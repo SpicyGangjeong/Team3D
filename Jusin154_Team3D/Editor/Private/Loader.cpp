@@ -2,6 +2,7 @@
 #include "Loader.h"
 #include "DebugCamera.h"
 #include "GameInstance.h"
+#include "DummyRect.h"
 #include "MainApp.h"
 #include "Dummy_Goblin.h"
 #include "Dummy_Cube.h"
@@ -95,11 +96,22 @@ void CLoader::Output()
 
 HRESULT CLoader::Loading_For_Logo()
 {
-	m_strMessage = TEXT("ÅØ½ºÃÄ¸¦(À») ·Îµù Áß ÀÔ´Ï´Ù.");
+	m_strMessage = TEXT("í…ìŠ¤ì³ë¥¼(ì„) ë¡œë”© ì¤‘ ì…ë‹ˆë‹¤.");
 
-	m_strMessage = TEXT("¸ğµ¨¸¦(À») ·Îµù Áß ÀÔ´Ï´Ù.");
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Dororong"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/DororongDoro.png"), TEXT("Dororong"), 0)))){
+		return E_FAIL;
+	}
 
-	m_strMessage = TEXT("¼ÎÀÌ´õ¸¦(À») ·Îµù Áß ÀÔ´Ï´Ù.");
+	m_strMessage = TEXT("ëª¨ë¸ë¥¼(ì„) ë¡œë”© ì¤‘ ì…ë‹ˆë‹¤.");
+
+	m_strMessage = TEXT("ì…°ì´ë”ë¥¼(ì„) ë¡œë”© ì¤‘ ì…ë‹ˆë‹¤.");
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_POSTEX,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_VtxPosTex.hlsl"),
+			VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)))) {
+		return E_FAIL;
+	}
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_NORTEX,
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_VtxNorTex.hlsl"),
@@ -131,12 +143,16 @@ HRESULT CLoader::Loading_For_Logo()
 		return E_FAIL;
 	}
 
-	m_strMessage = TEXT("°´Ã¼¿øÇü¸¦(À») ·Îµù Áß ÀÔ´Ï´Ù.");
+	m_strMessage = TEXT("ê°ì²´ì›í˜•ë¥¼(ì„) ë¡œë”© ì¤‘ ì…ë‹ˆë‹¤.");
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummyRect>(g_iStaticLevel, CDummyRect::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CDebugCamera>(g_iStaticLevel, CDebugCamera::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
-	m_strMessage = TEXT("·ÎµùÀÌ ¿Ï·áµÇ¾ú½À´Ï´Ù..");
+	m_strMessage = TEXT("ë¡œë”©ì´ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤..");
 
 	m_isFinished = true;
 
@@ -145,9 +161,9 @@ HRESULT CLoader::Loading_For_Logo()
 
 HRESULT CLoader::Loading_For_ObjectViewer()
 {
-	m_strMessage = TEXT("ÅØ½ºÃÄ¸¦(À») ·Îµù Áß ÀÔ´Ï´Ù.");
+	m_strMessage = TEXT("í…ìŠ¤ì³ë¥¼(ì„) ë¡œë”© ì¤‘ ì…ë‹ˆë‹¤.");
 
-	m_strMessage = TEXT("¸ğµ¨¸¦(À») ·Îµù Áß ÀÔ´Ï´Ù.");
+	m_strMessage = TEXT("ëª¨ë¸ë¥¼(ì„) ë¡œë”© ì¤‘ ì…ë‹ˆë‹¤.");
 	
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_GoblinBody_Model"),
 		CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Goblin/GoblinBody.fbx", MODEL::ANIM, XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixIdentity(), 0))))
@@ -157,11 +173,11 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Box/Box.fbx", MODEL::NONANIM, XMMatrixIdentity(), 0))))
 		return E_FAIL;
 
-	m_strMessage = TEXT("¼ÎÀÌ´õ¸¦(À») ·Îµù Áß ÀÔ´Ï´Ù.");
+	m_strMessage = TEXT("ì…°ì´ë”ë¥¼(ì„) ë¡œë”© ì¤‘ ì…ë‹ˆë‹¤.");
 
-	m_strMessage = TEXT("ÀÌÆåÆ®¸¦(À») ·Îµù Áß ÀÔ´Ï´Ù.");
+	m_strMessage = TEXT("ì´í™íŠ¸ë¥¼(ì„) ë¡œë”© ì¤‘ ì…ë‹ˆë‹¤.");
 
-	m_strMessage = TEXT("°´Ã¼¿øÇü¸¦(À») ·Îµù Áß ÀÔ´Ï´Ù.");
+	m_strMessage = TEXT("ê°ì²´ì›í˜•ë¥¼(ì„) ë¡œë”© ì¤‘ ì…ë‹ˆë‹¤.");
 
 	/* For.Prototype_GameObject_Dummy_Goblin */
 	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_Goblin>(g_iStaticLevel, CDummy_Goblin::Create(m_pDevice, m_pContext))))
@@ -171,9 +187,9 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_Cube>(g_iStaticLevel, CDummy_Cube::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	m_strMessage = TEXT("Á¤º¸¸¦ ºÒ·¯¿À´Â ÁßÀÔ´Ï´Ù.");
+	m_strMessage = TEXT("ì •ë³´ë¥¼ ë¶ˆëŸ¬ì˜¤ëŠ” ì¤‘ì…ë‹ˆë‹¤.");
 
-	m_strMessage = TEXT("·ÎµùÀÌ ¿Ï·áµÇ¾ú½À´Ï´Ù..");
+	m_strMessage = TEXT("ë¡œë”©ì´ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤..");
 
 	m_isFinished = true;
 

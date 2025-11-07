@@ -150,6 +150,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\DebugCamera.h" />
+    <ClInclude Include="..\Public\DummyRect.h" />
     <ClInclude Include="..\Public\Dummy_Cube.h" />
     <ClInclude Include="..\Public\Dummy_Goblin.h" />
     <ClInclude Include="..\Public\Editor_Define.h" />
@@ -167,6 +168,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\DebugCamera.cpp" />
+    <ClCompile Include="..\Private\DummyRect.cpp" />
     <ClCompile Include="..\Private\Dummy_Cube.cpp" />
     <ClCompile Include="..\Private\Dummy_Goblin.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />

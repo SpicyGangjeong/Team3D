@@ -2,6 +2,7 @@
 #include "Level_Logo.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
+#include "DummyRect.h"
 
 
 CLevel_Logo::CLevel_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
@@ -12,6 +13,9 @@ CLevel_Logo::CLevel_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, L
 
 HRESULT CLevel_Logo::Initialize()
 {
+	if (FAILED(Ready_Layer_UI(LAYER_BACKGROUND))) {
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
@@ -61,6 +65,9 @@ HRESULT CLevel_Logo::Ready_Layer_Camera(const _wstring& strLayerTag)
 
 HRESULT CLevel_Logo::Ready_Layer_UI(const _wstring& strLayerTag)
 {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummyRect>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
+		return E_FAIL;
+	}
 	return S_OK;
 }
 

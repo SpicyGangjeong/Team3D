@@ -15,7 +15,7 @@ private:
 public:
 	HRESULT Bind_ShaderResource(class CShader* pShader, const _char* pConstantName, _uint iTextureIndex);
 	HRESULT Bind_ShaderResources(class CShader* pShader, const _char* pConstantName, _uint iOffset, _uint iCount);
-	vector<ID3D11ShaderResourceView*>* Get_Texture() { return &m_pSRVs; }
+	vector<ID3D11ShaderResourceView*>* Get_Texture() { return &m_SRVs; }
 	ID3D11ShaderResourceView* Get_SRV(_uint iTextureIndex);
 	_uint Get_Size();
 

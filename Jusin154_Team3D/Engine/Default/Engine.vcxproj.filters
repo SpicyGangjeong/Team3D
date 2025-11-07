@@ -172,6 +172,9 @@
     <Filter Include="02.Element\02.Component\02.VIBuffer\Terrain">
       <UniqueIdentifier>{52994263-6339-4d57-97b3-7bb3c6dca479}</UniqueIdentifier>
     </Filter>
+    <Filter Include="99.Define\TINYXML2">
+      <UniqueIdentifier>{d93660eb-4bf9-43d2-902e-8ecbefd02481}</UniqueIdentifier>
+    </Filter>
     <Filter Include="99.Define">
       <UniqueIdentifier>{2cb454c9-e390-4f2e-8cf5-b5c6325543ed}</UniqueIdentifier>
     </Filter>
@@ -362,6 +365,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Cell.cpp">
       <Filter>02.Element\02.Component\02.VIBuffer\Cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\tinyxml2.cpp">
+      <Filter>99.Define\TINYXML2</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Mesh.cpp">
       <Filter>02.Element\02.Component\06.Model\Mesh</Filter>
@@ -901,6 +907,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_Cell.h">
       <Filter>02.Element\02.Component\02.VIBuffer\Cell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\tinyxml2.h">
+      <Filter>99.Define\TINYXML2</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Mesh.h">
       <Filter>02.Element\02.Component\06.Model\Mesh</Filter>
