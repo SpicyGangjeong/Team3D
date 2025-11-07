@@ -13,6 +13,7 @@
 #include "RenderTarget_Manager.h"
 #include "Key_Manager.h"
 #include "Mouse_Manager.h"
+#include "Collider_Manager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -78,6 +79,10 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 	}
 	m_pShadow = CShadow::Create();
 	if (nullptr == m_pShadow) {
+		return E_FAIL;
+	}
+	m_pCollider_Manager = CCollider_Manager::Create(*ppDevice, *ppContext, EngineDesc.iNumCollidableGroup);
+	if (nullptr == m_pCollider_Manager) {
 		return E_FAIL;
 	}
 
@@ -376,6 +381,19 @@ HRESULT CGameInstance::Render_Lights(class CShader* pShader, class CVIBuffer* pV
 	return m_pLight_Manager->Render_Lights(pShader, pVIBuffer);
 }
 
+HRESULT CGameInstance::Add_ColliderGroup(_uint iColliderGroup, class CCollider* pBounding)
+{
+	return m_pCollider_Manager->Add_ColliderGroup(iColliderGroup, pBounding);
+}
+void	CGameInstance::Refresh_Collider_Manager()
+{
+	return m_pCollider_Manager->Refresh_Collider_Manager();
+}
+void	CGameInstance::Collide(_uint iCollideGroupA, _uint iCollideGroupB)
+{
+	return m_pCollider_Manager->Collide(iCollideGroupA, iCollideGroupB);
+}
+
 
 HRESULT CGameInstance::Add_RenderTarget(const _wstring& strRenderTargetKey, _uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixelFormat, const _float4& vClearColor)
 {
@@ -563,6 +581,7 @@ void CGameInstance::Release_Engine()
 {
 	DestroyInstance();
 
+	SAFE_RELEASE(m_pCollider_Manager);
 	SAFE_RELEASE(m_pShadow);
 	SAFE_RELEASE(m_pCamera_Manager);
 	SAFE_RELEASE(m_pRenderTarget_Manager);

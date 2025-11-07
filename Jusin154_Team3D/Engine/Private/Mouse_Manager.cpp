@@ -60,25 +60,25 @@ void CMouse_Manager::Update()
 		m_ptOldMouseCur = m_ptCurrentMouseCur;
 
 
-		//GUI::Begin("Mouse_Manager");
-		//GUI::Text("AccumulateMomentum %f, %f", m_vMove.x, m_vMove.y);
-		//GUI::Text("CurPos %d, %d", m_ptCurrentMouseCur.x, m_ptCurrentMouseCur.y);
-		//GUI::Text("Lock %d", m_bLockMouseToCenter);
-		//POINT pt = Get_MouseViewPortPos();
-		//ImGuiIO& io = ImGui::GetIO();
-		//GUI::Text("IMGUI MousePos: %.1f, %.1f", io.MousePos.x, io.MousePos.y);
-		////io.MousePos = ImVec2((float)pt.x, (float)pt.y);
-		//GUI::Text("VPPOS: %d, %d", pt.x, pt.y);
-		//pt = Get_MouseScreenPos();
-		//GUI::Text("SCPOS: %d, %d", pt.x, pt.y);
+		GUI::Begin("Mouse_Manager");
+		GUI::Text("AccumulateMomentum %f, %f", m_vMove.x, m_vMove.y);
+		GUI::Text("CurPos %d, %d", m_ptCurrentMouseCur.x, m_ptCurrentMouseCur.y);
+		GUI::Text("Lock %d", m_bLockMouseToCenter);
+		POINT pt = Get_MouseViewPortPos();
+		ImGuiIO& io = ImGui::GetIO();
+		GUI::Text("IMGUI MousePos: %.1f, %.1f", io.MousePos.x, io.MousePos.y);
+		//io.MousePos = ImVec2((float)pt.x, (float)pt.y);
+		GUI::Text("VPPOS: %d, %d", pt.x, pt.y);
+		pt = Get_MouseScreenPos();
+		GUI::Text("SCPOS: %d, %d", pt.x, pt.y);
 
-		//pt = Get_MouseViewPortPos();
-		//D3D11_VIEWPORT	viewPort;
-		//_uint TargetViewPort = 1;
-		//m_pContext->RSGetViewports(&TargetViewPort, &viewPort);
-		//GUI::Text("INV_VPPOS: %f, %f", pt.x - (viewPort.Width * 0.5f), pt.y - (viewPort.Height * 0.5f));
+		pt = Get_MouseViewPortPos();
+		D3D11_VIEWPORT	viewPort;
+		_uint TargetViewPort = 1;
+		m_pContext->RSGetViewports(&TargetViewPort, &viewPort);
+		GUI::Text("INV_VPPOS: %f, %f", pt.x - (viewPort.Width * 0.5f), pt.y - (viewPort.Height * 0.5f));
 
-		//GUI::End();
+		GUI::End();
 
 		Picking();
 	}

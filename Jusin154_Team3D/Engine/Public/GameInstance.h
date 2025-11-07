@@ -129,7 +129,9 @@ public:
 	HRESULT Render_Lights(class CShader* pShader, class CVIBuffer* pVIBuffer);
 #pragma endregion
 #pragma region COLLIDER_MANAGER
-
+	HRESULT Add_ColliderGroup(_uint iColliderGroup, class CCollider* pBounding);
+	void	Refresh_Collider_Manager();
+	void	Collide(_uint iCollideGroupA, _uint iCollideGroupB);
 #pragma endregion
 #pragma region OBSTACLE_MANAGER
 #pragma endregion
@@ -177,6 +179,7 @@ private:
 	class CLight_Manager*			m_pLight_Manager = { nullptr };
 	class CKey_Manager*				m_pKey_Manager = { nullptr };
 	class CMouse_Manager*			m_pMouse_Manager = { nullptr };
+	class CCollider_Manager*		m_pCollider_Manager = { nullptr };
 
 #ifdef _DEBUG
 private:
