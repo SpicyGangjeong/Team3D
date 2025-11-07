@@ -1,0 +1,39 @@
+#pragma once
+
+#include "Editor_Define.h"
+#include "Level.h"
+
+
+/* 2. 자원을 로드하는 동안, 화면에 로딩 상태를 표현해준다. */
+
+NS_BEGIN(Editor)
+
+class CLevel_Loading final : public CLevel
+{
+private:
+	CLevel_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID);
+	virtual ~CLevel_Loading() = default;
+
+public:
+	virtual void Update(_float fTimeDelta) override;
+	virtual HRESULT Render() override;
+	virtual _uint	Get_NextLevelID() override { return ENUM_CLASS(m_eNextLevelID); };
+
+private:
+	LEVEL			m_eNextLevelID = { LEVEL::END };
+	class CLoader* m_pLoader = { nullptr };
+
+private:
+	virtual HRESULT Initialize(LEVEL eNextLevelID);
+	HRESULT Initialize() override;
+	HRESULT Ready_Layer_BackGround(const _wstring& strLayerTag);
+
+
+
+public:
+	static CLevel_Loading* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID, LEVEL eNextLevelID);
+	virtual void Free() override;
+
+};
+
+NS_END

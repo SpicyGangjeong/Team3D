@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{2133313a-e5e1-41cd-b976-21753fbcd083}</ProjectGuid>
+    <RootNamespace>Engine</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <EnableASAN>true</EnableASAN>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <EnableASAN>false</EnableASAN>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>../Bin/$(Configuration)/</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>../Bin/$(Configuration)/</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;ENGINE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;ENGINE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>EDITOR_PROJECT;ENGINE_EXPORTS;IMGUI_EXPORTS;$(USERNAME);_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>../Public/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <AdditionalLibraryDirectories>../ThirdPartyLib/fMod/;../ThirdPartyLib/DirectXTK/;../ThirdPartyLib/FX11/;../ThirdPartyLib/Assimp/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d11.lib;fmod_vc.lib;dinput8.lib;DirectXTKd.lib;Effects11d.lib;assimp-vc145-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>EDITOR_PROJECT;ENGINE_EXPORTS;IMGUI_EXPORTS;$(USERDOMAIN);NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>../Public/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <AdditionalLibraryDirectories>../ThirdPartyLib/fMod/;../ThirdPartyLib/DirectXTK/;../ThirdPartyLib/FX11/;../ThirdPartyLib/Assimp/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d11.lib;fmod_vc.lib;dinput8.lib;DirectXTK.lib;Effects11.lib;assimp-vc145-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Private\Base.cpp" />
+    <ClCompile Include="..\Private\Bounding.cpp" />
+    <ClCompile Include="..\Private\Bounding_AABB.cpp" />
+    <ClCompile Include="..\Private\Bounding_OBB.cpp" />
+    <ClCompile Include="..\Private\Bounding_Sphere.cpp" />
+    <ClCompile Include="..\Private\Camera.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera_Manager.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Private\Cell.cpp" />
+    <ClCompile Include="..\Private\Collider.cpp" />
+    <ClCompile Include="..\Private\Component.cpp" />
+    <ClCompile Include="..\Private\ContainerObject.cpp" />
+    <ClCompile Include="..\Private\DebugDraw.cpp" />
+    <ClCompile Include="..\Private\GameInstance.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject.cpp" />
+    <ClCompile Include="..\Private\GameObject_Manager.cpp" />
+    <ClCompile Include="..\Private\Graphic_Device.cpp" />
+    <ClCompile Include="..\Private\imgui.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../Public/IMGUI/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../Public/IMGUI/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClCompile Include="..\Private\imgui_demo.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../Public/IMGUI/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../Public/IMGUI/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClCompile Include="..\Private\imgui_draw.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../Public/IMGUI/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../Public/IMGUI/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClCompile Include="..\Private\imgui_impl_dx11.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../Public/IMGUI/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../Public/IMGUI/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClCompile Include="..\Private\imgui_impl_win32.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../Public/IMGUI/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../Public/IMGUI/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClCompile Include="..\Private\imgui_tables.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../Public/IMGUI/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../Public/IMGUI/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClCompile Include="..\Private\imgui_widgets.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../Public/IMGUI/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../Public/IMGUI/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClCompile Include="..\Private\Key_Manager.cpp" />
+    <ClCompile Include="..\Private\Layer.cpp" />
+    <ClCompile Include="..\Private\Level.cpp" />
+    <ClCompile Include="..\Private\Level_Manager.cpp" />
+    <ClCompile Include="..\Private\Light.cpp" />
+    <ClCompile Include="..\Private\Light_Manager.cpp" />
+    <ClCompile Include="..\Private\Model.cpp" />
+    <ClCompile Include="..\Private\Mouse_Manager.cpp" />
+    <ClCompile Include="..\Private\MyTools.cpp" />
+    <ClCompile Include="..\Private\Navigation.cpp" />
+    <ClCompile Include="..\Private\PartObject.cpp" />
+    <ClCompile Include="..\Private\pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\Private\PipeLine.cpp" />
+    <ClCompile Include="..\Private\Prototype_Manager.cpp" />
+    <ClCompile Include="..\Private\Renderer.cpp" />
+    <ClCompile Include="..\Private\RenderTarget.cpp" />
+    <ClCompile Include="..\Private\RenderTarget_Manager.cpp" />
+    <ClCompile Include="..\Private\Shader.cpp" />
+    <ClCompile Include="..\Private\Shadow.cpp" />
+    <ClCompile Include="..\Private\SoundSrc.cpp" />
+    <ClCompile Include="..\Private\Texture.cpp" />
+    <ClCompile Include="..\Private\Timer.cpp" />
+    <ClCompile Include="..\Private\Timer_Manager.cpp" />
+    <ClCompile Include="..\Private\Transform.cpp" />
+    <ClCompile Include="..\Private\VIBuffer.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_Cell.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_Rect.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Public\Assimp\aabb.h" />
+    <ClInclude Include="..\Public\Assimp\ai_assert.h" />
+    <ClInclude Include="..\Public\Assimp\anim.h" />
+    <ClInclude Include="..\Public\Assimp\AssertHandler.h" />
+    <ClInclude Include="..\Public\Assimp\Base64.hpp" />
+    <ClInclude Include="..\Public\Assimp\BaseImporter.h" />
+    <ClInclude Include="..\Public\Assimp\Bitmap.h" />
+    <ClInclude Include="..\Public\Assimp\BlobIOSystem.h" />
+    <ClInclude Include="..\Public\Assimp\ByteSwapper.h" />
+    <ClInclude Include="..\Public\Assimp\camera.h" />
+    <ClInclude Include="..\Public\Assimp\cexport.h" />
+    <ClInclude Include="..\Public\Assimp\cfileio.h" />
+    <ClInclude Include="..\Public\Assimp\cimport.h" />
+    <ClInclude Include="..\Public\Assimp\ColladaMetaData.h" />
+    <ClInclude Include="..\Public\Assimp\color4.h" />
+    <ClInclude Include="..\Public\Assimp\commonMetaData.h" />
+    <ClInclude Include="..\Public\Assimp\Compiler\poppack1.h" />
+    <ClInclude Include="..\Public\Assimp\Compiler\pstdint.h" />
+    <ClInclude Include="..\Public\Assimp\Compiler\pushpack1.h" />
+    <ClInclude Include="..\Public\Assimp\config.h" />
+    <ClInclude Include="..\Public\Assimp\CreateAnimMesh.h" />
+    <ClInclude Include="..\Public\Assimp\DefaultIOStream.h" />
+    <ClInclude Include="..\Public\Assimp\DefaultIOSystem.h" />
+    <ClInclude Include="..\Public\Assimp\DefaultLogger.hpp" />
+    <ClInclude Include="..\Public\Assimp\defs.h" />
+    <ClInclude Include="..\Public\Assimp\Exceptional.h" />
+    <ClInclude Include="..\Public\Assimp\Exporter.hpp" />
+    <ClInclude Include="..\Public\Assimp\fast_atof.h" />
+    <ClInclude Include="..\Public\Assimp\GenericProperty.h" />
+    <ClInclude Include="..\Public\Assimp\GltfMaterial.h" />
+    <ClInclude Include="..\Public\Assimp\Hash.h" />
+    <ClInclude Include="..\Public\Assimp\Importer.hpp" />
+    <ClInclude Include="..\Public\Assimp\importerdesc.h" />
+    <ClInclude Include="..\Public\Assimp\IOStream.hpp" />
+    <ClInclude Include="..\Public\Assimp\IOStreamBuffer.h" />
+    <ClInclude Include="..\Public\Assimp\IOSystem.hpp" />
+    <ClInclude Include="..\Public\Assimp\light.h" />
+    <ClInclude Include="..\Public\Assimp\LineSplitter.h" />
+    <ClInclude Include="..\Public\Assimp\LogAux.h" />
+    <ClInclude Include="..\Public\Assimp\Logger.hpp" />
+    <ClInclude Include="..\Public\Assimp\LogStream.hpp" />
+    <ClInclude Include="..\Public\Assimp\material.h" />
+    <ClInclude Include="..\Public\Assimp\MathFunctions.h" />
+    <ClInclude Include="..\Public\Assimp\matrix3x3.h" />
+    <ClInclude Include="..\Public\Assimp\matrix4x4.h" />
+    <ClInclude Include="..\Public\Assimp\MemoryIOWrapper.h" />
+    <ClInclude Include="..\Public\Assimp\mesh.h" />
+    <ClInclude Include="..\Public\Assimp\metadata.h" />
+    <ClInclude Include="..\Public\Assimp\NullLogger.hpp" />
+    <ClInclude Include="..\Public\Assimp\ObjMaterial.h" />
+    <ClInclude Include="..\Public\Assimp\ParsingUtils.h" />
+    <ClInclude Include="..\Public\Assimp\pbrmaterial.h" />
+    <ClInclude Include="..\Public\Assimp\port\AndroidJNI\AndroidJNIIOSystem.h" />
+    <ClInclude Include="..\Public\Assimp\port\AndroidJNI\BundledAssetIOSystem.h" />
+    <ClInclude Include="..\Public\Assimp\postprocess.h" />
+    <ClInclude Include="..\Public\Assimp\Profiler.h" />
+    <ClInclude Include="..\Public\Assimp\ProgressHandler.hpp" />
+    <ClInclude Include="..\Public\Assimp\qnan.h" />
+    <ClInclude Include="..\Public\Assimp\quaternion.h" />
+    <ClInclude Include="..\Public\Assimp\RemoveComments.h" />
+    <ClInclude Include="..\Public\Assimp\revision.h" />
+    <ClInclude Include="..\Public\Assimp\scene.h" />
+    <ClInclude Include="..\Public\Assimp\SceneCombiner.h" />
+    <ClInclude Include="..\Public\Assimp\SGSpatialSort.h" />
+    <ClInclude Include="..\Public\Assimp\SkeletonMeshBuilder.h" />
+    <ClInclude Include="..\Public\Assimp\SmallVector.h" />
+    <ClInclude Include="..\Public\Assimp\SmoothingGroups.h" />
+    <ClInclude Include="..\Public\Assimp\SpatialSort.h" />
+    <ClInclude Include="..\Public\Assimp\StandardShapes.h" />
+    <ClInclude Include="..\Public\Assimp\StreamReader.h" />
+    <ClInclude Include="..\Public\Assimp\StreamWriter.h" />
+    <ClInclude Include="..\Public\Assimp\StringComparison.h" />
+    <ClInclude Include="..\Public\Assimp\StringUtils.h" />
+    <ClInclude Include="..\Public\Assimp\Subdivision.h" />
+    <ClInclude Include="..\Public\Assimp\texture.h" />
+    <ClInclude Include="..\Public\Assimp\TinyFormatter.h" />
+    <ClInclude Include="..\Public\Assimp\types.h" />
+    <ClInclude Include="..\Public\Assimp\vector2.h" />
+    <ClInclude Include="..\Public\Assimp\vector3.h" />
+    <ClInclude Include="..\Public\Assimp\version.h" />
+    <ClInclude Include="..\Public\Assimp\Vertex.h" />
+    <ClInclude Include="..\Public\Assimp\XmlParser.h" />
+    <ClInclude Include="..\Public\Assimp\XMLTools.h" />
+    <ClInclude Include="..\Public\Assimp\ZipArchiveIOSystem.h" />
+    <ClInclude Include="..\Public\Base.h" />
+    <ClInclude Include="..\Public\Bounding.h" />
+    <ClInclude Include="..\Public\Bounding_AABB.h" />
+    <ClInclude Include="..\Public\Bounding_OBB.h" />
+    <ClInclude Include="..\Public\Bounding_Sphere.h" />
+    <ClInclude Include="..\Public\Camera.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Public\Camera_Manager.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Public\Cell.h" />
+    <ClInclude Include="..\Public\Collider.h" />
+    <ClInclude Include="..\Public\Component.h" />
+    <ClInclude Include="..\Public\ContainerObject.h" />
+    <ClInclude Include="..\Public\DebugDraw.h" />
+    <ClInclude Include="..\Public\DirectXTK\Audio.h" />
+    <ClInclude Include="..\Public\DirectXTK\BufferHelpers.h" />
+    <ClInclude Include="..\Public\DirectXTK\CommonStates.h" />
+    <ClInclude Include="..\Public\DirectXTK\DDSTextureLoader.h" />
+    <ClInclude Include="..\Public\DirectXTK\DirectXHelpers.h" />
+    <ClInclude Include="..\Public\DirectXTK\Effects.h" />
+    <ClInclude Include="..\Public\DirectXTK\GamePad.h" />
+    <ClInclude Include="..\Public\DirectXTK\GeometricPrimitive.h" />
+    <ClInclude Include="..\Public\DirectXTK\GraphicsMemory.h" />
+    <ClInclude Include="..\Public\DirectXTK\Keyboard.h" />
+    <ClInclude Include="..\Public\DirectXTK\Model.h" />
+    <ClInclude Include="..\Public\DirectXTK\Mouse.h" />
+    <ClInclude Include="..\Public\DirectXTK\PostProcess.h" />
+    <ClInclude Include="..\Public\DirectXTK\PrimitiveBatch.h" />
+    <ClInclude Include="..\Public\DirectXTK\ScreenGrab.h" />
+    <ClInclude Include="..\Public\DirectXTK\SimpleMath.h" />
+    <ClInclude Include="..\Public\DirectXTK\SpriteBatch.h" />
+    <ClInclude Include="..\Public\DirectXTK\SpriteFont.h" />
+    <ClInclude Include="..\Public\DirectXTK\VertexTypes.h" />
+    <ClInclude Include="..\Public\DirectXTK\WICTextureLoader.h" />
+    <ClInclude Include="..\Public\DirectXTK\XboxDDSTextureLoader.h" />
+    <ClInclude Include="..\Public\Engine_Define.h" />
+    <ClInclude Include="..\Public\Engine_Enum.h" />
+    <ClInclude Include="..\Public\Engine_Function.h" />
+    <ClInclude Include="..\Public\Engine_Macro.h" />
+    <ClInclude Include="..\Public\Engine_Struct.h" />
+    <ClInclude Include="..\Public\Engine_Typedef.h" />
+    <ClInclude Include="..\Public\fMod\fmod.h" />
+    <ClInclude Include="..\Public\fMod\fmod.hpp" />
+    <ClInclude Include="..\Public\fMod\fmod_codec.h" />
+    <ClInclude Include="..\Public\fMod\fmod_common.h" />
+    <ClInclude Include="..\Public\fMod\fmod_dsp.h" />
+    <ClInclude Include="..\Public\fMod\fmod_dsp_effects.h" />
+    <ClInclude Include="..\Public\fMod\fmod_errors.h" />
+    <ClInclude Include="..\Public\fMod\fmod_output.h" />
+    <ClInclude Include="..\Public\FX11\d3dx11effect.h" />
+    <ClInclude Include="..\Public\FX11\d3dxGlobal.h" />
+    <ClInclude Include="..\Public\GameInstance.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject.h" />
+    <ClInclude Include="..\Public\GameObject_Manager.h" />
+    <ClInclude Include="..\Public\Graphic_Device.h" />
+    <ClInclude Include="..\Public\IMGUI\imconfig.h" />
+    <ClInclude Include="..\Public\IMGUI\imgui.h" />
+    <ClInclude Include="..\Public\IMGUI\imgui_impl_dx11.h" />
+    <ClInclude Include="..\Public\IMGUI\imgui_impl_win32.h" />
+    <ClInclude Include="..\Public\IMGUI\imgui_internal.h" />
+    <ClInclude Include="..\Public\IMGUI\imstb_rectpack.h" />
+    <ClInclude Include="..\Public\IMGUI\imstb_textedit.h" />
+    <ClInclude Include="..\Public\IMGUI\imstb_truetype.h" />
+    <ClInclude Include="..\Public\Key_Manager.h" />
+    <ClInclude Include="..\Public\Layer.h" />
+    <ClInclude Include="..\Public\Level.h" />
+    <ClInclude Include="..\Public\Level_Manager.h" />
+    <ClInclude Include="..\Public\Light.h" />
+    <ClInclude Include="..\Public\Light_Manager.h" />
+    <ClInclude Include="..\Public\Model.h" />
+    <ClInclude Include="..\Public\Mouse_Manager.h" />
+    <ClInclude Include="..\Public\MyTools.h" />
+    <ClInclude Include="..\Public\Navigation.h" />
+    <ClInclude Include="..\Public\PartObject.h" />
+    <ClInclude Include="..\Public\pch.h" />
+    <ClInclude Include="..\Public\PipeLine.h" />
+    <ClInclude Include="..\Public\Prototype_Manager.h" />
+    <ClInclude Include="..\Public\Renderer.h" />
+    <ClInclude Include="..\Public\RenderTarget.h" />
+    <ClInclude Include="..\Public\RenderTarget_Manager.h" />
+    <ClInclude Include="..\Public\Shader.h" />
+    <ClInclude Include="..\Public\Shadow.h" />
+    <ClInclude Include="..\Public\SoundSrc.h" />
+    <ClInclude Include="..\Public\Texture.h" />
+    <ClInclude Include="..\Public\Timer.h" />
+    <ClInclude Include="..\Public\Timer_Manager.h" />
+    <ClInclude Include="..\Public\Transform.h" />
+    <ClInclude Include="..\Public\VIBuffer.h" />
+    <ClInclude Include="..\Public\VIBuffer_Cell.h" />
+    <ClInclude Include="..\Public\VIBuffer_Rect.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Defines.hlsli" />
+    <None Include="..\Public\Assimp\color4.inl" />
+    <None Include="..\Public\Assimp\config.h.in" />
+    <None Include="..\Public\Assimp\material.inl" />
+    <None Include="..\Public\Assimp\matrix3x3.inl" />
+    <None Include="..\Public\Assimp\matrix4x4.inl" />
+    <None Include="..\Public\Assimp\module.modulemap" />
+    <None Include="..\Public\Assimp\quaternion.inl" />
+    <None Include="..\Public\Assimp\revision.h.in" />
+    <None Include="..\Public\Assimp\SmoothingGroups.inl" />
+    <None Include="..\Public\Assimp\vector2.inl" />
+    <None Include="..\Public\Assimp\vector3.inl" />
+    <None Include="..\Public\DirectXTK\SimpleMath.inl" />
+    <None Include="..\Public\fMod\fmod.cs" />
+    <None Include="..\Public\fMod\fmod_dsp.cs" />
+    <None Include="..\Public\fMod\fmod_errors.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Cell.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Deferred.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

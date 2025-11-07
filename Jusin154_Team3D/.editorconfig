@@ -1,0 +1,13 @@
+﻿#sln
+
+# hlsl 저장형식 지정
+[*.hlsl]
+charset = utf-8
+insert_final_newline = true
+end_of_line = crlf
+
+# hlsli 저장형식 지정
+[*.hlsli]
+charset = utf-8
+insert_final_newline = true
+end_of_line = crlf

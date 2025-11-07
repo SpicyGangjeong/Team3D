@@ -1,0 +1,168 @@
+#include "pch.h"
+#include "Camera.h"
+
+CCamera::CCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+    : CGameObject(pDevice, pContext)
+{
+}
+
+CCamera::CCamera(const CCamera& rhs)
+    : CGameObject(rhs)
+{
+}
+
+HRESULT CCamera::Initialize_Prototype()
+{
+    return S_OK;
+}
+
+HRESULT CCamera::Initialize(void* pArg)
+{
+    if (FAILED(__super::Initialize(pArg))) {
+        return E_FAIL;
+    }
+    D3D11_VIEWPORT vp = {};
+    _uint iTargetVP = 1;
+    m_pContext->RSGetViewports(&iTargetVP, &vp);
+
+    CAMERA_DESC* pDesc = static_cast<CAMERA_DESC*>(pArg);
+    m_fFovy = pDesc->fFovy;
+    m_fAspect = vp.Width / vp.Height;
+    m_fNear = pDesc->fNear;
+    m_fFar = pDesc->fFar;
+    m_bActive = false;
+    m_iPriority = pDesc->iPriority;
+    m_pFollowTarget = pDesc->pFollowTarget;
+    SAFE_ADDREF(m_pFollowTarget);
+    m_pLookTarget = pDesc->pLookTarget;
+    SAFE_ADDREF(m_pLookTarget);
+
+    return S_OK;
+}
+
+HRESULT CCamera::Bind_Matrices()
+{
+    if (true == m_bActive) {
+        m_pGameInstance->Set_Transform(D3DTS::VIEW, XMMatrixInverse(nullptr, XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrixPtr())));
+        m_pGameInstance->Set_Transform(D3DTS::PROJ, XMMatrixPerspectiveFovLH(m_fFovy, m_fAspect, m_fNear, m_fFar));
+        Ready_Shadow();
+    }
+    return S_OK;
+}
+
+void CCamera::Transition(_float fTimeDelta)
+{
+    if (false == m_bIsCurrentTransition) {
+        return;
+    }
+    m_fTransitionCurrentTime += fTimeDelta;
+    _float fRatio = m_fTransitionCurrentTime / m_fTransitionMaxTime;
+    if (fRatio > 1.f) {
+        fRatio = 1.f;
+        m_bIsCurrentTransition = false;
+    }
+
+    CTransform* pLookTransform = m_pLookTarget->Get_Component<CTransform>();
+    _vector vFollowTarget = m_pFollowTarget->Get_Component<CTransform>()->Get_State(STATE::POSITION);
+    _vector vLookTarget = pLookTransform->Get_State(STATE::POSITION);
+    _matrix matTarget = XMMatrixInverse(nullptr, XMMatrixLookAtLH(vFollowTarget, vLookTarget, XMVectorSet(0.f, 1.f, 0.f, 0.f)));
+
+    _vector vTargetScale{}, vTargetRotq{}, vTargetTrans{}, vOriginScale{}, vOriginRotq{}, vOriginTrans{};
+    XMMatrixDecompose(&vTargetScale, &vTargetRotq, &vTargetTrans, matTarget);
+    XMMatrixDecompose(&vOriginScale, &vOriginRotq, &vOriginTrans, m_pTransformCom->Get_XMWorldMatrix());
+
+    vTargetScale = XMVectorLerp(vOriginScale, vTargetScale, fRatio);
+    vTargetRotq = XMQuaternionSlerp(vOriginRotq, vTargetRotq, fRatio);
+    vTargetTrans = XMVectorLerp(vOriginTrans, vTargetTrans, fRatio);
+
+    m_pTransformCom->Set_WorldMatrix(XMMatrixAffineTransformation(vTargetScale, XMVectorZero(), vTargetRotq, vTargetTrans));
+}
+
+void CCamera::Active_Camera(pair<_float4, _float3>& pairTransitionInfo)
+{
+    //if (true == m_bTransitionLerp) {
+        m_pTransformCom->Set_WorldMatrix(XMMatrixAffineTransformation(XMVectorSplatOne(), XMVectorZero(),
+            XMLoadFloat4(&pairTransitionInfo.first), XMLoadFloat3(&pairTransitionInfo.second)));
+        m_fTransitionCurrentTime = 0.f;
+        m_bIsCurrentTransition = true;
+    //}
+    //m_bActive = true;
+}
+
+void CCamera::DeActive_Camera(pair<_float4, _float3>& pairTransition)
+{
+    m_bActive = false;
+    m_bIsCurrentTransition = false;
+    _vector vScale{}, vRotq{}, vTrans{};
+    XMMatrixDecompose(&vScale, &vRotq, &vTrans, m_pTransformCom->Get_XMWorldMatrix());
+    XMStoreFloat4(&pairTransition.first, vRotq);
+    XMStoreFloat3(&pairTransition.second, vTrans);
+}
+
+void CCamera::Priority_Update(_float fTimeDelta)
+{
+}
+
+void CCamera::Update(_float fTimeDelta)
+{
+}
+
+void CCamera::Late_Update(_float fTimeDelta)
+{
+}
+
+HRESULT CCamera::Render()
+{
+
+    return S_OK;
+}
+
+HRESULT CCamera::Ready_Components(void* pArg)
+{
+    if (FAILED(__super::Ready_Components(pArg))) {
+        return E_FAIL;
+    }
+
+    return S_OK;
+}
+
+_bool CCamera::IsImportantThan(CCamera* pOther) const
+{
+    return m_iPriority > pOther->m_iPriority;
+}
+
+const _float* CCamera::Get_CurrentFar()
+{
+    return &m_fFar;
+}
+
+HRESULT CCamera::Ready_Shadow()
+{
+    if (nullptr == m_pLookTarget) {
+        return S_OK;
+    }
+    ShadowDesc = *m_pGameInstance->Get_ShadowDesc();
+
+    ShadowDesc.fFar = 200.f;
+    ShadowDesc.fNear = 0.1f;
+    ShadowDesc.fWidth = 30.f;
+    ShadowDesc.fHeight = 30.f;
+
+    XMStoreFloat4(&ShadowDesc.vAt, m_pLookTarget->Get_WorldPostion());
+
+    _matrix matRotation = XMMatrixRotationRollPitchYaw(XMConvertToRadians(vRollPichYaw.x), XMConvertToRadians(vRollPichYaw.y), XMConvertToRadians(vRollPichYaw.z));
+    XMStoreFloat4(&ShadowDesc.vEye, XMLoadFloat4(&ShadowDesc.vAt) - matRotation.r[2] * (ShadowDesc.fFar * 0.25f));
+
+    if (FAILED(m_pGameInstance->Ready_Shadow_Light(ShadowDesc))) {
+        return E_FAIL;
+    }
+    return S_OK;
+}
+
+void CCamera::Free()
+{
+    __super::Free();
+
+    SAFE_RELEASE(m_pFollowTarget);
+    SAFE_RELEASE(m_pLookTarget);
+}

@@ -1,0 +1,10 @@
+﻿# ENGINE_SDK
+root = true
+
+#외부 헤더: 수정 금지 경고 유도
+[*.h]
+charset = utf-8
+indent_style = tab
+indent_size = 8
+insert_final_newline = false
+end_of_line = lf

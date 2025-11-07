@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="Client.h">
+      <Filter>99.Define\00.DEFAULT</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>99.Define\00.DEFAULT</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>99.Define\00.DEFAULT</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>99.Define\00.DEFAULT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Define.h">
+      <Filter>99.Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Enum.h">
+      <Filter>99.Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Macro.h">
+      <Filter>99.Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MainApp.h">
+      <Filter>00.MainApp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Loading.h">
+      <Filter>01.Levels\00.Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Loader.h">
+      <Filter>01.Levels\00.Loading\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Logo.h">
+      <Filter>01.Levels\01.Logo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_GamePlay.h">
+      <Filter>01.Levels\02.GamePlay</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Client.ico">
+      <Filter>99.Define\00.DEFAULT</Filter>
+    </Image>
+    <Image Include="small.ico">
+      <Filter>99.Define\00.DEFAULT</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="99.Define">
+      <UniqueIdentifier>{2899f7fc-0ed2-41c0-8e24-0d89f08ffc39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.MainApp">
+      <UniqueIdentifier>{2902e559-abdf-4dd7-ac4c-cc6e2b81ad0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Define\00.DEFAULT">
+      <UniqueIdentifier>{05a0db73-4fbf-456c-9137-bb605c632d68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels">
+      <UniqueIdentifier>{aa499dd2-f7cb-4abd-9b3c-19f6e8427d7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\00.Loading">
+      <UniqueIdentifier>{f8cbe454-4dbd-4c76-9875-e68ce151bd01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\01.Logo">
+      <UniqueIdentifier>{5a95b59a-ca09-4ece-b00b-c4d2a419731f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\00.Loading\Loader">
+      <UniqueIdentifier>{37d70d8d-655c-498b-82a6-afd3d1726cd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.GamePlay">
+      <UniqueIdentifier>{7e641382-9dfa-4da7-a8c8-a3ee06360e7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects">
+      <UniqueIdentifier>{27434478-691e-42a8-83c7-ecd1a60f46ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Information">
+      <UniqueIdentifier>{cdfbb346-6cae-4094-93cd-b82685efa68e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Cameras">
+      <UniqueIdentifier>{7efd65d5-eb4d-4331-a746-f0fa2de6275b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment">
+      <UniqueIdentifier>{8d0b4269-fe26-433b-b18c-9ec1a893b7cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI">
+      <UniqueIdentifier>{f4bd3a1f-c925-4422-af6c-3a77cddd1960}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Player">
+      <UniqueIdentifier>{a3879c8c-52d4-48a0-82d6-6c4a20f44d11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\NPC">
+      <UniqueIdentifier>{be98e943-7e2e-4776-a801-d8cd6e263f54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\NPC\Hostile">
+      <UniqueIdentifier>{6ba6d00f-0638-4aae-a5cd-a9ddcfc67b75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\NPC\Ally">
+      <UniqueIdentifier>{a7d0a3fa-b3dc-40c6-b258-ffcde49b05c1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Client.cpp">
+      <Filter>99.Define\00.DEFAULT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\pch.cpp">
+      <Filter>99.Define\00.DEFAULT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MainApp.cpp">
+      <Filter>00.MainApp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Loading.cpp">
+      <Filter>01.Levels\00.Loading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Loader.cpp">
+      <Filter>01.Levels\00.Loading\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Logo.cpp">
+      <Filter>01.Levels\01.Logo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_GamePlay.cpp">
+      <Filter>01.Levels\02.GamePlay</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Client.rc">
+      <Filter>99.Define\00.DEFAULT</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

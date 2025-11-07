@@ -1,0 +1,29 @@
+﻿#pragma once
+
+#include <process.h>
+#include "../Default/framework.h"
+#include "wincrypt.h"
+#include "Editor_Macro.h"
+#include "Editor_Struct.h"
+
+namespace Editor
+{
+	const unsigned int			g_iWinSizeX = 1920;
+	const unsigned int			g_iWinSizeY = 1080;
+
+	enum class LEVEL { STATIC, LOADING, LOGO, LOBY, GAMEPLAY, RESTART, END };
+	enum class COLLIDABLEOBJECT { PLAYER, MONSTER, HOSTILE_HITBOX, ALLY_HITBOX, NEUTRAL_HITBOX, ENVIRIONMENT, NPC, ITEM, TRIGGERBOX, REGION, NOCOLLIDE, END };
+
+	enum class SHADER_PASS_ANIM { DEFAULT, SHADOW, CAPTURE, BLUR, END };
+	enum class SHADER_PASS_CUBE { DEFAULT, SHADOW, BLUR, END };
+	enum class SHADER_PASS_MESH { DEFAULT, SHADOW, SKYBOX, ALPHABLEND, EFFECT_ALPHABLEND, EFFECT_BLEND, EFFECT_ALPHABLEND_CULL, EFFECT_BLEND_CULL, CAPTURE, BLUR, EFFECT_ALPHABLEND_UVMOVE, END };	
+	enum class SHADER_PASS_NORTEX { DEFAULT, TERRAIN, END };
+	enum class SHADER_PASS_PARTICLE { EXPLOSION, END };
+	enum class SHADER_PASS_POSTEX { DEFAULT, SCISSOR, UI, UVMOVE, TRAIL, END };
+}
+
+using namespace Editor;
+
+extern HINSTANCE g_hInstance;
+extern HWND g_hWnd;
+extern float g_fTimeMult;

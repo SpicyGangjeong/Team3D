@@ -1,0 +1,934 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="00.System">
+      <UniqueIdentifier>{b9573a87-7a2c-4e47-a2b5-8ac9e1bd6887}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.System\99.Base">
+      <UniqueIdentifier>{0c9df74d-79e3-4ca1-87cd-22b0789afc1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Define">
+      <UniqueIdentifier>{2cb454c9-e390-4f2e-8cf5-b5c6325543ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Define\00.DEFAULT">
+      <UniqueIdentifier>{0e35cd1b-88f6-46b9-b72e-b46eeaacd4e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Define\99.THIRDPARTY">
+      <UniqueIdentifier>{32ca0c26-d3e2-49c5-8dc6-cc67e5291214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Define\99.THIRDPARTY\IMGUI">
+      <UniqueIdentifier>{17dcadfe-e4cd-46c6-8122-e5e02bb73e57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Define\99.THIRDPARTY\FX11">
+      <UniqueIdentifier>{c3e7b75b-ec8b-4071-8b52-e5c356febfa6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Define\99.THIRDPARTY\FMOD">
+      <UniqueIdentifier>{57dd171f-f788-4918-aae2-85c20794b3cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Define\99.THIRDPARTY\DXTK">
+      <UniqueIdentifier>{40758cb1-0f91-4db9-bad7-7c77eb8002da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Define\99.THIRDPARTY\ASSIMP">
+      <UniqueIdentifier>{bbf3ec67-56f5-4e67-b6cf-8eb1eb4400ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Define\01.SHADER">
+      <UniqueIdentifier>{30c382b4-2ac9-4355-b3a5-c1b3622c2982}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Define\70.NS_SOUND">
+      <UniqueIdentifier>{1622af23-8aca-43cd-8250-b289e363e613}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.System\01.Timer">
+      <UniqueIdentifier>{de88c47e-55e3-4c50-8b4c-7dd94c0c837f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.System\00.Device">
+      <UniqueIdentifier>{f69b37d9-7bbc-4df3-9500-59519fc972d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Management">
+      <UniqueIdentifier>{6d1b87d2-f89a-4d0b-ab45-59354f66d995}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element">
+      <UniqueIdentifier>{f56f4248-8206-42a9-935c-58a3da5f170e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility">
+      <UniqueIdentifier>{651c9406-d16c-48f9-9a0e-8f3883a29535}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\00.GameInstance">
+      <UniqueIdentifier>{1d05b463-1d77-4114-a33f-32866f510895}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\01.Renderer">
+      <UniqueIdentifier>{a087f449-06e3-4e3b-a55b-d07b53a5ec51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\02.PipeLine">
+      <UniqueIdentifier>{25e059a7-5d1d-47da-ad0b-3865fadecf72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.RenderTargets">
+      <UniqueIdentifier>{d7596dbd-fa1c-414b-9f4e-f05a1a982434}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.Light">
+      <UniqueIdentifier>{0c8440f6-63b2-4dcb-9cb8-4c2356106fd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\05.Shadow">
+      <UniqueIdentifier>{6f4f880c-b0f2-4fab-ba8b-0939f6bc9321}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Management\10.Collider_Manager">
+      <UniqueIdentifier>{ab763fcc-ac5b-4a2e-a99e-e96924a06c84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Management\11.Obstacle_Manager">
+      <UniqueIdentifier>{b22c46db-a0c1-469b-911c-47719a76ff7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Management\01.Prototype_Manager">
+      <UniqueIdentifier>{053fca41-962f-483d-a3d0-6569cdf188ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Management\00.GameObject_Manager">
+      <UniqueIdentifier>{1cc7e2f7-559a-4b58-9e84-bbfafb84f81c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Management\02.Asset_Manager">
+      <UniqueIdentifier>{685d2cc6-b29a-4018-b72f-d66a2807463d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\00.Level">
+      <UniqueIdentifier>{beb918fe-e798-41b2-8076-6d0cbc525ada}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component">
+      <UniqueIdentifier>{015bd5de-833e-44d3-bc1e-e5142e845b26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\01.GameObject">
+      <UniqueIdentifier>{e30e4f0e-a7b7-4854-a5ea-c06b6268d364}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.System\00.Device\Graphic">
+      <UniqueIdentifier>{f7180997-ba88-4c22-8b3c-462662946df1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.System\00.Device\Input">
+      <UniqueIdentifier>{b04220bf-3cdf-4100-9297-2011d191bea4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.System\00.Device\Sound">
+      <UniqueIdentifier>{ec0de87d-3357-4e28-b089-23a8170c1706}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.System\00.Device\Input\00.Key_Manager">
+      <UniqueIdentifier>{7b663849-e677-4117-a4f3-49526a5c41b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.System\00.Device\Input\01.Mouse_Manager">
+      <UniqueIdentifier>{d9f02732-2a8d-4e47-a236-5d76d981a14d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.System\00.Device\Sound\00.Sound_Manager">
+      <UniqueIdentifier>{8c67e221-93f9-41f2-8b0f-8fa6a2b86e4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\00.Level\Manager">
+      <UniqueIdentifier>{b6b69002-3802-473d-85ec-6263e54cfe5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Management\00.GameObject_Manager\Layer">
+      <UniqueIdentifier>{84644f2b-5f42-44e4-a193-68914e22f66d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\00.Transform">
+      <UniqueIdentifier>{89f6e50e-7dd3-4abb-b77b-3ce6250bf1ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.System\01.Timer\Timer_Manager">
+      <UniqueIdentifier>{e401f91c-93ee-40c8-95bb-aa59d01204a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\01.Shader">
+      <UniqueIdentifier>{f668c4cc-5655-457d-8a48-c382315b7203}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03.RenderTargets\RenderTarget_Manager">
+      <UniqueIdentifier>{5d881e7d-b040-492b-9c64-2da299534bd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\02.VIBuffer">
+      <UniqueIdentifier>{269dc6d4-fcee-4f16-a091-4fc836c9fd8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\02.VIBuffer\Rect">
+      <UniqueIdentifier>{5fec6152-84b6-4811-a2ee-f5f1044cc1eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.Light\Manager">
+      <UniqueIdentifier>{2bb63dcf-1503-446f-820e-03bfc3e1e38e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Management\20.Camera_Manager">
+      <UniqueIdentifier>{b89f3382-3069-4263-8e56-6116866a2518}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\03.Texture">
+      <UniqueIdentifier>{56c197ea-fb6f-4138-91da-c5b0c7625d82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\04.Collider">
+      <UniqueIdentifier>{2e7d8e87-901c-4ed2-bb65-cd7d26b9dd3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\04.Collider\Bounding">
+      <UniqueIdentifier>{b5918cea-7af5-4e2f-909a-25613a5164ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\04.Collider\DebugDraw">
+      <UniqueIdentifier>{495acaa3-3602-450d-959c-98b8559418cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\04.Collider\Bounding\AABB">
+      <UniqueIdentifier>{0d2bb8fc-2175-4d75-b62c-6dd75540c586}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\04.Collider\Bounding\Sphere">
+      <UniqueIdentifier>{879c8fad-7f3c-4c8c-b45a-6fcdb9b28958}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\04.Collider\Bounding\OBB">
+      <UniqueIdentifier>{16ea747e-d066-4300-b85d-860d339c1f8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\05.Navigation">
+      <UniqueIdentifier>{d70a7d8e-2ba1-402f-930a-17a4bd73f49e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\06.Model">
+      <UniqueIdentifier>{bcf90b04-c793-4f99-b64d-3f0321d9a8ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\01.GameObject\01.PartObject">
+      <UniqueIdentifier>{b3742605-653a-4bdf-bad9-329d993e7f52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\01.GameObject\00.ContainerObject">
+      <UniqueIdentifier>{acf78d53-8123-45d9-91d4-c038c6cc4872}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\01.GameObject\10.Camera">
+      <UniqueIdentifier>{14cad0fb-f45b-444e-ad80-1f68eac8c462}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\06.Model\Animation">
+      <UniqueIdentifier>{001b5c01-59a6-45dc-a46f-175f701b5585}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\06.Model\Mesh">
+      <UniqueIdentifier>{2ade693f-2b8a-49b3-81e8-0bac262c8ffd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\06.Model\Bone">
+      <UniqueIdentifier>{c3ee329c-4547-4b48-b29b-e7844039cf55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\06.Model\Material">
+      <UniqueIdentifier>{cdcc83b7-695f-4bf1-ada9-ca7c46e74225}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\05.Navigation\Cell">
+      <UniqueIdentifier>{3f8a432d-0710-4bc6-8178-66eae9a6a5bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\02.VIBuffer\Cell">
+      <UniqueIdentifier>{1737bcf1-ee47-4421-934f-be11533d2ca2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\02.VIBuffer\Instance">
+      <UniqueIdentifier>{6130d263-dccd-4c7c-914f-1a4b223b911a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\02.VIBuffer\Terrain">
+      <UniqueIdentifier>{52994263-6339-4d57-97b3-7bb3c6dca479}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Private\Base.cpp">
+      <Filter>00.System\99.Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\pch.cpp">
+      <Filter>99.Define\00.DEFAULT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MyTools.cpp">
+      <Filter>99.Define\00.DEFAULT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SoundSrc.cpp">
+      <Filter>99.Define\70.NS_SOUND</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Graphic_Device.cpp">
+      <Filter>00.System\00.Device\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameInstance.cpp">
+      <Filter>01.Utility\00.GameInstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject.cpp">
+      <Filter>02.Element\01.GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Component.cpp">
+      <Filter>02.Element\02.Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level.cpp">
+      <Filter>02.Element\00.Level</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Manager.cpp">
+      <Filter>02.Element\00.Level\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameObject_Manager.cpp">
+      <Filter>03.Management\00.GameObject_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Layer.cpp">
+      <Filter>03.Management\00.GameObject_Manager\Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Prototype_Manager.cpp">
+      <Filter>03.Management\01.Prototype_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Transform.cpp">
+      <Filter>02.Element\02.Component\00.Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Timer.cpp">
+      <Filter>00.System\01.Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Timer_Manager.cpp">
+      <Filter>00.System\01.Timer\Timer_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PipeLine.cpp">
+      <Filter>01.Utility\02.PipeLine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Renderer.cpp">
+      <Filter>01.Utility\01.Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Shader.cpp">
+      <Filter>02.Element\02.Component\01.Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RenderTarget.cpp">
+      <Filter>01.Utility\03.RenderTargets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RenderTarget_Manager.cpp">
+      <Filter>01.Utility\03.RenderTargets\RenderTarget_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera_Manager.cpp">
+      <Filter>03.Management\20.Camera_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera.cpp">
+      <Filter>02.Element\01.GameObject\10.Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer.cpp">
+      <Filter>02.Element\02.Component\02.VIBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Rect.cpp">
+      <Filter>02.Element\02.Component\02.VIBuffer\Rect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Shadow.cpp">
+      <Filter>01.Utility\05.Shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Light.cpp">
+      <Filter>01.Utility\04.Light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Light_Manager.cpp">
+      <Filter>01.Utility\04.Light\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\imgui_demo.cpp">
+      <Filter>99.Define\99.THIRDPARTY\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\imgui_draw.cpp">
+      <Filter>99.Define\99.THIRDPARTY\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\imgui_impl_dx11.cpp">
+      <Filter>99.Define\99.THIRDPARTY\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\imgui_impl_win32.cpp">
+      <Filter>99.Define\99.THIRDPARTY\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\imgui_tables.cpp">
+      <Filter>99.Define\99.THIRDPARTY\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\imgui_widgets.cpp">
+      <Filter>99.Define\99.THIRDPARTY\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\imgui.cpp">
+      <Filter>99.Define\99.THIRDPARTY\IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Key_Manager.cpp">
+      <Filter>00.System\00.Device\Input\00.Key_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mouse_Manager.cpp">
+      <Filter>00.System\00.Device\Input\01.Mouse_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Texture.cpp">
+      <Filter>02.Element\02.Component\03.Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Collider.cpp">
+      <Filter>02.Element\02.Component\04.Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bounding.cpp">
+      <Filter>02.Element\02.Component\04.Collider\Bounding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bounding_AABB.cpp">
+      <Filter>02.Element\02.Component\04.Collider\Bounding\AABB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bounding_OBB.cpp">
+      <Filter>02.Element\02.Component\04.Collider\Bounding\OBB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bounding_Sphere.cpp">
+      <Filter>02.Element\02.Component\04.Collider\Bounding\Sphere</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\DebugDraw.cpp">
+      <Filter>02.Element\02.Component\04.Collider\DebugDraw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Model.cpp">
+      <Filter>02.Element\02.Component\06.Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ContainerObject.cpp">
+      <Filter>02.Element\01.GameObject\00.ContainerObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PartObject.cpp">
+      <Filter>02.Element\01.GameObject\01.PartObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Navigation.cpp">
+      <Filter>02.Element\02.Component\05.Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Cell.cpp">
+      <Filter>02.Element\02.Component\05.Navigation\Cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Cell.cpp">
+      <Filter>02.Element\02.Component\02.VIBuffer\Cell</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Public\Base.h">
+      <Filter>00.System\99.Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\pch.h">
+      <Filter>99.Define\00.DEFAULT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\aabb.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\ai_assert.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\anim.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\AssertHandler.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\Base64.hpp">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\BaseImporter.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\Bitmap.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\BlobIOSystem.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\ByteSwapper.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\camera.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\cexport.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\cfileio.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\cimport.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\ColladaMetaData.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\color4.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\commonMetaData.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\config.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\CreateAnimMesh.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\DefaultIOStream.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\DefaultIOSystem.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\DefaultLogger.hpp">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\defs.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\Exceptional.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\Exporter.hpp">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\fast_atof.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\GenericProperty.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\GltfMaterial.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\Hash.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\Importer.hpp">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\importerdesc.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\IOStream.hpp">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\IOStreamBuffer.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\IOSystem.hpp">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\light.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\LineSplitter.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\LogAux.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\Logger.hpp">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\LogStream.hpp">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\material.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\MathFunctions.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\matrix3x3.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\matrix4x4.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\MemoryIOWrapper.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\mesh.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\metadata.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\NullLogger.hpp">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\ObjMaterial.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\ParsingUtils.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\pbrmaterial.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\postprocess.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\Profiler.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\ProgressHandler.hpp">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\qnan.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\quaternion.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\RemoveComments.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\revision.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\scene.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\SceneCombiner.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\SGSpatialSort.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\SkeletonMeshBuilder.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\SmallVector.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\SmoothingGroups.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\SpatialSort.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\StandardShapes.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\StreamReader.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\StreamWriter.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\StringComparison.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\StringUtils.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\Subdivision.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\texture.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\TinyFormatter.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\types.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\vector2.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\vector3.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\version.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\Vertex.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\XmlParser.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\XMLTools.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\ZipArchiveIOSystem.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\Compiler\poppack1.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\Compiler\pstdint.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\Compiler\pushpack1.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\port\AndroidJNI\AndroidJNIIOSystem.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Assimp\port\AndroidJNI\BundledAssetIOSystem.h">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DirectXTK\Audio.h">
+      <Filter>99.Define\99.THIRDPARTY\DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DirectXTK\BufferHelpers.h">
+      <Filter>99.Define\99.THIRDPARTY\DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DirectXTK\CommonStates.h">
+      <Filter>99.Define\99.THIRDPARTY\DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DirectXTK\DDSTextureLoader.h">
+      <Filter>99.Define\99.THIRDPARTY\DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DirectXTK\DirectXHelpers.h">
+      <Filter>99.Define\99.THIRDPARTY\DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DirectXTK\Effects.h">
+      <Filter>99.Define\99.THIRDPARTY\DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DirectXTK\GamePad.h">
+      <Filter>99.Define\99.THIRDPARTY\DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DirectXTK\GeometricPrimitive.h">
+      <Filter>99.Define\99.THIRDPARTY\DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DirectXTK\GraphicsMemory.h">
+      <Filter>99.Define\99.THIRDPARTY\DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DirectXTK\Keyboard.h">
+      <Filter>99.Define\99.THIRDPARTY\DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DirectXTK\Model.h">
+      <Filter>99.Define\99.THIRDPARTY\DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DirectXTK\Mouse.h">
+      <Filter>99.Define\99.THIRDPARTY\DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DirectXTK\PostProcess.h">
+      <Filter>99.Define\99.THIRDPARTY\DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DirectXTK\PrimitiveBatch.h">
+      <Filter>99.Define\99.THIRDPARTY\DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DirectXTK\ScreenGrab.h">
+      <Filter>99.Define\99.THIRDPARTY\DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DirectXTK\SimpleMath.h">
+      <Filter>99.Define\99.THIRDPARTY\DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DirectXTK\SpriteBatch.h">
+      <Filter>99.Define\99.THIRDPARTY\DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DirectXTK\SpriteFont.h">
+      <Filter>99.Define\99.THIRDPARTY\DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DirectXTK\VertexTypes.h">
+      <Filter>99.Define\99.THIRDPARTY\DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DirectXTK\WICTextureLoader.h">
+      <Filter>99.Define\99.THIRDPARTY\DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DirectXTK\XboxDDSTextureLoader.h">
+      <Filter>99.Define\99.THIRDPARTY\DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\fMod\fmod.h">
+      <Filter>99.Define\99.THIRDPARTY\FMOD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\fMod\fmod.hpp">
+      <Filter>99.Define\99.THIRDPARTY\FMOD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\fMod\fmod_codec.h">
+      <Filter>99.Define\99.THIRDPARTY\FMOD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\fMod\fmod_common.h">
+      <Filter>99.Define\99.THIRDPARTY\FMOD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\fMod\fmod_dsp.h">
+      <Filter>99.Define\99.THIRDPARTY\FMOD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\fMod\fmod_dsp_effects.h">
+      <Filter>99.Define\99.THIRDPARTY\FMOD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\fMod\fmod_errors.h">
+      <Filter>99.Define\99.THIRDPARTY\FMOD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\fMod\fmod_output.h">
+      <Filter>99.Define\99.THIRDPARTY\FMOD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\FX11\d3dx11effect.h">
+      <Filter>99.Define\99.THIRDPARTY\FX11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\FX11\d3dxGlobal.h">
+      <Filter>99.Define\99.THIRDPARTY\FX11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IMGUI\imconfig.h">
+      <Filter>99.Define\99.THIRDPARTY\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IMGUI\imgui.h">
+      <Filter>99.Define\99.THIRDPARTY\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IMGUI\imgui_impl_dx11.h">
+      <Filter>99.Define\99.THIRDPARTY\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IMGUI\imgui_impl_win32.h">
+      <Filter>99.Define\99.THIRDPARTY\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IMGUI\imgui_internal.h">
+      <Filter>99.Define\99.THIRDPARTY\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IMGUI\imstb_rectpack.h">
+      <Filter>99.Define\99.THIRDPARTY\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IMGUI\imstb_textedit.h">
+      <Filter>99.Define\99.THIRDPARTY\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\IMGUI\imstb_truetype.h">
+      <Filter>99.Define\99.THIRDPARTY\IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Engine_Typedef.h">
+      <Filter>99.Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Engine_Define.h">
+      <Filter>99.Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Engine_Enum.h">
+      <Filter>99.Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Engine_Function.h">
+      <Filter>99.Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Engine_Macro.h">
+      <Filter>99.Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Engine_Struct.h">
+      <Filter>99.Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MyTools.h">
+      <Filter>99.Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SoundSrc.h">
+      <Filter>99.Define\70.NS_SOUND</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Graphic_Device.h">
+      <Filter>00.System\00.Device\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameInstance.h">
+      <Filter>01.Utility\00.GameInstance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject.h">
+      <Filter>02.Element\01.GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Component.h">
+      <Filter>02.Element\02.Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level.h">
+      <Filter>02.Element\00.Level</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Manager.h">
+      <Filter>02.Element\00.Level\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameObject_Manager.h">
+      <Filter>03.Management\00.GameObject_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Layer.h">
+      <Filter>03.Management\00.GameObject_Manager\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Prototype_Manager.h">
+      <Filter>03.Management\01.Prototype_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Transform.h">
+      <Filter>02.Element\02.Component\00.Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Timer.h">
+      <Filter>00.System\01.Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Timer_Manager.h">
+      <Filter>00.System\01.Timer\Timer_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PipeLine.h">
+      <Filter>01.Utility\02.PipeLine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Renderer.h">
+      <Filter>01.Utility\01.Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Shader.h">
+      <Filter>02.Element\02.Component\01.Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RenderTarget.h">
+      <Filter>01.Utility\03.RenderTargets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RenderTarget_Manager.h">
+      <Filter>01.Utility\03.RenderTargets\RenderTarget_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Camera_Manager.h">
+      <Filter>03.Management\20.Camera_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Camera.h">
+      <Filter>02.Element\01.GameObject\10.Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer.h">
+      <Filter>02.Element\02.Component\02.VIBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Rect.h">
+      <Filter>02.Element\02.Component\02.VIBuffer\Rect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Shadow.h">
+      <Filter>01.Utility\05.Shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Light.h">
+      <Filter>01.Utility\04.Light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Light_Manager.h">
+      <Filter>01.Utility\04.Light\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Key_Manager.h">
+      <Filter>00.System\00.Device\Input\00.Key_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mouse_Manager.h">
+      <Filter>00.System\00.Device\Input\01.Mouse_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Texture.h">
+      <Filter>02.Element\02.Component\03.Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Collider.h">
+      <Filter>02.Element\02.Component\04.Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bounding.h">
+      <Filter>02.Element\02.Component\04.Collider\Bounding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bounding_AABB.h">
+      <Filter>02.Element\02.Component\04.Collider\Bounding\AABB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bounding_OBB.h">
+      <Filter>02.Element\02.Component\04.Collider\Bounding\OBB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bounding_Sphere.h">
+      <Filter>02.Element\02.Component\04.Collider\Bounding\Sphere</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DebugDraw.h">
+      <Filter>02.Element\02.Component\04.Collider\DebugDraw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Model.h">
+      <Filter>02.Element\02.Component\06.Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ContainerObject.h">
+      <Filter>02.Element\01.GameObject\00.ContainerObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PartObject.h">
+      <Filter>02.Element\01.GameObject\01.PartObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Navigation.h">
+      <Filter>02.Element\02.Component\05.Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Cell.h">
+      <Filter>02.Element\02.Component\05.Navigation\Cell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Cell.h">
+      <Filter>02.Element\02.Component\02.VIBuffer\Cell</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Public\Assimp\color4.inl">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </None>
+    <None Include="..\Public\Assimp\config.h.in">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </None>
+    <None Include="..\Public\Assimp\material.inl">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </None>
+    <None Include="..\Public\Assimp\matrix3x3.inl">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </None>
+    <None Include="..\Public\Assimp\matrix4x4.inl">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </None>
+    <None Include="..\Public\Assimp\module.modulemap">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </None>
+    <None Include="..\Public\Assimp\quaternion.inl">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </None>
+    <None Include="..\Public\Assimp\revision.h.in">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </None>
+    <None Include="..\Public\Assimp\SmoothingGroups.inl">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </None>
+    <None Include="..\Public\Assimp\vector2.inl">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </None>
+    <None Include="..\Public\Assimp\vector3.inl">
+      <Filter>99.Define\99.THIRDPARTY\ASSIMP</Filter>
+    </None>
+    <None Include="..\Public\DirectXTK\SimpleMath.inl">
+      <Filter>99.Define\99.THIRDPARTY\DXTK</Filter>
+    </None>
+    <None Include="..\Public\fMod\fmod.cs">
+      <Filter>99.Define\99.THIRDPARTY\FMOD</Filter>
+    </None>
+    <None Include="..\Public\fMod\fmod_dsp.cs">
+      <Filter>99.Define\99.THIRDPARTY\FMOD</Filter>
+    </None>
+    <None Include="..\Public\fMod\fmod_errors.cs">
+      <Filter>99.Define\99.THIRDPARTY\FMOD</Filter>
+    </None>
+    <None Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Defines.hlsli">
+      <Filter>99.Define\01.SHADER</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Cell.hlsl">
+      <Filter>99.Define\01.SHADER</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Deferred.hlsl">
+      <Filter>99.Define\01.SHADER</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>
