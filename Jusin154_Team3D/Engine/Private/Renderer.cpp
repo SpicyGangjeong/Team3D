@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Renderer.h"
 #include "GameInstance.h"
 #include "GameObject.h"
@@ -12,7 +12,7 @@ CRenderer::CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	SAFE_ADDREF(m_pDevice);
 	SAFE_ADDREF(m_pContext);
-	SAFE_ADDREF(m_pGameInstance);
+	SAFE_ADDREF(m_pGameInstance); 
 }
 
 

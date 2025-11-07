@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Texture.h"
 #include "Shader.h"
 
@@ -11,7 +11,7 @@ CTexture::CTexture(const CTexture& rhs)
 	:CComponent(rhs)
 	, m_SRVs{ rhs.m_SRVs }
 {
-	for (auto& iter : m_SRVs) {
+	for (auto& iter : m_SRVs) { 
 		SAFE_ADDREF(iter);
 	}
 }
@@ -25,8 +25,8 @@ HRESULT CTexture::Bind_ShaderResource(CShader* pShader, const _char* pConstantNa
 HRESULT CTexture::Bind_ShaderResources(CShader* pShader, const _char* pConstantName, _uint iOffset, _uint iCount)
 {
 
-	_uint iCnt = (iCount == UINT_MAX) ? (_uint)m_pSRVs.size() : iCount;
-	return pShader->Bind_SRVs(pConstantName, m_pSRVs.data(), iCnt);
+	_uint iCnt = (iCount == UINT_MAX) ? (_uint)m_SRVs.size() : iCount;
+	return pShader->Bind_SRVs(pConstantName, m_SRVs.data(), iCnt);
 }
 
 ID3D11ShaderResourceView* CTexture::Get_SRV(_uint iTextureIndex)
