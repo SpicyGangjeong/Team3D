@@ -26,10 +26,10 @@ void CLevel_Logo::Update(_float fTimeDelta)
 	//	if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::MAP))))
 	//		return;
 	//}
-	//else if (GUI::Button("Object Editor", { 100, 100 })) {
-	//	if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::OBJECT))))
-	//		return;
-	//}
+	/*else */if (GUI::Button("Object Editor", { 100, 100 })) {
+		if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::OBJECT))))
+			return;
+	}
 	//else if (GUI::Button("Combined Editor", { 100, 100 })) {
 	//	if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::COMBINED))))
 	//		return;

@@ -25,8 +25,8 @@ HRESULT CTexture::Bind_ShaderResource(CShader* pShader, const _char* pConstantNa
 HRESULT CTexture::Bind_ShaderResources(CShader* pShader, const _char* pConstantName, _uint iOffset, _uint iCount)
 {
 
-	_uint iCnt = (iCount == UINT_MAX) ? (_uint)m_SRVs.size() : iCount;
-	return pShader->Bind_SRVs(pConstantName, m_SRVs.data(), 0, iCnt);
+	_uint iCnt = (iCount == UINT_MAX) ? (_uint)m_pSRVs.size() : iCount;
+	return pShader->Bind_SRVs(pConstantName, m_pSRVs.data(), iCnt);
 }
 
 ID3D11ShaderResourceView* CTexture::Get_SRV(_uint iTextureIndex)
@@ -92,9 +92,9 @@ HRESULT CTexture::Load_SRV(const _char* szPath, ID3D11ShaderResourceView** ppSRV
 
 	HRESULT			hr = {};
 
-	hr = CreateDDSTextureFromFile(m_pDevice, CMyTools::ToWstring(szTextureFilePath).c_str(), nullptr, ppSRV); // ÀÏ´Ü dds·Î ½ÃµµÇÏ°í
+	hr = CreateDDSTextureFromFile(m_pDevice, CMyTools::ToWstring(szTextureFilePath).c_str(), nullptr, ppSRV); // ì¼ë‹¨ ddsë¡œ ì‹œë„í•˜ê³ 
 	if (FAILED(hr)) {
-		memset(szTextureFilePath, 0, sizeof(_char) * MAX_PATH); // ½ÇÆĞÇÏ¸é ¿ø·¡ È®ÀåÀÚ·Î ´Ù½Ã ½Ãµµ
+		memset(szTextureFilePath, 0, sizeof(_char) * MAX_PATH); // ì‹¤íŒ¨í•˜ë©´ ì›ë˜ í™•ì¥ìë¡œ ë‹¤ì‹œ ì‹œë„
 		strcat_s(szTextureFilePath, szTextureFileName);
 		strcat_s(szTextureFilePath, szEXT);
 
@@ -148,7 +148,7 @@ HRESULT CTexture::ParseTexturePathToSRVs(const _tchar* pTextureFolderPath)
 		files.reserve(128);
 		do {
 			if (fileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-				continue; // ..Æú´õ ¹«½Ã
+				continue; // ..í´ë” ë¬´ì‹œ
 			}
 			_wstring wstrName = fileData.cFileName;
 			_wstring wstrFull = wstrFolder + L"\\" + wstrName;

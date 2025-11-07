@@ -7,36 +7,6 @@
     <Filter Include="00.System\99.Base">
       <UniqueIdentifier>{0c9df74d-79e3-4ca1-87cd-22b0789afc1c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="99.Define">
-      <UniqueIdentifier>{2cb454c9-e390-4f2e-8cf5-b5c6325543ed}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="99.Define\00.DEFAULT">
-      <UniqueIdentifier>{0e35cd1b-88f6-46b9-b72e-b46eeaacd4e0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="99.Define\99.THIRDPARTY">
-      <UniqueIdentifier>{32ca0c26-d3e2-49c5-8dc6-cc67e5291214}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="99.Define\99.THIRDPARTY\IMGUI">
-      <UniqueIdentifier>{17dcadfe-e4cd-46c6-8122-e5e02bb73e57}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="99.Define\99.THIRDPARTY\FX11">
-      <UniqueIdentifier>{c3e7b75b-ec8b-4071-8b52-e5c356febfa6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="99.Define\99.THIRDPARTY\FMOD">
-      <UniqueIdentifier>{57dd171f-f788-4918-aae2-85c20794b3cb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="99.Define\99.THIRDPARTY\DXTK">
-      <UniqueIdentifier>{40758cb1-0f91-4db9-bad7-7c77eb8002da}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="99.Define\99.THIRDPARTY\ASSIMP">
-      <UniqueIdentifier>{bbf3ec67-56f5-4e67-b6cf-8eb1eb4400ff}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="99.Define\01.SHADER">
-      <UniqueIdentifier>{30c382b4-2ac9-4355-b3a5-c1b3622c2982}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="99.Define\70.NS_SOUND">
-      <UniqueIdentifier>{1622af23-8aca-43cd-8250-b289e363e613}</UniqueIdentifier>
-    </Filter>
     <Filter Include="00.System\01.Timer">
       <UniqueIdentifier>{de88c47e-55e3-4c50-8b4c-7dd94c0c837f}</UniqueIdentifier>
     </Filter>
@@ -205,6 +175,45 @@
     <Filter Include="99.Define\TINYXML2">
       <UniqueIdentifier>{d93660eb-4bf9-43d2-902e-8ecbefd02481}</UniqueIdentifier>
     </Filter>
+    <Filter Include="99.Define">
+      <UniqueIdentifier>{2cb454c9-e390-4f2e-8cf5-b5c6325543ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Define\00.DEFAULT">
+      <UniqueIdentifier>{0e35cd1b-88f6-46b9-b72e-b46eeaacd4e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Define\99.THIRDPARTY">
+      <UniqueIdentifier>{32ca0c26-d3e2-49c5-8dc6-cc67e5291214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Define\99.THIRDPARTY\IMGUI">
+      <UniqueIdentifier>{17dcadfe-e4cd-46c6-8122-e5e02bb73e57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Define\99.THIRDPARTY\FX11">
+      <UniqueIdentifier>{c3e7b75b-ec8b-4071-8b52-e5c356febfa6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Define\99.THIRDPARTY\FMOD">
+      <UniqueIdentifier>{57dd171f-f788-4918-aae2-85c20794b3cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Define\99.THIRDPARTY\DXTK">
+      <UniqueIdentifier>{40758cb1-0f91-4db9-bad7-7c77eb8002da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Define\99.THIRDPARTY\ASSIMP">
+      <UniqueIdentifier>{bbf3ec67-56f5-4e67-b6cf-8eb1eb4400ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Define\01.SHADER">
+      <UniqueIdentifier>{30c382b4-2ac9-4355-b3a5-c1b3622c2982}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Define\70.NS_SOUND">
+      <UniqueIdentifier>{1622af23-8aca-43cd-8250-b289e363e613}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\06.Model\Animation\Channel">
+      <UniqueIdentifier>{3625aad6-89b2-490e-bd9c-3cff284605e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\06.Model\LerpAnim">
+      <UniqueIdentifier>{92ec7ae6-14ee-455c-a3ad-378e46f3b1f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\02.VIBuffer\Cube">
+      <UniqueIdentifier>{be0d499e-e4cf-4dde-92a0-a0904e713045}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -359,6 +368,27 @@
     </ClCompile>
     <ClCompile Include="..\Private\tinyxml2.cpp">
       <Filter>99.Define\TINYXML2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mesh.cpp">
+      <Filter>02.Element\02.Component\06.Model\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Material.cpp">
+      <Filter>02.Element\02.Component\06.Model\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bone.cpp">
+      <Filter>02.Element\02.Component\06.Model\Bone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Animation.cpp">
+      <Filter>02.Element\02.Component\06.Model\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Channel.cpp">
+      <Filter>02.Element\02.Component\06.Model\Animation\Channel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LerpAnim.cpp">
+      <Filter>02.Element\02.Component\06.Model\LerpAnim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Cube.cpp">
+      <Filter>02.Element\02.Component\02.VIBuffer\Cube</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -880,6 +910,27 @@
     </ClInclude>
     <ClInclude Include="..\Public\tinyxml2.h">
       <Filter>99.Define\TINYXML2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mesh.h">
+      <Filter>02.Element\02.Component\06.Model\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Material.h">
+      <Filter>02.Element\02.Component\06.Model\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bone.h">
+      <Filter>02.Element\02.Component\06.Model\Bone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Animation.h">
+      <Filter>02.Element\02.Component\06.Model\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Channel.h">
+      <Filter>02.Element\02.Component\06.Model\Animation\Channel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LerpAnim.h">
+      <Filter>02.Element\02.Component\06.Model\LerpAnim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Cube.h">
+      <Filter>02.Element\02.Component\02.VIBuffer\Cube</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

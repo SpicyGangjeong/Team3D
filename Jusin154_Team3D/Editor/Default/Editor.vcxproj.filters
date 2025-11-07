@@ -61,6 +61,9 @@
     <Filter Include="02.GameObjects\Dummys\DummyRect">
       <UniqueIdentifier>{130c848e-6ab6-4b45-b12c-56db07e2c2f4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Dummy_Goblin">
+      <UniqueIdentifier>{0ebb9c08-69b0-49b6-bac3-c827ca13319a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -102,6 +105,15 @@
     <ClInclude Include="..\Public\DummyRect.h">
       <Filter>02.GameObjects\Dummys\DummyRect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Dummy_Goblin.h">
+      <Filter>02.GameObjects\Dummy_Goblin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_ObjectViewer.h">
+      <Filter>01.Level\20.ObjectViewer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dummy_Cube.h">
+      <Filter>02.GameObjects\Dummys\DummyCube</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -135,6 +147,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\DummyRect.cpp">
       <Filter>02.GameObjects\Dummys\DummyRect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_Goblin.cpp">
+      <Filter>02.GameObjects\Dummy_Goblin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_ObjectViewer.cpp">
+      <Filter>01.Level\20.ObjectViewer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_Cube.cpp">
+      <Filter>02.GameObjects\Dummys\DummyCube</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

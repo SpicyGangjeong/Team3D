@@ -42,7 +42,7 @@ public:
 	const CGameObject* Get_Owner() const { return m_pOwner; }
 
 public:
-	HRESULT Add_Asset_Component(_uint iTargetLevel, const _wstring strPrototypeTag, CComponent** ppOut, void* pArg);
+	HRESULT Add_Asset_Component(_uint iTargetLevel, const _wstring strPrototypeTag, CComponent** ppOut, void* pArg = nullptr);
 	template<typename T>
 	HRESULT Add_Component(_uint iPrototypeLevelIndex, T** ppOut, void* pArg = nullptr) {
 		T* pComponent = m_pGameInstance->Clone_Prototype<T>(iPrototypeLevelIndex, pArg, this);

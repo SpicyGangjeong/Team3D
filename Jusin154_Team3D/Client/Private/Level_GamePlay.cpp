@@ -85,6 +85,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Sound()
 
 HRESULT CLevel_GamePlay::Ready_Markers()
 {
+
 	return S_OK;
 }
 

@@ -33,11 +33,11 @@ void CRenderer::Refresh_Renderer()
 		XMStoreFloat3(&m_CubeViewFrustum[i], XMVector3TransformCoord(XMVectorSet(m_CubeViewFrustum[i].x, m_CubeViewFrustum[i].y, m_CubeViewFrustum[i].z, 1.f), matProjInv));
 		XMStoreFloat3(&m_CubeViewFrustum[i], XMVector3TransformCoord(XMVectorSet(m_CubeViewFrustum[i].x, m_CubeViewFrustum[i].y, m_CubeViewFrustum[i].z, 1.f), matViewInv));
 	}
-	// 0(1, 3, 4), 6(2, 5, 7) ( π˝º±∫§≈Õ »ƒ∫∏ )
-	// 0, 6( «— ¡° »ƒ∫∏)
+	// 0(1, 3, 4), 6(2, 5, 7) ( Î≤ïÏÑ†Î≤°ÌÑ∞ ÌõÑÎ≥¥ )
+	// 0, 6( Ìïú Ï†ê ÌõÑÎ≥¥)
 	//_float3								m_CubeNDC[8] = {
-	//	±Ÿ	¡¬«œ	øÏ«œ	øÏªÛ	¡¬ªÛ
-	//	ø¯	¡¬«œ	øÏ«œ	øÏªÛ	¡¬ªÛ
+	//	Í∑º	Ï¢åÌïò	Ïö∞Ìïò	Ïö∞ÏÉÅ	Ï¢åÏÉÅ
+	//	Ïõê	Ï¢åÌïò	Ïö∞Ìïò	Ïö∞ÏÉÅ	Ï¢åÏÉÅ
 	//		0,		1,		2,		3
 	//		4,		5,		6,		7
 	//{ -1.f, -1.f, 0.f }, { 1.f, -1.f, 0.f }, { 1.f, 1.f, 0.f }, { -1.f, 1.f, 0.f },
@@ -58,22 +58,22 @@ HRESULT CRenderer::Add_RenderGroup(RENDER eRenderGroup, CGameObject* pRenderObje
 		return E_FAIL;
 
 	_bool	bPossible = { true };
-	if (pRenderObject->isDead()) {
-		return E_FAIL;
-	}
-	// «¡∑ØΩ∫≈“ƒ√∏µ øπø‹ √ﬂ∞°
-	if (RENDER::UI == eRenderGroup || RENDER::PRIORITY == eRenderGroup /* || RENDER::SHADOW == eRenderGroup*/ || RENDER::BLUR == eRenderGroup) {
-		m_RenderObjects[ENUM_CLASS(eRenderGroup)].push_back(pRenderObject);
-		SAFE_ADDREF(pRenderObject);
-		return S_OK;
-	}
-	for (int i = 0; i < 6; ++i) {
-		if (XMVectorGetX(XMVector4Dot(XMLoadFloat4(&m_vPlanes[i]),
-			XMLoadFloat4(&vPos))) + fCullRadius < 0) {
-			bPossible = false;
-			break;
-		}
-	}
+	//if (pRenderObject->isDead()) {
+	//	return E_FAIL;
+	//}
+	//// ÌîÑÎü¨Ïä§ÌÖÄÏª¨ÎßÅ ÏòàÏô∏ Ï∂îÍ∞Ä
+	//if (RENDER::UI == eRenderGroup || RENDER::PRIORITY == eRenderGroup /* || RENDER::SHADOW == eRenderGroup*/ || RENDER::BLUR == eRenderGroup) {
+	//	m_RenderObjects[ENUM_CLASS(eRenderGroup)].push_back(pRenderObject);
+	//	SAFE_ADDREF(pRenderObject);
+	//	return S_OK;
+	//}
+	//for (int i = 0; i < 6; ++i) {
+	//	if (XMVectorGetX(XMVector4Dot(XMLoadFloat4(&m_vPlanes[i]),
+	//		XMLoadFloat4(&vPos))) + fCullRadius < 0) {
+	//		bPossible = false;
+	//		break;
+	//	}
+	//}
 	if (bPossible) {
 		m_RenderObjects[ENUM_CLASS(eRenderGroup)].push_back(pRenderObject);
 		SAFE_ADDREF(pRenderObject);
@@ -112,7 +112,7 @@ void CRenderer::Render()
 	Render_NonLight();
 	Render_Blend();
 	Render_UI();
-//
+
 //#ifdef _DEBUG
 //	Render_Debug();
 //#endif
@@ -388,7 +388,7 @@ void CRenderer::Render_UI()
 		XMStoreFloat3(&vSrcPos, pSrc->Get_WorldPostion());
 
 		return vDstPos.z > vSrcPos.z;
-		}); // z º“∆√
+		}); // z ÏÜåÌåÖ
 
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::UI)])
 	{
@@ -463,7 +463,7 @@ void CRenderer::Render_Debug()
 		return;
 	}
 
-	/* ∑ª¥ı≈∏∞Ÿ¿ª µπˆ±◊∑Œ ¡˜±≥≈ıøµ¿ª ≈Î«ÿ ±◊∑¡∂Û. */
+	/* Î†åÎçîÌÉÄÍ≤üÏùÑ ÎîîÎ≤ÑÍ∑∏Î°ú ÏßÅÍµêÌà¨ÏòÅÏùÑ ÌÜµÌï¥ Í∑∏Î†§Îùº. */
 	if (FAILED(m_pGameInstance->Render_RenderTarget_Debug(TEXT("MRT_GameObjects"), m_pShader, m_pVIBuffer))) {
 		return;
 	}
