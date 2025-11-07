@@ -214,6 +214,12 @@
     <Filter Include="02.Element\02.Component\02.VIBuffer\Cube">
       <UniqueIdentifier>{be0d499e-e4cf-4dde-92a0-a0904e713045}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Element\02.Component\50.UI">
+      <UniqueIdentifier>{41e9427d-6e3b-4424-b2d0-0496a0a875af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\01.GameObject\50.UI">
+      <UniqueIdentifier>{32546fa5-8ee9-4c26-8d48-7ef2b2d023b0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -389,6 +395,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Cube.cpp">
       <Filter>02.Element\02.Component\02.VIBuffer\Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UIComponent.cpp">
+      <Filter>02.Element\02.Component\50.UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UIObject.cpp">
+      <Filter>02.Element\01.GameObject\50.UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -931,6 +943,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_Cube.h">
       <Filter>02.Element\02.Component\02.VIBuffer\Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UIComponent.h">
+      <Filter>02.Element\02.Component\50.UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UIObject.h">
+      <Filter>02.Element\01.GameObject\50.UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
