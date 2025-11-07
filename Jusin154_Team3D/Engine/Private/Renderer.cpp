@@ -58,22 +58,22 @@ HRESULT CRenderer::Add_RenderGroup(RENDER eRenderGroup, CGameObject* pRenderObje
 		return E_FAIL;
 
 	_bool	bPossible = { true };
-	if (pRenderObject->isDead()) {
-		return E_FAIL;
-	}
-	// 프러스텀컬링 예외 추가
-	if (RENDER::UI == eRenderGroup || RENDER::PRIORITY == eRenderGroup /* || RENDER::SHADOW == eRenderGroup*/ || RENDER::BLUR == eRenderGroup) {
-		m_RenderObjects[ENUM_CLASS(eRenderGroup)].push_back(pRenderObject);
-		SAFE_ADDREF(pRenderObject);
-		return S_OK;
-	}
-	for (int i = 0; i < 6; ++i) {
-		if (XMVectorGetX(XMVector4Dot(XMLoadFloat4(&m_vPlanes[i]),
-			XMLoadFloat4(&vPos))) + fCullRadius < 0) {
-			bPossible = false;
-			break;
-		}
-	}
+	//if (pRenderObject->isDead()) {
+	//	return E_FAIL;
+	//}
+	//// 프러스텀컬링 예외 추가
+	//if (RENDER::UI == eRenderGroup || RENDER::PRIORITY == eRenderGroup /* || RENDER::SHADOW == eRenderGroup*/ || RENDER::BLUR == eRenderGroup) {
+	//	m_RenderObjects[ENUM_CLASS(eRenderGroup)].push_back(pRenderObject);
+	//	SAFE_ADDREF(pRenderObject);
+	//	return S_OK;
+	//}
+	//for (int i = 0; i < 6; ++i) {
+	//	if (XMVectorGetX(XMVector4Dot(XMLoadFloat4(&m_vPlanes[i]),
+	//		XMLoadFloat4(&vPos))) + fCullRadius < 0) {
+	//		bPossible = false;
+	//		break;
+	//	}
+	//}
 	if (bPossible) {
 		m_RenderObjects[ENUM_CLASS(eRenderGroup)].push_back(pRenderObject);
 		SAFE_ADDREF(pRenderObject);
@@ -113,9 +113,9 @@ void CRenderer::Render()
 	Render_Blend();
 	Render_UI();
 
-#ifdef _DEBUG
-	Render_Debug();
-#endif
+//#ifdef _DEBUG
+//	Render_Debug();
+//#endif
 }
 
 void CRenderer::Render_Priority()
