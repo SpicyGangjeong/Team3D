@@ -334,8 +334,8 @@ technique11 MeshTechnique11
  
     pass SkyBoxPass // 2
     {
-        SetRasterizerState(RS_Nocull);
-        SetDepthStencilState(DSS_None, 0);
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;

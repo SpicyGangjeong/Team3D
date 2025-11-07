@@ -1,0 +1,54 @@
+#pragma once
+
+#include "VIBuffer.h"
+
+NS_BEGIN(Engine)
+
+class ENGINE_DLL CMesh final : public CVIBuffer
+{
+private:
+	CMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CMesh(const CMesh& rhs);
+	virtual ~CMesh() = default;
+
+public:
+	_uint Get_MaterialIndex() const {
+		return m_iMaterialIndex;
+	}
+
+	HRESULT Bind_BoneMatrices(const vector<class CBone*>& Bones, class CShader* pShader, const _char* pConstantName);
+	HRESULT Bind_BoneMatrices(_float4x4* pCombinedMatrices, class CShader* pShader, const _char* pConstantName);
+	HRESULT Render_Indexed(_uint IndexCount, _uint StartIndexLocation, _uint BaseVertexLocation);
+#ifdef EDITOR_PROJECT
+private:
+	virtual HRESULT Initialize_Prototype(MODEL eType, vector<class CBone*>& Bones, const aiMesh* pAIMesh, _fmatrix& PreTransformMatrix);
+	HRESULT Ready_VertexBuffer_For_NonAnim(const aiMesh* pAIMesh, _fmatrix PreTransformMatrix);
+	HRESULT Ready_VertexBuffer_For_Anim(vector<class CBone*>& Bones, const aiMesh* pAIMesh);
+public:
+	static CMesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, vector<class CBone*>& Bones, const aiMesh* pAIMesh, _fmatrix& PreTransformMatrix);
+	HRESULT SaveAsBinary(HANDLE hFile, DWORD& dwByte);
+#endif // EDITOR_PROJECT
+
+private:
+	virtual HRESULT Initialize_Prototype(HANDLE hFile, DWORD& dwByte);
+	virtual HRESULT Initialize(void* pArg) override;
+	HRESULT Ready_VertexBuffer_For_NonAnim(HANDLE hFile, DWORD& dwByte);
+	HRESULT Ready_VertexBuffer_For_Anim(HANDLE hFile, DWORD& dwByte);
+
+private:
+	_char	m_szName[MAX_PATH] = {};
+	_uint	m_iMaterialIndex = {};
+	_uint	m_iNumBones = { };
+
+	vector<_int>		m_BoneIndices;
+	_float4x4* m_pBoneMatrices = { nullptr };
+	vector<_float4x4>	m_offsetMatrices;
+
+public:
+	static CMesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, HANDLE hFile, DWORD& dwByte);
+	virtual CMesh* Clone(void* pArg, class CGameObject* pOwner = nullptr) override;
+	virtual void Free() override;
+	void Describe_Entity() override;
+};
+
+NS_END
