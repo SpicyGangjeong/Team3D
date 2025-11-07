@@ -12,6 +12,15 @@ typedef struct tagEngineDesc
 	_uint				iWinSizeX, iWinSizeY;
 }ENGINE_DESC;
 
+typedef struct tagKeyFrame
+{
+	XMFLOAT3		vScale;
+	XMFLOAT4		vRotation;
+	XMFLOAT3		vTranslation;
+	float			fTrackPosition;
+
+}KEYFRAME;
+
 typedef struct tagLightDesc
 {
 	LIGHT		eType;
