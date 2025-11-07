@@ -61,12 +61,12 @@ public:
 		return dynamic_cast<T*>(pObject->Clone(_pArg, pOwner));
 	}
 private:
-	CGameInstance*						m_pGameInstance = { nullptr };
-	ID3D11Device*						m_pDevice = { nullptr };
-	ID3D11DeviceContext*				m_pContext = { nullptr };
-	vector<class CBase*>*				m_pPrototypes = { nullptr };
-	map<_wstring, CComponent*>*			m_pAssets = { nullptr };
-	
+	CGameInstance* m_pGameInstance = { nullptr };
+	ID3D11Device* m_pDevice = { nullptr };
+	ID3D11DeviceContext* m_pContext = { nullptr };
+	vector<class CBase*>* m_pPrototypes = { nullptr };
+	map<_wstring, CComponent*>* m_pAssets = { nullptr };
+
 	_uint								m_iLevelNumber = { };
 
 private:
@@ -79,9 +79,11 @@ private:
 	{
 		T* pObject = { nullptr };
 
-		for (auto& iter : m_pPrototypes[_iLevelNumber]) {
-			if (typeid(iter) == typeid(T)) {
-				return dynamic_cast<T*>(iter);
+		for (auto& pBase : m_pPrototypes[_iLevelNumber]) {
+			_int iIterId = (_int)typeid(*pBase).hash_code();
+			_int iTemplateID = (_int)typeid(T).hash_code();
+			if (typeid(*pBase).hash_code() == typeid(T).hash_code()) {
+				return dynamic_cast<T*>(pBase);
 			}
 		}
 		return pObject;
