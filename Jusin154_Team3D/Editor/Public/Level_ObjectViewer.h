@@ -19,6 +19,7 @@ private:
 	/* 이 레벨에서 쓰기위한 객체들을 생성한다. */
 	virtual HRESULT Initialize() override;
 	HRESULT Ready_Layer_Camera(const _wstring& strLayerTag);
+	HRESULT Ready_Layer_Light();
 	HRESULT Ready_Layer_UI(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_Dummy(const _wstring& strLayerTag);
 

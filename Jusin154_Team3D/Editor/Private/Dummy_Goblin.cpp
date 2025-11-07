@@ -38,8 +38,6 @@ void CDummy_Goblin::Priority_Update(_float fTimeDelta)
 
 void CDummy_Goblin::Update(_float fTimeDelta)
 {
-	m_pModelCom->Set_AnimationIndex(0);
-
 	m_pModelCom->Play_Animation(fTimeDelta);
 }
 
@@ -52,24 +50,33 @@ void CDummy_Goblin::Late_Update(_float fTimeDelta)
 
 HRESULT CDummy_Goblin::Render()
 {
-	if (FAILED(Bind_ShaderResources()))
+	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
+	}
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
+	//m_pShaderCom->Bind_SRV("g_NormalTexture", nullptr);
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
-		//if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices")))
-		//	return E_FAIL;
-
-		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom, "g_DiffuseTexture", aiTextureType_DIFFUSE, 0)))
+		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
 			return E_FAIL;
+		}
 
-		if (FAILED(m_pShaderCom->Begin(0)))
+		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom, "g_DiffuseTexture", aiTextureType_DIFFUSE, 0))) {
 			return E_FAIL;
+		}
+		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom, "g_NormalTexture", aiTextureType_NORMALS, 0))) {
+			return E_FAIL;
+		}
 
-		if (FAILED(m_pModelCom->Render(i)))
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
 			return E_FAIL;
+		}
+
+		if (FAILED(m_pModelCom->Render(i))) {
+			return E_FAIL;
+		}
 	}
 
 	return S_OK;
@@ -80,43 +87,50 @@ HRESULT CDummy_Goblin::Ready_Components()
 	__super::Ready_Components(nullptr);
 
 	/* Com_Model */
-	if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(LEVEL::OBJECT), TEXT("Prototype_Component_GoblinBody_Model"),
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_GoblinBody_Model"),
 		reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
 	/* Com_Shader */
-	if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(LEVEL::STATIC), FX_MESH,
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_ANIMMESH,
 		reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
-	CDebugCamera::CAMERA_DEBUG_DESC			CameraDesc{};
-	CameraDesc.fFovy = XMConvertToRadians(60.0f);
-	CameraDesc.fNear = 0.1f;
-	CameraDesc.fFar = 500.f;
-	CameraDesc.vEye = _float3(0.f, 10.f, -10.f);
-	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
-	CameraDesc.fSpeedPerSec = 5.f;
-	CameraDesc.fRotationPerSec = XMConvertToRadians(90.0f);
-	CameraDesc.fMouseSensor = 0.1f;
-	CameraDesc.pFollowTarget = this;
-	CameraDesc.pLookTarget  = this;
-
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDebugCamera>(ENUM_CLASS(LEVEL::STATIC), ENUM_CLASS(LEVEL::OBJECT),
-		TEXT("Layer_Camera"), &CameraDesc)))
-		return E_FAIL;
+	m_pModelCom->Change_AnimationIndex(0, true, 0.4f, true);
 
 	return S_OK;
 }
 
 HRESULT CDummy_Goblin::Bind_ShaderResources()
 {
-	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
+	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))){
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW))))
+	}
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))){
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ))))
+	}
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ)))){
 		return E_FAIL;
+	}
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
+		return E_FAIL;
+	}
+	//if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float4)))) {
+	//	return E_FAIL;
+	//}
+	//if (FAILED(m_pShaderCom->Bind_RawValue("g_bRimLight", &m_bRimLight, sizeof(_bool)))) {
+	//	return E_FAIL;
+	//}
+	//if (FAILED(m_pShaderCom->Bind_RawValue("g_fRimStrength", &m_fRimLightStrength, sizeof(_float)))) {
+	//	return E_FAIL;
+	//}
+	//if (FAILED(m_pShaderCom->Bind_RawValue("g_fRimPower", &m_fRimLightPower, sizeof(_float)))) {
+	//	return E_FAIL;
+	//}
+	//if (FAILED(m_pShaderCom->Bind_RawValue("g_vRimColor", &m_vRimLightColor, sizeof(_float3)))) {
+	//	return E_FAIL;
+	//}
 	return S_OK;
 }
 

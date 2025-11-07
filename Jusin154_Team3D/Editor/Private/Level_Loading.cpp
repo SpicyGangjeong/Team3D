@@ -30,7 +30,7 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevelID)
 void CLevel_Loading::Update(_float fTimeDelta)
 {
 	if (true == m_pLoader->isFinished() &&
-		m_pGameInstance->Key_Down(DIK_RETURN))
+		m_pGameInstance->Key_Down(DIK_F1))
 	{
 		CLevel* pNewLevel = { nullptr };
 

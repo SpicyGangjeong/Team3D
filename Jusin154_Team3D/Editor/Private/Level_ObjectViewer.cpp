@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "Level_Loading.h"
 #include "Dummy_Goblin.h"
+#include "Dummy_Cube.h"
 #include "DebugCamera.h"
 
 CLevel_ObjectViewer::CLevel_ObjectViewer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
@@ -13,7 +14,9 @@ CLevel_ObjectViewer::CLevel_ObjectViewer(ID3D11Device* pDevice, ID3D11DeviceCont
 
 HRESULT CLevel_ObjectViewer::Initialize()
 {
-
+	if (FAILED(Ready_Layer_Light())) {
+		return E_FAIL;
+	}
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 	{
 		return E_FAIL;
@@ -45,20 +48,36 @@ HRESULT CLevel_ObjectViewer::Render()
 
 HRESULT CLevel_ObjectViewer::Ready_Layer_Camera(const _wstring& strLayerTag)
 {
-	//CDebugCamera::CAMERA_DEBUG_DESC			CameraDesc{};
-	//CameraDesc.fFovy = XMConvertToRadians(60.0f);
-	//CameraDesc.fNear = 0.1f;
-	//CameraDesc.fFar = 500.f;
-	//CameraDesc.vEye = _float3(0.f, 10.f, -10.f);
-	//CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
-	//CameraDesc.fSpeedPerSec = 5.f;
-	//CameraDesc.fRotationPerSec = XMConvertToRadians(90.0f);
-	//CameraDesc.fMouseSensor = 0.1f;
+	CDebugCamera::CAMERA_DEBUG_DESC			CameraDesc{};
+	CameraDesc.fFovy = XMConvertToRadians(60.0f);
+	CameraDesc.fNear = 0.1f;
+	CameraDesc.fFar = 500.f;
+	CameraDesc.vEye = _float3(0.f, 10.f, -10.f);
+	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
+	CameraDesc.fSpeedPerSec = 5.f;
+	CameraDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+	CameraDesc.fMouseSensor = 0.1f;
 
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDebugCamera>(ENUM_CLASS(LEVEL::STATIC),ENUM_CLASS(LEVEL::OBJECT), 
-	//	strLayerTag, &CameraDesc)))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDebugCamera>(g_iStaticLevel, NEXT_LEVEL, 
+		strLayerTag, &CameraDesc)))
+		return E_FAIL;
 
+	return S_OK;
+}
+
+HRESULT CLevel_ObjectViewer::Ready_Layer_Light()
+{
+	LIGHT_DESC			LightDesc{};
+
+	LightDesc.eType = LIGHT::DIRECTIONAL;
+	LightDesc.vDiffuse = _float4(0.8f, 0.8f, 0.8f, 0.f);
+	LightDesc.vAmbient = _float4(0.2f, 0.2f, 0.2f, 0.f);
+	LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 0.f);
+	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
+
+	if (FAILED(m_pGameInstance->On_Light(NEXT_LEVEL, TEXT("Main_Light"), LightDesc, nullptr))) {
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
@@ -69,7 +88,10 @@ HRESULT CLevel_ObjectViewer::Ready_Layer_UI(const _wstring& strLayerTag)
 
 HRESULT CLevel_ObjectViewer::Ready_Layer_Dummy(const _wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_Goblin>(ENUM_CLASS(LEVEL::OBJECT), ENUM_CLASS(LEVEL::OBJECT), TEXT("Layer_Dummy"))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_Goblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER)))
+		return E_FAIL;
+	
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_Cube>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE)))
 		return E_FAIL;
 
 	return S_OK;

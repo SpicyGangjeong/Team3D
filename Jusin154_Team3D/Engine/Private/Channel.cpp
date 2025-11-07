@@ -1,4 +1,5 @@
 #include "pch.h"
+
 #include "Channel.h"
 #include "Model.h"
 #include "Bone.h"
@@ -6,22 +7,22 @@
 CChannel::CChannel()
 {
 }
-
-HRESULT CChannel::Initialize(const CModel* pModel, const aiNodeAnim* pAIChannel)
+#ifdef EDITOR_PROJECT
+HRESULT CChannel::Initialize(const vector<CBone*>& Bones, const aiNodeAnim* pAIChannel)
 {
 	strcpy_s(m_szName, pAIChannel->mNodeName.data);
 
-	m_iBoneIndex = pModel->Get_BoneIndex(m_szName);
-	if (-1 == m_iBoneIndex)
+	m_iBoneIndex = CModel::Get_BoneIndex(m_szName, Bones);
+	if (-1 == m_iBoneIndex) {
 		return E_FAIL;
+	}
 
 	m_iNumKeyFrames = max(pAIChannel->mNumScalingKeys, pAIChannel->mNumRotationKeys);
-	m_iNumKeyFrames = max(m_iNumKeyFrames, pAIChannel->mNumPositionKeys);
+	m_iNumKeyFrames = max(m_iNumKeyFrames, (_uint)pAIChannel->mNumPositionKeys);
 
-	_float3				vScale{};
+	_float3				vScale = { };
 	_float4				vRotation{};
 	_float3				vTranslation{};
-
 	for (size_t i = 0; i < m_iNumKeyFrames; i++)
 	{
 		KEYFRAME		KeyFrame{};
@@ -55,21 +56,60 @@ HRESULT CChannel::Initialize(const CModel* pModel, const aiNodeAnim* pAIChannel)
 		m_KeyFrames.push_back(KeyFrame);
 	}
 
+	return S_OK;
+}
 
+HRESULT CChannel::SaveAsBinary(HANDLE hFile, DWORD& dwByte)
+{
+	string strName = m_szName;
+	strName.shrink_to_fit();
+	DWORD iLength = (DWORD)strName.length();
+	WriteFile(hFile, &iLength, sizeof(_uint), &dwByte, nullptr);
+	WriteFile(hFile, strName.data(), iLength, &dwByte, nullptr);
+	WriteFile(hFile, &m_iBoneIndex, sizeof(_int), &dwByte, nullptr);
+	WriteFile(hFile, &m_iNumKeyFrames, sizeof(_uint), &dwByte, nullptr);
+	for (auto& keyFrame : m_KeyFrames) {
+		WriteFile(hFile, &keyFrame, sizeof(KEYFRAME), &dwByte, nullptr);
+	}
+	return S_OK;
+}
+
+CChannel* CChannel::Create(const vector<CBone*>& Bones, const aiNodeAnim* pAIChannel)
+{
+	CChannel* pInstance = new CChannel();
+
+	if (FAILED(pInstance->Initialize(Bones, pAIChannel))) {
+		MSG_BOX("Failed to Created : CChannel");
+		SAFE_RELEASE(pInstance);
+	}
+	return pInstance;
+}
+
+#endif
+
+HRESULT CChannel::Initialize(const vector<CBone*>& Bones, _uint iIndex)
+{
+	m_iBoneIndex = iIndex;
+	memcpy_s(m_szName, sizeof(_char) * MAX_PATH, Bones[iIndex]->Get_Name(), sizeof(_char) * MAX_PATH);
+
+	m_iNumKeyFrames = 2;
+	m_KeyFrames.resize(m_iNumKeyFrames);
 
 	return S_OK;
 }
 
-void CChannel::Update_TransformationMatrix(_float fCurrentTrackPosition, vector<CBone*>& Bones, _uint* pCurrentKeyFrameIndex)
+
+void CChannel::Update_TransformationMatirx(const vector<CBone*>& Bones, _float fCurrentTrackPosition, _uint* pCurrentKeyFrameIndex)
+
 {
-	if (0.f == fCurrentTrackPosition)
+	if (0.f == fCurrentTrackPosition) {
 		*pCurrentKeyFrameIndex = 0;
+	}
+	KEYFRAME LastKeyFrame = m_KeyFrames.back();
 
-	KEYFRAME		LastKeyFrame = m_KeyFrames.back();
-
-	_vector			vScale{};
-	_vector			vRotation{};
-	_vector			vTranslation{};
+	_vector vScale = {};
+	_vector vRotation = {};
+	_vector vTranslation = {};
 
 	if (fCurrentTrackPosition >= LastKeyFrame.fTrackPosition)
 	{
@@ -77,49 +117,93 @@ void CChannel::Update_TransformationMatrix(_float fCurrentTrackPosition, vector<
 		vRotation = XMLoadFloat4(&LastKeyFrame.vRotation);
 		vTranslation = XMVectorSetW(XMLoadFloat3(&LastKeyFrame.vTranslation), 1.f);
 	}
-
-	else
-	{
-		while (fCurrentTrackPosition >= m_KeyFrames[*pCurrentKeyFrameIndex + 1].fTrackPosition)
+	else {
+		while (fCurrentTrackPosition >= m_KeyFrames[*pCurrentKeyFrameIndex + 1].fTrackPosition) {
 			++*pCurrentKeyFrameIndex;
+		}
 
-		_float3		vSourScale{}, vDestScale{};
-		_float4		vSourRotation{}, vDestRotation{};
-		_float3		vSourTranslation{}, vDestTranslation{};
+		_float3 vSrcScale = {}, vDstScale = {};
+		_float4 vSrcRotation = {}, vDstRotation = {};
+		_float3 vSrcTranslation = {}, vDstTranslation = {};
 
-		vSourScale = m_KeyFrames[*pCurrentKeyFrameIndex].vScale;
-		vDestScale = m_KeyFrames[*pCurrentKeyFrameIndex + 1].vScale;
+		vSrcScale = m_KeyFrames[*pCurrentKeyFrameIndex].vScale;
+		vDstScale = m_KeyFrames[*pCurrentKeyFrameIndex + 1].vScale;
 
-		vSourRotation = m_KeyFrames[*pCurrentKeyFrameIndex].vRotation;
-		vDestRotation = m_KeyFrames[*pCurrentKeyFrameIndex + 1].vRotation;
+		vSrcRotation = m_KeyFrames[*pCurrentKeyFrameIndex].vRotation;
+		vDstRotation = m_KeyFrames[*pCurrentKeyFrameIndex + 1].vRotation;
 
-		vSourTranslation = m_KeyFrames[*pCurrentKeyFrameIndex].vTranslation;
-		vDestTranslation = m_KeyFrames[*pCurrentKeyFrameIndex + 1].vTranslation;
+		vSrcTranslation = m_KeyFrames[*pCurrentKeyFrameIndex].vTranslation;
+		vDstTranslation = m_KeyFrames[*pCurrentKeyFrameIndex + 1].vTranslation;
 
 		_float fRatio = (fCurrentTrackPosition - m_KeyFrames[*pCurrentKeyFrameIndex].fTrackPosition) /
 			(m_KeyFrames[*pCurrentKeyFrameIndex + 1].fTrackPosition - m_KeyFrames[*pCurrentKeyFrameIndex].fTrackPosition);
 
-		vScale = XMVectorLerp(XMLoadFloat3(&vSourScale), XMLoadFloat3(&vDestScale), fRatio);
-		vRotation = XMQuaternionSlerp(XMLoadFloat4(&vSourRotation), XMLoadFloat4(&vDestRotation), fRatio);
-		vTranslation = XMVectorSetW(XMVectorLerp(XMLoadFloat3(&vSourTranslation), XMLoadFloat3(&vDestTranslation), fRatio), 1.f);
-
+		vScale = XMVectorLerp(XMLoadFloat3(&vSrcScale), XMLoadFloat3(&vDstScale), fRatio);
+		vRotation = XMQuaternionSlerp(XMLoadFloat4(&vSrcRotation), XMLoadFloat4(&vDstRotation), fRatio);
+		vTranslation = XMVectorSetW(XMVectorLerp(XMLoadFloat3(&vSrcTranslation), XMLoadFloat3(&vDstTranslation), fRatio), 1.f);
 	}
+	_matrix BoneTransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vTranslation);
 
-	m_BoneTransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vTranslation);
-
-	Bones[m_iBoneIndex]->Set_Transformation(m_BoneTransformationMatrix);
-
-
+	Bones[m_iBoneIndex]->Set_TransformationMatrix(BoneTransformationMatrix);
 }
 
-CChannel* CChannel::Create(const CModel* pModel, const aiNodeAnim* pAIChannel)
+
+KEYFRAME* CChannel::Get_Frame(_uint iIndex)
+{
+	return &m_KeyFrames[iIndex];
+}
+
+void CChannel::Set_Frame(_uint iIndex, KEYFRAME& kf)
+{
+	m_KeyFrames[iIndex] = kf;
+}
+
+
+HRESULT CChannel::Initialize(HANDLE hFile, DWORD& dwByte)
+{
+	_uint iLength = { 0 };
+	if (!ReadFile(hFile, &iLength, sizeof(_uint), &dwByte, nullptr)) {
+		return E_FAIL;
+	}
+	if (!ReadFile(hFile, m_szName, iLength, &dwByte, nullptr)) {
+		return E_FAIL;
+	}
+	if (!ReadFile(hFile, &m_iBoneIndex, sizeof(_int), &dwByte, nullptr)) {
+		return E_FAIL;
+	}
+	if (!ReadFile(hFile, &m_iNumKeyFrames, sizeof(_uint), &dwByte, nullptr)) {
+		return E_FAIL;
+	}
+	m_KeyFrames.resize(m_iNumKeyFrames);
+	for (_uint i = 0; i < m_iNumKeyFrames; ++i) {
+		if (!ReadFile(hFile, &m_KeyFrames[i], sizeof(KEYFRAME), &dwByte, nullptr)) {
+			return E_FAIL;
+		}
+	}
+	return S_OK;
+}
+
+CChannel* CChannel::Create(const vector<CBone*>& Bones, _uint iIndex)
 {
 	CChannel* pInstance = new CChannel();
 
-	if (FAILED(pInstance->Initialize(pModel, pAIChannel)))
+	if (FAILED(pInstance->Initialize(Bones, iIndex)))
 	{
 		MSG_BOX("Failed to Created : CChannel");
-		Safe_Release(pInstance);
+		SAFE_RELEASE(pInstance);
+	}
+
+	return pInstance;
+}
+
+CChannel* CChannel::Create(HANDLE hFile, DWORD& dwByte)
+{
+	CChannel* pInstance = new CChannel();
+
+	if (FAILED(pInstance->Initialize(hFile, dwByte)))
+	{
+		MSG_BOX("Failed to Created : CChannel");
+		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
@@ -130,5 +214,4 @@ void CChannel::Free()
 	__super::Free();
 
 	m_KeyFrames.clear();
-
 }

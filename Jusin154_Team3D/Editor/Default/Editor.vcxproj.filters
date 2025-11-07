@@ -105,6 +105,9 @@
     <ClInclude Include="..\Public\Level_ObjectViewer.h">
       <Filter>01.Level\20.ObjectViewer</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Dummy_Cube.h">
+      <Filter>02.GameObjects\Dummys\DummyCube</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -141,6 +144,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Level_ObjectViewer.cpp">
       <Filter>01.Level\20.ObjectViewer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_Cube.cpp">
+      <Filter>02.GameObjects\Dummys\DummyCube</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -26,7 +26,7 @@ HRESULT CTexture::Bind_ShaderResources(CShader* pShader, const _char* pConstantN
 {
 
 	_uint iCnt = (iCount == UINT_MAX) ? (_uint)m_pSRVs.size() : iCount;
-	return pShader->Bind_SRVs(pConstantName, m_pSRVs.data(), 0, iCnt);
+	return pShader->Bind_SRVs(pConstantName, m_pSRVs.data(), iCnt);
 }
 
 ID3D11ShaderResourceView* CTexture::Get_SRV(_uint iTextureIndex)

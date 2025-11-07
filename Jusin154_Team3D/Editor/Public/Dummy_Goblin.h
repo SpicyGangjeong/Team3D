@@ -28,7 +28,10 @@ public:
 private:
 	CShader*	m_pShaderCom = { nullptr };
 	CModel*		m_pModelCom = { nullptr };
-
+	_bool		m_bRimLight = { true };
+	_float		m_fRimLightPower = { 3.2f };
+	_float		m_fRimLightStrength = { 3.04f };
+	_float3		m_vRimLightColor = { 69.f / 255.f, 5.f / 255.f, 10.f / 255.f };
 
 private:
 	HRESULT Ready_Components();
