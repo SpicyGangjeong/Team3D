@@ -86,6 +86,13 @@ HRESULT CPrototype_Manager::Initialize(_uint iNumLevels)
 
 HRESULT CPrototype_Manager::Ready_StaticComponents()
 {
+	if (FAILED(Add_Prototype(g_iStaticLevel, CTransform::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(Add_Prototype(g_iStaticLevel, CVIBuffer_Rect::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 
