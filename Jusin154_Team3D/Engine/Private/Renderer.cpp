@@ -112,10 +112,10 @@ void CRenderer::Render()
 	Render_NonLight();
 	Render_Blend();
 	Render_UI();
-
-#ifdef _DEBUG
-	Render_Debug();
-#endif
+//
+//#ifdef _DEBUG
+//	Render_Debug();
+//#endif
 }
 
 void CRenderer::Render_Priority()

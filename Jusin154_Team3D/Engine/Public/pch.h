@@ -22,6 +22,9 @@
 // FX11
 #include "FX11/d3dx11effect.h"
 
+// TinyXML2
+#include "tinyxml2.h"
+
 #ifdef EDITOR_PROJECT
 // assimp
 #include "assimp/scene.h"

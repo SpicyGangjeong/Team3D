@@ -9,9 +9,9 @@ CTexture::CTexture(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 CTexture::CTexture(const CTexture& rhs)
 	:CComponent(rhs)
-	, m_pSRVs{ rhs.m_pSRVs }
+	, m_SRVs{ rhs.m_SRVs }
 {
-	for (auto& iter : m_pSRVs) {
+	for (auto& iter : m_SRVs) {
 		SAFE_ADDREF(iter);
 	}
 }
@@ -19,24 +19,24 @@ CTexture::CTexture(const CTexture& rhs)
 
 HRESULT CTexture::Bind_ShaderResource(CShader* pShader, const _char* pConstantName, _uint iTextureIndex)
 {
-	return pShader->Bind_SRV(pConstantName, m_pSRVs[iTextureIndex]);
+	return pShader->Bind_SRV(pConstantName, m_SRVs[iTextureIndex]);
 }
 
 HRESULT CTexture::Bind_ShaderResources(CShader* pShader, const _char* pConstantName, _uint iOffset, _uint iCount)
 {
 
-	_uint iCnt = (iCount == UINT_MAX) ? (_uint)m_pSRVs.size() : iCount;
-	return pShader->Bind_SRVs(pConstantName, m_pSRVs.data(), 0, iCnt);
+	_uint iCnt = (iCount == UINT_MAX) ? (_uint)m_SRVs.size() : iCount;
+	return pShader->Bind_SRVs(pConstantName, m_SRVs.data(), 0, iCnt);
 }
 
 ID3D11ShaderResourceView* CTexture::Get_SRV(_uint iTextureIndex)
 {
-	return m_pSRVs[iTextureIndex];
+	return m_SRVs[iTextureIndex];
 }
 
 _uint CTexture::Get_Size()
 {
-	return (_uint)m_pSRVs.size();
+	return (_uint)m_SRVs.size();
 }
 
 HRESULT CTexture::Initialize_Prototype(TEXTURE_LOAD_TYPE eType, const _tchar* pTextureFilePath, const _wstring& wstrTextureKey, _uint iNumTextures)
@@ -49,7 +49,7 @@ HRESULT CTexture::Initialize_Prototype(TEXTURE_LOAD_TYPE eType, const _tchar* pT
 		if (FAILED(Load_SRV(CMyTools::ToString(pTextureFilePath).c_str(), &pSRV))) {
 			return E_FAIL;
 		}
-		m_pSRVs.push_back(pSRV);
+		m_SRVs.push_back(pSRV);
 	} break;
 	case Engine::TEXTURE_LOAD_TYPE::INCREMENTAL:
 		if (FAILED(ParseTextureIncrementalToSRVs(iNumTextures, pTextureFilePath))) {
@@ -111,7 +111,7 @@ HRESULT CTexture::Load_SRV(const _char* szPath, ID3D11ShaderResourceView** ppSRV
 
 HRESULT CTexture::ParseTextureIncrementalToSRVs(_uint iNumTextures, const _tchar* pTextureFilePath)
 {
-	m_pSRVs.reserve(iNumTextures);
+	m_SRVs.reserve(iNumTextures);
 
 	_tchar			szFullPath[MAX_PATH] = {};
 
@@ -129,7 +129,7 @@ HRESULT CTexture::ParseTextureIncrementalToSRVs(_uint iNumTextures, const _tchar
 			return E_FAIL;
 		}
 
-		m_pSRVs.push_back(pSRV);
+		m_SRVs.push_back(pSRV);
 	}
 	return S_OK;
 }
@@ -163,7 +163,7 @@ HRESULT CTexture::ParseTexturePathToSRVs(const _tchar* pTextureFolderPath)
 		}
 	}
 
-	m_pSRVs.reserve(files.size());
+	m_SRVs.reserve(files.size());
 	ID3D11ShaderResourceView* pSRV = { nullptr };
 	HRESULT hr;
 	for (const auto& filePath : files)
@@ -177,7 +177,7 @@ HRESULT CTexture::ParseTexturePathToSRVs(const _tchar* pTextureFolderPath)
 			return hr;
 		}
 
-		m_pSRVs.push_back(pSRV);
+		m_SRVs.push_back(pSRV);
 	}
 
 	return S_OK;
@@ -212,7 +212,7 @@ CComponent* CTexture::Clone(void* pArg, CGameObject* pOwner)
 void CTexture::Free()
 {
 	__super::Free();
-	for (auto& pSRV : m_pSRVs) {
+	for (auto& pSRV : m_SRVs) {
 		SAFE_RELEASE(pSRV);
 	}
 }

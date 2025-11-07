@@ -58,6 +58,9 @@
     <Filter Include="02.GameObjects\Effect">
       <UniqueIdentifier>{a9a30c22-af8f-421a-8901-edfb8146f59d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyRect">
+      <UniqueIdentifier>{130c848e-6ab6-4b45-b12c-56db07e2c2f4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -96,6 +99,9 @@
     <ClInclude Include="..\Public\DebugCamera.h">
       <Filter>02.GameObjects\Dummys\DebugCamera</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\DummyRect.h">
+      <Filter>02.GameObjects\Dummys\DummyRect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -126,6 +132,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\pch.cpp">
       <Filter>99.Define\DEFAULT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\DummyRect.cpp">
+      <Filter>02.GameObjects\Dummys\DummyRect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
