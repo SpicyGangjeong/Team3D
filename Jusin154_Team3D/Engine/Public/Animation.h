@@ -33,10 +33,17 @@ public:
 
 private:
 	HRESULT Initialize(HANDLE hFile, DWORD& dwByte);
+	// 바이너리
+	HRESULT Initialize(const class CModel* pModel,SaveAnimation* pSaveAnimation);
+	//
 	HRESULT Combined_Initialize();
 	_uint Get_BoneIndex(const char* pChannelName);
 
 private:
+	SaveAnimation*			m_pSaveAnim = { nullptr };
+	_char					m_szName[MAX_PATH] = {};
+	_float					m_fTickPerSecond = {};
+
 	_bool					m_bPause = { FALSE };							// 애님퍼즈 인덱스
 	_string					m_strName = {};									// 애님 이름
 	_float					m_fCurrentTrackPosition = {};					// 현재 트랙 위치
@@ -52,6 +59,9 @@ private:
 
 public:
 	static CAnimation* Create(HANDLE hFile, DWORD& dwByte);
+	// 바이너리
+	static CAnimation* Create(const class CModel* pModel, SaveAnimation* pSaveAnimation);
+	//
 	CAnimation* Clone();
 	virtual void Free() override;
 	void Describe_Entity();

@@ -165,6 +165,24 @@ public:
 #pragma region SOUND_MANAGER
 #pragma endregion
 
+public:
+	void Add_ModelToMap(const _char* filePath, CModel* pModel)
+	{
+		m_ModelMap[filePath] = pModel;
+	}
+
+	void Add_SaveModel(const _char* filePath, SaveModel sModel)
+	{
+		m_sModelMap[filePath] = sModel;
+	}
+
+	SaveModel* Load_SaveModel(const _char* filePath);
+	_bool SaveAssimpModel(const _char* filename);
+	void Save_ModelFilePath(const _char* FilePath);
+	const _char* Load_ModelFilePath(_uint iIndex);
+	const _char* Load_BinaryModelFilePath(_uint iIndex);
+	size_t ModelFilePathCount();
+
 private:
 	class CGraphic_Device*			m_pGraphic_Device = { nullptr };
 	class CTimer_Manager*			m_pTimer_Manager = { nullptr };
@@ -189,6 +207,10 @@ private:
 	_float							m_fTimer_DrawCall = { 0.f };
 	_float							m_fTimer_Present = { 0.f };
 	_float							m_fTimer_FrameCount = { 0.f };
+
+	vector<const _char*>			m_FilePaths = {};
+	map<const _char*, CModel*>			m_ModelMap;
+	map<const _char*, SaveModel>		m_sModelMap;
 #endif // _DEBUG
 
 public:

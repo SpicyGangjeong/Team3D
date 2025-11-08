@@ -55,6 +55,111 @@ typedef struct tagShadowLight
 	_float		fWidth, fHeight, fNear, fFar;
 }SHADOW_LIGHT_DESC;
 
+struct SaveVertex
+{
+	XMFLOAT3 Pos;
+	XMFLOAT3 Normal;
+	XMFLOAT3 Tan;
+	XMFLOAT3 BiNoraml;
+	XMFLOAT2 UV;
+
+	bool bHasNormal;
+	bool bHasTan;
+	bool bHasUV;
+
+	XMUINT4 BlendIndex;
+	XMFLOAT4 BlendWeight;
+};
+
+struct SaveBoneWeight
+{
+	unsigned int VertexId;
+	float Weight;
+};
+
+struct SaveBone
+{
+	char Name[64];
+	XMFLOAT4X4 OffsetMatrix;
+	int BoneIndex;
+	unsigned int WeightsCount;
+	vector<SaveBoneWeight>Weights;
+};
+
+struct SaveNode
+{
+	char Name[64];
+	int ParentIndex;
+	unsigned int ChildrenCount;
+	XMFLOAT4X4 Transformation;
+	vector<int> ChildrenIndices;
+};
+
+struct SaveMesh
+{
+	char Name[64];
+	unsigned int VertexCount;
+	unsigned int IndexCount;
+	unsigned int MaterialIndex;
+	unsigned int BoneCount;
+
+	vector<SaveVertex> Vertices;
+	vector<unsigned int> Indices;
+
+	vector<SaveBone> Bones;
+};
+
+struct SaveMaterial
+{
+	vector<string> Path[27];
+
+};
+
+struct SaveKeyFrameVec
+{
+	float Time;
+	XMFLOAT3 Value;
+};
+
+struct SaveKeyFrameRotation
+{
+	float Time;
+	XMFLOAT4 Value;
+};
+
+struct SaveChannel
+{
+	char Name[64];
+	unsigned int ScalingKeyCount;
+	unsigned int RotationKeyCount;
+	unsigned int PositionKeyCount;
+
+	vector<SaveKeyFrameVec> ScalingKeys;
+	vector<SaveKeyFrameRotation> RotationKeys;
+	vector<SaveKeyFrameVec> PositionKeys;
+};
+
+struct SaveAnimation
+{
+	char Name[128];
+	float mDuration;
+	float mTicksPerSecond;
+	unsigned int ChannelCount;
+	vector<SaveChannel> Channels;
+};
+
+struct SaveModel
+{
+	unsigned int MeshCount;
+	unsigned int MaterialCount;
+	unsigned int AnimationCount;
+	unsigned int NodeCount;
+	vector<SaveMesh> Meshes;
+	vector<SaveMaterial> Materials;
+	vector<SaveAnimation> Animations;
+	vector<SaveNode>Nodes;
+};
+
 typedef struct tagVertexInstance_Particle
 {
 	_float4			vRight;
