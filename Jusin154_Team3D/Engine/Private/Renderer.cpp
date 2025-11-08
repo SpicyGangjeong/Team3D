@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Renderer.h"
 #include "GameInstance.h"
 #include "GameObject.h"
@@ -12,7 +12,7 @@ CRenderer::CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	SAFE_ADDREF(m_pDevice);
 	SAFE_ADDREF(m_pContext);
-	SAFE_ADDREF(m_pGameInstance);
+	SAFE_ADDREF(m_pGameInstance); 
 }
 
 
@@ -33,11 +33,11 @@ void CRenderer::Refresh_Renderer()
 		XMStoreFloat3(&m_CubeViewFrustum[i], XMVector3TransformCoord(XMVectorSet(m_CubeViewFrustum[i].x, m_CubeViewFrustum[i].y, m_CubeViewFrustum[i].z, 1.f), matProjInv));
 		XMStoreFloat3(&m_CubeViewFrustum[i], XMVector3TransformCoord(XMVectorSet(m_CubeViewFrustum[i].x, m_CubeViewFrustum[i].y, m_CubeViewFrustum[i].z, 1.f), matViewInv));
 	}
-	// 0(1, 3, 4), 6(2, 5, 7) ( ¹ý¼±º¤ÅÍ ÈÄº¸ )
-	// 0, 6( ÇÑ Á¡ ÈÄº¸)
+	// 0(1, 3, 4), 6(2, 5, 7) ( ë²•ì„ ë²¡í„° í›„ë³´ )
+	// 0, 6( í•œ ì  í›„ë³´)
 	//_float3								m_CubeNDC[8] = {
-	//	±Ù	ÁÂÇÏ	¿ìÇÏ	¿ì»ó	ÁÂ»ó
-	//	¿ø	ÁÂÇÏ	¿ìÇÏ	¿ì»ó	ÁÂ»ó
+	//	ê·¼	ì¢Œí•˜	ìš°í•˜	ìš°ìƒ	ì¢Œìƒ
+	//	ì›	ì¢Œí•˜	ìš°í•˜	ìš°ìƒ	ì¢Œìƒ
 	//		0,		1,		2,		3
 	//		4,		5,		6,		7
 	//{ -1.f, -1.f, 0.f }, { 1.f, -1.f, 0.f }, { 1.f, 1.f, 0.f }, { -1.f, 1.f, 0.f },
@@ -61,7 +61,7 @@ HRESULT CRenderer::Add_RenderGroup(RENDER eRenderGroup, CGameObject* pRenderObje
 	//if (pRenderObject->isDead()) {
 	//	return E_FAIL;
 	//}
-	//// ÇÁ·¯½ºÅÒÄÃ¸µ ¿¹¿Ü Ãß°¡
+	//// í”„ëŸ¬ìŠ¤í…€ì»¬ë§ ì˜ˆì™¸ ì¶”ê°€
 	//if (RENDER::UI == eRenderGroup || RENDER::PRIORITY == eRenderGroup /* || RENDER::SHADOW == eRenderGroup*/ || RENDER::BLUR == eRenderGroup) {
 	//	m_RenderObjects[ENUM_CLASS(eRenderGroup)].push_back(pRenderObject);
 	//	SAFE_ADDREF(pRenderObject);
@@ -388,7 +388,7 @@ void CRenderer::Render_UI()
 		XMStoreFloat3(&vSrcPos, pSrc->Get_WorldPostion());
 
 		return vDstPos.z > vSrcPos.z;
-		}); // z ¼ÒÆÃ
+		}); // z ì†ŒíŒ…
 
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::UI)])
 	{
@@ -463,7 +463,7 @@ void CRenderer::Render_Debug()
 		return;
 	}
 
-	/* ·»´õÅ¸°ÙÀ» µð¹ö±×·Î Á÷±³Åõ¿µÀ» ÅëÇØ ±×·Á¶ó. */
+	/* ë Œë”íƒ€ê²Ÿì„ ë””ë²„ê·¸ë¡œ ì§êµíˆ¬ì˜ì„ í†µí•´ ê·¸ë ¤ë¼. */
 	if (FAILED(m_pGameInstance->Render_RenderTarget_Debug(TEXT("MRT_GameObjects"), m_pShader, m_pVIBuffer))) {
 		return;
 	}

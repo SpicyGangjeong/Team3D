@@ -42,6 +42,7 @@ private:
 	HRESULT Initialize(LEVEL eNextLevelID);
 	HRESULT Loading_For_Logo();
 	HRESULT Loading_For_ObjectViewer();
+	HRESULT Loading_For_UI();
 
 public:
 	static CLoader* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevelID);

@@ -5,6 +5,7 @@
 #include "VIBuffer_Cell.h"
 #include "Shader.h"
 #include "Navigation.h"
+#include "Texture.h"
 #include "Cell.h"
 #include "Model.h"
 

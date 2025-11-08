@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 
 #include "Level_Logo.h"
+#include "Level_UI.h"
 #include "Level_ObjectViewer.h"
 
 CLevel_Loading::CLevel_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
@@ -39,6 +40,9 @@ void CLevel_Loading::Update(_float fTimeDelta)
 		case LEVEL::LOGO:
 			pNewLevel = CLevel_Logo::Create(m_pDevice, m_pContext, m_eNextLevelID);
 			break;
+		case LEVEL::UI:
+			pNewLevel = CLevel_UI::Create(m_pDevice, m_pContext, m_eNextLevelID);
+			break;
 		//case LEVEL::MAP:
 		//	pNewLevel = CLevel_MapViewer::Create(m_pDevice, m_pContext, m_eNextLevelID);
 		//	break;
@@ -73,6 +77,7 @@ HRESULT CLevel_Loading::Render()
 
 HRESULT CLevel_Loading::Ready_Layer_BackGround(const _wstring& strLayerTag)
 {
+
 	return S_OK;
 }
 
