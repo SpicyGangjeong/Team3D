@@ -181,9 +181,6 @@
     <ClCompile Include="..\Private\Level_Loading.cpp">
       <Filter>01.Level\00.Loading</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Loader.cpp">
-      <Filter>01.Level\00.Loading\Loader</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Level_Logo.cpp">
       <Filter>01.Level\01.Logo</Filter>
     </ClCompile>
@@ -225,6 +222,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Head.cpp">
       <Filter>02.GameObjects\ModelParts\Head</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Loader.cpp">
+      <Filter>01.Level\00.Loading\Loader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

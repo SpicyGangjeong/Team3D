@@ -179,6 +179,7 @@
     <ClCompile Include="..\Private\DummyRect.cpp" />
     <ClCompile Include="..\Private\Dummy_Cube.cpp" />
     <ClCompile Include="..\Private\Dummy_Goblin.cpp" />
+    <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\private\Mission.cpp" />
     <ClCompile Include="..\Private\Dummy_Goblin_Head.cpp" />
     <ClCompile Include="..\Private\Head.cpp" />
@@ -186,7 +187,6 @@
     <ClCompile Include="..\Private\Level_Logo.cpp" />
     <ClCompile Include="..\private\Level_UI.cpp" />
     <ClCompile Include="..\Private\Level_ObjectViewer.cpp" />
-    <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />
     <ClCompile Include="..\Private\ModelParts.cpp" />
     <ClCompile Include="..\private\Mouse_Cursor.cpp" />
