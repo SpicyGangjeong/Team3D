@@ -4,12 +4,29 @@
 #include "GameInstance.h"
 #include "DummyRect.h"
 #include "MainApp.h"
+
+#include "Dummy_Cube.h"
+#include "Dummy_Goblin.h"
+
+#pragma region UI
+
 #include "Mission.h"
+#include "MissionBanner_Border.h"
+#include "MissionBanner_Key.h"
+#include "Mission_Icon.h"
+#include "Mission_Key.h"
+#include "Mission_KeyHold.h"
 #include "Mouse_Cursor.h"
 #include "Head.h"
 #include "Body.h"
 #include "Dummy_Goblin.h"
 #include "Dummy_Cube.h"
+#include "LodingWidget1.h"
+#include "MiniMap_TrimBorder.h"
+#include "Active_Icon.h"
+
+#pragma endregion
+
 
 
 #pragma region EFFECT_HEADER
@@ -74,9 +91,6 @@ HRESULT CLoader::Loading()
 	case LEVEL::UI:
 		hr = Loading_For_UI();
 		break;
-
-
-		
 	//case LEVEL::MAP:
 	//	hr = Loading_For_MapViewer();
 	//	break;
@@ -192,7 +206,47 @@ HRESULT CLoader::Loading_For_UI()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Cursor"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Cursor/UI_T_CursorRings.png"), TEXT("Cursor"), 0)))) {
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Cursor/UI_T_CursorRings.dds"), TEXT("Cursor"), 0)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("LodingWidget1"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Loading/LoadingWidget.png"), TEXT("LodingWidget1"), 0)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("MissionBanner_Border"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Mission/MissionBanner_Border.png"), TEXT("MissionBanner_Border"), 0)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("MissionBanner_Key"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Mission/MissionBanner_Key.png"), TEXT("MissionBanner_Key"), 0)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Finishi_Rect"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Mission/Finishi_Rect.png"), TEXT("Finishi_Rect"), 0)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Mission_Main"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Mission/Mission_Main.png"), TEXT("Mission_Main"), 0)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("HUD_MiniMap_TrimBorder"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/MiniMap/HUD_MiniMap_TrimBorder.png"), TEXT("HUD_MiniMap_TrimBorder"), 0)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("ActiveMission_Icon"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("../Bin/Resources/Textures/MiniMap/ActiveMission_Icon_%d.png"), TEXT("ActiveMission_Icon"), 2)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Mission_Icon_"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("../Bin/Resources/Textures/MiniMap/Mission_Icon_%d.png"), TEXT("Mission_Icon_"), 2)))) {
 		return E_FAIL;
 	}
 
@@ -200,8 +254,13 @@ HRESULT CLoader::Loading_For_UI()
 
 	m_strMessage = TEXT("���̴���(��) �ε� �� �Դϴ�.");
 
-	m_strMessage = TEXT("��ü������(��) �ε� �� �Դϴ�.");
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_UIEDITOR,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_UIEditor.hlsl"),
+			VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)))) {
+		return E_FAIL;
+	}
 
+	m_strMessage = TEXT("��ü������(��) �ε� �� �Դϴ�.");
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CMission>(g_iStaticLevel, CMission::Create(m_pDevice, m_pContext))))
 	{
@@ -213,7 +272,40 @@ HRESULT CLoader::Loading_For_UI()
 		return E_FAIL;
 	}
 
-
+  if (FAILED(m_pGameInstance->Add_Prototype<CLodingWidget1>(g_iStaticLevel, CLodingWidget1::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+		
+	if (FAILED(m_pGameInstance->Add_Prototype<CMissionBanner_Border>(g_iStaticLevel, CMissionBanner_Border::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CMissionBanner_Key>(g_iStaticLevel, CMissionBanner_Key::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CMission_Icon>(g_iStaticLevel, CMission_Icon::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CMission_Key>(g_iStaticLevel, CMission_Key::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CMission_KeyHold>(g_iStaticLevel, CMission_KeyHold::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CMiniMap_TrimBorder>(g_iStaticLevel, CMiniMap_TrimBorder::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CActive_Icon>(g_iStaticLevel, CActive_Icon::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+  
 	m_strMessage = TEXT("�ε��� �Ϸ�Ǿ����ϴ�..");
 
 	m_isFinished = true;
@@ -267,6 +359,9 @@ HRESULT CLoader::Loading_For_Effect()
 	}
 
 	m_strMessage = TEXT("로딩이 완료되었습니다..");
+	
+
+	m_strMessage = TEXT("�ε��� �Ϸ�Ǿ����ϴ�..");
 
 	m_isFinished = true;
 

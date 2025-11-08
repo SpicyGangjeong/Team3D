@@ -62,8 +62,8 @@ HRESULT CUIObject::Initialize(void* pArg)
 	// 계산이 안되서 1로 준다. 만약 2나 3으로 주면 1이 원본 크기인데 2면 절반 3이면
 	// 1/3만큼 줄어든다. 그래서 1을 주면 원래 크기대로 나온다.
 	/* 뷰스페이스 상에 네모를 어떻게 배치시킬건지를 설정하는거다. */
-	vScale = _float3(m_fSizeX, m_fSizeY, 1.f);
-	m_pTransformCom->Set_Scale(vScale);
+	m_vScale = _float3(m_fSizeX, m_fSizeY, 1.f);
+	m_pTransformCom->Set_Scale(m_vScale);
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(
 		pDesc->fX - ViewportDesc.Width * 0.5f, -
 		pDesc->fY + ViewportDesc.Height * 0.5f,
@@ -110,6 +110,19 @@ _vector CUIObject::Get_WorldPostion()
 {
 
 	return m_pOwner->Get_WorldPostion();
+}
+
+void CUIObject::Move_vector(_fvector vPos)
+{
+	m_pTransformCom->Set_State(STATE::POSITION, vPos);
+}
+
+void CUIObject::Move_float2(_float fX, _float fY)
+{
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(
+		fX - m_fWinSizeX * 0.5f, 
+	   -fY + m_fWinSizeY * 0.5f,
+		0.f, 1.f));
 }
 
 void CUIObject::Free()

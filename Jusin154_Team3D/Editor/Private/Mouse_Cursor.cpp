@@ -19,13 +19,12 @@ HRESULT CMouse_Cursor::Initialize_Prototype()
 
 HRESULT CMouse_Cursor::Initialize(void* pArg)
 {
-
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 0.f;
 	Desc.fY = 0.f;
-	Desc.fSizeX = 50.f;
-	Desc.fSizeY = 50.f;
+	Desc.fSizeX = 74.f;
+	Desc.fSizeY = 74.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -37,6 +36,8 @@ HRESULT CMouse_Cursor::Initialize(void* pArg)
 	{
 		return E_FAIL;
 	}
+
+	// 메뉴가 실행이 되면 마우스가 나타나고 다른 UI위에 올라가면 살짝 작아진다.
 	return S_OK;
 }
 
@@ -46,6 +47,7 @@ void CMouse_Cursor::Priority_Update(_float fTimeDelta)
 
 void CMouse_Cursor::Update(_float fTimeDelta)
 {
+	m_fTime += fTimeDelta;
 	ShowCursor(false);
 }
 
@@ -68,7 +70,7 @@ HRESULT CMouse_Cursor::Render()
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_POSTEX::UI)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::CURSOR)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
@@ -104,7 +106,15 @@ HRESULT CMouse_Cursor::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture2", 0)))
+	{
+		return E_FAIL;
+	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fTime", &m_fTime, sizeof(_float))))
 	{
 		return E_FAIL;
 	}
@@ -121,7 +131,7 @@ HRESULT CMouse_Cursor::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, FX_POSTEX, (CComponent**)&m_pShaderCom, nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, FX_UIEDITOR, (CComponent**)&m_pShaderCom, nullptr)))
 	{
 		return E_FAIL;
 	}

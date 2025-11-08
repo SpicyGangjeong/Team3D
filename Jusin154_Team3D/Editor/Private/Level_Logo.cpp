@@ -21,12 +21,6 @@ HRESULT CLevel_Logo::Initialize()
 
 void CLevel_Logo::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Down(DIK_I))
-	{
-		if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::UI))))
-			return;
-	}
-
 	GUI::Begin("SelectEditor");
 	//if (GUI::Button("Map Editor", { 100, 100 })) {
 	//	if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::MAP))))
@@ -52,6 +46,10 @@ void CLevel_Logo::Update(_float fTimeDelta)
 	//	if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::PARTICLE))))
 	//		return;
 	//}
+	else if (GUI::Button("UI Editor", { 100, 100 })) {
+		if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::UI))))
+			return;
+	}
 	GUI::End();
 }
 
