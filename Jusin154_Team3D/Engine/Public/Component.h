@@ -32,6 +32,7 @@ public:
 #ifdef _DEBUG
 	virtual void Describe_Entity()PURE; // IMGUI Àü¿ë
 #endif
+
 };
 
 NS_END

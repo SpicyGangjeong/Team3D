@@ -34,10 +34,10 @@ void CLevel_Logo::Update(_float fTimeDelta)
 	//	if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::COMBINED))))
 	//		return;
 	//}
-	//else if (GUI::Button("Effect Editor", { 100, 100 })) {
-	//	if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::EFFECT))))
-	//		return;
-	//}
+	else if (GUI::Button("Effect Editor", { 100, 100 })) {
+		if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::EFFECT))))
+			return;
+	}
 	//else if (GUI::Button("Skill Editor", { 100, 100 })) {
 	//	if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::SKIllSTUDIO))))
 	//		return;
