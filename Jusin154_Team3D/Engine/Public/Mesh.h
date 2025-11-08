@@ -29,6 +29,11 @@ public:
 	HRESULT SaveAsBinary(HANDLE hFile, DWORD& dwByte);
 #endif // EDITOR_PROJECT
 
+public:
+	//인스턴싱 모델 전용 드로우, 바인딩 함수 
+	virtual HRESULT Bind_Resources_Instance(ID3D11Buffer* pVBInstance, _uint iInstanceStride, _uint iBufferCount);
+	virtual HRESULT Render_Instance(_uint iNumInstance);
+
 private:
 	virtual HRESULT Initialize_Prototype(HANDLE hFile, DWORD& dwByte);
 	virtual HRESULT Initialize(void* pArg) override;

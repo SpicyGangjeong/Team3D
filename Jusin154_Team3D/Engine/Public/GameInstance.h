@@ -63,6 +63,13 @@ public:
 	{
 		return m_pPrototype_Manager->CPrototype_Manager::Clone_Prototype<T>(iLevelNumber, pArg, pOwner);
 	}
+
+	template<typename T>
+	void Asset_Description(_uint iLevel, const _char* pComponentName, CComponent** ppOut, void* pDesc, class CGameObject* pOwner = nullptr)
+	{
+		return m_pPrototype_Manager->CPrototype_Manager::Asset_Description<T>(iLevel, pComponentName, ppOut, pDesc, pOwner);
+	}
+
 #pragma endregion
 
 #pragma region OBJECT_MANAGER

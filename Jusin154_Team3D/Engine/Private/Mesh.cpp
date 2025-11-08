@@ -116,6 +116,40 @@ HRESULT CMesh::Initialize_Prototype(MODEL eType, vector<class CBone*>& Bones, co
 	return S_OK;
 }
 #endif
+
+HRESULT CMesh::Bind_Resources_Instance(ID3D11Buffer* pVBInstance, _uint iInstanceStride, _uint iBufferCount)
+{
+	ID3D11Buffer* VertexBuffers[] = {
+	   m_pVB,
+	   pVBInstance,
+
+	};
+
+	_uint		VertexStrides[] = {
+		m_iVertexStride,
+		iInstanceStride,
+	};
+
+	_uint		Offsets[] = {
+		0,
+		0
+	};
+
+	m_pContext->IASetVertexBuffers(0, iBufferCount, VertexBuffers, VertexStrides, Offsets);
+	m_pContext->IASetIndexBuffer(m_pIB, m_eIndexFormat, 0);
+	m_pContext->IASetPrimitiveTopology(m_ePrimitive);
+
+	return S_OK;
+}
+
+HRESULT CMesh::Render_Instance(_uint iNumInstance)
+{
+	m_pContext->DrawIndexedInstanced(m_iNumIndices, iNumInstance, 0, 0, 0);
+
+	return S_OK;
+}
+
+
 HRESULT CMesh::Initialize_Prototype(HANDLE hFile, DWORD& dwByte)
 {
 	{ // ¸â¹öº¯¼ö
