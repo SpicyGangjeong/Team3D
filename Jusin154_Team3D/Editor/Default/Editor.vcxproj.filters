@@ -103,6 +103,9 @@
     <Filter Include="50.UI\IMGUIUI">
       <UniqueIdentifier>{f60f1948-8c11-4796-843a-8c38f10043e3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="50.UI\Mission\Active_Icon">
+      <UniqueIdentifier>{977fe4d3-c3b5-413c-80fe-777ece19453e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -183,6 +186,9 @@
     <ClInclude Include="..\public\MiniMap_TrimBorder.h">
       <Filter>50.UI\MiniMap\MiniMap_TrimBorder</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Active_Icon.h">
+      <Filter>50.UI\Mission\Active_Icon</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -255,6 +261,9 @@
     </ClCompile>
     <ClCompile Include="..\private\MiniMap_TrimBorder.cpp">
       <Filter>50.UI\MiniMap\MiniMap_TrimBorder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Active_Icon.cpp">
+      <Filter>50.UI\Mission\Active_Icon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

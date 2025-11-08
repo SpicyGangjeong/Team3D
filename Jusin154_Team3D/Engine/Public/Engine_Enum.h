@@ -29,6 +29,8 @@ enum class SHADER_PASS_CELL { DEBUG, END };
 
 enum class SHADER_PASS_DEFERRED { DEBUG, DIRECTIONAL, POINT, COMBINED, BLUR, SPOT, END };
 
+enum class QUESTYPE {MAIN, SUB, END};
+
 #ifndef EDITOR_PROJECT
 enum aiTextureType {
     aiTextureType_NONE                      = 0,

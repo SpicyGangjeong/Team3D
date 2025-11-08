@@ -1,30 +1,30 @@
 #include "pch.h"
-#include "Mission_KeyHold.h"
+#include "Active_Icon.h"
 #include "GameInstance.h"
 
-CMission_KeyHold::CMission_KeyHold(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-    :CUIObject(pDevice, pContext)
+CActive_Icon::CActive_Icon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	:CUIObject(pDevice, pContext)
 {
 }
 
-CMission_KeyHold::CMission_KeyHold(const CMission_KeyHold& rhs)
-    :CUIObject(rhs)
+CActive_Icon::CActive_Icon(const CActive_Icon& rhs)
+	:CUIObject(rhs)
 {
 }
 
-HRESULT CMission_KeyHold::Initialize_Prototype()
+HRESULT CActive_Icon::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CMission_KeyHold::Initialize(void* pArg)
+HRESULT CActive_Icon::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = 90.f;
-	Desc.fY = 747.f;
-	Desc.fSizeX = 104.f;
-	Desc.fSizeY = 104.f;
+	Desc.fX = 300.f;
+	Desc.fY = 300.f;
+	Desc.fSizeX = 100.f;
+	Desc.fSizeY = 100.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -36,19 +36,18 @@ HRESULT CMission_KeyHold::Initialize(void* pArg)
 	{
 		return E_FAIL;
 	}
-
 	return S_OK;
 }
 
-void CMission_KeyHold::Priority_Update(_float fTimeDelta)
+void CActive_Icon::Priority_Update(_float fTimeDelta)
 {
 }
 
-void CMission_KeyHold::Update(_float fTimeDelta)
+void CActive_Icon::Update(_float fTimeDelta)
 {
 }
 
-void CMission_KeyHold::Late_Update(_float fTimeDelta)
+void CActive_Icon::Late_Update(_float fTimeDelta)
 {
 	if (m_bVisible) {
 		_float4* vPos = (_float4*)(m_pTransformCom->Get_WorldMatrixPtr()->m[3]);
@@ -56,12 +55,12 @@ void CMission_KeyHold::Late_Update(_float fTimeDelta)
 	}
 }
 
-HRESULT CMission_KeyHold::Render()
+HRESULT CActive_Icon::Render()
 {
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::HOLD)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::DEFAULT)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
@@ -74,12 +73,12 @@ HRESULT CMission_KeyHold::Render()
 	return S_OK;
 }
 
-_vector CMission_KeyHold::Get_WorldPostion()
+_vector CActive_Icon::Get_WorldPostion()
 {
-	return m_pTransformCom->Get_State(STATE::POSITION);
+	return m_pOwner->Get_WorldPostion();
 }
 
-HRESULT CMission_KeyHold::Bind_ShaderResources()
+HRESULT CActive_Icon::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 	{
@@ -101,17 +100,16 @@ HRESULT CMission_KeyHold::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-
 	return S_OK;
 }
 
-HRESULT CMission_KeyHold::Ready_Components(void* pArg)
+HRESULT CActive_Icon::Ready_Components(void* pArg)
 {
 	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Finishi_Rect"), reinterpret_cast<CComponent**>(&m_pTextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Keyboard"), reinterpret_cast<CComponent**>(&m_pTextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -123,33 +121,33 @@ HRESULT CMission_KeyHold::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-CMission_KeyHold* CMission_KeyHold::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CActive_Icon* CActive_Icon::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CMission_KeyHold* pInstance = new CMission_KeyHold(pDevice, pContext);
+	CActive_Icon* pInstance = new CActive_Icon(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CMission_KeyHold");
+		MSG_BOX("Failed to Created : CActive_Icon");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CMission_KeyHold::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CActive_Icon::Clone(void* pArg, CGameObject* pOwner)
 {
-	CMission_KeyHold* pInstance = new CMission_KeyHold(*this);
+	CActive_Icon* pInstance = new CActive_Icon(*this);
 	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CMission_KeyHold");
+		MSG_BOX("Failed to Cloned : CActive_Icon");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CMission_KeyHold::Free()
+void CActive_Icon::Free()
 {
 	__super::Free();
 
@@ -158,6 +156,6 @@ void CMission_KeyHold::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
-void CMission_KeyHold::Describe_Entity()
+void CActive_Icon::Describe_Entity()
 {
 }

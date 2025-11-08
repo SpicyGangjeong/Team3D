@@ -5,12 +5,12 @@
 
 NS_BEGIN(Editor)
 
-class CMissionBanner_Key final : public CUIObject
+class CActive_Icon final : public CUIObject
 {
 private:
-	CMissionBanner_Key(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CMissionBanner_Key(const CMissionBanner_Key& rhs);
-	virtual ~CMissionBanner_Key() = default;
+	CActive_Icon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CActive_Icon(const CActive_Icon& rhs);
+	virtual ~CActive_Icon() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -32,10 +32,9 @@ private:
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 	class CGameObject* m_pMission_KeyHold = { nullptr };
 	class CGameObject* m_pMission_Key = { nullptr };
-	class CGameObject* m_pActive_Icon = { nullptr };
 
 public:
-	static CMissionBanner_Key* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CActive_Icon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 	void Describe_Entity() override;

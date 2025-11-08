@@ -19,7 +19,6 @@ HRESULT CMission::Initialize_Prototype()
 
 HRESULT CMission::Initialize(void* pArg)
 {
-
 	CUIObject::UIOBJECT_DESC	Desc{};
 	
 	Desc.fX = 300.f;
