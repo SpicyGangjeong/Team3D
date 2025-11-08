@@ -8,6 +8,7 @@
 #include "Texture.h"
 #include "Cell.h"
 #include "Model.h"
+#include "Instance_Model.h"
 
 
 NS_BEGIN(Engine)
@@ -62,12 +63,54 @@ public:
 
 		return dynamic_cast<T*>(pObject->Clone(_pArg, pOwner));
 	}
+#ifdef _DEBUG
+public:
+	//특정 타입의 컴포넌트들의 이름을 통한 콤보박스 , 이미지는 이미지 클립을
+	//만들고 선택할 시에 내 ppOut에 클론하는 기능을 담당
+	template<typename T>
+	void Asset_Description(_uint iLevel , const _char* pComponentName , CComponent** ppOut  , void* pDesc , class CGameObject* pOwner = nullptr)
+	{
+		vector<const _char*> pComponentNames = {};
+
+
+		for (auto& Pair : m_pAssets[iLevel])
+		{
+
+			if (typeid(*Pair.second) == typeid(T)) // 같은 타입의 컴포넌트 였다면
+			{
+				_string strName = CMyTools::ToString(Pair.first);
+
+				pComponentNames.push_back(strName.c_str());
+			}
+		} 
+
+		_int iCurrentItem = 0;
+
+		if (GUI::Combo("pComponentName", &iCurrentItem, pComponentNames.data(), (_int)pComponentNames.size()))
+		{
+			if (*ppOut != nullptr)
+				Safe_Release(*ppOut);
+
+			_string strComponentName = pComponentNames[iCurrentItem];
+			_wstring wstrComponentName = CMyTools::ToWstring(strComponentName);
+
+			auto    iter = m_pAssets[iLevel].find(wstrComponentName);
+
+			if (iter == m_pAssets[iLevel].end()) {
+				return;
+			}
+
+			*ppOut = iter->second->Clone(pDesc , pOwner);
+		}
+	}
+#endif
+
 private:
-	CGameInstance* m_pGameInstance = { nullptr };
-	ID3D11Device* m_pDevice = { nullptr };
-	ID3D11DeviceContext* m_pContext = { nullptr };
-	vector<class CBase*>* m_pPrototypes = { nullptr };
-	map<_wstring, CComponent*>* m_pAssets = { nullptr };
+	CGameInstance*						m_pGameInstance = { nullptr };
+	ID3D11Device*						m_pDevice = { nullptr };
+	ID3D11DeviceContext*				m_pContext = { nullptr };
+	vector<class CBase*>*				m_pPrototypes = { nullptr };
+	map<_wstring, CComponent*>*			m_pAssets = { nullptr };
 
 	_uint								m_iLevelNumber = { };
 
