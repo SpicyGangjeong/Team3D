@@ -55,9 +55,6 @@
     <Filter Include="02.GameObjects\Env">
       <UniqueIdentifier>{1f58b759-0d65-4092-ad42-da21c974ea12}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Effect">
-      <UniqueIdentifier>{a9a30c22-af8f-421a-8901-edfb8146f59d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Dummys\DummyRect">
       <UniqueIdentifier>{130c848e-6ab6-4b45-b12c-56db07e2c2f4}</UniqueIdentifier>
     </Filter>
@@ -90,6 +87,24 @@
     </Filter>
     <Filter Include="02.GameObjects\ModelParts\Hair">
       <UniqueIdentifier>{7ac7ca7b-7e52-498b-adfe-3a8e602b0904}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect">
+      <UniqueIdentifier>{32909f25-6113-4bd6-81a8-9415d993b221}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect">
+      <UniqueIdentifier>{a9a30c22-af8f-421a-8901-edfb8146f59d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\00.EffectObject">
+      <UniqueIdentifier>{8a5ffca8-725a-42ee-a3eb-3c79df09dec9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\01.TestEffect">
+      <UniqueIdentifier>{32718f84-d863-48d2-8611-90c40f2ba1c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\02.EditEffect">
+      <UniqueIdentifier>{ba468252-bba3-46e4-bf61-e726a59060ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor">
+      <UniqueIdentifier>{5b31b993-b137-42d2-b737-000aeb27a675}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -162,6 +177,21 @@
     <ClInclude Include="..\Public\Head.h">
       <Filter>02.GameObjects\ModelParts\Head</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Level_EffectViewer.h">
+      <Filter>01.Level\40.EffectViewer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EffectObject.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\00.EffectObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TestEffect.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\01.TestEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EditEffect.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\02.EditEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_Editor.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -226,6 +256,21 @@
     <ClCompile Include="..\Private\Loader.cpp">
       <Filter>01.Level\00.Loading\Loader</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Level_EffectViewer.cpp">
+      <Filter>01.Level\40.EffectViewer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EffectObject.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\00.EffectObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TestEffect.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\01.TestEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EditEffect.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\02.EditEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect_Editor.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Editor.rc">
@@ -246,6 +291,9 @@
       <Filter>99.Define\SHADER</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxPosTex.hlsl">
+      <Filter>99.Define\SHADER</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxModelInstance.hlsl">
       <Filter>99.Define\SHADER</Filter>
     </FxCompile>
   </ItemGroup>

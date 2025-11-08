@@ -220,6 +220,12 @@
     <Filter Include="02.Element\01.GameObject\50.UI">
       <UniqueIdentifier>{32546fa5-8ee9-4c26-8d48-7ef2b2d023b0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Element\02.Component\06.Model\Instance_Model">
+      <UniqueIdentifier>{5d6c9918-c50d-4c5a-bbc6-56c50ae5985b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\06.ComputeShader">
+      <UniqueIdentifier>{96600587-16b1-4627-914d-7fc413c501ba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -404,6 +410,12 @@
     </ClCompile>
     <ClCompile Include="..\private\UIObject.cpp">
       <Filter>02.Element\01.GameObject\50.UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Instance_Model.cpp">
+      <Filter>02.Element\02.Component\06.Model\Instance_Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ComputeShader.cpp">
+      <Filter>01.Utility\06.ComputeShader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -956,6 +968,12 @@
     <ClInclude Include="..\public\UIObject.h">
       <Filter>02.Element\01.GameObject\50.UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Instance_Model.h">
+      <Filter>02.Element\02.Component\06.Model\Instance_Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ComputeShader.h">
+      <Filter>01.Utility\06.ComputeShader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Public\Assimp\color4.inl">
@@ -1012,6 +1030,9 @@
       <Filter>99.Define\01.SHADER</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Deferred.hlsl">
+      <Filter>99.Define\01.SHADER</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Particle_Compute.hlsl">
       <Filter>99.Define\01.SHADER</Filter>
     </FxCompile>
   </ItemGroup>
