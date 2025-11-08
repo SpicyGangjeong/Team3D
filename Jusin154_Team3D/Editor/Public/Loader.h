@@ -38,6 +38,8 @@ private:
 
 	CGameInstance* m_pGameInstance = { nullptr };
 
+	//list<SaveModel> m_SaveModel;
+
 private:
 	HRESULT Initialize(LEVEL eNextLevelID);
 	HRESULT Loading_For_Logo();

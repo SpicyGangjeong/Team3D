@@ -149,20 +149,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\Body.h" />
     <ClInclude Include="..\Public\DebugCamera.h" />
     <ClInclude Include="..\Public\DummyRect.h" />
     <ClInclude Include="..\Public\Dummy_Cube.h" />
     <ClInclude Include="..\Public\Dummy_Goblin.h" />
+    <ClInclude Include="..\Public\Dummy_Goblin_Head.h" />
     <ClInclude Include="..\Public\Editor_Define.h" />
     <ClInclude Include="..\Public\Editor_Macro.h" />
     <ClInclude Include="..\Public\Editor_Struct.h" />
     <ClInclude Include="..\public\Mission.h" />
+    <ClInclude Include="..\Public\Head.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
     <ClInclude Include="..\Public\Level_Logo.h" />
     <ClInclude Include="..\public\Level_UI.h" />
     <ClInclude Include="..\Public\Level_ObjectViewer.h" />
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\Public\MainApp.h" />
+    <ClInclude Include="..\Public\ModelParts.h" />
     <ClInclude Include="..\public\Mouse_Cursor.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="framework.h" />
@@ -170,17 +174,21 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\Body.cpp" />
     <ClCompile Include="..\Private\DebugCamera.cpp" />
     <ClCompile Include="..\Private\DummyRect.cpp" />
     <ClCompile Include="..\Private\Dummy_Cube.cpp" />
     <ClCompile Include="..\Private\Dummy_Goblin.cpp" />
+    <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\private\Mission.cpp" />
+    <ClCompile Include="..\Private\Dummy_Goblin_Head.cpp" />
+    <ClCompile Include="..\Private\Head.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />
     <ClCompile Include="..\Private\Level_Logo.cpp" />
     <ClCompile Include="..\private\Level_UI.cpp" />
     <ClCompile Include="..\Private\Level_ObjectViewer.cpp" />
-    <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />
+    <ClCompile Include="..\Private\ModelParts.cpp" />
     <ClCompile Include="..\private\Mouse_Cursor.cpp" />
     <ClCompile Include="..\Private\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

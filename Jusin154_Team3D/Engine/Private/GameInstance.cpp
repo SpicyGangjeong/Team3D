@@ -146,6 +146,29 @@ _int CGameInstance::Random_Int(_int iMin, _int iMax)
 	return iMin + (_int)(Random_Normal() * (iMax - iMin));
 }
 
+void CGameInstance::Save_ModelFilePath(const _char* FilePath)
+{
+	m_FilePaths.push_back(FilePath);
+}
+
+const _char* CGameInstance::Load_ModelFilePath(_uint iIndex)
+{
+	return	m_FilePaths[iIndex];
+}
+
+const _char* CGameInstance::Load_BinaryModelFilePath(_uint iIndex)
+{
+	auto iter = m_sModelMap.begin();
+	std::advance(iter, iIndex);
+	return iter->first;
+}
+
+
+size_t CGameInstance::ModelFilePathCount()
+{
+	return m_FilePaths.size();
+}
+
 void CGameInstance::Render_Begin(const _float4* pClearColor)
 {
 	m_pGraphic_Device->Clear_BackBuffer_View(pClearColor);
@@ -473,6 +496,16 @@ const _float4x4* CGameInstance::Get_ShadowMatricesPtr()
 const SHADOW_LIGHT_DESC* CGameInstance::Get_ShadowDesc()
 {
 	return m_pShadow->Get_ShadowDesc();
+}
+SaveModel* CGameInstance::Load_SaveModel(const _char* filePath)
+{
+	auto iter = m_sModelMap.find(filePath);
+	return &iter->second;
+}
+_bool CGameInstance::SaveAssimpModel(const _char* filename)
+{
+	auto iter = m_ModelMap.find(filename);
+	return iter->second->SaveAssimpModel(filename);
 }
 bool		CGameInstance::Key_Pressing(int _iKey)
 {

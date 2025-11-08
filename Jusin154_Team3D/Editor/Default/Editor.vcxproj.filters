@@ -76,6 +76,21 @@
     <Filter Include="02.GameObjects\Dummy_Goblin">
       <UniqueIdentifier>{0ebb9c08-69b0-49b6-bac3-c827ca13319a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Dummy_Goblin\Dummy_Goblin_Head">
+      <UniqueIdentifier>{69af10ea-e8f1-4455-9435-93857b7eb198}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\ModelParts">
+      <UniqueIdentifier>{a04e88c3-dabb-4a91-8b9f-ce7f5562def6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\ModelParts\Head">
+      <UniqueIdentifier>{a483f296-1312-4b29-8b8f-ce47654cd09e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\ModelParts\Body">
+      <UniqueIdentifier>{763765ed-6960-4837-946e-20ff88d8e350}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\ModelParts\Hair">
+      <UniqueIdentifier>{7ac7ca7b-7e52-498b-adfe-3a8e602b0904}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -135,6 +150,18 @@
     <ClInclude Include="..\Public\Dummy_Cube.h">
       <Filter>02.GameObjects\Dummys\DummyCube</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Dummy_Goblin_Head.h">
+      <Filter>02.GameObjects\Dummy_Goblin\Dummy_Goblin_Head</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body.h">
+      <Filter>02.GameObjects\ModelParts\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ModelParts.h">
+      <Filter>02.GameObjects\ModelParts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Head.h">
+      <Filter>02.GameObjects\ModelParts\Head</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -153,9 +180,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Level_Loading.cpp">
       <Filter>01.Level\00.Loading</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Loader.cpp">
-      <Filter>01.Level\00.Loading\Loader</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_Logo.cpp">
       <Filter>01.Level\01.Logo</Filter>
@@ -186,6 +210,21 @@
     </ClCompile>
     <ClCompile Include="..\Private\Dummy_Cube.cpp">
       <Filter>02.GameObjects\Dummys\DummyCube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_Goblin_Head.cpp">
+      <Filter>02.GameObjects\Dummy_Goblin\Dummy_Goblin_Head</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body.cpp">
+      <Filter>02.GameObjects\ModelParts\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ModelParts.cpp">
+      <Filter>02.GameObjects\ModelParts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Head.cpp">
+      <Filter>02.GameObjects\ModelParts\Head</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Loader.cpp">
+      <Filter>01.Level\00.Loading\Loader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

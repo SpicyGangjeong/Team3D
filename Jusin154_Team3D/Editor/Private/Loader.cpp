@@ -1,4 +1,4 @@
-癤�#include "pch.h"
+#include "pch.h"
 #include "Loader.h"
 #include "DebugCamera.h"
 #include "GameInstance.h"
@@ -6,6 +6,8 @@
 #include "MainApp.h"
 #include "Mission.h"
 #include "Mouse_Cursor.h"
+#include "Head.h"
+#include "Body.h"
 #include "Dummy_Goblin.h"
 #include "Dummy_Cube.h"
 
@@ -105,13 +107,12 @@ void CLoader::Output()
 HRESULT CLoader::Loading_For_Logo()
 {
 	m_strMessage = TEXT("텍스쳐를(을) 로딩 중 입니다.");
-
+	m_strMessage = TEXT("모델를(을) 로딩 중 입니다.");
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Dororong"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/DororongDoro.png"), TEXT("Dororong"), 0)))){
 		return E_FAIL;
 	}
 
-	m_strMessage = TEXT("모델를(을) 로딩 중 입니다.");
 
 	m_strMessage = TEXT("셰이더를(을) 로딩 중 입니다.");
 
@@ -170,7 +171,6 @@ HRESULT CLoader::Loading_For_Logo()
 HRESULT CLoader::Loading_For_UI()
 {
 	m_strMessage = TEXT("텍스쳐를(을) 로딩 중 입니다.");
-
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Keyboard"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("../Bin/Resources/Textures/Keyboard/Keyboard_%d.png"), TEXT("Keyboard"), 10)))) {
 		return E_FAIL;
@@ -185,6 +185,8 @@ HRESULT CLoader::Loading_For_UI()
 
 	m_strMessage = TEXT("셰이더를(을) 로딩 중 입니다.");
 
+	m_strMessage = TEXT("이펙트를(을) 로딩 중 입니다.");
+
 	m_strMessage = TEXT("객체원형를(을) 로딩 중 입니다.");
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CMission>(g_iStaticLevel, CMission::Create(m_pDevice, m_pContext))))
@@ -196,6 +198,8 @@ HRESULT CLoader::Loading_For_UI()
 	{
 		return E_FAIL;
 	}
+
+	m_strMessage = TEXT("정보를 불러오는 중입니다.");
 
 	m_strMessage = TEXT("로딩이 완료되었습니다..");
 
@@ -210,12 +214,38 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 
 	m_strMessage = TEXT("모델를(을) 로딩 중 입니다.");
 	
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_GoblinBody_Model"),
+	/*if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_GoblinBody_Model"),
 		CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Goblin/GoblinBody.fbx", MODEL::ANIM, XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixIdentity(), 0))))
 		return E_FAIL;
-	
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Desc_Box"),
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_GoblinHead_Model"),
+		CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Goblin/GoblinHead.fbx", MODEL::ANIM, XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixIdentity(), 0))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Desc_Box"),
 		CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Box/Box.fbx", MODEL::NONANIM, XMMatrixIdentity(), 0))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Steve_Model"),
+		CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Steve/Steve.fbx", MODEL::ANIM, XMMatrixIdentity(), 0))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_TombProtector_Model"),
+		CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/TombProtector/TombProtector.fbx", MODEL::ANIM,XMMatrixIdentity(), 0))))
+		return E_FAIL;*/
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_GoblinBody_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/SaveFile/GoblinBody", XMMatrixScaling(0.001f, 0.001f, 0.001f) * XMMatrixIdentity()))))
+		return E_FAIL;
+
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Steve_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/SaveFile/Steve",XMMatrixScaling(0.01f,0.01f,0.01f)* XMMatrixIdentity()))))
+		return E_FAIL;
+
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_TombProtector_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/SaveFile/TombProtector", XMMatrixScaling(0.001f, 0.001f, 0.001f) * XMMatrixIdentity()))))
 		return E_FAIL;
 
 	m_strMessage = TEXT("셰이더를(을) 로딩 중 입니다.");
@@ -224,8 +254,12 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 
 	m_strMessage = TEXT("객체원형를(을) 로딩 중 입니다.");
 
-	/* For.Prototype_GameObject_Dummy_Goblin */
-	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_Goblin>(g_iStaticLevel, CDummy_Goblin::Create(m_pDevice, m_pContext))))
+	/* For.Prototype_GameObject_Body */
+	if (FAILED(m_pGameInstance->Add_Prototype<CBody>(g_iStaticLevel, CBody::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Head */
+	if (FAILED(m_pGameInstance->Add_Prototype<CHead>(g_iStaticLevel, CHead::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Dummy_Cube */

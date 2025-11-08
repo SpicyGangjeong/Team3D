@@ -59,6 +59,26 @@ _int CModel::Get_BoneIndex(const _char* pBoneName, vector<class CBone*> Bones)
 	return iBoneIndex;
 }
 
+_int CModel::Get_BoneIndex(const _char* pBoneName) const
+{
+	_int	iBoneIndex = {};
+
+	auto	iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone)->_bool
+		{
+			if (true == pBone->Compare_Name(pBoneName))
+				return true;
+
+			++iBoneIndex;
+
+			return false;
+		});
+
+	if (iter == m_Bones.end())
+		return -1;
+
+	return iBoneIndex;
+}
+
 void CModel::Change_AnimationIndex(_int iAnimationIndex, _bool bIsLoop, _float fLerpDuration, _bool bIgnoreCurrentIndex)
 {
 	if (false == bIgnoreCurrentIndex && m_iCurrentAnimIndex == iAnimationIndex) { return; }
@@ -162,6 +182,19 @@ _bool CModel::Play_Animation(_float fTimeDelta)
 	}
 
 	return m_bIsFinishedAnim;
+}
+
+void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop)
+{
+	if (m_iCurrentAnimIndex == iIndex)
+		return;
+	if (iIndex >= 0 && iIndex < m_iNumAnimations)
+	{
+		m_iCurrentAnimIndex = iIndex;
+		m_bIsLoop = isLoop;
+	}
+	else
+		m_iCurrentAnimIndex = -1;
 }
 
 void CModel::Stop_Animation()
@@ -329,6 +362,296 @@ HRESULT CModel::Ready_Bones(const aiNode* pAINode, _int iParentIndex)
 
 	return S_OK;
 }
+bool CModel::SaveAssimpModel(const _char* filename)
+{
+	if (!m_pAIScene) return false;
+
+	_char szModel[MAX_PATH] = {};
+	_char szName[MAX_PATH] = {};
+	_splitpath_s(filename, nullptr, 0, nullptr, 0, szName, MAX_PATH, nullptr, 0);
+	strcat_s(szModel, sizeof(_char) * MAX_PATH, szName);
+
+	_string savePath = string("../Bin/Resources/SaveFile/") + szModel;
+
+	SaveModel modelData;
+	modelData.MeshCount = m_pAIScene->mNumMeshes;
+	modelData.MaterialCount = m_pAIScene->mNumMaterials;
+
+	for (unsigned int i = 0; i < m_pAIScene->mNumMeshes; i++)
+	{
+		aiMesh* mesh = m_pAIScene->mMeshes[i];
+		SaveMesh saveMesh{};
+		strcpy_s(saveMesh.Name, mesh->mName.C_Str());
+		saveMesh.VertexCount = mesh->mNumVertices;
+		saveMesh.IndexCount = mesh->mNumFaces * 3;
+		saveMesh.MaterialIndex = mesh->mMaterialIndex;
+
+		saveMesh.Vertices.resize(saveMesh.VertexCount);
+		for (unsigned int i = 0; i < mesh->mNumVertices; i++)
+		{
+			saveMesh.Vertices[i].Pos = XMFLOAT3{ mesh->mVertices[i].x , mesh->mVertices[i].y,mesh->mVertices[i].z };
+
+			if (mesh->HasNormals())
+			{
+				saveMesh.Vertices[i].Normal = XMFLOAT3{
+					mesh->mNormals[i].x,
+					mesh->mNormals[i].y,
+					mesh->mNormals[i].z
+				};
+				saveMesh.Vertices[i].bHasNormal = true;
+			}
+			else
+			{
+				saveMesh.Vertices[i].Normal = XMFLOAT3(0.f, 1.f, 0.f);
+				saveMesh.Vertices[i].bHasNormal = false;
+			}
+
+			if (mesh->HasTangentsAndBitangents())
+			{
+				saveMesh.Vertices[i].Tan = XMFLOAT3{
+					mesh->mTangents[i].x,
+					mesh->mTangents[i].y,
+					mesh->mTangents[i].z
+				};
+				saveMesh.Vertices[i].bHasTan = true;
+			}
+			else
+			{
+				saveMesh.Vertices[i].Tan = XMFLOAT3(1.f, 0.f, 0.f);
+				saveMesh.Vertices[i].bHasTan = false;
+			}
+
+			saveMesh.Vertices[i].BiNoraml = XMFLOAT3{
+				mesh->mBitangents[i].x,
+				mesh->mBitangents[i].y,
+				mesh->mBitangents[i].z
+			};
+
+			if (mesh->HasTextureCoords(0))
+			{
+				saveMesh.Vertices[i].UV = XMFLOAT2{
+					mesh->mTextureCoords[0][i].x,
+					mesh->mTextureCoords[0][i].y
+				};
+				saveMesh.Vertices[i].bHasUV = true;
+			}
+			else
+			{
+				saveMesh.Vertices[i].UV = XMFLOAT2(0.f, 0.f);
+				saveMesh.Vertices[i].bHasUV = false;
+			}
+			saveMesh.Vertices[i].BlendIndex = XMUINT4(0, 0, 0, 0);
+			saveMesh.Vertices[i].BlendWeight = XMFLOAT4(0.f, 0.f, 0.f, 0.f);
+		}
+		saveMesh.BoneCount = mesh->mNumBones;
+		saveMesh.Bones.resize(mesh->mNumBones);
+		for (size_t j = 0; j < mesh->mNumBones; j++)
+		{
+			strcpy_s(saveMesh.Bones[j].Name, sizeof(saveMesh.Bones[j].Name), mesh->mBones[j]->mName.C_Str());
+
+			memcpy(&saveMesh.Bones[j].OffsetMatrix, &mesh->mBones[j]->mOffsetMatrix, sizeof(_float4x4));
+			XMStoreFloat4x4(&saveMesh.Bones[j].OffsetMatrix, XMMatrixTranspose(XMLoadFloat4x4(&saveMesh.Bones[j].OffsetMatrix)));
+			saveMesh.Bones[j].WeightsCount = mesh->mBones[j]->mNumWeights;
+			saveMesh.Bones[j].Weights.resize(mesh->mBones[j]->mNumWeights);
+			for (size_t k = 0; k < saveMesh.Bones[j].WeightsCount; k++)
+			{
+				saveMesh.Bones[j].Weights[k].VertexId = mesh->mBones[j]->mWeights[k].mVertexId;
+				saveMesh.Bones[j].Weights[k].Weight = mesh->mBones[j]->mWeights[k].mWeight;
+			}
+		}
+
+		saveMesh.Indices.reserve(saveMesh.IndexCount);
+		for (unsigned int i = 0; i < mesh->mNumFaces; i++)
+		{
+			aiFace& face = mesh->mFaces[i];
+			for (unsigned int idx = 0; idx < face.mNumIndices; idx++)
+				saveMesh.Indices.push_back(face.mIndices[idx]);
+		}
+
+		modelData.Meshes.push_back(saveMesh);
+	}
+
+	for (size_t i = 0; i < m_Materials.size(); i++)
+	{
+		modelData.Materials.push_back(m_Materials[i]->Get_SaveMaterial());
+	}
+
+	std::vector<SaveNode> allNodes;
+	SaveNodeRecursive(m_pAIScene->mRootNode, allNodes, -1);
+
+	modelData.AnimationCount = m_pAIScene->mNumAnimations;
+	for (unsigned int i = 0; i < modelData.AnimationCount; i++)
+	{
+		aiAnimation* Anim = m_pAIScene->mAnimations[i];
+		SaveAnimation saveAnim{};
+		strcpy_s(saveAnim.Name, Anim->mName.C_Str());
+		saveAnim.mDuration = (_float)Anim->mDuration;
+		saveAnim.mTicksPerSecond = (_float)Anim->mTicksPerSecond;
+		saveAnim.ChannelCount = Anim->mNumChannels;
+
+		saveAnim.Channels.resize(Anim->mNumChannels);
+		for (size_t j = 0; j < saveAnim.ChannelCount; j++)
+		{
+			strcpy_s(saveAnim.Channels[j].Name, sizeof(saveAnim.Channels[j].Name),
+				Anim->mChannels[j]->mNodeName.C_Str());
+
+			saveAnim.Channels[j].ScalingKeyCount = Anim->mChannels[j]->mNumScalingKeys;
+			saveAnim.Channels[j].RotationKeyCount = Anim->mChannels[j]->mNumRotationKeys;
+			saveAnim.Channels[j].PositionKeyCount = Anim->mChannels[j]->mNumPositionKeys;
+			for (size_t k = 0; k < saveAnim.Channels[j].ScalingKeyCount; k++)
+			{
+				SaveKeyFrameVec Key;
+				Key.Time = (_float)Anim->mChannels[j]->mScalingKeys[k].mTime;
+				Key.Value = XMFLOAT3(
+					Anim->mChannels[j]->mScalingKeys[k].mValue.x,
+					Anim->mChannels[j]->mScalingKeys[k].mValue.y,
+					Anim->mChannels[j]->mScalingKeys[k].mValue.z);
+				saveAnim.Channels[j].ScalingKeys.push_back(Key);
+			}
+			for (size_t k = 0; k < saveAnim.Channels[j].RotationKeyCount; k++)
+			{
+				SaveKeyFrameRotation Key;
+				Key.Time = (_float)Anim->mChannels[j]->mRotationKeys[k].mTime;
+				Key.Value = XMFLOAT4(
+					Anim->mChannels[j]->mRotationKeys[k].mValue.x,
+					Anim->mChannels[j]->mRotationKeys[k].mValue.y,
+					Anim->mChannels[j]->mRotationKeys[k].mValue.z,
+					Anim->mChannels[j]->mRotationKeys[k].mValue.w);
+				saveAnim.Channels[j].RotationKeys.push_back(Key);
+			}
+			for (size_t k = 0; k < saveAnim.Channels[j].PositionKeyCount; k++)
+			{
+				SaveKeyFrameVec Key;
+				Key.Time = (_float)Anim->mChannels[j]->mPositionKeys[k].mTime;
+				Key.Value = XMFLOAT3(
+					Anim->mChannels[j]->mPositionKeys[k].mValue.x,
+					Anim->mChannels[j]->mPositionKeys[k].mValue.y,
+					Anim->mChannels[j]->mPositionKeys[k].mValue.z);
+				saveAnim.Channels[j].PositionKeys.push_back(Key);
+			}
+		}
+		modelData.Animations.push_back(saveAnim);
+	}
+
+	FILE* fp = nullptr;
+	fopen_s(&fp, savePath.c_str(), "wb");
+	if (!fp) return false;
+
+	fwrite(&modelData.MeshCount, sizeof(_uint), 1, fp);
+	fwrite(&modelData.MaterialCount, sizeof(_uint), 1, fp);
+	fwrite(&modelData.AnimationCount, sizeof(_uint), 1, fp);
+	modelData.NodeCount = (_uint)allNodes.size();
+	fwrite(&modelData.NodeCount, sizeof(_uint), 1, fp);
+
+	for (auto& mesh : modelData.Meshes)
+	{
+		fwrite(&mesh.Name, sizeof(mesh.Name), 1, fp);
+		fwrite(&mesh.VertexCount, sizeof(_uint), 1, fp);
+		fwrite(&mesh.IndexCount, sizeof(_uint), 1, fp);
+		fwrite(&mesh.MaterialIndex, sizeof(_uint), 1, fp);
+		fwrite(&mesh.BoneCount, sizeof(_uint), 1, fp);
+
+		fwrite(mesh.Vertices.data(), sizeof(SaveVertex), mesh.VertexCount, fp);
+		fwrite(mesh.Indices.data(), sizeof(_uint), mesh.IndexCount, fp);
+		for (auto& bone : mesh.Bones)
+		{
+			fwrite(&bone.Name, sizeof(bone.Name), 1, fp);
+			fwrite(&bone.OffsetMatrix, sizeof(XMFLOAT4X4), 1, fp);
+			fwrite(&bone.WeightsCount, sizeof(_uint), 1, fp);
+			for (auto& Weights : bone.Weights)
+			{
+				fwrite(&Weights.VertexId, sizeof(_uint), 1, fp);
+				fwrite(&Weights.Weight, sizeof(float), 1, fp);
+			}
+		}
+	}
+
+
+	for (auto& node : allNodes)
+	{
+		fwrite(node.Name, sizeof(node.Name), 1, fp);
+		fwrite(&node.ParentIndex, sizeof(int), 1, fp);
+		fwrite(&node.Transformation, sizeof(XMFLOAT4X4), 1, fp);
+		fwrite(&node.ChildrenCount, sizeof(_uint), 1, fp);
+
+		for (auto child : node.ChildrenIndices)
+		{
+			fwrite(&child, sizeof(int), 1, fp);
+		}
+	}
+
+	for (auto& Anim : modelData.Animations)
+	{
+		fwrite(Anim.Name, sizeof(Anim.Name), 1, fp);
+		fwrite(&Anim.mDuration, sizeof(_float), 1, fp);
+		fwrite(&Anim.mTicksPerSecond, sizeof(_float), 1, fp);
+		fwrite(&Anim.ChannelCount, sizeof(_uint), 1, fp);
+		for (size_t i = 0; i < Anim.ChannelCount; i++)
+		{
+			fwrite(Anim.Channels[i].Name, sizeof(Anim.Channels[i].Name), 1, fp);
+
+			fwrite(&Anim.Channels[i].ScalingKeyCount, sizeof(_uint), 1, fp);
+			fwrite(Anim.Channels[i].ScalingKeys.data(), sizeof(SaveKeyFrameVec), Anim.Channels[i].ScalingKeyCount, fp);
+
+			fwrite(&Anim.Channels[i].RotationKeyCount, sizeof(_uint), 1, fp);
+			fwrite(Anim.Channels[i].RotationKeys.data(), sizeof(SaveKeyFrameRotation), Anim.Channels[i].RotationKeyCount, fp);
+
+			fwrite(&Anim.Channels[i].PositionKeyCount, sizeof(_uint), 1, fp);
+			fwrite(Anim.Channels[i].PositionKeys.data(), sizeof(SaveKeyFrameVec), Anim.Channels[i].PositionKeyCount, fp);
+		}
+	}
+
+	for (auto& mat : modelData.Materials)
+	{
+		for (_uint i = 0; i < AI_TEXTURE_TYPE_MAX; i++)
+		{
+			_uint MaterialCount = static_cast<_uint>(mat.Path[i].size());
+			fwrite(&MaterialCount, sizeof(_uint), 1, fp);
+			for (const auto& path : mat.Path[i])
+			{
+				_uint len = static_cast<_uint>(path.size());
+				fwrite(&len, sizeof(_uint), 1, fp);
+				fwrite(path.c_str(), sizeof(char), len, fp);
+			}
+		}
+	}
+
+	fclose(fp);
+
+	MSG_BOX("Save Succeed");
+
+	return true;
+}
+_int CModel::SaveNodeRecursive(const aiNode* pAINode, std::vector<SaveNode>& outNodes, _int parentIndex)
+{
+	SaveNode node{};
+	strcpy_s(node.Name, sizeof(node.Name), pAINode->mName.C_Str());
+	node.ParentIndex = parentIndex;
+
+	const aiMatrix4x4& m = pAINode->mTransformation;
+	node.Transformation = XMFLOAT4X4(
+		m.a1, m.a2, m.a3, m.a4,
+		m.b1, m.b2, m.b3, m.b4,
+		m.c1, m.c2, m.c3, m.c4,
+		m.d1, m.d2, m.d3, m.d4
+	);
+
+	XMStoreFloat4x4(&node.Transformation, XMMatrixTranspose(XMLoadFloat4x4(&node.Transformation)));
+
+	node.ChildrenCount = pAINode->mNumChildren;
+	node.ChildrenIndices.resize(node.ChildrenCount);
+
+	int currentIndex = static_cast<int>(outNodes.size());
+	outNodes.push_back(node);
+
+	for (size_t i = 0; i < pAINode->mNumChildren; i++)
+	{
+		int childIndex = SaveNodeRecursive(pAINode->mChildren[i], outNodes, currentIndex);
+		outNodes[currentIndex].ChildrenIndices[i] = childIndex;
+	}
+
+	return currentIndex;
+}
 #endif // EDITOR_PROJECT
 
 HRESULT CModel::Initialize_Prototype()
@@ -336,9 +659,193 @@ HRESULT CModel::Initialize_Prototype()
 	return S_OK;
 }
 
+HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix)
+{
+	LoadData(pModelFilePath);
+	m_pSaveModel = m_pGameInstance->Load_SaveModel(pModelFilePath);
+
+	m_eType = eType;
+	XMStoreFloat4x4(&m_PreTransformMatrix, PreTransformMatrix);
+
+	Ready_Bones(m_pSaveModel->Nodes, 0, -1);
+
+	if (FAILED(Ready_Meshes()))
+		return E_FAIL;
+
+	if (FAILED(Ready_Materials(pModelFilePath)))
+		return E_FAIL;
+
+	if (FAILED(Ready_Animations()))
+		return E_FAIL;
+
+
+
+	return S_OK;
+}
+
+
 HRESULT CModel::Initialize_Prototype(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex)
 {
 	return Assimp_Model_Load(pModelFilePath, eType, PreTransformMatrix, iRootBoneIndex);
+}
+
+bool CModel::LoadData(const _char* filename)
+{
+	FILE* fp = nullptr;
+	fopen_s(&fp, filename, "rb");
+	if (!fp) return false;
+
+	SaveModel NewModel = {};
+
+	fread(&NewModel.MeshCount, sizeof(_uint), 1, fp);
+	fread(&NewModel.MaterialCount, sizeof(_uint), 1, fp);
+	fread(&NewModel.AnimationCount, sizeof(_uint), 1, fp);
+	fread(&NewModel.NodeCount, sizeof(_uint), 1, fp);
+
+	for (_uint i = 0; i < NewModel.MeshCount; i++)
+	{
+		SaveMesh mesh{};
+		fread(&mesh.Name, sizeof(mesh.Name), 1, fp);
+		fread(&mesh.VertexCount, sizeof(_uint), 1, fp);
+		fread(&mesh.IndexCount, sizeof(_uint), 1, fp);
+		fread(&mesh.MaterialIndex, sizeof(_uint), 1, fp);
+		fread(&mesh.BoneCount, sizeof(_uint), 1, fp);
+
+		mesh.Vertices.resize(mesh.VertexCount);
+		fread(mesh.Vertices.data(), sizeof(SaveVertex), mesh.VertexCount, fp);
+
+		mesh.Indices.resize(mesh.IndexCount);
+		fread(mesh.Indices.data(), sizeof(_uint), mesh.IndexCount, fp);
+
+		mesh.Bones.resize(mesh.BoneCount);
+		for (size_t i = 0; i < mesh.BoneCount; i++)
+		{
+			fread(&mesh.Bones[i].Name, sizeof(mesh.Bones[i].Name), 1, fp);
+			fread(&mesh.Bones[i].OffsetMatrix, sizeof(XMFLOAT4X4), 1, fp);
+			fread(&mesh.Bones[i].WeightsCount, sizeof(_uint), 1, fp);
+			mesh.Bones[i].Weights.resize(mesh.Bones[i].WeightsCount);
+			for (size_t j = 0;j < mesh.Bones[i].WeightsCount; j++)
+			{
+				fread(&mesh.Bones[i].Weights[j].VertexId, sizeof(_uint), 1, fp);
+				fread(&mesh.Bones[i].Weights[j].Weight, sizeof(_float), 1, fp);
+			}
+		}
+		NewModel.Meshes.push_back(mesh);
+	}
+
+	NewModel.Nodes.resize(NewModel.NodeCount);
+	for (size_t i = 0; i < NewModel.NodeCount; i++)
+	{
+		fread(NewModel.Nodes[i].Name, sizeof(NewModel.Nodes[i].Name), 1, fp);
+		fread(&NewModel.Nodes[i].ParentIndex, sizeof(int), 1, fp);
+		fread(&NewModel.Nodes[i].Transformation, sizeof(XMFLOAT4X4), 1, fp);
+		fread(&NewModel.Nodes[i].ChildrenCount, sizeof(_uint), 1, fp);
+		NewModel.Nodes[i].ChildrenIndices.resize(NewModel.Nodes[i].ChildrenCount);
+		for (size_t j = 0; j < NewModel.Nodes[i].ChildrenCount; j++)
+		{
+			fread(&NewModel.Nodes[i].ChildrenIndices[j], sizeof(int), 1, fp);
+		}
+	}
+
+	for (size_t i = 0; i < NewModel.AnimationCount; i++)
+	{
+		SaveAnimation saveAnim = {};
+		fread(&saveAnim.Name, sizeof(saveAnim.Name), 1, fp);
+		fread(&saveAnim.mDuration, sizeof(_float), 1, fp);
+		fread(&saveAnim.mTicksPerSecond, sizeof(_float), 1, fp);
+		fread(&saveAnim.ChannelCount, sizeof(_uint), 1, fp);
+		saveAnim.Channels.resize(saveAnim.ChannelCount);
+		for (size_t j = 0; j < saveAnim.ChannelCount; j++)
+		{
+			fread(&saveAnim.Channels[j].Name, sizeof(saveAnim.Channels[j].Name), 1, fp);
+
+			fread(&saveAnim.Channels[j].ScalingKeyCount, sizeof(_uint), 1, fp);
+			saveAnim.Channels[j].ScalingKeys.resize(saveAnim.Channels[j].ScalingKeyCount);
+			fread(saveAnim.Channels[j].ScalingKeys.data(), sizeof(SaveKeyFrameVec), saveAnim.Channels[j].ScalingKeyCount, fp);
+
+			fread(&saveAnim.Channels[j].RotationKeyCount, sizeof(_uint), 1, fp);
+			saveAnim.Channels[j].RotationKeys.resize(saveAnim.Channels[j].RotationKeyCount);
+			fread(saveAnim.Channels[j].RotationKeys.data(), sizeof(SaveKeyFrameRotation), saveAnim.Channels[j].RotationKeyCount, fp);
+
+			fread(&saveAnim.Channels[j].PositionKeyCount, sizeof(_uint), 1, fp);
+			saveAnim.Channels[j].PositionKeys.resize(saveAnim.Channels[j].PositionKeyCount);
+			fread(saveAnim.Channels[j].PositionKeys.data(), sizeof(SaveKeyFrameVec), saveAnim.Channels[j].PositionKeyCount, fp);
+		}
+		NewModel.Animations.push_back(saveAnim);
+	}
+
+	NewModel.Materials.clear();
+	for (_uint i = 0; i < NewModel.MaterialCount; i++)
+	{
+		SaveMaterial mat;
+
+		for (_uint k = 0; k < AI_TEXTURE_TYPE_MAX; k++)
+		{
+			_uint MaterialCount = 0;
+			fread(&MaterialCount, sizeof(_uint), 1, fp);
+			mat.Path[k].resize(MaterialCount);
+			for (_uint j = 0; j < MaterialCount; j++)
+			{
+				_uint len = 0;
+				fread(&len, sizeof(_uint), 1, fp);
+				std::string temp;
+				temp.resize(len);
+				fread(&temp[0], sizeof(char), len, fp);
+				mat.Path[k][j] = temp;
+			}
+		}
+		
+
+		/*_uint diffuseCount = 0;
+		fread(&diffuseCount, sizeof(_uint), 1, fp);
+		mat.DiffusePath.resize(diffuseCount);
+		for (_uint j = 0; j < diffuseCount; j++)
+		{
+			_uint len = 0;
+			fread(&len, sizeof(_uint), 1, fp);
+			std::string temp;
+			temp.resize(len);
+			fread(&temp[0], sizeof(char), len, fp);
+			mat.DiffusePath[j] = temp;
+		}
+
+		_uint normalCount = 0;
+		fread(&normalCount, sizeof(_uint), 1, fp);
+		mat.NormalPath.resize(normalCount);
+		for (_uint j = 0; j < normalCount; j++)
+		{
+			_uint len = 0;
+			fread(&len, sizeof(_uint), 1, fp);
+			std::string temp;
+			temp.resize(len);
+			fread(&temp[0], sizeof(char), len, fp);
+			mat.NormalPath[j] = temp;
+		}
+
+		_uint specularCount = 0;
+		fread(&specularCount, sizeof(_uint), 1, fp);
+		mat.SpecularPath.resize(specularCount);
+		for (_uint j = 0; j < specularCount; j++)
+		{
+			_uint len = 0;
+			fread(&len, sizeof(_uint), 1, fp);
+			std::string temp;
+			temp.resize(len);
+			fread(&temp[0], sizeof(char), len, fp);
+			mat.SpecularPath[j] = temp;
+		}*/
+
+		NewModel.Materials.push_back(mat);
+	}
+
+
+	fclose(fp);
+
+	m_SaveModel.push_back(NewModel);
+
+	m_pGameInstance->Add_SaveModel(filename, m_SaveModel.back());
+
+	return true;
 }
 
 CModel* CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex)
@@ -364,34 +871,36 @@ HRESULT CModel::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fma
 	}
 	m_iRootBoneIndex = iRootBoneIndex;
 
-	Assimp::Importer Importer = {};
-	const aiScene* pAIScene = { nullptr };
-
-	pAIScene = Importer.ReadFile(pModelFilePath, iFlag);
-	if (nullptr == pAIScene) {
+	m_pAIScene = m_Importer.ReadFile(pModelFilePath, iFlag);
+	if (nullptr == m_pAIScene)
 		return E_FAIL;
-	}
+
 
 #pragma region Bone
-	if (FAILED(Ready_Bones(pAIScene->mRootNode, -1))) {
+	if (FAILED(Ready_Bones(m_pAIScene->mRootNode, -1))) {
 		return E_FAIL;
 	}
 #pragma endregion
 #pragma region Mesh
-	if (FAILED(Ready_Meshes(eType, pAIScene, PreTransformMatrix))) {
+	if (FAILED(Ready_Meshes(eType, m_pAIScene, PreTransformMatrix))) {
 		return E_FAIL;
 	}
 #pragma endregion
 #pragma region Material
-	if (FAILED(Ready_Materials(pAIScene, pModelFilePath))) {
+	if (FAILED(Ready_Materials(m_pAIScene, pModelFilePath))) {
 		return E_FAIL;
 	}
 #pragma endregion
 #pragma region Animation
-	if (FAILED(Ready_Animations(pAIScene))) {
+	if (FAILED(Ready_Animations(m_pAIScene))) {
 		return E_FAIL;
 	}
 #pragma endregion
+
+	m_pGameInstance->Save_ModelFilePath(pModelFilePath);
+
+	m_pGameInstance->Add_ModelToMap(pModelFilePath, this);
+
 	return S_OK;
 }
 
@@ -407,6 +916,73 @@ HRESULT CModel::Initialize(void* pArg)
 	return S_OK;
 }
 
+HRESULT CModel::Ready_Meshes()
+{
+	m_iNumMeshes = m_pSaveModel->MeshCount;
+
+	for (size_t i = 0; i < m_iNumMeshes; i++)
+	{
+		CMesh* pMesh = CMesh::Create(m_pDevice, m_pContext, m_eType, this, &m_pSaveModel->Meshes[i], XMLoadFloat4x4(&m_PreTransformMatrix));
+		if (nullptr == pMesh)
+			return E_FAIL;
+
+		m_Meshes.push_back(pMesh);
+	}
+
+	return S_OK;
+}
+
+HRESULT CModel::Ready_Materials(const _char* pModelFilePath)
+{
+	m_iNumMaterials = m_pSaveModel->MaterialCount;
+
+	for (size_t i = 0; i < m_iNumMaterials; i++)
+	{
+		CMaterial* pMaterial = CMaterial::Create(m_pDevice, m_pContext, pModelFilePath, m_pSaveModel->Materials[i]);
+		if (nullptr == pMaterial)
+			return E_FAIL;
+
+		m_Materials.push_back(pMaterial);
+	}
+
+	return S_OK;
+}
+
+HRESULT CModel::Ready_Bones(const std::vector<SaveNode>& allNodes, _int currentIndex, _int parentIndex)
+{
+	const SaveNode& saveNode = allNodes[currentIndex];
+
+	CBone* pBone = CBone::Create(saveNode, parentIndex);
+
+	if (!pBone) return E_FAIL;
+
+	m_Bones.push_back(pBone);
+
+	_int myIndex = _int(m_Bones.size() - 1);
+
+	for (size_t i = 0; i < saveNode.ChildrenIndices.size(); i++)
+	{
+		Ready_Bones(allNodes, saveNode.ChildrenIndices[i], myIndex);
+	}
+	return S_OK;
+}
+
+HRESULT CModel::Ready_Animations()
+{
+	m_iNumAnimations = m_pSaveModel->AnimationCount;
+
+	for (size_t i = 0; i < m_iNumAnimations; i++)
+	{
+		CAnimation* pAnimation = CAnimation::Create(this, &m_pSaveModel->Animations[i]);
+		if (nullptr == pAnimation)
+			return E_FAIL;
+
+		m_Animations.push_back(pAnimation);
+	}
+
+	return S_OK;
+}
+
 CModel* CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CModel* pInstance = new CModel(pDevice, pContext);
@@ -415,6 +991,19 @@ CModel* CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	{
 		MSG_BOX("Failed to Created : CModel");
 		SAFE_RELEASE(pInstance);
+	}
+
+	return pInstance;
+}
+
+CModel* CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath,_fmatrix PreTransformMatrix)
+{
+	CModel* pInstance = new CModel(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize_Prototype(eType, pModelFilePath, PreTransformMatrix)))
+	{
+		MSG_BOX("Failed to Created : CModel");
+		Safe_Release(pInstance);
 	}
 
 	return pInstance;
@@ -458,6 +1047,8 @@ void CModel::Free()
 
 	SAFE_RELEASE(m_pTransform);
 	SAFE_RELEASE(m_pLerpAnim);
+
+	m_SaveModel.clear();
 }
 
 void CModel::Describe_Entity()
