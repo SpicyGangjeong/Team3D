@@ -156,6 +156,8 @@
     <ClInclude Include="..\Public\Editor_Define.h" />
     <ClInclude Include="..\Public\Editor_Macro.h" />
     <ClInclude Include="..\Public\Editor_Struct.h" />
+    <ClInclude Include="..\public\LodingWidget1.h" />
+    <ClInclude Include="..\public\MiniMap_TrimBorder.h" />
     <ClInclude Include="..\public\Mission.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
     <ClInclude Include="..\Public\Level_Logo.h" />
@@ -163,6 +165,11 @@
     <ClInclude Include="..\Public\Level_ObjectViewer.h" />
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\Public\MainApp.h" />
+    <ClInclude Include="..\public\MissionBanner_Border.h" />
+    <ClInclude Include="..\public\MissionBanner_Key.h" />
+    <ClInclude Include="..\public\Mission_Icon.h" />
+    <ClInclude Include="..\public\Mission_Key.h" />
+    <ClInclude Include="..\public\Mission_KeyHold.h" />
     <ClInclude Include="..\public\Mouse_Cursor.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="framework.h" />
@@ -174,6 +181,8 @@
     <ClCompile Include="..\Private\DummyRect.cpp" />
     <ClCompile Include="..\Private\Dummy_Cube.cpp" />
     <ClCompile Include="..\Private\Dummy_Goblin.cpp" />
+    <ClCompile Include="..\private\LodingWidget1.cpp" />
+    <ClCompile Include="..\private\MiniMap_TrimBorder.cpp" />
     <ClCompile Include="..\private\Mission.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />
     <ClCompile Include="..\Private\Level_Logo.cpp" />
@@ -181,6 +190,11 @@
     <ClCompile Include="..\Private\Level_ObjectViewer.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />
+    <ClCompile Include="..\private\MissionBanner_Border.cpp" />
+    <ClCompile Include="..\private\MissionBanner_Key.cpp" />
+    <ClCompile Include="..\private\Mission_Icon.cpp" />
+    <ClCompile Include="..\private\Mission_Key.cpp" />
+    <ClCompile Include="..\private\Mission_KeyHold.cpp" />
     <ClCompile Include="..\private\Mouse_Cursor.cpp" />
     <ClCompile Include="..\Private\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -196,6 +210,10 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_UIEditor.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxAnimMesh.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>

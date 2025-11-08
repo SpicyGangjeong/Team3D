@@ -21,11 +21,11 @@ HRESULT CMission::Initialize(void* pArg)
 {
 
 	CUIObject::UIOBJECT_DESC	Desc{};
-
-	Desc.fX = 0.f;
-	Desc.fY = 0.f;
-	Desc.fSizeX = 300.f;
-	Desc.fSizeY = 300.f;
+	
+	Desc.fX = 300.f;
+	Desc.fY = 300.f;
+	Desc.fSizeX = 100.f;
+	Desc.fSizeY = 100.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -61,7 +61,7 @@ HRESULT CMission::Render()
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_POSTEX::UI)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::DEFAULT)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
@@ -114,7 +114,7 @@ HRESULT CMission::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, FX_POSTEX, (CComponent**)&m_pShaderCom, nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, FX_UIEDITOR, (CComponent**)&m_pShaderCom, nullptr)))
 	{
 		return E_FAIL;
 	}

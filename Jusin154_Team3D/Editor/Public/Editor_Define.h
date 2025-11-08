@@ -20,6 +20,7 @@ namespace Editor
 	enum class SHADER_PASS_NORTEX { DEFAULT, TERRAIN, END };
 	enum class SHADER_PASS_PARTICLE { EXPLOSION, END };
 	enum class SHADER_PASS_POSTEX { DEFAULT, SCISSOR, UI, UVMOVE, TRAIL, END };
+	enum class SHADER_PASS_UIEDITOR { DEFAULT, ALPHABLEND, CURSOR, LODING, END };
 }
 
 using namespace Editor;
