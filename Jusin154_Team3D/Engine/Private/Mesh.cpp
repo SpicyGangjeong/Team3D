@@ -604,6 +604,29 @@ HRESULT CMesh::SaveAsBinary(HANDLE hFile, DWORD& dwByte)
 	return S_OK;
 }
 
+PSX::PxTriangleMesh* CMesh::ConvertToPxMesh(const PSX::PxCookingParams* pParam)
+{
+	PSX::PxTriangleMeshDesc Desc;
+	vector<PSX::PxVec3> Vertices;
+	vector<PSX::PxU32> Triangles;
+	{
+		Desc.points.count = m_iNumVertices;
+		Desc.points.stride = sizeof(PSX::PxVec3);
+		Vertices.resize(m_iNumVertices);
+		memcpy_s(Vertices.data(), sizeof(PSX::PxVec3) * m_iNumVertices, m_pVertexPositions, sizeof(_float3) * m_iNumVertices);
+		Desc.points.data = Vertices.data();
+	}
+	{
+		Desc.triangles.count = m_iNumIndices / 3;
+		Desc.triangles.stride = sizeof(PSX::PxU32) * 3;
+		Triangles.resize(m_iNumIndices);
+		memcpy_s(Triangles.data(), sizeof(PSX::PxU32) * m_iNumIndices, m_pIndices, sizeof(PSX::PxU32) * m_iNumIndices);
+		Desc.triangles.data = Triangles.data();
+	}
+	PSX::PxTriangleMesh* pTriangleMesh = PxCreateTriangleMesh(*pParam, Desc);
+	return pTriangleMesh;
+}
+
 HRESULT CMesh::Ready_VertexBuffer_For_NonAnim(const aiMesh* pAIMesh, _fmatrix PreTransformMatrix)
 {
 	m_iVertexStride = sizeof(VTXMESH);

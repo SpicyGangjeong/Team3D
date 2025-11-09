@@ -136,11 +136,16 @@
     <Filter Include="50.UI\Mission\Active_Icon">
       <UniqueIdentifier>{977fe4d3-c3b5-413c-80fe-777ece19453e}</UniqueIdentifier>
     </Filter>
+<<<<<<< Updated upstream
     <Filter Include="02.GameObjects\Terrain">
       <UniqueIdentifier>{44a3ddc2-3993-48d6-840c-3da09daeab70}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Env\Manger">
       <UniqueIdentifier>{584466e9-fe1a-4a7d-a4ba-54d62ee1a7c1}</UniqueIdentifier>
+=======
+    <Filter Include="01.Level\60.PhysXLab">
+      <UniqueIdentifier>{943a760b-2861-45b7-87b8-462e1309c172}</UniqueIdentifier>
+>>>>>>> Stashed changes
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -252,6 +257,7 @@
     <ClInclude Include="..\public\Active_Icon.h">
       <Filter>50.UI\Mission\Active_Icon</Filter>
     </ClInclude>
+<<<<<<< Updated upstream
     <ClInclude Include="..\public\Level_MapViewer.h">
       <Filter>01.Level\30.MapViewer</Filter>
     </ClInclude>
@@ -263,6 +269,10 @@
     </ClInclude>
     <ClInclude Include="..\public\MapObject_Manager.h">
       <Filter>02.GameObjects\Env\Manger</Filter>
+=======
+    <ClInclude Include="..\Public\Level_PhysXLab.h">
+      <Filter>01.Level\60.PhysXLab</Filter>
+>>>>>>> Stashed changes
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -367,6 +377,7 @@
     <ClCompile Include="..\private\Active_Icon.cpp">
       <Filter>50.UI\Mission\Active_Icon</Filter>
     </ClCompile>
+<<<<<<< Updated upstream
     <ClCompile Include="..\private\Level_MapViewer.cpp">
       <Filter>01.Level\30.MapViewer</Filter>
     </ClCompile>
@@ -378,6 +389,10 @@
     </ClCompile>
     <ClCompile Include="..\private\MapObject_Manager.cpp">
       <Filter>02.GameObjects\Env\Manger</Filter>
+=======
+    <ClCompile Include="..\Private\Level_PhysXLab.cpp">
+      <Filter>01.Level\60.PhysXLab</Filter>
+>>>>>>> Stashed changes
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
