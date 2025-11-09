@@ -27,6 +27,12 @@
 
 #pragma endregion
 
+#pragma region MAP_HEADER
+#include "VIBuffer_Terrain.h"
+#include "Terrain.h"
+#include "MapObject.h"
+#include "MapObject_Manager.h"
+#pragma endregion
 
 
 #pragma region EFFECT_HEADER
@@ -91,9 +97,9 @@ HRESULT CLoader::Loading()
 	case LEVEL::UI:
 		hr = Loading_For_UI();
 		break;
-	//case LEVEL::MAP:
-	//	hr = Loading_For_MapViewer();
-	//	break;
+	case LEVEL::MAP:
+		hr = Loading_For_MapViewer();
+		break;
 	case LEVEL::OBJECT:
 		hr = Loading_For_ObjectViewer();
 		break;
@@ -430,6 +436,72 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	m_strMessage = TEXT("������ �ҷ����� ���Դϴ�.");
 
 	m_strMessage = TEXT("�ε��� �Ϸ�Ǿ����ϴ�..");
+
+	m_isFinished = true;
+
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_For_MapViewer()
+{
+	m_strMessage = TEXT("텍스쳐를(을) 로딩 중 입니다.");
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("TerrainTest"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Cursor/UI_T_CursorRings.dds"), 0)))) {
+		return E_FAIL;
+	}
+
+	m_strMessage = TEXT("모델를(을) 로딩 중 입니다.");
+
+	vector<_wstring> ModelPrototypeTags;
+
+	for (const auto& file : filesystem::directory_iterator("C:\\Users\\82103\\Desktop\\MapRe\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Meshes"))
+	{
+		if (file.is_directory())
+			continue;
+
+		string ext = file.path().extension().string();
+
+		if (strcmp(ext.c_str(), ".fbx"))
+			continue;
+
+		_char szFilePath[MAX_PATH] = {};
+
+		strcpy_s(szFilePath, MAX_PATH, file.path().string().c_str());
+
+		_wstring strFileName = L"Prototype_GameObject_" + file.path().stem().wstring();
+
+		/*For Prototype_Component_Model_Auro*/
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, strFileName,
+			CModel::Create(m_pDevice, m_pContext, szFilePath, MODEL::ENVIROMENT, XMMatrixIdentity(), 0))))
+			return E_FAIL;
+
+		ModelPrototypeTags.push_back(strFileName);
+	}
+
+
+	m_strMessage = TEXT("쉐이더를(을) 로딩 중 입니다.");
+
+	m_strMessage = TEXT("객체원형를(을) 로딩 중 입니다.");
+	
+	/* For.Prototype_Component_VIBuffer_Terrain */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Terrain"),
+		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, nullptr, 100, 100))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_MapObject */
+	if (FAILED(m_pGameInstance->Add_Prototype<CMapObject>(g_iStaticLevel, CMapObject::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Terrain */
+	if (FAILED(m_pGameInstance->Add_Prototype<CTerrain>(g_iStaticLevel, CTerrain::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_MapObject_Manager */
+	if (FAILED(m_pGameInstance->Add_Prototype<CMapObject_Manager>(g_iStaticLevel, CMapObject_Manager::Create(m_pDevice, m_pContext, ModelPrototypeTags))))
+		return E_FAIL;
+
+	m_strMessage = TEXT("로딩이 완료되었습니다..");
 
 	m_isFinished = true;
 

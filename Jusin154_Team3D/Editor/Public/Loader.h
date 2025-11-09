@@ -44,6 +44,7 @@ private:
 	HRESULT Initialize(LEVEL eNextLevelID);
 	HRESULT Loading_For_Logo();
 	HRESULT Loading_For_ObjectViewer();
+	HRESULT Loading_For_MapViewer();
 	HRESULT Loading_For_UI();
 	HRESULT Loading_For_Effect();
 

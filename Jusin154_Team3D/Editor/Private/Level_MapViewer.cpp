@@ -1,9 +1,11 @@
 #include "pch.h"
 #include "Level_MapViewer.h"
 #include "GameInstance.h"
+
 #include "Level_Loading.h"
 #include "DebugCamera.h"
-
+#include "Terrain.h"
+#include "MapObject_Manager.h"
 
 CLevel_MapViewer::CLevel_MapViewer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -11,23 +13,9 @@ CLevel_MapViewer::CLevel_MapViewer(ID3D11Device* pDevice, ID3D11DeviceContext* p
 
 }
 
-HRESULT CLevel_MapViewer::Initialize()
-{
-	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
-		return E_FAIL;
-
-	return S_OK;
-}
-
 void CLevel_MapViewer::Update(_float fTimeDelta)
 {
-	GUI::Begin("SelectEditor");
-	if (GUI::Button("Map Editor", { 100, 100 })) {
-		if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::MAP))))
-			return;
-	}
-	
-	GUI::End();
+
 }
 
 HRESULT CLevel_MapViewer::Render()
@@ -37,27 +25,89 @@ HRESULT CLevel_MapViewer::Render()
 	return S_OK;
 }
 
+HRESULT CLevel_MapViewer::Initialize()
+{
+	if (FAILED(Ready_Layer_Light()))
+		return E_FAIL;
 
+	if (FAILED(Ready_Layer_Camera(LAYER_CAMERA))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(Ready_Layer_Terrain(TEXT("Layer_Terrain")))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(Ready_Layer_MapObjects(TEXT("Layer_MapObject")))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(Ready_Layer_MapObjectManager(TEXT("Layer_MapObjectManager")))) {
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+HRESULT CLevel_MapViewer::Ready_Layer_Light()
+{
+	LIGHT_DESC			LightDesc{};
+
+	LightDesc.eType = LIGHT::DIRECTIONAL;
+	LightDesc.vDiffuse = _float4(0.8f, 0.8f, 0.8f, 0.f);
+	LightDesc.vAmbient = _float4(0.8f, 0.8f, 0.8f, 0.f);
+	LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 0.f);
+	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
+
+	if (FAILED(m_pGameInstance->On_Light(NEXT_LEVEL, TEXT("Main_Light"), LightDesc, nullptr))) {
+		return E_FAIL;
+	}
+	return S_OK;
+}
 
 HRESULT CLevel_MapViewer::Ready_Layer_Camera(const _wstring& strLayerTag)
 {
-	CDebugCamera::CAMERA_DEBUG_DESC Desc = {};
+	CDebugCamera::CAMERA_DEBUG_DESC            CameraDesc{};
+	CameraDesc.fFovy = XMConvertToRadians(60.0f);
+	CameraDesc.fNear = 0.1f;
+	CameraDesc.fFar = 500.f;
+	CameraDesc.vEye = _float3(0.f, 10.f, -10.f);
+	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
+	CameraDesc.fSpeedPerSec = 2.f;
+	CameraDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+	CameraDesc.fMouseSensor = 0.1f;
 
-	Desc.fFar = 300.f;
-	Desc.fFovy = XMConvertToRadians(60.f);
-	Desc.fNear = 0.1f;
-	Desc.fMouseSensor = 1.f;
-	Desc.fSpeedPerSec = 1.f;
-	Desc.fRotationPerSec = 1.f;
-
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDebugCamera>(g_iStaticLevel, g_iStaticLevel, strLayerTag, &Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDebugCamera>(g_iStaticLevel, NEXT_LEVEL,
+		strLayerTag, &CameraDesc)))
 		return E_FAIL;
 
 	return S_OK;
 }
 
-HRESULT CLevel_MapViewer::Ready_Layer_UI(const _wstring& strLayerTag)
+HRESULT CLevel_MapViewer::Ready_Layer_Terrain(const _wstring& strLayerTag)
 {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CLevel_MapViewer::Ready_Layer_MapObjects(const _wstring& strLayerTag)
+{
+	//CMapObject::MAPOBJECT_DESC Desc = {};
+	//Desc.pModelPrototypeTag = TEXT("Prototype_GameObject_SM_HW_ClockTower_Courtyard_BaseWall_A");
+
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapObject>(g_iStaticLevel, NEXT_LEVEL,strLayerTag, &Desc)))
+	//	return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CLevel_MapViewer::Ready_Layer_MapObjectManager(const _wstring& strLayerTag)
+{
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapObject_Manager>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -67,7 +117,7 @@ CLevel_MapViewer* CLevel_MapViewer::Create(ID3D11Device* pDevice, ID3D11DeviceCo
 
 	if (FAILED(pInstance->Initialize()))
 	{
-		MSG_BOX("Failed to Created : CLevel_Logo");
+		MSG_BOX("Failed to Created : CLevel_MapViewer");
 		SAFE_RELEASE(pInstance);
 	}
 
@@ -79,6 +129,4 @@ CLevel_MapViewer* CLevel_MapViewer::Create(ID3D11Device* pDevice, ID3D11DeviceCo
 void CLevel_MapViewer::Free()
 {
 	__super::Free();
-
-
 }

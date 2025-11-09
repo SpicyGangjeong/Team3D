@@ -7,6 +7,7 @@
 #include "Level_UI.h"
 #include "Level_ObjectViewer.h"
 #include "Level_EffectViewer.h"
+#include "Level_MapViewer.h"
 
 CLevel_Loading::CLevel_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -44,9 +45,9 @@ void CLevel_Loading::Update(_float fTimeDelta)
 		case LEVEL::UI:
 			pNewLevel = CLevel_UI::Create(m_pDevice, m_pContext, m_eNextLevelID);
 			break;
-		//case LEVEL::MAP:
-		//	pNewLevel = CLevel_MapViewer::Create(m_pDevice, m_pContext, m_eNextLevelID);
-		//	break;
+		case LEVEL::MAP:
+			pNewLevel = CLevel_MapViewer::Create(m_pDevice, m_pContext, m_eNextLevelID);
+			break;
 		case LEVEL::OBJECT:
 			pNewLevel = CLevel_ObjectViewer::Create(m_pDevice, m_pContext, m_eNextLevelID);
 			break;
