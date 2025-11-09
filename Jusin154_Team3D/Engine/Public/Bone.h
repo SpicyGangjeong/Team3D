@@ -37,6 +37,9 @@ private:
 
 private:
 	HRESULT Initialize(HANDLE hFile, DWORD& dwByte);
+	// 바이너리
+	HRESULT Initialize(const SaveNode& _SaveNode, _int iParentIndex);
+	//
 
 public:
 	static CBone* Create(HANDLE hFile, DWORD& dwByte);
@@ -47,6 +50,9 @@ public:
 public:
 	HRESULT SaveAsBinary(HANDLE hFile, DWORD& dwByte);
 	static CBone* Create(const aiNode* pAINode, _int iParentIndex);
+	// 바이너리
+	static CBone* Create(const SaveNode& _SaveNode, _int iParentIndex);
+	//
 private:
 	HRESULT Initialize(const aiNode* pAINode, _int iParentIndex);
 #endif // EDITOR_PROJECT

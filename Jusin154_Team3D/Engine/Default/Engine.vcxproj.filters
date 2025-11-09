@@ -214,6 +214,21 @@
     <Filter Include="99.Define\99.THIRDPARTY\TINYXML2">
       <UniqueIdentifier>{d93660eb-4bf9-43d2-902e-8ecbefd02481}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Element\02.Component\50.UI">
+      <UniqueIdentifier>{41e9427d-6e3b-4424-b2d0-0496a0a875af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\01.GameObject\50.UI">
+      <UniqueIdentifier>{32546fa5-8ee9-4c26-8d48-7ef2b2d023b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\06.Model\Instance_Model">
+      <UniqueIdentifier>{5d6c9918-c50d-4c5a-bbc6-56c50ae5985b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\06.ComputeShader">
+      <UniqueIdentifier>{96600587-16b1-4627-914d-7fc413c501ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\06. Picking">
+      <UniqueIdentifier>{a60a7ba5-a937-41d7-baac-db67f86f3ba1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -392,6 +407,24 @@
     </ClCompile>
     <ClCompile Include="..\Private\Collider_Manager.cpp">
       <Filter>03.Management\10.Collider_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UIComponent.cpp">
+      <Filter>02.Element\02.Component\50.UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UIObject.cpp">
+      <Filter>02.Element\01.GameObject\50.UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Instance_Model.cpp">
+      <Filter>02.Element\02.Component\06.Model\Instance_Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Picking.cpp">
+      <Filter>01.Utility\06. Picking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ComputeShader.cpp">
+      <Filter>01.Utility\06.ComputeShader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_Terrain.cpp">
+      <Filter>02.Element\02.Component\02.VIBuffer\Terrain</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -938,6 +971,24 @@
     <ClInclude Include="..\Public\Collider_Manager.h">
       <Filter>03.Management\10.Collider_Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\UIComponent.h">
+      <Filter>02.Element\02.Component\50.UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UIObject.h">
+      <Filter>02.Element\01.GameObject\50.UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Instance_Model.h">
+      <Filter>02.Element\02.Component\06.Model\Instance_Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ComputeShader.h">
+      <Filter>01.Utility\06.ComputeShader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Picking.h">
+      <Filter>01.Utility\06. Picking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_Terrain.h">
+      <Filter>02.Element\02.Component\02.VIBuffer\Terrain</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Public\Assimp\color4.inl">
@@ -994,6 +1045,9 @@
       <Filter>99.Define\01.SHADER</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Deferred.hlsl">
+      <Filter>99.Define\01.SHADER</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Particle_Compute.hlsl">
       <Filter>99.Define\01.SHADER</Filter>
     </FxCompile>
   </ItemGroup>

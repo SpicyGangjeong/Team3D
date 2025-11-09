@@ -74,8 +74,8 @@ HRESULT CMaterial::Initialize(const _char* pModelFilePath, const aiMaterial* pAI
 						hr = CreateWICTextureFromFile(m_pDevice, CMyTools::ToWstring(szTextureFilePath).c_str(), nullptr, &pSRV);
 					}
 				}
+				m_SaveMaterial.Path[i].push_back(szTextureFilePath);
 			}
-
 
 			strcpy_s(szSaveDir, sizeof(_char) * MAX_PATH, szName);
 			strcat_s(szSaveDir, sizeof(_char) * MAX_PATH, szExt);
@@ -171,6 +171,7 @@ HRESULT CMaterial::Initialize(const _char* pModelFilePath, HANDLE hFile, DWORD& 
 			strcat_s(szTextureDir, sizeof(_char) * MAX_PATH, szDir);
 			strcat_s(szTextureDir, sizeof(_char) * MAX_PATH, szTextureName);
 
+
 			{
 				_char		szTextureFileName[MAX_PATH] = {};
 				_char		szTextureFilePath[MAX_PATH] = {};
@@ -200,12 +201,53 @@ HRESULT CMaterial::Initialize(const _char* pModelFilePath, HANDLE hFile, DWORD& 
 						hr = CreateWICTextureFromFile(m_pDevice, CMyTools::ToWstring(szTextureFilePath).c_str(), nullptr, &pSRV);
 					}
 				}
+
 			}
 			if (FAILED(hr)) {
 				return E_FAIL;
 			}
 
 			m_SRVs[i].push_back(pSRV);
+		}
+	}
+	return S_OK;
+}
+
+HRESULT CMaterial::Initialize(const _char* pModelFilePath, const SaveMaterial& _SaveMaterial)
+{
+	for (size_t type = 0; type < 27; type++)
+	{
+		for (const auto& path : _SaveMaterial.Path[type])
+		{
+			char szDrive[MAX_PATH] = {};
+			char szDir[MAX_PATH] = {};
+			_splitpath_s(pModelFilePath, szDrive, MAX_PATH, szDir, MAX_PATH, nullptr, 0, nullptr, 0);
+
+			char szFullPath[MAX_PATH] = {};
+			strcpy_s(szFullPath, szDrive);
+			strcat_s(szFullPath, path.c_str());
+
+			_tchar szPerfectPath[MAX_PATH] = {};
+			MultiByteToWideChar(CP_ACP, 0, szFullPath, -1, szPerfectPath, MAX_PATH);
+
+			ID3D11ShaderResourceView* pSRV = nullptr;
+			HRESULT hr = S_OK;
+
+			const char* ext = strrchr(szFullPath, '.');
+			if (ext)
+			{
+				if (strcmp(ext, ".dds") == 0)
+					hr = CreateDDSTextureFromFile(m_pDevice, szPerfectPath, nullptr, &pSRV);
+				else if (strcmp(ext, ".tga") == 0)
+					hr = S_OK;
+				else
+					hr = CreateWICTextureFromFile(m_pDevice, szPerfectPath, nullptr, &pSRV);
+			}
+
+			if (FAILED(hr))
+				return E_FAIL;
+
+			m_SRVs[type].push_back(pSRV);
 		}
 	}
 	return S_OK;
@@ -219,6 +261,19 @@ CMaterial* CMaterial::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 	{
 		MSG_BOX("Failed to Created : CMaterial");
 		SAFE_RELEASE(pInstance);
+	}
+
+	return pInstance;
+}
+
+CMaterial* CMaterial::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, const SaveMaterial& _SaveMaterial)
+{
+	CMaterial* pInstance = new CMaterial(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize(pModelFilePath, _SaveMaterial)))
+	{
+		MSG_BOX("Failed to Created : CMaterial");
+		Safe_Release(pInstance);
 	}
 
 	return pInstance;

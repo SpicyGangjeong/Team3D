@@ -13,11 +13,12 @@ private:
 
 public:
 	static _int Get_BoneIndex(const _char* pBoneName, vector<class CBone*> Bones);	// 본의 벡터와 이름을 넘겨주면 인덱스를 넘겨줌 ( n 순회 )
+	_int Get_BoneIndex(const _char* pBoneName) const;
 	void	Set_RootBoneIndex(_int iIndex) { m_iRootBoneIndex = iIndex; }
 	void	Change_AnimationIndex(_int iAnimationIndex, _bool bIsLoop, _float fLerpDuration, _bool bIgnoreCurrentIndex = false);	// 애니메이션을 다른 인덱스로 변경함
 	_bool	Play_Animation(_float fTimeDelta); // 애니메이션에 델타타임을 넣어줌
+	void Set_AnimationIndex(_uint iIndex, _bool isLoop = true);
 	void	Stop_Animation(); // 애니메이션을 정지 (초기상태로)
-	void	Get_CurrentAnimationState();
 	_bool	IsFinishedAnim() const { return m_bIsFinishedAnim; }
 	_bool	IsFinishedLerp() const { return m_bIsFinishedLerp; }
 	void	RefreshAnim(); // 애님을 현재 애님의 초기상태로 되돌림
@@ -34,6 +35,7 @@ public:
 	_matrix Get_BoneMatrix(_uint iBoneIndex);
 
 	_float4x4* Get_PreTransformMatrixPtr() { return &m_PreTransformMatrix; }
+	_float4x4 Get_PreTransformMatrix() const { return m_PreTransformMatrix; };
 	void Get_BoneMatrices(_float4x4* pOut);
 	_uint	Get_BonesNum() const { return (_uint)m_Bones.size(); }
 
@@ -51,7 +53,16 @@ public:
 	HRESULT Ready_Materials(const aiScene* pAIScene, const _char* pModelFilePath);
 	HRESULT Ready_Animations(const aiScene* pAIScene);
 	HRESULT Ready_Bones(const aiNode* pAINode, _int iParentIndex);
+	// 바이너리
+	bool SaveAssimpModel(const _char* filename);
+	_int SaveNodeRecursive(const aiNode* pAINode, std::vector<SaveNode>& outNodes, _int parentIndex);
+	//
 #endif // EDITOR_PROJECT
+
+
+private:
+	const aiScene* m_pAIScene = { nullptr };
+	Assimp::Importer			m_Importer;
 
 
 private:
@@ -81,12 +92,32 @@ private:
 	class CTransform* m_pTransform = { nullptr };			// 모델 대상의 트랜스폼
 
 
+	// 바이너리
+	SaveModel* m_pSaveModel = { nullptr };
+	list<SaveModel> m_SaveModel;
+	//
+
 private:
 	virtual HRESULT Initialize_Prototype() override;
+	// 바이너리
+	virtual HRESULT Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix);
+	bool LoadData(const _char* filename);
+	//
 	virtual HRESULT Initialize(void* pArg) override;
+
+private:
+	// 바이너리
+	HRESULT Ready_Meshes();
+	HRESULT Ready_Materials(const _char* pModelFilePath);
+	HRESULT Ready_Bones(const std::vector<SaveNode>& allNodes, _int currentIndex, _int parentIndex);
+	HRESULT Ready_Animations();
+	//
 
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	// 바이너리
+	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix = XMMatrixIdentity());
+	//
 	virtual CComponent* Clone(void* pArg, class CGameObject* pOwner = nullptr);
 virtual void Free(); public:
 	void Describe_Entity() override;

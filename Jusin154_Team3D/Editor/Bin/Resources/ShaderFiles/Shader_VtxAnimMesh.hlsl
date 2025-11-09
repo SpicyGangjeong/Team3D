@@ -150,7 +150,7 @@ VS_OUT_SHADOW VS_MAIN_SHADOW(VS_IN In)
         g_BoneMatrices[In.vBlendIndex.z] * In.vBlendWeight.z +
         g_BoneMatrices[In.vBlendIndex.w] * fWeightW;
     
-    /* 스키닝 */
+    /* ?ㅽ궎??*/
     vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
    
     matrix matWV, matWVP;
