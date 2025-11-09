@@ -90,12 +90,12 @@ HRESULT CMaterial::Initialize(const _char* pModelFilePath, const aiMaterial* pAI
 
 	return S_OK;
 }
-HRESULT CMaterial::Initialize(const _char* pMaterialFilePath)
+HRESULT CMaterial::Initialize(const _char* pMaterialFilePath, const _char* pTextureFilePath)
 {
 	_char szTextureFilePath[MAX_PATH] = {};
 	_char szMaterialFilePath[MAX_PATH] = {};
 
-	strcpy_s(szTextureFilePath, "../Bin/Resources/Models/");
+	strcpy_s(szTextureFilePath, pTextureFilePath);
 
 	strcpy_s(szMaterialFilePath, pMaterialFilePath);
 	strcat_s(szMaterialFilePath, ".props.txt");
@@ -114,7 +114,8 @@ HRESULT CMaterial::Read_MaterialFile(const _char* pMaterialFilePath, const _char
 	if (!file.is_open())
 	{
 		MSG_BOX("Failed to Open Materail File");
-		return E_FAIL;
+		//return E_FAIL;
+		return S_OK;
 	}
 
 	_char szTextureFilePath[MAX_PATH] = {};
@@ -250,18 +251,28 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 		eTexture = aiTextureType::aiTextureType_DIFFUSE;
 	else if (!strcmp(FileType.c_str(), "N"))
 		eTexture = aiTextureType::aiTextureType_NORMALS;
+	else if (!strcmp(FileType.c_str(), "normal"))
+		eTexture = aiTextureType::aiTextureType_NORMALS;
 	else if (!strcmp(FileType.c_str(), "MRO"))
 		eTexture = aiTextureType::aiTextureType_METALNESS;
 	else if (!strcmp(FileType.c_str(), "MROH"))
 		eTexture = aiTextureType::aiTextureType_METALNESS;
-	else if (!strcmp(FileType.c_str(), "MROA'"))
+	else if (!strcmp(FileType.c_str(), "MROA"))
 		eTexture = aiTextureType::aiTextureType_DIFFUSE_ROUGHNESS;
 	else if (!strcmp(FileType.c_str(), "SRO"))
-		eTexture = aiTextureType::aiTextureType_AMBIENT_OCCLUSION;
+		eTexture = aiTextureType::aiTextureType_SPECULAR;
 	else if (!strcmp(FileType.c_str(), "SROH"))
-		eTexture = aiTextureType::aiTextureType_AMBIENT_OCCLUSION;
-	else if (!strcmp(FileType.c_str(), "HDR'"))
-		eTexture = aiTextureType::aiTextureType_DISPLACEMENT;
+		eTexture = aiTextureType::aiTextureType_SPECULAR;
+	else if (!strcmp(FileType.c_str(), "SROA"))
+		eTexture = aiTextureType::aiTextureType_SPECULAR;
+	else if (!strcmp(FileType.c_str(), "HDR"))
+		return S_OK;
+	else if (!strcmp(FileType.c_str(), "MSK"))
+		eTexture = aiTextureType::aiTextureType_MAYA_BASE;
+	else if (!strcmp(FileType.c_str(), "basecolor"))
+		eTexture = aiTextureType::aiTextureType_DIFFUSE;
+	else if (!strcmp(FileType.c_str(), "E"))
+		eTexture = aiTextureType::aiTextureType_EMISSIVE;
 	else
 	{
 		MSG_BOX("Failed to Path Material Texture Type");
@@ -337,9 +348,18 @@ CMaterial* CMaterial::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 
 	return pInstance;
 }
-CMaterial* CMaterial::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, const _char* pMaterialName)
+
+CMaterial* CMaterial::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pMaterialFilePath, const _char* pTextureFilePath)
 {
-	return nullptr;
+	CMaterial* pInstance = new CMaterial(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize(pMaterialFilePath, pTextureFilePath)))
+	{
+		MSG_BOX("Failed to Created : CMaterial");
+		SAFE_RELEASE(pInstance);
+	}
+
+	return pInstance;
 }
 #endif
 
