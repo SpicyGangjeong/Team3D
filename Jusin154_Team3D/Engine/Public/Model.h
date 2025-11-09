@@ -51,6 +51,7 @@ public:
 	HRESULT Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex);
 	HRESULT Ready_Meshes(MODEL eType, const aiScene* pAIScene, _fmatrix& PreTransformMatrix);
 	HRESULT Ready_Materials(const aiScene* pAIScene, const _char* pModelFilePath);
+	HRESULT Ready_Materials_FromFile(const aiScene* pAIScene, const _char* pModelFilePath);
 	HRESULT Ready_Animations(const aiScene* pAIScene);
 	HRESULT Ready_Bones(const aiNode* pAINode, _int iParentIndex);
 	// 바이너리
