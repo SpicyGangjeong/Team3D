@@ -226,6 +226,9 @@
     <Filter Include="01.Utility\06.ComputeShader">
       <UniqueIdentifier>{96600587-16b1-4627-914d-7fc413c501ba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\06. Picking">
+      <UniqueIdentifier>{a60a7ba5-a937-41d7-baac-db67f86f3ba1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -413,6 +416,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Instance_Model.cpp">
       <Filter>02.Element\02.Component\06.Model\Instance_Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Picking.cpp">
+      <Filter>01.Utility\06. Picking</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ComputeShader.cpp">
       <Filter>01.Utility\06.ComputeShader</Filter>
@@ -973,6 +979,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\ComputeShader.h">
       <Filter>01.Utility\06.ComputeShader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Picking.h">
+      <Filter>01.Utility\06. Picking</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

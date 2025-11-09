@@ -172,6 +172,11 @@ public:
 #pragma region SOUND_MANAGER
 #pragma endregion
 
+#pragma region PICKING
+	_bool	isPicking(_float3* pOut);
+#pragma endregion
+
+
 public:
 	void Add_ModelToMap(const _char* filePath, CModel* pModel)
 	{
@@ -205,6 +210,7 @@ private:
 	class CKey_Manager*				m_pKey_Manager = { nullptr };
 	class CMouse_Manager*			m_pMouse_Manager = { nullptr };
 	class CCollider_Manager*		m_pCollider_Manager = { nullptr };
+	class CPicking*					m_pPicking = { nullptr };
 
 #ifdef _DEBUG
 private:

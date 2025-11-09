@@ -20,7 +20,7 @@ public:
 	_uint Get_Size();
 
 private:
-	HRESULT Initialize_Prototype(TEXTURE_LOAD_TYPE eType, const _tchar* pTextureFilePath, const _wstring& wstrTextureKey, _uint iNumTextures);
+	HRESULT Initialize_Prototype(TEXTURE_LOAD_TYPE eType, const _tchar* pTextureFilePath, _uint iNumTextures);
 	virtual HRESULT Initialize(void* pArg) override;
 
 	HRESULT Load_SRV(const _char* szPath, ID3D11ShaderResourceView** ppSRV);
@@ -31,7 +31,7 @@ private:
 	vector<ID3D11ShaderResourceView*>				m_SRVs = { };
 
 public:
-	static CTexture* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TEXTURE_LOAD_TYPE eType, const _tchar* pTextureFilePath, const _wstring& wstrTextureKey, _uint iNumTextures);
+	static CTexture* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TEXTURE_LOAD_TYPE eType, const _tchar* pTextureFilePath, _uint iNumTextures);
 	virtual CComponent* Clone(void* pArg, class CGameObject* pOwner = nullptr) override;
 	virtual void Free() override;
 	virtual void Describe_Entity() override;
