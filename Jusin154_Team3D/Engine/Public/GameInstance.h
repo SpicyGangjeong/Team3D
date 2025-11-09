@@ -188,8 +188,11 @@ public:
 		m_sModelMap[filePath] = sModel;
 	}
 
-	SaveModel* Load_SaveModel(const _char* filePath);
+#ifdef EDITOR_PROJECT
 	_bool SaveAssimpModel(const _char* filename);
+#endif
+
+	SaveModel* Load_SaveModel(const _char* filePath);
 	void Save_ModelFilePath(const _char* FilePath);
 	const _char* Load_ModelFilePath(_uint iIndex);
 	const _char* Load_BinaryModelFilePath(_uint iIndex);
