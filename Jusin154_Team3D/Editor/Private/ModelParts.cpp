@@ -50,7 +50,6 @@ HRESULT CModelParts::Render()
 HRESULT CModelParts::Ready_Components()
 {
 	__super::Ready_Components(nullptr);
-
 	/* Com_Shader */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_ANIMMESH,
 		reinterpret_cast<CComponent**>(&m_pShaderCom))))

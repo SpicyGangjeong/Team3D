@@ -169,6 +169,11 @@ const _char* CGameInstance::Load_BinaryModelFilePath(_uint iIndex)
 	return iter->first;
 }
 
+size_t CGameInstance::BinaryModelFilePathCount()
+{
+	return m_sModelMap.size();
+}
+
 
 size_t CGameInstance::ModelFilePathCount()
 {

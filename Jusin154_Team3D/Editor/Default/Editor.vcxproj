@@ -42,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <EnableASAN>true</EnableASAN>
   </PropertyGroup>
@@ -167,6 +167,7 @@
     <ClInclude Include="..\Public\Editor_Define.h" />
     <ClInclude Include="..\Public\Editor_Macro.h" />
     <ClInclude Include="..\Public\Editor_Struct.h" />
+    <ClInclude Include="..\Public\Hair.h" />
     <ClInclude Include="..\Public\Level_EffectViewer.h" />
     <ClInclude Include="..\public\LodingWidget1.h" />
     <ClInclude Include="..\public\MiniMap_TrimBorder.h" />
@@ -184,7 +185,11 @@
     <ClInclude Include="..\public\Mission_Icon.h" />
     <ClInclude Include="..\public\Mission_Key.h" />
     <ClInclude Include="..\public\Mission_KeyHold.h" />
+    <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\public\Mouse_Cursor.h" />
+    <ClInclude Include="..\Public\RootModelPart.h" />
+    <ClInclude Include="..\Public\TombProtector.h" />
+    <ClInclude Include="..\Public\Troll.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -205,6 +210,7 @@
     <ClCompile Include="..\Private\DummyRect.cpp" />
     <ClCompile Include="..\Private\Dummy_Cube.cpp" />
     <ClCompile Include="..\Private\Dummy_Goblin.cpp" />
+    <ClCompile Include="..\Private\Hair.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\Private\Level_EffectViewer.cpp" />
     <ClCompile Include="..\private\LodingWidget1.cpp" />
@@ -223,11 +229,15 @@
     <ClCompile Include="..\private\Mission_Icon.cpp" />
     <ClCompile Include="..\private\Mission_Key.cpp" />
     <ClCompile Include="..\private\Mission_KeyHold.cpp" />
+    <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\private\Mouse_Cursor.cpp" />
     <ClCompile Include="..\Private\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\Private\RootModelPart.cpp" />
+    <ClCompile Include="..\Private\TombProtector.cpp" />
+    <ClCompile Include="..\Private\Troll.cpp" />
     <ClCompile Include="Editor.cpp" />
   </ItemGroup>
   <ItemGroup>
