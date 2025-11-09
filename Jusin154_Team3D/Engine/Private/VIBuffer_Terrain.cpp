@@ -192,7 +192,7 @@ _bool CVIBuffer_Terrain::Picking(CTransform* pTransform, _float3& pOut)
 
 	return false;
 }
-/
+
 
 CVIBuffer_Terrain * CVIBuffer_Terrain::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const _char * pFilePath, _uint iSizeX, _uint iSizeZ)
 {

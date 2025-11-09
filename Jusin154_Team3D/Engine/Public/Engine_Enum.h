@@ -21,7 +21,7 @@ enum class TEXTURE_LOAD_TYPE {
 enum class MOUSEKEYSTATE { LBUTTON, RBUTTON, WBUTTON, XBUTTON };
 enum class MOUSEMOVESTATE { X, Y, W };
 enum class D3DTS { VIEW, PROJ, VIEW_INV, PROJ_INV, END };
-enum class MODEL { ANIM, NONANIM };
+enum class MODEL { ANIM, NONANIM, ENVIROMENT };
 
 enum class NAVI_POINT { A, B, C, END };
 enum class NAVI_LINE { AB, BC, CA, END };

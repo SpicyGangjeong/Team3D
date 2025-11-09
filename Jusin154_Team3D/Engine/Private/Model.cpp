@@ -328,6 +328,73 @@ HRESULT CModel::Ready_Materials(const aiScene* pAIScene, const _char* pModelFile
 	return S_OK;
 }
 
+HRESULT CModel::Ready_Materials_FromFile(const aiScene* pAIScene, const _char* pModelFilePath)
+{
+	m_iNumMaterials = pAIScene->mNumMaterials;
+	m_Materials.reserve(m_iNumMaterials);
+
+	_char szDrive[MAX_PATH] = {};
+	_char szDir[MAX_PATH] = {};
+	_char szFileName[MAX_PATH] = {};
+	_char szMeshFilePath[MAX_PATH] = {};
+	vector<_string> MaterialFilePathes;
+
+	_splitpath_s(pModelFilePath, szDrive, MAX_PATH, szDir, MAX_PATH, szFileName, MAX_PATH, nullptr, 0);
+
+	string FileName = szFileName;
+
+	auto iPos = FileName.find_last_of('.');
+
+	FileName = FileName.substr(0, iPos);
+
+	strcpy_s(szMeshFilePath, szDrive);
+	strcat_s(szMeshFilePath, szDir);
+	strcat_s(szMeshFilePath, FileName.c_str());
+	strcat_s(szMeshFilePath, ".props.txt");
+
+	ifstream file(szMeshFilePath);
+
+	if (!file.is_open())
+	{
+		MSG_BOX("Failed to Open Mesh File");
+		return E_FAIL;
+	}
+
+	string strText = {};
+	_uint iNumParameter = {};
+
+	getline(file, strText);
+	getline(file, strText);
+
+	for (_uint i = 0; i < m_iNumMaterials; ++i)
+	{
+		getline(file, strText);
+
+		// value
+		_uint iBeginIndex = (_uint)strText.find("Environment");
+		_uint iEndIndex = (_uint)strText.find('.');
+
+		if ((_uint)strText.size() < iEndIndex - iBeginIndex)
+		{
+			MSG_BOX("Fail Path");
+			return E_FAIL;
+		}
+
+		string	strPath = "../Bin/Resources/Models/" + strText.substr(iBeginIndex, iEndIndex - iBeginIndex);
+		MaterialFilePathes.push_back(strPath);
+	}
+
+	for (size_t i = 0; i < m_iNumMaterials; ++i) {
+		CMaterial* pMaterial = CMaterial::Create(m_pDevice, m_pContext, MaterialFilePathes[i].c_str(), pAIScene->mMaterials[i]->GetName().C_Str());
+		if (nullptr == pMaterial) {
+			return E_FAIL;
+		}
+		m_Materials.push_back(pMaterial);
+	}
+	m_Materials.shrink_to_fit();
+	return S_OK;
+}
+
 HRESULT CModel::Ready_Animations(const aiScene* pAIScene)
 {
 	m_iNumAnimations = pAIScene->mNumAnimations;
@@ -866,7 +933,7 @@ HRESULT CModel::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fma
 	_uint			iFlag = {};
 	iFlag = aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast;
 
-	if (MODEL::NONANIM == eType) {
+	if (MODEL::NONANIM == eType || MODEL::ENVIROMENT == eType) {
 		iFlag |= aiProcess_PreTransformVertices;
 	}
 	m_iRootBoneIndex = iRootBoneIndex;
@@ -887,8 +954,15 @@ HRESULT CModel::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fma
 	}
 #pragma endregion
 #pragma region Material
-	if (FAILED(Ready_Materials(m_pAIScene, pModelFilePath))) {
-		return E_FAIL;
+	if (MODEL::ENVIROMENT == eType)
+	{
+
+	}
+	else
+	{
+		if (FAILED(Ready_Materials(m_pAIScene, pModelFilePath))) {
+			return E_FAIL;
+		}
 	}
 #pragma endregion
 #pragma region Animation
