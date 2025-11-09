@@ -5,6 +5,7 @@
 #include "DebugCamera.h"
 #include "TestEffect.h"
 #include "Effect_Editor.h"
+#include "Dummy_Cube.h"
 
 CLevel_EffectViewer::CLevel_EffectViewer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -29,6 +30,9 @@ HRESULT CLevel_EffectViewer::Initialize()
 	}
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEffect_Editor>(ENUM_CLASS(LEVEL::EFFECT), NEXT_LEVEL, TEXT("Layer_Editor"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_Cube>(ENUM_CLASS(LEVEL::EFFECT), NEXT_LEVEL, LAYER_CUBE)))
 		return E_FAIL;
 
 
@@ -74,7 +78,7 @@ HRESULT CLevel_EffectViewer::Ready_Layer_Light()
 
 	LightDesc.eType = LIGHT::DIRECTIONAL;
 	LightDesc.vDiffuse = _float4(0.8f, 0.8f, 0.8f, 0.f);
-	LightDesc.vAmbient = _float4(0.2f, 0.2f, 0.2f, 0.f);
+	LightDesc.vAmbient = _float4(0.6f, 0.6f, 0.6f, 0.f);
 	LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 0.f);
 	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
 
@@ -92,11 +96,7 @@ HRESULT CLevel_EffectViewer::Ready_Layer_UI(const _wstring& strLayerTag)
 
 HRESULT CLevel_EffectViewer::Ready_Layer_Effect(const _wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTestEffect>(ENUM_CLASS(LEVEL::EFFECT), NEXT_LEVEL, strLayerTag)))
-		return E_FAIL;
 
-
-	
 	return S_OK;
 }
 

@@ -23,7 +23,7 @@ public:
 	virtual void Update(_float fTimeDelta);
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render() override;
-
+	virtual HRESULT Render_Blur() override;
 protected:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT Ready_Components(void* pArg) override;
@@ -31,10 +31,29 @@ protected:
 	virtual HRESULT Initialize(void* pArg) override;
 
 protected:
-	CTexture*			m_pTextureCom = { nullptr };
+	CTexture*			m_pDiffuse_TextureCom = { nullptr };
+	CTexture*			m_pNoise_TextureCom = { nullptr };
+	CTexture*			m_pMasking_TextureCom = { nullptr };
+	CTexture*			m_pDisolve_TextureCom = { nullptr };
+
 	CShader*			m_pShaderCom = { nullptr };
 	CInstance_Model*	m_pInstance_ModelCom = { nullptr };
 
+protected:
+	_float4 m_vColor = { 0.f ,0.f ,0.f ,1.f };
+
+	_float2 m_vUVGainAmount = {};
+			
+	_bool	m_isDiffuse = {};
+	_bool	m_isMasking = {};
+	_bool	m_isDissolve = {};
+	_bool	m_isNoise = {};
+	_bool	m_isUVMove = {};
+
+	_float4 m_vEmissive = { 0.f ,0.f ,0.f ,0.f};
+	_float  m_fColorOption = {};
+
+	RENDER m_eRenderOrder = {RENDER::NONLIGHT};
 
 public:
 	virtual void Free() override;

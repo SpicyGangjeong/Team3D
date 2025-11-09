@@ -6,10 +6,22 @@ Texture2D g_DiffuseTexture;
 Texture2D g_NormalTexture;
 Texture2D g_MaskingTexture;
 Texture2D g_DissolveTexture;
+Texture2D g_NoiseTexture;
 
 float4 g_vCamPosition;
+
 vector g_vColor;
-float2 g_vUVGain;
+
+float2 g_vUVGainAmount;
+
+float4 g_vEmissive;
+float  g_fColorOption;
+
+bool g_isDiffuse;
+bool g_isMasking;
+bool g_isDissolve;
+bool g_isNoise;
+bool g_isUVMove;
 
 float g_fFar;
 
@@ -88,6 +100,7 @@ struct PS_OUT
     float4 vDiffuse : SV_TARGET0;
     float4 vNormal : SV_TARGET1;
     float4 vDepth : SV_TARGET2;
+    float4 vColor : SV_TARGET3;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -121,19 +134,64 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
 {
    
     PS_OUT Out;
-
+    
     vector vMtrlDiffuse;
+    vector vMtrlMask;
+    vector vMtrlNoise;
+    vector vMtrlDisolve;
+    
+    float2 vTexcoord = In.vTexcoord;
+    
+    if (g_isUVMove)
+    {
+        vTexcoord += g_vUVGainAmount * (In.vLifeTime.x / In.vLifeTime.y);
+    }
+    
+    if (g_isDiffuse == true)
+    {
+        vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, vTexcoord);
+        
+        if (vMtrlDiffuse.a < 0.3f)
+            discard;
 
-    vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    }
+    else
+    {
+        vMtrlDiffuse = g_vColor;
+    }
     
-    if (vMtrlDiffuse.a < 0.3f)
-        discard;
+    if (g_isMasking == true)
+    {
+        vMtrlMask = g_MaskingTexture.Sample(DefaultSampler, vTexcoord);
+    }
+    else
+    {
+        vMtrlMask.r = 1.f;
+    }
     
+    if (g_isDissolve == true)
+    {
+       vMtrlDisolve = g_DissolveTexture.Sample(DefaultSampler, vTexcoord);
+    }
+    else
+    {
+        vMtrlDisolve.r = 0.f;
+    }
+    
+    if (g_isNoise == true)
+    {
+        vMtrlNoise = g_NoiseTexture.Sample(DefaultSampler, vTexcoord);
+    }
+    
+
+    vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * vMtrlMask.r - vMtrlDisolve.r * (In.vLifeTime.x / In.vLifeTime.y));
+        
     Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.0f, 0.0f);
-    Out.vNormal = In.vNormal;
-
-    Out.vDiffuse.a = saturate(In.vLifeTime.y - In.vLifeTime.x);
+    
     Out.vDiffuse = vMtrlDiffuse;
+    
+    // 색깔 추가할 처리 
+    Out.vColor = vector(g_vEmissive.rgb , g_fColorOption / 10.f);
     
     return Out;
 }
@@ -155,7 +213,7 @@ technique11 DefaultTechnique
 
     pass NON_NOMALMAP
     {
-        SetRasterizerState(RS_Default);
+        SetRasterizerState(RS_Nocull);
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
