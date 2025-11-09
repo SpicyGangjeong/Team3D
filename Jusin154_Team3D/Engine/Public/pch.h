@@ -51,6 +51,7 @@ using namespace DirectX;
 #include <cassert>
 #include <random>
 #include <fstream>
+#include <filesystem>
 
 using namespace std;
 
