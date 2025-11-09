@@ -423,9 +423,6 @@
     <ClCompile Include="..\Private\ComputeShader.cpp">
       <Filter>01.Utility\06.ComputeShader</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\VIBuffer_Terrain.cpp">
-      <Filter>02.Element\02.Component\02.VIBuffer\Terrain</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -985,9 +982,6 @@
     </ClInclude>
     <ClInclude Include="..\public\Picking.h">
       <Filter>01.Utility\06. Picking</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\VIBuffer_Terrain.h">
-      <Filter>02.Element\02.Component\02.VIBuffer\Terrain</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -46,13 +46,13 @@ public:
 	CBone* Clone();
 	virtual void Free() override;
 
+	// 바이너리
+	static CBone* Create(const SaveNode& _SaveNode, _int iParentIndex);
+	//
 #ifdef EDITOR_PROJECT
 public:
 	HRESULT SaveAsBinary(HANDLE hFile, DWORD& dwByte);
 	static CBone* Create(const aiNode* pAINode, _int iParentIndex);
-	// 바이너리
-	static CBone* Create(const SaveNode& _SaveNode, _int iParentIndex);
-	//
 private:
 	HRESULT Initialize(const aiNode* pAINode, _int iParentIndex);
 #endif // EDITOR_PROJECT

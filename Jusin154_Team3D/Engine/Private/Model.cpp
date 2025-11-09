@@ -719,6 +719,73 @@ _int CModel::SaveNodeRecursive(const aiNode* pAINode, std::vector<SaveNode>& out
 
 	return currentIndex;
 }
+CModel* CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex)
+{
+	CModel* pInstance = new CModel(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize_Prototype(pModelFilePath, eType, PreTransformMatrix, iRootBoneIndex)))
+	{
+		MSG_BOX("Failed to Created : CModel");
+		SAFE_RELEASE(pInstance);
+	}
+
+	return pInstance;
+}
+
+HRESULT CModel::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex)
+{
+	_uint			iFlag = {};
+	iFlag = aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast;
+
+	if (MODEL::NONANIM == eType || MODEL::ENVIROMENT == eType) {
+		iFlag |= aiProcess_PreTransformVertices;
+	}
+	m_iRootBoneIndex = iRootBoneIndex;
+
+	m_pAIScene = m_Importer.ReadFile(pModelFilePath, iFlag);
+	if (nullptr == m_pAIScene)
+		return E_FAIL;
+
+
+#pragma region Bone
+	if (FAILED(Ready_Bones(m_pAIScene->mRootNode, -1))) {
+		return E_FAIL;
+	}
+#pragma endregion
+#pragma region Mesh
+	if (FAILED(Ready_Meshes(eType, m_pAIScene, PreTransformMatrix))) {
+		return E_FAIL;
+	}
+#pragma endregion
+#pragma region Material
+	if (MODEL::ENVIROMENT == eType)
+	{
+
+	}
+	else
+	{
+		if (FAILED(Ready_Materials(m_pAIScene, pModelFilePath))) {
+			return E_FAIL;
+		}
+	}
+#pragma endregion
+#pragma region Animation
+	if (FAILED(Ready_Animations(m_pAIScene))) {
+		return E_FAIL;
+	}
+#pragma endregion
+
+	m_pGameInstance->Save_ModelFilePath(pModelFilePath);
+
+	m_pGameInstance->Add_ModelToMap(pModelFilePath, this);
+
+	return S_OK;
+}
+
+HRESULT CModel::Initialize_Prototype(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex)
+{
+	return Assimp_Model_Load(pModelFilePath, eType, PreTransformMatrix, iRootBoneIndex);
+}
 #endif // EDITOR_PROJECT
 
 HRESULT CModel::Initialize_Prototype()
@@ -751,10 +818,6 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 }
 
 
-HRESULT CModel::Initialize_Prototype(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex)
-{
-	return Assimp_Model_Load(pModelFilePath, eType, PreTransformMatrix, iRootBoneIndex);
-}
 
 bool CModel::LoadData(const _char* filename)
 {
@@ -913,69 +976,6 @@ bool CModel::LoadData(const _char* filename)
 	m_pGameInstance->Add_SaveModel(filename, m_SaveModel.back());
 
 	return true;
-}
-
-CModel* CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex)
-{
-	CModel* pInstance = new CModel(pDevice, pContext);
-
-	if (FAILED(pInstance->Initialize_Prototype(pModelFilePath, eType, PreTransformMatrix, iRootBoneIndex)))
-	{
-		MSG_BOX("Failed to Created : CModel");
-		SAFE_RELEASE(pInstance);
-	}
-
-	return pInstance;
-}
-
-HRESULT CModel::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex)
-{
-	_uint			iFlag = {};
-	iFlag = aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast;
-
-	if (MODEL::NONANIM == eType || MODEL::ENVIROMENT == eType) {
-		iFlag |= aiProcess_PreTransformVertices;
-	}
-	m_iRootBoneIndex = iRootBoneIndex;
-
-	m_pAIScene = m_Importer.ReadFile(pModelFilePath, iFlag);
-	if (nullptr == m_pAIScene)
-		return E_FAIL;
-
-
-#pragma region Bone
-	if (FAILED(Ready_Bones(m_pAIScene->mRootNode, -1))) {
-		return E_FAIL;
-	}
-#pragma endregion
-#pragma region Mesh
-	if (FAILED(Ready_Meshes(eType, m_pAIScene, PreTransformMatrix))) {
-		return E_FAIL;
-	}
-#pragma endregion
-#pragma region Material
-	if (MODEL::ENVIROMENT == eType)
-	{
-
-	}
-	else
-	{
-		if (FAILED(Ready_Materials(m_pAIScene, pModelFilePath))) {
-			return E_FAIL;
-		}
-	}
-#pragma endregion
-#pragma region Animation
-	if (FAILED(Ready_Animations(m_pAIScene))) {
-		return E_FAIL;
-	}
-#pragma endregion
-
-	m_pGameInstance->Save_ModelFilePath(pModelFilePath);
-
-	m_pGameInstance->Add_ModelToMap(pModelFilePath, this);
-
-	return S_OK;
 }
 
 HRESULT CModel::Initialize(void* pArg)

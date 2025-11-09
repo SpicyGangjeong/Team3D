@@ -507,15 +507,17 @@ _bool CGameInstance::isPicking(_float3* pOut)
 {
 	return m_pPicking->isPicking(pOut);
 }
-SaveModel* CGameInstance::Load_SaveModel(const _char* filePath)
-{
-	auto iter = m_sModelMap.find(filePath);
-	return &iter->second;
-}
+#ifdef EDITOR_PROJECT
 _bool CGameInstance::SaveAssimpModel(const _char* filename)
 {
 	auto iter = m_ModelMap.find(filename);
 	return iter->second->SaveAssimpModel(filename);
+}
+#endif
+SaveModel* CGameInstance::Load_SaveModel(const _char* filePath)
+{
+	auto iter = m_sModelMap.find(filePath);
+	return &iter->second;
 }
 bool		CGameInstance::Key_Pressing(int _iKey)
 {

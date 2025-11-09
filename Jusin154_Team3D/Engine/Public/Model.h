@@ -62,9 +62,10 @@ public:
 
 
 private:
+#ifdef EDITOR_PROJECT
 	const aiScene* m_pAIScene = { nullptr };
 	Assimp::Importer			m_Importer;
-
+#endif
 
 private:
 	MODEL						m_eType = {};						// 모델의 타입
