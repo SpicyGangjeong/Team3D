@@ -129,10 +129,10 @@ struct SaveKeyFrameRotation
 
 struct SaveChannel
 {
-	char Name[64];
-	unsigned int ScalingKeyCount;
-	unsigned int RotationKeyCount;
-	unsigned int PositionKeyCount;
+	char Name[64] = { };
+	unsigned int ScalingKeyCount = { };
+	unsigned int RotationKeyCount = { };
+	unsigned int PositionKeyCount = { };
 
 	vector<SaveKeyFrameVec> ScalingKeys;
 	vector<SaveKeyFrameRotation> RotationKeys;

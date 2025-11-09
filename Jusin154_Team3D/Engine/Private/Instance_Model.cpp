@@ -354,7 +354,7 @@ void CInstance_Model::Free()
 
 void CInstance_Model::Describe_Entity()
 {
-	if (ImGui::TreeNode("Instance_Model"))
+	if (ImGui::TreeNode("Model Option"))
 	{
 		ImGui::Separator(); ImGui::Spacing();
 

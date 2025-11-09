@@ -44,8 +44,12 @@ private:
 	HRESULT Initialize(LEVEL eNextLevelID);
 	HRESULT Loading_For_Logo();
 	HRESULT Loading_For_ObjectViewer();
+	HRESULT Loading_For_MapViewer();
 	HRESULT Loading_For_UI();
 	HRESULT Loading_For_Effect();
+
+private:
+	HRESULT Asset_FileLoad(const _char* pDirectoryPath, const _tchar* pPreName, function<HRESULT(_wstring, const _char*)> AddPrototypeEvent);
 
 public:
 	static CLoader* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevelID);
