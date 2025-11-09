@@ -10,16 +10,25 @@
 
 #pragma region UI
 
-#include "Mission.h"
+#include "GamePlay_Canvas.h"
+
+#include "Mission_Panel.h"
 #include "MissionBanner_Border.h"
 #include "MissionBanner_Key.h"
 #include "Mission_Icon.h"
 #include "Mission_Key.h"
 #include "Mission_KeyHold.h"
 #include "Mouse_Cursor.h"
-#include "LodingWidget1.h"
-#include "MiniMap_TrimBorder.h"
 #include "Active_Icon.h"
+
+#include "MiniMap_Panel.h"
+#include "MiniMap_TrimBorder.h"
+
+#include "Loading_Panel.h"
+#include "LoadingWidget.h"
+#include "LoadingWidget_Flame.h"
+
+#include "IMGUIUI.h"
 
 #pragma endregion
 
@@ -223,6 +232,8 @@ HRESULT CLoader::Loading_For_UI()
 		return E_FAIL;
 	}
 
+
+
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("HUD_MiniMap_TrimBorder"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/MiniMap/HUD_MiniMap_TrimBorder.png"), TEXT("HUD_MiniMap_TrimBorder"), 0)))) {
 		return E_FAIL;
@@ -240,7 +251,7 @@ HRESULT CLoader::Loading_For_UI()
 
 	m_strMessage = TEXT("��ü������(��) �ε� �� �Դϴ�.");
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CMission>(g_iStaticLevel, CMission::Create(m_pDevice, m_pContext))))
+	if (FAILED(m_pGameInstance->Add_Prototype<CGamePlay_Canvas>(g_iStaticLevel, CGamePlay_Canvas::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
@@ -250,11 +261,23 @@ HRESULT CLoader::Loading_For_UI()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CLodingWidget1>(g_iStaticLevel, CLodingWidget1::Create(m_pDevice, m_pContext))))
+	if (FAILED(m_pGameInstance->Add_Prototype<CLoading_Panel>(g_iStaticLevel, CLoading_Panel::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
-		
+	if (FAILED(m_pGameInstance->Add_Prototype<CLoadingWidget>(g_iStaticLevel, CLoadingWidget::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CLoadingWidget_Flame>(g_iStaticLevel, CLoadingWidget_Flame::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CMission_Panel>(g_iStaticLevel, CMission_Panel::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CMissionBanner_Border>(g_iStaticLevel, CMissionBanner_Border::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
@@ -275,15 +298,25 @@ HRESULT CLoader::Loading_For_UI()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Add_Prototype<CMiniMap_TrimBorder>(g_iStaticLevel, CMiniMap_TrimBorder::Create(m_pDevice, m_pContext))))
-	{
-		return E_FAIL;
-	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CActive_Icon>(g_iStaticLevel, CActive_Icon::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CMiniMap_Panel>(g_iStaticLevel, CMiniMap_Panel::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CMiniMap_TrimBorder>(g_iStaticLevel, CMiniMap_TrimBorder::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CIMGUIUI>(g_iStaticLevel, CIMGUIUI::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
 	m_strMessage = TEXT("�ε��� �Ϸ�Ǿ����ϴ�..");
 
 	m_isFinished = true;

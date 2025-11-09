@@ -220,6 +220,15 @@
     <Filter Include="02.Element\01.GameObject\50.UI">
       <UniqueIdentifier>{32546fa5-8ee9-4c26-8d48-7ef2b2d023b0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Element\01.GameObject\50.UI\CanvasObject">
+      <UniqueIdentifier>{bbebaf10-533c-4485-88e1-1c141801ef83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\01.GameObject\50.UI\PanelObject">
+      <UniqueIdentifier>{0162c52f-875b-41fd-9f9b-abd68e8483f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\01.GameObject\50.UI\ElementObject">
+      <UniqueIdentifier>{1eafb189-2d0c-4ad7-8690-10a517668206}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -404,6 +413,15 @@
     </ClCompile>
     <ClCompile Include="..\private\UIObject.cpp">
       <Filter>02.Element\01.GameObject\50.UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\CanvasObject.cpp">
+      <Filter>02.Element\01.GameObject\50.UI\CanvasObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ElementObject.cpp">
+      <Filter>02.Element\01.GameObject\50.UI\ElementObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PanelObject.cpp">
+      <Filter>02.Element\01.GameObject\50.UI\PanelObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -955,6 +973,15 @@
     </ClInclude>
     <ClInclude Include="..\public\UIObject.h">
       <Filter>02.Element\01.GameObject\50.UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\CanvasObject.h">
+      <Filter>02.Element\01.GameObject\50.UI\CanvasObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ElementObject.h">
+      <Filter>02.Element\01.GameObject\50.UI\ElementObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PanelObject.h">
+      <Filter>02.Element\01.GameObject\50.UI\PanelObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

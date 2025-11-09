@@ -48,7 +48,7 @@ void CMouse_Cursor::Priority_Update(_float fTimeDelta)
 void CMouse_Cursor::Update(_float fTimeDelta)
 {
 	m_fTime += fTimeDelta;
-	ShowCursor(false);
+	//ShowCursor(false);
 }
 
 void CMouse_Cursor::Late_Update(_float fTimeDelta)

@@ -1,16 +1,16 @@
 #pragma once
 
 #include "Editor_Define.h"
-#include "UIObject.h"
+#include "ElementObject.h"
 
 NS_BEGIN(Editor)
 
-class CLodingWidget1 final : public CUIObject
+class CLoadingWidget_Flame final : public CElementObject
 {
 private:
-	CLodingWidget1(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CLodingWidget1(const CLodingWidget1& rhs);
-	virtual ~CLodingWidget1() = default;
+	CLoadingWidget_Flame(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CLoadingWidget_Flame(const CLoadingWidget_Flame& rhs);
+	virtual ~CLoadingWidget_Flame() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -34,7 +34,7 @@ private:
 	_int m_iImageFrameX{};
 	_float m_fFrame{};
 public:
-	static CLodingWidget1* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CLoadingWidget_Flame* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 	void Describe_Entity() override;
