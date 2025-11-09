@@ -21,18 +21,12 @@ HRESULT CLevel_Logo::Initialize()
 
 void CLevel_Logo::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Down(DIK_I))
-	{
-		if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::UI))))
+	GUI::Begin("SelectEditor");
+	if (GUI::Button("Map Editor", { 100, 100 })) {
+		if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::MAP))))
 			return;
 	}
-
-	GUI::Begin("SelectEditor");
-	//if (GUI::Button("Map Editor", { 100, 100 })) {
-	//	if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::MAP))))
-	//		return;
-	//}
-	/*else */if (GUI::Button("Object Editor", { 100, 100 })) {
+	else if (GUI::Button("Object Editor", { 100, 100 })) {
 		if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::OBJECT))))
 			return;
 	}
@@ -40,10 +34,10 @@ void CLevel_Logo::Update(_float fTimeDelta)
 	//	if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::COMBINED))))
 	//		return;
 	//}
-	//else if (GUI::Button("Effect Editor", { 100, 100 })) {
-	//	if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::EFFECT))))
-	//		return;
-	//}
+	else if (GUI::Button("Effect Editor", { 100, 100 })) {
+		if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::EFFECT))))
+			return;
+	}
 	//else if (GUI::Button("Skill Editor", { 100, 100 })) {
 	//	if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::SKIllSTUDIO))))
 	//		return;
@@ -52,6 +46,10 @@ void CLevel_Logo::Update(_float fTimeDelta)
 	//	if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::PARTICLE))))
 	//		return;
 	//}
+	else if (GUI::Button("UI Editor", { 100, 100 })) {
+		if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::UI))))
+			return;
+	}
 	GUI::End();
 }
 

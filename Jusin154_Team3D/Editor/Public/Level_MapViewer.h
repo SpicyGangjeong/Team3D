@@ -17,8 +17,12 @@ public:
 
 private:
 	virtual HRESULT Initialize() override;
+	HRESULT Ready_Layer_Light();
 	HRESULT Ready_Layer_Camera(const _wstring& strLayerTag);
-	HRESULT Ready_Layer_UI(const _wstring& strLayerTag);
+	HRESULT Ready_Layer_Terrain(const _wstring& strLayerTag);
+	HRESULT Ready_Layer_MapObjects(const _wstring& strLayerTag);
+	HRESULT Ready_Layer_MapObjectManager(const _wstring& strLayerTag);
+
 
 
 public:

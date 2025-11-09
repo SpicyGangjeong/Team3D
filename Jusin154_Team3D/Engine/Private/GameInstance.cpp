@@ -14,6 +14,7 @@
 #include "Key_Manager.h"
 #include "Mouse_Manager.h"
 #include "Collider_Manager.h"
+#include "Picking.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -81,6 +82,9 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 	if (nullptr == m_pShadow) {
 		return E_FAIL;
 	}
+	m_pPicking = CPicking::Create(*ppDevice, *ppContext, EngineDesc.hWnd, EngineDesc.iWinSizeX, EngineDesc.iWinSizeY);
+	if (nullptr == m_pPicking)
+		return E_FAIL;
 	m_pCollider_Manager = CCollider_Manager::Create(*ppDevice, *ppContext, EngineDesc.iNumCollidableGroup);
 	if (nullptr == m_pCollider_Manager) {
 		return E_FAIL;
@@ -94,6 +98,8 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 	m_pKey_Manager->Update();
 	m_pMouse_Manager->Update();
 	//m_pSound_Manager->Update();
+
+	m_pPicking->Update();
 
 	m_pObject_Manager->Priority_Update(fTimeDelta);
 
@@ -497,15 +503,21 @@ const SHADOW_LIGHT_DESC* CGameInstance::Get_ShadowDesc()
 {
 	return m_pShadow->Get_ShadowDesc();
 }
-SaveModel* CGameInstance::Load_SaveModel(const _char* filePath)
+_bool CGameInstance::isPicking(_float3* pOut)
 {
-	auto iter = m_sModelMap.find(filePath);
-	return &iter->second;
+	return m_pPicking->isPicking(pOut);
 }
+#ifdef EDITOR_PROJECT
 _bool CGameInstance::SaveAssimpModel(const _char* filename)
 {
 	auto iter = m_ModelMap.find(filename);
 	return iter->second->SaveAssimpModel(filename);
+}
+#endif
+SaveModel* CGameInstance::Load_SaveModel(const _char* filePath)
+{
+	auto iter = m_sModelMap.find(filePath);
+	return &iter->second;
 }
 bool		CGameInstance::Key_Pressing(int _iKey)
 {
@@ -614,6 +626,7 @@ void CGameInstance::Release_Engine()
 {
 	DestroyInstance();
 
+	SAFE_RELEASE(m_pPicking);
 	SAFE_RELEASE(m_pCollider_Manager);
 	SAFE_RELEASE(m_pShadow);
 	SAFE_RELEASE(m_pCamera_Manager);

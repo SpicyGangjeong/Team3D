@@ -63,6 +63,13 @@ public:
 	{
 		return m_pPrototype_Manager->CPrototype_Manager::Clone_Prototype<T>(iLevelNumber, pArg, pOwner);
 	}
+
+	template<typename T>
+	void Asset_Description(_uint iLevel, const _char* pComponentName, CComponent** ppOut, void* pDesc, class CGameObject* pOwner = nullptr)
+	{
+		return m_pPrototype_Manager->CPrototype_Manager::Asset_Description<T>(iLevel, pComponentName, ppOut, pDesc, pOwner);
+	}
+
 #pragma endregion
 
 #pragma region OBJECT_MANAGER
@@ -165,6 +172,11 @@ public:
 #pragma region SOUND_MANAGER
 #pragma endregion
 
+#pragma region PICKING
+	_bool	isPicking(_float3* pOut);
+#pragma endregion
+
+
 public:
 	void Add_ModelToMap(const _char* filePath, CModel* pModel)
 	{
@@ -176,8 +188,11 @@ public:
 		m_sModelMap[filePath] = sModel;
 	}
 
-	SaveModel* Load_SaveModel(const _char* filePath);
+#ifdef EDITOR_PROJECT
 	_bool SaveAssimpModel(const _char* filename);
+#endif
+
+	SaveModel* Load_SaveModel(const _char* filePath);
 	void Save_ModelFilePath(const _char* FilePath);
 	const _char* Load_ModelFilePath(_uint iIndex);
 	const _char* Load_BinaryModelFilePath(_uint iIndex);
@@ -198,6 +213,7 @@ private:
 	class CKey_Manager*				m_pKey_Manager = { nullptr };
 	class CMouse_Manager*			m_pMouse_Manager = { nullptr };
 	class CCollider_Manager*		m_pCollider_Manager = { nullptr };
+	class CPicking*					m_pPicking = { nullptr };
 
 #ifdef _DEBUG
 private:

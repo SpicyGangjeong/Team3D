@@ -4,7 +4,14 @@
 #include "Level_Loading.h"
 #include "DummyRect.h"
 #include "Mission.h"
+#include "MissionBanner_Border.h"
+#include "MissionBanner_Key.h"
+#include "Mission_Icon.h"
+#include "Mission_Key.h"
+#include "Mission_KeyHold.h"
 #include "Mouse_Cursor.h"
+#include "LodingWidget1.h"
+#include "MiniMap_TrimBorder.h"
 
 CLevel_UI::CLevel_UI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -48,16 +55,28 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _wstring& strLayerTag)
 	{
 		return E_FAIL;
 	}
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLodingWidget1>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMissionBanner_Key>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMiniMap_TrimBorder>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
+	{
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
 HRESULT CLevel_UI::Ready_Layer_Cursor(const _wstring& strLayerTag)
 {
-
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMouse_Cursor>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
 	{
 		return E_FAIL;
 	}
+
 	return S_OK;
 }
 

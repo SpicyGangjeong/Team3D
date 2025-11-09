@@ -25,6 +25,10 @@ public:
 	virtual HRESULT Render();
 	virtual _vector Get_WorldPostion() override;
 
+public:
+	virtual void Move_vector(_fvector vPos);
+	virtual void Move_float2(_float fX, _float fY);
+
 protected:
 	_float4x4				m_ViewMatrix{};
 	_float4x4				m_ProjMatrix{};
@@ -35,7 +39,8 @@ protected:
 	_float					m_fX{}, m_fY{}, m_fSizeX{}, m_fSizeY{};
 	_float					m_fWinSizeX{}, m_fWinSizeY{};
 
-	_float3					vScale{};
+	_float					m_fTime{};
+	_float3					m_vScale{};
 
 	RECT					m_pRect{};
 

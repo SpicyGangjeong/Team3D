@@ -17,6 +17,8 @@ namespace Editor {
 #define FX_CELL				TEXT("FX_CELL")
 #define FX_DEFERRED			TEXT("FX_DEFFERED")
 #define FX_PARTICLE			TEXT("FX_PARTICLE")
+#define FX_INSTANCE_MODEL   TEXT("FX_INSTANCE_MODEL")
+#define FX_UIEDITOR			TEXT("FX_UIEDITOR")
 
 #pragma endregion
 #pragma region MACRO_PROTOTYPE

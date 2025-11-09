@@ -129,10 +129,10 @@ struct SaveKeyFrameRotation
 
 struct SaveChannel
 {
-	char Name[64];
-	unsigned int ScalingKeyCount;
-	unsigned int RotationKeyCount;
-	unsigned int PositionKeyCount;
+	char Name[64] = { };
+	unsigned int ScalingKeyCount = { };
+	unsigned int RotationKeyCount = { };
+	unsigned int PositionKeyCount = { };
 
 	vector<SaveKeyFrameVec> ScalingKeys;
 	vector<SaveKeyFrameRotation> RotationKeys;
@@ -275,5 +275,24 @@ typedef struct tagVertexPosInstanceParticleDesc
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 1, 64, D3D11_INPUT_PER_INSTANCE_DATA, 1 }
 	};
 }VTX_POS_INSTANCE_PARTICLE;
+
+
+typedef struct tagVertexModelInstanceParticleDesc
+{
+	static constexpr unsigned int					iNumElements = { 10 };
+	static constexpr D3D11_INPUT_ELEMENT_DESC		Elements[] = {
+		{ "POSITION" , 0 , DXGI_FORMAT_R32G32B32_FLOAT , 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{ "NORMAL" , 0 , DXGI_FORMAT_R32G32B32_FLOAT , 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{ "TANGENT" , 0 , DXGI_FORMAT_R32G32B32_FLOAT , 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{ "BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 36, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 48, D3D11_INPUT_PER_VERTEX_DATA, 0},
+
+		{ "TEXCOORD", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "TEXCOORD", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "TEXCOORD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "TEXCOORD", 4, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "TEXCOORD", 5, DXGI_FORMAT_R32G32_FLOAT, 1, 64, D3D11_INPUT_PER_INSTANCE_DATA, 1 }
+	};
+}VTX_MODEL_INSTANCE_PARTICLE;
 
 NS_END
