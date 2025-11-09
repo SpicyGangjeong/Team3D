@@ -351,7 +351,7 @@ HRESULT CLoader::Loading_For_Effect()
 		
 
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::EFFECT), wstrFileName,
-			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), wstrFileName, 0)))) {
+			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
 			return E_FAIL;
 		}
 
@@ -366,7 +366,7 @@ HRESULT CLoader::Loading_For_Effect()
 
 
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::EFFECT), wstrFileName,
-			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), wstrFileName, 0)))) {
+			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
 			return E_FAIL;
 		}
 
@@ -423,6 +423,31 @@ HRESULT CLoader::Loading_For_Effect()
 	m_strMessage = TEXT("Loading Success!");
 
 	m_isFinished = true;
+
+	return S_OK;
+}
+
+HRESULT CLoader::Asset_FileLoad(const _char* pDirectoryPath, const _tchar* pPreName, function<HRESULT(_wstring, const _char*)> AddPrototypeEvent)
+{
+	for (const auto& file : filesystem::directory_iterator(pDirectoryPath))
+	{
+		if (file.is_directory())
+			continue;
+
+		string ext = file.path().extension().string();
+
+		if (!strcmp(ext.c_str(), ".txt"))
+			continue;
+
+		_char szFilePath[MAX_PATH] = {};
+
+		strcpy_s(szFilePath, MAX_PATH, file.path().string().c_str());
+
+		wstring wstrFileName = pPreName + file.path().stem().wstring();
+
+		AddPrototypeEvent(wstrFileName, szFilePath);
+
+	}
 
 	return S_OK;
 }
