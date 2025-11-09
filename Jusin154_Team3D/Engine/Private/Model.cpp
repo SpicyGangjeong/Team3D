@@ -338,6 +338,11 @@ HRESULT CModel::Ready_Materials_FromFile(const aiScene* pAIScene, const _char* p
 	_char szFileName[MAX_PATH] = {};
 	_char szMeshFilePath[MAX_PATH] = {};
 	vector<_string> MaterialFilePathes;
+	string strFolderPath = pModelFilePath;
+
+	size_t iFolderPos = strFolderPath.find("Environment");
+
+	strFolderPath = strFolderPath.substr(0, iFolderPos);
 
 	_splitpath_s(pModelFilePath, szDrive, MAX_PATH, szDir, MAX_PATH, szFileName, MAX_PATH, nullptr, 0);
 
@@ -380,12 +385,12 @@ HRESULT CModel::Ready_Materials_FromFile(const aiScene* pAIScene, const _char* p
 			return E_FAIL;
 		}
 
-		string	strPath = "../Bin/Resources/Models/" + strText.substr(iBeginIndex, iEndIndex - iBeginIndex);
+		string	strPath = strFolderPath + strText.substr(iBeginIndex, iEndIndex - iBeginIndex);
 		MaterialFilePathes.push_back(strPath);
 	}
 
 	for (size_t i = 0; i < m_iNumMaterials; ++i) {
-		CMaterial* pMaterial = CMaterial::Create(m_pDevice, m_pContext, MaterialFilePathes[i].c_str(), pAIScene->mMaterials[i]->GetName().C_Str());
+		CMaterial* pMaterial = CMaterial::Create(m_pDevice, m_pContext, MaterialFilePathes[i].c_str(), strFolderPath.c_str());
 		if (nullptr == pMaterial) {
 			return E_FAIL;
 		}
@@ -760,7 +765,9 @@ HRESULT CModel::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fma
 #pragma region Material
 	if (MODEL::ENVIROMENT == eType)
 	{
-
+		if (FAILED(Ready_Materials_FromFile(m_pAIScene, pModelFilePath))) {
+			return E_FAIL;
+		}
 	}
 	else
 	{
