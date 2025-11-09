@@ -9,6 +9,7 @@ uint g_iIndexV;
 
 Texture2D g_DiffuseTexture;
 Texture2D g_MaskingTexture;
+Texture2D g_NoiseTexture;
 Texture2D g_DisolveTexture;
 vector g_vCamPosition;
 

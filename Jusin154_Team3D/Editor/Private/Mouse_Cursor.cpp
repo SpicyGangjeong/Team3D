@@ -102,11 +102,11 @@ HRESULT CMouse_Cursor::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
+	if (FAILED(m_pDiffuse_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture2", 0)))
+	if (FAILED(m_pDiffuse_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture2", 0)))
 	{
 		return E_FAIL;
 	}
@@ -127,7 +127,7 @@ HRESULT CMouse_Cursor::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Cursor"), reinterpret_cast<CComponent**>(&m_pTextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Cursor"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -169,7 +169,7 @@ void CMouse_Cursor::Free()
 {
 	__super::Free();
 
-	SAFE_RELEASE(m_pTextureCom);
+	SAFE_RELEASE(m_pDiffuse_TextureCom);
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }
