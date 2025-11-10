@@ -41,10 +41,12 @@ HRESULT CMiniMap_Panel::Initialize(void* pArg)
 
 void CMiniMap_Panel::Priority_Update(_float fTimeDelta)
 {
+	__super::Priority_Update(fTimeDelta);
 }
 
 void CMiniMap_Panel::Update(_float fTimeDelta)
 {
+	__super::Update(fTimeDelta);
 }
 
 void CMiniMap_Panel::Late_Update(_float fTimeDelta)
@@ -53,6 +55,7 @@ void CMiniMap_Panel::Late_Update(_float fTimeDelta)
 		_float4* vPos = (_float4*)(m_pTransformCom->Get_WorldMatrixPtr()->m[3]);
 		m_pGameInstance->Add_RenderGroup(RENDER::UI, this, *vPos, m_pTransformCom->Get_Radius());
 	}
+	__super::Late_Update(fTimeDelta);
 }
 
 HRESULT CMiniMap_Panel::Render()
@@ -109,7 +112,7 @@ HRESULT CMiniMap_Panel::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Keyboard"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_Keyboard_0"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -119,6 +122,11 @@ HRESULT CMiniMap_Panel::Ready_Components(void* pArg)
 	}
 
     return S_OK;
+}
+
+HRESULT CMiniMap_Panel::Ready_Element(void* pArg)
+{
+	return S_OK;
 }
 
 CMiniMap_Panel* CMiniMap_Panel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

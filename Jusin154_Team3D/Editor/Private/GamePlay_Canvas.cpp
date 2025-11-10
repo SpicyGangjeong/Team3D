@@ -83,20 +83,9 @@ HRESULT CGamePlay_Canvas::Bind_ShaderResources()
 
 HRESULT CGamePlay_Canvas::Ready_Components(void* pArg)
 {
-
-
 	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom))) {
 		return E_FAIL;
 	}
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMission_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &Mission_Panel)))
-	//{
-	//	return E_FAIL;
-	//}
-
-
-
-	CGameObject* asdf = this;
-
 
 	return S_OK;
 }
@@ -115,7 +104,10 @@ HRESULT CGamePlay_Canvas::Ready_Panel(void* pArg)
 		return E_FAIL;
 	}
 	Add_Panel(TEXT("Minimap"), m_pMinimap_Panel);
-
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMission_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &Mission_Panel)))
+	//{
+	//	return E_FAIL;
+	//}
 	return S_OK;
 }
 

@@ -25,14 +25,10 @@ protected:
 	virtual HRESULT	Ready_Element(void* pArg);
 
 public:
-	virtual void MoveX(_float fX) override;
-	virtual void MoveY(_float fY) override;
-	virtual void Move_Panel(_float fX, _float fY);
 	virtual void Visible(_bool bVisible) override;
 	virtual class CGameObject* Get_Element(const wstring& Name);
 	virtual _int Element_Count();
 	virtual const vector<wstring> Element_Name();
-
 
 protected:
 	virtual void Add_Element(wstring Name, class CGameObject* pPanel);

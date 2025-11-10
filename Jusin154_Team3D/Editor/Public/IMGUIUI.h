@@ -30,7 +30,8 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 
 private:
-	void wstringTostring(vector<wstring>& panelNames);
+	void PanelwstringTostring(vector<wstring>& panelNames);
+	void ElementwstringTostring(vector<wstring>& panelNames);
 
 private:
 	CGameObject*			m_pGamePlay_Canvas	= { nullptr };
@@ -41,11 +42,20 @@ private:
 	_float3					m_fSizeXY{};
 	_float					m_fTimeMult{};
 
-	_int					m_iPanelCount{};
+	_float2					m_fPanelPos{};
+	_float2					m_fPanelSize{};
+	_float3					m_fPanelSizeXY{};
+	_float					m_fPanelTimeMult{};
+
 	_int					m_iElementCount{};
-	vector<wstring>			m_pNamewstring;
-	vector<string>			m_pNamestring;
-	vector<const _char*>	m_pName;
+	vector<wstring>			m_pElementNamewstring;
+	vector<string>			m_pElementNamestring;
+	vector<const _char*>	m_pElementName;
+
+	_int					m_iPanelCount{};
+	vector<wstring>			m_iPanelNamewstring;
+	vector<string>			m_iPanelNamestring;
+	vector<const _char*>	m_iPanelName;
 
 public:
 	static CIMGUIUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

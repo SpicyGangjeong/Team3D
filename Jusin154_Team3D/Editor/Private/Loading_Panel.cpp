@@ -23,8 +23,8 @@ HRESULT CLoading_Panel::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = 500.f;
-	Desc.fY = 500.f;
+	Desc.fX = 0.f;
+	Desc.fY = 0.f;
 	Desc.fSizeX = 100.f;
 	Desc.fSizeY = 100.f;
 
@@ -33,6 +33,10 @@ HRESULT CLoading_Panel::Initialize(void* pArg)
 		return E_FAIL;
 	}
 	if (FAILED(Ready_Components(pArg)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(Ready_Element(pArg)))
 	{
 		return E_FAIL;
 	}
@@ -113,7 +117,7 @@ HRESULT CLoading_Panel::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Keyboard"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_Keyboard_0"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -121,6 +125,22 @@ HRESULT CLoading_Panel::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
+
+	return S_OK;
+}
+
+HRESULT CLoading_Panel::Ready_Element(void* pArg)
+{
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLoadingWidget>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &m_pLoadingWidget)))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("LoadingWidget"), m_pLoadingWidget);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLoadingWidget_Flame>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &m_pLoadingWidget_Flame)))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("LoadingWidget_Flame"), m_pLoadingWidget_Flame);
 
 	return S_OK;
 }
