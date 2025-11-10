@@ -117,8 +117,12 @@ void CEditEffect::Describe_Entity()
 	InstanceDesc.vSizeMin = _float3(1.f, 1.f, 1.f);
 	InstanceDesc.vSizeMax = _float3(1.f, 1.f, 1.f);
 	InstanceDesc.vSpeed = _float2(0.f, 0.f);
+	InstanceDesc.vAniIndex = _float2(0.f, 32.f);
+	InstanceDesc.vAniTime = _float2(1.f, 3.f);
+	InstanceDesc.vDiffuseUVMoveTime = _float2(1.f, 3.f);
+	InstanceDesc.vMaskingUVMoveTime = _float2(1.f, 3.f);
 
-	const char* pRenderNames[] = {"PRIORITY" , "SHADOW", "NONBLEND", "BLUR" , "NONLIGHT", "BLEND" , "UI" };
+	const char* pRenderNames[] = {"PRIORITY" , "SHADOW", "NONBLEND", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" , "UI"};
 
 	int iCurrentItem = static_cast<int>(m_eRenderOrder);
 
@@ -138,10 +142,15 @@ void CEditEffect::Describe_Entity()
 
 	GUI::ColorEdit4("Color", (_float*)&m_vColor);
 
-	GUI::DragFloat("BlurIntensity", &m_fBlurIntensity , 0.01f , 0.f , 1.f);
+	GUI::DragFloat("BlurIntensity", &m_fBlurIntensity , 0.005f , 0.f , 1.f);
+	GUI::DragFloat("EmissiveCutAlpha", &m_fEmissiveCutAlpha, 0.005f, 0.f, 1.f);
+
 
 	GUI::ColorEdit4("Emissive", (_float*)&m_vEmissive);
 	GUI::InputFloat("ColorTargetOption", &m_fColorOption);
+	GUI::InputFloat2("UVCutting", (_float*)& m_vUVCutting);
+
+
 
 	GUI::DragFloat2("vUVGainAmount", (_float*)&m_vUVGainAmount , 0.01f);
 
@@ -152,7 +161,6 @@ void CEditEffect::Describe_Entity()
 	//라이프 타임에 의해서가 아닌 공용시간으로 제어해야함
 	//UV잘라서 적용할 수 있도록
 
-	//블러 웨이트도 설정할 수 있도록
 
 
 	if (GUI::TreeNode("MODEL"))

@@ -38,10 +38,10 @@ void CLevel_Logo::Update(_float fTimeDelta)
 		if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::EFFECT))))
 			return;
 	}
-	//else if (GUI::Button("Skill Editor", { 100, 100 })) {
-	//	if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::SKIllSTUDIO))))
-	//		return;
-	//}
+	else if (GUI::Button("PhysX Simulator", { 100, 100 })) {
+		if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::PHYSX))))
+			return;
+	}
 	//else if (GUI::Button("Particle Editor", { 100, 100 })) {
 	//	if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::PARTICLE))))
 	//		return;

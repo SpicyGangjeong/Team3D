@@ -388,8 +388,9 @@ HRESULT CModel::Ready_Materials_FromFile(const aiScene* pAIScene, const _char* p
 
 	if (!file.is_open())
 	{
-		MSG_BOX("Failed to Open Mesh File");
-		return E_FAIL;
+		//MSG_BOX("Failed to Open Mesh File");
+		/* LOD */
+		return S_OK;
 	}
 
 	string strText = {};
@@ -827,13 +828,25 @@ HRESULT CModel::Initialize_Prototype()
 
 HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix)
 {
-	if (!LoadData(pModelFilePath))
+	_char		szTextureFileName[MAX_PATH] = {};
+	_char		szDir[MAX_PATH] = {};
+	_char		szName[MAX_PATH] = {};
+	_char		szEXT[MAX_PATH] = {};
+	_splitpath_s(pModelFilePath, nullptr, 0, szDir, MAX_PATH, szName, MAX_PATH, szEXT, MAX_PATH);
+
+	if (strcmp(".bin", szEXT) == 0)
+	{
+		LoadData(pModelFilePath);
+	}
+	else if (strcmp(".fbx", szEXT) == 0)
 	{
 		_char Temp[256];
-		strcpy_s(Temp, pModelFilePath);
-		strcat_s(Temp,".fbx");
-		Assimp_Model_Load(Temp, eType, PreTransformMatrix, 0);
-		SaveAssimpModel(pModelFilePath);
+		strcpy_s(Temp, szDir);
+		strcat_s(Temp, szName);
+		strcat_s(Temp, ".bin");
+		Assimp_Model_Load(pModelFilePath, eType, PreTransformMatrix, 0);
+		SaveAssimpModel(Temp);
+
 		return S_OK;
 	}
 	m_pSaveModel = m_pGameInstance->Load_SaveModel(pModelFilePath);

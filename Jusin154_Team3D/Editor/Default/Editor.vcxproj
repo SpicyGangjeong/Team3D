@@ -153,9 +153,15 @@
     <ClInclude Include="..\public\Active_Icon.h" />
     <ClInclude Include="..\public\GamePlay_Canvas.h" />
     <ClInclude Include="..\Public\DebugCamera.h" />
+    <ClInclude Include="..\Public\Dummy_PhysXBox.h" />
+    <ClInclude Include="..\Public\Dummy_PhysXMesh.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\Public\Effect_Editor.h" />
     <ClInclude Include="..\Public\EditEffect.h" />
     <ClInclude Include="..\public\Level_MapViewer.h" />
+    <ClInclude Include="..\Public\LoadingWidget.h" />
     <ClInclude Include="..\public\MapObject.h" />
     <ClInclude Include="..\public\MapObject_Manager.h" />
     <ClInclude Include="..\public\Terrain.h" />
@@ -172,7 +178,6 @@
     <ClInclude Include="..\Public\Hair.h" />
     <ClInclude Include="..\Public\Level_EffectViewer.h" />
     <ClInclude Include="..\public\IMGUIUI.h" />
-    <ClInclude Include="..\public\LoadingWidget.h" />
     <ClInclude Include="..\public\LoadingWidget_Flame.h" />
     <ClInclude Include="..\public\Loading_Panel.h" />
     <ClInclude Include="..\public\MiniMap_Panel.h" />
@@ -204,9 +209,15 @@
     <ClCompile Include="..\private\Active_Icon.cpp" />
     <ClCompile Include="..\private\GamePlay_Canvas.cpp" />
     <ClCompile Include="..\Private\DebugCamera.cpp" />
+    <ClCompile Include="..\Private\Dummy_PhysXBox.cpp" />
+    <ClCompile Include="..\Private\Dummy_PhysXMesh.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\Private\Effect_Editor.cpp" />
     <ClCompile Include="..\Private\EditEffect.cpp" />
     <ClCompile Include="..\private\Level_MapViewer.cpp" />
+    <ClCompile Include="..\Private\LoadingWidget.cpp" />
     <ClCompile Include="..\private\MapObject.cpp" />
     <ClCompile Include="..\private\MapObject_Manager.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
@@ -220,7 +231,6 @@
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\Private\Level_EffectViewer.cpp" />
     <ClCompile Include="..\private\IMGUIUI.cpp" />
-    <ClCompile Include="..\private\LoadingWidget.cpp" />
     <ClCompile Include="..\private\LoadingWidget_Flame.cpp" />
     <ClCompile Include="..\private\Loading_Panel.cpp" />
     <ClCompile Include="..\private\MiniMap_Panel.cpp" />

@@ -46,6 +46,11 @@ HRESULT CEffectObject::Render()
 
 	}
 
+	//바인딩한 버퍼 초기화
+
+	ID3D11ShaderResourceView* pResetSRV[1] = { nullptr };
+	m_pContext->CSSetShaderResources(0, 1, pResetSRV);
+
 	return S_OK;
 }
 
@@ -74,6 +79,8 @@ HRESULT CEffectObject::Render_Blur()
 
 	}
 
+
+
 	return S_OK;
 }
 
@@ -93,18 +100,23 @@ HRESULT CEffectObject::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDiffuse", &m_isDiffuse, sizeof(_bool)))) {
 		return E_FAIL;
 	}
+
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_isMasking", &m_isMasking, sizeof(_bool)))) {
 		return E_FAIL;						
 	}										
+
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDissolve", &m_isDissolve, sizeof(_bool)))) {
 		return E_FAIL;						
 	}										
+
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_isNoise", &m_isNoise, sizeof(_bool)))) {
 		return E_FAIL;						
-	}										
+	}
+
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_isUVMove", &m_isUVMove, sizeof(_bool)))) {
 		return E_FAIL;
 	}
+
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vColor", &m_vColor, sizeof(_float4)))) {
 		return E_FAIL;
 	}
@@ -117,11 +129,20 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fEmissiveCutAlpha", &m_fEmissiveCutAlpha, sizeof(_float)))) {
+		return E_FAIL;
+	}
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vUVGainAmount", &m_vUVGainAmount, sizeof(_float2)))) {
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vUVCutting", &m_vUVCutting, sizeof(_float2)))) {
+		return E_FAIL;
+	}
+
+	if(FAILED(m_pInstance_ModelCom->Bind_CS_Output(0)))
+		return E_FAIL;
 
 	if (m_pDiffuse_TextureCom != nullptr)
 	{
