@@ -117,6 +117,8 @@ void CIMGUIUI::Update(_float fTimeDelta)
 
 		m_fSizeXY = static_cast<CElementObject*>(m_pElementObject)->Get_Current_Size();
 
+		m_fEndTime = static_cast<CElementObject*>(m_pElementObject)->Get_EndTime();
+		m_fDelayTime = static_cast<CElementObject*>(m_pElementObject)->Get_DelayTime();
 		m_fTimeMult = static_cast<CElementObject*>(m_pElementObject)->Get_TimeMult();
 	}
 	GUI::Begin("Current_PanelObject_Info");
@@ -124,28 +126,46 @@ void CIMGUIUI::Update(_float fTimeDelta)
 	{
 		if (m_pGamePlay_Canvas != nullptr)
 		{
+			m_bCanvasVisible = static_cast<CCanvasObject*>(m_pGamePlay_Canvas)->Get_Visible();
 			auto panelNames = static_cast<CCanvasObject*>(m_pGamePlay_Canvas)->Panel_Name();
 			PanelwstringTostring(panelNames);
 			if (GUI::Combo("Panels", &m_iPanelCount, m_iPanelName.data(), static_cast<_int>(m_iPanelName.size())))
 			{
 				m_pPanelObject = static_cast<CCanvasObject*>(m_pGamePlay_Canvas)->Get_Panel(m_iPanelNamewstring[m_iPanelCount]);
 			}
+			if (GUI::Checkbox("Canvas Active", &m_bCanvasVisible))
+			{
+				static_cast<CCanvasObject*>(m_pGamePlay_Canvas)->Visible(m_bCanvasVisible);
+			}
 		}
 
 		if (m_pPanelObject != nullptr)
 		{
+			if (m_bCanvasVisible == false)
+			{
+				m_bPanelVisible = m_bCanvasVisible;
+			}
+			else
+			{
+				m_bPanelVisible = static_cast<CPanelObject*>(m_pPanelObject)->Get_Visible();
+			}
+			if (GUI::Checkbox("Panel Active", &m_bPanelVisible))
+			{
+				static_cast<CPanelObject*>(m_pPanelObject)->Visible(m_bPanelVisible);
+			}
+
 			GUI::Text("Origin Position : %.1f, %.1f", static_cast<CPanelObject*>(m_pPanelObject)->Get_Origin_Position().x, static_cast<CUIObject*>(m_pPanelObject)->Get_Origin_Position().y);
 			GUI::Text("Current Position : %.1f, %.1f", static_cast<CPanelObject*>(m_pPanelObject)->Get_Current_Position().m128_f32[0], static_cast<CUIObject*>(m_pPanelObject)->Get_Current_Position().m128_f32[1]);
 			GUI::Text("Origin Size : %.1f, %.1f", static_cast<CPanelObject*>(m_pPanelObject)->Get_Origin_Size().x, static_cast<CUIObject*>(m_pPanelObject)->Get_Origin_Size().y);
 			GUI::Text("Current Size : %.1f, %.1f", static_cast<CPanelObject*>(m_pPanelObject)->Get_Current_Size().x, static_cast<CUIObject*>(m_pPanelObject)->Get_Current_Size().y);
 
 			GUI::Text("PanelPosition");
-			if (GUI::SliderFloat("X##PanelPos", &m_fPanelPos.x, 0.f, 1920.f))
+			if (GUI::SliderFloat("X##PanelPos", &m_fPanelPos.x, -1920.f, 1920.f))
 			{
 				static_cast<CPanelObject*>(m_pPanelObject)->MoveX(m_fPanelPos.x);
 			}
 
-			if (GUI::SliderFloat("Y##PanelPos", &m_fPanelPos.y, 0.f, 1080))
+			if (GUI::SliderFloat("Y##PanelPos", &m_fPanelPos.y, -1080.f, 1080))
 			{
 				static_cast<CPanelObject*>(m_pPanelObject)->MoveY(m_fPanelPos.y);
 			}
@@ -186,21 +206,35 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		{
 			m_pElementObject = static_cast<CPanelObject*>(m_pPanelObject)->Get_Element(m_pElementNamewstring[m_iElementCount]);
 		}
+
 	}
 	if (m_pElementObject != nullptr)
 	{
+		if (m_bPanelVisible == false)
+		{
+			m_bElementVisible = m_bPanelVisible;
+		}
+		else
+		{
+			m_bElementVisible = static_cast<CElementObject*>(m_pElementObject)->Get_Visible();
+		}
+		if (GUI::Checkbox("Panel Active", &m_bElementVisible))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->Visible(m_bElementVisible);
+		}
+
 		GUI::Text("Origin Position : %.1f, %.1f", static_cast<CElementObject*>(m_pElementObject)->Get_Origin_Position().x, static_cast<CUIObject*>(m_pElementObject)->Get_Origin_Position().y);
 		GUI::Text("Current Position : %.1f, %.1f", static_cast<CElementObject*>(m_pElementObject)->Get_Current_Position().m128_f32[0], static_cast<CUIObject*>(m_pElementObject)->Get_Current_Position().m128_f32[1]);
 		GUI::Text("Origin Size : %.1f, %.1f", static_cast<CElementObject*>(m_pElementObject)->Get_Origin_Size().x, static_cast<CUIObject*>(m_pElementObject)->Get_Origin_Size().y);
 		GUI::Text("Current Size : %.1f, %.1f", static_cast<CElementObject*>(m_pElementObject)->Get_Current_Size().x, static_cast<CUIObject*>(m_pElementObject)->Get_Current_Size().y);
 
 		GUI::Text("Position");
-		if (GUI::SliderFloat("X##Pos", &m_fPos.x, 0.f, 1920.f))
+		if (GUI::SliderFloat("X##Pos", &m_fPos.x, -1920.f, 1920.f))
 		{
 			static_cast<CElementObject*>(m_pElementObject)->MoveX(m_fPos.x);
 		}
 
-		if (GUI::SliderFloat("Y##Pos", &m_fPos.y, 0.f, 1080))
+		if (GUI::SliderFloat("Y##Pos", &m_fPos.y, -1080.f, 1080))
 		{
 			static_cast<CElementObject*>(m_pElementObject)->MoveY(m_fPos.y);
 		}
@@ -220,6 +254,16 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		{
 			m_fSizeXY.y = m_fSizeXY.x;
 			static_cast<CElementObject*>(m_pElementObject)->SizeUpdate_float(m_fSizeXY);
+		}
+
+		if (GUI::DragFloat("EndTime", &m_fEndTime, 0.01f, 0.f, 10.f))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->Set_TimeMult(m_fEndTime);
+		}
+
+		if (GUI::DragFloat("m_fDelayTime", &m_fDelayTime, 0.01f, 0.f, 10.f))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->Set_TimeMult(m_fDelayTime);
 		}
 
 		if (GUI::DragFloat("TimeMult", &m_fTimeMult, 0.01f, 0.f, 10.f))

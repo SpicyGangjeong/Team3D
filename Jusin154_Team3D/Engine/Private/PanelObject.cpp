@@ -71,13 +71,7 @@ HRESULT CPanelObject::Ready_Element(void* pArg)
 
 void CPanelObject::Visible(_bool bVisible)
 {
-	if (m_Elements.empty())
-		return;
-
-	for (auto iter : m_Elements)
-	{
-		static_cast<CUIObject*>(iter)->Visible(bVisible);
-	}
+	m_bActive = bVisible;
 }
 
 CGameObject* CPanelObject::Get_Element(const wstring& Name)
@@ -111,6 +105,19 @@ void CPanelObject::Add_Element(wstring Name, CGameObject* pPanel)
 	m_ElementName.push_back(Name);
 	m_Elements_map.emplace(Name, pPanel);
 	m_iElements_Count++;
+}
+
+_bool CPanelObject::Chack_Visible()
+{
+	if (m_pOwner->Get_Visible() == false)
+	{
+		m_bVisible = m_pOwner->Get_Visible();
+	}
+	else
+	{
+		m_bVisible = m_bActive;
+	}
+	return m_bVisible;
 }
 
 CGameObject* CPanelObject::Find_Element(const wstring& Name)

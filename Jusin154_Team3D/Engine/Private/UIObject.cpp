@@ -145,9 +145,24 @@ void CUIObject::SizeUpdate_float(_float3 fSizeXY)
 	m_fSizeY = fSizeXY.y;
 }
 
+void CUIObject::Set_Time(_float fTime)
+{
+	m_fTime = fTime;
+}
+
 void CUIObject::Set_TimeMult(_float Mult)
 {
 	m_fTimeMult = Mult;
+}
+
+_float CUIObject::Get_EndTime()
+{
+	return m_fEndTime;
+}
+
+_float CUIObject::Get_DelayTime()
+{
+	return m_fDelayTime;
 }
 
 _float CUIObject::Get_TimeMult()
@@ -157,11 +172,22 @@ _float CUIObject::Get_TimeMult()
 
 void CUIObject::Visible(_bool bVisible)
 {
+	m_bVisible = bVisible;
 }
 
 _bool CUIObject::Get_Visible()
 {
 	return m_bVisible;
+}
+
+_bool CUIObject::Get_Active()
+{
+	return m_bActive;
+}
+
+_bool CUIObject::Chack_Visible()
+{
+	return _bool();
 }
 
 _float2 CUIObject::Get_Origin_Position()

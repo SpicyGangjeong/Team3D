@@ -61,15 +61,32 @@ _vector CElementObject::Get_WorldPostion()
 	return m_pOwner->Get_WorldPostion();
 }
 
+void CElementObject::Visible(_bool bVisible)
+{
+	m_bActive = bVisible;
+}
+
+_bool CElementObject::Chack_Visible()
+{
+	if (m_pOwner->Get_Visible() == false )
+	{
+		m_bVisible = m_pOwner->Get_Visible();
+	}
+	else if (static_cast<CUIObject*>(m_pOwner)->Get_Active() == false)
+	{
+		m_bVisible = static_cast<CUIObject*>(m_pOwner)->Get_Active();
+	}
+	else
+	{
+		m_bVisible = m_bActive;
+	}
+	return m_bVisible;
+}
+
 HRESULT CElementObject::Ready_Components(void* pArg)
 {
 	__super::Ready_Components(pArg);
 	return S_OK;
-}
-
-void CElementObject::Visible(_bool bVisible)
-{
-	Set_Visible(bVisible);
 }
 
 void CElementObject::Free()

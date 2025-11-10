@@ -66,15 +66,7 @@ HRESULT CCanvasObject::Ready_Panel(void* pArg)
 
 void CCanvasObject::Visible(_bool bVisible)
 {
-	if (m_Panels.empty())
-	{
-		return;
-	}
-
-	for (auto iter : m_Panels)
-	{
-		static_cast<CUIObject*>(iter)->Visible(bVisible);
-	}
+	m_bVisible = bVisible;
 }
 
 CGameObject* CCanvasObject::Get_Panel(const wstring& Name)

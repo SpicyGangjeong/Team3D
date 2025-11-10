@@ -40,6 +40,8 @@ private:
 	_float2					m_fPos{};
 	_float2					m_fSize{};
 	_float3					m_fSizeXY{};
+	_float					m_fEndTime{};
+	_float					m_fDelayTime{};
 	_float					m_fTimeMult{};
 
 	_float2					m_fPanelPos{};
@@ -56,6 +58,10 @@ private:
 	vector<wstring>			m_iPanelNamewstring;
 	vector<string>			m_iPanelNamestring;
 	vector<const _char*>	m_iPanelName;
+
+	_bool					m_bCanvasVisible =	{ false };
+	_bool					m_bPanelVisible =	{ false };
+	_bool					m_bElementVisible = { false };
 
 public:
 	static CIMGUIUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -21,8 +21,8 @@ HRESULT CLoadingWidget::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = 1800.f;
-	Desc.fY = 850.f;
+	Desc.fX = 600.f;
+	Desc.fY = 0.f;
 	Desc.fSizeX = 200.f;
 	Desc.fSizeY = 200.f;
 
@@ -45,17 +45,28 @@ HRESULT CLoadingWidget::Initialize(void* pArg)
 
 void CLoadingWidget::Priority_Update(_float fTimeDelta)
 {
+	if (!__super::Chack_Visible())
+	{
+		return;
+	}
 	__super::Priority_Update(fTimeDelta);
 }
 
 void CLoadingWidget::Update(_float fTimeDelta)
 {
+	if (!__super::Chack_Visible())
+		return;
+
 	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
 }
 
 void CLoadingWidget::Late_Update(_float fTimeDelta)
 {
+	if (!__super::Chack_Visible())
+	{
+		return;
+	}
 	if (m_bVisible) {
 		_float4* vPos = (_float4*)(m_pTransformCom->Get_WorldMatrixPtr()->m[3]);
 		m_pGameInstance->Add_RenderGroup(RENDER::UI, this, *vPos, m_pTransformCom->Get_Radius());

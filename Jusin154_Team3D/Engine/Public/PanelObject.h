@@ -32,6 +32,7 @@ public:
 
 protected:
 	virtual void Add_Element(wstring Name, class CGameObject* pPanel);
+	virtual _bool Chack_Visible() override;
 
 protected:
 	vector<class CGameObject*>			m_Elements;				// 패널이 엘리먼츠를 관리하기 위해 만듬
