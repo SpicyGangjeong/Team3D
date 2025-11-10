@@ -6,8 +6,6 @@
 CRigidBody::CRigidBody(ID3D11Device* pDevice, ID3D11DeviceContext* pContext):
 	CComponent(pDevice, pContext)
 {
-	SAFE_ADDREF(pDevice);
-	SAFE_ADDREF(pContext);
 }
 
 CRigidBody::CRigidBody(const CRigidBody& rhs):
@@ -16,10 +14,11 @@ CRigidBody::CRigidBody(const CRigidBody& rhs):
 	m_eActorType(rhs.m_eActorType),
 	m_vhalfGeometryInfo(rhs.m_vhalfGeometryInfo),
 	m_pShape(rhs.m_pShape),
-	m_pMeshKey(rhs.m_pMeshKey)
+	m_pMeshKey(rhs.m_pMeshKey),
+	m_bExclusive(rhs.m_bExclusive),
+	m_bKinematic(rhs.m_bKinematic)
 {
-	m_pMaterial->acquireReference();
-	m_pShape->acquireReference();
+
 }
 
 HRESULT CRigidBody::Initialize_Prototype(RIGIDBODY_PROTOTYPEDESC& Desc)
@@ -32,7 +31,8 @@ HRESULT CRigidBody::Initialize_Prototype(RIGIDBODY_PROTOTYPEDESC& Desc)
 	case ACTOR::SPHERE:
 		m_pMaterial = m_pGameInstance->Get_Material(Desc.tRigidDynamicDesc.vMatInfo);
 		m_vhalfGeometryInfo = Desc.tRigidDynamicDesc.vhalfGeometryInfo;
-		m_pShape = m_pGameInstance->Create_Shape(m_eActorType, m_vhalfGeometryInfo, *m_pMaterial, Desc.tRigidDynamicDesc.bExclusive, Desc.tRigidDynamicDesc.ePxShapeFlag);
+		m_bExclusive = Desc.tRigidDynamicDesc.bExclusive;
+		m_pShape = m_pGameInstance->Create_Shape(m_eActorType, m_vhalfGeometryInfo, *m_pMaterial, m_bExclusive, Desc.tRigidDynamicDesc.ePxShapeFlag);
 		if (nullptr == m_pShape) {
 			assert(false);
 			m_pMaterial->release();
@@ -54,7 +54,6 @@ HRESULT CRigidBody::Initialize_Prototype(RIGIDBODY_PROTOTYPEDESC& Desc)
 	default:
 		break;
 	}
-
 	return S_OK;
 }
 
@@ -63,6 +62,9 @@ HRESULT CRigidBody::Initialize(void* pArg)
 	RIGIDBODY_DESC* pDesc = (RIGIDBODY_DESC*)pArg;
 
 	if (FAILED(__super::Initialize(pArg))) {
+		return E_FAIL;
+	}
+	if (true == m_bExclusive) {
 		return E_FAIL;
 	}
 	
@@ -75,7 +77,7 @@ HRESULT CRigidBody::Initialize(void* pArg)
 	case Engine::ACTOR::CAPSULE:
 	case Engine::ACTOR::SPHERE:
 		m_fDensity = pDesc->tRigidDynamicDesc.fDensity;
-		m_bKenematic = pDesc->tRigidDynamicDesc.bIsKinematic;
+		m_bKinematic = pDesc->tRigidDynamicDesc.bIsKinematic;
 		m_pRigidBody = m_pGameInstance->Add_DynamicActor(*this);
 		break;
 	case Engine::ACTOR::PLANE:
@@ -123,15 +125,6 @@ CComponent* CRigidBody::Clone(void* pArg, CGameObject* pOwner)
 void CRigidBody::Free()
 {
 	__super::Free();
-
-	if (nullptr != m_pMaterial) {
-		m_pMaterial->release();
-		m_pMaterial = nullptr;
-	}
-	if (nullptr != m_pShape) {
-		m_pShape->release();
-		m_pShape = nullptr;
-	}
 
 	SAFE_RELEASE(m_pTransform);
 }

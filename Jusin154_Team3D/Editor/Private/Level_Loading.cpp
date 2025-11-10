@@ -8,6 +8,8 @@
 #include "Level_ObjectViewer.h"
 #include "Level_EffectViewer.h"
 #include "Level_MapViewer.h"
+#include "Level_PhysXLab.h"
+
 
 CLevel_Loading::CLevel_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -57,9 +59,9 @@ void CLevel_Loading::Update(_float fTimeDelta)
 		case LEVEL::EFFECT:
 			pNewLevel = CLevel_EffectViewer::Create(m_pDevice, m_pContext, m_eNextLevelID);
 			break;
-		//case LEVEL::SKIllSTUDIO:
-		//	pNewLevel = CLevel_SkillStudio::Create(m_pDevice, m_pContext, m_eNextLevelID);
-		//	break;
+		case LEVEL::PHYSX:
+			pNewLevel = CLevel_PhysXLab::Create(m_pDevice, m_pContext, m_eNextLevelID);
+			break;
 		//case LEVEL::PARTICLE:
 		//	pNewLevel = CLevel_ParticleViewer::Create(m_pDevice, m_pContext, m_eNextLevelID);
 		//	break;

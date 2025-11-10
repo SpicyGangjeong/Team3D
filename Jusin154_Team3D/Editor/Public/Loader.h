@@ -47,6 +47,7 @@ private:
 	HRESULT Loading_For_MapViewer();
 	HRESULT Loading_For_UI();
 	HRESULT Loading_For_Effect();
+	HRESULT Loading_For_PhysXLevel();
 
 private:
 	HRESULT Asset_FileLoad(const _char* pDirectoryPath, const _tchar* pPreName, function<HRESULT(_wstring, const _char*)> AddPrototypeEvent);
