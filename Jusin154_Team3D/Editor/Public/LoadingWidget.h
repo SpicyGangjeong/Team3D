@@ -1,16 +1,16 @@
 #pragma once
 
 #include "Editor_Define.h"
-#include "UIObject.h"
+#include "ElementObject.h"
 
 NS_BEGIN(Editor)
 
-class CMissionBanner_Key final : public CUIObject
+class CLoadingWidget final : public CElementObject
 {
 private:
-	CMissionBanner_Key(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CMissionBanner_Key(const CMissionBanner_Key& rhs);
-	virtual ~CMissionBanner_Key() = default;
+	CLoadingWidget(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CLoadingWidget(const CLoadingWidget& rhs);
+	virtual ~CLoadingWidget() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -31,8 +31,10 @@ private:
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
+	_int m_iImageFrameX{};
+	_float m_fFrame{};
 public:
-	static CMissionBanner_Key* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CLoadingWidget* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 	void Describe_Entity() override;
