@@ -56,10 +56,14 @@ HRESULT CEffectObject::Render_Blur()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fBlurIntensity", &m_fBlurIntensity, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
 	for (_uint i = 0; i < m_pInstance_ModelCom->Get_NumMeshes(); i++)
 	{
 
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_INSTANCE_MODEL::NON_NOMALMAP)))) {
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_INSTANCE_MODEL::BLUR)))) {
 			return E_FAIL;
 		}
 

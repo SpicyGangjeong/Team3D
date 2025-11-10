@@ -49,9 +49,11 @@ protected:
 	_bool	m_isDissolve = {};
 	_bool	m_isNoise = {};
 	_bool	m_isUVMove = {};
+	_bool   m_isBlur = {};
 
 	_float4 m_vEmissive = { 0.f ,0.f ,0.f ,0.f};
 	_float  m_fColorOption = {};
+	_float  m_fBlurIntensity = {};
 
 	RENDER m_eRenderOrder = {RENDER::NONLIGHT};
 
