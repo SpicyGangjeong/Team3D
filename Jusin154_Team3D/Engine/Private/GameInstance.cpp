@@ -519,14 +519,12 @@ _bool CGameInstance::SaveAssimpModel(const _char* filename)
 	auto iter = m_ModelMap.find(filename);
 	return iter->second->SaveAssimpModel(filename);
 }
-<<<<<<< Updated upstream
 #endif
 SaveModel* CGameInstance::Load_SaveModel(const _char* filePath)
 {
 	auto iter = m_sModelMap.find(filePath);
 	return &iter->second;
 }
-=======
 
 #pragma region PhysX_Manager
 PSX::PxMaterial* CGameInstance::Get_Material(_float3& vMatInfo)
@@ -551,7 +549,6 @@ const PSX::PxRigidStatic* CGameInstance::Add_StaticActor(CRigidBody& RigidBody)
 }
 #pragma endregion
 
->>>>>>> Stashed changes
 bool		CGameInstance::Key_Pressing(int _iKey)
 {
 	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {

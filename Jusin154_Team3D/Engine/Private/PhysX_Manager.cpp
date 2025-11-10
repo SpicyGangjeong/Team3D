@@ -121,7 +121,7 @@ PSX::PxShape* CPhysX_Manager::Create_Shape(ACTOR eType, _float3& vhalfGeometryIn
 HRESULT CPhysX_Manager::Create_TriangleMesh(const _wstring& wstrMeshKey, CMesh* pMesh)
 {
 	 
-	PSX::PxTriangleMesh* pTriangleMesh = pMesh->ConvertToPxMesh(m_pParam);
+	PSX::PxTriangleMesh* pTriangleMesh = pMesh->ConvertToPxMesh(m_pCookingParam);
 	if (nullptr != pTriangleMesh) {
 		m_TriangleMeshes.emplace(wstrMeshKey, pTriangleMesh);
 		
@@ -207,6 +207,49 @@ void CPhysX_Manager::ClearScene()
 	} m_RigidBodys.clear();
 }
 
+PSX::PxController* CPhysX_Manager::Add_CapsuleController(PSX::PxCapsuleControllerDesc& Desc)
+{
+	PSX::PxController* pController = { nullptr };
+
+	pController = m_pCCTManager->createController(Desc);
+	return pController;
+}
+
+PSX::PxController* CPhysX_Manager::Add_BoxController(PSX::PxBoxControllerDesc& Desc)
+{
+	PSX::PxController* pController = { nullptr };
+
+	pController = m_pCCTManager->createController(Desc);
+	return pController;
+}
+
+PSX::PxController* CPhysX_Manager::Get_Controller(_uint iControllerIndex)
+{
+	return nullptr;
+}
+
+void CPhysX_Manager::ReleaseController(_uint iControllerIndex)
+{
+	if (iControllerIndex >= Get_NumCurrentController()) {
+		assert(false);
+		return;
+	}
+
+	m_pCCTManager->getController((PSX::PxU32)iControllerIndex)->release();
+}
+
+_uint CPhysX_Manager::Get_NumCurrentController()
+{
+	return (_uint)m_pCCTManager->getNbControllers();
+}
+
+HRESULT CPhysX_Manager::PurgeAllController()
+{
+	m_pCCTManager->purgeControllers();
+	return S_OK;
+}
+
+
 HRESULT CPhysX_Manager::Initialize()
 {
 	
@@ -227,7 +270,7 @@ HRESULT CPhysX_Manager::Initialize()
 
 		m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, m_ToleranceScale, true, m_pPvd);
 
-		m_pParam = new PSX::PxCookingParams(m_pPhysics->getTolerancesScale());
+		m_pCookingParam = new PSX::PxCookingParams(m_pPhysics->getTolerancesScale());
 		PSX::PxSceneDesc sceneDesc = { m_pPhysics->getTolerancesScale() };
 
 		sceneDesc.gravity = PSX::PxVec3(0.f, GRAVITY, 0.f);
@@ -242,6 +285,8 @@ HRESULT CPhysX_Manager::Initialize()
 			return E_FAIL;
 		}
 		m_pScene = m_pPhysics->createScene(sceneDesc);
+		m_pCCTManager = PxCreateControllerManager(*m_pScene);
+
 	}
 
 	// 디버그서버의 클라 세팅
@@ -299,8 +344,8 @@ void CPhysX_Manager::Free()
 		Safe_Delete(pGeometry.second);
 	} m_TriangleMeshGeometry.clear();
 
-	if (nullptr != m_pParam) {
-		Safe_Delete(m_pParam);
+	if (nullptr != m_pCookingParam) {
+		Safe_Delete(m_pCookingParam);
 	}
 
 	if (nullptr != m_pScene) {
