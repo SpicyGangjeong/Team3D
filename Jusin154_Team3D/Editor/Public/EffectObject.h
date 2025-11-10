@@ -43,6 +43,7 @@ protected:
 	_float4 m_vColor = { 0.f ,0.f ,0.f ,1.f };
 
 	_float2 m_vUVGainAmount = {};
+	_float2 m_vUVCutting = {1.f ,1.f};
 			
 	_bool	m_isDiffuse = {};
 	_bool	m_isMasking = {};
@@ -54,8 +55,10 @@ protected:
 	_float4 m_vEmissive = { 0.f ,0.f ,0.f ,0.f};
 	_float  m_fColorOption = {};
 	_float  m_fBlurIntensity = {};
+	_float  m_fEmissiveCutAlpha = {};
 
-	RENDER m_eRenderOrder = {RENDER::NONLIGHT};
+
+	RENDER m_eRenderOrder = {RENDER::EFFECT};
 
 public:
 	virtual void Free() override;
