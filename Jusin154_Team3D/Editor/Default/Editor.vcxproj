@@ -158,6 +158,7 @@
     <ClInclude Include="..\public\MapObject.h" />
     <ClInclude Include="..\public\MapObject_Manager.h" />
     <ClInclude Include="..\public\Terrain.h" />
+    <ClInclude Include="..\Public\Level_PhysXLab.h" />
     <ClInclude Include="..\Public\TestEffect.h" />
     <ClInclude Include="..\Public\EffectObject.h" />
     <ClInclude Include="..\Public\DummyRect.h" />
@@ -200,6 +201,7 @@
     <ClCompile Include="..\private\MapObject.cpp" />
     <ClCompile Include="..\private\MapObject_Manager.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
+    <ClCompile Include="..\Private\Level_PhysXLab.cpp" />
     <ClCompile Include="..\Private\TestEffect.cpp" />
     <ClCompile Include="..\Private\EffectObject.cpp" />
     <ClCompile Include="..\Private\DummyRect.cpp" />

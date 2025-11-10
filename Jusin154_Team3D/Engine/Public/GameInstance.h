@@ -175,6 +175,13 @@ public:
 #pragma region PICKING
 	_bool	isPicking(_float3* pOut);
 #pragma endregion
+#pragma region PhysX_Manager
+	PSX::PxMaterial* Get_Material(_float3& vMatInfo);
+	HRESULT Create_TriangleMesh(const _wstring& wstrMeshKey, CMesh* pMesh);
+	PSX::PxShape* Create_Shape(ACTOR eType, _float3& vhalfGeometryInfo, PSX::PxMaterial& pxMaterial, _bool bExclusive = false, PSX::PxShapeFlags ePxShapeFlag = PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE);
+	const PSX::PxRigidDynamic* Add_DynamicActor(CRigidBody& RigidBody);
+	const PSX::PxRigidStatic* Add_StaticActor(CRigidBody& RigidBody);
+#pragma endregion
 
 
 public:
@@ -213,6 +220,7 @@ private:
 	class CKey_Manager*				m_pKey_Manager = { nullptr };
 	class CMouse_Manager*			m_pMouse_Manager = { nullptr };
 	class CCollider_Manager*		m_pCollider_Manager = { nullptr };
+	class CPhysX_Manager*			m_pPhysX_Manager = { nullptr };
 	class CPicking*					m_pPicking = { nullptr };
 
 #ifdef _DEBUG

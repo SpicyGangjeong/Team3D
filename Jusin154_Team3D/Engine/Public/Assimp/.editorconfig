@@ -1,4 +1,4 @@
-# See <http://EditorConfig.org> for details
+# ASSIMP
 
 [*.{h,hpp,inl}]
 end_of_line = lf
