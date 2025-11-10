@@ -2,6 +2,7 @@
 #include "Head.h"
 
 #include "GameInstance.h"
+#include "RootModelPart.h"
 
 CHead::CHead(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CModelParts(pDevice, pContext)
@@ -27,7 +28,7 @@ HRESULT CHead::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	m_pModelCom->Set_AnimationIndex(0);
+	dynamic_cast<CRootModelPart*>(m_pOwner)->Push_ModelParts(this);
 
 	return S_OK;
 }
@@ -39,7 +40,7 @@ void CHead::Priority_Update(_float fTimeDelta)
 
 void CHead::Update(_float fTimeDelta)
 {
-	m_pModelCom->Play_Animation(fTimeDelta);
+	//m_pModelCom->Play_Animation(fTimeDelta);
 }
 
 void CHead::Late_Update(_float fTimeDelta)
@@ -85,7 +86,7 @@ HRESULT CHead::Render()
 HRESULT CHead::Ready_Components()
 {
 	/* Com_Model */
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_GoblinBody_Model"),
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_HumanHead_Model"),
 		reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
