@@ -151,6 +151,7 @@
   <ItemGroup>
     <ClInclude Include="..\Public\Body.h" />
     <ClInclude Include="..\public\Active_Icon.h" />
+    <ClInclude Include="..\public\GamePlay_Canvas.h" />
     <ClInclude Include="..\Public\DebugCamera.h" />
     <ClInclude Include="..\Public\Effect_Editor.h" />
     <ClInclude Include="..\Public\EditEffect.h" />
@@ -171,9 +172,15 @@
     <ClInclude Include="..\Public\Hair.h" />
     <ClInclude Include="..\Public\Level_EffectViewer.h" />
     <ClInclude Include="..\public\LodingWidget1.h" />
+    <ClInclude Include="..\public\IMGUIUI.h" />
+    <ClInclude Include="..\public\LoadingWidget.h" />
+    <ClInclude Include="..\public\LoadingWidget_Flame.h" />
+    <ClInclude Include="..\public\Loading_Panel.h" />
+    <ClInclude Include="..\public\MiniMap_Panel.h" />
     <ClInclude Include="..\public\MiniMap_TrimBorder.h" />
     <ClInclude Include="..\public\Mission.h" />
     <ClInclude Include="..\Public\Head.h" />
+    <ClInclude Include="..\public\Mission_Panel.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
     <ClInclude Include="..\Public\Level_Logo.h" />
     <ClInclude Include="..\public\Level_UI.h" />
@@ -197,6 +204,7 @@
   <ItemGroup>
     <ClCompile Include="..\Private\Body.cpp" />
     <ClCompile Include="..\private\Active_Icon.cpp" />
+    <ClCompile Include="..\private\GamePlay_Canvas.cpp" />
     <ClCompile Include="..\Private\DebugCamera.cpp" />
     <ClCompile Include="..\Private\Effect_Editor.cpp" />
     <ClCompile Include="..\Private\EditEffect.cpp" />
@@ -214,10 +222,16 @@
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\Private\Level_EffectViewer.cpp" />
     <ClCompile Include="..\private\LodingWidget1.cpp" />
+    <ClCompile Include="..\private\IMGUIUI.cpp" />
+    <ClCompile Include="..\private\LoadingWidget.cpp" />
+    <ClCompile Include="..\private\LoadingWidget_Flame.cpp" />
+    <ClCompile Include="..\private\Loading_Panel.cpp" />
+    <ClCompile Include="..\private\MiniMap_Panel.cpp" />
     <ClCompile Include="..\private\MiniMap_TrimBorder.cpp" />
     <ClCompile Include="..\private\Mission.cpp" />
     <ClCompile Include="..\Private\Dummy_Goblin_Head.cpp" />
     <ClCompile Include="..\Private\Head.cpp" />
+    <ClCompile Include="..\private\Mission_Panel.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />
     <ClCompile Include="..\Private\Level_Logo.cpp" />
     <ClCompile Include="..\private\Level_UI.cpp" />

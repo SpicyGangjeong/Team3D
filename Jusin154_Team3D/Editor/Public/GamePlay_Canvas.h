@@ -1,16 +1,20 @@
 #pragma once
 
 #include "Editor_Define.h"
-#include "UIObject.h"
+#include "CanvasObject.h"
+
+NS_BEGIN(Engine)
+class CGameObject;
+NS_END
 
 NS_BEGIN(Editor)
 
-class CMissionBanner_Key final : public CUIObject
+class CGamePlay_Canvas final : public CCanvasObject
 {
 private:
-	CMissionBanner_Key(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CMissionBanner_Key(const CMissionBanner_Key& rhs);
-	virtual ~CMissionBanner_Key() = default;
+	CGamePlay_Canvas(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CGamePlay_Canvas(const CGamePlay_Canvas& rhs);
+	virtual ~CGamePlay_Canvas() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -19,20 +23,24 @@ public:
 	virtual HRESULT Render() override;
 	virtual _vector Get_WorldPostion() override;
 
-
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;
+	virtual HRESULT	Ready_Panel(void* pArg) override;
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
+public:
+	void Clear_Penel();
+
 private:
-	CTexture* m_pDiffuse_TextureCom = { nullptr };
-	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
+	//CGameObject* Mission_Panel = { nullptr };
+	//CGameObject* Minimap_Panel = { nullptr };
+	CGameObject* Loading_Panel = { nullptr };
 
 public:
-	static CMissionBanner_Key* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CGamePlay_Canvas* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 	void Describe_Entity() override;
