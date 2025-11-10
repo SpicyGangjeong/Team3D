@@ -203,6 +203,7 @@ public:
 	void Save_ModelFilePath(const _char* FilePath);
 	const _char* Load_ModelFilePath(_uint iIndex);
 	const _char* Load_BinaryModelFilePath(_uint iIndex);
+	size_t BinaryModelFilePathCount();
 	size_t ModelFilePathCount();
 
 private:

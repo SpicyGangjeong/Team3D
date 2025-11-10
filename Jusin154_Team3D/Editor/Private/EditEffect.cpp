@@ -52,6 +52,9 @@ void CEditEffect::Late_Update(_float fTimeDelta)
 
 	_float4* vPos = (_float4*)(m_pTransformCom->Get_WorldMatrixPtr()->m[3]);
 
+	if(m_isBlur == true)
+		m_pGameInstance->Add_RenderGroup(RENDER::BLUR, this, *vPos, m_pTransformCom->Get_Radius());
+
 	m_pGameInstance->Add_RenderGroup(m_eRenderOrder, this, *vPos, m_pTransformCom->Get_Radius());
 }
 
@@ -130,21 +133,26 @@ void CEditEffect::Describe_Entity()
 	GUI::Checkbox("Dissolve", &m_isDissolve);
 	GUI::Checkbox("Noise", &m_isNoise);
 	GUI::Checkbox("UVMove", &m_isUVMove);
+	GUI::Checkbox("Blur", &m_isBlur);
+
 
 	GUI::ColorEdit4("Color", (_float*)&m_vColor);
+
+	GUI::DragFloat("BlurIntensity", &m_fBlurIntensity , 0.01f , 0.f , 1.f);
 
 	GUI::ColorEdit4("Emissive", (_float*)&m_vEmissive);
 	GUI::InputFloat("ColorTargetOption", &m_fColorOption);
 
-	GUI::DragFloat2("vUVGainAmount", (_float*)&m_vUVGainAmount);
+	GUI::DragFloat2("vUVGainAmount", (_float*)&m_vUVGainAmount , 0.01f);
+
 
 	//UVMove를 각각의 텍스쳐마다 적용할 수 있어야함 
 	//노이즈 적용하기
 	//디졸브 적용하기
 	//라이프 타임에 의해서가 아닌 공용시간으로 제어해야함
 	//UV잘라서 적용할 수 있도록
-	//블러 적용
-	//
+
+	//블러 웨이트도 설정할 수 있도록
 
 
 	if (GUI::TreeNode("MODEL"))

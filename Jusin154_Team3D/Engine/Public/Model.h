@@ -39,6 +39,16 @@ public:
 	void Get_BoneMatrices(_float4x4* pOut);
 	_uint	Get_BonesNum() const { return (_uint)m_Bones.size(); }
 
+	void Reset_CurrentTrackPosition();
+	const _char* Get_AnimList(_uint iIndex);
+	size_t Get_AnimSize() { return m_Animations.size(); }
+	_float Get_CurrentTrackPosition();
+	void Set_PlayAnim(_bool bPlayAnim) { m_bPlayAnim = bPlayAnim; }
+	_bool Get_PlayAnim() { return m_bPlayAnim; }
+	_int Get_AnimIndex() { return m_iCurrentAnimIndex; }
+	_float Get_AnimSpeed();
+	void Set_AnimSpeed(_float fSpeed);
+
 public:
 	HRESULT Bind_Material(_uint iMeshIndex, class CShader* pShader, const _char* pConstantName, _uint iType, _uint iTextureIndex);
 	HRESULT Bind_BoneMatrices(_uint iMeshIndex, class CShader* pShader, const _char* pConstantName);
@@ -84,6 +94,7 @@ private:
 	_bool						m_bIsLoop = { false };				// 루프애니메이션인지
 	_bool						m_bIsFinishedAnim = { false };			// 대상 애니메이션이 끝났는지
 	_bool						m_bIsFinishedLerp = { false };			// 럴프 애니메이션이 끝났는지
+	_bool						m_bPlayAnim = { true };
 	vector<class CAnimation*>	m_Animations;						// 애니메이션의 벡터, 
 
 	class CLerpAnim* m_pLerpAnim = { nullptr };			// 럴프전용 애니메이션
@@ -121,6 +132,7 @@ public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix = XMMatrixIdentity());
 	//
 	virtual CComponent* Clone(void* pArg, class CGameObject* pOwner = nullptr);
+
 virtual void Free(); public:
 	void Describe_Entity() override;
 };

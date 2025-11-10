@@ -22,6 +22,12 @@ public:
 	vector<LERPDESC> Get_StartFrameInformations() { return m_StartKeyFrames; }
 	const _string& Get_Name() const { return m_strName; }
 
+	const _char* Get_SZName() const { return m_szName; }
+	void Reset_CurrentTrackPosition() { m_fCurrentTrackPosition = 0.f; }
+	_float Get_CurrentTrackPosition() { return m_fCurrentTrackPosition; }
+	void Set_AnimSpeed(_float fSpeed) { m_fAnimSpeed = fSpeed; }
+	_float Get_AnimSpeed() { return m_fAnimSpeed; }
+
 
 #ifdef EDITOR_PROJECT
 private:
@@ -43,6 +49,7 @@ private:
 	SaveAnimation*			m_pSaveAnim = { nullptr };
 	_char					m_szName[MAX_PATH] = {};
 	_float					m_fTickPerSecond = {};
+	_float					m_fAnimSpeed = {1.f};
 
 	_bool					m_bPause = { FALSE };							// æ÷¥‘∆€¡Ó ¿Œµ¶Ω∫
 	_string					m_strName = {};									// æ÷¥‘ ¿Ã∏ß

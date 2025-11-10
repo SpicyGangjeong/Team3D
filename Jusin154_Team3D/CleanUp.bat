@@ -26,5 +26,5 @@ xcopy			/y	.\Engine\ThirdPartyLib\DirectXTK\DirectXTK.pdb					.\Engine\Default\x
 xcopy			/y	.\Engine\ThirdPartyLib\FX11\Effects11d.pdb						.\Engine\Default\x64\Debug\
 xcopy			/y	.\Engine\ThirdPartyLib\FX11\Effects11.pdb						.\Engine\Default\x64\Release\
 
-xcopy			/y	.\Engine\ThirdPartyLib\PhysX\debug\*.pdb						.\Engine\Default\x64\Debug\
-xcopy			/y	.\Engine\ThirdPartyLib\PhysX\Release\*.pdb						.\Engine\Default\x64\Release\
+xcopy			/y	.\Engine\ThirdPartyLib\PhysX\PhysX_debug\*.pdb					.\Engine\Default\x64\Debug\
+xcopy			/y	.\Engine\ThirdPartyLib\PhysX\PhysX_Release\*.pdb				.\Engine\Default\x64\Release\
