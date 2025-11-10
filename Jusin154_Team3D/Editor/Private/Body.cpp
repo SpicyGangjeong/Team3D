@@ -2,6 +2,7 @@
 #include "Body.h"
 
 #include "GameInstance.h"
+#include "RootModelPart.h"
 
 CBody::CBody(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CModelParts(pDevice, pContext)
@@ -27,8 +28,9 @@ HRESULT CBody::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	m_pModelCom->Set_AnimationIndex(0);
+	dynamic_cast<CRootModelPart*>(m_pOwner)->Push_ModelParts(this);
 
+	dynamic_cast<CRootModelPart*>(m_pOwner)->Push_MainModel(m_pModelCom);
 	return S_OK;
 }
 
@@ -39,7 +41,7 @@ void CBody::Priority_Update(_float fTimeDelta)
 
 void CBody::Update(_float fTimeDelta)
 {
-	m_pModelCom->Play_Animation(fTimeDelta);
+	//m_pModelCom->Play_Animation(fTimeDelta);
 }
 
 void CBody::Late_Update(_float fTimeDelta)
@@ -85,7 +87,7 @@ HRESULT CBody::Render()
 HRESULT CBody::Ready_Components()
 {
 	/* Com_Model */
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_Steve_Model"),
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_HumanBody_Model"),
 		reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
@@ -110,7 +112,7 @@ CBody* CBody::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 CGameObject* CBody::Clone(void* pArg, CGameObject* pOwner)
 {
 	CBody* pInstance = new CBody(*this);
-
+	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
 		MSG_BOX("Failed to Cloned : CBody");
@@ -123,6 +125,7 @@ CGameObject* CBody::Clone(void* pArg, CGameObject* pOwner)
 void CBody::Free()
 {
 	__super::Free();
+
 
 }
 

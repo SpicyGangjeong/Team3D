@@ -84,8 +84,6 @@ HRESULT CDummy_Goblin::Render()
 
 HRESULT CDummy_Goblin::Ready_Components()
 {
-	__super::Ready_Components(nullptr);
-
 	/* Com_Model */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_GoblinBody_Model"),
 		reinterpret_cast<CComponent**>(&m_pModelCom))))

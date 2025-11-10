@@ -19,6 +19,7 @@ CAnimation::CAnimation(const CAnimation& rhs)
 	, m_strName{ rhs.m_strName }
 	, m_fTickPerSecond{ rhs.m_fTickPerSecond }
 	, m_pSaveAnim{ rhs.m_pSaveAnim }
+	, m_fAnimSpeed{rhs.m_fAnimSpeed }
 {
 	memcpy_s(m_TickPerSeconds, sizeof(_float) * 2, rhs.m_TickPerSeconds, sizeof(_float) * 2);
 
@@ -31,7 +32,7 @@ CAnimation::CAnimation(const CAnimation& rhs)
 _bool CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bones, _bool bIsLoop, _float fTimeDelta)
 {
 	//m_fCurrentTrackPosition += m_TickPerSeconds[m_bPause] * fTimeDelta;
-	m_fCurrentTrackPosition += m_fTickPerSecond * fTimeDelta;
+	m_fCurrentTrackPosition += m_fTickPerSecond * fTimeDelta * m_fAnimSpeed;
 	if (m_fCurrentTrackPosition >= m_fDuration) {
 		m_fCurrentTrackPosition = 0.f; // ∑Á«¡
 		if (false == bIsLoop) {
@@ -100,6 +101,7 @@ vector<_int>* CAnimation::Capture_Bones()
 HRESULT CAnimation::Initialize(const vector<CBone*>& Bones, const aiAnimation* pAIAnimation)
 {
 	m_strName = pAIAnimation->mName.data;
+	strcpy_s(m_szName, pAIAnimation->mName.data);
 	size_t pos = m_strName.find_last_of('|');
 	if (0 > pos) {
 		pos = 0;
@@ -108,6 +110,7 @@ HRESULT CAnimation::Initialize(const vector<CBone*>& Bones, const aiAnimation* p
 		pos++;
 	}
 	m_strName = m_strName.substr(pos);
+
 	m_fDuration = (_float)pAIAnimation->mDuration;
 	m_TickPerSeconds[0] = (_float)pAIAnimation->mTicksPerSecond;
 	m_iNumChannels = pAIAnimation->mNumChannels;
