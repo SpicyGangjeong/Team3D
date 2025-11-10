@@ -310,27 +310,27 @@ HRESULT CPhysX_Manager::Initialize()
 		pPvdClient->setScenePvdFlag(PSX::PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
 	}
 
-	physx::PxMaterial* pMaterial = m_pPhysics->createMaterial(0.5f, 0.5f, 0.6f);
-	physx::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *pMaterial);
-	m_pScene->addActor(*pGroundPlane);
+	//physx::PxMaterial* pMaterial = m_pPhysics->createMaterial(0.5f, 0.5f, 0.6f);
+	//physx::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *pMaterial);
+	//m_pScene->addActor(*pGroundPlane);
 
-	{
+	//{
 
-		float halfExtent = .5f;
-		physx::PxShape* shape = m_pPhysics->createShape(physx::PxSphereGeometry(halfExtent), *pMaterial);
-		physx::PxU32 size = 100;
-		physx::PxTransform pxTransform(physx::PxVec3(0));
+	//	float halfExtent = .5f;
+	//	physx::PxShape* shape = m_pPhysics->createShape(physx::PxSphereGeometry(halfExtent), *pMaterial);
+	//	physx::PxU32 size = 100;
+	//	physx::PxTransform pxTransform(physx::PxVec3(0));
 
-		for (physx::PxU32 i = 0; i < size; i++) {
-			for (physx::PxU32 j = 0; j < size - i; j++) {
-				physx::PxTransform localTm(physx::PxVec3(physx::PxReal(j * 2) - physx::PxReal(size - i) + 100, physx::PxReal(i * 2 + 1), 0) * halfExtent);
-				physx::PxRigidDynamic* body = m_pPhysics->createRigidDynamic(pxTransform.transform(localTm));
-				body->attachShape(*shape);
-				physx::PxRigidBodyExt::updateMassAndInertia(*body, 10.0f);
-				m_pScene->addActor(*body);
-			}
-		}
-	}
+	//	for (physx::PxU32 i = 0; i < size; i++) {
+	//		for (physx::PxU32 j = 0; j < size - i; j++) {
+	//			physx::PxTransform localTm(physx::PxVec3(physx::PxReal(j * 2) - physx::PxReal(size - i) + 100, physx::PxReal(i * 2 + 1), 0) * halfExtent);
+	//			physx::PxRigidDynamic* body = m_pPhysics->createRigidDynamic(pxTransform.transform(localTm));
+	//			body->attachShape(*shape);
+	//			physx::PxRigidBodyExt::updateMassAndInertia(*body, 10.0f);
+	//			m_pScene->addActor(*body);
+	//		}
+	//	}
+	//}
 
 	return S_OK;
 }
