@@ -60,18 +60,18 @@ void CMiniMap_Panel::Late_Update(_float fTimeDelta)
 
 HRESULT CMiniMap_Panel::Render()
 {
-	if (FAILED(Bind_ShaderResources())) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::DEFAULT)))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pVIBufferCom->Render())) {
-		return E_FAIL;
-	}
+	//if (FAILED(Bind_ShaderResources())) {
+	//	return E_FAIL;
+	//}
+	//if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::DEFAULT)))) {
+	//	return E_FAIL;
+	//}
+	//if (FAILED(m_pVIBufferCom->Bind_Resources())) {
+	//	return E_FAIL;
+	//}
+	//if (FAILED(m_pVIBufferCom->Render())) {
+	//	return E_FAIL;
+	//}
 
 	return S_OK;
 }
@@ -83,7 +83,7 @@ _vector CMiniMap_Panel::Get_WorldPostion()
 
 HRESULT CMiniMap_Panel::Bind_ShaderResources()
 {
-	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
+	/*if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 	{
 		return E_FAIL;
 	}
@@ -102,7 +102,7 @@ HRESULT CMiniMap_Panel::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float))))
 	{
 		return E_FAIL;
-	}
+	}*/
 	return S_OK;
 }
 
@@ -112,14 +112,14 @@ HRESULT CMiniMap_Panel::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_Keyboard_0"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, FX_UIEDITOR, (CComponent**)&m_pShaderCom, nullptr)))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_Keyboard_0"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	//{
+	//	return E_FAIL;
+	//}
+	//if (FAILED(Add_Asset_Component(g_iStaticLevel, FX_UIEDITOR, (CComponent**)&m_pShaderCom, nullptr)))
+	//{
+	//	return E_FAIL;
+	//}
 
     return S_OK;
 }
@@ -159,8 +159,8 @@ void CMiniMap_Panel::Free()
 {
 	__super::Free();
 
-	SAFE_RELEASE(m_pDiffuse_TextureCom);
-	SAFE_RELEASE(m_pShaderCom);
+	//SAFE_RELEASE(m_pDiffuse_TextureCom);
+	//SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
