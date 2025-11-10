@@ -161,6 +161,7 @@
     <ClInclude Include="..\Public\Effect_Editor.h" />
     <ClInclude Include="..\Public\EditEffect.h" />
     <ClInclude Include="..\public\Level_MapViewer.h" />
+    <ClInclude Include="..\Public\LoadingWidget.h" />
     <ClInclude Include="..\public\MapObject.h" />
     <ClInclude Include="..\public\MapObject_Manager.h" />
     <ClInclude Include="..\public\Terrain.h" />
@@ -177,7 +178,6 @@
     <ClInclude Include="..\Public\Hair.h" />
     <ClInclude Include="..\Public\Level_EffectViewer.h" />
     <ClInclude Include="..\public\IMGUIUI.h" />
-    <ClInclude Include="..\public\LoadingWidget.h" />
     <ClInclude Include="..\public\LoadingWidget_Flame.h" />
     <ClInclude Include="..\public\Loading_Panel.h" />
     <ClInclude Include="..\public\MiniMap_Panel.h" />
@@ -217,6 +217,7 @@
     <ClCompile Include="..\Private\Effect_Editor.cpp" />
     <ClCompile Include="..\Private\EditEffect.cpp" />
     <ClCompile Include="..\private\Level_MapViewer.cpp" />
+    <ClCompile Include="..\Private\LoadingWidget.cpp" />
     <ClCompile Include="..\private\MapObject.cpp" />
     <ClCompile Include="..\private\MapObject_Manager.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
@@ -230,7 +231,6 @@
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\Private\Level_EffectViewer.cpp" />
     <ClCompile Include="..\private\IMGUIUI.cpp" />
-    <ClCompile Include="..\private\LoadingWidget.cpp" />
     <ClCompile Include="..\private\LoadingWidget_Flame.cpp" />
     <ClCompile Include="..\private\Loading_Panel.cpp" />
     <ClCompile Include="..\private\MiniMap_Panel.cpp" />

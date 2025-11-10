@@ -27,8 +27,6 @@
 #include "Mission_Key.h"
 #include "Mission_KeyHold.h"
 #include "Mouse_Cursor.h"
-
-#include "Dummy_Cube.h"
 #include "MiniMap_TrimBorder.h"
 #include "Active_Icon.h"
 

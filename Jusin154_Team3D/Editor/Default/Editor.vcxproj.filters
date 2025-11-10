@@ -157,16 +157,14 @@
     <Filter Include="02.GameObjects\Monster">
       <UniqueIdentifier>{a2944f33-1db0-480a-b793-7ec7f81e8116}</UniqueIdentifier>
     </Filter>
-<<<<<<< Updated upstream
     <Filter Include="50.UI\GamePlay_Canvas\Loding_Panel\LoadingWidget_Flame">
       <UniqueIdentifier>{c347da03-98f1-4095-a4e4-2c840c308916}</UniqueIdentifier>
-=======
+    </Filter>
     <Filter Include="02.GameObjects\Dummys\PhysXBox">
       <UniqueIdentifier>{c7e7d3c7-fd26-4035-88b4-11233459559c}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Dummys\PhysXMesh">
       <UniqueIdentifier>{15a9dfe7-f3f7-4906-8bd4-91734f4ddc92}</UniqueIdentifier>
->>>>>>> Stashed changes
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -323,6 +321,9 @@
     <ClInclude Include="..\Public\Dummy_PhysXMesh.h">
       <Filter>02.GameObjects\Dummys\PhysXMesh</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\LoadingWidget.h">
+      <Filter>50.UI\GamePlay_Canvas\Loding_Panel\LoadingWidget</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -470,6 +471,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Dummy_PhysXMesh.cpp">
       <Filter>02.GameObjects\Dummys\PhysXMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LoadingWidget.cpp">
+      <Filter>50.UI\LoadingWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LoadingWidget.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Loding_Panel\LoadingWidget</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
