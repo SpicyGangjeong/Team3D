@@ -42,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <EnableASAN>true</EnableASAN>
   </PropertyGroup>
@@ -189,8 +189,6 @@
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\public\Mouse_Cursor.h" />
     <ClInclude Include="..\Public\RootModelPart.h" />
-    <ClInclude Include="..\Public\TombProtector.h" />
-    <ClInclude Include="..\Public\Troll.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -238,8 +236,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\Private\RootModelPart.cpp" />
-    <ClCompile Include="..\Private\TombProtector.cpp" />
-    <ClCompile Include="..\Private\Troll.cpp" />
     <ClCompile Include="Editor.cpp" />
   </ItemGroup>
   <ItemGroup>

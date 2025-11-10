@@ -8,10 +8,9 @@
 #include "Hair.h"
 #include "Dummy_Cube.h"
 #include "DebugCamera.h"
-#include "TombProtector.h"
-#include "Troll.h"
 #include "Layer.h"
 #include "GameObject.h"
+#include "Monster.h"
 
 CLevel_ObjectViewer::CLevel_ObjectViewer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -77,18 +76,12 @@ void CLevel_ObjectViewer::Add_Creature()
 {
 	if (ImGui::BeginTabItem("Creatures"))
 	{
-		if (GUI::Button("Add TombProtector"))
+		if (GUI::Button("Add Monster"))
 		{
 			CGameObject* pTempObject = { nullptr };
-			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTombProtector>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, TEXT("Layer_Monster"), nullptr, nullptr, &pTempObject)))
-				return;
-			m_Objects.push_back(pTempObject);
-		}
-
-		if (GUI::Button("Add Troll"))
-		{
-			CGameObject* pTempObject = { nullptr };
-			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, TEXT("Layer_Monster"), nullptr, nullptr, &pTempObject)))
+			CMonster::OBJECT_DESC Desc = {};
+			Desc.pModelPrototypeTag = TEXT("Prototype_Component_Troll_Model");
+			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMonster>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, TEXT("Layer_Monster"), &Desc, nullptr, &pTempObject)))
 				return;
 			m_Objects.push_back(pTempObject);
 		}
@@ -144,25 +137,31 @@ void CLevel_ObjectViewer::Show_ModelFilePath()
 	{
 		if (GUI::BeginTabItem("Assimp_Model"))
 		{
-			for (_uint i = 0; i < m_pGameInstance->ModelFilePathCount(); i++)
+			if (m_pGameInstance->ModelFilePathCount() > 0)
 			{
-				GUI::Text(m_pGameInstance->Load_ModelFilePath(i));
-				GUI::SameLine();
-
-				std::string label = "Binary##" + std::to_string(i);
-				if (GUI::Button(label.c_str()))
+				for (_uint i = 0; i < m_pGameInstance->ModelFilePathCount(); i++)
 				{
-					m_pGameInstance->SaveAssimpModel(m_pGameInstance->Load_ModelFilePath(i));
+					GUI::Text(m_pGameInstance->Load_ModelFilePath(i));
+					GUI::SameLine();
+
+					std::string label = "Binary##" + std::to_string(i);
+					if (GUI::Button(label.c_str()))
+					{
+						m_pGameInstance->SaveAssimpModel(m_pGameInstance->Load_ModelFilePath(i));
+					}
 				}
+				GUI::EndTabItem();
 			}
-			GUI::EndTabItem();
 		}
 
 		if (GUI::BeginTabItem("Binary_Model"))
 		{
-			for (_uint i = 0; i < m_pGameInstance->BinaryModelFilePathCount(); i++)
+			if (m_pGameInstance->BinaryModelFilePathCount() > 0)
 			{
-				GUI::Text(m_pGameInstance->Load_BinaryModelFilePath(i));
+				for (_uint i = 0; i < m_pGameInstance->BinaryModelFilePathCount(); i++)
+				{
+					GUI::Text(m_pGameInstance->Load_BinaryModelFilePath(i));
+				}
 			}
 			GUI::EndTabItem();
 		}
@@ -273,8 +272,8 @@ HRESULT CLevel_ObjectViewer::Ready_Layer_UI(const _wstring& strLayerTag)
 
 HRESULT CLevel_ObjectViewer::Ready_Layer_Dummy(const _wstring& strLayerTag)
 {
-	/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_Cube>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE)))
-		return E_FAIL;*/
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_Cube>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE)))
+		return E_FAIL;
 
 	return S_OK;
 }

@@ -151,12 +151,6 @@
     <Filter Include="02.GameObjects\Monster">
       <UniqueIdentifier>{a2944f33-1db0-480a-b793-7ec7f81e8116}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Monster\TombProtector">
-      <UniqueIdentifier>{6ccfe379-cf97-47af-98ae-b5155d1a0b39}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Monster\Troll">
-      <UniqueIdentifier>{f405a7a7-3eca-4a05-9098-aedc576bd360}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -236,12 +230,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Monster.h">
       <Filter>02.GameObjects\Monster</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\TombProtector.h">
-      <Filter>02.GameObjects\Monster\TombProtector</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Troll.h">
-      <Filter>02.GameObjects\Monster\Troll</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_EffectViewer.h">
       <Filter>01.Level\40.EffectViewer</Filter>
@@ -423,12 +411,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Monster.cpp">
       <Filter>02.GameObjects\Monster</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\TombProtector.cpp">
-      <Filter>02.GameObjects\Monster\TombProtector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Troll.cpp">
-      <Filter>02.GameObjects\Monster\Troll</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
