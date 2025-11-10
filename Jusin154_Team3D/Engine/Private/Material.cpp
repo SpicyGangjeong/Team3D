@@ -113,7 +113,7 @@ HRESULT CMaterial::Read_MaterialFile(const _char* pMaterialFilePath, const _char
 
 	if (!file.is_open())
 	{
-		MSG_BOX("Failed to Open Materail File");
+		//MSG_BOX("Failed to Open Materail File");
 		//return E_FAIL;
 		return S_OK;
 	}
