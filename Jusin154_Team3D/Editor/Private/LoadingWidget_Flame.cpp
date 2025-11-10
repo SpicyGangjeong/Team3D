@@ -145,10 +145,10 @@ HRESULT CLoadingWidget_Flame::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pShaderCom->Bind_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
+	//{
+	//	return E_FAIL;
+	//}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_iImageCount", &m_iImageFrameX, sizeof(_int))))
 	{
 		return E_FAIL;

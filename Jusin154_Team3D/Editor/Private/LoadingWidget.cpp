@@ -55,7 +55,9 @@ void CLoadingWidget::Priority_Update(_float fTimeDelta)
 void CLoadingWidget::Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
+	{
 		return;
+	}
 
 	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
