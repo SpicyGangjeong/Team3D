@@ -104,11 +104,8 @@ void CEffect_Editor::Describe_Entity()
 	ImGui::Begin("Effect Editor");
 
 
-	//if (m_pEditEffect != nullptr)
-	//	m_pEditEffect->Describe_Entity();
-
-
-
+	if (m_pEditEffect != nullptr)
+		m_pEditEffect->Describe_Entity();
 
 	ImGui::End();
 }

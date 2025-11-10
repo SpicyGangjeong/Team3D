@@ -99,6 +99,7 @@ void CRenderer::Render()
 	D3D11_VIEWPORT vp = {};
 	m_pContext->RSGetViewports(&iNumViewPort, &vp);
 	_float2 vResolution = { vp.Width, vp.Height };
+
 	if (FAILED(m_pShader->Bind_RawValue("g_vResolution", &vResolution, sizeof(_float2)))) {
 		assert(false);
 	}
@@ -113,9 +114,10 @@ void CRenderer::Render()
 	Render_Blend();
 	Render_UI();
 
-//#ifdef _DEBUG
-//	Render_Debug();
-//#endif
+#ifdef _DEBUG
+	if(m_pGameInstance->Key_Pressing(DIK_F10))
+		Render_Debug();
+#endif
 }
 
 void CRenderer::Render_Priority()
@@ -236,7 +238,9 @@ void CRenderer::Render_LightAcc()
 
 void CRenderer::Render_Combined()
 {
-	{ // Bind_Resorces
+	{ 
+		// Bind_Resorces
+
 		m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix);
 		m_pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix);
 		m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix);
@@ -253,6 +257,7 @@ void CRenderer::Render_Combined()
 		if (FAILED(m_pShader->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 			return;
 		}
+
 		if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShader, "g_LightViewMatrix", D3DTS::VIEW))) {
 			return;
 		}
@@ -270,7 +275,9 @@ void CRenderer::Render_Combined()
 		}
 	}
 
-	{ // Bind_Targets
+	{
+		// Bind_Targets
+
 		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Diffuse"), m_pShader, "g_DiffuseTexture"))) {
 			return;
 		}
@@ -292,6 +299,10 @@ void CRenderer::Render_Combined()
 		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur_X"), m_pShader, "g_BlurXTexture"))) {
 			return;
 		}
+		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Color"), m_pShader, "g_ColorTexture"))) {
+			return;
+		}
+
 	}
 
 	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::COMBINED));
@@ -479,9 +490,9 @@ void CRenderer::Render_Debug()
 	if (FAILED(m_pGameInstance->Render_RenderTarget_Debug(TEXT("MRT_Blur"), m_pShader, m_pVIBuffer))) {
 		return;
 	}
-	//if (FAILED(m_pGameInstance->Render_RenderTarget_Debug(TEXT("MRT_Blur_X"), m_pShader, m_pVIBuffer))){
-	//	return;
-	//}
+	if (FAILED(m_pGameInstance->Render_RenderTarget_Debug(TEXT("MRT_Blur_X"), m_pShader, m_pVIBuffer))){
+		return;
+	}
 }
 
 #endif
@@ -527,6 +538,7 @@ HRESULT CRenderer::Initialize()
 			DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)))) {
 			return E_FAIL;
 		}
+
 		/* Target_Shadow */
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_PreShadow"), (_uint)g_iMaxShadowWidth, (_uint)g_iMaxShadowHeight,
 			DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)))) {
@@ -545,6 +557,13 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 
+		/* Target_Color*/
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Color"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+
+
 
 		if (FAILED(Ready_DepthStencilView(g_iMaxShadowWidth, g_iMaxShadowHeight))) {
 			return E_FAIL;
@@ -560,6 +579,9 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Depth")))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Color")))) {
 			return E_FAIL;
 		}
 
@@ -617,18 +639,27 @@ HRESULT CRenderer::Initialize()
 	if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Specular"), 225.f, 225.f, 150.0f, 150.0f))) {
 		return E_FAIL;
 	}
+
+	if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Color"), 375.f, 75.f, 150.0f, 150.0f))) {
+		return E_FAIL;
+	}
+
 	if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Shadow"), Viewport.Width - 150.0f, 150.0f, 300.f, 300.f))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_PreShadow"), Viewport.Width - 150.0f, Viewport.Height - 150.0f, 300.f, 300.f))) {
 		return E_FAIL;
 	}
+
 	if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Blur"), 150.0f, Viewport.Height - 150.0f, 300.f, 300.f))) {
 		return E_FAIL;
 	}
+
 	if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Blur_X"), Viewport.Width * 0.75f, Viewport.Height * 0.75f, Viewport.Width * 0.5f, Viewport.Height * 0.5f))) {
 		return E_FAIL;
 	}
+
+
 
 
 #endif

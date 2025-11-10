@@ -43,22 +43,14 @@ HRESULT CComputeShader::Dispatch(_uint iSRVIndex, _uint iUAVIndex, _float3 vGrou
 	//따라서 스테이징 버퍼를 따로 선언하여 값을 복사받는다.
 
 
-
 	for (_uint i = 0; i < m_iNumInputBuffer; i++)
 	{
 		D3D11_MAPPED_SUBRESOURCE PreSubResource = {};
 
 		m_pContext->CopyResource(m_pStagingBuffer[i], ppBuffers[i]);
 
+		m_pContext->CopyResource(m_pInputBuffer[i], m_pStagingBuffer[i]);
 
-		if (SUCCEEDED(m_pContext->Map(m_pStagingBuffer[i], 0, D3D11_MAP_READ, 0, &PreSubResource)))
-		{
-			// 디폴트 버퍼는 UpdateSubresource 함수를 통해서만 내부 값에 접근이 가능하다.
-
-			m_pContext->UpdateSubresource(m_pInputBuffer[i], 0, nullptr, PreSubResource.pData, 0, 0);
-			m_pContext->Unmap(m_pStagingBuffer[i], 0);
-
-		}
 	}
 
 
