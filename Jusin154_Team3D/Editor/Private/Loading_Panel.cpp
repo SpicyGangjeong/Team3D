@@ -23,8 +23,8 @@ HRESULT CLoading_Panel::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = 1920.f;
-	Desc.fY = 1080.f;
+	Desc.fX = 500.f;
+	Desc.fY = 500.f;
 	Desc.fSizeX = 100.f;
 	Desc.fSizeY = 100.f;
 

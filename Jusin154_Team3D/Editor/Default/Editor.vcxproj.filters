@@ -103,9 +103,6 @@
     <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor">
       <UniqueIdentifier>{5b31b993-b137-42d2-b737-000aeb27a675}</UniqueIdentifier>
     </Filter>
-    <Filter Include="50.UI\LodingWidget1">
-      <UniqueIdentifier>{167182ec-ed5f-46fc-9c27-a82e327fa1ac}</UniqueIdentifier>
-       </Filter>
     <Filter Include="50.UI\IMGUIUI">
       <UniqueIdentifier>{f60f1948-8c11-4796-843a-8c38f10043e3}</UniqueIdentifier>
     </Filter>
@@ -243,9 +240,6 @@
     <ClInclude Include="..\Public\Effect_Editor.h">
       <Filter>02.GameObjects\Layer_Effect\Effect_Editor</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\LodingWidget1.h">
-      <Filter>50.UI\LodingWidget1</Filter>
-      </ClInclude>
     <ClInclude Include="..\public\LoadingWidget.h">
       <Filter>50.UI\GamePlay_Canvas\Loding_Panel\LoadingWidget</Filter>
     </ClInclude>
@@ -379,9 +373,6 @@
     <ClCompile Include="..\Private\Effect_Editor.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect_Editor</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\LodingWidget1.cpp">
-      <Filter>50.UI\LodingWidget1</Filter>
-      </ClCompile>
     <ClCompile Include="..\private\LoadingWidget.cpp">
       <Filter>50.UI\GamePlay_Canvas\Loding_Panel\LoadingWidget</Filter>
     </ClCompile>

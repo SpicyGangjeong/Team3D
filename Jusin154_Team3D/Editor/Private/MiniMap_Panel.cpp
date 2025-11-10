@@ -92,7 +92,7 @@ HRESULT CMiniMap_Panel::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
+	if (FAILED(m_pDiffuse_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
 	{
 		return E_FAIL;
 	}
@@ -105,6 +105,19 @@ HRESULT CMiniMap_Panel::Bind_ShaderResources()
 
 HRESULT CMiniMap_Panel::Ready_Components(void* pArg)
 {
+	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Keyboard"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, FX_UIEDITOR, (CComponent**)&m_pShaderCom, nullptr)))
+	{
+		return E_FAIL;
+	}
+
     return S_OK;
 }
 
@@ -138,7 +151,7 @@ void CMiniMap_Panel::Free()
 {
 	__super::Free();
 
-	SAFE_RELEASE(m_pTextureCom);
+	SAFE_RELEASE(m_pDiffuse_TextureCom);
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }

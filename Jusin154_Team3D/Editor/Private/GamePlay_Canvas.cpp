@@ -92,10 +92,7 @@ HRESULT CGamePlay_Canvas::Ready_Components(void* pArg)
 	//{
 	//	return E_FAIL;
 	//}
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMiniMap_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &Minimap_Panel)))
-	//{
-	//	return E_FAIL;
-	//}
+
 
 
 	CGameObject* asdf = this;
@@ -108,10 +105,17 @@ HRESULT CGamePlay_Canvas::Ready_Panel(void* pArg)
 {
 	CGameObject* asdf = this;
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLoading_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &Loading_Panel)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLoading_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &m_pLoading_Panel)))
 	{
 		return E_FAIL;
 	}
+	Add_Panel(TEXT("LoadingPanel"), m_pLoading_Panel);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMiniMap_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &m_pMinimap_Panel)))
+	{
+		return E_FAIL;
+	}
+	Add_Panel(TEXT("Minimap"), m_pMinimap_Panel);
+
 	return S_OK;
 }
 

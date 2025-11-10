@@ -64,7 +64,7 @@ HRESULT CPanelObject::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-HRESULT CPanelObject::Ready_Panel(void* pArg)
+HRESULT CPanelObject::Ready_Element(void* pArg)
 {
 	return S_OK;
 }
@@ -100,6 +100,16 @@ void CPanelObject::Visible(_bool bVisible)
 CGameObject* CPanelObject::Get_Element(const wstring& Name)
 {
 	return Find_Element(Name);
+}
+
+_int CPanelObject::Element_Count()
+{
+	return m_iElements_Count;
+}
+
+const vector<wstring> CPanelObject::Element_Name()
+{
+	return m_ElementName;
 }
 
 void CPanelObject::Move_Panel(_float fX, _float fY)

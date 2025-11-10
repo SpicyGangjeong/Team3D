@@ -82,6 +82,16 @@ CGameObject* CCanvasObject::Get_Panel(const wstring& Name)
 	return Find_Panel(Name);
 }
 
+_int CCanvasObject::Panels_Count()
+{
+	return m_iPanel_Count;
+}
+
+const vector<wstring> CCanvasObject::Panel_Name()
+{
+	return m_PanelNames;
+}
+
 void CCanvasObject::Add_Panel(wstring Name, CGameObject* pPanel)
 {
 	if (pPanel == nullptr)
@@ -95,7 +105,9 @@ void CCanvasObject::Add_Panel(wstring Name, CGameObject* pPanel)
 	}
 
 	m_Panels.push_back(pPanel);
+	m_PanelNames.push_back(Name);
 	m_Panels_map.emplace(Name, pPanel);
+	m_iPanel_Count++;
 }
 
 CGameObject* CCanvasObject::Find_Panel(const wstring& Name)

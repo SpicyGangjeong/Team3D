@@ -2,6 +2,9 @@
 #include "IMGUIUI.h"
 #include "UIObject.h"
 #include "GamePlay_Canvas.h"
+#include "PanelObject.h"
+#include "ElementObject.h"
+#include "Mouse_Cursor.h"
 
 CIMGUIUI::CIMGUIUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -25,6 +28,36 @@ HRESULT CIMGUIUI::Initialize(void* pArg)
 	return S_OK;
 }
 
+void CIMGUIUI::wstringTostring(vector<std::wstring>& panelNames)
+{
+	m_pNamestring.clear();
+	m_pName.clear();
+	m_pNamewstring.clear();
+
+	m_pNamewstring = panelNames;
+
+	for (auto& wname : panelNames)
+	{
+		// wstring -> UTF-8 string 변환
+		int size = WideCharToMultiByte(CP_UTF8, 0,
+			wname.c_str(), (int)wname.size(),
+			nullptr, 0, nullptr, nullptr);
+
+		std::string result(size, 0);
+
+		WideCharToMultiByte(CP_UTF8, 0,
+			wname.c_str(), (int)wname.size(),
+			&result[0], size, nullptr, nullptr);
+
+		// 변환된 string 저장
+		m_pNamestring.push_back(std::move(result));
+	}
+
+	// vector<const char*> 업데이트
+	for (auto& str : m_pNamestring)
+		m_pName.push_back(str.c_str());
+}
+
 void CIMGUIUI::Priority_Update(_float fTimeDelta)
 {
 }
@@ -43,8 +76,38 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		
 		m_fTimeMult = static_cast<CUIObject*>(m_pElementObject)->Get_TimeMult();
 	}
-	GUI::Begin("Current_UIObject_Info");
+	GUI::Begin("Current_PanelObject_Info");
+	if(m_pGamePlay_Canvas != nullptr)
+	{
+		if (m_pGamePlay_Canvas != nullptr)
+		{
+			auto panelNames = static_cast<CCanvasObject*>(m_pGamePlay_Canvas)->Panel_Name();
+			wstringTostring(panelNames);
+			if (GUI::Combo("Panels", &m_iPanelCount, m_pName.data(), static_cast<_int>(m_pName.size())))
+			{
+				m_pPanelObject = static_cast<CCanvasObject*>(m_pGamePlay_Canvas)->Get_Panel(m_pNamewstring[m_iPanelCount]);
+			}
+		}
 
+		if (m_pPanelObject != nullptr)
+		{
+
+		}
+
+	}
+
+	GUI::End();
+
+	GUI::Begin("Current_ElementObject_Info");
+	if (m_pPanelObject != nullptr)
+	{
+		auto ElementNames = static_cast<CPanelObject*>(m_pPanelObject)->Element_Name();
+		wstringTostring(ElementNames);
+		if (GUI::Combo("Panels", &m_iElementCount, m_pName.data(), static_cast<_int>(m_pName.size())))
+		{
+			m_pElementObject = static_cast<CPanelObject*>(m_pPanelObject)->Get_Element(m_pNamewstring[m_iElementCount]);
+		}
+	}
 	if (m_pElementObject != nullptr)
 	{
 		GUI::Text("Origin Position : %.1f, %.1f", static_cast<CUIObject*>(m_pElementObject)->Get_Origin_Position().x, static_cast<CUIObject*>(m_pElementObject)->Get_Origin_Position().y);
@@ -86,8 +149,6 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		}
 	}
 	GUI::End();
-
-
 }
 
 void CIMGUIUI::Late_Update(_float fTimeDelta)
@@ -110,6 +171,7 @@ HRESULT CIMGUIUI::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
+
 	return S_OK;
 }
 
