@@ -78,7 +78,7 @@ HRESULT CGameObject::Add_Asset_Component(_uint iTargetLevel, const _wstring strP
 	if (ppOut != nullptr)
 	{
 		*ppOut = pComponent;
-		Safe_AddRef(pComponent);
+		SAFE_ADDREF(pComponent);
 	}
 
 

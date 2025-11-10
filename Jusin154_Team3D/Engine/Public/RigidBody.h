@@ -72,7 +72,7 @@ public:
 	const PSX::PxMaterial* Get_PxMaterial() const { return m_pMaterial; }
 
 	_float Get_Density() const { return m_fDensity; }
-	_bool Is_Kinematic() const { return m_bKenematic; }
+	_bool Is_Kinematic() const { return m_bKinematic; }
 
 private:
 	ACTOR				m_eActorType = ACTOR::END;
@@ -81,7 +81,8 @@ private:
 	PSX::PxShape*		m_pShape = { nullptr };					// 피직스 객체의 모양 ( 머테리얼로 만들어짐 )
 	_float3				m_vhalfGeometryInfo = {};
 	CTransform*			m_pTransform = { nullptr };
-	_bool				m_bKenematic = { false };
+	_bool				m_bKinematic = { false };
+	_bool				m_bExclusive = { false };
 	_float				m_fDensity = { 1000.f };
 	const _tchar*		m_pMeshKey = { nullptr };
 
