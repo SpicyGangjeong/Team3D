@@ -516,43 +516,40 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 
 	m_strMessage = TEXT("Model Loading..");
 
-	
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_GoblinBody_Model"),
-		CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Goblin/GoblinBody.fbx", MODEL::ANIM, XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixIdentity(), 0))))
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_HumanBody_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Human/Body/Body", XMMatrixScaling(0.001f, 0.001f, 0.001f) * XMMatrixIdentity()))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Human/Body/Body.bin", XMMatrixScaling(0.001f, 0.001f, 0.001f) * XMMatrixIdentity()))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_HumanHead_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Human/Head/Head", XMMatrixScaling(0.001f, 0.001f, 0.001f) * XMMatrixIdentity()))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Human/Head/Head.bin", XMMatrixScaling(0.001f, 0.001f, 0.001f) * XMMatrixIdentity()))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_HumanHair_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Human/Hair/Hair", XMMatrixScaling(0.001f, 0.001f, 0.001f) * XMMatrixIdentity()))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Human/Hair/Hair.bin", XMMatrixScaling(0.001f, 0.001f, 0.001f) * XMMatrixIdentity()))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_GoblinHead_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Goblin/GoblinHead", XMMatrixScaling(0.001f, 0.001f, 0.001f) * XMMatrixIdentity()))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Goblin/GoblinHead.bin", XMMatrixScaling(0.001f, 0.001f, 0.001f) * XMMatrixIdentity()))))
 		return E_FAIL;
 
-	m_strMessage = TEXT("Shader Loading..");
-
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_GoblinBody_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Goblin/GoblinBody", XMMatrixScaling(0.001f, 0.001f, 0.001f) * XMMatrixIdentity()))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Goblin/GoblinBody.bin", XMMatrixScaling(0.001f, 0.001f, 0.001f) * XMMatrixIdentity()))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Steve_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Steve/Steve",XMMatrixScaling(0.01f,0.01f,0.01f)* XMMatrixIdentity()))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Steve/Steve.bin",XMMatrixScaling(0.01f,0.01f,0.01f)* XMMatrixIdentity()))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_TombProtector_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/TombProtector/TombProtector", XMMatrixScaling(0.001f, 0.001f, 0.001f) * XMMatrixIdentity()))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/TombProtector/TombProtector.bin", XMMatrixScaling(0.001f, 0.001f, 0.001f) * XMMatrixIdentity()))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Troll_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Troll/Troll", XMMatrixScaling(0.001f, 0.001f, 0.001f) * XMMatrixIdentity()))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Troll/Troll.bin", XMMatrixScaling(0.001f, 0.001f, 0.001f) * XMMatrixIdentity()))))
 		return E_FAIL;
+
+	m_strMessage = TEXT("Shader Loading..");
 
 	m_strMessage = TEXT("Prototype Loading..");
 
