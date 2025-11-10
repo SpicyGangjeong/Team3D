@@ -153,6 +153,11 @@
     <ClInclude Include="..\public\Active_Icon.h" />
     <ClInclude Include="..\public\GamePlay_Canvas.h" />
     <ClInclude Include="..\Public\DebugCamera.h" />
+    <ClInclude Include="..\Public\Dummy_PhysXBox.h" />
+    <ClInclude Include="..\Public\Dummy_PhysXMesh.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\Public\Effect_Editor.h" />
     <ClInclude Include="..\Public\EditEffect.h" />
     <ClInclude Include="..\public\Level_MapViewer.h" />
@@ -206,6 +211,11 @@
     <ClCompile Include="..\private\Active_Icon.cpp" />
     <ClCompile Include="..\private\GamePlay_Canvas.cpp" />
     <ClCompile Include="..\Private\DebugCamera.cpp" />
+    <ClCompile Include="..\Private\Dummy_PhysXBox.cpp" />
+    <ClCompile Include="..\Private\Dummy_PhysXMesh.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\Private\Effect_Editor.cpp" />
     <ClCompile Include="..\Private\EditEffect.cpp" />
     <ClCompile Include="..\private\Level_MapViewer.cpp" />

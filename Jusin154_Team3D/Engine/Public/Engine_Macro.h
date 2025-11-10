@@ -79,7 +79,9 @@
 //}
 #define			FLT_EPSILON3				1.192092896e-03F
 #define			FLT_EPSILON5				1.192092896e-05F
-#define			GRAVITY						-9.81f
+
+// GRAVITY 음수 박으면 피직스 로드 실패함
+#define			GRAVITY						9.81f
 
 constexpr unsigned int g_iMaxShadowWidth = 16384;
 constexpr unsigned int g_iMaxShadowHeight = 9216;

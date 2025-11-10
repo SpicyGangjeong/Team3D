@@ -90,10 +90,10 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 	if (nullptr == m_pCollider_Manager) {
 		return E_FAIL;
 	}
-	//m_pPhysX_Manager = CPhysX_Manager::Create(*ppDevice, *ppContext);
-	//if (nullptr == m_pPhysX_Manager) {
-	//	return E_FAIL;
-	//}
+	m_pPhysX_Manager = CPhysX_Manager::Create(*ppDevice, *ppContext);
+	if (nullptr == m_pPhysX_Manager) {
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -117,7 +117,7 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 
 	m_pLevel_Manager->Update(fTimeDelta);
 	m_pObject_Manager->Clear_DeadObj();
-	//m_pPhysX_Manager->Update(fTimeDelta);
+	m_pPhysX_Manager->Update(fTimeDelta);
 	//m_pObstacle_Manager->Refresh_Region();
 }
 

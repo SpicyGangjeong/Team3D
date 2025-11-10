@@ -10,8 +10,10 @@ static PSX::PxTransform XMWorldToPx(const _matrix& WorldMatrix)
 	_vector vPos, vRotq, vScale;
 	XMMatrixDecompose(&vScale, &vRotq, &vPos, WorldMatrix);
 
+	vRotq = XMQuaternionNormalize(vRotq);
+
 	PSX::PxTransform out;
-	XMStoreFloat3((_float3*)&out.p, WorldMatrix.r[3]);
+	XMStoreFloat3((_float3*)&out.p, vPos);
 	XMStoreFloat4((_float4*)&out.q, vRotq);
 
 	return out;
@@ -78,13 +80,15 @@ const PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody& RigidBody)
 	}
 
 
-	PSX::PxRigidStatic* pActor = m_pPhysics->createRigidStatic(pxWorldMatrix); pPxMeshGeometry;
+	PSX::PxRigidStatic* pActor = m_pPhysics->createRigidStatic(pxWorldMatrix);
 	PSX::PxShape* pShape = PSX::PxRigidActorExt::createExclusiveShape(*pActor, *pPxMeshGeometry, *RigidBody.Get_PxMaterial());
 
 	pShape->setFlag(PSX::PxShapeFlag::eSCENE_QUERY_SHAPE, true);
 	pShape->setFlag(PSX::PxShapeFlag::eSIMULATION_SHAPE, true);
-
-	pActor->attachShape(*pShape);
+	
+	pActor->userData = &RigidBody;
+	m_RigidBodys.emplace_back(&RigidBody, pActor);
+	m_pScene->addActor(*pActor);
 
 	return pActor;
 }
@@ -133,9 +137,9 @@ HRESULT CPhysX_Manager::Create_TriangleMesh(const _wstring& wstrMeshKey, CMesh* 
 	return E_FAIL;
 }
 
-PSX::PxTriangleMesh* CPhysX_Manager::Find_TriangleMesh(const _wstring& wstrFilePath)
+PSX::PxTriangleMesh* CPhysX_Manager::Find_TriangleMesh(const _wstring& wstrMeshKey)
 {
-	map<_wstring, PSX::PxTriangleMesh*>::iterator iter = m_TriangleMeshes.find(wstrFilePath);
+	map<_wstring, PSX::PxTriangleMesh*>::iterator iter = m_TriangleMeshes.find(wstrMeshKey);
 	if (iter != m_TriangleMeshes.end()) {
 		return iter->second;
 	}
@@ -186,6 +190,9 @@ void CPhysX_Manager::Update_Dynamic()
 		PSX::PxRigidDynamic* pActorDynamic = ppActiveActors[i]->is<PSX::PxRigidDynamic>();
 
 		if (nullptr != pActorDynamic) {
+			if (nullptr == ppActiveActors[i]->userData) {
+				continue;
+			}
 			CTransform* pTransform = ((CRigidBody*)ppActiveActors[i]->userData)->Get_PxTransformPtr();
 
 			PSX::PxTransform pPrevPxTransform;
@@ -220,13 +227,13 @@ PSX::PxController* CPhysX_Manager::Add_BoxController(PSX::PxBoxControllerDesc& D
 	PSX::PxController* pController = { nullptr };
 
 	pController = m_pCCTManager->createController(Desc);
-	//pController->
+	
 	return pController;
 }
 
 PSX::PxController* CPhysX_Manager::Get_Controller(_uint iControllerIndex)
 {
-	return nullptr;
+	return m_pCCTManager->getController((PSX::PxU32)iControllerIndex);
 }
 
 void CPhysX_Manager::ReleaseController(_uint iControllerIndex)
@@ -253,7 +260,6 @@ HRESULT CPhysX_Manager::PurgeAllController()
 
 HRESULT CPhysX_Manager::Initialize()
 {
-	
 	m_pFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_AllocatorCallBack, m_ErrorCallBack);
 	if (nullptr == m_pFoundation) {
 		assert(false);
@@ -266,17 +272,23 @@ HRESULT CPhysX_Manager::Initialize()
 
 
 	{ // 씬 세팅
-		m_ToleranceScale.length = 1.f;
-		m_ToleranceScale.speed = GRAVITY;
+		m_ToleranceScale.length = 1.f; // 1 meter
+		m_ToleranceScale.speed = GRAVITY; // 
+		
 
 		m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, m_ToleranceScale, true, m_pPvd);
 
 		m_pCookingParam = new PSX::PxCookingParams(m_pPhysics->getTolerancesScale());
 		PSX::PxSceneDesc sceneDesc = { m_pPhysics->getTolerancesScale() };
 
-		sceneDesc.gravity = PSX::PxVec3(0.f, GRAVITY, 0.f);
+		sceneDesc.gravity = PSX::PxVec3(0.f, -GRAVITY, 0.f);
 
-		sceneDesc.cpuDispatcher = m_pDispatcher = PSX::PxDefaultCpuDispatcherCreate(2/*cpu 코어 갯수*/);
+		m_pDispatcher = PSX::PxDefaultCpuDispatcherCreate(2/*cpu 코어 갯수*/);
+		if (nullptr == m_pDispatcher) {
+			assert(false);
+			return E_FAIL;
+		}
+		sceneDesc.cpuDispatcher = m_pDispatcher;
 
 		sceneDesc.filterShader = PSX::PxDefaultSimulationFilterShader;
 
@@ -298,26 +310,47 @@ HRESULT CPhysX_Manager::Initialize()
 		pPvdClient->setScenePvdFlag(PSX::PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
 	}
 
+	physx::PxMaterial* pMaterial = m_pPhysics->createMaterial(0.5f, 0.5f, 0.6f);
+	physx::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *pMaterial);
+	m_pScene->addActor(*pGroundPlane);
+
+	{
+
+		float halfExtent = .5f;
+		physx::PxShape* shape = m_pPhysics->createShape(physx::PxSphereGeometry(halfExtent), *pMaterial);
+		physx::PxU32 size = 100;
+		physx::PxTransform pxTransform(physx::PxVec3(0));
+
+		for (physx::PxU32 i = 0; i < size; i++) {
+			for (physx::PxU32 j = 0; j < size - i; j++) {
+				physx::PxTransform localTm(physx::PxVec3(physx::PxReal(j * 2) - physx::PxReal(size - i) + 100, physx::PxReal(i * 2 + 1), 0) * halfExtent);
+				physx::PxRigidDynamic* body = m_pPhysics->createRigidDynamic(pxTransform.transform(localTm));
+				body->attachShape(*shape);
+				physx::PxRigidBodyExt::updateMassAndInertia(*body, 10.0f);
+				m_pScene->addActor(*body);
+			}
+		}
+	}
+
 	return S_OK;
 }
 
 HRESULT CPhysX_Manager::Connect_DebugServer()
 {
 	// 네트워크 디버거 전송객체 생성
-	PSX::PxPvdTransport* pTransport = PSX::PxDefaultPvdSocketTransportCreate("127.0.0.1", 5425, 10);
-	if (nullptr == pTransport) {
+	m_pTransport = PSX::PxDefaultPvdSocketTransportCreate("127.0.0.1", 5425, 10);
+	if (nullptr == m_pTransport) {
 		assert(false);
 		return E_FAIL;
 	}
 
 	m_pPvd = PSX::PxCreatePvd(*m_pFoundation);
 	if (nullptr == m_pPvd) {
-		pTransport->release();
+		m_pTransport->release();
 		assert(false);
 		return E_FAIL;
 	}
-	m_pPvd->connect(*pTransport, PSX::PxPvdInstrumentationFlag::eALL);
-	pTransport->release();
+	m_pPvd->connect(*m_pTransport, PSX::PxPvdInstrumentationFlag::eALL);
 	return S_OK;
 }
 
@@ -365,10 +398,13 @@ void CPhysX_Manager::Free()
 		m_pPvd->release(); m_pPvd = nullptr;
 	}
 
+	if (nullptr != m_pTransport) {
+		m_pTransport->release(); m_pTransport = nullptr;
+	}
+
 	if (nullptr != m_pFoundation) {
 		m_pFoundation->release(); m_pFoundation = nullptr;
 	}
-
 
 	__super::Free();
 
