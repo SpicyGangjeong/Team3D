@@ -13,6 +13,7 @@ float4 g_vCamPosition;
 vector g_vColor;
 
 float2 g_vUVGainAmount;
+float  g_fBlurIntensity; //블러 세기
 
 float4 g_vEmissive;
 float  g_fColorOption;
@@ -196,7 +197,71 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_Blur(PS_IN In)
+{
+   
+    PS_OUT Out;
+    
+    vector vMtrlDiffuse;
+    vector vMtrlMask;
+    vector vMtrlNoise;
+    vector vMtrlDisolve;
+    
+    float2 vTexcoord = In.vTexcoord;
+    
+    if (g_isUVMove)
+    {
+        vTexcoord += g_vUVGainAmount * (In.vLifeTime.x / In.vLifeTime.y);
+    }
+    
+    if (g_isDiffuse == true)
+    {
+        vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, vTexcoord);
+        
+        if (vMtrlDiffuse.a < 0.3f)
+            discard;
 
+    }
+    else
+    {
+        vMtrlDiffuse = g_vColor;
+    }
+    
+    if (g_isMasking == true)
+    {
+        vMtrlMask = g_MaskingTexture.Sample(DefaultSampler, vTexcoord);
+    }
+    else
+    {
+        vMtrlMask.r = 1.f;
+    }
+    
+    if (g_isDissolve == true)
+    {
+        vMtrlDisolve = g_DissolveTexture.Sample(DefaultSampler, vTexcoord);
+    }
+    else
+    {
+        vMtrlDisolve.r = 0.f;
+    }
+    
+    if (g_isNoise == true)
+    {
+        vMtrlNoise = g_NoiseTexture.Sample(DefaultSampler, vTexcoord);
+    }
+    
+
+    vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * vMtrlMask.r - vMtrlDisolve.r * (In.vLifeTime.x / In.vLifeTime.y));
+        
+    Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.0f, 0.0f);
+    
+    Out.vDiffuse = vMtrlDiffuse * g_fBlurIntensity;
+    
+    // 색깔 추가할 처리 
+    Out.vColor = vector(g_vEmissive.rgb, g_fColorOption / 10.f);
+    
+    return Out;
+}
 
 
 technique11 DefaultTechnique
@@ -219,6 +284,16 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_NON_NORMALMAP();
+    }
+
+    pass Blur
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Blur();
     }
 
 }

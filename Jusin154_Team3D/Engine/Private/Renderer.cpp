@@ -113,6 +113,7 @@ void CRenderer::Render()
 	Render_NonLight();
 	Render_Blend();
 	Render_UI();
+	Render_LastColor();
 
 #ifdef _DEBUG
 	if(m_pGameInstance->Key_Pressing(DIK_F10))
@@ -299,9 +300,7 @@ void CRenderer::Render_Combined()
 		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur_X"), m_pShader, "g_BlurXTexture"))) {
 			return;
 		}
-		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Color"), m_pShader, "g_ColorTexture"))) {
-			return;
-		}
+	
 
 	}
 
@@ -412,6 +411,28 @@ void CRenderer::Render_UI()
 	}
 
 	m_RenderObjects[ENUM_CLASS(RENDER::UI)].clear();
+}
+
+void CRenderer::Render_LastColor()
+{
+	// Bind_Resorces
+
+	m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix);
+	m_pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix);
+	m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix);
+	m_pShader->Bind_Matrix("g_invMatView", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW_INV));
+	m_pShader->Bind_Matrix("g_invmatProj", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ_INV));
+
+
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Color"), m_pShader, "g_ColorTexture"))) {
+		return;
+	}
+
+	m_pShader->Begin(ENUM_CLASS(0));
+
+	m_pVIBuffer->Bind_Resources();
+	m_pVIBuffer->Render();
+
 }
 
 HRESULT CRenderer::Ready_DepthStencilView(_uint iSizeX, _uint iSizeY)
@@ -617,6 +638,15 @@ HRESULT CRenderer::Initialize()
 		return E_FAIL;
 	}
 
+
+	m_pLastColorShader = (CShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, TEXT("FX_LASTCOLOR"), nullptr, nullptr);
+
+	if (nullptr == m_pLastColorShader) {
+		return E_FAIL;
+	}
+
+	
+
 	m_pVIBuffer = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
 	if (nullptr == m_pVIBuffer) {
 		return E_FAIL;
@@ -701,6 +731,7 @@ void CRenderer::Free()
 
 	SAFE_RELEASE(m_pShadowDSV);
 	SAFE_RELEASE(m_pShader);
+	SAFE_RELEASE(m_pLastColorShader);
 	SAFE_RELEASE(m_pVIBuffer);
 	SAFE_RELEASE(m_pDevice);
 	SAFE_RELEASE(m_pContext);

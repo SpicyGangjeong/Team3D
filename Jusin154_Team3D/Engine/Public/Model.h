@@ -121,6 +121,7 @@ public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix = XMMatrixIdentity());
 	//
 	virtual CComponent* Clone(void* pArg, class CGameObject* pOwner = nullptr);
+
 virtual void Free(); public:
 	void Describe_Entity() override;
 };
