@@ -388,8 +388,9 @@ HRESULT CModel::Ready_Materials_FromFile(const aiScene* pAIScene, const _char* p
 
 	if (!file.is_open())
 	{
-		MSG_BOX("Failed to Open Mesh File");
-		return E_FAIL;
+		//MSG_BOX("Failed to Open Mesh File");
+		/* LOD */
+		return S_OK;
 	}
 
 	string strText = {};

@@ -160,6 +160,12 @@
     <Filter Include="50.UI\GamePlay_Canvas\Loding_Panel\LoadingWidget_Flame">
       <UniqueIdentifier>{c347da03-98f1-4095-a4e4-2c840c308916}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Dummys\PhysXBox">
+      <UniqueIdentifier>{c7e7d3c7-fd26-4035-88b4-11233459559c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\PhysXMesh">
+      <UniqueIdentifier>{15a9dfe7-f3f7-4906-8bd4-91734f4ddc92}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -309,6 +315,15 @@
     <ClInclude Include="..\Public\Level_PhysXLab.h">
       <Filter>01.Level\60.PhysXLab</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Dummy_PhysXBox.h">
+      <Filter>02.GameObjects\Dummys\PhysXBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dummy_PhysXMesh.h">
+      <Filter>02.GameObjects\Dummys\PhysXMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LoadingWidget.h">
+      <Filter>50.UI\GamePlay_Canvas\Loding_Panel\LoadingWidget</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -450,6 +465,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\Monster.cpp">
       <Filter>02.GameObjects\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_PhysXBox.cpp">
+      <Filter>02.GameObjects\Dummys\PhysXBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_PhysXMesh.cpp">
+      <Filter>02.GameObjects\Dummys\PhysXMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LoadingWidget.cpp">
+      <Filter>50.UI\LoadingWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LoadingWidget.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Loding_Panel\LoadingWidget</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
