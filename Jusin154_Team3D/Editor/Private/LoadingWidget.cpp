@@ -11,7 +11,7 @@ CLoadingWidget::CLoadingWidget(const CLoadingWidget& rhs)
     :CElementObject(rhs)
 {
 }
-
+ 
 HRESULT CLoadingWidget::Initialize_Prototype()
 {
     return S_OK;

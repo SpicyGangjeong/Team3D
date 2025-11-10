@@ -176,7 +176,7 @@ HRESULT CInstance_Model::Initialize(void* pArg)
 	};
 
 	m_pComputeShader = CComputeShader::Create(m_pDevice, m_pContext,
-		L"../Bin/Resources/ShaderFiles/Shader_Particle_Compute.hlsl", "CS_MAIN", m_iNumInstance, 2, sizeof(VTX_INSTANCE_PARTICLE), CS_Strides);
+		L"../Bin/Resources/ShaderFiles/Shader_Particle_Compute.hlsl", "CS_MAIN", m_iNumInstance, 2, sizeof(CS_PARTICLE_OUT), CS_Strides);
 
 	if (m_pComputeShader == nullptr)
 		return E_FAIL;
@@ -211,8 +211,19 @@ void CInstance_Model::Drop(_float fTimeDelta)
 
 	};
 
-	m_pComputeShader->Dispatch(0, 0, _float3((_float)iGroupCountX, 1.f, 1.f), CSBuffers, m_pConstantBuffer);
+	D3D11_MAPPED_SUBRESOURCE OutSubResource = {};
+	D3D11_MAPPED_SUBRESOURCE VBInstanceResource = {};
 
+	OutSubResource = m_pComputeShader->Dispatch(0, 0, _float3((_float)iGroupCountX, 1.f, 1.f), CSBuffers, m_pConstantBuffer);
+
+	if (SUCCEEDED(m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_DISCARD, 0, &VBInstanceResource)))
+	{
+		memcpy(VBInstanceResource.pData, OutSubResource.pData, m_iInstanceStride * m_InstanceDesc.iNumInstance); // 아웃풋 버퍼에 들어온 값들을 전부 복사한다.
+
+		m_pContext->Unmap(m_pVBInstance, 0);
+	}
+
+	//TODO:: 벨류버퍼 갱신 해야함 , OutPut버퍼 두개만들어야할듯..
 }
 
 
@@ -287,10 +298,13 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 
 				//라이프 타임 설정
 				pVertices[i].vLifeTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vLifeTime.x, m_InstanceDesc.vLifeTime.y));
-
-
+				
+				pParticleValues[i].vAniTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vAniTime.x, m_InstanceDesc.vAniTime.y));
+				pParticleValues[i].vMaskingUVMoveTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vMaskingUVMoveTime.x, m_InstanceDesc.vMaskingUVMoveTime.y));
+				pParticleValues[i].vDiffuseUVMoveTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vDiffuseUVMoveTime.x, m_InstanceDesc.vDiffuseUVMoveTime.y));
 				pParticleValues[i].fSpeed = m_pGameInstance->Random_Float(m_InstanceDesc.vSpeed.x, m_InstanceDesc.vSpeed.y);
 				pParticleValues[i].fRotaionSpeed = m_pGameInstance->Random_Float(m_InstanceDesc.vRotationSpeed.x, m_InstanceDesc.vRotationSpeed.y);
+				pParticleValues[i].vAniIndex = _float2(0.f, m_InstanceDesc.vAniIndex.y);
 
 				memcpy(&pParticleValues[i].vOriginRight, SRMatrix.m[0], sizeof(_float4));
 				memcpy(&pParticleValues[i].vOriginUp, SRMatrix.m[1], sizeof(_float4));
@@ -306,6 +320,17 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 	
 
 }
+
+HRESULT CInstance_Model::Bind_CS_Output(_uint Index)
+{
+	if (m_pComputeShader == nullptr)
+		return E_FAIL;
+
+	m_pComputeShader->Bind_OutPut_SRV(Index);
+
+	return S_OK;
+}
+
 
 #ifdef EDITOR_PROJECT
 
@@ -405,6 +430,25 @@ void CInstance_Model::Describe_Entity()
 		}
 
 		if (ImGui::DragFloat2("LifeTime", reinterpret_cast<_float*>(&m_InstanceDesc.vLifeTime)))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
+		if (ImGui::DragFloat2("DiffuseUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vDiffuseUVMoveTime)))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
+		if (ImGui::DragFloat2("MaskingUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vMaskingUVMoveTime)))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
+		if (ImGui::DragFloat2("AniTime", reinterpret_cast<_float*>(&m_InstanceDesc.vAniTime)))
+		{
+			Instane_Buffer_ReStruct();
+		}
+		if (ImGui::DragFloat2("AniIndex", reinterpret_cast<_float*>(&m_InstanceDesc.vAniIndex)))
 		{
 			Instane_Buffer_ReStruct();
 		}

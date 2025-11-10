@@ -238,7 +238,7 @@
     <Filter Include="02.Element\02.Component\07.RigidBody">
       <UniqueIdentifier>{5c89d610-7e57-40a5-bc65-04e5fa25df89}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.Management\21.PhysX_Manager\CCT">
+    <Filter Include="02.Element\02.Component\08.Character_Controller">
       <UniqueIdentifier>{b20c0397-6254-4350-bc83-ee695f9fd012}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.Element\01.GameObject\50.UI\CanvasObject">
@@ -454,7 +454,7 @@
       <Filter>02.Element\02.Component\02.VIBuffer\Terrain</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Character_Controller.cpp">
-      <Filter>03.Management\21.PhysX_Manager\CCT</Filter>
+      <Filter>02.Element\02.Component\08.Character_Controller</Filter>
     </ClCompile>
     <ClCompile Include="..\private\CanvasObject.cpp">
       <Filter>02.Element\01.GameObject\50.UI\CanvasObject</Filter>
@@ -1035,7 +1035,7 @@
       <Filter>02.Element\02.Component\07.RigidBody</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Character_Controller.h">
-      <Filter>03.Management\21.PhysX_Manager\CCT</Filter>
+      <Filter>02.Element\02.Component\08.Character_Controller</Filter>
     </ClInclude>
     <ClInclude Include="..\public\CanvasObject.h">
       <Filter>02.Element\01.GameObject\50.UI\CanvasObject</Filter>

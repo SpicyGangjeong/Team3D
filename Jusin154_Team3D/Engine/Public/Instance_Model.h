@@ -21,31 +21,56 @@ public:
 		_float3		vCenter = {}; // 센터 위치 
 		_float3		vRange = {}; // 위치 범위 
 
+		_float2		vMaskingUVMoveTime = {};
+		_float2		vDiffuseUVMoveTime = {};
+		_float2		vAniTime = {};
+		_float2	    vAniIndex = {};
+
 	}INSTANCE_DESC;
 
 	typedef struct tagCSParticleDesc
 	{
-		_float   fTimeDelta;
-		_float   fPadding;
-		_float	 fPadding2;
-		_float   fPadding3;
+		_float   fTimeDelta = {};
+		_float   fPadding = {};
+		_float	 fPadding2 = {};
+		_float   fPadding3 = {};
 
 	}CS_PARTICLE_DESC;
 
 	typedef struct tagCSParticleValueDesc
 	{
-		_float   fSpeed;
-		_float	 fRotaionSpeed;
+		_float   fSpeed = {};
+		_float	 fRotaionSpeed = {};
 
-		_float4  vOriginRight;
-		_float4  vOriginUp;
-		_float4  vOriginLook;
-		_float4  vOriginTranslation;
+		_float4  vOriginRight = {};
+		_float4  vOriginUp = {};
+		_float4  vOriginLook = {};
+		_float4  vOriginTranslation = {};
 
-		_float2  fPadding;
+		_float2	 vMaskingUVMoveTime = {};
+		_float2	 vDiffuseUVMoveTime = {};
+		_float2	 vAniTime = {};
+
+		_float2	 vAniIndex = {};
 
 	}CS_PARTICLE_VALUE_DESC;
 
+
+	struct ParticleOut
+	{
+		_float4 vRight = {};
+		_float4 vUp = {};
+		_float4 vLook = {};
+		_float4 vTranslation = {};
+		_float2 vLifeTime = {};
+
+		_float2 vMaskingUVMoveTime = {};
+		_float2 vDiffuseUVMoveTime = {};
+		_float2 vAniTime = {};
+
+		_float2 vAniIndex = {};
+
+	}CS_PARTICLE_OUT;
 public:
 	CInstance_Model(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CInstance_Model(const CInstance_Model& rhs);
@@ -63,6 +88,7 @@ public:
 	 HRESULT		Render(_uint iMeshIndx);
 	 void			Instane_Buffer_ReStruct();
 	 _uint			Get_NumMeshes() const { return m_iNumMeshes; }
+	 HRESULT		Bind_CS_Output(_uint Index);
 private:
 #ifdef EDITOR_PROJECT
 	HRESULT			Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex);
