@@ -69,6 +69,19 @@ CBone* CBone::Create(const aiNode* pAINode, _int iParentIndex)
 	return pInstance;
 }
 
+CBone* CBone::Create(const SaveNode& _SaveNode, _int iParentIndex)
+{
+	CBone* pInstance = new CBone();
+
+	if (FAILED(pInstance->Initialize(_SaveNode, iParentIndex)))
+	{
+		MSG_BOX("Failed to Created : CBone");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
 HRESULT CBone::Initialize(const aiNode* pAINode, _int iParentIndex)
 {
 	strcpy_s(m_szName, pAINode->mName.data);
@@ -103,6 +116,19 @@ HRESULT CBone::Initialize(HANDLE hFile, DWORD& dwByte)
 	if (!ReadFile(hFile, &m_matInitial, sizeof(_float4x4), &dwByte, nullptr)) {
 		return E_FAIL;
 	}
+
+	XMStoreFloat4x4(&m_CombinedTransformationMatrix, XMMatrixIdentity());
+
+	return S_OK;
+}
+
+HRESULT CBone::Initialize(const SaveNode& _SaveNode, _int iParentIndex)
+{
+	strcpy_s(m_szName, _SaveNode.Name);
+
+	m_iParentBoneIndex = iParentIndex;
+
+	memcpy(&m_TransformationMatrix, &_SaveNode.Transformation, sizeof(_float4x4));
 
 	XMStoreFloat4x4(&m_CombinedTransformationMatrix, XMMatrixIdentity());
 

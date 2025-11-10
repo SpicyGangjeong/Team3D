@@ -63,6 +63,13 @@ public:
 	{
 		return m_pPrototype_Manager->CPrototype_Manager::Clone_Prototype<T>(iLevelNumber, pArg, pOwner);
 	}
+
+	template<typename T>
+	void Asset_Description(_uint iLevel, const _char* pComponentName, CComponent** ppOut, void* pDesc, class CGameObject* pOwner = nullptr)
+	{
+		return m_pPrototype_Manager->CPrototype_Manager::Asset_Description<T>(iLevel, pComponentName, ppOut, pDesc, pOwner);
+	}
+
 #pragma endregion
 
 #pragma region OBJECT_MANAGER
@@ -165,6 +172,39 @@ public:
 #pragma region SOUND_MANAGER
 #pragma endregion
 
+#pragma region PICKING
+	_bool	isPicking(_float3* pOut);
+#pragma endregion
+#pragma region PhysX_Manager
+	PSX::PxMaterial* Get_Material(_float3& vMatInfo);
+	HRESULT Create_TriangleMesh(const _wstring& wstrMeshKey, CMesh* pMesh);
+	PSX::PxShape* Create_Shape(ACTOR eType, _float3& vhalfGeometryInfo, PSX::PxMaterial& pxMaterial, _bool bExclusive = false, PSX::PxShapeFlags ePxShapeFlag = PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE);
+	const PSX::PxRigidDynamic* Add_DynamicActor(CRigidBody& RigidBody);
+	const PSX::PxRigidStatic* Add_StaticActor(CRigidBody& RigidBody);
+#pragma endregion
+
+
+public:
+	void Add_ModelToMap(const _char* filePath, CModel* pModel)
+	{
+		m_ModelMap[filePath] = pModel;
+	}
+
+	void Add_SaveModel(const _char* filePath, SaveModel sModel)
+	{
+		m_sModelMap[filePath] = sModel;
+	}
+
+#ifdef EDITOR_PROJECT
+	_bool SaveAssimpModel(const _char* filename);
+#endif
+
+	SaveModel* Load_SaveModel(const _char* filePath);
+	void Save_ModelFilePath(const _char* FilePath);
+	const _char* Load_ModelFilePath(_uint iIndex);
+	const _char* Load_BinaryModelFilePath(_uint iIndex);
+	size_t ModelFilePathCount();
+
 private:
 	class CGraphic_Device*			m_pGraphic_Device = { nullptr };
 	class CTimer_Manager*			m_pTimer_Manager = { nullptr };
@@ -180,6 +220,8 @@ private:
 	class CKey_Manager*				m_pKey_Manager = { nullptr };
 	class CMouse_Manager*			m_pMouse_Manager = { nullptr };
 	class CCollider_Manager*		m_pCollider_Manager = { nullptr };
+	class CPhysX_Manager*			m_pPhysX_Manager = { nullptr };
+	class CPicking*					m_pPicking = { nullptr };
 
 #ifdef _DEBUG
 private:
@@ -189,6 +231,10 @@ private:
 	_float							m_fTimer_DrawCall = { 0.f };
 	_float							m_fTimer_Present = { 0.f };
 	_float							m_fTimer_FrameCount = { 0.f };
+
+	vector<const _char*>			m_FilePaths = {};
+	map<const _char*, CModel*>			m_ModelMap;
+	map<const _char*, SaveModel>		m_sModelMap;
 #endif // _DEBUG
 
 public:

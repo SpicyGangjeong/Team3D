@@ -55,9 +55,6 @@
     <Filter Include="02.GameObjects\Env">
       <UniqueIdentifier>{1f58b759-0d65-4092-ad42-da21c974ea12}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Effect">
-      <UniqueIdentifier>{a9a30c22-af8f-421a-8901-edfb8146f59d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Dummys\DummyRect">
       <UniqueIdentifier>{130c848e-6ab6-4b45-b12c-56db07e2c2f4}</UniqueIdentifier>
     </Filter>
@@ -73,6 +70,42 @@
     <Filter Include="02.GameObjects\Dummy_Goblin">
       <UniqueIdentifier>{0ebb9c08-69b0-49b6-bac3-c827ca13319a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Dummy_Goblin\Dummy_Goblin_Head">
+      <UniqueIdentifier>{69af10ea-e8f1-4455-9435-93857b7eb198}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\ModelParts">
+      <UniqueIdentifier>{a04e88c3-dabb-4a91-8b9f-ce7f5562def6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\ModelParts\Head">
+      <UniqueIdentifier>{a483f296-1312-4b29-8b8f-ce47654cd09e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\ModelParts\Body">
+      <UniqueIdentifier>{763765ed-6960-4837-946e-20ff88d8e350}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\ModelParts\Hair">
+      <UniqueIdentifier>{7ac7ca7b-7e52-498b-adfe-3a8e602b0904}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect">
+      <UniqueIdentifier>{32909f25-6113-4bd6-81a8-9415d993b221}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect">
+      <UniqueIdentifier>{a9a30c22-af8f-421a-8901-edfb8146f59d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\00.EffectObject">
+      <UniqueIdentifier>{8a5ffca8-725a-42ee-a3eb-3c79df09dec9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\01.TestEffect">
+      <UniqueIdentifier>{32718f84-d863-48d2-8611-90c40f2ba1c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\02.EditEffect">
+      <UniqueIdentifier>{ba468252-bba3-46e4-bf61-e726a59060ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor">
+      <UniqueIdentifier>{5b31b993-b137-42d2-b737-000aeb27a675}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\LodingWidget1">
+      <UniqueIdentifier>{167182ec-ed5f-46fc-9c27-a82e327fa1ac}</UniqueIdentifier>
+       </Filter>
     <Filter Include="50.UI\IMGUIUI">
       <UniqueIdentifier>{f60f1948-8c11-4796-843a-8c38f10043e3}</UniqueIdentifier>
     </Filter>
@@ -111,6 +144,15 @@
     </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Loding_Panel\LoadingWidget">
       <UniqueIdentifier>{167182ec-ed5f-46fc-9c27-a82e327fa1ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Terrain">
+      <UniqueIdentifier>{44a3ddc2-3993-48d6-840c-3da09daeab70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Env\Manger">
+      <UniqueIdentifier>{584466e9-fe1a-4a7d-a4ba-54d62ee1a7c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Level\60.PhysXLab">
+      <UniqueIdentifier>{943a760b-2861-45b7-87b8-462e1309c172}</UniqueIdentifier>
     </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Loding_Panel\LoadingWidget_Flame">
       <UniqueIdentifier>{c347da03-98f1-4095-a4e4-2c840c308916}</UniqueIdentifier>
@@ -174,6 +216,36 @@
     <ClInclude Include="..\Public\Dummy_Cube.h">
       <Filter>02.GameObjects\Dummys\DummyCube</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Dummy_Goblin_Head.h">
+      <Filter>02.GameObjects\Dummy_Goblin\Dummy_Goblin_Head</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Body.h">
+      <Filter>02.GameObjects\ModelParts\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ModelParts.h">
+      <Filter>02.GameObjects\ModelParts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Head.h">
+      <Filter>02.GameObjects\ModelParts\Head</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_EffectViewer.h">
+      <Filter>01.Level\40.EffectViewer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EffectObject.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\00.EffectObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TestEffect.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\01.TestEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EditEffect.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\02.EditEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_Editor.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\LodingWidget1.h">
+      <Filter>50.UI\LodingWidget1</Filter>
+      </ClInclude>
     <ClInclude Include="..\public\LoadingWidget.h">
       <Filter>50.UI\GamePlay_Canvas\Loding_Panel\LoadingWidget</Filter>
     </ClInclude>
@@ -213,6 +285,21 @@
     <ClInclude Include="..\public\Loading_Panel.h">
       <Filter>50.UI\GamePlay_Canvas\Loding_Panel</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Level_MapViewer.h">
+      <Filter>01.Level\30.MapViewer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapObject.h">
+      <Filter>02.GameObjects\Env</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Terrain.h">
+      <Filter>02.GameObjects\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapObject_Manager.h">
+      <Filter>02.GameObjects\Env\Manger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_PhysXLab.h">
+      <Filter>01.Level\60.PhysXLab</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -231,9 +318,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Level_Loading.cpp">
       <Filter>01.Level\00.Loading</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Loader.cpp">
-      <Filter>01.Level\00.Loading\Loader</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_Logo.cpp">
       <Filter>01.Level\01.Logo</Filter>
@@ -265,6 +349,39 @@
     <ClCompile Include="..\Private\Dummy_Cube.cpp">
       <Filter>02.GameObjects\Dummys\DummyCube</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Dummy_Goblin_Head.cpp">
+      <Filter>02.GameObjects\Dummy_Goblin\Dummy_Goblin_Head</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Body.cpp">
+      <Filter>02.GameObjects\ModelParts\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ModelParts.cpp">
+      <Filter>02.GameObjects\ModelParts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Head.cpp">
+      <Filter>02.GameObjects\ModelParts\Head</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Loader.cpp">
+      <Filter>01.Level\00.Loading\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_EffectViewer.cpp">
+      <Filter>01.Level\40.EffectViewer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EffectObject.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\00.EffectObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TestEffect.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\01.TestEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EditEffect.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\02.EditEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect_Editor.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect_Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\LodingWidget1.cpp">
+      <Filter>50.UI\LodingWidget1</Filter>
+      </ClCompile>
     <ClCompile Include="..\private\LoadingWidget.cpp">
       <Filter>50.UI\GamePlay_Canvas\Loding_Panel\LoadingWidget</Filter>
     </ClCompile>
@@ -304,6 +421,21 @@
     <ClCompile Include="..\private\Loading_Panel.cpp">
       <Filter>50.UI\GamePlay_Canvas\Loding_Panel</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Level_MapViewer.cpp">
+      <Filter>01.Level\30.MapViewer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapObject.cpp">
+      <Filter>02.GameObjects\Env</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Terrain.cpp">
+      <Filter>02.GameObjects\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapObject_Manager.cpp">
+      <Filter>02.GameObjects\Env\Manger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_PhysXLab.cpp">
+      <Filter>01.Level\60.PhysXLab</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Editor.rc">
@@ -327,6 +459,9 @@
       <Filter>99.Define\SHADER</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_UIEditor.hlsl">
+      <Filter>99.Define\SHADER</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxModelInstance.hlsl">
       <Filter>99.Define\SHADER</Filter>
     </FxCompile>
   </ItemGroup>

@@ -4,6 +4,10 @@
 #define	GUI	ImGui
 #endif // !GUI
 
+#ifndef PSX
+#define PSX physx
+#endif // !PSX
+
 #pragma region ProgrammerInfo
 
 #define ASSERT_NURI(expression)
@@ -75,7 +79,7 @@
 //}
 #define			FLT_EPSILON3				1.192092896e-03F
 #define			FLT_EPSILON5				1.192092896e-05F
-#define			GRAVITY						9.8f
+#define			GRAVITY						-9.81f
 
 constexpr unsigned int g_iMaxShadowWidth = 16384;
 constexpr unsigned int g_iMaxShadowHeight = 9216;

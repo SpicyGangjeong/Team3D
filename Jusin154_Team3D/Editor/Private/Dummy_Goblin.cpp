@@ -38,7 +38,7 @@ void CDummy_Goblin::Priority_Update(_float fTimeDelta)
 
 void CDummy_Goblin::Update(_float fTimeDelta)
 {
-	m_pModelCom->Play_Animation(fTimeDelta);
+	//m_pModelCom->Play_Animation(fTimeDelta);
 }
 
 void CDummy_Goblin::Late_Update(_float fTimeDelta)

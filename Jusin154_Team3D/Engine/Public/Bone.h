@@ -37,12 +37,18 @@ private:
 
 private:
 	HRESULT Initialize(HANDLE hFile, DWORD& dwByte);
+	// 바이너리
+	HRESULT Initialize(const SaveNode& _SaveNode, _int iParentIndex);
+	//
 
 public:
 	static CBone* Create(HANDLE hFile, DWORD& dwByte);
 	CBone* Clone();
 	virtual void Free() override;
 
+	// 바이너리
+	static CBone* Create(const SaveNode& _SaveNode, _int iParentIndex);
+	//
 #ifdef EDITOR_PROJECT
 public:
 	HRESULT SaveAsBinary(HANDLE hFile, DWORD& dwByte);

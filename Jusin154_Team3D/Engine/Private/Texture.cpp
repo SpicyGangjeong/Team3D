@@ -39,7 +39,7 @@ _uint CTexture::Get_Size()
 	return (_uint)m_SRVs.size();
 }
 
-HRESULT CTexture::Initialize_Prototype(TEXTURE_LOAD_TYPE eType, const _tchar* pTextureFilePath, const _wstring& wstrTextureKey, _uint iNumTextures)
+HRESULT CTexture::Initialize_Prototype(TEXTURE_LOAD_TYPE eType, const _tchar* pTextureFilePath, _uint iNumTextures)
 {
 	switch (eType)
 	{
@@ -182,11 +182,11 @@ HRESULT CTexture::ParseTexturePathToSRVs(const _tchar* pTextureFolderPath)
 
 	return S_OK;
 }
-CTexture* CTexture::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TEXTURE_LOAD_TYPE eType, const _tchar* pTextureFilePath, const _wstring& wstrTextureKey, _uint iNumTextures)
+CTexture* CTexture::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TEXTURE_LOAD_TYPE eType, const _tchar* pTextureFilePath, _uint iNumTextures)
 {
 	CTexture* pInstance = new CTexture(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype(eType, pTextureFilePath, wstrTextureKey, iNumTextures)))
+	if (FAILED(pInstance->Initialize_Prototype(eType, pTextureFilePath, iNumTextures)))
 	{
 		MSG_BOX("Failed to Created : CTexture");
 		SAFE_RELEASE(pInstance);

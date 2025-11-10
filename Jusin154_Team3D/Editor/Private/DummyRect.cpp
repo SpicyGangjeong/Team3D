@@ -58,7 +58,7 @@ HRESULT CDummyRect::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix))){
 		return E_FAIL;
 	}
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0))) {
+	if (FAILED(m_pDiffuse_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
@@ -76,7 +76,7 @@ HRESULT CDummyRect::Ready_Components(void* pArg)
 		if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom))) {
 			return E_FAIL;
 		}
-		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Dororong"), reinterpret_cast<CComponent**>(&m_pTextureCom), nullptr))) {
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Dororong"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr))) {
 			return E_FAIL;
 		}
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, FX_POSTEX, (CComponent**)&m_pShaderCom, nullptr))) {
@@ -145,7 +145,7 @@ void CDummyRect::Free()
 {
 	__super::Free();
 
-	SAFE_RELEASE(m_pTextureCom);
+	SAFE_RELEASE(m_pDiffuse_TextureCom);
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }

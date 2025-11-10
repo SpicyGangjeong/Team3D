@@ -5,9 +5,11 @@
 #include "VIBuffer_Cell.h"
 #include "Shader.h"
 #include "Navigation.h"
+#include "RigidBody.h"
 #include "Texture.h"
 #include "Cell.h"
 #include "Model.h"
+#include "Instance_Model.h"
 
 
 NS_BEGIN(Engine)
@@ -62,12 +64,90 @@ public:
 
 		return dynamic_cast<T*>(pObject->Clone(_pArg, pOwner));
 	}
+#ifdef _DEBUG
+public:
+	//특정 타입의 컴포넌트들의 이름을 통한 콤보박스 , 이미지는 이미지 클립을
+	//만들고 선택할 시에 내 ppOut에 클론하는 기능을 담당
+
+	template<typename T>
+	void Asset_Description(_uint iLevel , const _char* pComponentName , CComponent** ppOut  , void* pDesc , class CGameObject* pOwner = nullptr)
+	{
+		vector<const _char*> pComponentNames = {};
+		vector<_string> strNames = {};
+
+		for (auto& Pair : m_pAssets[iLevel])
+		{
+
+			if (typeid(*Pair.second) == typeid(T)) // 같은 타입의 컴포넌트 였다면
+			{
+				strNames.push_back(CMyTools::ToString(Pair.first));
+
+				pComponentNames.push_back(strNames.back().c_str());
+
+			}
+		} 
+
+		if (typeid(CTexture) == typeid(T)) // 텍스쳐일 경우 이미지로 띄우기
+		{
+			_int iIndex = {};
+
+			for (auto&  strName : strNames)
+			{
+				_wstring wstrComponentName = CMyTools::ToWstring(strName);
+
+				auto    iter = m_pAssets[iLevel].find(wstrComponentName);
+
+				if (iter == m_pAssets[iLevel].end()) {
+					continue;
+				}
+
+
+				if (GUI::ImageButton(strName.c_str(), dynamic_cast<CTexture*>(iter->second)->Get_SRV(0), ImVec2(48, 48)))
+				{
+					if (*ppOut != nullptr)
+						Safe_Release(*ppOut);
+
+
+					*ppOut = iter->second->Clone(pDesc, pOwner);
+				}
+
+				if ((iIndex++ + 1) % 4 != 0)
+					GUI::SameLine(); // 같은 줄에 이어서
+	
+			}
+
+			return;
+		}
+
+		static _int s_iCurrentItem = -1;
+
+		// 다른 어셋일 경우 콤보로 띄우기
+
+		if (GUI::Combo(pComponentName, &s_iCurrentItem, pComponentNames.data(), (_int)pComponentNames.size()))
+		{
+			if (*ppOut != nullptr)
+				Safe_Release(*ppOut);
+
+			_string strComponentName = pComponentNames[s_iCurrentItem];
+			_wstring wstrComponentName = CMyTools::ToWstring(strComponentName);
+
+			auto    iter = m_pAssets[iLevel].find(wstrComponentName);
+
+			if (iter == m_pAssets[iLevel].end()) {
+				return;
+			}
+
+			*ppOut = iter->second->Clone(pDesc , pOwner);
+		}
+	}
+#endif
+
 private:
-	CGameInstance* m_pGameInstance = { nullptr };
-	ID3D11Device* m_pDevice = { nullptr };
-	ID3D11DeviceContext* m_pContext = { nullptr };
-	vector<class CBase*>* m_pPrototypes = { nullptr };
-	map<_wstring, CComponent*>* m_pAssets = { nullptr };
+	CGameInstance*						m_pGameInstance = { nullptr };
+	ID3D11Device*						m_pDevice = { nullptr };
+	ID3D11DeviceContext*				m_pContext = { nullptr };
+	vector<class CBase*>*				m_pPrototypes = { nullptr };
+	map<_wstring, CComponent*>*			m_pAssets = { nullptr };
 
 	_uint								m_iLevelNumber = { };
 

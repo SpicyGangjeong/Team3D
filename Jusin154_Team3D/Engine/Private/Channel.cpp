@@ -183,6 +183,56 @@ HRESULT CChannel::Initialize(HANDLE hFile, DWORD& dwByte)
 	return S_OK;
 }
 
+HRESULT CChannel::Initialize(const CModel* pModel, SaveChannel* pSaveChannel)
+{
+	strcpy_s(m_szName, pSaveChannel->Name);
+
+	m_iBoneIndex = pModel->Get_BoneIndex(m_szName);
+	m_PreTransformMatrix = pModel->Get_PreTransformMatrix();
+
+	m_iNumKeyFrames = max(pSaveChannel->ScalingKeyCount, pSaveChannel->RotationKeyCount);
+	m_iNumKeyFrames = max(m_iNumKeyFrames, pSaveChannel->PositionKeyCount);
+
+	_float3				vScale{};
+	_float4				vRotation{};
+	_float3				vTranslation{};
+
+	for (size_t i = 0; i < m_iNumKeyFrames; i++)
+	{
+		KEYFRAME		KeyFrame{};
+
+		if (i < pSaveChannel->ScalingKeyCount)
+		{
+			memcpy(&vScale, &pSaveChannel->ScalingKeys[i].Value, sizeof(_float3));
+			KeyFrame.fTrackPosition = pSaveChannel->ScalingKeys[i].Time;
+		}
+
+		if (i < pSaveChannel->RotationKeyCount)
+		{
+			vRotation.x = pSaveChannel->RotationKeys[i].Value.x;
+			vRotation.y = pSaveChannel->RotationKeys[i].Value.y;
+			vRotation.z = pSaveChannel->RotationKeys[i].Value.z;
+			vRotation.w = pSaveChannel->RotationKeys[i].Value.w;
+
+			KeyFrame.fTrackPosition = pSaveChannel->RotationKeys[i].Time;
+		}
+
+		if (i < pSaveChannel->PositionKeyCount)
+		{
+			memcpy(&vTranslation, &pSaveChannel->PositionKeys[i].Value, sizeof(_float3));
+			KeyFrame.fTrackPosition = pSaveChannel->PositionKeys[i].Time;
+		}
+
+		KeyFrame.vScale = vScale;
+		KeyFrame.vRotation = vRotation;
+		KeyFrame.vTranslation = vTranslation;
+
+		m_KeyFrames.push_back(KeyFrame);
+	}
+
+	return S_OK;
+}
+
 CChannel* CChannel::Create(const vector<CBone*>& Bones, _uint iIndex)
 {
 	CChannel* pInstance = new CChannel();
@@ -204,6 +254,19 @@ CChannel* CChannel::Create(HANDLE hFile, DWORD& dwByte)
 	{
 		MSG_BOX("Failed to Created : CChannel");
 		SAFE_RELEASE(pInstance);
+	}
+
+	return pInstance;
+}
+
+CChannel* CChannel::Create(const CModel* pModel, SaveChannel* pSaveChannel)
+{
+	CChannel* pInstance = new CChannel();
+
+	if (FAILED(pInstance->Initialize(pModel, pSaveChannel)))
+	{
+		MSG_BOX("Failed to Created : CChannel");
+		Safe_Release(pInstance);
 	}
 
 	return pInstance;

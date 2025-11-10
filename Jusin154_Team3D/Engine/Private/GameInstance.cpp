@@ -14,6 +14,8 @@
 #include "Key_Manager.h"
 #include "Mouse_Manager.h"
 #include "Collider_Manager.h"
+#include "Picking.h"
+#include "PhysX_Manager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -81,10 +83,17 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 	if (nullptr == m_pShadow) {
 		return E_FAIL;
 	}
+	m_pPicking = CPicking::Create(*ppDevice, *ppContext, EngineDesc.hWnd, EngineDesc.iWinSizeX, EngineDesc.iWinSizeY);
+	if (nullptr == m_pPicking)
+		return E_FAIL;
 	m_pCollider_Manager = CCollider_Manager::Create(*ppDevice, *ppContext, EngineDesc.iNumCollidableGroup);
 	if (nullptr == m_pCollider_Manager) {
 		return E_FAIL;
 	}
+	//m_pPhysX_Manager = CPhysX_Manager::Create(*ppDevice, *ppContext);
+	//if (nullptr == m_pPhysX_Manager) {
+	//	return E_FAIL;
+	//}
 
 	return S_OK;
 }
@@ -94,6 +103,8 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 	m_pKey_Manager->Update();
 	m_pMouse_Manager->Update();
 	//m_pSound_Manager->Update();
+
+	m_pPicking->Update();
 
 	m_pObject_Manager->Priority_Update(fTimeDelta);
 
@@ -106,6 +117,7 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 
 	m_pLevel_Manager->Update(fTimeDelta);
 	m_pObject_Manager->Clear_DeadObj();
+	//m_pPhysX_Manager->Update(fTimeDelta);
 	//m_pObstacle_Manager->Refresh_Region();
 }
 
@@ -144,6 +156,29 @@ _float CGameInstance::Random_Float(_float fMin, _float fMax)
 _int CGameInstance::Random_Int(_int iMin, _int iMax)
 {
 	return iMin + (_int)(Random_Normal() * (iMax - iMin));
+}
+
+void CGameInstance::Save_ModelFilePath(const _char* FilePath)
+{
+	m_FilePaths.push_back(FilePath);
+}
+
+const _char* CGameInstance::Load_ModelFilePath(_uint iIndex)
+{
+	return	m_FilePaths[iIndex];
+}
+
+const _char* CGameInstance::Load_BinaryModelFilePath(_uint iIndex)
+{
+	auto iter = m_sModelMap.begin();
+	std::advance(iter, iIndex);
+	return iter->first;
+}
+
+
+size_t CGameInstance::ModelFilePathCount()
+{
+	return m_FilePaths.size();
 }
 
 void CGameInstance::Render_Begin(const _float4* pClearColor)
@@ -474,6 +509,46 @@ const SHADOW_LIGHT_DESC* CGameInstance::Get_ShadowDesc()
 {
 	return m_pShadow->Get_ShadowDesc();
 }
+_bool CGameInstance::isPicking(_float3* pOut)
+{
+	return m_pPicking->isPicking(pOut);
+}
+#ifdef EDITOR_PROJECT
+_bool CGameInstance::SaveAssimpModel(const _char* filename)
+{
+	auto iter = m_ModelMap.find(filename);
+	return iter->second->SaveAssimpModel(filename);
+}
+#endif
+SaveModel* CGameInstance::Load_SaveModel(const _char* filePath)
+{
+	auto iter = m_sModelMap.find(filePath);
+	return &iter->second;
+}
+
+#pragma region PhysX_Manager
+PSX::PxMaterial* CGameInstance::Get_Material(_float3& vMatInfo)
+{
+	return m_pPhysX_Manager->Get_Material(vMatInfo);
+}
+HRESULT CGameInstance::Create_TriangleMesh(const _wstring& wstrMeshKey, CMesh* pMesh)
+{
+	return m_pPhysX_Manager->Create_TriangleMesh(wstrMeshKey, pMesh);
+}
+PSX::PxShape* CGameInstance::Create_Shape(ACTOR eType, _float3& vhalfGeometryInfo, PSX::PxMaterial& pxMaterial, _bool bExclusive, PSX::PxShapeFlags ePxShapeFlag)
+{
+	return m_pPhysX_Manager->Create_Shape(eType, vhalfGeometryInfo, pxMaterial, bExclusive, ePxShapeFlag);
+}
+const PSX::PxRigidDynamic* CGameInstance::Add_DynamicActor(CRigidBody& RigidBody)
+{
+	return m_pPhysX_Manager->Add_DynamicActor(RigidBody);
+}
+const PSX::PxRigidStatic* CGameInstance::Add_StaticActor(CRigidBody& RigidBody)
+{
+	return m_pPhysX_Manager->Add_StaticActor(RigidBody);
+}
+#pragma endregion
+
 bool		CGameInstance::Key_Pressing(int _iKey)
 {
 	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
@@ -581,6 +656,8 @@ void CGameInstance::Release_Engine()
 {
 	DestroyInstance();
 
+	SAFE_RELEASE(m_pPhysX_Manager);
+	SAFE_RELEASE(m_pPicking);
 	SAFE_RELEASE(m_pCollider_Manager);
 	SAFE_RELEASE(m_pShadow);
 	SAFE_RELEASE(m_pCamera_Manager);
