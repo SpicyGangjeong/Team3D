@@ -27,13 +27,14 @@ private:
 public:
 	static CMesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, vector<class CBone*>& Bones, const aiMesh* pAIMesh, _fmatrix& PreTransformMatrix);
 	HRESULT SaveAsBinary(HANDLE hFile, DWORD& dwByte);
+	PSX::PxTriangleMesh* ConvertToPxMesh(const PSX::PxCookingParams* pParam);
 #endif // EDITOR_PROJECT
 
 public:
 	//인스턴싱 모델 전용 드로우, 바인딩 함수 
 	virtual HRESULT Bind_Resources_Instance(ID3D11Buffer* pVBInstance, _uint iInstanceStride, _uint iBufferCount);
 	virtual HRESULT Render_Instance(_uint iNumInstance);
-
+	
 private:
 	virtual HRESULT Initialize_Prototype(HANDLE hFile, DWORD& dwByte);
 	virtual HRESULT Initialize(void* pArg) override;
@@ -50,7 +51,7 @@ private:
 	_uint	m_iNumBones = { };
 
 	vector<_int>		m_BoneIndices;
-	_float4x4* m_pBoneMatrices = { nullptr };
+	_float4x4*			m_pBoneMatrices = { nullptr };
 	vector<_float4x4>	m_offsetMatrices;
 	// 바이너리
 	std::vector<_uint>   m_Indices;
