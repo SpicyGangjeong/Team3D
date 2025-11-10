@@ -38,7 +38,7 @@ void CTestEffect::Priority_Update(_float fTimeDelta)
 
 void CTestEffect::Update(_float fTimeDelta)
 {
-	m_pInstance_ModelCom->Drop(fTimeDelta);
+	//m_pInstance_ModelCom->Drop(fTimeDelta);
 }
 
 void CTestEffect::Late_Update(_float fTimeDelta)
@@ -56,14 +56,14 @@ HRESULT CTestEffect::Ready_Components(void* pArg)
 
 
  
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::EFFECT), TEXT("Prototype_Texture_Test_Noise"), reinterpret_cast<CComponent**>(&m_pTextureCom), nullptr))) 
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::EFFECT), TEXT("Prototype_Texture_Test_Noise"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr))) 
 	{
 		return E_FAIL;
 	}
 
 	CInstance_Model::INSTANCE_DESC InstanceDesc = {};
 
-	InstanceDesc.iNumInstance = 100;
+	InstanceDesc.iNumInstance = 1;
 	InstanceDesc.vLifeTime = _float2(1.f, 10.f);
 	InstanceDesc.vRange = _float3(5.f, 0.f, 5.f);
 	InstanceDesc.vSizeMin = _float3(1.f, 1.f, 1.f);

@@ -226,6 +226,21 @@
     <Filter Include="01.Utility\06.ComputeShader">
       <UniqueIdentifier>{96600587-16b1-4627-914d-7fc413c501ba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\06. Picking">
+      <UniqueIdentifier>{a60a7ba5-a937-41d7-baac-db67f86f3ba1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Define\99.THIRDPARTY\PHYSX">
+      <UniqueIdentifier>{5948985e-f67e-4627-aca4-09b8e9edc359}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Management\21.PhysX_Manager">
+      <UniqueIdentifier>{5e6a85cd-455a-4161-83c8-ba5f4ce2ba41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\07.RigidBody">
+      <UniqueIdentifier>{5c89d610-7e57-40a5-bc65-04e5fa25df89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Management\21.PhysX_Manager\CCT">
+      <UniqueIdentifier>{b20c0397-6254-4350-bc83-ee695f9fd012}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -405,6 +420,12 @@
     <ClCompile Include="..\Private\Collider_Manager.cpp">
       <Filter>03.Management\10.Collider_Manager</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\PhysX_Manager.cpp">
+      <Filter>03.Management\21.PhysX_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RigidBody.cpp">
+      <Filter>02.Element\02.Component\07.RigidBody</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\UIComponent.cpp">
       <Filter>02.Element\02.Component\50.UI</Filter>
     </ClCompile>
@@ -414,8 +435,17 @@
     <ClCompile Include="..\Private\Instance_Model.cpp">
       <Filter>02.Element\02.Component\06.Model\Instance_Model</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Picking.cpp">
+      <Filter>01.Utility\06. Picking</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\ComputeShader.cpp">
       <Filter>01.Utility\06.ComputeShader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Terrain.cpp">
+      <Filter>02.Element\02.Component\02.VIBuffer\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Character_Controller.cpp">
+      <Filter>03.Management\21.PhysX_Manager\CCT</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -973,6 +1003,21 @@
     </ClInclude>
     <ClInclude Include="..\Public\ComputeShader.h">
       <Filter>01.Utility\06.ComputeShader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Picking.h">
+      <Filter>01.Utility\06. Picking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Terrain.h">
+      <Filter>02.Element\02.Component\02.VIBuffer\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PhysX_Manager.h">
+      <Filter>03.Management\21.PhysX_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RigidBody.h">
+      <Filter>02.Element\02.Component\07.RigidBody</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Character_Controller.h">
+      <Filter>03.Management\21.PhysX_Manager\CCT</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

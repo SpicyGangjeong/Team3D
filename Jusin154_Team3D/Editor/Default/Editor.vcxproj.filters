@@ -136,6 +136,15 @@
     <Filter Include="50.UI\Mission\Active_Icon">
       <UniqueIdentifier>{977fe4d3-c3b5-413c-80fe-777ece19453e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Terrain">
+      <UniqueIdentifier>{44a3ddc2-3993-48d6-840c-3da09daeab70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Env\Manger">
+      <UniqueIdentifier>{584466e9-fe1a-4a7d-a4ba-54d62ee1a7c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Level\60.PhysXLab">
+      <UniqueIdentifier>{943a760b-2861-45b7-87b8-462e1309c172}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -246,6 +255,21 @@
     <ClInclude Include="..\public\Active_Icon.h">
       <Filter>50.UI\Mission\Active_Icon</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Level_MapViewer.h">
+      <Filter>01.Level\30.MapViewer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapObject.h">
+      <Filter>02.GameObjects\Env</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Terrain.h">
+      <Filter>02.GameObjects\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapObject_Manager.h">
+      <Filter>02.GameObjects\Env\Manger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_PhysXLab.h">
+      <Filter>01.Level\60.PhysXLab</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -349,6 +373,21 @@
     <ClCompile Include="..\private\Active_Icon.cpp">
       <Filter>50.UI\Mission\Active_Icon</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Level_MapViewer.cpp">
+      <Filter>01.Level\30.MapViewer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapObject.cpp">
+      <Filter>02.GameObjects\Env</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Terrain.cpp">
+      <Filter>02.GameObjects\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapObject_Manager.cpp">
+      <Filter>02.GameObjects\Env\Manger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_PhysXLab.cpp">
+      <Filter>01.Level\60.PhysXLab</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Editor.rc">
@@ -371,9 +410,10 @@
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxPosTex.hlsl">
       <Filter>99.Define\SHADER</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxModelInstance.hlsl">
-    </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_UIEditor.hlsl">
+      <Filter>99.Define\SHADER</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxModelInstance.hlsl">
       <Filter>99.Define\SHADER</Filter>
     </FxCompile>
   </ItemGroup>

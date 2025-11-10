@@ -154,6 +154,11 @@
     <ClInclude Include="..\Public\DebugCamera.h" />
     <ClInclude Include="..\Public\Effect_Editor.h" />
     <ClInclude Include="..\Public\EditEffect.h" />
+    <ClInclude Include="..\public\Level_MapViewer.h" />
+    <ClInclude Include="..\public\MapObject.h" />
+    <ClInclude Include="..\public\MapObject_Manager.h" />
+    <ClInclude Include="..\public\Terrain.h" />
+    <ClInclude Include="..\Public\Level_PhysXLab.h" />
     <ClInclude Include="..\Public\TestEffect.h" />
     <ClInclude Include="..\Public\EffectObject.h" />
     <ClInclude Include="..\Public\DummyRect.h" />
@@ -192,6 +197,11 @@
     <ClCompile Include="..\Private\DebugCamera.cpp" />
     <ClCompile Include="..\Private\Effect_Editor.cpp" />
     <ClCompile Include="..\Private\EditEffect.cpp" />
+    <ClCompile Include="..\private\Level_MapViewer.cpp" />
+    <ClCompile Include="..\private\MapObject.cpp" />
+    <ClCompile Include="..\private\MapObject_Manager.cpp" />
+    <ClCompile Include="..\private\Terrain.cpp" />
+    <ClCompile Include="..\Private\Level_PhysXLab.cpp" />
     <ClCompile Include="..\Private\TestEffect.cpp" />
     <ClCompile Include="..\Private\EffectObject.cpp" />
     <ClCompile Include="..\Private\DummyRect.cpp" />

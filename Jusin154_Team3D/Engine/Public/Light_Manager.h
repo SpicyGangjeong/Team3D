@@ -17,7 +17,7 @@ public:
 	HRESULT Change_Level(_uint iLevel);
 
 private:
-	map<_wstring, list<class CLight*>*>* m_pLights = { nullptr };;
+	map<_wstring, list<class CLight*>*>* m_pLights = { nullptr };
 	_uint m_iNumLevel = {};
 private:
 	list<class CLight*>* Find_Lights(_uint iLevel, const _wstring& wstrLightKey);
