@@ -29,7 +29,7 @@ Texture2D g_ShadowTexture;
 Texture2D g_PreShadowTexture;
 Texture2D g_BlurTexture;
 Texture2D g_BlurXTexture;
-Texture2D g_ColorTexture;
+
 
 
 vector g_vLightDiffuse;
@@ -72,6 +72,7 @@ struct PS_OUT_BACKBUFFER
 {
     float4 vBackBuffer : SV_TARGET0;
 };
+
 PS_OUT_BACKBUFFER PS_MAIN_DEBUG(PS_IN In)
 {
     PS_OUT_BACKBUFFER Out;
@@ -306,37 +307,6 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     }
     
     Out.vBackBuffer += vColor;
-    
-    /* Color_Target */
-    
-    vector ColorTexture = g_ColorTexture.Sample(DefaultSampler, vTexcoord);
-    
-    int iOption = ColorTexture.a * 10;
-    
-    if (iOption == 0) // 0이면 수행하지 않음
-        return Out;
-
-    switch (iOption)
-    {
-        case 1:
-            Out.vBackBuffer.rgb += ColorTexture.rgb;
-            break;
-        case 2:
-            Out.vBackBuffer.rgb *= ColorTexture.rgb;
-            break;
-        case 3:
-            Out.vBackBuffer.rgb -= ColorTexture.rgb;
-            break;
-        case 4:
-            Out.vBackBuffer.rgb /= ColorTexture.rgb;
-            break;
-        case 5:
-            Out.vBackBuffer.rgb = ColorTexture.rgb;
-            break;
-        default:
-            break;
-    }
-    
     
     return Out;
 }
