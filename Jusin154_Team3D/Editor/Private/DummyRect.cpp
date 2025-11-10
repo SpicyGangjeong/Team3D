@@ -83,6 +83,8 @@ HRESULT CDummyRect::Ready_Components(void* pArg)
 			return E_FAIL;
 		}
 	}
+
+	CGameObject* asdf = this;
 	return S_OK;
 }
 

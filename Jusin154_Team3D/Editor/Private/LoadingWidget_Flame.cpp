@@ -1,23 +1,23 @@
 #include "pch.h"
-#include "LodingWidget1.h"
+#include "LoadingWidget_Flame.h"
 #include "GameInstance.h"
 
-CLodingWidget1::CLodingWidget1(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-    :CUIObject(pDevice, pContext)
+CLoadingWidget_Flame::CLoadingWidget_Flame(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+    :CElementObject(pDevice, pContext)
 {
 }
 
-CLodingWidget1::CLodingWidget1(const CLodingWidget1& rhs)
-    :CUIObject(rhs)
+CLoadingWidget_Flame::CLoadingWidget_Flame(const CLoadingWidget_Flame& rhs)
+    :CElementObject(rhs)
 {
 }
 
-HRESULT CLodingWidget1::Initialize_Prototype()
+HRESULT CLoadingWidget_Flame::Initialize_Prototype()
 {
     return S_OK;
 }
 
-HRESULT CLodingWidget1::Initialize(void* pArg)
+HRESULT CLoadingWidget_Flame::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
@@ -37,30 +37,33 @@ HRESULT CLodingWidget1::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	m_iImageFrameX = 6;
+	m_iImageFrameX = 3;
 	m_fFrame = 0.2f;
-
+	m_fTimeMult = 3.f;
 	return S_OK;
 }
 
-void CLodingWidget1::Priority_Update(_float fTimeDelta)
+void CLoadingWidget_Flame::Priority_Update(_float fTimeDelta)
 {
+	__super::Priority_Update(fTimeDelta);
 }
 
-void CLodingWidget1::Update(_float fTimeDelta)
+void CLoadingWidget_Flame::Update(_float fTimeDelta)
 {
-	m_fTime += fTimeDelta * 3.f;
+	m_fTime += fTimeDelta * m_fTimeMult;
+	__super::Update(fTimeDelta);
 }
 
-void CLodingWidget1::Late_Update(_float fTimeDelta)
+void CLoadingWidget_Flame::Late_Update(_float fTimeDelta)
 {
 	if (m_bVisible) {
 		_float4* vPos = (_float4*)(m_pTransformCom->Get_WorldMatrixPtr()->m[3]);
 		m_pGameInstance->Add_RenderGroup(RENDER::UI, this, *vPos, m_pTransformCom->Get_Radius());
+		__super::Late_Update(fTimeDelta);
 	}
 }
 
-HRESULT CLodingWidget1::Render()
+HRESULT CLoadingWidget_Flame::Render()
 {
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
@@ -78,12 +81,12 @@ HRESULT CLodingWidget1::Render()
 	return S_OK;
 }
 
-_vector CLodingWidget1::Get_WorldPostion()
+_vector CLoadingWidget_Flame::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
 }
 
-HRESULT CLodingWidget1::Bind_ShaderResources()
+HRESULT CLoadingWidget_Flame::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 	{
@@ -97,7 +100,7 @@ HRESULT CLodingWidget1::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pDiffuse_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
+	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
 	{
 		return E_FAIL;
 	}
@@ -120,13 +123,13 @@ HRESULT CLodingWidget1::Bind_ShaderResources()
 	return S_OK;
 }
 
-HRESULT CLodingWidget1::Ready_Components(void* pArg)
+HRESULT CLoadingWidget_Flame::Ready_Components(void* pArg)
 {
 	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("LodingWidget1"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("LodingWidget1"), reinterpret_cast<CComponent**>(&m_pTextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -138,41 +141,41 @@ HRESULT CLodingWidget1::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-CLodingWidget1* CLodingWidget1::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CLoadingWidget_Flame* CLoadingWidget_Flame::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CLodingWidget1* pInstance = new CLodingWidget1(pDevice, pContext);
+	CLoadingWidget_Flame* pInstance = new CLoadingWidget_Flame(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CLodingWidget1");
+		MSG_BOX("Failed to Created : CLoadingWidget_Flame");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CLodingWidget1::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CLoadingWidget_Flame::Clone(void* pArg, CGameObject* pOwner)
 {
-	CLodingWidget1* pInstance = new CLodingWidget1(*this);
+	CLoadingWidget_Flame* pInstance = new CLoadingWidget_Flame(*this);
 	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CLodingWidget1");
+		MSG_BOX("Failed to Cloned : CLoadingWidget_Flame");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CLodingWidget1::Free()
+void CLoadingWidget_Flame::Free()
 {
 	__super::Free();
 
-	SAFE_RELEASE(m_pDiffuse_TextureCom);
+	SAFE_RELEASE(m_pTextureCom);
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
-void CLodingWidget1::Describe_Entity()
+void CLoadingWidget_Flame::Describe_Entity()
 {
 }

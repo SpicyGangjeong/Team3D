@@ -43,6 +43,9 @@ HRESULT CUIObject::Initialize(void* pArg)
 	m_fSizeX = pDesc->fSizeX;
 	m_fSizeY = pDesc->fSizeY;
 
+	m_fOrigin_Posigion = _float2(pDesc->fX, pDesc->fY);
+
+
 	m_fWinSizeX = ViewportDesc.Width;
 	m_fWinSizeY = ViewportDesc.Height;
 
@@ -69,12 +72,14 @@ HRESULT CUIObject::Initialize(void* pArg)
 		pDesc->fY + ViewportDesc.Height * 0.5f,
 		0.f, 1.f));
 
+	m_fOrigin_Size = m_vScale;
+
 	// 직교 투영을 하기 위해서 먼저 뷰 행렬을 항등 행렬로 바꿔준다.
 	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
 
 	// 이제 투영 행렬을 직교 투영 행렬로 바꿔 주는데 화면의 사이즈를 받고 near 0 far 1로
 	// 설정을 한다. 
-	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(ViewportDesc.Width,ViewportDesc.Height, 0.f, 1.f));
+	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(ViewportDesc.Width, ViewportDesc.Height, 0.f, 1.f));
 
 	m_bVisible = true;
 
@@ -89,6 +94,13 @@ void CUIObject::Priority_Update(_float fTimeDelta)
 
 void CUIObject::Update(_float fTimeDelta)
 {
+	m_vScale = _float3(m_fSizeX, m_fSizeY, 1.f);
+	m_pTransformCom->Set_Scale(m_vScale);
+
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_fX - m_fWinSizeX * 0.5f,-m_fY + m_fWinSizeY * 0.5f,0.f, 1.f));
+
+	m_fCurrent_Posigion = XMVectorSet(m_fX, m_fY, 0.f, 1.f);
+
 }
 
 void CUIObject::Late_Update(_float fTimeDelta)
@@ -108,21 +120,68 @@ HRESULT CUIObject::Ready_Components(void* pArg)
 
 _vector CUIObject::Get_WorldPostion()
 {
-
 	return m_pOwner->Get_WorldPostion();
 }
 
-void CUIObject::Move_vector(_fvector vPos)
+void CUIObject::MoveX(_float fX)
 {
-	m_pTransformCom->Set_State(STATE::POSITION, vPos);
+	m_fX = fX;
 }
 
-void CUIObject::Move_float2(_float fX, _float fY)
+void CUIObject::MoveY(_float fY)
 {
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(
-		fX - m_fWinSizeX * 0.5f, 
-	   -fY + m_fWinSizeY * 0.5f,
-		0.f, 1.f));
+	m_fY = fY;
+}
+
+void CUIObject::SizeUpdate(_float fSizeX, _float fSizeY)
+{
+	m_fSizeX = fSizeX;
+	m_fSizeY = fSizeY;
+}
+
+void CUIObject::SizeUpdate_float(_float3 fSizeXY)
+{
+	m_fSizeX = fSizeXY.x;
+	m_fSizeY = fSizeXY.y;
+}
+
+void CUIObject::Set_TimeMult(_float Mult)
+{
+	m_fTimeMult = Mult;
+}
+
+_float CUIObject::Get_TimeMult()
+{
+	return m_fTimeMult;
+}
+
+void CUIObject::Visible(_bool bVisible)
+{
+}
+
+_bool CUIObject::Get_Visible()
+{
+	return m_bVisible;
+}
+
+_float2 CUIObject::Get_Origin_Position()
+{
+	return m_fOrigin_Posigion;
+}
+
+_vector CUIObject::Get_Current_Position()
+{
+	return m_fCurrent_Posigion;
+}
+
+_float3 CUIObject::Get_Origin_Size()
+{
+	return m_fOrigin_Size;
+}
+
+_float3 CUIObject::Get_Current_Size()
+{
+	return m_pTransformCom->Get_Scale();
 }
 
 void CUIObject::Free()
