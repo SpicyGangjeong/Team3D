@@ -35,9 +35,9 @@ public:
 
 private:
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
-	//CGameObject* Mission_Panel = { nullptr };
-	//CGameObject* Minimap_Panel = { nullptr };
-	CGameObject* Loading_Panel = { nullptr };
+	//CGameObject* m_pMission_Panel = { nullptr };
+	CGameObject* m_pMinimap_Panel = { nullptr };
+	CGameObject* m_pLoading_Panel = { nullptr };
 
 public:
 	static CGamePlay_Canvas* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
