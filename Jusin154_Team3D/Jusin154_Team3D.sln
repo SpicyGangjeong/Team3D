@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.0.11201.2 d18.0
+VisualStudioVersion = 18.0.11201.2
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00.Client", "00.Client", "{8C01FFE2-C92D-4226-B772-6D7F6F315996}"
 EndProject
@@ -31,7 +31,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SOLUTION", "SOLUTION", "{3F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ASSIMP", "ASSIMP", "{E6463257-6A19-46F5-9436-5E447F4702B8}"
 	ProjectSection(SolutionItems) = preProject
-		EngineSDK\Inc\Assimp\.editorconfig = EngineSDK\Inc\Assimp\.editorconfig
+		Engine\Public\Assimp\.editorconfig = Engine\Public\Assimp\.editorconfig
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client", "Client\Default\Client.vcxproj", "{AC297B17-64C9-4CD6-8986-EC121672D125}"
@@ -48,14 +48,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2133313A-E5E1-41CD-B976-21753FBCD083}.Debug|x64.ActiveCfg = Debug|x64
-		{2133313A-E5E1-41CD-B976-21753FBCD083}.Debug|x64.Build.0 = Debug|x64
-		{2133313A-E5E1-41CD-B976-21753FBCD083}.Debug|x86.ActiveCfg = Debug|Win32
-		{2133313A-E5E1-41CD-B976-21753FBCD083}.Debug|x86.Build.0 = Debug|Win32
-		{2133313A-E5E1-41CD-B976-21753FBCD083}.Release|x64.ActiveCfg = Release|x64
-		{2133313A-E5E1-41CD-B976-21753FBCD083}.Release|x64.Build.0 = Release|x64
-		{2133313A-E5E1-41CD-B976-21753FBCD083}.Release|x86.ActiveCfg = Release|Win32
-		{2133313A-E5E1-41CD-B976-21753FBCD083}.Release|x86.Build.0 = Release|Win32
 		{AC297B17-64C9-4CD6-8986-EC121672D125}.Debug|x64.ActiveCfg = Debug|x64
 		{AC297B17-64C9-4CD6-8986-EC121672D125}.Debug|x64.Build.0 = Debug|x64
 		{AC297B17-64C9-4CD6-8986-EC121672D125}.Debug|x86.ActiveCfg = Debug|Win32
@@ -72,6 +64,14 @@ Global
 		{F91AD988-A0C8-4169-AA7D-A7596A403CFF}.Release|x64.Build.0 = Release|x64
 		{F91AD988-A0C8-4169-AA7D-A7596A403CFF}.Release|x86.ActiveCfg = Release|Win32
 		{F91AD988-A0C8-4169-AA7D-A7596A403CFF}.Release|x86.Build.0 = Release|Win32
+		{2133313A-E5E1-41CD-B976-21753FBCD083}.Debug|x64.ActiveCfg = Debug|x64
+		{2133313A-E5E1-41CD-B976-21753FBCD083}.Debug|x64.Build.0 = Debug|x64
+		{2133313A-E5E1-41CD-B976-21753FBCD083}.Debug|x86.ActiveCfg = Debug|Win32
+		{2133313A-E5E1-41CD-B976-21753FBCD083}.Debug|x86.Build.0 = Debug|Win32
+		{2133313A-E5E1-41CD-B976-21753FBCD083}.Release|x64.ActiveCfg = Release|x64
+		{2133313A-E5E1-41CD-B976-21753FBCD083}.Release|x64.Build.0 = Release|x64
+		{2133313A-E5E1-41CD-B976-21753FBCD083}.Release|x86.ActiveCfg = Release|Win32
+		{2133313A-E5E1-41CD-B976-21753FBCD083}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -80,9 +80,9 @@ Global
 		{593936C7-9E24-43FC-B5E2-03F0CD04E748} = {E9E01406-59AE-4A37-818D-D1967C717E2C}
 		{3F425FBE-7D37-445C-9917-5FD87463390D} = {E9E01406-59AE-4A37-818D-D1967C717E2C}
 		{E6463257-6A19-46F5-9436-5E447F4702B8} = {E9E01406-59AE-4A37-818D-D1967C717E2C}
-		{2133313A-E5E1-41CD-B976-21753FBCD083} = {C8D5274F-AC00-46C7-1F8D-E88E81087A52}
 		{AC297B17-64C9-4CD6-8986-EC121672D125} = {8C01FFE2-C92D-4226-B772-6D7F6F315996}
 		{F91AD988-A0C8-4169-AA7D-A7596A403CFF} = {8F2ABBAF-8EC5-4CF8-8AD2-B09FB2AC9B14}
+		{2133313A-E5E1-41CD-B976-21753FBCD083} = {C8D5274F-AC00-46C7-1F8D-E88E81087A52}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {40231FDE-C82F-496F-B27F-38258EBDC83D}

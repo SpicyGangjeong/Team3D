@@ -29,6 +29,7 @@ Texture2D g_ShadowTexture;
 Texture2D g_PreShadowTexture;
 Texture2D g_BlurTexture;
 Texture2D g_BlurXTexture;
+Texture2D g_ColorTexture;
 
 
 vector g_vLightDiffuse;
@@ -229,10 +230,12 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     PS_OUT_BACKBUFFER Out;
     
     vector vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    
     if (0.f == vDiffuse.a)
     {
         discard;
     }
+    
     vector vShade = g_ShadeTexture.Sample(DefaultSampler, In.vTexcoord);
     
     vector vSpecular = g_SpecularTexture.Sample(DefaultSampler, In.vTexcoord);
@@ -240,7 +243,10 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     Out.vBackBuffer = vDiffuse * vShade + vSpecular;
     
     vector vDepthDesc = g_DepthTexture.Sample(DefaultSampler, In.vTexcoord);
+    
+
     float fViewZ = vDepthDesc.y * g_fFar;
+    
     
     vector vPosition, vPreShadowPosition;
     
@@ -267,9 +273,11 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     vTexcoord.y = (vPosition.y / vPosition.w) * -0.5f + 0.5f;
     vPreShadowTexcoord.x = (vPreShadowPosition.x / vPreShadowPosition.w) * 0.5f + 0.5f;
     vPreShadowTexcoord.y = (vPreShadowPosition.y / vPreShadowPosition.w) * -0.5f + 0.5f;
+    
     /* 광원의 NDC에서 샘플링 */
     float fVisibility_Dynamic = ShadowVisibility_hwPCF(g_ShadowTexture, vPosition, float2(g_iMaxShadowWidth, g_iMaxShadowHeight), 0.0005f);
     float fVisibility_Static = ShadowVisibility_hwPCF(g_PreShadowTexture, vPreShadowPosition, float2(g_iMaxShadowWidth, g_iMaxShadowHeight), 0.0005f);
+    
     Out.vBackBuffer.rgb *= lerp(0.5f, 1.f, min(fVisibility_Dynamic, fVisibility_Static));
     //float fShadowDepth = g_ShadowTexture.Sample(DefaultSampler, vTexcoord).x;
     //float fPreShadowDepth = g_PreShadowTexture.Sample(DefaultSampler, vPreShadowTexcoord).x;
@@ -292,12 +300,43 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     for (int i = -6; i < 7; ++i)
     {
         vTexcoord.x = In.vTexcoord.x;
-        vTexcoord.y = In.vTexcoord.y + i / g_vResolution.y;
+        vTexcoord.y = In.vTexcoord.y + (float)i / g_vResolution.y;
         
         vColor += g_fWeights[i + 6] * g_BlurXTexture.Sample(BorderZeroSampler, vTexcoord);
     }
     
     Out.vBackBuffer += vColor;
+    
+    /* Color_Target */
+    
+    vector ColorTexture = g_ColorTexture.Sample(DefaultSampler, vTexcoord);
+    
+    int iOption = ColorTexture.a * 10;
+    
+    if (iOption == 0) // 0이면 수행하지 않음
+        return Out;
+
+    switch (iOption)
+    {
+        case 1:
+            Out.vBackBuffer.rgb += ColorTexture.rgb;
+            break;
+        case 2:
+            Out.vBackBuffer.rgb *= ColorTexture.rgb;
+            break;
+        case 3:
+            Out.vBackBuffer.rgb -= ColorTexture.rgb;
+            break;
+        case 4:
+            Out.vBackBuffer.rgb /= ColorTexture.rgb;
+            break;
+        case 5:
+            Out.vBackBuffer.rgb = ColorTexture.rgb;
+            break;
+        default:
+            break;
+    }
+    
     
     return Out;
 }
@@ -323,7 +362,7 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_X(PS_IN In)
         vColor += g_fWeights[i + 6] * g_BlurTexture.Sample(BorderZeroSampler, vTexcoord);
     }
     
-    Out.vBlurX = vColor;
+    Out.vBlurX = vColor; 
     
     return Out;
 }
@@ -370,6 +409,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_COMBINED();
     }
+
     pass BlurPass
     {
         SetRasterizerState(RS_Default);
