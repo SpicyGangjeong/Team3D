@@ -21,12 +21,18 @@ HRESULT CMonster::Initialize_Prototype()
 
 HRESULT CMonster::Initialize(void* pArg)
 {
+	OBJECT_DESC* pDesc = static_cast<OBJECT_DESC*>(pArg);
+
+	m_strModelPrototypeTag = pDesc->pModelPrototypeTag;
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
+
+	m_pModelCom->Set_AnimationIndex(0);
 
 	return S_OK;
 }
@@ -38,10 +44,14 @@ void CMonster::Priority_Update(_float fTimeDelta)
 
 void CMonster::Update(_float fTimeDelta)
 {
+	m_pModelCom->Play_Animation(fTimeDelta);
 }
 
 void CMonster::Late_Update(_float fTimeDelta)
 {
+	_float4 vPos;
+	XMStoreFloat4(&vPos, Get_WorldPostion());
+	m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this, vPos, 20.f);
 }
 
 HRESULT CMonster::Render()
@@ -81,6 +91,11 @@ HRESULT CMonster::Ready_Components()
 {
 	__super::Ready_Components(nullptr);
 
+	/* Com_Model */
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_strModelPrototypeTag,
+		reinterpret_cast<CComponent**>(&m_pModelCom))))
+		return E_FAIL;
+
 	/* Com_Shader */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_ANIMMESH,
 		reinterpret_cast<CComponent**>(&m_pShaderCom))))
@@ -106,6 +121,33 @@ HRESULT CMonster::Bind_ShaderResources()
 	}
 	return S_OK;
 }
+
+CMonster* CMonster::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+{
+	CMonster* pInstance = new CMonster(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize_Prototype()))
+	{
+		MSG_BOX("Failed to Created : CMonster");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+CGameObject* CMonster::Clone(void* pArg, CGameObject* pOwner)
+{
+	CMonster* pInstance = new CMonster(*this);
+
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("Failed to Cloned : CMonster");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
 
 
 void CMonster::Free()

@@ -4,10 +4,20 @@
 #include "GameInstance.h"
 #include "DummyRect.h"
 #include "MainApp.h"
-
 #include "Dummy_Cube.h"
+
+#pragma region OBJECT_HEADER
+
+#include "RootModelPart.h"
+#include "Head.h"
+#include "Body.h"
+#include "Hair.h"
 #include "Dummy_Goblin.h"
+#include "Dummy_Goblin.h"
+#include "Monster.h"
 #include <filesystem>
+
+#pragma endregion
 
 #pragma region UI
 
@@ -18,17 +28,11 @@
 #include "Mission_Key.h"
 #include "Mission_KeyHold.h"
 #include "Mouse_Cursor.h"
-#include "RootModelPart.h"
-#include "Head.h"
-#include "Body.h"
-#include "Hair.h"
-#include "Dummy_Goblin.h"
+
 #include "Dummy_Cube.h"
 #include "LodingWidget1.h"
 #include "MiniMap_TrimBorder.h"
 #include "Active_Icon.h"
-#include "TombProtector.h"
-#include "Troll.h"
 
 #pragma endregion
 
@@ -520,12 +524,8 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	if (FAILED(m_pGameInstance->Add_Prototype<CHair>(g_iStaticLevel, CHair::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	/* For.Prototype_GameObject_TombProtector */
-	if (FAILED(m_pGameInstance->Add_Prototype<CTombProtector>(g_iStaticLevel, CTombProtector::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
-	/* For.Prototype_GameObject_Troll */
-	if (FAILED(m_pGameInstance->Add_Prototype<CTroll>(g_iStaticLevel, CTroll::Create(m_pDevice, m_pContext))))
+	/* For.Prototype_GameObject_Monster */
+	if (FAILED(m_pGameInstance->Add_Prototype<CMonster>(g_iStaticLevel, CMonster::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Dummy_Cube */

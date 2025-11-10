@@ -10,9 +10,14 @@ NS_END
 
 NS_BEGIN(Editor)
 
-class CMonster abstract : public CGameObject
+class CMonster final : public CGameObject
 {
-protected:
+public:
+	typedef struct tagObjectDesc
+	{
+		const _tchar* pModelPrototypeTag;
+	}OBJECT_DESC;
+private:
 	CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CMonster(const CMonster& Prototype);
 	virtual ~CMonster() = default;
@@ -25,9 +30,13 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
-protected:
+public:
+	_wstring& Get_PrototypeTag() { return m_strModelPrototypeTag; }
+
+private:
 	CShader*	m_pShaderCom = { nullptr };
 	CModel*		m_pModelCom = { nullptr };
+	_wstring	m_strModelPrototypeTag;
 	_bool		m_bRimLight = { true };
 	_float		m_fRimLightPower = { 3.2f };
 	_float		m_fRimLightStrength = { 3.04f };
@@ -38,7 +47,8 @@ private:
 	HRESULT Bind_ShaderResources();
 
 public:
-	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr)PURE;
+	static CMonster* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr) override;
 	virtual void Free() override;
 	virtual void Describe_Entity() override;
 };
