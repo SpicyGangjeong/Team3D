@@ -132,42 +132,26 @@ void CLevel_ObjectViewer::Add_Human()
 
 void CLevel_ObjectViewer::Show_ModelFilePath()
 {
-	/*GUI::Begin("Model_List");
+	GUI::Begin("Model_List");
 	if(GUI::BeginTabBar("Model_List"))
 	{
-		if (GUI::BeginTabItem("Assimp_Model"))
-		{
-			if (m_pGameInstance->ModelFilePathCount() > 0)
-			{
-				for (_uint i = 0; i < m_pGameInstance->ModelFilePathCount(); i++)
-				{
-					GUI::Text(m_pGameInstance->Load_ModelFilePath(i));
-					GUI::SameLine();
-
-					std::string label = "Binary##" + std::to_string(i);
-					if (GUI::Button(label.c_str()))
-					{
-						m_pGameInstance->SaveAssimpModel(m_pGameInstance->Load_ModelFilePath(i));
-					}
-				}
-				GUI::EndTabItem();
-			}
-		}
-
-		if (GUI::BeginTabItem("Binary_Model"))
+		if (GUI::BeginTabItem("Model"))
 		{
 			if (m_pGameInstance->BinaryModelFilePathCount() > 0)
 			{
 				for (_uint i = 0; i < m_pGameInstance->BinaryModelFilePathCount(); i++)
 				{
-					GUI::Text(m_pGameInstance->Load_BinaryModelFilePath(i));
+					if (GUI::Button(m_pGameInstance->Load_BinaryModelFilePath(i)))
+					{
+
+					}
 				}
 			}
 			GUI::EndTabItem();
 		}
 	}
 	GUI::EndTabBar();
-	GUI::End();*/
+	GUI::End();
 }
 
 void CLevel_ObjectViewer::Show_AnimList()

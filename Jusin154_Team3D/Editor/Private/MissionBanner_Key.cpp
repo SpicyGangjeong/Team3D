@@ -1,9 +1,6 @@
 #include "pch.h"
 #include "MissionBanner_Key.h"
 #include "GameInstance.h"
-#include "Mission_KeyHold.h"
-#include "Mission_Key.h"
-#include "Active_Icon.h"
 
 CMissionBanner_Key::CMissionBanner_Key(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     :CUIObject(pDevice, pContext)
@@ -118,18 +115,6 @@ HRESULT CMissionBanner_Key::Ready_Components(void* pArg)
 		return E_FAIL;
 	}
 	if (FAILED(Add_Asset_Component(g_iStaticLevel, FX_UIEDITOR, (CComponent**)&m_pShaderCom, nullptr)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMission_KeyHold>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &m_pMission_KeyHold)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMission_Key>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &m_pMission_Key)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CActive_Icon>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &m_pActive_Icon)))
 	{
 		return E_FAIL;
 	}

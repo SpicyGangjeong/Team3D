@@ -170,6 +170,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\private\CanvasObject.cpp" />
     <ClCompile Include="..\Private\Cell.cpp" />
     <ClCompile Include="..\Private\Channel.cpp" />
     <ClCompile Include="..\Private\Character_Controller.cpp">
@@ -182,6 +183,7 @@
     <ClCompile Include="..\Private\ComputeShader.cpp" />
     <ClCompile Include="..\Private\ContainerObject.cpp" />
     <ClCompile Include="..\Private\DebugDraw.cpp" />
+    <ClCompile Include="..\private\ElementObject.cpp" />
     <ClCompile Include="..\Private\GameInstance.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </ExcludedFromBuild>
@@ -246,6 +248,7 @@
     <ClCompile Include="..\Private\Mouse_Manager.cpp" />
     <ClCompile Include="..\Private\MyTools.cpp" />
     <ClCompile Include="..\Private\Navigation.cpp" />
+    <ClCompile Include="..\private\PanelObject.cpp" />
     <ClCompile Include="..\Private\PartObject.cpp" />
     <ClCompile Include="..\Private\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -382,6 +385,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\public\CanvasObject.h" />
     <ClInclude Include="..\Public\Cell.h" />
     <ClInclude Include="..\Public\Channel.h" />
     <ClInclude Include="..\Public\Character_Controller.h">
@@ -415,6 +419,7 @@
     <ClInclude Include="..\Public\DirectXTK\VertexTypes.h" />
     <ClInclude Include="..\Public\DirectXTK\WICTextureLoader.h" />
     <ClInclude Include="..\Public\DirectXTK\XboxDDSTextureLoader.h" />
+    <ClInclude Include="..\public\ElementObject.h" />
     <ClInclude Include="..\Public\Engine_Define.h" />
     <ClInclude Include="..\Public\Engine_Enum.h" />
     <ClInclude Include="..\Public\Engine_Function.h" />
@@ -461,6 +466,7 @@
     <ClInclude Include="..\Public\Mouse_Manager.h" />
     <ClInclude Include="..\Public\MyTools.h" />
     <ClInclude Include="..\Public\Navigation.h" />
+    <ClInclude Include="..\public\PanelObject.h" />
     <ClInclude Include="..\Public\PartObject.h" />
     <ClInclude Include="..\Public\pch.h" />
     <ClInclude Include="..\Public\PhysX_Manager.h" />

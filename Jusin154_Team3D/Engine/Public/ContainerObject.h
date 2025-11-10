@@ -50,8 +50,10 @@ protected:
 			SAFE_RELEASE(pPartObject);
 			return E_FAIL;
 		}
-		*ppOut = pPartObject;
-		SAFE_ADDREF(pPartObject);
+		if (nullptr != ppOut) {
+			*ppOut = pPartObject;
+			SAFE_ADDREF(pPartObject);
+		}
 		return S_OK;
 	}
 

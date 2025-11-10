@@ -30,9 +30,6 @@ private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
-	class CGameObject* m_pMission_KeyHold = { nullptr };
-	class CGameObject* m_pMission_Key = { nullptr };
-	class CGameObject* m_pActive_Icon = { nullptr };
 
 public:
 	static CMissionBanner_Key* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
