@@ -3,6 +3,8 @@
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 Texture2D g_ColorTexture;
+Texture2D g_DiffuseTexture;
+
 
 struct VS_IN
 {
@@ -48,39 +50,41 @@ PS_OUT_BACKBUFFER PS_OUT_LASTCOLOR(PS_IN In)
     
     Out.vBackBuffer = float4(0.f, 0.f, 0.f, 0.f);
     
-    vector ColorTexture = g_ColorTexture.Sample(DefaultSampler, In.vTexcoord);
+    vector vColorTexture = g_ColorTexture.Sample(DefaultSampler, In.vTexcoord);
     
-    if (0.f == ColorTexture.a)
+    vector vDiffuseTexture = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    
+    
+    if (0.f == vColorTexture.a)
     {
         discard;
     }
     
-    int iOption = ColorTexture.a * 10;
+    int iOption = vColorTexture.a * 10;
     
 
     switch (iOption)
     {
         case 1:
-            Out.vBackBuffer.rgb += ColorTexture.rgb;
+            Out.vBackBuffer.rgb = vColorTexture.rgb;
             break;
         case 2:
-            Out.vBackBuffer.rgb *= ColorTexture.rgb;
+            Out.vBackBuffer.rgb *= vColorTexture.rgb;
             break;
         case 3:
-            Out.vBackBuffer.rgb -= ColorTexture.rgb;
+            Out.vBackBuffer.rgb -= vColorTexture.rgb;
             break;
         case 4:
-            Out.vBackBuffer.rgb /= ColorTexture.rgb;
+            Out.vBackBuffer.rgb /= vColorTexture.rgb;
             break;
         case 5:
-            Out.vBackBuffer.rgb = ColorTexture.rgb;
+            Out.vBackBuffer.rgb += vColorTexture.rgb;
             break;
         default:
             break;
     }
     
-
-
+    
     return Out;
 }
 
@@ -90,7 +94,7 @@ technique11 DefaultTechnique
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
-        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_OUT_LASTCOLOR();

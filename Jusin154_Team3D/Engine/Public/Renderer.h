@@ -58,6 +58,7 @@ private:
 	void Render_LightAcc();
 	void Render_Blur(); 
 	void Render_Combined();
+	void Render_Effect();
 	void Render_NonLight();
 	void Render_Blend();
 	void Render_UI();

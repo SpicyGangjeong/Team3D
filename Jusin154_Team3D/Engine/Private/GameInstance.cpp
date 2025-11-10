@@ -439,6 +439,11 @@ HRESULT CGameInstance::Begin_MRT(const _wstring& strMRTTag, ID3D11DepthStencilVi
 	return m_pRenderTarget_Manager->Begin_MRT(strMRTTag, pDSV);
 }
 
+HRESULT CGameInstance::Begin_MRT_Include_BackBuffer(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV)
+{
+	return m_pRenderTarget_Manager->Begin_MRT_Include_BackBuffer(strMRTTag, pDSV);
+}
+
 HRESULT CGameInstance::End_MRT()
 {
 	return m_pRenderTarget_Manager->End_MRT();
