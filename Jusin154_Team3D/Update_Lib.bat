@@ -19,10 +19,10 @@ xcopy			/y		.\Engine\Bin\fMod\fMod.dll					.\Client\Bin\Release\
 xcopy			/y		.\Engine\Bin\fMod\fMod.dll					.\Editor\Bin\Release\
 
 :: PhysX
-xcopy			/y 		.\Engine\Bin\PhysX\debug\*.dll					.\Editor\Bin\debug\
-xcopy			/y 		.\Engine\Bin\PhysX\release\*.dll				.\Editor\Bin\release\
-xcopy			/y 		.\Engine\Bin\PhysX\debug\*.dll					.\Client\Bin\debug\
-xcopy			/y 		.\Engine\Bin\PhysX\release\*.dll				.\Client\Bin\release\
+xcopy			/y 		.\Engine\Bin\PhysX\PhysX_debug\*.dll				.\Editor\Bin\debug\
+xcopy			/y 		.\Engine\Bin\PhysX\PhysX_release\*.dll				.\Editor\Bin\release\
+xcopy			/y 		.\Engine\Bin\PhysX\PhysX_debug\*.dll				.\Client\Bin\debug\
+xcopy			/y 		.\Engine\Bin\PhysX\PhysX_release\*.dll				.\Client\Bin\release\
 
 :: assimp
 :: engine에서 assimp의 dll을 읽어오기 때문에 client에서 사실상 사용은 안하더라도

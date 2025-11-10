@@ -142,6 +142,8 @@ HRESULT CModel::Bind_BoneMatrices(_uint iMeshIndex, CShader* pShader, const _cha
 
 _bool CModel::Play_Animation(_float fTimeDelta)
 {
+	if (!m_bPlayAnim)
+		return false;
 	if (-1 == m_iCurrentAnimIndex  // 정지 혹은 시작을 안시켜준 애님
 		|| m_iCurrentAnimIndex >= (_int)m_iNumAnimations)  // 애님 인덱스 초과됨
 	{
@@ -274,6 +276,31 @@ void CModel::Get_BoneMatrices(_float4x4* pOut)
 	for (_uint i = 0; i < m_Bones.size(); ++i) {
 		pOut[i] = *m_Bones[i]->Get_CombinedTransformationMatrixPtr();
 	}
+}
+
+void CModel::Reset_CurrentTrackPosition()
+{
+	m_Animations[m_iCurrentAnimIndex]->Reset_CurrentTrackPosition();
+}
+
+const _char* CModel::Get_AnimList(_uint iIndex)
+{
+	return m_Animations[iIndex]->Get_SZName();
+}
+
+_float CModel::Get_CurrentTrackPosition()
+{
+	return m_Animations[m_iCurrentAnimIndex]->Get_CurrentTrackPosition();
+}
+
+_float CModel::Get_AnimSpeed()
+{
+	return m_Animations[m_iCurrentAnimIndex]->Get_AnimSpeed();
+}
+
+void CModel::Set_AnimSpeed(_float fSpeed)
+{
+	m_Animations[m_iCurrentAnimIndex]->Set_AnimSpeed(fSpeed);
 }
 
 HRESULT CModel::Render(_uint iMeshIndex)
@@ -439,11 +466,11 @@ bool CModel::SaveAssimpModel(const _char* filename)
 	if (!m_pAIScene) return false;
 
 	_char szModel[MAX_PATH] = {};
-	_char szName[MAX_PATH] = {};
-	_splitpath_s(filename, nullptr, 0, nullptr, 0, szName, MAX_PATH, nullptr, 0);
-	strcat_s(szModel, sizeof(_char) * MAX_PATH, szName);
+	_char szExt[MAX_PATH] = {};
+	_splitpath_s(filename, nullptr, 0, nullptr, 0, nullptr, 0, szExt, MAX_PATH);
+	strcat_s(szModel, sizeof(_char) * MAX_PATH, szExt);
 
-	_string savePath = string("../Bin/Resources/SaveFile/") + szModel;
+	_string savePath = filename; 
 
 	SaveModel modelData;
 	modelData.MeshCount = m_pAIScene->mNumMeshes;
@@ -690,8 +717,6 @@ bool CModel::SaveAssimpModel(const _char* filename)
 
 	fclose(fp);
 
-	MSG_BOX("Save Succeed");
-
 	return true;
 }
 _int CModel::SaveNodeRecursive(const aiNode* pAINode, std::vector<SaveNode>& outNodes, _int parentIndex)
@@ -802,7 +827,15 @@ HRESULT CModel::Initialize_Prototype()
 
 HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix)
 {
-	LoadData(pModelFilePath);
+	if (!LoadData(pModelFilePath))
+	{
+		_char Temp[256];
+		strcpy_s(Temp, pModelFilePath);
+		strcat_s(Temp,".fbx");
+		Assimp_Model_Load(Temp, eType, PreTransformMatrix, 0);
+		SaveAssimpModel(pModelFilePath);
+		return S_OK;
+	}
 	m_pSaveModel = m_pGameInstance->Load_SaveModel(pModelFilePath);
 
 	m_eType = eType;
@@ -932,46 +965,6 @@ bool CModel::LoadData(const _char* filename)
 			}
 		}
 		
-
-		/*_uint diffuseCount = 0;
-		fread(&diffuseCount, sizeof(_uint), 1, fp);
-		mat.DiffusePath.resize(diffuseCount);
-		for (_uint j = 0; j < diffuseCount; j++)
-		{
-			_uint len = 0;
-			fread(&len, sizeof(_uint), 1, fp);
-			std::string temp;
-			temp.resize(len);
-			fread(&temp[0], sizeof(char), len, fp);
-			mat.DiffusePath[j] = temp;
-		}
-
-		_uint normalCount = 0;
-		fread(&normalCount, sizeof(_uint), 1, fp);
-		mat.NormalPath.resize(normalCount);
-		for (_uint j = 0; j < normalCount; j++)
-		{
-			_uint len = 0;
-			fread(&len, sizeof(_uint), 1, fp);
-			std::string temp;
-			temp.resize(len);
-			fread(&temp[0], sizeof(char), len, fp);
-			mat.NormalPath[j] = temp;
-		}
-
-		_uint specularCount = 0;
-		fread(&specularCount, sizeof(_uint), 1, fp);
-		mat.SpecularPath.resize(specularCount);
-		for (_uint j = 0; j < specularCount; j++)
-		{
-			_uint len = 0;
-			fread(&len, sizeof(_uint), 1, fp);
-			std::string temp;
-			temp.resize(len);
-			fread(&temp[0], sizeof(char), len, fp);
-			mat.SpecularPath[j] = temp;
-		}*/
-
 		NewModel.Materials.push_back(mat);
 	}
 

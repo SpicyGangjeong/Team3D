@@ -31,6 +31,7 @@ private:
 #endif
 private:
 	class CShader* m_pShader = { nullptr };
+	class CShader* m_pLastColorShader = { nullptr };
 	class CVIBuffer_Rect* m_pVIBuffer = { nullptr };
 
 private:
@@ -60,6 +61,7 @@ private:
 	void Render_NonLight();
 	void Render_Blend();
 	void Render_UI();
+	void Render_LastColor();
 
 #ifdef _DEBUG
 private:

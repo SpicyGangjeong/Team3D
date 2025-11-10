@@ -151,6 +151,12 @@
     <Filter Include="01.Level\60.PhysXLab">
       <UniqueIdentifier>{943a760b-2861-45b7-87b8-462e1309c172}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\ModelParts\RootModelPart">
+      <UniqueIdentifier>{a9a39942-3c35-4932-b845-e8d1787f3ec3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster">
+      <UniqueIdentifier>{a2944f33-1db0-480a-b793-7ec7f81e8116}</UniqueIdentifier>
+    </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Loding_Panel\LoadingWidget_Flame">
       <UniqueIdentifier>{c347da03-98f1-4095-a4e4-2c840c308916}</UniqueIdentifier>
     </Filter>
@@ -219,11 +225,20 @@
     <ClInclude Include="..\Public\Body.h">
       <Filter>02.GameObjects\ModelParts\Body</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Head.h">
+      <Filter>02.GameObjects\ModelParts\Head</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Hair.h">
+      <Filter>02.GameObjects\ModelParts\Hair</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\ModelParts.h">
       <Filter>02.GameObjects\ModelParts</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Head.h">
-      <Filter>02.GameObjects\ModelParts\Head</Filter>
+    <ClInclude Include="..\Public\RootModelPart.h">
+      <Filter>02.GameObjects\ModelParts\RootModelPart</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Monster.h">
+      <Filter>02.GameObjects\Monster</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_EffectViewer.h">
       <Filter>01.Level\40.EffectViewer</Filter>
@@ -349,9 +364,6 @@
     <ClCompile Include="..\Private\Body.cpp">
       <Filter>02.GameObjects\ModelParts\Body</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\ModelParts.cpp">
-      <Filter>02.GameObjects\ModelParts</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Head.cpp">
       <Filter>02.GameObjects\ModelParts\Head</Filter>
     </ClCompile>
@@ -426,6 +438,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\Level_PhysXLab.cpp">
       <Filter>01.Level\60.PhysXLab</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Hair.cpp">
+      <Filter>02.GameObjects\ModelParts\Hair</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ModelParts.cpp">
+      <Filter>02.GameObjects\ModelParts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RootModelPart.cpp">
+      <Filter>02.GameObjects\ModelParts\RootModelPart</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Monster.cpp">
+      <Filter>02.GameObjects\Monster</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
