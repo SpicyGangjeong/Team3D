@@ -43,16 +43,21 @@ private:
 	_float					m_fEndTime{};
 	_float					m_fDelayTime{};
 	_float					m_fTimeMult{};
+	_float					m_fAlpha{};
 
 	_float2					m_fPanelPos{};
 	_float2					m_fPanelSize{};
 	_float3					m_fPanelSizeXY{};
 	_float					m_fPanelTimeMult{};
+	_float					m_fPanelAlphA{};
+	_float					m_fAlphaTime{};
 
 	_int					m_iElementCount{};
 	vector<wstring>			m_pElementNamewstring;
 	vector<string>			m_pElementNamestring;
 	vector<const _char*>	m_pElementName;
+	_bool					m_bElementFadeIn = { false };
+	_bool					m_bElementFadeOut = { false };
 
 	_int					m_iPanelCount{};
 	vector<wstring>			m_iPanelNamewstring;

@@ -42,6 +42,8 @@ HRESULT CLoadingWidget_Flame::Initialize(void* pArg)
 	m_fEndTime = 1.8f;
 	m_fTimeMult = 3.f;
 	m_fDelay = 1.f;
+	m_fAlpha = 1.f;
+	m_fAlphaTime = 3.f;
 	return S_OK;
 }
 
@@ -61,20 +63,49 @@ void CLoadingWidget_Flame::Update(_float fTimeDelta)
 		return;
 	}
 
-	if (m_fDelay >= 0.f)
+	if (m_fAlpha >= 1.f)
 	{
-		m_fDelay -= fTimeDelta * m_fTimeMult;
+		if (m_fDelay >= 0.f)
+		{
+			m_fDelay -= fTimeDelta * m_fTimeMult;
+		}
+		else
+		{
+			m_fTime += fTimeDelta * m_fTimeMult;
+		}
+
+		if (m_fTime >= m_fEndTime)
+		{
+			m_fTime = 0.f;
+			m_fDelay = 1.f;
+			m_bFadeOut = true;
+		}
 	}
-	else
+
+	if (m_bFadeIn == true)
 	{
-		m_fTime += fTimeDelta * m_fTimeMult;
+		if (m_fAlpha <= 1.f)
+			m_fAlpha += fTimeDelta * m_fAlphaTime;
+
+		if (m_fAlpha >= 1.f)
+		{
+			m_bFadeIn = false;
+			m_fAlpha = 1.f;
+		}
 	}
-	
-	if (m_fTime >= m_fEndTime)
+
+	if (m_bFadeOut == true)
 	{
-		m_fTime = 0.f;
-		m_fDelay = 1.f;
+		if (m_fAlpha >= 0.f)
+			m_fAlpha -= fTimeDelta;
+
+		if (m_fAlpha <= 0.f)
+		{
+			m_bFadeOut = false;
+			m_fAlpha = 0.f;
+		}
 	}
+
 
 	__super::Update(fTimeDelta);
 }
@@ -145,10 +176,10 @@ HRESULT CLoadingWidget_Flame::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	//if (FAILED(m_pShaderCom->Bind_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
+	{
+		return E_FAIL;
+	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_iImageCount", &m_iImageFrameX, sizeof(_int))))
 	{
 		return E_FAIL;

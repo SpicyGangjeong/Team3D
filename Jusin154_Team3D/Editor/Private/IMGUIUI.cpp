@@ -116,10 +116,14 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		m_fSize.y = static_cast<CElementObject*>(m_pElementObject)->Get_Current_Size().y;
 
 		m_fSizeXY = static_cast<CElementObject*>(m_pElementObject)->Get_Current_Size();
+		m_fAlpha = static_cast<CElementObject*>(m_pElementObject)->Get_Alpha();
 
 		m_fEndTime = static_cast<CElementObject*>(m_pElementObject)->Get_EndTime();
 		m_fDelayTime = static_cast<CElementObject*>(m_pElementObject)->Get_DelayTime();
 		m_fTimeMult = static_cast<CElementObject*>(m_pElementObject)->Get_TimeMult();
+		m_bElementFadeIn = static_cast<CElementObject*>(m_pElementObject)->Get_FadeIn();
+		m_bElementFadeOut = static_cast<CElementObject*>(m_pElementObject)->Get_FadeOut();
+		m_fAlphaTime = static_cast<CElementObject*>(m_pElementObject)->Get_AlphaTime();
 	}
 	GUI::Begin("Current_PanelObject_Info");
 	if (m_pGamePlay_Canvas != nullptr)
@@ -222,11 +226,19 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		{
 			static_cast<CElementObject*>(m_pElementObject)->Visible(m_bElementVisible);
 		}
-
+		if (GUI::Button("FadeIn"))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->Set_FadeIn();
+		}		
+		if (GUI::Button("FadeOut"))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->Set_FadeOut();
+		}
 		GUI::Text("Origin Position : %.1f, %.1f", static_cast<CElementObject*>(m_pElementObject)->Get_Origin_Position().x, static_cast<CUIObject*>(m_pElementObject)->Get_Origin_Position().y);
 		GUI::Text("Current Position : %.1f, %.1f", static_cast<CElementObject*>(m_pElementObject)->Get_Current_Position().m128_f32[0], static_cast<CUIObject*>(m_pElementObject)->Get_Current_Position().m128_f32[1]);
 		GUI::Text("Origin Size : %.1f, %.1f", static_cast<CElementObject*>(m_pElementObject)->Get_Origin_Size().x, static_cast<CUIObject*>(m_pElementObject)->Get_Origin_Size().y);
 		GUI::Text("Current Size : %.1f, %.1f", static_cast<CElementObject*>(m_pElementObject)->Get_Current_Size().x, static_cast<CUIObject*>(m_pElementObject)->Get_Current_Size().y);
+		GUI::Text("Alpha : %.1f", m_fAlpha);
 
 		GUI::Text("Position");
 		if (GUI::SliderFloat("X##Pos", &m_fPos.x, -1920.f, 1920.f))
@@ -269,6 +281,11 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		if (GUI::DragFloat("TimeMult", &m_fTimeMult, 0.01f, 0.f, 10.f))
 		{
 			static_cast<CElementObject*>(m_pElementObject)->Set_TimeMult(m_fTimeMult);
+		}
+
+		if (GUI::DragFloat("AlphaTime", &m_fAlphaTime, 0.01f, 0.f, 10.f))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->Set_AlphaTime(m_fAlphaTime);
 		}
 	}
 	GUI::End();

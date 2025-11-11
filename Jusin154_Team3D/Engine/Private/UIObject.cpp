@@ -190,6 +190,57 @@ _bool CUIObject::Chack_Visible()
 	return _bool();
 }
 
+void CUIObject::Set_FadeIn()
+{
+	m_bFadeIn = true;
+	m_bFadeOut = false;
+}
+
+void CUIObject::Set_FadeOut()
+{
+	m_bFadeIn = false;
+	m_bFadeOut = true;
+}
+
+_bool CUIObject::Get_FadeIn()
+{
+	return _bool();
+}
+
+_bool CUIObject::Get_FadeOut()
+{
+	return _bool();
+}
+
+void CUIObject::Set_Alpha(_float fAlpha)
+{
+	m_fAlpha = fAlpha;
+}
+
+void CUIObject::Set_AlphaTime(_float fAlpha)
+{
+	m_fAlphaTime = fAlpha;
+}
+
+void CUIObject::Set_OwnerAlpha(_float fAlpha)
+{
+	m_fOwnerAlpha = fAlpha;
+}
+
+_float CUIObject::Get_Alpha()
+{
+	return m_fAlpha;
+}
+
+_float CUIObject::Get_OwnerAlpha()
+{
+	return m_fOwnerAlpha;
+}
+
+_float CUIObject::Get_AlphaTime()
+{
+	return m_fAlphaTime;
+}
 _float2 CUIObject::Get_Origin_Position()
 {
 	return m_fOrigin_Posigion;

@@ -8,7 +8,8 @@ int g_iImageCount;
 float g_fFar;
 float g_fTime;
 float g_fFrame;
-float g_Alpha;
+float g_fAlpha;
+float g_fOwnerAlpha;
 float g_fDeltaU;
 float g_fDeltaV;
 uint g_iIndexU;
@@ -146,6 +147,15 @@ PS_OUT PS_Sptire_Sheet(PS_IN In)
     if (Color.r <= 0.4f)
         discard;
     
+    //if(g_OwnerAlpha <= 1.f)
+    //{
+        Color.a = g_fAlpha;
+    //}
+    //else
+    //{
+    //    Color.a = g_OwnerAlpha;
+    //}
+    
     Out.vColor = Color;
     
     return Out;
@@ -216,7 +226,7 @@ technique11 PosTexTechnique11
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetBlendState(BS_UIBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Sptire_Sheet();
