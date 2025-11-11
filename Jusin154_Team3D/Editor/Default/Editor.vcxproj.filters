@@ -145,9 +145,6 @@
     <Filter Include="02.GameObjects\Terrain">
       <UniqueIdentifier>{44a3ddc2-3993-48d6-840c-3da09daeab70}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Env\Manger">
-      <UniqueIdentifier>{584466e9-fe1a-4a7d-a4ba-54d62ee1a7c1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Level\60.PhysXLab">
       <UniqueIdentifier>{943a760b-2861-45b7-87b8-462e1309c172}</UniqueIdentifier>
     </Filter>
@@ -165,6 +162,24 @@
     </Filter>
     <Filter Include="02.GameObjects\Dummys\PhysXMesh">
       <UniqueIdentifier>{15a9dfe7-f3f7-4906-8bd4-91734f4ddc92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Env\00.Manger">
+      <UniqueIdentifier>{584466e9-fe1a-4a7d-a4ba-54d62ee1a7c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Env\01.MapContainer">
+      <UniqueIdentifier>{d925c13c-6d66-4632-8bef-172baa566920}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Env\01.MapContainer\BuildingContainer">
+      <UniqueIdentifier>{9643531b-3b64-4a3b-9ba7-e372b4e4ddba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Env\02.MapObject">
+      <UniqueIdentifier>{702dfe26-f6b0-4aa0-b8d5-79385c0191d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Env\02.MapObject\Static">
+      <UniqueIdentifier>{bc80fcba-1ebd-497c-a40d-973e44ad3ef8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Env\02.MapObject\LOD">
+      <UniqueIdentifier>{34fa4d78-8091-44cf-b4b4-59db9fd56d98}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -303,14 +318,11 @@
     <ClInclude Include="..\public\Level_MapViewer.h">
       <Filter>01.Level\30.MapViewer</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\MapObject.h">
-      <Filter>02.GameObjects\Env</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Terrain.h">
       <Filter>02.GameObjects\Terrain</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MapObject_Manager.h">
-      <Filter>02.GameObjects\Env\Manger</Filter>
+      <Filter>02.GameObjects\Env\00.Manger</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_PhysXLab.h">
       <Filter>01.Level\60.PhysXLab</Filter>
@@ -326,6 +338,21 @@
     </ClInclude>
     <ClInclude Include="..\Public\DummyObject.h">
       <Filter>02.GameObjects\Dummys\DummyObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapContainer.h">
+      <Filter>02.GameObjects\Env\01.MapContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BuildingContainer.h">
+      <Filter>02.GameObjects\Env\01.MapContainer\BuildingContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapObject.h">
+      <Filter>02.GameObjects\Env\02.MapObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapObject_Static.h">
+      <Filter>02.GameObjects\Env\02.MapObject\Static</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapObject_LOD.h">
+      <Filter>02.GameObjects\Env\02.MapObject\LOD</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -445,14 +472,11 @@
     <ClCompile Include="..\private\Level_MapViewer.cpp">
       <Filter>01.Level\30.MapViewer</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\MapObject.cpp">
-      <Filter>02.GameObjects\Env</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Terrain.cpp">
       <Filter>02.GameObjects\Terrain</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MapObject_Manager.cpp">
-      <Filter>02.GameObjects\Env\Manger</Filter>
+      <Filter>02.GameObjects\Env\00.Manger</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_PhysXLab.cpp">
       <Filter>01.Level\60.PhysXLab</Filter>
@@ -483,6 +507,21 @@
     </ClCompile>
     <ClCompile Include="..\Private\DummyObject.cpp">
       <Filter>02.GameObjects\Dummys\DummyObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapContainer.cpp">
+      <Filter>02.GameObjects\Env\01.MapContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BuildingContainer.cpp">
+      <Filter>02.GameObjects\Env\01.MapContainer\BuildingContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapObject.cpp">
+      <Filter>02.GameObjects\Env\02.MapObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapObject_Static.cpp">
+      <Filter>02.GameObjects\Env\02.MapObject\Static</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapObject_LOD.cpp">
+      <Filter>02.GameObjects\Env\02.MapObject\LOD</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

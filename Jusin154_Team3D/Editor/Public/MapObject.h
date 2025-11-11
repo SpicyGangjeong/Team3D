@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Editor_Define.h"
-#include "GameObject.h"
+#include "PartObject.h"
 
 NS_BEGIN(Engine)
 class CShader;
@@ -10,50 +10,41 @@ NS_END
 
 NS_BEGIN(Editor)
 
-class CMapObject final : public CGameObject
+class CMapObject abstract : public CPartObject
 {
-public:
-	typedef struct tagMapObjectDesc
-	{
-		const _tchar* pModelPrototypeTag;
-	}MAPOBJECT_DESC;
-
-private:
+protected:
 	CMapObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CMapObject(const CMapObject& Prototype);
 	virtual ~CMapObject() = default;
 
 public:
-	virtual HRESULT Initialize_Prototype() override;
-	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Priority_Update(_float fTimeDelta) override;
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
 public:
-	_wstring& Get_PrototypeTag() { return m_strModelPrototypeTag; }
+	virtual _wstring	Get_PrototypeTag(_uint iLodIndex = 0);
 
-private:
-	CShader* m_pShaderCom = { nullptr };
-	CModel* m_pModelCom = { nullptr };
+protected:
 
-	_wstring m_strModelPrototypeTag;
+
+protected:
+	virtual HRESULT Initialize_Prototype() override;
+	virtual HRESULT Initialize(void* pArg) override;
+	HRESULT Ready_Components();
 
 #ifdef _DEBUG
-	_bool m_bSelected = {};
-	_float3 m_vPosition = {};
-	_float3 m_vRotation = {};
-	_float3 m_vScale = {};
+	_bool		m_bSelected = {};
+	_float3		m_vPosition = {};
+	_float3		m_vRotation = {};
+	_float3		m_vScale = {};
 #endif // _DEBUG
 
 private:
-	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
 
 public:
-	static CMapObject* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr) override;
 	virtual void Free() override;
 	virtual void Describe_Entity() override;
 };

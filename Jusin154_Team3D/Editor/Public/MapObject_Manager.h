@@ -26,14 +26,23 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	class CMapObject* m_pSelectObject = { nullptr };
-	const list<class CGameObject*>* m_pMapObjects = { nullptr };
+	class CMapObject*					m_pSelectObject = { nullptr };
+	list<class CMapObject*>				m_MapObjects = { nullptr };
 	vector<_wstring>					m_ModelPrototypeTags;
+	vector<_wstring>					m_LODModelPrototypeTags;
+
+	_bool								m_bLOD = { false };
+	class CBuildingContainer*			m_pContainer = { nullptr };
 
 private:
-	HRESULT Ready_Components();
-	HRESULT	Bind_ShaderResources();
-	HRESULT Save_MapData(const _char* pFileName);
+	HRESULT		Ready_Components();
+	HRESULT		Bind_ShaderResources();
+	HRESULT		Save_MapData(const _char* pFileName);
+	HRESULT		Load_MapData(const _char* pFileName);
+
+	void		Update_PrototypeList();
+	void		Update_ObjectList();
+	void		Update_Edit();
 
 public:
 	static CMapObject_Manager* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, vector<_wstring>& ModelPrototypeTags);

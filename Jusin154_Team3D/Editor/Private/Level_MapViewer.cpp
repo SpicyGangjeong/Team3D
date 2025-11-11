@@ -6,6 +6,7 @@
 #include "DebugCamera.h"
 #include "Terrain.h"
 #include "MapObject_Manager.h"
+#include "BuildingContainer.h"
 
 CLevel_MapViewer::CLevel_MapViewer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -38,7 +39,7 @@ HRESULT CLevel_MapViewer::Initialize()
 		return E_FAIL;
 	}
 
-	if (FAILED(Ready_Layer_MapObjects(TEXT("Layer_MapObject")))) {
+	if (FAILED(Ready_Layer_BuildingContainer(TEXT("Layer_Building")))) {
 		return E_FAIL;
 	}
 
@@ -92,13 +93,10 @@ HRESULT CLevel_MapViewer::Ready_Layer_Terrain(const _wstring& strLayerTag)
 	return S_OK;
 }
 
-HRESULT CLevel_MapViewer::Ready_Layer_MapObjects(const _wstring& strLayerTag)
+HRESULT CLevel_MapViewer::Ready_Layer_BuildingContainer(const _wstring& strLayerTag)
 {
-	//CMapObject::MAPOBJECT_DESC Desc = {};
-	//Desc.pModelPrototypeTag = TEXT("Prototype_GameObject_SM_HW_ClockTower_Courtyard_BaseWall_A");
-
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapObject>(g_iStaticLevel, NEXT_LEVEL,strLayerTag, &Desc)))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBuildingContainer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
+		return E_FAIL;
 
 	return S_OK;
 }

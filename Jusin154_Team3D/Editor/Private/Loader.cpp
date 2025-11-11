@@ -47,7 +47,9 @@
 #pragma region MAP_HEADER
 #include "VIBuffer_Terrain.h"
 #include "Terrain.h"
-#include "MapObject.h"
+#include "BuildingContainer.h"
+#include "MapObject_Static.h"
+#include "MapObject_LOD.h"
 #include "MapObject_Manager.h"
 #pragma endregion
 
@@ -676,9 +678,9 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 		_wstring strFileName = L"Prototype_GameObject_" + file.path().stem().wstring();
 
-		/*For Prototype_Component_Model_Auro*/
+		/*For Prototype_Component_Model_*/
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, strFileName,
-			CModel::Create(m_pDevice, m_pContext, szFilePath, MODEL::ENVIROMENT, XMMatrixIdentity(), 0))))
+			CModel::Create(m_pDevice, m_pContext,szFilePath, MODEL::ENVIROMENT, XMMatrixIdentity(), 0))))
 			return E_FAIL;
 
 		ModelPrototypeTags.push_back(strFileName);
@@ -694,8 +696,16 @@ HRESULT CLoader::Loading_For_MapViewer()
 		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, nullptr, 100, 100))))
 		return E_FAIL;
 
-	/* For.Prototype_GameObject_MapObject */
-	if (FAILED(m_pGameInstance->Add_Prototype<CMapObject>(g_iStaticLevel, CMapObject::Create(m_pDevice, m_pContext))))
+	/* For.Prototype_GameObject_BuildingContainer */
+	if (FAILED(m_pGameInstance->Add_Prototype<CBuildingContainer>(g_iStaticLevel, CBuildingContainer::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_MapObject_Static */
+	if (FAILED(m_pGameInstance->Add_Prototype<CMapObject_Static>(g_iStaticLevel, CMapObject_Static::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_MapObject_LOD */
+	if (FAILED(m_pGameInstance->Add_Prototype<CMapObject_LOD>(g_iStaticLevel, CMapObject_LOD::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Terrain */
