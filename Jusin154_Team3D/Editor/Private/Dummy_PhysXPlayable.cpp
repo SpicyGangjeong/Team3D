@@ -130,6 +130,8 @@ CGameObject* CDummy_PhysXPlayable::Clone(void* pArg, CGameObject* pOwner)
 void CDummy_PhysXPlayable::Free()
 {
 	__super::Free();
+
+	SAFE_RELEASE(m_pCharacter_Controller);
 }
 
 void CDummy_PhysXPlayable::Describe_Entity()

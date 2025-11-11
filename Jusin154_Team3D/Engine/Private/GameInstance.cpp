@@ -541,10 +541,12 @@ PSX::PxMaterial* CGameInstance::Get_Material(_float3& vMatInfo)
 {
 	return m_pPhysX_Manager->Get_Material(vMatInfo);
 }
-HRESULT CGameInstance::Create_TriangleMesh(const _wstring& wstrMeshKey, CMesh* pMesh)
+
+void CGameInstance::RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh)
 {
-	return m_pPhysX_Manager->Create_TriangleMesh(wstrMeshKey, pMesh);
+	return m_pPhysX_Manager->RegistTriMesh(pName, pPxTriMesh);
 }
+
 PSX::PxShape* CGameInstance::Create_Shape(ACTOR eType, _float3& vhalfGeometryInfo, PSX::PxMaterial& pxMaterial, _bool bExclusive, PSX::PxShapeFlags ePxShapeFlag)
 {
 	return m_pPhysX_Manager->Create_Shape(eType, vhalfGeometryInfo, pxMaterial, bExclusive, ePxShapeFlag);
@@ -572,6 +574,18 @@ PSX::PxController* CGameInstance::Get_Controller(_uint iControllerIndex)
 void CGameInstance::ReleaseController(_uint iControllerIndex)
 {
 	m_pPhysX_Manager->ReleaseController(iControllerIndex);
+}
+HRESULT CGameInstance::ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes)
+{
+	return m_pPhysX_Manager->ConvertToTriMeshes(Meshes, pxTriMeshes);
+}
+_bool CGameInstance::SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes)
+{
+	return m_pPhysX_Manager->SaveTriMeshes(pPath, TriMeshes);
+}
+_bool CGameInstance::LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes)
+{
+	return m_pPhysX_Manager->LoadTriMeshes(pPath, TriMeshes);
 }
 #pragma endregion
 

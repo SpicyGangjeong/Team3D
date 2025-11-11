@@ -204,10 +204,6 @@ CComponent* CCharacter_Controller::Clone(void* pArg, class CGameObject* pOwner)
 void CCharacter_Controller::Free()
 {
 	__super::Free();
-
-	if (nullptr != m_pController) {
-		m_pController->release();
-	}
 }
 
 void CCharacter_Controller::Describe_Entity()

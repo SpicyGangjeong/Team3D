@@ -22,11 +22,14 @@ public:
 
 	const PSX::PxRigidDynamic* Add_DynamicActor(CRigidBody& RigidBody);
 	const PSX::PxRigidStatic* Add_StaticActor(CRigidBody& RigidBody);
-
+	
+	void RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh);
 	PSX::PxMaterial* Get_Material(_float3& vMatInfo);
 	PSX::PxShape* Create_Shape(ACTOR eType, _float3& vhalfGeometryInfo, PSX::PxMaterial& pxMaterial, _bool bExclusive, PSX::PxShapeFlags ePxShapeFlag);
 
-	HRESULT Create_TriangleMesh(const _wstring& wstrMeshKey, CMesh* pMesh);
+	HRESULT ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes);
+	_bool SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
+	_bool LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
 	PSX::PxTriangleMesh* Find_TriangleMesh(const _wstring& wstrMeshKey);
 
 	void Update(_float fTimeDelta);

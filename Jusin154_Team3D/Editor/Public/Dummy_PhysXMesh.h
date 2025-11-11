@@ -31,8 +31,6 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	CRigidBody* m_pRigidBody = { nullptr };
-	const PSX::PxRigidStatic* m_pActor = { nullptr };
 
 private:
 	virtual HRESULT Initialize_Prototype() override;

@@ -7,6 +7,7 @@
 #include "Terrain.h"
 #include "Dummy_PhysXBox.h"
 #include "Dummy_PhysXPlayable.h"
+#include "Dummy_PhysXMesh.h"
 
 CLevel_PhysXLab::CLevel_PhysXLab(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -99,13 +100,23 @@ HRESULT CLevel_PhysXLab::Ready_Layer_PhysXObjects(const _wstring& strLayerTag)
 		}
 	}
 	
-	CDummy_PhysXPlayable::BOXSTARTPOS_DESC Desc{};
-	Desc.vPos = { 0.f, 10.f, 0.f };
-	Desc.vRotRPY = { 0.f, 0.f, 0.f };
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXPlayable>(g_iStaticLevel, NEXT_LEVEL, LAYER_PLAYER, &Desc))) {
-		return E_FAIL;
+	{
+		CDummy_PhysXPlayable::BOXSTARTPOS_DESC Desc{};
+		Desc.vPos = { 0.f, 10.f, 0.f };
+		Desc.vRotRPY = { 0.f, 0.f, 0.f };
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXPlayable>(g_iStaticLevel, NEXT_LEVEL, LAYER_PLAYER, &Desc))) {
+			return E_FAIL;
+		}
 	}
 
+	{
+		CDummy_PhysXMesh::BOXSTARTPOS_DESC Desc{};
+		Desc.vPos = { 0.f, 10.f, 0.f };
+		Desc.vRotRPY = { 0.f, 0.f, 0.f };
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXMesh>(g_iStaticLevel, NEXT_LEVEL, LAYER_CHUNK, &Desc))) {
+			return E_FAIL;
+		}
+	}
 	return S_OK;
 }
 

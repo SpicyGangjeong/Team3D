@@ -89,17 +89,16 @@ HRESULT CDummy_PhysXMesh::Ready_Components(void* pArg)
 	m_pTransformCom->Rotation(pBox->vRotRPY.x, pBox->vRotRPY.y, pBox->vRotRPY.z);
 
 
+	CModel* pModel = (CModel*)m_pGameInstance->Find_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_River_Col_Model"));
+	_uint iNumMesh = pModel->Get_NumMeshes();
+
+	CRigidBody::RIGIDBODY_DESC Desc{};
+	Desc.eType = ACTOR::TRIANGLEMESH;
+	for (_uint i = 0; i< iNumMesh; ++i)
 	{ // RIGID_BODY
-		CRigidBody::RIGIDBODY_DESC Desc{};
-		Desc.tRigidStaticDesc.pMeshKey = TEXT("PhysX_Plane");
+		Desc.tRigidStaticDesc.szMeshName = pModel->Get_MeshName(i);
 
-		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_Static_Object"), (CComponent**)&m_pRigidBody, &Desc))) {
-			return E_FAIL;
-		}
-
-		m_pActor = m_pGameInstance->Add_StaticActor(*m_pRigidBody);
-		if (nullptr == m_pActor) {
-			assert(false);
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, CMyTools::ToWstring(pModel->Get_MeshName(i)).c_str(), nullptr, &Desc))) {
 			return E_FAIL;
 		}
 	}
@@ -155,7 +154,6 @@ void CDummy_PhysXMesh::Free()
 {
 	__super::Free();
 
-	SAFE_RELEASE(m_pRigidBody);
 	//SAFE_RELEASE(m_pModelCom);
 	//SAFE_RELEASE(m_pShaderCom);
 }

@@ -79,7 +79,6 @@ const PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody& RigidBody)
 		pPxMeshGeometry = iter->second;
 	}
 
-
 	PSX::PxRigidStatic* pActor = m_pPhysics->createRigidStatic(pxWorldMatrix);
 	PSX::PxShape* pShape = PSX::PxRigidActorExt::createExclusiveShape(*pActor, *pPxMeshGeometry, *RigidBody.Get_PxMaterial());
 
@@ -122,19 +121,100 @@ PSX::PxShape* CPhysX_Manager::Create_Shape(ACTOR eType, _float3& vhalfGeometryIn
 	return pShape;
 }
 
-HRESULT CPhysX_Manager::Create_TriangleMesh(const _wstring& wstrMeshKey, CMesh* pMesh)
+void CPhysX_Manager::RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh) {
+	m_TriangleMeshes.emplace(CMyTools::ToWstring(pName), pPxTriMesh);
+
+	PSX::PxTriangleMeshGeometry* pGeometry = new PSX::PxTriangleMeshGeometry(pPxTriMesh);
+	pGeometry->meshFlags |= PSX::PxMeshGeometryFlag::eDOUBLE_SIDED;
+	m_TriangleMeshGeometry.emplace(CMyTools::ToWstring(pName), pGeometry);
+}
+
+HRESULT CPhysX_Manager::ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<PSX::PxTriangleMesh*>& pxTriMeshes)
 {
-	 
-	PSX::PxTriangleMesh* pTriangleMesh = pMesh->ConvertToPxMesh(m_pCookingParam);
-	if (nullptr != pTriangleMesh) {
-		m_TriangleMeshes.emplace(wstrMeshKey, pTriangleMesh);
-		
-		PSX::PxTriangleMeshGeometry* pGeometry = new PSX::PxTriangleMeshGeometry(pTriangleMesh);
-		pGeometry->meshFlags |= PSX::PxMeshGeometryFlag::eDOUBLE_SIDED;
-		m_TriangleMeshGeometry.emplace(wstrMeshKey, pGeometry);
-		return S_OK;
+	for (size_t i = 0; i < Meshes.size(); ++i)
+	{
+		PSX::PxTriangleMesh* pTriangleMesh = Meshes[i]->ConvertToPxMesh(m_pCookingParam, m_pPhysics);
+		if (nullptr == pTriangleMesh) {
+			return E_FAIL;
+		}
+		pxTriMeshes.push_back(pTriangleMesh);
 	}
-	return E_FAIL;
+	pxTriMeshes.shrink_to_fit();
+
+	return S_OK;
+}
+
+_bool CPhysX_Manager::SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes)
+{
+	filesystem::path pathPhysX = pPath;
+	pathPhysX.replace_extension(".xml");
+	if (TriMeshes.empty()){
+		return false;
+	}
+
+	filesystem::create_directories(pathPhysX.parent_path());
+
+
+	PSX::PxSerializationRegistry* pSerializationRegistry = PSX::PxSerialization::createSerializationRegistry(*m_pPhysics);
+	PSX::PxCollection* pCollections = PxCreateCollection();
+	if (nullptr == pCollections) { 
+		pSerializationRegistry->release();
+		assert(pCollections);
+		return false;
+	}
+
+	for (PSX::PxTriangleMesh* pTriMesh : TriMeshes) {
+		pCollections->add(*pTriMesh);
+	}
+
+	PSX::PxSerialization::complete(*pCollections, *pSerializationRegistry);
+	PSX::PxDefaultFileOutputStream out(pathPhysX.string().c_str());
+	PSX::PxCollection* extRefs = PxCreateCollection();
+	const _bool ok = PSX::PxSerialization::serializeCollectionToXml(out, *pCollections, *pSerializationRegistry, m_pCookingParam, extRefs);
+	//const _bool ok = PSX::PxSerialization::serializeCollectionToBinary(out, *pCollections, *pSerializationRegistry, extRefs);
+
+	extRefs->release();
+	pCollections->release();
+	pSerializationRegistry->release();
+	assert(ok);
+	return ok;
+}
+
+_bool CPhysX_Manager::LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes)
+{
+	filesystem::path pathPhysX = pPath;
+	pathPhysX.replace_extension(".xml");
+
+	PSX::PxSerializationRegistry* pSerializationRegistry = PSX::PxSerialization::createSerializationRegistry(*m_pPhysics);
+
+	PSX::PxDefaultFileInputData InputData(pathPhysX.string().c_str());
+	PSX::PxCollection* extRefs = PxCreateCollection();
+	
+	//PSX::PxCollection* pCollections = PSX::PxSerialization::createCollectionFromBinary(&InputData, *pSerializationRegistry, extRefs);
+	PSX::PxCollection* pCollections = PSX::PxSerialization::createCollectionFromXml(InputData, *m_pCookingParam, *pSerializationRegistry, extRefs);
+	if (nullptr == pCollections) { 
+		extRefs->release();
+		pSerializationRegistry->release(); 
+		assert(pCollections);
+		return false;
+	}
+
+	const PSX::PxU32 iNumTriMeshes = pCollections->getNbObjects();
+	TriMeshes.reserve(iNumTriMeshes);
+	for (PSX::PxU32 i = 0; i < iNumTriMeshes; ++i) {
+		PSX::PxBase& pObject = pCollections->getObject(i);
+
+		if (pObject.getConcreteType() == PSX::PxConcreteType::eTRIANGLE_MESH_BVH34) {
+			PSX::PxTriangleMesh* pTriMesh = static_cast<PSX::PxTriangleMesh*>(&pObject);
+			pTriMesh->acquireReference();
+			TriMeshes.push_back(pTriMesh);
+		}
+	}
+
+	extRefs->release();
+	pCollections->release();
+	pSerializationRegistry->release();
+	return true;
 }
 
 PSX::PxTriangleMesh* CPhysX_Manager::Find_TriangleMesh(const _wstring& wstrMeshKey)
@@ -314,27 +394,27 @@ HRESULT CPhysX_Manager::Initialize()
 
 #ifdef 扁公府
 	physx::PxMaterial* pMaterial = m_pPhysics->createMaterial(0.5f, 0.5f, 0.6f);
-	physx::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *pMaterial);
-	m_pScene->addActor(*pGroundPlane);
+	//physx::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *pMaterial);
+	//m_pScene->addActor(*pGroundPlane);
 
-	{
-		float halfExtent = .5f;
-		physx::PxShape* shape = m_pPhysics->createShape(physx::PxSphereGeometry(halfExtent), *pMaterial);
-		physx::PxU32 size = 30;
-		physx::PxTransform pxTransform(physx::PxVec3(0));
+	//{
+	//	float halfExtent = .5f;
+	//	physx::PxShape* shape = m_pPhysics->createShape(physx::PxSphereGeometry(halfExtent), *pMaterial);
+	//	physx::PxU32 size = 30;
+	//	physx::PxTransform pxTransform(physx::PxVec3(0));
 
-		for (physx::PxU32 i = 0; i < size; i++) {
-			for (physx::PxU32 j = 0; j < size - i; j++) {
-				physx::PxTransform localTm(physx::PxVec3(physx::PxReal(j * 2) - physx::PxReal(size - i) + 100, physx::PxReal(i * 2 + 1), 0) * halfExtent);
-				physx::PxRigidDynamic* body = m_pPhysics->createRigidDynamic(pxTransform.transform(localTm));
-				body->attachShape(*shape);
-				physx::PxRigidBodyExt::updateMassAndInertia(*body, 10.0f);
-				m_pScene->addActor(*body);
-			}
-		}
-	}
+	//	for (physx::PxU32 i = 0; i < size; i++) {
+	//		for (physx::PxU32 j = 0; j < size - i; j++) {
+	//			physx::PxTransform localTm(physx::PxVec3(physx::PxReal(j * 2) - physx::PxReal(size - i) + 100, physx::PxReal(i * 2 + 1), 0) * halfExtent);
+	//			physx::PxRigidDynamic* body = m_pPhysics->createRigidDynamic(pxTransform.transform(localTm));
+	//			body->attachShape(*shape);
+	//			physx::PxRigidBodyExt::updateMassAndInertia(*body, 10.0f);
+	//			m_pScene->addActor(*body);
+	//		}
+	//	}
+	//}
 #endif // 扁公府
-
+	pMaterial->release();
 	
 
 	return S_OK;
@@ -386,6 +466,10 @@ void CPhysX_Manager::Free()
 	if (nullptr != m_pCookingParam) {
 		Safe_Delete(m_pCookingParam);
 	}
+	if (nullptr != m_pCCTManager) {
+		m_pCCTManager->release();
+		m_pCCTManager = nullptr;
+	}
 
 	if (nullptr != m_pScene) {
 		m_pScene->release(); m_pScene = nullptr;
@@ -400,6 +484,7 @@ void CPhysX_Manager::Free()
 	}
 
 	if (nullptr != m_pPvd) {
+		m_pPvd->disconnect();
 		m_pPvd->release(); m_pPvd = nullptr;
 	}
 

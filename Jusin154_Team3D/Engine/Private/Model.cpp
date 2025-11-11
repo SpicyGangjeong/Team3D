@@ -262,6 +262,11 @@ const _float4x4* CModel::Get_BoneMatrixPtr(const _char* pBoneName) const
 	return (*iter)->Get_CombinedTransformationMatrixPtr();
 }
 
+const _char* CModel::Get_MeshName(_uint iIndex)
+{
+	return m_Meshes[iIndex]->Get_Name();
+}
+
 
 _matrix CModel::Get_BoneMatrix(_uint iBoneIndex)
 {
@@ -337,6 +342,17 @@ HRESULT CModel::Ready_Meshes(MODEL eType, const aiScene* pAIScene, _fmatrix& Pre
 		m_Meshes.push_back(pMesh);
 	}
 	m_Meshes.shrink_to_fit();
+	return S_OK;
+}
+
+HRESULT CModel::Ready_PhysXMeshes(MODEL eType)
+{
+	m_iNumPhysXMeshes = m_iNumMeshes;
+
+	m_TriMeshes.reserve(m_iNumMeshes);
+
+	m_pGameInstance->ConvertToTriMeshes(m_Meshes, m_TriMeshes);
+
 	return S_OK;
 }
 
@@ -794,6 +810,9 @@ HRESULT CModel::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fma
 		if (FAILED(Ready_Materials_FromFile(m_pAIScene, pModelFilePath))) {
 			return E_FAIL;
 		}
+		if (FAILED(Ready_PhysXMeshes(eType))) {
+			return E_FAIL;
+		}
 	}
 	else
 	{
@@ -836,7 +855,12 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 
 	if (strcmp(".bin", szEXT) == 0)
 	{
+		_char Temp[256];
+		strcpy_s(Temp, szDir);
+		strcat_s(Temp, szName);
+		strcat_s(Temp, ".bin");
 		LoadData(pModelFilePath);
+		m_pGameInstance->LoadTriMeshes(pModelFilePath, m_TriMeshes);
 	}
 	else if (strcmp(".fbx", szEXT) == 0)
 	{
@@ -846,10 +870,15 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 		strcat_s(Temp, ".bin");
 		Assimp_Model_Load(pModelFilePath, eType, PreTransformMatrix, 0);
 		SaveAssimpModel(Temp);
+		m_pGameInstance->SaveTriMeshes(pModelFilePath, m_TriMeshes);
 
+		for (_uint i = 0; i < m_iNumMeshes; ++i) {
+			m_pGameInstance->RegistTriMesh(m_Meshes[i]->Get_Name(), m_TriMeshes[i]);
+		}
 		return S_OK;
 	}
 	m_pSaveModel = m_pGameInstance->Load_SaveModel(pModelFilePath);
+	
 
 	m_eType = eType;
 	XMStoreFloat4x4(&m_PreTransformMatrix, PreTransformMatrix);
@@ -868,6 +897,9 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 		return E_FAIL;
 	}
 
+	for (_uint i = 0; i < m_iNumMeshes; ++i) {
+		m_pGameInstance->RegistTriMesh(m_Meshes[i]->Get_Name(), m_TriMeshes[i]);
+	}
 
 
 	return S_OK;

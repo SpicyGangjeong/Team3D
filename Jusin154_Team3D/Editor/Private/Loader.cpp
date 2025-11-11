@@ -491,13 +491,26 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 		m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), CRigidBody::Create(m_pDevice, m_pContext, Desc));
 	}
 
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_River_Col_Model"),
+		//CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, "../Bin/Resources/Models/River/River.fbx", XMMatrixScaling(0.001f, 0.001f, 0.001f) * XMMatrixIdentity())))){
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, "../Bin/Resources/Models/River/River.bin", XMMatrixScaling(0.001f, 0.001f, 0.001f) * XMMatrixIdentity())))){
+		return E_FAIL;
+	}
+
 	{
+		CModel* pModel = (CModel*)m_pGameInstance->Find_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_River_Col_Model"));
+		_uint iNumMesh = pModel->Get_NumMeshes();
+
 		CRigidBody::RIGIDBODY_PROTOTYPEDESC Desc{};
-		Desc.tRigidStaticDesc.pMeshKey = TEXT("PhysX_Plane");
-		Desc.tRigidStaticDesc.vMatInfo = _float3(0.5f, 0.5f, 0.6f);
-		Desc.tRigidStaticDesc.pMesh = ;
-		
-		m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), CRigidBody::Create(m_pDevice, m_pContext, Desc));
+		for (_uint i = 0; i < iNumMesh; ++i) {
+			Desc.eType = ACTOR::TRIANGLEMESH;
+			Desc.tRigidStaticDesc.szMeshName = pModel->Get_MeshName(i);
+			Desc.tRigidStaticDesc.vMatInfo = _float3(0.5f, 0.5f, 0.6f);
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, CMyTools::ToWstring(Desc.tRigidStaticDesc.szMeshName).c_str(), CRigidBody::Create(m_pDevice, m_pContext, Desc)))) {
+				return E_FAIL;
+			}
+		}
 	}
 	{
 		m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), CCharacter_Controller::Create(m_pDevice, m_pContext));

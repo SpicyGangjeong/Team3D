@@ -90,14 +90,16 @@ HRESULT CMesh::Initialize_Prototype(MODEL eType, vector<class CBone*>& Bones, co
 	_uint* pIndices = new _uint[m_iNumIndices];
 	ZeroMemory(pIndices, sizeof(_uint) * m_iNumIndices);
 
+	m_pIndices = new _uint[m_iNumIndices];
+	ZeroMemory(m_pIndices, sizeof(_uint) * m_iNumIndices);
+
 	_uint	iNumIndices = {};
 
 	for (size_t i = 0; i < pAIMesh->mNumFaces; i++)
 	{
-
-		pIndices[iNumIndices++] = pAIMesh->mFaces[i].mIndices[0];
-		pIndices[iNumIndices++] = pAIMesh->mFaces[i].mIndices[1];
-		pIndices[iNumIndices++] = pAIMesh->mFaces[i].mIndices[2];
+		pIndices[iNumIndices++] = m_pIndices[iNumIndices] = pAIMesh->mFaces[i].mIndices[0];
+		pIndices[iNumIndices++] = m_pIndices[iNumIndices] = pAIMesh->mFaces[i].mIndices[1];
+		pIndices[iNumIndices++] = m_pIndices[iNumIndices] = pAIMesh->mFaces[i].mIndices[2];
 	}
 
 
@@ -352,7 +354,7 @@ HRESULT CMesh::Ready_VertexBuffer_For_Anim(HANDLE hFile, DWORD& dwByte)
 	return S_OK;
 }
 
-HRESULT CMesh::Ready_VertexBuffer_For_NonAnim(SaveMesh* _SaveMesh, _fmatrix PreTransformMatrix)
+HRESULT CMesh::Ready_VertexBuffer_For_NonAnim(SaveMesh* SaveMesh, _fmatrix PreTransformMatrix)
 {
 	m_iVertexStride = sizeof(VTXMESH);
 	D3D11_BUFFER_DESC		VBDesc{};
@@ -371,23 +373,23 @@ HRESULT CMesh::Ready_VertexBuffer_For_NonAnim(SaveMesh* _SaveMesh, _fmatrix PreT
 
 	for (_uint i = 0; i < m_iNumVertices; ++i)
 	{
-		memcpy(&pVertices[i].vPosition, &_SaveMesh->Vertices[i].Pos, sizeof(_float3));
+		memcpy(&pVertices[i].vPosition, &SaveMesh->Vertices[i].Pos, sizeof(_float3));
 		XMStoreFloat3(&pVertices[i].vPosition,
 			XMVector3TransformCoord(XMLoadFloat3(&pVertices[i].vPosition), PreTransformMatrix));
 
-		memcpy(&pVertices[i].vNormal, &_SaveMesh->Vertices[i].Normal, sizeof(_float3));
+		memcpy(&pVertices[i].vNormal, &SaveMesh->Vertices[i].Normal, sizeof(_float3));
 		XMStoreFloat3(&pVertices[i].vNormal,
 			XMVector3Normalize(XMVector3TransformNormal(XMLoadFloat3(&pVertices[i].vNormal), PreTransformMatrix)));
 
-		memcpy(&pVertices[i].vTangent, &_SaveMesh->Vertices[i].Tan, sizeof(_float3));
+		memcpy(&pVertices[i].vTangent, &SaveMesh->Vertices[i].Tan, sizeof(_float3));
 		XMStoreFloat3(&pVertices[i].vTangent,
 			XMVector3Normalize(XMVector3TransformNormal(XMLoadFloat3(&pVertices[i].vTangent), PreTransformMatrix)));
 
-		memcpy(&pVertices[i].vBinormal, &_SaveMesh->Vertices[i].BiNoraml, sizeof(_float3));
+		memcpy(&pVertices[i].vBinormal, &SaveMesh->Vertices[i].BiNoraml, sizeof(_float3));
 		XMStoreFloat3(&pVertices[i].vBinormal, 
 			XMVector3Normalize(XMVector3TransformNormal(XMLoadFloat3(&pVertices[i].vBinormal), PreTransformMatrix)));
 
-		pVertices[i].vTexcoord = _SaveMesh->Vertices[i].UV;
+		pVertices[i].vTexcoord = SaveMesh->Vertices[i].UV;
 	}
 
 	D3D11_SUBRESOURCE_DATA	InitialVBData{};
@@ -420,6 +422,7 @@ HRESULT CMesh::Ready_VertexBuffer_For_Anim(const CModel* pModel, SaveMesh* _Save
 
 	for (_uint i = 0; i < m_iNumVertices; ++i)
 	{
+		memcpy(&m_pVertexPositions[i], &_SaveMesh->Vertices[i].Pos, sizeof(_float3));
 		memcpy(&pVertices[i].vPosition, &_SaveMesh->Vertices[i].Pos, sizeof(_float3));
 		if (_SaveMesh->Vertices[i].bHasNormal)
 			memcpy(&pVertices[i].vNormal, &_SaveMesh->Vertices[i].Normal, sizeof(_float3));
@@ -604,26 +607,40 @@ HRESULT CMesh::SaveAsBinary(HANDLE hFile, DWORD& dwByte)
 	return S_OK;
 }
 
-PSX::PxTriangleMesh* CMesh::ConvertToPxMesh(const PSX::PxCookingParams* pParam)
+PSX::PxTriangleMesh* CMesh::ConvertToPxMesh(const PSX::PxCookingParams* pParam, PSX::PxPhysics* pPhysX)
 {
-	PSX::PxTriangleMeshDesc Desc;
+	PSX::PxTriangleMeshDesc tMeshDesc;
 	vector<PSX::PxVec3> Vertices;
 	vector<PSX::PxU32> Triangles;
 	{
-		Desc.points.count = m_iNumVertices;
-		Desc.points.stride = sizeof(PSX::PxVec3);
+		tMeshDesc.points.count = m_iNumVertices;
+		tMeshDesc.points.stride = sizeof(PSX::PxVec3);
 		Vertices.resize(m_iNumVertices);
 		memcpy_s(Vertices.data(), sizeof(PSX::PxVec3) * m_iNumVertices, m_pVertexPositions, sizeof(_float3) * m_iNumVertices);
-		Desc.points.data = Vertices.data();
+		tMeshDesc.points.data = Vertices.data();
 	}
 	{
-		Desc.triangles.count = m_iNumIndices / 3;
-		Desc.triangles.stride = sizeof(PSX::PxU32) * 3;
+		tMeshDesc.triangles.count = m_iNumIndices / 3;
+		tMeshDesc.triangles.stride = sizeof(PSX::PxU32) * 3;
 		Triangles.resize(m_iNumIndices);
 		memcpy_s(Triangles.data(), sizeof(PSX::PxU32) * m_iNumIndices, m_pIndices, sizeof(PSX::PxU32) * m_iNumIndices);
-		Desc.triangles.data = Triangles.data();
+		tMeshDesc.triangles.data = Triangles.data();
 	}
-	PSX::PxTriangleMesh* pTriangleMesh = PxCreateTriangleMesh(*pParam, Desc);
+	PSX::PxDefaultMemoryOutputStream streamWriteBuffer = {};
+	PSX::PxTriangleMeshCookingResult::Enum eCookResult = {};
+	const _bool bCooked = PxCookTriangleMesh(*pParam, tMeshDesc, streamWriteBuffer, &eCookResult);
+	if (false == bCooked) {
+		assert(false);
+		return nullptr;
+	}
+
+	PSX::PxDefaultMemoryInputData readBuff(streamWriteBuffer.getData(), streamWriteBuffer.getSize());
+	PSX::PxTriangleMesh* pTriangleMesh = pPhysX->createTriangleMesh(readBuff);
+	if (nullptr == pTriangleMesh) {
+		assert(false);
+		return nullptr;
+	}
+
 	return pTriangleMesh;
 }
 
@@ -647,6 +664,7 @@ HRESULT CMesh::Ready_VertexBuffer_For_NonAnim(const aiMesh* pAIMesh, _fmatrix Pr
 	for (_uint i = 0; i < m_iNumVertices; ++i)
 	{
 		memcpy(&pVertices[i].vPosition, &pAIMesh->mVertices[i], sizeof(_float3));
+		memcpy(&m_pVertexPositions[i], &pAIMesh->mVertices[i], sizeof(_float3));
 		XMStoreFloat3(&pVertices[i].vPosition, XMVector3TransformCoord(XMLoadFloat3(&pVertices[i].vPosition), PreTransformMatrix));
 		memcpy(&pVertices[i].vNormal, &pAIMesh->mNormals[i], sizeof(_float3));
 		XMStoreFloat3(&pVertices[i].vNormal, XMVector3Normalize(XMVector3TransformNormal(XMLoadFloat3(&pVertices[i].vNormal), PreTransformMatrix)));
@@ -688,6 +706,7 @@ HRESULT CMesh::Ready_VertexBuffer_For_Anim(vector<class CBone*>& Bones, const ai
 	for (_uint i = 0; i < m_iNumVertices; ++i)
 	{
 		memcpy(&pVertices[i].vPosition, &pAIMesh->mVertices[i], sizeof(_float3));
+		memcpy(&m_pVertexPositions[i], &pAIMesh->mVertices[i], sizeof(_float3));
 		memcpy(&pVertices[i].vNormal, &pAIMesh->mNormals[i], sizeof(_float3));
 		memcpy(&pVertices[i].vTangent, &pAIMesh->mTangents[i], sizeof(_float3));
 		memcpy(&pVertices[i].vBinormal, &pAIMesh->mBitangents[i], sizeof(_float3));
