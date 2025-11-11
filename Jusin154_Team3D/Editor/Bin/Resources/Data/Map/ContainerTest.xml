@@ -308,4 +308,33 @@
             <Rotation x="0" y="0" z="0"/>
         </PartObject>
     </Container>
+    <Container Name="3Broom_Ext">
+        <Position x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <PartObject Lod_Level="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_3Broom_ext_barrel_stands</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_3Broom_ext_barrel_stands</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_3Broom_ext_barrels</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_3Broom_Door_R</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+    </Container>
 </Land>

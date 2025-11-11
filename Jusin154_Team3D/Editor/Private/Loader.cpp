@@ -684,29 +684,29 @@ HRESULT CLoader::Loading_For_MapViewer()
 		ModelPrototypeTags.push_back(strFileName);
 	}
 
-	for (const auto& file : filesystem::directory_iterator("C:\\Users\\82103\\Desktop\\MapRe\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Meshes\\3Broom_Kit"))
-	{
-		if (file.is_directory())
-			continue;
+	//for (const auto& file : filesystem::directory_iterator("C:\\Users\\82103\\Desktop\\MapRe\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Meshes\\3Broom_Kit"))
+	//{
+	//	if (file.is_directory())
+	//		continue;
 
-		string ext = file.path().extension().string();
+	//	string ext = file.path().extension().string();
 
-		if (strcmp(ext.c_str(), ".fbx"))
-			continue;
+	//	if (strcmp(ext.c_str(), ".fbx"))
+	//		continue;
 
-		_char szFilePath[MAX_PATH] = {};
+	//	_char szFilePath[MAX_PATH] = {};
 
-		strcpy_s(szFilePath, MAX_PATH, file.path().string().c_str());
+	//	strcpy_s(szFilePath, MAX_PATH, file.path().string().c_str());
 
-		_wstring strFileName = L"Prototype_GameObject_" + file.path().stem().wstring();
+	//	_wstring strFileName = L"Prototype_GameObject_" + file.path().stem().wstring();
 
-		/*For Prototype_Component_Model_*/
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, strFileName,
-			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, szFilePath))))
-			return E_FAIL;
+	//	/*For Prototype_Component_Model_*/
+	//	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, strFileName,
+	//		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, szFilePath))))
+	//		return E_FAIL;
 
-		ModelPrototypeTags.push_back(strFileName);
-	}
+	//	ModelPrototypeTags.push_back(strFileName);
+	//}
 
 	m_strMessage = TEXT("쉐이더를(을) 로딩 중 입니다.");
 

@@ -304,7 +304,8 @@ HRESULT CMapObject_Manager::Save_ContainerData(const _char* pFileName, const _ch
 			PartObject->InsertEndChild(proto);
 		}
 
-	//m_pMapObjects = pLayer->Get_Objects();
+		// <Position x="0.0" y="0.0" z="0.0"/>
+		tinyxml2::XMLElement* PositionElem = doc.NewElement("Position");
 
 		_float3 vPosition = {};
 		XMStoreFloat3(&vPosition, pMapObject->Get_Component<CTransform>()->Get_State(STATE::POSITION));
@@ -314,11 +315,8 @@ HRESULT CMapObject_Manager::Save_ContainerData(const _char* pFileName, const _ch
 		PositionElem->SetAttribute("z", vPosition.z);
 		PartObject->InsertEndChild(PositionElem);
 
-	if (false == m_MapObjects.empty())
-	{
-		for (auto pMapObject : m_MapObjects)
-		{
-			CMapObject* pCurrentMapObject = static_cast<CMapObject*>(pMapObject);
+		// <Scale x="0.0" y="0.0" z="0.0"/>
+		tinyxml2::XMLElement* ScaleElem = doc.NewElement("Scale");
 
 		_float3 pScale = pMapObject->Get_Component<CTransform>()->Get_Scale();
 		ScaleElem->SetAttribute("x", pScale.x);
@@ -326,7 +324,8 @@ HRESULT CMapObject_Manager::Save_ContainerData(const _char* pFileName, const _ch
 		ScaleElem->SetAttribute("z", pScale.z);
 		PartObject->InsertEndChild(ScaleElem);
 
-			wstring strPrototypeTag = pCurrentMapObject->Get_PrototypeTag();
+		// <Rotation x="0.0" y="0.0" z="0.0"/>
+		tinyxml2::XMLElement* RotationElem = doc.NewElement("Rotation");
 
 		_float3 vRotation = {};
 		XMStoreFloat3(&vRotation, pMapObject->Get_Component<CTransform>()->Get_RollPitchYawVector());
@@ -404,7 +403,7 @@ HRESULT CMapObject_Manager::Load_MapData(const _char* pFileName)
 		ContainerDesc.strName = string(pName);
 
 		m_pGameInstance->Add_GameObject_ToLayer<CBuildingContainer>(
-			g_iStaticLevel, ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Building"), &ContainerDesc, nullptr, reinterpret_cast<CGameObject**>(&pContainerObject));
+			g_iStaticLevel, ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Building"), &ContainerDesc, nullptr, &pContainerObject);
 #pragma endregion
 
 #pragma region ADD_PARTOBJECT
@@ -489,7 +488,6 @@ HRESULT CMapObject_Manager::Load_MapData(const _char* pFileName)
 
 		}
 #pragma endregion
-		
 	}
 
 	return S_OK;
@@ -556,8 +554,7 @@ HRESULT CMapObject_Manager::Load_ContainerData(const _char* pFileName, const _ch
 
 	ContainerDesc.strName = string(pContainerName);
 
-	m_pGameInstance->Add_GameObject_ToLayer<CBuildingContainer>(
-		g_iStaticLevel, ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Building"), &ContainerDesc, nullptr, reinterpret_cast<CGameObject**>(&pContainerObject));
+	m_pGameInstance->Add_GameObject_ToLayer<CBuildingContainer>(g_iStaticLevel, ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Building"), &ContainerDesc, nullptr, (CBuildingContainer**)(&pContainerObject));
 #pragma endregion
 
 #pragma region ADD_PARTOBJECT
@@ -642,7 +639,7 @@ HRESULT CMapObject_Manager::Load_ContainerData(const _char* pFileName, const _ch
 
 	}
 #pragma endregion
-
+	SAFE_RELEASE(pContainerObject);
 
 	return S_OK;
 }

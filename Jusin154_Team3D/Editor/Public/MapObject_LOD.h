@@ -36,13 +36,11 @@ public:
 
 private:
 	CShader*			m_pShaderCom = { nullptr };
-	vector<CModel*>		m_pModelComs = { nullptr };
+	vector<CModel*>		m_pModelComs;
 
 	_uint				m_iMaxLodLevel = {};
 	_uint				m_iLodIndex = {};
 
-	CShader*			m_pShaderCom = { nullptr };
-	vector<CModel*>		m_pModelComs;
 	vector<_wstring>	m_ModelPrototypeTags;
 
 
