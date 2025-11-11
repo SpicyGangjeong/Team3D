@@ -91,14 +91,13 @@ HRESULT CDummy_PhysXMesh::Ready_Components(void* pArg)
 
 	{ // RIGID_BODY
 		CRigidBody::RIGIDBODY_DESC Desc{};
-		Desc.tRigidDynamicDesc.bIsKinematic = false;
-		Desc.tRigidDynamicDesc.fDensity = 1000.f;
+		Desc.tRigidStaticDesc.pMeshKey = TEXT("PhysX_Plane");
 
-		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_Static_Object"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}
 
-		m_pActor = m_pGameInstance->Add_DynamicActor(*m_pRigidBody);
+		m_pActor = m_pGameInstance->Add_StaticActor(*m_pRigidBody);
 		if (nullptr == m_pActor) {
 			assert(false);
 			return E_FAIL;

@@ -32,10 +32,7 @@ public:
 
 private:
 	CRigidBody* m_pRigidBody = { nullptr };
-	const PSX::PxRigidDynamic* m_pActor = { nullptr };
-	//CModel* m_pModelCom = { nullptr };
-	//CShader* m_pShaderCom = { nullptr };
-
+	const PSX::PxRigidStatic* m_pActor = { nullptr };
 
 private:
 	virtual HRESULT Initialize_Prototype() override;

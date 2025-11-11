@@ -157,7 +157,7 @@ _bool CModel::Play_Animation(_float fTimeDelta)
 		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_bIsLoop, fTimeDelta);
 	}
 
-	for (int i = 0; i < m_Bones.size(); ++i)
+	for (_int i = 0; i < m_Bones.size(); ++i)
 	{
 		m_Bones[i]->Update_CombinedTransformationMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
 
@@ -219,7 +219,7 @@ _float CModel::Get_AnimProgressRatio()
 {
 	return m_Animations[m_iCurrentAnimIndex]->Get_AnimProgressRatio();
 }
-_int CModel::Get_AnimProgressPostion(const char* pAnimChannelName)
+_int CModel::Get_AnimProgressPostion(const _char* pAnimChannelName)
 {
 	return m_Animations[m_iCurrentAnimIndex]->Get_AnimProgressPostion(pAnimChannelName);
 }
@@ -462,7 +462,7 @@ HRESULT CModel::Ready_Bones(const aiNode* pAINode, _int iParentIndex)
 
 	return S_OK;
 }
-bool CModel::SaveAssimpModel(const _char* filename)
+_bool CModel::SaveAssimpModel(const _char* filename)
 {
 	if (!m_pAIScene) return false;
 
@@ -477,7 +477,7 @@ bool CModel::SaveAssimpModel(const _char* filename)
 	modelData.MeshCount = m_pAIScene->mNumMeshes;
 	modelData.MaterialCount = m_pAIScene->mNumMaterials;
 
-	for (unsigned int i = 0; i < m_pAIScene->mNumMeshes; i++)
+	for (_uint i = 0; i < m_pAIScene->mNumMeshes; i++)
 	{
 		aiMesh* mesh = m_pAIScene->mMeshes[i];
 		SaveMesh saveMesh{};
@@ -487,7 +487,7 @@ bool CModel::SaveAssimpModel(const _char* filename)
 		saveMesh.MaterialIndex = mesh->mMaterialIndex;
 
 		saveMesh.Vertices.resize(saveMesh.VertexCount);
-		for (unsigned int i = 0; i < mesh->mNumVertices; i++)
+		for (_uint i = 0; i < mesh->mNumVertices; i++)
 		{
 			saveMesh.Vertices[i].Pos = XMFLOAT3{ mesh->mVertices[i].x , mesh->mVertices[i].y,mesh->mVertices[i].z };
 
@@ -561,10 +561,10 @@ bool CModel::SaveAssimpModel(const _char* filename)
 		}
 
 		saveMesh.Indices.reserve(saveMesh.IndexCount);
-		for (unsigned int i = 0; i < mesh->mNumFaces; i++)
+		for (_uint i = 0; i < mesh->mNumFaces; i++)
 		{
 			aiFace& face = mesh->mFaces[i];
-			for (unsigned int idx = 0; idx < face.mNumIndices; idx++)
+			for (_uint idx = 0; idx < face.mNumIndices; idx++)
 				saveMesh.Indices.push_back(face.mIndices[idx]);
 		}
 
@@ -580,7 +580,7 @@ bool CModel::SaveAssimpModel(const _char* filename)
 	SaveNodeRecursive(m_pAIScene->mRootNode, allNodes, -1);
 
 	modelData.AnimationCount = m_pAIScene->mNumAnimations;
-	for (unsigned int i = 0; i < modelData.AnimationCount; i++)
+	for (_uint i = 0; i < modelData.AnimationCount; i++)
 	{
 		aiAnimation* Anim = m_pAIScene->mAnimations[i];
 		SaveAnimation saveAnim{};
@@ -661,7 +661,7 @@ bool CModel::SaveAssimpModel(const _char* filename)
 			for (auto& Weights : bone.Weights)
 			{
 				fwrite(&Weights.VertexId, sizeof(_uint), 1, fp);
-				fwrite(&Weights.Weight, sizeof(float), 1, fp);
+				fwrite(&Weights.Weight, sizeof(_float), 1, fp);
 			}
 		}
 	}
@@ -670,13 +670,13 @@ bool CModel::SaveAssimpModel(const _char* filename)
 	for (auto& node : allNodes)
 	{
 		fwrite(node.Name, sizeof(node.Name), 1, fp);
-		fwrite(&node.ParentIndex, sizeof(int), 1, fp);
+		fwrite(&node.ParentIndex, sizeof(_int), 1, fp);
 		fwrite(&node.Transformation, sizeof(XMFLOAT4X4), 1, fp);
 		fwrite(&node.ChildrenCount, sizeof(_uint), 1, fp);
 
 		for (auto child : node.ChildrenIndices)
 		{
-			fwrite(&child, sizeof(int), 1, fp);
+			fwrite(&child, sizeof(_int), 1, fp);
 		}
 	}
 
@@ -711,7 +711,7 @@ bool CModel::SaveAssimpModel(const _char* filename)
 			{
 				_uint len = static_cast<_uint>(path.size());
 				fwrite(&len, sizeof(_uint), 1, fp);
-				fwrite(path.c_str(), sizeof(char), len, fp);
+				fwrite(path.c_str(), sizeof(_char), len, fp);
 			}
 		}
 	}
@@ -739,12 +739,12 @@ _int CModel::SaveNodeRecursive(const aiNode* pAINode, std::vector<SaveNode>& out
 	node.ChildrenCount = pAINode->mNumChildren;
 	node.ChildrenIndices.resize(node.ChildrenCount);
 
-	int currentIndex = static_cast<int>(outNodes.size());
+	_int currentIndex = static_cast<_int>(outNodes.size());
 	outNodes.push_back(node);
 
 	for (size_t i = 0; i < pAINode->mNumChildren; i++)
 	{
-		int childIndex = SaveNodeRecursive(pAINode->mChildren[i], outNodes, currentIndex);
+		_int childIndex = SaveNodeRecursive(pAINode->mChildren[i], outNodes, currentIndex);
 		outNodes[currentIndex].ChildrenIndices[i] = childIndex;
 	}
 
@@ -856,14 +856,17 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 
 	Ready_Bones(m_pSaveModel->Nodes, 0, -1);
 
-	if (FAILED(Ready_Meshes()))
+	if (FAILED(Ready_Meshes())){
 		return E_FAIL;
+	}
 
-	if (FAILED(Ready_Materials(pModelFilePath)))
+	if (FAILED(Ready_Materials(pModelFilePath))){
 		return E_FAIL;
+	}
 
-	if (FAILED(Ready_Animations()))
+	if (FAILED(Ready_Animations())){
 		return E_FAIL;
+	}
 
 
 
@@ -872,7 +875,7 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 
 
 
-bool CModel::LoadData(const _char* filename)
+_bool CModel::LoadData(const _char* filename)
 {
 	FILE* fp = nullptr;
 	fopen_s(&fp, filename, "rb");
@@ -920,13 +923,13 @@ bool CModel::LoadData(const _char* filename)
 	for (size_t i = 0; i < NewModel.NodeCount; i++)
 	{
 		fread(NewModel.Nodes[i].Name, sizeof(NewModel.Nodes[i].Name), 1, fp);
-		fread(&NewModel.Nodes[i].ParentIndex, sizeof(int), 1, fp);
+		fread(&NewModel.Nodes[i].ParentIndex, sizeof(_int), 1, fp);
 		fread(&NewModel.Nodes[i].Transformation, sizeof(XMFLOAT4X4), 1, fp);
 		fread(&NewModel.Nodes[i].ChildrenCount, sizeof(_uint), 1, fp);
 		NewModel.Nodes[i].ChildrenIndices.resize(NewModel.Nodes[i].ChildrenCount);
 		for (size_t j = 0; j < NewModel.Nodes[i].ChildrenCount; j++)
 		{
-			fread(&NewModel.Nodes[i].ChildrenIndices[j], sizeof(int), 1, fp);
+			fread(&NewModel.Nodes[i].ChildrenIndices[j], sizeof(_int), 1, fp);
 		}
 	}
 
@@ -973,7 +976,7 @@ bool CModel::LoadData(const _char* filename)
 				fread(&len, sizeof(_uint), 1, fp);
 				std::string temp;
 				temp.resize(len);
-				fread(&temp[0], sizeof(char), len, fp);
+				fread(&temp[0], sizeof(_char), len, fp);
 				mat.Path[k][j] = temp;
 			}
 		}

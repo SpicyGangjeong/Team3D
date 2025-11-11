@@ -182,6 +182,12 @@ public:
 	PSX::PxShape* Create_Shape(ACTOR eType, _float3& vhalfGeometryInfo, PSX::PxMaterial& pxMaterial, _bool bExclusive = false, PSX::PxShapeFlags ePxShapeFlag = PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE);
 	const PSX::PxRigidDynamic* Add_DynamicActor(CRigidBody& RigidBody);
 	const PSX::PxRigidStatic* Add_StaticActor(CRigidBody& RigidBody);
+
+
+	PSX::PxController* Add_CapsuleController(PSX::PxCapsuleControllerDesc& Desc);
+	PSX::PxController* Add_BoxController(PSX::PxBoxControllerDesc& Desc);
+	PSX::PxController* Get_Controller(_uint iControllerIndex);
+	void				ReleaseController(_uint iControllerIndex);
 #pragma endregion
 
 

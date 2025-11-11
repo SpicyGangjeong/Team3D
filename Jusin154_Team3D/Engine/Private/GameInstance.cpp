@@ -270,7 +270,7 @@ void CGameInstance::Present_TimeCost() const
 		GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
 		GUI::Text("Timer_Occupancy %d", int(m_fTimer_Present / fTotal * 100.f));
 	}
-
+	GUI::Text("GameInstance RefCNT : %d", m_iRefCnt);
 	static float values[60] = {};
 	static int values_offset = 0;
 	static double refresh_time = 0.0;
@@ -556,6 +556,22 @@ const PSX::PxRigidDynamic* CGameInstance::Add_DynamicActor(CRigidBody& RigidBody
 const PSX::PxRigidStatic* CGameInstance::Add_StaticActor(CRigidBody& RigidBody)
 {
 	return m_pPhysX_Manager->Add_StaticActor(RigidBody);
+}
+PSX::PxController* CGameInstance::Add_CapsuleController(PSX::PxCapsuleControllerDesc& Desc)
+{
+	return m_pPhysX_Manager->Add_CapsuleController(Desc);
+}
+PSX::PxController* CGameInstance::Add_BoxController(PSX::PxBoxControllerDesc& Desc)
+{
+	return m_pPhysX_Manager->Add_BoxController(Desc);
+}
+PSX::PxController* CGameInstance::Get_Controller(_uint iControllerIndex)
+{
+	return m_pPhysX_Manager->Get_Controller(iControllerIndex);
+}
+void CGameInstance::ReleaseController(_uint iControllerIndex)
+{
+	m_pPhysX_Manager->ReleaseController(iControllerIndex);
 }
 #pragma endregion
 

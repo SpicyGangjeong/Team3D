@@ -299,7 +299,7 @@ HRESULT CPhysX_Manager::Initialize()
 		}
 		m_pScene = m_pPhysics->createScene(sceneDesc);
 		m_pCCTManager = PxCreateControllerManager(*m_pScene);
-
+		m_pCCTManager->setOverlapRecoveryModule(false);
 	}
 
 	// 디버그서버의 클라 세팅
@@ -310,27 +310,32 @@ HRESULT CPhysX_Manager::Initialize()
 		pPvdClient->setScenePvdFlag(PSX::PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
 	}
 
-	//physx::PxMaterial* pMaterial = m_pPhysics->createMaterial(0.5f, 0.5f, 0.6f);
-	//physx::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *pMaterial);
-	//m_pScene->addActor(*pGroundPlane);
+	// m_pScene->overlap();??????
 
-	//{
+#ifdef 기무리
+	physx::PxMaterial* pMaterial = m_pPhysics->createMaterial(0.5f, 0.5f, 0.6f);
+	physx::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *pMaterial);
+	m_pScene->addActor(*pGroundPlane);
 
-	//	float halfExtent = .5f;
-	//	physx::PxShape* shape = m_pPhysics->createShape(physx::PxSphereGeometry(halfExtent), *pMaterial);
-	//	physx::PxU32 size = 100;
-	//	physx::PxTransform pxTransform(physx::PxVec3(0));
+	{
+		float halfExtent = .5f;
+		physx::PxShape* shape = m_pPhysics->createShape(physx::PxSphereGeometry(halfExtent), *pMaterial);
+		physx::PxU32 size = 30;
+		physx::PxTransform pxTransform(physx::PxVec3(0));
 
-	//	for (physx::PxU32 i = 0; i < size; i++) {
-	//		for (physx::PxU32 j = 0; j < size - i; j++) {
-	//			physx::PxTransform localTm(physx::PxVec3(physx::PxReal(j * 2) - physx::PxReal(size - i) + 100, physx::PxReal(i * 2 + 1), 0) * halfExtent);
-	//			physx::PxRigidDynamic* body = m_pPhysics->createRigidDynamic(pxTransform.transform(localTm));
-	//			body->attachShape(*shape);
-	//			physx::PxRigidBodyExt::updateMassAndInertia(*body, 10.0f);
-	//			m_pScene->addActor(*body);
-	//		}
-	//	}
-	//}
+		for (physx::PxU32 i = 0; i < size; i++) {
+			for (physx::PxU32 j = 0; j < size - i; j++) {
+				physx::PxTransform localTm(physx::PxVec3(physx::PxReal(j * 2) - physx::PxReal(size - i) + 100, physx::PxReal(i * 2 + 1), 0) * halfExtent);
+				physx::PxRigidDynamic* body = m_pPhysics->createRigidDynamic(pxTransform.transform(localTm));
+				body->attachShape(*shape);
+				physx::PxRigidBodyExt::updateMassAndInertia(*body, 10.0f);
+				m_pScene->addActor(*body);
+			}
+		}
+	}
+#endif // 기무리
+
+	
 
 	return S_OK;
 }

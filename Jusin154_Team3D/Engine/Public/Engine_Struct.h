@@ -4,12 +4,12 @@ NS_BEGIN(Engine)
 
 typedef struct tagEngineDesc
 {
-	HINSTANCE			hInstance;
-	HWND				hWnd;
-	_uint				iNumLevels;
-	_uint				iNumCollidableGroup;
-	_uint				iStaticLevel;
-	_uint				iWinSizeX, iWinSizeY;
+	HINSTANCE			hInstance = {};
+	HWND				hWnd = {};
+	_uint				iNumLevels = {};
+	_uint				iNumCollidableGroup = {};
+	_uint				iStaticLevel = {};
+	_uint				iWinSizeX, iWinSizeY = {};
 }ENGINE_DESC;
 
 typedef struct tagModelDesc {
@@ -24,157 +24,159 @@ typedef struct tagModelDesc {
 
 typedef struct tagKeyFrame
 {
-	XMFLOAT3		vScale;
-	XMFLOAT4		vRotation;
-	XMFLOAT3		vTranslation;
-	float			fTrackPosition;
+	XMFLOAT3		vScale = {};
+	XMFLOAT4		vRotation = {};
+	XMFLOAT3		vTranslation = {};
+	_float			fTrackPosition = {};
 
 }KEYFRAME;
 
 struct LERPDESC {
-	_int iSlot;
-	tagKeyFrame tagKeyFrame;
+	_int iSlot = {};
+	tagKeyFrame tagKeyFrame = {};
 };
 
 typedef struct tagLightDesc
 {
-	LIGHT		eType;
-	_float4		vDiffuse;
-	_float4		vAmbient;
-	_float4		vSpecular;
+	LIGHT		eType = {};
+	_float4		vDiffuse = {};
+	_float4		vAmbient = {};
+	_float4		vSpecular = {};
 
-	_float4		vDirection;
-	_float4		vPosition;
-	_float		fRange;
-	_float2		vSpotAngles;
+	_float4		vDirection = {};
+	_float4		vPosition = {};
+	_float		fRange = {};
+	_float2		vSpotAngles = {};
 }LIGHT_DESC;
 
 typedef struct tagShadowLight
 {
-	_float4		vEye, vAt;
-	_float		fWidth, fHeight, fNear, fFar;
+	_float4		vEye{}, vAt{};
+	_float		fWidth{}, fHeight{}, fNear{}, fFar{};
 }SHADOW_LIGHT_DESC;
 
-struct SaveVertex
+typedef struct tagSaveVertex
 {
-	XMFLOAT3 Pos;
-	XMFLOAT3 Normal;
-	XMFLOAT3 Tan;
-	XMFLOAT3 BiNoraml;
-	XMFLOAT2 UV;
+	XMFLOAT3 Pos = {};
+	XMFLOAT3 Normal = {};
+	XMFLOAT3 Tan = {};
+	XMFLOAT3 BiNoraml = {};
+	XMFLOAT2 UV = {};
 
-	bool bHasNormal;
-	bool bHasTan;
-	bool bHasUV;
+	_bool bHasNormal = {};
+	_bool bHasTan = {};
+	_bool bHasUV = {};
 
-	XMUINT4 BlendIndex;
-	XMFLOAT4 BlendWeight;
-};
+	XMUINT4 BlendIndex = {};
+	XMFLOAT4 BlendWeight = {};
+}SaveVertex;
 
-struct SaveBoneWeight
+typedef struct tagSaveBoneWeight
 {
-	unsigned int VertexId;
-	float Weight;
-};
+	_uint VertexId = {};
+	_float Weight = {};
+}SaveBoneWeight;
 
-struct SaveBone
+typedef struct tagSaveBone
 {
-	char Name[64];
-	XMFLOAT4X4 OffsetMatrix;
-	int BoneIndex;
-	unsigned int WeightsCount;
-	vector<SaveBoneWeight>Weights;
-};
+	_char Name[64] = {};
+	XMFLOAT4X4 OffsetMatrix = {};
+	_int BoneIndex = {};
+	_uint WeightsCount = {};
+	vector<SaveBoneWeight>Weights = {};
+}SaveBone;
 
-struct SaveNode
+typedef struct tagSaveNode
 {
-	char Name[64];
-	int ParentIndex;
-	unsigned int ChildrenCount;
-	XMFLOAT4X4 Transformation;
-	vector<int> ChildrenIndices;
-};
+	_char Name[64] = {};
+	_int ParentIndex = {};
+	_uint ChildrenCount = {};
+	XMFLOAT4X4 Transformation = {};
+	vector<_int> ChildrenIndices = {};
+}SaveNode;
 
-struct SaveMesh
+typedef struct tagSaveMesh
 {
-	char Name[64];
-	unsigned int VertexCount;
-	unsigned int IndexCount;
-	unsigned int MaterialIndex;
-	unsigned int BoneCount;
+	_char Name[64] = {};
+	_uint VertexCount = {};
+	_uint IndexCount = {};
+	_uint MaterialIndex = {};
+	_uint BoneCount = {};
 
-	vector<SaveVertex> Vertices;
-	vector<unsigned int> Indices;
+	vector<SaveVertex> Vertices = {};
+	vector<_uint> Indices = {};
 
-	vector<SaveBone> Bones;
-};
+	vector<SaveBone> Bones = {};
+}SaveMesh;
 
-struct SaveMaterial
+typedef struct tagSaveMaterial
 {
-	vector<string> Path[27];
+	vector<string> Path[27] = {};
 
-};
+}SaveMaterial;
 
-struct SaveKeyFrameVec
+typedef struct tagSaveKeyFrameVec
 {
-	float Time;
-	XMFLOAT3 Value;
-};
+	_float Time = {};
+	XMFLOAT3 Value = {};
+}SaveKeyFrameVec;
 
-struct SaveKeyFrameRotation
+typedef struct tagSaveKeyFrameRotation
 {
-	float Time;
-	XMFLOAT4 Value;
-};
+	_float Time = {};
+	XMFLOAT4 Value = {};
+}SaveKeyFrameRotation;
 
-struct SaveChannel
+typedef struct tagSaveChannel
 {
-	char Name[64] = { };
-	unsigned int ScalingKeyCount = { };
-	unsigned int RotationKeyCount = { };
-	unsigned int PositionKeyCount = { };
+	_char Name[64] = { };
+	_uint ScalingKeyCount = { };
+	_uint RotationKeyCount = { };
+	_uint PositionKeyCount = { };
 
-	vector<SaveKeyFrameVec> ScalingKeys;
-	vector<SaveKeyFrameRotation> RotationKeys;
-	vector<SaveKeyFrameVec> PositionKeys;
-};
+	vector<SaveKeyFrameVec> ScalingKeys = {};
+	vector<SaveKeyFrameRotation> RotationKeys = {};
+	vector<SaveKeyFrameVec> PositionKeys = {};
+}SaveChannel;
 
-struct SaveAnimation
+typedef struct tagSaveAnimation
 {
-	char Name[128];
-	float mDuration;
-	float mTicksPerSecond;
-	unsigned int ChannelCount;
-	vector<SaveChannel> Channels;
-};
+	_char Name[128] = {};
+	_float mDuration = {};
+	_float mTicksPerSecond = {};
+	_uint ChannelCount = {};
+	vector<SaveChannel> Channels = {};
+}SaveAnimation;
 
-struct SaveModel
+typedef struct tagSaveModel
 {
-	unsigned int MeshCount;
-	unsigned int MaterialCount;
-	unsigned int AnimationCount;
-	unsigned int NodeCount;
-	vector<SaveMesh> Meshes;
-	vector<SaveMaterial> Materials;
-	vector<SaveAnimation> Animations;
-	vector<SaveNode>Nodes;
-};
+	_uint MeshCount = {};
+	_uint MaterialCount = {};
+	_uint AnimationCount = {};
+	_uint NodeCount = {};
+	vector<SaveMesh> Meshes = {};
+	vector<SaveMaterial> Materials = {};
+	vector<SaveAnimation> Animations = {};
+	vector<SaveNode>Nodes = {};
+}SaveModel;
+
+#pragma region VTX
 
 typedef struct tagVertexInstance_Particle
 {
-	_float4			vRight;
-	_float4			vUp;
-	_float4			vLook;
-	_float4			vTranslation;
+	_float4			vRight = {};
+	_float4			vUp = {};
+	_float4			vLook = {};
+	_float4			vTranslation = {};
 
-	_float2			vLifeTime;
+	_float2			vLifeTime = {};
 }VTX_INSTANCE_PARTICLE;
 
 typedef struct tagVertexBlock
 {
-	_float3 vPosition;
-	_float3 vNormal;
-	_float3 vTexcoord;
+	_float3 vPosition = {};
+	_float3 vNormal = {};
+	_float3 vTexcoord = {};
 
 	static constexpr _uint iNumElements = { 3 };
 	static constexpr D3D11_INPUT_ELEMENT_DESC Elements[] = {
@@ -186,8 +188,8 @@ typedef struct tagVertexBlock
 }VTXBLOCK;
 
 typedef struct tagVertexPosition {
-	_float3	vPosition;
-	
+	_float3	vPosition = {};
+
 	static constexpr _uint iNumElements = { 1 };
 	static constexpr D3D11_INPUT_ELEMENT_DESC Elements[] = {
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -196,9 +198,9 @@ typedef struct tagVertexPosition {
 }VTXPOS;
 
 typedef struct tagVertexPositionTexcoord {
-	_float3	vPosition;
-	_float2	vTexcoord;
-	
+	_float3	vPosition = {};
+	_float2	vTexcoord = {};
+
 	static constexpr _uint iNumElements = { 2 };
 	static constexpr D3D11_INPUT_ELEMENT_DESC Elements[] = {
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -208,10 +210,10 @@ typedef struct tagVertexPositionTexcoord {
 }VTXPOSTEX;
 
 typedef struct tagVertexPositionNormalTexcoord {
-	_float3	vPosition;
-	_float3	vNormal;
-	_float2	vTexcoord;
-	
+	_float3	vPosition = {};
+	_float3	vNormal = {};
+	_float2	vTexcoord = {};
+
 	static constexpr _uint iNumElements = { 3 };
 	static constexpr D3D11_INPUT_ELEMENT_DESC Elements[] = {
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -223,11 +225,11 @@ typedef struct tagVertexPositionNormalTexcoord {
 
 typedef struct tagVertexMesh
 {
-	_float3			vPosition;
-	_float3			vNormal;
-	_float3			vTangent;
-	_float3			vBinormal;
-	_float2			vTexcoord;
+	_float3			vPosition = {};
+	_float3			vNormal = {};
+	_float3			vTangent = {};
+	_float3			vBinormal = {};
+	_float2			vTexcoord = {};
 
 	static constexpr _uint					iNumElements = { 5 };
 	static constexpr D3D11_INPUT_ELEMENT_DESC		Elements[] = {
@@ -241,14 +243,14 @@ typedef struct tagVertexMesh
 
 typedef struct tagVertexAnimationMesh
 {
-	_float3			vPosition;
-	_float3			vNormal;
-	_float3			vTangent;
-	_float3			vBinormal;
-	_float2			vTexcoord;
+	_float3			vPosition = {};
+	_float3			vNormal = {};
+	_float3			vTangent = {};
+	_float3			vBinormal = {};
+	_float2			vTexcoord = {};
 
-	XMUINT4			vBlendIndex;
-	_float4			vBlendWeight;
+	XMUINT4			vBlendIndex = {};
+	_float4			vBlendWeight = {};
 
 	static constexpr _uint					iNumElements = { 7 };
 	static constexpr D3D11_INPUT_ELEMENT_DESC		Elements[] = {
@@ -264,7 +266,7 @@ typedef struct tagVertexAnimationMesh
 
 typedef struct tagVertexPosInstanceParticleDesc
 {
-	static constexpr unsigned int					iNumElements = { 6 };
+	static constexpr _uint					iNumElements = { 6 };
 	static constexpr D3D11_INPUT_ELEMENT_DESC		Elements[] = {
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
 
@@ -279,7 +281,7 @@ typedef struct tagVertexPosInstanceParticleDesc
 
 typedef struct tagVertexModelInstanceParticleDesc
 {
-	static constexpr unsigned int					iNumElements = { 10 };
+	static constexpr _uint					iNumElements = { 10 };
 	static constexpr D3D11_INPUT_ELEMENT_DESC		Elements[] = {
 		{ "POSITION" , 0 , DXGI_FORMAT_R32G32B32_FLOAT , 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
 		{ "NORMAL" , 0 , DXGI_FORMAT_R32G32B32_FLOAT , 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
@@ -294,5 +296,19 @@ typedef struct tagVertexModelInstanceParticleDesc
 		{ "TEXCOORD", 5, DXGI_FORMAT_R32G32_FLOAT, 1, 64, D3D11_INPUT_PER_INSTANCE_DATA, 1 }
 	};
 }VTX_MODEL_INSTANCE_PARTICLE;
+
+#pragma endregion
+
+
+typedef struct tagPhsXUserData {
+	PHYSX_KIND eKind = PHYSX_KIND::NOT_DEFINED;
+	class CGameObject* pOwner = { nullptr };
+	_float4x4 m_BeforeMatrix = { };
+	union {
+		class CRigidBody* pBody;
+		class CCharacter_Controller* pCharacter;
+		class CObstacle_Controller* pObstacle = { nullptr };
+	};
+}PhsXUserData;
 
 NS_END

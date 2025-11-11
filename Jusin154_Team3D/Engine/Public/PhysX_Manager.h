@@ -35,7 +35,7 @@ public:
 #pragma endregion
 
 #pragma region CHARACTER_CONTROLLER
-	/* https://dev-treadmill.tistory.com/158 */
+	/* dev-treadmill.tistory.com/158  */
 
 public:
 	PSX::PxController*	Add_CapsuleController(PSX::PxCapsuleControllerDesc& Desc);
