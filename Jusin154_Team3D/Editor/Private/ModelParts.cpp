@@ -20,6 +20,10 @@ HRESULT CModelParts::Initialize_Prototype()
 
 HRESULT CModelParts::Initialize(void* pArg)
 {
+	OBJECT_DESC* pDesc = static_cast<OBJECT_DESC*>(pArg);
+
+	m_strModelPrototypeTag = pDesc->pModelPrototypeTag;
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 

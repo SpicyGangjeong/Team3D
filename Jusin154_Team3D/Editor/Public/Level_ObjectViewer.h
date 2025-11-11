@@ -27,16 +27,26 @@ private:
 	HRESULT Ready_Layer_Dummy(const _wstring& strLayerTag);
 
 	void Add_Object();
-	void Add_Creature();
 	void Add_Human();
 	void Show_ModelFilePath();
+	void Category_ModelList(const _char* Category);
+	void Category_PartsModelList(const _char* Category, const _char* Layer);
 	void Show_AnimList();
 	void Show_ObjectList();
 	void Object_Setting();
+	void Save_LayerName(const _char* Category);
+	_wchar* Save_ModelName(const _char* Category);
+
 private:
 	vector<CGameObject*> m_Objects;
+	vector<CGameObject*> m_PartsObjects;
 	CGameObject* m_HumanRoot = { nullptr };
 	_int m_iObjectIndex = { 0 };
+	_int m_iPartsObjectIndex = { 0 };
+	_char m_szName[MAX_PATH];
+	_wchar m_wszName[MAX_PATH];
+	_wchar m_wszLayer[MAX_PATH];
+	_wchar m_wszPreLayer[MAX_PATH];
 
 
 public:

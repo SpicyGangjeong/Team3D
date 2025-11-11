@@ -1,14 +1,14 @@
 #pragma once
 
 #include "Editor_Define.h"
-#include "GameObject.h"
+#include "ContainerObject.h"
 NS_BEGIN(Engine)
 class CModel;
 NS_END
 
 NS_BEGIN(Editor)
 
-class CRootModelPart final : public CGameObject
+class CRootModelPart final : public CContainerObject
 {
 private:
 	CRootModelPart(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -30,7 +30,7 @@ public:
 private:
 	CModel* m_pMainModel = { nullptr };
 	vector<class CModelParts*> m_ModelParts = {};
-	_uint m_iAnimIndex = {0};
+	_uint m_iAnimIndex = { 0 };
 
 private:
 	HRESULT Ready_Components();

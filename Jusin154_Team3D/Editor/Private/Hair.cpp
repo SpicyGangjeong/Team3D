@@ -85,7 +85,7 @@ HRESULT CHair::Render()
 HRESULT CHair::Ready_Components()
 {
 	/* Com_Model */
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_HumanHair_Model"),
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_strModelPrototypeTag,
 		reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 

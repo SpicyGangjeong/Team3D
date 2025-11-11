@@ -6,12 +6,12 @@
 #include "ModelParts.h"
 
 CRootModelPart::CRootModelPart(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+	: CContainerObject(pDevice, pContext)
 {
 }
 
 CRootModelPart::CRootModelPart(const CRootModelPart& Prototype)
-	: CGameObject(Prototype)
+	: CContainerObject(Prototype)
 {
 }
 
@@ -126,4 +126,5 @@ void CRootModelPart::Free()
 
 void CRootModelPart::Describe_Entity()
 {
+	GUI::Text("HI");
 }
