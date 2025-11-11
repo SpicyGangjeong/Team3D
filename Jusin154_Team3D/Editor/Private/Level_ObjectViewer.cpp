@@ -74,7 +74,7 @@ void CLevel_ObjectViewer::Add_Human()
 {
 	if (GUI::BeginTabItem("Body"))
 	{
-		Category_PartsModelList("Human/Body", "Body");
+		Category_PartsModelList("Human/Body","Body");
 
 		GUI::EndTabItem();
 	}
@@ -131,7 +131,7 @@ void CLevel_ObjectViewer::Category_ModelList(const _char* Category)
 					{
 						CGameObject* pTempObject = { nullptr };
 
-						CDummyObject::OBJECT_DESC Desc = {};
+						CDummyObject::PARTS_OBJECT_DESC Desc = {};
 
 						Desc.pModelPrototypeTag = Save_ModelName(szCategory);
 
@@ -143,7 +143,7 @@ void CLevel_ObjectViewer::Category_ModelList(const _char* Category)
 							m_Objects.pop_back();
 						}
 
-						if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummyObject>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, m_wszLayer, &Desc, nullptr, &pTempObject)))
+						if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummyObject>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, m_wszLayer, &Desc, nullptr, reinterpret_cast<CDummyObject**>(&pTempObject))))
 							return;
 
 						wcscpy_s(m_wszPreLayer, m_wszLayer);
@@ -159,6 +159,11 @@ void CLevel_ObjectViewer::Category_ModelList(const _char* Category)
 
 void CLevel_ObjectViewer::Category_PartsModelList(const _char* Category, const _char* Layer)
 {
+	if (!m_HumanRoot)
+	{
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRootModelPart>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, TEXT("Layer_Root"), nullptr, nullptr, reinterpret_cast<CRootModelPart**>(&m_HumanRoot))))
+			return;
+	}
 	for (_uint i = 0; i < m_pGameInstance->BinaryModelFilePathCount(); i++)
 	{
 		const _char* szCategory = m_pGameInstance->Load_BinaryModelFilePath(i);
@@ -167,35 +172,16 @@ void CLevel_ObjectViewer::Category_PartsModelList(const _char* Category, const _
 		{
 			if (GUI::Button(szCategory))
 			{
-				if (strcmp("Body", Layer) == 0)
-				{
-					if (!m_HumanRoot)
-					{
-						if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRootModelPart>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, TEXT("Layer_Root"), nullptr, nullptr, &m_HumanRoot)))
-							return;
-					}
-				}
-
 				Save_LayerName(Layer);
 
 				CGameObject* pTempObject = { nullptr };
 
-				CDummyObject::OBJECT_DESC Desc = {};
+				CDummyObject::PARTS_OBJECT_DESC Desc = {};
 
 				Desc.pModelPrototypeTag = Save_ModelName(szCategory);
 
-				if (m_PartsObjects.size() > 0)
-				{
-					m_pGameInstance->Get_Layer(NEXT_LEVEL, m_wszPreLayer)->Clear_Layer();
-					m_PartsObjects.pop_back();
-				}
-
-				if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBody>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, m_wszLayer, &Desc, m_HumanRoot, &pTempObject)))
-					return;
-
-				m_PartsObjects.push_back(pTempObject);
-
-				wcscpy_s(m_wszPreLayer, m_wszLayer);
+				dynamic_cast<CRootModelPart*>(m_HumanRoot)->Set_PrototypeModelName(Desc.pModelPrototypeTag);
+				dynamic_cast<CRootModelPart*>(m_HumanRoot)->Set_ModelName(szCategory);
 			}
 		}
 	}
@@ -206,23 +192,20 @@ void CLevel_ObjectViewer::Show_AnimList()
 	GUI::Begin("Anim_List");
 	if (!m_Objects.empty())
 	{
-		if (!m_Objects[m_iObjectIndex]->isDead())
+		CModel* pModel = m_Objects[m_iObjectIndex]->Get_Component<CModel>();
+		for (_uint i = 0; i < pModel->Get_AnimSize(); i++)
 		{
-			CModel* pModel = m_Objects[m_iObjectIndex]->Get_Component<CModel>();
-			for (_uint i = 0; i < pModel->Get_AnimSize(); i++)
+			if (GUI::Button(pModel->Get_AnimList(i)))
 			{
-				if (GUI::Button(pModel->Get_AnimList(i)))
-				{
-					pModel->Set_AnimationIndex(i);
-				}
+				pModel->Set_AnimationIndex(i);
 			}
 		}
 	}
-	if (!m_PartsObjects.empty())
+	if (m_HumanRoot)
 	{
-		if (!m_PartsObjects[m_iObjectIndex]->isDead())
+		CModel* pModel = dynamic_cast<CRootModelPart*>(m_HumanRoot)->Get_ModelParts(0)->Get_Component<CModel>();
+		if (pModel)
 		{
-			CModel* pModel = m_PartsObjects[m_iObjectIndex]->Get_Component<CModel>();
 			for (_uint i = 0; i < pModel->Get_AnimSize(); i++)
 			{
 				if (GUI::Button(pModel->Get_AnimList(i)))
@@ -275,26 +258,28 @@ void CLevel_ObjectViewer::Object_Setting()
 	GUI::End();
 
 	GUI::Begin("PartsObject_Info");
-	if (!m_PartsObjects.empty())
+	if (m_HumanRoot)
 	{
-		CModel* pModel = m_PartsObjects.front()->Get_Component<CModel>();
-
-		_float AnimTrack = pModel->Get_CurrentTrackPosition();
-		GUI::DragFloat("AnimTrack", &AnimTrack);
-
-		_float AnimSpeed = pModel->Get_AnimSpeed();
-		GUI::DragFloat("AnimSpeed", &AnimSpeed, 0.1f);
-		pModel->Set_AnimSpeed(AnimSpeed);
-
-		_bool bPlayAnim = pModel->Get_PlayAnim();
-		if (GUI::Checkbox("Play Anim", &bPlayAnim))
+		CModel* pModel = dynamic_cast<CRootModelPart*>(m_HumanRoot)->Get_ModelParts(0)->Get_Component<CModel>();
+		if (pModel)
 		{
-			pModel->Set_PlayAnim(bPlayAnim);
-		}
-		if (GUI::Button("Delete"))
-		{
-			m_pGameInstance->Get_Layer(NEXT_LEVEL, m_wszPreLayer)->Clear_Layer();
-			m_PartsObjects.clear();
+			_float AnimTrack = pModel->Get_CurrentTrackPosition();
+			GUI::DragFloat("AnimTrack", &AnimTrack);
+
+			_float AnimSpeed = pModel->Get_AnimSpeed();
+			GUI::DragFloat("AnimSpeed", &AnimSpeed, 0.1f);
+			pModel->Set_AnimSpeed(AnimSpeed);
+
+			_bool bPlayAnim = pModel->Get_PlayAnim();
+			if (GUI::Checkbox("Play Anim", &bPlayAnim))
+			{
+				pModel->Set_PlayAnim(bPlayAnim);
+			}
+			if (GUI::Button("Delete"))
+			{
+				m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_Root"))->Clear_Layer();
+				m_HumanRoot = nullptr;
+			}
 		}
 	}
 
