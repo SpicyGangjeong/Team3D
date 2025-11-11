@@ -12,6 +12,12 @@ NS_BEGIN(Editor)
 
 class CModelParts abstract : public CGameObject
 {
+public:
+	typedef struct tagObjectDesc
+	{
+		const _tchar* pModelPrototypeTag;
+	}OBJECT_DESC;
+
 protected:
 	CModelParts(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CModelParts(const CModelParts& Prototype);
@@ -24,14 +30,17 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+	_wstring& Get_PrototypeTag() { return m_strModelPrototypeTag; }
 
 protected:
-	CShader*	m_pShaderCom = { nullptr };
-	CModel*		m_pModelCom = { nullptr };
+	CShader* m_pShaderCom = { nullptr };
+	CModel* m_pModelCom = { nullptr };
 	_bool		m_bRimLight = { true };
 	_float		m_fRimLightPower = { 3.2f };
 	_float		m_fRimLightStrength = { 3.04f };
 	_float3		m_vRimLightColor = { 69.f / 255.f, 5.f / 255.f, 10.f / 255.f };
+
+	_wstring	m_strModelPrototypeTag;
 
 protected:
 	HRESULT Ready_Components();
