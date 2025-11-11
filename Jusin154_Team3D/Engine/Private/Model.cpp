@@ -345,15 +345,26 @@ HRESULT CModel::Ready_Meshes(MODEL eType, const aiScene* pAIScene, _fmatrix& Pre
 	return S_OK;
 }
 
-HRESULT CModel::Ready_PhysXMeshes(MODEL eType)
+HRESULT CModel::Ready_PhysXMeshes()
 {
 	m_iNumPhysXMeshes = m_iNumMeshes;
 
 	m_TriMeshes.reserve(m_iNumMeshes);
 
-	m_pGameInstance->ConvertToTriMeshes(m_Meshes, m_TriMeshes);
+	m_pGameInstance->ConvertToTriMeshes(m_Meshes, m_TriMeshes, m_pTransform->Get_XMWorldMatrix());
 
 	return S_OK;
+}
+
+HRESULT CModel::Save_PhysXTriMeshes(const _char* pModelFilePath)
+{
+	if (FAILED(Ready_PhysXMeshes())) {
+		return E_FAIL;
+	}
+	for (_uint i = 0; i < m_iNumMeshes; ++i) {
+		m_pGameInstance->RegistTriMesh(m_Meshes[i]->Get_Name(), m_TriMeshes[i]);
+	}
+	return m_pGameInstance->SaveTriMeshes(pModelFilePath, m_TriMeshes);
 }
 
 HRESULT CModel::Ready_Materials(const aiScene* pAIScene, const _char* pModelFilePath)
@@ -810,9 +821,6 @@ HRESULT CModel::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fma
 		if (FAILED(Ready_Materials_FromFile(m_pAIScene, pModelFilePath))) {
 			return E_FAIL;
 		}
-		if (FAILED(Ready_PhysXMeshes(eType))) {
-			return E_FAIL;
-		}
 	}
 	else
 	{
@@ -847,6 +855,7 @@ HRESULT CModel::Initialize_Prototype()
 
 HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix)
 {
+	m_eType = eType;
 	_char		szTextureFileName[MAX_PATH] = {};
 	_char		szDir[MAX_PATH] = {};
 	_char		szName[MAX_PATH] = {};
@@ -855,12 +864,13 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 
 	if (strcmp(".bin", szEXT) == 0)
 	{
-		_char Temp[256];
-		strcpy_s(Temp, szDir);
-		strcat_s(Temp, szName);
-		strcat_s(Temp, ".bin");
 		LoadData(pModelFilePath);
-		m_pGameInstance->LoadTriMeshes(pModelFilePath, m_TriMeshes);
+		if (MODEL::ENVIROMENT == m_eType) {
+			m_pGameInstance->LoadTriMeshes(pModelFilePath, m_TriMeshes);
+			for (_uint i = 0; i < m_iNumMeshes; ++i) {
+				m_pGameInstance->RegistTriMesh(m_Meshes[i]->Get_Name(), m_TriMeshes[i]);
+			}
+		}
 	}
 	else if (strcmp(".fbx", szEXT) == 0)
 	{
@@ -870,17 +880,12 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 		strcat_s(Temp, ".bin");
 		Assimp_Model_Load(pModelFilePath, eType, PreTransformMatrix, 0);
 		SaveAssimpModel(Temp);
-		m_pGameInstance->SaveTriMeshes(pModelFilePath, m_TriMeshes);
 
-		for (_uint i = 0; i < m_iNumMeshes; ++i) {
-			m_pGameInstance->RegistTriMesh(m_Meshes[i]->Get_Name(), m_TriMeshes[i]);
-		}
 		return S_OK;
 	}
 	m_pSaveModel = m_pGameInstance->Load_SaveModel(pModelFilePath);
 	
 
-	m_eType = eType;
 	XMStoreFloat4x4(&m_PreTransformMatrix, PreTransformMatrix);
 
 	Ready_Bones(m_pSaveModel->Nodes, 0, -1);
@@ -897,9 +902,6 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 		return E_FAIL;
 	}
 
-	for (_uint i = 0; i < m_iNumMeshes; ++i) {
-		m_pGameInstance->RegistTriMesh(m_Meshes[i]->Get_Name(), m_TriMeshes[i]);
-	}
 
 
 	return S_OK;

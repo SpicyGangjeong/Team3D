@@ -61,7 +61,8 @@ public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex);
 	HRESULT Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex);
 	HRESULT Ready_Meshes(MODEL eType, const aiScene* pAIScene, _fmatrix& PreTransformMatrix);
-	HRESULT Ready_PhysXMeshes(MODEL eType);
+	HRESULT Ready_PhysXMeshes();
+	HRESULT Save_PhysXTriMeshes(const _char* pModelFilePath);
 	HRESULT Ready_Materials(const aiScene* pAIScene, const _char* pModelFilePath);
 	HRESULT Ready_Materials_FromFile(const aiScene* pAIScene, const _char* pModelFilePath);
 	HRESULT Ready_Animations(const aiScene* pAIScene);

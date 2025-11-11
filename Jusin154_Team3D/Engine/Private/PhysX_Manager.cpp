@@ -129,11 +129,11 @@ void CPhysX_Manager::RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxT
 	m_TriangleMeshGeometry.emplace(CMyTools::ToWstring(pName), pGeometry);
 }
 
-HRESULT CPhysX_Manager::ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<PSX::PxTriangleMesh*>& pxTriMeshes)
+HRESULT CPhysX_Manager::ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix)
 {
 	for (size_t i = 0; i < Meshes.size(); ++i)
 	{
-		PSX::PxTriangleMesh* pTriangleMesh = Meshes[i]->ConvertToPxMesh(m_pCookingParam, m_pPhysics);
+		PSX::PxTriangleMesh* pTriangleMesh = Meshes[i]->ConvertToPxMesh(m_pCookingParam, m_pPhysics, WorldMatrix);
 		if (nullptr == pTriangleMesh) {
 			return E_FAIL;
 		}
@@ -144,23 +144,22 @@ HRESULT CPhysX_Manager::ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<
 	return S_OK;
 }
 
-_bool CPhysX_Manager::SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes)
+HRESULT CPhysX_Manager::SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes)
 {
 	filesystem::path pathPhysX = pPath;
-	pathPhysX.replace_extension(".xml");
+	pathPhysX.replace_extension(".Pxml");
 	if (TriMeshes.empty()){
-		return false;
+		return E_FAIL;
 	}
 
 	filesystem::create_directories(pathPhysX.parent_path());
-
 
 	PSX::PxSerializationRegistry* pSerializationRegistry = PSX::PxSerialization::createSerializationRegistry(*m_pPhysics);
 	PSX::PxCollection* pCollections = PxCreateCollection();
 	if (nullptr == pCollections) { 
 		pSerializationRegistry->release();
 		assert(pCollections);
-		return false;
+		return E_FAIL;
 	}
 
 	for (PSX::PxTriangleMesh* pTriMesh : TriMeshes) {
@@ -171,32 +170,30 @@ _bool CPhysX_Manager::SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMe
 	PSX::PxDefaultFileOutputStream out(pathPhysX.string().c_str());
 	PSX::PxCollection* extRefs = PxCreateCollection();
 	const _bool ok = PSX::PxSerialization::serializeCollectionToXml(out, *pCollections, *pSerializationRegistry, m_pCookingParam, extRefs);
-	//const _bool ok = PSX::PxSerialization::serializeCollectionToBinary(out, *pCollections, *pSerializationRegistry, extRefs);
 
 	extRefs->release();
 	pCollections->release();
 	pSerializationRegistry->release();
 	assert(ok);
-	return ok;
+	return (ok ? S_OK : E_FAIL);
 }
 
-_bool CPhysX_Manager::LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes)
+HRESULT CPhysX_Manager::LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes)
 {
 	filesystem::path pathPhysX = pPath;
-	pathPhysX.replace_extension(".xml");
+	pathPhysX.replace_extension(".Pxml");
 
 	PSX::PxSerializationRegistry* pSerializationRegistry = PSX::PxSerialization::createSerializationRegistry(*m_pPhysics);
 
 	PSX::PxDefaultFileInputData InputData(pathPhysX.string().c_str());
 	PSX::PxCollection* extRefs = PxCreateCollection();
 	
-	//PSX::PxCollection* pCollections = PSX::PxSerialization::createCollectionFromBinary(&InputData, *pSerializationRegistry, extRefs);
 	PSX::PxCollection* pCollections = PSX::PxSerialization::createCollectionFromXml(InputData, *m_pCookingParam, *pSerializationRegistry, extRefs);
 	if (nullptr == pCollections) { 
 		extRefs->release();
 		pSerializationRegistry->release(); 
 		assert(pCollections);
-		return false;
+		return E_FAIL;
 	}
 
 	const PSX::PxU32 iNumTriMeshes = pCollections->getNbObjects();
@@ -214,8 +211,46 @@ _bool CPhysX_Manager::LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMe
 	extRefs->release();
 	pCollections->release();
 	pSerializationRegistry->release();
-	return true;
+	return S_OK;
 }
+
+// 바이너리 로드에는 128B 정렬된 메모리 포인터를 넘겨야 함. InputData 그대로 넘기면 안됨
+// 심지어 바이너리로 불러온 블럭은 피직스의 모든 메시들을 릴리즈 한 뒤에 해제 해야 함
+//_bool CPhysX_Manager::LoadTriMeshes_Binary(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes)
+//{
+//	filesystem::path pathPhysX = pPath;
+//	pathPhysX.replace_extension(".bmap");
+//
+//	PSX::PxSerializationRegistry* pSerializationRegistry = PSX::PxSerialization::createSerializationRegistry(*m_pPhysics);
+//
+//	PSX::PxDefaultFileInputData InputData(pathPhysX.string().c_str());
+//	PSX::PxCollection* extRefs = PxCreateCollection();
+//
+//	PSX::PxCollection* pCollections = PSX::PxSerialization::createCollectionFromBinary(&InputData, *pSerializationRegistry, extRefs); 
+//	if (nullptr == pCollections) {
+//		extRefs->release();
+//		pSerializationRegistry->release();
+//		assert(pCollections);
+//		return false;
+//	}
+//
+//	const PSX::PxU32 iNumTriMeshes = pCollections->getNbObjects();
+//	TriMeshes.reserve(iNumTriMeshes);
+//	for (PSX::PxU32 i = 0; i < iNumTriMeshes; ++i) {
+//		PSX::PxBase& pObject = pCollections->getObject(i);
+//
+//		if (pObject.getConcreteType() == PSX::PxConcreteType::eTRIANGLE_MESH_BVH34) {
+//			PSX::PxTriangleMesh* pTriMesh = static_cast<PSX::PxTriangleMesh*>(&pObject);
+//			pTriMesh->acquireReference();
+//			TriMeshes.push_back(pTriMesh);
+//		}
+//	}
+//
+//	extRefs->release();
+//	pCollections->release();
+//	pSerializationRegistry->release();
+//	return true;
+//}
 
 PSX::PxTriangleMesh* CPhysX_Manager::Find_TriangleMesh(const _wstring& wstrMeshKey)
 {
