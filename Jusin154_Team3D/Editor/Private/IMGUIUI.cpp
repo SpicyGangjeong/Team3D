@@ -2,6 +2,9 @@
 #include "IMGUIUI.h"
 #include "UIObject.h"
 #include "GamePlay_Canvas.h"
+#include "PanelObject.h"
+#include "ElementObject.h"
+#include "Mouse_Cursor.h"
 
 CIMGUIUI::CIMGUIUI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -25,69 +28,206 @@ HRESULT CIMGUIUI::Initialize(void* pArg)
 	return S_OK;
 }
 
+void CIMGUIUI::PanelwstringTostring(vector<std::wstring>& panelNames)
+{
+	m_iPanelNamestring.clear();
+	m_iPanelName.clear();
+	m_iPanelNamewstring.clear();
+
+	m_iPanelNamewstring = panelNames;
+
+	for (auto& wname : panelNames)
+	{
+		// wstring -> UTF-8 string 변환
+		int size = WideCharToMultiByte(CP_UTF8, 0,
+			wname.c_str(), (int)wname.size(),
+			nullptr, 0, nullptr, nullptr);
+
+		std::string result(size, 0);
+
+		WideCharToMultiByte(CP_UTF8, 0,
+			wname.c_str(), (int)wname.size(),
+			&result[0], size, nullptr, nullptr);
+
+		// 변환된 string 저장
+		m_iPanelNamestring.push_back(std::move(result));
+	}
+
+	// vector<const char*> 업데이트
+	for (auto& str : m_iPanelNamestring)
+		m_iPanelName.push_back(str.c_str());
+}
+
+void CIMGUIUI::ElementwstringTostring(vector<wstring>& panelNames)
+{
+	m_pElementNamestring.clear();
+	m_pElementName.clear();
+	m_pElementNamewstring.clear();
+
+	m_pElementNamewstring = panelNames;
+
+	for (auto& wname : panelNames)
+	{
+		// wstring -> UTF-8 string 변환
+		int size = WideCharToMultiByte(CP_UTF8, 0,
+			wname.c_str(), (int)wname.size(),
+			nullptr, 0, nullptr, nullptr);
+
+		std::string result(size, 0);
+
+		WideCharToMultiByte(CP_UTF8, 0,
+			wname.c_str(), (int)wname.size(),
+			&result[0], size, nullptr, nullptr);
+
+		// 변환된 string 저장
+		m_pElementNamestring.push_back(std::move(result));
+	}
+
+	// vector<const char*> 업데이트
+	for (auto& str : m_pElementNamestring)
+		m_pElementName.push_back(str.c_str());
+}
+
 void CIMGUIUI::Priority_Update(_float fTimeDelta)
 {
 }
 
 void CIMGUIUI::Update(_float fTimeDelta)
 {
-	if (m_pElementObject != nullptr)
+	if (m_pPanelObject != nullptr)
 	{
-		m_fPos.x = static_cast<CUIObject*>(m_pElementObject)->Get_Current_Position().m128_f32[0];
-		m_fPos.y = static_cast<CUIObject*>(m_pElementObject)->Get_Current_Position().m128_f32[1];
+		m_fPanelPos.x = static_cast<CPanelObject*>(m_pPanelObject)->Get_Current_Position().m128_f32[0];
+		m_fPanelPos.y = static_cast<CPanelObject*>(m_pPanelObject)->Get_Current_Position().m128_f32[1];
 
-		m_fSize.x = static_cast<CUIObject*>(m_pElementObject)->Get_Current_Size().x;
-		m_fSize.y = static_cast<CUIObject*>(m_pElementObject)->Get_Current_Size().y;
+		m_fPanelSize.x = static_cast<CPanelObject*>(m_pPanelObject)->Get_Current_Size().x;
+		m_fPanelSize.y = static_cast<CPanelObject*>(m_pPanelObject)->Get_Current_Size().y;
 
-		m_fSizeXY = static_cast<CUIObject*>(m_pElementObject)->Get_Current_Size();
-		
-		m_fTimeMult = static_cast<CUIObject*>(m_pElementObject)->Get_TimeMult();
+		m_fPanelSizeXY = static_cast<CPanelObject*>(m_pPanelObject)->Get_Current_Size();
+
+		m_fPanelTimeMult = static_cast<CPanelObject*>(m_pPanelObject)->Get_TimeMult();
 	}
-	GUI::Begin("Current_UIObject_Info");
 
 	if (m_pElementObject != nullptr)
 	{
-		GUI::Text("Origin Position : %.1f, %.1f", static_cast<CUIObject*>(m_pElementObject)->Get_Origin_Position().x, static_cast<CUIObject*>(m_pElementObject)->Get_Origin_Position().y);
-		GUI::Text("Current Position : %.1f, %.1f", static_cast<CUIObject*>(m_pElementObject)->Get_Current_Position().m128_f32[0], static_cast<CUIObject*>(m_pElementObject)->Get_Current_Position().m128_f32[1]);
-		GUI::Text("Origin Size : %.1f, %.1f", static_cast<CUIObject*>(m_pElementObject)->Get_Origin_Size().x, static_cast<CUIObject*>(m_pElementObject)->Get_Origin_Size().y);
-		GUI::Text("Current Size : %.1f, %.1f", static_cast<CUIObject*>(m_pElementObject)->Get_Current_Size().x, static_cast<CUIObject*>(m_pElementObject)->Get_Current_Size().y);
+		m_fPos.x = static_cast<CElementObject*>(m_pElementObject)->Get_Current_Position().m128_f32[0];
+		m_fPos.y = static_cast<CElementObject*>(m_pElementObject)->Get_Current_Position().m128_f32[1];
+
+		m_fSize.x = static_cast<CElementObject*>(m_pElementObject)->Get_Current_Size().x;
+		m_fSize.y = static_cast<CElementObject*>(m_pElementObject)->Get_Current_Size().y;
+
+		m_fSizeXY = static_cast<CElementObject*>(m_pElementObject)->Get_Current_Size();
+
+		m_fTimeMult = static_cast<CElementObject*>(m_pElementObject)->Get_TimeMult();
+	}
+	GUI::Begin("Current_PanelObject_Info");
+	if (m_pGamePlay_Canvas != nullptr)
+	{
+		if (m_pGamePlay_Canvas != nullptr)
+		{
+			auto panelNames = static_cast<CCanvasObject*>(m_pGamePlay_Canvas)->Panel_Name();
+			PanelwstringTostring(panelNames);
+			if (GUI::Combo("Panels", &m_iPanelCount, m_iPanelName.data(), static_cast<_int>(m_iPanelName.size())))
+			{
+				m_pPanelObject = static_cast<CCanvasObject*>(m_pGamePlay_Canvas)->Get_Panel(m_iPanelNamewstring[m_iPanelCount]);
+			}
+		}
+
+		if (m_pPanelObject != nullptr)
+		{
+			GUI::Text("Origin Position : %.1f, %.1f", static_cast<CPanelObject*>(m_pPanelObject)->Get_Origin_Position().x, static_cast<CUIObject*>(m_pPanelObject)->Get_Origin_Position().y);
+			GUI::Text("Current Position : %.1f, %.1f", static_cast<CPanelObject*>(m_pPanelObject)->Get_Current_Position().m128_f32[0], static_cast<CUIObject*>(m_pPanelObject)->Get_Current_Position().m128_f32[1]);
+			GUI::Text("Origin Size : %.1f, %.1f", static_cast<CPanelObject*>(m_pPanelObject)->Get_Origin_Size().x, static_cast<CUIObject*>(m_pPanelObject)->Get_Origin_Size().y);
+			GUI::Text("Current Size : %.1f, %.1f", static_cast<CPanelObject*>(m_pPanelObject)->Get_Current_Size().x, static_cast<CUIObject*>(m_pPanelObject)->Get_Current_Size().y);
+
+			GUI::Text("PanelPosition");
+			if (GUI::SliderFloat("X##PanelPos", &m_fPanelPos.x, 0.f, 1920.f))
+			{
+				static_cast<CPanelObject*>(m_pPanelObject)->MoveX(m_fPanelPos.x);
+			}
+
+			if (GUI::SliderFloat("Y##PanelPos", &m_fPanelPos.y, 0.f, 1080))
+			{
+				static_cast<CPanelObject*>(m_pPanelObject)->MoveY(m_fPanelPos.y);
+			}
+
+			GUI::Text("PanelSize");
+			if (GUI::SliderFloat("X##PanelSize", &m_fPanelSize.x, 1.f, 1920.f))
+			{
+				static_cast<CPanelObject*>(m_pPanelObject)->SizeUpdate(m_fPanelSize.x, m_fPanelSize.y);
+			}
+
+			if (GUI::SliderFloat("Y##PanelSize", &m_fPanelSize.y, 1.f, 1080.f))
+			{
+				static_cast<CPanelObject*>(m_pPanelObject)->SizeUpdate(m_fPanelSize.x, m_fPanelSize.y);
+			}
+
+			if (GUI::SliderFloat("PanelSize", &m_fPanelSizeXY.x, 1.f, 1980.f))
+			{
+				m_fPanelSizeXY.y = m_fPanelSizeXY.x;
+				static_cast<CPanelObject*>(m_pPanelObject)->SizeUpdate_float(m_fPanelSizeXY);
+			}
+
+			if (GUI::DragFloat("PanelTimeMult", &m_fPanelTimeMult, 0.01f, 0.f, 10.f))
+			{
+				static_cast<CPanelObject*>(m_pPanelObject)->Set_TimeMult(m_fPanelTimeMult);
+			}
+		}
+
+	}
+
+	GUI::End();
+
+	GUI::Begin("Current_ElementObject_Info");
+	if (m_pPanelObject != nullptr)
+	{
+		auto ElementNames = static_cast<CPanelObject*>(m_pPanelObject)->Element_Name();
+		ElementwstringTostring(ElementNames);
+		if (GUI::Combo("Element", &m_iElementCount, m_pElementName.data(), static_cast<_int>(m_pElementName.size())))
+		{
+			m_pElementObject = static_cast<CPanelObject*>(m_pPanelObject)->Get_Element(m_pElementNamewstring[m_iElementCount]);
+		}
+	}
+	if (m_pElementObject != nullptr)
+	{
+		GUI::Text("Origin Position : %.1f, %.1f", static_cast<CElementObject*>(m_pElementObject)->Get_Origin_Position().x, static_cast<CUIObject*>(m_pElementObject)->Get_Origin_Position().y);
+		GUI::Text("Current Position : %.1f, %.1f", static_cast<CElementObject*>(m_pElementObject)->Get_Current_Position().m128_f32[0], static_cast<CUIObject*>(m_pElementObject)->Get_Current_Position().m128_f32[1]);
+		GUI::Text("Origin Size : %.1f, %.1f", static_cast<CElementObject*>(m_pElementObject)->Get_Origin_Size().x, static_cast<CUIObject*>(m_pElementObject)->Get_Origin_Size().y);
+		GUI::Text("Current Size : %.1f, %.1f", static_cast<CElementObject*>(m_pElementObject)->Get_Current_Size().x, static_cast<CUIObject*>(m_pElementObject)->Get_Current_Size().y);
 
 		GUI::Text("Position");
 		if (GUI::SliderFloat("X##Pos", &m_fPos.x, 0.f, 1920.f))
 		{
-			static_cast<CUIObject*>(m_pElementObject)->MoveX(m_fPos.x);
+			static_cast<CElementObject*>(m_pElementObject)->MoveX(m_fPos.x);
 		}
 
 		if (GUI::SliderFloat("Y##Pos", &m_fPos.y, 0.f, 1080))
 		{
-			static_cast<CUIObject*>(m_pElementObject)->MoveY(m_fPos.y);
+			static_cast<CElementObject*>(m_pElementObject)->MoveY(m_fPos.y);
 		}
 
 		GUI::Text("Size");
 		if (GUI::SliderFloat("X##Size", &m_fSize.x, 1.f, 1920.f))
 		{
-			static_cast<CUIObject*>(m_pElementObject)->SizeUpdate(m_fSize.x, m_fSize.y);
+			static_cast<CElementObject*>(m_pElementObject)->SizeUpdate(m_fSize.x, m_fSize.y);
 		}
 
 		if (GUI::SliderFloat("Y##Size", &m_fSize.y, 1.f, 1080.f))
 		{
-			static_cast<CUIObject*>(m_pElementObject)->SizeUpdate(m_fSize.x, m_fSize.y);
+			static_cast<CElementObject*>(m_pElementObject)->SizeUpdate(m_fSize.x, m_fSize.y);
 		}
 
 		if (GUI::SliderFloat("Size", &m_fSizeXY.x, 1.f, 1980.f))
 		{
 			m_fSizeXY.y = m_fSizeXY.x;
-			static_cast<CUIObject*>(m_pElementObject)->SizeUpdate_float(m_fSizeXY);
+			static_cast<CElementObject*>(m_pElementObject)->SizeUpdate_float(m_fSizeXY);
 		}
 
 		if (GUI::DragFloat("TimeMult", &m_fTimeMult, 0.01f, 0.f, 10.f))
 		{
-			static_cast<CUIObject*>(m_pElementObject)->Set_TimeMult(m_fTimeMult);
+			static_cast<CElementObject*>(m_pElementObject)->Set_TimeMult(m_fTimeMult);
 		}
 	}
 	GUI::End();
-
-
 }
 
 void CIMGUIUI::Late_Update(_float fTimeDelta)
@@ -110,6 +250,7 @@ HRESULT CIMGUIUI::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
+
 	return S_OK;
 }
 
