@@ -40,8 +40,9 @@ void CEditEffect::Update(_float fTimeDelta)
 {
 	if (m_pInstance_ModelCom == nullptr)
 		return;
-
+	
 	m_pInstance_ModelCom->Drop(fTimeDelta);
+
 }
 
 void CEditEffect::Late_Update(_float fTimeDelta)
@@ -109,22 +110,15 @@ void CEditEffect::Describe_Entity()
 {
 	//여기서 모델, 텍스쳐, 선택할 수 있도록 함
 
-	CInstance_Model::INSTANCE_DESC InstanceDesc = {};
-
-	InstanceDesc.iNumInstance = 1;
-	InstanceDesc.vLifeTime = _float2(1.f, 3.f);
-	InstanceDesc.vRange = _float3(0.f, 0.f, 0.f);
-	InstanceDesc.vSizeMin = _float3(1.f, 1.f, 1.f);
-	InstanceDesc.vSizeMax = _float3(1.f, 1.f, 1.f);
-	InstanceDesc.vSpeed = _float2(0.f, 0.f);
-	InstanceDesc.vAniIndex = _float2(0.f, 32.f);
-	InstanceDesc.vAniTime = _float2(1.f, 3.f);
-	InstanceDesc.vDiffuseUVMoveTime = _float2(1.f, 3.f);
-	InstanceDesc.vMaskingUVMoveTime = _float2(1.f, 3.f);
+	//트레일 만들기
+	//사인 러프
+	//머테리얼 바인딩
+	//블러가 디졸브에 안사라짐 
+	//루프 빌보드
 
 	const char* pRenderNames[] = {"PRIORITY" , "SHADOW", "NONBLEND", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" , "UI"};
 
-	int iCurrentItem = static_cast<int>(m_eRenderOrder);
+	_int iCurrentItem = static_cast<_int>(m_eRenderOrder);
 
 	if (ImGui::Combo("Render Order", &iCurrentItem, pRenderNames, ENUM_CLASS(RENDER::END)))
 	{
@@ -136,35 +130,55 @@ void CEditEffect::Describe_Entity()
 	GUI::Checkbox("Masking", &m_isMasking);
 	GUI::Checkbox("Dissolve", &m_isDissolve);
 	GUI::Checkbox("Noise", &m_isNoise);
-	GUI::Checkbox("UVMove", &m_isUVMove);
 	GUI::Checkbox("Blur", &m_isBlur);
 
 
-	GUI::ColorEdit4("Color", (_float*)&m_vColor);
+	GUI::ColorEdit4("MixColor", (_float*)&m_vColor);
 
-	GUI::DragFloat("BlurIntensity", &m_fBlurIntensity , 0.005f , 0.f , 1.f);
-	GUI::DragFloat("EmissiveCutAlpha", &m_fEmissiveCutAlpha, 0.005f, 0.f, 1.f);
+	ImGui::PushItemWidth(80);
+	GUI::InputFloat2("UVCutting", (_float*)&m_vUVCutting);
+	ImGui::PopItemWidth();
+
+	if (GUI::TreeNode("BLUR"))
+	{
+		ImGui::PushItemWidth(80);
+		GUI::DragFloat("BlurIntensity", &m_fBlurIntensity, 0.005f, 0.f, 1.f);
+		ImGui::PopItemWidth();
+
+		GUI::TreePop();
+	}
 
 
-	GUI::ColorEdit4("Emissive", (_float*)&m_vEmissive);
-	GUI::InputFloat("ColorTargetOption", &m_fColorOption);
-	GUI::InputFloat2("UVCutting", (_float*)& m_vUVCutting);
+	if (GUI::TreeNode("EMISSIVE"))
+	{
+		const char* pCompute[] = { "EQUL" , "PLUS", "SUBSTRACT", "MULTY" , "DIV" };
+
+		_int iColorOption = (_int)m_fColorOption;
+
+		if (ImGui::Combo("OPTION", &iColorOption, pCompute, 5))
+		{
+			m_fColorOption = (_float)iColorOption;
+		}
+
+		ImGui::PushItemWidth(80);
+		GUI::DragFloat("EmissiveCutAlpha", &m_fEmissiveCutAlpha, 0.005f, 0.f, 1.f);
+		ImGui::PopItemWidth();
+
+		GUI::ColorEdit4("Emissive", (_float*)&m_vEmissive);
 
 
-
-	GUI::DragFloat2("vUVGainAmount", (_float*)&m_vUVGainAmount , 0.01f);
-
-
-	//UVMove를 각각의 텍스쳐마다 적용할 수 있어야함 
-	//노이즈 적용하기
-	//디졸브 적용하기
-	//라이프 타임에 의해서가 아닌 공용시간으로 제어해야함
-	//UV잘라서 적용할 수 있도록
+		GUI::TreePop();
+	}
 
 
 
 	if (GUI::TreeNode("MODEL"))
 	{
+		CInstance_Model::INSTANCE_DESC InstanceDesc = {};
+
+		if(m_pInstance_ModelCom != nullptr)
+			InstanceDesc = m_pInstance_ModelCom->Get_EffectValue();
+
 		m_pGameInstance->Asset_Description<CInstance_Model>(ENUM_CLASS(LEVEL::EFFECT), "INSTANCE_MODEL", (CComponent**)&m_pInstance_ModelCom, &InstanceDesc, this);
 
 		if (m_pInstance_ModelCom != nullptr)
@@ -180,6 +194,15 @@ void CEditEffect::Describe_Entity()
 	{
 		if (GUI::TreeNode("DIFFUSE"))
 		{
+			GUI::Checkbox("DiffuseUVMove", &m_isDiffuseUVMove);
+
+			ImGui::PushItemWidth(80);
+
+			GUI::DragFloat2("DiffuseUVGainAmount", (_float*)&m_vDiffuseUVGainAmount, 0.01f);
+			GUI::DragFloat2("DiffuseNoiseUVGainAmount", (_float*)&m_vDiffuseNoiseUVGainAmount, 0.01f);
+
+			ImGui::PopItemWidth();
+
 			m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DIFFUSE_TEXTURE", (CComponent**)&m_pDiffuse_TextureCom, nullptr, this);
 
 			GUI::Separator(); GUI::Spacing();
@@ -193,6 +216,14 @@ void CEditEffect::Describe_Entity()
 	{
 		if (GUI::TreeNode("MASKING"))
 		{
+
+			GUI::Checkbox("MaskUVMove", &m_isMaskUVMove);
+
+			ImGui::PushItemWidth(80);
+			GUI::DragFloat2("MaskingUVGainAmount", (_float*)&m_vMaskingUVGainAmount, 0.01f);
+			GUI::DragFloat2("MaskNoiseUVGainAmount", (_float*)&m_vMaskNoiseUVGainAmount, 0.01f);
+			ImGui::PopItemWidth();
+
 			m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "MASKING_TEXTURE", (CComponent**)&m_pMasking_TextureCom, nullptr, this);
 
 			GUI::Separator(); GUI::Spacing();
@@ -203,9 +234,9 @@ void CEditEffect::Describe_Entity()
 
 	if (m_isDissolve == true)
 	{
-		if (GUI::TreeNode("DISOLVE"))
+		if (GUI::TreeNode("DISSOLVE"))
 		{
-			m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISOLVE_TEXTURE", (CComponent**)&m_pNoise_TextureCom, &InstanceDesc, this);
+			m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISSOLVE_TEXTURE", (CComponent**)&m_pDissolve_TextureCom, nullptr, this);
 
 			GUI::Separator(); GUI::Spacing();
 
@@ -217,6 +248,11 @@ void CEditEffect::Describe_Entity()
 	{
 		if (GUI::TreeNode("NOISE"))
 		{
+			ImGui::PushItemWidth(80);
+			GUI::DragFloat("NoiseDistortionIntensity", &m_fNoiseDistortionIntensity, 0.005f, 0.f, 1.f);
+			ImGui::PopItemWidth();
+
+
 			m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "NOISE_TEXTURE", (CComponent**)&m_pNoise_TextureCom, nullptr, this);
 
 			GUI::Separator(); GUI::Spacing();

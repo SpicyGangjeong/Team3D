@@ -39,17 +39,17 @@ HRESULT CEffectObject::Render()
 			return E_FAIL;
 		}
 
+		if (FAILED(m_pInstance_ModelCom->Bind_CS_Output(5, 1)))
+			return E_FAIL;
+
+
 		if (FAILED(m_pInstance_ModelCom->Render(i)))
 		{
 			return E_FAIL;
 		}
 
+
 	}
-
-	//바인딩한 버퍼 초기화
-
-	ID3D11ShaderResourceView* pResetSRV[1] = { nullptr };
-	m_pContext->CSSetShaderResources(0, 1, pResetSRV);
 
 	return S_OK;
 }
@@ -72,6 +72,10 @@ HRESULT CEffectObject::Render_Blur()
 			return E_FAIL;
 		}
 
+		if (FAILED(m_pInstance_ModelCom->Bind_CS_Output(5, 1)))
+			return E_FAIL;
+
+
 		if (FAILED(m_pInstance_ModelCom->Render(i)))
 		{
 			return E_FAIL;
@@ -86,9 +90,11 @@ HRESULT CEffectObject::Render_Blur()
 
 HRESULT CEffectObject::Bind_ShaderResources()
 {
+	
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
 		return E_FAIL;
 	}
+
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))) {
 		return E_FAIL;
 	}
@@ -113,7 +119,11 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;						
 	}
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_isUVMove", &m_isUVMove, sizeof(_bool)))) {
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDiffuseUVMove", &m_isDiffuseUVMove, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isMaskUVMove", &m_isMaskUVMove, sizeof(_bool)))) {
 		return E_FAIL;
 	}
 
@@ -133,16 +143,31 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vUVGainAmount", &m_vUVGainAmount, sizeof(_float2)))) {
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fNoiseDistortionIntensity", &m_fNoiseDistortionIntensity, sizeof(_float)))) {
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDiffuseUVGainAmount", &m_vDiffuseUVGainAmount, sizeof(_float2)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vMaskingUVGainAmount", &m_vMaskingUVGainAmount, sizeof(_float2)))) {
+		return E_FAIL;
+	}
+
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDiffuseNoiseUVGainAmount", &m_vDiffuseNoiseUVGainAmount, sizeof(_float2)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vMaskNoiseUVGainAmount", &m_vMaskNoiseUVGainAmount, sizeof(_float2)))) {
+		return E_FAIL;
+	}
+	
+	
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vUVCutting", &m_vUVCutting, sizeof(_float2)))) {
 		return E_FAIL;
 	}
-
-	if(FAILED(m_pInstance_ModelCom->Bind_CS_Output(0)))
-		return E_FAIL;
 
 	if (m_pDiffuse_TextureCom != nullptr)
 	{
@@ -165,9 +190,9 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		}
 	}
 
-	if (m_pDisolve_TextureCom != nullptr)
+	if (m_pDissolve_TextureCom != nullptr)
 	{
-		if (FAILED(m_pDisolve_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_DisolveTexture", 0))) {
+		if (FAILED(m_pDissolve_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture", 0))) {
 			return E_FAIL;
 		}
 	}
@@ -176,6 +201,10 @@ HRESULT CEffectObject::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 		return E_FAIL;
 	}
+
+
+
+
 	return S_OK;
 }
 
@@ -213,7 +242,7 @@ void CEffectObject::Free()
 	SAFE_RELEASE(m_pDiffuse_TextureCom);
 	SAFE_RELEASE(m_pNoise_TextureCom);
 	SAFE_RELEASE(m_pMasking_TextureCom);
-	SAFE_RELEASE(m_pDisolve_TextureCom);
+	SAFE_RELEASE(m_pDissolve_TextureCom);
 
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pInstance_ModelCom);

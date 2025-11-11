@@ -32,6 +32,13 @@ sampler BorderZeroSampler = sampler_state
     BorderColor = float4(0, 0, 0, 0);
 };
 
+sampler PointSampler = sampler_state
+{
+    Filter = MIN_MAG_MIP_POINT;
+    AddressU = wrap;
+    AddressV = wrap;
+};
+
 RasterizerState RS_Default
 {
     FillMode = Solid;
