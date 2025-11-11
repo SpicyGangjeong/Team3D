@@ -2,11 +2,15 @@
 #include "Level_ObjectViewer.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
+#include "RootModelPart.h"
 #include "Body.h"
 #include "Head.h"
+#include "Hair.h"
 #include "Dummy_Cube.h"
 #include "DebugCamera.h"
 #include "Layer.h"
+#include "GameObject.h"
+#include "Monster.h"
 
 CLevel_ObjectViewer::CLevel_ObjectViewer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -39,6 +43,10 @@ void CLevel_ObjectViewer::Update(_float fTimeDelta)
 	Add_Object();
 
 	Show_ModelFilePath();
+
+	Show_AnimList();
+
+	Object_Setting();
 }
 
 HRESULT CLevel_ObjectViewer::Render()
@@ -54,60 +62,155 @@ void CLevel_ObjectViewer::Add_Object()
 
 	if (GUI::BeginTabBar("ObjectTabs"))
 	{
-		if (ImGui::BeginTabItem("Creatures"))
-		{
-			GUI::EndTabItem();
-		}
-		if (ImGui::BeginTabItem("Human"))
-		{
-			if (GUI::CollapsingHeader("Body"))
-			{
-				if (GUI::Button("Add"))
-				{
-					if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBody>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, TEXT("Layer_Body"))))
-						return;
-					CBody* pBody = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_Body"))->Get_Object<CBody>();
-				}
-				if (GUI::Button("Delete"))
-				{
-					m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_Body"))->Clear_Layer();
-				}
-			}
-			if (GUI::CollapsingHeader("Head"))
-			{
-				if (GUI::Button("Add"))
-				{
-					CGameObject* pOwner = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_Body"))->Get_Object<CBody>();
-					if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CHead>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, TEXT("Layer_Head"), nullptr, pOwner)))
-						return;
-				}
-			}
-			if (GUI::CollapsingHeader("Hair"))
-			{
-			}
-			GUI::EndTabItem();
-		}
+		Add_Creature();
 		
-		GUI::EndTabBar();
+		Add_Human();
+		
+	}
+	GUI::EndTabBar();
+	GUI::End();
+	
+}
 
-		GUI::End();
+void CLevel_ObjectViewer::Add_Creature()
+{
+	if (ImGui::BeginTabItem("Creatures"))
+	{
+		if (GUI::Button("Add Monster"))
+		{
+			CGameObject* pTempObject = { nullptr };
+			CMonster::OBJECT_DESC Desc = {};
+			Desc.pModelPrototypeTag = TEXT("Prototype_Component_Troll_Model");
+			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMonster>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, TEXT("Layer_Monster"), &Desc, nullptr, &pTempObject)))
+				return;
+			m_Objects.push_back(pTempObject);
+		}
+
+		GUI::EndTabItem();
+	}
+}
+
+void CLevel_ObjectViewer::Add_Human()
+{
+	if (ImGui::BeginTabItem("Human"))
+	{
+		if (GUI::CollapsingHeader("Body"))
+		{
+			if (GUI::Button("Add Body"))
+			{
+				if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRootModelPart>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, TEXT("Layer_Root"), nullptr, nullptr, &m_HumanRoot)))
+					return;
+
+				CGameObject* pTempObject = { nullptr };
+				if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBody>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, TEXT("Layer_Body"), nullptr, m_HumanRoot, &pTempObject)))
+					return;
+				m_Objects.push_back(pTempObject);
+			}
+		}
+		_bool bDisabled = (m_HumanRoot == nullptr);
+		if (bDisabled) ImGui::BeginDisabled();
+		if (GUI::CollapsingHeader("Head"))
+		{
+			if (GUI::Button("Add Head"))
+			{
+				if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CHead>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, TEXT("Layer_Head"), nullptr, m_HumanRoot)))
+					return;
+			}
+		}
+		if (GUI::CollapsingHeader("Hair"))
+		{
+			if (GUI::Button("Add Hair"))
+			{
+				if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CHair>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, TEXT("Layer_Hair"), nullptr, m_HumanRoot)))
+					return;
+			}
+		}
+		if (bDisabled) ImGui::EndDisabled();
+		GUI::EndTabItem();
 	}
 }
 
 void CLevel_ObjectViewer::Show_ModelFilePath()
 {
 	GUI::Begin("Model_List");
-	for (_uint i = 0; i < m_pGameInstance->ModelFilePathCount(); i++)
+	if(GUI::BeginTabBar("Model_List"))
 	{
-		/*GUI::Text(m_pGameInstance->Load_BinaryModelFilePath(i));*/
-		GUI::SameLine();
-
-		std::string label = "Binary##" + std::to_string(i);
-		if (GUI::Button(label.c_str()))
+		if (GUI::BeginTabItem("Model"))
 		{
-			m_pGameInstance->SaveAssimpModel(m_pGameInstance->Load_ModelFilePath(i));
+			if (m_pGameInstance->BinaryModelFilePathCount() > 0)
+			{
+				for (_uint i = 0; i < m_pGameInstance->BinaryModelFilePathCount(); i++)
+				{
+					if (GUI::Button(m_pGameInstance->Load_BinaryModelFilePath(i)))
+					{
+
+					}
+				}
+			}
+			GUI::EndTabItem();
 		}
 	}
+	GUI::EndTabBar();
+	GUI::End();
+}
+
+void CLevel_ObjectViewer::Show_AnimList()
+{
+	GUI::Begin("Anim_List");
+	if (!m_Objects.empty())
+	{
+		if (!m_Objects[m_iObjectIndex]->isDead())
+		{
+			CModel* pModel = m_Objects[m_iObjectIndex]->Get_Component<CModel>();
+			for (_uint i = 0; i < pModel->Get_AnimSize(); i++)
+			{
+				if (GUI::Button(pModel->Get_AnimList(i)))
+				{
+					pModel->Set_AnimationIndex(i);
+				}
+			}
+		}
+	}
+	GUI::End();
+}
+
+void CLevel_ObjectViewer::Show_ObjectList()
+{
+	for (size_t i = 0; i < m_Objects.size(); i++)
+	{
+		if (GUI::Selectable(typeid(*m_Objects[i]).name()))
+		{
+			m_iObjectIndex = (_int)i;
+		}
+	}
+}
+
+void CLevel_ObjectViewer::Object_Setting()
+{
+	GUI::Begin("Object_Info");
+	if (!m_Objects.empty())
+	{
+		Show_ObjectList();
+		CModel* pModel = m_Objects[m_iObjectIndex]->Get_Component<CModel>();
+
+		_float AnimTrack = pModel->Get_CurrentTrackPosition();
+		GUI::DragFloat("AnimTrack", &AnimTrack);
+
+		_float AnimSpeed = pModel->Get_AnimSpeed();
+		GUI::DragFloat("AnimSpeed", &AnimSpeed, 0.1f);
+		pModel->Set_AnimSpeed(AnimSpeed);
+
+		_bool bPlayAnim = pModel->Get_PlayAnim();
+		if (GUI::Checkbox("Play Anim", &bPlayAnim))
+		{
+			pModel->Set_PlayAnim(bPlayAnim);
+		}
+		if (GUI::Button("Delete"))
+		{
+
+		}
+	}
+	
 	GUI::End();
 }
 
@@ -117,7 +220,7 @@ HRESULT CLevel_ObjectViewer::Ready_Layer_Camera(const _wstring& strLayerTag)
 	CameraDesc.fFovy = XMConvertToRadians(60.0f);
 	CameraDesc.fNear = 0.1f;
 	CameraDesc.fFar = 500.f;
-	CameraDesc.vEye = _float3(0.f, 10.f, -10.f);
+	CameraDesc.vEye = _float3(0.f, 50.f, -10.f);
 	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
 	CameraDesc.fSpeedPerSec = 5.f;
 	CameraDesc.fRotationPerSec = XMConvertToRadians(90.0f);
@@ -153,8 +256,8 @@ HRESULT CLevel_ObjectViewer::Ready_Layer_UI(const _wstring& strLayerTag)
 
 HRESULT CLevel_ObjectViewer::Ready_Layer_Dummy(const _wstring& strLayerTag)
 {
-	/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_Cube>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE)))
-		return E_FAIL;*/
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_Cube>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE)))
+		return E_FAIL;
 
 	return S_OK;
 }

@@ -64,9 +64,6 @@
     <Filter Include="50.UI">
       <UniqueIdentifier>{627570ac-7129-4888-bdd1-467149dbcf35}</UniqueIdentifier>
     </Filter>
-    <Filter Include="50.UI\Mission">
-      <UniqueIdentifier>{b652ee5a-69ca-4c85-8c6c-def398a4dd23}</UniqueIdentifier>
-    </Filter>
     <Filter Include="50.UI\Mouse_Cursor">
       <UniqueIdentifier>{b5d188ff-5925-40bd-8da4-2ed00c89f730}</UniqueIdentifier>
     </Filter>
@@ -106,41 +103,68 @@
     <Filter Include="02.GameObjects\Layer_Effect\Effect_Editor">
       <UniqueIdentifier>{5b31b993-b137-42d2-b737-000aeb27a675}</UniqueIdentifier>
     </Filter>
-    <Filter Include="50.UI\LodingWidget1">
-      <UniqueIdentifier>{167182ec-ed5f-46fc-9c27-a82e327fa1ac}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="50.UI\Mission\Mission_Key">
-      <UniqueIdentifier>{887de1c6-ada2-4dc8-be5c-bcef4213e3b6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="50.UI\Mission\Mission_KeyHold">
-      <UniqueIdentifier>{3804137e-7af7-40db-b729-8afa81035b35}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="50.UI\Mission\MissionBanner_Key">
-      <UniqueIdentifier>{f897068c-184a-4bb2-a4fb-e74ec1877b02}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="50.UI\Mission\MissionBanner_Border">
-      <UniqueIdentifier>{d1c99bb3-369e-49b9-93f9-6b8536579cb5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="50.UI\Mission\Mission_Icon">
-      <UniqueIdentifier>{5da34159-e4a2-4b4b-a7a0-a65966579e2f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="50.UI\MiniMap">
-      <UniqueIdentifier>{61a808c7-2765-42d9-8b4c-b4bed93b013e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="50.UI\MiniMap\MiniMap_TrimBorder">
-      <UniqueIdentifier>{999ed728-0bc5-425c-b861-1422c77ccbe6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="50.UI\IMGUIUI">
       <UniqueIdentifier>{f60f1948-8c11-4796-843a-8c38f10043e3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="50.UI\Mission\Active_Icon">
+    <Filter Include="50.UI\GamePlay_Canvas">
+      <UniqueIdentifier>{9900c91e-574d-4d80-b8bc-142c971fb7b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Mission_Panel">
+      <UniqueIdentifier>{b652ee5a-69ca-4c85-8c6c-def398a4dd23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Mission_Panel\Mission_Key">
+      <UniqueIdentifier>{887de1c6-ada2-4dc8-be5c-bcef4213e3b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Mission_Panel\Mission_KeyHold">
+      <UniqueIdentifier>{3804137e-7af7-40db-b729-8afa81035b35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Key">
+      <UniqueIdentifier>{f897068c-184a-4bb2-a4fb-e74ec1877b02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Border">
+      <UniqueIdentifier>{d1c99bb3-369e-49b9-93f9-6b8536579cb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Mission_Panel\Mission_Icon">
+      <UniqueIdentifier>{5da34159-e4a2-4b4b-a7a0-a65966579e2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Mission_Panel\Active_Icon">
       <UniqueIdentifier>{977fe4d3-c3b5-413c-80fe-777ece19453e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\MiniMap_Panel">
+      <UniqueIdentifier>{61a808c7-2765-42d9-8b4c-b4bed93b013e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\MiniMap_Panel\MiniMap_TrimBorder">
+      <UniqueIdentifier>{999ed728-0bc5-425c-b861-1422c77ccbe6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Loding_Panel">
+      <UniqueIdentifier>{f21ccde9-97d1-4700-af94-2e5cf21a72c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Loding_Panel\LoadingWidget">
+      <UniqueIdentifier>{167182ec-ed5f-46fc-9c27-a82e327fa1ac}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Terrain">
       <UniqueIdentifier>{44a3ddc2-3993-48d6-840c-3da09daeab70}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Env\Manger">
       <UniqueIdentifier>{584466e9-fe1a-4a7d-a4ba-54d62ee1a7c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Level\60.PhysXLab">
+      <UniqueIdentifier>{943a760b-2861-45b7-87b8-462e1309c172}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\ModelParts\RootModelPart">
+      <UniqueIdentifier>{a9a39942-3c35-4932-b845-e8d1787f3ec3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster">
+      <UniqueIdentifier>{a2944f33-1db0-480a-b793-7ec7f81e8116}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Loding_Panel\LoadingWidget_Flame">
+      <UniqueIdentifier>{c347da03-98f1-4095-a4e4-2c840c308916}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\PhysXBox">
+      <UniqueIdentifier>{c7e7d3c7-fd26-4035-88b4-11233459559c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\PhysXMesh">
+      <UniqueIdentifier>{15a9dfe7-f3f7-4906-8bd4-91734f4ddc92}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -186,8 +210,8 @@
     <ClInclude Include="..\public\Level_UI.h">
       <Filter>01.Level\50.UIViewer</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Mission.h">
-      <Filter>50.UI\Mission</Filter>
+    <ClInclude Include="..\public\Mission_Panel.h">
+      <Filter>50.UI\GamePlay_Canvas\Mission_Panel</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Mouse_Cursor.h">
       <Filter>50.UI\Mouse_Cursor</Filter>
@@ -207,11 +231,20 @@
     <ClInclude Include="..\Public\Body.h">
       <Filter>02.GameObjects\ModelParts\Body</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Head.h">
+      <Filter>02.GameObjects\ModelParts\Head</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Hair.h">
+      <Filter>02.GameObjects\ModelParts\Hair</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\ModelParts.h">
       <Filter>02.GameObjects\ModelParts</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Head.h">
-      <Filter>02.GameObjects\ModelParts\Head</Filter>
+    <ClInclude Include="..\Public\RootModelPart.h">
+      <Filter>02.GameObjects\ModelParts\RootModelPart</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Monster.h">
+      <Filter>02.GameObjects\Monster</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_EffectViewer.h">
       <Filter>01.Level\40.EffectViewer</Filter>
@@ -228,29 +261,44 @@
     <ClInclude Include="..\Public\Effect_Editor.h">
       <Filter>02.GameObjects\Layer_Effect\Effect_Editor</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\LodingWidget1.h">
-      <Filter>50.UI\LodingWidget1</Filter>
+    <ClInclude Include="..\public\LoadingWidget.h">
+      <Filter>50.UI\GamePlay_Canvas\Loding_Panel\LoadingWidget</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Mission_Key.h">
-      <Filter>50.UI\Mission\Mission_Key</Filter>
+      <Filter>50.UI\GamePlay_Canvas\Mission_Panel\Mission_Key</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MissionBanner_Border.h">
-      <Filter>50.UI\Mission\MissionBanner_Border</Filter>
+      <Filter>50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Border</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Mission_KeyHold.h">
-      <Filter>50.UI\Mission\Mission_KeyHold</Filter>
+      <Filter>50.UI\GamePlay_Canvas\Mission_Panel\Mission_KeyHold</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MissionBanner_Key.h">
-      <Filter>50.UI\Mission\MissionBanner_Key</Filter>
+      <Filter>50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Key</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Mission_Icon.h">
-      <Filter>50.UI\Mission\Mission_Icon</Filter>
+      <Filter>50.UI\GamePlay_Canvas\Mission_Panel\Mission_Icon</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MiniMap_TrimBorder.h">
-      <Filter>50.UI\MiniMap\MiniMap_TrimBorder</Filter>
+      <Filter>50.UI\GamePlay_Canvas\MiniMap_Panel\MiniMap_TrimBorder</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Active_Icon.h">
-      <Filter>50.UI\Mission\Active_Icon</Filter>
+      <Filter>50.UI\GamePlay_Canvas\Mission_Panel\Active_Icon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\IMGUIUI.h">
+      <Filter>50.UI\IMGUIUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\GamePlay_Canvas.h">
+      <Filter>50.UI\GamePlay_Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\LoadingWidget_Flame.h">
+      <Filter>50.UI\GamePlay_Canvas\Loding_Panel\LoadingWidget_Flame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MiniMap_Panel.h">
+      <Filter>50.UI\GamePlay_Canvas\MiniMap_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Loading_Panel.h">
+      <Filter>50.UI\GamePlay_Canvas\Loding_Panel</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Level_MapViewer.h">
       <Filter>01.Level\30.MapViewer</Filter>
@@ -263,6 +311,18 @@
     </ClInclude>
     <ClInclude Include="..\public\MapObject_Manager.h">
       <Filter>02.GameObjects\Env\Manger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_PhysXLab.h">
+      <Filter>01.Level\60.PhysXLab</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dummy_PhysXBox.h">
+      <Filter>02.GameObjects\Dummys\PhysXBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dummy_PhysXMesh.h">
+      <Filter>02.GameObjects\Dummys\PhysXMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LoadingWidget.h">
+      <Filter>50.UI\GamePlay_Canvas\Loding_Panel\LoadingWidget</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -298,8 +358,8 @@
     <ClCompile Include="..\private\Level_UI.cpp">
       <Filter>01.Level\50.UIViewer</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Mission.cpp">
-      <Filter>50.UI\Mission</Filter>
+    <ClCompile Include="..\private\Mission_Panel.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Mission_Panel</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Mouse_Cursor.cpp">
       <Filter>50.UI\Mouse_Cursor</Filter>
@@ -318,9 +378,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Body.cpp">
       <Filter>02.GameObjects\ModelParts\Body</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\ModelParts.cpp">
-      <Filter>02.GameObjects\ModelParts</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Head.cpp">
       <Filter>02.GameObjects\ModelParts\Head</Filter>
@@ -343,29 +400,44 @@
     <ClCompile Include="..\Private\Effect_Editor.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect_Editor</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\LodingWidget1.cpp">
-      <Filter>50.UI\LodingWidget1</Filter>
+    <ClCompile Include="..\private\LoadingWidget.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Loding_Panel\LoadingWidget</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Mission_Key.cpp">
-      <Filter>50.UI\Mission\Mission_Key</Filter>
+      <Filter>50.UI\GamePlay_Canvas\Mission_Panel\Mission_Key</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MissionBanner_Border.cpp">
-      <Filter>50.UI\Mission\MissionBanner_Border</Filter>
+      <Filter>50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Border</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Mission_KeyHold.cpp">
-      <Filter>50.UI\Mission\Mission_KeyHold</Filter>
+      <Filter>50.UI\GamePlay_Canvas\Mission_Panel\Mission_KeyHold</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MissionBanner_Key.cpp">
-      <Filter>50.UI\Mission\MissionBanner_Key</Filter>
+      <Filter>50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Key</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Mission_Icon.cpp">
-      <Filter>50.UI\Mission\Mission_Icon</Filter>
+      <Filter>50.UI\GamePlay_Canvas\Mission_Panel\Mission_Icon</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MiniMap_TrimBorder.cpp">
-      <Filter>50.UI\MiniMap\MiniMap_TrimBorder</Filter>
+      <Filter>50.UI\GamePlay_Canvas\MiniMap_Panel\MiniMap_TrimBorder</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Active_Icon.cpp">
-      <Filter>50.UI\Mission\Active_Icon</Filter>
+      <Filter>50.UI\GamePlay_Canvas\Mission_Panel\Active_Icon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\IMGUIUI.cpp">
+      <Filter>50.UI\IMGUIUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\GamePlay_Canvas.cpp">
+      <Filter>50.UI\GamePlay_Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\LoadingWidget_Flame.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Loding_Panel\LoadingWidget_Flame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MiniMap_Panel.cpp">
+      <Filter>50.UI\GamePlay_Canvas\MiniMap_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Loading_Panel.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Loding_Panel</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Level_MapViewer.cpp">
       <Filter>01.Level\30.MapViewer</Filter>
@@ -378,6 +450,33 @@
     </ClCompile>
     <ClCompile Include="..\private\MapObject_Manager.cpp">
       <Filter>02.GameObjects\Env\Manger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_PhysXLab.cpp">
+      <Filter>01.Level\60.PhysXLab</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Hair.cpp">
+      <Filter>02.GameObjects\ModelParts\Hair</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ModelParts.cpp">
+      <Filter>02.GameObjects\ModelParts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RootModelPart.cpp">
+      <Filter>02.GameObjects\ModelParts\RootModelPart</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Monster.cpp">
+      <Filter>02.GameObjects\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_PhysXBox.cpp">
+      <Filter>02.GameObjects\Dummys\PhysXBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_PhysXMesh.cpp">
+      <Filter>02.GameObjects\Dummys\PhysXMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LoadingWidget.cpp">
+      <Filter>50.UI\LoadingWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LoadingWidget.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Loding_Panel\LoadingWidget</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -3,6 +3,10 @@
 #include "Editor_Define.h"
 #include "Level.h"
 
+NS_BEGIN(Engine)
+class CGameObject;
+NS_END
+
 NS_BEGIN(Editor)
 
 class CLevel_ObjectViewer final : public CLevel
@@ -14,9 +18,6 @@ private:
 public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
-	void Add_Object();
-	void Show_ModelFilePath();
-
 private:
 	/* 이 레벨에서 쓰기위한 객체들을 생성한다. */
 	virtual HRESULT Initialize() override;
@@ -24,6 +25,18 @@ private:
 	HRESULT Ready_Layer_Light();
 	HRESULT Ready_Layer_UI(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_Dummy(const _wstring& strLayerTag);
+
+	void Add_Object();
+	void Add_Creature();
+	void Add_Human();
+	void Show_ModelFilePath();
+	void Show_AnimList();
+	void Show_ObjectList();
+	void Object_Setting();
+private:
+	vector<CGameObject*> m_Objects;
+	CGameObject* m_HumanRoot = { nullptr };
+	_int m_iObjectIndex = { 0 };
 
 
 public:
