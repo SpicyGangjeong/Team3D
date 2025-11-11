@@ -49,8 +49,10 @@ private:
 	_float2					m_fPanelSize{};
 	_float3					m_fPanelSizeXY{};
 	_float					m_fPanelTimeMult{};
-	_float					m_fPanelAlphA{};
+	_float					m_fPanelAlpha{};
 	_float					m_fAlphaTime{};
+
+	_float					m_fCanvasAlpha{};
 
 	_int					m_iElementCount{};
 	vector<wstring>			m_pElementNamewstring;

@@ -94,6 +94,10 @@ void CIMGUIUI::Priority_Update(_float fTimeDelta)
 
 void CIMGUIUI::Update(_float fTimeDelta)
 {
+	if (m_pGamePlay_Canvas != nullptr)
+	{
+		m_fCanvasAlpha = static_cast<CCanvasObject*>(m_pGamePlay_Canvas)->Get_Alpha();
+	}
 	if (m_pPanelObject != nullptr)
 	{
 		m_fPanelPos.x = static_cast<CPanelObject*>(m_pPanelObject)->Get_Current_Position().m128_f32[0];
@@ -105,6 +109,7 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		m_fPanelSizeXY = static_cast<CPanelObject*>(m_pPanelObject)->Get_Current_Size();
 
 		m_fPanelTimeMult = static_cast<CPanelObject*>(m_pPanelObject)->Get_TimeMult();
+		m_fPanelAlpha = static_cast<CElementObject*>(m_pPanelObject)->Get_Alpha();
 	}
 
 	if (m_pElementObject != nullptr)
@@ -141,6 +146,16 @@ void CIMGUIUI::Update(_float fTimeDelta)
 			{
 				static_cast<CCanvasObject*>(m_pGamePlay_Canvas)->Visible(m_bCanvasVisible);
 			}
+			if (GUI::Button("CanvasFadeIn"))
+			{
+				static_cast<CCanvasObject*>(m_pGamePlay_Canvas)->Set_FadeIn();
+			}
+			if (GUI::Button("CanvasFadeOut"))
+			{
+				static_cast<CCanvasObject*>(m_pGamePlay_Canvas)->Set_FadeOut();
+			}
+			GUI::Text("PanelAlph : %.1f", m_fCanvasAlpha);
+
 		}
 
 		if (m_pPanelObject != nullptr)
@@ -157,11 +172,19 @@ void CIMGUIUI::Update(_float fTimeDelta)
 			{
 				static_cast<CPanelObject*>(m_pPanelObject)->Visible(m_bPanelVisible);
 			}
-
+			if (GUI::Button("PanelFadeIn"))
+			{
+				static_cast<CPanelObject*>(m_pPanelObject)->Set_FadeIn();
+			}
+			if (GUI::Button("PanelFadeOut"))
+			{
+				static_cast<CPanelObject*>(m_pPanelObject)->Set_FadeOut();
+			}
 			GUI::Text("Origin Position : %.1f, %.1f", static_cast<CPanelObject*>(m_pPanelObject)->Get_Origin_Position().x, static_cast<CUIObject*>(m_pPanelObject)->Get_Origin_Position().y);
 			GUI::Text("Current Position : %.1f, %.1f", static_cast<CPanelObject*>(m_pPanelObject)->Get_Current_Position().m128_f32[0], static_cast<CUIObject*>(m_pPanelObject)->Get_Current_Position().m128_f32[1]);
 			GUI::Text("Origin Size : %.1f, %.1f", static_cast<CPanelObject*>(m_pPanelObject)->Get_Origin_Size().x, static_cast<CUIObject*>(m_pPanelObject)->Get_Origin_Size().y);
 			GUI::Text("Current Size : %.1f, %.1f", static_cast<CPanelObject*>(m_pPanelObject)->Get_Current_Size().x, static_cast<CUIObject*>(m_pPanelObject)->Get_Current_Size().y);
+			GUI::Text("PanelAlph : %.1f", m_fPanelAlpha);
 
 			GUI::Text("PanelPosition");
 			if (GUI::SliderFloat("X##PanelPos", &m_fPanelPos.x, -1920.f, 1920.f))

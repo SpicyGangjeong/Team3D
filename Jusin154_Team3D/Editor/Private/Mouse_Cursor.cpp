@@ -43,6 +43,11 @@ HRESULT CMouse_Cursor::Initialize(void* pArg)
 
 void CMouse_Cursor::Priority_Update(_float fTimeDelta)
 {
+	POINT m_pPt{};
+	GetCursorPos(&m_pPt);
+	ScreenToClient(g_hWnd, &m_pPt);
+	_vector MousePos = XMVectorSet(static_cast<_float>(m_pPt.x - m_fWinSizeX * 0.5f), static_cast<_float>(-m_pPt.y + m_fWinSizeY * 0.5f) - 10.f, 0.f, 1.f);
+	m_pTransformCom->Set_State(STATE::POSITION, MousePos);
 }
 
 void CMouse_Cursor::Update(_float fTimeDelta)
@@ -54,12 +59,6 @@ void CMouse_Cursor::Update(_float fTimeDelta)
 void CMouse_Cursor::Late_Update(_float fTimeDelta)
 {
 	if (m_bVisible) {
-		POINT m_pPt{};
-		GetCursorPos(&m_pPt);
-		ScreenToClient(g_hWnd, &m_pPt);
-		_vector MousePos = XMVectorSet(static_cast<_float>(m_pPt.x - m_fWinSizeX * 0.5f), static_cast<_float>(-m_pPt.y + m_fWinSizeY * 0.5f) - 10.f, 0.f, 1.f);
-		m_pTransformCom->Set_State(STATE::POSITION, MousePos);
-
 		_float4* vPos = (_float4*)(m_pTransformCom->Get_WorldMatrixPtr()->m[3]);
 		m_pGameInstance->Add_RenderGroup(RENDER::UI, this, *vPos, m_pTransformCom->Get_Radius());
 	}

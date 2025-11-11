@@ -204,12 +204,34 @@ void CUIObject::Set_FadeOut()
 
 _bool CUIObject::Get_FadeIn()
 {
-	return _bool();
+	return m_bFadeIn;
 }
 
 _bool CUIObject::Get_FadeOut()
 {
-	return _bool();
+	return m_bFadeOut;
+}
+
+void CUIObject::Set_OwnerFadeIn()
+{
+	m_bOwnerFadeIn = true;
+	m_bOwnerFadeOut = false;
+}
+
+void CUIObject::Set_OwnerFadeOut()
+{
+	m_bOwnerFadeIn = false;
+	m_bOwnerFadeOut = true;
+}
+
+_bool CUIObject::Get_OwnerFadeIn()
+{
+	return m_bOwnerFadeIn;
+}
+
+_bool CUIObject::Get_OwnerFadeOut()
+{
+	return m_bOwnerFadeOut;
 }
 
 void CUIObject::Set_Alpha(_float fAlpha)
@@ -220,11 +242,6 @@ void CUIObject::Set_Alpha(_float fAlpha)
 void CUIObject::Set_AlphaTime(_float fAlpha)
 {
 	m_fAlphaTime = fAlpha;
-}
-
-void CUIObject::Set_OwnerAlpha(_float fAlpha)
-{
-	m_fOwnerAlpha = fAlpha;
 }
 
 _float CUIObject::Get_Alpha()

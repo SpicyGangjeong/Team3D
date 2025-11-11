@@ -27,16 +27,13 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 
 private:
-	//virtual _bool Chack_Visible() override;
-
-private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
 	_int m_iImageFrameX{};
+	_int m_iImageFrameY{};
 	_float m_fFrame{};
-	_float m_fDelay{};
 
 public:
 	static CLoadingWidget_Flame* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

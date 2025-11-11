@@ -21,12 +21,10 @@ HRESULT CMiniMap_Panel::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = 300.f;
-	Desc.fY = 300.f;
-	Desc.fSizeX = 100.f;
-	Desc.fSizeY = 100.f;
-
-	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
+	Desc.fX = 170.f;
+	Desc.fY = 920.f;
+	Desc.fSizeX = 280.f;
+	Desc.fSizeY = 280.f;
 
 	if (FAILED(__super::Initialize(&Desc)))
 	{
@@ -36,21 +34,38 @@ HRESULT CMiniMap_Panel::Initialize(void* pArg)
 	{
 		return E_FAIL;
 	}
+	if (FAILED(Ready_Element(pArg)))
+	{
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
 void CMiniMap_Panel::Priority_Update(_float fTimeDelta)
 {
+	if (!__super::Chack_Visible())
+	{
+		return;
+	}
 	__super::Priority_Update(fTimeDelta);
 }
 
 void CMiniMap_Panel::Update(_float fTimeDelta)
 {
+	if (!__super::Chack_Visible())
+	{
+		return;
+	}
+
 	__super::Update(fTimeDelta);
 }
 
 void CMiniMap_Panel::Late_Update(_float fTimeDelta)
 {
+	if (!__super::Chack_Visible())
+	{
+		return;
+	}
 	if (m_bVisible) {
 		_float4* vPos = (_float4*)(m_pTransformCom->Get_WorldMatrixPtr()->m[3]);
 		m_pGameInstance->Add_RenderGroup(RENDER::UI, this, *vPos, m_pTransformCom->Get_Radius());

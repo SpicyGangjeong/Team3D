@@ -38,8 +38,13 @@ HRESULT CLoadingWidget::Initialize(void* pArg)
 	}
 
 	m_iImageFrameX = 6;
+	m_iImageFrameY = 6;
 	m_fFrame = 0.2f;
 	m_fTimeMult = 3.f;
+	m_fDelayTime = 1.f;
+	m_fEndTime = 1.8f;
+	m_fAlpha = 1.f;
+	m_fAlphaTime = 3.f;
 	return S_OK;
 }
 
@@ -57,6 +62,32 @@ void CLoadingWidget::Update(_float fTimeDelta)
 	if (!__super::Chack_Visible())
 	{
 		return;
+	}
+
+	m_fOwnerAlpha = static_cast<CUIObject*>(m_pOwner)->Get_Alpha();
+	m_fCanvasAlpha = static_cast<CUIObject*>(m_pOwner)->Get_OwnerAlpha();
+	if (m_bFadeIn == true)
+	{
+		if (m_fAlpha <= 1.f)
+			m_fAlpha += fTimeDelta * m_fAlphaTime;
+
+		if (m_fAlpha >= 1.f)
+		{
+			m_bFadeIn = false;
+			m_fAlpha = 1.f;
+		}
+	}
+
+	if (m_bFadeOut == true)
+	{
+		if (m_fAlpha >= 0.f)
+			m_fAlpha -= fTimeDelta;
+
+		if (m_fAlpha <= 0.f)
+		{
+			m_bFadeOut = false;
+			m_fAlpha = 0.f;
+		}
 	}
 
 	m_fTime += fTimeDelta * m_fTimeMult;
@@ -129,7 +160,23 @@ HRESULT CLoadingWidget::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_iImageCount", &m_iImageFrameX, sizeof(_int))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOwnerAlpha", &m_fOwnerAlpha, sizeof(_float))))
+	{
+		return E_FAIL;
+	}	
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCanvasAlpha", &m_fCanvasAlpha, sizeof(_float))))
+	{
+		return E_FAIL;
+	}	
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iImageCountX", &m_iImageFrameX, sizeof(_int))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iImageCountY", &m_iImageFrameY, sizeof(_int))))
 	{
 		return E_FAIL;
 	}

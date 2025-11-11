@@ -58,6 +58,7 @@ void CLoading_Panel::Update(_float fTimeDelta)
 	{
 		return;
 	}
+
 	__super::Update(fTimeDelta);
 }
 
@@ -92,7 +93,7 @@ HRESULT CLoading_Panel::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	
+
 	return S_OK;
 }
 

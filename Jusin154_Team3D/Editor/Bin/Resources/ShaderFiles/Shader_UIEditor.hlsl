@@ -3,13 +3,15 @@
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 Texture2D g_DepthTexture;
 
-int g_iImageCount;
+int g_iImageCountX;
+int g_iImageCountY;
 
 float g_fFar;
 float g_fTime;
 float g_fFrame;
 float g_fAlpha;
 float g_fOwnerAlpha;
+float g_fCanvasAlpha;
 float g_fDeltaU;
 float g_fDeltaV;
 uint g_iIndexU;
@@ -124,18 +126,18 @@ PS_OUT PS_Sptire_Sheet(PS_IN In)
     PS_OUT Out;
     
     float4 Color = float4(0.f, 0.f, 0.f, 0.f);                              // 최종 이미지 출력
-
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     float2 UV = In.vTexcoord;                                               // 이미지의 UV값
     
-    int iTotalFrame = g_iImageCount * g_iImageCount;                        // 이미지의 최대 프레임 (몇 곱하기 몇인지)
+    int iTotalFrame = g_iImageCountX * g_iImageCountY;                        // 이미지의 최대 프레임 (몇 곱하기 몇인지)
     
     int iCurrentFrame = int(floor(g_fTime / g_fFrame)) % iTotalFrame;       // 현재 프레임이 어디 위치인지
     
-    int iFrameX = iCurrentFrame % g_iImageCount;                            // 현재 x축의 위치(현재 이미지의 몇번째 칸을 보여줄 지)
-    int iFrameY = iCurrentFrame / g_iImageCount;                            // 현재 y축의 위치(현재 이미지의 몇번째 줄을 보여줄 지)
+    int iFrameX = iCurrentFrame % g_iImageCountX;                            // 현재 x축의 위치(현재 이미지의 몇번째 칸을 보여줄 지)
+    int iFrameY = iCurrentFrame / g_iImageCountX;                            // 현재 y축의 위치(현재 이미지의 몇번째 줄을 보여줄 지)
     
-    float fFreamWidth = 1.0 / g_iImageCount;                                // 1.0 나누기 이미지 갯수를 해서 한칸에 얼마나 갈지 정해준다.
-    float fFreamHeight = 1.0 / g_iImageCount;                               // 1.0 나누기 이미지 갯수를 해서 한줄에 얼마나 갈지 정해준다.
+    float fFreamWidth = 1.0 / g_iImageCountX;                                // 1.0 나누기 이미지 갯수를 해서 한칸에 얼마나 갈지 정해준다.
+    float fFreamHeight = 1.0 / g_iImageCountY;                               // 1.0 나누기 이미지 갯수를 해서 한줄에 얼마나 갈지 정해준다.
     
     UV.x = UV.x * fFreamWidth + iFrameX * fFreamWidth;                      // 먼저 uv를 0~1이 아닌 0~fFrameWidth로 만든 다음에 한칸씩 옆으로 밀어준다.
     UV.y = UV.y * fFreamHeight + iFrameY * fFreamHeight;                    // 먼저 uv를 0~1이 아닌 0~fFrameHeight로 만든 다음에 한줄씩 밑으로 내려준다.
@@ -147,14 +149,7 @@ PS_OUT PS_Sptire_Sheet(PS_IN In)
     if (Color.r <= 0.4f)
         discard;
     
-    //if(g_OwnerAlpha <= 1.f)
-    //{
-        Color.a = g_fAlpha;
-    //}
-    //else
-    //{
-    //    Color.a = g_OwnerAlpha;
-    //}
+    Color.a = Alpha;
     
     Out.vColor = Color;
     
