@@ -56,6 +56,8 @@ void CIMGUIUI::PanelwstringTostring(vector<std::wstring>& panelNames)
 	// vector<const char*> 업데이트
 	for (auto& str : m_iPanelNamestring)
 		m_iPanelName.push_back(str.c_str());
+
+	m_iPanelCount = 999;
 }
 
 void CIMGUIUI::ElementwstringTostring(vector<wstring>& panelNames)
@@ -86,6 +88,8 @@ void CIMGUIUI::ElementwstringTostring(vector<wstring>& panelNames)
 	// vector<const char*> 업데이트
 	for (auto& str : m_pElementNamestring)
 		m_pElementName.push_back(str.c_str());
+
+	m_iElementCount = 999;
 }
 
 void CIMGUIUI::Priority_Update(_float fTimeDelta)
@@ -137,7 +141,10 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		{
 			m_bCanvasVisible = static_cast<CCanvasObject*>(m_pGamePlay_Canvas)->Get_Visible();
 			auto panelNames = static_cast<CCanvasObject*>(m_pGamePlay_Canvas)->Panel_Name();
-			PanelwstringTostring(panelNames);
+			if (panelNames != m_iPanelNamewstring)
+			{
+				PanelwstringTostring(panelNames);
+			}
 			if (GUI::Combo("Panels", &m_iPanelCount, m_iPanelName.data(), static_cast<_int>(m_iPanelName.size())))
 			{
 				m_pPanelObject = static_cast<CCanvasObject*>(m_pGamePlay_Canvas)->Get_Panel(m_iPanelNamewstring[m_iPanelCount]);
@@ -228,7 +235,10 @@ void CIMGUIUI::Update(_float fTimeDelta)
 	if (m_pPanelObject != nullptr)
 	{
 		auto ElementNames = static_cast<CPanelObject*>(m_pPanelObject)->Element_Name();
-		ElementwstringTostring(ElementNames);
+		if (ElementNames != m_pElementNamewstring)
+		{
+			ElementwstringTostring(ElementNames);
+		}
 		if (GUI::Combo("Element", &m_iElementCount, m_pElementName.data(), static_cast<_int>(m_pElementName.size())))
 		{
 			m_pElementObject = static_cast<CPanelObject*>(m_pPanelObject)->Get_Element(m_pElementNamewstring[m_iElementCount]);
@@ -252,7 +262,7 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		if (GUI::Button("FadeIn"))
 		{
 			static_cast<CElementObject*>(m_pElementObject)->Set_FadeIn();
-		}		
+		}
 		if (GUI::Button("FadeOut"))
 		{
 			static_cast<CElementObject*>(m_pElementObject)->Set_FadeOut();

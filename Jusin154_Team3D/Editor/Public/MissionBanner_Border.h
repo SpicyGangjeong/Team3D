@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Editor_Define.h"
-#include "UIObject.h"
+#include "ElementObject.h"
 
 NS_BEGIN(Editor)
 
-class CMissionBanner_Border final : public CUIObject
+class CMissionBanner_Border final : public CElementObject
 {
 private:
 	CMissionBanner_Border(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

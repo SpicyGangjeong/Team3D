@@ -1,20 +1,21 @@
 #include "pch.h"
 #include "MiniMap_Panel.h"
 #include "GameInstance.h"
+#include "MiniMap_TrimBorder.h"
 
 CMiniMap_Panel::CMiniMap_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-    :CPanelObject(pDevice, pContext)
+	:CPanelObject(pDevice, pContext)
 {
 }
 
 CMiniMap_Panel::CMiniMap_Panel(const CMiniMap_Panel& rhs)
-    :CPanelObject(rhs)
+	:CPanelObject(rhs)
 {
 }
 
 HRESULT CMiniMap_Panel::Initialize_Prototype()
 {
-    return S_OK;
+	return S_OK;
 }
 
 HRESULT CMiniMap_Panel::Initialize(void* pArg)
@@ -75,49 +76,16 @@ void CMiniMap_Panel::Late_Update(_float fTimeDelta)
 
 HRESULT CMiniMap_Panel::Render()
 {
-	if (FAILED(Bind_ShaderResources())) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::DEFAULT)))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pVIBufferCom->Render())) {
-		return E_FAIL;
-	}
-
 	return S_OK;
 }
 
 _vector CMiniMap_Panel::Get_WorldPostion()
 {
-	return m_pOwner->Get_WorldPostion();
+	return m_pTransformCom->Get_State(STATE::POSITION);
 }
 
 HRESULT CMiniMap_Panel::Bind_ShaderResources()
 {
-	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pDiffuse_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float))))
-	{
-		return E_FAIL;
-	}
 	return S_OK;
 }
 
@@ -127,20 +95,16 @@ HRESULT CMiniMap_Panel::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_Keyboard_0"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, FX_UIEDITOR, (CComponent**)&m_pShaderCom, nullptr)))
-	{
-		return E_FAIL;
-	}
-
-    return S_OK;
+	return S_OK;
 }
 
 HRESULT CMiniMap_Panel::Ready_Element(void* pArg)
 {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMiniMap_TrimBorder>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &m_pMiniMap_TrimBorder)))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("MiniMap_TrimBorder"), m_pMiniMap_TrimBorder);
 	return S_OK;
 }
 
@@ -174,8 +138,6 @@ void CMiniMap_Panel::Free()
 {
 	__super::Free();
 
-	SAFE_RELEASE(m_pDiffuse_TextureCom);
-	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 

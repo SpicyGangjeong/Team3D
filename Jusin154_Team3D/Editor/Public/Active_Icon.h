@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Editor_Define.h"
-#include "UIObject.h"
+#include "ElementObject.h"
 
 NS_BEGIN(Editor)
 
-class CActive_Icon final : public CUIObject
+class CActive_Icon final : public CElementObject
 {
 private:
 	CActive_Icon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

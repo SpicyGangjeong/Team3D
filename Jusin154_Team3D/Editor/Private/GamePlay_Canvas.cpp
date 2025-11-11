@@ -103,11 +103,12 @@ HRESULT CGamePlay_Canvas::Ready_Panel(void* pArg)
 	{
 		return E_FAIL;
 	}
-	Add_Panel(TEXT("Minimap"), m_pMinimap_Panel);
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMission_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &Mission_Panel)))
-	//{
-	//	return E_FAIL;
-	//}
+	Add_Panel(TEXT("MinimapPanel"), m_pMinimap_Panel);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMission_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &m_pMission_Panel)))
+	{
+		return E_FAIL;
+	}
+	Add_Panel(TEXT("MissionPanel"), m_pMission_Panel);
 	return S_OK;
 }
 
