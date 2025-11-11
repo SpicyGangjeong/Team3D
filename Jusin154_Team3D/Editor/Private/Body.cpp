@@ -24,13 +24,9 @@ HRESULT CBody::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	dynamic_cast<CRootModelPart*>(m_pOwner)->Push_ModelParts(this);
-
-	dynamic_cast<CRootModelPart*>(m_pOwner)->Push_MainModel(m_pModelCom);
 	return S_OK;
 }
 
@@ -41,7 +37,7 @@ void CBody::Priority_Update(_float fTimeDelta)
 
 void CBody::Update(_float fTimeDelta)
 {
-	//m_pModelCom->Play_Animation(fTimeDelta);
+	__super::Update(fTimeDelta);
 }
 
 void CBody::Late_Update(_float fTimeDelta)
@@ -53,45 +49,20 @@ void CBody::Late_Update(_float fTimeDelta)
 
 HRESULT CBody::Render()
 {
-	if (FAILED(Bind_ShaderResources())) {
-		return E_FAIL;
-	}
-
-	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-
-	for (_uint i = 0; i < iNumMeshes; i++)
-	{
-		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom, "g_DiffuseTexture", aiTextureType_DIFFUSE, 0))) {
-			return E_FAIL;
-		}
-		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom, "g_NormalTexture", aiTextureType_NORMALS, 0))) {
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pModelCom->Render(i))) {
-			return E_FAIL;
-		}
-	}
+	__super::Render();
 
 	return S_OK;
 }
 
 HRESULT CBody::Ready_Components()
 {
-	/* Com_Model */
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_strModelPrototypeTag,
-		reinterpret_cast<CComponent**>(&m_pModelCom))))
-		return E_FAIL;
-
-	/*m_pModelCom->Change_AnimationIndex(0, true, 0.4f, true);*/
+	if (m_strModelPrototypeTag != L"")
+	{
+		/* Com_Model */
+		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_strModelPrototypeTag,
+			reinterpret_cast<CComponent**>(&m_pModelCom))))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }

@@ -16,7 +16,7 @@ public:
 	typedef struct tagObjectDesc
 	{
 		const _tchar* pModelPrototypeTag;
-	}OBJECT_DESC;
+	}PARTS_OBJECT_DESC;
 private:
 	CDummyObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CDummyObject(const CDummyObject& Prototype);

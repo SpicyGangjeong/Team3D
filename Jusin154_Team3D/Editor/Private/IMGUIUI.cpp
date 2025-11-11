@@ -246,7 +246,7 @@ HRESULT CIMGUIUI::Bind_ShaderResources()
 
 HRESULT CIMGUIUI::Ready_Components(void* pArg)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGamePlay_Canvas>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &m_pGamePlay_Canvas)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGamePlay_Canvas>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CGamePlay_Canvas**>(&m_pGamePlay_Canvas))))
 	{
 		return E_FAIL;
 	}

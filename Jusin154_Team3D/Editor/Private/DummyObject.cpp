@@ -21,7 +21,7 @@ HRESULT CDummyObject::Initialize_Prototype()
 
 HRESULT CDummyObject::Initialize(void* pArg)
 {
-	OBJECT_DESC* pDesc = static_cast<OBJECT_DESC*>(pArg);
+	PARTS_OBJECT_DESC* pDesc = static_cast<PARTS_OBJECT_DESC*>(pArg);
 
 	m_strModelPrototypeTag = pDesc->pModelPrototypeTag;
 
