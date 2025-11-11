@@ -7,6 +7,8 @@ NS_BEGIN(Editor)
 
 class CBuildingContainer final : public CMapContainer
 {
+
+
 public:
 	CBuildingContainer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CBuildingContainer(const CBuildingContainer& rhs);

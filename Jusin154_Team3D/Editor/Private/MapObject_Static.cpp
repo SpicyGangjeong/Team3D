@@ -40,8 +40,10 @@ void CMapObject_Static::Late_Update(_float fTimeDelta)
 	}
 #endif 
 
+	XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_XMWorldMatrix() * m_pParentTransformCom->Get_XMWorldMatrix());
+
 	_float4 vPos;
-	XMStoreFloat4(&vPos, Get_WorldPostion());
+	XMStoreFloat4(&vPos, m_pTransformCom->Get_State(STATE::POSITION));
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this, vPos, 20.f);
 }
 
@@ -62,8 +64,17 @@ HRESULT CMapObject_Static::Render()
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::DEFAULT)))) {
-			return E_FAIL;
+		if (m_bSelected)
+		{
+			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::MAPTOOL)))) {
+				return E_FAIL;
+			}
+		}
+		else
+		{
+			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::DEFAULT)))) {
+				return E_FAIL;
+			}
 		}
 
 		if (FAILED(m_pModelCom->Render(i))) {
@@ -81,9 +92,11 @@ HRESULT CMapObject_Static::Initialize_Prototype()
 
 HRESULT CMapObject_Static::Initialize(void* pArg)
 {
+	m_iMaxLodLevel = 0;
+
 	MAPOBJECT_STATIC_DESC* pDesc = static_cast<MAPOBJECT_STATIC_DESC*>(pArg);
 
-	m_strModelPrototypeTag = pDesc->pModelPrototypeTag;
+	m_strModelPrototypeTag = pDesc->strModelPrototypeTag;
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -94,9 +107,13 @@ HRESULT CMapObject_Static::Initialize(void* pArg)
 
 #ifdef _DEBUG
 	m_bSelected = false;
-	m_vPosition = _float3(0.f, 0.f, 0.f);
-	m_vRotation = _float3(0.f, 0.f, 0.f);
-	m_vScale = _float3(1.f, 1.f, 1.f);
+	m_vPosition = pDesc->vPosition;
+	m_vScale = pDesc->vScale;
+	m_vRotation = pDesc->vRotation;
+
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
+	m_pTransformCom->Set_Scale(m_vScale);
+	m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
 #endif // _DEBUG
 
 	return S_OK;
@@ -126,7 +143,7 @@ HRESULT CMapObject_Static::Ready_Components()
 
 HRESULT CMapObject_Static::Bind_ShaderResources()
 {
-	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))) {
@@ -139,21 +156,7 @@ HRESULT CMapObject_Static::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 		return E_FAIL;
 	}
-	//if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float4)))) {
-	//	return E_FAIL;
-	//}
-	//if (FAILED(m_pShaderCom->Bind_RawValue("g_bRimLight", &m_bRimLight, sizeof(_bool)))) {
-	//	return E_FAIL;
-	//}
-	//if (FAILED(m_pShaderCom->Bind_RawValue("g_fRimStrength", &m_fRimLightStrength, sizeof(_float)))) {
-	//	return E_FAIL;
-	//}
-	//if (FAILED(m_pShaderCom->Bind_RawValue("g_fRimPower", &m_fRimLightPower, sizeof(_float)))) {
-	//	return E_FAIL;
-	//}
-	//if (FAILED(m_pShaderCom->Bind_RawValue("g_vRimColor", &m_vRimLightColor, sizeof(_float3)))) {
-	//	return E_FAIL;
-	//}
+
 	return S_OK;
 }
 

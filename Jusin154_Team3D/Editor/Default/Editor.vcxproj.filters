@@ -354,6 +354,21 @@
     <ClInclude Include="..\public\MapObject_LOD.h">
       <Filter>02.GameObjects\Env\02.MapObject\LOD</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\MapContainer.h">
+      <Filter>02.GameObjects\Env\01.MapContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BuildingContainer.h">
+      <Filter>02.GameObjects\Env\01.MapContainer\BuildingContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapObject.h">
+      <Filter>02.GameObjects\Env\02.MapObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapObject_Static.h">
+      <Filter>02.GameObjects\Env\02.MapObject\Static</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapObject_LOD.h">
+      <Filter>02.GameObjects\Env\02.MapObject\LOD</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -507,6 +522,21 @@
     </ClCompile>
     <ClCompile Include="..\Private\DummyObject.cpp">
       <Filter>02.GameObjects\Dummys\DummyObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapContainer.cpp">
+      <Filter>02.GameObjects\Env\01.MapContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BuildingContainer.cpp">
+      <Filter>02.GameObjects\Env\01.MapContainer\BuildingContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapObject.cpp">
+      <Filter>02.GameObjects\Env\02.MapObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapObject_Static.cpp">
+      <Filter>02.GameObjects\Env\02.MapObject\Static</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapObject_LOD.cpp">
+      <Filter>02.GameObjects\Env\02.MapObject\LOD</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MapContainer.cpp">
       <Filter>02.GameObjects\Env\01.MapContainer</Filter>

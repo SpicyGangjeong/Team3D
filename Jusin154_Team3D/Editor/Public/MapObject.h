@@ -25,6 +25,7 @@ public:
 
 public:
 	virtual _wstring	Get_PrototypeTag(_uint iLodIndex = 0);
+	virtual _uint		Get_LodLevel() { return m_iMaxLodLevel; }
 
 protected:
 
@@ -35,7 +36,11 @@ protected:
 	HRESULT Ready_Components();
 
 #ifdef _DEBUG
+protected:
 	_bool		m_bSelected = {};
+
+	_uint		m_iMaxLodLevel = {};
+
 	_float3		m_vPosition = {};
 	_float3		m_vRotation = {};
 	_float3		m_vScale = {};

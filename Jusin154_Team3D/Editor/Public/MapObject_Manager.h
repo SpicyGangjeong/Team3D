@@ -27,22 +27,31 @@ public:
 
 private:
 	class CMapObject*					m_pSelectObject = { nullptr };
-	list<class CMapObject*>				m_MapObjects = { nullptr };
+	list<class CMapObject*>				m_MapObjects = {};
 	vector<_wstring>					m_ModelPrototypeTags;
 	vector<_wstring>					m_LODModelPrototypeTags;
 
-	_bool								m_bLOD = { false };
-	class CBuildingContainer*			m_pContainer = { nullptr };
+	_uint								m_iContainerObjectIndex = {};
 
+	class CBuildingContainer*			m_pContainer = { nullptr };
+	_char								m_szSaveContainerName[MAX_PATH] = {};
 private:
 	HRESULT		Ready_Components();
 	HRESULT		Bind_ShaderResources();
+
+#pragma region SAVE_LOAD
 	HRESULT		Save_MapData(const _char* pFileName);
+	HRESULT		Save_ContainerData(const _char* pFileName, const _char* pContainerName);
 	HRESULT		Load_MapData(const _char* pFileName);
+	HRESULT		Load_ContainerData(const _char* pFileName, const _char* pContainerName);
+#pragma endregion
 
 	void		Update_PrototypeList();
 	void		Update_ObjectList();
 	void		Update_Edit();
+	void		Update_ContainerObject();
+
+	_bool		Find_Lod_Prototype(_wstring strPrototypeTag, _uint* iCount);
 
 public:
 	static CMapObject_Manager* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, vector<_wstring>& ModelPrototypeTags);

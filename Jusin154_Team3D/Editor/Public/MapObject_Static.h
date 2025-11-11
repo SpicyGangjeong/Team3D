@@ -11,7 +11,10 @@ public:
 	typedef struct tagMapObjectStaticDesc : public PARTOBJECT_DESC
 	{
 		_uint					iMaxLodLevel{};
-		const _tchar*			pModelPrototypeTag;
+		_wstring				strModelPrototypeTag;
+		_float3					vPosition;
+		_float3					vScale;
+		_float3					vRotation;
 	}MAPOBJECT_STATIC_DESC;
 
 private:

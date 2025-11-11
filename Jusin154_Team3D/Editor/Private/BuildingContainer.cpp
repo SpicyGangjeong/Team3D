@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "BuildingContainer.h"
 #include "PartObject.h"
+#include "Terrain.h"
+#include "Layer.h"
+#include "VIBuffer_Terrain.h"
 
 CBuildingContainer::CBuildingContainer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     :CMapContainer(pDevice, pContext)
@@ -15,6 +18,8 @@ CBuildingContainer::CBuildingContainer(const CBuildingContainer& rhs)
 void CBuildingContainer::Priority_Update(_float fTimeDelta)
 {
     __super::Priority_Update(fTimeDelta);
+
+    m_bSelected = false;
 }
 
 void CBuildingContainer::Update(_float fTimeDelta)
@@ -24,6 +29,13 @@ void CBuildingContainer::Update(_float fTimeDelta)
 
 void CBuildingContainer::Late_Update(_float fTimeDelta)
 {
+    if (m_bSelected)
+    {
+        m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
+        m_pTransformCom->Set_Scale(m_vScale);
+        m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
+    }
+
     __super::Late_Update(fTimeDelta);
 }
 
@@ -43,9 +55,21 @@ HRESULT CBuildingContainer::Initialize(void* pArg)
         return E_FAIL;
     }
 
-    if (FAILED(__super::Ready_Components(pArg))) {
+    if (FAILED(Ready_Components(pArg))) {
         return E_FAIL;
     }
+
+    MAP_CONTAINER_DESC* pDesc = static_cast<MAP_CONTAINER_DESC*>(pArg);
+
+    m_strName = pDesc->strName;
+
+    m_vPosition = pDesc->vPosition;
+    m_vScale = pDesc->vScale;
+    m_vRotation = pDesc->vRotation;
+
+    m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
+    m_pTransformCom->Set_Scale(m_vScale);
+    m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
 
     return S_OK;
 }
@@ -97,4 +121,44 @@ void CBuildingContainer::Free()
 
 void CBuildingContainer::Describe_Entity()
 {
+    if (m_bDead)
+        return;
+    if (nullptr == m_pGameInstance)
+        return;
+
+    GUI::Text(m_strName.c_str());
+    GUI::Text("----- Transfrom ----");
+    GUI::InputFloat("X##Position", &m_vPosition.x, 0.1f, 1.f);
+    GUI::InputFloat("Y##Position", &m_vPosition.y, 0.1f, 1.f);
+    GUI::InputFloat("Z##Position", &m_vPosition.z, 0.1f, 1.f);
+
+    if (m_pGameInstance->Mouse_Down(DIM_LBUTTON) && m_pGameInstance->Key_Pressing(DIK_LSHIFT))
+    {
+        CTerrain* pTerrain = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Terrain"))->Get_Object<CTerrain>();
+        if (nullptr != pTerrain)
+        {
+            pTerrain->Get_Component<CVIBuffer_Terrain>()->Picking(pTerrain->Get_Component<CTransform>(), m_vPosition);
+        }
+
+    }
+
+    GUI::Text("----- Rotation ----");
+    GUI::InputFloat("X##Rotation", &m_vRotation.x, 10.f, 45.f);
+    GUI::InputFloat("Y##Rotation", &m_vRotation.y, 10.f, 45.f);
+    GUI::InputFloat("Z##Rotation", &m_vRotation.z, 10.f, 45.f);
+
+    GUI::Text("----- Scale ----");
+    GUI::InputFloat("X##Scale", &m_vScale.x, 0.1f, 1.f);
+    GUI::InputFloat("Y##Scale", &m_vScale.y, 0.1f, 1.f);
+    GUI::InputFloat("Z##Scale", &m_vScale.z, 0.1f, 1.f);
+
+    m_vScale.x = max(0.01f, m_vScale.x);
+    m_vScale.y = max(0.01f, m_vScale.y);
+    m_vScale.z = max(0.01f, m_vScale.z);
+
+
+    if (GUI::Button("Delete"))
+        m_bDead = true;
+
+    m_bSelected = true;
 }

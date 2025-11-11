@@ -661,15 +661,13 @@ HRESULT CLoader::Loading_For_MapViewer()
 	vector<_wstring> ModelPrototypeTags;
 
 	for (const auto& file : filesystem::directory_iterator("C:\\Users\\82103\\Desktop\\MapRe\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Meshes"))
-
 	{
 		if (file.is_directory())
 			continue;
 
 		string ext = file.path().extension().string();
 
-		if (strcmp(ext.c_str(), ".fbx"))
-
+		if (strcmp(ext.c_str(), ".bin"))
 			continue;
 
 		_char szFilePath[MAX_PATH] = {};
@@ -680,12 +678,35 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 		/*For Prototype_Component_Model_*/
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, strFileName,
-			CModel::Create(m_pDevice, m_pContext,szFilePath, MODEL::ENVIROMENT, XMMatrixIdentity(), 0))))
+			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, szFilePath))))
 			return E_FAIL;
 
 		ModelPrototypeTags.push_back(strFileName);
 	}
 
+	for (const auto& file : filesystem::directory_iterator("C:\\Users\\82103\\Desktop\\MapRe\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Meshes\\3Broom_Kit"))
+	{
+		if (file.is_directory())
+			continue;
+
+		string ext = file.path().extension().string();
+
+		if (strcmp(ext.c_str(), ".fbx"))
+			continue;
+
+		_char szFilePath[MAX_PATH] = {};
+
+		strcpy_s(szFilePath, MAX_PATH, file.path().string().c_str());
+
+		_wstring strFileName = L"Prototype_GameObject_" + file.path().stem().wstring();
+
+		/*For Prototype_Component_Model_*/
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, strFileName,
+			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, szFilePath))))
+			return E_FAIL;
+
+		ModelPrototypeTags.push_back(strFileName);
+	}
 
 	m_strMessage = TEXT("쉐이더를(을) 로딩 중 입니다.");
 

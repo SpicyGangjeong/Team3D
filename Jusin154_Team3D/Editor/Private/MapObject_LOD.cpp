@@ -41,9 +41,13 @@ HRESULT CMapObject_LOD::Initialize(void* pArg)
 
 #ifdef _DEBUG
 	m_bSelected = false;
-	m_vPosition = _float3(0.f, 0.f, 0.f);
-	m_vRotation = _float3(0.f, 0.f, 0.f);
-	m_vScale = _float3(1.f, 1.f, 1.f);
+	m_vPosition = pDesc->vPosition;
+	m_vScale = pDesc->vScale;
+	m_vRotation = pDesc->vRotation;
+
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
+	m_pTransformCom->Set_Scale(m_vScale);
+	m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
 #endif // _DEBUG
 
 	return S_OK;
@@ -72,8 +76,11 @@ void CMapObject_LOD::Late_Update(_float fTimeDelta)
 	}
 #endif 
 
+	XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_XMWorldMatrix() * m_pParentTransformCom->Get_XMWorldMatrix());
+
 	_float4 vPos;
-	XMStoreFloat4(&vPos, Get_WorldPostion());
+	//XMStoreFloat4(&vPos, Get_WorldPostion());
+	XMStoreFloat4(&vPos, m_pTransformCom->Get_State(STATE::POSITION));
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this, vPos, 20.f);
 }
 
@@ -83,7 +90,7 @@ HRESULT CMapObject_LOD::Render()
 		return E_FAIL;
 	}
 
-	_uint		iNumMeshes = m_pModelComs[0]->Get_NumMeshes();
+	_uint		iNumMeshes = m_pModelComs[m_iLodIndex]->Get_NumMeshes();
 
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
@@ -93,10 +100,19 @@ HRESULT CMapObject_LOD::Render()
 		if (FAILED(m_pModelComs[0]->Bind_Material(i, m_pShaderCom, "g_NormalTexture", aiTextureType_NORMALS, 0))) {
 			return E_FAIL;
 		}
-
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::DEFAULT)))) {
-			return E_FAIL;
+		if (m_bSelected)
+		{
+			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::MAPTOOL)))) {
+				return E_FAIL;
+			}
 		}
+		else
+		{
+			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::DEFAULT)))) {
+				return E_FAIL;
+			}
+		}
+		
 
 		if (FAILED(m_pModelComs[m_iLodIndex]->Render(i))) {
 			return E_FAIL;
@@ -121,6 +137,8 @@ HRESULT CMapObject_LOD::Add_LodModel(const _tchar* pModelPrototypeTag)
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, pModelPrototypeTag,
 		reinterpret_cast<CComponent**>(&pModel))))
 		return E_FAIL;
+
+	m_ModelPrototypeTags.push_back(pModelPrototypeTag);
 
 	++m_iMaxLodLevel;
 	m_pModelComs.push_back(pModel);
@@ -154,9 +172,10 @@ HRESULT CMapObject_LOD::Ready_Components()
 
 HRESULT CMapObject_LOD::Bind_ShaderResources()
 {
-	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix))) {
 		return E_FAIL;
 	}
+
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))) {
 		return E_FAIL;
 	}

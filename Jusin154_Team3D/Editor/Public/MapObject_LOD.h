@@ -11,7 +11,10 @@ public:
 	typedef struct tagMapObjectLodDesc : public PARTOBJECT_DESC
 	{
 		_uint					iMaxLodLevel{};
-		vector<const _tchar*>	ModelPrototypeTags;
+		vector<_wstring>		ModelPrototypeTags;
+		_float3					vPosition;
+		_float3					vScale;
+		_float3					vRotation;
 	}MAPOBJECT_LOD_DESC;
 
 private:
@@ -38,7 +41,12 @@ private:
 	_uint				m_iMaxLodLevel = {};
 	_uint				m_iLodIndex = {};
 
+	CShader*			m_pShaderCom = { nullptr };
+	vector<CModel*>		m_pModelComs;
 	vector<_wstring>	m_ModelPrototypeTags;
+
+
+	
 
 private:
 	HRESULT Ready_Components();

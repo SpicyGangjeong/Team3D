@@ -49,30 +49,6 @@ void CMapObject::Late_Update(_float fTimeDelta)
 
 HRESULT CMapObject::Render()
 {
-	if (FAILED(Bind_ShaderResources())) {
-		return E_FAIL;
-	}
-
-	//_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-
-	//for (_uint i = 0; i < iNumMeshes; i++)
-	//{
-	//	if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom, "g_DiffuseTexture", aiTextureType_DIFFUSE, 0))) {
-	//		return E_FAIL;
-	//	}
-	//	if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom, "g_NormalTexture", aiTextureType_NORMALS, 0))) {
-	//		return E_FAIL;
-	//	}
-
-	//	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::DEFAULT)))) {
-	//		return E_FAIL;
-	//	}
-
-	//	if (FAILED(m_pModelCom->Render(i))) {
-	//		return E_FAIL;
-	//	}
-	//}
-
 	return S_OK;
 }
 
@@ -91,9 +67,6 @@ HRESULT CMapObject::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Components()))
-		return E_FAIL;
-
 #ifdef _DEBUG
 	m_bSelected = false;
 	m_vPosition = _float3(0.f, 0.f, 0.f);
@@ -104,6 +77,32 @@ HRESULT CMapObject::Initialize(void* pArg)
 	return S_OK;
 }
 
+_wstring CMapObject::Get_PrototypeTag(_uint iLodIndex)
+{
+	return _wstring();
+}
+
+	return S_OK;
+}
+
+HRESULT CMapObject::Initialize(void* pArg)
+{
+	if (FAILED(__super::Initialize(pArg)))
+		return E_FAIL;
+
+	if (FAILED(Ready_Components()))
+		return E_FAIL;
+
+#ifdef _DEBUG
+	m_bSelected = false;
+	m_vPosition = _float3(0.f, 0.f, 0.f);
+	m_vRotation = _float3(0.f, 0.f, 0.f);
+	m_vScale = _float3(1.f, 1.f, 1.f);
+#endif // _DEBUG
+
+	//if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float4)))) {
+	//	return E_FAIL;
+	//}
 HRESULT CMapObject::Ready_Components()
 {
 	__super::Ready_Components(nullptr);
@@ -116,6 +115,21 @@ HRESULT CMapObject::Bind_ShaderResources()
 	return S_OK;
 }
 
+	return pInstance;
+}
+
+CGameObject* CMapObject::Clone(void* pArg, CGameObject* pOwner)
+{
+	CMapObject* pInstance = new CMapObject(*this);
+
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("Failed to Cloned : CMapObject");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
 
 void CMapObject::Free()
 {
