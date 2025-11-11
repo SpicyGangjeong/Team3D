@@ -324,6 +324,9 @@
     <ClInclude Include="..\Public\LoadingWidget.h">
       <Filter>50.UI\GamePlay_Canvas\Loding_Panel\LoadingWidget</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\DummyObject.h">
+      <Filter>02.GameObjects\Dummys\DummyObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -477,6 +480,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\LoadingWidget.cpp">
       <Filter>50.UI\GamePlay_Canvas\Loding_Panel\LoadingWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\DummyObject.cpp">
+      <Filter>02.GameObjects\Dummys\DummyObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

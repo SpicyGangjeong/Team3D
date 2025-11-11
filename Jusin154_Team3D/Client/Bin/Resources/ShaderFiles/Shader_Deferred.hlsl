@@ -303,7 +303,7 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
         vTexcoord.x = In.vTexcoord.x;
         vTexcoord.y = In.vTexcoord.y + (float)i / g_vResolution.y;
         
-        vColor += g_fWeights[i + 6] * g_BlurXTexture.Sample(BorderZeroSampler, vTexcoord);
+        vColor += g_fWeights[i + 6] * g_BlurXTexture.Sample(ClampSampler, vTexcoord);
     }
     
     Out.vBackBuffer += vColor;
@@ -329,7 +329,7 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_X(PS_IN In)
         vTexcoord.x = In.vTexcoord.x + (float) i / g_vResolution.x;
         vTexcoord.y = In.vTexcoord.y;
         
-        vColor += g_fWeights[i + 6] * g_BlurTexture.Sample(BorderZeroSampler, vTexcoord);
+        vColor += g_fWeights[i + 6] * g_BlurTexture.Sample(ClampSampler, vTexcoord);
     }
     
     Out.vBlurX = vColor; 

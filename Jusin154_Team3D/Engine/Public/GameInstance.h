@@ -74,7 +74,7 @@ public:
 
 #pragma region OBJECT_MANAGER
 	template<typename T>
-	HRESULT Add_GameObject_ToLayer(_uint iPrototypeLevelIndex, _uint iLayerLevelIndex, const _wstring& strLayerTag, void* pArg = nullptr, class CGameObject* pOwner = nullptr, class CGameObject** ppOut = nullptr) {
+	HRESULT Add_GameObject_ToLayer(_uint iPrototypeLevelIndex, _uint iLayerLevelIndex, const _wstring& strLayerTag, void* pArg = nullptr, class CGameObject* pOwner = nullptr, T** ppOut = nullptr) {
 
 		T* pGameObject = Clone_Prototype<T>(iPrototypeLevelIndex, pArg, pOwner);
 		if (nullptr == pGameObject) {
@@ -146,6 +146,7 @@ public:
 	HRESULT Add_RenderTarget(const _wstring& strRenderTargetKey, _uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixelFormat, const _float4& vClearColor);
 	HRESULT Add_MRT(const _wstring& strMultiRenderTargetKey, const _wstring& strRenderTargetKey);
 	HRESULT Begin_MRT(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV = nullptr);
+	HRESULT Begin_MRT_Include_BackBuffer(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV = nullptr);
 	HRESULT End_MRT();
 	HRESULT Bind_RenderTarget(const _wstring& strTargetTag, class CShader* pShader, const _char* pConstantName);
 	HRESULT Copy_RenderTarget(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D);

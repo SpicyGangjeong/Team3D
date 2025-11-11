@@ -64,26 +64,9 @@ HRESULT CPanelObject::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-HRESULT CPanelObject::Ready_Panel(void* pArg)
+HRESULT CPanelObject::Ready_Element(void* pArg)
 {
 	return S_OK;
-}
-
-void CPanelObject::MoveX(_float fX)
-{
-
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(
-		fX - m_fWinSizeX * 0.5f,
-		-m_fY + m_fWinSizeY * 0.5f,
-		0.f, 1.f));
-}
-
-void CPanelObject::MoveY(_float fY)
-{
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(
-		m_fX - m_fWinSizeX * 0.5f,
-		-fY + m_fWinSizeY * 0.5f,
-		0.f, 1.f));
 }
 
 void CPanelObject::Visible(_bool bVisible)
@@ -102,8 +85,14 @@ CGameObject* CPanelObject::Get_Element(const wstring& Name)
 	return Find_Element(Name);
 }
 
-void CPanelObject::Move_Panel(_float fX, _float fY)
+_int CPanelObject::Element_Count()
 {
+	return m_iElements_Count;
+}
+
+const vector<wstring> CPanelObject::Element_Name()
+{
+	return m_ElementName;
 }
 
 void CPanelObject::Add_Element(wstring Name, CGameObject* pPanel)
@@ -119,7 +108,9 @@ void CPanelObject::Add_Element(wstring Name, CGameObject* pPanel)
 	}
 
 	m_Elements.push_back(pPanel);
+	m_ElementName.push_back(Name);
 	m_Elements_map.emplace(Name, pPanel);
+	m_iElements_Count++;
 }
 
 CGameObject* CPanelObject::Find_Element(const wstring& Name)

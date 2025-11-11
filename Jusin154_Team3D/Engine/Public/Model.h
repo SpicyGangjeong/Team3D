@@ -39,7 +39,7 @@ public:
 	void Get_BoneMatrices(_float4x4* pOut);
 	_uint	Get_BonesNum() const { return (_uint)m_Bones.size(); }
 
-	void Reset_CurrentTrackPosition();
+	void Set_CurrentTrackPosition(_float TrackPosition);
 	const _char* Get_AnimList(_uint iIndex);
 	size_t Get_AnimSize() { return m_Animations.size(); }
 	_float Get_CurrentTrackPosition();

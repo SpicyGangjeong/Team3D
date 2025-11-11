@@ -15,8 +15,8 @@ private:
 public:
 	 HRESULT Initialize(const _tchar* pShaderFilePath, const _char* pStartFunctionName, _uint iNumElement, _uint iNumInputBuffer, _uint iOutputStructStride, _uint iInputStructStride[]);
 public:
-	HRESULT Dispatch(_uint iSRVIndex, _uint iUAVIndex, _float3 vGroupCount, ID3D11Buffer** ppBuffers, ID3D11Buffer* pConstantBuffer = nullptr);
-
+	D3D11_MAPPED_SUBRESOURCE Dispatch(_uint iSRVIndex, _uint iUAVIndex, _float3 vGroupCount, ID3D11Buffer** ppBuffers, ID3D11Buffer* pConstantBuffer = nullptr);
+	void    Bind_OutPut_SRV(_uint iIndex);
 private:
 	void	Bind_SRV(_uint iIndex);
 	void	Bind_UAV(_uint iIndex);
@@ -39,7 +39,10 @@ private:
 	ID3D11Buffer*						m_pOutputBuffer = nullptr;
 
 	vector<ID3D11Buffer*>				m_pStagingBuffer = {};
+	ID3D11Buffer*						m_pOutputStagingBuffer = {};
 	ID3D11ComputeShader*				m_pComputeShader = nullptr;
+
+	ID3D11ShaderResourceView*			m_pOutputSRV = { nullptr };
 
 private:
 	_uint						m_iNumElement = 0; // 인수 개수
