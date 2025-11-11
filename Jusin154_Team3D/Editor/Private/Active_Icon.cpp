@@ -40,7 +40,13 @@ HRESULT CActive_Icon::Initialize(void* pArg)
 	m_fTimeMult = 3.f;
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 3.f;
+	m_eType = QUESTYPE::MAIN;
 	return S_OK;
+}
+
+void CActive_Icon::QuestType(QUESTYPE eType)
+{
+	m_eType = eType;
 }
 
 void CActive_Icon::Priority_Update(_float fTimeDelta)
@@ -107,7 +113,7 @@ HRESULT CActive_Icon::Render()
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::DEFAULT)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::QUESTYPE)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
@@ -160,6 +166,10 @@ HRESULT CActive_Icon::Bind_ShaderResources()
 		return E_FAIL;
 	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCanvasAlpha", &m_fCanvasAlpha, sizeof(_float))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iQuestType", &m_eType, sizeof(_uint))))
 	{
 		return E_FAIL;
 	}
