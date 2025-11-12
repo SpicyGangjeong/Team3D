@@ -42,6 +42,8 @@ float2 g_vDiffuseNoiseUVGainAmount;
 float2 g_vMaskNoiseUVGainAmount;
 
 float2 g_vUVCutting;
+float2 g_vUVMaskCutting;
+
 
 float  g_fBlurIntensity; //블러 세기
 float  g_fNoiseDistortionIntensity; // 노이즈 왜곡 세기
@@ -224,7 +226,8 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
         /* 최종 색깔  */
         vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, UV);
         
-        vMtrlDiffuse += g_vColor;
+        if (g_vColor.a > 0)
+            vMtrlDiffuse += g_vColor;
         
         if (vMtrlDiffuse.a < 0.3f)
             discard;
@@ -299,26 +302,22 @@ VS_BLUR_OUT VS_BLUR(VS_IN In, uint iGPUIndex : SV_InstanceID)
 {
     VS_BLUR_OUT Out = (VS_BLUR_OUT) 0;
 
-    matrix matWV, matWVP;
+    row_major matrix matW, matWV, matWVP;
     
-    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    row_major matrix TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
     
-    float4 vProjPos = vector(In.vPosition, 1.f);
-    
-    Out.vPosition = mul(vProjPos, matWVP);
-
+    matW = mul(g_WorldMatrix, TransformMatrix);
+    matWV = mul(matW, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
     
-    matrix TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
+    vector vPosition = mul(vector(In.vPosition, 1.f), matWVP);
     
-    vector vPosition = mul(vector(In.vPosition, 1.f), TransformMatrix);
-    
-    Out.vPosition = mul(vPosition, matWVP);
+    Out.vPosition = vPosition;
     Out.vTexcoord = In.vTexcoord;
     Out.vLifeTime = In.vLifeTime;
     Out.iGPUIndex = iGPUIndex;
 
-    
+
     return Out;
 }
 

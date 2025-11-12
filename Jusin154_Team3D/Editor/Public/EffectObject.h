@@ -40,7 +40,7 @@ protected:
 	CInstance_Model*	m_pInstance_ModelCom = { nullptr };
 
 protected:
-	_float4 m_vColor = { 0.f ,0.f ,0.f ,0.f };
+	_float4 m_vColor = { 0.f ,0.f ,0.f ,1.f };
 
 	_float2 m_vDiffuseUVGainAmount = {};
 	_float2 m_vMaskingUVGainAmount = {};
@@ -49,6 +49,7 @@ protected:
 	_float2 m_vMaskNoiseUVGainAmount = {};
 
 	_float2 m_vUVCutting = {1.f ,1.f};
+	_float2 m_vUVMaskCutting = { 1.f ,1.f };
 			
 	_bool	m_isDiffuse = {};
 	_bool	m_isMasking = {};

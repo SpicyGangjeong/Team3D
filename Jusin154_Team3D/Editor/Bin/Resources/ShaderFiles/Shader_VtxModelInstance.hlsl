@@ -42,6 +42,8 @@ float2 g_vDiffuseNoiseUVGainAmount;
 float2 g_vMaskNoiseUVGainAmount;
 
 float2 g_vUVCutting;
+float2 g_vUVMaskCutting;
+
 
 float  g_fBlurIntensity; //블러 세기
 float  g_fNoiseDistortionIntensity; // 노이즈 왜곡 세기
@@ -181,21 +183,9 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     
     if (g_isDiffuse == true)
     {
-        float2 UV = In.vTexcoord; // 이미지의 UV값
-    
-        int iTotalFrame = g_vUVCutting.x * g_vUVCutting.y; // 이미지의 최대 프레임 (몇 곱하기 몇인지)
-    
-        int iCurrentFrame = int(fAnimIndex.x); // 현재 프레임이 어디 위치인지
-    
-        int iFrameX = iCurrentFrame % (int) g_vUVCutting.x; // 현재 x축의 위치(현재 이미지의 몇번째 칸을 보여줄 지)
-        int iFrameY = iCurrentFrame / (int) g_vUVCutting.x; // 현재 y축의 위치(현재 이미지의 몇번째 줄을 보여줄 지)
-    
-        float fFreamWidth = 1.0 / g_vUVCutting.x; // 1.0 나누기 이미지 갯수를 해서 한칸에 얼마나 갈지 정해준다.
-        float fFreamHeight = 1.0 / g_vUVCutting.y; // 1.0 나누기 이미지 갯수를 해서 한줄에 얼마나 갈지 정해준다.
-    
-        UV.x = UV.x * fFreamWidth + iFrameX * fFreamWidth; // 먼저 uv를 0~1이 아닌 0~fFrameWidth로 만든 다음에 한칸씩 옆으로 밀어준다.
-        UV.y = UV.y * fFreamHeight + iFrameY * fFreamHeight; // 먼저 uv를 0~1이 아닌 0~fFrameHeight로 만든 다음에 한줄씩 밑으로 내려준다.
-    
+        float2 UV; // 이미지의 UV값
+   
+        UV = UV_Cutting(In.vTexcoord, g_vUVCutting, int(fAnimIndex.x));
         
         if (g_isDiffuseUVMove)
         {
@@ -240,9 +230,12 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     {
         float2 vMaskTexcoord = In.vTexcoord;
         
+        vMaskTexcoord = UV_Cutting(In.vTexcoord, g_vUVMaskCutting, int(fAnimIndex.x));
+        
         if (g_isNoise == true)
         {
-         
+            float2 UV; // 이미지의 UV값
+   
             float2 vNoiseUV = In.vTexcoord + (g_vMaskNoiseUVGainAmount) * (vNoiseUVMoveTime.x / vNoiseUVMoveTime.y);
             
             vMtrlNoise = g_NoiseTexture.Sample(DefaultSampler, vNoiseUV);

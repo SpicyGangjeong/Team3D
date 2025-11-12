@@ -23,7 +23,7 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 
 public:
-	void			Reference_Mat_For_EditEffect(class CTexture* pTexture, CGameObject* pObject);
+	void			Reference_Mat_For_EditEffect(class CComponent** pTexture, CGameObject* pObject);
 
 private:
 	virtual HRESULT Initialize_Prototype() override;

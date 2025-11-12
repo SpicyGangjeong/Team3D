@@ -249,9 +249,8 @@ void CEffect_Editor::ReadMaterial(_wstring wstrFileName, const char* pFilePath)
 	wifs.close();
 }
 
-void CEffect_Editor::Reference_Mat_For_EditEffect(CTexture* pTexture, CGameObject* pObject)
+void CEffect_Editor::Reference_Mat_For_EditEffect(CComponent** pTexture, CGameObject* pObject)
 {
-
 
 	for (auto iter : m_MatFiles)
 	{
@@ -263,7 +262,7 @@ void CEffect_Editor::Reference_Mat_For_EditEffect(CTexture* pTexture, CGameObjec
 				m_pGameInstance->Asset_Description<CTexture>(
 					ENUM_CLASS(LEVEL::EFFECT),
 					CMyTools::ToString(iter.first).c_str()
-					, (CComponent**)&pTexture
+					, pTexture
 					, nullptr
 					, pObject
 					, wstrTextureInfo.first // ¿Ã∏ß

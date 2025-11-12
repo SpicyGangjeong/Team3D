@@ -38,6 +38,9 @@ void CEditEffect::Priority_Update(_float fTimeDelta)
 
 void CEditEffect::Update(_float fTimeDelta)
 {
+
+	Reference_Mat_For_EditEffect();
+
 	if(m_isBillboard)
 		m_pGameInstance->BillBoard(m_pTransformCom);
 
@@ -46,7 +49,7 @@ void CEditEffect::Update(_float fTimeDelta)
 	
 	m_pInstance_ModelCom->Drop(fTimeDelta);
 
-	
+
 
 }
 
@@ -72,25 +75,24 @@ void CEditEffect::Reference_Mat_For_EditEffect()
 
 	if (ImGui::Combo("OPTION", &m_iSelectTextureNum, pCompute, 4))
 	{
-		switch (m_iSelectTextureNum)
-		{
-		case 0:
-			dynamic_cast<CEffect_Editor*>(m_pOwner)->Reference_Mat_For_EditEffect(m_pDiffuse_TextureCom , this);
-			break;
-		case 1:
-			dynamic_cast<CEffect_Editor*>(m_pOwner)->Reference_Mat_For_EditEffect(m_pMasking_TextureCom, this);
-			break;
-		case 2:
-			dynamic_cast<CEffect_Editor*>(m_pOwner)->Reference_Mat_For_EditEffect(m_pNoise_TextureCom, this);
-			break;
-		case 3:
-			dynamic_cast<CEffect_Editor*>(m_pOwner)->Reference_Mat_For_EditEffect(m_pDissolve_TextureCom, this);
-			break;
-		default:
-			break;
-		}
 	}
-
+	switch (m_iSelectTextureNum)
+	{
+	case 0:
+		dynamic_cast<CEffect_Editor*>(m_pOwner)->Reference_Mat_For_EditEffect((CComponent**)&m_pDiffuse_TextureCom, this);
+		break;
+	case 1:
+		dynamic_cast<CEffect_Editor*>(m_pOwner)->Reference_Mat_For_EditEffect((CComponent**)&m_pMasking_TextureCom, this);
+		break;
+	case 2:
+		dynamic_cast<CEffect_Editor*>(m_pOwner)->Reference_Mat_For_EditEffect((CComponent**)&m_pNoise_TextureCom, this);
+		break;
+	case 3:
+		dynamic_cast<CEffect_Editor*>(m_pOwner)->Reference_Mat_For_EditEffect((CComponent**)&m_pDissolve_TextureCom, this);
+		break;
+	default:
+		break;
+	}
 	ImGui::End();
 
 }
@@ -177,7 +179,7 @@ void CEditEffect::Describe_Entity()
 	GUI::ColorEdit4("MixColor", (_float*)&m_vColor);
 
 	ImGui::PushItemWidth(80);
-	GUI::InputFloat2("UVCutting", (_float*)&m_vUVCutting);
+
 	ImGui::PopItemWidth();
 
 	if (GUI::TreeNode("BLUR"))
@@ -235,9 +237,11 @@ void CEditEffect::Describe_Entity()
 	{
 		if (GUI::TreeNode("DIFFUSE"))
 		{
-			GUI::Checkbox("DiffuseUVMove", &m_isDiffuseUVMove);
+
 
 			ImGui::PushItemWidth(80);
+			GUI::Checkbox("DiffuseUVMove", &m_isDiffuseUVMove);
+			GUI::InputFloat2("DiffuseUVCutting", (_float*)&m_vUVCutting);
 
 			GUI::DragFloat2("DiffuseUVGainAmount", (_float*)&m_vDiffuseUVGainAmount, 0.01f);
 			GUI::DragFloat2("DiffuseNoiseUVGainAmount", (_float*)&m_vDiffuseNoiseUVGainAmount, 0.01f);
@@ -258,6 +262,7 @@ void CEditEffect::Describe_Entity()
 		if (GUI::TreeNode("MASKING"))
 		{
 
+			GUI::InputFloat2("MaskUVCutting", (_float*)&m_vUVMaskCutting);
 			GUI::Checkbox("MaskUVMove", &m_isMaskUVMove);
 
 			ImGui::PushItemWidth(80);
@@ -301,6 +306,7 @@ void CEditEffect::Describe_Entity()
 			GUI::TreePop();
 		}
 	}
+
 
 
 }

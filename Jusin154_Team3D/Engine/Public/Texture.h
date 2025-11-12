@@ -20,6 +20,9 @@ public:
 	_uint Get_Size();
 	_bool Compare_GroupName(_wstring wstrGroupName);
 
+#ifdef _DEBUG
+	void  HoverName();
+#endif
 private:
 	HRESULT Initialize_Prototype(TEXTURE_LOAD_TYPE eType, const _tchar* pTextureFilePath, _uint iNumTextures, _wstring wstrPrototypeName);
 	virtual HRESULT Initialize(void* pArg) override;

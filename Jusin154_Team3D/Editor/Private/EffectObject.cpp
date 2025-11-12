@@ -170,6 +170,11 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vUVMaskCutting", &m_vUVMaskCutting, sizeof(_float2)))) {
+		return E_FAIL;
+	}
+	
+
 	if (m_pDiffuse_TextureCom != nullptr)
 	{
 		if (FAILED(m_pDiffuse_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", 0))) {

@@ -116,7 +116,11 @@ public:
 
 
 					*ppOut = iter->second->Clone(pDesc, pOwner);
+					
+					return;
 				}
+
+				pTexture->HoverName();
 
 				if ((iIndex++ + 1) % 4 != 0)
 					GUI::SameLine(); // 같은 줄에 이어서
