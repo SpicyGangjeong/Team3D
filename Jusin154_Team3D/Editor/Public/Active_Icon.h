@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Editor_Define.h"
-#include "UIObject.h"
+#include "ElementObject.h"
 
 NS_BEGIN(Editor)
 
-class CActive_Icon final : public CUIObject
+class CActive_Icon final : public CElementObject
 {
 private:
 	CActive_Icon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -26,12 +26,14 @@ private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
+public:
+	void QuestType(QUESTYPE eType);
+
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
-	class CGameObject* m_pMission_KeyHold = { nullptr };
-	class CGameObject* m_pMission_Key = { nullptr };
+	QUESTYPE m_eType = QUESTYPE::END;
 
 public:
 	static CActive_Icon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

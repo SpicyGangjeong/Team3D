@@ -31,13 +31,14 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 
 private:
+<<<<<<< HEAD
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
+=======
+>>>>>>> Develope
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
-	CGameObject* m_pMission_KeyHold = { nullptr };
-	CGameObject* m_pMission_Key = { nullptr };
-	CGameObject* m_pActive_Icon = { nullptr };
-	CGameObject* m_pMissionBanner_Key = { nullptr };
+	CGameObject* m_pMiniMap_TrimBorder = { nullptr };
+
 
 public:
 	static CMiniMap_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
