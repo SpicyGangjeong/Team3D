@@ -1,0 +1,17 @@
+Diffuse=T_HW_NH_Hist_Stonewall_D
+Normal=T_HW_Doorway_RoomOfRequirement_N
+Opacity=VFX_T_SancDoorErosion_D
+Other[0]=T_HW_Doorway_RoomOfRequirement_D
+Other[1]=T_HW_Doorway_RoomOfRequirement_SRO
+Other[2]=T_HW_NH_Hist_Stonewall_N
+Other[3]=T_HW_NH_Hist_Stonewall_SRO
+Other[4]=DefaultDiffuse
+Other[5]=DefaultNormal_Uncompressed
+Other[6]=T_HW_INT_Wall_A_N
+Other[7]=T_HW_INT_Wall_A_SRO
+Other[8]=T_HW_INT_Wall_E2_D
+Other[9]=T_Sanc_Door_ROR_D
+Other[10]=T_Sanc_Door_ROR_MRO
+Other[11]=T_Sanc_Door_ROR_R_N
+Other[12]=VFX_T_Inky_Smoke_D
+Other[13]=VFX_T_SancDoorRoht_Erosion_D

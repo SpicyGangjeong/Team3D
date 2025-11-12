@@ -1,0 +1,288 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[7] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_Soft_D.VFX_T_Noise_Soft_D'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseGreypack01_D.VFX_T_NoiseGreypack01_D'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/T_White_4x4_D.T_White_4x4_D'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/VFX_T_Char_01_D.VFX_T_Char_01_D'
+    ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/VFX_T_Char_01_N.VFX_T_Char_01_N'
+    ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/VFX_T_ScorchMark_01_D.VFX_T_ScorchMark_01_D'
+    ReferencedTextures[6] = Texture2D'/Game/VFX/Textures/VFX_T_ScorchMark_01b_D.VFX_T_ScorchMark_01b_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[34] =
+                {
+                    ParameterInfos[0] = { Name=Tiling V cutout }
+                    ParameterInfos[1] = { Name=Black Point Intensity (S) }
+                    ParameterInfos[2] = { Name=Noise2_Horo_Speed }
+                    ParameterInfos[3] = { Name=Noise1_Vert_Speed }
+                    ParameterInfos[4] = { Name=Radius (S) }
+                    ParameterInfos[5] = { Name=Noise2_Horo_Speed (A) }
+                    ParameterInfos[6] = { Name=Tiling U cutout }
+                    ParameterInfos[7] = { Name=Emissive Opacity }
+                    ParameterInfos[8] = { Name=Noise2_Vert_Speed }
+                    ParameterInfos[9] = { Name=Speed U cutout }
+                    ParameterInfos[10] = { Name=LightingPanner }
+                    ParameterInfos[11] = { Name=Noise1_Vert_Speed (A) }
+                    ParameterInfos[12] = { Name=Tiling U - HT }
+                    ParameterInfos[13] = { Name=NoiseStrenght (A) }
+                    ParameterInfos[14] = { Name=Cutout_Noise1_Horo_Speed }
+                    ParameterInfos[15] = { Name=Height Scale (S) }
+                    ParameterInfos[16] = { Name=Cutout_NoiseSizeMultiplyer }
+                    ParameterInfos[17] = { Name=Fade Bias (S) }
+                    ParameterInfos[18] = { Name=Tiling V - HT }
+                    ParameterInfos[19] = { Name=LightingPanner (A) }
+                    ParameterInfos[20] = { Name=NoiseStrenght }
+                    ParameterInfos[21] = { Name=Tiling U (S) }
+                    ParameterInfos[22] = { Name=NoiseSizeMultiplyer }
+                    ParameterInfos[23] = { Name=Noise1_Horo_Speed (A) }
+                    ParameterInfos[24] = { Name=Speed V cutout }
+                    ParameterInfos[25] = { Name=Opacity }
+                    ParameterInfos[26] = { Name=Tiling V (S) }
+                    ParameterInfos[27] = { Name=Density (S) }
+                    ParameterInfos[28] = { Name=Noise1_Horo_Speed }
+                    ParameterInfos[29] = { Name=Speed U - HT }
+                    ParameterInfos[30] = { Name=Cutout_Noise1_Vert_Speed }
+                    ParameterInfos[31] = { Name=Speed V - HT }
+                    ParameterInfos[32] = { Name=Noise2_Vert_Speed (A) }
+                    ParameterInfos[33] = { Name=NoiseSizeMultiplyer (A) }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[3] =
+                {
+                    ParameterInfos[0] = { Name=Base Color Modifier }
+                    ParameterInfos[1] = { Name=Cooling Color }
+                    ParameterInfos[2] = { Name=Hot Color }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[7] =
+                {
+                    ParameterInfos[0] = { Name=Emissive }
+                    ParameterInfos[1] = { Name=Normal }
+                    ParameterInfos[2] = { Name=Emissive Mask }
+                    ParameterInfos[3] = { Name=Black Point }
+                    ParameterInfos[4] = { Name=Heat Cutout }
+                    ParameterInfos[5] = { Name=Heat Temp anim B }
+                    ParameterInfos[6] = { Name=Decal Shape }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[34] =
+        {
+            ScalarValues[0] = 1
+            ScalarValues[1] = 1
+            ScalarValues[2] = 0
+            ScalarValues[3] = 0
+            ScalarValues[4] = 0.5
+            ScalarValues[5] = 0
+            ScalarValues[6] = 1
+            ScalarValues[7] = 1
+            ScalarValues[8] = 0
+            ScalarValues[9] = 1
+            ScalarValues[10] = -0.15
+            ScalarValues[11] = 0
+            ScalarValues[12] = 1
+            ScalarValues[13] = 0.15
+            ScalarValues[14] = 0
+            ScalarValues[15] = -1
+            ScalarValues[16] = 1
+            ScalarValues[17] = 5
+            ScalarValues[18] = 1
+            ScalarValues[19] = -0.15
+            ScalarValues[20] = 0.15
+            ScalarValues[21] = 1
+            ScalarValues[22] = 1
+            ScalarValues[23] = 0
+            ScalarValues[24] = 1
+            ScalarValues[25] = 1
+            ScalarValues[26] = 1
+            ScalarValues[27] = 1
+            ScalarValues[28] = 0
+            ScalarValues[29] = 0
+            ScalarValues[30] = 0
+            ScalarValues[31] = 0
+            ScalarValues[32] = 0
+            ScalarValues[33] = 1
+        }
+        VectorValues[3] =
+        {
+            VectorValues[0] = { R=0, G=0, B=0, A=0 }
+            VectorValues[1] = { R=10, G=0, B=0, A=1 }
+            VectorValues[2] = { R=200, G=145.968, B=40.2204, A=1 }
+        }
+        TextureValues[7] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/VFX_T_Char_01_D.VFX_T_Char_01_D'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/VFX_T_Char_01_N.VFX_T_Char_01_N'
+            TextureValues[2] = Texture2D'/Game/VFX/Textures/VFX_T_ScorchMark_01b_D.VFX_T_ScorchMark_01b_D'
+            TextureValues[3] = Texture2D'/Game/VFX/Textures/VFX_T_Char_01_D.VFX_T_Char_01_D'
+            TextureValues[4] = Texture2D'/Game/VFX/Textures/T_White_4x4_D.T_White_4x4_D'
+            TextureValues[5] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_Soft_D.VFX_T_Noise_Soft_D'
+            TextureValues[6] = Texture2D'/Game/VFX/Textures/VFX_T_ScorchMark_01_D.VFX_T_ScorchMark_01_D'
+        }
+    }
+    ReferencedTextures[7] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/VFX_T_ScorchMark_01_D.VFX_T_ScorchMark_01_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/VFX_T_Char_01_N.VFX_T_Char_01_N'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/VFX_T_Char_01_D.VFX_T_Char_01_D'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/VFX_T_ScorchMark_01b_D.VFX_T_ScorchMark_01b_D'
+        ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_Soft_D.VFX_T_Noise_Soft_D'
+        ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseGreypack01_D.VFX_T_NoiseGreypack01_D'
+        ReferencedTextures[6] = Texture2D'/Game/VFX/Textures/T_White_4x4_D.T_White_4x4_D'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[7] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_Char_01_D.VFX_T_Char_01_D'
+        Name = Emissive
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_Char_01_N.VFX_T_Char_01_N'
+        Name = Normal
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_ScorchMark_01b_D.VFX_T_ScorchMark_01b_D'
+        Name = Emissive Mask
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_Char_01_D.VFX_T_Char_01_D'
+        Name = Black Point
+        Group = None
+    }
+    CollectedTextureParameters[4] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/T_White_4x4_D.T_White_4x4_D'
+        Name = Heat Cutout
+        Group = None
+    }
+    CollectedTextureParameters[5] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_Soft_D.VFX_T_Noise_Soft_D'
+        Name = Heat Temp anim B
+        Group = None
+    }
+    CollectedTextureParameters[6] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_ScorchMark_01_D.VFX_T_ScorchMark_01_D'
+        Name = Decal Shape
+        Group = None
+    }
+}
+CollectedScalarParameters[34] =
+{
+    CollectedScalarParameters[0] = { Value=1, Name=Tiling V cutout, Group=None }
+    CollectedScalarParameters[1] =
+    {
+        Value = 1
+        Name = Black Point Intensity (S)
+        Group = None
+    }
+    CollectedScalarParameters[2] = { Value=0, Name=Noise2_Horo_Speed, Group=None }
+    CollectedScalarParameters[3] = { Value=0, Name=Noise1_Vert_Speed, Group=None }
+    CollectedScalarParameters[4] = { Value=0.5, Name=Radius (S), Group=None }
+    CollectedScalarParameters[5] = { Value=0, Name=Noise2_Horo_Speed (A), Group=None }
+    CollectedScalarParameters[6] = { Value=1, Name=Tiling U cutout, Group=None }
+    CollectedScalarParameters[7] = { Value=1, Name=Emissive Opacity, Group=None }
+    CollectedScalarParameters[8] = { Value=0, Name=Noise2_Vert_Speed, Group=None }
+    CollectedScalarParameters[9] = { Value=1, Name=Speed U cutout, Group=None }
+    CollectedScalarParameters[10] = { Value=-0.15, Name=LightingPanner, Group=None }
+    CollectedScalarParameters[11] = { Value=0, Name=Noise1_Vert_Speed (A), Group=None }
+    CollectedScalarParameters[12] = { Value=1, Name=Tiling U - HT, Group=None }
+    CollectedScalarParameters[13] = { Value=0.15, Name=NoiseStrenght (A), Group=None }
+    CollectedScalarParameters[14] =
+    {
+        Value = 0
+        Name = Cutout_Noise1_Horo_Speed
+        Group = None
+    }
+    CollectedScalarParameters[15] = { Value=-1, Name=Height Scale (S), Group=None }
+    CollectedScalarParameters[16] =
+    {
+        Value = 1
+        Name = Cutout_NoiseSizeMultiplyer
+        Group = None
+    }
+    CollectedScalarParameters[17] = { Value=5, Name=Fade Bias (S), Group=None }
+    CollectedScalarParameters[18] = { Value=1, Name=Tiling V - HT, Group=None }
+    CollectedScalarParameters[19] = { Value=-0.15, Name=LightingPanner (A), Group=None }
+    CollectedScalarParameters[20] = { Value=0.15, Name=NoiseStrenght, Group=None }
+    CollectedScalarParameters[21] = { Value=1, Name=Tiling U (S), Group=None }
+    CollectedScalarParameters[22] = { Value=1, Name=NoiseSizeMultiplyer, Group=None }
+    CollectedScalarParameters[23] = { Value=0, Name=Noise1_Horo_Speed (A), Group=None }
+    CollectedScalarParameters[24] = { Value=1, Name=Speed V cutout, Group=None }
+    CollectedScalarParameters[25] = { Value=1, Name=Opacity, Group=None }
+    CollectedScalarParameters[26] = { Value=1, Name=Tiling V (S), Group=None }
+    CollectedScalarParameters[27] = { Value=1, Name=Density (S), Group=None }
+    CollectedScalarParameters[28] = { Value=0, Name=Noise1_Horo_Speed, Group=None }
+    CollectedScalarParameters[29] = { Value=0, Name=Speed U - HT, Group=None }
+    CollectedScalarParameters[30] =
+    {
+        Value = 0
+        Name = Cutout_Noise1_Vert_Speed
+        Group = None
+    }
+    CollectedScalarParameters[31] = { Value=0, Name=Speed V - HT, Group=None }
+    CollectedScalarParameters[32] = { Value=0, Name=Noise2_Vert_Speed (A), Group=None }
+    CollectedScalarParameters[33] =
+    {
+        Value = 1
+        Name = NoiseSizeMultiplyer (A)
+        Group = None
+    }
+}
+CollectedVectorParameters[3] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0, G=0, B=0, A=0 }
+        Name = Base Color Modifier
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=10, G=0, B=0, A=1 }
+        Name = Cooling Color
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=200, G=145.968, B=40.2204, A=1 }
+        Name = Hot Color
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

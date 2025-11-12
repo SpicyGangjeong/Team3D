@@ -1,0 +1,113 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[1] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/VFX_T_SmokeBall_D.VFX_T_SmokeBall_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[6] =
+                {
+                    ParameterInfos[0] = { Name=Emissive }
+                    ParameterInfos[1] = { Name=Columns }
+                    ParameterInfos[2] = { Name=Near Camera Fade Start Offset }
+                    ParameterInfos[3] = { Name=Rows }
+                    ParameterInfos[4] = { Name=FadeDistance }
+                    ParameterInfos[5] = { Name=Near Camera Fade Distance }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=AlphaChannel }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Texture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[6] = { 0, 1, 32, 1, 10, 256 }
+        VectorValues[1] =
+        {
+            VectorValues[0] = { R=0, G=0, B=0, A=1 }
+        }
+        TextureValues[1] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/VFX_T_SmokeBall_D.VFX_T_SmokeBall_D'
+        }
+    }
+    ReferencedTextures[1] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/VFX_T_SmokeBall_D.VFX_T_SmokeBall_D'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[1] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_SmokeBall_D.VFX_T_SmokeBall_D'
+        Name = Texture
+        Group = None
+    }
+}
+CollectedScalarParameters[6] =
+{
+    CollectedScalarParameters[0] = { Value=0, Name=Emissive, Group=None }
+    CollectedScalarParameters[1] = { Value=1, Name=Columns, Group=None }
+    CollectedScalarParameters[2] =
+    {
+        Value = 32
+        Name = Near Camera Fade Start Offset
+        Group = None
+    }
+    CollectedScalarParameters[3] = { Value=1, Name=Rows, Group=None }
+    CollectedScalarParameters[4] = { Value=10, Name=FadeDistance, Group=None }
+    CollectedScalarParameters[5] =
+    {
+        Value = 256
+        Name = Near Camera Fade Distance
+        Group = None
+    }
+}
+CollectedVectorParameters[1] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = AlphaChannel
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_SmokeBall_D
+    }
+}

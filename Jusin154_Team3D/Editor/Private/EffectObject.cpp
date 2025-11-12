@@ -18,6 +18,7 @@ void CEffectObject::Priority_Update(_float fTimeDelta)
 
 void CEffectObject::Update(_float fTimeDelta)
 {
+	
 }
 
 void CEffectObject::Late_Update(_float fTimeDelta)

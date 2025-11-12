@@ -1,0 +1,207 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[7] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/BaseFlattenNormalMap.BaseFlattenNormalMap'
+    ReferencedTextures[1] = Texture2D'/Engine/EngineMaterials/DefaultDiffuse.DefaultDiffuse'
+    ReferencedTextures[2] = Texture2D'/Engine/EngineMaterials/DefaultNormal_Uncompressed.DefaultNormal_Uncompressed'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_Ice_D.VFX_T_Ice_D'
+    ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_Ice_N.VFX_T_Ice_N'
+    ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_Ice_R.VFX_T_Ice_R'
+    ReferencedTextures[6] = Texture2D'/Game/VFX/Textures/TEST/T_Scorch_01_D.T_Scorch_01_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[16] =
+                {
+                    ParameterInfos[0] = { Name=Emissive Fade Start Time }
+                    ParameterInfos[1] = { Name=Exp }
+                    ParameterInfos[2] = { Name=Emissive Fade End Time }
+                    ParameterInfos[3] = { Name=Projection Contrast }
+                    ParameterInfos[4] = { Name=Sharpen (0-1) (S)_1 }
+                    ParameterInfos[5] = { Name=Alpha }
+                    ParameterInfos[6] = { Name=Panning Noise Projection Contrast }
+                    ParameterInfos[7] = { Name=Erosion Alpha (S) }
+                    ParameterInfos[8] = { Name=TexSize }
+                    ParameterInfos[9] = { Name=SnowRough }
+                    ParameterInfos[10] = { Name=Exp_1 }
+                    ParameterInfos[11] = { Name=RotationAngle }
+                    ParameterInfos[12] = { Name=Normal Intensity }
+                    ParameterInfos[13] = { Name=Exp_2 }
+                    ParameterInfos[14] = { Name=Sharpen (0-1) (S) }
+                    ParameterInfos[15] = { Name=Radius Dot 1 }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[3] =
+                {
+                    ParameterInfos[0] = { Name=SnowColor }
+                    ParameterInfos[1] = { Name=RotationAxis }
+                    ParameterInfos[2] = { Name=Position Dot 1 }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[3] =
+                {
+                    ParameterInfos[0] = { Name=Panning Noise Map }
+                    ParameterInfos[1] = { Name=Packed Mask Map }
+                    ParameterInfos[2] = { Name=Detail Normal Map }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[16] =
+        {
+            ScalarValues[0] = 0
+            ScalarValues[1] = 2
+            ScalarValues[2] = 0.33492
+            ScalarValues[3] = 0
+            ScalarValues[4] = 0.625397
+            ScalarValues[5] = 0.25
+            ScalarValues[6] = 0.222222
+            ScalarValues[7] = 0.733333
+            ScalarValues[8] = 150
+            ScalarValues[9] = 1
+            ScalarValues[10] = 3
+            ScalarValues[11] = -1
+            ScalarValues[12] = 1
+            ScalarValues[13] = 1.5
+            ScalarValues[14] = 0.190476
+            ScalarValues[15] = 101.82
+        }
+        VectorValues[3] =
+        {
+            VectorValues[0] = { R=1, G=1, B=1, A=1 }
+            VectorValues[1] = { R=0, G=1, B=0, A=1 }
+            VectorValues[2] = { R=11244.6, G=4339, B=1224.4, A=1 }
+        }
+        TextureValues[3] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/TEST/T_Scorch_01_D.T_Scorch_01_D'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_Ice_D.VFX_T_Ice_D'
+            TextureValues[2] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_Ice_N.VFX_T_Ice_N'
+        }
+    }
+    ReferencedTextures[8] =
+    {
+        ReferencedTextures[1] = Texture2D'/Engine/EngineMaterials/BaseFlattenNormalMap.BaseFlattenNormalMap'
+        ReferencedTextures[2] = Texture2D'/Engine/EngineMaterials/DefaultDiffuse.DefaultDiffuse'
+        ReferencedTextures[3] = Texture2D'/Engine/EngineMaterials/DefaultNormal_Uncompressed.DefaultNormal_Uncompressed'
+        ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_Ice_N.VFX_T_Ice_N'
+        ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_Ice_D.VFX_T_Ice_D'
+        ReferencedTextures[6] = Texture2D'/Game/VFX/Textures/TEST/T_Scorch_01_D.T_Scorch_01_D'
+        ReferencedTextures[7] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_Ice_R.VFX_T_Ice_R'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[3] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/TEST/T_Scorch_01_D.T_Scorch_01_D'
+        Name = Panning Noise Map
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_Ice_D.VFX_T_Ice_D'
+        Name = Packed Mask Map
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_Ice_N.VFX_T_Ice_N'
+        Name = Detail Normal Map
+        Group = None
+    }
+}
+CollectedScalarParameters[16] =
+{
+    CollectedScalarParameters[0] =
+    {
+        Value = 0
+        Name = Emissive Fade Start Time
+        Group = None
+    }
+    CollectedScalarParameters[1] = { Value=2, Name=Exp, Group=None }
+    CollectedScalarParameters[2] =
+    {
+        Value = 0.33492
+        Name = Emissive Fade End Time
+        Group = None
+    }
+    CollectedScalarParameters[3] = { Value=0, Name=Projection Contrast, Group=None }
+    CollectedScalarParameters[4] =
+    {
+        Value = 0.625397
+        Name = Sharpen (0-1) (S)_1
+        Group = None
+    }
+    CollectedScalarParameters[5] = { Value=0.25, Name=Alpha, Group=None }
+    CollectedScalarParameters[6] =
+    {
+        Value = 0.222222
+        Name = Panning Noise Projection Contrast
+        Group = None
+    }
+    CollectedScalarParameters[7] =
+    {
+        Value = 0.733333
+        Name = Erosion Alpha (S)
+        Group = None
+    }
+    CollectedScalarParameters[8] = { Value=150, Name=TexSize, Group=None }
+    CollectedScalarParameters[9] = { Value=1, Name=SnowRough, Group=None }
+    CollectedScalarParameters[10] = { Value=3, Name=Exp_1, Group=None }
+    CollectedScalarParameters[11] = { Value=-1, Name=RotationAngle, Group=None }
+    CollectedScalarParameters[12] = { Value=1, Name=Normal Intensity, Group=None }
+    CollectedScalarParameters[13] = { Value=1.5, Name=Exp_2, Group=None }
+    CollectedScalarParameters[14] =
+    {
+        Value = 0.190476
+        Name = Sharpen (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[15] = { Value=101.82, Name=Radius Dot 1, Group=None }
+}
+CollectedVectorParameters[3] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=1, G=1, B=1, A=1 }
+        Name = SnowColor
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0, G=1, B=0, A=1 }
+        Name = RotationAxis
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=11244.6, G=4339, B=1224.4, A=1 }
+        Name = Position Dot 1
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

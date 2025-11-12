@@ -1,0 +1,187 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[3] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise04_D.VFX_T_Noise04_D'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/VFX_T_Cone_N.VFX_T_Cone_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[16] =
+                {
+                    ParameterInfos[0] = { Name=Ray Speed U }
+                    ParameterInfos[1] = { Name=Distance Fade Length }
+                    ParameterInfos[2] = { Name=Ray Tiling V (length of rays) }
+                    ParameterInfos[3] = { Name=Radius_Outer }
+                    ParameterInfos[4] = { Name=Refraction Strength }
+                    ParameterInfos[5] = { Name=Ray Speed V }
+                    ParameterInfos[6] = { Name=Mask_Inner_Hardness }
+                    ParameterInfos[7] = { Name=Mask_Radius_Inner }
+                    ParameterInfos[8] = { Name=Ray Tiling U (# of rays) }
+                    ParameterInfos[9] = { Name=Hardness_Outer }
+                    ParameterInfos[10] = { Name=Distortion Normal Intensity }
+                    ParameterInfos[11] = { Name=Distance Fade Start }
+                    ParameterInfos[12] = { Name=Ray Time Offset Strength }
+                    ParameterInfos[13] = { Name=Mask_Soften_Distortion }
+                    ParameterInfos[14] = { Name=Mask_Soften_Blur }
+                    ParameterInfos[15] = { Name=Blur Strength Multiplier }
+                }
+            }
+            Entries[1] = { ParameterInfos[0]={} }
+            Entries[2] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=Sphere Normal Texture }
+                    ParameterInfos[1] = { Name=Ray Time Offset Texture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[16] =
+        {
+            ScalarValues[0] = 0.47619
+            ScalarValues[1] = 1850.08
+            ScalarValues[2] = 0.371429
+            ScalarValues[3] = 0.7
+            ScalarValues[4] = 0.05
+            ScalarValues[5] = 1.25522
+            ScalarValues[6] = 0
+            ScalarValues[7] = 0.057143
+            ScalarValues[8] = 9.56175
+            ScalarValues[9] = 0.5
+            ScalarValues[10] = 3.80953
+            ScalarValues[11] = 108.71
+            ScalarValues[12] = 1
+            ScalarValues[13] = 2.89524
+            ScalarValues[14] = 1.79985
+            ScalarValues[15] = 2
+        }
+        VectorValues[0] = {}
+        TextureValues[2] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/VFX_T_Cone_N.VFX_T_Cone_N'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise04_D.VFX_T_Noise04_D'
+        }
+    }
+    ReferencedTextures[3] =
+    {
+        ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise04_D.VFX_T_Noise04_D'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/VFX_T_Cone_N.VFX_T_Cone_N'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[2] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_Cone_N.VFX_T_Cone_N'
+        Name = Sphere Normal Texture
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise04_D.VFX_T_Noise04_D'
+        Name = Ray Time Offset Texture
+        Group = None
+    }
+}
+CollectedScalarParameters[16] =
+{
+    CollectedScalarParameters[0] = { Value=0.47619, Name=Ray Speed U, Group=None }
+    CollectedScalarParameters[1] =
+    {
+        Value = 1850.08
+        Name = Distance Fade Length
+        Group = None
+    }
+    CollectedScalarParameters[2] =
+    {
+        Value = 0.371429
+        Name = Ray Tiling V (length of rays)
+        Group = None
+    }
+    CollectedScalarParameters[3] = { Value=0.7, Name=Radius_Outer, Group=None }
+    CollectedScalarParameters[4] = { Value=0.05, Name=Refraction Strength, Group=None }
+    CollectedScalarParameters[5] = { Value=1.25522, Name=Ray Speed V, Group=None }
+    CollectedScalarParameters[6] = { Value=0, Name=Mask_Inner_Hardness, Group=None }
+    CollectedScalarParameters[7] =
+    {
+        Value = 0.057143
+        Name = Mask_Radius_Inner
+        Group = None
+    }
+    CollectedScalarParameters[8] =
+    {
+        Value = 9.56175
+        Name = Ray Tiling U (# of rays)
+        Group = None
+    }
+    CollectedScalarParameters[9] = { Value=0.5, Name=Hardness_Outer, Group=None }
+    CollectedScalarParameters[10] =
+    {
+        Value = 3.80953
+        Name = Distortion Normal Intensity
+        Group = None
+    }
+    CollectedScalarParameters[11] =
+    {
+        Value = 108.71
+        Name = Distance Fade Start
+        Group = None
+    }
+    CollectedScalarParameters[12] =
+    {
+        Value = 1
+        Name = Ray Time Offset Strength
+        Group = None
+    }
+    CollectedScalarParameters[13] =
+    {
+        Value = 2.89524
+        Name = Mask_Soften_Distortion
+        Group = None
+    }
+    CollectedScalarParameters[14] = { Value=1.79985, Name=Mask_Soften_Blur, Group=None }
+    CollectedScalarParameters[15] =
+    {
+        Value = 2
+        Name = Blur Strength Multiplier
+        Group = None
+    }
+}
+CollectedVectorParameters[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[2] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Cone_N
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 0.987549
+        UVChannelIndex = 0
+        TextureName = VFX_T_Noise04_D
+    }
+}

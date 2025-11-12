@@ -2,7 +2,7 @@
 #include "EditEffect.h"
 
 #include "GameInstance.h"
-
+#include "Effect_Editor.h"
 
 CEditEffect::CEditEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEffectObject{ pDevice, pContext }
@@ -38,10 +38,15 @@ void CEditEffect::Priority_Update(_float fTimeDelta)
 
 void CEditEffect::Update(_float fTimeDelta)
 {
+	if(m_isBillboard)
+		m_pGameInstance->BillBoard(m_pTransformCom);
+
 	if (m_pInstance_ModelCom == nullptr)
 		return;
 	
 	m_pInstance_ModelCom->Drop(fTimeDelta);
+
+	
 
 }
 
@@ -57,6 +62,37 @@ void CEditEffect::Late_Update(_float fTimeDelta)
 		m_pGameInstance->Add_RenderGroup(RENDER::BLUR, this, *vPos, m_pTransformCom->Get_Radius());
 
 	m_pGameInstance->Add_RenderGroup(m_eRenderOrder, this, *vPos, m_pTransformCom->Get_Radius());
+}
+
+void CEditEffect::Reference_Mat_For_EditEffect()
+{
+	ImGui::Begin("Reference Material");
+
+	const char* pCompute[] = { "DIFFUSE" , "MASK", "NOISE", "DISSOLVE"};
+
+	if (ImGui::Combo("OPTION", &m_iSelectTextureNum, pCompute, 4))
+	{
+		switch (m_iSelectTextureNum)
+		{
+		case 0:
+			dynamic_cast<CEffect_Editor*>(m_pOwner)->Reference_Mat_For_EditEffect(m_pDiffuse_TextureCom , this);
+			break;
+		case 1:
+			dynamic_cast<CEffect_Editor*>(m_pOwner)->Reference_Mat_For_EditEffect(m_pMasking_TextureCom, this);
+			break;
+		case 2:
+			dynamic_cast<CEffect_Editor*>(m_pOwner)->Reference_Mat_For_EditEffect(m_pNoise_TextureCom, this);
+			break;
+		case 3:
+			dynamic_cast<CEffect_Editor*>(m_pOwner)->Reference_Mat_For_EditEffect(m_pDissolve_TextureCom, this);
+			break;
+		default:
+			break;
+		}
+	}
+
+	ImGui::End();
+
 }
 
 HRESULT CEditEffect::Ready_Components(void* pArg)
@@ -125,6 +161,7 @@ void CEditEffect::Describe_Entity()
 		m_eRenderOrder = static_cast<RENDER>(iCurrentItem);
 	}
 
+	m_pTransformCom->Describe_Entity();
 
 	GUI::Checkbox("Diffuse", &m_isDiffuse);
 	GUI::Checkbox("Masking", &m_isMasking);
@@ -132,7 +169,11 @@ void CEditEffect::Describe_Entity()
 	GUI::Checkbox("Noise", &m_isNoise);
 	GUI::Checkbox("Blur", &m_isBlur);
 
-
+	if (GUI::Checkbox("Billboard", &m_isBillboard))
+	{
+		m_pTransformCom->Rotation(0.f, 0.f, 0.f);
+	}
+	
 	GUI::ColorEdit4("MixColor", (_float*)&m_vColor);
 
 	ImGui::PushItemWidth(80);

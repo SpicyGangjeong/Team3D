@@ -1,0 +1,7 @@
+Diffuse=VFX_T_SpiderWeb_D
+Normal=T_Web_Net_N
+SpecPower=VFX_T_SpiderWeb_D
+Other[0]=Good64x64TilingNoiseHighFreq
+Other[1]=VFX_T_NoiseCaustics01_Color_D
+Other[2]=VFX_T_RGB_3DNoiseRough_D
+Other[3]=VFX_T_SpiderWeb_N

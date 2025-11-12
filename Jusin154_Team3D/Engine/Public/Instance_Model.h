@@ -13,6 +13,7 @@ public:
 		_int		iNumInstance = {1}; // 인스턴스 개수
 
 		_bool		isLoop = { true };
+		_bool		isBillboard = { false};
 		_float2		vLifeTime = {1.f , 1.f}; // 라이프 타임 min , max
 		_float3		vSizeMin = {1.f, 1.f ,1.f}; // 사이즈 min xyz
 		_float3		vSizeMax = {1.f ,1.f ,1.f}; // 사이즈 max xyz
@@ -33,13 +34,17 @@ public:
 
 	typedef struct tagCSParticleDesc
 	{
+		_float4x4 CamViewInvMatrix = {};
+
+		_int	 isLoop = {};
+		_int     isBillboard = {};
+		_int     isPadding2 = {};
+		_int     isPadding3 = {};
+
 		_float   fTimeDelta = {};
-		_bool	 isLoop = {};
-		_bool    isPadding1 = {};
-		_bool    isPadding2 = {};
-		_bool    isPadding3 = {};
 		_float	 fPadding2 = {};
 		_float   fPadding3 = {};
+		_float   fPadding4 = {};
 
 	}CS_PARTICLE_DESC;
 

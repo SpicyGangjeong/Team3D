@@ -36,18 +36,42 @@ RWStructuredBuffer<ParticleValue> g_ParticleValueOutput : register(u1);
 
 cbuffer g_ConstantBuffer : register(b0) // b0 << 이 숫자와 컨스턴트 쉐이더 바인딩할때 인덱스가 동일해야함
 {
-    float fTimeDelta;
+    row_major matrix CamViewInvMatrix;
   
-    bool isLoop;
-    bool isPadding1;
+    bool isLoop; // 상수 버퍼에서 불값은 4바이트로 처리되기 때문에 반드시 클라에서는 int형으로 선언해라
+    bool isBillboard;
     bool isPadding2;
     bool isPadding3;
 
-    float   fPadding; // 반드시 상수버퍼는 16바이트 배수로 만들어져야 한다.
-    float   fPadding2;
-    float   fPadding3;
+    float fTimeDelta;
+    float fPadding; // 반드시 상수버퍼는 16바이트 배수로 만들어져야 한다.
+    float fPadding2;
+    float fPadding3;
 }
 
+void Billboard(Particle particle)
+{
+    if (isBillboard == true)
+    {
+        float3 vScale;
+        
+        vScale.x = length(particle.vRight);
+        vScale.y = length(particle.vUp);
+        vScale.z = length(particle.vLook);
+        
+       
+        particle.vRight = CamViewInvMatrix[0] * vScale.x;
+        particle.vUp = CamViewInvMatrix[1] * vScale.y;
+        particle.vLook = CamViewInvMatrix[2] * vScale.z;
+        
+        //180도 회전 시키기
+        particle.vRight.x *= -1.f;
+        particle.vLook.z *= -1.f;
+
+    }
+    
+
+}
 
 //내가 몇개의 스레드를 사용할 것인지 지정하는데
 //GPU 칩의 개수를 X * Y * Z의 개수 만큼 사용하겠다는 의미이다.
@@ -77,6 +101,8 @@ void CS_MAIN(
         particle.vLifeTime.x = 0.f;
         particle.vTranslation.y = 0.f;
     }
+    
+    Billboard(particle);
     
         
     //애니메이션 속도 , 인덱스
@@ -128,7 +154,6 @@ void CS_MAIN(
     //아웃풋 대입
     
     g_VBInstanceOutput[iIndex] = particle;
-    
     g_ParticleValueOutput[iIndex] = particleValue;
 
 }

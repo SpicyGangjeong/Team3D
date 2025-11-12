@@ -1,0 +1,154 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[4] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Repository/T_Repository_Arena_EdgeRock_D.T_Repository_Arena_EdgeRock_D'
+    ReferencedTextures[1] = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Repository/T_Repository_Arena_EdgeRock_MRO.T_Repository_Arena_EdgeRock_MRO'
+    ReferencedTextures[2] = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Repository/T_Repository_Arena_EdgeRock_N.T_Repository_Arena_EdgeRock_N'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Niagara/AncientMagic/IceWall/VFX_T_AncMag_IceWall_N.VFX_T_AncMag_IceWall_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[5] =
+                {
+                    ParameterInfos[0] = { Name=Detail Normal Intensity }
+                    ParameterInfos[1] = { Name=expIn }
+                    ParameterInfos[2] = { Name=Detail Tiling }
+                    ParameterInfos[3] = { Name=Base Normal Intensity }
+                    ParameterInfos[4] = { Name=Normal Strength }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Albedo_Tint }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[4] =
+                {
+                    ParameterInfos[0] = { Name=Detail Normal }
+                    ParameterInfos[1] = { Name=Diffuse }
+                    ParameterInfos[2] = { Name=Normal }
+                    ParameterInfos[3] = { Name=MRO }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[5] = { -0.280159, 1, 1, 1, 0.8 }
+        VectorValues[1] =
+        {
+            VectorValues[0] = { R=1, G=1, B=1, A=1 }
+        }
+        TextureValues[4] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Niagara/AncientMagic/IceWall/VFX_T_AncMag_IceWall_N.VFX_T_AncMag_IceWall_N'
+            TextureValues[1] = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Repository/T_Repository_Arena_EdgeRock_D.T_Repository_Arena_EdgeRock_D'
+            TextureValues[2] = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Repository/T_Repository_Arena_EdgeRock_N.T_Repository_Arena_EdgeRock_N'
+            TextureValues[3] = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Repository/T_Repository_Arena_EdgeRock_MRO.T_Repository_Arena_EdgeRock_MRO'
+        }
+    }
+    ReferencedTextures[4] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Repository/T_Repository_Arena_EdgeRock_MRO.T_Repository_Arena_EdgeRock_MRO'
+        ReferencedTextures[1] = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Repository/T_Repository_Arena_EdgeRock_D.T_Repository_Arena_EdgeRock_D'
+        ReferencedTextures[2] = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Repository/T_Repository_Arena_EdgeRock_N.T_Repository_Arena_EdgeRock_N'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Niagara/AncientMagic/IceWall/VFX_T_AncMag_IceWall_N.VFX_T_AncMag_IceWall_N'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[4] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Niagara/AncientMagic/IceWall/VFX_T_AncMag_IceWall_N.VFX_T_AncMag_IceWall_N'
+        Name = Detail Normal
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Repository/T_Repository_Arena_EdgeRock_D.T_Repository_Arena_EdgeRock_D'
+        Name = Diffuse
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Repository/T_Repository_Arena_EdgeRock_N.T_Repository_Arena_EdgeRock_N'
+        Name = Normal
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Repository/T_Repository_Arena_EdgeRock_MRO.T_Repository_Arena_EdgeRock_MRO'
+        Name = MRO
+        Group = None
+    }
+}
+CollectedScalarParameters[5] =
+{
+    CollectedScalarParameters[0] =
+    {
+        Value = -0.280159
+        Name = Detail Normal Intensity
+        Group = None
+    }
+    CollectedScalarParameters[1] = { Value=1, Name=expIn, Group=None }
+    CollectedScalarParameters[2] = { Value=1, Name=Detail Tiling, Group=None }
+    CollectedScalarParameters[3] = { Value=1, Name=Base Normal Intensity, Group=None }
+    CollectedScalarParameters[4] = { Value=0.8, Name=Normal Strength, Group=None }
+}
+CollectedVectorParameters[1] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=1, G=1, B=1, A=1 }
+        Name = Albedo_Tint
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[4] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Repository_Arena_EdgeRock_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Repository_Arena_EdgeRock_MRO
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Repository_Arena_EdgeRock_N
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_AncMag_IceWall_N
+    }
+}

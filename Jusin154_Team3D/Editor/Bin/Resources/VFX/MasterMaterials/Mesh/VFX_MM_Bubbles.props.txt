@@ -1,0 +1,114 @@
+TwoSided = true
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[3] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/T_FX_Distort_D.T_FX_Distort_D'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_Soft_D.VFX_T_Noise_Soft_D'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/VFX_T_Inky_Smoke_D.VFX_T_Inky_Smoke_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[13] =
+                {
+                    ParameterInfos[0] = { Name=Roughness }
+                    ParameterInfos[1] = { Name=Alpha Erosion Multiplier }
+                    ParameterInfos[2] = { Name=Fresnel Exponent }
+                    ParameterInfos[3] = { Name=Collapse Noise Amount }
+                    ParameterInfos[4] = { Name=Metallic }
+                    ParameterInfos[5] = { Name=Specular }
+                    ParameterInfos[6] = { Name=Offset Strength }
+                    ParameterInfos[7] = { Name=Refraction Fade Distance }
+                    ParameterInfos[8] = { Name=Tiling }
+                    ParameterInfos[9] = { Name=Collapse Noise Scale }
+                    ParameterInfos[10] = { Name=Emissive Amount }
+                    ParameterInfos[11] = { Name=Speed }
+                    ParameterInfos[12] = { Name=Refraction Amount }
+                }
+            }
+            Entries[1] = { ParameterInfos[0]={} }
+            Entries[2] = { ParameterInfos[0]={} }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[13] =
+        {
+            ScalarValues[0] = 0
+            ScalarValues[1] = 1
+            ScalarValues[2] = 1.80952
+            ScalarValues[3] = 0.333333
+            ScalarValues[4] = 0
+            ScalarValues[5] = 1
+            ScalarValues[6] = 2
+            ScalarValues[7] = 2000
+            ScalarValues[8] = 11.4286
+            ScalarValues[9] = 3.80953
+            ScalarValues[10] = 0
+            ScalarValues[11] = 1
+            ScalarValues[12] = 1.6
+        }
+        VectorValues[0] = {}
+        TextureValues[0] = {}
+    }
+    ReferencedTextures[3] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/VFX_T_Inky_Smoke_D.VFX_T_Inky_Smoke_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_Soft_D.VFX_T_Noise_Soft_D'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Noises/T_FX_Distort_D.T_FX_Distort_D'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[0] = {}
+CollectedScalarParameters[13] =
+{
+    CollectedScalarParameters[0] = { Value=0, Name=Roughness, Group=None }
+    CollectedScalarParameters[1] =
+    {
+        Value = 1
+        Name = Alpha Erosion Multiplier
+        Group = None
+    }
+    CollectedScalarParameters[2] = { Value=1.80952, Name=Fresnel Exponent, Group=None }
+    CollectedScalarParameters[3] =
+    {
+        Value = 0.333333
+        Name = Collapse Noise Amount
+        Group = None
+    }
+    CollectedScalarParameters[4] = { Value=0, Name=Metallic, Group=None }
+    CollectedScalarParameters[5] = { Value=1, Name=Specular, Group=None }
+    CollectedScalarParameters[6] = { Value=2, Name=Offset Strength, Group=None }
+    CollectedScalarParameters[7] =
+    {
+        Value = 2000
+        Name = Refraction Fade Distance
+        Group = None
+    }
+    CollectedScalarParameters[8] = { Value=11.4286, Name=Tiling, Group=None }
+    CollectedScalarParameters[9] =
+    {
+        Value = 3.80953
+        Name = Collapse Noise Scale
+        Group = None
+    }
+    CollectedScalarParameters[10] = { Value=0, Name=Emissive Amount, Group=None }
+    CollectedScalarParameters[11] = { Value=1, Name=Speed, Group=None }
+    CollectedScalarParameters[12] = { Value=1.6, Name=Refraction Amount, Group=None }
+}
+CollectedVectorParameters[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

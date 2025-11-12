@@ -1,0 +1,110 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[4] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/Environment/Hogwarts/Textures/Paintings/T_HW_Painting01_MRO.T_HW_Painting01_MRO'
+    ReferencedTextures[1] = Texture2D'/Game/Environment/Hogwarts/Textures/Paintings/T_HW_Painting01_N.T_HW_Painting01_N'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Flowmaps/VFX_T_Wend_FlowMap_FM.VFX_T_Wend_FlowMap_FM'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_Wend_All_D.VFX_T_Wend_All_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[5] =
+                {
+                    ParameterInfos[0] = { Name=Spec Adjuster }
+                    ParameterInfos[1] = { Name=TimeMult }
+                    ParameterInfos[2] = { Name=Roughness Adjuster }
+                    ParameterInfos[3] = { Name=AO Adjuster }
+                    ParameterInfos[4] = { Name=Normal Height }
+                }
+            }
+            Entries[1] = { ParameterInfos[0]={} }
+            Entries[2] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=SRO_Texture }
+                    ParameterInfos[1] = { Name=Normal Map }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[5] = { 0, 0.4, 0, 0, 1 }
+        VectorValues[0] = {}
+        TextureValues[2] =
+        {
+            TextureValues[0] = Texture2D'/Game/Environment/Hogwarts/Textures/Paintings/T_HW_Painting01_MRO.T_HW_Painting01_MRO'
+            TextureValues[1] = Texture2D'/Game/Environment/Hogwarts/Textures/Paintings/T_HW_Painting01_N.T_HW_Painting01_N'
+        }
+    }
+    ReferencedTextures[4] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Flowmaps/VFX_T_Wend_FlowMap_FM.VFX_T_Wend_FlowMap_FM'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_Wend_All_D.VFX_T_Wend_All_D'
+        ReferencedTextures[2] = Texture2D'/Game/Environment/Hogwarts/Textures/Paintings/T_HW_Painting01_N.T_HW_Painting01_N'
+        ReferencedTextures[3] = Texture2D'/Game/Environment/Hogwarts/Textures/Paintings/T_HW_Painting01_MRO.T_HW_Painting01_MRO'
+    }
+}
+BlendMode = BLEND_Opaque (0)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[2] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/Environment/Hogwarts/Textures/Paintings/T_HW_Painting01_MRO.T_HW_Painting01_MRO'
+        Name = SRO_Texture
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/Environment/Hogwarts/Textures/Paintings/T_HW_Painting01_N.T_HW_Painting01_N'
+        Name = Normal Map
+        Group = None
+    }
+}
+CollectedScalarParameters[5] =
+{
+    CollectedScalarParameters[0] = { Value=0, Name=Spec Adjuster, Group=None }
+    CollectedScalarParameters[1] = { Value=0.4, Name=TimeMult, Group=None }
+    CollectedScalarParameters[2] = { Value=0, Name=Roughness Adjuster, Group=None }
+    CollectedScalarParameters[3] = { Value=0, Name=AO Adjuster, Group=None }
+    CollectedScalarParameters[4] = { Value=1, Name=Normal Height, Group=None }
+}
+CollectedVectorParameters[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[3] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_HW_Painting01_MRO
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_HW_Painting01_N
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Wend_FlowMap_FM
+    }
+}

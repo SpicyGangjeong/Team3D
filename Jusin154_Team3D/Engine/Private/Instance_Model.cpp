@@ -236,6 +236,8 @@ void CInstance_Model::Drop(_float fTimeDelta)
 
 		pDesc->fTimeDelta = fTimeDelta;
 		pDesc->isLoop = m_InstanceDesc.isLoop;
+		pDesc->isBillboard = m_InstanceDesc.isBillboard;
+		pDesc->CamViewInvMatrix = *m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW_INV);
 
 		m_pContext->Unmap(m_pConstantBuffer, 0);
 	}
@@ -435,7 +437,7 @@ void CInstance_Model::Describe_Entity()
 	if (ImGui::TreeNode("Model Option"))
 	{
 		ImGui::Separator(); ImGui::Spacing();
-		ImGui::PushItemWidth(80);
+		ImGui::PushItemWidth(120);
 
 		if (ImGui::InputInt("NumInstance", &m_InstanceDesc.iNumInstance))
 		{
@@ -446,7 +448,11 @@ void CInstance_Model::Describe_Entity()
 		{
 			Instane_Buffer_ReStruct();
 		}
-		
+
+		if(GUI::Checkbox("BillBoard", &m_InstanceDesc.isBillboard))
+		{
+			Instane_Buffer_ReStruct();
+		}
 	
 		if (ImGui::DragFloat3("SizeMin", reinterpret_cast<_float*>(&m_InstanceDesc.vSizeMin)))
 		{

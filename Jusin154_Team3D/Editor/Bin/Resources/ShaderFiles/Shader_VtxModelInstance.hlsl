@@ -93,29 +93,27 @@ VS_OUT VS_MAIN(VS_IN In, uint iGPUIndex : SV_InstanceID)
 {
     VS_OUT Out = (VS_OUT) 0;
 
-    matrix matWV, matWVP;
+    row_major matrix matW, matWV, matWVP;
     
-    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    row_major matrix TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
     
-    float4 vProjPos = vector(In.vPosition, 1.f);
+    matW = mul(g_WorldMatrix, TransformMatrix);
+    matWV = mul(matW, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
     
-    Out.vPosition = mul(vProjPos, matWVP);
-    Out.vProjPos = vProjPos;
+
+
+    vector vPosition = mul(vector(In.vPosition, 1.f), matWVP);
     
-    matWVP = mul(matWV, g_ProjMatrix);   
-    
-    matrix TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
-    
-    vector vPosition = mul(vector(In.vPosition, 1.f), TransformMatrix);
-    
-    Out.vPosition = mul(vPosition, matWVP);
-    Out.vNormal = normalize(mul(vector(In.vNormal, 0.f), TransformMatrix));
-    Out.vTangent = normalize(mul(vector(In.vTangent, 0.f), TransformMatrix)).xyz;
-    Out.vBinormal = normalize(mul(vector(In.vBinormal, 0.f), TransformMatrix)).xyz;
+    Out.vPosition = vPosition;
+    Out.vNormal = normalize(mul(vector(In.vNormal, 0.f), matW));
+    Out.vTangent = normalize(mul(vector(In.vTangent, 0.f), matW)).xyz;
+    Out.vBinormal = normalize(mul(vector(In.vBinormal, 0.f), matW)).xyz;
     Out.vTexcoord = In.vTexcoord;    
     Out.vLifeTime = In.vLifeTime;
-    Out.vWorldPos = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
+    Out.vWorldPos = mul(vector(In.vPosition, 1.f), matW);
     Out.iGPUIndex = iGPUIndex;
+    Out.vProjPos = vPosition;
     
     return Out;
 }
@@ -226,7 +224,8 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
         /* 최종 색깔  */
         vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, UV);
         
-        vMtrlDiffuse += g_vColor;
+        if (g_vColor.a > 0)
+            vMtrlDiffuse += g_vColor;
         
         if (vMtrlDiffuse.a < 0.3f)
             discard;
@@ -301,26 +300,22 @@ VS_BLUR_OUT VS_BLUR(VS_IN In, uint iGPUIndex : SV_InstanceID)
 {
     VS_BLUR_OUT Out = (VS_BLUR_OUT) 0;
 
-    matrix matWV, matWVP;
+    row_major matrix matW, matWV, matWVP;
     
-    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    row_major matrix TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
     
-    float4 vProjPos = vector(In.vPosition, 1.f);
-    
-    Out.vPosition = mul(vProjPos, matWVP);
-
+    matW = mul(g_WorldMatrix, TransformMatrix);
+    matWV = mul(matW, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
     
-    matrix TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
+    vector vPosition = mul(vector(In.vPosition, 1.f), matWVP);
     
-    vector vPosition = mul(vector(In.vPosition, 1.f), TransformMatrix);
-    
-    Out.vPosition = mul(vPosition, matWVP);
+    Out.vPosition = vPosition;
     Out.vTexcoord = In.vTexcoord;
     Out.vLifeTime = In.vLifeTime;
     Out.iGPUIndex = iGPUIndex;
 
-    
+
     return Out;
 }
 

@@ -463,6 +463,8 @@ HRESULT CLoader::Loading_For_Effect()
 	m_strMessage = TEXT("Prototype Loading..");
 
 
+
+
 	if (FAILED(m_pGameInstance->Add_Prototype<CDebugCamera>(ENUM_CLASS(LEVEL::EFFECT), CDebugCamera::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}

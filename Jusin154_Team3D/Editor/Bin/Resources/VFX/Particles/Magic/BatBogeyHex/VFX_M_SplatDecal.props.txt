@@ -1,0 +1,160 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[4] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/DefaultDiffuse.DefaultDiffuse'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Particles/Magic/BatBogeyHex/VFX_T_SplatDecal_D.VFX_T_SplatDecal_D'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Particles/Magic/BatBogeyHex/VFX_T_SplatDecal_N.VFX_T_SplatDecal_N'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/VFX_T_SkinBurn_Alpha_D.VFX_T_SkinBurn_Alpha_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[11] =
+                {
+                    ParameterInfos[0] = { Name=Roughness }
+                    ParameterInfos[1] = { Name=Input Low (S) }
+                    ParameterInfos[2] = { Name=Metallic }
+                    ParameterInfos[3] = { Name=Frame }
+                    ParameterInfos[4] = { Name=Specular }
+                    ParameterInfos[5] = { Name=Erosion Softness }
+                    ParameterInfos[6] = { Name=Normal Strengh Mulitplyer }
+                    ParameterInfos[7] = { Name=Target Height (S) }
+                    ParameterInfos[8] = { Name=Input High (S) }
+                    ParameterInfos[9] = { Name=Target Low (S) }
+                    ParameterInfos[10] = { Name=Erossion Amount }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=Base Color }
+                    ParameterInfos[1] = { Name=SUB UVs }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[3] =
+                {
+                    ParameterInfos[0] = { Name=Erossion Texture }
+                    ParameterInfos[1] = { Name=Alpha Texture }
+                    ParameterInfos[2] = { Name=Normal Texture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[11] = { 0.1, 1, 0.3, 2, 0.1, 0, 1, 1, 0, 0, 0.9 }
+        VectorValues[2] =
+        {
+            VectorValues[0] = { R=0.327352, G=0.380208, B=0.019085, A=1 }
+            VectorValues[1] = { R=2, G=2, B=0, A=1 }
+        }
+        TextureValues[3] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/VFX_T_SkinBurn_Alpha_D.VFX_T_SkinBurn_Alpha_D'
+            TextureValues[1] = Texture2D'/Game/VFX/Particles/Magic/BatBogeyHex/VFX_T_SplatDecal_D.VFX_T_SplatDecal_D'
+            TextureValues[2] = Texture2D'/Game/VFX/Particles/Magic/BatBogeyHex/VFX_T_SplatDecal_N.VFX_T_SplatDecal_N'
+        }
+    }
+    ReferencedTextures[4] =
+    {
+        ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/DefaultDiffuse.DefaultDiffuse'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Particles/Magic/BatBogeyHex/VFX_T_SplatDecal_D.VFX_T_SplatDecal_D'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Particles/Magic/BatBogeyHex/VFX_T_SplatDecal_N.VFX_T_SplatDecal_N'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/VFX_T_SkinBurn_Alpha_D.VFX_T_SkinBurn_Alpha_D'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[3] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_SkinBurn_Alpha_D.VFX_T_SkinBurn_Alpha_D'
+        Name = Erossion Texture
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Particles/Magic/BatBogeyHex/VFX_T_SplatDecal_D.VFX_T_SplatDecal_D'
+        Name = Alpha Texture
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/VFX/Particles/Magic/BatBogeyHex/VFX_T_SplatDecal_N.VFX_T_SplatDecal_N'
+        Name = Normal Texture
+        Group = None
+    }
+}
+CollectedScalarParameters[11] =
+{
+    CollectedScalarParameters[0] = { Value=0.1, Name=Roughness, Group=None }
+    CollectedScalarParameters[1] = { Value=1, Name=Input Low (S), Group=None }
+    CollectedScalarParameters[2] = { Value=0.3, Name=Metallic, Group=None }
+    CollectedScalarParameters[3] = { Value=2, Name=Frame, Group=None }
+    CollectedScalarParameters[4] = { Value=0.1, Name=Specular, Group=None }
+    CollectedScalarParameters[5] = { Value=0, Name=Erosion Softness, Group=None }
+    CollectedScalarParameters[6] =
+    {
+        Value = 1
+        Name = Normal Strengh Mulitplyer
+        Group = None
+    }
+    CollectedScalarParameters[7] = { Value=1, Name=Target Height (S), Group=None }
+    CollectedScalarParameters[8] = { Value=0, Name=Input High (S), Group=None }
+    CollectedScalarParameters[9] = { Value=0, Name=Target Low (S), Group=None }
+    CollectedScalarParameters[10] = { Value=0.9, Name=Erossion Amount, Group=None }
+}
+CollectedVectorParameters[2] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0.327352, G=0.380208, B=0.019085, A=1 }
+        Name = Base Color
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=2, G=2, B=0, A=1 }
+        Name = SUB UVs
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[3] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_SkinBurn_Alpha_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 0.5
+        UVChannelIndex = 0
+        TextureName = VFX_T_SplatDecal_D
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 0.5
+        UVChannelIndex = 0
+        TextureName = VFX_T_SplatDecal_N
+    }
+}
