@@ -30,8 +30,7 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
-	void Change_Model();
-	void Set_Model(const _char*PartType);
+	virtual void Change_Model(const _wchar* Prototype);
 	_wstring& Get_PrototypeTag() { return m_strModelPrototypeTag; }
 
 protected:
@@ -41,11 +40,8 @@ protected:
 	_float		m_fRimLightPower = { 3.2f };
 	_float		m_fRimLightStrength = { 3.04f };
 	_float3		m_vRimLightColor = { 69.f / 255.f, 5.f / 255.f, 10.f / 255.f };
-	_float		m_fTrackPosition = {};
-	_uint		m_iAnimIndex = {};
 
 	_wstring	m_strModelPrototypeTag;
-	_wstring	m_strPreModelPrototypeTag;
 protected:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
