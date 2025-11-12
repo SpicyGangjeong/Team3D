@@ -180,16 +180,14 @@ PS_OUT PS_Sptire_Sheet(PS_IN In)
     return Out;
 }
 
-PS_OUT PS_Key_Hold(PS_IN In)
+PS_OUT PS_Key_Hold_Rotation(PS_IN In)
 {
     PS_OUT Out;
     
-    float3 Grey = float3(128.f, 128.f, 128.f) / 255.f;
-    
     float4 Color = g_Texture.Sample(DefaultSampler, In.vTexcoord);
-
-    if (Color.r >= 0.3f)
-        Color.rgb = Grey;
+    
+    if (Color.a <= 0.1f)
+        discard;
     
     Out.vColor = Color;
     
@@ -199,8 +197,7 @@ PS_OUT PS_Key_Hold(PS_IN In)
 PS_OUT PS_QuestType(PS_IN In)
 {
     PS_OUT Out;
-    float3 Color = float3(255, 255, 0) / 255.f;
-    
+    float3 Color = float3(253.f, 207.f, 11.f) / 255.f;
     float4 Texture1 = g_Texture.Sample(DefaultSampler, In.vTexcoord);
     
     if (g_iQuestType == 0)
@@ -210,6 +207,20 @@ PS_OUT PS_QuestType(PS_IN In)
             Texture1.rgb = Color;
         }
     }
+
+    Out.vColor = Texture1;
+    
+    return Out;
+}
+
+PS_OUT PS_UVMult(PS_IN In)
+{
+    PS_OUT Out;
+    
+    float2 UV = In.vTexcoord;
+    
+    float4 Texture1 = g_Texture.Sample(ClampSampler, float2(UV.x * g_fDeltaU, UV.y * g_fDeltaV));
+    
 
     Out.vColor = Texture1;
     
@@ -268,14 +279,14 @@ technique11 PosTexTechnique11
         PixelShader = compile ps_5_0 PS_Sptire_Sheet();
     }
 
-    pass Key_Hold
+    pass Key_Hold_Rotation
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_Key_Hold();
+        PixelShader = compile ps_5_0 PS_Key_Hold_Rotation();
     }
 
     pass QuestType
@@ -286,5 +297,15 @@ technique11 PosTexTechnique11
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_QuestType();
+    }
+
+    pass UVMult
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_UVMult();
     }
 }

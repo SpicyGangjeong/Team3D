@@ -37,7 +37,7 @@ HRESULT CMission_KeyHold::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	m_fTimeMult = 3.f;
+	m_fTimeMult = 1.f;
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 3.f;
 	return S_OK;
@@ -85,7 +85,15 @@ void CMission_KeyHold::Update(_float fTimeDelta)
 		}
 	}
 
-	m_fTime += fTimeDelta * m_fTimeMult;
+	if (m_pGameInstance->Key_Pressing(DIK_V))
+	{
+		m_fTime += fTimeDelta * m_fTimeMult;
+	}
+	else
+	{
+		m_fTime = 0.f;
+	}
+
 	__super::Update(fTimeDelta);
 }
 
@@ -107,7 +115,7 @@ HRESULT CMission_KeyHold::Render()
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::HOLD)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::HOLD_ROTATION)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {

@@ -258,6 +258,20 @@ _float CUIObject::Get_AlphaTime()
 {
 	return m_fAlphaTime;
 }
+void CUIObject::Set_U(_float U)
+{
+	m_vUVScale.x = U;
+}
+void CUIObject::Set_V(_float V)
+{
+	m_vUVScale.y = V;
+}
+
+_float2 CUIObject::Get_UV()
+{
+	return m_vUVScale;
+}
+
 _float2 CUIObject::Get_Origin_Position()
 {
 	return m_fOrigin_Posigion;

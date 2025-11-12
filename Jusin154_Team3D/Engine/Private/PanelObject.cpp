@@ -118,6 +118,17 @@ const vector<wstring> CPanelObject::Element_Name()
 	return m_ElementName;
 }
 
+void CPanelObject::ElementAllVisible(_bool bVisible)
+{
+	if (m_Elements.empty())
+		return;
+
+	for (auto& iter : m_Elements)
+	{
+		static_cast<CUIObject*>(iter)->Visible(bVisible);
+	}
+}
+
 void CPanelObject::Add_Element(wstring Name, CGameObject* pPanel)
 {
 	if (pPanel == nullptr)

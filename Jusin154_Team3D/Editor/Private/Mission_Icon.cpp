@@ -21,10 +21,10 @@ HRESULT CMission_Icon::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = 0.f;
-	Desc.fY = 0.f;
-	Desc.fSizeX = 50.f;
-	Desc.fSizeY = 50.f;
+	Desc.fX = -290.f;
+	Desc.fY = 103.f;
+	Desc.fSizeX = 60.f;
+	Desc.fSizeY = 60.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -40,13 +40,14 @@ HRESULT CMission_Icon::Initialize(void* pArg)
 	m_fTimeMult = 3.f;
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 3.f;
-	m_eType = QUESTYPE::MAIN;
+	m_eQuestType = QUESTYPE::MAIN;
+	m_iType = ENUM_CLASS(m_eQuestType);
 	return S_OK;
 }
 
 void CMission_Icon::QuestType(QUESTYPE eType)
 {
-	m_eType = eType;
+	m_eQuestType = eType;
 }
 
 void CMission_Icon::Priority_Update(_float fTimeDelta)
@@ -145,7 +146,7 @@ HRESULT CMission_Icon::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}	
-	if (FAILED(m_pDiffuse_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
+	if (FAILED(m_pDiffuse_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", m_iType)))
 	{
 		return E_FAIL;
 	}
@@ -169,7 +170,7 @@ HRESULT CMission_Icon::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_iQuestType", &m_eType, sizeof(_uint))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iQuestType", &m_eQuestType, sizeof(_uint))))
 	{
 		return E_FAIL;
 	}
@@ -182,7 +183,7 @@ HRESULT CMission_Icon::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_Mission_Icon_0"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Mission_Icon"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}

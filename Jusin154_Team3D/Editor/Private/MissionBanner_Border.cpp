@@ -21,10 +21,10 @@ HRESULT CMissionBanner_Border::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = 0.f;
-	Desc.fY = 0.f;
-	Desc.fSizeX = 50.f;
-	Desc.fSizeY = 50.f;
+	Desc.fX = -248.f;
+	Desc.fY = 100.f;
+	Desc.fSizeX = 512.f;
+	Desc.fSizeY = 128.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -40,6 +40,7 @@ HRESULT CMissionBanner_Border::Initialize(void* pArg)
 	m_fTimeMult = 3.f;
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 3.f;
+	m_vUVScale = _float2(2.f, 2.f);
 	return S_OK;
 }
 
@@ -107,7 +108,7 @@ HRESULT CMissionBanner_Border::Render()
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::ALPHABLEND)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::UVMULT)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
@@ -143,7 +144,7 @@ HRESULT CMissionBanner_Border::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float))))
+	if (FAILED(m_pDiffuse_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture2", 0)))
 	{
 		return E_FAIL;
 	}
@@ -160,6 +161,14 @@ HRESULT CMissionBanner_Border::Bind_ShaderResources()
 		return E_FAIL;
 	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCanvasAlpha", &m_fCanvasAlpha, sizeof(_float))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDeltaU", &m_vUVScale.x, sizeof(_float))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDeltaV", &m_vUVScale.y, sizeof(_float))))
 	{
 		return E_FAIL;
 	}

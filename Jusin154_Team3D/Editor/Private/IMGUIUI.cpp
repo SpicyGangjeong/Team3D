@@ -133,6 +133,7 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		m_bElementFadeIn = static_cast<CElementObject*>(m_pElementObject)->Get_FadeIn();
 		m_bElementFadeOut = static_cast<CElementObject*>(m_pElementObject)->Get_FadeOut();
 		m_fAlphaTime = static_cast<CElementObject*>(m_pElementObject)->Get_AlphaTime();
+		m_UV = static_cast<CElementObject*>(m_pElementObject)->Get_UV();
 	}
 	GUI::Begin("Current_PanelObject_Info");
 	if (m_pGamePlay_Canvas != nullptr)
@@ -178,6 +179,10 @@ void CIMGUIUI::Update(_float fTimeDelta)
 			if (GUI::Checkbox("Panel Active", &m_bPanelVisible))
 			{
 				static_cast<CPanelObject*>(m_pPanelObject)->Visible(m_bPanelVisible);
+			}
+			if (GUI::Checkbox("Panel All Active", &m_bElementAllVisible))
+			{
+				static_cast<CPanelObject*>(m_pPanelObject)->ElementAllVisible(m_bElementAllVisible);
 			}
 			if (GUI::Button("PanelFadeIn"))
 			{
@@ -255,7 +260,7 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		{
 			m_bElementVisible = static_cast<CElementObject*>(m_pElementObject)->Get_Visible();
 		}
-		if (GUI::Checkbox("Panel Active", &m_bElementVisible))
+		if (GUI::Checkbox("Active", &m_bElementVisible))
 		{
 			static_cast<CElementObject*>(m_pElementObject)->Visible(m_bElementVisible);
 		}
@@ -319,6 +324,16 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		if (GUI::DragFloat("AlphaTime", &m_fAlphaTime, 0.01f, 0.f, 10.f))
 		{
 			static_cast<CElementObject*>(m_pElementObject)->Set_AlphaTime(m_fAlphaTime);
+		}
+
+		if (GUI::DragFloat("U", &m_UV.x, 0.01f, 0.f, 10.f))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->Set_U(m_UV.x);
+		}
+
+		if (GUI::DragFloat("V", &m_UV.y, 0.01f, 0.f, 10.f))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->Set_V(m_UV.y);
 		}
 	}
 	GUI::End();

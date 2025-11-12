@@ -55,6 +55,10 @@ public:
 	virtual _float Get_OwnerAlpha();
 	virtual _float Get_AlphaTime();
 
+	virtual void Set_U(_float U);
+	virtual void Set_V(_float V);
+	virtual _float2 Get_UV();
+
 public:
 	virtual _float2 Get_Origin_Position();			// Start Position
 	virtual _vector Get_Current_Position();			// Current Position
@@ -89,6 +93,8 @@ protected:
 	_float					m_fDelayTime{};							// UI의 딜레이 시간
 	_float					m_fTimeMult{1.f};						// 애니메이션 속도를 조절하기 위해서 필요
 	_float3					m_vScale{};								// UI의 스케일을 조절하기 위해서 필요함
+
+	_float2					m_vUVScale{};
 
 	RECT					m_pRect{};
 

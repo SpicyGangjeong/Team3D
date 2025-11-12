@@ -29,6 +29,7 @@ public:
 	virtual class CGameObject* Get_Element(const wstring& Name);
 	virtual _int Element_Count();
 	virtual const vector<wstring> Element_Name();
+	virtual void ElementAllVisible(_bool bVisible);
 
 protected:
 	virtual void Add_Element(wstring Name, class CGameObject* pPanel);

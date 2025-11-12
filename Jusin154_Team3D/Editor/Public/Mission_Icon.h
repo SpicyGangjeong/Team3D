@@ -30,10 +30,11 @@ public:
 	void QuestType(QUESTYPE eType);
 
 private:
-	CTexture* m_pDiffuse_TextureCom = { nullptr };
-	CShader* m_pShaderCom = { nullptr };
+	CTexture*		m_pDiffuse_TextureCom = { nullptr };
+	CShader*		m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
-	QUESTYPE m_eType = QUESTYPE::END;
+	QUESTYPE		m_eQuestType = QUESTYPE::END;
+	_uint			m_iType{};
 
 public:
 	static CMission_Icon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
