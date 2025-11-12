@@ -3,6 +3,8 @@
 #include <process.h>
 #include "../Default/framework.h"
 #include "wincrypt.h"
+
+#include "Engine_Define.h"
 #include "Editor_Macro.h"
 #include "Editor_Struct.h"
 

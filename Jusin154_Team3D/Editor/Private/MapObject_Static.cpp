@@ -6,6 +6,7 @@
 #include "Layer.h"
 #include "Terrain.h"
 #include "VIBuffer_Terrain.h"
+#include "MapObject_Manager.h"
 
 CMapObject_Static::CMapObject_Static(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMapObject(pDevice, pContext)
@@ -97,6 +98,7 @@ HRESULT CMapObject_Static::Initialize(void* pArg)
 	MAPOBJECT_STATIC_DESC* pDesc = static_cast<MAPOBJECT_STATIC_DESC*>(pArg);
 
 	m_strModelPrototypeTag = pDesc->strModelPrototypeTag;
+	m_iModelPathIndex = pDesc->iModelPathIndex;
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -234,6 +236,38 @@ void CMapObject_Static::Describe_Entity()
 
 	if (ImGui::Button("Delete"))
 		m_bDead = true;
+
+	if (GUI::Button("Bake_StaticPhysXMesh")) {
+		GUI::OpenPopup("BakeStaticPhysXMesh##popup");
+	}
+
+	if (GUI::BeginPopup("BakeStaticPhysXMesh##popup")) {
+		if (GUI::Button("No")) {
+			GUI::CloseCurrentPopup();
+		}
+		GUI::SameLine();
+		if (GUI::Button("Bake!!!")) {
+			CMapObject_Manager* pManager = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_MAPOBJECTMANAGER)->Get_Object<CMapObject_Manager>();
+
+			filesystem::path filePath = pManager->Get_PrototypePath(m_iModelPathIndex);
+			m_pModelCom->Save_PhysXTriMeshes(CMyTools::ToString(pManager->Get_PrototypePath(m_iModelPathIndex)).c_str());
+			_uint iNumMesh = m_pModelCom->Get_NumMeshes();
+
+			CRigidBody::RIGIDBODY_DESC Desc{};
+			Desc.eType = ACTOR::TRIANGLEMESH;
+
+			for (_uint i = 0; i < iNumMesh; ++i)
+			{ // RIGID_BODY
+				Desc.tRigidStaticDesc.szMeshName = m_pModelCom->Get_MeshName(i);
+
+				if (FAILED(Add_Asset_Component(g_iStaticLevel, CMyTools::ToWstring(m_pModelCom->Get_MeshName(i)).c_str(), nullptr, &Desc))) {
+					assert(false);
+				}
+			}
+			GUI::CloseCurrentPopup();
+		}
+		GUI::EndPopup();
+	}
 
 	m_bSelected = true;
 }
