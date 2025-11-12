@@ -99,7 +99,7 @@ HRESULT CLoading_Panel::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
+	if (FAILED(m_pDiffuse_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
 	{
 		return E_FAIL;
 	}
@@ -131,12 +131,12 @@ HRESULT CLoading_Panel::Ready_Components(void* pArg)
 
 HRESULT CLoading_Panel::Ready_Element(void* pArg)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLoadingWidget>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &m_pLoadingWidget)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLoadingWidget>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CLoadingWidget**>(&m_pLoadingWidget))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("LoadingWidget"), m_pLoadingWidget);
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLoadingWidget_Flame>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &m_pLoadingWidget_Flame)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLoadingWidget_Flame>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CLoadingWidget_Flame**>(&m_pLoadingWidget_Flame))))
 	{
 		return E_FAIL;
 	}
@@ -175,7 +175,7 @@ void CLoading_Panel::Free()
 {
 	__super::Free();
 
-	SAFE_RELEASE(m_pTextureCom);
+	SAFE_RELEASE(m_pDiffuse_TextureCom);
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }

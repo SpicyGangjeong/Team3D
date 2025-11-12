@@ -16,8 +16,7 @@ public:
 	typedef struct tagRigidStatic_PrototypeDesc
 	{
 		_float3			vMatInfo;
-		const _tchar*	pMeshKey = { nullptr };
-		CMesh*	pMesh = { nullptr };
+		const _char*	szMeshName = { } ;
 	}RIGID_STATIC_PROTOTYPEDESC;
 	typedef struct tagRigidDynamic_PrototypeDesc
 	{
@@ -37,7 +36,7 @@ public:
 		}; 
 	}RIGIDBODY_PROTOTYPEDESC;
 	typedef struct tagRigidStatic_Desc {
-		const _tchar*	pMeshKey = { nullptr };
+		const _char* szMeshName = { };
 	}RIGID_STATIC_DESC;
 	typedef struct tagRigidDynamic_Desc {
 		_float			fDensity = { 1000.f };
@@ -68,7 +67,7 @@ private:
 public:
 	PSX::PxShape* Get_ShapePtr() const { return m_pShape; }
 	CTransform* Get_PxTransformPtr() const { return m_pTransform; }
-	const _tchar* Get_PxMeshKey() const { return m_pMeshKey; }
+	const _tchar* Get_PxMeshKey() const { return m_wstrMeshKey.c_str(); }
 	const PSX::PxMaterial* Get_PxMaterial() const { return m_pMaterial; }
 
 	_float Get_Density() const { return m_fDensity; }
@@ -84,7 +83,7 @@ private:
 	_bool				m_bKinematic = { false };
 	_bool				m_bExclusive = { false };
 	_float				m_fDensity = { 1000.f };
-	const _tchar*		m_pMeshKey = { nullptr };
+	_wstring			m_wstrMeshKey = {  };
 
 private:
 	HRESULT Initialize_Prototype(RIGIDBODY_PROTOTYPEDESC& Desc);

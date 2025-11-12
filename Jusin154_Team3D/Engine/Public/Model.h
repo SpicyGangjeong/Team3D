@@ -31,6 +31,7 @@ public:
 	_int	Get_RootBoneIndex() const { return m_iRootBoneIndex; }
 	const _float4x4* Get_BoneMatrixPtr(const _char* pBoneName) const;
 	_uint	Get_NumMeshes() const { return m_iNumMeshes; }
+	const _char* Get_MeshName(_uint iIndex);
 	MODEL	Get_Type() const { return m_eType; }
 	_matrix Get_BoneMatrix(_uint iBoneIndex);
 
@@ -39,7 +40,7 @@ public:
 	void Get_BoneMatrices(_float4x4* pOut);
 	_uint	Get_BonesNum() const { return (_uint)m_Bones.size(); }
 
-	void Reset_CurrentTrackPosition();
+	void Set_CurrentTrackPosition(_float TrackPosition);
 	const _char* Get_AnimList(_uint iIndex);
 	size_t Get_AnimSize() { return m_Animations.size(); }
 	_float Get_CurrentTrackPosition();
@@ -56,16 +57,16 @@ public:
 	virtual HRESULT Render_Indexed(_uint iMeshIndex, _uint IndexCount, _uint StartIndexLocation, _uint BaseVertexLocation);
 
 #ifdef EDITOR_PROJECT	
-	HRESULT Initialize_Prototype(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex);
-	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex);
 	HRESULT Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex);
 	HRESULT Ready_Meshes(MODEL eType, const aiScene* pAIScene, _fmatrix& PreTransformMatrix);
+	HRESULT Ready_PhysXMeshes();
+	HRESULT Save_PhysXTriMeshes(const _char* pModelFilePath);
 	HRESULT Ready_Materials(const aiScene* pAIScene, const _char* pModelFilePath);
 	HRESULT Ready_Materials_FromFile(const aiScene* pAIScene, const _char* pModelFilePath);
 	HRESULT Ready_Animations(const aiScene* pAIScene);
 	HRESULT Ready_Bones(const aiNode* pAINode, _int iParentIndex);
 	// 바이너리
-	bool SaveAssimpModel(const _char* filename);
+	_bool SaveAssimpModel(const _char* filename);
 	_int SaveNodeRecursive(const aiNode* pAINode, std::vector<SaveNode>& outNodes, _int parentIndex);
 	//
 #endif // EDITOR_PROJECT
@@ -83,6 +84,8 @@ private:
 
 	_uint						m_iNumMeshes = {};					// 메쉬의 갯수
 	vector<class CMesh*>		m_Meshes;							// 메쉬의 벡터
+	_uint						m_iNumPhysXMeshes = {};				// 피직스 메쉬의 갯수
+	vector<PSX::PxTriangleMesh*> m_TriMeshes = {};			// 피직스 메쉬의 갯수
 
 	_uint						m_iNumMaterials = {};				// 머테리얼의 갯수
 	vector<class CMaterial*>	m_Materials;						// 머테리얼의 벡터
@@ -111,7 +114,6 @@ private:
 	//
 
 private:
-	virtual HRESULT Initialize_Prototype() override;
 	// 바이너리
 	virtual HRESULT Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix);
 	bool LoadData(const _char* filename);
@@ -127,7 +129,6 @@ private:
 	//
 
 public:
-	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	// 바이너리
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix = XMMatrixIdentity());
 	//

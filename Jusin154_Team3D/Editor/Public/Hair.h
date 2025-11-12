@@ -2,6 +2,9 @@
 
 #include "Editor_Define.h"
 #include "ModelParts.h"
+NS_BEGIN(Engine)
+class CTexture;
+NS_END
 
 NS_BEGIN(Editor)
 
@@ -22,6 +25,9 @@ public:
 
 private:
 	HRESULT Ready_Components();
+
+private:
+	CTexture* m_pTextureCom = { nullptr };
 
 public:
 	static CHair* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
