@@ -106,5 +106,5 @@ void CLight_Manager::Free()
             }
             Safe_Delete(pairLight.second);
         } m_pLights[i].clear();
-    }
+    } Safe_Delete_Array(m_pLights);
 }
