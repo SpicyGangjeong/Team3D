@@ -1,8 +1,0 @@
-Diffuse=T_FX_Decal_claw_D
-Normal=T_FX_Decal_claw_N
-Other[0]=DefaultDiffuse
-Other[1]=T_FX_Decal_Dirt_H
-Other[2]=VFX_T_Noise09_D
-Other[3]=T_FX_water_drops_D
-Other[4]=VFX_T_Ground_ClumpySnow_2k_N
-Other[5]=VFX_T_Wavy_N

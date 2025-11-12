@@ -9,6 +9,7 @@
 #include "Texture.h"
 #include "Cell.h"
 #include "Model.h"
+#include "Character_Controller.h"
 #include "Instance_Model.h"
 
 
@@ -70,7 +71,7 @@ public:
 	//만들고 선택할 시에 내 ppOut에 클론하는 기능을 담당
 
 	template<typename T>
-	void Asset_Description(_uint iLevel , const _char* pComponentName , CComponent** ppOut  , void* pDesc , class CGameObject* pOwner = nullptr , _wstring wstrGroupName = L"")
+	void Asset_Description(_uint iLevel , const _char* pComponentName , CComponent** ppOut  , void* pDesc , class CGameObject* pOwner = nullptr)
 	{
 		vector<const _char*> pComponentNames = {};
 		vector<_string> strNames = {};
@@ -100,27 +101,16 @@ public:
 				if (iter == m_pAssets[iLevel].end()) {
 					continue;
 				}
-				
-				CTexture* pTexture = dynamic_cast<CTexture*>(iter->second);
 
-				if (pTexture == nullptr)
-					continue;
 
-				if (pTexture->Compare_GroupName(wstrGroupName) == false) //  그룹네임을 비교해서 같은 것만 띄울 수 있도록 한다 , Default시 L""
-					continue;
-
-				if (GUI::ImageButton(strName.c_str(), pTexture->Get_SRV(0), ImVec2(48, 48)))
+				if (GUI::ImageButton(strName.c_str(), dynamic_cast<CTexture*>(iter->second)->Get_SRV(0), ImVec2(48, 48)))
 				{
 					if (*ppOut != nullptr)
 						Safe_Release(*ppOut);
 
 
 					*ppOut = iter->second->Clone(pDesc, pOwner);
-					
-					return;
 				}
-
-				pTexture->HoverName();
 
 				if ((iIndex++ + 1) % 4 != 0)
 					GUI::SameLine(); // 같은 줄에 이어서

@@ -1,9 +1,0 @@
-Diffuse=VFX_T_Decal_Graphorn_Footstep_D
-Normal=VFX_T_Decal_Graphorn_Footstep_N
-Other[0]=VFX_T_Decal_Graphorn_Footstep_H
-Other[1]=DefaultDiffuse
-Other[2]=T_FX_Decal_claw_D
-Other[3]=T_FX_Decal_claw_N
-Other[4]=T_FX_Decal_Dirt_H
-Other[5]=T_FX_water_drops_D
-Other[6]=VFX_T_Inky_Smoke_D

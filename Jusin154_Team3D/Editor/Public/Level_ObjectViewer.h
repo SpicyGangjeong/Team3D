@@ -34,20 +34,19 @@ private:
 	void Show_AnimList();
 	void Show_ObjectList();
 	void Object_Setting();
-	void Save_LayerName(const _char* Category);
+	void Save_LayerName(const _char* Layer);
 	_wchar* Save_ModelName(const _char* Category);
 
 private:
-	vector<CGameObject*> m_Objects;
-	vector<CGameObject*> m_PartsObjects;
-	CGameObject* m_HumanRoot = { nullptr };
-	_int m_iObjectIndex = { 0 };
-	_int m_iPartsObjectIndex = { 0 };
-	_char m_szName[MAX_PATH];
-	_wchar m_wszName[MAX_PATH];
-	_wchar m_wszLayer[MAX_PATH];
-	_wchar m_wszPreLayer[MAX_PATH];
-
+	vector<CGameObject*>	m_Objects;
+	vector<CGameObject*>	m_PartsObjects;
+	class CRootModelPart*	m_HumanRoot = { nullptr };
+	_int					m_iObjectIndex = { 0 };
+	_int					m_iPartsObjectIndex = { 0 };
+	_char					m_szName[MAX_PATH];
+	_wchar					m_wszName[MAX_PATH];
+	_wchar					m_wszLayer[MAX_PATH];
+	_wchar					m_wszPreLayer[MAX_PATH];
 
 public:
 	static CLevel_ObjectViewer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID);

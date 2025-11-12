@@ -1,8 +1,0 @@
-Diffuse=VFX_T_Scorch_DH_MSK
-Normal=BaseFlattenNormalMap
-Other[0]=DefaultDiffuse
-Other[1]=DefaultNormal_Uncompressed
-Other[2]=VFX_T_Blast_Packed_MSK
-Other[3]=VFX_T_Blast_Packed_N
-Other[4]=VFX_T_NoiseCaustics01_Color_D
-Other[5]=VFX_T_NoiseTiled_1_D

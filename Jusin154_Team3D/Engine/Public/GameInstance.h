@@ -22,8 +22,6 @@ public:
 	_float Random_Float(_float fMin, _float fMax);
 	_int   Random_Int(_int iMin, _int iMax);
 
-	void   BillBoard(class CTransform* pTransform);
-
 #pragma region GRAPHIC_DEVICE
 public:
 	void Render_Begin(const _float4* pClearColor);
@@ -67,9 +65,9 @@ public:
 	}
 
 	template<typename T>
-	void Asset_Description(_uint iLevel, const _char* pComponentName, CComponent** ppOut, void* pDesc, class CGameObject* pOwner = nullptr, _wstring wstrGroupName = L"")
+	void Asset_Description(_uint iLevel, const _char* pComponentName, CComponent** ppOut, void* pDesc, class CGameObject* pOwner = nullptr)
 	{
-		return m_pPrototype_Manager->CPrototype_Manager::Asset_Description<T>(iLevel, pComponentName, ppOut, pDesc, pOwner, wstrGroupName);
+		return m_pPrototype_Manager->CPrototype_Manager::Asset_Description<T>(iLevel, pComponentName, ppOut, pDesc, pOwner);
 	}
 
 #pragma endregion
@@ -180,10 +178,20 @@ public:
 #pragma endregion
 #pragma region PhysX_Manager
 	PSX::PxMaterial* Get_Material(_float3& vMatInfo);
-	HRESULT Create_TriangleMesh(const _wstring& wstrMeshKey, CMesh* pMesh);
+	void RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh);
 	PSX::PxShape* Create_Shape(ACTOR eType, _float3& vhalfGeometryInfo, PSX::PxMaterial& pxMaterial, _bool bExclusive = false, PSX::PxShapeFlags ePxShapeFlag = PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE);
 	const PSX::PxRigidDynamic* Add_DynamicActor(CRigidBody& RigidBody);
 	const PSX::PxRigidStatic* Add_StaticActor(CRigidBody& RigidBody);
+
+
+	PSX::PxController*	Add_CapsuleController(PSX::PxCapsuleControllerDesc& Desc);
+	PSX::PxController*	Add_BoxController(PSX::PxBoxControllerDesc& Desc);
+	PSX::PxController*	Get_Controller(_uint iControllerIndex);
+	void				ReleaseController(_uint iControllerIndex);
+
+	HRESULT ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix);
+	HRESULT SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
+	HRESULT LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes); // 모델 불러왔던 경로에 그대로 있음
 #pragma endregion
 
 

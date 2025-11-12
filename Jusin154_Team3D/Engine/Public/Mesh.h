@@ -16,6 +16,7 @@ public:
 		return m_iMaterialIndex;
 	}
 
+	const _char* Get_Name() const { return m_szName; }
 	HRESULT Bind_BoneMatrices(const vector<class CBone*>& Bones, class CShader* pShader, const _char* pConstantName);
 	HRESULT Bind_BoneMatrices(_float4x4* pCombinedMatrices, class CShader* pShader, const _char* pConstantName);
 	HRESULT Render_Indexed(_uint IndexCount, _uint StartIndexLocation, _uint BaseVertexLocation);
@@ -27,7 +28,7 @@ private:
 public:
 	static CMesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, vector<class CBone*>& Bones, const aiMesh* pAIMesh, _fmatrix& PreTransformMatrix);
 	HRESULT SaveAsBinary(HANDLE hFile, DWORD& dwByte);
-	PSX::PxTriangleMesh* ConvertToPxMesh(const PSX::PxCookingParams* pParam);
+	PSX::PxTriangleMesh* ConvertToPxMesh(const PSX::PxCookingParams* pParam, PSX::PxPhysics* pPhysX, _fmatrix WorldMatrix);
 #endif // EDITOR_PROJECT
 
 public:

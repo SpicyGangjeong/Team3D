@@ -28,6 +28,9 @@ HRESULT CRootModelPart::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	if (FAILED(Ready_Components(pArg)))
+		return E_FAIL;
+
 	if (FAILED(Ready_PartObjects()))
 		return E_FAIL;
 
@@ -58,22 +61,71 @@ HRESULT CRootModelPart::Render()
 
 void CRootModelPart::Update_Anim(_float fTimeDelta)
 {
+	if (!m_pMainModel)
+		return;
+
 	for (auto& ModelParts : m_ModelParts)
 	{
 		CModel* pModel = ModelParts->Get_Component<CModel>();
 		if (pModel)
 		{
 			pModel->Set_PlayAnim(m_pMainModel->Get_PlayAnim());
-			pModel->Set_AnimationIndex(m_pMainModel->Get_AnimIndex());
-			pModel->Set_CurrentTrackPosition(m_pMainModel->Get_CurrentTrackPosition());
+			pModel->Set_AnimSpeed(m_pMainModel->Get_AnimSpeed());
 			pModel->Play_Animation(fTimeDelta);
 		}
 	}
 }
 
-
-HRESULT CRootModelPart::Ready_Components()
+void CRootModelPart::Set_MainModel(CModel* Model)
 {
+	if (m_pMainModel)
+	{
+		SAFE_RELEASE(m_pMainModel);
+	}
+	m_pMainModel = Model;
+}
+
+void CRootModelPart::Change_Model(_uint iIndex)
+{
+	if (m_pMainModel)
+	{
+		m_iAnimIndex = m_pMainModel->Get_AnimIndex();
+		m_fTrackPosition = m_pMainModel->Get_CurrentTrackPosition();
+	}
+
+	m_ModelParts[iIndex]->Change_Model(m_PrototypeModelName);
+
+	CModel* pModel = m_ModelParts[iIndex]->Get_Component<CModel>();
+
+	pModel->Set_AnimationIndex(m_iAnimIndex);
+	pModel->Set_CurrentTrackPosition(m_fTrackPosition);                                                                                                            
+	pModel->Play_Animation(0.f);
+
+	if (iIndex == 0)
+	{
+		Set_MainModel(m_ModelParts[iIndex]->Get_Component<CModel>());
+	}
+}
+
+void CRootModelPart::Set_Animation(_uint iAnimIndex)
+{
+	m_pMainModel->Set_AnimationIndex(iAnimIndex);
+
+	for (auto& PartObject : m_ModelParts)
+	{
+		CModel* pModel = PartObject->Get_Component<CModel>();
+		if (pModel)
+		{
+			pModel->Set_AnimationIndex(m_pMainModel->Get_AnimIndex());
+			pModel->Set_CurrentTrackPosition(m_pMainModel->Get_CurrentTrackPosition());
+		}
+	}
+}
+
+HRESULT CRootModelPart::Ready_Components(void* pArg)
+{
+	__super::Ready_Components(pArg);
+
 	return S_OK;
 }
 
@@ -86,12 +138,12 @@ HRESULT CRootModelPart::Ready_PartObjects()
 
 	CModelParts* pModelPartsObject = { nullptr };
 
-	if (FAILED(Add_PartObject<CBody>("Human_Body", ENUM_CLASS(LEVEL::STATIC), reinterpret_cast<CBody**>(&pModelPartsObject), &PartsDesc)))
+	if (FAILED(Add_PartObject<CHead>("Human_Head", ENUM_CLASS(LEVEL::STATIC), reinterpret_cast<CHead**>(&pModelPartsObject), &PartsDesc)))
 		return E_FAIL;
 
 	m_ModelParts.push_back(pModelPartsObject);
 
-	if (FAILED(Add_PartObject<CHead>("Human_Head", ENUM_CLASS(LEVEL::STATIC), reinterpret_cast<CHead**>(&pModelPartsObject), &PartsDesc)))
+	if (FAILED(Add_PartObject<CBody>("Human_Body", ENUM_CLASS(LEVEL::STATIC), reinterpret_cast<CBody**>(&pModelPartsObject), &PartsDesc)))
 		return E_FAIL;
 
 	m_ModelParts.push_back(pModelPartsObject);

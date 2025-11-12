@@ -39,26 +39,7 @@ _uint CTexture::Get_Size()
 	return (_uint)m_SRVs.size();
 }
 
-_bool CTexture::Compare_GroupName(_wstring wstrGroupName)
-{
-	return m_wstrPrototypeName == wstrGroupName;
-}
-
-#ifdef _DEBUG
-void CTexture::HoverName()
-{
-	if (ImGui::IsItemHovered()) {
-
-		ImGui::BeginTooltip();           // 툴팁 창 시작
-
-		ImGui::TextUnformatted(CMyTools::ToString(m_wstrPrototypeName).c_str());    // 텍스트 출력 (Text 대신 Unformatted 추천)
-
-		ImGui::EndTooltip();             // 툴팁 창 종료
-	}
-}
-#endif
-
-HRESULT CTexture::Initialize_Prototype(TEXTURE_LOAD_TYPE eType, const _tchar* pTextureFilePath, _uint iNumTextures, _wstring wstrPrototypeName)
+HRESULT CTexture::Initialize_Prototype(TEXTURE_LOAD_TYPE eType, const _tchar* pTextureFilePath, _uint iNumTextures)
 {
 	switch (eType)
 	{
@@ -83,8 +64,6 @@ HRESULT CTexture::Initialize_Prototype(TEXTURE_LOAD_TYPE eType, const _tchar* pT
 	default:
 		break;
 	}
-
-	m_wstrPrototypeName = wstrPrototypeName;
 
 	return S_OK;
 }
@@ -203,11 +182,11 @@ HRESULT CTexture::ParseTexturePathToSRVs(const _tchar* pTextureFolderPath)
 
 	return S_OK;
 }
-CTexture* CTexture::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TEXTURE_LOAD_TYPE eType, const _tchar* pTextureFilePath, _uint iNumTextures, _wstring wstrGroupName)
+CTexture* CTexture::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TEXTURE_LOAD_TYPE eType, const _tchar* pTextureFilePath, _uint iNumTextures)
 {
 	CTexture* pInstance = new CTexture(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype(eType, pTextureFilePath, iNumTextures, wstrGroupName)))
+	if (FAILED(pInstance->Initialize_Prototype(eType, pTextureFilePath, iNumTextures)))
 	{
 		MSG_BOX("Failed to Created : CTexture");
 		SAFE_RELEASE(pInstance);

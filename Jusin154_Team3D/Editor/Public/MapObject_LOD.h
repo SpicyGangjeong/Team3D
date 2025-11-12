@@ -5,18 +5,8 @@
 
 NS_BEGIN(Editor)
 
-class CMapObject_LOD final : public CMapObject
+class CMapObject_LOD final : public CMapObject // LOD 있는 애들
 {
-public:
-	typedef struct tagMapObjectLodDesc : public PARTOBJECT_DESC
-	{
-		_uint					iMaxLodLevel{};
-		vector<_wstring>		ModelPrototypeTags;
-		_float3					vPosition;
-		_float3					vScale;
-		_float3					vRotation;
-	}MAPOBJECT_LOD_DESC;
-
 private:
 	CMapObject_LOD(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CMapObject_LOD(const CMapObject_LOD& Prototype);
@@ -42,6 +32,7 @@ private:
 	_uint				m_iLodIndex = {};
 
 	vector<_wstring>	m_ModelPrototypeTags;
+	vector<_uint>		m_ModelPathIndices = { };
 
 
 	

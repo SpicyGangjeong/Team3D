@@ -1,6 +1,0 @@
-Diffuse=VFX_T_Circle_Sphere_D
-Normal=VFX_T_RibbonOffset_N
-SpecPower=VFX_T_Circle_Sphere_D
-Other[0]=VFX_T_smokeCloud_Dal_BPF_D
-Other[1]=VFX_T_Goo_Noise_N
-Other[2]=VFX_T_Circle_LerpMask_D

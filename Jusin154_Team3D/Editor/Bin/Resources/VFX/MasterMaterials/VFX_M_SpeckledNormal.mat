@@ -1,5 +1,0 @@
-Diffuse=VFX_T_Whisp_One_512_8x8_D
-Normal=VFX_T_whisp_One_512_8x8_N
-SpecPower=VFX_T_Speckled_tile_2_D
-Other[0]=VFX_T_Noise_Anisotropic2_height_D
-Other[1]=VFX_T_Speckled_tile_D

@@ -1,7 +1,0 @@
-Diffuse=VFX_T_GH_Skydome_Skynight_NoColor_D
-Normal=VFX_T_GH_Skydome_Skynight_NoColor_D
-Other[0]=BlendFunc_DefBase
-Other[1]=BlendFunc_DefBlend
-Other[2]=Good64x64TilingNoiseHighFreq
-Other[3]=T_CM_Moon_Atmosphere_O
-Other[4]=VFX_T_GH_Skydome_Stars_2_MSK

@@ -10,13 +10,10 @@ class ENGINE_DLL CInstance_Model final : public CComponent
 public:
 	typedef struct tagInstanceDesc
 	{
-		_int		iNumInstance = {1}; // 인스턴스 개수
-
-		_bool		isLoop = { true };
-		_bool		isBillboard = { false};
-		_float2		vLifeTime = {1.f , 1.f}; // 라이프 타임 min , max
-		_float3		vSizeMin = {1.f, 1.f ,1.f}; // 사이즈 min xyz
-		_float3		vSizeMax = {1.f ,1.f ,1.f}; // 사이즈 max xyz
+		_int		iNumInstance = {}; // 인스턴스 개수
+		_float2		vLifeTime = {}; // 라이프 타임 min , max
+		_float3		vSizeMin = {}; // 사이즈 min xyz
+		_float3		vSizeMax = {}; // 사이즈 max xyz
 		_float3		vRotationAngleMin = {};  // 로테이션 min x y z for angle
 		_float3		vRotationAngleMax = {};// 로테이션 max x y z for angle
 		_float2		vRotationSpeed = {}; // 로테이션 스피드 min , max
@@ -24,27 +21,19 @@ public:
 		_float3		vCenter = {}; // 센터 위치 
 		_float3		vRange = {}; // 위치 범위 
 
-		_float2		vMaskingUVMoveTime = {1.f, 1.f};
-		_float2		vDiffuseUVMoveTime = {1.f, 1.f};
-		_float2		vNoiseUVMoveTime = {1.f ,1.f};
-		_float2		vAniTime = {1.f , 1.f};
+		_float2		vMaskingUVMoveTime = {};
+		_float2		vDiffuseUVMoveTime = {};
+		_float2		vAniTime = {};
 		_float2	    vAniIndex = {};
 
 	}INSTANCE_DESC;
 
 	typedef struct tagCSParticleDesc
 	{
-		_float4x4 CamViewInvMatrix = {};
-
-		_int	 isLoop = {};
-		_int     isBillboard = {};
-		_int     isPadding2 = {};
-		_int     isPadding3 = {};
-
 		_float   fTimeDelta = {};
+		_float   fPadding = {};
 		_float	 fPadding2 = {};
 		_float   fPadding3 = {};
-		_float   fPadding4 = {};
 
 	}CS_PARTICLE_DESC;
 
@@ -60,13 +49,28 @@ public:
 
 		_float2	 vMaskingUVMoveTime = {};
 		_float2	 vDiffuseUVMoveTime = {};
-		_float2  vNoiseUVMoveTime = {};
 		_float2	 vAniTime = {};
 
 		_float2	 vAniIndex = {};
 
 	}CS_PARTICLE_VALUE_DESC;
 
+
+	struct ParticleOut
+	{
+		_float4 vRight = {};
+		_float4 vUp = {};
+		_float4 vLook = {};
+		_float4 vTranslation = {};
+		_float2 vLifeTime = {};
+
+		_float2 vMaskingUVMoveTime = {};
+		_float2 vDiffuseUVMoveTime = {};
+		_float2 vAniTime = {};
+
+		_float2 vAniIndex = {};
+
+	}CS_PARTICLE_OUT;
 public:
 	CInstance_Model(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CInstance_Model(const CInstance_Model& rhs);
@@ -84,14 +88,12 @@ public:
 	 HRESULT		Render(_uint iMeshIndx);
 	 void			Instane_Buffer_ReStruct();
 	 _uint			Get_NumMeshes() const { return m_iNumMeshes; }
-	 HRESULT		Bind_CS_Output(_uint Index , _uint iBufferIndex);
-	 INSTANCE_DESC	Get_EffectValue() { return m_InstanceDesc; }
+	 HRESULT		Bind_CS_Output(_uint Index);
 private:
 #ifdef EDITOR_PROJECT
 	HRESULT			Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex);
 	HRESULT			Ready_Meshes(MODEL eType, const aiScene* pAIScene, _fmatrix& PreTransformMatrix);
 #endif	
-	HRESULT			Change_NumInstance();
 	HRESULT			Create_Instance_Buffer(const INSTANCE_DESC* pDesc);
 	HRESULT         Create_SubResource_Buffer();
 

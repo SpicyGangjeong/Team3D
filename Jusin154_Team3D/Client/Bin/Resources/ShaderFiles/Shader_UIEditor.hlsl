@@ -142,7 +142,7 @@ PS_OUT PS_Sptire_Sheet(PS_IN In)
     
     Color = Texture;
     
-    if (Color.r <= 0.4f)
+    if (Color.r <= 0.f)
         discard;
     
     Out.vColor = Color;

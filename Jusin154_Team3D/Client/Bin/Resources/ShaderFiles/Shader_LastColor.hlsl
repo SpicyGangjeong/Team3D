@@ -69,16 +69,16 @@ PS_OUT_BACKBUFFER PS_OUT_LASTCOLOR(PS_IN In)
             Out.vBackBuffer.rgb = vColorTexture.rgb;
             break;
         case 2:
-            Out.vBackBuffer.rgb += vColorTexture.rgb;
+            Out.vBackBuffer.rgb *= vColorTexture.rgb;
             break;
         case 3:
             Out.vBackBuffer.rgb -= vColorTexture.rgb;
             break;
         case 4:
-            Out.vBackBuffer.rgb *= vColorTexture.rgb;
+            Out.vBackBuffer.rgb /= vColorTexture.rgb;
             break;
         case 5:
-            Out.vBackBuffer.rgb /= vColorTexture.rgb;
+            Out.vBackBuffer.rgb += vColorTexture.rgb;
             break;
         default:
             break;

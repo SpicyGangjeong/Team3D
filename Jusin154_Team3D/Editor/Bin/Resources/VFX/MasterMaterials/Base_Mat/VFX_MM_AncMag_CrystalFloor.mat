@@ -1,8 +1,0 @@
-Diffuse=T_Sanctum_10meter_Flat_Ceiling_01_C_D
-Normal=T_Sanctum__Marble_BlackB_N
-Emissive=VFX_T_Dots_E
-Other[0]=T_Caustics_Colour_MSK
-Other[1]=T_Sanctum__Marble_BlackB_MRO
-Other[2]=VFX_T_Cloud_SoftNoise_A
-Other[3]=VFX_T_DistortionNoise_N
-Other[4]=VFX_T_Noise01_D

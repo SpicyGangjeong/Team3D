@@ -1,7 +1,0 @@
-Diffuse=T_Gradient_Soft_D
-Normal=T_FX_Decal_claw_N
-Other[0]=DefaultDiffuse
-Other[1]=T_FX_Decal_claw_D
-Other[2]=T_FX_Decal_Dirt_H
-Other[3]=T_FX_water_drops_D
-Other[4]=VFX_T_Inky_Smoke_D

@@ -1,7 +1,0 @@
-Diffuse=VFX_T_MarbleSkin_01_BPF_D
-Normal=DefaultNormal
-Other[0]=DefaultDiffuse
-Other[1]=DefaultTexture
-Other[2]=LowResBlurredNoise
-Other[3]=T_FX_Flowmap_FM
-Other[4]=VFX_T_TiledNoise_01_D

@@ -1,9 +1,0 @@
-Diffuse=base_black_d
-Normal=base_flat_n
-Other[0]=HeatmapGradient
-Other[1]=DefaultTexture
-Other[2]=base_gray_d
-Other[3]=VFX_T_BubbleMask_D
-Other[4]=VFX_T_IceB_D
-Other[5]=VFX_T_IceB_mask_D
-Other[6]=VFX_T_IceB_N

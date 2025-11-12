@@ -124,7 +124,7 @@ HRESULT CBone::Initialize(HANDLE hFile, DWORD& dwByte)
 
 HRESULT CBone::Initialize(const SaveNode& _SaveNode, _int iParentIndex)
 {
-	strcpy_s(m_szName, _SaveNode.Name);
+	strcpy_s(m_szName, _SaveNode.NodeName.c_str());
 
 	m_iParentBoneIndex = iParentIndex;
 

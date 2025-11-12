@@ -1,7 +1,0 @@
-Diffuse=VFX_T_WaterDecal_01_D
-Normal=VFX_T_WaterDecalMask_01_N
-Other[0]=VFX_T_WaterDecalMask_01_D
-Other[1]=VFX_T_Cloud_SoftWisps_D
-Other[2]=T_Cav_WaterStream_N
-Other[3]=T_Water_Normal_Large_N
-Other[4]=VFX_T_CnA_Fire3_D

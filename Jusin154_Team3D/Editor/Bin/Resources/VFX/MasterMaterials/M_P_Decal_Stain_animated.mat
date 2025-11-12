@@ -1,7 +1,0 @@
-Diffuse=BlendFunc_DefBase
-Other[0]=BlendFunc_DefBlend
-Other[1]=DefaultDiffuse
-Other[2]=Good64x64TilingNoiseHighFreq
-Other[3]=T_HW_Decal_Drip1
-Other[4]=T_Haven_decay_R
-Other[5]=VFX_T_RGB_3DNoiseRough_D

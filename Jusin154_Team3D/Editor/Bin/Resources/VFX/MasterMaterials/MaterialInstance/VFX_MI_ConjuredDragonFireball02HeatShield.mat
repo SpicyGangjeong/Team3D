@@ -1,7 +1,0 @@
-Diffuse=VFX_T_WaterTurbulentTile_01_D
-Normal=VFX_T_WaterTurbulentTile_01_N
-Emissive=VFX_T_WaterTurbulentTile_01_D
-Other[0]=VFX_T_GradientThinTop_01_D
-Other[1]=VFX_T_WaterTurbulentTile_01_DA
-Other[2]=VFX_T_WaterTurbulentTileFreq_01_D
-Other[3]=VFX_T_VortexSliceVertexAlpha01_DA

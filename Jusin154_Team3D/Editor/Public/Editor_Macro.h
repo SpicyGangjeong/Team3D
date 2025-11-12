@@ -51,6 +51,8 @@ namespace Editor {
 #define LAYER_CELL			TEXT("Layer_Cell")
 #define LAYER_TRIGGER		TEXT("Layer_Trigger")
 
+#define LAYER_MAPOBJECTMANAGER		TEXT("Layer_MapObjectManager")
+
 #pragma endregion
 #pragma region MACRO_TEXTURE
 
