@@ -74,7 +74,7 @@ public:
 
 #pragma region OBJECT_MANAGER
 	template<typename T>
-	HRESULT Add_GameObject_ToLayer(_uint iPrototypeLevelIndex, _uint iLayerLevelIndex, const _wstring& strLayerTag, void* pArg = nullptr, class CGameObject* pOwner = nullptr, class CGameObject** ppOut = nullptr) {
+	HRESULT Add_GameObject_ToLayer(_uint iPrototypeLevelIndex, _uint iLayerLevelIndex, const _wstring& strLayerTag, void* pArg = nullptr, class CGameObject* pOwner = nullptr, T** ppOut = nullptr) {
 
 		T* pGameObject = Clone_Prototype<T>(iPrototypeLevelIndex, pArg, pOwner);
 		if (nullptr == pGameObject) {
