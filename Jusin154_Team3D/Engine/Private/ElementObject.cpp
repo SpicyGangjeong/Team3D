@@ -22,10 +22,6 @@ HRESULT CElementObject::Initialize(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Ready_Components(pArg)))
-	{
-		return E_FAIL;
-	}
 	return S_OK;
 }
 
@@ -85,7 +81,6 @@ _bool CElementObject::Chack_Visible()
 
 HRESULT CElementObject::Ready_Components(void* pArg)
 {
-	__super::Ready_Components(pArg);
 	return S_OK;
 }
 

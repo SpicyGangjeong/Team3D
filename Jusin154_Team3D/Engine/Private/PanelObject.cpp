@@ -173,4 +173,8 @@ CGameObject* CPanelObject::Find_Element(const wstring& Name)
 void CPanelObject::Free()
 {
 	__super::Free();
+
+	m_Elements.clear();
+	m_ElementName.clear();
+	m_Elements_map.clear(); // map ºñ¿ì±â
 }

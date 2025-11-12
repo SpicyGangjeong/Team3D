@@ -23,8 +23,8 @@ HRESULT CMissionBanner_Border::Initialize(void* pArg)
 
 	Desc.fX = -248.f;
 	Desc.fY = 100.f;
-	Desc.fSizeX = 512.f;
-	Desc.fSizeY = 128.f;
+	Desc.fSizeX = 480.f;
+	Desc.fSizeY = 240.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -141,10 +141,6 @@ HRESULT CMissionBanner_Border::Bind_ShaderResources()
 		return E_FAIL;
 	}
 	if (FAILED(m_pDiffuse_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pDiffuse_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture2", 0)))
 	{
 		return E_FAIL;
 	}

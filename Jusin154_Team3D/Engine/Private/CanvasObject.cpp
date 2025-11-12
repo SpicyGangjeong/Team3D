@@ -143,4 +143,6 @@ void CCanvasObject::Free()
 	__super::Free();
 
 	m_Panels.clear();
+	m_PanelNames.clear();
+	m_Panels_map.clear(); // map ºñ¿ì±â
 }
