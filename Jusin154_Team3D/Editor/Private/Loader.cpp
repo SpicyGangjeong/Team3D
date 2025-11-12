@@ -708,14 +708,14 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 	vector<_wstring> ModelPrototypeTags;
 
-	for (const auto& file : filesystem::directory_iterator("C:\\Users\\82103\\Desktop\\MapRe\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Meshes"))
+	for (const auto& file : filesystem::directory_iterator("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Meshes"))
 	{
 		if (file.is_directory())
 			continue;
 
 		string ext = file.path().extension().string();
 
-		if (strcmp(ext.c_str(), ".bin"))
+		if (strcmp(ext.c_str(), ".fbx"))
 			continue;
 
 		_char szFilePath[MAX_PATH] = {};
