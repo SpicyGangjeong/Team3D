@@ -5,18 +5,8 @@
 
 NS_BEGIN(Editor)
 
-class CMapObject_Static final : public CMapObject
+class CMapObject_Static final : public CMapObject // LOD 모델이 없는 애들
 {
-public:
-	typedef struct tagMapObjectStaticDesc : public PARTOBJECT_DESC
-	{
-		_uint					iMaxLodLevel{};
-		_wstring				strModelPrototypeTag;
-		_float3					vPosition;
-		_float3					vScale;
-		_float3					vRotation;
-	}MAPOBJECT_STATIC_DESC;
-
 private:
 	CMapObject_Static(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CMapObject_Static(const CMapObject_Static& Prototype);
@@ -36,6 +26,7 @@ private:
 	CModel*				m_pModelCom = { nullptr };
 
 	_wstring			m_strModelPrototypeTag;
+	_uint				m_iModelPathIndex = { UINT_MAX };
 
 private:
 	virtual HRESULT Initialize_Prototype() override;

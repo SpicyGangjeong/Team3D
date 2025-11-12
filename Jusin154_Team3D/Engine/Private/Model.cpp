@@ -431,10 +431,13 @@ HRESULT CModel::Ready_Materials_FromFile(const aiScene* pAIScene, const _char* p
 		getline(file, strText);
 
 		// value
-		_uint iBeginIndex = (_uint)strText.find("Environment");
-		_uint iEndIndex = (_uint)strText.find('.');
-
-		if ((_uint)strText.size() < iEndIndex - iBeginIndex)
+		_int iBeginIndex = (_int)strText.find("Environment");
+		_int iEndIndex = (_int)strText.find('.');
+		if (-1 == iBeginIndex || -1 == iEndIndex) {
+			MSG_BOX("Fail Path _ NotExist"); // Not Exsist
+			return S_OK;
+		}
+		if ((_int)strText.size() < iEndIndex - iBeginIndex)
 		{
 			MSG_BOX("Fail Path");
 			return E_FAIL;
@@ -815,17 +818,9 @@ HRESULT CModel::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fma
 #pragma region Material
 	if (MODEL::ENVIROMENT == eType)
 	{
-#ifdef 기무리
-		if (FAILED(Ready_Materials(m_pAIScene, pModelFilePath))) {
-			return E_FAIL;
-		}
-#endif // 기무리
-#ifndef 기무리
 		if (FAILED(Ready_Materials_FromFile(m_pAIScene, pModelFilePath))) {
 			return E_FAIL;
 		}
-#endif // !기무리
-
 	}
 	else
 	{

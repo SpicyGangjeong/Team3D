@@ -18,18 +18,21 @@ private:
 	virtual ~CMapObject_Manager() = default;
 
 public:
-	virtual HRESULT Initialize_Prototype(vector<_wstring>& ModelPrototypeTags);
+	virtual HRESULT Initialize_Prototype(vector<_wstring>& ModelPrototypeTags, vector<filesystem::path>& ModelPrototypePaths);
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Priority_Update(_float fTimeDelta) override;
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+	const filesystem::path Get_PrototypePath(_uint iModelIndex);
+
 private:
 	class CMapObject*					m_pSelectObject = { nullptr };
 	list<class CMapObject*>				m_MapObjects = {};
 	vector<_wstring>					m_ModelPrototypeTags;
 	vector<_wstring>					m_LODModelPrototypeTags;
+	vector<filesystem::path>			m_ModelPrototypePaths;
 
 	_uint								m_iContainerObjectIndex = {};
 
@@ -51,10 +54,10 @@ private:
 	void		Update_Edit();
 	void		Update_ContainerObject();
 
-	_bool		Find_Lod_Prototype(_wstring strPrototypeTag, _uint* iCount);
+	_bool		Find_Lod_Prototype(_wstring strPrototypeTag, vector<_uint>& LodModelIndices);
 
 public:
-	static CMapObject_Manager* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, vector<_wstring>& ModelPrototypeTags);
+	static CMapObject_Manager* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, vector<_wstring>& ModelPrototypeTags, vector<filesystem::path>& ModelPrototypePaths);
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr) override;
 	virtual void Free() override;
 	virtual void Describe_Entity() override;
