@@ -481,7 +481,9 @@ bool CModel::SaveAssimpModel(const _char* filename)
 	{
 		aiMesh* mesh = m_pAIScene->mMeshes[i];
 		SaveMesh saveMesh{};
-		strcpy_s(saveMesh.Name, mesh->mName.C_Str());
+		
+		saveMesh.MeshName =  mesh->mName.C_Str();
+		saveMesh.MeshNameSize = (_int)saveMesh.MeshName.size() + 1;
 		saveMesh.VertexCount = mesh->mNumVertices;
 		saveMesh.IndexCount = mesh->mNumFaces * 3;
 		saveMesh.MaterialIndex = mesh->mMaterialIndex;
@@ -547,7 +549,8 @@ bool CModel::SaveAssimpModel(const _char* filename)
 		saveMesh.Bones.resize(mesh->mNumBones);
 		for (size_t j = 0; j < mesh->mNumBones; j++)
 		{
-			strcpy_s(saveMesh.Bones[j].Name, sizeof(saveMesh.Bones[j].Name), mesh->mBones[j]->mName.C_Str());
+			saveMesh.Bones[j].BoneName = mesh->mBones[j]->mName.C_Str();
+			saveMesh.Bones[j].BoneNameSize = (_int)saveMesh.Bones[j].BoneName.size();
 
 			memcpy(&saveMesh.Bones[j].OffsetMatrix, &mesh->mBones[j]->mOffsetMatrix, sizeof(_float4x4));
 			XMStoreFloat4x4(&saveMesh.Bones[j].OffsetMatrix, XMMatrixTranspose(XMLoadFloat4x4(&saveMesh.Bones[j].OffsetMatrix)));
@@ -584,7 +587,8 @@ bool CModel::SaveAssimpModel(const _char* filename)
 	{
 		aiAnimation* Anim = m_pAIScene->mAnimations[i];
 		SaveAnimation saveAnim{};
-		strcpy_s(saveAnim.Name, Anim->mName.C_Str());
+		saveAnim.AnimName = Anim->mName.C_Str();
+		saveAnim.AnimNameSize = (_int)saveAnim.AnimName.size() + 1;
 		saveAnim.mDuration = (_float)Anim->mDuration;
 		saveAnim.mTicksPerSecond = (_float)Anim->mTicksPerSecond;
 		saveAnim.ChannelCount = Anim->mNumChannels;
@@ -592,8 +596,8 @@ bool CModel::SaveAssimpModel(const _char* filename)
 		saveAnim.Channels.resize(Anim->mNumChannels);
 		for (size_t j = 0; j < saveAnim.ChannelCount; j++)
 		{
-			strcpy_s(saveAnim.Channels[j].Name, sizeof(saveAnim.Channels[j].Name),
-				Anim->mChannels[j]->mNodeName.C_Str());
+			saveAnim.Channels[j].ChannelName = Anim->mChannels[j]->mNodeName.C_Str();
+			saveAnim.Channels[j].ChannelNameSize = (_int)saveAnim.Channels[j].ChannelName.size();
 
 			saveAnim.Channels[j].ScalingKeyCount = Anim->mChannels[j]->mNumScalingKeys;
 			saveAnim.Channels[j].RotationKeyCount = Anim->mChannels[j]->mNumRotationKeys;
@@ -645,7 +649,8 @@ bool CModel::SaveAssimpModel(const _char* filename)
 
 	for (auto& mesh : modelData.Meshes)
 	{
-		fwrite(&mesh.Name, sizeof(mesh.Name), 1, fp);
+		fwrite(&mesh.MeshNameSize, sizeof(_uint), 1, fp);
+		fwrite(mesh.MeshName.data(), 1, mesh.MeshNameSize, fp);
 		fwrite(&mesh.VertexCount, sizeof(_uint), 1, fp);
 		fwrite(&mesh.IndexCount, sizeof(_uint), 1, fp);
 		fwrite(&mesh.MaterialIndex, sizeof(_uint), 1, fp);
@@ -655,7 +660,8 @@ bool CModel::SaveAssimpModel(const _char* filename)
 		fwrite(mesh.Indices.data(), sizeof(_uint), mesh.IndexCount, fp);
 		for (auto& bone : mesh.Bones)
 		{
-			fwrite(&bone.Name, sizeof(bone.Name), 1, fp);
+			fwrite(&bone.BoneNameSize, sizeof(_uint), 1, fp);
+			fwrite(bone.BoneName.data(), 1, bone.BoneNameSize, fp);
 			fwrite(&bone.OffsetMatrix, sizeof(XMFLOAT4X4), 1, fp);
 			fwrite(&bone.WeightsCount, sizeof(_uint), 1, fp);
 			for (auto& Weights : bone.Weights)
@@ -669,7 +675,8 @@ bool CModel::SaveAssimpModel(const _char* filename)
 
 	for (auto& node : allNodes)
 	{
-		fwrite(node.Name, sizeof(node.Name), 1, fp);
+		fwrite(&node.NodeNameSize, sizeof(_uint), 1, fp);
+		fwrite(node.NodeName.data(), 1, node.NodeNameSize, fp);
 		fwrite(&node.ParentIndex, sizeof(int), 1, fp);
 		fwrite(&node.Transformation, sizeof(XMFLOAT4X4), 1, fp);
 		fwrite(&node.ChildrenCount, sizeof(_uint), 1, fp);
@@ -682,13 +689,15 @@ bool CModel::SaveAssimpModel(const _char* filename)
 
 	for (auto& Anim : modelData.Animations)
 	{
-		fwrite(Anim.Name, sizeof(Anim.Name), 1, fp);
+		fwrite(&Anim.AnimNameSize, sizeof(_uint), 1, fp);
+		fwrite(Anim.AnimName.data(), 1,Anim.AnimNameSize, fp);
 		fwrite(&Anim.mDuration, sizeof(_float), 1, fp);
 		fwrite(&Anim.mTicksPerSecond, sizeof(_float), 1, fp);
 		fwrite(&Anim.ChannelCount, sizeof(_uint), 1, fp);
 		for (size_t i = 0; i < Anim.ChannelCount; i++)
 		{
-			fwrite(Anim.Channels[i].Name, sizeof(Anim.Channels[i].Name), 1, fp);
+			fwrite(&Anim.Channels[i].ChannelNameSize, sizeof(_uint), 1, fp);
+			fwrite(Anim.Channels[i].ChannelName.data(), 1, Anim.Channels[i].ChannelNameSize, fp);
 
 			fwrite(&Anim.Channels[i].ScalingKeyCount, sizeof(_uint), 1, fp);
 			fwrite(Anim.Channels[i].ScalingKeys.data(), sizeof(SaveKeyFrameVec), Anim.Channels[i].ScalingKeyCount, fp);
@@ -723,7 +732,8 @@ bool CModel::SaveAssimpModel(const _char* filename)
 _int CModel::SaveNodeRecursive(const aiNode* pAINode, std::vector<SaveNode>& outNodes, _int parentIndex)
 {
 	SaveNode node{};
-	strcpy_s(node.Name, sizeof(node.Name), pAINode->mName.C_Str());
+	node.NodeName = pAINode->mName.C_Str();
+	node.NodeNameSize =(_uint)node.NodeName.size() + 1;
 	node.ParentIndex = parentIndex;
 
 	const aiMatrix4x4& m = pAINode->mTransformation;
@@ -888,7 +898,11 @@ bool CModel::LoadData(const _char* filename)
 	for (_uint i = 0; i < NewModel.MeshCount; i++)
 	{
 		SaveMesh mesh{};
-		fread(&mesh.Name, sizeof(mesh.Name), 1, fp);
+
+		fread(&mesh.MeshNameSize, sizeof(_uint), 1, fp);
+		mesh.MeshName.resize(mesh.MeshNameSize);
+		fread(mesh.MeshName.data(), 1, mesh.MeshNameSize, fp);
+
 		fread(&mesh.VertexCount, sizeof(_uint), 1, fp);
 		fread(&mesh.IndexCount, sizeof(_uint), 1, fp);
 		fread(&mesh.MaterialIndex, sizeof(_uint), 1, fp);
@@ -903,7 +917,9 @@ bool CModel::LoadData(const _char* filename)
 		mesh.Bones.resize(mesh.BoneCount);
 		for (size_t i = 0; i < mesh.BoneCount; i++)
 		{
-			fread(&mesh.Bones[i].Name, sizeof(mesh.Bones[i].Name), 1, fp);
+			fread(&mesh.Bones[i].BoneNameSize, sizeof(_uint), 1, fp);
+			mesh.Bones[i].BoneName.resize(mesh.Bones[i].BoneNameSize);
+			fread(mesh.Bones[i].BoneName.data(), 1, mesh.Bones[i].BoneNameSize, fp);
 			fread(&mesh.Bones[i].OffsetMatrix, sizeof(XMFLOAT4X4), 1, fp);
 			fread(&mesh.Bones[i].WeightsCount, sizeof(_uint), 1, fp);
 			mesh.Bones[i].Weights.resize(mesh.Bones[i].WeightsCount);
@@ -919,7 +935,9 @@ bool CModel::LoadData(const _char* filename)
 	NewModel.Nodes.resize(NewModel.NodeCount);
 	for (size_t i = 0; i < NewModel.NodeCount; i++)
 	{
-		fread(NewModel.Nodes[i].Name, sizeof(NewModel.Nodes[i].Name), 1, fp);
+		fread(&NewModel.Nodes[i].NodeNameSize, sizeof(_uint), 1, fp);
+		NewModel.Nodes[i].NodeName.resize(NewModel.Nodes[i].NodeNameSize);
+		fread(NewModel.Nodes[i].NodeName.data(), 1, NewModel.Nodes[i].NodeNameSize, fp);
 		fread(&NewModel.Nodes[i].ParentIndex, sizeof(int), 1, fp);
 		fread(&NewModel.Nodes[i].Transformation, sizeof(XMFLOAT4X4), 1, fp);
 		fread(&NewModel.Nodes[i].ChildrenCount, sizeof(_uint), 1, fp);
@@ -933,14 +951,19 @@ bool CModel::LoadData(const _char* filename)
 	for (size_t i = 0; i < NewModel.AnimationCount; i++)
 	{
 		SaveAnimation saveAnim = {};
-		fread(&saveAnim.Name, sizeof(saveAnim.Name), 1, fp);
+		fread(&saveAnim.AnimNameSize, sizeof(_uint), 1, fp);
+		saveAnim.AnimName.resize(saveAnim.AnimNameSize);
+		fread(saveAnim.AnimName.data(), 1, saveAnim.AnimNameSize, fp);
 		fread(&saveAnim.mDuration, sizeof(_float), 1, fp);
 		fread(&saveAnim.mTicksPerSecond, sizeof(_float), 1, fp);
 		fread(&saveAnim.ChannelCount, sizeof(_uint), 1, fp);
 		saveAnim.Channels.resize(saveAnim.ChannelCount);
 		for (size_t j = 0; j < saveAnim.ChannelCount; j++)
 		{
-			fread(&saveAnim.Channels[j].Name, sizeof(saveAnim.Channels[j].Name), 1, fp);
+			fread(&saveAnim.Channels[j].ChannelNameSize, sizeof(_uint), 1, fp);
+
+			saveAnim.Channels[j].ChannelName.resize(saveAnim.Channels[j].ChannelNameSize);
+			fread(saveAnim.Channels[j].ChannelName.data(), 1, saveAnim.Channels[j].ChannelNameSize, fp);
 
 			fread(&saveAnim.Channels[j].ScalingKeyCount, sizeof(_uint), 1, fp);
 			saveAnim.Channels[j].ScalingKeys.resize(saveAnim.Channels[j].ScalingKeyCount);

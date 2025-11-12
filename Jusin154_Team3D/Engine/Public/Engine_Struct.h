@@ -79,7 +79,9 @@ struct SaveBoneWeight
 
 struct SaveBone
 {
-	char Name[64];
+	string BoneName;
+
+	unsigned int BoneNameSize = {};
 	XMFLOAT4X4 OffsetMatrix;
 	int BoneIndex;
 	unsigned int WeightsCount;
@@ -88,7 +90,9 @@ struct SaveBone
 
 struct SaveNode
 {
-	char Name[64];
+	string NodeName;
+
+	unsigned int NodeNameSize = {};
 	int ParentIndex;
 	unsigned int ChildrenCount;
 	XMFLOAT4X4 Transformation;
@@ -97,7 +101,9 @@ struct SaveNode
 
 struct SaveMesh
 {
-	char Name[64];
+	string MeshName;
+
+	unsigned int MeshNameSize = {};
 	unsigned int VertexCount;
 	unsigned int IndexCount;
 	unsigned int MaterialIndex;
@@ -129,7 +135,9 @@ struct SaveKeyFrameRotation
 
 struct SaveChannel
 {
-	char Name[64] = { };
+	string ChannelName;
+
+	unsigned int ChannelNameSize = {};
 	unsigned int ScalingKeyCount = { };
 	unsigned int RotationKeyCount = { };
 	unsigned int PositionKeyCount = { };
@@ -141,7 +149,9 @@ struct SaveChannel
 
 struct SaveAnimation
 {
-	char Name[128];
+	string AnimName;
+
+	unsigned int AnimNameSize = {};
 	float mDuration;
 	float mTicksPerSecond;
 	unsigned int ChannelCount;
