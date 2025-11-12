@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Editor_Define.h"
-#include "UIObject.h"
+#include "ElementObject.h"
 
 NS_BEGIN(Editor)
 
-class CMission_KeyHold final : public CUIObject
+class CMission_KeyHold final : public CElementObject
 {
 private:
 	CMission_KeyHold(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

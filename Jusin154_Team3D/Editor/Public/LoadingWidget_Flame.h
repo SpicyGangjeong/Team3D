@@ -32,7 +32,9 @@ private:
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
 	_int m_iImageFrameX{};
+	_int m_iImageFrameY{};
 	_float m_fFrame{};
+
 public:
 	static CLoadingWidget_Flame* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
