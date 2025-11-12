@@ -47,7 +47,9 @@
 #pragma region MAP_HEADER
 #include "VIBuffer_Terrain.h"
 #include "Terrain.h"
-#include "MapObject.h"
+#include "BuildingContainer.h"
+#include "MapObject_Static.h"
+#include "MapObject_LOD.h"
 #include "MapObject_Manager.h"
 #pragma endregion
 
@@ -659,15 +661,13 @@ HRESULT CLoader::Loading_For_MapViewer()
 	vector<_wstring> ModelPrototypeTags;
 
 	for (const auto& file : filesystem::directory_iterator("C:\\Users\\82103\\Desktop\\MapRe\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Meshes"))
-
 	{
 		if (file.is_directory())
 			continue;
 
 		string ext = file.path().extension().string();
 
-		if (strcmp(ext.c_str(), ".fbx"))
-
+		if (strcmp(ext.c_str(), ".bin"))
 			continue;
 
 		_char szFilePath[MAX_PATH] = {};
@@ -676,14 +676,37 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 		_wstring strFileName = L"Prototype_GameObject_" + file.path().stem().wstring();
 
-		/*For Prototype_Component_Model_Auro*/
+		/*For Prototype_Component_Model_*/
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, strFileName,
-			CModel::Create(m_pDevice, m_pContext, szFilePath, MODEL::ENVIROMENT, XMMatrixIdentity(), 0))))
+			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, szFilePath))))
 			return E_FAIL;
 
 		ModelPrototypeTags.push_back(strFileName);
 	}
 
+	//for (const auto& file : filesystem::directory_iterator("C:\\Users\\82103\\Desktop\\MapRe\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Meshes\\3Broom_Kit"))
+	//{
+	//	if (file.is_directory())
+	//		continue;
+
+	//	string ext = file.path().extension().string();
+
+	//	if (strcmp(ext.c_str(), ".fbx"))
+	//		continue;
+
+	//	_char szFilePath[MAX_PATH] = {};
+
+	//	strcpy_s(szFilePath, MAX_PATH, file.path().string().c_str());
+
+	//	_wstring strFileName = L"Prototype_GameObject_" + file.path().stem().wstring();
+
+	//	/*For Prototype_Component_Model_*/
+	//	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, strFileName,
+	//		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, szFilePath))))
+	//		return E_FAIL;
+
+	//	ModelPrototypeTags.push_back(strFileName);
+	//}
 
 	m_strMessage = TEXT("쉐이더를(을) 로딩 중 입니다.");
 
@@ -694,8 +717,16 @@ HRESULT CLoader::Loading_For_MapViewer()
 		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, nullptr, 100, 100))))
 		return E_FAIL;
 
-	/* For.Prototype_GameObject_MapObject */
-	if (FAILED(m_pGameInstance->Add_Prototype<CMapObject>(g_iStaticLevel, CMapObject::Create(m_pDevice, m_pContext))))
+	/* For.Prototype_GameObject_BuildingContainer */
+	if (FAILED(m_pGameInstance->Add_Prototype<CBuildingContainer>(g_iStaticLevel, CBuildingContainer::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_MapObject_Static */
+	if (FAILED(m_pGameInstance->Add_Prototype<CMapObject_Static>(g_iStaticLevel, CMapObject_Static::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_MapObject_LOD */
+	if (FAILED(m_pGameInstance->Add_Prototype<CMapObject_LOD>(g_iStaticLevel, CMapObject_LOD::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Terrain */

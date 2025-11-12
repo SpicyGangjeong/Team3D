@@ -464,8 +464,8 @@ HRESULT CMaterial::Initialize(const _char* pModelFilePath, const SaveMaterial& _
 			_splitpath_s(pModelFilePath, szDrive, MAX_PATH, szDir, MAX_PATH, nullptr, 0, nullptr, 0);
 
 			char szFullPath[MAX_PATH] = {};
-			strcpy_s(szFullPath, szDrive);
-			strcat_s(szFullPath, path.c_str());
+			//(szFullPath, szDrive);
+			strcpy_s(szFullPath, path.c_str());
 
 			_tchar szPerfectPath[MAX_PATH] = {};
 			MultiByteToWideChar(CP_ACP, 0, szFullPath, -1, szPerfectPath, MAX_PATH);
