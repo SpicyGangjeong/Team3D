@@ -35,7 +35,7 @@ public:
 
 private:
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
-	//CGameObject* m_pMission_Panel = { nullptr };
+	CGameObject* m_pMission_Panel = { nullptr };
 	CGameObject* m_pMinimap_Panel = { nullptr };
 	CGameObject* m_pLoading_Panel = { nullptr };
 

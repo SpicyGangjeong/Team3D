@@ -234,7 +234,7 @@ HRESULT CMesh::Initialize_Prototype(HANDLE hFile, DWORD& dwByte)
 
 HRESULT CMesh::Initialize_Prototype(MODEL eType, const CModel* pModel, SaveMesh* _SaveMesh, _fmatrix PreTransformMatrix)
 {
-	strcpy_s(m_szName, _SaveMesh->Name);
+	strcpy_s(m_szName, _SaveMesh->MeshName.c_str());
 
 	m_iMaterialIndex = _SaveMesh->MaterialIndex;
 	m_iNumVertexBuffers = 1;
@@ -454,11 +454,11 @@ HRESULT CMesh::Ready_VertexBuffer_For_Anim(const CModel* pModel, SaveMesh* _Save
 	for (_uint i = 0; i < m_iNumBones; i++)
 	{
 		SaveBone _SaveBone = _SaveMesh->Bones[i];
-		strcpy_s(m_szName, _SaveBone.Name);
+		strcpy_s(m_szName, _SaveBone.BoneName.c_str());
 
 		memcpy(&OffsetMatrix, &_SaveBone.OffsetMatrix, sizeof(_float4x4));
 
-		_int		iBoneIndex = pModel->Get_BoneIndex(_SaveBone.Name);
+		_int		iBoneIndex = pModel->Get_BoneIndex(_SaveBone.BoneName.c_str());
 
 		if (-1 == iBoneIndex)
 			return E_FAIL;

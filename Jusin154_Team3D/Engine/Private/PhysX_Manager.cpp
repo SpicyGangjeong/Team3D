@@ -451,8 +451,9 @@ HRESULT CPhysX_Manager::Initialize()
 	//		}
 	//	}
 	//}
+	//pMaterial->release();
 #endif // ±â¹«¸®
-	pMaterial->release();
+
 	
 
 	return S_OK;

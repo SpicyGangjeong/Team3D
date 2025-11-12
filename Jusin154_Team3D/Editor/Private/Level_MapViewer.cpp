@@ -43,7 +43,7 @@ HRESULT CLevel_MapViewer::Initialize()
 		return E_FAIL;
 	}
 
-	if (FAILED(Ready_Layer_MapObjectManager(TEXT("Layer_MapObjectManager")))) {
+	if (FAILED(Ready_Layer_MapObjectManager(LAYER_MAPOBJECTMANAGER))) {
 		return E_FAIL;
 	}
 

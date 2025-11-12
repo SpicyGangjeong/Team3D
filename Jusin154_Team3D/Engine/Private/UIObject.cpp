@@ -83,6 +83,7 @@ HRESULT CUIObject::Initialize(void* pArg)
 
 	m_bVisible = true;
 
+	m_vNine_Slice = XMVectorSet(-m_fSizeX * 0.5f, m_fSizeX * 0.5f, -m_fSizeY * 0.5f, m_fSizeY * 0.5f);
 
 	return S_OK;
 }
@@ -145,9 +146,24 @@ void CUIObject::SizeUpdate_float(_float3 fSizeXY)
 	m_fSizeY = fSizeXY.y;
 }
 
+void CUIObject::Set_Time(_float fTime)
+{
+	m_fTime = fTime;
+}
+
 void CUIObject::Set_TimeMult(_float Mult)
 {
 	m_fTimeMult = Mult;
+}
+
+_float CUIObject::Get_EndTime()
+{
+	return m_fEndTime;
+}
+
+_float CUIObject::Get_DelayTime()
+{
+	return m_fDelayTime;
 }
 
 _float CUIObject::Get_TimeMult()
@@ -157,11 +173,124 @@ _float CUIObject::Get_TimeMult()
 
 void CUIObject::Visible(_bool bVisible)
 {
+	m_bVisible = bVisible;
 }
 
 _bool CUIObject::Get_Visible()
 {
 	return m_bVisible;
+}
+
+_bool CUIObject::Get_Active()
+{
+	return m_bActive;
+}
+
+_bool CUIObject::Chack_Visible()
+{
+	return _bool();
+}
+
+void CUIObject::Set_FadeIn()
+{
+	m_bFadeIn = true;
+	m_bFadeOut = false;
+}
+
+void CUIObject::Set_FadeOut()
+{
+	m_bFadeIn = false;
+	m_bFadeOut = true;
+}
+
+_bool CUIObject::Get_FadeIn()
+{
+	return m_bFadeIn;
+}
+
+_bool CUIObject::Get_FadeOut()
+{
+	return m_bFadeOut;
+}
+
+void CUIObject::Set_OwnerFadeIn()
+{
+	m_bOwnerFadeIn = true;
+	m_bOwnerFadeOut = false;
+}
+
+void CUIObject::Set_OwnerFadeOut()
+{
+	m_bOwnerFadeIn = false;
+	m_bOwnerFadeOut = true;
+}
+
+_bool CUIObject::Get_OwnerFadeIn()
+{
+	return m_bOwnerFadeIn;
+}
+
+_bool CUIObject::Get_OwnerFadeOut()
+{
+	return m_bOwnerFadeOut;
+}
+
+void CUIObject::Set_Alpha(_float fAlpha)
+{
+	m_fAlpha = fAlpha;
+}
+
+void CUIObject::Set_AlphaTime(_float fAlpha)
+{
+	m_fAlphaTime = fAlpha;
+}
+
+_float CUIObject::Get_Alpha()
+{
+	return m_fAlpha;
+}
+
+_float CUIObject::Get_OwnerAlpha()
+{
+	return m_fOwnerAlpha;
+}
+
+_float CUIObject::Get_AlphaTime()
+{
+	return m_fAlphaTime;
+}
+void CUIObject::Set_U(_float U)
+{
+	m_vUVScale.x = U;
+}
+void CUIObject::Set_V(_float V)
+{
+	m_vUVScale.y = V;
+}
+
+_float2 CUIObject::Get_UV()
+{
+	return m_vUVScale;
+}
+
+void CUIObject::Nine_Slice_Left(_float X)
+{
+	XMVectorSetX(m_vNine_Slice, X);
+}
+
+void CUIObject::Nine_Slice_Right(_float Y)
+{
+	XMVectorSetY(m_vNine_Slice, Y);
+}
+
+void CUIObject::Nine_Slice_Top(_float Z)
+{
+	XMVectorSetZ(m_vNine_Slice, Z);
+}
+
+void CUIObject::Nine_Slice_Bottom(_float W)
+{
+	XMVectorSetW(m_vNine_Slice, W);
 }
 
 _float2 CUIObject::Get_Origin_Position()

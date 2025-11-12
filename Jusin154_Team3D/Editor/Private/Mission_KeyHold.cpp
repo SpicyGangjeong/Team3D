@@ -3,12 +3,12 @@
 #include "GameInstance.h"
 
 CMission_KeyHold::CMission_KeyHold(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-    :CUIObject(pDevice, pContext)
+    :CElementObject(pDevice, pContext)
 {
 }
 
 CMission_KeyHold::CMission_KeyHold(const CMission_KeyHold& rhs)
-    :CUIObject(rhs)
+    :CElementObject(rhs)
 {
 }
 
@@ -21,10 +21,10 @@ HRESULT CMission_KeyHold::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = 90.f;
-	Desc.fY = 747.f;
-	Desc.fSizeX = 104.f;
-	Desc.fSizeY = 104.f;
+	Desc.fX = -296.f;
+	Desc.fY = 158.f;
+	Desc.fSizeX = 86.f;
+	Desc.fSizeY = 86.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -37,22 +37,76 @@ HRESULT CMission_KeyHold::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
+	m_fTimeMult = 1.f;
+	m_fAlpha = 1.f;
+	m_fAlphaTime = 3.f;
 	return S_OK;
 }
 
 void CMission_KeyHold::Priority_Update(_float fTimeDelta)
 {
+	if (!__super::Chack_Visible())
+	{
+		return;
+	}
+	__super::Priority_Update(fTimeDelta);
 }
 
 void CMission_KeyHold::Update(_float fTimeDelta)
 {
+	if (!__super::Chack_Visible())
+	{
+		return;
+	}
+
+	m_fOwnerAlpha = static_cast<CUIObject*>(m_pOwner)->Get_Alpha();
+	m_fCanvasAlpha = static_cast<CUIObject*>(m_pOwner)->Get_OwnerAlpha();
+	if (m_bFadeIn == true)
+	{
+		if (m_fAlpha <= 1.f)
+			m_fAlpha += fTimeDelta * m_fAlphaTime;
+
+		if (m_fAlpha >= 1.f)
+		{
+			m_bFadeIn = false;
+			m_fAlpha = 1.f;
+		}
+	}
+
+	if (m_bFadeOut == true)
+	{
+		if (m_fAlpha >= 0.f)
+			m_fAlpha -= fTimeDelta;
+
+		if (m_fAlpha <= 0.f)
+		{
+			m_bFadeOut = false;
+			m_fAlpha = 0.f;
+		}
+	}
+
+	if (m_pGameInstance->Key_Pressing(DIK_V))
+	{
+		m_fTime += fTimeDelta * m_fTimeMult;
+	}
+	else
+	{
+		m_fTime = 0.f;
+	}
+
+	__super::Update(fTimeDelta);
 }
 
 void CMission_KeyHold::Late_Update(_float fTimeDelta)
 {
+	if (!__super::Chack_Visible())
+	{
+		return;
+	}
 	if (m_bVisible) {
 		_float4* vPos = (_float4*)(m_pTransformCom->Get_WorldMatrixPtr()->m[3]);
 		m_pGameInstance->Add_RenderGroup(RENDER::UI, this, *vPos, m_pTransformCom->Get_Radius());
+		__super::Late_Update(fTimeDelta);
 	}
 }
 
@@ -61,7 +115,7 @@ HRESULT CMission_KeyHold::Render()
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::HOLD)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::HOLD_ROTATION)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
@@ -101,9 +155,25 @@ HRESULT CMission_KeyHold::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fTime", &m_fTime, sizeof(_float))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOwnerAlpha", &m_fOwnerAlpha, sizeof(_float))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCanvasAlpha", &m_fCanvasAlpha, sizeof(_float))))
+	{
+		return E_FAIL;
+	}
 	return S_OK;
 }
+
 
 HRESULT CMission_KeyHold::Ready_Components(void* pArg)
 {

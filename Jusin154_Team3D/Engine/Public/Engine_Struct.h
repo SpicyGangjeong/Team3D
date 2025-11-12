@@ -55,110 +55,121 @@ typedef struct tagShadowLight
 	_float		fWidth{}, fHeight{}, fNear{}, fFar{};
 }SHADOW_LIGHT_DESC;
 
-typedef struct tagSaveVertex
+struct SaveVertex
 {
-	XMFLOAT3 Pos = {};
-	XMFLOAT3 Normal = {};
-	XMFLOAT3 Tan = {};
-	XMFLOAT3 BiNoraml = {};
-	XMFLOAT2 UV = {};
+	XMFLOAT3 Pos;
+	XMFLOAT3 Normal;
+	XMFLOAT3 Tan;
+	XMFLOAT3 BiNoraml;
+	XMFLOAT2 UV;
 
-	_bool bHasNormal = {};
-	_bool bHasTan = {};
-	_bool bHasUV = {};
+	bool bHasNormal;
+	bool bHasTan;
+	bool bHasUV;
 
-	XMUINT4 BlendIndex = {};
-	XMFLOAT4 BlendWeight = {};
-}SaveVertex;
+	XMUINT4 BlendIndex;
+	XMFLOAT4 BlendWeight;
+};
 
-typedef struct tagSaveBoneWeight
+struct SaveBoneWeight
 {
-	_uint VertexId = {};
-	_float Weight = {};
-}SaveBoneWeight;
+	unsigned int VertexId = {};
+	float Weight = {};
+};
 
-typedef struct tagSaveBone
+struct SaveBone
 {
-	_char Name[64] = {};
-	XMFLOAT4X4 OffsetMatrix = {};
-	_int BoneIndex = {};
-	_uint WeightsCount = {};
+	string BoneName;
+
+	unsigned int BoneNameSize = {};
+	XMFLOAT4X4 OffsetMatrix;
+	int BoneIndex = {};
+	unsigned int WeightsCount = {};
 	vector<SaveBoneWeight>Weights = {};
-}SaveBone;
+};
 
-typedef struct tagSaveNode
+struct SaveNode
 {
-	_char Name[64] = {};
-	_int ParentIndex = {};
-	_uint ChildrenCount = {};
-	XMFLOAT4X4 Transformation = {};
-	vector<_int> ChildrenIndices = {};
-}SaveNode;
+	string NodeName;
 
-typedef struct tagSaveMesh
+	unsigned int NodeNameSize = {};
+	int ParentIndex = {};
+	unsigned int ChildrenCount = {};
+	XMFLOAT4X4 Transformation;
+	vector<int> ChildrenIndices;
+};
+
+struct SaveMesh
 {
-	_char Name[64] = {};
-	_uint VertexCount = {};
-	_uint IndexCount = {};
-	_uint MaterialIndex = {};
-	_uint BoneCount = {};
+	string MeshName;
 
-	vector<SaveVertex> Vertices = {};
-	vector<_uint> Indices = {};
+	unsigned int MeshNameSize = {};
+	unsigned int VertexCount = {};
+	unsigned int IndexCount = {};
+	unsigned int MaterialIndex = {};
+	unsigned int BoneCount = {};
 
-	vector<SaveBone> Bones = {};
-}SaveMesh;
+	vector<SaveVertex> Vertices;
+	vector<unsigned int> Indices;
 
-typedef struct tagSaveMaterial
+	vector<SaveBone> Bones;
+};
+
+struct SaveMaterial
 {
-	vector<string> Path[27] = {};
+	vector<string> Path[27];
 
-}SaveMaterial;
+};
 
-typedef struct tagSaveKeyFrameVec
+struct SaveKeyFrameVec
 {
-	_float Time = {};
-	XMFLOAT3 Value = {};
-}SaveKeyFrameVec;
+	float Time;
+	XMFLOAT3 Value;
+};
 
-typedef struct tagSaveKeyFrameRotation
+struct SaveKeyFrameRotation
 {
-	_float Time = {};
-	XMFLOAT4 Value = {};
-}SaveKeyFrameRotation;
+	float Time;
+	XMFLOAT4 Value;
+};
 
-typedef struct tagSaveChannel
+struct SaveChannel
 {
-	_char Name[64] = { };
-	_uint ScalingKeyCount = { };
-	_uint RotationKeyCount = { };
-	_uint PositionKeyCount = { };
+	string ChannelName;
 
-	vector<SaveKeyFrameVec> ScalingKeys = {};
-	vector<SaveKeyFrameRotation> RotationKeys = {};
-	vector<SaveKeyFrameVec> PositionKeys = {};
-}SaveChannel;
+	unsigned int ChannelNameSize = {};
+	unsigned int ScalingKeyCount = { };
+	unsigned int RotationKeyCount = { };
+	unsigned int PositionKeyCount = { };
 
-typedef struct tagSaveAnimation
+	vector<SaveKeyFrameVec> ScalingKeys;
+	vector<SaveKeyFrameRotation> RotationKeys;
+	vector<SaveKeyFrameVec> PositionKeys;
+};
+
+struct SaveAnimation
 {
-	_char Name[128] = {};
-	_float mDuration = {};
-	_float mTicksPerSecond = {};
-	_uint ChannelCount = {};
-	vector<SaveChannel> Channels = {};
-}SaveAnimation;
+	string AnimName;
 
-typedef struct tagSaveModel
+	unsigned int AnimNameSize = {};
+	float mDuration = {};
+	float mTicksPerSecond = {};
+	unsigned int ChannelCount = {};
+	vector<SaveChannel> Channels;
+};
+
+struct SaveModel
 {
-	_uint MeshCount = {};
-	_uint MaterialCount = {};
-	_uint AnimationCount = {};
-	_uint NodeCount = {};
-	vector<SaveMesh> Meshes = {};
-	vector<SaveMaterial> Materials = {};
-	vector<SaveAnimation> Animations = {};
-	vector<SaveNode>Nodes = {};
-}SaveModel;
+	unsigned int MeshCount = {};
+	unsigned int MaterialCount = {};
+	unsigned int AnimationCount = {};
+	unsigned int NodeCount = {};
+	vector<SaveMesh> Meshes;
+	vector<SaveMaterial> Materials;
+	vector<SaveAnimation> Animations;
+	vector<SaveNode>Nodes;
+};
+
 
 #pragma region VTX
 
