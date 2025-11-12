@@ -85,7 +85,7 @@ struct SaveBone
 	XMFLOAT4X4 OffsetMatrix;
 	int BoneIndex = {};
 	unsigned int WeightsCount = {};
-	vector<SaveBoneWeight>Weights;
+	vector<SaveBoneWeight>Weights = {};
 };
 
 struct SaveNode

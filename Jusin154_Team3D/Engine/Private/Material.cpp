@@ -196,11 +196,14 @@ HRESULT CMaterial::Read_MaterialFile(const _char* pMaterialFilePath, const _char
 					/* Texture */
 				case 1:
 					// value
-					iBeginIndex = (_uint)strText.find("Environment");
+					iBeginIndex = (_uint)strText.find("/");
 					iEndIndex = (_uint)strText.find('.');
 
 					if (256 < iBeginIndex || 256 < iEndIndex)
+					{
 						Value = "none";
+						return S_OK;
+					}
 					else
 						Value = strText.substr(iBeginIndex, iEndIndex - iBeginIndex);
 
@@ -258,7 +261,7 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 	else if (!strcmp(FileType.c_str(), "MROH"))
 		eTexture = aiTextureType::aiTextureType_METALNESS;
 	else if (!strcmp(FileType.c_str(), "MROA"))
-		eTexture = aiTextureType::aiTextureType_DIFFUSE_ROUGHNESS;
+		eTexture = aiTextureType::aiTextureType_SPECULAR;
 	else if (!strcmp(FileType.c_str(), "SRO"))
 		eTexture = aiTextureType::aiTextureType_SPECULAR;
 	else if (!strcmp(FileType.c_str(), "SROH"))
@@ -268,7 +271,7 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 	else if (!strcmp(FileType.c_str(), "HDR"))
 		return S_OK;
 	else if (!strcmp(FileType.c_str(), "MSK"))
-		eTexture = aiTextureType::aiTextureType_MAYA_BASE;
+		eTexture = aiTextureType::aiTextureType_AMBIENT_OCCLUSION;
 	else if (!strcmp(FileType.c_str(), "basecolor"))
 		eTexture = aiTextureType::aiTextureType_DIFFUSE;
 	else if (!strcmp(FileType.c_str(), "E"))
@@ -312,7 +315,33 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 		strTexturePath = CMyTools::ToString(szTextureFilePath);
 	}
 
-	m_SaveMaterial.Path[ENUM_CLASS(eTexture)].push_back(strTexturePath);
+	_string strPrefix = "../Bin/Resources/Models/MapMesh/";
+	_string strSearchString = "MeshTable";
+	_string strResultPath = {};
+
+	size_t mapRePos = strTexturePath.find(strSearchString);
+
+	if (mapRePos != std::string::npos) 
+	{
+		size_t startPos = mapRePos + strSearchString.length();
+
+		// 'MapRe' 뒤에 오는 경로 건너뛰기
+		if (startPos < strTexturePath.length() &&
+			(strTexturePath[startPos] == '\\' || strTexturePath[startPos] == '/')) {
+			startPos++;
+		}
+
+		// 'MapRe' 이후의 나머지 경로를 추출
+		strResultPath = strPrefix + strTexturePath.substr(startPos);
+	}
+	else
+	{
+		MSG_BOX("FAILED to Find Path");
+	}
+
+	replace(strResultPath.begin(), strResultPath.end(), '\\', '/');
+
+	m_SaveMaterial.Path[ENUM_CLASS(eTexture)].push_back(strResultPath);
 	m_SRVs[ENUM_CLASS(eTexture)].push_back(pSRV);
 
 	return S_OK;
