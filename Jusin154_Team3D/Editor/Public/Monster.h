@@ -16,7 +16,7 @@ public:
 	typedef struct tagObjectDesc
 	{
 		const _tchar* pModelPrototypeTag;
-	}OBJECT_DESC;
+	}PARTS_OBJECT_DESC;
 private:
 	CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CMonster(const CMonster& Prototype);

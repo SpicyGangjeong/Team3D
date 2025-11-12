@@ -283,9 +283,9 @@ void CModel::Get_BoneMatrices(_float4x4* pOut)
 	}
 }
 
-void CModel::Reset_CurrentTrackPosition()
+void CModel::Set_CurrentTrackPosition(_float TrackPosition)
 {
-	m_Animations[m_iCurrentAnimIndex]->Reset_CurrentTrackPosition();
+	m_Animations[m_iCurrentAnimIndex]->Set_CurrentTrackPosition(TrackPosition);
 }
 
 const _char* CModel::Get_AnimList(_uint iIndex)

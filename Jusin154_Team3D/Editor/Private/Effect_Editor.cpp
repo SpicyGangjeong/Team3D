@@ -61,7 +61,7 @@ HRESULT CEffect_Editor::Ready_Components(void* pArg)
 
 HRESULT CEffect_Editor::Ready_Child()
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEditEffect>(ENUM_CLASS(LEVEL::EFFECT), NEXT_LEVEL, LAYER_EFFECT , nullptr ,this , &m_pEditEffect)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEditEffect>(ENUM_CLASS(LEVEL::EFFECT), NEXT_LEVEL, LAYER_EFFECT , nullptr ,this , reinterpret_cast<CEditEffect**>(&m_pEditEffect))))
 		return E_FAIL;
 
 	return S_OK;
