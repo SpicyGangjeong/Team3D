@@ -185,7 +185,7 @@ HRESULT CChannel::Initialize(HANDLE hFile, DWORD& dwByte)
 
 HRESULT CChannel::Initialize(const CModel* pModel, SaveChannel* pSaveChannel)
 {
-	strcpy_s(m_szName, pSaveChannel->Name);
+	strcpy_s(m_szName, pSaveChannel->ChannelName.c_str());
 
 	m_iBoneIndex = pModel->Get_BoneIndex(m_szName);
 	m_PreTransformMatrix = pModel->Get_PreTransformMatrix();

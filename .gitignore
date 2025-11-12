@@ -35,6 +35,7 @@ x64/
 Release/
 Debug/
 Inc/
+Jusin154_Team3D/Client/Bin/Resources/
 
 # Imgui 임시 파일
 imgui.ini

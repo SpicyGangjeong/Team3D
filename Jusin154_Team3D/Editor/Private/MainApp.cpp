@@ -108,9 +108,12 @@ HRESULT CMainApp::Ready_IMGUI()
 	ImGui_ImplWin32_Init(g_hWnd);
 	ImGui_ImplDX11_Init(m_pDevice, m_pContext);
 
-	string strFontTag = "C:\\Windows\\Fonts\\malgun.ttf";
-	//string strFontTag = "../Bin/Resources/Fonts/SHOWG.TTF";
-
+	//string strFontTag = "C:\\Windows\\Fonts\\malgun.ttf";
+	string strFontTag = "../Bin/Resources/Fonts/malgunsl.TTF";
+	ImFontConfig cfg;
+	cfg.OversampleH = 2;  // 가독성 향상
+	cfg.OversampleV = 2;
+	cfg.PixelSnapH = true;
 	ifstream ifile;
 
 	ifile.open(strFontTag);
@@ -119,6 +122,7 @@ HRESULT CMainApp::Ready_IMGUI()
 		font = io.Fonts->AddFontFromFileTTF(strFontTag.c_str(), 16.f, NULL, io.Fonts->GetGlyphRangesKorean());
 	}
 	IM_ASSERT(font != NULL);
+	io.FontDefault = font;
 	return S_OK;
 }
 

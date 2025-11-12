@@ -14,7 +14,7 @@ CRigidBody::CRigidBody(const CRigidBody& rhs):
 	m_eActorType(rhs.m_eActorType),
 	m_vhalfGeometryInfo(rhs.m_vhalfGeometryInfo),
 	m_pShape(rhs.m_pShape),
-	m_pMeshKey(rhs.m_pMeshKey),
+	m_wstrMeshKey(rhs.m_wstrMeshKey),
 	m_bExclusive(rhs.m_bExclusive),
 	m_bKinematic(rhs.m_bKinematic)
 {
@@ -44,9 +44,8 @@ HRESULT CRigidBody::Initialize_Prototype(RIGIDBODY_PROTOTYPEDESC& Desc)
 		break;
 	case ACTOR::TRIANGLEMESH:
 		{
-			m_pGameInstance->Create_TriangleMesh(Desc.tRigidStaticDesc.pMeshKey, Desc.tRigidStaticDesc.pMesh);
 			m_pMaterial = m_pGameInstance->Get_Material(Desc.tRigidDynamicDesc.vMatInfo);
-			m_pMeshKey = Desc.tRigidStaticDesc.pMeshKey;
+			m_wstrMeshKey = CMyTools::ToWstring(Desc.tRigidStaticDesc.szMeshName);
 		}
 		break;
 	case ACTOR::HEIGHTFIELD:
@@ -54,6 +53,7 @@ HRESULT CRigidBody::Initialize_Prototype(RIGIDBODY_PROTOTYPEDESC& Desc)
 	default:
 		break;
 	}
+		return S_OK;
 	return S_OK;
 }
 

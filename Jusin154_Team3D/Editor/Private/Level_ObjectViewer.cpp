@@ -152,36 +152,39 @@ void CLevel_ObjectViewer::Category_ModelList(const _char* Category)
 					}
 				}
 			}
-			GUI::EndTabItem();
 		}
+		GUI::EndTabItem();
 	}
 }
 
 void CLevel_ObjectViewer::Category_PartsModelList(const _char* Category, const _char* Layer)
 {
-	if (!m_HumanRoot)
+	if (m_pGameInstance->BinaryModelFilePathCount() > 0)
 	{
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRootModelPart>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, TEXT("Layer_Root"), nullptr, nullptr, reinterpret_cast<CRootModelPart**>(&m_HumanRoot))))
-			return;
-	}
-	for (_uint i = 0; i < m_pGameInstance->BinaryModelFilePathCount(); i++)
-	{
-		const _char* szCategory = m_pGameInstance->Load_BinaryModelFilePath(i);
-
-		if (strstr(szCategory, Category))
+		if (!m_HumanRoot)
 		{
-			if (GUI::Button(szCategory))
+			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRootModelPart>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, TEXT("Layer_Root"), nullptr, nullptr, reinterpret_cast<CRootModelPart**>(&m_HumanRoot))))
+				return;
+		}
+		for (_uint i = 0; i < m_pGameInstance->BinaryModelFilePathCount(); i++)
+		{
+			const _char* szCategory = m_pGameInstance->Load_BinaryModelFilePath(i);
+
+			if (strstr(szCategory, Category))
 			{
-				Save_LayerName(Layer);
+				if (GUI::Button(szCategory))
+				{
+					Save_LayerName(Layer);
 
-				CGameObject* pTempObject = { nullptr };
+					CGameObject* pTempObject = { nullptr };
 
-				CDummyObject::PARTS_OBJECT_DESC Desc = {};
+					CDummyObject::PARTS_OBJECT_DESC Desc = {};
 
-				Desc.pModelPrototypeTag = Save_ModelName(szCategory);
+					Desc.pModelPrototypeTag = Save_ModelName(szCategory);
 
-				dynamic_cast<CRootModelPart*>(m_HumanRoot)->Set_PrototypeModelName(Desc.pModelPrototypeTag);
-				dynamic_cast<CRootModelPart*>(m_HumanRoot)->Set_ModelName(szCategory);
+					dynamic_cast<CRootModelPart*>(m_HumanRoot)->Set_PrototypeModelName(Desc.pModelPrototypeTag);
+					dynamic_cast<CRootModelPart*>(m_HumanRoot)->Set_ModelName(szCategory);
+				}
 			}
 		}
 	}
@@ -359,8 +362,8 @@ HRESULT CLevel_ObjectViewer::Ready_Layer_UI(const _wstring& strLayerTag)
 
 HRESULT CLevel_ObjectViewer::Ready_Layer_Dummy(const _wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_Cube>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE)))
-		return E_FAIL;
+	/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_Cube>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE)))
+		return E_FAIL;*/
 
 	return S_OK;
 }

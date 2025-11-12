@@ -178,10 +178,20 @@ public:
 #pragma endregion
 #pragma region PhysX_Manager
 	PSX::PxMaterial* Get_Material(_float3& vMatInfo);
-	HRESULT Create_TriangleMesh(const _wstring& wstrMeshKey, CMesh* pMesh);
+	void RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh);
 	PSX::PxShape* Create_Shape(ACTOR eType, _float3& vhalfGeometryInfo, PSX::PxMaterial& pxMaterial, _bool bExclusive = false, PSX::PxShapeFlags ePxShapeFlag = PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE);
 	const PSX::PxRigidDynamic* Add_DynamicActor(CRigidBody& RigidBody);
 	const PSX::PxRigidStatic* Add_StaticActor(CRigidBody& RigidBody);
+
+
+	PSX::PxController*	Add_CapsuleController(PSX::PxCapsuleControllerDesc& Desc);
+	PSX::PxController*	Add_BoxController(PSX::PxBoxControllerDesc& Desc);
+	PSX::PxController*	Get_Controller(_uint iControllerIndex);
+	void				ReleaseController(_uint iControllerIndex);
+
+	HRESULT ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix);
+	HRESULT SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
+	HRESULT LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
 #pragma endregion
 
 

@@ -157,10 +157,16 @@
     <Filter Include="50.UI\GamePlay_Canvas\Loding_Panel\LoadingWidget_Flame">
       <UniqueIdentifier>{c347da03-98f1-4095-a4e4-2c840c308916}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Dummys\PhysXBox">
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX">
+      <UniqueIdentifier>{de3719fe-5a3a-45bd-ae8f-67533b8150fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\PhysXPlayable">
+      <UniqueIdentifier>{ad93e84b-166d-4ba2-9103-f4fe0171b2ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\PhysXBox">
       <UniqueIdentifier>{c7e7d3c7-fd26-4035-88b4-11233459559c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Dummys\PhysXMesh">
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\PhysXMesh">
       <UniqueIdentifier>{15a9dfe7-f3f7-4906-8bd4-91734f4ddc92}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Env\00.Manger">
@@ -180,6 +186,9 @@
     </Filter>
     <Filter Include="02.GameObjects\Env\02.MapObject\LOD">
       <UniqueIdentifier>{34fa4d78-8091-44cf-b4b4-59db9fd56d98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\PhysXObstacle">
+      <UniqueIdentifier>{fbe2856d-a829-4563-a9f1-00adc4029c65}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -328,10 +337,10 @@
       <Filter>01.Level\60.PhysXLab</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Dummy_PhysXBox.h">
-      <Filter>02.GameObjects\Dummys\PhysXBox</Filter>
+      <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXBox</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Dummy_PhysXMesh.h">
-      <Filter>02.GameObjects\Dummys\PhysXMesh</Filter>
+      <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXMesh</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\LoadingWidget.h">
       <Filter>50.UI\GamePlay_Canvas\Loding_Panel\LoadingWidget</Filter>
@@ -368,6 +377,9 @@
     </ClInclude>
     <ClInclude Include="..\public\MapObject_LOD.h">
       <Filter>02.GameObjects\Env\02.MapObject\LOD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dummy_PhysXPlayable.h">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXPlayable</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -509,10 +521,10 @@
       <Filter>02.GameObjects\Monster</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Dummy_PhysXBox.cpp">
-      <Filter>02.GameObjects\Dummys\PhysXBox</Filter>
+      <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXBox</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Dummy_PhysXMesh.cpp">
-      <Filter>02.GameObjects\Dummys\PhysXMesh</Filter>
+      <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXMesh</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\LoadingWidget.cpp">
       <Filter>50.UI\LoadingWidget</Filter>
@@ -552,6 +564,9 @@
     </ClCompile>
     <ClCompile Include="..\private\MapObject_LOD.cpp">
       <Filter>02.GameObjects\Env\02.MapObject\LOD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_PhysXPlayable.cpp">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXPlayable</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -65,6 +65,8 @@
 #pragma region PHYSX_HEADER
 
 #include "Dummy_PhysXBox.h"
+#include "Dummy_PhysXPlayable.h"
+#include "Dummy_PhysXMesh.h"
 
 #pragma endregion 
 
@@ -78,7 +80,7 @@ CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	SAFE_ADDREF(m_pContext);
 }
 
-unsigned int APIENTRY LoadingMain(void* pArg)
+_uint APIENTRY LoadingMain(void* pArg)
 {
 	CLoader* pLoader = static_cast<CLoader*>(pArg);
 
@@ -209,11 +211,6 @@ HRESULT CLoader::Loading_For_Logo()
 			VTX_POS_INSTANCE_PARTICLE::Elements, VTX_POS_INSTANCE_PARTICLE::iNumElements)))) {
 		return E_FAIL;
 	}
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Desc_Box"),
-		CModel::Create(m_pDevice, m_pContext, "../Bin/Resources/Models/Box/Box.fbx", MODEL::NONANIM, XMMatrixIdentity(), 0))))
-		return E_FAIL;
-
 
 	m_strMessage = TEXT("Prototype Loading..");
 
@@ -502,22 +499,77 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 
 		m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), CRigidBody::Create(m_pDevice, m_pContext, Desc));
 	}
-	//{
-	//	CRigidBody::RIGIDBODY_PROTOTYPEDESC Desc{};
-	//	Desc.tRigidStaticDesc.pMesh;
-	//	Desc.tRigidStaticDesc.vMatInfo = { 0.5f, 0.5f, 0.6f };
-	//	Desc.tRigidStaticDesc.pMeshKey = TEXT("PHYSX_STATIC_MESH");
-	//}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_River_Col_Model"),
+		//CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, "../Bin/Resources/Models/River/River.fbx", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixIdentity())))){
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, "../Bin/Resources/Models/River/River.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixIdentity())))){
+		return E_FAIL;
+	}
+
+	{
+		CModel* pModel = (CModel*)m_pGameInstance->Find_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_River_Col_Model"));
+		_uint iNumMesh = pModel->Get_NumMeshes();
+
+		CRigidBody::RIGIDBODY_PROTOTYPEDESC Desc{};
+		for (_uint i = 0; i < iNumMesh; ++i) {
+			Desc.eType = ACTOR::TRIANGLEMESH;
+			Desc.tRigidStaticDesc.szMeshName = pModel->Get_MeshName(i);
+			Desc.tRigidStaticDesc.vMatInfo = _float3(0.5f, 0.5f, 0.6f);
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, CMyTools::ToWstring(Desc.tRigidStaticDesc.szMeshName).c_str(), CRigidBody::Create(m_pDevice, m_pContext, Desc)))) {
+				return E_FAIL;
+			}
+		}
+	}
+	{
+		m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), CCharacter_Controller::Create(m_pDevice, m_pContext));
+	}
 
 	m_strMessage = TEXT("Texture Loading..");
 
 	m_strMessage = TEXT("Model Loading..");
+
+#ifdef 기무리
+	for (const auto& file : filesystem::directory_iterator("C:\\Users\\82103\\Desktop\\MapRe\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Meshes"))
+	{
+		if (file.is_directory())
+			continue;
+
+		string ext = file.path().extension().string();
+
+		if (strcmp(ext.c_str(), ".bin"))
+			continue;
+
+		_char szFilePath[MAX_PATH] = {};
+
+		strcpy_s(szFilePath, MAX_PATH, file.path().string().c_str());
+
+		_wstring strFileName = L"Prototype_GameObject_" + file.path().stem().wstring();
+
+		/*For Prototype_Component_Model_*/
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, strFileName,
+			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, szFilePath))))
+			return E_FAIL;
+
+		ModelPrototypeTags.push_back(strFileName);
+	}
+#endif // 기무리
+
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Steve_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Steve/Steve.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixIdentity()))))
+		return E_FAIL;
 
 	m_strMessage = TEXT("Shader Loading..");
 
 	m_strMessage = TEXT("Prototype Loading..");
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXBox>(g_iStaticLevel, CDummy_PhysXBox::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXPlayable>(g_iStaticLevel, CDummy_PhysXPlayable::Create(m_pDevice, m_pContext)))){
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXMesh>(g_iStaticLevel, CDummy_PhysXMesh::Create(m_pDevice, m_pContext)))){
 		return E_FAIL;
 	}
 
@@ -597,10 +649,6 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_GoblinBody_Model"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Monster/Goblin/GoblinBody.bin", XMMatrixScaling(0.001f, 0.001f, 0.001f) * XMMatrixIdentity()))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Steve_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Steve/Steve.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixIdentity()))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_TombProtector_Model"),
@@ -683,7 +731,6 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 		ModelPrototypeTags.push_back(strFileName);
 	}
-
 	//for (const auto& file : filesystem::directory_iterator("C:\\Users\\82103\\Desktop\\MapRe\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Meshes\\3Broom_Kit"))
 	//{
 	//	if (file.is_directory())
