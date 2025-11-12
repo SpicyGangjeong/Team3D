@@ -101,7 +101,7 @@ void CRootModelPart::Change_Model(_uint iIndex)
 	pModel->Set_CurrentTrackPosition(m_fTrackPosition);                                                                                                            
 	pModel->Play_Animation(0.f);
 
-	if (iIndex == 0)
+	if (iIndex == ENUM_CLASS(PARTSTYPE::HEAD))
 	{
 		Set_MainModel(m_ModelParts[iIndex]->Get_Component<CModel>());
 	}

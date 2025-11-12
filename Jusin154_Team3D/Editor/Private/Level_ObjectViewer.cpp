@@ -62,40 +62,82 @@ void CLevel_ObjectViewer::Add_Object()
 
 	if (GUI::BeginTabBar("ObjectTabs"))
 	{
-		Add_Human();
-
+		Add_Parts();
 	}
 	GUI::EndTabBar();
 	GUI::End();
 
 }
 
-void CLevel_ObjectViewer::Add_Human()
+void CLevel_ObjectViewer::Add_Parts()
 {
-	if (GUI::BeginTabItem("Head"))
+	if (GUI::BeginTabItem("Male"))
 	{
-		Category_PartsModelList("Human/Head", "Head");
+		if (GUI::BeginTabBar("##MaleTabBar"))
+		{
+			if (GUI::BeginTabItem("Head"))
+			{
+				Category_PartsModelList("Human/Head/Male", "Head");
 
+				GUI::EndTabItem();
+			}
+			_bool bDisabled = {};
+			if (m_HumanRoot)
+				bDisabled = (m_HumanRoot->Get_MainModel());
+			if (!bDisabled) GUI::BeginDisabled();
+			if (GUI::BeginTabItem("Body"))
+			{
+				Category_PartsModelList("Human/Body/Male", "Body");
+
+				GUI::EndTabItem();
+			}
+
+			if (GUI::BeginTabItem("Hair"))
+			{
+				Category_PartsModelList("Human/Hair/Male", "Hair");
+
+				GUI::EndTabItem();
+			}
+			if (!bDisabled) GUI::EndDisabled();
+			GUI::EndTabBar();
+		}
 		GUI::EndTabItem();
 	}
-	_bool bDisabled = {};
-	if (m_HumanRoot)
-		bDisabled = (m_HumanRoot->Get_MainModel());
-	if (!bDisabled) GUI::BeginDisabled();
-	if (GUI::BeginTabItem("Body"))
-	{
-		Category_PartsModelList("Human/Body", "Body");
 
+	if (GUI::BeginTabItem("FeMale"))
+	{
+		if (GUI::BeginTabBar("##FeMaleTabBar")) 
+		{
+			if (GUI::BeginTabItem("Head"))
+			{
+				Category_PartsModelList("Human/Head/FeMale", "Head");
+
+				GUI::EndTabItem();
+			}
+			_bool bDisabled = {};
+			if (m_HumanRoot)
+				bDisabled = (m_HumanRoot->Get_MainModel());
+			if (!bDisabled) GUI::BeginDisabled();
+			if (GUI::BeginTabItem("Body"))
+			{
+				Category_PartsModelList("Human/Body/FeMale", "Body");
+
+				GUI::EndTabItem();
+			}
+
+			if (GUI::BeginTabItem("Hair"))
+			{
+				Category_PartsModelList("Human/Hair/FeMale", "Hair");
+
+				GUI::EndTabItem();
+			}
+			if (!bDisabled) GUI::EndDisabled();
+			GUI::EndTabBar();
+		}
 		GUI::EndTabItem();
 	}
 
-	if (GUI::BeginTabItem("Hair"))
-	{
-		Category_PartsModelList("Human/Hair", "Hair");
-
-		GUI::EndTabItem();
-	}
-	if (!bDisabled) GUI::EndDisabled();
+	
 }
 
 void CLevel_ObjectViewer::Show_ModelFilePath()
@@ -183,11 +225,11 @@ void CLevel_ObjectViewer::Category_PartsModelList(const _char* Category, const _
 
 					_uint iIndex = 0;
 					if (strstr(szCategory,"Head"))
-						iIndex = 0;
+						iIndex = ENUM_CLASS(CRootModelPart::PARTSTYPE::HEAD);
 					else if (strstr(szCategory,"Body"))
-						iIndex = 1;
+						iIndex = ENUM_CLASS(CRootModelPart::PARTSTYPE::BODY);
 					else if (strstr(szCategory,"Hair"))
-						iIndex = 2;
+						iIndex = ENUM_CLASS(CRootModelPart::PARTSTYPE::HAIR);
 
 					m_HumanRoot->Change_Model(iIndex);
 				}
@@ -287,6 +329,13 @@ void CLevel_ObjectViewer::Object_Setting()
 
 			if (GUI::Button("Add Event"))
 			{
+				m_fAnimFrame = m_HumanRoot->Get_MainModel()->Get_CurrentTrackPosition();
+			}
+
+			GUI::DragFloat("Anim Frame", &m_fAnimFrame);
+			GUI::SameLine();
+			if(GUI::Button("Event"))
+			{
 				ImDrawList* draw = ImGui::GetForegroundDrawList();
 				ImVec2 center = ImGui::GetMainViewport()->GetCenter();
 				float scale = 50.f;
@@ -304,7 +353,7 @@ void CLevel_ObjectViewer::Object_Setting()
 		}
 
 		if (m_HumanRoot)
-			m_HumanRoot->Get_ModelParts(2)->Describe_Entity();
+			m_HumanRoot->Get_ModelParts(ENUM_CLASS(CRootModelPart::PARTSTYPE::HAIR))->Describe_Entity();
 	}
 
 	GUI::End();
