@@ -109,13 +109,13 @@ HRESULT CMission_Panel::Ready_Components(void* pArg)
 
 HRESULT CMission_Panel::Ready_Element(void* pArg)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMissionBanner_Border>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &m_pMissionBanner_Border)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMissionBanner_Border>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMissionBanner_Border**>(&m_pMissionBanner_Border))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("MissionBanner_Border"), m_pMissionBanner_Border);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMissionBanner_Key>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &m_pMissionBanner_Key)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMissionBanner_Key>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMissionBanner_Key**>(&m_pMissionBanner_Key))))
 	{
 		return E_FAIL;
 	}
@@ -127,19 +127,19 @@ HRESULT CMission_Panel::Ready_Element(void* pArg)
 	}
 	Add_Element(TEXT("Mission_KeyHold"), m_pMission_KeyHold);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMission_Key>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &m_pMission_Key)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMission_Key>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMission_Key**>(&m_pMission_Key))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Mission_Key"), m_pMission_Key);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMission_Icon>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &m_pMission_Icon)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMission_Icon>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMission_Icon**>(&m_pMission_Icon))))
 	{
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Mission_Icon"), m_pMission_Icon);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CActive_Icon>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &m_pActive_Icon)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CActive_Icon>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CActive_Icon**>(&m_pActive_Icon))))
 	{
 		return E_FAIL;
 	}

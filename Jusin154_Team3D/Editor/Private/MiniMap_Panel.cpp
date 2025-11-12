@@ -100,7 +100,7 @@ HRESULT CMiniMap_Panel::Ready_Components(void* pArg)
 
 HRESULT CMiniMap_Panel::Ready_Element(void* pArg)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMiniMap_TrimBorder>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &m_pMiniMap_TrimBorder)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMiniMap_TrimBorder>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CMiniMap_TrimBorder**>(&m_pMiniMap_TrimBorder))))
 	{
 		return E_FAIL;
 	}
