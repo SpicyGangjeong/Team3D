@@ -639,7 +639,6 @@ HRESULT CMapObject_Manager::Load_ContainerData(const _char* pFileName, const _ch
 
 	}
 #pragma endregion
-	SAFE_RELEASE(pContainerObject);
 
 	return S_OK;
 }

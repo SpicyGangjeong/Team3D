@@ -394,21 +394,15 @@ HRESULT CModel::Ready_Materials_FromFile(const aiScene* pAIScene, const _char* p
 	vector<_string> MaterialFilePathes;
 	string strFolderPath = pModelFilePath;
 
-	size_t iFolderPos = strFolderPath.find("Environment");
+	size_t iFolderPos = strFolderPath.find("MeshTable");
 
-	strFolderPath = strFolderPath.substr(0, iFolderPos);
+	strFolderPath = strFolderPath.substr(0, iFolderPos) + "MeshTable/";
 
 	_splitpath_s(pModelFilePath, szDrive, MAX_PATH, szDir, MAX_PATH, szFileName, MAX_PATH, nullptr, 0);
 
-	string FileName = szFileName;
-
-	auto iPos = FileName.find_last_of('.');
-
-	FileName = FileName.substr(0, iPos);
-
 	strcpy_s(szMeshFilePath, szDrive);
 	strcat_s(szMeshFilePath, szDir);
-	strcat_s(szMeshFilePath, FileName.c_str());
+	strcat_s(szMeshFilePath, szFileName);
 	strcat_s(szMeshFilePath, ".props.txt");
 
 	ifstream file(szMeshFilePath);
@@ -430,17 +424,19 @@ HRESULT CModel::Ready_Materials_FromFile(const aiScene* pAIScene, const _char* p
 	{
 		getline(file, strText);
 
-		// value
-		_uint iBeginIndex = (_uint)strText.find("Environment");
-		_uint iEndIndex = (_uint)strText.find('.');
-
-		if ((_uint)strText.size() < iEndIndex - iBeginIndex)
+		_int iBeginIndex = (_int)strText.find_first_of("/");
+		_int iEndIndex = (_int)strText.find('.');
+		if (-1 == iBeginIndex || -1 == iEndIndex) {
+			MSG_BOX("Fail Path _ NotExist"); // Not Exsist
+			return E_FAIL;
+		}
+		if ((_int)strText.size() < iEndIndex - iBeginIndex)
 		{
 			MSG_BOX("Fail Path");
 			return E_FAIL;
 		}
 
-		string	strPath = strFolderPath + strText.substr(iBeginIndex, iEndIndex - iBeginIndex);
+		string	strPath = strFolderPath + strText.substr(iBeginIndex + 1, iEndIndex - iBeginIndex - 1);
 		MaterialFilePathes.push_back(strPath);
 	}
 
