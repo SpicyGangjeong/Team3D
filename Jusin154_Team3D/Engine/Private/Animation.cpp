@@ -189,7 +189,7 @@ HRESULT CAnimation::Initialize(const CModel* pModel, SaveAnimation* pSaveAnimati
 {
 	m_pSaveAnim = pSaveAnimation;
 
-	strcpy_s(m_szName, pSaveAnimation->Name);
+	strcpy_s(m_szName, pSaveAnimation->AnimName.c_str());
 	m_fDuration = pSaveAnimation->mDuration;
 	m_fTickPerSecond = pSaveAnimation->mTicksPerSecond;
 
