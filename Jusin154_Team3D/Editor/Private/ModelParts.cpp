@@ -47,9 +47,6 @@ void CModelParts::Update(_float fTimeDelta)
 {
 	XMStoreFloat4x4(&m_CombinedWorldMatrix,
 		XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrixPtr()) * XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr()));
-
-	Change_Model();
-
 }
 
 void CModelParts::Late_Update(_float fTimeDelta)
@@ -92,53 +89,17 @@ HRESULT CModelParts::Render()
 	return S_OK;
 }
 
-void CModelParts::Change_Model()
+void CModelParts::Change_Model(const _wchar* Prototype)
 {
-	if (dynamic_cast<CRootModelPart*>(m_pOwner)->Get_PrototypeModelName())
+	if (m_pModelCom)
 	{
-		if (m_strPreModelPrototypeTag != dynamic_cast<CRootModelPart*>(m_pOwner)->Get_PrototypeModelName())
-		{
-			Set_Model("Body");
-			Set_Model("Hair");
-			Set_Model("Head");
-		}
-	}
-}
-
-void CModelParts::Set_Model(const _char* PartType)
-{
-	const _char* ObjectType = typeid(*this).name();
-	const _char* ModelName = dynamic_cast<CRootModelPart*>(m_pOwner)->Get_ModelName();
-	if (strstr(ObjectType, PartType))
-	{
-		if (strstr(ModelName, PartType))
-		{
-			if (m_pModelCom)
-			{
-				m_iAnimIndex = m_pModelCom->Get_AnimIndex();
-				m_fTrackPosition = m_pModelCom->Get_CurrentTrackPosition();
-				SAFE_RELEASE(m_pModelCom);
-				Remove_Component<CModel>();
-			}
-
-			m_strModelPrototypeTag = dynamic_cast<CRootModelPart*>(m_pOwner)->Get_PrototypeModelName();
-
-			if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_strModelPrototypeTag,
-				reinterpret_cast<CComponent**>(&m_pModelCom))))
-				return;
-
-			if (strstr(PartType,"Body"))
-			{
-				 dynamic_cast<CRootModelPart*>(m_pOwner)->Set_MainModel(m_pModelCom);
-			}
-
-			m_pModelCom->Set_AnimationIndex(m_iAnimIndex);
-			m_pModelCom->Set_CurrentTrackPosition(m_fTrackPosition);
-
-			m_strPreModelPrototypeTag = m_strModelPrototypeTag;
-		}
+		Remove_Component<CModel>();
+		SAFE_RELEASE(m_pModelCom);
 	}
 
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, Prototype,
+		reinterpret_cast<CComponent**>(&m_pModelCom))))
+		return;
 }
 
 HRESULT CModelParts::Ready_Components()

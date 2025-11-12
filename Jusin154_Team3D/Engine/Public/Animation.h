@@ -28,7 +28,6 @@ public:
 	void Set_AnimSpeed(_float fSpeed) { m_fAnimSpeed = fSpeed; }
 	_float Get_AnimSpeed() { return m_fAnimSpeed; }
 
-
 #ifdef EDITOR_PROJECT
 private:
 	HRESULT Initialize(const vector<class CBone*>& Bones, const aiAnimation* pAIAnimation);

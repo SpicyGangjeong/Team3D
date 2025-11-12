@@ -124,11 +124,6 @@ HRESULT CDummy_PhysXPlayable::Ready_Components(void* pArg)
 		}
 	}
 
-	/* Com_Model */
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_Steve_Model"),
-		reinterpret_cast<CComponent**>(&m_pModelCom))))
-		return E_FAIL;
-
 	/* Com_Shader */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_ANIMMESH,
 		reinterpret_cast<CComponent**>(&m_pShaderCom))))

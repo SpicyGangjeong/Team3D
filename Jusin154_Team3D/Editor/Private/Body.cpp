@@ -54,6 +54,7 @@ HRESULT CBody::Render()
 	return S_OK;
 }
 
+
 HRESULT CBody::Ready_Components()
 {
 	if (m_strModelPrototypeTag != L"")

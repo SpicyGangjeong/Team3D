@@ -19,26 +19,28 @@ CMapObject_Manager::CMapObject_Manager(const CMapObject_Manager& rhs)
 	: CGameObject(rhs)
 	, m_ModelPrototypeTags{ rhs.m_ModelPrototypeTags }
 	, m_LODModelPrototypeTags{ rhs.m_LODModelPrototypeTags }
+	, m_ModelPrototypePaths{ rhs.m_ModelPrototypePaths }
 {
 }
 
-HRESULT CMapObject_Manager::Initialize_Prototype(vector<_wstring>& ModelPrototypeTags)
+HRESULT CMapObject_Manager::Initialize_Prototype(vector<_wstring>& ModelPrototypeTags, vector<filesystem::path>& ModelPrototypePaths)
 {
-	for (auto& Tag : ModelPrototypeTags)
+	//for (auto& Tag : ModelPrototypeTags)
+	for (_uint i = 0 ; i < ModelPrototypeTags.size(); ++i)
 	{
-		if (_wstring::npos != Tag.find(L"Lod"))
+		if (_wstring::npos != ModelPrototypeTags[i].find(L"Lod"))
 		{
-			m_LODModelPrototypeTags.push_back(Tag);
+			m_LODModelPrototypeTags.push_back(ModelPrototypeTags[i]);
 		}
 
-		m_ModelPrototypeTags.push_back(Tag);
-
+		m_ModelPrototypeTags.push_back(ModelPrototypeTags[i]);
+		m_ModelPrototypePaths.push_back(ModelPrototypePaths[i]);
 	}
 
 	return S_OK;
 }
 
-HRESULT CMapObject_Manager::Initialize(void* pArg)
+HRESULT CMapObject_Manager::Initialize(void* pArg)												
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -120,6 +122,11 @@ void CMapObject_Manager::Late_Update(_float fTimeDelta)
 HRESULT CMapObject_Manager::Render()
 {
 	return S_OK;
+}
+
+const filesystem::path CMapObject_Manager::Get_PrototypePath(_uint iModelIndex)
+{
+	return m_ModelPrototypePaths[iModelIndex];
 }
 
 HRESULT CMapObject_Manager::Ready_Components()
@@ -416,7 +423,7 @@ HRESULT CMapObject_Manager::Load_MapData(const _char* pFileName)
 #pragma region MAPOBJECT_STATIC
 			if (0 == iLodLevel) /* MapObject_Static */
 			{
-				CMapObject_Static::MAPOBJECT_STATIC_DESC Desc = {};
+				MAPOBJECT_STATIC_DESC Desc = {};
 				string strTag = {};
 				auto* PrototypeTag = PartObject->FirstChildElement("PrototypeTag");
 
@@ -452,7 +459,7 @@ HRESULT CMapObject_Manager::Load_MapData(const _char* pFileName)
 #pragma region MAPOBJECT_LOD
 			else
 			{
-				CMapObject_LOD::MAPOBJECT_LOD_DESC Desc = {};
+				MAPOBJECT_LOD_DESC Desc = {};
 				string strTag = {};
 				for (auto* PrototypeTag = PartObject->FirstChildElement("PrototypeTag"); PrototypeTag; PrototypeTag = PrototypeTag->NextSiblingElement("PrototypeTag"))
 				{
@@ -567,7 +574,7 @@ HRESULT CMapObject_Manager::Load_ContainerData(const _char* pFileName, const _ch
 #pragma region MAPOBJECT_STATIC
 		if (0 == iLodLevel) /* MapObject_Static */
 		{
-			CMapObject_Static::MAPOBJECT_STATIC_DESC Desc = {};
+			MAPOBJECT_STATIC_DESC Desc = {};
 			string strTag = {};
 			auto* PrototypeTag = PartObject->FirstChildElement("PrototypeTag");
 
@@ -603,7 +610,7 @@ HRESULT CMapObject_Manager::Load_ContainerData(const _char* pFileName, const _ch
 #pragma region MAPOBJECT_LOD
 		else
 		{
-			CMapObject_LOD::MAPOBJECT_LOD_DESC Desc = {};
+			MAPOBJECT_LOD_DESC Desc = {};
 			string strTag = {};
 			for (auto* PrototypeTag = PartObject->FirstChildElement("PrototypeTag"); PrototypeTag; PrototypeTag = PrototypeTag->NextSiblingElement("PrototypeTag"))
 			{
@@ -646,24 +653,30 @@ HRESULT CMapObject_Manager::Load_ContainerData(const _char* pFileName, const _ch
 void CMapObject_Manager::Update_PrototypeList()
 {
 	GUI::Begin("Model Prototype List");
-	for (auto& Tag : m_ModelPrototypeTags)
+
+	_uint iMaxSize = (_uint)m_ModelPrototypeTags.size();
+	for (_uint i = 0; i < iMaxSize; ++i)
 	{
-		if (_wstring::npos != Tag.find(L"Lod"))
+		auto& Tag = m_ModelPrototypeTags[i];
+
+		if (_wstring::npos != Tag.find(L"Lod")){
 			continue;
+		}
 
 		if (ImGui::Button(CMyTools::ToString(Tag).c_str()))
 		{
-			_uint iNumLodModel = {};
+			vector<_uint> LodModelIndices;
 
-			if(false == Find_Lod_Prototype(Tag, &iNumLodModel))
+			if(false == Find_Lod_Prototype(Tag, LodModelIndices))
 			{
-				CMapObject_Static::MAPOBJECT_STATIC_DESC Desc = {};
+				MAPOBJECT_STATIC_DESC Desc = {};
 
 				Desc.strModelPrototypeTag = Tag;
 				Desc.pParentTransform = m_pTransformCom;
 				Desc.vPosition = _float3(0.f, 0.f, 0.f);
 				Desc.vRotation = _float3(0.f, 0.f, 0.f);
 				Desc.vScale = _float3(1.f, 1.f, 1.f);
+				Desc.iModelPathIndex = i;
 
 				CMapObject_Static* pMapObject = { nullptr };
 				const string strKey = CMyTools::ToString(Tag);
@@ -677,7 +690,7 @@ void CMapObject_Manager::Update_PrototypeList()
 			}
 			else
 			{
-				CMapObject_LOD::MAPOBJECT_LOD_DESC Desc = {};
+				MAPOBJECT_LOD_DESC Desc = {};
 
 				vector<_wstring> PrototypeTags;
 
@@ -688,6 +701,7 @@ void CMapObject_Manager::Update_PrototypeList()
 				Desc.vPosition = _float3(0.f, 0.f, 0.f);
 				Desc.vRotation = _float3(0.f, 0.f, 0.f);
 				Desc.vScale = _float3(1.f, 1.f, 1.f);
+				Desc.pModelPathIndices = &LodModelIndices;
 
 				CMapObject_LOD* pMapObject = { nullptr };
 				const string strKey = CMyTools::ToString(Tag);
@@ -699,7 +713,7 @@ void CMapObject_Manager::Update_PrototypeList()
 
 				m_MapObjects.push_back(pMapObject);
 
-				for (_uint i = 0; i < iNumLodModel; ++i)
+				for (_uint i = 0; i < LodModelIndices.size(); ++i)
 				{
 					_wstring strLodTag = Tag + L"_Lod" + to_wstring(i + 1);
 
@@ -805,25 +819,28 @@ void CMapObject_Manager::Update_ContainerObject()
 	GUI::End();
 }
 
-_bool CMapObject_Manager::Find_Lod_Prototype(_wstring strPrototypeTag, _uint* iCount)
+_bool CMapObject_Manager::Find_Lod_Prototype(_wstring strPrototypeTag, vector<_uint>& LodModelIndices)
 {
-	for (auto& Tag : m_LODModelPrototypeTags)
+	// for (auto& Tag : m_LODModelPrototypeTags)
+	for(_uint i = 0 ; i < m_ModelPrototypeTags.size(); ++i)
 	{
-		if (_wstring::npos != Tag.find(strPrototypeTag))
-			(*iCount)++;
+		if (_wstring::npos != m_ModelPrototypeTags[i].find(strPrototypeTag))
+			LodModelIndices.push_back(i);
 	}
-	if (0 < *iCount)
+	if (0 < LodModelIndices.size()) {
 		return true;
-
+	}
 	return false;
+	//if (0 < *iCount)
+	//	return true;
 }
 
 
-CMapObject_Manager* CMapObject_Manager::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, vector<_wstring>& ModelPrototypeTags)
+CMapObject_Manager* CMapObject_Manager::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, vector<_wstring>& ModelPrototypeTags, vector<filesystem::path>& ModelPrototypePaths)
 {
 	CMapObject_Manager* pInstance = new CMapObject_Manager(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype(ModelPrototypeTags)))
+	if (FAILED(pInstance->Initialize_Prototype(ModelPrototypeTags, ModelPrototypePaths)))
 	{
 		MSG_BOX("Failed to Created : CMapObject_Manager");
 		Safe_Release(pInstance);
