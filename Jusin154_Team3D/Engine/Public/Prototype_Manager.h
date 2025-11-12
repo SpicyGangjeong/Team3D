@@ -9,6 +9,7 @@
 #include "Texture.h"
 #include "Cell.h"
 #include "Model.h"
+#include "Character_Controller.h"
 #include "Instance_Model.h"
 
 

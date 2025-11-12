@@ -65,6 +65,8 @@
 #pragma region PHYSX_HEADER
 
 #include "Dummy_PhysXBox.h"
+#include "Dummy_PhysXPlayable.h"
+#include "Dummy_PhysXMesh.h"
 
 #pragma endregion 
 
@@ -78,7 +80,7 @@ CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	SAFE_ADDREF(m_pContext);
 }
 
-unsigned int APIENTRY LoadingMain(void* pArg)
+_uint APIENTRY LoadingMain(void* pArg)
 {
 	CLoader* pLoader = static_cast<CLoader*>(pArg);
 
@@ -502,12 +504,30 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 
 		m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), CRigidBody::Create(m_pDevice, m_pContext, Desc));
 	}
-	//{
-	//	CRigidBody::RIGIDBODY_PROTOTYPEDESC Desc{};
-	//	Desc.tRigidStaticDesc.pMesh;
-	//	Desc.tRigidStaticDesc.vMatInfo = { 0.5f, 0.5f, 0.6f };
-	//	Desc.tRigidStaticDesc.pMeshKey = TEXT("PHYSX_STATIC_MESH");
-	//}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_River_Col_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, "../Bin/Resources/Models/River/River.fbx", XMMatrixScaling(0.001f, 0.001f, 0.001f) * XMMatrixIdentity())))){
+		//CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, "../Bin/Resources/Models/River/River.bin", XMMatrixScaling(0.001f, 0.001f, 0.001f) * XMMatrixIdentity())))){
+		return E_FAIL;
+	}
+
+	{
+		CModel* pModel = (CModel*)m_pGameInstance->Find_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_River_Col_Model"));
+		_uint iNumMesh = pModel->Get_NumMeshes();
+
+		CRigidBody::RIGIDBODY_PROTOTYPEDESC Desc{};
+		for (_uint i = 0; i < iNumMesh; ++i) {
+			Desc.eType = ACTOR::TRIANGLEMESH;
+			Desc.tRigidStaticDesc.szMeshName = pModel->Get_MeshName(i);
+			Desc.tRigidStaticDesc.vMatInfo = _float3(0.5f, 0.5f, 0.6f);
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, CMyTools::ToWstring(Desc.tRigidStaticDesc.szMeshName).c_str(), CRigidBody::Create(m_pDevice, m_pContext, Desc)))) {
+				return E_FAIL;
+			}
+		}
+	}
+	{
+		m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), CCharacter_Controller::Create(m_pDevice, m_pContext));
+	}
 
 	m_strMessage = TEXT("Texture Loading..");
 
@@ -518,6 +538,12 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 	m_strMessage = TEXT("Prototype Loading..");
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXBox>(g_iStaticLevel, CDummy_PhysXBox::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXPlayable>(g_iStaticLevel, CDummy_PhysXPlayable::Create(m_pDevice, m_pContext)))){
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXMesh>(g_iStaticLevel, CDummy_PhysXMesh::Create(m_pDevice, m_pContext)))){
 		return E_FAIL;
 	}
 
