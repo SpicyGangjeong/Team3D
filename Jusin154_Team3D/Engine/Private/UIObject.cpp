@@ -83,6 +83,7 @@ HRESULT CUIObject::Initialize(void* pArg)
 
 	m_bVisible = true;
 
+	m_vNine_Slice = XMVectorSet(-m_fSizeX * 0.5f, m_fSizeX * 0.5f, -m_fSizeY * 0.5f, m_fSizeY * 0.5f);
 
 	return S_OK;
 }
@@ -270,6 +271,26 @@ void CUIObject::Set_V(_float V)
 _float2 CUIObject::Get_UV()
 {
 	return m_vUVScale;
+}
+
+void CUIObject::Nine_Slice_Left(_float X)
+{
+	XMVectorSetX(m_vNine_Slice, X);
+}
+
+void CUIObject::Nine_Slice_Right(_float Y)
+{
+	XMVectorSetY(m_vNine_Slice, Y);
+}
+
+void CUIObject::Nine_Slice_Top(_float Z)
+{
+	XMVectorSetZ(m_vNine_Slice, Z);
+}
+
+void CUIObject::Nine_Slice_Bottom(_float W)
+{
+	XMVectorSetW(m_vNine_Slice, W);
 }
 
 _float2 CUIObject::Get_Origin_Position()
