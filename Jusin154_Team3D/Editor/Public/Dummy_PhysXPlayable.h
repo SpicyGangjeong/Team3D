@@ -32,8 +32,8 @@ public:
 
 private:
 	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
-	//CModel* m_pModelCom = { nullptr };
-	//CShader* m_pShaderCom = { nullptr };
+	CModel* m_pModelCom = { nullptr };
+	CShader* m_pShaderCom = { nullptr };
 
 
 private:

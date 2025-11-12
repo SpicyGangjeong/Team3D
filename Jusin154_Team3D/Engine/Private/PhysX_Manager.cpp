@@ -134,6 +134,8 @@ HRESULT CPhysX_Manager::ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<
 	for (size_t i = 0; i < Meshes.size(); ++i)
 	{
 		PSX::PxTriangleMesh* pTriangleMesh = Meshes[i]->ConvertToPxMesh(m_pCookingParam, m_pPhysics, WorldMatrix);
+		PX_ASSERT(pTriangleMesh);
+		PX_ASSERT(pTriangleMesh->getReferenceCount() == 1);
 		if (nullptr == pTriangleMesh) {
 			return E_FAIL;
 		}
@@ -394,6 +396,7 @@ HRESULT CPhysX_Manager::Initialize()
 		m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, m_ToleranceScale, true, m_pPvd);
 
 		m_pCookingParam = new PSX::PxCookingParams(m_pPhysics->getTolerancesScale());
+		m_pCookingParam->meshPreprocessParams |= PSX::PxMeshPreprocessingFlag::eWELD_VERTICES;
 		PSX::PxSceneDesc sceneDesc = { m_pPhysics->getTolerancesScale() };
 
 		sceneDesc.gravity = PSX::PxVec3(0.f, -GRAVITY, 0.f);
@@ -429,7 +432,7 @@ HRESULT CPhysX_Manager::Initialize()
 
 #ifdef ±â¹«¸®
 	physx::PxMaterial* pMaterial = m_pPhysics->createMaterial(0.5f, 0.5f, 0.6f);
-	//physx::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *pMaterial);
+	//physx::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 90), *pMaterial);
 	//m_pScene->addActor(*pGroundPlane);
 
 	//{

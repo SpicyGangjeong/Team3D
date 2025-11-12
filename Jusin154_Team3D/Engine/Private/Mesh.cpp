@@ -616,7 +616,7 @@ PSX::PxTriangleMesh* CMesh::ConvertToPxMesh(const PSX::PxCookingParams* pParam, 
 		tMeshDesc.points.count = m_iNumVertices;
 		tMeshDesc.points.stride = sizeof(PSX::PxVec3);
 		Vertices.resize(m_iNumVertices);
-		XMVector3TransformCoordStream(reinterpret_cast<XMFLOAT3*>(Vertices.data()), sizeof(PSX::PxVec3), (_float3*)m_pVertexPositions, sizeof(_float3), m_iNumVertices, WorldMatrix);
+		XMVector3TransformCoordStream(reinterpret_cast<_float3*>(Vertices.data()), sizeof(PSX::PxVec3), (_float3*)m_pVertexPositions, sizeof(_float3), m_iNumVertices, WorldMatrix);
 		tMeshDesc.points.data = Vertices.data();
 	}
 	{
@@ -636,6 +636,8 @@ PSX::PxTriangleMesh* CMesh::ConvertToPxMesh(const PSX::PxCookingParams* pParam, 
 
 	PSX::PxDefaultMemoryInputData readBuff(streamWriteBuffer.getData(), streamWriteBuffer.getSize());
 	PSX::PxTriangleMesh* pTriangleMesh = pPhysX->createTriangleMesh(readBuff);
+	PX_ASSERT(pTriangleMesh);
+	PX_ASSERT(pTriangleMesh->getReferenceCount() == 1);
 	if (nullptr == pTriangleMesh) {
 		assert(false);
 		return nullptr;

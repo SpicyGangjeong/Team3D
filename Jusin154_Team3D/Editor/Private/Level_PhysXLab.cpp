@@ -68,7 +68,7 @@ HRESULT CLevel_PhysXLab::Ready_Layer_Camera(const _wstring& strLayerTag)
 	CDebugCamera::CAMERA_DEBUG_DESC            CameraDesc{};
 	CameraDesc.fFovy = XMConvertToRadians(60.0f);
 	CameraDesc.fNear = 0.1f;
-	CameraDesc.fFar = 500.f;
+	CameraDesc.fFar = 5000.f;
 	CameraDesc.vEye = _float3(0.f, 10.f, -10.f);
 	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
 	CameraDesc.fSpeedPerSec = 2.f;

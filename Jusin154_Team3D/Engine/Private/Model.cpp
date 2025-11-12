@@ -777,19 +777,6 @@ _int CModel::SaveNodeRecursive(const aiNode* pAINode, std::vector<SaveNode>& out
 
 	return currentIndex;
 }
-CModel* CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex)
-{
-	CModel* pInstance = new CModel(pDevice, pContext);
-
-	if (FAILED(pInstance->Initialize_Prototype(pModelFilePath, eType, PreTransformMatrix, iRootBoneIndex)))
-	{
-		MSG_BOX("Failed to Created : CModel");
-		SAFE_RELEASE(pInstance);
-	}
-
-	return pInstance;
-}
-
 HRESULT CModel::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex)
 {
 	_uint			iFlag = {};
@@ -818,9 +805,17 @@ HRESULT CModel::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fma
 #pragma region Material
 	if (MODEL::ENVIROMENT == eType)
 	{
+#ifdef 扁公府
+		if (FAILED(Ready_Materials(m_pAIScene, pModelFilePath))) {
+			return E_FAIL;
+		}
+#endif // 扁公府
+#ifndef 扁公府
 		if (FAILED(Ready_Materials_FromFile(m_pAIScene, pModelFilePath))) {
 			return E_FAIL;
 		}
+#endif // !扁公府
+
 	}
 	else
 	{
@@ -842,16 +837,7 @@ HRESULT CModel::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fma
 	return S_OK;
 }
 
-HRESULT CModel::Initialize_Prototype(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex)
-{
-	return Assimp_Model_Load(pModelFilePath, eType, PreTransformMatrix, iRootBoneIndex);
-}
 #endif // EDITOR_PROJECT
-
-HRESULT CModel::Initialize_Prototype()
-{
-	return S_OK;
-}
 
 HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix)
 {
@@ -865,12 +851,6 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 	if (strcmp(".bin", szEXT) == 0)
 	{
 		LoadData(pModelFilePath);
-		if (MODEL::ENVIROMENT == m_eType) {
-			m_pGameInstance->LoadTriMeshes(pModelFilePath, m_TriMeshes);
-			for (_uint i = 0; i < m_iNumMeshes; ++i) {
-				m_pGameInstance->RegistTriMesh(m_Meshes[i]->Get_Name(), m_TriMeshes[i]);
-			}
-		}
 	}
 	else if (strcmp(".fbx", szEXT) == 0)
 	{
@@ -903,6 +883,12 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 	}
 
 
+	if (MODEL::ENVIROMENT == m_eType) {
+		m_pGameInstance->LoadTriMeshes(pModelFilePath, m_TriMeshes);
+		for (_uint i = 0; i < m_iNumMeshes; ++i) {
+			m_pGameInstance->RegistTriMesh(m_Meshes[i]->Get_Name(), m_TriMeshes[i]);
+		}
+	}
 
 	return S_OK;
 }
@@ -1105,19 +1091,6 @@ HRESULT CModel::Ready_Animations()
 	}
 
 	return S_OK;
-}
-
-CModel* CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-{
-	CModel* pInstance = new CModel(pDevice, pContext);
-
-	if (FAILED(pInstance->Initialize_Prototype()))
-	{
-		MSG_BOX("Failed to Created : CModel");
-		SAFE_RELEASE(pInstance);
-	}
-
-	return pInstance;
 }
 
 CModel* CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath,_fmatrix PreTransformMatrix)
