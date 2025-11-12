@@ -91,6 +91,7 @@ constexpr unsigned int g_iMaxShadowHeight = 9216;
 #endif // !AI_TEXTURE_TYPE_MAX
 
 #define			ENUM_CLASS(ENUM)		static_cast<unsigned int>(ENUM)
+#define			KR_CSTR(str)			reinterpret_cast<const char*>(u8##str)
 
 #ifndef			MSG_BOX
 #define			MSG_BOX(_message)			MessageBox(NULL, TEXT(_message), L"System Message", MB_OK)

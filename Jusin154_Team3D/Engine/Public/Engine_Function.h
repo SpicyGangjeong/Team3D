@@ -47,4 +47,17 @@ unsigned long Safe_Release(T& pInstance)
 	return dwRefCnt;
 }
 
+static void GUIHelpMarker(const char* desc)
+{
+	GUI::SameLine();
+	GUI::TextDisabled("(?)");
+	if (GUI::BeginItemTooltip())
+	{
+		GUI::PushTextWrapPos(GUI::GetFontSize() * 35.0f);
+		GUI::TextUnformatted((_string("u8") + desc).c_str());
+		GUI::PopTextWrapPos();
+		GUI::EndTooltip();
+	}
+}
+
 NS_END

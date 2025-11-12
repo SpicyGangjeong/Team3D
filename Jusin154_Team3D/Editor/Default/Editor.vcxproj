@@ -151,7 +151,10 @@
   <ItemGroup>
     <ClInclude Include="..\Public\Body.h" />
     <ClInclude Include="..\public\Active_Icon.h" />
+    <ClInclude Include="..\Public\DummyObject.h" />
+    <ClInclude Include="..\Public\Dummy_PhysXPlayable.h" />
     <ClInclude Include="..\public\GamePlay_Canvas.h" />
+    <ClInclude Include="..\public\BuildingContainer.h" />
     <ClInclude Include="..\Public\DebugCamera.h" />
     <ClInclude Include="..\Public\Dummy_PhysXBox.h" />
     <ClInclude Include="..\Public\Dummy_PhysXMesh.h">
@@ -162,8 +165,11 @@
     <ClInclude Include="..\Public\EditEffect.h" />
     <ClInclude Include="..\public\Level_MapViewer.h" />
     <ClInclude Include="..\Public\LoadingWidget.h" />
+    <ClInclude Include="..\public\MapContainer.h" />
     <ClInclude Include="..\public\MapObject.h" />
+    <ClInclude Include="..\public\MapObject_LOD.h" />
     <ClInclude Include="..\public\MapObject_Manager.h" />
+    <ClInclude Include="..\public\MapObject_Static.h" />
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\Public\Level_PhysXLab.h" />
     <ClInclude Include="..\Public\TestEffect.h" />
@@ -207,7 +213,10 @@
   <ItemGroup>
     <ClCompile Include="..\Private\Body.cpp" />
     <ClCompile Include="..\private\Active_Icon.cpp" />
+    <ClCompile Include="..\Private\DummyObject.cpp" />
+    <ClCompile Include="..\Private\Dummy_PhysXPlayable.cpp" />
     <ClCompile Include="..\private\GamePlay_Canvas.cpp" />
+    <ClCompile Include="..\private\BuildingContainer.cpp" />
     <ClCompile Include="..\Private\DebugCamera.cpp" />
     <ClCompile Include="..\Private\Dummy_PhysXBox.cpp" />
     <ClCompile Include="..\Private\Dummy_PhysXMesh.cpp">
@@ -218,8 +227,11 @@
     <ClCompile Include="..\Private\EditEffect.cpp" />
     <ClCompile Include="..\private\Level_MapViewer.cpp" />
     <ClCompile Include="..\Private\LoadingWidget.cpp" />
+    <ClCompile Include="..\private\MapContainer.cpp" />
     <ClCompile Include="..\private\MapObject.cpp" />
+    <ClCompile Include="..\private\MapObject_LOD.cpp" />
     <ClCompile Include="..\private\MapObject_Manager.cpp" />
+    <ClCompile Include="..\private\MapObject_Static.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\Private\Level_PhysXLab.cpp" />
     <ClCompile Include="..\Private\TestEffect.cpp" />

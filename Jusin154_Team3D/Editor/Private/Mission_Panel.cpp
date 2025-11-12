@@ -121,7 +121,7 @@ HRESULT CMission_Panel::Ready_Element(void* pArg)
 	}
 	Add_Element(TEXT("MissionBanner_Key"), m_pMissionBanner_Key);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMission_KeyHold>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, &m_pMission_KeyHold)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMission_KeyHold>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMission_KeyHold**>(&m_pMission_KeyHold))))
 	{
 		return E_FAIL;
 	}

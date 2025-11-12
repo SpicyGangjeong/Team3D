@@ -68,6 +68,22 @@ public:
 		return nullptr;
 	}
 
+
+	template<typename T>
+	void Remove_Component()
+	{
+		for (auto it = m_Components.begin(); it != m_Components.end(); )
+		{
+			if (dynamic_cast<T*>(*it))
+			{
+				SAFE_RELEASE(*it);
+				it = m_Components.erase(it);
+			}
+			else
+				++it;
+		}
+	}
+
 protected:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);

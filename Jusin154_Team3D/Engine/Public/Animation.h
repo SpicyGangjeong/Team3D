@@ -23,7 +23,7 @@ public:
 	const _string& Get_Name() const { return m_strName; }
 
 	const _char* Get_SZName() const { return m_szName; }
-	void Reset_CurrentTrackPosition() { m_fCurrentTrackPosition = 0.f; }
+	void Set_CurrentTrackPosition(_float TrackPosition) { m_fCurrentTrackPosition =TrackPosition; }
 	_float Get_CurrentTrackPosition() { return m_fCurrentTrackPosition; }
 	void Set_AnimSpeed(_float fSpeed) { m_fAnimSpeed = fSpeed; }
 	_float Get_AnimSpeed() { return m_fAnimSpeed; }

@@ -4,14 +4,17 @@
 #include "GameInstance.h"
 #include "DebugCamera.h"
 #include "ModelParts.h"
+#include "Body.h"
+#include "Head.h"
+#include "Hair.h"
 
 CRootModelPart::CRootModelPart(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+	: CContainerObject(pDevice, pContext)
 {
 }
 
 CRootModelPart::CRootModelPart(const CRootModelPart& Prototype)
-	: CGameObject(Prototype)
+	: CContainerObject(Prototype)
 {
 }
 
@@ -25,23 +28,27 @@ HRESULT CRootModelPart::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	if (FAILED(Ready_PartObjects()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
 void CRootModelPart::Priority_Update(_float fTimeDelta)
 {
+	__super::Priority_Update(fTimeDelta);
 }
 
 void CRootModelPart::Update(_float fTimeDelta)
 {
-	if (!m_pMainModel)
-		return;
-
 	Update_Anim(fTimeDelta);
+
+	__super::Update(fTimeDelta);
 }
 
 void CRootModelPart::Late_Update(_float fTimeDelta)
 {
+	__super::Late_Update(fTimeDelta);
 }
 
 HRESULT CRootModelPart::Render()
@@ -51,33 +58,49 @@ HRESULT CRootModelPart::Render()
 
 void CRootModelPart::Update_Anim(_float fTimeDelta)
 {
-	for (size_t i = 0; i < m_ModelParts.size(); i++)
-	{
-		m_ModelParts[i]->Get_Component<CModel>()->Set_PlayAnim(m_pMainModel->Get_PlayAnim());
-		m_ModelParts[i]->Get_Component<CModel>()->Set_AnimationIndex(m_pMainModel->Get_AnimIndex());
-		m_ModelParts[i]->Get_Component<CModel>()->Play_Animation(fTimeDelta);
-	}
-}
-
-void CRootModelPart::Push_ModelParts(CModelParts* ModelParts)
-{
-	m_ModelParts.push_back(ModelParts);
-	SAFE_ADDREF(ModelParts);
 	for (auto& ModelParts : m_ModelParts)
 	{
-		ModelParts->Get_Component<CModel>()->Set_AnimationIndex(0);
-		ModelParts->Get_Component<CModel>()->Reset_CurrentTrackPosition();
+		CModel* pModel = ModelParts->Get_Component<CModel>();
+		if (pModel)
+		{
+			pModel->Set_PlayAnim(m_pMainModel->Get_PlayAnim());
+			pModel->Set_AnimationIndex(m_pMainModel->Get_AnimIndex());
+			pModel->Set_CurrentTrackPosition(m_pMainModel->Get_CurrentTrackPosition());
+			pModel->Play_Animation(fTimeDelta);
+		}
 	}
 }
 
-void CRootModelPart::Push_MainModel(CModel* MainModel)
-{
-	m_pMainModel = MainModel;
-	SAFE_ADDREF(MainModel);
-}
 
 HRESULT CRootModelPart::Ready_Components()
 {
+	return S_OK;
+}
+
+HRESULT CRootModelPart::Ready_PartObjects()
+{
+	CModelParts::PARTS_OBJECT_DESC PartsDesc{};
+
+	PartsDesc.pParentTransform = m_pTransformCom;
+	PartsDesc.pModelPrototypeTag = m_PrototypeModelName;
+
+	CModelParts* pModelPartsObject = { nullptr };
+
+	if (FAILED(Add_PartObject<CBody>("Human_Body", ENUM_CLASS(LEVEL::STATIC), reinterpret_cast<CBody**>(&pModelPartsObject), &PartsDesc)))
+		return E_FAIL;
+
+	m_ModelParts.push_back(pModelPartsObject);
+
+	if (FAILED(Add_PartObject<CHead>("Human_Head", ENUM_CLASS(LEVEL::STATIC), reinterpret_cast<CHead**>(&pModelPartsObject), &PartsDesc)))
+		return E_FAIL;
+
+	m_ModelParts.push_back(pModelPartsObject);
+
+	if (FAILED(Add_PartObject<CHair>("Human_Hair", ENUM_CLASS(LEVEL::STATIC), reinterpret_cast<CHair**>(&pModelPartsObject), &PartsDesc)))
+		return E_FAIL;
+
+	m_ModelParts.push_back(pModelPartsObject);
+
 	return S_OK;
 }
 
@@ -126,4 +149,5 @@ void CRootModelPart::Free()
 
 void CRootModelPart::Describe_Entity()
 {
+	
 }
