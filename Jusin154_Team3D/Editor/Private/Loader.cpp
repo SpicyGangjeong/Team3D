@@ -528,6 +528,33 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 
 	m_strMessage = TEXT("Model Loading..");
 
+#ifdef 기무리
+	for (const auto& file : filesystem::directory_iterator("C:\\Users\\82103\\Desktop\\MapRe\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Meshes"))
+	{
+		if (file.is_directory())
+			continue;
+
+		string ext = file.path().extension().string();
+
+		if (strcmp(ext.c_str(), ".bin"))
+			continue;
+
+		_char szFilePath[MAX_PATH] = {};
+
+		strcpy_s(szFilePath, MAX_PATH, file.path().string().c_str());
+
+		_wstring strFileName = L"Prototype_GameObject_" + file.path().stem().wstring();
+
+		/*For Prototype_Component_Model_*/
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, strFileName,
+			CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, szFilePath))))
+			return E_FAIL;
+
+		ModelPrototypeTags.push_back(strFileName);
+	}
+#endif // 기무리
+
+
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Steve_Model"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Steve/Steve.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixIdentity()))))
 		return E_FAIL;
@@ -704,7 +731,6 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 		ModelPrototypeTags.push_back(strFileName);
 	}
-
 	//for (const auto& file : filesystem::directory_iterator("C:\\Users\\82103\\Desktop\\MapRe\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Meshes\\3Broom_Kit"))
 	//{
 	//	if (file.is_directory())
