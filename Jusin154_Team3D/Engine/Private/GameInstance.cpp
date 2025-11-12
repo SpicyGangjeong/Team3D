@@ -270,7 +270,7 @@ void CGameInstance::Present_TimeCost() const
 		GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
 		GUI::Text("Timer_Occupancy %d", int(m_fTimer_Present / fTotal * 100.f));
 	}
-
+	GUI::Text("GameInstance RefCNT : %d", m_iRefCnt);
 	static float values[60] = {};
 	static int values_offset = 0;
 	static double refresh_time = 0.0;
@@ -541,10 +541,12 @@ PSX::PxMaterial* CGameInstance::Get_Material(_float3& vMatInfo)
 {
 	return m_pPhysX_Manager->Get_Material(vMatInfo);
 }
-HRESULT CGameInstance::Create_TriangleMesh(const _wstring& wstrMeshKey, CMesh* pMesh)
+
+void CGameInstance::RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh)
 {
-	return m_pPhysX_Manager->Create_TriangleMesh(wstrMeshKey, pMesh);
+	return m_pPhysX_Manager->RegistTriMesh(pName, pPxTriMesh);
 }
+
 PSX::PxShape* CGameInstance::Create_Shape(ACTOR eType, _float3& vhalfGeometryInfo, PSX::PxMaterial& pxMaterial, _bool bExclusive, PSX::PxShapeFlags ePxShapeFlag)
 {
 	return m_pPhysX_Manager->Create_Shape(eType, vhalfGeometryInfo, pxMaterial, bExclusive, ePxShapeFlag);
@@ -556,6 +558,34 @@ const PSX::PxRigidDynamic* CGameInstance::Add_DynamicActor(CRigidBody& RigidBody
 const PSX::PxRigidStatic* CGameInstance::Add_StaticActor(CRigidBody& RigidBody)
 {
 	return m_pPhysX_Manager->Add_StaticActor(RigidBody);
+}
+PSX::PxController* CGameInstance::Add_CapsuleController(PSX::PxCapsuleControllerDesc& Desc)
+{
+	return m_pPhysX_Manager->Add_CapsuleController(Desc);
+}
+PSX::PxController* CGameInstance::Add_BoxController(PSX::PxBoxControllerDesc& Desc)
+{
+	return m_pPhysX_Manager->Add_BoxController(Desc);
+}
+PSX::PxController* CGameInstance::Get_Controller(_uint iControllerIndex)
+{
+	return m_pPhysX_Manager->Get_Controller(iControllerIndex);
+}
+void CGameInstance::ReleaseController(_uint iControllerIndex)
+{
+	m_pPhysX_Manager->ReleaseController(iControllerIndex);
+}
+HRESULT CGameInstance::ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix)
+{
+	return m_pPhysX_Manager->ConvertToTriMeshes(Meshes, pxTriMeshes, WorldMatrix);
+}
+HRESULT CGameInstance::SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes)
+{
+	return m_pPhysX_Manager->SaveTriMeshes(pPath, TriMeshes);
+}
+HRESULT CGameInstance::LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes)
+{
+	return m_pPhysX_Manager->LoadTriMeshes(pPath, TriMeshes);
 }
 #pragma endregion
 
