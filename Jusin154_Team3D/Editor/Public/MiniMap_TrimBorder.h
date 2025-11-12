@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Editor_Define.h"
-#include "UIObject.h"
+#include "ElementObject.h"
 
 NS_BEGIN(Editor)
 
-class CMiniMap_TrimBorder final : public CUIObject
+class CMiniMap_TrimBorder final : public CElementObject
 {
 private:
 	CMiniMap_TrimBorder(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
