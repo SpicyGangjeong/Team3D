@@ -1,14 +1,14 @@
 #pragma once
 
 #include "Editor_Define.h"
-#include "GameObject.h"
+#include "ContainerObject.h"
 NS_BEGIN(Engine)
 class CModel;
 NS_END
 
 NS_BEGIN(Editor)
 
-class CRootModelPart final : public CGameObject
+class CRootModelPart final : public CContainerObject
 {
 private:
 	CRootModelPart(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -23,17 +23,22 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	void Update_Anim(_float fTimeDelta);
-	void Push_ModelParts(class CModelParts* ModelParts);
-	void Push_MainModel(CModel* MainModel);
 	void Set_AnimIndex(_uint iIndex) { m_iAnimIndex = iIndex; }
-
+	void Set_PrototypeModelName(const _wchar* PrototypeModelName) { m_PrototypeModelName = PrototypeModelName; }
+	void Set_ModelName(const _char* Name) { m_ModelName = Name; }
+	const _wchar* Get_PrototypeModelName() { return m_PrototypeModelName; }
+	const _char* Get_ModelName() { return m_ModelName; }
+	class CModelParts* Get_ModelParts(_uint iIndex) { return m_ModelParts[iIndex]; }
+	void Set_MainModel(class CModel* Model) { m_pMainModel = Model; }
 private:
-	CModel* m_pMainModel = { nullptr };
+	class CModel* m_pMainModel = { nullptr };
 	vector<class CModelParts*> m_ModelParts = {};
-	_uint m_iAnimIndex = {0};
-
+	_uint m_iAnimIndex = { 0 };
+	const _wchar* m_PrototypeModelName = { 0 };
+	const _char* m_ModelName = { 0 };
 private:
 	HRESULT Ready_Components();
+	HRESULT Ready_PartObjects();
 	HRESULT Bind_ShaderResources();
 
 public:

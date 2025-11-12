@@ -10,7 +10,7 @@
 #include "DebugCamera.h"
 #include "Layer.h"
 #include "GameObject.h"
-#include "Monster.h"
+#include "DummyObject.h"
 
 CLevel_ObjectViewer::CLevel_ObjectViewer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -58,74 +58,46 @@ HRESULT CLevel_ObjectViewer::Render()
 
 void CLevel_ObjectViewer::Add_Object()
 {
-	GUI::Begin("Add Object");
+	GUI::Begin("Add PartObject");
 
 	if (GUI::BeginTabBar("ObjectTabs"))
 	{
-		Add_Creature();
-		
 		Add_Human();
-		
+
 	}
 	GUI::EndTabBar();
 	GUI::End();
-	
-}
 
-void CLevel_ObjectViewer::Add_Creature()
-{
-	if (ImGui::BeginTabItem("Creatures"))
-	{
-		if (GUI::Button("Add Monster"))
-		{
-			CGameObject* pTempObject = { nullptr };
-			CMonster::OBJECT_DESC Desc = {};
-			Desc.pModelPrototypeTag = TEXT("Prototype_Component_Troll_Model");
-			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMonster>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, TEXT("Layer_Monster"), &Desc, nullptr, &pTempObject)))
-				return;
-			m_Objects.push_back(pTempObject);
-		}
-
-		GUI::EndTabItem();
-	}
 }
 
 void CLevel_ObjectViewer::Add_Human()
 {
-	if (ImGui::BeginTabItem("Human"))
+	if (GUI::BeginTabItem("Body"))
 	{
-		if (GUI::CollapsingHeader("Body"))
-		{
-			if (GUI::Button("Add Body"))
-			{
-				if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRootModelPart>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, TEXT("Layer_Root"), nullptr, nullptr, &m_HumanRoot)))
-					return;
+		Category_PartsModelList("Human/Body","Body");
 
-				CGameObject* pTempObject = { nullptr };
-				if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBody>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, TEXT("Layer_Body"), nullptr, m_HumanRoot, &pTempObject)))
-					return;
-				m_Objects.push_back(pTempObject);
-			}
-		}
+		GUI::EndTabItem();
+	}
+
+	if (GUI::BeginTabItem("Head"))
+	{
 		_bool bDisabled = (m_HumanRoot == nullptr);
-		if (bDisabled) ImGui::BeginDisabled();
-		if (GUI::CollapsingHeader("Head"))
-		{
-			if (GUI::Button("Add Head"))
-			{
-				if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CHead>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, TEXT("Layer_Head"), nullptr, m_HumanRoot)))
-					return;
-			}
-		}
-		if (GUI::CollapsingHeader("Hair"))
-		{
-			if (GUI::Button("Add Hair"))
-			{
-				if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CHair>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, TEXT("Layer_Hair"), nullptr, m_HumanRoot)))
-					return;
-			}
-		}
-		if (bDisabled) ImGui::EndDisabled();
+		if (bDisabled) GUI::BeginDisabled();
+
+		Category_PartsModelList("Human/Head", "Head");
+
+		if (bDisabled) GUI::EndDisabled();
+		GUI::EndTabItem();
+	}
+
+	if (GUI::BeginTabItem("Hair"))
+	{
+		_bool bDisabled = (m_HumanRoot == nullptr);
+		if (bDisabled) GUI::BeginDisabled();
+
+		Category_PartsModelList("Human/Hair", "Hair");
+
+		if (bDisabled) GUI::EndDisabled();
 		GUI::EndTabItem();
 	}
 }
@@ -133,25 +105,86 @@ void CLevel_ObjectViewer::Add_Human()
 void CLevel_ObjectViewer::Show_ModelFilePath()
 {
 	GUI::Begin("Model_List");
-	if(GUI::BeginTabBar("Model_List"))
+	if (GUI::BeginTabBar("Model_List"))
 	{
-		if (GUI::BeginTabItem("Model"))
-		{
-			if (m_pGameInstance->BinaryModelFilePathCount() > 0)
-			{
-				for (_uint i = 0; i < m_pGameInstance->BinaryModelFilePathCount(); i++)
-				{
-					if (GUI::Button(m_pGameInstance->Load_BinaryModelFilePath(i)))
-					{
+		Category_ModelList("Monster");
 
+		Category_ModelList("Human");
+	}
+	GUI::EndTabBar();
+	GUI::End();
+}
+
+void CLevel_ObjectViewer::Category_ModelList(const _char* Category)
+{
+	if (GUI::BeginTabItem(Category))
+	{
+		if (m_pGameInstance->BinaryModelFilePathCount() > 0)
+		{
+			for (_uint i = 0; i < m_pGameInstance->BinaryModelFilePathCount(); i++)
+			{
+				const _char* szCategory = m_pGameInstance->Load_BinaryModelFilePath(i);
+
+				if (strstr(szCategory, Category))
+				{
+					if (GUI::Button(szCategory))
+					{
+						CGameObject* pTempObject = { nullptr };
+
+						CDummyObject::PARTS_OBJECT_DESC Desc = {};
+
+						Desc.pModelPrototypeTag = Save_ModelName(szCategory);
+
+						Save_LayerName(Category);
+
+						if (m_Objects.size() > 0)
+						{
+							m_pGameInstance->Get_Layer(NEXT_LEVEL, m_wszPreLayer)->Clear_Layer();
+							m_Objects.pop_back();
+						}
+
+						if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummyObject>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, m_wszLayer, &Desc, nullptr, reinterpret_cast<CDummyObject**>(&pTempObject))))
+							return;
+
+						wcscpy_s(m_wszPreLayer, m_wszLayer);
+
+						m_Objects.push_back(pTempObject);
 					}
 				}
 			}
 			GUI::EndTabItem();
 		}
 	}
-	GUI::EndTabBar();
-	GUI::End();
+}
+
+void CLevel_ObjectViewer::Category_PartsModelList(const _char* Category, const _char* Layer)
+{
+	if (!m_HumanRoot)
+	{
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRootModelPart>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, TEXT("Layer_Root"), nullptr, nullptr, reinterpret_cast<CRootModelPart**>(&m_HumanRoot))))
+			return;
+	}
+	for (_uint i = 0; i < m_pGameInstance->BinaryModelFilePathCount(); i++)
+	{
+		const _char* szCategory = m_pGameInstance->Load_BinaryModelFilePath(i);
+
+		if (strstr(szCategory, Category))
+		{
+			if (GUI::Button(szCategory))
+			{
+				Save_LayerName(Layer);
+
+				CGameObject* pTempObject = { nullptr };
+
+				CDummyObject::PARTS_OBJECT_DESC Desc = {};
+
+				Desc.pModelPrototypeTag = Save_ModelName(szCategory);
+
+				dynamic_cast<CRootModelPart*>(m_HumanRoot)->Set_PrototypeModelName(Desc.pModelPrototypeTag);
+				dynamic_cast<CRootModelPart*>(m_HumanRoot)->Set_ModelName(szCategory);
+			}
+		}
+	}
 }
 
 void CLevel_ObjectViewer::Show_AnimList()
@@ -159,9 +192,20 @@ void CLevel_ObjectViewer::Show_AnimList()
 	GUI::Begin("Anim_List");
 	if (!m_Objects.empty())
 	{
-		if (!m_Objects[m_iObjectIndex]->isDead())
+		CModel* pModel = m_Objects[m_iObjectIndex]->Get_Component<CModel>();
+		for (_uint i = 0; i < pModel->Get_AnimSize(); i++)
 		{
-			CModel* pModel = m_Objects[m_iObjectIndex]->Get_Component<CModel>();
+			if (GUI::Button(pModel->Get_AnimList(i)))
+			{
+				pModel->Set_AnimationIndex(i);
+			}
+		}
+	}
+	if (m_HumanRoot)
+	{
+		CModel* pModel = dynamic_cast<CRootModelPart*>(m_HumanRoot)->Get_ModelParts(0)->Get_Component<CModel>();
+		if (pModel)
+		{
 			for (_uint i = 0; i < pModel->Get_AnimSize(); i++)
 			{
 				if (GUI::Button(pModel->Get_AnimList(i)))
@@ -207,11 +251,70 @@ void CLevel_ObjectViewer::Object_Setting()
 		}
 		if (GUI::Button("Delete"))
 		{
-
+			m_pGameInstance->Get_Layer(NEXT_LEVEL, m_wszPreLayer)->Clear_Layer();
+			m_Objects.pop_back();
 		}
 	}
-	
 	GUI::End();
+
+	GUI::Begin("PartsObject_Info");
+	if (m_HumanRoot)
+	{
+		CModel* pModel = dynamic_cast<CRootModelPart*>(m_HumanRoot)->Get_ModelParts(0)->Get_Component<CModel>();
+		if (pModel)
+		{
+			_float AnimTrack = pModel->Get_CurrentTrackPosition();
+			GUI::DragFloat("AnimTrack", &AnimTrack);
+
+			_float AnimSpeed = pModel->Get_AnimSpeed();
+			GUI::DragFloat("AnimSpeed", &AnimSpeed, 0.1f);
+			pModel->Set_AnimSpeed(AnimSpeed);
+
+			_bool bPlayAnim = pModel->Get_PlayAnim();
+			if (GUI::Checkbox("Play Anim", &bPlayAnim))
+			{
+				pModel->Set_PlayAnim(bPlayAnim);
+			}
+			if (GUI::Button("Delete"))
+			{
+				m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_Root"))->Clear_Layer();
+				m_HumanRoot = nullptr;
+			}
+		}
+	}
+
+	GUI::End();
+}
+
+void CLevel_ObjectViewer::Save_LayerName(const _char* Category)
+{
+	_wstring szLayer = TEXT("Layer_");
+
+	_wchar szCategory[MAX_PATH];
+
+	wcscpy_s(m_wszLayer, szLayer.c_str());
+
+	MultiByteToWideChar(CP_ACP, 0, Category, -1, szCategory, MAX_PATH);
+
+	wcscat_s(m_wszLayer, szCategory);
+}
+
+_wchar* CLevel_ObjectViewer::Save_ModelName(const _char* Category)
+{
+	_splitpath_s(Category, nullptr, 0, nullptr, 0, m_szName, MAX_PATH, nullptr, 0);
+
+	_wstring szDir = TEXT("Prototype_Component_");
+	_wstring szDir2 = TEXT("_Model");
+
+	_wchar wszName[MAX_PATH] = { 0 };
+
+	MultiByteToWideChar(CP_ACP, 0, m_szName, -1, wszName, MAX_PATH);
+
+	wcscpy_s(m_wszName, szDir.c_str());
+	wcscat_s(m_wszName, wszName);
+	wcscat_s(m_wszName, szDir2.c_str());
+
+	return m_wszName;
 }
 
 HRESULT CLevel_ObjectViewer::Ready_Layer_Camera(const _wstring& strLayerTag)
@@ -226,7 +329,7 @@ HRESULT CLevel_ObjectViewer::Ready_Layer_Camera(const _wstring& strLayerTag)
 	CameraDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 	CameraDesc.fMouseSensor = 0.1f;
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDebugCamera>(g_iStaticLevel, NEXT_LEVEL, 
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDebugCamera>(g_iStaticLevel, NEXT_LEVEL,
 		strLayerTag, &CameraDesc)))
 		return E_FAIL;
 
