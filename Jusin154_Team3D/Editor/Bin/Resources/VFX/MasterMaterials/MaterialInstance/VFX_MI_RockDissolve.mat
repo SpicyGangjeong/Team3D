@@ -1,0 +1,5 @@
+Diffuse=T_Rock_Basalt_D
+Normal=T_RockMesh_N
+Other[0]=T_Detail_Rocky_N
+Other[1]=T_RockMesh_MRO
+Other[2]=VFX_T_FlameTile_D

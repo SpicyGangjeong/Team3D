@@ -1,0 +1,13 @@
+Diffuse=T_BCProps_Ivy_Yellow_D
+Normal=T_Ivy_N
+Other[0]=BlendFunc_DefBase
+Other[1]=BlendFunc_DefBlend
+Other[2]=DefaultDiffuse
+Other[3]=Good64x64TilingNoiseHighFreq
+Other[4]=T_Ivy_SROA
+Other[5]=base_white_d
+Other[6]=VFX_T_Noise03_D
+Other[7]=VFX_T_RGB_3DNoiseRough_D
+Other[8]=VFX_T_SparkleNoise_01_D
+Other[9]=VFX_T_Char_01_N
+Other[10]=VFX_T_FlameTile_D

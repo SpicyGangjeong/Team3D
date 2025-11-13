@@ -2,7 +2,7 @@
 #include "EditEffect.h"
 
 #include "GameInstance.h"
-
+#include "Effect_Editor.h"
 
 CEditEffect::CEditEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEffectObject{ pDevice, pContext }
@@ -38,10 +38,19 @@ void CEditEffect::Priority_Update(_float fTimeDelta)
 
 void CEditEffect::Update(_float fTimeDelta)
 {
+
+
+
+	if (m_isBillboard)
+		m_pGameInstance->BillBoard(m_pTransformCom);
+
 	if (m_pInstance_ModelCom == nullptr)
 		return;
 
 	m_pInstance_ModelCom->Drop(fTimeDelta);
+
+
+
 }
 
 void CEditEffect::Late_Update(_float fTimeDelta)
@@ -52,10 +61,40 @@ void CEditEffect::Late_Update(_float fTimeDelta)
 
 	_float4* vPos = (_float4*)(m_pTransformCom->Get_WorldMatrixPtr()->m[3]);
 
-	if(m_isBlur == true)
+	if (m_isBlur == true)
 		m_pGameInstance->Add_RenderGroup(RENDER::BLUR, this, *vPos, m_pTransformCom->Get_Radius());
 
 	m_pGameInstance->Add_RenderGroup(m_eRenderOrder, this, *vPos, m_pTransformCom->Get_Radius());
+}
+
+void CEditEffect::Reference_Mat_For_EditEffect()
+{
+
+
+	const char* pCompute[] = { "DIFFUSE" , "MASK", "NOISE", "DISSOLVE" };
+
+	if (ImGui::Combo("OPTION", &m_iSelectTextureNum, pCompute, 4))
+	{
+	}
+	switch (m_iSelectTextureNum)
+	{
+	case 0:
+		dynamic_cast<CEffect_Editor*>(m_pOwner)->Reference_Mat_For_EditEffect((CComponent**)&m_pDiffuse_TextureCom, this);
+		break;
+	case 1:
+		dynamic_cast<CEffect_Editor*>(m_pOwner)->Reference_Mat_For_EditEffect((CComponent**)&m_pMasking_TextureCom, this);
+		break;
+	case 2:
+		dynamic_cast<CEffect_Editor*>(m_pOwner)->Reference_Mat_For_EditEffect((CComponent**)&m_pNoise_TextureCom, this);
+		break;
+	case 3:
+		dynamic_cast<CEffect_Editor*>(m_pOwner)->Reference_Mat_For_EditEffect((CComponent**)&m_pDissolve_TextureCom, this);
+		break;
+	default:
+		break;
+	}
+
+
 }
 
 HRESULT CEditEffect::Ready_Components(void* pArg)
@@ -109,62 +148,80 @@ void CEditEffect::Describe_Entity()
 {
 	//여기서 모델, 텍스쳐, 선택할 수 있도록 함
 
-	CInstance_Model::INSTANCE_DESC InstanceDesc = {};
+	const char* pLerp[] = { "Linear" , "EaseInQuad", "EaseOutQuad", "EaseInCubic" , "EaseOutCubic" , "EaseInOutSin" , "EaseInBack" , "Expo" , "Circle" };
+	const char* pRenderNames[] = { "PRIORITY" , "SHADOW", "NONBLEND", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" , "UI" };
 
-	InstanceDesc.iNumInstance = 1;
-	InstanceDesc.vLifeTime = _float2(1.f, 3.f);
-	InstanceDesc.vRange = _float3(0.f, 0.f, 0.f);
-	InstanceDesc.vSizeMin = _float3(1.f, 1.f, 1.f);
-	InstanceDesc.vSizeMax = _float3(1.f, 1.f, 1.f);
-	InstanceDesc.vSpeed = _float2(0.f, 0.f);
-	InstanceDesc.vAniIndex = _float2(0.f, 32.f);
-	InstanceDesc.vAniTime = _float2(1.f, 3.f);
-	InstanceDesc.vDiffuseUVMoveTime = _float2(1.f, 3.f);
-	InstanceDesc.vMaskingUVMoveTime = _float2(1.f, 3.f);
-
-	const char* pRenderNames[] = {"PRIORITY" , "SHADOW", "NONBLEND", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" , "UI"};
-
-	int iCurrentItem = static_cast<int>(m_eRenderOrder);
+	_int iCurrentItem = static_cast<_int>(m_eRenderOrder);
 
 	if (ImGui::Combo("Render Order", &iCurrentItem, pRenderNames, ENUM_CLASS(RENDER::END)))
 	{
 		m_eRenderOrder = static_cast<RENDER>(iCurrentItem);
 	}
 
+	m_pTransformCom->Describe_Entity();
 
 	GUI::Checkbox("Diffuse", &m_isDiffuse);
 	GUI::Checkbox("Masking", &m_isMasking);
 	GUI::Checkbox("Dissolve", &m_isDissolve);
 	GUI::Checkbox("Noise", &m_isNoise);
-	GUI::Checkbox("UVMove", &m_isUVMove);
-	GUI::Checkbox("Blur", &m_isBlur);
 
 
-	GUI::ColorEdit4("Color", (_float*)&m_vColor);
+	if (GUI::Checkbox("Billboard", &m_isBillboard))
+	{
+		m_pTransformCom->Rotation(0.f, 0.f, 0.f);
+	}
 
-	GUI::DragFloat("BlurIntensity", &m_fBlurIntensity , 0.005f , 0.f , 1.f);
-	GUI::DragFloat("EmissiveCutAlpha", &m_fEmissiveCutAlpha, 0.005f, 0.f, 1.f);
+	GUI::ColorEdit4("MixColor", (_float*)&m_vColor);
+
+	ImGui::PushItemWidth(80);
+
+	ImGui::PopItemWidth();
+
+	if (GUI::TreeNode("BLUR"))
+	{
+		GUI::Checkbox("Blur", &m_isBlur);
+
+		ImGui::PushItemWidth(80);
+		GUI::DragFloat("BlurIntensity", &m_fBlurIntensity, 0.005f, 0.f, 1.f);
+		GUI::DragInt("BlurWeight", &m_iBlurWeight, 1.f, 0, 32);
+
+		
+		ImGui::PopItemWidth();
+
+		GUI::TreePop();
+	}
 
 
-	GUI::ColorEdit4("Emissive", (_float*)&m_vEmissive);
-	GUI::InputFloat("ColorTargetOption", &m_fColorOption);
-	GUI::InputFloat2("UVCutting", (_float*)& m_vUVCutting);
+	if (GUI::TreeNode("EMISSIVE"))
+	{
+		const char* pCompute[] = {"NONE",  "DIV" , "PLUS", "SUBSTRACT", "MULTY" , "EQUL" };
+
+		_int iColorOption = (_int)m_fColorOption;
+
+		if (ImGui::Combo("OPTION", &iColorOption, pCompute , 6))
+		{
+			m_fColorOption = (_float)iColorOption;
+		}
+
+		ImGui::PushItemWidth(80);
+		GUI::DragFloat("EmissiveCutAlpha", &m_fEmissiveCutAlpha, 0.005f, 0.f, 1.f);
+		ImGui::PopItemWidth();
+
+		GUI::ColorEdit4("Emissive", (_float*)&m_vEmissive);
 
 
-
-	GUI::DragFloat2("vUVGainAmount", (_float*)&m_vUVGainAmount , 0.01f);
-
-
-	//UVMove를 각각의 텍스쳐마다 적용할 수 있어야함 
-	//노이즈 적용하기
-	//디졸브 적용하기
-	//라이프 타임에 의해서가 아닌 공용시간으로 제어해야함
-	//UV잘라서 적용할 수 있도록
+		GUI::TreePop();
+	}
 
 
 
 	if (GUI::TreeNode("MODEL"))
 	{
+		CInstance_Model::INSTANCE_DESC InstanceDesc = {};
+
+		if (m_pInstance_ModelCom != nullptr)
+			InstanceDesc = m_pInstance_ModelCom->Get_EffectValue();
+
 		m_pGameInstance->Asset_Description<CInstance_Model>(ENUM_CLASS(LEVEL::EFFECT), "INSTANCE_MODEL", (CComponent**)&m_pInstance_ModelCom, &InstanceDesc, this);
 
 		if (m_pInstance_ModelCom != nullptr)
@@ -180,7 +237,34 @@ void CEditEffect::Describe_Entity()
 	{
 		if (GUI::TreeNode("DIFFUSE"))
 		{
-			m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DIFFUSE_TEXTURE", (CComponent**)&m_pDiffuse_TextureCom, nullptr, this);
+
+
+			ImGui::PushItemWidth(80);
+			GUI::Checkbox("DiffuseUVMove", &m_isDiffuseUVMove);
+			GUI::InputFloat2("DiffuseUVCutting", (_float*)&m_vUVCutting);
+
+			GUI::Spacing();
+
+			GUI::DragFloat2("DiffuseUVGainAmount", (_float*)&m_vDiffuseUVGainAmount, 0.01f);
+	
+
+
+			_int iDiffuseMoveLerpOption = (_int)m_iDiffuseMoveLerpOption;
+
+			if (ImGui::Combo("Lerp DiffuseMove Option", &iDiffuseMoveLerpOption, pLerp, 9))
+			{
+				m_iDiffuseMoveLerpOption = iDiffuseMoveLerpOption;
+			}
+
+			GUI::Spacing();
+
+			ImGui::PopItemWidth();
+
+			if (GUI::TreeNode("DIFFUSE_TEX"))
+			{
+				m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DIFFUSE_TEXTURE", (CComponent**)&m_pDiffuse_TextureCom, nullptr, this);
+				GUI::TreePop();
+			}
 
 			GUI::Separator(); GUI::Spacing();
 
@@ -193,8 +277,33 @@ void CEditEffect::Describe_Entity()
 	{
 		if (GUI::TreeNode("MASKING"))
 		{
-			m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "MASKING_TEXTURE", (CComponent**)&m_pMasking_TextureCom, nullptr, this);
 
+			GUI::InputFloat2("MaskUVCutting", (_float*)&m_vUVMaskCutting);
+			GUI::Checkbox("MaskUVMove", &m_isMaskUVMove);
+
+			ImGui::PushItemWidth(80);
+			GUI::DragFloat2("MaskingUVGainAmount", (_float*)&m_vMaskingUVGainAmount, 0.01f);
+			ImGui::PopItemWidth();
+
+
+			GUI::Spacing();
+
+
+			_int iMaskMoveLerpOption = (_int)m_iMaskMoveLerpOption;
+
+			if (ImGui::Combo("Lerp MaskMove Option", &iMaskMoveLerpOption, pLerp, 9))
+			{
+				m_iMaskMoveLerpOption = iMaskMoveLerpOption;
+			}
+		
+		
+			GUI::Spacing();
+
+			if (GUI::TreeNode("MASKING_TEX"))
+			{
+				m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "MASKING_TEXTURE", (CComponent**)&m_pMasking_TextureCom, nullptr, this);
+				GUI::TreePop();
+			}
 			GUI::Separator(); GUI::Spacing();
 
 			GUI::TreePop();
@@ -203,10 +312,13 @@ void CEditEffect::Describe_Entity()
 
 	if (m_isDissolve == true)
 	{
-		if (GUI::TreeNode("DISOLVE"))
+		if (GUI::TreeNode("DISSOLVE"))
 		{
-			m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISOLVE_TEXTURE", (CComponent**)&m_pNoise_TextureCom, &InstanceDesc, this);
-
+			if (GUI::TreeNode("DISSOLV_TEX"))
+			{
+				m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISSOLVE_TEXTURE", (CComponent**)&m_pDissolve_TextureCom, nullptr, this);
+				GUI::TreePop();
+			}
 			GUI::Separator(); GUI::Spacing();
 
 			GUI::TreePop();
@@ -217,13 +329,48 @@ void CEditEffect::Describe_Entity()
 	{
 		if (GUI::TreeNode("NOISE"))
 		{
-			m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "NOISE_TEXTURE", (CComponent**)&m_pNoise_TextureCom, nullptr, this);
+			ImGui::PushItemWidth(80);
+
+			GUI::DragFloat("NoiseDistortionIntensity", &m_fNoiseDistortionIntensity, 0.005f, 0.f, 1.f);
+			
+			GUI::Spacing();
+
+			GUI::DragFloat2("DiffuseNoiseUVGainAmount", (_float*)&m_vDiffuseNoiseUVGainAmount, 0.01f);
+
+			_int iDiffuseNoiseMoveLerpOption = (_int)m_iDiffuseNoiseMoveLerpOption;
+
+			if (ImGui::Combo("Lerp DiffuseNoiseMove Option", &iDiffuseNoiseMoveLerpOption, pLerp, 9))
+			{
+				m_iDiffuseNoiseMoveLerpOption = iDiffuseNoiseMoveLerpOption;
+			}
+
+			GUI::Spacing();
+
+			GUI::DragFloat2("MaskNoiseUVGainAmount", (_float*)&m_vMaskNoiseUVGainAmount, 0.01f);
+
+			_int iMaskNoiseMoveLerpOption = (_int)m_iMaskNoiseMoveLerpOption;
+
+			if (ImGui::Combo("Lerp MaskNoiseMove Option", &iMaskNoiseMoveLerpOption, pLerp, 9))
+			{
+				m_iMaskNoiseMoveLerpOption = iMaskNoiseMoveLerpOption;
+			}
+			
+			GUI::Spacing();
+
+			ImGui::PopItemWidth();
+
+			if (GUI::TreeNode("NOISE_TEX"))
+			{
+				m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "NOISE_TEXTURE", (CComponent**)&m_pNoise_TextureCom, nullptr, this);
+				GUI::TreePop();
+			}
 
 			GUI::Separator(); GUI::Spacing();
 
 			GUI::TreePop();
 		}
 	}
+
 
 
 }

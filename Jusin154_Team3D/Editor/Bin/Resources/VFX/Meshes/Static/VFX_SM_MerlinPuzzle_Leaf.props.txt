@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Gameplay/SphinxPuzzles/Materials/MI_MerlinPuzzle_Structure_Leaves.MI_MerlinPuzzle_Structure_Leaves'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Gameplay/SphinxPuzzles/Materials/MI_MerlinPuzzle_Structure_Leaves.MI_MerlinPuzzle_Structure_Leaves'
+        MaterialSlotName = VFX_SK_MerlinPuzzle_Structure_Foliage_LOD0_001_Leaves
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 38.7381, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0.22933, Y=-1.27329, Z=18.0253 }
+    BoxExtent = { X=8.29507, Y=9.51023, Z=18.1134 }
+    SphereRadius = 18.5603
+}

@@ -256,6 +256,8 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 		eTexture = aiTextureType::aiTextureType_NORMALS;
 	else if (!strcmp(FileType.c_str(), "normal"))
 		eTexture = aiTextureType::aiTextureType_NORMALS;
+	else if (!strcmp(FileType.c_str(), "n"))
+		eTexture = aiTextureType::aiTextureType_NORMALS;
 	else if (!strcmp(FileType.c_str(), "MRO"))
 		eTexture = aiTextureType::aiTextureType_METALNESS;
 	else if (!strcmp(FileType.c_str(), "MROH"))

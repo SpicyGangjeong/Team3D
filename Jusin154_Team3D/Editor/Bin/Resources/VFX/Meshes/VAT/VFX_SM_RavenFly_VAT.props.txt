@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/VAT/MatInstances/VFX_MI_VAT_Soft_RavenFly_01.VFX_MI_VAT_Soft_RavenFly_01'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/VAT/MatInstances/VFX_MI_VAT_Soft_RavenFly_01.VFX_MI_VAT_Soft_RavenFly_01'
+        MaterialSlotName = constant
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 116.934, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-2.51086, Y=-0.819168, Z=30.5795 }
+    BoxExtent = { X=50.0154, Y=54.2583, Z=20.9774 }
+    SphereRadius = 74.1974
+}

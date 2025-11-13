@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Meshes/Static/HairStyles/MI_HUM_F_Hair_STUHair14_SideBun.MI_HUM_F_Hair_STUHair14_SideBun'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Meshes/Static/HairStyles/MI_HUM_F_Hair_STUHair14_SideBun.MI_HUM_F_Hair_STUHair14_SideBun'
+        MaterialSlotName = MI_HUM_F_Hair_StuHair14_SideBun
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 34.0068, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-0.687913, Y=-2.03835, Z=4.27948 }
+    BoxExtent = { X=9.90578, Y=11.4799, Z=12.2533 }
+    SphereRadius = 15.2436
+}

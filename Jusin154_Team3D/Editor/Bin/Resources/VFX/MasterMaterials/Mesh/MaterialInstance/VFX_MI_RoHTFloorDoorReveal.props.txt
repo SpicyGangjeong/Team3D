@@ -1,0 +1,88 @@
+Parent = Material3'/Game/VFX/MasterMaterials/Mesh/VFX_M_SolidMeshRotateUvs.VFX_M_SolidMeshRotateUvs'
+ScalarParameterValues[6] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=Diffuse Brightness }
+        ParameterValue = 0.5
+        ParameterName = None
+    }
+    ScalarParameterValues[1] =
+    {
+        ParameterInfo = { Name=Roughness Adjuster }
+        ParameterValue = -0.1
+        ParameterName = None
+    }
+    ScalarParameterValues[2] =
+    {
+        ParameterInfo = { Name=Normal Height }
+        ParameterValue = 1.25
+        ParameterName = None
+    }
+    ScalarParameterValues[3] =
+    {
+        ParameterInfo = { Name=UV scale }
+        ParameterValue = 0.65
+        ParameterName = None
+    }
+    ScalarParameterValues[4] =
+    {
+        ParameterInfo = { Name=Rotation }
+        ParameterValue = 0.1333
+        ParameterName = None
+    }
+    ScalarParameterValues[5] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[0] = {}
+VectorParameterValues[0] = {}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Opaque (0)
+    bOverride_TwoSided = false
+    TwoSided = false
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[0] = {}
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[3] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 0.65625
+        UVChannelIndex = 0
+        TextureName = T_HW_stonefloor_1_normal
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 0.65625
+        UVChannelIndex = 0
+        TextureName = T_HW_stonefloor_1_SRO
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 0.65625
+        UVChannelIndex = 0
+        TextureName = T_Sanc_RoHT_StoneTiles_01_D
+    }
+}

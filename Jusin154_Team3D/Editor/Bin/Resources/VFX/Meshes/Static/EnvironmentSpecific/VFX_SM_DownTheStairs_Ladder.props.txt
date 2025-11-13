@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/VFX_MI_DownTheStairs_Ladder.VFX_MI_DownTheStairs_Ladder'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/VFX_MI_DownTheStairs_Ladder.VFX_MI_DownTheStairs_Ladder'
+        MaterialSlotName = DownTheStairs
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 488.909, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-0.410675, Y=-11.4379, Z=745.829 }
+    BoxExtent = { X=43.4034, Y=20.1737, Z=745.656 }
+    SphereRadius = 746.969
+}

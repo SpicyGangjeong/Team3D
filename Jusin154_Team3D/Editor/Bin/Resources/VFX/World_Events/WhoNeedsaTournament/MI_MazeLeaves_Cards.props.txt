@@ -1,0 +1,158 @@
+Parent = Material3'/Game/VFX/World_Events/WhoNeedsaTournament/VFX_MM_GrowingLeaves.VFX_MM_GrowingLeaves'
+ScalarParameterValues[10] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=BandSize }
+        ParameterValue = 0.3
+        ParameterName = None
+    }
+    ScalarParameterValues[1] =
+    {
+        ParameterInfo = { Name=debug speed }
+        ParameterValue = 0.05
+        ParameterName = None
+    }
+    ScalarParameterValues[2] =
+    {
+        ParameterInfo = { Name=Growth }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[3] =
+    {
+        ParameterInfo = { Name=MaskDistortionMult }
+        ParameterValue = 0.6
+        ParameterName = None
+    }
+    ScalarParameterValues[4] =
+    {
+        ParameterInfo = { Name=Noise Intensity }
+        ParameterValue = 5
+        ParameterName = None
+    }
+    ScalarParameterValues[5] =
+    {
+        ParameterInfo = { Name=Wind Intensity }
+        ParameterValue = 0.05
+        ParameterName = None
+    }
+    ScalarParameterValues[6] =
+    {
+        ParameterInfo = { Name=Wind Noise Size }
+        ParameterValue = 500
+        ParameterName = None
+    }
+    ScalarParameterValues[7] =
+    {
+        ParameterInfo = { Name=Wind Speed }
+        ParameterValue = 0.1
+        ParameterName = None
+    }
+    ScalarParameterValues[8] =
+    {
+        ParameterInfo = { Name=Wind Weight }
+        ParameterValue = 0.05
+        ParameterName = None
+    }
+    ScalarParameterValues[9] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[7] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=Mask }
+        ParameterValue = Texture2D'/Game/VFX/World_Events/WhoNeedsaTournament/VFX_T_MazeTwig_02_D.VFX_T_MazeTwig_02_D'
+        ParameterName = None
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=MaskDistortionTexture }
+        ParameterValue = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_Soft_D.VFX_T_Noise_Soft_D'
+        ParameterName = None
+    }
+    TextureParameterValues[2] =
+    {
+        ParameterInfo = { Name=Wind Noise }
+        ParameterValue = Texture2D'/Game/Environment/Overland_Common/Objects/Trees/Textures/T_WindNoise_MSK.T_WindNoise_MSK'
+        ParameterName = None
+    }
+    TextureParameterValues[3] =
+    {
+        ParameterInfo = { Name=Diffuse }
+        ParameterValue = Texture2D'/Game/Environment/WorldEvents/WNAT/Textures/T_WE_MazeTwig_02_D.T_WE_MazeTwig_02_D'
+        ParameterName = None
+    }
+    TextureParameterValues[4] =
+    {
+        ParameterInfo = { Name=MRO }
+        ParameterValue = Texture2D'/Game/Environment/WorldEvents/WNAT/Textures/T_WE_MazeTwig_02_MRO.T_WE_MazeTwig_02_MRO'
+        ParameterName = None
+    }
+    TextureParameterValues[5] =
+    {
+        ParameterInfo = { Name=Normal }
+        ParameterValue = Texture2D'/Game/Environment/WorldEvents/WNAT/Textures/T_WE_MazeTwig_02_N.T_WE_MazeTwig_02_N'
+        ParameterName = None
+    }
+    TextureParameterValues[6] =
+    {
+        ParameterInfo = { Name=Subsurface }
+        ParameterValue = Texture2D'/Game/Environment/WorldEvents/WNAT/Textures/T_WE_MazeTwig_02_D.T_WE_MazeTwig_02_D'
+        ParameterName = None
+    }
+}
+VectorParameterValues[1] =
+{
+    VectorParameterValues[0] =
+    {
+        ParameterInfo = { Name=Subsurface Colour }
+        ParameterValue = { R=0.45098, G=0.623529, B=0.078431, A=1 }
+        ParameterName = None
+    }
+}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Masked (1)
+    bOverride_TwoSided = false
+    TwoSided = true
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[0] = {}
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[2] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_WE_MazeTwig_02_N
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Noise_Soft_D
+    }
+}

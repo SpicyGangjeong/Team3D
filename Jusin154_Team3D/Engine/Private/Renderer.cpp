@@ -113,8 +113,8 @@ void CRenderer::Render()
 	Render_Effect();
 	Render_NonLight();
 	Render_Blend();
-	Render_UI();
 	Render_LastColor();
+	Render_UI();
 
 #ifdef _DEBUG
 	if(m_pGameInstance->Key_Pressing(DIK_F10))
@@ -301,6 +301,10 @@ void CRenderer::Render_Combined()
 		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur_X"), m_pShader, "g_BlurXTexture"))) {
 			return;
 		}
+		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur_Weight"), m_pShader, "g_BlurWeightTexture"))) {
+			return;
+		}
+
 	}
 
 	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::COMBINED));
@@ -379,6 +383,11 @@ void CRenderer::Render_Blur()
 		return;
 	}
 
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur_Weight"), m_pShader, "g_BlurWeightTexture"))) {
+		return;
+	}
+
+	
 	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::BLUR));
 
 	m_pVIBuffer->Bind_Resources();
@@ -588,6 +597,12 @@ HRESULT CRenderer::Initialize()
 		}
 
 		/* Target_Blur */
+
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Blur_Weight"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.0f, 0.0f, 0.0f, 1.0f)))) {
+			return E_FAIL;
+		}
+
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Blur"), (_uint)Viewport.Width, (_uint)Viewport.Height,
 			DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
 			return E_FAIL;
@@ -648,6 +663,10 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Blur"), TEXT("Target_Blur_Weight")))) {
+			return E_FAIL;
+		}
+
 		/* MRT_Blur_X */
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Blur_X"), TEXT("Target_Blur_X")))) {
 			return E_FAIL;
@@ -683,20 +702,19 @@ HRESULT CRenderer::Initialize()
 	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(Viewport.Width, Viewport.Height, 0.f, 1.f));
 
 #ifdef _DEBUG
-	//if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Diffuse"), 75.f, 75.f, 150.0f, 150.0f))) {
-	//	return E_FAIL;
-	//}
-	//if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Normal"), 75.f, 225.f, 150.0f, 150.0f))) {
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Diffuse"), 75.f, 75.f, 150.0f, 150.0f))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Normal"), 75.f, 225.f, 150.0f, 150.0f))) {
+		return E_FAIL;
+	}
 	//if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Shade"), 225.f, 75.f, 150.0f, 150.0f))) {
 	//	return E_FAIL;
 	//}
 	//if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Specular"), 225.f, 225.f, 150.0f, 150.0f))) {
 	//	return E_FAIL;
 	//}
-
-	if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Color"), 375.f, 225.f, 450.f, 450.0f))) {
+	if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Color"),75.f , 1080 - 75.f, 150.f, 150.f))) {
 		return E_FAIL;
 	}
 
@@ -705,15 +723,18 @@ HRESULT CRenderer::Initialize()
 	//}
 	//if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_PreShadow"), Viewport.Width - 150.0f, Viewport.Height - 150.0f, 300.f, 300.f))) {
 	//	return E_FAIL;
-	//}
+	
+	if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Blur_Weight"), 75.f, 75.f, 150.0f, 150.0f))) {
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Blur"), 150.0f, Viewport.Height - 150.0f, 300.f, 300.f))) {
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Blur"), 75.f, 225.f, 150.0f, 150.0f))) {
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Blur_X"), Viewport.Width * 0.75f, Viewport.Height * 0.75f, Viewport.Width * 0.5f, Viewport.Height * 0.5f))) {
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Blur_X"), 225.f, 75.f, 150.0f, 150.0f))) {
+		return E_FAIL;
+	}
 
 
 

@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Mesh/MaterialInstance/VFX_MI_GuideMech_SplineRibbon_01.VFX_MI_GuideMech_SplineRibbon_01'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Mesh/MaterialInstance/VFX_MI_GuideMech_SplineRibbon_01.VFX_MI_GuideMech_SplineRibbon_01'
+        MaterialSlotName = texture_material
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 393.004, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=0, Z=1.52588e-05 }
+    BoxExtent = { X=50, Y=47.5528, Z=250 }
+    SphereRadius = 254.951
+}

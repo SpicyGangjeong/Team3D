@@ -1,0 +1,8 @@
+Diffuse=VFX_T_Wisps_O1_D
+Normal=VFX_T_RibbonOffset_N
+Opacity=VFX_T_Packed_BPF_01_D
+Emissive=VFX_T_FireballGeo_E
+Other[0]=VFX_T_Dementor_Ribbon_pack_D
+Other[1]=VFX_T_Dementor_Ash_D
+Other[2]=VFX_T_Dementor_Ash_N
+Other[3]=VFX_T_Dementor_RibbonFlakes_D

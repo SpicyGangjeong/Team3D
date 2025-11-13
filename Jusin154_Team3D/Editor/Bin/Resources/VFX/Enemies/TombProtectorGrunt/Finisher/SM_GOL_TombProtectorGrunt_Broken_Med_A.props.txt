@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Enemies/TombProtectorGrunt/Finisher/MI_GOL_TombProtectorGrunt_Legs_P3D.MI_GOL_TombProtectorGrunt_Legs_P3D'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Enemies/TombProtectorGrunt/Finisher/MI_GOL_TombProtectorGrunt_Legs_P3D.MI_GOL_TombProtectorGrunt_Legs_P3D'
+        MaterialSlotName = WorldGridMaterial
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 405.355, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=7.05719e-05, Y=5.89637, Z=4.83204 }
+    BoxExtent = { X=19.5459, Y=26.2756, Z=29.1069 }
+    SphereRadius = 40.6352
+}

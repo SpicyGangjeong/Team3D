@@ -63,6 +63,7 @@ void CLevel_ObjectViewer::Add_Object()
 	if (GUI::BeginTabBar("ObjectTabs"))
 	{
 		Add_Parts();
+
 	}
 	GUI::EndTabBar();
 	GUI::End();
@@ -336,6 +337,7 @@ void CLevel_ObjectViewer::Object_Setting()
 			GUI::SameLine();
 			if(GUI::Button("Event"))
 			{
+
 				ImDrawList* draw = ImGui::GetForegroundDrawList();
 				ImVec2 center = ImGui::GetMainViewport()->GetCenter();
 				float scale = 50.f;
@@ -353,7 +355,9 @@ void CLevel_ObjectViewer::Object_Setting()
 		}
 
 		if (m_HumanRoot)
+
 			m_HumanRoot->Get_ModelParts(ENUM_CLASS(CRootModelPart::PARTSTYPE::HAIR))->Describe_Entity();
+
 	}
 
 	GUI::End();

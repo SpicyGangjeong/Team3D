@@ -1,0 +1,38 @@
+Materials[2] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Enemies/TombProtector/DestructionPieces/New/VFX_MI_TMB_ArmorFX_Interior.VFX_MI_TMB_ArmorFX_Interior'
+    Materials[1] = MaterialInstanceConstant'/Game/VFX/Enemies/TombProtector/Body/VFX_MI_TMB_ArmorFX_Legs.VFX_MI_TMB_ArmorFX_Legs'
+}
+SourceModels[0] = {}
+StaticMaterials[2] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Enemies/TombProtector/DestructionPieces/New/VFX_MI_TMB_ArmorFX_Interior.VFX_MI_TMB_ArmorFX_Interior'
+        MaterialSlotName = Interior
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 316.627, 475.243, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Enemies/TombProtector/Body/VFX_MI_TMB_ArmorFX_Legs.VFX_MI_TMB_ArmorFX_Legs'
+        MaterialSlotName = GOL_TombProtector01_Lower1_ncl1_9
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 465.966, 400.519, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=22.1924, Y=-9.68419, Z=54.7363 }
+    BoxExtent = { X=16.08, Y=21.3782, Z=30.6176 }
+    SphereRadius = 33.3527
+}

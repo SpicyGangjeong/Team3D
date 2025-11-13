@@ -1,0 +1,201 @@
+Skeleton = Skeleton'/Game/VFX/Meshes/Animated/TrollCrash_Hogsmead/VFX_TrollCrash_Phase2_5_12_Skeleton.VFX_TrollCrash_Phase2_5_12_Skeleton'
+bHasVertexColors = true
+bComputeNormalsToUVs = false
+bVertexCurvature = false
+bBuildVertexCurvature = false
+LODInfo[5] =
+{
+    LODInfo[0] =
+    {
+        DisplayFactor = 0
+        LODHysteresis = 0.02
+        LODMaterialMap[21] =
+        {
+            LODMaterialMap[0] = -1
+            LODMaterialMap[1] = -1
+            LODMaterialMap[2] = -1
+            LODMaterialMap[3] = -1
+            LODMaterialMap[4] = -1
+            LODMaterialMap[5] = -1
+            LODMaterialMap[6] = -1
+            LODMaterialMap[7] = -1
+            LODMaterialMap[8] = -1
+            LODMaterialMap[9] = -1
+            LODMaterialMap[10] = -1
+            LODMaterialMap[11] = -1
+            LODMaterialMap[12] = -1
+            LODMaterialMap[13] = -1
+            LODMaterialMap[14] = -1
+            LODMaterialMap[15] = -1
+            LODMaterialMap[16] = -1
+            LODMaterialMap[17] = -1
+            LODMaterialMap[18] = -1
+            LODMaterialMap[19] = -1
+            LODMaterialMap[20] = 1
+        }
+        bEnableShadowCasting[0] = {}
+        bEnableSecondPass = false
+        SecondarySection[0] = {}
+        SecondaryMaterialsIndex[0] = {}
+        BonesToRemove[0] = {}
+        BonesToPrioritize[0] = {}
+        SourceImportFilename = "E:/../Assets/FX/Meshes/AnimatedMeshes/HM_TrollFight_BuildingCollapse_Ulysses/VFX_TrollCrash_Phase2_5_12.fbx"
+    }
+    LODInfo[1] =
+    {
+        DisplayFactor = 0
+        LODHysteresis = 0.02
+        LODMaterialMap[21] =
+        {
+            LODMaterialMap[0] = -1
+            LODMaterialMap[1] = -1
+            LODMaterialMap[2] = -1
+            LODMaterialMap[3] = -1
+            LODMaterialMap[4] = -1
+            LODMaterialMap[5] = -1
+            LODMaterialMap[6] = -1
+            LODMaterialMap[7] = -1
+            LODMaterialMap[8] = -1
+            LODMaterialMap[9] = -1
+            LODMaterialMap[10] = -1
+            LODMaterialMap[11] = -1
+            LODMaterialMap[12] = -1
+            LODMaterialMap[13] = -1
+            LODMaterialMap[14] = -1
+            LODMaterialMap[15] = -1
+            LODMaterialMap[16] = -1
+            LODMaterialMap[17] = -1
+            LODMaterialMap[18] = -1
+            LODMaterialMap[19] = -1
+            LODMaterialMap[20] = 1
+        }
+        bEnableShadowCasting[0] = {}
+        bEnableSecondPass = false
+        SecondarySection[0] = {}
+        SecondaryMaterialsIndex[0] = {}
+        BonesToRemove[0] = {}
+        BonesToPrioritize[0] = {}
+        SourceImportFilename = ""
+    }
+    LODInfo[2] =
+    {
+        DisplayFactor = 0
+        LODHysteresis = 0.02
+        LODMaterialMap[21] =
+        {
+            LODMaterialMap[0] = -1
+            LODMaterialMap[1] = -1
+            LODMaterialMap[2] = -1
+            LODMaterialMap[3] = -1
+            LODMaterialMap[4] = -1
+            LODMaterialMap[5] = -1
+            LODMaterialMap[6] = -1
+            LODMaterialMap[7] = -1
+            LODMaterialMap[8] = -1
+            LODMaterialMap[9] = -1
+            LODMaterialMap[10] = -1
+            LODMaterialMap[11] = -1
+            LODMaterialMap[12] = -1
+            LODMaterialMap[13] = -1
+            LODMaterialMap[14] = -1
+            LODMaterialMap[15] = -1
+            LODMaterialMap[16] = -1
+            LODMaterialMap[17] = -1
+            LODMaterialMap[18] = -1
+            LODMaterialMap[19] = -1
+            LODMaterialMap[20] = 1
+        }
+        bEnableShadowCasting[0] = {}
+        bEnableSecondPass = false
+        SecondarySection[0] = {}
+        SecondaryMaterialsIndex[0] = {}
+        BonesToRemove[0] = {}
+        BonesToPrioritize[0] = {}
+        SourceImportFilename = ""
+    }
+    LODInfo[3] =
+    {
+        DisplayFactor = 0
+        LODHysteresis = 0.02
+        LODMaterialMap[21] =
+        {
+            LODMaterialMap[0] = -1
+            LODMaterialMap[1] = -1
+            LODMaterialMap[2] = -1
+            LODMaterialMap[3] = -1
+            LODMaterialMap[4] = -1
+            LODMaterialMap[5] = -1
+            LODMaterialMap[6] = -1
+            LODMaterialMap[7] = -1
+            LODMaterialMap[8] = -1
+            LODMaterialMap[9] = -1
+            LODMaterialMap[10] = -1
+            LODMaterialMap[11] = -1
+            LODMaterialMap[12] = -1
+            LODMaterialMap[13] = -1
+            LODMaterialMap[14] = -1
+            LODMaterialMap[15] = -1
+            LODMaterialMap[16] = -1
+            LODMaterialMap[17] = -1
+            LODMaterialMap[18] = -1
+            LODMaterialMap[19] = -1
+            LODMaterialMap[20] = 1
+        }
+        bEnableShadowCasting[0] = {}
+        bEnableSecondPass = false
+        SecondarySection[0] = {}
+        SecondaryMaterialsIndex[0] = {}
+        BonesToRemove[0] = {}
+        BonesToPrioritize[0] = {}
+        SourceImportFilename = ""
+    }
+    LODInfo[4] =
+    {
+        DisplayFactor = 0
+        LODHysteresis = 0.02
+        LODMaterialMap[21] =
+        {
+            LODMaterialMap[0] = -1
+            LODMaterialMap[1] = -1
+            LODMaterialMap[2] = -1
+            LODMaterialMap[3] = -1
+            LODMaterialMap[4] = -1
+            LODMaterialMap[5] = -1
+            LODMaterialMap[6] = -1
+            LODMaterialMap[7] = -1
+            LODMaterialMap[8] = -1
+            LODMaterialMap[9] = -1
+            LODMaterialMap[10] = -1
+            LODMaterialMap[11] = -1
+            LODMaterialMap[12] = -1
+            LODMaterialMap[13] = -1
+            LODMaterialMap[14] = -1
+            LODMaterialMap[15] = -1
+            LODMaterialMap[16] = -1
+            LODMaterialMap[17] = -1
+            LODMaterialMap[18] = -1
+            LODMaterialMap[19] = -1
+            LODMaterialMap[20] = 1
+        }
+        bEnableShadowCasting[0] = {}
+        bEnableSecondPass = false
+        SecondarySection[0] = {}
+        SecondaryMaterialsIndex[0] = {}
+        BonesToRemove[0] = {}
+        BonesToPrioritize[0] = {}
+        SourceImportFilename = ""
+    }
+}
+MorphTargets[0] = {}
+Sockets[0] = {}
+SamplingInfo =
+{
+    Regions[0] = {}
+    BuiltData =
+    {
+        WholeMeshBuiltData[5] = { , , , ,  }
+        RegionBuiltData[0] = {}
+    }
+}
+SkinWeightProfiles[0] = {}
+NumVertexColorChannels = 0

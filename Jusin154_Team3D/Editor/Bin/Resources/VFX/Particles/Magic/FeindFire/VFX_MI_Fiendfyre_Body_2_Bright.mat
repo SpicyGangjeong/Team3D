@@ -1,0 +1,10 @@
+Diffuse=VFX_T_Char_01_D
+Normal=T_Pygmy_Body_N
+Emissive=VFX_T_SkinBurn_D
+Other[0]=VFX_T_Noise01_D
+Other[1]=VFX_T_Smoke_Tiled_01_D
+Other[2]=VFX_T_SkinBurn_N
+Other[3]=VFX_T_Noise_Soft_D
+Other[4]=VFX_T_NoiseGreypack01_D
+Other[5]=VFX_T_Char_01_N
+Other[6]=VFX_T_ScorchMark_01b_D

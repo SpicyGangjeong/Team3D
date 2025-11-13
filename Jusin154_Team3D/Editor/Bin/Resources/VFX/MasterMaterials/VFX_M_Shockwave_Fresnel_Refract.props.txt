@@ -1,0 +1,93 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[3] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_Circle_Sphere_D.VFX_T_Circle_Sphere_D'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/VFX_T_Sphere_N.VFX_T_Sphere_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[6] =
+                {
+                    ParameterInfos[0] = { Name=ExponentIn }
+                    ParameterInfos[1] = { Name=Camera Fade Distance }
+                    ParameterInfos[2] = { Name=BaseReflectFractionIn }
+                    ParameterInfos[3] = { Name=Brightness Opacity Bias }
+                    ParameterInfos[4] = { Name=Depth Fade Distance }
+                    ParameterInfos[5] = { Name=Billboard Spherical Normal Strength }
+                }
+            }
+            Entries[1] = { ParameterInfos[0]={} }
+            Entries[2] = { ParameterInfos[0]={} }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[6] = { 4, 20000, 0.05, 0.2, 100, 1 }
+        VectorValues[0] = {}
+        TextureValues[0] = {}
+    }
+    ReferencedTextures[3] =
+    {
+        ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/VFX_T_Sphere_N.VFX_T_Sphere_N'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_Circle_Sphere_D.VFX_T_Circle_Sphere_D'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[0] = {}
+CollectedScalarParameters[6] =
+{
+    CollectedScalarParameters[0] = { Value=4, Name=ExponentIn, Group=None }
+    CollectedScalarParameters[1] =
+    {
+        Value = 20000
+        Name = Camera Fade Distance
+        Group = None
+    }
+    CollectedScalarParameters[2] =
+    {
+        Value = 0.05
+        Name = BaseReflectFractionIn
+        Group = None
+    }
+    CollectedScalarParameters[3] =
+    {
+        Value = 0.2
+        Name = Brightness Opacity Bias
+        Group = None
+    }
+    CollectedScalarParameters[4] = { Value=100, Name=Depth Fade Distance, Group=None }
+    CollectedScalarParameters[5] =
+    {
+        Value = 1
+        Name = Billboard Spherical Normal Strength
+        Group = None
+    }
+}
+CollectedVectorParameters[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Circle_Sphere_D
+    }
+}

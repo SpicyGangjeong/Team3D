@@ -1,0 +1,9 @@
+Diffuse=VFX_T_Ice_D
+Normal=BaseFlattenNormalMap
+Other[0]=DefaultDiffuse
+Other[1]=DefaultNormal_Uncompressed
+Other[2]=VFX_T_Noise01_D
+Other[3]=VFX_T_NoiseCaustics01_Color_D
+Other[4]=VFX_T_Ice_N
+Other[5]=VFX_T_Snow_D
+Other[6]=VFX_T_Snow_N

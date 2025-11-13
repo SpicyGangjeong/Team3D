@@ -1,0 +1,10 @@
+Diffuse=T_Fig07_GraphornHead_D
+Normal=T_Fig07_GraphornHead_N
+Other[0]=VFX_T_GraphornheadSpirals_ErosionMask_D
+Other[1]=VFX_T_GraphornheadSpiralsMasks_ECS_D
+Other[2]=T_Fig07_GraphornHead_MROH
+Other[3]=VFX_T_GraphornheadSpiralsNormal_N
+Other[4]=VFX_T_GraphornDoorSpiral2_N
+Other[5]=VFX_T_GraphornDoorSpiral_ErosionMask2_D
+Other[6]=VFX_T_GraphornDoorSpiralMasks_ECS_D
+Other[7]=VFX_T_Inky_Smoke_D

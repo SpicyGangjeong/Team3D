@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/VAT/MatInstances/VFX_MI_VAT_Goblin_w_Sword_01.VFX_MI_VAT_Goblin_w_Sword_01'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/VAT/MatInstances/VFX_MI_VAT_Goblin_w_Sword_01.VFX_MI_VAT_Goblin_w_Sword_01'
+        MaterialSlotName = constant
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 437.529, 3460.4, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-30.6685, Y=16.6208, Z=65.4911 }
+    BoxExtent = { X=80.7453, Y=48.8056, Z=65.8071 }
+    SphereRadius = 96.1875
+}

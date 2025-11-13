@@ -83,6 +83,7 @@ _vector CLoading_Panel::Get_WorldPostion()
 
 HRESULT CLoading_Panel::Bind_ShaderResources()
 {
+
 	return S_OK;
 }
 

@@ -1,0 +1,84 @@
+Parent = Material3'/Game/VFX/MasterMaterials/MM_VFX_Repository_StormWindMesh_01.MM_VFX_Repository_StormWindMesh_01'
+ScalarParameterValues[3] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=emissiveIntensity_A }
+        ParameterValue = 250
+        ParameterName = None
+    }
+    ScalarParameterValues[1] =
+    {
+        ParameterInfo = { Name=maskPower }
+        ParameterValue = 0.9
+        ParameterName = None
+    }
+    ScalarParameterValues[2] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[0] = {}
+VectorParameterValues[2] =
+{
+    VectorParameterValues[0] =
+    {
+        ParameterInfo = { Name=colorFront }
+        ParameterValue = { R=0.321716, G=0.51943, B=1, A=1 }
+        ParameterName = None
+    }
+    VectorParameterValues[1] =
+    {
+        ParameterInfo = { Name=colorRear }
+        ParameterValue = { R=1, G=0, B=0.028078, A=1 }
+        ParameterName = None
+    }
+}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Additive (3)
+    bOverride_TwoSided = false
+    TwoSided = false
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[0] = {}
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[3] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 2
+        UVChannelIndex = 0
+        TextureName = T_FX_Flowmap_FM
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 0.8125
+        UVChannelIndex = 0
+        TextureName = VFX_T_MarbleSkin_01_BPF_D
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 0.8125
+        UVChannelIndex = 0
+        TextureName = VFX_T_TiledNoise_01_D
+    }
+}

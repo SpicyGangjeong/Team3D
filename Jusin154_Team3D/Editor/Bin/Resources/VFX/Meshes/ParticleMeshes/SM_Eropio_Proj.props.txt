@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/VFX_MI_PanningTexture_geo.VFX_MI_PanningTexture_geo'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/VFX_MI_PanningTexture_geo.VFX_MI_PanningTexture_geo'
+        MaterialSlotName = VFX_MI_PanningTexture_geo
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 154.983, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-11.9932, Y=0, Z=-3.8147e-06 }
+    BoxExtent = { X=51.8269, Y=39.7224, Z=39.6113 }
+    SphereRadius = 51.8269
+}

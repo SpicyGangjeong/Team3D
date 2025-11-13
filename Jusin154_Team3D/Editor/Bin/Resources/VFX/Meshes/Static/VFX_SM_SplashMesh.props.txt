@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = Material3'/Game/VFX/MasterMaterials/Base_Mat/VFX_MM_Mud_Opaque.VFX_MM_Mud_Opaque'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = Material3'/Game/VFX/MasterMaterials/Base_Mat/VFX_MM_Mud_Opaque.VFX_MM_Mud_Opaque'
+        MaterialSlotName = VFX_M_Mud_Opaque
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 107.837, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-5.43679, Y=-0.0163479, Z=11.1576 }
+    BoxExtent = { X=41.3799, Y=30.4676, Z=12.1363 }
+    SphereRadius = 42.9875
+}

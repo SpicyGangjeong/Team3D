@@ -176,7 +176,7 @@ PS_OUT PS_MAIN(PS_IN In)
     
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
-    Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.0f, 1.f);
+    Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 500.f, 0.0f, 1.f);
     
     return Out;
 }
@@ -336,7 +336,7 @@ technique11 MeshTechnique11
 {
     pass MeshPass // 0
     {
-        SetRasterizerState(RS_Default);
+        SetRasterizerState(RS_Nocull);
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
@@ -442,7 +442,7 @@ technique11 MeshTechnique11
 
     pass MapToolPass // 11
     {
-        SetRasterizerState(RS_Default);
+        SetRasterizerState(RS_Nocull);
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();

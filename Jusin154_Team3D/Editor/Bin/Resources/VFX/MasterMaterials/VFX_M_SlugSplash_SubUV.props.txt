@@ -1,0 +1,186 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[3] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_Splash_Packed_D.VFX_T_Splash_Packed_D'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_Water_N.VFX_T_Water_N'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/VFX_T_LightningCenter_Pack_D.VFX_T_LightningCenter_Pack_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[12] =
+                {
+                    ParameterInfos[0] = { Name=Max Refraction }
+                    ParameterInfos[1] = { Name=Clip Min }
+                    ParameterInfos[2] = { Name=Fade Fresnel Power }
+                    ParameterInfos[3] = { Name=UV Warp Strength }
+                    ParameterInfos[4] = { Name=Height To Fresnel Style }
+                    ParameterInfos[5] = { Name=SubUV Columns For GPU }
+                    ParameterInfos[6] = { Name=UV Warp Pan Speed }
+                    ParameterInfos[7] = { Name=SubUV Rows For GPU }
+                    ParameterInfos[8] = { Name=Metalness }
+                    ParameterInfos[9] = { Name=UV Warp Scale }
+                    ParameterInfos[10] = { Name=Emissive Depth Bias }
+                    ParameterInfos[11] = { Name=Clip Softness }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[7] =
+                {
+                    ParameterInfos[0] = { Name=Base Color }
+                    ParameterInfos[1] = { Name=Glow Color }
+                    ParameterInfos[2] = { Name=Ambient Ground Color }
+                    ParameterInfos[3] = { Name=Ambient Sky Color }
+                    ParameterInfos[4] = { Name=Sub UV Sheet Channel Mask }
+                    ParameterInfos[5] = { Name=Light Color }
+                    ParameterInfos[6] = { Name=Light Direction }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=SubUVSheet }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[12] =
+        {
+            ScalarValues[0] = 1.3
+            ScalarValues[1] = 0.05
+            ScalarValues[2] = 8
+            ScalarValues[3] = 0.05
+            ScalarValues[4] = 1
+            ScalarValues[5] = 2
+            ScalarValues[6] = 1
+            ScalarValues[7] = 2
+            ScalarValues[8] = 0.02
+            ScalarValues[9] = 1
+            ScalarValues[10] = 0.8
+            ScalarValues[11] = 0.1
+        }
+        VectorValues[7] =
+        {
+            VectorValues[0] = { R=0.0858, G=0.090736, B=0.12, A=0.5 }
+            VectorValues[1] = { R=1, G=1, B=1, A=1 }
+            VectorValues[2] = { R=0.2, G=0.123949, B=0.060458, A=0 }
+            VectorValues[3] = { R=0.297, G=0.518281, B=0.825, A=0 }
+            VectorValues[4] = { R=0, G=1, B=0, A=0 }
+            VectorValues[5] = { R=8, G=5.2175, B=4.05315, A=1 }
+            VectorValues[6] = { R=-0.2, G=1, B=1, A=1 }
+        }
+        TextureValues[1] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_Splash_Packed_D.VFX_T_Splash_Packed_D'
+        }
+    }
+    ReferencedTextures[4] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_Water_N.VFX_T_Water_N'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_Splash_Packed_D.VFX_T_Splash_Packed_D'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/VFX_T_LightningCenter_Pack_D.VFX_T_LightningCenter_Pack_D'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[1] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_Splash_Packed_D.VFX_T_Splash_Packed_D'
+        Name = SubUVSheet
+        Group = None
+    }
+}
+CollectedScalarParameters[12] =
+{
+    CollectedScalarParameters[0] = { Value=1.3, Name=Max Refraction, Group=None }
+    CollectedScalarParameters[1] = { Value=0.05, Name=Clip Min, Group=None }
+    CollectedScalarParameters[2] = { Value=8, Name=Fade Fresnel Power, Group=None }
+    CollectedScalarParameters[3] = { Value=0.05, Name=UV Warp Strength, Group=None }
+    CollectedScalarParameters[4] =
+    {
+        Value = 1
+        Name = Height To Fresnel Style
+        Group = None
+    }
+    CollectedScalarParameters[5] = { Value=2, Name=SubUV Columns For GPU, Group=None }
+    CollectedScalarParameters[6] = { Value=1, Name=UV Warp Pan Speed, Group=None }
+    CollectedScalarParameters[7] = { Value=2, Name=SubUV Rows For GPU, Group=None }
+    CollectedScalarParameters[8] = { Value=0.02, Name=Metalness, Group=None }
+    CollectedScalarParameters[9] = { Value=1, Name=UV Warp Scale, Group=None }
+    CollectedScalarParameters[10] = { Value=0.8, Name=Emissive Depth Bias, Group=None }
+    CollectedScalarParameters[11] = { Value=0.1, Name=Clip Softness, Group=None }
+}
+CollectedVectorParameters[7] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0.0858, G=0.090736, B=0.12, A=0.5 }
+        Name = Base Color
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=1, G=1, B=1, A=1 }
+        Name = Glow Color
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=0.2, G=0.123949, B=0.060458, A=0 }
+        Name = Ambient Ground Color
+        Group = None
+    }
+    CollectedVectorParameters[3] =
+    {
+        Value = { R=0.297, G=0.518281, B=0.825, A=0 }
+        Name = Ambient Sky Color
+        Group = None
+    }
+    CollectedVectorParameters[4] =
+    {
+        Value = { R=0, G=1, B=0, A=0 }
+        Name = Sub UV Sheet Channel Mask
+        Group = None
+    }
+    CollectedVectorParameters[5] =
+    {
+        Value = { R=8, G=5.2175, B=4.05315, A=1 }
+        Name = Light Color
+        Group = None
+    }
+    CollectedVectorParameters[6] =
+    {
+        Value = { R=-0.2, G=1, B=1, A=1 }
+        Name = Light Direction
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Water_N
+    }
+}

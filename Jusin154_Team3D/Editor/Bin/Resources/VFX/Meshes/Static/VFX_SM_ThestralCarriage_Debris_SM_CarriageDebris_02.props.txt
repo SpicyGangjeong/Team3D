@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/RiggedObjects/Props/ThestralCarriage/Materials/MI_ThestralCarriage.MI_ThestralCarriage'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/RiggedObjects/Props/ThestralCarriage/Materials/MI_ThestralCarriage.MI_ThestralCarriage'
+        MaterialSlotName = SM_ThestralCarriage
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 620.547, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=1.90735e-06, Y=-1.33514e-05, Z=1.90735e-05 }
+    BoxExtent = { X=8.58685, Y=25.4454, Z=42.3997 }
+    SphereRadius = 50.0582
+}

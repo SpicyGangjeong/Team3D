@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Cinematic/VFX_MI_CIN_WandPieces_AM_Liner_P3D_Direct_TMBG1.VFX_MI_CIN_WandPieces_AM_Liner_P3D_Direct_TMBG1'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Cinematic/VFX_MI_CIN_WandPieces_AM_Liner_P3D_Direct_TMBG1.VFX_MI_CIN_WandPieces_AM_Liner_P3D_Direct_TMBG1'
+        MaterialSlotName = lambert1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 136.257, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=8.36197, Y=-1.08849, Z=0.751414 }
+    BoxExtent = { X=34.4434, Y=10.3326, Z=5.42489 }
+    SphereRadius = 35.1955
+}

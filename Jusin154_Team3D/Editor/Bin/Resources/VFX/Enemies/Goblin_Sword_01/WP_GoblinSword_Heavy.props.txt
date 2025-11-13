@@ -1,0 +1,50 @@
+Materials[3] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Enemies/Goblin_Sword_01/M_Goblin_Goblin_Sword_Glow_Core_Heavy.M_Goblin_Goblin_Sword_Glow_Core_Heavy'
+    Materials[1] = MaterialInstanceConstant'/Game/VFX/Enemies/Goblin_Sword_01/M_FX_Goblin_Sword_Glow_Blade_Heavy.M_FX_Goblin_Sword_Glow_Blade_Heavy'
+    Materials[2] = Material3'/Game/VFX/Enemies/Goblin_Sword_01/M_FX_Goblin_Sword_Glow_Cap.M_FX_Goblin_Sword_Glow_Cap'
+}
+SourceModels[0] = {}
+StaticMaterials[3] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Enemies/Goblin_Sword_01/M_Goblin_Goblin_Sword_Glow_Core_Heavy.M_Goblin_Goblin_Sword_Glow_Core_Heavy'
+        MaterialSlotName = lambert3
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 44.0651, 71.4902, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Enemies/Goblin_Sword_01/M_FX_Goblin_Sword_Glow_Blade_Heavy.M_FX_Goblin_Sword_Glow_Blade_Heavy'
+        MaterialSlotName = lambert5
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 45.6042, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[2] =
+    {
+        MaterialInterface = Material3'/Game/VFX/Enemies/Goblin_Sword_01/M_FX_Goblin_Sword_Glow_Cap.M_FX_Goblin_Sword_Glow_Cap'
+        MaterialSlotName = lambert4
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 3.22081, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0.084692, Y=-0.101351, Z=76.5002 }
+    BoxExtent = { X=13.3022, Y=5.4347, Z=42.679 }
+    SphereRadius = 42.7434
+}

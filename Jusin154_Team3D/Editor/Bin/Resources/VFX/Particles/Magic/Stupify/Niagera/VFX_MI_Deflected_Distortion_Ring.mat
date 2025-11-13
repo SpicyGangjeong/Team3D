@@ -1,0 +1,5 @@
+Diffuse=VFX_T_Circle_Sphere_D
+Normal=VFX_T_DistortionNoise_N
+SpecPower=VFX_T_Circle_Sphere_D
+Other[0]=VFX_T_Ring02_D
+Other[1]=VFX_T_RibbonOffset_N

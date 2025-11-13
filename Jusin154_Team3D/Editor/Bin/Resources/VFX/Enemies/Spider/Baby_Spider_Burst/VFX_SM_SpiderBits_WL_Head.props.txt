@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/RiggedObjects/Characters/Creatures/Insects/Spiders/AraneusThornback/Materials/MI_Spider_AraneusThornback.MI_Spider_AraneusThornback'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/RiggedObjects/Characters/Creatures/Insects/Spiders/AraneusThornback/Materials/MI_Spider_AraneusThornback.MI_Spider_AraneusThornback'
+        MaterialSlotName = M_Spider_AraneusThornback
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 244.633, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=10.3095, Z=-9.53674e-07 }
+    BoxExtent = { X=16.3657, Y=30.6807, Z=14.3383 }
+    SphereRadius = 32.8468
+}

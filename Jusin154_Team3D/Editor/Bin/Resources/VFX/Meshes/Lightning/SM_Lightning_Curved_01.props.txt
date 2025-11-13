@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Phoenix/Plugins/Weather/Content/Lightning/VFX_MM_LightningMesh_Curved.VFX_MM_LightningMesh_Curved'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Phoenix/Plugins/Weather/Content/Lightning/VFX_MM_LightningMesh_Curved.VFX_MM_LightningMesh_Curved'
+        MaterialSlotName = WorldGridMaterial
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 1.56575, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=0, Z=0 }
+    BoxExtent = { X=47.8799, Y=19.2887, Z=18.7917 }
+    SphereRadius = 49.8928
+}

@@ -1,0 +1,292 @@
+Parent = Material3'/Game/VFX/MasterMaterials/VFX_MM_GH_SkyDome_CloudsDay.VFX_MM_GH_SkyDome_CloudsDay'
+ScalarParameterValues[28] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=Cloud Far Speed }
+        ParameterValue = 0.7
+        ParameterName = None
+    }
+    ScalarParameterValues[1] =
+    {
+        ParameterInfo = { Name=Cloud Speed }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[2] =
+    {
+        ParameterInfo = { Name=Cloud Edge Emissive Intensity }
+        ParameterValue = 60
+        ParameterName = None
+    }
+    ScalarParameterValues[3] =
+    {
+        ParameterInfo = { Name=Cloud Near Opacity }
+        ParameterValue = 1.15
+        ParameterName = None
+    }
+    ScalarParameterValues[4] =
+    {
+        ParameterInfo = { Name=Cloud Tile X }
+        ParameterValue = 1.5
+        ParameterName = None
+    }
+    ScalarParameterValues[5] =
+    {
+        ParameterInfo = { Name=Cloud Tile Y }
+        ParameterValue = 1.3
+        ParameterName = None
+    }
+    ScalarParameterValues[6] =
+    {
+        ParameterInfo = { Name=Cloud Far Tile X }
+        ParameterValue = 2.5
+        ParameterName = None
+    }
+    ScalarParameterValues[7] =
+    {
+        ParameterInfo = { Name=Cloud Far Tile Y }
+        ParameterValue = 2
+        ParameterName = None
+    }
+    ScalarParameterValues[8] =
+    {
+        ParameterInfo = { Name=CloudFar Opacity }
+        ParameterValue = 0.2
+        ParameterName = None
+    }
+    ScalarParameterValues[9] =
+    {
+        ParameterInfo = { Name=CloudFar_BumpOffset }
+        ParameterValue = -0.5
+        ParameterName = None
+    }
+    ScalarParameterValues[10] =
+    {
+        ParameterInfo = { Name=Edge Softness }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[11] =
+    {
+        ParameterInfo = { Name=Emissive Opacity }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[12] =
+    {
+        ParameterInfo = { Name=Opacity Intensity }
+        ParameterValue = 5
+        ParameterName = None
+    }
+    ScalarParameterValues[13] =
+    {
+        ParameterInfo = { Name=VertexMesh_Mask }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[14] =
+    {
+        ParameterInfo = { Name=CloudEdge Offset U }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[15] =
+    {
+        ParameterInfo = { Name=CloudEdge Offset V }
+        ParameterValue = -0.028571
+        ParameterName = None
+    }
+    ScalarParameterValues[16] =
+    {
+        ParameterInfo = { Name=CloudEdgeMash Intensity }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[17] =
+    {
+        ParameterInfo = { Name=DistortionTileX }
+        ParameterValue = 15
+        ParameterName = None
+    }
+    ScalarParameterValues[18] =
+    {
+        ParameterInfo = { Name=DistortionTileY }
+        ParameterValue = 15
+        ParameterName = None
+    }
+    ScalarParameterValues[19] =
+    {
+        ParameterInfo = { Name=DistortionPanX }
+        ParameterValue = 0.07
+        ParameterName = None
+    }
+    ScalarParameterValues[20] =
+    {
+        ParameterInfo = { Name=DistortionPanY }
+        ParameterValue = 0.12
+        ParameterName = None
+    }
+    ScalarParameterValues[21] =
+    {
+        ParameterInfo = { Name=DistortionStrength }
+        ParameterValue = 13
+        ParameterName = None
+    }
+    ScalarParameterValues[22] =
+    {
+        ParameterInfo = { Name=DistortionTileFarX }
+        ParameterValue = 20
+        ParameterName = None
+    }
+    ScalarParameterValues[23] =
+    {
+        ParameterInfo = { Name=DistortionTileFarY }
+        ParameterValue = 20
+        ParameterName = None
+    }
+    ScalarParameterValues[24] =
+    {
+        ParameterInfo = { Name=DistortionPanFarX }
+        ParameterValue = 0.035
+        ParameterName = None
+    }
+    ScalarParameterValues[25] =
+    {
+        ParameterInfo = { Name=DistortionPanFarY }
+        ParameterValue = 0.05
+        ParameterName = None
+    }
+    ScalarParameterValues[26] =
+    {
+        ParameterInfo = { Name=DistortionFarStrength }
+        ParameterValue = 15
+        ParameterName = None
+    }
+    ScalarParameterValues[27] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[5] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=Cloud Edge }
+        ParameterValue = Texture2D'/Game/VFX/Textures/Meshes/T_GreatHallCloudsEdge02_D.T_GreatHallCloudsEdge02_D'
+        ParameterName = None
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=Cloud Far Texture }
+        ParameterValue = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Fog/T_GeneralClouds_D.T_GeneralClouds_D'
+        ParameterName = None
+    }
+    TextureParameterValues[2] =
+    {
+        ParameterInfo = { Name=Cloud Texture }
+        ParameterValue = Texture2D'/Game/VFX/Textures/Meshes/T_GreatHallClouds02_D.T_GreatHallClouds02_D'
+        ParameterName = None
+    }
+    TextureParameterValues[3] =
+    {
+        ParameterInfo = { Name=Cloude Edge Mask }
+        ParameterValue = Texture2D'/Game/VFX/Textures/Meshes/T_GreatHallCloudsEmissiveMask02_D.T_GreatHallCloudsEmissiveMask02_D'
+        ParameterName = None
+    }
+    TextureParameterValues[4] =
+    {
+        ParameterInfo = { Name=DistortionTexture }
+        ParameterValue = Texture2D'/Game/VFX/Textures/Flowmaps/VFX_T_Swirl_FlowMapDiffTile_Warp_FM.VFX_T_Swirl_FlowMapDiffTile_Warp_FM'
+        ParameterName = None
+    }
+}
+VectorParameterValues[4] =
+{
+    VectorParameterValues[0] =
+    {
+        ParameterInfo = { Name=Rim Color High }
+        ParameterValue = { R=0.026888, G=0.026338, B=0.046875, A=0 }
+        ParameterName = None
+    }
+    VectorParameterValues[1] =
+    {
+        ParameterInfo = { Name=Rim Color Low }
+        ParameterValue = { R=1.21875, G=2.12844, B=3, A=1 }
+        ParameterName = None
+    }
+    VectorParameterValues[2] =
+    {
+        ParameterInfo = { Name=Shadow Color High }
+        ParameterValue = { R=0.151042, G=0.103815, B=0.105318, A=1 }
+        ParameterName = None
+    }
+    VectorParameterValues[3] =
+    {
+        ParameterInfo = { Name=Shadow Color Low }
+        ParameterValue = { R=0.421875, G=0.385673, B=0.312717, A=1 }
+        ParameterName = None
+    }
+}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Translucent (2)
+    bOverride_TwoSided = false
+    TwoSided = false
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[1] =
+    {
+        StaticSwitchParameters[0] =
+        {
+            Value = true
+            ParameterInfo = { Name=MF_BloomAdaptation }
+            bOverride = true
+        }
+    }
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[4] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1.31329
+        UVChannelIndex = 0
+        TextureName = T_GeneralClouds_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1.31329
+        UVChannelIndex = 0
+        TextureName = T_GreatHallCloudsEdge02_D
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_GreatHallCloudsEmissiveMask02_D
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 15
+        UVChannelIndex = 0
+        TextureName = VFX_T_Swirl_FlowMapDiffTile_Warp_FM
+    }
+}

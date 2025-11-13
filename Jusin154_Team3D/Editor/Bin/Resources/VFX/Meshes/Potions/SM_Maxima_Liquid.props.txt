@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Gameplay/InventoryObjects/Potions/Materials/MI_Potion_Wiggenweld.MI_Potion_Wiggenweld'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Gameplay/InventoryObjects/Potions/Materials/MI_Potion_Wiggenweld.MI_Potion_Wiggenweld'
+        MaterialSlotName = MI_Potion_Wiggenweld
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 31.5585, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=0, Z=-6.52733 }
+    BoxExtent = { X=4.7308, Y=4.7308, Z=10.22 }
+    SphereRadius = 11.2618
+}

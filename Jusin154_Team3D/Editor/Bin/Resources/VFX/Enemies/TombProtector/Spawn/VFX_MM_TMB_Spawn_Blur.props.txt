@@ -1,0 +1,156 @@
+Parent = Material3'/Game/VFX/Niagara/AncientMagic/Burst/VFX_MM_AncMag_ShockRingA.VFX_MM_AncMag_ShockRingA'
+ScalarParameterValues[16] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=Normal Speed U (S) }
+        ParameterValue = 0.819048
+        ParameterName = None
+    }
+    ScalarParameterValues[1] =
+    {
+        ParameterInfo = { Name=Normal Speed V (S) }
+        ParameterValue = 0.1
+        ParameterName = None
+    }
+    ScalarParameterValues[2] =
+    {
+        ParameterInfo = { Name=Normal Tiling U (S) }
+        ParameterValue = 0.259999
+        ParameterName = None
+    }
+    ScalarParameterValues[3] =
+    {
+        ParameterInfo = { Name=Normal Tiling V (S) }
+        ParameterValue = 1.81464
+        ParameterName = None
+    }
+    ScalarParameterValues[4] =
+    {
+        ParameterInfo = { Name=Caustics 2 Speed U (S) }
+        ParameterValue = -0.676191
+        ParameterName = None
+    }
+    ScalarParameterValues[5] =
+    {
+        ParameterInfo = { Name=Caustics 2 Speed V (S) }
+        ParameterValue = -0.142858
+        ParameterName = None
+    }
+    ScalarParameterValues[6] =
+    {
+        ParameterInfo = { Name=Caustics 2 Tiling U (S) }
+        ParameterValue = 0.17143
+        ParameterName = None
+    }
+    ScalarParameterValues[7] =
+    {
+        ParameterInfo = { Name=Caustics 2 Tiling V (S) }
+        ParameterValue = 0.352381
+        ParameterName = None
+    }
+    ScalarParameterValues[8] =
+    {
+        ParameterInfo = { Name=Caustics Speed U (S) }
+        ParameterValue = -0.866667
+        ParameterName = None
+    }
+    ScalarParameterValues[9] =
+    {
+        ParameterInfo = { Name=Caustics Speed V (S) }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[10] =
+    {
+        ParameterInfo = { Name=Caustics Tiling U (S) }
+        ParameterValue = 0.152382
+        ParameterName = None
+    }
+    ScalarParameterValues[11] =
+    {
+        ParameterInfo = { Name=Caustics Tiling V (S) }
+        ParameterValue = 0.499072
+        ParameterName = None
+    }
+    ScalarParameterValues[12] =
+    {
+        ParameterInfo = { Name=Cheap contrast bright (S) }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[13] =
+    {
+        ParameterInfo = { Name=Cheap contrast dark (S) }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[14] =
+    {
+        ParameterInfo = { Name=RefractiveIndex (S) }
+        ParameterValue = 0.933334
+        ParameterName = None
+    }
+    ScalarParameterValues[15] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[0] = {}
+VectorParameterValues[1] =
+{
+    VectorParameterValues[0] =
+    {
+        ParameterInfo = { Name=World Pos Offset }
+        ParameterValue = { R=0, G=0, B=7.45241, A=1 }
+        ParameterName = None
+    }
+}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Additive (3)
+    bOverride_TwoSided = true
+    TwoSided = true
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[0] = {}
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[3] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 0.265625
+        UVChannelIndex = 0
+        TextureName = T_waterSplashA_N
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 0.171875
+        UVChannelIndex = 0
+        TextureName = VFX_T_Noise_Soft_D
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 0.15625
+        UVChannelIndex = 0
+        TextureName = VFX_T_NoiseCaustics01_Color_D
+    }
+}

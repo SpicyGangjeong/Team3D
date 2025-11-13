@@ -8,6 +8,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01.Editor", "01.Editor", "{8F2ABBAF-8EC5-4CF8-8AD2-B09FB2AC9B14}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03.Engine", "03.Engine", "{C8D5274F-AC00-46C7-1F8D-E88E81087A52}"
+	ProjectSection(SolutionItems) = preProject
+		Editor\public\DummySkyBox.h = Editor\public\DummySkyBox.h
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "98.Batch", "98.Batch", "{15C374FB-70F1-426A-AF16-1922F28ABE5D}"
 	ProjectSection(SolutionItems) = preProject

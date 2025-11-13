@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Niagara/AncientMagic/Whirlwind/Maelstrom/VFX_MI_IAncMagPortal_PanGeo.VFX_MI_IAncMagPortal_PanGeo'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Niagara/AncientMagic/Whirlwind/Maelstrom/VFX_MI_IAncMagPortal_PanGeo.VFX_MI_IAncMagPortal_PanGeo'
+        MaterialSlotName = WorldGridMaterial
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 517.365, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=158.605, Y=-31.749, Z=244.855 }
+    BoxExtent = { X=153.162, Y=262.278, Z=239.283 }
+    SphereRadius = 386.43
+}

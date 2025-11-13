@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Editor_Define.h"
-#include "GameObject.h"
+#include "PartObject.h"
 
 NS_BEGIN(Engine)
 class CInstance_Model;
@@ -11,7 +11,7 @@ NS_END
 
 NS_BEGIN(Editor)
 
-class CEffectObject abstract : public CGameObject
+class CEffectObject abstract : public CPartObject
 {
 protected:
 	CEffectObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -31,34 +31,51 @@ protected:
 	virtual HRESULT Initialize(void* pArg) override;
 
 protected:
-	CTexture*			m_pDiffuse_TextureCom = { nullptr };
-	CTexture*			m_pNoise_TextureCom = { nullptr };
-	CTexture*			m_pMasking_TextureCom = { nullptr };
-	CTexture*			m_pDisolve_TextureCom = { nullptr };
+	CTexture* m_pDiffuse_TextureCom = { nullptr };
+	CTexture* m_pNoise_TextureCom = { nullptr };
+	CTexture* m_pMasking_TextureCom = { nullptr };
+	CTexture* m_pDissolve_TextureCom = { nullptr };
 
-	CShader*			m_pShaderCom = { nullptr };
-	CInstance_Model*	m_pInstance_ModelCom = { nullptr };
+	CShader* m_pShaderCom = { nullptr };
+	CInstance_Model* m_pInstance_ModelCom = { nullptr };
 
 protected:
 	_float4 m_vColor = { 0.f ,0.f ,0.f ,1.f };
 
-	_float2 m_vUVGainAmount = {};
-	_float2 m_vUVCutting = {1.f ,1.f};
-			
+	_float2 m_vDiffuseUVGainAmount = {};
+	_float2 m_vMaskingUVGainAmount = {};
+
+	_float2 m_vDiffuseNoiseUVGainAmount = {};
+	_float2 m_vMaskNoiseUVGainAmount = {};
+
+	_float2 m_vUVCutting = { 1.f ,1.f };
+	_float2 m_vUVMaskCutting = { 1.f ,1.f };
+
+	_int    m_iMaskMoveLerpOption = { 0 };
+	_int    m_iDiffuseMoveLerpOption = { 0 };
+	_int    m_iMaskNoiseMoveLerpOption = { 0 };
+	_int    m_iDiffuseNoiseMoveLerpOption = { 0 };
+	_int	m_iBlurWeight = { 0 };
+
+
 	_bool	m_isDiffuse = {};
 	_bool	m_isMasking = {};
 	_bool	m_isDissolve = {};
 	_bool	m_isNoise = {};
-	_bool	m_isUVMove = {};
+	_bool	m_isDiffuseUVMove = {};
+	_bool	m_isMaskUVMove = {};
 	_bool   m_isBlur = {};
+	_bool   m_isBillboard = {};
 
-	_float4 m_vEmissive = { 0.f ,0.f ,0.f ,0.f};
+
+	_float4 m_vEmissive = { 0.f ,0.f ,0.f ,0.f };
 	_float  m_fColorOption = {};
 	_float  m_fBlurIntensity = {};
+	_float  m_fNoiseDistortionIntensity = {};
 	_float  m_fEmissiveCutAlpha = {};
 
 
-	RENDER m_eRenderOrder = {RENDER::EFFECT};
+	RENDER m_eRenderOrder = { RENDER::EFFECT };
 
 public:
 	virtual void Free() override;

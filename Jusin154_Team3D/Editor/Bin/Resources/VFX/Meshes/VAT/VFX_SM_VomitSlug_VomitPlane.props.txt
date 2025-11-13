@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Mesh/MaterialInstance/VFX_MI_VomitPlane.VFX_MI_VomitPlane'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Mesh/MaterialInstance/VFX_MI_VomitPlane.VFX_MI_VomitPlane'
+        MaterialSlotName = lambert1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 23.8468, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=0, Z=13.1363 }
+    BoxExtent = { X=11.7428, Y=11.7428, Z=1.13632 }
+    SphereRadius = 11.7976
+}

@@ -94,6 +94,7 @@ HRESULT CHair::Ready_Components()
 
 	}
 
+
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("MaskTexture"),
 		reinterpret_cast<CComponent**>(&m_pTextureCom))))
 		return E_FAIL;

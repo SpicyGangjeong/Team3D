@@ -1,0 +1,7 @@
+Diffuse=VFX_T_CloudyPack_D
+Normal=T_WPN_Troll_Club02_N
+Emissive=T_WPN_Troll_Club02_D
+Other[0]=VFX_T_Noise04_D
+Other[1]=T_VolcanicAsh_D
+Other[2]=VFX_T_Embers_E
+Other[3]=VFX_T_rock_small_tiling_N

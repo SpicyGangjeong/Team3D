@@ -1,0 +1,135 @@
+TwoSided = true
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[3] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_cloudsBillowy03_N.VFX_T_cloudsBillowy03_N'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/T_dust_cloud_D.T_dust_cloud_D'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/T_Env_Ice_Deco2_Skeleton_D.T_Env_Ice_Deco2_Skeleton_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[10] =
+                {
+                    ParameterInfos[0] = { Name=Roughness }
+                    ParameterInfos[1] = { Name=Ripple Strength }
+                    ParameterInfos[2] = { Name=Ripple Center Mask Exponent }
+                    ParameterInfos[3] = { Name=World Offset Strength }
+                    ParameterInfos[4] = { Name=World Offset Noise Speed }
+                    ParameterInfos[5] = { Name=Normal Scale (S) }
+                    ParameterInfos[6] = { Name=Specular }
+                    ParameterInfos[7] = { Name=Ripple Speed }
+                    ParameterInfos[8] = { Name=Ripple Center (V value) }
+                    ParameterInfos[9] = { Name=World Offset Scale }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=Direction }
+                    ParameterInfos[1] = { Name=Param }
+                }
+            }
+            Entries[2] = { ParameterInfos[0]={} }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[10] =
+        {
+            ScalarValues[0] = 0.8
+            ScalarValues[1] = 4.3439
+            ScalarValues[2] = 0.965377
+            ScalarValues[3] = 20.9882
+            ScalarValues[4] = 129.444
+            ScalarValues[5] = 0.2
+            ScalarValues[6] = 0.2
+            ScalarValues[7] = 1.28117
+            ScalarValues[8] = 0.319048
+            ScalarValues[9] = 0.0007
+        }
+        VectorValues[2] =
+        {
+            VectorValues[0] = { R=0.5, G=0.5, B=2, A=1 }
+            VectorValues[1] = { R=0.572917, G=0.556158, B=0.462344, A=1 }
+        }
+        TextureValues[0] = {}
+    }
+    ReferencedTextures[3] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/T_dust_cloud_D.T_dust_cloud_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_cloudsBillowy03_N.VFX_T_cloudsBillowy03_N'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/T_Env_Ice_Deco2_Skeleton_D.T_Env_Ice_Deco2_Skeleton_D'
+    }
+}
+BlendMode = BLEND_Opaque (0)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[0] = {}
+CollectedScalarParameters[10] =
+{
+    CollectedScalarParameters[0] = { Value=0.8, Name=Roughness, Group=None }
+    CollectedScalarParameters[1] = { Value=4.3439, Name=Ripple Strength, Group=None }
+    CollectedScalarParameters[2] =
+    {
+        Value = 0.965377
+        Name = Ripple Center Mask Exponent
+        Group = None
+    }
+    CollectedScalarParameters[3] =
+    {
+        Value = 20.9882
+        Name = World Offset Strength
+        Group = None
+    }
+    CollectedScalarParameters[4] =
+    {
+        Value = 129.444
+        Name = World Offset Noise Speed
+        Group = None
+    }
+    CollectedScalarParameters[5] = { Value=0.2, Name=Normal Scale (S), Group=None }
+    CollectedScalarParameters[6] = { Value=0.2, Name=Specular, Group=None }
+    CollectedScalarParameters[7] = { Value=1.28117, Name=Ripple Speed, Group=None }
+    CollectedScalarParameters[8] =
+    {
+        Value = 0.319048
+        Name = Ripple Center (V value)
+        Group = None
+    }
+    CollectedScalarParameters[9] =
+    {
+        Value = 0.0007
+        Name = World Offset Scale
+        Group = None
+    }
+}
+CollectedVectorParameters[2] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0.5, G=0.5, B=2, A=1 }
+        Name = Direction
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0.572917, G=0.556158, B=0.462344, A=1 }
+        Name = Param
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

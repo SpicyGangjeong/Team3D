@@ -1,0 +1,38 @@
+Materials[2] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Mesh/MaterialInstance/VFX_MI_Flying_Bee.VFX_MI_Flying_Bee'
+    Materials[1] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Mesh/MaterialInstance/VFX_MI_Flying_Bee_Wings.VFX_MI_Flying_Bee_Wings'
+}
+SourceModels[0] = {}
+StaticMaterials[2] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Mesh/MaterialInstance/VFX_MI_Flying_Bee.VFX_MI_Flying_Bee'
+        MaterialSlotName = texture_material
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 134.949, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Mesh/MaterialInstance/VFX_MI_Flying_Bee_Wings.VFX_MI_Flying_Bee_Wings'
+        MaterialSlotName = texture_material_ncl1_1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 58.7817, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-4.89591, Y=0, Z=3.56369 }
+    BoxExtent = { X=40.4323, Y=68.7362, Z=25.4909 }
+    SphereRadius = 74.3669
+}

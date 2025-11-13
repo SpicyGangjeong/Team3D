@@ -1,0 +1,73 @@
+Skeleton = Skeleton'/Game/VFX/Meshes/Animated/MerlinPuzzles/VFX_SK_Merlinpuzzle_Gazebo_Pillars_Half_Skeleton.VFX_SK_Merlinpuzzle_Gazebo_Pillars_Half_Skeleton'
+bHasVertexColors = false
+bComputeNormalsToUVs = false
+bVertexCurvature = false
+bBuildVertexCurvature = false
+LODInfo[4] =
+{
+    LODInfo[0] =
+    {
+        DisplayFactor = 0
+        LODHysteresis = 0.02
+        LODMaterialMap[0] = {}
+        bEnableShadowCasting[0] = {}
+        bEnableSecondPass = false
+        SecondarySection[0] = {}
+        SecondaryMaterialsIndex[0] = {}
+        BonesToRemove[0] = {}
+        BonesToPrioritize[0] = {}
+        SourceImportFilename = "C:/buildAgent/Assets/FX/Meshes/AnimatedMeshes/VFX_SK_Merlinpuzzle_Gazebo_Pillars_Half.fbx"
+    }
+    LODInfo[1] =
+    {
+        DisplayFactor = 0
+        LODHysteresis = 0.02
+        LODMaterialMap[0] = {}
+        bEnableShadowCasting[0] = {}
+        bEnableSecondPass = false
+        SecondarySection[0] = {}
+        SecondaryMaterialsIndex[0] = {}
+        BonesToRemove[0] = {}
+        BonesToPrioritize[0] = {}
+        SourceImportFilename = ""
+    }
+    LODInfo[2] =
+    {
+        DisplayFactor = 0
+        LODHysteresis = 0.02
+        LODMaterialMap[0] = {}
+        bEnableShadowCasting[0] = {}
+        bEnableSecondPass = false
+        SecondarySection[0] = {}
+        SecondaryMaterialsIndex[0] = {}
+        BonesToRemove[0] = {}
+        BonesToPrioritize[0] = {}
+        SourceImportFilename = ""
+    }
+    LODInfo[3] =
+    {
+        DisplayFactor = 0
+        LODHysteresis = 0.02
+        LODMaterialMap[0] = {}
+        bEnableShadowCasting[0] = {}
+        bEnableSecondPass = false
+        SecondarySection[0] = {}
+        SecondaryMaterialsIndex[0] = {}
+        BonesToRemove[0] = {}
+        BonesToPrioritize[0] = {}
+        SourceImportFilename = ""
+    }
+}
+MorphTargets[0] = {}
+Sockets[0] = {}
+SamplingInfo =
+{
+    Regions[0] = {}
+    BuiltData =
+    {
+        WholeMeshBuiltData[4] = { , , ,  }
+        RegionBuiltData[0] = {}
+    }
+}
+SkinWeightProfiles[0] = {}
+NumVertexColorChannels = 0

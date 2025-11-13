@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/VAT/MatInstances/VFX_MI_VAT_Soft_PensieveMelt.VFX_MI_VAT_Soft_PensieveMelt'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/VAT/MatInstances/VFX_MI_VAT_Soft_PensieveMelt.VFX_MI_VAT_Soft_PensieveMelt'
+        MaterialSlotName = constant
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 322.829, 464.216, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-14.7462, Y=-1.03838, Z=42.8898 }
+    BoxExtent = { X=59.0509, Y=56.2137, Z=45.5899 }
+    SphereRadius = 85.6521
+}

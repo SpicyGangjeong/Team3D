@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Environment/Hogwarts/Common/Materials/Wood/MI_HW_Wood_Ceiling_8.MI_HW_Wood_Ceiling_8'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Hogwarts/Common/Materials/Wood/MI_HW_Wood_Ceiling_8.MI_HW_Wood_Ceiling_8'
+        MaterialSlotName = MI_HW_Wood_Ceiling_2
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 3131.98, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=1.85803, Y=99.3306, Z=814.732 }
+    BoxExtent = { X=1167.56, Y=2399.81, Z=851.545 }
+    SphereRadius = 2801.33
+}

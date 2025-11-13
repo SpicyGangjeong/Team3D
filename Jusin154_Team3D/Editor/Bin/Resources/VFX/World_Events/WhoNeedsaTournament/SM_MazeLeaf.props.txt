@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/World_Events/WhoNeedsaTournament/VFX_MI_MazeParticleLeaves.VFX_MI_MazeParticleLeaves'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/World_Events/WhoNeedsaTournament/VFX_MI_MazeParticleLeaves.VFX_MI_MazeParticleLeaves'
+        MaterialSlotName = WorldGridMaterial
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 49.9058, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=2.03487, Y=-2.67835, Z=-23.7513 }
+    BoxExtent = { X=23.0824, Y=9.6567, Z=29.7445 }
+    SphereRadius = 37.1186
+}

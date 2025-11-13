@@ -35,7 +35,7 @@ VS_OUT VS_MAIN(VS_IN In)
 
 struct PS_IN
 {
-	float4 vPosition : SV_POSITION;
+    float4 vPosition : SV_POSITION;
     float2 vTexcoord : TEXCOORD0;
 };
 
@@ -50,10 +50,7 @@ PS_OUT_BACKBUFFER PS_OUT_LASTCOLOR(PS_IN In)
     
     Out.vBackBuffer = float4(0.f, 0.f, 0.f, 0.f);
     
-    vector vColorTexture = g_ColorTexture.Sample(DefaultSampler, In.vTexcoord);
-    
-    vector vDiffuseTexture = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-    
+    vector vColorTexture = g_ColorTexture.Sample(ClampSampler, In.vTexcoord);
     
     if (0.f == vColorTexture.a)
     {
@@ -66,19 +63,19 @@ PS_OUT_BACKBUFFER PS_OUT_LASTCOLOR(PS_IN In)
     switch (iOption)
     {
         case 1:
-            Out.vBackBuffer.rgb = vColorTexture.rgb;
+            Out.vBackBuffer.rgb /= vColorTexture.rgb;
             break;
         case 2:
-            Out.vBackBuffer.rgb *= vColorTexture.rgb;
+            Out.vBackBuffer.rgb += vColorTexture.rgb;
             break;
         case 3:
             Out.vBackBuffer.rgb -= vColorTexture.rgb;
             break;
         case 4:
-            Out.vBackBuffer.rgb /= vColorTexture.rgb;
+            Out.vBackBuffer.rgb *= vColorTexture.rgb;
             break;
         case 5:
-            Out.vBackBuffer.rgb += vColorTexture.rgb;
+            Out.vBackBuffer.rgb = vColorTexture.rgb;
             break;
         default:
             break;

@@ -1,0 +1,104 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[2] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Dots_E.VFX_T_Dots_E'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_pc_calypsolightclouds_D.VFX_T_pc_calypsolightclouds_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[12] =
+                {
+                    ParameterInfos[0] = { Name=Forward Mask Size }
+                    ParameterInfos[1] = { Name=Cloud Polar Length }
+                    ParameterInfos[2] = { Name=Backward Mask Size }
+                    ParameterInfos[3] = { Name=Edge Cloud Amount }
+                    ParameterInfos[4] = { Name=Spark Speed }
+                    ParameterInfos[5] = { Name=CentreX }
+                    ParameterInfos[6] = { Name=Spark Polar Length }
+                    ParameterInfos[7] = { Name=Cloud Speed }
+                    ParameterInfos[8] = { Name=CentreY }
+                    ParameterInfos[9] = { Name=Cloud Polar Radial }
+                    ParameterInfos[10] = { Name=Spark Polar Width }
+                    ParameterInfos[11] = { Name=Edge Spark Amount }
+                }
+            }
+            Entries[1] = { ParameterInfos[0]={} }
+            Entries[2] = { ParameterInfos[0]={} }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[12] =
+        {
+            ScalarValues[0] = 0.8
+            ScalarValues[1] = 0.319048
+            ScalarValues[2] = 1
+            ScalarValues[3] = 2
+            ScalarValues[4] = 0.647619
+            ScalarValues[5] = 0.5
+            ScalarValues[6] = 0.161904
+            ScalarValues[7] = 0.647619
+            ScalarValues[8] = 0.5
+            ScalarValues[9] = 1
+            ScalarValues[10] = 0.161904
+            ScalarValues[11] = 0.2
+        }
+        VectorValues[0] = {}
+        TextureValues[0] = {}
+    }
+    ReferencedTextures[2] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Dots_E.VFX_T_Dots_E'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_pc_calypsolightclouds_D.VFX_T_pc_calypsolightclouds_D'
+    }
+}
+BlendMode = BLEND_Opaque (0)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[0] = {}
+CollectedScalarParameters[12] =
+{
+    CollectedScalarParameters[0] = { Value=0.8, Name=Forward Mask Size, Group=None }
+    CollectedScalarParameters[1] =
+    {
+        Value = 0.319048
+        Name = Cloud Polar Length
+        Group = None
+    }
+    CollectedScalarParameters[2] = { Value=1, Name=Backward Mask Size, Group=None }
+    CollectedScalarParameters[3] = { Value=2, Name=Edge Cloud Amount, Group=None }
+    CollectedScalarParameters[4] = { Value=0.647619, Name=Spark Speed, Group=None }
+    CollectedScalarParameters[5] = { Value=0.5, Name=CentreX, Group=None }
+    CollectedScalarParameters[6] =
+    {
+        Value = 0.161904
+        Name = Spark Polar Length
+        Group = None
+    }
+    CollectedScalarParameters[7] = { Value=0.647619, Name=Cloud Speed, Group=None }
+    CollectedScalarParameters[8] = { Value=0.5, Name=CentreY, Group=None }
+    CollectedScalarParameters[9] = { Value=1, Name=Cloud Polar Radial, Group=None }
+    CollectedScalarParameters[10] =
+    {
+        Value = 0.161904
+        Name = Spark Polar Width
+        Group = None
+    }
+    CollectedScalarParameters[11] = { Value=0.2, Name=Edge Spark Amount, Group=None }
+}
+CollectedVectorParameters[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

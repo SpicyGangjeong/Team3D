@@ -1,0 +1,7 @@
+Diffuse=VFX_T_Shards_D
+SpecPower=VFX_T_Specks2_tile_D
+Other[0]=BlendFunc_DefBase
+Other[1]=BlendFunc_DefBlend
+Other[2]=VFX_T_Noise_height2_D
+Other[3]=VFX_T_TilingNoise_N
+Other[4]=VFX_T_Speckled_tile_2_D

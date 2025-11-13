@@ -1,0 +1,38 @@
+Materials[2] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/VAT/MatInstances/VFX_MI_VAT_Soft_BirdSmall.VFX_MI_VAT_Soft_BirdSmall'
+    Materials[1] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/VAT/MatInstances/VFX_MI_VAT_Soft_BirdSmall_Wings.VFX_MI_VAT_Soft_BirdSmall_Wings'
+}
+SourceModels[0] = {}
+StaticMaterials[2] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/VAT/MatInstances/VFX_MI_VAT_Soft_BirdSmall.VFX_MI_VAT_Soft_BirdSmall'
+        MaterialSlotName = constant
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 84.5377, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/VAT/MatInstances/VFX_MI_VAT_Soft_BirdSmall_Wings.VFX_MI_VAT_Soft_BirdSmall_Wings'
+        MaterialSlotName = constant_ncl1_1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 73.6193, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-4.36325, Y=0.0612793, Z=6.81278 }
+    BoxExtent = { X=49.1117, Y=56.0351, Z=20.7569 }
+    SphereRadius = 69.7134
+}

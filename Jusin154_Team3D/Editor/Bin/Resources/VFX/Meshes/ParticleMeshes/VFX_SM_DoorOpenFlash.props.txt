@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Particles/MaterialInstance/VFX_MI_FlashRays.VFX_MI_FlashRays'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Particles/MaterialInstance/VFX_MI_FlashRays.VFX_MI_FlashRays'
+        MaterialSlotName = lambert1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 88.996, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-1.52588e-05, Y=12.6713, Z=160.141 }
+    BoxExtent = { X=107.058, Y=16.2097, Z=152.99 }
+    SphereRadius = 154.042
+}

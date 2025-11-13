@@ -27,6 +27,7 @@ private:
 	HRESULT Ready_Layer_Dummy(const _wstring& strLayerTag);
 
 	void Add_Object();
+
 	void Add_Parts();
 	void Show_ModelFilePath();
 	void Category_ModelList(const _char* Category);
@@ -43,6 +44,7 @@ private:
 	class CRootModelPart*	m_HumanRoot = { nullptr };
 	_int					m_iObjectIndex = { 0 };
 	_int					m_iPartsObjectIndex = { 0 };
+
 	_float					m_fAnimFrame = {};
 	_char					m_szName[MAX_PATH];
 	_wchar					m_wszName[MAX_PATH];

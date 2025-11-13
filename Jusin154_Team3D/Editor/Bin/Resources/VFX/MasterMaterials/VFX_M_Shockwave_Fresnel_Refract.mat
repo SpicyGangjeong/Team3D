@@ -1,0 +1,4 @@
+Diffuse=VFX_T_Circle_Sphere_D
+Normal=VFX_T_Sphere_N
+SpecPower=VFX_T_Circle_Sphere_D
+Other[0]=Good64x64TilingNoiseHighFreq

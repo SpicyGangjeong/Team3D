@@ -1,0 +1,5 @@
+Diffuse=base_white_d
+Normal=VFX_T_RibbonOffset_N
+Opacity=T_WaterCaustics_A
+Emissive=VFX_T_ExpulsoCloud_01_E
+Other[0]=Good64x64TilingNoiseHighFreq

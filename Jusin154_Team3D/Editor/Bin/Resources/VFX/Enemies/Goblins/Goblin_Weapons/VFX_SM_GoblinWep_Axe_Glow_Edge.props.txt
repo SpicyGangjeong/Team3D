@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Enemies/Goblins/Goblin_Weapons/VFX_MI_Goblin_Weapon_Edge_Base.VFX_MI_Goblin_Weapon_Edge_Base'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Enemies/Goblins/Goblin_Weapons/VFX_MI_Goblin_Weapon_Edge_Base.VFX_MI_Goblin_Weapon_Edge_Base'
+        MaterialSlotName = Blade_Glow
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 17.421, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=-0.0160136, Z=60.9246 }
+    BoxExtent = { X=37.1051, Y=2.70874, Z=25.2692 }
+    SphereRadius = 39.7815
+}

@@ -1,0 +1,122 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[1] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/VFX_T_FlameTileGrey_D.VFX_T_FlameTileGrey_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[13] =
+                {
+                    ParameterInfos[0] = { Name=DepthFade }
+                    ParameterInfos[1] = { Name=FresnelExponent }
+                    ParameterInfos[2] = { Name=Fresnel Alpha Strength }
+                    ParameterInfos[3] = { Name=FresnelSoftness }
+                    ParameterInfos[4] = { Name=TileX }
+                    ParameterInfos[5] = { Name=NormalDistortionAmount }
+                    ParameterInfos[6] = { Name=VisibleDepthDistance }
+                    ParameterInfos[7] = { Name=PanX }
+                    ParameterInfos[8] = { Name=InvertFresnel }
+                    ParameterInfos[9] = { Name=NormalFlatten }
+                    ParameterInfos[10] = { Name=RadialGradientAmount }
+                    ParameterInfos[11] = { Name=PanY }
+                    ParameterInfos[12] = { Name=TileY }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Channel }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Texture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[13] = { 20, 0.2, 0, 2, 1, 0.1, 44, 0, 1, 0.2, 1, 0, 1 }
+        VectorValues[1] =
+        {
+            VectorValues[0] = { R=0, G=1, B=0, A=0 }
+        }
+        TextureValues[1] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/VFX_T_FlameTileGrey_D.VFX_T_FlameTileGrey_D'
+        }
+    }
+    ReferencedTextures[1] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/VFX_T_FlameTileGrey_D.VFX_T_FlameTileGrey_D'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[1] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_FlameTileGrey_D.VFX_T_FlameTileGrey_D'
+        Name = Texture
+        Group = None
+    }
+}
+CollectedScalarParameters[13] =
+{
+    CollectedScalarParameters[0] = { Value=20, Name=DepthFade, Group=None }
+    CollectedScalarParameters[1] = { Value=0.2, Name=FresnelExponent, Group=None }
+    CollectedScalarParameters[2] = { Value=0, Name=Fresnel Alpha Strength, Group=None }
+    CollectedScalarParameters[3] = { Value=2, Name=FresnelSoftness, Group=None }
+    CollectedScalarParameters[4] = { Value=1, Name=TileX, Group=None }
+    CollectedScalarParameters[5] =
+    {
+        Value = 0.1
+        Name = NormalDistortionAmount
+        Group = None
+    }
+    CollectedScalarParameters[6] = { Value=44, Name=VisibleDepthDistance, Group=None }
+    CollectedScalarParameters[7] = { Value=0, Name=PanX, Group=None }
+    CollectedScalarParameters[8] = { Value=1, Name=InvertFresnel, Group=None }
+    CollectedScalarParameters[9] = { Value=0.2, Name=NormalFlatten, Group=None }
+    CollectedScalarParameters[10] = { Value=1, Name=RadialGradientAmount, Group=None }
+    CollectedScalarParameters[11] = { Value=0, Name=PanY, Group=None }
+    CollectedScalarParameters[12] = { Value=1, Name=TileY, Group=None }
+}
+CollectedVectorParameters[1] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0, G=1, B=0, A=0 }
+        Name = Channel
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_FlameTileGrey_D
+    }
+}
