@@ -11,6 +11,7 @@
 #include "Layer.h"
 #include "GameObject.h"
 #include "DummyObject.h"
+#include "DummySkyBox.h"
 
 CLevel_ObjectViewer::CLevel_ObjectViewer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -46,7 +47,9 @@ void CLevel_ObjectViewer::Update(_float fTimeDelta)
 
 	Show_AnimList();
 
-	Object_Setting();
+	Dummy_Object_Setting();
+
+	Parts_Object_Setting();
 }
 
 HRESULT CLevel_ObjectViewer::Render()
@@ -76,19 +79,20 @@ void CLevel_ObjectViewer::Add_Parts()
 	{
 		if (GUI::BeginTabBar("##MaleTabBar"))
 		{
-			if (GUI::BeginTabItem("Head"))
+			if (GUI::BeginTabItem("Body"))
 			{
-				Category_PartsModelList("Human/Head/Male", "Head");
+				Category_PartsModelList("Human/Body/Male", "Body");
 
 				GUI::EndTabItem();
 			}
+			
 			_bool bDisabled = {};
 			if (m_HumanRoot)
 				bDisabled = (m_HumanRoot->Get_MainModel());
 			if (!bDisabled) GUI::BeginDisabled();
-			if (GUI::BeginTabItem("Body"))
+			if (GUI::BeginTabItem("Head"))
 			{
-				Category_PartsModelList("Human/Body/Male", "Body");
+				Category_PartsModelList("Human/Head/Male", "Head");
 
 				GUI::EndTabItem();
 			}
@@ -96,6 +100,9 @@ void CLevel_ObjectViewer::Add_Parts()
 			if (GUI::BeginTabItem("Hair"))
 			{
 				Category_PartsModelList("Human/Hair/Male", "Hair");
+
+				if (m_HumanRoot)
+					m_HumanRoot->Get_ModelParts(ENUM_CLASS(CRootModelPart::PARTSTYPE::HAIR))->Describe_Entity();
 
 				GUI::EndTabItem();
 			}
@@ -109,19 +116,20 @@ void CLevel_ObjectViewer::Add_Parts()
 	{
 		if (GUI::BeginTabBar("##FeMaleTabBar")) 
 		{
-			if (GUI::BeginTabItem("Head"))
+			if (GUI::BeginTabItem("Body"))
 			{
-				Category_PartsModelList("Human/Head/FeMale", "Head");
+				Category_PartsModelList("Human/Body/FeMale", "Body");
 
 				GUI::EndTabItem();
 			}
+			
 			_bool bDisabled = {};
 			if (m_HumanRoot)
 				bDisabled = (m_HumanRoot->Get_MainModel());
 			if (!bDisabled) GUI::BeginDisabled();
-			if (GUI::BeginTabItem("Body"))
+			if (GUI::BeginTabItem("Head"))
 			{
-				Category_PartsModelList("Human/Body/FeMale", "Body");
+				Category_PartsModelList("Human/Head/FeMale", "Head");
 
 				GUI::EndTabItem();
 			}
@@ -129,6 +137,9 @@ void CLevel_ObjectViewer::Add_Parts()
 			if (GUI::BeginTabItem("Hair"))
 			{
 				Category_PartsModelList("Human/Hair/FeMale", "Hair");
+
+				if (m_HumanRoot)
+					m_HumanRoot->Get_ModelParts(ENUM_CLASS(CRootModelPart::PARTSTYPE::HAIR))->Describe_Entity();
 
 				GUI::EndTabItem();
 			}
@@ -149,6 +160,8 @@ void CLevel_ObjectViewer::Show_ModelFilePath()
 		Category_ModelList("Monster");
 
 		Category_ModelList("Human");
+
+		Category_ModelList("Object");
 	}
 	GUI::EndTabBar();
 	GUI::End();
@@ -214,8 +227,6 @@ void CLevel_ObjectViewer::Category_PartsModelList(const _char* Category, const _
 			{
 				if (GUI::Button(szCategory))
 				{
-					Save_LayerName(Layer);
-
 					CGameObject* pTempObject = { nullptr };
 
 					CDummyObject::PARTS_OBJECT_DESC Desc = {};
@@ -225,10 +236,10 @@ void CLevel_ObjectViewer::Category_PartsModelList(const _char* Category, const _
 					m_HumanRoot->Set_ModelName(szCategory);
 
 					_uint iIndex = 0;
-					if (strstr(szCategory,"Head"))
-						iIndex = ENUM_CLASS(CRootModelPart::PARTSTYPE::HEAD);
-					else if (strstr(szCategory,"Body"))
+					if (strstr(szCategory,"Body"))
 						iIndex = ENUM_CLASS(CRootModelPart::PARTSTYPE::BODY);
+					else if (strstr(szCategory,"Head"))
+						iIndex = ENUM_CLASS(CRootModelPart::PARTSTYPE::HEAD);
 					else if (strstr(szCategory,"Hair"))
 						iIndex = ENUM_CLASS(CRootModelPart::PARTSTYPE::HAIR);
 
@@ -250,6 +261,7 @@ void CLevel_ObjectViewer::Show_AnimList()
 			if (GUI::Button(pModel->Get_AnimList(i)))
 			{
 				pModel->Set_AnimationIndex(i);
+				pModel->Set_CurrentTrackPosition(0.f);
 			}
 		}
 	}
@@ -281,7 +293,7 @@ void CLevel_ObjectViewer::Show_ObjectList()
 	}
 }
 
-void CLevel_ObjectViewer::Object_Setting()
+void CLevel_ObjectViewer::Dummy_Object_Setting()
 {
 	GUI::Begin("Object_Info");
 	if (!m_Objects.empty())
@@ -308,15 +320,20 @@ void CLevel_ObjectViewer::Object_Setting()
 		}
 	}
 	GUI::End();
+}
 
+void CLevel_ObjectViewer::Parts_Object_Setting()
+{
 	GUI::Begin("PartsObject_Info");
 	if (m_HumanRoot)
 	{
 		CModel* pModel = m_HumanRoot->Get_MainModel();
 		if (pModel)
 		{
-			_float AnimTrack = pModel->Get_CurrentTrackPosition();
-			GUI::DragFloat("AnimTrack", &AnimTrack);
+			GUI::Button(pModel->Get_AnimList(pModel->Get_AnimIndex()));
+
+			_float KeyFrame = pModel->Get_CurrentTrackPosition();
+			GUI::DragFloat("KeyFrame", &KeyFrame);
 
 			_float AnimSpeed = pModel->Get_AnimSpeed();
 			GUI::DragFloat("AnimSpeed", &AnimSpeed, 0.1f);
@@ -328,36 +345,64 @@ void CLevel_ObjectViewer::Object_Setting()
 				pModel->Set_PlayAnim(bPlayAnim);
 			}
 
-			if (GUI::Button("Add Event"))
+			if (GUI::Button("Load KeyFrame"))
 			{
-				m_fAnimFrame = m_HumanRoot->Get_MainModel()->Get_CurrentTrackPosition();
+				Load_KeyFrame();
 			}
 
-			GUI::DragFloat("Anim Frame", &m_fAnimFrame);
-			GUI::SameLine();
-			if(GUI::Button("Event"))
-			{
+			static _char EventName[64] = {};
 
+			GUI::InputText("EventName", EventName, sizeof(EventName));
+			GUI::SameLine();
+
+			if (GUI::Button("Save KeyFrame"))
+			{
+				if (m_HumanRoot && m_HumanRoot->Get_MainModel())
+				{
+					_float fKeyFrame = m_HumanRoot->Get_MainModel()->Get_CurrentTrackPosition();
+					m_KeyFrame.push_back(fKeyFrame);
+					m_Events.emplace_back(EventName);
+
+					FILE* fp = nullptr;
+					fopen_s(&fp, "../Bin/Resources/Models/KeyFrame.bin", "wb");
+					if (!fp) return;
+
+					_uint KeyFrameSize = (_uint)m_KeyFrame.size();
+
+					fwrite(&KeyFrameSize, sizeof(_uint), 1, fp);
+
+					for (size_t i = 0; i < m_KeyFrame.size(); i++)
+					{
+						_uint EventSize = (_uint)m_Events[i].size();
+						fwrite(&m_KeyFrame[i], sizeof(_float), 1, fp);
+						fwrite(&EventSize, sizeof(_uint), 1, fp);
+						fwrite(&m_Events[i], sizeof(_string), 1, fp);
+					}
+						
+
+					fclose(fp);
+
+					EventName[0] = '\0';
+				}
+			}
+
+			for (_uint i = 0; i < m_KeyFrame.size(); ++i)
+			{
 				ImDrawList* draw = ImGui::GetForegroundDrawList();
 				ImVec2 center = ImGui::GetMainViewport()->GetCenter();
 				float scale = 50.f;
 
-				draw->AddLine(center, ImVec2(center.x + scale, center.y), IM_COL32(255, 0, 0, 255), 2.0f);
-				draw->AddLine(center, ImVec2(center.x, center.y - scale), IM_COL32(0, 255, 0, 255), 2.0f);
-				draw->AddLine(center, ImVec2(center.x + scale * 0.5f, center.y + scale * 0.5f), IM_COL32(0, 0, 255, 255), 2.0f);
+				GUI::DragFloat(m_Events[i].c_str(), &m_KeyFrame[i]);
 			}
+
 
 			if (GUI::Button("Delete"))
 			{
 				m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_Root"))->Clear_Layer();
 				m_HumanRoot = nullptr;
+				m_KeyFrame.clear();
 			}
 		}
-
-		if (m_HumanRoot)
-
-			m_HumanRoot->Get_ModelParts(ENUM_CLASS(CRootModelPart::PARTSTYPE::HAIR))->Describe_Entity();
-
 	}
 
 	GUI::End();
@@ -384,6 +429,30 @@ _wchar* CLevel_ObjectViewer::Save_ModelName(const _char* Category)
 	wcscat_s(m_wszName, szDir2.c_str());
 
 	return m_wszName;
+}
+
+void CLevel_ObjectViewer::Load_KeyFrame()
+{
+	FILE* fp = nullptr;
+	fopen_s(&fp, "../Bin/Resources/Models/KeyFrame.bin", "rb");
+	if (!fp) return;
+
+	_uint KeyFameSize = {};
+	_uint EventLen = {};
+
+	fread(&KeyFameSize, sizeof(_uint), 1, fp);
+
+	for (size_t i = 0; i < KeyFameSize; i++)
+	{
+		fread(&m_fKeyFrame, sizeof(_float), 1, fp);
+		fread(&EventLen, sizeof(_uint), 1, fp);
+		fread(&m_strEvent, sizeof(_string), 1, fp);
+
+		m_Events.push_back(m_strEvent);
+		m_KeyFrame.push_back(m_fKeyFrame);
+	}
+
+	fclose(fp);
 }
 
 HRESULT CLevel_ObjectViewer::Ready_Layer_Camera(const _wstring& strLayerTag)
@@ -428,7 +497,7 @@ HRESULT CLevel_ObjectViewer::Ready_Layer_UI(const _wstring& strLayerTag)
 
 HRESULT CLevel_ObjectViewer::Ready_Layer_Dummy(const _wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_Cube>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummySkyBox>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE)))
 		return E_FAIL;
 
 	return S_OK;

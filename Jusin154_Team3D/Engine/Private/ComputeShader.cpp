@@ -345,6 +345,7 @@ void CComputeShader::Free()
 		Safe_Release(m_pOutputUAV[i]);
 		Safe_Release(m_pOutputBuffer[i]);
 		Safe_Release(m_pOutputSRV[i]);
+		Safe_Release(m_pOutputStagingBuffer[i]);
 	}
 
 

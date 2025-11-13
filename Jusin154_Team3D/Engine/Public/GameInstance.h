@@ -66,7 +66,7 @@ public:
 	}
 
 	template<typename T>
-	void Asset_Description(_uint iLevel, const _char* pComponentName, CComponent** ppOut, void* pDesc, class CGameObject* pOwner = nullptr, _wstring wstrGroupName = L"")
+	void Asset_Description(_uint iLevel, const _char* pComponentName, Engine::CComponent** ppOut, void* pDesc, class CGameObject* pOwner = nullptr, _wstring wstrGroupName = L"")
 	{
 		return m_pPrototype_Manager->CPrototype_Manager::Asset_Description<T>(iLevel, pComponentName, ppOut, pDesc, pOwner, wstrGroupName);
 	}
@@ -178,9 +178,8 @@ public:
 	_bool	isPicking(_float3* pOut);
 #pragma endregion
 #pragma region PhysX_Manager
-	PSX::PxMaterial* Get_Material(_float3& vMatInfo);
+	PSX::PxMaterial* Get_Material(_float3* vMatInfo);
 	void RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh);
-	PSX::PxShape* Create_Shape(ACTOR eType, _float3& vhalfGeometryInfo, PSX::PxMaterial& pxMaterial, _bool bExclusive = false, PSX::PxShapeFlags ePxShapeFlag = PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE);
 	const PSX::PxRigidDynamic* Add_DynamicActor(CRigidBody& RigidBody);
 	const PSX::PxRigidStatic* Add_StaticActor(CRigidBody& RigidBody);
 
@@ -190,7 +189,7 @@ public:
 	PSX::PxController*	Get_Controller(_uint iControllerIndex);
 	void				ReleaseController(_uint iControllerIndex);
 
-	HRESULT ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix);
+	HRESULT ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix = XMMatrixIdentity());
 	HRESULT SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
 	HRESULT LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes); // 모델 불러왔던 경로에 그대로 있음
 #pragma endregion

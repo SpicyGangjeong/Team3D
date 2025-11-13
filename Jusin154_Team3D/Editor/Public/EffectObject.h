@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Editor_Define.h"
-#include "GameObject.h"
+#include "PartObject.h"
 
 NS_BEGIN(Engine)
 class CInstance_Model;
@@ -11,7 +11,7 @@ NS_END
 
 NS_BEGIN(Editor)
 
-class CEffectObject abstract : public CGameObject
+class CEffectObject abstract : public CPartObject
 {
 protected:
 	CEffectObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -50,6 +50,13 @@ protected:
 
 	_float2 m_vUVCutting = { 1.f ,1.f };
 	_float2 m_vUVMaskCutting = { 1.f ,1.f };
+
+	_int    m_iMaskMoveLerpOption = { 0 };
+	_int    m_iDiffuseMoveLerpOption = { 0 };
+	_int    m_iMaskNoiseMoveLerpOption = { 0 };
+	_int    m_iDiffuseNoiseMoveLerpOption = { 0 };
+	_int	m_iBlurWeight = { 0 };
+
 
 	_bool	m_isDiffuse = {};
 	_bool	m_isMasking = {};

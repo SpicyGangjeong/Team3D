@@ -39,7 +39,7 @@ void CEditEffect::Priority_Update(_float fTimeDelta)
 void CEditEffect::Update(_float fTimeDelta)
 {
 
-	Reference_Mat_For_EditEffect();
+
 
 	if (m_isBillboard)
 		m_pGameInstance->BillBoard(m_pTransformCom);
@@ -69,7 +69,7 @@ void CEditEffect::Late_Update(_float fTimeDelta)
 
 void CEditEffect::Reference_Mat_For_EditEffect()
 {
-	ImGui::Begin("Reference Material");
+
 
 	const char* pCompute[] = { "DIFFUSE" , "MASK", "NOISE", "DISSOLVE" };
 
@@ -93,7 +93,7 @@ void CEditEffect::Reference_Mat_For_EditEffect()
 	default:
 		break;
 	}
-	ImGui::End();
+
 
 }
 
@@ -148,12 +148,7 @@ void CEditEffect::Describe_Entity()
 {
 	//여기서 모델, 텍스쳐, 선택할 수 있도록 함
 
-	//트레일 만들기
-	//사인 러프
-	//머테리얼 바인딩
-	//블러가 디졸브에 안사라짐 
-	//루프 빌보드
-
+	const char* pLerp[] = { "Linear" , "EaseInQuad", "EaseOutQuad", "EaseInCubic" , "EaseOutCubic" , "EaseInOutSin" , "EaseInBack" , "Expo" , "Circle" };
 	const char* pRenderNames[] = { "PRIORITY" , "SHADOW", "NONBLEND", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" , "UI" };
 
 	_int iCurrentItem = static_cast<_int>(m_eRenderOrder);
@@ -169,7 +164,7 @@ void CEditEffect::Describe_Entity()
 	GUI::Checkbox("Masking", &m_isMasking);
 	GUI::Checkbox("Dissolve", &m_isDissolve);
 	GUI::Checkbox("Noise", &m_isNoise);
-	GUI::Checkbox("Blur", &m_isBlur);
+
 
 	if (GUI::Checkbox("Billboard", &m_isBillboard))
 	{
@@ -184,8 +179,13 @@ void CEditEffect::Describe_Entity()
 
 	if (GUI::TreeNode("BLUR"))
 	{
+		GUI::Checkbox("Blur", &m_isBlur);
+
 		ImGui::PushItemWidth(80);
 		GUI::DragFloat("BlurIntensity", &m_fBlurIntensity, 0.005f, 0.f, 1.f);
+		GUI::DragInt("BlurWeight", &m_iBlurWeight, 1.f, 0, 32);
+
+		
 		ImGui::PopItemWidth();
 
 		GUI::TreePop();
@@ -194,11 +194,11 @@ void CEditEffect::Describe_Entity()
 
 	if (GUI::TreeNode("EMISSIVE"))
 	{
-		const char* pCompute[] = { "EQUL" , "PLUS", "SUBSTRACT", "MULTY" , "DIV" };
+		const char* pCompute[] = {"NONE",  "DIV" , "PLUS", "SUBSTRACT", "MULTY" , "EQUL" };
 
 		_int iColorOption = (_int)m_fColorOption;
 
-		if (ImGui::Combo("OPTION", &iColorOption, pCompute, 5))
+		if (ImGui::Combo("OPTION", &iColorOption, pCompute , 6))
 		{
 			m_fColorOption = (_float)iColorOption;
 		}
@@ -243,12 +243,28 @@ void CEditEffect::Describe_Entity()
 			GUI::Checkbox("DiffuseUVMove", &m_isDiffuseUVMove);
 			GUI::InputFloat2("DiffuseUVCutting", (_float*)&m_vUVCutting);
 
+			GUI::Spacing();
+
 			GUI::DragFloat2("DiffuseUVGainAmount", (_float*)&m_vDiffuseUVGainAmount, 0.01f);
-			GUI::DragFloat2("DiffuseNoiseUVGainAmount", (_float*)&m_vDiffuseNoiseUVGainAmount, 0.01f);
+	
+
+
+			_int iDiffuseMoveLerpOption = (_int)m_iDiffuseMoveLerpOption;
+
+			if (ImGui::Combo("Lerp DiffuseMove Option", &iDiffuseMoveLerpOption, pLerp, 9))
+			{
+				m_iDiffuseMoveLerpOption = iDiffuseMoveLerpOption;
+			}
+
+			GUI::Spacing();
 
 			ImGui::PopItemWidth();
 
-			m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DIFFUSE_TEXTURE", (CComponent**)&m_pDiffuse_TextureCom, nullptr, this);
+			if (GUI::TreeNode("DIFFUSE_TEX"))
+			{
+				m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DIFFUSE_TEXTURE", (CComponent**)&m_pDiffuse_TextureCom, nullptr, this);
+				GUI::TreePop();
+			}
 
 			GUI::Separator(); GUI::Spacing();
 
@@ -267,11 +283,27 @@ void CEditEffect::Describe_Entity()
 
 			ImGui::PushItemWidth(80);
 			GUI::DragFloat2("MaskingUVGainAmount", (_float*)&m_vMaskingUVGainAmount, 0.01f);
-			GUI::DragFloat2("MaskNoiseUVGainAmount", (_float*)&m_vMaskNoiseUVGainAmount, 0.01f);
 			ImGui::PopItemWidth();
 
-			m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "MASKING_TEXTURE", (CComponent**)&m_pMasking_TextureCom, nullptr, this);
 
+			GUI::Spacing();
+
+
+			_int iMaskMoveLerpOption = (_int)m_iMaskMoveLerpOption;
+
+			if (ImGui::Combo("Lerp MaskMove Option", &iMaskMoveLerpOption, pLerp, 9))
+			{
+				m_iMaskMoveLerpOption = iMaskMoveLerpOption;
+			}
+		
+		
+			GUI::Spacing();
+
+			if (GUI::TreeNode("MASKING_TEX"))
+			{
+				m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "MASKING_TEXTURE", (CComponent**)&m_pMasking_TextureCom, nullptr, this);
+				GUI::TreePop();
+			}
 			GUI::Separator(); GUI::Spacing();
 
 			GUI::TreePop();
@@ -282,8 +314,11 @@ void CEditEffect::Describe_Entity()
 	{
 		if (GUI::TreeNode("DISSOLVE"))
 		{
-			m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISSOLVE_TEXTURE", (CComponent**)&m_pDissolve_TextureCom, nullptr, this);
-
+			if (GUI::TreeNode("DISSOLV_TEX"))
+			{
+				m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISSOLVE_TEXTURE", (CComponent**)&m_pDissolve_TextureCom, nullptr, this);
+				GUI::TreePop();
+			}
 			GUI::Separator(); GUI::Spacing();
 
 			GUI::TreePop();
@@ -295,11 +330,40 @@ void CEditEffect::Describe_Entity()
 		if (GUI::TreeNode("NOISE"))
 		{
 			ImGui::PushItemWidth(80);
+
 			GUI::DragFloat("NoiseDistortionIntensity", &m_fNoiseDistortionIntensity, 0.005f, 0.f, 1.f);
+			
+			GUI::Spacing();
+
+			GUI::DragFloat2("DiffuseNoiseUVGainAmount", (_float*)&m_vDiffuseNoiseUVGainAmount, 0.01f);
+
+			_int iDiffuseNoiseMoveLerpOption = (_int)m_iDiffuseNoiseMoveLerpOption;
+
+			if (ImGui::Combo("Lerp DiffuseNoiseMove Option", &iDiffuseNoiseMoveLerpOption, pLerp, 9))
+			{
+				m_iDiffuseNoiseMoveLerpOption = iDiffuseNoiseMoveLerpOption;
+			}
+
+			GUI::Spacing();
+
+			GUI::DragFloat2("MaskNoiseUVGainAmount", (_float*)&m_vMaskNoiseUVGainAmount, 0.01f);
+
+			_int iMaskNoiseMoveLerpOption = (_int)m_iMaskNoiseMoveLerpOption;
+
+			if (ImGui::Combo("Lerp MaskNoiseMove Option", &iMaskNoiseMoveLerpOption, pLerp, 9))
+			{
+				m_iMaskNoiseMoveLerpOption = iMaskNoiseMoveLerpOption;
+			}
+			
+			GUI::Spacing();
+
 			ImGui::PopItemWidth();
 
-
-			m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "NOISE_TEXTURE", (CComponent**)&m_pNoise_TextureCom, nullptr, this);
+			if (GUI::TreeNode("NOISE_TEX"))
+			{
+				m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "NOISE_TEXTURE", (CComponent**)&m_pNoise_TextureCom, nullptr, this);
+				GUI::TreePop();
+			}
 
 			GUI::Separator(); GUI::Spacing();
 

@@ -70,6 +70,7 @@ HRESULT CMapContainer::Save_PartObjects(tinyxml2::XMLDocument& Doc, tinyxml2::XM
 		// <PartObject>
 		tinyxml2::XMLElement* PartObject = Doc.NewElement("PartObject");
 		PartObject->SetAttribute("Lod_Level", pMapObject->Get_LodLevel());
+		PartObject->SetAttribute("Key_Index", pMapObject->Get_iKeyIndex());
 		Container->InsertEndChild(PartObject);
 
 		for (_uint i = 0; i < pMapObject->Get_LodLevel() + 1; ++i)
@@ -110,7 +111,6 @@ HRESULT CMapContainer::Save_PartObjects(tinyxml2::XMLDocument& Doc, tinyxml2::XM
 		RotationElem->SetAttribute("y", vRotation.y);
 		RotationElem->SetAttribute("z", vRotation.z);
 		PartObject->InsertEndChild(RotationElem);
-
 	}
 
 	return S_OK;

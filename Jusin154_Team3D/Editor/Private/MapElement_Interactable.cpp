@@ -2,6 +2,9 @@
 #include "MapElement_Interactable.h"
 
 #include "GameInstance.h"
+#include "Terrain.h"
+#include "Layer.h"
+#include "VIBuffer_Terrain.h"
 
 CMapElement_Interactable::CMapElement_Interactable(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMapElement{ pDevice, pContext }
@@ -20,11 +23,32 @@ HRESULT CMapElement_Interactable::Initialize_Prototype()
 
 HRESULT CMapElement_Interactable::Initialize(void* pArg)
 {
+	MAPOBJECT_LOD_DESC* pDesc = static_cast<MAPOBJECT_LOD_DESC*>(pArg);
+
+	m_iMaxLodLevel = pDesc->iMaxLodLevel;
+
+	for (_uint i = 0; i < m_iMaxLodLevel + 1; i++)
+	{
+		m_ModelPrototypeTags.push_back(pDesc->ModelPrototypeTags[i]);
+		//m_ModelPathIndices.push_back((*pDesc->pModelPathIndices)[i]);
+	}
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
+
+#ifdef _DEBUG
+	m_bSelected = false;
+	m_vPosition = pDesc->vPosition;
+	m_vScale = pDesc->vScale;
+	m_vRotation = pDesc->vRotation;
+
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
+	m_pTransformCom->Set_Scale(m_vScale);
+	m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
+#endif // _DEBUG
 
 	return S_OK;
 }
@@ -58,6 +82,9 @@ void CMapElement_Interactable::Late_Update(_float fTimeDelta)
 
 HRESULT CMapElement_Interactable::Render()
 {
+	if (FAILED(Bind_ShaderResources()))
+		return E_FAIL;
+
 	_uint		iNumMeshes = m_pModelComs[m_iLodIndex]->Get_NumMeshes();
 
 	for (_uint i = 0; i < iNumMeshes; i++)
@@ -95,6 +122,23 @@ HRESULT CMapElement_Interactable::Ready_Components(void* pArg)
 	if (FAILED(__super::Ready_Components(pArg))) {
 		return E_FAIL;
 	}
+
+	for (_uint i = 0; i < m_iMaxLodLevel + 1; ++i)
+	{
+		CModel* pModel = { nullptr };
+
+		/* Com_Model */
+		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_ModelPrototypeTags[i],
+			reinterpret_cast<CComponent**>(&pModel))))
+			return E_FAIL;
+
+		m_pModelComs.push_back(pModel);
+	}
+
+	/* Com_Shader */
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_MESH,
+		reinterpret_cast<CComponent**>(&m_pShaderCom))))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -147,6 +191,10 @@ CGameObject* CMapElement_Interactable::Clone(void* pArg, CGameObject* pOwner)
 void CMapElement_Interactable::Free()
 {
 	__super::Free();
+
+	SAFE_RELEASE(m_pShaderCom);
+	for (auto& pModel : m_pModelComs)
+		SAFE_RELEASE(pModel);
 }
 
 void CMapElement_Interactable::Describe_Entity()
@@ -165,7 +213,7 @@ void CMapElement_Interactable::Describe_Entity()
 	GUI::InputFloat("Y##Position", &m_vPosition.y, 0.1f, 1.f);
 	GUI::InputFloat("Z##Position", &m_vPosition.z, 0.1f, 1.f);
 
-	/*if (m_pGameInstance->Mouse_Down(DIM_LBUTTON) && m_pGameInstance->Key_Pressing(DIK_LSHIFT))
+	if (m_pGameInstance->Mouse_Down(DIM_LBUTTON) && m_pGameInstance->Key_Pressing(DIK_LSHIFT))
 	{
 		CTerrain* pTerrain = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Terrain"))->Get_Object<CTerrain>();
 		if (nullptr != pTerrain)
@@ -173,7 +221,7 @@ void CMapElement_Interactable::Describe_Entity()
 			pTerrain->Get_Component<CVIBuffer_Terrain>()->Picking(pTerrain->Get_Component<CTransform>(), m_vPosition);
 		}
 
-	}*/
+	}
 
 	GUI::Text("----- Rotation ----");
 	GUI::InputFloat("X##Rotation", &m_vRotation.x, 10.f, 45.f);

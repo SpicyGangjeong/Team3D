@@ -32,7 +32,7 @@ HRESULT CMapObject_LOD::Initialize(void* pArg)
 	for (_uint i = 0; i < m_iMaxLodLevel + 1; i++)
 	{
 		m_ModelPrototypeTags.push_back(pDesc->ModelPrototypeTags[i]);
-		m_ModelPathIndices.push_back((*pDesc->pModelPathIndices)[i]);
+		//m_ModelPathIndices.push_back((*pDesc->pModelPathIndices)[i]);
 	}
 
 	if (FAILED(__super::Initialize(pArg)))
@@ -284,22 +284,21 @@ void CMapObject_LOD::Describe_Entity()
 		GUI::SameLine();
 		if (GUI::Button("Bake!!!")) {
 			CMapObject_Manager* pManager = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_MAPOBJECTMANAGER)->Get_Object<CMapObject_Manager>();
-			for (_uint i = 0; i < (_uint)m_ModelPrototypeTags.size(); ++i) {
+			for (_uint i = 0; i < (_uint)m_ModelPathIndices.size(); ++i) {
 				filesystem::path filePath = pManager->Get_PrototypePath(m_ModelPathIndices[i]);
 				
 				CModel* pModel = m_pModelComs[i];
 				_uint iNumMesh = pModel->Get_NumMeshes();
 				pModel->Save_PhysXTriMeshes(filePath.string().c_str());
 
-
 				CRigidBody::RIGIDBODY_DESC Desc{};
-				Desc.eType = ACTOR::TRIANGLEMESH;
 
 				for (_uint i = 0; i < iNumMesh; ++i)
 				{ // RIGID_BODY
-					Desc.tRigidStaticDesc.szMeshName = pModel->Get_MeshName(i);
+					_string strDestName = pModel->Get_MeshName(i) + to_string(i);
+					Desc.szMeshName = strDestName.c_str();
 
-					if (FAILED(Add_Asset_Component(g_iStaticLevel, CMyTools::ToWstring(pModel->Get_MeshName(i)).c_str(), nullptr, &Desc))) {
+					if (FAILED(Add_Asset_Component(g_iStaticLevel, CMyTools::ToWstring(strDestName).c_str(), nullptr, &Desc))) {
 						assert(false);
 					}
 				}

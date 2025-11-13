@@ -12,6 +12,8 @@ NS_BEGIN(Editor)
 
 class CMapObject_Manager final : public CGameObject
 {
+	enum class ADD_TYPE {CONTAINER, ELEMENT_STATIC, ELEMENT_INTERACT};
+
 private:
 	CMapObject_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CMapObject_Manager(const CMapObject_Manager& Prototype);
@@ -28,15 +30,20 @@ public:
 	const filesystem::path Get_PrototypePath(_uint iModelIndex);
 
 private:
+	ADD_TYPE							m_eType = {};
+
 	class CMapObject*					m_pSelectObject = { nullptr };
+	class CMapElement*					m_pSelectElemnt = { nullptr };
 	list<class CMapObject*>				m_MapObjects = {};
 	vector<_wstring>					m_ModelPrototypeTags;
+	map<_wstring, _uint>				m_PartObjectKeyCount;
 	vector<_wstring>					m_LODModelPrototypeTags;
 	vector<filesystem::path>			m_ModelPrototypePaths;
 
 	_uint								m_iContainerObjectIndex = {};
 
 	class CBuildingContainer*			m_pContainer = { nullptr };
+	_char								m_szSaveFileName[MAX_PATH] = {};
 	_char								m_szSaveContainerName[MAX_PATH] = {};
 private:
 	HRESULT		Ready_Components();
@@ -44,8 +51,9 @@ private:
 
 #pragma region SAVE_LOAD
 	HRESULT		Save_MapData(const _char* pFileName);
-	HRESULT		Save_ContainerData(const _char* pFileName, const _char* pContainerName);
 	HRESULT		Load_MapData(const _char* pFileName);
+
+	HRESULT		Save_ContainerData(const _char* pFileName, const _char* pContainerName);
 	HRESULT		Load_ContainerData(const _char* pFileName, const _char* pContainerName);
 #pragma endregion
 
@@ -54,8 +62,12 @@ private:
 	void		Update_Edit();
 	void		Update_ContainerObject();
 
-	_bool		Find_Lod_Prototype(_wstring strPrototypeTag, vector<_uint>& LodModelIndices);
+	void		Create_PartObject(_wstring& strPrototypeTag);
+	void		Create_Elemnt_Static(_wstring& strPrototypeTag);
+	void		Create_Elemnt_Interact(_wstring& strPrototypeTag);
 
+	_bool		Find_Lod_Prototype(_wstring strPrototypeTag, vector<_uint>& LodModelIndices);
+	_uint		Get_KeyCount(_wstring strPrototypeTag);
 public:
 	static CMapObject_Manager* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, vector<_wstring>& ModelPrototypeTags, vector<filesystem::path>& ModelPrototypePaths);
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr) override;
