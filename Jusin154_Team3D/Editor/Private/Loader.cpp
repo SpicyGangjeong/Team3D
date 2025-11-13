@@ -495,23 +495,23 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 
 	{
 		CRigidBody::RIGIDBODY_PROTOTYPEDESC Desc{};
-		Desc.tRigidDynamicDesc.bExclusive = false;
-		Desc.tRigidDynamicDesc.vhalfGeometryInfo = { 0.5f, 0.5f, 0.5f };
-		Desc.tRigidDynamicDesc.vMatInfo = { 0.5f, 0.5f, 0.6f };
-		Desc.tRigidDynamicDesc.ePxShapeFlag = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
-
+		{
+			Desc.eType = ACTOR::BOX;
+			Desc.ePxRigidBodyFlags = {};
+			Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+			Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
+			Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
+			Desc.fContactOffset = { 0.05f };
+			Desc.vhalfGeometryInfo = { 1.f, 1.f, 1.f };
+			Desc.fDensity = 10.f;
+		}
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), CRigidBody::Create(m_pDevice, m_pContext, Desc)))) {
 			return E_FAIL;
 		}
 	}
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_River_Col_Model"),
-	//	//CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, "../Bin/Resources/Models/River/River.fbx", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixIdentity())))){
-	//	CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, "../Bin/Resources/Models/River/River.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixIdentity())))){
-	//	return E_FAIL;
-	//}
-
 	{
+
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), CCharacter_Controller::Create(m_pDevice, m_pContext)))) {
 			return E_FAIL;
 		}
@@ -526,17 +526,17 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 	m_strMessage = TEXT("Model Loading..");
 	
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Box"),
-	//	CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Box/Box.bin", XMMatrixScaling(0.001f, 0.001f, 0.001f) * XMMatrixIdentity())))){
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Box"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Box/Box.fbx", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixIdentity())))){
+		return E_FAIL;
+	}
 
 #ifdef 기무리
 	vector<_wstring> ModelPrototypeTags = {};
 	vector<filesystem::path> ModelPrototypePath = {};
 
 	//for (const auto& file : filesystem::directory_iterator("..\\Bin\\Resources\\Models\\MapMesh"))
-	for (const auto& file : filesystem::directory_iterator("C:\\Users\\kimnuri\\Desktop\\Hogwart\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Terrain"))
+	for (const auto& file : filesystem::directory_iterator("C:\\Users\\kimnuri\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Terrain"))
 	{
 		if (file.is_directory()){
 			continue;
@@ -569,10 +569,16 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 
 		CRigidBody::RIGIDBODY_PROTOTYPEDESC Desc{};
 		for (_uint i = 0; i < iNumMesh; ++i) {
-			Desc.eType = ACTOR::TRIANGLEMESH;
-			Desc.tRigidStaticDesc.szMeshName = pModel->Get_MeshName(i);
-			Desc.tRigidStaticDesc.vMatInfo = _float3(0.5f, 0.5f, 0.6f);
-			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, CMyTools::ToWstring(Desc.tRigidStaticDesc.szMeshName).c_str(), CRigidBody::Create(m_pDevice, m_pContext, Desc)))) {
+			_string strDestName = pModel->Get_MeshName(i) + to_string(i);
+			{
+				Desc.eType = ACTOR::TRIANGLEMESH;
+				Desc.ePxRigidBodyFlags = {};
+				Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+				Desc.ePxMaterialTypes = PXMATERIAL::DEFAULT;
+				Desc.vMatInfo = _float3(0.5f, 0.5f, 0.6f);
+				Desc.fContactOffset = 0.f;
+			}
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, CMyTools::ToWstring(strDestName).c_str(), CRigidBody::Create(m_pDevice, m_pContext, Desc)))) {
 				return E_FAIL;
 			}
 		}
@@ -834,12 +840,19 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 		_uint iNumMesh = pModel->Get_NumMeshes();
 
+
 		CRigidBody::RIGIDBODY_PROTOTYPEDESC Desc{};
 		for (_uint i = 0; i < iNumMesh; ++i) {
-			Desc.eType = ACTOR::TRIANGLEMESH;
-			Desc.tRigidStaticDesc.szMeshName = pModel->Get_MeshName(i);
-			Desc.tRigidStaticDesc.vMatInfo = _float3(0.5f, 0.5f, 0.6f);
-			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, CMyTools::ToWstring(Desc.tRigidStaticDesc.szMeshName).c_str(), CRigidBody::Create(m_pDevice, m_pContext, Desc)))) {
+			_string strDestName = pModel->Get_MeshName(i) + to_string(i);
+			{
+				Desc.eType = ACTOR::TRIANGLEMESH;
+				Desc.ePxRigidBodyFlags = {};
+				Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+				Desc.ePxMaterialTypes = PXMATERIAL::DEFAULT;
+				Desc.vMatInfo = _float3(0.5f, 0.5f, 0.6f);
+				Desc.fContactOffset = 0.f;
+			}
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, CMyTools::ToWstring(strDestName).c_str(), CRigidBody::Create(m_pDevice, m_pContext, Desc)))) {
 				return E_FAIL;
 			}
 		}

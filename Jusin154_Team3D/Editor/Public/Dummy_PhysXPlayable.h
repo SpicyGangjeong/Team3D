@@ -14,11 +14,11 @@ NS_BEGIN(Editor)
 class CDummy_PhysXPlayable final : public CGameObject
 {
 public:
-	typedef struct tagBoxStartPos
+	typedef struct tagPlayableStartPos
 	{
 		_float3 vPos = {};
 		_float3 vRotRPY = {};
-	}BOXSTARTPOS_DESC;
+	}PlayableSTARTPOS_DESC;
 private:
 	CDummy_PhysXPlayable(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CDummy_PhysXPlayable(const CDummy_PhysXPlayable& rhs);

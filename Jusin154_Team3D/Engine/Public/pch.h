@@ -19,6 +19,8 @@
 #include "DirectXTK/SpriteBatch.h"
 #include "DirectXTK/SpriteFont.h"
 
+#include "DirectXTK/GeometricPrimitive.h"
+
 // FX11
 #include "FX11/d3dx11effect.h"
 
