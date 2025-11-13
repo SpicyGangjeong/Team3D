@@ -93,6 +93,7 @@ void CEditEffect::Reference_Mat_For_EditEffect()
 	default:
 		break;
 	}
+
 	ImGui::End();
 
 }
@@ -150,9 +151,6 @@ void CEditEffect::Describe_Entity()
 
 	//트레일 만들기
 	//사인 러프
-	//머테리얼 바인딩
-	//블러가 디졸브에 안사라짐 
-	//루프 빌보드
 
 	const char* pRenderNames[] = { "PRIORITY" , "SHADOW", "NONBLEND", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" , "UI" };
 
@@ -244,11 +242,15 @@ void CEditEffect::Describe_Entity()
 			GUI::InputFloat2("DiffuseUVCutting", (_float*)&m_vUVCutting);
 
 			GUI::DragFloat2("DiffuseUVGainAmount", (_float*)&m_vDiffuseUVGainAmount, 0.01f);
-			GUI::DragFloat2("DiffuseNoiseUVGainAmount", (_float*)&m_vDiffuseNoiseUVGainAmount, 0.01f);
+	
 
 			ImGui::PopItemWidth();
 
-			m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DIFFUSE_TEXTURE", (CComponent**)&m_pDiffuse_TextureCom, nullptr, this);
+			if (GUI::TreeNode("DIFFUSE_TEX"))
+			{
+				m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DIFFUSE_TEXTURE", (CComponent**)&m_pDiffuse_TextureCom, nullptr, this);
+				GUI::TreePop();
+			}
 
 			GUI::Separator(); GUI::Spacing();
 
@@ -267,11 +269,13 @@ void CEditEffect::Describe_Entity()
 
 			ImGui::PushItemWidth(80);
 			GUI::DragFloat2("MaskingUVGainAmount", (_float*)&m_vMaskingUVGainAmount, 0.01f);
-			GUI::DragFloat2("MaskNoiseUVGainAmount", (_float*)&m_vMaskNoiseUVGainAmount, 0.01f);
+
 			ImGui::PopItemWidth();
-
-			m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "MASKING_TEXTURE", (CComponent**)&m_pMasking_TextureCom, nullptr, this);
-
+			if (GUI::TreeNode("MASKING_TEX"))
+			{
+				m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "MASKING_TEXTURE", (CComponent**)&m_pMasking_TextureCom, nullptr, this);
+				GUI::TreePop();
+			}
 			GUI::Separator(); GUI::Spacing();
 
 			GUI::TreePop();
@@ -282,8 +286,11 @@ void CEditEffect::Describe_Entity()
 	{
 		if (GUI::TreeNode("DISSOLVE"))
 		{
-			m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISSOLVE_TEXTURE", (CComponent**)&m_pDissolve_TextureCom, nullptr, this);
-
+			if (GUI::TreeNode("DISSOLV_TEX"))
+			{
+				m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISSOLVE_TEXTURE", (CComponent**)&m_pDissolve_TextureCom, nullptr, this);
+				GUI::TreePop();
+			}
 			GUI::Separator(); GUI::Spacing();
 
 			GUI::TreePop();
@@ -295,11 +302,18 @@ void CEditEffect::Describe_Entity()
 		if (GUI::TreeNode("NOISE"))
 		{
 			ImGui::PushItemWidth(80);
+
 			GUI::DragFloat("NoiseDistortionIntensity", &m_fNoiseDistortionIntensity, 0.005f, 0.f, 1.f);
+			GUI::DragFloat2("DiffuseNoiseUVGainAmount", (_float*)&m_vDiffuseNoiseUVGainAmount, 0.01f);
+			GUI::DragFloat2("MaskNoiseUVGainAmount", (_float*)&m_vMaskNoiseUVGainAmount, 0.01f);
+			
 			ImGui::PopItemWidth();
 
-
-			m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "NOISE_TEXTURE", (CComponent**)&m_pNoise_TextureCom, nullptr, this);
+			if (GUI::TreeNode("NOISE_TEX"))
+			{
+				m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "NOISE_TEXTURE", (CComponent**)&m_pNoise_TextureCom, nullptr, this);
+				GUI::TreePop();
+			}
 
 			GUI::Separator(); GUI::Spacing();
 

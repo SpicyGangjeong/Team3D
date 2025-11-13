@@ -23,21 +23,22 @@ HRESULT CEffect_Editor::Initialize_Prototype()
 {
 
 
-	ReadMaterials("../Bin/Resources/VFX/ParticleMaterials/Base_Mat");
-	ReadMaterials("../Bin/Resources/VFX/ParticleMaterials/Mat_Instance");
+	//ReadMaterials("../Bin/Resources/VFX/Particles/Magic/Protego");
 
-	for (auto iter : m_MatFiles)
-	{
 
-		for (auto vec_iter : iter.second)
-		{
-			if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::EFFECT), vec_iter.first,
-				CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, vec_iter.second.c_str(), 0, vec_iter.first)))) {
-				return E_FAIL;
-			}
-		}
+	//for (auto iter : m_MatFiles)
+	//{
 
-	}
+	//	for (auto vec_iter : iter.second)
+	//	{
+	//		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::EFFECT), vec_iter.first,
+	//			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, vec_iter.second.c_str(), 0, vec_iter.first)))) {
+	//			return E_FAIL;
+	//		}
+	//	}
+
+	//}
+
 	return S_OK;
 
 }
