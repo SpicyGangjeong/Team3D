@@ -83,7 +83,6 @@ _vector CLoading_Panel::Get_WorldPostion()
 
 HRESULT CLoading_Panel::Bind_ShaderResources()
 {
-<<<<<<< HEAD
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 	{
 		return E_FAIL;
@@ -104,8 +103,7 @@ HRESULT CLoading_Panel::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-=======
->>>>>>> Develope
+
 	return S_OK;
 }
 
@@ -166,11 +164,9 @@ void CLoading_Panel::Free()
 {
 	__super::Free();
 
-<<<<<<< HEAD
+
 	SAFE_RELEASE(m_pDiffuse_TextureCom);
 	SAFE_RELEASE(m_pShaderCom);
-=======
->>>>>>> Develope
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 

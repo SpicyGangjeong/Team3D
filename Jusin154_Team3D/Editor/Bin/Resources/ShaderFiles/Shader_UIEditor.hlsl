@@ -95,6 +95,52 @@ PS_OUT PS_Clamp(PS_IN In)
     float4 Color = g_Texture.Sample(DefaultSampler, In.vTexcoord);
 
     Out.vColor = Color;
+
+    
+    return Out;
+}
+
+PS_OUT PS_Cursor(PS_IN In) 
+{
+    PS_OUT Out;
+    
+    float4 Color = float4(0.f, 0.f, 0.f, 0.f); 
+    float4 White = float4(1.f, 1.f, 1.f, 1.f); 
+    
+    float2 UV = In.vTexcoord; 
+    float2 Center = float2(0.5f, 0.5f); 
+    
+    float CW = -g_fTime; 
+    float CCW = g_fTime; 
+    
+    float2 RedCircle = UV; 
+    float2 RedUV = UV - Center; 
+                                                                        
+    RedCircle.x = RedUV.x * cos(CCW) - RedUV.y * sin(CCW); 
+    RedCircle.y = RedUV.x * sin(CCW) + RedUV.y * cos(CCW); 
+    RedCircle = RedCircle + Center; 
+    
+    float2 BlueCircle = UV; 
+    float2 BlueUV = UV - Center;
+                                                                        
+    BlueCircle.x = BlueUV.x * cos(CW) - BlueUV.y * sin(CW); 
+    BlueCircle.y = BlueUV.x * sin(CW) + BlueUV.y * cos(CW); 
+    BlueCircle = BlueCircle + Center; 
+    
+                                                                   
+    float4 Texture1 = g_Texture.Sample(ClampSampler, RedCircle);   
+    float4 Texture2 = g_Texture2.Sample(ClampSampler, BlueCircle); 
+    
+    if (Texture1.r >= 0.7f)                                            
+        Color = Texture1;
+    
+    if (Texture2.b >= 0.7f)                                           
+        Color = Texture2;
+
+    if (all(Color.rgb <= 0.5f))                                         
+        discard;
+    
+    Color = White; 
     
     return Out;
 }
@@ -228,6 +274,85 @@ PS_OUT PS_UVMult(PS_IN In)
 
     Out.vColor = Color;
     
+    return Out;
+}
+
+PS_OUT PS_Sptire_Sheet(PS_IN In)
+{
+    PS_OUT Out;
+    
+    float4 Color = float4(0.f, 0.f, 0.f, 0.f); 
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+    float2 UV = In.vTexcoord;
+    
+    int iTotalFrame = g_iImageCountX * g_iImageCountY;
+    
+    int iCurrentFrame = int(floor(g_fTime / g_fFrame)) % iTotalFrame; 
+    
+    int iFrameX = iCurrentFrame % g_iImageCountX; 
+    int iFrameY = iCurrentFrame / g_iImageCountX; 
+    
+    float fFreamWidth = 1.0 / g_iImageCountX;  
+    float fFreamHeight = 1.0 / g_iImageCountY; 
+    
+    UV.x = UV.x * fFreamWidth + iFrameX * fFreamWidth;  
+    UV.y = UV.y * fFreamHeight + iFrameY * fFreamHeight;
+    
+    float4 Texture = g_Texture.Sample(DefaultSampler, UV);
+    
+    Color = Texture;
+    
+    if (Color.r <= 0.4f)
+        discard;
+    
+    Color.a = Alpha;
+    
+    Out.vColor = Color;
+    
+    return Out;
+}
+
+PS_OUT PS_Key_Hold_Rotation(PS_IN In)
+{
+    PS_OUT Out;
+    
+    float4 Color = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    
+    if (Color.a <= 0.1f)
+        discard;
+    
+    Out.vColor = Color;
+    
+    return Out;
+}
+
+PS_OUT PS_QuestType(PS_IN In)
+{
+    PS_OUT Out;
+    float3 Color = float3(253.f, 207.f, 11.f) / 255.f;
+    float4 Texture1 = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    
+    if (g_iQuestType == 0)
+    {
+        if (Texture1.r >= 0.3f)
+        {
+            Texture1.rgb = Color;
+        }
+    }
+
+    Out.vColor = Texture1;
+    
+    return Out;
+}
+
+PS_OUT PS_UVMult(PS_IN In)
+{
+    PS_OUT Out;
+
+    float4 color = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    
+    Out.vColor = color;
+
     return Out;
 }
 

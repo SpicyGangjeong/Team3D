@@ -99,10 +99,7 @@ HRESULT CGamePlay_Canvas::Ready_Panel(void* pArg)
 		return E_FAIL;
 	}
 	Add_Panel(TEXT("LoadingPanel"), m_pLoading_Panel);
-<<<<<<< HEAD
-=======
 
->>>>>>> Develope
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMiniMap_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMiniMap_Panel**>(&m_pMinimap_Panel))))
 	{
 		return E_FAIL;

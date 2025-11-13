@@ -40,7 +40,9 @@ HRESULT CMissionBanner_Border::Initialize(void* pArg)
 	m_fTimeMult = 3.f;
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 3.f;
-	m_vUVScale = _float2(2.f, 2.f);
+
+	m_vUVScale = _float2(1.f,1.f);
+
 	return S_OK;
 }
 

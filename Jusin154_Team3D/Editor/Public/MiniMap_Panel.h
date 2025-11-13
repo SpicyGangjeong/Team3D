@@ -31,11 +31,8 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 
 private:
-<<<<<<< HEAD
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
-=======
->>>>>>> Develope
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 	CGameObject* m_pMiniMap_TrimBorder = { nullptr };
 

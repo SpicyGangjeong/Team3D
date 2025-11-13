@@ -104,7 +104,6 @@ HRESULT CMission_Panel::Ready_Components(void* pArg)
 		return E_FAIL;
 	}
 
-<<<<<<< HEAD
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMission_KeyHold>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMission_KeyHold**>(&m_pMission_KeyHold))))
 	{
 		return E_FAIL;
@@ -118,7 +117,7 @@ HRESULT CMission_Panel::Ready_Components(void* pArg)
 		return E_FAIL;
 	}
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMissionBanner_Key>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMissionBanner_Key**>(&m_pMissionBanner_Key))))
-=======
+
 	return S_OK;
 }
 
@@ -143,7 +142,6 @@ HRESULT CMission_Panel::Ready_Element(void* pArg)
 	Add_Element(TEXT("Mission_KeyHold"), m_pMission_KeyHold);
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMission_Key>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMission_Key**>(&m_pMission_Key))))
->>>>>>> Develope
 	{
 		return E_FAIL;
 	}
