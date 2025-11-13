@@ -1,0 +1,148 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[6] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/BaseFlattenNormalMap.BaseFlattenNormalMap'
+    ReferencedTextures[1] = Texture2D'/Engine/EngineMaterials/DefaultDiffuse.DefaultDiffuse'
+    ReferencedTextures[2] = Texture2D'/Engine/EngineMaterials/DefaultNormal_Uncompressed.DefaultNormal_Uncompressed'
+    ReferencedTextures[3] = Texture2D'/Game/RiggedObjects/Props/Weapons/Goblins/Textures/SmallSword/T_WPN_GOB_SmallSword_E.T_WPN_GOB_SmallSword_E'
+    ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Cloud_Noise_Tile_N.VFX_T_Cloud_Noise_Tile_N'
+    ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_Corruption_E.VFX_T_Noise_Corruption_E'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[13] =
+                {
+                    ParameterInfos[0] = { Name=Roughness }
+                    ParameterInfos[1] = { Name=EmStrength_Sword }
+                    ParameterInfos[2] = { Name=Emissive_ScaleTiling }
+                    ParameterInfos[3] = { Name=Metallic }
+                    ParameterInfos[4] = { Name=Thickness }
+                    ParameterInfos[5] = { Name=Specular }
+                    ParameterInfos[6] = { Name=Swirl Profile Curve }
+                    ParameterInfos[7] = { Name=Swirl Length }
+                    ParameterInfos[8] = { Name=TexSize }
+                    ParameterInfos[9] = { Name=PanSpeed Scale }
+                    ParameterInfos[10] = { Name=Swirl Pan Speed }
+                    ParameterInfos[11] = { Name=SwirlPosition }
+                    ParameterInfos[12] = { Name=EmMapStrength }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Base Color }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=EmissiveMap }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[13] =
+        {
+            ScalarValues[0] = 0.225397
+            ScalarValues[1] = 1
+            ScalarValues[2] = 0.136508
+            ScalarValues[3] = 0
+            ScalarValues[4] = 1
+            ScalarValues[5] = 1
+            ScalarValues[6] = 19
+            ScalarValues[7] = 0.304762
+            ScalarValues[8] = 118.298
+            ScalarValues[9] = 20
+            ScalarValues[10] = 0.485715
+            ScalarValues[11] = 0
+            ScalarValues[12] = 1
+        }
+        VectorValues[1] =
+        {
+            VectorValues[0] = { R=0.01, G=0.01, B=0.01, A=1 }
+        }
+        TextureValues[1] =
+        {
+            TextureValues[0] = Texture2D'/Game/RiggedObjects/Props/Weapons/Goblins/Textures/SmallSword/T_WPN_GOB_SmallSword_E.T_WPN_GOB_SmallSword_E'
+        }
+    }
+    ReferencedTextures[8] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/CurveAtlas/VFX_CA_CurveAtlasMaterialAnims.VFX_CA_CurveAtlasMaterialAnims'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_Corruption_E.VFX_T_Noise_Corruption_E'
+        ReferencedTextures[3] = Texture2D'/Engine/EngineMaterials/BaseFlattenNormalMap.BaseFlattenNormalMap'
+        ReferencedTextures[4] = Texture2D'/Engine/EngineMaterials/DefaultDiffuse.DefaultDiffuse'
+        ReferencedTextures[5] = Texture2D'/Engine/EngineMaterials/DefaultNormal_Uncompressed.DefaultNormal_Uncompressed'
+        ReferencedTextures[6] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Cloud_Noise_Tile_N.VFX_T_Cloud_Noise_Tile_N'
+        ReferencedTextures[7] = Texture2D'/Game/RiggedObjects/Props/Weapons/Goblins/Textures/SmallSword/T_WPN_GOB_SmallSword_E.T_WPN_GOB_SmallSword_E'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[1] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/RiggedObjects/Props/Weapons/Goblins/Textures/SmallSword/T_WPN_GOB_SmallSword_E.T_WPN_GOB_SmallSword_E'
+        Name = EmissiveMap
+        Group = None
+    }
+}
+CollectedScalarParameters[13] =
+{
+    CollectedScalarParameters[0] = { Value=0.225397, Name=Roughness, Group=None }
+    CollectedScalarParameters[1] = { Value=1, Name=EmStrength_Sword, Group=None }
+    CollectedScalarParameters[2] =
+    {
+        Value = 0.136508
+        Name = Emissive_ScaleTiling
+        Group = None
+    }
+    CollectedScalarParameters[3] = { Value=0, Name=Metallic, Group=None }
+    CollectedScalarParameters[4] = { Value=1, Name=Thickness, Group=None }
+    CollectedScalarParameters[5] = { Value=1, Name=Specular, Group=None }
+    CollectedScalarParameters[6] = { Value=19, Name=Swirl Profile Curve, Group=None }
+    CollectedScalarParameters[7] = { Value=0.304762, Name=Swirl Length, Group=None }
+    CollectedScalarParameters[8] = { Value=118.298, Name=TexSize, Group=None }
+    CollectedScalarParameters[9] = { Value=20, Name=PanSpeed Scale, Group=None }
+    CollectedScalarParameters[10] = { Value=0.485715, Name=Swirl Pan Speed, Group=None }
+    CollectedScalarParameters[11] = { Value=0, Name=SwirlPosition, Group=None }
+    CollectedScalarParameters[12] = { Value=1, Name=EmMapStrength, Group=None }
+}
+CollectedVectorParameters[1] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0.01, G=0.01, B=0.01, A=1 }
+        Name = Base Color
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_WPN_GOB_SmallSword_E
+    }
+}

@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Niagara/Corruption/GooSplatter/VFX_MI_Splatter02Goo01.VFX_MI_Splatter02Goo01'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Niagara/Corruption/GooSplatter/VFX_MI_Splatter02Goo01.VFX_MI_Splatter02Goo01'
+        MaterialSlotName = Splatter02Main
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 200.529, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=1.09771, Y=-27.0358, Z=10.1327 }
+    BoxExtent = { X=57.3751, Y=74.0157, Z=65.1392 }
+    SphereRadius = 106.327
+}

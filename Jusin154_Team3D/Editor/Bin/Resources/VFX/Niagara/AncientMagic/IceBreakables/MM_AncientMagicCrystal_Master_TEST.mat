@@ -1,0 +1,11 @@
+Diffuse=T_IceWall_Emissive_D
+Normal=T_Intro_Cliffside_CrystalWall_N
+Emissive=T_IceWall_Emissive_D
+Other[0]=Good64x64TilingNoiseHighFreq
+Other[1]=T_Intro_Cliffside_CrystalWall_MROH
+Other[2]=base_flat_n
+Other[3]=VFX_T_AncMag_IceWall_H
+Other[4]=VFX_T_AncMag_IceWall_N
+Other[5]=VFX_T_Noise05_D
+Other[6]=VFX_T_Noise_LowFreq_E
+Other[7]=VFX_T_RibbonOffset_N

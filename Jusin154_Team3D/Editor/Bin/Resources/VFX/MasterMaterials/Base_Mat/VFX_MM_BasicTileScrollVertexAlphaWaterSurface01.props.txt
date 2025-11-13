@@ -1,0 +1,217 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[4] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_WaterTurbulentTile_01_DA.VFX_T_WaterTurbulentTile_01_DA'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_WaterTurbulentTile_01_N.VFX_T_WaterTurbulentTile_01_N'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_WaterTurbulentTileFreq_01_D.VFX_T_WaterTurbulentTileFreq_01_D'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/VFX_T_VortexSliceVertexAlpha01_DA.VFX_T_VortexSliceVertexAlpha01_DA'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[16] =
+                {
+                    ParameterInfos[0] = { Name=RoughnessScale }
+                    ParameterInfos[1] = { Name=FadeThreshold }
+                    ParameterInfos[2] = { Name=DepthFadeDistance }
+                    ParameterInfos[3] = { Name=FadeLength }
+                    ParameterInfos[4] = { Name=TilingV }
+                    ParameterInfos[5] = { Name=GradientAdd }
+                    ParameterInfos[6] = { Name=DepthFadePower }
+                    ParameterInfos[7] = { Name=Near Camera Fade Start Offset }
+                    ParameterInfos[8] = { Name=ScrollSpeedU }
+                    ParameterInfos[9] = { Name=ScrollSpeedV }
+                    ParameterInfos[10] = { Name=EmissiveAmount }
+                    ParameterInfos[11] = { Name=TilingU }
+                    ParameterInfos[12] = { Name=NormalStrength }
+                    ParameterInfos[13] = { Name=Near Camera Fade Distance }
+                    ParameterInfos[14] = { Name=WaterSurfaceOffset }
+                    ParameterInfos[15] = { Name=ImageAlphaIntensity }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=EmissiveTint }
+                    ParameterInfos[1] = { Name=DiffuseTint }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[6] =
+                {
+                    ParameterInfos[0] = { Name=Roughness }
+                    ParameterInfos[1] = { Name=Metallic }
+                    ParameterInfos[2] = { Name=Emissive }
+                    ParameterInfos[3] = { Name=Diffuse }
+                    ParameterInfos[4] = { Name=Normal }
+                    ParameterInfos[5] = { Name=ImageMask }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[16] =
+        {
+            ScalarValues[0] = 1
+            ScalarValues[1] = 0.2
+            ScalarValues[2] = 100
+            ScalarValues[3] = 50
+            ScalarValues[4] = 1
+            ScalarValues[5] = 0.3
+            ScalarValues[6] = 1
+            ScalarValues[7] = 32
+            ScalarValues[8] = 0.1
+            ScalarValues[9] = -0.4
+            ScalarValues[10] = 0
+            ScalarValues[11] = 1
+            ScalarValues[12] = 1
+            ScalarValues[13] = 256
+            ScalarValues[14] = 0
+            ScalarValues[15] = 1
+        }
+        VectorValues[2] =
+        {
+            VectorValues[0] = { R=1, G=1, B=1, A=1 }
+            VectorValues[1] = { R=1, G=1, B=1, A=1 }
+        }
+        TextureValues[6] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_WaterTurbulentTileFreq_01_D.VFX_T_WaterTurbulentTileFreq_01_D'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_WaterTurbulentTileFreq_01_D.VFX_T_WaterTurbulentTileFreq_01_D'
+            TextureValues[2] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_WaterTurbulentTile_01_DA.VFX_T_WaterTurbulentTile_01_DA'
+            TextureValues[3] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_WaterTurbulentTile_01_DA.VFX_T_WaterTurbulentTile_01_DA'
+            TextureValues[4] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_WaterTurbulentTile_01_N.VFX_T_WaterTurbulentTile_01_N'
+            TextureValues[5] = Texture2D'/Game/VFX/Textures/VFX_T_VortexSliceVertexAlpha01_DA.VFX_T_VortexSliceVertexAlpha01_DA'
+        }
+    }
+    ReferencedTextures[6] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_WaterTurbulentTileFreq_01_D.VFX_T_WaterTurbulentTileFreq_01_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_WaterTurbulentTile_01_DA.VFX_T_WaterTurbulentTile_01_DA'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_WaterTurbulentTile_01_N.VFX_T_WaterTurbulentTile_01_N'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/VFX_T_VortexSliceVertexAlpha01_DA.VFX_T_VortexSliceVertexAlpha01_DA'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 2
+CollectedTextureParameters[6] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_WaterTurbulentTileFreq_01_D.VFX_T_WaterTurbulentTileFreq_01_D'
+        Name = Roughness
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_WaterTurbulentTileFreq_01_D.VFX_T_WaterTurbulentTileFreq_01_D'
+        Name = Metallic
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_WaterTurbulentTile_01_DA.VFX_T_WaterTurbulentTile_01_DA'
+        Name = Emissive
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_WaterTurbulentTile_01_DA.VFX_T_WaterTurbulentTile_01_DA'
+        Name = Diffuse
+        Group = None
+    }
+    CollectedTextureParameters[4] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_WaterTurbulentTile_01_N.VFX_T_WaterTurbulentTile_01_N'
+        Name = Normal
+        Group = None
+    }
+    CollectedTextureParameters[5] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_VortexSliceVertexAlpha01_DA.VFX_T_VortexSliceVertexAlpha01_DA'
+        Name = ImageMask
+        Group = None
+    }
+}
+CollectedScalarParameters[16] =
+{
+    CollectedScalarParameters[0] = { Value=1, Name=RoughnessScale, Group=None }
+    CollectedScalarParameters[1] = { Value=0.2, Name=FadeThreshold, Group=None }
+    CollectedScalarParameters[2] = { Value=100, Name=DepthFadeDistance, Group=None }
+    CollectedScalarParameters[3] = { Value=50, Name=FadeLength, Group=None }
+    CollectedScalarParameters[4] = { Value=1, Name=TilingV, Group=None }
+    CollectedScalarParameters[5] = { Value=0.3, Name=GradientAdd, Group=None }
+    CollectedScalarParameters[6] = { Value=1, Name=DepthFadePower, Group=None }
+    CollectedScalarParameters[7] =
+    {
+        Value = 32
+        Name = Near Camera Fade Start Offset
+        Group = None
+    }
+    CollectedScalarParameters[8] = { Value=0.1, Name=ScrollSpeedU, Group=None }
+    CollectedScalarParameters[9] = { Value=-0.4, Name=ScrollSpeedV, Group=None }
+    CollectedScalarParameters[10] = { Value=0, Name=EmissiveAmount, Group=None }
+    CollectedScalarParameters[11] = { Value=1, Name=TilingU, Group=None }
+    CollectedScalarParameters[12] = { Value=1, Name=NormalStrength, Group=None }
+    CollectedScalarParameters[13] =
+    {
+        Value = 256
+        Name = Near Camera Fade Distance
+        Group = None
+    }
+    CollectedScalarParameters[14] = { Value=0, Name=WaterSurfaceOffset, Group=None }
+    CollectedScalarParameters[15] = { Value=1, Name=ImageAlphaIntensity, Group=None }
+}
+CollectedVectorParameters[2] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=1, G=1, B=1, A=1 }
+        Name = EmissiveTint
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=1, G=1, B=1, A=1 }
+        Name = DiffuseTint
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[3] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_WaterTurbulentTile_01_DA
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_WaterTurbulentTile_01_N
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_WaterTurbulentTileFreq_01_D
+    }
+}

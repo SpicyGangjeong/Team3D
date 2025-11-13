@@ -1,0 +1,413 @@
+TwoSided = true
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[12] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+    ReferencedTextures[1] = Texture2D'/Game/Environment/BanditCamps/CampA/Textures/T_CampA_BigBanners_B_MROA.T_CampA_BigBanners_B_MROA'
+    ReferencedTextures[2] = Texture2D'/Game/Environment/BanditCamps/CampA/Textures/T_CampA_BigBanners_B_N.T_CampA_BigBanners_B_N'
+    ReferencedTextures[3] = Texture2D'/Game/Environment/BanditCamps/CampA/Textures/T_CampA_ClothA_D.T_CampA_ClothA_D'
+    ReferencedTextures[4] = Texture2D'/Game/Environment/BanditCamps/CampA/Textures/T_CampA_Fabric_B_H.T_CampA_Fabric_B_H'
+    ReferencedTextures[5] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_MSK.base_white_MSK'
+    ReferencedTextures[6] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Cloth/T_Fabric001_N.T_Fabric001_N'
+    ReferencedTextures[7] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/T_Blank_A.T_Blank_A'
+    ReferencedTextures[8] = Texture2D'/Game/MaterialFunctions/BaseTextures/ColorNoise/T_ColorNoise512_D.T_ColorNoise512_D'
+    ReferencedTextures[9] = Texture2D'/Game/RiggedObjects/Environments/Forageables/Horklump/Textures/T_Forageable_Horklump_Gradient_D.T_Forageable_Horklump_Gradient_D'
+    ReferencedTextures[10] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise05_D.VFX_T_Noise05_D'
+    ReferencedTextures[11] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_TankMoteNoiseVinceTest_D.VFX_T_TankMoteNoiseVinceTest_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[38] =
+                {
+                    ParameterInfos[0] = { Name=Min }
+                    ParameterInfos[1] = { Name=Exp }
+                    ParameterInfos[2] = { Name=Wind Intensity }
+                    ParameterInfos[3] = { Name=Min WPO }
+                    ParameterInfos[4] = { Name=Wind Speed }
+                    ParameterInfos[5] = { Name=BurnRadius }
+                    ParameterInfos[6] = { Name=Fuzz Intensity }
+                    ParameterInfos[7] = { Name=Tiling U (S)_1 }
+                    ParameterInfos[8] = { Name=ObjectFadePerinstanceOverride }
+                    ParameterInfos[9] = { Name=Subsurface Brightness }
+                    ParameterInfos[10] = { Name=Alpha }
+                    ParameterInfos[11] = { Name=Metallic Adjuster }
+                    ParameterInfos[12] = { Name=NightSubsurfaceFactor }
+                    ParameterInfos[13] = { Name=Min Diff }
+                    ParameterInfos[14] = { Name=Roughness Adjuster }
+                    ParameterInfos[15] = { Name=Wipe (0-1) (S) }
+                    ParameterInfos[16] = { Name=Hardness }
+                    ParameterInfos[17] = { Name=AO Adjuster }
+                    ParameterInfos[18] = { Name=Subsurface Thickness }
+                    ParameterInfos[19] = { Name=Subsurface Texture Strength }
+                    ParameterInfos[20] = { Name=Detail Amount }
+                    ParameterInfos[21] = { Name=Max Diff }
+                    ParameterInfos[22] = { Name=Base Color Brightness }
+                    ParameterInfos[23] = { Name=Max }
+                    ParameterInfos[24] = { Name=ObjectFadeOpacity }
+                    ParameterInfos[25] = { Name=Exp_1 }
+                    ParameterInfos[26] = { Name=Wipe Softness (0-1) (S) }
+                    ParameterInfos[27] = { Name=WPO Strength }
+                    ParameterInfos[28] = { Name=WipePos }
+                    ParameterInfos[29] = { Name=Mod Strength (S) }
+                    ParameterInfos[30] = { Name=Tiling U (S) }
+                    ParameterInfos[31] = { Name=Speed (S) }
+                    ParameterInfos[32] = { Name=opacity }
+                    ParameterInfos[33] = { Name=Max WPO }
+                    ParameterInfos[34] = { Name=Max Em }
+                    ParameterInfos[35] = { Name=Min Em }
+                    ParameterInfos[36] = { Name=Wind Weight }
+                    ParameterInfos[37] = { Name=Detail Scale }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[8] =
+                {
+                    ParameterInfos[0] = { Name=Aditional WPO }
+                    ParameterInfos[1] = { Name=ColorSize }
+                    ParameterInfos[2] = { Name=WPO }
+                    ParameterInfos[3] = { Name=EmCol }
+                    ParameterInfos[4] = { Name=color2 }
+                    ParameterInfos[5] = { Name=color3 }
+                    ParameterInfos[6] = { Name=BurnlOrigin_Local }
+                    ParameterInfos[7] = { Name=color1 }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[8] =
+                {
+                    ParameterInfos[0] = { Name=Wind Position Map }
+                    ParameterInfos[1] = { Name=Diffuse }
+                    ParameterInfos[2] = { Name=Normal }
+                    ParameterInfos[3] = { Name=DissolveDetail }
+                    ParameterInfos[4] = { Name=Cloth Detail Normal }
+                    ParameterInfos[5] = { Name=MROA Mask }
+                    ParameterInfos[6] = { Name=Subsurface Color }
+                    ParameterInfos[7] = { Name=Color Mask }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[38] =
+        {
+            ScalarValues[0] = 0.5
+            ScalarValues[1] = 2
+            ScalarValues[2] = 1
+            ScalarValues[3] = 0.342857
+            ScalarValues[4] = 1
+            ScalarValues[5] = 291.71
+            ScalarValues[6] = 1
+            ScalarValues[7] = 2
+            ScalarValues[8] = 0
+            ScalarValues[9] = 0.419048
+            ScalarValues[10] = 0.645238
+            ScalarValues[11] = 0
+            ScalarValues[12] = 1
+            ScalarValues[13] = 0.6
+            ScalarValues[14] = 0
+            ScalarValues[15] = 0.5
+            ScalarValues[16] = 0
+            ScalarValues[17] = 0
+            ScalarValues[18] = 0.304762
+            ScalarValues[19] = 0.6
+            ScalarValues[20] = 0.4
+            ScalarValues[21] = 1
+            ScalarValues[22] = 1
+            ScalarValues[23] = 0.55
+            ScalarValues[24] = 1
+            ScalarValues[25] = 4.51832
+            ScalarValues[26] = 0.371429
+            ScalarValues[27] = 39.4055
+            ScalarValues[28] = 0.5
+            ScalarValues[29] = 0.323808
+            ScalarValues[30] = 0.5
+            ScalarValues[31] = 0.15
+            ScalarValues[32] = 1
+            ScalarValues[33] = 1
+            ScalarValues[34] = 0.550001
+            ScalarValues[35] = 0.54
+            ScalarValues[36] = 1
+            ScalarValues[37] = 1
+        }
+        VectorValues[8] =
+        {
+            VectorValues[0] = { R=0, G=0, B=0, A=1 }
+            VectorValues[1] = { R=128, G=128, B=128, A=1 }
+            VectorValues[2] = { R=0, G=0, B=1, A=1 }
+            VectorValues[3] = { R=30, G=1, B=0, A=1 }
+            VectorValues[4] = { R=1, G=1, B=1, A=0 }
+            VectorValues[5] = { R=1, G=1, B=1, A=0 }
+            VectorValues[6] = { R=0, G=0, B=-200, A=1 }
+            VectorValues[7] = { R=0.461, G=0.273564, B=0.179965, A=0 }
+        }
+        TextureValues[8] =
+        {
+            TextureValues[0] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_MSK.base_white_MSK'
+            TextureValues[1] = Texture2D'/Game/Environment/BanditCamps/CampA/Textures/T_CampA_Fabric_B_H.T_CampA_Fabric_B_H'
+            TextureValues[2] = Texture2D'/Game/Environment/BanditCamps/CampA/Textures/T_CampA_BigBanners_B_N.T_CampA_BigBanners_B_N'
+            TextureValues[3] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise05_D.VFX_T_Noise05_D'
+            TextureValues[4] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Cloth/T_Fabric001_N.T_Fabric001_N'
+            TextureValues[5] = Texture2D'/Game/Environment/BanditCamps/CampA/Textures/T_CampA_BigBanners_B_MROA.T_CampA_BigBanners_B_MROA'
+            TextureValues[6] = Texture2D'/Game/Environment/BanditCamps/CampA/Textures/T_CampA_ClothA_D.T_CampA_ClothA_D'
+            TextureValues[7] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_MSK.base_white_MSK'
+        }
+    }
+    ReferencedTextures[12] =
+    {
+        ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+        ReferencedTextures[1] = Texture2D'/Game/RiggedObjects/Environments/Forageables/Horklump/Textures/T_Forageable_Horklump_Gradient_D.T_Forageable_Horklump_Gradient_D'
+        ReferencedTextures[2] = Texture2D'/Game/MaterialFunctions/BaseTextures/ColorNoise/T_ColorNoise512_D.T_ColorNoise512_D'
+        ReferencedTextures[3] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/T_Blank_A.T_Blank_A'
+        ReferencedTextures[4] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_MSK.base_white_MSK'
+        ReferencedTextures[5] = Texture2D'/Game/Environment/BanditCamps/CampA/Textures/T_CampA_Fabric_B_H.T_CampA_Fabric_B_H'
+        ReferencedTextures[6] = Texture2D'/Game/Environment/BanditCamps/CampA/Textures/T_CampA_BigBanners_B_N.T_CampA_BigBanners_B_N'
+        ReferencedTextures[7] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Cloth/T_Fabric001_N.T_Fabric001_N'
+        ReferencedTextures[8] = Texture2D'/Game/Environment/BanditCamps/CampA/Textures/T_CampA_BigBanners_B_MROA.T_CampA_BigBanners_B_MROA'
+        ReferencedTextures[9] = Texture2D'/Game/Environment/BanditCamps/CampA/Textures/T_CampA_ClothA_D.T_CampA_ClothA_D'
+        ReferencedTextures[10] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise05_D.VFX_T_Noise05_D'
+        ReferencedTextures[11] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_TankMoteNoiseVinceTest_D.VFX_T_TankMoteNoiseVinceTest_D'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[8] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_MSK.base_white_MSK'
+        Name = Wind Position Map
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/Environment/BanditCamps/CampA/Textures/T_CampA_Fabric_B_H.T_CampA_Fabric_B_H'
+        Name = Diffuse
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/Environment/BanditCamps/CampA/Textures/T_CampA_BigBanners_B_N.T_CampA_BigBanners_B_N'
+        Name = Normal
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise05_D.VFX_T_Noise05_D'
+        Name = DissolveDetail
+        Group = None
+    }
+    CollectedTextureParameters[4] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Cloth/T_Fabric001_N.T_Fabric001_N'
+        Name = Cloth Detail Normal
+        Group = None
+    }
+    CollectedTextureParameters[5] =
+    {
+        Texture = Texture2D'/Game/Environment/BanditCamps/CampA/Textures/T_CampA_BigBanners_B_MROA.T_CampA_BigBanners_B_MROA'
+        Name = MROA Mask
+        Group = None
+    }
+    CollectedTextureParameters[6] =
+    {
+        Texture = Texture2D'/Game/Environment/BanditCamps/CampA/Textures/T_CampA_ClothA_D.T_CampA_ClothA_D'
+        Name = Subsurface Color
+        Group = None
+    }
+    CollectedTextureParameters[7] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_MSK.base_white_MSK'
+        Name = Color Mask
+        Group = None
+    }
+}
+CollectedScalarParameters[38] =
+{
+    CollectedScalarParameters[0] = { Value=0.5, Name=Min, Group=None }
+    CollectedScalarParameters[1] = { Value=2, Name=Exp, Group=None }
+    CollectedScalarParameters[2] = { Value=1, Name=Wind Intensity, Group=None }
+    CollectedScalarParameters[3] = { Value=0.342857, Name=Min WPO, Group=None }
+    CollectedScalarParameters[4] = { Value=1, Name=Wind Speed, Group=None }
+    CollectedScalarParameters[5] = { Value=291.71, Name=BurnRadius, Group=None }
+    CollectedScalarParameters[6] = { Value=1, Name=Fuzz Intensity, Group=None }
+    CollectedScalarParameters[7] = { Value=2, Name=Tiling U (S)_1, Group=None }
+    CollectedScalarParameters[8] =
+    {
+        Value = 0
+        Name = ObjectFadePerinstanceOverride
+        Group = None
+    }
+    CollectedScalarParameters[9] =
+    {
+        Value = 0.419048
+        Name = Subsurface Brightness
+        Group = None
+    }
+    CollectedScalarParameters[10] = { Value=0.645238, Name=Alpha, Group=None }
+    CollectedScalarParameters[11] = { Value=0, Name=Metallic Adjuster, Group=None }
+    CollectedScalarParameters[12] = { Value=1, Name=NightSubsurfaceFactor, Group=None }
+    CollectedScalarParameters[13] = { Value=0.6, Name=Min Diff, Group=None }
+    CollectedScalarParameters[14] = { Value=0, Name=Roughness Adjuster, Group=None }
+    CollectedScalarParameters[15] = { Value=0.5, Name=Wipe (0-1) (S), Group=None }
+    CollectedScalarParameters[16] = { Value=0, Name=Hardness, Group=None }
+    CollectedScalarParameters[17] = { Value=0, Name=AO Adjuster, Group=None }
+    CollectedScalarParameters[18] =
+    {
+        Value = 0.304762
+        Name = Subsurface Thickness
+        Group = None
+    }
+    CollectedScalarParameters[19] =
+    {
+        Value = 0.6
+        Name = Subsurface Texture Strength
+        Group = None
+    }
+    CollectedScalarParameters[20] = { Value=0.4, Name=Detail Amount, Group=None }
+    CollectedScalarParameters[21] = { Value=1, Name=Max Diff, Group=None }
+    CollectedScalarParameters[22] = { Value=1, Name=Base Color Brightness, Group=None }
+    CollectedScalarParameters[23] = { Value=0.55, Name=Max, Group=None }
+    CollectedScalarParameters[24] = { Value=1, Name=ObjectFadeOpacity, Group=None }
+    CollectedScalarParameters[25] = { Value=4.51832, Name=Exp_1, Group=None }
+    CollectedScalarParameters[26] =
+    {
+        Value = 0.371429
+        Name = Wipe Softness (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[27] = { Value=39.4055, Name=WPO Strength, Group=None }
+    CollectedScalarParameters[28] = { Value=0.5, Name=WipePos, Group=None }
+    CollectedScalarParameters[29] =
+    {
+        Value = 0.323808
+        Name = Mod Strength (S)
+        Group = None
+    }
+    CollectedScalarParameters[30] = { Value=0.5, Name=Tiling U (S), Group=None }
+    CollectedScalarParameters[31] = { Value=0.15, Name=Speed (S), Group=None }
+    CollectedScalarParameters[32] = { Value=1, Name=opacity, Group=None }
+    CollectedScalarParameters[33] = { Value=1, Name=Max WPO, Group=None }
+    CollectedScalarParameters[34] = { Value=0.550001, Name=Max Em, Group=None }
+    CollectedScalarParameters[35] = { Value=0.54, Name=Min Em, Group=None }
+    CollectedScalarParameters[36] = { Value=1, Name=Wind Weight, Group=None }
+    CollectedScalarParameters[37] = { Value=1, Name=Detail Scale, Group=None }
+}
+CollectedVectorParameters[8] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = Aditional WPO
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=128, G=128, B=128, A=1 }
+        Name = ColorSize
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=0, G=0, B=1, A=1 }
+        Name = WPO
+        Group = None
+    }
+    CollectedVectorParameters[3] =
+    {
+        Value = { R=30, G=1, B=0, A=1 }
+        Name = EmCol
+        Group = None
+    }
+    CollectedVectorParameters[4] =
+    {
+        Value = { R=1, G=1, B=1, A=0 }
+        Name = color2
+        Group = None
+    }
+    CollectedVectorParameters[5] =
+    {
+        Value = { R=1, G=1, B=1, A=0 }
+        Name = color3
+        Group = None
+    }
+    CollectedVectorParameters[6] =
+    {
+        Value = { R=0, G=0, B=-200, A=1 }
+        Name = BurnlOrigin_Local
+        Group = None
+    }
+    CollectedVectorParameters[7] =
+    {
+        Value = { R=0.461, G=0.273564, B=0.179965, A=0 }
+        Name = color1
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[8] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = base_white_MSK
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_CampA_BigBanners_B_MROA
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_CampA_BigBanners_B_N
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_CampA_ClothA_D
+    }
+    TextureStreamingData[4] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_CampA_Fabric_B_H
+    }
+    TextureStreamingData[5] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Fabric001_N
+    }
+    TextureStreamingData[6] =
+    {
+        SamplingScale = 0.484375
+        UVChannelIndex = 0
+        TextureName = VFX_T_Noise05_D
+    }
+    TextureStreamingData[7] =
+    {
+        SamplingScale = 1.92188
+        UVChannelIndex = 0
+        TextureName = VFX_T_TankMoteNoiseVinceTest_D
+    }
+}

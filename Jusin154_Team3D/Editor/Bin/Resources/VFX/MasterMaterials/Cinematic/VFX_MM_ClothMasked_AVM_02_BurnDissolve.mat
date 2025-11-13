@@ -1,0 +1,12 @@
+Diffuse=T_CampA_ClothA_D
+Normal=T_CampA_BigBanners_B_N
+Opacity=T_Blank_A
+Other[0]=Good64x64TilingNoiseHighFreq
+Other[1]=T_CampA_BigBanners_B_MROA
+Other[2]=T_CampA_Fabric_B_H
+Other[3]=base_white_MSK
+Other[4]=T_Fabric001_N
+Other[5]=T_ColorNoise512_D
+Other[6]=T_Forageable_Horklump_Gradient_D
+Other[7]=VFX_T_Noise05_D
+Other[8]=VFX_T_TankMoteNoiseVinceTest_D

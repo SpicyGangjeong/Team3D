@@ -1,0 +1,84 @@
+Parent = Material3'/Game/VFX/MasterMaterials/Decals/VFX_MM_Decal3D_Ice.VFX_MM_Decal3D_Ice'
+ScalarParameterValues[1] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[5] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=Inner Texture }
+        ParameterValue = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Snow/T_Snow_Base_D.T_Snow_Base_D'
+        ParameterName = None
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=Inner Texture_1 }
+        ParameterValue = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Snow/T_Snow_Base_N.T_Snow_Base_N'
+        ParameterName = None
+    }
+    TextureParameterValues[2] =
+    {
+        ParameterInfo = { Name=Inner Texture_2 }
+        ParameterValue = Texture2D'/Game/VFX/Textures/VFX_T_Snow_N.VFX_T_Snow_N'
+        ParameterName = None
+    }
+    TextureParameterValues[3] =
+    {
+        ParameterInfo = { Name=Noise Texture }
+        ParameterValue = Texture2D'/Game/VFX/Textures/VFX_T_Ice_D.VFX_T_Ice_D'
+        ParameterName = None
+    }
+    TextureParameterValues[4] =
+    {
+        ParameterInfo = { Name=Outer Texture }
+        ParameterValue = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Snow/T_Snow_Base_D.T_Snow_Base_D'
+        ParameterName = None
+    }
+}
+VectorParameterValues[2] =
+{
+    VectorParameterValues[0] =
+    {
+        ParameterInfo = { Name=Param }
+        ParameterValue = { R=0.8, G=0.8, B=0.8, A=1 }
+        ParameterName = None
+    }
+    VectorParameterValues[1] =
+    {
+        ParameterInfo = { Name=OuterTexture_Color }
+        ParameterValue = { R=0.848958, G=0.848958, B=0.848958, A=1 }
+        ParameterName = None
+    }
+}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Translucent (2)
+    bOverride_TwoSided = false
+    TwoSided = false
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[0] = {}
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

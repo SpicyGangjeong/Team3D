@@ -1,0 +1,8 @@
+Diffuse=VFX_T_Swirl_FlowMapDiffTile_Warp_FM
+Emissive=T_GreatHallCloudsEmissiveMask_D
+Other[0]=T_GreatHallCloudsEdge02_D
+Other[1]=T_GeneralClouds_D
+Other[2]=T_GreatHallClouds02_D
+Other[3]=T_GreatHallCloudsEmissiveMask02_D
+Other[4]=T_GreatHallClouds_D
+Other[5]=T_GreatHallCloudsEdge_D

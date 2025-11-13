@@ -1,0 +1,118 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[2] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseCaustics02_D.VFX_T_NoiseCaustics02_D'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/T_waterSplashA_N.T_waterSplashA_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[14] =
+                {
+                    ParameterInfos[0] = { Name=Soften Exponent (S) }
+                    ParameterInfos[1] = { Name=Tiling U (S)_1 }
+                    ParameterInfos[2] = { Name=Radius }
+                    ParameterInfos[3] = { Name=Soften Strength (S) }
+                    ParameterInfos[4] = { Name=ModUV Strength (S) }
+                    ParameterInfos[5] = { Name=Speed U (S)_1 }
+                    ParameterInfos[6] = { Name=Hardness }
+                    ParameterInfos[7] = { Name=Speed V (S)_1 }
+                    ParameterInfos[8] = { Name=Param }
+                    ParameterInfos[9] = { Name=Speed V (S) }
+                    ParameterInfos[10] = { Name=Speed U (S) }
+                    ParameterInfos[11] = { Name=Tiling U (S) }
+                    ParameterInfos[12] = { Name=Tiling V (S) }
+                    ParameterInfos[13] = { Name=B }
+                }
+            }
+            Entries[1] = { ParameterInfos[0]={} }
+            Entries[2] = { ParameterInfos[0]={} }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[14] =
+        {
+            ScalarValues[0] = 1.82857
+            ScalarValues[1] = 0.5
+            ScalarValues[2] = 0.5
+            ScalarValues[3] = 257.143
+            ScalarValues[4] = 0.028573
+            ScalarValues[5] = -0.095238
+            ScalarValues[6] = 0
+            ScalarValues[7] = 0.009524
+            ScalarValues[8] = 0.774033
+            ScalarValues[9] = 0.1
+            ScalarValues[10] = 0.1
+            ScalarValues[11] = 0.4
+            ScalarValues[12] = 0.4
+            ScalarValues[13] = 1
+        }
+        VectorValues[0] = {}
+        TextureValues[0] = {}
+    }
+    ReferencedTextures[2] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseCaustics02_D.VFX_T_NoiseCaustics02_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/T_waterSplashA_N.T_waterSplashA_N'
+    }
+}
+BlendMode = BLEND_Additive (3)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[0] = {}
+CollectedScalarParameters[14] =
+{
+    CollectedScalarParameters[0] =
+    {
+        Value = 1.82857
+        Name = Soften Exponent (S)
+        Group = None
+    }
+    CollectedScalarParameters[1] = { Value=0.5, Name=Tiling U (S)_1, Group=None }
+    CollectedScalarParameters[2] = { Value=0.5, Name=Radius, Group=None }
+    CollectedScalarParameters[3] =
+    {
+        Value = 257.143
+        Name = Soften Strength (S)
+        Group = None
+    }
+    CollectedScalarParameters[4] =
+    {
+        Value = 0.028573
+        Name = ModUV Strength (S)
+        Group = None
+    }
+    CollectedScalarParameters[5] = { Value=-0.095238, Name=Speed U (S)_1, Group=None }
+    CollectedScalarParameters[6] = { Value=0, Name=Hardness, Group=None }
+    CollectedScalarParameters[7] = { Value=0.009524, Name=Speed V (S)_1, Group=None }
+    CollectedScalarParameters[8] = { Value=0.774033, Name=Param, Group=None }
+    CollectedScalarParameters[9] = { Value=0.1, Name=Speed V (S), Group=None }
+    CollectedScalarParameters[10] = { Value=0.1, Name=Speed U (S), Group=None }
+    CollectedScalarParameters[11] = { Value=0.4, Name=Tiling U (S), Group=None }
+    CollectedScalarParameters[12] = { Value=0.4, Name=Tiling V (S), Group=None }
+    CollectedScalarParameters[13] = { Value=1, Name=B, Group=None }
+}
+CollectedVectorParameters[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 0.5
+        UVChannelIndex = 0
+        TextureName = T_waterSplashA_N
+    }
+}

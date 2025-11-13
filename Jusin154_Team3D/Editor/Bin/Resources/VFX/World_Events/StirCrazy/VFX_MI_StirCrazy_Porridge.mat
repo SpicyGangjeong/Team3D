@@ -1,0 +1,8 @@
+Diffuse=T_porridge_D
+Normal=T_porridge_N
+SpecPower=VFX_T_SpiralFlow_FM
+Other[0]=T_porridge_MRO
+Other[1]=DefaultDiffuse
+Other[2]=DefaultNormal
+Other[3]=LowResBlurredNoise
+Other[4]=VFX_T_Noise_Soft_D

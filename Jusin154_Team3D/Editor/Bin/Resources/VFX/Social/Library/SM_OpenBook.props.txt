@@ -1,0 +1,38 @@
+Materials[2] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/RiggedObjects/Props/Books/Materials/MI_CCL_MedicalBook.MI_CCL_MedicalBook'
+    Materials[1] = MaterialInstanceConstant'/Game/RiggedObjects/Props/Books/Materials/MI_AncientMagicBook_Page01_Anim.MI_AncientMagicBook_Page01_Anim'
+}
+SourceModels[0] = {}
+StaticMaterials[2] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/RiggedObjects/Props/Books/Materials/MI_CCL_MedicalBook.MI_CCL_MedicalBook'
+        MaterialSlotName = SK_MedicalBook_Thin:M_CCL_MedicalBook
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 59.3388, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/RiggedObjects/Props/Books/Materials/MI_AncientMagicBook_Page01_Anim.MI_AncientMagicBook_Page01_Anim'
+        MaterialSlotName = SK_MedicalBook_Thin:blinn5
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 80.7313, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-0.165522, Y=-0.0191994, Z=4.12513 }
+    BoxExtent = { X=25.9737, Y=16.2872, Z=4.68221 }
+    SphereRadius = 30.7162
+}

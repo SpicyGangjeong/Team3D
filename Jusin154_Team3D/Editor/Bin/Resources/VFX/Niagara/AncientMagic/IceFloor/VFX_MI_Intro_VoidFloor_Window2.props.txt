@@ -1,0 +1,242 @@
+Parent = Material3'/Game/VFX/Niagara/AncientMagic/IceFloor/MM_2LayersBlend_Intro_Floor.MM_2LayersBlend_Intro_Floor'
+ScalarParameterValues[16] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=Height Ratio }
+        ParameterValue = 0.05
+        ParameterName = None
+    }
+    ScalarParameterValues[1] =
+    {
+        ParameterInfo = { Name=Exp_1 }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[2] =
+    {
+        ParameterInfo = { Name=RadiusScale }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[3] =
+    {
+        ParameterInfo = { Name=Opacity Grunge UV scale }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[4] =
+    {
+        ParameterInfo = { Name=UV scale A }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[5] =
+    {
+        ParameterInfo = { Name=Diffuse Brightness A }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[6] =
+    {
+        ParameterInfo = { Name=Roughness A }
+        ParameterValue = -0.2
+        ParameterName = None
+    }
+    ScalarParameterValues[7] =
+    {
+        ParameterInfo = { Name=Normal A Height }
+        ParameterValue = -1
+        ParameterName = None
+    }
+    ScalarParameterValues[8] =
+    {
+        ParameterInfo = { Name=Diffuse B Height Contrast }
+        ParameterValue = 0.5
+        ParameterName = None
+    }
+    ScalarParameterValues[9] =
+    {
+        ParameterInfo = { Name=Opcity B }
+        ParameterValue = 0.5
+        ParameterName = None
+    }
+    ScalarParameterValues[10] =
+    {
+        ParameterInfo = { Name=UV scale B }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[11] =
+    {
+        ParameterInfo = { Name=Diffuse Brightness B }
+        ParameterValue = 0.8
+        ParameterName = None
+    }
+    ScalarParameterValues[12] =
+    {
+        ParameterInfo = { Name=Roughness B }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[13] =
+    {
+        ParameterInfo = { Name=Normal B Height }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[14] =
+    {
+        ParameterInfo = { Name=UV scale }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[15] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[7] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=Mask Texture (packed) }
+        ParameterValue = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Noise/T_Noise_MSK.T_Noise_MSK'
+        ParameterName = None
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=Diffuse A }
+        ParameterValue = Texture2D'/Game/Environment/Hogwarts/Common/Textures/Stone/T_HW_Marble_3_D.T_HW_Marble_3_D'
+        ParameterName = None
+    }
+    TextureParameterValues[2] =
+    {
+        ParameterInfo = { Name=Normal Map A }
+        ParameterValue = Texture2D'/Game/Environment/Cavern_Dungeon/Textures/Floor/T_Cav_GroundBedRock_01_Lime_N.T_Cav_GroundBedRock_01_Lime_N'
+        ParameterName = None
+    }
+    TextureParameterValues[3] =
+    {
+        ParameterInfo = { Name=MROH/SROH Map A }
+        ParameterValue = Texture2D'/Game/Environment/Cavern_Dungeon/Textures/Floor/T_Cav_GroundBedRock_02_MROH.T_Cav_GroundBedRock_02_MROH'
+        ParameterName = None
+    }
+    TextureParameterValues[4] =
+    {
+        ParameterInfo = { Name=Diffuse B }
+        ParameterValue = Texture2D'/Game/Environment/Cavern_Dungeon/Textures/Rocks/T_CavernDun_Rock_C_D.T_CavernDun_Rock_C_D'
+        ParameterName = None
+    }
+    TextureParameterValues[5] =
+    {
+        ParameterInfo = { Name=MRO/SRO Map B }
+        ParameterValue = Texture2D'/Game/Environment/Cavern_Dungeon/Textures/Floor/T_Cav_GroundSand_01_Bslt_MROH.T_Cav_GroundSand_01_Bslt_MROH'
+        ParameterName = None
+    }
+    TextureParameterValues[6] =
+    {
+        ParameterInfo = { Name=Normal Map B }
+        ParameterValue = Texture2D'/Game/Environment/Cavern_Dungeon/Textures/Floor/T_Cav_GroundRockGold_01_N.T_Cav_GroundRockGold_01_N'
+        ParameterName = None
+    }
+}
+VectorParameterValues[2] =
+{
+    VectorParameterValues[0] =
+    {
+        ParameterInfo = { Name=Origin }
+        ParameterValue = { R=-5757.75, G=-73161.2, B=-13530.9, A=1 }
+        ParameterName = None
+    }
+    VectorParameterValues[1] =
+    {
+        ParameterInfo = { Name=GrungeStrength }
+        ParameterValue = { R=0.266667, G=1.23275, B=3.92266, A=0.877215 }
+        ParameterName = None
+    }
+}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Masked (1)
+    bOverride_TwoSided = false
+    TwoSided = false
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[0] = {}
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[9] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 0.973694
+        UVChannelIndex = 0
+        TextureName = T_Cav_GroundRockGold_01_N
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 0.966614
+        UVChannelIndex = 0
+        TextureName = T_Cav_GroundSand_01_Bslt_MROH
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 0.973694
+        UVChannelIndex = 0
+        TextureName = T_CavernDun_Rock_C_D
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Noise_MSK
+    }
+    TextureStreamingData[4] =
+    {
+        SamplingScale = 0.765625
+        UVChannelIndex = 0
+        TextureName = VFX_T_Ice_D
+    }
+    TextureStreamingData[5] =
+    {
+        SamplingScale = 0.765625
+        UVChannelIndex = 0
+        TextureName = VFX_T_Ice_N
+    }
+    TextureStreamingData[6] =
+    {
+        SamplingScale = 0.765625
+        UVChannelIndex = 0
+        TextureName = VFX_T_Ice_R
+    }
+    TextureStreamingData[7] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Noise05_D
+    }
+    TextureStreamingData[8] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Noise_LowFreq_E
+    }
+}

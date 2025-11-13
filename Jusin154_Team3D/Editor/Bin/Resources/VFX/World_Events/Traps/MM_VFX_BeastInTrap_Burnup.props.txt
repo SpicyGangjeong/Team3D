@@ -1,0 +1,169 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[6] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/RiggedObjects/Props/World_Events/BeastsInATrap/Trap/Textures/T_BIAT_D.T_BIAT_D'
+    ReferencedTextures[1] = Texture2D'/Game/RiggedObjects/Props/World_Events/BeastsInATrap/Trap/Textures/T_BIAT_MRO.T_BIAT_MRO'
+    ReferencedTextures[2] = Texture2D'/Game/RiggedObjects/Props/World_Events/BeastsInATrap/Trap/Textures/T_BIAT_N.T_BIAT_N'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Mechanics/Broom/Rings/T_Gradient_Centre_MSK.T_Gradient_Centre_MSK'
+    ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_NoisyRamp_D.VFX_T_NoisyRamp_D'
+    ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/T_Burnup_Emissive_Mask_MSK.T_Burnup_Emissive_Mask_MSK'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[9] =
+                {
+                    ParameterInfos[0] = { Name=Erode }
+                    ParameterInfos[1] = { Name=Intensity }
+                    ParameterInfos[2] = { Name=Texture U Offset }
+                    ParameterInfos[3] = { Name=EdgeStrength }
+                    ParameterInfos[4] = { Name=Tiling }
+                    ParameterInfos[5] = { Name=Disintegrate? }
+                    ParameterInfos[6] = { Name=ScrollBanner }
+                    ParameterInfos[7] = { Name=Dissolve }
+                    ParameterInfos[8] = { Name=Cool }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Glow Falloff Colour }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[5] =
+                {
+                    ParameterInfos[0] = { Name=Diffuse }
+                    ParameterInfos[1] = { Name=Param }
+                    ParameterInfos[2] = { Name=Normal Map }
+                    ParameterInfos[3] = { Name=T_Heat }
+                    ParameterInfos[4] = { Name=MRO }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[9] = { 1, 500, 0, 1, 15, 0, 0, -5, 0 }
+        VectorValues[1] =
+        {
+            VectorValues[0] = { R=1, G=0, B=0, A=1 }
+        }
+        TextureValues[5] =
+        {
+            TextureValues[0] = Texture2D'/Game/RiggedObjects/Props/World_Events/BeastsInATrap/Trap/Textures/T_BIAT_D.T_BIAT_D'
+            TextureValues[1] = Texture2D'/Game/VFX/Mechanics/Broom/Rings/T_Gradient_Centre_MSK.T_Gradient_Centre_MSK'
+            TextureValues[2] = Texture2D'/Game/RiggedObjects/Props/World_Events/BeastsInATrap/Trap/Textures/T_BIAT_N.T_BIAT_N'
+            TextureValues[3] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_NoisyRamp_D.VFX_T_NoisyRamp_D'
+            TextureValues[4] = Texture2D'/Game/RiggedObjects/Props/World_Events/BeastsInATrap/Trap/Textures/T_BIAT_MRO.T_BIAT_MRO'
+        }
+    }
+    ReferencedTextures[6] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/RiggedObjects/Props/World_Events/BeastsInATrap/Trap/Textures/T_BIAT_D.T_BIAT_D'
+        ReferencedTextures[1] = Texture2D'/Game/RiggedObjects/Props/World_Events/BeastsInATrap/Trap/Textures/T_BIAT_MRO.T_BIAT_MRO'
+        ReferencedTextures[2] = Texture2D'/Game/RiggedObjects/Props/World_Events/BeastsInATrap/Trap/Textures/T_BIAT_N.T_BIAT_N'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_NoisyRamp_D.VFX_T_NoisyRamp_D'
+        ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/T_Burnup_Emissive_Mask_MSK.T_Burnup_Emissive_Mask_MSK'
+        ReferencedTextures[5] = Texture2D'/Game/VFX/Mechanics/Broom/Rings/T_Gradient_Centre_MSK.T_Gradient_Centre_MSK'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[5] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/RiggedObjects/Props/World_Events/BeastsInATrap/Trap/Textures/T_BIAT_D.T_BIAT_D'
+        Name = Diffuse
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Mechanics/Broom/Rings/T_Gradient_Centre_MSK.T_Gradient_Centre_MSK'
+        Name = Param
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/RiggedObjects/Props/World_Events/BeastsInATrap/Trap/Textures/T_BIAT_N.T_BIAT_N'
+        Name = Normal Map
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_NoisyRamp_D.VFX_T_NoisyRamp_D'
+        Name = T_Heat
+        Group = None
+    }
+    CollectedTextureParameters[4] =
+    {
+        Texture = Texture2D'/Game/RiggedObjects/Props/World_Events/BeastsInATrap/Trap/Textures/T_BIAT_MRO.T_BIAT_MRO'
+        Name = MRO
+        Group = None
+    }
+}
+CollectedScalarParameters[9] =
+{
+    CollectedScalarParameters[0] = { Value=1, Name=Erode, Group=None }
+    CollectedScalarParameters[1] = { Value=500, Name=Intensity, Group=None }
+    CollectedScalarParameters[2] = { Value=0, Name=Texture U Offset, Group=None }
+    CollectedScalarParameters[3] = { Value=1, Name=EdgeStrength, Group=None }
+    CollectedScalarParameters[4] = { Value=15, Name=Tiling, Group=None }
+    CollectedScalarParameters[5] = { Value=0, Name=Disintegrate?, Group=None }
+    CollectedScalarParameters[6] = { Value=0, Name=ScrollBanner, Group=None }
+    CollectedScalarParameters[7] = { Value=-5, Name=Dissolve, Group=None }
+    CollectedScalarParameters[8] = { Value=0, Name=Cool, Group=None }
+}
+CollectedVectorParameters[1] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=1, G=0, B=0, A=1 }
+        Name = Glow Falloff Colour
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[4] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_BIAT_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_BIAT_MRO
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_BIAT_N
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Burnup_Emissive_Mask_MSK
+    }
+}

@@ -1,0 +1,114 @@
+TwoSided = true
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[1] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/VFX_T_GlowBugWing_D.VFX_T_GlowBugWing_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[5] =
+                {
+                    ParameterInfos[0] = { Name=Angle (S) }
+                    ParameterInfos[1] = { Name=LimitB }
+                    ParameterInfos[2] = { Name=LimitA }
+                    ParameterInfos[3] = { Name=Speed }
+                    ParameterInfos[4] = { Name=OutdoorsDaytimeEmissiveBoost }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[3] =
+                {
+                    ParameterInfos[0] = { Name=Axis }
+                    ParameterInfos[1] = { Name=PivotPoint }
+                    ParameterInfos[2] = { Name=Color }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=DiffuseTex }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[5] = { -0.55873, 2, 0, 3, 2 }
+        VectorValues[3] =
+        {
+            VectorValues[0] = { R=1, G=0, B=0, A=1 }
+            VectorValues[1] = { R=0, G=0, B=0, A=1 }
+            VectorValues[2] = { R=0.247752, G=10, B=7.79096, A=1 }
+        }
+        TextureValues[1] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/VFX_T_GlowBugWing_D.VFX_T_GlowBugWing_D'
+        }
+    }
+    ReferencedTextures[1] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/VFX_T_GlowBugWing_D.VFX_T_GlowBugWing_D'
+    }
+}
+BlendMode = BLEND_Opaque (0)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[1] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_GlowBugWing_D.VFX_T_GlowBugWing_D'
+        Name = DiffuseTex
+        Group = None
+    }
+}
+CollectedScalarParameters[5] =
+{
+    CollectedScalarParameters[0] = { Value=-0.55873, Name=Angle (S), Group=None }
+    CollectedScalarParameters[1] = { Value=2, Name=LimitB, Group=None }
+    CollectedScalarParameters[2] = { Value=0, Name=LimitA, Group=None }
+    CollectedScalarParameters[3] = { Value=3, Name=Speed, Group=None }
+    CollectedScalarParameters[4] =
+    {
+        Value = 2
+        Name = OutdoorsDaytimeEmissiveBoost
+        Group = None
+    }
+}
+CollectedVectorParameters[3] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=1, G=0, B=0, A=1 }
+        Name = Axis
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = PivotPoint
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=0.247752, G=10, B=7.79096, A=1 }
+        Name = Color
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

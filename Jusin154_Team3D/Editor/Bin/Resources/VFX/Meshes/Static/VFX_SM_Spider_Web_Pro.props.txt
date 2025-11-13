@@ -1,0 +1,38 @@
+Materials[2] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Enemies/Spider/Spider_Webs/VFX_MI_Spider_Web_Pro_Wisps.VFX_MI_Spider_Web_Pro_Wisps'
+    Materials[1] = MaterialInstanceConstant'/Game/VFX/Enemies/Spider/Spider_Webs/VFX_MI_Spider_Web_Pro_Core.VFX_MI_Spider_Web_Pro_Core'
+}
+SourceModels[0] = {}
+StaticMaterials[2] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Enemies/Spider/Spider_Webs/VFX_MI_Spider_Web_Pro_Wisps.VFX_MI_Spider_Web_Pro_Wisps'
+        MaterialSlotName = lambert1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 29.2148, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Enemies/Spider/Spider_Webs/VFX_MI_Spider_Web_Pro_Core.VFX_MI_Spider_Web_Pro_Core'
+        MaterialSlotName = lambert3
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 33.7481, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-123.3, Y=-0.46603, Z=0.0485287 }
+    BoxExtent = { X=126.071, Y=21.5157, Z=21.617 }
+    SphereRadius = 126.074
+}

@@ -1,0 +1,157 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[7] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Niagara/MechanicsFX/AttackIndicatorFX/VFX_T_AttackInd_Mask_02_E.VFX_T_AttackInd_Mask_02_E'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Niagara/MechanicsFX/AttackIndicatorFX/VFX_T_AttackInd_Mask_A.VFX_T_AttackInd_Mask_A'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Niagara/MechanicsFX/AttackIndicatorFX/VFX_T_AttackInd_Unblock_E.VFX_T_AttackInd_Unblock_E'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Niagara/MechanicsFX/AttackIndicatorFX/VFX_T_AttackInd_Unblock_MSK.VFX_T_AttackInd_Unblock_MSK'
+    ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_EdgeMask_D.VFX_T_EdgeMask_D'
+    ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+    ReferencedTextures[6] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_SwirlNoise_05_D.VFX_T_SwirlNoise_05_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[28] =
+                {
+                    ParameterInfos[0] = { Name=Alpha_1 }
+                    ParameterInfos[1] = { Name=Swizzle (0-1) (S) }
+                    ParameterInfos[2] = { Name=Radius (S) }
+                    ParameterInfos[3] = { Name=Tiling U (S)_1 }
+                    ParameterInfos[4] = { Name=A }
+                    ParameterInfos[5] = { Name=Radius }
+                    ParameterInfos[6] = { Name=Speed V (S)_2 }
+                    ParameterInfos[7] = { Name=B_2 }
+                    ParameterInfos[8] = { Name=Alpha }
+                    ParameterInfos[9] = { Name=Param_1 }
+                    ParameterInfos[10] = { Name=ModUV Strength (S) }
+                    ParameterInfos[11] = { Name=Speed U (S)_1 }
+                    ParameterInfos[12] = { Name=Width (S)_1 }
+                    ParameterInfos[13] = { Name=Hardness }
+                    ParameterInfos[14] = { Name=Speed V (S)_1 }
+                    ParameterInfos[15] = { Name=Speed U (S)_2 }
+                    ParameterInfos[16] = { Name=Tiling U (S)_2 }
+                    ParameterInfos[17] = { Name=LowQual_AlphaScale }
+                    ParameterInfos[18] = { Name=Radius (S)_2 }
+                    ParameterInfos[19] = { Name=B_4 }
+                    ParameterInfos[20] = { Name=Param }
+                    ParameterInfos[21] = { Name=Width (S) }
+                    ParameterInfos[22] = { Name=Exp_1 }
+                    ParameterInfos[23] = { Name=B_3 }
+                    ParameterInfos[24] = { Name=Time }
+                    ParameterInfos[25] = { Name=Speed (S) }
+                    ParameterInfos[26] = { Name=B_5 }
+                    ParameterInfos[27] = { Name=B }
+                }
+            }
+            Entries[1] = { ParameterInfos[0]={} }
+            Entries[2] = { ParameterInfos[0]={} }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[28] =
+        {
+            ScalarValues[0] = 0.6
+            ScalarValues[1] = 0
+            ScalarValues[2] = 0.347619
+            ScalarValues[3] = 1.85616
+            ScalarValues[4] = 0.031746
+            ScalarValues[5] = 0.487301
+            ScalarValues[6] = -0.215873
+            ScalarValues[7] = 0.152381
+            ScalarValues[8] = -0.238095
+            ScalarValues[9] = 0.750697
+            ScalarValues[10] = 0.0025
+            ScalarValues[11] = -0.126984
+            ScalarValues[12] = 0.01
+            ScalarValues[13] = 0.479365
+            ScalarValues[14] = 0.101587
+            ScalarValues[15] = -0.15873
+            ScalarValues[16] = 1
+            ScalarValues[17] = 0.265873
+            ScalarValues[18] = 0.375
+            ScalarValues[19] = 0.019047
+            ScalarValues[20] = 0.5
+            ScalarValues[21] = 0.005
+            ScalarValues[22] = 3
+            ScalarValues[23] = 0
+            ScalarValues[24] = -6.25
+            ScalarValues[25] = 4
+            ScalarValues[26] = 0.405
+            ScalarValues[27] = -0.208392
+        }
+        VectorValues[0] = {}
+        TextureValues[0] = {}
+    }
+    ReferencedTextures[8] =
+    {
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Niagara/MechanicsFX/AttackIndicatorFX/VFX_T_AttackInd_Unblock_MSK.VFX_T_AttackInd_Unblock_MSK'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Niagara/MechanicsFX/AttackIndicatorFX/VFX_T_AttackInd_Unblock_E.VFX_T_AttackInd_Unblock_E'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Niagara/MechanicsFX/AttackIndicatorFX/VFX_T_AttackInd_Mask_02_E.VFX_T_AttackInd_Mask_02_E'
+        ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+        ReferencedTextures[5] = Texture2D'/Game/VFX/Niagara/MechanicsFX/AttackIndicatorFX/VFX_T_AttackInd_Mask_A.VFX_T_AttackInd_Mask_A'
+        ReferencedTextures[6] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_SwirlNoise_05_D.VFX_T_SwirlNoise_05_D'
+        ReferencedTextures[7] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_EdgeMask_D.VFX_T_EdgeMask_D'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[0] = {}
+CollectedScalarParameters[28] =
+{
+    CollectedScalarParameters[0] = { Value=0.6, Name=Alpha_1, Group=None }
+    CollectedScalarParameters[1] = { Value=0, Name=Swizzle (0-1) (S), Group=None }
+    CollectedScalarParameters[2] = { Value=0.347619, Name=Radius (S), Group=None }
+    CollectedScalarParameters[3] = { Value=1.85616, Name=Tiling U (S)_1, Group=None }
+    CollectedScalarParameters[4] = { Value=0.031746, Name=A, Group=None }
+    CollectedScalarParameters[5] = { Value=0.487301, Name=Radius, Group=None }
+    CollectedScalarParameters[6] = { Value=-0.215873, Name=Speed V (S)_2, Group=None }
+    CollectedScalarParameters[7] = { Value=0.152381, Name=B_2, Group=None }
+    CollectedScalarParameters[8] = { Value=-0.238095, Name=Alpha, Group=None }
+    CollectedScalarParameters[9] = { Value=0.750697, Name=Param_1, Group=None }
+    CollectedScalarParameters[10] =
+    {
+        Value = 0.0025
+        Name = ModUV Strength (S)
+        Group = None
+    }
+    CollectedScalarParameters[11] = { Value=-0.126984, Name=Speed U (S)_1, Group=None }
+    CollectedScalarParameters[12] = { Value=0.01, Name=Width (S)_1, Group=None }
+    CollectedScalarParameters[13] = { Value=0.479365, Name=Hardness, Group=None }
+    CollectedScalarParameters[14] = { Value=0.101587, Name=Speed V (S)_1, Group=None }
+    CollectedScalarParameters[15] = { Value=-0.15873, Name=Speed U (S)_2, Group=None }
+    CollectedScalarParameters[16] = { Value=1, Name=Tiling U (S)_2, Group=None }
+    CollectedScalarParameters[17] =
+    {
+        Value = 0.265873
+        Name = LowQual_AlphaScale
+        Group = None
+    }
+    CollectedScalarParameters[18] = { Value=0.375, Name=Radius (S)_2, Group=None }
+    CollectedScalarParameters[19] = { Value=0.019047, Name=B_4, Group=None }
+    CollectedScalarParameters[20] = { Value=0.5, Name=Param, Group=None }
+    CollectedScalarParameters[21] = { Value=0.005, Name=Width (S), Group=None }
+    CollectedScalarParameters[22] = { Value=3, Name=Exp_1, Group=None }
+    CollectedScalarParameters[23] = { Value=0, Name=B_3, Group=None }
+    CollectedScalarParameters[24] = { Value=-6.25, Name=Time, Group=None }
+    CollectedScalarParameters[25] = { Value=4, Name=Speed (S), Group=None }
+    CollectedScalarParameters[26] = { Value=0.405, Name=B_5, Group=None }
+    CollectedScalarParameters[27] = { Value=-0.208392, Name=B, Group=None }
+}
+CollectedVectorParameters[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

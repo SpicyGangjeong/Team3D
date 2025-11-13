@@ -1,0 +1,193 @@
+TwoSided = false
+bDisableDepthTest = true
+bIsMasked = false
+ReferencedTextures[4] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Flares/VFX_T_ChromaWheel_E.VFX_T_ChromaWheel_E'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Flares/VFX_T_Flare01_D.VFX_T_Flare01_D'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseCaustics01_Color_D.VFX_T_NoiseCaustics01_Color_D'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/VFX_T_LensFlare_DirtMask_E.VFX_T_LensFlare_DirtMask_E'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[27] =
+                {
+                    ParameterInfos[0] = { Name=EmissAdap Daytime Boost Percent (S) }
+                    ParameterInfos[1] = { Name=Ray UV Method }
+                    ParameterInfos[2] = { Name=Soften Exponent (S) }
+                    ParameterInfos[3] = { Name=Dirt Mask Intensity }
+                    ParameterInfos[4] = { Name=Ray Chroma }
+                    ParameterInfos[5] = { Name=Red- Offset U (S) }
+                    ParameterInfos[6] = { Name=Emissive Boost }
+                    ParameterInfos[7] = { Name=Soften Strength (S) }
+                    ParameterInfos[8] = { Name=Red- Offset V (S) }
+                    ParameterInfos[9] = { Name=Core Boost (S) }
+                    ParameterInfos[10] = { Name=Ray Opacity }
+                    ParameterInfos[11] = { Name=Blue- Offset V (S) }
+                    ParameterInfos[12] = { Name=Chromatic Aberration Strength (0-1) (S) }
+                    ParameterInfos[13] = { Name=Sphere Mask Radius (S) }
+                    ParameterInfos[14] = { Name=Ring Mask Width }
+                    ParameterInfos[15] = { Name=Ring Mask Bias }
+                    ParameterInfos[16] = { Name=Ray # Multiplier }
+                    ParameterInfos[17] = { Name=Dirt Mask Tiling V (S) }
+                    ParameterInfos[18] = { Name=Ring Softness Exponent }
+                    ParameterInfos[19] = { Name=Ring Contrast }
+                    ParameterInfos[20] = { Name=Blue- Offset U (S) }
+                    ParameterInfos[21] = { Name=Sphere Mask Power Bias }
+                    ParameterInfos[22] = { Name=Green- Offset U (S) }
+                    ParameterInfos[23] = { Name=Ring Chroma }
+                    ParameterInfos[24] = { Name=Green- Offset V (S) }
+                    ParameterInfos[25] = { Name=Sphere Mask Hardness }
+                    ParameterInfos[26] = { Name=Dirt Mask Tiling U (S) }
+                }
+            }
+            Entries[1] = { ParameterInfos[0]={} }
+            Entries[2] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=Color and Alpha Map }
+                    ParameterInfos[1] = { Name=Dirt Mask Texture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[27] =
+        {
+            ScalarValues[0] = 0.5
+            ScalarValues[1] = -0.25
+            ScalarValues[2] = 1
+            ScalarValues[3] = 1
+            ScalarValues[4] = 0.5
+            ScalarValues[5] = 0.01
+            ScalarValues[6] = 1
+            ScalarValues[7] = 1
+            ScalarValues[8] = 0.01
+            ScalarValues[9] = 0
+            ScalarValues[10] = 1
+            ScalarValues[11] = -0.01
+            ScalarValues[12] = 1
+            ScalarValues[13] = 0.5
+            ScalarValues[14] = 0.345238
+            ScalarValues[15] = 0.5
+            ScalarValues[16] = 193.3
+            ScalarValues[17] = 1.7
+            ScalarValues[18] = 3.05302
+            ScalarValues[19] = 20
+            ScalarValues[20] = -0.01
+            ScalarValues[21] = 0
+            ScalarValues[22] = 0
+            ScalarValues[23] = 0.25
+            ScalarValues[24] = 0
+            ScalarValues[25] = 0
+            ScalarValues[26] = 1.5
+        }
+        VectorValues[0] = {}
+        TextureValues[2] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Flares/VFX_T_Flare01_D.VFX_T_Flare01_D'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/VFX_T_LensFlare_DirtMask_E.VFX_T_LensFlare_DirtMask_E'
+        }
+    }
+    ReferencedTextures[5] =
+    {
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Flares/VFX_T_Flare01_D.VFX_T_Flare01_D'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/VFX_T_LensFlare_DirtMask_E.VFX_T_LensFlare_DirtMask_E'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Flares/VFX_T_ChromaWheel_E.VFX_T_ChromaWheel_E'
+        ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseCaustics01_Color_D.VFX_T_NoiseCaustics01_Color_D'
+    }
+}
+BlendMode = BLEND_Additive (3)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[2] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Flares/VFX_T_Flare01_D.VFX_T_Flare01_D'
+        Name = Color and Alpha Map
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_LensFlare_DirtMask_E.VFX_T_LensFlare_DirtMask_E'
+        Name = Dirt Mask Texture
+        Group = None
+    }
+}
+CollectedScalarParameters[27] =
+{
+    CollectedScalarParameters[0] =
+    {
+        Value = 0.5
+        Name = EmissAdap Daytime Boost Percent (S)
+        Group = None
+    }
+    CollectedScalarParameters[1] = { Value=-0.25, Name=Ray UV Method, Group=None }
+    CollectedScalarParameters[2] = { Value=1, Name=Soften Exponent (S), Group=None }
+    CollectedScalarParameters[3] = { Value=1, Name=Dirt Mask Intensity, Group=None }
+    CollectedScalarParameters[4] = { Value=0.5, Name=Ray Chroma, Group=None }
+    CollectedScalarParameters[5] = { Value=0.01, Name=Red- Offset U (S), Group=None }
+    CollectedScalarParameters[6] = { Value=1, Name=Emissive Boost, Group=None }
+    CollectedScalarParameters[7] = { Value=1, Name=Soften Strength (S), Group=None }
+    CollectedScalarParameters[8] = { Value=0.01, Name=Red- Offset V (S), Group=None }
+    CollectedScalarParameters[9] = { Value=0, Name=Core Boost (S), Group=None }
+    CollectedScalarParameters[10] = { Value=1, Name=Ray Opacity, Group=None }
+    CollectedScalarParameters[11] = { Value=-0.01, Name=Blue- Offset V (S), Group=None }
+    CollectedScalarParameters[12] =
+    {
+        Value = 1
+        Name = Chromatic Aberration Strength (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[13] =
+    {
+        Value = 0.5
+        Name = Sphere Mask Radius (S)
+        Group = None
+    }
+    CollectedScalarParameters[14] = { Value=0.345238, Name=Ring Mask Width, Group=None }
+    CollectedScalarParameters[15] = { Value=0.5, Name=Ring Mask Bias, Group=None }
+    CollectedScalarParameters[16] = { Value=193.3, Name=Ray # Multiplier, Group=None }
+    CollectedScalarParameters[17] =
+    {
+        Value = 1.7
+        Name = Dirt Mask Tiling V (S)
+        Group = None
+    }
+    CollectedScalarParameters[18] =
+    {
+        Value = 3.05302
+        Name = Ring Softness Exponent
+        Group = None
+    }
+    CollectedScalarParameters[19] = { Value=20, Name=Ring Contrast, Group=None }
+    CollectedScalarParameters[20] = { Value=-0.01, Name=Blue- Offset U (S), Group=None }
+    CollectedScalarParameters[21] = { Value=0, Name=Sphere Mask Power Bias, Group=None }
+    CollectedScalarParameters[22] = { Value=0, Name=Green- Offset U (S), Group=None }
+    CollectedScalarParameters[23] = { Value=0.25, Name=Ring Chroma, Group=None }
+    CollectedScalarParameters[24] = { Value=0, Name=Green- Offset V (S), Group=None }
+    CollectedScalarParameters[25] = { Value=0, Name=Sphere Mask Hardness, Group=None }
+    CollectedScalarParameters[26] =
+    {
+        Value = 1.5
+        Name = Dirt Mask Tiling U (S)
+        Group = None
+    }
+}
+CollectedVectorParameters[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

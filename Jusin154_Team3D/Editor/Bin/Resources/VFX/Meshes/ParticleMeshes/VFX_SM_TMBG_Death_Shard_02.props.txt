@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/VFX_MI_Rock_Basic_BlackMarble.VFX_MI_Rock_Basic_BlackMarble'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/VFX_MI_Rock_Basic_BlackMarble.VFX_MI_Rock_Basic_BlackMarble'
+        MaterialSlotName = Rock_Cover
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 514.37, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-9.53674e-05, Y=0.000892639, Z=3.8147e-06 }
+    BoxExtent = { X=43.8524, Y=66.5738, Z=55.2485 }
+    SphereRadius = 78.7417
+}

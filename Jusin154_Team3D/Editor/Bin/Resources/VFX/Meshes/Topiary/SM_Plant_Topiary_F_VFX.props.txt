@@ -1,0 +1,38 @@
+Materials[2] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Environment/Hogwarts/Materials/MI_HW_Plant_Topiary_B.MI_HW_Plant_Topiary_B'
+    Materials[1] = MaterialInstanceConstant'/Game/Environment/Hogwarts/Materials/MI_HW_Plant_Topiary_A.MI_HW_Plant_Topiary_A'
+}
+SourceModels[0] = {}
+StaticMaterials[2] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Hogwarts/Materials/MI_HW_Plant_Topiary_B.MI_HW_Plant_Topiary_B'
+        MaterialSlotName = M_Plant_Topiary_B_b
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 43.884, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Hogwarts/Materials/MI_HW_Plant_Topiary_A.MI_HW_Plant_Topiary_A'
+        MaterialSlotName = M_Plant_Topiary_B_a
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 120.663, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=3.44739, Y=1.14058, Z=34.5155 }
+    BoxExtent = { X=46.2666, Y=30.2887, Z=36.5275 }
+    SphereRadius = 52.9557
+}

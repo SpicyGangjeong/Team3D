@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Meshes/Static/HairStyles/MI_HUM_M_Hair_STUHair10_PrettyBoy.MI_HUM_M_Hair_STUHair10_PrettyBoy'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Meshes/Static/HairStyles/MI_HUM_M_Hair_STUHair10_PrettyBoy.MI_HUM_M_Hair_STUHair10_PrettyBoy'
+        MaterialSlotName = M_HUM_M_Hair_StuHair10_PrettyBoy
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 14.0858, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-0.709374, Y=2.25982, Z=7.69301 }
+    BoxExtent = { X=10.6891, Y=12.6997, Z=12.208 }
+    SphereRadius = 14.9814
+}

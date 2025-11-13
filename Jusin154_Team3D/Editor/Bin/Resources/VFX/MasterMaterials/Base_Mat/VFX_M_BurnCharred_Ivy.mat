@@ -1,0 +1,9 @@
+Diffuse=T_BCProps_Ivy_Yellow_D
+Normal=T_Ivy_N
+Other[0]=DefaultDiffuse
+Other[1]=Good64x64TilingNoiseHighFreq
+Other[2]=T_Ivy_SROA
+Other[3]=VFX_T_Noise03_D
+Other[4]=VFX_T_RGB_3DNoiseRough_D
+Other[5]=VFX_T_SparkleNoise_01_D
+Other[6]=VFX_T_Char_01_N

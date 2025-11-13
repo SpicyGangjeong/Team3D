@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Environment/Hogwarts/Common/Materials/Walls/MI_HW_Stonewall_3.MI_HW_Stonewall_3'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Hogwarts/Common/Materials/Walls/MI_HW_Stonewall_3.MI_HW_Stonewall_3'
+        MaterialSlotName = initialShadingGroup_pPlane2Mat
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 1148.35, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=3.82608, Y=0, Z=150.286 }
+    BoxExtent = { X=267.837, Y=150, Z=150.014 }
+    SphereRadius = 341.674
+}

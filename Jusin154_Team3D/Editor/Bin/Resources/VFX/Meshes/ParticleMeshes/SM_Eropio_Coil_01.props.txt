@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Particles/MaterialInstance/VFX_MI_EropioMistSwirl.VFX_MI_EropioMistSwirl'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Particles/MaterialInstance/VFX_MI_EropioMistSwirl.VFX_MI_EropioMistSwirl'
+        MaterialSlotName = initialShadingGroup
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 27.7441, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=22.4549, Y=-0.00649738, Z=0.925218 }
+    BoxExtent = { X=22.586, Y=9.39941, Z=8.4742 }
+    SphereRadius = 22.605
+}

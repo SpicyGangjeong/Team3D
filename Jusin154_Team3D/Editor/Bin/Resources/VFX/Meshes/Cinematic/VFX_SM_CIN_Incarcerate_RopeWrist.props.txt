@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Environment/Castle_Dungeon/Materials/Props/MI_DungeonRope_SRO.MI_DungeonRope_SRO'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Castle_Dungeon/Materials/Props/MI_DungeonRope_SRO.MI_DungeonRope_SRO'
+        MaterialSlotName = MI_DungeonRope_SRO
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 15.0775, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-1.52588e-05, Y=0, Z=0 }
+    BoxExtent = { X=15.8008, Y=18.4472, Z=18.4056 }
+    SphereRadius = 21.8513
+}

@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Cinematic/MaterialInstances/VFX_MI_PensieveCIN.VFX_MI_PensieveCIN'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Cinematic/MaterialInstances/VFX_MI_PensieveCIN.VFX_MI_PensieveCIN'
+        MaterialSlotName = WorldGridMaterial
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 83.1635, 87.8358, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0.00320816, Y=0.100639, Z=1.52891e-05 }
+    BoxExtent = { X=43.8913, Y=43.9181, Z=1.52891e-05 }
+    SphereRadius = 43.9983
+}

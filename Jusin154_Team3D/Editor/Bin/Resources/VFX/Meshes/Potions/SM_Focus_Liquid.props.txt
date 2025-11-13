@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Gameplay/InventoryObjects/Potions/Materials/MI_Potion_Barruffios_Brain_Elixer.MI_Potion_Barruffios_Brain_Elixer'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Gameplay/InventoryObjects/Potions/Materials/MI_Potion_Barruffios_Brain_Elixer.MI_Potion_Barruffios_Brain_Elixer'
+        MaterialSlotName = MI_Potion_Barruffios_Brain_Elixer
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 30.4428, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-0.0263286, Y=0, Z=-6.19937 }
+    BoxExtent = { X=5.01601, Y=5.01601, Z=9.66089 }
+    SphereRadius = 9.81676
+}

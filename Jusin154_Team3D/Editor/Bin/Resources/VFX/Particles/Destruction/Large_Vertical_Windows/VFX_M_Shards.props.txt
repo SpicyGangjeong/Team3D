@@ -1,0 +1,89 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[7] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/BlendFunc_DefBase.BlendFunc_DefBase'
+    ReferencedTextures[1] = Texture2D'/Engine/EngineMaterials/BlendFunc_DefBlend.BlendFunc_DefBlend'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Particles/Destruction/Large_Vertical_Windows/VFX_T_Noise_height2_D.VFX_T_Noise_height2_D'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Particles/Destruction/Large_Vertical_Windows/VFX_T_Shards_D.VFX_T_Shards_D'
+    ReferencedTextures[4] = Texture2D'/Game/VFX/Particles/Destruction/Large_Vertical_Windows/VFX_T_Specks2_tile_D.VFX_T_Specks2_tile_D'
+    ReferencedTextures[5] = Texture2D'/Game/VFX/Particles/Destruction/Large_Vertical_Windows/VFX_T_TilingNoise_N.VFX_T_TilingNoise_N'
+    ReferencedTextures[6] = Texture2D'/Game/VFX/Textures/TEST/VFX_T_Speckled_tile_2_D.VFX_T_Speckled_tile_2_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Glimmer }
+                }
+            }
+            Entries[1] = { ParameterInfos[0]={} }
+            Entries[2] = { ParameterInfos[0]={} }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[1] = { 20000 }
+        VectorValues[0] = {}
+        TextureValues[0] = {}
+    }
+    ReferencedTextures[7] =
+    {
+        ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/BlendFunc_DefBase.BlendFunc_DefBase'
+        ReferencedTextures[1] = Texture2D'/Engine/EngineMaterials/BlendFunc_DefBlend.BlendFunc_DefBlend'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Particles/Destruction/Large_Vertical_Windows/VFX_T_Shards_D.VFX_T_Shards_D'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Particles/Destruction/Large_Vertical_Windows/VFX_T_Specks2_tile_D.VFX_T_Specks2_tile_D'
+        ReferencedTextures[4] = Texture2D'/Game/VFX/Particles/Destruction/Large_Vertical_Windows/VFX_T_Noise_height2_D.VFX_T_Noise_height2_D'
+        ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/TEST/VFX_T_Speckled_tile_2_D.VFX_T_Speckled_tile_2_D'
+        ReferencedTextures[6] = Texture2D'/Game/VFX/Particles/Destruction/Large_Vertical_Windows/VFX_T_TilingNoise_N.VFX_T_TilingNoise_N'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[0] = {}
+CollectedScalarParameters[1] =
+{
+    CollectedScalarParameters[0] = { Value=20000, Name=Glimmer, Group=None }
+}
+CollectedVectorParameters[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[4] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Noise_height2_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Shards_D
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 0.09375
+        UVChannelIndex = 0
+        TextureName = VFX_T_Specks2_tile_D
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_TilingNoise_N
+    }
+}

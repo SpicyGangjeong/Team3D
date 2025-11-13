@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/VFX_MI_ConjuredDragonFireball02HeatShield.VFX_MI_ConjuredDragonFireball02HeatShield'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/VFX_MI_ConjuredDragonFireball02HeatShield.VFX_MI_ConjuredDragonFireball02HeatShield'
+        MaterialSlotName = HeatShieldSphere01
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 219.281, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-49.3682, Y=-7.62939e-06, Z=-7.62939e-06 }
+    BoxExtent = { X=78.3766, Y=49.96, Z=49.96 }
+    SphereRadius = 87.6227
+}

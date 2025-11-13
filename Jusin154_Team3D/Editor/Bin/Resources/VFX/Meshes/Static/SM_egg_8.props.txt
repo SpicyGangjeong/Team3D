@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/RiggedObjects/Characters/Creatures/Birds/Diricawl/Materials/Offspring/MI_Egg_Diricawl.MI_Egg_Diricawl'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/RiggedObjects/Characters/Creatures/Birds/Diricawl/Materials/Offspring/MI_Egg_Diricawl.MI_Egg_Diricawl'
+        MaterialSlotName = MM_Egg
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 29.4179, 28.3583, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=2.38419e-07, Y=-4.76837e-07, Z=0 }
+    BoxExtent = { X=3.89345, Y=1.99765, Z=3.52003 }
+    SphereRadius = 5.16523
+}

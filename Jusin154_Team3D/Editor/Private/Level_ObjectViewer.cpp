@@ -62,42 +62,8 @@ void CLevel_ObjectViewer::Add_Object()
 
 	if (GUI::BeginTabBar("ObjectTabs"))
 	{
-		Add_Human();
-
-	}
-	GUI::EndTabBar();
-	GUI::End();
-
-}
-
-void CLevel_ObjectViewer::Add_Human()
-{
-	if (GUI::BeginTabItem("Head"))
-	{
-		Category_PartsModelList("Human/Head", "Head");
-
-		GUI::EndTabItem();
-	}
-	_bool bDisabled = {};
-	if (m_HumanRoot)
-		bDisabled = (m_HumanRoot->Get_MainModel());
-	if (!bDisabled) GUI::BeginDisabled();
-	if (GUI::BeginTabItem("Body"))
-	{
-		Category_PartsModelList("Human/Body", "Body");
-
-		GUI::EndTabItem();
-	}
-
-	if (GUI::BeginTabItem("Hair"))
-	{
-		Category_PartsModelList("Human/Hair", "Hair");
-
-		GUI::EndTabItem();
-	}
-	if (!bDisabled) GUI::EndDisabled();
-}
 		Add_Parts();
+
 	}
 	GUI::EndTabBar();
 	GUI::End();

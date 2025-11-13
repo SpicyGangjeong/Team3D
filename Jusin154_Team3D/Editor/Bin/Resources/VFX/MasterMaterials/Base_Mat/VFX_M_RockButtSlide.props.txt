@@ -1,0 +1,161 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[4] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/VFX_T_ButtSlide_A_HalfRes_D.VFX_T_ButtSlide_A_HalfRes_D'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/VFX_T_ButtSlide_A_HalfRes_MRO.VFX_T_ButtSlide_A_HalfRes_MRO'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/VFX_T_ButtSlide_A_HalfRes_N.VFX_T_ButtSlide_A_HalfRes_N'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/VFX_T_ButtSlideAlpha_Grey1024_D.VFX_T_ButtSlideAlpha_Grey1024_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[11] =
+                {
+                    ParameterInfos[0] = { Name=Speed_V }
+                    ParameterInfos[1] = { Name=ButtSlide AO Intensity }
+                    ParameterInfos[2] = { Name=ButtSlide Rough }
+                    ParameterInfos[3] = { Name=RockSlideTime }
+                    ParameterInfos[4] = { Name=OffsetUV }
+                    ParameterInfos[5] = { Name=EmissiveStrength }
+                    ParameterInfos[6] = { Name=Tiling }
+                    ParameterInfos[7] = { Name=Speed_U }
+                    ParameterInfos[8] = { Name=ButtSlide N Intensity }
+                    ParameterInfos[9] = { Name=OverAllOpacity }
+                    ParameterInfos[10] = { Name=ButtSlide Spec }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=BaseColor }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[4] =
+                {
+                    ParameterInfos[0] = { Name=OpacityMap }
+                    ParameterInfos[1] = { Name=ButtSlide N 1 }
+                    ParameterInfos[2] = { Name=ButtSlide MRO 1 }
+                    ParameterInfos[3] = { Name=ButtSlide D 1 }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[11] = { -0.06, 1, 1, 0.988865, 0, 1, 1.5, 0, 1, 1, 0 }
+        VectorValues[1] =
+        {
+            VectorValues[0] = { R=1, G=1, B=1, A=1 }
+        }
+        TextureValues[4] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/VFX_T_ButtSlideAlpha_Grey1024_D.VFX_T_ButtSlideAlpha_Grey1024_D'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/VFX_T_ButtSlide_A_HalfRes_N.VFX_T_ButtSlide_A_HalfRes_N'
+            TextureValues[2] = Texture2D'/Game/VFX/Textures/VFX_T_ButtSlide_A_HalfRes_MRO.VFX_T_ButtSlide_A_HalfRes_MRO'
+            TextureValues[3] = Texture2D'/Game/VFX/Textures/VFX_T_ButtSlide_A_HalfRes_D.VFX_T_ButtSlide_A_HalfRes_D'
+        }
+    }
+    ReferencedTextures[4] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/VFX_T_ButtSlide_A_HalfRes_D.VFX_T_ButtSlide_A_HalfRes_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/VFX_T_ButtSlide_A_HalfRes_MRO.VFX_T_ButtSlide_A_HalfRes_MRO'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/VFX_T_ButtSlide_A_HalfRes_N.VFX_T_ButtSlide_A_HalfRes_N'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/VFX_T_ButtSlideAlpha_Grey1024_D.VFX_T_ButtSlideAlpha_Grey1024_D'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[4] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_ButtSlideAlpha_Grey1024_D.VFX_T_ButtSlideAlpha_Grey1024_D'
+        Name = OpacityMap
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_ButtSlide_A_HalfRes_N.VFX_T_ButtSlide_A_HalfRes_N'
+        Name = ButtSlide N 1
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_ButtSlide_A_HalfRes_MRO.VFX_T_ButtSlide_A_HalfRes_MRO'
+        Name = ButtSlide MRO 1
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_ButtSlide_A_HalfRes_D.VFX_T_ButtSlide_A_HalfRes_D'
+        Name = ButtSlide D 1
+        Group = None
+    }
+}
+CollectedScalarParameters[11] =
+{
+    CollectedScalarParameters[0] = { Value=-0.06, Name=Speed_V, Group=None }
+    CollectedScalarParameters[1] = { Value=1, Name=ButtSlide AO Intensity, Group=None }
+    CollectedScalarParameters[2] = { Value=1, Name=ButtSlide Rough, Group=None }
+    CollectedScalarParameters[3] = { Value=0.988865, Name=RockSlideTime, Group=None }
+    CollectedScalarParameters[4] = { Value=0, Name=OffsetUV, Group=None }
+    CollectedScalarParameters[5] = { Value=1, Name=EmissiveStrength, Group=None }
+    CollectedScalarParameters[6] = { Value=1.5, Name=Tiling, Group=None }
+    CollectedScalarParameters[7] = { Value=0, Name=Speed_U, Group=None }
+    CollectedScalarParameters[8] = { Value=1, Name=ButtSlide N Intensity, Group=None }
+    CollectedScalarParameters[9] = { Value=1, Name=OverAllOpacity, Group=None }
+    CollectedScalarParameters[10] = { Value=0, Name=ButtSlide Spec, Group=None }
+}
+CollectedVectorParameters[1] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=1, G=1, B=1, A=1 }
+        Name = BaseColor
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[4] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1.5
+        UVChannelIndex = 0
+        TextureName = VFX_T_ButtSlide_A_HalfRes_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1.5
+        UVChannelIndex = 0
+        TextureName = VFX_T_ButtSlide_A_HalfRes_MRO
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1.5
+        UVChannelIndex = 0
+        TextureName = VFX_T_ButtSlide_A_HalfRes_N
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 1.5
+        UVChannelIndex = 0
+        TextureName = VFX_T_ButtSlideAlpha_Grey1024_D
+    }
+}

@@ -1,0 +1,199 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[4] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/Environment/Mines_Dungeon/Textures/T_LightingNoise_resized_D.T_LightingNoise_resized_D'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise04_D.VFX_T_Noise04_D'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/VFX_T_Inky_Smoke_D.VFX_T_Inky_Smoke_D'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/VFX_T_Wisps_2_D.VFX_T_Wisps_2_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[25] =
+                {
+                    ParameterInfos[0] = { Name=Inner Opacity (S) }
+                    ParameterInfos[1] = { Name=Exp }
+                    ParameterInfos[2] = { Name=B_1 }
+                    ParameterInfos[3] = { Name=Alpha Erosion Multiplier }
+                    ParameterInfos[4] = { Name=Cheap contrast bright (S) }
+                    ParameterInfos[5] = { Name=Radius (S) }
+                    ParameterInfos[6] = { Name=B_12 }
+                    ParameterInfos[7] = { Name=Tiling V (S)_1 }
+                    ParameterInfos[8] = { Name=Tiling U (S)_1 }
+                    ParameterInfos[9] = { Name=Softness (S) }
+                    ParameterInfos[10] = { Name=Speed V (S)2 }
+                    ParameterInfos[11] = { Name=Speed U (S)_1 }
+                    ParameterInfos[12] = { Name=Outer Falloff Softness (S) }
+                    ParameterInfos[13] = { Name=Speed V (S)_1 }
+                    ParameterInfos[14] = { Name=Falloff Hardness (S) }
+                    ParameterInfos[15] = { Name=Width (S) }
+                    ParameterInfos[16] = { Name=Inner Falloff Softness (S) }
+                    ParameterInfos[17] = { Name=Cheap contrast dark (S) }
+                    ParameterInfos[18] = { Name=Tiling V (S)2 }
+                    ParameterInfos[19] = { Name=Test Dark }
+                    ParameterInfos[20] = { Name=Bias (S) }
+                    ParameterInfos[21] = { Name=Test Bright }
+                    ParameterInfos[22] = { Name=Tiling U (S) 2 }
+                    ParameterInfos[23] = { Name=Alpha (S) }
+                    ParameterInfos[24] = { Name=Speed U (S)2 }
+                }
+            }
+            Entries[1] = { ParameterInfos[0]={} }
+            Entries[2] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Erosion Texture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[25] =
+        {
+            ScalarValues[0] = 0.333333
+            ScalarValues[1] = 1.41234
+            ScalarValues[2] = 0.076191
+            ScalarValues[3] = 1
+            ScalarValues[4] = 2.55664
+            ScalarValues[5] = 0.5
+            ScalarValues[6] = 0.099048
+            ScalarValues[7] = 2.5
+            ScalarValues[8] = 2.5
+            ScalarValues[9] = 1
+            ScalarValues[10] = -0.038096
+            ScalarValues[11] = 0.095239
+            ScalarValues[12] = 1
+            ScalarValues[13] = -0.019048
+            ScalarValues[14] = 0
+            ScalarValues[15] = 0.5
+            ScalarValues[16] = 1.90476
+            ScalarValues[17] = -0.159375
+            ScalarValues[18] = 2
+            ScalarValues[19] = 0
+            ScalarValues[20] = 0.161905
+            ScalarValues[21] = 1
+            ScalarValues[22] = 2
+            ScalarValues[23] = 1
+            ScalarValues[24] = 0.009524
+        }
+        VectorValues[0] = {}
+        TextureValues[1] =
+        {
+            TextureValues[0] = Texture2D'/Game/Environment/Mines_Dungeon/Textures/T_LightingNoise_resized_D.T_LightingNoise_resized_D'
+        }
+    }
+    ReferencedTextures[4] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/VFX_T_Inky_Smoke_D.VFX_T_Inky_Smoke_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/VFX_T_Wisps_2_D.VFX_T_Wisps_2_D'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise04_D.VFX_T_Noise04_D'
+        ReferencedTextures[3] = Texture2D'/Game/Environment/Mines_Dungeon/Textures/T_LightingNoise_resized_D.T_LightingNoise_resized_D'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[1] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/Environment/Mines_Dungeon/Textures/T_LightingNoise_resized_D.T_LightingNoise_resized_D'
+        Name = Erosion Texture
+        Group = None
+    }
+}
+CollectedScalarParameters[25] =
+{
+    CollectedScalarParameters[0] =
+    {
+        Value = 0.333333
+        Name = Inner Opacity (S)
+        Group = None
+    }
+    CollectedScalarParameters[1] = { Value=1.41234, Name=Exp, Group=None }
+    CollectedScalarParameters[2] = { Value=0.076191, Name=B_1, Group=None }
+    CollectedScalarParameters[3] =
+    {
+        Value = 1
+        Name = Alpha Erosion Multiplier
+        Group = None
+    }
+    CollectedScalarParameters[4] =
+    {
+        Value = 2.55664
+        Name = Cheap contrast bright (S)
+        Group = None
+    }
+    CollectedScalarParameters[5] = { Value=0.5, Name=Radius (S), Group=None }
+    CollectedScalarParameters[6] = { Value=0.099048, Name=B_12, Group=None }
+    CollectedScalarParameters[7] = { Value=2.5, Name=Tiling V (S)_1, Group=None }
+    CollectedScalarParameters[8] = { Value=2.5, Name=Tiling U (S)_1, Group=None }
+    CollectedScalarParameters[9] = { Value=1, Name=Softness (S), Group=None }
+    CollectedScalarParameters[10] = { Value=-0.038096, Name=Speed V (S)2, Group=None }
+    CollectedScalarParameters[11] = { Value=0.095239, Name=Speed U (S)_1, Group=None }
+    CollectedScalarParameters[12] =
+    {
+        Value = 1
+        Name = Outer Falloff Softness (S)
+        Group = None
+    }
+    CollectedScalarParameters[13] = { Value=-0.019048, Name=Speed V (S)_1, Group=None }
+    CollectedScalarParameters[14] = { Value=0, Name=Falloff Hardness (S), Group=None }
+    CollectedScalarParameters[15] = { Value=0.5, Name=Width (S), Group=None }
+    CollectedScalarParameters[16] =
+    {
+        Value = 1.90476
+        Name = Inner Falloff Softness (S)
+        Group = None
+    }
+    CollectedScalarParameters[17] =
+    {
+        Value = -0.159375
+        Name = Cheap contrast dark (S)
+        Group = None
+    }
+    CollectedScalarParameters[18] = { Value=2, Name=Tiling V (S)2, Group=None }
+    CollectedScalarParameters[19] = { Value=0, Name=Test Dark, Group=None }
+    CollectedScalarParameters[20] = { Value=0.161905, Name=Bias (S), Group=None }
+    CollectedScalarParameters[21] = { Value=1, Name=Test Bright, Group=None }
+    CollectedScalarParameters[22] = { Value=2, Name=Tiling U (S) 2, Group=None }
+    CollectedScalarParameters[23] = { Value=1, Name=Alpha (S), Group=None }
+    CollectedScalarParameters[24] = { Value=0.009524, Name=Speed U (S)2, Group=None }
+}
+CollectedVectorParameters[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[3] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_LightingNoise_resized_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 2
+        UVChannelIndex = 0
+        TextureName = VFX_T_Noise04_D
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 2.5
+        UVChannelIndex = 0
+        TextureName = VFX_T_Wisps_2_D
+    }
+}

@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Particles/MaterialInstance/VFX_MI_PanningMesh_Goblin_Impact_Wisp_Lit.VFX_MI_PanningMesh_Goblin_Impact_Wisp_Lit'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Particles/MaterialInstance/VFX_MI_PanningMesh_Goblin_Impact_Wisp_Lit.VFX_MI_PanningMesh_Goblin_Impact_Wisp_Lit'
+        MaterialSlotName = lambert1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 150.947, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=42.1645, Y=1.14441e-05, Z=0.00755596 }
+    BoxExtent = { X=41.594, Y=46.3228, Z=0 }
+    SphereRadius = 56.8455
+}

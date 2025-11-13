@@ -1,0 +1,5 @@
+Diffuse=T_Intro_AncientMagicIce_01_D
+Normal=T_Intro_AncientMagicIce_01_N
+Other[0]=BlendFunc_DefBase
+Other[1]=BlendFunc_DefBlend
+Other[2]=T_Intro_AncientMagicIce_01_MRO

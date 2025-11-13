@@ -1,0 +1,275 @@
+TwoSided = true
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[6] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+    ReferencedTextures[1] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/T_Blank_A.T_Blank_A'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Niagara/DeathlyHallows/VFX_T_DHL_Crosshatch_Inverted_Packed_D.VFX_T_DHL_Crosshatch_Inverted_Packed_D'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Marble_01R2_D.VFX_T_Marble_01R2_D'
+    ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise07_N.VFX_T_Noise07_N'
+    ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[37] =
+                {
+                    ParameterInfos[0] = { Name=Light  Input }
+                    ParameterInfos[1] = { Name=Roughness }
+                    ParameterInfos[2] = { Name=WPO Speed U }
+                    ParameterInfos[3] = { Name=Emissive Speed V (S) }
+                    ParameterInfos[4] = { Name=RandomTimeOffset }
+                    ParameterInfos[5] = { Name=Normal Speed U }
+                    ParameterInfos[6] = { Name=Metallic }
+                    ParameterInfos[7] = { Name=Emissive Tiling U (S) }
+                    ParameterInfos[8] = { Name=Thickness }
+                    ParameterInfos[9] = { Name=Specular }
+                    ParameterInfos[10] = { Name=Emissive Speed U (S) }
+                    ParameterInfos[11] = { Name=WPO Tiling U }
+                    ParameterInfos[12] = { Name=Normal Speed V }
+                    ParameterInfos[13] = { Name=Swirl Profile Curve }
+                    ParameterInfos[14] = { Name=RandomSpeedScale }
+                    ParameterInfos[15] = { Name=UseCurveForEmissive }
+                    ParameterInfos[16] = { Name=Swirl Length }
+                    ParameterInfos[17] = { Name=Offset U }
+                    ParameterInfos[18] = { Name=Offset }
+                    ParameterInfos[19] = { Name=Offset V }
+                    ParameterInfos[20] = { Name=Normal Tiling V }
+                    ParameterInfos[21] = { Name=Speed V (S) }
+                    ParameterInfos[22] = { Name=RandomSwirlLengthScale }
+                    ParameterInfos[23] = { Name=WPO Tiling V }
+                    ParameterInfos[24] = { Name=WPO Speed V }
+                    ParameterInfos[25] = { Name=WPO Strength }
+                    ParameterInfos[26] = { Name=Emissive Fresnel Power }
+                    ParameterInfos[27] = { Name=Normal Intensity }
+                    ParameterInfos[28] = { Name=Speed U (S) }
+                    ParameterInfos[29] = { Name=Swirl Pan Speed }
+                    ParameterInfos[30] = { Name=Normal Tiling U }
+                    ParameterInfos[31] = { Name=Tiling U (S) }
+                    ParameterInfos[32] = { Name=Emissive Tiling V (S) }
+                    ParameterInfos[33] = { Name=EmissiveTextureExp }
+                    ParameterInfos[34] = { Name=Tiling V (S) }
+                    ParameterInfos[35] = { Name=Swirl Position (0-1) (S) }
+                    ParameterInfos[36] = { Name=EmissiveCurve_Exp }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[3] =
+                {
+                    ParameterInfos[0] = { Name=Arbitrary Light Vector }
+                    ParameterInfos[1] = { Name=EmissiveColor }
+                    ParameterInfos[2] = { Name=BaseColor }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[4] =
+                {
+                    ParameterInfos[0] = { Name=WPO Texture }
+                    ParameterInfos[1] = { Name=LineTexture }
+                    ParameterInfos[2] = { Name=Normal Map }
+                    ParameterInfos[3] = { Name=Emissive Texture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[37] =
+        {
+            ScalarValues[0] = 1
+            ScalarValues[1] = 0.296825
+            ScalarValues[2] = 0.071666
+            ScalarValues[3] = 0.577778
+            ScalarValues[4] = 0
+            ScalarValues[5] = 0.038095
+            ScalarValues[6] = 1
+            ScalarValues[7] = 2
+            ScalarValues[8] = 1
+            ScalarValues[9] = 0.5
+            ScalarValues[10] = 0.012698
+            ScalarValues[11] = 0
+            ScalarValues[12] = 0.617644
+            ScalarValues[13] = 16
+            ScalarValues[14] = 0
+            ScalarValues[15] = 0
+            ScalarValues[16] = 1
+            ScalarValues[17] = 0
+            ScalarValues[18] = 1
+            ScalarValues[19] = 0
+            ScalarValues[20] = 1.1808
+            ScalarValues[21] = 0
+            ScalarValues[22] = 0
+            ScalarValues[23] = 0.873397
+            ScalarValues[24] = -0.323809
+            ScalarValues[25] = 16
+            ScalarValues[26] = 0.48254
+            ScalarValues[27] = 1.49973
+            ScalarValues[28] = 0
+            ScalarValues[29] = 0.485715
+            ScalarValues[30] = 1
+            ScalarValues[31] = 1
+            ScalarValues[32] = 2
+            ScalarValues[33] = 1
+            ScalarValues[34] = 1
+            ScalarValues[35] = 1
+            ScalarValues[36] = 1
+        }
+        VectorValues[3] =
+        {
+            VectorValues[0] = { R=0, G=0, B=0, A=0 }
+            VectorValues[1] = { R=1, G=1, B=1, A=1 }
+            VectorValues[2] = { R=0.184475, G=0.212231, B=0.309469, A=1 }
+        }
+        TextureValues[4] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+            TextureValues[1] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/T_Blank_A.T_Blank_A'
+            TextureValues[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise07_N.VFX_T_Noise07_N'
+            TextureValues[3] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Marble_01R2_D.VFX_T_Marble_01R2_D'
+        }
+    }
+    ReferencedTextures[7] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/CurveAtlas/VFX_CA_CurveAtlasMaterialAnims.VFX_CA_CurveAtlasMaterialAnims'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Marble_01R2_D.VFX_T_Marble_01R2_D'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise07_N.VFX_T_Noise07_N'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+        ReferencedTextures[4] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+        ReferencedTextures[5] = Texture2D'/Game/VFX/Niagara/DeathlyHallows/VFX_T_DHL_Crosshatch_Inverted_Packed_D.VFX_T_DHL_Crosshatch_Inverted_Packed_D'
+        ReferencedTextures[6] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/T_Blank_A.T_Blank_A'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[4] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+        Name = WPO Texture
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/T_Blank_A.T_Blank_A'
+        Name = LineTexture
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise07_N.VFX_T_Noise07_N'
+        Name = Normal Map
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Marble_01R2_D.VFX_T_Marble_01R2_D'
+        Name = Emissive Texture
+        Group = None
+    }
+}
+CollectedScalarParameters[37] =
+{
+    CollectedScalarParameters[0] = { Value=1, Name=Light  Input, Group=None }
+    CollectedScalarParameters[1] = { Value=0.296825, Name=Roughness, Group=None }
+    CollectedScalarParameters[2] = { Value=0.071666, Name=WPO Speed U, Group=None }
+    CollectedScalarParameters[3] =
+    {
+        Value = 0.577778
+        Name = Emissive Speed V (S)
+        Group = None
+    }
+    CollectedScalarParameters[4] = { Value=0, Name=RandomTimeOffset, Group=None }
+    CollectedScalarParameters[5] = { Value=0.038095, Name=Normal Speed U, Group=None }
+    CollectedScalarParameters[6] = { Value=1, Name=Metallic, Group=None }
+    CollectedScalarParameters[7] = { Value=2, Name=Emissive Tiling U (S), Group=None }
+    CollectedScalarParameters[8] = { Value=1, Name=Thickness, Group=None }
+    CollectedScalarParameters[9] = { Value=0.5, Name=Specular, Group=None }
+    CollectedScalarParameters[10] =
+    {
+        Value = 0.012698
+        Name = Emissive Speed U (S)
+        Group = None
+    }
+    CollectedScalarParameters[11] = { Value=0, Name=WPO Tiling U, Group=None }
+    CollectedScalarParameters[12] = { Value=0.617644, Name=Normal Speed V, Group=None }
+    CollectedScalarParameters[13] = { Value=16, Name=Swirl Profile Curve, Group=None }
+    CollectedScalarParameters[14] = { Value=0, Name=RandomSpeedScale, Group=None }
+    CollectedScalarParameters[15] = { Value=0, Name=UseCurveForEmissive, Group=None }
+    CollectedScalarParameters[16] = { Value=1, Name=Swirl Length, Group=None }
+    CollectedScalarParameters[17] = { Value=0, Name=Offset U, Group=None }
+    CollectedScalarParameters[18] = { Value=1, Name=Offset, Group=None }
+    CollectedScalarParameters[19] = { Value=0, Name=Offset V, Group=None }
+    CollectedScalarParameters[20] = { Value=1.1808, Name=Normal Tiling V, Group=None }
+    CollectedScalarParameters[21] = { Value=0, Name=Speed V (S), Group=None }
+    CollectedScalarParameters[22] = { Value=0, Name=RandomSwirlLengthScale, Group=None }
+    CollectedScalarParameters[23] = { Value=0.873397, Name=WPO Tiling V, Group=None }
+    CollectedScalarParameters[24] = { Value=-0.323809, Name=WPO Speed V, Group=None }
+    CollectedScalarParameters[25] = { Value=16, Name=WPO Strength, Group=None }
+    CollectedScalarParameters[26] =
+    {
+        Value = 0.48254
+        Name = Emissive Fresnel Power
+        Group = None
+    }
+    CollectedScalarParameters[27] = { Value=1.49973, Name=Normal Intensity, Group=None }
+    CollectedScalarParameters[28] = { Value=0, Name=Speed U (S), Group=None }
+    CollectedScalarParameters[29] = { Value=0.485715, Name=Swirl Pan Speed, Group=None }
+    CollectedScalarParameters[30] = { Value=1, Name=Normal Tiling U, Group=None }
+    CollectedScalarParameters[31] = { Value=1, Name=Tiling U (S), Group=None }
+    CollectedScalarParameters[32] = { Value=2, Name=Emissive Tiling V (S), Group=None }
+    CollectedScalarParameters[33] = { Value=1, Name=EmissiveTextureExp, Group=None }
+    CollectedScalarParameters[34] = { Value=1, Name=Tiling V (S), Group=None }
+    CollectedScalarParameters[35] =
+    {
+        Value = 1
+        Name = Swirl Position (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[36] = { Value=1, Name=EmissiveCurve_Exp, Group=None }
+}
+CollectedVectorParameters[3] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0, G=0, B=0, A=0 }
+        Name = Arbitrary Light Vector
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=1, G=1, B=1, A=1 }
+        Name = EmissiveColor
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=0.184475, G=0.212231, B=0.309469, A=1 }
+        Name = BaseColor
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_RibbonOffset_N
+    }
+}

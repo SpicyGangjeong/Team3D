@@ -1,0 +1,38 @@
+Materials[2] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/VFX_MI_SplineThicken_Preview_Inst.VFX_MI_SplineThicken_Preview_Inst'
+    Materials[1] = MaterialInstanceConstant'/Game/Cinematics/Missions/FGS/FGS_01/VFX/VFX_MI_Wingardium_PillarGlow_Cin_Repos.VFX_MI_Wingardium_PillarGlow_Cin_Repos'
+}
+SourceModels[0] = {}
+StaticMaterials[2] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/VFX_MI_SplineThicken_Preview_Inst.VFX_MI_SplineThicken_Preview_Inst'
+        MaterialSlotName = SplineThicken
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 27.283, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Cinematics/Missions/FGS/FGS_01/VFX/VFX_MI_Wingardium_PillarGlow_Cin_Repos.VFX_MI_Wingardium_PillarGlow_Cin_Repos'
+        MaterialSlotName = GlowMesh
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 1577.7, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=52.7615, Y=139.672, Z=799.865 }
+    BoxExtent = { X=298.492, Y=235.716, Z=745.318 }
+    SphereRadius = 836.754
+}

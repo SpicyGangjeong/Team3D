@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/MI_CampB_8m_Log_C_D_SAT_Fade.MI_CampB_8m_Log_C_D_SAT_Fade'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/MI_CampB_8m_Log_C_D_SAT_Fade.MI_CampB_8m_Log_C_D_SAT_Fade'
+        MaterialSlotName = MI_CampB_8m_Log_C_D_SAT
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 506.578, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=0, Z=3.05176e-05 }
+    BoxExtent = { X=108.297, Y=16.8007, Z=13.3941 }
+    SphereRadius = 109.962
+}

@@ -1,0 +1,180 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[3] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/FlatNormal.FlatNormal'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_Soft_D.VFX_T_Noise_Soft_D'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/TEST/VFX_T_Speckled_tile_2_D.VFX_T_Speckled_tile_2_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[17] =
+                {
+                    ParameterInfos[0] = { Name=Roughness }
+                    ParameterInfos[1] = { Name=BubblesPanX }
+                    ParameterInfos[2] = { Name=WPOTileX }
+                    ParameterInfos[3] = { Name=WPOAmount }
+                    ParameterInfos[4] = { Name=Height }
+                    ParameterInfos[5] = { Name=WPOPanY }
+                    ParameterInfos[6] = { Name=Metallic }
+                    ParameterInfos[7] = { Name=Emissive }
+                    ParameterInfos[8] = { Name=Specular }
+                    ParameterInfos[9] = { Name=WPOPanX }
+                    ParameterInfos[10] = { Name=WPOTileY }
+                    ParameterInfos[11] = { Name=Power }
+                    ParameterInfos[12] = { Name=ColorLerp }
+                    ParameterInfos[13] = { Name=Divide }
+                    ParameterInfos[14] = { Name=BubblesPanY }
+                    ParameterInfos[15] = { Name=BubblesFade }
+                    ParameterInfos[16] = { Name=Height2 }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[4] =
+                {
+                    ParameterInfos[0] = { Name=Up }
+                    ParameterInfos[1] = { Name=Color2 }
+                    ParameterInfos[2] = { Name=Color3 }
+                    ParameterInfos[3] = { Name=Color1 }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=WPOTexture }
+                    ParameterInfos[1] = { Name=Normal }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[17] =
+        {
+            ScalarValues[0] = 1
+            ScalarValues[1] = 0
+            ScalarValues[2] = 1
+            ScalarValues[3] = 0
+            ScalarValues[4] = -25
+            ScalarValues[5] = -1
+            ScalarValues[6] = 0
+            ScalarValues[7] = 1
+            ScalarValues[8] = 0
+            ScalarValues[9] = -1
+            ScalarValues[10] = 1
+            ScalarValues[11] = 10
+            ScalarValues[12] = 1
+            ScalarValues[13] = 60
+            ScalarValues[14] = 0.15
+            ScalarValues[15] = 0
+            ScalarValues[16] = -10
+        }
+        VectorValues[4] =
+        {
+            VectorValues[0] = { R=0, G=0, B=60, A=1 }
+            VectorValues[1] = { R=0.140625, G=0.019446, B=0, A=1 }
+            VectorValues[2] = { R=0.5, G=0.15, B=0, A=1 }
+            VectorValues[3] = { R=0.692708, G=0.351999, B=0, A=1 }
+        }
+        TextureValues[2] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_Soft_D.VFX_T_Noise_Soft_D'
+            TextureValues[1] = Texture2D'/Engine/EngineMaterials/FlatNormal.FlatNormal'
+        }
+    }
+    ReferencedTextures[3] =
+    {
+        ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/FlatNormal.FlatNormal'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/TEST/VFX_T_Speckled_tile_2_D.VFX_T_Speckled_tile_2_D'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_Soft_D.VFX_T_Noise_Soft_D'
+    }
+}
+BlendMode = BLEND_Opaque (0)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[2] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_Soft_D.VFX_T_Noise_Soft_D'
+        Name = WPOTexture
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Engine/EngineMaterials/FlatNormal.FlatNormal'
+        Name = Normal
+        Group = None
+    }
+}
+CollectedScalarParameters[17] =
+{
+    CollectedScalarParameters[0] = { Value=1, Name=Roughness, Group=None }
+    CollectedScalarParameters[1] = { Value=0, Name=BubblesPanX, Group=None }
+    CollectedScalarParameters[2] = { Value=1, Name=WPOTileX, Group=None }
+    CollectedScalarParameters[3] = { Value=0, Name=WPOAmount, Group=None }
+    CollectedScalarParameters[4] = { Value=-25, Name=Height, Group=None }
+    CollectedScalarParameters[5] = { Value=-1, Name=WPOPanY, Group=None }
+    CollectedScalarParameters[6] = { Value=0, Name=Metallic, Group=None }
+    CollectedScalarParameters[7] = { Value=1, Name=Emissive, Group=None }
+    CollectedScalarParameters[8] = { Value=0, Name=Specular, Group=None }
+    CollectedScalarParameters[9] = { Value=-1, Name=WPOPanX, Group=None }
+    CollectedScalarParameters[10] = { Value=1, Name=WPOTileY, Group=None }
+    CollectedScalarParameters[11] = { Value=10, Name=Power, Group=None }
+    CollectedScalarParameters[12] = { Value=1, Name=ColorLerp, Group=None }
+    CollectedScalarParameters[13] = { Value=60, Name=Divide, Group=None }
+    CollectedScalarParameters[14] = { Value=0.15, Name=BubblesPanY, Group=None }
+    CollectedScalarParameters[15] = { Value=0, Name=BubblesFade, Group=None }
+    CollectedScalarParameters[16] = { Value=-10, Name=Height2, Group=None }
+}
+CollectedVectorParameters[4] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0, G=0, B=60, A=1 }
+        Name = Up
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0.140625, G=0.019446, B=0, A=1 }
+        Name = Color2
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=0.5, G=0.15, B=0, A=1 }
+        Name = Color3
+        Group = None
+    }
+    CollectedVectorParameters[3] =
+    {
+        Value = { R=0.692708, G=0.351999, B=0, A=1 }
+        Name = Color1
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = FlatNormal
+    }
+}

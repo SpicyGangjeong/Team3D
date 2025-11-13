@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Meshes/Static/HairStyles/MI_HUM_F_Hair_STUHair08_Curly.MI_HUM_F_Hair_STUHair08_Curly'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Meshes/Static/HairStyles/MI_HUM_F_Hair_STUHair08_Curly.MI_HUM_F_Hair_STUHair08_Curly'
+        MaterialSlotName = SM_HUM_F_Hair_StuHair08_Curly
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 35.5314, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0.345245, Y=-3.2968, Z=1.54956 }
+    BoxExtent = { X=16.6455, Y=14.3214, Z=16.4382 }
+    SphereRadius = 19.9364
+}

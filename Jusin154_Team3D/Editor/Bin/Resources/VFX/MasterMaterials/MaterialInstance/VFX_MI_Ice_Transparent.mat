@@ -1,0 +1,7 @@
+Diffuse=VFX_T_Ice_D
+Normal=VFX_T_Ground_Ice_N
+Other[0]=VFX_T_Ice_D
+Other[1]=VFX_T_IceB_N
+Other[2]=T_FX_Rainbow_D
+Other[3]=T_waterSplashA_N
+Other[4]=VFX_T_Wavy_N

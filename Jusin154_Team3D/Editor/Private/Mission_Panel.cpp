@@ -117,7 +117,9 @@ HRESULT CMission_Panel::Ready_Components(void* pArg)
 		return E_FAIL;
 	}
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMissionBanner_Key>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMissionBanner_Key**>(&m_pMissionBanner_Key))))
-
+	{
+		return E_FAIL;
+	}
 	return S_OK;
 }
 

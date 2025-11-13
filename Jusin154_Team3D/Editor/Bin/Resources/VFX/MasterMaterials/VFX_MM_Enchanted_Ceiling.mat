@@ -1,0 +1,7 @@
+Diffuse=base_white_d
+Normal=base_flat_n
+Opacity=T_WaterCaustics_Disorder_A
+Other[0]=Good64x64TilingNoiseHighFreq
+Other[1]=T_GlassNoise_D
+Other[2]=T_Base011_MRO
+Other[3]=VFX_T_NoiseCaustics01_Color_D

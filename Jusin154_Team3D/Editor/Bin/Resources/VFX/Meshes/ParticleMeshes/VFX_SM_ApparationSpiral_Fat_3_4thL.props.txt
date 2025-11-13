@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = Material3'/Game/VFX/Particles/Magic/Apparition/VFX_M_Apparation_Loot.VFX_M_Apparation_Loot'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = Material3'/Game/VFX/Particles/Magic/Apparition/VFX_M_Apparation_Loot.VFX_M_Apparation_Loot'
+        MaterialSlotName = M_TEST_Apparition
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 54.0978, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=3.07353, Y=0.501575, Z=-2.16985 }
+    BoxExtent = { X=14.5423, Y=8.14652, Z=16.5665 }
+    SphereRadius = 18.2514
+}

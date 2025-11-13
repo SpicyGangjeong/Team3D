@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Gameplay/Moonstone/Materials/MI_Collectable_Moonstone.MI_Collectable_Moonstone'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Gameplay/Moonstone/Materials/MI_Collectable_Moonstone.MI_Collectable_Moonstone'
+        MaterialSlotName = MI_Collectable_Moonstone
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 327.734, 45.8136, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-3.48868, Y=-0.258274, Z=-1.73428 }
+    BoxExtent = { X=12.677, Y=8.51211, Z=8.0251 }
+    SphereRadius = 13.6951
+}

@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/VFX_MI_P_GenericTreeBreakable.VFX_MI_P_GenericTreeBreakable'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/VFX_MI_P_GenericTreeBreakable.VFX_MI_P_GenericTreeBreakable'
+        MaterialSlotName = MI_GenericTree
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 52.8124, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=1.52588e-05, Y=0, Z=0 }
+    BoxExtent = { X=159.644, Y=83.8637, Z=124.987 }
+    SphereRadius = 218.166
+}

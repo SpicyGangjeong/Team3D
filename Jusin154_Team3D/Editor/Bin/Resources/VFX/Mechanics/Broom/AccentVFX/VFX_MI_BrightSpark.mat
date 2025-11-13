@@ -1,0 +1,10 @@
+Diffuse=T_BrightSparkBroom_D
+Normal=T_BrightSparkBroom_N
+Other[0]=T_BrightSparkBroom_MRO
+Other[1]=VFX_T_BrightSpark_D
+Other[2]=T_BIAT_D
+Other[3]=T_BIAT_MRO
+Other[4]=T_BIAT_N
+Other[5]=T_Gradient_Centre_MSK
+Other[6]=VFX_T_NoisyRamp_D
+Other[7]=T_Burnup_Emissive_Mask_MSK

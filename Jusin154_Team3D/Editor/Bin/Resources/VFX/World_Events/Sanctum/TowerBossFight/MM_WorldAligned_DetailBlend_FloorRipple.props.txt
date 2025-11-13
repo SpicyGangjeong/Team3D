@@ -1,0 +1,391 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[10] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/BaseFlattenNormalMap.BaseFlattenNormalMap'
+    ReferencedTextures[1] = Texture2D'/Engine/EngineMaterials/DefaultDiffuse.DefaultDiffuse'
+    ReferencedTextures[2] = Texture2D'/Engine/EngineMaterials/DefaultNormal_Uncompressed.DefaultNormal_Uncompressed'
+    ReferencedTextures[3] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+    ReferencedTextures[4] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+    ReferencedTextures[5] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_MSK.base_white_MSK'
+    ReferencedTextures[6] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/T_Blank_A.T_Blank_A'
+    ReferencedTextures[7] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/WaterCaustics/T_WaterCaustics_Disorder_A.T_WaterCaustics_Disorder_A'
+    ReferencedTextures[8] = Texture2D'/Game/Environment/Overland_Common/Textures/Landscape/T_CastleDun_JailHall_Tiles_SROH.T_CastleDun_JailHall_Tiles_SROH'
+    ReferencedTextures[9] = Texture2D'/Game/MaterialFunctions/BaseTextures/T_Blank_D.T_Blank_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[40] =
+                {
+                    ParameterInfos[0] = { Name=Normal A Height }
+                    ParameterInfos[1] = { Name=Roughness }
+                    ParameterInfos[2] = { Name=Diffuse Desaturation B }
+                    ParameterInfos[3] = { Name=Met }
+                    ParameterInfos[4] = { Name=Distortion Emissive Brightness }
+                    ParameterInfos[5] = { Name=Disorder Strength Top (S) }
+                    ParameterInfos[6] = { Name=Texture Size }
+                    ParameterInfos[7] = { Name=Mask Strength }
+                    ParameterInfos[8] = { Name=FlattenHeight }
+                    ParameterInfos[9] = { Name=Disorder Strength Bottom (S) }
+                    ParameterInfos[10] = { Name=Layer Opcity Multiplier }
+                    ParameterInfos[11] = { Name=Distortion Bottom Height }
+                    ParameterInfos[12] = { Name=Diffuse Brightness B }
+                    ParameterInfos[13] = { Name=MaskContrast }
+                    ParameterInfos[14] = { Name=Invert Displacement }
+                    ParameterInfos[15] = { Name=Invert Height Map }
+                    ParameterInfos[16] = { Name=Height Strength }
+                    ParameterInfos[17] = { Name=Spec }
+                    ParameterInfos[18] = { Name=Distortion Bottom Tiling }
+                    ParameterInfos[19] = { Name=Normal B Height }
+                    ParameterInfos[20] = { Name=TranslucentOverride_DstortionOpaicty }
+                    ParameterInfos[21] = { Name=AO B }
+                    ParameterInfos[22] = { Name=AO }
+                    ParameterInfos[23] = { Name=Spec A }
+                    ParameterInfos[24] = { Name=Distortion Top Height }
+                    ParameterInfos[25] = { Name=MaskOffset }
+                    ParameterInfos[26] = { Name=Roughness A }
+                    ParameterInfos[27] = { Name=Met A }
+                    ParameterInfos[28] = { Name=Disorder Opacity Top }
+                    ParameterInfos[29] = { Name=Texture Size B }
+                    ParameterInfos[30] = { Name=Diffuse Desaturation A }
+                    ParameterInfos[31] = { Name=Disorder Opacity Bottom  }
+                    ParameterInfos[32] = { Name=Diffuse Brightness A }
+                    ParameterInfos[33] = { Name=Distortion Top Tiling }
+                    ParameterInfos[34] = { Name=Roughness B }
+                    ParameterInfos[35] = { Name=Normal Height }
+                    ParameterInfos[36] = { Name=AO A }
+                    ParameterInfos[37] = { Name=Met B }
+                    ParameterInfos[38] = { Name=Distortion Tiling }
+                    ParameterInfos[39] = { Name=Spec B }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[4] =
+                {
+                    ParameterInfos[0] = { Name=Texture Rotation B }
+                    ParameterInfos[1] = { Name=Texture Rotation }
+                    ParameterInfos[2] = { Name=Disorder Speed Bottom (V2) }
+                    ParameterInfos[3] = { Name=Disorder Speed Top (V2) }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[14] =
+                {
+                    ParameterInfos[0] = { Name=Distortion Map }
+                    ParameterInfos[1] = { Name=MRO/SRO B }
+                    ParameterInfos[2] = { Name=Distortion Top }
+                    ParameterInfos[3] = { Name=Normal Map B }
+                    ParameterInfos[4] = { Name=Diffuse }
+                    ParameterInfos[5] = { Name=Displacement }
+                    ParameterInfos[6] = { Name=Distortion Bottom }
+                    ParameterInfos[7] = { Name=MROH/SROH }
+                    ParameterInfos[8] = { Name=Base MRO/SRO }
+                    ParameterInfos[9] = { Name=MRO/SRO }
+                    ParameterInfos[10] = { Name=Normal Map }
+                    ParameterInfos[11] = { Name=Base Normal }
+                    ParameterInfos[12] = { Name=Diffuse B }
+                    ParameterInfos[13] = { Name=EmissiveAlphaMask }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[40] =
+        {
+            ScalarValues[0] = 1
+            ScalarValues[1] = 0
+            ScalarValues[2] = 0
+            ScalarValues[3] = 0
+            ScalarValues[4] = 0.1
+            ScalarValues[5] = 0.2
+            ScalarValues[6] = 128
+            ScalarValues[7] = 1
+            ScalarValues[8] = 0
+            ScalarValues[9] = 0.2
+            ScalarValues[10] = 1
+            ScalarValues[11] = 0
+            ScalarValues[12] = 1
+            ScalarValues[13] = 0
+            ScalarValues[14] = 0
+            ScalarValues[15] = 0
+            ScalarValues[16] = 1
+            ScalarValues[17] = 0
+            ScalarValues[18] = 1
+            ScalarValues[19] = 1
+            ScalarValues[20] = 0.5
+            ScalarValues[21] = 0
+            ScalarValues[22] = 0
+            ScalarValues[23] = 0
+            ScalarValues[24] = 0
+            ScalarValues[25] = 0
+            ScalarValues[26] = 0
+            ScalarValues[27] = 0
+            ScalarValues[28] = 1
+            ScalarValues[29] = 128
+            ScalarValues[30] = 0
+            ScalarValues[31] = 1
+            ScalarValues[32] = 1
+            ScalarValues[33] = 1
+            ScalarValues[34] = 0
+            ScalarValues[35] = 1
+            ScalarValues[36] = 0
+            ScalarValues[37] = 0
+            ScalarValues[38] = 1
+            ScalarValues[39] = 0
+        }
+        VectorValues[4] =
+        {
+            VectorValues[0] = { R=0, G=0, B=0, A=0 }
+            VectorValues[1] = { R=0, G=0, B=0, A=0 }
+            VectorValues[2] = { R=0.01, G=0.01, B=0, A=0 }
+            VectorValues[3] = { R=0.01, G=0.01, B=0, A=0 }
+        }
+        TextureValues[14] =
+        {
+            TextureValues[0] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/WaterCaustics/T_WaterCaustics_Disorder_A.T_WaterCaustics_Disorder_A'
+            TextureValues[1] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_MSK.base_white_MSK'
+            TextureValues[2] = Texture2D'/Game/MaterialFunctions/BaseTextures/T_Blank_D.T_Blank_D'
+            TextureValues[3] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+            TextureValues[4] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+            TextureValues[5] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_MSK.base_white_MSK'
+            TextureValues[6] = Texture2D'/Game/MaterialFunctions/BaseTextures/T_Blank_D.T_Blank_D'
+            TextureValues[7] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_MSK.base_white_MSK'
+            TextureValues[8] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_MSK.base_white_MSK'
+            TextureValues[9] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_MSK.base_white_MSK'
+            TextureValues[10] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+            TextureValues[11] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+            TextureValues[12] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+            TextureValues[13] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/T_Blank_A.T_Blank_A'
+        }
+    }
+    ReferencedTextures[11] =
+    {
+        ReferencedTextures[1] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+        ReferencedTextures[2] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/WaterCaustics/T_WaterCaustics_Disorder_A.T_WaterCaustics_Disorder_A'
+        ReferencedTextures[3] = Texture2D'/Game/MaterialFunctions/BaseTextures/T_Blank_D.T_Blank_D'
+        ReferencedTextures[4] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/T_Blank_A.T_Blank_A'
+        ReferencedTextures[5] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+        ReferencedTextures[6] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_MSK.base_white_MSK'
+        ReferencedTextures[7] = Texture2D'/Engine/EngineMaterials/DefaultDiffuse.DefaultDiffuse'
+        ReferencedTextures[8] = Texture2D'/Engine/EngineMaterials/BaseFlattenNormalMap.BaseFlattenNormalMap'
+        ReferencedTextures[9] = Texture2D'/Engine/EngineMaterials/DefaultNormal_Uncompressed.DefaultNormal_Uncompressed'
+        ReferencedTextures[10] = Texture2D'/Game/Environment/Overland_Common/Textures/Landscape/T_CastleDun_JailHall_Tiles_SROH.T_CastleDun_JailHall_Tiles_SROH'
+    }
+}
+BlendMode = BLEND_Opaque (0)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[14] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/WaterCaustics/T_WaterCaustics_Disorder_A.T_WaterCaustics_Disorder_A'
+        Name = Distortion Map
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_MSK.base_white_MSK'
+        Name = MRO/SRO B
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/MaterialFunctions/BaseTextures/T_Blank_D.T_Blank_D'
+        Name = Distortion Top
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+        Name = Normal Map B
+        Group = None
+    }
+    CollectedTextureParameters[4] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+        Name = Diffuse
+        Group = None
+    }
+    CollectedTextureParameters[5] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_MSK.base_white_MSK'
+        Name = Displacement
+        Group = None
+    }
+    CollectedTextureParameters[6] =
+    {
+        Texture = Texture2D'/Game/MaterialFunctions/BaseTextures/T_Blank_D.T_Blank_D'
+        Name = Distortion Bottom
+        Group = None
+    }
+    CollectedTextureParameters[7] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_MSK.base_white_MSK'
+        Name = MROH/SROH
+        Group = None
+    }
+    CollectedTextureParameters[8] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_MSK.base_white_MSK'
+        Name = Base MRO/SRO
+        Group = None
+    }
+    CollectedTextureParameters[9] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_MSK.base_white_MSK'
+        Name = MRO/SRO
+        Group = None
+    }
+    CollectedTextureParameters[10] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+        Name = Normal Map
+        Group = None
+    }
+    CollectedTextureParameters[11] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+        Name = Base Normal
+        Group = None
+    }
+    CollectedTextureParameters[12] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+        Name = Diffuse B
+        Group = None
+    }
+    CollectedTextureParameters[13] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/T_Blank_A.T_Blank_A'
+        Name = EmissiveAlphaMask
+        Group = None
+    }
+}
+CollectedScalarParameters[40] =
+{
+    CollectedScalarParameters[0] = { Value=1, Name=Normal A Height, Group=None }
+    CollectedScalarParameters[1] = { Value=0, Name=Roughness, Group=None }
+    CollectedScalarParameters[2] = { Value=0, Name=Diffuse Desaturation B, Group=None }
+    CollectedScalarParameters[3] = { Value=0, Name=Met, Group=None }
+    CollectedScalarParameters[4] =
+    {
+        Value = 0.1
+        Name = Distortion Emissive Brightness
+        Group = None
+    }
+    CollectedScalarParameters[5] =
+    {
+        Value = 0.2
+        Name = Disorder Strength Top (S)
+        Group = None
+    }
+    CollectedScalarParameters[6] = { Value=128, Name=Texture Size, Group=None }
+    CollectedScalarParameters[7] = { Value=1, Name=Mask Strength, Group=None }
+    CollectedScalarParameters[8] = { Value=0, Name=FlattenHeight, Group=None }
+    CollectedScalarParameters[9] =
+    {
+        Value = 0.2
+        Name = Disorder Strength Bottom (S)
+        Group = None
+    }
+    CollectedScalarParameters[10] =
+    {
+        Value = 1
+        Name = Layer Opcity Multiplier
+        Group = None
+    }
+    CollectedScalarParameters[11] =
+    {
+        Value = 0
+        Name = Distortion Bottom Height
+        Group = None
+    }
+    CollectedScalarParameters[12] = { Value=1, Name=Diffuse Brightness B, Group=None }
+    CollectedScalarParameters[13] = { Value=0, Name=MaskContrast, Group=None }
+    CollectedScalarParameters[14] = { Value=0, Name=Invert Displacement, Group=None }
+    CollectedScalarParameters[15] = { Value=0, Name=Invert Height Map, Group=None }
+    CollectedScalarParameters[16] = { Value=1, Name=Height Strength, Group=None }
+    CollectedScalarParameters[17] = { Value=0, Name=Spec, Group=None }
+    CollectedScalarParameters[18] =
+    {
+        Value = 1
+        Name = Distortion Bottom Tiling
+        Group = None
+    }
+    CollectedScalarParameters[19] = { Value=1, Name=Normal B Height, Group=None }
+    CollectedScalarParameters[20] =
+    {
+        Value = 0.5
+        Name = TranslucentOverride_DstortionOpaicty
+        Group = None
+    }
+    CollectedScalarParameters[21] = { Value=0, Name=AO B, Group=None }
+    CollectedScalarParameters[22] = { Value=0, Name=AO, Group=None }
+    CollectedScalarParameters[23] = { Value=0, Name=Spec A, Group=None }
+    CollectedScalarParameters[24] = { Value=0, Name=Distortion Top Height, Group=None }
+    CollectedScalarParameters[25] = { Value=0, Name=MaskOffset, Group=None }
+    CollectedScalarParameters[26] = { Value=0, Name=Roughness A, Group=None }
+    CollectedScalarParameters[27] = { Value=0, Name=Met A, Group=None }
+    CollectedScalarParameters[28] = { Value=1, Name=Disorder Opacity Top, Group=None }
+    CollectedScalarParameters[29] = { Value=128, Name=Texture Size B, Group=None }
+    CollectedScalarParameters[30] = { Value=0, Name=Diffuse Desaturation A, Group=None }
+    CollectedScalarParameters[31] =
+    {
+        Value = 1
+        Name = Disorder Opacity Bottom 
+        Group = None
+    }
+    CollectedScalarParameters[32] = { Value=1, Name=Diffuse Brightness A, Group=None }
+    CollectedScalarParameters[33] = { Value=1, Name=Distortion Top Tiling, Group=None }
+    CollectedScalarParameters[34] = { Value=0, Name=Roughness B, Group=None }
+    CollectedScalarParameters[35] = { Value=1, Name=Normal Height, Group=None }
+    CollectedScalarParameters[36] = { Value=0, Name=AO A, Group=None }
+    CollectedScalarParameters[37] = { Value=0, Name=Met B, Group=None }
+    CollectedScalarParameters[38] = { Value=1, Name=Distortion Tiling, Group=None }
+    CollectedScalarParameters[39] = { Value=0, Name=Spec B, Group=None }
+}
+CollectedVectorParameters[4] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0, G=0, B=0, A=0 }
+        Name = Texture Rotation B
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0, G=0, B=0, A=0 }
+        Name = Texture Rotation
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=0.01, G=0.01, B=0, A=0 }
+        Name = Disorder Speed Bottom (V2)
+        Group = None
+    }
+    CollectedVectorParameters[3] =
+    {
+        Value = { R=0.01, G=0.01, B=0, A=0 }
+        Name = Disorder Speed Top (V2)
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}
