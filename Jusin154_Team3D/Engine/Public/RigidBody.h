@@ -65,11 +65,12 @@ private:
 	CRigidBody(const CRigidBody& rhs);
 	virtual ~CRigidBody() = default;
 public:
+	ACTOR Get_Type() const { return m_eActorType; }
 	PSX::PxShape* Get_ShapePtr() const { return m_pShape; }
 	CTransform* Get_PxTransformPtr() const { return m_pTransform; }
 	const _tchar* Get_PxMeshKey() const { return m_wstrMeshKey.c_str(); }
 	const PSX::PxMaterial* Get_PxMaterial() const { return m_pMaterial; }
-
+	_float Get_ContactOffset() { return m_fContactOffset; }
 	_float Get_Density() const { return m_fDensity; }
 	_bool Is_Kinematic() const { return m_bKinematic; }
 
@@ -79,6 +80,7 @@ private:
 	PSX::PxMaterial*	m_pMaterial = { nullptr };				// 피직스 객체의 속성 등
 	PSX::PxShape*		m_pShape = { nullptr };					// 피직스 객체의 모양 ( 머테리얼로 만들어짐 )
 	_float3				m_vhalfGeometryInfo = {};
+	_float				m_fContactOffset = { 0.05f };
 	CTransform*			m_pTransform = { nullptr };
 	_bool				m_bKinematic = { false };
 	_bool				m_bExclusive = { false };

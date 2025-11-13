@@ -683,8 +683,8 @@ void CMapObject_Manager::Update_PrototypeList()
 
 				pMapObject = m_pGameInstance->Clone_Prototype<CMapObject_Static>(g_iStaticLevel, &Desc);
 
-			/*	if(FAILED(m_pContainer->Add_Part<CMapObject_Static>(strKey, 0, &pMapObject, &Desc)))
-					break;*/
+				/*	if(FAILED(m_pContainer->Add_Part<CMapObject_Static>(strKey, 0, &pMapObject, &Desc)))
+						break;*/
 
 				m_MapObjects.push_back(pMapObject);
 			}

@@ -43,37 +43,27 @@ void CDummy_PhysXBox::Update(_float fTimeDelta)
 
 void CDummy_PhysXBox::Late_Update(_float fTimeDelta)
 {
-	//_float4* vPos = (_float4*)(m_pTransformCom->Get_WorldMatrixPtr()->m[3]);
-	//m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this, *vPos, m_pTransformCom->Get_Radius());
+	_float4 vPos;
+	XMStoreFloat4(&vPos, Get_WorldPostion());
+	m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this, vPos, 20.f);
 }
 
 HRESULT CDummy_PhysXBox::Render()
 {
-	//if (FAILED(Bind_ShaderResources())) {
-	//	return E_FAIL;
-	//}
+	if (FAILED(Bind_ShaderResources())) {
+		return E_FAIL;
+	}
 
+	if (FAILED(m_pModelCom->Bind_Material(0, m_pShaderCom, "g_DiffuseTexture", aiTextureType_DIFFUSE, 0))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::DEFAULT)))) {
+		return E_FAIL;
+	}
 
-	//_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-
-	//for (_uint i = 0; i < iNumMeshes; i++)
-	//{
-	//	if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom, "g_DiffuseTexture", aiTextureType_DIFFUSE, 0))) {
-	//		return E_FAIL;
-	//	}
-	//	if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom, "g_NormalTexture", aiTextureType_NORMALS, 0))) {
-	//		return E_FAIL;
-	//	}
-
-	//	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::SKYBOX)))) {
-	//		return E_FAIL;
-	//	}
-
-	//	if (FAILED(m_pModelCom->Render(i))) {
-	//		return E_FAIL;
-	//	}
-	//}
-
+	if (FAILED(m_pModelCom->Render(0))) {
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -106,24 +96,34 @@ HRESULT CDummy_PhysXBox::Ready_Components(void* pArg)
 
 	}
 
+	/* Com_Shader */
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_MESH,
+		reinterpret_cast<CComponent**>(&m_pShaderCom))))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_Box"), (CComponent**)&m_pModelCom))) {
+		return E_FAIL;
+	}
+
+
 	return S_OK;
 }
 
 HRESULT CDummy_PhysXBox::Bind_ShaderResources()
 {
-	//if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
-	//	return E_FAIL;
-	//}
-	//if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))) {
-	//	return E_FAIL;
-	//}
-	//if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ)))) {
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ)))) {
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
@@ -158,8 +158,8 @@ void CDummy_PhysXBox::Free()
 	__super::Free();
 
 	SAFE_RELEASE(m_pRigidBody);
-	//SAFE_RELEASE(m_pModelCom);
-	//SAFE_RELEASE(m_pShaderCom);
+	Safe_Release(m_pShaderCom);
+	Safe_Release(m_pModelCom);
 }
 
 void CDummy_PhysXBox::Describe_Entity()

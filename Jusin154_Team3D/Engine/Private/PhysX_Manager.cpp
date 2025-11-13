@@ -5,7 +5,7 @@
 #include "RigidBody.h"
 #include "Mesh.h"
 
-static PSX::PxTransform XMWorldToPx(const _matrix& WorldMatrix)
+static PSX::PxTransform XMWorldToPx_NoScale(const _matrix& WorldMatrix)
 {
 	_vector vPos, vRotq, vScale;
 	XMMatrixDecompose(&vScale, &vRotq, &vPos, WorldMatrix);
@@ -15,7 +15,6 @@ static PSX::PxTransform XMWorldToPx(const _matrix& WorldMatrix)
 	PSX::PxTransform out;
 	XMStoreFloat3((_float3*)&out.p, vPos);
 	XMStoreFloat4((_float4*)&out.q, vRotq);
-
 	return out;
 }
 
@@ -33,19 +32,46 @@ const PSX::PxRigidDynamic* CPhysX_Manager::Add_DynamicActor(CRigidBody& RigidBod
 {
 	_matrix WorldMatrix = RigidBody.Get_PxTransformPtr()->Get_XMWorldMatrix();
 
-	PSX::PxTransform pxWorldMatrix = XMWorldToPx(WorldMatrix);
+	PSX::PxTransform pxWorldMatrix = XMWorldToPx_NoScale(WorldMatrix);
 
 	// PxRigidDynamic		씬의 동적 바디 인터페이스
 	PSX::PxRigidDynamic* pActorDynamic = m_pPhysics->createRigidDynamic(pxWorldMatrix);
 	pActorDynamic->userData = &RigidBody;
+	
+	PSX::PxShape* pSrc = RigidBody.Get_ShapePtr();
+	PSX::PxGeometryHolder geoHolder = pSrc->getGeometry();
+
+	PSX::PxShape* pClone = nullptr;
+	switch (RigidBody.Get_Type()) {
+	case ACTOR::BOX:
+		pClone = PSX::PxRigidActorExt::createExclusiveShape(*pActorDynamic, geoHolder.box(), *RigidBody.Get_PxMaterial());
+		break;
+	case ACTOR::CAPSULE:
+		pClone = PSX::PxRigidActorExt::createExclusiveShape(*pActorDynamic, geoHolder.capsule(), *RigidBody.Get_PxMaterial());
+		break;
+	case ACTOR::SPHERE:
+		pClone = PSX::PxRigidActorExt::createExclusiveShape(*pActorDynamic, geoHolder.sphere(), *RigidBody.Get_PxMaterial());
+		break;
+	default:
+		assert(false); break;
+	}
+	pClone->setFlag(PSX::PxShapeFlag::eSIMULATION_SHAPE, true);
+	pClone->setFlag(PSX::PxShapeFlag::eSCENE_QUERY_SHAPE, true);
+	pClone->setContactOffset(RigidBody.Get_ContactOffset());
+	pClone->setRestOffset(0.f);
+
+
 	pActorDynamic->attachShape(*RigidBody.Get_ShapePtr());
+	pActorDynamic->setRigidBodyFlag(PSX::PxRigidBodyFlag::eENABLE_CCD, true);
+
+
+
 	if (RigidBody.Is_Kinematic()) {
 		pActorDynamic->setRigidBodyFlag(PSX::PxRigidBodyFlag::eKINEMATIC, true);
 	}
 	else {
 		PSX::PxRigidBodyExt::updateMassAndInertia(*pActorDynamic, (PSX::PxReal)RigidBody.Get_Density());
 	}
-
 
 	m_RigidBodys.emplace_back(&RigidBody, pActorDynamic);
 	m_pScene->addActor(*pActorDynamic);
@@ -57,10 +83,10 @@ const PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody& RigidBody)
 {
 	_matrix WorldMatrix = RigidBody.Get_PxTransformPtr()->Get_XMWorldMatrix();
 
-	PSX::PxTransform pxWorldMatrix = XMWorldToPx(WorldMatrix);
+	PSX::PxTransform pxWorldMatrix = XMWorldToPx_NoScale(WorldMatrix);
     
 	// PxRigidStatic		씬의 정적 바디 인터페이스
-	const PSX::PxTriangleMesh* pPxMesh = { nullptr };
+	PSX::PxTriangleMesh* pPxMesh = { nullptr };
 	{
 		auto iter = m_TriangleMeshes.find(RigidBody.Get_PxMeshKey());
 		if (m_TriangleMeshes.end() == iter) {
@@ -69,14 +95,23 @@ const PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody& RigidBody)
 		}
 		pPxMesh = iter->second;
 	}
-	const PSX::PxTriangleMeshGeometry* pPxMeshGeometry = { nullptr };
+	_vector vPos, vRotq, vScale;
+	XMMatrixDecompose(&vScale, &vRotq, &vPos, WorldMatrix);
+
+	vRotq = XMQuaternionNormalize(vRotq);
+
+	PSX::PxTransform out;
+	XMStoreFloat3((_float3*)&out.p, vPos);
+	XMStoreFloat4((_float4*)&out.q, vRotq);
+	PSX::PxMeshScale meshScale(
+		PSX::PxVec3(fabsf(vScale.m128_f32[0]), fabsf(vScale.m128_f32[1]), fabsf(vScale.m128_f32[2])),
+		PSX::PxQuat(PSX::PxIdentity) // 스케일 축은 로컬 기준(보통 Identity가 가장 안전)
+	);
+	PSX::PxTriangleMeshGeometry* pPxMeshGeometry = new PSX::PxTriangleMeshGeometry(pPxMesh, meshScale);
 	{
-		auto iter = m_TriangleMeshGeometry.find(RigidBody.Get_PxMeshKey());
-		if (m_TriangleMeshGeometry.end() == iter) {
-			assert(false);
-			return nullptr;
-		}
-		pPxMeshGeometry = iter->second;
+		pPxMeshGeometry->meshFlags |= PSX::PxMeshGeometryFlag::eDOUBLE_SIDED;
+		PX_ASSERT(pPxMeshGeometry.isValid()); // 유효성 체크
+		m_TriangleMeshGeometry.emplace(RigidBody.Get_PxMeshKey(), pPxMeshGeometry);
 	}
 
 	PSX::PxRigidStatic* pActor = m_pPhysics->createRigidStatic(pxWorldMatrix);
@@ -124,9 +159,6 @@ PSX::PxShape* CPhysX_Manager::Create_Shape(ACTOR eType, _float3& vhalfGeometryIn
 void CPhysX_Manager::RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh) {
 	m_TriangleMeshes.emplace(CMyTools::ToWstring(pName), pPxTriMesh);
 
-	PSX::PxTriangleMeshGeometry* pGeometry = new PSX::PxTriangleMeshGeometry(pPxTriMesh);
-	pGeometry->meshFlags |= PSX::PxMeshGeometryFlag::eDOUBLE_SIDED;
-	m_TriangleMeshGeometry.emplace(CMyTools::ToWstring(pName), pGeometry);
 }
 
 HRESULT CPhysX_Manager::ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix)
@@ -276,7 +308,7 @@ void CPhysX_Manager::Update_Kinematic()
 			CRigidBody* pBody = pairBody.first;
 			const CTransform* pTransform = pBody->Get_PxTransformPtr();
 
-			pActor->setKinematicTarget(XMWorldToPx(pTransform->Get_XMWorldMatrix()));
+			pActor->setKinematicTarget(XMWorldToPx_NoScale(pTransform->Get_XMWorldMatrix()));
 		}
 	}
 }
@@ -319,9 +351,13 @@ void CPhysX_Manager::Update_Dynamic()
 
 			WorldMatrix = XMMatrixAffineTransformation(XMLoadFloat3(&vOriginalScale), XMVectorZero(), XMLoadFloat4((_float4*)&pPxTransform.q), XMLoadFloat3((_float3*)&pPxTransform.p));
 			pTransform->Set_WorldMatrix(WorldMatrix);
-
 		}
 	}
+	//_uint iNumActor = (_uint)m_RigidBodys.size();
+	//for (_uint i = 0; i < iNumActor; ++i) {
+	//for (auto& pairBody : m_RigidBodys)
+	//	pairBody.second->userData
+	//}
 }
 
 void CPhysX_Manager::ClearScene()
@@ -410,7 +446,7 @@ HRESULT CPhysX_Manager::Initialize()
 
 		sceneDesc.filterShader = PSX::PxDefaultSimulationFilterShader;
 
-		sceneDesc.flags = PSX::PxSceneFlag::eENABLE_PCM | PSX::PxSceneFlag::eENABLE_ACTIVE_ACTORS | PSX::PxSceneFlag::eEXCLUDE_KINEMATICS_FROM_ACTIVE_ACTORS;
+		sceneDesc.flags = PSX::PxSceneFlag::eENABLE_PCM | PSX::PxSceneFlag::eENABLE_CCD| PSX::PxSceneFlag::eENABLE_ACTIVE_ACTORS | PSX::PxSceneFlag::eEXCLUDE_KINEMATICS_FROM_ACTIVE_ACTORS;
 		if (false == sceneDesc.isValid()) {
 			assert(false);
 			return E_FAIL;
@@ -432,8 +468,8 @@ HRESULT CPhysX_Manager::Initialize()
 
 #ifdef 기무리
 	physx::PxMaterial* pMaterial = m_pPhysics->createMaterial(0.5f, 0.5f, 0.6f);
-	//physx::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 90), *pMaterial);
-	//m_pScene->addActor(*pGroundPlane);
+	physx::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *pMaterial);
+	m_pScene->addActor(*pGroundPlane);
 
 	//{
 	//	float halfExtent = .5f;
@@ -451,7 +487,7 @@ HRESULT CPhysX_Manager::Initialize()
 	//		}
 	//	}
 	//}
-	//pMaterial->release();
+	pMaterial->release();
 #endif // 기무리
 
 	

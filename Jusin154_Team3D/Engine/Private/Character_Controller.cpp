@@ -13,6 +13,55 @@ CCharacter_Controller::CCharacter_Controller(const CCharacter_Controller& rhs)
 {
 
 }
+#ifdef _DEBUG
+
+HRESULT CCharacter_Controller::Render()
+{
+	_vector  vPos = Get_Position();
+	_float3  vVolume = Get_Volume(); 
+	_matrix  WorldMatrix = XMMatrixTranslationFromVector(vPos);
+
+	_matrix ViewMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
+	_matrix ProjMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
+	_vector vColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0x2fc48000, 1.f);
+
+	switch (m_eBodyType)
+	{
+	case ACTOR::BOX:
+	{
+		// vVolume = half-extents(Hx,Hy,Hz) 라고 가정
+		const _matrix ScaleMatrix =
+			XMMatrixScaling(vVolume.x / 0.5f,
+				vVolume.y / 0.5f,
+				vVolume.z / 0.5f);
+		m_pMainShape->Draw(ScaleMatrix * WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
+	} break;
+	case ACTOR::CAPSULE:
+	{
+		_float fHalf = vVolume.y;
+
+		_matrix ScaleMatrix =
+			XMMatrixScaling(vVolume.x / 0.5f,
+				fHalf / (2.f * 0.5f),
+				vVolume.x / 0.5f);
+		m_pMainShape->Draw(ScaleMatrix * WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
+
+		_matrix ScaleSphereMatrix = XMMatrixScaling(vVolume.x / 0.5f, vVolume.x / 0.5f, vVolume.x / 0.5f);
+
+		_matrix WorldUp = XMMatrixTranslation(0.f, +fHalf * 0.5f, 0.f);
+		_matrix WorldDown = XMMatrixTranslation(0.f, -fHalf * 0.5f, 0.f);
+
+		m_pSubShape->Draw(ScaleSphereMatrix * WorldUp * WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
+		m_pSubShape->Draw(ScaleSphereMatrix * WorldDown * WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
+	}
+	break;
+	default:
+		break;
+	}
+	return S_OK;
+}
+
+#endif // _DEBUG
 
 void CCharacter_Controller::Modify_Volume(_float3 fVolume)
 {
@@ -111,6 +160,12 @@ void CCharacter_Controller::Set_Position(_fvector vNewPos)
 	m_pController->setPosition(pxLVec3NewPos);
 }
 
+_vector CCharacter_Controller::Get_Position()
+{
+	PSX::PxExtendedVec3 pxVPos = m_pController->getPosition();
+	return XMVectorSet((_float)pxVPos.x, (_float)pxVPos.y, (_float)pxVPos.z, 1.f);
+}
+
 _float3 CCharacter_Controller::Get_FootPosition()
 {
 	PSX::PxExtendedVec3  pxLVecfootPos = m_pController->getFootPosition();
@@ -145,6 +200,10 @@ HRESULT CCharacter_Controller::Initialize(void* pArg)
 		Desc.contactOffset = pDesc->fContactOffset;
 		Desc.material = m_pGameInstance->Get_Material(pDesc->fMaterial);
 		m_pController = m_pGameInstance->Add_BoxController(Desc);
+#ifdef _DEBUG
+		_float3 vVolume = Get_Volume();
+		m_pMainShape = (GeometricPrimitive::CreateBox(m_pContext, vVolume, false, false));
+#endif // _DEBUG
 	} break;
 	case Engine::ACTOR::CAPSULE:
 	{
@@ -155,6 +214,11 @@ HRESULT CCharacter_Controller::Initialize(void* pArg)
 		Desc.contactOffset = pDesc->fContactOffset;
 		Desc.material = m_pGameInstance->Get_Material(pDesc->fMaterial);
 		m_pController = m_pGameInstance->Add_CapsuleController(Desc);
+#ifdef _DEBUG
+		_float3 vVolume = Get_Volume();
+		m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, vVolume.x, 10, false, false));
+		m_pMainShape = (GeometricPrimitive::CreateCylinder(m_pContext, vVolume.y, vVolume.x, 10, false));
+#endif // _DEBUG
 	} break;
 	default:
 		assert(false); // PhysX에서 불가능

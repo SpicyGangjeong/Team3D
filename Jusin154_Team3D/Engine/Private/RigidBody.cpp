@@ -18,7 +18,7 @@ CRigidBody::CRigidBody(const CRigidBody& rhs):
 	m_bExclusive(rhs.m_bExclusive),
 	m_bKinematic(rhs.m_bKinematic)
 {
-
+	//m_pMaterial->acquireReference();
 }
 
 HRESULT CRigidBody::Initialize_Prototype(RIGIDBODY_PROTOTYPEDESC& Desc)
@@ -127,6 +127,10 @@ void CRigidBody::Free()
 	__super::Free();
 
 	SAFE_RELEASE(m_pTransform);
+	//if (nullptr != m_pMaterial) {
+	//	m_pMaterial->release();
+	//	m_pMaterial = nullptr;
+	//}
 }
 
 void CRigidBody::Describe_Entity()
