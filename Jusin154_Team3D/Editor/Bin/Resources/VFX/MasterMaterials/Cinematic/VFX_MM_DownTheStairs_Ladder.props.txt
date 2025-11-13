@@ -1,0 +1,205 @@
+TwoSided = true
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[4] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/Environment/Hogwarts/SUB_RavenclawTower/Textures/T_HW_RT_Bunks_D.T_HW_RT_Bunks_D'
+    ReferencedTextures[1] = Texture2D'/Game/Environment/Hogwarts/SUB_RavenclawTower/Textures/T_HW_RT_Bunks_MRO.T_HW_RT_Bunks_MRO'
+    ReferencedTextures[2] = Texture2D'/Game/Environment/Hogwarts/SUB_RavenclawTower/Textures/T_HW_RT_Bunks_N.T_HW_RT_Bunks_N'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise08_D.VFX_T_Noise08_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[18] =
+                {
+                    ParameterInfos[0] = { Name=Unblockable_WidthScreenTiling }
+                    ParameterInfos[1] = { Name=Saturation }
+                    ParameterInfos[2] = { Name=BandNoiseStrength }
+                    ParameterInfos[3] = { Name=BandWidth }
+                    ParameterInfos[4] = { Name=BandTileSpeed }
+                    ParameterInfos[5] = { Name=OffsetV }
+                    ParameterInfos[6] = { Name=OffsetU }
+                    ParameterInfos[7] = { Name=Metallic Adjuster }
+                    ParameterInfos[8] = { Name=Roughness Adjuster }
+                    ParameterInfos[9] = { Name=AO Adjuster }
+                    ParameterInfos[10] = { Name=BandFalloff }
+                    ParameterInfos[11] = { Name=Diffuse Brightness }
+                    ParameterInfos[12] = { Name=OpacityLerpStrength }
+                    ParameterInfos[13] = { Name=NormalLerpStrength }
+                    ParameterInfos[14] = { Name=Normal Height }
+                    ParameterInfos[15] = { Name=Unblockable_Position }
+                    ParameterInfos[16] = { Name=UV scale }
+                    ParameterInfos[17] = { Name=Emissive_Lerp }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=WipeBasecolor }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[4] =
+                {
+                    ParameterInfos[0] = { Name=UnblockableNoiseTexture }
+                    ParameterInfos[1] = { Name=Normal Map }
+                    ParameterInfos[2] = { Name=Diffuse Map }
+                    ParameterInfos[3] = { Name=MRO Map }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[18] =
+        {
+            ScalarValues[0] = 3
+            ScalarValues[1] = 1
+            ScalarValues[2] = 0.8
+            ScalarValues[3] = 0.15
+            ScalarValues[4] = -0.3
+            ScalarValues[5] = 0
+            ScalarValues[6] = 0
+            ScalarValues[7] = 0
+            ScalarValues[8] = 0
+            ScalarValues[9] = 0
+            ScalarValues[10] = 1
+            ScalarValues[11] = 1
+            ScalarValues[12] = 1
+            ScalarValues[13] = 1
+            ScalarValues[14] = 1
+            ScalarValues[15] = 0.76
+            ScalarValues[16] = 1
+            ScalarValues[17] = 1
+        }
+        VectorValues[1] =
+        {
+            VectorValues[0] = { R=6.91979, G=3.59375, B=30, A=1 }
+        }
+        TextureValues[4] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise08_D.VFX_T_Noise08_D'
+            TextureValues[1] = Texture2D'/Game/Environment/Hogwarts/SUB_RavenclawTower/Textures/T_HW_RT_Bunks_N.T_HW_RT_Bunks_N'
+            TextureValues[2] = Texture2D'/Game/Environment/Hogwarts/SUB_RavenclawTower/Textures/T_HW_RT_Bunks_D.T_HW_RT_Bunks_D'
+            TextureValues[3] = Texture2D'/Game/Environment/Hogwarts/SUB_RavenclawTower/Textures/T_HW_RT_Bunks_MRO.T_HW_RT_Bunks_MRO'
+        }
+    }
+    ReferencedTextures[4] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise08_D.VFX_T_Noise08_D'
+        ReferencedTextures[1] = Texture2D'/Game/Environment/Hogwarts/SUB_RavenclawTower/Textures/T_HW_RT_Bunks_MRO.T_HW_RT_Bunks_MRO'
+        ReferencedTextures[2] = Texture2D'/Game/Environment/Hogwarts/SUB_RavenclawTower/Textures/T_HW_RT_Bunks_D.T_HW_RT_Bunks_D'
+        ReferencedTextures[3] = Texture2D'/Game/Environment/Hogwarts/SUB_RavenclawTower/Textures/T_HW_RT_Bunks_N.T_HW_RT_Bunks_N'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[4] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise08_D.VFX_T_Noise08_D'
+        Name = UnblockableNoiseTexture
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/Environment/Hogwarts/SUB_RavenclawTower/Textures/T_HW_RT_Bunks_N.T_HW_RT_Bunks_N'
+        Name = Normal Map
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/Environment/Hogwarts/SUB_RavenclawTower/Textures/T_HW_RT_Bunks_D.T_HW_RT_Bunks_D'
+        Name = Diffuse Map
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/Environment/Hogwarts/SUB_RavenclawTower/Textures/T_HW_RT_Bunks_MRO.T_HW_RT_Bunks_MRO'
+        Name = MRO Map
+        Group = None
+    }
+}
+CollectedScalarParameters[18] =
+{
+    CollectedScalarParameters[0] =
+    {
+        Value = 3
+        Name = Unblockable_WidthScreenTiling
+        Group = None
+    }
+    CollectedScalarParameters[1] = { Value=1, Name=Saturation, Group=None }
+    CollectedScalarParameters[2] = { Value=0.8, Name=BandNoiseStrength, Group=None }
+    CollectedScalarParameters[3] = { Value=0.15, Name=BandWidth, Group=None }
+    CollectedScalarParameters[4] = { Value=-0.3, Name=BandTileSpeed, Group=None }
+    CollectedScalarParameters[5] = { Value=0, Name=OffsetV, Group=None }
+    CollectedScalarParameters[6] = { Value=0, Name=OffsetU, Group=None }
+    CollectedScalarParameters[7] = { Value=0, Name=Metallic Adjuster, Group=None }
+    CollectedScalarParameters[8] = { Value=0, Name=Roughness Adjuster, Group=None }
+    CollectedScalarParameters[9] = { Value=0, Name=AO Adjuster, Group=None }
+    CollectedScalarParameters[10] = { Value=1, Name=BandFalloff, Group=None }
+    CollectedScalarParameters[11] = { Value=1, Name=Diffuse Brightness, Group=None }
+    CollectedScalarParameters[12] = { Value=1, Name=OpacityLerpStrength, Group=None }
+    CollectedScalarParameters[13] = { Value=1, Name=NormalLerpStrength, Group=None }
+    CollectedScalarParameters[14] = { Value=1, Name=Normal Height, Group=None }
+    CollectedScalarParameters[15] =
+    {
+        Value = 0.76
+        Name = Unblockable_Position
+        Group = None
+    }
+    CollectedScalarParameters[16] = { Value=1, Name=UV scale, Group=None }
+    CollectedScalarParameters[17] = { Value=1, Name=Emissive_Lerp, Group=None }
+}
+CollectedVectorParameters[1] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=6.91979, G=3.59375, B=30, A=1 }
+        Name = WipeBasecolor
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[4] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_HW_RT_Bunks_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_HW_RT_Bunks_MRO
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_HW_RT_Bunks_N
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 3
+        UVChannelIndex = 0
+        TextureName = VFX_T_Noise08_D
+    }
+}

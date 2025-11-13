@@ -95,6 +95,7 @@ PS_OUT PS_Clamp(PS_IN In)
     float4 Color = g_Texture.Sample(DefaultSampler, In.vTexcoord);
 
     Out.vColor = Color;
+
     
     return Out;
 }
@@ -141,6 +142,18 @@ PS_OUT PS_Cursor(PS_IN In)
     
     Color = White; 
     
+    return Out;
+}
+
+PS_OUT PS_Key_Hold_Rotation(PS_IN In)
+{
+    PS_OUT Out;
+    
+    float4 Color = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    
+    if (Color.a <= 0.1f)
+        discard;
+    
     Out.vColor = Color;
     
     return Out;
@@ -175,20 +188,6 @@ PS_OUT PS_Sptire_Sheet(PS_IN In)
         discard;
     
     Color.a = Alpha;
-    
-    Out.vColor = Color;
-    
-    return Out;
-}
-
-PS_OUT PS_Key_Hold_Rotation(PS_IN In)
-{
-    PS_OUT Out;
-    
-    float4 Color = g_Texture.Sample(DefaultSampler, In.vTexcoord);
-    
-    if (Color.a <= 0.1f)
-        discard;
     
     Out.vColor = Color;
     

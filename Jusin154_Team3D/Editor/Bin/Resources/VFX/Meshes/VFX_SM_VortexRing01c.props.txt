@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/VFX_MI_WhirlpoolTeleport01.VFX_MI_WhirlpoolTeleport01'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/VFX_MI_WhirlpoolTeleport01.VFX_MI_WhirlpoolTeleport01'
+        MaterialSlotName = VortexRing01c
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 115.049, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=7.62939e-06, Y=5.34058e-05, Z=0.951714 }
+    BoxExtent = { X=113.552, Y=113.552, Z=0.951714 }
+    SphereRadius = 113.557
+}

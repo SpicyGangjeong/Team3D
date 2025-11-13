@@ -1,0 +1,11 @@
+Diffuse=T_Candles_D
+Normal=T_Candles_N
+Emissive=VFX_T_CandlesP3D_E
+Other[0]=Good64x64TilingNoiseHighFreq
+Other[1]=base_flat_n
+Other[2]=base_white_d
+Other[3]=T_Blank_A
+Other[4]=T_ColorNoise512_D
+Other[5]=T_FlickerNoice_MSK
+Other[6]=T_Forageable_Horklump_Gradient_D
+Other[7]=VFX_T_RibbonOffset_N

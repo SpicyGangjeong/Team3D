@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Materials/Mat_Instance/MI_BridgeCloud_B.MI_BridgeCloud_B'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Materials/Mat_Instance/MI_BridgeCloud_B.MI_BridgeCloud_B'
+        MaterialSlotName = MI_BridgeCloud_A
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 3021.61, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=316.37, Y=96.1553, Z=1127.3 }
+    BoxExtent = { X=2767.9, Y=1273.41, Z=1423.5 }
+    SphereRadius = 3091.66
+}

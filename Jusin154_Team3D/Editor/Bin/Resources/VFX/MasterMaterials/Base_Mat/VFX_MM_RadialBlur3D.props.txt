@@ -1,0 +1,147 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[2] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseCaustics01_Color_D.VFX_T_NoiseCaustics01_Color_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[12] =
+                {
+                    ParameterInfos[0] = { Name=Exp }
+                    ParameterInfos[1] = { Name=Distance Fade Length }
+                    ParameterInfos[2] = { Name=Distance Fade Start Distance }
+                    ParameterInfos[3] = { Name=DebugOpacity }
+                    ParameterInfos[4] = { Name=Alpha }
+                    ParameterInfos[5] = { Name=Fresnel Cheap contrast bright (S) }
+                    ParameterInfos[6] = { Name=Motion Blur Strength }
+                    ParameterInfos[7] = { Name=Fresnel Cheap contrast dark (S) }
+                    ParameterInfos[8] = { Name=Test Dark }
+                    ParameterInfos[9] = { Name=Test Bright }
+                    ParameterInfos[10] = { Name=Soften Fresnel Fade }
+                    ParameterInfos[11] = { Name=IndexOfRefraction }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[3] =
+                {
+                    ParameterInfos[0] = { Name=Fade Axis }
+                    ParameterInfos[1] = { Name=Debug Color }
+                    ParameterInfos[2] = { Name=Focus Point (Local Space) }
+                }
+            }
+            Entries[2] = { ParameterInfos[0]={} }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[12] =
+        {
+            ScalarValues[0] = 0.409524
+            ScalarValues[1] = 1850.08
+            ScalarValues[2] = 1000
+            ScalarValues[3] = 0
+            ScalarValues[4] = 1
+            ScalarValues[5] = 1.69819
+            ScalarValues[6] = 100
+            ScalarValues[7] = 0
+            ScalarValues[8] = 0
+            ScalarValues[9] = 1
+            ScalarValues[10] = 0.333333
+            ScalarValues[11] = 1
+        }
+        VectorValues[3] =
+        {
+            VectorValues[0] = { R=1, G=0, B=0, A=0 }
+            VectorValues[1] = { R=0.612176, G=0, B=1, A=1 }
+            VectorValues[2] = { R=0, G=0, B=0, A=1 }
+        }
+        TextureValues[0] = {}
+    }
+    ReferencedTextures[2] =
+    {
+        ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseCaustics01_Color_D.VFX_T_NoiseCaustics01_Color_D'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[0] = {}
+CollectedScalarParameters[12] =
+{
+    CollectedScalarParameters[0] = { Value=0.409524, Name=Exp, Group=None }
+    CollectedScalarParameters[1] =
+    {
+        Value = 1850.08
+        Name = Distance Fade Length
+        Group = None
+    }
+    CollectedScalarParameters[2] =
+    {
+        Value = 1000
+        Name = Distance Fade Start Distance
+        Group = None
+    }
+    CollectedScalarParameters[3] = { Value=0, Name=DebugOpacity, Group=None }
+    CollectedScalarParameters[4] = { Value=1, Name=Alpha, Group=None }
+    CollectedScalarParameters[5] =
+    {
+        Value = 1.69819
+        Name = Fresnel Cheap contrast bright (S)
+        Group = None
+    }
+    CollectedScalarParameters[6] = { Value=100, Name=Motion Blur Strength, Group=None }
+    CollectedScalarParameters[7] =
+    {
+        Value = 0
+        Name = Fresnel Cheap contrast dark (S)
+        Group = None
+    }
+    CollectedScalarParameters[8] = { Value=0, Name=Test Dark, Group=None }
+    CollectedScalarParameters[9] = { Value=1, Name=Test Bright, Group=None }
+    CollectedScalarParameters[10] =
+    {
+        Value = 0.333333
+        Name = Soften Fresnel Fade
+        Group = None
+    }
+    CollectedScalarParameters[11] = { Value=1, Name=IndexOfRefraction, Group=None }
+}
+CollectedVectorParameters[3] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=1, G=0, B=0, A=0 }
+        Name = Fade Axis
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0.612176, G=0, B=1, A=1 }
+        Name = Debug Color
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = Focus Point (Local Space)
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

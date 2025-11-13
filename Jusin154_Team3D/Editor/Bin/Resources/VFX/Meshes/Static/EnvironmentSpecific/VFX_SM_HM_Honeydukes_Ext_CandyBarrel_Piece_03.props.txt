@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Environment/Hogsmeade/Common/Materials/Food/M_HM_Candy_Bin_Pieces.M_HM_Candy_Bin_Pieces'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Hogsmeade/Common/Materials/Food/M_HM_Candy_Bin_Pieces.M_HM_Candy_Bin_Pieces'
+        MaterialSlotName = M_HM_Candy_Bin_Pieces
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 85.8589, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=0, Z=3.8147e-06 }
+    BoxExtent = { X=2.07233, Y=2.09521, Z=1.78441 }
+    SphereRadius = 2.33786
+}

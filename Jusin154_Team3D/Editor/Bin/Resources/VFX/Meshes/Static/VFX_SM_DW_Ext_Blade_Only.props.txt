@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Enemies/Dark_Wizards/Dark_Wizard_Extortionist/VFX_MI_DW_Ext_Blade_Glow.VFX_MI_DW_Ext_Blade_Glow'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Enemies/Dark_Wizards/Dark_Wizard_Extortionist/VFX_MI_DW_Ext_Blade_Glow.VFX_MI_DW_Ext_Blade_Glow'
+        MaterialSlotName = lambert1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 177.727, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=0, Z=0 }
+    BoxExtent = { X=37.7726, Y=133.75, Z=2.04669 }
+    SphereRadius = 137.641
+}

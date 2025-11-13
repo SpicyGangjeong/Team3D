@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = Material3'/Game/VFX/Niagara/AncientMagic/IceWall/VFX_MM_AncMagIce_Transparent.VFX_MM_AncMagIce_Transparent'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = Material3'/Game/VFX/Niagara/AncientMagic/IceWall/VFX_MM_AncMagIce_Transparent.VFX_MM_AncMagIce_Transparent'
+        MaterialSlotName = MI_Intro_RuinsBrickMulti_A
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 388.657, 507.701, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-2.30789, Y=-54.1929, Z=316.703 }
+    BoxExtent = { X=201.389, Y=5.72205e-06, Z=309.532 }
+    SphereRadius = 369.28
+}

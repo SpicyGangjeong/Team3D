@@ -1,0 +1,593 @@
+TwoSided = true
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[11] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/DefaultDiffuse.DefaultDiffuse'
+    ReferencedTextures[1] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_black_d.base_black_d'
+    ReferencedTextures[2] = Texture2D'/Game/Environment/Overland_Common/Objects/Trees/Textures/T_WindNoise_MSK.T_WindNoise_MSK'
+    ReferencedTextures[3] = Texture2D'/Game/Environment/Overland_Common/Textures/T_Wind_01_MSK.T_Wind_01_MSK'
+    ReferencedTextures[4] = Texture2D'/Game/Environment/WorldEvents/WNAT/Textures/T_WE_Maze_BaseLeaves_D.T_WE_Maze_BaseLeaves_D'
+    ReferencedTextures[5] = Texture2D'/Game/Environment/WorldEvents/WNAT/Textures/T_WE_Maze_BaseLeaves_MRO.T_WE_Maze_BaseLeaves_MRO'
+    ReferencedTextures[6] = Texture2D'/Game/Environment/WorldEvents/WNAT/Textures/T_WE_Maze_BaseLeaves_N.T_WE_Maze_BaseLeaves_N'
+    ReferencedTextures[7] = Texture2D'/Game/MaterialFunctions/BaseTextures/ColorNoise/T_Rain_Noise_01_D.T_Rain_Noise_01_D'
+    ReferencedTextures[8] = Texture2D'/Game/MaterialFunctions/BaseTextures/T_FlickerNoice_MSK.T_FlickerNoice_MSK'
+    ReferencedTextures[9] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise04_D.VFX_T_Noise04_D'
+    ReferencedTextures[10] = Texture2D'/Game/VFX/World_Events/WhoNeedsaTournament/VFX_T_Maze_BaseLeaves_D.VFX_T_Maze_BaseLeaves_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[63] =
+                {
+                    ParameterInfos[0] = { Name=Rotation-MaxAngle }
+                    ParameterInfos[1] = { Name=Sway_Mask_Length }
+                    ParameterInfos[2] = { Name=Rain_Animation_Max }
+                    ParameterInfos[3] = { Name=Leaf Sine Rate Along Length }
+                    ParameterInfos[4] = { Name=Branch Bend Strength }
+                    ParameterInfos[5] =
+                    {
+                        Name = Volumetric_Spell_Leaf_Flutter_Strength_Min
+                    }
+                    ParameterInfos[6] = { Name=Directional Masking Multiplier }
+                    ParameterInfos[7] = { Name=Wind Intensity }
+                    ParameterInfos[8] = { Name=Rain_Speed }
+                    ParameterInfos[9] = { Name=Wind Speed }
+                    ParameterInfos[10] = { Name=Wind_Texture_Transition_Point }
+                    ParameterInfos[11] = { Name=MaskDistortionMult }
+                    ParameterInfos[12] = { Name=Rain_Anim_Start_At_Storm_Intensity }
+                    ParameterInfos[13] = { Name=Wind Speed Multiplier }
+                    ParameterInfos[14] = { Name=Max Wind Speed }
+                    ParameterInfos[15] = { Name=Hue Shift Range }
+                    ParameterInfos[16] = { Name=Sway_BaseMask_Softness }
+                    ParameterInfos[17] = { Name=Leaf_Flow_Gradient_Strength }
+                    ParameterInfos[18] = { Name=Force Scaling }
+                    ParameterInfos[19] = { Name=Growth }
+                    ParameterInfos[20] = { Name=Leaf Directional Masking Multiplier }
+                    ParameterInfos[21] = { Name=Rain_UV_Scale }
+                    ParameterInfos[22] = { Name=Sway_Exponent }
+                    ParameterInfos[23] = { Name=Sway_Sine_Exponent_Slow_Wind }
+                    ParameterInfos[24] = { Name=NightSubsurfaceFactor }
+                    ParameterInfos[25] = { Name=Branch_Length_1/# }
+                    ParameterInfos[26] = { Name=Sway_BaseMask_Offset }
+                    ParameterInfos[27] = { Name=Stiffness Curve }
+                    ParameterInfos[28] = { Name=Curve_Length }
+                    ParameterInfos[29] = { Name=Trunk_Masking_Threshold }
+                    ParameterInfos[30] = { Name=Wind_Sway_Texture_Strong_Wind }
+                    ParameterInfos[31] = { Name=Volumetric_Spell_Strength }
+                    ParameterInfos[32] = { Name=debug speed }
+                    ParameterInfos[33] = { Name=Hue Shift Sensitivity }
+                    ParameterInfos[34] = { Name=Wind_Position_Random_Offset }
+                    ParameterInfos[35] = { Name=Branch Animation Strength }
+                    ParameterInfos[36] =
+                    {
+                        Name = Volumetric_Spell_Leaf_Flutter_Strength_Max
+                    }
+                    ParameterInfos[37] = { Name=Rain_Time_Offset }
+                    ParameterInfos[38] = { Name=Noise Intensity }
+                    ParameterInfos[39] = { Name=Average Leaf Model Diameter (WS) }
+                    ParameterInfos[40] =
+                    {
+                        Name = Mask_Leaf_Motion_For_Single_Material_Foliage 0/1
+                    }
+                    ParameterInfos[41] = { Name=BandSize }
+                    ParameterInfos[42] = { Name=Wind Noise Size }
+                    ParameterInfos[43] = { Name=Branch Sine Rate Along Length }
+                    ParameterInfos[44] = { Name=Rain_Animation_Min }
+                    ParameterInfos[45] = { Name=DisableCameraFadeVegetation }
+                    ParameterInfos[46] = { Name=Branch_Sine_Random_Offset }
+                    ParameterInfos[47] = { Name=Leaf_Sine_Speed }
+                    ParameterInfos[48] = { Name=Rain_Anim_Storm_Intensity_Lerp_Speed }
+                    ParameterInfos[49] = { Name=Wind_Sway_Texture_Low_Wind }
+                    ParameterInfos[50] = { Name=Rain_Animation_Curves }
+                    ParameterInfos[51] = { Name=Leaf/Branch_Falloff_Power }
+                    ParameterInfos[52] = { Name=Wind_Texture_Transition_Range }
+                    ParameterInfos[53] = { Name=Unpacking_Resolution }
+                    ParameterInfos[54] = { Name=Sway_Sine_Exponent_Fast_Wind }
+                    ParameterInfos[55] = { Name=Displacement-MaxDistance }
+                    ParameterInfos[56] = { Name=Sway_Affects_Leaf_&_Brach_Motion }
+                    ParameterInfos[57] = { Name=Leaf_Sine_Random_Offset }
+                    ParameterInfos[58] = { Name=Branch Sine Rate Length Variation }
+                    ParameterInfos[59] = { Name=Branch wind Bias Amount }
+                    ParameterInfos[60] = { Name=Wind Weight }
+                    ParameterInfos[61] = { Name=Branch_Flow_Gradient_Strength }
+                    ParameterInfos[62] = { Name=Leaf Animation Strength }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[5] =
+                {
+                    ParameterInfos[0] = { Name=MaskDistortionTex Size }
+                    ParameterInfos[1] = { Name=Rain_Leaf_Displacement }
+                    ParameterInfos[2] = { Name=Object_Sway_RGB_Noise_Scale_Strengths }
+                    ParameterInfos[3] = { Name=Subsurface Colour }
+                    ParameterInfos[4] = { Name=Pan Speed and Direction }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[9] =
+                {
+                    ParameterInfos[0] = { Name=Wind Noise }
+                    ParameterInfos[1] = { Name=Diffuse }
+                    ParameterInfos[2] = { Name=Normal }
+                    ParameterInfos[3] = { Name=Subsurface }
+                    ParameterInfos[4] = { Name=MaskDistortionTexture }
+                    ParameterInfos[5] = { Name=Mask }
+                    ParameterInfos[6] = { Name=Wind_Texture }
+                    ParameterInfos[7] = { Name=MRO }
+                    ParameterInfos[8] = { Name=Rain_Texture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[63] =
+        {
+            ScalarValues[0] = 55
+            ScalarValues[1] = 0.000333
+            ScalarValues[2] = 1
+            ScalarValues[3] = 0
+            ScalarValues[4] = 0.5
+            ScalarValues[5] = 0.5
+            ScalarValues[6] = 0.5
+            ScalarValues[7] = 0.5
+            ScalarValues[8] = 0.25
+            ScalarValues[9] = 1
+            ScalarValues[10] = 0.25
+            ScalarValues[11] = 0
+            ScalarValues[12] = 0.25
+            ScalarValues[13] = 1
+            ScalarValues[14] = 24
+            ScalarValues[15] = 0
+            ScalarValues[16] = 10000
+            ScalarValues[17] = 0.15
+            ScalarValues[18] = 1
+            ScalarValues[19] = 1
+            ScalarValues[20] = 0.5
+            ScalarValues[21] = 0.1
+            ScalarValues[22] = 0.5
+            ScalarValues[23] = 2
+            ScalarValues[24] = 1
+            ScalarValues[25] = 0.001333
+            ScalarValues[26] = 0.0001
+            ScalarValues[27] = 0
+            ScalarValues[28] = 1
+            ScalarValues[29] = -0.98
+            ScalarValues[30] = 4e-05
+            ScalarValues[31] = 0.00015
+            ScalarValues[32] = 0.1
+            ScalarValues[33] = 0.1
+            ScalarValues[34] = 0
+            ScalarValues[35] = 3
+            ScalarValues[36] = 1.2
+            ScalarValues[37] = 3514.35
+            ScalarValues[38] = 7
+            ScalarValues[39] = 0.004
+            ScalarValues[40] = 0
+            ScalarValues[41] = 0.3
+            ScalarValues[42] = 1000
+            ScalarValues[43] = 2
+            ScalarValues[44] = 0
+            ScalarValues[45] = 0
+            ScalarValues[46] = 3.38761
+            ScalarValues[47] = 1
+            ScalarValues[48] = 100000
+            ScalarValues[49] = 5e-05
+            ScalarValues[50] = 0
+            ScalarValues[51] = 3
+            ScalarValues[52] = 10
+            ScalarValues[53] = 4096
+            ScalarValues[54] = 1
+            ScalarValues[55] = 100
+            ScalarValues[56] = 1
+            ScalarValues[57] = 1.2
+            ScalarValues[58] = 0.15
+            ScalarValues[59] = 2
+            ScalarValues[60] = 0.2
+            ScalarValues[61] = 0.5
+            ScalarValues[62] = 0.2
+        }
+        VectorValues[5] =
+        {
+            VectorValues[0] = { R=1024, G=1024, B=1024, A=1 }
+            VectorValues[1] = { R=0, G=0, B=-200, A=1 }
+            VectorValues[2] = { R=0.02, G=0.01, B=0, A=0 }
+            VectorValues[3] = { R=0.004316, G=0.005208, B=0.003662, A=1 }
+            VectorValues[4] = { R=0.5, G=0.1, B=0, A=0 }
+        }
+        TextureValues[9] =
+        {
+            TextureValues[0] = Texture2D'/Game/Environment/Overland_Common/Objects/Trees/Textures/T_WindNoise_MSK.T_WindNoise_MSK'
+            TextureValues[1] = Texture2D'/Game/Environment/WorldEvents/WNAT/Textures/T_WE_Maze_BaseLeaves_D.T_WE_Maze_BaseLeaves_D'
+            TextureValues[2] = Texture2D'/Game/Environment/WorldEvents/WNAT/Textures/T_WE_Maze_BaseLeaves_N.T_WE_Maze_BaseLeaves_N'
+            TextureValues[3] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_black_d.base_black_d'
+            TextureValues[4] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise04_D.VFX_T_Noise04_D'
+            TextureValues[5] = Texture2D'/Game/VFX/World_Events/WhoNeedsaTournament/VFX_T_Maze_BaseLeaves_D.VFX_T_Maze_BaseLeaves_D'
+            TextureValues[6] = Texture2D'/Game/Environment/Overland_Common/Textures/T_Wind_01_MSK.T_Wind_01_MSK'
+            TextureValues[7] = Texture2D'/Game/Environment/WorldEvents/WNAT/Textures/T_WE_Maze_BaseLeaves_MRO.T_WE_Maze_BaseLeaves_MRO'
+            TextureValues[8] = Texture2D'/Game/MaterialFunctions/BaseTextures/ColorNoise/T_Rain_Noise_01_D.T_Rain_Noise_01_D'
+        }
+    }
+    ReferencedTextures[13] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/MaterialFunctions/BaseTextures/T_FlickerNoice_MSK.T_FlickerNoice_MSK'
+        ReferencedTextures[1] = Texture2D'/Game/Environment/WorldEvents/WNAT/Textures/T_WE_Maze_BaseLeaves_MRO.T_WE_Maze_BaseLeaves_MRO'
+        ReferencedTextures[2] = Texture2D'/Game/Environment/WorldEvents/WNAT/Textures/T_WE_Maze_BaseLeaves_N.T_WE_Maze_BaseLeaves_N'
+        ReferencedTextures[3] = Texture2D'/Game/MaterialFunctions/BaseTextures/ColorNoise/T_Rain_Noise_01_D.T_Rain_Noise_01_D'
+        ReferencedTextures[4] = Texture2D'/Game/Environment/Overland_Common/Textures/T_CA_RainImpacts_Swatch_01_D.T_CA_RainImpacts_Swatch_01_D'
+        ReferencedTextures[5] = Texture2D'/Game/Environment/Overland_Common/Textures/T_Wind_01_MSK.T_Wind_01_MSK'
+        ReferencedTextures[6] = Texture2D'/Game/Environment/WorldEvents/WNAT/Textures/T_WE_Maze_BaseLeaves_D.T_WE_Maze_BaseLeaves_D'
+        ReferencedTextures[7] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_black_d.base_black_d'
+        ReferencedTextures[8] = Texture2D'/Game/VFX/World_Events/WhoNeedsaTournament/VFX_T_Maze_BaseLeaves_D.VFX_T_Maze_BaseLeaves_D'
+        ReferencedTextures[9] = Texture2D'/Game/Environment/Overland_Common/Objects/Trees/Textures/T_WindNoise_MSK.T_WindNoise_MSK'
+        ReferencedTextures[11] = Texture2D'/Engine/EngineMaterials/DefaultDiffuse.DefaultDiffuse'
+        ReferencedTextures[12] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise04_D.VFX_T_Noise04_D'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[9] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/Environment/Overland_Common/Objects/Trees/Textures/T_WindNoise_MSK.T_WindNoise_MSK'
+        Name = Wind Noise
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/Environment/WorldEvents/WNAT/Textures/T_WE_Maze_BaseLeaves_D.T_WE_Maze_BaseLeaves_D'
+        Name = Diffuse
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/Environment/WorldEvents/WNAT/Textures/T_WE_Maze_BaseLeaves_N.T_WE_Maze_BaseLeaves_N'
+        Name = Normal
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_black_d.base_black_d'
+        Name = Subsurface
+        Group = None
+    }
+    CollectedTextureParameters[4] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise04_D.VFX_T_Noise04_D'
+        Name = MaskDistortionTexture
+        Group = None
+    }
+    CollectedTextureParameters[5] =
+    {
+        Texture = Texture2D'/Game/VFX/World_Events/WhoNeedsaTournament/VFX_T_Maze_BaseLeaves_D.VFX_T_Maze_BaseLeaves_D'
+        Name = Mask
+        Group = None
+    }
+    CollectedTextureParameters[6] =
+    {
+        Texture = Texture2D'/Game/Environment/Overland_Common/Textures/T_Wind_01_MSK.T_Wind_01_MSK'
+        Name = Wind_Texture
+        Group = None
+    }
+    CollectedTextureParameters[7] =
+    {
+        Texture = Texture2D'/Game/Environment/WorldEvents/WNAT/Textures/T_WE_Maze_BaseLeaves_MRO.T_WE_Maze_BaseLeaves_MRO'
+        Name = MRO
+        Group = None
+    }
+    CollectedTextureParameters[8] =
+    {
+        Texture = Texture2D'/Game/MaterialFunctions/BaseTextures/ColorNoise/T_Rain_Noise_01_D.T_Rain_Noise_01_D'
+        Name = Rain_Texture
+        Group = None
+    }
+}
+CollectedScalarParameters[63] =
+{
+    CollectedScalarParameters[0] = { Value=55, Name=Rotation-MaxAngle, Group=None }
+    CollectedScalarParameters[1] =
+    {
+        Value = 0.000333
+        Name = Sway_Mask_Length
+        Group = None
+    }
+    CollectedScalarParameters[2] = { Value=1, Name=Rain_Animation_Max, Group=None }
+    CollectedScalarParameters[3] =
+    {
+        Value = 0
+        Name = Leaf Sine Rate Along Length
+        Group = None
+    }
+    CollectedScalarParameters[4] = { Value=0.5, Name=Branch Bend Strength, Group=None }
+    CollectedScalarParameters[5] =
+    {
+        Value = 0.5
+        Name = Volumetric_Spell_Leaf_Flutter_Strength_Min
+        Group = None
+    }
+    CollectedScalarParameters[6] =
+    {
+        Value = 0.5
+        Name = Directional Masking Multiplier
+        Group = None
+    }
+    CollectedScalarParameters[7] = { Value=0.5, Name=Wind Intensity, Group=None }
+    CollectedScalarParameters[8] = { Value=0.25, Name=Rain_Speed, Group=None }
+    CollectedScalarParameters[9] = { Value=1, Name=Wind Speed, Group=None }
+    CollectedScalarParameters[10] =
+    {
+        Value = 0.25
+        Name = Wind_Texture_Transition_Point
+        Group = None
+    }
+    CollectedScalarParameters[11] = { Value=0, Name=MaskDistortionMult, Group=None }
+    CollectedScalarParameters[12] =
+    {
+        Value = 0.25
+        Name = Rain_Anim_Start_At_Storm_Intensity
+        Group = None
+    }
+    CollectedScalarParameters[13] = { Value=1, Name=Wind Speed Multiplier, Group=None }
+    CollectedScalarParameters[14] = { Value=24, Name=Max Wind Speed, Group=None }
+    CollectedScalarParameters[15] = { Value=0, Name=Hue Shift Range, Group=None }
+    CollectedScalarParameters[16] =
+    {
+        Value = 10000
+        Name = Sway_BaseMask_Softness
+        Group = None
+    }
+    CollectedScalarParameters[17] =
+    {
+        Value = 0.15
+        Name = Leaf_Flow_Gradient_Strength
+        Group = None
+    }
+    CollectedScalarParameters[18] = { Value=1, Name=Force Scaling, Group=None }
+    CollectedScalarParameters[19] = { Value=1, Name=Growth, Group=None }
+    CollectedScalarParameters[20] =
+    {
+        Value = 0.5
+        Name = Leaf Directional Masking Multiplier
+        Group = None
+    }
+    CollectedScalarParameters[21] = { Value=0.1, Name=Rain_UV_Scale, Group=None }
+    CollectedScalarParameters[22] = { Value=0.5, Name=Sway_Exponent, Group=None }
+    CollectedScalarParameters[23] =
+    {
+        Value = 2
+        Name = Sway_Sine_Exponent_Slow_Wind
+        Group = None
+    }
+    CollectedScalarParameters[24] = { Value=1, Name=NightSubsurfaceFactor, Group=None }
+    CollectedScalarParameters[25] =
+    {
+        Value = 0.001333
+        Name = Branch_Length_1/#
+        Group = None
+    }
+    CollectedScalarParameters[26] =
+    {
+        Value = 0.0001
+        Name = Sway_BaseMask_Offset
+        Group = None
+    }
+    CollectedScalarParameters[27] = { Value=0, Name=Stiffness Curve, Group=None }
+    CollectedScalarParameters[28] = { Value=1, Name=Curve_Length, Group=None }
+    CollectedScalarParameters[29] =
+    {
+        Value = -0.98
+        Name = Trunk_Masking_Threshold
+        Group = None
+    }
+    CollectedScalarParameters[30] =
+    {
+        Value = 4e-05
+        Name = Wind_Sway_Texture_Strong_Wind
+        Group = None
+    }
+    CollectedScalarParameters[31] =
+    {
+        Value = 0.00015
+        Name = Volumetric_Spell_Strength
+        Group = None
+    }
+    CollectedScalarParameters[32] = { Value=0.1, Name=debug speed, Group=None }
+    CollectedScalarParameters[33] =
+    {
+        Value = 0.1
+        Name = Hue Shift Sensitivity
+        Group = None
+    }
+    CollectedScalarParameters[34] =
+    {
+        Value = 0
+        Name = Wind_Position_Random_Offset
+        Group = None
+    }
+    CollectedScalarParameters[35] =
+    {
+        Value = 3
+        Name = Branch Animation Strength
+        Group = None
+    }
+    CollectedScalarParameters[36] =
+    {
+        Value = 1.2
+        Name = Volumetric_Spell_Leaf_Flutter_Strength_Max
+        Group = None
+    }
+    CollectedScalarParameters[37] = { Value=3514.35, Name=Rain_Time_Offset, Group=None }
+    CollectedScalarParameters[38] = { Value=7, Name=Noise Intensity, Group=None }
+    CollectedScalarParameters[39] =
+    {
+        Value = 0.004
+        Name = Average Leaf Model Diameter (WS)
+        Group = None
+    }
+    CollectedScalarParameters[40] =
+    {
+        Value = 0
+        Name = Mask_Leaf_Motion_For_Single_Material_Foliage 0/1
+        Group = None
+    }
+    CollectedScalarParameters[41] = { Value=0.3, Name=BandSize, Group=None }
+    CollectedScalarParameters[42] = { Value=1000, Name=Wind Noise Size, Group=None }
+    CollectedScalarParameters[43] =
+    {
+        Value = 2
+        Name = Branch Sine Rate Along Length
+        Group = None
+    }
+    CollectedScalarParameters[44] = { Value=0, Name=Rain_Animation_Min, Group=None }
+    CollectedScalarParameters[45] =
+    {
+        Value = 0
+        Name = DisableCameraFadeVegetation
+        Group = None
+    }
+    CollectedScalarParameters[46] =
+    {
+        Value = 3.38761
+        Name = Branch_Sine_Random_Offset
+        Group = None
+    }
+    CollectedScalarParameters[47] = { Value=1, Name=Leaf_Sine_Speed, Group=None }
+    CollectedScalarParameters[48] =
+    {
+        Value = 100000
+        Name = Rain_Anim_Storm_Intensity_Lerp_Speed
+        Group = None
+    }
+    CollectedScalarParameters[49] =
+    {
+        Value = 5e-05
+        Name = Wind_Sway_Texture_Low_Wind
+        Group = None
+    }
+    CollectedScalarParameters[50] = { Value=0, Name=Rain_Animation_Curves, Group=None }
+    CollectedScalarParameters[51] =
+    {
+        Value = 3
+        Name = Leaf/Branch_Falloff_Power
+        Group = None
+    }
+    CollectedScalarParameters[52] =
+    {
+        Value = 10
+        Name = Wind_Texture_Transition_Range
+        Group = None
+    }
+    CollectedScalarParameters[53] =
+    {
+        Value = 4096
+        Name = Unpacking_Resolution
+        Group = None
+    }
+    CollectedScalarParameters[54] =
+    {
+        Value = 1
+        Name = Sway_Sine_Exponent_Fast_Wind
+        Group = None
+    }
+    CollectedScalarParameters[55] =
+    {
+        Value = 100
+        Name = Displacement-MaxDistance
+        Group = None
+    }
+    CollectedScalarParameters[56] =
+    {
+        Value = 1
+        Name = Sway_Affects_Leaf_&_Brach_Motion
+        Group = None
+    }
+    CollectedScalarParameters[57] =
+    {
+        Value = 1.2
+        Name = Leaf_Sine_Random_Offset
+        Group = None
+    }
+    CollectedScalarParameters[58] =
+    {
+        Value = 0.15
+        Name = Branch Sine Rate Length Variation
+        Group = None
+    }
+    CollectedScalarParameters[59] =
+    {
+        Value = 2
+        Name = Branch wind Bias Amount
+        Group = None
+    }
+    CollectedScalarParameters[60] = { Value=0.2, Name=Wind Weight, Group=None }
+    CollectedScalarParameters[61] =
+    {
+        Value = 0.5
+        Name = Branch_Flow_Gradient_Strength
+        Group = None
+    }
+    CollectedScalarParameters[62] =
+    {
+        Value = 0.2
+        Name = Leaf Animation Strength
+        Group = None
+    }
+}
+CollectedVectorParameters[5] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=1024, G=1024, B=1024, A=1 }
+        Name = MaskDistortionTex Size
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0, G=0, B=-200, A=1 }
+        Name = Rain_Leaf_Displacement
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=0.02, G=0.01, B=0, A=0 }
+        Name = Object_Sway_RGB_Noise_Scale_Strengths
+        Group = None
+    }
+    CollectedVectorParameters[3] =
+    {
+        Value = { R=0.004316, G=0.005208, B=0.003662, A=1 }
+        Name = Subsurface Colour
+        Group = None
+    }
+    CollectedVectorParameters[4] =
+    {
+        Value = { R=0.5, G=0.1, B=0, A=0 }
+        Name = Pan Speed and Direction
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_WE_Maze_BaseLeaves_D
+    }
+}

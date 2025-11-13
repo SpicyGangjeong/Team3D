@@ -1,0 +1,11 @@
+Diffuse=T_Stew_01_D
+Normal=T_Stew_01_N
+SpecPower=VFX_T_SpiralFlow_FM
+Other[0]=T_Stew_01_MRO
+Other[1]=DefaultDiffuse
+Other[2]=DefaultNormal
+Other[3]=LowResBlurredNoise
+Other[4]=T_porridge_D
+Other[5]=T_porridge_MRO
+Other[6]=T_porridge_N
+Other[7]=VFX_T_Noise_Soft_D

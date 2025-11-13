@@ -1,0 +1,38 @@
+Materials[2] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Niagara/AncientMagic/ControlPoint/VFX_MI_ConjuredDragonControlPoint01GooSwirl01.VFX_MI_ConjuredDragonControlPoint01GooSwirl01'
+    Materials[1] = Material3'/Engine/EngineMaterials/WorldGridMaterial.WorldGridMaterial'
+}
+SourceModels[0] = {}
+StaticMaterials[2] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Niagara/AncientMagic/ControlPoint/VFX_MI_ConjuredDragonControlPoint01GooSwirl01.VFX_MI_ConjuredDragonControlPoint01GooSwirl01'
+        MaterialSlotName = ConjuredDragonControlPoint01GooSwirl01
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 545.113, 4.25861, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = Material3'/Engine/EngineMaterials/WorldGridMaterial.WorldGridMaterial'
+        MaterialSlotName = WorldGridMaterial
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 0, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=8.19592, Y=-8.58688, Z=2.0856 }
+    BoxExtent = { X=228.146, Y=218.527, Z=353.202 }
+    SphereRadius = 387.62
+}

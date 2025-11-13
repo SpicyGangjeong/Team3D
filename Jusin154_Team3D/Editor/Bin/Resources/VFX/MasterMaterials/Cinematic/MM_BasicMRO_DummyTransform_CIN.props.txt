@@ -1,0 +1,422 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[13] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+    ReferencedTextures[1] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_black_d.base_black_d'
+    ReferencedTextures[2] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+    ReferencedTextures[3] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+    ReferencedTextures[4] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Noise/T_GlassNoise_D.T_GlassNoise_D'
+    ReferencedTextures[5] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/T_Base011_MRO.T_Base011_MRO'
+    ReferencedTextures[6] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/T_Blank_A.T_Blank_A'
+    ReferencedTextures[7] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/WaterCaustics/T_WaterCaustics_Disorder_A.T_WaterCaustics_Disorder_A'
+    ReferencedTextures[8] = Texture2D'/Game/MaterialFunctions/BaseTextures/ColorNoise/T_ColorNoise512_D.T_ColorNoise512_D'
+    ReferencedTextures[9] = Texture2D'/Game/RiggedObjects/Environments/Forageables/Horklump/Textures/T_Forageable_Horklump_Gradient_D.T_Forageable_Horklump_Gradient_D'
+    ReferencedTextures[10] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_VerticalBeam_D.VFX_T_VerticalBeam_D'
+    ReferencedTextures[11] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise08_D.VFX_T_Noise08_D'
+    ReferencedTextures[12] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[47] =
+                {
+                    ParameterInfos[0] = { Name=Distortion Speed X }
+                    ParameterInfos[1] = { Name=Fresnel Emissive Power }
+                    ParameterInfos[2] = { Name=Saturation }
+                    ParameterInfos[3] = { Name=WipeSpeedX }
+                    ParameterInfos[4] = { Name=Angle (S) }
+                    ParameterInfos[5] = { Name=Alpha Wipe Width }
+                    ParameterInfos[6] = { Name=WipeSpeedY }
+                    ParameterInfos[7] = { Name=FlattenHeight }
+                    ParameterInfos[8] = { Name=TwistAngle }
+                    ParameterInfos[9] = { Name=ObjectFadePerinstanceOverride }
+                    ParameterInfos[10] = { Name=Speed U B (S) }
+                    ParameterInfos[11] = { Name=Distortion Speed Y }
+                    ParameterInfos[12] = { Name=TesselationMultiplier }
+                    ParameterInfos[13] = { Name=GlowWipeStrength }
+                    ParameterInfos[14] = { Name=Noise Size Scale (S) }
+                    ParameterInfos[15] = { Name=Alpha Wipe Min }
+                    ParameterInfos[16] = { Name=Fresnel Emissive Strength }
+                    ParameterInfos[17] = { Name=Metallic Adjuster }
+                    ParameterInfos[18] = { Name=Noise Speed Scale (S) }
+                    ParameterInfos[19] = { Name=WipePercent }
+                    ParameterInfos[20] = { Name=Roughness Adjuster }
+                    ParameterInfos[21] = { Name=WipeInAlpha }
+                    ParameterInfos[22] = { Name=LimitB }
+                    ParameterInfos[23] = { Name=AO Adjuster }
+                    ParameterInfos[24] = { Name=NoiseStrength }
+                    ParameterInfos[25] = { Name=LimitA }
+                    ParameterInfos[26] = { Name=OffsetCurves }
+                    ParameterInfos[27] = { Name=Speed V (S) }
+                    ParameterInfos[28] = { Name=Distortion Strength }
+                    ParameterInfos[29] = { Name=Color_Multiplier }
+                    ParameterInfos[30] = { Name=Diffuse Brightness }
+                    ParameterInfos[31] = { Name=ObjectFadeOpacity }
+                    ParameterInfos[32] = { Name=Flatten }
+                    ParameterInfos[33] = { Name=Tiling U B (S) }
+                    ParameterInfos[34] = { Name=Width }
+                    ParameterInfos[35] = { Name=Speed V B (S) }
+                    ParameterInfos[36] = { Name=DisplacementPercent }
+                    ParameterInfos[37] = { Name=Input High (S) }
+                    ParameterInfos[38] = { Name=Normal Height }
+                    ParameterInfos[39] = { Name=Speed U (S) }
+                    ParameterInfos[40] = { Name=Tiling U (S) }
+                    ParameterInfos[41] = { Name=Tiling V (S) }
+                    ParameterInfos[42] = { Name=ScalePercent }
+                    ParameterInfos[43] = { Name=Emissive Brightness }
+                    ParameterInfos[44] = { Name=UV scale }
+                    ParameterInfos[45] = { Name=Distortion Tiling }
+                    ParameterInfos[46] = { Name=Tiling V B (S) }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[9] =
+                {
+                    ParameterInfos[0] = { Name=Emissive Fresnel Color }
+                    ParameterInfos[1] = { Name=ColorSize }
+                    ParameterInfos[2] = { Name=Axis }
+                    ParameterInfos[3] = { Name=Axis (V3) }
+                    ParameterInfos[4] = { Name=PivotPoint }
+                    ParameterInfos[5] = { Name=Scaling }
+                    ParameterInfos[6] = { Name=Color }
+                    ParameterInfos[7] = { Name=BaseColor_Mult }
+                    ParameterInfos[8] = { Name=CenterOffset }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[8] =
+                {
+                    ParameterInfos[0] = { Name=ScrollingWipeTexture }
+                    ParameterInfos[1] = { Name=ScrollingMapA }
+                    ParameterInfos[2] = { Name=Normal Map }
+                    ParameterInfos[3] = { Name=ScrollingMapB }
+                    ParameterInfos[4] = { Name=Diffuse Map }
+                    ParameterInfos[5] = { Name=MRO Map }
+                    ParameterInfos[6] = { Name=Distortion Pattern }
+                    ParameterInfos[7] = { Name=Emissive Map }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[47] =
+        {
+            ScalarValues[0] = 0.05
+            ScalarValues[1] = 1
+            ScalarValues[2] = 1
+            ScalarValues[3] = 0.1
+            ScalarValues[4] = 0.830139
+            ScalarValues[5] = 0.095238
+            ScalarValues[6] = 0
+            ScalarValues[7] = 0
+            ScalarValues[8] = 11.1641
+            ScalarValues[9] = 0
+            ScalarValues[10] = -0.1
+            ScalarValues[11] = 0.01
+            ScalarValues[12] = 0.5
+            ScalarValues[13] = 10000
+            ScalarValues[14] = 1
+            ScalarValues[15] = 0.342856
+            ScalarValues[16] = 0
+            ScalarValues[17] = 0
+            ScalarValues[18] = 1.47989
+            ScalarValues[19] = 0
+            ScalarValues[20] = 0
+            ScalarValues[21] = 0
+            ScalarValues[22] = 0.8
+            ScalarValues[23] = 0
+            ScalarValues[24] = 0.234921
+            ScalarValues[25] = 0.3
+            ScalarValues[26] = 9
+            ScalarValues[27] = 0.1
+            ScalarValues[28] = 0.5
+            ScalarValues[29] = 1
+            ScalarValues[30] = 1
+            ScalarValues[31] = 1
+            ScalarValues[32] = 0
+            ScalarValues[33] = 1
+            ScalarValues[34] = 800
+            ScalarValues[35] = -0.1
+            ScalarValues[36] = 0
+            ScalarValues[37] = 800
+            ScalarValues[38] = 1
+            ScalarValues[39] = 0.1
+            ScalarValues[40] = 1
+            ScalarValues[41] = 1
+            ScalarValues[42] = 0.771429
+            ScalarValues[43] = 0
+            ScalarValues[44] = 1
+            ScalarValues[45] = 2
+            ScalarValues[46] = 1
+        }
+        VectorValues[9] =
+        {
+            VectorValues[0] = { R=0, G=0, B=0, A=1 }
+            VectorValues[1] = { R=128, G=128, B=128, A=1 }
+            VectorValues[2] = { R=0, G=0, B=1, A=1 }
+            VectorValues[3] = { R=0, G=0, B=1, A=0 }
+            VectorValues[4] = { R=0, G=50, B=0, A=1 }
+            VectorValues[5] = { R=1, G=1, B=0.803175, A=1 }
+            VectorValues[6] = { R=1, G=1, B=1, A=1 }
+            VectorValues[7] = { R=1, G=1, B=1, A=1 }
+            VectorValues[8] = { R=0, G=0, B=-94.9085, A=1 }
+        }
+        TextureValues[8] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_VerticalBeam_D.VFX_T_VerticalBeam_D'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise08_D.VFX_T_Noise08_D'
+            TextureValues[2] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+            TextureValues[3] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise08_D.VFX_T_Noise08_D'
+            TextureValues[4] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+            TextureValues[5] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/T_Base011_MRO.T_Base011_MRO'
+            TextureValues[6] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Noise/T_GlassNoise_D.T_GlassNoise_D'
+            TextureValues[7] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_black_d.base_black_d'
+        }
+    }
+    ReferencedTextures[15] =
+    {
+        ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+        ReferencedTextures[1] = Texture2D'/Game/RiggedObjects/Environments/Forageables/Horklump/Textures/T_Forageable_Horklump_Gradient_D.T_Forageable_Horklump_Gradient_D'
+        ReferencedTextures[2] = Texture2D'/Game/MaterialFunctions/BaseTextures/ColorNoise/T_ColorNoise512_D.T_ColorNoise512_D'
+        ReferencedTextures[3] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/T_Blank_A.T_Blank_A'
+        ReferencedTextures[4] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/T_Base011_MRO.T_Base011_MRO'
+        ReferencedTextures[5] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+        ReferencedTextures[6] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+        ReferencedTextures[7] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_black_d.base_black_d'
+        ReferencedTextures[9] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/WaterCaustics/T_WaterCaustics_Disorder_A.T_WaterCaustics_Disorder_A'
+        ReferencedTextures[10] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Noise/T_GlassNoise_D.T_GlassNoise_D'
+        ReferencedTextures[11] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise08_D.VFX_T_Noise08_D'
+        ReferencedTextures[12] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_VerticalBeam_D.VFX_T_VerticalBeam_D'
+        ReferencedTextures[13] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+        ReferencedTextures[14] = Texture2D'/Game/VFX/CurveAtlas/VFX_CA_CurveAtlasMaterialAnims.VFX_CA_CurveAtlasMaterialAnims'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[8] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_VerticalBeam_D.VFX_T_VerticalBeam_D'
+        Name = ScrollingWipeTexture
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise08_D.VFX_T_Noise08_D'
+        Name = ScrollingMapA
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+        Name = Normal Map
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise08_D.VFX_T_Noise08_D'
+        Name = ScrollingMapB
+        Group = None
+    }
+    CollectedTextureParameters[4] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+        Name = Diffuse Map
+        Group = None
+    }
+    CollectedTextureParameters[5] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/T_Base011_MRO.T_Base011_MRO'
+        Name = MRO Map
+        Group = None
+    }
+    CollectedTextureParameters[6] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Noise/T_GlassNoise_D.T_GlassNoise_D'
+        Name = Distortion Pattern
+        Group = None
+    }
+    CollectedTextureParameters[7] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_black_d.base_black_d'
+        Name = Emissive Map
+        Group = None
+    }
+}
+CollectedScalarParameters[47] =
+{
+    CollectedScalarParameters[0] = { Value=0.05, Name=Distortion Speed X, Group=None }
+    CollectedScalarParameters[1] = { Value=1, Name=Fresnel Emissive Power, Group=None }
+    CollectedScalarParameters[2] = { Value=1, Name=Saturation, Group=None }
+    CollectedScalarParameters[3] = { Value=0.1, Name=WipeSpeedX, Group=None }
+    CollectedScalarParameters[4] = { Value=0.830139, Name=Angle (S), Group=None }
+    CollectedScalarParameters[5] =
+    {
+        Value = 0.095238
+        Name = Alpha Wipe Width
+        Group = None
+    }
+    CollectedScalarParameters[6] = { Value=0, Name=WipeSpeedY, Group=None }
+    CollectedScalarParameters[7] = { Value=0, Name=FlattenHeight, Group=None }
+    CollectedScalarParameters[8] = { Value=11.1641, Name=TwistAngle, Group=None }
+    CollectedScalarParameters[9] =
+    {
+        Value = 0
+        Name = ObjectFadePerinstanceOverride
+        Group = None
+    }
+    CollectedScalarParameters[10] = { Value=-0.1, Name=Speed U B (S), Group=None }
+    CollectedScalarParameters[11] = { Value=0.01, Name=Distortion Speed Y, Group=None }
+    CollectedScalarParameters[12] =
+    {
+        Value = 0.5
+        Name = TesselationMultiplier
+        Group = None
+    }
+    CollectedScalarParameters[13] = { Value=10000, Name=GlowWipeStrength, Group=None }
+    CollectedScalarParameters[14] = { Value=1, Name=Noise Size Scale (S), Group=None }
+    CollectedScalarParameters[15] = { Value=0.342856, Name=Alpha Wipe Min, Group=None }
+    CollectedScalarParameters[16] =
+    {
+        Value = 0
+        Name = Fresnel Emissive Strength
+        Group = None
+    }
+    CollectedScalarParameters[17] = { Value=0, Name=Metallic Adjuster, Group=None }
+    CollectedScalarParameters[18] =
+    {
+        Value = 1.47989
+        Name = Noise Speed Scale (S)
+        Group = None
+    }
+    CollectedScalarParameters[19] = { Value=0, Name=WipePercent, Group=None }
+    CollectedScalarParameters[20] = { Value=0, Name=Roughness Adjuster, Group=None }
+    CollectedScalarParameters[21] = { Value=0, Name=WipeInAlpha, Group=None }
+    CollectedScalarParameters[22] = { Value=0.8, Name=LimitB, Group=None }
+    CollectedScalarParameters[23] = { Value=0, Name=AO Adjuster, Group=None }
+    CollectedScalarParameters[24] = { Value=0.234921, Name=NoiseStrength, Group=None }
+    CollectedScalarParameters[25] = { Value=0.3, Name=LimitA, Group=None }
+    CollectedScalarParameters[26] = { Value=9, Name=OffsetCurves, Group=None }
+    CollectedScalarParameters[27] = { Value=0.1, Name=Speed V (S), Group=None }
+    CollectedScalarParameters[28] = { Value=0.5, Name=Distortion Strength, Group=None }
+    CollectedScalarParameters[29] = { Value=1, Name=Color_Multiplier, Group=None }
+    CollectedScalarParameters[30] = { Value=1, Name=Diffuse Brightness, Group=None }
+    CollectedScalarParameters[31] = { Value=1, Name=ObjectFadeOpacity, Group=None }
+    CollectedScalarParameters[32] = { Value=0, Name=Flatten, Group=None }
+    CollectedScalarParameters[33] = { Value=1, Name=Tiling U B (S), Group=None }
+    CollectedScalarParameters[34] = { Value=800, Name=Width, Group=None }
+    CollectedScalarParameters[35] = { Value=-0.1, Name=Speed V B (S), Group=None }
+    CollectedScalarParameters[36] = { Value=0, Name=DisplacementPercent, Group=None }
+    CollectedScalarParameters[37] = { Value=800, Name=Input High (S), Group=None }
+    CollectedScalarParameters[38] = { Value=1, Name=Normal Height, Group=None }
+    CollectedScalarParameters[39] = { Value=0.1, Name=Speed U (S), Group=None }
+    CollectedScalarParameters[40] = { Value=1, Name=Tiling U (S), Group=None }
+    CollectedScalarParameters[41] = { Value=1, Name=Tiling V (S), Group=None }
+    CollectedScalarParameters[42] = { Value=0.771429, Name=ScalePercent, Group=None }
+    CollectedScalarParameters[43] = { Value=0, Name=Emissive Brightness, Group=None }
+    CollectedScalarParameters[44] = { Value=1, Name=UV scale, Group=None }
+    CollectedScalarParameters[45] = { Value=2, Name=Distortion Tiling, Group=None }
+    CollectedScalarParameters[46] = { Value=1, Name=Tiling V B (S), Group=None }
+}
+CollectedVectorParameters[9] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = Emissive Fresnel Color
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=128, G=128, B=128, A=1 }
+        Name = ColorSize
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=0, G=0, B=1, A=1 }
+        Name = Axis
+        Group = None
+    }
+    CollectedVectorParameters[3] =
+    {
+        Value = { R=0, G=0, B=1, A=0 }
+        Name = Axis (V3)
+        Group = None
+    }
+    CollectedVectorParameters[4] =
+    {
+        Value = { R=0, G=50, B=0, A=1 }
+        Name = PivotPoint
+        Group = None
+    }
+    CollectedVectorParameters[5] =
+    {
+        Value = { R=1, G=1, B=0.803175, A=1 }
+        Name = Scaling
+        Group = None
+    }
+    CollectedVectorParameters[6] =
+    {
+        Value = { R=1, G=1, B=1, A=1 }
+        Name = Color
+        Group = None
+    }
+    CollectedVectorParameters[7] =
+    {
+        Value = { R=1, G=1, B=1, A=1 }
+        Name = BaseColor_Mult
+        Group = None
+    }
+    CollectedVectorParameters[8] =
+    {
+        Value = { R=0, G=0, B=-94.9085, A=1 }
+        Name = CenterOffset
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[4] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = base_black_d
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = base_flat_n
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = base_white_d
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Base011_MRO
+    }
+}

@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Niagara/MechanicsFX/AttackIndicatorFX/VFX_MI_AttackIndicator_Mesh_Energy.VFX_MI_AttackIndicator_Mesh_Energy'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Niagara/MechanicsFX/AttackIndicatorFX/VFX_MI_AttackIndicator_Mesh_Energy.VFX_MI_AttackIndicator_Mesh_Energy'
+        MaterialSlotName = lambert1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 22.6132, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=26.7872, Y=12.1374, Z=-1.8888 }
+    BoxExtent = { X=33.5976, Y=23.4383, Z=24.2753 }
+    SphereRadius = 37.5023
+}

@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Mechanics/Broom/Rings/MI_BroomFlight_Ring_Appear.MI_BroomFlight_Ring_Appear'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Mechanics/Broom/Rings/MI_BroomFlight_Ring_Appear.MI_BroomFlight_Ring_Appear'
+        MaterialSlotName = MI_BRR_RaceGate_StartEnd
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 1484.58, 4304.06, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=4.53711, Y=-2.93097, Z=-15.0499 }
+    BoxExtent = { X=67.1129, Y=553.548, Z=539.039 }
+    SphereRadius = 580.408
+}

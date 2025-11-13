@@ -1,0 +1,148 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[4] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Meshes/Intro/VFX_T_Portkey_Case_Glow_BandsPulse_2_D.VFX_T_Portkey_Case_Glow_BandsPulse_2_D'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseCaustics02_D.VFX_T_NoiseCaustics02_D'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseGreypack01_D.VFX_T_NoiseGreypack01_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[9] =
+                {
+                    ParameterInfos[0] = { Name=Noise2_Horo_Speed }
+                    ParameterInfos[1] = { Name=Noise1_Vert_Speed }
+                    ParameterInfos[2] = { Name=Noise2_Vert_Speed }
+                    ParameterInfos[3] = { Name=LightingPanner }
+                    ParameterInfos[4] = { Name=PulsePosition }
+                    ParameterInfos[5] = { Name=NoiseStrenght }
+                    ParameterInfos[6] = { Name=NoiseSizeMultiplyer }
+                    ParameterInfos[7] = { Name=Noise1_Horo_Speed }
+                    ParameterInfos[8] = { Name=PulseAlphaStrenght }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=GlowColor }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[3] =
+                {
+                    ParameterInfos[0] = { Name=Base Texture }
+                    ParameterInfos[1] = { Name=dsgfdfgdf }
+                    ParameterInfos[2] = { Name=Texture Noise }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[9] =
+        {
+            ScalarValues[0] = -0.07
+            ScalarValues[1] = 0.05
+            ScalarValues[2] = -0.008
+            ScalarValues[3] = -0.15
+            ScalarValues[4] = 0
+            ScalarValues[5] = 0.15
+            ScalarValues[6] = 1
+            ScalarValues[7] = 0.015
+            ScalarValues[8] = 500
+        }
+        VectorValues[1] =
+        {
+            VectorValues[0] = { R=0.162029, G=0.545725, B=1, A=1 }
+        }
+        TextureValues[3] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Meshes/Intro/VFX_T_Portkey_Case_Glow_BandsPulse_2_D.VFX_T_Portkey_Case_Glow_BandsPulse_2_D'
+            TextureValues[1] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+            TextureValues[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseCaustics02_D.VFX_T_NoiseCaustics02_D'
+        }
+    }
+    ReferencedTextures[4] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseGreypack01_D.VFX_T_NoiseGreypack01_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Meshes/Intro/VFX_T_Portkey_Case_Glow_BandsPulse_2_D.VFX_T_Portkey_Case_Glow_BandsPulse_2_D'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseCaustics02_D.VFX_T_NoiseCaustics02_D'
+        ReferencedTextures[3] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+    }
+}
+BlendMode = BLEND_Additive (3)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[3] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Meshes/Intro/VFX_T_Portkey_Case_Glow_BandsPulse_2_D.VFX_T_Portkey_Case_Glow_BandsPulse_2_D'
+        Name = Base Texture
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+        Name = dsgfdfgdf
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseCaustics02_D.VFX_T_NoiseCaustics02_D'
+        Name = Texture Noise
+        Group = None
+    }
+}
+CollectedScalarParameters[9] =
+{
+    CollectedScalarParameters[0] = { Value=-0.07, Name=Noise2_Horo_Speed, Group=None }
+    CollectedScalarParameters[1] = { Value=0.05, Name=Noise1_Vert_Speed, Group=None }
+    CollectedScalarParameters[2] = { Value=-0.008, Name=Noise2_Vert_Speed, Group=None }
+    CollectedScalarParameters[3] = { Value=-0.15, Name=LightingPanner, Group=None }
+    CollectedScalarParameters[4] = { Value=0, Name=PulsePosition, Group=None }
+    CollectedScalarParameters[5] = { Value=0.15, Name=NoiseStrenght, Group=None }
+    CollectedScalarParameters[6] = { Value=1, Name=NoiseSizeMultiplyer, Group=None }
+    CollectedScalarParameters[7] = { Value=0.015, Name=Noise1_Horo_Speed, Group=None }
+    CollectedScalarParameters[8] = { Value=500, Name=PulseAlphaStrenght, Group=None }
+}
+CollectedVectorParameters[1] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0.162029, G=0.545725, B=1, A=1 }
+        Name = GlowColor
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[2] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_NoiseGreypack01_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Portkey_Case_Glow_BandsPulse_2_D
+    }
+}

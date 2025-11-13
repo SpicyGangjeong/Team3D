@@ -1,0 +1,38 @@
+Materials[2] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Enemies/HogwartsProtector/DestructionPieces/VFX_MI_GOL_CombatGruntA_Dissolve.VFX_MI_GOL_CombatGruntA_Dissolve'
+    Materials[1] = MaterialInstanceConstant'/Game/VFX/Enemies/HogwartsProtector/DestructionPieces/VFX_MI_GOL_CombatGruntB_Dissolve.VFX_MI_GOL_CombatGruntB_Dissolve'
+}
+SourceModels[0] = {}
+StaticMaterials[2] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Enemies/HogwartsProtector/DestructionPieces/VFX_MI_GOL_CombatGruntA_Dissolve.VFX_MI_GOL_CombatGruntA_Dissolve'
+        MaterialSlotName = GruntA
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 366.611, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Enemies/HogwartsProtector/DestructionPieces/VFX_MI_GOL_CombatGruntB_Dissolve.VFX_MI_GOL_CombatGruntB_Dissolve'
+        MaterialSlotName = GruntB
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 371.127, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-105.533, Y=18.2243, Z=168.827 }
+    BoxExtent = { X=14.8834, Y=16.2692, Z=27.7896 }
+    SphereRadius = 30.0252
+}

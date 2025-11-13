@@ -1,0 +1,209 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[4] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Decals/VFX_T_LavaDecal_D.VFX_T_LavaDecal_D'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Decals/VFX_T_LavaDecal_MRHE_D.VFX_T_LavaDecal_MRHE_D'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Decals/VFX_T_LavaDecal_N.VFX_T_LavaDecal_N'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/TEST/T_VolcanicAshall_DSP.T_VolcanicAshall_DSP'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[14] =
+                {
+                    ParameterInfos[0] = { Name=Alpha Fade End Time }
+                    ParameterInfos[1] = { Name=Emissive Fade Start Time }
+                    ParameterInfos[2] = { Name=Rotation }
+                    ParameterInfos[3] = { Name=Emissive Fade End Time }
+                    ParameterInfos[4] = { Name=Alpha Fade Start Time }
+                    ParameterInfos[5] = { Name=EmissiveOpacity }
+                    ParameterInfos[6] = { Name=Emissive Mask Tiling U }
+                    ParameterInfos[7] = { Name=Emissive Mask Speed U }
+                    ParameterInfos[8] = { Name=Alpha Fade Curve }
+                    ParameterInfos[9] = { Name=Emissive Fade Curve }
+                    ParameterInfos[10] = { Name=Normal Intensity }
+                    ParameterInfos[11] = { Name=Opacity }
+                    ParameterInfos[12] = { Name=Emissive Mask Speed V }
+                    ParameterInfos[13] = { Name=Emissive Mask Tiling V }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=EmissiveColor }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[4] =
+                {
+                    ParameterInfos[0] = { Name=MRHE Texture }
+                    ParameterInfos[1] = { Name=Normal }
+                    ParameterInfos[2] = { Name=EmissiveMask }
+                    ParameterInfos[3] = { Name=BaseColor }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[14] =
+        {
+            ScalarValues[0] = 1
+            ScalarValues[1] = 0.285714
+            ScalarValues[2] = 0
+            ScalarValues[3] = 0.571429
+            ScalarValues[4] = 0.495237
+            ScalarValues[5] = 1
+            ScalarValues[6] = 2
+            ScalarValues[7] = 0.047619
+            ScalarValues[8] = 0
+            ScalarValues[9] = 1
+            ScalarValues[10] = 2.21296
+            ScalarValues[11] = 1
+            ScalarValues[12] = 0.057143
+            ScalarValues[13] = 2
+        }
+        VectorValues[1] =
+        {
+            VectorValues[0] = { R=20, G=2.73574, B=0, A=1 }
+        }
+        TextureValues[4] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Decals/VFX_T_LavaDecal_MRHE_D.VFX_T_LavaDecal_MRHE_D'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/Decals/VFX_T_LavaDecal_N.VFX_T_LavaDecal_N'
+            TextureValues[2] = Texture2D'/Game/VFX/Textures/TEST/T_VolcanicAshall_DSP.T_VolcanicAshall_DSP'
+            TextureValues[3] = Texture2D'/Game/VFX/Textures/Decals/VFX_T_LavaDecal_D.VFX_T_LavaDecal_D'
+        }
+    }
+    ReferencedTextures[5] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Decals/VFX_T_LavaDecal_D.VFX_T_LavaDecal_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Decals/VFX_T_LavaDecal_MRHE_D.VFX_T_LavaDecal_MRHE_D'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Decals/VFX_T_LavaDecal_N.VFX_T_LavaDecal_N'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/TEST/T_VolcanicAshall_DSP.T_VolcanicAshall_DSP'
+        ReferencedTextures[4] = Texture2D'/Game/VFX/CurveAtlas/VFX_CA_CurveAtlasMaterialAnims.VFX_CA_CurveAtlasMaterialAnims'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[4] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Decals/VFX_T_LavaDecal_MRHE_D.VFX_T_LavaDecal_MRHE_D'
+        Name = MRHE Texture
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Decals/VFX_T_LavaDecal_N.VFX_T_LavaDecal_N'
+        Name = Normal
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/TEST/T_VolcanicAshall_DSP.T_VolcanicAshall_DSP'
+        Name = EmissiveMask
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Decals/VFX_T_LavaDecal_D.VFX_T_LavaDecal_D'
+        Name = BaseColor
+        Group = None
+    }
+}
+CollectedScalarParameters[14] =
+{
+    CollectedScalarParameters[0] = { Value=1, Name=Alpha Fade End Time, Group=None }
+    CollectedScalarParameters[1] =
+    {
+        Value = 0.285714
+        Name = Emissive Fade Start Time
+        Group = None
+    }
+    CollectedScalarParameters[2] = { Value=0, Name=Rotation, Group=None }
+    CollectedScalarParameters[3] =
+    {
+        Value = 0.571429
+        Name = Emissive Fade End Time
+        Group = None
+    }
+    CollectedScalarParameters[4] =
+    {
+        Value = 0.495237
+        Name = Alpha Fade Start Time
+        Group = None
+    }
+    CollectedScalarParameters[5] = { Value=1, Name=EmissiveOpacity, Group=None }
+    CollectedScalarParameters[6] = { Value=2, Name=Emissive Mask Tiling U, Group=None }
+    CollectedScalarParameters[7] =
+    {
+        Value = 0.047619
+        Name = Emissive Mask Speed U
+        Group = None
+    }
+    CollectedScalarParameters[8] = { Value=0, Name=Alpha Fade Curve, Group=None }
+    CollectedScalarParameters[9] = { Value=1, Name=Emissive Fade Curve, Group=None }
+    CollectedScalarParameters[10] = { Value=2.21296, Name=Normal Intensity, Group=None }
+    CollectedScalarParameters[11] = { Value=1, Name=Opacity, Group=None }
+    CollectedScalarParameters[12] =
+    {
+        Value = 0.057143
+        Name = Emissive Mask Speed V
+        Group = None
+    }
+    CollectedScalarParameters[13] = { Value=2, Name=Emissive Mask Tiling V, Group=None }
+}
+CollectedVectorParameters[1] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=20, G=2.73574, B=0, A=1 }
+        Name = EmissiveColor
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[4] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 2
+        UVChannelIndex = 0
+        TextureName = T_VolcanicAshall_DSP
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_LavaDecal_D
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_LavaDecal_MRHE_D
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_LavaDecal_N
+    }
+}

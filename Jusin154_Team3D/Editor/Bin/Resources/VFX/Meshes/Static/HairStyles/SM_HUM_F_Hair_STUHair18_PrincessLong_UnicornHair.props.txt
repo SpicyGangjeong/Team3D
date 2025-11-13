@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/RiggedObjects/Characters/Human/Hair/Hair_F/STUHair18/Materials/MI_HUM_F_Hair_STUHair18_Hellabore.MI_HUM_F_Hair_STUHair18_Hellabore'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/RiggedObjects/Characters/Human/Hair/Hair_F/STUHair18/Materials/MI_HUM_F_Hair_STUHair18_Hellabore.MI_HUM_F_Hair_STUHair18_Hellabore'
+        MaterialSlotName = MI_HUM_F_Hair_StuHair18_PrincessLong
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 43.8557, 36.7189, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-0.0767765, Y=-4.40838, Z=-2.89463 }
+    BoxExtent = { X=15.6565, Y=14.8405, Z=19.9299 }
+    SphereRadius = 25.4945
+}

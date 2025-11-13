@@ -1,0 +1,117 @@
+TwoSided = true
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[4] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_GradientMask_D.VFX_T_GradientMask_D'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Marble_01R_D.VFX_T_Marble_01R_D'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/VFX_T_LoomThread_03_D.VFX_T_LoomThread_03_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[9] =
+                {
+                    ParameterInfos[0] = { Name=DepthFade }
+                    ParameterInfos[1] = { Name=WPO Speed U }
+                    ParameterInfos[2] = { Name=WPO Tiling U }
+                    ParameterInfos[3] = { Name=FresnelPower }
+                    ParameterInfos[4] = { Name=EmissiveDaytimeBoost }
+                    ParameterInfos[5] = { Name=EdgeMaskExp }
+                    ParameterInfos[6] = { Name=WPO Tiling V }
+                    ParameterInfos[7] = { Name=WPO Speed V }
+                    ParameterInfos[8] = { Name=WPO Strength }
+                }
+            }
+            Entries[1] = { ParameterInfos[0]={} }
+            Entries[2] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=ScrollTexture }
+                    ParameterInfos[1] = { Name=WPO Texture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[9] =
+        {
+            ScalarValues[0] = 20
+            ScalarValues[1] = 0.071666
+            ScalarValues[2] = 0.25
+            ScalarValues[3] = 2
+            ScalarValues[4] = 0
+            ScalarValues[5] = 2
+            ScalarValues[6] = 0.873397
+            ScalarValues[7] = -0.323809
+            ScalarValues[8] = 16
+        }
+        VectorValues[0] = {}
+        TextureValues[2] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/VFX_T_LoomThread_03_D.VFX_T_LoomThread_03_D'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+        }
+    }
+    ReferencedTextures[4] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_GradientMask_D.VFX_T_GradientMask_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Marble_01R_D.VFX_T_Marble_01R_D'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/VFX_T_LoomThread_03_D.VFX_T_LoomThread_03_D'
+    }
+}
+BlendMode = BLEND_Additive (3)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[2] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_LoomThread_03_D.VFX_T_LoomThread_03_D'
+        Name = ScrollTexture
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+        Name = WPO Texture
+        Group = None
+    }
+}
+CollectedScalarParameters[9] =
+{
+    CollectedScalarParameters[0] = { Value=20, Name=DepthFade, Group=None }
+    CollectedScalarParameters[1] = { Value=0.071666, Name=WPO Speed U, Group=None }
+    CollectedScalarParameters[2] = { Value=0.25, Name=WPO Tiling U, Group=None }
+    CollectedScalarParameters[3] = { Value=2, Name=FresnelPower, Group=None }
+    CollectedScalarParameters[4] = { Value=0, Name=EmissiveDaytimeBoost, Group=None }
+    CollectedScalarParameters[5] = { Value=2, Name=EdgeMaskExp, Group=None }
+    CollectedScalarParameters[6] = { Value=0.873397, Name=WPO Tiling V, Group=None }
+    CollectedScalarParameters[7] = { Value=-0.323809, Name=WPO Speed V, Group=None }
+    CollectedScalarParameters[8] = { Value=16, Name=WPO Strength, Group=None }
+}
+CollectedVectorParameters[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_LoomThread_03_D
+    }
+}

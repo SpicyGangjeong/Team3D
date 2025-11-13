@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Materials/Mat_Instance/MI_GB_PinkHot.MI_GB_PinkHot'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Materials/Mat_Instance/MI_GB_PinkHot.MI_GB_PinkHot'
+        MaterialSlotName = VFX_M_XYZAxis1m_01
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 609.848, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=5.45441, Y=2.60364, Z=52.9535 }
+    BoxExtent = { X=55.4544, Y=52.6036, Z=57.9423 }
+    SphereRadius = 92.9861
+}

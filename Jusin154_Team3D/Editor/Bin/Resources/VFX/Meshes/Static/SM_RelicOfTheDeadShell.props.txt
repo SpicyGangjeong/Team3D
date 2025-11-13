@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Environment/Universal/Interactables/Materials/MI_RelicOfTheDead_PyramidChest.MI_RelicOfTheDead_PyramidChest'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Universal/Interactables/Materials/MI_RelicOfTheDead_PyramidChest.MI_RelicOfTheDead_PyramidChest'
+        MaterialSlotName = MI_RelicOfTheDead_PyramidChest
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 23.5488, 0, 0, 0 }
+        }
+    }
+}
+Sockets[1] = {  }
+ExtendedBounds =
+{
+    Origin = { X=0, Y=0, Z=6.00854 }
+    BoxExtent = { X=8.14614, Y=8.14614, Z=6.22757 }
+    SphereRadius = 9.28478
+}

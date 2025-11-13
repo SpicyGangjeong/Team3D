@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Environment/Overland_Common/Materials/Waterfalls/MI_waterfall_Intro_Cliffside.MI_waterfall_Intro_Cliffside'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Overland_Common/Materials/Waterfalls/MI_waterfall_Intro_Cliffside.MI_waterfall_Intro_Cliffside'
+        MaterialSlotName = lambert1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 2795.9, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-1317.65, Y=716.891, Z=-1031.85 }
+    BoxExtent = { X=493.249, Y=1431.07, Z=5602.99 }
+    SphereRadius = 5795.02
+}

@@ -1,0 +1,293 @@
+TwoSided = true
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[4] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_Circle_LerpMask_D.VFX_T_Circle_LerpMask_D'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise04_D.VFX_T_Noise04_D'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/VFX_T_Wisps_2_D.VFX_T_Wisps_2_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[34] =
+                {
+                    ParameterInfos[0] = { Name=FresnelExponent }
+                    ParameterInfos[1] = { Name=Mask Distortion Edge }
+                    ParameterInfos[2] = { Name=WPOTexturePanY }
+                    ParameterInfos[3] = { Name=InvertColors }
+                    ParameterInfos[4] = { Name=Texture2TileX }
+                    ParameterInfos[5] = { Name=DistortionPanX }
+                    ParameterInfos[6] = { Name=DistortionStrengthMin }
+                    ParameterInfos[7] = { Name=Alpha }
+                    ParameterInfos[8] = { Name=WPO }
+                    ParameterInfos[9] = { Name=MaskStrength }
+                    ParameterInfos[10] = { Name=Texture2PanY }
+                    ParameterInfos[11] = { Name=DistortionStrengthMax }
+                    ParameterInfos[12] = { Name=DistortionTileY }
+                    ParameterInfos[13] = { Name=Texture2PanX }
+                    ParameterInfos[14] = { Name=Near Camera Fade Start Offset }
+                    ParameterInfos[15] = { Name=FresnelMultiply }
+                    ParameterInfos[16] = { Name=FadeDistance }
+                    ParameterInfos[17] = { Name=TexturePanX }
+                    ParameterInfos[18] = { Name=TextureTileX }
+                    ParameterInfos[19] = { Name=VisInRedWorld }
+                    ParameterInfos[20] = { Name=WPOTexturePanX }
+                    ParameterInfos[21] = { Name=TextureTileY }
+                    ParameterInfos[22] = { Name=Test Dark }
+                    ParameterInfos[23] = { Name=MaskPower }
+                    ParameterInfos[24] = { Name=Near Camera Fade Distance }
+                    ParameterInfos[25] = { Name=HideOnOppositeSide }
+                    ParameterInfos[26] = { Name=Sharpen (0-1) (S) }
+                    ParameterInfos[27] = { Name=WPOTextureTileX }
+                    ParameterInfos[28] = { Name=Test Bright }
+                    ParameterInfos[29] = { Name=Texture2TileY }
+                    ParameterInfos[30] = { Name=DistortionTileX }
+                    ParameterInfos[31] = { Name=DistortionPanY }
+                    ParameterInfos[32] = { Name=WPOTextureTileY }
+                    ParameterInfos[33] = { Name=TexturePanY }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[6] =
+                {
+                    ParameterInfos[0] = { Name=Remap BaseColor Max Blue }
+                    ParameterInfos[1] = { Name=MaskChannel }
+                    ParameterInfos[2] = { Name=Remap BaseColor Min Blue }
+                    ParameterInfos[3] = { Name=AlphaChannel }
+                    ParameterInfos[4] = { Name=Remap BaseColor Max Red }
+                    ParameterInfos[5] = { Name=Remap BaseColor Min Red }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[5] =
+                {
+                    ParameterInfos[0] = { Name=WPOTexture }
+                    ParameterInfos[1] = { Name=Texture2 }
+                    ParameterInfos[2] = { Name=Mask }
+                    ParameterInfos[3] = { Name=Texture }
+                    ParameterInfos[4] = { Name=DistortionTexture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[34] =
+        {
+            ScalarValues[0] = 0.5
+            ScalarValues[1] = 0
+            ScalarValues[2] = 0.5
+            ScalarValues[3] = 0
+            ScalarValues[4] = 1
+            ScalarValues[5] = 0
+            ScalarValues[6] = 0.1
+            ScalarValues[7] = 1
+            ScalarValues[8] = 20
+            ScalarValues[9] = 0
+            ScalarValues[10] = 0.095238
+            ScalarValues[11] = 0.2
+            ScalarValues[12] = 1
+            ScalarValues[13] = 0
+            ScalarValues[14] = 32
+            ScalarValues[15] = 2
+            ScalarValues[16] = 20
+            ScalarValues[17] = 0
+            ScalarValues[18] = 1
+            ScalarValues[19] = 1
+            ScalarValues[20] = 0
+            ScalarValues[21] = 1
+            ScalarValues[22] = 0
+            ScalarValues[23] = 4
+            ScalarValues[24] = 256
+            ScalarValues[25] = 0
+            ScalarValues[26] = 0
+            ScalarValues[27] = 1
+            ScalarValues[28] = 1
+            ScalarValues[29] = 1
+            ScalarValues[30] = 1
+            ScalarValues[31] = 0.2
+            ScalarValues[32] = 1
+            ScalarValues[33] = 0.2
+        }
+        VectorValues[6] =
+        {
+            VectorValues[0] = { R=1, G=1, B=1, A=0 }
+            VectorValues[1] = { R=0, G=1, B=0, A=0 }
+            VectorValues[2] = { R=0, G=0, B=0, A=0 }
+            VectorValues[3] = { R=0, G=1, B=0, A=0 }
+            VectorValues[4] = { R=1, G=1, B=1, A=0 }
+            VectorValues[5] = { R=0, G=0, B=0, A=0 }
+        }
+        TextureValues[5] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise04_D.VFX_T_Noise04_D'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/VFX_T_Wisps_2_D.VFX_T_Wisps_2_D'
+            TextureValues[2] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_Circle_LerpMask_D.VFX_T_Circle_LerpMask_D'
+            TextureValues[3] = Texture2D'/Game/VFX/Textures/VFX_T_Wisps_2_D.VFX_T_Wisps_2_D'
+            TextureValues[4] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+        }
+    }
+    ReferencedTextures[4] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/VFX_T_Wisps_2_D.VFX_T_Wisps_2_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_Circle_LerpMask_D.VFX_T_Circle_LerpMask_D'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise04_D.VFX_T_Noise04_D'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[5] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise04_D.VFX_T_Noise04_D'
+        Name = WPOTexture
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_Wisps_2_D.VFX_T_Wisps_2_D'
+        Name = Texture2
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_Circle_LerpMask_D.VFX_T_Circle_LerpMask_D'
+        Name = Mask
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_Wisps_2_D.VFX_T_Wisps_2_D'
+        Name = Texture
+        Group = None
+    }
+    CollectedTextureParameters[4] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+        Name = DistortionTexture
+        Group = None
+    }
+}
+CollectedScalarParameters[34] =
+{
+    CollectedScalarParameters[0] = { Value=0.5, Name=FresnelExponent, Group=None }
+    CollectedScalarParameters[1] = { Value=0, Name=Mask Distortion Edge, Group=None }
+    CollectedScalarParameters[2] = { Value=0.5, Name=WPOTexturePanY, Group=None }
+    CollectedScalarParameters[3] = { Value=0, Name=InvertColors, Group=None }
+    CollectedScalarParameters[4] = { Value=1, Name=Texture2TileX, Group=None }
+    CollectedScalarParameters[5] = { Value=0, Name=DistortionPanX, Group=None }
+    CollectedScalarParameters[6] =
+    {
+        Value = 0.1
+        Name = DistortionStrengthMin
+        Group = None
+    }
+    CollectedScalarParameters[7] = { Value=1, Name=Alpha, Group=None }
+    CollectedScalarParameters[8] = { Value=20, Name=WPO, Group=None }
+    CollectedScalarParameters[9] = { Value=0, Name=MaskStrength, Group=None }
+    CollectedScalarParameters[10] = { Value=0.095238, Name=Texture2PanY, Group=None }
+    CollectedScalarParameters[11] =
+    {
+        Value = 0.2
+        Name = DistortionStrengthMax
+        Group = None
+    }
+    CollectedScalarParameters[12] = { Value=1, Name=DistortionTileY, Group=None }
+    CollectedScalarParameters[13] = { Value=0, Name=Texture2PanX, Group=None }
+    CollectedScalarParameters[14] =
+    {
+        Value = 32
+        Name = Near Camera Fade Start Offset
+        Group = None
+    }
+    CollectedScalarParameters[15] = { Value=2, Name=FresnelMultiply, Group=None }
+    CollectedScalarParameters[16] = { Value=20, Name=FadeDistance, Group=None }
+    CollectedScalarParameters[17] = { Value=0, Name=TexturePanX, Group=None }
+    CollectedScalarParameters[18] = { Value=1, Name=TextureTileX, Group=None }
+    CollectedScalarParameters[19] = { Value=1, Name=VisInRedWorld, Group=None }
+    CollectedScalarParameters[20] = { Value=0, Name=WPOTexturePanX, Group=None }
+    CollectedScalarParameters[21] = { Value=1, Name=TextureTileY, Group=None }
+    CollectedScalarParameters[22] = { Value=0, Name=Test Dark, Group=None }
+    CollectedScalarParameters[23] = { Value=4, Name=MaskPower, Group=None }
+    CollectedScalarParameters[24] =
+    {
+        Value = 256
+        Name = Near Camera Fade Distance
+        Group = None
+    }
+    CollectedScalarParameters[25] = { Value=0, Name=HideOnOppositeSide, Group=None }
+    CollectedScalarParameters[26] = { Value=0, Name=Sharpen (0-1) (S), Group=None }
+    CollectedScalarParameters[27] = { Value=1, Name=WPOTextureTileX, Group=None }
+    CollectedScalarParameters[28] = { Value=1, Name=Test Bright, Group=None }
+    CollectedScalarParameters[29] = { Value=1, Name=Texture2TileY, Group=None }
+    CollectedScalarParameters[30] = { Value=1, Name=DistortionTileX, Group=None }
+    CollectedScalarParameters[31] = { Value=0.2, Name=DistortionPanY, Group=None }
+    CollectedScalarParameters[32] = { Value=1, Name=WPOTextureTileY, Group=None }
+    CollectedScalarParameters[33] = { Value=0.2, Name=TexturePanY, Group=None }
+}
+CollectedVectorParameters[6] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=1, G=1, B=1, A=0 }
+        Name = Remap BaseColor Max Blue
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0, G=1, B=0, A=0 }
+        Name = MaskChannel
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=0, G=0, B=0, A=0 }
+        Name = Remap BaseColor Min Blue
+        Group = None
+    }
+    CollectedVectorParameters[3] =
+    {
+        Value = { R=0, G=1, B=0, A=0 }
+        Name = AlphaChannel
+        Group = None
+    }
+    CollectedVectorParameters[4] =
+    {
+        Value = { R=1, G=1, B=1, A=0 }
+        Name = Remap BaseColor Max Red
+        Group = None
+    }
+    CollectedVectorParameters[5] =
+    {
+        Value = { R=0, G=0, B=0, A=0 }
+        Name = Remap BaseColor Min Red
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Wisps_2_D
+    }
+}

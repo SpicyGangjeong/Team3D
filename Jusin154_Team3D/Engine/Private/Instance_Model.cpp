@@ -6,7 +6,7 @@
 #include "ComputeShader.h"
 
 CInstance_Model::CInstance_Model(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	:CComponent { pDevice  , pContext }
+	:CComponent{ pDevice  , pContext }
 {
 }
 
@@ -14,9 +14,9 @@ CInstance_Model::CInstance_Model(const CInstance_Model& rhs)
 	: CComponent(rhs)
 	, m_iInstanceStride{ rhs.m_iInstanceStride }
 	, m_iNumInstance{ rhs.m_iNumInstance }
-	, m_iNumBuffer {rhs.m_iNumBuffer}
-	, m_iNumMeshes {rhs.m_iNumMeshes }
-	, m_Meshes {rhs.m_Meshes}
+	, m_iNumBuffer{ rhs.m_iNumBuffer }
+	, m_iNumMeshes{ rhs.m_iNumMeshes }
+	, m_Meshes{ rhs.m_Meshes }
 {
 	for (auto& pMesh : m_Meshes) {
 		SAFE_ADDREF(pMesh);
@@ -75,7 +75,7 @@ HRESULT CInstance_Model::Ready_Meshes(MODEL eType, const aiScene* pAIScene, _fma
 	for (size_t i = 0; i < m_iNumMeshes; ++i)
 	{
 		CMesh* pMesh = CMesh::Create(m_pDevice, m_pContext, eType, m_Bones, pAIScene->mMeshes[i], PreTransformMatrix);
-		
+
 		if (nullptr == pMesh) {
 			return E_FAIL;
 		}
@@ -89,10 +89,48 @@ HRESULT CInstance_Model::Ready_Meshes(MODEL eType, const aiScene* pAIScene, _fma
 }
 #endif
 
+HRESULT CInstance_Model::Change_NumInstance()
+{
+	Safe_Release(m_pVBInstance);
+	Safe_Release(m_pComputeShader);
+	Safe_Release(m_pConstantBuffer);
+	Safe_Release(m_pParticleValueBuffer);
+
+	//모든 버퍼를 지우고 재 생성 해야함
+
+	if (FAILED(Create_Instance_Buffer(&m_InstanceDesc)))
+		return E_FAIL;
+
+	if (FAILED(Create_SubResource_Buffer()))
+		return E_FAIL;
+
+	//시작 시에 인스턴트 버퍼를 구성 해줌
+	Instane_Buffer_ReStruct();
+
+	_uint		CS_InputStrides[] = {
+		sizeof(VTX_INSTANCE_PARTICLE),
+		sizeof(CS_PARTICLE_VALUE_DESC),
+	};
+
+	_uint		CS_OutputStrides[] = {
+	sizeof(VTX_INSTANCE_PARTICLE),
+	sizeof(CS_PARTICLE_VALUE_DESC),
+	};
+
+	m_pComputeShader = CComputeShader::Create(m_pDevice, m_pContext,
+		L"../Bin/Resources/ShaderFiles/Shader_Particle_Compute.hlsl", "CS_MAIN", m_iNumInstance, 2, 2, CS_OutputStrides, CS_InputStrides);
+
+	if (m_pComputeShader == nullptr)
+		return E_FAIL;
+
+
+	return S_OK;
+}
+
 HRESULT CInstance_Model::Create_Instance_Buffer(const INSTANCE_DESC* pDesc)
 {
-
-	m_InstanceDesc = *pDesc;
+	if (pDesc != nullptr)
+		m_InstanceDesc = *pDesc;
 
 	m_iNumInstance = m_InstanceDesc.iNumInstance;
 
@@ -158,8 +196,7 @@ HRESULT CInstance_Model::Initialize(void* pArg)
 
 	INSTANCE_DESC* pInstanceDesc = static_cast<INSTANCE_DESC*>(pArg);
 
-	if (pInstanceDesc == nullptr)
-		return E_FAIL;
+
 
 	if (FAILED(Create_Instance_Buffer(pInstanceDesc)))
 		return E_FAIL;
@@ -170,13 +207,18 @@ HRESULT CInstance_Model::Initialize(void* pArg)
 	//시작 시에 인스턴트 버퍼를 구성 해줌
 	Instane_Buffer_ReStruct();
 
-	_uint		CS_Strides[] = {
+	_uint		CS_InputStrides[] = {
 		sizeof(VTX_INSTANCE_PARTICLE),
 		sizeof(CS_PARTICLE_VALUE_DESC),
 	};
 
+	_uint		CS_OutputStrides[] = {
+	sizeof(VTX_INSTANCE_PARTICLE),
+	sizeof(CS_PARTICLE_VALUE_DESC),
+	};
+
 	m_pComputeShader = CComputeShader::Create(m_pDevice, m_pContext,
-		L"../Bin/Resources/ShaderFiles/Shader_Particle_Compute.hlsl", "CS_MAIN", m_iNumInstance, 2, sizeof(CS_PARTICLE_OUT), CS_Strides);
+		L"../Bin/Resources/ShaderFiles/Shader_Particle_Compute.hlsl", "CS_MAIN", m_iNumInstance, 2, 2, CS_OutputStrides, CS_InputStrides);
 
 	if (m_pComputeShader == nullptr)
 		return E_FAIL;
@@ -193,9 +235,9 @@ void CInstance_Model::Drop(_float fTimeDelta)
 		CS_PARTICLE_DESC* pDesc = static_cast<CS_PARTICLE_DESC*>(ConstantSubResource.pData);
 
 		pDesc->fTimeDelta = fTimeDelta;
-		pDesc->fPadding = 0;
-		pDesc->fPadding2 = 0;
-		pDesc->fPadding3 = 0;
+		pDesc->isLoop = m_InstanceDesc.isLoop;
+		pDesc->isBillboard = m_InstanceDesc.isBillboard;
+		pDesc->CamViewInvMatrix = *m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW_INV);
 
 		m_pContext->Unmap(m_pConstantBuffer, 0);
 	}
@@ -211,19 +253,31 @@ void CInstance_Model::Drop(_float fTimeDelta)
 
 	};
 
-	D3D11_MAPPED_SUBRESOURCE OutSubResource = {};
+	vector<D3D11_MAPPED_SUBRESOURCE> OutSubResources = {};
 	D3D11_MAPPED_SUBRESOURCE VBInstanceResource = {};
 
-	OutSubResource = m_pComputeShader->Dispatch(0, 0, _float3((_float)iGroupCountX, 1.f, 1.f), CSBuffers, m_pConstantBuffer);
+	OutSubResources = m_pComputeShader->Dispatch(0, 0, _float3((_float)iGroupCountX, 1.f, 1.f), CSBuffers, m_pConstantBuffer);
 
 	if (SUCCEEDED(m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_DISCARD, 0, &VBInstanceResource)))
 	{
-		memcpy(VBInstanceResource.pData, OutSubResource.pData, m_iInstanceStride * m_InstanceDesc.iNumInstance); // 아웃풋 버퍼에 들어온 값들을 전부 복사한다.
+
+		memcpy(VBInstanceResource.pData, OutSubResources[0].pData, m_iInstanceStride * m_InstanceDesc.iNumInstance); // 아웃풋 버퍼에 들어온 값들을 전부 복사한다.
 
 		m_pContext->Unmap(m_pVBInstance, 0);
 	}
 
-	//TODO:: 벨류버퍼 갱신 해야함 , OutPut버퍼 두개만들어야할듯..
+	D3D11_MAPPED_SUBRESOURCE ParticleValueResource = {};
+
+	if (SUCCEEDED(m_pContext->Map(m_pParticleValueBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &ParticleValueResource)))
+	{
+		CS_PARTICLE_VALUE_DESC* pValueDesc = static_cast<CS_PARTICLE_VALUE_DESC*>(OutSubResources[1].pData);
+
+		memcpy(ParticleValueResource.pData, OutSubResources[1].pData, sizeof(CS_PARTICLE_VALUE_DESC) * m_InstanceDesc.iNumInstance); // 아웃풋 버퍼에 들어온 값들을 전부 복사한다.
+
+		m_pContext->Unmap(m_pParticleValueBuffer, 0);
+	}
+
+
 }
 
 
@@ -298,10 +352,11 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 
 				//라이프 타임 설정
 				pVertices[i].vLifeTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vLifeTime.x, m_InstanceDesc.vLifeTime.y));
-				
+
 				pParticleValues[i].vAniTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vAniTime.x, m_InstanceDesc.vAniTime.y));
 				pParticleValues[i].vMaskingUVMoveTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vMaskingUVMoveTime.x, m_InstanceDesc.vMaskingUVMoveTime.y));
 				pParticleValues[i].vDiffuseUVMoveTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vDiffuseUVMoveTime.x, m_InstanceDesc.vDiffuseUVMoveTime.y));
+				pParticleValues[i].vNoiseUVMoveTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vNoiseUVMoveTime.x, m_InstanceDesc.vNoiseUVMoveTime.y));
 				pParticleValues[i].fSpeed = m_pGameInstance->Random_Float(m_InstanceDesc.vSpeed.x, m_InstanceDesc.vSpeed.y);
 				pParticleValues[i].fRotaionSpeed = m_pGameInstance->Random_Float(m_InstanceDesc.vRotationSpeed.x, m_InstanceDesc.vRotationSpeed.y);
 				pParticleValues[i].vAniIndex = _float2(0.f, m_InstanceDesc.vAniIndex.y);
@@ -317,16 +372,16 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 		}
 		m_pContext->Unmap(m_pVBInstance, 0);
 	}
-	
+
 
 }
 
-HRESULT CInstance_Model::Bind_CS_Output(_uint Index)
+HRESULT CInstance_Model::Bind_CS_Output(_uint Index, _uint iBufferIndex)
 {
 	if (m_pComputeShader == nullptr)
 		return E_FAIL;
 
-	m_pComputeShader->Bind_OutPut_SRV(Index);
+	m_pComputeShader->Bind_OutPut_SRV(Index, iBufferIndex);
 
 	return S_OK;
 }
@@ -382,8 +437,19 @@ void CInstance_Model::Describe_Entity()
 	if (ImGui::TreeNode("Model Option"))
 	{
 		ImGui::Separator(); ImGui::Spacing();
+		ImGui::PushItemWidth(120);
 
 		if (ImGui::InputInt("NumInstance", &m_InstanceDesc.iNumInstance))
+		{
+			Change_NumInstance();
+		}
+
+		if (GUI::Checkbox("Loop", &m_InstanceDesc.isLoop))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
+		if (GUI::Checkbox("BillBoard", &m_InstanceDesc.isBillboard))
 		{
 			Instane_Buffer_ReStruct();
 		}
@@ -444,6 +510,11 @@ void CInstance_Model::Describe_Entity()
 			Instane_Buffer_ReStruct();
 		}
 
+		if (ImGui::DragFloat2("NoiseUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vNoiseUVMoveTime)))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
 		if (ImGui::DragFloat2("AniTime", reinterpret_cast<_float*>(&m_InstanceDesc.vAniTime)))
 		{
 			Instane_Buffer_ReStruct();
@@ -453,6 +524,7 @@ void CInstance_Model::Describe_Entity()
 			Instane_Buffer_ReStruct();
 		}
 
+		ImGui::PopItemWidth();
 		ImGui::TreePop();
 	}
 

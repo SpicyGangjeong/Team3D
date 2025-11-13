@@ -1,0 +1,108 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[1] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Cloud_SoftNoise_Dark_A.VFX_T_Cloud_SoftNoise_Dark_A'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[6] =
+                {
+                    ParameterInfos[0] = { Name=Minimum Hardness }
+                    ParameterInfos[1] = { Name=Camera Min Distance }
+                    ParameterInfos[2] = { Name=Camera Max Distance }
+                    ParameterInfos[3] = { Name=EmissiveBoost }
+                    ParameterInfos[4] = { Name=Param }
+                    ParameterInfos[5] = { Name=Noise Mask UVScale }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Param }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Noise Mask }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[6] = { 0, 100, 2500, 100, 0.5, 0.164992 }
+        VectorValues[1] =
+        {
+            VectorValues[0] = { R=0, G=0, B=1, A=1 }
+        }
+        TextureValues[1] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Cloud_SoftNoise_Dark_A.VFX_T_Cloud_SoftNoise_Dark_A'
+        }
+    }
+    ReferencedTextures[1] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Cloud_SoftNoise_Dark_A.VFX_T_Cloud_SoftNoise_Dark_A'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[1] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Cloud_SoftNoise_Dark_A.VFX_T_Cloud_SoftNoise_Dark_A'
+        Name = Noise Mask
+        Group = None
+    }
+}
+CollectedScalarParameters[6] =
+{
+    CollectedScalarParameters[0] = { Value=0, Name=Minimum Hardness, Group=None }
+    CollectedScalarParameters[1] = { Value=100, Name=Camera Min Distance, Group=None }
+    CollectedScalarParameters[2] = { Value=2500, Name=Camera Max Distance, Group=None }
+    CollectedScalarParameters[3] = { Value=100, Name=EmissiveBoost, Group=None }
+    CollectedScalarParameters[4] = { Value=0.5, Name=Param, Group=None }
+    CollectedScalarParameters[5] =
+    {
+        Value = 0.164992
+        Name = Noise Mask UVScale
+        Group = None
+    }
+}
+CollectedVectorParameters[1] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0, G=0, B=1, A=1 }
+        Name = Param
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1.9375
+        UVChannelIndex = 0
+        TextureName = VFX_T_Cloud_SoftNoise_Dark_A
+    }
+}

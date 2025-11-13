@@ -1,0 +1,38 @@
+Materials[2] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Meshes/Static/HairStyles/MI_HUM_F_Hair_TWNHair04_WovenPonyTail.MI_HUM_F_Hair_TWNHair04_WovenPonyTail'
+    Materials[1] = MaterialInstanceConstant'/Game/VFX/Meshes/Static/HairStyles/MI_HUM_F_Hair_TWNHair04_WovenPonyTail_Band.MI_HUM_F_Hair_TWNHair04_WovenPonyTail_Band'
+}
+SourceModels[0] = {}
+StaticMaterials[2] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Meshes/Static/HairStyles/MI_HUM_F_Hair_TWNHair04_WovenPonyTail.MI_HUM_F_Hair_TWNHair04_WovenPonyTail'
+        MaterialSlotName = MI_HUM_F_Hair_TWNHair04_WovenPonyTail
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 19.2558, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Meshes/Static/HairStyles/MI_HUM_F_Hair_TWNHair04_WovenPonyTail_Band.MI_HUM_F_Hair_TWNHair04_WovenPonyTail_Band'
+        MaterialSlotName = MI_HUM_F_TWNHair04_WovenPonyTail_Band
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 46.0281, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-0.161299, Y=-3.74989, Z=-1.58272 }
+    BoxExtent = { X=10.0719, Y=12.6516, Z=17.7394 }
+    SphereRadius = 20.5318
+}

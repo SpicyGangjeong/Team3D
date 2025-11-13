@@ -1,0 +1,515 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[20] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/Engine_MI_Shaders/T_Base_Tile_Normal.T_Base_Tile_Normal'
+    ReferencedTextures[1] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+    ReferencedTextures[2] = Texture2D'/Engine/EngineResources/DefaultTexture.DefaultTexture'
+    ReferencedTextures[3] = Texture2D'/Engine/MapTemplates/Sky/T_Sky_Stars.T_Sky_Stars'
+    ReferencedTextures[4] = Texture2D'/Game/Environment/Lighting/Universal/T_Clouds_MSK.T_Clouds_MSK'
+    ReferencedTextures[5] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Crystal/T_CrystalCrack_MSK.T_CrystalCrack_MSK'
+    ReferencedTextures[6] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Fog/T_GeneralClouds_D.T_GeneralClouds_D'
+    ReferencedTextures[7] = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Ceiling/T_Sanctum_10meter_Flat_Ceiling_01_B_MROA.T_Sanctum_10meter_Flat_Ceiling_01_B_MROA'
+    ReferencedTextures[8] = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Ceiling/T_Sanctum_10meter_Flat_Ceiling_01_C_N.T_Sanctum_10meter_Flat_Ceiling_01_C_N'
+    ReferencedTextures[9] = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Repository/T_Repository_LargeSpikeAttack_A.T_Repository_LargeSpikeAttack_A'
+    ReferencedTextures[10] = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Wall/T_SanctumDun_MarbleB_N_D.T_SanctumDun_MarbleB_N_D'
+    ReferencedTextures[11] = Texture2D'/Game/Gameplay/Sanctuary/Textures/Structures/T_Sanc_ObsidianStone_01_Potnr_N.T_Sanc_ObsidianStone_01_Potnr_N'
+    ReferencedTextures[12] = Texture2D'/Game/Gameplay/Sanctuary/Textures/Structures/T_Sanc_ObsidianStone_02_Potnr_D.T_Sanc_ObsidianStone_02_Potnr_D'
+    ReferencedTextures[13] = Texture2D'/Game/Gameplay/Sanctuary/Textures/Structures/T_Sanc_ObsidianStone_02_Potnr_MROH.T_Sanc_ObsidianStone_02_Potnr_MROH'
+    ReferencedTextures[14] = Texture2D'/Game/VFX/Particles/Destruction/Large_Vertical_Windows/VFX_T_TilingNoise_N.VFX_T_TilingNoise_N'
+    ReferencedTextures[15] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Cloud_Mask_D.VFX_T_Cloud_Mask_D'
+    ReferencedTextures[16] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+    ReferencedTextures[17] = Texture2D'/Game/VFX/Textures/TEST/VFX_T_clouds_D.VFX_T_clouds_D'
+    ReferencedTextures[18] = Texture2D'/Game/VFX/Textures/VFX_T_Smoke_Tiled_01_D.VFX_T_Smoke_Tiled_01_D'
+    ReferencedTextures[19] = Texture2D'/Game/VFX/Textures/VFX_T_Wisps_D.VFX_T_Wisps_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[61] =
+                {
+                    ParameterInfos[0] = { Name=Wipe Out Hardness }
+                    ParameterInfos[1] = { Name=WhiteCore_blendSTR }
+                    ParameterInfos[2] = { Name=Wisps Tiling }
+                    ParameterInfos[3] = { Name=Crack 2 Height }
+                    ParameterInfos[4] = { Name=CracksPwr }
+                    ParameterInfos[5] = { Name=Distance Fade Length }
+                    ParameterInfos[6] = { Name=MSK_distort }
+                    ParameterInfos[7] = { Name=LinearGrad }
+                    ParameterInfos[8] = { Name=Wisps_Move_Speed }
+                    ParameterInfos[9] = { Name=Crack rotation }
+                    ParameterInfos[10] = { Name=Wisps Height }
+                    ParameterInfos[11] = { Name=White_Veins_Strength }
+                    ParameterInfos[12] = { Name=NormalPanning }
+                    ParameterInfos[13] = { Name=FlipTop }
+                    ParameterInfos[14] = { Name=WispsNoiseMask_tiling }
+                    ParameterInfos[15] = { Name=WIspsNoiseMask_Power }
+                    ParameterInfos[16] = { Name=MskTiling }
+                    ParameterInfos[17] = { Name=Cracks Height }
+                    ParameterInfos[18] = { Name=CrackNoiseMask_tiling }
+                    ParameterInfos[19] = { Name=Msk_tex_Grad_size }
+                    ParameterInfos[20] = { Name=Test }
+                    ParameterInfos[21] = { Name=LinearGradPwr }
+                    ParameterInfos[22] = { Name=Distort speed }
+                    ParameterInfos[23] = { Name=On }
+                    ParameterInfos[24] = { Name=ForRedWorld }
+                    ParameterInfos[25] = { Name=Stars Height }
+                    ParameterInfos[26] = { Name=CrackNoiseMask_Power }
+                    ParameterInfos[27] = { Name=Crack distort strength }
+                    ParameterInfos[28] = { Name=BaseColor tint }
+                    ParameterInfos[29] = { Name=Emissive STR }
+                    ParameterInfos[30] = { Name=Stars Tiling }
+                    ParameterInfos[31] = { Name=Tiling_AM2 }
+                    ParameterInfos[32] = { Name=Panning Speed Roughness }
+                    ParameterInfos[33] = { Name=Ingate }
+                    ParameterInfos[34] = { Name=Wipe In Hardness }
+                    ParameterInfos[35] = { Name=AM Roughness }
+                    ParameterInfos[36] = { Name=UV_distortSpeed }
+                    ParameterInfos[37] = { Name=Wisps strength }
+                    ParameterInfos[38] = { Name=Distance Fade Start }
+                    ParameterInfos[39] = { Name=Stars Brightness }
+                    ParameterInfos[40] = { Name=RockDetailNormal_STR }
+                    ParameterInfos[41] = { Name=FlipEdge }
+                    ParameterInfos[42] = { Name=Cracks Tiling }
+                    ParameterInfos[43] = { Name=Rock Tint }
+                    ParameterInfos[44] = { Name=Mask Contrast }
+                    ParameterInfos[45] = { Name=Cracks Tiling2 }
+                    ParameterInfos[46] = { Name=Msk_Tex_grad_density }
+                    ParameterInfos[47] = { Name=Mesh Distort Hardness }
+                    ParameterInfos[48] = { Name=Wisps speed }
+                    ParameterInfos[49] = { Name=WipeInOrOut }
+                    ParameterInfos[50] = { Name=Off }
+                    ParameterInfos[51] = { Name=Normal_tiling }
+                    ParameterInfos[52] = { Name=Crack_Move_Speed }
+                    ParameterInfos[53] = { Name=Outline }
+                    ParameterInfos[54] = { Name=Mask_blend }
+                    ParameterInfos[55] = { Name=RockMSK_Tex_Power }
+                    ParameterInfos[56] = { Name=FlipGate }
+                    ParameterInfos[57] = { Name=RockTiling }
+                    ParameterInfos[58] = { Name=RockDetailNormal Tiling }
+                    ParameterInfos[59] = { Name=Bakestrength }
+                    ParameterInfos[60] = { Name=WipeOut Offset }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[6] =
+                {
+                    ParameterInfos[0] = { Name=Wisps color }
+                    ParameterInfos[1] = { Name=Color }
+                    ParameterInfos[2] = { Name=Stars color }
+                    ParameterInfos[3] = { Name=Crack Color  }
+                    ParameterInfos[4] = { Name=AM_Material_TintColor }
+                    ParameterInfos[5] = { Name=Distortion Direction }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[12] =
+                {
+                    ParameterInfos[0] = { Name=AM Material }
+                    ParameterInfos[1] = { Name=RockMaskBake }
+                    ParameterInfos[2] = { Name=Rock_normal_Detail }
+                    ParameterInfos[3] = { Name=RockTexture }
+                    ParameterInfos[4] = { Name=RockMask }
+                    ParameterInfos[5] = { Name=RockMRO }
+                    ParameterInfos[6] = { Name=CrackTexture }
+                    ParameterInfos[7] = { Name=Panning Nrmal }
+                    ParameterInfos[8] = { Name=wisps MSK Texture }
+                    ParameterInfos[9] = { Name=Baked_normal }
+                    ParameterInfos[10] = { Name=Wisps texture }
+                    ParameterInfos[11] = { Name=Crack MSK Texture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[61] =
+        {
+            ScalarValues[0] = 0.3
+            ScalarValues[1] = 0.1
+            ScalarValues[2] = 1
+            ScalarValues[3] = -10
+            ScalarValues[4] = 1
+            ScalarValues[5] = 19604.3
+            ScalarValues[6] = 1
+            ScalarValues[7] = 0.5
+            ScalarValues[8] = 0.1
+            ScalarValues[9] = 0.5
+            ScalarValues[10] = -12.8076
+            ScalarValues[11] = 45
+            ScalarValues[12] = 0.2
+            ScalarValues[13] = 0
+            ScalarValues[14] = 1
+            ScalarValues[15] = 0.3
+            ScalarValues[16] = 1
+            ScalarValues[17] = -12.8076
+            ScalarValues[18] = 1
+            ScalarValues[19] = 0.5
+            ScalarValues[20] = 0.168
+            ScalarValues[21] = 0.5
+            ScalarValues[22] = 0.1
+            ScalarValues[23] = 0
+            ScalarValues[24] = 0
+            ScalarValues[25] = -1
+            ScalarValues[26] = 1.5
+            ScalarValues[27] = 0
+            ScalarValues[28] = 1
+            ScalarValues[29] = 1
+            ScalarValues[30] = 5
+            ScalarValues[31] = 2
+            ScalarValues[32] = 0.02
+            ScalarValues[33] = 0
+            ScalarValues[34] = 0.3
+            ScalarValues[35] = 0.1
+            ScalarValues[36] = 0.01
+            ScalarValues[37] = 0.428571
+            ScalarValues[38] = 981.889
+            ScalarValues[39] = 1
+            ScalarValues[40] = 1
+            ScalarValues[41] = 0
+            ScalarValues[42] = 6
+            ScalarValues[43] = 0.5
+            ScalarValues[44] = 0.5
+            ScalarValues[45] = 3
+            ScalarValues[46] = 5
+            ScalarValues[47] = 0.3
+            ScalarValues[48] = 0.01
+            ScalarValues[49] = 0
+            ScalarValues[50] = 1
+            ScalarValues[51] = 2
+            ScalarValues[52] = 0.1
+            ScalarValues[53] = 0
+            ScalarValues[54] = 0.75
+            ScalarValues[55] = 1
+            ScalarValues[56] = 0
+            ScalarValues[57] = 1
+            ScalarValues[58] = 1
+            ScalarValues[59] = 1
+            ScalarValues[60] = 100
+        }
+        VectorValues[6] =
+        {
+            VectorValues[0] = { R=0.6268, G=0.854167, B=0.628995, A=1 }
+            VectorValues[1] = { R=0, G=0.204562, B=1, A=0 }
+            VectorValues[2] = { R=1, G=1, B=1, A=1 }
+            VectorValues[3] = { R=0.651042, G=0.651042, B=0.651042, A=1 }
+            VectorValues[4] = { R=1, G=0, B=0, A=1 }
+            VectorValues[5] = { R=266.285, G=94.2082, B=146.612, A=1 }
+        }
+        TextureValues[12] =
+        {
+            TextureValues[0] = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Wall/T_SanctumDun_MarbleB_N_D.T_SanctumDun_MarbleB_N_D'
+            TextureValues[1] = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Repository/T_Repository_LargeSpikeAttack_A.T_Repository_LargeSpikeAttack_A'
+            TextureValues[2] = Texture2D'/Game/Gameplay/Sanctuary/Textures/Structures/T_Sanc_ObsidianStone_01_Potnr_N.T_Sanc_ObsidianStone_01_Potnr_N'
+            TextureValues[3] = Texture2D'/Game/Gameplay/Sanctuary/Textures/Structures/T_Sanc_ObsidianStone_02_Potnr_D.T_Sanc_ObsidianStone_02_Potnr_D'
+            TextureValues[4] = Texture2D'/Game/Environment/Lighting/Universal/T_Clouds_MSK.T_Clouds_MSK'
+            TextureValues[5] = Texture2D'/Game/Gameplay/Sanctuary/Textures/Structures/T_Sanc_ObsidianStone_02_Potnr_MROH.T_Sanc_ObsidianStone_02_Potnr_MROH'
+            TextureValues[6] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Crystal/T_CrystalCrack_MSK.T_CrystalCrack_MSK'
+            TextureValues[7] = Texture2D'/Game/VFX/Particles/Destruction/Large_Vertical_Windows/VFX_T_TilingNoise_N.VFX_T_TilingNoise_N'
+            TextureValues[8] = Texture2D'/Game/VFX/Textures/TEST/VFX_T_clouds_D.VFX_T_clouds_D'
+            TextureValues[9] = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Ceiling/T_Sanctum_10meter_Flat_Ceiling_01_C_N.T_Sanctum_10meter_Flat_Ceiling_01_C_N'
+            TextureValues[10] = Texture2D'/Game/VFX/Textures/VFX_T_Wisps_D.VFX_T_Wisps_D'
+            TextureValues[11] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Fog/T_GeneralClouds_D.T_GeneralClouds_D'
+        }
+    }
+    ReferencedTextures[21] =
+    {
+        ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+        ReferencedTextures[3] = Texture2D'/Engine/EngineResources/DefaultTexture.DefaultTexture'
+        ReferencedTextures[4] = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Ceiling/T_Sanctum_10meter_Flat_Ceiling_01_B_MROA.T_Sanctum_10meter_Flat_Ceiling_01_B_MROA'
+        ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/VFX_T_Smoke_Tiled_01_D.VFX_T_Smoke_Tiled_01_D'
+        ReferencedTextures[6] = Texture2D'/Game/Gameplay/Sanctuary/Textures/Structures/T_Sanc_ObsidianStone_02_Potnr_D.T_Sanc_ObsidianStone_02_Potnr_D'
+        ReferencedTextures[7] = Texture2D'/Game/Gameplay/Sanctuary/Textures/Structures/T_Sanc_ObsidianStone_02_Potnr_MROH.T_Sanc_ObsidianStone_02_Potnr_MROH'
+        ReferencedTextures[8] = Texture2D'/Game/Gameplay/Sanctuary/Textures/Structures/T_Sanc_ObsidianStone_01_Potnr_N.T_Sanc_ObsidianStone_01_Potnr_N'
+        ReferencedTextures[9] = Texture2D'/Game/Environment/Lighting/Universal/T_Clouds_MSK.T_Clouds_MSK'
+        ReferencedTextures[10] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Cloud_Mask_D.VFX_T_Cloud_Mask_D'
+        ReferencedTextures[11] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Crystal/T_CrystalCrack_MSK.T_CrystalCrack_MSK'
+        ReferencedTextures[12] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Fog/T_GeneralClouds_D.T_GeneralClouds_D'
+        ReferencedTextures[13] = Texture2D'/Engine/MapTemplates/Sky/T_Sky_Stars.T_Sky_Stars'
+        ReferencedTextures[14] = Texture2D'/Game/VFX/Textures/TEST/VFX_T_clouds_D.VFX_T_clouds_D'
+        ReferencedTextures[15] = Texture2D'/Game/VFX/Textures/VFX_T_Wisps_D.VFX_T_Wisps_D'
+        ReferencedTextures[16] = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Ceiling/T_Sanctum_10meter_Flat_Ceiling_01_C_N.T_Sanctum_10meter_Flat_Ceiling_01_C_N'
+        ReferencedTextures[17] = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Wall/T_SanctumDun_MarbleB_N_D.T_SanctumDun_MarbleB_N_D'
+        ReferencedTextures[18] = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Repository/T_Repository_LargeSpikeAttack_A.T_Repository_LargeSpikeAttack_A'
+        ReferencedTextures[19] = Texture2D'/Engine/Engine_MI_Shaders/T_Base_Tile_Normal.T_Base_Tile_Normal'
+        ReferencedTextures[20] = Texture2D'/Game/VFX/Particles/Destruction/Large_Vertical_Windows/VFX_T_TilingNoise_N.VFX_T_TilingNoise_N'
+    }
+}
+BlendMode = BLEND_Opaque (0)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[12] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Wall/T_SanctumDun_MarbleB_N_D.T_SanctumDun_MarbleB_N_D'
+        Name = AM Material
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Repository/T_Repository_LargeSpikeAttack_A.T_Repository_LargeSpikeAttack_A'
+        Name = RockMaskBake
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/Gameplay/Sanctuary/Textures/Structures/T_Sanc_ObsidianStone_01_Potnr_N.T_Sanc_ObsidianStone_01_Potnr_N'
+        Name = Rock_normal_Detail
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/Gameplay/Sanctuary/Textures/Structures/T_Sanc_ObsidianStone_02_Potnr_D.T_Sanc_ObsidianStone_02_Potnr_D'
+        Name = RockTexture
+        Group = None
+    }
+    CollectedTextureParameters[4] =
+    {
+        Texture = Texture2D'/Game/Environment/Lighting/Universal/T_Clouds_MSK.T_Clouds_MSK'
+        Name = RockMask
+        Group = None
+    }
+    CollectedTextureParameters[5] =
+    {
+        Texture = Texture2D'/Game/Gameplay/Sanctuary/Textures/Structures/T_Sanc_ObsidianStone_02_Potnr_MROH.T_Sanc_ObsidianStone_02_Potnr_MROH'
+        Name = RockMRO
+        Group = None
+    }
+    CollectedTextureParameters[6] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Crystal/T_CrystalCrack_MSK.T_CrystalCrack_MSK'
+        Name = CrackTexture
+        Group = None
+    }
+    CollectedTextureParameters[7] =
+    {
+        Texture = Texture2D'/Game/VFX/Particles/Destruction/Large_Vertical_Windows/VFX_T_TilingNoise_N.VFX_T_TilingNoise_N'
+        Name = Panning Nrmal
+        Group = None
+    }
+    CollectedTextureParameters[8] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/TEST/VFX_T_clouds_D.VFX_T_clouds_D'
+        Name = wisps MSK Texture
+        Group = None
+    }
+    CollectedTextureParameters[9] =
+    {
+        Texture = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Ceiling/T_Sanctum_10meter_Flat_Ceiling_01_C_N.T_Sanctum_10meter_Flat_Ceiling_01_C_N'
+        Name = Baked_normal
+        Group = None
+    }
+    CollectedTextureParameters[10] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_Wisps_D.VFX_T_Wisps_D'
+        Name = Wisps texture
+        Group = None
+    }
+    CollectedTextureParameters[11] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Fog/T_GeneralClouds_D.T_GeneralClouds_D'
+        Name = Crack MSK Texture
+        Group = None
+    }
+}
+CollectedScalarParameters[61] =
+{
+    CollectedScalarParameters[0] = { Value=0.3, Name=Wipe Out Hardness, Group=None }
+    CollectedScalarParameters[1] = { Value=0.1, Name=WhiteCore_blendSTR, Group=None }
+    CollectedScalarParameters[2] = { Value=1, Name=Wisps Tiling, Group=None }
+    CollectedScalarParameters[3] = { Value=-10, Name=Crack 2 Height, Group=None }
+    CollectedScalarParameters[4] = { Value=1, Name=CracksPwr, Group=None }
+    CollectedScalarParameters[5] =
+    {
+        Value = 19604.3
+        Name = Distance Fade Length
+        Group = None
+    }
+    CollectedScalarParameters[6] = { Value=1, Name=MSK_distort, Group=None }
+    CollectedScalarParameters[7] = { Value=0.5, Name=LinearGrad, Group=None }
+    CollectedScalarParameters[8] = { Value=0.1, Name=Wisps_Move_Speed, Group=None }
+    CollectedScalarParameters[9] = { Value=0.5, Name=Crack rotation, Group=None }
+    CollectedScalarParameters[10] = { Value=-12.8076, Name=Wisps Height, Group=None }
+    CollectedScalarParameters[11] = { Value=45, Name=White_Veins_Strength, Group=None }
+    CollectedScalarParameters[12] = { Value=0.2, Name=NormalPanning, Group=None }
+    CollectedScalarParameters[13] = { Value=0, Name=FlipTop, Group=None }
+    CollectedScalarParameters[14] = { Value=1, Name=WispsNoiseMask_tiling, Group=None }
+    CollectedScalarParameters[15] = { Value=0.3, Name=WIspsNoiseMask_Power, Group=None }
+    CollectedScalarParameters[16] = { Value=1, Name=MskTiling, Group=None }
+    CollectedScalarParameters[17] = { Value=-12.8076, Name=Cracks Height, Group=None }
+    CollectedScalarParameters[18] = { Value=1, Name=CrackNoiseMask_tiling, Group=None }
+    CollectedScalarParameters[19] = { Value=0.5, Name=Msk_tex_Grad_size, Group=None }
+    CollectedScalarParameters[20] = { Value=0.168, Name=Test, Group=None }
+    CollectedScalarParameters[21] = { Value=0.5, Name=LinearGradPwr, Group=None }
+    CollectedScalarParameters[22] = { Value=0.1, Name=Distort speed, Group=None }
+    CollectedScalarParameters[23] = { Value=0, Name=On, Group=None }
+    CollectedScalarParameters[24] = { Value=0, Name=ForRedWorld, Group=None }
+    CollectedScalarParameters[25] = { Value=-1, Name=Stars Height, Group=None }
+    CollectedScalarParameters[26] = { Value=1.5, Name=CrackNoiseMask_Power, Group=None }
+    CollectedScalarParameters[27] = { Value=0, Name=Crack distort strength, Group=None }
+    CollectedScalarParameters[28] = { Value=1, Name=BaseColor tint, Group=None }
+    CollectedScalarParameters[29] = { Value=1, Name=Emissive STR, Group=None }
+    CollectedScalarParameters[30] = { Value=5, Name=Stars Tiling, Group=None }
+    CollectedScalarParameters[31] = { Value=2, Name=Tiling_AM2, Group=None }
+    CollectedScalarParameters[32] =
+    {
+        Value = 0.02
+        Name = Panning Speed Roughness
+        Group = None
+    }
+    CollectedScalarParameters[33] = { Value=0, Name=Ingate, Group=None }
+    CollectedScalarParameters[34] = { Value=0.3, Name=Wipe In Hardness, Group=None }
+    CollectedScalarParameters[35] = { Value=0.1, Name=AM Roughness, Group=None }
+    CollectedScalarParameters[36] = { Value=0.01, Name=UV_distortSpeed, Group=None }
+    CollectedScalarParameters[37] = { Value=0.428571, Name=Wisps strength, Group=None }
+    CollectedScalarParameters[38] =
+    {
+        Value = 981.889
+        Name = Distance Fade Start
+        Group = None
+    }
+    CollectedScalarParameters[39] = { Value=1, Name=Stars Brightness, Group=None }
+    CollectedScalarParameters[40] = { Value=1, Name=RockDetailNormal_STR, Group=None }
+    CollectedScalarParameters[41] = { Value=0, Name=FlipEdge, Group=None }
+    CollectedScalarParameters[42] = { Value=6, Name=Cracks Tiling, Group=None }
+    CollectedScalarParameters[43] = { Value=0.5, Name=Rock Tint, Group=None }
+    CollectedScalarParameters[44] = { Value=0.5, Name=Mask Contrast, Group=None }
+    CollectedScalarParameters[45] = { Value=3, Name=Cracks Tiling2, Group=None }
+    CollectedScalarParameters[46] = { Value=5, Name=Msk_Tex_grad_density, Group=None }
+    CollectedScalarParameters[47] =
+    {
+        Value = 0.3
+        Name = Mesh Distort Hardness
+        Group = None
+    }
+    CollectedScalarParameters[48] = { Value=0.01, Name=Wisps speed, Group=None }
+    CollectedScalarParameters[49] = { Value=0, Name=WipeInOrOut, Group=None }
+    CollectedScalarParameters[50] = { Value=1, Name=Off, Group=None }
+    CollectedScalarParameters[51] = { Value=2, Name=Normal_tiling, Group=None }
+    CollectedScalarParameters[52] = { Value=0.1, Name=Crack_Move_Speed, Group=None }
+    CollectedScalarParameters[53] = { Value=0, Name=Outline, Group=None }
+    CollectedScalarParameters[54] = { Value=0.75, Name=Mask_blend, Group=None }
+    CollectedScalarParameters[55] = { Value=1, Name=RockMSK_Tex_Power, Group=None }
+    CollectedScalarParameters[56] = { Value=0, Name=FlipGate, Group=None }
+    CollectedScalarParameters[57] = { Value=1, Name=RockTiling, Group=None }
+    CollectedScalarParameters[58] =
+    {
+        Value = 1
+        Name = RockDetailNormal Tiling
+        Group = None
+    }
+    CollectedScalarParameters[59] = { Value=1, Name=Bakestrength, Group=None }
+    CollectedScalarParameters[60] = { Value=100, Name=WipeOut Offset, Group=None }
+}
+CollectedVectorParameters[6] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0.6268, G=0.854167, B=0.628995, A=1 }
+        Name = Wisps color
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0, G=0.204562, B=1, A=0 }
+        Name = Color
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=1, G=1, B=1, A=1 }
+        Name = Stars color
+        Group = None
+    }
+    CollectedVectorParameters[3] =
+    {
+        Value = { R=0.651042, G=0.651042, B=0.651042, A=1 }
+        Name = Crack Color 
+        Group = None
+    }
+    CollectedVectorParameters[4] =
+    {
+        Value = { R=1, G=0, B=0, A=1 }
+        Name = AM_Material_TintColor
+        Group = None
+    }
+    CollectedVectorParameters[5] =
+    {
+        Value = { R=266.285, G=94.2082, B=146.612, A=1 }
+        Name = Distortion Direction
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[9] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 3.05743
+        UVChannelIndex = 0
+        TextureName = T_CrystalCrack_MSK
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Sanc_ObsidianStone_01_Potnr_N
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Sanc_ObsidianStone_02_Potnr_D
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Sanc_ObsidianStone_02_Potnr_MROH
+    }
+    TextureStreamingData[4] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Sanctum_10meter_Flat_Ceiling_01_B_MROA
+    }
+    TextureStreamingData[5] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Sanctum_10meter_Flat_Ceiling_01_C_N
+    }
+    TextureStreamingData[6] =
+    {
+        SamplingScale = 3
+        UVChannelIndex = 0
+        TextureName = T_SanctumDun_MarbleB_N_D
+    }
+    TextureStreamingData[7] =
+    {
+        SamplingScale = 5.00073
+        UVChannelIndex = 0
+        TextureName = T_Sky_Stars
+    }
+    TextureStreamingData[8] =
+    {
+        SamplingScale = 1.45947
+        UVChannelIndex = 0
+        TextureName = VFX_T_Wisps_D
+    }
+}

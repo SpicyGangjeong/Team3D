@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/World_Events/WhyDoesItAlwaysRainOnMe/VFX_MI_Smoke.VFX_MI_Smoke'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/World_Events/WhyDoesItAlwaysRainOnMe/VFX_MI_Smoke.VFX_MI_Smoke'
+        MaterialSlotName = lambert1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 121.003, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0.000228882, Y=-43.3619, Z=17.1479 }
+    BoxExtent = { X=84.1084, Y=49.556, Z=18.6214 }
+    SphereRadius = 91.8015
+}

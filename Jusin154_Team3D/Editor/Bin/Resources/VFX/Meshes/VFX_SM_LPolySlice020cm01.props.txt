@@ -1,0 +1,38 @@
+Materials[2] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Environment/Materials/BaseColors/MI_Blue.MI_Blue'
+    Materials[1] = MaterialInstanceConstant'/Game/Environment/Materials/BaseColors/MI_Orange.MI_Orange'
+}
+SourceModels[0] = {}
+StaticMaterials[2] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Materials/BaseColors/MI_Blue.MI_Blue'
+        MaterialSlotName = LPolySliceVertical
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 44.7377, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Materials/BaseColors/MI_Orange.MI_Orange'
+        MaterialSlotName = LPolySliceHorizontal
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 44.7268, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=10, Y=50, Z=50 }
+    BoxExtent = { X=10, Y=50, Z=50 }
+    SphereRadius = 71.4143
+}

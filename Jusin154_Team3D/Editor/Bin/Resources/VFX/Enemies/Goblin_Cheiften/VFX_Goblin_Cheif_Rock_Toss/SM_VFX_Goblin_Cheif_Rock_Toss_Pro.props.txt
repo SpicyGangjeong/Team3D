@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Enemies/Troll/Troll_Rock_Toss/Projectile/VFX_MI_TrollRock.VFX_MI_TrollRock'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Enemies/Troll/Troll_Rock_Toss/Projectile/VFX_MI_TrollRock.VFX_MI_TrollRock'
+        MaterialSlotName = lambert1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 165.163, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-1.90735e-05, Y=-7.62939e-06, Z=0 }
+    BoxExtent = { X=19.7944, Y=19.5122, Z=11.6727 }
+    SphereRadius = 22.5875
+}

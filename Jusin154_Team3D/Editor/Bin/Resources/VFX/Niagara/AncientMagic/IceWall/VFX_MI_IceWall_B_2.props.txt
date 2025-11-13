@@ -1,0 +1,242 @@
+Parent = Material3'/Game/VFX/Niagara/AncientMagic/IceWall/VFX_MM_2layersBlend_Dithered_B_2.VFX_MM_2layersBlend_Dithered_B_2'
+ScalarParameterValues[14] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=B }
+        ParameterValue = 2
+        ParameterName = None
+    }
+    ScalarParameterValues[1] =
+    {
+        ParameterInfo = { Name=Hole Hardness (0-1) (S) }
+        ParameterValue = 0.31741
+        ParameterName = None
+    }
+    ScalarParameterValues[2] =
+    {
+        ParameterInfo = { Name=HoleCoverage }
+        ParameterValue = 0.904761
+        ParameterName = None
+    }
+    ScalarParameterValues[3] =
+    {
+        ParameterInfo = { Name=Ice Hardness (0-1) }
+        ParameterValue = 0.120635
+        ParameterName = None
+    }
+    ScalarParameterValues[4] =
+    {
+        ParameterInfo = { Name=Ice Sharpen }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[5] =
+    {
+        ParameterInfo = { Name=IceCoverage }
+        ParameterValue = 0.4
+        ParameterName = None
+    }
+    ScalarParameterValues[6] =
+    {
+        ParameterInfo = { Name=IceOpacity }
+        ParameterValue = 0.95
+        ParameterName = None
+    }
+    ScalarParameterValues[7] =
+    {
+        ParameterInfo = { Name=Offset U }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[8] =
+    {
+        ParameterInfo = { Name=Offset V }
+        ParameterValue = -0.15
+        ParameterName = None
+    }
+    ScalarParameterValues[9] =
+    {
+        ParameterInfo = { Name=TexA_Opacity }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[10] =
+    {
+        ParameterInfo = { Name=HoleOpacity }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[11] =
+    {
+        ParameterInfo = { Name=Opacity B }
+        ParameterValue = 0.5
+        ParameterName = None
+    }
+    ScalarParameterValues[12] =
+    {
+        ParameterInfo = { Name=Diffuse Brightness B }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[13] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[6] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=Diffuse A }
+        ParameterValue = Texture2D'/Game/Environment/Intro/Textures/Cliffside/T_Intro_CastleRuinWall_Snow_A_D.T_Intro_CastleRuinWall_Snow_A_D'
+        ParameterName = None
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=Normal Map A }
+        ParameterValue = Texture2D'/Game/Environment/Castle_Ruin_1/Textures/T_CastleRuins_1_wall_B_N.T_CastleRuins_1_wall_B_N'
+        ParameterName = None
+    }
+    TextureParameterValues[2] =
+    {
+        ParameterInfo = { Name=MROH/SROH Map A }
+        ParameterValue = Texture2D'/Game/Environment/Castle_Ruin_1/Textures/T_CastleRuins_1_wall_B_SRO.T_CastleRuins_1_wall_B_SRO'
+        ParameterName = None
+    }
+    TextureParameterValues[3] =
+    {
+        ParameterInfo = { Name=Diffuse B }
+        ParameterValue = Texture2D'/Game/Environment/Castle_Ruin_1/Textures/T_CastleRuins_1_wall_B_D.T_CastleRuins_1_wall_B_D'
+        ParameterName = None
+    }
+    TextureParameterValues[4] =
+    {
+        ParameterInfo = { Name=MRO/SRO Map B }
+        ParameterValue = Texture2D'/Game/Environment/Castle_Ruin_1/Textures/T_CastleRuins_1_wall_B_SRO.T_CastleRuins_1_wall_B_SRO'
+        ParameterName = None
+    }
+    TextureParameterValues[5] =
+    {
+        ParameterInfo = { Name=Normal Map B }
+        ParameterValue = Texture2D'/Game/Environment/Castle_Ruin_1/Textures/T_CastleRuins_1_wall_B_N.T_CastleRuins_1_wall_B_N'
+        ParameterName = None
+    }
+}
+VectorParameterValues[0] = {}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Masked (1)
+    bOverride_TwoSided = false
+    TwoSided = false
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[2] =
+    {
+        StaticSwitchParameters[0] =
+        {
+            Value = true
+            ParameterInfo = { Name=Use SROH for A }
+            bOverride = true
+        }
+        StaticSwitchParameters[1] =
+        {
+            Value = true
+            ParameterInfo = { Name=Use SRO for B }
+            bOverride = true
+        }
+    }
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[12] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_CastleRuins_1_wall_B_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_CastleRuins_1_wall_B_N
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_CastleRuins_1_wall_B_SRO
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 0.5
+        UVChannelIndex = 0
+        TextureName = VFX_T_AncMag_Icewall_01_MSK
+    }
+    TextureStreamingData[4] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_AncMag_Icewall_Brick_H
+    }
+    TextureStreamingData[5] =
+    {
+        SamplingScale = 2
+        UVChannelIndex = 0
+        TextureName = VFX_T_AncMag_IceWall_N
+    }
+    TextureStreamingData[6] =
+    {
+        SamplingScale = 1.5
+        UVChannelIndex = 0
+        TextureName = VFX_T_Cloud_SoftWisps_D
+    }
+    TextureStreamingData[7] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Ice_D
+    }
+    TextureStreamingData[8] =
+    {
+        SamplingScale = 0.078125
+        UVChannelIndex = 2
+        TextureName = VFX_T_Noise05_D
+    }
+    TextureStreamingData[9] =
+    {
+        SamplingScale = 0.796875
+        UVChannelIndex = 0
+        TextureName = VFX_T_Noise_LowFreq_E
+    }
+    TextureStreamingData[10] =
+    {
+        SamplingScale = 0.203125
+        UVChannelIndex = 0
+        TextureName = VFX_T_NoiseTiled_1_D
+    }
+    TextureStreamingData[11] =
+    {
+        SamplingScale = 0.890625
+        UVChannelIndex = 0
+        TextureName = VFX_T_RibbonOffset_N
+    }
+}

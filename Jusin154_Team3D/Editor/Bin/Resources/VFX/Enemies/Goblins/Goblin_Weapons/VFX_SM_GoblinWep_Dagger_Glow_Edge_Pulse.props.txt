@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Enemies/Goblins/Goblin_Weapons/VFX_MI_Goblin_Weapon_Swipe.VFX_MI_Goblin_Weapon_Swipe'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Enemies/Goblins/Goblin_Weapons/VFX_MI_Goblin_Weapon_Swipe.VFX_MI_Goblin_Weapon_Swipe'
+        MaterialSlotName = Glow_Edge
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 14.5894, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=-1.72638, Z=-11.0235 }
+    BoxExtent = { X=1.83961, Y=11.8141, Z=25.2318 }
+    SphereRadius = 27.8607
+}

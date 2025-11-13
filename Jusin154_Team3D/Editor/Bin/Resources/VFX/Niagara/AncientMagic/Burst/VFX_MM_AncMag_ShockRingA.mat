@@ -1,0 +1,5 @@
+Diffuse=DefaultDiffuse
+Normal=T_waterSplashA_N
+Other[0]=Good64x64TilingNoiseHighFreq
+Other[1]=VFX_T_Noise_Soft_D
+Other[2]=VFX_T_NoiseCaustics01_Color_D

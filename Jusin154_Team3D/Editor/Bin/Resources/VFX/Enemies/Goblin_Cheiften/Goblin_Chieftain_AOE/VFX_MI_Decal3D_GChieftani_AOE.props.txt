@@ -1,0 +1,670 @@
+Parent = Material3'/Game/VFX/MasterMaterials/Decals/VFX_MM_Decal3D_Blast.VFX_MM_Decal3D_Blast'
+ScalarParameterValues[82] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=Metallic }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[1] =
+    {
+        ParameterInfo = { Name=Roughness }
+        ParameterValue = 0.05
+        ParameterName = None
+    }
+    ScalarParameterValues[2] =
+    {
+        ParameterInfo = { Name=Specular }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[3] =
+    {
+        ParameterInfo = { Name=Blast Mask Tiling U }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[4] =
+    {
+        ParameterInfo = { Name=Blast Mask Tiling V }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[5] =
+    {
+        ParameterInfo = { Name=Blast Mask Hardness }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[6] =
+    {
+        ParameterInfo = { Name=Blast Mask Sharpen }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[7] =
+    {
+        ParameterInfo = { Name=Blast Mask Center Opacity }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[8] =
+    {
+        ParameterInfo = { Name=Detail Coverage }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[9] =
+    {
+        ParameterInfo = { Name=Detail Mask Hardness }
+        ParameterValue = 0.25
+        ParameterName = None
+    }
+    ScalarParameterValues[10] =
+    {
+        ParameterInfo = { Name=Detail Center Opacity }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[11] =
+    {
+        ParameterInfo = { Name=Detail Mask Sharpen }
+        ParameterValue = 0.3
+        ParameterName = None
+    }
+    ScalarParameterValues[12] =
+    {
+        ParameterInfo = { Name=Detail Tiling Size }
+        ParameterValue = 300
+        ParameterName = None
+    }
+    ScalarParameterValues[13] =
+    {
+        ParameterInfo = { Name=Detail Projection Contrast }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[14] =
+    {
+        ParameterInfo = { Name=Emissive Multiplyer }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[15] =
+    {
+        ParameterInfo = { Name=Soften Emissive Mask }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[16] =
+    {
+        ParameterInfo = { Name=Mask Mod Shape Multiplyer }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[17] =
+    {
+        ParameterInfo = { Name=Mask Mod Shape Tiling Size }
+        ParameterValue = 300
+        ParameterName = None
+    }
+    ScalarParameterValues[18] =
+    {
+        ParameterInfo = { Name=Mask Mod A Multiplyer }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[19] =
+    {
+        ParameterInfo = { Name=Mask Mod A Tiling Size }
+        ParameterValue = 300
+        ParameterName = None
+    }
+    ScalarParameterValues[20] =
+    {
+        ParameterInfo = { Name=Speed X (MA) }
+        ParameterValue = -8
+        ParameterName = None
+    }
+    ScalarParameterValues[21] =
+    {
+        ParameterInfo = { Name=Speed Y (MA) }
+        ParameterValue = -8
+        ParameterName = None
+    }
+    ScalarParameterValues[22] =
+    {
+        ParameterInfo = { Name=Speed Z (MA) }
+        ParameterValue = -8
+        ParameterName = None
+    }
+    ScalarParameterValues[23] =
+    {
+        ParameterInfo = { Name=Mask Mod B Multiplyer }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[24] =
+    {
+        ParameterInfo = { Name=Mask Mod B Tiling Size }
+        ParameterValue = 50
+        ParameterName = None
+    }
+    ScalarParameterValues[25] =
+    {
+        ParameterInfo = { Name=Speed X (MB) }
+        ParameterValue = 5
+        ParameterName = None
+    }
+    ScalarParameterValues[26] =
+    {
+        ParameterInfo = { Name=Speed Y (MB) }
+        ParameterValue = 5
+        ParameterName = None
+    }
+    ScalarParameterValues[27] =
+    {
+        ParameterInfo = { Name=Speed Z (MB) }
+        ParameterValue = 5
+        ParameterName = None
+    }
+    ScalarParameterValues[28] =
+    {
+        ParameterInfo = { Name=Mask Center Radius (MaskMod) }
+        ParameterValue = 75
+        ParameterName = None
+    }
+    ScalarParameterValues[29] =
+    {
+        ParameterInfo = { Name=Corruption  Tiling Size }
+        ParameterValue = 5000
+        ParameterName = None
+    }
+    ScalarParameterValues[30] =
+    {
+        ParameterInfo = { Name=Corruption Emissive Multiplyer }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[31] =
+    {
+        ParameterInfo = { Name=Speed X (C) }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[32] =
+    {
+        ParameterInfo = { Name=Speed X (Cb) }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[33] =
+    {
+        ParameterInfo = { Name=Speed Y (C) }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[34] =
+    {
+        ParameterInfo = { Name=Speed Y (Cb) }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[35] =
+    {
+        ParameterInfo = { Name=Speed Z (C) }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[36] =
+    {
+        ParameterInfo = { Name=Speed Z (Cb) }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[37] =
+    {
+        ParameterInfo = { Name=Tiling U (CUVmodA) }
+        ParameterValue = 0.05
+        ParameterName = None
+    }
+    ScalarParameterValues[38] =
+    {
+        ParameterInfo = { Name=Tiling U (CUVmodA2) }
+        ParameterValue = 20
+        ParameterName = None
+    }
+    ScalarParameterValues[39] =
+    {
+        ParameterInfo = { Name=Tiling V (CUVmodA) }
+        ParameterValue = 0.05
+        ParameterName = None
+    }
+    ScalarParameterValues[40] =
+    {
+        ParameterInfo = { Name=Tiling V (CUVmodA2) }
+        ParameterValue = 20
+        ParameterName = None
+    }
+    ScalarParameterValues[41] =
+    {
+        ParameterInfo = { Name=Tiling W(CUVmodA) }
+        ParameterValue = 0.05
+        ParameterName = None
+    }
+    ScalarParameterValues[42] =
+    {
+        ParameterInfo = { Name=Tiling W(CUVmodA2) }
+        ParameterValue = 20
+        ParameterName = None
+    }
+    ScalarParameterValues[43] =
+    {
+        ParameterInfo = { Name=Speed U (CUVmodA) }
+        ParameterValue = 0.05
+        ParameterName = None
+    }
+    ScalarParameterValues[44] =
+    {
+        ParameterInfo = { Name=Speed U (CUVmodA2) }
+        ParameterValue = 10
+        ParameterName = None
+    }
+    ScalarParameterValues[45] =
+    {
+        ParameterInfo = { Name=Speed V (CUVmodA) }
+        ParameterValue = 0.05
+        ParameterName = None
+    }
+    ScalarParameterValues[46] =
+    {
+        ParameterInfo = { Name=Speed V (CUVmodA2) }
+        ParameterValue = 10
+        ParameterName = None
+    }
+    ScalarParameterValues[47] =
+    {
+        ParameterInfo = { Name=Speed W (CUVmodA) }
+        ParameterValue = 0.05
+        ParameterName = None
+    }
+    ScalarParameterValues[48] =
+    {
+        ParameterInfo = { Name=Speed W (CUVmodA2) }
+        ParameterValue = 10
+        ParameterName = None
+    }
+    ScalarParameterValues[49] =
+    {
+        ParameterInfo = { Name=Tiling U (CUVmodB) }
+        ParameterValue = 0.1
+        ParameterName = None
+    }
+    ScalarParameterValues[50] =
+    {
+        ParameterInfo = { Name=Tiling V (CUVmodB) }
+        ParameterValue = 0.1
+        ParameterName = None
+    }
+    ScalarParameterValues[51] =
+    {
+        ParameterInfo = { Name=Tiling W (CUVmodB) }
+        ParameterValue = 0.1
+        ParameterName = None
+    }
+    ScalarParameterValues[52] =
+    {
+        ParameterInfo = { Name=Speed U (CUVmodB) }
+        ParameterValue = -0.05
+        ParameterName = None
+    }
+    ScalarParameterValues[53] =
+    {
+        ParameterInfo = { Name=Speed U (CUVmodB2) }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[54] =
+    {
+        ParameterInfo = { Name=Speed V (CUVmodB) }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[55] =
+    {
+        ParameterInfo = { Name=Speed V (CUVmodB2) }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[56] =
+    {
+        ParameterInfo = { Name=Speed W (CUVmodB) }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[57] =
+    {
+        ParameterInfo = { Name=Speed W (CUVmodB2) }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[58] =
+    {
+        ParameterInfo = { Name=NoiseStrenght (CUVmod) }
+        ParameterValue = 2
+        ParameterName = None
+    }
+    ScalarParameterValues[59] =
+    {
+        ParameterInfo = { Name=Normal Intensity }
+        ParameterValue = 0.35
+        ParameterName = None
+    }
+    ScalarParameterValues[60] =
+    {
+        ParameterInfo = { Name=Boost }
+        ParameterValue = 30
+        ParameterName = None
+    }
+    ScalarParameterValues[61] =
+    {
+        ParameterInfo = { Name=Contrast }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[62] =
+    {
+        ParameterInfo = { Name=Width }
+        ParameterValue = 0.75
+        ParameterName = None
+    }
+    ScalarParameterValues[63] =
+    {
+        ParameterInfo = { Name=Line Type }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[64] =
+    {
+        ParameterInfo = { Name=BloomAdaptation }
+        ParameterValue = 0.0001
+        ParameterName = None
+    }
+    ScalarParameterValues[65] =
+    {
+        ParameterInfo = { Name=LightingPanner }
+        ParameterValue = -0.15
+        ParameterName = None
+    }
+    ScalarParameterValues[66] =
+    {
+        ParameterInfo = { Name=NoiseStrenght }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[67] =
+    {
+        ParameterInfo = { Name=Speed U - HT }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[68] =
+    {
+        ParameterInfo = { Name=Speed V - HT }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[69] =
+    {
+        ParameterInfo = { Name=Tiling U - HT }
+        ParameterValue = 100
+        ParameterName = None
+    }
+    ScalarParameterValues[70] =
+    {
+        ParameterInfo = { Name=Tiling V - HT }
+        ParameterValue = 100
+        ParameterName = None
+    }
+    ScalarParameterValues[71] =
+    {
+        ParameterInfo = { Name=Heat Map Tiling Size }
+        ParameterValue = 75
+        ParameterName = None
+    }
+    ScalarParameterValues[72] =
+    {
+        ParameterInfo = { Name=Tiling U (A) }
+        ParameterValue = 0.1
+        ParameterName = None
+    }
+    ScalarParameterValues[73] =
+    {
+        ParameterInfo = { Name=Tiling V (A) }
+        ParameterValue = 0.1
+        ParameterName = None
+    }
+    ScalarParameterValues[74] =
+    {
+        ParameterInfo = { Name=Speed U (A) }
+        ParameterValue = 0.1
+        ParameterName = None
+    }
+    ScalarParameterValues[75] =
+    {
+        ParameterInfo = { Name=Speed V (A) }
+        ParameterValue = 0.7
+        ParameterName = None
+    }
+    ScalarParameterValues[76] =
+    {
+        ParameterInfo = { Name=Tiling U (B) }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[77] =
+    {
+        ParameterInfo = { Name=Tiling V (B) }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[78] =
+    {
+        ParameterInfo = { Name=Speed U (B) }
+        ParameterValue = 0.4
+        ParameterName = None
+    }
+    ScalarParameterValues[79] =
+    {
+        ParameterInfo = { Name=Speed V (B) }
+        ParameterValue = -0.333
+        ParameterName = None
+    }
+    ScalarParameterValues[80] =
+    {
+        ParameterInfo = { Name=Radius Dot 1 }
+        ParameterValue = 333.492
+        ParameterName = None
+    }
+    ScalarParameterValues[81] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[12] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=Blast Mask Noise  Map }
+        ParameterValue = Texture2D'/Game/VFX/Textures/Noises/VFX_T_TankMoteNoiseVinceTest_D.VFX_T_TankMoteNoiseVinceTest_D'
+        ParameterName = None
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=Detail Emissive Map }
+        ParameterValue = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Voronoi_Cells_19_D.VFX_T_Voronoi_Cells_19_D'
+        ParameterName = None
+    }
+    TextureParameterValues[2] =
+    {
+        ParameterInfo = { Name=Mask Mod Shape texture }
+        ParameterValue = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Voronoi_Cells_19_D.VFX_T_Voronoi_Cells_19_D'
+        ParameterName = None
+    }
+    TextureParameterValues[3] =
+    {
+        ParameterInfo = { Name=Mask Mod A Map }
+        ParameterValue = Texture2D'/Game/VFX/Textures/Meshes/T_GreatHallCloudsEdge_D.T_GreatHallCloudsEdge_D'
+        ParameterName = None
+    }
+    TextureParameterValues[4] =
+    {
+        ParameterInfo = { Name=Mask Mod B Map }
+        ParameterValue = Texture2D'/Game/VFX/Textures/VFX_T_WhispyCausticA_D.VFX_T_WhispyCausticA_D'
+        ParameterName = None
+    }
+    TextureParameterValues[5] =
+    {
+        ParameterInfo = { Name=Corruption Emissive Map }
+        ParameterValue = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise09_D.VFX_T_Noise09_D'
+        ParameterName = None
+    }
+    TextureParameterValues[6] =
+    {
+        ParameterInfo = { Name=Corruption Emissive Map (CB) }
+        ParameterValue = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Marble_01B_D.VFX_T_Marble_01B_D'
+        ParameterName = None
+    }
+    TextureParameterValues[7] =
+    {
+        ParameterInfo = { Name=Corruption UV Mod }
+        ParameterValue = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Voronoi_Cells_19b_N.VFX_T_Voronoi_Cells_19b_N'
+        ParameterName = None
+    }
+    TextureParameterValues[8] =
+    {
+        ParameterInfo = { Name=Detail Normal Map }
+        ParameterValue = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Voronoi_Cells_19b_N.VFX_T_Voronoi_Cells_19b_N'
+        ParameterName = None
+    }
+    TextureParameterValues[9] =
+    {
+        ParameterInfo = { Name=Edge Glow Dissolve Texture }
+        ParameterValue = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Cloud_SoftNoise_A.VFX_T_Cloud_SoftNoise_A'
+        ParameterName = None
+    }
+    TextureParameterValues[10] =
+    {
+        ParameterInfo = { Name=Heat Temp anim B }
+        ParameterValue = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Marble_01G2_D.VFX_T_Marble_01G2_D'
+        ParameterName = None
+    }
+    TextureParameterValues[11] =
+    {
+        ParameterInfo = { Name=Heat Map UV mod }
+        ParameterValue = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Marble_01R2_D.VFX_T_Marble_01R2_D'
+        ParameterName = None
+    }
+}
+VectorParameterValues[7] =
+{
+    VectorParameterValues[0] =
+    {
+        ParameterInfo = { Name=Base Color }
+        ParameterValue = { R=0.083333, G=0.083333, B=0.083333, A=1 }
+        ParameterName = None
+    }
+    VectorParameterValues[1] =
+    {
+        ParameterInfo = { Name=Emissive Color }
+        ParameterValue = { R=30, G=2.8125, B=2.8125, A=1 }
+        ParameterName = None
+    }
+    VectorParameterValues[2] =
+    {
+        ParameterInfo = { Name=Corruption Color }
+        ParameterValue = { R=10, G=0, B=0.356817, A=1 }
+        ParameterName = None
+    }
+    VectorParameterValues[3] =
+    {
+        ParameterInfo = { Name=Hot Color }
+        ParameterValue = { R=2, G=0, B=0.800359, A=1 }
+        ParameterName = None
+    }
+    VectorParameterValues[4] =
+    {
+        ParameterInfo = { Name=Cooling Color }
+        ParameterValue = { R=2, G=0, B=1.33154, A=1 }
+        ParameterName = None
+    }
+    VectorParameterValues[5] =
+    {
+        ParameterInfo = { Name=Param }
+        ParameterValue = { R=1, G=0, B=0, A=1 }
+        ParameterName = None
+    }
+    VectorParameterValues[6] =
+    {
+        ParameterInfo = { Name=Position Dot 1 }
+        ParameterValue = { R=8293.94, G=-6806.01, B=300, A=1 }
+        ParameterName = None
+    }
+}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Translucent (2)
+    bOverride_TwoSided = false
+    TwoSided = false
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[3] =
+    {
+        StaticSwitchParameters[0] =
+        {
+            Value = true
+            ParameterInfo = { Name=Blast Maks Modifyer }
+            bOverride = true
+        }
+        StaticSwitchParameters[1] =
+        {
+            Value = true
+            ParameterInfo = { Name=Use Edge Glow }
+            bOverride = true
+        }
+        StaticSwitchParameters[2] =
+        {
+            Value = true
+            ParameterInfo = { Name=Use Heat Map }
+            bOverride = true
+        }
+    }
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 81.25
+        UVChannelIndex = 0
+        TextureName = VFX_T_Marble_01G2_D
+    }
+}

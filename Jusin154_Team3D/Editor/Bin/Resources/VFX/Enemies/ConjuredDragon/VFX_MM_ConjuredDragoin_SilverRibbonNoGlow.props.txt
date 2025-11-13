@@ -1,0 +1,212 @@
+TwoSided = true
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[7] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_GradientThick_01_D.VFX_T_GradientThick_01_D'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_DistortionNoise_N.VFX_T_DistortionNoise_N'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise07_D.VFX_T_Noise07_D'
+    ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise07_N.VFX_T_Noise07_N'
+    ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseCaustics01_Color_D.VFX_T_NoiseCaustics01_Color_D'
+    ReferencedTextures[6] = Texture2D'/Game/VFX/Textures/T_FX_BandRibbed01_N.T_FX_BandRibbed01_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[34] =
+                {
+                    ParameterInfos[0] = { Name=Roughness }
+                    ParameterInfos[1] = { Name=Tiling V (S)_2 }
+                    ParameterInfos[2] = { Name=Exp }
+                    ParameterInfos[3] = { Name=Swizzle (0-1) (S) }
+                    ParameterInfos[4] = { Name=B_1 }
+                    ParameterInfos[5] = { Name=ShapeNormalIntensity }
+                    ParameterInfos[6] = { Name=Tiling V (S) 2 }
+                    ParameterInfos[7] = { Name=Speed U (S)_4 }
+                    ParameterInfos[8] = { Name=Input Low (S) }
+                    ParameterInfos[9] = { Name=WidthBase (S) }
+                    ParameterInfos[10] = { Name=Metallic }
+                    ParameterInfos[11] = { Name=PowBias }
+                    ParameterInfos[12] = { Name=Tiling V (S)_1 }
+                    ParameterInfos[13] = { Name=Tiling U (S)_1 }
+                    ParameterInfos[14] = { Name=Intensity (S) }
+                    ParameterInfos[15] = { Name=Input Max (S) }
+                    ParameterInfos[16] = { Name=ModUV Strength (S) }
+                    ParameterInfos[17] = { Name=Speed U (S)_1 }
+                    ParameterInfos[18] = { Name=Input Min (S) }
+                    ParameterInfos[19] = { Name=Speed V (S)_1 }
+                    ParameterInfos[20] = { Name=Speed U (S) 2 }
+                    ParameterInfos[21] = { Name=Speed U (S)_2 }
+                    ParameterInfos[22] = { Name=Tiling U (S)_2 }
+                    ParameterInfos[23] = { Name=Speed V (S) }
+                    ParameterInfos[24] = { Name=Speed U (S)_3 }
+                    ParameterInfos[25] = { Name=Input High (S) }
+                    ParameterInfos[26] = { Name=Speed U (S) }
+                    ParameterInfos[27] = { Name=Tiling U (S) }
+                    ParameterInfos[28] = { Name=Smoothing (S) }
+                    ParameterInfos[29] = { Name=Tiling V (S) }
+                    ParameterInfos[30] = { Name=Width (0-1) (S) }
+                    ParameterInfos[31] = { Name=Bias (0-1) (S) }
+                    ParameterInfos[32] = { Name=Tiling U (S) 2 }
+                    ParameterInfos[33] = { Name=B }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=Emissive Color (V3) }
+                    ParameterInfos[1] = { Name=Param }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=ShapeNormal }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[34] =
+        {
+            ScalarValues[0] = 0.225397
+            ScalarValues[1] = 2.98474
+            ScalarValues[2] = 8.35517
+            ScalarValues[3] = 0
+            ScalarValues[4] = 0.603175
+            ScalarValues[5] = 1
+            ScalarValues[6] = 0.155555
+            ScalarValues[7] = 0
+            ScalarValues[8] = -4.57343
+            ScalarValues[9] = 46.8196
+            ScalarValues[10] = 1
+            ScalarValues[11] = 1
+            ScalarValues[12] = 3
+            ScalarValues[13] = 3
+            ScalarValues[14] = 4
+            ScalarValues[15] = 1
+            ScalarValues[16] = 0.003618
+            ScalarValues[17] = 0.752381
+            ScalarValues[18] = 0.076191
+            ScalarValues[19] = 0.196826
+            ScalarValues[20] = -0.116681
+            ScalarValues[21] = 0.028571
+            ScalarValues[22] = 0
+            ScalarValues[23] = 0.228571
+            ScalarValues[24] = -0.009523
+            ScalarValues[25] = 1
+            ScalarValues[26] = 0.031746
+            ScalarValues[27] = 1.20718
+            ScalarValues[28] = 0.91746
+            ScalarValues[29] = 0.0948
+            ScalarValues[30] = 0
+            ScalarValues[31] = 0
+            ScalarValues[32] = 1.60988
+            ScalarValues[33] = 57.1364
+        }
+        VectorValues[2] =
+        {
+            VectorValues[0] = { R=1, G=1, B=1, A=0 }
+            VectorValues[1] = { R=0.0377702, G=0.0340396, B=0.0642362, A=1 }
+        }
+        TextureValues[1] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/T_FX_BandRibbed01_N.T_FX_BandRibbed01_N'
+        }
+    }
+    ReferencedTextures[7] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise07_D.VFX_T_Noise07_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise07_N.VFX_T_Noise07_N'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseCaustics01_Color_D.VFX_T_NoiseCaustics01_Color_D'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_DistortionNoise_N.VFX_T_DistortionNoise_N'
+        ReferencedTextures[4] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+        ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_GradientThick_01_D.VFX_T_GradientThick_01_D'
+        ReferencedTextures[6] = Texture2D'/Game/VFX/Textures/T_FX_BandRibbed01_N.T_FX_BandRibbed01_N'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[1] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/T_FX_BandRibbed01_N.T_FX_BandRibbed01_N'
+        Name = ShapeNormal
+        Group = None
+    }
+}
+CollectedScalarParameters[34] =
+{
+    CollectedScalarParameters[0] = { Value=0.225397, Name=Roughness, Group=None }
+    CollectedScalarParameters[1] = { Value=2.98474, Name=Tiling V (S)_2, Group=None }
+    CollectedScalarParameters[2] = { Value=8.35517, Name=Exp, Group=None }
+    CollectedScalarParameters[3] = { Value=0, Name=Swizzle (0-1) (S), Group=None }
+    CollectedScalarParameters[4] = { Value=0.603175, Name=B_1, Group=None }
+    CollectedScalarParameters[5] = { Value=1, Name=ShapeNormalIntensity, Group=None }
+    CollectedScalarParameters[6] = { Value=0.155555, Name=Tiling V (S) 2, Group=None }
+    CollectedScalarParameters[7] = { Value=0, Name=Speed U (S)_4, Group=None }
+    CollectedScalarParameters[8] = { Value=-4.57343, Name=Input Low (S), Group=None }
+    CollectedScalarParameters[9] = { Value=46.8196, Name=WidthBase (S), Group=None }
+    CollectedScalarParameters[10] = { Value=1, Name=Metallic, Group=None }
+    CollectedScalarParameters[11] = { Value=1, Name=PowBias, Group=None }
+    CollectedScalarParameters[12] = { Value=3, Name=Tiling V (S)_1, Group=None }
+    CollectedScalarParameters[13] = { Value=3, Name=Tiling U (S)_1, Group=None }
+    CollectedScalarParameters[14] = { Value=4, Name=Intensity (S), Group=None }
+    CollectedScalarParameters[15] = { Value=1, Name=Input Max (S), Group=None }
+    CollectedScalarParameters[16] =
+    {
+        Value = 0.003618
+        Name = ModUV Strength (S)
+        Group = None
+    }
+    CollectedScalarParameters[17] = { Value=0.752381, Name=Speed U (S)_1, Group=None }
+    CollectedScalarParameters[18] = { Value=0.076191, Name=Input Min (S), Group=None }
+    CollectedScalarParameters[19] = { Value=0.196826, Name=Speed V (S)_1, Group=None }
+    CollectedScalarParameters[20] = { Value=-0.116681, Name=Speed U (S) 2, Group=None }
+    CollectedScalarParameters[21] = { Value=0.028571, Name=Speed U (S)_2, Group=None }
+    CollectedScalarParameters[22] = { Value=0, Name=Tiling U (S)_2, Group=None }
+    CollectedScalarParameters[23] = { Value=0.228571, Name=Speed V (S), Group=None }
+    CollectedScalarParameters[24] = { Value=-0.009523, Name=Speed U (S)_3, Group=None }
+    CollectedScalarParameters[25] = { Value=1, Name=Input High (S), Group=None }
+    CollectedScalarParameters[26] = { Value=0.031746, Name=Speed U (S), Group=None }
+    CollectedScalarParameters[27] = { Value=1.20718, Name=Tiling U (S), Group=None }
+    CollectedScalarParameters[28] = { Value=0.91746, Name=Smoothing (S), Group=None }
+    CollectedScalarParameters[29] = { Value=0.0948, Name=Tiling V (S), Group=None }
+    CollectedScalarParameters[30] = { Value=0, Name=Width (0-1) (S), Group=None }
+    CollectedScalarParameters[31] = { Value=0, Name=Bias (0-1) (S), Group=None }
+    CollectedScalarParameters[32] = { Value=1.60988, Name=Tiling U (S) 2, Group=None }
+    CollectedScalarParameters[33] = { Value=57.1364, Name=B, Group=None }
+}
+CollectedVectorParameters[2] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=1, G=1, B=1, A=0 }
+        Name = Emissive Color (V3)
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0.0377702, G=0.0340396, B=0.0642362, A=1 }
+        Name = Param
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

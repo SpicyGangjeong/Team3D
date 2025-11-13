@@ -1,0 +1,50 @@
+Materials[3] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Mesh/MaterialInstance/VFX_MI_HW_Origami_WingsB.VFX_MI_HW_Origami_WingsB'
+    Materials[1] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Mesh/MaterialInstance/VFX_MI_HW_Origami_Body.VFX_MI_HW_Origami_Body'
+    Materials[2] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Mesh/MaterialInstance/VFX_MI_HW_Origami_Wings.VFX_MI_HW_Origami_Wings'
+}
+SourceModels[0] = {}
+StaticMaterials[3] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Mesh/MaterialInstance/VFX_MI_HW_Origami_WingsB.VFX_MI_HW_Origami_WingsB'
+        MaterialSlotName = VFX_MI_GlowBugWingsB
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 86.5225, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Mesh/MaterialInstance/VFX_MI_HW_Origami_Body.VFX_MI_HW_Origami_Body'
+        MaterialSlotName = VFX_MI_GlowBugBody
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 156.363, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[2] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Mesh/MaterialInstance/VFX_MI_HW_Origami_Wings.VFX_MI_HW_Origami_Wings'
+        MaterialSlotName = VFX_MI_GlowBugWings
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 87.2597, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=4.92265, Y=0, Z=12.6332 }
+    BoxExtent = { X=42.7911, Y=50, Z=27.3272 }
+    SphereRadius = 55.3321
+}

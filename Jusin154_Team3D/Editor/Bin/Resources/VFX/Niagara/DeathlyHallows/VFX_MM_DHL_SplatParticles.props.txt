@@ -1,0 +1,67 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[2] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/VFX_T_Splatter_Decals_3_D.VFX_T_Splatter_Decals_3_D'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/VFX_T_Splatter_Decals_3_N.VFX_T_Splatter_Decals_3_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[4] =
+                {
+                    ParameterInfos[0] = { Name=Roughness }
+                    ParameterInfos[1] = { Name=Metallic }
+                    ParameterInfos[2] = { Name=Specular }
+                    ParameterInfos[3] = { Name=Intensity (S) }
+                }
+            }
+            Entries[1] = { ParameterInfos[0]={} }
+            Entries[2] = { ParameterInfos[0]={} }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[4] = { 1, 1, 0.44127, 0.5 }
+        VectorValues[0] = {}
+        TextureValues[0] = {}
+    }
+    ReferencedTextures[2] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/VFX_T_Splatter_Decals_3_D.VFX_T_Splatter_Decals_3_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/VFX_T_Splatter_Decals_3_N.VFX_T_Splatter_Decals_3_N'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[0] = {}
+CollectedScalarParameters[4] =
+{
+    CollectedScalarParameters[0] = { Value=1, Name=Roughness, Group=None }
+    CollectedScalarParameters[1] = { Value=1, Name=Metallic, Group=None }
+    CollectedScalarParameters[2] = { Value=0.44127, Name=Specular, Group=None }
+    CollectedScalarParameters[3] = { Value=0.5, Name=Intensity (S), Group=None }
+}
+CollectedVectorParameters[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Splatter_Decals_3_D
+    }
+}

@@ -1,0 +1,38 @@
+Materials[2] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Gameplay/InventoryObjects/Potions/Materials/MI_Potion_Wound_cleaning_Glass.MI_Potion_Wound_cleaning_Glass'
+    Materials[1] = MaterialInstanceConstant'/Game/Gameplay/InventoryObjects/Potions/Materials/MI_Potion_Wound_cleaning.MI_Potion_Wound_cleaning'
+}
+SourceModels[0] = {}
+StaticMaterials[2] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Gameplay/InventoryObjects/Potions/Materials/MI_Potion_Wound_cleaning_Glass.MI_Potion_Wound_cleaning_Glass'
+        MaterialSlotName = MI_Potion_Wound_cleaning_Glass
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 32.2898, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Gameplay/InventoryObjects/Potions/Materials/MI_Potion_Wound_cleaning.MI_Potion_Wound_cleaning'
+        MaterialSlotName = MI_Potion_Wound_cleaning
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 22.3496, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=0, Z=-7.63273 }
+    BoxExtent = { X=3.62457, Y=3.62457, Z=12.3125 }
+    SphereRadius = 12.6084
+}

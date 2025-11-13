@@ -11,10 +11,12 @@ float g_LifeRatio;
 float g_fRimStrength;
 float g_fRimPower;
 float3 g_vRimColor;
+float4 g_TestColor;
 vector g_vCamPosition;
 
 Texture2D g_DiffuseTexture;
 Texture2D g_NormalTexture;
+Texture2D g_MaskingTexture;
 
 matrix g_BoneMatrices[512];
 
@@ -272,6 +274,38 @@ PS_OUT_BLUR PS_MAIN_BLUR(PS_IN_BLUR In)
     return Out;
 }
 
+PS_OUT PS_MAIN_TEST(PS_IN In)
+{
+    PS_OUT Out;
+
+    float4 vMtrlDiffuse = g_TestColor;
+
+    float4 vMtrlMask = g_MaskingTexture.Sample(DefaultSampler, In.vTexcoord);
+
+    float fAlpha = vMtrlMask.r;
+
+    if (fAlpha < 0.1f)
+        discard;
+
+    float4 vNormalDesc = g_NormalTexture.Sample(MirrorSampler, In.vTexcoord);
+    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
+    float3 vNormal = mul(vNormalDesc.xyz * 2.f - 1.f, WorldMatrix);
+
+    if (g_bRimLight)
+    {
+        float fRimLight = GetRimLight(g_vCamPosition.xyz, In.vWorldPos.xyz, vNormal, g_fRimPower, g_fRimStrength);
+        vMtrlDiffuse.rgb = lerp(vMtrlDiffuse.rgb, g_vRimColor.rgb, fRimLight);
+    }
+
+    Out.vDiffuse = float4(vMtrlDiffuse.rgb * vMtrlMask.r, g_TestColor.a);
+    Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.0f, 1.f);
+
+    return Out;
+}
+
+
+
 
 technique11 DefaultTechnique
 {
@@ -312,5 +346,15 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN_BLUR();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_BLUR();
+    }
+
+    pass TestPass
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_TEST();
     }
 }

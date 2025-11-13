@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/RiggedObjects/Props/Weapons/Goblins/Materials/MI_WPN_GOB_SmallSword_Spectre.MI_WPN_GOB_SmallSword_Spectre'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/RiggedObjects/Props/Weapons/Goblins/Materials/MI_WPN_GOB_SmallSword_Spectre.MI_WPN_GOB_SmallSword_Spectre'
+        MaterialSlotName = M_WPN_GOB_SmallSword
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 40.7188, 2.15697, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-0.0214434, Y=-7.15256e-07, Z=21.9872 }
+    BoxExtent = { X=8.6534, Y=2.41813, Z=34.1544 }
+    SphereRadius = 34.1544
+}

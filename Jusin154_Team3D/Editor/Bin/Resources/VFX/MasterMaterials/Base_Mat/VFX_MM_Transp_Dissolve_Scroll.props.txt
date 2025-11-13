@@ -1,0 +1,119 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[2] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Cloud_SoftNoise_A.VFX_T_Cloud_SoftNoise_A'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/VFX_T_Black_4x4_D.VFX_T_Black_4x4_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[6] =
+                {
+                    ParameterInfos[0] = { Name=Boost }
+                    ParameterInfos[1] = { Name=Contrast }
+                    ParameterInfos[2] = { Name=BloomAdaptation }
+                    ParameterInfos[3] = { Name=Dissolve }
+                    ParameterInfos[4] = { Name=Width }
+                    ParameterInfos[5] = { Name=Line Type }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Emissive Color }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=Param }
+                    ParameterInfos[1] = { Name=Dissolve Texture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[6] = { 0.57717, 1.41989, 0, 0, 0.640233, 0 }
+        VectorValues[1] =
+        {
+            VectorValues[0] = { R=40, G=32.3314, B=0, A=1 }
+        }
+        TextureValues[2] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/VFX_T_Black_4x4_D.VFX_T_Black_4x4_D'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Cloud_SoftNoise_A.VFX_T_Cloud_SoftNoise_A'
+        }
+    }
+    ReferencedTextures[2] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/VFX_T_Black_4x4_D.VFX_T_Black_4x4_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Cloud_SoftNoise_A.VFX_T_Cloud_SoftNoise_A'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[2] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_Black_4x4_D.VFX_T_Black_4x4_D'
+        Name = Param
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Cloud_SoftNoise_A.VFX_T_Cloud_SoftNoise_A'
+        Name = Dissolve Texture
+        Group = None
+    }
+}
+CollectedScalarParameters[6] =
+{
+    CollectedScalarParameters[0] = { Value=0.57717, Name=Boost, Group=None }
+    CollectedScalarParameters[1] = { Value=1.41989, Name=Contrast, Group=None }
+    CollectedScalarParameters[2] = { Value=0, Name=BloomAdaptation, Group=None }
+    CollectedScalarParameters[3] = { Value=0, Name=Dissolve, Group=None }
+    CollectedScalarParameters[4] = { Value=0.640233, Name=Width, Group=None }
+    CollectedScalarParameters[5] = { Value=0, Name=Line Type, Group=None }
+}
+CollectedVectorParameters[1] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=40, G=32.3314, B=0, A=1 }
+        Name = Emissive Color
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[2] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Black_4x4_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Cloud_SoftNoise_A
+    }
+}

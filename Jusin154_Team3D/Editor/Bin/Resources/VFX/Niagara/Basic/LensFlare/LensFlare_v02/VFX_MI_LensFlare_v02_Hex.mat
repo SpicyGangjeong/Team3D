@@ -1,0 +1,5 @@
+Diffuse=VFX_T_Flare01_D
+Emissive=VFX_T_ChromaWheel_E
+Other[0]=VFX_T_LensFlare_Bokeh_Hex_D
+Other[1]=VFX_T_NoiseCaustics01_Color_D
+Other[2]=VFX_T_LensFlare_DirtMask_E

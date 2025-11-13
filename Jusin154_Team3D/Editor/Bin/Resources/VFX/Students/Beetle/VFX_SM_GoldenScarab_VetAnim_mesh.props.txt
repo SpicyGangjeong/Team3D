@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Students/Beetle/VFX_MM_GoldenScarab_VertAnim_Inst.VFX_MM_GoldenScarab_VertAnim_Inst'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Students/Beetle/VFX_MM_GoldenScarab_VertAnim_Inst.VFX_MM_GoldenScarab_VertAnim_Inst'
+        MaterialSlotName = VFX_MM_GoldenScarab_VertAnim_Inst
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 22.7555, 0, 33.2553, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0.159582, Y=-0.755842, Z=2.93049 }
+    BoxExtent = { X=6.92664, Y=8.24511, Z=3.0635 }
+    SphereRadius = 10.5929
+}

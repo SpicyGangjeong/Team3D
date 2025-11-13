@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = Material3'/Game/VFX/TEST/Darin_Niagra_lerning/Test_System/VFX_M_Test_Debug.VFX_M_Test_Debug'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = Material3'/Game/VFX/TEST/Darin_Niagra_lerning/Test_System/VFX_M_Test_Debug.VFX_M_Test_Debug'
+        MaterialSlotName = lambert1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 4625.78, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=962.88, Y=956.873, Z=962.879 }
+    BoxExtent = { X=1037.88, Y=1043.89, Z=1037.88 }
+    SphereRadius = 1715.8
+}

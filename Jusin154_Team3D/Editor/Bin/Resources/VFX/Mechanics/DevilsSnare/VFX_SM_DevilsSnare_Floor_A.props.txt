@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Mechanics/DevilsSnare/VFX_MI_DevilsSnare_Floor_A.VFX_MI_DevilsSnare_Floor_A'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Mechanics/DevilsSnare/VFX_MI_DevilsSnare_Floor_A.VFX_MI_DevilsSnare_Floor_A'
+        MaterialSlotName = constant
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 366.494, 5219.34, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=137.922, Y=-9.4663, Z=9.74109 }
+    BoxExtent = { X=153.552, Y=108.329, Z=24.2479 }
+    SphereRadius = 156.969
+}

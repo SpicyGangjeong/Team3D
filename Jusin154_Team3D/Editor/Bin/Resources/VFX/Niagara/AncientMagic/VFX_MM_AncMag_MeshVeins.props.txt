@@ -1,0 +1,185 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[3] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/RiggedObjects/Characters/Creatures/Insects/Spiders/Acromantula_Corrupted/Textures/T_Spider_AcromantulaAM_Corrupted_N.T_Spider_AcromantulaAM_Corrupted_N'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_DistortionNoise_N.VFX_T_DistortionNoise_N'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseCaustics_Chromatic_D.VFX_T_NoiseCaustics_Chromatic_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[15] =
+                {
+                    ParameterInfos[0] = { Name=NormalIntensity_Liquid }
+                    ParameterInfos[1] = { Name=Exp }
+                    ParameterInfos[2] = { Name=MatAnimCurve }
+                    ParameterInfos[3] = { Name=Radius }
+                    ParameterInfos[4] = { Name=Roughness_Liquid }
+                    ParameterInfos[5] = { Name=Roughness_Solid }
+                    ParameterInfos[6] = { Name=NormalIntensity_Solid }
+                    ParameterInfos[7] = { Name=Hardness }
+                    ParameterInfos[8] = { Name=Metallic_Solid }
+                    ParameterInfos[9] = { Name=Speed V (S) }
+                    ParameterInfos[10] = { Name=Exp_1 }
+                    ParameterInfos[11] = { Name=WPO Strength }
+                    ParameterInfos[12] = { Name=Speed U (S) }
+                    ParameterInfos[13] = { Name=Tiling U (S) }
+                    ParameterInfos[14] = { Name=Metallic_Liquid }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[5] =
+                {
+                    ParameterInfos[0] = { Name=Emissive_Liquid }
+                    ParameterInfos[1] = { Name=WipeCenter }
+                    ParameterInfos[2] = { Name=BaseColor_Solid }
+                    ParameterInfos[3] = { Name=BaseColor_Liquid }
+                    ParameterInfos[4] = { Name=Emissive_Solid }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=NormalMap }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[15] =
+        {
+            ScalarValues[0] = 0.790476
+            ScalarValues[1] = 6
+            ScalarValues[2] = 18
+            ScalarValues[3] = 93.8879
+            ScalarValues[4] = 0.187301
+            ScalarValues[5] = 0.463493
+            ScalarValues[6] = 1
+            ScalarValues[7] = 0.438095
+            ScalarValues[8] = 1
+            ScalarValues[9] = 0.342857
+            ScalarValues[10] = 4
+            ScalarValues[11] = 2
+            ScalarValues[12] = 0.495238
+            ScalarValues[13] = 4
+            ScalarValues[14] = 1
+        }
+        VectorValues[5] =
+        {
+            VectorValues[0] = { R=0.0632284, G=0.15471, B=0.225, A=1 }
+            VectorValues[1] = { R=0, G=0, B=0, A=1 }
+            VectorValues[2] = { R=0.20725, G=0.225521, B=0.282986, A=1 }
+            VectorValues[3] = { R=1, G=1, B=1, A=1 }
+            VectorValues[4] = { R=0, G=0, B=0, A=1 }
+        }
+        TextureValues[1] =
+        {
+            TextureValues[0] = Texture2D'/Game/RiggedObjects/Characters/Creatures/Insects/Spiders/Acromantula_Corrupted/Textures/T_Spider_AcromantulaAM_Corrupted_N.T_Spider_AcromantulaAM_Corrupted_N'
+        }
+    }
+    ReferencedTextures[4] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/CurveAtlas/VFX_CA_CurveAtlasMaterialAnims.VFX_CA_CurveAtlasMaterialAnims'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_DistortionNoise_N.VFX_T_DistortionNoise_N'
+        ReferencedTextures[2] = Texture2D'/Game/RiggedObjects/Characters/Creatures/Insects/Spiders/Acromantula_Corrupted/Textures/T_Spider_AcromantulaAM_Corrupted_N.T_Spider_AcromantulaAM_Corrupted_N'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseCaustics_Chromatic_D.VFX_T_NoiseCaustics_Chromatic_D'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[1] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/RiggedObjects/Characters/Creatures/Insects/Spiders/Acromantula_Corrupted/Textures/T_Spider_AcromantulaAM_Corrupted_N.T_Spider_AcromantulaAM_Corrupted_N'
+        Name = NormalMap
+        Group = None
+    }
+}
+CollectedScalarParameters[15] =
+{
+    CollectedScalarParameters[0] =
+    {
+        Value = 0.790476
+        Name = NormalIntensity_Liquid
+        Group = None
+    }
+    CollectedScalarParameters[1] = { Value=6, Name=Exp, Group=None }
+    CollectedScalarParameters[2] = { Value=18, Name=MatAnimCurve, Group=None }
+    CollectedScalarParameters[3] = { Value=93.8879, Name=Radius, Group=None }
+    CollectedScalarParameters[4] =
+    {
+        Value = 0.187301
+        Name = Roughness_Liquid
+        Group = None
+    }
+    CollectedScalarParameters[5] = { Value=0.463493, Name=Roughness_Solid, Group=None }
+    CollectedScalarParameters[6] = { Value=1, Name=NormalIntensity_Solid, Group=None }
+    CollectedScalarParameters[7] = { Value=0.438095, Name=Hardness, Group=None }
+    CollectedScalarParameters[8] = { Value=1, Name=Metallic_Solid, Group=None }
+    CollectedScalarParameters[9] = { Value=0.342857, Name=Speed V (S), Group=None }
+    CollectedScalarParameters[10] = { Value=4, Name=Exp_1, Group=None }
+    CollectedScalarParameters[11] = { Value=2, Name=WPO Strength, Group=None }
+    CollectedScalarParameters[12] = { Value=0.495238, Name=Speed U (S), Group=None }
+    CollectedScalarParameters[13] = { Value=4, Name=Tiling U (S), Group=None }
+    CollectedScalarParameters[14] = { Value=1, Name=Metallic_Liquid, Group=None }
+}
+CollectedVectorParameters[5] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0.0632284, G=0.15471, B=0.225, A=1 }
+        Name = Emissive_Liquid
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = WipeCenter
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=0.20725, G=0.225521, B=0.282986, A=1 }
+        Name = BaseColor_Solid
+        Group = None
+    }
+    CollectedVectorParameters[3] =
+    {
+        Value = { R=1, G=1, B=1, A=1 }
+        Name = BaseColor_Liquid
+        Group = None
+    }
+    CollectedVectorParameters[4] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = Emissive_Solid
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_NoiseCaustics_Chromatic_D
+    }
+}

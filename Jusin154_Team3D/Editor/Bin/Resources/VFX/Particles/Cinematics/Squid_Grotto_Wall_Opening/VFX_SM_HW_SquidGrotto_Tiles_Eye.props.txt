@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Environment/Hogwarts/SUB_GroundsQ/Materials/MI_HW_GroundsQ_Grotto_Mosaic.MI_HW_GroundsQ_Grotto_Mosaic'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Hogwarts/SUB_GroundsQ/Materials/MI_HW_GroundsQ_Grotto_Mosaic.MI_HW_GroundsQ_Grotto_Mosaic'
+        MaterialSlotName = M_SquidGrotto_Mosaic
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 466.373, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=27.6707, Y=0.229462, Z=101.733 }
+    BoxExtent = { X=8.7208, Y=0.0103016, Z=7.85231 }
+    SphereRadius = 9.11179
+}

@@ -1,0 +1,278 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[6] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/Environment/Cavern_Dungeon/Textures/Rocks/T_CavernDun_Sanctum_Rockwall_Blend_C_N.T_CavernDun_Sanctum_Rockwall_Blend_C_N'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise08_D.VFX_T_Noise08_D'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_LowFreq_E.VFX_T_Noise_LowFreq_E'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_LowFreq_N.VFX_T_Noise_LowFreq_N'
+    ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseCaustics01_Color_D.VFX_T_NoiseCaustics01_Color_D'
+    ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_PlasmaSpell_D.VFX_T_PlasmaSpell_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[36] =
+                {
+                    ParameterInfos[0] = { Name=Roughness }
+                    ParameterInfos[1] = { Name=Exp }
+                    ParameterInfos[2] = { Name=Metallic Light }
+                    ParameterInfos[3] = { Name=Stretch Strength }
+                    ParameterInfos[4] = { Name=B_1 }
+                    ParameterInfos[5] = { Name=Metallic_1 }
+                    ParameterInfos[6] = { Name=Metallic }
+                    ParameterInfos[7] = { Name=Tiling U }
+                    ParameterInfos[8] = { Name=NMap Speed V }
+                    ParameterInfos[9] = { Name=Speed U }
+                    ParameterInfos[10] = { Name=Intensity (S) }
+                    ParameterInfos[11] = { Name=Tiling V }
+                    ParameterInfos[12] = { Name=Metallic Boost }
+                    ParameterInfos[13] = { Name=Em Map 2 Sped V }
+                    ParameterInfos[14] = { Name=Em Map 2 Tiling U }
+                    ParameterInfos[15] = { Name=Param }
+                    ParameterInfos[16] = { Name=Roughness_1 }
+                    ParameterInfos[17] = { Name=Speed V (S) }
+                    ParameterInfos[18] = { Name=Min Speed }
+                    ParameterInfos[19] = { Name=Roughness Dark }
+                    ParameterInfos[20] = { Name=Em Map 2 Tiling V }
+                    ParameterInfos[21] = { Name=Metallic Dark }
+                    ParameterInfos[22] = { Name=Normal Intensity }
+                    ParameterInfos[23] = { Name=NMap Tiling U }
+                    ParameterInfos[24] = { Name=NMap Speed U }
+                    ParameterInfos[25] = { Name=Max Speed }
+                    ParameterInfos[26] = { Name=Speed U (S) }
+                    ParameterInfos[27] = { Name=Roughness Light }
+                    ParameterInfos[28] = { Name=Tiling U (S) }
+                    ParameterInfos[29] = { Name=Speed V }
+                    ParameterInfos[30] = { Name=Tiling V (S) }
+                    ParameterInfos[31] = { Name=Em Map Bias Power }
+                    ParameterInfos[32] = { Name=NMap Tiling V }
+                    ParameterInfos[33] = { Name=Em Map 2 Speed U }
+                    ParameterInfos[34] = { Name=Em Fresnel Bias Power }
+                    ParameterInfos[35] = { Name=B }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[5] =
+                {
+                    ParameterInfos[0] = { Name=Base Color }
+                    ParameterInfos[1] = { Name=Color Dark }
+                    ParameterInfos[2] = { Name=EmCol }
+                    ParameterInfos[3] = { Name=Color Light }
+                    ParameterInfos[4] = { Name=Param }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=Blend Map }
+                    ParameterInfos[1] = { Name=Normal Map }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[36] =
+        {
+            ScalarValues[0] = 0.247619
+            ScalarValues[1] = 4
+            ScalarValues[2] = 1
+            ScalarValues[3] = 1
+            ScalarValues[4] = 1.36739
+            ScalarValues[5] = 1
+            ScalarValues[6] = 0
+            ScalarValues[7] = 1
+            ScalarValues[8] = -0.590476
+            ScalarValues[9] = 0.07619
+            ScalarValues[10] = 2
+            ScalarValues[11] = 0.580952
+            ScalarValues[12] = 1.46569
+            ScalarValues[13] = -1.01905
+            ScalarValues[14] = 1
+            ScalarValues[15] = 0.295237
+            ScalarValues[16] = 0.2
+            ScalarValues[17] = 0.666666
+            ScalarValues[18] = 0
+            ScalarValues[19] = 1
+            ScalarValues[20] = 0.704762
+            ScalarValues[21] = 0.657143
+            ScalarValues[22] = 0.3
+            ScalarValues[23] = 1
+            ScalarValues[24] = 0
+            ScalarValues[25] = 275
+            ScalarValues[26] = 0.361905
+            ScalarValues[27] = 0.171429
+            ScalarValues[28] = 1
+            ScalarValues[29] = 0.152381
+            ScalarValues[30] = 1
+            ScalarValues[31] = 0.161904
+            ScalarValues[32] = 0.533333
+            ScalarValues[33] = 0.133333
+            ScalarValues[34] = 1
+            ScalarValues[35] = 15.4286
+        }
+        VectorValues[5] =
+        {
+            VectorValues[0] = { R=0.0104167, G=0.00743273, B=0.00743273, A=0 }
+            VectorValues[1] = { R=0, G=0, B=0, A=1 }
+            VectorValues[2] = { R=36.9792, G=56.4907, B=100, A=1 }
+            VectorValues[3] = { R=1, G=0.551385, B=0.147041, A=1 }
+            VectorValues[4] = { R=0.026042, G=0.00407, B=0, A=1 }
+        }
+        TextureValues[2] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise08_D.VFX_T_Noise08_D'
+            TextureValues[1] = Texture2D'/Game/Environment/Cavern_Dungeon/Textures/Rocks/T_CavernDun_Sanctum_Rockwall_Blend_C_N.T_CavernDun_Sanctum_Rockwall_Blend_C_N'
+        }
+    }
+    ReferencedTextures[6] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_LowFreq_E.VFX_T_Noise_LowFreq_E'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_LowFreq_N.VFX_T_Noise_LowFreq_N'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_PlasmaSpell_D.VFX_T_PlasmaSpell_D'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseCaustics01_Color_D.VFX_T_NoiseCaustics01_Color_D'
+        ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise08_D.VFX_T_Noise08_D'
+        ReferencedTextures[5] = Texture2D'/Game/Environment/Cavern_Dungeon/Textures/Rocks/T_CavernDun_Sanctum_Rockwall_Blend_C_N.T_CavernDun_Sanctum_Rockwall_Blend_C_N'
+    }
+}
+BlendMode = BLEND_Opaque (0)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[2] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise08_D.VFX_T_Noise08_D'
+        Name = Blend Map
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/Environment/Cavern_Dungeon/Textures/Rocks/T_CavernDun_Sanctum_Rockwall_Blend_C_N.T_CavernDun_Sanctum_Rockwall_Blend_C_N'
+        Name = Normal Map
+        Group = None
+    }
+}
+CollectedScalarParameters[36] =
+{
+    CollectedScalarParameters[0] = { Value=0.247619, Name=Roughness, Group=None }
+    CollectedScalarParameters[1] = { Value=4, Name=Exp, Group=None }
+    CollectedScalarParameters[2] = { Value=1, Name=Metallic Light, Group=None }
+    CollectedScalarParameters[3] = { Value=1, Name=Stretch Strength, Group=None }
+    CollectedScalarParameters[4] = { Value=1.36739, Name=B_1, Group=None }
+    CollectedScalarParameters[5] = { Value=1, Name=Metallic_1, Group=None }
+    CollectedScalarParameters[6] = { Value=0, Name=Metallic, Group=None }
+    CollectedScalarParameters[7] = { Value=1, Name=Tiling U, Group=None }
+    CollectedScalarParameters[8] = { Value=-0.590476, Name=NMap Speed V, Group=None }
+    CollectedScalarParameters[9] = { Value=0.07619, Name=Speed U, Group=None }
+    CollectedScalarParameters[10] = { Value=2, Name=Intensity (S), Group=None }
+    CollectedScalarParameters[11] = { Value=0.580952, Name=Tiling V, Group=None }
+    CollectedScalarParameters[12] = { Value=1.46569, Name=Metallic Boost, Group=None }
+    CollectedScalarParameters[13] = { Value=-1.01905, Name=Em Map 2 Sped V, Group=None }
+    CollectedScalarParameters[14] = { Value=1, Name=Em Map 2 Tiling U, Group=None }
+    CollectedScalarParameters[15] = { Value=0.295237, Name=Param, Group=None }
+    CollectedScalarParameters[16] = { Value=0.2, Name=Roughness_1, Group=None }
+    CollectedScalarParameters[17] = { Value=0.666666, Name=Speed V (S), Group=None }
+    CollectedScalarParameters[18] = { Value=0, Name=Min Speed, Group=None }
+    CollectedScalarParameters[19] = { Value=1, Name=Roughness Dark, Group=None }
+    CollectedScalarParameters[20] =
+    {
+        Value = 0.704762
+        Name = Em Map 2 Tiling V
+        Group = None
+    }
+    CollectedScalarParameters[21] = { Value=0.657143, Name=Metallic Dark, Group=None }
+    CollectedScalarParameters[22] = { Value=0.3, Name=Normal Intensity, Group=None }
+    CollectedScalarParameters[23] = { Value=1, Name=NMap Tiling U, Group=None }
+    CollectedScalarParameters[24] = { Value=0, Name=NMap Speed U, Group=None }
+    CollectedScalarParameters[25] = { Value=275, Name=Max Speed, Group=None }
+    CollectedScalarParameters[26] = { Value=0.361905, Name=Speed U (S), Group=None }
+    CollectedScalarParameters[27] = { Value=0.171429, Name=Roughness Light, Group=None }
+    CollectedScalarParameters[28] = { Value=1, Name=Tiling U (S), Group=None }
+    CollectedScalarParameters[29] = { Value=0.152381, Name=Speed V, Group=None }
+    CollectedScalarParameters[30] = { Value=1, Name=Tiling V (S), Group=None }
+    CollectedScalarParameters[31] =
+    {
+        Value = 0.161904
+        Name = Em Map Bias Power
+        Group = None
+    }
+    CollectedScalarParameters[32] = { Value=0.533333, Name=NMap Tiling V, Group=None }
+    CollectedScalarParameters[33] =
+    {
+        Value = 0.133333
+        Name = Em Map 2 Speed U
+        Group = None
+    }
+    CollectedScalarParameters[34] = { Value=1, Name=Em Fresnel Bias Power, Group=None }
+    CollectedScalarParameters[35] = { Value=15.4286, Name=B, Group=None }
+}
+CollectedVectorParameters[5] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0.0104167, G=0.00743273, B=0.00743273, A=0 }
+        Name = Base Color
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = Color Dark
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=36.9792, G=56.4907, B=100, A=1 }
+        Name = EmCol
+        Group = None
+    }
+    CollectedVectorParameters[3] =
+    {
+        Value = { R=1, G=0.551385, B=0.147041, A=1 }
+        Name = Color Light
+        Group = None
+    }
+    CollectedVectorParameters[4] =
+    {
+        Value = { R=0.026042, G=0.00407, B=0, A=1 }
+        Name = Param
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[3] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 0.53125
+        UVChannelIndex = 0
+        TextureName = T_CavernDun_Sanctum_Rockwall_Blend_C_N
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Noise08_D
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 0.703125
+        UVChannelIndex = 0
+        TextureName = VFX_T_PlasmaSpell_D
+    }
+}

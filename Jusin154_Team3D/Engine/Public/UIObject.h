@@ -59,6 +59,7 @@ public:
 	virtual void Set_V(_float V);
 	virtual _float2 Get_UV();
 
+
 	virtual void Nine_Slice_Left(_float X);
 	virtual void Nine_Slice_Right(_float Y);
 	virtual void Nine_Slice_Top(_float Z);
