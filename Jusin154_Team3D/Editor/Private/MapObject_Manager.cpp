@@ -140,7 +140,7 @@ HRESULT CMapObject_Manager::Bind_ShaderResources()
 {
 	return S_OK;
 }
-
+#pragma region SAVE & LOAD
 HRESULT CMapObject_Manager::Save_MapData(const _char* pFileName)
 {
 	tinyxml2::XMLDocument doc;
@@ -649,6 +649,8 @@ HRESULT CMapObject_Manager::Load_ContainerData(const _char* pFileName, const _ch
 
 	return S_OK;
 }
+#pragma endregion
+
 
 void CMapObject_Manager::Update_PrototypeList()
 {
@@ -768,6 +770,8 @@ void CMapObject_Manager::Update_ObjectList()
 void CMapObject_Manager::Update_Edit()
 {
 	GUI::Begin("Edit");
+	if (m_pGameInstance->Mouse_Down(DIM_4))
+		m_pSelectObject = nullptr;
 
 	if (nullptr != m_pSelectObject)
 	{

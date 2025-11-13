@@ -13,6 +13,7 @@
 #include "Body.h"
 #include "Hair.h"
 #include "Dummy_Goblin.h"
+#include "DummySkyBox.h"
 #include "DummyObject.h"
 #include <filesystem>
 
@@ -219,6 +220,7 @@ HRESULT CLoader::Loading_For_Logo()
 	if (FAILED(m_pGameInstance->Add_Prototype<CDebugCamera>(g_iStaticLevel, CDebugCamera::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
+
 	m_strMessage = TEXT("Loading Success!");
 
 	m_isFinished = true;
@@ -782,10 +784,17 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 	m_strMessage = TEXT("모델를(을) 로딩 중 입니다.");
 
+	/* For.Prototype_Component_SkyboxModel */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_SkyboxModel"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/SkyBox/SkyBox.fbx", XMMatrixIdentity()))))
+		return E_FAIL;
+
 	vector<_wstring> ModelPrototypeTags = {};
 	vector<filesystem::path> ModelPrototypePath = {};
 
-	for (const auto& file : filesystem::directory_iterator("C:\\Users\\kimnuri\\Desktop\\Hogwart\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Terrain"))
+	//for (const auto& file : filesystem::directory_iterator("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Meshes"))
+	for (const auto& file : filesystem::directory_iterator("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogwarts\\SUB_GreatHall\\Static_Mesh\\Kit_INT"))
+	//for (const auto& file : filesystem::directory_iterator("C:\\Users\\kimnuri\\Desktop\\Hogwart\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Terrain"))
 	{
 		if (file.is_directory())
 			continue;
@@ -835,6 +844,11 @@ HRESULT CLoader::Loading_For_MapViewer()
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Terrain"),
 		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, nullptr, 100, 100))))
 		return E_FAIL;
+
+	/* For.Prototype_GameObject_SkyBox */
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummySkyBox>(g_iStaticLevel, CDummySkyBox::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 
 	/* For.Prototype_GameObject_BuildingContainer */
 	if (FAILED(m_pGameInstance->Add_Prototype<CBuildingContainer>(g_iStaticLevel, CBuildingContainer::Create(m_pDevice, m_pContext))))
