@@ -393,6 +393,9 @@
     <ClInclude Include="..\public\DummySkyBox.h">
       <Filter>02.GameObjects\Dummys\DummySkyBox</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Information.h">
+      <Filter>03.Information</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -585,6 +588,9 @@
     </ClCompile>
     <ClCompile Include="..\private\DummySkyBox.cpp">
       <Filter>02.GameObjects\Dummys\DummySkyBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Information.cpp">
+      <Filter>03.Information</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

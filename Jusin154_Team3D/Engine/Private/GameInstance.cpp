@@ -559,7 +559,7 @@ SaveModel* CGameInstance::Load_SaveModel(const _char* filePath)
 }
 
 #pragma region PhysX_Manager
-PSX::PxMaterial* CGameInstance::Get_Material(_float3& vMatInfo)
+PSX::PxMaterial* CGameInstance::Get_Material(_float3* vMatInfo)
 {
 	return m_pPhysX_Manager->Get_Material(vMatInfo);
 }
@@ -569,10 +569,6 @@ void CGameInstance::RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTr
 	return m_pPhysX_Manager->RegistTriMesh(pName, pPxTriMesh);
 }
 
-PSX::PxShape* CGameInstance::Create_Shape(ACTOR eType, _float3& vhalfGeometryInfo, PSX::PxMaterial& pxMaterial, _bool bExclusive, PSX::PxShapeFlags ePxShapeFlag)
-{
-	return m_pPhysX_Manager->Create_Shape(eType, vhalfGeometryInfo, pxMaterial, bExclusive, ePxShapeFlag);
-}
 const PSX::PxRigidDynamic* CGameInstance::Add_DynamicActor(CRigidBody& RigidBody)
 {
 	return m_pPhysX_Manager->Add_DynamicActor(RigidBody);

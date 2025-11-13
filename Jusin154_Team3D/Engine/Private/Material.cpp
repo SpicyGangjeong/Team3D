@@ -405,85 +405,6 @@ HRESULT CMaterial::Bind_SRV(CShader* pShader, const _char* pConstantName, _uint 
 	return pShader->Bind_SRV(pConstantName, m_SRVs[iType][iTextureIndex]);
 }
 
-
-HRESULT CMaterial::Initialize(const _char* pModelFilePath, HANDLE hFile, DWORD& dwByte)
-{
-	for (int i = 0; i < AI_TEXTURE_TYPE_MAX; ++i) {
-		_uint iNumSrv = { 0 };
-		if (!ReadFile(hFile, &i, sizeof(_uint), &dwByte, nullptr)) {
-			return E_FAIL;
-		}
-		if (!ReadFile(hFile, &iNumSrv, sizeof(_uint), &dwByte, nullptr)) {
-			return E_FAIL;
-		}
-		if (iNumSrv == 0) {
-			continue;
-		}
-		m_SRVs[i].reserve(iNumSrv);
-
-		ID3D11ShaderResourceView* pSRV = { nullptr };
-		HRESULT hr = {};
-
-		for (_uint j = 0; j < iNumSrv; ++j) {
-			_uint strLength = { 0 };
-			if (!ReadFile(hFile, &strLength, sizeof(_uint), &dwByte, nullptr)) {
-				return E_FAIL;
-			}
-			_char szTextureName[MAX_PATH] = {};
-			if (!ReadFile(hFile, szTextureName, strLength, &dwByte, nullptr)) {
-				return E_FAIL;
-			}
-
-			_char szTextureDir[MAX_PATH] = {};
-			_char szDrive[MAX_PATH] = {};
-			_char szDir[MAX_PATH] = {};
-			_splitpath_s(pModelFilePath, szDrive, MAX_PATH, szDir, MAX_PATH, nullptr, 0, nullptr, 0);
-			strcpy_s(szTextureDir, sizeof(_char) * MAX_PATH, szDrive);
-			strcat_s(szTextureDir, sizeof(_char) * MAX_PATH, szDir);
-			strcat_s(szTextureDir, sizeof(_char) * MAX_PATH, szTextureName);
-
-
-			{
-				_char		szTextureFileName[MAX_PATH] = {};
-				_char		szTextureFilePath[MAX_PATH] = {};
-				_char		szDrive[MAX_PATH] = {};
-				_char		szDir[MAX_PATH] = {};
-				_char		szFileName[MAX_PATH] = {};
-				_char		szEXT[MAX_PATH] = {};
-				_splitpath_s(szTextureDir, szDrive, MAX_PATH, szDir, MAX_PATH, szFileName, MAX_PATH, szEXT, MAX_PATH);
-				strcpy_s(szTextureFileName, szDrive);
-				strcat_s(szTextureFileName, szDir);
-				strcat_s(szTextureFileName, szFileName);
-
-				strcat_s(szTextureFilePath, szTextureFileName);
-				strcat_s(szTextureFilePath, ".dds");
-
-				hr = CreateDDSTextureFromFile(m_pDevice, CMyTools::ToWstring(szTextureFilePath).c_str(), nullptr, &pSRV); // 일단 dds로 시도하고
-				if (FAILED(hr)) {
-					memset(szTextureFilePath, 0, sizeof(_char) * MAX_PATH); // 실패하면 원래 확장자로 다시 시도
-					strcat_s(szTextureFilePath, szTextureFileName);
-					strcat_s(szTextureFilePath, szEXT);
-
-					if (false == strcmp(".tga", szEXT)) {
-						assert(false); // trying to Load TGA
-						hr = S_OK;
-					}
-					else {
-						hr = CreateWICTextureFromFile(m_pDevice, CMyTools::ToWstring(szTextureFilePath).c_str(), nullptr, &pSRV);
-					}
-				}
-
-			}
-			if (FAILED(hr)) {
-				return E_FAIL;
-			}
-
-			m_SRVs[i].push_back(pSRV);
-		}
-	}
-	return S_OK;
-}
-
 HRESULT CMaterial::Initialize(const _char* pModelFilePath, const SaveMaterial& _SaveMaterial)
 {
 	for (size_t type = 0; type < 27; type++)
@@ -522,19 +443,6 @@ HRESULT CMaterial::Initialize(const _char* pModelFilePath, const SaveMaterial& _
 		}
 	}
 	return S_OK;
-}
-
-
-CMaterial* CMaterial::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, HANDLE hFile, DWORD& dwByte) {
-	CMaterial* pInstance = new CMaterial(pDevice, pContext);
-
-	if (FAILED(pInstance->Initialize(pModelFilePath, hFile, dwByte)))
-	{
-		MSG_BOX("Failed to Created : CMaterial");
-		SAFE_RELEASE(pInstance);
-	}
-
-	return pInstance;
 }
 
 CMaterial* CMaterial::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, const SaveMaterial& _SaveMaterial)
