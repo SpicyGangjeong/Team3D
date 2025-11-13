@@ -101,17 +101,18 @@ void CRootModelPart::Change_Model(_uint iIndex)
 	pModel->Set_CurrentTrackPosition(m_fTrackPosition);                                                                                                            
 	pModel->Play_Animation(0.f);
 
-
-	if (iIndex == ENUM_CLASS(PARTSTYPE::HEAD))
+	if (iIndex == ENUM_CLASS(PARTSTYPE::BODY))
 	{
 		Set_MainModel(m_ModelParts[iIndex]->Get_Component<CModel>());
 	}
+	
 }
 
 void CRootModelPart::Set_Animation(_uint iAnimIndex)
 {
 	m_pMainModel->Set_AnimationIndex(iAnimIndex);
-
+	m_pMainModel->Set_CurrentTrackPosition(0.f);
+	m_pMainModel->Play_Animation(0.f);
 	for (auto& PartObject : m_ModelParts)
 	{
 		CModel* pModel = PartObject->Get_Component<CModel>();
@@ -119,6 +120,7 @@ void CRootModelPart::Set_Animation(_uint iAnimIndex)
 		{
 			pModel->Set_AnimationIndex(m_pMainModel->Get_AnimIndex());
 			pModel->Set_CurrentTrackPosition(m_pMainModel->Get_CurrentTrackPosition());
+			pModel->Play_Animation(0.f);
 		}
 	}
 }
@@ -139,12 +141,12 @@ HRESULT CRootModelPart::Ready_PartObjects()
 
 	CModelParts* pModelPartsObject = { nullptr };
 
-	if (FAILED(Add_PartObject<CHead>("Human_Head", ENUM_CLASS(LEVEL::STATIC), reinterpret_cast<CHead**>(&pModelPartsObject), &PartsDesc)))
+	if (FAILED(Add_PartObject<CBody>("Human_Body", ENUM_CLASS(LEVEL::STATIC), reinterpret_cast<CBody**>(&pModelPartsObject), &PartsDesc)))
 		return E_FAIL;
 
 	m_ModelParts.push_back(pModelPartsObject);
 
-	if (FAILED(Add_PartObject<CBody>("Human_Body", ENUM_CLASS(LEVEL::STATIC), reinterpret_cast<CBody**>(&pModelPartsObject), &PartsDesc)))
+	if (FAILED(Add_PartObject<CHead>("Human_Head", ENUM_CLASS(LEVEL::STATIC), reinterpret_cast<CHead**>(&pModelPartsObject), &PartsDesc)))
 		return E_FAIL;
 
 	m_ModelParts.push_back(pModelPartsObject);

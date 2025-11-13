@@ -49,7 +49,6 @@ public:
 	_int Get_AnimIndex() { return m_iCurrentAnimIndex; }
 	_float Get_AnimSpeed();
 	void Set_AnimSpeed(_float fSpeed);
-
 public:
 	HRESULT Bind_Material(_uint iMeshIndex, class CShader* pShader, const _char* pConstantName, _uint iType, _uint iTextureIndex);
 	HRESULT Bind_BoneMatrices(_uint iMeshIndex, class CShader* pShader, const _char* pConstantName);
