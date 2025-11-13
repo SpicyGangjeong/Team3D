@@ -8,6 +8,7 @@ int g_iImageCountY;
 
 float g_fFar;
 float g_fTime;
+float g_fTimeMult;
 float g_fFrame;
 float g_fAlpha;
 float g_fOwnerAlpha;
@@ -16,8 +17,11 @@ float g_fDeltaU;
 float g_fDeltaV;
 uint g_iIndexU;
 uint g_iIndexV;
-
+float4 g_fNine_Slice;
+float2 g_fOrigin_Size;
+float2 g_fCurrent_Size;
 uint g_iQuestType;
+float g_fPI;
 
 Texture2D g_Texture;
 Texture2D g_Texture1;
@@ -64,7 +68,7 @@ struct PS_OUT
     float4 vColor : SV_Target0;
 };
 
-PS_OUT PS_MAIN(PS_IN In) // ??곗뺘 UI
+PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out;
     
@@ -148,13 +152,23 @@ PS_OUT PS_Cursor(PS_IN In)
 PS_OUT PS_Key_Hold_Rotation(PS_IN In)
 {
     PS_OUT Out;
-    
-    float4 Color = g_Texture.Sample(DefaultSampler, In.vTexcoord);
-    
-    if (Color.a <= 0.1f)
-        discard;
-    
-    Out.vColor = Color;
+
+    float2 uv = In.vTexcoord;
+
+    float4 tex = g_Texture.Sample(DefaultSampler, uv);
+
+    float2 center = float2(0.5, 0.5);
+    float2 dir = uv - center;
+
+    float angle = atan2(dir.x, -dir.y);
+    if (angle < 0)
+        angle += g_fPI;
+
+    float rotation = saturate(g_fTime * g_fTimeMult) * g_fPI;
+
+    tex.rgb = (angle <= rotation) ? 1.0 : tex.rgb;
+
+    Out.vColor = tex;
     
     return Out;
 }
@@ -218,6 +232,52 @@ PS_OUT PS_UVMult(PS_IN In)
     PS_OUT Out;
 
     float4 color = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    
+    Out.vColor = color;
+
+    return Out;
+}
+
+PS_OUT PS_NineSlice(PS_IN In)
+{
+    PS_OUT Out;
+    float Left = g_fNine_Slice.x / g_fOrigin_Size.x;
+    float Right = (g_fOrigin_Size.x - g_fNine_Slice.y) / g_fOrigin_Size.x;
+    float Top = g_fNine_Slice.z / g_fOrigin_Size.y;
+    float Bottom = (g_fOrigin_Size.y - g_fNine_Slice.w) / g_fOrigin_Size.y;
+    
+    float2 ratio = g_fCurrent_Size / g_fOrigin_Size;
+    
+    float2 UV = In.vTexcoord * 0.5f + 0.5f;
+    float2 ScaledUV = UV;
+    
+    if(UV.x < Left)
+    {
+        ScaledUV.x = UV.x;
+    }
+    else if(UV.x > Right)
+    {
+        ScaledUV.x = 1.0f - ((1.0f - UV.x) / ratio.x);
+    }
+    else
+    {
+        ScaledUV.x = Left + (UV.x - Left) / ratio.x;
+    }
+    
+    if(UV.y < Top)
+    {
+        ScaledUV.y = UV.y;
+    }
+    else if(UV.y > Bottom)
+    {
+        ScaledUV.y = 1.0f - ((1.0f - UV.y) / ratio.y);
+    }
+    else
+    {
+        ScaledUV.y = Top + (UV.y - Top) / ratio.y;
+    }
+    
+    float4 color = g_Texture.Sample(ClampSampler, ScaledUV);
     
     Out.vColor = color;
 
@@ -305,4 +365,15 @@ technique11 PosTexTechnique11
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_UVMult();
     }
+
+    pass NineSlice
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_NineSlice();
+    }
+
 }

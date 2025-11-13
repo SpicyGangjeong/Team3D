@@ -83,10 +83,10 @@ HRESULT CUIObject::Initialize(void* pArg)
 
 	m_bVisible = true;
 
-	m_fLeft = -m_fSizeX * 0.5f;
-	m_fRight = m_fSizeX * 0.5f;
-	m_fTop = -m_fSizeY * 0.5f;
-	m_fBottom = m_fSizeY * 0.5f;
+	m_fLeft = 0.f;
+	m_fRight = m_fSizeX;
+	m_fTop = 0.f;
+	m_fBottom = m_fSizeY;
 
 	m_vNine_Slice = _float4(m_fLeft, m_fRight, m_fTop, m_fBottom);
 

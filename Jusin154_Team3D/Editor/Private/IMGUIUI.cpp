@@ -344,22 +344,22 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		}
 
 		GUI::Text("Nine_Slice");
-		if (GUI::DragFloat("Left", &m_fLeft, 0.1f, -m_fSize.x * 0.5f, m_fSize.x * 0.5f))
+		if (GUI::DragFloat("Left", &m_fLeft, 0.1f, 0, m_fSize.x))
 		{
 			static_cast<CElementObject*>(m_pElementObject)->Nine_Slice_Left(m_fLeft);
 		}		
 		
-		if (GUI::DragFloat("Right", &m_fRight, 0.1f, -m_fSize.x * 0.5f, m_fSize.x * 0.5f))
+		if (GUI::DragFloat("Right", &m_fRight, 0.1f,0.5f, m_fSize.x))
 		{
 			static_cast<CElementObject*>(m_pElementObject)->Nine_Slice_Right(m_fRight);
 		}		
 		
-		if (GUI::DragFloat("Top", &m_fTop, 0.1f, -m_fSize.y * 0.5f, m_fSize.y * 0.5f))
+		if (GUI::DragFloat("Top", &m_fTop, 0.1f, 0, m_fSize.y))
 		{
 			static_cast<CElementObject*>(m_pElementObject)->Nine_Slice_Top(m_fTop);
 		}		
 		
-		if (GUI::DragFloat("Bottom", &m_fBottom, 0.1f, -m_fSize.y * 0.5f, m_fSize.y * 0.5f))
+		if (GUI::DragFloat("Bottom", &m_fBottom, 0.1f,0, m_fSize.y))
 		{
 			static_cast<CElementObject*>(m_pElementObject)->Nine_Slice_Bottom(m_fBottom);
 		}

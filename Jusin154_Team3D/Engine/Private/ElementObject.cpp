@@ -41,7 +41,7 @@ void CElementObject::Update(_float fTimeDelta)
 		0.f, 1.f));
 
 	m_fCurrent_Posigion = XMVectorSet(m_fX, m_fY, 0.f, 1.f);
-	m_vNine_Slice = _float4(-m_fSizeX * 0.5f + m_fLeft, m_fSizeX * 0.5f - m_fRight, -m_fSizeY * 0.5f + m_fTop, m_fSizeY * 0.5f - m_fBottom);
+	m_vNine_Slice = _float4(m_fLeft, m_fRight, m_fTop, m_fBottom);
 }
 
 void CElementObject::Late_Update(_float fTimeDelta)
