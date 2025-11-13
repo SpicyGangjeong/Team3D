@@ -1,0 +1,128 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[4] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/AlphaErosion/VFX_T_FadeToTop_D.VFX_T_FadeToTop_D'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Decals/VFX_T_ShatterdGlass_D.VFX_T_ShatterdGlass_D'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Decals/VFX_T_ShatterdGlass_N.VFX_T_ShatterdGlass_N'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_GreyChecker_D.VFX_T_GreyChecker_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[14] =
+                {
+                    ParameterInfos[0] = { Name=Normal Strenght }
+                    ParameterInfos[1] = { Name=ErosionAmmount }
+                    ParameterInfos[2] = { Name=2000 }
+                    ParameterInfos[3] = { Name=Refraction Strenght }
+                    ParameterInfos[4] = { Name=Erosion Softness }
+                    ParameterInfos[5] = { Name=Contrast (S) }
+                    ParameterInfos[6] = { Name=Speed V (S) }
+                    ParameterInfos[7] = { Name=Tilling }
+                    ParameterInfos[8] = { Name=Speed U (S) }
+                    ParameterInfos[9] = { Name=Tiling U (S) }
+                    ParameterInfos[10] = { Name=Offset V (S) }
+                    ParameterInfos[11] = { Name=Tiling V (S) }
+                    ParameterInfos[12] = { Name=Offset U (S) }
+                    ParameterInfos[13] = { Name=Rotation Angle }
+                }
+            }
+            Entries[1] = { ParameterInfos[0]={} }
+            Entries[2] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=Refraction Texture }
+                    ParameterInfos[1] = { Name=Texture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[14] = { 0, 0, 1, 0.1, 1, 2, 0, 1, 0, 1, 0, 1, 0, 0 }
+        VectorValues[0] = {}
+        TextureValues[2] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Decals/VFX_T_ShatterdGlass_N.VFX_T_ShatterdGlass_N'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/Decals/VFX_T_ShatterdGlass_D.VFX_T_ShatterdGlass_D'
+        }
+    }
+    ReferencedTextures[4] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Decals/VFX_T_ShatterdGlass_D.VFX_T_ShatterdGlass_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Decals/VFX_T_ShatterdGlass_N.VFX_T_ShatterdGlass_N'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/AlphaErosion/VFX_T_FadeToTop_D.VFX_T_FadeToTop_D'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_GreyChecker_D.VFX_T_GreyChecker_D'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.1
+CollectedTextureParameters[2] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Decals/VFX_T_ShatterdGlass_N.VFX_T_ShatterdGlass_N'
+        Name = Refraction Texture
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Decals/VFX_T_ShatterdGlass_D.VFX_T_ShatterdGlass_D'
+        Name = Texture
+        Group = None
+    }
+}
+CollectedScalarParameters[14] =
+{
+    CollectedScalarParameters[0] = { Value=0, Name=Normal Strenght, Group=None }
+    CollectedScalarParameters[1] = { Value=0, Name=ErosionAmmount, Group=None }
+    CollectedScalarParameters[2] = { Value=1, Name=2000, Group=None }
+    CollectedScalarParameters[3] = { Value=0.1, Name=Refraction Strenght, Group=None }
+    CollectedScalarParameters[4] = { Value=1, Name=Erosion Softness, Group=None }
+    CollectedScalarParameters[5] = { Value=2, Name=Contrast (S), Group=None }
+    CollectedScalarParameters[6] = { Value=0, Name=Speed V (S), Group=None }
+    CollectedScalarParameters[7] = { Value=1, Name=Tilling, Group=None }
+    CollectedScalarParameters[8] = { Value=0, Name=Speed U (S), Group=None }
+    CollectedScalarParameters[9] = { Value=1, Name=Tiling U (S), Group=None }
+    CollectedScalarParameters[10] = { Value=0, Name=Offset V (S), Group=None }
+    CollectedScalarParameters[11] = { Value=1, Name=Tiling V (S), Group=None }
+    CollectedScalarParameters[12] = { Value=0, Name=Offset U (S), Group=None }
+    CollectedScalarParameters[13] = { Value=0, Name=Rotation Angle, Group=None }
+}
+CollectedVectorParameters[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[3] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_FadeToTop_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_ShatterdGlass_D
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_ShatterdGlass_N
+    }
+}

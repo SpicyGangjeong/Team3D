@@ -1,0 +1,102 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[4] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+    ReferencedTextures[1] = Texture2D'/Game/RiggedObjects/Characters/Creatures/Dragons/HebrideanBlack/Textures/T_DragonEye_Iris_D.T_DragonEye_Iris_D'
+    ReferencedTextures[2] = Texture2D'/Game/RiggedObjects/Characters/Creatures/Insects/Spiders/Acromantula_Corrupted/Textures/T_CorruptedSpider_Eye_D.T_CorruptedSpider_Eye_D'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_CausticNoise_C_Seamless_D.VFX_T_CausticNoise_C_Seamless_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[8] =
+                {
+                    ParameterInfos[0] = { Name=SphereMaskHardness }
+                    ParameterInfos[1] = { Name=roughness }
+                    ParameterInfos[2] = { Name=innerDensity }
+                    ParameterInfos[3] = { Name=SphereRadiusMax }
+                    ParameterInfos[4] = { Name=baseColorHueShift }
+                    ParameterInfos[5] = { Name=innerIntensiity }
+                    ParameterInfos[6] = { Name=innerRadius }
+                    ParameterInfos[7] = { Name=baseIntensity }
+                }
+            }
+            Entries[1] = { ParameterInfos[0]={} }
+            Entries[2] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=opacityMask }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[8] = { 0.2, 0, 2.55, 3500, 0, 20, 0.1, 1 }
+        VectorValues[0] = {}
+        TextureValues[1] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_CausticNoise_C_Seamless_D.VFX_T_CausticNoise_C_Seamless_D'
+        }
+    }
+    ReferencedTextures[4] =
+    {
+        ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+        ReferencedTextures[1] = Texture2D'/Game/RiggedObjects/Characters/Creatures/Dragons/HebrideanBlack/Textures/T_DragonEye_Iris_D.T_DragonEye_Iris_D'
+        ReferencedTextures[2] = Texture2D'/Game/RiggedObjects/Characters/Creatures/Insects/Spiders/Acromantula_Corrupted/Textures/T_CorruptedSpider_Eye_D.T_CorruptedSpider_Eye_D'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_CausticNoise_C_Seamless_D.VFX_T_CausticNoise_C_Seamless_D'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[1] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_CausticNoise_C_Seamless_D.VFX_T_CausticNoise_C_Seamless_D'
+        Name = opacityMask
+        Group = None
+    }
+}
+CollectedScalarParameters[8] =
+{
+    CollectedScalarParameters[0] = { Value=0.2, Name=SphereMaskHardness, Group=None }
+    CollectedScalarParameters[1] = { Value=0, Name=roughness, Group=None }
+    CollectedScalarParameters[2] = { Value=2.55, Name=innerDensity, Group=None }
+    CollectedScalarParameters[3] = { Value=3500, Name=SphereRadiusMax, Group=None }
+    CollectedScalarParameters[4] = { Value=0, Name=baseColorHueShift, Group=None }
+    CollectedScalarParameters[5] = { Value=20, Name=innerIntensiity, Group=None }
+    CollectedScalarParameters[6] = { Value=0.1, Name=innerRadius, Group=None }
+    CollectedScalarParameters[7] = { Value=1, Name=baseIntensity, Group=None }
+}
+CollectedVectorParameters[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[2] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_CorruptedSpider_Eye_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 2
+        UVChannelIndex = 0
+        TextureName = T_DragonEye_Iris_D
+    }
+}

@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Environment/MasterMaterials/Decal/VFX_MI_UI_MAP_Overland_Edge_S.VFX_MI_UI_MAP_Overland_Edge_S'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/MasterMaterials/Decal/VFX_MI_UI_MAP_Overland_Edge_S.VFX_MI_UI_MAP_Overland_Edge_S'
+        MaterialSlotName = MI_Map3D_Overland_E
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 284.911, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=27768.4, Y=-2332.2, Z=-4431.35 }
+    BoxExtent = { X=2989.47, Y=2585.1, Z=317.499 }
+    SphereRadius = 3581.53
+}

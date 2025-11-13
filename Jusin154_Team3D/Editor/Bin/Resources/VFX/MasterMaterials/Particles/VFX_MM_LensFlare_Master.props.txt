@@ -1,0 +1,355 @@
+TwoSided = false
+bDisableDepthTest = true
+bIsMasked = false
+ReferencedTextures[3] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Flares/VFX_T_ChromaWheel_E.VFX_T_ChromaWheel_E'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Flares/VFX_T_Flare01_D.VFX_T_Flare01_D'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/VFX_T_LensFlare_DirtMask_E.VFX_T_LensFlare_DirtMask_E'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[49] =
+                {
+                    ParameterInfos[0] = { Name=Green- Offset V (S) Sph. }
+                    ParameterInfos[1] = { Name=EmissAdap Daytime Boost Percent (S) }
+                    ParameterInfos[2] = { Name=Ray UV Method }
+                    ParameterInfos[3] = { Name=Soften Exponent (S) }
+                    ParameterInfos[4] = { Name=Occlusion Falloff Softness }
+                    ParameterInfos[5] = { Name=Dirt Mask Intensity }
+                    ParameterInfos[6] = { Name=Ray Chroma }
+                    ParameterInfos[7] = { Name=Distance Fade Length }
+                    ParameterInfos[8] = { Name=Red- Offset V (S) Sph. }
+                    ParameterInfos[9] =
+                    {
+                        Name = Size by Distance (0 = normal scale, 1 = constant scale)
+                    }
+                    ParameterInfos[10] = { Name=Red- Offset U (S) }
+                    ParameterInfos[11] = { Name=Soften Exponent }
+                    ParameterInfos[12] = { Name=Emissive Boost }
+                    ParameterInfos[13] = { Name=Soften Strength (S) }
+                    ParameterInfos[14] =
+                    {
+                        Name = Distance_Max (Where LightSource is Largest)
+                    }
+                    ParameterInfos[15] = { Name=Red- Offset V (S) }
+                    ParameterInfos[16] = { Name=Red- Offset U (S) Sph. }
+                    ParameterInfos[17] = { Name=Core Boost (S) }
+                    ParameterInfos[18] = { Name=Axis Fade Hardness }
+                    ParameterInfos[19] = { Name=Ray Opacity }
+                    ParameterInfos[20] = { Name=Blue- Offset V (S) }
+                    ParameterInfos[21] = { Name=Axis Fade Radius (in Screen UVs) }
+                    ParameterInfos[22] = { Name=Offscreen Falloff Softness }
+                    ParameterInfos[23] = { Name=Chromatic Aberration Strength (0-1) (S) }
+                    ParameterInfos[24] = { Name=Sphere Mask Radius (S) }
+                    ParameterInfos[25] = { Name=Axis Scale Minimum }
+                    ParameterInfos[26] =
+                    {
+                        Name = Distance_Min (Where Light Source is Smallest)
+                    }
+                    ParameterInfos[27] = { Name=Ring Mask Width }
+                    ParameterInfos[28] = { Name=Ring Mask Bias }
+                    ParameterInfos[29] = { Name=Ray # Multiplier }
+                    ParameterInfos[30] = { Name=Distance Fade Start Distance (S) }
+                    ParameterInfos[31] = { Name=Dirt Mask Tiling V (S) }
+                    ParameterInfos[32] = { Name=Ring Softness Exponent }
+                    ParameterInfos[33] =
+                    {
+                        Name = Axis Offset Multiplier (Also uses Particle Dynamic Parameter 1)
+                    }
+                    ParameterInfos[34] = { Name=Ring Contrast }
+                    ParameterInfos[35] = { Name=Light Source Radius }
+                    ParameterInfos[36] = { Name=Blue- Offset U (S) }
+                    ParameterInfos[37] = { Name=Chrom Ab Edge Boost Exp (S) }
+                    ParameterInfos[38] =
+                    {
+                        Name = Distance Fade Hardness (Higher # = brighter up close)
+                    }
+                    ParameterInfos[39] = { Name=Green- Offset U (S) Sph }
+                    ParameterInfos[40] = { Name=Blue- Offset U (S) Sph. }
+                    ParameterInfos[41] = { Name=Green- Offset U (S) }
+                    ParameterInfos[42] = { Name=Opacity }
+                    ParameterInfos[43] = { Name=Ring Chroma }
+                    ParameterInfos[44] = { Name=Depth Bias (S) }
+                    ParameterInfos[45] = { Name=Blue- Offset V (S) Sph. }
+                    ParameterInfos[46] = { Name=Green- Offset V (S) }
+                    ParameterInfos[47] = { Name=Sphere Mask Hardness }
+                    ParameterInfos[48] = { Name=Dirt Mask Tiling U (S) }
+                }
+            }
+            Entries[1] = { ParameterInfos[0]={} }
+            Entries[2] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=Color and Alpha Map }
+                    ParameterInfos[1] = { Name=Dirt Mask Texture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[49] =
+        {
+            ScalarValues[0] = -0.05
+            ScalarValues[1] = 0.5
+            ScalarValues[2] = -0.25
+            ScalarValues[3] = 1
+            ScalarValues[4] = 1.70189
+            ScalarValues[5] = 1
+            ScalarValues[6] = 0.5
+            ScalarValues[7] = 5000
+            ScalarValues[8] = 0.1
+            ScalarValues[9] = 1
+            ScalarValues[10] = 0.01
+            ScalarValues[11] = 1
+            ScalarValues[12] = 1
+            ScalarValues[13] = 1
+            ScalarValues[14] = 2000
+            ScalarValues[15] = 0.01
+            ScalarValues[16] = -0.1
+            ScalarValues[17] = 0
+            ScalarValues[18] = 0.5
+            ScalarValues[19] = 1
+            ScalarValues[20] = -0.01
+            ScalarValues[21] = 1.3
+            ScalarValues[22] = 2
+            ScalarValues[23] = 1
+            ScalarValues[24] = 0.5
+            ScalarValues[25] = 1
+            ScalarValues[26] = 200
+            ScalarValues[27] = 0.345238
+            ScalarValues[28] = 0.5
+            ScalarValues[29] = 193.3
+            ScalarValues[30] = 0
+            ScalarValues[31] = 1
+            ScalarValues[32] = 3.05302
+            ScalarValues[33] = 1
+            ScalarValues[34] = 20
+            ScalarValues[35] = 2
+            ScalarValues[36] = -0.01
+            ScalarValues[37] = 2.5
+            ScalarValues[38] = 0.5
+            ScalarValues[39] = 0.05
+            ScalarValues[40] = 0
+            ScalarValues[41] = 0
+            ScalarValues[42] = 1
+            ScalarValues[43] = 0.25
+            ScalarValues[44] = 0
+            ScalarValues[45] = 0.1
+            ScalarValues[46] = 0
+            ScalarValues[47] = 0
+            ScalarValues[48] = 1
+        }
+        VectorValues[0] = {}
+        TextureValues[2] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Flares/VFX_T_Flare01_D.VFX_T_Flare01_D'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/VFX_T_LensFlare_DirtMask_E.VFX_T_LensFlare_DirtMask_E'
+        }
+    }
+    ReferencedTextures[4] =
+    {
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Flares/VFX_T_Flare01_D.VFX_T_Flare01_D'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/VFX_T_LensFlare_DirtMask_E.VFX_T_LensFlare_DirtMask_E'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Flares/VFX_T_ChromaWheel_E.VFX_T_ChromaWheel_E'
+    }
+}
+BlendMode = BLEND_Additive (3)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[2] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Flares/VFX_T_Flare01_D.VFX_T_Flare01_D'
+        Name = Color and Alpha Map
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_LensFlare_DirtMask_E.VFX_T_LensFlare_DirtMask_E'
+        Name = Dirt Mask Texture
+        Group = None
+    }
+}
+CollectedScalarParameters[49] =
+{
+    CollectedScalarParameters[0] =
+    {
+        Value = -0.05
+        Name = Green- Offset V (S) Sph.
+        Group = None
+    }
+    CollectedScalarParameters[1] =
+    {
+        Value = 0.5
+        Name = EmissAdap Daytime Boost Percent (S)
+        Group = None
+    }
+    CollectedScalarParameters[2] = { Value=-0.25, Name=Ray UV Method, Group=None }
+    CollectedScalarParameters[3] = { Value=1, Name=Soften Exponent (S), Group=None }
+    CollectedScalarParameters[4] =
+    {
+        Value = 1.70189
+        Name = Occlusion Falloff Softness
+        Group = None
+    }
+    CollectedScalarParameters[5] = { Value=1, Name=Dirt Mask Intensity, Group=None }
+    CollectedScalarParameters[6] = { Value=0.5, Name=Ray Chroma, Group=None }
+    CollectedScalarParameters[7] =
+    {
+        Value = 5000
+        Name = Distance Fade Length
+        Group = None
+    }
+    CollectedScalarParameters[8] =
+    {
+        Value = 0.1
+        Name = Red- Offset V (S) Sph.
+        Group = None
+    }
+    CollectedScalarParameters[9] =
+    {
+        Value = 1
+        Name = Size by Distance (0 = normal scale, 1 = constant scale)
+        Group = None
+    }
+    CollectedScalarParameters[10] = { Value=0.01, Name=Red- Offset U (S), Group=None }
+    CollectedScalarParameters[11] = { Value=1, Name=Soften Exponent, Group=None }
+    CollectedScalarParameters[12] = { Value=1, Name=Emissive Boost, Group=None }
+    CollectedScalarParameters[13] = { Value=1, Name=Soften Strength (S), Group=None }
+    CollectedScalarParameters[14] =
+    {
+        Value = 2000
+        Name = Distance_Max (Where LightSource is Largest)
+        Group = None
+    }
+    CollectedScalarParameters[15] = { Value=0.01, Name=Red- Offset V (S), Group=None }
+    CollectedScalarParameters[16] =
+    {
+        Value = -0.1
+        Name = Red- Offset U (S) Sph.
+        Group = None
+    }
+    CollectedScalarParameters[17] = { Value=0, Name=Core Boost (S), Group=None }
+    CollectedScalarParameters[18] = { Value=0.5, Name=Axis Fade Hardness, Group=None }
+    CollectedScalarParameters[19] = { Value=1, Name=Ray Opacity, Group=None }
+    CollectedScalarParameters[20] = { Value=-0.01, Name=Blue- Offset V (S), Group=None }
+    CollectedScalarParameters[21] =
+    {
+        Value = 1.3
+        Name = Axis Fade Radius (in Screen UVs)
+        Group = None
+    }
+    CollectedScalarParameters[22] =
+    {
+        Value = 2
+        Name = Offscreen Falloff Softness
+        Group = None
+    }
+    CollectedScalarParameters[23] =
+    {
+        Value = 1
+        Name = Chromatic Aberration Strength (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[24] =
+    {
+        Value = 0.5
+        Name = Sphere Mask Radius (S)
+        Group = None
+    }
+    CollectedScalarParameters[25] = { Value=1, Name=Axis Scale Minimum, Group=None }
+    CollectedScalarParameters[26] =
+    {
+        Value = 200
+        Name = Distance_Min (Where Light Source is Smallest)
+        Group = None
+    }
+    CollectedScalarParameters[27] = { Value=0.345238, Name=Ring Mask Width, Group=None }
+    CollectedScalarParameters[28] = { Value=0.5, Name=Ring Mask Bias, Group=None }
+    CollectedScalarParameters[29] = { Value=193.3, Name=Ray # Multiplier, Group=None }
+    CollectedScalarParameters[30] =
+    {
+        Value = 0
+        Name = Distance Fade Start Distance (S)
+        Group = None
+    }
+    CollectedScalarParameters[31] = { Value=1, Name=Dirt Mask Tiling V (S), Group=None }
+    CollectedScalarParameters[32] =
+    {
+        Value = 3.05302
+        Name = Ring Softness Exponent
+        Group = None
+    }
+    CollectedScalarParameters[33] =
+    {
+        Value = 1
+        Name = Axis Offset Multiplier (Also uses Particle Dynamic Parameter 1)
+        Group = None
+    }
+    CollectedScalarParameters[34] = { Value=20, Name=Ring Contrast, Group=None }
+    CollectedScalarParameters[35] = { Value=2, Name=Light Source Radius, Group=None }
+    CollectedScalarParameters[36] = { Value=-0.01, Name=Blue- Offset U (S), Group=None }
+    CollectedScalarParameters[37] =
+    {
+        Value = 2.5
+        Name = Chrom Ab Edge Boost Exp (S)
+        Group = None
+    }
+    CollectedScalarParameters[38] =
+    {
+        Value = 0.5
+        Name = Distance Fade Hardness (Higher # = brighter up close)
+        Group = None
+    }
+    CollectedScalarParameters[39] =
+    {
+        Value = 0.05
+        Name = Green- Offset U (S) Sph
+        Group = None
+    }
+    CollectedScalarParameters[40] =
+    {
+        Value = 0
+        Name = Blue- Offset U (S) Sph.
+        Group = None
+    }
+    CollectedScalarParameters[41] = { Value=0, Name=Green- Offset U (S), Group=None }
+    CollectedScalarParameters[42] = { Value=1, Name=Opacity, Group=None }
+    CollectedScalarParameters[43] = { Value=0.25, Name=Ring Chroma, Group=None }
+    CollectedScalarParameters[44] = { Value=0, Name=Depth Bias (S), Group=None }
+    CollectedScalarParameters[45] =
+    {
+        Value = 0.1
+        Name = Blue- Offset V (S) Sph.
+        Group = None
+    }
+    CollectedScalarParameters[46] = { Value=0, Name=Green- Offset V (S), Group=None }
+    CollectedScalarParameters[47] = { Value=0, Name=Sphere Mask Hardness, Group=None }
+    CollectedScalarParameters[48] = { Value=1, Name=Dirt Mask Tiling U (S), Group=None }
+}
+CollectedVectorParameters[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Flare01_D
+    }
+}

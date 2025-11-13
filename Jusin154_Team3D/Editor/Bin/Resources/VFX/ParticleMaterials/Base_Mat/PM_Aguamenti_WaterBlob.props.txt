@@ -1,0 +1,86 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[1] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Particles/Magic/Aguamenti/VFX_T_Water_Blobbing_D.VFX_T_Water_Blobbing_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[6] =
+                {
+                    ParameterInfos[0] = { Name=Roughness }
+                    ParameterInfos[1] = { Name=Metallic }
+                    ParameterInfos[2] = { Name=1. FresnelExp. }
+                    ParameterInfos[3] = { Name=1. Fresnel_Parameter }
+                    ParameterInfos[4] = { Name=2. Refraction }
+                    ParameterInfos[5] = { Name=Diffuse Multiply }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=2. Light_Color }
+                    ParameterInfos[1] = { Name=1. Dark_Color }
+                }
+            }
+            Entries[2] = { ParameterInfos[0]={} }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[6] = { 0.08, 0.9, 1, 0.2, 2, 0.5 }
+        VectorValues[2] =
+        {
+            VectorValues[0] = { R=0.56, G=0.860243, B=1, A=1 }
+            VectorValues[1] = { R=0.081065, G=0.284484, B=0.58, A=1 }
+        }
+        TextureValues[0] = {}
+    }
+    ReferencedTextures[1] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Particles/Magic/Aguamenti/VFX_T_Water_Blobbing_D.VFX_T_Water_Blobbing_D'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[0] = {}
+CollectedScalarParameters[6] =
+{
+    CollectedScalarParameters[0] = { Value=0.08, Name=Roughness, Group=None }
+    CollectedScalarParameters[1] = { Value=0.9, Name=Metallic, Group=None }
+    CollectedScalarParameters[2] = { Value=1, Name=1. FresnelExp., Group=None }
+    CollectedScalarParameters[3] = { Value=0.2, Name=1. Fresnel_Parameter, Group=None }
+    CollectedScalarParameters[4] = { Value=2, Name=2. Refraction, Group=None }
+    CollectedScalarParameters[5] = { Value=0.5, Name=Diffuse Multiply, Group=None }
+}
+CollectedVectorParameters[2] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0.56, G=0.860243, B=1, A=1 }
+        Name = 2. Light_Color
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0.081065, G=0.284484, B=0.58, A=1 }
+        Name = 1. Dark_Color
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

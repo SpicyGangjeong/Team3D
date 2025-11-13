@@ -1,0 +1,402 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[15] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+    ReferencedTextures[1] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_black_d.base_black_d'
+    ReferencedTextures[2] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+    ReferencedTextures[3] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+    ReferencedTextures[4] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Noise/T_GlassNoise_D.T_GlassNoise_D'
+    ReferencedTextures[5] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/T_Base011_MRO.T_Base011_MRO'
+    ReferencedTextures[6] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/T_Blank_A.T_Blank_A'
+    ReferencedTextures[7] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/WaterCaustics/T_WaterCaustics_Disorder_A.T_WaterCaustics_Disorder_A'
+    ReferencedTextures[8] = Texture2D'/Game/MaterialFunctions/BaseTextures/ColorNoise/T_ColorNoise512_D.T_ColorNoise512_D'
+    ReferencedTextures[9] = Texture2D'/Game/RiggedObjects/Characters/Creatures/Dragons/ConjuredDragon/Textures/VFX_T_RanrakDragon_Upper_E.VFX_T_RanrakDragon_Upper_E'
+    ReferencedTextures[10] = Texture2D'/Game/RiggedObjects/Environments/Forageables/Horklump/Textures/T_Forageable_Horklump_Gradient_D.T_Forageable_Horklump_Gradient_D'
+    ReferencedTextures[11] = Texture2D'/Game/VFX/Enemies/ConjuredDragon/VFX_T_RanrakDragon_UpperAlpha_E.VFX_T_RanrakDragon_UpperAlpha_E'
+    ReferencedTextures[12] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_VerticalBeam_D.VFX_T_VerticalBeam_D'
+    ReferencedTextures[13] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise05_D.VFX_T_Noise05_D'
+    ReferencedTextures[14] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[42] =
+                {
+                    ParameterInfos[0] = { Name=Distortion Speed X }
+                    ParameterInfos[1] = { Name=Exp }
+                    ParameterInfos[2] = { Name=Fresnel Emissive Power }
+                    ParameterInfos[3] = { Name=Saturation }
+                    ParameterInfos[4] = { Name=WipeSpeedX }
+                    ParameterInfos[5] = { Name=Alpha_PhysicalState }
+                    ParameterInfos[6] = { Name=A }
+                    ParameterInfos[7] = { Name=WipeSpeedY }
+                    ParameterInfos[8] = { Name=FlattenHeight }
+                    ParameterInfos[9] = { Name=ObjectFadePerinstanceOverride }
+                    ParameterInfos[10] = { Name=Speed U B (S) }
+                    ParameterInfos[11] = { Name=Distortion Speed Y }
+                    ParameterInfos[12] = { Name=GlowWipeStrength }
+                    ParameterInfos[13] = { Name=Noise Size Scale (S) }
+                    ParameterInfos[14] = { Name=Fresnel Emissive Strength }
+                    ParameterInfos[15] = { Name=EmissiveStrength }
+                    ParameterInfos[16] = { Name=Metallic Adjuster }
+                    ParameterInfos[17] = { Name=Noise Speed Scale (S) }
+                    ParameterInfos[18] = { Name=Roughness Adjuster }
+                    ParameterInfos[19] = { Name=LimitB }
+                    ParameterInfos[20] = { Name=AO Adjuster }
+                    ParameterInfos[21] = { Name=LimitA }
+                    ParameterInfos[22] = { Name=Power (S) }
+                    ParameterInfos[23] = { Name=Speed V (S) }
+                    ParameterInfos[24] = { Name=Distortion Strength }
+                    ParameterInfos[25] = { Name=Color_Multiplier }
+                    ParameterInfos[26] = { Name=Diffuse Brightness }
+                    ParameterInfos[27] = { Name=ObjectFadeOpacity }
+                    ParameterInfos[28] = { Name=Flatten }
+                    ParameterInfos[29] = { Name=Tiling U B (S) }
+                    ParameterInfos[30] = { Name=Exp_1 }
+                    ParameterInfos[31] = { Name=Speed V B (S) }
+                    ParameterInfos[32] = { Name=Alpha_EtherealState }
+                    ParameterInfos[33] = { Name=Normal Height }
+                    ParameterInfos[34] = { Name=Speed U (S) }
+                    ParameterInfos[35] = { Name=Tiling U (S) }
+                    ParameterInfos[36] = { Name=Tiling V (S) }
+                    ParameterInfos[37] = { Name=Emissive Brightness }
+                    ParameterInfos[38] = { Name=UV scale }
+                    ParameterInfos[39] = { Name=Distortion Tiling }
+                    ParameterInfos[40] = { Name=Tiling V B (S) }
+                    ParameterInfos[41] = { Name=B }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[6] =
+                {
+                    ParameterInfos[0] = { Name=Emissive Fresnel Color }
+                    ParameterInfos[1] = { Name=ColorSize }
+                    ParameterInfos[2] = { Name=Axis }
+                    ParameterInfos[3] = { Name=EmColor }
+                    ParameterInfos[4] = { Name=PivotPoint }
+                    ParameterInfos[5] = { Name=Color }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[10] =
+                {
+                    ParameterInfos[0] = { Name=ScrollingWipeTexture }
+                    ParameterInfos[1] = { Name=Alpha Mask }
+                    ParameterInfos[2] = { Name=ScrollingMapA }
+                    ParameterInfos[3] = { Name=Normal Map }
+                    ParameterInfos[4] = { Name=ScrollingMapB }
+                    ParameterInfos[5] = { Name=Diffuse Map }
+                    ParameterInfos[6] = { Name=MRO Map }
+                    ParameterInfos[7] = { Name=Distortion Pattern }
+                    ParameterInfos[8] = { Name=EmissiveMap }
+                    ParameterInfos[9] = { Name=Emissive Map }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[42] =
+        {
+            ScalarValues[0] = 0.05
+            ScalarValues[1] = 1.21639
+            ScalarValues[2] = 1
+            ScalarValues[3] = 1
+            ScalarValues[4] = 0.1
+            ScalarValues[5] = 1
+            ScalarValues[6] = 0.66
+            ScalarValues[7] = 0
+            ScalarValues[8] = 0
+            ScalarValues[9] = 0
+            ScalarValues[10] = -0.061905
+            ScalarValues[11] = 0.01
+            ScalarValues[12] = 10000
+            ScalarValues[13] = 1.53059
+            ScalarValues[14] = 0
+            ScalarValues[15] = 15.2381
+            ScalarValues[16] = 0
+            ScalarValues[17] = 0.552381
+            ScalarValues[18] = 0
+            ScalarValues[19] = 0.8
+            ScalarValues[20] = 0
+            ScalarValues[21] = 0.3
+            ScalarValues[22] = 1.1098
+            ScalarValues[23] = 0.157143
+            ScalarValues[24] = 0.5
+            ScalarValues[25] = 1
+            ScalarValues[26] = 1
+            ScalarValues[27] = 1
+            ScalarValues[28] = 0
+            ScalarValues[29] = 0.5
+            ScalarValues[30] = 3
+            ScalarValues[31] = -0.061904
+            ScalarValues[32] = 0.171429
+            ScalarValues[33] = 1
+            ScalarValues[34] = 0.214286
+            ScalarValues[35] = 1
+            ScalarValues[36] = 1
+            ScalarValues[37] = 0
+            ScalarValues[38] = 1
+            ScalarValues[39] = 2
+            ScalarValues[40] = 0.5
+            ScalarValues[41] = 4.41753
+        }
+        VectorValues[6] =
+        {
+            VectorValues[0] = { R=0, G=0, B=0, A=1 }
+            VectorValues[1] = { R=128, G=128, B=128, A=1 }
+            VectorValues[2] = { R=0, G=0, B=1, A=1 }
+            VectorValues[3] = { R=1, G=0.691357, B=0.42218, A=1 }
+            VectorValues[4] = { R=0, G=50, B=0, A=1 }
+            VectorValues[5] = { R=1, G=1, B=1, A=1 }
+        }
+        TextureValues[10] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_VerticalBeam_D.VFX_T_VerticalBeam_D'
+            TextureValues[1] = Texture2D'/Game/VFX/Enemies/ConjuredDragon/VFX_T_RanrakDragon_UpperAlpha_E.VFX_T_RanrakDragon_UpperAlpha_E'
+            TextureValues[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise05_D.VFX_T_Noise05_D'
+            TextureValues[3] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+            TextureValues[4] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise05_D.VFX_T_Noise05_D'
+            TextureValues[5] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+            TextureValues[6] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/T_Base011_MRO.T_Base011_MRO'
+            TextureValues[7] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Noise/T_GlassNoise_D.T_GlassNoise_D'
+            TextureValues[8] = Texture2D'/Game/RiggedObjects/Characters/Creatures/Dragons/ConjuredDragon/Textures/VFX_T_RanrakDragon_Upper_E.VFX_T_RanrakDragon_Upper_E'
+            TextureValues[9] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_black_d.base_black_d'
+        }
+    }
+    ReferencedTextures[16] =
+    {
+        ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+        ReferencedTextures[1] = Texture2D'/Game/RiggedObjects/Environments/Forageables/Horklump/Textures/T_Forageable_Horklump_Gradient_D.T_Forageable_Horklump_Gradient_D'
+        ReferencedTextures[2] = Texture2D'/Game/MaterialFunctions/BaseTextures/ColorNoise/T_ColorNoise512_D.T_ColorNoise512_D'
+        ReferencedTextures[3] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/T_Blank_A.T_Blank_A'
+        ReferencedTextures[4] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/T_Base011_MRO.T_Base011_MRO'
+        ReferencedTextures[5] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+        ReferencedTextures[6] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+        ReferencedTextures[7] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_black_d.base_black_d'
+        ReferencedTextures[9] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/WaterCaustics/T_WaterCaustics_Disorder_A.T_WaterCaustics_Disorder_A'
+        ReferencedTextures[10] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Noise/T_GlassNoise_D.T_GlassNoise_D'
+        ReferencedTextures[11] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise05_D.VFX_T_Noise05_D'
+        ReferencedTextures[12] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_VerticalBeam_D.VFX_T_VerticalBeam_D'
+        ReferencedTextures[13] = Texture2D'/Game/RiggedObjects/Characters/Creatures/Dragons/ConjuredDragon/Textures/VFX_T_RanrakDragon_Upper_E.VFX_T_RanrakDragon_Upper_E'
+        ReferencedTextures[14] = Texture2D'/Game/VFX/Enemies/ConjuredDragon/VFX_T_RanrakDragon_UpperAlpha_E.VFX_T_RanrakDragon_UpperAlpha_E'
+        ReferencedTextures[15] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[10] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_VerticalBeam_D.VFX_T_VerticalBeam_D'
+        Name = ScrollingWipeTexture
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Enemies/ConjuredDragon/VFX_T_RanrakDragon_UpperAlpha_E.VFX_T_RanrakDragon_UpperAlpha_E'
+        Name = Alpha Mask
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise05_D.VFX_T_Noise05_D'
+        Name = ScrollingMapA
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+        Name = Normal Map
+        Group = None
+    }
+    CollectedTextureParameters[4] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise05_D.VFX_T_Noise05_D'
+        Name = ScrollingMapB
+        Group = None
+    }
+    CollectedTextureParameters[5] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+        Name = Diffuse Map
+        Group = None
+    }
+    CollectedTextureParameters[6] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/T_Base011_MRO.T_Base011_MRO'
+        Name = MRO Map
+        Group = None
+    }
+    CollectedTextureParameters[7] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Noise/T_GlassNoise_D.T_GlassNoise_D'
+        Name = Distortion Pattern
+        Group = None
+    }
+    CollectedTextureParameters[8] =
+    {
+        Texture = Texture2D'/Game/RiggedObjects/Characters/Creatures/Dragons/ConjuredDragon/Textures/VFX_T_RanrakDragon_Upper_E.VFX_T_RanrakDragon_Upper_E'
+        Name = EmissiveMap
+        Group = None
+    }
+    CollectedTextureParameters[9] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_black_d.base_black_d'
+        Name = Emissive Map
+        Group = None
+    }
+}
+CollectedScalarParameters[42] =
+{
+    CollectedScalarParameters[0] = { Value=0.05, Name=Distortion Speed X, Group=None }
+    CollectedScalarParameters[1] = { Value=1.21639, Name=Exp, Group=None }
+    CollectedScalarParameters[2] = { Value=1, Name=Fresnel Emissive Power, Group=None }
+    CollectedScalarParameters[3] = { Value=1, Name=Saturation, Group=None }
+    CollectedScalarParameters[4] = { Value=0.1, Name=WipeSpeedX, Group=None }
+    CollectedScalarParameters[5] = { Value=1, Name=Alpha_PhysicalState, Group=None }
+    CollectedScalarParameters[6] = { Value=0.66, Name=A, Group=None }
+    CollectedScalarParameters[7] = { Value=0, Name=WipeSpeedY, Group=None }
+    CollectedScalarParameters[8] = { Value=0, Name=FlattenHeight, Group=None }
+    CollectedScalarParameters[9] =
+    {
+        Value = 0
+        Name = ObjectFadePerinstanceOverride
+        Group = None
+    }
+    CollectedScalarParameters[10] = { Value=-0.061905, Name=Speed U B (S), Group=None }
+    CollectedScalarParameters[11] = { Value=0.01, Name=Distortion Speed Y, Group=None }
+    CollectedScalarParameters[12] = { Value=10000, Name=GlowWipeStrength, Group=None }
+    CollectedScalarParameters[13] =
+    {
+        Value = 1.53059
+        Name = Noise Size Scale (S)
+        Group = None
+    }
+    CollectedScalarParameters[14] =
+    {
+        Value = 0
+        Name = Fresnel Emissive Strength
+        Group = None
+    }
+    CollectedScalarParameters[15] = { Value=15.2381, Name=EmissiveStrength, Group=None }
+    CollectedScalarParameters[16] = { Value=0, Name=Metallic Adjuster, Group=None }
+    CollectedScalarParameters[17] =
+    {
+        Value = 0.552381
+        Name = Noise Speed Scale (S)
+        Group = None
+    }
+    CollectedScalarParameters[18] = { Value=0, Name=Roughness Adjuster, Group=None }
+    CollectedScalarParameters[19] = { Value=0.8, Name=LimitB, Group=None }
+    CollectedScalarParameters[20] = { Value=0, Name=AO Adjuster, Group=None }
+    CollectedScalarParameters[21] = { Value=0.3, Name=LimitA, Group=None }
+    CollectedScalarParameters[22] = { Value=1.1098, Name=Power (S), Group=None }
+    CollectedScalarParameters[23] = { Value=0.157143, Name=Speed V (S), Group=None }
+    CollectedScalarParameters[24] = { Value=0.5, Name=Distortion Strength, Group=None }
+    CollectedScalarParameters[25] = { Value=1, Name=Color_Multiplier, Group=None }
+    CollectedScalarParameters[26] = { Value=1, Name=Diffuse Brightness, Group=None }
+    CollectedScalarParameters[27] = { Value=1, Name=ObjectFadeOpacity, Group=None }
+    CollectedScalarParameters[28] = { Value=0, Name=Flatten, Group=None }
+    CollectedScalarParameters[29] = { Value=0.5, Name=Tiling U B (S), Group=None }
+    CollectedScalarParameters[30] = { Value=3, Name=Exp_1, Group=None }
+    CollectedScalarParameters[31] = { Value=-0.061904, Name=Speed V B (S), Group=None }
+    CollectedScalarParameters[32] =
+    {
+        Value = 0.171429
+        Name = Alpha_EtherealState
+        Group = None
+    }
+    CollectedScalarParameters[33] = { Value=1, Name=Normal Height, Group=None }
+    CollectedScalarParameters[34] = { Value=0.214286, Name=Speed U (S), Group=None }
+    CollectedScalarParameters[35] = { Value=1, Name=Tiling U (S), Group=None }
+    CollectedScalarParameters[36] = { Value=1, Name=Tiling V (S), Group=None }
+    CollectedScalarParameters[37] = { Value=0, Name=Emissive Brightness, Group=None }
+    CollectedScalarParameters[38] = { Value=1, Name=UV scale, Group=None }
+    CollectedScalarParameters[39] = { Value=2, Name=Distortion Tiling, Group=None }
+    CollectedScalarParameters[40] = { Value=0.5, Name=Tiling V B (S), Group=None }
+    CollectedScalarParameters[41] = { Value=4.41753, Name=B, Group=None }
+}
+CollectedVectorParameters[6] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = Emissive Fresnel Color
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=128, G=128, B=128, A=1 }
+        Name = ColorSize
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=0, G=0, B=1, A=1 }
+        Name = Axis
+        Group = None
+    }
+    CollectedVectorParameters[3] =
+    {
+        Value = { R=1, G=0.691357, B=0.42218, A=1 }
+        Name = EmColor
+        Group = None
+    }
+    CollectedVectorParameters[4] =
+    {
+        Value = { R=0, G=50, B=0, A=1 }
+        Name = PivotPoint
+        Group = None
+    }
+    CollectedVectorParameters[5] =
+    {
+        Value = { R=1, G=1, B=1, A=1 }
+        Name = Color
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[4] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = base_flat_n
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = base_white_d
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Base011_MRO
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_RanrakDragon_UpperAlpha_E
+    }
+}

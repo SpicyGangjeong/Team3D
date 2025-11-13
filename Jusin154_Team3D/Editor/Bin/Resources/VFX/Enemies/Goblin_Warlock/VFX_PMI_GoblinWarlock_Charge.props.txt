@@ -1,0 +1,163 @@
+TwoSided = true
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[2] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_WispyNoise_D.VFX_T_WispyNoise_D'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/VFX_T_Wavy_N.VFX_T_Wavy_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[23] =
+                {
+                    ParameterInfos[0] = { Name=Exp }
+                    ParameterInfos[1] = { Name=B_1 }
+                    ParameterInfos[2] = { Name=Tiling V (S)_1 }
+                    ParameterInfos[3] = { Name=Tiling U (S)_1 }
+                    ParameterInfos[4] = { Name=A }
+                    ParameterInfos[5] = { Name=Power (S)_1 }
+                    ParameterInfos[6] = { Name=Bright }
+                    ParameterInfos[7] = { Name=Speed U (S)_1 }
+                    ParameterInfos[8] = { Name=Tiling }
+                    ParameterInfos[9] = { Name=Speed V (S)_1 }
+                    ParameterInfos[10] = { Name=B_4 }
+                    ParameterInfos[11] = { Name=Power (S) }
+                    ParameterInfos[12] = { Name=Speed V (S) }
+                    ParameterInfos[13] = { Name=Dark }
+                    ParameterInfos[14] = { Name=B_3 }
+                    ParameterInfos[15] = { Name=Test Dark }
+                    ParameterInfos[16] = { Name=Speed U (S) }
+                    ParameterInfos[17] = { Name=Tiling U (S) }
+                    ParameterInfos[18] = { Name=Speed (S) }
+                    ParameterInfos[19] = { Name=Test Bright }
+                    ParameterInfos[20] = { Name=B_5 }
+                    ParameterInfos[21] = { Name=Tiling V (S) }
+                    ParameterInfos[22] = { Name=B }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[3] =
+                {
+                    ParameterInfos[0] = { Name=Param }
+                    ParameterInfos[1] = { Name=Color_1 }
+                    ParameterInfos[2] = { Name=Color }
+                }
+            }
+            Entries[2] = { ParameterInfos[0]={} }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[23] =
+        {
+            ScalarValues[0] = 20.2582
+            ScalarValues[1] = 0.180953
+            ScalarValues[2] = 1
+            ScalarValues[3] = 1
+            ScalarValues[4] = 42.6333
+            ScalarValues[5] = 1.9953
+            ScalarValues[6] = 3.36121
+            ScalarValues[7] = 0.07619
+            ScalarValues[8] = 0.002
+            ScalarValues[9] = 0.152381
+            ScalarValues[10] = 5.20149
+            ScalarValues[11] = 1.05862
+            ScalarValues[12] = 0.05
+            ScalarValues[13] = -0.544614
+            ScalarValues[14] = 0.5
+            ScalarValues[15] = 0
+            ScalarValues[16] = -0.1
+            ScalarValues[17] = 1
+            ScalarValues[18] = 0.32381
+            ScalarValues[19] = 1
+            ScalarValues[20] = 319.712
+            ScalarValues[21] = 0.5
+            ScalarValues[22] = 34.5704
+        }
+        VectorValues[3] =
+        {
+            VectorValues[0] = { R=0.480309, G=2, B=1.27376, A=1 }
+            VectorValues[1] = { R=2.52151, G=8, B=5.60998, A=1 }
+            VectorValues[2] = { R=1.22806, G=7, B=4.47561, A=1 }
+        }
+        TextureValues[0] = {}
+    }
+    ReferencedTextures[2] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_WispyNoise_D.VFX_T_WispyNoise_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/VFX_T_Wavy_N.VFX_T_Wavy_N'
+    }
+}
+BlendMode = BLEND_Additive (3)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[0] = {}
+CollectedScalarParameters[23] =
+{
+    CollectedScalarParameters[0] = { Value=20.2582, Name=Exp, Group=None }
+    CollectedScalarParameters[1] = { Value=0.180953, Name=B_1, Group=None }
+    CollectedScalarParameters[2] = { Value=1, Name=Tiling V (S)_1, Group=None }
+    CollectedScalarParameters[3] = { Value=1, Name=Tiling U (S)_1, Group=None }
+    CollectedScalarParameters[4] = { Value=42.6333, Name=A, Group=None }
+    CollectedScalarParameters[5] = { Value=1.9953, Name=Power (S)_1, Group=None }
+    CollectedScalarParameters[6] = { Value=3.36121, Name=Bright, Group=None }
+    CollectedScalarParameters[7] = { Value=0.07619, Name=Speed U (S)_1, Group=None }
+    CollectedScalarParameters[8] = { Value=0.002, Name=Tiling, Group=None }
+    CollectedScalarParameters[9] = { Value=0.152381, Name=Speed V (S)_1, Group=None }
+    CollectedScalarParameters[10] = { Value=5.20149, Name=B_4, Group=None }
+    CollectedScalarParameters[11] = { Value=1.05862, Name=Power (S), Group=None }
+    CollectedScalarParameters[12] = { Value=0.05, Name=Speed V (S), Group=None }
+    CollectedScalarParameters[13] = { Value=-0.544614, Name=Dark, Group=None }
+    CollectedScalarParameters[14] = { Value=0.5, Name=B_3, Group=None }
+    CollectedScalarParameters[15] = { Value=0, Name=Test Dark, Group=None }
+    CollectedScalarParameters[16] = { Value=-0.1, Name=Speed U (S), Group=None }
+    CollectedScalarParameters[17] = { Value=1, Name=Tiling U (S), Group=None }
+    CollectedScalarParameters[18] = { Value=0.32381, Name=Speed (S), Group=None }
+    CollectedScalarParameters[19] = { Value=1, Name=Test Bright, Group=None }
+    CollectedScalarParameters[20] = { Value=319.712, Name=B_5, Group=None }
+    CollectedScalarParameters[21] = { Value=0.5, Name=Tiling V (S), Group=None }
+    CollectedScalarParameters[22] = { Value=34.5704, Name=B, Group=None }
+}
+CollectedVectorParameters[3] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0.480309, G=2, B=1.27376, A=1 }
+        Name = Param
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=2.52151, G=8, B=5.60998, A=1 }
+        Name = Color_1
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=1.22806, G=7, B=4.47561, A=1 }
+        Name = Color
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 1
+        TextureName = VFX_T_Wavy_N
+    }
+}

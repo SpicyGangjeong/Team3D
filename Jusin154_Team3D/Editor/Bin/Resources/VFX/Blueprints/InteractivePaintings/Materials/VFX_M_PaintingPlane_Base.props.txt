@@ -1,0 +1,146 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[8] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EditorMaterials/Cascade/CASC_Cross.CASC_Cross'
+    ReferencedTextures[1] = Texture2D'/Engine/EditorMaterials/Cascade/CASC_None.CASC_None'
+    ReferencedTextures[2] = Texture2D'/Game/Environment/Hogwarts/Textures/T_Canvas_N.T_Canvas_N'
+    ReferencedTextures[3] = Texture2D'/Game/Environment/Hogwarts/Textures/T_Canvas_R.T_Canvas_R'
+    ReferencedTextures[4] = Texture2D'/Game/MaterialFunctions/BaseTextures/Painting/T_PaintingTextures_N.T_PaintingTextures_N'
+    ReferencedTextures[5] = Texture2D'/Game/MaterialFunctions/BaseTextures/Painting/T_PaintingTexturesB_MSK.T_PaintingTexturesB_MSK'
+    ReferencedTextures[6] = Texture2D'/Game/VFX/SpineAssets/Assets/PaintingFaceA/Textures/VFX_T_FacePaintingABKGRND_D.VFX_T_FacePaintingABKGRND_D'
+    ReferencedTextures[7] = Texture2D'/Game/VFX/Textures/TEST/VFX_T_PluralSight_Circle_D.VFX_T_PluralSight_Circle_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=NormalTilingMultiplier }
+                    ParameterInfos[1] = { Name=NormalIntensity }
+                }
+            }
+            Entries[1] = { ParameterInfos[0]={} }
+            Entries[2] =
+            {
+                ParameterInfos[4] =
+                {
+                    ParameterInfos[0] = { Name=Background }
+                    ParameterInfos[1] = { Name=CanvasRoughness }
+                    ParameterInfos[2] = { Name=CanvasNormal }
+                    ParameterInfos[3] = { Name=FrameMask }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[2] = { 1, 1 }
+        VectorValues[0] = {}
+        TextureValues[4] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/SpineAssets/Assets/PaintingFaceA/Textures/VFX_T_FacePaintingABKGRND_D.VFX_T_FacePaintingABKGRND_D'
+            TextureValues[1] = Texture2D'/Game/Environment/Hogwarts/Textures/T_Canvas_R.T_Canvas_R'
+            TextureValues[2] = Texture2D'/Game/Environment/Hogwarts/Textures/T_Canvas_N.T_Canvas_N'
+            TextureValues[3] = Texture2D'/Game/VFX/Textures/TEST/VFX_T_PluralSight_Circle_D.VFX_T_PluralSight_Circle_D'
+        }
+    }
+    ReferencedTextures[8] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/Environment/Hogwarts/Textures/T_Canvas_R.T_Canvas_R'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/TEST/VFX_T_PluralSight_Circle_D.VFX_T_PluralSight_Circle_D'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/SpineAssets/Assets/PaintingFaceA/Textures/VFX_T_FacePaintingABKGRND_D.VFX_T_FacePaintingABKGRND_D'
+        ReferencedTextures[3] = Texture2D'/Game/Environment/Hogwarts/Textures/T_Canvas_N.T_Canvas_N'
+        ReferencedTextures[4] = Texture2D'/Game/MaterialFunctions/BaseTextures/Painting/T_PaintingTextures_N.T_PaintingTextures_N'
+        ReferencedTextures[5] = Texture2D'/Game/MaterialFunctions/BaseTextures/Painting/T_PaintingTexturesB_MSK.T_PaintingTexturesB_MSK'
+        ReferencedTextures[6] = Texture2D'/Engine/EditorMaterials/Cascade/CASC_None.CASC_None'
+        ReferencedTextures[7] = Texture2D'/Engine/EditorMaterials/Cascade/CASC_Cross.CASC_Cross'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[4] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/SpineAssets/Assets/PaintingFaceA/Textures/VFX_T_FacePaintingABKGRND_D.VFX_T_FacePaintingABKGRND_D'
+        Name = Background
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/Environment/Hogwarts/Textures/T_Canvas_R.T_Canvas_R'
+        Name = CanvasRoughness
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/Environment/Hogwarts/Textures/T_Canvas_N.T_Canvas_N'
+        Name = CanvasNormal
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/TEST/VFX_T_PluralSight_Circle_D.VFX_T_PluralSight_Circle_D'
+        Name = FrameMask
+        Group = None
+    }
+}
+CollectedScalarParameters[2] =
+{
+    CollectedScalarParameters[0] = { Value=1, Name=NormalTilingMultiplier, Group=None }
+    CollectedScalarParameters[1] = { Value=1, Name=NormalIntensity, Group=None }
+}
+CollectedVectorParameters[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[6] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 4
+        UVChannelIndex = 0
+        TextureName = T_Canvas_N
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 4
+        UVChannelIndex = 0
+        TextureName = T_Canvas_R
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 4
+        UVChannelIndex = 0
+        TextureName = T_PaintingTextures_N
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_PaintingTexturesB_MSK
+    }
+    TextureStreamingData[4] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_FacePaintingABKGRND_D
+    }
+    TextureStreamingData[5] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_PluralSight_Circle_D
+    }
+}

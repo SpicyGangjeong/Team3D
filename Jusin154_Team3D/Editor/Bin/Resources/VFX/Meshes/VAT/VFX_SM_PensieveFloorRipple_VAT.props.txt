@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/VAT/VFX_M_VAT_PensieveFloor.VFX_M_VAT_PensieveFloor'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/VAT/VFX_M_VAT_PensieveFloor.VFX_M_VAT_PensieveFloor'
+        MaterialSlotName = MI_Intro_Pensieve_Marble_Blend_simple
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 294.71, 473.322, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=8.15454, Y=10.1119, Z=82.6728 }
+    BoxExtent = { X=614.55, Y=614.535, Z=16.8499 }
+    SphereRadius = 869.258
+}

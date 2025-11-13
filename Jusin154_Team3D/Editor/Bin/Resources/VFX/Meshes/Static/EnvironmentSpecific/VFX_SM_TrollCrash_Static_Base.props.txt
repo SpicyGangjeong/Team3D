@@ -1,0 +1,146 @@
+Materials[11] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Environment/Hogsmeade/Common/Materials/Floors/MI_HM_woodfloor_3_Alt.MI_HM_woodfloor_3_Alt'
+    Materials[1] = MaterialInstanceConstant'/Game/Environment/Hogsmeade/BLDG_2Hand/Materials/MI_HM_2Hand_Prestoe_Fireplace.MI_HM_2Hand_Prestoe_Fireplace'
+    Materials[2] = MaterialInstanceConstant'/Game/Environment/Hogsmeade/Common/Materials/Walls/MI_BLDG_Quid_Stonewall01.MI_BLDG_Quid_Stonewall01'
+    Materials[3] = MaterialInstanceConstant'/Game/Environment/Hogsmeade/Common/Materials/Walls/MI_HM_plaster_stone_blend.MI_HM_plaster_stone_blend'
+    Materials[4] = MaterialInstanceConstant'/Game/Environment/Hogsmeade/Common/Materials/Walls/MI_HM_New_Stacked_Stone_wall.MI_HM_New_Stacked_Stone_wall'
+    Materials[5] = MaterialInstanceConstant'/Game/Environment/Hogsmeade/Common/Materials/Walls/MI_HM_Plaster_blend.MI_HM_Plaster_blend'
+    Materials[6] = MaterialInstanceConstant'/Game/Environment/Hogsmeade/Common/Materials/Stone/MI_HM_Potions_Stone_Wall.MI_HM_Potions_Stone_Wall'
+    Materials[7] = MaterialInstanceConstant'/Game/Environment/Hogsmeade/BLDG_ThreeBroomsticks/Materials/MI_3Broomsticks_StuccoBrick_A.MI_3Broomsticks_StuccoBrick_A'
+    Materials[8] = MaterialInstanceConstant'/Game/Environment/Hogsmeade/BLDG_ThreeBroomsticks/Materials/MI_HM_3Broom_Stone_Stairs_A.MI_HM_3Broom_Stone_Stairs_A'
+    Materials[9] = MaterialInstanceConstant'/Game/Environment/Hogsmeade/BLDG_ThreeBroomsticks/Materials/M_3Broom_Ground_Trans_Moss_Decal.M_3Broom_Ground_Trans_Moss_Decal'
+    Materials[10] = MaterialInstanceConstant'/Game/Environment/Hogsmeade/Common/Materials/Wood/M_HM_WoodTrimTile_int.M_HM_WoodTrimTile_int'
+}
+SourceModels[0] = {}
+StaticMaterials[11] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Hogsmeade/Common/Materials/Floors/MI_HM_woodfloor_3_Alt.MI_HM_woodfloor_3_Alt'
+        MaterialSlotName = MI_HM_woodfloor_3
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 340.336, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Hogsmeade/BLDG_2Hand/Materials/MI_HM_2Hand_Prestoe_Fireplace.MI_HM_2Hand_Prestoe_Fireplace'
+        MaterialSlotName = MI_HM_2Hand_Prestoe_Fireplace
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 314.497, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[2] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Hogsmeade/Common/Materials/Walls/MI_BLDG_Quid_Stonewall01.MI_BLDG_Quid_Stonewall01'
+        MaterialSlotName = M_BLDG_Quid_Stonewall01
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 354.932, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[3] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Hogsmeade/Common/Materials/Walls/MI_HM_plaster_stone_blend.MI_HM_plaster_stone_blend'
+        MaterialSlotName = MI_HM_Plaster_stone_blend
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 337.745, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[4] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Hogsmeade/Common/Materials/Walls/MI_HM_New_Stacked_Stone_wall.MI_HM_New_Stacked_Stone_wall'
+        MaterialSlotName = MI_HM_New_Stacked_Stone_wall
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 291.956, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[5] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Hogsmeade/Common/Materials/Walls/MI_HM_Plaster_blend.MI_HM_Plaster_blend'
+        MaterialSlotName = MI_HM_Plaster_blend
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 346.427, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[6] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Hogsmeade/Common/Materials/Stone/MI_HM_Potions_Stone_Wall.MI_HM_Potions_Stone_Wall'
+        MaterialSlotName = MI_HM_Potions_Stone_Wall
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 417.848, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[7] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Hogsmeade/BLDG_ThreeBroomsticks/Materials/MI_3Broomsticks_StuccoBrick_A.MI_3Broomsticks_StuccoBrick_A'
+        MaterialSlotName = MI_3Broomsticks_StuccoBrick_A
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 325.866, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[8] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Hogsmeade/BLDG_ThreeBroomsticks/Materials/MI_HM_3Broom_Stone_Stairs_A.MI_HM_3Broom_Stone_Stairs_A'
+        MaterialSlotName = MI_HM_3Broom_Stone_Stairs_A
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 601.701, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[9] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Hogsmeade/BLDG_ThreeBroomsticks/Materials/M_3Broom_Ground_Trans_Moss_Decal.M_3Broom_Ground_Trans_Moss_Decal'
+        MaterialSlotName = M_3Broom_Ground_Trans_Moss_Decal
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 356.61, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[10] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Hogsmeade/Common/Materials/Wood/M_HM_WoodTrimTile_int.M_HM_WoodTrimTile_int'
+        MaterialSlotName = MI_HM_WoodTrimTile_int
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 254.415, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=56.1369, Y=-288.977, Z=87.3652 }
+    BoxExtent = { X=258.333, Y=397.679, Z=108.573 }
+    SphereRadius = 447.973
+}

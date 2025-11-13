@@ -494,7 +494,7 @@ _bool CModel::SaveAssimpModel(const _char* filename)
 	_splitpath_s(filename, nullptr, 0, nullptr, 0, nullptr, 0, szExt, MAX_PATH);
 	strcat_s(szModel, sizeof(_char) * MAX_PATH, szExt);
 
-	_string savePath = filename; 
+	_string savePath = filename;
 
 	SaveModel modelData;
 	modelData.MeshCount = m_pAIScene->mNumMeshes;
@@ -504,8 +504,8 @@ _bool CModel::SaveAssimpModel(const _char* filename)
 	{
 		aiMesh* mesh = m_pAIScene->mMeshes[i];
 		SaveMesh saveMesh{};
-		
-		saveMesh.MeshName =  mesh->mName.C_Str();
+
+		saveMesh.MeshName = mesh->mName.C_Str();
 		saveMesh.MeshNameSize = (_int)saveMesh.MeshName.size() + 1;
 		saveMesh.VertexCount = mesh->mNumVertices;
 		saveMesh.IndexCount = mesh->mNumFaces * 3;
@@ -713,7 +713,7 @@ _bool CModel::SaveAssimpModel(const _char* filename)
 	for (auto& Anim : modelData.Animations)
 	{
 		fwrite(&Anim.AnimNameSize, sizeof(_uint), 1, fp);
-		fwrite(Anim.AnimName.data(), 1,Anim.AnimNameSize, fp);
+		fwrite(Anim.AnimName.data(), 1, Anim.AnimNameSize, fp);
 		fwrite(&Anim.mDuration, sizeof(_float), 1, fp);
 		fwrite(&Anim.mTicksPerSecond, sizeof(_float), 1, fp);
 		fwrite(&Anim.ChannelCount, sizeof(_uint), 1, fp);
@@ -756,7 +756,7 @@ _int CModel::SaveNodeRecursive(const aiNode* pAINode, std::vector<SaveNode>& out
 {
 	SaveNode node{};
 	node.NodeName = pAINode->mName.C_Str();
-	node.NodeNameSize =(_uint)node.NodeName.size() + 1;
+	node.NodeNameSize = (_uint)node.NodeName.size() + 1;
 	node.ParentIndex = parentIndex;
 
 	const aiMatrix4x4& m = pAINode->mTransformation;
@@ -811,17 +811,9 @@ HRESULT CModel::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fma
 #pragma region Material
 	if (MODEL::ENVIROMENT == eType)
 	{
-#ifdef 기무리
-		if (FAILED(Ready_Materials(m_pAIScene, pModelFilePath))) {
-			return E_FAIL;
-		}
-#endif // 기무리
-#ifndef 기무리
 		if (FAILED(Ready_Materials_FromFile(m_pAIScene, pModelFilePath))) {
 			return E_FAIL;
 		}
-#endif // !기무리
-
 	}
 	else
 	{
@@ -870,21 +862,21 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 		return S_OK;
 	}
 	m_pSaveModel = m_pGameInstance->Load_SaveModel(pModelFilePath);
-	
+
 
 	XMStoreFloat4x4(&m_PreTransformMatrix, PreTransformMatrix);
 
 	Ready_Bones(m_pSaveModel->Nodes, 0, -1);
 
-	if (FAILED(Ready_Meshes())){
+	if (FAILED(Ready_Meshes())) {
 		return E_FAIL;
 	}
 
-	if (FAILED(Ready_Materials(pModelFilePath))){
+	if (FAILED(Ready_Materials(pModelFilePath))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(Ready_Animations())){
+	if (FAILED(Ready_Animations())) {
 		return E_FAIL;
 	}
 
@@ -942,7 +934,7 @@ _bool CModel::LoadData(const _char* filename)
 			fread(&mesh.Bones[i].OffsetMatrix, sizeof(XMFLOAT4X4), 1, fp);
 			fread(&mesh.Bones[i].WeightsCount, sizeof(_uint), 1, fp);
 			mesh.Bones[i].Weights.resize(mesh.Bones[i].WeightsCount);
-			for (size_t j = 0;j < mesh.Bones[i].WeightsCount; j++)
+			for (size_t j = 0; j < mesh.Bones[i].WeightsCount; j++)
 			{
 				fread(&mesh.Bones[i].Weights[j].VertexId, sizeof(_uint), 1, fp);
 				fread(&mesh.Bones[i].Weights[j].Weight, sizeof(_float), 1, fp);
@@ -1019,7 +1011,7 @@ _bool CModel::LoadData(const _char* filename)
 				mat.Path[k][j] = temp;
 			}
 		}
-		
+
 		NewModel.Materials.push_back(mat);
 	}
 
@@ -1112,7 +1104,7 @@ HRESULT CModel::Ready_Animations()
 	return S_OK;
 }
 
-CModel* CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath,_fmatrix PreTransformMatrix)
+CModel* CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix)
 {
 	CModel* pInstance = new CModel(pDevice, pContext);
 

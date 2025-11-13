@@ -1,0 +1,198 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[3] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/TEST/T_Scorch_01_D.T_Scorch_01_D'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/VFX_T_BOTU_Nebula_D.VFX_T_BOTU_Nebula_D'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/VFX_T_IceB_N.VFX_T_IceB_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[15] =
+                {
+                    ParameterInfos[0] = { Name=Roughness }
+                    ParameterInfos[1] = { Name=Exp }
+                    ParameterInfos[2] = { Name=Specular }
+                    ParameterInfos[3] = { Name=Emissive Mask Tiling U }
+                    ParameterInfos[4] = { Name=Emissive Mask Speed U }
+                    ParameterInfos[5] = { Name=Sharpen B (0-1) (S) }
+                    ParameterInfos[6] = { Name=Normal Intensity }
+                    ParameterInfos[7] = { Name=Tiling U (S) }
+                    ParameterInfos[8] = { Name=Offset V (S) }
+                    ParameterInfos[9] = { Name=Opacity }
+                    ParameterInfos[10] = { Name=Tiling V (S) }
+                    ParameterInfos[11] = { Name=Erosion B Alpha (S) }
+                    ParameterInfos[12] = { Name=Offset U (S) }
+                    ParameterInfos[13] = { Name=Emissive Mask Speed V }
+                    ParameterInfos[14] = { Name=Emissive Mask Tiling V }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=Base Color }
+                    ParameterInfos[1] = { Name=EmissiveColor }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[3] =
+                {
+                    ParameterInfos[0] = { Name=Normal }
+                    ParameterInfos[1] = { Name=EmissiveMask }
+                    ParameterInfos[2] = { Name=BaseColor }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[15] =
+        {
+            ScalarValues[0] = 0.834921
+            ScalarValues[1] = 2.36597
+            ScalarValues[2] = 0.12381
+            ScalarValues[3] = 1
+            ScalarValues[4] = 0.069841
+            ScalarValues[5] = 4.11455
+            ScalarValues[6] = 1.38719
+            ScalarValues[7] = 1
+            ScalarValues[8] = 0
+            ScalarValues[9] = 1
+            ScalarValues[10] = 1
+            ScalarValues[11] = 0.022937
+            ScalarValues[12] = 0
+            ScalarValues[13] = -0.044444
+            ScalarValues[14] = 1
+        }
+        VectorValues[2] =
+        {
+            VectorValues[0] = { R=0, G=0, B=0, A=0 }
+            VectorValues[1] = { R=20, G=2.73574, B=0, A=1 }
+        }
+        TextureValues[3] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/VFX_T_IceB_N.VFX_T_IceB_N'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/VFX_T_BOTU_Nebula_D.VFX_T_BOTU_Nebula_D'
+            TextureValues[2] = Texture2D'/Game/VFX/Textures/TEST/T_Scorch_01_D.T_Scorch_01_D'
+        }
+    }
+    ReferencedTextures[3] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/VFX_T_BOTU_Nebula_D.VFX_T_BOTU_Nebula_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/VFX_T_IceB_N.VFX_T_IceB_N'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/TEST/T_Scorch_01_D.T_Scorch_01_D'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[3] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_IceB_N.VFX_T_IceB_N'
+        Name = Normal
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_BOTU_Nebula_D.VFX_T_BOTU_Nebula_D'
+        Name = EmissiveMask
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/TEST/T_Scorch_01_D.T_Scorch_01_D'
+        Name = BaseColor
+        Group = None
+    }
+}
+CollectedScalarParameters[15] =
+{
+    CollectedScalarParameters[0] = { Value=0.834921, Name=Roughness, Group=None }
+    CollectedScalarParameters[1] = { Value=2.36597, Name=Exp, Group=None }
+    CollectedScalarParameters[2] = { Value=0.12381, Name=Specular, Group=None }
+    CollectedScalarParameters[3] = { Value=1, Name=Emissive Mask Tiling U, Group=None }
+    CollectedScalarParameters[4] =
+    {
+        Value = 0.069841
+        Name = Emissive Mask Speed U
+        Group = None
+    }
+    CollectedScalarParameters[5] =
+    {
+        Value = 4.11455
+        Name = Sharpen B (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[6] = { Value=1.38719, Name=Normal Intensity, Group=None }
+    CollectedScalarParameters[7] = { Value=1, Name=Tiling U (S), Group=None }
+    CollectedScalarParameters[8] = { Value=0, Name=Offset V (S), Group=None }
+    CollectedScalarParameters[9] = { Value=1, Name=Opacity, Group=None }
+    CollectedScalarParameters[10] = { Value=1, Name=Tiling V (S), Group=None }
+    CollectedScalarParameters[11] =
+    {
+        Value = 0.022937
+        Name = Erosion B Alpha (S)
+        Group = None
+    }
+    CollectedScalarParameters[12] = { Value=0, Name=Offset U (S), Group=None }
+    CollectedScalarParameters[13] =
+    {
+        Value = -0.044444
+        Name = Emissive Mask Speed V
+        Group = None
+    }
+    CollectedScalarParameters[14] = { Value=1, Name=Emissive Mask Tiling V, Group=None }
+}
+CollectedVectorParameters[2] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0, G=0, B=0, A=0 }
+        Name = Base Color
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=20, G=2.73574, B=0, A=1 }
+        Name = EmissiveColor
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[3] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Scorch_01_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_BOTU_Nebula_D
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_IceB_N
+    }
+}

@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Particles/Ambient/Fire/FirePlace/FirePlace_Logs/VFX_MI_woodchar_Inst.VFX_MI_woodchar_Inst'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Particles/Ambient/Fire/FirePlace/FirePlace_Logs/VFX_MI_woodchar_Inst.VFX_MI_woodchar_Inst'
+        MaterialSlotName = lambert1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 211, 226.952, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-1.95573, Y=0.479431, Z=19.5017 }
+    BoxExtent = { X=44.2478, Y=51.8511, Z=21.553 }
+    SphereRadius = 57.7923
+}

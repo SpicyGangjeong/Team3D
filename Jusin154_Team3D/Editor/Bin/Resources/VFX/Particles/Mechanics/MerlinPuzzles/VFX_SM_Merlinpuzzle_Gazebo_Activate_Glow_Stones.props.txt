@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Particles/Mechanics/MerlinPuzzles/VFX_MI_Gazebo_Base_Stone_Glow.VFX_MI_Gazebo_Base_Stone_Glow'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Particles/Mechanics/MerlinPuzzles/VFX_MI_Gazebo_Base_Stone_Glow.VFX_MI_Gazebo_Base_Stone_Glow'
+        MaterialSlotName = Base_Stone
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 69.4896, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-0.0605621, Y=-0.308502, Z=-1.18438 }
+    BoxExtent = { X=178.491, Y=176.524, Z=2.26975 }
+    SphereRadius = 178.523
+}

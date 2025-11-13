@@ -32,6 +32,13 @@ sampler BorderZeroSampler = sampler_state
     BorderColor = float4(0, 0, 0, 0);
 };
 
+sampler PointSampler = sampler_state
+{
+    Filter = MIN_MAG_MIP_POINT;
+    AddressU = wrap;
+    AddressV = wrap;
+};
+
 RasterizerState RS_Default
 {
     FillMode = Solid;
@@ -106,9 +113,9 @@ BlendState BS_AlphaBlend // ALPHA_BLEND
     BlendEnable[7] = true;
 
     // Ac * Aa + Bc * (1 - Aa);
-    SrcBlend       = Src_Alpha;
-    DestBlend      = Inv_Src_Alpha;
-    BlendOp        = Add;
+    SrcBlend = Src_Alpha;
+    DestBlend = Inv_Src_Alpha;
+    BlendOp = Add;
 };
 
 BlendState BS_Blend // ADDITIVE_BLEND
@@ -182,4 +189,22 @@ float2 Get_MovedUV(float2 vOriginalUV, float fDeltaU, float fDeltaV, uint iIndex
     float2 vDelta = float2(fDeltaU, fDeltaV);
     float2 vOffset = float2(iIndexU * fDeltaU, iIndexV * fDeltaV);
     return vOriginalUV * vDelta + vOffset;
+}
+
+float2 UV_Cutting(float2 vUV, float2 vUVCutting, int iCurrentFrame)
+{
+    float2 UV = vUV; // 이미지의 UV값
+    
+    int iTotalFrame = vUVCutting.x * vUVCutting.y; // 이미지의 최대 프레임 (몇 곱하기 몇인지)
+    
+    int iFrameX = iCurrentFrame % (int) vUVCutting.x; // 현재 x축의 위치(현재 이미지의 몇번째 칸을 보여줄 지)
+    int iFrameY = iCurrentFrame / (int) vUVCutting.x; // 현재 y축의 위치(현재 이미지의 몇번째 줄을 보여줄 지)
+    
+    float fFreamWidth = 1.0 / vUVCutting.x; // 1.0 나누기 이미지 갯수를 해서 한칸에 얼마나 갈지 정해준다.
+    float fFreamHeight = 1.0 / vUVCutting.y; // 1.0 나누기 이미지 갯수를 해서 한줄에 얼마나 갈지 정해준다.
+    
+    UV.x = UV.x * fFreamWidth + iFrameX * fFreamWidth; // 먼저 uv를 0~1이 아닌 0~fFrameWidth로 만든 다음에 한칸씩 옆으로 밀어준다.
+    UV.y = UV.y * fFreamHeight + iFrameY * fFreamHeight; // 먼저 uv를 0~1이 아닌 0~fFrameHeight로 만든 다음에 한줄씩 밑으로 내려준다.
+    
+    return UV;
 }

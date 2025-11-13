@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/VAT/MatInstances/VFX_MI_VAT_FwooperBird_Fly.VFX_MI_VAT_FwooperBird_Fly'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/VAT/MatInstances/VFX_MI_VAT_FwooperBird_Fly.VFX_MI_VAT_FwooperBird_Fly'
+        MaterialSlotName = FwooperLow
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 208.441, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-1.06037, Y=-39.71, Z=34.9353 }
+    BoxExtent = { X=63.0253, Y=79.4555, Z=34.0129 }
+    SphereRadius = 94.8931
+}

@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/World_Events/SelfWrappingGifts/MI_VFX_SWG_01.MI_VFX_SWG_01'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/World_Events/SelfWrappingGifts/MI_VFX_SWG_01.MI_VFX_SWG_01'
+        MaterialSlotName = MI_WE_SWG_BOW
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 52.821, 20.2033, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0.0724888, Y=0.0781441, Z=17.8479 }
+    BoxExtent = { X=14.4195, Y=14.6273, Z=18.2437 }
+    SphereRadius = 23.0454
+}

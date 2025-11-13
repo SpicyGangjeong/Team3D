@@ -1,0 +1,38 @@
+Materials[2] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Environment/Hogsmeade/Common/Materials/Vegetation/Hengist_Tree/MI_HM_Hengist_Fountain.MI_HM_Hengist_Fountain'
+    Materials[1] = MaterialInstanceConstant'/Game/Gameplay/SphinxPuzzles/Materials/MI_SphinxPuzzle_Reparo_Brokenpieces.MI_SphinxPuzzle_Reparo_Brokenpieces'
+}
+SourceModels[0] = {}
+StaticMaterials[2] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Hogsmeade/Common/Materials/Vegetation/Hengist_Tree/MI_HM_Hengist_Fountain.MI_HM_Hengist_Fountain'
+        MaterialSlotName = TEMP_Rubble
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 413.126, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Gameplay/SphinxPuzzles/Materials/MI_SphinxPuzzle_Reparo_Brokenpieces.MI_SphinxPuzzle_Reparo_Brokenpieces'
+        MaterialSlotName = MI_HM_Hengist_Fountain
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 367.931, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-1.90735e-05, Y=-4.00543e-05, Z=1.90735e-06 }
+    BoxExtent = { X=14.9445, Y=26.1275, Z=4.47178 }
+    SphereRadius = 28.5226
+}

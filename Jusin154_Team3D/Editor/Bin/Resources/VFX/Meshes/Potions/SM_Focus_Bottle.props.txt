@@ -1,0 +1,38 @@
+Materials[2] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Gameplay/InventoryObjects/Potions/Materials/MI_Potion_Barruffios_Brain_Elixer_Glass.MI_Potion_Barruffios_Brain_Elixer_Glass'
+    Materials[1] = MaterialInstanceConstant'/Game/Gameplay/InventoryObjects/Potions/Materials/MI_Potion_Barruffios_Brain_Elixer.MI_Potion_Barruffios_Brain_Elixer'
+}
+SourceModels[0] = {}
+StaticMaterials[2] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Gameplay/InventoryObjects/Potions/Materials/MI_Potion_Barruffios_Brain_Elixer_Glass.MI_Potion_Barruffios_Brain_Elixer_Glass'
+        MaterialSlotName = MI_Potion_Barruffios_Brain_Elixer_Glass
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 22.1679, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Gameplay/InventoryObjects/Potions/Materials/MI_Potion_Barruffios_Brain_Elixer.MI_Potion_Barruffios_Brain_Elixer'
+        MaterialSlotName = MI_Potion_Barruffios_Brain_Elixer
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 22.7104, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=4.76837e-06, Y=4.76837e-07, Z=-6.99091 }
+    BoxExtent = { X=5.40535, Y=5.40535, Z=13.0091 }
+    SphereRadius = 13.4534
+}

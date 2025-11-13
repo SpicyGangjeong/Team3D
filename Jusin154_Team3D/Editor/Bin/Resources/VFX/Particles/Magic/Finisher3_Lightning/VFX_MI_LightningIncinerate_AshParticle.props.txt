@@ -1,0 +1,72 @@
+Parent = Material3'/Game/VFX/MasterMaterials/VFX_MM_AshParticle.VFX_MM_AshParticle'
+ScalarParameterValues[1] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[0] = {}
+VectorParameterValues[2] =
+{
+    VectorParameterValues[0] =
+    {
+        ParameterInfo = { Name=Emissive Color Inner }
+        ParameterValue = { R=8.93903, G=45.8338, B=100, A=1 }
+        ParameterName = None
+    }
+    VectorParameterValues[1] =
+    {
+        ParameterInfo = { Name=Emissive Color Outer }
+        ParameterValue = { R=0.022778, G=0.109708, B=0.203125, A=1 }
+        ParameterName = None
+    }
+}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Masked (1)
+    bOverride_TwoSided = false
+    TwoSided = true
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[0] = {}
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[3] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 0.5
+        UVChannelIndex = 0
+        TextureName = VFX_T_CloudyPack_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 0.296875
+        UVChannelIndex = 0
+        TextureName = VFX_T_Embers_E
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 0.203125
+        UVChannelIndex = 0
+        TextureName = VFX_T_rock_small_tiling_N
+    }
+}

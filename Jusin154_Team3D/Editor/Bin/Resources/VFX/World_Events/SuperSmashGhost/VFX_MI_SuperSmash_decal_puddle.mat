@@ -1,0 +1,15 @@
+Diffuse=base_grey_Alpha_D
+Normal=base_flat_n
+Other[0]=T_SuperSmashDecal_MSK
+Other[1]=BlendFunc_DefBase
+Other[2]=BlendFunc_DefBlend
+Other[3]=Good64x64TilingNoiseHighFreq
+Other[4]=T_Cairn_WaterTextures_MSK
+Other[5]=T_Cav_Dungeon_Drips_MSK
+Other[6]=T_Cav_WaterStream_DA
+Other[7]=T_Cav_WaterStream_N
+Other[8]=T_OL_WaterNormal_N
+Other[9]=T_Water_Normal_Large_N
+Other[10]=T_Water_Normal_Subtle_N
+Other[11]=VFX_T_RGB_3DNoiseRough_D
+Other[12]=T_Drip_D

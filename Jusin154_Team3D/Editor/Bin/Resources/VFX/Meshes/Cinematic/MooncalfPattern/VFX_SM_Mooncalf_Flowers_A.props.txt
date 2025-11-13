@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Cinematic/MaterialInstances/VFX_MI_CIN_Mooncalf_Flowers.VFX_MI_CIN_Mooncalf_Flowers'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Cinematic/MaterialInstances/VFX_MI_CIN_Mooncalf_Flowers.VFX_MI_CIN_Mooncalf_Flowers'
+        MaterialSlotName = MI_Flowers
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 36.3275, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=1.45072, Y=-0.840483, Z=8.8266 }
+    BoxExtent = { X=4.34052, Y=4.23846, Z=9.78923 }
+    SphereRadius = 10.815
+}

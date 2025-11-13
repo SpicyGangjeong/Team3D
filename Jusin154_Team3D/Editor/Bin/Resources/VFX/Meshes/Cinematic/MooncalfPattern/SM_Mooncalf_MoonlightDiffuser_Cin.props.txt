@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Cinematic/MaterialInstances/MI_Mooncalf_MoonlightDiffuser_Cin.MI_Mooncalf_MoonlightDiffuser_Cin'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Cinematic/MaterialInstances/MI_Mooncalf_MoonlightDiffuser_Cin.MI_Mooncalf_MoonlightDiffuser_Cin'
+        MaterialSlotName = MI_Mooncalf_MoonlightDiffuser
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 93.7216, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=3.8147e-06, Z=31.6026 }
+    BoxExtent = { X=31.6026, Y=31.6026, Z=31.6026 }
+    SphereRadius = 31.6026
+}

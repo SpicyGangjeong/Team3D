@@ -1,0 +1,143 @@
+TwoSided = true
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[2] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_WispyNoise_D.VFX_T_WispyNoise_D'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/VFX_T_Wavy_N.VFX_T_Wavy_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[19] =
+                {
+                    ParameterInfos[0] = { Name=TimeMultiplier }
+                    ParameterInfos[1] = { Name=UVMultiplier }
+                    ParameterInfos[2] = { Name=Tiling V (S)_1 }
+                    ParameterInfos[3] = { Name=Multiplier }
+                    ParameterInfos[4] = { Name=Tiling U (S)_1 }
+                    ParameterInfos[5] = { Name=Speed U (S)_1 }
+                    ParameterInfos[6] = { Name=Tiling }
+                    ParameterInfos[7] = { Name=Fade }
+                    ParameterInfos[8] = { Name=Speed V (S)_1 }
+                    ParameterInfos[9] = { Name=Power (S) }
+                    ParameterInfos[10] = { Name=Speed V (S) }
+                    ParameterInfos[11] = { Name=Offset_X }
+                    ParameterInfos[12] = { Name=Test Dark }
+                    ParameterInfos[13] = { Name=Speed U (S) }
+                    ParameterInfos[14] = { Name=Tiling U (S) }
+                    ParameterInfos[15] = { Name=Test Bright }
+                    ParameterInfos[16] = { Name=Tiling V (S) }
+                    ParameterInfos[17] = { Name=Offset_Y }
+                    ParameterInfos[18] = { Name=OpacityMultiplier }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=Direction }
+                    ParameterInfos[1] = { Name=Color }
+                }
+            }
+            Entries[2] = { ParameterInfos[0]={} }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[19] =
+        {
+            ScalarValues[0] = 0.07
+            ScalarValues[1] = 0.180953
+            ScalarValues[2] = 1
+            ScalarValues[3] = 34.5704
+            ScalarValues[4] = 1
+            ScalarValues[5] = 0.05
+            ScalarValues[6] = 0.002
+            ScalarValues[7] = 1
+            ScalarValues[8] = 0.15
+            ScalarValues[9] = 1.05862
+            ScalarValues[10] = 0.05
+            ScalarValues[11] = 319.712
+            ScalarValues[12] = 0
+            ScalarValues[13] = -0.1
+            ScalarValues[14] = 1
+            ScalarValues[15] = 1
+            ScalarValues[16] = 0.5
+            ScalarValues[17] = 319.712
+            ScalarValues[18] = 1
+        }
+        VectorValues[2] =
+        {
+            VectorValues[0] = { R=-1, G=-0.752381, B=2, A=1 }
+            VectorValues[1] = { R=0.359449, G=0.896332, B=2, A=1 }
+        }
+        TextureValues[0] = {}
+    }
+    ReferencedTextures[2] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_WispyNoise_D.VFX_T_WispyNoise_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/VFX_T_Wavy_N.VFX_T_Wavy_N'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[0] = {}
+CollectedScalarParameters[19] =
+{
+    CollectedScalarParameters[0] = { Value=0.07, Name=TimeMultiplier, Group=None }
+    CollectedScalarParameters[1] = { Value=0.180953, Name=UVMultiplier, Group=None }
+    CollectedScalarParameters[2] = { Value=1, Name=Tiling V (S)_1, Group=None }
+    CollectedScalarParameters[3] = { Value=34.5704, Name=Multiplier, Group=None }
+    CollectedScalarParameters[4] = { Value=1, Name=Tiling U (S)_1, Group=None }
+    CollectedScalarParameters[5] = { Value=0.05, Name=Speed U (S)_1, Group=None }
+    CollectedScalarParameters[6] = { Value=0.002, Name=Tiling, Group=None }
+    CollectedScalarParameters[7] = { Value=1, Name=Fade, Group=None }
+    CollectedScalarParameters[8] = { Value=0.15, Name=Speed V (S)_1, Group=None }
+    CollectedScalarParameters[9] = { Value=1.05862, Name=Power (S), Group=None }
+    CollectedScalarParameters[10] = { Value=0.05, Name=Speed V (S), Group=None }
+    CollectedScalarParameters[11] = { Value=319.712, Name=Offset_X, Group=None }
+    CollectedScalarParameters[12] = { Value=0, Name=Test Dark, Group=None }
+    CollectedScalarParameters[13] = { Value=-0.1, Name=Speed U (S), Group=None }
+    CollectedScalarParameters[14] = { Value=1, Name=Tiling U (S), Group=None }
+    CollectedScalarParameters[15] = { Value=1, Name=Test Bright, Group=None }
+    CollectedScalarParameters[16] = { Value=0.5, Name=Tiling V (S), Group=None }
+    CollectedScalarParameters[17] = { Value=319.712, Name=Offset_Y, Group=None }
+    CollectedScalarParameters[18] = { Value=1, Name=OpacityMultiplier, Group=None }
+}
+CollectedVectorParameters[2] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=-1, G=-0.752381, B=2, A=1 }
+        Name = Direction
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0.359449, G=0.896332, B=2, A=1 }
+        Name = Color
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 1
+        TextureName = VFX_T_Wavy_N
+    }
+}

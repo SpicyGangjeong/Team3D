@@ -1,0 +1,16 @@
+Diffuse=base_grey_Alpha_D
+Normal=T_Cairn_Decal_WallDamage_N
+Opacity=T_Cairn_Decal_WallDamage_D
+Other[0]=BlendFunc_DefBase
+Other[1]=BlendFunc_DefBlend
+Other[2]=Good64x64TilingNoiseHighFreq
+Other[3]=T_Cairn_WaterTextures_MSK
+Other[4]=T_Cav_Dungeon_Drips_MSK
+Other[5]=T_Cav_WaterStream_DA
+Other[6]=T_Cav_WaterStream_N
+Other[7]=base_flat_n
+Other[8]=T_OL_WaterNormal_N
+Other[9]=T_Water_Normal_Large_N
+Other[10]=T_Water_Normal_Subtle_N
+Other[11]=VFX_T_RGB_3DNoiseRough_D
+Other[12]=T_Drip_D

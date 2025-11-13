@@ -16,6 +16,22 @@ _vector CPanelObject::Get_WorldPostion()
 	return m_pTransformCom->Get_State(STATE::POSITION);
 }
 
+HRESULT CPanelObject::Initialize_Prototype()
+{
+	return S_OK;
+}
+
+HRESULT CPanelObject::Initialize(void* pArg)
+{
+	if (FAILED(__super::Initialize(pArg)))
+	{
+		return E_FAIL;
+	}
+
+	m_fAlpha = 1.f;
+	return S_OK;
+}
+
 void CPanelObject::Priority_Update(_float fTimeDelta)
 {
 	CTransform* pOwnerTransform = m_pOwner->Get_Component<CTransform>();
@@ -32,6 +48,34 @@ void CPanelObject::Update(_float fTimeDelta)
 		0.f, 1.f));
 
 	m_fCurrent_Posigion = XMVectorSet(m_fX, m_fY, 0.f, 1.f);
+
+	m_fOwnerAlpha = static_cast<CUIObject*>(m_pOwner)->Get_Alpha();
+
+	if (m_bFadeIn == true)
+	{
+		if (m_fAlpha <= 1.f)
+		{
+			m_fAlpha += fTimeDelta;
+		}
+
+		if (m_fAlpha >= 1.f)
+		{
+			m_bFadeIn = false;
+			m_fAlpha = 1.f;
+		}
+	}
+
+	if (m_bFadeOut == true)
+	{
+		if (m_fAlpha >= 0.f)
+			m_fAlpha -= fTimeDelta;
+
+		if (m_fAlpha <= 0.f)
+		{
+			m_bFadeOut = false;
+			m_fAlpha = 0.f;
+		}
+	}
 }
 
 void CPanelObject::Late_Update(_float fTimeDelta)
@@ -40,21 +84,6 @@ void CPanelObject::Late_Update(_float fTimeDelta)
 
 HRESULT CPanelObject::Render()
 {
-	return E_NOTIMPL;
-}
-
-HRESULT CPanelObject::Initialize_Prototype()
-{
-	return S_OK;
-}
-
-HRESULT CPanelObject::Initialize(void* pArg)
-{
-	if (FAILED(__super::Initialize(pArg)))
-	{
-		return E_FAIL;
-	}
-
 	return S_OK;
 }
 
@@ -71,13 +100,7 @@ HRESULT CPanelObject::Ready_Element(void* pArg)
 
 void CPanelObject::Visible(_bool bVisible)
 {
-	if (m_Elements.empty())
-		return;
-
-	for (auto iter : m_Elements)
-	{
-		static_cast<CUIObject*>(iter)->Visible(bVisible);
-	}
+	m_bActive = bVisible;
 }
 
 CGameObject* CPanelObject::Get_Element(const wstring& Name)
@@ -93,6 +116,17 @@ _int CPanelObject::Element_Count()
 const vector<wstring> CPanelObject::Element_Name()
 {
 	return m_ElementName;
+}
+
+void CPanelObject::ElementAllVisible(_bool bVisible)
+{
+	if (m_Elements.empty())
+		return;
+
+	for (auto& iter : m_Elements)
+	{
+		static_cast<CUIObject*>(iter)->Visible(bVisible);
+	}
 }
 
 void CPanelObject::Add_Element(wstring Name, CGameObject* pPanel)
@@ -113,6 +147,19 @@ void CPanelObject::Add_Element(wstring Name, CGameObject* pPanel)
 	m_iElements_Count++;
 }
 
+_bool CPanelObject::Chack_Visible()
+{
+	if (m_pOwner->Get_Visible() == false)
+	{
+		m_bVisible = m_pOwner->Get_Visible();
+	}
+	else
+	{
+		m_bVisible = m_bActive;
+	}
+	return m_bVisible;
+}
+
 CGameObject* CPanelObject::Find_Element(const wstring& Name)
 {
 	auto iter = m_Elements_map.find(Name);
@@ -126,4 +173,8 @@ CGameObject* CPanelObject::Find_Element(const wstring& Name)
 void CPanelObject::Free()
 {
 	__super::Free();
+
+	m_Elements.clear();
+	m_ElementName.clear();
+	m_Elements_map.clear(); // map ºñ¿ì±â
 }

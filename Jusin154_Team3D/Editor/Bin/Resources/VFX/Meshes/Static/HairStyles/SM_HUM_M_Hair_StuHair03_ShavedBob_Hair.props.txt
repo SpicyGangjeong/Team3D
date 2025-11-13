@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Meshes/Static/HairStyles/MI_HUM_M_Hair_STUHair03_ShavedBob.MI_HUM_M_Hair_STUHair03_ShavedBob'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Meshes/Static/HairStyles/MI_HUM_M_Hair_STUHair03_ShavedBob.MI_HUM_M_Hair_STUHair03_ShavedBob'
+        MaterialSlotName = MI_HUM_M_Hair_StuHair03_ShavedBob
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 21.7465, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-0.893615, Y=1.16042, Z=8.14292 }
+    BoxExtent = { X=11.0613, Y=11.6062, Z=10.9548 }
+    SphereRadius = 14.2456
+}

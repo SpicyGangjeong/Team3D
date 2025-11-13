@@ -1,0 +1,256 @@
+TwoSided = true
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[4] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/Engine_MI_Shaders/T_Base_Tile_Normal.T_Base_Tile_Normal'
+    ReferencedTextures[1] = Texture2D'/Game/Environment/Overland_Common/Water/Textures/T_Water_Normal_Large_N.T_Water_Normal_Large_N'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/VFX_T_Wisps_2_D.VFX_T_Wisps_2_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[27] =
+                {
+                    ParameterInfos[0] = { Name=emissiveWisp_Strength }
+                    ParameterInfos[1] = { Name=roughness }
+                    ParameterInfos[2] = { Name=emissiveIntersectionRing }
+                    ParameterInfos[3] = { Name=Mask Distortion Edge }
+                    ParameterInfos[4] = { Name=refraction }
+                    ParameterInfos[5] = { Name=density }
+                    ParameterInfos[6] = { Name=DistortionPanX }
+                    ParameterInfos[7] = { Name=radius }
+                    ParameterInfos[8] = { Name=cameraDistanceFade }
+                    ParameterInfos[9] = { Name=DistortionStrengthMin }
+                    ParameterInfos[10] = { Name=fadeOut }
+                    ParameterInfos[11] = { Name=DistortionStrengthMax }
+                    ParameterInfos[12] = { Name=maskHardness }
+                    ParameterInfos[13] = { Name=intersectionRingIntensity }
+                    ParameterInfos[14] = { Name=DistortionTileY }
+                    ParameterInfos[15] = { Name=opacityOuter }
+                    ParameterInfos[16] = { Name=opacityInner }
+                    ParameterInfos[17] = { Name=fadeDistance }
+                    ParameterInfos[18] = { Name=TexturePanX }
+                    ParameterInfos[19] = { Name=TextureTileX }
+                    ParameterInfos[20] = { Name=TextureTileY }
+                    ParameterInfos[21] = { Name=Box_Falloff }
+                    ParameterInfos[22] = { Name=emissiveIntersectionRingHardness }
+                    ParameterInfos[23] = { Name=DistortionTileX }
+                    ParameterInfos[24] = { Name=Bounds_Scale }
+                    ParameterInfos[25] = { Name=DistortionPanY }
+                    ParameterInfos[26] = { Name=TexturePanY }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[5] =
+                {
+                    ParameterInfos[0] = { Name=color_a }
+                    ParameterInfos[1] = { Name=Scale_Debug }
+                    ParameterInfos[2] = { Name=Location_Debug }
+                    ParameterInfos[3] = { Name=playerlocation }
+                    ParameterInfos[4] = { Name=color_b }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=Texture }
+                    ParameterInfos[1] = { Name=DistortionTexture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[27] =
+        {
+            ScalarValues[0] = 0.01
+            ScalarValues[1] = 0
+            ScalarValues[2] = 30
+            ScalarValues[3] = 0
+            ScalarValues[4] = 1.1
+            ScalarValues[5] = 1
+            ScalarValues[6] = 0
+            ScalarValues[7] = 0
+            ScalarValues[8] = 100
+            ScalarValues[9] = 0.1
+            ScalarValues[10] = 1
+            ScalarValues[11] = 0.2
+            ScalarValues[12] = 1
+            ScalarValues[13] = 100
+            ScalarValues[14] = 1
+            ScalarValues[15] = 0.3
+            ScalarValues[16] = 0.001
+            ScalarValues[17] = 15
+            ScalarValues[18] = 0
+            ScalarValues[19] = 1
+            ScalarValues[20] = 1
+            ScalarValues[21] = 0
+            ScalarValues[22] = 1
+            ScalarValues[23] = 1
+            ScalarValues[24] = 100
+            ScalarValues[25] = 0.2
+            ScalarValues[26] = 0.2
+        }
+        VectorValues[5] =
+        {
+            VectorValues[0] = { R=0.20128, G=0.314409, B=0.364583, A=1 }
+            VectorValues[1] = { R=30.6839, G=11.2561, B=6.64056, A=0 }
+            VectorValues[2] = { R=26674.7, G=3387.68, B=6645.01, A=0 }
+            VectorValues[3] = { R=0, G=0, B=0, A=0 }
+            VectorValues[4] = { R=0, G=0, B=0, A=1 }
+        }
+        TextureValues[2] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/VFX_T_Wisps_2_D.VFX_T_Wisps_2_D'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+        }
+    }
+    ReferencedTextures[5] =
+    {
+        ReferencedTextures[1] = Texture2D'/Engine/Engine_MI_Shaders/T_Base_Tile_Normal.T_Base_Tile_Normal'
+        ReferencedTextures[2] = Texture2D'/Game/Environment/Overland_Common/Water/Textures/T_Water_Normal_Large_N.T_Water_Normal_Large_N'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/VFX_T_Wisps_2_D.VFX_T_Wisps_2_D'
+        ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[2] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_Wisps_2_D.VFX_T_Wisps_2_D'
+        Name = Texture
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+        Name = DistortionTexture
+        Group = None
+    }
+}
+CollectedScalarParameters[27] =
+{
+    CollectedScalarParameters[0] =
+    {
+        Value = 0.01
+        Name = emissiveWisp_Strength
+        Group = None
+    }
+    CollectedScalarParameters[1] = { Value=0, Name=roughness, Group=None }
+    CollectedScalarParameters[2] =
+    {
+        Value = 30
+        Name = emissiveIntersectionRing
+        Group = None
+    }
+    CollectedScalarParameters[3] = { Value=0, Name=Mask Distortion Edge, Group=None }
+    CollectedScalarParameters[4] = { Value=1.1, Name=refraction, Group=None }
+    CollectedScalarParameters[5] = { Value=1, Name=density, Group=None }
+    CollectedScalarParameters[6] = { Value=0, Name=DistortionPanX, Group=None }
+    CollectedScalarParameters[7] = { Value=0, Name=radius, Group=None }
+    CollectedScalarParameters[8] = { Value=100, Name=cameraDistanceFade, Group=None }
+    CollectedScalarParameters[9] =
+    {
+        Value = 0.1
+        Name = DistortionStrengthMin
+        Group = None
+    }
+    CollectedScalarParameters[10] = { Value=1, Name=fadeOut, Group=None }
+    CollectedScalarParameters[11] =
+    {
+        Value = 0.2
+        Name = DistortionStrengthMax
+        Group = None
+    }
+    CollectedScalarParameters[12] = { Value=1, Name=maskHardness, Group=None }
+    CollectedScalarParameters[13] =
+    {
+        Value = 100
+        Name = intersectionRingIntensity
+        Group = None
+    }
+    CollectedScalarParameters[14] = { Value=1, Name=DistortionTileY, Group=None }
+    CollectedScalarParameters[15] = { Value=0.3, Name=opacityOuter, Group=None }
+    CollectedScalarParameters[16] = { Value=0.001, Name=opacityInner, Group=None }
+    CollectedScalarParameters[17] = { Value=15, Name=fadeDistance, Group=None }
+    CollectedScalarParameters[18] = { Value=0, Name=TexturePanX, Group=None }
+    CollectedScalarParameters[19] = { Value=1, Name=TextureTileX, Group=None }
+    CollectedScalarParameters[20] = { Value=1, Name=TextureTileY, Group=None }
+    CollectedScalarParameters[21] = { Value=0, Name=Box_Falloff, Group=None }
+    CollectedScalarParameters[22] =
+    {
+        Value = 1
+        Name = emissiveIntersectionRingHardness
+        Group = None
+    }
+    CollectedScalarParameters[23] = { Value=1, Name=DistortionTileX, Group=None }
+    CollectedScalarParameters[24] = { Value=100, Name=Bounds_Scale, Group=None }
+    CollectedScalarParameters[25] = { Value=0.2, Name=DistortionPanY, Group=None }
+    CollectedScalarParameters[26] = { Value=0.2, Name=TexturePanY, Group=None }
+}
+CollectedVectorParameters[5] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0.20128, G=0.314409, B=0.364583, A=1 }
+        Name = color_a
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=30.6839, G=11.2561, B=6.64056, A=0 }
+        Name = Scale_Debug
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=26674.7, G=3387.68, B=6645.01, A=0 }
+        Name = Location_Debug
+        Group = None
+    }
+    CollectedVectorParameters[3] =
+    {
+        Value = { R=0, G=0, B=0, A=0 }
+        Name = playerlocation
+        Group = None
+    }
+    CollectedVectorParameters[4] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = color_b
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[2] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Water_Normal_Large_N
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Wisps_2_D
+    }
+}

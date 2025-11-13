@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = Material3'/Game/Gameplay/Nurturing/Herbology/Herbs/Materials/M_Mallowsweet.M_Mallowsweet'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = Material3'/Game/Gameplay/Nurturing/Herbology/Herbs/Materials/M_Mallowsweet.M_Mallowsweet'
+        MaterialSlotName = M_Mallowsweet
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 19.15, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=1.29448, Y=0.0906321, Z=0.244792 }
+    BoxExtent = { X=2.35411, Y=1.4383, Z=0.66173 }
+    SphereRadius = 2.53666
+}

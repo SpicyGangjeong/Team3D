@@ -3,6 +3,8 @@
 #include <process.h>
 #include "../Default/framework.h"
 #include "wincrypt.h"
+
+#include "Engine_Define.h"
 #include "Editor_Macro.h"
 #include "Editor_Struct.h"
 
@@ -21,7 +23,7 @@ namespace Editor
 	enum class SHADER_PASS_PARTICLE { EXPLOSION, END };
 	enum class SHADER_PASS_POSTEX { DEFAULT, SCISSOR, UI, UVMOVE, TRAIL, END };
 	enum class SHADER_PASS_INSTANCE_MODEL { DEFAULT, NON_NOMALMAP, BLUR ,END };
-	enum class SHADER_PASS_UIEDITOR { DEFAULT, ALPHABLEND, CURSOR, LODING, HOLD, END };
+	enum class SHADER_PASS_UIEDITOR { DEFAULT, ALPHABLEND, CLAMP, CURSOR, LODING, HOLD_ROTATION, QUESTYPE, UVMULT, END };
 }
 
 using namespace Editor;

@@ -1,0 +1,38 @@
+Materials[2] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Environment/Hogwarts/SUB_CentralTower/Materials/MI_HW_CT_FountainStatue_A.MI_HW_CT_FountainStatue_A'
+    Materials[1] = MaterialInstanceConstant'/Game/Environment/Hogwarts/SUB_CentralTower/Materials/MI_HW_CT_FountainStatue_B.MI_HW_CT_FountainStatue_B'
+}
+SourceModels[0] = {}
+StaticMaterials[2] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Hogwarts/SUB_CentralTower/Materials/MI_HW_CT_FountainStatue_A.MI_HW_CT_FountainStatue_A'
+        MaterialSlotName = lambert2
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 439.304, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Hogwarts/SUB_CentralTower/Materials/MI_HW_CT_FountainStatue_B.MI_HW_CT_FountainStatue_B'
+        MaterialSlotName = blinn2
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 691.46, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=0, Z=277.027 }
+    BoxExtent = { X=207.588, Y=207.588, Z=277.216 }
+    SphereRadius = 343.099
+}

@@ -1,0 +1,11 @@
+Diffuse=base_black_d
+Normal=T_WE_Maze_BaseLeaves_N
+Other[0]=DefaultDiffuse
+Other[1]=T_WindNoise_MSK
+Other[2]=T_Wind_01_MSK
+Other[3]=T_WE_Maze_BaseLeaves_D
+Other[4]=T_WE_Maze_BaseLeaves_MRO
+Other[5]=T_Rain_Noise_01_D
+Other[6]=T_FlickerNoice_MSK
+Other[7]=VFX_T_Noise04_D
+Other[8]=VFX_T_Maze_BaseLeaves_D

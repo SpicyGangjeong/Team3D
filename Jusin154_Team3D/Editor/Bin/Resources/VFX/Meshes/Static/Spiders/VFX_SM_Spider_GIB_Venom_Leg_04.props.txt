@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/RiggedObjects/Characters/Creatures/Insects/Spiders/Venomous/Biting/Materials/MI_Spider_Venomous_Biting.MI_Spider_Venomous_Biting'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/RiggedObjects/Characters/Creatures/Insects/Spiders/Venomous/Biting/Materials/MI_Spider_Venomous_Biting.MI_Spider_Venomous_Biting'
+        MaterialSlotName = MI_Spider_Venomous_Biting
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 271.73, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=3.19915, Y=1.74638, Z=-4.1119 }
+    BoxExtent = { X=7.58855, Y=30.7902, Z=15.2777 }
+    SphereRadius = 34.0894
+}

@@ -4,6 +4,8 @@
 #include "Mission_KeyHold.h"
 #include "Mission_Key.h"
 #include "Active_Icon.h"
+#include "Mission_Icon.h"
+#include "MissionBanner_Border.h"
 #include "MissionBanner_Key.h"
 
 CMission_Panel::CMission_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -25,12 +27,11 @@ HRESULT CMission_Panel::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 	
-	Desc.fX = 300.f;
-	Desc.fY = 300.f;
-	Desc.fSizeX = 100.f;
-	Desc.fSizeY = 100.f;
+	Desc.fX = 380.f;
+	Desc.fY = 612.f;
+	Desc.fSizeX = 750.f;
+	Desc.fSizeY = 410.f;
 
-	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
 	if (FAILED(__super::Initialize(&Desc)))
 	{
@@ -40,40 +41,49 @@ HRESULT CMission_Panel::Initialize(void* pArg)
 	{
 		return E_FAIL;
 	}
+	if (FAILED(Ready_Element(pArg)))
+	{
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
 void CMission_Panel::Priority_Update(_float fTimeDelta)
 {
+	if (!__super::Chack_Visible())
+	{
+		return;
+	}
+	__super::Priority_Update(fTimeDelta);
 }
 
 void CMission_Panel::Update(_float fTimeDelta)
 {
+	if (!__super::Chack_Visible())
+	{
+		return;
+	}
+
+	__super::Update(fTimeDelta);
 }
 
 void CMission_Panel::Late_Update(_float fTimeDelta)
 {
-	if (m_bVisible) {
-		_float4* vPos = (_float4*)(m_pTransformCom->Get_WorldMatrixPtr()->m[3]);
-		m_pGameInstance->Add_RenderGroup(RENDER::UI, this, *vPos, m_pTransformCom->Get_Radius());
+	if (!__super::Chack_Visible())
+	{
+		return;
 	}
+
+	if (m_bVisible) {
+		//_float4* vPos = (_float4*)(m_pTransformCom->Get_WorldMatrixPtr()->m[3]);
+		//m_pGameInstance->Add_RenderGroup(RENDER::UI, this, *vPos, m_pTransformCom->Get_Radius());
+	}
+	__super::Late_Update(fTimeDelta);
+
 }
 
 HRESULT CMission_Panel::Render()
 {
-	if (FAILED(Bind_ShaderResources())) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::DEFAULT)))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pVIBufferCom->Render())) {
-		return E_FAIL;
-	}
-
 	return S_OK;
 }
 
@@ -84,40 +94,12 @@ _vector CMission_Panel::Get_WorldPostion()
 
 HRESULT CMission_Panel::Bind_ShaderResources()
 {
-	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float))))
-	{
-		return E_FAIL;
-	}
 	return S_OK;
 }
 
 HRESULT CMission_Panel::Ready_Components(void* pArg)
 {
 	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Keyboard"), reinterpret_cast<CComponent**>(&m_pTextureCom), nullptr)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, FX_UIEDITOR, (CComponent**)&m_pShaderCom, nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -138,6 +120,47 @@ HRESULT CMission_Panel::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
+	return S_OK;
+}
+
+HRESULT CMission_Panel::Ready_Element(void* pArg)
+{
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMissionBanner_Border>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMissionBanner_Border**>(&m_pMissionBanner_Border))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("MissionBanner_Border"), m_pMissionBanner_Border);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMissionBanner_Key>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMissionBanner_Key**>(&m_pMissionBanner_Key))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("MissionBanner_Key"), m_pMissionBanner_Key);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMission_KeyHold>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMission_KeyHold**>(&m_pMission_KeyHold))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Mission_KeyHold"), m_pMission_KeyHold);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMission_Key>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMission_Key**>(&m_pMission_Key))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Mission_Key"), m_pMission_Key);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMission_Icon>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMission_Icon**>(&m_pMission_Icon))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Mission_Icon"), m_pMission_Icon);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CActive_Icon>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CActive_Icon**>(&m_pActive_Icon))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Active_Icon"), m_pActive_Icon);
+
 	return S_OK;
 }
 
@@ -171,8 +194,6 @@ void CMission_Panel::Free()
 {
 	__super::Free();
 
-	SAFE_RELEASE(m_pTextureCom);
-	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 

@@ -62,7 +62,7 @@ void CLevel_ObjectViewer::Add_Object()
 
 	if (GUI::BeginTabBar("ObjectTabs"))
 	{
-		Add_Human();
+		Add_Parts();
 
 	}
 	GUI::EndTabBar();
@@ -70,36 +70,75 @@ void CLevel_ObjectViewer::Add_Object()
 
 }
 
-void CLevel_ObjectViewer::Add_Human()
+void CLevel_ObjectViewer::Add_Parts()
 {
-	if (GUI::BeginTabItem("Body"))
+	if (GUI::BeginTabItem("Male"))
 	{
-		Category_PartsModelList("Human/Body","Body");
+		if (GUI::BeginTabBar("##MaleTabBar"))
+		{
+			if (GUI::BeginTabItem("Head"))
+			{
+				Category_PartsModelList("Human/Head/Male", "Head");
 
+				GUI::EndTabItem();
+			}
+			_bool bDisabled = {};
+			if (m_HumanRoot)
+				bDisabled = (m_HumanRoot->Get_MainModel());
+			if (!bDisabled) GUI::BeginDisabled();
+			if (GUI::BeginTabItem("Body"))
+			{
+				Category_PartsModelList("Human/Body/Male", "Body");
+
+				GUI::EndTabItem();
+			}
+
+			if (GUI::BeginTabItem("Hair"))
+			{
+				Category_PartsModelList("Human/Hair/Male", "Hair");
+
+				GUI::EndTabItem();
+			}
+			if (!bDisabled) GUI::EndDisabled();
+			GUI::EndTabBar();
+		}
 		GUI::EndTabItem();
 	}
 
-	if (GUI::BeginTabItem("Head"))
+	if (GUI::BeginTabItem("FeMale"))
 	{
-		_bool bDisabled = (m_HumanRoot == nullptr);
-		if (bDisabled) GUI::BeginDisabled();
+		if (GUI::BeginTabBar("##FeMaleTabBar")) 
+		{
+			if (GUI::BeginTabItem("Head"))
+			{
+				Category_PartsModelList("Human/Head/FeMale", "Head");
 
-		Category_PartsModelList("Human/Head", "Head");
+				GUI::EndTabItem();
+			}
+			_bool bDisabled = {};
+			if (m_HumanRoot)
+				bDisabled = (m_HumanRoot->Get_MainModel());
+			if (!bDisabled) GUI::BeginDisabled();
+			if (GUI::BeginTabItem("Body"))
+			{
+				Category_PartsModelList("Human/Body/FeMale", "Body");
 
-		if (bDisabled) GUI::EndDisabled();
+				GUI::EndTabItem();
+			}
+
+			if (GUI::BeginTabItem("Hair"))
+			{
+				Category_PartsModelList("Human/Hair/FeMale", "Hair");
+
+				GUI::EndTabItem();
+			}
+			if (!bDisabled) GUI::EndDisabled();
+			GUI::EndTabBar();
+		}
 		GUI::EndTabItem();
 	}
 
-	if (GUI::BeginTabItem("Hair"))
-	{
-		_bool bDisabled = (m_HumanRoot == nullptr);
-		if (bDisabled) GUI::BeginDisabled();
-
-		Category_PartsModelList("Human/Hair", "Hair");
-
-		if (bDisabled) GUI::EndDisabled();
-		GUI::EndTabItem();
-	}
+	
 }
 
 void CLevel_ObjectViewer::Show_ModelFilePath()
@@ -163,7 +202,8 @@ void CLevel_ObjectViewer::Category_PartsModelList(const _char* Category, const _
 	{
 		if (!m_HumanRoot)
 		{
-			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRootModelPart>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, TEXT("Layer_Root"), nullptr, nullptr, reinterpret_cast<CRootModelPart**>(&m_HumanRoot))))
+			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRootModelPart>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, TEXT("Layer_Root"),
+				nullptr, nullptr, reinterpret_cast<CRootModelPart**>(&m_HumanRoot))))
 				return;
 		}
 		for (_uint i = 0; i < m_pGameInstance->BinaryModelFilePathCount(); i++)
@@ -180,10 +220,19 @@ void CLevel_ObjectViewer::Category_PartsModelList(const _char* Category, const _
 
 					CDummyObject::PARTS_OBJECT_DESC Desc = {};
 
-					Desc.pModelPrototypeTag = Save_ModelName(szCategory);
+					m_HumanRoot->Set_PrototypeModelName(Save_ModelName(szCategory));
 
-					dynamic_cast<CRootModelPart*>(m_HumanRoot)->Set_PrototypeModelName(Desc.pModelPrototypeTag);
-					dynamic_cast<CRootModelPart*>(m_HumanRoot)->Set_ModelName(szCategory);
+					m_HumanRoot->Set_ModelName(szCategory);
+
+					_uint iIndex = 0;
+					if (strstr(szCategory,"Head"))
+						iIndex = ENUM_CLASS(CRootModelPart::PARTSTYPE::HEAD);
+					else if (strstr(szCategory,"Body"))
+						iIndex = ENUM_CLASS(CRootModelPart::PARTSTYPE::BODY);
+					else if (strstr(szCategory,"Hair"))
+						iIndex = ENUM_CLASS(CRootModelPart::PARTSTYPE::HAIR);
+
+					m_HumanRoot->Change_Model(iIndex);
 				}
 			}
 		}
@@ -206,14 +255,14 @@ void CLevel_ObjectViewer::Show_AnimList()
 	}
 	if (m_HumanRoot)
 	{
-		CModel* pModel = dynamic_cast<CRootModelPart*>(m_HumanRoot)->Get_ModelParts(0)->Get_Component<CModel>();
+		CModel* pModel = m_HumanRoot->Get_MainModel();
 		if (pModel)
 		{
 			for (_uint i = 0; i < pModel->Get_AnimSize(); i++)
 			{
 				if (GUI::Button(pModel->Get_AnimList(i)))
 				{
-					pModel->Set_AnimationIndex(i);
+					m_HumanRoot->Set_Animation(i);
 				}
 			}
 		}
@@ -263,7 +312,7 @@ void CLevel_ObjectViewer::Object_Setting()
 	GUI::Begin("PartsObject_Info");
 	if (m_HumanRoot)
 	{
-		CModel* pModel = dynamic_cast<CRootModelPart*>(m_HumanRoot)->Get_ModelParts(0)->Get_Component<CModel>();
+		CModel* pModel = m_HumanRoot->Get_MainModel();
 		if (pModel)
 		{
 			_float AnimTrack = pModel->Get_CurrentTrackPosition();
@@ -278,28 +327,49 @@ void CLevel_ObjectViewer::Object_Setting()
 			{
 				pModel->Set_PlayAnim(bPlayAnim);
 			}
+
+			if (GUI::Button("Add Event"))
+			{
+				m_fAnimFrame = m_HumanRoot->Get_MainModel()->Get_CurrentTrackPosition();
+			}
+
+			GUI::DragFloat("Anim Frame", &m_fAnimFrame);
+			GUI::SameLine();
+			if(GUI::Button("Event"))
+			{
+
+				ImDrawList* draw = ImGui::GetForegroundDrawList();
+				ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+				float scale = 50.f;
+
+				draw->AddLine(center, ImVec2(center.x + scale, center.y), IM_COL32(255, 0, 0, 255), 2.0f);
+				draw->AddLine(center, ImVec2(center.x, center.y - scale), IM_COL32(0, 255, 0, 255), 2.0f);
+				draw->AddLine(center, ImVec2(center.x + scale * 0.5f, center.y + scale * 0.5f), IM_COL32(0, 0, 255, 255), 2.0f);
+			}
+
 			if (GUI::Button("Delete"))
 			{
 				m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_Root"))->Clear_Layer();
 				m_HumanRoot = nullptr;
 			}
 		}
+
+		if (m_HumanRoot)
+
+			m_HumanRoot->Get_ModelParts(ENUM_CLASS(CRootModelPart::PARTSTYPE::HAIR))->Describe_Entity();
+
 	}
 
 	GUI::End();
 }
 
-void CLevel_ObjectViewer::Save_LayerName(const _char* Category)
+void CLevel_ObjectViewer::Save_LayerName(const _char* Layer)
 {
 	_wstring szLayer = TEXT("Layer_");
 
-	_wchar szCategory[MAX_PATH];
+	_wstring wstrPath = szLayer + CMyTools::ToWstring(Layer);
 
-	wcscpy_s(m_wszLayer, szLayer.c_str());
-
-	MultiByteToWideChar(CP_ACP, 0, Category, -1, szCategory, MAX_PATH);
-
-	wcscat_s(m_wszLayer, szCategory);
+	wcscpy_s(m_wszLayer, wstrPath.c_str());
 }
 
 _wchar* CLevel_ObjectViewer::Save_ModelName(const _char* Category)
@@ -309,12 +379,8 @@ _wchar* CLevel_ObjectViewer::Save_ModelName(const _char* Category)
 	_wstring szDir = TEXT("Prototype_Component_");
 	_wstring szDir2 = TEXT("_Model");
 
-	_wchar wszName[MAX_PATH] = { 0 };
-
-	MultiByteToWideChar(CP_ACP, 0, m_szName, -1, wszName, MAX_PATH);
-
 	wcscpy_s(m_wszName, szDir.c_str());
-	wcscat_s(m_wszName, wszName);
+	wcscat_s(m_wszName, CMyTools::ToWstring(m_szName).c_str());
 	wcscat_s(m_wszName, szDir2.c_str());
 
 	return m_wszName;
@@ -326,7 +392,7 @@ HRESULT CLevel_ObjectViewer::Ready_Layer_Camera(const _wstring& strLayerTag)
 	CameraDesc.fFovy = XMConvertToRadians(60.0f);
 	CameraDesc.fNear = 0.1f;
 	CameraDesc.fFar = 500.f;
-	CameraDesc.vEye = _float3(0.f, 50.f, -10.f);
+	CameraDesc.vEye = _float3(0.f, 30.f, -10.f);
 	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
 	CameraDesc.fSpeedPerSec = 5.f;
 	CameraDesc.fRotationPerSec = XMConvertToRadians(90.0f);
@@ -362,8 +428,8 @@ HRESULT CLevel_ObjectViewer::Ready_Layer_UI(const _wstring& strLayerTag)
 
 HRESULT CLevel_ObjectViewer::Ready_Layer_Dummy(const _wstring& strLayerTag)
 {
-	/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_Cube>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE)))
-		return E_FAIL;*/
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_Cube>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE)))
+		return E_FAIL;
 
 	return S_OK;
 }

@@ -1,0 +1,4 @@
+Diffuse=DefaultDiffuse
+Other[0]=VFX_T_DistortionNoise_N
+Other[1]=VFX_T_Noise04_D
+Other[2]=VFX_T_NoiseCaustics04_D

@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/RiggedObjects/Characters/Creatures/Plants/ChompingCabbage/Materials/MI_ChompingCabbage.MI_ChompingCabbage'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/RiggedObjects/Characters/Creatures/Plants/ChompingCabbage/Materials/MI_ChompingCabbage.MI_ChompingCabbage'
+        MaterialSlotName = MI_ChompingCabbage
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 104.802, 115.866, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=0.0229559, Z=0.252574 }
+    BoxExtent = { X=7.67244, Y=9.26609, Z=2.19397 }
+    SphereRadius = 9.48627
+}

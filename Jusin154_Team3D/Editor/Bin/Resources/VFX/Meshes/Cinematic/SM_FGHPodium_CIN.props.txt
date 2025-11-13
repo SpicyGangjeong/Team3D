@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Particles/MaterialInstance/VFX_MI_AncMag_Panning.VFX_MI_AncMag_Panning'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Particles/MaterialInstance/VFX_MI_AncMag_Panning.VFX_MI_AncMag_Panning'
+        MaterialSlotName = MI_SanctumDun_Podium_B
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 71.0743, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-4.95911e-05, Y=0, Z=18.4953 }
+    BoxExtent = { X=16.0864, Y=26.3923, Z=17.1706 }
+    SphereRadius = 33.7321
+}

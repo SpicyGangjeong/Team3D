@@ -22,12 +22,13 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
-
 private:
 	HRESULT Ready_Components();
-
+	HRESULT Bind_ShaderResources();
 private:
 	CTexture* m_pTextureCom = { nullptr };
+	_uint iTextureIndex = { 0 };
+	_float4 m_vColor = _float4{1.f,1.f,1.f,1.f};
 
 public:
 	static CHair* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -27,6 +27,8 @@ HRESULT CCanvasObject::Initialize(void* pArg)
 	{
 		return E_FAIL;
 	}
+	m_fAlpha = 1.f;
+
 	return S_OK;
 }
 
@@ -42,6 +44,30 @@ void CCanvasObject::Update(_float fTimeDelta)
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_fX - m_fWinSizeX * 0.5f, -m_fY + m_fWinSizeY * 0.5f, 0.f, 1.f));
 
 	m_fCurrent_Posigion = XMVectorSet(m_fX, m_fY, 0.f, 1.f);
+
+	if (m_bFadeIn == true)
+	{
+		if (m_fAlpha <= 1.f)
+			m_fAlpha += fTimeDelta;
+
+		if (m_fAlpha >= 1.f)
+		{
+			m_bFadeIn = false;
+			m_fAlpha = 1.f;
+		}
+	}
+
+	if (m_bFadeOut == true)
+	{
+		if (m_fAlpha >= 0.f)
+			m_fAlpha -= fTimeDelta;
+
+		if (m_fAlpha <= 0.f)
+		{
+			m_bFadeOut = false;
+			m_fAlpha = 0.f;
+		}
+	}
 }
 
 void CCanvasObject::Late_Update(_float fTimeDelta)
@@ -66,15 +92,7 @@ HRESULT CCanvasObject::Ready_Panel(void* pArg)
 
 void CCanvasObject::Visible(_bool bVisible)
 {
-	if (m_Panels.empty())
-	{
-		return;
-	}
-
-	for (auto iter : m_Panels)
-	{
-		static_cast<CUIObject*>(iter)->Visible(bVisible);
-	}
+	m_bVisible = bVisible;
 }
 
 CGameObject* CCanvasObject::Get_Panel(const wstring& Name)
@@ -125,4 +143,6 @@ void CCanvasObject::Free()
 	__super::Free();
 
 	m_Panels.clear();
+	m_PanelNames.clear();
+	m_Panels_map.clear(); // map ºñ¿ì±â
 }

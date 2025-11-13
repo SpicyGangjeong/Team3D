@@ -1,0 +1,162 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[5] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_SplashDisc_D.VFX_T_SplashDisc_D'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_SplashDisc_N.VFX_T_SplashDisc_N'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseTiled_2_D.VFX_T_NoiseTiled_2_D'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/VFX_T_HeatTile3_N.VFX_T_HeatTile3_N'
+    ReferencedTextures[4] = TextureCube4'/Game/Environment/Mines_Dungeon/FX/VFX_P_GobMine_WaterDrops/T_GobMine_WaterDrop_CubeMap_HDR.T_GobMine_WaterDrop_CubeMap_HDR'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[6] =
+                {
+                    ParameterInfos[0] = { Name=Tiling }
+                    ParameterInfos[1] = { Name=RefractScale }
+                    ParameterInfos[2] = { Name=Opacity }
+                    ParameterInfos[3] = { Name=RefractFresnelExponent }
+                    ParameterInfos[4] = { Name=CubeMapBrightness }
+                    ParameterInfos[5] = { Name=ColorFresnelExponent }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=BaseColor }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[6] =
+                {
+                    ParameterInfos[0] = { Name=UseColorTexture }
+                    ParameterInfos[1] = { Name=NormalMap }
+                    ParameterInfos[2] = { Name=DetailNormal_0 }
+                    ParameterInfos[3] = { Name=AlphaMask }
+                    ParameterInfos[4] = { Name=Cubemap }
+                    ParameterInfos[5] = { Name=DetailNormal_1 }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[6] = { 8, 1.25, 1, 1.25, 1, 0.2 }
+        VectorValues[1] =
+        {
+            VectorValues[0] = { R=0.5, G=0.5, B=0.5, A=1 }
+        }
+        TextureValues[6] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseTiled_2_D.VFX_T_NoiseTiled_2_D'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_SplashDisc_N.VFX_T_SplashDisc_N'
+            TextureValues[2] = Texture2D'/Game/VFX/Textures/VFX_T_HeatTile3_N.VFX_T_HeatTile3_N'
+            TextureValues[3] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_SplashDisc_D.VFX_T_SplashDisc_D'
+            TextureValues[4] = TextureCube4'/Game/Environment/Mines_Dungeon/FX/VFX_P_GobMine_WaterDrops/T_GobMine_WaterDrop_CubeMap_HDR.T_GobMine_WaterDrop_CubeMap_HDR'
+            TextureValues[5] = Texture2D'/Game/VFX/Textures/VFX_T_HeatTile3_N.VFX_T_HeatTile3_N'
+        }
+    }
+    ReferencedTextures[5] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_SplashDisc_D.VFX_T_SplashDisc_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_SplashDisc_N.VFX_T_SplashDisc_N'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/VFX_T_HeatTile3_N.VFX_T_HeatTile3_N'
+        ReferencedTextures[3] = TextureCube4'/Game/Environment/Mines_Dungeon/FX/VFX_P_GobMine_WaterDrops/T_GobMine_WaterDrop_CubeMap_HDR.T_GobMine_WaterDrop_CubeMap_HDR'
+        ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseTiled_2_D.VFX_T_NoiseTiled_2_D'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[6] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseTiled_2_D.VFX_T_NoiseTiled_2_D'
+        Name = UseColorTexture
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_SplashDisc_N.VFX_T_SplashDisc_N'
+        Name = NormalMap
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_HeatTile3_N.VFX_T_HeatTile3_N'
+        Name = DetailNormal_0
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_SplashDisc_D.VFX_T_SplashDisc_D'
+        Name = AlphaMask
+        Group = None
+    }
+    CollectedTextureParameters[4] =
+    {
+        Texture = TextureCube4'/Game/Environment/Mines_Dungeon/FX/VFX_P_GobMine_WaterDrops/T_GobMine_WaterDrop_CubeMap_HDR.T_GobMine_WaterDrop_CubeMap_HDR'
+        Name = Cubemap
+        Group = None
+    }
+    CollectedTextureParameters[5] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_HeatTile3_N.VFX_T_HeatTile3_N'
+        Name = DetailNormal_1
+        Group = None
+    }
+}
+CollectedScalarParameters[6] =
+{
+    CollectedScalarParameters[0] = { Value=8, Name=Tiling, Group=None }
+    CollectedScalarParameters[1] = { Value=1.25, Name=RefractScale, Group=None }
+    CollectedScalarParameters[2] = { Value=1, Name=Opacity, Group=None }
+    CollectedScalarParameters[3] =
+    {
+        Value = 1.25
+        Name = RefractFresnelExponent
+        Group = None
+    }
+    CollectedScalarParameters[4] = { Value=1, Name=CubeMapBrightness, Group=None }
+    CollectedScalarParameters[5] = { Value=0.2, Name=ColorFresnelExponent, Group=None }
+}
+CollectedVectorParameters[1] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0.5, G=0.5, B=0.5, A=1 }
+        Name = BaseColor
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[2] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_NoiseTiled_2_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_SplashDisc_N
+    }
+}

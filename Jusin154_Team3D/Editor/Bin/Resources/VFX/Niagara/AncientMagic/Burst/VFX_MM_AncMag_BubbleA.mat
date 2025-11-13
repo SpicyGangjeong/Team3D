@@ -1,0 +1,6 @@
+Diffuse=VFX_T_PlasmaSpell_D
+Normal=T_CavernDun_Sanctum_Rockwall_Blend_C_N
+Other[0]=VFX_T_Noise08_D
+Other[1]=VFX_T_Noise_LowFreq_E
+Other[2]=VFX_T_Noise_LowFreq_N
+Other[3]=VFX_T_NoiseCaustics01_Color_D

@@ -1,0 +1,62 @@
+Materials[4] =
+{
+    Materials[0] = Material3'/Engine/EngineMaterials/WorldGridMaterial.WorldGridMaterial'
+    Materials[1] = Material3'/Engine/EngineMaterials/WorldGridMaterial_Low.WorldGridMaterial_Low'
+    Materials[2] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/VFX_MI_GH_SkyDome_CloudsNight.VFX_MI_GH_SkyDome_CloudsNight'
+    Materials[3] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/VFX_MI_GH_SkyDome_StarsMask.VFX_MI_GH_SkyDome_StarsMask'
+}
+SourceModels[0] = {}
+StaticMaterials[4] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = Material3'/Engine/EngineMaterials/WorldGridMaterial.WorldGridMaterial'
+        MaterialSlotName = lambert2
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 0, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = Material3'/Engine/EngineMaterials/WorldGridMaterial_Low.WorldGridMaterial_Low'
+        MaterialSlotName = lambert1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 0, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[2] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/VFX_MI_GH_SkyDome_CloudsNight.VFX_MI_GH_SkyDome_CloudsNight'
+        MaterialSlotName = VFX_MI_GH_SkyDome_CloudsNight
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 7510.3, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[3] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/VFX_MI_GH_SkyDome_StarsMask.VFX_MI_GH_SkyDome_StarsMask'
+        MaterialSlotName = VFX_MI_GH_SkyDome_StarsMask
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 8155.27, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=1.55005, Y=-793.41, Z=49.7062 }
+    BoxExtent = { X=1102.22, Y=3106.78, Z=802.245 }
+    SphereRadius = 3208.51
+}

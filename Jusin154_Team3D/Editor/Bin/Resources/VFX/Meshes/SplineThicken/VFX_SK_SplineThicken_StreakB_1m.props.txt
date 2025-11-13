@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = Material3'/Game/VFX/MasterMaterials/Base_Mat/VFX_MM_SplineThicken_Preview.VFX_MM_SplineThicken_Preview'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = Material3'/Game/VFX/MasterMaterials/Base_Mat/VFX_MM_SplineThicken_Preview.VFX_MM_SplineThicken_Preview'
+        MaterialSlotName = WorldGridMaterial
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 7.2147, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=49.5872, Y=-1.73262, Z=-0.469936 }
+    BoxExtent = { X=50.0865, Y=5.11142, Z=3.13376 }
+    SphereRadius = 50.397
+}

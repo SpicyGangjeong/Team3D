@@ -1,0 +1,38 @@
+Materials[2] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Gameplay/InventoryObjects/Potions/Materials/MI_Potion_Wiggenweld_Glass.MI_Potion_Wiggenweld_Glass'
+    Materials[1] = MaterialInstanceConstant'/Game/Gameplay/InventoryObjects/Potions/Materials/MI_Potion_Wiggenweld.MI_Potion_Wiggenweld'
+}
+SourceModels[0] = {}
+StaticMaterials[2] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Gameplay/InventoryObjects/Potions/Materials/MI_Potion_Wiggenweld_Glass.MI_Potion_Wiggenweld_Glass'
+        MaterialSlotName = MI_Potion_Wiggenweld_Glass
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 28.1466, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Gameplay/InventoryObjects/Potions/Materials/MI_Potion_Wiggenweld.MI_Potion_Wiggenweld'
+        MaterialSlotName = MI_Potion_Wiggenweld
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 31.5721, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=0, Z=-6.1899 }
+    BoxExtent = { X=5.4147, Y=5.9378, Z=10.8737 }
+    SphereRadius = 11.8939
+}

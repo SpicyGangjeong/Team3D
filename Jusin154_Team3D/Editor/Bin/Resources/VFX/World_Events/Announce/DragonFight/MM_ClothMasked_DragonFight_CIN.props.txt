@@ -1,0 +1,314 @@
+TwoSided = true
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[7] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_black_d.base_black_d'
+    ReferencedTextures[1] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+    ReferencedTextures[2] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+    ReferencedTextures[3] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_MSK.base_white_MSK'
+    ReferencedTextures[4] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Cloth/T_Fabric001_N.T_Fabric001_N'
+    ReferencedTextures[5] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/T_Base011_MRO.T_Base011_MRO'
+    ReferencedTextures[6] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_Soft_D.VFX_T_Noise_Soft_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[22] =
+                {
+                    ParameterInfos[0] = { Name=Roughness }
+                    ParameterInfos[1] = { Name=Offset Tex Speed U (S) }
+                    ParameterInfos[2] = { Name=Wind Intensity }
+                    ParameterInfos[3] = { Name=Wind Speed }
+                    ParameterInfos[4] = { Name=Metallic }
+                    ParameterInfos[5] = { Name=Fuzz Intensity }
+                    ParameterInfos[6] = { Name=Subsurface Brightness }
+                    ParameterInfos[7] = { Name=Offset Strength }
+                    ParameterInfos[8] = { Name=Alpha }
+                    ParameterInfos[9] = { Name=NightSubsurfaceFactor }
+                    ParameterInfos[10] = { Name=spec }
+                    ParameterInfos[11] = { Name=Subsurface Thickness }
+                    ParameterInfos[12] = { Name=Subsurface Texture Strength }
+                    ParameterInfos[13] = { Name=AO }
+                    ParameterInfos[14] = { Name=Detail Amount }
+                    ParameterInfos[15] = { Name=Base Color Brightness }
+                    ParameterInfos[16] = { Name=Offset Tex Speed V (S) }
+                    ParameterInfos[17] = { Name=Offset Tex Tiling U (S) }
+                    ParameterInfos[18] = { Name=Offset Tex Tiling V (S) }
+                    ParameterInfos[19] = { Name=opacity }
+                    ParameterInfos[20] = { Name=Wind Weight }
+                    ParameterInfos[21] = { Name=Detail Scale }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[6] =
+                {
+                    ParameterInfos[0] = { Name=Aditional WPO }
+                    ParameterInfos[1] = { Name=OffsetDir }
+                    ParameterInfos[2] = { Name=color2 }
+                    ParameterInfos[3] = { Name=Burn Color }
+                    ParameterInfos[4] = { Name=color3 }
+                    ParameterInfos[5] = { Name=color1 }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[7] =
+                {
+                    ParameterInfos[0] = { Name=Wind Position Map }
+                    ParameterInfos[1] = { Name=Diffuse }
+                    ParameterInfos[2] = { Name=Normal }
+                    ParameterInfos[3] = { Name=Cloth Detail Normal }
+                    ParameterInfos[4] = { Name=MROA Mask }
+                    ParameterInfos[5] = { Name=Subsurface Color }
+                    ParameterInfos[6] = { Name=Color Mask }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[22] =
+        {
+            ScalarValues[0] = 0
+            ScalarValues[1] = 0.371429
+            ScalarValues[2] = 1
+            ScalarValues[3] = 1
+            ScalarValues[4] = 0
+            ScalarValues[5] = 1
+            ScalarValues[6] = 1
+            ScalarValues[7] = -800
+            ScalarValues[8] = 1
+            ScalarValues[9] = 1
+            ScalarValues[10] = 0.5
+            ScalarValues[11] = 1
+            ScalarValues[12] = 0
+            ScalarValues[13] = 0
+            ScalarValues[14] = 0.4
+            ScalarValues[15] = 1
+            ScalarValues[16] = 2.00187
+            ScalarValues[17] = 1.2
+            ScalarValues[18] = 1.2
+            ScalarValues[19] = 1
+            ScalarValues[20] = 1
+            ScalarValues[21] = 1
+        }
+        VectorValues[6] =
+        {
+            VectorValues[0] = { R=0, G=0, B=0, A=1 }
+            VectorValues[1] = { R=0, G=-0.104762, B=1, A=1 }
+            VectorValues[2] = { R=1, G=1, B=1, A=0 }
+            VectorValues[3] = { R=1, G=0, B=0, A=0 }
+            VectorValues[4] = { R=1, G=1, B=1, A=0 }
+            VectorValues[5] = { R=1, G=1, B=1, A=0 }
+        }
+        TextureValues[7] =
+        {
+            TextureValues[0] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_MSK.base_white_MSK'
+            TextureValues[1] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+            TextureValues[2] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+            TextureValues[3] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Cloth/T_Fabric001_N.T_Fabric001_N'
+            TextureValues[4] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/T_Base011_MRO.T_Base011_MRO'
+            TextureValues[5] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_black_d.base_black_d'
+            TextureValues[6] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_MSK.base_white_MSK'
+        }
+    }
+    ReferencedTextures[7] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_MSK.base_white_MSK'
+        ReferencedTextures[1] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+        ReferencedTextures[2] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+        ReferencedTextures[3] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Cloth/T_Fabric001_N.T_Fabric001_N'
+        ReferencedTextures[4] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/T_Base011_MRO.T_Base011_MRO'
+        ReferencedTextures[5] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_black_d.base_black_d'
+        ReferencedTextures[6] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_Soft_D.VFX_T_Noise_Soft_D'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[7] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_MSK.base_white_MSK'
+        Name = Wind Position Map
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+        Name = Diffuse
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+        Name = Normal
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Cloth/T_Fabric001_N.T_Fabric001_N'
+        Name = Cloth Detail Normal
+        Group = None
+    }
+    CollectedTextureParameters[4] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/T_Base011_MRO.T_Base011_MRO'
+        Name = MROA Mask
+        Group = None
+    }
+    CollectedTextureParameters[5] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_black_d.base_black_d'
+        Name = Subsurface Color
+        Group = None
+    }
+    CollectedTextureParameters[6] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_MSK.base_white_MSK'
+        Name = Color Mask
+        Group = None
+    }
+}
+CollectedScalarParameters[22] =
+{
+    CollectedScalarParameters[0] = { Value=0, Name=Roughness, Group=None }
+    CollectedScalarParameters[1] =
+    {
+        Value = 0.371429
+        Name = Offset Tex Speed U (S)
+        Group = None
+    }
+    CollectedScalarParameters[2] = { Value=1, Name=Wind Intensity, Group=None }
+    CollectedScalarParameters[3] = { Value=1, Name=Wind Speed, Group=None }
+    CollectedScalarParameters[4] = { Value=0, Name=Metallic, Group=None }
+    CollectedScalarParameters[5] = { Value=1, Name=Fuzz Intensity, Group=None }
+    CollectedScalarParameters[6] = { Value=1, Name=Subsurface Brightness, Group=None }
+    CollectedScalarParameters[7] = { Value=-800, Name=Offset Strength, Group=None }
+    CollectedScalarParameters[8] = { Value=1, Name=Alpha, Group=None }
+    CollectedScalarParameters[9] = { Value=1, Name=NightSubsurfaceFactor, Group=None }
+    CollectedScalarParameters[10] = { Value=0.5, Name=spec, Group=None }
+    CollectedScalarParameters[11] = { Value=1, Name=Subsurface Thickness, Group=None }
+    CollectedScalarParameters[12] =
+    {
+        Value = 0
+        Name = Subsurface Texture Strength
+        Group = None
+    }
+    CollectedScalarParameters[13] = { Value=0, Name=AO, Group=None }
+    CollectedScalarParameters[14] = { Value=0.4, Name=Detail Amount, Group=None }
+    CollectedScalarParameters[15] = { Value=1, Name=Base Color Brightness, Group=None }
+    CollectedScalarParameters[16] =
+    {
+        Value = 2.00187
+        Name = Offset Tex Speed V (S)
+        Group = None
+    }
+    CollectedScalarParameters[17] =
+    {
+        Value = 1.2
+        Name = Offset Tex Tiling U (S)
+        Group = None
+    }
+    CollectedScalarParameters[18] =
+    {
+        Value = 1.2
+        Name = Offset Tex Tiling V (S)
+        Group = None
+    }
+    CollectedScalarParameters[19] = { Value=1, Name=opacity, Group=None }
+    CollectedScalarParameters[20] = { Value=1, Name=Wind Weight, Group=None }
+    CollectedScalarParameters[21] = { Value=1, Name=Detail Scale, Group=None }
+}
+CollectedVectorParameters[6] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = Aditional WPO
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0, G=-0.104762, B=1, A=1 }
+        Name = OffsetDir
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=1, G=1, B=1, A=0 }
+        Name = color2
+        Group = None
+    }
+    CollectedVectorParameters[3] =
+    {
+        Value = { R=1, G=0, B=0, A=0 }
+        Name = Burn Color
+        Group = None
+    }
+    CollectedVectorParameters[4] =
+    {
+        Value = { R=1, G=1, B=1, A=0 }
+        Name = color3
+        Group = None
+    }
+    CollectedVectorParameters[5] =
+    {
+        Value = { R=1, G=1, B=1, A=0 }
+        Name = color1
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[6] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = base_black_d
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = base_flat_n
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = base_white_d
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = base_white_MSK
+    }
+    TextureStreamingData[4] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Base011_MRO
+    }
+    TextureStreamingData[5] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Fabric001_N
+    }
+}

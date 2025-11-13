@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Environment/Overland_Common/Objects/Rocks/Materials/MI_OL_Rock_SM_Light.MI_OL_Rock_SM_Light'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Overland_Common/Objects/Rocks/Materials/MI_OL_Rock_SM_Light.MI_OL_Rock_SM_Light'
+        MaterialSlotName = MI_OL_Rock_SM_Light
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 134.564, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=1.90735e-06, Y=9.53674e-07, Z=1.43114 }
+    BoxExtent = { X=14.3706, Y=10.7234, Z=13.7141 }
+    SphereRadius = 17.0921
+}

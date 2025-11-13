@@ -1,0 +1,124 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[2] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/VFX_T_Streaks_01_D.VFX_T_Streaks_01_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[8] =
+                {
+                    ParameterInfos[0] = { Name=Motionblur Near Amount }
+                    ParameterInfos[1] = { Name=Texture1_Tiling U }
+                    ParameterInfos[2] = { Name=Texture1_Speed V }
+                    ParameterInfos[3] = { Name=Texture1_Speed U }
+                    ParameterInfos[4] = { Name=Motionblur Multiplier }
+                    ParameterInfos[5] = { Name=Motionblur Far Amount }
+                    ParameterInfos[6] = { Name=Texture1_Tiling V }
+                    ParameterInfos[7] = { Name=MotionBlur Fadeout Distance }
+                }
+            }
+            Entries[1] = { ParameterInfos[0]={} }
+            Entries[2] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Panning Texture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[8] =
+        {
+            ScalarValues[0] = 1
+            ScalarValues[1] = 5
+            ScalarValues[2] = 0.195069
+            ScalarValues[3] = 0.038095
+            ScalarValues[4] = 0.5
+            ScalarValues[5] = 0.2
+            ScalarValues[6] = 0.761905
+            ScalarValues[7] = 1000
+        }
+        VectorValues[0] = {}
+        TextureValues[1] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/VFX_T_Streaks_01_D.VFX_T_Streaks_01_D'
+        }
+    }
+    ReferencedTextures[2] =
+    {
+        ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/VFX_T_Streaks_01_D.VFX_T_Streaks_01_D'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[1] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_Streaks_01_D.VFX_T_Streaks_01_D'
+        Name = Panning Texture
+        Group = None
+    }
+}
+CollectedScalarParameters[8] =
+{
+    CollectedScalarParameters[0] = { Value=1, Name=Motionblur Near Amount, Group=None }
+    CollectedScalarParameters[1] = { Value=5, Name=Texture1_Tiling U, Group=None }
+    CollectedScalarParameters[2] =
+    {
+        Value = 0.195069
+        Name = Texture1_Speed V
+        Group = None
+    }
+    CollectedScalarParameters[3] =
+    {
+        Value = 0.038095
+        Name = Texture1_Speed U
+        Group = None
+    }
+    CollectedScalarParameters[4] =
+    {
+        Value = 0.5
+        Name = Motionblur Multiplier
+        Group = None
+    }
+    CollectedScalarParameters[5] =
+    {
+        Value = 0.2
+        Name = Motionblur Far Amount
+        Group = None
+    }
+    CollectedScalarParameters[6] =
+    {
+        Value = 0.761905
+        Name = Texture1_Tiling V
+        Group = None
+    }
+    CollectedScalarParameters[7] =
+    {
+        Value = 1000
+        Name = MotionBlur Fadeout Distance
+        Group = None
+    }
+}
+CollectedVectorParameters[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

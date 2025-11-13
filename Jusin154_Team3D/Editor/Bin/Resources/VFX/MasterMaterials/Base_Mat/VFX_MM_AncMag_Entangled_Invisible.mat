@@ -1,0 +1,6 @@
+Diffuse=T_FX_heat_distortion_N
+Normal=T_SanctumDun_EntangledObjects_N
+Other[0]=DefaultDiffuse
+Other[1]=Good64x64TilingNoiseHighFreq
+Other[2]=VFX_T_Noise05_D
+Other[3]=VFX_T_RibbonOffset_N

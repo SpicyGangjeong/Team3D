@@ -1,0 +1,38 @@
+Materials[2] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/RiggedObjects/Characters/Creatures/Insects/Spiders/Acromatula/Materials/MI_Spider_Acromantula_FurCards.MI_Spider_Acromantula_FurCards'
+    Materials[1] = MaterialInstanceConstant'/Game/RiggedObjects/Characters/Creatures/Insects/Spiders/Acromatula/Materials/M_Spider_Acromantula.M_Spider_Acromantula'
+}
+SourceModels[0] = {}
+StaticMaterials[2] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/RiggedObjects/Characters/Creatures/Insects/Spiders/Acromatula/Materials/MI_Spider_Acromantula_FurCards.MI_Spider_Acromantula_FurCards'
+        MaterialSlotName = MI_Spider_Acromantula_FurCards
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 38.0688, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/RiggedObjects/Characters/Creatures/Insects/Spiders/Acromatula/Materials/M_Spider_Acromantula.M_Spider_Acromantula'
+        MaterialSlotName = M_Spider_Acromantula
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 242.347, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-2.45693, Y=13.817, Z=-0.62467 }
+    BoxExtent = { X=12.4688, Y=22.83, Z=24.0266 }
+    SphereRadius = 31.3152
+}

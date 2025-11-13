@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/World_Events/Water/VFX_MI_FromTheDepths.VFX_MI_FromTheDepths'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/World_Events/Water/VFX_MI_FromTheDepths.VFX_MI_FromTheDepths'
+        MaterialSlotName = lambert1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 248.398, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-7.62939e-05, Y=-7.62939e-05, Z=9.36566 }
+    BoxExtent = { X=85.2637, Y=85.2638, Z=9.36566 }
+    SphereRadius = 85.7767
+}

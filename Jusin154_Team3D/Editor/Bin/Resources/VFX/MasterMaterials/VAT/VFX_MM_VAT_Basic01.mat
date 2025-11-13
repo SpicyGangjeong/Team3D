@@ -1,0 +1,12 @@
+Diffuse=T_DevilsSnare_Tiling_D
+Normal=DemoBox_Normals
+Other[0]=DefaultDiffuse
+Other[1]=DebugNumberStrip
+Other[2]=Gradient
+Other[3]=Greyscale
+Other[4]=DemoBox
+Other[5]=DebugNumberPeriod
+Other[6]=T_DevilsSnare_Tiling_MRO
+Other[7]=T_DevilsSnare_Tiling_N
+Other[8]=VFX_T_DevilsSnareFloorA01_VN
+Other[9]=VFX_T_DevilsSnareFloorA01_VP

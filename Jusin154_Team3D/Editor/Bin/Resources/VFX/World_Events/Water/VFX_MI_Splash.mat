@@ -1,0 +1,9 @@
+Diffuse=VFX_T_Water_Reflection_D
+Normal=VFX_T_Wavy_N
+Cube=VFX_T_Wavy_N
+Other[0]=VFX_T_WaterSplash_Dir_N
+Other[1]=VFX_T_WaterSplash_Dir_D
+Other[2]=VFX_T_Smoke_8x8_01_N
+Other[3]=VFX_T_Inky_Smoke_D
+Other[4]=VFX_T_Wisps_D
+Other[5]=VFX_T_Wisps_N

@@ -1,0 +1,4 @@
+Diffuse=VFX_T_WaterTurbulentTileFreq_01_D
+Normal=VFX_T_WaterTurbulentTile_01_N
+Opacity=VFX_T_VortexSliceVertexAlpha01_DA
+Other[0]=VFX_T_WaterTurbulentTile_01_DA

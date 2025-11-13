@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Gameplay/InventoryObjects/Potions/Materials/MI_Potion_Invisibility.MI_Potion_Invisibility'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Gameplay/InventoryObjects/Potions/Materials/MI_Potion_Invisibility.MI_Potion_Invisibility'
+        MaterialSlotName = MI_Potion_Invisibility
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 35.3187, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=9.87053e-05, Y=0.00139046, Z=-7.2533 }
+    BoxExtent = { X=6.06898, Y=6.06899, Z=11.956 }
+    SphereRadius = 13.1539
+}

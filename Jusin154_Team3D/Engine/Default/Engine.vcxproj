@@ -126,6 +126,16 @@
       <AdditionalLibraryDirectories>../ThirdPartyLib/fMod/;../ThirdPartyLib/DirectXTK/;../ThirdPartyLib/FX11/;../ThirdPartyLib/Assimp/;../ThirdPartyLib/PhysX/PhysX_$(Configuration)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>d3d11.lib;fmod_vc.lib;dinput8.lib;LowLevel_static_64.lib;LowLevelAABB_static_64.lib;LowLevelDynamics_static_64.lib;PhysX_64.lib;PhysXCommon_64.lib;PhysXCooking_64.lib;PhysXExtensions_static_64.lib;PhysXFoundation_64.lib;PhysXPvdSDK_static_64.lib;PhysXTask_static_64.lib;SceneQuery_static_64.lib;SimulationController_static_64.lib;PhysXCharacterKinematic_static_64.lib;DirectXTKd.lib;Effects11d.lib;assimp-vc145-mtd.lib;%(AdditionalDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>cd /d "$(SolutionDir)"
+call CleanUp.bat
+</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>cd /d "$(SolutionDir)"
+call Update_Lib.bat
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -133,7 +143,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>EDITOR_PROJECT;ENGINE_EXPORTS;IMGUI_EXPORTS;TINYXML2_EXPORT;$(USERDOMAIN);NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>EDITOR_PROJECT;ENGINE_EXPORTS;IMGUI_EXPORTS;TINYXML2_EXPORT;$(USERNAME);NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>../Public/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -149,6 +159,16 @@
       <AdditionalLibraryDirectories>../ThirdPartyLib/fMod/;../ThirdPartyLib/DirectXTK/;../ThirdPartyLib/FX11/;../ThirdPartyLib/Assimp/;../ThirdPartyLib/PhysX/PhysX_$(Configuration)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>d3d11.lib;fmod_vc.lib;dinput8.lib;LowLevel_static_64.lib;LowLevelAABB_static_64.lib;LowLevelDynamics_static_64.lib;PhysX_64.lib;PhysXCommon_64.lib;PhysXCooking_64.lib;PhysXExtensions_static_64.lib;PhysXFoundation_64.lib;PhysXPvdSDK_static_64.lib;PhysXTask_static_64.lib;SceneQuery_static_64.lib;SimulationController_static_64.lib;PhysXCharacterKinematic_static_64.lib;DirectXTK.lib;Effects11.lib;assimp-vc145-mt.lib;%(AdditionalDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>cd /d "$(SolutionDir)"
+call CleanUp.bat
+</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>cd /d "$(SolutionDir)"
+call Update_Lib.bat
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Animation.cpp" />
@@ -530,6 +550,8 @@
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Particle_Compute.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

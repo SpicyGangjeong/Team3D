@@ -26,17 +26,18 @@ public:
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;
+	virtual HRESULT Ready_Element(void* pArg) override;
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
 private:
-	CTexture* m_pTextureCom = { nullptr };
-	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
+	CGameObject* m_pMissionBanner_Border = { nullptr };
+	CGameObject* m_pMissionBanner_Key = { nullptr };
 	CGameObject* m_pMission_KeyHold = { nullptr };
 	CGameObject* m_pMission_Key = { nullptr };
+	CGameObject* m_pMission_Icon = { nullptr };
 	CGameObject* m_pActive_Icon = { nullptr };
-	CGameObject* m_pMissionBanner_Key = { nullptr };
 
 public:
 	static CMission_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

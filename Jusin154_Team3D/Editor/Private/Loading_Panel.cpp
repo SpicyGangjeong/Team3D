@@ -23,10 +23,10 @@ HRESULT CLoading_Panel::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = 0.f;
-	Desc.fY = 0.f;
-	Desc.fSizeX = 100.f;
-	Desc.fSizeY = 100.f;
+	Desc.fX = 1200.f;
+	Desc.fY = 900.f;
+	Desc.fSizeX = 1515.f;
+	Desc.fSizeY = 300.f;
 
 	if (FAILED(__super::Initialize(&Desc)))
 	{
@@ -45,38 +45,34 @@ HRESULT CLoading_Panel::Initialize(void* pArg)
 
 void CLoading_Panel::Priority_Update(_float fTimeDelta)
 {
+	if (!__super::Chack_Visible())
+	{
+		return;
+	}
 	__super::Priority_Update(fTimeDelta);
 }
 
 void CLoading_Panel::Update(_float fTimeDelta)
 {
+	if (!__super::Chack_Visible())
+	{
+		return;
+	}
+
 	__super::Update(fTimeDelta);
 }
 
 void CLoading_Panel::Late_Update(_float fTimeDelta)
 {
-	if (m_bVisible) {
-		_float4* vPos = (_float4*)(m_pTransformCom->Get_WorldMatrixPtr()->m[3]);
-		m_pGameInstance->Add_RenderGroup(RENDER::UI, this, *vPos, m_pTransformCom->Get_Radius());
+	if (!__super::Chack_Visible())
+	{
+		return;
 	}
 	__super::Late_Update(fTimeDelta);
 }
 
 HRESULT CLoading_Panel::Render()
 {
-	if (FAILED(Bind_ShaderResources())) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::DEFAULT)))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pVIBufferCom->Render())) {
-		return E_FAIL;
-	}
-
 	return S_OK;
 }
 
@@ -87,26 +83,7 @@ _vector CLoading_Panel::Get_WorldPostion()
 
 HRESULT CLoading_Panel::Bind_ShaderResources()
 {
-	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pDiffuse_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float))))
-	{
-		return E_FAIL;
-	}
+
 	return S_OK;
 }
 
@@ -114,14 +91,6 @@ HRESULT CLoading_Panel::Ready_Components(void* pArg)
 {
 
 	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_Keyboard_0"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, FX_UIEDITOR, (CComponent**)&m_pShaderCom, nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -175,8 +144,6 @@ void CLoading_Panel::Free()
 {
 	__super::Free();
 
-	SAFE_RELEASE(m_pDiffuse_TextureCom);
-	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 

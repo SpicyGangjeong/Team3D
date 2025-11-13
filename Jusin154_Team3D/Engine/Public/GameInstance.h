@@ -21,6 +21,7 @@ public:
 	_float Random_Normal();
 	_float Random_Float(_float fMin, _float fMax);
 	_int   Random_Int(_int iMin, _int iMax);
+	void BillBoard(CTransform* pTransform);
 
 #pragma region GRAPHIC_DEVICE
 public:
@@ -65,9 +66,9 @@ public:
 	}
 
 	template<typename T>
-	void Asset_Description(_uint iLevel, const _char* pComponentName, CComponent** ppOut, void* pDesc, class CGameObject* pOwner = nullptr)
+	void Asset_Description(_uint iLevel, const _char* pComponentName, CComponent** ppOut, void* pDesc, class CGameObject* pOwner = nullptr, _wstring wstrGroupName = L"")
 	{
-		return m_pPrototype_Manager->CPrototype_Manager::Asset_Description<T>(iLevel, pComponentName, ppOut, pDesc, pOwner);
+		return m_pPrototype_Manager->CPrototype_Manager::Asset_Description<T>(iLevel, pComponentName, ppOut, pDesc, pOwner, wstrGroupName);
 	}
 
 #pragma endregion
@@ -191,7 +192,7 @@ public:
 
 	HRESULT ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix);
 	HRESULT SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
-	HRESULT LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
+	HRESULT LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes); // 모델 불러왔던 경로에 그대로 있음
 #pragma endregion
 
 

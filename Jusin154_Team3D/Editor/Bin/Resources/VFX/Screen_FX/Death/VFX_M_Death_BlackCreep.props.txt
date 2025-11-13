@@ -1,0 +1,167 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[2] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseGreypack01_D.VFX_T_NoiseGreypack01_D'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/VFX_T_Screen_Death_Ink_02_I.VFX_T_Screen_Death_Ink_02_I'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[16] =
+                {
+                    ParameterInfos[0] = { Name=Input Low (S) }
+                    ParameterInfos[1] = { Name=Noise2_Horo_Speed }
+                    ParameterInfos[2] = { Name=Noise1_Vert_Speed }
+                    ParameterInfos[3] = { Name=Noise2_Vert_Speed }
+                    ParameterInfos[4] = { Name=Target Hight (S) }
+                    ParameterInfos[5] = { Name=Fade_In }
+                    ParameterInfos[6] = { Name=boost (S) }
+                    ParameterInfos[7] = { Name=Width (S) }
+                    ParameterInfos[8] = { Name=Input High (S) }
+                    ParameterInfos[9] = { Name=Target Low (S) }
+                    ParameterInfos[10] = { Name=NoiseStrenght }
+                    ParameterInfos[11] = { Name=NoiseSizeMultiplyer }
+                    ParameterInfos[12] = { Name=Centerer H }
+                    ParameterInfos[13] = { Name=Noise1_Horo_Speed }
+                    ParameterInfos[14] = { Name=Amount (S) }
+                    ParameterInfos[15] = { Name=Centerer V }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[3] =
+                {
+                    ParameterInfos[0] = { Name=color (V3) }
+                    ParameterInfos[1] = { Name=Alpha Modifier }
+                    ParameterInfos[2] = { Name=Color }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[3] =
+                {
+                    ParameterInfos[0] = { Name=Texture Warp b }
+                    ParameterInfos[1] = { Name=Texture Warp A }
+                    ParameterInfos[2] = { Name=Ink Shape }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[16] =
+        {
+            ScalarValues[0] = 0
+            ScalarValues[1] = 0
+            ScalarValues[2] = 0
+            ScalarValues[3] = 0
+            ScalarValues[4] = 2
+            ScalarValues[5] = 0
+            ScalarValues[6] = 1
+            ScalarValues[7] = 1
+            ScalarValues[8] = 1
+            ScalarValues[9] = -1
+            ScalarValues[10] = 0.05
+            ScalarValues[11] = 1
+            ScalarValues[12] = 0.95
+            ScalarValues[13] = 0
+            ScalarValues[14] = 1
+            ScalarValues[15] = -0.03
+        }
+        VectorValues[3] =
+        {
+            VectorValues[0] = { R=1, G=1, B=1, A=0 }
+            VectorValues[1] = { R=1, G=1, B=1, A=1 }
+            VectorValues[2] = { R=0, G=0, B=0, A=1 }
+        }
+        TextureValues[3] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseGreypack01_D.VFX_T_NoiseGreypack01_D'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseGreypack01_D.VFX_T_NoiseGreypack01_D'
+            TextureValues[2] = Texture2D'/Game/VFX/Textures/VFX_T_Screen_Death_Ink_02_I.VFX_T_Screen_Death_Ink_02_I'
+        }
+    }
+    ReferencedTextures[2] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/VFX_T_Screen_Death_Ink_02_I.VFX_T_Screen_Death_Ink_02_I'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseGreypack01_D.VFX_T_NoiseGreypack01_D'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[3] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseGreypack01_D.VFX_T_NoiseGreypack01_D'
+        Name = Texture Warp b
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseGreypack01_D.VFX_T_NoiseGreypack01_D'
+        Name = Texture Warp A
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_Screen_Death_Ink_02_I.VFX_T_Screen_Death_Ink_02_I'
+        Name = Ink Shape
+        Group = None
+    }
+}
+CollectedScalarParameters[16] =
+{
+    CollectedScalarParameters[0] = { Value=0, Name=Input Low (S), Group=None }
+    CollectedScalarParameters[1] = { Value=0, Name=Noise2_Horo_Speed, Group=None }
+    CollectedScalarParameters[2] = { Value=0, Name=Noise1_Vert_Speed, Group=None }
+    CollectedScalarParameters[3] = { Value=0, Name=Noise2_Vert_Speed, Group=None }
+    CollectedScalarParameters[4] = { Value=2, Name=Target Hight (S), Group=None }
+    CollectedScalarParameters[5] = { Value=0, Name=Fade_In, Group=None }
+    CollectedScalarParameters[6] = { Value=1, Name=boost (S), Group=None }
+    CollectedScalarParameters[7] = { Value=1, Name=Width (S), Group=None }
+    CollectedScalarParameters[8] = { Value=1, Name=Input High (S), Group=None }
+    CollectedScalarParameters[9] = { Value=-1, Name=Target Low (S), Group=None }
+    CollectedScalarParameters[10] = { Value=0.05, Name=NoiseStrenght, Group=None }
+    CollectedScalarParameters[11] = { Value=1, Name=NoiseSizeMultiplyer, Group=None }
+    CollectedScalarParameters[12] = { Value=0.95, Name=Centerer H, Group=None }
+    CollectedScalarParameters[13] = { Value=0, Name=Noise1_Horo_Speed, Group=None }
+    CollectedScalarParameters[14] = { Value=1, Name=Amount (S), Group=None }
+    CollectedScalarParameters[15] = { Value=-0.03, Name=Centerer V, Group=None }
+}
+CollectedVectorParameters[3] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=1, G=1, B=1, A=0 }
+        Name = color (V3)
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=1, G=1, B=1, A=1 }
+        Name = Alpha Modifier
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = Color
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

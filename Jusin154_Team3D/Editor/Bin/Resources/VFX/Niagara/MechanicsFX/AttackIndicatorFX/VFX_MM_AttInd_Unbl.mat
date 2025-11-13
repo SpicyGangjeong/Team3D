@@ -1,0 +1,7 @@
+Diffuse=VFX_T_EdgeMask_D
+Normal=VFX_T_RibbonOffset_N
+Opacity=VFX_T_AttackInd_Mask_A
+Emissive=VFX_T_AttackInd_Mask_02_E
+Other[0]=VFX_T_AttackInd_Unblock_E
+Other[1]=VFX_T_AttackInd_Unblock_MSK
+Other[2]=VFX_T_SwirlNoise_05_D
