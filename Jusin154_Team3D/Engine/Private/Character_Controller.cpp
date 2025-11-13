@@ -197,7 +197,7 @@ HRESULT CCharacter_Controller::Initialize(void* pArg)
 		Desc.halfSideExtent = {};
 		Desc.halfForwardExtent = {};
 		Desc.contactOffset = pDesc->fContactOffset;
-		Desc.material = m_pGameInstance->Get_Material(pDesc->fMaterial);
+		Desc.material = m_pGameInstance->Get_Material(&pDesc->fMaterial);
 		m_pController = m_pGameInstance->Add_BoxController(Desc);
 #ifdef _DEBUG
 		_float3 vVolume = Get_Volume();
@@ -211,7 +211,7 @@ HRESULT CCharacter_Controller::Initialize(void* pArg)
 		Desc.height = pDesc->tCapsuleInfo.fHeight;
 		Desc.climbingMode = pDesc->tCapsuleInfo.eClimbingMode; // ±âº» eEASY
 		Desc.contactOffset = pDesc->fContactOffset;
-		Desc.material = m_pGameInstance->Get_Material(pDesc->fMaterial);
+		Desc.material = m_pGameInstance->Get_Material(&pDesc->fMaterial);
 		m_pController = m_pGameInstance->Add_CapsuleController(Desc);
 #ifdef _DEBUG
 		_float3 vVolume = Get_Volume();

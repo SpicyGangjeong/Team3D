@@ -8,15 +8,16 @@ CRigidBody::CRigidBody(ID3D11Device* pDevice, ID3D11DeviceContext* pContext):
 {
 }
 
-CRigidBody::CRigidBody(const CRigidBody& rhs):
+CRigidBody::CRigidBody(const CRigidBody& rhs) :
 	CComponent(rhs),
-	m_pMaterial(rhs.m_pMaterial),
 	m_eActorType(rhs.m_eActorType),
 	m_vhalfGeometryInfo(rhs.m_vhalfGeometryInfo),
-	m_pShape(rhs.m_pShape),
 	m_wstrMeshKey(rhs.m_wstrMeshKey),
-	m_bExclusive(rhs.m_bExclusive),
-	m_bKinematic(rhs.m_bKinematic)
+	m_vMatInfo(rhs.m_vMatInfo),
+	m_ePxRigidBodyFlags(rhs.m_ePxRigidBodyFlags),
+	m_ePxShapeFlags(rhs.m_ePxShapeFlags),
+	m_eMatType(rhs.m_eMatType),
+	m_fContactOffset(rhs.m_fContactOffset)
 {
 }
 #ifdef _DEBUG
@@ -54,22 +55,14 @@ HRESULT CRigidBody::Render()
 
 HRESULT CRigidBody::Initialize_Prototype(RIGIDBODY_PROTOTYPEDESC& Desc)
 {
-	m_eActorType = Desc.eType;
-	switch (m_eActorType)
-	{
-	case ACTOR::BOX:
-	case ACTOR::CAPSULE:
-	case ACTOR::SPHERE:
-		Add_DynamicPrototype(Desc);
-		break;
-	case ACTOR::PLANE:
-	case ACTOR::TRIANGLEMESH:
-	case ACTOR::HEIGHTFIELD:
-		break;
-	default:
-		break;
-	}
-
+	m_eActorType		= Desc.eType;
+	m_ePxRigidBodyFlags = Desc.ePxRigidBodyFlags;
+	m_ePxShapeFlags		= Desc.ePxShapeFlags;
+	m_eMatType			= Desc.ePxMaterialTypes;
+	m_vMatInfo			= Desc.vMatInfo;
+	m_fContactOffset	= Desc.fContactOffset;
+	m_vhalfGeometryInfo = Desc.vhalfGeometryInfo;
+	m_fDensity			= Desc.fDensity;
 #ifdef _DEBUG
 	if (FAILED(Add_DebugShape())) {
 		return E_FAIL;
@@ -86,9 +79,6 @@ HRESULT CRigidBody::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg))) {
 		return E_FAIL;
 	}
-	if (true == m_bExclusive) {
-		return E_FAIL;
-	}
 	
 	m_pTransform = m_pOwner->Get_Component<CTransform>();
 	SAFE_ADDREF(m_pTransform);
@@ -98,8 +88,6 @@ HRESULT CRigidBody::Initialize(void* pArg)
 	case Engine::ACTOR::BOX:
 	case Engine::ACTOR::CAPSULE:
 	case Engine::ACTOR::SPHERE:
-		m_fDensity = pDesc->tRigidDynamicDesc.fDensity;
-		m_bKinematic = pDesc->tRigidDynamicDesc.bIsKinematic;
 		m_pRigidBody = m_pGameInstance->Add_DynamicActor(*this);
 		break;
 	case Engine::ACTOR::PLANE:
@@ -118,21 +106,6 @@ HRESULT CRigidBody::Initialize(void* pArg)
 	Add_DebugShape();
 #endif // _DEBUG
 
-	return S_OK;
-}
-
-HRESULT CRigidBody::Add_DynamicPrototype(RIGIDBODY_PROTOTYPEDESC& Desc)
-{
-	m_pMaterial = m_pGameInstance->Get_Material(Desc.tRigidDynamicDesc.vMatInfo);
-	m_vhalfGeometryInfo = Desc.tRigidDynamicDesc.vhalfGeometryInfo;
-	m_bExclusive = Desc.tRigidDynamicDesc.bExclusive;
-	m_pShape = m_pGameInstance->Create_Shape(m_eActorType, m_vhalfGeometryInfo, *m_pMaterial, m_bExclusive, Desc.tRigidDynamicDesc.ePxShapeFlag);
-	if (nullptr == m_pShape) {
-		assert(false);
-		m_pMaterial->release();
-		m_pMaterial = nullptr;
-		return E_FAIL;
-	}
 	return S_OK;
 }
 

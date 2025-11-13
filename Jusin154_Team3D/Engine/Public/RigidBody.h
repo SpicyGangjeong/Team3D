@@ -12,54 +12,30 @@ class CMesh;
 
 class ENGINE_DLL CRigidBody final : public CComponent
 {
-public:
-	typedef struct tagRigidStatic_PrototypeDesc
+public: // MORE INFO ON ENGINE_ENUM
+	typedef struct tagRigidBody_PrototypeDesc // 다 채우세요 NONE 빼고, 목적에 안맞는거 빼고
 	{
-		_float3			vMatInfo;
-		const _char*	szMeshName = { } ;
-	}RIGID_STATIC_PROTOTYPEDESC;
-	typedef struct tagRigidDynamic_PrototypeDesc
-	{
-		_float3						vMatInfo;
-		_float3						vhalfGeometryInfo;
-		_bool						bExclusive = { false };
-		PSX::PxShapeFlags			ePxShapeFlag = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
-	}RIGID_DYNAMIC_PROTOTYPEDESC;
-
-
-
-	typedef struct tagRigidBody_PrototypeDesc
-	{
-		ACTOR						eType;
-		union 
-		{
-			RIGID_STATIC_PROTOTYPEDESC		tRigidStaticDesc;
-			RIGID_DYNAMIC_PROTOTYPEDESC		tRigidDynamicDesc;
-		}; 
+		ACTOR					eType;
+		PSX::PxRigidBodyFlags	ePxRigidBodyFlags = { /* NONE */};
+		PSX::PxShapeFlags		ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+		PXMATERIAL				ePxMaterialTypes = { PXMATERIAL::DEFAULT };
+		_float3					vMatInfo = { 0.5f, 0.5f, 0.6f }; // 피직스 객체의 속성 등
+		_float					fContactOffset = { 0.05f }; // 접촉 유격 오프셋
+#pragma region DYNAMIC
+		_float3					vhalfGeometryInfo;		// 박스는 vSize, 캡슐은 radius, height로 씀
+		_float					fDensity = { 1000.f };	// 밀도, 실제 무게는 부피에 따라 달라짐
+#pragma endregion
+#pragma region STATIC
+#pragma endregion
 	}RIGIDBODY_PROTOTYPEDESC;
-	typedef struct tagRigidStatic_Desc {
-		const _char* szMeshName = { };
-	}RIGID_STATIC_DESC;
-	typedef struct tagRigidDynamic_Desc {
-		_float			fDensity = { 1000.f };
-		_bool			bIsKinematic = { false };
-	}RIGID_DYNAMIC_DESC;
+
 	typedef struct tagRigidBody_Desc
 	{
-		ACTOR eType;
-		union
-		{
-			RIGID_STATIC_DESC		tRigidStaticDesc;
-			RIGID_DYNAMIC_DESC		tRigidDynamicDesc;
-		};
-		// 키네마틱을 켜면, 
-		// 프레임 별 직접 위치 지정이 가능하다.
-		// 물리엔진의 힘, 중력 등의 영향을 받지 않는다.
-		// 단, 다른 물리엔진 오브젝트와의 충돌은 발생한다.
-		// 즉, 강제로 움직이지만, 충돌은 시뮬레이션 한다.
-		// 그러므로 키네마틱 오브젝트는 다른 오브젝트에 영향을 주지만, 다른 오브젝트의 힘에 영향을 받지 않는다.
-		// 주로 움직이는 플랫폼, 문 등에 사용된다.
-		// 스태틱 리지드바디와 달리 움직일 수 있다 !!!
+#pragma region DYNAMIC
+#pragma endregion
+#pragma region STATIC
+		const _char* szMeshName = { };
+#pragma endregion
 	}RIGIDBODY_DESC;
 
 private:
@@ -72,27 +48,34 @@ public:
 #endif // _DEBUG
 
 
-	ACTOR Get_Type() const { return m_eActorType; }
-	PSX::PxShape* Get_ShapePtr() const { return m_pShape; }
-	CTransform* Get_PxTransformPtr() const { return m_pTransform; }
-	const _tchar* Get_PxMeshKey() const { return m_wstrMeshKey.c_str(); }
-	const PSX::PxMaterial* Get_PxMaterial() const { return m_pMaterial; }
-	_float Get_ContactOffset() { return m_fContactOffset; }
-	_float Get_Density() const { return m_fDensity; }
-	_bool Is_Kinematic() const { return m_bKinematic; }
+	ACTOR					Get_Type()				const { return m_eActorType; }
+	CTransform*				Get_TransformPtr()		const { return m_pTransform; }
+	const _tchar*			Get_PxMeshKey()			const { return m_wstrMeshKey.c_str(); }
+	PXMATERIAL				Get_MaterialType()		const { return m_eMatType; }
+	_float					Get_ContactOffset()		const { return m_fContactOffset; }
+	_float					Get_Density()			const { return m_fDensity; }
+	PSX::PxShapeFlags		Get_ShapeFlags()		const { return m_ePxShapeFlags; }
+	PSX::PxRigidBodyFlags	Get_RigidBodyFlags()	const { return m_ePxRigidBodyFlags; }
+	_float3					Get_HalfGeometryInfo() const { return m_vhalfGeometryInfo; }
 
 private:
-	ACTOR				m_eActorType = ACTOR::END;
-	const PSX::PxActor*	m_pRigidBody = { nullptr };		// 실제 시뮬레이션을 도는 본체
-	PSX::PxMaterial*	m_pMaterial = { nullptr };		// 피직스 객체의 속성 등
-	PSX::PxShape*		m_pShape = { nullptr };			// 피직스 객체의 모양 ( 머테리얼로 만들어짐 )
-	_float3				m_vhalfGeometryInfo = {};
-	_float				m_fContactOffset = { 0.05f };
-	CTransform*			m_pTransform = { nullptr };
-	_bool				m_bKinematic = { false };
-	_bool				m_bExclusive = { false };
-	_float				m_fDensity = { 1000.f };
-	_wstring			m_wstrMeshKey = {  };
+	ACTOR					m_eActorType = ACTOR::END;
+	PSX::PxRigidBodyFlags	m_ePxRigidBodyFlags = {};
+	PXMATERIAL				m_eMatType = { PXMATERIAL::END };
+	_float					m_fContactOffset = { 0.05f };
+	const PSX::PxActor*		m_pRigidBody = { nullptr };		// 실제 시뮬레이션을 도는 본체
+
+	CTransform*				m_pTransform = { nullptr };
+
+#pragma region DYNAMIC
+	PSX::PxShapeFlags		m_ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+	_float3					m_vMatInfo = {};
+	_float3					m_vhalfGeometryInfo = {};
+	_float					m_fDensity = { 1000.f };
+#pragma endregion
+#pragma region STATIC
+	_wstring				m_wstrMeshKey = {  }; // 짝꿍 스태틱 메시의 triangleMesh 키
+#pragma endregion
 
 private:
 #ifdef _DEBUG
@@ -100,9 +83,9 @@ private:
 	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };
 #endif // _DEBUG
 
+private:
 	HRESULT Initialize_Prototype(RIGIDBODY_PROTOTYPEDESC& Desc);
 	HRESULT Initialize(void* pArg);
-	HRESULT Add_DynamicPrototype(RIGIDBODY_PROTOTYPEDESC& Desc);
 #ifdef _DEBUG
 	HRESULT Add_DebugShape();
 #endif

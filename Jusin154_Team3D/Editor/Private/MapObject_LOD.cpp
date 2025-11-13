@@ -294,14 +294,13 @@ void CMapObject_LOD::Describe_Entity()
 				pModel->Save_PhysXTriMeshes(filePath.string().c_str());
 
 				CRigidBody::RIGIDBODY_DESC Desc{};
-				Desc.eType = ACTOR::TRIANGLEMESH;
 
 				for (_uint i = 0; i < iNumMesh; ++i)
 				{ // RIGID_BODY
 					_string strDestName = pModel->Get_MeshName(i) + to_string(i);
-					Desc.tRigidStaticDesc.szMeshName = strDestName.c_str();
+					Desc.szMeshName = strDestName.c_str();
 
-					if (FAILED(Add_Asset_Component(g_iStaticLevel, CMyTools::ToWstring(pModel->Get_MeshName(i) + to_string(i)).c_str(), nullptr, &Desc))) {
+					if (FAILED(Add_Asset_Component(g_iStaticLevel, CMyTools::ToWstring(strDestName).c_str(), nullptr, &Desc))) {
 						assert(false);
 					}
 				}

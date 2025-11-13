@@ -30,44 +30,52 @@ CPhysX_Manager::CPhysX_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 
 const PSX::PxRigidDynamic* CPhysX_Manager::Add_DynamicActor(CRigidBody& RigidBody)
 {
-	_matrix WorldMatrix = RigidBody.Get_PxTransformPtr()->Get_XMWorldMatrix();
+	_matrix WorldMatrix = RigidBody.Get_TransformPtr()->Get_XMWorldMatrix();
 
 	PSX::PxTransform pxWorldMatrix = XMWorldToPx_NoScale(WorldMatrix);
 
 	// PxRigidDynamic		씬의 동적 바디 인터페이스
 	PSX::PxRigidDynamic* pActorDynamic = m_pPhysics->createRigidDynamic(pxWorldMatrix);
 	pActorDynamic->userData = &RigidBody;
-	
-	PSX::PxShape* pSrc = RigidBody.Get_ShapePtr();
-	PSX::PxGeometryHolder geoHolder = pSrc->getGeometry();
 
 	PSX::PxShape* pClone = nullptr;
+	PSX::PxGeometryHolder geoHolder = {};
+
+	_float3 vVolume = RigidBody.Get_HalfGeometryInfo();
+
 	switch (RigidBody.Get_Type()) {
 	case ACTOR::BOX:
-		pClone = PSX::PxRigidActorExt::createExclusiveShape(*pActorDynamic, geoHolder.box(), *RigidBody.Get_PxMaterial());
+		geoHolder = PSX::PxBoxGeometry(PSX::PxVec3(vVolume.x, vVolume.y, vVolume.z));
+		pClone = PSX::PxRigidActorExt::createExclusiveShape(*pActorDynamic, geoHolder.box(), *m_pMaterials[ENUM_CLASS(RigidBody.Get_MaterialType())]);
+		assert(nullptr != pClone);
 		break;
 	case ACTOR::CAPSULE:
-		pClone = PSX::PxRigidActorExt::createExclusiveShape(*pActorDynamic, geoHolder.capsule(), *RigidBody.Get_PxMaterial());
+		geoHolder = PSX::PxCapsuleGeometry(vVolume.x, vVolume.y);
+		pClone = PSX::PxRigidActorExt::createExclusiveShape(*pActorDynamic, geoHolder.capsule(), *m_pMaterials[ENUM_CLASS(RigidBody.Get_MaterialType())]);
+		assert(nullptr != pClone);
 		break;
 	case ACTOR::SPHERE:
-		pClone = PSX::PxRigidActorExt::createExclusiveShape(*pActorDynamic, geoHolder.sphere(), *RigidBody.Get_PxMaterial());
+		geoHolder = PSX::PxCapsuleGeometry(vVolume.x);
+		pClone = PSX::PxRigidActorExt::createExclusiveShape(*pActorDynamic, geoHolder.sphere(), *m_pMaterials[ENUM_CLASS(RigidBody.Get_MaterialType())]);
+		assert(nullptr != pClone);
 		break;
 	default:
 		assert(false); break;
 	}
-	pClone->setFlag(PSX::PxShapeFlag::eSIMULATION_SHAPE, true);
-	pClone->setFlag(PSX::PxShapeFlag::eSCENE_QUERY_SHAPE, true);
+
+	pClone->setFlags(RigidBody.Get_ShapeFlags());
 	pClone->setContactOffset(RigidBody.Get_ContactOffset());
 	pClone->setRestOffset(0.f);
 
 
-	pActorDynamic->attachShape(*RigidBody.Get_ShapePtr());
-	pActorDynamic->setRigidBodyFlag(PSX::PxRigidBodyFlag::eENABLE_CCD, true);
+	pActorDynamic->attachShape(*pClone);
+	PSX::PxRigidBodyFlags pxRigidFlags = RigidBody.Get_RigidBodyFlags();
+	pActorDynamic->setRigidBodyFlags(pxRigidFlags);
 
 
 
-	if (RigidBody.Is_Kinematic()) {
-		pActorDynamic->setRigidBodyFlag(PSX::PxRigidBodyFlag::eKINEMATIC, true);
+	if (pxRigidFlags.isSet(PSX::PxRigidBodyFlag::eKINEMATIC)) {
+
 	}
 	else {
 		PSX::PxRigidBodyExt::updateMassAndInertia(*pActorDynamic, (PSX::PxReal)RigidBody.Get_Density());
@@ -81,7 +89,7 @@ const PSX::PxRigidDynamic* CPhysX_Manager::Add_DynamicActor(CRigidBody& RigidBod
 
 const PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody& RigidBody)
 {
-	_matrix WorldMatrix = RigidBody.Get_PxTransformPtr()->Get_XMWorldMatrix();
+	_matrix WorldMatrix = RigidBody.Get_TransformPtr()->Get_XMWorldMatrix();
 
 	PSX::PxTransform pxWorldMatrix = XMWorldToPx_NoScale(WorldMatrix);
     
@@ -115,7 +123,7 @@ const PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody& RigidBody)
 	}
 
 	PSX::PxRigidStatic* pActor = m_pPhysics->createRigidStatic(pxWorldMatrix);
-	PSX::PxShape* pShape = PSX::PxRigidActorExt::createExclusiveShape(*pActor, *pPxMeshGeometry, *RigidBody.Get_PxMaterial());
+	PSX::PxShape* pShape = PSX::PxRigidActorExt::createExclusiveShape(*pActor, *pPxMeshGeometry, *m_pMaterials[ENUM_CLASS(RigidBody.Get_MaterialType())]);
 
 	pShape->setFlag(PSX::PxShapeFlag::eSCENE_QUERY_SHAPE, true);
 	pShape->setFlag(PSX::PxShapeFlag::eSIMULATION_SHAPE, true);
@@ -127,33 +135,10 @@ const PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody& RigidBody)
 	return pActor;
 }
 
-PSX::PxMaterial* CPhysX_Manager::Get_Material(_float3& vMatInfo)
+PSX::PxMaterial* CPhysX_Manager::Get_Material(const _float3* vMatInfo)
 {
-	PSX::PxMaterial* pPxMaterial = m_pPhysics->createMaterial(vMatInfo.x, vMatInfo.y, vMatInfo.z);
+	PSX::PxMaterial* pPxMaterial = m_pPhysics->createMaterial(vMatInfo->x, vMatInfo->y, vMatInfo->z);
 	return pPxMaterial;
-}
-
-PSX::PxShape* CPhysX_Manager::Create_Shape(ACTOR eType, _float3& vhalfGeometryInfo, PSX::PxMaterial& pxMaterial, _bool bExclusive, PSX::PxShapeFlags ePxShapeFlag)
-{
-	PSX::PxShape* pShape = { nullptr };
-	switch (eType)
-	{
-	case Engine::ACTOR::BOX:
-		pShape = m_pPhysics->createShape(PSX::PxBoxGeometry(vhalfGeometryInfo.x, vhalfGeometryInfo.y, vhalfGeometryInfo.z), pxMaterial,
-			bExclusive, ePxShapeFlag);
-		break;
-	case Engine::ACTOR::CAPSULE:
-		pShape = m_pPhysics->createShape(PSX::PxCapsuleGeometry(vhalfGeometryInfo.x, vhalfGeometryInfo.y), pxMaterial,
-			bExclusive, ePxShapeFlag);
-		break;
-	case Engine::ACTOR::SPHERE:
-		pShape = m_pPhysics->createShape(PSX::PxSphereGeometry(vhalfGeometryInfo.x), pxMaterial,
-			bExclusive, ePxShapeFlag);
-		break;
-	default:
-		break;
-	}
-	return pShape;
 }
 
 void CPhysX_Manager::RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh) {
@@ -306,7 +291,8 @@ void CPhysX_Manager::Update_Kinematic()
 		if (pActor->getRigidBodyFlags() & PSX::PxRigidBodyFlag::eKINEMATIC)
 		{
 			CRigidBody* pBody = pairBody.first;
-			const CTransform* pTransform = pBody->Get_PxTransformPtr();
+			const CTransform* pTransform = pBody->Get_TransformPtr();
+			
 
 			pActor->setKinematicTarget(XMWorldToPx_NoScale(pTransform->Get_XMWorldMatrix()));
 		}
@@ -326,11 +312,12 @@ void CPhysX_Manager::Update(_float fTimeDelta)
 		_bool bResult = m_pScene->fetchResults(true);
 	}
 	{ // Post
-		Update_Dynamic();
+		// Update_Dynamic_ActiveActors();
+		Update_Dynamic_AllActors();
 	}
 }
 
-void CPhysX_Manager::Update_Dynamic()
+void CPhysX_Manager::Update_Dynamic_ActiveActors()
 {
 	PSX::PxU32 iNumActiveActor = {};
 	PSX::PxActor** ppActiveActors = m_pScene->getActiveActors(iNumActiveActor);
@@ -342,7 +329,7 @@ void CPhysX_Manager::Update_Dynamic()
 			if (nullptr == ppActiveActors[i]->userData) {
 				continue;
 			}
-			CTransform* pTransform = ((CRigidBody*)ppActiveActors[i]->userData)->Get_PxTransformPtr();
+			CTransform* pTransform = ((CRigidBody*)ppActiveActors[i]->userData)->Get_TransformPtr();
 
 			PSX::PxTransform pPrevPxTransform;
 			PSX::PxTransform pPxTransform = pActorDynamic->getGlobalPose();
@@ -358,6 +345,22 @@ void CPhysX_Manager::Update_Dynamic()
 	//for (auto& pairBody : m_RigidBodys)
 	//	pairBody.second->userData
 	//}
+}
+
+void CPhysX_Manager::Update_Dynamic_AllActors()
+{
+	for (pair<CRigidBody*, PSX::PxActor*>& pairActors : m_RigidBodys) {
+		PSX::PxRigidDynamic* pActorDynamic = pairActors.second->is<PSX::PxRigidDynamic>();
+		if (nullptr != pActorDynamic) {
+			CTransform* pTransform = ((CRigidBody*)(pActorDynamic->userData))->Get_TransformPtr();
+
+			PSX::PxTransform pxTransform = pActorDynamic->getGlobalPose();
+			_float3 vOriginalScale = pTransform->Get_Scale();
+			_matrix WorldMatrix = {};
+			WorldMatrix = XMMatrixAffineTransformation(XMLoadFloat3(&vOriginalScale), XMVectorZero(), XMLoadFloat4((_float4*)&pxTransform.q), XMLoadFloat3((_float3*)&pxTransform.p));
+			pTransform->Set_WorldMatrix(WorldMatrix);
+		}
+	}
 }
 
 void CPhysX_Manager::ClearScene()
@@ -467,8 +470,9 @@ HRESULT CPhysX_Manager::Initialize()
 	// m_pScene->overlap();??????
 
 #ifdef 기무리
-	physx::PxMaterial* pMaterial = m_pPhysics->createMaterial(0.5f, 0.5f, 0.6f);
-	physx::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *pMaterial);
+	m_pMaterials.reserve(ENUM_CLASS(PXMATERIAL::END));
+	m_pMaterials.push_back(m_pPhysics->createMaterial(0.5f, 0.5f, 0.6f));
+	PSX::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *m_pMaterials[ENUM_CLASS(PXMATERIAL::DEFAULT)]);
 	m_pScene->addActor(*pGroundPlane);
 
 	//{
@@ -487,7 +491,6 @@ HRESULT CPhysX_Manager::Initialize()
 	//		}
 	//	}
 	//}
-	pMaterial->release();
 #endif // 기무리
 
 	
