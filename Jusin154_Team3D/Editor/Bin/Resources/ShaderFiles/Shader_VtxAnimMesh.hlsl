@@ -304,9 +304,6 @@ PS_OUT PS_MAIN_TEST(PS_IN In)
     return Out;
 }
 
-
-
-
 technique11 DefaultTechnique
 {
     pass Default

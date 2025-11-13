@@ -61,8 +61,9 @@ private:
 	void Render_Effect();
 	void Render_NonLight();
 	void Render_Blend();
-	void Render_UI();
 	void Render_LastColor();
+	void Render_UI();
+
 
 #ifdef _DEBUG
 private:

@@ -96,7 +96,7 @@ private:
 	HRESULT         Create_SubResource_Buffer();
 
 private:
-	ID3D11Buffer* m_pVBInstance = { nullptr };
+	ID3D11Buffer*			m_pVBInstance = { nullptr };
 
 	INSTANCE_DESC			m_InstanceDesc = {};
 
@@ -114,9 +114,9 @@ private:
 	vector<class CBone*>	m_Bones = {}; // 나중에 혹시 애님메쉬를 인스턴싱 할 일이 있을지도 모르니 남겨놓음
 
 private:
-	class CComputeShader* m_pComputeShader = {};
-	ID3D11Buffer* m_pConstantBuffer = { nullptr }; // 컴퓨트 쉐이드 전용 상수버퍼
-	ID3D11Buffer* m_pParticleValueBuffer = { nullptr }; // 컴퓨트 쉐이드 두번째 버퍼 (스피드, 로테이션)
+	class CComputeShader*	m_pComputeShader = {};
+	ID3D11Buffer*			m_pConstantBuffer = { nullptr }; // 컴퓨트 쉐이드 전용 상수버퍼
+	ID3D11Buffer*			m_pParticleValueBuffer = { nullptr }; // 컴퓨트 쉐이드 두번째 버퍼 (스피드, 로테이션)
 
 public:
 #ifdef EDITOR_PROJECT	

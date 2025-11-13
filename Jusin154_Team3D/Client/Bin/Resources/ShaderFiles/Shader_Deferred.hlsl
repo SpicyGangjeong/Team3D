@@ -16,6 +16,7 @@ Texture2D g_Texture;
 float g_fLightRange;
 float g_fSpotInnerAngle;
 float g_fSpotOuterAngle;
+
 vector g_vLightDir;
 vector g_vLightPos;
 vector g_vCamPosition;
@@ -29,12 +30,15 @@ Texture2D g_ShadowTexture;
 Texture2D g_PreShadowTexture;
 Texture2D g_BlurTexture;
 Texture2D g_BlurXTexture;
+Texture2D g_BlurWeightTexture;
 
 
 
 vector g_vLightDiffuse;
 vector g_vLightAmbient;
 vector g_vLightSpecular;
+
+
 
 struct VS_IN
 {
@@ -219,12 +223,14 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
     return Out;
 }
 
-float g_fWeights[13] =
+float g_fWeights[32] =
 {
-    0.0090, 0.0218, 0.0448, 0.0784, 0.1169,
-    0.1486, 0.1610, 0.1486, 0.1169, 0.0784,
-    0.0448, 0.0218, 0.0090
+    0.000400, 0.000700, 0.001200, 0.002000, 0.003200, 0.005000, 0.007500, 0.011000,
+    0.015700, 0.021700, 0.029000, 0.037300, 0.046200, 0.055200, 0.063600, 0.070800,
+    0.075900, 0.078500, 0.078500, 0.075900, 0.070800, 0.063600, 0.055200, 0.046200,
+    0.037300, 0.029000, 0.021700, 0.015700, 0.011000, 0.007500, 0.005000, 0.003200
 };
+
 
 PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
 {
@@ -295,15 +301,31 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     //{
     //    Out.vBackBuffer *= 0.5f;
     //}
-    
     float4 vColor = 0.f;
     
-    for (int i = -6; i < 7; ++i)
+    //int iBlurWeight = g_BlurWeightTexture.Sample(ClampSampler, In.vTexcoord).r * 32.f;
+    
+    //int iBlurMin;
+    //int iBlurMax;
+    
+    //if (iBlurWeight % 2 == 0)
+    //{
+    //    iBlurMin = -1 * iBlurWeight / 2;
+    //    iBlurMax = iBlurWeight / 2;
+    //}
+    //else
+    //{
+    //    iBlurMin = -iBlurWeight / 2;
+    //    iBlurMax = iBlurWeight / 2 + 1;
+    //}
+    
+    //[loop]  // 변수로 루프돌리려면 반드시 필요함
+    for (int i = -15; i < 16; ++i)
     {
         vTexcoord.x = In.vTexcoord.x;
-        vTexcoord.y = In.vTexcoord.y + (float)i / g_vResolution.y;
+        vTexcoord.y = In.vTexcoord.y + (float) i / g_vResolution.y;
         
-        vColor += g_fWeights[i + 6] * g_BlurXTexture.Sample(ClampSampler, vTexcoord);
+        vColor += g_fWeights[i + 15] * g_BlurXTexture.Sample(ClampSampler, vTexcoord);
     }
     
     Out.vBackBuffer += vColor;
@@ -324,12 +346,32 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_X(PS_IN In)
     float2 vTexcoord;
     float4 vColor = 0.f;
     
-    for (int i = -6; i < 7; ++i)
+    //TODO 블러 조절 해보려햇는데 실패함..
+    
+    //int iBlurWeight = g_BlurWeightTexture.Sample(ClampSampler, In.vTexcoord).r * 32.f;
+    
+    //int iBlurMin;
+    //int iBlurMax;
+    
+    //if (iBlurWeight % 2 == 0)
+    //{
+    //    iBlurMin = -1 * iBlurWeight / 2;
+    //    iBlurMax = iBlurWeight / 2;
+    //}
+    //else
+    //{
+    //    iBlurMin = -iBlurWeight / 2;
+    //    iBlurMax = iBlurWeight / 2 + 1;
+    //}
+    
+    //[loop]  // 변수로 루프돌리려면 반드시 필요함
+    
+    for (int i = -15; i < 16; ++i)
     {
         vTexcoord.x = In.vTexcoord.x + (float) i / g_vResolution.x;
         vTexcoord.y = In.vTexcoord.y;
         
-        vColor += g_fWeights[i + 6] * g_BlurTexture.Sample(ClampSampler, vTexcoord);
+        vColor += g_fWeights[i + 15] * g_BlurTexture.Sample(ClampSampler, vTexcoord);
     }
     
     Out.vBlurX = vColor; 

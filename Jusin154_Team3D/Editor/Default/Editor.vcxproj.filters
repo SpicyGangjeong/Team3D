@@ -67,12 +67,6 @@
     <Filter Include="50.UI\Mouse_Cursor">
       <UniqueIdentifier>{b5d188ff-5925-40bd-8da4-2ed00c89f730}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Dummy_Goblin">
-      <UniqueIdentifier>{0ebb9c08-69b0-49b6-bac3-c827ca13319a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Dummy_Goblin\Dummy_Goblin_Head">
-      <UniqueIdentifier>{69af10ea-e8f1-4455-9435-93857b7eb198}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\ModelParts">
       <UniqueIdentifier>{a04e88c3-dabb-4a91-8b9f-ce7f5562def6}</UniqueIdentifier>
     </Filter>
@@ -252,17 +246,11 @@
     <ClInclude Include="..\public\Mouse_Cursor.h">
       <Filter>50.UI\Mouse_Cursor</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Dummy_Goblin.h">
-      <Filter>02.GameObjects\Dummy_Goblin</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Level_ObjectViewer.h">
       <Filter>01.Level\20.ObjectViewer</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Dummy_Cube.h">
       <Filter>02.GameObjects\Dummys\DummyCube</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Dummy_Goblin_Head.h">
-      <Filter>02.GameObjects\Dummy_Goblin\Dummy_Goblin_Head</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Body.h">
       <Filter>02.GameObjects\ModelParts\Body</Filter>
@@ -448,17 +436,11 @@
     <ClCompile Include="..\private\Mouse_Cursor.cpp">
       <Filter>50.UI\Mouse_Cursor</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Dummy_Goblin.cpp">
-      <Filter>02.GameObjects\Dummy_Goblin</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Level_ObjectViewer.cpp">
       <Filter>01.Level\20.ObjectViewer</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Dummy_Cube.cpp">
       <Filter>02.GameObjects\Dummys\DummyCube</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Dummy_Goblin_Head.cpp">
-      <Filter>02.GameObjects\Dummy_Goblin\Dummy_Goblin_Head</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Body.cpp">
       <Filter>02.GameObjects\ModelParts\Body</Filter>

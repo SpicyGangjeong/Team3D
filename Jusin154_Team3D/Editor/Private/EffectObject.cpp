@@ -3,12 +3,12 @@
 #include "GameInstance.h"
 
 CEffectObject::CEffectObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	:CGameObject(pDevice, pContext)
+	:CPartObject(pDevice, pContext)
 {
 }
 
 CEffectObject::CEffectObject(const CEffectObject& rhs)
-	:CGameObject(rhs)
+	:CPartObject(rhs)
 {
 }
 
@@ -65,6 +65,12 @@ HRESULT CEffectObject::Render_Blur()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fBlurIntensity", &m_fBlurIntensity, sizeof(_float)))) {
 		return E_FAIL;
 	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iBlurWeight", &m_iBlurWeight, sizeof(_int)))) {
+		return E_FAIL;
+	}
+
+	
 
 	for (_uint i = 0; i < m_pInstance_ModelCom->Get_NumMeshes(); i++)
 	{
@@ -174,6 +180,26 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iMaskMoveLerpOption", &m_iMaskMoveLerpOption, sizeof(_int)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iDiffuseMoveLerpOption", &m_iDiffuseMoveLerpOption, sizeof(_int)))) {
+		return E_FAIL;
+	}
+
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iMaskNoiseMoveLerpOption", &m_iMaskNoiseMoveLerpOption, sizeof(_int)))) {
+		return E_FAIL;
+	}
+
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iDiffuseNoiseMoveLerpOption", &m_iDiffuseNoiseMoveLerpOption, sizeof(_int)))) {
+		return E_FAIL;
+	}
+
+
+	
 
 	if (m_pDiffuse_TextureCom != nullptr)
 	{
