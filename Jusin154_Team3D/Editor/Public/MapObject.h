@@ -25,7 +25,8 @@ public:
 
 public:
 	virtual _wstring	Get_PrototypeTag(_uint iLodIndex = 0);
-	virtual _uint		Get_LodLevel() { return m_iMaxLodLevel; }
+	_uint		Get_LodLevel();
+	_uint		Get_iKeyIndex() const { return m_iKeyIndex; }
 
 protected:
 
@@ -39,6 +40,7 @@ protected:
 protected:
 	_bool		m_bSelected = {};
 
+	_uint		m_iKeyIndex = {};
 	_uint		m_iMaxLodLevel = {};
 
 	_float3		m_vPosition = {};

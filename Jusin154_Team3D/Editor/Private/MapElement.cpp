@@ -13,6 +13,14 @@ CMapElement::CMapElement(const CMapElement& rhs)
 {
 }
 
+const _wstring& CMapElement::Get_PrototypeTag(_uint iIndex)
+{
+	if (m_iMaxLodLevel < iIndex)
+		return m_ModelPrototypeTags[0];
+
+	return m_ModelPrototypeTags[iIndex];
+}
+
 void CMapElement::Priority_Update(_float fTimeDelta)
 {
 }

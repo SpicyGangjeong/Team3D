@@ -57,6 +57,11 @@ _wstring CMapObject::Get_PrototypeTag(_uint iLodIndex)
 	return _wstring();
 }
 
+_uint CMapObject::Get_LodLevel()
+{
+	 return m_iMaxLodLevel;
+}
+
 HRESULT CMapObject::Initialize_Prototype()
 {
 	return S_OK;

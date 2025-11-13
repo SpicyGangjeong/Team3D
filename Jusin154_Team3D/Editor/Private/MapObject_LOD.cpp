@@ -32,7 +32,7 @@ HRESULT CMapObject_LOD::Initialize(void* pArg)
 	for (_uint i = 0; i < m_iMaxLodLevel + 1; i++)
 	{
 		m_ModelPrototypeTags.push_back(pDesc->ModelPrototypeTags[i]);
-		m_ModelPathIndices.push_back((*pDesc->pModelPathIndices)[i]);
+		//m_ModelPathIndices.push_back((*pDesc->pModelPathIndices)[i]);
 	}
 
 	if (FAILED(__super::Initialize(pArg)))
