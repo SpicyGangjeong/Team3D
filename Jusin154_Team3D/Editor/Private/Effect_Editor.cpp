@@ -8,12 +8,12 @@
 #include <sstream>
 
 CEffect_Editor::CEffect_Editor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CEffectObject{ pDevice, pContext }
+	: CContainerObject{ pDevice, pContext }
 {
 }
 
 CEffect_Editor::CEffect_Editor(const CEffect_Editor& rhs)
-	: CEffectObject(rhs)
+	: CContainerObject(rhs)
 	, m_MatFiles(rhs.m_MatFiles)
 {
 
@@ -23,21 +23,21 @@ HRESULT CEffect_Editor::Initialize_Prototype()
 {
 
 
-	//ReadMaterials("../Bin/Resources/VFX/Particles/Magic/Protego");
+	ReadMaterials("../Bin/Resources/VFX/Particles/Magic/Protego");
 
 
-	//for (auto iter : m_MatFiles)
-	//{
+	for (auto iter : m_MatFiles)
+	{
 
-	//	for (auto vec_iter : iter.second)
-	//	{
-	//		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::EFFECT), vec_iter.first,
-	//			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, vec_iter.second.c_str(), 0, vec_iter.first)))) {
-	//			return E_FAIL;
-	//		}
-	//	}
+		for (auto vec_iter : iter.second)
+		{
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::EFFECT), vec_iter.first,
+				CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, vec_iter.second.c_str(), 0, vec_iter.first)))) {
+				return E_FAIL;
+			}
+		}
 
-	//}
+	}
 
 	return S_OK;
 
@@ -61,17 +61,19 @@ HRESULT CEffect_Editor::Initialize(void* pArg)
 
 void CEffect_Editor::Priority_Update(_float fTimeDelta)
 {
-
+	__super::Priority_Update(fTimeDelta);
 }
 
 void CEffect_Editor::Update(_float fTimeDelta)
 {
 	Describe_Entity();
+	__super::Update(fTimeDelta);
+
 }
 
 void CEffect_Editor::Late_Update(_float fTimeDelta)
 {
-
+	__super::Late_Update(fTimeDelta);
 }
 
 HRESULT CEffect_Editor::Ready_Components(void* pArg)
@@ -85,8 +87,19 @@ HRESULT CEffect_Editor::Ready_Components(void* pArg)
 
 HRESULT CEffect_Editor::Ready_Child()
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEditEffect>(ENUM_CLASS(LEVEL::EFFECT), NEXT_LEVEL, LAYER_EFFECT, nullptr, this, reinterpret_cast<CEditEffect**>(&m_pEditEffect))))
+
+
+	CPartObject::PARTOBJECT_DESC PartsDesc{};
+
+	PartsDesc.pParentTransform = m_pTransformCom;
+
+	if (FAILED(Add_PartObject<CEditEffect>("EffectObject" + to_string(m_iNumPart++), ENUM_CLASS(LEVEL::EFFECT), &m_pEditEffect, &PartsDesc)))
 		return E_FAIL;
+
+	m_strCurrentEffectName = "EffectObject0";
+	SAFE_RELEASE(m_pEditEffect);
+
+
 
 	return S_OK;
 }
@@ -311,17 +324,136 @@ CGameObject* CEffect_Editor::Clone(void* pArg, CGameObject* pOwner)
 void CEffect_Editor::Free()
 {
 	__super::Free();
+
+	SAFE_RELEASE(m_pEditEffect);
 }
 
 void CEffect_Editor::Describe_Entity()
 {
 	ImGui::Begin("Effect Editor");
 
+	GUI::TextColored(ImVec4(1.f, 0.f, 1.f, 1.f), m_strCurrentEffectName.c_str());
 
 	if (m_pEditEffect != nullptr)
 		m_pEditEffect->Describe_Entity();
 
 	ImGui::End();
 
+	ImGui::Begin("Reference Material");
 
+	if (m_pEditEffect != nullptr)
+		m_pEditEffect->Reference_Mat_For_EditEffect();
+
+	ImGui::End();
+
+	ImGui::Begin("Effect Hierarchy");
+
+#pragma region PopUp
+	
+	if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+		ImGui::OpenPopup("Effect Hierarchy");
+
+
+	if (ImGui::BeginPopup("Effect Hierarchy"))
+	{
+		if (ImGui::MenuItem("Create Effect"))
+		{
+
+			CPartObject::PARTOBJECT_DESC PartsDesc{};
+
+			PartsDesc.pParentTransform = m_pTransformCom;
+
+			if (FAILED(Add_PartObject<CEditEffect>("EffectObject" + to_string(m_iNumPart++), ENUM_CLASS(LEVEL::EFFECT), nullptr, &PartsDesc)))
+				return;
+
+
+		}
+
+		ImGui::EndPopup();
+	}
+#pragma endregion
+
+
+	_int iIndex = {};
+
+	for (auto& pPartObject : m_PartObjects)
+	{
+		_string strName = "EffectObject" + to_string(iIndex);
+
+		if (GUI::TreeNode(strName.c_str()))
+		{
+
+#pragma region PopUp
+
+			if (GUI::IsItemClicked(ImGuiMouseButton_Right))
+				GUI::OpenPopup(strName.c_str());
+
+
+			if (GUI::BeginPopup(strName.c_str()))
+			{
+	
+				if (ImGui::MenuItem("Delete Effect"))
+				{
+					auto iter = m_PartObjects.begin();
+					advance(iter, iIndex); // 이터레이터를 증가시킨다
+
+					SAFE_RELEASE(pPartObject.second);
+					m_PartObjects.erase(iter);
+
+					GUI::EndPopup();
+					GUI::TreePop();
+					break;
+				}
+
+
+				GUI::EndPopup();
+			}
+
+#pragma endregion
+		
+			if (GUI::IsItemClicked()) // 선택창에 띄우기
+			{
+				CEditEffect* pSelectedEffectObject = dynamic_cast<CEditEffect*>(pPartObject.second);
+
+				if (pSelectedEffectObject == nullptr)
+				{
+					GUI::TreePop();
+					continue;
+		
+				}
+				
+
+				if (m_pEditEffect == pSelectedEffectObject)
+				{
+					GUI::TreePop();
+					continue;
+		
+				}
+			
+
+
+				Safe_Release(m_pEditEffect);
+				
+				m_pEditEffect = pSelectedEffectObject;
+
+				Safe_AddRef(pSelectedEffectObject);
+
+				m_strCurrentEffectName = strName;
+
+			}
+
+			GUI::TreePop();
+		}
+
+		iIndex++;
+	}
+
+
+
+	ImGui::End();
+}
+
+HRESULT CEffect_Editor::Bind_ShaderResources()
+{
+	return S_OK;
 }
