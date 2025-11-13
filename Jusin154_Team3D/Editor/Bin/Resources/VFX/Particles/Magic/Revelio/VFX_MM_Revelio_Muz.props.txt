@@ -1,0 +1,167 @@
+TwoSided = false
+bDisableDepthTest = true
+bIsMasked = false
+ReferencedTextures[3] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Marble_01G_D.VFX_T_Marble_01G_D'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/T_waterSplashA_N.T_waterSplashA_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[22] =
+                {
+                    ParameterInfos[0] = { Name=Exp }
+                    ParameterInfos[1] = { Name=B_1 }
+                    ParameterInfos[2] = { Name=Refraction }
+                    ParameterInfos[3] = { Name=Input Low (S) }
+                    ParameterInfos[4] = { Name=Distance Fade Length }
+                    ParameterInfos[5] = { Name=Radius }
+                    ParameterInfos[6] = { Name=B_2 }
+                    ParameterInfos[7] = { Name=Soften }
+                    ParameterInfos[8] = { Name=Hardness }
+                    ParameterInfos[9] = { Name=B_4 }
+                    ParameterInfos[10] = { Name=Param }
+                    ParameterInfos[11] = { Name=Speed V (S) }
+                    ParameterInfos[12] = { Name=Distance Fade Start }
+                    ParameterInfos[13] = { Name=B_3 }
+                    ParameterInfos[14] = { Name=Width }
+                    ParameterInfos[15] = { Name=Blur Strength Multiplier }
+                    ParameterInfos[16] = { Name=Speed U (S) }
+                    ParameterInfos[17] = { Name=Tiling U (S) }
+                    ParameterInfos[18] = { Name=B_5 }
+                    ParameterInfos[19] = { Name=Tiling V (S) }
+                    ParameterInfos[20] = { Name=B_7 }
+                    ParameterInfos[21] = { Name=B }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Param }
+                }
+            }
+            Entries[2] = { ParameterInfos[0]={} }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[22] =
+        {
+            ScalarValues[0] = 13.8016
+            ScalarValues[1] = 0.526286
+            ScalarValues[2] = 0.5
+            ScalarValues[3] = 0
+            ScalarValues[4] = 1850.08
+            ScalarValues[5] = 0.2
+            ScalarValues[6] = 0.457142
+            ScalarValues[7] = 1
+            ScalarValues[8] = 0
+            ScalarValues[9] = 0.2
+            ScalarValues[10] = 0.4
+            ScalarValues[11] = 0
+            ScalarValues[12] = 108.71
+            ScalarValues[13] = 0.152381
+            ScalarValues[14] = 0.114826
+            ScalarValues[15] = 0.25
+            ScalarValues[16] = 0
+            ScalarValues[17] = 1.5
+            ScalarValues[18] = 0.066773
+            ScalarValues[19] = 1
+            ScalarValues[20] = -1
+            ScalarValues[21] = 1
+        }
+        VectorValues[1] =
+        {
+            VectorValues[0] = { R=1, G=1, B=1, A=1 }
+        }
+        TextureValues[0] = {}
+    }
+    ReferencedTextures[3] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/T_waterSplashA_N.T_waterSplashA_N'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Marble_01G_D.VFX_T_Marble_01G_D'
+        ReferencedTextures[2] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+    }
+}
+BlendMode = BLEND_Additive (3)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[0] = {}
+CollectedScalarParameters[22] =
+{
+    CollectedScalarParameters[0] = { Value=13.8016, Name=Exp, Group=None }
+    CollectedScalarParameters[1] = { Value=0.526286, Name=B_1, Group=None }
+    CollectedScalarParameters[2] = { Value=0.5, Name=Refraction, Group=None }
+    CollectedScalarParameters[3] = { Value=0, Name=Input Low (S), Group=None }
+    CollectedScalarParameters[4] =
+    {
+        Value = 1850.08
+        Name = Distance Fade Length
+        Group = None
+    }
+    CollectedScalarParameters[5] = { Value=0.2, Name=Radius, Group=None }
+    CollectedScalarParameters[6] = { Value=0.457142, Name=B_2, Group=None }
+    CollectedScalarParameters[7] = { Value=1, Name=Soften, Group=None }
+    CollectedScalarParameters[8] = { Value=0, Name=Hardness, Group=None }
+    CollectedScalarParameters[9] = { Value=0.2, Name=B_4, Group=None }
+    CollectedScalarParameters[10] = { Value=0.4, Name=Param, Group=None }
+    CollectedScalarParameters[11] = { Value=0, Name=Speed V (S), Group=None }
+    CollectedScalarParameters[12] =
+    {
+        Value = 108.71
+        Name = Distance Fade Start
+        Group = None
+    }
+    CollectedScalarParameters[13] = { Value=0.152381, Name=B_3, Group=None }
+    CollectedScalarParameters[14] = { Value=0.114826, Name=Width, Group=None }
+    CollectedScalarParameters[15] =
+    {
+        Value = 0.25
+        Name = Blur Strength Multiplier
+        Group = None
+    }
+    CollectedScalarParameters[16] = { Value=0, Name=Speed U (S), Group=None }
+    CollectedScalarParameters[17] = { Value=1.5, Name=Tiling U (S), Group=None }
+    CollectedScalarParameters[18] = { Value=0.066773, Name=B_5, Group=None }
+    CollectedScalarParameters[19] = { Value=1, Name=Tiling V (S), Group=None }
+    CollectedScalarParameters[20] = { Value=-1, Name=B_7, Group=None }
+    CollectedScalarParameters[21] = { Value=1, Name=B, Group=None }
+}
+CollectedVectorParameters[1] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=1, G=1, B=1, A=1 }
+        Name = Param
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[2] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_waterSplashA_N
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Marble_01G_D
+    }
+}

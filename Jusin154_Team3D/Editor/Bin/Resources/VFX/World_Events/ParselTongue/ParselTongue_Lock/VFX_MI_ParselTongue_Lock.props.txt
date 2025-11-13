@@ -1,0 +1,238 @@
+Parent = Material3'/Game/VFX/MasterMaterials/Base_Mat/VFX_M_MRO_with_Flow.VFX_M_MRO_with_Flow'
+ScalarParameterValues[10] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=2ndary Emissive Brightness }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[1] =
+    {
+        ParameterInfo = { Name=2ndary Emissive Errosion Ammount }
+        ParameterValue = 0.5
+        ParameterName = None
+    }
+    ScalarParameterValues[2] =
+    {
+        ParameterInfo = { Name=2ndary Hardness }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[3] =
+    {
+        ParameterInfo = { Name=Emissive Brightness }
+        ParameterValue = 5
+        ParameterName = None
+    }
+    ScalarParameterValues[4] =
+    {
+        ParameterInfo = { Name=Emissive Errosion Ammount }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[5] =
+    {
+        ParameterInfo = { Name=Tiling U (AN) }
+        ParameterValue = 6
+        ParameterName = None
+    }
+    ScalarParameterValues[6] =
+    {
+        ParameterInfo = { Name=Tiling V (AN) }
+        ParameterValue = 6
+        ParameterName = None
+    }
+    ScalarParameterValues[7] =
+    {
+        ParameterInfo = { Name=Speed U (AN) }
+        ParameterValue = 0.1
+        ParameterName = None
+    }
+    ScalarParameterValues[8] =
+    {
+        ParameterInfo = { Name=Speed V (AN) }
+        ParameterValue = 0.03
+        ParameterName = None
+    }
+    ScalarParameterValues[9] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[8] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=Diffuse Map }
+        ParameterValue = Texture2D'/Game/RiggedObjects/Environments/Hogwarts/HW_ParselTongue_EvilMaze_Puzzle/Textures/T_HW_ParselTongue_EvilMaze_LockAlove_D.T_HW_ParselTongue_EvilMaze_LockAlove_D'
+        ParameterName = None
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=MRO Map }
+        ParameterValue = Texture2D'/Game/RiggedObjects/Environments/Hogwarts/HW_ParselTongue_EvilMaze_Puzzle/Textures/T_HW_ParselTongue_EvilMaze_LockAlove_MRO.T_HW_ParselTongue_EvilMaze_LockAlove_MRO'
+        ParameterName = None
+    }
+    TextureParameterValues[2] =
+    {
+        ParameterInfo = { Name=2ndary Emissive Map }
+        ParameterValue = Texture2D'/Game/VFX/World_Events/ParselTongue/ParselTongue_Lock/VFX_T_ParselTongue_SnakeLock_emiss_2nd_D.VFX_T_ParselTongue_SnakeLock_emiss_2nd_D'
+        ParameterName = None
+    }
+    TextureParameterValues[3] =
+    {
+        ParameterInfo = { Name=2ndary Alpha Errosion }
+        ParameterValue = Texture2D'/Game/VFX/World_Events/ParselTongue/ParselTongue_Lock/VFX_T_ParselTongue_SnakeLock_emiss_2nd_D.VFX_T_ParselTongue_SnakeLock_emiss_2nd_D'
+        ParameterName = None
+    }
+    TextureParameterValues[4] =
+    {
+        ParameterInfo = { Name=Emissive Map }
+        ParameterValue = Texture2D'/Game/VFX/Textures/VFX_T_ParselTongue_SnakeLock_emiss_D.VFX_T_ParselTongue_SnakeLock_emiss_D'
+        ParameterName = None
+    }
+    TextureParameterValues[5] =
+    {
+        ParameterInfo = { Name=Alpha Errosion }
+        ParameterValue = Texture2D'/Game/VFX/Textures/AlphaErosion/VFX_T_ParselTongue_SnakeLock_BPF_D.VFX_T_ParselTongue_SnakeLock_BPF_D'
+        ParameterName = None
+    }
+    TextureParameterValues[6] =
+    {
+        ParameterInfo = { Name=Alpha Noise }
+        ParameterValue = Texture2D'/Game/VFX/Textures/Noises/VFX_T_MarbleSkin_01_BPF_D.VFX_T_MarbleSkin_01_BPF_D'
+        ParameterName = None
+    }
+    TextureParameterValues[7] =
+    {
+        ParameterInfo = { Name=Normal Map }
+        ParameterValue = Texture2D'/Game/RiggedObjects/Environments/Hogwarts/HW_ParselTongue_EvilMaze_Puzzle/Textures/T_HW_ParselTongue_EvilMaze_LockAlove_N.T_HW_ParselTongue_EvilMaze_LockAlove_N'
+        ParameterName = None
+    }
+}
+VectorParameterValues[3] =
+{
+    VectorParameterValues[0] =
+    {
+        ParameterInfo = { Name=2ndary Emissive Color Modifyer }
+        ParameterValue = { R=13.4188, G=200, B=0, A=1 }
+        ParameterName = None
+    }
+    VectorParameterValues[1] =
+    {
+        ParameterInfo = { Name=Emissive Color Modifyer }
+        ParameterValue = { R=0.617835, G=0.888871, B=1, A=1 }
+        ParameterName = None
+    }
+    VectorParameterValues[2] =
+    {
+        ParameterInfo = { Name=Emissive Fresnel Color }
+        ParameterValue = { R=1, G=1, B=1, A=1 }
+        ParameterName = None
+    }
+}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Opaque (0)
+    bOverride_TwoSided = false
+    TwoSided = false
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[6] =
+    {
+        StaticSwitchParameters[0] =
+        {
+            Value = true
+            ParameterInfo = { Name=Use 2ndary Emissive }
+            bOverride = true
+        }
+        StaticSwitchParameters[1] =
+        {
+            Value = true
+            ParameterInfo = { Name=2ndary Emissive Errosion }
+            bOverride = true
+        }
+        StaticSwitchParameters[2] =
+        {
+            Value = true
+            ParameterInfo = { Name=EmissiveAdaptationUseDaytimeBoost }
+            bOverride = true
+        }
+        StaticSwitchParameters[3] =
+        {
+            Value = true
+            ParameterInfo = { Name=Use Emissive Errosion }
+            bOverride = true
+        }
+        StaticSwitchParameters[4] =
+        {
+            Value = true
+            ParameterInfo = { Name=Emissive Noise }
+            bOverride = true
+        }
+        StaticSwitchParameters[5] =
+        {
+            Value = false
+            ParameterInfo = { Name=Use Fkow Map }
+            bOverride = true
+        }
+    }
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[6] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_HW_ParselTongue_EvilMaze_LockAlove_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_HW_ParselTongue_EvilMaze_LockAlove_MRO
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_HW_ParselTongue_EvilMaze_LockAlove_N
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 6
+        UVChannelIndex = 0
+        TextureName = VFX_T_MarbleSkin_01_BPF_D
+    }
+    TextureStreamingData[4] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_ParselTongue_SnakeLock_BPF_D
+    }
+    TextureStreamingData[5] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_ParselTongue_SnakeLock_emiss_D
+    }
+}

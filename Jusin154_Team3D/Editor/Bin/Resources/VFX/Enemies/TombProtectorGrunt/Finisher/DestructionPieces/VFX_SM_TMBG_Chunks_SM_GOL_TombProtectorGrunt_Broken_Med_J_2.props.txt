@@ -1,0 +1,38 @@
+Materials[2] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Enemies/TombProtectorGrunt/Finisher/DestructionPieces/VFX_MI_TMBG_ArmorFX_Legs_Broken_BPE.VFX_MI_TMBG_ArmorFX_Legs_Broken_BPE'
+    Materials[1] = MaterialInstanceConstant'/Game/VFX/Enemies/TombProtectorGrunt/Finisher/DestructionPieces/VFX_MI_TMBG_ArmorFX_Interior_BPE.VFX_MI_TMBG_ArmorFX_Interior_BPE'
+}
+SourceModels[0] = {}
+StaticMaterials[2] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Enemies/TombProtectorGrunt/Finisher/DestructionPieces/VFX_MI_TMBG_ArmorFX_Legs_Broken_BPE.VFX_MI_TMBG_ArmorFX_Legs_Broken_BPE'
+        MaterialSlotName = MI_GOL_TombProtectorGrunt_Legs_ncl1_7
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 382.259, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Enemies/TombProtectorGrunt/Finisher/DestructionPieces/VFX_MI_TMBG_ArmorFX_Interior_BPE.VFX_MI_TMBG_ArmorFX_Interior_BPE'
+        MaterialSlotName = Interior
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 152.689, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=22.4969, Y=1.66608, Z=75.9489 }
+    BoxExtent = { X=18.8432, Y=27.2003, Z=48.7113 }
+    SphereRadius = 55.8717
+}

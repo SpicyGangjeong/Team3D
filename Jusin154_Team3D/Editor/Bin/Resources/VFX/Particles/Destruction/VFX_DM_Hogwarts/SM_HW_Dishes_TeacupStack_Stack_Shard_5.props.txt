@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Environment/Hogwarts/Blueprints/Interactables/Materials/MI_HW_Dishes_Teacups_Porcelain.MI_HW_Dishes_Teacups_Porcelain'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Hogwarts/Blueprints/Interactables/Materials/MI_HW_Dishes_Teacups_Porcelain.MI_HW_Dishes_Teacups_Porcelain'
+        MaterialSlotName = M_HW_Dishes_TeacupStack
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 290.931, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-9.53674e-07, Y=-4.76837e-07, Z=0 }
+    BoxExtent = { X=3.11391, Y=3.37171, Z=0.623055 }
+    SphereRadius = 3.70653
+}

@@ -1,0 +1,88 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[2] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Cloud_Noise_Tile_D.VFX_T_Cloud_Noise_Tile_D'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/VFX_T_Smoke_Dust_Base_01_D.VFX_T_Smoke_Dust_Base_01_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[3] =
+                {
+                    ParameterInfos[0] = { Name=FadeDistanceLow }
+                    ParameterInfos[1] = { Name=EdgePanSpeed }
+                    ParameterInfos[2] = { Name=FadeDistanceHigh }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=EmissiveColor }
+                }
+            }
+            Entries[2] = { ParameterInfos[0]={} }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[3] = { 50, 0.008, 250 }
+        VectorValues[1] =
+        {
+            VectorValues[0] = { R=0.035, G=0.035, B=0.035, A=1 }
+        }
+        TextureValues[0] = {}
+    }
+    ReferencedTextures[2] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/VFX_T_Smoke_Dust_Base_01_D.VFX_T_Smoke_Dust_Base_01_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Cloud_Noise_Tile_D.VFX_T_Cloud_Noise_Tile_D'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[0] = {}
+CollectedScalarParameters[3] =
+{
+    CollectedScalarParameters[0] = { Value=50, Name=FadeDistanceLow, Group=None }
+    CollectedScalarParameters[1] = { Value=0.008, Name=EdgePanSpeed, Group=None }
+    CollectedScalarParameters[2] = { Value=250, Name=FadeDistanceHigh, Group=None }
+}
+CollectedVectorParameters[1] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0.035, G=0.035, B=0.035, A=1 }
+        Name = EmissiveColor
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[2] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Cloud_Noise_Tile_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Smoke_Dust_Base_01_D
+    }
+}

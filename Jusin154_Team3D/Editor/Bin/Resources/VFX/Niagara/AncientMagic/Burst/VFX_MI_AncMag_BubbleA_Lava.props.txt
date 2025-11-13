@@ -1,0 +1,86 @@
+Parent = Material3'/Game/VFX/Niagara/AncientMagic/Burst/VFX_MM_AncMag_BubbleA.VFX_MM_AncMag_BubbleA'
+ScalarParameterValues[1] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[2] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=Blend Map }
+        ParameterValue = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise08_D.VFX_T_Noise08_D'
+        ParameterName = None
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=Normal Map }
+        ParameterValue = Texture2D'/Game/Environment/Cavern_Dungeon/Textures/Rocks/T_CavernDun_Sanctum_Rockwall_Blend_C_N.T_CavernDun_Sanctum_Rockwall_Blend_C_N'
+        ParameterName = None
+    }
+}
+VectorParameterValues[2] =
+{
+    VectorParameterValues[0] =
+    {
+        ParameterInfo = { Name=EmCol }
+        ParameterValue = { R=100, G=12.9006, B=0, A=1 }
+        ParameterName = None
+    }
+    VectorParameterValues[1] =
+    {
+        ParameterInfo = { Name=Param }
+        ParameterValue = { R=100, G=15.6286, B=0, A=1 }
+        ParameterName = None
+    }
+}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Opaque (0)
+    bOverride_TwoSided = false
+    TwoSided = false
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[0] = {}
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[3] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 0.53125
+        UVChannelIndex = 0
+        TextureName = T_CavernDun_Sanctum_Rockwall_Blend_C_N
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Noise08_D
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 0.703125
+        UVChannelIndex = 0
+        TextureName = VFX_T_PlasmaSpell_D
+    }
+}

@@ -1,0 +1,8 @@
+Diffuse=VFX_T_Water_Reflection_D
+Normal=T_FX_mud_clumps_N
+Other[0]=T_VFX_Waterdrops_D
+Other[1]=VFX_T_Smoke_8x8_01_N
+Other[2]=VFX_T_Inky_Smoke_D
+Other[3]=VFX_T_Wavy_N
+Other[4]=VFX_T_Wisps_D
+Other[5]=VFX_T_Wisps_N

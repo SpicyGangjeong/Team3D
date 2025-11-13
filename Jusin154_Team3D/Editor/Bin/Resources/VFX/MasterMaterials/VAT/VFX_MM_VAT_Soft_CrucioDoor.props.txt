@@ -1,0 +1,521 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[21] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/BaseFlattenNormalMap.BaseFlattenNormalMap'
+    ReferencedTextures[1] = Texture2D'/Engine/EngineMaterials/DefaultDiffuse.DefaultDiffuse'
+    ReferencedTextures[2] = Texture2D'/Engine/EngineMaterials/DefaultNormal_Uncompressed.DefaultNormal_Uncompressed'
+    ReferencedTextures[3] = Texture2D'/Engine/EngineResources/WhiteSquareTexture.WhiteSquareTexture'
+    ReferencedTextures[4] = Texture2D'/Game/Environment/Hogwarts/Meshes/Doors/Textures/T_HW_Door_Crucio_N.T_HW_Door_Crucio_N'
+    ReferencedTextures[5] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+    ReferencedTextures[6] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Noise/T_GlassNoise_D.T_GlassNoise_D'
+    ReferencedTextures[7] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/WaterCaustics/T_WaterCaustics_Disorder_A.T_WaterCaustics_Disorder_A'
+    ReferencedTextures[8] = Texture2D'/Game/RiggedObjects/MasterMaterials/BaseTexture/T_Blank_D.T_Blank_D'
+    ReferencedTextures[9] = Texture2D'/Game/VFX/MasterMaterials/BaseTextures/T_Blank_SRO_MSK.T_Blank_SRO_MSK'
+    ReferencedTextures[10] = Texture2D'/Game/VFX/MasterMaterials/BaseTextures/T_Blank_VN.T_Blank_VN'
+    ReferencedTextures[11] = Texture2D'/Game/VFX/MasterMaterials/BaseTextures/T_Blank_VP.T_Blank_VP'
+    ReferencedTextures[12] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_VerticalBeam_D.VFX_T_VerticalBeam_D'
+    ReferencedTextures[13] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_Butterflies_01_D.VFX_T_Butterflies_01_D'
+    ReferencedTextures[14] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_Crusio_Door_Emiss_D.VFX_T_Crusio_Door_Emiss_D'
+    ReferencedTextures[15] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Cloud_SoftWisps_D.VFX_T_Cloud_SoftWisps_D'
+    ReferencedTextures[16] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_MarbleSkin_01_BPF_D.VFX_T_MarbleSkin_01_BPF_D'
+    ReferencedTextures[17] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise07_D.VFX_T_Noise07_D'
+    ReferencedTextures[18] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise07_N.VFX_T_Noise07_N'
+    ReferencedTextures[19] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise08_D.VFX_T_Noise08_D'
+    ReferencedTextures[20] = Texture2D'/Game/VFX/Textures/VFX_T_Wavy_N.VFX_T_Wavy_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[58] =
+                {
+                    ParameterInfos[0] = { Name=2ndary Emissive Brightness }
+                    ParameterInfos[1] = { Name=Roughness }
+                    ParameterInfos[2] = { Name=Distortion Speed X }
+                    ParameterInfos[3] = { Name=PanSpeed (S) }
+                    ParameterInfos[4] = { Name=Specular_1 }
+                    ParameterInfos[5] = { Name=Metallic_1 }
+                    ParameterInfos[6] = { Name=Fresnel Emissive Power }
+                    ParameterInfos[7] = { Name=Liquify }
+                    ParameterInfos[8] = { Name=WipeSpeedX }
+                    ParameterInfos[9] = { Name=FPS }
+                    ParameterInfos[10] = { Name=Sharpen (0-1) (S)_1 }
+                    ParameterInfos[11] = { Name=Metallic }
+                    ParameterInfos[12] = { Name=Vertical Oscillating Strength }
+                    ParameterInfos[13] = { Name=Specular }
+                    ParameterInfos[14] = { Name=WipeSpeedY }
+                    ParameterInfos[15] = { Name=FlattenHeight }
+                    ParameterInfos[16] = { Name=Intensity (S) }
+                    ParameterInfos[17] = { Name=Speed U B (S) }
+                    ParameterInfos[18] = { Name=Distortion Speed Y }
+                    ParameterInfos[19] = { Name=AnimPositionOffset }
+                    ParameterInfos[20] = { Name=GlowWipeStrength }
+                    ParameterInfos[21] = { Name=Fresnel Emissive Strength }
+                    ParameterInfos[22] = { Name=Tiling U (EN) }
+                    ParameterInfos[23] = { Name=Speed U (UVM) }
+                    ParameterInfos[24] = { Name=Erosion Alpha (S) }
+                    ParameterInfos[25] = { Name=TexSize }
+                    ParameterInfos[26] = { Name=Vertical Oscillating Frequency }
+                    ParameterInfos[27] = { Name=Tiling V (En) }
+                    ParameterInfos[28] = { Name=Roughness_1 }
+                    ParameterInfos[29] = { Name=Speed V (S) }
+                    ParameterInfos[30] = { Name=Bounding Min }
+                    ParameterInfos[31] = { Name=Distortion Strength }
+                    ParameterInfos[32] = { Name=Color_Multiplier }
+                    ParameterInfos[33] = { Name=Opacity Amount }
+                    ParameterInfos[34] = { Name=Tiling V (UVM) }
+                    ParameterInfos[35] = { Name=Bounding Max }
+                    ParameterInfos[36] = { Name=Tiling U B (S) }
+                    ParameterInfos[37] = { Name=Subsurface Color Brightness }
+                    ParameterInfos[38] = { Name=Number Of Frames }
+                    ParameterInfos[39] = { Name=Speed V B (S) }
+                    ParameterInfos[40] = { Name=Speed U (S) }
+                    ParameterInfos[41] = { Name=Sharpen (0-1) (S) }
+                    ParameterInfos[42] = { Name=Tiling U (S) }
+                    ParameterInfos[43] = { Name=Speed }
+                    ParameterInfos[44] = { Name=Tiling V (S) }
+                    ParameterInfos[45] = { Name=Speed U (EN) }
+                    ParameterInfos[46] = { Name=UVM Strenght }
+                    ParameterInfos[47] = { Name=Speed V (UVM) }
+                    ParameterInfos[48] = { Name=Emissive Brightness }
+                    ParameterInfos[49] = { Name=2ndary Emissive Noise Strenght }
+                    ParameterInfos[50] = { Name=Tiling U (UVM) }
+                    ParameterInfos[51] = { Name=BaseColor Scale }
+                    ParameterInfos[52] = { Name=Distortion Tiling }
+                    ParameterInfos[53] = { Name=Random Anim Offset }
+                    ParameterInfos[54] = { Name=Tiling V B (S) }
+                    ParameterInfos[55] = { Name=Rotation Angle (0-1) (S) }
+                    ParameterInfos[56] = { Name=B }
+                    ParameterInfos[57] = { Name=Speed V (EN) }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[8] =
+                {
+                    ParameterInfos[0] = { Name=Emissive Color Modifyer }
+                    ParameterInfos[1] = { Name=Emissive Fresnel Color }
+                    ParameterInfos[2] = { Name=Tint }
+                    ParameterInfos[3] = { Name=PanDirection3D (V3) }
+                    ParameterInfos[4] = { Name=LiquifyColor }
+                    ParameterInfos[5] = { Name=Color }
+                    ParameterInfos[6] = { Name=Emissive Color }
+                    ParameterInfos[7] = { Name=2ndary Emissive Color Modifyer }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[15] =
+                {
+                    ParameterInfos[0] = { Name=ScrollingWipeTexture }
+                    ParameterInfos[1] = { Name=Position Texture }
+                    ParameterInfos[2] = { Name=Emissive Noise Texture }
+                    ParameterInfos[3] = { Name=Surface Normal Map }
+                    ParameterInfos[4] = { Name=SSS }
+                    ParameterInfos[5] = { Name=ScrollingMapA }
+                    ParameterInfos[6] = { Name=Normal Map }
+                    ParameterInfos[7] = { Name=ScrollingMapB }
+                    ParameterInfos[8] = { Name=Diffuse Map }
+                    ParameterInfos[9] = { Name=Colour Map }
+                    ParameterInfos[10] = { Name=Distortion Pattern }
+                    ParameterInfos[11] = { Name=SROA or MRO }
+                    ParameterInfos[12] = { Name=UV Mod Texture }
+                    ParameterInfos[13] = { Name=2ndary Emissive Map }
+                    ParameterInfos[14] = { Name=Emissive Map }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[58] =
+        {
+            ScalarValues[0] = 1
+            ScalarValues[1] = 0
+            ScalarValues[2] = 0.05
+            ScalarValues[3] = 10
+            ScalarValues[4] = 1
+            ScalarValues[5] = 1
+            ScalarValues[6] = 1
+            ScalarValues[7] = 0.777777
+            ScalarValues[8] = 0.1
+            ScalarValues[9] = 20
+            ScalarValues[10] = 0
+            ScalarValues[11] = 0
+            ScalarValues[12] = 70
+            ScalarValues[13] = 0
+            ScalarValues[14] = 0
+            ScalarValues[15] = 0
+            ScalarValues[16] = 1
+            ScalarValues[17] = -0.1
+            ScalarValues[18] = 0.01
+            ScalarValues[19] = 0
+            ScalarValues[20] = 10000
+            ScalarValues[21] = 0
+            ScalarValues[22] = 1
+            ScalarValues[23] = 0.05
+            ScalarValues[24] = 1
+            ScalarValues[25] = 55.6132
+            ScalarValues[26] = 0.8
+            ScalarValues[27] = 1
+            ScalarValues[28] = 0.207936
+            ScalarValues[29] = 0.1
+            ScalarValues[30] = 0
+            ScalarValues[31] = 0.5
+            ScalarValues[32] = 1
+            ScalarValues[33] = 1
+            ScalarValues[34] = 1
+            ScalarValues[35] = 1
+            ScalarValues[36] = 1
+            ScalarValues[37] = 1
+            ScalarValues[38] = 239
+            ScalarValues[39] = -0.1
+            ScalarValues[40] = 0.1
+            ScalarValues[41] = 1.51379
+            ScalarValues[42] = 1
+            ScalarValues[43] = 1
+            ScalarValues[44] = 1
+            ScalarValues[45] = 0.2
+            ScalarValues[46] = 0.05
+            ScalarValues[47] = 0.01
+            ScalarValues[48] = 1
+            ScalarValues[49] = 1
+            ScalarValues[50] = 1
+            ScalarValues[51] = 1
+            ScalarValues[52] = 2
+            ScalarValues[53] = 10
+            ScalarValues[54] = 1
+            ScalarValues[55] = 0
+            ScalarValues[56] = 4.71833
+            ScalarValues[57] = 0.1
+        }
+        VectorValues[8] =
+        {
+            VectorValues[0] = { R=0, G=1, B=0, A=1 }
+            VectorValues[1] = { R=0, G=0, B=0, A=1 }
+            VectorValues[2] = { R=1, G=1, B=1, A=0 }
+            VectorValues[3] = { R=0.139683, G=0.139683, B=1.00954, A=0 }
+            VectorValues[4] = { R=1, G=1, B=1, A=1 }
+            VectorValues[5] = { R=1, G=1, B=1, A=1 }
+            VectorValues[6] = { R=1, G=1, B=1, A=1 }
+            VectorValues[7] = { R=0, G=1, B=1, A=1 }
+        }
+        TextureValues[15] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_VerticalBeam_D.VFX_T_VerticalBeam_D'
+            TextureValues[1] = Texture2D'/Game/VFX/MasterMaterials/BaseTextures/T_Blank_VP.T_Blank_VP'
+            TextureValues[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_MarbleSkin_01_BPF_D.VFX_T_MarbleSkin_01_BPF_D'
+            TextureValues[3] = Texture2D'/Game/Environment/Hogwarts/Meshes/Doors/Textures/T_HW_Door_Crucio_N.T_HW_Door_Crucio_N'
+            TextureValues[4] = Texture2D'/Game/RiggedObjects/MasterMaterials/BaseTexture/T_Blank_D.T_Blank_D'
+            TextureValues[5] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise08_D.VFX_T_Noise08_D'
+            TextureValues[6] = Texture2D'/Game/VFX/MasterMaterials/BaseTextures/T_Blank_VN.T_Blank_VN'
+            TextureValues[7] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise08_D.VFX_T_Noise08_D'
+            TextureValues[8] = Texture2D'/Engine/EngineResources/WhiteSquareTexture.WhiteSquareTexture'
+            TextureValues[9] = Texture2D'/Engine/EngineResources/WhiteSquareTexture.WhiteSquareTexture'
+            TextureValues[10] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Noise/T_GlassNoise_D.T_GlassNoise_D'
+            TextureValues[11] = Texture2D'/Game/VFX/MasterMaterials/BaseTextures/T_Blank_SRO_MSK.T_Blank_SRO_MSK'
+            TextureValues[12] = Texture2D'/Game/VFX/Textures/VFX_T_Wavy_N.VFX_T_Wavy_N'
+            TextureValues[13] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_Crusio_Door_Emiss_D.VFX_T_Crusio_Door_Emiss_D'
+            TextureValues[14] = Texture2D'/Engine/EngineResources/WhiteSquareTexture.WhiteSquareTexture'
+        }
+    }
+    ReferencedTextures[22] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/MasterMaterials/BaseTextures/T_Blank_SRO_MSK.T_Blank_SRO_MSK'
+        ReferencedTextures[1] = Texture2D'/Engine/EngineResources/WhiteSquareTexture.WhiteSquareTexture'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/MasterMaterials/BaseTextures/T_Blank_VP.T_Blank_VP'
+        ReferencedTextures[4] = Texture2D'/Game/VFX/MasterMaterials/BaseTextures/T_Blank_VN.T_Blank_VN'
+        ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_Butterflies_01_D.VFX_T_Butterflies_01_D'
+        ReferencedTextures[6] = Texture2D'/Game/RiggedObjects/MasterMaterials/BaseTexture/T_Blank_D.T_Blank_D'
+        ReferencedTextures[7] = Texture2D'/Game/Environment/Hogwarts/Meshes/Doors/Textures/T_HW_Door_Crucio_N.T_HW_Door_Crucio_N'
+        ReferencedTextures[8] = Texture2D'/Engine/EngineMaterials/BaseFlattenNormalMap.BaseFlattenNormalMap'
+        ReferencedTextures[9] = Texture2D'/Engine/EngineMaterials/DefaultDiffuse.DefaultDiffuse'
+        ReferencedTextures[10] = Texture2D'/Engine/EngineMaterials/DefaultNormal_Uncompressed.DefaultNormal_Uncompressed'
+        ReferencedTextures[11] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise07_N.VFX_T_Noise07_N'
+        ReferencedTextures[12] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise07_D.VFX_T_Noise07_D'
+        ReferencedTextures[13] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Cloud_SoftWisps_D.VFX_T_Cloud_SoftWisps_D'
+        ReferencedTextures[14] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+        ReferencedTextures[15] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/WaterCaustics/T_WaterCaustics_Disorder_A.T_WaterCaustics_Disorder_A'
+        ReferencedTextures[16] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Noise/T_GlassNoise_D.T_GlassNoise_D'
+        ReferencedTextures[17] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise08_D.VFX_T_Noise08_D'
+        ReferencedTextures[18] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_VerticalBeam_D.VFX_T_VerticalBeam_D'
+        ReferencedTextures[19] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_Crusio_Door_Emiss_D.VFX_T_Crusio_Door_Emiss_D'
+        ReferencedTextures[20] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_MarbleSkin_01_BPF_D.VFX_T_MarbleSkin_01_BPF_D'
+        ReferencedTextures[21] = Texture2D'/Game/VFX/Textures/VFX_T_Wavy_N.VFX_T_Wavy_N'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[15] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_VerticalBeam_D.VFX_T_VerticalBeam_D'
+        Name = ScrollingWipeTexture
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/MasterMaterials/BaseTextures/T_Blank_VP.T_Blank_VP'
+        Name = Position Texture
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_MarbleSkin_01_BPF_D.VFX_T_MarbleSkin_01_BPF_D'
+        Name = Emissive Noise Texture
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/Environment/Hogwarts/Meshes/Doors/Textures/T_HW_Door_Crucio_N.T_HW_Door_Crucio_N'
+        Name = Surface Normal Map
+        Group = None
+    }
+    CollectedTextureParameters[4] =
+    {
+        Texture = Texture2D'/Game/RiggedObjects/MasterMaterials/BaseTexture/T_Blank_D.T_Blank_D'
+        Name = SSS
+        Group = None
+    }
+    CollectedTextureParameters[5] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise08_D.VFX_T_Noise08_D'
+        Name = ScrollingMapA
+        Group = None
+    }
+    CollectedTextureParameters[6] =
+    {
+        Texture = Texture2D'/Game/VFX/MasterMaterials/BaseTextures/T_Blank_VN.T_Blank_VN'
+        Name = Normal Map
+        Group = None
+    }
+    CollectedTextureParameters[7] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise08_D.VFX_T_Noise08_D'
+        Name = ScrollingMapB
+        Group = None
+    }
+    CollectedTextureParameters[8] =
+    {
+        Texture = Texture2D'/Engine/EngineResources/WhiteSquareTexture.WhiteSquareTexture'
+        Name = Diffuse Map
+        Group = None
+    }
+    CollectedTextureParameters[9] =
+    {
+        Texture = Texture2D'/Engine/EngineResources/WhiteSquareTexture.WhiteSquareTexture'
+        Name = Colour Map
+        Group = None
+    }
+    CollectedTextureParameters[10] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Noise/T_GlassNoise_D.T_GlassNoise_D'
+        Name = Distortion Pattern
+        Group = None
+    }
+    CollectedTextureParameters[11] =
+    {
+        Texture = Texture2D'/Game/VFX/MasterMaterials/BaseTextures/T_Blank_SRO_MSK.T_Blank_SRO_MSK'
+        Name = SROA or MRO
+        Group = None
+    }
+    CollectedTextureParameters[12] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_Wavy_N.VFX_T_Wavy_N'
+        Name = UV Mod Texture
+        Group = None
+    }
+    CollectedTextureParameters[13] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_Crusio_Door_Emiss_D.VFX_T_Crusio_Door_Emiss_D'
+        Name = 2ndary Emissive Map
+        Group = None
+    }
+    CollectedTextureParameters[14] =
+    {
+        Texture = Texture2D'/Engine/EngineResources/WhiteSquareTexture.WhiteSquareTexture'
+        Name = Emissive Map
+        Group = None
+    }
+}
+CollectedScalarParameters[58] =
+{
+    CollectedScalarParameters[0] =
+    {
+        Value = 1
+        Name = 2ndary Emissive Brightness
+        Group = None
+    }
+    CollectedScalarParameters[1] = { Value=0, Name=Roughness, Group=None }
+    CollectedScalarParameters[2] = { Value=0.05, Name=Distortion Speed X, Group=None }
+    CollectedScalarParameters[3] = { Value=10, Name=PanSpeed (S), Group=None }
+    CollectedScalarParameters[4] = { Value=1, Name=Specular_1, Group=None }
+    CollectedScalarParameters[5] = { Value=1, Name=Metallic_1, Group=None }
+    CollectedScalarParameters[6] = { Value=1, Name=Fresnel Emissive Power, Group=None }
+    CollectedScalarParameters[7] = { Value=0.777777, Name=Liquify, Group=None }
+    CollectedScalarParameters[8] = { Value=0.1, Name=WipeSpeedX, Group=None }
+    CollectedScalarParameters[9] = { Value=20, Name=FPS, Group=None }
+    CollectedScalarParameters[10] = { Value=0, Name=Sharpen (0-1) (S)_1, Group=None }
+    CollectedScalarParameters[11] = { Value=0, Name=Metallic, Group=None }
+    CollectedScalarParameters[12] =
+    {
+        Value = 70
+        Name = Vertical Oscillating Strength
+        Group = None
+    }
+    CollectedScalarParameters[13] = { Value=0, Name=Specular, Group=None }
+    CollectedScalarParameters[14] = { Value=0, Name=WipeSpeedY, Group=None }
+    CollectedScalarParameters[15] = { Value=0, Name=FlattenHeight, Group=None }
+    CollectedScalarParameters[16] = { Value=1, Name=Intensity (S), Group=None }
+    CollectedScalarParameters[17] = { Value=-0.1, Name=Speed U B (S), Group=None }
+    CollectedScalarParameters[18] = { Value=0.01, Name=Distortion Speed Y, Group=None }
+    CollectedScalarParameters[19] = { Value=0, Name=AnimPositionOffset, Group=None }
+    CollectedScalarParameters[20] = { Value=10000, Name=GlowWipeStrength, Group=None }
+    CollectedScalarParameters[21] =
+    {
+        Value = 0
+        Name = Fresnel Emissive Strength
+        Group = None
+    }
+    CollectedScalarParameters[22] = { Value=1, Name=Tiling U (EN), Group=None }
+    CollectedScalarParameters[23] = { Value=0.05, Name=Speed U (UVM), Group=None }
+    CollectedScalarParameters[24] = { Value=1, Name=Erosion Alpha (S), Group=None }
+    CollectedScalarParameters[25] = { Value=55.6132, Name=TexSize, Group=None }
+    CollectedScalarParameters[26] =
+    {
+        Value = 0.8
+        Name = Vertical Oscillating Frequency
+        Group = None
+    }
+    CollectedScalarParameters[27] = { Value=1, Name=Tiling V (En), Group=None }
+    CollectedScalarParameters[28] = { Value=0.207936, Name=Roughness_1, Group=None }
+    CollectedScalarParameters[29] = { Value=0.1, Name=Speed V (S), Group=None }
+    CollectedScalarParameters[30] = { Value=0, Name=Bounding Min, Group=None }
+    CollectedScalarParameters[31] = { Value=0.5, Name=Distortion Strength, Group=None }
+    CollectedScalarParameters[32] = { Value=1, Name=Color_Multiplier, Group=None }
+    CollectedScalarParameters[33] = { Value=1, Name=Opacity Amount, Group=None }
+    CollectedScalarParameters[34] = { Value=1, Name=Tiling V (UVM), Group=None }
+    CollectedScalarParameters[35] = { Value=1, Name=Bounding Max, Group=None }
+    CollectedScalarParameters[36] = { Value=1, Name=Tiling U B (S), Group=None }
+    CollectedScalarParameters[37] =
+    {
+        Value = 1
+        Name = Subsurface Color Brightness
+        Group = None
+    }
+    CollectedScalarParameters[38] = { Value=239, Name=Number Of Frames, Group=None }
+    CollectedScalarParameters[39] = { Value=-0.1, Name=Speed V B (S), Group=None }
+    CollectedScalarParameters[40] = { Value=0.1, Name=Speed U (S), Group=None }
+    CollectedScalarParameters[41] =
+    {
+        Value = 1.51379
+        Name = Sharpen (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[42] = { Value=1, Name=Tiling U (S), Group=None }
+    CollectedScalarParameters[43] = { Value=1, Name=Speed, Group=None }
+    CollectedScalarParameters[44] = { Value=1, Name=Tiling V (S), Group=None }
+    CollectedScalarParameters[45] = { Value=0.2, Name=Speed U (EN), Group=None }
+    CollectedScalarParameters[46] = { Value=0.05, Name=UVM Strenght, Group=None }
+    CollectedScalarParameters[47] = { Value=0.01, Name=Speed V (UVM), Group=None }
+    CollectedScalarParameters[48] = { Value=1, Name=Emissive Brightness, Group=None }
+    CollectedScalarParameters[49] =
+    {
+        Value = 1
+        Name = 2ndary Emissive Noise Strenght
+        Group = None
+    }
+    CollectedScalarParameters[50] = { Value=1, Name=Tiling U (UVM), Group=None }
+    CollectedScalarParameters[51] = { Value=1, Name=BaseColor Scale, Group=None }
+    CollectedScalarParameters[52] = { Value=2, Name=Distortion Tiling, Group=None }
+    CollectedScalarParameters[53] = { Value=10, Name=Random Anim Offset, Group=None }
+    CollectedScalarParameters[54] = { Value=1, Name=Tiling V B (S), Group=None }
+    CollectedScalarParameters[55] =
+    {
+        Value = 0
+        Name = Rotation Angle (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[56] = { Value=4.71833, Name=B, Group=None }
+    CollectedScalarParameters[57] = { Value=0.1, Name=Speed V (EN), Group=None }
+}
+CollectedVectorParameters[8] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0, G=1, B=0, A=1 }
+        Name = Emissive Color Modifyer
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = Emissive Fresnel Color
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=1, G=1, B=1, A=0 }
+        Name = Tint
+        Group = None
+    }
+    CollectedVectorParameters[3] =
+    {
+        Value = { R=0.139683, G=0.139683, B=1.00954, A=0 }
+        Name = PanDirection3D (V3)
+        Group = None
+    }
+    CollectedVectorParameters[4] =
+    {
+        Value = { R=1, G=1, B=1, A=1 }
+        Name = LiquifyColor
+        Group = None
+    }
+    CollectedVectorParameters[5] =
+    {
+        Value = { R=1, G=1, B=1, A=1 }
+        Name = Color
+        Group = None
+    }
+    CollectedVectorParameters[6] =
+    {
+        Value = { R=1, G=1, B=1, A=1 }
+        Name = Emissive Color
+        Group = None
+    }
+    CollectedVectorParameters[7] =
+    {
+        Value = { R=0, G=1, B=1, A=1 }
+        Name = 2ndary Emissive Color Modifyer
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[2] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_HW_Door_Crucio_N
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Noise07_N
+    }
+}

@@ -1,0 +1,5 @@
+Diffuse=T_candle_D
+Normal=T_candle_N
+Other[0]=HeatmapGradient
+Other[1]=base_flat_n
+Other[2]=base_gray_d

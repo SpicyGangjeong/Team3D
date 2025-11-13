@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Base_Mat/VFX_MI_ToiletSwirl.VFX_MI_ToiletSwirl'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Base_Mat/VFX_MI_ToiletSwirl.VFX_MI_ToiletSwirl'
+        MaterialSlotName = lambert1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 120.954, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=-4.57764e-05, Z=-11.124 }
+    BoxExtent = { X=114.436, Y=114.436, Z=16.9919 }
+    SphereRadius = 114.976
+}

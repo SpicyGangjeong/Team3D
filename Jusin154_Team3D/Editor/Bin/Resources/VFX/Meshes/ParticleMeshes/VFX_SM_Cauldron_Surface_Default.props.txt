@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Cinematic/MaterialInstances/VFX_MI_BoilingLiquid_Pan_Gray.VFX_MI_BoilingLiquid_Pan_Gray'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Cinematic/MaterialInstances/VFX_MI_BoilingLiquid_Pan_Gray.VFX_MI_BoilingLiquid_Pan_Gray'
+        MaterialSlotName = WorldGridMaterial
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 41.4565, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=0, Z=1.26 }
+    BoxExtent = { X=20, Y=20, Z=1.26 }
+    SphereRadius = 20.0396
+}

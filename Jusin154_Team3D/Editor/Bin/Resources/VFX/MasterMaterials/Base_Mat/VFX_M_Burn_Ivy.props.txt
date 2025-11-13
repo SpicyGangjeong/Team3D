@@ -1,0 +1,220 @@
+TwoSided = true
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[13] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/BlendFunc_DefBase.BlendFunc_DefBase'
+    ReferencedTextures[1] = Texture2D'/Engine/EngineMaterials/BlendFunc_DefBlend.BlendFunc_DefBlend'
+    ReferencedTextures[2] = Texture2D'/Engine/EngineMaterials/DefaultDiffuse.DefaultDiffuse'
+    ReferencedTextures[3] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+    ReferencedTextures[4] = Texture2D'/Game/Environment/BanditCamps/Bandit_Camp_Shared_Props/Textures/Ivy/T_BCProps_Ivy_Yellow_D.T_BCProps_Ivy_Yellow_D'
+    ReferencedTextures[5] = Texture2D'/Game/Environment/Hogsmeade/Common/Textures/Vegetation/T_Ivy_N.T_Ivy_N'
+    ReferencedTextures[6] = Texture2D'/Game/Environment/Hogsmeade/Common/Textures/Vegetation/T_Ivy_SROA.T_Ivy_SROA'
+    ReferencedTextures[7] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+    ReferencedTextures[8] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise03_D.VFX_T_Noise03_D'
+    ReferencedTextures[9] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RGB_3DNoiseRough_D.VFX_T_RGB_3DNoiseRough_D'
+    ReferencedTextures[10] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_SparkleNoise_01_D.VFX_T_SparkleNoise_01_D'
+    ReferencedTextures[11] = Texture2D'/Game/VFX/Textures/VFX_T_Char_01_N.VFX_T_Char_01_N'
+    ReferencedTextures[12] = Texture2D'/Game/VFX/Textures/VFX_T_FlameTile_D.VFX_T_FlameTile_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[11] =
+                {
+                    ParameterInfos[0] = { Name=Wind Intensity }
+                    ParameterInfos[1] = { Name=RingWidth }
+                    ParameterInfos[2] = { Name=Decay_Power }
+                    ParameterInfos[3] = { Name=DecayScale }
+                    ParameterInfos[4] = { Name=AlphaErosionContrast }
+                    ParameterInfos[5] = { Name=Scale }
+                    ParameterInfos[6] = { Name=Roughness_Scale }
+                    ParameterInfos[7] = { Name=NormalScale }
+                    ParameterInfos[8] = { Name=NormalIntensity }
+                    ParameterInfos[9] = { Name=SphereRadius }
+                    ParameterInfos[10] = { Name=Wind Weight }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[5] =
+                {
+                    ParameterInfos[0] = { Name=Aditional WPO }
+                    ParameterInfos[1] = { Name=SphereLocation }
+                    ParameterInfos[2] = { Name=Color }
+                    ParameterInfos[3] = { Name=HeatColor }
+                    ParameterInfos[4] = { Name=GravityForce }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=Noise }
+                    ParameterInfos[1] = { Name=Wind Position Map }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[11] =
+        {
+            ScalarValues[0] = 0.2
+            ScalarValues[1] = 50
+            ScalarValues[2] = 1.5
+            ScalarValues[3] = 1
+            ScalarValues[4] = 3
+            ScalarValues[5] = 0.1
+            ScalarValues[6] = 1
+            ScalarValues[7] = 2
+            ScalarValues[8] = 1.2
+            ScalarValues[9] = 0.029518
+            ScalarValues[10] = 0.1
+        }
+        VectorValues[5] =
+        {
+            VectorValues[0] = { R=0, G=0, B=0, A=1 }
+            VectorValues[1] = { R=-50, G=0, B=0, A=1 }
+            VectorValues[2] = { R=0.01515, G=0.0151, B=0.020833, A=1 }
+            VectorValues[3] = { R=20, G=3, B=0.1, A=1 }
+            VectorValues[4] = { R=0, G=0, B=100, A=1 }
+        }
+        TextureValues[2] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_SparkleNoise_01_D.VFX_T_SparkleNoise_01_D'
+            TextureValues[1] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+        }
+    }
+    ReferencedTextures[14] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/Environment/Hogsmeade/Common/Textures/Vegetation/T_Ivy_N.T_Ivy_N'
+        ReferencedTextures[1] = Texture2D'/Game/Environment/Hogsmeade/Common/Textures/Vegetation/T_Ivy_SROA.T_Ivy_SROA'
+        ReferencedTextures[3] = Texture2D'/Engine/EngineMaterials/DefaultDiffuse.DefaultDiffuse'
+        ReferencedTextures[4] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+        ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RGB_3DNoiseRough_D.VFX_T_RGB_3DNoiseRough_D'
+        ReferencedTextures[6] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise03_D.VFX_T_Noise03_D'
+        ReferencedTextures[7] = Texture2D'/Game/VFX/Textures/VFX_T_FlameTile_D.VFX_T_FlameTile_D'
+        ReferencedTextures[8] = Texture2D'/Game/Environment/BanditCamps/Bandit_Camp_Shared_Props/Textures/Ivy/T_BCProps_Ivy_Yellow_D.T_BCProps_Ivy_Yellow_D'
+        ReferencedTextures[9] = Texture2D'/Game/VFX/Textures/VFX_T_Char_01_N.VFX_T_Char_01_N'
+        ReferencedTextures[10] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_SparkleNoise_01_D.VFX_T_SparkleNoise_01_D'
+        ReferencedTextures[11] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+        ReferencedTextures[12] = Texture2D'/Engine/EngineMaterials/BlendFunc_DefBlend.BlendFunc_DefBlend'
+        ReferencedTextures[13] = Texture2D'/Engine/EngineMaterials/BlendFunc_DefBase.BlendFunc_DefBase'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.25
+CollectedTextureParameters[2] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_SparkleNoise_01_D.VFX_T_SparkleNoise_01_D'
+        Name = Noise
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+        Name = Wind Position Map
+        Group = None
+    }
+}
+CollectedScalarParameters[11] =
+{
+    CollectedScalarParameters[0] = { Value=0.2, Name=Wind Intensity, Group=None }
+    CollectedScalarParameters[1] = { Value=50, Name=RingWidth, Group=None }
+    CollectedScalarParameters[2] = { Value=1.5, Name=Decay_Power, Group=None }
+    CollectedScalarParameters[3] = { Value=1, Name=DecayScale, Group=None }
+    CollectedScalarParameters[4] = { Value=3, Name=AlphaErosionContrast, Group=None }
+    CollectedScalarParameters[5] = { Value=0.1, Name=Scale, Group=None }
+    CollectedScalarParameters[6] = { Value=1, Name=Roughness_Scale, Group=None }
+    CollectedScalarParameters[7] = { Value=2, Name=NormalScale, Group=None }
+    CollectedScalarParameters[8] = { Value=1.2, Name=NormalIntensity, Group=None }
+    CollectedScalarParameters[9] = { Value=0.029518, Name=SphereRadius, Group=None }
+    CollectedScalarParameters[10] = { Value=0.1, Name=Wind Weight, Group=None }
+}
+CollectedVectorParameters[5] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = Aditional WPO
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=-50, G=0, B=0, A=1 }
+        Name = SphereLocation
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=0.01515, G=0.0151, B=0.020833, A=1 }
+        Name = Color
+        Group = None
+    }
+    CollectedVectorParameters[3] =
+    {
+        Value = { R=20, G=3, B=0.1, A=1 }
+        Name = HeatColor
+        Group = None
+    }
+    CollectedVectorParameters[4] =
+    {
+        Value = { R=0, G=0, B=100, A=1 }
+        Name = GravityForce
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[6] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 1
+        TextureName = base_white_d
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_BCProps_Ivy_Yellow_D
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Ivy_N
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Ivy_SROA
+    }
+    TextureStreamingData[4] =
+    {
+        SamplingScale = 0.90625
+        UVChannelIndex = 0
+        TextureName = VFX_T_FlameTile_D
+    }
+    TextureStreamingData[5] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_SparkleNoise_01_D
+    }
+}

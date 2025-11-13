@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Gameplay/InventoryObjects/Potions/Materials/MI_Potion_Felix_Felicis.MI_Potion_Felix_Felicis'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Gameplay/InventoryObjects/Potions/Materials/MI_Potion_Felix_Felicis.MI_Potion_Felix_Felicis'
+        MaterialSlotName = MI_Potion_Felix_Felicis
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 31.7194, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-0.0128155, Y=-4.76837e-06, Z=-7.35401 }
+    BoxExtent = { X=5.47581, Y=5.47581, Z=10.7094 }
+    SphereRadius = 10.8357
+}

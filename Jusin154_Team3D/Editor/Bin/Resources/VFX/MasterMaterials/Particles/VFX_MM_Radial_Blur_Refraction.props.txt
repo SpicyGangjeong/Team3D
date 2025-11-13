@@ -1,0 +1,102 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[2] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Flares/VFX_T_Flare02_D.VFX_T_Flare02_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[6] =
+                {
+                    ParameterInfos[0] = { Name=Volume }
+                    ParameterInfos[1] = { Name=Alpha Bias }
+                    ParameterInfos[2] = { Name=Scale Particle by Distance }
+                    ParameterInfos[3] = { Name=Index of Refraction }
+                    ParameterInfos[4] = { Name=Opacity }
+                    ParameterInfos[5] = { Name=Camera Fade Dist }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=MaskAlphaChannel }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Mask }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[6] = { 0.25, 0.75, 0.1, 0, 0.025, 500 }
+        VectorValues[1] =
+        {
+            VectorValues[0] = { R=0.25, G=0.25, B=0.25, A=0.25 }
+        }
+        TextureValues[1] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Flares/VFX_T_Flare02_D.VFX_T_Flare02_D'
+        }
+    }
+    ReferencedTextures[2] =
+    {
+        ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Flares/VFX_T_Flare02_D.VFX_T_Flare02_D'
+    }
+}
+BlendMode = BLEND_Additive (3)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[1] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Flares/VFX_T_Flare02_D.VFX_T_Flare02_D'
+        Name = Mask
+        Group = None
+    }
+}
+CollectedScalarParameters[6] =
+{
+    CollectedScalarParameters[0] = { Value=0.25, Name=Volume, Group=None }
+    CollectedScalarParameters[1] = { Value=0.75, Name=Alpha Bias, Group=None }
+    CollectedScalarParameters[2] =
+    {
+        Value = 0.1
+        Name = Scale Particle by Distance
+        Group = None
+    }
+    CollectedScalarParameters[3] = { Value=0, Name=Index of Refraction, Group=None }
+    CollectedScalarParameters[4] = { Value=0.025, Name=Opacity, Group=None }
+    CollectedScalarParameters[5] = { Value=500, Name=Camera Fade Dist, Group=None }
+}
+CollectedVectorParameters[1] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0.25, G=0.25, B=0.25, A=0.25 }
+        Name = MaskAlphaChannel
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

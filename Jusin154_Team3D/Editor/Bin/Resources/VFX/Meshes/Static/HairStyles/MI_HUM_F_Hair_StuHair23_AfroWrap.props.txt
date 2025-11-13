@@ -1,0 +1,128 @@
+Parent = MaterialInstanceConstant'/Game/RiggedObjects/Characters/Human/Hair/Hair_F/STUHair23/Materials/MI_HUM_F_Hair_StuHair23_AfroWrap_Master.MI_HUM_F_Hair_StuHair23_AfroWrap_Master'
+ScalarParameterValues[9] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=Dye Opacity }
+        ParameterValue = 0.1
+        ParameterName = None
+    }
+    ScalarParameterValues[1] =
+    {
+        ParameterInfo = { Name=Value Variation }
+        ParameterValue = 0.9
+        ParameterName = None
+    }
+    ScalarParameterValues[2] =
+    {
+        ParameterInfo = { Name=EdgeMaskMin }
+        ParameterValue = 0.85
+        ParameterName = None
+    }
+    ScalarParameterValues[3] =
+    {
+        ParameterInfo = { Name=Dye Roughness }
+        ParameterValue = 0.5
+        ParameterName = None
+    }
+    ScalarParameterValues[4] =
+    {
+        ParameterInfo = { Name=Hair Roughness }
+        ParameterValue = 0.65
+        ParameterName = None
+    }
+    ScalarParameterValues[5] =
+    {
+        ParameterInfo = { Name=Spec Multiplier }
+        ParameterValue = 0.65
+        ParameterName = None
+    }
+    ScalarParameterValues[6] =
+    {
+        ParameterInfo = { Name=BackLitAmount }
+        ParameterValue = 1.35
+        ParameterName = None
+    }
+    ScalarParameterValues[7] =
+    {
+        ParameterInfo = { Name=Scatter }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[8] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[2] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=DAO Mask }
+        ParameterValue = Texture2D'/Game/RiggedObjects/Characters/Human/Hair/Hair_F/STUHair23/Textures/T_HUM_F_Hair_StuHair23_AfroWrap_DFOA_MSK.T_HUM_F_Hair_StuHair23_AfroWrap_DFOA_MSK'
+        ParameterName = None
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=THV Mask }
+        ParameterValue = Texture2D'/Game/RiggedObjects/Characters/Human/Hair/Hair_F/STUHair23/Textures/T_HUM_F_Hair_StuHair23_AfroWrap_THV_MSK.T_HUM_F_Hair_StuHair23_AfroWrap_THV_MSK'
+        ParameterName = None
+    }
+}
+VectorParameterValues[3] =
+{
+    VectorParameterValues[0] =
+    {
+        ParameterInfo = { Name=RootColor }
+        ParameterValue = { R=0.021875, G=0.010771, B=0.009821, A=1 }
+        ParameterName = None
+    }
+    VectorParameterValues[1] =
+    {
+        ParameterInfo = { Name=TipColor }
+        ParameterValue = { R=0.041667, G=0.027123, B=0.021485, A=1 }
+        ParameterName = None
+    }
+    VectorParameterValues[2] =
+    {
+        ParameterInfo = { Name=Dye Color }
+        ParameterValue = { R=0.125, G=0.071977, B=0.042318, A=1 }
+        ParameterName = None
+    }
+}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Masked (1)
+    bOverride_TwoSided = false
+    TwoSided = true
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.25
+}
+StaticParameters =
+{
+    StaticSwitchParameters[1] =
+    {
+        StaticSwitchParameters[0] =
+        {
+            Value = false
+            ParameterInfo = { Name=SimpleHair }
+            bOverride = true
+        }
+    }
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/RiggedObjects/Props/TrainingDummy/Soldier/Materials/MI_Training_Dummy_Soldier.MI_Training_Dummy_Soldier'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/RiggedObjects/Props/TrainingDummy/Soldier/Materials/MI_Training_Dummy_Soldier.MI_Training_Dummy_Soldier'
+        MaterialSlotName = M_Training_Dummy_Soldier
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 365.196, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-12.4473, Y=-3.05862, Z=117.315 }
+    BoxExtent = { X=7.65921, Y=9.99183, Z=17.9577 }
+    SphereRadius = 19.6559
+}

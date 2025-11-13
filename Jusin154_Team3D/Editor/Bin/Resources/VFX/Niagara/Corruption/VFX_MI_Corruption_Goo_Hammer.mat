@@ -1,0 +1,8 @@
+Diffuse=T_WPN_GOB_WarHammer01_E
+Normal=BaseFlattenNormalMap
+Emissive=T_WPN_GOB_WarHammer01_E
+Other[0]=DefaultDiffuse
+Other[1]=DefaultNormal_Uncompressed
+Other[2]=T_WPN_GOB_SmallSword_E
+Other[3]=VFX_T_Cloud_Noise_Tile_N
+Other[4]=VFX_T_Noise_Corruption_E

@@ -1,0 +1,311 @@
+TwoSided = true
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[6] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Flares/VFX_T_FlareWisp_D.VFX_T_FlareWisp_D'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_Gradient03_D.VFX_T_Gradient03_D'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_ThinTop_Gradiant_D.VFX_T_ThinTop_Gradiant_D'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseGreypack01_D.VFX_T_NoiseGreypack01_D'
+    ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_SwirlNoise_05_D.VFX_T_SwirlNoise_05_D'
+    ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/VFX_T_Noise_Anisotropic2_height_D.VFX_T_Noise_Anisotropic2_height_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[45] =
+                {
+                    ParameterInfos[0] = { Name=Tiling U (AE) }
+                    ParameterInfos[1] = { Name=Pan V }
+                    ParameterInfos[2] = { Name=AlphaSoft }
+                    ParameterInfos[3] = { Name=Noise2_Horo_Speed }
+                    ParameterInfos[4] = { Name=FadeSensitivity (optional) (S) }
+                    ParameterInfos[5] = { Name=Noise1_Vert_Speed }
+                    ParameterInfos[6] = { Name=ShrinkFlare }
+                    ParameterInfos[7] = { Name=CenterFillBrightness }
+                    ParameterInfos[8] = { Name=Noise2_Vert_Speed }
+                    ParameterInfos[9] = { Name=Texture RGB Strength }
+                    ParameterInfos[10] = { Name=SpiralU }
+                    ParameterInfos[11] = { Name=Speed V (AE) }
+                    ParameterInfos[12] = { Name=Color Bias }
+                    ParameterInfos[13] = { Name=Texture Bias }
+                    ParameterInfos[14] = { Name=FadeDistanceCenter }
+                    ParameterInfos[15] = { Name=LightingPanner }
+                    ParameterInfos[16] = { Name=Camera Offset Relative to Particle Size }
+                    ParameterInfos[17] = { Name=Tile U }
+                    ParameterInfos[18] = { Name=Sharpen }
+                    ParameterInfos[19] = { Name=SpiralV (Whole Numbers) }
+                    ParameterInfos[20] = { Name=Tiling V (AE) }
+                    ParameterInfos[21] = { Name=Alpha test }
+                    ParameterInfos[22] = { Name=Warp Strength }
+                    ParameterInfos[23] = { Name=Mask RGB Strength }
+                    ParameterInfos[24] = { Name=FadeDistanceEdge }
+                    ParameterInfos[25] = { Name=AlphaMin }
+                    ParameterInfos[26] = { Name=Camera Distance }
+                    ParameterInfos[27] = { Name=Noise 1 Tiling U }
+                    ParameterInfos[28] = { Name=Noise 2 Tiling U }
+                    ParameterInfos[29] = { Name=Speed U (AE) }
+                    ParameterInfos[30] = { Name=AlphaBias }
+                    ParameterInfos[31] = { Name=Randomize Texture }
+                    ParameterInfos[32] = { Name=Tile V }
+                    ParameterInfos[33] = { Name=NoiseStrenght }
+                    ParameterInfos[34] = { Name=Edge Mask Multiplyer }
+                    ParameterInfos[35] = { Name=NoiseSizeMultiplyer }
+                    ParameterInfos[36] = { Name=Rotation Angle (0-1) (AE) }
+                    ParameterInfos[37] = { Name=Texture Alpha Strength }
+                    ParameterInfos[38] = { Name=Rotation Angle (0-1) (W) }
+                    ParameterInfos[39] = { Name=Noise1_Horo_Speed }
+                    ParameterInfos[40] = { Name=Noise 1 Tiling V }
+                    ParameterInfos[41] = { Name=Pan U }
+                    ParameterInfos[42] = { Name=Noise 2 Tiling V }
+                    ParameterInfos[43] = { Name=Mask Bias }
+                    ParameterInfos[44] = { Name=TextureUVBias }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[4] =
+                {
+                    ParameterInfos[0] = { Name=FlareColorEdge }
+                    ParameterInfos[1] = { Name=Mask Channels }
+                    ParameterInfos[2] = { Name=FlareColorCenter }
+                    ParameterInfos[3] = { Name=Texture Channels }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[5] =
+                {
+                    ParameterInfos[0] = { Name=Mask Texture }
+                    ParameterInfos[1] = { Name=Edge Mask }
+                    ParameterInfos[2] = { Name=Erosion Texture }
+                    ParameterInfos[3] = { Name=Texture }
+                    ParameterInfos[4] = { Name=Wipe Texture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[45] =
+        {
+            ScalarValues[0] = 1
+            ScalarValues[1] = 0.25
+            ScalarValues[2] = 0.5
+            ScalarValues[3] = 0
+            ScalarValues[4] = 1
+            ScalarValues[5] = 0
+            ScalarValues[6] = 1
+            ScalarValues[7] = 1
+            ScalarValues[8] = 0
+            ScalarValues[9] = 0.5
+            ScalarValues[10] = 0
+            ScalarValues[11] = 0
+            ScalarValues[12] = -1
+            ScalarValues[13] = 0
+            ScalarValues[14] = 5
+            ScalarValues[15] = -0.15
+            ScalarValues[16] = 0.1
+            ScalarValues[17] = 1
+            ScalarValues[18] = 1
+            ScalarValues[19] = 0
+            ScalarValues[20] = 1
+            ScalarValues[21] = 0.2
+            ScalarValues[22] = -1
+            ScalarValues[23] = 1
+            ScalarValues[24] = 50
+            ScalarValues[25] = 0
+            ScalarValues[26] = 150
+            ScalarValues[27] = 1
+            ScalarValues[28] = 1
+            ScalarValues[29] = 0
+            ScalarValues[30] = 0
+            ScalarValues[31] = 1
+            ScalarValues[32] = 0.3
+            ScalarValues[33] = 0.15
+            ScalarValues[34] = 1
+            ScalarValues[35] = 1
+            ScalarValues[36] = 0
+            ScalarValues[37] = 1
+            ScalarValues[38] = 0
+            ScalarValues[39] = 0
+            ScalarValues[40] = 1
+            ScalarValues[41] = 0
+            ScalarValues[42] = 1
+            ScalarValues[43] = 0
+            ScalarValues[44] = 0
+        }
+        VectorValues[4] =
+        {
+            VectorValues[0] = { R=0.25, G=0.5, B=2, A=1 }
+            VectorValues[1] = { R=0.3, G=0.4, B=0.3, A=0 }
+            VectorValues[2] = { R=10, G=5, B=1, A=1 }
+            VectorValues[3] = { R=0.3, G=0.55, B=0.15, A=0 }
+        }
+        TextureValues[5] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Flares/VFX_T_FlareWisp_D.VFX_T_FlareWisp_D'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_ThinTop_Gradiant_D.VFX_T_ThinTop_Gradiant_D'
+            TextureValues[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_SwirlNoise_05_D.VFX_T_SwirlNoise_05_D'
+            TextureValues[3] = Texture2D'/Game/VFX/Textures/VFX_T_Noise_Anisotropic2_height_D.VFX_T_Noise_Anisotropic2_height_D'
+            TextureValues[4] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_Gradient03_D.VFX_T_Gradient03_D'
+        }
+    }
+    ReferencedTextures[6] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/VFX_T_Noise_Anisotropic2_height_D.VFX_T_Noise_Anisotropic2_height_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Flares/VFX_T_FlareWisp_D.VFX_T_FlareWisp_D'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_ThinTop_Gradiant_D.VFX_T_ThinTop_Gradiant_D'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_Gradient03_D.VFX_T_Gradient03_D'
+        ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_SwirlNoise_05_D.VFX_T_SwirlNoise_05_D'
+        ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseGreypack01_D.VFX_T_NoiseGreypack01_D'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[5] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Flares/VFX_T_FlareWisp_D.VFX_T_FlareWisp_D'
+        Name = Mask Texture
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_ThinTop_Gradiant_D.VFX_T_ThinTop_Gradiant_D'
+        Name = Edge Mask
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_SwirlNoise_05_D.VFX_T_SwirlNoise_05_D'
+        Name = Erosion Texture
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_Noise_Anisotropic2_height_D.VFX_T_Noise_Anisotropic2_height_D'
+        Name = Texture
+        Group = None
+    }
+    CollectedTextureParameters[4] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_Gradient03_D.VFX_T_Gradient03_D'
+        Name = Wipe Texture
+        Group = None
+    }
+}
+CollectedScalarParameters[45] =
+{
+    CollectedScalarParameters[0] = { Value=1, Name=Tiling U (AE), Group=None }
+    CollectedScalarParameters[1] = { Value=0.25, Name=Pan V, Group=None }
+    CollectedScalarParameters[2] = { Value=0.5, Name=AlphaSoft, Group=None }
+    CollectedScalarParameters[3] = { Value=0, Name=Noise2_Horo_Speed, Group=None }
+    CollectedScalarParameters[4] =
+    {
+        Value = 1
+        Name = FadeSensitivity (optional) (S)
+        Group = None
+    }
+    CollectedScalarParameters[5] = { Value=0, Name=Noise1_Vert_Speed, Group=None }
+    CollectedScalarParameters[6] = { Value=1, Name=ShrinkFlare, Group=None }
+    CollectedScalarParameters[7] = { Value=1, Name=CenterFillBrightness, Group=None }
+    CollectedScalarParameters[8] = { Value=0, Name=Noise2_Vert_Speed, Group=None }
+    CollectedScalarParameters[9] = { Value=0.5, Name=Texture RGB Strength, Group=None }
+    CollectedScalarParameters[10] = { Value=0, Name=SpiralU, Group=None }
+    CollectedScalarParameters[11] = { Value=0, Name=Speed V (AE), Group=None }
+    CollectedScalarParameters[12] = { Value=-1, Name=Color Bias, Group=None }
+    CollectedScalarParameters[13] = { Value=0, Name=Texture Bias, Group=None }
+    CollectedScalarParameters[14] = { Value=5, Name=FadeDistanceCenter, Group=None }
+    CollectedScalarParameters[15] = { Value=-0.15, Name=LightingPanner, Group=None }
+    CollectedScalarParameters[16] =
+    {
+        Value = 0.1
+        Name = Camera Offset Relative to Particle Size
+        Group = None
+    }
+    CollectedScalarParameters[17] = { Value=1, Name=Tile U, Group=None }
+    CollectedScalarParameters[18] = { Value=1, Name=Sharpen, Group=None }
+    CollectedScalarParameters[19] =
+    {
+        Value = 0
+        Name = SpiralV (Whole Numbers)
+        Group = None
+    }
+    CollectedScalarParameters[20] = { Value=1, Name=Tiling V (AE), Group=None }
+    CollectedScalarParameters[21] = { Value=0.2, Name=Alpha test, Group=None }
+    CollectedScalarParameters[22] = { Value=-1, Name=Warp Strength, Group=None }
+    CollectedScalarParameters[23] = { Value=1, Name=Mask RGB Strength, Group=None }
+    CollectedScalarParameters[24] = { Value=50, Name=FadeDistanceEdge, Group=None }
+    CollectedScalarParameters[25] = { Value=0, Name=AlphaMin, Group=None }
+    CollectedScalarParameters[26] = { Value=150, Name=Camera Distance, Group=None }
+    CollectedScalarParameters[27] = { Value=1, Name=Noise 1 Tiling U, Group=None }
+    CollectedScalarParameters[28] = { Value=1, Name=Noise 2 Tiling U, Group=None }
+    CollectedScalarParameters[29] = { Value=0, Name=Speed U (AE), Group=None }
+    CollectedScalarParameters[30] = { Value=0, Name=AlphaBias, Group=None }
+    CollectedScalarParameters[31] = { Value=1, Name=Randomize Texture, Group=None }
+    CollectedScalarParameters[32] = { Value=0.3, Name=Tile V, Group=None }
+    CollectedScalarParameters[33] = { Value=0.15, Name=NoiseStrenght, Group=None }
+    CollectedScalarParameters[34] = { Value=1, Name=Edge Mask Multiplyer, Group=None }
+    CollectedScalarParameters[35] = { Value=1, Name=NoiseSizeMultiplyer, Group=None }
+    CollectedScalarParameters[36] =
+    {
+        Value = 0
+        Name = Rotation Angle (0-1) (AE)
+        Group = None
+    }
+    CollectedScalarParameters[37] = { Value=1, Name=Texture Alpha Strength, Group=None }
+    CollectedScalarParameters[38] =
+    {
+        Value = 0
+        Name = Rotation Angle (0-1) (W)
+        Group = None
+    }
+    CollectedScalarParameters[39] = { Value=0, Name=Noise1_Horo_Speed, Group=None }
+    CollectedScalarParameters[40] = { Value=1, Name=Noise 1 Tiling V, Group=None }
+    CollectedScalarParameters[41] = { Value=0, Name=Pan U, Group=None }
+    CollectedScalarParameters[42] = { Value=1, Name=Noise 2 Tiling V, Group=None }
+    CollectedScalarParameters[43] = { Value=0, Name=Mask Bias, Group=None }
+    CollectedScalarParameters[44] = { Value=0, Name=TextureUVBias, Group=None }
+}
+CollectedVectorParameters[4] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0.25, G=0.5, B=2, A=1 }
+        Name = FlareColorEdge
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0.3, G=0.4, B=0.3, A=0 }
+        Name = Mask Channels
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=10, G=5, B=1, A=1 }
+        Name = FlareColorCenter
+        Group = None
+    }
+    CollectedVectorParameters[3] =
+    {
+        Value = { R=0.3, G=0.55, B=0.15, A=0 }
+        Name = Texture Channels
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

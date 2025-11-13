@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Environment/Hogwarts/SUB_GroundsQ/Materials/MI_HW_GroundsQ_Grotto_Mosaic.MI_HW_GroundsQ_Grotto_Mosaic'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Hogwarts/SUB_GroundsQ/Materials/MI_HW_GroundsQ_Grotto_Mosaic.MI_HW_GroundsQ_Grotto_Mosaic'
+        MaterialSlotName = lambert1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 606.312, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-13.4773, Y=-9.76762e-15, Z=159.517 }
+    BoxExtent = { X=125.469, Y=6.46175e-15, Z=105.528 }
+    SphereRadius = 151.625
+}

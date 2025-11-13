@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Meshes/Static/HairStyles/MI_HUM_M_Hair_STUHair02_Georgie.MI_HUM_M_Hair_STUHair02_Georgie'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Meshes/Static/HairStyles/MI_HUM_M_Hair_STUHair02_Georgie.MI_HUM_M_Hair_STUHair02_Georgie'
+        MaterialSlotName = SM_HUM_M_Hair_STUHair02_Georgie
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 25.6182, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0.0779791, Y=-0.0186281, Z=6.68333 }
+    BoxExtent = { X=12.2447, Y=13.2683, Z=13.1514 }
+    SphereRadius = 15.4336
+}

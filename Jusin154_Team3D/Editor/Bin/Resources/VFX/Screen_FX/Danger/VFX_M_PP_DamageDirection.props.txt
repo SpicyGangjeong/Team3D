@@ -1,0 +1,285 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[4] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseGreypack01_D.VFX_T_NoiseGreypack01_D'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/UI/VFX_T_DamageIndicatorMask_D.VFX_T_DamageIndicatorMask_D'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/UI/VFX_T_DamageIndicatorSpike_D.VFX_T_DamageIndicatorSpike_D'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/VFX_T_Screen_Danger_Ink_04_I.VFX_T_Screen_Danger_Ink_04_I'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[39] =
+                {
+                    ParameterInfos[0] = { Name=Input High (CV) }
+                    ParameterInfos[1] = { Name=Target Low (NSpd2_H) }
+                    ParameterInfos[2] = { Name=Target Hight (CH) }
+                    ParameterInfos[3] = { Name=Spike Intencity }
+                    ParameterInfos[4] = { Name=Input Low (NSpd1_H) }
+                    ParameterInfos[5] = { Name=Noise2_Horo_Speed }
+                    ParameterInfos[6] = { Name=Input High (NS) }
+                    ParameterInfos[7] = { Name=Noise1_Vert_Speed }
+                    ParameterInfos[8] = { Name=Input Low (CH) }
+                    ParameterInfos[9] = { Name=Target Hight (NSpd1_V) }
+                    ParameterInfos[10] = { Name=Noise2_Vert_Speed }
+                    ParameterInfos[11] = { Name=Input Low (NSpd2_H) }
+                    ParameterInfos[12] = { Name=Input Low (NSpd2_V) }
+                    ParameterInfos[13] = { Name=Target Low (NSpd2_V) }
+                    ParameterInfos[14] = { Name=Input Low (NS) }
+                    ParameterInfos[15] = { Name=Target Low (NSpd1_H) }
+                    ParameterInfos[16] = { Name=Target Hight (NS) }
+                    ParameterInfos[17] = { Name=Target Low (NSpd1_V) }
+                    ParameterInfos[18] = { Name=Target Hight (NSpd1_H) }
+                    ParameterInfos[19] = { Name=Target Hight (NSpd2_H) }
+                    ParameterInfos[20] = { Name=Target Low (NS) }
+                    ParameterInfos[21] = { Name=Input High (NSpd1_V) }
+                    ParameterInfos[22] = { Name=Input High (NSpd2_V) }
+                    ParameterInfos[23] = { Name=Target Low (CV) }
+                    ParameterInfos[24] = { Name=Input High (NSpd1_H) }
+                    ParameterInfos[25] = { Name=Target Hight (CV) }
+                    ParameterInfos[26] = { Name=NoiseStrenght }
+                    ParameterInfos[27] = { Name=NoiseSizeMultiplyer }
+                    ParameterInfos[28] = { Name=Input High (CH) }
+                    ParameterInfos[29] = { Name=Target Hight (NSpd2_V) }
+                    ParameterInfos[30] = { Name=1 }
+                    ParameterInfos[31] = { Name=Centerer H }
+                    ParameterInfos[32] = { Name=Target Low (CH) }
+                    ParameterInfos[33] = { Name=Noise1_Horo_Speed }
+                    ParameterInfos[34] = { Name=Input High (NSpd2_H) }
+                    ParameterInfos[35] = { Name=Rotation Angle (0-1) (S) }
+                    ParameterInfos[36] = { Name=Input Low (CV) }
+                    ParameterInfos[37] = { Name=Input Low (NSpd1_V) }
+                    ParameterInfos[38] = { Name=Centerer V }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Color }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[5] =
+                {
+                    ParameterInfos[0] = { Name=Direction Spike }
+                    ParameterInfos[1] = { Name=Texture Warp b }
+                    ParameterInfos[2] = { Name=Texture Warp A }
+                    ParameterInfos[3] = { Name=Cloud Mask }
+                    ParameterInfos[4] = { Name=Fade Mask }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[39] =
+        {
+            ScalarValues[0] = 1
+            ScalarValues[1] = -0.032
+            ScalarValues[2] = -0.06
+            ScalarValues[3] = 2
+            ScalarValues[4] = 0
+            ScalarValues[5] = 0
+            ScalarValues[6] = 1
+            ScalarValues[7] = 0
+            ScalarValues[8] = 0
+            ScalarValues[9] = 0.03
+            ScalarValues[10] = 0
+            ScalarValues[11] = 0
+            ScalarValues[12] = 0
+            ScalarValues[13] = -0.02
+            ScalarValues[14] = 0
+            ScalarValues[15] = 0.01
+            ScalarValues[16] = 0.18
+            ScalarValues[17] = 0.025
+            ScalarValues[18] = 0.05
+            ScalarValues[19] = -0.06
+            ScalarValues[20] = 0.1
+            ScalarValues[21] = 1
+            ScalarValues[22] = 1
+            ScalarValues[23] = -0.015
+            ScalarValues[24] = 1
+            ScalarValues[25] = -0.05
+            ScalarValues[26] = 0.05
+            ScalarValues[27] = 1
+            ScalarValues[28] = 1
+            ScalarValues[29] = -0.04
+            ScalarValues[30] = 1
+            ScalarValues[31] = 0
+            ScalarValues[32] = -0.02
+            ScalarValues[33] = 0
+            ScalarValues[34] = 1
+            ScalarValues[35] = 0.125
+            ScalarValues[36] = 0
+            ScalarValues[37] = 0
+            ScalarValues[38] = 0
+        }
+        VectorValues[1] =
+        {
+            VectorValues[0] = { R=1, G=0, B=0, A=0 }
+        }
+        TextureValues[5] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/UI/VFX_T_DamageIndicatorSpike_D.VFX_T_DamageIndicatorSpike_D'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseGreypack01_D.VFX_T_NoiseGreypack01_D'
+            TextureValues[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseGreypack01_D.VFX_T_NoiseGreypack01_D'
+            TextureValues[3] = Texture2D'/Game/VFX/Textures/UI/VFX_T_DamageIndicatorMask_D.VFX_T_DamageIndicatorMask_D'
+            TextureValues[4] = Texture2D'/Game/VFX/Textures/VFX_T_Screen_Danger_Ink_04_I.VFX_T_Screen_Danger_Ink_04_I'
+        }
+    }
+    ReferencedTextures[4] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/VFX_T_Screen_Danger_Ink_04_I.VFX_T_Screen_Danger_Ink_04_I'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/UI/VFX_T_DamageIndicatorSpike_D.VFX_T_DamageIndicatorSpike_D'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseGreypack01_D.VFX_T_NoiseGreypack01_D'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/UI/VFX_T_DamageIndicatorMask_D.VFX_T_DamageIndicatorMask_D'
+    }
+}
+BlendMode = BLEND_Modulate (4)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[5] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/UI/VFX_T_DamageIndicatorSpike_D.VFX_T_DamageIndicatorSpike_D'
+        Name = Direction Spike
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseGreypack01_D.VFX_T_NoiseGreypack01_D'
+        Name = Texture Warp b
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseGreypack01_D.VFX_T_NoiseGreypack01_D'
+        Name = Texture Warp A
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/UI/VFX_T_DamageIndicatorMask_D.VFX_T_DamageIndicatorMask_D'
+        Name = Cloud Mask
+        Group = None
+    }
+    CollectedTextureParameters[4] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_Screen_Danger_Ink_04_I.VFX_T_Screen_Danger_Ink_04_I'
+        Name = Fade Mask
+        Group = None
+    }
+}
+CollectedScalarParameters[39] =
+{
+    CollectedScalarParameters[0] = { Value=1, Name=Input High (CV), Group=None }
+    CollectedScalarParameters[1] =
+    {
+        Value = -0.032
+        Name = Target Low (NSpd2_H)
+        Group = None
+    }
+    CollectedScalarParameters[2] = { Value=-0.06, Name=Target Hight (CH), Group=None }
+    CollectedScalarParameters[3] = { Value=2, Name=Spike Intencity, Group=None }
+    CollectedScalarParameters[4] = { Value=0, Name=Input Low (NSpd1_H), Group=None }
+    CollectedScalarParameters[5] = { Value=0, Name=Noise2_Horo_Speed, Group=None }
+    CollectedScalarParameters[6] = { Value=1, Name=Input High (NS), Group=None }
+    CollectedScalarParameters[7] = { Value=0, Name=Noise1_Vert_Speed, Group=None }
+    CollectedScalarParameters[8] = { Value=0, Name=Input Low (CH), Group=None }
+    CollectedScalarParameters[9] =
+    {
+        Value = 0.03
+        Name = Target Hight (NSpd1_V)
+        Group = None
+    }
+    CollectedScalarParameters[10] = { Value=0, Name=Noise2_Vert_Speed, Group=None }
+    CollectedScalarParameters[11] = { Value=0, Name=Input Low (NSpd2_H), Group=None }
+    CollectedScalarParameters[12] = { Value=0, Name=Input Low (NSpd2_V), Group=None }
+    CollectedScalarParameters[13] =
+    {
+        Value = -0.02
+        Name = Target Low (NSpd2_V)
+        Group = None
+    }
+    CollectedScalarParameters[14] = { Value=0, Name=Input Low (NS), Group=None }
+    CollectedScalarParameters[15] =
+    {
+        Value = 0.01
+        Name = Target Low (NSpd1_H)
+        Group = None
+    }
+    CollectedScalarParameters[16] = { Value=0.18, Name=Target Hight (NS), Group=None }
+    CollectedScalarParameters[17] =
+    {
+        Value = 0.025
+        Name = Target Low (NSpd1_V)
+        Group = None
+    }
+    CollectedScalarParameters[18] =
+    {
+        Value = 0.05
+        Name = Target Hight (NSpd1_H)
+        Group = None
+    }
+    CollectedScalarParameters[19] =
+    {
+        Value = -0.06
+        Name = Target Hight (NSpd2_H)
+        Group = None
+    }
+    CollectedScalarParameters[20] = { Value=0.1, Name=Target Low (NS), Group=None }
+    CollectedScalarParameters[21] = { Value=1, Name=Input High (NSpd1_V), Group=None }
+    CollectedScalarParameters[22] = { Value=1, Name=Input High (NSpd2_V), Group=None }
+    CollectedScalarParameters[23] = { Value=-0.015, Name=Target Low (CV), Group=None }
+    CollectedScalarParameters[24] = { Value=1, Name=Input High (NSpd1_H), Group=None }
+    CollectedScalarParameters[25] = { Value=-0.05, Name=Target Hight (CV), Group=None }
+    CollectedScalarParameters[26] = { Value=0.05, Name=NoiseStrenght, Group=None }
+    CollectedScalarParameters[27] = { Value=1, Name=NoiseSizeMultiplyer, Group=None }
+    CollectedScalarParameters[28] = { Value=1, Name=Input High (CH), Group=None }
+    CollectedScalarParameters[29] =
+    {
+        Value = -0.04
+        Name = Target Hight (NSpd2_V)
+        Group = None
+    }
+    CollectedScalarParameters[30] = { Value=1, Name=1, Group=None }
+    CollectedScalarParameters[31] = { Value=0, Name=Centerer H, Group=None }
+    CollectedScalarParameters[32] = { Value=-0.02, Name=Target Low (CH), Group=None }
+    CollectedScalarParameters[33] = { Value=0, Name=Noise1_Horo_Speed, Group=None }
+    CollectedScalarParameters[34] = { Value=1, Name=Input High (NSpd2_H), Group=None }
+    CollectedScalarParameters[35] =
+    {
+        Value = 0.125
+        Name = Rotation Angle (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[36] = { Value=0, Name=Input Low (CV), Group=None }
+    CollectedScalarParameters[37] = { Value=0, Name=Input Low (NSpd1_V), Group=None }
+    CollectedScalarParameters[38] = { Value=0, Name=Centerer V, Group=None }
+}
+CollectedVectorParameters[1] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=1, G=0, B=0, A=0 }
+        Name = Color
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

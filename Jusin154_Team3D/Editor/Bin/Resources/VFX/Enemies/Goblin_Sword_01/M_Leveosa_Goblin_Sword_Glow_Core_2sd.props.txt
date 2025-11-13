@@ -1,0 +1,151 @@
+TwoSided = true
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[2] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_CausticsTile_Grey_D.VFX_T_CausticsTile_Grey_D'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseGreypack01_D.VFX_T_NoiseGreypack01_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[16] =
+                {
+                    ParameterInfos[0] = { Name=Noise2_Horo_Speed }
+                    ParameterInfos[1] = { Name=Noise1_Vert_Speed }
+                    ParameterInfos[2] = { Name=Speed V a }
+                    ParameterInfos[3] = { Name=Speed U a }
+                    ParameterInfos[4] = { Name=Tiling U }
+                    ParameterInfos[5] = { Name=Speed U }
+                    ParameterInfos[6] = { Name=Tiling V }
+                    ParameterInfos[7] = { Name=Noise2_Vert_Speed }
+                    ParameterInfos[8] = { Name=Alpha }
+                    ParameterInfos[9] = { Name=LightingPanner }
+                    ParameterInfos[10] = { Name=Tiling U a  }
+                    ParameterInfos[11] = { Name=Tiling V a }
+                    ParameterInfos[12] = { Name=NoiseStrenght }
+                    ParameterInfos[13] = { Name=NoiseSizeMultiplyer }
+                    ParameterInfos[14] = { Name=Speed V }
+                    ParameterInfos[15] = { Name=Noise1_Horo_Speed }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Color }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=Texture B }
+                    ParameterInfos[1] = { Name=Texture A }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[16] =
+        {
+            ScalarValues[0] = 0
+            ScalarValues[1] = 0
+            ScalarValues[2] = 0.2
+            ScalarValues[3] = 0.5
+            ScalarValues[4] = 1
+            ScalarValues[5] = 0.3
+            ScalarValues[6] = 1
+            ScalarValues[7] = 0
+            ScalarValues[8] = 1
+            ScalarValues[9] = -0.15
+            ScalarValues[10] = 1
+            ScalarValues[11] = 1
+            ScalarValues[12] = 0.15
+            ScalarValues[13] = 1
+            ScalarValues[14] = 0.2
+            ScalarValues[15] = 0
+        }
+        VectorValues[1] =
+        {
+            VectorValues[0] = { R=8.65871, G=1.69624, B=100, A=1 }
+        }
+        TextureValues[2] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_CausticsTile_Grey_D.VFX_T_CausticsTile_Grey_D'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_CausticsTile_Grey_D.VFX_T_CausticsTile_Grey_D'
+        }
+    }
+    ReferencedTextures[2] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_CausticsTile_Grey_D.VFX_T_CausticsTile_Grey_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseGreypack01_D.VFX_T_NoiseGreypack01_D'
+    }
+}
+BlendMode = BLEND_Additive (3)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[2] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_CausticsTile_Grey_D.VFX_T_CausticsTile_Grey_D'
+        Name = Texture B
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_CausticsTile_Grey_D.VFX_T_CausticsTile_Grey_D'
+        Name = Texture A
+        Group = None
+    }
+}
+CollectedScalarParameters[16] =
+{
+    CollectedScalarParameters[0] = { Value=0, Name=Noise2_Horo_Speed, Group=None }
+    CollectedScalarParameters[1] = { Value=0, Name=Noise1_Vert_Speed, Group=None }
+    CollectedScalarParameters[2] = { Value=0.2, Name=Speed V a, Group=None }
+    CollectedScalarParameters[3] = { Value=0.5, Name=Speed U a, Group=None }
+    CollectedScalarParameters[4] = { Value=1, Name=Tiling U, Group=None }
+    CollectedScalarParameters[5] = { Value=0.3, Name=Speed U, Group=None }
+    CollectedScalarParameters[6] = { Value=1, Name=Tiling V, Group=None }
+    CollectedScalarParameters[7] = { Value=0, Name=Noise2_Vert_Speed, Group=None }
+    CollectedScalarParameters[8] = { Value=1, Name=Alpha, Group=None }
+    CollectedScalarParameters[9] = { Value=-0.15, Name=LightingPanner, Group=None }
+    CollectedScalarParameters[10] = { Value=1, Name=Tiling U a , Group=None }
+    CollectedScalarParameters[11] = { Value=1, Name=Tiling V a, Group=None }
+    CollectedScalarParameters[12] = { Value=0.15, Name=NoiseStrenght, Group=None }
+    CollectedScalarParameters[13] = { Value=1, Name=NoiseSizeMultiplyer, Group=None }
+    CollectedScalarParameters[14] = { Value=0.2, Name=Speed V, Group=None }
+    CollectedScalarParameters[15] = { Value=0, Name=Noise1_Horo_Speed, Group=None }
+}
+CollectedVectorParameters[1] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=8.65871, G=1.69624, B=100, A=1 }
+        Name = Color
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_NoiseGreypack01_D
+    }
+}

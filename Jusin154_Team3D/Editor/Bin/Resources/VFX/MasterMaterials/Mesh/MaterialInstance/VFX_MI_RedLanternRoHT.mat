@@ -1,0 +1,9 @@
+Diffuse=T_Sanc_RoHT_RedLantern_01_D
+Normal=T_Sanc_RoHT_RedLantern_01_N
+Emissive=T_Sanc_RoHT_RedLantern_01_E
+Other[0]=T_Sanc_RoHT_RedLantern_01_MROH
+Other[1]=base_flat_n
+Other[2]=base_white_d
+Other[3]=T_Base011_MRO
+Other[4]=VFX_T_Marble_01R_D
+Other[5]=VFX_T_Noise09_D

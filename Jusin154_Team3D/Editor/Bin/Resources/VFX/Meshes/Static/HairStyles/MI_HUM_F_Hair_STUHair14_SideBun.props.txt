@@ -1,0 +1,116 @@
+Parent = MaterialInstanceConstant'/Game/RiggedObjects/Characters/Human/Hair/Hair_F/STUHair14/Material/MI_HUM_F_Hair_STUHair14_SideBun_Master.MI_HUM_F_Hair_STUHair14_SideBun_Master'
+ScalarParameterValues[7] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=Value Variation }
+        ParameterValue = 0.642857
+        ParameterName = None
+    }
+    ScalarParameterValues[1] =
+    {
+        ParameterInfo = { Name=PDO }
+        ParameterValue = 0.2
+        ParameterName = None
+    }
+    ScalarParameterValues[2] =
+    {
+        ParameterInfo = { Name=EdgeMaskMin }
+        ParameterValue = 0.5
+        ParameterName = None
+    }
+    ScalarParameterValues[3] =
+    {
+        ParameterInfo = { Name=Dye Roughness }
+        ParameterValue = 0.4
+        ParameterName = None
+    }
+    ScalarParameterValues[4] =
+    {
+        ParameterInfo = { Name=Hair Roughness }
+        ParameterValue = 0.394762
+        ParameterName = None
+    }
+    ScalarParameterValues[5] =
+    {
+        ParameterInfo = { Name=Spec Multiplier }
+        ParameterValue = 0.5
+        ParameterName = None
+    }
+    ScalarParameterValues[6] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[2] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=DAO Mask }
+        ParameterValue = Texture2D'/Game/RiggedObjects/Characters/Human/Hair/Hair_F/STUHair14/Texture/T_HUM_F_Hair_StuHair14_SideBun_DAO_MSK.T_HUM_F_Hair_StuHair14_SideBun_DAO_MSK'
+        ParameterName = None
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=THV Mask }
+        ParameterValue = Texture2D'/Game/RiggedObjects/Characters/Human/Hair/Hair_F/STUHair14/Texture/T_HUM_F_Hair_StuHair14_SideBun_THV_MSK.T_HUM_F_Hair_StuHair14_SideBun_THV_MSK'
+        ParameterName = None
+    }
+}
+VectorParameterValues[3] =
+{
+    VectorParameterValues[0] =
+    {
+        ParameterInfo = { Name=RootColor }
+        ParameterValue = { R=0.255208, G=0.127805, B=0.073617, A=1 }
+        ParameterName = None
+    }
+    VectorParameterValues[1] =
+    {
+        ParameterInfo = { Name=TipColor }
+        ParameterValue = { R=0.244792, G=0.121239, B=0.109046, A=1 }
+        ParameterName = None
+    }
+    VectorParameterValues[2] =
+    {
+        ParameterInfo = { Name=Dye Color }
+        ParameterValue = { R=0.390625, G=0.190825, B=0.135962, A=1 }
+        ParameterName = None
+    }
+}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Masked (1)
+    bOverride_TwoSided = false
+    TwoSided = true
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[1] =
+    {
+        StaticSwitchParameters[0] =
+        {
+            Value = false
+            ParameterInfo = { Name=SimpleHair }
+            bOverride = true
+        }
+    }
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

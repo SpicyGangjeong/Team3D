@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Niagara/Basic/Candle/VFX_MI_Candles_3DParticle.VFX_MI_Candles_3DParticle'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Niagara/Basic/Candle/VFX_MI_Candles_3DParticle.VFX_MI_Candles_3DParticle'
+        MaterialSlotName = VFX_MI_Candles_3DParticle
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 64.6375, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-0.0944829, Y=0.087409, Z=-0.274954 }
+    BoxExtent = { X=4.11797, Y=3.13207, Z=18.1573 }
+    SphereRadius = 18.4576
+}

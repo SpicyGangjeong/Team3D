@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/VFX_MI_UltraFlare_Leviosa.VFX_MI_UltraFlare_Leviosa'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/VFX_MI_UltraFlare_Leviosa.VFX_MI_UltraFlare_Leviosa'
+        MaterialSlotName = MI_HW_DADA_DragonBones_A_R_Clean_A
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 315.585, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0.00315857, Y=9.40446, Z=-4.01167 }
+    BoxExtent = { X=97.0916, Y=110.71, Z=72.4 }
+    SphereRadius = 147.37
+}

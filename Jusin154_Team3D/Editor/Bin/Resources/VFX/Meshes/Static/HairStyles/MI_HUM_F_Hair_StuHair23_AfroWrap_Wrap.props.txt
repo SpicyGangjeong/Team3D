@@ -1,0 +1,82 @@
+Parent = Material3'/Game/RiggedObjects/MasterMaterials/MM_Prop_SSS.MM_Prop_SSS'
+ScalarParameterValues[4] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=Center Multiplier }
+        ParameterValue = 0.2
+        ParameterName = None
+    }
+    ScalarParameterValues[1] =
+    {
+        ParameterInfo = { Name=Edge Multiplier }
+        ParameterValue = 1.2
+        ParameterName = None
+    }
+    ScalarParameterValues[2] =
+    {
+        ParameterInfo = { Name=FX_Fresnel Power }
+        ParameterValue = 5
+        ParameterName = None
+    }
+    ScalarParameterValues[3] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[4] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=Normal }
+        ParameterValue = Texture2D'/Game/RiggedObjects/Characters/Human/Hair/Hair_F/STUHair23/Textures/T_HUM_F_Hair_StuHair23_AfroWrap_Wrap_N.T_HUM_F_Hair_StuHair23_AfroWrap_Wrap_N'
+        ParameterName = None
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=SSS Color Map }
+        ParameterValue = Texture2D'/Game/RiggedObjects/Characters/Human/Hair/Hair_F/STUHair23/Textures/T_HUM_F_Hair_StuHair23_AfroWrap_Wrap_D.T_HUM_F_Hair_StuHair23_AfroWrap_Wrap_D'
+        ParameterName = None
+    }
+    TextureParameterValues[2] =
+    {
+        ParameterInfo = { Name=Diffuse }
+        ParameterValue = Texture2D'/Game/RiggedObjects/Characters/Human/Hair/Hair_F/STUHair23/Textures/T_HUM_F_Hair_StuHair23_AfroWrap_Wrap_D.T_HUM_F_Hair_StuHair23_AfroWrap_Wrap_D'
+        ParameterName = None
+    }
+    TextureParameterValues[3] =
+    {
+        ParameterInfo = { Name=MRO }
+        ParameterValue = Texture2D'/Game/RiggedObjects/Characters/Human/Hair/Hair_F/STUHair23/Textures/T_HUM_F_Hair_StuHair23_AfroWrap_Wrap_MRO.T_HUM_F_Hair_StuHair23_AfroWrap_Wrap_MRO'
+        ParameterName = None
+    }
+}
+VectorParameterValues[0] = {}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Masked (1)
+    bOverride_TwoSided = false
+    TwoSided = true
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[0] = {}
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

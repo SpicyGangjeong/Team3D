@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Cinematic/MaterialInstances/MI_AnteChamber_MapGlassFloorDissolve.MI_AnteChamber_MapGlassFloorDissolve'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Cinematic/MaterialInstances/MI_AnteChamber_MapGlassFloorDissolve.MI_AnteChamber_MapGlassFloorDissolve'
+        MaterialSlotName = lambert1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 119.009, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=1.90735e-05, Y=1.52588e-05, Z=45.0104 }
+    BoxExtent = { X=50.4359, Y=50.4359, Z=5.4256 }
+    SphereRadius = 50.7269
+}

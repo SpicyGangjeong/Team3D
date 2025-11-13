@@ -1,0 +1,9 @@
+Diffuse=VFX_T_MarbleSkin_01_BPF_D
+Normal=VFX_T_water_flow_N
+Emissive=VFX_T_Cursed_X_Inner_D
+Other[0]=VFX_T_Cursed_X_Inverted_BPF_D
+Other[1]=VFX_T_Cursed_X_Outer_D
+Other[2]=HeatmapGradient
+Other[3]=VFX_T_CausticNoise_C_Seamless_N
+Other[4]=VFX_T_Noise04_D
+Other[5]=VFX_T_Cursed_X_BPF_D

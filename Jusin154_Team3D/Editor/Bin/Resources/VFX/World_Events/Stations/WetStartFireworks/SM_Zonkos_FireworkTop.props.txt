@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Gameplay/InventoryObjects/Pranks/Materials/etc/MI_Zonkos_Fireworks_05.MI_Zonkos_Fireworks_05'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Gameplay/InventoryObjects/Pranks/Materials/etc/MI_Zonkos_Fireworks_05.MI_Zonkos_Fireworks_05'
+        MaterialSlotName = MI_Zonkos_Fireworks_06
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 23.5727, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0.80265, Y=2.7912, Z=87.1133 }
+    BoxExtent = { X=2.29045, Y=2.3258, Z=18.2031 }
+    SphereRadius = 18.2211
+}

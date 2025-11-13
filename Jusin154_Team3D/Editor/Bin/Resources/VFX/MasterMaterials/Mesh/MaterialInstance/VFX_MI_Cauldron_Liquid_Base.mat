@@ -1,0 +1,8 @@
+Diffuse=T_foam_D
+Normal=DefaultNormal
+Other[0]=T_FX_Flowmap_FM
+Other[1]=DefaultDiffuse
+Other[2]=LowResBlurredNoise
+Other[3]=VFX_T_LowFreq_FM
+Other[4]=VFX_T_DistortionNoise_N
+Other[5]=VFX_T_Wavy_N

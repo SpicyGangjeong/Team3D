@@ -1,0 +1,200 @@
+TwoSided = true
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[6] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseCaustics01_Color_D.VFX_T_NoiseCaustics01_Color_D'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RGB_3DNoiseRough_D.VFX_T_RGB_3DNoiseRough_D'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/T_Web_Net_N.T_Web_Net_N'
+    ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/VFX_T_SpiderWeb_D.VFX_T_SpiderWeb_D'
+    ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/VFX_T_SpiderWeb_N.VFX_T_SpiderWeb_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[21] =
+                {
+                    ParameterInfos[0] = { Name=Burning Edge Size }
+                    ParameterInfos[1] = { Name=Debug Time Bias }
+                    ParameterInfos[2] = { Name=Noise Strength }
+                    ParameterInfos[3] = { Name=NoiseTile }
+                    ParameterInfos[4] = { Name=Unlit Brightness }
+                    ParameterInfos[5] = { Name=Tile }
+                    ParameterInfos[6] = { Name=Debug Burn Size }
+                    ParameterInfos[7] = { Name=Specular Chroma Strength }
+                    ParameterInfos[8] = { Name=Fade Distance }
+                    ParameterInfos[9] = { Name=LightBrightness }
+                    ParameterInfos[10] = { Name=Param }
+                    ParameterInfos[11] = { Name=Specular Sharpness }
+                    ParameterInfos[12] = { Name=Alpha Bias }
+                    ParameterInfos[13] = { Name=WPO Edge Size }
+                    ParameterInfos[14] = { Name=Light Tightness }
+                    ParameterInfos[15] = { Name=Pull Contrast }
+                    ParameterInfos[16] = { Name=Light Expand From Fire }
+                    ParameterInfos[17] = { Name=Normals Mult }
+                    ParameterInfos[18] = { Name=WPO Noise Strength }
+                    ParameterInfos[19] = { Name=Specular Tiling }
+                    ParameterInfos[20] = { Name=Debug Burn Offset }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[4] =
+                {
+                    ParameterInfos[0] = { Name=Specular Color }
+                    ParameterInfos[1] = { Name=BurnColor }
+                    ParameterInfos[2] = { Name=Web Color }
+                    ParameterInfos[3] = { Name=Hanging WPO }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Texture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[21] =
+        {
+            ScalarValues[0] = 100
+            ScalarValues[1] = 0
+            ScalarValues[2] = 100
+            ScalarValues[3] = 200
+            ScalarValues[4] = 0.01
+            ScalarValues[5] = 1.5
+            ScalarValues[6] = 500
+            ScalarValues[7] = 0.25
+            ScalarValues[8] = 100
+            ScalarValues[9] = 0.02
+            ScalarValues[10] = 1
+            ScalarValues[11] = 50
+            ScalarValues[12] = 0
+            ScalarValues[13] = 50
+            ScalarValues[14] = 100
+            ScalarValues[15] = 1
+            ScalarValues[16] = 1000
+            ScalarValues[17] = 8
+            ScalarValues[18] = 50
+            ScalarValues[19] = 0.5
+            ScalarValues[20] = 0
+        }
+        VectorValues[4] =
+        {
+            VectorValues[0] = { R=1, G=1, B=1, A=0 }
+            VectorValues[1] = { R=10, G=3, B=0.5, A=0 }
+            VectorValues[2] = { R=1, G=1, B=1, A=0.01 }
+            VectorValues[3] = { R=0, G=0, B=1, A=1 }
+        }
+        TextureValues[1] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/VFX_T_SpiderWeb_D.VFX_T_SpiderWeb_D'
+        }
+    }
+    ReferencedTextures[6] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/T_Web_Net_N.T_Web_Net_N'
+        ReferencedTextures[1] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RGB_3DNoiseRough_D.VFX_T_RGB_3DNoiseRough_D'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/VFX_T_SpiderWeb_D.VFX_T_SpiderWeb_D'
+        ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseCaustics01_Color_D.VFX_T_NoiseCaustics01_Color_D'
+        ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/VFX_T_SpiderWeb_N.VFX_T_SpiderWeb_N'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[1] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_SpiderWeb_D.VFX_T_SpiderWeb_D'
+        Name = Texture
+        Group = None
+    }
+}
+CollectedScalarParameters[21] =
+{
+    CollectedScalarParameters[0] = { Value=100, Name=Burning Edge Size, Group=None }
+    CollectedScalarParameters[1] = { Value=0, Name=Debug Time Bias, Group=None }
+    CollectedScalarParameters[2] = { Value=100, Name=Noise Strength, Group=None }
+    CollectedScalarParameters[3] = { Value=200, Name=NoiseTile, Group=None }
+    CollectedScalarParameters[4] = { Value=0.01, Name=Unlit Brightness, Group=None }
+    CollectedScalarParameters[5] = { Value=1.5, Name=Tile, Group=None }
+    CollectedScalarParameters[6] = { Value=500, Name=Debug Burn Size, Group=None }
+    CollectedScalarParameters[7] =
+    {
+        Value = 0.25
+        Name = Specular Chroma Strength
+        Group = None
+    }
+    CollectedScalarParameters[8] = { Value=100, Name=Fade Distance, Group=None }
+    CollectedScalarParameters[9] = { Value=0.02, Name=LightBrightness, Group=None }
+    CollectedScalarParameters[10] = { Value=1, Name=Param, Group=None }
+    CollectedScalarParameters[11] = { Value=50, Name=Specular Sharpness, Group=None }
+    CollectedScalarParameters[12] = { Value=0, Name=Alpha Bias, Group=None }
+    CollectedScalarParameters[13] = { Value=50, Name=WPO Edge Size, Group=None }
+    CollectedScalarParameters[14] = { Value=100, Name=Light Tightness, Group=None }
+    CollectedScalarParameters[15] = { Value=1, Name=Pull Contrast, Group=None }
+    CollectedScalarParameters[16] =
+    {
+        Value = 1000
+        Name = Light Expand From Fire
+        Group = None
+    }
+    CollectedScalarParameters[17] = { Value=8, Name=Normals Mult, Group=None }
+    CollectedScalarParameters[18] = { Value=50, Name=WPO Noise Strength, Group=None }
+    CollectedScalarParameters[19] = { Value=0.5, Name=Specular Tiling, Group=None }
+    CollectedScalarParameters[20] = { Value=0, Name=Debug Burn Offset, Group=None }
+}
+CollectedVectorParameters[4] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=1, G=1, B=1, A=0 }
+        Name = Specular Color
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=10, G=3, B=0.5, A=0 }
+        Name = BurnColor
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=1, G=1, B=1, A=0.01 }
+        Name = Web Color
+        Group = None
+    }
+    CollectedVectorParameters[3] =
+    {
+        Value = { R=0, G=0, B=1, A=1 }
+        Name = Hanging WPO
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_SpiderWeb_N
+    }
+}

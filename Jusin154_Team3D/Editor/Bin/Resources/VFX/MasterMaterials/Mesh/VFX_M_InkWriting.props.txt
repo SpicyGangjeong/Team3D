@@ -1,0 +1,154 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[5] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise04_D.VFX_T_Noise04_D'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise05_D.VFX_T_Noise05_D'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/VFX_T_InkLines_D.VFX_T_InkLines_D'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/VFX_T_Inky_Smoke_D.VFX_T_Inky_Smoke_D'
+    ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/VFX_T_Wisps_D.VFX_T_Wisps_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[14] =
+                {
+                    ParameterInfos[0] = { Name=Emissive Offset U }
+                    ParameterInfos[1] = { Name=DrawOnAlpha }
+                    ParameterInfos[2] = { Name=AlphaStrength }
+                    ParameterInfos[3] = { Name=Alpha Erosion Multiplier }
+                    ParameterInfos[4] = { Name=TextureOffset V }
+                    ParameterInfos[5] = { Name=DissolveSoftness }
+                    ParameterInfos[6] = { Name=Emissive Speed U }
+                    ParameterInfos[7] = { Name=Emissive Offset V }
+                    ParameterInfos[8] = { Name=DissolveAlpha }
+                    ParameterInfos[9] = { Name=Emissive Tiling V }
+                    ParameterInfos[10] = { Name=DrawOnSoftness }
+                    ParameterInfos[11] = { Name=Emissive Speed V }
+                    ParameterInfos[12] = { Name=TextureOffset U }
+                    ParameterInfos[13] = { Name=Emissive Tiling U }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=EmissiveColour }
+                    ParameterInfos[1] = { Name=BaseColour }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=Texture }
+                    ParameterInfos[1] = { Name=EmissiveTexture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[14] = { 0, 0, 5, 1, 0, 0.15, 0, 0, 1, 1, 0, 0, 0, 1 }
+        VectorValues[2] =
+        {
+            VectorValues[0] = { R=1, G=1, B=1, A=1 }
+            VectorValues[1] = { R=1, G=1, B=1, A=1 }
+        }
+        TextureValues[2] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/VFX_T_InkLines_D.VFX_T_InkLines_D'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise05_D.VFX_T_Noise05_D'
+        }
+    }
+    ReferencedTextures[5] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/VFX_T_InkLines_D.VFX_T_InkLines_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise04_D.VFX_T_Noise04_D'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise05_D.VFX_T_Noise05_D'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/VFX_T_Wisps_D.VFX_T_Wisps_D'
+        ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/VFX_T_Inky_Smoke_D.VFX_T_Inky_Smoke_D'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[2] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_InkLines_D.VFX_T_InkLines_D'
+        Name = Texture
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise05_D.VFX_T_Noise05_D'
+        Name = EmissiveTexture
+        Group = None
+    }
+}
+CollectedScalarParameters[14] =
+{
+    CollectedScalarParameters[0] = { Value=0, Name=Emissive Offset U, Group=None }
+    CollectedScalarParameters[1] = { Value=0, Name=DrawOnAlpha, Group=None }
+    CollectedScalarParameters[2] = { Value=5, Name=AlphaStrength, Group=None }
+    CollectedScalarParameters[3] =
+    {
+        Value = 1
+        Name = Alpha Erosion Multiplier
+        Group = None
+    }
+    CollectedScalarParameters[4] = { Value=0, Name=TextureOffset V, Group=None }
+    CollectedScalarParameters[5] = { Value=0.15, Name=DissolveSoftness, Group=None }
+    CollectedScalarParameters[6] = { Value=0, Name=Emissive Speed U, Group=None }
+    CollectedScalarParameters[7] = { Value=0, Name=Emissive Offset V, Group=None }
+    CollectedScalarParameters[8] = { Value=1, Name=DissolveAlpha, Group=None }
+    CollectedScalarParameters[9] = { Value=1, Name=Emissive Tiling V, Group=None }
+    CollectedScalarParameters[10] = { Value=0, Name=DrawOnSoftness, Group=None }
+    CollectedScalarParameters[11] = { Value=0, Name=Emissive Speed V, Group=None }
+    CollectedScalarParameters[12] = { Value=0, Name=TextureOffset U, Group=None }
+    CollectedScalarParameters[13] = { Value=1, Name=Emissive Tiling U, Group=None }
+}
+CollectedVectorParameters[2] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=1, G=1, B=1, A=1 }
+        Name = EmissiveColour
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=1, G=1, B=1, A=1 }
+        Name = BaseColour
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[2] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_InkLines_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 10
+        UVChannelIndex = 0
+        TextureName = VFX_T_Noise04_D
+    }
+}

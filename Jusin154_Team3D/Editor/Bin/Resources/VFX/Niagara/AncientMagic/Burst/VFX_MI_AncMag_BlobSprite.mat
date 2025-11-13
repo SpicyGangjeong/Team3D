@@ -1,0 +1,8 @@
+Diffuse=VFX_T_Circle_Padded_D
+Normal=VFX_T_SphereNormal_Padded_N
+Emissive=VFX_T_SoftCutout_D
+Other[0]=VFX_T_Base_Metallic_MRO
+Other[1]=VFX_T_Wavy_N
+Other[2]=base_flat_n
+Other[3]=base_white_d
+Other[4]=T_Base011_MRO

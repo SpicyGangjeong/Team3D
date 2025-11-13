@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Niagara/AncientMagic/Hotspot/VFX_MI_SplineThicken_Pan_AncMagicRibbon01.VFX_MI_SplineThicken_Pan_AncMagicRibbon01'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Niagara/AncientMagic/Hotspot/VFX_MI_SplineThicken_Pan_AncMagicRibbon01.VFX_MI_SplineThicken_Pan_AncMagicRibbon01'
+        MaterialSlotName = WorldGridMaterial
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 112.87, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-154.972, Y=-556.909, Z=-0.3996 }
+    BoxExtent = { X=3077.93, Y=2474.06, Z=1.30499 }
+    SphereRadius = 3556.65
+}

@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/VFX_MI_WhirlpoolTeleport01.VFX_MI_WhirlpoolTeleport01'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/VFX_MI_WhirlpoolTeleport01.VFX_MI_WhirlpoolTeleport01'
+        MaterialSlotName = SwirlSegment02
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 97.9505, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-37.4198, Y=-27.5032, Z=3.24577 }
+    BoxExtent = { X=46.3602, Y=30.9705, Z=3.24577 }
+    SphereRadius = 52.0564
+}

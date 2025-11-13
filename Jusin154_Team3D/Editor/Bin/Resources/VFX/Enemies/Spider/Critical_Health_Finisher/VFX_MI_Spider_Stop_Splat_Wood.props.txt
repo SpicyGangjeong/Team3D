@@ -1,0 +1,86 @@
+Parent = Material3'/Game/VFX/Particles/Magic/BatBogeyHex/VFX_M_SplatDecal.VFX_M_SplatDecal'
+ScalarParameterValues[2] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=Frame }
+        ParameterValue = 2
+        ParameterName = None
+    }
+    ScalarParameterValues[1] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[2] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=Alpha Texture }
+        ParameterValue = Texture2D'/Game/VFX/Textures/Decals/VFX_T_Splatter_Decals_2_D.VFX_T_Splatter_Decals_2_D'
+        ParameterName = None
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=Normal Texture }
+        ParameterValue = Texture2D'/Game/VFX/Textures/Decals/VFX_T_Splatter_Decals_2_N.VFX_T_Splatter_Decals_2_N'
+        ParameterName = None
+    }
+}
+VectorParameterValues[1] =
+{
+    VectorParameterValues[0] =
+    {
+        ParameterInfo = { Name=Base Color }
+        ParameterValue = { R=0.305882, G=0.254902, B=0.082353, A=1 }
+        ParameterName = None
+    }
+}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Translucent (2)
+    bOverride_TwoSided = false
+    TwoSided = false
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[0] = {}
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[3] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 1
+        TextureName = VFX_T_SkinBurn_Alpha_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 0.5
+        UVChannelIndex = 0
+        TextureName = VFX_T_Splatter_Decals_2_D
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 0.5
+        UVChannelIndex = 0
+        TextureName = VFX_T_Splatter_Decals_2_N
+    }
+}

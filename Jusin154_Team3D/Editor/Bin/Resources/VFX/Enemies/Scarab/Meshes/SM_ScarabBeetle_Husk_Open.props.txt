@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Enemies/Scarab/Materials/MI_ScarabBeetle_Husk.MI_ScarabBeetle_Husk'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Enemies/Scarab/Materials/MI_ScarabBeetle_Husk.MI_ScarabBeetle_Husk'
+        MaterialSlotName = 01 - Default
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 22.7331, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=1.24307, Z=-0.896376 }
+    BoxExtent = { X=10.1154, Y=4.89376, Z=8.33685 }
+    SphereRadius = 12.3323
+}

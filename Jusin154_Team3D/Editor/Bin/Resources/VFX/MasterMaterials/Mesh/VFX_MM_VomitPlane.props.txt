@@ -1,0 +1,179 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[4] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise04_D.VFX_T_Noise04_D'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_noise140_D.VFX_T_noise140_D'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseTiled_1_D.VFX_T_NoiseTiled_1_D'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[15] =
+                {
+                    ParameterInfos[0] = { Name=Mask Distortion Edge }
+                    ParameterInfos[1] = { Name=WPOTexturePanY }
+                    ParameterInfos[2] = { Name=Texture2TileX }
+                    ParameterInfos[3] = { Name=DistortionPanX }
+                    ParameterInfos[4] = { Name=WPO }
+                    ParameterInfos[5] = { Name=Texture2PanY }
+                    ParameterInfos[6] = { Name=DistortionStrengthMax }
+                    ParameterInfos[7] = { Name=DistortionTileY }
+                    ParameterInfos[8] = { Name=Texture2PanX }
+                    ParameterInfos[9] = { Name=WPOTexturePanX }
+                    ParameterInfos[10] = { Name=WPOTextureTileX }
+                    ParameterInfos[11] = { Name=Texture2TileY }
+                    ParameterInfos[12] = { Name=DistortionTileX }
+                    ParameterInfos[13] = { Name=DistortionPanY }
+                    ParameterInfos[14] = { Name=WPOTextureTileY }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[3] =
+                {
+                    ParameterInfos[0] = { Name=Color_3 }
+                    ParameterInfos[1] = { Name=Color_1 }
+                    ParameterInfos[2] = { Name=Color_2 }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=WPOTexture }
+                    ParameterInfos[1] = { Name=DistortionTexture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[15] =
+        {
+            ScalarValues[0] = 0
+            ScalarValues[1] = 0.5
+            ScalarValues[2] = 1
+            ScalarValues[3] = 0
+            ScalarValues[4] = 20
+            ScalarValues[5] = 0.095238
+            ScalarValues[6] = 0.2
+            ScalarValues[7] = 1
+            ScalarValues[8] = 0
+            ScalarValues[9] = 0
+            ScalarValues[10] = 1
+            ScalarValues[11] = 1
+            ScalarValues[12] = 1
+            ScalarValues[13] = 0.2
+            ScalarValues[14] = 1
+        }
+        VectorValues[3] =
+        {
+            VectorValues[0] = { R=0.320833, G=0.291263, B=0.084872, A=1 }
+            VectorValues[1] = { R=0.0786213, G=0.0802085, B=0.0188221, A=1 }
+            VectorValues[2] = { R=0.584375, G=0.449014, B=0.161414, A=1 }
+        }
+        TextureValues[2] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise04_D.VFX_T_Noise04_D'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+        }
+    }
+    ReferencedTextures[4] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_noise140_D.VFX_T_noise140_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseTiled_1_D.VFX_T_NoiseTiled_1_D'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise04_D.VFX_T_Noise04_D'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+    }
+}
+BlendMode = BLEND_Opaque (0)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[2] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise04_D.VFX_T_Noise04_D'
+        Name = WPOTexture
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+        Name = DistortionTexture
+        Group = None
+    }
+}
+CollectedScalarParameters[15] =
+{
+    CollectedScalarParameters[0] = { Value=0, Name=Mask Distortion Edge, Group=None }
+    CollectedScalarParameters[1] = { Value=0.5, Name=WPOTexturePanY, Group=None }
+    CollectedScalarParameters[2] = { Value=1, Name=Texture2TileX, Group=None }
+    CollectedScalarParameters[3] = { Value=0, Name=DistortionPanX, Group=None }
+    CollectedScalarParameters[4] = { Value=20, Name=WPO, Group=None }
+    CollectedScalarParameters[5] = { Value=0.095238, Name=Texture2PanY, Group=None }
+    CollectedScalarParameters[6] =
+    {
+        Value = 0.2
+        Name = DistortionStrengthMax
+        Group = None
+    }
+    CollectedScalarParameters[7] = { Value=1, Name=DistortionTileY, Group=None }
+    CollectedScalarParameters[8] = { Value=0, Name=Texture2PanX, Group=None }
+    CollectedScalarParameters[9] = { Value=0, Name=WPOTexturePanX, Group=None }
+    CollectedScalarParameters[10] = { Value=1, Name=WPOTextureTileX, Group=None }
+    CollectedScalarParameters[11] = { Value=1, Name=Texture2TileY, Group=None }
+    CollectedScalarParameters[12] = { Value=1, Name=DistortionTileX, Group=None }
+    CollectedScalarParameters[13] = { Value=0.2, Name=DistortionPanY, Group=None }
+    CollectedScalarParameters[14] = { Value=1, Name=WPOTextureTileY, Group=None }
+}
+CollectedVectorParameters[3] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0.320833, G=0.291263, B=0.084872, A=1 }
+        Name = Color_3
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0.0786213, G=0.0802085, B=0.0188221, A=1 }
+        Name = Color_1
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=0.584375, G=0.449014, B=0.161414, A=1 }
+        Name = Color_2
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[2] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_noise140_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_NoiseTiled_1_D
+    }
+}

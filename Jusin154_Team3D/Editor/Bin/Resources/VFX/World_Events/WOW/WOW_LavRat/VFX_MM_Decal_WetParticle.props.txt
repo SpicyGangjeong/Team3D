@@ -1,0 +1,204 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[6] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/DefaultDiffuse.DefaultDiffuse'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Decals/T_FX_Decal_claw_D.T_FX_Decal_claw_D'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Decals/T_FX_Decal_claw_N.T_FX_Decal_claw_N'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Decals/T_FX_Decal_Dirt_H.T_FX_Decal_Dirt_H'
+    ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/T_FX_water_drops_D.T_FX_water_drops_D'
+    ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/VFX_T_Inky_Smoke_D.VFX_T_Inky_Smoke_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[14] =
+                {
+                    ParameterInfos[0] = { Name=Alpha Erosion Multiplier }
+                    ParameterInfos[1] = { Name=Minimum Fill }
+                    ParameterInfos[2] = { Name=Frame }
+                    ParameterInfos[3] = { Name=Vertical }
+                    ParameterInfos[4] = { Name=Metallic Amount }
+                    ParameterInfos[5] = { Name=Roughness Amount }
+                    ParameterInfos[6] = { Name=Horizontal Flip }
+                    ParameterInfos[7] = { Name=BumpOffset Depth }
+                    ParameterInfos[8] = { Name=Opacity Amount }
+                    ParameterInfos[9] = { Name=Max Fill }
+                    ParameterInfos[10] = { Name=Use Underlying normal Amount }
+                    ParameterInfos[11] = { Name=Horizontal }
+                    ParameterInfos[12] = { Name=Use Underlying Roughness Amount }
+                    ParameterInfos[13] = { Name=Specular Amount }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[3] =
+                {
+                    ParameterInfos[0] = { Name=Base Color }
+                    ParameterInfos[1] = { Name=Param }
+                    ParameterInfos[2] = { Name=AlphaChannel }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[3] =
+                {
+                    ParameterInfos[0] = { Name=Height }
+                    ParameterInfos[1] = { Name=Diffuse Texture }
+                    ParameterInfos[2] = { Name=Normal Texture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[14] =
+        {
+            ScalarValues[0] = 1
+            ScalarValues[1] = 0.3
+            ScalarValues[2] = 3
+            ScalarValues[3] = 2
+            ScalarValues[4] = 0
+            ScalarValues[5] = 1
+            ScalarValues[6] = 0
+            ScalarValues[7] = 0.07
+            ScalarValues[8] = 1
+            ScalarValues[9] = -0.2
+            ScalarValues[10] = 1
+            ScalarValues[11] = 2
+            ScalarValues[12] = 1
+            ScalarValues[13] = 1
+        }
+        VectorValues[3] =
+        {
+            VectorValues[0] = { R=0, G=0, B=0, A=1 }
+            VectorValues[1] = { R=0, G=0, B=1, A=1 }
+            VectorValues[2] = { R=0, G=0, B=0, A=1 }
+        }
+        TextureValues[3] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Decals/T_FX_Decal_Dirt_H.T_FX_Decal_Dirt_H'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/Decals/T_FX_Decal_claw_D.T_FX_Decal_claw_D'
+            TextureValues[2] = Texture2D'/Game/VFX/Textures/Decals/T_FX_Decal_claw_N.T_FX_Decal_claw_N'
+        }
+    }
+    ReferencedTextures[6] =
+    {
+        ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/DefaultDiffuse.DefaultDiffuse'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Decals/T_FX_Decal_claw_N.T_FX_Decal_claw_N'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Decals/T_FX_Decal_claw_D.T_FX_Decal_claw_D'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/T_FX_water_drops_D.T_FX_water_drops_D'
+        ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/Decals/T_FX_Decal_Dirt_H.T_FX_Decal_Dirt_H'
+        ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/VFX_T_Inky_Smoke_D.VFX_T_Inky_Smoke_D'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[3] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Decals/T_FX_Decal_Dirt_H.T_FX_Decal_Dirt_H'
+        Name = Height
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Decals/T_FX_Decal_claw_D.T_FX_Decal_claw_D'
+        Name = Diffuse Texture
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Decals/T_FX_Decal_claw_N.T_FX_Decal_claw_N'
+        Name = Normal Texture
+        Group = None
+    }
+}
+CollectedScalarParameters[14] =
+{
+    CollectedScalarParameters[0] =
+    {
+        Value = 1
+        Name = Alpha Erosion Multiplier
+        Group = None
+    }
+    CollectedScalarParameters[1] = { Value=0.3, Name=Minimum Fill, Group=None }
+    CollectedScalarParameters[2] = { Value=3, Name=Frame, Group=None }
+    CollectedScalarParameters[3] = { Value=2, Name=Vertical, Group=None }
+    CollectedScalarParameters[4] = { Value=0, Name=Metallic Amount, Group=None }
+    CollectedScalarParameters[5] = { Value=1, Name=Roughness Amount, Group=None }
+    CollectedScalarParameters[6] = { Value=0, Name=Horizontal Flip, Group=None }
+    CollectedScalarParameters[7] = { Value=0.07, Name=BumpOffset Depth, Group=None }
+    CollectedScalarParameters[8] = { Value=1, Name=Opacity Amount, Group=None }
+    CollectedScalarParameters[9] = { Value=-0.2, Name=Max Fill, Group=None }
+    CollectedScalarParameters[10] =
+    {
+        Value = 1
+        Name = Use Underlying normal Amount
+        Group = None
+    }
+    CollectedScalarParameters[11] = { Value=2, Name=Horizontal, Group=None }
+    CollectedScalarParameters[12] =
+    {
+        Value = 1
+        Name = Use Underlying Roughness Amount
+        Group = None
+    }
+    CollectedScalarParameters[13] = { Value=1, Name=Specular Amount, Group=None }
+}
+CollectedVectorParameters[3] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = Base Color
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0, G=0, B=1, A=1 }
+        Name = Param
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = AlphaChannel
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[3] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_FX_Decal_claw_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_FX_Decal_claw_N
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_FX_Decal_Dirt_H
+    }
+}

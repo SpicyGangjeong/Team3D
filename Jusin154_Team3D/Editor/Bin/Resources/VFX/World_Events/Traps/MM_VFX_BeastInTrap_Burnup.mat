@@ -1,0 +1,6 @@
+Diffuse=T_BIAT_D
+Normal=T_BIAT_N
+Emissive=T_Burnup_Emissive_Mask_MSK
+Other[0]=T_BIAT_MRO
+Other[1]=T_Gradient_Centre_MSK
+Other[2]=VFX_T_NoisyRamp_D

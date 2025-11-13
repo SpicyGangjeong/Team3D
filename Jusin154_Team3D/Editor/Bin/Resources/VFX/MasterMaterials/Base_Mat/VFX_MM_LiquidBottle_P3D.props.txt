@@ -1,0 +1,168 @@
+TwoSided = true
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[2] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_DistortionNoise_N.VFX_T_DistortionNoise_N'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise04_D.VFX_T_Noise04_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[14] =
+                {
+                    ParameterInfos[0] = { Name=Roughness }
+                    ParameterInfos[1] = { Name=Refraction }
+                    ParameterInfos[2] = { Name=Specular }
+                    ParameterInfos[3] = { Name=PanSpeed U }
+                    ParameterInfos[4] = { Name=AbsorptionCoefficients }
+                    ParameterInfos[5] = { Name=ColorScaleBehindWater }
+                    ParameterInfos[6] = { Name=Param }
+                    ParameterInfos[7] = { Name=PanSpeed V }
+                    ParameterInfos[8] = { Name=TilingSize }
+                    ParameterInfos[9] = { Name=Slosh Height }
+                    ParameterInfos[10] = { Name=Sloshiness Bias }
+                    ParameterInfos[11] = { Name=ScatteringCoefficients }
+                    ParameterInfos[12] = { Name=Opacity }
+                    ParameterInfos[13] = { Name=PhaseG }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[3] =
+                {
+                    ParameterInfos[0] = { Name=LightAbsorption_Edge }
+                    ParameterInfos[1] = { Name=LightAbsorption_Center }
+                    ParameterInfos[2] = { Name=Subsurface Color }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=Surfce Normal Tex }
+                    ParameterInfos[1] = { Name=Slosh Height Map }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[14] =
+        {
+            ScalarValues[0] = 0.155555
+            ScalarValues[1] = 0.99
+            ScalarValues[2] = 0.447619
+            ScalarValues[3] = 25
+            ScalarValues[4] = 0.5
+            ScalarValues[5] = 0.02349
+            ScalarValues[6] = 0
+            ScalarValues[7] = 30
+            ScalarValues[8] = 25
+            ScalarValues[9] = 8.5
+            ScalarValues[10] = 4
+            ScalarValues[11] = 0.0001
+            ScalarValues[12] = 0
+            ScalarValues[13] = 0
+        }
+        VectorValues[3] =
+        {
+            VectorValues[0] = { R=0.0260417, G=0.0260417, B=0.0260417, A=1 }
+            VectorValues[1] = { R=0.112847, G=0, B=0.0667977, A=0 }
+            VectorValues[2] = { R=0, G=0.01275, B=0.015, A=0 }
+        }
+        TextureValues[2] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_DistortionNoise_N.VFX_T_DistortionNoise_N'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise04_D.VFX_T_Noise04_D'
+        }
+    }
+    ReferencedTextures[2] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_DistortionNoise_N.VFX_T_DistortionNoise_N'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise04_D.VFX_T_Noise04_D'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[2] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_DistortionNoise_N.VFX_T_DistortionNoise_N'
+        Name = Surfce Normal Tex
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise04_D.VFX_T_Noise04_D'
+        Name = Slosh Height Map
+        Group = None
+    }
+}
+CollectedScalarParameters[14] =
+{
+    CollectedScalarParameters[0] = { Value=0.155555, Name=Roughness, Group=None }
+    CollectedScalarParameters[1] = { Value=0.99, Name=Refraction, Group=None }
+    CollectedScalarParameters[2] = { Value=0.447619, Name=Specular, Group=None }
+    CollectedScalarParameters[3] = { Value=25, Name=PanSpeed U, Group=None }
+    CollectedScalarParameters[4] =
+    {
+        Value = 0.5
+        Name = AbsorptionCoefficients
+        Group = None
+    }
+    CollectedScalarParameters[5] =
+    {
+        Value = 0.02349
+        Name = ColorScaleBehindWater
+        Group = None
+    }
+    CollectedScalarParameters[6] = { Value=0, Name=Param, Group=None }
+    CollectedScalarParameters[7] = { Value=30, Name=PanSpeed V, Group=None }
+    CollectedScalarParameters[8] = { Value=25, Name=TilingSize, Group=None }
+    CollectedScalarParameters[9] = { Value=8.5, Name=Slosh Height, Group=None }
+    CollectedScalarParameters[10] = { Value=4, Name=Sloshiness Bias, Group=None }
+    CollectedScalarParameters[11] =
+    {
+        Value = 0.0001
+        Name = ScatteringCoefficients
+        Group = None
+    }
+    CollectedScalarParameters[12] = { Value=0, Name=Opacity, Group=None }
+    CollectedScalarParameters[13] = { Value=0, Name=PhaseG, Group=None }
+}
+CollectedVectorParameters[3] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0.0260417, G=0.0260417, B=0.0260417, A=1 }
+        Name = LightAbsorption_Edge
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0.112847, G=0, B=0.0667977, A=0 }
+        Name = LightAbsorption_Center
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=0, G=0.01275, B=0.015, A=0 }
+        Name = Subsurface Color
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

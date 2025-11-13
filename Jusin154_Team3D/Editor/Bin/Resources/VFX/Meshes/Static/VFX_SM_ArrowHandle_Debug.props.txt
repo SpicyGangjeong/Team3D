@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = Material3'/Game/VFX/MasterMaterials/TEST/VFX_MM_VertColorOnly.VFX_MM_VertColorOnly'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = Material3'/Game/VFX/MasterMaterials/TEST/VFX_MM_VertColorOnly.VFX_MM_VertColorOnly'
+        MaterialSlotName = WorldGridMaterial
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 36.5852, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=45, Y=45, Z=45 }
+    BoxExtent = { X=55, Y=55, Z=55 }
+    SphereRadius = 84.8105
+}

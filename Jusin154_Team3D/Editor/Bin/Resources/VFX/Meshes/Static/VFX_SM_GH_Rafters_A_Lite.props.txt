@@ -1,0 +1,50 @@
+Materials[3] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/VFX_MI_Enchanted_Ceiling_Rafters.VFX_MI_Enchanted_Ceiling_Rafters'
+    Materials[1] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/VFX_MI_Enchanted_Ceiling_RaftersDetails.VFX_MI_Enchanted_Ceiling_RaftersDetails'
+    Materials[2] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/VFX_MI_Enchanted_Ceiling_Wood2.VFX_MI_Enchanted_Ceiling_Wood2'
+}
+SourceModels[0] = {}
+StaticMaterials[3] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/VFX_MI_Enchanted_Ceiling_Rafters.VFX_MI_Enchanted_Ceiling_Rafters'
+        MaterialSlotName = MI_GH_Rafters
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 2063.76, 4065.04, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/VFX_MI_Enchanted_Ceiling_RaftersDetails.VFX_MI_Enchanted_Ceiling_RaftersDetails'
+        MaterialSlotName = MI_GH_RaftersDetail
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 1259.96, 2316.12, 0, 0 }
+        }
+    }
+    StaticMaterials[2] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/VFX_MI_Enchanted_Ceiling_Wood2.VFX_MI_Enchanted_Ceiling_Wood2'
+        MaterialSlotName = MI_HW_Wood_Ceiling_2
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 2123.78, 2301, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0.124268, Y=116.515, Z=-23.6093 }
+    BoxExtent = { X=1076.34, Y=55.1636, Z=948.827 }
+    SphereRadius = 1435.42
+}

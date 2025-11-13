@@ -1,0 +1,38 @@
+Materials[2] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Meshes/Static/HairStyles/MI_HUM_F_Hair_StuHair23_AfroWrap.MI_HUM_F_Hair_StuHair23_AfroWrap'
+    Materials[1] = MaterialInstanceConstant'/Game/VFX/Meshes/Static/HairStyles/MI_HUM_F_Hair_StuHair23_AfroWrap_Wrap.MI_HUM_F_Hair_StuHair23_AfroWrap_Wrap'
+}
+SourceModels[0] = {}
+StaticMaterials[2] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Meshes/Static/HairStyles/MI_HUM_F_Hair_StuHair23_AfroWrap.MI_HUM_F_Hair_StuHair23_AfroWrap'
+        MaterialSlotName = MI_HUM_F_Hair_StuHair23_AfroWrap
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 16.471, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Meshes/Static/HairStyles/MI_HUM_F_Hair_StuHair23_AfroWrap_Wrap.MI_HUM_F_Hair_StuHair23_AfroWrap_Wrap'
+        MaterialSlotName = MI_HUM_F_Hair_StuHair23_AfroWrap_Wrap
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 40.5546, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-0.26254, Y=-4.6566, Z=10.895 }
+    BoxExtent = { X=12.519, Y=13.4466, Z=13.1316 }
+    SphereRadius = 14.5919
+}

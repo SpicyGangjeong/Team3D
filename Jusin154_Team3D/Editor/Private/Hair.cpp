@@ -94,7 +94,8 @@ HRESULT CHair::Ready_Components()
 
 	}
 
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("MaskTexture1"),
+
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("MaskTexture"),
 		reinterpret_cast<CComponent**>(&m_pTextureCom))))
 		return E_FAIL;
 
@@ -172,13 +173,14 @@ void CHair::Describe_Entity()
 
 		sprintf_s(label, "%s%d","Mask",i);
 
-		if (GUI::ImageButton(label, dynamic_cast<CTexture*>(m_pTextureCom)->Get_SRV(i), ImVec2(48, 48)))
+		if (GUI::ImageButton(label, dynamic_cast<CTexture*>(m_pTextureCom)->Get_SRV(i), ImVec2(50, 50)))
 		{
 			iTextureIndex = i;
 		}
-	}
 
-	m_vColor = _float4(1.f, 0.f, 0.f, 1.f);
+		if (i % dynamic_cast<CTexture*>(m_pTextureCom)->Get_Size()   != dynamic_cast<CTexture*>(m_pTextureCom)->Get_Size()-1)
+			GUI::SameLine();
+	}
 
 	GUI::DragFloat4("COLOR", (_float*)&m_vColor, 0.1f);
 

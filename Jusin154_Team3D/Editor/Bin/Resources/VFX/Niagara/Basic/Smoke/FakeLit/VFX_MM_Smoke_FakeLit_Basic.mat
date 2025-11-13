@@ -1,0 +1,6 @@
+Diffuse=VFX_T_SmokeWispy_Tile_D
+Normal=VFX_T_SmokeWispy_Tile_N
+SpecPower=VFX_T_Sphere_N
+Opacity=VFX_T_smokeCloud_Dal_BPF_D
+Other[0]=VFX_T_RibbonOffset_N
+Other[1]=VFX_T_Wavy_N

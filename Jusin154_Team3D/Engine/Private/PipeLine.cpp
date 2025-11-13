@@ -37,7 +37,7 @@ void CPipeLine::Update()
 		XMStoreFloat4x4(&m_TransformStateMatrices[i], XMMatrixInverse(nullptr, Get_Transform_Matrix(static_cast<D3DTS>(i-2))));
 	}
 
-	memcpy(&m_vCamPosition, &m_TransformStateMatrices[ENUM_CLASS(D3DTS::VIEW)].m[3], sizeof(_float4));
+	memcpy(&m_vCamPosition, &m_TransformStateMatrices[ENUM_CLASS(D3DTS::VIEW_INV)].m[3], sizeof(_float4));
 }
 
 CPipeLine* CPipeLine::Create()

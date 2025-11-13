@@ -1,0 +1,309 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[6] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineDebugMaterials/HeatmapGradient.HeatmapGradient'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_CausticNoise_C_Seamless_D.VFX_T_CausticNoise_C_Seamless_D'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_CausticNoise_C_Seamless_N.VFX_T_CausticNoise_C_Seamless_N'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_MarbleSkin_01_BPF_D.VFX_T_MarbleSkin_01_BPF_D'
+    ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise04_D.VFX_T_Noise04_D'
+    ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/VFX_T_Wavy_N.VFX_T_Wavy_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[39] =
+                {
+                    ParameterInfos[0] = { Name=Roughness }
+                    ParameterInfos[1] = { Name=Normal Strenght }
+                    ParameterInfos[2] = { Name=Emissive Contrast Threshold Inner (E2) }
+                    ParameterInfos[3] = { Name=Metallic }
+                    ParameterInfos[4] = { Name=Center Color Amout }
+                    ParameterInfos[5] = { Name=Emissive Noise Strenght }
+                    ParameterInfos[6] = { Name=Specular }
+                    ParameterInfos[7] = { Name=Anisotropy }
+                    ParameterInfos[8] = { Name=Tiling U (E2) }
+                    ParameterInfos[9] = { Name=Tiling V (E2) }
+                    ParameterInfos[10] = { Name=Tiling U (EN) }
+                    ParameterInfos[11] = { Name=Speed U (UVM) }
+                    ParameterInfos[12] = { Name=Base Strenght }
+                    ParameterInfos[13] = { Name=Emissive Contrast Threshold Outer (E2) }
+                    ParameterInfos[14] = { Name=Base Contrast }
+                    ParameterInfos[15] = { Name=Tiling V (En) }
+                    ParameterInfos[16] = { Name=FadeDistance }
+                    ParameterInfos[17] = { Name=Speed V (S) }
+                    ParameterInfos[18] = { Name=Offset U (E2) }
+                    ParameterInfos[19] = { Name=Tiling V (UVM) }
+                    ParameterInfos[20] = { Name=Center ColorIntesity }
+                    ParameterInfos[21] = { Name=Speed U (E2) }
+                    ParameterInfos[22] = { Name=Emissive Contrast Threshold (E2) }
+                    ParameterInfos[23] = { Name=Speed U (S) }
+                    ParameterInfos[24] = { Name=Tiling U (S) }
+                    ParameterInfos[25] = { Name=Offset V (S) }
+                    ParameterInfos[26] = { Name=Emissive Strenght }
+                    ParameterInfos[27] = { Name=Emissive Contrast Threshold }
+                    ParameterInfos[28] = { Name=Tiling V (S) }
+                    ParameterInfos[29] = { Name=Speed U (EN) }
+                    ParameterInfos[30] = { Name=UVM Strenght }
+                    ParameterInfos[31] = { Name=Speed V (UVM) }
+                    ParameterInfos[32] = { Name=Angle Based Fade Amount }
+                    ParameterInfos[33] = { Name=Speed V (E2) }
+                    ParameterInfos[34] = { Name=Offset U (S) }
+                    ParameterInfos[35] = { Name=Tiling U (UVM) }
+                    ParameterInfos[36] = { Name=Offset V (E2) }
+                    ParameterInfos[37] = { Name=Rotation Angle (0-1) (S) }
+                    ParameterInfos[38] = { Name=Speed V (EN) }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[4] =
+                {
+                    ParameterInfos[0] = { Name=Base Color }
+                    ParameterInfos[1] = { Name=Color 1 }
+                    ParameterInfos[2] = { Name=Emissive Color }
+                    ParameterInfos[3] = { Name=Color 2 }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[4] =
+                {
+                    ParameterInfos[0] = { Name=Emissive Noise Texture }
+                    ParameterInfos[1] = { Name=Texture }
+                    ParameterInfos[2] = { Name=UV Mod Texture }
+                    ParameterInfos[3] = { Name=Normal texture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[39] =
+        {
+            ScalarValues[0] = 0
+            ScalarValues[1] = 1
+            ScalarValues[2] = 0.75
+            ScalarValues[3] = 0
+            ScalarValues[4] = 0.48
+            ScalarValues[5] = 1
+            ScalarValues[6] = 1
+            ScalarValues[7] = 0
+            ScalarValues[8] = 1
+            ScalarValues[9] = 1
+            ScalarValues[10] = 1
+            ScalarValues[11] = 0.05
+            ScalarValues[12] = 3
+            ScalarValues[13] = 3
+            ScalarValues[14] = 2
+            ScalarValues[15] = 1
+            ScalarValues[16] = 100
+            ScalarValues[17] = 0
+            ScalarValues[18] = 0
+            ScalarValues[19] = 1
+            ScalarValues[20] = 200
+            ScalarValues[21] = 0
+            ScalarValues[22] = 3
+            ScalarValues[23] = 0
+            ScalarValues[24] = 1
+            ScalarValues[25] = 0
+            ScalarValues[26] = 1
+            ScalarValues[27] = 3
+            ScalarValues[28] = 1
+            ScalarValues[29] = 0.2
+            ScalarValues[30] = 0.05
+            ScalarValues[31] = 0.01
+            ScalarValues[32] = 2
+            ScalarValues[33] = 0
+            ScalarValues[34] = 0
+            ScalarValues[35] = 1
+            ScalarValues[36] = 0
+            ScalarValues[37] = 0
+            ScalarValues[38] = 0.1
+        }
+        VectorValues[4] =
+        {
+            VectorValues[0] = { R=0, G=0, B=0, A=1 }
+            VectorValues[1] = { R=2, G=0, B=0, A=1 }
+            VectorValues[2] = { R=2, G=0, B=0, A=1 }
+            VectorValues[3] = { R=0, G=0, B=2, A=1 }
+        }
+        TextureValues[4] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_MarbleSkin_01_BPF_D.VFX_T_MarbleSkin_01_BPF_D'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_CausticNoise_C_Seamless_D.VFX_T_CausticNoise_C_Seamless_D'
+            TextureValues[2] = Texture2D'/Game/VFX/Textures/VFX_T_Wavy_N.VFX_T_Wavy_N'
+            TextureValues[3] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_CausticNoise_C_Seamless_N.VFX_T_CausticNoise_C_Seamless_N'
+        }
+    }
+    ReferencedTextures[6] =
+    {
+        ReferencedTextures[0] = Texture2D'/Engine/EngineDebugMaterials/HeatmapGradient.HeatmapGradient'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_CausticNoise_C_Seamless_N.VFX_T_CausticNoise_C_Seamless_N'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_MarbleSkin_01_BPF_D.VFX_T_MarbleSkin_01_BPF_D'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/VFX_T_Wavy_N.VFX_T_Wavy_N'
+        ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_CausticNoise_C_Seamless_D.VFX_T_CausticNoise_C_Seamless_D'
+        ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise04_D.VFX_T_Noise04_D'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[4] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_MarbleSkin_01_BPF_D.VFX_T_MarbleSkin_01_BPF_D'
+        Name = Emissive Noise Texture
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_CausticNoise_C_Seamless_D.VFX_T_CausticNoise_C_Seamless_D'
+        Name = Texture
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_Wavy_N.VFX_T_Wavy_N'
+        Name = UV Mod Texture
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_CausticNoise_C_Seamless_N.VFX_T_CausticNoise_C_Seamless_N'
+        Name = Normal texture
+        Group = None
+    }
+}
+CollectedScalarParameters[39] =
+{
+    CollectedScalarParameters[0] = { Value=0, Name=Roughness, Group=None }
+    CollectedScalarParameters[1] = { Value=1, Name=Normal Strenght, Group=None }
+    CollectedScalarParameters[2] =
+    {
+        Value = 0.75
+        Name = Emissive Contrast Threshold Inner (E2)
+        Group = None
+    }
+    CollectedScalarParameters[3] = { Value=0, Name=Metallic, Group=None }
+    CollectedScalarParameters[4] = { Value=0.48, Name=Center Color Amout, Group=None }
+    CollectedScalarParameters[5] =
+    {
+        Value = 1
+        Name = Emissive Noise Strenght
+        Group = None
+    }
+    CollectedScalarParameters[6] = { Value=1, Name=Specular, Group=None }
+    CollectedScalarParameters[7] = { Value=0, Name=Anisotropy, Group=None }
+    CollectedScalarParameters[8] = { Value=1, Name=Tiling U (E2), Group=None }
+    CollectedScalarParameters[9] = { Value=1, Name=Tiling V (E2), Group=None }
+    CollectedScalarParameters[10] = { Value=1, Name=Tiling U (EN), Group=None }
+    CollectedScalarParameters[11] = { Value=0.05, Name=Speed U (UVM), Group=None }
+    CollectedScalarParameters[12] = { Value=3, Name=Base Strenght, Group=None }
+    CollectedScalarParameters[13] =
+    {
+        Value = 3
+        Name = Emissive Contrast Threshold Outer (E2)
+        Group = None
+    }
+    CollectedScalarParameters[14] = { Value=2, Name=Base Contrast, Group=None }
+    CollectedScalarParameters[15] = { Value=1, Name=Tiling V (En), Group=None }
+    CollectedScalarParameters[16] = { Value=100, Name=FadeDistance, Group=None }
+    CollectedScalarParameters[17] = { Value=0, Name=Speed V (S), Group=None }
+    CollectedScalarParameters[18] = { Value=0, Name=Offset U (E2), Group=None }
+    CollectedScalarParameters[19] = { Value=1, Name=Tiling V (UVM), Group=None }
+    CollectedScalarParameters[20] = { Value=200, Name=Center ColorIntesity, Group=None }
+    CollectedScalarParameters[21] = { Value=0, Name=Speed U (E2), Group=None }
+    CollectedScalarParameters[22] =
+    {
+        Value = 3
+        Name = Emissive Contrast Threshold (E2)
+        Group = None
+    }
+    CollectedScalarParameters[23] = { Value=0, Name=Speed U (S), Group=None }
+    CollectedScalarParameters[24] = { Value=1, Name=Tiling U (S), Group=None }
+    CollectedScalarParameters[25] = { Value=0, Name=Offset V (S), Group=None }
+    CollectedScalarParameters[26] = { Value=1, Name=Emissive Strenght, Group=None }
+    CollectedScalarParameters[27] =
+    {
+        Value = 3
+        Name = Emissive Contrast Threshold
+        Group = None
+    }
+    CollectedScalarParameters[28] = { Value=1, Name=Tiling V (S), Group=None }
+    CollectedScalarParameters[29] = { Value=0.2, Name=Speed U (EN), Group=None }
+    CollectedScalarParameters[30] = { Value=0.05, Name=UVM Strenght, Group=None }
+    CollectedScalarParameters[31] = { Value=0.01, Name=Speed V (UVM), Group=None }
+    CollectedScalarParameters[32] =
+    {
+        Value = 2
+        Name = Angle Based Fade Amount
+        Group = None
+    }
+    CollectedScalarParameters[33] = { Value=0, Name=Speed V (E2), Group=None }
+    CollectedScalarParameters[34] = { Value=0, Name=Offset U (S), Group=None }
+    CollectedScalarParameters[35] = { Value=1, Name=Tiling U (UVM), Group=None }
+    CollectedScalarParameters[36] = { Value=0, Name=Offset V (E2), Group=None }
+    CollectedScalarParameters[37] =
+    {
+        Value = 0
+        Name = Rotation Angle (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[38] = { Value=0.1, Name=Speed V (EN), Group=None }
+}
+CollectedVectorParameters[4] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = Base Color
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=2, G=0, B=0, A=1 }
+        Name = Color 1
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=2, G=0, B=0, A=1 }
+        Name = Emissive Color
+        Group = None
+    }
+    CollectedVectorParameters[3] =
+    {
+        Value = { R=0, G=0, B=2, A=1 }
+        Name = Color 2
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[2] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_MarbleSkin_01_BPF_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Wavy_N
+    }
+}

@@ -1,0 +1,290 @@
+TwoSided = true
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[4] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/Environment/Hogsmeade/Common/Textures/BooksAndScrolls/T_HM_Quill_Rolled_Parchment_Set_A_N.T_HM_Quill_Rolled_Parchment_Set_A_N'
+    ReferencedTextures[1] = Texture2D'/Game/UI/Icons/RichPaper/UI_T_Parchment1.UI_T_Parchment1'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_cloudsBillowy03_N.VFX_T_cloudsBillowy03_N'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[40] =
+                {
+                    ParameterInfos[0] = { Name=Noise 1 Size }
+                    ParameterInfos[1] = { Name=Roughness }
+                    ParameterInfos[2] = { Name=Radius_1 }
+                    ParameterInfos[3] = { Name=Exp }
+                    ParameterInfos[4] = { Name=Noise 3 Hardness }
+                    ParameterInfos[5] = { Name=B_1 }
+                    ParameterInfos[6] = { Name=minFrom (S) }
+                    ParameterInfos[7] = { Name=Exp_4 }
+                    ParameterInfos[8] = { Name=Noise 2 Hardness }
+                    ParameterInfos[9] = { Name=Normal Scale (S) }
+                    ParameterInfos[10] = { Name=Specular }
+                    ParameterInfos[11] = { Name=Bend_Back_Strength }
+                    ParameterInfos[12] = { Name=Radius }
+                    ParameterInfos[13] = { Name=Noise 2 Radius }
+                    ParameterInfos[14] = { Name=FadeDrawNoise }
+                    ParameterInfos[15] = { Name=FadeDrawTransition }
+                    ParameterInfos[16] = { Name=B_2 }
+                    ParameterInfos[17] = { Name=Exp_3 }
+                    ParameterInfos[18] = { Name=Tiling }
+                    ParameterInfos[19] = { Name=Distortion Tex Size }
+                    ParameterInfos[20] = { Name=Hardness }
+                    ParameterInfos[21] = { Name=Offset Amount }
+                    ParameterInfos[22] = { Name=Noise 1 Radius }
+                    ParameterInfos[23] = { Name=FadeEnable }
+                    ParameterInfos[24] = { Name=Noise 1 Brightness }
+                    ParameterInfos[25] = { Name=Noise 2 Brightness }
+                    ParameterInfos[26] = { Name=Ripple_Strength }
+                    ParameterInfos[27] = { Name=Hardness_1 }
+                    ParameterInfos[28] = { Name=Exp_1 }
+                    ParameterInfos[29] = { Name=Noise 3 Brightness }
+                    ParameterInfos[30] = { Name=Curl_Strength }
+                    ParameterInfos[31] = { Name=FadeDrawSphereRadius }
+                    ParameterInfos[32] = { Name=Exp_2 }
+                    ParameterInfos[33] = { Name=Noise 3 Size }
+                    ParameterInfos[34] = { Name=Speed }
+                    ParameterInfos[35] = { Name=Noise 3 Radius }
+                    ParameterInfos[36] = { Name=Noise 2 Size }
+                    ParameterInfos[37] = { Name=Noise 1 Hardness }
+                    ParameterInfos[38] = { Name=B }
+                    ParameterInfos[39] = { Name=Bend_In_Strength }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[8] =
+                {
+                    ParameterInfos[0] = { Name=Noise 3 Velocity }
+                    ParameterInfos[1] = { Name=Direction }
+                    ParameterInfos[2] = { Name=FadeDrawSphereCenter }
+                    ParameterInfos[3] = { Name=Noise 2 Speed }
+                    ParameterInfos[4] = { Name=Distortion Velocity }
+                    ParameterInfos[5] = { Name=Noise 1 Velocity }
+                    ParameterInfos[6] = { Name=Param }
+                    ParameterInfos[7] = { Name=Distortion Strength }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Distortion Texture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[40] =
+        {
+            ScalarValues[0] = 309.636
+            ScalarValues[1] = 0.8
+            ScalarValues[2] = 191.948
+            ScalarValues[3] = 3.61891
+            ScalarValues[4] = 0
+            ScalarValues[5] = 1.0896
+            ScalarValues[6] = 139.36
+            ScalarValues[7] = 0.873647
+            ScalarValues[8] = 0
+            ScalarValues[9] = 0.2
+            ScalarValues[10] = 0.2
+            ScalarValues[11] = 32.2507
+            ScalarValues[12] = 191.948
+            ScalarValues[13] = 0.719048
+            ScalarValues[14] = 300
+            ScalarValues[15] = 15
+            ScalarValues[16] = 1.60502
+            ScalarValues[17] = 2.08556
+            ScalarValues[18] = 0.0007
+            ScalarValues[19] = 1000
+            ScalarValues[20] = 0.019048
+            ScalarValues[21] = 27.4258
+            ScalarValues[22] = 0.5
+            ScalarValues[23] = 0
+            ScalarValues[24] = 1
+            ScalarValues[25] = 1
+            ScalarValues[26] = 7.41174
+            ScalarValues[27] = 0.019048
+            ScalarValues[28] = 2.08556
+            ScalarValues[29] = 1
+            ScalarValues[30] = 56.4887
+            ScalarValues[31] = 1000
+            ScalarValues[32] = 3.61891
+            ScalarValues[33] = 376.264
+            ScalarValues[34] = 129.444
+            ScalarValues[35] = 0.471429
+            ScalarValues[36] = 298.24
+            ScalarValues[37] = 0
+            ScalarValues[38] = 1.54881
+            ScalarValues[39] = 0.438518
+        }
+        VectorValues[8] =
+        {
+            VectorValues[0] = { R=-0.371274, G=-0.428571, B=-0.738095, A=1 }
+            VectorValues[1] = { R=0.5, G=0.5, B=2, A=1 }
+            VectorValues[2] = { R=0, G=0, B=0, A=0 }
+            VectorValues[3] = { R=0.7, G=-0.2, B=0.3, A=1 }
+            VectorValues[4] = { R=2, G=2, B=2, A=1 }
+            VectorValues[5] = { R=0.5, G=0.5, B=0.5, A=1 }
+            VectorValues[6] = { R=0.572917, G=0.556158, B=0.462344, A=1 }
+            VectorValues[7] = { R=60, G=60, B=60, A=1 }
+        }
+        TextureValues[1] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+        }
+    }
+    ReferencedTextures[4] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/UI/Icons/RichPaper/UI_T_Parchment1.UI_T_Parchment1'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_cloudsBillowy03_N.VFX_T_cloudsBillowy03_N'
+        ReferencedTextures[2] = Texture2D'/Game/Environment/Hogsmeade/Common/Textures/BooksAndScrolls/T_HM_Quill_Rolled_Parchment_Set_A_N.T_HM_Quill_Rolled_Parchment_Set_A_N'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[1] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+        Name = Distortion Texture
+        Group = None
+    }
+}
+CollectedScalarParameters[40] =
+{
+    CollectedScalarParameters[0] = { Value=309.636, Name=Noise 1 Size, Group=None }
+    CollectedScalarParameters[1] = { Value=0.8, Name=Roughness, Group=None }
+    CollectedScalarParameters[2] = { Value=191.948, Name=Radius_1, Group=None }
+    CollectedScalarParameters[3] = { Value=3.61891, Name=Exp, Group=None }
+    CollectedScalarParameters[4] = { Value=0, Name=Noise 3 Hardness, Group=None }
+    CollectedScalarParameters[5] = { Value=1.0896, Name=B_1, Group=None }
+    CollectedScalarParameters[6] = { Value=139.36, Name=minFrom (S), Group=None }
+    CollectedScalarParameters[7] = { Value=0.873647, Name=Exp_4, Group=None }
+    CollectedScalarParameters[8] = { Value=0, Name=Noise 2 Hardness, Group=None }
+    CollectedScalarParameters[9] = { Value=0.2, Name=Normal Scale (S), Group=None }
+    CollectedScalarParameters[10] = { Value=0.2, Name=Specular, Group=None }
+    CollectedScalarParameters[11] =
+    {
+        Value = 32.2507
+        Name = Bend_Back_Strength
+        Group = None
+    }
+    CollectedScalarParameters[12] = { Value=191.948, Name=Radius, Group=None }
+    CollectedScalarParameters[13] = { Value=0.719048, Name=Noise 2 Radius, Group=None }
+    CollectedScalarParameters[14] = { Value=300, Name=FadeDrawNoise, Group=None }
+    CollectedScalarParameters[15] = { Value=15, Name=FadeDrawTransition, Group=None }
+    CollectedScalarParameters[16] = { Value=1.60502, Name=B_2, Group=None }
+    CollectedScalarParameters[17] = { Value=2.08556, Name=Exp_3, Group=None }
+    CollectedScalarParameters[18] = { Value=0.0007, Name=Tiling, Group=None }
+    CollectedScalarParameters[19] = { Value=1000, Name=Distortion Tex Size, Group=None }
+    CollectedScalarParameters[20] = { Value=0.019048, Name=Hardness, Group=None }
+    CollectedScalarParameters[21] = { Value=27.4258, Name=Offset Amount, Group=None }
+    CollectedScalarParameters[22] = { Value=0.5, Name=Noise 1 Radius, Group=None }
+    CollectedScalarParameters[23] = { Value=0, Name=FadeEnable, Group=None }
+    CollectedScalarParameters[24] = { Value=1, Name=Noise 1 Brightness, Group=None }
+    CollectedScalarParameters[25] = { Value=1, Name=Noise 2 Brightness, Group=None }
+    CollectedScalarParameters[26] = { Value=7.41174, Name=Ripple_Strength, Group=None }
+    CollectedScalarParameters[27] = { Value=0.019048, Name=Hardness_1, Group=None }
+    CollectedScalarParameters[28] = { Value=2.08556, Name=Exp_1, Group=None }
+    CollectedScalarParameters[29] = { Value=1, Name=Noise 3 Brightness, Group=None }
+    CollectedScalarParameters[30] = { Value=56.4887, Name=Curl_Strength, Group=None }
+    CollectedScalarParameters[31] =
+    {
+        Value = 1000
+        Name = FadeDrawSphereRadius
+        Group = None
+    }
+    CollectedScalarParameters[32] = { Value=3.61891, Name=Exp_2, Group=None }
+    CollectedScalarParameters[33] = { Value=376.264, Name=Noise 3 Size, Group=None }
+    CollectedScalarParameters[34] = { Value=129.444, Name=Speed, Group=None }
+    CollectedScalarParameters[35] = { Value=0.471429, Name=Noise 3 Radius, Group=None }
+    CollectedScalarParameters[36] = { Value=298.24, Name=Noise 2 Size, Group=None }
+    CollectedScalarParameters[37] = { Value=0, Name=Noise 1 Hardness, Group=None }
+    CollectedScalarParameters[38] = { Value=1.54881, Name=B, Group=None }
+    CollectedScalarParameters[39] =
+    {
+        Value = 0.438518
+        Name = Bend_In_Strength
+        Group = None
+    }
+}
+CollectedVectorParameters[8] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=-0.371274, G=-0.428571, B=-0.738095, A=1 }
+        Name = Noise 3 Velocity
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0.5, G=0.5, B=2, A=1 }
+        Name = Direction
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=0, G=0, B=0, A=0 }
+        Name = FadeDrawSphereCenter
+        Group = None
+    }
+    CollectedVectorParameters[3] =
+    {
+        Value = { R=0.7, G=-0.2, B=0.3, A=1 }
+        Name = Noise 2 Speed
+        Group = None
+    }
+    CollectedVectorParameters[4] =
+    {
+        Value = { R=2, G=2, B=2, A=1 }
+        Name = Distortion Velocity
+        Group = None
+    }
+    CollectedVectorParameters[5] =
+    {
+        Value = { R=0.5, G=0.5, B=0.5, A=1 }
+        Name = Noise 1 Velocity
+        Group = None
+    }
+    CollectedVectorParameters[6] =
+    {
+        Value = { R=0.572917, G=0.556158, B=0.462344, A=1 }
+        Name = Param
+        Group = None
+    }
+    CollectedVectorParameters[7] =
+    {
+        Value = { R=60, G=60, B=60, A=1 }
+        Name = Distortion Strength
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_RibbonOffset_N
+    }
+}

@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Environment/Sanctum_Dungeon/Materials/Repository/MI_FakeCorruptPP_2.MI_FakeCorruptPP_2'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Sanctum_Dungeon/Materials/Repository/MI_FakeCorruptPP_2.MI_FakeCorruptPP_2'
+        MaterialSlotName = lambert1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 2264.07, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=11.4073, Z=-1.91156 }
+    BoxExtent = { X=2715.86, Y=552.5, Z=892.586 }
+    SphereRadius = 2830.64
+}
