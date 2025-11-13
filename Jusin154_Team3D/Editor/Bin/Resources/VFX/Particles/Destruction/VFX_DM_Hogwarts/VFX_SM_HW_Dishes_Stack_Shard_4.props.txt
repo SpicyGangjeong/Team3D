@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Environment/Hogwarts/Blueprints/Interactables/Materials/MI_HW_Dishes_PlateStack_Porcelain.MI_HW_Dishes_PlateStack_Porcelain'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Hogwarts/Blueprints/Interactables/Materials/MI_HW_Dishes_PlateStack_Porcelain.MI_HW_Dishes_PlateStack_Porcelain'
+        MaterialSlotName = M_HW_Dishes_PlateStack_B
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 164.118, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=9.53674e-07, Y=-9.53674e-07, Z=3.8147e-06 }
+    BoxExtent = { X=8.36905, Y=6.47457, Z=2.06097 }
+    SphereRadius = 9.69402
+}

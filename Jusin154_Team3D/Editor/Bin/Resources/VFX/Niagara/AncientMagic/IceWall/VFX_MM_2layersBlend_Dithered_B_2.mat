@@ -1,0 +1,14 @@
+Diffuse=base_white_d
+Normal=base_flat_n
+Other[0]=base_white_MSK
+Other[1]=VFX_T_AncMag_Icewall_01_MSK
+Other[2]=VFX_T_AncMag_IceWall_H
+Other[3]=VFX_T_AncMag_IceWall_N
+Other[4]=VFX_T_AncMag_Icewall_Brick_H
+Other[5]=VFX_T_Ice_D
+Other[6]=VFX_T_Ice_R
+Other[7]=VFX_T_Cloud_SoftWisps_D
+Other[8]=VFX_T_Noise05_D
+Other[9]=VFX_T_Noise_LowFreq_E
+Other[10]=VFX_T_NoiseTiled_1_D
+Other[11]=VFX_T_RibbonOffset_N

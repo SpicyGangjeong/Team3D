@@ -1,0 +1,16 @@
+Diffuse=T_HW_Marble_3_D
+Normal=T_Cav_GroundBedRock_01_Lime_N
+Other[0]=T_Noise_MSK
+Other[1]=T_Cav_GroundBedRock_02_MROH
+Other[2]=T_CavernDun_Rock_C_D
+Other[3]=T_Cav_GroundSand_01_Bslt_MROH
+Other[4]=T_Cav_GroundRockGold_01_N
+Other[5]=T_Cairn_WaterTextures_MSK
+Other[6]=base_flat_n
+Other[7]=base_white_d
+Other[8]=base_white_MSK
+Other[9]=VFX_T_Ice_D
+Other[10]=VFX_T_Ice_N
+Other[11]=VFX_T_Ice_R
+Other[12]=VFX_T_Noise05_D
+Other[13]=VFX_T_Noise_LowFreq_E

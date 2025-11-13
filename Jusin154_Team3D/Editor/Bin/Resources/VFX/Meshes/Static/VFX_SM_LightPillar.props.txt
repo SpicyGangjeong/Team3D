@@ -1,0 +1,62 @@
+Materials[4] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/UI/Overland_Map/Cursor/VFX_MM_Cursor_Shaft.VFX_MM_Cursor_Shaft'
+    Materials[1] = MaterialInstanceConstant'/Game/VFX/UI/Overland_Map/Cursor/VFX_MM_Cursor_Disk_Middle.VFX_MM_Cursor_Disk_Middle'
+    Materials[2] = MaterialInstanceConstant'/Game/VFX/UI/Overland_Map/Cursor/VFX_MM_Cursor_Disk_Top.VFX_MM_Cursor_Disk_Top'
+    Materials[3] = MaterialInstanceConstant'/Game/VFX/UI/Overland_Map/Cursor/VFX_MM_Cursor_Disk_Bottom.VFX_MM_Cursor_Disk_Bottom'
+}
+SourceModels[0] = {}
+StaticMaterials[4] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/UI/Overland_Map/Cursor/VFX_MM_Cursor_Shaft.VFX_MM_Cursor_Shaft'
+        MaterialSlotName = lambert2
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 200, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/UI/Overland_Map/Cursor/VFX_MM_Cursor_Disk_Middle.VFX_MM_Cursor_Disk_Middle'
+        MaterialSlotName = lambert4
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 34.0422, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[2] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/UI/Overland_Map/Cursor/VFX_MM_Cursor_Disk_Top.VFX_MM_Cursor_Disk_Top'
+        MaterialSlotName = lambert5
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 14.8592, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[3] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/UI/Overland_Map/Cursor/VFX_MM_Cursor_Disk_Bottom.VFX_MM_Cursor_Disk_Bottom'
+        MaterialSlotName = lambert3
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 71.0086, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=0, Z=200 }
+    BoxExtent = { X=50, Y=50, Z=200 }
+    SphereRadius = 206.155
+}

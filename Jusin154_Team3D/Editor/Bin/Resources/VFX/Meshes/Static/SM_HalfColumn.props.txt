@@ -1,0 +1,50 @@
+Materials[3] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Environment/Sanctum_Dungeon/Materials/Column/MI_SanctumDun_Column_Natural_20m_A_marble.MI_SanctumDun_Column_Natural_20m_A_marble'
+    Materials[1] = MaterialInstanceConstant'/Game/Environment/Sanctum_Dungeon/Materials/Column/MI_SanctumDun_Column_Natural_20m_B_marble.MI_SanctumDun_Column_Natural_20m_B_marble'
+    Materials[2] = MaterialInstanceConstant'/Game/Environment/Sanctum_Dungeon/Materials/Column/MI_SanctumDun_Column_Natural_20m_C_marble.MI_SanctumDun_Column_Natural_20m_C_marble'
+}
+SourceModels[0] = {}
+StaticMaterials[3] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Sanctum_Dungeon/Materials/Column/MI_SanctumDun_Column_Natural_20m_A_marble.MI_SanctumDun_Column_Natural_20m_A_marble'
+        MaterialSlotName = MI_SanctumDun_Column_Natural_20m_A
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 545.453, 1032.65, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Sanctum_Dungeon/Materials/Column/MI_SanctumDun_Column_Natural_20m_B_marble.MI_SanctumDun_Column_Natural_20m_B_marble'
+        MaterialSlotName = MI_SanctumDun_Column_Natural_20m_B
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 417.519, 957.934, 0, 0 }
+        }
+    }
+    StaticMaterials[2] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Sanctum_Dungeon/Materials/Column/MI_SanctumDun_Column_Natural_20m_C_marble.MI_SanctumDun_Column_Natural_20m_C_marble'
+        MaterialSlotName = MI_SanctumDun_Column_Natural_20m_C
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 360.785, 816.573, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-6.26183, Y=-10.776, Z=190.966 }
+    BoxExtent = { X=178.495, Y=190.792, Z=214.514 }
+    SphereRadius = 304.227
+}

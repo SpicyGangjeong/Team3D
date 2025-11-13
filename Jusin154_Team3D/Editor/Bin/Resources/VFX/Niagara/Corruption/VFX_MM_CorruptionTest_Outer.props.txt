@@ -1,0 +1,268 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[19] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/BaseFlattenNormalMap.BaseFlattenNormalMap'
+    ReferencedTextures[1] = Texture2D'/Engine/EngineMaterials/DefaultDiffuse.DefaultDiffuse'
+    ReferencedTextures[2] = Texture2D'/Engine/EngineMaterials/DefaultNormal_Uncompressed.DefaultNormal_Uncompressed'
+    ReferencedTextures[3] = Texture2D'/Engine/Functions/Engine_MaterialFunctions02/ExampleContent/DebugNumberStrip.DebugNumberStrip'
+    ReferencedTextures[4] = Texture2D'/Engine/Functions/Engine_MaterialFunctions02/ExampleContent/Gradient.Gradient'
+    ReferencedTextures[5] = Texture2D'/Engine/Functions/Engine_MaterialFunctions02/ExampleContent/Greyscale.Greyscale'
+    ReferencedTextures[6] = Texture2D'/Engine/Functions/Engine_MaterialFunctions02/ExampleContent/TextureBasedWPO/DemoBox.DemoBox'
+    ReferencedTextures[7] = Texture2D'/Engine/Functions/Engine_MaterialFunctions02/ExampleContent/TextureBasedWPO/DemoBox_Normals.DemoBox_Normals'
+    ReferencedTextures[8] = Texture2D'/Engine/Functions/Engine_MaterialFunctions02/ExampleContent/Textures/DebugNumberPeriod.DebugNumberPeriod'
+    ReferencedTextures[9] = Texture2D'/Game/VFX/Niagara/Corruption/GooSplatter/VFX_T_Splatter01_VN.VFX_T_Splatter01_VN'
+    ReferencedTextures[10] = Texture2D'/Game/VFX/Niagara/Corruption/GooSplatter/VFX_T_Splatter01_VP.VFX_T_Splatter01_VP'
+    ReferencedTextures[11] = Texture2D'/Game/VFX/Niagara/Corruption/VFX_T_Corrupt_Goblin_Spectre_E.VFX_T_Corrupt_Goblin_Spectre_E'
+    ReferencedTextures[12] = Texture2D'/Game/VFX/Niagara/Corruption/VFX_T_Gob_AO.VFX_T_Gob_AO'
+    ReferencedTextures[13] = Texture2D'/Game/VFX/Niagara/Corruption/VFX_T_Gob_N.VFX_T_Gob_N'
+    ReferencedTextures[14] = Texture2D'/Game/VFX/Niagara/Corruption/VFX_T_Gob_R.VFX_T_Gob_R'
+    ReferencedTextures[15] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Cloud_Noise_Tile_N.VFX_T_Cloud_Noise_Tile_N'
+    ReferencedTextures[16] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise06_D.VFX_T_Noise06_D'
+    ReferencedTextures[17] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_Corruption_E.VFX_T_Noise_Corruption_E'
+    ReferencedTextures[18] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[28] =
+                {
+                    ParameterInfos[0] = { Name=maxFrom (S) }
+                    ParameterInfos[1] = { Name=Roughness }
+                    ParameterInfos[2] = { Name=Emissive_ScaleTiling }
+                    ParameterInfos[3] = { Name=minFrom (S) }
+                    ParameterInfos[4] = { Name=EmScale }
+                    ParameterInfos[5] = { Name=Input Low (S) }
+                    ParameterInfos[6] = { Name=Metallic }
+                    ParameterInfos[7] = { Name=VATAnimation }
+                    ParameterInfos[8] = { Name=EmissiveHue }
+                    ParameterInfos[9] = { Name=EmStrength_Spectre }
+                    ParameterInfos[10] = { Name=Specular }
+                    ParameterInfos[11] = { Name=Intensity (S) }
+                    ParameterInfos[12] = { Name=VATFrames }
+                    ParameterInfos[13] = { Name=Noise Size Scale (S) }
+                    ParameterInfos[14] = { Name=FresnelBright }
+                    ParameterInfos[15] = { Name=Noise Speed Scale (S) }
+                    ParameterInfos[16] = { Name=TexSize }
+                    ParameterInfos[17] = { Name=MainTextureTileX }
+                    ParameterInfos[18] = { Name=AlphaErosionSoftness }
+                    ParameterInfos[19] = { Name=MainTextureTileY }
+                    ParameterInfos[20] = { Name=Exp_1 }
+                    ParameterInfos[21] = { Name=Target Height (S) }
+                    ParameterInfos[22] = { Name=PanSpeed Scale }
+                    ParameterInfos[23] = { Name=Input High (S) }
+                    ParameterInfos[24] = { Name=Alpha_Spectre }
+                    ParameterInfos[25] = { Name=Target Low (S) }
+                    ParameterInfos[26] = { Name=FresnelDark }
+                    ParameterInfos[27] = { Name=BaseEmitMultiply }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Base Color }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[7] =
+                {
+                    ParameterInfos[0] = { Name=ObjectMask }
+                    ParameterInfos[1] = { Name=AOTexture }
+                    ParameterInfos[2] = { Name=EmissiveMask }
+                    ParameterInfos[3] = { Name=VATOffset }
+                    ParameterInfos[4] = { Name=NormalMap }
+                    ParameterInfos[5] = { Name=CorruptionTexture }
+                    ParameterInfos[6] = { Name=VATNormal }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[28] =
+        {
+            ScalarValues[0] = 0.628571
+            ScalarValues[1] = 0.126985
+            ScalarValues[2] = 0.136508
+            ScalarValues[3] = 0.292064
+            ScalarValues[4] = 3000
+            ScalarValues[5] = 24.5917
+            ScalarValues[6] = 1
+            ScalarValues[7] = 0
+            ScalarValues[8] = 0
+            ScalarValues[9] = 1
+            ScalarValues[10] = 0.368254
+            ScalarValues[11] = 1
+            ScalarValues[12] = 32
+            ScalarValues[13] = 0.339682
+            ScalarValues[14] = 0.422222
+            ScalarValues[15] = 2.4565
+            ScalarValues[16] = 118.298
+            ScalarValues[17] = 1
+            ScalarValues[18] = 0
+            ScalarValues[19] = 1
+            ScalarValues[20] = 1
+            ScalarValues[21] = 1
+            ScalarValues[22] = 20
+            ScalarValues[23] = 79.4152
+            ScalarValues[24] = 0
+            ScalarValues[25] = 0
+            ScalarValues[26] = -1.45878
+            ScalarValues[27] = 1
+        }
+        VectorValues[1] =
+        {
+            VectorValues[0] = { R=0.119792, G=0.119792, B=0.119792, A=0 }
+        }
+        TextureValues[7] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Niagara/Corruption/VFX_T_Gob_R.VFX_T_Gob_R'
+            TextureValues[1] = Texture2D'/Game/VFX/Niagara/Corruption/VFX_T_Gob_AO.VFX_T_Gob_AO'
+            TextureValues[2] = Texture2D'/Game/VFX/Niagara/Corruption/VFX_T_Corrupt_Goblin_Spectre_E.VFX_T_Corrupt_Goblin_Spectre_E'
+            TextureValues[3] = Texture2D'/Game/VFX/Niagara/Corruption/GooSplatter/VFX_T_Splatter01_VP.VFX_T_Splatter01_VP'
+            TextureValues[4] = Texture2D'/Game/VFX/Niagara/Corruption/VFX_T_Gob_N.VFX_T_Gob_N'
+            TextureValues[5] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_Corruption_E.VFX_T_Noise_Corruption_E'
+            TextureValues[6] = Texture2D'/Game/VFX/Niagara/Corruption/GooSplatter/VFX_T_Splatter01_VN.VFX_T_Splatter01_VN'
+        }
+    }
+    ReferencedTextures[20] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Niagara/Corruption/VFX_T_Gob_AO.VFX_T_Gob_AO'
+        ReferencedTextures[2] = Texture2D'/Engine/Functions/Engine_MaterialFunctions02/ExampleContent/Gradient.Gradient'
+        ReferencedTextures[3] = Texture2D'/Engine/Functions/Engine_MaterialFunctions02/ExampleContent/Greyscale.Greyscale'
+        ReferencedTextures[4] = Texture2D'/Engine/EngineMaterials/DefaultDiffuse.DefaultDiffuse'
+        ReferencedTextures[5] = Texture2D'/Engine/Functions/Engine_MaterialFunctions02/ExampleContent/DebugNumberStrip.DebugNumberStrip'
+        ReferencedTextures[6] = Texture2D'/Engine/Functions/Engine_MaterialFunctions02/ExampleContent/Textures/DebugNumberPeriod.DebugNumberPeriod'
+        ReferencedTextures[7] = Texture2D'/Engine/Functions/Engine_MaterialFunctions02/ExampleContent/TextureBasedWPO/DemoBox.DemoBox'
+        ReferencedTextures[8] = Texture2D'/Engine/Functions/Engine_MaterialFunctions02/ExampleContent/TextureBasedWPO/DemoBox_Normals.DemoBox_Normals'
+        ReferencedTextures[9] = Texture2D'/Game/VFX/Niagara/Corruption/VFX_T_Gob_N.VFX_T_Gob_N'
+        ReferencedTextures[10] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+        ReferencedTextures[11] = Texture2D'/Engine/EngineMaterials/BaseFlattenNormalMap.BaseFlattenNormalMap'
+        ReferencedTextures[12] = Texture2D'/Engine/EngineMaterials/DefaultNormal_Uncompressed.DefaultNormal_Uncompressed'
+        ReferencedTextures[13] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Cloud_Noise_Tile_N.VFX_T_Cloud_Noise_Tile_N'
+        ReferencedTextures[14] = Texture2D'/Game/VFX/Niagara/Corruption/VFX_T_Corrupt_Goblin_Spectre_E.VFX_T_Corrupt_Goblin_Spectre_E'
+        ReferencedTextures[15] = Texture2D'/Game/VFX/Niagara/Corruption/VFX_T_Gob_R.VFX_T_Gob_R'
+        ReferencedTextures[16] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_Corruption_E.VFX_T_Noise_Corruption_E'
+        ReferencedTextures[17] = Texture2D'/Game/VFX/Niagara/Corruption/GooSplatter/VFX_T_Splatter01_VP.VFX_T_Splatter01_VP'
+        ReferencedTextures[18] = Texture2D'/Game/VFX/Niagara/Corruption/GooSplatter/VFX_T_Splatter01_VN.VFX_T_Splatter01_VN'
+        ReferencedTextures[19] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise06_D.VFX_T_Noise06_D'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[7] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Niagara/Corruption/VFX_T_Gob_R.VFX_T_Gob_R'
+        Name = ObjectMask
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Niagara/Corruption/VFX_T_Gob_AO.VFX_T_Gob_AO'
+        Name = AOTexture
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/VFX/Niagara/Corruption/VFX_T_Corrupt_Goblin_Spectre_E.VFX_T_Corrupt_Goblin_Spectre_E'
+        Name = EmissiveMask
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/VFX/Niagara/Corruption/GooSplatter/VFX_T_Splatter01_VP.VFX_T_Splatter01_VP'
+        Name = VATOffset
+        Group = None
+    }
+    CollectedTextureParameters[4] =
+    {
+        Texture = Texture2D'/Game/VFX/Niagara/Corruption/VFX_T_Gob_N.VFX_T_Gob_N'
+        Name = NormalMap
+        Group = None
+    }
+    CollectedTextureParameters[5] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_Corruption_E.VFX_T_Noise_Corruption_E'
+        Name = CorruptionTexture
+        Group = None
+    }
+    CollectedTextureParameters[6] =
+    {
+        Texture = Texture2D'/Game/VFX/Niagara/Corruption/GooSplatter/VFX_T_Splatter01_VN.VFX_T_Splatter01_VN'
+        Name = VATNormal
+        Group = None
+    }
+}
+CollectedScalarParameters[28] =
+{
+    CollectedScalarParameters[0] = { Value=0.628571, Name=maxFrom (S), Group=None }
+    CollectedScalarParameters[1] = { Value=0.126985, Name=Roughness, Group=None }
+    CollectedScalarParameters[2] =
+    {
+        Value = 0.136508
+        Name = Emissive_ScaleTiling
+        Group = None
+    }
+    CollectedScalarParameters[3] = { Value=0.292064, Name=minFrom (S), Group=None }
+    CollectedScalarParameters[4] = { Value=3000, Name=EmScale, Group=None }
+    CollectedScalarParameters[5] = { Value=24.5917, Name=Input Low (S), Group=None }
+    CollectedScalarParameters[6] = { Value=1, Name=Metallic, Group=None }
+    CollectedScalarParameters[7] = { Value=0, Name=VATAnimation, Group=None }
+    CollectedScalarParameters[8] = { Value=0, Name=EmissiveHue, Group=None }
+    CollectedScalarParameters[9] = { Value=1, Name=EmStrength_Spectre, Group=None }
+    CollectedScalarParameters[10] = { Value=0.368254, Name=Specular, Group=None }
+    CollectedScalarParameters[11] = { Value=1, Name=Intensity (S), Group=None }
+    CollectedScalarParameters[12] = { Value=32, Name=VATFrames, Group=None }
+    CollectedScalarParameters[13] =
+    {
+        Value = 0.339682
+        Name = Noise Size Scale (S)
+        Group = None
+    }
+    CollectedScalarParameters[14] = { Value=0.422222, Name=FresnelBright, Group=None }
+    CollectedScalarParameters[15] =
+    {
+        Value = 2.4565
+        Name = Noise Speed Scale (S)
+        Group = None
+    }
+    CollectedScalarParameters[16] = { Value=118.298, Name=TexSize, Group=None }
+    CollectedScalarParameters[17] = { Value=1, Name=MainTextureTileX, Group=None }
+    CollectedScalarParameters[18] = { Value=0, Name=AlphaErosionSoftness, Group=None }
+    CollectedScalarParameters[19] = { Value=1, Name=MainTextureTileY, Group=None }
+    CollectedScalarParameters[20] = { Value=1, Name=Exp_1, Group=None }
+    CollectedScalarParameters[21] = { Value=1, Name=Target Height (S), Group=None }
+    CollectedScalarParameters[22] = { Value=20, Name=PanSpeed Scale, Group=None }
+    CollectedScalarParameters[23] = { Value=79.4152, Name=Input High (S), Group=None }
+    CollectedScalarParameters[24] = { Value=0, Name=Alpha_Spectre, Group=None }
+    CollectedScalarParameters[25] = { Value=0, Name=Target Low (S), Group=None }
+    CollectedScalarParameters[26] = { Value=-1.45878, Name=FresnelDark, Group=None }
+    CollectedScalarParameters[27] = { Value=1, Name=BaseEmitMultiply, Group=None }
+}
+CollectedVectorParameters[1] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0.119792, G=0.119792, B=0.119792, A=0 }
+        Name = Base Color
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

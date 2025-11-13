@@ -1,0 +1,1899 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[39] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/BaseFlattenNormalMap.BaseFlattenNormalMap'
+    ReferencedTextures[1] = Texture2D'/Engine/EngineMaterials/DefaultDiffuse.DefaultDiffuse'
+    ReferencedTextures[2] = Texture2D'/Engine/EngineMaterials/DefaultNormal_Uncompressed.DefaultNormal_Uncompressed'
+    ReferencedTextures[3] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+    ReferencedTextures[4] = Texture2D'/Engine/EngineResources/DefaultTexture.DefaultTexture'
+    ReferencedTextures[5] = Texture2D'/Engine/Functions/Engine_MaterialFunctions02/ExampleContent/Textures/LowResBlurredNoise.LowResBlurredNoise'
+    ReferencedTextures[6] = Texture2D'/Game/Environment/Azkaban/Textures/T_Dragon_Stone_Tile_N.T_Dragon_Stone_Tile_N'
+    ReferencedTextures[7] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+    ReferencedTextures[8] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/T_Blank_A.T_Blank_A'
+    ReferencedTextures[9] = Texture2D'/Game/MaterialFunctions/BaseTextures/ColorNoise/T_ColorNoise512_D.T_ColorNoise512_D'
+    ReferencedTextures[10] = Texture2D'/Game/MaterialFunctions/BaseTextures/T_Blank_N.T_Blank_N'
+    ReferencedTextures[11] = Texture2D'/Game/RiggedObjects/Characters/Creatures/TombProtector/Grunt/Textures/T_GOL_TombProtectorGrunt_Torso_D.T_GOL_TombProtectorGrunt_Torso_D'
+    ReferencedTextures[12] = Texture2D'/Game/RiggedObjects/Characters/Creatures/TombProtector/Grunt/Textures/T_GOL_TombProtectorGrunt_Torso_MRO.T_GOL_TombProtectorGrunt_Torso_MRO'
+    ReferencedTextures[13] = Texture2D'/Game/RiggedObjects/Characters/Creatures/TombProtector/Grunt/Textures/T_GOL_TombProtectorGrunt_Torso_N.T_GOL_TombProtectorGrunt_Torso_N'
+    ReferencedTextures[14] = Texture2D'/Game/RiggedObjects/Characters/TileableTextures/T_DefaultGrey_D.T_DefaultGrey_D'
+    ReferencedTextures[15] = Texture2D'/Game/RiggedObjects/Environments/Forageables/Horklump/Textures/T_Forageable_Horklump_Gradient_D.T_Forageable_Horklump_Gradient_D'
+    ReferencedTextures[16] = Texture2D'/Game/VFX/Enemies/TombProtectorGrunt/VFX_T_TMBG_Torso_E.VFX_T_TMBG_Torso_E'
+    ReferencedTextures[17] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_Ice_D.VFX_T_Ice_D'
+    ReferencedTextures[18] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_Ice_N.VFX_T_Ice_N'
+    ReferencedTextures[19] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_Ice_R.VFX_T_Ice_R'
+    ReferencedTextures[20] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_BubbleMask_D.VFX_T_BubbleMask_D'
+    ReferencedTextures[21] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_ChromaticCellNoise_N.VFX_T_ChromaticCellNoise_N'
+    ReferencedTextures[22] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Cloud_SoftWisps_Chroma_D.VFX_T_Cloud_SoftWisps_Chroma_D'
+    ReferencedTextures[23] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Cloud_SoftWisps_D.VFX_T_Cloud_SoftWisps_D'
+    ReferencedTextures[24] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_LowFreq_ChromaNoise_D.VFX_T_LowFreq_ChromaNoise_D'
+    ReferencedTextures[25] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_MarbleSkin_01_BPF_D.VFX_T_MarbleSkin_01_BPF_D'
+    ReferencedTextures[26] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise04_D.VFX_T_Noise04_D'
+    ReferencedTextures[27] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise05_D.VFX_T_Noise05_D'
+    ReferencedTextures[28] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseCaustics01_Color_D.VFX_T_NoiseCaustics01_Color_D'
+    ReferencedTextures[29] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseCaustics_Chromatic_D.VFX_T_NoiseCaustics_Chromatic_D'
+    ReferencedTextures[30] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseTiled_1_D.VFX_T_NoiseTiled_1_D'
+    ReferencedTextures[31] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+    ReferencedTextures[32] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_SwirlNoise_05_Chroma_D.VFX_T_SwirlNoise_05_Chroma_D'
+    ReferencedTextures[33] = Texture2D'/Game/VFX/Textures/VFX_T_Burnt_D.VFX_T_Burnt_D'
+    ReferencedTextures[34] = Texture2D'/Game/VFX/Textures/VFX_T_Burnt_E.VFX_T_Burnt_E'
+    ReferencedTextures[35] = Texture2D'/Game/VFX/Textures/VFX_T_Burnt_N.VFX_T_Burnt_N'
+    ReferencedTextures[36] = Texture2D'/Game/VFX/Textures/VFX_T_IceB_D.VFX_T_IceB_D'
+    ReferencedTextures[37] = Texture2D'/Game/VFX/Textures/VFX_T_IceB_mask_D.VFX_T_IceB_mask_D'
+    ReferencedTextures[38] = Texture2D'/Game/VFX/Textures/VFX_T_IceB_N.VFX_T_IceB_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[260] =
+                {
+                    ParameterInfos[0] = { Name=Opacity_02 }
+                    ParameterInfos[1] = { Name=Ring Width (S) }
+                    ParameterInfos[2] = { Name=SkinFXOutline_EmissiveAdaptation }
+                    ParameterInfos[3] = { Name=HueShiftAdd }
+                    ParameterInfos[4] = { Name=Inner Opacity (S) }
+                    ParameterInfos[5] = { Name=Wipe Out Hardness }
+                    ParameterInfos[6] = { Name=Roughness }
+                    ParameterInfos[7] = { Name=SkinFX_EnvelopeReleasePhase }
+                    ParameterInfos[8] = { Name=MeltNoiseExp }
+                    ParameterInfos[9] = { Name=Noise Opacity Boost }
+                    ParameterInfos[10] = { Name=ScaleInteriorGlow }
+                    ParameterInfos[11] = { Name=ReverseDisintegration }
+                    ParameterInfos[12] = { Name=ProjectionTransitionContrast (S)_1 }
+                    ParameterInfos[13] = { Name=Opacity_03 }
+                    ParameterInfos[14] = { Name=Opacity Mask Tiling }
+                    ParameterInfos[15] = { Name=WPO Hardness (0-1) (S) }
+                    ParameterInfos[16] = { Name=Iciness_Sharpen }
+                    ParameterInfos[17] = { Name=SkinFXOutline_NoiseSpeed }
+                    ParameterInfos[18] = { Name=Exp }
+                    ParameterInfos[19] = { Name=Glow_Brightness }
+                    ParameterInfos[20] = { Name=Rough Hardness (0-1) (S) }
+                    ParameterInfos[21] = { Name=Hardness (0-1) (S) }
+                    ParameterInfos[22] = { Name=Interior Glow Boost }
+                    ParameterInfos[23] = { Name=Noise Pan Speed }
+                    ParameterInfos[24] =
+                    {
+                        Name = Emissive Adaptation Outdoor Daytime Boost (S)
+                    }
+                    ParameterInfos[25] = { Name=Cheap contrast bright (S) }
+                    ParameterInfos[26] = { Name=OuterRadius }
+                    ParameterInfos[27] = { Name=Transparency_Clip_DIstance_1 }
+                    ParameterInfos[28] = { Name=Fresnel Power }
+                    ParameterInfos[29] = { Name=Mask_Radius }
+                    ParameterInfos[30] = { Name=Contrast }
+                    ParameterInfos[31] = { Name=Caustics_EmStrength }
+                    ParameterInfos[32] = { Name=Distance Fade Length }
+                    ParameterInfos[33] = { Name=NearDistanceBrightnessFactor }
+                    ParameterInfos[34] = { Name=Roughness_Exp }
+                    ParameterInfos[35] = { Name=Fade Offset (S) }
+                    ParameterInfos[36] = { Name=HueShiftNoise }
+                    ParameterInfos[37] = { Name=Surface_Color_Tiling }
+                    ParameterInfos[38] = { Name=Bubble_X-Offset }
+                    ParameterInfos[39] = { Name=HeightTiling }
+                    ParameterInfos[40] = { Name=Max_Roughness }
+                    ParameterInfos[41] = { Name=Bubble_X-Offset_2 }
+                    ParameterInfos[42] = { Name=BaseRoughness }
+                    ParameterInfos[43] = { Name=Glow Edge Falloff Softness1 (S) }
+                    ParameterInfos[44] = { Name=Dissolve WPO }
+                    ParameterInfos[45] = { Name=Caustics2_PanSpeed }
+                    ParameterInfos[46] = { Name=maxTo (S) }
+                    ParameterInfos[47] = { Name=Desaturation }
+                    ParameterInfos[48] = { Name=Ice_TextureSize }
+                    ParameterInfos[49] = { Name=FlipTop }
+                    ParameterInfos[50] = { Name=MeltStrength }
+                    ParameterInfos[51] = { Name=Dissolve Sharpen }
+                    ParameterInfos[52] = { Name=Opacity_Ping }
+                    ParameterInfos[53] = { Name=Bubble_Tiling_02 }
+                    ParameterInfos[54] = { Name=Base_EmScale }
+                    ParameterInfos[55] = { Name=BloomAdaptation }
+                    ParameterInfos[56] = { Name=Bubble_Y_Offset_2 }
+                    ParameterInfos[57] = { Name=Cull Offset }
+                    ParameterInfos[58] = { Name=Tiling U (S)_1 }
+                    ParameterInfos[59] = { Name=Emissive Detail Tiling }
+                    ParameterInfos[60] = { Name=Caustics1_TexSize }
+                    ParameterInfos[61] = { Name=TalentPulseSpeed }
+                    ParameterInfos[62] = { Name=Interior Glow Fresnel Power }
+                    ParameterInfos[63] = { Name=BlurStrenght_LowQuality }
+                    ParameterInfos[64] = { Name=SkinFX_EnvelopeValue }
+                    ParameterInfos[65] = { Name=Noise Speed 1 }
+                    ParameterInfos[66] = { Name=Base Tiling U (S) }
+                    ParameterInfos[67] = { Name=Base_HueShift }
+                    ParameterInfos[68] = { Name=Base_Em_Exp }
+                    ParameterInfos[69] = { Name=Intensity (S) }
+                    ParameterInfos[70] = { Name=WPO Coverage (0-1) (S) }
+                    ParameterInfos[71] = { Name=CracksEm_Exp }
+                    ParameterInfos[72] = { Name=ObjectFadePerinstanceOverride }
+                    ParameterInfos[73] = { Name=GlowWidth }
+                    ParameterInfos[74] = { Name=Speed V (S)_2 }
+                    ParameterInfos[75] = { Name=DroopStrength }
+                    ParameterInfos[76] = { Name=Fade Length (S) }
+                    ParameterInfos[77] = { Name=Test }
+                    ParameterInfos[78] = { Name=ExteriorCoverage }
+                    ParameterInfos[79] = { Name=ImpactHardness }
+                    ParameterInfos[80] = { Name=ProjectionTransitionContrast (S) }
+                    ParameterInfos[81] = { Name=Edge Width (0-1) (S) }
+                    ParameterInfos[82] = { Name=Mask_Width }
+                    ParameterInfos[83] = { Name=RadiusBufferScale }
+                    ParameterInfos[84] = { Name=DistortionStrength (S) }
+                    ParameterInfos[85] = { Name=FX_Param }
+                    ParameterInfos[86] = { Name=Noise Exp }
+                    ParameterInfos[87] = { Name=Em Hardness (0-1) (S) }
+                    ParameterInfos[88] = { Name=MaxRadius }
+                    ParameterInfos[89] = { Name=MeltNoiseSize }
+                    ParameterInfos[90] = { Name=Buffer }
+                    ParameterInfos[91] = { Name=SphereMask_Hardness }
+                    ParameterInfos[92] = { Name=FX_RotationAmount }
+                    ParameterInfos[93] = { Name=Interior_GlowMin }
+                    ParameterInfos[94] = { Name=Noise Size Scale (S) }
+                    ParameterInfos[95] = { Name=On }
+                    ParameterInfos[96] = { Name=Em Noise Speed U }
+                    ParameterInfos[97] = { Name=Alpha }
+                    ParameterInfos[98] = { Name=ForRedWorld }
+                    ParameterInfos[99] = { Name=Rough Coverage (0-1) (S) }
+                    ParameterInfos[100] = { Name=Glow Edge Bias (0-1) (S) }
+                    ParameterInfos[101] = { Name=Subsurface_MAsk_Tiling }
+                    ParameterInfos[102] = { Name=Normal_MinCoverage }
+                    ParameterInfos[103] = { Name=NearDistance }
+                    ParameterInfos[104] = { Name=BlendWidth }
+                    ParameterInfos[105] = { Name=FarDistanceBrightnessFactor }
+                    ParameterInfos[106] = { Name=ModUV Strength (S) }
+                    ParameterInfos[107] = { Name=Base_EmBoost }
+                    ParameterInfos[108] = { Name=Noise Speed Scale (S) }
+                    ParameterInfos[109] = { Name=SkinFXOutline_NoiseMin }
+                    ParameterInfos[110] = { Name=Speed U (S)_1 }
+                    ParameterInfos[111] = { Name=Min_ROughness }
+                    ParameterInfos[112] = { Name=Tiling }
+                    ParameterInfos[113] = { Name=Em Noise Speed V }
+                    ParameterInfos[114] = { Name=HueShift }
+                    ParameterInfos[115] = { Name=Cracks_EmBoost }
+                    ParameterInfos[116] = { Name=Bubble_SurfaceMask_Tiling_03 }
+                    ParameterInfos[117] = { Name=Caustics2_TexSize }
+                    ParameterInfos[118] = { Name=SphereMask_Radius }
+                    ParameterInfos[119] = { Name=Erosion Alpha (S) }
+                    ParameterInfos[120] = { Name=SkinFXOutline_NoiseMax }
+                    ParameterInfos[121] = { Name=Normal Coverage (0-1) (S) }
+                    ParameterInfos[122] = { Name=Ingate }
+                    ParameterInfos[123] = { Name=Outer Opacity (S) }
+                    ParameterInfos[124] = { Name=Noise Speed 2 }
+                    ParameterInfos[125] = { Name=Wipe (0-1) (S) }
+                    ParameterInfos[126] = { Name=FadeCurve }
+                    ParameterInfos[127] = { Name=Sharpen }
+                    ParameterInfos[128] = { Name=Hardness }
+                    ParameterInfos[129] = { Name=TalentPulse }
+                    ParameterInfos[130] = { Name=Blend Noise_Tiling }
+                    ParameterInfos[131] = { Name=Wipe In Hardness }
+                    ParameterInfos[132] = { Name=SkinFX_EnvelopeAttackPhase }
+                    ParameterInfos[133] = { Name=Speed V (S)_1 }
+                    ParameterInfos[134] = { Name=Caustics1_PanSpeed }
+                    ParameterInfos[135] = { Name=HitFreezePercent }
+                    ParameterInfos[136] = { Name=Fresnel_Opacity }
+                    ParameterInfos[137] = { Name=BaseReflectFractionIn }
+                    ParameterInfos[138] = { Name=Offset }
+                    ParameterInfos[139] = { Name=WipeExp }
+                    ParameterInfos[140] = { Name=Surface_Color_02_Tiling }
+                    ParameterInfos[141] = { Name=Speed U (S)_2 }
+                    ParameterInfos[142] = { Name=Tiling U (S)_2 }
+                    ParameterInfos[143] = { Name=FX_Rotation Mult }
+                    ParameterInfos[144] = { Name=Caustics2_Inset }
+                    ParameterInfos[145] = { Name=minTo (S) }
+                    ParameterInfos[146] = { Name=AmbientOcclusion_Min }
+                    ParameterInfos[147] = { Name=FX_Collapse }
+                    ParameterInfos[148] = { Name=NoiseStrength }
+                    ParameterInfos[149] = { Name=Crack_02_Tiling }
+                    ParameterInfos[150] = { Name=Dissolve }
+                    ParameterInfos[151] = { Name=SkinFXOutline_ExponentIn }
+                    ParameterInfos[152] = { Name=Bubble_X-Offset_1 }
+                    ParameterInfos[153] = { Name=SkinFXOutline_NoisePanAngle }
+                    ParameterInfos[154] = { Name=SphereMask_power }
+                    ParameterInfos[155] = { Name=Ring Distortion Amount }
+                    ParameterInfos[156] = { Name=FadeDistance }
+                    ParameterInfos[157] = { Name=Subsurface_Cracks_Tiling }
+                    ParameterInfos[158] = { Name=BaseColor Hardness (0-1) (S) }
+                    ParameterInfos[159] = { Name=Speed V (S) }
+                    ParameterInfos[160] = { Name=Opacity_Hint }
+                    ParameterInfos[161] = { Name=SkinFXOutline_UseSphericalNormals }
+                    ParameterInfos[162] = { Name=FarDistance }
+                    ParameterInfos[163] = { Name=DroopRadius }
+                    ParameterInfos[164] = { Name=Noise Size 2 }
+                    ParameterInfos[165] = { Name=Distance Fade Start }
+                    ParameterInfos[166] = { Name=Duration }
+                    ParameterInfos[167] = { Name=Tiling U (S)_3 }
+                    ParameterInfos[168] = { Name=Caustics1_Inset }
+                    ParameterInfos[169] = { Name=Edge Bias (0-1) (S) }
+                    ParameterInfos[170] = { Name=Bubble_Tiling_01 }
+                    ParameterInfos[171] = { Name=Width (S) }
+                    ParameterInfos[172] = { Name=Noise Size 1 }
+                    ParameterInfos[173] = { Name=Inner Falloff Softness (S) }
+                    ParameterInfos[174] = { Name=ObjectFadeOpacity }
+                    ParameterInfos[175] = { Name=FX_ScaleMult }
+                    ParameterInfos[176] = { Name=Glow Center Opacity (S) }
+                    ParameterInfos[177] = { Name=Cheap contrast dark (S) }
+                    ParameterInfos[178] = { Name=SkinFX_Age }
+                    ParameterInfos[179] = { Name=ImpactRadius }
+                    ParameterInfos[180] = { Name=Speed U (S)_3 }
+                    ParameterInfos[181] = { Name=Glow }
+                    ParameterInfos[182] = { Name=FlipEdge }
+                    ParameterInfos[183] = { Name=Glow_Base }
+                    ParameterInfos[184] = { Name=ScaleEdgeGlow }
+                    ParameterInfos[185] = { Name=Speed V (S)_3 }
+                    ParameterInfos[186] = { Name=Wipe Softness (0-1) (S) }
+                    ParameterInfos[187] = { Name=VertOffset_NoiseStrength }
+                    ParameterInfos[188] = { Name=Bubbles_Opacity }
+                    ParameterInfos[189] = { Name=WPO Strength }
+                    ParameterInfos[190] = { Name=EmStr }
+                    ParameterInfos[191] = { Name=Glow_EmScale }
+                    ParameterInfos[192] = { Name=DroopHardness }
+                    ParameterInfos[193] = { Name=Glow Center Falloff Softness (S) }
+                    ParameterInfos[194] = { Name=Blend Sharpen }
+                    ParameterInfos[195] = { Name=Glow Fresnel Exp }
+                    ParameterInfos[196] = { Name=SkinFXOutline_BaseReflectFractionIn }
+                    ParameterInfos[197] = { Name=HeightBase }
+                    ParameterInfos[198] = { Name=SkinFXOutline_Alpha }
+                    ParameterInfos[199] = { Name=Roughness_Tiling }
+                    ParameterInfos[200] = { Name=Glow_Boost }
+                    ParameterInfos[201] = { Name=HeightVariation }
+                    ParameterInfos[202] = { Name=Impact_MinIciness }
+                    ParameterInfos[203] = { Name=NoiseStrengthLS }
+                    ParameterInfos[204] = { Name=Stretch Amount }
+                    ParameterInfos[205] = { Name=Wipe_Hardness }
+                    ParameterInfos[206] = { Name=SkinFXOutline_WashBrightness }
+                    ParameterInfos[207] = { Name=Mod Strength (S) }
+                    ParameterInfos[208] = { Name=FX_AxisBlend }
+                    ParameterInfos[209] = { Name=Em Coverage (0-1) (S) }
+                    ParameterInfos[210] = { Name=InnerRadius }
+                    ParameterInfos[211] = { Name=Subsurface_Power }
+                    ParameterInfos[212] = { Name=MeltNoiseSpeed }
+                    ParameterInfos[213] = { Name=Speed U (S) }
+                    ParameterInfos[214] = { Name=Bubble_Y_Offset_1 }
+                    ParameterInfos[215] = { Name=Mesh Distort Hardness }
+                    ParameterInfos[216] = { Name=BlurStrength }
+                    ParameterInfos[217] = { Name=Cracks_EmScale }
+                    ParameterInfos[218] = { Name=Opacity_01 }
+                    ParameterInfos[219] = { Name=Caustics_EmScale }
+                    ParameterInfos[220] = { Name=Sharpen (0-1) (S) }
+                    ParameterInfos[221] = { Name=Bias (S) }
+                    ParameterInfos[222] = { Name=Metallic Hardness (0-1) (S) }
+                    ParameterInfos[223] = { Name=FX_Scale }
+                    ParameterInfos[224] = { Name=SkinFXOutline_NoiseTiling }
+                    ParameterInfos[225] = { Name=WipeInOrOut }
+                    ParameterInfos[226] = { Name=Fresnel_NormalIntensity }
+                    ParameterInfos[227] = { Name=OpacityMask Hardness (0-1) (S) }
+                    ParameterInfos[228] = { Name=Metallic Coverage (0-1) (S) }
+                    ParameterInfos[229] = { Name=DeformationCurve }
+                    ParameterInfos[230] = { Name=SkinFXOutline_NoiseScreenUV }
+                    ParameterInfos[231] = { Name=SkinFXOutline_NoiseAmount }
+                    ParameterInfos[232] = { Name=Off }
+                    ParameterInfos[233] = { Name=BlurStrength (S) }
+                    ParameterInfos[234] = { Name=Surface_Color_Tiling_03 }
+                    ParameterInfos[235] = { Name=Distort Glow Edge }
+                    ParameterInfos[236] = { Name=Master_Tiling }
+                    ParameterInfos[237] = { Name=Bubble_Y_Offset }
+                    ParameterInfos[238] = { Name=OpacityMask Coverage (0-1) (S) }
+                    ParameterInfos[239] = { Name=FX_Param_1 }
+                    ParameterInfos[240] = { Name=Color Noise Size }
+                    ParameterInfos[241] = { Name=Normal Hardness (0-1) (S) }
+                    ParameterInfos[242] = { Name=ExtraCoverage (0-1) (S) }
+                    ParameterInfos[243] = { Name=FX_Motionblur Multiplier }
+                    ParameterInfos[244] = { Name=Edge Exp }
+                    ParameterInfos[245] = { Name=Outline }
+                    ParameterInfos[246] = { Name=IOR }
+                    ParameterInfos[247] = { Name=Bloat }
+                    ParameterInfos[248] = { Name=FX_InputMax (S) }
+                    ParameterInfos[249] = { Name=FlipGate }
+                    ParameterInfos[250] = { Name=SkinFXOutline_Brightness }
+                    ParameterInfos[251] = { Name=SkinFX_EnvelopeSustainPhase }
+                    ParameterInfos[252] = { Name=Pan Speed (S) }
+                    ParameterInfos[253] = { Name=Emissive Noise Tiling }
+                    ParameterInfos[254] = { Name=Interior Noise Tiling }
+                    ParameterInfos[255] = { Name=Refractive Index Target (S) }
+                    ParameterInfos[256] = { Name=BaseColor Coverage (0-1) (S) }
+                    ParameterInfos[257] = { Name=ScaleSizeForWipe }
+                    ParameterInfos[258] = { Name=Wipe }
+                    ParameterInfos[259] = { Name=WipeOut Offset }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[55] =
+                {
+                    ParameterInfos[0] = { Name=Base Color }
+                    ParameterInfos[1] = { Name=Subsurface_Color_Tint }
+                    ParameterInfos[2] = { Name=Metallicness }
+                    ParameterInfos[3] = { Name=SkinFX_BoundingSphere }
+                    ParameterInfos[4] = { Name=Interior Emissive Color }
+                    ParameterInfos[5] = { Name=SkinFX_BoundingBoxMin }
+                    ParameterInfos[6] = { Name=Deep_Color }
+                    ParameterInfos[7] = { Name=Glow Color }
+                    ParameterInfos[8] = { Name=Noise PanDir 2 }
+                    ParameterInfos[9] = { Name=Color Nois PanDir }
+                    ParameterInfos[10] = { Name=Noise Texture Size }
+                    ParameterInfos[11] = { Name=TintMinIce }
+                    ParameterInfos[12] = { Name=Ring Edge Glow Color }
+                    ParameterInfos[13] = { Name=EmisCol }
+                    ParameterInfos[14] = { Name=Caustics1_PanDirection }
+                    ParameterInfos[15] = { Name=MeltVec }
+                    ParameterInfos[16] = { Name=OffsetDir }
+                    ParameterInfos[17] = { Name=ColorSize }
+                    ParameterInfos[18] = { Name=SkinFX_InitialBoundingSphere }
+                    ParameterInfos[19] = { Name=WipeOriginLS }
+                    ParameterInfos[20] = { Name=SubSurfaceColor }
+                    ParameterInfos[21] = { Name=MeltCenter }
+                    ParameterInfos[22] = { Name=FX_RotationAxis2 }
+                    ParameterInfos[23] = { Name=HitLocation }
+                    ParameterInfos[24] = { Name=Stretch Direction }
+                    ParameterInfos[25] = { Name=Emissive_Detail }
+                    ParameterInfos[26] = { Name=Light_Color_1 }
+                    ParameterInfos[27] = { Name=Surface_Cracks_COlor }
+                    ParameterInfos[28] = { Name=FX_Location }
+                    ParameterInfos[29] = { Name=Caustics2_PanDirection }
+                    ParameterInfos[30] = { Name=Default Stretch Direction }
+                    ParameterInfos[31] = { Name=Noise Offset 1 }
+                    ParameterInfos[32] = { Name=Caustics_EmColor }
+                    ParameterInfos[33] = { Name=ImpactPointAttached }
+                    ParameterInfos[34] = { Name=VertOffset_Droop }
+                    ParameterInfos[35] = { Name=Emissive_Color }
+                    ParameterInfos[36] = { Name=LOC_Target }
+                    ParameterInfos[37] = { Name=Cracks/Bubbles_Color }
+                    ParameterInfos[38] = { Name=RingDistortionTextureSize (V3) }
+                    ParameterInfos[39] = { Name=FX_RotationAxis1 }
+                    ParameterInfos[40] = { Name=Noise Pan Direction }
+                    ParameterInfos[41] = { Name=Color }
+                    ParameterInfos[42] = { Name=Noise PanDir 1 }
+                    ParameterInfos[43] = { Name=WipeOrigin_LS }
+                    ParameterInfos[44] = { Name=Noise Offset 2 }
+                    ParameterInfos[45] = { Name=Emissive Color }
+                    ParameterInfos[46] = { Name=Alt_Metallicness }
+                    ParameterInfos[47] = { Name=Exterior_SubsurfaceColor }
+                    ParameterInfos[48] = { Name=SkinFXOutline_Color }
+                    ParameterInfos[49] = { Name=ImpactPoint }
+                    ParameterInfos[50] = { Name=BaseColor }
+                    ParameterInfos[51] = { Name=SkinFX_BoundingBoxExtent }
+                    ParameterInfos[52] = { Name=Distortion Direction }
+                    ParameterInfos[53] = { Name=Mask_Origin }
+                    ParameterInfos[54] = { Name=SphereMask_Origin }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[12] =
+                {
+                    ParameterInfos[0] = { Name=Mesh_Baked_Normal }
+                    ParameterInfos[1] = { Name=Exterior MRO }
+                    ParameterInfos[2] = { Name=Emissive }
+                    ParameterInfos[3] = { Name=NoiseTexture }
+                    ParameterInfos[4] = { Name=NormalMap }
+                    ParameterInfos[5] = { Name=OpacityMask }
+                    ParameterInfos[6] = { Name=Exterior Base }
+                    ParameterInfos[7] = { Name=Exterior Normal }
+                    ParameterInfos[8] = { Name=EmissiveTexture }
+                    ParameterInfos[9] = { Name=Noise Tex 1 }
+                    ParameterInfos[10] = { Name=Base Color Texture }
+                    ParameterInfos[11] = { Name=Interior Normal }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[260] =
+        {
+            ScalarValues[0] = 0.95
+            ScalarValues[1] = 58.3167
+            ScalarValues[2] = 1
+            ScalarValues[3] = 0
+            ScalarValues[4] = 0
+            ScalarValues[5] = 0.3
+            ScalarValues[6] = 0.15
+            ScalarValues[7] = 0
+            ScalarValues[8] = 2
+            ScalarValues[9] = 2
+            ScalarValues[10] = 1
+            ScalarValues[11] = 0
+            ScalarValues[12] = 1
+            ScalarValues[13] = 1
+            ScalarValues[14] = 1
+            ScalarValues[15] = 0.082539
+            ScalarValues[16] = 0.331745
+            ScalarValues[17] = 0.5
+            ScalarValues[18] = 4
+            ScalarValues[19] = 4
+            ScalarValues[20] = 0.726984
+            ScalarValues[21] = 0.45
+            ScalarValues[22] = 1000
+            ScalarValues[23] = 20
+            ScalarValues[24] = 1
+            ScalarValues[25] = 0.499796
+            ScalarValues[26] = 5000
+            ScalarValues[27] = 512
+            ScalarValues[28] = 2
+            ScalarValues[29] = 200
+            ScalarValues[30] = 1.4
+            ScalarValues[31] = 5
+            ScalarValues[32] = 19604.3
+            ScalarValues[33] = 1
+            ScalarValues[34] = 1.2
+            ScalarValues[35] = 100
+            ScalarValues[36] = 0.1
+            ScalarValues[37] = 1
+            ScalarValues[38] = 0.2
+            ScalarValues[39] = 2.07063
+            ScalarValues[40] = 0.5
+            ScalarValues[41] = 0.2
+            ScalarValues[42] = 1
+            ScalarValues[43] = 2.90362
+            ScalarValues[44] = -30
+            ScalarValues[45] = 20.9419
+            ScalarValues[46] = 0.9
+            ScalarValues[47] = -0.850793
+            ScalarValues[48] = 150
+            ScalarValues[49] = 0
+            ScalarValues[50] = 0
+            ScalarValues[51] = 1
+            ScalarValues[52] = 0
+            ScalarValues[53] = 4
+            ScalarValues[54] = 1
+            ScalarValues[55] = 1
+            ScalarValues[56] = 0
+            ScalarValues[57] = -0.148413
+            ScalarValues[58] = 3
+            ScalarValues[59] = 1.12441
+            ScalarValues[60] = 75
+            ScalarValues[61] = 1.45046
+            ScalarValues[62] = 3
+            ScalarValues[63] = 0
+            ScalarValues[64] = 0.3
+            ScalarValues[65] = 50
+            ScalarValues[66] = 2.00794
+            ScalarValues[67] = -0.15
+            ScalarValues[68] = 1
+            ScalarValues[69] = 0.6
+            ScalarValues[70] = 0.479365
+            ScalarValues[71] = 1
+            ScalarValues[72] = 0
+            ScalarValues[73] = 0.04
+            ScalarValues[74] = -0.273016
+            ScalarValues[75] = 2
+            ScalarValues[76] = 250
+            ScalarValues[77] = 0.168
+            ScalarValues[78] = 1
+            ScalarValues[79] = 0.25
+            ScalarValues[80] = 2
+            ScalarValues[81] = 0.009
+            ScalarValues[82] = 50
+            ScalarValues[83] = 1.2
+            ScalarValues[84] = 0.1
+            ScalarValues[85] = 0.05
+            ScalarValues[86] = 1.25
+            ScalarValues[87] = 0.165079
+            ScalarValues[88] = 150
+            ScalarValues[89] = 0.5
+            ScalarValues[90] = 0
+            ScalarValues[91] = 0
+            ScalarValues[92] = 1
+            ScalarValues[93] = 2
+            ScalarValues[94] = 0.714286
+            ScalarValues[95] = 0
+            ScalarValues[96] = 0.266667
+            ScalarValues[97] = 1
+            ScalarValues[98] = 0
+            ScalarValues[99] = 1
+            ScalarValues[100] = 0.514286
+            ScalarValues[101] = 1
+            ScalarValues[102] = 0.793651
+            ScalarValues[103] = 300
+            ScalarValues[104] = 0.37619
+            ScalarValues[105] = 15
+            ScalarValues[106] = 0.026667
+            ScalarValues[107] = 0.371429
+            ScalarValues[108] = 0.7
+            ScalarValues[109] = 0
+            ScalarValues[110] = 0.07619
+            ScalarValues[111] = 0
+            ScalarValues[112] = 1
+            ScalarValues[113] = -0.12381
+            ScalarValues[114] = -0.2
+            ScalarValues[115] = 3
+            ScalarValues[116] = 4
+            ScalarValues[117] = 125
+            ScalarValues[118] = 400
+            ScalarValues[119] = 0.721428
+            ScalarValues[120] = 1
+            ScalarValues[121] = 1
+            ScalarValues[122] = 0
+            ScalarValues[123] = 1
+            ScalarValues[124] = 57.441
+            ScalarValues[125] = 0
+            ScalarValues[126] = 20
+            ScalarValues[127] = 2
+            ScalarValues[128] = 0.97
+            ScalarValues[129] = 0
+            ScalarValues[130] = 7
+            ScalarValues[131] = 0.3
+            ScalarValues[132] = 1
+            ScalarValues[133] = -0.190476
+            ScalarValues[134] = -18.0826
+            ScalarValues[135] = 0.318349
+            ScalarValues[136] = 1
+            ScalarValues[137] = 0.054445
+            ScalarValues[138] = 49.0458
+            ScalarValues[139] = 0.6
+            ScalarValues[140] = 1
+            ScalarValues[141] = 0
+            ScalarValues[142] = 2.5
+            ScalarValues[143] = 90
+            ScalarValues[144] = 18
+            ScalarValues[145] = 0
+            ScalarValues[146] = 1
+            ScalarValues[147] = 0
+            ScalarValues[148] = 50
+            ScalarValues[149] = 1
+            ScalarValues[150] = 1
+            ScalarValues[151] = 12
+            ScalarValues[152] = 0.2
+            ScalarValues[153] = 90
+            ScalarValues[154] = 3
+            ScalarValues[155] = 0.180952
+            ScalarValues[156] = 50
+            ScalarValues[157] = 6
+            ScalarValues[158] = 0.698412
+            ScalarValues[159] = 0
+            ScalarValues[160] = 0
+            ScalarValues[161] = 0
+            ScalarValues[162] = 2500
+            ScalarValues[163] = 150
+            ScalarValues[164] = 150.168
+            ScalarValues[165] = 981.889
+            ScalarValues[166] = 0.517459
+            ScalarValues[167] = 1
+            ScalarValues[168] = 12
+            ScalarValues[169] = 0.457144
+            ScalarValues[170] = 2
+            ScalarValues[171] = 50
+            ScalarValues[172] = 283.286
+            ScalarValues[173] = 1.57143
+            ScalarValues[174] = 1
+            ScalarValues[175] = 1
+            ScalarValues[176] = 0
+            ScalarValues[177] = -0.628571
+            ScalarValues[178] = 0.5
+            ScalarValues[179] = 100
+            ScalarValues[180] = 0
+            ScalarValues[181] = 0
+            ScalarValues[182] = 0
+            ScalarValues[183] = 3
+            ScalarValues[184] = 1
+            ScalarValues[185] = -0.273016
+            ScalarValues[186] = 0.83492
+            ScalarValues[187] = 10
+            ScalarValues[188] = 0.889908
+            ScalarValues[189] = -0.864985
+            ScalarValues[190] = 60
+            ScalarValues[191] = 1
+            ScalarValues[192] = 0.1
+            ScalarValues[193] = 1.70917
+            ScalarValues[194] = 2
+            ScalarValues[195] = 2
+            ScalarValues[196] = 0
+            ScalarValues[197] = -0.920635
+            ScalarValues[198] = 1
+            ScalarValues[199] = 10
+            ScalarValues[200] = 10
+            ScalarValues[201] = -9.70801
+            ScalarValues[202] = 0.25
+            ScalarValues[203] = 0.1
+            ScalarValues[204] = 0
+            ScalarValues[205] = 0.361904
+            ScalarValues[206] = 0
+            ScalarValues[207] = 0.2
+            ScalarValues[208] = 0
+            ScalarValues[209] = 0.412698
+            ScalarValues[210] = 100
+            ScalarValues[211] = 2
+            ScalarValues[212] = 3
+            ScalarValues[213] = -0.2
+            ScalarValues[214] = 0
+            ScalarValues[215] = 0.3
+            ScalarValues[216] = 30
+            ScalarValues[217] = 1
+            ScalarValues[218] = 0.25
+            ScalarValues[219] = 1
+            ScalarValues[220] = 0.393651
+            ScalarValues[221] = 0.5
+            ScalarValues[222] = 0.825397
+            ScalarValues[223] = 0.6
+            ScalarValues[224] = 5
+            ScalarValues[225] = 0
+            ScalarValues[226] = 1.25
+            ScalarValues[227] = 0.43492
+            ScalarValues[228] = 1
+            ScalarValues[229] = 24
+            ScalarValues[230] = 1
+            ScalarValues[231] = 1
+            ScalarValues[232] = 1
+            ScalarValues[233] = 0.225396
+            ScalarValues[234] = 1
+            ScalarValues[235] = 0.100345
+            ScalarValues[236] = 1
+            ScalarValues[237] = 0
+            ScalarValues[238] = 0.130159
+            ScalarValues[239] = 1
+            ScalarValues[240] = 250
+            ScalarValues[241] = 0.860317
+            ScalarValues[242] = 0
+            ScalarValues[243] = 0.005
+            ScalarValues[244] = 4
+            ScalarValues[245] = 0
+            ScalarValues[246] = 1.03
+            ScalarValues[247] = 25
+            ScalarValues[248] = 2000
+            ScalarValues[249] = 0
+            ScalarValues[250] = 3
+            ScalarValues[251] = 0
+            ScalarValues[252] = 20
+            ScalarValues[253] = 0.247619
+            ScalarValues[254] = 3
+            ScalarValues[255] = 1.06423
+            ScalarValues[256] = 0.904762
+            ScalarValues[257] = 1
+            ScalarValues[258] = 1
+            ScalarValues[259] = 100
+        }
+        VectorValues[55] =
+        {
+            VectorValues[0] = { R=0, G=0, B=0, A=0 }
+            VectorValues[1] = { R=0.5, G=0.7, B=1, A=1 }
+            VectorValues[2] = { R=0, G=0, B=0, A=1 }
+            VectorValues[3] = { R=6440.41, G=-6851.61, B=529.405, A=153.995 }
+            VectorValues[4] = { R=0.416667, G=0.65, B=1, A=1 }
+            VectorValues[5] = { R=0, G=0, B=0, A=1 }
+            VectorValues[6] = { R=0.001816, G=0.020123, B=0.057292, A=1 }
+            VectorValues[7] = { R=0.067551, G=0.035156, B=0.125, A=1 }
+            VectorValues[8] = { R=-0.590476, G=0.488889, B=0.720033, A=1 }
+            VectorValues[9] = { R=0.152381, G=0.146032, B=1, A=0 }
+            VectorValues[10] = { R=200, G=200, B=200, A=0 }
+            VectorValues[11] = { R=0.533, G=0.700979, B=1, A=1 }
+            VectorValues[12] = { R=0.777532, G=1.30411, B=5, A=1 }
+            VectorValues[13] = { R=1, G=0.605556, B=0.249575, A=1 }
+            VectorValues[14] = { R=0.311111, G=-0.304762, B=1, A=0 }
+            VectorValues[15] = { R=0, G=0, B=-70, A=1 }
+            VectorValues[16] = { R=0, G=-0.104762, B=0.98481, A=1 }
+            VectorValues[17] = { R=128, G=128, B=128, A=1 }
+            VectorValues[18] = { R=7117.67, G=-6525.18, B=452.801, A=250 }
+            VectorValues[19] = { R=0, G=0, B=0, A=1 }
+            VectorValues[20] = { R=0.00142031, G=0.00584534, B=0.01, A=1 }
+            VectorValues[21] = { R=0, G=0, B=100, A=1 }
+            VectorValues[22] = { R=0, G=0, B=0, A=1 }
+            VectorValues[23] = { R=-40, G=0, B=100, A=1 }
+            VectorValues[24] = { R=0, G=-1, B=54.5519, A=1 }
+            VectorValues[25] = { R=1.00347, G=1.42816, B=2, A=1 }
+            VectorValues[26] = { R=0.04456, G=0.116356, B=0.208333, A=1 }
+            VectorValues[27] = { R=0.14996, G=0.391572, B=0.701102, A=1 }
+            VectorValues[28] = { R=0, G=0, B=0, A=1 }
+            VectorValues[29] = { R=0.088889, G=-0.158731, B=1, A=0 }
+            VectorValues[30] = { R=0, G=-1, B=0.705, A=1 }
+            VectorValues[31] = { R=36, G=78, B=20, A=0 }
+            VectorValues[32] = { R=0.11632, G=0.248872, B=1, A=1 }
+            VectorValues[33] = { R=5160, G=-26612, B=291, A=11 }
+            VectorValues[34] = { R=0, G=0, B=-20, A=1 }
+            VectorValues[35] = { R=0.314236, G=0.602351, B=1, A=0 }
+            VectorValues[36] = { R=0, G=0, B=0, A=1 }
+            VectorValues[37] = { R=0.388077, G=0.614115, B=0.831, A=1 }
+            VectorValues[38] = { R=200, G=200, B=200, A=0 }
+            VectorValues[39] = { R=0, G=0, B=0, A=1 }
+            VectorValues[40] = { R=0.247619, G=-0.184127, B=0.406349, A=0 }
+            VectorValues[41] = { R=0, G=0.204562, B=1, A=0 }
+            VectorValues[42] = { R=-0.590476, G=0.488889, B=-1, A=1 }
+            VectorValues[43] = { R=0, G=0, B=0, A=1 }
+            VectorValues[44] = { R=-15, G=-90, B=-83, A=1 }
+            VectorValues[45] = { R=30, G=3.5, B=0, A=1 }
+            VectorValues[46] = { R=1, G=1, B=1, A=1 }
+            VectorValues[47] = { R=0, G=0, B=0, A=1 }
+            VectorValues[48] = { R=1, G=0, B=0, A=1 }
+            VectorValues[49] = { R=6274.02, G=-6726.46, B=400, A=1 }
+            VectorValues[50] = { R=1, G=1, B=1, A=1 }
+            VectorValues[51] = { R=0, G=0, B=0, A=1 }
+            VectorValues[52] = { R=266.285, G=94.2082, B=146.612, A=1 }
+            VectorValues[53] = { R=0, G=0, B=0, A=1 }
+            VectorValues[54] = { R=0, G=0, B=238.585, A=1 }
+        }
+        TextureValues[12] =
+        {
+            TextureValues[0] = Texture2D'/Engine/EngineResources/DefaultTexture.DefaultTexture'
+            TextureValues[1] = Texture2D'/Game/RiggedObjects/Characters/Creatures/TombProtector/Grunt/Textures/T_GOL_TombProtectorGrunt_Torso_MRO.T_GOL_TombProtectorGrunt_Torso_MRO'
+            TextureValues[2] = Texture2D'/Game/VFX/Textures/VFX_T_Burnt_E.VFX_T_Burnt_E'
+            TextureValues[3] = Texture2D'/Engine/Functions/Engine_MaterialFunctions02/ExampleContent/Textures/LowResBlurredNoise.LowResBlurredNoise'
+            TextureValues[4] = Texture2D'/Game/VFX/Textures/VFX_T_IceB_N.VFX_T_IceB_N'
+            TextureValues[5] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Cloud_SoftWisps_D.VFX_T_Cloud_SoftWisps_D'
+            TextureValues[6] = Texture2D'/Game/RiggedObjects/Characters/Creatures/TombProtector/Grunt/Textures/T_GOL_TombProtectorGrunt_Torso_D.T_GOL_TombProtectorGrunt_Torso_D'
+            TextureValues[7] = Texture2D'/Game/RiggedObjects/Characters/Creatures/TombProtector/Grunt/Textures/T_GOL_TombProtectorGrunt_Torso_N.T_GOL_TombProtectorGrunt_Torso_N'
+            TextureValues[8] = Texture2D'/Game/VFX/Enemies/TombProtectorGrunt/VFX_T_TMBG_Torso_E.VFX_T_TMBG_Torso_E'
+            TextureValues[9] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise05_D.VFX_T_Noise05_D'
+            TextureValues[10] = Texture2D'/Game/VFX/Textures/VFX_T_Burnt_D.VFX_T_Burnt_D'
+            TextureValues[11] = Texture2D'/Game/Environment/Azkaban/Textures/T_Dragon_Stone_Tile_N.T_Dragon_Stone_Tile_N'
+        }
+    }
+    ReferencedTextures[41] =
+    {
+        ReferencedTextures[1] = Texture2D'/Engine/EngineMaterials/BaseFlattenNormalMap.BaseFlattenNormalMap'
+        ReferencedTextures[2] = Texture2D'/Engine/EngineMaterials/DefaultDiffuse.DefaultDiffuse'
+        ReferencedTextures[3] = Texture2D'/Engine/EngineMaterials/DefaultNormal_Uncompressed.DefaultNormal_Uncompressed'
+        ReferencedTextures[4] = Texture2D'/Game/RiggedObjects/Characters/TileableTextures/T_DefaultGrey_D.T_DefaultGrey_D'
+        ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_Ice_N.VFX_T_Ice_N'
+        ReferencedTextures[6] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_Ice_D.VFX_T_Ice_D'
+        ReferencedTextures[7] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_Ice_R.VFX_T_Ice_R'
+        ReferencedTextures[8] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_SwirlNoise_05_Chroma_D.VFX_T_SwirlNoise_05_Chroma_D'
+        ReferencedTextures[9] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+        ReferencedTextures[10] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_ChromaticCellNoise_N.VFX_T_ChromaticCellNoise_N'
+        ReferencedTextures[11] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseCaustics01_Color_D.VFX_T_NoiseCaustics01_Color_D'
+        ReferencedTextures[12] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+        ReferencedTextures[13] = Texture2D'/Game/RiggedObjects/Environments/Forageables/Horklump/Textures/T_Forageable_Horklump_Gradient_D.T_Forageable_Horklump_Gradient_D'
+        ReferencedTextures[14] = Texture2D'/Game/MaterialFunctions/BaseTextures/ColorNoise/T_ColorNoise512_D.T_ColorNoise512_D'
+        ReferencedTextures[15] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/T_Blank_A.T_Blank_A'
+        ReferencedTextures[16] = Texture2D'/Game/RiggedObjects/Characters/Creatures/TombProtector/Grunt/Textures/T_GOL_TombProtectorGrunt_Torso_D.T_GOL_TombProtectorGrunt_Torso_D'
+        ReferencedTextures[17] = Texture2D'/Game/RiggedObjects/Characters/Creatures/TombProtector/Grunt/Textures/T_GOL_TombProtectorGrunt_Torso_MRO.T_GOL_TombProtectorGrunt_Torso_MRO'
+        ReferencedTextures[18] = Texture2D'/Game/RiggedObjects/Characters/Creatures/TombProtector/Grunt/Textures/T_GOL_TombProtectorGrunt_Torso_N.T_GOL_TombProtectorGrunt_Torso_N'
+        ReferencedTextures[19] = Texture2D'/Game/VFX/Enemies/TombProtectorGrunt/VFX_T_TMBG_Torso_E.VFX_T_TMBG_Torso_E'
+        ReferencedTextures[20] = Texture2D'/Game/VFX/CurveAtlas/VFX_CA_CurveAtlasMaterialAnims.VFX_CA_CurveAtlasMaterialAnims'
+        ReferencedTextures[21] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseTiled_1_D.VFX_T_NoiseTiled_1_D'
+        ReferencedTextures[22] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_MarbleSkin_01_BPF_D.VFX_T_MarbleSkin_01_BPF_D'
+        ReferencedTextures[23] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Cloud_SoftWisps_D.VFX_T_Cloud_SoftWisps_D'
+        ReferencedTextures[24] = Texture2D'/Game/Environment/Azkaban/Textures/T_Dragon_Stone_Tile_N.T_Dragon_Stone_Tile_N'
+        ReferencedTextures[25] = Texture2D'/Game/VFX/Textures/VFX_T_IceB_N.VFX_T_IceB_N'
+        ReferencedTextures[26] = Texture2D'/Game/VFX/Textures/VFX_T_IceB_mask_D.VFX_T_IceB_mask_D'
+        ReferencedTextures[27] = Texture2D'/Game/VFX/Textures/VFX_T_IceB_D.VFX_T_IceB_D'
+        ReferencedTextures[28] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_BubbleMask_D.VFX_T_BubbleMask_D'
+        ReferencedTextures[29] = Texture2D'/Engine/EngineResources/DefaultTexture.DefaultTexture'
+        ReferencedTextures[30] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise04_D.VFX_T_Noise04_D'
+        ReferencedTextures[31] = Texture2D'/Engine/Functions/Engine_MaterialFunctions02/ExampleContent/Textures/LowResBlurredNoise.LowResBlurredNoise'
+        ReferencedTextures[32] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Cloud_SoftWisps_Chroma_D.VFX_T_Cloud_SoftWisps_Chroma_D'
+        ReferencedTextures[33] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+        ReferencedTextures[34] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise05_D.VFX_T_Noise05_D'
+        ReferencedTextures[35] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseCaustics_Chromatic_D.VFX_T_NoiseCaustics_Chromatic_D'
+        ReferencedTextures[36] = Texture2D'/Game/VFX/Textures/VFX_T_Burnt_E.VFX_T_Burnt_E'
+        ReferencedTextures[37] = Texture2D'/Game/VFX/Textures/VFX_T_Burnt_N.VFX_T_Burnt_N'
+        ReferencedTextures[38] = Texture2D'/Game/VFX/Textures/VFX_T_Burnt_D.VFX_T_Burnt_D'
+        ReferencedTextures[39] = Texture2D'/Game/MaterialFunctions/BaseTextures/T_Blank_N.T_Blank_N'
+        ReferencedTextures[40] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_LowFreq_ChromaNoise_D.VFX_T_LowFreq_ChromaNoise_D'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[12] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Engine/EngineResources/DefaultTexture.DefaultTexture'
+        Name = Mesh_Baked_Normal
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/RiggedObjects/Characters/Creatures/TombProtector/Grunt/Textures/T_GOL_TombProtectorGrunt_Torso_MRO.T_GOL_TombProtectorGrunt_Torso_MRO'
+        Name = Exterior MRO
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_Burnt_E.VFX_T_Burnt_E'
+        Name = Emissive
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Engine/Functions/Engine_MaterialFunctions02/ExampleContent/Textures/LowResBlurredNoise.LowResBlurredNoise'
+        Name = NoiseTexture
+        Group = None
+    }
+    CollectedTextureParameters[4] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_IceB_N.VFX_T_IceB_N'
+        Name = NormalMap
+        Group = None
+    }
+    CollectedTextureParameters[5] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Cloud_SoftWisps_D.VFX_T_Cloud_SoftWisps_D'
+        Name = OpacityMask
+        Group = None
+    }
+    CollectedTextureParameters[6] =
+    {
+        Texture = Texture2D'/Game/RiggedObjects/Characters/Creatures/TombProtector/Grunt/Textures/T_GOL_TombProtectorGrunt_Torso_D.T_GOL_TombProtectorGrunt_Torso_D'
+        Name = Exterior Base
+        Group = None
+    }
+    CollectedTextureParameters[7] =
+    {
+        Texture = Texture2D'/Game/RiggedObjects/Characters/Creatures/TombProtector/Grunt/Textures/T_GOL_TombProtectorGrunt_Torso_N.T_GOL_TombProtectorGrunt_Torso_N'
+        Name = Exterior Normal
+        Group = None
+    }
+    CollectedTextureParameters[8] =
+    {
+        Texture = Texture2D'/Game/VFX/Enemies/TombProtectorGrunt/VFX_T_TMBG_Torso_E.VFX_T_TMBG_Torso_E'
+        Name = EmissiveTexture
+        Group = None
+    }
+    CollectedTextureParameters[9] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise05_D.VFX_T_Noise05_D'
+        Name = Noise Tex 1
+        Group = None
+    }
+    CollectedTextureParameters[10] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_Burnt_D.VFX_T_Burnt_D'
+        Name = Base Color Texture
+        Group = None
+    }
+    CollectedTextureParameters[11] =
+    {
+        Texture = Texture2D'/Game/Environment/Azkaban/Textures/T_Dragon_Stone_Tile_N.T_Dragon_Stone_Tile_N'
+        Name = Interior Normal
+        Group = None
+    }
+}
+CollectedScalarParameters[260] =
+{
+    CollectedScalarParameters[0] = { Value=0.95, Name=Opacity_02, Group=None }
+    CollectedScalarParameters[1] = { Value=58.3167, Name=Ring Width (S), Group=None }
+    CollectedScalarParameters[2] =
+    {
+        Value = 1
+        Name = SkinFXOutline_EmissiveAdaptation
+        Group = None
+    }
+    CollectedScalarParameters[3] = { Value=0, Name=HueShiftAdd, Group=None }
+    CollectedScalarParameters[4] = { Value=0, Name=Inner Opacity (S), Group=None }
+    CollectedScalarParameters[5] = { Value=0.3, Name=Wipe Out Hardness, Group=None }
+    CollectedScalarParameters[6] = { Value=0.15, Name=Roughness, Group=None }
+    CollectedScalarParameters[7] =
+    {
+        Value = 0
+        Name = SkinFX_EnvelopeReleasePhase
+        Group = None
+    }
+    CollectedScalarParameters[8] = { Value=2, Name=MeltNoiseExp, Group=None }
+    CollectedScalarParameters[9] = { Value=2, Name=Noise Opacity Boost, Group=None }
+    CollectedScalarParameters[10] = { Value=1, Name=ScaleInteriorGlow, Group=None }
+    CollectedScalarParameters[11] = { Value=0, Name=ReverseDisintegration, Group=None }
+    CollectedScalarParameters[12] =
+    {
+        Value = 1
+        Name = ProjectionTransitionContrast (S)_1
+        Group = None
+    }
+    CollectedScalarParameters[13] = { Value=1, Name=Opacity_03, Group=None }
+    CollectedScalarParameters[14] = { Value=1, Name=Opacity Mask Tiling, Group=None }
+    CollectedScalarParameters[15] =
+    {
+        Value = 0.082539
+        Name = WPO Hardness (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[16] = { Value=0.331745, Name=Iciness_Sharpen, Group=None }
+    CollectedScalarParameters[17] =
+    {
+        Value = 0.5
+        Name = SkinFXOutline_NoiseSpeed
+        Group = None
+    }
+    CollectedScalarParameters[18] = { Value=4, Name=Exp, Group=None }
+    CollectedScalarParameters[19] = { Value=4, Name=Glow_Brightness, Group=None }
+    CollectedScalarParameters[20] =
+    {
+        Value = 0.726984
+        Name = Rough Hardness (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[21] = { Value=0.45, Name=Hardness (0-1) (S), Group=None }
+    CollectedScalarParameters[22] = { Value=1000, Name=Interior Glow Boost, Group=None }
+    CollectedScalarParameters[23] = { Value=20, Name=Noise Pan Speed, Group=None }
+    CollectedScalarParameters[24] =
+    {
+        Value = 1
+        Name = Emissive Adaptation Outdoor Daytime Boost (S)
+        Group = None
+    }
+    CollectedScalarParameters[25] =
+    {
+        Value = 0.499796
+        Name = Cheap contrast bright (S)
+        Group = None
+    }
+    CollectedScalarParameters[26] = { Value=5000, Name=OuterRadius, Group=None }
+    CollectedScalarParameters[27] =
+    {
+        Value = 512
+        Name = Transparency_Clip_DIstance_1
+        Group = None
+    }
+    CollectedScalarParameters[28] = { Value=2, Name=Fresnel Power, Group=None }
+    CollectedScalarParameters[29] = { Value=200, Name=Mask_Radius, Group=None }
+    CollectedScalarParameters[30] = { Value=1.4, Name=Contrast, Group=None }
+    CollectedScalarParameters[31] = { Value=5, Name=Caustics_EmStrength, Group=None }
+    CollectedScalarParameters[32] =
+    {
+        Value = 19604.3
+        Name = Distance Fade Length
+        Group = None
+    }
+    CollectedScalarParameters[33] =
+    {
+        Value = 1
+        Name = NearDistanceBrightnessFactor
+        Group = None
+    }
+    CollectedScalarParameters[34] = { Value=1.2, Name=Roughness_Exp, Group=None }
+    CollectedScalarParameters[35] = { Value=100, Name=Fade Offset (S), Group=None }
+    CollectedScalarParameters[36] = { Value=0.1, Name=HueShiftNoise, Group=None }
+    CollectedScalarParameters[37] = { Value=1, Name=Surface_Color_Tiling, Group=None }
+    CollectedScalarParameters[38] = { Value=0.2, Name=Bubble_X-Offset, Group=None }
+    CollectedScalarParameters[39] = { Value=2.07063, Name=HeightTiling, Group=None }
+    CollectedScalarParameters[40] = { Value=0.5, Name=Max_Roughness, Group=None }
+    CollectedScalarParameters[41] = { Value=0.2, Name=Bubble_X-Offset_2, Group=None }
+    CollectedScalarParameters[42] = { Value=1, Name=BaseRoughness, Group=None }
+    CollectedScalarParameters[43] =
+    {
+        Value = 2.90362
+        Name = Glow Edge Falloff Softness1 (S)
+        Group = None
+    }
+    CollectedScalarParameters[44] = { Value=-30, Name=Dissolve WPO, Group=None }
+    CollectedScalarParameters[45] =
+    {
+        Value = 20.9419
+        Name = Caustics2_PanSpeed
+        Group = None
+    }
+    CollectedScalarParameters[46] = { Value=0.9, Name=maxTo (S), Group=None }
+    CollectedScalarParameters[47] = { Value=-0.850793, Name=Desaturation, Group=None }
+    CollectedScalarParameters[48] = { Value=150, Name=Ice_TextureSize, Group=None }
+    CollectedScalarParameters[49] = { Value=0, Name=FlipTop, Group=None }
+    CollectedScalarParameters[50] = { Value=0, Name=MeltStrength, Group=None }
+    CollectedScalarParameters[51] = { Value=1, Name=Dissolve Sharpen, Group=None }
+    CollectedScalarParameters[52] = { Value=0, Name=Opacity_Ping, Group=None }
+    CollectedScalarParameters[53] = { Value=4, Name=Bubble_Tiling_02, Group=None }
+    CollectedScalarParameters[54] = { Value=1, Name=Base_EmScale, Group=None }
+    CollectedScalarParameters[55] = { Value=1, Name=BloomAdaptation, Group=None }
+    CollectedScalarParameters[56] = { Value=0, Name=Bubble_Y_Offset_2, Group=None }
+    CollectedScalarParameters[57] = { Value=-0.148413, Name=Cull Offset, Group=None }
+    CollectedScalarParameters[58] = { Value=3, Name=Tiling U (S)_1, Group=None }
+    CollectedScalarParameters[59] =
+    {
+        Value = 1.12441
+        Name = Emissive Detail Tiling
+        Group = None
+    }
+    CollectedScalarParameters[60] = { Value=75, Name=Caustics1_TexSize, Group=None }
+    CollectedScalarParameters[61] = { Value=1.45046, Name=TalentPulseSpeed, Group=None }
+    CollectedScalarParameters[62] =
+    {
+        Value = 3
+        Name = Interior Glow Fresnel Power
+        Group = None
+    }
+    CollectedScalarParameters[63] =
+    {
+        Value = 0
+        Name = BlurStrenght_LowQuality
+        Group = None
+    }
+    CollectedScalarParameters[64] = { Value=0.3, Name=SkinFX_EnvelopeValue, Group=None }
+    CollectedScalarParameters[65] = { Value=50, Name=Noise Speed 1, Group=None }
+    CollectedScalarParameters[66] =
+    {
+        Value = 2.00794
+        Name = Base Tiling U (S)
+        Group = None
+    }
+    CollectedScalarParameters[67] = { Value=-0.15, Name=Base_HueShift, Group=None }
+    CollectedScalarParameters[68] = { Value=1, Name=Base_Em_Exp, Group=None }
+    CollectedScalarParameters[69] = { Value=0.6, Name=Intensity (S), Group=None }
+    CollectedScalarParameters[70] =
+    {
+        Value = 0.479365
+        Name = WPO Coverage (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[71] = { Value=1, Name=CracksEm_Exp, Group=None }
+    CollectedScalarParameters[72] =
+    {
+        Value = 0
+        Name = ObjectFadePerinstanceOverride
+        Group = None
+    }
+    CollectedScalarParameters[73] = { Value=0.04, Name=GlowWidth, Group=None }
+    CollectedScalarParameters[74] = { Value=-0.273016, Name=Speed V (S)_2, Group=None }
+    CollectedScalarParameters[75] = { Value=2, Name=DroopStrength, Group=None }
+    CollectedScalarParameters[76] = { Value=250, Name=Fade Length (S), Group=None }
+    CollectedScalarParameters[77] = { Value=0.168, Name=Test, Group=None }
+    CollectedScalarParameters[78] = { Value=1, Name=ExteriorCoverage, Group=None }
+    CollectedScalarParameters[79] = { Value=0.25, Name=ImpactHardness, Group=None }
+    CollectedScalarParameters[80] =
+    {
+        Value = 2
+        Name = ProjectionTransitionContrast (S)
+        Group = None
+    }
+    CollectedScalarParameters[81] =
+    {
+        Value = 0.009
+        Name = Edge Width (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[82] = { Value=50, Name=Mask_Width, Group=None }
+    CollectedScalarParameters[83] = { Value=1.2, Name=RadiusBufferScale, Group=None }
+    CollectedScalarParameters[84] =
+    {
+        Value = 0.1
+        Name = DistortionStrength (S)
+        Group = None
+    }
+    CollectedScalarParameters[85] = { Value=0.05, Name=FX_Param, Group=None }
+    CollectedScalarParameters[86] = { Value=1.25, Name=Noise Exp, Group=None }
+    CollectedScalarParameters[87] =
+    {
+        Value = 0.165079
+        Name = Em Hardness (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[88] = { Value=150, Name=MaxRadius, Group=None }
+    CollectedScalarParameters[89] = { Value=0.5, Name=MeltNoiseSize, Group=None }
+    CollectedScalarParameters[90] = { Value=0, Name=Buffer, Group=None }
+    CollectedScalarParameters[91] = { Value=0, Name=SphereMask_Hardness, Group=None }
+    CollectedScalarParameters[92] = { Value=1, Name=FX_RotationAmount, Group=None }
+    CollectedScalarParameters[93] = { Value=2, Name=Interior_GlowMin, Group=None }
+    CollectedScalarParameters[94] =
+    {
+        Value = 0.714286
+        Name = Noise Size Scale (S)
+        Group = None
+    }
+    CollectedScalarParameters[95] = { Value=0, Name=On, Group=None }
+    CollectedScalarParameters[96] =
+    {
+        Value = 0.266667
+        Name = Em Noise Speed U
+        Group = None
+    }
+    CollectedScalarParameters[97] = { Value=1, Name=Alpha, Group=None }
+    CollectedScalarParameters[98] = { Value=0, Name=ForRedWorld, Group=None }
+    CollectedScalarParameters[99] =
+    {
+        Value = 1
+        Name = Rough Coverage (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[100] =
+    {
+        Value = 0.514286
+        Name = Glow Edge Bias (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[101] = { Value=1, Name=Subsurface_MAsk_Tiling, Group=None }
+    CollectedScalarParameters[102] =
+    {
+        Value = 0.793651
+        Name = Normal_MinCoverage
+        Group = None
+    }
+    CollectedScalarParameters[103] = { Value=300, Name=NearDistance, Group=None }
+    CollectedScalarParameters[104] = { Value=0.37619, Name=BlendWidth, Group=None }
+    CollectedScalarParameters[105] =
+    {
+        Value = 15
+        Name = FarDistanceBrightnessFactor
+        Group = None
+    }
+    CollectedScalarParameters[106] =
+    {
+        Value = 0.026667
+        Name = ModUV Strength (S)
+        Group = None
+    }
+    CollectedScalarParameters[107] = { Value=0.371429, Name=Base_EmBoost, Group=None }
+    CollectedScalarParameters[108] =
+    {
+        Value = 0.7
+        Name = Noise Speed Scale (S)
+        Group = None
+    }
+    CollectedScalarParameters[109] = { Value=0, Name=SkinFXOutline_NoiseMin, Group=None }
+    CollectedScalarParameters[110] = { Value=0.07619, Name=Speed U (S)_1, Group=None }
+    CollectedScalarParameters[111] = { Value=0, Name=Min_ROughness, Group=None }
+    CollectedScalarParameters[112] = { Value=1, Name=Tiling, Group=None }
+    CollectedScalarParameters[113] =
+    {
+        Value = -0.12381
+        Name = Em Noise Speed V
+        Group = None
+    }
+    CollectedScalarParameters[114] = { Value=-0.2, Name=HueShift, Group=None }
+    CollectedScalarParameters[115] = { Value=3, Name=Cracks_EmBoost, Group=None }
+    CollectedScalarParameters[116] =
+    {
+        Value = 4
+        Name = Bubble_SurfaceMask_Tiling_03
+        Group = None
+    }
+    CollectedScalarParameters[117] = { Value=125, Name=Caustics2_TexSize, Group=None }
+    CollectedScalarParameters[118] = { Value=400, Name=SphereMask_Radius, Group=None }
+    CollectedScalarParameters[119] =
+    {
+        Value = 0.721428
+        Name = Erosion Alpha (S)
+        Group = None
+    }
+    CollectedScalarParameters[120] = { Value=1, Name=SkinFXOutline_NoiseMax, Group=None }
+    CollectedScalarParameters[121] =
+    {
+        Value = 1
+        Name = Normal Coverage (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[122] = { Value=0, Name=Ingate, Group=None }
+    CollectedScalarParameters[123] = { Value=1, Name=Outer Opacity (S), Group=None }
+    CollectedScalarParameters[124] = { Value=57.441, Name=Noise Speed 2, Group=None }
+    CollectedScalarParameters[125] = { Value=0, Name=Wipe (0-1) (S), Group=None }
+    CollectedScalarParameters[126] = { Value=20, Name=FadeCurve, Group=None }
+    CollectedScalarParameters[127] = { Value=2, Name=Sharpen, Group=None }
+    CollectedScalarParameters[128] = { Value=0.97, Name=Hardness, Group=None }
+    CollectedScalarParameters[129] = { Value=0, Name=TalentPulse, Group=None }
+    CollectedScalarParameters[130] = { Value=7, Name=Blend Noise_Tiling, Group=None }
+    CollectedScalarParameters[131] = { Value=0.3, Name=Wipe In Hardness, Group=None }
+    CollectedScalarParameters[132] =
+    {
+        Value = 1
+        Name = SkinFX_EnvelopeAttackPhase
+        Group = None
+    }
+    CollectedScalarParameters[133] = { Value=-0.190476, Name=Speed V (S)_1, Group=None }
+    CollectedScalarParameters[134] =
+    {
+        Value = -18.0826
+        Name = Caustics1_PanSpeed
+        Group = None
+    }
+    CollectedScalarParameters[135] =
+    {
+        Value = 0.318349
+        Name = HitFreezePercent
+        Group = None
+    }
+    CollectedScalarParameters[136] = { Value=1, Name=Fresnel_Opacity, Group=None }
+    CollectedScalarParameters[137] =
+    {
+        Value = 0.054445
+        Name = BaseReflectFractionIn
+        Group = None
+    }
+    CollectedScalarParameters[138] = { Value=49.0458, Name=Offset, Group=None }
+    CollectedScalarParameters[139] = { Value=0.6, Name=WipeExp, Group=None }
+    CollectedScalarParameters[140] =
+    {
+        Value = 1
+        Name = Surface_Color_02_Tiling
+        Group = None
+    }
+    CollectedScalarParameters[141] = { Value=0, Name=Speed U (S)_2, Group=None }
+    CollectedScalarParameters[142] = { Value=2.5, Name=Tiling U (S)_2, Group=None }
+    CollectedScalarParameters[143] = { Value=90, Name=FX_Rotation Mult, Group=None }
+    CollectedScalarParameters[144] = { Value=18, Name=Caustics2_Inset, Group=None }
+    CollectedScalarParameters[145] = { Value=0, Name=minTo (S), Group=None }
+    CollectedScalarParameters[146] = { Value=1, Name=AmbientOcclusion_Min, Group=None }
+    CollectedScalarParameters[147] = { Value=0, Name=FX_Collapse, Group=None }
+    CollectedScalarParameters[148] = { Value=50, Name=NoiseStrength, Group=None }
+    CollectedScalarParameters[149] = { Value=1, Name=Crack_02_Tiling, Group=None }
+    CollectedScalarParameters[150] = { Value=1, Name=Dissolve, Group=None }
+    CollectedScalarParameters[151] =
+    {
+        Value = 12
+        Name = SkinFXOutline_ExponentIn
+        Group = None
+    }
+    CollectedScalarParameters[152] = { Value=0.2, Name=Bubble_X-Offset_1, Group=None }
+    CollectedScalarParameters[153] =
+    {
+        Value = 90
+        Name = SkinFXOutline_NoisePanAngle
+        Group = None
+    }
+    CollectedScalarParameters[154] = { Value=3, Name=SphereMask_power, Group=None }
+    CollectedScalarParameters[155] =
+    {
+        Value = 0.180952
+        Name = Ring Distortion Amount
+        Group = None
+    }
+    CollectedScalarParameters[156] = { Value=50, Name=FadeDistance, Group=None }
+    CollectedScalarParameters[157] =
+    {
+        Value = 6
+        Name = Subsurface_Cracks_Tiling
+        Group = None
+    }
+    CollectedScalarParameters[158] =
+    {
+        Value = 0.698412
+        Name = BaseColor Hardness (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[159] = { Value=0, Name=Speed V (S), Group=None }
+    CollectedScalarParameters[160] = { Value=0, Name=Opacity_Hint, Group=None }
+    CollectedScalarParameters[161] =
+    {
+        Value = 0
+        Name = SkinFXOutline_UseSphericalNormals
+        Group = None
+    }
+    CollectedScalarParameters[162] = { Value=2500, Name=FarDistance, Group=None }
+    CollectedScalarParameters[163] = { Value=150, Name=DroopRadius, Group=None }
+    CollectedScalarParameters[164] = { Value=150.168, Name=Noise Size 2, Group=None }
+    CollectedScalarParameters[165] =
+    {
+        Value = 981.889
+        Name = Distance Fade Start
+        Group = None
+    }
+    CollectedScalarParameters[166] = { Value=0.517459, Name=Duration, Group=None }
+    CollectedScalarParameters[167] = { Value=1, Name=Tiling U (S)_3, Group=None }
+    CollectedScalarParameters[168] = { Value=12, Name=Caustics1_Inset, Group=None }
+    CollectedScalarParameters[169] =
+    {
+        Value = 0.457144
+        Name = Edge Bias (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[170] = { Value=2, Name=Bubble_Tiling_01, Group=None }
+    CollectedScalarParameters[171] = { Value=50, Name=Width (S), Group=None }
+    CollectedScalarParameters[172] = { Value=283.286, Name=Noise Size 1, Group=None }
+    CollectedScalarParameters[173] =
+    {
+        Value = 1.57143
+        Name = Inner Falloff Softness (S)
+        Group = None
+    }
+    CollectedScalarParameters[174] = { Value=1, Name=ObjectFadeOpacity, Group=None }
+    CollectedScalarParameters[175] = { Value=1, Name=FX_ScaleMult, Group=None }
+    CollectedScalarParameters[176] =
+    {
+        Value = 0
+        Name = Glow Center Opacity (S)
+        Group = None
+    }
+    CollectedScalarParameters[177] =
+    {
+        Value = -0.628571
+        Name = Cheap contrast dark (S)
+        Group = None
+    }
+    CollectedScalarParameters[178] = { Value=0.5, Name=SkinFX_Age, Group=None }
+    CollectedScalarParameters[179] = { Value=100, Name=ImpactRadius, Group=None }
+    CollectedScalarParameters[180] = { Value=0, Name=Speed U (S)_3, Group=None }
+    CollectedScalarParameters[181] = { Value=0, Name=Glow, Group=None }
+    CollectedScalarParameters[182] = { Value=0, Name=FlipEdge, Group=None }
+    CollectedScalarParameters[183] = { Value=3, Name=Glow_Base, Group=None }
+    CollectedScalarParameters[184] = { Value=1, Name=ScaleEdgeGlow, Group=None }
+    CollectedScalarParameters[185] = { Value=-0.273016, Name=Speed V (S)_3, Group=None }
+    CollectedScalarParameters[186] =
+    {
+        Value = 0.83492
+        Name = Wipe Softness (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[187] =
+    {
+        Value = 10
+        Name = VertOffset_NoiseStrength
+        Group = None
+    }
+    CollectedScalarParameters[188] = { Value=0.889908, Name=Bubbles_Opacity, Group=None }
+    CollectedScalarParameters[189] = { Value=-0.864985, Name=WPO Strength, Group=None }
+    CollectedScalarParameters[190] = { Value=60, Name=EmStr, Group=None }
+    CollectedScalarParameters[191] = { Value=1, Name=Glow_EmScale, Group=None }
+    CollectedScalarParameters[192] = { Value=0.1, Name=DroopHardness, Group=None }
+    CollectedScalarParameters[193] =
+    {
+        Value = 1.70917
+        Name = Glow Center Falloff Softness (S)
+        Group = None
+    }
+    CollectedScalarParameters[194] = { Value=2, Name=Blend Sharpen, Group=None }
+    CollectedScalarParameters[195] = { Value=2, Name=Glow Fresnel Exp, Group=None }
+    CollectedScalarParameters[196] =
+    {
+        Value = 0
+        Name = SkinFXOutline_BaseReflectFractionIn
+        Group = None
+    }
+    CollectedScalarParameters[197] = { Value=-0.920635, Name=HeightBase, Group=None }
+    CollectedScalarParameters[198] = { Value=1, Name=SkinFXOutline_Alpha, Group=None }
+    CollectedScalarParameters[199] = { Value=10, Name=Roughness_Tiling, Group=None }
+    CollectedScalarParameters[200] = { Value=10, Name=Glow_Boost, Group=None }
+    CollectedScalarParameters[201] = { Value=-9.70801, Name=HeightVariation, Group=None }
+    CollectedScalarParameters[202] = { Value=0.25, Name=Impact_MinIciness, Group=None }
+    CollectedScalarParameters[203] = { Value=0.1, Name=NoiseStrengthLS, Group=None }
+    CollectedScalarParameters[204] = { Value=0, Name=Stretch Amount, Group=None }
+    CollectedScalarParameters[205] = { Value=0.361904, Name=Wipe_Hardness, Group=None }
+    CollectedScalarParameters[206] =
+    {
+        Value = 0
+        Name = SkinFXOutline_WashBrightness
+        Group = None
+    }
+    CollectedScalarParameters[207] = { Value=0.2, Name=Mod Strength (S), Group=None }
+    CollectedScalarParameters[208] = { Value=0, Name=FX_AxisBlend, Group=None }
+    CollectedScalarParameters[209] =
+    {
+        Value = 0.412698
+        Name = Em Coverage (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[210] = { Value=100, Name=InnerRadius, Group=None }
+    CollectedScalarParameters[211] = { Value=2, Name=Subsurface_Power, Group=None }
+    CollectedScalarParameters[212] = { Value=3, Name=MeltNoiseSpeed, Group=None }
+    CollectedScalarParameters[213] = { Value=-0.2, Name=Speed U (S), Group=None }
+    CollectedScalarParameters[214] = { Value=0, Name=Bubble_Y_Offset_1, Group=None }
+    CollectedScalarParameters[215] =
+    {
+        Value = 0.3
+        Name = Mesh Distort Hardness
+        Group = None
+    }
+    CollectedScalarParameters[216] = { Value=30, Name=BlurStrength, Group=None }
+    CollectedScalarParameters[217] = { Value=1, Name=Cracks_EmScale, Group=None }
+    CollectedScalarParameters[218] = { Value=0.25, Name=Opacity_01, Group=None }
+    CollectedScalarParameters[219] = { Value=1, Name=Caustics_EmScale, Group=None }
+    CollectedScalarParameters[220] =
+    {
+        Value = 0.393651
+        Name = Sharpen (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[221] = { Value=0.5, Name=Bias (S), Group=None }
+    CollectedScalarParameters[222] =
+    {
+        Value = 0.825397
+        Name = Metallic Hardness (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[223] = { Value=0.6, Name=FX_Scale, Group=None }
+    CollectedScalarParameters[224] =
+    {
+        Value = 5
+        Name = SkinFXOutline_NoiseTiling
+        Group = None
+    }
+    CollectedScalarParameters[225] = { Value=0, Name=WipeInOrOut, Group=None }
+    CollectedScalarParameters[226] =
+    {
+        Value = 1.25
+        Name = Fresnel_NormalIntensity
+        Group = None
+    }
+    CollectedScalarParameters[227] =
+    {
+        Value = 0.43492
+        Name = OpacityMask Hardness (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[228] =
+    {
+        Value = 1
+        Name = Metallic Coverage (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[229] = { Value=24, Name=DeformationCurve, Group=None }
+    CollectedScalarParameters[230] =
+    {
+        Value = 1
+        Name = SkinFXOutline_NoiseScreenUV
+        Group = None
+    }
+    CollectedScalarParameters[231] =
+    {
+        Value = 1
+        Name = SkinFXOutline_NoiseAmount
+        Group = None
+    }
+    CollectedScalarParameters[232] = { Value=1, Name=Off, Group=None }
+    CollectedScalarParameters[233] =
+    {
+        Value = 0.225396
+        Name = BlurStrength (S)
+        Group = None
+    }
+    CollectedScalarParameters[234] =
+    {
+        Value = 1
+        Name = Surface_Color_Tiling_03
+        Group = None
+    }
+    CollectedScalarParameters[235] =
+    {
+        Value = 0.100345
+        Name = Distort Glow Edge
+        Group = None
+    }
+    CollectedScalarParameters[236] = { Value=1, Name=Master_Tiling, Group=None }
+    CollectedScalarParameters[237] = { Value=0, Name=Bubble_Y_Offset, Group=None }
+    CollectedScalarParameters[238] =
+    {
+        Value = 0.130159
+        Name = OpacityMask Coverage (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[239] = { Value=1, Name=FX_Param_1, Group=None }
+    CollectedScalarParameters[240] = { Value=250, Name=Color Noise Size, Group=None }
+    CollectedScalarParameters[241] =
+    {
+        Value = 0.860317
+        Name = Normal Hardness (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[242] =
+    {
+        Value = 0
+        Name = ExtraCoverage (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[243] =
+    {
+        Value = 0.005
+        Name = FX_Motionblur Multiplier
+        Group = None
+    }
+    CollectedScalarParameters[244] = { Value=4, Name=Edge Exp, Group=None }
+    CollectedScalarParameters[245] = { Value=0, Name=Outline, Group=None }
+    CollectedScalarParameters[246] = { Value=1.03, Name=IOR, Group=None }
+    CollectedScalarParameters[247] = { Value=25, Name=Bloat, Group=None }
+    CollectedScalarParameters[248] = { Value=2000, Name=FX_InputMax (S), Group=None }
+    CollectedScalarParameters[249] = { Value=0, Name=FlipGate, Group=None }
+    CollectedScalarParameters[250] =
+    {
+        Value = 3
+        Name = SkinFXOutline_Brightness
+        Group = None
+    }
+    CollectedScalarParameters[251] =
+    {
+        Value = 0
+        Name = SkinFX_EnvelopeSustainPhase
+        Group = None
+    }
+    CollectedScalarParameters[252] = { Value=20, Name=Pan Speed (S), Group=None }
+    CollectedScalarParameters[253] =
+    {
+        Value = 0.247619
+        Name = Emissive Noise Tiling
+        Group = None
+    }
+    CollectedScalarParameters[254] = { Value=3, Name=Interior Noise Tiling, Group=None }
+    CollectedScalarParameters[255] =
+    {
+        Value = 1.06423
+        Name = Refractive Index Target (S)
+        Group = None
+    }
+    CollectedScalarParameters[256] =
+    {
+        Value = 0.904762
+        Name = BaseColor Coverage (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[257] = { Value=1, Name=ScaleSizeForWipe, Group=None }
+    CollectedScalarParameters[258] = { Value=1, Name=Wipe, Group=None }
+    CollectedScalarParameters[259] = { Value=100, Name=WipeOut Offset, Group=None }
+}
+CollectedVectorParameters[55] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0, G=0, B=0, A=0 }
+        Name = Base Color
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0.5, G=0.7, B=1, A=1 }
+        Name = Subsurface_Color_Tint
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = Metallicness
+        Group = None
+    }
+    CollectedVectorParameters[3] =
+    {
+        Value = { R=6440.41, G=-6851.61, B=529.405, A=153.995 }
+        Name = SkinFX_BoundingSphere
+        Group = None
+    }
+    CollectedVectorParameters[4] =
+    {
+        Value = { R=0.416667, G=0.65, B=1, A=1 }
+        Name = Interior Emissive Color
+        Group = None
+    }
+    CollectedVectorParameters[5] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = SkinFX_BoundingBoxMin
+        Group = None
+    }
+    CollectedVectorParameters[6] =
+    {
+        Value = { R=0.001816, G=0.020123, B=0.057292, A=1 }
+        Name = Deep_Color
+        Group = None
+    }
+    CollectedVectorParameters[7] =
+    {
+        Value = { R=0.067551, G=0.035156, B=0.125, A=1 }
+        Name = Glow Color
+        Group = None
+    }
+    CollectedVectorParameters[8] =
+    {
+        Value = { R=-0.590476, G=0.488889, B=0.720033, A=1 }
+        Name = Noise PanDir 2
+        Group = None
+    }
+    CollectedVectorParameters[9] =
+    {
+        Value = { R=0.152381, G=0.146032, B=1, A=0 }
+        Name = Color Nois PanDir
+        Group = None
+    }
+    CollectedVectorParameters[10] =
+    {
+        Value = { R=200, G=200, B=200, A=0 }
+        Name = Noise Texture Size
+        Group = None
+    }
+    CollectedVectorParameters[11] =
+    {
+        Value = { R=0.533, G=0.700979, B=1, A=1 }
+        Name = TintMinIce
+        Group = None
+    }
+    CollectedVectorParameters[12] =
+    {
+        Value = { R=0.777532, G=1.30411, B=5, A=1 }
+        Name = Ring Edge Glow Color
+        Group = None
+    }
+    CollectedVectorParameters[13] =
+    {
+        Value = { R=1, G=0.605556, B=0.249575, A=1 }
+        Name = EmisCol
+        Group = None
+    }
+    CollectedVectorParameters[14] =
+    {
+        Value = { R=0.311111, G=-0.304762, B=1, A=0 }
+        Name = Caustics1_PanDirection
+        Group = None
+    }
+    CollectedVectorParameters[15] =
+    {
+        Value = { R=0, G=0, B=-70, A=1 }
+        Name = MeltVec
+        Group = None
+    }
+    CollectedVectorParameters[16] =
+    {
+        Value = { R=0, G=-0.104762, B=0.98481, A=1 }
+        Name = OffsetDir
+        Group = None
+    }
+    CollectedVectorParameters[17] =
+    {
+        Value = { R=128, G=128, B=128, A=1 }
+        Name = ColorSize
+        Group = None
+    }
+    CollectedVectorParameters[18] =
+    {
+        Value = { R=7117.67, G=-6525.18, B=452.801, A=250 }
+        Name = SkinFX_InitialBoundingSphere
+        Group = None
+    }
+    CollectedVectorParameters[19] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = WipeOriginLS
+        Group = None
+    }
+    CollectedVectorParameters[20] =
+    {
+        Value = { R=0.00142031, G=0.00584534, B=0.01, A=1 }
+        Name = SubSurfaceColor
+        Group = None
+    }
+    CollectedVectorParameters[21] =
+    {
+        Value = { R=0, G=0, B=100, A=1 }
+        Name = MeltCenter
+        Group = None
+    }
+    CollectedVectorParameters[22] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = FX_RotationAxis2
+        Group = None
+    }
+    CollectedVectorParameters[23] =
+    {
+        Value = { R=-40, G=0, B=100, A=1 }
+        Name = HitLocation
+        Group = None
+    }
+    CollectedVectorParameters[24] =
+    {
+        Value = { R=0, G=-1, B=54.5519, A=1 }
+        Name = Stretch Direction
+        Group = None
+    }
+    CollectedVectorParameters[25] =
+    {
+        Value = { R=1.00347, G=1.42816, B=2, A=1 }
+        Name = Emissive_Detail
+        Group = None
+    }
+    CollectedVectorParameters[26] =
+    {
+        Value = { R=0.04456, G=0.116356, B=0.208333, A=1 }
+        Name = Light_Color_1
+        Group = None
+    }
+    CollectedVectorParameters[27] =
+    {
+        Value = { R=0.14996, G=0.391572, B=0.701102, A=1 }
+        Name = Surface_Cracks_COlor
+        Group = None
+    }
+    CollectedVectorParameters[28] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = FX_Location
+        Group = None
+    }
+    CollectedVectorParameters[29] =
+    {
+        Value = { R=0.088889, G=-0.158731, B=1, A=0 }
+        Name = Caustics2_PanDirection
+        Group = None
+    }
+    CollectedVectorParameters[30] =
+    {
+        Value = { R=0, G=-1, B=0.705, A=1 }
+        Name = Default Stretch Direction
+        Group = None
+    }
+    CollectedVectorParameters[31] =
+    {
+        Value = { R=36, G=78, B=20, A=0 }
+        Name = Noise Offset 1
+        Group = None
+    }
+    CollectedVectorParameters[32] =
+    {
+        Value = { R=0.11632, G=0.248872, B=1, A=1 }
+        Name = Caustics_EmColor
+        Group = None
+    }
+    CollectedVectorParameters[33] =
+    {
+        Value = { R=5160, G=-26612, B=291, A=11 }
+        Name = ImpactPointAttached
+        Group = None
+    }
+    CollectedVectorParameters[34] =
+    {
+        Value = { R=0, G=0, B=-20, A=1 }
+        Name = VertOffset_Droop
+        Group = None
+    }
+    CollectedVectorParameters[35] =
+    {
+        Value = { R=0.314236, G=0.602351, B=1, A=0 }
+        Name = Emissive_Color
+        Group = None
+    }
+    CollectedVectorParameters[36] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = LOC_Target
+        Group = None
+    }
+    CollectedVectorParameters[37] =
+    {
+        Value = { R=0.388077, G=0.614115, B=0.831, A=1 }
+        Name = Cracks/Bubbles_Color
+        Group = None
+    }
+    CollectedVectorParameters[38] =
+    {
+        Value = { R=200, G=200, B=200, A=0 }
+        Name = RingDistortionTextureSize (V3)
+        Group = None
+    }
+    CollectedVectorParameters[39] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = FX_RotationAxis1
+        Group = None
+    }
+    CollectedVectorParameters[40] =
+    {
+        Value = { R=0.247619, G=-0.184127, B=0.406349, A=0 }
+        Name = Noise Pan Direction
+        Group = None
+    }
+    CollectedVectorParameters[41] =
+    {
+        Value = { R=0, G=0.204562, B=1, A=0 }
+        Name = Color
+        Group = None
+    }
+    CollectedVectorParameters[42] =
+    {
+        Value = { R=-0.590476, G=0.488889, B=-1, A=1 }
+        Name = Noise PanDir 1
+        Group = None
+    }
+    CollectedVectorParameters[43] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = WipeOrigin_LS
+        Group = None
+    }
+    CollectedVectorParameters[44] =
+    {
+        Value = { R=-15, G=-90, B=-83, A=1 }
+        Name = Noise Offset 2
+        Group = None
+    }
+    CollectedVectorParameters[45] =
+    {
+        Value = { R=30, G=3.5, B=0, A=1 }
+        Name = Emissive Color
+        Group = None
+    }
+    CollectedVectorParameters[46] =
+    {
+        Value = { R=1, G=1, B=1, A=1 }
+        Name = Alt_Metallicness
+        Group = None
+    }
+    CollectedVectorParameters[47] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = Exterior_SubsurfaceColor
+        Group = None
+    }
+    CollectedVectorParameters[48] =
+    {
+        Value = { R=1, G=0, B=0, A=1 }
+        Name = SkinFXOutline_Color
+        Group = None
+    }
+    CollectedVectorParameters[49] =
+    {
+        Value = { R=6274.02, G=-6726.46, B=400, A=1 }
+        Name = ImpactPoint
+        Group = None
+    }
+    CollectedVectorParameters[50] =
+    {
+        Value = { R=1, G=1, B=1, A=1 }
+        Name = BaseColor
+        Group = None
+    }
+    CollectedVectorParameters[51] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = SkinFX_BoundingBoxExtent
+        Group = None
+    }
+    CollectedVectorParameters[52] =
+    {
+        Value = { R=266.285, G=94.2082, B=146.612, A=1 }
+        Name = Distortion Direction
+        Group = None
+    }
+    CollectedVectorParameters[53] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = Mask_Origin
+        Group = None
+    }
+    CollectedVectorParameters[54] =
+    {
+        Value = { R=0, G=0, B=238.585, A=1 }
+        Name = SphereMask_Origin
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[7] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Dragon_Stone_Tile_N
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_GOL_TombProtectorGrunt_Torso_D
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_GOL_TombProtectorGrunt_Torso_MRO
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_GOL_TombProtectorGrunt_Torso_N
+    }
+    TextureStreamingData[4] =
+    {
+        SamplingScale = 3
+        UVChannelIndex = 0
+        TextureName = VFX_T_MarbleSkin_01_BPF_D
+    }
+    TextureStreamingData[5] =
+    {
+        SamplingScale = 7
+        UVChannelIndex = 0
+        TextureName = VFX_T_NoiseTiled_1_D
+    }
+    TextureStreamingData[6] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_TMBG_Torso_E
+    }
+}

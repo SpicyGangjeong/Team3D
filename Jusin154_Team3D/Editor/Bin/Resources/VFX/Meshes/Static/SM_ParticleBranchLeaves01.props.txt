@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/VFX_MI_P_DHeroTreeLeavesBreakable.VFX_MI_P_DHeroTreeLeavesBreakable'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/VFX_MI_P_DHeroTreeLeavesBreakable.VFX_MI_P_DHeroTreeLeavesBreakable'
+        MaterialSlotName = MI_DHeroTreeLeaves
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 535.441, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-2.67365, Y=8.47361, Z=4.40222 }
+    BoxExtent = { X=99.0361, Y=78.8372, Z=57.2316 }
+    SphereRadius = 117.798
+}

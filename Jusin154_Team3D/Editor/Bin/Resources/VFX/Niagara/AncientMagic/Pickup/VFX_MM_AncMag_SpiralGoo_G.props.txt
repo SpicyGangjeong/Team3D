@@ -1,0 +1,366 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[6] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise05_D.VFX_T_Noise05_D'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise07_N.VFX_T_Noise07_N'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_Soft_D.VFX_T_Noise_Soft_D'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseCaustics01_Color_D.VFX_T_NoiseCaustics01_Color_D'
+    ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseCaustics01_D.VFX_T_NoiseCaustics01_D'
+    ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[53] =
+                {
+                    ParameterInfos[0] = { Name=WS Offset Tiling U (S) }
+                    ParameterInfos[1] = { Name=Roughness }
+                    ParameterInfos[2] = { Name=Tiling V (S)_2 }
+                    ParameterInfos[3] = { Name=Length Offset Tiling U (S) }
+                    ParameterInfos[4] = { Name=Exp }
+                    ParameterInfos[5] = { Name=Rotation }
+                    ParameterInfos[6] = { Name=B_1 }
+                    ParameterInfos[7] = { Name=WipeIn }
+                    ParameterInfos[8] = { Name=Flip Swipe Direction (S) }
+                    ParameterInfos[9] = { Name=WS Offset Speed V (S) }
+                    ParameterInfos[10] = { Name=Metallic }
+                    ParameterInfos[11] = { Name=InputMin (S) }
+                    ParameterInfos[12] = { Name=Tiling V (S)_1 }
+                    ParameterInfos[13] = { Name=Tiling U (S)_1 }
+                    ParameterInfos[14] = { Name=Radius }
+                    ParameterInfos[15] = { Name=Intensity (S) }
+                    ParameterInfos[16] = { Name=Speed V (S)_2 }
+                    ParameterInfos[17] = { Name=Normal Tiling U (S) }
+                    ParameterInfos[18] = { Name=Tiling V (S)_3 }
+                    ParameterInfos[19] = { Name=WS Offset Speed U (S) }
+                    ParameterInfos[20] = { Name=Swipe U vs V (S) }
+                    ParameterInfos[21] = { Name=RotationScalar }
+                    ParameterInfos[22] = { Name=Collapse Sphere Size }
+                    ParameterInfos[23] = { Name=WS Offset Tiling V (S) }
+                    ParameterInfos[24] = { Name=Scale to Target }
+                    ParameterInfos[25] = { Name=Length Offset Scale Max }
+                    ParameterInfos[26] = { Name=Speed U (S)_1 }
+                    ParameterInfos[27] = { Name=Lengh Offset Speed V (S) }
+                    ParameterInfos[28] = { Name=Swipe Length (S) }
+                    ParameterInfos[29] = { Name=Offset U }
+                    ParameterInfos[30] = { Name=InputMax (S) }
+                    ParameterInfos[31] = { Name=Speed V (S)_1 }
+                    ParameterInfos[32] = { Name=Length Offset Scale Min }
+                    ParameterInfos[33] = { Name=Speed U (S)_2 }
+                    ParameterInfos[34] = { Name=Tiling U (S)_2 }
+                    ParameterInfos[35] = { Name=SuckIn }
+                    ParameterInfos[36] = { Name=Offset V }
+                    ParameterInfos[37] = { Name=Power (S) }
+                    ParameterInfos[38] = { Name=Speed V (S) }
+                    ParameterInfos[39] = { Name=Exp_1 }
+                    ParameterInfos[40] = { Name=Target Use Local Space }
+                    ParameterInfos[41] = { Name=Speed U (S)_3 }
+                    ParameterInfos[42] = { Name=Speed V (S)_3 }
+                    ParameterInfos[43] = { Name=ThicknessScale }
+                    ParameterInfos[44] = { Name=Length Offset Speed U (S) }
+                    ParameterInfos[45] = { Name=AnimCurve }
+                    ParameterInfos[46] = { Name=Speed U (S) }
+                    ParameterInfos[47] = { Name=Tiling U (S) }
+                    ParameterInfos[48] = { Name=Speed (S) }
+                    ParameterInfos[49] = { Name=Tiling V (S) }
+                    ParameterInfos[50] = { Name=Hardness2 }
+                    ParameterInfos[51] = { Name=Length Offset Tiling V (S) }
+                    ParameterInfos[52] = { Name=B }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[8] =
+                {
+                    ParameterInfos[0] = { Name=Base Color }
+                    ParameterInfos[1] = { Name=Tint }
+                    ParameterInfos[2] = { Name=LOC_AttractWipeCenter }
+                    ParameterInfos[3] = { Name=LOC_Target }
+                    ParameterInfos[4] = { Name=Param }
+                    ParameterInfos[5] = { Name=RotationAxis }
+                    ParameterInfos[6] = { Name=Rotation Axis }
+                    ParameterInfos[7] = { Name=Location }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Offset Noise Texture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[53] =
+        {
+            ScalarValues[0] = 0
+            ScalarValues[1] = 0.319047
+            ScalarValues[2] = 3.55413
+            ScalarValues[3] = 0
+            ScalarValues[4] = 30
+            ScalarValues[5] = 0.095238
+            ScalarValues[6] = 4.54577
+            ScalarValues[7] = 0.72381
+            ScalarValues[8] = 0
+            ScalarValues[9] = -0.08254
+            ScalarValues[10] = 1
+            ScalarValues[11] = 0
+            ScalarValues[12] = 0.371428
+            ScalarValues[13] = 0.5
+            ScalarValues[14] = 600
+            ScalarValues[15] = 0.69546
+            ScalarValues[16] = 0.18672
+            ScalarValues[17] = 1
+            ScalarValues[18] = 1
+            ScalarValues[19] = 0.01
+            ScalarValues[20] = 1
+            ScalarValues[21] = 60.9524
+            ScalarValues[22] = 2
+            ScalarValues[23] = 0.618451
+            ScalarValues[24] = 1
+            ScalarValues[25] = 1
+            ScalarValues[26] = -0.028571
+            ScalarValues[27] = 0.6
+            ScalarValues[28] = 0.766666
+            ScalarValues[29] = 0
+            ScalarValues[30] = 0.066666
+            ScalarValues[31] = 0.028571
+            ScalarValues[32] = 0.72381
+            ScalarValues[33] = 0.038095
+            ScalarValues[34] = 1
+            ScalarValues[35] = 0
+            ScalarValues[36] = 0
+            ScalarValues[37] = 1
+            ScalarValues[38] = 0.02
+            ScalarValues[39] = 4
+            ScalarValues[40] = 1
+            ScalarValues[41] = 0
+            ScalarValues[42] = 0
+            ScalarValues[43] = 1
+            ScalarValues[44] = 0.066667
+            ScalarValues[45] = 10
+            ScalarValues[46] = 0
+            ScalarValues[47] = 0.504762
+            ScalarValues[48] = 0.447619
+            ScalarValues[49] = 0.761905
+            ScalarValues[50] = 0.428572
+            ScalarValues[51] = 3
+            ScalarValues[52] = 1.0473
+        }
+        VectorValues[8] =
+        {
+            VectorValues[0] = { R=0.445201, G=0.520996, B=0.715694, A=0 }
+            VectorValues[1] = { R=0.354167, G=0.515625, B=1, A=1 }
+            VectorValues[2] = { R=0, G=0, B=-300, A=1 }
+            VectorValues[3] = { R=0, G=0, B=0, A=1 }
+            VectorValues[4] = { R=567.708, G=596.527, B=1000, A=1 }
+            VectorValues[5] = { R=0, G=0, B=0, A=0 }
+            VectorValues[6] = { R=0, G=0, B=1, A=1 }
+            VectorValues[7] = { R=0, G=0, B=0, A=0 }
+        }
+        TextureValues[1] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_Soft_D.VFX_T_Noise_Soft_D'
+        }
+    }
+    ReferencedTextures[7] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/CurveAtlas/VFX_CA_CurveAtlasMaterialAnims.VFX_CA_CurveAtlasMaterialAnims'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise07_N.VFX_T_Noise07_N'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_Soft_D.VFX_T_Noise_Soft_D'
+        ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseCaustics01_D.VFX_T_NoiseCaustics01_D'
+        ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise05_D.VFX_T_Noise05_D'
+        ReferencedTextures[6] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseCaustics01_Color_D.VFX_T_NoiseCaustics01_Color_D'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[1] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_Soft_D.VFX_T_Noise_Soft_D'
+        Name = Offset Noise Texture
+        Group = None
+    }
+}
+CollectedScalarParameters[53] =
+{
+    CollectedScalarParameters[0] = { Value=0, Name=WS Offset Tiling U (S), Group=None }
+    CollectedScalarParameters[1] = { Value=0.319047, Name=Roughness, Group=None }
+    CollectedScalarParameters[2] = { Value=3.55413, Name=Tiling V (S)_2, Group=None }
+    CollectedScalarParameters[3] =
+    {
+        Value = 0
+        Name = Length Offset Tiling U (S)
+        Group = None
+    }
+    CollectedScalarParameters[4] = { Value=30, Name=Exp, Group=None }
+    CollectedScalarParameters[5] = { Value=0.095238, Name=Rotation, Group=None }
+    CollectedScalarParameters[6] = { Value=4.54577, Name=B_1, Group=None }
+    CollectedScalarParameters[7] = { Value=0.72381, Name=WipeIn, Group=None }
+    CollectedScalarParameters[8] =
+    {
+        Value = 0
+        Name = Flip Swipe Direction (S)
+        Group = None
+    }
+    CollectedScalarParameters[9] =
+    {
+        Value = -0.08254
+        Name = WS Offset Speed V (S)
+        Group = None
+    }
+    CollectedScalarParameters[10] = { Value=1, Name=Metallic, Group=None }
+    CollectedScalarParameters[11] = { Value=0, Name=InputMin (S), Group=None }
+    CollectedScalarParameters[12] = { Value=0.371428, Name=Tiling V (S)_1, Group=None }
+    CollectedScalarParameters[13] = { Value=0.5, Name=Tiling U (S)_1, Group=None }
+    CollectedScalarParameters[14] = { Value=600, Name=Radius, Group=None }
+    CollectedScalarParameters[15] = { Value=0.69546, Name=Intensity (S), Group=None }
+    CollectedScalarParameters[16] = { Value=0.18672, Name=Speed V (S)_2, Group=None }
+    CollectedScalarParameters[17] = { Value=1, Name=Normal Tiling U (S), Group=None }
+    CollectedScalarParameters[18] = { Value=1, Name=Tiling V (S)_3, Group=None }
+    CollectedScalarParameters[19] =
+    {
+        Value = 0.01
+        Name = WS Offset Speed U (S)
+        Group = None
+    }
+    CollectedScalarParameters[20] = { Value=1, Name=Swipe U vs V (S), Group=None }
+    CollectedScalarParameters[21] = { Value=60.9524, Name=RotationScalar, Group=None }
+    CollectedScalarParameters[22] = { Value=2, Name=Collapse Sphere Size, Group=None }
+    CollectedScalarParameters[23] =
+    {
+        Value = 0.618451
+        Name = WS Offset Tiling V (S)
+        Group = None
+    }
+    CollectedScalarParameters[24] = { Value=1, Name=Scale to Target, Group=None }
+    CollectedScalarParameters[25] =
+    {
+        Value = 1
+        Name = Length Offset Scale Max
+        Group = None
+    }
+    CollectedScalarParameters[26] = { Value=-0.028571, Name=Speed U (S)_1, Group=None }
+    CollectedScalarParameters[27] =
+    {
+        Value = 0.6
+        Name = Lengh Offset Speed V (S)
+        Group = None
+    }
+    CollectedScalarParameters[28] =
+    {
+        Value = 0.766666
+        Name = Swipe Length (S)
+        Group = None
+    }
+    CollectedScalarParameters[29] = { Value=0, Name=Offset U, Group=None }
+    CollectedScalarParameters[30] = { Value=0.066666, Name=InputMax (S), Group=None }
+    CollectedScalarParameters[31] = { Value=0.028571, Name=Speed V (S)_1, Group=None }
+    CollectedScalarParameters[32] =
+    {
+        Value = 0.72381
+        Name = Length Offset Scale Min
+        Group = None
+    }
+    CollectedScalarParameters[33] = { Value=0.038095, Name=Speed U (S)_2, Group=None }
+    CollectedScalarParameters[34] = { Value=1, Name=Tiling U (S)_2, Group=None }
+    CollectedScalarParameters[35] = { Value=0, Name=SuckIn, Group=None }
+    CollectedScalarParameters[36] = { Value=0, Name=Offset V, Group=None }
+    CollectedScalarParameters[37] = { Value=1, Name=Power (S), Group=None }
+    CollectedScalarParameters[38] = { Value=0.02, Name=Speed V (S), Group=None }
+    CollectedScalarParameters[39] = { Value=4, Name=Exp_1, Group=None }
+    CollectedScalarParameters[40] = { Value=1, Name=Target Use Local Space, Group=None }
+    CollectedScalarParameters[41] = { Value=0, Name=Speed U (S)_3, Group=None }
+    CollectedScalarParameters[42] = { Value=0, Name=Speed V (S)_3, Group=None }
+    CollectedScalarParameters[43] = { Value=1, Name=ThicknessScale, Group=None }
+    CollectedScalarParameters[44] =
+    {
+        Value = 0.066667
+        Name = Length Offset Speed U (S)
+        Group = None
+    }
+    CollectedScalarParameters[45] = { Value=10, Name=AnimCurve, Group=None }
+    CollectedScalarParameters[46] = { Value=0, Name=Speed U (S), Group=None }
+    CollectedScalarParameters[47] = { Value=0.504762, Name=Tiling U (S), Group=None }
+    CollectedScalarParameters[48] = { Value=0.447619, Name=Speed (S), Group=None }
+    CollectedScalarParameters[49] = { Value=0.761905, Name=Tiling V (S), Group=None }
+    CollectedScalarParameters[50] = { Value=0.428572, Name=Hardness2, Group=None }
+    CollectedScalarParameters[51] =
+    {
+        Value = 3
+        Name = Length Offset Tiling V (S)
+        Group = None
+    }
+    CollectedScalarParameters[52] = { Value=1.0473, Name=B, Group=None }
+}
+CollectedVectorParameters[8] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0.445201, G=0.520996, B=0.715694, A=0 }
+        Name = Base Color
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0.354167, G=0.515625, B=1, A=1 }
+        Name = Tint
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=0, G=0, B=-300, A=1 }
+        Name = LOC_AttractWipeCenter
+        Group = None
+    }
+    CollectedVectorParameters[3] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = LOC_Target
+        Group = None
+    }
+    CollectedVectorParameters[4] =
+    {
+        Value = { R=567.708, G=596.527, B=1000, A=1 }
+        Name = Param
+        Group = None
+    }
+    CollectedVectorParameters[5] =
+    {
+        Value = { R=0, G=0, B=0, A=0 }
+        Name = RotationAxis
+        Group = None
+    }
+    CollectedVectorParameters[6] =
+    {
+        Value = { R=0, G=0, B=1, A=1 }
+        Name = Rotation Axis
+        Group = None
+    }
+    CollectedVectorParameters[7] =
+    {
+        Value = { R=0, G=0, B=0, A=0 }
+        Name = Location
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

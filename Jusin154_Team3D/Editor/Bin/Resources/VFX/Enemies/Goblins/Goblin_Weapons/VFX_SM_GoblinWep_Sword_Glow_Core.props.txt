@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Enemies/Goblins/Goblin_Weapons/VFX_MI_Goblin_Weapon_Core_Base.VFX_MI_Goblin_Weapon_Core_Base'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Enemies/Goblins/Goblin_Weapons/VFX_MI_Goblin_Weapon_Core_Base.VFX_MI_Goblin_Weapon_Core_Base'
+        MaterialSlotName = Sword_Core
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 61.8001, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0.123869, Y=-0.0598927, Z=69.6899 }
+    BoxExtent = { X=5.85563, Y=1.56766, Z=35.7807 }
+    SphereRadius = 35.8501
+}

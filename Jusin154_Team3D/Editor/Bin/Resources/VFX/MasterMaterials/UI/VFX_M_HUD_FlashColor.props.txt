@@ -1,0 +1,165 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[2] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_Intruding_ScreenFX_Fade_I.VFX_T_Intruding_ScreenFX_Fade_I'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/VFX_T_Noise_Anisotropic2_height_D.VFX_T_Noise_Anisotropic2_height_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[18] =
+                {
+                    ParameterInfos[0] = { Name=Pan V }
+                    ParameterInfos[1] = { Name=AlphaSoft }
+                    ParameterInfos[2] = { Name=ShrinkFlare }
+                    ParameterInfos[3] = { Name=CenterFillBrightness }
+                    ParameterInfos[4] = { Name=Texture RGB Strength }
+                    ParameterInfos[5] = { Name=Color Bias }
+                    ParameterInfos[6] = { Name=Texture Bias }
+                    ParameterInfos[7] = { Name=FadeDistanceCenter }
+                    ParameterInfos[8] = { Name=Tile U }
+                    ParameterInfos[9] = { Name=Alpha_Animate }
+                    ParameterInfos[10] = { Name=FadeDistanceEdge }
+                    ParameterInfos[11] = { Name=AlphaMin }
+                    ParameterInfos[12] = { Name=AlphaBias }
+                    ParameterInfos[13] = { Name=Tile V }
+                    ParameterInfos[14] = { Name=Texture Alpha Strength }
+                    ParameterInfos[15] = { Name=Pan U }
+                    ParameterInfos[16] = { Name=Mask Bias }
+                    ParameterInfos[17] = { Name=TextureUVBias }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[3] =
+                {
+                    ParameterInfos[0] = { Name=FlareColorEdge }
+                    ParameterInfos[1] = { Name=FlareColorCenter }
+                    ParameterInfos[2] = { Name=Texture Channels }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=Diffuse Texture }
+                    ParameterInfos[1] = { Name=Mask_Texture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[18] =
+        {
+            ScalarValues[0] = 0.25
+            ScalarValues[1] = 0.5
+            ScalarValues[2] = 1
+            ScalarValues[3] = 1
+            ScalarValues[4] = 0.5
+            ScalarValues[5] = -1
+            ScalarValues[6] = 0
+            ScalarValues[7] = 5
+            ScalarValues[8] = 1
+            ScalarValues[9] = 1
+            ScalarValues[10] = 50
+            ScalarValues[11] = 0
+            ScalarValues[12] = 0
+            ScalarValues[13] = 0.3
+            ScalarValues[14] = 1
+            ScalarValues[15] = 0
+            ScalarValues[16] = 1
+            ScalarValues[17] = 0
+        }
+        VectorValues[3] =
+        {
+            VectorValues[0] = { R=0.25, G=0.5, B=2, A=1 }
+            VectorValues[1] = { R=10, G=5, B=1, A=1 }
+            VectorValues[2] = { R=0.3, G=0.55, B=0.15, A=0 }
+        }
+        TextureValues[2] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/VFX_T_Noise_Anisotropic2_height_D.VFX_T_Noise_Anisotropic2_height_D'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_Intruding_ScreenFX_Fade_I.VFX_T_Intruding_ScreenFX_Fade_I'
+        }
+    }
+    ReferencedTextures[2] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/VFX_T_Noise_Anisotropic2_height_D.VFX_T_Noise_Anisotropic2_height_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_Intruding_ScreenFX_Fade_I.VFX_T_Intruding_ScreenFX_Fade_I'
+    }
+}
+BlendMode = BLEND_Additive (3)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[2] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_Noise_Anisotropic2_height_D.VFX_T_Noise_Anisotropic2_height_D'
+        Name = Diffuse Texture
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_Intruding_ScreenFX_Fade_I.VFX_T_Intruding_ScreenFX_Fade_I'
+        Name = Mask_Texture
+        Group = None
+    }
+}
+CollectedScalarParameters[18] =
+{
+    CollectedScalarParameters[0] = { Value=0.25, Name=Pan V, Group=None }
+    CollectedScalarParameters[1] = { Value=0.5, Name=AlphaSoft, Group=None }
+    CollectedScalarParameters[2] = { Value=1, Name=ShrinkFlare, Group=None }
+    CollectedScalarParameters[3] = { Value=1, Name=CenterFillBrightness, Group=None }
+    CollectedScalarParameters[4] = { Value=0.5, Name=Texture RGB Strength, Group=None }
+    CollectedScalarParameters[5] = { Value=-1, Name=Color Bias, Group=None }
+    CollectedScalarParameters[6] = { Value=0, Name=Texture Bias, Group=None }
+    CollectedScalarParameters[7] = { Value=5, Name=FadeDistanceCenter, Group=None }
+    CollectedScalarParameters[8] = { Value=1, Name=Tile U, Group=None }
+    CollectedScalarParameters[9] = { Value=1, Name=Alpha_Animate, Group=None }
+    CollectedScalarParameters[10] = { Value=50, Name=FadeDistanceEdge, Group=None }
+    CollectedScalarParameters[11] = { Value=0, Name=AlphaMin, Group=None }
+    CollectedScalarParameters[12] = { Value=0, Name=AlphaBias, Group=None }
+    CollectedScalarParameters[13] = { Value=0.3, Name=Tile V, Group=None }
+    CollectedScalarParameters[14] = { Value=1, Name=Texture Alpha Strength, Group=None }
+    CollectedScalarParameters[15] = { Value=0, Name=Pan U, Group=None }
+    CollectedScalarParameters[16] = { Value=1, Name=Mask Bias, Group=None }
+    CollectedScalarParameters[17] = { Value=0, Name=TextureUVBias, Group=None }
+}
+CollectedVectorParameters[3] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0.25, G=0.5, B=2, A=1 }
+        Name = FlareColorEdge
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=10, G=5, B=1, A=1 }
+        Name = FlareColorCenter
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=0.3, G=0.55, B=0.15, A=0 }
+        Name = Texture Channels
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

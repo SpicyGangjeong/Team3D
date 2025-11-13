@@ -1,0 +1,99 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[2] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Flipbooks/VFX_T_Smoke_8x4_D.VFX_T_Smoke_8x4_D'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Flipbooks/VFX_T_Smoke_8x4_N.VFX_T_Smoke_8x4_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[3] =
+                {
+                    ParameterInfos[0] = { Name=UseParallelFade }
+                    ParameterInfos[1] = { Name=UseGreenForAlphaClip }
+                    ParameterInfos[2] = { Name=Normal_Power }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Smoke Color }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=Normal_Testure }
+                    ParameterInfos[1] = { Name=ParticleTexture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[3] = { 0, 0, 1 }
+        VectorValues[1] =
+        {
+            VectorValues[0] = { R=0.05, G=0.05, B=0.05, A=0 }
+        }
+        TextureValues[2] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Flipbooks/VFX_T_Smoke_8x4_N.VFX_T_Smoke_8x4_N'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/Flipbooks/VFX_T_Smoke_8x4_D.VFX_T_Smoke_8x4_D'
+        }
+    }
+    ReferencedTextures[2] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Flipbooks/VFX_T_Smoke_8x4_D.VFX_T_Smoke_8x4_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Flipbooks/VFX_T_Smoke_8x4_N.VFX_T_Smoke_8x4_N'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[2] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Flipbooks/VFX_T_Smoke_8x4_N.VFX_T_Smoke_8x4_N'
+        Name = Normal_Testure
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Flipbooks/VFX_T_Smoke_8x4_D.VFX_T_Smoke_8x4_D'
+        Name = ParticleTexture
+        Group = None
+    }
+}
+CollectedScalarParameters[3] =
+{
+    CollectedScalarParameters[0] = { Value=0, Name=UseParallelFade, Group=None }
+    CollectedScalarParameters[1] = { Value=0, Name=UseGreenForAlphaClip, Group=None }
+    CollectedScalarParameters[2] = { Value=1, Name=Normal_Power, Group=None }
+}
+CollectedVectorParameters[1] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0.05, G=0.05, B=0.05, A=0 }
+        Name = Smoke Color
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

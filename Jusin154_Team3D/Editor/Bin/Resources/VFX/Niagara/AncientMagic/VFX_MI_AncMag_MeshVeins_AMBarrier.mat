@@ -1,0 +1,5 @@
+Diffuse=T_SanctumDun_AncientMagic_Barrier_N
+Normal=T_SanctumDun_AncientMagic_Barrier_N
+SpecPower=T_Spider_AcromantulaAM_Corrupted_N
+Other[0]=VFX_T_DistortionNoise_N
+Other[1]=VFX_T_NoiseCaustics_Chromatic_D

@@ -1,0 +1,153 @@
+TwoSided = true
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[2] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Meshes/T_Butterfly_Cabbage_D.T_Butterfly_Cabbage_D'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise05_D.VFX_T_Noise05_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[10] =
+                {
+                    ParameterInfos[0] = { Name=Roughness }
+                    ParameterInfos[1] = { Name=Displacement }
+                    ParameterInfos[2] = { Name=Spec }
+                    ParameterInfos[3] = { Name=Emissive Amount }
+                    ParameterInfos[4] = { Name=Emissive Amount in Radius }
+                    ParameterInfos[5] = { Name=Up Down }
+                    ParameterInfos[6] = { Name=Subsurface Amount }
+                    ParameterInfos[7] = { Name=flap speed }
+                    ParameterInfos[8] = { Name=WorldTextureSize }
+                    ParameterInfos[9] = { Name=Player Emissive Radius }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[4] =
+                {
+                    ParameterInfos[0] = { Name=Emissive_Colour_2 }
+                    ParameterInfos[1] = { Name=WP_Colour1 }
+                    ParameterInfos[2] = { Name=WP_Colour_2 }
+                    ParameterInfos[3] = { Name=Emissive_Colour1 }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Texture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[10] = { 1, 6, 0, 0.5, 3, 0, 1, 5, 512, 800 }
+        VectorValues[4] =
+        {
+            VectorValues[0] = { R=0.339261, G=0.286458, B=1, A=1 }
+            VectorValues[1] = { R=1, G=0.176995, B=0, A=1 }
+            VectorValues[2] = { R=0, G=0.192936, B=1, A=1 }
+            VectorValues[3] = { R=1, G=0.421875, B=0.455496, A=1 }
+        }
+        TextureValues[1] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Meshes/T_Butterfly_Cabbage_D.T_Butterfly_Cabbage_D'
+        }
+    }
+    ReferencedTextures[2] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Meshes/T_Butterfly_Cabbage_D.T_Butterfly_Cabbage_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise05_D.VFX_T_Noise05_D'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[1] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Meshes/T_Butterfly_Cabbage_D.T_Butterfly_Cabbage_D'
+        Name = Texture
+        Group = None
+    }
+}
+CollectedScalarParameters[10] =
+{
+    CollectedScalarParameters[0] = { Value=1, Name=Roughness, Group=None }
+    CollectedScalarParameters[1] = { Value=6, Name=Displacement, Group=None }
+    CollectedScalarParameters[2] = { Value=0, Name=Spec, Group=None }
+    CollectedScalarParameters[3] = { Value=0.5, Name=Emissive Amount, Group=None }
+    CollectedScalarParameters[4] =
+    {
+        Value = 3
+        Name = Emissive Amount in Radius
+        Group = None
+    }
+    CollectedScalarParameters[5] = { Value=0, Name=Up Down, Group=None }
+    CollectedScalarParameters[6] = { Value=1, Name=Subsurface Amount, Group=None }
+    CollectedScalarParameters[7] = { Value=5, Name=flap speed, Group=None }
+    CollectedScalarParameters[8] = { Value=512, Name=WorldTextureSize, Group=None }
+    CollectedScalarParameters[9] =
+    {
+        Value = 800
+        Name = Player Emissive Radius
+        Group = None
+    }
+}
+CollectedVectorParameters[4] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0.339261, G=0.286458, B=1, A=1 }
+        Name = Emissive_Colour_2
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=1, G=0.176995, B=0, A=1 }
+        Name = WP_Colour1
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=0, G=0.192936, B=1, A=1 }
+        Name = WP_Colour_2
+        Group = None
+    }
+    CollectedVectorParameters[3] =
+    {
+        Value = { R=1, G=0.421875, B=0.455496, A=1 }
+        Name = Emissive_Colour1
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[2] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Butterfly_Cabbage_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 0.0625
+        UVChannelIndex = 0
+        TextureName = VFX_T_Noise05_D
+    }
+}

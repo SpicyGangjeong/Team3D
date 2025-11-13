@@ -1,0 +1,10 @@
+Diffuse=T_GOL_CombatGruntB_D
+Normal=T_GOL_CombatGruntB_N
+Emissive=T_GrungyNoise_01_D
+Other[0]=VFX_T_MarbleSkin_01_BPF_D
+Other[1]=T_GOL_CombatGruntB_MRO
+Other[2]=T_Dragon_Stone_Tile_N
+Other[3]=base_flat_n
+Other[4]=base_white_d
+Other[5]=T_Base011_MRO
+Other[6]=VFX_T_Cloud_SoftWisps_D

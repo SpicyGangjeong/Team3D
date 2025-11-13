@@ -1,0 +1,140 @@
+Parent = MaterialInstanceConstant'/Game/VFX/Enemies/ConjuredDragon/VFX_MI_ConjuredDragon_Body.VFX_MI_ConjuredDragon_Body'
+ScalarParameterValues[1] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[5] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=DistortionSpectre }
+        ParameterValue = Texture2D'/Game/RiggedObjects/Characters/Creatures/Dragons/ConjuredDragon/Textures/T_ConjuredDragon_Wings_MSK.T_ConjuredDragon_Wings_MSK'
+        ParameterName = None
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=Mask }
+        ParameterValue = Texture2D'/Game/RiggedObjects/Characters/Creatures/Dragons/ConjuredDragon/Textures/T_ConjuredDragon_Wings_MSK.T_ConjuredDragon_Wings_MSK'
+        ParameterName = None
+    }
+    TextureParameterValues[2] =
+    {
+        ParameterInfo = { Name=Diffuse Map }
+        ParameterValue = Texture2D'/Game/RiggedObjects/Characters/Creatures/Dragons/ConjuredDragon/Textures/T_ConjuredDragon_Wings_D.T_ConjuredDragon_Wings_D'
+        ParameterName = None
+    }
+    TextureParameterValues[3] =
+    {
+        ParameterInfo = { Name=MRO Map }
+        ParameterValue = Texture2D'/Game/RiggedObjects/Characters/Creatures/Dragons/ConjuredDragon/Textures/T_ConjuredDragon_Wings_MRO.T_ConjuredDragon_Wings_MRO'
+        ParameterName = None
+    }
+    TextureParameterValues[4] =
+    {
+        ParameterInfo = { Name=Normal Map }
+        ParameterValue = Texture2D'/Game/RiggedObjects/Characters/Creatures/Dragons/ConjuredDragon/Textures/T_ConjuredDragon_Wings_N.T_ConjuredDragon_Wings_N'
+        ParameterName = None
+    }
+}
+VectorParameterValues[2] =
+{
+    VectorParameterValues[0] =
+    {
+        ParameterInfo = { Name=energyColor }
+        ParameterValue = { R=1, G=0, B=0.033333, A=1 }
+        ParameterName = None
+    }
+    VectorParameterValues[1] =
+    {
+        ParameterInfo = { Name=SolidEmColor }
+        ParameterValue = { R=1, G=0, B=0.033333, A=1 }
+        ParameterName = None
+    }
+}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Masked (1)
+    bOverride_TwoSided = false
+    TwoSided = true
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[0] = {}
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[9] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 12
+        UVChannelIndex = 0
+        TextureName = T_CastleDun_RockDetail_N
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_ConjuredDragon_Wings_D
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_ConjuredDragon_Wings_MRO
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_ConjuredDragon_Wings_N
+    }
+    TextureStreamingData[4] =
+    {
+        SamplingScale = 15
+        UVChannelIndex = 0
+        TextureName = T_Distortion_Wave_A
+    }
+    TextureStreamingData[5] =
+    {
+        SamplingScale = 5
+        UVChannelIndex = 0
+        TextureName = T_WaterCaustics_Disorder_A
+    }
+    TextureStreamingData[6] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_CausticNoise_C_Seamless_D
+    }
+    TextureStreamingData[7] =
+    {
+        SamplingScale = 12
+        UVChannelIndex = 0
+        TextureName = VFX_T_DistortionNoise_N
+    }
+    TextureStreamingData[8] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Noise_Corruption_E
+    }
+}

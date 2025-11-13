@@ -1,0 +1,8 @@
+Diffuse=VFX_T_LavaDecal_D
+Normal=T_Water_Normal_Large_N
+Other[0]=VFX_T_LavaDecal_MRHE_D
+Other[1]=VFX_T_LavaDecal_N
+Other[2]=VFX_T_NoiseCaustics01_Color_D
+Other[3]=VFX_T_RibbonOffset_N
+Other[4]=VFX_T_CracksE_D
+Other[5]=VFX_T_smokeWater_D

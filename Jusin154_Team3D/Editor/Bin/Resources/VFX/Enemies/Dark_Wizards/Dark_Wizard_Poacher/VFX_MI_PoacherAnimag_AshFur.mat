@@ -1,0 +1,7 @@
+Diffuse=T_TimberWolf_Body_D
+Normal=VFX_T_Dementor_Ash_N
+Opacity=VFX_T_Packed_BPF_01_D
+Other[0]=VFX_T_DementorTatter_D
+Other[1]=VFX_T_Wisps_O1_D
+Other[2]=VFX_T_Dementor_Ash_D
+Other[3]=VFX_T_FireballGeo_E

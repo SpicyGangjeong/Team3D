@@ -1,0 +1,140 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[7] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/BlendFunc_DefBase.BlendFunc_DefBase'
+    ReferencedTextures[1] = Texture2D'/Engine/EngineMaterials/BlendFunc_DefBlend.BlendFunc_DefBlend'
+    ReferencedTextures[2] = Texture2D'/Engine/EngineMaterials/DefaultDiffuse.DefaultDiffuse'
+    ReferencedTextures[3] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+    ReferencedTextures[4] = Texture2D'/Game/Environment/Hogwarts/Common/Textures/Decal/T_HW_Decal_Drip1.T_HW_Decal_Drip1'
+    ReferencedTextures[5] = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/AnteChamber/Decals/T_Haven_decay_R.T_Haven_decay_R'
+    ReferencedTextures[6] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RGB_3DNoiseRough_D.VFX_T_RGB_3DNoiseRough_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[8] =
+                {
+                    ParameterInfos[0] = { Name=Radial size }
+                    ParameterInfos[1] = { Name=Roughness }
+                    ParameterInfos[2] = { Name=Roughness_power }
+                    ParameterInfos[3] = { Name=MasterRoughness }
+                    ParameterInfos[4] = { Name=Radial_gradient_contrast }
+                    ParameterInfos[5] = { Name=Roughness_bias }
+                    ParameterInfos[6] = { Name=Roughness_tile }
+                    ParameterInfos[7] = { Name=Roughness_mult }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[3] =
+                {
+                    ParameterInfos[0] = { Name=Size }
+                    ParameterInfos[1] = { Name=Param }
+                    ParameterInfos[2] = { Name=Radial_gradient_position }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=OpacityMap }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[8] = { 0.9, 0.8, 0, 1, 3, 0, 1, 0 }
+        VectorValues[3] =
+        {
+            VectorValues[0] = { R=1024, G=1024, B=1024, A=0 }
+            VectorValues[1] = { R=0.5, G=0.473161, B=0.401041, A=1 }
+            VectorValues[2] = { R=0.494282, G=0.514348, B=1, A=1 }
+        }
+        TextureValues[1] =
+        {
+            TextureValues[0] = Texture2D'/Game/Environment/Hogwarts/Common/Textures/Decal/T_HW_Decal_Drip1.T_HW_Decal_Drip1'
+        }
+    }
+    ReferencedTextures[8] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/Environment/Hogwarts/Common/Textures/Decal/T_HW_Decal_Drip1.T_HW_Decal_Drip1'
+        ReferencedTextures[1] = Texture2D'/Engine/EngineMaterials/BlendFunc_DefBlend.BlendFunc_DefBlend'
+        ReferencedTextures[2] = Texture2D'/Engine/EngineMaterials/BlendFunc_DefBase.BlendFunc_DefBase'
+        ReferencedTextures[3] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+        ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RGB_3DNoiseRough_D.VFX_T_RGB_3DNoiseRough_D'
+        ReferencedTextures[6] = Texture2D'/Engine/EngineMaterials/DefaultDiffuse.DefaultDiffuse'
+        ReferencedTextures[7] = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/AnteChamber/Decals/T_Haven_decay_R.T_Haven_decay_R'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[1] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/Environment/Hogwarts/Common/Textures/Decal/T_HW_Decal_Drip1.T_HW_Decal_Drip1'
+        Name = OpacityMap
+        Group = None
+    }
+}
+CollectedScalarParameters[8] =
+{
+    CollectedScalarParameters[0] = { Value=0.9, Name=Radial size, Group=None }
+    CollectedScalarParameters[1] = { Value=0.8, Name=Roughness, Group=None }
+    CollectedScalarParameters[2] = { Value=0, Name=Roughness_power, Group=None }
+    CollectedScalarParameters[3] = { Value=1, Name=MasterRoughness, Group=None }
+    CollectedScalarParameters[4] =
+    {
+        Value = 3
+        Name = Radial_gradient_contrast
+        Group = None
+    }
+    CollectedScalarParameters[5] = { Value=0, Name=Roughness_bias, Group=None }
+    CollectedScalarParameters[6] = { Value=1, Name=Roughness_tile, Group=None }
+    CollectedScalarParameters[7] = { Value=0, Name=Roughness_mult, Group=None }
+}
+CollectedVectorParameters[3] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=1024, G=1024, B=1024, A=0 }
+        Name = Size
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0.5, G=0.473161, B=0.401041, A=1 }
+        Name = Param
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=0.494282, G=0.514348, B=1, A=1 }
+        Name = Radial_gradient_position
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_HW_Decal_Drip1
+    }
+}

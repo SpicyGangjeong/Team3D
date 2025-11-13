@@ -1,0 +1,8 @@
+Diffuse=T_DefaultGrey_D
+Normal=Grid_N
+SpecPower=T_Cav_Spid_ThickWeb_N
+Other[0]=DefaultDiffuse
+Other[1]=DefaultWhiteGrid
+Other[2]=VFX_T_Spid_ThickWeb_BPF_D
+Other[3]=VFX_T_Inky_Smoke_D
+Other[4]=VFX_T_Spider_Por_Web_D

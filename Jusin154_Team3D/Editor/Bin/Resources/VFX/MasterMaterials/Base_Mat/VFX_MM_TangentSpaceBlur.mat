@@ -1,0 +1,5 @@
+Diffuse=DefaultDiffuse
+Normal=VFX_T_cloudsBillowyA_N
+Other[0]=Good64x64TilingNoiseHighFreq
+Other[1]=DebugNumberStrip
+Other[2]=DebugNumberPeriod

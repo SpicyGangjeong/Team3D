@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = Material3'/Phoenix/Plugins/Weather/Content/Lightning/VFX_MM_LightningMesh.VFX_MM_LightningMesh'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = Material3'/Phoenix/Plugins/Weather/Content/Lightning/VFX_MM_LightningMesh.VFX_MM_LightningMesh'
+        MaterialSlotName = WorldGridMaterial
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 1.83063, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-37.4969, Y=-29.7881, Z=-54.1853 }
+    BoxExtent = { X=58.5814, Y=47.5225, Z=54.1853 }
+    SphereRadius = 86.3439
+}

@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Enemies/Troll/Troll_Rock_Toss/Projectile/VFX_MI_TrollRock.VFX_MI_TrollRock'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Enemies/Troll/Troll_Rock_Toss/Projectile/VFX_MI_TrollRock.VFX_MI_TrollRock'
+        MaterialSlotName = M_CastleDungeon_Pieces_Inst
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 352.65, 199.9, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=0, Z=4.76837e-07 }
+    BoxExtent = { X=15.3519, Y=10.6896, Z=7.45293 }
+    SphereRadius = 17.1467
+}

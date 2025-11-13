@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Particles/Cinematics/IntroCave_Room12/VFX_MI_BurningSpiderweb.VFX_MI_BurningSpiderweb'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Particles/Cinematics/IntroCave_Room12/VFX_MI_BurningSpiderweb.VFX_MI_BurningSpiderweb'
+        MaterialSlotName = Material_001
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 307.106, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=234.762, Y=2.64641, Z=-10.7385 }
+    BoxExtent = { X=250.109, Y=237.846, Z=149.398 }
+    SphereRadius = 376.092
+}

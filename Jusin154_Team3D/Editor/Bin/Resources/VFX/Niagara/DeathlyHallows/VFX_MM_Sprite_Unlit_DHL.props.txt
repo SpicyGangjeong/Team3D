@@ -1,0 +1,97 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[1] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Flares/VFX_T_Flare01_D.VFX_T_Flare01_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[9] =
+                {
+                    ParameterInfos[0] = { Name=Hardness (S) }
+                    ParameterInfos[1] = { Name=Radius (S) }
+                    ParameterInfos[2] = { Name=Erosion Alpha (S) }
+                    ParameterInfos[3] = { Name=Speed V (S) }
+                    ParameterInfos[4] = { Name=SphereMaskStrength }
+                    ParameterInfos[5] = { Name=Speed U (S) }
+                    ParameterInfos[6] = { Name=Sharpen (0-1) (S) }
+                    ParameterInfos[7] = { Name=Tiling U (S) }
+                    ParameterInfos[8] = { Name=Tiling V (S) }
+                }
+            }
+            Entries[1] = { ParameterInfos[0]={} }
+            Entries[2] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=DiffuseTex }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[9] = { 0, 0.5, 0.847619, 0, 0, 0, 1, 1, 1 }
+        VectorValues[0] = {}
+        TextureValues[1] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Flares/VFX_T_Flare01_D.VFX_T_Flare01_D'
+        }
+    }
+    ReferencedTextures[1] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Flares/VFX_T_Flare01_D.VFX_T_Flare01_D'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[1] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Flares/VFX_T_Flare01_D.VFX_T_Flare01_D'
+        Name = DiffuseTex
+        Group = None
+    }
+}
+CollectedScalarParameters[9] =
+{
+    CollectedScalarParameters[0] = { Value=0, Name=Hardness (S), Group=None }
+    CollectedScalarParameters[1] = { Value=0.5, Name=Radius (S), Group=None }
+    CollectedScalarParameters[2] =
+    {
+        Value = 0.847619
+        Name = Erosion Alpha (S)
+        Group = None
+    }
+    CollectedScalarParameters[3] = { Value=0, Name=Speed V (S), Group=None }
+    CollectedScalarParameters[4] = { Value=0, Name=SphereMaskStrength, Group=None }
+    CollectedScalarParameters[5] = { Value=0, Name=Speed U (S), Group=None }
+    CollectedScalarParameters[6] = { Value=1, Name=Sharpen (0-1) (S), Group=None }
+    CollectedScalarParameters[7] = { Value=1, Name=Tiling U (S), Group=None }
+    CollectedScalarParameters[8] = { Value=1, Name=Tiling V (S), Group=None }
+}
+CollectedVectorParameters[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Flare01_D
+    }
+}

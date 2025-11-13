@@ -1,0 +1,291 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[10] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineResources/DefaultTexture.DefaultTexture'
+    ReferencedTextures[1] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Enemies/Goblin_Sword_01/VFX_T_Mal_Smoke_7_D.VFX_T_Mal_Smoke_7_D'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/AlphaErosion/VFX_T_SlytherinEntranceSmoothstepMask_A.VFX_T_SlytherinEntranceSmoothstepMask_A'
+    ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseTiled_1_D.VFX_T_NoiseTiled_1_D'
+    ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_TiledNoise_02_D.VFX_T_TiledNoise_02_D'
+    ReferencedTextures[6] = Texture2D'/Game/VFX/Textures/VFX_T_Inky_Smoke_D.VFX_T_Inky_Smoke_D'
+    ReferencedTextures[7] = Texture2D'/Game/VFX/Textures/VFX_T_RocksSheet_01_DA.VFX_T_RocksSheet_01_DA'
+    ReferencedTextures[8] = Texture2D'/Game/VFX/Textures/VFX_T_RocksSheet_01_MRO.VFX_T_RocksSheet_01_MRO'
+    ReferencedTextures[9] = Texture2D'/Game/VFX/Textures/VFX_T_RocksSheet_01_N.VFX_T_RocksSheet_01_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[27] =
+                {
+                    ParameterInfos[0] = { Name=CorruptionDistortStrength }
+                    ParameterInfos[1] = { Name=Roughness }
+                    ParameterInfos[2] = { Name=RockMaskPower }
+                    ParameterInfos[3] = { Name=Alpha Erosion Multiplier }
+                    ParameterInfos[4] = { Name=Saturation }
+                    ParameterInfos[5] = { Name=RockMaskTiling }
+                    ParameterInfos[6] = { Name=Metallic }
+                    ParameterInfos[7] = { Name=CorruptionBump }
+                    ParameterInfos[8] = { Name=Emissive Contrast }
+                    ParameterInfos[9] = { Name=Alpha Softness }
+                    ParameterInfos[10] = { Name=RockMaskContrast }
+                    ParameterInfos[11] = { Name=Tile Y }
+                    ParameterInfos[12] = { Name=Columns }
+                    ParameterInfos[13] = { Name=Pan Y }
+                    ParameterInfos[14] = { Name=CorruptionPower }
+                    ParameterInfos[15] = { Name=CorruptionEmissiveStrength }
+                    ParameterInfos[16] = { Name=CorruptionSpeed }
+                    ParameterInfos[17] = { Name=CorruptionDistortSpeed }
+                    ParameterInfos[18] = { Name=Rows }
+                    ParameterInfos[19] = { Name=Alpha Erosion }
+                    ParameterInfos[20] = { Name=AO Multiplier }
+                    ParameterInfos[21] = { Name=Pan X }
+                    ParameterInfos[22] = { Name=CorruptionTiling }
+                    ParameterInfos[23] = { Name=CorruptionDistortTiling }
+                    ParameterInfos[24] = { Name=Normal Height }
+                    ParameterInfos[25] = { Name=Tile X }
+                    ParameterInfos[26] = { Name=Emissive Brightness }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=VeinsColor }
+                    ParameterInfos[1] = { Name=Emissive Color }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[7] =
+                {
+                    ParameterInfos[0] = { Name=Alpha Erosion Map }
+                    ParameterInfos[1] = { Name=RockMask }
+                    ParameterInfos[2] = { Name=Normal Map }
+                    ParameterInfos[3] = { Name=Diffuse Map }
+                    ParameterInfos[4] = { Name=MRO Map }
+                    ParameterInfos[5] = { Name=Small Wisps texture }
+                    ParameterInfos[6] = { Name=Emissive Map }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[27] =
+        {
+            ScalarValues[0] = 0.1
+            ScalarValues[1] = 1
+            ScalarValues[2] = 0.25
+            ScalarValues[3] = 1
+            ScalarValues[4] = 1
+            ScalarValues[5] = 1
+            ScalarValues[6] = 1
+            ScalarValues[7] = -6.5
+            ScalarValues[8] = 1
+            ScalarValues[9] = 0.25
+            ScalarValues[10] = 1
+            ScalarValues[11] = 1
+            ScalarValues[12] = 1
+            ScalarValues[13] = 0
+            ScalarValues[14] = 2
+            ScalarValues[15] = 1
+            ScalarValues[16] = 0.1
+            ScalarValues[17] = 0.1
+            ScalarValues[18] = 1
+            ScalarValues[19] = 1
+            ScalarValues[20] = 1
+            ScalarValues[21] = 0
+            ScalarValues[22] = 3
+            ScalarValues[23] = 10
+            ScalarValues[24] = 1
+            ScalarValues[25] = 1
+            ScalarValues[26] = 1
+        }
+        VectorValues[2] =
+        {
+            VectorValues[0] = { R=1, G=1, B=1, A=1 }
+            VectorValues[1] = { R=1, G=1, B=1, A=1 }
+        }
+        TextureValues[7] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/AlphaErosion/VFX_T_SlytherinEntranceSmoothstepMask_A.VFX_T_SlytherinEntranceSmoothstepMask_A'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_TiledNoise_02_D.VFX_T_TiledNoise_02_D'
+            TextureValues[2] = Texture2D'/Game/VFX/Textures/VFX_T_RocksSheet_01_N.VFX_T_RocksSheet_01_N'
+            TextureValues[3] = Texture2D'/Game/VFX/Textures/VFX_T_RocksSheet_01_DA.VFX_T_RocksSheet_01_DA'
+            TextureValues[4] = Texture2D'/Game/VFX/Textures/VFX_T_RocksSheet_01_MRO.VFX_T_RocksSheet_01_MRO'
+            TextureValues[5] = Texture2D'/Game/VFX/Enemies/Goblin_Sword_01/VFX_T_Mal_Smoke_7_D.VFX_T_Mal_Smoke_7_D'
+            TextureValues[6] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+        }
+    }
+    ReferencedTextures[11] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/VFX_T_RocksSheet_01_MRO.VFX_T_RocksSheet_01_MRO'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/VFX_T_RocksSheet_01_DA.VFX_T_RocksSheet_01_DA'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/VFX_T_RocksSheet_01_N.VFX_T_RocksSheet_01_N'
+        ReferencedTextures[3] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+        ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/VFX_T_Inky_Smoke_D.VFX_T_Inky_Smoke_D'
+        ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/AlphaErosion/VFX_T_SlytherinEntranceSmoothstepMask_A.VFX_T_SlytherinEntranceSmoothstepMask_A'
+        ReferencedTextures[7] = Texture2D'/Engine/EngineResources/DefaultTexture.DefaultTexture'
+        ReferencedTextures[8] = Texture2D'/Game/VFX/Enemies/Goblin_Sword_01/VFX_T_Mal_Smoke_7_D.VFX_T_Mal_Smoke_7_D'
+        ReferencedTextures[9] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseTiled_1_D.VFX_T_NoiseTiled_1_D'
+        ReferencedTextures[10] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_TiledNoise_02_D.VFX_T_TiledNoise_02_D'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[7] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/AlphaErosion/VFX_T_SlytherinEntranceSmoothstepMask_A.VFX_T_SlytherinEntranceSmoothstepMask_A'
+        Name = Alpha Erosion Map
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_TiledNoise_02_D.VFX_T_TiledNoise_02_D'
+        Name = RockMask
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_RocksSheet_01_N.VFX_T_RocksSheet_01_N'
+        Name = Normal Map
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_RocksSheet_01_DA.VFX_T_RocksSheet_01_DA'
+        Name = Diffuse Map
+        Group = None
+    }
+    CollectedTextureParameters[4] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_RocksSheet_01_MRO.VFX_T_RocksSheet_01_MRO'
+        Name = MRO Map
+        Group = None
+    }
+    CollectedTextureParameters[5] =
+    {
+        Texture = Texture2D'/Game/VFX/Enemies/Goblin_Sword_01/VFX_T_Mal_Smoke_7_D.VFX_T_Mal_Smoke_7_D'
+        Name = Small Wisps texture
+        Group = None
+    }
+    CollectedTextureParameters[6] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+        Name = Emissive Map
+        Group = None
+    }
+}
+CollectedScalarParameters[27] =
+{
+    CollectedScalarParameters[0] =
+    {
+        Value = 0.1
+        Name = CorruptionDistortStrength
+        Group = None
+    }
+    CollectedScalarParameters[1] = { Value=1, Name=Roughness, Group=None }
+    CollectedScalarParameters[2] = { Value=0.25, Name=RockMaskPower, Group=None }
+    CollectedScalarParameters[3] =
+    {
+        Value = 1
+        Name = Alpha Erosion Multiplier
+        Group = None
+    }
+    CollectedScalarParameters[4] = { Value=1, Name=Saturation, Group=None }
+    CollectedScalarParameters[5] = { Value=1, Name=RockMaskTiling, Group=None }
+    CollectedScalarParameters[6] = { Value=1, Name=Metallic, Group=None }
+    CollectedScalarParameters[7] = { Value=-6.5, Name=CorruptionBump, Group=None }
+    CollectedScalarParameters[8] = { Value=1, Name=Emissive Contrast, Group=None }
+    CollectedScalarParameters[9] = { Value=0.25, Name=Alpha Softness, Group=None }
+    CollectedScalarParameters[10] = { Value=1, Name=RockMaskContrast, Group=None }
+    CollectedScalarParameters[11] = { Value=1, Name=Tile Y, Group=None }
+    CollectedScalarParameters[12] = { Value=1, Name=Columns, Group=None }
+    CollectedScalarParameters[13] = { Value=0, Name=Pan Y, Group=None }
+    CollectedScalarParameters[14] = { Value=2, Name=CorruptionPower, Group=None }
+    CollectedScalarParameters[15] =
+    {
+        Value = 1
+        Name = CorruptionEmissiveStrength
+        Group = None
+    }
+    CollectedScalarParameters[16] = { Value=0.1, Name=CorruptionSpeed, Group=None }
+    CollectedScalarParameters[17] =
+    {
+        Value = 0.1
+        Name = CorruptionDistortSpeed
+        Group = None
+    }
+    CollectedScalarParameters[18] = { Value=1, Name=Rows, Group=None }
+    CollectedScalarParameters[19] = { Value=1, Name=Alpha Erosion, Group=None }
+    CollectedScalarParameters[20] = { Value=1, Name=AO Multiplier, Group=None }
+    CollectedScalarParameters[21] = { Value=0, Name=Pan X, Group=None }
+    CollectedScalarParameters[22] = { Value=3, Name=CorruptionTiling, Group=None }
+    CollectedScalarParameters[23] =
+    {
+        Value = 10
+        Name = CorruptionDistortTiling
+        Group = None
+    }
+    CollectedScalarParameters[24] = { Value=1, Name=Normal Height, Group=None }
+    CollectedScalarParameters[25] = { Value=1, Name=Tile X, Group=None }
+    CollectedScalarParameters[26] = { Value=1, Name=Emissive Brightness, Group=None }
+}
+CollectedVectorParameters[2] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=1, G=1, B=1, A=1 }
+        Name = VeinsColor
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=1, G=1, B=1, A=1 }
+        Name = Emissive Color
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[4] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_RocksSheet_01_DA
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_RocksSheet_01_MRO
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_RocksSheet_01_N
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_SlytherinEntranceSmoothstepMask_A
+    }
+}

@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/VFX_MI_Orbit_Spline_Thicken.VFX_MI_Orbit_Spline_Thicken'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/VFX_MI_Orbit_Spline_Thicken.VFX_MI_Orbit_Spline_Thicken'
+        MaterialSlotName = 01 - Default
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 78.8168, 78.8144, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=7.21299, Y=0.834076, Z=-2.01248 }
+    BoxExtent = { X=87.9591, Y=84.4356, Z=22.4405 }
+    SphereRadius = 92.1354
+}

@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Mechanics/Broom/AccentVFX/VFX_MI_BroomStraw.VFX_MI_BroomStraw'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Mechanics/Broom/AccentVFX/VFX_MI_BroomStraw.VFX_MI_BroomStraw'
+        MaterialSlotName = MI_FlyingClassBroom_01
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 217.166, 311.363, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-4.82625, Y=0, Z=0 }
+    BoxExtent = { X=7.63719, Y=26.4718, Z=2.27816 }
+    SphereRadius = 27.5641
+}

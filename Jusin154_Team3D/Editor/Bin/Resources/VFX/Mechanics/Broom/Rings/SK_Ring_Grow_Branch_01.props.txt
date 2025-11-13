@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Mechanics/Broom/Rings/MI_BroomFlight_Ring_Appear.MI_BroomFlight_Ring_Appear'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Mechanics/Broom/Rings/MI_BroomFlight_Ring_Appear.MI_BroomFlight_Ring_Appear'
+        MaterialSlotName = lambert1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 168.688, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=3.61538, Y=56.8096, Z=25.7988 }
+    BoxExtent = { X=9.60618, Y=54.885, Z=42.9626 }
+    SphereRadius = 69.725
+}

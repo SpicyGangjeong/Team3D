@@ -1,0 +1,124 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[4] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/T_dust_cloud_D.T_dust_cloud_D'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/VFX_T_Dementor_Ash_D.VFX_T_Dementor_Ash_D'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/VFX_T_Dementor_Ash_N.VFX_T_Dementor_Ash_N'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/VFX_T_Dementor_Ribbon_pack_D.VFX_T_Dementor_Ribbon_pack_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[5] =
+                {
+                    ParameterInfos[0] = { Name=Contrast (S) }
+                    ParameterInfos[1] = { Name=Speed V (S) }
+                    ParameterInfos[2] = { Name=Speed U (S) }
+                    ParameterInfos[3] = { Name=Tiling U (S) }
+                    ParameterInfos[4] = { Name=Tiling V (S) }
+                }
+            }
+            Entries[1] = { ParameterInfos[0]={} }
+            Entries[2] =
+            {
+                ParameterInfos[3] =
+                {
+                    ParameterInfos[0] = { Name=Diffuse }
+                    ParameterInfos[1] = { Name=Normal }
+                    ParameterInfos[2] = { Name=TatterTexture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[5] = { 4.41566, 0.165079, -0.439117, 1, 1 }
+        VectorValues[0] = {}
+        TextureValues[3] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/VFX_T_Dementor_Ash_D.VFX_T_Dementor_Ash_D'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/VFX_T_Dementor_Ash_N.VFX_T_Dementor_Ash_N'
+            TextureValues[2] = Texture2D'/Game/VFX/Textures/T_dust_cloud_D.T_dust_cloud_D'
+        }
+    }
+    ReferencedTextures[4] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/VFX_T_Dementor_Ribbon_pack_D.VFX_T_Dementor_Ribbon_pack_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/T_dust_cloud_D.T_dust_cloud_D'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/VFX_T_Dementor_Ash_N.VFX_T_Dementor_Ash_N'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/VFX_T_Dementor_Ash_D.VFX_T_Dementor_Ash_D'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[3] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_Dementor_Ash_D.VFX_T_Dementor_Ash_D'
+        Name = Diffuse
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_Dementor_Ash_N.VFX_T_Dementor_Ash_N'
+        Name = Normal
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/T_dust_cloud_D.T_dust_cloud_D'
+        Name = TatterTexture
+        Group = None
+    }
+}
+CollectedScalarParameters[5] =
+{
+    CollectedScalarParameters[0] = { Value=4.41566, Name=Contrast (S), Group=None }
+    CollectedScalarParameters[1] = { Value=0.165079, Name=Speed V (S), Group=None }
+    CollectedScalarParameters[2] = { Value=-0.439117, Name=Speed U (S), Group=None }
+    CollectedScalarParameters[3] = { Value=1, Name=Tiling U (S), Group=None }
+    CollectedScalarParameters[4] = { Value=1, Name=Tiling V (S), Group=None }
+}
+CollectedVectorParameters[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[4] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_dust_cloud_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 2
+        UVChannelIndex = 0
+        TextureName = VFX_T_Dementor_Ash_D
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 2
+        UVChannelIndex = 0
+        TextureName = VFX_T_Dementor_Ash_N
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Dementor_Ribbon_pack_D
+    }
+}

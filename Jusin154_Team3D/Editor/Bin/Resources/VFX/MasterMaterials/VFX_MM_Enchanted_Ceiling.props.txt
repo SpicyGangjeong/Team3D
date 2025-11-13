@@ -1,0 +1,205 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[7] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+    ReferencedTextures[1] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+    ReferencedTextures[2] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+    ReferencedTextures[3] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Noise/T_GlassNoise_D.T_GlassNoise_D'
+    ReferencedTextures[4] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/T_Base011_MRO.T_Base011_MRO'
+    ReferencedTextures[5] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/WaterCaustics/T_WaterCaustics_Disorder_A.T_WaterCaustics_Disorder_A'
+    ReferencedTextures[6] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseCaustics01_Color_D.VFX_T_NoiseCaustics01_Color_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[17] =
+                {
+                    ParameterInfos[0] = { Name=Distortion Speed X }
+                    ParameterInfos[1] = { Name=Fresnel Emissive Power }
+                    ParameterInfos[2] = { Name=Saturation }
+                    ParameterInfos[3] = { Name=FlattenHeight }
+                    ParameterInfos[4] = { Name=Distortion Speed Y }
+                    ParameterInfos[5] = { Name=Fresnel Emissive Strength }
+                    ParameterInfos[6] = { Name=Metallic Adjuster }
+                    ParameterInfos[7] = { Name=Roughness Adjuster }
+                    ParameterInfos[8] = { Name=AO Adjuster }
+                    ParameterInfos[9] = { Name=TransparencyRampFade }
+                    ParameterInfos[10] = { Name=Distortion Strength }
+                    ParameterInfos[11] = { Name=Diffuse Brightness }
+                    ParameterInfos[12] = { Name=Normal Height }
+                    ParameterInfos[13] = { Name=TransPowerBias }
+                    ParameterInfos[14] = { Name=Emissive Brightness }
+                    ParameterInfos[15] = { Name=UV scale }
+                    ParameterInfos[16] = { Name=Distortion Tiling }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Emissive Fresnel Color }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[5] =
+                {
+                    ParameterInfos[0] = { Name=Normal Map }
+                    ParameterInfos[1] = { Name=Diffuse Map }
+                    ParameterInfos[2] = { Name=MRO Map }
+                    ParameterInfos[3] = { Name=Distortion Pattern }
+                    ParameterInfos[4] = { Name=Emissive Map }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[17] =
+        {
+            ScalarValues[0] = 0.05
+            ScalarValues[1] = 1
+            ScalarValues[2] = 1
+            ScalarValues[3] = 0
+            ScalarValues[4] = 0.01
+            ScalarValues[5] = 0
+            ScalarValues[6] = 0
+            ScalarValues[7] = 0
+            ScalarValues[8] = 0
+            ScalarValues[9] = 1
+            ScalarValues[10] = 0.5
+            ScalarValues[11] = 1
+            ScalarValues[12] = 1
+            ScalarValues[13] = 0.1
+            ScalarValues[14] = 0
+            ScalarValues[15] = 1
+            ScalarValues[16] = 2
+        }
+        VectorValues[1] =
+        {
+            VectorValues[0] = { R=0, G=0, B=0, A=1 }
+        }
+        TextureValues[5] =
+        {
+            TextureValues[0] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+            TextureValues[1] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+            TextureValues[2] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/T_Base011_MRO.T_Base011_MRO'
+            TextureValues[3] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Noise/T_GlassNoise_D.T_GlassNoise_D'
+            TextureValues[4] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+        }
+    }
+    ReferencedTextures[8] =
+    {
+        ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+        ReferencedTextures[1] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/T_Base011_MRO.T_Base011_MRO'
+        ReferencedTextures[2] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+        ReferencedTextures[3] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+        ReferencedTextures[5] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/WaterCaustics/T_WaterCaustics_Disorder_A.T_WaterCaustics_Disorder_A'
+        ReferencedTextures[6] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Noise/T_GlassNoise_D.T_GlassNoise_D'
+        ReferencedTextures[7] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseCaustics01_Color_D.VFX_T_NoiseCaustics01_Color_D'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[5] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+        Name = Normal Map
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+        Name = Diffuse Map
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/T_Base011_MRO.T_Base011_MRO'
+        Name = MRO Map
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Noise/T_GlassNoise_D.T_GlassNoise_D'
+        Name = Distortion Pattern
+        Group = None
+    }
+    CollectedTextureParameters[4] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+        Name = Emissive Map
+        Group = None
+    }
+}
+CollectedScalarParameters[17] =
+{
+    CollectedScalarParameters[0] = { Value=0.05, Name=Distortion Speed X, Group=None }
+    CollectedScalarParameters[1] = { Value=1, Name=Fresnel Emissive Power, Group=None }
+    CollectedScalarParameters[2] = { Value=1, Name=Saturation, Group=None }
+    CollectedScalarParameters[3] = { Value=0, Name=FlattenHeight, Group=None }
+    CollectedScalarParameters[4] = { Value=0.01, Name=Distortion Speed Y, Group=None }
+    CollectedScalarParameters[5] =
+    {
+        Value = 0
+        Name = Fresnel Emissive Strength
+        Group = None
+    }
+    CollectedScalarParameters[6] = { Value=0, Name=Metallic Adjuster, Group=None }
+    CollectedScalarParameters[7] = { Value=0, Name=Roughness Adjuster, Group=None }
+    CollectedScalarParameters[8] = { Value=0, Name=AO Adjuster, Group=None }
+    CollectedScalarParameters[9] = { Value=1, Name=TransparencyRampFade, Group=None }
+    CollectedScalarParameters[10] = { Value=0.5, Name=Distortion Strength, Group=None }
+    CollectedScalarParameters[11] = { Value=1, Name=Diffuse Brightness, Group=None }
+    CollectedScalarParameters[12] = { Value=1, Name=Normal Height, Group=None }
+    CollectedScalarParameters[13] = { Value=0.1, Name=TransPowerBias, Group=None }
+    CollectedScalarParameters[14] = { Value=0, Name=Emissive Brightness, Group=None }
+    CollectedScalarParameters[15] = { Value=1, Name=UV scale, Group=None }
+    CollectedScalarParameters[16] = { Value=2, Name=Distortion Tiling, Group=None }
+}
+CollectedVectorParameters[1] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = Emissive Fresnel Color
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[3] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = base_flat_n
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = base_white_d
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Base011_MRO
+    }
+}
