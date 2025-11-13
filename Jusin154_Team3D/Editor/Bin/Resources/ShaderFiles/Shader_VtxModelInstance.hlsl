@@ -15,7 +15,7 @@ vector g_vColor;
 float2 g_vUVGainAmount;
 float2 g_vUVCutting;
 
-float  g_fBlurIntensity; //블러 세기
+float  g_fBlurIntensity; //釉붾윭 ?멸린
 
 float4 g_vEmissive;
 float  g_fColorOption;
@@ -169,7 +169,7 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     
     float2 vTexcoord = In.vTexcoord;
     
-    float2 vUVPerCell   = In.vTexcoord / g_vUVCutting; //이게 한 셀당 크기
+    float2 vUVPerCell   = In.vTexcoord / g_vUVCutting; //?닿쾶 ??????ш린
     
     vTexcoord.x = vTexcoord.x * vUVPerCell.x + (fAnimIndex.x % g_vUVCutting.x) * vUVPerCell.x;
     vTexcoord.y = vTexcoord.y * vUVPerCell.y + (fAnimIndex.x / g_vUVCutting.y) * vUVPerCell.y;
@@ -221,7 +221,7 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     
     Out.vDiffuse = vMtrlDiffuse; 
     
-    // 색깔 추가할 처리 (이미시브)
+    // ?됯퉼 異붽???泥섎━ (?대??쒕툕)
     if (vMtrlDiffuse.a >= g_fEmissiveCutAlpha )
         Out.vColorTarget = vector(g_vEmissive.rgb, g_fColorOption / 10.f);
     else
