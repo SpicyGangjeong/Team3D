@@ -4,6 +4,7 @@
 #include "Mesh.h"
 #include "GameInstance.h"
 #include "ComputeShader.h"
+#include "Bone.h"
 
 CInstance_Model::CInstance_Model(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CComponent{ pDevice  , pContext }
@@ -426,6 +427,9 @@ void CInstance_Model::Free()
 
 	for (auto& pMesh : m_Meshes)
 		Safe_Release(pMesh);
+
+	for (auto& pBone : m_Bones)
+		Safe_Release(pBone);
 
 	Safe_Release(m_pComputeShader);
 	Safe_Release(m_pConstantBuffer);
