@@ -11,6 +11,7 @@
 #include "Layer.h"
 #include "GameObject.h"
 #include "DummyObject.h"
+#include "DummySkyBox.h"
 
 CLevel_ObjectViewer::CLevel_ObjectViewer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -496,7 +497,7 @@ HRESULT CLevel_ObjectViewer::Ready_Layer_UI(const _wstring& strLayerTag)
 
 HRESULT CLevel_ObjectViewer::Ready_Layer_Dummy(const _wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_Cube>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummySkyBox>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE)))
 		return E_FAIL;
 
 	return S_OK;
