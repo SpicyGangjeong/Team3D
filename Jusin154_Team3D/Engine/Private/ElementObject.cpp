@@ -41,6 +41,7 @@ void CElementObject::Update(_float fTimeDelta)
 		0.f, 1.f));
 
 	m_fCurrent_Posigion = XMVectorSet(m_fX, m_fY, 0.f, 1.f);
+	m_vNine_Slice = _float4(-m_fSizeX * 0.5f + m_fLeft, m_fSizeX * 0.5f - m_fRight, -m_fSizeY * 0.5f + m_fTop, m_fSizeY * 0.5f - m_fBottom);
 }
 
 void CElementObject::Late_Update(_float fTimeDelta)
@@ -77,6 +78,46 @@ _bool CElementObject::Chack_Visible()
 		m_bVisible = m_bActive;
 	}
 	return m_bVisible;
+}
+
+void CElementObject::Nine_Slice_Left(_float X)
+{
+	m_fLeft = X;
+}
+
+void CElementObject::Nine_Slice_Right(_float Y)
+{
+	m_fRight = Y;
+}
+
+void CElementObject::Nine_Slice_Top(_float Z)
+{
+	m_fTop = Z;
+}
+
+void CElementObject::Nine_Slice_Bottom(_float W)
+{
+	m_fBottom = W;
+}
+
+_float CElementObject::Get_Nine_Slice_Left()
+{
+	return m_fLeft;
+}
+
+_float CElementObject::Get_Nine_Slice_Right()
+{
+	return m_fRight;
+}
+
+_float CElementObject::Get_Nine_Slice_Top()
+{
+	return m_fTop;
+}
+
+_float CElementObject::Get_Nine_Slice_Bottom()
+{
+	return m_fBottom;
 }
 
 HRESULT CElementObject::Ready_Components(void* pArg)

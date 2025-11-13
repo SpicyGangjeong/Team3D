@@ -83,7 +83,12 @@ HRESULT CUIObject::Initialize(void* pArg)
 
 	m_bVisible = true;
 
-	m_vNine_Slice = XMVectorSet(-m_fSizeX * 0.5f, m_fSizeX * 0.5f, -m_fSizeY * 0.5f, m_fSizeY * 0.5f);
+	m_fLeft = -m_fSizeX * 0.5f;
+	m_fRight = m_fSizeX * 0.5f;
+	m_fTop = -m_fSizeY * 0.5f;
+	m_fBottom = m_fSizeY * 0.5f;
+
+	m_vNine_Slice = _float4(m_fLeft, m_fRight, m_fTop, m_fBottom);
 
 	return S_OK;
 }
@@ -98,7 +103,7 @@ void CUIObject::Update(_float fTimeDelta)
 	m_vScale = _float3(m_fSizeX, m_fSizeY, 1.f);
 	m_pTransformCom->Set_Scale(m_vScale);
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_fX - m_fWinSizeX * 0.5f,-m_fY + m_fWinSizeY * 0.5f,0.f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_fX - m_fWinSizeX * 0.5f, -m_fY + m_fWinSizeY * 0.5f, 0.f, 1.f));
 
 	m_fCurrent_Posigion = XMVectorSet(m_fX, m_fY, 0.f, 1.f);
 
@@ -275,22 +280,42 @@ _float2 CUIObject::Get_UV()
 
 void CUIObject::Nine_Slice_Left(_float X)
 {
-	XMVectorSetX(m_vNine_Slice, X);
+	m_fLeft = -m_fSizeX * 0.5f + X;
 }
 
 void CUIObject::Nine_Slice_Right(_float Y)
 {
-	XMVectorSetY(m_vNine_Slice, Y);
+	m_fRight = m_fSizeX * 0.5f - Y;
 }
 
 void CUIObject::Nine_Slice_Top(_float Z)
 {
-	XMVectorSetZ(m_vNine_Slice, Z);
+	m_fTop = -m_fSizeY * 0.5f + Z;
 }
 
 void CUIObject::Nine_Slice_Bottom(_float W)
 {
-	XMVectorSetW(m_vNine_Slice, W);
+	m_fBottom = m_fSizeY * 0.5f - W;
+}
+
+_float CUIObject::Get_Nine_Slice_Left()
+{
+	return m_fLeft;
+}
+
+_float CUIObject::Get_Nine_Slice_Right()
+{
+	return m_fRight;
+}
+
+_float CUIObject::Get_Nine_Slice_Top()
+{
+	return m_fTop;
+}
+
+_float CUIObject::Get_Nine_Slice_Bottom()
+{
+	return m_fBottom;
 }
 
 _float2 CUIObject::Get_Origin_Position()

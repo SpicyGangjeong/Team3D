@@ -63,8 +63,11 @@ public:
 	virtual void Nine_Slice_Right(_float Y);
 	virtual void Nine_Slice_Top(_float Z);
 	virtual void Nine_Slice_Bottom(_float W);
+	virtual _float Get_Nine_Slice_Left();
+	virtual _float Get_Nine_Slice_Right();
+	virtual _float Get_Nine_Slice_Top();
+	virtual _float Get_Nine_Slice_Bottom();
 
-public:
 	virtual _float2 Get_Origin_Position();			// Start Position
 	virtual _vector Get_Current_Position();			// Current Position
 	virtual _float3 Get_Origin_Size();				// Start Size
@@ -103,7 +106,11 @@ protected:
 
 	RECT					m_pRect{};
 
-	_vector					m_vNine_Slice{};
+	_float4					m_vNine_Slice{};
+	_float					m_fLeft{};
+	_float					m_fRight{};
+	_float					m_fTop{};
+	_float					m_fBottom{};
 
 protected:
 	virtual HRESULT Initialize_Prototype();

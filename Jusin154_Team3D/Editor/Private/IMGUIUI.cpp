@@ -134,6 +134,11 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		m_bElementFadeOut = static_cast<CElementObject*>(m_pElementObject)->Get_FadeOut();
 		m_fAlphaTime = static_cast<CElementObject*>(m_pElementObject)->Get_AlphaTime();
 		m_UV = static_cast<CElementObject*>(m_pElementObject)->Get_UV();
+
+		m_fLeft = static_cast<CElementObject*>(m_pElementObject)->Get_Nine_Slice_Left();
+		m_fRight = static_cast<CElementObject*>(m_pElementObject)->Get_Nine_Slice_Right();
+		m_fTop = static_cast<CElementObject*>(m_pElementObject)->Get_Nine_Slice_Top();
+		m_fBottom = static_cast<CElementObject*>(m_pElementObject)->Get_Nine_Slice_Bottom();
 	}
 	GUI::Begin("Current_PanelObject_Info");
 	if (m_pGamePlay_Canvas != nullptr)
@@ -306,6 +311,7 @@ void CIMGUIUI::Update(_float fTimeDelta)
 			static_cast<CElementObject*>(m_pElementObject)->SizeUpdate_float(m_fSizeXY);
 		}
 
+		GUI::Text("Time");
 		if (GUI::DragFloat("EndTime", &m_fEndTime, 0.01f, 0.f, 10.f))
 		{
 			static_cast<CElementObject*>(m_pElementObject)->Set_TimeMult(m_fEndTime);
@@ -326,6 +332,7 @@ void CIMGUIUI::Update(_float fTimeDelta)
 			static_cast<CElementObject*>(m_pElementObject)->Set_AlphaTime(m_fAlphaTime);
 		}
 
+		GUI::Text("UV");
 		if (GUI::DragFloat("U", &m_UV.x, 0.01f, 0.f, 10.f))
 		{
 			static_cast<CElementObject*>(m_pElementObject)->Set_U(m_UV.x);
@@ -335,6 +342,28 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		{
 			static_cast<CElementObject*>(m_pElementObject)->Set_V(m_UV.y);
 		}
+
+		GUI::Text("Nine_Slice");
+		if (GUI::DragFloat("Left", &m_fLeft, 0.1f, -m_fSize.x * 0.5f, m_fSize.x * 0.5f))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->Nine_Slice_Left(m_fLeft);
+		}		
+		
+		if (GUI::DragFloat("Right", &m_fRight, 0.1f, -m_fSize.x * 0.5f, m_fSize.x * 0.5f))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->Nine_Slice_Right(m_fRight);
+		}		
+		
+		if (GUI::DragFloat("Top", &m_fTop, 0.1f, -m_fSize.y * 0.5f, m_fSize.y * 0.5f))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->Nine_Slice_Top(m_fTop);
+		}		
+		
+		if (GUI::DragFloat("Bottom", &m_fBottom, 0.1f, -m_fSize.y * 0.5f, m_fSize.y * 0.5f))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->Nine_Slice_Bottom(m_fBottom);
+		}
+
 	}
 	GUI::End();
 }

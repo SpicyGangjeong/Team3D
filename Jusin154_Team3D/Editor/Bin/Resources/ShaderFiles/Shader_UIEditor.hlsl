@@ -64,7 +64,7 @@ struct PS_OUT
     float4 vColor : SV_Target0;
 };
 
-PS_OUT PS_MAIN(PS_IN In) // ?쇰컲 UI
+PS_OUT PS_MAIN(PS_IN In) // ??곗뺘 UI
 {
     PS_OUT Out;
     
