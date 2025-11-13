@@ -4,6 +4,7 @@
 #include "Terrain.h"
 #include "Layer.h"
 #include "VIBuffer_Terrain.h"
+#include "PartObject.h"
 
 CBuildingContainer::CBuildingContainer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     :CMapContainer(pDevice, pContext)
@@ -139,7 +140,6 @@ void CBuildingContainer::Describe_Entity()
         {
             pTerrain->Get_Component<CVIBuffer_Terrain>()->Picking(pTerrain->Get_Component<CTransform>(), m_vPosition);
         }
-
     }
 
     GUI::Text("----- Rotation ----");

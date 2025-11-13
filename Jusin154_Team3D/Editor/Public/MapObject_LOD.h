@@ -23,12 +23,14 @@ public:
 public:
 	virtual _wstring Get_PrototypeTag(_uint iLodIndex = 0);
 	HRESULT Add_LodModel(const _tchar* pModelPrototypeTag);
+	void Set_KeyIndex(_uint iIndex) {
+		m_iKeyIndex = iIndex;
+	}
 
 private:
 	CShader*			m_pShaderCom = { nullptr };
 	vector<CModel*>		m_pModelComs;
 
-	_uint				m_iMaxLodLevel = {};
 	_uint				m_iLodIndex = {};
 
 	vector<_wstring>	m_ModelPrototypeTags;

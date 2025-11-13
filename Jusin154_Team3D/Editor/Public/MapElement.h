@@ -18,6 +18,10 @@ protected:
 	virtual ~CMapElement() = default;
 
 public:
+	_uint Get_LodLevel() const{ return m_iMaxLodLevel; }
+	const _wstring& Get_PrototypeTag(_uint iIndex);
+
+public:
 	virtual void Priority_Update(_float fTimeDelta) override;
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;

@@ -1,123 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Land>
-    <Model>
-        <PrototypeTag>Prototype_GameObject_SM_HM_3Broom_Ext_Awning_Trim.mo</PrototypeTag>
-        <Position x="0" y="0" z="0"/>
+    <Container Name="Key">
+        <Position x="33.378426" y="0" z="36.928886"/>
         <Scale x="1" y="1" z="1"/>
         <Rotation x="0" y="0" z="0"/>
-    </Model>
-    <Model>
-        <PrototypeTag>Prototype_GameObject_SM_HM_3Broom_Ext_DoorFrameSide.mo</PrototypeTag>
-        <Position x="0" y="0" z="0"/>
+        <PartObject Lod_Level="2" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_GH_ArchSmall</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_GH_ArchSmall_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_GH_ArchSmall_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="5"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="1">
+            <PrototypeTag>Prototype_GameObject_SM_HW_GH_ArchSmall</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_GH_ArchSmall_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_GH_ArchSmall_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+    </Container>
+    <Object Type="1" Lod_Level="1">
+        <PrototypeTag>Prototype_GameObject_SM_HW_GH_FloorMain</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_HW_GH_FloorMain_Lod1</PrototypeTag>
+        <Position x="48.988075" y="0" z="58.2355"/>
         <Scale x="1" y="1" z="1"/>
         <Rotation x="0" y="0" z="0"/>
-    </Model>
-    <Model>
-        <PrototypeTag>Prototype_GameObject_SM_HM_3Broom_MERGED_Entry_Base_Stones.mo</PrototypeTag>
-        <Position x="0" y="0" z="0"/>
+    </Object>
+    <Object Type="1" Lod_Level="0">
+        <PrototypeTag>Prototype_GameObject_SM_HW_GH_WallWindow</PrototypeTag>
+        <Position x="48.56007" y="1.9073486e-06" z="51.822701"/>
         <Scale x="1" y="1" z="1"/>
         <Rotation x="0" y="0" z="0"/>
-    </Model>
-    <Model>
-        <PrototypeTag>Prototype_GameObject_SM_HM_3Broom_MERGED_Side_Stone_Steps.mo</PrototypeTag>
-        <Position x="0" y="0" z="0"/>
+    </Object>
+    <Object Type="1" Lod_Level="1">
+        <PrototypeTag>Prototype_GameObject_SM_HW_GH_WallTimbers</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_HW_GH_WallTimbers_Lod1</PrototypeTag>
+        <Position x="45.475964" y="1.9073486e-06" z="47.131371"/>
         <Scale x="1" y="1" z="1"/>
         <Rotation x="0" y="0" z="0"/>
-    </Model>
-    <Model>
-        <PrototypeTag>Prototype_GameObject_SM_HM_3Broom_MERGED_Winter_Kit_Icicles.mo</PrototypeTag>
-        <Position x="0" y="0" z="0"/>
+    </Object>
+    <Object Type="1" Lod_Level="0">
+        <PrototypeTag>Prototype_GameObject_SM_HW_GH_Table</PrototypeTag>
+        <Position x="39.54475" y="0" z="69.756302"/>
+        <Scale x="0.99999976" y="1" z="0.99999976"/>
+        <Rotation x="0" y="89.999962" z="0"/>
+    </Object>
+    <Object Type="1" Lod_Level="0">
+        <PrototypeTag>Prototype_GameObject_SM_HW_GH_ShadowCaster</PrototypeTag>
+        <Position x="48.098145" y="1.9073486e-06" z="37.810532"/>
         <Scale x="1" y="1" z="1"/>
         <Rotation x="0" y="0" z="0"/>
-    </Model>
-    <Model>
-        <PrototypeTag>Prototype_GameObject_SM_HM_3Broom_MERGED_Winter_Kit_Snow.mo</PrototypeTag>
-        <Position x="0" y="0" z="0"/>
-        <Scale x="1" y="1" z="1"/>
-        <Rotation x="0" y="0" z="0"/>
-    </Model>
-    <Model>
-        <PrototypeTag>Prototype_GameObject_SM_HM_3Broom_Roof_Debris_A.mo</PrototypeTag>
-        <Position x="0" y="0" z="0"/>
-        <Scale x="1" y="1" z="1"/>
-        <Rotation x="0" y="0" z="0"/>
-    </Model>
-    <Model>
-        <PrototypeTag>Prototype_GameObject_SM_HM_3Broom_Roof_Debris_A_Decal.mo</PrototypeTag>
-        <Position x="0" y="0" z="0"/>
-        <Scale x="1" y="1" z="1"/>
-        <Rotation x="0" y="0" z="0"/>
-    </Model>
-    <Model>
-        <PrototypeTag>Prototype_GameObject_SM_HM_3Broom_Roof_Debris_B_Decal.mo</PrototypeTag>
-        <Position x="0" y="0" z="0"/>
-        <Scale x="1" y="1" z="1"/>
-        <Rotation x="0" y="0" z="0"/>
-    </Model>
-    <Model>
-        <PrototypeTag>Prototype_GameObject_SM_HM_3Broom_Roof_Snow_Winter.mo</PrototypeTag>
-        <Position x="0" y="0" z="0"/>
-        <Scale x="1" y="1" z="1"/>
-        <Rotation x="0" y="0" z="0"/>
-    </Model>
-    <Model>
-        <PrototypeTag>Prototype_GameObject_SM_HM_3Broom_Window_Glass.mo</PrototypeTag>
-        <Position x="0" y="0" z="0"/>
-        <Scale x="1" y="1" z="1"/>
-        <Rotation x="0" y="0" z="0"/>
-    </Model>
-    <Model>
-        <PrototypeTag>Prototype_GameObject_SM_HM_3Broom_Wood_Steps_B.mo</PrototypeTag>
-        <Position x="0" y="0" z="0"/>
-        <Scale x="1" y="1" z="1"/>
-        <Rotation x="0" y="0" z="0"/>
-    </Model>
-    <Model>
-        <PrototypeTag>Prototype_GameObject_SM_HM_3Broom_Wood_Steps_C.mo</PrototypeTag>
-        <Position x="0" y="0" z="0"/>
-        <Scale x="1" y="1" z="1"/>
-        <Rotation x="0" y="0" z="0"/>
-    </Model>
-    <Model>
-        <PrototypeTag>Prototype_GameObject_SM_HM_3Broom_int_walls.mo</PrototypeTag>
-        <Position x="0" y="0" z="0"/>
-        <Scale x="1" y="1" z="1"/>
-        <Rotation x="0" y="0" z="0"/>
-    </Model>
-    <Model>
-        <PrototypeTag>Prototype_GameObject_SM_HM_3Broom_int_wood_A.mo</PrototypeTag>
-        <Position x="0" y="0" z="0"/>
-        <Scale x="1" y="1" z="1"/>
-        <Rotation x="0" y="0" z="0"/>
-    </Model>
-    <Model>
-        <PrototypeTag>Prototype_GameObject_SM_HM_3Broom_int_wood_B.mo</PrototypeTag>
-        <Position x="0" y="0" z="0"/>
-        <Scale x="1" y="1" z="1"/>
-        <Rotation x="0" y="0" z="0"/>
-    </Model>
-    <Model>
-        <PrototypeTag>Prototype_GameObject_SM_HM_3Broom_int_wood_Stairs.mo</PrototypeTag>
-        <Position x="0" y="0" z="0"/>
-        <Scale x="1" y="1" z="1"/>
-        <Rotation x="0" y="0" z="0"/>
-    </Model>
-    <Model>
-        <PrototypeTag>Prototype_GameObject_SM_HM_3Broom_int_windows.mo</PrototypeTag>
-        <Position x="0" y="0" z="0"/>
-        <Scale x="1" y="1" z="1"/>
-        <Rotation x="0" y="0" z="0"/>
-    </Model>
-    <Model>
-        <PrototypeTag>Prototype_GameObject_SM_HM_3Broom_int_walls.mo</PrototypeTag>
-        <Position x="0" y="0" z="0"/>
-        <Scale x="1" y="1" z="1"/>
-        <Rotation x="0" y="0" z="0"/>
-    </Model>
-    <Model>
-        <PrototypeTag>Prototype_GameObject_SM_HM_3Broom_int_Stairs_Upper_Floors.mo</PrototypeTag>
-        <Position x="0" y="0" z="0"/>
-        <Scale x="1" y="1" z="1"/>
-        <Rotation x="0" y="0" z="0"/>
-    </Model>
+    </Object>
 </Land>
