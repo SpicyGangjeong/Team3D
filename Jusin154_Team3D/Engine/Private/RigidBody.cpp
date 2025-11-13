@@ -18,8 +18,39 @@ CRigidBody::CRigidBody(const CRigidBody& rhs):
 	m_bExclusive(rhs.m_bExclusive),
 	m_bKinematic(rhs.m_bKinematic)
 {
-	//m_pMaterial->acquireReference();
 }
+#ifdef _DEBUG
+HRESULT CRigidBody::Render()
+{
+	_matrix  WorldMatrix = m_pTransform->Get_XMWorldMatrix();
+	_matrix ViewMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
+	_matrix ProjMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
+	_vector vColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0x2fc48000, 1.f);
+
+	switch (m_eActorType)
+	{
+	case ACTOR::BOX:
+	{
+		m_pMainShape->Draw(WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
+	} break;
+	case ACTOR::CAPSULE:
+	{
+		m_pMainShape->Draw(WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
+		_matrix WorldUp = XMMatrixTranslationFromVector(m_pTransform->Get_State(STATE::UP) * m_vhalfGeometryInfo.y);
+		_matrix WorldDown = XMMatrixTranslationFromVector(m_pTransform->Get_State(STATE::UP) * -m_vhalfGeometryInfo.y);
+		m_pSubShape->Draw(WorldUp * WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
+		m_pSubShape->Draw(WorldDown * WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
+	} break;
+	case ACTOR::SPHERE:
+	{
+		m_pMainShape->Draw(WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
+	} break;
+	default:
+		break;
+	}
+	return S_OK;
+}
+#endif // _DEBUG
 
 HRESULT CRigidBody::Initialize_Prototype(RIGIDBODY_PROTOTYPEDESC& Desc)
 {
@@ -29,31 +60,22 @@ HRESULT CRigidBody::Initialize_Prototype(RIGIDBODY_PROTOTYPEDESC& Desc)
 	case ACTOR::BOX:
 	case ACTOR::CAPSULE:
 	case ACTOR::SPHERE:
-		m_pMaterial = m_pGameInstance->Get_Material(Desc.tRigidDynamicDesc.vMatInfo);
-		m_vhalfGeometryInfo = Desc.tRigidDynamicDesc.vhalfGeometryInfo;
-		m_bExclusive = Desc.tRigidDynamicDesc.bExclusive;
-		m_pShape = m_pGameInstance->Create_Shape(m_eActorType, m_vhalfGeometryInfo, *m_pMaterial, m_bExclusive, Desc.tRigidDynamicDesc.ePxShapeFlag);
-		if (nullptr == m_pShape) {
-			assert(false);
-			m_pMaterial->release();
-			m_pMaterial = nullptr;
-			return E_FAIL;
-		}
+		Add_DynamicPrototype(Desc);
 		break;
 	case ACTOR::PLANE:
-		break;
 	case ACTOR::TRIANGLEMESH:
-		{
-			m_pMaterial = m_pGameInstance->Get_Material(Desc.tRigidDynamicDesc.vMatInfo);
-			m_wstrMeshKey = CMyTools::ToWstring(Desc.tRigidStaticDesc.szMeshName);
-		}
-		break;
 	case ACTOR::HEIGHTFIELD:
 		break;
 	default:
 		break;
 	}
-		return S_OK;
+
+#ifdef _DEBUG
+	if (FAILED(Add_DebugShape())) {
+		return E_FAIL;
+	}
+#endif // _DEBUG
+
 	return S_OK;
 }
 
@@ -92,11 +114,53 @@ HRESULT CRigidBody::Initialize(void* pArg)
 	default:
 		break;
 	}
-
-
+#ifdef _DEBUG
+	Add_DebugShape();
+#endif // _DEBUG
 
 	return S_OK;
 }
+
+HRESULT CRigidBody::Add_DynamicPrototype(RIGIDBODY_PROTOTYPEDESC& Desc)
+{
+	m_pMaterial = m_pGameInstance->Get_Material(Desc.tRigidDynamicDesc.vMatInfo);
+	m_vhalfGeometryInfo = Desc.tRigidDynamicDesc.vhalfGeometryInfo;
+	m_bExclusive = Desc.tRigidDynamicDesc.bExclusive;
+	m_pShape = m_pGameInstance->Create_Shape(m_eActorType, m_vhalfGeometryInfo, *m_pMaterial, m_bExclusive, Desc.tRigidDynamicDesc.ePxShapeFlag);
+	if (nullptr == m_pShape) {
+		assert(false);
+		m_pMaterial->release();
+		m_pMaterial = nullptr;
+		return E_FAIL;
+	}
+	return S_OK;
+}
+
+#ifdef _DEBUG
+HRESULT CRigidBody::Add_DebugShape()
+{
+	switch (m_eActorType)
+	{
+	case ACTOR::BOX:
+		m_pMainShape = (GeometricPrimitive::CreateBox(m_pContext, m_vhalfGeometryInfo, false, false));
+		break;
+	case ACTOR::CAPSULE:
+		m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, m_vhalfGeometryInfo.x, 10, false, false));
+		m_pMainShape = (GeometricPrimitive::CreateCylinder(m_pContext, m_vhalfGeometryInfo.y, m_vhalfGeometryInfo.x, 10, false));
+		break;
+	case ACTOR::SPHERE:
+		m_pMainShape = (GeometricPrimitive::CreateSphere(m_pContext, m_vhalfGeometryInfo.x, 10, false, false));
+		break;
+	case ACTOR::PLANE:
+	case ACTOR::TRIANGLEMESH:
+	case ACTOR::HEIGHTFIELD:
+		break;
+	default:
+		break;
+	}
+	return S_OK;
+}
+#endif // _DEBUG
 
 CRigidBody* CRigidBody::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, RIGIDBODY_PROTOTYPEDESC& Desc)
 {
@@ -127,10 +191,6 @@ void CRigidBody::Free()
 	__super::Free();
 
 	SAFE_RELEASE(m_pTransform);
-	//if (nullptr != m_pMaterial) {
-	//	m_pMaterial->release();
-	//	m_pMaterial = nullptr;
-	//}
 }
 
 void CRigidBody::Describe_Entity()

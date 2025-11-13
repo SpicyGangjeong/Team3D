@@ -26,6 +26,8 @@ public:
 		PSX::PxShapeFlags			ePxShapeFlag = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
 	}RIGID_DYNAMIC_PROTOTYPEDESC;
 
+
+
 	typedef struct tagRigidBody_PrototypeDesc
 	{
 		ACTOR						eType;
@@ -65,6 +67,11 @@ private:
 	CRigidBody(const CRigidBody& rhs);
 	virtual ~CRigidBody() = default;
 public:
+#ifdef _DEBUG
+	virtual HRESULT Render()override;
+#endif // _DEBUG
+
+
 	ACTOR Get_Type() const { return m_eActorType; }
 	PSX::PxShape* Get_ShapePtr() const { return m_pShape; }
 	CTransform* Get_PxTransformPtr() const { return m_pTransform; }
@@ -76,9 +83,9 @@ public:
 
 private:
 	ACTOR				m_eActorType = ACTOR::END;
-	const PSX::PxActor*	m_pRigidBody = { nullptr };				// 실제 시뮬레이션을 도는 본체
-	PSX::PxMaterial*	m_pMaterial = { nullptr };				// 피직스 객체의 속성 등
-	PSX::PxShape*		m_pShape = { nullptr };					// 피직스 객체의 모양 ( 머테리얼로 만들어짐 )
+	const PSX::PxActor*	m_pRigidBody = { nullptr };		// 실제 시뮬레이션을 도는 본체
+	PSX::PxMaterial*	m_pMaterial = { nullptr };		// 피직스 객체의 속성 등
+	PSX::PxShape*		m_pShape = { nullptr };			// 피직스 객체의 모양 ( 머테리얼로 만들어짐 )
 	_float3				m_vhalfGeometryInfo = {};
 	_float				m_fContactOffset = { 0.05f };
 	CTransform*			m_pTransform = { nullptr };
@@ -88,8 +95,17 @@ private:
 	_wstring			m_wstrMeshKey = {  };
 
 private:
+#ifdef _DEBUG
+	unique_ptr<GeometricPrimitive> m_pMainShape = { nullptr };
+	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };
+#endif // _DEBUG
+
 	HRESULT Initialize_Prototype(RIGIDBODY_PROTOTYPEDESC& Desc);
 	HRESULT Initialize(void* pArg);
+	HRESULT Add_DynamicPrototype(RIGIDBODY_PROTOTYPEDESC& Desc);
+#ifdef _DEBUG
+	HRESULT Add_DebugShape();
+#endif
 
 public:
 	static CRigidBody* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, RIGIDBODY_PROTOTYPEDESC& Desc);

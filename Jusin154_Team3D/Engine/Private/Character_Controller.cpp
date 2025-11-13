@@ -53,8 +53,7 @@ HRESULT CCharacter_Controller::Render()
 
 		m_pSubShape->Draw(ScaleSphereMatrix * WorldUp * WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
 		m_pSubShape->Draw(ScaleSphereMatrix * WorldDown * WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
-	}
-	break;
+	} break;
 	default:
 		break;
 	}

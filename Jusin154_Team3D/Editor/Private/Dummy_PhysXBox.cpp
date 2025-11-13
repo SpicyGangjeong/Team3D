@@ -50,20 +50,26 @@ void CDummy_PhysXBox::Late_Update(_float fTimeDelta)
 
 HRESULT CDummy_PhysXBox::Render()
 {
-	if (FAILED(Bind_ShaderResources())) {
-		return E_FAIL;
-	}
+	//if (FAILED(Bind_ShaderResources())) {
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pModelCom->Bind_Material(0, m_pShaderCom, "g_DiffuseTexture", aiTextureType_DIFFUSE, 0))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::DEFAULT)))) {
-		return E_FAIL;
-	}
+	//if (FAILED(m_pModelCom->Bind_Material(0, m_pShaderCom, "g_DiffuseTexture", aiTextureType_DIFFUSE, 0))) {
+	//	return E_FAIL;
+	//}
+	//if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::DEFAULT)))) {
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pModelCom->Render(0))) {
+	//if (FAILED(m_pModelCom->Render(0))) {
+	//	return E_FAIL;
+	//}
+#ifdef _DEBUG
+	if (FAILED(m_pRigidBody->Render())) {
 		return E_FAIL;
 	}
+#endif // _DEBUG
+
 
 	return S_OK;
 }
