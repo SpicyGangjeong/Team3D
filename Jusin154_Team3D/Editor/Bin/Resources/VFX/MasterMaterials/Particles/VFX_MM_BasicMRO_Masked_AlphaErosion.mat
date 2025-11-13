@@ -1,0 +1,10 @@
+Diffuse=base_white_d
+Normal=VFX_T_RocksSheet_01_N
+Opacity=VFX_T_SlytherinEntranceSmoothstepMask_A
+Other[0]=DefaultTexture
+Other[1]=VFX_T_Mal_Smoke_7_D
+Other[2]=VFX_T_NoiseTiled_1_D
+Other[3]=VFX_T_TiledNoise_02_D
+Other[4]=VFX_T_Inky_Smoke_D
+Other[5]=VFX_T_RocksSheet_01_DA
+Other[6]=VFX_T_RocksSheet_01_MRO

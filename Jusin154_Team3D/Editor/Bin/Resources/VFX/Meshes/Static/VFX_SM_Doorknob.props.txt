@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Levels/Hogwarts/VFX_MI_HW_Doorknob_Transform.VFX_MI_HW_Doorknob_Transform'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Levels/Hogwarts/VFX_MI_HW_Doorknob_Transform.VFX_MI_HW_Doorknob_Transform'
+        MaterialSlotName = M_HM_HoneyDukes_Door01
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 223.877, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=6.69846, Z=0 }
+    BoxExtent = { X=5.6967, Y=6.59895, Z=5.6967 }
+    SphereRadius = 7.64736
+}

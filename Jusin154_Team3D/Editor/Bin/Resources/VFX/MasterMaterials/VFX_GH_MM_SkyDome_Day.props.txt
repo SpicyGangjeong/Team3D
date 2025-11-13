@@ -1,0 +1,223 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[9] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/BlendFunc_DefBase.BlendFunc_DefBase'
+    ReferencedTextures[1] = Texture2D'/Engine/EngineMaterials/BlendFunc_DefBlend.BlendFunc_DefBlend'
+    ReferencedTextures[2] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+    ReferencedTextures[3] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_black_d.base_black_d'
+    ReferencedTextures[4] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+    ReferencedTextures[5] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+    ReferencedTextures[6] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Noise/T_GlassNoise_D.T_GlassNoise_D'
+    ReferencedTextures[7] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/WaterCaustics/T_WaterCaustics_Disorder_A.T_WaterCaustics_Disorder_A'
+    ReferencedTextures[8] = Texture2D'/Game/Experimental/Levels/CoreMechanics/Textures/T_CM_Moon_Atmosphere_O.T_CM_Moon_Atmosphere_O'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[21] =
+                {
+                    ParameterInfos[0] = { Name=Distortion Speed X }
+                    ParameterInfos[1] = { Name=Fresnel Emissive Power }
+                    ParameterInfos[2] = { Name=Saturation }
+                    ParameterInfos[3] = { Name=FlattenHeight }
+                    ParameterInfos[4] = { Name=Distortion Speed Y }
+                    ParameterInfos[5] = { Name=OffsetV }
+                    ParameterInfos[6] = { Name=Tile Y }
+                    ParameterInfos[7] = { Name=Fresnel Emissive Strength }
+                    ParameterInfos[8] = { Name=OffsetU }
+                    ParameterInfos[9] = { Name=SunGlow Offset V }
+                    ParameterInfos[10] = { Name=Vertex_Mult }
+                    ParameterInfos[11] = { Name=Distortion Strength }
+                    ParameterInfos[12] = { Name=SunGlow Offset U }
+                    ParameterInfos[13] = { Name=Diffuse Brightness }
+                    ParameterInfos[14] = { Name=Normal Height }
+                    ParameterInfos[15] = { Name=Tile X }
+                    ParameterInfos[16] = { Name=Opacity }
+                    ParameterInfos[17] = { Name=Emissive Brightness }
+                    ParameterInfos[18] = { Name=UV scale }
+                    ParameterInfos[19] = { Name=Distortion Tiling }
+                    ParameterInfos[20] = { Name=SunGlow Brightness }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=SunGlow }
+                    ParameterInfos[1] = { Name=Emissive Fresnel Color }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[5] =
+                {
+                    ParameterInfos[0] = { Name=Sun Glow }
+                    ParameterInfos[1] = { Name=Normal Map }
+                    ParameterInfos[2] = { Name=Diffuse Map }
+                    ParameterInfos[3] = { Name=Distortion Pattern }
+                    ParameterInfos[4] = { Name=Emissive Map }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[21] =
+        {
+            ScalarValues[0] = 0.05
+            ScalarValues[1] = 1
+            ScalarValues[2] = 1
+            ScalarValues[3] = 0
+            ScalarValues[4] = 0.01
+            ScalarValues[5] = 0
+            ScalarValues[6] = 1
+            ScalarValues[7] = 0
+            ScalarValues[8] = 0
+            ScalarValues[9] = 0
+            ScalarValues[10] = 1.2
+            ScalarValues[11] = 0.5
+            ScalarValues[12] = 0
+            ScalarValues[13] = 1
+            ScalarValues[14] = 1
+            ScalarValues[15] = 1
+            ScalarValues[16] = 1
+            ScalarValues[17] = 0
+            ScalarValues[18] = 1
+            ScalarValues[19] = 2
+            ScalarValues[20] = 1
+        }
+        VectorValues[2] =
+        {
+            VectorValues[0] = { R=1, G=1, B=1, A=1 }
+            VectorValues[1] = { R=0, G=0, B=0, A=1 }
+        }
+        TextureValues[5] =
+        {
+            TextureValues[0] = Texture2D'/Game/Experimental/Levels/CoreMechanics/Textures/T_CM_Moon_Atmosphere_O.T_CM_Moon_Atmosphere_O'
+            TextureValues[1] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+            TextureValues[2] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+            TextureValues[3] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Noise/T_GlassNoise_D.T_GlassNoise_D'
+            TextureValues[4] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_black_d.base_black_d'
+        }
+    }
+    ReferencedTextures[10] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+        ReferencedTextures[1] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+        ReferencedTextures[2] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_black_d.base_black_d'
+        ReferencedTextures[4] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/WaterCaustics/T_WaterCaustics_Disorder_A.T_WaterCaustics_Disorder_A'
+        ReferencedTextures[5] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Noise/T_GlassNoise_D.T_GlassNoise_D'
+        ReferencedTextures[6] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+        ReferencedTextures[7] = Texture2D'/Game/Experimental/Levels/CoreMechanics/Textures/T_CM_Moon_Atmosphere_O.T_CM_Moon_Atmosphere_O'
+        ReferencedTextures[8] = Texture2D'/Engine/EngineMaterials/BlendFunc_DefBase.BlendFunc_DefBase'
+        ReferencedTextures[9] = Texture2D'/Engine/EngineMaterials/BlendFunc_DefBlend.BlendFunc_DefBlend'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[5] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/Experimental/Levels/CoreMechanics/Textures/T_CM_Moon_Atmosphere_O.T_CM_Moon_Atmosphere_O'
+        Name = Sun Glow
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+        Name = Normal Map
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+        Name = Diffuse Map
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/Noise/T_GlassNoise_D.T_GlassNoise_D'
+        Name = Distortion Pattern
+        Group = None
+    }
+    CollectedTextureParameters[4] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_black_d.base_black_d'
+        Name = Emissive Map
+        Group = None
+    }
+}
+CollectedScalarParameters[21] =
+{
+    CollectedScalarParameters[0] = { Value=0.05, Name=Distortion Speed X, Group=None }
+    CollectedScalarParameters[1] = { Value=1, Name=Fresnel Emissive Power, Group=None }
+    CollectedScalarParameters[2] = { Value=1, Name=Saturation, Group=None }
+    CollectedScalarParameters[3] = { Value=0, Name=FlattenHeight, Group=None }
+    CollectedScalarParameters[4] = { Value=0.01, Name=Distortion Speed Y, Group=None }
+    CollectedScalarParameters[5] = { Value=0, Name=OffsetV, Group=None }
+    CollectedScalarParameters[6] = { Value=1, Name=Tile Y, Group=None }
+    CollectedScalarParameters[7] =
+    {
+        Value = 0
+        Name = Fresnel Emissive Strength
+        Group = None
+    }
+    CollectedScalarParameters[8] = { Value=0, Name=OffsetU, Group=None }
+    CollectedScalarParameters[9] = { Value=0, Name=SunGlow Offset V, Group=None }
+    CollectedScalarParameters[10] = { Value=1.2, Name=Vertex_Mult, Group=None }
+    CollectedScalarParameters[11] = { Value=0.5, Name=Distortion Strength, Group=None }
+    CollectedScalarParameters[12] = { Value=0, Name=SunGlow Offset U, Group=None }
+    CollectedScalarParameters[13] = { Value=1, Name=Diffuse Brightness, Group=None }
+    CollectedScalarParameters[14] = { Value=1, Name=Normal Height, Group=None }
+    CollectedScalarParameters[15] = { Value=1, Name=Tile X, Group=None }
+    CollectedScalarParameters[16] = { Value=1, Name=Opacity, Group=None }
+    CollectedScalarParameters[17] = { Value=0, Name=Emissive Brightness, Group=None }
+    CollectedScalarParameters[18] = { Value=1, Name=UV scale, Group=None }
+    CollectedScalarParameters[19] = { Value=2, Name=Distortion Tiling, Group=None }
+    CollectedScalarParameters[20] = { Value=1, Name=SunGlow Brightness, Group=None }
+}
+CollectedVectorParameters[2] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=1, G=1, B=1, A=1 }
+        Name = SunGlow
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = Emissive Fresnel Color
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[2] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = base_black_d
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = base_flat_n
+    }
+}

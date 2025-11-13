@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/VFX_MI_LightRay_Shaft.VFX_MI_LightRay_Shaft'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/VFX_MI_LightRay_Shaft.VFX_MI_LightRay_Shaft'
+        MaterialSlotName = VFX_MM_Cursor_Shaft
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 117.032, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=0, Z=199.642 }
+    BoxExtent = { X=18.3202, Y=18.3202, Z=199.476 }
+    SphereRadius = 200.316
+}

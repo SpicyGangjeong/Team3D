@@ -1,0 +1,173 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[6] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/T_Default_Normal.T_Default_Normal'
+    ReferencedTextures[1] = Texture2D'/Engine/EngineResources/WhiteSquareTexture.WhiteSquareTexture'
+    ReferencedTextures[2] = Texture2D'/Game/Environment/Objects/DevilsSnare/Textures/T_DevilsSnare_B_D.T_DevilsSnare_B_D'
+    ReferencedTextures[3] = Texture2D'/Game/Environment/Objects/DevilsSnare/Textures/T_DevilsSnare_B_N.T_DevilsSnare_B_N'
+    ReferencedTextures[4] = Texture2D'/Game/Environment/Objects/DevilsSnare/Textures/T_DevilsSnare_B_SRO.T_DevilsSnare_B_SRO'
+    ReferencedTextures[5] = Texture2D'/Game/VFX/Mechanics/DevilsSnare/VFX_T_DevilsSnare_Ceiling_A_VN.VFX_T_DevilsSnare_Ceiling_A_VN'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[9] =
+                {
+                    ParameterInfos[0] = { Name=AmbientMovementSpeed }
+                    ParameterInfos[1] = { Name=Bounding Min }
+                    ParameterInfos[2] = { Name=Roughness_Scale }
+                    ParameterInfos[3] = { Name=Bounding Max }
+                    ParameterInfos[4] = { Name=AmbientMovementIntensity }
+                    ParameterInfos[5] = { Name=Number Of Frames }
+                    ParameterInfos[6] = { Name=Time }
+                    ParameterInfos[7] = { Name=Speed }
+                    ParameterInfos[8] = { Name=AmbientMovementWeight }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Tint }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[5] =
+                {
+                    ParameterInfos[0] = { Name=Position Texture }
+                    ParameterInfos[1] = { Name=Normal Map }
+                    ParameterInfos[2] = { Name=Diffuse Map }
+                    ParameterInfos[3] = { Name=Colour Map }
+                    ParameterInfos[4] = { Name=Diffuse Normal }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[9] = { 0.1, 0, 1, 1, 0.5, 239, 1, 1, 0.07 }
+        VectorValues[1] =
+        {
+            VectorValues[0] = { R=1, G=1, B=1, A=0 }
+        }
+        TextureValues[5] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Mechanics/DevilsSnare/VFX_T_DevilsSnare_Ceiling_A_VN.VFX_T_DevilsSnare_Ceiling_A_VN'
+            TextureValues[1] = Texture2D'/Engine/EngineMaterials/T_Default_Normal.T_Default_Normal'
+            TextureValues[2] = Texture2D'/Game/Environment/Objects/DevilsSnare/Textures/T_DevilsSnare_B_D.T_DevilsSnare_B_D'
+            TextureValues[3] = Texture2D'/Engine/EngineResources/WhiteSquareTexture.WhiteSquareTexture'
+            TextureValues[4] = Texture2D'/Game/Environment/Objects/DevilsSnare/Textures/T_DevilsSnare_B_N.T_DevilsSnare_B_N'
+        }
+    }
+    ReferencedTextures[7] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/Environment/Objects/DevilsSnare/Textures/T_DevilsSnare_B_SRO.T_DevilsSnare_B_SRO'
+        ReferencedTextures[1] = Texture2D'/Game/Environment/Objects/DevilsSnare/Textures/T_DevilsSnare_B_D.T_DevilsSnare_B_D'
+        ReferencedTextures[2] = Texture2D'/Engine/EngineResources/WhiteSquareTexture.WhiteSquareTexture'
+        ReferencedTextures[4] = Texture2D'/Game/VFX/Mechanics/DevilsSnare/VFX_T_DevilsSnare_Ceiling_A_VN.VFX_T_DevilsSnare_Ceiling_A_VN'
+        ReferencedTextures[5] = Texture2D'/Engine/EngineMaterials/T_Default_Normal.T_Default_Normal'
+        ReferencedTextures[6] = Texture2D'/Game/Environment/Objects/DevilsSnare/Textures/T_DevilsSnare_B_N.T_DevilsSnare_B_N'
+    }
+}
+BlendMode = BLEND_Opaque (0)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[5] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Mechanics/DevilsSnare/VFX_T_DevilsSnare_Ceiling_A_VN.VFX_T_DevilsSnare_Ceiling_A_VN'
+        Name = Position Texture
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Engine/EngineMaterials/T_Default_Normal.T_Default_Normal'
+        Name = Normal Map
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/Environment/Objects/DevilsSnare/Textures/T_DevilsSnare_B_D.T_DevilsSnare_B_D'
+        Name = Diffuse Map
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Engine/EngineResources/WhiteSquareTexture.WhiteSquareTexture'
+        Name = Colour Map
+        Group = None
+    }
+    CollectedTextureParameters[4] =
+    {
+        Texture = Texture2D'/Game/Environment/Objects/DevilsSnare/Textures/T_DevilsSnare_B_N.T_DevilsSnare_B_N'
+        Name = Diffuse Normal
+        Group = None
+    }
+}
+CollectedScalarParameters[9] =
+{
+    CollectedScalarParameters[0] = { Value=0.1, Name=AmbientMovementSpeed, Group=None }
+    CollectedScalarParameters[1] = { Value=0, Name=Bounding Min, Group=None }
+    CollectedScalarParameters[2] = { Value=1, Name=Roughness_Scale, Group=None }
+    CollectedScalarParameters[3] = { Value=1, Name=Bounding Max, Group=None }
+    CollectedScalarParameters[4] =
+    {
+        Value = 0.5
+        Name = AmbientMovementIntensity
+        Group = None
+    }
+    CollectedScalarParameters[5] = { Value=239, Name=Number Of Frames, Group=None }
+    CollectedScalarParameters[6] = { Value=1, Name=Time, Group=None }
+    CollectedScalarParameters[7] = { Value=1, Name=Speed, Group=None }
+    CollectedScalarParameters[8] =
+    {
+        Value = 0.07
+        Name = AmbientMovementWeight
+        Group = None
+    }
+}
+CollectedVectorParameters[1] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=1, G=1, B=1, A=0 }
+        Name = Tint
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[3] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_DevilsSnare_B_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_DevilsSnare_B_N
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_DevilsSnare_B_SRO
+    }
+}

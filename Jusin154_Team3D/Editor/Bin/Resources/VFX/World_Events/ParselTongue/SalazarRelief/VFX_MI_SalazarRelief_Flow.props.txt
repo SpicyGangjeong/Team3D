@@ -1,0 +1,250 @@
+Parent = Material3'/Game/VFX/MasterMaterials/Base_Mat/VFX_M_MRO_with_Flow.VFX_M_MRO_with_Flow'
+ScalarParameterValues[18] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=2ndary Emissive Brightness }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[1] =
+    {
+        ParameterInfo = { Name=2ndary Emissive Noise Strenght }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[2] =
+    {
+        ParameterInfo = { Name=Tiling U (EN) }
+        ParameterValue = 30
+        ParameterName = None
+    }
+    ScalarParameterValues[3] =
+    {
+        ParameterInfo = { Name=Tiling V (En) }
+        ParameterValue = 30
+        ParameterName = None
+    }
+    ScalarParameterValues[4] =
+    {
+        ParameterInfo = { Name=Speed U (EN) }
+        ParameterValue = 0.02
+        ParameterName = None
+    }
+    ScalarParameterValues[5] =
+    {
+        ParameterInfo = { Name=Speed V (EN) }
+        ParameterValue = 0.01
+        ParameterName = None
+    }
+    ScalarParameterValues[6] =
+    {
+        ParameterInfo = { Name=UVM Strenght }
+        ParameterValue = 0.05
+        ParameterName = None
+    }
+    ScalarParameterValues[7] =
+    {
+        ParameterInfo = { Name=Tiling U (UVM) }
+        ParameterValue = 5
+        ParameterName = None
+    }
+    ScalarParameterValues[8] =
+    {
+        ParameterInfo = { Name=Tiling V (UVM) }
+        ParameterValue = 5
+        ParameterName = None
+    }
+    ScalarParameterValues[9] =
+    {
+        ParameterInfo = { Name=Speed U (UVM) }
+        ParameterValue = 0.005
+        ParameterName = None
+    }
+    ScalarParameterValues[10] =
+    {
+        ParameterInfo = { Name=Speed V (UVM) }
+        ParameterValue = 0.001
+        ParameterName = None
+    }
+    ScalarParameterValues[11] =
+    {
+        ParameterInfo = { Name=Metallic Adjuster }
+        ParameterValue = -1
+        ParameterName = None
+    }
+    ScalarParameterValues[12] =
+    {
+        ParameterInfo = { Name=Tiling U (AN) }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[13] =
+    {
+        ParameterInfo = { Name=Tiling V (AN) }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[14] =
+    {
+        ParameterInfo = { Name=Speed U (AN) }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[15] =
+    {
+        ParameterInfo = { Name=Speed V (AN) }
+        ParameterValue = 0.05
+        ParameterName = None
+    }
+    ScalarParameterValues[16] =
+    {
+        ParameterInfo = { Name=Strenght (S) }
+        ParameterValue = 0.08
+        ParameterName = None
+    }
+    ScalarParameterValues[17] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[7] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=Diffuse Map }
+        ParameterValue = Texture2D'/Game/Environment/Hogwarts/Meshes/Statues/Textures/T_HW_SD_SalazarRelief_D.T_HW_SD_SalazarRelief_D'
+        ParameterName = None
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=MRO Map }
+        ParameterValue = Texture2D'/Game/Environment/Hogwarts/Meshes/Statues/Textures/T_HW_SD_SalazarRelief_MRO.T_HW_SD_SalazarRelief_MRO'
+        ParameterName = None
+    }
+    TextureParameterValues[2] =
+    {
+        ParameterInfo = { Name=2ndary Emissive Map }
+        ParameterValue = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_Salazar_Vains_Emiss_D.VFX_T_Salazar_Vains_Emiss_D'
+        ParameterName = None
+    }
+    TextureParameterValues[3] =
+    {
+        ParameterInfo = { Name=Emissive Noise Texture }
+        ParameterValue = Texture2D'/Game/VFX/Textures/Noises/VFX_T_MarbleSkin_01_BPF_D.VFX_T_MarbleSkin_01_BPF_D'
+        ParameterName = None
+    }
+    TextureParameterValues[4] =
+    {
+        ParameterInfo = { Name=Alpha Noise }
+        ParameterValue = Texture2D'/Game/VFX/Textures/VFX_T_Black_4x4_D.VFX_T_Black_4x4_D'
+        ParameterName = None
+    }
+    TextureParameterValues[5] =
+    {
+        ParameterInfo = { Name=Flow Map }
+        ParameterValue = Texture2D'/Game/VFX/Textures/Flowmaps/VFX_T_SalazarRelief_FM.VFX_T_SalazarRelief_FM'
+        ParameterName = None
+    }
+    TextureParameterValues[6] =
+    {
+        ParameterInfo = { Name=Normal Map }
+        ParameterValue = Texture2D'/Game/Environment/Hogwarts/Meshes/Statues/Textures/T_HW_SD_SalazarRelief_N.T_HW_SD_SalazarRelief_N'
+        ParameterName = None
+    }
+}
+VectorParameterValues[1] =
+{
+    VectorParameterValues[0] =
+    {
+        ParameterInfo = { Name=2ndary Emissive Color Modifyer }
+        ParameterValue = { R=0, G=0, B=0, A=0 }
+        ParameterName = None
+    }
+}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Opaque (0)
+    bOverride_TwoSided = false
+    TwoSided = false
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[2] =
+    {
+        StaticSwitchParameters[0] =
+        {
+            Value = true
+            ParameterInfo = { Name=Use 2ndary Emissive }
+            bOverride = true
+        }
+        StaticSwitchParameters[1] =
+        {
+            Value = false
+            ParameterInfo = { Name=Emissive Noise }
+            bOverride = true
+        }
+    }
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[7] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = base_black_d
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 0.974976
+        UVChannelIndex = 0
+        TextureName = T_HW_SD_SalazarRelief_D
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 0.983459
+        UVChannelIndex = 0
+        TextureName = T_HW_SD_SalazarRelief_MRO
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 0.974976
+        UVChannelIndex = 0
+        TextureName = T_HW_SD_SalazarRelief_N
+    }
+    TextureStreamingData[4] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Salazar_Vains_Emiss_D
+    }
+    TextureStreamingData[5] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_SalazarRelief_FM
+    }
+    TextureStreamingData[6] =
+    {
+        SamplingScale = 5
+        UVChannelIndex = 0
+        TextureName = VFX_T_Wavy_N
+    }
+}

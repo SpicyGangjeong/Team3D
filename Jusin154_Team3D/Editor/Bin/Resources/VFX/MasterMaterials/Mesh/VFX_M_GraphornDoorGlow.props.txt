@@ -1,0 +1,197 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[7] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/Environment/FIG_07/Textures/T_Fig07_GraphornHead_D.T_Fig07_GraphornHead_D'
+    ReferencedTextures[1] = Texture2D'/Game/Environment/FIG_07/Textures/T_Fig07_GraphornHead_MROH.T_Fig07_GraphornHead_MROH'
+    ReferencedTextures[2] = Texture2D'/Game/Environment/FIG_07/Textures/T_Fig07_GraphornHead_N.T_Fig07_GraphornHead_N'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_GraphornDoorSpiral2_N.VFX_T_GraphornDoorSpiral2_N'
+    ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_GraphornDoorSpiral_ErosionMask2_D.VFX_T_GraphornDoorSpiral_ErosionMask2_D'
+    ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_GraphornDoorSpiralMasks_ECS_D.VFX_T_GraphornDoorSpiralMasks_ECS_D'
+    ReferencedTextures[6] = Texture2D'/Game/VFX/Textures/VFX_T_Inky_Smoke_D.VFX_T_Inky_Smoke_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[9] =
+                {
+                    ParameterInfos[0] = { Name=Alpha Erosion Multiplier }
+                    ParameterInfos[1] = { Name=alpha }
+                    ParameterInfos[2] = { Name=shiftColourGradient }
+                    ParameterInfos[3] = { Name=alphamultiplier }
+                    ParameterInfos[4] = { Name=SubsurfacePower }
+                    ParameterInfos[5] = { Name=SubsurfaceStrength }
+                    ParameterInfos[6] = { Name=softness }
+                    ParameterInfos[7] = { Name=gradient }
+                    ParameterInfos[8] = { Name=EmisiveBrightness }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=SubsurfaceColor }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[6] =
+                {
+                    ParameterInfos[0] = { Name=NormalBlend }
+                    ParameterInfos[1] = { Name=Normal }
+                    ParameterInfos[2] = { Name=Masks }
+                    ParameterInfos[3] = { Name=ErosionMaskGradient }
+                    ParameterInfos[4] = { Name=MRO }
+                    ParameterInfos[5] = { Name=BaseColor }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[9] = { 1, 1, 0, 1, 2, 1, 0, 0, 1 }
+        VectorValues[1] =
+        {
+            VectorValues[0] = { R=0.890625, G=0.402416, B=0.03585, A=1 }
+        }
+        TextureValues[6] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_GraphornDoorSpiral2_N.VFX_T_GraphornDoorSpiral2_N'
+            TextureValues[1] = Texture2D'/Game/Environment/FIG_07/Textures/T_Fig07_GraphornHead_N.T_Fig07_GraphornHead_N'
+            TextureValues[2] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_GraphornDoorSpiralMasks_ECS_D.VFX_T_GraphornDoorSpiralMasks_ECS_D'
+            TextureValues[3] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_GraphornDoorSpiral_ErosionMask2_D.VFX_T_GraphornDoorSpiral_ErosionMask2_D'
+            TextureValues[4] = Texture2D'/Game/Environment/FIG_07/Textures/T_Fig07_GraphornHead_MROH.T_Fig07_GraphornHead_MROH'
+            TextureValues[5] = Texture2D'/Game/Environment/FIG_07/Textures/T_Fig07_GraphornHead_D.T_Fig07_GraphornHead_D'
+        }
+    }
+    ReferencedTextures[8] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/Environment/FIG_07/Textures/T_Fig07_GraphornHead_D.T_Fig07_GraphornHead_D'
+        ReferencedTextures[1] = Texture2D'/Game/Environment/FIG_07/Textures/T_Fig07_GraphornHead_MROH.T_Fig07_GraphornHead_MROH'
+        ReferencedTextures[2] = Texture2D'/Game/Environment/FIG_07/Textures/T_Fig07_GraphornHead_N.T_Fig07_GraphornHead_N'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/VFX_T_Inky_Smoke_D.VFX_T_Inky_Smoke_D'
+        ReferencedTextures[4] = Texture2D'/Game/VFX/CurveAtlas/VFX_CA_Fig07.VFX_CA_Fig07'
+        ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_GraphornDoorSpiral_ErosionMask2_D.VFX_T_GraphornDoorSpiral_ErosionMask2_D'
+        ReferencedTextures[6] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_GraphornDoorSpiral2_N.VFX_T_GraphornDoorSpiral2_N'
+        ReferencedTextures[7] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_GraphornDoorSpiralMasks_ECS_D.VFX_T_GraphornDoorSpiralMasks_ECS_D'
+    }
+}
+BlendMode = BLEND_Opaque (0)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[6] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_GraphornDoorSpiral2_N.VFX_T_GraphornDoorSpiral2_N'
+        Name = NormalBlend
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/Environment/FIG_07/Textures/T_Fig07_GraphornHead_N.T_Fig07_GraphornHead_N'
+        Name = Normal
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_GraphornDoorSpiralMasks_ECS_D.VFX_T_GraphornDoorSpiralMasks_ECS_D'
+        Name = Masks
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_GraphornDoorSpiral_ErosionMask2_D.VFX_T_GraphornDoorSpiral_ErosionMask2_D'
+        Name = ErosionMaskGradient
+        Group = None
+    }
+    CollectedTextureParameters[4] =
+    {
+        Texture = Texture2D'/Game/Environment/FIG_07/Textures/T_Fig07_GraphornHead_MROH.T_Fig07_GraphornHead_MROH'
+        Name = MRO
+        Group = None
+    }
+    CollectedTextureParameters[5] =
+    {
+        Texture = Texture2D'/Game/Environment/FIG_07/Textures/T_Fig07_GraphornHead_D.T_Fig07_GraphornHead_D'
+        Name = BaseColor
+        Group = None
+    }
+}
+CollectedScalarParameters[9] =
+{
+    CollectedScalarParameters[0] =
+    {
+        Value = 1
+        Name = Alpha Erosion Multiplier
+        Group = None
+    }
+    CollectedScalarParameters[1] = { Value=1, Name=alpha, Group=None }
+    CollectedScalarParameters[2] = { Value=0, Name=shiftColourGradient, Group=None }
+    CollectedScalarParameters[3] = { Value=1, Name=alphamultiplier, Group=None }
+    CollectedScalarParameters[4] = { Value=2, Name=SubsurfacePower, Group=None }
+    CollectedScalarParameters[5] = { Value=1, Name=SubsurfaceStrength, Group=None }
+    CollectedScalarParameters[6] = { Value=0, Name=softness, Group=None }
+    CollectedScalarParameters[7] = { Value=0, Name=gradient, Group=None }
+    CollectedScalarParameters[8] = { Value=1, Name=EmisiveBrightness, Group=None }
+}
+CollectedVectorParameters[1] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0.890625, G=0.402416, B=0.03585, A=1 }
+        Name = SubsurfaceColor
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[6] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Fig07_GraphornHead_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Fig07_GraphornHead_MROH
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Fig07_GraphornHead_N
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_GraphornDoorSpiral2_N
+    }
+    TextureStreamingData[4] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_GraphornDoorSpiral_ErosionMask2_D
+    }
+    TextureStreamingData[5] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_GraphornDoorSpiralMasks_ECS_D
+    }
+}

@@ -35,7 +35,7 @@ VS_OUT VS_MAIN(VS_IN In)
 
 struct PS_IN
 {
-	float4 vPosition : SV_POSITION;
+    float4 vPosition : SV_POSITION;
     float2 vTexcoord : TEXCOORD0;
 };
 
@@ -69,16 +69,16 @@ PS_OUT_BACKBUFFER PS_OUT_LASTCOLOR(PS_IN In)
             Out.vBackBuffer.rgb = vColorTexture.rgb;
             break;
         case 2:
-            Out.vBackBuffer.rgb *= vColorTexture.rgb;
+            Out.vBackBuffer.rgb += vColorTexture.rgb;
             break;
         case 3:
             Out.vBackBuffer.rgb -= vColorTexture.rgb;
             break;
         case 4:
-            Out.vBackBuffer.rgb /= vColorTexture.rgb;
+            Out.vBackBuffer.rgb *= vColorTexture.rgb;
             break;
         case 5:
-            Out.vBackBuffer.rgb += vColorTexture.rgb;
+            Out.vBackBuffer.rgb /= vColorTexture.rgb;
             break;
         default:
             break;

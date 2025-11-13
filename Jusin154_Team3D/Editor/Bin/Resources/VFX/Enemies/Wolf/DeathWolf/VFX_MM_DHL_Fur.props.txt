@@ -1,0 +1,100 @@
+TwoSided = true
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[1] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/RiggedObjects/Characters/Creatures/Wolves/Animagus_Wolf/Textures/T_TimberWolf_Corrupted_Hair_TVOA_MSK.T_TimberWolf_Corrupted_Hair_TVOA_MSK'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[9] =
+                {
+                    ParameterInfos[0] = { Name=Wipe Out Hardness }
+                    ParameterInfos[1] = { Name=Roughness }
+                    ParameterInfos[2] = { Name=Wipe_Invert }
+                    ParameterInfos[3] = { Name=Specular }
+                    ParameterInfos[4] = { Name=Wipe_RadiusScale }
+                    ParameterInfos[5] = { Name=Wipe In Hardness }
+                    ParameterInfos[6] = { Name=Wipe_EdgeWidth }
+                    ParameterInfos[7] = { Name=WipeInOrOut }
+                    ParameterInfos[8] = { Name=WipeOut Offset }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=Base Color }
+                    ParameterInfos[1] = { Name=SkinFX_BoundingSphere }
+                }
+            }
+            Entries[2] = { ParameterInfos[0]={} }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[9] = { 0.3, 1, 0, 0, 0.5, 0.3, 20, 0, 100 }
+        VectorValues[2] =
+        {
+            VectorValues[0] = { R=1, G=5, B=0, A=0 }
+            VectorValues[1] = { R=0, G=0, B=88.1859, A=100.927 }
+        }
+        TextureValues[0] = {}
+    }
+    ReferencedTextures[1] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/RiggedObjects/Characters/Creatures/Wolves/Animagus_Wolf/Textures/T_TimberWolf_Corrupted_Hair_TVOA_MSK.T_TimberWolf_Corrupted_Hair_TVOA_MSK'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[0] = {}
+CollectedScalarParameters[9] =
+{
+    CollectedScalarParameters[0] = { Value=0.3, Name=Wipe Out Hardness, Group=None }
+    CollectedScalarParameters[1] = { Value=1, Name=Roughness, Group=None }
+    CollectedScalarParameters[2] = { Value=0, Name=Wipe_Invert, Group=None }
+    CollectedScalarParameters[3] = { Value=0, Name=Specular, Group=None }
+    CollectedScalarParameters[4] = { Value=0.5, Name=Wipe_RadiusScale, Group=None }
+    CollectedScalarParameters[5] = { Value=0.3, Name=Wipe In Hardness, Group=None }
+    CollectedScalarParameters[6] = { Value=20, Name=Wipe_EdgeWidth, Group=None }
+    CollectedScalarParameters[7] = { Value=0, Name=WipeInOrOut, Group=None }
+    CollectedScalarParameters[8] = { Value=100, Name=WipeOut Offset, Group=None }
+}
+CollectedVectorParameters[2] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=1, G=5, B=0, A=0 }
+        Name = Base Color
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0, G=0, B=88.1859, A=100.927 }
+        Name = SkinFX_BoundingSphere
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_TimberWolf_Corrupted_Hair_TVOA_MSK
+    }
+}

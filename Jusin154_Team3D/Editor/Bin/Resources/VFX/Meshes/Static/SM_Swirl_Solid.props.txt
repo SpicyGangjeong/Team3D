@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = Material3'/Game/VFX/MasterMaterials/Mesh/MM_ConjurationSwirl.MM_ConjurationSwirl'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = Material3'/Game/VFX/MasterMaterials/Mesh/MM_ConjurationSwirl.MM_ConjurationSwirl'
+        MaterialSlotName = houdini_default_material
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 233, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=1.28389, Y=8.56872, Z=8.64694 }
+    BoxExtent = { X=16.9115, Y=84.8709, Z=93.7005 }
+    SphereRadius = 96.5968
+}

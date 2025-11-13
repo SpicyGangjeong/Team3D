@@ -1,0 +1,272 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[5] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/BaseFlattenNormalMap.BaseFlattenNormalMap'
+    ReferencedTextures[1] = Texture2D'/Engine/EngineMaterials/DefaultNormal_Uncompressed.DefaultNormal_Uncompressed'
+    ReferencedTextures[2] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_CnA_Fire3_D.VFX_T_CnA_Fire3_D'
+    ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/T_waterSplashA_N.T_waterSplashA_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[23] =
+                {
+                    ParameterInfos[0] = { Name=Depth Fade Distance (S) }
+                    ParameterInfos[1] =
+                    {
+                        Name = Emissive Adaptation Outdoor Daytime Boost (S)
+                    }
+                    ParameterInfos[2] = { Name=Cheap contrast bright (S) }
+                    ParameterInfos[3] = { Name=Normal Scale (S) }
+                    ParameterInfos[4] = { Name=Center Opacity (S) }
+                    ParameterInfos[5] = { Name=Cheap contrast dark Crackle }
+                    ParameterInfos[6] = { Name=Cheap contrast bright Crackle }
+                    ParameterInfos[7] = { Name=Depth Fade In Softness (S) }
+                    ParameterInfos[8] = { Name=Center Opacity Crackle }
+                    ParameterInfos[9] = { Name=Refraction Alpha Crackle }
+                    ParameterInfos[10] = { Name=Edge Falloff Softness1 (S) }
+                    ParameterInfos[11] = { Name=Center Falloff Softness (S) }
+                    ParameterInfos[12] = { Name=Refraction Index }
+                    ParameterInfos[13] = { Name=Speed V (S) }
+                    ParameterInfos[14] = { Name=Cheap contrast dark (S) }
+                    ParameterInfos[15] = { Name=Test Dark }
+                    ParameterInfos[16] = { Name=Depth Fade In Distance (S) }
+                    ParameterInfos[17] = { Name=Speed U (S) }
+                    ParameterInfos[18] = { Name=Tiling U (S) }
+                    ParameterInfos[19] = { Name=Test Bright }
+                    ParameterInfos[20] = { Name=Tiling V (S) }
+                    ParameterInfos[21] = { Name=Bias (0-1) (S) }
+                    ParameterInfos[22] = { Name=Refraction Alpha }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[4] =
+                {
+                    ParameterInfos[0] = { Name=Emissive Color Crackle }
+                    ParameterInfos[1] = { Name=Normal TextureSize (V3) }
+                    ParameterInfos[2] = { Name=Normal 3D Pan Vel }
+                    ParameterInfos[3] = { Name=Emissive Color }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Normal Map }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[23] =
+        {
+            ScalarValues[0] = 1000
+            ScalarValues[1] = 1
+            ScalarValues[2] = 0.838095
+            ScalarValues[3] = 0.504762
+            ScalarValues[4] = 0.085714
+            ScalarValues[5] = -0.299295
+            ScalarValues[6] = 0.72381
+            ScalarValues[7] = 10
+            ScalarValues[8] = 0.2
+            ScalarValues[9] = 1
+            ScalarValues[10] = 8
+            ScalarValues[11] = 4
+            ScalarValues[12] = 0.495238
+            ScalarValues[13] = -0.036191
+            ScalarValues[14] = -0.78501
+            ScalarValues[15] = 0
+            ScalarValues[16] = 1000
+            ScalarValues[17] = -0.02
+            ScalarValues[18] = 4
+            ScalarValues[19] = 1
+            ScalarValues[20] = 4
+            ScalarValues[21] = 0.619047
+            ScalarValues[22] = 1
+        }
+        VectorValues[4] =
+        {
+            VectorValues[0] = { R=0.0119356, G=0.0148437, B=0.0208333, A=0 }
+            VectorValues[1] = { R=500, G=500, B=500, A=0 }
+            VectorValues[2] = { R=122.091, G=60.8608, B=95.1941, A=1 }
+            VectorValues[3] = { R=0.0114583, G=0.0142501, B=0.02, A=0 }
+        }
+        TextureValues[1] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/T_waterSplashA_N.T_waterSplashA_N'
+        }
+    }
+    ReferencedTextures[6] =
+    {
+        ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+        ReferencedTextures[2] = Texture2D'/Engine/EngineMaterials/BaseFlattenNormalMap.BaseFlattenNormalMap'
+        ReferencedTextures[3] = Texture2D'/Engine/EngineMaterials/DefaultNormal_Uncompressed.DefaultNormal_Uncompressed'
+        ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_CnA_Fire3_D.VFX_T_CnA_Fire3_D'
+        ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/T_waterSplashA_N.T_waterSplashA_N'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[1] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/T_waterSplashA_N.T_waterSplashA_N'
+        Name = Normal Map
+        Group = None
+    }
+}
+CollectedScalarParameters[23] =
+{
+    CollectedScalarParameters[0] =
+    {
+        Value = 1000
+        Name = Depth Fade Distance (S)
+        Group = None
+    }
+    CollectedScalarParameters[1] =
+    {
+        Value = 1
+        Name = Emissive Adaptation Outdoor Daytime Boost (S)
+        Group = None
+    }
+    CollectedScalarParameters[2] =
+    {
+        Value = 0.838095
+        Name = Cheap contrast bright (S)
+        Group = None
+    }
+    CollectedScalarParameters[3] =
+    {
+        Value = 0.504762
+        Name = Normal Scale (S)
+        Group = None
+    }
+    CollectedScalarParameters[4] =
+    {
+        Value = 0.085714
+        Name = Center Opacity (S)
+        Group = None
+    }
+    CollectedScalarParameters[5] =
+    {
+        Value = -0.299295
+        Name = Cheap contrast dark Crackle
+        Group = None
+    }
+    CollectedScalarParameters[6] =
+    {
+        Value = 0.72381
+        Name = Cheap contrast bright Crackle
+        Group = None
+    }
+    CollectedScalarParameters[7] =
+    {
+        Value = 10
+        Name = Depth Fade In Softness (S)
+        Group = None
+    }
+    CollectedScalarParameters[8] =
+    {
+        Value = 0.2
+        Name = Center Opacity Crackle
+        Group = None
+    }
+    CollectedScalarParameters[9] =
+    {
+        Value = 1
+        Name = Refraction Alpha Crackle
+        Group = None
+    }
+    CollectedScalarParameters[10] =
+    {
+        Value = 8
+        Name = Edge Falloff Softness1 (S)
+        Group = None
+    }
+    CollectedScalarParameters[11] =
+    {
+        Value = 4
+        Name = Center Falloff Softness (S)
+        Group = None
+    }
+    CollectedScalarParameters[12] =
+    {
+        Value = 0.495238
+        Name = Refraction Index
+        Group = None
+    }
+    CollectedScalarParameters[13] = { Value=-0.036191, Name=Speed V (S), Group=None }
+    CollectedScalarParameters[14] =
+    {
+        Value = -0.78501
+        Name = Cheap contrast dark (S)
+        Group = None
+    }
+    CollectedScalarParameters[15] = { Value=0, Name=Test Dark, Group=None }
+    CollectedScalarParameters[16] =
+    {
+        Value = 1000
+        Name = Depth Fade In Distance (S)
+        Group = None
+    }
+    CollectedScalarParameters[17] = { Value=-0.02, Name=Speed U (S), Group=None }
+    CollectedScalarParameters[18] = { Value=4, Name=Tiling U (S), Group=None }
+    CollectedScalarParameters[19] = { Value=1, Name=Test Bright, Group=None }
+    CollectedScalarParameters[20] = { Value=4, Name=Tiling V (S), Group=None }
+    CollectedScalarParameters[21] = { Value=0.619047, Name=Bias (0-1) (S), Group=None }
+    CollectedScalarParameters[22] = { Value=1, Name=Refraction Alpha, Group=None }
+}
+CollectedVectorParameters[4] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0.0119356, G=0.0148437, B=0.0208333, A=0 }
+        Name = Emissive Color Crackle
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=500, G=500, B=500, A=0 }
+        Name = Normal TextureSize (V3)
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=122.091, G=60.8608, B=95.1941, A=1 }
+        Name = Normal 3D Pan Vel
+        Group = None
+    }
+    CollectedVectorParameters[3] =
+    {
+        Value = { R=0.0114583, G=0.0142501, B=0.02, A=0 }
+        Name = Emissive Color
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 4
+        UVChannelIndex = 0
+        TextureName = VFX_T_CnA_Fire3_D
+    }
+}

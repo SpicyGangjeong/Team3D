@@ -1,0 +1,173 @@
+TwoSided = true
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[3] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Dots_E.VFX_T_Dots_E'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/TEST/VFX_T_clouds_D.VFX_T_clouds_D'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/VFX_T_Dustmotes_D.VFX_T_Dustmotes_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[9] =
+                {
+                    ParameterInfos[0] = { Name=FresnelExp }
+                    ParameterInfos[1] = { Name=B_1 }
+                    ParameterInfos[2] = { Name=ExponentIn }
+                    ParameterInfos[3] = { Name=B_2 }
+                    ParameterInfos[4] = { Name=BaseReflectFractionIn }
+                    ParameterInfos[5] = { Name=Piel3 }
+                    ParameterInfos[6] = { Name=b_3 }
+                    ParameterInfos[7] = { Name=Opacity }
+                    ParameterInfos[8] = { Name=B }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[4] =
+                {
+                    ParameterInfos[0] = { Name=Param 3 }
+                    ParameterInfos[1] = { Name=Param 2 }
+                    ParameterInfos[2] = { Name=Param }
+                    ParameterInfos[3] = { Name=BaseColor }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=Texture2 }
+                    ParameterInfos[1] = { Name=Texture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[9] =
+        {
+            ScalarValues[0] = 0.5
+            ScalarValues[1] = 0.011
+            ScalarValues[2] = 0.361951
+            ScalarValues[3] = 0.3
+            ScalarValues[4] = -0.419081
+            ScalarValues[5] = 500
+            ScalarValues[6] = 0.4
+            ScalarValues[7] = 0.2
+            ScalarValues[8] = 0.1
+        }
+        VectorValues[4] =
+        {
+            VectorValues[0] = { R=20, G=30, B=0, A=1 }
+            VectorValues[1] = { R=1, G=1, B=0, A=1 }
+            VectorValues[2] = { R=1, G=1, B=0, A=1 }
+            VectorValues[3] = { R=1, G=0.992634, B=0.970537, A=0 }
+        }
+        TextureValues[2] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Dots_E.VFX_T_Dots_E'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/TEST/VFX_T_clouds_D.VFX_T_clouds_D'
+        }
+    }
+    ReferencedTextures[4] =
+    {
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/VFX_T_Dustmotes_D.VFX_T_Dustmotes_D'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/TEST/VFX_T_clouds_D.VFX_T_clouds_D'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Dots_E.VFX_T_Dots_E'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[2] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Dots_E.VFX_T_Dots_E'
+        Name = Texture2
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/TEST/VFX_T_clouds_D.VFX_T_clouds_D'
+        Name = Texture
+        Group = None
+    }
+}
+CollectedScalarParameters[9] =
+{
+    CollectedScalarParameters[0] = { Value=0.5, Name=FresnelExp, Group=None }
+    CollectedScalarParameters[1] = { Value=0.011, Name=B_1, Group=None }
+    CollectedScalarParameters[2] = { Value=0.361951, Name=ExponentIn, Group=None }
+    CollectedScalarParameters[3] = { Value=0.3, Name=B_2, Group=None }
+    CollectedScalarParameters[4] =
+    {
+        Value = -0.419081
+        Name = BaseReflectFractionIn
+        Group = None
+    }
+    CollectedScalarParameters[5] = { Value=500, Name=Piel3, Group=None }
+    CollectedScalarParameters[6] = { Value=0.4, Name=b_3, Group=None }
+    CollectedScalarParameters[7] = { Value=0.2, Name=Opacity, Group=None }
+    CollectedScalarParameters[8] = { Value=0.1, Name=B, Group=None }
+}
+CollectedVectorParameters[4] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=20, G=30, B=0, A=1 }
+        Name = Param 3
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=1, G=1, B=0, A=1 }
+        Name = Param 2
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=1, G=1, B=0, A=1 }
+        Name = Param
+        Group = None
+    }
+    CollectedVectorParameters[3] =
+    {
+        Value = { R=1, G=0.992634, B=0.970537, A=0 }
+        Name = BaseColor
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[3] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 2
+        UVChannelIndex = 0
+        TextureName = VFX_T_clouds_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 19.998
+        UVChannelIndex = 0
+        TextureName = VFX_T_Dots_E
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 150
+        UVChannelIndex = 0
+        TextureName = VFX_T_Dustmotes_D
+    }
+}

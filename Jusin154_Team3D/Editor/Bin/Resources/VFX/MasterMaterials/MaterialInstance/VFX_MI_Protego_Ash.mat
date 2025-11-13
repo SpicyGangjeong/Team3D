@@ -1,0 +1,7 @@
+Diffuse=T_Smoke_Tiled_D
+Normal=VFX_T_rock_small_tiling_N
+Emissive=VFX_T_clouds_D
+Other[0]=VFX_T_CloudyPack_D
+Other[1]=VFX_T_Noise04_D
+Other[2]=T_VolcanicAsh_D
+Other[3]=VFX_T_Embers_E

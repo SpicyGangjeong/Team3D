@@ -190,6 +190,18 @@
     <Filter Include="02.GameObjects\Dummys\DummyPhysX\PhysXObstacle">
       <UniqueIdentifier>{fbe2856d-a829-4563-a9f1-00adc4029c65}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Env\03.MapElement">
+      <UniqueIdentifier>{e6df1c15-e857-4d34-8857-e6d6f1113948}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Env\03.MapElement\Static">
+      <UniqueIdentifier>{95042c6d-04ae-46a5-9f52-0b7688c7ee4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Env\03.MapElement\Interactable">
+      <UniqueIdentifier>{dc6d3d82-0ee7-4c5f-a561-591e257b441e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummySkyBox">
+      <UniqueIdentifier>{12d17342-7cb4-46be-8243-9e1864496338}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -381,6 +393,18 @@
     <ClInclude Include="..\Public\Dummy_PhysXPlayable.h">
       <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXPlayable</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\MapElement.h">
+      <Filter>02.GameObjects\Env\03.MapElement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapElement_Static.h">
+      <Filter>02.GameObjects\Env\03.MapElement\Static</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapElement_Interactable.h">
+      <Filter>02.GameObjects\Env\03.MapElement\Interactable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\DummySkyBox.h">
+      <Filter>02.GameObjects\Dummys\DummySkyBox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -567,6 +591,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\Dummy_PhysXPlayable.cpp">
       <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXPlayable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapElement.cpp">
+      <Filter>02.GameObjects\Env\03.MapElement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapElement_Static.cpp">
+      <Filter>02.GameObjects\Env\03.MapElement\Static</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapElement_Interactable.cpp">
+      <Filter>02.GameObjects\Env\03.MapElement\Interactable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\DummySkyBox.cpp">
+      <Filter>02.GameObjects\Dummys\DummySkyBox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

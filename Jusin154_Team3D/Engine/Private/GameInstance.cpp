@@ -158,6 +158,28 @@ _int CGameInstance::Random_Int(_int iMin, _int iMax)
 	return iMin + (_int)(Random_Normal() * (iMax - iMin));
 }
 
+void CGameInstance::BillBoard(CTransform* pTransform)
+{
+	_matrix ScaleMatrix = {};
+
+	_matrix BillBoardMatrix = Get_Transform_Matrix(D3DTS::VIEW_INV);
+
+	_float3 vScale = pTransform->Get_Scale();
+
+	_vector vPosition = pTransform->Get_State(STATE::POSITION);
+
+	_matrix RotationMatrix = XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(180.f));
+
+	ScaleMatrix = XMMatrixIdentity() * XMMatrixScaling(vScale.x, vScale.y, vScale.z);
+
+	BillBoardMatrix.r[3] = vPosition;
+
+	pTransform->Set_WorldMatrix(ScaleMatrix * RotationMatrix * BillBoardMatrix);
+
+
+}
+
+
 void CGameInstance::Save_ModelFilePath(const _char* FilePath)
 {
 	m_FilePaths.push_back(FilePath);

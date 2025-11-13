@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Environment/Cairn_Dungeon/Materials/Props/MI_Cairn_Bones_A.MI_Cairn_Bones_A'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Cairn_Dungeon/Materials/Props/MI_Cairn_Bones_A.MI_Cairn_Bones_A'
+        MaterialSlotName = MI_Cairn_Bones_A
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 250.525, 114.568, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0.0313816, Y=5.65153, Z=-9.53674e-07 }
+    BoxExtent = { X=7.24797, Y=4.69337, Z=8.58719 }
+    SphereRadius = 9.67881
+}

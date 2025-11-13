@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Environment/Hogsmeade/BLDG_Honeydukes/Materials/MI_CottonCandy_Fur_A.MI_CottonCandy_Fur_A'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Hogsmeade/BLDG_Honeydukes/Materials/MI_CottonCandy_Fur_A.MI_CottonCandy_Fur_A'
+        MaterialSlotName = lambert1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 151.102, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-0.00235748, Y=-0.177771, Z=-1.31427 }
+    BoxExtent = { X=66.1667, Y=27.4986, Z=30.7464 }
+    SphereRadius = 66.1918
+}

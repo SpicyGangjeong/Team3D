@@ -1,0 +1,475 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[11] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/Environment/Azkaban/Textures/T_Azkaban_Frost_D.T_Azkaban_Frost_D'
+    ReferencedTextures[1] = Texture2D'/Game/Environment/Castle_Ruin_1/Textures/T_CastleRuins_1_wall_B_N.T_CastleRuins_1_wall_B_N'
+    ReferencedTextures[2] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Niagara/AncientMagic/IceWall/VFX_T_AncMag_Icewall_01_MSK.VFX_T_AncMag_Icewall_01_MSK'
+    ReferencedTextures[4] = Texture2D'/Game/VFX/Niagara/AncientMagic/IceWall/VFX_T_AncMag_IceWall_H.VFX_T_AncMag_IceWall_H'
+    ReferencedTextures[5] = Texture2D'/Game/VFX/Niagara/AncientMagic/IceWall/VFX_T_AncMag_IceWall_N.VFX_T_AncMag_IceWall_N'
+    ReferencedTextures[6] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_Ice_R.VFX_T_Ice_R'
+    ReferencedTextures[7] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise05_D.VFX_T_Noise05_D'
+    ReferencedTextures[8] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_LowFreq_E.VFX_T_Noise_LowFreq_E'
+    ReferencedTextures[9] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseTiled_1_D.VFX_T_NoiseTiled_1_D'
+    ReferencedTextures[10] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[70] =
+                {
+                    ParameterInfos[0] = { Name=Frost_Exp }
+                    ParameterInfos[1] = { Name=Hue Shift Percentage (S) }
+                    ParameterInfos[2] = { Name=Scale Tiling All }
+                    ParameterInfos[3] = { Name=Exp }
+                    ParameterInfos[4] = { Name=Hardness (0-1) (S) }
+                    ParameterInfos[5] = { Name=ModUV Speed V (S) }
+                    ParameterInfos[6] = { Name=B_1 }
+                    ParameterInfos[7] = { Name=Height }
+                    ParameterInfos[8] = { Name=ModUV Swizzle (S) 2 }
+                    ParameterInfos[9] = { Name=Offset U (S)_1 }
+                    ParameterInfos[10] = { Name=IceA_Tiling }
+                    ParameterInfos[11] = { Name=Tiling V (S)_1 }
+                    ParameterInfos[12] = { Name=ModUV Speed V (S) 2 }
+                    ParameterInfos[13] = { Name=Tiling U (S)_1 }
+                    ParameterInfos[14] = { Name=Intensity (S)_1 }
+                    ParameterInfos[15] = { Name=ModUV Tiling U (S) 2 }
+                    ParameterInfos[16] = { Name=Intensity (S) }
+                    ParameterInfos[17] = { Name=B_2 }
+                    ParameterInfos[18] = { Name=Emissive Exp }
+                    ParameterInfos[19] = { Name=ModUV Strength (S) }
+                    ParameterInfos[20] = { Name=Tiling U (S)_5 }
+                    ParameterInfos[21] = { Name=Exp_3 }
+                    ParameterInfos[22] = { Name=Edge Falloff (S) }
+                    ParameterInfos[23] = { Name=Speed U (S)_1 }
+                    ParameterInfos[24] = { Name=ModUV Speed U (S) }
+                    ParameterInfos[25] = { Name=Speed V (S)_1 2 }
+                    ParameterInfos[26] = { Name=Speed V (S)_1 }
+                    ParameterInfos[27] = { Name=Speed U (S)_2 }
+                    ParameterInfos[28] = { Name=Tiling U (S)_2 }
+                    ParameterInfos[29] = { Name=Hardness (0-1) (S)_1 }
+                    ParameterInfos[30] = { Name=Height 2 }
+                    ParameterInfos[31] = { Name=B_4 }
+                    ParameterInfos[32] = { Name=IceA_Tiling 2 }
+                    ParameterInfos[33] = { Name=Speed V (S) }
+                    ParameterInfos[34] = { Name=Norm2 Hardness (0-1) (S) }
+                    ParameterInfos[35] = { Name=Frost_Hardness }
+                    ParameterInfos[36] = { Name=Frost_Coverage }
+                    ParameterInfos[37] = { Name=Tiling All V }
+                    ParameterInfos[38] = { Name=ModUV Tiling U (S) }
+                    ParameterInfos[39] = { Name=ModUV Speed U (S) 2 }
+                    ParameterInfos[40] = { Name=Tiling All U }
+                    ParameterInfos[41] = { Name=Exp_1 }
+                    ParameterInfos[42] = { Name=ModUV Strength (S) 2 }
+                    ParameterInfos[43] = { Name=Speed V (S)_3 }
+                    ParameterInfos[44] = { Name=B_3 }
+                    ParameterInfos[45] = { Name=Coverage (0-1) (S) }
+                    ParameterInfos[46] = { Name=Exp_2 }
+                    ParameterInfos[47] = { Name=Speed U (S) }
+                    ParameterInfos[48] = { Name=Noise_Tiling }
+                    ParameterInfos[49] = { Name=Offset V (S)_1 }
+                    ParameterInfos[50] = { Name=Tiling U (S) }
+                    ParameterInfos[51] = { Name=Offset U (S)_5 }
+                    ParameterInfos[52] = { Name=Offset V (S) }
+                    ParameterInfos[53] = { Name=B_5 }
+                    ParameterInfos[54] = { Name=Tiling V (S)_5 }
+                    ParameterInfos[55] = { Name=Tiling V (S) }
+                    ParameterInfos[56] = { Name=EmBoost Clear }
+                    ParameterInfos[57] = { Name=Em_Noise_Tiling }
+                    ParameterInfos[58] = { Name=Speed U (S)_1 2 }
+                    ParameterInfos[59] = { Name=Coverage }
+                    ParameterInfos[60] = { Name=Offset U (S) }
+                    ParameterInfos[61] = { Name=Speed U (S)_2 2 }
+                    ParameterInfos[62] = { Name=Offset V (S)_5 }
+                    ParameterInfos[63] = { Name=EmBoost Fog }
+                    ParameterInfos[64] = { Name=FogOpacity }
+                    ParameterInfos[65] = { Name=ColorScaleInterior }
+                    ParameterInfos[66] = { Name=Speed V (S)_3 2 }
+                    ParameterInfos[67] = { Name=Norm2 Coverage (0-1) (S) }
+                    ParameterInfos[68] = { Name=Noise_Tiling 2 }
+                    ParameterInfos[69] = { Name=B }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[12] =
+                {
+                    ParameterInfos[0] = { Name=Absorption }
+                    ParameterInfos[1] = { Name=Scattering }
+                    ParameterInfos[2] = { Name=TintInterior_Fog }
+                    ParameterInfos[3] = { Name=Absorption_Fog }
+                    ParameterInfos[4] = { Name=EmCol }
+                    ParameterInfos[5] = { Name=TintInterior }
+                    ParameterInfos[6] = { Name=Bounds (V3) }
+                    ParameterInfos[7] = { Name=Param }
+                    ParameterInfos[8] = { Name=Emissive Color }
+                    ParameterInfos[9] = { Name=Scattering_Fog }
+                    ParameterInfos[10] = { Name=BoxCenter }
+                    ParameterInfos[11] = { Name=Darken Center }
+                }
+            }
+            Entries[2] = { ParameterInfos[0]={} }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[70] =
+        {
+            ScalarValues[0] = 1
+            ScalarValues[1] = -0.06
+            ScalarValues[2] = 1
+            ScalarValues[3] = 1
+            ScalarValues[4] = 0.311112
+            ScalarValues[5] = 0
+            ScalarValues[6] = 0.215873
+            ScalarValues[7] = -10
+            ScalarValues[8] = 0
+            ScalarValues[9] = 0.24127
+            ScalarValues[10] = 1.57005
+            ScalarValues[11] = 2.41229
+            ScalarValues[12] = -0.01
+            ScalarValues[13] = 1.60576
+            ScalarValues[14] = 8
+            ScalarValues[15] = 2
+            ScalarValues[16] = 10
+            ScalarValues[17] = 2
+            ScalarValues[18] = 1
+            ScalarValues[19] = 0.165
+            ScalarValues[20] = 1.14178
+            ScalarValues[21] = 2
+            ScalarValues[22] = 72.5047
+            ScalarValues[23] = 0.045397
+            ScalarValues[24] = -0.02
+            ScalarValues[25] = 0.069047
+            ScalarValues[26] = 0.100794
+            ScalarValues[27] = 0
+            ScalarValues[28] = 2.13143
+            ScalarValues[29] = 0
+            ScalarValues[30] = -10
+            ScalarValues[31] = -5
+            ScalarValues[32] = 2
+            ScalarValues[33] = 0.02
+            ScalarValues[34] = 0.260317
+            ScalarValues[35] = 0
+            ScalarValues[36] = 0
+            ScalarValues[37] = 1
+            ScalarValues[38] = 0.885714
+            ScalarValues[39] = -0.012698
+            ScalarValues[40] = 1
+            ScalarValues[41] = 3
+            ScalarValues[42] = -0.133334
+            ScalarValues[43] = -0.01
+            ScalarValues[44] = -30
+            ScalarValues[45] = 1
+            ScalarValues[46] = 2
+            ScalarValues[47] = 0.01
+            ScalarValues[48] = 2
+            ScalarValues[49] = 0
+            ScalarValues[50] = 0.733333
+            ScalarValues[51] = 0.926984
+            ScalarValues[52] = -0.590477
+            ScalarValues[53] = 0.3
+            ScalarValues[54] = 1.00159
+            ScalarValues[55] = 0.504762
+            ScalarValues[56] = 30
+            ScalarValues[57] = 0.196508
+            ScalarValues[58] = -0.011746
+            ScalarValues[59] = 1
+            ScalarValues[60] = -0.146032
+            ScalarValues[61] = 0
+            ScalarValues[62] = 0
+            ScalarValues[63] = 11
+            ScalarValues[64] = 1
+            ScalarValues[65] = 1
+            ScalarValues[66] = 0.01
+            ScalarValues[67] = 0.726984
+            ScalarValues[68] = 1
+            ScalarValues[69] = 0.193651
+        }
+        VectorValues[12] =
+        {
+            VectorValues[0] = { R=0, G=0, B=0, A=1 }
+            VectorValues[1] = { R=0.000211, G=0.000238, B=0.0003, A=1 }
+            VectorValues[2] = { R=1, G=1, B=1, A=1 }
+            VectorValues[3] = { R=0, G=0, B=0, A=1 }
+            VectorValues[4] = { R=0.352431, G=0.575957, B=1, A=1 }
+            VectorValues[5] = { R=1, G=1, B=1, A=1 }
+            VectorValues[6] = { R=200, G=517.737, B=196.896, A=0 }
+            VectorValues[7] = { R=1, G=1, B=1, A=1 }
+            VectorValues[8] = { R=0.0278792, G=0.0526147, B=0.109375, A=0 }
+            VectorValues[9] = { R=0.000211, G=0.000238, B=0.0003, A=1 }
+            VectorValues[10] = { R=0, G=0, B=200, A=1 }
+            VectorValues[11] = { R=0.05, G=0.05, B=0.05, A=1 }
+        }
+        TextureValues[0] = {}
+    }
+    ReferencedTextures[12] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Niagara/AncientMagic/IceWall/VFX_T_AncMag_IceWall_H.VFX_T_AncMag_IceWall_H'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_LowFreq_E.VFX_T_Noise_LowFreq_E'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseTiled_1_D.VFX_T_NoiseTiled_1_D'
+        ReferencedTextures[4] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+        ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+        ReferencedTextures[6] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise05_D.VFX_T_Noise05_D'
+        ReferencedTextures[7] = Texture2D'/Game/VFX/Niagara/AncientMagic/IceWall/VFX_T_AncMag_Icewall_01_MSK.VFX_T_AncMag_Icewall_01_MSK'
+        ReferencedTextures[8] = Texture2D'/Game/VFX/Niagara/AncientMagic/IceWall/VFX_T_AncMag_IceWall_N.VFX_T_AncMag_IceWall_N'
+        ReferencedTextures[9] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_Ice_R.VFX_T_Ice_R'
+        ReferencedTextures[10] = Texture2D'/Game/Environment/Castle_Ruin_1/Textures/T_CastleRuins_1_wall_B_N.T_CastleRuins_1_wall_B_N'
+        ReferencedTextures[11] = Texture2D'/Game/Environment/Azkaban/Textures/T_Azkaban_Frost_D.T_Azkaban_Frost_D'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[0] = {}
+CollectedScalarParameters[70] =
+{
+    CollectedScalarParameters[0] = { Value=1, Name=Frost_Exp, Group=None }
+    CollectedScalarParameters[1] =
+    {
+        Value = -0.06
+        Name = Hue Shift Percentage (S)
+        Group = None
+    }
+    CollectedScalarParameters[2] = { Value=1, Name=Scale Tiling All, Group=None }
+    CollectedScalarParameters[3] = { Value=1, Name=Exp, Group=None }
+    CollectedScalarParameters[4] =
+    {
+        Value = 0.311112
+        Name = Hardness (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[5] = { Value=0, Name=ModUV Speed V (S), Group=None }
+    CollectedScalarParameters[6] = { Value=0.215873, Name=B_1, Group=None }
+    CollectedScalarParameters[7] = { Value=-10, Name=Height, Group=None }
+    CollectedScalarParameters[8] = { Value=0, Name=ModUV Swizzle (S) 2, Group=None }
+    CollectedScalarParameters[9] = { Value=0.24127, Name=Offset U (S)_1, Group=None }
+    CollectedScalarParameters[10] = { Value=1.57005, Name=IceA_Tiling, Group=None }
+    CollectedScalarParameters[11] = { Value=2.41229, Name=Tiling V (S)_1, Group=None }
+    CollectedScalarParameters[12] =
+    {
+        Value = -0.01
+        Name = ModUV Speed V (S) 2
+        Group = None
+    }
+    CollectedScalarParameters[13] = { Value=1.60576, Name=Tiling U (S)_1, Group=None }
+    CollectedScalarParameters[14] = { Value=8, Name=Intensity (S)_1, Group=None }
+    CollectedScalarParameters[15] = { Value=2, Name=ModUV Tiling U (S) 2, Group=None }
+    CollectedScalarParameters[16] = { Value=10, Name=Intensity (S), Group=None }
+    CollectedScalarParameters[17] = { Value=2, Name=B_2, Group=None }
+    CollectedScalarParameters[18] = { Value=1, Name=Emissive Exp, Group=None }
+    CollectedScalarParameters[19] = { Value=0.165, Name=ModUV Strength (S), Group=None }
+    CollectedScalarParameters[20] = { Value=1.14178, Name=Tiling U (S)_5, Group=None }
+    CollectedScalarParameters[21] = { Value=2, Name=Exp_3, Group=None }
+    CollectedScalarParameters[22] = { Value=72.5047, Name=Edge Falloff (S), Group=None }
+    CollectedScalarParameters[23] = { Value=0.045397, Name=Speed U (S)_1, Group=None }
+    CollectedScalarParameters[24] = { Value=-0.02, Name=ModUV Speed U (S), Group=None }
+    CollectedScalarParameters[25] = { Value=0.069047, Name=Speed V (S)_1 2, Group=None }
+    CollectedScalarParameters[26] = { Value=0.100794, Name=Speed V (S)_1, Group=None }
+    CollectedScalarParameters[27] = { Value=0, Name=Speed U (S)_2, Group=None }
+    CollectedScalarParameters[28] = { Value=2.13143, Name=Tiling U (S)_2, Group=None }
+    CollectedScalarParameters[29] = { Value=0, Name=Hardness (0-1) (S)_1, Group=None }
+    CollectedScalarParameters[30] = { Value=-10, Name=Height 2, Group=None }
+    CollectedScalarParameters[31] = { Value=-5, Name=B_4, Group=None }
+    CollectedScalarParameters[32] = { Value=2, Name=IceA_Tiling 2, Group=None }
+    CollectedScalarParameters[33] = { Value=0.02, Name=Speed V (S), Group=None }
+    CollectedScalarParameters[34] =
+    {
+        Value = 0.260317
+        Name = Norm2 Hardness (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[35] = { Value=0, Name=Frost_Hardness, Group=None }
+    CollectedScalarParameters[36] = { Value=0, Name=Frost_Coverage, Group=None }
+    CollectedScalarParameters[37] = { Value=1, Name=Tiling All V, Group=None }
+    CollectedScalarParameters[38] =
+    {
+        Value = 0.885714
+        Name = ModUV Tiling U (S)
+        Group = None
+    }
+    CollectedScalarParameters[39] =
+    {
+        Value = -0.012698
+        Name = ModUV Speed U (S) 2
+        Group = None
+    }
+    CollectedScalarParameters[40] = { Value=1, Name=Tiling All U, Group=None }
+    CollectedScalarParameters[41] = { Value=3, Name=Exp_1, Group=None }
+    CollectedScalarParameters[42] =
+    {
+        Value = -0.133334
+        Name = ModUV Strength (S) 2
+        Group = None
+    }
+    CollectedScalarParameters[43] = { Value=-0.01, Name=Speed V (S)_3, Group=None }
+    CollectedScalarParameters[44] = { Value=-30, Name=B_3, Group=None }
+    CollectedScalarParameters[45] = { Value=1, Name=Coverage (0-1) (S), Group=None }
+    CollectedScalarParameters[46] = { Value=2, Name=Exp_2, Group=None }
+    CollectedScalarParameters[47] = { Value=0.01, Name=Speed U (S), Group=None }
+    CollectedScalarParameters[48] = { Value=2, Name=Noise_Tiling, Group=None }
+    CollectedScalarParameters[49] = { Value=0, Name=Offset V (S)_1, Group=None }
+    CollectedScalarParameters[50] = { Value=0.733333, Name=Tiling U (S), Group=None }
+    CollectedScalarParameters[51] = { Value=0.926984, Name=Offset U (S)_5, Group=None }
+    CollectedScalarParameters[52] = { Value=-0.590477, Name=Offset V (S), Group=None }
+    CollectedScalarParameters[53] = { Value=0.3, Name=B_5, Group=None }
+    CollectedScalarParameters[54] = { Value=1.00159, Name=Tiling V (S)_5, Group=None }
+    CollectedScalarParameters[55] = { Value=0.504762, Name=Tiling V (S), Group=None }
+    CollectedScalarParameters[56] = { Value=30, Name=EmBoost Clear, Group=None }
+    CollectedScalarParameters[57] = { Value=0.196508, Name=Em_Noise_Tiling, Group=None }
+    CollectedScalarParameters[58] =
+    {
+        Value = -0.011746
+        Name = Speed U (S)_1 2
+        Group = None
+    }
+    CollectedScalarParameters[59] = { Value=1, Name=Coverage, Group=None }
+    CollectedScalarParameters[60] = { Value=-0.146032, Name=Offset U (S), Group=None }
+    CollectedScalarParameters[61] = { Value=0, Name=Speed U (S)_2 2, Group=None }
+    CollectedScalarParameters[62] = { Value=0, Name=Offset V (S)_5, Group=None }
+    CollectedScalarParameters[63] = { Value=11, Name=EmBoost Fog, Group=None }
+    CollectedScalarParameters[64] = { Value=1, Name=FogOpacity, Group=None }
+    CollectedScalarParameters[65] = { Value=1, Name=ColorScaleInterior, Group=None }
+    CollectedScalarParameters[66] = { Value=0.01, Name=Speed V (S)_3 2, Group=None }
+    CollectedScalarParameters[67] =
+    {
+        Value = 0.726984
+        Name = Norm2 Coverage (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[68] = { Value=1, Name=Noise_Tiling 2, Group=None }
+    CollectedScalarParameters[69] = { Value=0.193651, Name=B, Group=None }
+}
+CollectedVectorParameters[12] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = Absorption
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0.000211, G=0.000238, B=0.0003, A=1 }
+        Name = Scattering
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=1, G=1, B=1, A=1 }
+        Name = TintInterior_Fog
+        Group = None
+    }
+    CollectedVectorParameters[3] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = Absorption_Fog
+        Group = None
+    }
+    CollectedVectorParameters[4] =
+    {
+        Value = { R=0.352431, G=0.575957, B=1, A=1 }
+        Name = EmCol
+        Group = None
+    }
+    CollectedVectorParameters[5] =
+    {
+        Value = { R=1, G=1, B=1, A=1 }
+        Name = TintInterior
+        Group = None
+    }
+    CollectedVectorParameters[6] =
+    {
+        Value = { R=200, G=517.737, B=196.896, A=0 }
+        Name = Bounds (V3)
+        Group = None
+    }
+    CollectedVectorParameters[7] =
+    {
+        Value = { R=1, G=1, B=1, A=1 }
+        Name = Param
+        Group = None
+    }
+    CollectedVectorParameters[8] =
+    {
+        Value = { R=0.0278792, G=0.0526147, B=0.109375, A=0 }
+        Name = Emissive Color
+        Group = None
+    }
+    CollectedVectorParameters[9] =
+    {
+        Value = { R=0.000211, G=0.000238, B=0.0003, A=1 }
+        Name = Scattering_Fog
+        Group = None
+    }
+    CollectedVectorParameters[10] =
+    {
+        Value = { R=0, G=0, B=200, A=1 }
+        Name = BoxCenter
+        Group = None
+    }
+    CollectedVectorParameters[11] =
+    {
+        Value = { R=0.05, G=0.05, B=0.05, A=1 }
+        Name = Darken Center
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[7] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 2.125
+        UVChannelIndex = 0
+        TextureName = T_Azkaban_Frost_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 0.5
+        UVChannelIndex = 0
+        TextureName = VFX_T_AncMag_Icewall_01_MSK
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1.60938
+        UVChannelIndex = 0
+        TextureName = VFX_T_AncMag_IceWall_N
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Ice_R
+    }
+    TextureStreamingData[4] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Noise_LowFreq_E
+    }
+    TextureStreamingData[5] =
+    {
+        SamplingScale = 0.203125
+        UVChannelIndex = 0
+        TextureName = VFX_T_NoiseTiled_1_D
+    }
+    TextureStreamingData[6] =
+    {
+        SamplingScale = 0.890625
+        UVChannelIndex = 0
+        TextureName = VFX_T_RibbonOffset_N
+    }
+}

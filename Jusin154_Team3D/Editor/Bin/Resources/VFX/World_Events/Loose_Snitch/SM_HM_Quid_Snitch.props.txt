@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Environment/Hogsmeade/Common/Materials/MiscDecorations/MI_HM_Quid_Cage_Snitch.MI_HM_Quid_Cage_Snitch'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Hogsmeade/Common/Materials/MiscDecorations/MI_HM_Quid_Cage_Snitch.MI_HM_Quid_Cage_Snitch'
+        MaterialSlotName = MI_HM_Quid_Cage_Snitch
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 47.2709, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0.0912895, Y=-0.0414772, Z=2.22367 }
+    BoxExtent = { X=2.22763, Y=2.22272, Z=2.22367 }
+    SphereRadius = 2.23095
+}

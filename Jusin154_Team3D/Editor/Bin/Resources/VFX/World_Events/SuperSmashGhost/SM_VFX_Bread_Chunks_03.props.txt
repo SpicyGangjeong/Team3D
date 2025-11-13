@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Cinematics/Props/Materials/MI_CCL_Food_Bread.MI_CCL_Food_Bread'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Cinematics/Props/Materials/MI_CCL_Food_Bread.MI_CCL_Food_Bread'
+        MaterialSlotName = MI_CCL_Food_Bread
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 48.9149, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=0, Z=0 }
+    BoxExtent = { X=1.70283, Y=2.547, Z=1.5537 }
+    SphereRadius = 3.05189
+}

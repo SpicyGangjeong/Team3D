@@ -1,0 +1,38 @@
+Materials[2] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Gameplay/InventoryObjects/Potions/Materials/MI_Potion_Essence_of_Dittany_Glass.MI_Potion_Essence_of_Dittany_Glass'
+    Materials[1] = MaterialInstanceConstant'/Game/Gameplay/InventoryObjects/Potions/Materials/MI_Potion_Essence_of_Dittany.MI_Potion_Essence_of_Dittany'
+}
+SourceModels[0] = {}
+StaticMaterials[2] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Gameplay/InventoryObjects/Potions/Materials/MI_Potion_Essence_of_Dittany_Glass.MI_Potion_Essence_of_Dittany_Glass'
+        MaterialSlotName = MI_Potion_Essence_of_Dittany_Glass
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 26.1215, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Gameplay/InventoryObjects/Potions/Materials/MI_Potion_Essence_of_Dittany.MI_Potion_Essence_of_Dittany'
+        MaterialSlotName = MI_Potion_Essence_of_Dittany
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 22.592, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0.00422955, Y=-1.19209e-06, Z=-5.0697 }
+    BoxExtent = { X=9.72213, Y=3.74145, Z=10.8803 }
+    SphereRadius = 12.8315
+}

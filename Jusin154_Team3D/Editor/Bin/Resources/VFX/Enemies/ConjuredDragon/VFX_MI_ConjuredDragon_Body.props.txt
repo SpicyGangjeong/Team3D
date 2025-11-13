@@ -1,0 +1,226 @@
+Parent = Material3'/Game/VFX/Enemies/ConjuredDragon/VFX_MM_ConjuredDragon.VFX_MM_ConjuredDragon'
+ScalarParameterValues[12] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=Diffuse Brightness }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[1] =
+    {
+        ParameterInfo = { Name=EmStrength_Powerful }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[2] =
+    {
+        ParameterInfo = { Name=debugBlendScalar }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[3] =
+    {
+        ParameterInfo = { Name=Intensity (S) B }
+        ParameterValue = 0.4
+        ParameterName = None
+    }
+    ScalarParameterValues[4] =
+    {
+        ParameterInfo = { Name=Metallic_Ethereal }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[5] =
+    {
+        ParameterInfo = { Name=Roughness_Ethereal }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[6] =
+    {
+        ParameterInfo = { Name=SolidEmStrength }
+        ParameterValue = 3.24
+        ParameterName = None
+    }
+    ScalarParameterValues[7] =
+    {
+        ParameterInfo = { Name=Tiling U (S) }
+        ParameterValue = 12
+        ParameterName = None
+    }
+    ScalarParameterValues[8] =
+    {
+        ParameterInfo = { Name=weakChestEmissivMaskPower }
+        ParameterValue = 50
+        ParameterName = None
+    }
+    ScalarParameterValues[9] =
+    {
+        ParameterInfo = { Name=woundIntensity }
+        ParameterValue = 509.375
+        ParameterName = None
+    }
+    ScalarParameterValues[10] =
+    {
+        ParameterInfo = { Name=woundPower }
+        ParameterValue = 5
+        ParameterName = None
+    }
+    ScalarParameterValues[11] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[4] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=Mask }
+        ParameterValue = Texture2D'/Game/RiggedObjects/Characters/Creatures/Dragons/ConjuredDragon/Textures/T_ConjuredDragon_Body_MSK.T_ConjuredDragon_Body_MSK'
+        ParameterName = None
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=Diffuse Map }
+        ParameterValue = Texture2D'/Game/RiggedObjects/Characters/Creatures/Dragons/ConjuredDragon/Textures/T_ConjuredDragon_Body_D.T_ConjuredDragon_Body_D'
+        ParameterName = None
+    }
+    TextureParameterValues[2] =
+    {
+        ParameterInfo = { Name=MRO Map }
+        ParameterValue = Texture2D'/Game/RiggedObjects/Characters/Creatures/Dragons/ConjuredDragon/Textures/T_ConjuredDragon_Body_MRO.T_ConjuredDragon_Body_MRO'
+        ParameterName = None
+    }
+    TextureParameterValues[3] =
+    {
+        ParameterInfo = { Name=Normal Map }
+        ParameterValue = Texture2D'/Game/RiggedObjects/Characters/Creatures/Dragons/ConjuredDragon/Textures/T_ConjuredDragon_Body_N.T_ConjuredDragon_Body_N'
+        ParameterName = None
+    }
+}
+VectorParameterValues[5] =
+{
+    VectorParameterValues[0] =
+    {
+        ParameterInfo = { Name=BaseColor_Ethereal }
+        ParameterValue = { R=0.427083, G=0, B=0.010455, A=1 }
+        ParameterName = None
+    }
+    VectorParameterValues[1] =
+    {
+        ParameterInfo = { Name=energyColor }
+        ParameterValue = { R=1, G=0, B=0.013355, A=1 }
+        ParameterName = None
+    }
+    VectorParameterValues[2] =
+    {
+        ParameterInfo = { Name=powerfulBonesBaseColor }
+        ParameterValue = { R=0.041667, G=0.000535, B=0, A=1 }
+        ParameterName = None
+    }
+    VectorParameterValues[3] =
+    {
+        ParameterInfo = { Name=SolidEmColor }
+        ParameterValue = { R=1, G=0, B=0, A=1 }
+        ParameterName = None
+    }
+    VectorParameterValues[4] =
+    {
+        ParameterInfo = { Name=woundColor }
+        ParameterValue = { R=1, G=0, B=0.033333, A=1 }
+        ParameterName = None
+    }
+}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Masked (1)
+    bOverride_TwoSided = false
+    TwoSided = true
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[1] =
+    {
+        StaticSwitchParameters[0] =
+        {
+            Value = true
+            ParameterInfo = { Name=UseSphereMask }
+            bOverride = true
+        }
+    }
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[9] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 12
+        UVChannelIndex = 0
+        TextureName = T_CastleDun_RockDetail_N
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_ConjuredDragon_Body_D
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_ConjuredDragon_Body_MRO
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_ConjuredDragon_Body_N
+    }
+    TextureStreamingData[4] =
+    {
+        SamplingScale = 15
+        UVChannelIndex = 0
+        TextureName = T_Distortion_Wave_A
+    }
+    TextureStreamingData[5] =
+    {
+        SamplingScale = 5
+        UVChannelIndex = 0
+        TextureName = T_WaterCaustics_Disorder_A
+    }
+    TextureStreamingData[6] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_CausticNoise_C_Seamless_D
+    }
+    TextureStreamingData[7] =
+    {
+        SamplingScale = 12
+        UVChannelIndex = 0
+        TextureName = VFX_T_DistortionNoise_N
+    }
+    TextureStreamingData[8] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Noise_Corruption_E
+    }
+}

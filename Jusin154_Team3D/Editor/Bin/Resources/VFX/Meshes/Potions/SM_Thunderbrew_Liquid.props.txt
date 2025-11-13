@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Gameplay/InventoryObjects/Potions/Materials/MI_Potion_Essence_of_Dittany.MI_Potion_Essence_of_Dittany'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Gameplay/InventoryObjects/Potions/Materials/MI_Potion_Essence_of_Dittany.MI_Potion_Essence_of_Dittany'
+        MaterialSlotName = MI_Potion_Essence_of_Dittany
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 56.5865, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-2.09808e-05, Y=3.57628e-06, Z=-5.68441 }
+    BoxExtent = { X=9.09996, Y=3.09358, Z=9.83939 }
+    SphereRadius = 11.9421
+}

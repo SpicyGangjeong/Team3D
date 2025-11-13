@@ -1,0 +1,8 @@
+Diffuse=VFX_T_AMFireball02Impact01_Decal_D
+Normal=VFX_T_AMFireball02Impact01_Decal_N
+Emissive=VFX_T_AMFireball02Impact01_Decal_DSP
+Other[0]=VFX_T_AMFireball02Impact01_Decal_MRHE_D
+Other[1]=VFX_T_LavaDecal_D
+Other[2]=VFX_T_LavaDecal_MRHE_D
+Other[3]=VFX_T_LavaDecal_N
+Other[4]=T_VolcanicAshall_DSP

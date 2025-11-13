@@ -1,0 +1,6 @@
+Diffuse=VFX_T_FlameBasic_D
+Normal=T_waterSplashA_N
+Other[0]=VFX_T_FlameNoise_E
+Other[1]=VFX_T_Noise_Soft_D
+Other[2]=VFX_T_Noise_Low_Packed_D
+Other[3]=VFX_T_NoiseCaustics01_Color_D

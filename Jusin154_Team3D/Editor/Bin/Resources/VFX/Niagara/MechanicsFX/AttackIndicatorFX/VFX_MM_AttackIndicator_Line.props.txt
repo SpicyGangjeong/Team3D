@@ -1,0 +1,115 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[2] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Goo_Noise_N.VFX_T_Goo_Noise_N'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_MarbleSkin_01_BPF_D.VFX_T_MarbleSkin_01_BPF_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[7] =
+                {
+                    ParameterInfos[0] = { Name=SpeedX }
+                    ParameterInfos[1] = { Name=BoostFadeDistance }
+                    ParameterInfos[2] = { Name=DistSpeedY }
+                    ParameterInfos[3] = { Name=DistSpeedX }
+                    ParameterInfos[4] = { Name=DistMult }
+                    ParameterInfos[5] = { Name=EdgePower }
+                    ParameterInfos[6] = { Name=SpeedY }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Texturetiling }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=Distortion }
+                    ParameterInfos[1] = { Name=Texture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[7] = { -0.2, 100, 0, -0.05, 0.3, 1, 0.25 }
+        VectorValues[1] =
+        {
+            VectorValues[0] = { R=1, G=0.5, B=0.2, A=0.15 }
+        }
+        TextureValues[2] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Goo_Noise_N.VFX_T_Goo_Noise_N'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_MarbleSkin_01_BPF_D.VFX_T_MarbleSkin_01_BPF_D'
+        }
+    }
+    ReferencedTextures[3] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_MarbleSkin_01_BPF_D.VFX_T_MarbleSkin_01_BPF_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Goo_Noise_N.VFX_T_Goo_Noise_N'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[2] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Goo_Noise_N.VFX_T_Goo_Noise_N'
+        Name = Distortion
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_MarbleSkin_01_BPF_D.VFX_T_MarbleSkin_01_BPF_D'
+        Name = Texture
+        Group = None
+    }
+}
+CollectedScalarParameters[7] =
+{
+    CollectedScalarParameters[0] = { Value=-0.2, Name=SpeedX, Group=None }
+    CollectedScalarParameters[1] = { Value=100, Name=BoostFadeDistance, Group=None }
+    CollectedScalarParameters[2] = { Value=0, Name=DistSpeedY, Group=None }
+    CollectedScalarParameters[3] = { Value=-0.05, Name=DistSpeedX, Group=None }
+    CollectedScalarParameters[4] = { Value=0.3, Name=DistMult, Group=None }
+    CollectedScalarParameters[5] = { Value=1, Name=EdgePower, Group=None }
+    CollectedScalarParameters[6] = { Value=0.25, Name=SpeedY, Group=None }
+}
+CollectedVectorParameters[1] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=1, G=0.5, B=0.2, A=0.15 }
+        Name = Texturetiling
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 0.15625
+        UVChannelIndex = 0
+        TextureName = VFX_T_Goo_Noise_N
+    }
+}

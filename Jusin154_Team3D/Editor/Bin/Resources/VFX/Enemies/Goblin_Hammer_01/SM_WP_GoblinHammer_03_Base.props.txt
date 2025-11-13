@@ -1,0 +1,38 @@
+Materials[2] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Enemies/Goblin_Sword_01/M_Goblin_Goblin_BattleAxe_Glow_Core_Base.M_Goblin_Goblin_BattleAxe_Glow_Core_Base'
+    Materials[1] = MaterialInstanceConstant'/Game/VFX/Enemies/Goblin_Hammer_01/MI_FX_GoblinHammer_3_Glow_Blade_Zero.MI_FX_GoblinHammer_3_Glow_Blade_Zero'
+}
+SourceModels[0] = {}
+StaticMaterials[2] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Enemies/Goblin_Sword_01/M_Goblin_Goblin_BattleAxe_Glow_Core_Base.M_Goblin_Goblin_BattleAxe_Glow_Core_Base'
+        MaterialSlotName = blinn2
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 22.1228, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Enemies/Goblin_Hammer_01/MI_FX_GoblinHammer_3_Glow_Blade_Zero.MI_FX_GoblinHammer_3_Glow_Blade_Zero'
+        MaterialSlotName = blinn1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 11.7617, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-0.00480652, Y=6.19888e-05, Z=85.7818 }
+    BoxExtent = { X=28.2088, Y=14.7788, Z=14.1604 }
+    SphereRadius = 34.8399
+}

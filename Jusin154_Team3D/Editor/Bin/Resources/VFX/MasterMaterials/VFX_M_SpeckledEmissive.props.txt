@@ -1,0 +1,108 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[7] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/BlendFunc_DefBase.BlendFunc_DefBase'
+    ReferencedTextures[1] = Texture2D'/Engine/EngineMaterials/BlendFunc_DefBlend.BlendFunc_DefBlend'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Flipbooks/VFX_T_Whisp_One_512_8x8_D.VFX_T_Whisp_One_512_8x8_D'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Flipbooks/VFX_T_whisp_One_512_8x8_N.VFX_T_whisp_One_512_8x8_N'
+    ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/TEST/VFX_T_Speckled_tile_2_D.VFX_T_Speckled_tile_2_D'
+    ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/VFX_T_Noise_Anisotropic2_height_D.VFX_T_Noise_Anisotropic2_height_D'
+    ReferencedTextures[6] = Texture2D'/Game/VFX/Textures/VFX_T_Speckled_tile_D.VFX_T_Speckled_tile_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[5] =
+                {
+                    ParameterInfos[0] = { Name=MasterOpacity }
+                    ParameterInfos[1] = { Name=Fade Distance }
+                    ParameterInfos[2] = { Name=Param }
+                    ParameterInfos[3] = { Name=sparkle }
+                    ParameterInfos[4] = { Name=Opacity }
+                }
+            }
+            Entries[1] = { ParameterInfos[0]={} }
+            Entries[2] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Base }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[5] = { 1, 100, 0, 200, 1 }
+        VectorValues[0] = {}
+        TextureValues[1] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Flipbooks/VFX_T_Whisp_One_512_8x8_D.VFX_T_Whisp_One_512_8x8_D'
+        }
+    }
+    ReferencedTextures[7] =
+    {
+        ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/BlendFunc_DefBase.BlendFunc_DefBase'
+        ReferencedTextures[1] = Texture2D'/Engine/EngineMaterials/BlendFunc_DefBlend.BlendFunc_DefBlend'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Flipbooks/VFX_T_Whisp_One_512_8x8_D.VFX_T_Whisp_One_512_8x8_D'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Flipbooks/VFX_T_whisp_One_512_8x8_N.VFX_T_whisp_One_512_8x8_N'
+        ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/TEST/VFX_T_Speckled_tile_2_D.VFX_T_Speckled_tile_2_D'
+        ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/VFX_T_Speckled_tile_D.VFX_T_Speckled_tile_D'
+        ReferencedTextures[6] = Texture2D'/Game/VFX/Textures/VFX_T_Noise_Anisotropic2_height_D.VFX_T_Noise_Anisotropic2_height_D'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[1] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Flipbooks/VFX_T_Whisp_One_512_8x8_D.VFX_T_Whisp_One_512_8x8_D'
+        Name = Base
+        Group = None
+    }
+}
+CollectedScalarParameters[5] =
+{
+    CollectedScalarParameters[0] = { Value=1, Name=MasterOpacity, Group=None }
+    CollectedScalarParameters[1] = { Value=100, Name=Fade Distance, Group=None }
+    CollectedScalarParameters[2] = { Value=0, Name=Param, Group=None }
+    CollectedScalarParameters[3] = { Value=200, Name=sparkle, Group=None }
+    CollectedScalarParameters[4] = { Value=1, Name=Opacity, Group=None }
+}
+CollectedVectorParameters[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[3] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Noise_Anisotropic2_height_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 7
+        UVChannelIndex = 0
+        TextureName = VFX_T_Speckled_tile_D
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Whisp_One_512_8x8_D
+    }
+}

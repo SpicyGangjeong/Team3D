@@ -1,0 +1,109 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[2] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_Intruding_ScreenFX_Fade_D.VFX_T_Intruding_ScreenFX_Fade_D'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/VFX_T_Noise_Anisotropic2_height_N.VFX_T_Noise_Anisotropic2_height_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[8] =
+                {
+                    ParameterInfos[0] = { Name=Outward Pan }
+                    ParameterInfos[1] = { Name=Distortion_Animate }
+                    ParameterInfos[2] = { Name=ShrinkFlare }
+                    ParameterInfos[3] = { Name=Rotation Pan }
+                    ParameterInfos[4] = { Name=Distortion Power }
+                    ParameterInfos[5] = { Name=Tile U }
+                    ParameterInfos[6] = { Name=Tile V }
+                    ParameterInfos[7] = { Name=Mask Bias }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Mask Channels }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=Mask Texture }
+                    ParameterInfos[1] = { Name=Distortion Noise }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[8] = { 0.25, 1, 1, 0, 2, 1, 0.3, 0.5 }
+        VectorValues[1] =
+        {
+            VectorValues[0] = { R=0.3, G=0.4, B=0.3, A=0 }
+        }
+        TextureValues[2] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_Intruding_ScreenFX_Fade_D.VFX_T_Intruding_ScreenFX_Fade_D'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/VFX_T_Noise_Anisotropic2_height_N.VFX_T_Noise_Anisotropic2_height_N'
+        }
+    }
+    ReferencedTextures[2] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_Intruding_ScreenFX_Fade_D.VFX_T_Intruding_ScreenFX_Fade_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/VFX_T_Noise_Anisotropic2_height_N.VFX_T_Noise_Anisotropic2_height_N'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[2] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_Intruding_ScreenFX_Fade_D.VFX_T_Intruding_ScreenFX_Fade_D'
+        Name = Mask Texture
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_Noise_Anisotropic2_height_N.VFX_T_Noise_Anisotropic2_height_N'
+        Name = Distortion Noise
+        Group = None
+    }
+}
+CollectedScalarParameters[8] =
+{
+    CollectedScalarParameters[0] = { Value=0.25, Name=Outward Pan, Group=None }
+    CollectedScalarParameters[1] = { Value=1, Name=Distortion_Animate, Group=None }
+    CollectedScalarParameters[2] = { Value=1, Name=ShrinkFlare, Group=None }
+    CollectedScalarParameters[3] = { Value=0, Name=Rotation Pan, Group=None }
+    CollectedScalarParameters[4] = { Value=2, Name=Distortion Power, Group=None }
+    CollectedScalarParameters[5] = { Value=1, Name=Tile U, Group=None }
+    CollectedScalarParameters[6] = { Value=0.3, Name=Tile V, Group=None }
+    CollectedScalarParameters[7] = { Value=0.5, Name=Mask Bias, Group=None }
+}
+CollectedVectorParameters[1] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0.3, G=0.4, B=0.3, A=0 }
+        Name = Mask Channels
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

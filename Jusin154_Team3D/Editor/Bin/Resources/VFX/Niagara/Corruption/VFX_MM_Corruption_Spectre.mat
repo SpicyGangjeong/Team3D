@@ -1,0 +1,11 @@
+Normal=BaseFlattenNormalMap
+SpecPower=VFX_T_Corrupt_Goblin_Spectre_E
+Emissive=VFX_T_Corrupt_Goblin_Spectre_E
+Other[0]=DefaultDiffuse
+Other[1]=DefaultNormal_Uncompressed
+Other[2]=VFX_T_Gob_AO
+Other[3]=VFX_T_Gob_N
+Other[4]=VFX_T_Gob_R
+Other[5]=VFX_T_Cloud_Noise_Tile_N
+Other[6]=VFX_T_Noise_Corruption_E
+Other[7]=VFX_T_RibbonOffset_N

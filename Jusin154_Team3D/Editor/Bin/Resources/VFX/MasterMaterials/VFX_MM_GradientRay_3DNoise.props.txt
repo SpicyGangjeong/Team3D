@@ -1,0 +1,125 @@
+TwoSided = true
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[2] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise04_D.VFX_T_Noise04_D'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[14] =
+                {
+                    ParameterInfos[0] = { Name=Center U }
+                    ParameterInfos[1] = { Name=Width U }
+                    ParameterInfos[2] = { Name=Center V }
+                    ParameterInfos[3] = { Name=Noise Fallof Exponent }
+                    ParameterInfos[4] = { Name=Width V }
+                    ParameterInfos[5] = { Name=FadeDistance }
+                    ParameterInfos[6] = { Name=Speed V (S) }
+                    ParameterInfos[7] = { Name=Softness }
+                    ParameterInfos[8] = { Name=Test Dark }
+                    ParameterInfos[9] = { Name=Speed U (S) }
+                    ParameterInfos[10] = { Name=Tiling U (S) }
+                    ParameterInfos[11] = { Name=Test Bright }
+                    ParameterInfos[12] = { Name=Tiling V (S) }
+                    ParameterInfos[13] = { Name=Falloff Exponent }
+                }
+            }
+            Entries[1] = { ParameterInfos[0]={} }
+            Entries[2] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=EmissiveTexture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[14] =
+        {
+            ScalarValues[0] = 0.5
+            ScalarValues[1] = 0.352383
+            ScalarValues[2] = 0.533333
+            ScalarValues[3] = 1.58483
+            ScalarValues[4] = 0
+            ScalarValues[5] = 58.42
+            ScalarValues[6] = -0.857142
+            ScalarValues[7] = 3.93896
+            ScalarValues[8] = 0
+            ScalarValues[9] = 0.952381
+            ScalarValues[10] = 2.14286
+            ScalarValues[11] = 1
+            ScalarValues[12] = 0.285714
+            ScalarValues[13] = 6.41085
+        }
+        VectorValues[0] = {}
+        TextureValues[1] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise04_D.VFX_T_Noise04_D'
+        }
+    }
+    ReferencedTextures[2] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise04_D.VFX_T_Noise04_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+    }
+}
+BlendMode = BLEND_Additive (3)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[1] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise04_D.VFX_T_Noise04_D'
+        Name = EmissiveTexture
+        Group = None
+    }
+}
+CollectedScalarParameters[14] =
+{
+    CollectedScalarParameters[0] = { Value=0.5, Name=Center U, Group=None }
+    CollectedScalarParameters[1] = { Value=0.352383, Name=Width U, Group=None }
+    CollectedScalarParameters[2] = { Value=0.533333, Name=Center V, Group=None }
+    CollectedScalarParameters[3] =
+    {
+        Value = 1.58483
+        Name = Noise Fallof Exponent
+        Group = None
+    }
+    CollectedScalarParameters[4] = { Value=0, Name=Width V, Group=None }
+    CollectedScalarParameters[5] = { Value=58.42, Name=FadeDistance, Group=None }
+    CollectedScalarParameters[6] = { Value=-0.857142, Name=Speed V (S), Group=None }
+    CollectedScalarParameters[7] = { Value=3.93896, Name=Softness, Group=None }
+    CollectedScalarParameters[8] = { Value=0, Name=Test Dark, Group=None }
+    CollectedScalarParameters[9] = { Value=0.952381, Name=Speed U (S), Group=None }
+    CollectedScalarParameters[10] = { Value=2.14286, Name=Tiling U (S), Group=None }
+    CollectedScalarParameters[11] = { Value=1, Name=Test Bright, Group=None }
+    CollectedScalarParameters[12] = { Value=0.285714, Name=Tiling V (S), Group=None }
+    CollectedScalarParameters[13] = { Value=6.41085, Name=Falloff Exponent, Group=None }
+}
+CollectedVectorParameters[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 0.28125
+        UVChannelIndex = 0
+        TextureName = VFX_T_Noise04_D
+    }
+}

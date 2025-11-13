@@ -1,0 +1,288 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[8] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_Soft_D.VFX_T_Noise_Soft_D'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseGreypack01_D.VFX_T_NoiseGreypack01_D'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/VFX_T_Char_01_D.VFX_T_Char_01_D'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/VFX_T_Char_01_N.VFX_T_Char_01_N'
+    ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/VFX_T_Inky_Smoke_D.VFX_T_Inky_Smoke_D'
+    ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/VFX_T_SkinBurn_Alpha_D.VFX_T_SkinBurn_Alpha_D'
+    ReferencedTextures[6] = Texture2D'/Game/VFX/Textures/VFX_T_SkinBurn_Emiss_BPF_D.VFX_T_SkinBurn_Emiss_BPF_D'
+    ReferencedTextures[7] = Texture2D'/Game/VFX/Textures/VFX_T_SkinBurn_Emiss_D.VFX_T_SkinBurn_Emiss_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[27] =
+                {
+                    ParameterInfos[0] = { Name=Black Point Intensity (S) }
+                    ParameterInfos[1] = { Name=Alpha Erosion Multiplier }
+                    ParameterInfos[2] = { Name=Noise2_Horo_Speed }
+                    ParameterInfos[3] = { Name=Noise1_Vert_Speed }
+                    ParameterInfos[4] = { Name=Speed U (S) Emmis }
+                    ParameterInfos[5] = { Name=Fader }
+                    ParameterInfos[6] = { Name=Emissive Opacity }
+                    ParameterInfos[7] = { Name=Softness (S) }
+                    ParameterInfos[8] = { Name=Noise2_Vert_Speed }
+                    ParameterInfos[9] = { Name=LightingPanner }
+                    ParameterInfos[10] = { Name=Tiling U - HT }
+                    ParameterInfos[11] = { Name=Tiling U (S)Coal }
+                    ParameterInfos[12] = { Name=Height Scale (S) }
+                    ParameterInfos[13] = { Name=Fade Bias (S) }
+                    ParameterInfos[14] = { Name=Tiling U (S) Emmis }
+                    ParameterInfos[15] = { Name=Tiling V (S)Coal }
+                    ParameterInfos[16] = { Name=Tiling V - HT }
+                    ParameterInfos[17] = { Name=Alpha_Errosion_Amount }
+                    ParameterInfos[18] = { Name=Speed V (S) Emmis }
+                    ParameterInfos[19] = { Name=Tiling V (S) Emmis }
+                    ParameterInfos[20] = { Name=NoiseStrenght }
+                    ParameterInfos[21] = { Name=NoiseSizeMultiplyer }
+                    ParameterInfos[22] = { Name=Noise1_Horo_Speed }
+                    ParameterInfos[23] = { Name=Speed U - HT }
+                    ParameterInfos[24] = { Name=Speed V - HT }
+                    ParameterInfos[25] = { Name=Speed V (S)Coal }
+                    ParameterInfos[26] = { Name=Speed U (S)Coal }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[3] =
+                {
+                    ParameterInfos[0] = { Name=Base Color Modifier }
+                    ParameterInfos[1] = { Name=Cooling Color }
+                    ParameterInfos[2] = { Name=Hot Color }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[8] =
+                {
+                    ParameterInfos[0] = { Name=Emissive }
+                    ParameterInfos[1] = { Name=Normal }
+                    ParameterInfos[2] = { Name=Emissive Mask }
+                    ParameterInfos[3] = { Name=Black Point }
+                    ParameterInfos[4] = { Name=AlphaMask }
+                    ParameterInfos[5] = { Name=Heat Temp anim B }
+                    ParameterInfos[6] = { Name=Alpha Errosion Texture }
+                    ParameterInfos[7] = { Name=Decal Shape }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[27] =
+        {
+            ScalarValues[0] = 1
+            ScalarValues[1] = 1
+            ScalarValues[2] = 0
+            ScalarValues[3] = 0
+            ScalarValues[4] = 0
+            ScalarValues[5] = 0.25
+            ScalarValues[6] = 1
+            ScalarValues[7] = 0.5
+            ScalarValues[8] = 0
+            ScalarValues[9] = -0.15
+            ScalarValues[10] = 1
+            ScalarValues[11] = 1
+            ScalarValues[12] = -1
+            ScalarValues[13] = 5
+            ScalarValues[14] = 1
+            ScalarValues[15] = 1
+            ScalarValues[16] = 1
+            ScalarValues[17] = 0
+            ScalarValues[18] = 0
+            ScalarValues[19] = 1
+            ScalarValues[20] = 0.15
+            ScalarValues[21] = 1
+            ScalarValues[22] = 0
+            ScalarValues[23] = 0
+            ScalarValues[24] = 0
+            ScalarValues[25] = 0
+            ScalarValues[26] = 0
+        }
+        VectorValues[3] =
+        {
+            VectorValues[0] = { R=0, G=0, B=0, A=0 }
+            VectorValues[1] = { R=10, G=0, B=0, A=1 }
+            VectorValues[2] = { R=600, G=437.903, B=120.661, A=1 }
+        }
+        TextureValues[8] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/VFX_T_Char_01_D.VFX_T_Char_01_D'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/VFX_T_Char_01_N.VFX_T_Char_01_N'
+            TextureValues[2] = Texture2D'/Game/VFX/Textures/VFX_T_SkinBurn_Emiss_D.VFX_T_SkinBurn_Emiss_D'
+            TextureValues[3] = Texture2D'/Game/VFX/Textures/VFX_T_SkinBurn_Emiss_BPF_D.VFX_T_SkinBurn_Emiss_BPF_D'
+            TextureValues[4] = Texture2D'/Game/VFX/Textures/VFX_T_SkinBurn_Alpha_D.VFX_T_SkinBurn_Alpha_D'
+            TextureValues[5] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_Soft_D.VFX_T_Noise_Soft_D'
+            TextureValues[6] = Texture2D'/Game/VFX/Textures/VFX_T_SkinBurn_Alpha_D.VFX_T_SkinBurn_Alpha_D'
+            TextureValues[7] = Texture2D'/Game/VFX/Textures/VFX_T_SkinBurn_Emiss_D.VFX_T_SkinBurn_Emiss_D'
+        }
+    }
+    ReferencedTextures[8] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/VFX_T_Inky_Smoke_D.VFX_T_Inky_Smoke_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/VFX_T_Char_01_N.VFX_T_Char_01_N'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/VFX_T_Char_01_D.VFX_T_Char_01_D'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/VFX_T_SkinBurn_Emiss_D.VFX_T_SkinBurn_Emiss_D'
+        ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_Soft_D.VFX_T_Noise_Soft_D'
+        ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseGreypack01_D.VFX_T_NoiseGreypack01_D'
+        ReferencedTextures[6] = Texture2D'/Game/VFX/Textures/VFX_T_SkinBurn_Emiss_BPF_D.VFX_T_SkinBurn_Emiss_BPF_D'
+        ReferencedTextures[7] = Texture2D'/Game/VFX/Textures/VFX_T_SkinBurn_Alpha_D.VFX_T_SkinBurn_Alpha_D'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[8] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_Char_01_D.VFX_T_Char_01_D'
+        Name = Emissive
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_Char_01_N.VFX_T_Char_01_N'
+        Name = Normal
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_SkinBurn_Emiss_D.VFX_T_SkinBurn_Emiss_D'
+        Name = Emissive Mask
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_SkinBurn_Emiss_BPF_D.VFX_T_SkinBurn_Emiss_BPF_D'
+        Name = Black Point
+        Group = None
+    }
+    CollectedTextureParameters[4] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_SkinBurn_Alpha_D.VFX_T_SkinBurn_Alpha_D'
+        Name = AlphaMask
+        Group = None
+    }
+    CollectedTextureParameters[5] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_Soft_D.VFX_T_Noise_Soft_D'
+        Name = Heat Temp anim B
+        Group = None
+    }
+    CollectedTextureParameters[6] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_SkinBurn_Alpha_D.VFX_T_SkinBurn_Alpha_D'
+        Name = Alpha Errosion Texture
+        Group = None
+    }
+    CollectedTextureParameters[7] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_SkinBurn_Emiss_D.VFX_T_SkinBurn_Emiss_D'
+        Name = Decal Shape
+        Group = None
+    }
+}
+CollectedScalarParameters[27] =
+{
+    CollectedScalarParameters[0] =
+    {
+        Value = 1
+        Name = Black Point Intensity (S)
+        Group = None
+    }
+    CollectedScalarParameters[1] =
+    {
+        Value = 1
+        Name = Alpha Erosion Multiplier
+        Group = None
+    }
+    CollectedScalarParameters[2] = { Value=0, Name=Noise2_Horo_Speed, Group=None }
+    CollectedScalarParameters[3] = { Value=0, Name=Noise1_Vert_Speed, Group=None }
+    CollectedScalarParameters[4] = { Value=0, Name=Speed U (S) Emmis, Group=None }
+    CollectedScalarParameters[5] = { Value=0.25, Name=Fader, Group=None }
+    CollectedScalarParameters[6] = { Value=1, Name=Emissive Opacity, Group=None }
+    CollectedScalarParameters[7] = { Value=0.5, Name=Softness (S), Group=None }
+    CollectedScalarParameters[8] = { Value=0, Name=Noise2_Vert_Speed, Group=None }
+    CollectedScalarParameters[9] = { Value=-0.15, Name=LightingPanner, Group=None }
+    CollectedScalarParameters[10] = { Value=1, Name=Tiling U - HT, Group=None }
+    CollectedScalarParameters[11] = { Value=1, Name=Tiling U (S)Coal, Group=None }
+    CollectedScalarParameters[12] = { Value=-1, Name=Height Scale (S), Group=None }
+    CollectedScalarParameters[13] = { Value=5, Name=Fade Bias (S), Group=None }
+    CollectedScalarParameters[14] = { Value=1, Name=Tiling U (S) Emmis, Group=None }
+    CollectedScalarParameters[15] = { Value=1, Name=Tiling V (S)Coal, Group=None }
+    CollectedScalarParameters[16] = { Value=1, Name=Tiling V - HT, Group=None }
+    CollectedScalarParameters[17] = { Value=0, Name=Alpha_Errosion_Amount, Group=None }
+    CollectedScalarParameters[18] = { Value=0, Name=Speed V (S) Emmis, Group=None }
+    CollectedScalarParameters[19] = { Value=1, Name=Tiling V (S) Emmis, Group=None }
+    CollectedScalarParameters[20] = { Value=0.15, Name=NoiseStrenght, Group=None }
+    CollectedScalarParameters[21] = { Value=1, Name=NoiseSizeMultiplyer, Group=None }
+    CollectedScalarParameters[22] = { Value=0, Name=Noise1_Horo_Speed, Group=None }
+    CollectedScalarParameters[23] = { Value=0, Name=Speed U - HT, Group=None }
+    CollectedScalarParameters[24] = { Value=0, Name=Speed V - HT, Group=None }
+    CollectedScalarParameters[25] = { Value=0, Name=Speed V (S)Coal, Group=None }
+    CollectedScalarParameters[26] = { Value=0, Name=Speed U (S)Coal, Group=None }
+}
+CollectedVectorParameters[3] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0, G=0, B=0, A=0 }
+        Name = Base Color Modifier
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=10, G=0, B=0, A=1 }
+        Name = Cooling Color
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=600, G=437.903, B=120.661, A=1 }
+        Name = Hot Color
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[4] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Char_01_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_NoiseGreypack01_D
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_SkinBurn_Alpha_D
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_SkinBurn_Emiss_D
+    }
+}

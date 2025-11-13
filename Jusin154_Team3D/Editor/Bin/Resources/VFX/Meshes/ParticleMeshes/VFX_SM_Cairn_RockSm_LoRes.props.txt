@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/VFX_MI_Rock_Basic.VFX_MI_Rock_Basic'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/VFX_MI_Rock_Basic.VFX_MI_Rock_Basic'
+        MaterialSlotName = low_uvs:RockPile_Low1:lambert1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 449.471, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0.132561, Y=-0.217253, Z=0.0348129 }
+    BoxExtent = { X=25.5474, Y=18.5861, Z=15.1653 }
+    SphereRadius = 29.8189
+}

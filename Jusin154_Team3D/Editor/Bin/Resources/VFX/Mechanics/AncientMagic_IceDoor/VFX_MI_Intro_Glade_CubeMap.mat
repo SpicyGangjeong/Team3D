@@ -1,0 +1,6 @@
+Diffuse=VFX_T_Ice_D
+Normal=VFX_T_Water_N
+Cube=VFX_T_Intro_Glade4_HDR
+Other[0]=VFX_T_Ice_N
+Other[1]=VFX_T_Ice_R
+Other[2]=VFX_T_smokeWater_D

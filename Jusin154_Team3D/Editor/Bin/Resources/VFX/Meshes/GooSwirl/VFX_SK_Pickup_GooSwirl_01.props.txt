@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Niagara/AncientMagic/Pickup/VFX_MM_AncMag_Pickup_GooSwirl01.VFX_MM_AncMag_Pickup_GooSwirl01'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Niagara/AncientMagic/Pickup/VFX_MM_AncMag_Pickup_GooSwirl01.VFX_MM_AncMag_Pickup_GooSwirl01'
+        MaterialSlotName = WorldGridMaterial
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 419.966, 4.18811, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=2.82913, Y=28.8497, Z=85.2895 }
+    BoxExtent = { X=186.06, Y=190.788, Z=314.512 }
+    SphereRadius = 315.839
+}

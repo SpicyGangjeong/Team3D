@@ -1,0 +1,38 @@
+Materials[2] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Particles/Magic/Deflected/VFX_MI_Defected_Spike_Shaft.VFX_MI_Defected_Spike_Shaft'
+    Materials[1] = MaterialInstanceConstant'/Game/VFX/Particles/Magic/Deflected/VFX_MI_Defected_Spike_Disk_Bottom.VFX_MI_Defected_Spike_Disk_Bottom'
+}
+SourceModels[0] = {}
+StaticMaterials[2] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Particles/Magic/Deflected/VFX_MI_Defected_Spike_Shaft.VFX_MI_Defected_Spike_Shaft'
+        MaterialSlotName = VFX_MM_Cursor_Shaft
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 200, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Particles/Magic/Deflected/VFX_MI_Defected_Spike_Disk_Bottom.VFX_MI_Defected_Spike_Disk_Bottom'
+        MaterialSlotName = VFX_MM_Cursor_Disk_Bottom
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 71.0086, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=0, Z=200 }
+    BoxExtent = { X=50, Y=50, Z=200 }
+    SphereRadius = 206.155
+}

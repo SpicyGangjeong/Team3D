@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Meshes/Static/HairStyles/MI_HUM_F_Hair_STUHair25_AfroLooseCurls.MI_HUM_F_Hair_STUHair25_AfroLooseCurls'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Meshes/Static/HairStyles/MI_HUM_F_Hair_STUHair25_AfroLooseCurls.MI_HUM_F_Hair_STUHair25_AfroLooseCurls'
+        MaterialSlotName = MI_HUM_F_Hair_StuHair25_AfroLooseCurls
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 15.5041, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0.548289, Y=-2.14857, Z=5.35428 }
+    BoxExtent = { X=15.6361, Y=13.3307, Z=14.4173 }
+    SphereRadius = 18.2818
+}

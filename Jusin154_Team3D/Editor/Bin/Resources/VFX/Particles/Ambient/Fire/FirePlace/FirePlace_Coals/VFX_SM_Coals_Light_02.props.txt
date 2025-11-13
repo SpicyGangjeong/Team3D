@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Particles/Ambient/Fire/FirePlace/FirePlace_Coals/VFX_MI_woodchar_Coals.VFX_MI_woodchar_Coals'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Particles/Ambient/Fire/FirePlace/FirePlace_Coals/VFX_MI_woodchar_Coals.VFX_MI_woodchar_Coals'
+        MaterialSlotName = lambert1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 62.7948, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0.974998, Y=-0.139694, Z=2.51315 }
+    BoxExtent = { X=17.6108, Y=45.7021, Z=2.74736 }
+    SphereRadius = 46.3525
+}

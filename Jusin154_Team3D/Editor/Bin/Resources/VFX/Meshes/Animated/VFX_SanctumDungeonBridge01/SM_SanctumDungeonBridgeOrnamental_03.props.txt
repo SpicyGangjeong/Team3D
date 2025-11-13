@@ -1,0 +1,74 @@
+Materials[5] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Environment/Sanctum_Dungeon/Materials/Bridge/MI_SanctumDun_Podium_Transform_A.MI_SanctumDun_Podium_Transform_A'
+    Materials[1] = MaterialInstanceConstant'/Game/Environment/Sanctum_Dungeon/Materials/Bridge/MI_SanctumDun_Railing_Transform_A.MI_SanctumDun_Railing_Transform_A'
+    Materials[2] = MaterialInstanceConstant'/Game/Environment/Sanctum_Dungeon/Materials/Bridge/MI_SanctumDun_Stairs_Transform_A.MI_SanctumDun_Stairs_Transform_A'
+    Materials[3] = MaterialInstanceConstant'/Game/Environment/Sanctum_Dungeon/Materials/Bridge/MI_SanctumDun_Marble_Transform_B2.MI_SanctumDun_Marble_Transform_B2'
+    Materials[4] = MaterialInstanceConstant'/Game/Environment/Sanctum_Dungeon/Materials/Bridge/MI_SanctumDun_Railing_Transform_C.MI_SanctumDun_Railing_Transform_C'
+}
+SourceModels[0] = {}
+StaticMaterials[5] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Sanctum_Dungeon/Materials/Bridge/MI_SanctumDun_Podium_Transform_A.MI_SanctumDun_Podium_Transform_A'
+        MaterialSlotName = pasted__M_SanctumDun_Podium_A1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 173.933, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Sanctum_Dungeon/Materials/Bridge/MI_SanctumDun_Railing_Transform_A.MI_SanctumDun_Railing_Transform_A'
+        MaterialSlotName = MI_SanctumDun_1x5m_Railing_B1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 354.431, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[2] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Sanctum_Dungeon/Materials/Bridge/MI_SanctumDun_Stairs_Transform_A.MI_SanctumDun_Stairs_Transform_A'
+        MaterialSlotName = pasted__M_Sanctum_Stair_Steps_01_Ben2
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 447.103, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[3] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Sanctum_Dungeon/Materials/Bridge/MI_SanctumDun_Marble_Transform_B2.MI_SanctumDun_Marble_Transform_B2'
+        MaterialSlotName = pasted__MI_SanctumDun_Marble_Transform_B3
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 486.975, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[4] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Sanctum_Dungeon/Materials/Bridge/MI_SanctumDun_Railing_Transform_C.MI_SanctumDun_Railing_Transform_C'
+        MaterialSlotName = MI_Stone_Gold1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 351.906, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=2007.35, Y=0.0729675, Z=46.8526 }
+    BoxExtent = { X=2042.66, Y=284.234, Z=70.8997 }
+    SphereRadius = 2058.23
+}

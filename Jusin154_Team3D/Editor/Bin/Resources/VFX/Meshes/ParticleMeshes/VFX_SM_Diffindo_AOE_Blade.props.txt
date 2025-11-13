@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/VFX_MI_Lensflare_TB_Soft.VFX_MI_Lensflare_TB_Soft'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/VFX_MI_Lensflare_TB_Soft.VFX_MI_Lensflare_TB_Soft'
+        MaterialSlotName = VFX_MI_Lensflare_TB_Soft
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 159.151, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=155.295, Y=31.5783, Z=0.76223 }
+    BoxExtent = { X=155.418, Y=86.4019, Z=1.35929 }
+    SphereRadius = 172.09
+}

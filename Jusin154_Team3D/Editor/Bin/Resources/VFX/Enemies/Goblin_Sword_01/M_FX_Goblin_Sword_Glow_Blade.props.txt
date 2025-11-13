@@ -1,0 +1,147 @@
+TwoSided = true
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[2] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_CnA_Fire3_D.VFX_T_CnA_Fire3_D'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/VFX_T_Wavy_N.VFX_T_Wavy_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[13] =
+                {
+                    ParameterInfos[0] = { Name=Tiling U (R) }
+                    ParameterInfos[1] = { Name=Emiss_Brightness }
+                    ParameterInfos[2] = { Name=Speed V (R) }
+                    ParameterInfos[3] = { Name=Offset V (E) }
+                    ParameterInfos[4] = { Name=Tiling V (E) }
+                    ParameterInfos[5] = { Name=UV Mod Intesity }
+                    ParameterInfos[6] = { Name=Speed U (R) }
+                    ParameterInfos[7] = { Name=Speed U (E) }
+                    ParameterInfos[8] = { Name=Tiling U (E) }
+                    ParameterInfos[9] = { Name=Speed V (E) }
+                    ParameterInfos[10] = { Name=Rotation Angle (0-1) (S) }
+                    ParameterInfos[11] = { Name=Tiling V (R) }
+                    ParameterInfos[12] = { Name=Offset U (E) }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Emissive Color }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=Emissive Texture }
+                    ParameterInfos[1] = { Name=Emissive UV Mod Texture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[13] =
+        {
+            ScalarValues[0] = 1
+            ScalarValues[1] = 1
+            ScalarValues[2] = 0.01
+            ScalarValues[3] = 0
+            ScalarValues[4] = 1
+            ScalarValues[5] = 0.05
+            ScalarValues[6] = 0.05
+            ScalarValues[7] = 0
+            ScalarValues[8] = 1
+            ScalarValues[9] = 0
+            ScalarValues[10] = 0
+            ScalarValues[11] = 1
+            ScalarValues[12] = 0
+        }
+        VectorValues[1] =
+        {
+            VectorValues[0] = { R=0, G=1, B=0.715694, A=1 }
+        }
+        TextureValues[2] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_CnA_Fire3_D.VFX_T_CnA_Fire3_D'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/VFX_T_Wavy_N.VFX_T_Wavy_N'
+        }
+    }
+    ReferencedTextures[2] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_CnA_Fire3_D.VFX_T_CnA_Fire3_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/VFX_T_Wavy_N.VFX_T_Wavy_N'
+    }
+}
+BlendMode = BLEND_Additive (3)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[2] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_CnA_Fire3_D.VFX_T_CnA_Fire3_D'
+        Name = Emissive Texture
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_Wavy_N.VFX_T_Wavy_N'
+        Name = Emissive UV Mod Texture
+        Group = None
+    }
+}
+CollectedScalarParameters[13] =
+{
+    CollectedScalarParameters[0] = { Value=1, Name=Tiling U (R), Group=None }
+    CollectedScalarParameters[1] = { Value=1, Name=Emiss_Brightness, Group=None }
+    CollectedScalarParameters[2] = { Value=0.01, Name=Speed V (R), Group=None }
+    CollectedScalarParameters[3] = { Value=0, Name=Offset V (E), Group=None }
+    CollectedScalarParameters[4] = { Value=1, Name=Tiling V (E), Group=None }
+    CollectedScalarParameters[5] = { Value=0.05, Name=UV Mod Intesity, Group=None }
+    CollectedScalarParameters[6] = { Value=0.05, Name=Speed U (R), Group=None }
+    CollectedScalarParameters[7] = { Value=0, Name=Speed U (E), Group=None }
+    CollectedScalarParameters[8] = { Value=1, Name=Tiling U (E), Group=None }
+    CollectedScalarParameters[9] = { Value=0, Name=Speed V (E), Group=None }
+    CollectedScalarParameters[10] =
+    {
+        Value = 0
+        Name = Rotation Angle (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[11] = { Value=1, Name=Tiling V (R), Group=None }
+    CollectedScalarParameters[12] = { Value=0, Name=Offset U (E), Group=None }
+}
+CollectedVectorParameters[1] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0, G=1, B=0.715694, A=1 }
+        Name = Emissive Color
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Wavy_N
+    }
+}

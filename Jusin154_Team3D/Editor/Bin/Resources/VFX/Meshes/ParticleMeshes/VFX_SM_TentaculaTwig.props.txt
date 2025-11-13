@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Gameplay/Nurturing/Herbology/Herbs/Materials/M_Venomous_Tentacula_Tree.M_Venomous_Tentacula_Tree'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Gameplay/Nurturing/Herbology/Herbs/Materials/M_Venomous_Tentacula_Tree.M_Venomous_Tentacula_Tree'
+        MaterialSlotName = Default_Material
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 19.2441, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0.171133, Y=0.153086, Z=2.24166 }
+    BoxExtent = { X=2.45453, Y=2.74812, Z=4.01518 }
+    SphereRadius = 5.18128
+}

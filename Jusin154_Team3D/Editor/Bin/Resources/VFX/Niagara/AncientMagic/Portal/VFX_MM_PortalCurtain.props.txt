@@ -1,0 +1,162 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[4] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_FlameNoise_E.VFX_T_FlameNoise_E'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise05_D.VFX_T_Noise05_D'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/T_waterSplashA_N.T_waterSplashA_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[20] =
+                {
+                    ParameterInfos[0] = { Name=Tiling V (S)_2 }
+                    ParameterInfos[1] = { Name=Refraction }
+                    ParameterInfos[2] = { Name=Normal Speed U }
+                    ParameterInfos[3] = { Name=EmissiveScale_Blue }
+                    ParameterInfos[4] = { Name=Tiling V (S)_1 }
+                    ParameterInfos[5] = { Name=Tiling U (S)_1 }
+                    ParameterInfos[6] = { Name=Speed V (S)_2 }
+                    ParameterInfos[7] = { Name=Normal Speed V }
+                    ParameterInfos[8] = { Name=Speed U (S)_1 }
+                    ParameterInfos[9] = { Name=Speed V (S)_1 }
+                    ParameterInfos[10] = { Name=Speed U (S)_2 }
+                    ParameterInfos[11] = { Name=Tiling U (S)_2 }
+                    ParameterInfos[12] = { Name=OpBoost }
+                    ParameterInfos[13] = { Name=Normal Tiling V }
+                    ParameterInfos[14] = { Name=EdgeFadeBias }
+                    ParameterInfos[15] = { Name=Normal Intensity }
+                    ParameterInfos[16] = { Name=DepthFadeDist }
+                    ParameterInfos[17] = { Name=Normal Tiling U }
+                    ParameterInfos[18] = { Name=EmissiveScale_Red }
+                    ParameterInfos[19] = { Name=BlurStrength (S) }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=EmissiveColor_Red }
+                    ParameterInfos[1] = { Name=EmissiveColor_Blue }
+                }
+            }
+            Entries[2] = { ParameterInfos[0]={} }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[20] =
+        {
+            ScalarValues[0] = 10
+            ScalarValues[1] = 1.02
+            ScalarValues[2] = 0.03
+            ScalarValues[3] = 1
+            ScalarValues[4] = 4.00363
+            ScalarValues[5] = 12
+            ScalarValues[6] = 0.038095
+            ScalarValues[7] = 0.152381
+            ScalarValues[8] = 0.02
+            ScalarValues[9] = 0.057143
+            ScalarValues[10] = 0.266667
+            ScalarValues[11] = 10
+            ScalarValues[12] = 1.11363
+            ScalarValues[13] = 25
+            ScalarValues[14] = 0.057143
+            ScalarValues[15] = 1
+            ScalarValues[16] = 98.4127
+            ScalarValues[17] = 25
+            ScalarValues[18] = 1
+            ScalarValues[19] = 0
+        }
+        VectorValues[2] =
+        {
+            VectorValues[0] = { R=200, G=46.0814, B=28.1408, A=1 }
+            VectorValues[1] = { R=42.7874, G=60.4022, B=120, A=0 }
+        }
+        TextureValues[0] = {}
+    }
+    ReferencedTextures[4] =
+    {
+        ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/Good64x64TilingNoiseHighFreq.Good64x64TilingNoiseHighFreq'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/T_waterSplashA_N.T_waterSplashA_N'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_FlameNoise_E.VFX_T_FlameNoise_E'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise05_D.VFX_T_Noise05_D'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[0] = {}
+CollectedScalarParameters[20] =
+{
+    CollectedScalarParameters[0] = { Value=10, Name=Tiling V (S)_2, Group=None }
+    CollectedScalarParameters[1] = { Value=1.02, Name=Refraction, Group=None }
+    CollectedScalarParameters[2] = { Value=0.03, Name=Normal Speed U, Group=None }
+    CollectedScalarParameters[3] = { Value=1, Name=EmissiveScale_Blue, Group=None }
+    CollectedScalarParameters[4] = { Value=4.00363, Name=Tiling V (S)_1, Group=None }
+    CollectedScalarParameters[5] = { Value=12, Name=Tiling U (S)_1, Group=None }
+    CollectedScalarParameters[6] = { Value=0.038095, Name=Speed V (S)_2, Group=None }
+    CollectedScalarParameters[7] = { Value=0.152381, Name=Normal Speed V, Group=None }
+    CollectedScalarParameters[8] = { Value=0.02, Name=Speed U (S)_1, Group=None }
+    CollectedScalarParameters[9] = { Value=0.057143, Name=Speed V (S)_1, Group=None }
+    CollectedScalarParameters[10] = { Value=0.266667, Name=Speed U (S)_2, Group=None }
+    CollectedScalarParameters[11] = { Value=10, Name=Tiling U (S)_2, Group=None }
+    CollectedScalarParameters[12] = { Value=1.11363, Name=OpBoost, Group=None }
+    CollectedScalarParameters[13] = { Value=25, Name=Normal Tiling V, Group=None }
+    CollectedScalarParameters[14] = { Value=0.057143, Name=EdgeFadeBias, Group=None }
+    CollectedScalarParameters[15] = { Value=1, Name=Normal Intensity, Group=None }
+    CollectedScalarParameters[16] = { Value=98.4127, Name=DepthFadeDist, Group=None }
+    CollectedScalarParameters[17] = { Value=25, Name=Normal Tiling U, Group=None }
+    CollectedScalarParameters[18] = { Value=1, Name=EmissiveScale_Red, Group=None }
+    CollectedScalarParameters[19] = { Value=0, Name=BlurStrength (S), Group=None }
+}
+CollectedVectorParameters[2] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=200, G=46.0814, B=28.1408, A=1 }
+        Name = EmissiveColor_Red
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=42.7874, G=60.4022, B=120, A=0 }
+        Name = EmissiveColor_Blue
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[3] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 25
+        UVChannelIndex = 0
+        TextureName = T_waterSplashA_N
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 4
+        UVChannelIndex = 0
+        TextureName = VFX_T_FlameNoise_E
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 10
+        UVChannelIndex = 0
+        TextureName = VFX_T_Noise05_D
+    }
+}

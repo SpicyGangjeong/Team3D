@@ -1,0 +1,196 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[2] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_CausticsTile_Grey_D.VFX_T_CausticsTile_Grey_D'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/VFX_T_Wavy_N.VFX_T_Wavy_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[25] =
+                {
+                    ParameterInfos[0] = { Name=BTiling V (UVB) }
+                    ParameterInfos[1] = { Name=Tiling V (UVA) }
+                    ParameterInfos[2] = { Name=Speed V (UVA) }
+                    ParameterInfos[3] = { Name=Speed V a }
+                    ParameterInfos[4] = { Name=Speed U a }
+                    ParameterInfos[5] = { Name=Tiling U }
+                    ParameterInfos[6] = { Name=Speed U }
+                    ParameterInfos[7] = { Name=Core_Emiss }
+                    ParameterInfos[8] = { Name=Tiling V }
+                    ParameterInfos[9] = { Name=UV Mod Intesity }
+                    ParameterInfos[10] = { Name=Speed V (UVB) }
+                    ParameterInfos[11] = { Name=Tiling U (UVB) }
+                    ParameterInfos[12] = { Name=Speed U (UVB) }
+                    ParameterInfos[13] = { Name=Tiling U a  }
+                    ParameterInfos[14] = { Name=UV Mod Intesity B }
+                    ParameterInfos[15] = { Name=FadeDistance }
+                    ParameterInfos[16] = { Name=Tiling V a }
+                    ParameterInfos[17] = { Name=Tiling U (UVA) }
+                    ParameterInfos[18] = { Name=Speed U (UVA) }
+                    ParameterInfos[19] = { Name=Core_Alpha }
+                    ParameterInfos[20] = { Name=Time }
+                    ParameterInfos[21] = { Name=Speed V }
+                    ParameterInfos[22] = { Name=Rotation Angle (0-1) (B) }
+                    ParameterInfos[23] = { Name=Rotation Angle (0-1) (S) }
+                    ParameterInfos[24] = { Name=Time_1 }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Color }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[3] =
+                {
+                    ParameterInfos[0] = { Name=Texture B }
+                    ParameterInfos[1] = { Name=Texture A }
+                    ParameterInfos[2] = { Name=Emissive UV Mod Texture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[25] =
+        {
+            ScalarValues[0] = 1
+            ScalarValues[1] = 1
+            ScalarValues[2] = 0.01
+            ScalarValues[3] = 0.2
+            ScalarValues[4] = 0.5
+            ScalarValues[5] = 1
+            ScalarValues[6] = 0.3
+            ScalarValues[7] = 1
+            ScalarValues[8] = 1
+            ScalarValues[9] = 0.05
+            ScalarValues[10] = 0.01
+            ScalarValues[11] = 1
+            ScalarValues[12] = 0.05
+            ScalarValues[13] = 1
+            ScalarValues[14] = 0.05
+            ScalarValues[15] = 0
+            ScalarValues[16] = 1
+            ScalarValues[17] = 1
+            ScalarValues[18] = 0.05
+            ScalarValues[19] = 1
+            ScalarValues[20] = 1
+            ScalarValues[21] = 0.2
+            ScalarValues[22] = 0
+            ScalarValues[23] = 0
+            ScalarValues[24] = 1
+        }
+        VectorValues[1] =
+        {
+            VectorValues[0] = { R=8.65871, G=1.69624, B=100, A=1 }
+        }
+        TextureValues[3] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_CausticsTile_Grey_D.VFX_T_CausticsTile_Grey_D'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_CausticsTile_Grey_D.VFX_T_CausticsTile_Grey_D'
+            TextureValues[2] = Texture2D'/Game/VFX/Textures/VFX_T_Wavy_N.VFX_T_Wavy_N'
+        }
+    }
+    ReferencedTextures[2] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_CausticsTile_Grey_D.VFX_T_CausticsTile_Grey_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/VFX_T_Wavy_N.VFX_T_Wavy_N'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[3] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_CausticsTile_Grey_D.VFX_T_CausticsTile_Grey_D'
+        Name = Texture B
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_CausticsTile_Grey_D.VFX_T_CausticsTile_Grey_D'
+        Name = Texture A
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_Wavy_N.VFX_T_Wavy_N'
+        Name = Emissive UV Mod Texture
+        Group = None
+    }
+}
+CollectedScalarParameters[25] =
+{
+    CollectedScalarParameters[0] = { Value=1, Name=BTiling V (UVB), Group=None }
+    CollectedScalarParameters[1] = { Value=1, Name=Tiling V (UVA), Group=None }
+    CollectedScalarParameters[2] = { Value=0.01, Name=Speed V (UVA), Group=None }
+    CollectedScalarParameters[3] = { Value=0.2, Name=Speed V a, Group=None }
+    CollectedScalarParameters[4] = { Value=0.5, Name=Speed U a, Group=None }
+    CollectedScalarParameters[5] = { Value=1, Name=Tiling U, Group=None }
+    CollectedScalarParameters[6] = { Value=0.3, Name=Speed U, Group=None }
+    CollectedScalarParameters[7] = { Value=1, Name=Core_Emiss, Group=None }
+    CollectedScalarParameters[8] = { Value=1, Name=Tiling V, Group=None }
+    CollectedScalarParameters[9] = { Value=0.05, Name=UV Mod Intesity, Group=None }
+    CollectedScalarParameters[10] = { Value=0.01, Name=Speed V (UVB), Group=None }
+    CollectedScalarParameters[11] = { Value=1, Name=Tiling U (UVB), Group=None }
+    CollectedScalarParameters[12] = { Value=0.05, Name=Speed U (UVB), Group=None }
+    CollectedScalarParameters[13] = { Value=1, Name=Tiling U a , Group=None }
+    CollectedScalarParameters[14] = { Value=0.05, Name=UV Mod Intesity B, Group=None }
+    CollectedScalarParameters[15] = { Value=0, Name=FadeDistance, Group=None }
+    CollectedScalarParameters[16] = { Value=1, Name=Tiling V a, Group=None }
+    CollectedScalarParameters[17] = { Value=1, Name=Tiling U (UVA), Group=None }
+    CollectedScalarParameters[18] = { Value=0.05, Name=Speed U (UVA), Group=None }
+    CollectedScalarParameters[19] = { Value=1, Name=Core_Alpha, Group=None }
+    CollectedScalarParameters[20] = { Value=1, Name=Time, Group=None }
+    CollectedScalarParameters[21] = { Value=0.2, Name=Speed V, Group=None }
+    CollectedScalarParameters[22] =
+    {
+        Value = 0
+        Name = Rotation Angle (0-1) (B)
+        Group = None
+    }
+    CollectedScalarParameters[23] =
+    {
+        Value = 0
+        Name = Rotation Angle (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[24] = { Value=1, Name=Time_1, Group=None }
+}
+CollectedVectorParameters[1] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=8.65871, G=1.69624, B=100, A=1 }
+        Name = Color
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Wavy_N
+    }
+}

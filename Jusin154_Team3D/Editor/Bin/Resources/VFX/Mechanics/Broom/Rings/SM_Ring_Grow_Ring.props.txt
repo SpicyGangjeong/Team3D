@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Mechanics/Broom/Rings/MI_BroomFlight_Ring_Grow.MI_BroomFlight_Ring_Grow'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Mechanics/Broom/Rings/MI_BroomFlight_Ring_Grow.MI_BroomFlight_Ring_Grow'
+        MaterialSlotName = Ring_Grow
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 1476.44, 2567.35, 0, 0 }
+        }
+    }
+}
+Sockets[11] = {  }
+ExtendedBounds =
+{
+    Origin = { X=3.69287, Y=-0.881805, Z=611.417 }
+    BoxExtent = { X=30.7804, Y=451.059, Z=1203.42 }
+    SphereRadius = 1203.75
+}

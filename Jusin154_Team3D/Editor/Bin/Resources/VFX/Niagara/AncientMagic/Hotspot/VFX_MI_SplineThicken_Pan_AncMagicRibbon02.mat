@@ -1,0 +1,6 @@
+Diffuse=VFX_T_GradientVertical_Clamp_D
+Normal=base_flat_n
+Other[0]=VFX_T_Noise08_D
+Other[1]=VFX_T_LightningTrailSingle_E
+Other[2]=VFX_T_DistortionNoise_N
+Other[3]=VFX_T_Noise05_D
