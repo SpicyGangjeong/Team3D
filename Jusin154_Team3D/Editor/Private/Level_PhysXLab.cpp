@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Level_PhysXLab.h"
 #include "GameInstance.h"
 
@@ -10,6 +10,7 @@
 #include "Dummy_PhysXMesh.h"
 #include "MapObject_Manager.h"
 #include "BuildingContainer.h"
+#include "MainLight.h"
 
 CLevel_PhysXLab::CLevel_PhysXLab(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -24,7 +25,7 @@ void CLevel_PhysXLab::Update(_float fTimeDelta)
 
 HRESULT CLevel_PhysXLab::Render()
 {
-	SetWindowText(g_hWnd, TEXT("PhysXEditor·¹º§ÀÔ´Ï´Ù"));
+	SetWindowText(g_hWnd, TEXT("PhysXEditorë ˆë²¨ìž…ë‹ˆë‹¤"));
 	GUI::ShowDemoWindow();
 	return S_OK;
 }
@@ -51,17 +52,9 @@ HRESULT CLevel_PhysXLab::Initialize()
 
 HRESULT CLevel_PhysXLab::Ready_Layer_Light()
 {
-	LIGHT_DESC			LightDesc{};
-
-	LightDesc.eType = LIGHT::DIRECTIONAL;
-	LightDesc.vDiffuse = _float4(0.8f, 0.8f, 0.8f, 0.f);
-	LightDesc.vAmbient = _float4(0.8f, 0.8f, 0.8f, 0.f);
-	LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 0.f);
-	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
-
-	if (FAILED(m_pGameInstance->On_Light(NEXT_LEVEL, TEXT("Main_Light"), LightDesc, nullptr))) {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMainLight>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT)))
 		return E_FAIL;
-	}
+
 	return S_OK;
 }
 
@@ -70,10 +63,11 @@ HRESULT CLevel_PhysXLab::Ready_Layer_Camera(const _wstring& strLayerTag)
 	CDebugCamera::CAMERA_DEBUG_DESC            CameraDesc{};
 	CameraDesc.fFovy = XMConvertToRadians(60.0f);
 	CameraDesc.fNear = 0.1f;
-	CameraDesc.fFar = 5000.f;
+	CameraDesc.fFar = 500.f;
 	CameraDesc.vEye = _float3(0.f, 10.f, -10.f);
 	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
 	CameraDesc.fSpeedPerSec = 2.f;
+	CameraDesc.pCameraKey = TEXT("Debug_Camera");
 	CameraDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 	CameraDesc.fMouseSensor = 0.1f;
 

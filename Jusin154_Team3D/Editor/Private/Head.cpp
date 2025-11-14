@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Head.h"
 
 #include "GameInstance.h"
@@ -50,7 +50,78 @@ void CHead::Late_Update(_float fTimeDelta)
 
 HRESULT CHead::Render()
 {
-	__super::Render();
+	if(!m_pModelCom)
+		return S_OK;
+
+	if (FAILED(Bind_ShaderResources())) {
+		return E_FAIL;
+	}
+
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (_uint i = 0; i < iNumMeshes; i++)
+	{
+		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom, "g_DiffuseTexture", aiTextureType_DIFFUSE, 0))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom, "g_NormalTexture", aiTextureType_NORMALS, 0))) {
+			return E_FAIL;
+		}
+
+		if (i == m_HeadIndex)
+		{
+
+			if (FAILED(m_pShaderCom->Begin(5))) {
+				return E_FAIL;
+			}
+
+			if (FAILED(m_pModelCom->Render(i))) {
+				return E_FAIL;
+			}
+		}
+		else
+		{
+			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
+				return E_FAIL;
+			}
+
+			if (FAILED(m_pModelCom->Render(i))) {
+				return E_FAIL;
+			}
+		}
+
+	}
+
+	return S_OK;
+}
+
+HRESULT CHead::Bind_ShaderResources()
+{
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+
+	GUI::DragFloat4("COLOR", (_float*)&m_vColor, 0.1f);
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_TestColor", &m_vColor, sizeof(_float4)))) {
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -75,7 +146,7 @@ CHead* CHead::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
 		MSG_BOX("Failed to Created : CHead");
-		Safe_Release(pInstance);
+		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
@@ -88,7 +159,7 @@ CGameObject* CHead::Clone(void* pArg, CGameObject* pOwner)
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
 		MSG_BOX("Failed to Cloned : CHead");
-		Safe_Release(pInstance);
+		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;

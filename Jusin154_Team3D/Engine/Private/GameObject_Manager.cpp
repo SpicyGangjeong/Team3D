@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "GameObject_Manager.h"
 
 #include "Layer.h"
@@ -15,7 +15,7 @@ HRESULT CGameObject_Manager::Initialize(_uint iNumLevels)
 	m_iNumLevels = iNumLevels;
 
 	m_pLayers = new map<const _wstring, CLayer*>[iNumLevels];
-
+	
 	return S_OK;
 }
 
@@ -39,6 +39,7 @@ HRESULT CGameObject_Manager::Add_GameObject_ToLayer(_uint iLayerLevelIndex, cons
 
 void CGameObject_Manager::Priority_Update(_float fTimeDelta)
 {
+	Describe_Entity();
 #ifdef _DEBUG
 	m_pGameInstance->Compute_TimeDelta(TEXT("Timer_PriorityUpdate"));
 #endif // _DEBUG
@@ -157,3 +158,46 @@ void CGameObject_Manager::Free()
 
 	Safe_Delete_Array(m_pLayers);
 }
+
+#ifdef _DEBUG
+
+void CGameObject_Manager::Describe_Entity()
+{
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
+	GUI::Begin("Object_Manager");
+	GUI::Text("Levels : "); GUI::SameLine();
+	if (GUI::BeginTabBar("Levels")) {
+		for (_uint i = 0; i < m_iNumLevels; ++i) {
+
+			if (GUI::BeginTabItem(to_string(i).c_str(), nullptr)) { // Insert Here Level Names
+				GUI::BeginChild("Object_Lists");
+				if (GUI::BeginTabBar("Layers")) {
+					string strlayerName;
+					for (pair< const _wstring, CLayer*>& pairLayer : m_pLayers[i]) {
+						size_t pos = pairLayer.first.find(TEXT("Layer_"));
+						strlayerName = "NOT_STARTED_WITH_Layer_";
+						if (pos != wstring::npos) {
+							strlayerName = CMyTools::ToString(pairLayer.first.c_str() + pos + wcslen(TEXT("Layer_"))).c_str();
+						}
+						if (GUI::BeginTabItem(strlayerName.c_str(), nullptr)) {
+							if (GUI::BeginChild("Items", ImVec2(0, 0), 0, window_flags)) {
+								pairLayer.second->Describe_Entity();
+								GUI::EndChild();
+							}
+							GUI::EndTabItem();
+						}
+					}
+					GUI::EndTabBar();
+				}
+				GUI::EndChild();
+				GUI::EndTabItem();
+			}
+		}
+		GUI::EndTabBar();
+	}
+	GUI::End();
+}
+
+
+#endif // _DEBUG
+

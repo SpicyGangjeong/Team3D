@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Body.h"
 
 #include "GameInstance.h"
@@ -96,7 +96,13 @@ void CModelParts::Change_Model(const _wchar* Prototype)
 		Remove_Component<CModel>();
 		SAFE_RELEASE(m_pModelCom);
 	}
-
+	;
+	if (strstr(CMyTools::ToString(Prototype).c_str(), "_F_"))
+	{
+		m_HeadIndex = 2;
+	}
+	else
+		m_HeadIndex = 1;
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, Prototype,
 		reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return;
@@ -138,8 +144,8 @@ void CModelParts::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pShaderCom);
-	Safe_Release(m_pModelCom);
+	SAFE_RELEASE(m_pShaderCom);
+	SAFE_RELEASE(m_pModelCom);
 }
 
 void CModelParts::Describe_Entity()

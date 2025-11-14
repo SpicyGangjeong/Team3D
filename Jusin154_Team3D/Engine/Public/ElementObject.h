@@ -21,7 +21,14 @@ public:
 public:
 	virtual void Visible(_bool bVisible) override;
 	virtual _bool Chack_Visible() override;
-
+	virtual void Nine_Slice_Left(_float X) override;
+	virtual void Nine_Slice_Right(_float Y) override;
+	virtual void Nine_Slice_Top(_float Z) override;
+	virtual void Nine_Slice_Bottom(_float W) override;
+	virtual _float Get_Nine_Slice_Left() override;
+	virtual _float Get_Nine_Slice_Right() override;
+	virtual _float Get_Nine_Slice_Top() override;
+	virtual _float Get_Nine_Slice_Bottom() override;
 
 protected:
 	virtual HRESULT Initialize_Prototype();

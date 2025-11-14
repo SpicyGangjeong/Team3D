@@ -6,6 +6,7 @@
 #include "Animation.h"
 #include "LerpAnim.h"
 #include "GameObject.h"
+#include "Transform.h"
 
 CModel::CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent{ pDevice, pContext }
@@ -140,7 +141,7 @@ HRESULT CModel::Bind_BoneMatrices(_uint iMeshIndex, CShader* pShader, const _cha
 	return m_Meshes[iMeshIndex]->Bind_BoneMatrices(m_Bones, pShader, pConstantName);
 }
 
-_bool CModel::Play_Animation(_float fTimeDelta)
+_bool CModel::Play_Animation(_float fTimeDelta,CTransform* pTransform)
 {
 	if (!m_bPlayAnim)
 		return false;
@@ -154,7 +155,7 @@ _bool CModel::Play_Animation(_float fTimeDelta)
 		m_bIsFinishedLerp = m_pLerpAnim->Update_TransformationMatrices(m_Bones, fTimeDelta);
 	}
 	else { // 럴프중이지 않다면 실제 애니메이션 재생을 시작함
-		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_bIsLoop, fTimeDelta);
+		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_bIsLoop, fTimeDelta, pTransform);
 	}
 
 	for (_int i = 0; i < m_Bones.size(); ++i)
@@ -183,6 +184,9 @@ _bool CModel::Play_Animation(_float fTimeDelta)
 		}
 	}
 
+	if(m_bIsFinishedAnim)
+		m_Animations[m_iCurrentAnimIndex]->ResetRootMotion();
+
 	return m_bIsFinishedAnim;
 }
 
@@ -194,6 +198,7 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop)
 	{
 		m_iCurrentAnimIndex = iIndex;
 		m_bIsLoop = isLoop;
+		m_Animations[m_iCurrentAnimIndex]->ResetRootMotion();
 	}
 	else
 		m_iCurrentAnimIndex = -1;
@@ -307,6 +312,17 @@ void CModel::Set_AnimSpeed(_float fSpeed)
 {
 	m_Animations[m_iCurrentAnimIndex]->Set_AnimSpeed(fSpeed);
 }
+
+void CModel::Set_Anim(CModel* Source)
+{
+	m_Animations = Source->m_Animations;
+
+	for (auto& anim : m_Animations)
+		anim->Remap_Channels_By_Name(this);
+
+	m_iNumAnimations = (_uint)m_Animations.size();
+}
+
 
 HRESULT CModel::Render(_uint iMeshIndex)
 {
@@ -1113,7 +1129,7 @@ CModel* CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MOD
 	if (FAILED(pInstance->Initialize_Prototype(eType, pModelFilePath, PreTransformMatrix)))
 	{
 		MSG_BOX("Failed to Created : CModel");
-		Safe_Release(pInstance);
+		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;

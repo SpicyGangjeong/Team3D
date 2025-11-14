@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Base.h"
 #include "Editor_Define.h"
@@ -15,7 +15,7 @@ public:
 	_bool strListBox(const _char* Label, _int& iCurrentIndex, vector<_string>& contents);
 	_bool wstrListBox(const _char* Label, _int& iCurrentIndex, vector<_wstring>& contents);
 
-#pragma endregion // Àü¿ª
+#pragma endregion // ì „ì—­
 
 #pragma region OBJECTVIEWER
 

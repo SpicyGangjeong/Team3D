@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "GameObject.h"
 
@@ -9,10 +9,11 @@ class ENGINE_DLL CCamera abstract : public CGameObject
 public:
 	typedef struct tagCameraDesc : public CTransform::TRANSFORM_DESC
 	{
-		_float		fFovy{}, fNear{}, fFar{};
-		_uint		iPriority = { UINT_MAX };
-		CGameObject* pFollowTarget = { nullptr };
-		CGameObject* pLookTarget = { nullptr };
+		_float			fFovy{}, fNear{}, fFar{};
+		_uint			iPriority = { UINT_MAX };
+		const _wchar*	pCameraKey = { };
+		CGameObject*	pFollowTarget = { nullptr };
+		CGameObject*	pLookTarget = { nullptr };
 	}CAMERA_DESC;
 
 protected:
@@ -48,6 +49,7 @@ protected:
 
 	_bool			m_bActive = { false };
 
+	const _wchar*	m_pCameraKey = { nullptr };
 	CGameObject*	m_pFollowTarget = { nullptr };
 	CGameObject*	m_pLookTarget = { nullptr };
 

@@ -1,4 +1,4 @@
-#include "pch.h"
+Ôªø#include "pch.h"
 #include "EditEffect.h"
 
 #include "GameInstance.h"
@@ -41,7 +41,7 @@ void CEditEffect::Update(_float fTimeDelta)
 
 
 
-	if (m_isBillboard)
+	if (m_EffectInfo.isBillboard)
 		m_pGameInstance->BillBoard(m_pTransformCom);
 
 	if (m_pInstance_ModelCom == nullptr)
@@ -61,15 +61,16 @@ void CEditEffect::Late_Update(_float fTimeDelta)
 
 	_float4* vPos = (_float4*)(m_pTransformCom->Get_WorldMatrixPtr()->m[3]);
 
-	if (m_isBlur == true)
+	if (m_EffectInfo.isBlur == true)
 		m_pGameInstance->Add_RenderGroup(RENDER::BLUR, this, *vPos, m_pTransformCom->Get_Radius());
 
-	m_pGameInstance->Add_RenderGroup(m_eRenderOrder, this, *vPos, m_pTransformCom->Get_Radius());
+	m_pGameInstance->Add_RenderGroup(m_EffectInfo.eRenderOrder, this, *vPos, m_pTransformCom->Get_Radius());
 }
 
 void CEditEffect::Reference_Mat_For_EditEffect()
 {
 
+	string strName = {};
 
 	const char* pCompute[] = { "DIFFUSE" , "MASK", "NOISE", "DISSOLVE" };
 
@@ -79,22 +80,182 @@ void CEditEffect::Reference_Mat_For_EditEffect()
 	switch (m_iSelectTextureNum)
 	{
 	case 0:
-		dynamic_cast<CEffect_Editor*>(m_pOwner)->Reference_Mat_For_EditEffect((CComponent**)&m_pDiffuse_TextureCom, this);
+		strName = dynamic_cast<CEffect_Editor*>(m_pOwner)->Reference_Mat_For_EditEffect((CComponent**)&m_pDiffuse_TextureCom, this);
+
+		if (strName != "")
+		{
+			m_strDiffuseName = strName;
+		}
 		break;
 	case 1:
-		dynamic_cast<CEffect_Editor*>(m_pOwner)->Reference_Mat_For_EditEffect((CComponent**)&m_pMasking_TextureCom, this);
+		strName =dynamic_cast<CEffect_Editor*>(m_pOwner)->Reference_Mat_For_EditEffect((CComponent**)&m_pMasking_TextureCom, this);
+
+		if (strName != "")
+		{
+			m_strMaskingName = strName;
+		}
 		break;
 	case 2:
-		dynamic_cast<CEffect_Editor*>(m_pOwner)->Reference_Mat_For_EditEffect((CComponent**)&m_pNoise_TextureCom, this);
+		strName = dynamic_cast<CEffect_Editor*>(m_pOwner)->Reference_Mat_For_EditEffect((CComponent**)&m_pNoise_TextureCom, this);
+		
+		if (strName != "")
+		{
+			m_strNoiseName = strName;
+		}
 		break;
 	case 3:
-		dynamic_cast<CEffect_Editor*>(m_pOwner)->Reference_Mat_For_EditEffect((CComponent**)&m_pDissolve_TextureCom, this);
+		strName = dynamic_cast<CEffect_Editor*>(m_pOwner)->Reference_Mat_For_EditEffect((CComponent**)&m_pDissolve_TextureCom, this);
+
+		if (strName != "")
+		{
+			m_strDissolveName = strName;
+		}
+
 		break;
 	default:
 		break;
 	}
 
 
+}
+
+HRESULT CEditEffect::Save_Effect(const _char* pPath)
+{
+
+	_string strPerfectFilePath = pPath;
+	strPerfectFilePath += ".bin";
+	
+	HANDLE	hFile = CreateFile(CMyTools::ToWstring(strPerfectFilePath).c_str(),
+		GENERIC_WRITE,
+		FILE_SHARE_READ | FILE_SHARE_WRITE,
+		NULL, CREATE_ALWAYS,
+		FILE_ATTRIBUTE_NORMAL, NULL
+	);
+
+
+	if (hFile == INVALID_HANDLE_VALUE) {
+		MessageBox(NULL, L"Ïò§Î∏åÏ†ùÌä∏ Ï†ÄÏû• Ïã§Ìå®", L"System Message", MB_OK);
+		return E_FAIL;
+	}
+
+
+	
+	DWORD	dwByte(0);
+
+	if (m_pLightCom != nullptr) 
+	{
+		m_EffectInfo.LightDesc = *m_pLightCom->Get_LightDesc();
+	}
+
+
+	if (!WriteFile(hFile, &m_EffectInfo, sizeof(EFFECT_INFO), &dwByte, nullptr)) {
+		return E_FAIL;
+	}
+
+	if (m_EffectInfo.isDiffuse)
+	{
+		size_t iComponentLength = m_strDiffuseName.length();
+		const _char* pFileComponentPath = m_strDiffuseName.c_str();
+
+		if (!WriteFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+			return E_FAIL;
+		}
+
+		if (iComponentLength != 0)
+		{
+			if (!WriteFile(hFile, pFileComponentPath, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+				return E_FAIL;
+			}
+		}
+	}
+
+	if (m_EffectInfo.isNoise)
+	{
+		size_t iComponentLength = m_strNoiseName.length();
+		const _char* pFileComponentPath = m_strNoiseName.c_str();
+
+		if (!WriteFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+			return E_FAIL;
+		}
+
+		if (iComponentLength != 0)
+		{
+			if (!WriteFile(hFile, pFileComponentPath, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+				return E_FAIL;
+			}
+		}
+	}
+
+	if (m_EffectInfo.isMasking)
+	{
+		size_t iComponentLength = m_strMaskingName.length();
+		const _char* pFileComponentPath = m_strMaskingName.c_str();
+
+		if (!WriteFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+			return E_FAIL;
+		}
+
+		if (iComponentLength != 0)
+		{
+			if (!WriteFile(hFile, pFileComponentPath, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+				return E_FAIL;
+			}
+		}
+	}
+
+	if (m_EffectInfo.isDissolve)
+	{
+		size_t iComponentLength = m_strDissolveName.length();
+		const _char* pFileComponentPath = m_strDissolveName.c_str();
+
+		if (!WriteFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+			return E_FAIL;
+		}
+
+		if (iComponentLength != 0)
+		{
+			if (!WriteFile(hFile, pFileComponentPath, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+				return E_FAIL;
+			}
+		}
+	}
+
+	if (m_EffectInfo.isEmissive)
+	{
+		size_t iComponentLength = m_strEmissiveName.length();
+		const _char* pFileComponentPath = m_strEmissiveName.c_str();
+
+		if (!WriteFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+			return E_FAIL;
+		}
+
+		if (iComponentLength != 0)
+		{
+			if (!WriteFile(hFile, pFileComponentPath, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+				return E_FAIL;
+			}
+		}
+	}
+
+	size_t iComponentLength = m_strModelName.length();
+	const _char* pFileComponentPath = m_strModelName.c_str();
+
+	if (!WriteFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+		return E_FAIL;
+	}
+
+	if (iComponentLength != 0)
+	{
+		if (!WriteFile(hFile, pFileComponentPath, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+			return E_FAIL;
+		}
+	}
+
+	m_pInstance_ModelCom->Save_InstanceModel(hFile);
+
+	CloseHandle(hFile);
+
+	return S_OK;
 }
 
 HRESULT CEditEffect::Ready_Components(void* pArg)
@@ -146,44 +307,46 @@ void CEditEffect::Free()
 
 void CEditEffect::Describe_Entity()
 {
-	//ø©±‚º≠ ∏µ®, ≈ÿΩ∫√ƒ, º±≈√«“ ºˆ ¿÷µµ∑œ «‘
+	//Ïó¨Í∏∞ÏÑú Î™®Îç∏, ÌÖçÏä§Ï≥ê, ÏÑ†ÌÉùÌï† Ïàò ÏûàÎèÑÎ°ù Ìï®
 
 	const char* pLerp[] = { "Linear" , "EaseInQuad", "EaseOutQuad", "EaseInCubic" , "EaseOutCubic" , "EaseInOutSin" , "EaseInBack" , "Expo" , "Circle" };
 	const char* pRenderNames[] = { "PRIORITY" , "SHADOW", "NONBLEND", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" , "UI" };
 
-	_int iCurrentItem = static_cast<_int>(m_eRenderOrder);
+	_int iCurrentItem = static_cast<_int>(m_EffectInfo.eRenderOrder);
 
 	if (ImGui::Combo("Render Order", &iCurrentItem, pRenderNames, ENUM_CLASS(RENDER::END)))
 	{
-		m_eRenderOrder = static_cast<RENDER>(iCurrentItem);
+		m_EffectInfo.eRenderOrder = static_cast<RENDER>(iCurrentItem);
 	}
 
 	m_pTransformCom->Describe_Entity();
 
-	GUI::Checkbox("Diffuse", &m_isDiffuse);
-	GUI::Checkbox("Masking", &m_isMasking);
-	GUI::Checkbox("Dissolve", &m_isDissolve);
-	GUI::Checkbox("Noise", &m_isNoise);
+	GUI::Checkbox("Diffuse", &m_EffectInfo.isDiffuse);
+	GUI::Checkbox("Masking", &m_EffectInfo.isMasking);
+	GUI::Checkbox("Dissolve", &m_EffectInfo.isDissolve);
+	GUI::Checkbox("Noise", &m_EffectInfo.isNoise);
 
 
-	if (GUI::Checkbox("Billboard", &m_isBillboard))
+	if (GUI::Checkbox("Billboard", &m_EffectInfo.isBillboard))
 	{
 		m_pTransformCom->Rotation(0.f, 0.f, 0.f);
 	}
 
-	GUI::ColorEdit4("MixColor", (_float*)&m_vColor);
+	GUI::ColorEdit4("MixColor", (_float*)&m_EffectInfo.vColor);
 
 	ImGui::PushItemWidth(80);
+
+	m_pShaderCom->Describe_Entity();
 
 	ImGui::PopItemWidth();
 
 	if (GUI::TreeNode("BLUR"))
 	{
-		GUI::Checkbox("Blur", &m_isBlur);
+		GUI::Checkbox("Blur", &m_EffectInfo.isBlur);
 
 		ImGui::PushItemWidth(80);
-		GUI::DragFloat("BlurIntensity", &m_fBlurIntensity, 0.005f, 0.f, 1.f);
-		GUI::DragInt("BlurWeight", &m_iBlurWeight, 1.f, 0, 32);
+		GUI::DragFloat("BlurIntensity", &m_EffectInfo.fBlurIntensity, 0.005f, 0.f, 1.f);
+		GUI::DragInt("BlurWeight", &m_EffectInfo.iBlurWeight, 1.f, 0, 32);
 
 		
 		ImGui::PopItemWidth();
@@ -196,24 +359,73 @@ void CEditEffect::Describe_Entity()
 	{
 		const char* pCompute[] = {"NONE",  "DIV" , "PLUS", "SUBSTRACT", "MULTY" , "EQUL" };
 
-		_int iColorOption = (_int)m_fColorOption;
+		_int iColorOption = (_int)m_EffectInfo.fColorOption;
 
 		if (ImGui::Combo("OPTION", &iColorOption, pCompute , 6))
 		{
-			m_fColorOption = (_float)iColorOption;
+			m_EffectInfo.fColorOption = (_float)iColorOption;
 		}
 
 		ImGui::PushItemWidth(80);
-		GUI::DragFloat("EmissiveCutAlpha", &m_fEmissiveCutAlpha, 0.005f, 0.f, 1.f);
+		GUI::DragFloat("EmissiveCutAlpha", &m_EffectInfo.fEmissiveCutAlpha, 0.005f, 0.f, 1.f);
 		ImGui::PopItemWidth();
 
-		GUI::ColorEdit4("Emissive", (_float*)&m_vEmissive);
+		GUI::ColorEdit4("Emissive", (_float*)&m_EffectInfo.vEmissive);
+
+		GUI::Checkbox("EmissiveTex", &m_EffectInfo.isEmissive);
+
+		if (m_EffectInfo.isEmissive)
+		{
+			if (GUI::TreeNode("EMISSIVE_TEX"))
+			{
+				_string strName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "EMISSIVE_TEXTURE", (CComponent**)&m_pEmissive_TextureCom, nullptr, this);
+
+				if (strName != "") {
+					m_strEmissiveName = strName;
+				}
+
+
+				GUI::TreePop();
+			}
+		}
 
 
 		GUI::TreePop();
 	}
 
+	if (GUI::TreeNode("LIGHT"))
+	{
+		if (GUI::Button("ADD LIGHT"))
+		{
+			if (m_pLightCom != nullptr)
+			{
+				GUI::TreePop();
+				return;
+			}
+			LIGHT_DESC			LightDesc{};
 
+			LightDesc.eType = LIGHT::POINT;
+			LightDesc.vDiffuse = _float4(0.0f, 0.0f, 0.0f, 0.f);
+			LightDesc.vAmbient = _float4(0.0f, 0.0f, 0.0f, 0.f);
+			LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 0.f);
+			LightDesc.pPosition = m_pTransformCom->Get_StatePtr(STATE::POSITION);
+			LightDesc.iLevel = NEXT_LEVEL;
+
+			/* Com_Light*/
+			if (FAILED(Add_Component<CLight>(g_iStaticLevel, &m_pLightCom, &LightDesc)))
+			{
+				GUI::TreePop();
+				return;
+			}
+		}
+
+		if (m_pLightCom != nullptr)
+		{
+			m_pLightCom->Describe_Entity();
+		}
+
+		GUI::TreePop();
+	}
 
 	if (GUI::TreeNode("MODEL"))
 	{
@@ -222,7 +434,11 @@ void CEditEffect::Describe_Entity()
 		if (m_pInstance_ModelCom != nullptr)
 			InstanceDesc = m_pInstance_ModelCom->Get_EffectValue();
 
-		m_pGameInstance->Asset_Description<CInstance_Model>(ENUM_CLASS(LEVEL::EFFECT), "INSTANCE_MODEL", (CComponent**)&m_pInstance_ModelCom, &InstanceDesc, this);
+		_string strName  = m_pGameInstance->Asset_Description<CInstance_Model>(ENUM_CLASS(LEVEL::EFFECT), "INSTANCE_MODEL", (CComponent**)&m_pInstance_ModelCom, &InstanceDesc, this);
+
+		if (strName != "") {
+			m_strModelName = strName;
+		}
 
 		if (m_pInstance_ModelCom != nullptr)
 		{
@@ -233,27 +449,30 @@ void CEditEffect::Describe_Entity()
 	}
 
 
-	if (m_isDiffuse == true)
+
+
+
+	if (m_EffectInfo.isDiffuse == true)
 	{
 		if (GUI::TreeNode("DIFFUSE"))
 		{
 
 
 			ImGui::PushItemWidth(80);
-			GUI::Checkbox("DiffuseUVMove", &m_isDiffuseUVMove);
-			GUI::InputFloat2("DiffuseUVCutting", (_float*)&m_vUVCutting);
+			GUI::Checkbox("DiffuseUVMove", &m_EffectInfo.isDiffuseUVMove);
+			GUI::InputFloat2("DiffuseUVCutting", (_float*)&m_EffectInfo.vUVCutting);
 
 			GUI::Spacing();
 
-			GUI::DragFloat2("DiffuseUVGainAmount", (_float*)&m_vDiffuseUVGainAmount, 0.01f);
+			GUI::DragFloat2("DiffuseUVGainAmount", (_float*)&m_EffectInfo.vDiffuseUVGainAmount, 0.01f);
 	
 
 
-			_int iDiffuseMoveLerpOption = (_int)m_iDiffuseMoveLerpOption;
+			_int iDiffuseMoveLerpOption = (_int)m_EffectInfo.iDiffuseMoveLerpOption;
 
 			if (ImGui::Combo("Lerp DiffuseMove Option", &iDiffuseMoveLerpOption, pLerp, 9))
 			{
-				m_iDiffuseMoveLerpOption = iDiffuseMoveLerpOption;
+				m_EffectInfo.iDiffuseMoveLerpOption = iDiffuseMoveLerpOption;
 			}
 
 			GUI::Spacing();
@@ -262,7 +481,13 @@ void CEditEffect::Describe_Entity()
 
 			if (GUI::TreeNode("DIFFUSE_TEX"))
 			{
-				m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DIFFUSE_TEXTURE", (CComponent**)&m_pDiffuse_TextureCom, nullptr, this);
+				_string strName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DIFFUSE_TEXTURE", (CComponent**)&m_pDiffuse_TextureCom, nullptr, this);
+				
+				if (strName != "") {
+					m_strDiffuseName = strName;
+				}
+
+				
 				GUI::TreePop();
 			}
 
@@ -273,27 +498,27 @@ void CEditEffect::Describe_Entity()
 	}
 
 
-	if (m_isMasking == true)
+	if (m_EffectInfo.isMasking == true)
 	{
 		if (GUI::TreeNode("MASKING"))
 		{
 
-			GUI::InputFloat2("MaskUVCutting", (_float*)&m_vUVMaskCutting);
-			GUI::Checkbox("MaskUVMove", &m_isMaskUVMove);
+			GUI::InputFloat2("MaskUVCutting", (_float*)&m_EffectInfo.vUVMaskCutting);
+			GUI::Checkbox("MaskUVMove", &m_EffectInfo.isMaskUVMove);
 
 			ImGui::PushItemWidth(80);
-			GUI::DragFloat2("MaskingUVGainAmount", (_float*)&m_vMaskingUVGainAmount, 0.01f);
+			GUI::DragFloat2("MaskingUVGainAmount", (_float*)&m_EffectInfo.vMaskingUVGainAmount, 0.01f);
 			ImGui::PopItemWidth();
 
 
 			GUI::Spacing();
 
 
-			_int iMaskMoveLerpOption = (_int)m_iMaskMoveLerpOption;
+			_int iMaskMoveLerpOption = (_int)m_EffectInfo.iMaskMoveLerpOption;
 
 			if (ImGui::Combo("Lerp MaskMove Option", &iMaskMoveLerpOption, pLerp, 9))
 			{
-				m_iMaskMoveLerpOption = iMaskMoveLerpOption;
+				m_EffectInfo.iMaskMoveLerpOption = iMaskMoveLerpOption;
 			}
 		
 		
@@ -301,7 +526,12 @@ void CEditEffect::Describe_Entity()
 
 			if (GUI::TreeNode("MASKING_TEX"))
 			{
-				m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "MASKING_TEXTURE", (CComponent**)&m_pMasking_TextureCom, nullptr, this);
+				string strName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "MASKING_TEXTURE", (CComponent**)&m_pMasking_TextureCom, nullptr, this);
+				
+				if (strName != "") {
+					m_strMaskingName = strName;
+				}
+
 				GUI::TreePop();
 			}
 			GUI::Separator(); GUI::Spacing();
@@ -310,13 +540,18 @@ void CEditEffect::Describe_Entity()
 		}
 	}
 
-	if (m_isDissolve == true)
+	if (m_EffectInfo.isDissolve == true)
 	{
 		if (GUI::TreeNode("DISSOLVE"))
 		{
 			if (GUI::TreeNode("DISSOLV_TEX"))
 			{
-				m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISSOLVE_TEXTURE", (CComponent**)&m_pDissolve_TextureCom, nullptr, this);
+				_string strName = m_strDissolveName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISSOLVE_TEXTURE", (CComponent**)&m_pDissolve_TextureCom, nullptr, this);
+				
+				if (strName != "") {
+					m_strDissolveName = strName;
+				}
+
 				GUI::TreePop();
 			}
 			GUI::Separator(); GUI::Spacing();
@@ -325,34 +560,34 @@ void CEditEffect::Describe_Entity()
 		}
 
 	}
-	if (m_isNoise == true)
+	if (m_EffectInfo.isNoise == true)
 	{
 		if (GUI::TreeNode("NOISE"))
 		{
 			ImGui::PushItemWidth(80);
 
-			GUI::DragFloat("NoiseDistortionIntensity", &m_fNoiseDistortionIntensity, 0.005f, 0.f, 1.f);
+			GUI::DragFloat("NoiseDistortionIntensity", &m_EffectInfo.fNoiseDistortionIntensity, 0.005f, 0.f, 1.f);
 			
 			GUI::Spacing();
 
-			GUI::DragFloat2("DiffuseNoiseUVGainAmount", (_float*)&m_vDiffuseNoiseUVGainAmount, 0.01f);
+			GUI::DragFloat2("DiffuseNoiseUVGainAmount", (_float*)&m_EffectInfo.vDiffuseNoiseUVGainAmount, 0.01f);
 
-			_int iDiffuseNoiseMoveLerpOption = (_int)m_iDiffuseNoiseMoveLerpOption;
+			_int iDiffuseNoiseMoveLerpOption = (_int)m_EffectInfo.iDiffuseNoiseMoveLerpOption;
 
 			if (ImGui::Combo("Lerp DiffuseNoiseMove Option", &iDiffuseNoiseMoveLerpOption, pLerp, 9))
 			{
-				m_iDiffuseNoiseMoveLerpOption = iDiffuseNoiseMoveLerpOption;
+				m_EffectInfo.iDiffuseNoiseMoveLerpOption = iDiffuseNoiseMoveLerpOption;
 			}
 
 			GUI::Spacing();
 
-			GUI::DragFloat2("MaskNoiseUVGainAmount", (_float*)&m_vMaskNoiseUVGainAmount, 0.01f);
+			GUI::DragFloat2("MaskNoiseUVGainAmount", (_float*)&m_EffectInfo.vMaskNoiseUVGainAmount, 0.01f);
 
-			_int iMaskNoiseMoveLerpOption = (_int)m_iMaskNoiseMoveLerpOption;
+			_int iMaskNoiseMoveLerpOption = (_int)m_EffectInfo.iMaskNoiseMoveLerpOption;
 
 			if (ImGui::Combo("Lerp MaskNoiseMove Option", &iMaskNoiseMoveLerpOption, pLerp, 9))
 			{
-				m_iMaskNoiseMoveLerpOption = iMaskNoiseMoveLerpOption;
+				m_EffectInfo.iMaskNoiseMoveLerpOption = iMaskNoiseMoveLerpOption;
 			}
 			
 			GUI::Spacing();
@@ -361,7 +596,11 @@ void CEditEffect::Describe_Entity()
 
 			if (GUI::TreeNode("NOISE_TEX"))
 			{
-				m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "NOISE_TEXTURE", (CComponent**)&m_pNoise_TextureCom, nullptr, this);
+				_string strName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "NOISE_TEXTURE", (CComponent**)&m_pNoise_TextureCom, nullptr, this);
+
+				if (strName != "") {
+					m_strNoiseName = strName;
+				}
 				GUI::TreePop();
 			}
 

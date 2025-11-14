@@ -1,7 +1,9 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 
 #include "Animation.h"
 #include "Channel.h"
+#include "Model.h"
+#include "Transform.h"
 
 CAnimation::CAnimation()
 {
@@ -29,12 +31,12 @@ CAnimation::CAnimation(const CAnimation& rhs)
 		SAFE_ADDREF(pChannel);
 	}
 }
-_bool CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bones, _bool bIsLoop, _float fTimeDelta)
+_bool CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bones, _bool bIsLoop, _float fTimeDelta,CTransform*pTransform)
 {
 	//m_fCurrentTrackPosition += m_TickPerSeconds[m_bPause] * fTimeDelta;
 	m_fCurrentTrackPosition += m_fTickPerSecond * fTimeDelta * m_fAnimSpeed;
 	if (m_fCurrentTrackPosition >= m_fDuration) {
-		m_fCurrentTrackPosition = 0.f; // ·çÇÁ
+		m_fCurrentTrackPosition = 0.f; // ë£¨í”„
 		if (false == bIsLoop) {
 			m_fCurrentTrackPosition = m_fDuration;
 			return true;
@@ -47,12 +49,17 @@ _bool CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bone
 
 	_uint iIndex = {};
 	for (auto& pChannel : m_Channels) {
-		pChannel->Update_TransformationMatirx(Bones, m_fCurrentTrackPosition, &m_CurrentKeyFrameIndices[iIndex++]);
+		pChannel->Update_TransformationMatirx(Bones, m_fCurrentTrackPosition, &m_CurrentKeyFrameIndices[iIndex++],pTransform);
 	}
 
 	return false;
 }
 
+void CAnimation::ResetRootMotion()
+{
+	for (auto& pChannel : m_Channels)
+		pChannel->ResetRootMotion();
+}
 
 void CAnimation::Depart_Animation()
 {
@@ -97,7 +104,25 @@ vector<_int>* CAnimation::Capture_Bones()
 	}
 	return &m_DestBones;
 }
+
+void CAnimation::Remap_Channels_By_Name(CModel* TargetModel)
+{
+	for (auto& channel : m_Channels)
+	{
+		const string& name = channel->Get_Name();
+
+		int idx = TargetModel->Get_BoneIndex(name.c_str());
+
+		if (idx != -1)
+			channel->Set_BoneIndex(idx);
+		else
+			channel->Set_BoneIndex(-1);
+	}
+}
+
+
 #ifdef EDITOR_PROJECT
+
 HRESULT CAnimation::Initialize(const vector<CBone*>& Bones, const aiAnimation* pAIAnimation)
 {
 	m_strName = pAIAnimation->mName.data;
@@ -244,7 +269,7 @@ CAnimation* CAnimation::Create(const CModel* pModel, SaveAnimation* pSaveAnimati
 	if (FAILED(pInstance->Initialize(pModel, pSaveAnimation)))
 	{
 		MSG_BOX("Failed to Created : CAnimation");
-		Safe_Release(pInstance);
+		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;

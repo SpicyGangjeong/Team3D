@@ -374,7 +374,7 @@ HRESULT CMapObject_Manager::Save_MapData(const _char* pFileName)
 #pragma endregion
 
 
-	// ÀúÀå
+	// ?ú?å
 	if (doc.SaveFile(strPath.c_str()) != tinyxml2::XML_SUCCESS) {
 		MSG_BOX("Failed to Save File");
 	}
@@ -498,7 +498,7 @@ HRESULT CMapObject_Manager::Save_ContainerData(const _char* pFileName, const _ch
 	m_pSelectObject = nullptr;
 #pragma endregion
 
-	// ÀúÀå
+	// ?ú?å
 	if (doc.SaveFile(strPath.c_str()) != tinyxml2::XML_SUCCESS) {
 		MSG_BOX("Failed to Save File");
 	}
@@ -1084,7 +1084,7 @@ CMapObject_Manager* CMapObject_Manager::Create(ID3D11Device* pDevice, ID3D11Devi
 	if (FAILED(pInstance->Initialize_Prototype(ModelPrototypeTags, ModelPrototypePaths)))
 	{
 		MSG_BOX("Failed to Created : CMapObject_Manager");
-		Safe_Release(pInstance);
+		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
@@ -1097,7 +1097,7 @@ CGameObject* CMapObject_Manager::Clone(void* pArg, CGameObject* pOwner)
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
 		MSG_BOX("Failed to Cloned : CMapObject_Manager");
-		Safe_Release(pInstance);
+		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;

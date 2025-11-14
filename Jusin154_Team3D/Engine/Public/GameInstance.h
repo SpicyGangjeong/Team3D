@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 #include "Prototype_Manager.h"
 #include "GameObject_Manager.h"
 
@@ -66,7 +66,7 @@ public:
 	}
 
 	template<typename T>
-	void Asset_Description(_uint iLevel, const _char* pComponentName, Engine::CComponent** ppOut, void* pDesc, class CGameObject* pOwner = nullptr, _wstring wstrGroupName = L"")
+	_string Asset_Description(_uint iLevel, const _char* pComponentName, Engine::CComponent** ppOut, void* pDesc, class CGameObject* pOwner = nullptr, _wstring wstrGroupName = L"")
 	{
 		return m_pPrototype_Manager->CPrototype_Manager::Asset_Description<T>(iLevel, pComponentName, ppOut, pDesc, pOwner, wstrGroupName);
 	}
@@ -132,9 +132,10 @@ public:
 	const _vector Get_CamXMPosition();
 #pragma endregion
 #pragma region LIGHT_MANAGER
-	HRESULT On_Light(_uint iLevel, const _wstring& wstrLightKey, const LIGHT_DESC& LightDesc, class CLight** ppOut);
-	HRESULT Off_Light(_uint iLevel, const _wstring& wstrLightKey);
-	HRESULT Render_Lights(class CShader* pShader, class CVIBuffer* pVIBuffer);
+	void			  Add_Light(_uint _iCurrentLevel, class CLight* _pLight);
+	void			  Delete_Light(_uint _iCurrentLevel, class CLight* _pLight);
+	const LIGHT_DESC* Get_Light_Info(_uint _iCurrentLevel, _uint _iLightIndex);
+	HRESULT			  Render_Lights(_uint _iCurrentLevel, class CShader* pShader, class CVIBuffer* pVIBuffer);
 #pragma endregion
 #pragma region COLLIDER_MANAGER
 	HRESULT Add_ColliderGroup(_uint iColliderGroup, class CCollider* pBounding);
@@ -152,8 +153,8 @@ public:
 	HRESULT Bind_RenderTarget(const _wstring& strTargetTag, class CShader* pShader, const _char* pConstantName);
 	HRESULT Copy_RenderTarget(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D);
 #ifdef _DEBUG
-	HRESULT Ready_RenderTarget_Debug(const _wstring& strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY);
-	HRESULT Render_RenderTarget_Debug(const _wstring& strMRTTag, class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
+	void    RenderTarget_Debuger();
+	HRESULT Render_RenderTarget_Debug(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
 #endif // _DEBUG
 #pragma endregion
 #pragma region CAMERA_MANAGER
@@ -163,6 +164,7 @@ public:
 	HRESULT Bind_Camera(_uint iLevel, const _wstring& strCameraKey, _bool bIgnorePriority);
 	HRESULT IsBinded_Camera(const _wstring& strCameraKey);
 	const _float* Get_CurrentCameraFar();
+	void Force_CamPosition(_fvector vPos);
 #pragma endregion
 
 #pragma region SHADOW
@@ -178,20 +180,22 @@ public:
 	_bool	isPicking(_float3* pOut);
 #pragma endregion
 #pragma region PhysX_Manager
-	PSX::PxMaterial* Get_Material(_float3* vMatInfo);
+	PSX::PxMaterial* Create_Material(_float3* vMatInfo);
 	void RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh);
-	const PSX::PxRigidDynamic* Add_DynamicActor(CRigidBody& RigidBody);
-	const PSX::PxRigidStatic* Add_StaticActor(CRigidBody& RigidBody);
+	PSX::PxRigidDynamic* Add_DynamicActor(CRigidBody& RigidBody);
+	PSX::PxRigidStatic* Add_StaticActor(CRigidBody& RigidBody);
 
 
 	PSX::PxController*	Add_CapsuleController(PSX::PxCapsuleControllerDesc& Desc);
 	PSX::PxController*	Add_BoxController(PSX::PxBoxControllerDesc& Desc);
 	PSX::PxController*	Get_Controller(_uint iControllerIndex);
 	void				ReleaseController(_uint iControllerIndex);
+	void				Attach_Actor(CRigidBody& RigidBody, PSX::PxActor& Actor);
+	void				Detach_Actor(CRigidBody& RigidBody, PSX::PxActor*& pActor);
 
 	HRESULT ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix = XMMatrixIdentity());
 	HRESULT SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
-	HRESULT LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes); // ∏µ® ∫“∑Øø‘¥¯ ∞Ê∑Œø° ±◊¥Î∑Œ ¿÷¿Ω
+	HRESULT LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes); // Î™®Îç∏ Î∂àÎü¨ÏôîÎçò Í≤ΩÎ°úÏóê Í∑∏ÎåÄÎ°ú ÏûàÏùå
 #pragma endregion
 
 

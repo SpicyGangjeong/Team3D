@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "RootModelPart.h"
 
 #include "GameInstance.h"
@@ -71,7 +71,7 @@ void CRootModelPart::Update_Anim(_float fTimeDelta)
 		{
 			pModel->Set_PlayAnim(m_pMainModel->Get_PlayAnim());
 			pModel->Set_AnimSpeed(m_pMainModel->Get_AnimSpeed());
-			pModel->Play_Animation(fTimeDelta);
+			pModel->Play_Animation(fTimeDelta,m_pTransformCom);
 		}
 	}
 }
@@ -171,7 +171,7 @@ CRootModelPart* CRootModelPart::Create(ID3D11Device* pDevice, ID3D11DeviceContex
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
 		MSG_BOX("Failed to Created : CRootModelPart");
-		Safe_Release(pInstance);
+		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
@@ -184,7 +184,7 @@ CGameObject* CRootModelPart::Clone(void* pArg, CGameObject* pOwner)
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
 		MSG_BOX("Failed to Cloned : CRootModelPart");
-		Safe_Release(pInstance);
+		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;

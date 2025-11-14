@@ -13,6 +13,7 @@ public:
 		_float		fRotationPerSec = 0.f;
 		_float		fRadius = 20.f;
 	}TRANSFORM_DESC;
+
 private:
 	CTransform(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CTransform(const CTransform& rhs);
@@ -32,6 +33,7 @@ public:
 	_vector		Get_QuarternionVector() const; // 현재 회전정보를 담고 있는 쿼터니언 벡터를 out 
 	_vector		Get_RollPitchYawVector() const;
 	_vector		Get_State(STATE eState) const { return XMLoadFloat4(reinterpret_cast<const _float4*>(&m_WorldMatrix.m[ENUM_CLASS(eState)])); }
+	const _float4* Get_StatePtr(STATE eState) { return reinterpret_cast<_float4*>(&m_WorldMatrix.m[ENUM_CLASS(eState)]); }
 	const _float4x4* Get_WorldMatrixPtr() const { return &m_WorldMatrix; }
 	const _matrix Get_XMWorldMatrix() const { return XMLoadFloat4x4(&m_WorldMatrix); }
 	const _matrix Get_WorldMatrixInv() const { return XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_WorldMatrix)); }

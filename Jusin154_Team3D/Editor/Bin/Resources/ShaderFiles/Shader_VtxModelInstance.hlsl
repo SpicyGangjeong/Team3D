@@ -29,6 +29,7 @@ Texture2D g_NormalTexture : register(t1);
 Texture2D g_MaskingTexture : register(t2);
 Texture2D g_DissolveTexture : register(t3);
 Texture2D g_NoiseTexture : register(t4);
+Texture2D g_EmissiveTexture : register(t6);
 
 StructuredBuffer<ParticleValue> g_ParticleValue : register(t5);
 
@@ -65,6 +66,7 @@ bool g_isDiffuse;
 bool g_isMasking;
 bool g_isDissolve;
 bool g_isNoise;
+bool g_isEmissive;
 
 bool g_isDiffuseUVMove;
 bool g_isMaskUVMove;
@@ -323,8 +325,16 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     Out.vDiffuse = vMtrlDiffuse;
     
     // 색깔 추가할 처리 (이미시브)
+    
+    float4 vEmissiveMtrl;
+    
+    if (g_isEmissive == true)
+    {
+        vEmissiveMtrl = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
+    }
+    
     if (vMtrlDiffuse.a >= g_fEmissiveCutAlpha)
-        Out.vColorTarget = vector(g_vEmissive.rgb, g_fColorOption / 10.f);
+        Out.vColorTarget = vector(g_vEmissive.rgb + vEmissiveMtrl.rgb, g_fColorOption / 10.f);
     else
         Out.vColorTarget = vector(0.f, 0.f, 0.f, 0.f);
     

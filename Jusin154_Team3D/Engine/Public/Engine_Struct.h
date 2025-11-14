@@ -38,15 +38,20 @@ struct LERPDESC {
 
 typedef struct tagLightDesc
 {
-	LIGHT		eType = {};
-	_float4		vDiffuse = {};
-	_float4		vAmbient = {};
-	_float4		vSpecular = {};
+	LIGHT				eType = {};
+	_float4				vDiffuse = {};
+	_float4				vAmbient = {};
+	_float4				vSpecular = {};
 
-	_float4		vDirection = {};
-	_float4		vPosition = {};
-	_float		fRange = {};
-	_float2		vSpotAngles = {};
+	const XMFLOAT4* pDirection = nullptr;
+	const XMFLOAT4* pPosition = nullptr;
+
+	_float4				vPosOffset = {};
+
+	_float				fRange = {};
+	_float2				vSpotAngles = {};
+
+	_uint				iLevel = {};
 }LIGHT_DESC;
 
 typedef struct tagShadowLight
@@ -312,14 +317,18 @@ typedef struct tagVertexModelInstanceParticleDesc
 
 
 typedef struct tagPhsXUserData {
-	PHYSX_KIND eKind = PHYSX_KIND::NOT_DEFINED;
+
+	PHYSX_KIND	eKind = PHYSX_KIND::NOT_DEFINED;
+	_uint		iSubKind = UINT_MAX;
 	class CGameObject* pOwner = { nullptr };
 	_float4x4 m_BeforeMatrix = { };
+
 	union {
 		class CRigidBody* pBody;
 		class CCharacter_Controller* pCharacter;
 		class CObstacle_Controller* pObstacle = { nullptr };
 	};
+
 }PhsXUserData;
 
 NS_END

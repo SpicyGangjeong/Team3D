@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Camera.h"
 
 CCamera::CCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -32,6 +32,7 @@ HRESULT CCamera::Initialize(void* pArg)
     m_fFar = pDesc->fFar;
     m_bActive = false;
     m_iPriority = pDesc->iPriority;
+    m_pCameraKey = pDesc->pCameraKey;
     m_pFollowTarget = pDesc->pFollowTarget;
     SAFE_ADDREF(m_pFollowTarget);
     m_pLookTarget = pDesc->pLookTarget;
@@ -81,12 +82,12 @@ void CCamera::Transition(_float fTimeDelta)
 void CCamera::Active_Camera(pair<_float4, _float3>& pairTransitionInfo)
 {
     //if (true == m_bTransitionLerp) {
-        m_pTransformCom->Set_WorldMatrix(XMMatrixAffineTransformation(XMVectorSplatOne(), XMVectorZero(),
-            XMLoadFloat4(&pairTransitionInfo.first), XMLoadFloat3(&pairTransitionInfo.second)));
-        m_fTransitionCurrentTime = 0.f;
-        m_bIsCurrentTransition = true;
+    //    m_pTransformCom->Set_WorldMatrix(XMMatrixAffineTransformation(XMVectorSplatOne(), XMVectorZero(),
+    //        XMLoadFloat4(&pairTransitionInfo.first), XMLoadFloat3(&pairTransitionInfo.second)));
+    //    m_fTransitionCurrentTime = 0.f;
+    //    m_bIsCurrentTransition = true;
     //}
-    //m_bActive = true;
+    m_bActive = true;
 }
 
 void CCamera::DeActive_Camera(pair<_float4, _float3>& pairTransition)

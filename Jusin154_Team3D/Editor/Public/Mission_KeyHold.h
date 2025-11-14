@@ -31,6 +31,7 @@ private:
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
+	_float m_fPI{};
 
 public:
 	static CMission_KeyHold* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
