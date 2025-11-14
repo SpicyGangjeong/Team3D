@@ -244,6 +244,18 @@
     <Filter Include="01.Utility\06.Picking">
       <UniqueIdentifier>{a60a7ba5-a937-41d7-baac-db67f86f3ba1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Element\02.Component\08.Character_Controller\Collision_Callback">
+      <UniqueIdentifier>{05865481-fa20-4432-a5a7-945d4f8c7f3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\07.RigidBody\10.Dynamic">
+      <UniqueIdentifier>{bed0de44-4e62-4b5f-9767-65cfc8a933a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\07.RigidBody\11.Kinematic">
+      <UniqueIdentifier>{33ac85a2-be8e-4ad9-a179-1239d818dc9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\07.RigidBody\00.Static">
+      <UniqueIdentifier>{fda41884-634b-4dd4-8bd2-f6f7ad68ab1f}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.Element\02.Component\09.Light">
       <UniqueIdentifier>{7c82051e-19af-4284-8156-16f504db30b6}</UniqueIdentifier>
     </Filter>
@@ -464,6 +476,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Light_Manager.cpp">
       <Filter>03.Management\03.Light_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Collision_Callback.cpp">
+      <Filter>02.Element\02.Component\08.Character_Controller\Collision_Callback</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1045,6 +1060,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Light_Manager.h">
       <Filter>03.Management\03.Light_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Collision_Callback.h">
+      <Filter>02.Element\02.Component\08.Character_Controller\Collision_Callback</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

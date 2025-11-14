@@ -315,14 +315,18 @@ typedef struct tagVertexModelInstanceParticleDesc
 
 
 typedef struct tagPhsXUserData {
-	PHYSX_KIND eKind = PHYSX_KIND::NOT_DEFINED;
+
+	PHYSX_KIND	eKind = PHYSX_KIND::NOT_DEFINED;
+	_uint		iSubKind = UINT_MAX;
 	class CGameObject* pOwner = { nullptr };
 	_float4x4 m_BeforeMatrix = { };
+
 	union {
 		class CRigidBody* pBody;
 		class CCharacter_Controller* pCharacter;
 		class CObstacle_Controller* pObstacle = { nullptr };
 	};
+
 }PhsXUserData;
 
 NS_END

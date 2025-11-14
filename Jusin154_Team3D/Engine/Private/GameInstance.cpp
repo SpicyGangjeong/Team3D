@@ -571,7 +571,7 @@ SaveModel* CGameInstance::Load_SaveModel(const _char* filePath)
 }
 
 #pragma region PhysX_Manager
-PSX::PxMaterial* CGameInstance::Get_Material(_float3* vMatInfo)
+PSX::PxMaterial* CGameInstance::Create_Material(_float3* vMatInfo)
 {
 	return m_pPhysX_Manager->Create_Material(vMatInfo);
 }
@@ -581,11 +581,11 @@ void CGameInstance::RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTr
 	return m_pPhysX_Manager->RegistTriMesh(pName, pPxTriMesh);
 }
 
-const PSX::PxRigidDynamic* CGameInstance::Add_DynamicActor(CRigidBody& RigidBody)
+PSX::PxRigidDynamic* CGameInstance::Add_DynamicActor(CRigidBody& RigidBody)
 {
 	return m_pPhysX_Manager->Add_DynamicActor(RigidBody);
 }
-const PSX::PxRigidStatic* CGameInstance::Add_StaticActor(CRigidBody& RigidBody)
+PSX::PxRigidStatic* CGameInstance::Add_StaticActor(CRigidBody& RigidBody)
 {
 	return m_pPhysX_Manager->Add_StaticActor(RigidBody);
 }
@@ -604,6 +604,14 @@ PSX::PxController* CGameInstance::Get_Controller(_uint iControllerIndex)
 void CGameInstance::ReleaseController(_uint iControllerIndex)
 {
 	m_pPhysX_Manager->ReleaseController(iControllerIndex);
+}
+void CGameInstance::Attach_Actor(CRigidBody& RigidBody, PSX::PxActor& Actor)
+{
+	m_pPhysX_Manager->Attach_Actor(RigidBody, Actor);
+}
+void CGameInstance::Detach_Actor(CRigidBody& RigidBody, PSX::PxActor*& pActor)
+{
+	m_pPhysX_Manager->Detach_Actor(RigidBody, pActor);
 }
 HRESULT CGameInstance::ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix)
 {
@@ -726,7 +734,6 @@ void CGameInstance::Release_Engine()
 {
 	DestroyInstance();
 
-	SAFE_RELEASE(m_pPhysX_Manager);
 	SAFE_RELEASE(m_pPicking);
 	SAFE_RELEASE(m_pCollider_Manager);
 	SAFE_RELEASE(m_pShadow);
@@ -738,6 +745,7 @@ void CGameInstance::Release_Engine()
 	SAFE_RELEASE(m_pTimer_Manager);
 	SAFE_RELEASE(m_pRenderer);
 	SAFE_RELEASE(m_pObject_Manager);
+	SAFE_RELEASE(m_pPhysX_Manager);
 	SAFE_RELEASE(m_pLevel_Manager);
 	SAFE_RELEASE(m_pPrototype_Manager);
 	SAFE_RELEASE(m_pLight_Manager); // Light Manager는 m_pObject_Manager 보다 빨리 불려야함 

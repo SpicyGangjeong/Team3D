@@ -180,16 +180,18 @@ public:
 	_bool	isPicking(_float3* pOut);
 #pragma endregion
 #pragma region PhysX_Manager
-	PSX::PxMaterial* Get_Material(_float3* vMatInfo);
+	PSX::PxMaterial* Create_Material(_float3* vMatInfo);
 	void RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh);
-	const PSX::PxRigidDynamic* Add_DynamicActor(CRigidBody& RigidBody);
-	const PSX::PxRigidStatic* Add_StaticActor(CRigidBody& RigidBody);
+	PSX::PxRigidDynamic* Add_DynamicActor(CRigidBody& RigidBody);
+	PSX::PxRigidStatic* Add_StaticActor(CRigidBody& RigidBody);
 
 
 	PSX::PxController*	Add_CapsuleController(PSX::PxCapsuleControllerDesc& Desc);
 	PSX::PxController*	Add_BoxController(PSX::PxBoxControllerDesc& Desc);
 	PSX::PxController*	Get_Controller(_uint iControllerIndex);
 	void				ReleaseController(_uint iControllerIndex);
+	void				Attach_Actor(CRigidBody& RigidBody, PSX::PxActor& Actor);
+	void				Detach_Actor(CRigidBody& RigidBody, PSX::PxActor*& pActor);
 
 	HRESULT ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix = XMMatrixIdentity());
 	HRESULT SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);

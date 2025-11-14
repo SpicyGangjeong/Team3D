@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "RigidBody.h"
 #include "GameInstance.h"
 #include "GameObject.h"
@@ -53,6 +53,25 @@ HRESULT CRigidBody::Render()
 }
 #endif // _DEBUG
 
+void CRigidBody::Set_Kinematic(_bool bKinematic)
+{
+	static_cast<PSX::PxRigidDynamic*>(m_pRigidBody)->setRigidBodyFlag(PSX::PxRigidBodyFlag::eKINEMATIC, bKinematic);
+}
+
+void CRigidBody::Add_Force(_fvector vForce, PSX::PxForceMode::Enum eType)
+{
+	PSX::PxVec3 vPxForce = {};
+	XMStoreFloat3((_float3*)&vPxForce, vForce);
+	static_cast<PSX::PxRigidDynamic*>(m_pRigidBody)->addForce(vPxForce, eType);
+}
+
+void CRigidBody::Add_Torque(_fvector vDirection, PSX::PxForceMode::Enum eType)
+{
+	PSX::PxVec3 vPxTorque = {};
+	XMStoreFloat3((_float3*)&vPxTorque, vDirection);
+	static_cast<PSX::PxRigidDynamic*>(m_pRigidBody)->addForce(vPxTorque, eType);
+}
+
 HRESULT CRigidBody::Initialize_Prototype(RIGIDBODY_PROTOTYPEDESC& Desc)
 {
 	m_eActorType		= Desc.eType;
@@ -63,11 +82,6 @@ HRESULT CRigidBody::Initialize_Prototype(RIGIDBODY_PROTOTYPEDESC& Desc)
 	m_fContactOffset	= Desc.fContactOffset;
 	m_vhalfGeometryInfo = Desc.vhalfGeometryInfo;
 	m_fDensity			= Desc.fDensity;
-#ifdef _DEBUG
-	if (FAILED(Add_DebugShape())) {
-		return E_FAIL;
-	}
-#endif // _DEBUG
 
 	return S_OK;
 }
@@ -102,9 +116,58 @@ HRESULT CRigidBody::Initialize(void* pArg)
 	default:
 		break;
 	}
+
+	Initialize_UserData();
+	m_pRigidBody->userData = &m_tagData;
+
+
+
 #ifdef _DEBUG
-	Add_DebugShape();
+	if (FAILED(Add_DebugShape())) {
+		return E_FAIL;
+	}
 #endif // _DEBUG
+
+	return S_OK;
+}
+
+HRESULT CRigidBody::Initialize_UserData()
+{
+	switch (m_eActorType)
+	{
+	case Engine::ACTOR::BOX:
+		m_tagData.eKind = PHYSX_KIND::BODY_DYNAMIC;
+		m_tagData.pOwner = m_pOwner;
+		XMStoreFloat4x4(&m_tagData.m_BeforeMatrix, m_pTransform->Get_XMWorldMatrix());
+		m_tagData.pBody = this;
+		break;
+	case Engine::ACTOR::CAPSULE:
+		m_tagData.eKind = PHYSX_KIND::BODY_DYNAMIC;
+		m_tagData.pOwner = m_pOwner;
+		XMStoreFloat4x4(&m_tagData.m_BeforeMatrix, m_pTransform->Get_XMWorldMatrix());
+		m_tagData.pBody = this;
+		break;
+	case Engine::ACTOR::SPHERE:
+		m_tagData.eKind = PHYSX_KIND::BODY_DYNAMIC;
+		m_tagData.pOwner = m_pOwner;
+		XMStoreFloat4x4(&m_tagData.m_BeforeMatrix, m_pTransform->Get_XMWorldMatrix());
+		m_tagData.pBody = this;
+		break;
+	case Engine::ACTOR::PLANE:
+		break;
+	case Engine::ACTOR::TRIANGLEMESH:
+		m_tagData.eKind = PHYSX_KIND::BODY_STATIC;
+		m_tagData.pOwner = m_pOwner;
+		XMStoreFloat4x4(&m_tagData.m_BeforeMatrix, m_pTransform->Get_XMWorldMatrix());
+		m_tagData.pBody = this;
+		break;
+	case Engine::ACTOR::HEIGHTFIELD:
+		break;
+	case Engine::ACTOR::END:
+		break;
+	default:
+		break;
+	}
 
 	return S_OK;
 }
@@ -161,6 +224,9 @@ CComponent* CRigidBody::Clone(void* pArg, CGameObject* pOwner)
 
 void CRigidBody::Free()
 {
+	if (nullptr != m_pRigidBody) {
+		m_pRigidBody = nullptr;
+	}
 	__super::Free();
 
 	SAFE_RELEASE(m_pTransform);

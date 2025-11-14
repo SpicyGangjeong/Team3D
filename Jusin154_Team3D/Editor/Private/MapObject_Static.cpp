@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "MapObject_Static.h"
 
 #include "GameInstance.h"
@@ -192,8 +192,8 @@ void CMapObject_Static::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pShaderCom);
-	Safe_Release(m_pModelCom);
+	SAFE_RELEASE(m_pShaderCom);
+	SAFE_RELEASE(m_pModelCom);
 }
 
 void CMapObject_Static::Describe_Entity()
