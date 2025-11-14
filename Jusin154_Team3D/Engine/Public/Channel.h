@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Base.h"
 
@@ -30,23 +30,23 @@ public:
 	}
 private:
 	HRESULT Initialize(HANDLE hFile, DWORD& dwByte);
-	// ¹ÙÀÌ³Ê¸®
+	// ë°”ì´ë„ˆë¦¬
 	HRESULT Initialize(const class CModel* pModel, SaveChannel* pSaveChannel);
 	//
 	HRESULT Initialize(const vector<class CBone*>& Bones, _uint iIndex);
 
 
 private:
-	_char					m_szName[MAX_PATH] = {};	// ¿µÇâÀ» ¹ŞÀ» º»ÀÇ ÀÌ¸§
-	_int					m_iBoneIndex = { -1 };		// º» º¤ÅÍ¿¡¼­ º»ÀÇ ÀÎµ¦½º
-	_uint					m_iNumKeyFrames = {};		// AnimationÀÇ m_fDurationµ¿¾È ÀÌ º»ÀÌ ÃëÇØ¾ßÇÒ Å°ÇÁ·¹ÀÓÀÇ °¹¼ö
+	_char					m_szName[MAX_PATH] = {};	// ì˜í–¥ì„ ë°›ì„ ë³¸ì˜ ì´ë¦„
+	_int					m_iBoneIndex = { -1 };		// ë³¸ ë²¡í„°ì—ì„œ ë³¸ì˜ ì¸ë±ìŠ¤
+	_uint					m_iNumKeyFrames = {};		// Animationì˜ m_fDurationë™ì•ˆ ì´ ë³¸ì´ ì·¨í•´ì•¼í•  í‚¤í”„ë ˆì„ì˜ ê°¯ìˆ˜
 	_float4x4				m_PreTransformMatrix = {};
-	vector<KEYFRAME>		m_KeyFrames;	// Å°ÇÁ·¹ÀÓ º¤ÅÍ
+	vector<KEYFRAME>		m_KeyFrames;	// í‚¤í”„ë ˆì„ ë²¡í„°
 
 public:
-	static CChannel* Create(const vector<class CBone*>& Bones, _uint iIndex); // ·²ÇÁÀü¿ë
+	static CChannel* Create(const vector<class CBone*>& Bones, _uint iIndex); // ëŸ´í”„ì „ìš©
 	static CChannel* Create(HANDLE hFile, DWORD& dwByte);
-	// ¹ÙÀÌ³Ê¸®
+	// ë°”ì´ë„ˆë¦¬
 	static CChannel* Create(const class CModel* pModel, SaveChannel* pSaveChannel);
 	//
 	virtual void Free() override;

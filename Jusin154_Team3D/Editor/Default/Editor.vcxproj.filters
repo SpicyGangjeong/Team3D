@@ -199,6 +199,9 @@
     <Filter Include="02.GameObjects\MainLight">
       <UniqueIdentifier>{a9360a97-5ef2-476a-9f12-f4e06c28290c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Dummy_Plane">
+      <UniqueIdentifier>{6872c5bc-5eac-46a1-b6d8-3ec0f4fb2cd5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -402,6 +405,9 @@
     <ClInclude Include="..\Public\MainLight.h">
       <Filter>02.GameObjects\MainLight</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Dummy_Plane.h">
+      <Filter>02.GameObjects\Layer_Effect\Dummy_Plane</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -600,6 +606,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\MainLight.cpp">
       <Filter>02.GameObjects\MainLight</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_Plane.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Dummy_Plane</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

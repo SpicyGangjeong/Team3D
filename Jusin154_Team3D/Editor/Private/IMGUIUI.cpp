@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "IMGUIUI.h"
 #include "UIObject.h"
 #include "GamePlay_Canvas.h"
@@ -38,7 +38,7 @@ void CIMGUIUI::PanelwstringTostring(vector<std::wstring>& panelNames)
 
 	for (auto& wname : panelNames)
 	{
-		// wstring -> UTF-8 string º¯È¯
+		// wstring -> UTF-8 string ë³€í™˜
 		int size = WideCharToMultiByte(CP_UTF8, 0,
 			wname.c_str(), (int)wname.size(),
 			nullptr, 0, nullptr, nullptr);
@@ -49,11 +49,11 @@ void CIMGUIUI::PanelwstringTostring(vector<std::wstring>& panelNames)
 			wname.c_str(), (int)wname.size(),
 			&result[0], size, nullptr, nullptr);
 
-		// º¯È¯µÈ string ÀúÀå
+		// ë³€í™˜ëœ string ì €ì¥
 		m_iPanelNamestring.push_back(std::move(result));
 	}
 
-	// vector<const char*> ¾÷µ¥ÀÌÆ®
+	// vector<const char*> ì—…ë°ì´íŠ¸
 	for (auto& str : m_iPanelNamestring)
 		m_iPanelName.push_back(str.c_str());
 
@@ -70,7 +70,7 @@ void CIMGUIUI::ElementwstringTostring(vector<wstring>& panelNames)
 
 	for (auto& wname : panelNames)
 	{
-		// wstring -> UTF-8 string º¯È¯
+		// wstring -> UTF-8 string ë³€í™˜
 		int size = WideCharToMultiByte(CP_UTF8, 0,
 			wname.c_str(), (int)wname.size(),
 			nullptr, 0, nullptr, nullptr);
@@ -81,11 +81,11 @@ void CIMGUIUI::ElementwstringTostring(vector<wstring>& panelNames)
 			wname.c_str(), (int)wname.size(),
 			&result[0], size, nullptr, nullptr);
 
-		// º¯È¯µÈ string ÀúÀå
+		// ë³€í™˜ëœ string ì €ì¥
 		m_pElementNamestring.push_back(std::move(result));
 	}
 
-	// vector<const char*> ¾÷µ¥ÀÌÆ®
+	// vector<const char*> ì—…ë°ì´íŠ¸
 	for (auto& str : m_pElementNamestring)
 		m_pElementName.push_back(str.c_str());
 

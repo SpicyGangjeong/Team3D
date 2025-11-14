@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CanvasObject.h"
 
 CCanvasObject::CCanvasObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -144,5 +144,5 @@ void CCanvasObject::Free()
 
 	m_Panels.clear();
 	m_PanelNames.clear();
-	m_Panels_map.clear(); // map ºñ¿ì±â
+	m_Panels_map.clear(); // map ë¹„ìš°ê¸°
 }

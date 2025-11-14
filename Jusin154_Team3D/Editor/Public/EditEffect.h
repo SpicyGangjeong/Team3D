@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Editor_Define.h"
 #include "EffectObject.h"
@@ -23,8 +23,8 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 
 public:
-	void Reference_Mat_For_EditEffect();
-
+	void	Reference_Mat_For_EditEffect();
+	HRESULT Save_Effect(const _char* pPath);
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
