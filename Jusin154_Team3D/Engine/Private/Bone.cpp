@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Bone.h"
 
 CBone::CBone()
@@ -76,7 +76,7 @@ CBone* CBone::Create(const SaveNode& _SaveNode, _int iParentIndex)
 	if (FAILED(pInstance->Initialize(_SaveNode, iParentIndex)))
 	{
 		MSG_BOX("Failed to Created : CBone");
-		Safe_Release(pInstance);
+		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;

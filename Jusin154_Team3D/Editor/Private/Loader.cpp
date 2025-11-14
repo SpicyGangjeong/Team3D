@@ -65,6 +65,7 @@
 #include "TestEffect.h"
 #include "EditEffect.h"
 #include "Effect_Editor.h"
+#include "Dummy_Plane.h"
 
 #pragma endregion
 
@@ -475,6 +476,10 @@ HRESULT CLoader::Loading_For_Effect()
 		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Box/Box.bin", XMMatrixIdentity()))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Model_DummyPlane"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Effect/DummyPlane/DummyPlane.fbx", XMMatrixIdentity()))))
+		return E_FAIL;
+
 
 
 	m_strMessage = TEXT("Shader Loading..");
@@ -509,6 +514,10 @@ HRESULT CLoader::Loading_For_Effect()
 	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_Cube>(ENUM_CLASS(LEVEL::EFFECT), CDummy_Cube::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_Plane>(ENUM_CLASS(LEVEL::EFFECT), CDummy_Plane::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	
 	m_strMessage = TEXT("Loading Success!");
 
 	m_isFinished = true;

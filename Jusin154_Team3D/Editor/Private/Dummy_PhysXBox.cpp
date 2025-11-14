@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Dummy_PhysXBox.h"
 
 #include "GameInstance.h"
@@ -155,8 +155,8 @@ void CDummy_PhysXBox::Free()
 	__super::Free();
 
 	SAFE_RELEASE(m_pRigidBody);
-	Safe_Release(m_pShaderCom);
-	Safe_Release(m_pModelCom);
+	SAFE_RELEASE(m_pShaderCom);
+	SAFE_RELEASE(m_pModelCom);
 }
 
 void CDummy_PhysXBox::Describe_Entity()

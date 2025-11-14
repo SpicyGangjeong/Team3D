@@ -1,8 +1,9 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Light.h"
 #include "Shader.h"
 #include "VIBuffer.h"
 #include "GameInstance.h"
+#include "GameObject.h"
 
 
 CLight::CLight(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -72,6 +73,9 @@ HRESULT CLight::Render(CShader* pShader, CVIBuffer* pVIBuffer) const
 		if (FAILED(pShader->Bind_RawValue("g_vLightPos", m_LightDesc.pPosition, sizeof(_float4)))) {
 			return E_FAIL;
 		}
+		if (FAILED(pShader->Bind_RawValue("g_vLightPosOffset", &m_LightDesc.vPosOffset, sizeof(_float4)))) {
+			return E_FAIL;
+		}
 		if (FAILED(pShader->Bind_RawValue("g_fLightRange", &m_LightDesc.fRange, sizeof(_float)))) {
 			return E_FAIL;
 		}
@@ -84,7 +88,10 @@ HRESULT CLight::Render(CShader* pShader, CVIBuffer* pVIBuffer) const
 		iPassIndex = ENUM_CLASS(SHADER_PASS_DEFERRED::SPOT);
 	}
 	else {
-		if (FAILED(pShader->Bind_RawValue("g_vLightPos", m_LightDesc.pDirection, sizeof(_float4)))) {
+		if (FAILED(pShader->Bind_RawValue("g_vLightPos", m_LightDesc.pPosition, sizeof(_float4)))) {
+			return E_FAIL;
+		}
+		if (FAILED(pShader->Bind_RawValue("g_vLightPosOffset", &m_LightDesc.vPosOffset, sizeof(_float4)))) {
 			return E_FAIL;
 		}
 		if (FAILED(pShader->Bind_RawValue("g_fLightRange", &m_LightDesc.fRange, sizeof(_float)))) {
@@ -147,7 +154,7 @@ void CLight::Free()
 
 void CLight::Describe_Entity()
 {
-	if (ImGui::TreeNode("LIGHT"))
+	if (ImGui::TreeNode("LIGHT_INFO"))
 	{
 		ImGui::Separator(); ImGui::Spacing();
 
@@ -160,12 +167,23 @@ void CLight::Describe_Entity()
 			m_LightDesc.eType = static_cast<LIGHT>(iCurrentItem);
 		}
 
-		ImGui::DragFloat4("Diffuse", reinterpret_cast<float*>(&m_LightDesc.vDiffuse));
-		ImGui::DragFloat4("Ambient", reinterpret_cast<float*>(&m_LightDesc.vAmbient));
-		ImGui::DragFloat4("Specular", reinterpret_cast<float*>(&m_LightDesc.vSpecular));
+		GUI::DragFloat4("Diffuse", reinterpret_cast<float*>(&m_LightDesc.vDiffuse) , 0.01f , 0.f ,1.f);
+		GUI::DragFloat4("Ambient", reinterpret_cast<float*>(&m_LightDesc.vAmbient), 0.01f, 0.f, 1.f);
+		GUI::DragFloat4("Specular", reinterpret_cast<float*>(&m_LightDesc.vSpecular), 0.01f, 0.f, 1.f);
+		GUI::DragFloat("Range", &m_LightDesc.fRange, 1.f, 0.f);
+		GUI::DragFloat2("SpotAngle", reinterpret_cast<float*>(&m_LightDesc.vSpotAngles));
 
-		ImGui::TreePop();
+		GUI::Spacing();
+		GUI::Spacing();
+
+		GUI::DragFloat3("PosOffest", reinterpret_cast<float*>(&m_LightDesc.vPosOffset));
+
+		GUI::Spacing();
+
+		m_pOwner->Get_Component<CTransform>()->Describe_Entity();
+
+		GUI::TreePop();
 	}
 
-	ImGui::Separator();
+	GUI::Separator();
 }
