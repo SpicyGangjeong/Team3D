@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "MapObject_Manager.h"
 
 #include "GameInstance.h"
@@ -374,7 +374,7 @@ HRESULT CMapObject_Manager::Save_MapData(const _char* pFileName)
 #pragma endregion
 
 
-	// ÀúÀå
+	// ?Ãº?Ã¥
 	if (doc.SaveFile(strPath.c_str()) != tinyxml2::XML_SUCCESS) {
 		MSG_BOX("Failed to Save File");
 	}
@@ -451,7 +451,7 @@ HRESULT CMapObject_Manager::Save_ContainerData(const _char* pFileName, const _ch
 
 		for (_uint i = 0; i < pMapObject->Get_LodLevel() + 1; ++i)
 		{
-			// <PrototypeTag>ÅØ½ºÆ®</PrototypeTag>
+			// <PrototypeTag>Ã…Ã˜Â½ÂºÃ†Â®</PrototypeTag>
 			tinyxml2::XMLElement* proto = doc.NewElement("PrototypeTag");
 			proto->SetText(CMyTools::ToString(pMapObject->Get_PrototypeTag(i)).c_str());
 			PartObject->InsertEndChild(proto);
@@ -498,7 +498,7 @@ HRESULT CMapObject_Manager::Save_ContainerData(const _char* pFileName, const _ch
 	m_pSelectObject = nullptr;
 #pragma endregion
 
-	// ÀúÀå
+	// ?Ãº?Ã¥
 	if (doc.SaveFile(strPath.c_str()) != tinyxml2::XML_SUCCESS) {
 		MSG_BOX("Failed to Save File");
 	}

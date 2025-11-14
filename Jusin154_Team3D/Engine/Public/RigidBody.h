@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Component.h"
 
 NS_BEGIN(PSX)
@@ -12,52 +12,30 @@ class CMesh;
 
 class ENGINE_DLL CRigidBody final : public CComponent
 {
-public:
-	typedef struct tagRigidStatic_PrototypeDesc
+public: // MORE INFO ON ENGINE_ENUM
+	typedef struct tagRigidBody_PrototypeDesc // ë‹¤ ì±„ìš°ì„¸ìš” NONE ë¹¼ê³ , ëª©ì ì— ì•ˆë§ëŠ”ê±° ë¹¼ê³ 
 	{
-		_float3			vMatInfo;
-		const _char*	szMeshName = { } ;
-	}RIGID_STATIC_PROTOTYPEDESC;
-	typedef struct tagRigidDynamic_PrototypeDesc
-	{
-		_float3						vMatInfo;
-		_float3						vhalfGeometryInfo;
-		_bool						bExclusive = { false };
-		PSX::PxShapeFlags			ePxShapeFlag = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
-	}RIGID_DYNAMIC_PROTOTYPEDESC;
-
-	typedef struct tagRigidBody_PrototypeDesc
-	{
-		ACTOR						eType;
-		union 
-		{
-			RIGID_STATIC_PROTOTYPEDESC		tRigidStaticDesc;
-			RIGID_DYNAMIC_PROTOTYPEDESC		tRigidDynamicDesc;
-		}; 
+		ACTOR					eType;
+		PSX::PxRigidBodyFlags	ePxRigidBodyFlags = { /* NONE */};
+		PSX::PxShapeFlags		ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+		PXMATERIAL				ePxMaterialTypes = { PXMATERIAL::DEFAULT };
+		_float3					vMatInfo = { 0.5f, 0.5f, 0.6f }; // í”¼ì§ìŠ¤ ê°ì²´ì˜ ì†ì„± ë“±
+		_float					fContactOffset = { 0.05f }; // ì ‘ì´‰ ìœ ê²© ì˜¤í”„ì…‹
+#pragma region DYNAMIC
+		_float3					vhalfGeometryInfo;		// ë°•ìŠ¤ëŠ” vSize, ìº¡ìŠì€ radius, heightë¡œ ì”€
+		_float					fDensity = { 1000.f };	// ë°€ë„, ì‹¤ì œ ë¬´ê²ŒëŠ” ë¶€í”¼ì— ë”°ë¼ ë‹¬ë¼ì§
+#pragma endregion
+#pragma region STATIC
+#pragma endregion
 	}RIGIDBODY_PROTOTYPEDESC;
-	typedef struct tagRigidStatic_Desc {
-		const _char* szMeshName = { };
-	}RIGID_STATIC_DESC;
-	typedef struct tagRigidDynamic_Desc {
-		_float			fDensity = { 1000.f };
-		_bool			bIsKinematic = { false };
-	}RIGID_DYNAMIC_DESC;
+
 	typedef struct tagRigidBody_Desc
 	{
-		ACTOR eType;
-		union
-		{
-			RIGID_STATIC_DESC		tRigidStaticDesc;
-			RIGID_DYNAMIC_DESC		tRigidDynamicDesc;
-		};
-		// Å°³×¸¶Æ½À» ÄÑ¸é, 
-		// ÇÁ·¹ÀÓ º° Á÷Á¢ À§Ä¡ ÁöÁ¤ÀÌ °¡´ÉÇÏ´Ù.
-		// ¹°¸®¿£ÁøÀÇ Èû, Áß·Â µîÀÇ ¿µÇâÀ» ¹ŞÁö ¾Ê´Â´Ù.
-		// ´Ü, ´Ù¸¥ ¹°¸®¿£Áø ¿ÀºêÁ§Æ®¿ÍÀÇ Ãæµ¹Àº ¹ß»ıÇÑ´Ù.
-		// Áï, °­Á¦·Î ¿òÁ÷ÀÌÁö¸¸, Ãæµ¹Àº ½Ã¹Ä·¹ÀÌ¼Ç ÇÑ´Ù.
-		// ±×·¯¹Ç·Î Å°³×¸¶Æ½ ¿ÀºêÁ§Æ®´Â ´Ù¸¥ ¿ÀºêÁ§Æ®¿¡ ¿µÇâÀ» ÁÖÁö¸¸, ´Ù¸¥ ¿ÀºêÁ§Æ®ÀÇ Èû¿¡ ¿µÇâÀ» ¹ŞÁö ¾Ê´Â´Ù.
-		// ÁÖ·Î ¿òÁ÷ÀÌ´Â ÇÃ·§Æû, ¹® µî¿¡ »ç¿ëµÈ´Ù.
-		// ½ºÅÂÆ½ ¸®Áöµå¹Ùµğ¿Í ´Ş¸® ¿òÁ÷ÀÏ ¼ö ÀÖ´Ù !!!
+#pragma region DYNAMIC
+#pragma endregion
+#pragma region STATIC
+		const _char* szMeshName = { };
+#pragma endregion
 	}RIGIDBODY_DESC;
 
 private:
@@ -65,29 +43,52 @@ private:
 	CRigidBody(const CRigidBody& rhs);
 	virtual ~CRigidBody() = default;
 public:
-	PSX::PxShape* Get_ShapePtr() const { return m_pShape; }
-	CTransform* Get_PxTransformPtr() const { return m_pTransform; }
-	const _tchar* Get_PxMeshKey() const { return m_wstrMeshKey.c_str(); }
-	const PSX::PxMaterial* Get_PxMaterial() const { return m_pMaterial; }
+#ifdef _DEBUG
+	virtual HRESULT Render()override;
+#endif // _DEBUG
 
-	_float Get_Density() const { return m_fDensity; }
-	_bool Is_Kinematic() const { return m_bKinematic; }
+
+	ACTOR					Get_Type()				const { return m_eActorType; }
+	CTransform*				Get_TransformPtr()		const { return m_pTransform; }
+	const _tchar*			Get_PxMeshKey()			const { return m_wstrMeshKey.c_str(); }
+	PXMATERIAL				Get_MaterialType()		const { return m_eMatType; }
+	_float					Get_ContactOffset()		const { return m_fContactOffset; }
+	_float					Get_Density()			const { return m_fDensity; }
+	PSX::PxShapeFlags		Get_ShapeFlags()		const { return m_ePxShapeFlags; }
+	PSX::PxRigidBodyFlags	Get_RigidBodyFlags()	const { return m_ePxRigidBodyFlags; }
+	_float3					Get_HalfGeometryInfo() const { return m_vhalfGeometryInfo; }
 
 private:
-	ACTOR				m_eActorType = ACTOR::END;
-	const PSX::PxActor*	m_pRigidBody = { nullptr };				// ½ÇÁ¦ ½Ã¹Ä·¹ÀÌ¼ÇÀ» µµ´Â º»Ã¼
-	PSX::PxMaterial*	m_pMaterial = { nullptr };				// ÇÇÁ÷½º °´Ã¼ÀÇ ¼Ó¼º µî
-	PSX::PxShape*		m_pShape = { nullptr };					// ÇÇÁ÷½º °´Ã¼ÀÇ ¸ğ¾ç ( ¸ÓÅ×¸®¾ó·Î ¸¸µé¾îÁü )
-	_float3				m_vhalfGeometryInfo = {};
-	CTransform*			m_pTransform = { nullptr };
-	_bool				m_bKinematic = { false };
-	_bool				m_bExclusive = { false };
-	_float				m_fDensity = { 1000.f };
-	_wstring			m_wstrMeshKey = {  };
+	ACTOR					m_eActorType = ACTOR::END;
+	PSX::PxRigidBodyFlags	m_ePxRigidBodyFlags = {};
+	PXMATERIAL				m_eMatType = { PXMATERIAL::END };
+	_float					m_fContactOffset = { 0.05f };
+	const PSX::PxActor*		m_pRigidBody = { nullptr };		// ì‹¤ì œ ì‹œë®¬ë ˆì´ì…˜ì„ ë„ëŠ” ë³¸ì²´
+
+	CTransform*				m_pTransform = { nullptr };
+
+#pragma region DYNAMIC
+	PSX::PxShapeFlags		m_ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+	_float3					m_vMatInfo = {};
+	_float3					m_vhalfGeometryInfo = {};
+	_float					m_fDensity = { 1000.f };
+#pragma endregion
+#pragma region STATIC
+	_wstring				m_wstrMeshKey = {  }; // ì§ê¿ ìŠ¤íƒœí‹± ë©”ì‹œì˜ triangleMesh í‚¤
+#pragma endregion
+
+private:
+#ifdef _DEBUG
+	unique_ptr<GeometricPrimitive> m_pMainShape = { nullptr };
+	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };
+#endif // _DEBUG
 
 private:
 	HRESULT Initialize_Prototype(RIGIDBODY_PROTOTYPEDESC& Desc);
 	HRESULT Initialize(void* pArg);
+#ifdef _DEBUG
+	HRESULT Add_DebugShape();
+#endif
 
 public:
 	static CRigidBody* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, RIGIDBODY_PROTOTYPEDESC& Desc);

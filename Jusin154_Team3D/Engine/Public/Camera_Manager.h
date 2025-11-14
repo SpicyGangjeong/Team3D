@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Base.h"
 
 NS_BEGIN(Engine)
@@ -17,8 +17,9 @@ public:
 	HRESULT Bind_Camera(_uint iLevel, const _wstring& wstrCameraKey, _bool bIgnorePriority);
 	HRESULT IsBinded_Camera(const _wstring& wstrCameraKey);
 
-	const _float* Get_CurrentCameraFar();
 
+	void Force_CamPosition(_fvector vPos);
+	const _float* Get_CurrentCameraFar();
 
 private:
 	ID3D11Device*								m_pDevice = { nullptr };

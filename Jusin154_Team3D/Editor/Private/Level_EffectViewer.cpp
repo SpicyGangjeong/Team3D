@@ -1,4 +1,4 @@
-#include "pch.h"
+Ôªø#include "pch.h"
 #include "Level_EffectViewer.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
@@ -47,7 +47,7 @@ void CLevel_EffectViewer::Update(_float fTimeDelta)
 
 HRESULT CLevel_EffectViewer::Render()
 {
-	SetWindowText(g_hWnd, TEXT("¿Ã∆Â∆Æ ∑π∫ß¿‘¥œ¥Ÿ"));
+	SetWindowText(g_hWnd, TEXT("Ïù¥ÌéôÌä∏ Î†àÎ≤®ÏûÖÎãàÎã§"));
 	GUI::ShowDemoWindow();
 	return S_OK;
 }
@@ -63,6 +63,7 @@ HRESULT CLevel_EffectViewer::Ready_Layer_Camera(const _wstring& strLayerTag)
 	CameraDesc.vEye = _float3(0.f, 10.f, -10.f);
 	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
 	CameraDesc.fSpeedPerSec = 5.f;
+	CameraDesc.pCameraKey = TEXT("Debug_Camera");
 	CameraDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 	CameraDesc.fMouseSensor = 0.1f;
 

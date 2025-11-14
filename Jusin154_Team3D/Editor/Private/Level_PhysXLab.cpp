@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Level_PhysXLab.h"
 #include "GameInstance.h"
 
@@ -25,7 +25,7 @@ void CLevel_PhysXLab::Update(_float fTimeDelta)
 
 HRESULT CLevel_PhysXLab::Render()
 {
-	SetWindowText(g_hWnd, TEXT("PhysXEditor·¹º§ÀÔ´Ï´Ù"));
+	SetWindowText(g_hWnd, TEXT("PhysXEditorë ˆë²¨ìž…ë‹ˆë‹¤"));
 	GUI::ShowDemoWindow();
 	return S_OK;
 }
@@ -63,10 +63,11 @@ HRESULT CLevel_PhysXLab::Ready_Layer_Camera(const _wstring& strLayerTag)
 	CDebugCamera::CAMERA_DEBUG_DESC            CameraDesc{};
 	CameraDesc.fFovy = XMConvertToRadians(60.0f);
 	CameraDesc.fNear = 0.1f;
-	CameraDesc.fFar = 5000.f;
+	CameraDesc.fFar = 500.f;
 	CameraDesc.vEye = _float3(0.f, 10.f, -10.f);
 	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
 	CameraDesc.fSpeedPerSec = 2.f;
+	CameraDesc.pCameraKey = TEXT("Debug_Camera");
 	CameraDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 	CameraDesc.fMouseSensor = 0.1f;
 
@@ -90,24 +91,24 @@ HRESULT CLevel_PhysXLab::Ready_Layer_Terrain(const _wstring& strLayerTag)
 
 HRESULT CLevel_PhysXLab::Ready_Layer_PhysXObjects(const _wstring& strLayerTag)
 {
-	//for (int i = 0; i < 50; ++i) {
-	//	CDummy_PhysXBox::BOXSTARTPOS_DESC Desc{};
-	//	Desc.vPos = { m_pGameInstance->Random_Float(0.f, 30.f), m_pGameInstance->Random_Float(3.f, 33.f), m_pGameInstance->Random_Float(0.f, 30.f) };
-	//	Desc.vRotRPY = { m_pGameInstance->Random_Float(0.f, XM_2PI), m_pGameInstance->Random_Float(0.f, XM_2PI), m_pGameInstance->Random_Float(0.f, XM_2PI) };
+	for (int i = 0; i < 50; ++i) {
+		CDummy_PhysXBox::BOXSTARTPOS_DESC Desc{};
+		Desc.vPos = { m_pGameInstance->Random_Float(0.f, 30.f), m_pGameInstance->Random_Float(3.f, 33.f), m_pGameInstance->Random_Float(0.f, 30.f) };
+		Desc.vRotRPY = { m_pGameInstance->Random_Float(0.f, XM_2PI), m_pGameInstance->Random_Float(0.f, XM_2PI), m_pGameInstance->Random_Float(0.f, XM_2PI) };
 
-	//	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXBox>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE, &Desc))) {
-	//		return E_FAIL;
-	//	}
-	//}
-	//
-	//{
-	//	CDummy_PhysXPlayable::BOXSTARTPOS_DESC Desc{};
-	//	Desc.vPos = { 0.f, 10.f, 0.f };
-	//	Desc.vRotRPY = { 0.f, 0.f, 0.f };
-	//	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXPlayable>(g_iStaticLevel, NEXT_LEVEL, LAYER_PLAYER, &Desc))) {
-	//		return E_FAIL;
-	//	}
-	//}
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXBox>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE, &Desc))) {
+			return E_FAIL;
+		}
+	}
+	
+	{
+		CDummy_PhysXPlayable::PlayableSTARTPOS_DESC Desc{};
+		Desc.vPos = { 0.f, 100.f, 0.f };
+		Desc.vRotRPY = { 0.f, 0.f, 0.f };
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXPlayable>(g_iStaticLevel, NEXT_LEVEL, LAYER_PLAYER, &Desc))) {
+			return E_FAIL;
+		}
+	}
 
 	//{
 	//	CDummy_PhysXMesh::BOXSTARTPOS_DESC Desc{};

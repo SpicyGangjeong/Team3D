@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "DebugCamera.h"
 #include "Shader.h"
 
@@ -95,6 +95,9 @@ HRESULT CDebugCamera::Initialize(void* pArg)
 	m_pTransformCom->LookAt(XMVectorSetW(XMLoadFloat3(&pDesc->vAt), 1.f));
 	m_matInitial = *m_pTransformCom->Get_WorldMatrixPtr();
 	m_bActive = true;
+
+	m_pGameInstance->Add_Camera(NEXT_LEVEL, this, m_pCameraKey);
+	m_pGameInstance->Bind_Camera(NEXT_LEVEL, m_pCameraKey, false);
 	return S_OK;
 }
 

@@ -1,5 +1,18 @@
 ﻿#sln
 
+# h 저장형식 지정
+[*.h]
+charset = utf-8-bom
+insert_final_newline = true
+end_of_line = crlf
+
+# cpp 저장형식 지정
+[*.cpp]
+charset = utf-8-bom
+insert_final_newline = true
+end_of_line = crlf
+
+
 # hlsl 저장형식 지정
 [*.hlsl]
 charset = utf-8

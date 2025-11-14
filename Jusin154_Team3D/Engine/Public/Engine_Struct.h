@@ -85,7 +85,7 @@ struct SaveBone
 	string BoneName;
 
 	unsigned int BoneNameSize = {};
-	XMFLOAT4X4 OffsetMatrix;
+	_float4x4 OffsetMatrix = {};
 	int BoneIndex = {};
 	unsigned int WeightsCount = {};
 	vector<SaveBoneWeight>Weights = {};
@@ -98,7 +98,7 @@ struct SaveNode
 	unsigned int NodeNameSize = {};
 	int ParentIndex = {};
 	unsigned int ChildrenCount = {};
-	XMFLOAT4X4 Transformation;
+	_float4x4 Transformation = {};
 	vector<int> ChildrenIndices;
 };
 

@@ -220,9 +220,6 @@
     <Filter Include="01.Utility\06.ComputeShader">
       <UniqueIdentifier>{96600587-16b1-4627-914d-7fc413c501ba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\06. Picking">
-      <UniqueIdentifier>{a60a7ba5-a937-41d7-baac-db67f86f3ba1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="99.Define\99.THIRDPARTY\PHYSX">
       <UniqueIdentifier>{5948985e-f67e-4627-aca4-09b8e9edc359}</UniqueIdentifier>
     </Filter>
@@ -243,6 +240,9 @@
     </Filter>
     <Filter Include="02.Element\01.GameObject\50.UI\ElementObject">
       <UniqueIdentifier>{1eafb189-2d0c-4ad7-8690-10a517668206}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\06.Picking">
+      <UniqueIdentifier>{a60a7ba5-a937-41d7-baac-db67f86f3ba1}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.Element\02.Component\09.Light">
       <UniqueIdentifier>{7c82051e-19af-4284-8156-16f504db30b6}</UniqueIdentifier>
@@ -439,7 +439,7 @@
       <Filter>02.Element\02.Component\06.Model\Instance_Model</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Picking.cpp">
-      <Filter>01.Utility\06. Picking</Filter>
+      <Filter>01.Utility\06.Picking</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ComputeShader.cpp">
       <Filter>01.Utility\06.ComputeShader</Filter>
@@ -1017,7 +1017,7 @@
       <Filter>01.Utility\06.ComputeShader</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Picking.h">
-      <Filter>01.Utility\06. Picking</Filter>
+      <Filter>01.Utility\06.Picking</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_Terrain.h">
       <Filter>02.Element\02.Component\02.VIBuffer\Terrain</Filter>

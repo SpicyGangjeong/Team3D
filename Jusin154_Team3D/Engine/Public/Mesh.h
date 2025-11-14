@@ -28,7 +28,7 @@ private:
 public:
 	static CMesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, vector<class CBone*>& Bones, const aiMesh* pAIMesh, _fmatrix& PreTransformMatrix);
 	HRESULT SaveAsBinary(HANDLE hFile, DWORD& dwByte);
-	PSX::PxTriangleMesh* ConvertToPxMesh(const PSX::PxCookingParams* pParam, PSX::PxPhysics* pPhysX, _fmatrix WorldMatrix);
+	PSX::PxTriangleMesh* ConvertToPxMesh(const PSX::PxCookingParams* pParam, PSX::PxPhysics* pPhysX, _matrix WorldMatrix);
 #endif // EDITOR_PROJECT
 
 public:

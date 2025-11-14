@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Character_Controller.h"
 #include "GameInstance.h"
 
@@ -13,6 +13,54 @@ CCharacter_Controller::CCharacter_Controller(const CCharacter_Controller& rhs)
 {
 
 }
+#ifdef _DEBUG
+
+HRESULT CCharacter_Controller::Render()
+{
+	_vector  vPos = Get_Position();
+	_float3  vVolume = Get_Volume(); 
+	_matrix  WorldMatrix = XMMatrixTranslationFromVector(vPos);
+
+	_matrix ViewMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
+	_matrix ProjMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
+	_vector vColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0x2fc48000, 1.f);
+
+	switch (m_eBodyType)
+	{
+	case ACTOR::BOX:
+	{
+		// vVolume = half-extents(Hx,Hy,Hz) ë¼ê³  ê°€ì •
+		const _matrix ScaleMatrix =
+			XMMatrixScaling(vVolume.x / 0.5f,
+				vVolume.y / 0.5f,
+				vVolume.z / 0.5f);
+		m_pMainShape->Draw(ScaleMatrix * WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
+	} break;
+	case ACTOR::CAPSULE:
+	{
+		_float fHalf = vVolume.y;
+
+		_matrix ScaleMatrix =
+			XMMatrixScaling(vVolume.x / 0.5f,
+				fHalf / (2.f * 0.5f),
+				vVolume.x / 0.5f);
+		m_pMainShape->Draw(ScaleMatrix * WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
+
+		_matrix ScaleSphereMatrix = XMMatrixScaling(vVolume.x / 0.5f, vVolume.x / 0.5f, vVolume.x / 0.5f);
+
+		_matrix WorldUp = XMMatrixTranslation(0.f, +fHalf * 0.5f, 0.f);
+		_matrix WorldDown = XMMatrixTranslation(0.f, -fHalf * 0.5f, 0.f);
+
+		m_pSubShape->Draw(ScaleSphereMatrix * WorldUp * WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
+		m_pSubShape->Draw(ScaleSphereMatrix * WorldDown * WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
+	} break;
+	default:
+		break;
+	}
+	return S_OK;
+}
+
+#endif // _DEBUG
 
 void CCharacter_Controller::Modify_Volume(_float3 fVolume)
 {
@@ -81,13 +129,13 @@ _float3 CCharacter_Controller::Get_Volume()
 
 void CCharacter_Controller::Move(_float fTimeDelta)
 {
-	PSX::PxVec3 pxVecMomentum = {};				// ¼ø°£ ÀÌµ¿·®
-	_float fMinimumDistant = FLT_EPSILON3;		// ÀÌµ¿·® ¿ÀÂ÷ Çã¿ëÄ¡, ( Å©¸é Å¬¼ö·Ï ÀÌµ¿ÀÌ ´õ ÀÏÂï ³¡³­´Ù, ¼ø°£ ÀÌµ¿·®º¸´Ù °°°Å³ª ´õ Å©¸é ¾È¿òÁ÷ÀÏµí? )
+	PSX::PxVec3 pxVecMomentum = {};				// ìˆœê°„ ì´ë™ëŸ‰
+	_float fMinimumDistant = FLT_EPSILON3;		// ì´ë™ëŸ‰ ì˜¤ì°¨ í—ˆìš©ì¹˜, ( í¬ë©´ í´ìˆ˜ë¡ ì´ë™ì´ ë” ì¼ì° ëë‚œë‹¤, ìˆœê°„ ì´ë™ëŸ‰ë³´ë‹¤ ê°™ê±°ë‚˜ ë” í¬ë©´ ì•ˆì›€ì§ì¼ë“¯? )
 	_vector vMomentum = m_pTransform->Get_CurrentMomentum();
 	XMStoreFloat3((_float3*)&pxVecMomentum, vMomentum);
 	
-	PSX::PxControllerFilters pxFilter = {};		// Ãæµ¹ ´ë»ó ÇÊÅÍ
-	const PSX::PxObstacleContext* pPxObstacles = { nullptr }; // Ä³¸¯ÅÍ°¡ Ãæµ¹ÇØ¾ßÇÒ Ãß°¡ÀûÀÎ Àå¾Ö¹° °´Ã¼?, ´êÀº Àå¾Ö¹°Àº Ä³½ÃµÈ´Ù?
+	PSX::PxControllerFilters pxFilter = {};		// ì¶©ëŒ ëŒ€ìƒ í•„í„°
+	const PSX::PxObstacleContext* pPxObstacles = { nullptr }; // ìºë¦­í„°ê°€ ì¶©ëŒí•´ì•¼í•  ì¶”ê°€ì ì¸ ì¥ì• ë¬¼ ê°ì²´?, ë‹¿ì€ ì¥ì• ë¬¼ì€ ìºì‹œëœë‹¤?
 
 
 	// eCOLLISION_SIDES = (1 << 0),	//!< Character is colliding to the sides.
@@ -109,6 +157,12 @@ void CCharacter_Controller::Set_Position(_fvector vNewPos)
 	pxLVec3NewPos.y = vNewPos.m128_f32[1];
 	pxLVec3NewPos.z = vNewPos.m128_f32[2];
 	m_pController->setPosition(pxLVec3NewPos);
+}
+
+_vector CCharacter_Controller::Get_Position()
+{
+	PSX::PxExtendedVec3 pxVPos = m_pController->getPosition();
+	return XMVectorSet((_float)pxVPos.x, (_float)pxVPos.y, (_float)pxVPos.z, 1.f);
 }
 
 _float3 CCharacter_Controller::Get_FootPosition()
@@ -143,21 +197,30 @@ HRESULT CCharacter_Controller::Initialize(void* pArg)
 		Desc.halfSideExtent = {};
 		Desc.halfForwardExtent = {};
 		Desc.contactOffset = pDesc->fContactOffset;
-		Desc.material = m_pGameInstance->Get_Material(pDesc->fMaterial);
+		Desc.material = m_pGameInstance->Get_Material(&pDesc->fMaterial);
 		m_pController = m_pGameInstance->Add_BoxController(Desc);
+#ifdef _DEBUG
+		_float3 vVolume = Get_Volume();
+		m_pMainShape = (GeometricPrimitive::CreateBox(m_pContext, vVolume, false, false));
+#endif // _DEBUG
 	} break;
 	case Engine::ACTOR::CAPSULE:
 	{
 		PSX::PxCapsuleControllerDesc Desc{};
 		Desc.radius = pDesc->tCapsuleInfo.fRadius;
 		Desc.height = pDesc->tCapsuleInfo.fHeight;
-		Desc.climbingMode = pDesc->tCapsuleInfo.eClimbingMode; // ±âº» eEASY
+		Desc.climbingMode = pDesc->tCapsuleInfo.eClimbingMode; // ê¸°ë³¸ eEASY
 		Desc.contactOffset = pDesc->fContactOffset;
-		Desc.material = m_pGameInstance->Get_Material(pDesc->fMaterial);
+		Desc.material = m_pGameInstance->Get_Material(&pDesc->fMaterial);
 		m_pController = m_pGameInstance->Add_CapsuleController(Desc);
+#ifdef _DEBUG
+		_float3 vVolume = Get_Volume();
+		m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, vVolume.x, 10, false, false));
+		m_pMainShape = (GeometricPrimitive::CreateCylinder(m_pContext, vVolume.y, vVolume.x, 10, false));
+#endif // _DEBUG
 	} break;
 	default:
-		assert(false); // PhysX¿¡¼­ ºÒ°¡´É
+		assert(false); // PhysXì—ì„œ ë¶ˆê°€ëŠ¥
 		return E_FAIL;
 		break;
 	}

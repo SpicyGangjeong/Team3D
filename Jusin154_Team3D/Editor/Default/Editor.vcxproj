@@ -129,6 +129,12 @@
       <Command>
       </Command>
     </PreBuildEvent>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -172,6 +178,7 @@
     </ClInclude>
     <ClInclude Include="..\Public\Effect_Editor.h" />
     <ClInclude Include="..\Public\EditEffect.h" />
+    <ClInclude Include="..\Public\Information.h" />
     <ClInclude Include="..\public\Level_MapViewer.h" />
     <ClInclude Include="..\Public\LoadingWidget.h" />
     <ClInclude Include="..\public\MapContainer.h" />
@@ -189,8 +196,6 @@
     <ClInclude Include="..\Public\EffectObject.h" />
     <ClInclude Include="..\Public\DummyRect.h" />
     <ClInclude Include="..\Public\Dummy_Cube.h" />
-    <ClInclude Include="..\Public\Dummy_Goblin.h" />
-    <ClInclude Include="..\Public\Dummy_Goblin_Head.h" />
     <ClInclude Include="..\Public\Editor_Define.h" />
     <ClInclude Include="..\Public\Editor_Macro.h" />
     <ClInclude Include="..\Public\Editor_Struct.h" />
@@ -239,6 +244,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\Effect_Editor.cpp" />
     <ClCompile Include="..\Private\EditEffect.cpp" />
+    <ClCompile Include="..\Private\Information.cpp" />
     <ClCompile Include="..\private\Level_MapViewer.cpp" />
     <ClCompile Include="..\Private\LoadingWidget.cpp" />
     <ClCompile Include="..\private\MapContainer.cpp" />
@@ -256,7 +262,6 @@
     <ClCompile Include="..\Private\EffectObject.cpp" />
     <ClCompile Include="..\Private\DummyRect.cpp" />
     <ClCompile Include="..\Private\Dummy_Cube.cpp" />
-    <ClCompile Include="..\Private\Dummy_Goblin.cpp" />
     <ClCompile Include="..\Private\Hair.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\Private\Level_EffectViewer.cpp" />
@@ -265,7 +270,6 @@
     <ClCompile Include="..\private\Loading_Panel.cpp" />
     <ClCompile Include="..\private\MiniMap_Panel.cpp" />
     <ClCompile Include="..\private\MiniMap_TrimBorder.cpp" />
-    <ClCompile Include="..\Private\Dummy_Goblin_Head.cpp" />
     <ClCompile Include="..\Private\Head.cpp" />
     <ClCompile Include="..\private\Mission_Panel.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />

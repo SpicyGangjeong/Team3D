@@ -144,7 +144,8 @@ void CChannel::Update_TransformationMatirx(const vector<CBone*>& Bones, _float f
 	}
 	_matrix BoneTransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vTranslation);
 
-	Bones[m_iBoneIndex]->Set_TransformationMatrix(BoneTransformationMatrix);
+	if(Bones.size()>m_iBoneIndex)
+		Bones[m_iBoneIndex]->Set_TransformationMatrix(BoneTransformationMatrix);
 }
 
 
