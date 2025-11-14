@@ -66,7 +66,7 @@ public:
 	}
 
 	template<typename T>
-	void Asset_Description(_uint iLevel, const _char* pComponentName, Engine::CComponent** ppOut, void* pDesc, class CGameObject* pOwner = nullptr, _wstring wstrGroupName = L"")
+	_string Asset_Description(_uint iLevel, const _char* pComponentName, Engine::CComponent** ppOut, void* pDesc, class CGameObject* pOwner = nullptr, _wstring wstrGroupName = L"")
 	{
 		return m_pPrototype_Manager->CPrototype_Manager::Asset_Description<T>(iLevel, pComponentName, ppOut, pDesc, pOwner, wstrGroupName);
 	}

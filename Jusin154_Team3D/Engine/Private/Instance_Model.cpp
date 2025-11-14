@@ -88,7 +88,30 @@ HRESULT CInstance_Model::Ready_Meshes(MODEL eType, const aiScene* pAIScene, _fma
 
 	return S_OK;
 }
+HRESULT CInstance_Model::Save_InstanceModel(HANDLE hFile)
+{
+	DWORD dwByte = {};
+
+	if (!WriteFile(hFile, &m_InstanceDesc, sizeof(INSTANCE_DESC), &dwByte, nullptr)) {
+		return E_FAIL;
+	}
+	return S_OK;
+}
+
 #endif
+
+HRESULT CInstance_Model::Load_InstanceModel(HANDLE hFile)
+{
+	DWORD dwByte = {};
+
+	if (!ReadFile(hFile, &m_InstanceDesc, sizeof(INSTANCE_DESC), &dwByte, nullptr)) {
+		return E_FAIL;
+	}
+
+	Change_NumInstance();
+
+	return S_OK;
+}
 
 HRESULT CInstance_Model::Change_NumInstance()
 {
@@ -99,39 +122,31 @@ HRESULT CInstance_Model::Change_NumInstance()
 
 	//모든 버퍼를 지우고 재 생성 해야함
 
-	if (FAILED(Create_Instance_Buffer(&m_InstanceDesc)))
+	if (FAILED(Create_Instance_Buffer()))
 		return E_FAIL;
 
 	if (FAILED(Create_SubResource_Buffer()))
 		return E_FAIL;
 
+
 	//시작 시에 인스턴트 버퍼를 구성 해줌
 	Instane_Buffer_ReStruct();
 
-	_uint		CS_InputStrides[] = {
-		sizeof(VTX_INSTANCE_PARTICLE),
-		sizeof(CS_PARTICLE_VALUE_DESC),
-	};
-
-	_uint		CS_OutputStrides[] = {
-	sizeof(VTX_INSTANCE_PARTICLE),
-	sizeof(CS_PARTICLE_VALUE_DESC),
-	};
-
-	m_pComputeShader = CComputeShader::Create(m_pDevice, m_pContext,
-		L"../Bin/Resources/ShaderFiles/Shader_Particle_Compute.hlsl", "CS_MAIN", m_iNumInstance, 2, 2, CS_OutputStrides, CS_InputStrides);
-
-	if (m_pComputeShader == nullptr)
+	if (FAILED(Create_CS()))
 		return E_FAIL;
+
+
+
+
+
 
 
 	return S_OK;
 }
 
-HRESULT CInstance_Model::Create_Instance_Buffer(const INSTANCE_DESC* pDesc)
+HRESULT CInstance_Model::Create_Instance_Buffer()
 {
-	if (pDesc != nullptr)
-		m_InstanceDesc = *pDesc;
+	
 
 	m_iNumInstance = m_InstanceDesc.iNumInstance;
 
@@ -191,26 +206,11 @@ HRESULT CInstance_Model::Create_SubResource_Buffer()
 	return S_OK;
 }
 
-
-HRESULT CInstance_Model::Initialize(void* pArg)
+HRESULT CInstance_Model::Create_CS()
 {
-
-	INSTANCE_DESC* pInstanceDesc = static_cast<INSTANCE_DESC*>(pArg);
-
-
-
-	if (FAILED(Create_Instance_Buffer(pInstanceDesc)))
-		return E_FAIL;
-
-	if (FAILED(Create_SubResource_Buffer()))
-		return E_FAIL;
-
-	//시작 시에 인스턴트 버퍼를 구성 해줌
-	Instane_Buffer_ReStruct();
-
 	_uint		CS_InputStrides[] = {
-		sizeof(VTX_INSTANCE_PARTICLE),
-		sizeof(CS_PARTICLE_VALUE_DESC),
+	sizeof(VTX_INSTANCE_PARTICLE),
+	sizeof(CS_PARTICLE_VALUE_DESC),
 	};
 
 	_uint		CS_OutputStrides[] = {
@@ -222,6 +222,32 @@ HRESULT CInstance_Model::Initialize(void* pArg)
 		L"../Bin/Resources/ShaderFiles/Shader_Particle_Compute.hlsl", "CS_MAIN", m_iNumInstance, 2, 2, CS_OutputStrides, CS_InputStrides);
 
 	if (m_pComputeShader == nullptr)
+		return E_FAIL;
+
+	return S_OK;
+}
+
+
+HRESULT CInstance_Model::Initialize(void* pArg)
+{
+
+	INSTANCE_DESC* pInstanceDesc = static_cast<INSTANCE_DESC*>(pArg);
+
+	if (pInstanceDesc != nullptr)
+		m_InstanceDesc = *pInstanceDesc;
+	else
+		return S_OK;
+
+	if (FAILED(Create_Instance_Buffer()))
+		return E_FAIL;
+
+	if (FAILED(Create_SubResource_Buffer()))
+		return E_FAIL;
+
+	//시작 시에 인스턴트 버퍼를 구성 해줌
+	Instane_Buffer_ReStruct();
+
+	if(FAILED(Create_CS()))
 		return E_FAIL;
 
 	return S_OK;

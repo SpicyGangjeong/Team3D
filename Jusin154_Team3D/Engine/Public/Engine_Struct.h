@@ -46,6 +46,8 @@ typedef struct tagLightDesc
 	const XMFLOAT4* pDirection = nullptr;
 	const XMFLOAT4* pPosition = nullptr;
 
+	_float4				vPosOffset = {};
+
 	_float				fRange = {};
 	_float2				vSpotAngles = {};
 

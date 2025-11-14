@@ -748,7 +748,7 @@ void CGameInstance::Release_Engine()
 	SAFE_RELEASE(m_pPhysX_Manager);
 	SAFE_RELEASE(m_pLevel_Manager);
 	SAFE_RELEASE(m_pPrototype_Manager);
-	SAFE_RELEASE(m_pLight_Manager); // Light Manager´Â m_pObject_Manager º¸´Ù »¡¸® ºÒ·Á¾ßÇÔ 
+	SAFE_RELEASE(m_pLight_Manager); // Light Managerï¿½ï¿½ m_pObject_Manager ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½ 
 	SAFE_RELEASE(m_pGraphic_Device);
 }
 
