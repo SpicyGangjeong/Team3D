@@ -157,7 +157,7 @@ PS_OUT PS_Key_Hold_Rotation(PS_IN In)
 
     float4 tex = g_Texture.Sample(DefaultSampler, uv);
 
-    float2 center = float2(0.5, 0.5);
+    float2 center = float2(0.5, 0);
     float2 dir = uv - center;
 
     float angle = atan2(dir.x, -dir.y);
