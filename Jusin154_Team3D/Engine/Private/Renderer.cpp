@@ -117,6 +117,8 @@ void CRenderer::Render()
 	Render_UI();
 
 #ifdef _DEBUG
+	m_pGameInstance->RenderTarget_Debuger();
+	
 	if(m_pGameInstance->Key_Pressing(DIK_F10))
 		Render_Debug();
 #endif
@@ -229,7 +231,7 @@ void CRenderer::Render_LightAcc()
 
 	m_pVIBuffer->Bind_Resources();
 
-	if (FAILED(m_pGameInstance->Render_Lights(m_pShader, m_pVIBuffer))) {
+	if (FAILED(m_pGameInstance->Render_Lights(m_pGameInstance->Get_CurrentLevelID(), m_pShader, m_pVIBuffer))) {
 		return;
 	}
 
@@ -523,27 +525,10 @@ void CRenderer::Render_Debug()
 	}
 
 	/* 렌더타겟을 디버그로 직교투영을 통해 그려라. */
-	if (FAILED(m_pGameInstance->Render_RenderTarget_Debug(TEXT("MRT_GameObjects"), m_pShader, m_pVIBuffer))) {
+	if (FAILED(m_pGameInstance->Render_RenderTarget_Debug(m_pShader, m_pVIBuffer))) {
 		return;
 	}
-	if (FAILED(m_pGameInstance->Render_RenderTarget_Debug(TEXT("MRT_LightAcc"), m_pShader, m_pVIBuffer))) {
-		return;
-	}
-	if (FAILED(m_pGameInstance->Render_RenderTarget_Debug(TEXT("MRT_Shadow"), m_pShader, m_pVIBuffer))) {
-		return;
-	}
-	if (FAILED(m_pGameInstance->Render_RenderTarget_Debug(TEXT("MRT_PreShadow"), m_pShader, m_pVIBuffer))) {
-		return;
-	}
-	if (FAILED(m_pGameInstance->Render_RenderTarget_Debug(TEXT("MRT_Blur"), m_pShader, m_pVIBuffer))) {
-		return;
-	}
-	if (FAILED(m_pGameInstance->Render_RenderTarget_Debug(TEXT("MRT_Blur_X"), m_pShader, m_pVIBuffer))){
-		return;
-	}
-	if (FAILED(m_pGameInstance->Render_RenderTarget_Debug(TEXT("MRT_Color"), m_pShader, m_pVIBuffer))) {
-		return;
-	}
+
 }
 
 #endif
@@ -701,45 +686,6 @@ HRESULT CRenderer::Initialize()
 	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
 	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(Viewport.Width, Viewport.Height, 0.f, 1.f));
 
-#ifdef _DEBUG
-	if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Diffuse"), 75.f, 75.f, 150.0f, 150.0f))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Normal"), 75.f, 225.f, 150.0f, 150.0f))) {
-		return E_FAIL;
-	}
-	//if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Shade"), 225.f, 75.f, 150.0f, 150.0f))) {
-	//	return E_FAIL;
-	//}
-	//if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Specular"), 225.f, 225.f, 150.0f, 150.0f))) {
-	//	return E_FAIL;
-	//}
-	if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Color"),75.f , 1080 - 75.f, 150.f, 150.f))) {
-		return E_FAIL;
-	}
-
-	//if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Shadow"), Viewport.Width - 150.0f, 150.0f, 300.f, 300.f))) {
-	//	return E_FAIL;
-	//}
-	//if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_PreShadow"), Viewport.Width - 150.0f, Viewport.Height - 150.0f, 300.f, 300.f))) {
-	//	return E_FAIL;
-	
-	if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Blur_Weight"), 75.f, 75.f, 150.0f, 150.0f))) {
-		return E_FAIL;
-	}
-
-	if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Blur"), 75.f, 225.f, 150.0f, 150.0f))) {
-		return E_FAIL;
-	}
-
-	if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Blur_X"), 225.f, 75.f, 150.0f, 150.0f))) {
-		return E_FAIL;
-	}
-
-
-
-
-#endif
 
 	return S_OK;
 }

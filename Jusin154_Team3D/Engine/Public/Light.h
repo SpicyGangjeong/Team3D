@@ -1,13 +1,14 @@
 #pragma once
-#include "Base.h"
+#include "Component.h"
 
 NS_BEGIN(Engine)
 
 
-class ENGINE_DLL CLight final : public CBase
+class ENGINE_DLL CLight final : public CComponent
 {
 private:
-	CLight();
+	CLight(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CLight(const CLight& rhs);
 	virtual ~CLight() = default;
 
 public:
@@ -15,15 +16,21 @@ public:
 	_bool operator==(const Engine::LIGHT_DESC& rhs) const;
 
 public:
-	HRESULT Replace_LightTo(_fvector vPosition);
-	HRESULT Initialize(const LIGHT_DESC& LightDesc);
+	virtual HRESULT Initialize_Prototype() override;
+	virtual HRESULT Initialize(void* pArg) override;
+public:
+	const LIGHT_DESC* Get_LightDesc() { return &m_LightDesc; }
+public:
 	HRESULT Render(class CShader* pShader, class CVIBuffer* pVIBuffer) const;
 
 private:
-	LIGHT_DESC m_LightDesc{};
+	LIGHT_DESC			m_LightDesc = {};
 public:
-	static CLight* Create(const LIGHT_DESC& LightDesc);
+	static CLight* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CComponent* Clone(void* pArg, CGameObject* pOwner) override;
 	virtual void Free() override;
+	void Describe_Entity() override;
+
 };
 
 NS_END

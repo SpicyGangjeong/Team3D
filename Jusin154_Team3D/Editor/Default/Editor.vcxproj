@@ -189,6 +189,7 @@
     <ClInclude Include="..\public\MapObject_LOD.h" />
     <ClInclude Include="..\public\MapObject_Manager.h" />
     <ClInclude Include="..\public\MapObject_Static.h" />
+    <ClInclude Include="..\Public\MainLight.h" />
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\Public\Level_PhysXLab.h" />
     <ClInclude Include="..\Public\TestEffect.h" />
@@ -254,6 +255,7 @@
     <ClCompile Include="..\private\MapObject_LOD.cpp" />
     <ClCompile Include="..\private\MapObject_Manager.cpp" />
     <ClCompile Include="..\private\MapObject_Static.cpp" />
+    <ClCompile Include="..\Private\MainLight.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\Private\Level_PhysXLab.cpp" />
     <ClCompile Include="..\Private\TestEffect.cpp" />
