@@ -351,7 +351,7 @@ HRESULT CModel::Ready_PhysXMeshes()
 
 	m_TriMeshes.reserve(m_iNumMeshes);
 
-	m_pGameInstance->ConvertToTriMeshes(m_Meshes, m_TriMeshes, m_pTransform->Get_XMWorldMatrix());
+	m_pGameInstance->ConvertToTriMeshes(m_Meshes, m_TriMeshes);
 
 	return S_OK;
 }
@@ -362,7 +362,7 @@ HRESULT CModel::Save_PhysXTriMeshes(const _char* pModelFilePath)
 		return E_FAIL;
 	}
 	for (_uint i = 0; i < m_iNumMeshes; ++i) {
-		m_pGameInstance->RegistTriMesh(m_Meshes[i]->Get_Name(), m_TriMeshes[i]);
+		m_pGameInstance->RegistTriMesh((m_Meshes[i]->Get_Name() + to_string(i)).c_str(), m_TriMeshes[i]);
 	}
 	return m_pGameInstance->SaveTriMeshes(pModelFilePath, m_TriMeshes);
 }
@@ -410,7 +410,7 @@ HRESULT CModel::Ready_Materials_FromFile(const aiScene* pAIScene, const _char* p
 	if (!file.is_open())
 	{
 		//MSG_BOX("Failed to Open Mesh File");
-		/* LOD */
+		///* LOD */
 		return S_OK;
 	}
 
@@ -856,7 +856,9 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 		strcpy_s(Temp, szDir);
 		strcat_s(Temp, szName);
 		strcat_s(Temp, ".bin");
-		Assimp_Model_Load(pModelFilePath, eType, PreTransformMatrix, 0);
+		if (FAILED(Assimp_Model_Load(pModelFilePath, eType, PreTransformMatrix, 0))) {
+			return E_FAIL;
+		}
 		SaveAssimpModel(Temp);
 
 		return S_OK;

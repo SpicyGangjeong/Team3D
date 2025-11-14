@@ -34,13 +34,11 @@ private:
 	HRESULT Add_Texture(const _char* pTextureFolderPath, string& FileType);
 #endif // EDITOR_PROJECT
 
-	virtual HRESULT Initialize(const _char* pModelFilePath, HANDLE hFile, DWORD& dwByte);
 	// 바이너리
 	HRESULT Initialize(const _char* pModelFilePath, const SaveMaterial& _SaveMaterial);
 	//
 
 public:
-	static CMaterial* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, HANDLE hFile, DWORD& dwByte);
 	// 바이너리
 	static CMaterial* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePathconst, const SaveMaterial& _SaveMaterial);
 	//

@@ -12,49 +12,59 @@ private:
 	virtual ~CModel() = default;
 
 public:
-	static _int Get_BoneIndex(const _char* pBoneName, vector<class CBone*> Bones);	// 본의 벡터와 이름을 넘겨주면 인덱스를 넘겨줌 ( n 순회 )
-	_int Get_BoneIndex(const _char* pBoneName) const;
-	void	Set_RootBoneIndex(_int iIndex) { m_iRootBoneIndex = iIndex; }
+#pragma region Model
+	MODEL	Get_Type() const { return m_eType; }
+	_float4x4* Get_PreTransformMatrixPtr() { return &m_PreTransformMatrix; }
+	_float4x4 Get_PreTransformMatrix() const { return m_PreTransformMatrix; };
+	virtual HRESULT Render(_uint iMeshIndex);
+	virtual HRESULT Render_Indexed(_uint iMeshIndex, _uint IndexCount, _uint StartIndexLocation, _uint BaseVertexLocation);
+#pragma endregion 
+#pragma region Animation
 	void	Change_AnimationIndex(_int iAnimationIndex, _bool bIsLoop, _float fLerpDuration, _bool bIgnoreCurrentIndex = false);	// 애니메이션을 다른 인덱스로 변경함
 	_bool	Play_Animation(_float fTimeDelta); // 애니메이션에 델타타임을 넣어줌
-	void Set_AnimationIndex(_uint iIndex, _bool isLoop = true);
+	void	RefreshAnim(); // 애님을 현재 애님의 초기상태로 되돌림
+	void	Set_AnimationIndex(_uint iIndex, _bool isLoop = true);
 	void	Stop_Animation(); // 애니메이션을 정지 (초기상태로)
 	_bool	IsFinishedAnim() const { return m_bIsFinishedAnim; }
 	_bool	IsFinishedLerp() const { return m_bIsFinishedLerp; }
-	void	RefreshAnim(); // 애님을 현재 애님의 초기상태로 되돌림
 	_float	Get_AnimProgressRatio();
 	_int	Get_AnimProgressPostion(const char* pAnimChannelName);
 	_float	Get_AnimEstimatedDuration();
 	void	Set_AnimProgressPostion(const _char* pChannelName, _uint iPosition);
 	void	Set_AnimPauseState(_bool bValue);// 애님을 현재상태로 정지
 	void	ReallocateResources(class CTransform* pTransform = nullptr); // 애님 이동의 대상 트랜스폼(이동시켜야할 트랜스폼)을 재지정함
-	_int	Get_RootBoneIndex() const { return m_iRootBoneIndex; }
-	const _float4x4* Get_BoneMatrixPtr(const _char* pBoneName) const;
-	_uint	Get_NumMeshes() const { return m_iNumMeshes; }
-	const _char* Get_MeshName(_uint iIndex);
-	MODEL	Get_Type() const { return m_eType; }
-	_matrix Get_BoneMatrix(_uint iBoneIndex);
-
-	_float4x4* Get_PreTransformMatrixPtr() { return &m_PreTransformMatrix; }
-	_float4x4 Get_PreTransformMatrix() const { return m_PreTransformMatrix; };
-	void Get_BoneMatrices(_float4x4* pOut);
-	_uint	Get_BonesNum() const { return (_uint)m_Bones.size(); }
-
 	void Set_CurrentTrackPosition(_float TrackPosition);
 	const _char* Get_AnimList(_uint iIndex);
 	size_t Get_AnimSize() { return m_Animations.size(); }
 	_float Get_CurrentTrackPosition();
 	void Set_PlayAnim(_bool bPlayAnim) { m_bPlayAnim = bPlayAnim; }
-	_bool Get_PlayAnim() { return m_bPlayAnim; }
-	_int Get_AnimIndex() { return m_iCurrentAnimIndex; }
+	_bool Get_PlayAnim() const { return m_bPlayAnim; }
+	_int Get_AnimIndex() const { return m_iCurrentAnimIndex; }
 	_float Get_AnimSpeed();
 	void Set_AnimSpeed(_float fSpeed);
-public:
-	HRESULT Bind_Material(_uint iMeshIndex, class CShader* pShader, const _char* pConstantName, _uint iType, _uint iTextureIndex);
+#pragma endregion
+#pragma region Mesh
+	const _char* Get_MeshName(_uint iIndex);
+	_uint	Get_NumMeshes() const { return m_iNumMeshes; }
+#pragma endregion
+#pragma region Bone
 	HRESULT Bind_BoneMatrices(_uint iMeshIndex, class CShader* pShader, const _char* pConstantName);
-	virtual HRESULT Render(_uint iMeshIndex);
-	virtual HRESULT Render_Indexed(_uint iMeshIndex, _uint IndexCount, _uint StartIndexLocation, _uint BaseVertexLocation);
+	void Get_BoneMatrices(_float4x4* pOut);
+	_uint	Get_BonesNum() const { return (_uint)m_Bones.size(); }
+	const _float4x4* Get_BoneMatrixPtr(const _char* pBoneName) const;
+	_int	Get_RootBoneIndex() const { return m_iRootBoneIndex; }
+		void	Set_RootBoneIndex(_int iIndex) { m_iRootBoneIndex = iIndex; }
+static	_int Get_BoneIndex(const _char* pBoneName, vector<class CBone*> Bones);	// 본의 벡터와 이름을 넘겨주면 인덱스를 넘겨줌 ( n 순회 )
+		_int Get_BoneIndex(const _char* pBoneName) const;
+		_matrix Get_BoneMatrix(_uint iBoneIndex);
+#pragma endregion
+#pragma region Material
+		HRESULT Bind_Material(_uint iMeshIndex, class CShader* pShader, const _char* pConstantName, _uint iType, _uint iTextureIndex);
 
+#pragma endregion
+
+
+public:
 #ifdef EDITOR_PROJECT	
 	HRESULT Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex);
 	HRESULT Ready_Meshes(MODEL eType, const aiScene* pAIScene, _fmatrix& PreTransformMatrix);

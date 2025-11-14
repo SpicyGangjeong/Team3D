@@ -607,7 +607,7 @@ HRESULT CMesh::SaveAsBinary(HANDLE hFile, DWORD& dwByte)
 	return S_OK;
 }
 
-PSX::PxTriangleMesh* CMesh::ConvertToPxMesh(const PSX::PxCookingParams* pParam, PSX::PxPhysics* pPhysX, _fmatrix WorldMatrix)
+PSX::PxTriangleMesh* CMesh::ConvertToPxMesh(const PSX::PxCookingParams* pParam, PSX::PxPhysics* pPhysX, _matrix WorldMatrix)
 {
 	PSX::PxTriangleMeshDesc tMeshDesc = {};
 	vector<PSX::PxVec3> Vertices = {};
@@ -616,7 +616,7 @@ PSX::PxTriangleMesh* CMesh::ConvertToPxMesh(const PSX::PxCookingParams* pParam, 
 		tMeshDesc.points.count = m_iNumVertices;
 		tMeshDesc.points.stride = sizeof(PSX::PxVec3);
 		Vertices.resize(m_iNumVertices);
-		XMVector3TransformCoordStream(reinterpret_cast<_float3*>(Vertices.data()), sizeof(PSX::PxVec3), (_float3*)m_pVertexPositions, sizeof(_float3), m_iNumVertices, WorldMatrix);
+		memcpy(Vertices.data(), m_pVertexPositions, sizeof(PSX::PxVec3) * m_iNumVertices);
 		tMeshDesc.points.data = Vertices.data();
 	}
 	{

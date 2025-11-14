@@ -43,12 +43,18 @@ private:
 	CCharacter_Controller(const CCharacter_Controller& rhs);
 	virtual ~CCharacter_Controller() = default;
 public:
+#ifdef _DEBUG
+	virtual HRESULT Render() override;
+#endif
+
 	_float	Get_ContactOffset() const { return m_pController->getContactOffset(); }
 	void	Set_ContactOffset(_float fValue) const { return m_pController->setContactOffset((PSX::PxF32)fValue); }
 
 	void Move(_float fTimeDelta);			// 이동
 	void Set_Position(_fvector vNewPos);	// 순간이동
+	_vector Get_Position();
 	_float3 Get_FootPosition();				// ContactOffset이 고려된 발바닥 위치( 실제보다 더 아래에 위치한다는 뜻 )
+
 
 	void Resize_Volume(_float fHeight); // 높이를 수정하고 바닥에 붙임
 	void  Modify_Volume(_float3 fVolume);
@@ -65,6 +71,11 @@ private:
 	function<void()> m_funcHitCallback = { nullptr };
 	function<void()> m_funcBehaviorCallback = { nullptr };
 	PSX::PxControllerCollisionFlags m_eBeforeCollisionFlags = {};;
+#ifdef _DEBUG
+	unique_ptr<GeometricPrimitive> m_pMainShape = { nullptr };
+	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };
+#endif // _DEBUG
+
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
