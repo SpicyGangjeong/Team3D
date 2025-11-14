@@ -99,7 +99,7 @@ void CRootModelPart::Change_Model(_uint iIndex)
 
 	pModel->Set_AnimationIndex(m_iAnimIndex);
 	pModel->Set_CurrentTrackPosition(m_fTrackPosition);                                                                                                            
-	pModel->Play_Animation(0.f);
+	pModel->Play_Animation(0.f, m_pTransformCom);
 
 	if (iIndex == ENUM_CLASS(PARTSTYPE::BODY))
 	{
@@ -112,7 +112,7 @@ void CRootModelPart::Set_Animation(_uint iAnimIndex)
 {
 	m_pMainModel->Set_AnimationIndex(iAnimIndex);
 	m_pMainModel->Set_CurrentTrackPosition(0.f);
-	m_pMainModel->Play_Animation(0.f);
+	m_pMainModel->Play_Animation(0.f, m_pTransformCom);
 	for (auto& PartObject : m_ModelParts)
 	{
 		CModel* pModel = PartObject->Get_Component<CModel>();
@@ -120,7 +120,7 @@ void CRootModelPart::Set_Animation(_uint iAnimIndex)
 		{
 			pModel->Set_AnimationIndex(m_pMainModel->Get_AnimIndex());
 			pModel->Set_CurrentTrackPosition(m_pMainModel->Get_CurrentTrackPosition());
-			pModel->Play_Animation(0.f);
+			pModel->Play_Animation(0.f, m_pTransformCom);
 		}
 	}
 }

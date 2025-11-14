@@ -1,16 +1,20 @@
-#pragma once
+Ôªø#pragma once
 
 #include "Editor_Define.h"
 #include "MapObject.h"
 
+NS_BEGIN(Engine)
+class CTexture;
+NS_END
+
 NS_BEGIN(Editor)
 
-class CMapObject_Static final : public CMapObject // LOD ∏µ®¿Ã æ¯¥¬ æ÷µÈ
+class CMapObject_Collision final : public CMapObject // LOD Î™®Îç∏Ïù¥ ÏóÜÎäî Ïï†Îì§
 {
 private:
-	CMapObject_Static(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CMapObject_Static(const CMapObject_Static& Prototype);
-	virtual ~CMapObject_Static() = default;
+	CMapObject_Collision(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CMapObject_Collision(const CMapObject_Collision& Prototype);
+	virtual ~CMapObject_Collision() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta) override;
@@ -23,10 +27,13 @@ public:
 
 private:
 	CShader*			m_pShaderCom = { nullptr };
-	CModel*				m_pModelCom = { nullptr };
+	CTexture*			m_pTextureCom = { nullptr };
+	vector<CModel*>		m_pModelComs;
 
-	_wstring			m_strModelPrototypeTag;
-	_uint				m_iModelPathIndex = { UINT_MAX };
+	_uint				m_iLodIndex = {};
+
+	vector<_wstring>	m_ModelPrototypeTags;
+	vector<_uint>		m_ModelPathIndices = { };
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
@@ -36,7 +43,7 @@ private:
 	HRESULT Bind_ShaderResources();
 
 public:
-	static CMapObject_Static* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CMapObject_Collision* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr) override;
 	virtual void Free() override;
 	virtual void Describe_Entity() override;
