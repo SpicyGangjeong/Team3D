@@ -38,15 +38,18 @@ struct LERPDESC {
 
 typedef struct tagLightDesc
 {
-	LIGHT		eType = {};
-	_float4		vDiffuse = {};
-	_float4		vAmbient = {};
-	_float4		vSpecular = {};
+	LIGHT				eType = {};
+	_float4				vDiffuse = {};
+	_float4				vAmbient = {};
+	_float4				vSpecular = {};
 
-	_float4		vDirection = {};
-	_float4		vPosition = {};
-	_float		fRange = {};
-	_float2		vSpotAngles = {};
+	const XMFLOAT4* pDirection = nullptr;
+	const XMFLOAT4* pPosition = nullptr;
+
+	_float				fRange = {};
+	_float2				vSpotAngles = {};
+
+	_uint				iLevel = {};
 }LIGHT_DESC;
 
 typedef struct tagShadowLight

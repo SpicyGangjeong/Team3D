@@ -20,6 +20,7 @@ namespace Editor {
 #define FX_INSTANCE_MODEL   TEXT("FX_INSTANCE_MODEL")
 #define FX_UIEDITOR			TEXT("FX_UIEDITOR")
 
+
 #pragma endregion
 #pragma region MACRO_PROTOTYPE
 #define CURRENT_LEVEL	m_pGameInstance->Get_CurrentLevelID()
@@ -50,6 +51,7 @@ namespace Editor {
 #define LAYER_DOT			TEXT("Layer_Dot")
 #define LAYER_CELL			TEXT("Layer_Cell")
 #define LAYER_TRIGGER		TEXT("Layer_Trigger")
+#define LAYER_LIGHT			TEXT("Layer_Light")
 
 #define LAYER_MAPOBJECTMANAGER		TEXT("Layer_MapObjectManager")
 

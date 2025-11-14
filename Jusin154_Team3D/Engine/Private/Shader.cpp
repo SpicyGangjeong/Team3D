@@ -12,6 +12,12 @@ CShader::CShader(const CShader& rhs)
 	, m_pEffect{ rhs.m_pEffect }
 	, m_iNumPasses{ rhs.m_iNumPasses }
 	, m_InputLayouts{ rhs.m_InputLayouts }
+
+#ifdef _DEBUG
+	, m_strShaderPath { rhs.m_strShaderPath }
+	, m_pElements{ rhs.m_pElements }
+	, m_iNumElements{ rhs.m_iNumElements }
+#endif
 {
 	SAFE_ADDREF(m_pEffect);
 
@@ -21,52 +27,18 @@ CShader::CShader(const CShader& rhs)
 
 HRESULT CShader::Initialize_Prototype(const _tchar* pShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)
 {
-	_uint		iHlslFlag = {};
+
 
 #ifdef _DEBUG
-	iHlslFlag = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
-#else
-	iHlslFlag = D3DCOMPILE_OPTIMIZATION_LEVEL1;
+	m_strShaderPath = pShaderFilePath;
+	m_pElements = pElements;
+	m_iNumElements = iNumElements;
 #endif
 
-	/*ID3DBlob* pBlob;*/
 
-	if (FAILED(D3DX11CompileEffectFromFile(pShaderFilePath, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, iHlslFlag, 0, m_pDevice, &m_pEffect, nullptr)))
+	if (FAILED(CreateShader(pShaderFilePath, pElements, iNumElements)))
 		return E_FAIL;
 
-	ID3DX11EffectTechnique* pTechnique = m_pEffect->GetTechniqueByIndex(0);
-	if (nullptr == pTechnique)
-		return E_FAIL;
-
-	D3DX11_TECHNIQUE_DESC	TechniqueDesc{};
-
-	if (FAILED(pTechnique->GetDesc(&TechniqueDesc)))
-		return E_FAIL;
-
-	m_iNumPasses = TechniqueDesc.Passes;
-
-	for (_uint i = 0; i < m_iNumPasses; i++)
-	{
-		ID3D11InputLayout* pInputLayout = { nullptr };
-
-		ID3DX11EffectPass* pPass = pTechnique->GetPassByIndex(i);
-		if (nullptr == pPass)
-			return E_FAIL;
-
-		D3DX11_PASS_DESC	PassDesc{};
-		if (FAILED(pPass->GetDesc(&PassDesc)))
-			return E_FAIL;
-
-		if (FAILED(m_pDevice->CreateInputLayout(
-			pElements,
-			iNumElements,
-			PassDesc.pIAInputSignature/*쉐이더에서 받아줄수 있는 정점의 정보*/,
-			PassDesc.IAInputSignatureSize/*쉐이더에서 받아줄수 있는 정점의 멤버변수갯수*/,
-			&pInputLayout)))
-			return E_FAIL;
-
-		m_InputLayouts.push_back(pInputLayout);
-	}
 
 	return S_OK;
 }
@@ -139,6 +111,81 @@ HRESULT CShader::Bind_SRVs(const _char* pConstantName, ID3D11ShaderResourceView*
 	return pSRVariable->SetResourceArray(ppSRV, 0, iNumSRVs);
 }
 
+HRESULT CShader::CreateShader(const _tchar* pShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)
+{
+
+	_uint		iHlslFlag = {};
+
+#ifdef _DEBUG
+	iHlslFlag = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+#else
+	iHlslFlag = D3DCOMPILE_OPTIMIZATION_LEVEL1;
+#endif
+
+	/*ID3DBlob* pBlob;*/
+
+	if (FAILED(D3DX11CompileEffectFromFile(pShaderFilePath, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, iHlslFlag, 0, m_pDevice, &m_pEffect, nullptr)))
+		return E_FAIL;
+
+	ID3DX11EffectTechnique* pTechnique = m_pEffect->GetTechniqueByIndex(0);
+	if (nullptr == pTechnique)
+		return E_FAIL;
+
+	D3DX11_TECHNIQUE_DESC	TechniqueDesc{};
+
+	if (FAILED(pTechnique->GetDesc(&TechniqueDesc)))
+		return E_FAIL;
+
+	m_iNumPasses = TechniqueDesc.Passes;
+
+	for (_uint i = 0; i < m_iNumPasses; i++)
+	{
+		ID3D11InputLayout* pInputLayout = { nullptr };
+
+		ID3DX11EffectPass* pPass = pTechnique->GetPassByIndex(i);
+		if (nullptr == pPass)
+			return E_FAIL;
+
+		D3DX11_PASS_DESC	PassDesc{};
+		if (FAILED(pPass->GetDesc(&PassDesc)))
+			return E_FAIL;
+
+		if (FAILED(m_pDevice->CreateInputLayout(
+			pElements,
+			iNumElements,
+			PassDesc.pIAInputSignature/*���̴����� �޾��ټ� �ִ� ������ ����*/,
+			PassDesc.IAInputSignatureSize/*���̴����� �޾��ټ� �ִ� ������ �����������*/,
+			&pInputLayout)))
+			return E_FAIL;
+
+		m_InputLayouts.push_back(pInputLayout);
+	}
+	return S_OK;
+}
+
+#ifdef _DEBUG
+
+HRESULT CShader::Shader_Refresh()
+{
+	// �� ��ǲ ���̾ƿ� ����Ʈ �Ҹ��Ű��
+	Safe_Release(m_pEffect);
+
+	for (auto& pInputLayout : m_InputLayouts)
+		Safe_Release(pInputLayout);
+
+	m_InputLayouts.clear();
+
+
+	//�� ��η� �� �����Ѵ�.
+	if (FAILED(CreateShader(m_strShaderPath.c_str(), m_pElements, m_iNumElements)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+#endif //  
+
+
 HRESULT CShader::Begin(_uint iPassIndex)
 {
 	if (iPassIndex >= m_iNumPasses)
@@ -146,8 +193,8 @@ HRESULT CShader::Begin(_uint iPassIndex)
 
 	m_pContext->IASetInputLayout(m_InputLayouts[iPassIndex]);
 
-	/* Apply를 반드시 호출해야만 쉐이더로 그려진다. */
-	/* Apply이전에 쉐이더에 전달할 모든 데이터들을 다 던져놓아야한다. */
+	/* Apply�� �ݵ�� ȣ���ؾ߸� ���̴��� �׷�����. */
+	/* Apply������ ���̴��� ������ ��� �����͵��� �� �������ƾ��Ѵ�. */
 	m_pEffect->GetTechniqueByIndex(0)->GetPassByIndex(iPassIndex)->Apply(0, m_pContext);
 
 	return S_OK;
@@ -193,4 +240,17 @@ void CShader::Free()
 
 void CShader::Describe_Entity()
 {
+
+	if(GUI::TreeNode("SHADER"))
+	{
+		if (GUI::Button("Shader Refresh"))
+		{
+
+			Shader_Refresh();
+
+		}
+
+		GUI::TreePop();
+	}
+
 }

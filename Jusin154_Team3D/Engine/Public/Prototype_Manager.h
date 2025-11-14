@@ -11,6 +11,7 @@
 #include "Model.h"
 #include "Instance_Model.h"
 #include "Character_Controller.h"
+#include "Light.h"
 
 
 NS_BEGIN(Engine)

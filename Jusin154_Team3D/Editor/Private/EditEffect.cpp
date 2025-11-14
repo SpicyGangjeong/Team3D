@@ -175,6 +175,8 @@ void CEditEffect::Describe_Entity()
 
 	ImGui::PushItemWidth(80);
 
+	m_pShaderCom->Describe_Entity();
+
 	ImGui::PopItemWidth();
 
 	if (GUI::TreeNode("BLUR"))

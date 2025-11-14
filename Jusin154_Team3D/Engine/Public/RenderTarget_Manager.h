@@ -20,8 +20,14 @@ public:
 
 #ifdef _DEBUG
 public:
-	HRESULT Ready_RenderTarget_Debug(const _wstring& strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY);
-	HRESULT Render_RenderTarget_Debug(const _wstring& strMRTTag, class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
+	HRESULT Render_RenderTarget_Debug(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
+	void    RenderTarget_Debuger();
+#endif // _DEBUG
+
+#ifdef _DEBUG
+private:
+	_int m_iSizeX = { 100 };
+	_int m_iSizeY = { 100 };
 #endif // _DEBUG
 
 private:

@@ -149,29 +149,51 @@ HRESULT CRenderTarget_Manager::Bind_RenderTarget(const _wstring& strTargetTag, C
     return pRenderTarget->Bind_ShaderResource(pShader, pConstantName);
 }
 #ifdef _DEBUG
-HRESULT CRenderTarget_Manager::Ready_RenderTarget_Debug(const _wstring& strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY)
+
+HRESULT CRenderTarget_Manager::Render_RenderTarget_Debug(CShader* pShader, CVIBuffer_Rect* pVIBuffer)
 {
-    CRenderTarget* pRenderTarget = Find_RenderTarget(strTargetTag);
-    if (nullptr == pRenderTarget) {
-        return E_FAIL;
-    }
-    return pRenderTarget->Ready_Debug(fX, fY, fSizeX, fSizeY);
-}
 
-HRESULT CRenderTarget_Manager::Render_RenderTarget_Debug(const _wstring& strMRTTag, CShader* pShader, CVIBuffer_Rect* pVIBuffer)
-{
-    list<CRenderTarget*>* pMRTList = Find_MRT(strMRTTag);
+    _float fX = m_iSizeX  * 0.5f;
+    _float fY = m_iSizeY * 0.5f;
 
-    if (nullptr == pMRTList) {
-        return E_FAIL;
-    }
-
-    for (auto& pRenderTarget : *pMRTList)
+    for (auto& pRenderTarget : m_RenderTargets)
     {
-        pRenderTarget->Render_Debug(pShader, pVIBuffer);
+        if (pRenderTarget.second->Render_Debug(pShader, pVIBuffer, fX, fY, (_float)m_iSizeX, (_float)m_iSizeY) == false)
+            continue;
+
+        fX += m_iSizeX;
+
+        if (fX > 1920.f - m_iSizeX * 0.5f)
+        {
+            fX = m_iSizeX * 0.5f;
+            fY += m_iSizeY;
+        }
     }
 
     return S_OK;
+}
+
+void CRenderTarget_Manager::RenderTarget_Debuger()
+{
+    GUI::Begin("RenderTarget Debuger");
+
+    GUI::Spacing();
+
+    GUI::Text("Active Btn -> F10");
+
+    GUI::Spacing();
+
+    GUI::PushItemWidth(80);
+    GUI::DragInt("Target Size X" , &m_iSizeX);
+    GUI::DragInt("Target Size Y", &m_iSizeY);
+    GUI::PopItemWidth();
+
+    for (auto& pTarget : m_RenderTargets)
+    {
+        pTarget.second->Describe_Entity(CMyTools::ToString(pTarget.first).c_str());
+    }
+
+    GUI::End();
 }
 
 #endif // _DEBUG
