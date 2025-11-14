@@ -16,29 +16,32 @@ CDummy_PhysXPlayable::CDummy_PhysXPlayable(const CDummy_PhysXPlayable& rhs):
 void CDummy_PhysXPlayable::Priority_Update(_float fTimeDelta)
 {
 	m_pTransformCom->RewindMomentum();
+	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_Position());
 }
 
 void CDummy_PhysXPlayable::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Pressing(DIK_W)) {
-		m_pTransformCom->AccumulateMomentum(XMVectorSet(0.f, 0.f, 1.f, 0.f));
+	if (m_pGameInstance->Key_Pressing(DIK_UPARROW)) {
+		m_pTransformCom->AccumulateMomentum(XMVectorSet(0.f, 0.f, 1.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta);
 	}
-	if (m_pGameInstance->Key_Pressing(DIK_A)) {
-		m_pTransformCom->AccumulateMomentum(XMVectorSet(-1.f, 0.f, 0.f, 0.f));
+	if (m_pGameInstance->Key_Pressing(DIK_LEFT)) {
+		m_pTransformCom->AccumulateMomentum(XMVectorSet(-1.f, 0.f, 0.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta);
 	}
-	if (m_pGameInstance->Key_Pressing(DIK_S)) {
-		m_pTransformCom->AccumulateMomentum(XMVectorSet(0.f, 0.f, -1.f, 0.f));
+	if (m_pGameInstance->Key_Pressing(DIK_DOWN)) {
+		m_pTransformCom->AccumulateMomentum(XMVectorSet(0.f, 0.f, -1.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta);
 	}
-	if (m_pGameInstance->Key_Pressing(DIK_D)) {
-		m_pTransformCom->AccumulateMomentum(XMVectorSet(1.f, 0.f, 0.f, 0.f));
+	if (m_pGameInstance->Key_Pressing(DIK_RIGHT)) {
+		m_pTransformCom->AccumulateMomentum(XMVectorSet(1.f, 0.f, 0.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta);
 	}
-	if (m_pGameInstance->Key_Pressing(DIK_SPACE)) {
-		m_pTransformCom->AccumulateMomentum(XMVectorSet(0.f, 10.f, 0.f, 0.f));
+	if (m_pGameInstance->Key_Pressing(DIK_LCONTROL)) {
+		if (m_pGameInstance->Key_Pressing(DIK_SPACE)) {
+			m_pTransformCom->AccumulateMomentum(XMVectorSet(0.f, 10.f, 0.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta);
+		}
+		if (m_pGameInstance->Key_Pressing(DIK_C)) {
+			m_pTransformCom->AccumulateMomentum(XMVectorSet(0.f, -10.f, 0.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta);
+		}
 	}
-	if (m_pGameInstance->Key_Pressing(DIK_C)) {
-		m_pTransformCom->AccumulateMomentum(XMVectorSet(0.f, -10.f, 0.f, 0.f));
-	}
-	//m_pTransformCom->AccumulateMomentum(XMVectorSet(0.f, -GRAVITY, 0.f, 0.f));
+	m_pTransformCom->AccumulateMomentum(XMVectorSet(0.f, -GRAVITY * fTimeDelta, 0.f, 0.f));
 	m_pCharacter_Controller->Move(fTimeDelta);
 }
 
@@ -52,34 +55,25 @@ void CDummy_PhysXPlayable::Late_Update(_float fTimeDelta)
 
 HRESULT CDummy_PhysXPlayable::Render()
 {
-	if (FAILED(Bind_ShaderResources())) {
+	//if (FAILED(Bind_ShaderResources())) {
+	//	return E_FAIL;
+	//}
+
+	//if (FAILED(m_pModelCom->Bind_Material(0, m_pShaderCom, "g_DiffuseTexture", aiTextureType_DIFFUSE, 0))) {
+	//	return E_FAIL;
+	//}
+	//if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::DEFAULT)))) {
+	//	return E_FAIL;
+	//}
+
+	//if (FAILED(m_pModelCom->Render(0))) {
+	//	return E_FAIL;
+	//}
+#ifdef _DEBUG
+	if (FAILED(m_pCharacter_Controller->Render())) {
 		return E_FAIL;
 	}
-
-	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-
-	//m_pShaderCom->Bind_SRV("g_NormalTexture", nullptr);
-	for (_uint i = 0; i < iNumMeshes; i++)
-	{
-		//if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
-		//	return E_FAIL;
-		//}
-
-		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom, "g_DiffuseTexture", aiTextureType_DIFFUSE, 0))) {
-			return E_FAIL;
-		}
-		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom, "g_NormalTexture", aiTextureType_NORMALS, 0))) {
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pModelCom->Render(i))) {
-			return E_FAIL;
-		}
-	}
+#endif // _DEBUG
 
 	return S_OK;
 }
@@ -104,9 +98,16 @@ HRESULT CDummy_PhysXPlayable::Initialize(void* pArg)
 
 HRESULT CDummy_PhysXPlayable::Ready_Components(void* pArg)
 {
-	if (FAILED(__super::Ready_Components(nullptr))) {
+	CTransform::TRANSFORM_DESC TransformDesc{};
+	TransformDesc.fRadius = 100.f;
+	TransformDesc.fRotationPerSec = XMConvertToRadians(60.f);
+	TransformDesc.fSpeedPerSec = 30.f;
+	if (FAILED(__super::Ready_Components(&TransformDesc))) {
 		return E_FAIL;
 	}
+	PlayableSTARTPOS_DESC* pDesc = static_cast<PlayableSTARTPOS_DESC*>(pArg);
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pDesc->vPos), 1.f));
+	m_pTransformCom->Rotation(pDesc->vRotRPY.x, pDesc->vRotRPY.y, pDesc->vRotRPY.z);
 	{
 		CCharacter_Controller::Character_Controller_DESC Desc{};
 
@@ -116,22 +117,24 @@ HRESULT CDummy_PhysXPlayable::Ready_Components(void* pArg)
 		Desc.fMaterial = { 0.5f, 0.5f, 0.6f };
 		Desc.bAutoStepping = { false };
 		Desc.fStepOffset = { 0.05f };
-		Desc.tCapsuleInfo.fRadius = 1.5f;
-		Desc.tCapsuleInfo.fHeight = 3.0f;
+		Desc.tCapsuleInfo.fRadius = 0.5f;
+		Desc.tCapsuleInfo.fHeight = 1.0f;
 		Desc.tCapsuleInfo.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), (CComponent**)&m_pCharacter_Controller, &Desc))) {
 			return E_FAIL;
 		}
 	}
+	m_pCharacter_Controller->Set_Position(m_pTransformCom->Get_State(STATE::POSITION));
 
 	/* Com_Shader */
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_ANIMMESH,
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_MESH,
 		reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
-	//m_pModelCom->Change_AnimationIndex(0, true, 0.4f, true);
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_Box"), (CComponent**)&m_pModelCom))) {
+		return E_FAIL;
+	}
 
-	return S_OK;
 
 	return S_OK;
 }

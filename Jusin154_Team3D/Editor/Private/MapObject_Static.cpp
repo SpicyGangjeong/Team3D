@@ -254,13 +254,11 @@ void CMapObject_Static::Describe_Entity()
 			_uint iNumMesh = m_pModelCom->Get_NumMeshes();
 
 			CRigidBody::RIGIDBODY_DESC Desc{};
-			Desc.eType = ACTOR::TRIANGLEMESH;
-
 			for (_uint i = 0; i < iNumMesh; ++i)
 			{ // RIGID_BODY
-				Desc.tRigidStaticDesc.szMeshName = m_pModelCom->Get_MeshName(i);
+				Desc.szMeshName = _string(m_pModelCom->Get_MeshName(i) + to_string(i)).c_str();
 
-				if (FAILED(Add_Asset_Component(g_iStaticLevel, CMyTools::ToWstring(m_pModelCom->Get_MeshName(i)).c_str(), nullptr, &Desc))) {
+				if (FAILED(Add_Asset_Component(g_iStaticLevel, CMyTools::ToWstring(Desc.szMeshName).c_str(), nullptr, &Desc))) {
 					assert(false);
 				}
 			}

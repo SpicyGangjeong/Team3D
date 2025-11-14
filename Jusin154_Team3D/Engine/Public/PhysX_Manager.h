@@ -24,8 +24,7 @@ public:
 	const PSX::PxRigidStatic* Add_StaticActor(CRigidBody& RigidBody);
 	
 	void RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh);
-	PSX::PxMaterial* Get_Material(_float3& vMatInfo);
-	PSX::PxShape* Create_Shape(ACTOR eType, _float3& vhalfGeometryInfo, PSX::PxMaterial& pxMaterial, _bool bExclusive, PSX::PxShapeFlags ePxShapeFlag);
+	PSX::PxMaterial* Get_Material(const _float3* vMatInfo);
 
 	HRESULT ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix);
 	HRESULT SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
@@ -76,12 +75,15 @@ private:
 	list<pair<CRigidBody*, PSX::PxActor*>>		m_RigidBodys = { };
 	map<_wstring, PSX::PxTriangleMesh*>			m_TriangleMeshes = {};
 	map<_wstring, PSX::PxTriangleMeshGeometry*>	m_TriangleMeshGeometry = {};
+
+	vector<PSX::PxMaterial*> m_pMaterials = { };
 	_uint m_iNumLevel = {};
 private:
 	HRESULT Initialize();
 	HRESULT Connect_DebugServer();
 	void Update_Kinematic();
-	void Update_Dynamic();
+	void Update_Dynamic_ActiveActors();
+	void Update_Dynamic_AllActors();
 
 public:
 	static CPhysX_Manager* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

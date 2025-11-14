@@ -12,8 +12,7 @@ class CRootModelPart final : public CContainerObject
 {
 
 public:
-	enum class PARTSTYPE{HEAD,BODY,HAIR,END};
-
+	enum class PARTSTYPE{ BODY,HEAD,HAIR,END};
 public:
 	void Set_PrototypeModelName(const _wchar* PrototypeModelName) { m_PrototypeModelName = PrototypeModelName; }
 	void Set_ModelName(const _char* Name) { m_ModelName = Name; }

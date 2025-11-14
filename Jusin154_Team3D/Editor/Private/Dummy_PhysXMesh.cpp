@@ -34,32 +34,6 @@ HRESULT CDummy_PhysXMesh::Initialize(void* pArg)
 
 void CDummy_PhysXMesh::Priority_Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Down(DIK_F2)) {
-		CModel* pModel = Get_Component<CModel>();
-		_uint iNumMesh = pModel->Get_NumMeshes();
-		pModel->Save_PhysXTriMeshes("../Bin/Resources/Models/River/River.bin");
-
-		CRigidBody::RIGIDBODY_DESC Desc{};
-		Desc.eType = ACTOR::TRIANGLEMESH;
-		for (_uint i = 0; i < iNumMesh; ++i)
-		{ // RIGID_BODY
-			Desc.tRigidStaticDesc.szMeshName = pModel->Get_MeshName(i);
-
-			Add_Asset_Component(g_iStaticLevel, CMyTools::ToWstring(pModel->Get_MeshName(i)).c_str(), nullptr, &Desc);
-		}
-	}
-	if (m_pGameInstance->Key_Down(DIK_F3)) {
-		CModel* pModel = Get_Component<CModel>();
-		_uint iNumMesh = pModel->Get_NumMeshes();
-		CRigidBody::RIGIDBODY_DESC Desc{};
-		Desc.eType = ACTOR::TRIANGLEMESH;
-		for (_uint i = 0; i < iNumMesh; ++i)
-		{ // RIGID_BODY
-			Desc.tRigidStaticDesc.szMeshName = pModel->Get_MeshName(i);
-
-			Add_Asset_Component(g_iStaticLevel, CMyTools::ToWstring(pModel->Get_MeshName(i)).c_str(), nullptr, &Desc);
-		}
-	}
 }
 
 void CDummy_PhysXMesh::Update(_float fTimeDelta)

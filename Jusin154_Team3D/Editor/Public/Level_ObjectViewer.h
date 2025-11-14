@@ -34,9 +34,12 @@ private:
 	void Category_PartsModelList(const _char* Category, const _char* Layer);
 	void Show_AnimList();
 	void Show_ObjectList();
-	void Object_Setting();
+	void Dummy_Object_Setting();
+	void Parts_Object_Setting();
 	void Save_LayerName(const _char* Layer);
 	_wchar* Save_ModelName(const _char* Category);
+	void Load_KeyFrame();
+	
 
 private:
 	vector<CGameObject*>	m_Objects;
@@ -44,8 +47,10 @@ private:
 	class CRootModelPart*	m_HumanRoot = { nullptr };
 	_int					m_iObjectIndex = { 0 };
 	_int					m_iPartsObjectIndex = { 0 };
-
-	_float					m_fAnimFrame = {};
+	_float					m_fKeyFrame = {};
+	vector<_float>			m_KeyFrame;
+	vector<_string>			m_Events;
+	_string					m_strEvent;
 	_char					m_szName[MAX_PATH];
 	_wchar					m_wszName[MAX_PATH];
 	_wchar					m_wszLayer[MAX_PATH];

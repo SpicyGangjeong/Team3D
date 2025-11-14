@@ -71,7 +71,7 @@ public:
 	//만들고 선택할 시에 내 ppOut에 클론하는 기능을 담당
 
 	template<typename T>
-	void Asset_Description(_uint iLevel, const _char* pComponentName, CComponent** ppOut, void* pDesc, class CGameObject* pOwner = nullptr, _wstring wstrGroupName = L"")
+	void Asset_Description(_uint iLevel, const _char* pComponentName, Engine::CComponent** ppOut, void* pDesc, class CGameObject* pOwner = nullptr, _wstring wstrGroupName = L"")
 	{
 		vector<const _char*> pComponentNames = {};
 		vector<_string> strNames = {};
@@ -131,26 +131,67 @@ public:
 			return;
 		}
 
-		static _int s_iCurrentItem = -1;
+		static _int s_iCurrentItem = 0;
+		static ImGuiTextFilter filter;
 
 		// 다른 어셋일 경우 콤보로 띄우기
 
-		if (GUI::Combo(pComponentName, &s_iCurrentItem, pComponentNames.data(), (_int)pComponentNames.size()))
+		if(GUI::BeginCombo(pComponentName, (s_iCurrentItem >= 0 && s_iCurrentItem < pComponentNames.size())
+			? pComponentNames[s_iCurrentItem] : "NONE"))
 		{
-			if (*ppOut != nullptr)
-				Safe_Release(*ppOut);
+			if (ImGui::IsWindowAppearing())
+			{
+				ImGui::SetKeyboardFocusHere();
+				filter.Clear();
+			}
 
-			_string strComponentName = pComponentNames[s_iCurrentItem];
-			_wstring wstrComponentName = CMyTools::ToWstring(strComponentName);
 
-			auto    iter = m_pAssets[iLevel].find(wstrComponentName);
+			filter.Draw("##Filter", -FLT_MIN);
+
+
+			for (_uint i = 0; i < pComponentNames.size(); i++)
+			{
+				bool is_selected = (s_iCurrentItem == i);
+
+				if (filter.PassFilter(pComponentNames[i]))
+				{
+
+					if (GUI::Selectable(pComponentNames[i], is_selected))
+					{
+						s_iCurrentItem = i;
+					}
+
+					if (is_selected)
+					{
+				
+						ImGui::SetItemDefaultFocus();
+					}
+
+				}
+
+			}
+
+			GUI::EndCombo();
+		}
+
+		if (GUI::Button("Select"))
+		{
+			auto    iter = m_pAssets[iLevel].find(CMyTools::ToWstring(pComponentNames[s_iCurrentItem]));
 
 			if (iter == m_pAssets[iLevel].end()) {
+
+
+				GUI::EndCombo();
+
 				return;
 			}
 
+			if (*ppOut != nullptr)
+				Safe_Release(*ppOut);
+
 			*ppOut = iter->second->Clone(pDesc, pOwner);
 		}
+
 	}
 #endif
 
