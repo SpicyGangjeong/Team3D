@@ -34,9 +34,6 @@
     <Filter Include="01.Utility\03.RenderTargets">
       <UniqueIdentifier>{d7596dbd-fa1c-414b-9f4e-f05a1a982434}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\04.Light">
-      <UniqueIdentifier>{0c8440f6-63b2-4dcb-9cb8-4c2356106fd0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\05.Shadow">
       <UniqueIdentifier>{6f4f880c-b0f2-4fab-ba8b-0939f6bc9321}</UniqueIdentifier>
     </Filter>
@@ -105,9 +102,6 @@
     </Filter>
     <Filter Include="02.Element\02.Component\02.VIBuffer\Rect">
       <UniqueIdentifier>{5fec6152-84b6-4811-a2ee-f5f1044cc1eb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\04.Light\Manager">
-      <UniqueIdentifier>{2bb63dcf-1503-446f-820e-03bfc3e1e38e}</UniqueIdentifier>
     </Filter>
     <Filter Include="03.Management\20.Camera_Manager">
       <UniqueIdentifier>{b89f3382-3069-4263-8e56-6116866a2518}</UniqueIdentifier>
@@ -250,6 +244,12 @@
     <Filter Include="01.Utility\06.Picking">
       <UniqueIdentifier>{a60a7ba5-a937-41d7-baac-db67f86f3ba1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Element\02.Component\09.Light">
+      <UniqueIdentifier>{7c82051e-19af-4284-8156-16f504db30b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Management\03.Light_Manager">
+      <UniqueIdentifier>{8727e975-e9e2-4b59-9a52-27ad3ad79f2f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -329,12 +329,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Shadow.cpp">
       <Filter>01.Utility\05.Shadow</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Light.cpp">
-      <Filter>01.Utility\04.Light</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Light_Manager.cpp">
-      <Filter>01.Utility\04.Light\Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\imgui_demo.cpp">
       <Filter>99.Define\99.THIRDPARTY\IMGUI</Filter>
@@ -464,6 +458,12 @@
     </ClCompile>
     <ClCompile Include="..\private\PanelObject.cpp">
       <Filter>02.Element\01.GameObject\50.UI\PanelObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Light.cpp">
+      <Filter>02.Element\02.Component\09.Light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Light_Manager.cpp">
+      <Filter>03.Management\03.Light_Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -932,12 +932,6 @@
     <ClInclude Include="..\Public\Shadow.h">
       <Filter>01.Utility\05.Shadow</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Light.h">
-      <Filter>01.Utility\04.Light</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Light_Manager.h">
-      <Filter>01.Utility\04.Light\Manager</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Key_Manager.h">
       <Filter>00.System\00.Device\Input\00.Key_Manager</Filter>
     </ClInclude>
@@ -1045,6 +1039,12 @@
     </ClInclude>
     <ClInclude Include="..\public\PanelObject.h">
       <Filter>02.Element\01.GameObject\50.UI\PanelObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Light.h">
+      <Filter>02.Element\02.Component\09.Light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Light_Manager.h">
+      <Filter>03.Management\03.Light_Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

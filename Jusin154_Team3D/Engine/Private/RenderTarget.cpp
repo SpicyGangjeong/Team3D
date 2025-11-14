@@ -44,7 +44,13 @@ HRESULT CRenderTarget::Initialize(_uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixel
         return E_FAIL;
     }
 
+
     m_vClearColor = vClearColor;
+
+
+#ifdef _DEBUG
+    Ready_Debug();
+#endif
 
     return S_OK;
 }
@@ -69,40 +75,58 @@ void CRenderTarget::Copy_Resource(ID3D11Texture2D* pTexture2D)
 }
 #ifdef _DEBUG
 
-HRESULT CRenderTarget::Ready_Debug(_float fX, _float fY, _float fSizeX, _float fSizeY)
+void CRenderTarget::Ready_Debug()
 {
+
+    XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity()); // 디버그 월드 메트릭스 초기화
 
     _uint		iNumViewports = { 1 };
 
     D3D11_VIEWPORT		Viewport{};
     m_pContext->RSGetViewports(&iNumViewports, &Viewport);
 
+    m_ptWindowSize.x = (LONG)Viewport.Width;
+    m_ptWindowSize.y = (LONG)Viewport.Height;
 
-    XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());
-    m_WorldMatrix._11 = fSizeX;
-    m_WorldMatrix._22 = fSizeY;
-    m_WorldMatrix._41 = fX - Viewport.Width * 0.5f;
-    m_WorldMatrix._42 = -fY + Viewport.Height * 0.5f;
-
-    return S_OK;
+    return;
 }
 
-void CRenderTarget::Render_Debug(CShader* pShader, CVIBuffer_Rect* pVIBuffer)
+void CRenderTarget::Describe_Entity(const _char* pName)
 {
+    if (GUI::Checkbox(pName, &m_isDraw))
+    {
+
+    }
+}
+
+_bool CRenderTarget::Render_Debug(CShader* pShader, CVIBuffer_Rect* pVIBuffer ,_float fX, _float fY, _float fSizeX, _float fSizeY)
+{
+
+    if (m_isDraw == false)
+        return false;
+
+    m_WorldMatrix._11 = fSizeX;
+    m_WorldMatrix._22 = fSizeY;
+    m_WorldMatrix._41 = fX - m_ptWindowSize.x * 0.5f;
+    m_WorldMatrix._42 = -fY + m_ptWindowSize.y * 0.5f;
+
+
     if (FAILED(pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
-        return;
+        return false;
 
     if (FAILED(pShader->Bind_SRV("g_Texture", m_pSRV)))
-        return;
+        return false;
 
     if (FAILED(pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::DEBUG))))
-        return;
+        return false;
 
     if (FAILED(pVIBuffer->Bind_Resources()))
-        return;
+        return false;
 
     if (FAILED(pVIBuffer->Render()))
-        return;
+        return false;
+
+    return true;
 }
 
 #endif

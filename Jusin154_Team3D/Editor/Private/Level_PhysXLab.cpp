@@ -10,6 +10,7 @@
 #include "Dummy_PhysXMesh.h"
 #include "MapObject_Manager.h"
 #include "BuildingContainer.h"
+#include "MainLight.h"
 
 CLevel_PhysXLab::CLevel_PhysXLab(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -51,17 +52,9 @@ HRESULT CLevel_PhysXLab::Initialize()
 
 HRESULT CLevel_PhysXLab::Ready_Layer_Light()
 {
-	LIGHT_DESC			LightDesc{};
-
-	LightDesc.eType = LIGHT::DIRECTIONAL;
-	LightDesc.vDiffuse = _float4(0.8f, 0.8f, 0.8f, 0.f);
-	LightDesc.vAmbient = _float4(0.8f, 0.8f, 0.8f, 0.f);
-	LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 0.f);
-	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
-
-	if (FAILED(m_pGameInstance->On_Light(NEXT_LEVEL, TEXT("Main_Light"), LightDesc, nullptr))) {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMainLight>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT)))
 		return E_FAIL;
-	}
+
 	return S_OK;
 }
 

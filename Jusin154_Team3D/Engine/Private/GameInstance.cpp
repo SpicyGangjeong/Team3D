@@ -140,7 +140,8 @@ void CGameInstance::Clear_Resources(_uint iLevelIndex)
 	m_pPrototype_Manager->Clear_Resource(iLevelIndex);
 	m_pCamera_Manager->Clear_Cameras(iLevelIndex);
 	m_pObject_Manager->Clear(iLevelIndex);
-	m_pLight_Manager->Change_Level(iLevelIndex);
+	m_pLight_Manager->Light_Clear(iLevelIndex);
+
 }
 
 _float CGameInstance::Random_Normal()
@@ -429,19 +430,26 @@ const _vector CGameInstance::Get_CamXMPosition()
 	return m_pPipeLine->Get_CamXMPosition();
 }
 
-HRESULT CGameInstance::On_Light(_uint iLevel, const _wstring& wstrLightKey, const LIGHT_DESC& LightDesc, CLight** ppOut)
+void CGameInstance::Add_Light(_uint _iCurrentLevel, CLight* _pLight)
 {
-	return m_pLight_Manager->On_Light(iLevel, wstrLightKey, LightDesc, ppOut);
-}
-HRESULT CGameInstance::Off_Light(_uint iLevel, const _wstring& wstrLightKey)
-{
-	return m_pLight_Manager->Off_Light(iLevel, wstrLightKey);
+	m_pLight_Manager->Add_Light(_iCurrentLevel, _pLight);
 }
 
-HRESULT CGameInstance::Render_Lights(class CShader* pShader, class CVIBuffer* pVIBuffer)
+void CGameInstance::Delete_Light(_uint _iCurrentLevel, CLight* _pLight)
 {
-	return m_pLight_Manager->Render_Lights(pShader, pVIBuffer);
+	m_pLight_Manager->Delete_Light(_iCurrentLevel, _pLight);
 }
+
+const LIGHT_DESC* CGameInstance::Get_Light_Info(_uint _iCurrentLevel, _uint _iLightIndex)
+{
+	return m_pLight_Manager->Get_Light_Info(_iCurrentLevel, _iLightIndex);
+}
+
+HRESULT CGameInstance::Render_Lights(_uint _iCurrentLevel, CShader* pShader, CVIBuffer* pVIBuffer)
+{
+	return m_pLight_Manager->Render_Lights(_iCurrentLevel, pShader, pVIBuffer);
+}
+
 
 HRESULT CGameInstance::Add_ColliderGroup(_uint iColliderGroup, class CCollider* pBounding)
 {
@@ -492,14 +500,14 @@ HRESULT CGameInstance::Copy_RenderTarget(const _wstring& strTargetTag, ID3D11Tex
 	return m_pRenderTarget_Manager->Copy_RenderTarget(strTargetTag, pTexture2D);
 }
 
-HRESULT CGameInstance::Ready_RenderTarget_Debug(const _wstring& strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY)
+void CGameInstance::RenderTarget_Debuger()
 {
-	return m_pRenderTarget_Manager->Ready_RenderTarget_Debug(strTargetTag, fX, fY, fSizeX, fSizeY);
+	m_pRenderTarget_Manager->RenderTarget_Debuger();
 }
 
-HRESULT CGameInstance::Render_RenderTarget_Debug(const _wstring& strMRTTag, CShader* pShader, CVIBuffer_Rect* pVIBuffer)
+HRESULT CGameInstance::Render_RenderTarget_Debug(CShader* pShader, CVIBuffer_Rect* pVIBuffer)
 {
-	return m_pRenderTarget_Manager->Render_RenderTarget_Debug(strMRTTag, pShader, pVIBuffer);
+	return m_pRenderTarget_Manager->Render_RenderTarget_Debug(pShader, pVIBuffer);
 }
 HRESULT CGameInstance::Clear_Cameras(_uint iLevel)
 {
@@ -724,7 +732,6 @@ void CGameInstance::Release_Engine()
 	SAFE_RELEASE(m_pShadow);
 	SAFE_RELEASE(m_pCamera_Manager);
 	SAFE_RELEASE(m_pRenderTarget_Manager);
-	SAFE_RELEASE(m_pLight_Manager);
 	SAFE_RELEASE(m_pPipeLine);
 	SAFE_RELEASE(m_pKey_Manager);
 	SAFE_RELEASE(m_pMouse_Manager);
@@ -733,6 +740,7 @@ void CGameInstance::Release_Engine()
 	SAFE_RELEASE(m_pObject_Manager);
 	SAFE_RELEASE(m_pLevel_Manager);
 	SAFE_RELEASE(m_pPrototype_Manager);
+	SAFE_RELEASE(m_pLight_Manager); // Light Manager는 m_pObject_Manager 보다 빨리 불려야함 
 	SAFE_RELEASE(m_pGraphic_Device);
 }
 

@@ -1,10 +1,16 @@
 ﻿#include "pch.h"
 #include "Loader.h"
-#include "DebugCamera.h"
 #include "GameInstance.h"
+
+#pragma region DEFAULT_HEADER
+
+#include "DebugCamera.h"
 #include "DummyRect.h"
 #include "MainApp.h"
 #include "Dummy_Cube.h"
+#include "MainLight.h"
+
+#pragma endregion
 
 #pragma region OBJECT_HEADER
 
@@ -219,6 +225,10 @@ HRESULT CLoader::Loading_For_Logo()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CDebugCamera>(g_iStaticLevel, CDebugCamera::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CMainLight>(g_iStaticLevel, CMainLight::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
