@@ -7,9 +7,9 @@ CPicking::CPicking(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	, m_pContext{ pContext }
 	, m_pGameInstance{ CGameInstance::GetInstance() }
 {
-	Safe_AddRef(m_pDevice);
-	Safe_AddRef(m_pContext);
-	Safe_AddRef(m_pGameInstance);
+	SAFE_ADDREF(m_pDevice);
+	SAFE_ADDREF(m_pContext);
+	SAFE_ADDREF(m_pGameInstance);
 }
 
 HRESULT CPicking::Initialize(HWND hWnd, _uint iSizeX, _uint iSizeY)

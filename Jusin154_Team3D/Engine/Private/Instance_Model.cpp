@@ -23,7 +23,7 @@ CInstance_Model::CInstance_Model(const CInstance_Model& rhs)
 		SAFE_ADDREF(pMesh);
 	}
 
-	Safe_AddRef(m_pVBInstance);
+	SAFE_ADDREF(m_pVBInstance);
 }
 #ifdef EDITOR_PROJECT
 HRESULT CInstance_Model::Initialize_Prototype(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex)

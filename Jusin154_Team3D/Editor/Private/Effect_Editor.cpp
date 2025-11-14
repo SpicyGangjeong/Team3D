@@ -436,7 +436,7 @@ void CEffect_Editor::Describe_Entity()
 				
 				m_pEditEffect = pSelectedEffectObject;
 
-				Safe_AddRef(pSelectedEffectObject);
+				SAFE_ADDREF(pSelectedEffectObject);
 
 				m_strCurrentEffectName = strName;
 

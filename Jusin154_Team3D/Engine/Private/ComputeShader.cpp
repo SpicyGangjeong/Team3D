@@ -8,9 +8,9 @@ CComputeShader::CComputeShader(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 	, m_pContext{ pContext }
 	, m_pGameInstance{ CGameInstance::GetInstance() }
 {
-	Safe_AddRef(m_pDevice);
-	Safe_AddRef(m_pContext);
-	Safe_AddRef(m_pGameInstance);
+	SAFE_ADDREF(m_pDevice);
+	SAFE_ADDREF(m_pContext);
+	SAFE_ADDREF(m_pGameInstance);
 }
 
 HRESULT CComputeShader::Initialize(const _tchar* pShaderFilePath, const _char* pStartFunctionName, _uint iNumElement, _uint iNumInputBuffer, _uint iNumOutputBuffer, _uint iInputStructStride[], _uint iOutputStructStride[])

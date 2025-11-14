@@ -13,10 +13,10 @@ CShader::CShader(const CShader& rhs)
 	, m_iNumPasses{ rhs.m_iNumPasses }
 	, m_InputLayouts{ rhs.m_InputLayouts }
 {
-	Safe_AddRef(m_pEffect);
+	SAFE_ADDREF(m_pEffect);
 
 	for (auto& pInputLayout : m_InputLayouts)
-		Safe_AddRef(pInputLayout);
+		SAFE_ADDREF(pInputLayout);
 }
 
 HRESULT CShader::Initialize_Prototype(const _tchar* pShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)
