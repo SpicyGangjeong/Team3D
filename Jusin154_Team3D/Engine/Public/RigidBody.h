@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Component.h"
 
 NS_BEGIN(PSX)
@@ -13,17 +13,17 @@ class CMesh;
 class ENGINE_DLL CRigidBody final : public CComponent
 {
 public: // MORE INFO ON ENGINE_ENUM
-	typedef struct tagRigidBody_PrototypeDesc // ´Ù Ã¤¿ì¼¼¿ä NONE »©°í, ¸ñÀû¿¡ ¾È¸Â´Â°Å »©°í
+	typedef struct tagRigidBody_PrototypeDesc // ë‹¤ ì±„ìš°ì„¸ìš” NONE ë¹¼ê³ , ëª©ì ì— ì•ˆë§ëŠ”ê±° ë¹¼ê³ 
 	{
 		ACTOR					eType;
 		PSX::PxRigidBodyFlags	ePxRigidBodyFlags = { /* NONE */};
 		PSX::PxShapeFlags		ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
 		PXMATERIAL				ePxMaterialTypes = { PXMATERIAL::DEFAULT };
-		_float3					vMatInfo = { 0.5f, 0.5f, 0.6f }; // ÇÇÁ÷½º °´Ã¼ÀÇ ¼Ó¼º µî
-		_float					fContactOffset = { 0.05f }; // Á¢ÃË À¯°İ ¿ÀÇÁ¼Â
+		_float3					vMatInfo = { 0.5f, 0.5f, 0.6f }; // í”¼ì§ìŠ¤ ê°ì²´ì˜ ì†ì„± ë“±
+		_float					fContactOffset = { 0.05f }; // ì ‘ì´‰ ìœ ê²© ì˜¤í”„ì…‹
 #pragma region DYNAMIC
-		_float3					vhalfGeometryInfo;		// ¹Ú½º´Â vSize, Ä¸½¶Àº radius, height·Î ¾¸
-		_float					fDensity = { 1000.f };	// ¹Ğµµ, ½ÇÁ¦ ¹«°Ô´Â ºÎÇÇ¿¡ µû¶ó ´Ş¶óÁü
+		_float3					vhalfGeometryInfo;		// ë°•ìŠ¤ëŠ” vSize, ìº¡ìŠì€ radius, heightë¡œ ì”€
+		_float					fDensity = { 1000.f };	// ë°€ë„, ì‹¤ì œ ë¬´ê²ŒëŠ” ë¶€í”¼ì— ë”°ë¼ ë‹¬ë¼ì§
 #pragma endregion
 #pragma region STATIC
 #pragma endregion
@@ -63,7 +63,7 @@ private:
 	PSX::PxRigidBodyFlags	m_ePxRigidBodyFlags = {};
 	PXMATERIAL				m_eMatType = { PXMATERIAL::END };
 	_float					m_fContactOffset = { 0.05f };
-	const PSX::PxActor*		m_pRigidBody = { nullptr };		// ½ÇÁ¦ ½Ã¹Ä·¹ÀÌ¼ÇÀ» µµ´Â º»Ã¼
+	const PSX::PxActor*		m_pRigidBody = { nullptr };		// ì‹¤ì œ ì‹œë®¬ë ˆì´ì…˜ì„ ë„ëŠ” ë³¸ì²´
 
 	CTransform*				m_pTransform = { nullptr };
 
@@ -74,7 +74,7 @@ private:
 	_float					m_fDensity = { 1000.f };
 #pragma endregion
 #pragma region STATIC
-	_wstring				m_wstrMeshKey = {  }; // Â¦²á ½ºÅÂÆ½ ¸Ş½ÃÀÇ triangleMesh Å°
+	_wstring				m_wstrMeshKey = {  }; // ì§ê¿ ìŠ¤íƒœí‹± ë©”ì‹œì˜ triangleMesh í‚¤
 #pragma endregion
 
 private:

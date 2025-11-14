@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Component.h"
 
@@ -28,7 +28,7 @@ public:
 	_bool	IsFinishedAnim() const { return m_bIsFinishedAnim; }
 	_bool	IsFinishedLerp() const { return m_bIsFinishedLerp; }
 	_float	Get_AnimProgressRatio();
-	_int	Get_AnimProgressPostion(const char* pAnimChannelName);
+	_int	Get_AnimProgressPostion(const _char* pAnimChannelName);
 	_float	Get_AnimEstimatedDuration();
 	void	Set_AnimProgressPostion(const _char* pChannelName, _uint iPosition);
 	void	Set_AnimPauseState(_bool bValue);// ¾Ö´ÔÀ» ÇöÀç»óÅÂ·Î Á¤Áö

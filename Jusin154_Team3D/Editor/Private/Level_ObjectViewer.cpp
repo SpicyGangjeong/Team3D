@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Level_ObjectViewer.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
@@ -11,7 +11,10 @@
 #include "Layer.h"
 #include "GameObject.h"
 #include "DummyObject.h"
+
 #include "DummySkyBox.h"
+#include "MainLight.h"
+
 
 CLevel_ObjectViewer::CLevel_ObjectViewer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -54,7 +57,7 @@ void CLevel_ObjectViewer::Update(_float fTimeDelta)
 
 HRESULT CLevel_ObjectViewer::Render()
 {
-	SetWindowText(g_hWnd, TEXT("¿ÀºêÁ§Æ® ·¹º§ÀÔ´Ï´Ù"));
+	SetWindowText(g_hWnd, TEXT("ì˜¤ë¸Œì íŠ¸ ë ˆë²¨ìž…ë‹ˆë‹¤"));
 	//GUI::ShowDemoWindow();
 	return S_OK;
 }
@@ -464,6 +467,7 @@ HRESULT CLevel_ObjectViewer::Ready_Layer_Camera(const _wstring& strLayerTag)
 	CameraDesc.vEye = _float3(0.f, 30.f, -10.f);
 	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
 	CameraDesc.fSpeedPerSec = 5.f;
+	CameraDesc.pCameraKey = TEXT("Debug_Camera");
 	CameraDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 	CameraDesc.fMouseSensor = 0.1f;
 
@@ -476,17 +480,9 @@ HRESULT CLevel_ObjectViewer::Ready_Layer_Camera(const _wstring& strLayerTag)
 
 HRESULT CLevel_ObjectViewer::Ready_Layer_Light()
 {
-	LIGHT_DESC			LightDesc{};
-
-	LightDesc.eType = LIGHT::DIRECTIONAL;
-	LightDesc.vDiffuse = _float4(0.8f, 0.8f, 0.8f, 0.f);
-	LightDesc.vAmbient = _float4(0.2f, 0.2f, 0.2f, 0.f);
-	LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 0.f);
-	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
-
-	if (FAILED(m_pGameInstance->On_Light(NEXT_LEVEL, TEXT("Main_Light"), LightDesc, nullptr))) {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMainLight>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT)))
 		return E_FAIL;
-	}
+
 	return S_OK;
 }
 

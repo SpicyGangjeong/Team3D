@@ -10,19 +10,22 @@ private:
 	CLight_Manager();
 	virtual ~CLight_Manager() = default;
 
+
 public:
-	HRESULT On_Light(_uint iLevel, const _wstring& wstrLightKey, const LIGHT_DESC& LightDesc, class CLight** ppOut);
-	HRESULT Off_Light(_uint iLevel, const _wstring& wstrLightKey);
-	HRESULT Render_Lights(class CShader* pShader, class CVIBuffer* pVIBuffer);
-	HRESULT Change_Level(_uint iLevel);
+	void			  Add_Light(_uint _iCurrentLevel, class CLight* _pLight);
+	void			  Delete_Light(_uint _iCurrentLevel, class CLight* _pLight);
+	void			  Light_Clear(_uint _iCurrentLevel);
+	const LIGHT_DESC* Get_Light_Info(_uint _iCurrentLevel ,_uint _iLightIndex);
+
+public:
+	HRESULT Render_Lights(_uint _iCurrentLevel, class CShader* pShader, class CVIBuffer* pVIBuffer);
 
 private:
-	map<_wstring, list<class CLight*>*>* m_pLights = { nullptr };
-	_uint m_iNumLevel = {};
-private:
-	list<class CLight*>* Find_Lights(_uint iLevel, const _wstring& wstrLightKey);
-	HRESULT Initialize(_uint iNumLevel);
+	HRESULT Initialize(_uint iNumLevels);
 
+private:
+	_uint				 m_iLevelNumber = {};
+	list<class CLight*>* m_Lights = { nullptr };
 public:
 	static CLight_Manager* Create(_uint iNumLevel);
 	virtual void Free() override;

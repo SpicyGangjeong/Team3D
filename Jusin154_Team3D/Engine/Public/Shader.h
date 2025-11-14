@@ -23,14 +23,30 @@ public:
 	HRESULT Bind_SRV(const _char* pConstantName, ID3D11ShaderResourceView* pSRV);
 	HRESULT Bind_SRVs(const _char* pConstantName, ID3D11ShaderResourceView** ppSRV, _uint iNumSRVs);
 
+
+private:
+	HRESULT CreateShader(const _tchar* pShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements);
+
+#ifdef _DEBUG
+public:
+	HRESULT Shader_Refresh();
+#endif
+
 public:
 	HRESULT Begin(_uint iPassIndex);
 
 private:
-	ID3DX11Effect* m_pEffect = { nullptr };
+	ID3DX11Effect*					m_pEffect = { nullptr };
 	_uint							m_iNumPasses = {};
 	vector<ID3D11InputLayout*>		m_InputLayouts;
 
+
+#ifdef _DEBUG
+private:
+	_wstring						m_strShaderPath = {};
+	const D3D11_INPUT_ELEMENT_DESC* m_pElements = nullptr;
+	_uint							m_iNumElements = {};
+#endif
 
 public:
 	static CShader* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements);
