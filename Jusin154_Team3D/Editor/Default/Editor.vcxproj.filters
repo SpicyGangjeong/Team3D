@@ -202,6 +202,9 @@
     <Filter Include="02.GameObjects\Dummys\DummySkyBox">
       <UniqueIdentifier>{12d17342-7cb4-46be-8243-9e1864496338}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\MainLight">
+      <UniqueIdentifier>{a9360a97-5ef2-476a-9f12-f4e06c28290c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -405,6 +408,9 @@
     <ClInclude Include="..\public\DummySkyBox.h">
       <Filter>02.GameObjects\Dummys\DummySkyBox</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\MainLight.h">
+      <Filter>02.GameObjects\MainLight</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -603,6 +609,9 @@
     </ClCompile>
     <ClCompile Include="..\private\DummySkyBox.cpp">
       <Filter>02.GameObjects\Dummys\DummySkyBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MainLight.cpp">
+      <Filter>02.GameObjects\MainLight</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -6,92 +6,95 @@ CLight_Manager::CLight_Manager()
 {
 }
 
-HRESULT CLight_Manager::On_Light(_uint iLevel, const _wstring& wstrLightKey, const LIGHT_DESC& LightDesc, class CLight** ppOut)
+
+
+
+HRESULT CLight_Manager::Initialize(_uint iNumLevels)
 {
-    list<CLight*>* pLights = Find_Lights(iLevel, wstrLightKey);
-    if (nullptr != pLights) {
-        if (*(*pLights).front() == LightDesc) { // 같은 종류, 같은 위치의 광원은 추가하지 않음
-            return E_FAIL;
-        }
-    }
-    else if (nullptr == pLights) {
-        pLights = new list<CLight*>();
-        m_pLights[iLevel].emplace(wstrLightKey, pLights);
-    }
-    CLight* pLight = CLight::Create(LightDesc);
-    if (nullptr == pLight) {
-        return E_FAIL;
-    }
-    if (nullptr != ppOut) {
-        *ppOut = pLight;
-    }
-    pLights->push_back(pLight);
+    m_iLevelNumber = iNumLevels;
+
+    m_Lights = new list<class CLight*>[m_iLevelNumber];
+
     return S_OK;
 }
 
-HRESULT CLight_Manager::Off_Light(_uint iLevel, const _wstring& wstrLightKey)
+void CLight_Manager::Add_Light(_uint _iCurrentLevel, CLight* _pLight)
 {
-    map<_wstring, list<CLight*>*>::iterator iter = m_pLights[iLevel].find(wstrLightKey);
-    if (iter == m_pLights[iLevel].end()) {
-        return E_FAIL;
+    if (nullptr == _pLight)
+        return;
+
+    m_Lights[_iCurrentLevel].push_back(_pLight);
+
+    SAFE_ADDREF(_pLight);
+
+}
+
+void CLight_Manager::Delete_Light(_uint _iCurrentLevel, CLight* _pLight)
+{
+    for (auto iter = m_Lights[_iCurrentLevel].begin(); iter != m_Lights[_iCurrentLevel].end();)
+    {
+        if (*iter == _pLight)
+        {
+            SAFE_RELEASE(_pLight);
+
+            iter = m_Lights[_iCurrentLevel].erase(iter);
+        
+        }
+        else
+        {
+            iter++;
+        }
     }
-    for (auto& pLight : *(*iter).second) {
+}
+
+void CLight_Manager::Light_Clear(_uint _iCurrentLevel)
+{
+    for (auto& pLight : m_Lights[_iCurrentLevel])
+    {
         SAFE_RELEASE(pLight);
     }
-    Safe_Delete((*iter).second);
-    (m_pLights[iLevel]).erase(iter);
-    return S_OK;
+
+    m_Lights[_iCurrentLevel].clear();
 }
 
-HRESULT CLight_Manager::Render_Lights(CShader* pShader, CVIBuffer* pVIBuffer)
+const LIGHT_DESC* CLight_Manager::Get_Light_Info(_uint _iCurrentLevel, _uint _iLightIndex)
 {
-    for (_uint i = 0; i < m_iNumLevel; ++i) {
-        for (auto& pairLight : m_pLights[i])
-        {
-            for (auto& pLight : *pairLight.second) {
-                if (FAILED((pLight)->Render(pShader, pVIBuffer))) {
-                    return E_FAIL;
-                }
-            }
-        }
-    }
 
-    return S_OK;
-}
-
-HRESULT CLight_Manager::Change_Level(_uint iLevel)
-{
-    for (auto& pairLight : m_pLights[iLevel]) {
-        for (auto& pLight : *pairLight.second) {
-            SAFE_RELEASE(pLight);
-        }
-        Safe_Delete(pairLight.second);
-    } m_pLights[iLevel].clear();
-    return S_OK;
-}
-
-list<CLight*>* CLight_Manager::Find_Lights(_uint iLevel, const _wstring& wstrLightKey)
-{
-    map<_wstring, list<CLight*>*>::iterator iter = m_pLights[iLevel].find(wstrLightKey);
-    if (iter == m_pLights[iLevel].end()) {
+    if (_iLightIndex >= m_Lights[_iCurrentLevel].size())
         return nullptr;
+
+    auto iter = m_Lights[_iCurrentLevel].begin();
+
+    for (size_t i = 0; i < _iLightIndex; i++)
+    {
+        iter++;
     }
-    return iter->second;
+
+    return (*iter)->Get_LightDesc();
 }
 
-HRESULT CLight_Manager::Initialize(_uint iLevelNumber)
+
+HRESULT CLight_Manager::Render_Lights(_uint _iCurrentLevel, CShader* pShader, CVIBuffer* pVIBuffer)
 {
-    m_iNumLevel = iLevelNumber;
-    m_pLights = new map<_wstring, list<CLight*>*>[iLevelNumber];
+
+    for (auto& pLight : m_Lights[_iCurrentLevel])
+    {
+        pLight->Render(pShader, pVIBuffer);
+    }
+
     return S_OK;
 }
+
 
 CLight_Manager* CLight_Manager::Create(_uint iLevelNumber)
 {
     CLight_Manager* pInstance = new CLight_Manager();
+
     if (FAILED(pInstance->Initialize(iLevelNumber))) {
+
         SAFE_RELEASE(pInstance);
     }
+
     return pInstance;
 }
 
@@ -99,12 +102,18 @@ void CLight_Manager::Free()
 {
     __super::Free();
 
-    for (_uint i = 0; i < m_iNumLevel; ++i) {
-        for (auto& pairLight : m_pLights[i]) {
-            for (auto& pLight : *pairLight.second) {
-                SAFE_RELEASE(pLight);
-            }
-            Safe_Delete(pairLight.second);
-        } m_pLights[i].clear();
-    } Safe_Delete_Array(m_pLights);
+    for (size_t i = 0; i < m_iLevelNumber; i++)
+    {
+        for (auto& Light : m_Lights[i])
+        {
+            SAFE_RELEASE(Light);
+        } 
+        
+        m_Lights[i].clear();
+
+    }
+
+    Safe_Delete_Array(m_Lights);
+
+
 }
