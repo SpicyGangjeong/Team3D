@@ -250,6 +250,9 @@
     <Filter Include="01.Utility\06.Picking">
       <UniqueIdentifier>{a60a7ba5-a937-41d7-baac-db67f86f3ba1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Element\02.Component\08.Character_Controller\Collision_Callback">
+      <UniqueIdentifier>{05865481-fa20-4432-a5a7-945d4f8c7f3c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -464,6 +467,9 @@
     </ClCompile>
     <ClCompile Include="..\private\PanelObject.cpp">
       <Filter>02.Element\01.GameObject\50.UI\PanelObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Collision_Callback.cpp">
+      <Filter>02.Element\02.Component\08.Character_Controller\Collision_Callback</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1045,6 +1051,9 @@
     </ClInclude>
     <ClInclude Include="..\public\PanelObject.h">
       <Filter>02.Element\01.GameObject\50.UI\PanelObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Collision_Callback.h">
+      <Filter>02.Element\02.Component\08.Character_Controller\Collision_Callback</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Character_Controller.h"
 #include "GameInstance.h"
+#include "Collision_Callback.h"
 
 CCharacter_Controller::CCharacter_Controller(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent{ pDevice, pContext }
@@ -192,29 +193,32 @@ HRESULT CCharacter_Controller::Initialize(void* pArg)
 		m_tagData.pCharacter = this;
 	}
 
-
 	switch (m_eBodyType)
 	{
 	case Engine::ACTOR::BOX:
 	{
 		PSX::PxBoxControllerDesc Desc{};
-		Desc.halfHeight = {};
-		Desc.halfSideExtent = {};
-		Desc.halfForwardExtent = {};
-		Desc.contactOffset = pDesc->fContactOffset;
-		Desc.material = m_pGameInstance->Get_Material(&pDesc->fMaterial);
-		m_pController = m_pGameInstance->Add_BoxController(Desc);
+		Desc.halfHeight			= pDesc->vBoxSize.y;
+		Desc.halfSideExtent		= pDesc->vBoxSize.x;
+		Desc.halfForwardExtent	= pDesc->vBoxSize.z;
+		Desc.contactOffset		= pDesc->fContactOffset;
+		Desc.reportCallback		= static_cast<PSX::PxUserControllerHitReport*>(pDesc->pCallback);
+		Desc.behaviorCallback	= static_cast<PSX::PxControllerBehaviorCallback*>(pDesc->pCallback);
+		Desc.material			= m_pGameInstance->Create_Material(&pDesc->fMaterial);
+		m_pController			= m_pGameInstance->Add_BoxController(Desc);
 		m_pController->setUserData(&m_tagData);
 	} break;
 	case Engine::ACTOR::CAPSULE:
 	{
 		PSX::PxCapsuleControllerDesc Desc{};
-		Desc.radius = pDesc->tCapsuleInfo.fRadius;
-		Desc.height = pDesc->tCapsuleInfo.fHeight;
-		Desc.climbingMode = pDesc->tCapsuleInfo.eClimbingMode; // 기본 eEASY
-		Desc.contactOffset = pDesc->fContactOffset;
-		Desc.material = m_pGameInstance->Get_Material(&pDesc->fMaterial);
-		m_pController = m_pGameInstance->Add_CapsuleController(Desc);
+		Desc.radius				= pDesc->fRadius;
+		Desc.height				= pDesc->fHeight;
+		Desc.climbingMode		= pDesc->eClimbingMode; // 기본 eEASY
+		Desc.contactOffset		= pDesc->fContactOffset;
+		Desc.reportCallback		= static_cast<PSX::PxUserControllerHitReport*>(pDesc->pCallback);
+		Desc.behaviorCallback	= static_cast<PSX::PxControllerBehaviorCallback*>(pDesc->pCallback);
+		Desc.material			= m_pGameInstance->Create_Material(&pDesc->fMaterial);
+		m_pController			= m_pGameInstance->Add_CapsuleController(Desc);
 		m_pController->setUserData(&m_tagData);
 	} break;
 	default:
@@ -222,7 +226,6 @@ HRESULT CCharacter_Controller::Initialize(void* pArg)
 		return E_FAIL;
 		break;
 	}
-	
 	
 	if (nullptr == m_pController) {
 		assert(false);

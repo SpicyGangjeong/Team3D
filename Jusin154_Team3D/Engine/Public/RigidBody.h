@@ -34,7 +34,7 @@ public: // MORE INFO ON ENGINE_ENUM
 #pragma region DYNAMIC
 #pragma endregion
 #pragma region STATIC
-		const _char* szMeshName = { };
+		const _char* szMeshName = { }; 
 #pragma endregion
 	}RIGIDBODY_DESC;
 

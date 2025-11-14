@@ -4,7 +4,7 @@
 NS_BEGIN(Engine)
 class CTransform;
 class ENGINE_DLL CCharacter_Controller final :
-	public CComponent, 
+	public CComponent
 {
 	/* dev-treadmill.tistory.com/158 */
 	/* dev-treadmill.tistory.com/159 */
@@ -14,30 +14,30 @@ public:
 #pragma region STRUCT
 	struct CapsuleInfo
 	{
-		_float fRadius;
-		_float fHeight;
-		PSX::PxCapsuleClimbingMode::Enum eClimbingMode; // 기본 (eEASY, stepOffset 값이 무제한), (eCONSTRAINED, stepOffset 값이 제대로 먹음)
 	};
 	typedef struct tagCharacter_ControllerDesc
 	{
-		CTransform*			pTransform = { nullptr };
-		ACTOR				eBodyType = { ACTOR::END };
-		_float				fContactOffset = { 0.f };
-		_float3				fMaterial = { 0.5f, 0.5f, 0.6f };
-		_bool				bAutoStepping = { false }; // 계단 높이 타게 할건지 // 박스 콜라이더는 생각한대로 되는데 캡슐은 바닥의 구체 때문에 예상보다 더 높은 곳까지 오를 수 있음
-		_float				fStepOffset = { 0.05f }; // 허용가능한 계단 높이, 작게 유지하는게 좋음
+		CTransform*			pTransform			= { nullptr };
+		ACTOR				eBodyType			= { ACTOR::END };
+		_float				fContactOffset		= { 0.f };
+		_float3				fMaterial			= { 0.5f, 0.5f, 0.6f };
+		_bool				bAutoStepping		= { false }; // 계단 높이 타게 할건지 // 박스 콜라이더는 생각한대로 되는데 캡슐은 바닥의 구체 때문에 예상보다 더 높은 곳까지 오를 수 있음
+		_float				fStepOffset			= { 0.05f }; // 허용가능한 계단 높이, 작게 유지하는게 좋음
 
-		function<void()>	funcHitCallback = { nullptr };
-		function<void()>	funcBehaviorCallback = { nullptr };
+		void*				pCallback			= { }; // move가 호출될 때 호출 됨 // dll을 받는 각 프로젝트에서 CCollision_Callback 을 구현해야함
 
 		// 타고 올라갈 수 없는 경사면의 각도를 정의함.  0.f 면 비활성화 됨
 		// _float fSlopeLimit = { 코사인각도 };
 		
-		union
-		{
-			_float3 vBoxSize; // CCT박스는 회전없는 AABB임
-			CapsuleInfo tCapsuleInfo;
-		};
+		
+		
+		// Box인 경우 채워넣기
+		_float3				vBoxSize = { 0.5f, 0.5f, 0.5f };						// CCT박스는 회전없는 AABB임
+
+		// Capsule인 경우 채워넣기
+		_float fRadius;
+		_float fHeight;
+		PSX::PxCapsuleClimbingMode::Enum eClimbingMode; // 기본 (eEASY, stepOffset 값이 무제한), (eCONSTRAINED, stepOffset 값이 제대로 먹음)
 	}Character_Controller_DESC;
 #pragma endregion
 private:
@@ -70,8 +70,6 @@ private:
 	_float					m_fSlopeLimit = { 0.f }; // cosf각도, 오르막 경사각 제한. ( 추가설정 필요함 )
 	PhsXUserData			m_tagData = {};
 	
-	function<void()>		m_funcHitCallback = { nullptr };
-	function<void()>		m_funcBehaviorCallback = { nullptr };
 	PSX::PxControllerCollisionFlags m_eBeforeCollisionFlags = {};
 #ifdef _DEBUG
 	unique_ptr<GeometricPrimitive> m_pMainShape = { nullptr };

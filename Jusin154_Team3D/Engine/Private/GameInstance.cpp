@@ -563,7 +563,7 @@ SaveModel* CGameInstance::Load_SaveModel(const _char* filePath)
 }
 
 #pragma region PhysX_Manager
-PSX::PxMaterial* CGameInstance::Get_Material(_float3* vMatInfo)
+PSX::PxMaterial* CGameInstance::Create_Material(_float3* vMatInfo)
 {
 	return m_pPhysX_Manager->Create_Material(vMatInfo);
 }

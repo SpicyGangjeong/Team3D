@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Dummy_PhysXPlayable.h"
 
 #include "GameInstance.h"
@@ -117,9 +117,9 @@ HRESULT CDummy_PhysXPlayable::Ready_Components(void* pArg)
 		Desc.fMaterial = { 0.5f, 0.5f, 0.6f };
 		Desc.bAutoStepping = { false };
 		Desc.fStepOffset = { 0.05f };
-		Desc.tCapsuleInfo.fRadius = 0.5f;
-		Desc.tCapsuleInfo.fHeight = 1.0f;
-		Desc.tCapsuleInfo.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
+		Desc.fRadius = 0.5f;
+		Desc.fHeight = 1.0f;
+		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), (CComponent**)&m_pCharacter_Controller, &Desc))) {
 			return E_FAIL;
 		}

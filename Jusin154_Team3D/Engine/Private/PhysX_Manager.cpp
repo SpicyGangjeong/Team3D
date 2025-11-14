@@ -451,6 +451,7 @@ HRESULT CPhysX_Manager::Initialize()
 			return E_FAIL;
 		}
 		sceneDesc.cpuDispatcher = m_pDispatcher;
+		//sceneDesc.simulationEventCallback = ; // fetchResults 때 불림. 아래 필터랑, pair랑 같이 짝꿍임. 좀 더 공부해야 쓸 수 있을듯;;
 		sceneDesc.filterShader = PSX::PxDefaultSimulationFilterShader; // 레이어 충돌, 오브젝트에 속성을 주고 복잡한 필터링 충돌 식
 		sceneDesc.flags =
 			PSX::PxSceneFlag::eENABLE_PCM // 기본 true, 현대적인 충돌시스템 적용

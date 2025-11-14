@@ -179,7 +179,7 @@ public:
 	_bool	isPicking(_float3* pOut);
 #pragma endregion
 #pragma region PhysX_Manager
-	PSX::PxMaterial* Get_Material(_float3* vMatInfo);
+	PSX::PxMaterial* Create_Material(_float3* vMatInfo);
 	void RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh);
 	PSX::PxRigidDynamic* Add_DynamicActor(CRigidBody& RigidBody);
 	PSX::PxRigidStatic* Add_StaticActor(CRigidBody& RigidBody);
