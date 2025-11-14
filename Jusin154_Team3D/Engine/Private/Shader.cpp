@@ -19,10 +19,10 @@ CShader::CShader(const CShader& rhs)
 	, m_iNumElements{ rhs.m_iNumElements }
 #endif
 {
-	Safe_AddRef(m_pEffect);
+	SAFE_ADDREF(m_pEffect);
 
 	for (auto& pInputLayout : m_InputLayouts)
-		Safe_AddRef(pInputLayout);
+		SAFE_ADDREF(pInputLayout);
 }
 
 HRESULT CShader::Initialize_Prototype(const _tchar* pShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)
@@ -155,6 +155,7 @@ HRESULT CShader::CreateShader(const _tchar* pShaderFilePath, const D3D11_INPUT_E
 			iNumElements,
 			PassDesc.pIAInputSignature/*쉐이더에서 받아줄수 있는 정점의 정보*/,
 			PassDesc.IAInputSignatureSize/*쉐이더에서 받아줄수 있는 정점의 멤버변수갯수*/,
+
 			&pInputLayout)))
 			return E_FAIL;
 
@@ -168,6 +169,7 @@ HRESULT CShader::CreateShader(const _tchar* pShaderFilePath, const D3D11_INPUT_E
 HRESULT CShader::Shader_Refresh()
 {
 	// 내 인풋 레이아웃 이펙트 소멸시키고
+
 	Safe_Release(m_pEffect);
 
 	for (auto& pInputLayout : m_InputLayouts)
@@ -175,8 +177,8 @@ HRESULT CShader::Shader_Refresh()
 
 	m_InputLayouts.clear();
 
-
 	//그 경로로 재 생성한다.
+
 	if (FAILED(CreateShader(m_strShaderPath.c_str(), m_pElements, m_iNumElements)))
 	{
 		MessageBox(NULL, L"쉐이더 변경 실패", L"System Message", MB_OK);
@@ -201,6 +203,7 @@ HRESULT CShader::Begin(_uint iPassIndex)
 
 	/* Apply를 반드시 호출해야만 쉐이더로 그려진다. */
 	/* Apply이전에 쉐이더에 전달할 모든 데이터들을 다 던져놓아야한다. */
+
 	m_pEffect->GetTechniqueByIndex(0)->GetPassByIndex(iPassIndex)->Apply(0, m_pContext);
 
 	return S_OK;
@@ -213,7 +216,7 @@ CShader* CShader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, c
 	if (FAILED(pInstance->Initialize_Prototype(pShaderFilePath, pElements, iNumElements)))
 	{
 		MSG_BOX("Failed to Created : CShader");
-		Safe_Release(pInstance);
+		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
@@ -226,7 +229,7 @@ CComponent* CShader::Clone(void* pArg, class CGameObject* pOwner)
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
 		MSG_BOX("Failed to Cloned : CShader");
-		Safe_Release(pInstance);
+		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
@@ -236,10 +239,10 @@ void CShader::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pEffect);
+	SAFE_RELEASE(m_pEffect);
 
 	for (auto& pInputLayout : m_InputLayouts)
-		Safe_Release(pInputLayout);
+		SAFE_RELEASE(pInputLayout);
 
 	m_InputLayouts.clear();
 }

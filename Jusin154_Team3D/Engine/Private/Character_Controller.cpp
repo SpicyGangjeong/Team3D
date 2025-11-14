@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Character_Controller.h"
 #include "GameInstance.h"
+#include "Collision_Callback.h"
 
 CCharacter_Controller::CCharacter_Controller(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent{ pDevice, pContext }
@@ -61,6 +62,11 @@ HRESULT CCharacter_Controller::Render()
 }
 
 #endif // _DEBUG
+
+void CCharacter_Controller::Resize_Volume(_float fHeight)
+{
+	m_pController->resize(fHeight);
+}
 
 void CCharacter_Controller::Modify_Volume(_float3 fVolume)
 {
@@ -129,18 +135,13 @@ _float3 CCharacter_Controller::Get_Volume()
 
 void CCharacter_Controller::Move(_float fTimeDelta)
 {
-	PSX::PxVec3 pxVecMomentum = {};				// 순간 이동량
-	_float fMinimumDistant = FLT_EPSILON3;		// 이동량 오차 허용치, ( 크면 클수록 이동이 더 일찍 끝난다, 순간 이동량보다 같거나 더 크면 안움직일듯? )
-	_vector vMomentum = m_pTransform->Get_CurrentMomentum();
-	XMStoreFloat3((_float3*)&pxVecMomentum, vMomentum);
-	
-	PSX::PxControllerFilters pxFilter = {};		// 충돌 대상 필터
-	const PSX::PxObstacleContext* pPxObstacles = { nullptr }; // 캐릭터가 충돌해야할 추가적인 장애물 객체?, 닿은 장애물은 캐시된다?
+	PSX::PxVec3						pxVecMomentum = {};					// 순간 이동량
+	_float							fMinimumDistant = FLT_EPSILON3;		// 이동량 오차 허용치, ( 크면 클수록 이동이 더 일찍 끝난다, 순간 이동량보다 같거나 더 크면 안움직일듯? )
+	PSX::PxControllerFilters		pxFilter = {};						// 충돌 대상 필터
+	const PSX::PxObstacleContext*	pPxObstacles = { nullptr };			// 캐릭터가 충돌해야할 추가적인 장애물 객체?, 닿은 장애물은 캐시된다?
 
+	XMStoreFloat3((_float3*)&pxVecMomentum, m_pTransform->Get_CurrentMomentum());
 
-	// eCOLLISION_SIDES = (1 << 0),	//!< Character is colliding to the sides.
-	// eCOLLISION_UP = (1 << 1),	//!< Character has collision above.
-	// eCOLLISION_DOWN = (1 << 2)	//!< Character has collision below.
 	m_eBeforeCollisionFlags = m_pController->move(pxVecMomentum, fMinimumDistant, fTimeDelta, pxFilter, pPxObstacles);
 
 
@@ -171,11 +172,6 @@ _float3 CCharacter_Controller::Get_FootPosition()
 	return { (_float)pxLVecfootPos.x, (_float)pxLVecfootPos.y, (_float)pxLVecfootPos.z };
 }
 
-void CCharacter_Controller::Resize_Volume(_float fHeight)
-{
-	m_pController->resize(fHeight);
-}
-
 HRESULT CCharacter_Controller::Initialize_Prototype()
 {
 	return S_OK;
@@ -184,54 +180,89 @@ HRESULT CCharacter_Controller::Initialize_Prototype()
 HRESULT CCharacter_Controller::Initialize(void* pArg)
 {
 	Character_Controller_DESC* pDesc = static_cast<Character_Controller_DESC*>(pArg);
-	m_eBodyType = pDesc->eBodyType;
-	m_bAutoStepping = pDesc->bAutoStepping;
-	m_pTransform = pDesc->pTransform;
+	{ // Character_Controller_DESC
+		m_eBodyType = pDesc->eBodyType;
+		m_bAutoStepping = pDesc->bAutoStepping;
+		m_pTransform = pDesc->pTransform;
+
+	}
+	{ // PhsXUserData
+		m_tagData.eKind = PHYSX_KIND::CCTActor;
+		m_tagData.pOwner = m_pOwner;
+		XMStoreFloat4x4(&m_tagData.m_BeforeMatrix, m_pTransform->Get_XMWorldMatrix());
+		m_tagData.pCharacter = this;
+	}
 
 	switch (m_eBodyType)
 	{
 	case Engine::ACTOR::BOX:
 	{
 		PSX::PxBoxControllerDesc Desc{};
-		Desc.halfHeight = {};
-		Desc.halfSideExtent = {};
-		Desc.halfForwardExtent = {};
-		Desc.contactOffset = pDesc->fContactOffset;
-		Desc.material = m_pGameInstance->Get_Material(&pDesc->fMaterial);
-		m_pController = m_pGameInstance->Add_BoxController(Desc);
-#ifdef _DEBUG
-		_float3 vVolume = Get_Volume();
-		m_pMainShape = (GeometricPrimitive::CreateBox(m_pContext, vVolume, false, false));
-#endif // _DEBUG
+		Desc.halfHeight			= pDesc->vBoxSize.y;
+		Desc.halfSideExtent		= pDesc->vBoxSize.x;
+		Desc.halfForwardExtent	= pDesc->vBoxSize.z;
+		Desc.contactOffset		= pDesc->fContactOffset;
+		Desc.reportCallback		= static_cast<PSX::PxUserControllerHitReport*>(pDesc->pCallback);
+		Desc.behaviorCallback	= static_cast<PSX::PxControllerBehaviorCallback*>(pDesc->pCallback);
+		Desc.material			= m_pGameInstance->Create_Material(&pDesc->fMaterial);
+		m_pController			= m_pGameInstance->Add_BoxController(Desc);
+		m_pController->setUserData(&m_tagData);
 	} break;
 	case Engine::ACTOR::CAPSULE:
 	{
 		PSX::PxCapsuleControllerDesc Desc{};
-		Desc.radius = pDesc->tCapsuleInfo.fRadius;
-		Desc.height = pDesc->tCapsuleInfo.fHeight;
-		Desc.climbingMode = pDesc->tCapsuleInfo.eClimbingMode; // 기본 eEASY
-		Desc.contactOffset = pDesc->fContactOffset;
-		Desc.material = m_pGameInstance->Get_Material(&pDesc->fMaterial);
-		m_pController = m_pGameInstance->Add_CapsuleController(Desc);
-#ifdef _DEBUG
-		_float3 vVolume = Get_Volume();
-		m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, vVolume.x, 10, false, false));
-		m_pMainShape = (GeometricPrimitive::CreateCylinder(m_pContext, vVolume.y, vVolume.x, 10, false));
-#endif // _DEBUG
+		Desc.radius				= pDesc->fRadius;
+		Desc.height				= pDesc->fHeight;
+		Desc.climbingMode		= pDesc->eClimbingMode; // 기본 eEASY
+		Desc.contactOffset		= pDesc->fContactOffset;
+		Desc.reportCallback		= static_cast<PSX::PxUserControllerHitReport*>(pDesc->pCallback);
+		Desc.behaviorCallback	= static_cast<PSX::PxControllerBehaviorCallback*>(pDesc->pCallback);
+		Desc.material			= m_pGameInstance->Create_Material(&pDesc->fMaterial);
+		m_pController			= m_pGameInstance->Add_CapsuleController(Desc);
+		m_pController->setUserData(&m_tagData);
 	} break;
 	default:
 		assert(false); // PhysX에서 불가능
 		return E_FAIL;
 		break;
 	}
+	
 	if (nullptr == m_pController) {
 		assert(false);
 		return E_FAIL;
 	}
+
 	m_pController->setSlopeLimit(m_fSlopeLimit);
+
+#ifdef _DEBUG
+	if (FAILED(Debug_Initialize())) {
+		return E_FAIL;
+	}
+#endif // _DEBUG
 
 	return S_OK;
 }
+
+#ifdef _DEBUG
+HRESULT CCharacter_Controller::Debug_Initialize()
+{
+	_float3 vVolume = Get_Volume();
+	switch (m_eBodyType)
+	{
+	case ACTOR::BOX:
+		m_pMainShape = (GeometricPrimitive::CreateBox(m_pContext, vVolume, false, false));
+		break;
+	case ACTOR::CAPSULE:
+		m_pMainShape = (GeometricPrimitive::CreateCylinder(m_pContext, vVolume.y, vVolume.x, 10, false));
+		m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, vVolume.x, 10, false, false));
+		break;
+	default:
+		break;
+	}
+	return S_OK;
+}
+#endif // _DEBUG
+
 
 _bool CCharacter_Controller::Check_Overlap()
 {
@@ -295,6 +326,7 @@ void CCharacter_Controller::Describe_Entity()
 	if (GUI::SliderFloat("StepOffset", &fStepOffset, 0.f, 3.f, "%.2f")) {
 		m_pController->setStepOffset(fStepOffset);
 	} GUIHelpMarker("In stepped regions, the tolerance height the controller can climb.\n Capsule behaves slightly differently.");
+	
 	if (ACTOR::CAPSULE == m_eBodyType) {
 		PSX::PxCapsuleController* pController = (PSX::PxCapsuleController*)m_pController;
 
@@ -317,6 +349,7 @@ void CCharacter_Controller::Describe_Entity()
 			GUIHelpMarker("A capsule is affected by its lower sphere and tends to generate an up vector on steps.\nIn eEASY, the up vector is combined with the step offset, allowing easier climbing; in eCONSTRAINED, the up vector is removed during step detection and only the step offset is used.");
 		}
 	}
+
 	if (GUI::SliderFloat3("Volume", (_float*)&vVolume, 0.1f, 10.f, "%.2f")) {
 		Modify_Volume(vVolume);
 	}GUIHelpMarker("Box uses vSize; Capsule uses x->fRadius, y->fHeight.\nThe capsule's fHeight is likely the distance from the lower sphere center to the upper sphere center.");

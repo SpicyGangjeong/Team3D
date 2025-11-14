@@ -117,9 +117,9 @@ HRESULT CDummy_PhysXPlayable::Ready_Components(void* pArg)
 		Desc.fMaterial = { 0.5f, 0.5f, 0.6f };
 		Desc.bAutoStepping = { false };
 		Desc.fStepOffset = { 0.05f };
-		Desc.tCapsuleInfo.fRadius = 0.5f;
-		Desc.tCapsuleInfo.fHeight = 1.0f;
-		Desc.tCapsuleInfo.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
+		Desc.fRadius = 0.5f;
+		Desc.fHeight = 1.0f;
+		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), (CComponent**)&m_pCharacter_Controller, &Desc))) {
 			return E_FAIL;
 		}
@@ -188,8 +188,8 @@ void CDummy_PhysXPlayable::Free()
 	__super::Free();
 
 	SAFE_RELEASE(m_pCharacter_Controller);
-	Safe_Release(m_pShaderCom);
-	Safe_Release(m_pModelCom);
+	SAFE_RELEASE(m_pShaderCom);
+	SAFE_RELEASE(m_pModelCom);
 }
 
 void CDummy_PhysXPlayable::Describe_Entity()

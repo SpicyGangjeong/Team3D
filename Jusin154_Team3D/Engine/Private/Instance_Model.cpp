@@ -23,7 +23,7 @@ CInstance_Model::CInstance_Model(const CInstance_Model& rhs)
 		SAFE_ADDREF(pMesh);
 	}
 
-	Safe_AddRef(m_pVBInstance);
+	SAFE_ADDREF(m_pVBInstance);
 }
 #ifdef EDITOR_PROJECT
 HRESULT CInstance_Model::Initialize_Prototype(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex)
@@ -115,10 +115,10 @@ HRESULT CInstance_Model::Load_InstanceModel(HANDLE hFile)
 
 HRESULT CInstance_Model::Change_NumInstance()
 {
-	Safe_Release(m_pVBInstance);
-	Safe_Release(m_pComputeShader);
-	Safe_Release(m_pConstantBuffer);
-	Safe_Release(m_pParticleValueBuffer);
+	SAFE_RELEASE(m_pVBInstance);
+	SAFE_RELEASE(m_pComputeShader);
+	SAFE_RELEASE(m_pConstantBuffer);
+	SAFE_RELEASE(m_pParticleValueBuffer);
 
 	//모든 버퍼를 지우고 재 생성 해야함
 
@@ -128,12 +128,14 @@ HRESULT CInstance_Model::Change_NumInstance()
 	if (FAILED(Create_SubResource_Buffer()))
 		return E_FAIL;
 
+
+	//시작 시에 인스턴트 버퍼를 구성 해줌
 	Instane_Buffer_ReStruct();
 
 	if (FAILED(Create_CS()))
 		return E_FAIL;
 
-	//시작 시에 인스턴트 버퍼를 구성 해줌
+
 
 
 
@@ -447,17 +449,17 @@ void CInstance_Model::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pVBInstance);
+	SAFE_RELEASE(m_pVBInstance);
 
 	for (auto& pMesh : m_Meshes)
-		Safe_Release(pMesh);
+		SAFE_RELEASE(pMesh);
 
 	for (auto& pBone : m_Bones)
-		Safe_Release(pBone);
+		SAFE_RELEASE(pBone);
 
-	Safe_Release(m_pComputeShader);
-	Safe_Release(m_pConstantBuffer);
-	Safe_Release(m_pParticleValueBuffer);
+	SAFE_RELEASE(m_pComputeShader);
+	SAFE_RELEASE(m_pConstantBuffer);
+	SAFE_RELEASE(m_pParticleValueBuffer);
 }
 
 void CInstance_Model::Describe_Entity()

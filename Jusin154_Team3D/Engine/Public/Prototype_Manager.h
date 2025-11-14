@@ -114,7 +114,7 @@ public:
 				if (GUI::ImageButton(strName.c_str(), pTexture->Get_SRV(0), ImVec2(48, 48)))
 				{
 					if (*ppOut != nullptr)
-						Safe_Release(*ppOut);
+						SAFE_RELEASE(*ppOut);
 
 
 					*ppOut = iter->second->Clone(pDesc, pOwner);
@@ -188,7 +188,7 @@ public:
 			}
 
 			if (*ppOut != nullptr)
-				Safe_Release(*ppOut);
+				SAFE_RELEASE(*ppOut);
 
 			*ppOut = iter->second->Clone(pDesc, pOwner);
 

@@ -8,9 +8,9 @@ CComputeShader::CComputeShader(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 	, m_pContext{ pContext }
 	, m_pGameInstance{ CGameInstance::GetInstance() }
 {
-	Safe_AddRef(m_pDevice);
-	Safe_AddRef(m_pContext);
-	Safe_AddRef(m_pGameInstance);
+	SAFE_ADDREF(m_pDevice);
+	SAFE_ADDREF(m_pContext);
+	SAFE_ADDREF(m_pGameInstance);
 }
 
 HRESULT CComputeShader::Initialize(const _tchar* pShaderFilePath, const _char* pStartFunctionName, _uint iNumElement, _uint iNumInputBuffer, _uint iNumOutputBuffer, _uint iInputStructStride[], _uint iOutputStructStride[])
@@ -323,7 +323,7 @@ CComputeShader* CComputeShader::Create(ID3D11Device* pDevice, ID3D11DeviceContex
 	if (FAILED(pInstance->Initialize(pShaderFilePath, pStartFunctionName, iNumElement, iNumInputBuffer, iNumOutputBuffer, iOutputStructStride, iInputStructStride)))
 	{
 		MSG_BOX("Failed to Created : CComputeShader Prototype");
-		Safe_Release(pInstance);
+		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
@@ -335,22 +335,22 @@ void CComputeShader::Free()
 
 	for (_uint i = 0; i < m_iNumInputBuffer; i++)
 	{
-		Safe_Release(m_pInputSRV[i]);
-		Safe_Release(m_pInputBuffer[i]);
-		Safe_Release(m_pInputStagingBuffer[i]);
+		SAFE_RELEASE(m_pInputSRV[i]);
+		SAFE_RELEASE(m_pInputBuffer[i]);
+		SAFE_RELEASE(m_pInputStagingBuffer[i]);
 	}
 
 	for (_uint i = 0; i < m_iNumOutputBuffer; i++)
 	{
-		Safe_Release(m_pOutputUAV[i]);
-		Safe_Release(m_pOutputBuffer[i]);
-		Safe_Release(m_pOutputSRV[i]);
-		Safe_Release(m_pOutputStagingBuffer[i]);
+		SAFE_RELEASE(m_pOutputUAV[i]);
+		SAFE_RELEASE(m_pOutputBuffer[i]);
+		SAFE_RELEASE(m_pOutputSRV[i]);
+		SAFE_RELEASE(m_pOutputStagingBuffer[i]);
 	}
 
 
-	Safe_Release(m_pComputeShader);
-	Safe_Release(m_pDevice);
-	Safe_Release(m_pContext);
-	Safe_Release(m_pGameInstance);
+	SAFE_RELEASE(m_pComputeShader);
+	SAFE_RELEASE(m_pDevice);
+	SAFE_RELEASE(m_pContext);
+	SAFE_RELEASE(m_pGameInstance);
 }

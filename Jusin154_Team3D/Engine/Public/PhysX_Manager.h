@@ -20,8 +20,8 @@ public:
 // HRESULT Update_RegionOfInterest(); ( 충돌 컬링, 필터링도 검색해야함 )
 // Aggregate ( 충돌 그룹, 이 그룹끼리는 서로 충돌검사를 하지 않음, 지형, 레그돌 등 )
 
-	const PSX::PxRigidDynamic* Add_DynamicActor(CRigidBody& RigidBody);
-	const PSX::PxRigidStatic* Add_StaticActor(CRigidBody& RigidBody);
+	PSX::PxRigidDynamic* Add_DynamicActor(CRigidBody& RigidBody);
+	PSX::PxRigidStatic* Add_StaticActor(CRigidBody& RigidBody);
 	
 	void RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh);
 	PSX::PxMaterial* Create_Material(const _float3* vMatInfo);
@@ -34,7 +34,8 @@ public:
 
 	void Update(_float fTimeDelta);
 	void ClearScene();
-
+	void Attach_Actor(CRigidBody& RigidBody, PSX::PxActor& Actor);
+	void Detach_Actor(CRigidBody& RigidBody, PSX::PxActor*& pActor);
 #pragma endregion
 
 #pragma region CHARACTER_CONTROLLER
@@ -54,8 +55,8 @@ public:
 
 private:
 	class CGameInstance*				m_pGameInstance = { nullptr };
-	ID3D11Device*						m_pDevice = { nullptr };
 	ID3D11DeviceContext*				m_pContext = { nullptr };
+	ID3D11Device*						m_pDevice = { nullptr };
 
 	PSX::PxDefaultAllocator				m_AllocatorCallBack = { };						// 피직스 동적할당자
 	PSX::PxDefaultErrorCallback			m_ErrorCallBack = { };							// 피직스 오류처리자
@@ -83,7 +84,7 @@ private:
 	HRESULT Connect_DebugServer();
 	void Update_Kinematic();
 	void Update_Dynamic_ActiveActors();
-	void Update_Dynamic_AllActors();
+	//void Update_Dynamic_AllActors();
 
 public:
 	static CPhysX_Manager* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

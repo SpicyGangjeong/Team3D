@@ -244,7 +244,7 @@ CAnimation* CAnimation::Create(const CModel* pModel, SaveAnimation* pSaveAnimati
 	if (FAILED(pInstance->Initialize(pModel, pSaveAnimation)))
 	{
 		MSG_BOX("Failed to Created : CAnimation");
-		Safe_Release(pInstance);
+		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;

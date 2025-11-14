@@ -469,11 +469,11 @@ void CEffect_Editor::Describe_Entity()
 			
 
 
-				Safe_Release(m_pEditEffect);
+				SAFE_RELEASE(m_pEditEffect);
 				
 				m_pEditEffect = pSelectedEffectObject;
 
-				Safe_AddRef(pSelectedEffectObject);
+				SAFE_ADDREF(pSelectedEffectObject);
 
 				m_strCurrentEffectName = strName;
 
