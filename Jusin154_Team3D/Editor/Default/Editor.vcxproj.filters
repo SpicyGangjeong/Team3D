@@ -363,7 +363,7 @@
     <ClInclude Include="..\public\MapObject.h">
       <Filter>02.GameObjects\Env\02.MapObject</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\MapObject_Static.h">
+    <ClInclude Include="..\public\MapObject_Collision.h">
       <Filter>02.GameObjects\Env\02.MapObject\Static</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MapObject_LOD.h">
@@ -377,9 +377,6 @@
     </ClInclude>
     <ClInclude Include="..\public\MapObject.h">
       <Filter>02.GameObjects\Env\02.MapObject</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\MapObject_Static.h">
-      <Filter>02.GameObjects\Env\02.MapObject\Static</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MapObject_LOD.h">
       <Filter>02.GameObjects\Env\02.MapObject\LOD</Filter>
@@ -565,7 +562,7 @@
     <ClCompile Include="..\private\MapObject.cpp">
       <Filter>02.GameObjects\Env\02.MapObject</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\MapObject_Static.cpp">
+    <ClCompile Include="..\private\MapObject_Collision.cpp">
       <Filter>02.GameObjects\Env\02.MapObject\Static</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MapObject_LOD.cpp">
@@ -579,9 +576,6 @@
     </ClCompile>
     <ClCompile Include="..\private\MapObject.cpp">
       <Filter>02.GameObjects\Env\02.MapObject</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\MapObject_Static.cpp">
-      <Filter>02.GameObjects\Env\02.MapObject\Static</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MapObject_LOD.cpp">
       <Filter>02.GameObjects\Env\02.MapObject\LOD</Filter>
