@@ -374,7 +374,7 @@ HRESULT CMapObject_Manager::Save_MapData(const _char* pFileName)
 #pragma endregion
 
 
-	// ÀúÀå
+	// ?ú?å
 	if (doc.SaveFile(strPath.c_str()) != tinyxml2::XML_SUCCESS) {
 		MSG_BOX("Failed to Save File");
 	}
@@ -498,7 +498,7 @@ HRESULT CMapObject_Manager::Save_ContainerData(const _char* pFileName, const _ch
 	m_pSelectObject = nullptr;
 #pragma endregion
 
-	// ÀúÀå
+	// ?ú?å
 	if (doc.SaveFile(strPath.c_str()) != tinyxml2::XML_SUCCESS) {
 		MSG_BOX("Failed to Save File");
 	}

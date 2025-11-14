@@ -40,6 +40,7 @@ HRESULT CMission_KeyHold::Initialize(void* pArg)
 	m_fTimeMult = 1.f;
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 3.f;
+	m_fPI = AI_MATH_TWO_PI_F;
 	return S_OK;
 }
 
@@ -159,7 +160,11 @@ HRESULT CMission_KeyHold::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fTimeMult", &m_fTimeMult, sizeof(_float))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fPI", &m_fPI, sizeof(_float))))
 	{
 		return E_FAIL;
 	}
