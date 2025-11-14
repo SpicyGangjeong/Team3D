@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "GameInstance.h"
 #include "Prototype_Manager.h"
 #include "GameObject_Manager.h"
@@ -314,23 +314,23 @@ void CGameInstance::Present_TimeCost() const
 
 		float minY = 0.f;
 		float maxY = 0.025f;
-		//float threshold = 166.f / 250.f; // ¾à 0.664f
+		//float threshold = 166.f / 250.f; // ì•½ 0.664f
 		ImVec2 graph_size(0, 80.0f);
 		ImVec2 start_pos = GUI::GetCursorScreenPos();
 
 		GUI::PlotLines("##FrameCount", values, IM_ARRAYSIZE(values), values_offset,
 			overlay, minY, maxY, ImVec2(0, 80.0f));
 
-		// PlotLinesÀÇ ½ÇÁ¦ Ç¥½Ã ¿µ¿ª °¡Á®¿À±â
+		// PlotLinesì˜ ì‹¤ì œ í‘œì‹œ ì˜ì—­ ê°€ì ¸ì˜¤ê¸°
 		ImVec2 plot_min = GUI::GetItemRectMin();
 		ImVec2 plot_max = GUI::GetItemRectMax();
 
-		// ±âÁØ¼± (60FPS)
-		float threshold = 1.0f / 60.0f; // 0.0166ÃÊ
+		// ê¸°ì¤€ì„  (60FPS)
+		float threshold = 1.0f / 60.0f; // 0.0166ì´ˆ
 		float normalized = (threshold - minY) / (maxY - minY);
 		float y = plot_max.y - normalized * (plot_max.y - plot_min.y);
 
-		// »¡°£ ¼± ±×¸®±â
+		// ë¹¨ê°„ ì„  ê·¸ë¦¬ê¸°
 		ImDrawList* draw_list = GUI::GetWindowDrawList();
 		draw_list->AddLine(
 			ImVec2(plot_min.x, y),
@@ -525,6 +525,10 @@ const _float* CGameInstance::Get_CurrentCameraFar()
 {
 	return m_pCamera_Manager->Get_CurrentCameraFar();
 }
+void CGameInstance::Force_CamPosition(_fvector vPos)
+{
+	return m_pCamera_Manager->Force_CamPosition(vPos);
+}
 HRESULT CGameInstance::Ready_Shadow_Light(const SHADOW_LIGHT_DESC& Desc)
 {
 	return m_pShadow->Ready_Shadow_Light(Desc);
@@ -561,7 +565,7 @@ SaveModel* CGameInstance::Load_SaveModel(const _char* filePath)
 #pragma region PhysX_Manager
 PSX::PxMaterial* CGameInstance::Get_Material(_float3* vMatInfo)
 {
-	return m_pPhysX_Manager->Get_Material(vMatInfo);
+	return m_pPhysX_Manager->Create_Material(vMatInfo);
 }
 
 void CGameInstance::RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh)

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Prototype_Manager.h"
 #include "GameObject_Manager.h"
 
@@ -163,6 +163,7 @@ public:
 	HRESULT Bind_Camera(_uint iLevel, const _wstring& strCameraKey, _bool bIgnorePriority);
 	HRESULT IsBinded_Camera(const _wstring& strCameraKey);
 	const _float* Get_CurrentCameraFar();
+	void Force_CamPosition(_fvector vPos);
 #pragma endregion
 
 #pragma region SHADOW
@@ -191,7 +192,7 @@ public:
 
 	HRESULT ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix = XMMatrixIdentity());
 	HRESULT SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
-	HRESULT LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes); // ¸ğµ¨ ºÒ·¯¿Ô´ø °æ·Î¿¡ ±×´ë·Î ÀÖÀ½
+	HRESULT LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes); // ëª¨ë¸ ë¶ˆëŸ¬ì™”ë˜ ê²½ë¡œì— ê·¸ëŒ€ë¡œ ìˆìŒ
 #pragma endregion
 
 

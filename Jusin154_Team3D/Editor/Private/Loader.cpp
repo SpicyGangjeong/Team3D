@@ -580,25 +580,29 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 		}
 
 		ModelPrototypeTags.push_back(strFileName);
-		ModelPrototypePath.push_back(file.path());
 
-		_uint iNumMesh = pModel->Get_NumMeshes();
+		{ /* cache rigidbody */ // More Info In 리지드바디, CCT, 엔진이넘
+			ModelPrototypePath.push_back(file.path());
 
-		CRigidBody::RIGIDBODY_PROTOTYPEDESC Desc{};
-		for (_uint i = 0; i < iNumMesh; ++i) {
-			_string strDestName = pModel->Get_MeshName(i) + to_string(i);
-			{
-				Desc.eType = ACTOR::TRIANGLEMESH;
-				Desc.ePxRigidBodyFlags = {};
-				Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
-				Desc.ePxMaterialTypes = PXMATERIAL::DEFAULT;
-				Desc.vMatInfo = _float3(0.5f, 0.5f, 0.6f);
-				Desc.fContactOffset = 0.f;
-			}
-			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, CMyTools::ToWstring(strDestName).c_str(), CRigidBody::Create(m_pDevice, m_pContext, Desc)))) {
-				return E_FAIL;
+			_uint iNumMesh = pModel->Get_NumMeshes();
+
+			CRigidBody::RIGIDBODY_PROTOTYPEDESC Desc{};
+			for (_uint i = 0; i < iNumMesh; ++i) {
+				_string strDestName = pModel->Get_MeshName(i) + to_string(i);
+				{ // basic static RIGIDBODY
+					Desc.eType = ACTOR::TRIANGLEMESH;
+					Desc.ePxRigidBodyFlags = {};
+					Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+					Desc.ePxMaterialTypes = PXMATERIAL::DEFAULT;
+					Desc.vMatInfo = _float3(0.5f, 0.5f, 0.6f);
+					Desc.fContactOffset = 0.f;
+				}
+				if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, CMyTools::ToWstring(strDestName).c_str(), CRigidBody::Create(m_pDevice, m_pContext, Desc)))) {
+					return E_FAIL;
+				}
 			}
 		}
+
 	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CMapObject_Manager>(g_iStaticLevel, CMapObject_Manager::Create(m_pDevice, m_pContext, ModelPrototypeTags, ModelPrototypePath)))){
 		return E_FAIL;

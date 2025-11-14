@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "PhysX_Manager.h"
 #include "GameObject.h"
 #include "GameInstance.h"
@@ -31,14 +31,13 @@ CPhysX_Manager::CPhysX_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 const PSX::PxRigidDynamic* CPhysX_Manager::Add_DynamicActor(CRigidBody& RigidBody)
 {
 	_matrix WorldMatrix = RigidBody.Get_TransformPtr()->Get_XMWorldMatrix();
-
 	PSX::PxTransform pxWorldMatrix = XMWorldToPx_NoScale(WorldMatrix);
 
-	// PxRigidDynamic		¾ÀÀÇ µ¿Àû ¹Ùµğ ÀÎÅÍÆäÀÌ½º
+	// PxRigidDynamic		ì”¬ì˜ ë™ì  ë°”ë”” ì¸í„°í˜ì´ìŠ¤
 	PSX::PxRigidDynamic* pActorDynamic = m_pPhysics->createRigidDynamic(pxWorldMatrix);
 	pActorDynamic->userData = &RigidBody;
 
-	PSX::PxShape* pClone = nullptr;
+	PSX::PxShape* pShape = nullptr;
 	PSX::PxGeometryHolder geoHolder = {};
 
 	_float3 vVolume = RigidBody.Get_HalfGeometryInfo();
@@ -46,29 +45,27 @@ const PSX::PxRigidDynamic* CPhysX_Manager::Add_DynamicActor(CRigidBody& RigidBod
 	switch (RigidBody.Get_Type()) {
 	case ACTOR::BOX:
 		geoHolder = PSX::PxBoxGeometry(PSX::PxVec3(vVolume.x, vVolume.y, vVolume.z));
-		pClone = PSX::PxRigidActorExt::createExclusiveShape(*pActorDynamic, geoHolder.box(), *m_pMaterials[ENUM_CLASS(RigidBody.Get_MaterialType())]);
-		assert(nullptr != pClone);
+		pShape = PSX::PxRigidActorExt::createExclusiveShape(*pActorDynamic, geoHolder.box(), *m_pMaterials[ENUM_CLASS(RigidBody.Get_MaterialType())]);
 		break;
 	case ACTOR::CAPSULE:
 		geoHolder = PSX::PxCapsuleGeometry(vVolume.x, vVolume.y);
-		pClone = PSX::PxRigidActorExt::createExclusiveShape(*pActorDynamic, geoHolder.capsule(), *m_pMaterials[ENUM_CLASS(RigidBody.Get_MaterialType())]);
-		assert(nullptr != pClone);
+		pShape = PSX::PxRigidActorExt::createExclusiveShape(*pActorDynamic, geoHolder.capsule(), *m_pMaterials[ENUM_CLASS(RigidBody.Get_MaterialType())]);
 		break;
 	case ACTOR::SPHERE:
 		geoHolder = PSX::PxCapsuleGeometry(vVolume.x);
-		pClone = PSX::PxRigidActorExt::createExclusiveShape(*pActorDynamic, geoHolder.sphere(), *m_pMaterials[ENUM_CLASS(RigidBody.Get_MaterialType())]);
-		assert(nullptr != pClone);
+		pShape = PSX::PxRigidActorExt::createExclusiveShape(*pActorDynamic, geoHolder.sphere(), *m_pMaterials[ENUM_CLASS(RigidBody.Get_MaterialType())]);
 		break;
 	default:
-		assert(false); break;
+		assert(false); 
+		break;
 	}
+	assert(nullptr != pShape);
 
-	pClone->setFlags(RigidBody.Get_ShapeFlags());
-	pClone->setContactOffset(RigidBody.Get_ContactOffset());
-	pClone->setRestOffset(0.f);
+	pShape->setFlags(RigidBody.Get_ShapeFlags());
+	pShape->setContactOffset(RigidBody.Get_ContactOffset());
+	pShape->setRestOffset(0.f);
 
-
-	pActorDynamic->attachShape(*pClone);
+	pActorDynamic->attachShape(*pShape);
 	PSX::PxRigidBodyFlags pxRigidFlags = RigidBody.Get_RigidBodyFlags();
 	pActorDynamic->setRigidBodyFlags(pxRigidFlags);
 
@@ -90,60 +87,70 @@ const PSX::PxRigidDynamic* CPhysX_Manager::Add_DynamicActor(CRigidBody& RigidBod
 const PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody& RigidBody)
 {
 	_matrix WorldMatrix = RigidBody.Get_TransformPtr()->Get_XMWorldMatrix();
-
 	PSX::PxTransform pxWorldMatrix = XMWorldToPx_NoScale(WorldMatrix);
-    
-	// PxRigidStatic		¾ÀÀÇ Á¤Àû ¹Ùµğ ÀÎÅÍÆäÀÌ½º
-	PSX::PxTriangleMesh* pPxMesh = { nullptr };
-	{
-		auto iter = m_TriangleMeshes.find(RigidBody.Get_PxMeshKey());
-		if (m_TriangleMeshes.end() == iter) {
-			assert(false);
-			return nullptr;
-		}
-		pPxMesh = iter->second;
-	}
-	_vector vPos, vRotq, vScale;
-	XMMatrixDecompose(&vScale, &vRotq, &vPos, WorldMatrix);
 
-	vRotq = XMQuaternionNormalize(vRotq);
-
-	PSX::PxTransform out;
-	XMStoreFloat3((_float3*)&out.p, vPos);
-	XMStoreFloat4((_float4*)&out.q, vRotq);
-	PSX::PxMeshScale meshScale(
-		PSX::PxVec3(fabsf(vScale.m128_f32[0]), fabsf(vScale.m128_f32[1]), fabsf(vScale.m128_f32[2])),
-		PSX::PxQuat(PSX::PxIdentity) // ½ºÄÉÀÏ ÃàÀº ·ÎÄÃ ±âÁØ(º¸Åë Identity°¡ °¡Àå ¾ÈÀü)
-	);
-	PSX::PxTriangleMeshGeometry* pPxMeshGeometry = new PSX::PxTriangleMeshGeometry(pPxMesh, meshScale);
-	{
-		pPxMeshGeometry->meshFlags |= PSX::PxMeshGeometryFlag::eDOUBLE_SIDED;
-		PX_ASSERT(pPxMeshGeometry.isValid()); // À¯È¿¼º Ã¼Å©
-		m_TriangleMeshGeometry.emplace(RigidBody.Get_PxMeshKey(), pPxMeshGeometry);
-	}
-
+	// PxRigidStatic		ì”¬ì˜ ì •ì  ë°”ë”” ì¸í„°í˜ì´ìŠ¤
 	PSX::PxRigidStatic* pActor = m_pPhysics->createRigidStatic(pxWorldMatrix);
-	PSX::PxShape* pShape = PSX::PxRigidActorExt::createExclusiveShape(*pActor, *pPxMeshGeometry, *m_pMaterials[ENUM_CLASS(RigidBody.Get_MaterialType())]);
-
-	pShape->setFlag(PSX::PxShapeFlag::eSCENE_QUERY_SHAPE, true);
-	pShape->setFlag(PSX::PxShapeFlag::eSIMULATION_SHAPE, true);
-	
 	pActor->userData = &RigidBody;
+
+	PSX::PxShape* pShape = { nullptr };
+	PSX::PxTriangleMesh* pPxMesh = Find_TriangleMesh(RigidBody.Get_PxMeshKey());
+	PSX::PxTriangleMeshGeometry* pPxMeshGeometry = { nullptr };
+	
+	switch (RigidBody.Get_Type())
+	{
+	case ACTOR::PLANE:
+		break;
+	case ACTOR::TRIANGLEMESH:
+		{ // SetUp Geometry
+			_vector vPos, vRotq, vScale;
+			XMMatrixDecompose(&vScale, &vRotq, &vPos, WorldMatrix);
+			vRotq = XMQuaternionNormalize(vRotq);
+
+			PSX::PxTransform out;
+			XMStoreFloat3((_float3*)&out.p, vPos);
+			XMStoreFloat4((_float4*)&out.q, vRotq);
+			PSX::PxMeshScale meshScale(
+				PSX::PxVec3(fabsf(vScale.m128_f32[0]), fabsf(vScale.m128_f32[1]), fabsf(vScale.m128_f32[2])),
+				PSX::PxQuat(PSX::PxIdentity) // ìŠ¤ì¼€ì¼ ì¶•ì€ ë¡œì»¬ ê¸°ì¤€
+			);
+			pPxMeshGeometry = new PSX::PxTriangleMeshGeometry(pPxMesh, meshScale);
+
+			// GeoFlag ì¤‘ ë”ë¸”ì‚¬ì´ë“œëŠ” ì´ì œ ì§€ì› ì•ˆí•¨, í• ê±°ë©´ ë…¸ë§ ë’¤ì§‘ì–´ì„œ í•˜ë¼ê³  í•¨
+			// pPxMeshGeometry->meshFlags |= PSX::PxMeshGeometryFlag::eDOUBLE_SIDED;
+			// ìœ íš¨ì„± ì²´í¬
+			PX_ASSERT(pPxMeshGeometry.isValid());
+			m_TriangleMeshGeometry.emplace(RigidBody.Get_PxMeshKey(), pPxMeshGeometry);
+		}
+		break;
+	case ACTOR::HEIGHTFIELD:
+		break;
+	default:
+		assert(false);
+		break;
+	}
+
+	pShape = PSX::PxRigidActorExt::createExclusiveShape(*pActor, *pPxMeshGeometry, *m_pMaterials[ENUM_CLASS(RigidBody.Get_MaterialType())]);
+
+	pShape->setFlags(RigidBody.Get_ShapeFlags());
+	pShape->setContactOffset(RigidBody.Get_ContactOffset());
+	pShape->setRestOffset(0.f);
+	
 	m_RigidBodys.emplace_back(&RigidBody, pActor);
 	m_pScene->addActor(*pActor);
 
 	return pActor;
 }
 
-PSX::PxMaterial* CPhysX_Manager::Get_Material(const _float3* vMatInfo)
+PSX::PxMaterial* CPhysX_Manager::Create_Material(const _float3* vMatInfo)
 {
 	PSX::PxMaterial* pPxMaterial = m_pPhysics->createMaterial(vMatInfo->x, vMatInfo->y, vMatInfo->z);
 	return pPxMaterial;
 }
 
-void CPhysX_Manager::RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh) {
+void CPhysX_Manager::RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh) 
+{
 	m_TriangleMeshes.emplace(CMyTools::ToWstring(pName), pPxTriMesh);
-
 }
 
 HRESULT CPhysX_Manager::ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix)
@@ -233,8 +240,8 @@ HRESULT CPhysX_Manager::LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangle
 	return S_OK;
 }
 
-// ¹ÙÀÌ³Ê¸® ·Îµå¿¡´Â 128B Á¤·ÄµÈ ¸Ş¸ğ¸® Æ÷ÀÎÅÍ¸¦ ³Ñ°Ü¾ß ÇÔ. InputData ±×´ë·Î ³Ñ±â¸é ¾ÈµÊ
-// ½ÉÁö¾î ¹ÙÀÌ³Ê¸®·Î ºÒ·¯¿Â ºí·°Àº ÇÇÁ÷½ºÀÇ ¸ğµç ¸Ş½ÃµéÀ» ¸±¸®Áî ÇÑ µÚ¿¡ ÇØÁ¦ ÇØ¾ß ÇÔ
+// ë°”ì´ë„ˆë¦¬ ë¡œë“œì—ëŠ” 128B ì •ë ¬ëœ ë©”ëª¨ë¦¬ í¬ì¸í„°ë¥¼ ë„˜ê²¨ì•¼ í•¨. InputData ê·¸ëŒ€ë¡œ ë„˜ê¸°ë©´ ì•ˆë¨
+// ì‹¬ì§€ì–´ ë°”ì´ë„ˆë¦¬ë¡œ ë¶ˆëŸ¬ì˜¨ ë¸”ëŸ­ì€ í”¼ì§ìŠ¤ì˜ ëª¨ë“  ë©”ì‹œë“¤ì„ ë¦´ë¦¬ì¦ˆ í•œ ë’¤ì— í•´ì œ í•´ì•¼ í•¨
 //_bool CPhysX_Manager::LoadTriMeshes_Binary(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes)
 //{
 //	filesystem::path pathPhysX = pPath;
@@ -312,8 +319,8 @@ void CPhysX_Manager::Update(_float fTimeDelta)
 		_bool bResult = m_pScene->fetchResults(true);
 	}
 	{ // Post
-		// Update_Dynamic_ActiveActors();
-		Update_Dynamic_AllActors();
+		 Update_Dynamic_ActiveActors();
+		//Update_Dynamic_AllActors();
 	}
 }
 
@@ -427,7 +434,7 @@ HRESULT CPhysX_Manager::Initialize()
 	}
 
 
-	{ // ¾À ¼¼ÆÃ
+	{ // ì”¬ ì„¸íŒ…
 		m_ToleranceScale.length = 1.f; // 1 meter
 		m_ToleranceScale.speed = GRAVITY; // 
 		
@@ -440,7 +447,7 @@ HRESULT CPhysX_Manager::Initialize()
 
 		sceneDesc.gravity = PSX::PxVec3(0.f, -GRAVITY, 0.f);
 
-		m_pDispatcher = PSX::PxDefaultCpuDispatcherCreate(2/*cpu ÄÚ¾î °¹¼ö*/);
+		m_pDispatcher = PSX::PxDefaultCpuDispatcherCreate(2/*cpu ì½”ì–´ ê°¯ìˆ˜*/);
 		if (nullptr == m_pDispatcher) {
 			assert(false);
 			return E_FAIL;
@@ -459,7 +466,7 @@ HRESULT CPhysX_Manager::Initialize()
 		m_pCCTManager->setOverlapRecoveryModule(false);
 	}
 
-	// µğ¹ö±×¼­¹öÀÇ Å¬¶ó ¼¼ÆÃ
+	// ë””ë²„ê·¸ì„œë²„ì˜ í´ë¼ ì„¸íŒ…
 	PSX::PxPvdSceneClient* pPvdClient = m_pScene->getScenePvdClient();
 	if (nullptr != pPvdClient) {
 		pPvdClient->setScenePvdFlag(PSX::PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
@@ -469,7 +476,7 @@ HRESULT CPhysX_Manager::Initialize()
 
 	// m_pScene->overlap();??????
 
-#ifdef ±â¹«¸®
+#ifdef ê¸°ë¬´ë¦¬
 	m_pMaterials.reserve(ENUM_CLASS(PXMATERIAL::END));
 	m_pMaterials.push_back(m_pPhysics->createMaterial(0.5f, 0.5f, 0.6f));
 	PSX::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *m_pMaterials[ENUM_CLASS(PXMATERIAL::DEFAULT)]);
@@ -491,7 +498,7 @@ HRESULT CPhysX_Manager::Initialize()
 	//		}
 	//	}
 	//}
-#endif // ±â¹«¸®
+#endif // ê¸°ë¬´ë¦¬
 
 	
 
@@ -500,7 +507,7 @@ HRESULT CPhysX_Manager::Initialize()
 
 HRESULT CPhysX_Manager::Connect_DebugServer()
 {
-	// ³×Æ®¿öÅ© µğ¹ö°Å Àü¼Û°´Ã¼ »ı¼º
+	// ë„¤íŠ¸ì›Œí¬ ë””ë²„ê±° ì „ì†¡ê°ì²´ ìƒì„±
 	m_pTransport = PSX::PxDefaultPvdSocketTransportCreate("127.0.0.1", 5425, 10);
 	if (nullptr == m_pTransport) {
 		assert(false);
