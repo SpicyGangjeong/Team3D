@@ -7,6 +7,7 @@
 #include "Effect_Editor.h"
 #include "Dummy_Cube.h"
 #include "MainLight.h"
+#include "Dummy_Plane.h"
 
 CLevel_EffectViewer::CLevel_EffectViewer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -34,6 +35,9 @@ HRESULT CLevel_EffectViewer::Initialize()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_Cube>(ENUM_CLASS(LEVEL::EFFECT), NEXT_LEVEL, LAYER_CUBE)))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_Plane>(ENUM_CLASS(LEVEL::EFFECT), NEXT_LEVEL, LAYER_CUBE)))
 		return E_FAIL;
 
 

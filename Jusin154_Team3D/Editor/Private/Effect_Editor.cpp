@@ -263,9 +263,10 @@ void CEffect_Editor::ReadMaterial(_wstring wstrFileName, const char* pFilePath)
 	wifs.close();
 }
 
-void CEffect_Editor::Reference_Mat_For_EditEffect(CComponent** pTexture, CGameObject* pObject)
+_string CEffect_Editor::Reference_Mat_For_EditEffect(CComponent** pTexture, CGameObject* pObject)
 {
 
+	_string strName = {};
 	for (auto iter : m_MatFiles)
 	{
 		if (GUI::TreeNode(CMyTools::ToString(iter.first).c_str()))
@@ -273,7 +274,7 @@ void CEffect_Editor::Reference_Mat_For_EditEffect(CComponent** pTexture, CGameOb
 
 			for (auto wstrTextureInfo : iter.second)
 			{
-				m_pGameInstance->Asset_Description<CTexture>(
+				strName = m_pGameInstance->Asset_Description<CTexture>(
 					ENUM_CLASS(LEVEL::EFFECT),
 					CMyTools::ToString(iter.first).c_str()
 					, pTexture
@@ -281,6 +282,9 @@ void CEffect_Editor::Reference_Mat_For_EditEffect(CComponent** pTexture, CGameOb
 					, pObject
 					, wstrTextureInfo.first // 이름
 				);
+				
+				if(strName != "")
+					return strName;
 			};
 
 
@@ -291,7 +295,24 @@ void CEffect_Editor::Reference_Mat_For_EditEffect(CComponent** pTexture, CGameOb
 	}
 
 
+	return "";
+}
 
+HRESULT CEffect_Editor::Load_Edit(const _char* pPath)
+{
+
+	if (m_pEditEffect == nullptr)
+		return E_FAIL;
+
+	if (FAILED(m_pEditEffect->Load(pPath, LEVEL::EFFECT)))
+	{
+		Safe_Release(m_pEditEffect);
+		return E_FAIL;
+	}
+
+	Safe_Release(m_pEditEffect);
+
+	return S_OK;
 }
 
 
@@ -337,6 +358,22 @@ void CEffect_Editor::Describe_Entity()
 	if (m_pEditEffect != nullptr)
 		m_pEditEffect->Describe_Entity();
 
+	GUI::InputTextMultiline("FILE PATH", m_szBuffer, sizeof(m_szBuffer), ImVec2(250, 25));
+
+	m_strSavePath = m_szBuffer;
+
+	if (GUI::Button("SAVE"))
+	{
+		m_pEditEffect->Save_Effect(m_strSavePath.c_str());
+	}
+	
+	GUI::SameLine();
+
+	if (GUI::Button("LOAD"))
+	{
+		Load_Edit(m_strSavePath.c_str());
+	}
+	
 	ImGui::End();
 
 	ImGui::Begin("Reference Material");

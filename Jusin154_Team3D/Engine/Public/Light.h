@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Component.h"
 
 NS_BEGIN(Engine)
@@ -21,7 +21,7 @@ public:
 public:
 	const LIGHT_DESC* Get_LightDesc() { return &m_LightDesc; }
 public:
-	HRESULT Render(class CShader* pShader, class CVIBuffer* pVIBuffer) const;
+	HRESULT			  Render(class CShader* pShader, class CVIBuffer* pVIBuffer) const;
 
 private:
 	LIGHT_DESC			m_LightDesc = {};

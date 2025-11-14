@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Base.h"
 
@@ -47,9 +47,9 @@ private:
 
 
 private:
-	_uint						m_iNumElement = 0; // ÀÎ¼ö °³¼ö
-	_uint						m_iNumInputBuffer = 0; // ÀÎÇ² ¹öÆÛÀÇ °³¼ö
-	_uint						m_iNumOutputBuffer = 0; // ÀÎÇ² ¹öÆÛÀÇ °³¼ö
+	_uint						m_iNumElement = 0; // ì¸ìˆ˜ ê°œìˆ˜
+	_uint						m_iNumInputBuffer = 0; // ì¸í’‹ ë²„í¼ì˜ ê°œìˆ˜
+	_uint						m_iNumOutputBuffer = 0; // ì¸í’‹ ë²„í¼ì˜ ê°œìˆ˜
 
 public:
 	static CComputeShader* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pShaderFilePath, const _char* pStartFunctionName, _uint iNumElement, _uint iNumInputBuffer, _uint iNumOutputBuffer, _uint iInputStructStride[], _uint iOutputStructStride[]);

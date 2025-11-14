@@ -19,7 +19,10 @@ float g_fSpotOuterAngle;
 
 vector g_vLightDir;
 vector g_vLightPos;
+vector g_vLightPosOffset;
+
 vector g_vCamPosition;
+
 
 Texture2D g_NormalTexture;
 Texture2D g_DiffuseTexture;
@@ -156,7 +159,7 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     vPosition = mul(vPosition, g_invmatProj);
     vPosition = mul(vPosition, g_invMatView);
     
-    vector vLightDir = vPosition - g_vLightPos;
+    vector vLightDir = vPosition - (g_vLightPos + g_vLightPosOffset);
     float fDistance = length(vLightDir);
     float fAttenuation = saturate((g_fLightRange - fDistance) / g_fLightRange);
     if (fAttenuation <= 0.f)

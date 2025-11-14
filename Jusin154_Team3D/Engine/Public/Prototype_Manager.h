@@ -72,7 +72,7 @@ public:
 	//만들고 선택할 시에 내 ppOut에 클론하는 기능을 담당
 
 	template<typename T>
-	void Asset_Description(_uint iLevel, const _char* pComponentName, Engine::CComponent** ppOut, void* pDesc, class CGameObject* pOwner = nullptr, _wstring wstrGroupName = L"")
+	_string Asset_Description(_uint iLevel, const _char* pComponentName, Engine::CComponent** ppOut, void* pDesc, class CGameObject* pOwner = nullptr, _wstring wstrGroupName = L"")
 	{
 		vector<const _char*> pComponentNames = {};
 		vector<_string> strNames = {};
@@ -119,7 +119,7 @@ public:
 
 					*ppOut = iter->second->Clone(pDesc, pOwner);
 
-					return;
+					return strName;
 				}
 
 				pTexture->HoverName();
@@ -129,7 +129,7 @@ public:
 
 			}
 
-			return;
+			return "";
 		}
 
 		static _int s_iCurrentItem = 0;
@@ -184,15 +184,18 @@ public:
 
 				GUI::EndCombo();
 
-				return;
+				return "";
 			}
 
 			if (*ppOut != nullptr)
 				SAFE_RELEASE(*ppOut);
 
 			*ppOut = iter->second->Clone(pDesc, pOwner);
+
+			return pComponentNames[s_iCurrentItem];
 		}
 
+		return "";
 	}
 #endif
 

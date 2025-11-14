@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Component.h"
 #include "Assimp/scene.h"
@@ -10,19 +10,19 @@ class ENGINE_DLL CInstance_Model final : public CComponent
 public:
 	typedef struct tagInstanceDesc
 	{
-		_int		iNumInstance = { 1 }; // ÀÎ½ºÅÏ½º °³¼ö
+		_int		iNumInstance = { 1 }; // ì¸ìŠ¤í„´ìŠ¤ ê°œìˆ˜
 
 		_bool		isLoop = { true };
 		_bool		isBillboard = { false };
-		_float2		vLifeTime = { 1.f , 1.f }; // ¶óÀÌÇÁ Å¸ÀÓ min , max
-		_float3		vSizeMin = { 1.f, 1.f ,1.f }; // »çÀÌÁî min xyz
-		_float3		vSizeMax = { 1.f ,1.f ,1.f }; // »çÀÌÁî max xyz
-		_float3		vRotationAngleMin = {};  // ·ÎÅ×ÀÌ¼Ç min x y z for angle
-		_float3		vRotationAngleMax = {};// ·ÎÅ×ÀÌ¼Ç max x y z for angle
-		_float2		vRotationSpeed = {}; // ·ÎÅ×ÀÌ¼Ç ½ºÇÇµå min , max
-		_float2		vSpeed = {}; // ½ºÇÇµå min , max
-		_float3		vCenter = {}; // ¼¾ÅÍ À§Ä¡ 
-		_float3		vRange = {}; // À§Ä¡ ¹üÀ§ 
+		_float2		vLifeTime = { 1.f , 1.f }; // ë¼ì´í”„ íƒ€ì„ min , max
+		_float3		vSizeMin = { 1.f, 1.f ,1.f }; // ì‚¬ì´ì¦ˆ min xyz
+		_float3		vSizeMax = { 1.f ,1.f ,1.f }; // ì‚¬ì´ì¦ˆ max xyz
+		_float3		vRotationAngleMin = {};  // ë¡œí…Œì´ì…˜ min x y z for angle
+		_float3		vRotationAngleMax = {};// ë¡œí…Œì´ì…˜ max x y z for angle
+		_float2		vRotationSpeed = {}; // ë¡œí…Œì´ì…˜ ìŠ¤í”¼ë“œ min , max
+		_float2		vSpeed = {}; // ìŠ¤í”¼ë“œ min , max
+		_float3		vCenter = {}; // ì„¼í„° ìœ„ì¹˜ 
+		_float3		vRange = {}; // ìœ„ì¹˜ ë²”ìœ„ 
 
 		_float2		vMaskingUVMoveTime = { 1.f, 1.f };
 		_float2		vDiffuseUVMoveTime = { 1.f, 1.f };
@@ -75,25 +75,29 @@ public:
 public:
 #ifdef EDITOR_PROJECT
 	virtual HRESULT Initialize_Prototype(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex);
-
+	HRESULT			Save_InstanceModel(HANDLE hFile);
 #endif	
 
 	virtual HRESULT Initialize(void* pArg) override;
 	void			Drop(_float fTimeDelta);
 public:
-	HRESULT		Render(_uint iMeshIndx);
+	HRESULT			Render(_uint iMeshIndx);
 	void			Instane_Buffer_ReStruct();
 	_uint			Get_NumMeshes() const { return m_iNumMeshes; }
-	HRESULT		Bind_CS_Output(_uint Index, _uint iBufferIndex);
+	HRESULT			Bind_CS_Output(_uint Index, _uint iBufferIndex);
 	INSTANCE_DESC	Get_EffectValue() { return m_InstanceDesc; }
+	HRESULT			Load_InstanceModel(HANDLE hFile);
 private:
 #ifdef EDITOR_PROJECT
 	HRESULT			Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex);
 	HRESULT			Ready_Meshes(MODEL eType, const aiScene* pAIScene, _fmatrix& PreTransformMatrix);
+
 #endif	
+
 	HRESULT			Change_NumInstance();
-	HRESULT			Create_Instance_Buffer(const INSTANCE_DESC* pDesc);
+	HRESULT			Create_Instance_Buffer();
 	HRESULT         Create_SubResource_Buffer();
+	HRESULT			Create_CS();
 
 private:
 	ID3D11Buffer*			m_pVBInstance = { nullptr };
@@ -111,12 +115,12 @@ private:
 	_float4x4				m_PreTransformMatrix = {};
 
 	vector<class CMesh*>	m_Meshes = {};
-	vector<class CBone*>	m_Bones = {}; // ³ªÁß¿¡ È¤½Ã ¾Ö´Ô¸Ş½¬¸¦ ÀÎ½ºÅÏ½Ì ÇÒ ÀÏÀÌ ÀÖÀ»Áöµµ ¸ğ¸£´Ï ³²°Ü³õÀ½
+	vector<class CBone*>	m_Bones = {}; // ë‚˜ì¤‘ì— í˜¹ì‹œ ì• ë‹˜ë©”ì‰¬ë¥¼ ì¸ìŠ¤í„´ì‹± í•  ì¼ì´ ìˆì„ì§€ë„ ëª¨ë¥´ë‹ˆ ë‚¨ê²¨ë†“ìŒ
 
 private:
 	class CComputeShader*	m_pComputeShader = {};
-	ID3D11Buffer*			m_pConstantBuffer = { nullptr }; // ÄÄÇ»Æ® ½¦ÀÌµå Àü¿ë »ó¼ö¹öÆÛ
-	ID3D11Buffer*			m_pParticleValueBuffer = { nullptr }; // ÄÄÇ»Æ® ½¦ÀÌµå µÎ¹øÂ° ¹öÆÛ (½ºÇÇµå, ·ÎÅ×ÀÌ¼Ç)
+	ID3D11Buffer*			m_pConstantBuffer = { nullptr }; // ì»´í“¨íŠ¸ ì‰ì´ë“œ ì „ìš© ìƒìˆ˜ë²„í¼
+	ID3D11Buffer*			m_pParticleValueBuffer = { nullptr }; // ì»´í“¨íŠ¸ ì‰ì´ë“œ ë‘ë²ˆì§¸ ë²„í¼ (ìŠ¤í”¼ë“œ, ë¡œí…Œì´ì…˜)
 
 public:
 #ifdef EDITOR_PROJECT	
