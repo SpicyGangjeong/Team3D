@@ -287,6 +287,8 @@ call Update_Lib.bat
     <ClCompile Include="..\Private\RenderTarget.cpp" />
     <ClCompile Include="..\Private\RenderTarget_Manager.cpp" />
     <ClCompile Include="..\Private\RigidBody.cpp" />
+    <ClCompile Include="..\Private\RigidBody_Dynamic.cpp" />
+    <ClCompile Include="..\Private\RigidBody_Static.cpp" />
     <ClCompile Include="..\Private\Shader.cpp" />
     <ClCompile Include="..\Private\Shadow.cpp" />
     <ClCompile Include="..\Private\SoundSrc.cpp" />
@@ -503,6 +505,8 @@ call Update_Lib.bat
     <ClInclude Include="..\Public\RenderTarget.h" />
     <ClInclude Include="..\Public\RenderTarget_Manager.h" />
     <ClInclude Include="..\Public\RigidBody.h" />
+    <ClInclude Include="..\Public\RigidBody_Dynamic.h" />
+    <ClInclude Include="..\Public\RigidBody_Static.h" />
     <ClInclude Include="..\Public\Shader.h" />
     <ClInclude Include="..\Public\Shadow.h" />
     <ClInclude Include="..\Public\SoundSrc.h" />

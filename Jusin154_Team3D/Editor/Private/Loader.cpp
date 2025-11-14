@@ -521,7 +521,7 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 	m_strMessage = TEXT("PhysX Bodies Loading..");
 
 	{
-		CRigidBody::RIGIDBODY_PROTOTYPEDESC Desc{};
+		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
 		{
 			Desc.eType = ACTOR::BOX;
 			Desc.ePxRigidBodyFlags = {};
@@ -532,7 +532,7 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 			Desc.vhalfGeometryInfo = { 1.f, 1.f, 1.f };
 			Desc.fDensity = 10.f;
 		}
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), CRigidBody::Create(m_pDevice, m_pContext, Desc)))) {
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
 			return E_FAIL;
 		}
 	}
@@ -596,7 +596,7 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 
 			_uint iNumMesh = pModel->Get_NumMeshes();
 
-			CRigidBody::RIGIDBODY_PROTOTYPEDESC Desc{};
+			CRigidBody_Static::RIGIDBODY_STATIC_PROTOTYPEDESC Desc{};
 			for (_uint i = 0; i < iNumMesh; ++i) {
 				_string strDestName = pModel->Get_MeshName(i) + to_string(i);
 				{ // basic static RIGIDBODY
@@ -607,7 +607,7 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 					Desc.vMatInfo = _float3(0.5f, 0.5f, 0.6f);
 					Desc.fContactOffset = 0.f;
 				}
-				if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, CMyTools::ToWstring(strDestName).c_str(), CRigidBody::Create(m_pDevice, m_pContext, Desc)))) {
+				if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, CMyTools::ToWstring(strDestName).c_str(), CRigidBody_Static::Create(m_pDevice, m_pContext, Desc)))) {
 					return E_FAIL;
 				}
 			}
@@ -872,7 +872,7 @@ HRESULT CLoader::Loading_For_MapViewer()
 		_uint iNumMesh = pModel->Get_NumMeshes();
 
 
-		CRigidBody::RIGIDBODY_PROTOTYPEDESC Desc{};
+		CRigidBody_Static::RIGIDBODY_STATIC_PROTOTYPEDESC Desc{};
 		for (_uint i = 0; i < iNumMesh; ++i) {
 			_string strDestName = pModel->Get_MeshName(i) + to_string(i);
 			{
@@ -883,7 +883,7 @@ HRESULT CLoader::Loading_For_MapViewer()
 				Desc.vMatInfo = _float3(0.5f, 0.5f, 0.6f);
 				Desc.fContactOffset = 0.f;
 			}
-			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, CMyTools::ToWstring(strDestName).c_str(), CRigidBody::Create(m_pDevice, m_pContext, Desc)))) {
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, CMyTools::ToWstring(strDestName).c_str(), CRigidBody_Static::Create(m_pDevice, m_pContext, Desc)))) {
 				return E_FAIL;
 			}
 		}

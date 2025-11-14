@@ -250,9 +250,6 @@
     <Filter Include="02.Element\02.Component\07.RigidBody\10.Dynamic">
       <UniqueIdentifier>{bed0de44-4e62-4b5f-9767-65cfc8a933a3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Element\02.Component\07.RigidBody\11.Kinematic">
-      <UniqueIdentifier>{33ac85a2-be8e-4ad9-a179-1239d818dc9c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Element\02.Component\07.RigidBody\00.Static">
       <UniqueIdentifier>{fda41884-634b-4dd4-8bd2-f6f7ad68ab1f}</UniqueIdentifier>
     </Filter>
@@ -438,9 +435,6 @@
     <ClCompile Include="..\Private\PhysX_Manager.cpp">
       <Filter>03.Management\21.PhysX_Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\RigidBody.cpp">
-      <Filter>02.Element\02.Component\07.RigidBody</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\UIComponent.cpp">
       <Filter>02.Element\02.Component\50.UI</Filter>
     </ClCompile>
@@ -479,6 +473,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Collision_Callback.cpp">
       <Filter>02.Element\02.Component\08.Character_Controller\Collision_Callback</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RigidBody_Static.cpp">
+      <Filter>02.Element\02.Component\07.RigidBody\00.Static</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RigidBody_Dynamic.cpp">
+      <Filter>02.Element\02.Component\07.RigidBody\10.Dynamic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RigidBody.cpp">
+      <Filter>02.Element\02.Component\07.RigidBody</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1063,6 +1066,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Collision_Callback.h">
       <Filter>02.Element\02.Component\08.Character_Controller\Collision_Callback</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RigidBody_Static.h">
+      <Filter>02.Element\02.Component\07.RigidBody\00.Static</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RigidBody_Dynamic.h">
+      <Filter>02.Element\02.Component\07.RigidBody\10.Dynamic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -86,7 +86,7 @@ HRESULT CDummy_PhysXBox::Ready_Components(void* pArg)
 
 
 	{ // RIGID_BODY
-		CRigidBody::RIGIDBODY_DESC Desc{};
+		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
 
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
@@ -95,8 +95,9 @@ HRESULT CDummy_PhysXBox::Ready_Components(void* pArg)
 
 	/* Com_Shader */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_MESH,
-		reinterpret_cast<CComponent**>(&m_pShaderCom))))
+		reinterpret_cast<CComponent**>(&m_pShaderCom)))){
 		return E_FAIL;
+	}
 
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_Box"), (CComponent**)&m_pModelCom))) {
 		return E_FAIL;
