@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Editor_Define.h"
 #include "PartObject.h"
@@ -34,14 +34,15 @@ public:
 	_wstring& Get_PrototypeTag() { return m_strModelPrototypeTag; }
 
 protected:
-	CShader* m_pShaderCom = { nullptr };
-	CModel* m_pModelCom = { nullptr };
+	CShader*	m_pShaderCom = { nullptr };
+	CModel*		m_pModelCom = { nullptr };
 	_bool		m_bRimLight = { true };
 	_float		m_fRimLightPower = { 3.2f };
 	_float		m_fRimLightStrength = { 3.04f };
 	_float3		m_vRimLightColor = { 69.f / 255.f, 5.f / 255.f, 10.f / 255.f };
-
+	_uint		m_HeadIndex = {};
 	_wstring	m_strModelPrototypeTag;
+	_float4		m_vColor = _float4{ 1.f,1.f,1.f,1.f };
 protected:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();

@@ -11,7 +11,8 @@ private:
 	CAnimation(const CAnimation& rhs);
 	virtual ~CAnimation() = default;
 public:
-	_bool			Update_TransformationMatrices(const vector<class CBone*>& Bones, _bool bIsLoop, _float fTimeDelta);
+	_bool			Update_TransformationMatrices(const vector<class CBone*>& Bones, _bool bIsLoop, _float fTimeDelta, class CTransform* pTransform = nullptr);
+	void			ResetRootMotion();
 	void			Depart_Animation();
 	void			Set_AnimPause(_bool bValue) { m_bPause = bValue; }
 	_float			Get_AnimProgressRatio();
@@ -27,7 +28,8 @@ public:
 	_float Get_CurrentTrackPosition() { return m_fCurrentTrackPosition; }
 	void Set_AnimSpeed(_float fSpeed) { m_fAnimSpeed = fSpeed; }
 	_float Get_AnimSpeed() { return m_fAnimSpeed; }
-
+	void Set_Channel(CAnimation* Animation);
+	void Remap_Channels_By_Name(class CModel* TargetModel);
 #ifdef EDITOR_PROJECT
 private:
 	HRESULT Initialize(const vector<class CBone*>& Bones, const aiAnimation* pAIAnimation);

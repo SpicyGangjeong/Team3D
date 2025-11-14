@@ -71,7 +71,7 @@ void CRootModelPart::Update_Anim(_float fTimeDelta)
 		{
 			pModel->Set_PlayAnim(m_pMainModel->Get_PlayAnim());
 			pModel->Set_AnimSpeed(m_pMainModel->Get_AnimSpeed());
-			pModel->Play_Animation(fTimeDelta);
+			pModel->Play_Animation(fTimeDelta,m_pTransformCom);
 		}
 	}
 }
