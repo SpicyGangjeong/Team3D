@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Shader.h"
 
 CShader::CShader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -60,8 +60,8 @@ HRESULT CShader::Initialize_Prototype(const _tchar* pShaderFilePath, const D3D11
 		if (FAILED(m_pDevice->CreateInputLayout(
 			pElements,
 			iNumElements,
-			PassDesc.pIAInputSignature/*½¦ÀÌ´õ¿¡¼­ ¹Þ¾ÆÁÙ¼ö ÀÖ´Â Á¤Á¡ÀÇ Á¤º¸*/,
-			PassDesc.IAInputSignatureSize/*½¦ÀÌ´õ¿¡¼­ ¹Þ¾ÆÁÙ¼ö ÀÖ´Â Á¤Á¡ÀÇ ¸â¹öº¯¼ö°¹¼ö*/,
+			PassDesc.pIAInputSignature/*ì‰ì´ë”ì—ì„œ ë°›ì•„ì¤„ìˆ˜ ìžˆëŠ” ì •ì ì˜ ì •ë³´*/,
+			PassDesc.IAInputSignatureSize/*ì‰ì´ë”ì—ì„œ ë°›ì•„ì¤„ìˆ˜ ìžˆëŠ” ì •ì ì˜ ë©¤ë²„ë³€ìˆ˜ê°¯ìˆ˜*/,
 			&pInputLayout)))
 			return E_FAIL;
 
@@ -146,8 +146,8 @@ HRESULT CShader::Begin(_uint iPassIndex)
 
 	m_pContext->IASetInputLayout(m_InputLayouts[iPassIndex]);
 
-	/* Apply¸¦ ¹Ýµå½Ã È£ÃâÇØ¾ß¸¸ ½¦ÀÌ´õ·Î ±×·ÁÁø´Ù. */
-	/* ApplyÀÌÀü¿¡ ½¦ÀÌ´õ¿¡ Àü´ÞÇÒ ¸ðµç µ¥ÀÌÅÍµéÀ» ´Ù ´øÁ®³õ¾Æ¾ßÇÑ´Ù. */
+	/* Applyë¥¼ ë°˜ë“œì‹œ í˜¸ì¶œí•´ì•¼ë§Œ ì‰ì´ë”ë¡œ ê·¸ë ¤ì§„ë‹¤. */
+	/* Applyì´ì „ì— ì‰ì´ë”ì— ì „ë‹¬í•  ëª¨ë“  ë°ì´í„°ë“¤ì„ ë‹¤ ë˜ì ¸ë†“ì•„ì•¼í•œë‹¤. */
 	m_pEffect->GetTechniqueByIndex(0)->GetPassByIndex(iPassIndex)->Apply(0, m_pContext);
 
 	return S_OK;
@@ -160,7 +160,7 @@ CShader* CShader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, c
 	if (FAILED(pInstance->Initialize_Prototype(pShaderFilePath, pElements, iNumElements)))
 	{
 		MSG_BOX("Failed to Created : CShader");
-		Safe_Release(pInstance);
+		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
@@ -173,7 +173,7 @@ CComponent* CShader::Clone(void* pArg, class CGameObject* pOwner)
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
 		MSG_BOX("Failed to Cloned : CShader");
-		Safe_Release(pInstance);
+		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
@@ -183,10 +183,10 @@ void CShader::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pEffect);
+	SAFE_RELEASE(m_pEffect);
 
 	for (auto& pInputLayout : m_InputLayouts)
-		Safe_Release(pInputLayout);
+		SAFE_RELEASE(pInputLayout);
 
 	m_InputLayouts.clear();
 }

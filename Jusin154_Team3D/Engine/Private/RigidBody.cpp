@@ -53,6 +53,25 @@ HRESULT CRigidBody::Render()
 }
 #endif // _DEBUG
 
+void CRigidBody::Set_Kinematic(_bool bKinematic)
+{
+	static_cast<PSX::PxRigidDynamic*>(m_pRigidBody)->setRigidBodyFlag(PSX::PxRigidBodyFlag::eKINEMATIC, bKinematic);
+}
+
+void CRigidBody::Add_Force(_fvector vForce, PSX::PxForceMode::Enum eType)
+{
+	PSX::PxVec3 vPxForce = {};
+	XMStoreFloat3((_float3*)&vPxForce, vForce);
+	static_cast<PSX::PxRigidDynamic*>(m_pRigidBody)->addForce(vPxForce, eType);
+}
+
+void CRigidBody::Add_Torque(_fvector vDirection, PSX::PxForceMode::Enum eType)
+{
+	PSX::PxVec3 vPxTorque = {};
+	XMStoreFloat3((_float3*)&vPxTorque, vDirection);
+	static_cast<PSX::PxRigidDynamic*>(m_pRigidBody)->addForce(vPxTorque, eType);
+}
+
 HRESULT CRigidBody::Initialize_Prototype(RIGIDBODY_PROTOTYPEDESC& Desc)
 {
 	m_eActorType		= Desc.eType;
@@ -114,7 +133,6 @@ HRESULT CRigidBody::Initialize(void* pArg)
 
 HRESULT CRigidBody::Initialize_UserData()
 {
-
 	switch (m_eActorType)
 	{
 	case Engine::ACTOR::BOX:
@@ -206,6 +224,9 @@ CComponent* CRigidBody::Clone(void* pArg, CGameObject* pOwner)
 
 void CRigidBody::Free()
 {
+	if (nullptr != m_pRigidBody) {
+		m_pRigidBody = nullptr;
+	}
 	__super::Free();
 
 	SAFE_RELEASE(m_pTransform);

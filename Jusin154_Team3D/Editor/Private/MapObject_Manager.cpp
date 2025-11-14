@@ -1084,7 +1084,7 @@ CMapObject_Manager* CMapObject_Manager::Create(ID3D11Device* pDevice, ID3D11Devi
 	if (FAILED(pInstance->Initialize_Prototype(ModelPrototypeTags, ModelPrototypePaths)))
 	{
 		MSG_BOX("Failed to Created : CMapObject_Manager");
-		Safe_Release(pInstance);
+		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
@@ -1097,7 +1097,7 @@ CGameObject* CMapObject_Manager::Clone(void* pArg, CGameObject* pOwner)
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
 		MSG_BOX("Failed to Cloned : CMapObject_Manager");
-		Safe_Release(pInstance);
+		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;

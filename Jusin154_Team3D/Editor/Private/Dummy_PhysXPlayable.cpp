@@ -188,8 +188,8 @@ void CDummy_PhysXPlayable::Free()
 	__super::Free();
 
 	SAFE_RELEASE(m_pCharacter_Controller);
-	Safe_Release(m_pShaderCom);
-	Safe_Release(m_pModelCom);
+	SAFE_RELEASE(m_pShaderCom);
+	SAFE_RELEASE(m_pModelCom);
 }
 
 void CDummy_PhysXPlayable::Describe_Entity()

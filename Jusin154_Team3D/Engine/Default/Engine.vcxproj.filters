@@ -253,6 +253,15 @@
     <Filter Include="02.Element\02.Component\08.Character_Controller\Collision_Callback">
       <UniqueIdentifier>{05865481-fa20-4432-a5a7-945d4f8c7f3c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Element\02.Component\07.RigidBody\10.Dynamic">
+      <UniqueIdentifier>{bed0de44-4e62-4b5f-9767-65cfc8a933a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\07.RigidBody\11.Kinematic">
+      <UniqueIdentifier>{33ac85a2-be8e-4ad9-a179-1239d818dc9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\07.RigidBody\00.Static">
+      <UniqueIdentifier>{fda41884-634b-4dd4-8bd2-f6f7ad68ab1f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">

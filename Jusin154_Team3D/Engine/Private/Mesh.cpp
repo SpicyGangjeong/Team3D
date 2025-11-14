@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Mesh.h"
 #include "Model.h"
 #include "Bone.h"
@@ -154,7 +154,7 @@ HRESULT CMesh::Render_Instance(_uint iNumInstance)
 
 HRESULT CMesh::Initialize_Prototype(HANDLE hFile, DWORD& dwByte)
 {
-	{ // ¸â¹öº¯¼ö
+	{ // ë©¤ë²„ë³€ìˆ˜
 		if (!ReadFile(hFile, &m_iMaterialIndex, sizeof(_uint), &dwByte, nullptr)) {
 			return E_FAIL;
 		}
@@ -535,7 +535,7 @@ CMesh* CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL
 
 HRESULT CMesh::SaveAsBinary(HANDLE hFile, DWORD& dwByte)
 {
-	{ // ¸â¹öº¯¼ö
+	{ // ë©¤ë²„ë³€ìˆ˜
 		WriteFile(hFile, &m_iMaterialIndex, sizeof(_uint), &dwByte, nullptr);
 		WriteFile(hFile, &m_iNumVertexBuffers, sizeof(_uint), &dwByte, nullptr);
 		WriteFile(hFile, &m_iNumVertices, sizeof(_uint), &dwByte, nullptr);
@@ -556,7 +556,7 @@ HRESULT CMesh::SaveAsBinary(HANDLE hFile, DWORD& dwByte)
 	}
 	{ // Vertex Buffer
 		D3D11_BUFFER_DESC VBDesc{};
-		m_pVB->GetDesc(&VBDesc); // ¹öÆÛ µð½ºÅ©¸³¼Ç ÀúÀå
+		m_pVB->GetDesc(&VBDesc); // ë²„í¼ ë””ìŠ¤í¬ë¦½ì…˜ ì €ìž¥
 		WriteFile(hFile, &VBDesc, sizeof(D3D11_BUFFER_DESC), &dwByte, nullptr);
 
 		D3D11_BUFFER_DESC StagingDesc{};
@@ -570,7 +570,7 @@ HRESULT CMesh::SaveAsBinary(HANDLE hFile, DWORD& dwByte)
 		if (FAILED(m_pDevice->CreateBuffer(&StagingDesc, nullptr, &pStaging)) || nullptr == pStaging) {
 			return E_FAIL;
 		}
-		m_pContext->CopyResource(pStaging, m_pVB); // ¹öÆÛ º¹»ç
+		m_pContext->CopyResource(pStaging, m_pVB); // ë²„í¼ ë³µì‚¬
 
 		D3D11_MAPPED_SUBRESOURCE mapped{};
 		m_pContext->Map(pStaging, 0, D3D11_MAP_READ, 0, &mapped);
@@ -799,7 +799,7 @@ CMesh* CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL
 	if (FAILED(pInstance->Initialize_Prototype(eType, pModel, _SaveMesh, PreTransformMatrix)))
 	{
 		MSG_BOX("Failed to Created : CMesh");
-		Safe_Release(pInstance);
+		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;

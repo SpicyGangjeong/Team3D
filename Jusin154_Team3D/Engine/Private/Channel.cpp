@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 
 #include "Channel.h"
 #include "Model.h"
@@ -267,7 +267,7 @@ CChannel* CChannel::Create(const CModel* pModel, SaveChannel* pSaveChannel)
 	if (FAILED(pInstance->Initialize(pModel, pSaveChannel)))
 	{
 		MSG_BOX("Failed to Created : CChannel");
-		Safe_Release(pInstance);
+		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;

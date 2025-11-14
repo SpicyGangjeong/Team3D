@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Picking.h"
 #include "GameInstance.h"
 
@@ -90,7 +90,7 @@ CPicking* CPicking::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext,
 	if (FAILED(pInstance->Initialize(hWnd, iSizeX, iSizeY)))
 	{
 		MSG_BOX("Failed to Created : CPicking");
-		Safe_Release(pInstance);
+		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
@@ -100,9 +100,9 @@ void CPicking::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pDevice);
-	Safe_Release(m_pContext);
-	Safe_Release(m_pTexture2D);
-	Safe_Release(m_pGameInstance);
+	SAFE_RELEASE(m_pDevice);
+	SAFE_RELEASE(m_pContext);
+	SAFE_RELEASE(m_pTexture2D);
+	SAFE_RELEASE(m_pGameInstance);
 	Safe_Delete_Array(m_pPixels);
 }

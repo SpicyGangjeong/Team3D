@@ -34,6 +34,8 @@ public:
 
 	void Update(_float fTimeDelta);
 	void ClearScene();
+	void Attach_Actor(CRigidBody& RigidBody, PSX::PxActor& Actor);
+	void Detach_Actor(CRigidBody& RigidBody, PSX::PxActor*& pActor);
 #pragma endregion
 
 #pragma region CHARACTER_CONTROLLER
@@ -53,8 +55,8 @@ public:
 
 private:
 	class CGameInstance*				m_pGameInstance = { nullptr };
-	ID3D11Device*						m_pDevice = { nullptr };
 	ID3D11DeviceContext*				m_pContext = { nullptr };
+	ID3D11Device*						m_pDevice = { nullptr };
 
 	PSX::PxDefaultAllocator				m_AllocatorCallBack = { };						// 피직스 동적할당자
 	PSX::PxDefaultErrorCallback			m_ErrorCallBack = { };							// 피직스 오류처리자

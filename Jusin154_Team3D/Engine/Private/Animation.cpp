@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 
 #include "Animation.h"
 #include "Channel.h"
@@ -34,7 +34,7 @@ _bool CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bone
 	//m_fCurrentTrackPosition += m_TickPerSeconds[m_bPause] * fTimeDelta;
 	m_fCurrentTrackPosition += m_fTickPerSecond * fTimeDelta * m_fAnimSpeed;
 	if (m_fCurrentTrackPosition >= m_fDuration) {
-		m_fCurrentTrackPosition = 0.f; // ·çÇÁ
+		m_fCurrentTrackPosition = 0.f; // ë£¨í”„
 		if (false == bIsLoop) {
 			m_fCurrentTrackPosition = m_fDuration;
 			return true;
@@ -244,7 +244,7 @@ CAnimation* CAnimation::Create(const CModel* pModel, SaveAnimation* pSaveAnimati
 	if (FAILED(pInstance->Initialize(pModel, pSaveAnimation)))
 	{
 		MSG_BOX("Failed to Created : CAnimation");
-		Safe_Release(pInstance);
+		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;

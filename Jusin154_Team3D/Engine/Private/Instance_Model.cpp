@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 
 #include "Instance_Model.h"
 #include "Mesh.h"
@@ -92,12 +92,12 @@ HRESULT CInstance_Model::Ready_Meshes(MODEL eType, const aiScene* pAIScene, _fma
 
 HRESULT CInstance_Model::Change_NumInstance()
 {
-	Safe_Release(m_pVBInstance);
-	Safe_Release(m_pComputeShader);
-	Safe_Release(m_pConstantBuffer);
-	Safe_Release(m_pParticleValueBuffer);
+	SAFE_RELEASE(m_pVBInstance);
+	SAFE_RELEASE(m_pComputeShader);
+	SAFE_RELEASE(m_pConstantBuffer);
+	SAFE_RELEASE(m_pParticleValueBuffer);
 
-	//¸ðµç ¹öÆÛ¸¦ Áö¿ì°í Àç »ý¼º ÇØ¾ßÇÔ
+	//ëª¨ë“  ë²„í¼ë¥¼ ì§€ìš°ê³  ìž¬ ìƒì„± í•´ì•¼í•¨
 
 	if (FAILED(Create_Instance_Buffer(&m_InstanceDesc)))
 		return E_FAIL;
@@ -105,7 +105,7 @@ HRESULT CInstance_Model::Change_NumInstance()
 	if (FAILED(Create_SubResource_Buffer()))
 		return E_FAIL;
 
-	//½ÃÀÛ ½Ã¿¡ ÀÎ½ºÅÏÆ® ¹öÆÛ¸¦ ±¸¼º ÇØÁÜ
+	//ì‹œìž‘ ì‹œì— ì¸ìŠ¤í„´íŠ¸ ë²„í¼ë¥¼ êµ¬ì„± í•´ì¤Œ
 	Instane_Buffer_ReStruct();
 
 	_uint		CS_InputStrides[] = {
@@ -158,7 +158,7 @@ HRESULT CInstance_Model::Create_Instance_Buffer(const INSTANCE_DESC* pDesc)
 HRESULT CInstance_Model::Create_SubResource_Buffer()
 {
 
-	// º§·ù ¹öÆÛ »ý¼ºÇÏ±â
+	// ë²¨ë¥˜ ë²„í¼ ìƒì„±í•˜ê¸°
 	D3D11_BUFFER_DESC Particle_Buffer_Desc = {};
 	Particle_Buffer_Desc.ByteWidth = sizeof(CS_PARTICLE_VALUE_DESC) * m_iNumInstance;
 	Particle_Buffer_Desc.Usage = D3D11_USAGE_DYNAMIC;
@@ -175,7 +175,7 @@ HRESULT CInstance_Model::Create_SubResource_Buffer()
 		return E_FAIL;
 
 
-	//ÄÁ½ºÅÏÆ® ¹öÆÛ »ý¼ºÇÏ±â 
+	//ì»¨ìŠ¤í„´íŠ¸ ë²„í¼ ìƒì„±í•˜ê¸° 
 
 	D3D11_BUFFER_DESC cbDesc = {};
 	cbDesc.Usage = D3D11_USAGE_DYNAMIC;
@@ -205,7 +205,7 @@ HRESULT CInstance_Model::Initialize(void* pArg)
 	if (FAILED(Create_SubResource_Buffer()))
 		return E_FAIL;
 
-	//½ÃÀÛ ½Ã¿¡ ÀÎ½ºÅÏÆ® ¹öÆÛ¸¦ ±¸¼º ÇØÁÜ
+	//ì‹œìž‘ ì‹œì— ì¸ìŠ¤í„´íŠ¸ ë²„í¼ë¥¼ êµ¬ì„± í•´ì¤Œ
 	Instane_Buffer_ReStruct();
 
 	_uint		CS_InputStrides[] = {
@@ -262,7 +262,7 @@ void CInstance_Model::Drop(_float fTimeDelta)
 	if (SUCCEEDED(m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_DISCARD, 0, &VBInstanceResource)))
 	{
 
-		memcpy(VBInstanceResource.pData, OutSubResources[0].pData, m_iInstanceStride * m_InstanceDesc.iNumInstance); // ¾Æ¿ôÇ² ¹öÆÛ¿¡ µé¾î¿Â °ªµéÀ» ÀüºÎ º¹»çÇÑ´Ù.
+		memcpy(VBInstanceResource.pData, OutSubResources[0].pData, m_iInstanceStride * m_InstanceDesc.iNumInstance); // ì•„ì›ƒí’‹ ë²„í¼ì— ë“¤ì–´ì˜¨ ê°’ë“¤ì„ ì „ë¶€ ë³µì‚¬í•œë‹¤.
 
 		m_pContext->Unmap(m_pVBInstance, 0);
 	}
@@ -273,7 +273,7 @@ void CInstance_Model::Drop(_float fTimeDelta)
 	{
 		CS_PARTICLE_VALUE_DESC* pValueDesc = static_cast<CS_PARTICLE_VALUE_DESC*>(OutSubResources[1].pData);
 
-		memcpy(ParticleValueResource.pData, OutSubResources[1].pData, sizeof(CS_PARTICLE_VALUE_DESC) * m_InstanceDesc.iNumInstance); // ¾Æ¿ôÇ² ¹öÆÛ¿¡ µé¾î¿Â °ªµéÀ» ÀüºÎ º¹»çÇÑ´Ù.
+		memcpy(ParticleValueResource.pData, OutSubResources[1].pData, sizeof(CS_PARTICLE_VALUE_DESC) * m_InstanceDesc.iNumInstance); // ì•„ì›ƒí’‹ ë²„í¼ì— ë“¤ì–´ì˜¨ ê°’ë“¤ì„ ì „ë¶€ ë³µì‚¬í•œë‹¤.
 
 		m_pContext->Unmap(m_pParticleValueBuffer, 0);
 	}
@@ -312,7 +312,7 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 			for (size_t i = 0; i < m_iNumInstance; i++)
 			{
 
-				//½ºÄÉÀÏ ¼³Á¤ 
+				//ìŠ¤ì¼€ì¼ ì„¤ì • 
 				_float3			vScale = _float3(
 					m_pGameInstance->Random_Float(m_InstanceDesc.vSizeMin.x, m_InstanceDesc.vSizeMax.x),
 					m_pGameInstance->Random_Float(m_InstanceDesc.vSizeMin.y, m_InstanceDesc.vSizeMax.y),
@@ -321,7 +321,7 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 
 				_matrix ScaleMatrix = XMMatrixScaling(vScale.x, vScale.y, vScale.z);
 
-				//·ÎÅ×ÀÌ¼Ç ¼³Á¤
+				//ë¡œí…Œì´ì…˜ ì„¤ì •
 				_float3			vRoataion = _float3(
 					m_pGameInstance->Random_Float(m_InstanceDesc.vRotationAngleMin.x, m_InstanceDesc.vRotationAngleMax.x),
 					m_pGameInstance->Random_Float(m_InstanceDesc.vRotationAngleMin.y, m_InstanceDesc.vRotationAngleMax.y),
@@ -335,7 +335,7 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 				);
 
 
-				//À§Ä¡ ¼³Á¤
+				//ìœ„ì¹˜ ì„¤ì •
 				_float4x4 SRMatrix = {};
 
 				XMStoreFloat4x4(&SRMatrix, ScaleMatrix * RotationMatrix);
@@ -351,7 +351,7 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 					m_pGameInstance->Random_Float(m_InstanceDesc.vCenter.z - m_InstanceDesc.vRange.z * 0.5f, m_InstanceDesc.vCenter.z + m_InstanceDesc.vRange.z * 0.5f),
 					1.f);
 
-				//¶óÀÌÇÁ Å¸ÀÓ ¼³Á¤
+				//ë¼ì´í”„ íƒ€ìž„ ì„¤ì •
 				pVertices[i].vLifeTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vLifeTime.x, m_InstanceDesc.vLifeTime.y));
 
 				pParticleValues[i].vAniTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vAniTime.x, m_InstanceDesc.vAniTime.y));
@@ -423,17 +423,17 @@ void CInstance_Model::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pVBInstance);
+	SAFE_RELEASE(m_pVBInstance);
 
 	for (auto& pMesh : m_Meshes)
-		Safe_Release(pMesh);
+		SAFE_RELEASE(pMesh);
 
 	for (auto& pBone : m_Bones)
-		Safe_Release(pBone);
+		SAFE_RELEASE(pBone);
 
-	Safe_Release(m_pComputeShader);
-	Safe_Release(m_pConstantBuffer);
-	Safe_Release(m_pParticleValueBuffer);
+	SAFE_RELEASE(m_pComputeShader);
+	SAFE_RELEASE(m_pConstantBuffer);
+	SAFE_RELEASE(m_pParticleValueBuffer);
 }
 
 void CInstance_Model::Describe_Entity()

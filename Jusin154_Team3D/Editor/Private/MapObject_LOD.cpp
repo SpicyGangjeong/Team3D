@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "MapObject_LOD.h"
 
 #include "GameInstance.h"
@@ -222,10 +222,10 @@ void CMapObject_LOD::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pShaderCom);
+	SAFE_RELEASE(m_pShaderCom);
 
 	for(auto& pModel : m_pModelComs)
-		Safe_Release(pModel);
+		SAFE_RELEASE(pModel);
 	m_pModelComs.clear();
 }
 

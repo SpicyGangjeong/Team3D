@@ -597,6 +597,14 @@ void CGameInstance::ReleaseController(_uint iControllerIndex)
 {
 	m_pPhysX_Manager->ReleaseController(iControllerIndex);
 }
+void CGameInstance::Attach_Actor(CRigidBody& RigidBody, PSX::PxActor& Actor)
+{
+	m_pPhysX_Manager->Attach_Actor(RigidBody, Actor);
+}
+void CGameInstance::Detach_Actor(CRigidBody& RigidBody, PSX::PxActor*& pActor)
+{
+	m_pPhysX_Manager->Detach_Actor(RigidBody, pActor);
+}
 HRESULT CGameInstance::ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix)
 {
 	return m_pPhysX_Manager->ConvertToTriMeshes(Meshes, pxTriMeshes, WorldMatrix);
@@ -718,7 +726,6 @@ void CGameInstance::Release_Engine()
 {
 	DestroyInstance();
 
-	SAFE_RELEASE(m_pPhysX_Manager);
 	SAFE_RELEASE(m_pPicking);
 	SAFE_RELEASE(m_pCollider_Manager);
 	SAFE_RELEASE(m_pShadow);
@@ -731,6 +738,7 @@ void CGameInstance::Release_Engine()
 	SAFE_RELEASE(m_pTimer_Manager);
 	SAFE_RELEASE(m_pRenderer);
 	SAFE_RELEASE(m_pObject_Manager);
+	SAFE_RELEASE(m_pPhysX_Manager);
 	SAFE_RELEASE(m_pLevel_Manager);
 	SAFE_RELEASE(m_pPrototype_Manager);
 	SAFE_RELEASE(m_pGraphic_Device);

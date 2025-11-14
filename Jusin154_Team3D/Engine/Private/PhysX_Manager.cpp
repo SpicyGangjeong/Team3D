@@ -5,19 +5,6 @@
 #include "RigidBody.h"
 #include "Mesh.h"
 
-static PSX::PxTransform XMWorldToPx_NoScale(const _matrix& WorldMatrix)
-{
-	_vector vPos, vRotq, vScale;
-	XMMatrixDecompose(&vScale, &vRotq, &vPos, WorldMatrix);
-
-	vRotq = XMQuaternionNormalize(vRotq);
-
-	PSX::PxTransform out;
-	XMStoreFloat3((_float3*)&out.p, vPos);
-	XMStoreFloat4((_float4*)&out.q, vRotq);
-	return out;
-}
-
 CPhysX_Manager::CPhysX_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) :
 	m_pDevice(pDevice),
 	m_pContext(pContext),
@@ -76,8 +63,7 @@ PSX::PxRigidDynamic* CPhysX_Manager::Add_DynamicActor(CRigidBody& RigidBody)
 		PSX::PxRigidBodyExt::updateMassAndInertia(*pActorDynamic, (PSX::PxReal)RigidBody.Get_Density());
 	}
 
-	m_RigidBodys.emplace_back(&RigidBody, pActorDynamic);
-	m_pScene->addActor(*pActorDynamic);
+	Attach_Actor(RigidBody, *pActorDynamic);
 
 	return pActorDynamic;
 }
@@ -132,8 +118,8 @@ PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody& RigidBody)
 	pShape->setContactOffset(RigidBody.Get_ContactOffset());
 	pShape->setRestOffset(0.f);
 	
-	m_RigidBodys.emplace_back(&RigidBody, pActor);
-	m_pScene->addActor(*pActor);
+
+	Attach_Actor(RigidBody, *pActor);
 
 	return pActor;
 }
@@ -374,6 +360,32 @@ void CPhysX_Manager::ClearScene()
 	for (auto& pObject : m_RigidBodys) {
 		pObject.second->release();
 	} m_RigidBodys.clear();
+}
+void CPhysX_Manager::Attach_Actor(CRigidBody& RigidBody, PSX::PxActor& Actor)
+{
+	if (m_pScene == nullptr){
+		return;
+	}
+
+	m_RigidBodys.emplace_back(&RigidBody, &Actor);
+	m_pScene->addActor(Actor);
+}
+
+void CPhysX_Manager::Detach_Actor(CRigidBody& RigidBody, PSX::PxActor*& pActor)
+{
+	if (m_pScene == nullptr){
+		return;
+	}
+
+	list<pair<CRigidBody*, PSX::PxActor*>>::iterator iter = m_RigidBodys.begin();
+	for (; iter != m_RigidBodys.end(); ++iter){
+		if ((*iter).second == pActor) {
+			m_RigidBodys.erase(iter);
+			break;
+		}
+	}
+	
+	m_pScene->removeActor(*pActor);
 }
 
 PSX::PxController* CPhysX_Manager::Add_CapsuleController(PSX::PxCapsuleControllerDesc& Desc)
