@@ -28,15 +28,13 @@ CPhysX_Manager::CPhysX_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 	SAFE_ADDREF(m_pGameInstance);
 }
 
-const PSX::PxRigidDynamic* CPhysX_Manager::Add_DynamicActor(CRigidBody& RigidBody)
+PSX::PxRigidDynamic* CPhysX_Manager::Add_DynamicActor(CRigidBody& RigidBody)
 {
 	_matrix WorldMatrix = RigidBody.Get_TransformPtr()->Get_XMWorldMatrix();
 	PSX::PxTransform pxWorldMatrix = XMWorldToPx_NoScale(WorldMatrix);
 
 	// PxRigidDynamic		씬의 동적 바디 인터페이스
 	PSX::PxRigidDynamic* pActorDynamic = m_pPhysics->createRigidDynamic(pxWorldMatrix);
-	pActorDynamic->userData = &RigidBody;
-
 	PSX::PxShape* pShape = nullptr;
 	PSX::PxGeometryHolder geoHolder = {};
 
@@ -84,15 +82,13 @@ const PSX::PxRigidDynamic* CPhysX_Manager::Add_DynamicActor(CRigidBody& RigidBod
 	return pActorDynamic;
 }
 
-const PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody& RigidBody)
+PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody& RigidBody)
 {
 	_matrix WorldMatrix = RigidBody.Get_TransformPtr()->Get_XMWorldMatrix();
 	PSX::PxTransform pxWorldMatrix = XMWorldToPx_NoScale(WorldMatrix);
 
 	// PxRigidStatic		씬의 정적 바디 인터페이스
 	PSX::PxRigidStatic* pActor = m_pPhysics->createRigidStatic(pxWorldMatrix);
-	pActor->userData = &RigidBody;
-
 	PSX::PxShape* pShape = { nullptr };
 	PSX::PxTriangleMesh* pPxMesh = Find_TriangleMesh(RigidBody.Get_PxMeshKey());
 	PSX::PxTriangleMeshGeometry* pPxMeshGeometry = { nullptr };
@@ -330,15 +326,18 @@ void CPhysX_Manager::Update_Dynamic_ActiveActors()
 	PSX::PxActor** ppActiveActors = m_pScene->getActiveActors(iNumActiveActor);
 
 	for (PSX::PxU32 i = 0; i < iNumActiveActor; ++i) {
+		PhsXUserData* pUserData = (PhsXUserData*)ppActiveActors[i]->userData;
 		PSX::PxRigidDynamic* pActorDynamic = ppActiveActors[i]->is<PSX::PxRigidDynamic>();
-
 		if (nullptr != pActorDynamic) {
 			if (nullptr == ppActiveActors[i]->userData) {
 				continue;
 			}
-			CTransform* pTransform = ((CRigidBody*)ppActiveActors[i]->userData)->Get_TransformPtr();
+			CTransform* pTransform = pUserData->pOwner->Get_Component<CTransform>();
 
-			PSX::PxTransform pPrevPxTransform;
+
+			// PSX::PxTransform pPrevPxTransform = pUserData->m_BeforeMatrix;
+			// XMMatrixDecompose(nullptr, (_vector*)&pPrevPxTransform.q, (_vector*)&pPrevPxTransform.p, XMLoadFloat4x4(&pUserData->m_BeforeMatrix));
+
 			PSX::PxTransform pPxTransform = pActorDynamic->getGlobalPose();
 			_float3 vOriginalScale = pTransform->Get_Scale();
 			_matrix WorldMatrix = {};
@@ -354,21 +353,21 @@ void CPhysX_Manager::Update_Dynamic_ActiveActors()
 	//}
 }
 
-void CPhysX_Manager::Update_Dynamic_AllActors()
-{
-	for (pair<CRigidBody*, PSX::PxActor*>& pairActors : m_RigidBodys) {
-		PSX::PxRigidDynamic* pActorDynamic = pairActors.second->is<PSX::PxRigidDynamic>();
-		if (nullptr != pActorDynamic) {
-			CTransform* pTransform = ((CRigidBody*)(pActorDynamic->userData))->Get_TransformPtr();
-
-			PSX::PxTransform pxTransform = pActorDynamic->getGlobalPose();
-			_float3 vOriginalScale = pTransform->Get_Scale();
-			_matrix WorldMatrix = {};
-			WorldMatrix = XMMatrixAffineTransformation(XMLoadFloat3(&vOriginalScale), XMVectorZero(), XMLoadFloat4((_float4*)&pxTransform.q), XMLoadFloat3((_float3*)&pxTransform.p));
-			pTransform->Set_WorldMatrix(WorldMatrix);
-		}
-	}
-}
+//void CPhysX_Manager::Update_Dynamic_AllActors()
+//{
+//	for (pair<CRigidBody*, PSX::PxActor*>& pairActors : m_RigidBodys) {
+//		PSX::PxRigidDynamic* pActorDynamic = pairActors.second->is<PSX::PxRigidDynamic>();
+//		if (nullptr != pActorDynamic) {
+//			CTransform* pTransform = ((CRigidBody*)(pActorDynamic->userData))->Get_TransformPtr();
+//
+//			PSX::PxTransform pxTransform = pActorDynamic->getGlobalPose();
+//			_float3 vOriginalScale = pTransform->Get_Scale();
+//			_matrix WorldMatrix = {};
+//			WorldMatrix = XMMatrixAffineTransformation(XMLoadFloat3(&vOriginalScale), XMVectorZero(), XMLoadFloat4((_float4*)&pxTransform.q), XMLoadFloat3((_float3*)&pxTransform.p));
+//			pTransform->Set_WorldMatrix(WorldMatrix);
+//		}
+//	}
+//}
 
 void CPhysX_Manager::ClearScene()
 {
@@ -433,7 +432,6 @@ HRESULT CPhysX_Manager::Initialize()
 		assert(false);
 	}
 
-
 	{ // 씬 세팅
 		m_ToleranceScale.length = 1.f; // 1 meter
 		m_ToleranceScale.speed = GRAVITY; // 
@@ -453,17 +451,41 @@ HRESULT CPhysX_Manager::Initialize()
 			return E_FAIL;
 		}
 		sceneDesc.cpuDispatcher = m_pDispatcher;
+		sceneDesc.filterShader = PSX::PxDefaultSimulationFilterShader; // 레이어 충돌, 오브젝트에 속성을 주고 복잡한 필터링 충돌 식
+		sceneDesc.flags =
+			PSX::PxSceneFlag::eENABLE_PCM // 기본 true, 현대적인 충돌시스템 적용
+			| PSX::PxSceneFlag::eENABLE_ACTIVE_ACTORS // 현재 움직임이 있는 액터만 가져옴
+			| PSX::PxSceneFlag::eEXCLUDE_KINEMATICS_FROM_ACTIVE_ACTORS // 그중에 키네틱은 뺌
+			| PSX::PxSceneFlag::eENABLE_CCD // CCD 기본플래그, 키면 비쌈. 단일오브젝트만 켤 수 있으니 선택적으로 고려
+			| PSX::PxSceneFlag::eDISABLE_CCD_RESWEEP // CCD 옵션플래그, 정확도 낮추고 비용 아낌
+			//| PSX::PxSceneFlag::eDISABLE_CONTACT_REPORT_BUFFER_RESIZE // 접촉 리포트버퍼 리사이즈 금지 -> 보통 끔
+			//| PSX::PxSceneFlag::eDISABLE_CONTACT_CACHE // 접촉 캐시를 금지 -> 그냥 켜두자, 캐시 있는게 보통 더 낫다
+			//| PSX::PxSceneFlag::eREQUIRE_RW_LOCK // 멀티스레딩 환경에서 혹시라도 락 걸고 접근하지 않아 발생할 일을 제거, 
+			//| PSX::PxSceneFlag::eENABLE_STABILIZATION // 물체가 얽힌 상황에서 불안정한걸 방지. 추가비용인듯
+			//| PSX::PxSceneFlag::eENABLE_AVERAGE_POINT // 이해 못하겠음
+			//| PSX::PxSceneFlag::eEnable_GPU_Dynamics // 피직스 그래픽가속 설정. 여기선 세팅 안돼서 비활성화ㅏ
+			//| PSX::PxSceneFlag::eEnable_Direct_GPU_API // 직접 그래픽버퍼를 다루게끔 설정
+			//| PSX::PxSceneFlag::eEnable_Enhanced_Determinism // 중간에 액터 추가해도 결과가 바뀌지 않는 결정론 수준 향상, 리플레이기능 ㅇㅇ
+			//| PSX::PxSceneFlag::eENABLE_FRICTION_EVERY_ITERATION // 마찰 꼐산 추가
+			//| PSX::PxSceneFlag::eENABLE_EXTERNAL_FORCES_EVERY_ITERATION_TGS // 중력 나눠서 여러번 적용
+			//| PSX::PxSceneFlag::eENABLE_PCM // 기본 true
+			//| PSX::PxSceneFlag::eENABLE_BODY_ACCELERATIONS // 선형 각가속도 값을 쿼리가능하도록 설정
+			//| PSX::PxSceneFlag::eEnable_solver_residual_reporting // 고급 디버깅, 연구 용
+			//| PSX::PxSceneFlag::eSOLVE_ARTICULATION_CONTACT_LAST 물리 관절 처리 시나리오 순서 변경
+			;
 
-		sceneDesc.filterShader = PSX::PxDefaultSimulationFilterShader;
-
-		sceneDesc.flags = PSX::PxSceneFlag::eENABLE_PCM | PSX::PxSceneFlag::eENABLE_CCD| PSX::PxSceneFlag::eENABLE_ACTIVE_ACTORS | PSX::PxSceneFlag::eEXCLUDE_KINEMATICS_FROM_ACTIVE_ACTORS;
 		if (false == sceneDesc.isValid()) {
 			assert(false);
 			return E_FAIL;
 		}
+
 		m_pScene = m_pPhysics->createScene(sceneDesc);
+
+		// CCT
 		m_pCCTManager = PxCreateControllerManager(*m_pScene);
-		m_pCCTManager->setOverlapRecoveryModule(false);
+		m_pCCTManager->setOverlapRecoveryModule(true); // 복구모듈은 하이트필드에는 적용되지 않음, 오직 스태틱만 대상
+		m_pCCTManager->setPreciseSweeps(true); // 정밀 스윕
+		m_pCCTManager->setPreventVerticalSlidingAgainstCeiling(false); // 천장타고 슬라이딩 허용 비허용
 	}
 
 	// 디버그서버의 클라 세팅

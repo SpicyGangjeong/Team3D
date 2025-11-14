@@ -63,9 +63,10 @@ private:
 	PSX::PxRigidBodyFlags	m_ePxRigidBodyFlags = {};
 	PXMATERIAL				m_eMatType = { PXMATERIAL::END };
 	_float					m_fContactOffset = { 0.05f };
-	const PSX::PxActor*		m_pRigidBody = { nullptr };		// 실제 시뮬레이션을 도는 본체
+	PSX::PxActor*			m_pRigidBody = { nullptr };		// 실제 시뮬레이션을 도는 본체
 
 	CTransform*				m_pTransform = { nullptr };
+	PhsXUserData			m_tagData = {};
 
 #pragma region DYNAMIC
 	PSX::PxShapeFlags		m_ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
@@ -86,6 +87,7 @@ private:
 private:
 	HRESULT Initialize_Prototype(RIGIDBODY_PROTOTYPEDESC& Desc);
 	HRESULT Initialize(void* pArg);
+	HRESULT Initialize_UserData();
 #ifdef _DEBUG
 	HRESULT Add_DebugShape();
 #endif

@@ -4,10 +4,12 @@
 NS_BEGIN(Engine)
 class CTransform;
 class ENGINE_DLL CCharacter_Controller final :
-	public CComponent
+	public CComponent, 
 {
 	/* dev-treadmill.tistory.com/158 */
 	/* dev-treadmill.tistory.com/159 */
+	// 기본적으로 아무 힘도 받지 않는, 주지 않는 놈임
+	// kinematic 기반임
 public:
 #pragma region STRUCT
 	struct CapsuleInfo
@@ -33,7 +35,7 @@ public:
 		
 		union
 		{
-			_float3 vBoxSize; // 박스는 AABB임
+			_float3 vBoxSize; // CCT박스는 회전없는 AABB임
 			CapsuleInfo tCapsuleInfo;
 		};
 	}Character_Controller_DESC;
@@ -42,21 +44,21 @@ private:
 	CCharacter_Controller(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CCharacter_Controller(const CCharacter_Controller& rhs);
 	virtual ~CCharacter_Controller() = default;
+
 public:
 #ifdef _DEBUG
 	virtual HRESULT Render() override;
 #endif
 
 	_float			Get_ContactOffset() const { return m_pController->getContactOffset(); }
-	void			Set_ContactOffset(_float fValue) const { return m_pController->setContactOffset((PSX::PxF32)fValue); }
+	void			Set_ContactOffset(_float fValue) { return m_pController->setContactOffset((PSX::PxF32)fValue); }
 
-	void			Move(_float fTimeDelta);			// 이동
+	void			Move(_float fTimeDelta);		// 이동 // 충돌보정만 있음, 
 	void			Set_Position(_fvector vNewPos);	// 순간이동
 	_vector			Get_Position();
-	_float3			Get_FootPosition();				// ContactOffset이 고려된 발바닥 위치( 실제보다 더 아래에 위치한다는 뜻 )
+	_float3			Get_FootPosition();				// ContactOffset이 고려된 발바닥 위치( 실제보다 바닥 위치가 더 아래에 위치한다는 뜻 )
 
-
-	void			Resize_Volume(_float fHeight); // 높이를 수정하고 바닥에 붙임
+	void			Resize_Volume(_float fHeight);	// 높이를 수정하고 바닥에 붙임
 	void			Modify_Volume(_float3 fVolume);
 	_float3			Get_Volume();
 
@@ -65,12 +67,12 @@ private:
 	PSX::PxController*		m_pController = { nullptr };
 	CTransform*				m_pTransform = { nullptr };
 	_bool					m_bAutoStepping = { false };
-	_float					m_fSlopeLimit = { 0.f }; // cosf
+	_float					m_fSlopeLimit = { 0.f }; // cosf각도, 오르막 경사각 제한. ( 추가설정 필요함 )
+	PhsXUserData			m_tagData = {};
 	
-	
-	function<void()> m_funcHitCallback = { nullptr };
-	function<void()> m_funcBehaviorCallback = { nullptr };
-	PSX::PxControllerCollisionFlags m_eBeforeCollisionFlags = {};;
+	function<void()>		m_funcHitCallback = { nullptr };
+	function<void()>		m_funcBehaviorCallback = { nullptr };
+	PSX::PxControllerCollisionFlags m_eBeforeCollisionFlags = {};
 #ifdef _DEBUG
 	unique_ptr<GeometricPrimitive> m_pMainShape = { nullptr };
 	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };
@@ -79,6 +81,10 @@ private:
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
+#ifdef _DEBUG
+	virtual HRESULT Debug_Initialize();
+#endif // _DEBUG
+
 
 	_bool Check_Overlap();
 
