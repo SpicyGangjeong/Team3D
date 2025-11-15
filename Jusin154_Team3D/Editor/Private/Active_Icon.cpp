@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Active_Icon.h"
 #include "GameInstance.h"
 
@@ -64,6 +64,7 @@ void CActive_Icon::Update(_float fTimeDelta)
 	{
 		return;
 	}
+	m_fTime += fTimeDelta * m_fTimeMult;
 
 	m_fOwnerAlpha = static_cast<CUIObject*>(m_pOwner)->Get_Alpha();
 	m_fCanvasAlpha = static_cast<CUIObject*>(m_pOwner)->Get_OwnerAlpha();
@@ -91,7 +92,16 @@ void CActive_Icon::Update(_float fTimeDelta)
 		}
 	}
 
-	m_fTime += fTimeDelta * m_fTimeMult;
+	if (m_bLerpOn == true)
+	{
+		Start_Lerp(fTimeDelta);
+	}
+
+	if (m_bLerpOff == true)
+	{
+		Reset_Pos(fTimeDelta);
+	}
+
 	__super::Update(fTimeDelta);
 }
 

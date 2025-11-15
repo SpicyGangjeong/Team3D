@@ -183,6 +183,12 @@ typedef struct tagVertexInstance_Particle
 	_float2			vLifeTime = {};
 }VTX_INSTANCE_PARTICLE;
 
+typedef struct tagVertexInstance_UI
+{
+	_float2 fSize = {};
+	_float2 fPos = {};
+}VTX_INSTANCE_UI;
+
 typedef struct tagVertexBlock
 {
 	_float3 vPosition = {};

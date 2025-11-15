@@ -1,4 +1,4 @@
-#include "pch.h"
+Ôªø#include "pch.h"
 #include "IMGUIUI.h"
 #include "UIObject.h"
 #include "GamePlay_Canvas.h"
@@ -38,7 +38,7 @@ void CIMGUIUI::PanelwstringTostring(vector<std::wstring>& panelNames)
 
 	for (auto& wname : panelNames)
 	{
-		// wstring -> UTF-8 string ∫Ø»Ø
+		// wstring -> UTF-8 string Î≥ÄÌôò
 		int size = WideCharToMultiByte(CP_UTF8, 0,
 			wname.c_str(), (int)wname.size(),
 			nullptr, 0, nullptr, nullptr);
@@ -49,11 +49,11 @@ void CIMGUIUI::PanelwstringTostring(vector<std::wstring>& panelNames)
 			wname.c_str(), (int)wname.size(),
 			&result[0], size, nullptr, nullptr);
 
-		// ∫Ø»Øµ» string ¿˙¿Â
+		// Î≥ÄÌôòÎêú string Ï†ÄÏû•
 		m_iPanelNamestring.push_back(std::move(result));
 	}
 
-	// vector<const char*> æ˜µ•¿Ã∆Æ
+	// vector<const char*> ÏóÖÎç∞Ïù¥Ìä∏
 	for (auto& str : m_iPanelNamestring)
 		m_iPanelName.push_back(str.c_str());
 
@@ -70,7 +70,7 @@ void CIMGUIUI::ElementwstringTostring(vector<wstring>& panelNames)
 
 	for (auto& wname : panelNames)
 	{
-		// wstring -> UTF-8 string ∫Ø»Ø
+		// wstring -> UTF-8 string Î≥ÄÌôò
 		int size = WideCharToMultiByte(CP_UTF8, 0,
 			wname.c_str(), (int)wname.size(),
 			nullptr, 0, nullptr, nullptr);
@@ -81,11 +81,11 @@ void CIMGUIUI::ElementwstringTostring(vector<wstring>& panelNames)
 			wname.c_str(), (int)wname.size(),
 			&result[0], size, nullptr, nullptr);
 
-		// ∫Ø»Øµ» string ¿˙¿Â
+		// Î≥ÄÌôòÎêú string Ï†ÄÏû•
 		m_pElementNamestring.push_back(std::move(result));
 	}
 
-	// vector<const char*> æ˜µ•¿Ã∆Æ
+	// vector<const char*> ÏóÖÎç∞Ïù¥Ìä∏
 	for (auto& str : m_pElementNamestring)
 		m_pElementName.push_back(str.c_str());
 
@@ -139,6 +139,11 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		m_fRight = static_cast<CElementObject*>(m_pElementObject)->Get_Nine_Slice_Right();
 		m_fTop = static_cast<CElementObject*>(m_pElementObject)->Get_Nine_Slice_Top();
 		m_fBottom = static_cast<CElementObject*>(m_pElementObject)->Get_Nine_Slice_Bottom();
+
+		m_vLerpPosition = static_cast<CElementObject*>(m_pElementObject)->Get_Lerp_Pos();
+		m_fLerpX = static_cast<CElementObject*>(m_pElementObject)->Get_Lerp_Pos().m128_f32[0];
+		m_fLerpY = static_cast<CElementObject*>(m_pElementObject)->Get_Lerp_Pos().m128_f32[1];
+		m_fMoveSpeed = static_cast<CElementObject*>(m_pElementObject)->Get_Speed();
 	}
 	GUI::Begin("Current_PanelObject_Info");
 	if (m_pGamePlay_Canvas != nullptr)
@@ -347,23 +352,48 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		if (GUI::DragFloat("Left", &m_fLeft, 0.1f, 0, m_fSize.x))
 		{
 			static_cast<CElementObject*>(m_pElementObject)->Nine_Slice_Left(m_fLeft);
-		}		
-		
-		if (GUI::DragFloat("Right", &m_fRight, 0.1f,0.5f, m_fSize.x))
+		}
+
+		if (GUI::DragFloat("Right", &m_fRight, 0.1f, 0.5f, m_fSize.x))
 		{
 			static_cast<CElementObject*>(m_pElementObject)->Nine_Slice_Right(m_fRight);
-		}		
-		
+		}
+
 		if (GUI::DragFloat("Top", &m_fTop, 0.1f, 0, m_fSize.y))
 		{
 			static_cast<CElementObject*>(m_pElementObject)->Nine_Slice_Top(m_fTop);
-		}		
-		
-		if (GUI::DragFloat("Bottom", &m_fBottom, 0.1f,0, m_fSize.y))
+		}
+
+		if (GUI::DragFloat("Bottom", &m_fBottom, 0.1f, 0, m_fSize.y))
 		{
 			static_cast<CElementObject*>(m_pElementObject)->Nine_Slice_Bottom(m_fBottom);
 		}
 
+		GUI::Text("Lerp");
+		GUI::Text("Lerp Position : %.1f, %.1f", m_vLerpPosition.m128_f32[0], m_vLerpPosition.m128_f32[1]);
+		if (GUI::DragFloat("LerpX", &m_fLerpX, 0.1f, -1920.f, 1920.f))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->Lerp_PosX(m_fLerpX);
+		}
+
+		if (GUI::DragFloat("LerpY", &m_fLerpY, 0.1f, -1080.f, 1080.f))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->Lerp_PosY(m_fLerpY);
+		}
+		if (GUI::Button("LerpOn"))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->LerpOn();
+		}
+		if (GUI::Button("LerpOut"))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->LerpOff();
+		}
+
+		GUI::Text("Speed %.1f", m_fMoveSpeed);
+		if (GUI::DragFloat("Speed", &m_fMoveSpeed, 0.1f, 0.f, 100.f))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->Set_Speed(m_fMoveSpeed);
+		}
 	}
 	GUI::End();
 }

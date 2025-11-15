@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Editor_Define.h"
 #include "GameObject.h"
@@ -45,6 +45,11 @@ private:
 	_float					m_fTimeMult{};
 	_float					m_fAlpha{};
 	_float2					m_UV{};
+
+	_vector					m_vLerpPosition{};
+	_float					m_fLerpX{};
+	_float					m_fLerpY{};
+	_float					m_fMoveSpeed{};
 
 	_float					m_fLeft{};
 	_float					m_fRight{};

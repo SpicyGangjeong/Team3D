@@ -38,6 +38,9 @@
 #include "LoadingWidget.h"
 #include "LoadingWidget_Flame.h"
 
+#include "Action_Panel.h"
+#include "Spell_Slot.h"
+
 #include "IMGUIUI.h"
 
 #pragma endregion
@@ -252,6 +255,22 @@ HRESULT CLoader::Loading_For_UI()
 
 		});
 
+	Asset_FileLoad("../Bin/Resources/Textures/Action", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
+		{
+
+			_string strFilePath = pFilePath;
+			_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
+
+
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), wstrFileName,
+				CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
+				return E_FAIL;
+			}
+
+			return S_OK;
+
+		});
+
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Cursor"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Cursor/UI_T_CursorRings.dds"), 0)))) {
 		return E_FAIL;
@@ -319,6 +338,14 @@ HRESULT CLoader::Loading_For_UI()
 		});
 
 	m_strMessage = TEXT("Model Loading..");
+
+	CVIBuffer_UI_Instance::UI_INSTANCE_DESC		UIDesc{};
+
+	UIDesc.UINum = 4;
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_ActionSkillRect"),
+		CVIBuffer_UI_Instance::Create(m_pDevice, m_pContext, &UIDesc))))
+		return E_FAIL;
 
 	m_strMessage = TEXT("Shader Loading..");
 
@@ -388,6 +415,16 @@ HRESULT CLoader::Loading_For_UI()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CMiniMap_TrimBorder>(g_iStaticLevel, CMiniMap_TrimBorder::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CAction_Panel>(g_iStaticLevel, CAction_Panel::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_Slot>(g_iStaticLevel, CSpell_Slot::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
@@ -541,10 +578,10 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 		return E_FAIL;
 	}
 	m_strMessage = TEXT("Model Loading..");
-	
+
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Box"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Box/Box.fbx", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixIdentity())))){
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Box/Box.fbx", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixIdentity())))) {
 		return E_FAIL;
 	}
 
@@ -555,7 +592,7 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 	//for (const auto& file : filesystem::directory_iterator("..\\Bin\\Resources\\Models\\MapMesh"))
 	for (const auto& file : filesystem::directory_iterator("C:\\Users\\kimnuri\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Terrain"))
 	{
-		if (file.is_directory()){
+		if (file.is_directory()) {
 			continue;
 		}
 
@@ -575,7 +612,7 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 		CModel* pModel = CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, szFilePath);
 
 		/*For Prototype_Component_Model_*/
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, strFileName, pModel ))){
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, strFileName, pModel))) {
 			return E_FAIL;
 		}
 
@@ -600,7 +637,7 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 			}
 		}
 	}
-	if (FAILED(m_pGameInstance->Add_Prototype<CMapObject_Manager>(g_iStaticLevel, CMapObject_Manager::Create(m_pDevice, m_pContext, ModelPrototypeTags, ModelPrototypePath)))){
+	if (FAILED(m_pGameInstance->Add_Prototype<CMapObject_Manager>(g_iStaticLevel, CMapObject_Manager::Create(m_pDevice, m_pContext, ModelPrototypeTags, ModelPrototypePath)))) {
 		return E_FAIL;
 	}
 
@@ -620,10 +657,10 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXBox>(g_iStaticLevel, CDummy_PhysXBox::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXPlayable>(g_iStaticLevel, CDummy_PhysXPlayable::Create(m_pDevice, m_pContext)))){
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXPlayable>(g_iStaticLevel, CDummy_PhysXPlayable::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXMesh>(g_iStaticLevel, CDummy_PhysXMesh::Create(m_pDevice, m_pContext)))){
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXMesh>(g_iStaticLevel, CDummy_PhysXMesh::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
@@ -826,7 +863,7 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 	//for (const auto& file : filesystem::directory_iterator("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Meshes"))
 	for (const auto& file : filesystem::directory_iterator("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogwarts\\SUB_GreatHall\\Static_Mesh\\Kit_INT"))
-	//for (const auto& file : filesystem::directory_iterator("C:\\Users\\kimnuri\\Desktop\\Hogwart\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Terrain"))
+		//for (const auto& file : filesystem::directory_iterator("C:\\Users\\kimnuri\\Desktop\\Hogwart\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Terrain"))
 	{
 		if (file.is_directory())
 			continue;
@@ -836,7 +873,7 @@ HRESULT CLoader::Loading_For_MapViewer()
 		//if (strcmp(ext.c_str(), ".bin")){
 		//	continue;
 		//}
-		if (strcmp(ext.c_str(), ".fbx")){
+		if (strcmp(ext.c_str(), ".fbx")) {
 			continue;
 		}
 

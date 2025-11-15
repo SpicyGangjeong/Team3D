@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "MissionBanner_Border.h"
 #include "GameInstance.h"
 
@@ -178,7 +178,7 @@ HRESULT CMissionBanner_Border::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCurrent_Size", &m_fCurrent_Posigion, sizeof(_float2))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCurrent_Size", &m_fCurrent_Position, sizeof(_float2))))
 	{
 		return E_FAIL;
 	}

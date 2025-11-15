@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "PanelObject.h"
 
 CPanelObject::CPanelObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -47,7 +47,7 @@ void CPanelObject::Update(_float fTimeDelta)
 		-m_fY + m_pOwner->Get_WorldPostion().m128_f32[1],
 		0.f, 1.f));
 
-	m_fCurrent_Posigion = XMVectorSet(m_fX, m_fY, 0.f, 1.f);
+	m_fCurrent_Position = XMVectorSet(m_fX, m_fY, 0.f, 1.f);
 
 	m_fOwnerAlpha = static_cast<CUIObject*>(m_pOwner)->Get_Alpha();
 
@@ -176,5 +176,5 @@ void CPanelObject::Free()
 
 	m_Elements.clear();
 	m_ElementName.clear();
-	m_Elements_map.clear(); // map ºñ¿ì±â
+	m_Elements_map.clear(); // map ë¹„ìš°ê¸°
 }

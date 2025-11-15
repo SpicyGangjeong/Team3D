@@ -139,9 +139,6 @@
     <Filter Include="02.Element\02.Component\06.Model">
       <UniqueIdentifier>{bcf90b04-c793-4f99-b64d-3f0321d9a8ce}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Element\01.GameObject\01.PartObject">
-      <UniqueIdentifier>{b3742605-653a-4bdf-bad9-329d993e7f52}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Element\01.GameObject\00.ContainerObject">
       <UniqueIdentifier>{acf78d53-8123-45d9-91d4-c038c6cc4872}</UniqueIdentifier>
     </Filter>
@@ -249,6 +246,12 @@
     </Filter>
     <Filter Include="02.Element\01.GameObject\50.UI\ElementObject">
       <UniqueIdentifier>{1eafb189-2d0c-4ad7-8690-10a517668206}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\01.GameObject\00.ContainerObject\01.PartObject">
+      <UniqueIdentifier>{b3742605-653a-4bdf-bad9-329d993e7f52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\02.VIBuffer\Instance\UI_nstance">
+      <UniqueIdentifier>{3266e85d-44bb-4144-bf85-fadc48d85a38}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -391,7 +394,7 @@
       <Filter>02.Element\01.GameObject\00.ContainerObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PartObject.cpp">
-      <Filter>02.Element\01.GameObject\01.PartObject</Filter>
+      <Filter>02.Element\01.GameObject\00.ContainerObject\01.PartObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Navigation.cpp">
       <Filter>02.Element\02.Component\05.Navigation</Filter>
@@ -464,6 +467,12 @@
     </ClCompile>
     <ClCompile Include="..\private\PanelObject.cpp">
       <Filter>02.Element\01.GameObject\50.UI\PanelObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_UI_Instance.cpp">
+      <Filter>02.Element\02.Component\02.VIBuffer\Instance\UI_nstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_Instance.cpp">
+      <Filter>02.Element\02.Component\02.VIBuffer\Instance</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -972,7 +981,7 @@
       <Filter>02.Element\01.GameObject\00.ContainerObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PartObject.h">
-      <Filter>02.Element\01.GameObject\01.PartObject</Filter>
+      <Filter>02.Element\01.GameObject\00.ContainerObject\01.PartObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Navigation.h">
       <Filter>02.Element\02.Component\05.Navigation</Filter>
@@ -1045,6 +1054,12 @@
     </ClInclude>
     <ClInclude Include="..\public\PanelObject.h">
       <Filter>02.Element\01.GameObject\50.UI\PanelObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_UI_Instance.h">
+      <Filter>02.Element\02.Component\02.VIBuffer\Instance\UI_nstance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_Instance.h">
+      <Filter>02.Element\02.Component\02.VIBuffer\Instance</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

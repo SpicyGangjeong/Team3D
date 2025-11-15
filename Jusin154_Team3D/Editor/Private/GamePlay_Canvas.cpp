@@ -1,9 +1,10 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "GamePlay_Canvas.h"
 #include "GameInstance.h"
 #include "Mission_Panel.h"
 #include "MiniMap_Panel.h"
 #include "Loading_Panel.h"
+#include "Action_Panel.h"
 #include "Mouse_Cursor.h"
 
 CGamePlay_Canvas::CGamePlay_Canvas(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -92,8 +93,6 @@ HRESULT CGamePlay_Canvas::Ready_Components(void* pArg)
 
 HRESULT CGamePlay_Canvas::Ready_Panel(void* pArg)
 {
-	CGameObject* asdf = this;
-
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLoading_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CLoading_Panel**>(&m_pLoading_Panel))))
 	{
 		return E_FAIL;
@@ -111,6 +110,14 @@ HRESULT CGamePlay_Canvas::Ready_Panel(void* pArg)
 		return E_FAIL;
 	}
 	Add_Panel(TEXT("MissionPanel"), m_pMission_Panel);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CAction_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CAction_Panel**>(&m_pAction_Panel))))
+	{
+		return E_FAIL;
+	}
+	Add_Panel(TEXT("ActionPanel"), m_pAction_Panel);
+
+
 	return S_OK;
 }
 

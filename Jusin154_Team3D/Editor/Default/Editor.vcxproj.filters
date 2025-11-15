@@ -196,6 +196,12 @@
     <Filter Include="02.GameObjects\Dummys\DummySkyBox">
       <UniqueIdentifier>{12d17342-7cb4-46be-8243-9e1864496338}</UniqueIdentifier>
     </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Action_Panel">
+      <UniqueIdentifier>{69af6531-b479-4496-9e9b-245423844204}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\Spell_Slot">
+      <UniqueIdentifier>{09ea24b7-2c4b-430c-826b-bdfdc63c522a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -396,6 +402,12 @@
     <ClInclude Include="..\Public\Information.h">
       <Filter>03.Information</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Action_Panel.h">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Spell_Slot.h">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\Spell_Slot</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -591,6 +603,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Information.cpp">
       <Filter>03.Information</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Action_Panel.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Spell_Slot.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\Spell_Slot</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

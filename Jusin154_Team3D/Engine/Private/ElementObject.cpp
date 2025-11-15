@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "ElementObject.h"
 
 CElementObject::CElementObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -40,8 +40,9 @@ void CElementObject::Update(_float fTimeDelta)
 		-m_fY + m_pOwner->Get_WorldPostion().m128_f32[1],
 		0.f, 1.f));
 
-	m_fCurrent_Posigion = XMVectorSet(m_fX, m_fY, 0.f, 1.f);
+	m_fCurrent_Position = XMVectorSet(m_fX, m_fY, 0.f, 1.f);
 	m_vNine_Slice = _float4(m_fLeft, m_fRight, m_fTop, m_fBottom);
+	m_vLerp_Position = XMVectorSet(m_fLerpX, m_fLerpY, 0.f, 1.f);
 }
 
 void CElementObject::Late_Update(_float fTimeDelta)
@@ -118,6 +119,23 @@ _float CElementObject::Get_Nine_Slice_Top()
 _float CElementObject::Get_Nine_Slice_Bottom()
 {
 	return m_fBottom;
+}
+
+void CElementObject::Start_Lerp(_float fTimeDelta, _bool Alpha)
+{
+	m_fX = MovDir(m_fCurrent_Position.m128_f32[0], m_vLerp_Position.m128_f32[0], fTimeDelta);
+	m_fY = MovDir(m_fCurrent_Position.m128_f32[1], m_vLerp_Position.m128_f32[1], fTimeDelta);
+}
+
+void CElementObject::Reset_Pos(_float fTimeDelta, _bool Alpha)
+{
+	m_fX = MovDir(m_fCurrent_Position.m128_f32[0], m_fOrigin_Position.x, fTimeDelta);
+	m_fY = MovDir(m_fCurrent_Position.m128_f32[1], m_fOrigin_Position.y, fTimeDelta);
+}
+
+_vector CElementObject::Get_Lerp_Pos()
+{
+	return m_vLerp_Position;
 }
 
 HRESULT CElementObject::Ready_Components(void* pArg)

@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CanvasObject.h"
 
 CCanvasObject::CCanvasObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -43,7 +43,7 @@ void CCanvasObject::Update(_float fTimeDelta)
 
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_fX - m_fWinSizeX * 0.5f, -m_fY + m_fWinSizeY * 0.5f, 0.f, 1.f));
 
-	m_fCurrent_Posigion = XMVectorSet(m_fX, m_fY, 0.f, 1.f);
+	m_fCurrent_Position = XMVectorSet(m_fX, m_fY, 0.f, 1.f);
 
 	if (m_bFadeIn == true)
 	{
@@ -144,5 +144,5 @@ void CCanvasObject::Free()
 
 	m_Panels.clear();
 	m_PanelNames.clear();
-	m_Panels_map.clear(); // map ºñ¿ì±â
+	m_Panels_map.clear(); // map ë¹„ìš°ê¸°
 }
