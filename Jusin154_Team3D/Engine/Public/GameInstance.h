@@ -182,8 +182,9 @@ public:
 #pragma region PhysX_Manager
 	PSX::PxMaterial* Create_Material(_float3* vMatInfo);
 	void RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh);
-	PSX::PxRigidDynamic*	Add_DynamicActor(CRigidBody_Dynamic& RigidBody);
-	PSX::PxRigidStatic*		Add_StaticActor(CRigidBody_Static& RigidBody);
+	PSX::PxRigidDynamic* Add_DynamicActor(CRigidBody_Dynamic& RigidBody);
+	PSX::PxRigidStatic* Add_StaticActor(CRigidBody_Static& RigidBody);
+
 
 	PSX::PxController*	Add_CapsuleController(PSX::PxCapsuleControllerDesc& Desc);
 	PSX::PxController*	Add_BoxController(PSX::PxBoxControllerDesc& Desc);
