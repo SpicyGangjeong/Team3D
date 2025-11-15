@@ -34,8 +34,9 @@ public:
 private:
 	CRigidBody* m_pRigidBody = { nullptr };
 	const PSX::PxRigidDynamic* m_pActor = { nullptr };
-	CModel* m_pModelCom = { nullptr };
-	CShader* m_pShaderCom = { nullptr };
+	CModel*		m_pModelCom = { nullptr };
+	CShader*	m_pShaderCom = { nullptr };
+	_float3		m_vRadianYAngle = {};
 
 
 private:

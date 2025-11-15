@@ -43,17 +43,32 @@ void CCallBack_Playable_HitRepot::onShapeHit(const PSX::PxControllerShapeHit& hi
 			{
 			case 23: // 무거운데 올라갈 수 있는 벽
 				if (m_pGameInstance->Key_Pressing(DIK_E)) {
-					pOwnerActorData->pOwner->Get_Component<CTransform>()->BookMomentum(fLength * XMVectorSet(0.f, 1.f, 0.f, 0.f));
+					pOwnerActorData->pOwner->Get_Component<CTransform>()->BookMomentum(fLength * XMVectorSet(0.f, 1.5f, 0.f, 0.f));
 				}																			   					  
 				else if (m_pGameInstance->Key_Pressing(DIK_R)) {							   					  
 					pOwnerActorData->pOwner->Get_Component<CTransform>()->BookMomentum(fLength * XMVectorSet(0.f, -1.f, 0.f, 0.f));
 				}
+				//pOwnerActorData->pOwner->Get_Component<CTransform>()->BookMomentum(XMVectorSet(0.f, 0.5f * GRAVITY, 0.f, 0.f));
 				break;
+			case 24: // 문짝
+			{
+				PSX::PxRigidDynamic* pDynamic = static_cast<PSX::PxRigidDynamic*>(pActor);
+				pDynamic->addTorque(vDir * fLength * 100000.f, PSX::PxForceMode::eIMPULSE);
+				_float fDot = vDir.dot(PSX::PxVec3(0.f, 1.f, 0.f));
+				if (fDot > 0) {
+					pDynamic->addTorque(PSX::PxVec3(0.f, 1.f, 0.f) * fLength * 100000.f, PSX::PxForceMode::eIMPULSE);
+				}
+				else {
+					pDynamic->addTorque(PSX::PxVec3(0.f, -1.f, 0.f) * fLength * 100000.f, PSX::PxForceMode::eIMPULSE);
+				}
+			} break;
 			default:
+			{
+				PSX::PxRigidDynamic* pDynamic = static_cast<PSX::PxRigidDynamic*>(pActor);
+				pDynamic->addForce(vDir * fLength * 100000.f, PSX::PxForceMode::eIMPULSE);
+			}
 				break;
 			}
-			PSX::PxRigidDynamic* pDynamic = static_cast<PSX::PxRigidDynamic*>(pActor);
-			pDynamic->addForce(vDir * fLength * 100000.f, PSX::PxForceMode::eIMPULSE);
 		}	break;
 		case PHYSX_KIND::CCTActor:
 			assert(false);
@@ -101,7 +116,7 @@ void CCallBack_Playable_HitRepot::onControllerHit(const PSX::PxControllersHit& h
 
 void CCallBack_Playable_HitRepot::onObstacleHit(const PSX::PxControllerObstacleHit& hit)
 {
-	PSX::PxController* pController = hit.controller;
+	PSX::PxController*		pController = hit.controller;
 	PSX::PxExtendedVec3		vWorldPos = hit.worldPos;		// 접촉지점
 	PSX::PxVec3				vWorldNormal = hit.worldNormal;	// 접촉노말
 	PSX::PxVec3				vDir = hit.dir;			// 시도한 move 방향

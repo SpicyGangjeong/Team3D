@@ -39,6 +39,12 @@ void CDummy_PhysXDoor::Priority_Update(_float fTimeDelta)
 
 void CDummy_PhysXDoor::Update(_float fTimeDelta)
 {
+#ifdef 기무리
+	//if (m_pActor->is wakeup)
+	//	_vector vRPY = m_pTransformCom->Get_RollPitchYawVector();
+	//_float fRadian = XMConvertToRadians(XMVectorGetZ(vRPY));
+	//if (tanf(fRadian)
+#endif // 기무리
 }
 
 void CDummy_PhysXDoor::Late_Update(_float fTimeDelta)
@@ -81,14 +87,17 @@ HRESULT CDummy_PhysXDoor::Ready_Components(void* pArg)
 	}
 	PHYSXDUMMY_DESC* pPhysXDummyDesc = static_cast<PHYSXDUMMY_DESC*>(pArg);
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pBox->vPos), 1.f));
-	m_pTransformCom->Rotation(pBox->vRotRPY.x, pBox->vRotRPY.y, pBox->vRotRPY.z);
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pPhysXDummyDesc->vPos), 1.f));
+	m_pTransformCom->Rotation(pPhysXDummyDesc->vRotRPY.x, pPhysXDummyDesc->vRotRPY.y, pPhysXDummyDesc->vRotRPY.z);
 
+	m_vRadianYAngle.y = pPhysXDummyDesc->vRotRPY.y;
+	m_vRadianYAngle.x = m_vRadianYAngle.y + XMConvertToRadians(-70.f);
+	m_vRadianYAngle.z = m_vRadianYAngle.y + XMConvertToRadians(70.f);
 
 	{ // RIGID_BODY
 		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
 		Desc.iSubKind = pPhysXDummyDesc->iSubKind;
-		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_DOOR"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}
 	}
@@ -102,7 +111,6 @@ HRESULT CDummy_PhysXDoor::Ready_Components(void* pArg)
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_Box"), (CComponent**)&m_pModelCom))) {
 		return E_FAIL;
 	}
-
 
 	return S_OK;
 }

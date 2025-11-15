@@ -108,7 +108,7 @@ HRESULT CDummy_PhysXPlayable::Ready_Components(void* pArg)
 	CTransform::TRANSFORM_DESC TransformDesc{};
 	TransformDesc.fRadius = 100.f;
 	TransformDesc.fRotationPerSec = XMConvertToRadians(60.f);
-	TransformDesc.fSpeedPerSec = 30.f;
+	TransformDesc.fSpeedPerSec = 15.f;
 	if (FAILED(__super::Ready_Components(&TransformDesc))) {
 		return E_FAIL;
 	}

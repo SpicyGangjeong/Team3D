@@ -10,6 +10,7 @@
 #include "Dummy_PhysXMesh.h"
 #include "Dummy_PhysXWall.h"
 #include "Dummy_PhysXPlatform.h"
+#include "Dummy_PhysXDoor.h"
 #include "MapObject_Manager.h"
 #include "BuildingContainer.h"
 #include "MainLight.h"
@@ -116,7 +117,7 @@ HRESULT CLevel_PhysXLab::Ready_Layer_PhysXObjects(const _wstring& strLayerTag)
 	}
 	{
 		CDummy_PhysXPlatform::PHYSXDUMMY_DESC Desc{};
-		Desc.vPos = { -1.f, 2.f, 10.f };
+		Desc.vPos = { -3.f, 2.f, 10.f };
 		Desc.vRotRPY = { 0.f, m_pGameInstance->Random_Float(0.f, XM_2PI), 0.f };
 		Desc.iSubKind = 20;
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXPlatform>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE, &Desc))) {
@@ -125,10 +126,19 @@ HRESULT CLevel_PhysXLab::Ready_Layer_PhysXObjects(const _wstring& strLayerTag)
 	}
 	{
 		CDummy_PhysXPlatform::PHYSXDUMMY_DESC Desc{};
-		Desc.vPos = { 0.f, 2.f, 10.f };
+		Desc.vPos = { 0.f, 2.f, 8.f };
 		Desc.vRotRPY = { 0.f, m_pGameInstance->Random_Float(0.f, XM_2PI), 0.f };
 		Desc.iSubKind = 21;
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXPlatform>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE, &Desc))) {
+			return E_FAIL;
+		}
+	}
+	{
+		CDummy_PhysXDoor::PHYSXDUMMY_DESC Desc{};
+		Desc.vPos = { 10.f, 2.f, 10.f };
+		Desc.vRotRPY = { 0.f, m_pGameInstance->Random_Float(0.f, XM_2PI), 0.f };
+		Desc.iSubKind = 24;
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXDoor>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE, &Desc))) {
 			return E_FAIL;
 		}
 	}
