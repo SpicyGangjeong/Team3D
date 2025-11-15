@@ -154,7 +154,7 @@ void CChannel::Update_TransformationMatirx(const vector<CBone*>& Bones, _float f
 		_vector vDeltaAdjusted = {};
 
 		XMMATRIX pre = XMLoadFloat4x4(&m_PreTransformMatrix);
-		vDeltaAdjusted = XMVector3TransformNormal(vDeltaLocal, pre);
+		vDeltaAdjusted = XMVector3TransformNormal(vDeltaLocal, pre*20.f);
 
 		_vector vRight = pTransform->Get_State(STATE::RIGHT);
 		_vector vUp = pTransform->Get_State(STATE::UP);

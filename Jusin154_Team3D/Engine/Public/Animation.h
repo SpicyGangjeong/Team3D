@@ -28,7 +28,6 @@ public:
 	_float Get_CurrentTrackPosition() { return m_fCurrentTrackPosition; }
 	void Set_AnimSpeed(_float fSpeed) { m_fAnimSpeed = fSpeed; }
 	_float Get_AnimSpeed() { return m_fAnimSpeed; }
-	void Set_Channel(CAnimation* Animation);
 	void Remap_Channels_By_Name(class CModel* TargetModel);
 #ifdef EDITOR_PROJECT
 private:

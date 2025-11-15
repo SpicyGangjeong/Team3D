@@ -125,6 +125,11 @@ void CRootModelPart::Set_Animation(_uint iAnimIndex)
 	}
 }
 
+void CRootModelPart::Set_Texture(_uint iIndex, const _wchar* Texture)
+{
+	m_ModelParts[iIndex]->Set_Texture(Texture);
+}
+
 HRESULT CRootModelPart::Ready_Components(void* pArg)
 {
 	__super::Ready_Components(pArg);
