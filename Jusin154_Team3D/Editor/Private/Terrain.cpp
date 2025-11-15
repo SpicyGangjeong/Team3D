@@ -48,9 +48,9 @@ void CTerrain::Update(_float fTimeDelta)
 
 void CTerrain::Late_Update(_float fTimeDelta)
 {
-	_float4 vPos;
-	XMStoreFloat4(&vPos, Get_WorldPostion());
-	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this, vPos, 20.f);
+	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
+		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+	}
 }
 
 HRESULT CTerrain::Render()

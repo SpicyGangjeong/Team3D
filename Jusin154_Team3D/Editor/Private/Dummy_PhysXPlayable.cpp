@@ -47,9 +47,9 @@ void CDummy_PhysXPlayable::Update(_float fTimeDelta)
 void CDummy_PhysXPlayable::Late_Update(_float fTimeDelta)
 {
 	Describe_Entity();
-	_float4 vPos;
-	XMStoreFloat4(&vPos, Get_WorldPostion());
-	m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this, vPos, 20.f);
+	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
+		m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
+	}
 }
 
 HRESULT CDummy_PhysXPlayable::Render()

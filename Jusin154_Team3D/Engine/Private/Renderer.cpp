@@ -15,71 +15,23 @@ CRenderer::CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	SAFE_ADDREF(m_pGameInstance); 
 }
 
-
-void CRenderer::Refresh_Renderer()
+HRESULT CRenderer::Add_RenderGroup(RENDER eRenderGroup, CGameObject* pRenderObject)
 {
-	if (nullptr == m_pGameInstance->Get_CamPosition()) {
-		return;
-	}
-	_matrix matViewInv = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
-	_matrix matProjInv = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
-
-	matProjInv = XMMatrixInverse(nullptr, matProjInv);
-	matViewInv = XMMatrixInverse(nullptr, matViewInv);
-
-	memcpy_s(&m_CubeViewFrustum, sizeof(_float3) * 8, m_CubeNDC, sizeof(_float3) * 8);
-
-	for (int i = 0; i < 8; ++i) {
-		XMStoreFloat3(&m_CubeViewFrustum[i], XMVector3TransformCoord(XMVectorSet(m_CubeViewFrustum[i].x, m_CubeViewFrustum[i].y, m_CubeViewFrustum[i].z, 1.f), matProjInv));
-		XMStoreFloat3(&m_CubeViewFrustum[i], XMVector3TransformCoord(XMVectorSet(m_CubeViewFrustum[i].x, m_CubeViewFrustum[i].y, m_CubeViewFrustum[i].z, 1.f), matViewInv));
-	}
-	// 0(1, 3, 4), 6(2, 5, 7) ( 법선벡터 후보 )
-	// 0, 6( 한 점 후보)
-	//_float3								m_CubeNDC[8] = {
-	//	근	좌하	우하	우상	좌상
-	//	원	좌하	우하	우상	좌상
-	//		0,		1,		2,		3
-	//		4,		5,		6,		7
-	//{ -1.f, -1.f, 0.f }, { 1.f, -1.f, 0.f }, { 1.f, 1.f, 0.f }, { -1.f, 1.f, 0.f },
-	//{ -1.f, -1.f, 1.f }, { 1.f, -1.f, 1.f }, { 1.f, 1.f, 1.f }, { -1.f, 1.f, 1.f }
-	//};
-	_vector vPlanes[8] = {};
-	XMStoreFloat4(&m_vPlanes[0], XMPlaneNormalize(XMPlaneFromPoints(XMLoadFloat3(&m_CubeViewFrustum[0]), XMLoadFloat3(&m_CubeViewFrustum[3]), XMLoadFloat3(&m_CubeViewFrustum[4]))));
-	XMStoreFloat4(&m_vPlanes[1], XMPlaneNormalize(XMPlaneFromPoints(XMLoadFloat3(&m_CubeViewFrustum[5]), XMLoadFloat3(&m_CubeViewFrustum[6]), XMLoadFloat3(&m_CubeViewFrustum[2]))));
-	XMStoreFloat4(&m_vPlanes[2], XMPlaneNormalize(XMPlaneFromPoints(XMLoadFloat3(&m_CubeViewFrustum[1]), XMLoadFloat3(&m_CubeViewFrustum[2]), XMLoadFloat3(&m_CubeViewFrustum[3]))));
-	XMStoreFloat4(&m_vPlanes[3], XMPlaneNormalize(XMPlaneFromPoints(XMLoadFloat3(&m_CubeViewFrustum[4]), XMLoadFloat3(&m_CubeViewFrustum[7]), XMLoadFloat3(&m_CubeViewFrustum[6]))));
-	XMStoreFloat4(&m_vPlanes[4], XMPlaneNormalize(XMPlaneFromPoints(XMLoadFloat3(&m_CubeViewFrustum[0]), XMLoadFloat3(&m_CubeViewFrustum[4]), XMLoadFloat3(&m_CubeViewFrustum[5]))));
-	XMStoreFloat4(&m_vPlanes[5], XMPlaneNormalize(XMPlaneFromPoints(XMLoadFloat3(&m_CubeViewFrustum[3]), XMLoadFloat3(&m_CubeViewFrustum[2]), XMLoadFloat3(&m_CubeViewFrustum[7]))));
-}
-
-HRESULT CRenderer::Add_RenderGroup(RENDER eRenderGroup, CGameObject* pRenderObject, _float4& vPos, _float fCullRadius)
-{
-	if (nullptr == pRenderObject)
+	if (nullptr == pRenderObject || pRenderObject->isDead()){
 		return E_FAIL;
+	}
 
-	_bool	bPossible = { true };
-	//if (pRenderObject->isDead()) {
-	//	return E_FAIL;
-	//}
-	//// 프러스텀컬링 예외 추가
-	//if (RENDER::UI == eRenderGroup || RENDER::PRIORITY == eRenderGroup /* || RENDER::SHADOW == eRenderGroup*/ || RENDER::BLUR == eRenderGroup) {
-	//	m_RenderObjects[ENUM_CLASS(eRenderGroup)].push_back(pRenderObject);
-	//	SAFE_ADDREF(pRenderObject);
-	//	return S_OK;
-	//}
-	//for (int i = 0; i < 6; ++i) {
-	//	if (XMVectorGetX(XMVector4Dot(XMLoadFloat4(&m_vPlanes[i]),
-	//		XMLoadFloat4(&vPos))) + fCullRadius < 0) {
-	//		bPossible = false;
-	//		break;
-	//	}
-	//}
-	if (bPossible) {
+	_bool	bPossible = { false };
+	// 프러스텀컬링 예외 추가
+	if (RENDER::UI == eRenderGroup || RENDER::PRIORITY == eRenderGroup /* || RENDER::SHADOW == eRenderGroup*/ || RENDER::BLUR == eRenderGroup) {
+		bPossible = true;
+	}
+	if (true == bPossible) {
 		m_RenderObjects[ENUM_CLASS(eRenderGroup)].push_back(pRenderObject);
 		SAFE_ADDREF(pRenderObject);
 		return S_OK;
 	}
-	return S_OK;
+	return E_FAIL;
 }
 
 #ifdef _DEBUG

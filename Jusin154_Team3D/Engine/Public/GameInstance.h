@@ -94,8 +94,7 @@ public:
 
 
 #pragma region RENDERER
-	void	Refresh_Renderer();
-	HRESULT Add_RenderGroup(RENDER eRenderGroup, class CGameObject* pRenderObject, _float4& vPos, _float fCullRadius);
+	HRESULT Add_RenderGroup(RENDER eRenderGroup, class CGameObject* pRenderObject);
 #pragma endregion
 
 #pragma region ASSET_MANAGER
@@ -116,7 +115,7 @@ public:
 #pragma region MOUSE_MANAGER
 	POINT	Get_MouseViewPortPos();
 	_bool	Toggle_MouseCenter();
-	_float3		Get_MouseMove();
+	_float3	Get_MouseMove();
 	void    Picking();
 	HRESULT Ray_WorldToLocal(_fmatrix* InvWorldMatrix);
 	_bool   MousePicking_InLocalSpace(const _float3& vPointA, const _float3& vPointB, const _float3& vPointC, _float3& pOut);
@@ -130,6 +129,10 @@ public:
 	_matrix Get_Transform_Matrix(D3DTS eState);
 	const _float4* Get_CamPosition();
 	const _vector Get_CamXMPosition();
+	void Transform_Frustum_ToLocalSpace(_fmatrix WorldMatrixInverse);
+	_bool isIn_WorldFrustum(_fvector vWorldPos, _float fRadius);
+	_bool isIn_LocalFrustum(_fvector vLocalPos, _float fRadius);
+
 #pragma endregion
 #pragma region LIGHT_MANAGER
 	void			  Add_Light(_uint _iCurrentLevel, class CLight* _pLight);

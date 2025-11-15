@@ -80,10 +80,9 @@ void CMapObject_LOD::Late_Update(_float fTimeDelta)
 
 	XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_XMWorldMatrix() * m_pParentTransformCom->Get_XMWorldMatrix());
 
-	_float4 vPos;
-	//XMStoreFloat4(&vPos, Get_WorldPostion());
-	XMStoreFloat4(&vPos, m_pTransformCom->Get_State(STATE::POSITION));
-	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this, vPos, 20.f);
+	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
+		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+	}
 }
 
 HRESULT CMapObject_LOD::Render()
