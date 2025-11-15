@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Monster.h"
 
 #include "GameInstance.h"
@@ -44,14 +44,14 @@ void CMonster::Priority_Update(_float fTimeDelta)
 
 void CMonster::Update(_float fTimeDelta)
 {
-	m_pModelCom->Play_Animation(fTimeDelta);
+	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 }
 
 void CMonster::Late_Update(_float fTimeDelta)
 {
-	_float4 vPos;
-	XMStoreFloat4(&vPos, Get_WorldPostion());
-	m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this, vPos, 20.f);
+	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
+		m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
+	}
 }
 
 HRESULT CMonster::Render()
@@ -129,7 +129,7 @@ CMonster* CMonster::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
 		MSG_BOX("Failed to Created : CMonster");
-		Safe_Release(pInstance);
+		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
@@ -142,7 +142,7 @@ CGameObject* CMonster::Clone(void* pArg, CGameObject* pOwner)
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
 		MSG_BOX("Failed to Cloned : CMonster");
-		Safe_Release(pInstance);
+		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
@@ -154,8 +154,8 @@ void CMonster::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pShaderCom);
-	Safe_Release(m_pModelCom);
+	SAFE_RELEASE(m_pShaderCom);
+	SAFE_RELEASE(m_pModelCom);
 }
 
 void CMonster::Describe_Entity()

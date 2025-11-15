@@ -73,11 +73,11 @@ enum aiTextureType {
 #endif // !EDITOR_PROJECT
 
 enum class PHYSX_KIND {
-    NOT_DEFINED = 0,
-    CCTActor = 1,
-    OBSTACLEActor = 2,
-    BODY_STATIC = 3,
-    BODY_DYNAMIC = 4,
+    NOT_DEFINED,
+    BODY_STATIC,
+    BODY_DYNAMIC,
+    CCTActor,
+    OBSTACLEActor,
 };
 
 NS_END

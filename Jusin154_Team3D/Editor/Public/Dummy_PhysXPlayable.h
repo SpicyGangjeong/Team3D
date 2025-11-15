@@ -1,7 +1,9 @@
-#pragma once
+﻿#pragma once
 
 #include "Editor_Define.h"
 #include "GameObject.h"
+#include "CallBack_Playable_Behavior.h"
+#include "CallBack_Playable_HitRepot.h"
 
 NS_BEGIN(Engine)
 class CModel;
@@ -34,7 +36,9 @@ private:
 	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
 	CModel* m_pModelCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
-
+	
+	CCallBack_Playable_Behavior m_pCallBack_Behavior = {};
+	CCallBack_Playable_HitRepot m_pCallBack_HitReport = {};
 
 private:
 	virtual HRESULT Initialize_Prototype() override;

@@ -1,14 +1,12 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Layer.h"
 #include "GameObject.h"
 #include "GameInstance.h"
 
-CLayer::CLayer()
+CLayer::CLayer():
+	m_pGameInstance(CGameInstance::GetInstance())
 {
-}
-
-CLayer::~CLayer()
-{
+	SAFE_ADDREF(m_pGameInstance);
 }
 
 HRESULT CLayer::Initialize()
@@ -89,9 +87,9 @@ void CLayer::Free()
 	for (auto& iter : m_ObjectList)
 	{
 		SAFE_RELEASE(iter);
-	}
+	} m_ObjectList.clear();
 
-	m_ObjectList.clear();
+	SAFE_RELEASE(m_pGameInstance);
 }
 
 CLayer* CLayer::Create()
@@ -106,3 +104,21 @@ CLayer* CLayer::Create()
 
 	return pInstance;
 }
+
+#ifdef _DEBUG
+
+void CLayer::Describe_Entity()
+{
+	_int iIndex = 0;
+
+	for (CGameObject*& iter : m_ObjectList)
+	{
+		GUI::PushID(iter);
+		if (GUI::SmallButton((to_string(iIndex) + " : " + typeid(*iter).name()).c_str())) {
+			m_pGameInstance->Force_CamPosition(iter->Get_WorldPostion() - XMVectorSet(0.f, -1.f, 1.f, 0.f) * 10.f);
+		} iIndex++;
+		GUI::PopID();
+	}
+}
+
+#endif // _DEBUG

@@ -166,8 +166,16 @@
     <ClInclude Include="..\Public\Action_Panel.h" />
     <ClInclude Include="..\Public\Body.h" />
     <ClInclude Include="..\public\Active_Icon.h" />
+    <ClInclude Include="..\Public\CallBack_Playable_Behavior.h" />
+    <ClInclude Include="..\Public\CallBack_Playable_HitRepot.h" />
     <ClInclude Include="..\Public\DummyObject.h" />
     <ClInclude Include="..\public\DummySkyBox.h" />
+    <ClInclude Include="..\Public\Dummy_PhysXPlatform.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dummy_PhysXWall.h" />
+    <ClInclude Include="..\Public\Dummy_Plane.h" />
     <ClInclude Include="..\Public\Dummy_PhysXPlayable.h" />
     <ClInclude Include="..\public\GamePlay_Canvas.h" />
     <ClInclude Include="..\public\BuildingContainer.h" />
@@ -189,6 +197,9 @@
     <ClInclude Include="..\public\MapObject.h" />
     <ClInclude Include="..\public\MapObject_LOD.h" />
     <ClInclude Include="..\public\MapObject_Manager.h" />
+    <ClInclude Include="..\Public\MainLight.h" />
+    <ClInclude Include="..\public\MapObject_Collision.h" />
+    <ClInclude Include="..\Public\Dummy_PhysXDoor.h" />
     <ClInclude Include="..\public\MapObject_Static.h" />
     <ClInclude Include="..\public\Spell_Slot.h" />
     <ClInclude Include="..\public\Terrain.h" />
@@ -233,8 +244,16 @@
     <ClCompile Include="..\Private\Action_Panel.cpp" />
     <ClCompile Include="..\Private\Body.cpp" />
     <ClCompile Include="..\private\Active_Icon.cpp" />
+    <ClCompile Include="..\Private\CallBack_Playable_Behavior.cpp" />
+    <ClCompile Include="..\Private\CallBack_Playable_HitRepot.cpp" />
     <ClCompile Include="..\Private\DummyObject.cpp" />
     <ClCompile Include="..\private\DummySkyBox.cpp" />
+    <ClCompile Include="..\Private\Dummy_PhysXPlatform.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_PhysXWall.cpp" />
+    <ClCompile Include="..\Private\Dummy_Plane.cpp" />
     <ClCompile Include="..\Private\Dummy_PhysXPlayable.cpp" />
     <ClCompile Include="..\private\GamePlay_Canvas.cpp" />
     <ClCompile Include="..\private\BuildingContainer.cpp" />
@@ -256,6 +275,9 @@
     <ClCompile Include="..\private\MapObject.cpp" />
     <ClCompile Include="..\private\MapObject_LOD.cpp" />
     <ClCompile Include="..\private\MapObject_Manager.cpp" />
+    <ClCompile Include="..\Private\MainLight.cpp" />
+    <ClCompile Include="..\private\MapObject_Collision.cpp" />
+    <ClCompile Include="..\Private\Dummy_PhysXDoor.cpp" />
     <ClCompile Include="..\private\MapObject_Static.cpp" />
     <ClCompile Include="..\private\Spell_Slot.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />

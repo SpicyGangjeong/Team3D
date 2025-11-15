@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "MapObject_LOD.h"
 
 #include "GameInstance.h"
@@ -80,10 +80,9 @@ void CMapObject_LOD::Late_Update(_float fTimeDelta)
 
 	XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_XMWorldMatrix() * m_pParentTransformCom->Get_XMWorldMatrix());
 
-	_float4 vPos;
-	//XMStoreFloat4(&vPos, Get_WorldPostion());
-	XMStoreFloat4(&vPos, m_pTransformCom->Get_State(STATE::POSITION));
-	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this, vPos, 20.f);
+	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
+		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+	}
 }
 
 HRESULT CMapObject_LOD::Render()
@@ -99,6 +98,7 @@ HRESULT CMapObject_LOD::Render()
 		if (FAILED(m_pModelComs[0]->Bind_Material(i, m_pShaderCom, "g_DiffuseTexture", aiTextureType_DIFFUSE, 0))) {
 			return E_FAIL;
 		}
+	
 		if (FAILED(m_pModelComs[0]->Bind_Material(i, m_pShaderCom, "g_NormalTexture", aiTextureType_NORMALS, 0))) {
 			return E_FAIL;
 		}
@@ -222,10 +222,10 @@ void CMapObject_LOD::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pShaderCom);
+	SAFE_RELEASE(m_pShaderCom);
 
 	for(auto& pModel : m_pModelComs)
-		Safe_Release(pModel);
+		SAFE_RELEASE(pModel);
 	m_pModelComs.clear();
 }
 
@@ -284,21 +284,21 @@ void CMapObject_LOD::Describe_Entity()
 		GUI::SameLine();
 		if (GUI::Button("Bake!!!")) {
 			CMapObject_Manager* pManager = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_MAPOBJECTMANAGER)->Get_Object<CMapObject_Manager>();
-			for (_uint i = 0; i < (_uint)m_ModelPathIndices.size(); ++i) {
-				filesystem::path filePath = pManager->Get_PrototypePath(m_ModelPathIndices[i]);
+			for (_uint iModelIndex = 0; iModelIndex < (_uint)m_ModelPathIndices.size(); ++iModelIndex) {
+				filesystem::path filePath = pManager->Get_PrototypePath(m_ModelPathIndices[iModelIndex]);
 				
-				CModel* pModel = m_pModelComs[i];
+				CModel* pModel = m_pModelComs[iModelIndex];
 				_uint iNumMesh = pModel->Get_NumMeshes();
 				pModel->Save_PhysXTriMeshes(filePath.string().c_str());
 
-				CRigidBody::RIGIDBODY_DESC Desc{};
+				CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc{};
 
-				for (_uint i = 0; i < iNumMesh; ++i)
+				for (_uint iMeshIndex = 0; iMeshIndex < iNumMesh; ++iMeshIndex)
 				{ // RIGID_BODY
-					_string strDestName = pModel->Get_MeshName(i) + to_string(i);
-					Desc.szMeshName = strDestName.c_str();
+					_wstring dest = CMyTools::ToWstring(m_pModelComs[iModelIndex]->Get_MeshName(iMeshIndex) + to_string(iMeshIndex)).c_str();
+					Desc.pMeshName = dest.c_str();
 
-					if (FAILED(Add_Asset_Component(g_iStaticLevel, CMyTools::ToWstring(strDestName).c_str(), nullptr, &Desc))) {
+					if (FAILED(Add_Asset_Component(g_iStaticLevel, Desc.pMeshName, nullptr, &Desc))) {
 						assert(false);
 					}
 				}

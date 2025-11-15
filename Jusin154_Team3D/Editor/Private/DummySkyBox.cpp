@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "DummySkyBox.h"
 
 #include "GameInstance.h"
@@ -44,8 +44,9 @@ void CDummySkyBox::Update(_float fTimeDelta)
 
 void CDummySkyBox::Late_Update(_float fTimeDelta)
 {
-	_float4* vPos = (_float4*)(m_pTransformCom->Get_WorldMatrixPtr()->m[3]);
-	m_pGameInstance->Add_RenderGroup(RENDER::PRIORITY, this, *vPos, 0.f);
+	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
+		m_pGameInstance->Add_RenderGroup(RENDER::PRIORITY, this);
+	}
 }
 
 HRESULT CDummySkyBox::Render()

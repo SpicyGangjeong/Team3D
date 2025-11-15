@@ -15,71 +15,24 @@ CRenderer::CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	SAFE_ADDREF(m_pGameInstance); 
 }
 
-
-void CRenderer::Refresh_Renderer()
+HRESULT CRenderer::Add_RenderGroup(RENDER eRenderGroup, CGameObject* pRenderObject)
 {
-	if (nullptr == m_pGameInstance->Get_CamPosition()) {
-		return;
-	}
-	_matrix matViewInv = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
-	_matrix matProjInv = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
-
-	matProjInv = XMMatrixInverse(nullptr, matProjInv);
-	matViewInv = XMMatrixInverse(nullptr, matViewInv);
-
-	memcpy_s(&m_CubeViewFrustum, sizeof(_float3) * 8, m_CubeNDC, sizeof(_float3) * 8);
-
-	for (int i = 0; i < 8; ++i) {
-		XMStoreFloat3(&m_CubeViewFrustum[i], XMVector3TransformCoord(XMVectorSet(m_CubeViewFrustum[i].x, m_CubeViewFrustum[i].y, m_CubeViewFrustum[i].z, 1.f), matProjInv));
-		XMStoreFloat3(&m_CubeViewFrustum[i], XMVector3TransformCoord(XMVectorSet(m_CubeViewFrustum[i].x, m_CubeViewFrustum[i].y, m_CubeViewFrustum[i].z, 1.f), matViewInv));
-	}
-	// 0(1, 3, 4), 6(2, 5, 7) ( 법선벡터 후보 )
-	// 0, 6( 한 점 후보)
-	//_float3								m_CubeNDC[8] = {
-	//	근	좌하	우하	우상	좌상
-	//	원	좌하	우하	우상	좌상
-	//		0,		1,		2,		3
-	//		4,		5,		6,		7
-	//{ -1.f, -1.f, 0.f }, { 1.f, -1.f, 0.f }, { 1.f, 1.f, 0.f }, { -1.f, 1.f, 0.f },
-	//{ -1.f, -1.f, 1.f }, { 1.f, -1.f, 1.f }, { 1.f, 1.f, 1.f }, { -1.f, 1.f, 1.f }
-	//};
-	_vector vPlanes[8] = {};
-	XMStoreFloat4(&m_vPlanes[0], XMPlaneNormalize(XMPlaneFromPoints(XMLoadFloat3(&m_CubeViewFrustum[0]), XMLoadFloat3(&m_CubeViewFrustum[3]), XMLoadFloat3(&m_CubeViewFrustum[4]))));
-	XMStoreFloat4(&m_vPlanes[1], XMPlaneNormalize(XMPlaneFromPoints(XMLoadFloat3(&m_CubeViewFrustum[5]), XMLoadFloat3(&m_CubeViewFrustum[6]), XMLoadFloat3(&m_CubeViewFrustum[2]))));
-	XMStoreFloat4(&m_vPlanes[2], XMPlaneNormalize(XMPlaneFromPoints(XMLoadFloat3(&m_CubeViewFrustum[1]), XMLoadFloat3(&m_CubeViewFrustum[2]), XMLoadFloat3(&m_CubeViewFrustum[3]))));
-	XMStoreFloat4(&m_vPlanes[3], XMPlaneNormalize(XMPlaneFromPoints(XMLoadFloat3(&m_CubeViewFrustum[4]), XMLoadFloat3(&m_CubeViewFrustum[7]), XMLoadFloat3(&m_CubeViewFrustum[6]))));
-	XMStoreFloat4(&m_vPlanes[4], XMPlaneNormalize(XMPlaneFromPoints(XMLoadFloat3(&m_CubeViewFrustum[0]), XMLoadFloat3(&m_CubeViewFrustum[4]), XMLoadFloat3(&m_CubeViewFrustum[5]))));
-	XMStoreFloat4(&m_vPlanes[5], XMPlaneNormalize(XMPlaneFromPoints(XMLoadFloat3(&m_CubeViewFrustum[3]), XMLoadFloat3(&m_CubeViewFrustum[2]), XMLoadFloat3(&m_CubeViewFrustum[7]))));
-}
-
-HRESULT CRenderer::Add_RenderGroup(RENDER eRenderGroup, CGameObject* pRenderObject, _float4& vPos, _float fCullRadius)
-{
-	if (nullptr == pRenderObject)
+	if (nullptr == pRenderObject || pRenderObject->isDead()){
 		return E_FAIL;
+	}
 
-	_bool	bPossible = { true };
-	//if (pRenderObject->isDead()) {
-	//	return E_FAIL;
-	//}
-	//// 프러스텀컬링 예외 추가
-	//if (RENDER::UI == eRenderGroup || RENDER::PRIORITY == eRenderGroup /* || RENDER::SHADOW == eRenderGroup*/ || RENDER::BLUR == eRenderGroup) {
-	//	m_RenderObjects[ENUM_CLASS(eRenderGroup)].push_back(pRenderObject);
-	//	SAFE_ADDREF(pRenderObject);
-	//	return S_OK;
-	//}
-	//for (int i = 0; i < 6; ++i) {
-	//	if (XMVectorGetX(XMVector4Dot(XMLoadFloat4(&m_vPlanes[i]),
-	//		XMLoadFloat4(&vPos))) + fCullRadius < 0) {
-	//		bPossible = false;
-	//		break;
-	//	}
-	//}
-	if (bPossible) {
+	_bool	bPossible = { false };
+	// 프러스텀컬링 예외 추가
+	if (RENDER::UI == eRenderGroup || RENDER::PRIORITY == eRenderGroup /* || RENDER::SHADOW == eRenderGroup*/ || RENDER::BLUR == eRenderGroup) {
+		bPossible = true;
+	}
+	bPossible = true;
+	if (true == bPossible) {
 		m_RenderObjects[ENUM_CLASS(eRenderGroup)].push_back(pRenderObject);
 		SAFE_ADDREF(pRenderObject);
 		return S_OK;
 	}
-	return S_OK;
+	return E_FAIL;
 }
 
 #ifdef _DEBUG
@@ -117,6 +70,8 @@ void CRenderer::Render()
 	Render_UI();
 
 #ifdef _DEBUG
+	m_pGameInstance->RenderTarget_Debuger();
+	
 	if(m_pGameInstance->Key_Pressing(DIK_F10))
 		Render_Debug();
 #endif
@@ -229,7 +184,7 @@ void CRenderer::Render_LightAcc()
 
 	m_pVIBuffer->Bind_Resources();
 
-	if (FAILED(m_pGameInstance->Render_Lights(m_pShader, m_pVIBuffer))) {
+	if (FAILED(m_pGameInstance->Render_Lights(m_pGameInstance->Get_CurrentLevelID(), m_pShader, m_pVIBuffer))) {
 		return;
 	}
 
@@ -523,27 +478,10 @@ void CRenderer::Render_Debug()
 	}
 
 	/* 렌더타겟을 디버그로 직교투영을 통해 그려라. */
-	if (FAILED(m_pGameInstance->Render_RenderTarget_Debug(TEXT("MRT_GameObjects"), m_pShader, m_pVIBuffer))) {
+	if (FAILED(m_pGameInstance->Render_RenderTarget_Debug(m_pShader, m_pVIBuffer))) {
 		return;
 	}
-	if (FAILED(m_pGameInstance->Render_RenderTarget_Debug(TEXT("MRT_LightAcc"), m_pShader, m_pVIBuffer))) {
-		return;
-	}
-	if (FAILED(m_pGameInstance->Render_RenderTarget_Debug(TEXT("MRT_Shadow"), m_pShader, m_pVIBuffer))) {
-		return;
-	}
-	if (FAILED(m_pGameInstance->Render_RenderTarget_Debug(TEXT("MRT_PreShadow"), m_pShader, m_pVIBuffer))) {
-		return;
-	}
-	if (FAILED(m_pGameInstance->Render_RenderTarget_Debug(TEXT("MRT_Blur"), m_pShader, m_pVIBuffer))) {
-		return;
-	}
-	if (FAILED(m_pGameInstance->Render_RenderTarget_Debug(TEXT("MRT_Blur_X"), m_pShader, m_pVIBuffer))){
-		return;
-	}
-	if (FAILED(m_pGameInstance->Render_RenderTarget_Debug(TEXT("MRT_Color"), m_pShader, m_pVIBuffer))) {
-		return;
-	}
+
 }
 
 #endif
@@ -701,45 +639,6 @@ HRESULT CRenderer::Initialize()
 	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
 	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(Viewport.Width, Viewport.Height, 0.f, 1.f));
 
-#ifdef _DEBUG
-	if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Diffuse"), 75.f, 75.f, 150.0f, 150.0f))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Normal"), 75.f, 225.f, 150.0f, 150.0f))) {
-		return E_FAIL;
-	}
-	//if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Shade"), 225.f, 75.f, 150.0f, 150.0f))) {
-	//	return E_FAIL;
-	//}
-	//if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Specular"), 225.f, 225.f, 150.0f, 150.0f))) {
-	//	return E_FAIL;
-	//}
-	if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Color"),75.f , 1080 - 75.f, 150.f, 150.f))) {
-		return E_FAIL;
-	}
-
-	//if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Shadow"), Viewport.Width - 150.0f, 150.0f, 300.f, 300.f))) {
-	//	return E_FAIL;
-	//}
-	//if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_PreShadow"), Viewport.Width - 150.0f, Viewport.Height - 150.0f, 300.f, 300.f))) {
-	//	return E_FAIL;
-	
-	if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Blur_Weight"), 75.f, 75.f, 150.0f, 150.0f))) {
-		return E_FAIL;
-	}
-
-	if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Blur"), 75.f, 225.f, 150.0f, 150.0f))) {
-		return E_FAIL;
-	}
-
-	if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Blur_X"), 225.f, 75.f, 150.0f, 150.0f))) {
-		return E_FAIL;
-	}
-
-
-
-
-#endif
 
 	return S_OK;
 }

@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Body.h"
 
 #include "GameInstance.h"
@@ -42,9 +42,9 @@ void CBody::Update(_float fTimeDelta)
 
 void CBody::Late_Update(_float fTimeDelta)
 {
-	_float4 vPos;
-	XMStoreFloat4(&vPos, Get_WorldPostion());
-	m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this, vPos, 20.f);
+	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
+		m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
+	}
 }
 
 HRESULT CBody::Render()
@@ -75,7 +75,7 @@ CBody* CBody::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
 		MSG_BOX("Failed to Created : CBody");
-		Safe_Release(pInstance);
+		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
@@ -88,7 +88,7 @@ CGameObject* CBody::Clone(void* pArg, CGameObject* pOwner)
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
 		MSG_BOX("Failed to Cloned : CBody");
-		Safe_Release(pInstance);
+		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;

@@ -1,10 +1,20 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Light.h"
 #include "Shader.h"
 #include "VIBuffer.h"
+#include "GameInstance.h"
+#include "GameObject.h"
 
-CLight::CLight()
+
+CLight::CLight(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	: CComponent{ pDevice, pContext }
 {
+}
+
+CLight::CLight(const CLight& rhs)
+	: CComponent{ rhs }
+{
+
 }
 
 _bool CLight::operator==(const CLight& rhs) const
@@ -14,36 +24,36 @@ _bool CLight::operator==(const CLight& rhs) const
 
 _bool CLight::operator==(const LIGHT_DESC& rhs) const
 {
+	_float4 vSrcPositon = *m_LightDesc.pPosition;
+	_float4 vDstPositon = *rhs.pPosition;
+
 	if (m_LightDesc.eType != rhs.eType ||
-		m_LightDesc.vPosition.x != rhs.vPosition.x ||
-		m_LightDesc.vPosition.y != rhs.vPosition.y ||
-		m_LightDesc.vPosition.z != rhs.vPosition.z) {
+		vSrcPositon.x != vDstPositon.x ||
+		vSrcPositon.y != vDstPositon.y ||
+		vSrcPositon.z != vDstPositon.z) {
 		return false;
 	}
+
 	return true;
 }
 
-HRESULT CLight::Replace_LightTo(_fvector vPosition)
+HRESULT CLight::Initialize_Prototype()
 {
-	//GUI::Begin("Light_Position");
-	//GUI::SliderFloat("fRange", (_float*)&m_LightDesc.fRange, 0.f, 30.f);
-	//GUI::SliderFloat4("vDiffuse", (_float*)&m_LightDesc.vDiffuse, 0.f, 1.f);
-	//GUI::SliderFloat4("vAmbient", (_float*)&m_LightDesc.vAmbient, 0.f, 1.f);
-	//GUI::SliderFloat4("vSpecular", (_float*)&m_LightDesc.vSpecular, 0.f, 1.f);
-	//GUI::SliderFloat3("fAngle", (_float*)&m_LightDesc.vDirection.x, -1.f, 1.f);
-	//GUI::SliderFloat("fSpotInner", (_float*)&m_LightDesc.vSpotAngles.x, 0.f, 1.f);
-	//GUI::SliderFloat("fSpotOutter", (_float*)&m_LightDesc.vSpotAngles.y, 0.f, 1.f);
-	//GUI::End();
-	if (LIGHT::POINT == m_LightDesc.eType || LIGHT::SPOT == m_LightDesc.eType) {
-		XMStoreFloat4(&m_LightDesc.vPosition, vPosition);
-		return S_OK;
-	}
-	return E_FAIL;
+
+	return S_OK;
 }
 
-HRESULT CLight::Initialize(const LIGHT_DESC& LightDesc)
+HRESULT CLight::Initialize(void* pArg)
 {
-	m_LightDesc = LightDesc;
+	LIGHT_DESC* pLightDesc = static_cast<LIGHT_DESC*>(pArg);
+
+	if (nullptr == pLightDesc)
+		return E_FAIL;
+
+	m_LightDesc = *pLightDesc;
+
+	m_pGameInstance->Add_Light(m_LightDesc.iLevel, this);
+
 	return S_OK;
 }
 
@@ -51,16 +61,19 @@ HRESULT CLight::Render(CShader* pShader, CVIBuffer* pVIBuffer) const
 {
 	_uint iPassIndex = { 0 };
 	if (LIGHT::DIRECTIONAL == m_LightDesc.eType) {
-		if (FAILED(pShader->Bind_RawValue("g_vLightDir", &m_LightDesc.vDirection, sizeof(_float4)))) {
+		if (FAILED(pShader->Bind_RawValue("g_vLightDir", m_LightDesc.pDirection, sizeof(_float4)))) {
 			return E_FAIL;
 		}
 		iPassIndex = ENUM_CLASS(SHADER_PASS_DEFERRED::DIRECTIONAL);
 	}
 	else if (LIGHT::SPOT == m_LightDesc.eType) {
-		if (FAILED(pShader->Bind_RawValue("g_vLightDir", &m_LightDesc.vDirection, sizeof(_float4)))) {
+		if (FAILED(pShader->Bind_RawValue("g_vLightDir", m_LightDesc.pDirection, sizeof(_float4)))) {
 			return E_FAIL;
 		}
-		if (FAILED(pShader->Bind_RawValue("g_vLightPos", &m_LightDesc.vPosition, sizeof(_float4)))) {
+		if (FAILED(pShader->Bind_RawValue("g_vLightPos", m_LightDesc.pPosition, sizeof(_float4)))) {
+			return E_FAIL;
+		}
+		if (FAILED(pShader->Bind_RawValue("g_vLightPosOffset", &m_LightDesc.vPosOffset, sizeof(_float4)))) {
 			return E_FAIL;
 		}
 		if (FAILED(pShader->Bind_RawValue("g_fLightRange", &m_LightDesc.fRange, sizeof(_float)))) {
@@ -75,7 +88,10 @@ HRESULT CLight::Render(CShader* pShader, CVIBuffer* pVIBuffer) const
 		iPassIndex = ENUM_CLASS(SHADER_PASS_DEFERRED::SPOT);
 	}
 	else {
-		if (FAILED(pShader->Bind_RawValue("g_vLightPos", &m_LightDesc.vPosition, sizeof(_float4)))) {
+		if (FAILED(pShader->Bind_RawValue("g_vLightPos", m_LightDesc.pPosition, sizeof(_float4)))) {
+			return E_FAIL;
+		}
+		if (FAILED(pShader->Bind_RawValue("g_vLightPosOffset", &m_LightDesc.vPosOffset, sizeof(_float4)))) {
 			return E_FAIL;
 		}
 		if (FAILED(pShader->Bind_RawValue("g_fLightRange", &m_LightDesc.fRange, sizeof(_float)))) {
@@ -99,15 +115,30 @@ HRESULT CLight::Render(CShader* pShader, CVIBuffer* pVIBuffer) const
 	}
 
 	return pVIBuffer->Render();
+
 	return S_OK;
 }
-CLight* CLight::Create(const LIGHT_DESC& LightDesc)
-{
-	CLight* pInstance = new CLight();
 
-	if (FAILED(pInstance->Initialize(LightDesc)))
+CLight* CLight::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+{
+	CLight* pInstance = new CLight(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize_Prototype()))
 	{
 		MSG_BOX("Failed to Created : CLight");
+		SAFE_RELEASE(pInstance);
+	}
+
+	return pInstance;
+}
+
+CComponent* CLight::Clone(void* pArg, class CGameObject* pOwner)
+{
+	CLight* pInstance = new CLight(*this);
+	pInstance->m_pOwner = pOwner;
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("Failed to Cloned : CLight");
 		SAFE_RELEASE(pInstance);
 	}
 
@@ -118,5 +149,41 @@ void CLight::Free()
 {
 	__super::Free();
 
+}
 
+
+void CLight::Describe_Entity()
+{
+	if (ImGui::TreeNode("LIGHT_INFO"))
+	{
+		ImGui::Separator(); ImGui::Spacing();
+
+		const char* pLightTypeNames[] = { "DIRECTIONAL", "POINT", "SPOT" };
+
+		int iCurrentItem = static_cast<int>(m_LightDesc.eType);
+
+		if (ImGui::Combo("LightType", &iCurrentItem, pLightTypeNames, ENUM_CLASS(LIGHT::END)))
+		{
+			m_LightDesc.eType = static_cast<LIGHT>(iCurrentItem);
+		}
+
+		GUI::DragFloat4("Diffuse", reinterpret_cast<float*>(&m_LightDesc.vDiffuse) , 0.01f , 0.f ,1.f);
+		GUI::DragFloat4("Ambient", reinterpret_cast<float*>(&m_LightDesc.vAmbient), 0.01f, 0.f, 1.f);
+		GUI::DragFloat4("Specular", reinterpret_cast<float*>(&m_LightDesc.vSpecular), 0.01f, 0.f, 1.f);
+		GUI::DragFloat("Range", &m_LightDesc.fRange, 1.f, 0.f);
+		GUI::DragFloat2("SpotAngle", reinterpret_cast<float*>(&m_LightDesc.vSpotAngles));
+
+		GUI::Spacing();
+		GUI::Spacing();
+
+		GUI::DragFloat3("PosOffest", reinterpret_cast<float*>(&m_LightDesc.vPosOffset));
+
+		GUI::Spacing();
+
+		m_pOwner->Get_Component<CTransform>()->Describe_Entity();
+
+		GUI::TreePop();
+	}
+
+	GUI::Separator();
 }

@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Body.h"
 
 #include "GameInstance.h"
@@ -96,10 +96,45 @@ void CModelParts::Change_Model(const _wchar* Prototype)
 		Remove_Component<CModel>();
 		SAFE_RELEASE(m_pModelCom);
 	}
+	;
+	if (strstr(CMyTools::ToString(Prototype).c_str(), "_F_"))
+	{
+		m_HeadIndex = 2;
+	}
+	else
+		m_HeadIndex = 1;
 
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, Prototype,
 		reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return;
+}
+
+void CModelParts::Set_Texture(const _wchar* Texture)
+{
+	if (strstr(CMyTools::ToString(Texture).c_str(), "THV"))
+	{
+		if (m_pTHV_TextureCom)
+		{
+			Remove_Component<CTexture>();
+			SAFE_RELEASE(m_pTHV_TextureCom);
+		}
+		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, Texture,
+			reinterpret_cast<CComponent**>(&m_pTHV_TextureCom))))
+			return;
+	}
+	else if (strstr(CMyTools::ToString(Texture).c_str(), "DAO"))
+	{
+		if (m_pDAO_TextureCom)
+		{
+			Remove_Component<CTexture>();
+			SAFE_RELEASE(m_pDAO_TextureCom);
+		}
+		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, Texture,
+			reinterpret_cast<CComponent**>(&m_pDAO_TextureCom))))
+			return;
+	}
+
+	
 }
 
 HRESULT CModelParts::Ready_Components()
@@ -138,8 +173,12 @@ void CModelParts::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pShaderCom);
-	Safe_Release(m_pModelCom);
+	SAFE_RELEASE(m_pShaderCom);
+	SAFE_RELEASE(m_pModelCom);
+
+	SAFE_RELEASE(m_pDAO_TextureCom);
+	SAFE_RELEASE(m_pTHV_TextureCom);
+	
 }
 
 void CModelParts::Describe_Entity()

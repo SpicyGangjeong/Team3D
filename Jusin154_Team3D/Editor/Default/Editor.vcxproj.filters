@@ -196,6 +196,36 @@
     <Filter Include="02.GameObjects\Dummys\DummySkyBox">
       <UniqueIdentifier>{12d17342-7cb4-46be-8243-9e1864496338}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\MainLight">
+      <UniqueIdentifier>{a9360a97-5ef2-476a-9f12-f4e06c28290c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Dummy_Plane">
+      <UniqueIdentifier>{6872c5bc-5eac-46a1-b6d8-3ec0f4fb2cd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\Callback">
+      <UniqueIdentifier>{b6d1496a-c8ef-4b7a-9ed4-f00b0a244313}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\Callback\Playable">
+      <UniqueIdentifier>{a225d78f-7eec-4407-bdfd-9e14452f3338}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\Callback\Playable\Playable">
+      <UniqueIdentifier>{a32d5869-5562-4099-925a-f8c022e9aac7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\Callback\Playable\Behavior">
+      <UniqueIdentifier>{83781d7f-b84d-45a3-8361-b6bed2722b74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\Callback">
+      <UniqueIdentifier>{b6d1496a-c8ef-4b7a-9ed4-f00b0a244313}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\PhysXDoor">
+      <UniqueIdentifier>{3131278b-18f5-4b84-ba85-73104998e9c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\PhysXPlatform">
+      <UniqueIdentifier>{efffeaa6-b7a5-49fe-bd2e-9dfa9e4a67d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\PhysXWall">
+      <UniqueIdentifier>{813d68fb-0603-44e9-8fda-5c5dd84d0eb1}</UniqueIdentifier>
+    </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Action_Panel">
       <UniqueIdentifier>{69af6531-b479-4496-9e9b-245423844204}</UniqueIdentifier>
     </Filter>
@@ -363,7 +393,7 @@
     <ClInclude Include="..\public\MapObject.h">
       <Filter>02.GameObjects\Env\02.MapObject</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\MapObject_Static.h">
+    <ClInclude Include="..\public\MapObject_Collision.h">
       <Filter>02.GameObjects\Env\02.MapObject\Static</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MapObject_LOD.h">
@@ -377,9 +407,6 @@
     </ClInclude>
     <ClInclude Include="..\public\MapObject.h">
       <Filter>02.GameObjects\Env\02.MapObject</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\MapObject_Static.h">
-      <Filter>02.GameObjects\Env\02.MapObject\Static</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MapObject_LOD.h">
       <Filter>02.GameObjects\Env\02.MapObject\LOD</Filter>
@@ -401,6 +428,27 @@
     </ClInclude>
     <ClInclude Include="..\Public\Information.h">
       <Filter>03.Information</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MainLight.h">
+      <Filter>02.GameObjects\MainLight</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dummy_Plane.h">
+      <Filter>02.GameObjects\Layer_Effect\Dummy_Plane</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CallBack_Playable_HitRepot.h">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\Callback\Playable\Playable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CallBack_Playable_Behavior.h">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\Callback\Playable\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dummy_PhysXDoor.h">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXDoor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dummy_PhysXPlatform.h">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dummy_PhysXWall.h">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXWall</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Action_Panel.h">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel</Filter>
@@ -565,7 +613,7 @@
     <ClCompile Include="..\private\MapObject.cpp">
       <Filter>02.GameObjects\Env\02.MapObject</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\MapObject_Static.cpp">
+    <ClCompile Include="..\private\MapObject_Collision.cpp">
       <Filter>02.GameObjects\Env\02.MapObject\Static</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MapObject_LOD.cpp">
@@ -579,9 +627,6 @@
     </ClCompile>
     <ClCompile Include="..\private\MapObject.cpp">
       <Filter>02.GameObjects\Env\02.MapObject</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\MapObject_Static.cpp">
-      <Filter>02.GameObjects\Env\02.MapObject\Static</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MapObject_LOD.cpp">
       <Filter>02.GameObjects\Env\02.MapObject\LOD</Filter>
@@ -603,6 +648,27 @@
     </ClCompile>
     <ClCompile Include="..\Private\Information.cpp">
       <Filter>03.Information</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MainLight.cpp">
+      <Filter>02.GameObjects\MainLight</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_Plane.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Dummy_Plane</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CallBack_Playable_HitRepot.cpp">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\Callback\Playable\Playable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CallBack_Playable_Behavior.cpp">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\Callback\Playable\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_PhysXDoor.cpp">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXDoor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_PhysXPlatform.cpp">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_PhysXWall.cpp">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXWall</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Action_Panel.cpp">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel</Filter>

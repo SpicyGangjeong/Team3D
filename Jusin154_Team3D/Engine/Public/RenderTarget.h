@@ -21,9 +21,9 @@ public:
 
 #ifdef _DEBUG
 public:
-	HRESULT Ready_Debug(_float fX, _float fY, _float fSizeX, _float fSizeY);
-	void Render_Debug(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
-
+	_bool Render_Debug(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer, _float fX, _float fY, _float fSizeX, _float fSizeY);
+	void Ready_Debug();
+	void Describe_Entity(const _char* pName);
 #endif
 
 private:
@@ -38,6 +38,8 @@ private:
 #ifdef _DEBUG
 private:
 	_float4x4		m_WorldMatrix = {};
+	_point			m_ptWindowSize = {};
+	_bool			m_isDraw = { false };
 #endif
 
 public:

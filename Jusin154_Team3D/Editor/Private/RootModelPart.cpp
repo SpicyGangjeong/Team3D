@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "RootModelPart.h"
 
 #include "GameInstance.h"
@@ -71,7 +71,7 @@ void CRootModelPart::Update_Anim(_float fTimeDelta)
 		{
 			pModel->Set_PlayAnim(m_pMainModel->Get_PlayAnim());
 			pModel->Set_AnimSpeed(m_pMainModel->Get_AnimSpeed());
-			pModel->Play_Animation(fTimeDelta);
+			pModel->Play_Animation(fTimeDelta,m_pTransformCom);
 		}
 	}
 }
@@ -99,7 +99,7 @@ void CRootModelPart::Change_Model(_uint iIndex)
 
 	pModel->Set_AnimationIndex(m_iAnimIndex);
 	pModel->Set_CurrentTrackPosition(m_fTrackPosition);                                                                                                            
-	pModel->Play_Animation(0.f);
+	pModel->Play_Animation(0.f, m_pTransformCom);
 
 	if (iIndex == ENUM_CLASS(PARTSTYPE::BODY))
 	{
@@ -112,7 +112,7 @@ void CRootModelPart::Set_Animation(_uint iAnimIndex)
 {
 	m_pMainModel->Set_AnimationIndex(iAnimIndex);
 	m_pMainModel->Set_CurrentTrackPosition(0.f);
-	m_pMainModel->Play_Animation(0.f);
+	m_pMainModel->Play_Animation(0.f, m_pTransformCom);
 	for (auto& PartObject : m_ModelParts)
 	{
 		CModel* pModel = PartObject->Get_Component<CModel>();
@@ -120,9 +120,14 @@ void CRootModelPart::Set_Animation(_uint iAnimIndex)
 		{
 			pModel->Set_AnimationIndex(m_pMainModel->Get_AnimIndex());
 			pModel->Set_CurrentTrackPosition(m_pMainModel->Get_CurrentTrackPosition());
-			pModel->Play_Animation(0.f);
+			pModel->Play_Animation(0.f, m_pTransformCom);
 		}
 	}
+}
+
+void CRootModelPart::Set_Texture(_uint iIndex, const _wchar* Texture)
+{
+	m_ModelParts[iIndex]->Set_Texture(Texture);
 }
 
 HRESULT CRootModelPart::Ready_Components(void* pArg)
@@ -171,7 +176,7 @@ CRootModelPart* CRootModelPart::Create(ID3D11Device* pDevice, ID3D11DeviceContex
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
 		MSG_BOX("Failed to Created : CRootModelPart");
-		Safe_Release(pInstance);
+		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
@@ -184,7 +189,7 @@ CGameObject* CRootModelPart::Clone(void* pArg, CGameObject* pOwner)
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
 		MSG_BOX("Failed to Cloned : CRootModelPart");
-		Safe_Release(pInstance);
+		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;

@@ -1,10 +1,16 @@
 ﻿#include "pch.h"
 #include "Loader.h"
-#include "DebugCamera.h"
 #include "GameInstance.h"
+
+#pragma region DEFAULT_HEADER
+
+#include "DebugCamera.h"
 #include "DummyRect.h"
 #include "MainApp.h"
 #include "Dummy_Cube.h"
+#include "MainLight.h"
+
+#pragma endregion
 
 #pragma region OBJECT_HEADER
 
@@ -49,7 +55,7 @@
 #include "VIBuffer_Terrain.h"
 #include "Terrain.h"
 #include "BuildingContainer.h"
-#include "MapObject_Static.h"
+#include "MapObject_Collision.h"
 #include "MapObject_LOD.h"
 #include "MapObject_Manager.h"
 #include "MapElement_Interactable.h"
@@ -62,6 +68,7 @@
 #include "TestEffect.h"
 #include "EditEffect.h"
 #include "Effect_Editor.h"
+#include "Dummy_Plane.h"
 
 #pragma endregion
 
@@ -70,6 +77,8 @@
 #include "Dummy_PhysXBox.h"
 #include "Dummy_PhysXPlayable.h"
 #include "Dummy_PhysXMesh.h"
+#include "Dummy_PhysXPlatform.h"
+#include "Dummy_PhysXWall.h"
 
 #pragma endregion 
 
@@ -222,6 +231,10 @@ HRESULT CLoader::Loading_For_Logo()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CDebugCamera>(g_iStaticLevel, CDebugCamera::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CMainLight>(g_iStaticLevel, CMainLight::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
@@ -502,6 +515,10 @@ HRESULT CLoader::Loading_For_Effect()
 		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Box/Box.bin", XMMatrixIdentity()))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Model_DummyPlane"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Effect/DummyPlane/DummyPlane.fbx", XMMatrixIdentity()))))
+		return E_FAIL;
+
 
 
 	m_strMessage = TEXT("Shader Loading..");
@@ -536,6 +553,10 @@ HRESULT CLoader::Loading_For_Effect()
 	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_Cube>(ENUM_CLASS(LEVEL::EFFECT), CDummy_Cube::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_Plane>(ENUM_CLASS(LEVEL::EFFECT), CDummy_Plane::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	
 	m_strMessage = TEXT("Loading Success!");
 
 	m_isFinished = true;
@@ -547,25 +568,65 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 {
 	m_strMessage = TEXT("PhysX Bodies Loading..");
 
-	{
-		CRigidBody::RIGIDBODY_PROTOTYPEDESC Desc{};
+	{ // Dumping Box
+		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
 		{
 			Desc.eType = ACTOR::BOX;
-			Desc.ePxRigidBodyFlags = {};
+			Desc.ePxRigidBodyFlags = { /*PSX::PxRigidBodyFlag::eKINEMATIC*/ };
 			Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
 			Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 			Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
 			Desc.fContactOffset = { 0.05f };
 			Desc.vhalfGeometryInfo = { 1.f, 1.f, 1.f };
 			Desc.fDensity = 10.f;
+			Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
+			Desc.eLockFlag = {};
+			Desc.vAutoDamping = { };
 		}
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), CRigidBody::Create(m_pDevice, m_pContext, Desc)))) {
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
+			return E_FAIL;
+		}
+	}
+	{ // Heavy Wall
+		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
+		{
+			Desc.eType = ACTOR::BOX;
+			Desc.ePxRigidBodyFlags = { /*PSX::PxRigidBodyFlag::eKINEMATIC*/ };
+			Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+			Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
+			Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
+			Desc.fContactOffset = { 0.05f };
+			Desc.vhalfGeometryInfo = { 4.5f, 4.5f, 4.5f };
+			Desc.fDensity = 1000.f;
+			Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
+			Desc.eLockFlag = {};
+			Desc.vAutoDamping = { 100.f, 100.f };
+		}
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_HEAVY_WALL"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
+			return E_FAIL;
+		}
+	}
+	{ // Platform
+		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
+		{
+			Desc.eType = ACTOR::BOX;
+			Desc.ePxRigidBodyFlags = { /*PSX::PxRigidBodyFlag::eKINEMATIC*/ };
+			Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+			Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
+			Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
+			Desc.fContactOffset = { 0.05f };
+			Desc.vhalfGeometryInfo = { 1.5f, 0.5f, 1.5f };
+			Desc.fDensity = 1000.f;
+			Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
+			Desc.eLockFlag = { PSX::PxRigidDynamicLockFlag::eLOCK_ANGULAR_X| PSX::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z| PSX::PxRigidDynamicLockFlag::eLOCK_LINEAR_Y };
+			Desc.vAutoDamping = { 10.f, 10.f };
+		}
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_PLATFORM"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
 			return E_FAIL;
 		}
 	}
 
 	{
-
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), CCharacter_Controller::Create(m_pDevice, m_pContext)))) {
 			return E_FAIL;
 		}
@@ -617,27 +678,31 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 		}
 
 		ModelPrototypeTags.push_back(strFileName);
-		ModelPrototypePath.push_back(file.path());
 
-		_uint iNumMesh = pModel->Get_NumMeshes();
+		{ /* cache rigidbody */ // More Info In 리지드바디, CCT, 엔진이넘
+			ModelPrototypePath.push_back(file.path());
 
-		CRigidBody::RIGIDBODY_PROTOTYPEDESC Desc{};
-		for (_uint i = 0; i < iNumMesh; ++i) {
-			_string strDestName = pModel->Get_MeshName(i) + to_string(i);
-			{
-				Desc.eType = ACTOR::TRIANGLEMESH;
-				Desc.ePxRigidBodyFlags = {};
-				Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
-				Desc.ePxMaterialTypes = PXMATERIAL::DEFAULT;
-				Desc.vMatInfo = _float3(0.5f, 0.5f, 0.6f);
-				Desc.fContactOffset = 0.f;
-			}
-			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, CMyTools::ToWstring(strDestName).c_str(), CRigidBody::Create(m_pDevice, m_pContext, Desc)))) {
-				return E_FAIL;
+			_uint iNumMesh = pModel->Get_NumMeshes();
+
+			CRigidBody_Static::RIGIDBODY_STATIC_PROTOTYPEDESC Desc{};
+			for (_uint i = 0; i < iNumMesh; ++i) {
+				_string strDestName = pModel->Get_MeshName(i) + to_string(i);
+				{ // basic static RIGIDBODY
+					Desc.eType = ACTOR::TRIANGLEMESH;
+					Desc.ePxRigidBodyFlags = {};
+					Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+					Desc.ePxMaterialTypes = PXMATERIAL::DEFAULT;
+					Desc.vMatInfo = _float3(0.5f, 0.5f, 0.6f);
+					Desc.fContactOffset = 0.f;
+				}
+				if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, CMyTools::ToWstring(strDestName).c_str(), CRigidBody_Static::Create(m_pDevice, m_pContext, Desc)))) {
+					return E_FAIL;
+				}
 			}
 		}
+
 	}
-	if (FAILED(m_pGameInstance->Add_Prototype<CMapObject_Manager>(g_iStaticLevel, CMapObject_Manager::Create(m_pDevice, m_pContext, ModelPrototypeTags, ModelPrototypePath)))) {
+	if (FAILED(m_pGameInstance->Add_Prototype<CMapObject_Manager>(g_iStaticLevel, CMapObject_Manager::Create(m_pDevice, m_pContext, ModelPrototypeTags, ModelPrototypePath)))){
 		return E_FAIL;
 	}
 
@@ -648,11 +713,13 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 	m_strMessage = TEXT("Prototype Loading..");
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Terrain"),
-		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, nullptr, 100, 100))))
+		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, nullptr, 100, 100)))){
 		return E_FAIL;
+	}
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CTerrain>(g_iStaticLevel, CTerrain::Create(m_pDevice, m_pContext))))
+	if (FAILED(m_pGameInstance->Add_Prototype<CTerrain>(g_iStaticLevel, CTerrain::Create(m_pDevice, m_pContext)))){
 		return E_FAIL;
+	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXBox>(g_iStaticLevel, CDummy_PhysXBox::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
@@ -663,12 +730,20 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXMesh>(g_iStaticLevel, CDummy_PhysXMesh::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
-
-	if (FAILED(m_pGameInstance->Add_Prototype<CMapObject_Static>(g_iStaticLevel, CMapObject_Static::Create(m_pDevice, m_pContext))))
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXWall>(g_iStaticLevel, CDummy_PhysXWall::Create(m_pDevice, m_pContext)))){
 		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Prototype<CMapObject_LOD>(g_iStaticLevel, CMapObject_LOD::Create(m_pDevice, m_pContext))))
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXPlatform>(g_iStaticLevel, CDummy_PhysXPlatform::Create(m_pDevice, m_pContext)))){
 		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CMapObject_Collision>(g_iStaticLevel, CMapObject_Collision::Create(m_pDevice, m_pContext)))){
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CMapObject_LOD>(g_iStaticLevel, CMapObject_LOD::Create(m_pDevice, m_pContext)))){
+		return E_FAIL;
+	}
 
 	m_strMessage = TEXT("Loading Success!");
 
@@ -698,6 +773,60 @@ HRESULT CLoader::Asset_FileLoad(const _char* pDirectoryPath, const _tchar* pPreN
 
 		AddPrototypeEvent(wstrFileName, szFilePath);
 
+	}
+
+	return S_OK;
+}
+
+HRESULT CLoader::MapFolderLoad(const _char* pDirectoryPath, const _char* pFileExt, _bool bUseTag, vector<_wstring>& ModelPrototypeTags, vector<filesystem::path>& ModelPrototypePath)
+{
+	for (const auto& file : filesystem::directory_iterator(pDirectoryPath))
+	{
+		if (file.is_directory())
+			continue;
+
+		string ext = file.path().extension().string();
+
+		if (strcmp(ext.c_str(), pFileExt)) {
+			continue;
+		}
+
+		_char szFilePath[MAX_PATH] = {};
+
+		strcpy_s(szFilePath, MAX_PATH, file.path().string().c_str());
+
+		_wstring strFileName = L"Prototype_GameObject_" + file.path().stem().wstring();
+
+		CModel* pModel = CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, szFilePath);
+
+		/*For Prototype_Component_Model_*/
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, strFileName, pModel)))
+			return E_FAIL;
+
+		if(bUseTag)
+		{
+			ModelPrototypeTags.push_back(strFileName);
+			ModelPrototypePath.emplace_back(file.path());
+		}
+
+		_uint iNumMesh = pModel->Get_NumMeshes();
+
+
+		CRigidBody_Static::RIGIDBODY_STATIC_PROTOTYPEDESC Desc{};
+		for (_uint i = 0; i < iNumMesh; ++i) {
+			_string strDestName = pModel->Get_MeshName(i) + to_string(i);
+			{
+				Desc.eType = ACTOR::TRIANGLEMESH;
+				Desc.ePxRigidBodyFlags = {};
+				Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+				Desc.ePxMaterialTypes = PXMATERIAL::DEFAULT;
+				Desc.vMatInfo = _float3(0.5f, 0.5f, 0.6f);
+				Desc.fContactOffset = 0.f;
+			}
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, CMyTools::ToWstring(strDestName).c_str(), CRigidBody_Static::Create(m_pDevice, m_pContext, Desc)))) {
+				return E_FAIL;
+			}
+		}
 	}
 
 	return S_OK;
@@ -749,6 +878,14 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Human/Head/FeMale/T_NPC_F_Head_Eye_Honey.bin", XMMatrixScaling(0.001f, 0.001f, 0.001f) * XMMatrixIdentity()))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_F_Head_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Human/Head/FeMale/F_Head.bin", XMMatrixScaling(0.001f, 0.001f, 0.001f) * XMMatrixIdentity()))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_M_Head_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Human/Head/Male/M_Head.bin", XMMatrixScaling(0.001f, 0.001f, 0.001f) * XMMatrixIdentity()))))
+		return E_FAIL;
+
 #pragma endregion
 
 #pragma region HAIR
@@ -786,6 +923,10 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 
 #pragma endregion
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Npc_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Human/Npc/Npc.bin", XMMatrixScaling(0.001f, 0.001f, 0.001f) * XMMatrixIdentity()))))
+		return E_FAIL;
+
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Broom_Model"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Broom/Broom.bin", XMMatrixScaling(0.001f, 0.001f, 0.001f) * XMMatrixIdentity()))))
 		return E_FAIL;
@@ -806,9 +947,19 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("TerrainTest"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Cursor/UI_T_CursorRings.dds"), 0)))) {
+		return E_FAIL;
+	}
+
 	m_strMessage = TEXT("Shader Loading..");
 
 	m_strMessage = TEXT("Prototype Loading..");
+
+	/* For.Prototype_Component_VIBuffer_Terrain */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Terrain"),
+		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, nullptr, 100, 100))))
+		return E_FAIL;
 
 	/* For.Prototype_GameObject_RootModelPart */
 	if (FAILED(m_pGameInstance->Add_Prototype<CRootModelPart>(g_iStaticLevel, CRootModelPart::Create(m_pDevice, m_pContext))))
@@ -834,6 +985,10 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	if (FAILED(m_pGameInstance->Add_Prototype<CDummySkyBox>(g_iStaticLevel, CDummySkyBox::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_Terrain */
+	if (FAILED(m_pGameInstance->Add_Prototype<CTerrain>(g_iStaticLevel, CTerrain::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	m_strMessage = TEXT("Loading Success!");
 
 	m_isFinished = true;
@@ -851,6 +1006,11 @@ HRESULT CLoader::Loading_For_MapViewer()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("CollisionDebug"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Effect/Noises/VFX_T_noise6_D.png"), 0)))) {
+		return E_FAIL;
+	}
+
 	m_strMessage = TEXT("모델를(을) 로딩 중 입니다.");
 
 	/* For.Prototype_Component_SkyboxModel */
@@ -861,56 +1021,28 @@ HRESULT CLoader::Loading_For_MapViewer()
 	vector<_wstring> ModelPrototypeTags = {};
 	vector<filesystem::path> ModelPrototypePath = {};
 
-	//for (const auto& file : filesystem::directory_iterator("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Meshes"))
-	for (const auto& file : filesystem::directory_iterator("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogwarts\\SUB_GreatHall\\Static_Mesh\\Kit_INT"))
-		//for (const auto& file : filesystem::directory_iterator("C:\\Users\\kimnuri\\Desktop\\Hogwart\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Terrain"))
-	{
-		if (file.is_directory())
-			continue;
+	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Collision\\Terrain",
+		".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Terrain",
+		".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_TScrolls\\Collisions",
+		".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_TScrolls\\Meshes",
+		".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Collision",
+		".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Meshes",
+		".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Meshes\\3Broom_Kit",
+		".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
 
-		string ext = file.path().extension().string();
-
-		//if (strcmp(ext.c_str(), ".bin")){
-		//	continue;
-		//}
-		if (strcmp(ext.c_str(), ".fbx")) {
-			continue;
-		}
-
-		_char szFilePath[MAX_PATH] = {};
-
-		strcpy_s(szFilePath, MAX_PATH, file.path().string().c_str());
-
-		_wstring strFileName = L"Prototype_GameObject_" + file.path().stem().wstring();
-
-		CModel* pModel = CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, szFilePath);
-
-		/*For Prototype_Component_Model_*/
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, strFileName, pModel)))
-			return E_FAIL;
-
-		ModelPrototypeTags.push_back(strFileName);
-		ModelPrototypePath.emplace_back(file.path());
-
-		_uint iNumMesh = pModel->Get_NumMeshes();
-
-
-		CRigidBody::RIGIDBODY_PROTOTYPEDESC Desc{};
-		for (_uint i = 0; i < iNumMesh; ++i) {
-			_string strDestName = pModel->Get_MeshName(i) + to_string(i);
-			{
-				Desc.eType = ACTOR::TRIANGLEMESH;
-				Desc.ePxRigidBodyFlags = {};
-				Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
-				Desc.ePxMaterialTypes = PXMATERIAL::DEFAULT;
-				Desc.vMatInfo = _float3(0.5f, 0.5f, 0.6f);
-				Desc.fContactOffset = 0.f;
-			}
-			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, CMyTools::ToWstring(strDestName).c_str(), CRigidBody::Create(m_pDevice, m_pContext, Desc)))) {
-				return E_FAIL;
-			}
-		}
-	}
 
 	m_strMessage = TEXT("쉐이더를(을) 로딩 중 입니다.");
 
@@ -930,8 +1062,8 @@ HRESULT CLoader::Loading_For_MapViewer()
 	if (FAILED(m_pGameInstance->Add_Prototype<CBuildingContainer>(g_iStaticLevel, CBuildingContainer::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	/* For.Prototype_GameObject_MapObject_Static */
-	if (FAILED(m_pGameInstance->Add_Prototype<CMapObject_Static>(g_iStaticLevel, CMapObject_Static::Create(m_pDevice, m_pContext))))
+	/* For.Prototype_GameObject_MapObject_Collision */
+	if (FAILED(m_pGameInstance->Add_Prototype<CMapObject_Collision>(g_iStaticLevel, CMapObject_Collision::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_MapObject_LOD */
@@ -993,3 +1125,5 @@ void CLoader::Free()
 	SAFE_RELEASE(m_pDevice);
 	SAFE_RELEASE(m_pContext);
 }
+//
+//

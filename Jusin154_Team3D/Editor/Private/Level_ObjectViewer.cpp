@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Level_ObjectViewer.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
@@ -11,7 +11,11 @@
 #include "Layer.h"
 #include "GameObject.h"
 #include "DummyObject.h"
+
 #include "DummySkyBox.h"
+#include "MainLight.h"
+#include "Terrain.h"
+
 
 CLevel_ObjectViewer::CLevel_ObjectViewer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -54,7 +58,7 @@ void CLevel_ObjectViewer::Update(_float fTimeDelta)
 
 HRESULT CLevel_ObjectViewer::Render()
 {
-	SetWindowText(g_hWnd, TEXT("¿ÀºêÁ§Æ® ·¹º§ÀÔ´Ï´Ù"));
+	SetWindowText(g_hWnd, TEXT("ì˜¤ë¸Œì íŠ¸ ë ˆë²¨ìž…ë‹ˆë‹¤"));
 	//GUI::ShowDemoWindow();
 	return S_OK;
 }
@@ -244,6 +248,52 @@ void CLevel_ObjectViewer::Category_PartsModelList(const _char* Category, const _
 						iIndex = ENUM_CLASS(CRootModelPart::PARTSTYPE::HAIR);
 
 					m_HumanRoot->Change_Model(iIndex);
+
+					filesystem::path fullPath(szCategory);
+					filesystem::path folder = fullPath.parent_path();
+					_string baseName = fullPath.stem().string();
+
+					_string defaultModel = fullPath.filename().string();
+
+					for (auto& entry : filesystem::directory_iterator(folder))
+					{
+						if (!entry.is_regular_file())
+							continue;
+
+						auto file = entry.path().filename().string();
+						auto stem = entry.path().stem().string();
+						auto ext = entry.path().extension().string();
+
+						if (ext != ".png")
+							continue;
+
+						if (strstr(stem.c_str(),"DAO_MSK"))
+						{
+							_string Name = folder.string() +"/" + file;
+
+							const _wchar* Prototype = TEXT("DAO_MSK");
+
+							if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, Prototype,
+								CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, CMyTools::ToWstring(Name).c_str(), 0)))) {
+								return;
+							}
+
+							m_HumanRoot->Set_Texture(iIndex, Prototype);
+						}
+						if (strstr(stem.c_str(), "THV_MSK"))
+						{
+							_string Name = folder.string() + "/" + file;
+
+							const _wchar* Prototype = TEXT("THV_MSK");
+
+							if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, Prototype,
+								CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, CMyTools::ToWstring(Name).c_str(), 0)))) {
+								return;
+							}
+
+							m_HumanRoot->Set_Texture(iIndex, Prototype);
+						}
+					}
 				}
 			}
 		}
@@ -262,6 +312,7 @@ void CLevel_ObjectViewer::Show_AnimList()
 			{
 				pModel->Set_AnimationIndex(i);
 				pModel->Set_CurrentTrackPosition(0.f);
+				pModel->Play_Animation(0.f);
 			}
 		}
 	}
@@ -298,8 +349,15 @@ void CLevel_ObjectViewer::Dummy_Object_Setting()
 	GUI::Begin("Object_Info");
 	if (!m_Objects.empty())
 	{
+		_float3 Pos;
+		XMStoreFloat3(&Pos, m_Objects[m_iObjectIndex]->Get_Component<CTransform>()->Get_State(STATE::POSITION));
+		GUI::DragFloat3("Pos", (_float*)&Pos);
+
 		Show_ObjectList();
+
 		CModel* pModel = m_Objects[m_iObjectIndex]->Get_Component<CModel>();
+
+		GUI::Button(pModel->Get_AnimList(pModel->Get_AnimIndex()));
 
 		_float AnimTrack = pModel->Get_CurrentTrackPosition();
 		GUI::DragFloat("AnimTrack", &AnimTrack);
@@ -330,6 +388,18 @@ void CLevel_ObjectViewer::Parts_Object_Setting()
 		CModel* pModel = m_HumanRoot->Get_MainModel();
 		if (pModel)
 		{
+			_float3 Pos;
+			XMStoreFloat3(&Pos, m_HumanRoot->Get_WorldPostion());
+
+			float Pos3[3] = { Pos.x, Pos.y, Pos.z };
+			GUI::DragFloat3("Pos", Pos3);
+
+			Pos.x = Pos3[0];
+			Pos.y = Pos3[1];
+			Pos.z = Pos3[2];
+
+			m_HumanRoot->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(Pos.x, Pos.y, Pos.z, 1.f));
+
 			GUI::Button(pModel->Get_AnimList(pModel->Get_AnimIndex()));
 
 			_float KeyFrame = pModel->Get_CurrentTrackPosition();
@@ -464,6 +534,7 @@ HRESULT CLevel_ObjectViewer::Ready_Layer_Camera(const _wstring& strLayerTag)
 	CameraDesc.vEye = _float3(0.f, 30.f, -10.f);
 	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
 	CameraDesc.fSpeedPerSec = 5.f;
+	CameraDesc.pCameraKey = TEXT("Debug_Camera");
 	CameraDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 	CameraDesc.fMouseSensor = 0.1f;
 
@@ -476,17 +547,9 @@ HRESULT CLevel_ObjectViewer::Ready_Layer_Camera(const _wstring& strLayerTag)
 
 HRESULT CLevel_ObjectViewer::Ready_Layer_Light()
 {
-	LIGHT_DESC			LightDesc{};
-
-	LightDesc.eType = LIGHT::DIRECTIONAL;
-	LightDesc.vDiffuse = _float4(0.8f, 0.8f, 0.8f, 0.f);
-	LightDesc.vAmbient = _float4(0.2f, 0.2f, 0.2f, 0.f);
-	LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 0.f);
-	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
-
-	if (FAILED(m_pGameInstance->On_Light(NEXT_LEVEL, TEXT("Main_Light"), LightDesc, nullptr))) {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMainLight>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT)))
 		return E_FAIL;
-	}
+
 	return S_OK;
 }
 
@@ -498,6 +561,9 @@ HRESULT CLevel_ObjectViewer::Ready_Layer_UI(const _wstring& strLayerTag)
 HRESULT CLevel_ObjectViewer::Ready_Layer_Dummy(const _wstring& strLayerTag)
 {
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummySkyBox>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE)))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
 		return E_FAIL;
 
 	return S_OK;

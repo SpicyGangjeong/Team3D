@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Dummy_PhysXMesh.h"
 
 #include "GameInstance.h"
@@ -42,8 +42,9 @@ void CDummy_PhysXMesh::Update(_float fTimeDelta)
 
 void CDummy_PhysXMesh::Late_Update(_float fTimeDelta)
 {
-	_float4* vPos = (_float4*)(m_pTransformCom->Get_WorldMatrixPtr()->m[3]);
-	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this, *vPos, m_pTransformCom->Get_Radius());
+	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
+		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+	}
 }
 
 HRESULT CDummy_PhysXMesh::Render()

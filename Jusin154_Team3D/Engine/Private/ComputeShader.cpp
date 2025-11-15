@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "ComputeShader.h"
 #include "GameInstance.h"
 #include "Instance_Model.h"
@@ -8,9 +8,9 @@ CComputeShader::CComputeShader(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 	, m_pContext{ pContext }
 	, m_pGameInstance{ CGameInstance::GetInstance() }
 {
-	Safe_AddRef(m_pDevice);
-	Safe_AddRef(m_pContext);
-	Safe_AddRef(m_pGameInstance);
+	SAFE_ADDREF(m_pDevice);
+	SAFE_ADDREF(m_pContext);
+	SAFE_ADDREF(m_pGameInstance);
 }
 
 HRESULT CComputeShader::Initialize(const _tchar* pShaderFilePath, const _char* pStartFunctionName, _uint iNumElement, _uint iNumInputBuffer, _uint iNumOutputBuffer, _uint iInputStructStride[], _uint iOutputStructStride[])
@@ -37,10 +37,10 @@ vector<D3D11_MAPPED_SUBRESOURCE> CComputeShader::Dispatch(_uint iSRVIndex, _uint
 {
 	//VBBuffer-> dynamic , pConstantBuffer-> dynamic  , m_pInputBuffer, m_pOutputBuffer-> default , m_pStagingBuffer-> Staging
 
-	//³» ½ÃÀÛ ¹öÆÛ °ªÀ» Ã¤¿î´Ù.
+	//ë‚´ ì‹œì‘ ë²„í¼ ê°’ì„ ì±„ìš´ë‹¤.
 
-	//´ÙÀÌ³ª¹ÍÀ¸·Î »ı¼ºµÈ ¹öÆÛ¸¦ ¹Ù·Î µğÆúÆ® ¹öÆÛ·Î ¶§·Á¹ÚÀ» ¼ö ¾øÀ½
-	//µû¶ó¼­ ½ºÅ×ÀÌÂ¡ ¹öÆÛ¸¦ µû·Î ¼±¾ğÇÏ¿© °ªÀ» º¹»ç¹Ş´Â´Ù.
+	//ë‹¤ì´ë‚˜ë¯¹ìœ¼ë¡œ ìƒì„±ëœ ë²„í¼ë¥¼ ë°”ë¡œ ë””í´íŠ¸ ë²„í¼ë¡œ ë•Œë ¤ë°•ì„ ìˆ˜ ì—†ìŒ
+	//ë”°ë¼ì„œ ìŠ¤í…Œì´ì§• ë²„í¼ë¥¼ ë”°ë¡œ ì„ ì–¸í•˜ì—¬ ê°’ì„ ë³µì‚¬ë°›ëŠ”ë‹¤.
 
 
 	for (_uint i = 0; i < m_iNumInputBuffer; i++)
@@ -55,22 +55,22 @@ vector<D3D11_MAPPED_SUBRESOURCE> CComputeShader::Dispatch(_uint iSRVIndex, _uint
 
 
 
-	//ÄÄÇ»Æ® ½¦ÀÌ´õ ¹ÙÀÎµù
+	//ì»´í“¨íŠ¸ ì‰ì´ë” ë°”ì¸ë”©
 	m_pContext->CSSetShader(m_pComputeShader, nullptr, 0);
 	m_pContext->CSSetConstantBuffers(0, 1, &pConstantBuffer);
 
-	//SRV, UAV ¹ÙÀÎµù
+	//SRV, UAV ë°”ì¸ë”©
 	Bind_SRV(iSRVIndex);
 	Bind_UAV(iUAVIndex);
 
-	//ÄÄÇ»Æ® ½¦ÀÌ´õ ½ÇÇà
+	//ì»´í“¨íŠ¸ ì‰ì´ë” ì‹¤í–‰
 
-	//³» ¹öÆÛÀÇ Â÷¿ø(1,2,3Â÷¿ø ¹è¿­)¿¡ µû¸¥ ±×·ì Ä«¿îÆ®¸¦ ¼³Á¤ << Á¤È®È÷ ¸ğ¸£°ÚÀ½
+	//ë‚´ ë²„í¼ì˜ ì°¨ì›(1,2,3ì°¨ì› ë°°ì—´)ì— ë”°ë¥¸ ê·¸ë£¹ ì¹´ìš´íŠ¸ë¥¼ ì„¤ì • << ì •í™•íˆ ëª¨ë¥´ê² ìŒ
 	m_pContext->Dispatch((_uint)vGroupCount.x, (_uint)vGroupCount.y, (_uint)vGroupCount.z);
 
 
-	//µğÆúÆ®-> ½ºÅ×ÀÌÂ¡ ¹öÆÛ´Â º¹»ç°¡ °¡´ÉÇÔ (´ÙÀÌ³ª¹ÍÀº cpu ±â¹İÀÌ¶ó º¹»ç ¾ÈµÊ)
-	//0¹ø ½ºÅ×ÀÌÂ¡ ¹öÆÛ°¡ ¾Æ¿ìÇ² ½ºÅ×ÀÌÂ¡ ¹öÆÛ¿Í °°À½
+	//ë””í´íŠ¸-> ìŠ¤í…Œì´ì§• ë²„í¼ëŠ” ë³µì‚¬ê°€ ê°€ëŠ¥í•¨ (ë‹¤ì´ë‚˜ë¯¹ì€ cpu ê¸°ë°˜ì´ë¼ ë³µì‚¬ ì•ˆë¨)
+	//0ë²ˆ ìŠ¤í…Œì´ì§• ë²„í¼ê°€ ì•„ìš°í’‹ ìŠ¤í…Œì´ì§• ë²„í¼ì™€ ê°™ìŒ
 
 	vector<D3D11_MAPPED_SUBRESOURCE> StagingSubResources = {};
 
@@ -78,7 +78,7 @@ vector<D3D11_MAPPED_SUBRESOURCE> CComputeShader::Dispatch(_uint iSRVIndex, _uint
 	{
 		m_pContext->CopyResource(m_pOutputStagingBuffer[i], m_pOutputBuffer[i]);
 
-		//½ºÅ×ÀÌÂ¡ ¹öÆÛ¸¦ ¿­¾î¼­ Ä«ÇÇÇÔ
+		//ìŠ¤í…Œì´ì§• ë²„í¼ë¥¼ ì—´ì–´ì„œ ì¹´í”¼í•¨
 		D3D11_MAPPED_SUBRESOURCE StagingSubResource = {};
 
 		if (SUCCEEDED(m_pContext->Map(m_pOutputStagingBuffer[i], 0, D3D11_MAP_READ, 0, &StagingSubResource)))
@@ -99,9 +99,9 @@ vector<D3D11_MAPPED_SUBRESOURCE> CComputeShader::Dispatch(_uint iSRVIndex, _uint
 
 void CComputeShader::Bind_SRV(_uint iIndex)
 {
-	m_pContext->CSSetShaderResources(iIndex, // ½ÃÀÛ½½·Ô ¹øÈ£
-		m_iNumInputBuffer,  // ¹öÆÛ °³¼ö
-		&m_pInputSRV[0]); // ¹öÆÛ ½ÃÀÛ ÁÖ¼Ò
+	m_pContext->CSSetShaderResources(iIndex, // ì‹œì‘ìŠ¬ë¡¯ ë²ˆí˜¸
+		m_iNumInputBuffer,  // ë²„í¼ ê°œìˆ˜
+		&m_pInputSRV[0]); // ë²„í¼ ì‹œì‘ ì£¼ì†Œ
 }
 
 void CComputeShader::Bind_UAV(_uint iIndex)
@@ -111,15 +111,15 @@ void CComputeShader::Bind_UAV(_uint iIndex)
 
 void CComputeShader::Bind_OutPut_SRV(_uint iIndex, _uint iBufferIndex)
 {
-	m_pContext->PSSetShaderResources(iIndex, // ½ÃÀÛ½½·Ô ¹øÈ£
-		1,  // ¹öÆÛ °³¼ö
-		&m_pOutputSRV[iBufferIndex]); // ¹öÆÛ ½ÃÀÛ ÁÖ¼Ò
+	m_pContext->PSSetShaderResources(iIndex, // ì‹œì‘ìŠ¬ë¡¯ ë²ˆí˜¸
+		1,  // ë²„í¼ ê°œìˆ˜
+		&m_pOutputSRV[iBufferIndex]); // ë²„í¼ ì‹œì‘ ì£¼ì†Œ
 
 }
 
 void CComputeShader::Reset()
 {
-	//´ÙÀ½ ·£´õ¸µ ÆĞ½º¿¡ ¿¬°üµÇÁö ¾Êµµ·Ï ÃÊ±âÈ­
+	//ë‹¤ìŒ ëœë”ë§ íŒ¨ìŠ¤ì— ì—°ê´€ë˜ì§€ ì•Šë„ë¡ ì´ˆê¸°í™”
 
 	vector<ID3D11ShaderResourceView*> pResetSRVs = {};
 	vector<ID3D11UnorderedAccessView*> pResetUAVs = {};
@@ -141,10 +141,10 @@ void CComputeShader::Reset()
 
 HRESULT CComputeShader::CreateBuffer(_uint iNumElement, _uint iInputStructStride[], _uint iOuputStructStride[])
 {
-	//ÀÎ ¾Æ¿ôÇ² ¹öÆÛ
+	//ì¸ ì•„ì›ƒí’‹ ë²„í¼
 
 
-	for (_uint i = 0; i < m_iNumInputBuffer; i++) // ÀÎÇ² ¹öÆÛ¸¦ ¿©·¯°³ »ç¿ëÇÒ ¼ö ÀÖµµ·Ï ¸¸µç´Ù
+	for (_uint i = 0; i < m_iNumInputBuffer; i++) // ì¸í’‹ ë²„í¼ë¥¼ ì—¬ëŸ¬ê°œ ì‚¬ìš©í•  ìˆ˜ ìˆë„ë¡ ë§Œë“ ë‹¤
 	{
 		D3D11_BUFFER_DESC InputBufferdesc = {};
 
@@ -162,9 +162,9 @@ HRESULT CComputeShader::CreateBuffer(_uint iNumElement, _uint iInputStructStride
 
 		m_pInputBuffer.push_back(pInputBuffer);
 
-		//½ºÅ×ÀÌÂ¡ ¹öÆÛ ÀÌ¸§
+		//ìŠ¤í…Œì´ì§• ë²„í¼ ì´ë¦„
 		D3D11_BUFFER_DESC StagingBufferDesc = {};
-		StagingBufferDesc.Usage = D3D11_USAGE_STAGING; // ½ºÅ×ÀÌÂ¡ ¹öÆÛ 
+		StagingBufferDesc.Usage = D3D11_USAGE_STAGING; // ìŠ¤í…Œì´ì§• ë²„í¼ 
 		StagingBufferDesc.ByteWidth = iInputStructStride[i] * iNumElement;
 		StagingBufferDesc.StructureByteStride = iInputStructStride[i];
 		StagingBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
@@ -181,14 +181,14 @@ HRESULT CComputeShader::CreateBuffer(_uint iNumElement, _uint iInputStructStride
 
 	for (_uint i = 0; i < m_iNumOutputBuffer; i++)
 	{
-		// ¾Æ¿ôÇ² ¹öÆÛ
+		// ì•„ì›ƒí’‹ ë²„í¼
 
 		D3D11_BUFFER_DESC Bufferdesc = {};
 		Bufferdesc.ByteWidth = iOuputStructStride[i] * iNumElement;
 		Bufferdesc.StructureByteStride = iOuputStructStride[i];
-		Bufferdesc.Usage = D3D11_USAGE_DEFAULT; // ÀÎ ¾Æ¿ôÇ² ¹öÆÛ´Â µğÆúÆ®·Î ¼³Á¤ÇØ¾ßÇÔ
-		Bufferdesc.CPUAccessFlags = 0; // µğÆúÆ® ¹öÆÛ´Â CPU¿¡¼­ Read Write°¡ ºÒ°¡´ÉÇÏ¸ç
-		//¿ÀÁ÷ Update_SubResource¸¦ ÅëÇØ¼­¸¸ °»½ÅÀÌ °¡´ÉÇÏ´Ù.
+		Bufferdesc.Usage = D3D11_USAGE_DEFAULT; // ì¸ ì•„ì›ƒí’‹ ë²„í¼ëŠ” ë””í´íŠ¸ë¡œ ì„¤ì •í•´ì•¼í•¨
+		Bufferdesc.CPUAccessFlags = 0; // ë””í´íŠ¸ ë²„í¼ëŠ” CPUì—ì„œ Read Writeê°€ ë¶ˆê°€ëŠ¥í•˜ë©°
+		//ì˜¤ì§ Update_SubResourceë¥¼ í†µí•´ì„œë§Œ ê°±ì‹ ì´ ê°€ëŠ¥í•˜ë‹¤.
 
 		Bufferdesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS;
 		Bufferdesc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
@@ -201,9 +201,9 @@ HRESULT CComputeShader::CreateBuffer(_uint iNumElement, _uint iInputStructStride
 
 		m_pOutputBuffer.push_back(pOutputBuffer);
 
-		//¾Æ¿ôÇ² ½ºÅ×ÀÌÂ¡ ¹öÆÛ
+		//ì•„ì›ƒí’‹ ìŠ¤í…Œì´ì§• ë²„í¼
 		D3D11_BUFFER_DESC OutPutStagingBufferDesc = {};
-		OutPutStagingBufferDesc.Usage = D3D11_USAGE_STAGING; // ½ºÅ×ÀÌÂ¡ ¹öÆÛ 
+		OutPutStagingBufferDesc.Usage = D3D11_USAGE_STAGING; // ìŠ¤í…Œì´ì§• ë²„í¼ 
 		OutPutStagingBufferDesc.ByteWidth = iOuputStructStride[i] * iNumElement;
 		OutPutStagingBufferDesc.StructureByteStride = iOuputStructStride[i];
 		OutPutStagingBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
@@ -222,7 +222,7 @@ HRESULT CComputeShader::CreateBuffer(_uint iNumElement, _uint iInputStructStride
 HRESULT CComputeShader::CreateResurceViews(_uint iNumElement, _uint iNumInputBuffer)
 {
 	// SRV
-	for (_uint i = 0; i < iNumInputBuffer; i++) // ÀÎÇ² ¹öÆÛ¸¦ ¿©·¯°³ »ç¿ëÇÒ ¼ö ÀÖµµ·Ï ¸¸µç´Ù
+	for (_uint i = 0; i < iNumInputBuffer; i++) // ì¸í’‹ ë²„í¼ë¥¼ ì—¬ëŸ¬ê°œ ì‚¬ìš©í•  ìˆ˜ ìˆë„ë¡ ë§Œë“ ë‹¤
 	{
 		ID3D11ShaderResourceView* pSrv = {};
 
@@ -261,7 +261,7 @@ HRESULT CComputeShader::CreateResurceViews(_uint iNumElement, _uint iNumInputBuf
 		//SRV
 
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-		srvDesc.Format = DXGI_FORMAT_UNKNOWN; // StructuredBuffer´Â UNKNOWN
+		srvDesc.Format = DXGI_FORMAT_UNKNOWN; // StructuredBufferëŠ” UNKNOWN
 		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
 		srvDesc.Buffer.NumElements = iNumElement;
 		srvDesc.Buffer.FirstElement = 0;
@@ -283,7 +283,7 @@ HRESULT CComputeShader::CreateComputeShader(const _tchar* pShaderFilePath, const
 {
 	ID3DBlob* pCSBlob = nullptr;
 
-	// Debug ¸ğµå¿Í release ¸ğµåÀÇ ÇÃ·¹±×¸¦ ´Ù¸£°Ô Áà¾ßÇÔ
+	// Debug ëª¨ë“œì™€ release ëª¨ë“œì˜ í”Œë ˆê·¸ë¥¼ ë‹¤ë¥´ê²Œ ì¤˜ì•¼í•¨
 	UINT HLSLFlags = {};
 #ifdef _DEBUG
 	HLSLFlags |= D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
@@ -303,10 +303,10 @@ HRESULT CComputeShader::CreateComputeShader(const _tchar* pShaderFilePath, const
 
 
 	if (FAILED(m_pDevice->CreateComputeShader(
-		pCSBlob->GetBufferPointer(),         // ÄÄÆÄÀÏµÈ ½¦ÀÌ´õ ÄÚµå
-		pCSBlob->GetBufferSize(),            // ÄÚµå ±æÀÌ
-		nullptr,                                // Å¬·¡½º ÀÎ½ºÅÏ½º (¾øÀ½)
-		&m_pComputeShader // ÄÄÇ»Æ® ½¦ÀÌ´õ °´Ã¼
+		pCSBlob->GetBufferPointer(),         // ì»´íŒŒì¼ëœ ì‰ì´ë” ì½”ë“œ
+		pCSBlob->GetBufferSize(),            // ì½”ë“œ ê¸¸ì´
+		nullptr,                                // í´ë˜ìŠ¤ ì¸ìŠ¤í„´ìŠ¤ (ì—†ìŒ)
+		&m_pComputeShader // ì»´í“¨íŠ¸ ì‰ì´ë” ê°ì²´
 	)))
 		return E_FAIL;
 
@@ -323,7 +323,7 @@ CComputeShader* CComputeShader::Create(ID3D11Device* pDevice, ID3D11DeviceContex
 	if (FAILED(pInstance->Initialize(pShaderFilePath, pStartFunctionName, iNumElement, iNumInputBuffer, iNumOutputBuffer, iOutputStructStride, iInputStructStride)))
 	{
 		MSG_BOX("Failed to Created : CComputeShader Prototype");
-		Safe_Release(pInstance);
+		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
@@ -335,22 +335,22 @@ void CComputeShader::Free()
 
 	for (_uint i = 0; i < m_iNumInputBuffer; i++)
 	{
-		Safe_Release(m_pInputSRV[i]);
-		Safe_Release(m_pInputBuffer[i]);
-		Safe_Release(m_pInputStagingBuffer[i]);
+		SAFE_RELEASE(m_pInputSRV[i]);
+		SAFE_RELEASE(m_pInputBuffer[i]);
+		SAFE_RELEASE(m_pInputStagingBuffer[i]);
 	}
 
 	for (_uint i = 0; i < m_iNumOutputBuffer; i++)
 	{
-		Safe_Release(m_pOutputUAV[i]);
-		Safe_Release(m_pOutputBuffer[i]);
-		Safe_Release(m_pOutputSRV[i]);
-		Safe_Release(m_pOutputStagingBuffer[i]);
+		SAFE_RELEASE(m_pOutputUAV[i]);
+		SAFE_RELEASE(m_pOutputBuffer[i]);
+		SAFE_RELEASE(m_pOutputSRV[i]);
+		SAFE_RELEASE(m_pOutputStagingBuffer[i]);
 	}
 
 
-	Safe_Release(m_pComputeShader);
-	Safe_Release(m_pDevice);
-	Safe_Release(m_pContext);
-	Safe_Release(m_pGameInstance);
+	SAFE_RELEASE(m_pComputeShader);
+	SAFE_RELEASE(m_pDevice);
+	SAFE_RELEASE(m_pContext);
+	SAFE_RELEASE(m_pGameInstance);
 }

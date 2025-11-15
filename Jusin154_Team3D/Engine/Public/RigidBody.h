@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 #include "Component.h"
 
 NS_BEGIN(PSX)
@@ -10,89 +10,53 @@ NS_BEGIN(Engine)
 class CTransform;
 class CMesh;
 
-class ENGINE_DLL CRigidBody final : public CComponent
+class ENGINE_DLL CRigidBody abstract : public CComponent
 {
-public: // MORE INFO ON ENGINE_ENUM
-	typedef struct tagRigidBody_PrototypeDesc // ¥Ÿ √§øÏººø‰ NONE ª©∞Ì, ∏Ò¿˚ø° æ»∏¬¥¬∞≈ ª©∞Ì
+protected: // MORE INFO ON ENGINE_ENUM
+	typedef struct tagRigidBody_PrototypeDesc // Îã§ Ï±ÑÏö∞ÏÑ∏Ïöî NONE ÎπºÍ≥†, Î™©Ï†ÅÏóê ÏïàÎßûÎäîÍ±∞ ÎπºÍ≥†
 	{
 		ACTOR					eType;
 		PSX::PxRigidBodyFlags	ePxRigidBodyFlags = { /* NONE */};
 		PSX::PxShapeFlags		ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
 		PXMATERIAL				ePxMaterialTypes = { PXMATERIAL::DEFAULT };
-		_float3					vMatInfo = { 0.5f, 0.5f, 0.6f }; // ««¡˜Ω∫ ∞¥√º¿« º”º∫ µÓ
-		_float					fContactOffset = { 0.05f }; // ¡¢√À ¿Ø∞› ø¿«¡º¬
-#pragma region DYNAMIC
-		_float3					vhalfGeometryInfo;		// π⁄Ω∫¥¬ vSize, ƒ∏Ω∂¿∫ radius, height∑Œ æ∏
-		_float					fDensity = { 1000.f };	// π–µµ, Ω«¡¶ π´∞‘¥¬ ∫Œ««ø° µ˚∂Û ¥ﬁ∂Û¡¸
-#pragma endregion
-#pragma region STATIC
-#pragma endregion
+		_float3					vMatInfo = { 0.5f, 0.5f, 0.6f }; // ÌîºÏßÅÏä§ Í∞ùÏ≤¥Ïùò ÏÜçÏÑ± Îì±
+		_float					fContactOffset = { 0.05f }; // Ï†ëÏ¥â Ïú†Í≤© Ïò§ÌîÑÏÖã
+
 	}RIGIDBODY_PROTOTYPEDESC;
 
 	typedef struct tagRigidBody_Desc
 	{
-#pragma region DYNAMIC
-#pragma endregion
-#pragma region STATIC
-		const _char* szMeshName = { };
-#pragma endregion
+
 	}RIGIDBODY_DESC;
 
-private:
+protected:
 	CRigidBody(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CRigidBody(const CRigidBody& rhs);
 	virtual ~CRigidBody() = default;
+
 public:
-#ifdef _DEBUG
-	virtual HRESULT Render()override;
-#endif // _DEBUG
-
-
 	ACTOR					Get_Type()				const { return m_eActorType; }
+	virtual PSX::PxActor*	Get_Actor()PURE;
 	CTransform*				Get_TransformPtr()		const { return m_pTransform; }
-	const _tchar*			Get_PxMeshKey()			const { return m_wstrMeshKey.c_str(); }
 	PXMATERIAL				Get_MaterialType()		const { return m_eMatType; }
 	_float					Get_ContactOffset()		const { return m_fContactOffset; }
-	_float					Get_Density()			const { return m_fDensity; }
 	PSX::PxShapeFlags		Get_ShapeFlags()		const { return m_ePxShapeFlags; }
 	PSX::PxRigidBodyFlags	Get_RigidBodyFlags()	const { return m_ePxRigidBodyFlags; }
-	_float3					Get_HalfGeometryInfo() const { return m_vhalfGeometryInfo; }
 
-private:
+protected:
 	ACTOR					m_eActorType = ACTOR::END;
-	PSX::PxRigidBodyFlags	m_ePxRigidBodyFlags = {};
+	PSX::PxRigidBodyFlags	m_ePxRigidBodyFlags = { };
+	PSX::PxShapeFlags		m_ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
 	PXMATERIAL				m_eMatType = { PXMATERIAL::END };
 	_float					m_fContactOffset = { 0.05f };
-	const PSX::PxActor*		m_pRigidBody = { nullptr };		// Ω«¡¶ Ω√πƒ∑π¿Ãº«¿ª µµ¥¬ ∫ª√º
 
 	CTransform*				m_pTransform = { nullptr };
+	PhsXUserData			m_tagData = {};
 
-#pragma region DYNAMIC
-	PSX::PxShapeFlags		m_ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
-	_float3					m_vMatInfo = {};
-	_float3					m_vhalfGeometryInfo = {};
-	_float					m_fDensity = { 1000.f };
-#pragma endregion
-#pragma region STATIC
-	_wstring				m_wstrMeshKey = {  }; // ¬¶≤· Ω∫≈¬∆Ω ∏ﬁΩ√¿« triangleMesh ≈∞
-#pragma endregion
-
-private:
-#ifdef _DEBUG
-	unique_ptr<GeometricPrimitive> m_pMainShape = { nullptr };
-	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };
-#endif // _DEBUG
-
-private:
-	HRESULT Initialize_Prototype(RIGIDBODY_PROTOTYPEDESC& Desc);
-	HRESULT Initialize(void* pArg);
-#ifdef _DEBUG
-	HRESULT Add_DebugShape();
-#endif
+protected:
+	virtual HRESULT Initialize(void* pArg);
 
 public:
-	static CRigidBody* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, RIGIDBODY_PROTOTYPEDESC& Desc);
-	virtual CComponent* Clone(void* pArg, class CGameObject* pOwner = nullptr) override;
 	virtual void Free() override;
 	virtual void Describe_Entity() override;
 };

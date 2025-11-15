@@ -5,12 +5,14 @@
 #include "VIBuffer_Cell.h"
 #include "Shader.h"
 #include "Navigation.h"
-#include "RigidBody.h"
+#include "RigidBody_Dynamic.h"
+#include "RigidBody_Static.h"
 #include "Texture.h"
 #include "Cell.h"
 #include "Model.h"
 #include "Instance_Model.h"
 #include "Character_Controller.h"
+#include "Light.h"
 #include "VIBuffer_UI_Instance.h"
 
 
@@ -72,7 +74,7 @@ public:
 	//만들고 선택할 시에 내 ppOut에 클론하는 기능을 담당
 
 	template<typename T>
-	void Asset_Description(_uint iLevel, const _char* pComponentName, Engine::CComponent** ppOut, void* pDesc, class CGameObject* pOwner = nullptr, _wstring wstrGroupName = L"")
+	_string Asset_Description(_uint iLevel, const _char* pComponentName, Engine::CComponent** ppOut, void* pDesc, class CGameObject* pOwner = nullptr, _wstring wstrGroupName = L"")
 	{
 		vector<const _char*> pComponentNames = {};
 		vector<_string> strNames = {};
@@ -114,12 +116,12 @@ public:
 				if (GUI::ImageButton(strName.c_str(), pTexture->Get_SRV(0), ImVec2(48, 48)))
 				{
 					if (*ppOut != nullptr)
-						Safe_Release(*ppOut);
+						SAFE_RELEASE(*ppOut);
 
 
 					*ppOut = iter->second->Clone(pDesc, pOwner);
 
-					return;
+					return strName;
 				}
 
 				pTexture->HoverName();
@@ -129,7 +131,7 @@ public:
 
 			}
 
-			return;
+			return "";
 		}
 
 		static _int s_iCurrentItem = 0;
@@ -184,15 +186,18 @@ public:
 
 				GUI::EndCombo();
 
-				return;
+				return "";
 			}
 
 			if (*ppOut != nullptr)
-				Safe_Release(*ppOut);
+				SAFE_RELEASE(*ppOut);
 
 			*ppOut = iter->second->Clone(pDesc, pOwner);
+
+			return pComponentNames[s_iCurrentItem];
 		}
 
+		return "";
 	}
 #endif
 

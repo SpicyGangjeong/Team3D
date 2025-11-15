@@ -6,7 +6,7 @@
 #include "Layer.h"
 #include "MapObject.h"
 #include "MapObject_LOD.h"
-#include "MapObject_Static.h"
+#include "MapObject_Collision.h"
 #include "BuildingContainer.h"
 #include "MapElement_Static.h"
 #include "MapElement_Interactable.h"
@@ -67,6 +67,10 @@ void CMapObject_Manager::Priority_Update(_float fTimeDelta)
 	{
 		pObject->Priority_Update(fTimeDelta);
 	}
+	for (auto* pObject : m_Collision)
+	{
+		pObject->Priority_Update(fTimeDelta);
+	}
 }
 
 void CMapObject_Manager::Update(_float fTimeDelta)
@@ -79,7 +83,8 @@ void CMapObject_Manager::Update(_float fTimeDelta)
 		"ELEMENT_INTERACT"
 	};
 	GUI::Combo("MODE", (_int*)(&m_eType), ModeNames, IM_ARRAYSIZE(ModeNames));
-
+	GUI::Checkbox("Model View", &m_bModelVisable);
+	GUI::Checkbox("COL View", &m_bCollisionVisable);
 	GUI::InputText("MapFileName", m_szSaveFileName, MAX_PATH);
 	if (GUI::Button("Save_Map"))
 	{
@@ -111,10 +116,7 @@ void CMapObject_Manager::Update(_float fTimeDelta)
 
 	Update_ObjectList();
 
-	if (ADD_TYPE::CONTAINER != m_eType)
-	{
-		Update_Edit();
-	}
+	Update_Edit();
 
 	if (ADD_TYPE::CONTAINER == m_eType)
 	{
@@ -122,6 +124,10 @@ void CMapObject_Manager::Update(_float fTimeDelta)
 	}
 
 	for (auto* pObject : m_MapObjects)
+	{
+		pObject->Update(fTimeDelta);
+	}
+	for (auto* pObject : m_Collision)
 	{
 		pObject->Update(fTimeDelta);
 	}
@@ -139,10 +145,27 @@ void CMapObject_Manager::Late_Update(_float fTimeDelta)
 		}
 		else
 		{
-			(*iter)->Late_Update(fTimeDelta);
+			if(m_bModelVisable)
+				(*iter)->Late_Update(fTimeDelta);
 			++iter;
 		}
 		
+	}
+
+	auto Col_iter = m_Collision.begin();
+	for (; Col_iter != m_Collision.end();)
+	{
+		if ((*Col_iter)->isDead())
+		{
+			SAFE_RELEASE(*Col_iter);
+			Col_iter = m_Collision.erase(Col_iter);
+		}
+		else
+		{
+			if (m_bCollisionVisable)
+				(*Col_iter)->Late_Update(fTimeDelta);
+			++Col_iter;
+		}
 	}
 }
 
@@ -388,7 +411,7 @@ HRESULT CMapObject_Manager::Save_MapData(const _char* pFileName)
 
 HRESULT CMapObject_Manager::Save_ContainerData(const _char* pFileName, const _char* pContainerName)
 {
-	if (true == m_MapObjects.empty())
+	if (true == m_MapObjects.empty()&& true == m_Collision.empty())
 		return E_FAIL;
 
 	tinyxml2::XMLDocument doc;
@@ -498,7 +521,67 @@ HRESULT CMapObject_Manager::Save_ContainerData(const _char* pFileName, const _ch
 	m_pSelectObject = nullptr;
 #pragma endregion
 
-	// ?ú?å
+#pragma region SAVE_COLLISION
+	for (auto& pColObject : m_Collision)
+	{
+		// <Collision>
+		tinyxml2::XMLElement* Collision = doc.NewElement("Collision");
+		_uint iLodLvel = pColObject->Get_LodLevel();
+
+		Collision->SetAttribute("Lod_Level", iLodLvel);
+		Collision->SetAttribute("Key_Index", pColObject->Get_iKeyIndex());
+		container->InsertEndChild(Collision);
+
+		for (_uint i = 0; i < pColObject->Get_LodLevel() + 1; ++i)
+		{
+			// <PrototypeTag>ÅØ½ºÆ®</PrototypeTag>
+			tinyxml2::XMLElement* proto = doc.NewElement("PrototypeTag");
+			proto->SetText(CMyTools::ToString(pColObject->Get_PrototypeTag(i)).c_str());
+			Collision->InsertEndChild(proto);
+		}
+
+		// <Position x="0.0" y="0.0" z="0.0"/>
+		tinyxml2::XMLElement* PositionElem = doc.NewElement("Position");
+
+		_float3 vPosition = {};
+		XMStoreFloat3(&vPosition, pColObject->Get_Component<CTransform>()->Get_State(STATE::POSITION));
+
+		PositionElem->SetAttribute("x", vPosition.x);
+		PositionElem->SetAttribute("y", vPosition.y);
+		PositionElem->SetAttribute("z", vPosition.z);
+		Collision->InsertEndChild(PositionElem);
+
+		// <Scale x="0.0" y="0.0" z="0.0"/>
+		tinyxml2::XMLElement* ScaleElem = doc.NewElement("Scale");
+
+		_float3 pScale = pColObject->Get_Component<CTransform>()->Get_Scale();
+		ScaleElem->SetAttribute("x", pScale.x);
+		ScaleElem->SetAttribute("y", pScale.y);
+		ScaleElem->SetAttribute("z", pScale.z);
+		Collision->InsertEndChild(ScaleElem);
+
+		// <Rotation x="0.0" y="0.0" z="0.0"/>
+		tinyxml2::XMLElement* RotationElem = doc.NewElement("Rotation");
+
+		_float3 vRotation = {};
+		XMStoreFloat3(&vRotation, pColObject->Get_Component<CTransform>()->Get_RollPitchYawVector());
+
+		vRotation.x = XMConvertToDegrees(vRotation.x);
+		vRotation.y = XMConvertToDegrees(vRotation.y);
+		vRotation.z = XMConvertToDegrees(vRotation.z);
+
+		RotationElem->SetAttribute("x", vRotation.x);
+		RotationElem->SetAttribute("y", vRotation.y);
+		RotationElem->SetAttribute("z", vRotation.z);
+		Collision->InsertEndChild(RotationElem);
+
+		SAFE_RELEASE(pColObject);
+	}
+	m_Collision.clear();
+#pragma endregion
+
+
+	// ÀúÀå
 	if (doc.SaveFile(strPath.c_str()) != tinyxml2::XML_SUCCESS) {
 		MSG_BOX("Failed to Save File");
 	}
@@ -608,6 +691,51 @@ HRESULT CMapObject_Manager::Load_MapData(const _char* pFileName)
 			pMapObject->Set_KeyIndex(iKeyIndex);
 
 			SAFE_RELEASE(pMapObject);
+#pragma endregion
+
+		}
+#pragma endregion
+
+#pragma region ADD_COLLISION
+		for (auto* Collision = Container->FirstChildElement("Collision"); Collision; Collision = Collision->NextSiblingElement("Collision"))
+		{
+			_uint iLodLevel = {};
+			_uint iKeyIndex = {};
+
+			Collision->QueryUnsignedAttribute("Lod_Level", &iLodLevel);
+			Collision->QueryUnsignedAttribute("Key_Index", &iKeyIndex);
+
+#pragma region MAPOBJECT_LOD
+			MAPOBJECT_LOD_DESC Desc = {};
+			string strTag = {};
+			for (auto* PrototypeTag = Collision->FirstChildElement("PrototypeTag"); PrototypeTag; PrototypeTag = PrototypeTag->NextSiblingElement("PrototypeTag"))
+			{
+				strTag = PrototypeTag->GetText();
+
+				Desc.ModelPrototypeTags.push_back(CMyTools::ToWstring(strTag));
+			}
+			Desc.iMaxLodLevel = iLodLevel;
+			Desc.pParentTransform = pContainerObject->Get_Component<CTransform>();
+
+			/* Position */
+			tinyxml2::XMLElement* Position = Collision->FirstChildElement("Position");
+			Position->QueryFloatAttribute("x", &Desc.vPosition.x);
+			Position->QueryFloatAttribute("y", &Desc.vPosition.y);
+			Position->QueryFloatAttribute("z", &Desc.vPosition.z);
+
+			/* Scale */
+			tinyxml2::XMLElement* Scale = Collision->FirstChildElement("Scale");
+			Scale->QueryFloatAttribute("x", &Desc.vScale.x);
+			Scale->QueryFloatAttribute("y", &Desc.vScale.y);
+			Scale->QueryFloatAttribute("z", &Desc.vScale.z);
+
+			/* Rotation */
+			tinyxml2::XMLElement* Rotation = Collision->FirstChildElement("Rotation");
+			Rotation->QueryFloatAttribute("x", &Desc.vRotation.x);
+			Rotation->QueryFloatAttribute("y", &Desc.vRotation.y);
+			Rotation->QueryFloatAttribute("z", &Desc.vRotation.z);
+
+			pContainerObject->Add_Collision<CMapObject_Collision>(g_iStaticLevel, &Desc);
 #pragma endregion
 
 		}
@@ -766,6 +894,52 @@ HRESULT CMapObject_Manager::Load_ContainerData(const _char* pFileName, const _ch
 	}
 #pragma endregion
 
+#pragma region ADD_COLLISION
+	for (auto* Collision = TargetContainer->FirstChildElement("Collision"); Collision; Collision = Collision->NextSiblingElement("Collision"))
+	{
+		_uint iLodLevel = {};
+		_uint iKeyIndex = {};
+
+		Collision->QueryUnsignedAttribute("Lod_Level", &iLodLevel);
+		Collision->QueryUnsignedAttribute("Key_Index", &iKeyIndex);
+
+#pragma region MAPOBJECT_LOD
+		MAPOBJECT_LOD_DESC Desc = {};
+		string strTag = {};
+		for (auto* PrototypeTag = Collision->FirstChildElement("PrototypeTag"); PrototypeTag; PrototypeTag = PrototypeTag->NextSiblingElement("PrototypeTag"))
+		{
+			strTag = PrototypeTag->GetText();
+
+			Desc.ModelPrototypeTags.push_back(CMyTools::ToWstring(strTag));
+		}
+		Desc.iMaxLodLevel = iLodLevel;
+		Desc.pParentTransform = pContainerObject->Get_Component<CTransform>();
+
+		/* Position */
+		tinyxml2::XMLElement* Position = Collision->FirstChildElement("Position");
+		Position->QueryFloatAttribute("x", &Desc.vPosition.x);
+		Position->QueryFloatAttribute("y", &Desc.vPosition.y);
+		Position->QueryFloatAttribute("z", &Desc.vPosition.z);
+
+		/* Scale */
+		tinyxml2::XMLElement* Scale = Collision->FirstChildElement("Scale");
+		Scale->QueryFloatAttribute("x", &Desc.vScale.x);
+		Scale->QueryFloatAttribute("y", &Desc.vScale.y);
+		Scale->QueryFloatAttribute("z", &Desc.vScale.z);
+
+		/* Rotation */
+		tinyxml2::XMLElement* Rotation = Collision->FirstChildElement("Rotation");
+		Rotation->QueryFloatAttribute("x", &Desc.vRotation.x);
+		Rotation->QueryFloatAttribute("y", &Desc.vRotation.y);
+		Rotation->QueryFloatAttribute("z", &Desc.vRotation.z);
+
+		pContainerObject->Add_Collision<CMapObject_Collision>(g_iStaticLevel, &Desc);
+#pragma endregion
+
+	}
+#pragma endregion
+
+
 	return S_OK;
 }
 #pragma endregion
@@ -780,7 +954,7 @@ void CMapObject_Manager::Update_PrototypeList()
 	{
 		auto& Tag = m_ModelPrototypeTags[i];
 
-		if (_wstring::npos != Tag.find(L"Lod")) {
+		if (_wstring::npos != Tag.find(L"Lod") || _wstring::npos != Tag.find(L"COL")) {
 			continue;
 		}
 
@@ -807,6 +981,56 @@ void CMapObject_Manager::Update_PrototypeList()
 	}
 	GUI::End();
 	
+	/* COL Mesh를 Container에 추가 */
+	if (ADD_TYPE::CONTAINER == m_eType)
+	{
+		GUI::Begin("Collision Model");
+		_uint iMaxSize = (_uint)m_ModelPrototypeTags.size();
+		for (_uint i = 0; i < iMaxSize; ++i)
+		{
+			auto& Tag = m_ModelPrototypeTags[i];
+
+			if (_wstring::npos != Tag.find(L"COL") && _wstring::npos == Tag.find(L"Lod")) {
+				if (ImGui::Button(CMyTools::ToString(Tag).c_str()))
+				{
+					vector<_uint> LodModelIndices;
+
+					MAPOBJECT_LOD_DESC Desc = {};
+
+					vector<_wstring> PrototypeTags;
+
+					Find_Lod_Prototype(Tag, LodModelIndices);
+
+					PrototypeTags.push_back(Tag);
+
+					for (_uint i = 0; i < LodModelIndices.size(); ++i)
+					{
+						_wstring strLodTag = Tag + L"_Lod" + to_wstring(i + 1);
+						PrototypeTags.push_back(strLodTag);
+					}
+
+					Desc.iMaxLodLevel = (_uint)LodModelIndices.size() - 1;
+					Desc.ModelPrototypeTags = PrototypeTags;
+					Desc.pParentTransform = m_pTransformCom;
+					Desc.vPosition = _float3(0.f, 0.f, 0.f);
+					Desc.vRotation = _float3(0.f, 0.f, 0.f);
+					Desc.vScale = _float3(1.f, 1.f, 1.f);
+					Desc.pModelPathIndices = &LodModelIndices;
+
+					CMapObject_Collision* pMapObject = { nullptr };
+					const string strKey = CMyTools::ToString(Tag);
+
+					pMapObject = m_pGameInstance->Clone_Prototype<CMapObject_Collision>(g_iStaticLevel, &Desc);
+
+					if(nullptr != pMapObject)
+						m_Collision.push_back(pMapObject);
+				}
+			}
+
+			
+		}
+		GUI::End();
+	}
 }
 
 void CMapObject_Manager::Update_ObjectList()
@@ -820,11 +1044,34 @@ void CMapObject_Manager::Update_ObjectList()
 	_uint iObjectIndex = {};
 	string strSrc;
 
-	if(ADD_TYPE::CONTAINER == m_eType)
+	if (ADD_TYPE::CONTAINER == m_eType)
 	{
-		if (false == m_MapObjects.empty())
+		if (ImGui::CollapsingHeader("Map Objects", ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			for (auto pMapObject : m_MapObjects)
+			if (false == m_MapObjects.empty())
+			{
+				for (auto pMapObject : m_MapObjects)
+				{
+					CMapObject* pCurrentMapObject = static_cast<CMapObject*>(pMapObject);
+
+					if (nullptr == pCurrentMapObject)
+						continue;
+
+					wstring strPrototypeTag = pCurrentMapObject->Get_PrototypeTag();
+
+					strSrc = CMyTools::ToString(strPrototypeTag) + to_string(iObjectIndex) + "##" + to_string(iObjectIndex++);
+
+					if (ImGui::Button(strSrc.c_str()))
+					{
+						m_pSelectObject = pCurrentMapObject;
+					}
+				}
+
+			}
+		}
+		if (ImGui::CollapsingHeader("COL", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			for (auto pMapObject : m_Collision)
 			{
 				CMapObject* pCurrentMapObject = static_cast<CMapObject*>(pMapObject);
 
@@ -1055,8 +1302,13 @@ _bool CMapObject_Manager::Find_Lod_Prototype(_wstring strPrototypeTag, vector<_u
 	// for (auto& Tag : m_LODModelPrototypeTags)
 	for(_uint i = 0 ; i < m_ModelPrototypeTags.size(); ++i)
 	{
-		if (_wstring::npos != m_ModelPrototypeTags[i].find(strPrototypeTag) && 5 > (m_ModelPrototypeTags[i].size() - strPrototypeTag.size()))
+		if (m_ModelPrototypeTags[i] == strPrototypeTag)
 			LodModelIndices.push_back(i);
+
+		_wstring strPt = strPrototypeTag + L"_Lod";
+		if (_wstring::npos != m_ModelPrototypeTags[i].find(strPt)) //&& 5 > (m_ModelPrototypeTags[i].size() - strPrototypeTag.size()))
+			LodModelIndices.push_back(i);
+		
 	}
 	if (0 < LodModelIndices.size()) {
 		return true;
@@ -1084,7 +1336,7 @@ CMapObject_Manager* CMapObject_Manager::Create(ID3D11Device* pDevice, ID3D11Devi
 	if (FAILED(pInstance->Initialize_Prototype(ModelPrototypeTags, ModelPrototypePaths)))
 	{
 		MSG_BOX("Failed to Created : CMapObject_Manager");
-		Safe_Release(pInstance);
+		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
@@ -1097,7 +1349,7 @@ CGameObject* CMapObject_Manager::Clone(void* pArg, CGameObject* pOwner)
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
 		MSG_BOX("Failed to Cloned : CMapObject_Manager");
-		Safe_Release(pInstance);
+		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
@@ -1111,6 +1363,13 @@ void CMapObject_Manager::Free()
 	{
 		SAFE_RELEASE(pObject);
 	}
+	m_MapObjects.clear();
+
+	for (auto& pObject : m_Collision)
+	{
+		SAFE_RELEASE(pObject);
+	}
+	m_Collision.clear();
 
 	SAFE_RELEASE(m_pContainer);
 }
