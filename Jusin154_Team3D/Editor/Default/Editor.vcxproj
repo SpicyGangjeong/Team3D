@@ -165,6 +165,8 @@
   <ItemGroup>
     <ClInclude Include="..\Public\Body.h" />
     <ClInclude Include="..\public\Active_Icon.h" />
+    <ClInclude Include="..\Public\CallBack_Playable_Behavior.h" />
+    <ClInclude Include="..\Public\CallBack_Playable_HitRepot.h" />
     <ClInclude Include="..\Public\DummyObject.h" />
     <ClInclude Include="..\public\DummySkyBox.h" />
     <ClInclude Include="..\Public\Dummy_Plane.h" />
@@ -232,6 +234,8 @@
   <ItemGroup>
     <ClCompile Include="..\Private\Body.cpp" />
     <ClCompile Include="..\private\Active_Icon.cpp" />
+    <ClCompile Include="..\Private\CallBack_Playable_Behavior.cpp" />
+    <ClCompile Include="..\Private\CallBack_Playable_HitRepot.cpp" />
     <ClCompile Include="..\Private\DummyObject.cpp" />
     <ClCompile Include="..\private\DummySkyBox.cpp" />
     <ClCompile Include="..\Private\Dummy_Plane.cpp" />

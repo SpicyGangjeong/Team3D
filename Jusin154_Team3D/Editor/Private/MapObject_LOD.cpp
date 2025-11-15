@@ -285,21 +285,21 @@ void CMapObject_LOD::Describe_Entity()
 		GUI::SameLine();
 		if (GUI::Button("Bake!!!")) {
 			CMapObject_Manager* pManager = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_MAPOBJECTMANAGER)->Get_Object<CMapObject_Manager>();
-			for (_uint i = 0; i < (_uint)m_ModelPathIndices.size(); ++i) {
-				filesystem::path filePath = pManager->Get_PrototypePath(m_ModelPathIndices[i]);
+			for (_uint iModelIndex = 0; iModelIndex < (_uint)m_ModelPathIndices.size(); ++iModelIndex) {
+				filesystem::path filePath = pManager->Get_PrototypePath(m_ModelPathIndices[iModelIndex]);
 				
-				CModel* pModel = m_pModelComs[i];
+				CModel* pModel = m_pModelComs[iModelIndex];
 				_uint iNumMesh = pModel->Get_NumMeshes();
 				pModel->Save_PhysXTriMeshes(filePath.string().c_str());
 
-				CRigidBody::RIGIDBODY_DESC Desc{};
+				CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc{};
 
-				for (_uint i = 0; i < iNumMesh; ++i)
+				for (_uint iMeshIndex = 0; iMeshIndex < iNumMesh; ++iMeshIndex)
 				{ // RIGID_BODY
-					_string strDestName = pModel->Get_MeshName(i) + to_string(i);
-					Desc.szMeshName = strDestName.c_str();
+					_wstring dest = CMyTools::ToWstring(m_pModelComs[iModelIndex]->Get_MeshName(iMeshIndex) + to_string(iMeshIndex)).c_str();
+					Desc.pMeshName = dest.c_str();
 
-					if (FAILED(Add_Asset_Component(g_iStaticLevel, CMyTools::ToWstring(strDestName).c_str(), nullptr, &Desc))) {
+					if (FAILED(Add_Asset_Component(g_iStaticLevel, Desc.pMeshName, nullptr, &Desc))) {
 						assert(false);
 					}
 				}

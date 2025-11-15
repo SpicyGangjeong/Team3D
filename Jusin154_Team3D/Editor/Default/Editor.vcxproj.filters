@@ -202,6 +202,21 @@
     <Filter Include="02.GameObjects\Layer_Effect\Dummy_Plane">
       <UniqueIdentifier>{6872c5bc-5eac-46a1-b6d8-3ec0f4fb2cd5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\Callback">
+      <UniqueIdentifier>{b6d1496a-c8ef-4b7a-9ed4-f00b0a244313}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\Callback\Playable">
+      <UniqueIdentifier>{a225d78f-7eec-4407-bdfd-9e14452f3338}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\Callback\Playable\Playable">
+      <UniqueIdentifier>{a32d5869-5562-4099-925a-f8c022e9aac7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\Callback\Playable\Behavior">
+      <UniqueIdentifier>{83781d7f-b84d-45a3-8361-b6bed2722b74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\Callback">
+      <UniqueIdentifier>{b6d1496a-c8ef-4b7a-9ed4-f00b0a244313}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -405,6 +420,12 @@
     <ClInclude Include="..\Public\Dummy_Plane.h">
       <Filter>02.GameObjects\Layer_Effect\Dummy_Plane</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CallBack_Playable_HitRepot.h">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\Callback\Playable\Playable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CallBack_Playable_Behavior.h">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\Callback\Playable\Behavior</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -603,6 +624,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Dummy_Plane.cpp">
       <Filter>02.GameObjects\Layer_Effect\Dummy_Plane</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CallBack_Playable_HitRepot.cpp">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\Callback\Playable\Playable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CallBack_Playable_Behavior.cpp">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\Callback\Playable\Behavior</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
