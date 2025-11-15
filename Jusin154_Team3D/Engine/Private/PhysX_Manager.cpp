@@ -63,6 +63,7 @@ PSX::PxRigidDynamic* CPhysX_Manager::Add_DynamicActor(CRigidBody_Dynamic& RigidB
 	}
 
 	m_pRestBodies.insert(pActorDynamic);
+	Attach_Actor(*pActorDynamic);
 
 	return pActorDynamic;
 }
