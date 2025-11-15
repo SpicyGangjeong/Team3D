@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "BuildingContainer.h"
 #include "PartObject.h"
 #include "Terrain.h"
@@ -20,12 +20,18 @@ void CBuildingContainer::Priority_Update(_float fTimeDelta)
 {
     __super::Priority_Update(fTimeDelta);
 
+    for (auto& pCollisiton : m_ColiisonPartObjects)
+        pCollisiton->Priority_Update(fTimeDelta);
+
     m_bSelected = false;
 }
 
 void CBuildingContainer::Update(_float fTimeDelta)
 {
     __super::Update(fTimeDelta);
+
+    for (auto& pCollisiton : m_ColiisonPartObjects)
+        pCollisiton->Update(fTimeDelta);
 }
 
 void CBuildingContainer::Late_Update(_float fTimeDelta)
@@ -38,6 +44,9 @@ void CBuildingContainer::Late_Update(_float fTimeDelta)
     }
 
     __super::Late_Update(fTimeDelta);
+
+    for (auto& pCollisiton : m_ColiisonPartObjects)
+        pCollisiton->Late_Update(fTimeDelta);
 }
 
 HRESULT CBuildingContainer::Render()
@@ -118,6 +127,9 @@ CGameObject* CBuildingContainer::Clone(void* pArg, CGameObject* pOwner)
 void CBuildingContainer::Free()
 {
     __super::Free();
+
+    for (auto& pCollision : m_ColiisonPartObjects)
+        SAFE_RELEASE(pCollision);
 }
 
 void CBuildingContainer::Describe_Entity()

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Editor_Define.h"
 #include "ContainerObject.h"
@@ -23,7 +23,8 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 
 public:
-	void			Reference_Mat_For_EditEffect(class CComponent** pTexture, CGameObject* pObject);
+	_string			Reference_Mat_For_EditEffect(class CComponent** pTexture, CGameObject* pObject);
+	HRESULT			Load_Edit(const _char* pPath);
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
@@ -37,9 +38,13 @@ private:
 
 private:
 	_string												 m_strCurrentEffectName = {};
+
 	_uint												 m_iNumPart = { 0 };
 	class CEditEffect*									 m_pEditEffect = { nullptr };
-	map<_wstring, vector<pair<_wstring, _wstring>>>		 m_MatFiles = {}; // map<¸ÓÅ×¸®¾ó ÀÌ¸§, vector<ÅØ½ºÃÄÀÌ¸§ , ÅØ½ºÃÄ °æ·Î>>
+	map<_wstring, vector<pair<_wstring, _wstring>>>		 m_MatFiles = {}; // map<ë¨¸í…Œë¦¬ì–¼ ì´ë¦„, vector<í…ìŠ¤ì³ì´ë¦„ , í…ìŠ¤ì³ ê²½ë¡œ>>
+
+	_char												 m_szBuffer[MAX_PATH] = { "../Bin/Resources/Data/Effect/"};
+	_string												 m_strSavePath = {};
 
 public:
 	static CEffect_Editor* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

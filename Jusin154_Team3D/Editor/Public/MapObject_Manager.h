@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Editor_Define.h"
 #include "GameObject.h"
@@ -32,9 +32,13 @@ public:
 private:
 	ADD_TYPE							m_eType = {};
 
+	_bool								m_bModelVisable = {true};
+	_bool								m_bCollisionVisable = { true };
+
 	class CMapObject*					m_pSelectObject = { nullptr };
 	class CMapElement*					m_pSelectElemnt = { nullptr };
 	list<class CMapObject*>				m_MapObjects = {};
+	list<class CMapObject*>				m_Collision = {};
 	vector<_wstring>					m_ModelPrototypeTags;
 	map<_wstring, _uint>				m_PartObjectKeyCount;
 	vector<_wstring>					m_LODModelPrototypeTags;

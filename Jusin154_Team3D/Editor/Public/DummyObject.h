@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Editor_Define.h"
 #include "GameObject.h"
@@ -34,8 +34,8 @@ public:
 	_wstring& Get_PrototypeTag() { return m_strModelPrototypeTag; }
 
 private:
-	CShader* m_pShaderCom = { nullptr };
-	CModel* m_pModelCom = { nullptr };
+	CShader*	m_pShaderCom = { nullptr };
+	CModel*		m_pModelCom = { nullptr };
 	_wstring	m_strModelPrototypeTag;
 	_bool		m_bRimLight = { true };
 	_float		m_fRimLightPower = { 3.2f };

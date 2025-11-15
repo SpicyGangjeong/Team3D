@@ -199,6 +199,9 @@
     <Filter Include="02.GameObjects\MainLight">
       <UniqueIdentifier>{a9360a97-5ef2-476a-9f12-f4e06c28290c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Dummy_Plane">
+      <UniqueIdentifier>{6872c5bc-5eac-46a1-b6d8-3ec0f4fb2cd5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -360,7 +363,7 @@
     <ClInclude Include="..\public\MapObject.h">
       <Filter>02.GameObjects\Env\02.MapObject</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\MapObject_Static.h">
+    <ClInclude Include="..\public\MapObject_Collision.h">
       <Filter>02.GameObjects\Env\02.MapObject\Static</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MapObject_LOD.h">
@@ -374,9 +377,6 @@
     </ClInclude>
     <ClInclude Include="..\public\MapObject.h">
       <Filter>02.GameObjects\Env\02.MapObject</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\MapObject_Static.h">
-      <Filter>02.GameObjects\Env\02.MapObject\Static</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MapObject_LOD.h">
       <Filter>02.GameObjects\Env\02.MapObject\LOD</Filter>
@@ -401,6 +401,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\MainLight.h">
       <Filter>02.GameObjects\MainLight</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dummy_Plane.h">
+      <Filter>02.GameObjects\Layer_Effect\Dummy_Plane</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -559,7 +562,7 @@
     <ClCompile Include="..\private\MapObject.cpp">
       <Filter>02.GameObjects\Env\02.MapObject</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\MapObject_Static.cpp">
+    <ClCompile Include="..\private\MapObject_Collision.cpp">
       <Filter>02.GameObjects\Env\02.MapObject\Static</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MapObject_LOD.cpp">
@@ -573,9 +576,6 @@
     </ClCompile>
     <ClCompile Include="..\private\MapObject.cpp">
       <Filter>02.GameObjects\Env\02.MapObject</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\MapObject_Static.cpp">
-      <Filter>02.GameObjects\Env\02.MapObject\Static</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MapObject_LOD.cpp">
       <Filter>02.GameObjects\Env\02.MapObject\LOD</Filter>
@@ -600,6 +600,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\MainLight.cpp">
       <Filter>02.GameObjects\MainLight</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_Plane.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Dummy_Plane</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

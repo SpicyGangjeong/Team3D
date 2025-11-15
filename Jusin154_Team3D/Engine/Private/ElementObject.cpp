@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "ElementObject.h"
 
 CElementObject::CElementObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

@@ -44,7 +44,7 @@ void CMonster::Priority_Update(_float fTimeDelta)
 
 void CMonster::Update(_float fTimeDelta)
 {
-	m_pModelCom->Play_Animation(fTimeDelta);
+	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 }
 
 void CMonster::Late_Update(_float fTimeDelta)

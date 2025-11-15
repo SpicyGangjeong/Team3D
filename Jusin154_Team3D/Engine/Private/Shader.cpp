@@ -153,8 +153,9 @@ HRESULT CShader::CreateShader(const _tchar* pShaderFilePath, const D3D11_INPUT_E
 		if (FAILED(m_pDevice->CreateInputLayout(
 			pElements,
 			iNumElements,
-			PassDesc.pIAInputSignature/*���̴����� �޾��ټ� �ִ� ������ ����*/,
-			PassDesc.IAInputSignatureSize/*���̴����� �޾��ټ� �ִ� ������ �����������*/,
+			PassDesc.pIAInputSignature/*쉐이더에서 받아줄수 있는 정점의 정보*/,
+			PassDesc.IAInputSignatureSize/*쉐이더에서 받아줄수 있는 정점의 멤버변수갯수*/,
+
 			&pInputLayout)))
 			return E_FAIL;
 
@@ -167,7 +168,8 @@ HRESULT CShader::CreateShader(const _tchar* pShaderFilePath, const D3D11_INPUT_E
 
 HRESULT CShader::Shader_Refresh()
 {
-	// �� ��ǲ ���̾ƿ� ����Ʈ �Ҹ��Ű��
+	// 내 인풋 레이아웃 이펙트 소멸시키고
+
 	Safe_Release(m_pEffect);
 
 	for (auto& pInputLayout : m_InputLayouts)
@@ -175,10 +177,16 @@ HRESULT CShader::Shader_Refresh()
 
 	m_InputLayouts.clear();
 
+	//그 경로로 재 생성한다.
 
-	//�� ��η� �� �����Ѵ�.
 	if (FAILED(CreateShader(m_strShaderPath.c_str(), m_pElements, m_iNumElements)))
+	{
+		MessageBox(NULL, L"쉐이더 변경 실패", L"System Message", MB_OK);
 		return E_FAIL;
+	}
+
+
+	MessageBox(NULL, L"쉐이더 변경 성공", L"System Message", MB_OK);
 
 	return S_OK;
 }
@@ -193,8 +201,9 @@ HRESULT CShader::Begin(_uint iPassIndex)
 
 	m_pContext->IASetInputLayout(m_InputLayouts[iPassIndex]);
 
-	/* Apply�� �ݵ�� ȣ���ؾ߸� ���̴��� �׷�����. */
-	/* Apply������ ���̴��� ������ ��� �����͵��� �� �������ƾ��Ѵ�. */
+	/* Apply를 반드시 호출해야만 쉐이더로 그려진다. */
+	/* Apply이전에 쉐이더에 전달할 모든 데이터들을 다 던져놓아야한다. */
+
 	m_pEffect->GetTechniqueByIndex(0)->GetPassByIndex(iPassIndex)->Apply(0, m_pContext);
 
 	return S_OK;

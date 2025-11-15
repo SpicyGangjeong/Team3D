@@ -3,6 +3,7 @@
 #include "Channel.h"
 #include "Model.h"
 #include "Bone.h"
+#include "Transform.h"
 
 CChannel::CChannel()
 {
@@ -99,7 +100,7 @@ HRESULT CChannel::Initialize(const vector<CBone*>& Bones, _uint iIndex)
 }
 
 
-void CChannel::Update_TransformationMatirx(const vector<CBone*>& Bones, _float fCurrentTrackPosition, _uint* pCurrentKeyFrameIndex)
+void CChannel::Update_TransformationMatirx(const vector<CBone*>& Bones, _float fCurrentTrackPosition, _uint* pCurrentKeyFrameIndex, CTransform* pTransform)
 
 {
 	if (0.f == fCurrentTrackPosition) {
@@ -142,10 +143,41 @@ void CChannel::Update_TransformationMatirx(const vector<CBone*>& Bones, _float f
 		vRotation = XMQuaternionSlerp(XMLoadFloat4(&vSrcRotation), XMLoadFloat4(&vDstRotation), fRatio);
 		vTranslation = XMVectorSetW(XMVectorLerp(XMLoadFloat3(&vSrcTranslation), XMLoadFloat3(&vDstTranslation), fRatio), 1.f);
 	}
+	
+	if (Bones[m_iBoneIndex]->Compare_Name("Reference") && pTransform != nullptr)
+	{
+		_float3 vCurRootPos;
+		XMStoreFloat3(&vCurRootPos, vTranslation);
+
+		_vector vDeltaLocal = XMLoadFloat3(&vCurRootPos) - XMLoadFloat3(&m_vPrevRootPos);
+
+		_vector vDeltaAdjusted = {};
+
+		XMMATRIX pre = XMLoadFloat4x4(&m_PreTransformMatrix);
+		vDeltaAdjusted = XMVector3TransformNormal(vDeltaLocal, pre);
+
+		_vector vRight = pTransform->Get_State(STATE::RIGHT);
+		_vector vUp = pTransform->Get_State(STATE::UP);
+		_vector vLook = pTransform->Get_State(STATE::LOOK);
+
+		_float dx = XMVectorGetX(vDeltaAdjusted);
+		_float dy = XMVectorGetY(vDeltaAdjusted);
+		_float dz = XMVectorGetZ(vDeltaAdjusted);
+
+		_vector vDeltaWorld = vRight * dx + vUp * dz + vLook * dy;
+
+		_vector vCurrentPos = pTransform->Get_State(STATE::POSITION);
+		_vector vTargetPos = vCurrentPos + vDeltaWorld;
+
+		pTransform->Set_State(STATE::POSITION, vTargetPos);
+
+		m_vPrevRootPos = vCurRootPos;
+		vTranslation = XMVectorZero();
+	}
+
 	_matrix BoneTransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vTranslation);
 
-	if(Bones.size()>m_iBoneIndex)
-		Bones[m_iBoneIndex]->Set_TransformationMatrix(BoneTransformationMatrix);
+	Bones[m_iBoneIndex]->Set_TransformationMatrix(BoneTransformationMatrix);
 }
 
 

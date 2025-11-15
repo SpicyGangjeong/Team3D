@@ -14,6 +14,7 @@
 
 #include "DummySkyBox.h"
 #include "MainLight.h"
+#include "Terrain.h"
 
 
 CLevel_ObjectViewer::CLevel_ObjectViewer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
@@ -265,6 +266,7 @@ void CLevel_ObjectViewer::Show_AnimList()
 			{
 				pModel->Set_AnimationIndex(i);
 				pModel->Set_CurrentTrackPosition(0.f);
+				//pModel->Play_Animation(0.f);
 			}
 		}
 	}
@@ -301,8 +303,15 @@ void CLevel_ObjectViewer::Dummy_Object_Setting()
 	GUI::Begin("Object_Info");
 	if (!m_Objects.empty())
 	{
+		_float3 Pos;
+		XMStoreFloat3(&Pos, m_Objects[m_iObjectIndex]->Get_Component<CTransform>()->Get_State(STATE::POSITION));
+		GUI::DragFloat3("Pos", (_float*)&Pos);
+
 		Show_ObjectList();
+
 		CModel* pModel = m_Objects[m_iObjectIndex]->Get_Component<CModel>();
+
+		GUI::Button(pModel->Get_AnimList(pModel->Get_AnimIndex()));
 
 		_float AnimTrack = pModel->Get_CurrentTrackPosition();
 		GUI::DragFloat("AnimTrack", &AnimTrack);
@@ -333,6 +342,18 @@ void CLevel_ObjectViewer::Parts_Object_Setting()
 		CModel* pModel = m_HumanRoot->Get_MainModel();
 		if (pModel)
 		{
+			_float3 Pos;
+			XMStoreFloat3(&Pos, m_HumanRoot->Get_WorldPostion());
+
+			float Pos3[3] = { Pos.x, Pos.y, Pos.z };
+			GUI::DragFloat3("Pos", Pos3);
+
+			Pos.x = Pos3[0];
+			Pos.y = Pos3[1];
+			Pos.z = Pos3[2];
+
+			m_HumanRoot->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(Pos.x, Pos.y, Pos.z, 1.f));
+
 			GUI::Button(pModel->Get_AnimList(pModel->Get_AnimIndex()));
 
 			_float KeyFrame = pModel->Get_CurrentTrackPosition();
@@ -494,6 +515,9 @@ HRESULT CLevel_ObjectViewer::Ready_Layer_UI(const _wstring& strLayerTag)
 HRESULT CLevel_ObjectViewer::Ready_Layer_Dummy(const _wstring& strLayerTag)
 {
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummySkyBox>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE)))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
 		return E_FAIL;
 
 	return S_OK;

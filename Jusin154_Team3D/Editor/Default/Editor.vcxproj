@@ -167,6 +167,7 @@
     <ClInclude Include="..\public\Active_Icon.h" />
     <ClInclude Include="..\Public\DummyObject.h" />
     <ClInclude Include="..\public\DummySkyBox.h" />
+    <ClInclude Include="..\Public\Dummy_Plane.h" />
     <ClInclude Include="..\Public\Dummy_PhysXPlayable.h" />
     <ClInclude Include="..\public\GamePlay_Canvas.h" />
     <ClInclude Include="..\public\BuildingContainer.h" />
@@ -188,8 +189,8 @@
     <ClInclude Include="..\public\MapObject.h" />
     <ClInclude Include="..\public\MapObject_LOD.h" />
     <ClInclude Include="..\public\MapObject_Manager.h" />
-    <ClInclude Include="..\public\MapObject_Static.h" />
     <ClInclude Include="..\Public\MainLight.h" />
+    <ClInclude Include="..\public\MapObject_Collision.h" />
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\Public\Level_PhysXLab.h" />
     <ClInclude Include="..\Public\TestEffect.h" />
@@ -233,6 +234,7 @@
     <ClCompile Include="..\private\Active_Icon.cpp" />
     <ClCompile Include="..\Private\DummyObject.cpp" />
     <ClCompile Include="..\private\DummySkyBox.cpp" />
+    <ClCompile Include="..\Private\Dummy_Plane.cpp" />
     <ClCompile Include="..\Private\Dummy_PhysXPlayable.cpp" />
     <ClCompile Include="..\private\GamePlay_Canvas.cpp" />
     <ClCompile Include="..\private\BuildingContainer.cpp" />
@@ -254,8 +256,8 @@
     <ClCompile Include="..\private\MapObject.cpp" />
     <ClCompile Include="..\private\MapObject_LOD.cpp" />
     <ClCompile Include="..\private\MapObject_Manager.cpp" />
-    <ClCompile Include="..\private\MapObject_Static.cpp" />
     <ClCompile Include="..\Private\MainLight.cpp" />
+    <ClCompile Include="..\private\MapObject_Collision.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\Private\Level_PhysXLab.cpp" />
     <ClCompile Include="..\Private\TestEffect.cpp" />
