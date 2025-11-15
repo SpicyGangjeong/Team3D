@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Component.h"
 
 NS_BEGIN(Engine)
@@ -19,7 +19,7 @@ private:
 	CTransform(const CTransform& rhs);
 	virtual ~CTransform() = default;
 public:
-	HRESULT Bind_ShaderResource(class CShader* pShader, const _char* pConstantName) const;
+	HRESULT		Bind_ShaderResource(class CShader* pShader, const _char* pConstantName) const;
 
 	void		Set_Scale(_float3& vScale);
 	void		Mult_Scale(_float3& vScale);
@@ -30,7 +30,7 @@ public:
 	_float		Get_RotationSpeed() const { return m_fRotationPerSec; }
 	_float		Get_Radius() const { return m_fRadius; }
 	_float3		Get_Scale() const;
-	_vector		Get_QuarternionVector() const; // ÇöÀç È¸ÀüÁ¤º¸¸¦ ´ã°í ÀÖ´Â ÄõÅÍ´Ï¾ğ º¤ÅÍ¸¦ out 
+	_vector		Get_QuarternionVector() const; // í˜„ì¬ íšŒì „ì •ë³´ë¥¼ ë‹´ê³  ìˆëŠ” ì¿¼í„°ë‹ˆì–¸ ë²¡í„°ë¥¼ out 
 	_vector		Get_RollPitchYawVector() const;
 	_vector		Get_State(STATE eState) const { return XMLoadFloat4(reinterpret_cast<const _float4*>(&m_WorldMatrix.m[ENUM_CLASS(eState)])); }
 	const _float4* Get_StatePtr(STATE eState) { return reinterpret_cast<_float4*>(&m_WorldMatrix.m[ENUM_CLASS(eState)]); }
@@ -60,17 +60,17 @@ public:
 	void Rotation(_float fRadianX, _float fRadianY, _float fRadianZ);
 	void Rotation(_float3& vRadian);
 
-	// Up, Down º¤ÅÍ¸¦ ¹Ù¶óº¸°Ô ÇÏ¸é ÅÍÁü
+	// Up, Down ë²¡í„°ë¥¼ ë°”ë¼ë³´ê²Œ í•˜ë©´ í„°ì§
 	void LookAt(_fvector vAt);
 
 private:
 	_float				m_fSpeedPerSec = {};
 	_float				m_fRotationPerSec = {};
 	_float4x4			m_WorldMatrix = {};
-	_float				m_fRadius = {};
+	_float				m_fRadius = { 20.f };
 
-	_float3				m_vMomentum = {}; // ÇöÀç ÇÁ·¹ÀÓ¿¡ °è»êµÈ ÀÌµ¿·®
-	_float3				m_vBackMomentum = {}; // ´ÙÀ½ ÇÁ·¹ÀÓ¿¡ °è»êµÉ ÀÌµ¿·®
+	_float3				m_vMomentum = {}; // í˜„ì¬ í”„ë ˆì„ì— ê³„ì‚°ëœ ì´ë™ëŸ‰
+	_float3				m_vBackMomentum = {}; // ë‹¤ìŒ í”„ë ˆì„ì— ê³„ì‚°ë  ì´ë™ëŸ‰
 
 private:
 	virtual HRESULT Initialize_Prototype() override;

@@ -185,6 +185,7 @@ void CLevel_ObjectViewer::Category_ModelList(const _char* Category)
 				{
 					if (GUI::Button(szCategory))
 					{
+						strcpy_s(m_DummyPath, szCategory);
 						CGameObject* pTempObject = { nullptr };
 
 						CDummyObject::PARTS_OBJECT_DESC Desc = {};
@@ -248,6 +249,52 @@ void CLevel_ObjectViewer::Category_PartsModelList(const _char* Category, const _
 						iIndex = ENUM_CLASS(CRootModelPart::PARTSTYPE::HAIR);
 
 					m_HumanRoot->Change_Model(iIndex);
+
+					filesystem::path fullPath(szCategory);
+					filesystem::path folder = fullPath.parent_path();
+					_string baseName = fullPath.stem().string();
+
+					_string defaultModel = fullPath.filename().string();
+
+					for (auto& entry : filesystem::directory_iterator(folder))
+					{
+						if (!entry.is_regular_file())
+							continue;
+
+						auto file = entry.path().filename().string();
+						auto stem = entry.path().stem().string();
+						auto ext = entry.path().extension().string();
+
+						if (ext != ".png")
+							continue;
+
+						if (strstr(stem.c_str(),"DAO_MSK"))
+						{
+							_string Name = folder.string() +"/" + file;
+
+							const _wchar* Prototype = TEXT("DAO_MSK");
+
+							if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, Prototype,
+								CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, CMyTools::ToWstring(Name).c_str(), 0)))) {
+								return;
+							}
+
+							m_HumanRoot->Set_Texture(iIndex, Prototype);
+						}
+						if (strstr(stem.c_str(), "THV_MSK"))
+						{
+							_string Name = folder.string() + "/" + file;
+
+							const _wchar* Prototype = TEXT("THV_MSK");
+
+							if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, Prototype,
+								CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, CMyTools::ToWstring(Name).c_str(), 0)))) {
+								return;
+							}
+
+							m_HumanRoot->Set_Texture(iIndex, Prototype);
+						}
+					}
 				}
 			}
 		}
@@ -257,33 +304,46 @@ void CLevel_ObjectViewer::Category_PartsModelList(const _char* Category, const _
 void CLevel_ObjectViewer::Show_AnimList()
 {
 	GUI::Begin("Anim_List");
-	if (!m_Objects.empty())
+	if (GUI::BeginTabBar("Anim_List"))
 	{
-		CModel* pModel = m_Objects[m_iObjectIndex]->Get_Component<CModel>();
-		for (_uint i = 0; i < pModel->Get_AnimSize(); i++)
+		if (GUI::BeginTabItem("Dummy_Anim"))
 		{
-			if (GUI::Button(pModel->Get_AnimList(i)))
+			if (!m_Objects.empty())
 			{
-				pModel->Set_AnimationIndex(i);
-				pModel->Set_CurrentTrackPosition(0.f);
-				//pModel->Play_Animation(0.f);
-			}
-		}
-	}
-	if (m_HumanRoot)
-	{
-		CModel* pModel = m_HumanRoot->Get_MainModel();
-		if (pModel)
-		{
-			for (_uint i = 0; i < pModel->Get_AnimSize(); i++)
-			{
-				if (GUI::Button(pModel->Get_AnimList(i)))
+				CModel* pModel = m_Objects[m_iObjectIndex]->Get_Component<CModel>();
+				for (_uint i = 0; i < pModel->Get_AnimSize(); i++)
 				{
-					m_HumanRoot->Set_Animation(i);
+					if (GUI::Button(pModel->Get_AnimList(i)))
+					{
+						pModel->Set_AnimationIndex(i);
+						pModel->Set_CurrentTrackPosition(0.f);
+						pModel->Play_Animation(0.f);
+					}
 				}
 			}
+			GUI::EndTabItem();
+		}
+		
+		if (GUI::BeginTabItem("Parts_Anim"))
+		{
+			if (m_HumanRoot)
+			{
+				CModel* pModel = m_HumanRoot->Get_MainModel();
+				if (pModel)
+				{
+					for (_uint i = 0; i < pModel->Get_AnimSize(); i++)
+					{
+						if (GUI::Button(pModel->Get_AnimList(i)))
+						{
+							m_HumanRoot->Set_Animation(i);
+						}
+					}
+				}
+			}
+			GUI::EndTabItem();
 		}
 	}
+	GUI::EndTabBar();
 	GUI::End();
 }
 
@@ -325,10 +385,73 @@ void CLevel_ObjectViewer::Dummy_Object_Setting()
 		{
 			pModel->Set_PlayAnim(bPlayAnim);
 		}
+
+		if (GUI::Button("Load KeyFrame"))
+		{
+			_char szName[MAX_PATH] = {};
+			_splitpath_s(m_DummyPath, nullptr, 0, nullptr, 0, szName, MAX_PATH, nullptr, 0);
+
+			Load_KeyFrame(szName);
+		}
+
+		static _char EventName[64] = {};
+
+		GUI::InputText("EventName", EventName, sizeof(EventName));
+		GUI::SameLine();
+
+		if (GUI::Button("Save KeyFrame"))
+		{
+			if (pModel)
+			{
+				_float fKeyFrame = pModel->Get_CurrentTrackPosition();
+				m_KeyFrame.push_back(fKeyFrame);
+				m_Events.emplace_back(EventName);
+
+				_char szDir[MAX_PATH] = {};
+
+				_splitpath_s(m_DummyPath, nullptr, 0, szDir, MAX_PATH, nullptr, 0, nullptr, 0);
+
+				_string szFile = "KeyFrame.bin";
+				_string Path = szDir + szFile;
+
+				FILE* fp = nullptr;
+				fopen_s(&fp, Path.c_str(), "wb");
+				if (!fp) return;
+
+				_uint KeyFrameSize = (_uint)m_KeyFrame.size();
+
+				fwrite(&KeyFrameSize, sizeof(_uint), 1, fp);
+
+				for (size_t i = 0; i < m_KeyFrame.size(); i++)
+				{
+					_uint EventSize = (_uint)m_Events[i].size() + 1;
+					fwrite(&m_KeyFrame[i], sizeof(_float), 1, fp);
+					fwrite(&EventSize, sizeof(_uint), 1, fp);
+					fwrite(m_Events[i].c_str(), sizeof(_char), EventSize, fp);
+				}
+
+
+				fclose(fp);
+
+				EventName[0] = '\0';
+			}
+		}
+
+		for (_uint i = 0; i < m_KeyFrame.size(); ++i)
+		{
+			ImDrawList* draw = ImGui::GetForegroundDrawList();
+			ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+			float scale = 50.f;
+
+			GUI::DragFloat(m_Events[i].c_str(), &m_KeyFrame[i]);
+		}
+
 		if (GUI::Button("Delete"))
 		{
 			m_pGameInstance->Get_Layer(NEXT_LEVEL, m_wszPreLayer)->Clear_Layer();
 			m_Objects.pop_back();
+			m_Events.clear();
+			m_KeyFrame.clear();
 		}
 	}
 	GUI::End();
@@ -371,7 +494,7 @@ void CLevel_ObjectViewer::Parts_Object_Setting()
 
 			if (GUI::Button("Load KeyFrame"))
 			{
-				Load_KeyFrame();
+				Load_KeyFrame("Human");
 			}
 
 			static _char EventName[64] = {};
@@ -388,21 +511,20 @@ void CLevel_ObjectViewer::Parts_Object_Setting()
 					m_Events.emplace_back(EventName);
 
 					FILE* fp = nullptr;
-					fopen_s(&fp, "../Bin/Resources/Models/KeyFrame.bin", "wb");
+					fopen_s(&fp, "../Bin/Resources/Models/Human/KeyFrame.bin", "wb");
 					if (!fp) return;
 
-					_uint KeyFrameSize = (_uint)m_KeyFrame.size();
+					_uint KeyFrameSize = (_uint)m_KeyFrame.size() + 1;
 
 					fwrite(&KeyFrameSize, sizeof(_uint), 1, fp);
 
 					for (size_t i = 0; i < m_KeyFrame.size(); i++)
 					{
-						_uint EventSize = (_uint)m_Events[i].size();
+						_uint EventSize = (_uint)m_Events[i].size() + 1;
 						fwrite(&m_KeyFrame[i], sizeof(_float), 1, fp);
 						fwrite(&EventSize, sizeof(_uint), 1, fp);
-						fwrite(&m_Events[i], sizeof(_string), 1, fp);
+						fwrite(m_Events[i].c_str(), sizeof(_char), EventSize, fp);
 					}
-						
 
 					fclose(fp);
 
@@ -424,6 +546,7 @@ void CLevel_ObjectViewer::Parts_Object_Setting()
 			{
 				m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_Root"))->Clear_Layer();
 				m_HumanRoot = nullptr;
+				m_Events.clear();
 				m_KeyFrame.clear();
 			}
 		}
@@ -455,29 +578,49 @@ _wchar* CLevel_ObjectViewer::Save_ModelName(const _char* Category)
 	return m_wszName;
 }
 
-void CLevel_ObjectViewer::Load_KeyFrame()
+void CLevel_ObjectViewer::Load_KeyFrame(const _char* Name)
 {
 	FILE* fp = nullptr;
-	fopen_s(&fp, "../Bin/Resources/Models/KeyFrame.bin", "rb");
+	_string Path = {};
+	if (Name == _string("Human"))
+	{
+		Path = "../Bin/Resources/Models/Human/KeyFrame.bin";
+	}
+	else
+	{
+		_char szDir[MAX_PATH] = {};
+		_splitpath_s(m_DummyPath, nullptr, 0, szDir, MAX_PATH, nullptr, 0, nullptr, 0);
+		Path = _string(szDir) + "KeyFrame.bin";
+	}
+
+	fopen_s(&fp, Path.c_str(), "rb");
 	if (!fp) return;
 
-	_uint KeyFameSize = {};
-	_uint EventLen = {};
+	_uint KeyFrameSize = 0;
+	fread(&KeyFrameSize, sizeof(_uint), 1, fp);
 
-	fread(&KeyFameSize, sizeof(_uint), 1, fp);
-
-	for (size_t i = 0; i < KeyFameSize; i++)
+	for (size_t i = 0; i < KeyFrameSize; i++)
 	{
-		fread(&m_fKeyFrame, sizeof(_float), 1, fp);
-		fread(&EventLen, sizeof(_uint), 1, fp);
-		fread(&m_strEvent, sizeof(_string), 1, fp);
+		float fKey = 0.f;
+		fread(&fKey, sizeof(float), 1, fp);
 
-		m_Events.push_back(m_strEvent);
-		m_KeyFrame.push_back(m_fKeyFrame);
+		_uint EventLen = 0;
+		fread(&EventLen, sizeof(_uint), 1, fp);
+
+		_string str;
+		str.resize(EventLen);
+
+		fread(str.data(), sizeof(_char), EventLen, fp);
+
+		m_KeyFrame.push_back(fKey);
+		m_Events.push_back(str);
 	}
 
 	fclose(fp);
 }
+
+
+
 
 HRESULT CLevel_ObjectViewer::Ready_Layer_Camera(const _wstring& strLayerTag)
 {
@@ -485,7 +628,7 @@ HRESULT CLevel_ObjectViewer::Ready_Layer_Camera(const _wstring& strLayerTag)
 	CameraDesc.fFovy = XMConvertToRadians(60.0f);
 	CameraDesc.fNear = 0.1f;
 	CameraDesc.fFar = 500.f;
-	CameraDesc.vEye = _float3(0.f, 30.f, -10.f);
+	CameraDesc.vEye = _float3(0.f, 5.f, -5.f);
 	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
 	CameraDesc.fSpeedPerSec = 5.f;
 	CameraDesc.pCameraKey = TEXT("Debug_Camera");

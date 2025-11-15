@@ -11,9 +11,8 @@ private:
 	virtual ~CRenderer() = default;
 
 public:
-	void	Refresh_Renderer();
 	void	Render();
-	HRESULT Add_RenderGroup(RENDER eRenderGroup, class CGameObject* pRenderObject, _float4& vPos, _float fCullRadius);
+	HRESULT Add_RenderGroup(RENDER eRenderGroup, class CGameObject* pRenderObject);
 
 #ifdef _DEBUG
 private:
@@ -39,12 +38,6 @@ private:
 	_float4x4					m_WorldMatrix = {};
 	_float4x4					m_ViewMatrix = {};
 	_float4x4					m_ProjMatrix = {};
-	_float4						m_vPlanes[6] = {};
-	_float3						m_CubeViewFrustum[8] = {};
-	_float3						m_CubeNDC[8] = {
-		{ -1.f, -1.f, 0.f }, { 1.f, -1.f, 0.f }, { 1.f, 1.f, 0.f }, { -1.f, 1.f, 0.f },
-		{ -1.f, -1.f, 1.f }, { 1.f, -1.f, 1.f }, { 1.f, 1.f, 1.f }, { -1.f, 1.f, 1.f }
-	};
 
 	ID3D11DepthStencilView* m_pShadowDSV = { nullptr };
 

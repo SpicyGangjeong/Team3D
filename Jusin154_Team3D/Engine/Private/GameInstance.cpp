@@ -112,7 +112,6 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 
 	m_pObject_Manager->Update(fTimeDelta);
 
-	m_pRenderer->Refresh_Renderer();
 	m_pObject_Manager->Late_Update(fTimeDelta);
 
 	m_pLevel_Manager->Update(fTimeDelta);
@@ -400,14 +399,9 @@ void CGameInstance::Clear_Objects_With_Layers(_uint iLevelIndex)
 	m_pObject_Manager->Clear(iLevelIndex);
 }
 
-void CGameInstance::Refresh_Renderer()
+HRESULT CGameInstance::Add_RenderGroup(RENDER eRenderGroup, CGameObject* pRenderObject)
 {
-	m_pRenderer->Refresh_Renderer();
-}
-
-HRESULT CGameInstance::Add_RenderGroup(RENDER eRenderGroup, CGameObject* pRenderObject, _float4& vPos, _float fCullRadius)
-{
-	return m_pRenderer->Add_RenderGroup(eRenderGroup, pRenderObject, vPos, fCullRadius);
+	return m_pRenderer->Add_RenderGroup(eRenderGroup, pRenderObject);
 }
 
 void CGameInstance::Set_Transform(D3DTS eState, _fmatrix TransformStateMatrix)
@@ -433,6 +427,21 @@ const _float4* CGameInstance::Get_CamPosition()
 const _vector CGameInstance::Get_CamXMPosition()
 {
 	return m_pPipeLine->Get_CamXMPosition();
+}
+
+void CGameInstance::Transform_Frustum_ToLocalSpace(_fmatrix WorldMatrixInverse)
+{
+	m_pPipeLine->Transform_Frustum_ToLocalSpace(WorldMatrixInverse);
+}
+
+_bool CGameInstance::isIn_WorldFrustum(_fvector vWorldPos, _float fRadius)
+{
+	return m_pPipeLine->isIn_WorldFrustum(vWorldPos, fRadius);
+}
+
+_bool CGameInstance::isIn_LocalFrustum(_fvector vLocalPos, _float fRadius)
+{
+	return m_pPipeLine->isIn_LocalFrustum(vLocalPos, fRadius);
 }
 
 void CGameInstance::Add_Light(_uint _iCurrentLevel, CLight* _pLight)
@@ -591,11 +600,11 @@ void CGameInstance::RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTr
 	return m_pPhysX_Manager->RegistTriMesh(pName, pPxTriMesh);
 }
 
-PSX::PxRigidDynamic* CGameInstance::Add_DynamicActor(CRigidBody& RigidBody)
+PSX::PxRigidDynamic* CGameInstance::Add_DynamicActor(CRigidBody_Dynamic& RigidBody)
 {
 	return m_pPhysX_Manager->Add_DynamicActor(RigidBody);
 }
-PSX::PxRigidStatic* CGameInstance::Add_StaticActor(CRigidBody& RigidBody)
+PSX::PxRigidStatic* CGameInstance::Add_StaticActor(CRigidBody_Static& RigidBody)
 {
 	return m_pPhysX_Manager->Add_StaticActor(RigidBody);
 }
@@ -615,13 +624,17 @@ void CGameInstance::ReleaseController(_uint iControllerIndex)
 {
 	m_pPhysX_Manager->ReleaseController(iControllerIndex);
 }
-void CGameInstance::Attach_Actor(CRigidBody& RigidBody, PSX::PxActor& Actor)
+void CGameInstance::Attach_Actor(PSX::PxActor& Actor)
 {
-	m_pPhysX_Manager->Attach_Actor(RigidBody, Actor);
+	m_pPhysX_Manager->Attach_Actor(Actor);
 }
-void CGameInstance::Detach_Actor(CRigidBody& RigidBody, PSX::PxActor*& pActor)
+void CGameInstance::Detach_Actor(PSX::PxActor& Actor)
 {
-	m_pPhysX_Manager->Detach_Actor(RigidBody, pActor);
+	m_pPhysX_Manager->Detach_Actor(Actor);
+}
+void CGameInstance::Release_Actor(PSX::PxActor& Actor)
+{
+	m_pPhysX_Manager->Detach_Actor(Actor);
 }
 HRESULT CGameInstance::ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix)
 {

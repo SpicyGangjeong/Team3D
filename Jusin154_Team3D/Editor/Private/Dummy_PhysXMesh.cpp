@@ -42,8 +42,9 @@ void CDummy_PhysXMesh::Update(_float fTimeDelta)
 
 void CDummy_PhysXMesh::Late_Update(_float fTimeDelta)
 {
-	_float4* vPos = (_float4*)(m_pTransformCom->Get_WorldMatrixPtr()->m[3]);
-	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this, *vPos, m_pTransformCom->Get_Radius());
+	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
+		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+	}
 }
 
 HRESULT CDummy_PhysXMesh::Render()
@@ -87,10 +88,10 @@ HRESULT CDummy_PhysXMesh::Ready_Components(void* pArg)
 		reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
-	BOXSTARTPOS_DESC* pBox = static_cast<BOXSTARTPOS_DESC*>(pArg);
+	PHYSXDUMMY_DESC* pPhysXDummyDesc = static_cast<PHYSXDUMMY_DESC*>(pArg);
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pBox->vPos), 1.f));
-	m_pTransformCom->Rotation(pBox->vRotRPY.x, pBox->vRotRPY.y, pBox->vRotRPY.z);
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pPhysXDummyDesc->vPos), 1.f));
+	m_pTransformCom->Rotation(pPhysXDummyDesc->vRotRPY.x, pPhysXDummyDesc->vRotRPY.y, pPhysXDummyDesc->vRotRPY.z);
 
 	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_River_Col_Model"), (CComponent**)&m_pModelCom))) {
 		return E_FAIL;

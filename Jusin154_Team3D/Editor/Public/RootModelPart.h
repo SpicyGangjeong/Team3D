@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Editor_Define.h"
 #include "ContainerObject.h"
@@ -38,6 +38,7 @@ public:
 	void Set_MainModel(class CModel* Model);
 	void Change_Model(_uint iIndex);
 	void Set_Animation(_uint iAnimIndex);
+	void Set_Texture(_uint iIndex, const _wchar* Texture);
 
 private:
 	class CModel*				m_pMainModel = { nullptr };

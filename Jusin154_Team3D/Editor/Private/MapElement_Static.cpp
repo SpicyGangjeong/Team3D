@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "MapElement_Static.h"
 
 #include "GameInstance.h"
@@ -76,9 +76,9 @@ void CMapElement_Static::Late_Update(_float fTimeDelta)
 	}
 #endif 
 
-	_float4 vPos;
-	XMStoreFloat4(&vPos, m_pTransformCom->Get_State(STATE::POSITION));
-	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this, vPos, 20.f);
+	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
+		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+	}
 }
 
 HRESULT CMapElement_Static::Render()
