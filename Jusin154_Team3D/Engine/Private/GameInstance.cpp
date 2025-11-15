@@ -431,7 +431,7 @@ void CGameInstance::Transform_Frustum_ToLocalSpace(_fmatrix WorldMatrixInverse)
 
 _bool CGameInstance::isIn_WorldFrustum(_fvector vWorldPos, _float fRadius)
 {
-	return m_pPipeLine->isIn_LocalFrustum(vWorldPos, fRadius);
+	return m_pPipeLine->isIn_WorldFrustum(vWorldPos, fRadius);
 }
 
 _bool CGameInstance::isIn_LocalFrustum(_fvector vLocalPos, _float fRadius)
@@ -614,13 +614,17 @@ void CGameInstance::ReleaseController(_uint iControllerIndex)
 {
 	m_pPhysX_Manager->ReleaseController(iControllerIndex);
 }
-void CGameInstance::Attach_Actor(CRigidBody& RigidBody, PSX::PxActor& Actor)
+void CGameInstance::Attach_Actor(PSX::PxActor& Actor)
 {
-	m_pPhysX_Manager->Attach_Actor(RigidBody, Actor);
+	m_pPhysX_Manager->Attach_Actor(Actor);
 }
-void CGameInstance::Detach_Actor(CRigidBody& RigidBody, PSX::PxActor*& pActor)
+void CGameInstance::Detach_Actor(PSX::PxActor& Actor)
 {
-	m_pPhysX_Manager->Detach_Actor(RigidBody, pActor);
+	m_pPhysX_Manager->Detach_Actor(Actor);
+}
+void CGameInstance::Release_Actor(PSX::PxActor& Actor)
+{
+	m_pPhysX_Manager->Detach_Actor(Actor);
 }
 HRESULT CGameInstance::ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix)
 {

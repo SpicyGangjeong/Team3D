@@ -36,10 +36,10 @@ public:
 
 	void Update(_float fTimeDelta);
 	void ClearScene();
-	void Attach_Actor(CRigidBody& RigidBody, PSX::PxActor& Actor);
-	void Detach_Actor(CRigidBody& RigidBody, PSX::PxActor*& pActor);
+	void Attach_Actor(PSX::PxActor& Actor);
+	unordered_set<PSX::PxActor*>::iterator Detach_Actor(PSX::PxActor& Actor);
+	void Release_Actor(PSX::PxActor& Actor);
 #pragma endregion
-
 #pragma region CHARACTER_CONTROLLER
 	/* dev-treadmill.tistory.com/158  */
 
@@ -75,7 +75,8 @@ private:
 
 
 
-	list<pair<CRigidBody*, PSX::PxActor*>>		m_RigidBodys = { };
+	unordered_set<PSX::PxActor*>				m_pActiveBodys = { };
+	unordered_set<PSX::PxActor*>				m_pRestBodies = { }; // 피직스의 액터로 구별되기 때문에 피직스액터 포인터를 키로 사용함
 	map<_wstring, PSX::PxTriangleMesh*>			m_TriangleMeshes = {};
 	map<_wstring, PSX::PxTriangleMeshGeometry*>	m_TriangleMeshGeometry = {};
 #ifdef 기무리

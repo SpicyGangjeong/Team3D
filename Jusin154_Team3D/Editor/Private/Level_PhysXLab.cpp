@@ -91,7 +91,7 @@ HRESULT CLevel_PhysXLab::Ready_Layer_Terrain(const _wstring& strLayerTag)
 
 HRESULT CLevel_PhysXLab::Ready_Layer_PhysXObjects(const _wstring& strLayerTag)
 {
-	for (int i = 0; i < 50; ++i) {
+	for (int i = 0; i < 500; ++i) {
 		CDummy_PhysXBox::BOXSTARTPOS_DESC Desc{};
 		Desc.vPos = { m_pGameInstance->Random_Float(0.f, 30.f), m_pGameInstance->Random_Float(3.f, 33.f), m_pGameInstance->Random_Float(0.f, 30.f) };
 		Desc.vRotRPY = { m_pGameInstance->Random_Float(0.f, XM_2PI), m_pGameInstance->Random_Float(0.f, XM_2PI), m_pGameInstance->Random_Float(0.f, XM_2PI) };

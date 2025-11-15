@@ -93,7 +93,7 @@ HRESULT CRigidBody_Dynamic::Initialize(void* pArg)
 	}
 #endif // _DEBUG
 	m_tagData.pOwner = m_pOwner;
-	XMStoreFloat4x4(&m_tagData.m_BeforeMatrix, m_pTransform->Get_XMWorldMatrix());
+	XMStoreFloat4x4(&m_tagData.BeforeMatrix, m_pTransform->Get_XMWorldMatrix());
 	m_tagData.pBody = this;
 	m_pRigidBody = m_pGameInstance->Add_DynamicActor(*this);
 	m_pRigidBody->userData = &m_tagData;

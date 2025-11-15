@@ -50,6 +50,7 @@ public:
 #ifdef _DEBUG
 	virtual HRESULT Render() override;
 #endif
+	PSX::PxRigidDynamic* Get_Actor();
 
 	_float			Get_ContactOffset() const { return m_pController->getContactOffset(); }
 	void			Set_ContactOffset(_float fValue) { return m_pController->setContactOffset((PSX::PxF32)fValue); }

@@ -44,7 +44,6 @@ void CPipeLine::Transform_Frustum_ToLocalSpace(_fmatrix WorldMatrixInverse)
 
 _bool CPipeLine::isIn_WorldFrustum(_fvector vWorldPos, _float fRadius)
 {
-	return true;
 	for (size_t i = 0; i < 6; i++)
 	{
 		if (fRadius < XMVectorGetX(XMPlaneDotCoord(XMLoadFloat4(&m_vWorldPlanes[i]), vWorldPos)))
@@ -56,7 +55,6 @@ _bool CPipeLine::isIn_WorldFrustum(_fvector vWorldPos, _float fRadius)
 
 _bool CPipeLine::isIn_LocalFrustum(_fvector vLocalPos, _float fRadius)
 {
-	return true;
 	for (size_t i = 0; i < 6; i++)
 	{
 		if (fRadius < XMVectorGetX(XMPlaneDotCoord(XMLoadFloat4(&m_vLocalPlanes[i]), vLocalPos)))

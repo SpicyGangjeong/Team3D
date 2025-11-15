@@ -193,8 +193,9 @@ public:
 	PSX::PxController*	Add_BoxController(PSX::PxBoxControllerDesc& Desc);
 	PSX::PxController*	Get_Controller(_uint iControllerIndex);
 	void				ReleaseController(_uint iControllerIndex);
-	void				Attach_Actor(CRigidBody& RigidBody, PSX::PxActor& Actor);
-	void				Detach_Actor(CRigidBody& RigidBody, PSX::PxActor*& pActor);
+	void				Attach_Actor(PSX::PxActor& Actor);
+	void				Detach_Actor(PSX::PxActor& pActor);
+	void				Release_Actor(PSX::PxActor& Actor);
 
 	HRESULT ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix = XMMatrixIdentity());
 	HRESULT SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);

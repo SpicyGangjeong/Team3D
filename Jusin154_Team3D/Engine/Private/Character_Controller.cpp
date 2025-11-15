@@ -60,6 +60,11 @@ HRESULT CCharacter_Controller::Render()
 	return S_OK;
 }
 
+PSX::PxRigidDynamic* CCharacter_Controller::Get_Actor()
+{
+	return m_pController->getActor();
+}
+
 #endif // _DEBUG
 
 void CCharacter_Controller::Resize_Volume(_float fHeight)
@@ -188,7 +193,7 @@ HRESULT CCharacter_Controller::Initialize(void* pArg)
 	{ // PhsXUserData
 		m_tagData.eKind = PHYSX_KIND::CCTActor;
 		m_tagData.pOwner = m_pOwner;
-		XMStoreFloat4x4(&m_tagData.m_BeforeMatrix, m_pTransform->Get_XMWorldMatrix());
+		XMStoreFloat4x4(&m_tagData.BeforeMatrix, m_pTransform->Get_XMWorldMatrix());
 		m_tagData.pCharacter = this;
 	}
 

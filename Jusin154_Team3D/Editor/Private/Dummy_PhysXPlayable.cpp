@@ -39,6 +39,14 @@ void CDummy_PhysXPlayable::Update(_float fTimeDelta)
 		if (m_pGameInstance->Key_Pressing(DIK_C)) {
 			m_pTransformCom->AccumulateMomentum(XMVectorSet(0.f, -10.f, 0.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta);
 		}
+		if (m_pGameInstance->Key_Down(DIK_V)) {
+			m_pGameInstance->Detach_Actor(*m_pCharacter_Controller->Get_Actor());
+		}
+	}
+	else {
+		if (m_pGameInstance->Key_Down(DIK_V)) {
+			m_pGameInstance->Attach_Actor(*m_pCharacter_Controller->Get_Actor());
+		}
 	}
 	m_pTransformCom->AccumulateMomentum(XMVectorSet(0.f, -GRAVITY * fTimeDelta, 0.f, 0.f));
 	m_pCharacter_Controller->Move(fTimeDelta);

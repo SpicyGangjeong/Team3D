@@ -1,25 +1,25 @@
 ﻿#include "pch.h"
-#include "Dummy_PhysXBox.h"
+#include "Dummy_PhysXDoor.h"
 
 #include "GameInstance.h"
 
 
-CDummy_PhysXBox::CDummy_PhysXBox(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CDummy_PhysXDoor::CDummy_PhysXDoor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject{ pDevice, pContext }
 {
 }
 
-CDummy_PhysXBox::CDummy_PhysXBox(const CDummy_PhysXBox& rhs)
+CDummy_PhysXDoor::CDummy_PhysXDoor(const CDummy_PhysXDoor& rhs)
 	: CGameObject(rhs)
 {
 }
 
-HRESULT CDummy_PhysXBox::Initialize_Prototype()
+HRESULT CDummy_PhysXDoor::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CDummy_PhysXBox::Initialize(void* pArg)
+HRESULT CDummy_PhysXDoor::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg))) {
 		return E_FAIL;
@@ -32,48 +32,38 @@ HRESULT CDummy_PhysXBox::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CDummy_PhysXBox::Priority_Update(_float fTimeDelta)
+void CDummy_PhysXDoor::Priority_Update(_float fTimeDelta)
 {
 
 }
 
-void CDummy_PhysXBox::Update(_float fTimeDelta)
+void CDummy_PhysXDoor::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Pressing(DIK_LCONTROL)) {
-		if (m_pGameInstance->Key_Down(DIK_X)) {
-			m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor());
-		}
-	}
-	else {
-		if (m_pGameInstance->Key_Down(DIK_X)) {
-			m_pGameInstance->Attach_Actor(*m_pRigidBody->Get_Actor());
-		}
-	}
 }
 
-void CDummy_PhysXBox::Late_Update(_float fTimeDelta)
+void CDummy_PhysXDoor::Late_Update(_float fTimeDelta)
 {
 	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
 		m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
 	}
 }
 
-HRESULT CDummy_PhysXBox::Render()
+HRESULT CDummy_PhysXDoor::Render()
 {
-	if (FAILED(Bind_ShaderResources())) {
-		return E_FAIL;
-	}
+	//if (FAILED(Bind_ShaderResources())) {
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pModelCom->Bind_Material(0, m_pShaderCom, "g_DiffuseTexture", aiTextureType_DIFFUSE, 0))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::DEFAULT)))) {
-		return E_FAIL;
-	}
+	//if (FAILED(m_pModelCom->Bind_Material(0, m_pShaderCom, "g_DiffuseTexture", aiTextureType_DIFFUSE, 0))) {
+	//	return E_FAIL;
+	//}
+	//if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::DEFAULT)))) {
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pModelCom->Render(0))) {
-		return E_FAIL;
-	}
+	//if (FAILED(m_pModelCom->Render(0))) {
+	//	return E_FAIL;
+	//}
 #ifdef _DEBUG
 	if (FAILED(m_pRigidBody->Render())) {
 		return E_FAIL;
@@ -84,7 +74,7 @@ HRESULT CDummy_PhysXBox::Render()
 	return S_OK;
 }
 
-HRESULT CDummy_PhysXBox::Ready_Components(void* pArg)
+HRESULT CDummy_PhysXDoor::Ready_Components(void* pArg)
 {
 	if (FAILED(__super::Ready_Components(pArg))) {
 		return E_FAIL;
@@ -105,7 +95,7 @@ HRESULT CDummy_PhysXBox::Ready_Components(void* pArg)
 
 	/* Com_Shader */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_MESH,
-		reinterpret_cast<CComponent**>(&m_pShaderCom)))){
+		reinterpret_cast<CComponent**>(&m_pShaderCom)))) {
 		return E_FAIL;
 	}
 
@@ -117,7 +107,7 @@ HRESULT CDummy_PhysXBox::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-HRESULT CDummy_PhysXBox::Bind_ShaderResources()
+HRESULT CDummy_PhysXDoor::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
 		return E_FAIL;
@@ -135,33 +125,33 @@ HRESULT CDummy_PhysXBox::Bind_ShaderResources()
 	return S_OK;
 }
 
-CDummy_PhysXBox* CDummy_PhysXBox::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CDummy_PhysXDoor* CDummy_PhysXDoor::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CDummy_PhysXBox* pInstance = new CDummy_PhysXBox(pDevice, pContext);
+	CDummy_PhysXDoor* pInstance = new CDummy_PhysXDoor(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CDummy_PhysXBox");
+		MSG_BOX("Failed to Created : CDummy_PhysXDoor");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CDummy_PhysXBox::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CDummy_PhysXDoor::Clone(void* pArg, CGameObject* pOwner)
 {
-	CDummy_PhysXBox* pInstance = new CDummy_PhysXBox(*this);
+	CDummy_PhysXDoor* pInstance = new CDummy_PhysXDoor(*this);
 	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CDummy_PhysXBox");
+		MSG_BOX("Failed to Cloned : CDummy_PhysXDoor");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CDummy_PhysXBox::Free()
+void CDummy_PhysXDoor::Free()
 {
 	__super::Free();
 
@@ -170,6 +160,6 @@ void CDummy_PhysXBox::Free()
 	SAFE_RELEASE(m_pModelCom);
 }
 
-void CDummy_PhysXBox::Describe_Entity()
+void CDummy_PhysXDoor::Describe_Entity()
 {
 }

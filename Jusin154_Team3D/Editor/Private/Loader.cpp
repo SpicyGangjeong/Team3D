@@ -533,7 +533,7 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
 		{
 			Desc.eType = ACTOR::BOX;
-			Desc.ePxRigidBodyFlags = {};
+			Desc.ePxRigidBodyFlags = { /*PSX::PxRigidBodyFlag::eKINEMATIC*/ };
 			Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
 			Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 			Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
