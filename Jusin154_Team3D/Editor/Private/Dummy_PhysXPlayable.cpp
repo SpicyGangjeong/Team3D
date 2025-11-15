@@ -1,6 +1,5 @@
 ﻿#include "pch.h"
 #include "Dummy_PhysXPlayable.h"
-
 #include "GameInstance.h"
 
 CDummy_PhysXPlayable::CDummy_PhysXPlayable(ID3D11Device* pDevice, ID3D11DeviceContext* pContext):
@@ -40,6 +39,14 @@ void CDummy_PhysXPlayable::Update(_float fTimeDelta)
 		if (m_pGameInstance->Key_Pressing(DIK_C)) {
 			m_pTransformCom->AccumulateMomentum(XMVectorSet(0.f, -10.f, 0.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta);
 		}
+		if (m_pGameInstance->Key_Down(DIK_V)) {
+			m_pGameInstance->Detach_Actor(*m_pCharacter_Controller->Get_Actor());
+		}
+	}
+	else {
+		if (m_pGameInstance->Key_Down(DIK_V)) {
+			m_pGameInstance->Attach_Actor(*m_pCharacter_Controller->Get_Actor());
+		}
 	}
 	m_pTransformCom->AccumulateMomentum(XMVectorSet(0.f, -GRAVITY * fTimeDelta, 0.f, 0.f));
 	m_pCharacter_Controller->Move(fTimeDelta);
@@ -48,9 +55,9 @@ void CDummy_PhysXPlayable::Update(_float fTimeDelta)
 void CDummy_PhysXPlayable::Late_Update(_float fTimeDelta)
 {
 	Describe_Entity();
-	_float4 vPos;
-	XMStoreFloat4(&vPos, Get_WorldPostion());
-	m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this, vPos, 20.f);
+	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
+		m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
+	}
 }
 
 HRESULT CDummy_PhysXPlayable::Render()
@@ -119,6 +126,8 @@ HRESULT CDummy_PhysXPlayable::Ready_Components(void* pArg)
 		Desc.fStepOffset = { 0.05f };
 		Desc.fRadius = 0.5f;
 		Desc.fHeight = 1.0f;
+		Desc.pCallback_HitReport = &m_pCallBack_HitReport;
+		Desc.pCallback_Behavior = &m_pCallBack_Behavior;
 		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), (CComponent**)&m_pCharacter_Controller, &Desc))) {
 			return E_FAIL;
