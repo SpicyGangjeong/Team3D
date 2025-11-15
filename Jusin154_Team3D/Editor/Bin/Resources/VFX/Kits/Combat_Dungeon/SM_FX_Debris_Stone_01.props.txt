@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = Material3'/Engine/EngineMaterials/WorldGridMaterial.WorldGridMaterial'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = Material3'/Engine/EngineMaterials/WorldGridMaterial.WorldGridMaterial'
+        MaterialSlotName = lambert2
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 622.142, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=7.12776, Y=-7.31136, Z=7.87326 }
+    BoxExtent = { X=72.1725, Y=94.6565, Z=54.9331 }
+    SphereRadius = 107.091
+}

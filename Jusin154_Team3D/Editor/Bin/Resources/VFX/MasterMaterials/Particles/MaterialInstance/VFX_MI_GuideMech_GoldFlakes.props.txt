@@ -1,0 +1,150 @@
+Parent = Material3'/Game/VFX/MasterMaterials/Particles/VFX_M_Lit_Metallic.VFX_M_Lit_Metallic'
+ScalarParameterValues[17] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=metal }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[1] =
+    {
+        ParameterInfo = { Name=roughness }
+        ParameterValue = 0.1
+        ParameterName = None
+    }
+    ScalarParameterValues[2] =
+    {
+        ParameterInfo = { Name=Base Emissive Strength }
+        ParameterValue = 0.2
+        ParameterName = None
+    }
+    ScalarParameterValues[3] =
+    {
+        ParameterInfo = { Name=Emissive strength texture }
+        ParameterValue = 44
+        ParameterName = None
+    }
+    ScalarParameterValues[4] =
+    {
+        ParameterInfo = { Name=Contrast Emissive texture  }
+        ParameterValue = 2
+        ParameterName = None
+    }
+    ScalarParameterValues[5] =
+    {
+        ParameterInfo = { Name=Tiling Emissive Texture }
+        ParameterValue = 0.1
+        ParameterName = None
+    }
+    ScalarParameterValues[6] =
+    {
+        ParameterInfo = { Name=Panning speed emissive texture }
+        ParameterValue = 0.25
+        ParameterName = None
+    }
+    ScalarParameterValues[7] =
+    {
+        ParameterInfo = { Name=Emissive Fresnel exponent }
+        ParameterValue = 2
+        ParameterName = None
+    }
+    ScalarParameterValues[8] =
+    {
+        ParameterInfo = { Name=Emissive Fresnel multiplier }
+        ParameterValue = 0.706106
+        ParameterName = None
+    }
+    ScalarParameterValues[9] =
+    {
+        ParameterInfo = { Name=Columns }
+        ParameterValue = 2
+        ParameterName = None
+    }
+    ScalarParameterValues[10] =
+    {
+        ParameterInfo = { Name=Rows }
+        ParameterValue = 2
+        ParameterName = None
+    }
+    ScalarParameterValues[11] =
+    {
+        ParameterInfo = { Name=soften normal }
+        ParameterValue = 0.3
+        ParameterName = None
+    }
+    ScalarParameterValues[12] =
+    {
+        ParameterInfo = { Name=CameraScaleMultiplier }
+        ParameterValue = 1.4
+        ParameterName = None
+    }
+    ScalarParameterValues[13] =
+    {
+        ParameterInfo = { Name=Max Scaling Distance }
+        ParameterValue = 1000
+        ParameterName = None
+    }
+    ScalarParameterValues[14] =
+    {
+        ParameterInfo = { Name=Scale down  Distance }
+        ParameterValue = 100
+        ParameterName = None
+    }
+    ScalarParameterValues[15] =
+    {
+        ParameterInfo = { Name=Scale down  Distance Offset }
+        ParameterValue = 200
+        ParameterName = None
+    }
+    ScalarParameterValues[16] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[0] = {}
+VectorParameterValues[1] =
+{
+    VectorParameterValues[0] =
+    {
+        ParameterInfo = { Name=Base metallic color }
+        ParameterValue = { R=0.968628, G=0.611765, B=0.121569, A=1 }
+        ParameterName = None
+    }
+}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Masked (1)
+    bOverride_TwoSided = true
+    TwoSided = true
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[1] =
+    {
+        StaticSwitchParameters[0] =
+        {
+            Value = true
+            ParameterInfo = { Name=Scale Particle by Camera Distance }
+            bOverride = true
+        }
+    }
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

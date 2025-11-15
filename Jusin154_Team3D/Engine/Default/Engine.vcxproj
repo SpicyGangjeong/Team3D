@@ -44,7 +44,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <EnableASAN>true</EnableASAN>
+    <EnableASAN>false</EnableASAN>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -110,7 +110,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>EDITOR_PROJECT;ENGINE_EXPORTS;IMGUI_EXPORTS;$(USERNAME);_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>EDITOR_PROJECT;ENGINE_EXPORTS;IMGUI_EXPORTS;TINYXML2_EXPORT;$(USERNAME);_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>../Public/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -123,9 +123,24 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>../ThirdPartyLib/fMod/;../ThirdPartyLib/DirectXTK/;../ThirdPartyLib/FX11/;../ThirdPartyLib/Assimp/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>d3d11.lib;fmod_vc.lib;dinput8.lib;DirectXTKd.lib;Effects11d.lib;assimp-vc145-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../ThirdPartyLib/fMod/;../ThirdPartyLib/DirectXTK/;../ThirdPartyLib/FX11/;../ThirdPartyLib/Assimp/;../ThirdPartyLib/PhysX/PhysX_$(Configuration)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d11.lib;fmod_vc.lib;dinput8.lib;LowLevel_static_64.lib;LowLevelAABB_static_64.lib;LowLevelDynamics_static_64.lib;PhysX_64.lib;PhysXCommon_64.lib;PhysXCooking_64.lib;PhysXExtensions_static_64.lib;PhysXFoundation_64.lib;PhysXPvdSDK_static_64.lib;PhysXTask_static_64.lib;SceneQuery_static_64.lib;SimulationController_static_64.lib;PhysXCharacterKinematic_static_64.lib;DirectXTKd.lib;Effects11d.lib;assimp-vc145-mtd.lib;%(AdditionalDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>cd /d "$(SolutionDir)"
+call Update_Lib.bat
+</Command>
+    </PostBuildEvent>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -133,7 +148,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>EDITOR_PROJECT;ENGINE_EXPORTS;IMGUI_EXPORTS;$(USERDOMAIN);NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>EDITOR_PROJECT;ENGINE_EXPORTS;IMGUI_EXPORTS;TINYXML2_EXPORT;$(USERNAME);NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>../Public/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -146,12 +161,23 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>../ThirdPartyLib/fMod/;../ThirdPartyLib/DirectXTK/;../ThirdPartyLib/FX11/;../ThirdPartyLib/Assimp/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>d3d11.lib;fmod_vc.lib;dinput8.lib;DirectXTK.lib;Effects11.lib;assimp-vc145-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../ThirdPartyLib/fMod/;../ThirdPartyLib/DirectXTK/;../ThirdPartyLib/FX11/;../ThirdPartyLib/Assimp/;../ThirdPartyLib/PhysX/PhysX_$(Configuration)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d11.lib;fmod_vc.lib;dinput8.lib;LowLevel_static_64.lib;LowLevelAABB_static_64.lib;LowLevelDynamics_static_64.lib;PhysX_64.lib;PhysXCommon_64.lib;PhysXCooking_64.lib;PhysXExtensions_static_64.lib;PhysXFoundation_64.lib;PhysXPvdSDK_static_64.lib;PhysXTask_static_64.lib;SceneQuery_static_64.lib;SimulationController_static_64.lib;PhysXCharacterKinematic_static_64.lib;DirectXTK.lib;Effects11.lib;assimp-vc145-mt.lib;%(AdditionalDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>cd /d "$(SolutionDir)"
+call Update_Lib.bat
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\Animation.cpp" />
     <ClCompile Include="..\Private\Base.cpp" />
+    <ClCompile Include="..\Private\Bone.cpp" />
     <ClCompile Include="..\Private\Bounding.cpp" />
     <ClCompile Include="..\Private\Bounding_AABB.cpp" />
     <ClCompile Include="..\Private\Bounding_OBB.cpp" />
@@ -168,11 +194,20 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\private\CanvasObject.cpp" />
     <ClCompile Include="..\Private\Cell.cpp" />
+    <ClCompile Include="..\Private\Channel.cpp" />
+    <ClCompile Include="..\Private\Character_Controller.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\Private\Collider.cpp" />
+    <ClCompile Include="..\Private\Collider_Manager.cpp" />
     <ClCompile Include="..\Private\Component.cpp" />
+    <ClCompile Include="..\Private\ComputeShader.cpp" />
     <ClCompile Include="..\Private\ContainerObject.cpp" />
     <ClCompile Include="..\Private\DebugDraw.cpp" />
+    <ClCompile Include="..\private\ElementObject.cpp" />
     <ClCompile Include="..\Private\GameInstance.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </ExcludedFromBuild>
@@ -226,36 +261,62 @@
     </ClCompile>
     <ClCompile Include="..\Private\Key_Manager.cpp" />
     <ClCompile Include="..\Private\Layer.cpp" />
+    <ClCompile Include="..\Private\LerpAnim.cpp" />
     <ClCompile Include="..\Private\Level.cpp" />
     <ClCompile Include="..\Private\Level_Manager.cpp" />
     <ClCompile Include="..\Private\Light.cpp" />
     <ClCompile Include="..\Private\Light_Manager.cpp" />
+    <ClCompile Include="..\Private\Material.cpp" />
+    <ClCompile Include="..\Private\Mesh.cpp" />
     <ClCompile Include="..\Private\Model.cpp" />
     <ClCompile Include="..\Private\Mouse_Manager.cpp" />
     <ClCompile Include="..\Private\MyTools.cpp" />
     <ClCompile Include="..\Private\Navigation.cpp" />
+    <ClCompile Include="..\private\PanelObject.cpp" />
     <ClCompile Include="..\Private\PartObject.cpp" />
     <ClCompile Include="..\Private\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\private\Picking.cpp" />
+    <ClCompile Include="..\Private\PhysX_Manager.cpp" />
     <ClCompile Include="..\Private\PipeLine.cpp" />
     <ClCompile Include="..\Private\Prototype_Manager.cpp" />
     <ClCompile Include="..\Private\Renderer.cpp" />
     <ClCompile Include="..\Private\RenderTarget.cpp" />
     <ClCompile Include="..\Private\RenderTarget_Manager.cpp" />
+    <ClCompile Include="..\Private\RigidBody.cpp" />
+    <ClCompile Include="..\Private\RigidBody_Dynamic.cpp" />
+    <ClCompile Include="..\Private\RigidBody_Static.cpp" />
     <ClCompile Include="..\Private\Shader.cpp" />
     <ClCompile Include="..\Private\Shadow.cpp" />
     <ClCompile Include="..\Private\SoundSrc.cpp" />
     <ClCompile Include="..\Private\Texture.cpp" />
     <ClCompile Include="..\Private\Timer.cpp" />
     <ClCompile Include="..\Private\Timer_Manager.cpp" />
+    <ClCompile Include="..\Private\tinyxml2.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\Private\Transform.cpp" />
+    <ClCompile Include="..\private\UIComponent.cpp" />
+    <ClCompile Include="..\private\UIObject.cpp" />
     <ClCompile Include="..\Private\VIBuffer.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Cell.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_Cube.cpp" />
+    <ClCompile Include="..\Private\Instance_Model.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Rect.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_Terrain.cpp" />
+    <ClCompile Include="..\Public\NCallBack_Playable_Behavior.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Public\NCallBack_Playable_HitRepot.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\Animation.h" />
     <ClInclude Include="..\Public\Assimp\aabb.h" />
     <ClInclude Include="..\Public\Assimp\ai_assert.h" />
     <ClInclude Include="..\Public\Assimp\anim.h" />
@@ -341,10 +402,19 @@
     <ClInclude Include="..\Public\Assimp\XMLTools.h" />
     <ClInclude Include="..\Public\Assimp\ZipArchiveIOSystem.h" />
     <ClInclude Include="..\Public\Base.h" />
+    <ClInclude Include="..\Public\Bone.h" />
     <ClInclude Include="..\Public\Bounding.h" />
     <ClInclude Include="..\Public\Bounding_AABB.h" />
     <ClInclude Include="..\Public\Bounding_OBB.h" />
     <ClInclude Include="..\Public\Bounding_Sphere.h" />
+    <ClInclude Include="..\Public\NCallBack_Playable_Behavior.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Public\NCallBack_Playable_HitRepot.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\Public\Camera.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </ExcludedFromBuild>
@@ -357,9 +427,17 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\public\CanvasObject.h" />
     <ClInclude Include="..\Public\Cell.h" />
+    <ClInclude Include="..\Public\Channel.h" />
+    <ClInclude Include="..\Public\Character_Controller.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\Public\Collider.h" />
+    <ClInclude Include="..\Public\Collider_Manager.h" />
     <ClInclude Include="..\Public\Component.h" />
+    <ClInclude Include="..\Public\ComputeShader.h" />
     <ClInclude Include="..\Public\ContainerObject.h" />
     <ClInclude Include="..\Public\DebugDraw.h" />
     <ClInclude Include="..\Public\DirectXTK\Audio.h" />
@@ -383,6 +461,7 @@
     <ClInclude Include="..\Public\DirectXTK\VertexTypes.h" />
     <ClInclude Include="..\Public\DirectXTK\WICTextureLoader.h" />
     <ClInclude Include="..\Public\DirectXTK\XboxDDSTextureLoader.h" />
+    <ClInclude Include="..\public\ElementObject.h" />
     <ClInclude Include="..\Public\Engine_Define.h" />
     <ClInclude Include="..\Public\Engine_Enum.h" />
     <ClInclude Include="..\Public\Engine_Function.h" />
@@ -418,31 +497,46 @@
     <ClInclude Include="..\Public\IMGUI\imstb_truetype.h" />
     <ClInclude Include="..\Public\Key_Manager.h" />
     <ClInclude Include="..\Public\Layer.h" />
+    <ClInclude Include="..\Public\LerpAnim.h" />
     <ClInclude Include="..\Public\Level.h" />
     <ClInclude Include="..\Public\Level_Manager.h" />
     <ClInclude Include="..\Public\Light.h" />
     <ClInclude Include="..\Public\Light_Manager.h" />
+    <ClInclude Include="..\Public\Material.h" />
+    <ClInclude Include="..\Public\Mesh.h" />
     <ClInclude Include="..\Public\Model.h" />
     <ClInclude Include="..\Public\Mouse_Manager.h" />
     <ClInclude Include="..\Public\MyTools.h" />
     <ClInclude Include="..\Public\Navigation.h" />
+    <ClInclude Include="..\public\PanelObject.h" />
     <ClInclude Include="..\Public\PartObject.h" />
     <ClInclude Include="..\Public\pch.h" />
+    <ClInclude Include="..\Public\PhysX_Manager.h" />
+    <ClInclude Include="..\public\Picking.h" />
     <ClInclude Include="..\Public\PipeLine.h" />
     <ClInclude Include="..\Public\Prototype_Manager.h" />
     <ClInclude Include="..\Public\Renderer.h" />
     <ClInclude Include="..\Public\RenderTarget.h" />
     <ClInclude Include="..\Public\RenderTarget_Manager.h" />
+    <ClInclude Include="..\Public\RigidBody.h" />
+    <ClInclude Include="..\Public\RigidBody_Dynamic.h" />
+    <ClInclude Include="..\Public\RigidBody_Static.h" />
     <ClInclude Include="..\Public\Shader.h" />
     <ClInclude Include="..\Public\Shadow.h" />
     <ClInclude Include="..\Public\SoundSrc.h" />
     <ClInclude Include="..\Public\Texture.h" />
     <ClInclude Include="..\Public\Timer.h" />
     <ClInclude Include="..\Public\Timer_Manager.h" />
+    <ClInclude Include="..\Public\tinyxml2.h" />
     <ClInclude Include="..\Public\Transform.h" />
+    <ClInclude Include="..\public\UIComponent.h" />
+    <ClInclude Include="..\public\UIObject.h" />
     <ClInclude Include="..\Public\VIBuffer.h" />
     <ClInclude Include="..\Public\VIBuffer_Cell.h" />
+    <ClInclude Include="..\Public\VIBuffer_Cube.h" />
+    <ClInclude Include="..\Public\Instance_Model.h" />
     <ClInclude Include="..\Public\VIBuffer_Rect.h" />
+    <ClInclude Include="..\Public\VIBuffer_Terrain.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Defines.hlsli" />
@@ -463,6 +557,12 @@
     <None Include="..\Public\fMod\fmod_errors.cs" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_LastColor.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Cell.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
@@ -470,6 +570,12 @@
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Deferred.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Particle_Compute.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

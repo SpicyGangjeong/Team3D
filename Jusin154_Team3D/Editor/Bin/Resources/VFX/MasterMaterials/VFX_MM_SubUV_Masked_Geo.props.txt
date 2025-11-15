@@ -1,0 +1,577 @@
+TwoSided = true
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[19] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/DefaultDiffuse.DefaultDiffuse'
+    ReferencedTextures[1] = Texture2D'/Game/Environment/Cavern_Dungeon/Textures/Rocks/T_Cav_Spid_ThickWeb_N.T_Cav_Spid_ThickWeb_N'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/AlphaErosion/VFX_T_Spid_ThickWeb_BPF_D.VFX_T_Spid_ThickWeb_BPF_D'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Decals/T_FX_Decal_claw_D.T_FX_Decal_claw_D'
+    ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/Decals/T_FX_Decal_claw_N.T_FX_Decal_claw_N'
+    ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/Decals/T_FX_Decal_Dirt_H.T_FX_Decal_Dirt_H'
+    ReferencedTextures[6] = Texture2D'/Game/VFX/Textures/Gradients/T_FX_Rainbow_D.T_FX_Rainbow_D'
+    ReferencedTextures[7] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_Circle_Sphere_D.VFX_T_Circle_Sphere_D'
+    ReferencedTextures[8] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_CausticNoise_C_Seamless_D.VFX_T_CausticNoise_C_Seamless_D'
+    ReferencedTextures[9] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_DistortionNoise_N.VFX_T_DistortionNoise_N'
+    ReferencedTextures[10] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_Corruption_E.VFX_T_Noise_Corruption_E'
+    ReferencedTextures[11] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseGreypack01_D.VFX_T_NoiseGreypack01_D'
+    ReferencedTextures[12] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseVeins01Tiled_D.VFX_T_NoiseVeins01Tiled_D'
+    ReferencedTextures[13] = Texture2D'/Game/VFX/Textures/T_FX_water_drops_D.T_FX_water_drops_D'
+    ReferencedTextures[14] = Texture2D'/Game/VFX/Textures/T_waterSplashA_N.T_waterSplashA_N'
+    ReferencedTextures[15] = Texture2D'/Game/VFX/Textures/VFX_T_LightningCenter_Pack_D.VFX_T_LightningCenter_Pack_D'
+    ReferencedTextures[16] = Texture2D'/Game/VFX/Textures/VFX_T_Spider_Pro_Web_MROH.VFX_T_Spider_Pro_Web_MROH'
+    ReferencedTextures[17] = Texture2D'/Game/VFX/Textures/VFX_T_Wavy_N.VFX_T_Wavy_N'
+    ReferencedTextures[18] = Texture2D'/Game/VFX/Textures/VFX_T_Wisps_D.VFX_T_Wisps_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[62] =
+                {
+                    ParameterInfos[0] = { Name=Roughness }
+                    ParameterInfos[1] = { Name=Alpha Multiplyer }
+                    ParameterInfos[2] = { Name=I Speed V (S) }
+                    ParameterInfos[3] = { Name=Offset Scroll V }
+                    ParameterInfos[4] = { Name=Normal Strenght Multiplier }
+                    ParameterInfos[5] = { Name=Minimum Fill }
+                    ParameterInfos[6] = { Name=Noise2_Horo_Speed }
+                    ParameterInfos[7] = { Name=Secondary Normal Multiplyer }
+                    ParameterInfos[8] = { Name=ExponentIn }
+                    ParameterInfos[9] = { Name=Noise1_Vert_Speed }
+                    ParameterInfos[10] = { Name=Noise1 Tiling U }
+                    ParameterInfos[11] = { Name=Metallic }
+                    ParameterInfos[12] = { Name=R Mask Strength (S) }
+                    ParameterInfos[13] = { Name=EmissiveHue }
+                    ParameterInfos[14] = { Name=EmStrength_Spectre }
+                    ParameterInfos[15] = { Name=Frame }
+                    ParameterInfos[16] = { Name=Specular }
+                    ParameterInfos[17] = { Name=Vertical }
+                    ParameterInfos[18] = { Name=B Mask Strength (S) }
+                    ParameterInfos[19] = { Name=Speed U Secondary Normal }
+                    ParameterInfos[20] = { Name=Noise2_Vert_Speed }
+                    ParameterInfos[21] = { Name=Corruption Tex UV Speed U }
+                    ParameterInfos[22] = { Name=Lerp_ExponentIn }
+                    ParameterInfos[23] = { Name=Horizontal Flip }
+                    ParameterInfos[24] = { Name=G Mask Strength (S) }
+                    ParameterInfos[25] = { Name=EmissiveMaskTextureTileX }
+                    ParameterInfos[26] = { Name=FresnelBright }
+                    ParameterInfos[27] = { Name=LightingPanner }
+                    ParameterInfos[28] = { Name=Noise2 Tiling V }
+                    ParameterInfos[29] = { Name=Tiling V Secondary Normal }
+                    ParameterInfos[30] =
+                    {
+                        Name = Emissive Adaptation Outdoor Daytime Boost [0..1] (S)
+                    }
+                    ParameterInfos[31] = { Name=EmissiveMaskTextureTileY }
+                    ParameterInfos[32] = { Name=Color Lerp Strenght }
+                    ParameterInfos[33] = { Name=Corruption Tex UV Speed V }
+                    ParameterInfos[34] = { Name=BaseReflectFractionIn }
+                    ParameterInfos[35] = { Name=A Mask Strength (S) }
+                    ParameterInfos[36] = { Name=BumpOffset Depth }
+                    ParameterInfos[37] = { Name=Corruption Tex UV Tile V }
+                    ParameterInfos[38] = { Name=Corruption Tex UV Tile U }
+                    ParameterInfos[39] = { Name=Corruption Emissive_ScaleTiling }
+                    ParameterInfos[40] = { Name=dfggf }
+                    ParameterInfos[41] = { Name=Speed V (S) }
+                    ParameterInfos[42] = { Name=Tiling U Secondary Normal }
+                    ParameterInfos[43] = { Name=Offset Scroll U }
+                    ParameterInfos[44] = { Name=I Speed U (S) }
+                    ParameterInfos[45] = { Name=Exp_1 }
+                    ParameterInfos[46] = { Name=Max Fill }
+                    ParameterInfos[47] = { Name=dgdfg }
+                    ParameterInfos[48] = { Name=Noise2 Tiling U }
+                    ParameterInfos[49] = { Name=Speed U (S) }
+                    ParameterInfos[50] = { Name=FresnelDark }
+                    ParameterInfos[51] = { Name=NoiseStrenght }
+                    ParameterInfos[52] = { Name=Corruption Tex UV mod Strenght Multiplyer }
+                    ParameterInfos[53] = { Name=Tiling U (S) }
+                    ParameterInfos[54] = { Name=NoiseSizeMultiplyer }
+                    ParameterInfos[55] = { Name=Horizontal }
+                    ParameterInfos[56] = { Name=Strength }
+                    ParameterInfos[57] = { Name=Tiling V (S) }
+                    ParameterInfos[58] = { Name=Noise1_Horo_Speed }
+                    ParameterInfos[59] = { Name=Lerp_BaseReflectFractionIn }
+                    ParameterInfos[60] = { Name=Speed V Secondary Normal }
+                    ParameterInfos[61] = { Name=Noise1 Tiling V }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[7] =
+                {
+                    ParameterInfos[0] = { Name=Vertex offset Zeroed }
+                    ParameterInfos[1] = { Name=Param }
+                    ParameterInfos[2] = { Name=Alpha Softness (V3) }
+                    ParameterInfos[3] = { Name=Color }
+                    ParameterInfos[4] = { Name=AlphaChannel }
+                    ParameterInfos[5] = { Name=Emissive Color }
+                    ParameterInfos[6] = { Name=Alpha Min (V3) }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[16] =
+                {
+                    ParameterInfos[0] = { Name=Iridescence NormalMap }
+                    ParameterInfos[1] = { Name=Iridescence Texture A }
+                    ParameterInfos[2] = { Name=Height }
+                    ParameterInfos[3] = { Name=Offset Map (Uses R Channel) }
+                    ParameterInfos[4] = { Name=Iridescence Texture B }
+                    ParameterInfos[5] = { Name=EmissiveMask }
+                    ParameterInfos[6] = { Name=MROH Alpha Multiplyer }
+                    ParameterInfos[7] = { Name=Secondary Normal }
+                    ParameterInfos[8] = { Name=Diffuse Texture }
+                    ParameterInfos[9] = { Name=CorruptionTexture }
+                    ParameterInfos[10] = { Name=Alpha Erosion }
+                    ParameterInfos[11] = { Name=MROH }
+                    ParameterInfos[12] = { Name=Base Nomral }
+                    ParameterInfos[13] = { Name=Noise1 }
+                    ParameterInfos[14] = { Name=Noise2 }
+                    ParameterInfos[15] = { Name=Normal Texture }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[62] =
+        {
+            ScalarValues[0] = 0
+            ScalarValues[1] = 1
+            ScalarValues[2] = 0
+            ScalarValues[3] = 0.05
+            ScalarValues[4] = 1
+            ScalarValues[5] = 0.3
+            ScalarValues[6] = 0
+            ScalarValues[7] = 1
+            ScalarValues[8] = 1
+            ScalarValues[9] = 0
+            ScalarValues[10] = 1
+            ScalarValues[11] = 0
+            ScalarValues[12] = 0
+            ScalarValues[13] = 0
+            ScalarValues[14] = 1
+            ScalarValues[15] = 3
+            ScalarValues[16] = 0
+            ScalarValues[17] = 2
+            ScalarValues[18] = 0
+            ScalarValues[19] = 0
+            ScalarValues[20] = 0
+            ScalarValues[21] = -0.253968
+            ScalarValues[22] = 20
+            ScalarValues[23] = 0
+            ScalarValues[24] = 0
+            ScalarValues[25] = 1
+            ScalarValues[26] = 0.422222
+            ScalarValues[27] = -0.15
+            ScalarValues[28] = 1
+            ScalarValues[29] = 1
+            ScalarValues[30] = 0
+            ScalarValues[31] = 1
+            ScalarValues[32] = 1
+            ScalarValues[33] = -0.215873
+            ScalarValues[34] = 0.04
+            ScalarValues[35] = 0
+            ScalarValues[36] = 0.07
+            ScalarValues[37] = 8
+            ScalarValues[38] = 8
+            ScalarValues[39] = 1
+            ScalarValues[40] = 6
+            ScalarValues[41] = 0
+            ScalarValues[42] = 1
+            ScalarValues[43] = 0.1
+            ScalarValues[44] = 0
+            ScalarValues[45] = 1
+            ScalarValues[46] = -0.2
+            ScalarValues[47] = 6
+            ScalarValues[48] = 1
+            ScalarValues[49] = 0
+            ScalarValues[50] = -1.45878
+            ScalarValues[51] = 0.15
+            ScalarValues[52] = 1
+            ScalarValues[53] = 1
+            ScalarValues[54] = 1
+            ScalarValues[55] = 2
+            ScalarValues[56] = 8
+            ScalarValues[57] = 1
+            ScalarValues[58] = 0
+            ScalarValues[59] = 0.01
+            ScalarValues[60] = 0
+            ScalarValues[61] = 1
+        }
+        VectorValues[7] =
+        {
+            VectorValues[0] = { R=0, G=0, B=0, A=1 }
+            VectorValues[1] = { R=0, G=0, B=1, A=1 }
+            VectorValues[2] = { R=0, G=0, B=0, A=0 }
+            VectorValues[3] = { R=0.164706, G=0.137255, B=0.043137, A=1 }
+            VectorValues[4] = { R=0, G=0, B=0, A=1 }
+            VectorValues[5] = { R=0, G=0, B=0, A=0 }
+            VectorValues[6] = { R=0, G=0, B=0, A=0 }
+        }
+        TextureValues[16] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/T_waterSplashA_N.T_waterSplashA_N'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/Gradients/T_FX_Rainbow_D.T_FX_Rainbow_D'
+            TextureValues[2] = Texture2D'/Game/VFX/Textures/Decals/T_FX_Decal_Dirt_H.T_FX_Decal_Dirt_H'
+            TextureValues[3] = Texture2D'/Game/VFX/Textures/VFX_T_Wavy_N.VFX_T_Wavy_N'
+            TextureValues[4] = Texture2D'/Game/VFX/Textures/Gradients/T_FX_Rainbow_D.T_FX_Rainbow_D'
+            TextureValues[5] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseVeins01Tiled_D.VFX_T_NoiseVeins01Tiled_D'
+            TextureValues[6] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_Circle_Sphere_D.VFX_T_Circle_Sphere_D'
+            TextureValues[7] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_DistortionNoise_N.VFX_T_DistortionNoise_N'
+            TextureValues[8] = Texture2D'/Game/VFX/Textures/Decals/T_FX_Decal_claw_D.T_FX_Decal_claw_D'
+            TextureValues[9] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_Corruption_E.VFX_T_Noise_Corruption_E'
+            TextureValues[10] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_CausticNoise_C_Seamless_D.VFX_T_CausticNoise_C_Seamless_D'
+            TextureValues[11] = Texture2D'/Game/VFX/Textures/VFX_T_Spider_Pro_Web_MROH.VFX_T_Spider_Pro_Web_MROH'
+            TextureValues[12] = Texture2D'/Game/Environment/Cavern_Dungeon/Textures/Rocks/T_Cav_Spid_ThickWeb_N.T_Cav_Spid_ThickWeb_N'
+            TextureValues[13] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseGreypack01_D.VFX_T_NoiseGreypack01_D'
+            TextureValues[14] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseGreypack01_D.VFX_T_NoiseGreypack01_D'
+            TextureValues[15] = Texture2D'/Game/VFX/Textures/Decals/T_FX_Decal_claw_N.T_FX_Decal_claw_N'
+        }
+    }
+    ReferencedTextures[19] =
+    {
+        ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/DefaultDiffuse.DefaultDiffuse'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Decals/T_FX_Decal_claw_N.T_FX_Decal_claw_N'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Decals/T_FX_Decal_claw_D.T_FX_Decal_claw_D'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/T_FX_water_drops_D.T_FX_water_drops_D'
+        ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/Decals/T_FX_Decal_Dirt_H.T_FX_Decal_Dirt_H'
+        ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_DistortionNoise_N.VFX_T_DistortionNoise_N'
+        ReferencedTextures[6] = Texture2D'/Game/VFX/Textures/VFX_T_Wisps_D.VFX_T_Wisps_D'
+        ReferencedTextures[7] = Texture2D'/Game/VFX/Textures/VFX_T_LightningCenter_Pack_D.VFX_T_LightningCenter_Pack_D'
+        ReferencedTextures[8] = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_CausticNoise_C_Seamless_D.VFX_T_CausticNoise_C_Seamless_D'
+        ReferencedTextures[9] = Texture2D'/Game/VFX/Textures/VFX_T_Spider_Pro_Web_MROH.VFX_T_Spider_Pro_Web_MROH'
+        ReferencedTextures[10] = Texture2D'/Game/VFX/Textures/AlphaErosion/VFX_T_Spid_ThickWeb_BPF_D.VFX_T_Spid_ThickWeb_BPF_D'
+        ReferencedTextures[11] = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_Circle_Sphere_D.VFX_T_Circle_Sphere_D'
+        ReferencedTextures[12] = Texture2D'/Game/VFX/Textures/VFX_T_Wavy_N.VFX_T_Wavy_N'
+        ReferencedTextures[13] = Texture2D'/Game/Environment/Cavern_Dungeon/Textures/Rocks/T_Cav_Spid_ThickWeb_N.T_Cav_Spid_ThickWeb_N'
+        ReferencedTextures[14] = Texture2D'/Game/VFX/Textures/T_waterSplashA_N.T_waterSplashA_N'
+        ReferencedTextures[15] = Texture2D'/Game/VFX/Textures/Gradients/T_FX_Rainbow_D.T_FX_Rainbow_D'
+        ReferencedTextures[16] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseGreypack01_D.VFX_T_NoiseGreypack01_D'
+        ReferencedTextures[17] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_Corruption_E.VFX_T_Noise_Corruption_E'
+        ReferencedTextures[18] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseVeins01Tiled_D.VFX_T_NoiseVeins01Tiled_D'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[16] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/T_waterSplashA_N.T_waterSplashA_N'
+        Name = Iridescence NormalMap
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Gradients/T_FX_Rainbow_D.T_FX_Rainbow_D'
+        Name = Iridescence Texture A
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Decals/T_FX_Decal_Dirt_H.T_FX_Decal_Dirt_H'
+        Name = Height
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_Wavy_N.VFX_T_Wavy_N'
+        Name = Offset Map (Uses R Channel)
+        Group = None
+    }
+    CollectedTextureParameters[4] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Gradients/T_FX_Rainbow_D.T_FX_Rainbow_D'
+        Name = Iridescence Texture B
+        Group = None
+    }
+    CollectedTextureParameters[5] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseVeins01Tiled_D.VFX_T_NoiseVeins01Tiled_D'
+        Name = EmissiveMask
+        Group = None
+    }
+    CollectedTextureParameters[6] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Gradients/VFX_T_Circle_Sphere_D.VFX_T_Circle_Sphere_D'
+        Name = MROH Alpha Multiplyer
+        Group = None
+    }
+    CollectedTextureParameters[7] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_DistortionNoise_N.VFX_T_DistortionNoise_N'
+        Name = Secondary Normal
+        Group = None
+    }
+    CollectedTextureParameters[8] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Decals/T_FX_Decal_claw_D.T_FX_Decal_claw_D'
+        Name = Diffuse Texture
+        Group = None
+    }
+    CollectedTextureParameters[9] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_Corruption_E.VFX_T_Noise_Corruption_E'
+        Name = CorruptionTexture
+        Group = None
+    }
+    CollectedTextureParameters[10] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_CausticNoise_C_Seamless_D.VFX_T_CausticNoise_C_Seamless_D'
+        Name = Alpha Erosion
+        Group = None
+    }
+    CollectedTextureParameters[11] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_Spider_Pro_Web_MROH.VFX_T_Spider_Pro_Web_MROH'
+        Name = MROH
+        Group = None
+    }
+    CollectedTextureParameters[12] =
+    {
+        Texture = Texture2D'/Game/Environment/Cavern_Dungeon/Textures/Rocks/T_Cav_Spid_ThickWeb_N.T_Cav_Spid_ThickWeb_N'
+        Name = Base Nomral
+        Group = None
+    }
+    CollectedTextureParameters[13] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseGreypack01_D.VFX_T_NoiseGreypack01_D'
+        Name = Noise1
+        Group = None
+    }
+    CollectedTextureParameters[14] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseGreypack01_D.VFX_T_NoiseGreypack01_D'
+        Name = Noise2
+        Group = None
+    }
+    CollectedTextureParameters[15] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Decals/T_FX_Decal_claw_N.T_FX_Decal_claw_N'
+        Name = Normal Texture
+        Group = None
+    }
+}
+CollectedScalarParameters[62] =
+{
+    CollectedScalarParameters[0] = { Value=0, Name=Roughness, Group=None }
+    CollectedScalarParameters[1] = { Value=1, Name=Alpha Multiplyer, Group=None }
+    CollectedScalarParameters[2] = { Value=0, Name=I Speed V (S), Group=None }
+    CollectedScalarParameters[3] = { Value=0.05, Name=Offset Scroll V, Group=None }
+    CollectedScalarParameters[4] =
+    {
+        Value = 1
+        Name = Normal Strenght Multiplier
+        Group = None
+    }
+    CollectedScalarParameters[5] = { Value=0.3, Name=Minimum Fill, Group=None }
+    CollectedScalarParameters[6] = { Value=0, Name=Noise2_Horo_Speed, Group=None }
+    CollectedScalarParameters[7] =
+    {
+        Value = 1
+        Name = Secondary Normal Multiplyer
+        Group = None
+    }
+    CollectedScalarParameters[8] = { Value=1, Name=ExponentIn, Group=None }
+    CollectedScalarParameters[9] = { Value=0, Name=Noise1_Vert_Speed, Group=None }
+    CollectedScalarParameters[10] = { Value=1, Name=Noise1 Tiling U, Group=None }
+    CollectedScalarParameters[11] = { Value=0, Name=Metallic, Group=None }
+    CollectedScalarParameters[12] = { Value=0, Name=R Mask Strength (S), Group=None }
+    CollectedScalarParameters[13] = { Value=0, Name=EmissiveHue, Group=None }
+    CollectedScalarParameters[14] = { Value=1, Name=EmStrength_Spectre, Group=None }
+    CollectedScalarParameters[15] = { Value=3, Name=Frame, Group=None }
+    CollectedScalarParameters[16] = { Value=0, Name=Specular, Group=None }
+    CollectedScalarParameters[17] = { Value=2, Name=Vertical, Group=None }
+    CollectedScalarParameters[18] = { Value=0, Name=B Mask Strength (S), Group=None }
+    CollectedScalarParameters[19] =
+    {
+        Value = 0
+        Name = Speed U Secondary Normal
+        Group = None
+    }
+    CollectedScalarParameters[20] = { Value=0, Name=Noise2_Vert_Speed, Group=None }
+    CollectedScalarParameters[21] =
+    {
+        Value = -0.253968
+        Name = Corruption Tex UV Speed U
+        Group = None
+    }
+    CollectedScalarParameters[22] = { Value=20, Name=Lerp_ExponentIn, Group=None }
+    CollectedScalarParameters[23] = { Value=0, Name=Horizontal Flip, Group=None }
+    CollectedScalarParameters[24] = { Value=0, Name=G Mask Strength (S), Group=None }
+    CollectedScalarParameters[25] =
+    {
+        Value = 1
+        Name = EmissiveMaskTextureTileX
+        Group = None
+    }
+    CollectedScalarParameters[26] = { Value=0.422222, Name=FresnelBright, Group=None }
+    CollectedScalarParameters[27] = { Value=-0.15, Name=LightingPanner, Group=None }
+    CollectedScalarParameters[28] = { Value=1, Name=Noise2 Tiling V, Group=None }
+    CollectedScalarParameters[29] =
+    {
+        Value = 1
+        Name = Tiling V Secondary Normal
+        Group = None
+    }
+    CollectedScalarParameters[30] =
+    {
+        Value = 0
+        Name = Emissive Adaptation Outdoor Daytime Boost [0..1] (S)
+        Group = None
+    }
+    CollectedScalarParameters[31] =
+    {
+        Value = 1
+        Name = EmissiveMaskTextureTileY
+        Group = None
+    }
+    CollectedScalarParameters[32] = { Value=1, Name=Color Lerp Strenght, Group=None }
+    CollectedScalarParameters[33] =
+    {
+        Value = -0.215873
+        Name = Corruption Tex UV Speed V
+        Group = None
+    }
+    CollectedScalarParameters[34] =
+    {
+        Value = 0.04
+        Name = BaseReflectFractionIn
+        Group = None
+    }
+    CollectedScalarParameters[35] = { Value=0, Name=A Mask Strength (S), Group=None }
+    CollectedScalarParameters[36] = { Value=0.07, Name=BumpOffset Depth, Group=None }
+    CollectedScalarParameters[37] =
+    {
+        Value = 8
+        Name = Corruption Tex UV Tile V
+        Group = None
+    }
+    CollectedScalarParameters[38] =
+    {
+        Value = 8
+        Name = Corruption Tex UV Tile U
+        Group = None
+    }
+    CollectedScalarParameters[39] =
+    {
+        Value = 1
+        Name = Corruption Emissive_ScaleTiling
+        Group = None
+    }
+    CollectedScalarParameters[40] = { Value=6, Name=dfggf, Group=None }
+    CollectedScalarParameters[41] = { Value=0, Name=Speed V (S), Group=None }
+    CollectedScalarParameters[42] =
+    {
+        Value = 1
+        Name = Tiling U Secondary Normal
+        Group = None
+    }
+    CollectedScalarParameters[43] = { Value=0.1, Name=Offset Scroll U, Group=None }
+    CollectedScalarParameters[44] = { Value=0, Name=I Speed U (S), Group=None }
+    CollectedScalarParameters[45] = { Value=1, Name=Exp_1, Group=None }
+    CollectedScalarParameters[46] = { Value=-0.2, Name=Max Fill, Group=None }
+    CollectedScalarParameters[47] = { Value=6, Name=dgdfg, Group=None }
+    CollectedScalarParameters[48] = { Value=1, Name=Noise2 Tiling U, Group=None }
+    CollectedScalarParameters[49] = { Value=0, Name=Speed U (S), Group=None }
+    CollectedScalarParameters[50] = { Value=-1.45878, Name=FresnelDark, Group=None }
+    CollectedScalarParameters[51] = { Value=0.15, Name=NoiseStrenght, Group=None }
+    CollectedScalarParameters[52] =
+    {
+        Value = 1
+        Name = Corruption Tex UV mod Strenght Multiplyer
+        Group = None
+    }
+    CollectedScalarParameters[53] = { Value=1, Name=Tiling U (S), Group=None }
+    CollectedScalarParameters[54] = { Value=1, Name=NoiseSizeMultiplyer, Group=None }
+    CollectedScalarParameters[55] = { Value=2, Name=Horizontal, Group=None }
+    CollectedScalarParameters[56] = { Value=8, Name=Strength, Group=None }
+    CollectedScalarParameters[57] = { Value=1, Name=Tiling V (S), Group=None }
+    CollectedScalarParameters[58] = { Value=0, Name=Noise1_Horo_Speed, Group=None }
+    CollectedScalarParameters[59] =
+    {
+        Value = 0.01
+        Name = Lerp_BaseReflectFractionIn
+        Group = None
+    }
+    CollectedScalarParameters[60] =
+    {
+        Value = 0
+        Name = Speed V Secondary Normal
+        Group = None
+    }
+    CollectedScalarParameters[61] = { Value=1, Name=Noise1 Tiling V, Group=None }
+}
+CollectedVectorParameters[7] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = Vertex offset Zeroed
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0, G=0, B=1, A=1 }
+        Name = Param
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=0, G=0, B=0, A=0 }
+        Name = Alpha Softness (V3)
+        Group = None
+    }
+    CollectedVectorParameters[3] =
+    {
+        Value = { R=0.164706, G=0.137255, B=0.043137, A=1 }
+        Name = Color
+        Group = None
+    }
+    CollectedVectorParameters[4] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = AlphaChannel
+        Group = None
+    }
+    CollectedVectorParameters[5] =
+    {
+        Value = { R=0, G=0, B=0, A=0 }
+        Name = Emissive Color
+        Group = None
+    }
+    CollectedVectorParameters[6] =
+    {
+        Value = { R=0, G=0, B=0, A=0 }
+        Name = Alpha Min (V3)
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[2] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_FX_Decal_claw_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_FX_Decal_claw_N
+    }
+}

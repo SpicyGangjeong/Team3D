@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Camera_Manager.h"
 #include "Camera.h"
 #include "GameInstance.h"
@@ -66,6 +66,14 @@ HRESULT CCamera_Manager::IsBinded_Camera(const _wstring& wstrCameraKey)
     return E_FAIL;
 }
 
+void CCamera_Manager::Force_CamPosition(_fvector vPos)
+{
+    if (nullptr == m_pCurrentMainCamera)
+        return;
+
+    m_pCurrentMainCamera->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSetW(vPos, 1.f));
+}
+
 const _float* CCamera_Manager::Get_CurrentCameraFar()
 {
     return &m_fFar;
@@ -92,9 +100,13 @@ CCamera* CCamera_Manager::Find_Camera(_uint iLevel, const _wstring& wstrCameraKe
 HRESULT CCamera_Manager::Clear_Cameras(_uint iLevel)
 {
     if (nullptr != m_pCurrentMainCamera) {
-        pair<_float4, _float3> pairTransitionInfo = { };
-        m_pCurrentMainCamera->DeActive_Camera(pairTransitionInfo);
-        SAFE_RELEASE(m_pCurrentMainCamera);
+        for (pair<const _wstring, CCamera*>& pairCamera : m_Cameras[iLevel]) {
+            if (m_pCurrentMainCamera == pairCamera.second) {
+                pair<_float4, _float3> pairTransitionInfo = { };
+                m_pCurrentMainCamera->DeActive_Camera(pairTransitionInfo);
+                SAFE_RELEASE(m_pCurrentMainCamera);
+            }
+        }
     }
     for (auto& iter : m_Cameras[iLevel]) {
         SAFE_RELEASE(iter.second);

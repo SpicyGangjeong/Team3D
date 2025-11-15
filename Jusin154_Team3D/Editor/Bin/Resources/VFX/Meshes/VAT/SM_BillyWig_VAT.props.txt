@@ -1,0 +1,38 @@
+Materials[2] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/VAT/MatInstances/VFX_MI_VAT_Soft_BillyWig.VFX_MI_VAT_Soft_BillyWig'
+    Materials[1] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/VAT/MatInstances/VFX_MI_VAT_Soft_BillyWig_Wings.VFX_MI_VAT_Soft_BillyWig_Wings'
+}
+SourceModels[0] = {}
+StaticMaterials[2] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/VAT/MatInstances/VFX_MI_VAT_Soft_BillyWig.VFX_MI_VAT_Soft_BillyWig'
+        MaterialSlotName = constant
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 51.2084, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/VAT/MatInstances/VFX_MI_VAT_Soft_BillyWig_Wings.VFX_MI_VAT_Soft_BillyWig_Wings'
+        MaterialSlotName = constant_ncl1_1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 24.1529, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-3.28346, Y=-0.0131168, Z=-2.54861 }
+    BoxExtent = { X=13.3246, Y=16.5653, Z=28.9385 }
+    SphereRadius = 31.362
+}

@@ -1,4 +1,4 @@
-#include "pch.h"
+Ôªø#include "pch.h"
 #include "Renderer.h"
 #include "GameInstance.h"
 #include "GameObject.h"
@@ -12,74 +12,27 @@ CRenderer::CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	SAFE_ADDREF(m_pDevice);
 	SAFE_ADDREF(m_pContext);
-	SAFE_ADDREF(m_pGameInstance);
+	SAFE_ADDREF(m_pGameInstance); 
 }
 
-
-void CRenderer::Refresh_Renderer()
+HRESULT CRenderer::Add_RenderGroup(RENDER eRenderGroup, CGameObject* pRenderObject)
 {
-	if (nullptr == m_pGameInstance->Get_CamPosition()) {
-		return;
-	}
-	_matrix matViewInv = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
-	_matrix matProjInv = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
-
-	matProjInv = XMMatrixInverse(nullptr, matProjInv);
-	matViewInv = XMMatrixInverse(nullptr, matViewInv);
-
-	memcpy_s(&m_CubeViewFrustum, sizeof(_float3) * 8, m_CubeNDC, sizeof(_float3) * 8);
-
-	for (int i = 0; i < 8; ++i) {
-		XMStoreFloat3(&m_CubeViewFrustum[i], XMVector3TransformCoord(XMVectorSet(m_CubeViewFrustum[i].x, m_CubeViewFrustum[i].y, m_CubeViewFrustum[i].z, 1.f), matProjInv));
-		XMStoreFloat3(&m_CubeViewFrustum[i], XMVector3TransformCoord(XMVectorSet(m_CubeViewFrustum[i].x, m_CubeViewFrustum[i].y, m_CubeViewFrustum[i].z, 1.f), matViewInv));
-	}
-	// 0(1, 3, 4), 6(2, 5, 7) ( π˝º±∫§≈Õ »ƒ∫∏ )
-	// 0, 6( «— ¡° »ƒ∫∏)
-	//_float3								m_CubeNDC[8] = {
-	//	±Ÿ	¡¬«œ	øÏ«œ	øÏªÛ	¡¬ªÛ
-	//	ø¯	¡¬«œ	øÏ«œ	øÏªÛ	¡¬ªÛ
-	//		0,		1,		2,		3
-	//		4,		5,		6,		7
-	//{ -1.f, -1.f, 0.f }, { 1.f, -1.f, 0.f }, { 1.f, 1.f, 0.f }, { -1.f, 1.f, 0.f },
-	//{ -1.f, -1.f, 1.f }, { 1.f, -1.f, 1.f }, { 1.f, 1.f, 1.f }, { -1.f, 1.f, 1.f }
-	//};
-	_vector vPlanes[8] = {};
-	XMStoreFloat4(&m_vPlanes[0], XMPlaneNormalize(XMPlaneFromPoints(XMLoadFloat3(&m_CubeViewFrustum[0]), XMLoadFloat3(&m_CubeViewFrustum[3]), XMLoadFloat3(&m_CubeViewFrustum[4]))));
-	XMStoreFloat4(&m_vPlanes[1], XMPlaneNormalize(XMPlaneFromPoints(XMLoadFloat3(&m_CubeViewFrustum[5]), XMLoadFloat3(&m_CubeViewFrustum[6]), XMLoadFloat3(&m_CubeViewFrustum[2]))));
-	XMStoreFloat4(&m_vPlanes[2], XMPlaneNormalize(XMPlaneFromPoints(XMLoadFloat3(&m_CubeViewFrustum[1]), XMLoadFloat3(&m_CubeViewFrustum[2]), XMLoadFloat3(&m_CubeViewFrustum[3]))));
-	XMStoreFloat4(&m_vPlanes[3], XMPlaneNormalize(XMPlaneFromPoints(XMLoadFloat3(&m_CubeViewFrustum[4]), XMLoadFloat3(&m_CubeViewFrustum[7]), XMLoadFloat3(&m_CubeViewFrustum[6]))));
-	XMStoreFloat4(&m_vPlanes[4], XMPlaneNormalize(XMPlaneFromPoints(XMLoadFloat3(&m_CubeViewFrustum[0]), XMLoadFloat3(&m_CubeViewFrustum[4]), XMLoadFloat3(&m_CubeViewFrustum[5]))));
-	XMStoreFloat4(&m_vPlanes[5], XMPlaneNormalize(XMPlaneFromPoints(XMLoadFloat3(&m_CubeViewFrustum[3]), XMLoadFloat3(&m_CubeViewFrustum[2]), XMLoadFloat3(&m_CubeViewFrustum[7]))));
-}
-
-HRESULT CRenderer::Add_RenderGroup(RENDER eRenderGroup, CGameObject* pRenderObject, _float4& vPos, _float fCullRadius)
-{
-	if (nullptr == pRenderObject)
-		return E_FAIL;
-
-	_bool	bPossible = { true };
-	if (pRenderObject->isDead()) {
+	if (nullptr == pRenderObject || pRenderObject->isDead()){
 		return E_FAIL;
 	}
-	// «¡∑ØΩ∫≈“ƒ√∏µ øπø‹ √ﬂ∞°
+
+	_bool	bPossible = { false };
+	// ÌîÑÎü¨Ïä§ÌÖÄÏª¨ÎßÅ ÏòàÏô∏ Ï∂îÍ∞Ä
 	if (RENDER::UI == eRenderGroup || RENDER::PRIORITY == eRenderGroup /* || RENDER::SHADOW == eRenderGroup*/ || RENDER::BLUR == eRenderGroup) {
+		bPossible = true;
+	}
+	bPossible = true;
+	if (true == bPossible) {
 		m_RenderObjects[ENUM_CLASS(eRenderGroup)].push_back(pRenderObject);
 		SAFE_ADDREF(pRenderObject);
 		return S_OK;
 	}
-	for (int i = 0; i < 6; ++i) {
-		if (XMVectorGetX(XMVector4Dot(XMLoadFloat4(&m_vPlanes[i]),
-			XMLoadFloat4(&vPos))) + fCullRadius < 0) {
-			bPossible = false;
-			break;
-		}
-	}
-	if (bPossible) {
-		m_RenderObjects[ENUM_CLASS(eRenderGroup)].push_back(pRenderObject);
-		SAFE_ADDREF(pRenderObject);
-		return S_OK;
-	}
-	return S_OK;
+	return E_FAIL;
 }
 
 #ifdef _DEBUG
@@ -99,6 +52,7 @@ void CRenderer::Render()
 	D3D11_VIEWPORT vp = {};
 	m_pContext->RSGetViewports(&iNumViewPort, &vp);
 	_float2 vResolution = { vp.Width, vp.Height };
+
 	if (FAILED(m_pShader->Bind_RawValue("g_vResolution", &vResolution, sizeof(_float2)))) {
 		assert(false);
 	}
@@ -109,12 +63,17 @@ void CRenderer::Render()
 	Render_LightAcc();
 	Render_Blur();
 	Render_Combined();
+	Render_Effect();
 	Render_NonLight();
 	Render_Blend();
+	Render_LastColor();
 	Render_UI();
 
 #ifdef _DEBUG
-	Render_Debug();
+	m_pGameInstance->RenderTarget_Debuger();
+	
+	if(m_pGameInstance->Key_Pressing(DIK_F10))
+		Render_Debug();
 #endif
 }
 
@@ -225,7 +184,7 @@ void CRenderer::Render_LightAcc()
 
 	m_pVIBuffer->Bind_Resources();
 
-	if (FAILED(m_pGameInstance->Render_Lights(m_pShader, m_pVIBuffer))) {
+	if (FAILED(m_pGameInstance->Render_Lights(m_pGameInstance->Get_CurrentLevelID(), m_pShader, m_pVIBuffer))) {
 		return;
 	}
 
@@ -236,7 +195,9 @@ void CRenderer::Render_LightAcc()
 
 void CRenderer::Render_Combined()
 {
-	{ // Bind_Resorces
+	{ 
+		// Bind_Resorces
+
 		m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix);
 		m_pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix);
 		m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix);
@@ -253,6 +214,7 @@ void CRenderer::Render_Combined()
 		if (FAILED(m_pShader->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 			return;
 		}
+
 		if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShader, "g_LightViewMatrix", D3DTS::VIEW))) {
 			return;
 		}
@@ -270,7 +232,9 @@ void CRenderer::Render_Combined()
 		}
 	}
 
-	{ // Bind_Targets
+	{
+		// Bind_Targets
+
 		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Diffuse"), m_pShader, "g_DiffuseTexture"))) {
 			return;
 		}
@@ -292,12 +256,38 @@ void CRenderer::Render_Combined()
 		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur_X"), m_pShader, "g_BlurXTexture"))) {
 			return;
 		}
+		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur_Weight"), m_pShader, "g_BlurWeightTexture"))) {
+			return;
+		}
+
 	}
 
 	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::COMBINED));
 
 	m_pVIBuffer->Bind_Resources();
 	m_pVIBuffer->Render();
+}
+
+void CRenderer::Render_Effect()
+{
+	if (FAILED(m_pGameInstance->Begin_MRT_Include_BackBuffer(TEXT("MRT_Color")))) {
+		return;
+	}
+
+	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::EFFECT)])
+	{
+		if (nullptr != pRenderObject)
+			pRenderObject->Render();
+
+		SAFE_RELEASE(pRenderObject);
+	}
+
+	m_RenderObjects[ENUM_CLASS(RENDER::EFFECT)].clear();
+
+
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
+	}
 }
 
 void CRenderer::Render_NonLight()
@@ -348,6 +338,11 @@ void CRenderer::Render_Blur()
 		return;
 	}
 
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur_Weight"), m_pShader, "g_BlurWeightTexture"))) {
+		return;
+	}
+
+	
 	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::BLUR));
 
 	m_pVIBuffer->Bind_Resources();
@@ -388,7 +383,7 @@ void CRenderer::Render_UI()
 		XMStoreFloat3(&vSrcPos, pSrc->Get_WorldPostion());
 
 		return vDstPos.z > vSrcPos.z;
-		}); // z º“∆√
+		}); // z ÏÜåÌåÖ
 
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::UI)])
 	{
@@ -401,6 +396,25 @@ void CRenderer::Render_UI()
 	}
 
 	m_RenderObjects[ENUM_CLASS(RENDER::UI)].clear();
+}
+
+void CRenderer::Render_LastColor()
+{
+	// Bind_Resorces
+
+	m_pLastColorShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix);
+	m_pLastColorShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix);
+	m_pLastColorShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix);
+
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Color"), m_pLastColorShader, "g_ColorTexture"))) {
+		return;
+	}
+
+	m_pLastColorShader->Begin(0);
+
+	m_pVIBuffer->Bind_Resources();
+	m_pVIBuffer->Render();
+
 }
 
 HRESULT CRenderer::Ready_DepthStencilView(_uint iSizeX, _uint iSizeY)
@@ -463,25 +477,11 @@ void CRenderer::Render_Debug()
 		return;
 	}
 
-	/* ∑ª¥ı≈∏∞Ÿ¿ª µπˆ±◊∑Œ ¡˜±≥≈ıøµ¿ª ≈Î«ÿ ±◊∑¡∂Û. */
-	if (FAILED(m_pGameInstance->Render_RenderTarget_Debug(TEXT("MRT_GameObjects"), m_pShader, m_pVIBuffer))) {
+	/* Î†åÎçîÌÉÄÍ≤üÏùÑ ÎîîÎ≤ÑÍ∑∏Î°ú ÏßÅÍµêÌà¨ÏòÅÏùÑ ÌÜµÌï¥ Í∑∏Î†§Îùº. */
+	if (FAILED(m_pGameInstance->Render_RenderTarget_Debug(m_pShader, m_pVIBuffer))) {
 		return;
 	}
-	if (FAILED(m_pGameInstance->Render_RenderTarget_Debug(TEXT("MRT_LightAcc"), m_pShader, m_pVIBuffer))) {
-		return;
-	}
-	if (FAILED(m_pGameInstance->Render_RenderTarget_Debug(TEXT("MRT_Shadow"), m_pShader, m_pVIBuffer))) {
-		return;
-	}
-	if (FAILED(m_pGameInstance->Render_RenderTarget_Debug(TEXT("MRT_PreShadow"), m_pShader, m_pVIBuffer))) {
-		return;
-	}
-	if (FAILED(m_pGameInstance->Render_RenderTarget_Debug(TEXT("MRT_Blur"), m_pShader, m_pVIBuffer))) {
-		return;
-	}
-	//if (FAILED(m_pGameInstance->Render_RenderTarget_Debug(TEXT("MRT_Blur_X"), m_pShader, m_pVIBuffer))){
-	//	return;
-	//}
+
 }
 
 #endif
@@ -527,6 +527,7 @@ HRESULT CRenderer::Initialize()
 			DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)))) {
 			return E_FAIL;
 		}
+
 		/* Target_Shadow */
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_PreShadow"), (_uint)g_iMaxShadowWidth, (_uint)g_iMaxShadowHeight,
 			DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)))) {
@@ -534,6 +535,12 @@ HRESULT CRenderer::Initialize()
 		}
 
 		/* Target_Blur */
+
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Blur_Weight"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.0f, 0.0f, 0.0f, 1.0f)))) {
+			return E_FAIL;
+		}
+
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Blur"), (_uint)Viewport.Width, (_uint)Viewport.Height,
 			DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
 			return E_FAIL;
@@ -544,6 +551,13 @@ HRESULT CRenderer::Initialize()
 			DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
 			return E_FAIL;
 		}
+
+		/* Target_Color*/
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Color"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+
 
 
 		if (FAILED(Ready_DepthStencilView(g_iMaxShadowWidth, g_iMaxShadowHeight))) {
@@ -560,6 +574,9 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Depth")))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Color")))) {
 			return E_FAIL;
 		}
 
@@ -584,16 +601,34 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Blur"), TEXT("Target_Blur_Weight")))) {
+			return E_FAIL;
+		}
+
 		/* MRT_Blur_X */
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Blur_X"), TEXT("Target_Blur_X")))) {
 			return E_FAIL;
 		}
 
+		/* MRT_Color */
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Color"), TEXT("Target_Color")))) {
+			return E_FAIL;
+		}
+		
 	}
 	m_pShader = (CShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, TEXT("FX_DEFERRED"), nullptr, nullptr);
 	if (nullptr == m_pShader) {
 		return E_FAIL;
 	}
+
+
+	m_pLastColorShader = (CShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, TEXT("FX_LASTCOLOR"), nullptr, nullptr);
+
+	if (nullptr == m_pLastColorShader) {
+		return E_FAIL;
+	}
+
+	
 
 	m_pVIBuffer = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
 	if (nullptr == m_pVIBuffer) {
@@ -604,34 +639,6 @@ HRESULT CRenderer::Initialize()
 	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
 	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(Viewport.Width, Viewport.Height, 0.f, 1.f));
 
-#ifdef _DEBUG
-	if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Diffuse"), 75.f, 75.f, 150.0f, 150.0f))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Normal"), 75.f, 225.f, 150.0f, 150.0f))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Shade"), 225.f, 75.f, 150.0f, 150.0f))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Specular"), 225.f, 225.f, 150.0f, 150.0f))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Shadow"), Viewport.Width - 150.0f, 150.0f, 300.f, 300.f))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_PreShadow"), Viewport.Width - 150.0f, Viewport.Height - 150.0f, 300.f, 300.f))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Blur"), 150.0f, Viewport.Height - 150.0f, 300.f, 300.f))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pGameInstance->Ready_RenderTarget_Debug(TEXT("Target_Blur_X"), Viewport.Width * 0.75f, Viewport.Height * 0.75f, Viewport.Width * 0.5f, Viewport.Height * 0.5f))) {
-		return E_FAIL;
-	}
-
-
-#endif
 
 	return S_OK;
 }
@@ -670,6 +677,7 @@ void CRenderer::Free()
 
 	SAFE_RELEASE(m_pShadowDSV);
 	SAFE_RELEASE(m_pShader);
+	SAFE_RELEASE(m_pLastColorShader);
 	SAFE_RELEASE(m_pVIBuffer);
 	SAFE_RELEASE(m_pDevice);
 	SAFE_RELEASE(m_pContext);

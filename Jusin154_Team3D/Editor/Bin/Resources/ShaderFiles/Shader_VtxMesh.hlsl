@@ -23,6 +23,7 @@ Texture2D g_MaskingTexture;
 Texture2D g_ClippingTexture;
 Texture2D g_DisolveTexture;
 Texture2D g_NormalTexture;
+Texture2D g_GlowTexture;
 
 struct VS_IN
 {
@@ -157,8 +158,30 @@ struct PS_OUT
     float4 vDiffuse : SV_TARGET0;
     float4 vNormal : SV_TARGET1;
     float4 vDepth : SV_TARGET2;
+    
 };
 PS_OUT PS_MAIN(PS_IN In)
+{
+    PS_OUT Out;
+
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    if (vMtrlDiffuse.a < 0.1f)
+    {
+        discard;
+    }
+    
+    vector vNormalDesc = g_NormalTexture.Sample(MirrorSampler, In.vTexcoord);
+    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
+    
+    float3 vNormal = mul(vNormalDesc.xyz * 2.f - 1.f, WorldMatrix);
+    
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.0f, 1.f);
+    
+    return Out;
+}
+PS_OUT PS_MAIN_SELECT(PS_IN In)
 {
     PS_OUT Out;
 
@@ -173,9 +196,28 @@ PS_OUT PS_MAIN(PS_IN In)
     
     float3 vNormal = mul(vNormalDesc.xyz * 2.f - 1.f, WorldMatrix);
     
-    Out.vDiffuse = vMtrlDiffuse;
+    Out.vDiffuse = vMtrlDiffuse * float4(0.f, 1.f, 1.f, 0.3f);
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.0f, 1.f);
+    return Out;
+}
+
+PS_OUT PS_GLASS(PS_IN In)
+{
+    PS_OUT Out;
+
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    vector vMtrlGlow = g_GlowTexture.Sample(DefaultSampler, In.vTexcoord);
+    
+    vector vNormalDesc = g_NormalTexture.Sample(MirrorSampler, In.vTexcoord);
+    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
+    
+    float3 vNormal = mul(vNormalDesc.xyz * 2.f - 1.f, WorldMatrix);
+    
+    Out.vDiffuse = lerp(vMtrlDiffuse, vMtrlGlow, vMtrlDiffuse.a);
+    Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.0f, 1.f);
+    
     return Out;
 }
 
@@ -314,7 +356,7 @@ technique11 MeshTechnique11
 {
     pass MeshPass // 0
     {
-        SetRasterizerState(RS_Default);
+        SetRasterizerState(RS_Nocull);
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
@@ -416,5 +458,25 @@ technique11 MeshTechnique11
         VertexShader = compile vs_5_0 VS_EFFECT();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_EFFECT_UVMOVE();
+    }
+
+    pass MapToolPass // 11
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_SELECT();
+    }
+
+    pass GlassPass // 12
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_GLASS();
     }
 }

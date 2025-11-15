@@ -1,0 +1,182 @@
+Materials[14] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Environment/Castle_Dungeon/Materials/Roof/Roof_Trims/MI_CastleDun_RoofTrim_E.MI_CastleDun_RoofTrim_E'
+    Materials[1] = MaterialInstanceConstant'/Game/Environment/Castle_Dungeon/Materials/Stairs/MI_CastleDun_Post.MI_CastleDun_Post'
+    Materials[2] = MaterialInstanceConstant'/Game/Environment/Castle_Dungeon/Materials/Arch/MI_CastleDun_Arch_A.MI_CastleDun_Arch_A'
+    Materials[3] = MaterialInstanceConstant'/Game/Environment/Castle_Dungeon/Materials/Wall/MI_CastleDun_Wall_largeBrickNstucco_A.MI_CastleDun_Wall_largeBrickNstucco_A'
+    Materials[4] = MaterialInstanceConstant'/Game/Environment/Castle_Dungeon/Materials/Column/M_C_Dun_column_damage_Inst.M_C_Dun_column_damage_Inst'
+    Materials[5] = MaterialInstanceConstant'/Game/Environment/Castle_Dungeon/Materials/Arch/MI_CastleDun_Arch_C.MI_CastleDun_Arch_C'
+    Materials[6] = MaterialInstanceConstant'/Game/Environment/Castle_Dungeon/Materials/Wall/MI_CastleDun_Stucco_Smooth_A.MI_CastleDun_Stucco_Smooth_A'
+    Materials[7] = MaterialInstanceConstant'/Game/Environment/Castle_Dungeon/Materials/Roof/Roof_Trims/MI_CastleDun_RoofTrim_C.MI_CastleDun_RoofTrim_C'
+    Materials[8] = MaterialInstanceConstant'/Game/Environment/Castle_Dungeon/Materials/Floor/MI_CastleDun_FloorBroken_A.MI_CastleDun_FloorBroken_A'
+    Materials[9] = MaterialInstanceConstant'/Game/Environment/Castle_Dungeon/Materials/Column/M_I_CastleDun_Column_A_5Meter.M_I_CastleDun_Column_A_5Meter'
+    Materials[10] = MaterialInstanceConstant'/Game/Environment/Castle_Dungeon/Materials/Column/M_I_CastleDun_Column_Damaged_C_5Meter.M_I_CastleDun_Column_Damaged_C_5Meter'
+    Materials[11] = MaterialInstanceConstant'/Game/Environment/Castle_Dungeon/Materials/curbstone/MI_CastleDun_CurbStyle_2.MI_CastleDun_CurbStyle_2'
+    Materials[12] = MaterialInstanceConstant'/Game/Environment/Castle_Dungeon/Materials/Stairs/MI_CastleDun_Post_F.MI_CastleDun_Post_F'
+    Materials[13] = MaterialInstanceConstant'/Game/Environment/Castle_Dungeon/Materials/Wall/MI_CastleDun_3D_Decal_Large_A.MI_CastleDun_3D_Decal_Large_A'
+}
+SourceModels[0] = {}
+StaticMaterials[14] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Castle_Dungeon/Materials/Roof/Roof_Trims/MI_CastleDun_RoofTrim_E.MI_CastleDun_RoofTrim_E'
+        MaterialSlotName = T_CastleDun_RoofTrim_DE_D
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 437.866, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Castle_Dungeon/Materials/Stairs/MI_CastleDun_Post.MI_CastleDun_Post'
+        MaterialSlotName = T_CastleDun_Post_A_D
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 435.435, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[2] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Castle_Dungeon/Materials/Arch/MI_CastleDun_Arch_A.MI_CastleDun_Arch_A'
+        MaterialSlotName = T_CastleDun_Arches_A_D
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 500.304, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[3] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Castle_Dungeon/Materials/Wall/MI_CastleDun_Wall_largeBrickNstucco_A.MI_CastleDun_Wall_largeBrickNstucco_A'
+        MaterialSlotName = T_CastleDun_Wall_LargeBricks_B_D
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 433.935, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[4] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Castle_Dungeon/Materials/Column/M_C_Dun_column_damage_Inst.M_C_Dun_column_damage_Inst'
+        MaterialSlotName = T_C_Dun_Column_damage_D
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 1708.46, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[5] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Castle_Dungeon/Materials/Arch/MI_CastleDun_Arch_C.MI_CastleDun_Arch_C'
+        MaterialSlotName = T_CastleDun_Arches_C_D
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 667.621, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[6] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Castle_Dungeon/Materials/Wall/MI_CastleDun_Stucco_Smooth_A.MI_CastleDun_Stucco_Smooth_A'
+        MaterialSlotName = T_CastleDun_Stucco_Smooth_D
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 489.413, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[7] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Castle_Dungeon/Materials/Roof/Roof_Trims/MI_CastleDun_RoofTrim_C.MI_CastleDun_RoofTrim_C'
+        MaterialSlotName = T_CastleDun_RoofTrim_C_D
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 458.538, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[8] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Castle_Dungeon/Materials/Floor/MI_CastleDun_FloorBroken_A.MI_CastleDun_FloorBroken_A'
+        MaterialSlotName = T_CastleDun_FloorBroken_D
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 483.424, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[9] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Castle_Dungeon/Materials/Column/M_I_CastleDun_Column_A_5Meter.M_I_CastleDun_Column_A_5Meter'
+        MaterialSlotName = CastleDun_Column_A
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 730.921, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[10] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Castle_Dungeon/Materials/Column/M_I_CastleDun_Column_Damaged_C_5Meter.M_I_CastleDun_Column_Damaged_C_5Meter'
+        MaterialSlotName = T_CastleDun_Column_Damaged_A_D
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 620.044, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[11] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Castle_Dungeon/Materials/curbstone/MI_CastleDun_CurbStyle_2.MI_CastleDun_CurbStyle_2'
+        MaterialSlotName = T_CastleDun_CurbStyle_3_A_D
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 550.011, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[12] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Castle_Dungeon/Materials/Stairs/MI_CastleDun_Post_F.MI_CastleDun_Post_F'
+        MaterialSlotName = T_CastleDun_Post_F_D
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 556.276, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[13] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Environment/Castle_Dungeon/Materials/Wall/MI_CastleDun_3D_Decal_Large_A.MI_CastleDun_3D_Decal_Large_A'
+        MaterialSlotName = T_CastleRuins_1_Broken_End_Cap_A_a_D
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 555.54, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=34.4761, Y=345.086, Z=1591.73 }
+    BoxExtent = { X=1075.81, Y=1021.95, Z=941.861 }
+    SphereRadius = 1523.72
+}

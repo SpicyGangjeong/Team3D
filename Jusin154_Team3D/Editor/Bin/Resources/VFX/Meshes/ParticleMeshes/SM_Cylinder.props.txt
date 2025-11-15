@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Gameplay/Sanctuary/Materials/Transfiguration_Blockout/MI_Blockout_Grey_01.MI_Blockout_Grey_01'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Gameplay/Sanctuary/Materials/Transfiguration_Blockout/MI_Blockout_Grey_01.MI_Blockout_Grey_01'
+        MaterialSlotName = lambert1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 24.0848, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-9.53674e-07, Y=-9.53674e-07, Z=4.36321 }
+    BoxExtent = { X=10, Y=10, Z=4.63387 }
+    SphereRadius = 11.0215
+}

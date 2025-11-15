@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Gameplay/Nurturing/Herbology/Herbs/Materials/MI_ChompingCabbage.MI_ChompingCabbage'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Gameplay/Nurturing/Herbology/Herbs/Materials/MI_ChompingCabbage.MI_ChompingCabbage'
+        MaterialSlotName = MI_ChompingCabbage1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 88.996, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=-2.80768, Z=0.040607 }
+    BoxExtent = { X=6.42806, Y=4.00413, Z=7.16383 }
+    SphereRadius = 8.15985
+}

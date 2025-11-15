@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Level_GamePlay.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
@@ -46,7 +46,7 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 
 HRESULT CLevel_GamePlay::Render()
 {
-	SetWindowText(g_hWnd, TEXT("°ÔÀÓÇÃ·¹ÀÌ·¹º§ÀÔ´Ï´Ù"));
+	SetWindowText(g_hWnd, TEXT("ê²Œìž„í”Œë ˆì´ë ˆë²¨ìž…ë‹ˆë‹¤"));
 	return S_OK;
 }
 
@@ -58,11 +58,12 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 	LightDesc.vDiffuse = _float4(0.8f, 0.8f, 0.8f, 0.f);
 	LightDesc.vAmbient = _float4(0.2f, 0.2f, 0.2f, 0.f);
 	LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 0.f);
-	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
+	//LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
 
-	if (FAILED(m_pGameInstance->On_Light(NEXT_LEVEL, TEXT("Main_Light"), LightDesc, nullptr))) {
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->On_Light(NEXT_LEVEL, TEXT("Main_Light"), LightDesc, nullptr))) {
+	//	return E_FAIL;
+	//}
+	assert(false);
 
 
 	return S_OK;
@@ -85,6 +86,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Sound()
 
 HRESULT CLevel_GamePlay::Ready_Markers()
 {
+
 	return S_OK;
 }
 

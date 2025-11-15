@@ -1,0 +1,120 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[3] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Marble_01G_D.VFX_T_Marble_01G_D'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/VFX_T_IceDecal_D.VFX_T_IceDecal_D'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/VFX_T_SphereNormal_N.VFX_T_SphereNormal_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[6] =
+                {
+                    ParameterInfos[0] = { Name=Roughness }
+                    ParameterInfos[1] = { Name=Noise Tiling }
+                    ParameterInfos[2] = { Name=Speed V (S) }
+                    ParameterInfos[3] = { Name=Normal Intensity }
+                    ParameterInfos[4] = { Name=Speed U (S) }
+                    ParameterInfos[5] = { Name=SphereMask Hardness }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=AlphaChannel }
+                    ParameterInfos[1] = { Name=Mask_AlphaChannel }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=MaskTex }
+                    ParameterInfos[1] = { Name=NoiseTex }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[6] = { 0.3, 1, 0, 0.495238, 0, 0 }
+        VectorValues[2] =
+        {
+            VectorValues[0] = { R=0, G=1, B=0, A=0 }
+            VectorValues[1] = { R=0, G=1, B=0, A=0 }
+        }
+        TextureValues[2] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/VFX_T_IceDecal_D.VFX_T_IceDecal_D'
+            TextureValues[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Marble_01G_D.VFX_T_Marble_01G_D'
+        }
+    }
+    ReferencedTextures[3] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/VFX_T_SphereNormal_N.VFX_T_SphereNormal_N'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Marble_01G_D.VFX_T_Marble_01G_D'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/VFX_T_IceDecal_D.VFX_T_IceDecal_D'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[2] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/VFX_T_IceDecal_D.VFX_T_IceDecal_D'
+        Name = MaskTex
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Marble_01G_D.VFX_T_Marble_01G_D'
+        Name = NoiseTex
+        Group = None
+    }
+}
+CollectedScalarParameters[6] =
+{
+    CollectedScalarParameters[0] = { Value=0.3, Name=Roughness, Group=None }
+    CollectedScalarParameters[1] = { Value=1, Name=Noise Tiling, Group=None }
+    CollectedScalarParameters[2] = { Value=0, Name=Speed V (S), Group=None }
+    CollectedScalarParameters[3] =
+    {
+        Value = 0.495238
+        Name = Normal Intensity
+        Group = None
+    }
+    CollectedScalarParameters[4] = { Value=0, Name=Speed U (S), Group=None }
+    CollectedScalarParameters[5] = { Value=0, Name=SphereMask Hardness, Group=None }
+}
+CollectedVectorParameters[2] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0, G=1, B=0, A=0 }
+        Name = AlphaChannel
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0, G=1, B=0, A=0 }
+        Name = Mask_AlphaChannel
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

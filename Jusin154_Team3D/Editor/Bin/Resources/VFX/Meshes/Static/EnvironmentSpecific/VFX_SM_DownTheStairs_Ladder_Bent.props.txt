@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/VFX_MI_DownTheStairs_Ladder.VFX_MI_DownTheStairs_Ladder'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/VFX_MI_DownTheStairs_Ladder.VFX_MI_DownTheStairs_Ladder'
+        MaterialSlotName = MI_RT_Bunks
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 489.106, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-0.410675, Y=11.2276, Z=746.464 }
+    BoxExtent = { X=43.4034, Y=42.8354, Z=745.022 }
+    SphereRadius = 746.99
+}

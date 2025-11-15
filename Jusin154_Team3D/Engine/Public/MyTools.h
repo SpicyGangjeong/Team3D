@@ -165,6 +165,45 @@ public:
 		return fValue;
 	}
 
+#pragma region FileSystem
+	//static void Folder_Func(/* 재귀적으로 탐색할지		*/	_In_	_bool											bRecursive,
+	//						/* 탐색할 폴더 경로			*/	_In_	const _wstring&									TargetPath,
+	//						/* 탐색할 때마다 실행할 로직*/	_In_	function<void(filesystem::directory_entry)>		funcLogic,
+	//						/* 탐색할 확장자들			*/	_In_	const vector<_wstring>&							targetExtentions,
+	//						/* 결과 경로들				*/	_Out_	vector<_wstring>&								Paths ) 
+	//{
+	//	// 경로 예시 -> "../Bin/Resources/Models/Environment/Hogwarts/SUB_ClockTowerCourtyard/Static_Mesh_EXT"
+	//	filesystem::path path = TargetPath;
+	//	for (const filesystem::directory_entry& file : filesystem::directory_iterator(path, filesystem::directory_options::skip_permission_denied)) 
+	//	{
+	//		if (file.is_directory()){
+	//			if (true == bRecursive) {
+	//				Folder_Func(bRecursive, file.path().wstring(), funcLogic, targetExtentions, Paths);
+	//			}
+	//			continue;
+	//		}
+	//		if (true == targetExtentions.empty()) { // 확장자 제한 없음
+	//			Paths.emplace_back(file.path().wstring());
+	//			funcLogic(file);
+	//			continue;
+	//		}
+	//		for (const _wstring& ext : targetExtentions) { // 확장자 제한 있음
+	//			if (file.path().extension() == ext) {
+	//				Paths.emplace_back(file.path().wstring());
+	//				funcLogic(file);
+	//				break;
+	//			}
+	//		}
+	//		// file.path().extension(); // 확장자
+	//		// file.path().filename();  // 파일명(확장자포함)
+	//		// file.path().stem();      // 파일명(확장자제외)
+	//		// file.path().parent_path(); // 상위 폴더 경로
+	//		// file.path().wstring(); // 전체 경로
+	//		// file.path().string();  // 전체 경로 (string)
+	//	}
+	//}
+#pragma endregion
+
 private:
 	inline static void DecodeRGBA(_uint hex, float& r, float& g, float& b, float& a, bool hasAlpha)
 	{

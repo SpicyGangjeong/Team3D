@@ -19,8 +19,13 @@
 #include "DirectXTK/SpriteBatch.h"
 #include "DirectXTK/SpriteFont.h"
 
+#include "DirectXTK/GeometricPrimitive.h"
+
 // FX11
 #include "FX11/d3dx11effect.h"
+
+// TinyXML2
+#include "tinyxml2.h"
 
 #ifdef EDITOR_PROJECT
 // assimp
@@ -48,6 +53,7 @@ using namespace DirectX;
 #include <cassert>
 #include <random>
 #include <fstream>
+#include <filesystem>
 
 using namespace std;
 
@@ -63,6 +69,15 @@ using namespace std;
 using namespace FMOD;
 
 
+// PhysX
+#pragma warning(push)
+#pragma warning(disable: 26495)
+#pragma warning(disable: 33010)
+
+#include "PhysX/PxPhysics.h"
+#include "PhysX/PxPhysicsAPI.h"
+
+#pragma warning(pop)
 
 
 #ifdef _DEBUG

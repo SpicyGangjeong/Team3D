@@ -17,6 +17,9 @@ namespace Editor {
 #define FX_CELL				TEXT("FX_CELL")
 #define FX_DEFERRED			TEXT("FX_DEFFERED")
 #define FX_PARTICLE			TEXT("FX_PARTICLE")
+#define FX_INSTANCE_MODEL   TEXT("FX_INSTANCE_MODEL")
+#define FX_UIEDITOR			TEXT("FX_UIEDITOR")
+
 
 #pragma endregion
 #pragma region MACRO_PROTOTYPE
@@ -48,6 +51,9 @@ namespace Editor {
 #define LAYER_DOT			TEXT("Layer_Dot")
 #define LAYER_CELL			TEXT("Layer_Cell")
 #define LAYER_TRIGGER		TEXT("Layer_Trigger")
+#define LAYER_LIGHT			TEXT("Layer_Light")
+
+#define LAYER_MAPOBJECTMANAGER		TEXT("Layer_MapObjectManager")
 
 #pragma endregion
 #pragma region MACRO_TEXTURE

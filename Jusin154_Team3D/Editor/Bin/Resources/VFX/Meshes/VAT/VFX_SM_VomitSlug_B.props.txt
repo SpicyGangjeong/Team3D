@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/VAT/MatInstances/VFX_MI_VomitSlug_Static.VFX_MI_VomitSlug_Static'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/VAT/MatInstances/VFX_MI_VomitSlug_Static.VFX_MI_VomitSlug_Static'
+        MaterialSlotName = lambert1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 17.6801, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=1.5122, Y=3.12702, Z=0.267858 }
+    BoxExtent = { X=6.22, Y=3.47993, Z=1.74119 }
+    SphereRadius = 6.80091
+}

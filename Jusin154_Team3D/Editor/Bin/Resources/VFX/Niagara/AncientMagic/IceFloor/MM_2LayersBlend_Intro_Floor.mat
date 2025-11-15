@@ -1,0 +1,9 @@
+Diffuse=base_white_d
+Normal=base_flat_n
+Other[0]=T_Cairn_WaterTextures_MSK
+Other[1]=base_white_MSK
+Other[2]=VFX_T_Ice_D
+Other[3]=VFX_T_Ice_N
+Other[4]=VFX_T_Ice_R
+Other[5]=VFX_T_Noise05_D
+Other[6]=VFX_T_Noise_LowFreq_E

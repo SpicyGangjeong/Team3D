@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Cell.h"
 
 #include "VIBuffer_Cell.h"
@@ -44,7 +44,7 @@ _ubyte CCell::Get_CellAttribute()
 HRESULT CCell::Initialize(const _float3* pPoints, _uint iIndex)
 {
 	if (nullptr == pPoints) {
-		return S_OK; // ·Îµù Àü¿ë
+		return S_OK; // ë¡œë”© ì „ìš©
 	}
 	memcpy(m_vPoints, pPoints, sizeof(_float3) * ENUM_CLASS(NAVI_POINT::END));
 
@@ -153,7 +153,7 @@ HRESULT CCell::LoadAsBinary(HANDLE hFile, DWORD& dwByte, _uint iCellIndex)
 HRESULT CCell::SaveAsBinary(HANDLE hFile, DWORD& dwByte)
 {
 	if (UINT_MAX == m_iIndex) {
-		assert(false); // ÃÊ±âÈ­ µÇÁö ¾ÊÀº Á¤Á¡ ÀúÀå ½Ãµµ
+		assert(false); // ì´ˆê¸°í™” ë˜ì§€ ì•Šì€ ì •ì  ì €ì¥ ì‹œë„
 		return E_FAIL;
 	}
 	WriteFile(hFile, m_vPoints, sizeof(_float3) * ENUM_CLASS(NAVI_POINT::END), &dwByte, nullptr);

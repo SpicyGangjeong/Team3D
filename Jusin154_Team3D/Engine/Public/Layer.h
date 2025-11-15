@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Base.h"
 
 NS_BEGIN(Engine)
@@ -7,7 +7,7 @@ class ENGINE_DLL CLayer final : public CBase
 {
 private:
 	CLayer();
-	virtual ~CLayer();
+	virtual ~CLayer() = default;
 public:
 	virtual void Priority_Update(_float fTimeDelta);
 	virtual void Update(_float fTimeDelta);
@@ -40,8 +40,13 @@ private:
 	HRESULT Initialize();
 
 public:
-	virtual void Free() override;
 	static CLayer* Create();
+	virtual void Free() override;
+
+
+#ifdef _DEBUG
+	void Describe_Entity();
+#endif // _DEBUG
 
 };
 

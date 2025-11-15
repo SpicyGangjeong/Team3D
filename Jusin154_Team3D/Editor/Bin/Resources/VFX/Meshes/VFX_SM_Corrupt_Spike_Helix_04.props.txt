@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = Material3'/Engine/EngineMaterials/WorldGridMaterial.WorldGridMaterial'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = Material3'/Engine/EngineMaterials/WorldGridMaterial.WorldGridMaterial'
+        MaterialSlotName = MI_CrystalCluster1L
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 211.223, 184.25, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=1.24017, Y=3.78512, Z=53.6857 }
+    BoxExtent = { X=39.8898, Y=28.1331, Z=55.7695 }
+    SphereRadius = 71.0871
+}

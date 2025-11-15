@@ -1,0 +1,62 @@
+Materials[4] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Materials/Mat_Instance/MI_CoreMaterial_01.MI_CoreMaterial_01'
+    Materials[1] = Material3'/Game/VFX/Materials/Base_Mat/MM_CorruptCoreOuter_01.MM_CorruptCoreOuter_01'
+    Materials[2] = MaterialInstanceConstant'/Game/VFX/Enemies/Goblin_Bolo/MI_ConjuredDragonControlPoint01_GoblinGlow01.MI_ConjuredDragonControlPoint01_GoblinGlow01'
+    Materials[3] = MaterialInstanceConstant'/Game/VFX/Materials/Mat_Instance/MI_SpellHit_01.MI_SpellHit_01'
+}
+SourceModels[0] = {}
+StaticMaterials[4] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Materials/Mat_Instance/MI_CoreMaterial_01.MI_CoreMaterial_01'
+        MaterialSlotName = MAT2
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 84.5942, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = Material3'/Game/VFX/Materials/Base_Mat/MM_CorruptCoreOuter_01.MM_CorruptCoreOuter_01'
+        MaterialSlotName = Mat3
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 0, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[2] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Enemies/Goblin_Bolo/MI_ConjuredDragonControlPoint01_GoblinGlow01.MI_ConjuredDragonControlPoint01_GoblinGlow01'
+        MaterialSlotName = matCore
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 74.7312, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[3] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Materials/Mat_Instance/MI_SpellHit_01.MI_SpellHit_01'
+        MaterialSlotName = spellhit
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 0, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=1.92426, Y=1.2527, Z=1.36835 }
+    BoxExtent = { X=36.3194, Y=41.9818, Z=38.3467 }
+    SphereRadius = 45.603
+}

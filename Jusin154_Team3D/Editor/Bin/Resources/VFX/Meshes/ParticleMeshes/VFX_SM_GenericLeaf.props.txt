@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = Material3'/Game/Gameplay/Nurturing/Herbology/Herbs/Materials/VFX_MM_FigLeavesAlpha.VFX_MM_FigLeavesAlpha'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = Material3'/Game/Gameplay/Nurturing/Herbology/Herbs/Materials/VFX_MM_FigLeavesAlpha.VFX_MM_FigLeavesAlpha'
+        MaterialSlotName = lambert2
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 4.33852, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=0.00229555, Z=0.0252574 }
+    BoxExtent = { X=0.767244, Y=0.926609, Z=0.219397 }
+    SphereRadius = 0.948627
+}

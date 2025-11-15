@@ -1,0 +1,242 @@
+Parent = Material3'/Game/VFX/MasterMaterials/Base_Mat/VFX_MM_SplineThicken_Pan.VFX_MM_SplineThicken_Pan'
+ScalarParameterValues[27] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=Distance (S) }
+        ParameterValue = 100
+        ParameterName = None
+    }
+    ScalarParameterValues[1] =
+    {
+        ParameterInfo = { Name=FakeWind_Strength }
+        ParameterValue = 85.8323
+        ParameterName = None
+    }
+    ScalarParameterValues[2] =
+    {
+        ParameterInfo = { Name=VolumetricWindStrength }
+        ParameterValue = 67.2802
+        ParameterName = None
+    }
+    ScalarParameterValues[3] =
+    {
+        ParameterInfo = { Name=ScaleTiling_U }
+        ParameterValue = 0.9
+        ParameterName = None
+    }
+    ScalarParameterValues[4] =
+    {
+        ParameterInfo = { Name=ScaleTiling_V }
+        ParameterValue = 2.2619
+        ParameterName = None
+    }
+    ScalarParameterValues[5] =
+    {
+        ParameterInfo = { Name=SpeedScale_All }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[6] =
+    {
+        ParameterInfo = { Name=Width Min }
+        ParameterValue = 50
+        ParameterName = None
+    }
+    ScalarParameterValues[7] =
+    {
+        ParameterInfo = { Name=Width Max }
+        ParameterValue = 300
+        ParameterName = None
+    }
+    ScalarParameterValues[8] =
+    {
+        ParameterInfo = { Name=Tex A Tiling U }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[9] =
+    {
+        ParameterInfo = { Name=Tex A Tiling V }
+        ParameterValue = 0.902153
+        ParameterName = None
+    }
+    ScalarParameterValues[10] =
+    {
+        ParameterInfo = { Name=Tex A Speed U }
+        ParameterValue = 0.057143
+        ParameterName = None
+    }
+    ScalarParameterValues[11] =
+    {
+        ParameterInfo = { Name=Tex A Speed V }
+        ParameterValue = 0.178136
+        ParameterName = None
+    }
+    ScalarParameterValues[12] =
+    {
+        ParameterInfo = { Name=ModUV Strength }
+        ParameterValue = 0.02
+        ParameterName = None
+    }
+    ScalarParameterValues[13] =
+    {
+        ParameterInfo = { Name=ModUV Scale Strength U }
+        ParameterValue = 0.333333
+        ParameterName = None
+    }
+    ScalarParameterValues[14] =
+    {
+        ParameterInfo = { Name=ModUV Scale Strength V }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[15] =
+    {
+        ParameterInfo = { Name=ModUV Speed V }
+        ParameterValue = 0.124444
+        ParameterName = None
+    }
+    ScalarParameterValues[16] =
+    {
+        ParameterInfo = { Name=Depth Fade Distance }
+        ParameterValue = 50
+        ParameterName = None
+    }
+    ScalarParameterValues[17] =
+    {
+        ParameterInfo = { Name=Use Vert Color for Opacity }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[18] =
+    {
+        ParameterInfo = { Name=Edge Mask Width U }
+        ParameterValue = 0.473016
+        ParameterName = None
+    }
+    ScalarParameterValues[19] =
+    {
+        ParameterInfo = { Name=Edge Mask Width V }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[20] =
+    {
+        ParameterInfo = { Name=Edge Mask Softness }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[21] =
+    {
+        ParameterInfo = { Name=WPO Strength }
+        ParameterValue = 30
+        ParameterName = None
+    }
+    ScalarParameterValues[22] =
+    {
+        ParameterInfo = { Name=WPO Tiling V }
+        ParameterValue = 0.870494
+        ParameterName = None
+    }
+    ScalarParameterValues[23] =
+    {
+        ParameterInfo = { Name=WPO Speed U }
+        ParameterValue = 0.05
+        ParameterName = None
+    }
+    ScalarParameterValues[24] =
+    {
+        ParameterInfo = { Name=WPO Speed V  }
+        ParameterValue = 0.3
+        ParameterName = None
+    }
+    ScalarParameterValues[25] =
+    {
+        ParameterInfo = { Name=WPO Tiling U }
+        ParameterValue = 0.17619
+        ParameterName = None
+    }
+    ScalarParameterValues[26] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[1] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=Texture A }
+        ParameterValue = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseCaustics04_D.VFX_T_NoiseCaustics04_D'
+        ParameterName = None
+    }
+}
+VectorParameterValues[3] =
+{
+    VectorParameterValues[0] =
+    {
+        ParameterInfo = { Name=FakeWind_Direction }
+        ParameterValue = { R=0, G=1, B=0, A=1 }
+        ParameterName = None
+    }
+    VectorParameterValues[1] =
+    {
+        ParameterInfo = { Name=BaseColor }
+        ParameterValue = { R=0, G=0, B=0, A=2 }
+        ParameterName = None
+    }
+    VectorParameterValues[2] =
+    {
+        ParameterInfo = { Name=AlphaChannel }
+        ParameterValue = { R=1, G=0, B=0, A=0 }
+        ParameterName = None
+    }
+}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = true
+    BlendMode = BLEND_Translucent (2)
+    bOverride_TwoSided = false
+    TwoSided = true
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[3] =
+    {
+        StaticSwitchParameters[0] =
+        {
+            Value = false
+            ParameterInfo = { Name=UseEmissive }
+            bOverride = true
+        }
+        StaticSwitchParameters[1] =
+        {
+            Value = true
+            ParameterInfo = { Name=UseModUV }
+            bOverride = true
+        }
+        StaticSwitchParameters[2] =
+        {
+            Value = true
+            ParameterInfo = { Name=UseDeathlyHallows }
+            bOverride = true
+        }
+    }
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

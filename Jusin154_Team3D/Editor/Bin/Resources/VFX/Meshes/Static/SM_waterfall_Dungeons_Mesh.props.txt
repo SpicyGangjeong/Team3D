@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Mesh/MaterialInstance/VFX_MI_WaterSurfaceFlow.VFX_MI_WaterSurfaceFlow'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Mesh/MaterialInstance/VFX_MI_WaterSurfaceFlow.VFX_MI_WaterSurfaceFlow'
+        MaterialSlotName = texture_material
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 251.649, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=7.01737, Y=-0.264526, Z=-175.805 }
+    BoxExtent = { X=5, Y=72.4948, Z=210 }
+    SphereRadius = 222.217
+}

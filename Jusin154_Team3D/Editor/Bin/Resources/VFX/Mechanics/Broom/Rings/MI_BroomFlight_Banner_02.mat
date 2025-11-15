@@ -1,0 +1,9 @@
+Diffuse=T_RaceBanner_01_D
+Normal=T_RaceBanner_01_N
+Other[0]=T_RaceBanner_01_MRO
+Other[1]=T_BIAT_D
+Other[2]=T_BIAT_MRO
+Other[3]=T_BIAT_N
+Other[4]=T_Gradient_Centre_MSK
+Other[5]=VFX_T_NoisyRamp_D
+Other[6]=T_Burnup_Emissive_Mask_MSK

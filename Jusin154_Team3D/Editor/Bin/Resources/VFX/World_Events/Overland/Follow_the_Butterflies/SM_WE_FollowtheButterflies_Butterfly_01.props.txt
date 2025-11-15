@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = Material3'/Game/VFX/World_Events/Overland/Follow_the_Butterflies/VFX_M_Butterflies_ColourChanging.VFX_M_Butterflies_ColourChanging'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = Material3'/Game/VFX/World_Events/Overland/Follow_the_Butterflies/VFX_M_Butterflies_ColourChanging.VFX_M_Butterflies_ColourChanging'
+        MaterialSlotName = phong1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 5.56528, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0.482805, Y=4.76837e-07, Z=0.956243 }
+    BoxExtent = { X=2.30645, Y=3.25068, Z=0.981313 }
+    SphereRadius = 3.98765
+}

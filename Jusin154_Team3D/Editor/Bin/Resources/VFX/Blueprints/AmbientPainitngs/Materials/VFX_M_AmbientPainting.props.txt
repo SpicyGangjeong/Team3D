@@ -1,0 +1,175 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[7] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EditorMaterials/Cascade/CASC_Cross.CASC_Cross'
+    ReferencedTextures[1] = Texture2D'/Engine/EditorMaterials/Cascade/CASC_None.CASC_None'
+    ReferencedTextures[2] = Texture2D'/Engine/EngineDebugMaterials/HeatmapGradient.HeatmapGradient'
+    ReferencedTextures[3] = Texture2D'/Game/Environment/Hogsmeade/BLDG_ThreeBroomsticks/Textures/3BroomStx_Door_01_D.3BroomStx_Door_01_D'
+    ReferencedTextures[4] = Texture2D'/Game/MaterialFunctions/BaseTextures/Painting/T_PaintingTextures_MSK.T_PaintingTextures_MSK'
+    ReferencedTextures[5] = Texture2D'/Game/MaterialFunctions/BaseTextures/Painting/T_PaintingTextures_N.T_PaintingTextures_N'
+    ReferencedTextures[6] = Texture2D'/Game/MaterialFunctions/BaseTextures/Painting/T_PortraitVignette_A.T_PortraitVignette_A'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[9] =
+                {
+                    ParameterInfos[0] = { Name=Fuzz }
+                    ParameterInfos[1] = { Name=Distortion }
+                    ParameterInfos[2] = { Name=FuzzEdgeBrightness }
+                    ParameterInfos[3] = { Name=BrushTiling }
+                    ParameterInfos[4] = { Name=FuzzCoreDarkness }
+                    ParameterInfos[5] = { Name=Poster }
+                    ParameterInfos[6] = { Name=Divider }
+                    ParameterInfos[7] = { Name=RoughnessMultiplier }
+                    ParameterInfos[8] = { Name=FuzzPower }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[3] =
+                {
+                    ParameterInfos[0] = { Name=Color Addition }
+                    ParameterInfos[1] = { Name=VignetteColor }
+                    ParameterInfos[2] = { Name=FrameScaleOffset }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[5] =
+                {
+                    ParameterInfos[0] = { Name=BrushNormal }
+                    ParameterInfos[1] = { Name=RenderTarget }
+                    ParameterInfos[2] = { Name=VignetteTexture }
+                    ParameterInfos[3] = { Name=PosterTexture }
+                    ParameterInfos[4] = { Name=BrushMap }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[9] = { 0, 0.015, 0.8, 1, 0.8, 0, 25, 4.5, 6 }
+        VectorValues[3] =
+        {
+            VectorValues[0] = { R=0.05, G=0.05, B=0.05, A=1 }
+            VectorValues[1] = { R=0, G=0, B=0, A=0 }
+            VectorValues[2] = { R=0.25, G=0.25, B=0.25, A=0.25 }
+        }
+        TextureValues[5] =
+        {
+            TextureValues[0] = Texture2D'/Game/MaterialFunctions/BaseTextures/Painting/T_PaintingTextures_N.T_PaintingTextures_N'
+            TextureValues[2] = Texture2D'/Game/MaterialFunctions/BaseTextures/Painting/T_PortraitVignette_A.T_PortraitVignette_A'
+            TextureValues[3] = Texture2D'/Game/Environment/Hogsmeade/BLDG_ThreeBroomsticks/Textures/3BroomStx_Door_01_D.3BroomStx_Door_01_D'
+            TextureValues[4] = Texture2D'/Game/MaterialFunctions/BaseTextures/Painting/T_PaintingTextures_MSK.T_PaintingTextures_MSK'
+        }
+    }
+    ReferencedTextures[8] =
+    {
+        ReferencedTextures[0] = Texture2D'/Engine/EditorMaterials/Cascade/CASC_None.CASC_None'
+        ReferencedTextures[1] = Texture2D'/Engine/EditorMaterials/Cascade/CASC_Cross.CASC_Cross'
+        ReferencedTextures[2] = Texture2D'/Engine/EngineDebugMaterials/HeatmapGradient.HeatmapGradient'
+        ReferencedTextures[3] = Texture2D'/Game/MaterialFunctions/BaseTextures/Painting/T_PaintingTextures_MSK.T_PaintingTextures_MSK'
+        ReferencedTextures[4] = Texture2D'/Game/MaterialFunctions/BaseTextures/Painting/T_PaintingTextures_N.T_PaintingTextures_N'
+        ReferencedTextures[6] = Texture2D'/Game/Environment/Hogsmeade/BLDG_ThreeBroomsticks/Textures/3BroomStx_Door_01_D.3BroomStx_Door_01_D'
+        ReferencedTextures[7] = Texture2D'/Game/MaterialFunctions/BaseTextures/Painting/T_PortraitVignette_A.T_PortraitVignette_A'
+    }
+}
+BlendMode = BLEND_Opaque (0)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[5] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/MaterialFunctions/BaseTextures/Painting/T_PaintingTextures_N.T_PaintingTextures_N'
+        Name = BrushNormal
+        Group = None
+    }
+    CollectedTextureParameters[1] = { Texture=None, Name=RenderTarget, Group=None }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/MaterialFunctions/BaseTextures/Painting/T_PortraitVignette_A.T_PortraitVignette_A'
+        Name = VignetteTexture
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/Environment/Hogsmeade/BLDG_ThreeBroomsticks/Textures/3BroomStx_Door_01_D.3BroomStx_Door_01_D'
+        Name = PosterTexture
+        Group = None
+    }
+    CollectedTextureParameters[4] =
+    {
+        Texture = Texture2D'/Game/MaterialFunctions/BaseTextures/Painting/T_PaintingTextures_MSK.T_PaintingTextures_MSK'
+        Name = BrushMap
+        Group = None
+    }
+}
+CollectedScalarParameters[9] =
+{
+    CollectedScalarParameters[0] = { Value=0, Name=Fuzz, Group=None }
+    CollectedScalarParameters[1] = { Value=0.015, Name=Distortion, Group=None }
+    CollectedScalarParameters[2] = { Value=0.8, Name=FuzzEdgeBrightness, Group=None }
+    CollectedScalarParameters[3] = { Value=1, Name=BrushTiling, Group=None }
+    CollectedScalarParameters[4] = { Value=0.8, Name=FuzzCoreDarkness, Group=None }
+    CollectedScalarParameters[5] = { Value=0, Name=Poster, Group=None }
+    CollectedScalarParameters[6] = { Value=25, Name=Divider, Group=None }
+    CollectedScalarParameters[7] = { Value=4.5, Name=RoughnessMultiplier, Group=None }
+    CollectedScalarParameters[8] = { Value=6, Name=FuzzPower, Group=None }
+}
+CollectedVectorParameters[3] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0.05, G=0.05, B=0.05, A=1 }
+        Name = Color Addition
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0, G=0, B=0, A=0 }
+        Name = VignetteColor
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=0.25, G=0.25, B=0.25, A=0.25 }
+        Name = FrameScaleOffset
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[3] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_PaintingTextures_MSK
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_PaintingTextures_N
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_PortraitVignette_A
+    }
+}

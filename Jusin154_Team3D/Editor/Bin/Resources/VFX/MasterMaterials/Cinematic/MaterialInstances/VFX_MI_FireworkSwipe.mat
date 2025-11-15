@@ -1,0 +1,8 @@
+Diffuse=VFX_T_Gradient_Packed_01_D
+Other[0]=VFX_T_NoisyRamp_D
+Other[1]=VFX_T_NoiseCaustics01_Color_D
+Other[2]=Good64x64TilingNoiseHighFreq
+Other[3]=VFX_T_DistortionNoise_N
+Other[4]=VFX_T_Noise_Soft_LinearRGBA_D
+Other[5]=VFX_T_RGB_3DNoiseRough_D
+Other[6]=VFX_T_DirtThrownB_D

@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Niagara/AncientMagic/IceBreakables/VFX_MI_AncientMagicCrystal_Glow_A.VFX_MI_AncientMagicCrystal_Glow_A'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Niagara/AncientMagic/IceBreakables/VFX_MI_AncientMagicCrystal_Glow_A.VFX_MI_AncientMagicCrystal_Glow_A'
+        MaterialSlotName = lambert2
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 1695.62, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-0.336635, Y=0.600994, Z=0.40921 }
+    BoxExtent = { X=15.5732, Y=16.691, Z=16.7984 }
+    SphereRadius = 23.4816
+}

@@ -1,0 +1,92 @@
+Parent = MaterialInstanceConstant'/Game/VFX/Niagara/Basic/Trails/VFX_MI_Ribbon_Lit.VFX_MI_Ribbon_Lit'
+ScalarParameterValues[6] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=CustomTilingDistance }
+        ParameterValue = 100
+        ParameterName = None
+    }
+    ScalarParameterValues[1] =
+    {
+        ParameterInfo = { Name=RibbonTiling U }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[2] =
+    {
+        ParameterInfo = { Name=RibbonTiling V }
+        ParameterValue = 0.663492
+        ParameterName = None
+    }
+    ScalarParameterValues[3] =
+    {
+        ParameterInfo = { Name=RibbonSpeed U }
+        ParameterValue = 0.495238
+        ParameterName = None
+    }
+    ScalarParameterValues[4] =
+    {
+        ParameterInfo = { Name=RibbonSpeed V }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[5] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[1] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=RibbonTexture 1 }
+        ParameterValue = Texture2D'/Game/VFX/Textures/Noises/VFX_T_WhispyCaustic_D.VFX_T_WhispyCaustic_D'
+        ParameterName = None
+    }
+}
+VectorParameterValues[0] = {}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Translucent (2)
+    bOverride_TwoSided = false
+    TwoSided = false
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[1] =
+    {
+        StaticSwitchParameters[0] =
+        {
+            Value = true
+            ParameterInfo = { Name=UseCustomTiling }
+            bOverride = true
+        }
+    }
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 0.65625
+        UVChannelIndex = 0
+        TextureName = VFX_T_WhispyCaustic_D
+    }
+}

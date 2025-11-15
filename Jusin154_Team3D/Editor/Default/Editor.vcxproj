@@ -44,7 +44,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <EnableASAN>true</EnableASAN>
+    <EnableASAN>false</EnableASAN>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -110,7 +110,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>EDITOR_PROJECT;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>EDITOR_PROJECT;$(USERNAME);_DEBUG;_WINDOWS;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>../../EngineSDK/Inc/;../Public/;../../EngineSDK/Inc/DirectXTK/;../../EngineSDK/Inc/fMod/;../../EngineSDK/Inc/IMGUI/;../../EngineSDK/Inc/FX11/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -125,6 +125,16 @@
       <AdditionalLibraryDirectories>../../EngineSDK/Lib/$(ConfigurationName)/;../ThirdPartyLib/ZLib/$(ConfigurationName)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Engine.lib;fmod_vc.lib;Crypt32.lib;assimp-vc145-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -132,7 +142,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>EDITOR_PROJECT;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>EDITOR_PROJECT;$(USERNAME);NDEBUG;_WINDOWS;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>../../EngineSDK/Inc/;../Public/;../../EngineSDK/Inc/DirectXTK/;../../EngineSDK/Inc/fMod/;../../EngineSDK/Inc/IMGUI/;../../EngineSDK/Inc/FX11/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -147,31 +157,157 @@
       <AdditionalLibraryDirectories>../../EngineSDK/Lib/$(ConfigurationName)/;../ThirdPartyLib/ZLib/$(ConfigurationName)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Engine.lib;fmod_vc.lib;Crypt32.lib;assimp-vc145-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\Body.h" />
+    <ClInclude Include="..\public\Active_Icon.h" />
+    <ClInclude Include="..\Public\CallBack_Playable_Behavior.h" />
+    <ClInclude Include="..\Public\CallBack_Playable_HitRepot.h" />
+    <ClInclude Include="..\Public\DummyObject.h" />
+    <ClInclude Include="..\public\DummySkyBox.h" />
+    <ClInclude Include="..\Public\Dummy_PhysXPlatform.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dummy_PhysXWall.h" />
+    <ClInclude Include="..\Public\Dummy_Plane.h" />
+    <ClInclude Include="..\Public\Dummy_PhysXPlayable.h" />
+    <ClInclude Include="..\public\GamePlay_Canvas.h" />
+    <ClInclude Include="..\public\BuildingContainer.h" />
     <ClInclude Include="..\Public\DebugCamera.h" />
+    <ClInclude Include="..\Public\Dummy_PhysXBox.h" />
+    <ClInclude Include="..\Public\Dummy_PhysXMesh.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_Editor.h" />
+    <ClInclude Include="..\Public\EditEffect.h" />
+    <ClInclude Include="..\Public\Information.h" />
+    <ClInclude Include="..\public\Level_MapViewer.h" />
+    <ClInclude Include="..\Public\LoadingWidget.h" />
+    <ClInclude Include="..\public\MapContainer.h" />
+    <ClInclude Include="..\public\MapElement.h" />
+    <ClInclude Include="..\public\MapElement_Interactable.h" />
+    <ClInclude Include="..\public\MapElement_Static.h" />
+    <ClInclude Include="..\public\MapObject.h" />
+    <ClInclude Include="..\public\MapObject_LOD.h" />
+    <ClInclude Include="..\public\MapObject_Manager.h" />
+    <ClInclude Include="..\Public\MainLight.h" />
+    <ClInclude Include="..\public\MapObject_Collision.h" />
+    <ClInclude Include="..\Public\Dummy_PhysXDoor.h" />
+    <ClInclude Include="..\public\Terrain.h" />
+    <ClInclude Include="..\Public\Level_PhysXLab.h" />
+    <ClInclude Include="..\Public\TestEffect.h" />
+    <ClInclude Include="..\Public\EffectObject.h" />
+    <ClInclude Include="..\Public\DummyRect.h" />
+    <ClInclude Include="..\Public\Dummy_Cube.h" />
     <ClInclude Include="..\Public\Editor_Define.h" />
     <ClInclude Include="..\Public\Editor_Macro.h" />
     <ClInclude Include="..\Public\Editor_Struct.h" />
+    <ClInclude Include="..\Public\Hair.h" />
+    <ClInclude Include="..\Public\Level_EffectViewer.h" />
+    <ClInclude Include="..\public\IMGUIUI.h" />
+    <ClInclude Include="..\public\LoadingWidget_Flame.h" />
+    <ClInclude Include="..\public\Loading_Panel.h" />
+    <ClInclude Include="..\public\MiniMap_Panel.h" />
+    <ClInclude Include="..\public\MiniMap_TrimBorder.h" />
+    <ClInclude Include="..\Public\Head.h" />
+    <ClInclude Include="..\public\Mission_Panel.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
     <ClInclude Include="..\Public\Level_Logo.h" />
+    <ClInclude Include="..\public\Level_UI.h" />
+    <ClInclude Include="..\Public\Level_ObjectViewer.h" />
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\Public\MainApp.h" />
+    <ClInclude Include="..\Public\ModelParts.h" />
+    <ClInclude Include="..\public\MissionBanner_Border.h" />
+    <ClInclude Include="..\public\MissionBanner_Key.h" />
+    <ClInclude Include="..\public\Mission_Icon.h" />
+    <ClInclude Include="..\public\Mission_Key.h" />
+    <ClInclude Include="..\public\Mission_KeyHold.h" />
+    <ClInclude Include="..\Public\Monster.h" />
+    <ClInclude Include="..\public\Mouse_Cursor.h" />
+    <ClInclude Include="..\Public\RootModelPart.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\Body.cpp" />
+    <ClCompile Include="..\private\Active_Icon.cpp" />
+    <ClCompile Include="..\Private\CallBack_Playable_Behavior.cpp" />
+    <ClCompile Include="..\Private\CallBack_Playable_HitRepot.cpp" />
+    <ClCompile Include="..\Private\DummyObject.cpp" />
+    <ClCompile Include="..\private\DummySkyBox.cpp" />
+    <ClCompile Include="..\Private\Dummy_PhysXPlatform.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_PhysXWall.cpp" />
+    <ClCompile Include="..\Private\Dummy_Plane.cpp" />
+    <ClCompile Include="..\Private\Dummy_PhysXPlayable.cpp" />
+    <ClCompile Include="..\private\GamePlay_Canvas.cpp" />
+    <ClCompile Include="..\private\BuildingContainer.cpp" />
     <ClCompile Include="..\Private\DebugCamera.cpp" />
+    <ClCompile Include="..\Private\Dummy_PhysXBox.cpp" />
+    <ClCompile Include="..\Private\Dummy_PhysXMesh.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect_Editor.cpp" />
+    <ClCompile Include="..\Private\EditEffect.cpp" />
+    <ClCompile Include="..\Private\Information.cpp" />
+    <ClCompile Include="..\private\Level_MapViewer.cpp" />
+    <ClCompile Include="..\Private\LoadingWidget.cpp" />
+    <ClCompile Include="..\private\MapContainer.cpp" />
+    <ClCompile Include="..\private\MapElement.cpp" />
+    <ClCompile Include="..\private\MapElement_Interactable.cpp" />
+    <ClCompile Include="..\private\MapElement_Static.cpp" />
+    <ClCompile Include="..\private\MapObject.cpp" />
+    <ClCompile Include="..\private\MapObject_LOD.cpp" />
+    <ClCompile Include="..\private\MapObject_Manager.cpp" />
+    <ClCompile Include="..\Private\MainLight.cpp" />
+    <ClCompile Include="..\private\MapObject_Collision.cpp" />
+    <ClCompile Include="..\Private\Dummy_PhysXDoor.cpp" />
+    <ClCompile Include="..\private\Terrain.cpp" />
+    <ClCompile Include="..\Private\Level_PhysXLab.cpp" />
+    <ClCompile Include="..\Private\TestEffect.cpp" />
+    <ClCompile Include="..\Private\EffectObject.cpp" />
+    <ClCompile Include="..\Private\DummyRect.cpp" />
+    <ClCompile Include="..\Private\Dummy_Cube.cpp" />
+    <ClCompile Include="..\Private\Hair.cpp" />
+    <ClCompile Include="..\Private\Loader.cpp" />
+    <ClCompile Include="..\Private\Level_EffectViewer.cpp" />
+    <ClCompile Include="..\private\IMGUIUI.cpp" />
+    <ClCompile Include="..\private\LoadingWidget_Flame.cpp" />
+    <ClCompile Include="..\private\Loading_Panel.cpp" />
+    <ClCompile Include="..\private\MiniMap_Panel.cpp" />
+    <ClCompile Include="..\private\MiniMap_TrimBorder.cpp" />
+    <ClCompile Include="..\Private\Head.cpp" />
+    <ClCompile Include="..\private\Mission_Panel.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />
     <ClCompile Include="..\Private\Level_Logo.cpp" />
-    <ClCompile Include="..\Private\Loader.cpp" />
+    <ClCompile Include="..\private\Level_UI.cpp" />
+    <ClCompile Include="..\Private\Level_ObjectViewer.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />
+    <ClCompile Include="..\Private\ModelParts.cpp" />
+    <ClCompile Include="..\private\MissionBanner_Border.cpp" />
+    <ClCompile Include="..\private\MissionBanner_Key.cpp" />
+    <ClCompile Include="..\private\Mission_Icon.cpp" />
+    <ClCompile Include="..\private\Mission_Key.cpp" />
+    <ClCompile Include="..\private\Mission_KeyHold.cpp" />
+    <ClCompile Include="..\Private\Monster.cpp" />
+    <ClCompile Include="..\private\Mouse_Cursor.cpp" />
     <ClCompile Include="..\Private\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\Private\RootModelPart.cpp" />
     <ClCompile Include="Editor.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -182,6 +318,10 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_UIEditor.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxAnimMesh.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
@@ -191,6 +331,12 @@
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxMesh.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxModelInstance.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>

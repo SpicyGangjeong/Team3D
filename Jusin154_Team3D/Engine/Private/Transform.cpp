@@ -1,4 +1,4 @@
-#include "pch.h"
+Ôªø#include "pch.h"
 #include "Transform.h"
 #include "Shader.h"
 
@@ -40,7 +40,7 @@ _vector CTransform::Get_RollPitchYawVector() const
 	_vector vQuaternion = XMQuaternionNormalize(Get_QuarternionVector());
 
 	_float roll, pitch, yaw;
-	{ // XMMatrixRotationRollPitchYawFromVector∑Œ øœ∫Æ»˜ ∫π±∏µ 
+	{ // XMMatrixRotationRollPitchYawFromVectorÎ°ú ÏôÑÎ≤ΩÌûà Î≥µÍµ¨Îê®
 		XMFLOAT4 q;
 		XMStoreFloat4(&q, vQuaternion);
 
@@ -306,13 +306,13 @@ void CTransform::Free()
 
 void CTransform::Describe_Entity()
 {
-	//if (GUI::TreeNode("Transform")) {
-	//	GUI::DragFloat4("Right", (_float*)(&m_WorldMatrix._11), 1.f, 0.f, 0.f, "%.3f", ImGuiSliderFlags_NoInput);
-	//	GUI::DragFloat4("Up", (_float*)(&m_WorldMatrix._21), 1.f, 0.f, 0.f, "%.3f", ImGuiSliderFlags_NoInput);
-	//	GUI::DragFloat4("Look", (_float*)(&m_WorldMatrix._31), 1.f, 0.f, 0.f, "%.3f", ImGuiSliderFlags_NoInput);
-	//	GUI::DragFloat4("Pos", (_float*)(&m_WorldMatrix._41), 1.f, 0.f, 0.f, "%.3f", ImGuiSliderFlags_NoInput);
+	if (GUI::TreeNode("Transform")) {
+		GUI::DragFloat4("Right", (_float*)(&m_WorldMatrix._11), 1.f, 0.f, 0.f, "%.3f", ImGuiSliderFlags_NoInput);
+		GUI::DragFloat4("Up", (_float*)(&m_WorldMatrix._21), 1.f, 0.f, 0.f, "%.3f", ImGuiSliderFlags_NoInput);
+		GUI::DragFloat4("Look", (_float*)(&m_WorldMatrix._31), 1.f, 0.f, 0.f, "%.3f", ImGuiSliderFlags_NoInput);
+		GUI::DragFloat4("Pos", (_float*)(&m_WorldMatrix._41), 1.f, 0.f, 0.f, "%.3f", ImGuiSliderFlags_NoInput);
 
-	//	GUI::TreePop();
-	//	GUI::Spacing();
-	//}
+		GUI::TreePop();
+		GUI::Spacing();
+	}
 }

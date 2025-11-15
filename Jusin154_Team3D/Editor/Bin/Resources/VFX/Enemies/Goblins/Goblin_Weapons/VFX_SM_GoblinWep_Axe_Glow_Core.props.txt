@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Enemies/Goblins/Goblin_Weapons/VFX_MI_Goblin_Weapon_Core_Base.VFX_MI_Goblin_Weapon_Core_Base'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Enemies/Goblins/Goblin_Weapons/VFX_MI_Goblin_Weapon_Core_Base.VFX_MI_Goblin_Weapon_Core_Base'
+        MaterialSlotName = Blade_Core
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 24.5908, 24.1234, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=-0.0261447, Z=62.215 }
+    BoxExtent = { X=26.5931, Y=2.23197, Z=11.905 }
+    SphereRadius = 27.6284
+}

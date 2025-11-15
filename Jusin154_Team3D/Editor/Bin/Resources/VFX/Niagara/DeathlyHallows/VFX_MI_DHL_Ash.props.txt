@@ -1,0 +1,102 @@
+Parent = Material3'/Game/VFX/MasterMaterials/VFX_MM_AshParticle.VFX_MM_AshParticle'
+ScalarParameterValues[9] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=Alpha Mask Radius }
+        ParameterValue = 0.461905
+        ParameterName = None
+    }
+    ScalarParameterValues[1] =
+    {
+        ParameterInfo = { Name=Roughness }
+        ParameterValue = 0.349206
+        ParameterName = None
+    }
+    ScalarParameterValues[2] =
+    {
+        ParameterInfo = { Name=Diffuse Tiling U (S) }
+        ParameterValue = 0.3
+        ParameterName = None
+    }
+    ScalarParameterValues[3] =
+    {
+        ParameterInfo = { Name=Diffuse Tiling V (S) }
+        ParameterValue = 0.3
+        ParameterName = None
+    }
+    ScalarParameterValues[4] =
+    {
+        ParameterInfo = { Name=Spec }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[5] =
+    {
+        ParameterInfo = { Name=Vertex Offset Scroll Speed U }
+        ParameterValue = 0.135714
+        ParameterName = None
+    }
+    ScalarParameterValues[6] =
+    {
+        ParameterInfo = { Name=Vertex Offset Scroll Speed V }
+        ParameterValue = 0.118254
+        ParameterName = None
+    }
+    ScalarParameterValues[7] =
+    {
+        ParameterInfo = { Name=Vertex Offset Strength }
+        ParameterValue = 6
+        ParameterName = None
+    }
+    ScalarParameterValues[8] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[1] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=DiffuseMap }
+        ParameterValue = Texture2D'/Game/VFX/Niagara/DeathlyHallows/VFX_T_DHL_Crosshatch_Inverted_Packed_D.VFX_T_DHL_Crosshatch_Inverted_Packed_D'
+        ParameterName = None
+    }
+}
+VectorParameterValues[0] = {}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Masked (1)
+    bOverride_TwoSided = false
+    TwoSided = true
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[0] = {}
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_CloudyPack_D
+    }
+}

@@ -1,0 +1,70 @@
+Parent = Material3'/Game/VFX/MasterMaterials/Particles/VFX_MM_GlowSharp.VFX_MM_GlowSharp'
+ScalarParameterValues[4] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=RaySpeed }
+        ParameterValue = 2.23313
+        ParameterName = None
+    }
+    ScalarParameterValues[1] =
+    {
+        ParameterInfo = { Name=Chromatic Aberration Strength (0-1) (S) }
+        ParameterValue = 0.126984
+        ParameterName = None
+    }
+    ScalarParameterValues[2] =
+    {
+        ParameterInfo = { Name=FadeDistance }
+        ParameterValue = 3
+        ParameterName = None
+    }
+    ScalarParameterValues[3] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[0] = {}
+VectorParameterValues[0] = {}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Additive (3)
+    bOverride_TwoSided = false
+    TwoSided = false
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[2] =
+    {
+        StaticSwitchParameters[0] =
+        {
+            Value = true
+            ParameterInfo = { Name=Use Advanced Rays }
+            bOverride = true
+        }
+        StaticSwitchParameters[1] =
+        {
+            Value = true
+            ParameterInfo = { Name=Use Cheap Chromatic Ab }
+            bOverride = true
+        }
+    }
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

@@ -1,0 +1,9 @@
+Diffuse=base_black_d
+Normal=base_flat_n
+Opacity=T_Blank_A
+Other[0]=Good64x64TilingNoiseHighFreq
+Other[1]=base_white_d
+Other[2]=base_white_MSK
+Other[3]=T_ColorNoise512_D
+Other[4]=T_Forageable_Horklump_Gradient_D
+Other[5]=T_BlankCubemap_HDR

@@ -4,6 +4,10 @@
 #define	GUI	ImGui
 #endif // !GUI
 
+#ifndef PSX
+#define PSX physx
+#endif // !PSX
+
 #pragma region ProgrammerInfo
 
 #define ASSERT_NURI(expression)
@@ -75,7 +79,9 @@
 //}
 #define			FLT_EPSILON3				1.192092896e-03F
 #define			FLT_EPSILON5				1.192092896e-05F
-#define			GRAVITY						9.8f
+
+// GRAVITY 음수 박으면 피직스 로드 실패함
+#define			GRAVITY						9.81f
 
 constexpr unsigned int g_iMaxShadowWidth = 16384;
 constexpr unsigned int g_iMaxShadowHeight = 9216;
@@ -85,6 +91,7 @@ constexpr unsigned int g_iMaxShadowHeight = 9216;
 #endif // !AI_TEXTURE_TYPE_MAX
 
 #define			ENUM_CLASS(ENUM)		static_cast<unsigned int>(ENUM)
+#define			KR_CSTR(str)			reinterpret_cast<const char*>(u8##str)
 
 #ifndef			MSG_BOX
 #define			MSG_BOX(_message)			MessageBox(NULL, TEXT(_message), L"System Message", MB_OK)

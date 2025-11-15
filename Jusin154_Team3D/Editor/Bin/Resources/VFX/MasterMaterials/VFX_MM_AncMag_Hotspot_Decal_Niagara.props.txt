@@ -1,0 +1,179 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[4] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/Environment/Overland_Common/Water/Textures/T_Water_Normal_Large_N.T_Water_Normal_Large_N'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Decals/VFX_T_BOTU_Footprint_E.VFX_T_BOTU_Footprint_E'
+    ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_MarbleSkin_01_BPF_D.VFX_T_MarbleSkin_01_BPF_D'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_MarbleSkin_01_N.VFX_T_MarbleSkin_01_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[22] =
+                {
+                    ParameterInfos[0] = { Name=Roughness }
+                    ParameterInfos[1] = { Name=B_1 }
+                    ParameterInfos[2] = { Name=Emissive Color Curve Shift }
+                    ParameterInfos[3] = { Name=Tiling U (S)_1 }
+                    ParameterInfos[4] = { Name=Intensity (S) }
+                    ParameterInfos[5] = { Name=Param_1 }
+                    ParameterInfos[6] = { Name=Emissive Source Hardness }
+                    ParameterInfos[7] = { Name=Speed U (S)_1 }
+                    ParameterInfos[8] = { Name=Speed V (S)_1 }
+                    ParameterInfos[9] = { Name=Emissive Source Radius }
+                    ParameterInfos[10] = { Name=B_4 }
+                    ParameterInfos[11] = { Name=Coverage Bias (0-1) }
+                    ParameterInfos[12] = { Name=Emissive Scale }
+                    ParameterInfos[13] = { Name=Speed V (S) }
+                    ParameterInfos[14] = { Name=Input High (S)_1 }
+                    ParameterInfos[15] = { Name=EmissiveFresnelStrength }
+                    ParameterInfos[16] = { Name=Speed U (S) }
+                    ParameterInfos[17] = { Name=Tiling U (S) }
+                    ParameterInfos[18] = { Name=Input Low (S)_1 }
+                    ParameterInfos[19] = { Name=Full Coverage Percent (0-1) }
+                    ParameterInfos[20] = { Name=LightSource Falloff }
+                    ParameterInfos[21] = { Name=B }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=Base Color }
+                    ParameterInfos[1] = { Name=LightSourceOffset }
+                }
+            }
+            Entries[2] = { ParameterInfos[0]={} }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[22] =
+        {
+            ScalarValues[0] = 0.23701
+            ScalarValues[1] = 35.9162
+            ScalarValues[2] = 1.2302
+            ScalarValues[3] = 0.75
+            ScalarValues[4] = 0.590476
+            ScalarValues[5] = 14
+            ScalarValues[6] = 0
+            ScalarValues[7] = -0.105238
+            ScalarValues[8] = -0.166667
+            ScalarValues[9] = 47.2121
+            ScalarValues[10] = 0.005
+            ScalarValues[11] = 0.595238
+            ScalarValues[12] = 50
+            ScalarValues[13] = 0.2
+            ScalarValues[14] = 1
+            ScalarValues[15] = 0.576
+            ScalarValues[16] = 0.1
+            ScalarValues[17] = 1
+            ScalarValues[18] = 0.8
+            ScalarValues[19] = 0.314286
+            ScalarValues[20] = 3
+            ScalarValues[21] = 0.011524
+        }
+        VectorValues[2] =
+        {
+            VectorValues[0] = { R=0.00840929, G=0.0130534, B=0.0260417, A=1 }
+            VectorValues[1] = { R=0, G=0, B=-3.26707, A=1 }
+        }
+        TextureValues[0] = {}
+    }
+    ReferencedTextures[5] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/Environment/Overland_Common/Water/Textures/T_Water_Normal_Large_N.T_Water_Normal_Large_N'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_MarbleSkin_01_BPF_D.VFX_T_MarbleSkin_01_BPF_D'
+        ReferencedTextures[2] = Texture2D'/Game/VFX/Textures/Decals/VFX_T_BOTU_Footprint_E.VFX_T_BOTU_Footprint_E'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_MarbleSkin_01_N.VFX_T_MarbleSkin_01_N'
+        ReferencedTextures[4] = Texture2D'/Game/VFX/CurveAtlas/VFX_CA_CurveAtlasMaterialAnims.VFX_CA_CurveAtlasMaterialAnims'
+    }
+}
+BlendMode = BLEND_Translucent (2)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[0] = {}
+CollectedScalarParameters[22] =
+{
+    CollectedScalarParameters[0] = { Value=0.23701, Name=Roughness, Group=None }
+    CollectedScalarParameters[1] = { Value=35.9162, Name=B_1, Group=None }
+    CollectedScalarParameters[2] =
+    {
+        Value = 1.2302
+        Name = Emissive Color Curve Shift
+        Group = None
+    }
+    CollectedScalarParameters[3] = { Value=0.75, Name=Tiling U (S)_1, Group=None }
+    CollectedScalarParameters[4] = { Value=0.590476, Name=Intensity (S), Group=None }
+    CollectedScalarParameters[5] = { Value=14, Name=Param_1, Group=None }
+    CollectedScalarParameters[6] =
+    {
+        Value = 0
+        Name = Emissive Source Hardness
+        Group = None
+    }
+    CollectedScalarParameters[7] = { Value=-0.105238, Name=Speed U (S)_1, Group=None }
+    CollectedScalarParameters[8] = { Value=-0.166667, Name=Speed V (S)_1, Group=None }
+    CollectedScalarParameters[9] =
+    {
+        Value = 47.2121
+        Name = Emissive Source Radius
+        Group = None
+    }
+    CollectedScalarParameters[10] = { Value=0.005, Name=B_4, Group=None }
+    CollectedScalarParameters[11] =
+    {
+        Value = 0.595238
+        Name = Coverage Bias (0-1)
+        Group = None
+    }
+    CollectedScalarParameters[12] = { Value=50, Name=Emissive Scale, Group=None }
+    CollectedScalarParameters[13] = { Value=0.2, Name=Speed V (S), Group=None }
+    CollectedScalarParameters[14] = { Value=1, Name=Input High (S)_1, Group=None }
+    CollectedScalarParameters[15] =
+    {
+        Value = 0.576
+        Name = EmissiveFresnelStrength
+        Group = None
+    }
+    CollectedScalarParameters[16] = { Value=0.1, Name=Speed U (S), Group=None }
+    CollectedScalarParameters[17] = { Value=1, Name=Tiling U (S), Group=None }
+    CollectedScalarParameters[18] = { Value=0.8, Name=Input Low (S)_1, Group=None }
+    CollectedScalarParameters[19] =
+    {
+        Value = 0.314286
+        Name = Full Coverage Percent (0-1)
+        Group = None
+    }
+    CollectedScalarParameters[20] = { Value=3, Name=LightSource Falloff, Group=None }
+    CollectedScalarParameters[21] = { Value=0.011524, Name=B, Group=None }
+}
+CollectedVectorParameters[2] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0.00840929, G=0.0130534, B=0.0260417, A=1 }
+        Name = Base Color
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0, G=0, B=-3.26707, A=1 }
+        Name = LightSourceOffset
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

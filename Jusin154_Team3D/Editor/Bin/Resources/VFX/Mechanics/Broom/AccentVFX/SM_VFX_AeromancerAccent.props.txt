@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Mechanics/Broom/AccentVFX/MI_VFX_AeromancerAccent.MI_VFX_AeromancerAccent'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Mechanics/Broom/AccentVFX/MI_VFX_AeromancerAccent.MI_VFX_AeromancerAccent'
+        MaterialSlotName = lambert1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 194.305, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-7.62939e-06, Y=0, Z=3.8147e-06 }
+    BoxExtent = { X=79.9634, Y=79.9634, Z=51.1574 }
+    SphereRadius = 94.9275
+}

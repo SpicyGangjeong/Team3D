@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = Material3'/Game/VFX/MasterMaterials/Base_Mat/VFX_MM_Null.VFX_MM_Null'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = Material3'/Game/VFX/MasterMaterials/Base_Mat/VFX_MM_Null.VFX_MM_Null'
+        MaterialSlotName = MI_SanctumDun_PensieveStatue_D_Generic
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 1896, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-76.9119, Y=-28.9062, Z=1132.28 }
+    BoxExtent = { X=58.1329, Y=13.5595, Z=28.3141 }
+    SphereRadius = 65.9809
+}

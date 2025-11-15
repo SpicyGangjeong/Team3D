@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Base.h"
 
@@ -30,8 +30,9 @@ public:
 	virtual void Free();
 
 #ifdef _DEBUG
-	virtual void Describe_Entity()PURE; // IMGUI Àü¿ë
+	virtual void Describe_Entity()PURE; // IMGUI ì „ìš©
 #endif
+
 };
 
 NS_END

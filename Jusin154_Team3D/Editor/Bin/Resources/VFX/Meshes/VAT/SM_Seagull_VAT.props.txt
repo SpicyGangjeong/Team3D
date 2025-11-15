@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/VAT/MatInstances/VFX_MI_VAT_Soft_Seagull_Particles.VFX_MI_VAT_Soft_Seagull_Particles'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/VAT/MatInstances/VFX_MI_VAT_Soft_Seagull_Particles.VFX_MI_VAT_Soft_Seagull_Particles'
+        MaterialSlotName = MM_Seagul
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 133.258, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=7.75713, Y=2.54175, Z=62.7603 }
+    BoxExtent = { X=54.06, Y=76.9013, Z=49.8886 }
+    SphereRadius = 94.0561
+}

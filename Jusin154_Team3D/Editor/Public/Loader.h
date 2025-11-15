@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Editor_Define.h"
 #include "Base.h"
@@ -38,9 +38,20 @@ private:
 
 	CGameInstance* m_pGameInstance = { nullptr };
 
+	//list<SaveModel> m_SaveModel;
+
 private:
 	HRESULT Initialize(LEVEL eNextLevelID);
 	HRESULT Loading_For_Logo();
+	HRESULT Loading_For_ObjectViewer();
+	HRESULT Loading_For_MapViewer();
+	HRESULT Loading_For_UI();
+	HRESULT Loading_For_Effect();
+	HRESULT Loading_For_PhysXLevel();
+
+private:
+	HRESULT Asset_FileLoad(const _char* pDirectoryPath, const _tchar* pPreName, function<HRESULT(_wstring, const _char*)> AddPrototypeEvent);
+	HRESULT MapFolderLoad(const _char* pDirectoryPath, const _char* pFileExt, _bool bUseTag, vector<_wstring>& ModelPrototypeTags, vector<filesystem::path>& ModelPrototypePath);
 
 public:
 	static CLoader* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevelID);

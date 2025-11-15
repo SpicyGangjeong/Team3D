@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Gameplay/InventoryObjects/Potions/Materials/MI_Potion_Wound_cleaning.MI_Potion_Wound_cleaning'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Gameplay/InventoryObjects/Potions/Materials/MI_Potion_Wound_cleaning.MI_Potion_Wound_cleaning'
+        MaterialSlotName = MI_Potion_Wound_cleaning
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 35.7107, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=0, Z=-7.83143 }
+    BoxExtent = { X=3.26772, Y=3.26772, Z=11.6626 }
+    SphereRadius = 11.9053
+}

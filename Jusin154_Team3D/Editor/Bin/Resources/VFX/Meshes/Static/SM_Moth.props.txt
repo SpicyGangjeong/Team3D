@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Mesh/MaterialInstance/VFX_MI_Moth.VFX_MI_Moth'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Mesh/MaterialInstance/VFX_MI_Moth.VFX_MI_Moth'
+        MaterialSlotName = texture_material
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 7.94082, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0.47201, Y=0, Z=-0.0865104 }
+    BoxExtent = { X=4.10031, Y=4.578, Z=0.613021 }
+    SphereRadius = 6.06617
+}

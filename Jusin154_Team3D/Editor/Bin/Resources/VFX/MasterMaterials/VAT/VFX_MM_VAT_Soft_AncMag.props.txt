@@ -1,0 +1,287 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[13] =
+{
+    ReferencedTextures[0] = Texture2D'/Engine/EngineMaterials/BaseFlattenNormalMap.BaseFlattenNormalMap'
+    ReferencedTextures[1] = Texture2D'/Engine/EngineMaterials/DefaultDiffuse.DefaultDiffuse'
+    ReferencedTextures[2] = Texture2D'/Engine/EngineMaterials/DefaultNormal_Uncompressed.DefaultNormal_Uncompressed'
+    ReferencedTextures[3] = Texture2D'/Engine/EngineResources/WhiteSquareTexture.WhiteSquareTexture'
+    ReferencedTextures[4] = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Props/T_SanctumDun_IntroPensieve_N.T_SanctumDun_IntroPensieve_N'
+    ReferencedTextures[5] = Texture2D'/Game/RiggedObjects/MasterMaterials/BaseTexture/T_Blank_D.T_Blank_D'
+    ReferencedTextures[6] = Texture2D'/Game/VFX/MasterMaterials/BaseTextures/T_Blank_SRO_MSK.T_Blank_SRO_MSK'
+    ReferencedTextures[7] = Texture2D'/Game/VFX/MasterMaterials/BaseTextures/T_Blank_VN.T_Blank_VN'
+    ReferencedTextures[8] = Texture2D'/Game/VFX/MasterMaterials/BaseTextures/T_Blank_VP.T_Blank_VP'
+    ReferencedTextures[9] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_Butterflies_01_D.VFX_T_Butterflies_01_D'
+    ReferencedTextures[10] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Cloud_SoftWisps_D.VFX_T_Cloud_SoftWisps_D'
+    ReferencedTextures[11] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise07_D.VFX_T_Noise07_D'
+    ReferencedTextures[12] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise07_N.VFX_T_Noise07_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[26] =
+                {
+                    ParameterInfos[0] = { Name=Roughness }
+                    ParameterInfos[1] = { Name=PanSpeed (S) }
+                    ParameterInfos[2] = { Name=Specular_1 }
+                    ParameterInfos[3] = { Name=Metallic_1 }
+                    ParameterInfos[4] = { Name=Liquify }
+                    ParameterInfos[5] = { Name=FPS }
+                    ParameterInfos[6] = { Name=Sharpen (0-1) (S)_1 }
+                    ParameterInfos[7] = { Name=Metallic }
+                    ParameterInfos[8] = { Name=Vertical Oscillating Strength }
+                    ParameterInfos[9] = { Name=Specular }
+                    ParameterInfos[10] = { Name=Intensity (S) }
+                    ParameterInfos[11] = { Name=AnimPositionOffset }
+                    ParameterInfos[12] = { Name=Erosion Alpha (S) }
+                    ParameterInfos[13] = { Name=TexSize }
+                    ParameterInfos[14] = { Name=Vertical Oscillating Frequency }
+                    ParameterInfos[15] = { Name=Roughness_1 }
+                    ParameterInfos[16] = { Name=Bounding Min }
+                    ParameterInfos[17] = { Name=Opacity Amount }
+                    ParameterInfos[18] = { Name=Bounding Max }
+                    ParameterInfos[19] = { Name=Subsurface Color Brightness }
+                    ParameterInfos[20] = { Name=Number Of Frames }
+                    ParameterInfos[21] = { Name=Sharpen (0-1) (S) }
+                    ParameterInfos[22] = { Name=Speed }
+                    ParameterInfos[23] = { Name=BaseColor Scale }
+                    ParameterInfos[24] = { Name=Random Anim Offset }
+                    ParameterInfos[25] = { Name=B }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[4] =
+                {
+                    ParameterInfos[0] = { Name=Tint }
+                    ParameterInfos[1] = { Name=PanDirection3D (V3) }
+                    ParameterInfos[2] = { Name=LiquifyColor }
+                    ParameterInfos[3] = { Name=Emissive Color }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[8] =
+                {
+                    ParameterInfos[0] = { Name=Position Texture }
+                    ParameterInfos[1] = { Name=Surface Normal Map }
+                    ParameterInfos[2] = { Name=SSS }
+                    ParameterInfos[3] = { Name=Normal Map }
+                    ParameterInfos[4] = { Name=Diffuse Map }
+                    ParameterInfos[5] = { Name=Colour Map }
+                    ParameterInfos[6] = { Name=SROA or MRO }
+                    ParameterInfos[7] = { Name=Emissive Map }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[26] =
+        {
+            ScalarValues[0] = 0
+            ScalarValues[1] = 10
+            ScalarValues[2] = 1
+            ScalarValues[3] = 1
+            ScalarValues[4] = 0.777777
+            ScalarValues[5] = 20
+            ScalarValues[6] = 0
+            ScalarValues[7] = 0
+            ScalarValues[8] = 70
+            ScalarValues[9] = 0
+            ScalarValues[10] = 1
+            ScalarValues[11] = 0
+            ScalarValues[12] = 1
+            ScalarValues[13] = 55.6132
+            ScalarValues[14] = 0.8
+            ScalarValues[15] = 0.207936
+            ScalarValues[16] = 0
+            ScalarValues[17] = 1
+            ScalarValues[18] = 1
+            ScalarValues[19] = 1
+            ScalarValues[20] = 239
+            ScalarValues[21] = 1.51379
+            ScalarValues[22] = 1
+            ScalarValues[23] = 1
+            ScalarValues[24] = 10
+            ScalarValues[25] = 4.71833
+        }
+        VectorValues[4] =
+        {
+            VectorValues[0] = { R=1, G=1, B=1, A=0 }
+            VectorValues[1] = { R=0.139683, G=0.139683, B=1.00954, A=0 }
+            VectorValues[2] = { R=1, G=1, B=1, A=1 }
+            VectorValues[3] = { R=1, G=1, B=1, A=1 }
+        }
+        TextureValues[8] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/MasterMaterials/BaseTextures/T_Blank_VP.T_Blank_VP'
+            TextureValues[1] = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Props/T_SanctumDun_IntroPensieve_N.T_SanctumDun_IntroPensieve_N'
+            TextureValues[2] = Texture2D'/Game/RiggedObjects/MasterMaterials/BaseTexture/T_Blank_D.T_Blank_D'
+            TextureValues[3] = Texture2D'/Game/VFX/MasterMaterials/BaseTextures/T_Blank_VN.T_Blank_VN'
+            TextureValues[4] = Texture2D'/Engine/EngineResources/WhiteSquareTexture.WhiteSquareTexture'
+            TextureValues[5] = Texture2D'/Engine/EngineResources/WhiteSquareTexture.WhiteSquareTexture'
+            TextureValues[6] = Texture2D'/Game/VFX/MasterMaterials/BaseTextures/T_Blank_SRO_MSK.T_Blank_SRO_MSK'
+            TextureValues[7] = Texture2D'/Engine/EngineResources/WhiteSquareTexture.WhiteSquareTexture'
+        }
+    }
+    ReferencedTextures[14] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/MasterMaterials/BaseTextures/T_Blank_SRO_MSK.T_Blank_SRO_MSK'
+        ReferencedTextures[1] = Texture2D'/Engine/EngineResources/WhiteSquareTexture.WhiteSquareTexture'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/MasterMaterials/BaseTextures/T_Blank_VP.T_Blank_VP'
+        ReferencedTextures[4] = Texture2D'/Game/VFX/MasterMaterials/BaseTextures/T_Blank_VN.T_Blank_VN'
+        ReferencedTextures[5] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_Butterflies_01_D.VFX_T_Butterflies_01_D'
+        ReferencedTextures[6] = Texture2D'/Game/RiggedObjects/MasterMaterials/BaseTexture/T_Blank_D.T_Blank_D'
+        ReferencedTextures[7] = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Props/T_SanctumDun_IntroPensieve_N.T_SanctumDun_IntroPensieve_N'
+        ReferencedTextures[8] = Texture2D'/Engine/EngineMaterials/BaseFlattenNormalMap.BaseFlattenNormalMap'
+        ReferencedTextures[9] = Texture2D'/Engine/EngineMaterials/DefaultDiffuse.DefaultDiffuse'
+        ReferencedTextures[10] = Texture2D'/Engine/EngineMaterials/DefaultNormal_Uncompressed.DefaultNormal_Uncompressed'
+        ReferencedTextures[11] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise07_N.VFX_T_Noise07_N'
+        ReferencedTextures[12] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise07_D.VFX_T_Noise07_D'
+        ReferencedTextures[13] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Cloud_SoftWisps_D.VFX_T_Cloud_SoftWisps_D'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[8] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/MasterMaterials/BaseTextures/T_Blank_VP.T_Blank_VP'
+        Name = Position Texture
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Props/T_SanctumDun_IntroPensieve_N.T_SanctumDun_IntroPensieve_N'
+        Name = Surface Normal Map
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/RiggedObjects/MasterMaterials/BaseTexture/T_Blank_D.T_Blank_D'
+        Name = SSS
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/VFX/MasterMaterials/BaseTextures/T_Blank_VN.T_Blank_VN'
+        Name = Normal Map
+        Group = None
+    }
+    CollectedTextureParameters[4] =
+    {
+        Texture = Texture2D'/Engine/EngineResources/WhiteSquareTexture.WhiteSquareTexture'
+        Name = Diffuse Map
+        Group = None
+    }
+    CollectedTextureParameters[5] =
+    {
+        Texture = Texture2D'/Engine/EngineResources/WhiteSquareTexture.WhiteSquareTexture'
+        Name = Colour Map
+        Group = None
+    }
+    CollectedTextureParameters[6] =
+    {
+        Texture = Texture2D'/Game/VFX/MasterMaterials/BaseTextures/T_Blank_SRO_MSK.T_Blank_SRO_MSK'
+        Name = SROA or MRO
+        Group = None
+    }
+    CollectedTextureParameters[7] =
+    {
+        Texture = Texture2D'/Engine/EngineResources/WhiteSquareTexture.WhiteSquareTexture'
+        Name = Emissive Map
+        Group = None
+    }
+}
+CollectedScalarParameters[26] =
+{
+    CollectedScalarParameters[0] = { Value=0, Name=Roughness, Group=None }
+    CollectedScalarParameters[1] = { Value=10, Name=PanSpeed (S), Group=None }
+    CollectedScalarParameters[2] = { Value=1, Name=Specular_1, Group=None }
+    CollectedScalarParameters[3] = { Value=1, Name=Metallic_1, Group=None }
+    CollectedScalarParameters[4] = { Value=0.777777, Name=Liquify, Group=None }
+    CollectedScalarParameters[5] = { Value=20, Name=FPS, Group=None }
+    CollectedScalarParameters[6] = { Value=0, Name=Sharpen (0-1) (S)_1, Group=None }
+    CollectedScalarParameters[7] = { Value=0, Name=Metallic, Group=None }
+    CollectedScalarParameters[8] =
+    {
+        Value = 70
+        Name = Vertical Oscillating Strength
+        Group = None
+    }
+    CollectedScalarParameters[9] = { Value=0, Name=Specular, Group=None }
+    CollectedScalarParameters[10] = { Value=1, Name=Intensity (S), Group=None }
+    CollectedScalarParameters[11] = { Value=0, Name=AnimPositionOffset, Group=None }
+    CollectedScalarParameters[12] = { Value=1, Name=Erosion Alpha (S), Group=None }
+    CollectedScalarParameters[13] = { Value=55.6132, Name=TexSize, Group=None }
+    CollectedScalarParameters[14] =
+    {
+        Value = 0.8
+        Name = Vertical Oscillating Frequency
+        Group = None
+    }
+    CollectedScalarParameters[15] = { Value=0.207936, Name=Roughness_1, Group=None }
+    CollectedScalarParameters[16] = { Value=0, Name=Bounding Min, Group=None }
+    CollectedScalarParameters[17] = { Value=1, Name=Opacity Amount, Group=None }
+    CollectedScalarParameters[18] = { Value=1, Name=Bounding Max, Group=None }
+    CollectedScalarParameters[19] =
+    {
+        Value = 1
+        Name = Subsurface Color Brightness
+        Group = None
+    }
+    CollectedScalarParameters[20] = { Value=239, Name=Number Of Frames, Group=None }
+    CollectedScalarParameters[21] =
+    {
+        Value = 1.51379
+        Name = Sharpen (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[22] = { Value=1, Name=Speed, Group=None }
+    CollectedScalarParameters[23] = { Value=1, Name=BaseColor Scale, Group=None }
+    CollectedScalarParameters[24] = { Value=10, Name=Random Anim Offset, Group=None }
+    CollectedScalarParameters[25] = { Value=4.71833, Name=B, Group=None }
+}
+CollectedVectorParameters[4] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=1, G=1, B=1, A=0 }
+        Name = Tint
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0.139683, G=0.139683, B=1.00954, A=0 }
+        Name = PanDirection3D (V3)
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=1, G=1, B=1, A=1 }
+        Name = LiquifyColor
+        Group = None
+    }
+    CollectedVectorParameters[3] =
+    {
+        Value = { R=1, G=1, B=1, A=1 }
+        Name = Emissive Color
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

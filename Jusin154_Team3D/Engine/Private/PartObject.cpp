@@ -62,7 +62,6 @@ _vector CPartObject::Get_WorldPostion()
     return m_pOwner->Get_WorldPostion();
 }
 
-
 void CPartObject::Free()
 {
     __super::Free();

@@ -1,0 +1,124 @@
+Parent = Material3'/Game/VFX/MasterMaterials/Particles/VFX_MM_BasicMRO_Masked.VFX_MM_BasicMRO_Masked'
+ScalarParameterValues[5] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=Emissive Brightness }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[1] =
+    {
+        ParameterInfo = { Name=Emissive Contrast }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[2] =
+    {
+        ParameterInfo = { Name=Columns }
+        ParameterValue = 3
+        ParameterName = None
+    }
+    ScalarParameterValues[3] =
+    {
+        ParameterInfo = { Name=Rows }
+        ParameterValue = 3
+        ParameterName = None
+    }
+    ScalarParameterValues[4] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[4] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=Emissive Map }
+        ParameterValue = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+        ParameterName = None
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=Diffuse Map }
+        ParameterValue = Texture2D'/Game/VFX/Textures/T_FX_Paper_D.T_FX_Paper_D'
+        ParameterName = None
+    }
+    TextureParameterValues[2] =
+    {
+        ParameterInfo = { Name=MRO Map }
+        ParameterValue = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/T_Base011_MRO.T_Base011_MRO'
+        ParameterName = None
+    }
+    TextureParameterValues[3] =
+    {
+        ParameterInfo = { Name=Normal Map }
+        ParameterValue = Texture2D'/Game/VFX/Textures/TEST/T_VolcanicAshall_N.T_VolcanicAshall_N'
+        ParameterName = None
+    }
+}
+VectorParameterValues[1] =
+{
+    VectorParameterValues[0] =
+    {
+        ParameterInfo = { Name=Emissive Color }
+        ParameterValue = { R=0.01, G=0.01, B=0.01, A=1 }
+        ParameterName = None
+    }
+}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Masked (1)
+    bOverride_TwoSided = true
+    TwoSided = true
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[1] =
+    {
+        StaticSwitchParameters[0] =
+        {
+            Value = true
+            ParameterInfo = { Name=Use Emissive }
+            bOverride = true
+        }
+    }
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[3] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 0.328125
+        UVChannelIndex = 0
+        TextureName = T_Base011_MRO
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 0.328125
+        UVChannelIndex = 0
+        TextureName = T_FX_Paper_D
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 0.328125
+        UVChannelIndex = 0
+        TextureName = T_VolcanicAshall_N
+    }
+}

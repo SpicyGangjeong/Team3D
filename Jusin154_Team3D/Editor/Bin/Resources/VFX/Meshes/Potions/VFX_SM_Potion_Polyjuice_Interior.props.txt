@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/Gameplay/InventoryObjects/Potions/Materials/MI_Potion_Polyjuice.MI_Potion_Polyjuice'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/Gameplay/InventoryObjects/Potions/Materials/MI_Potion_Polyjuice.MI_Potion_Polyjuice'
+        MaterialSlotName = MI_Potion_Polyjuice
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 38.0373, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-0.0609021, Y=-0.0360208, Z=11.8037 }
+    BoxExtent = { X=4.01979, Y=4.0198, Z=10.5981 }
+    SphereRadius = 11.9641
+}

@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Niagara/AncientMagic/ControlPoint/VFX_MI_ConjuredDragonControlPoint01GooSwirl01.VFX_MI_ConjuredDragonControlPoint01GooSwirl01'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Niagara/AncientMagic/ControlPoint/VFX_MI_ConjuredDragonControlPoint01GooSwirl01.VFX_MI_ConjuredDragonControlPoint01GooSwirl01'
+        MaterialSlotName = ConjuredDragonControlPoint01GooSwirl04
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 464.449, 3.66735, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-191.534, Y=-45.5239, Z=-298.953 }
+    BoxExtent = { X=317.478, Y=176.786, Z=318.418 }
+    SphereRadius = 449.079
+}

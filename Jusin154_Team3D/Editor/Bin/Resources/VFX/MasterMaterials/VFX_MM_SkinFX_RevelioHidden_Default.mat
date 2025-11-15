@@ -1,0 +1,6 @@
+Diffuse=T_DefaultGrey_D
+Normal=base_flat_n
+Other[0]=DefaultDiffuse
+Other[1]=Good64x64TilingNoiseHighFreq
+Other[2]=VFX_T_Noise05_D
+Other[3]=VFX_T_NoiseCaustics_Chromatic_D

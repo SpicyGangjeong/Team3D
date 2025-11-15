@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Engine_Define.h"
 
@@ -15,7 +15,7 @@ public:
 	_uint AddRef();
 	_uint Release();
 
-private:
+protected:
 	_uint		m_iRefCnt = {};
 
 public:

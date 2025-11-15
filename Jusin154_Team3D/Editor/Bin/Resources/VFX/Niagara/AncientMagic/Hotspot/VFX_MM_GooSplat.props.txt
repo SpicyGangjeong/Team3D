@@ -1,0 +1,147 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[1] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Niagara/AncientMagic/Hotspot/VFX_T_SplatMeshA_N.VFX_T_SplatMeshA_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[10] =
+                {
+                    ParameterInfos[0] = { Name=Roughness }
+                    ParameterInfos[1] = { Name=Exp }
+                    ParameterInfos[2] = { Name=Metallic }
+                    ParameterInfos[3] = { Name=Radius }
+                    ParameterInfos[4] = { Name=Intensity (S) }
+                    ParameterInfos[5] = { Name=Smear }
+                    ParameterInfos[6] = { Name=Hardness }
+                    ParameterInfos[7] = { Name=Spread }
+                    ParameterInfos[8] = { Name=Power (S) }
+                    ParameterInfos[9] = { Name=Bloat }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[4] =
+                {
+                    ParameterInfos[0] = { Name=Base Color }
+                    ParameterInfos[1] = { Name=EmissiveColor }
+                    ParameterInfos[2] = { Name=Center }
+                    ParameterInfos[3] = { Name=Subsurface Color }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=NormalMap }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[10] =
+        {
+            ScalarValues[0] = 0.2
+            ScalarValues[1] = 2.14768
+            ScalarValues[2] = 0.95
+            ScalarValues[3] = 60.2384
+            ScalarValues[4] = 4
+            ScalarValues[5] = 0.558731
+            ScalarValues[6] = 0
+            ScalarValues[7] = 1
+            ScalarValues[8] = 2
+            ScalarValues[9] = 2
+        }
+        VectorValues[4] =
+        {
+            VectorValues[0] = { R=0.284436, G=0.387559, B=0.647569, A=0 }
+            VectorValues[1] = { R=0, G=0, B=0, A=1 }
+            VectorValues[2] = { R=0, G=0, B=0, A=1 }
+            VectorValues[3] = { R=0.00700777, G=0.060532, B=0.161458, A=0 }
+        }
+        TextureValues[1] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Niagara/AncientMagic/Hotspot/VFX_T_SplatMeshA_N.VFX_T_SplatMeshA_N'
+        }
+    }
+    ReferencedTextures[1] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Niagara/AncientMagic/Hotspot/VFX_T_SplatMeshA_N.VFX_T_SplatMeshA_N'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[1] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Niagara/AncientMagic/Hotspot/VFX_T_SplatMeshA_N.VFX_T_SplatMeshA_N'
+        Name = NormalMap
+        Group = None
+    }
+}
+CollectedScalarParameters[10] =
+{
+    CollectedScalarParameters[0] = { Value=0.2, Name=Roughness, Group=None }
+    CollectedScalarParameters[1] = { Value=2.14768, Name=Exp, Group=None }
+    CollectedScalarParameters[2] = { Value=0.95, Name=Metallic, Group=None }
+    CollectedScalarParameters[3] = { Value=60.2384, Name=Radius, Group=None }
+    CollectedScalarParameters[4] = { Value=4, Name=Intensity (S), Group=None }
+    CollectedScalarParameters[5] = { Value=0.558731, Name=Smear, Group=None }
+    CollectedScalarParameters[6] = { Value=0, Name=Hardness, Group=None }
+    CollectedScalarParameters[7] = { Value=1, Name=Spread, Group=None }
+    CollectedScalarParameters[8] = { Value=2, Name=Power (S), Group=None }
+    CollectedScalarParameters[9] = { Value=2, Name=Bloat, Group=None }
+}
+CollectedVectorParameters[4] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0.284436, G=0.387559, B=0.647569, A=0 }
+        Name = Base Color
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = EmissiveColor
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = Center
+        Group = None
+    }
+    CollectedVectorParameters[3] =
+    {
+        Value = { R=0.00700777, G=0.060532, B=0.161458, A=0 }
+        Name = Subsurface Color
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_SplatMeshA_N
+    }
+}

@@ -1,0 +1,10 @@
+Diffuse=T_White_4x4_D
+Normal=VFX_T_Char_01_N
+Emissive=VFX_T_Crucio_Decal_Emiss_D
+Other[0]=VFX_T_Crucio_Decal_Diff_D
+Other[1]=VFX_T_Char_01_D
+Other[2]=VFX_T_Marble_01R_D
+Other[3]=VFX_T_Noise_Soft_D
+Other[4]=VFX_T_NoiseGreypack01_D
+Other[5]=VFX_T_ScorchMark_01_D
+Other[6]=VFX_T_ScorchMark_01b_D

@@ -1,0 +1,147 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[2] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseCaustics02_D.VFX_T_NoiseCaustics02_D'
+    ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[18] =
+                {
+                    ParameterInfos[0] = { Name=Input Low (S) }
+                    ParameterInfos[1] = { Name=Tiling U (S)_1 }
+                    ParameterInfos[2] = { Name=A }
+                    ParameterInfos[3] = { Name=Alpha }
+                    ParameterInfos[4] = { Name=ModUV Strength (S) }
+                    ParameterInfos[5] = { Name=Speed U (S)_1 }
+                    ParameterInfos[6] = { Name=Hardness }
+                    ParameterInfos[7] = { Name=Speed V (S)_1 }
+                    ParameterInfos[8] = { Name=FadeDistance }
+                    ParameterInfos[9] = { Name=Speed V (S) }
+                    ParameterInfos[10] = { Name=OffsetStrength (S) }
+                    ParameterInfos[11] = { Name=Target Height (S) }
+                    ParameterInfos[12] = { Name=Input High (S) }
+                    ParameterInfos[13] = { Name=Speed U (S) }
+                    ParameterInfos[14] = { Name=Target Low (S) }
+                    ParameterInfos[15] = { Name=Tiling U (S) }
+                    ParameterInfos[16] = { Name=ZoomAroundCenter }
+                    ParameterInfos[17] = { Name=B }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Param }
+                }
+            }
+            Entries[2] = { ParameterInfos[0]={} }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[18] =
+        {
+            ScalarValues[0] = 0
+            ScalarValues[1] = 1.51531
+            ScalarValues[2] = 0
+            ScalarValues[3] = 0.933333
+            ScalarValues[4] = 0.020952
+            ScalarValues[5] = -0.07619
+            ScalarValues[6] = 0
+            ScalarValues[7] = -0.104762
+            ScalarValues[8] = 0
+            ScalarValues[9] = 0.009524
+            ScalarValues[10] = 0.190476
+            ScalarValues[11] = 21.9048
+            ScalarValues[12] = 1
+            ScalarValues[13] = 0.07619
+            ScalarValues[14] = 0
+            ScalarValues[15] = 1
+            ScalarValues[16] = 3
+            ScalarValues[17] = 0
+        }
+        VectorValues[1] =
+        {
+            VectorValues[0] = { R=3.16667, G=3.26208, B=4, A=1 }
+        }
+        TextureValues[0] = {}
+    }
+    ReferencedTextures[3] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseCaustics02_D.VFX_T_NoiseCaustics02_D'
+        ReferencedTextures[1] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+    }
+}
+BlendMode = BLEND_Additive (3)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[0] = {}
+CollectedScalarParameters[18] =
+{
+    CollectedScalarParameters[0] = { Value=0, Name=Input Low (S), Group=None }
+    CollectedScalarParameters[1] = { Value=1.51531, Name=Tiling U (S)_1, Group=None }
+    CollectedScalarParameters[2] = { Value=0, Name=A, Group=None }
+    CollectedScalarParameters[3] = { Value=0.933333, Name=Alpha, Group=None }
+    CollectedScalarParameters[4] =
+    {
+        Value = 0.020952
+        Name = ModUV Strength (S)
+        Group = None
+    }
+    CollectedScalarParameters[5] = { Value=-0.07619, Name=Speed U (S)_1, Group=None }
+    CollectedScalarParameters[6] = { Value=0, Name=Hardness, Group=None }
+    CollectedScalarParameters[7] = { Value=-0.104762, Name=Speed V (S)_1, Group=None }
+    CollectedScalarParameters[8] = { Value=0, Name=FadeDistance, Group=None }
+    CollectedScalarParameters[9] = { Value=0.009524, Name=Speed V (S), Group=None }
+    CollectedScalarParameters[10] =
+    {
+        Value = 0.190476
+        Name = OffsetStrength (S)
+        Group = None
+    }
+    CollectedScalarParameters[11] =
+    {
+        Value = 21.9048
+        Name = Target Height (S)
+        Group = None
+    }
+    CollectedScalarParameters[12] = { Value=1, Name=Input High (S), Group=None }
+    CollectedScalarParameters[13] = { Value=0.07619, Name=Speed U (S), Group=None }
+    CollectedScalarParameters[14] = { Value=0, Name=Target Low (S), Group=None }
+    CollectedScalarParameters[15] = { Value=1, Name=Tiling U (S), Group=None }
+    CollectedScalarParameters[16] = { Value=3, Name=ZoomAroundCenter, Group=None }
+    CollectedScalarParameters[17] = { Value=0, Name=B, Group=None }
+}
+CollectedVectorParameters[1] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=3.16667, G=3.26208, B=4, A=1 }
+        Name = Param
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1.51563
+        UVChannelIndex = 0
+        TextureName = VFX_T_RibbonOffset_N
+    }
+}

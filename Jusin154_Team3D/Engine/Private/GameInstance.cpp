@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "GameInstance.h"
 #include "Prototype_Manager.h"
 #include "GameObject_Manager.h"
@@ -13,6 +13,9 @@
 #include "RenderTarget_Manager.h"
 #include "Key_Manager.h"
 #include "Mouse_Manager.h"
+#include "Collider_Manager.h"
+#include "Picking.h"
+#include "PhysX_Manager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -80,6 +83,17 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 	if (nullptr == m_pShadow) {
 		return E_FAIL;
 	}
+	m_pPicking = CPicking::Create(*ppDevice, *ppContext, EngineDesc.hWnd, EngineDesc.iWinSizeX, EngineDesc.iWinSizeY);
+	if (nullptr == m_pPicking)
+		return E_FAIL;
+	m_pCollider_Manager = CCollider_Manager::Create(*ppDevice, *ppContext, EngineDesc.iNumCollidableGroup);
+	if (nullptr == m_pCollider_Manager) {
+		return E_FAIL;
+	}
+	m_pPhysX_Manager = CPhysX_Manager::Create(*ppDevice, *ppContext);
+	if (nullptr == m_pPhysX_Manager) {
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -90,17 +104,19 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 	m_pMouse_Manager->Update();
 	//m_pSound_Manager->Update();
 
+	//m_pPicking->Update();
+
 	m_pObject_Manager->Priority_Update(fTimeDelta);
 
 	m_pPipeLine->Update();
 
 	m_pObject_Manager->Update(fTimeDelta);
 
-	m_pRenderer->Refresh_Renderer();
 	m_pObject_Manager->Late_Update(fTimeDelta);
 
 	m_pLevel_Manager->Update(fTimeDelta);
 	m_pObject_Manager->Clear_DeadObj();
+	m_pPhysX_Manager->Update(fTimeDelta);
 	//m_pObstacle_Manager->Refresh_Region();
 }
 
@@ -123,7 +139,8 @@ void CGameInstance::Clear_Resources(_uint iLevelIndex)
 	m_pPrototype_Manager->Clear_Resource(iLevelIndex);
 	m_pCamera_Manager->Clear_Cameras(iLevelIndex);
 	m_pObject_Manager->Clear(iLevelIndex);
-	m_pLight_Manager->Change_Level(iLevelIndex);
+	m_pLight_Manager->Light_Clear(iLevelIndex);
+
 }
 
 _float CGameInstance::Random_Normal()
@@ -139,6 +156,56 @@ _float CGameInstance::Random_Float(_float fMin, _float fMax)
 _int CGameInstance::Random_Int(_int iMin, _int iMax)
 {
 	return iMin + (_int)(Random_Normal() * (iMax - iMin));
+}
+
+void CGameInstance::BillBoard(CTransform* pTransform)
+{
+	_matrix ScaleMatrix = {};
+
+	_matrix BillBoardMatrix = Get_Transform_Matrix(D3DTS::VIEW_INV);
+
+	_float3 vScale = pTransform->Get_Scale();
+
+	_vector vPosition = pTransform->Get_State(STATE::POSITION);
+
+	_matrix RotationMatrix = XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(180.f));
+
+	ScaleMatrix = XMMatrixIdentity() * XMMatrixScaling(vScale.x, vScale.y, vScale.z);
+
+	BillBoardMatrix.r[3] = vPosition;
+
+	pTransform->Set_WorldMatrix(ScaleMatrix * RotationMatrix * BillBoardMatrix);
+
+
+}
+
+
+void CGameInstance::Save_ModelFilePath(const _char* FilePath)
+{
+	m_FilePaths.push_back(FilePath);
+}
+
+const _char* CGameInstance::Load_ModelFilePath(_uint iIndex)
+{
+	return	m_FilePaths[iIndex];
+}
+
+const _char* CGameInstance::Load_BinaryModelFilePath(_uint iIndex)
+{
+	auto iter = m_sModelMap.begin();
+	std::advance(iter, iIndex);
+	return iter->first;
+}
+
+size_t CGameInstance::BinaryModelFilePathCount()
+{
+	return m_sModelMap.size();
+}
+
+
+size_t CGameInstance::ModelFilePathCount()
+{
+	return m_FilePaths.size();
 }
 
 void CGameInstance::Render_Begin(const _float4* pClearColor)
@@ -225,7 +292,7 @@ void CGameInstance::Present_TimeCost() const
 		GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
 		GUI::Text("Timer_Occupancy %d", int(m_fTimer_Present / fTotal * 100.f));
 	}
-
+	GUI::Text("GameInstance RefCNT : %d", m_iRefCnt);
 	static float values[60] = {};
 	static int values_offset = 0;
 	static double refresh_time = 0.0;
@@ -247,23 +314,23 @@ void CGameInstance::Present_TimeCost() const
 
 		float minY = 0.f;
 		float maxY = 0.025f;
-		//float threshold = 166.f / 250.f; // ¾à 0.664f
+		//float threshold = 166.f / 250.f; // ì•½ 0.664f
 		ImVec2 graph_size(0, 80.0f);
 		ImVec2 start_pos = GUI::GetCursorScreenPos();
 
 		GUI::PlotLines("##FrameCount", values, IM_ARRAYSIZE(values), values_offset,
 			overlay, minY, maxY, ImVec2(0, 80.0f));
 
-		// PlotLinesÀÇ ½ÇÁ¦ Ç¥½Ã ¿µ¿ª °¡Á®¿À±â
+		// PlotLinesì˜ ì‹¤ì œ í‘œì‹œ ì˜ì—­ ê°€ì ¸ì˜¤ê¸°
 		ImVec2 plot_min = GUI::GetItemRectMin();
 		ImVec2 plot_max = GUI::GetItemRectMax();
 
-		// ±âÁØ¼± (60FPS)
-		float threshold = 1.0f / 60.0f; // 0.0166ÃÊ
+		// ê¸°ì¤€ì„  (60FPS)
+		float threshold = 1.0f / 60.0f; // 0.0166ì´ˆ
 		float normalized = (threshold - minY) / (maxY - minY);
 		float y = plot_max.y - normalized * (plot_max.y - plot_min.y);
 
-		// »¡°£ ¼± ±×¸®±â
+		// ë¹¨ê°„ ì„  ê·¸ë¦¬ê¸°
 		ImDrawList* draw_list = GUI::GetWindowDrawList();
 		draw_list->AddLine(
 			ImVec2(plot_min.x, y),
@@ -327,14 +394,9 @@ void CGameInstance::Clear_Objects_With_Layers(_uint iLevelIndex)
 	m_pObject_Manager->Clear(iLevelIndex);
 }
 
-void CGameInstance::Refresh_Renderer()
+HRESULT CGameInstance::Add_RenderGroup(RENDER eRenderGroup, CGameObject* pRenderObject)
 {
-	m_pRenderer->Refresh_Renderer();
-}
-
-HRESULT CGameInstance::Add_RenderGroup(RENDER eRenderGroup, CGameObject* pRenderObject, _float4& vPos, _float fCullRadius)
-{
-	return m_pRenderer->Add_RenderGroup(eRenderGroup, pRenderObject, vPos, fCullRadius);
+	return m_pRenderer->Add_RenderGroup(eRenderGroup, pRenderObject);
 }
 
 void CGameInstance::Set_Transform(D3DTS eState, _fmatrix TransformStateMatrix)
@@ -362,18 +424,53 @@ const _vector CGameInstance::Get_CamXMPosition()
 	return m_pPipeLine->Get_CamXMPosition();
 }
 
-HRESULT CGameInstance::On_Light(_uint iLevel, const _wstring& wstrLightKey, const LIGHT_DESC& LightDesc, CLight** ppOut)
+void CGameInstance::Transform_Frustum_ToLocalSpace(_fmatrix WorldMatrixInverse)
 {
-	return m_pLight_Manager->On_Light(iLevel, wstrLightKey, LightDesc, ppOut);
-}
-HRESULT CGameInstance::Off_Light(_uint iLevel, const _wstring& wstrLightKey)
-{
-	return m_pLight_Manager->Off_Light(iLevel, wstrLightKey);
+	m_pPipeLine->Transform_Frustum_ToLocalSpace(WorldMatrixInverse);
 }
 
-HRESULT CGameInstance::Render_Lights(class CShader* pShader, class CVIBuffer* pVIBuffer)
+_bool CGameInstance::isIn_WorldFrustum(_fvector vWorldPos, _float fRadius)
 {
-	return m_pLight_Manager->Render_Lights(pShader, pVIBuffer);
+	return m_pPipeLine->isIn_WorldFrustum(vWorldPos, fRadius);
+}
+
+_bool CGameInstance::isIn_LocalFrustum(_fvector vLocalPos, _float fRadius)
+{
+	return m_pPipeLine->isIn_LocalFrustum(vLocalPos, fRadius);
+}
+
+void CGameInstance::Add_Light(_uint _iCurrentLevel, CLight* _pLight)
+{
+	m_pLight_Manager->Add_Light(_iCurrentLevel, _pLight);
+}
+
+void CGameInstance::Delete_Light(_uint _iCurrentLevel, CLight* _pLight)
+{
+	m_pLight_Manager->Delete_Light(_iCurrentLevel, _pLight);
+}
+
+const LIGHT_DESC* CGameInstance::Get_Light_Info(_uint _iCurrentLevel, _uint _iLightIndex)
+{
+	return m_pLight_Manager->Get_Light_Info(_iCurrentLevel, _iLightIndex);
+}
+
+HRESULT CGameInstance::Render_Lights(_uint _iCurrentLevel, CShader* pShader, CVIBuffer* pVIBuffer)
+{
+	return m_pLight_Manager->Render_Lights(_iCurrentLevel, pShader, pVIBuffer);
+}
+
+
+HRESULT CGameInstance::Add_ColliderGroup(_uint iColliderGroup, class CCollider* pBounding)
+{
+	return m_pCollider_Manager->Add_ColliderGroup(iColliderGroup, pBounding);
+}
+void	CGameInstance::Refresh_Collider_Manager()
+{
+	return m_pCollider_Manager->Refresh_Collider_Manager();
+}
+void	CGameInstance::Collide(_uint iCollideGroupA, _uint iCollideGroupB)
+{
+	return m_pCollider_Manager->Collide(iCollideGroupA, iCollideGroupB);
 }
 
 
@@ -392,6 +489,11 @@ HRESULT CGameInstance::Begin_MRT(const _wstring& strMRTTag, ID3D11DepthStencilVi
 	return m_pRenderTarget_Manager->Begin_MRT(strMRTTag, pDSV);
 }
 
+HRESULT CGameInstance::Begin_MRT_Include_BackBuffer(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV)
+{
+	return m_pRenderTarget_Manager->Begin_MRT_Include_BackBuffer(strMRTTag, pDSV);
+}
+
 HRESULT CGameInstance::End_MRT()
 {
 	return m_pRenderTarget_Manager->End_MRT();
@@ -407,14 +509,14 @@ HRESULT CGameInstance::Copy_RenderTarget(const _wstring& strTargetTag, ID3D11Tex
 	return m_pRenderTarget_Manager->Copy_RenderTarget(strTargetTag, pTexture2D);
 }
 
-HRESULT CGameInstance::Ready_RenderTarget_Debug(const _wstring& strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY)
+void CGameInstance::RenderTarget_Debuger()
 {
-	return m_pRenderTarget_Manager->Ready_RenderTarget_Debug(strTargetTag, fX, fY, fSizeX, fSizeY);
+	m_pRenderTarget_Manager->RenderTarget_Debuger();
 }
 
-HRESULT CGameInstance::Render_RenderTarget_Debug(const _wstring& strMRTTag, CShader* pShader, CVIBuffer_Rect* pVIBuffer)
+HRESULT CGameInstance::Render_RenderTarget_Debug(CShader* pShader, CVIBuffer_Rect* pVIBuffer)
 {
-	return m_pRenderTarget_Manager->Render_RenderTarget_Debug(strMRTTag, pShader, pVIBuffer);
+	return m_pRenderTarget_Manager->Render_RenderTarget_Debug(pShader, pVIBuffer);
 }
 HRESULT CGameInstance::Clear_Cameras(_uint iLevel)
 {
@@ -440,6 +542,10 @@ const _float* CGameInstance::Get_CurrentCameraFar()
 {
 	return m_pCamera_Manager->Get_CurrentCameraFar();
 }
+void CGameInstance::Force_CamPosition(_fvector vPos)
+{
+	return m_pCamera_Manager->Force_CamPosition(vPos);
+}
 HRESULT CGameInstance::Ready_Shadow_Light(const SHADOW_LIGHT_DESC& Desc)
 {
 	return m_pShadow->Ready_Shadow_Light(Desc);
@@ -456,6 +562,84 @@ const SHADOW_LIGHT_DESC* CGameInstance::Get_ShadowDesc()
 {
 	return m_pShadow->Get_ShadowDesc();
 }
+_bool CGameInstance::isPicking(_float3* pOut)
+{
+	return m_pPicking->isPicking(pOut);
+}
+#ifdef EDITOR_PROJECT
+_bool CGameInstance::SaveAssimpModel(const _char* filename)
+{
+	auto iter = m_ModelMap.find(filename);
+	return iter->second->SaveAssimpModel(filename);
+}
+#endif
+SaveModel* CGameInstance::Load_SaveModel(const _char* filePath)
+{
+	auto iter = m_sModelMap.find(filePath);
+	return &iter->second;
+}
+
+#pragma region PhysX_Manager
+PSX::PxMaterial* CGameInstance::Create_Material(_float3* vMatInfo)
+{
+	return m_pPhysX_Manager->Create_Material(vMatInfo);
+}
+
+void CGameInstance::RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh)
+{
+	return m_pPhysX_Manager->RegistTriMesh(pName, pPxTriMesh);
+}
+
+PSX::PxRigidDynamic* CGameInstance::Add_DynamicActor(CRigidBody_Dynamic& RigidBody)
+{
+	return m_pPhysX_Manager->Add_DynamicActor(RigidBody);
+}
+PSX::PxRigidStatic* CGameInstance::Add_StaticActor(CRigidBody_Static& RigidBody)
+{
+	return m_pPhysX_Manager->Add_StaticActor(RigidBody);
+}
+PSX::PxController* CGameInstance::Add_CapsuleController(PSX::PxCapsuleControllerDesc& Desc)
+{
+	return m_pPhysX_Manager->Add_CapsuleController(Desc);
+}
+PSX::PxController* CGameInstance::Add_BoxController(PSX::PxBoxControllerDesc& Desc)
+{
+	return m_pPhysX_Manager->Add_BoxController(Desc);
+}
+PSX::PxController* CGameInstance::Get_Controller(_uint iControllerIndex)
+{
+	return m_pPhysX_Manager->Get_Controller(iControllerIndex);
+}
+void CGameInstance::ReleaseController(_uint iControllerIndex)
+{
+	m_pPhysX_Manager->ReleaseController(iControllerIndex);
+}
+void CGameInstance::Attach_Actor(PSX::PxActor& Actor)
+{
+	m_pPhysX_Manager->Attach_Actor(Actor);
+}
+void CGameInstance::Detach_Actor(PSX::PxActor& Actor)
+{
+	m_pPhysX_Manager->Detach_Actor(Actor);
+}
+void CGameInstance::Release_Actor(PSX::PxActor& Actor)
+{
+	m_pPhysX_Manager->Detach_Actor(Actor);
+}
+HRESULT CGameInstance::ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix)
+{
+	return m_pPhysX_Manager->ConvertToTriMeshes(Meshes, pxTriMeshes, WorldMatrix);
+}
+HRESULT CGameInstance::SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes)
+{
+	return m_pPhysX_Manager->SaveTriMeshes(pPath, TriMeshes);
+}
+HRESULT CGameInstance::LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes)
+{
+	return m_pPhysX_Manager->LoadTriMeshes(pPath, TriMeshes);
+}
+#pragma endregion
+
 bool		CGameInstance::Key_Pressing(int _iKey)
 {
 	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
@@ -563,18 +747,21 @@ void CGameInstance::Release_Engine()
 {
 	DestroyInstance();
 
+	SAFE_RELEASE(m_pPicking);
+	SAFE_RELEASE(m_pCollider_Manager);
 	SAFE_RELEASE(m_pShadow);
 	SAFE_RELEASE(m_pCamera_Manager);
 	SAFE_RELEASE(m_pRenderTarget_Manager);
-	SAFE_RELEASE(m_pLight_Manager);
 	SAFE_RELEASE(m_pPipeLine);
 	SAFE_RELEASE(m_pKey_Manager);
 	SAFE_RELEASE(m_pMouse_Manager);
 	SAFE_RELEASE(m_pTimer_Manager);
 	SAFE_RELEASE(m_pRenderer);
 	SAFE_RELEASE(m_pObject_Manager);
+	SAFE_RELEASE(m_pPhysX_Manager);
 	SAFE_RELEASE(m_pLevel_Manager);
 	SAFE_RELEASE(m_pPrototype_Manager);
+	SAFE_RELEASE(m_pLight_Manager); // Light Managerï¿½ï¿½ m_pObject_Manager ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½ 
 	SAFE_RELEASE(m_pGraphic_Device);
 }
 

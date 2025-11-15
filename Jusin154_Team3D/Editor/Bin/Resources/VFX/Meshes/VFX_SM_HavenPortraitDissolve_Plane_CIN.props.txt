@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Cinematic/VFX_MI_PortraitDissolve_CIN01.VFX_MI_PortraitDissolve_CIN01'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/Cinematic/VFX_MI_PortraitDissolve_CIN01.VFX_MI_PortraitDissolve_CIN01'
+        MaterialSlotName = Base_01_Inst
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 510.419, 114.742, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-1.37405, Y=-31.6876, Z=252.959 }
+    BoxExtent = { X=162.35, Y=10, Z=255.09 }
+    SphereRadius = 301.243
+}

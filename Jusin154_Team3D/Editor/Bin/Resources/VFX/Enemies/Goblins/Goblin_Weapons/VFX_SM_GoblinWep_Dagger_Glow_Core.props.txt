@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Enemies/Goblins/Goblin_Weapons/VFX_MI_Goblin_Weapon_Core_Base.VFX_MI_Goblin_Weapon_Core_Base'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Enemies/Goblins/Goblin_Weapons/VFX_MI_Goblin_Weapon_Core_Base.VFX_MI_Goblin_Weapon_Core_Base'
+        MaterialSlotName = lambert2
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 37.2174, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=-0.331388, Z=8.92045 }
+    BoxExtent = { X=1.06492, Y=4.11065, Z=18.6145 }
+    SphereRadius = 19.0672
+}

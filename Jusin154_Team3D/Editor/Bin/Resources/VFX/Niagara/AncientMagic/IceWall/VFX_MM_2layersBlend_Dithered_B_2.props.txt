@@ -1,0 +1,636 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[14] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+    ReferencedTextures[1] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+    ReferencedTextures[2] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_MSK.base_white_MSK'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Niagara/AncientMagic/IceWall/VFX_T_AncMag_Icewall_01_MSK.VFX_T_AncMag_Icewall_01_MSK'
+    ReferencedTextures[4] = Texture2D'/Game/VFX/Niagara/AncientMagic/IceWall/VFX_T_AncMag_IceWall_H.VFX_T_AncMag_IceWall_H'
+    ReferencedTextures[5] = Texture2D'/Game/VFX/Niagara/AncientMagic/IceWall/VFX_T_AncMag_IceWall_N.VFX_T_AncMag_IceWall_N'
+    ReferencedTextures[6] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_AncMag_Icewall_Brick_H.VFX_T_AncMag_Icewall_Brick_H'
+    ReferencedTextures[7] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_Ice_D.VFX_T_Ice_D'
+    ReferencedTextures[8] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_Ice_R.VFX_T_Ice_R'
+    ReferencedTextures[9] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Cloud_SoftWisps_D.VFX_T_Cloud_SoftWisps_D'
+    ReferencedTextures[10] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise05_D.VFX_T_Noise05_D'
+    ReferencedTextures[11] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_LowFreq_E.VFX_T_Noise_LowFreq_E'
+    ReferencedTextures[12] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseTiled_1_D.VFX_T_NoiseTiled_1_D'
+    ReferencedTextures[13] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[90] =
+                {
+                    ParameterInfos[0] = { Name=Normal A Height }
+                    ParameterInfos[1] = { Name=Roughness Min }
+                    ParameterInfos[2] = { Name=Scale Tiling All }
+                    ParameterInfos[3] = { Name=Opacity B }
+                    ParameterInfos[4] = { Name=Exp }
+                    ParameterInfos[5] = { Name=Hardness (0-1) (S) }
+                    ParameterInfos[6] = { Name=ModUV Speed V (S) }
+                    ParameterInfos[7] = { Name=WipeIn }
+                    ParameterInfos[8] = { Name=TexA_Opacity }
+                    ParameterInfos[9] = { Name=Height }
+                    ParameterInfos[10] = { Name=HoleCoverage }
+                    ParameterInfos[11] = { Name=ModUV Swizzle (S) 2 }
+                    ParameterInfos[12] = { Name=Roughness_Exp }
+                    ParameterInfos[13] = { Name=Metalic adjuster }
+                    ParameterInfos[14] = { Name=HoleOpacity }
+                    ParameterInfos[15] = { Name=Desaturation }
+                    ParameterInfos[16] = { Name=IceA_Tiling }
+                    ParameterInfos[17] = { Name=ModUV Speed V (S) 2 }
+                    ParameterInfos[18] = { Name=Opacity Noise Tiling U }
+                    ParameterInfos[19] = { Name=Radius }
+                    ParameterInfos[20] = { Name=ModUV Tiling U (S) 2 }
+                    ParameterInfos[21] = { Name=Intensity (S) }
+                    ParameterInfos[22] = { Name=Opacity Noise Tiling V }
+                    ParameterInfos[23] = { Name=Coverage (0-1) (S)_1 }
+                    ParameterInfos[24] = { Name=B_2 }
+                    ParameterInfos[25] = { Name=Emissive Exp }
+                    ParameterInfos[26] = { Name=Diffuse Brightness B }
+                    ParameterInfos[27] = { Name=UV scale B }
+                    ParameterInfos[28] = { Name=ModUV Strength (S) }
+                    ParameterInfos[29] = { Name=Exp_3 }
+                    ParameterInfos[30] = { Name=Speed U (S)_1 }
+                    ParameterInfos[31] = { Name=Opacity Noise Strength }
+                    ParameterInfos[32] = { Name=Opacity Noise Speed V }
+                    ParameterInfos[33] = { Name=ModUV Speed U (S) }
+                    ParameterInfos[34] = { Name=Opacity Noise Speed U }
+                    ParameterInfos[35] = { Name=Offset U }
+                    ParameterInfos[36] = { Name=Speed V (S)_1 2 }
+                    ParameterInfos[37] = { Name=Hardness }
+                    ParameterInfos[38] = { Name=Speed V (S)_1 }
+                    ParameterInfos[39] = { Name=Speed U (S)_2 }
+                    ParameterInfos[40] = { Name=Hardness (0-1) (S)_1 }
+                    ParameterInfos[41] = { Name=Normal B Height }
+                    ParameterInfos[42] = { Name=Diffuse B Height Contrast }
+                    ParameterInfos[43] = { Name=Height 2 }
+                    ParameterInfos[44] = { Name=AO B }
+                    ParameterInfos[45] = { Name=B_4 }
+                    ParameterInfos[46] = { Name=IceA_Tiling 2 }
+                    ParameterInfos[47] = { Name=Offset V }
+                    ParameterInfos[48] = { Name=Normal Tiling V }
+                    ParameterInfos[49] = { Name=Speed V (S) }
+                    ParameterInfos[50] = { Name=IceCoverage }
+                    ParameterInfos[51] = { Name=Roughness A }
+                    ParameterInfos[52] = { Name=Sharpen Opacity Noise }
+                    ParameterInfos[53] = { Name=Met A }
+                    ParameterInfos[54] = { Name=Tiling All V }
+                    ParameterInfos[55] = { Name=ModUV Tiling U (S) }
+                    ParameterInfos[56] = { Name=ModUV Speed U (S) 2 }
+                    ParameterInfos[57] = { Name=Tiling All U }
+                    ParameterInfos[58] = { Name=ModUV Strength (S) 2 }
+                    ParameterInfos[59] = { Name=Diffuse Brightness A }
+                    ParameterInfos[60] = { Name=Ice Sharpen }
+                    ParameterInfos[61] = { Name=Speed V (S)_3 }
+                    ParameterInfos[62] = { Name=UV scale A }
+                    ParameterInfos[63] = { Name=Coverage (0-1) (S) }
+                    ParameterInfos[64] = { Name=Depth Ratio }
+                    ParameterInfos[65] = { Name=Roughness B }
+                    ParameterInfos[66] = { Name=Exp_2 }
+                    ParameterInfos[67] = { Name=IceOpacity }
+                    ParameterInfos[68] = { Name=Speed U (S) }
+                    ParameterInfos[69] = { Name=Noise_Tiling }
+                    ParameterInfos[70] = { Name=Normal Tiling U }
+                    ParameterInfos[71] = { Name=Tiling U (S) }
+                    ParameterInfos[72] = { Name=Offset V (S) }
+                    ParameterInfos[73] = { Name=AO A }
+                    ParameterInfos[74] = { Name=ColorExp }
+                    ParameterInfos[75] = { Name=Tiling V (S) }
+                    ParameterInfos[76] = { Name=Met B }
+                    ParameterInfos[77] = { Name=Em_Noise_Tiling }
+                    ParameterInfos[78] = { Name=Speed U (S)_1 2 }
+                    ParameterInfos[79] = { Name=UV scale }
+                    ParameterInfos[80] = { Name=Offset U (S) }
+                    ParameterInfos[81] = { Name=Speed U (S)_2 2 }
+                    ParameterInfos[82] = { Name=Hole Hardness (0-1) (S) }
+                    ParameterInfos[83] = { Name=Base Tiling }
+                    ParameterInfos[84] = { Name=Roughness Max }
+                    ParameterInfos[85] = { Name=WipeIn_Distortion }
+                    ParameterInfos[86] = { Name=Speed V (S)_3 2 }
+                    ParameterInfos[87] = { Name=Noise_Tiling 2 }
+                    ParameterInfos[88] = { Name=B }
+                    ParameterInfos[89] = { Name=Ice Hardness (0-1) }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[6] =
+                {
+                    ParameterInfos[0] = { Name=Ice_SubSurface }
+                    ParameterInfos[1] = { Name=IceColor }
+                    ParameterInfos[2] = { Name=EmCol }
+                    ParameterInfos[3] = { Name=Base_Subsurface }
+                    ParameterInfos[4] = { Name=WipeIn_Offset }
+                    ParameterInfos[5] = { Name=Darken Center }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[8] =
+                {
+                    ParameterInfos[0] = { Name=Normal Map A }
+                    ParameterInfos[1] = { Name=Normal Map B }
+                    ParameterInfos[2] = { Name=Opacity Noise Tex }
+                    ParameterInfos[3] = { Name=Height Map }
+                    ParameterInfos[4] = { Name=MRO/SRO Map B }
+                    ParameterInfos[5] = { Name=Diffuse A }
+                    ParameterInfos[6] = { Name=Diffuse B }
+                    ParameterInfos[7] = { Name=MROH/SROH Map A }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[90] =
+        {
+            ScalarValues[0] = 1
+            ScalarValues[1] = 0
+            ScalarValues[2] = 1
+            ScalarValues[3] = 0.5
+            ScalarValues[4] = 2
+            ScalarValues[5] = 0.433333
+            ScalarValues[6] = 0
+            ScalarValues[7] = 0.311111
+            ScalarValues[8] = 0
+            ScalarValues[9] = -4
+            ScalarValues[10] = 1
+            ScalarValues[11] = 1
+            ScalarValues[12] = 1
+            ScalarValues[13] = 0
+            ScalarValues[14] = 0
+            ScalarValues[15] = 0.5
+            ScalarValues[16] = 1.57005
+            ScalarValues[17] = -0.01
+            ScalarValues[18] = 1.5
+            ScalarValues[19] = 800
+            ScalarValues[20] = 0.961905
+            ScalarValues[21] = 0.15
+            ScalarValues[22] = 1.5
+            ScalarValues[23] = 1
+            ScalarValues[24] = 3
+            ScalarValues[25] = 1
+            ScalarValues[26] = 1
+            ScalarValues[27] = 1
+            ScalarValues[28] = 0.165
+            ScalarValues[29] = 3
+            ScalarValues[30] = 0.045397
+            ScalarValues[31] = 0.123809
+            ScalarValues[32] = 0.1
+            ScalarValues[33] = -0.02
+            ScalarValues[34] = 0.038095
+            ScalarValues[35] = 0
+            ScalarValues[36] = 0.069047
+            ScalarValues[37] = 0.6
+            ScalarValues[38] = 0.100794
+            ScalarValues[39] = 0
+            ScalarValues[40] = 0
+            ScalarValues[41] = 1
+            ScalarValues[42] = 0.5
+            ScalarValues[43] = -3
+            ScalarValues[44] = 0
+            ScalarValues[45] = -5
+            ScalarValues[46] = 1.19895
+            ScalarValues[47] = 0
+            ScalarValues[48] = 2
+            ScalarValues[49] = 0.02
+            ScalarValues[50] = 1
+            ScalarValues[51] = 0
+            ScalarValues[52] = 0.102381
+            ScalarValues[53] = 0
+            ScalarValues[54] = 1
+            ScalarValues[55] = 0.885714
+            ScalarValues[56] = -0.012698
+            ScalarValues[57] = 1
+            ScalarValues[58] = -0.330159
+            ScalarValues[59] = 1
+            ScalarValues[60] = 0.711111
+            ScalarValues[61] = -0.01
+            ScalarValues[62] = 1
+            ScalarValues[63] = 0.911111
+            ScalarValues[64] = 0.05
+            ScalarValues[65] = 0
+            ScalarValues[66] = 2
+            ScalarValues[67] = 1
+            ScalarValues[68] = 0.01
+            ScalarValues[69] = 0.796826
+            ScalarValues[70] = 2
+            ScalarValues[71] = 0.733333
+            ScalarValues[72] = -0.590477
+            ScalarValues[73] = 0
+            ScalarValues[74] = 1
+            ScalarValues[75] = 0.504762
+            ScalarValues[76] = 0
+            ScalarValues[77] = 0.196508
+            ScalarValues[78] = -0.011746
+            ScalarValues[79] = 1
+            ScalarValues[80] = -0.146032
+            ScalarValues[81] = 0
+            ScalarValues[82] = 0.3936
+            ScalarValues[83] = 1
+            ScalarValues[84] = 1
+            ScalarValues[85] = -0.549206
+            ScalarValues[86] = 0.02
+            ScalarValues[87] = 1
+            ScalarValues[88] = 1
+            ScalarValues[89] = 1
+        }
+        VectorValues[6] =
+        {
+            VectorValues[0] = { R=0, G=0, B=0, A=1 }
+            VectorValues[1] = { R=0.23814, G=0.270186, B=0.369792, A=1 }
+            VectorValues[2] = { R=30.9105, G=54.7587, B=100, A=1 }
+            VectorValues[3] = { R=0, G=0, B=0, A=1 }
+            VectorValues[4] = { R=0, G=55, B=208.377, A=1 }
+            VectorValues[5] = { R=0.02, G=0.02, B=0.02, A=1 }
+        }
+        TextureValues[8] =
+        {
+            TextureValues[0] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+            TextureValues[1] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+            TextureValues[2] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Cloud_SoftWisps_D.VFX_T_Cloud_SoftWisps_D'
+            TextureValues[3] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_AncMag_Icewall_Brick_H.VFX_T_AncMag_Icewall_Brick_H'
+            TextureValues[4] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_MSK.base_white_MSK'
+            TextureValues[5] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+            TextureValues[6] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+            TextureValues[7] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_MSK.base_white_MSK'
+        }
+    }
+    ReferencedTextures[15] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_MSK.base_white_MSK'
+        ReferencedTextures[1] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+        ReferencedTextures[2] = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_Ice_D.VFX_T_Ice_D'
+        ReferencedTextures[4] = Texture2D'/Game/VFX/Niagara/AncientMagic/IceWall/VFX_T_AncMag_IceWall_N.VFX_T_AncMag_IceWall_N'
+        ReferencedTextures[5] = Texture2D'/Game/VFX/Niagara/AncientMagic/IceWall/VFX_T_AncMag_IceWall_H.VFX_T_AncMag_IceWall_H'
+        ReferencedTextures[6] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_Ice_R.VFX_T_Ice_R'
+        ReferencedTextures[7] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise_LowFreq_E.VFX_T_Noise_LowFreq_E'
+        ReferencedTextures[8] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_NoiseTiled_1_D.VFX_T_NoiseTiled_1_D'
+        ReferencedTextures[9] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Cloud_SoftWisps_D.VFX_T_Cloud_SoftWisps_D'
+        ReferencedTextures[10] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_AncMag_Icewall_Brick_H.VFX_T_AncMag_Icewall_Brick_H'
+        ReferencedTextures[12] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_RibbonOffset_N.VFX_T_RibbonOffset_N'
+        ReferencedTextures[13] = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Noise05_D.VFX_T_Noise05_D'
+        ReferencedTextures[14] = Texture2D'/Game/VFX/Niagara/AncientMagic/IceWall/VFX_T_AncMag_Icewall_01_MSK.VFX_T_AncMag_Icewall_01_MSK'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[8] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+        Name = Normal Map A
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_flat_n.base_flat_n'
+        Name = Normal Map B
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Noises/VFX_T_Cloud_SoftWisps_D.VFX_T_Cloud_SoftWisps_D'
+        Name = Opacity Noise Tex
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_AncMag_Icewall_Brick_H.VFX_T_AncMag_Icewall_Brick_H'
+        Name = Height Map
+        Group = None
+    }
+    CollectedTextureParameters[4] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_MSK.base_white_MSK'
+        Name = MRO/SRO Map B
+        Group = None
+    }
+    CollectedTextureParameters[5] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+        Name = Diffuse A
+        Group = None
+    }
+    CollectedTextureParameters[6] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_d.base_white_d'
+        Name = Diffuse B
+        Group = None
+    }
+    CollectedTextureParameters[7] =
+    {
+        Texture = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/base_white_MSK.base_white_MSK'
+        Name = MROH/SROH Map A
+        Group = None
+    }
+}
+CollectedScalarParameters[90] =
+{
+    CollectedScalarParameters[0] = { Value=1, Name=Normal A Height, Group=None }
+    CollectedScalarParameters[1] = { Value=0, Name=Roughness Min, Group=None }
+    CollectedScalarParameters[2] = { Value=1, Name=Scale Tiling All, Group=None }
+    CollectedScalarParameters[3] = { Value=0.5, Name=Opacity B, Group=None }
+    CollectedScalarParameters[4] = { Value=2, Name=Exp, Group=None }
+    CollectedScalarParameters[5] =
+    {
+        Value = 0.433333
+        Name = Hardness (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[6] = { Value=0, Name=ModUV Speed V (S), Group=None }
+    CollectedScalarParameters[7] = { Value=0.311111, Name=WipeIn, Group=None }
+    CollectedScalarParameters[8] = { Value=0, Name=TexA_Opacity, Group=None }
+    CollectedScalarParameters[9] = { Value=-4, Name=Height, Group=None }
+    CollectedScalarParameters[10] = { Value=1, Name=HoleCoverage, Group=None }
+    CollectedScalarParameters[11] = { Value=1, Name=ModUV Swizzle (S) 2, Group=None }
+    CollectedScalarParameters[12] = { Value=1, Name=Roughness_Exp, Group=None }
+    CollectedScalarParameters[13] = { Value=0, Name=Metalic adjuster, Group=None }
+    CollectedScalarParameters[14] = { Value=0, Name=HoleOpacity, Group=None }
+    CollectedScalarParameters[15] = { Value=0.5, Name=Desaturation, Group=None }
+    CollectedScalarParameters[16] = { Value=1.57005, Name=IceA_Tiling, Group=None }
+    CollectedScalarParameters[17] =
+    {
+        Value = -0.01
+        Name = ModUV Speed V (S) 2
+        Group = None
+    }
+    CollectedScalarParameters[18] =
+    {
+        Value = 1.5
+        Name = Opacity Noise Tiling U
+        Group = None
+    }
+    CollectedScalarParameters[19] = { Value=800, Name=Radius, Group=None }
+    CollectedScalarParameters[20] =
+    {
+        Value = 0.961905
+        Name = ModUV Tiling U (S) 2
+        Group = None
+    }
+    CollectedScalarParameters[21] = { Value=0.15, Name=Intensity (S), Group=None }
+    CollectedScalarParameters[22] =
+    {
+        Value = 1.5
+        Name = Opacity Noise Tiling V
+        Group = None
+    }
+    CollectedScalarParameters[23] = { Value=1, Name=Coverage (0-1) (S)_1, Group=None }
+    CollectedScalarParameters[24] = { Value=3, Name=B_2, Group=None }
+    CollectedScalarParameters[25] = { Value=1, Name=Emissive Exp, Group=None }
+    CollectedScalarParameters[26] = { Value=1, Name=Diffuse Brightness B, Group=None }
+    CollectedScalarParameters[27] = { Value=1, Name=UV scale B, Group=None }
+    CollectedScalarParameters[28] = { Value=0.165, Name=ModUV Strength (S), Group=None }
+    CollectedScalarParameters[29] = { Value=3, Name=Exp_3, Group=None }
+    CollectedScalarParameters[30] = { Value=0.045397, Name=Speed U (S)_1, Group=None }
+    CollectedScalarParameters[31] =
+    {
+        Value = 0.123809
+        Name = Opacity Noise Strength
+        Group = None
+    }
+    CollectedScalarParameters[32] =
+    {
+        Value = 0.1
+        Name = Opacity Noise Speed V
+        Group = None
+    }
+    CollectedScalarParameters[33] = { Value=-0.02, Name=ModUV Speed U (S), Group=None }
+    CollectedScalarParameters[34] =
+    {
+        Value = 0.038095
+        Name = Opacity Noise Speed U
+        Group = None
+    }
+    CollectedScalarParameters[35] = { Value=0, Name=Offset U, Group=None }
+    CollectedScalarParameters[36] = { Value=0.069047, Name=Speed V (S)_1 2, Group=None }
+    CollectedScalarParameters[37] = { Value=0.6, Name=Hardness, Group=None }
+    CollectedScalarParameters[38] = { Value=0.100794, Name=Speed V (S)_1, Group=None }
+    CollectedScalarParameters[39] = { Value=0, Name=Speed U (S)_2, Group=None }
+    CollectedScalarParameters[40] = { Value=0, Name=Hardness (0-1) (S)_1, Group=None }
+    CollectedScalarParameters[41] = { Value=1, Name=Normal B Height, Group=None }
+    CollectedScalarParameters[42] =
+    {
+        Value = 0.5
+        Name = Diffuse B Height Contrast
+        Group = None
+    }
+    CollectedScalarParameters[43] = { Value=-3, Name=Height 2, Group=None }
+    CollectedScalarParameters[44] = { Value=0, Name=AO B, Group=None }
+    CollectedScalarParameters[45] = { Value=-5, Name=B_4, Group=None }
+    CollectedScalarParameters[46] = { Value=1.19895, Name=IceA_Tiling 2, Group=None }
+    CollectedScalarParameters[47] = { Value=0, Name=Offset V, Group=None }
+    CollectedScalarParameters[48] = { Value=2, Name=Normal Tiling V, Group=None }
+    CollectedScalarParameters[49] = { Value=0.02, Name=Speed V (S), Group=None }
+    CollectedScalarParameters[50] = { Value=1, Name=IceCoverage, Group=None }
+    CollectedScalarParameters[51] = { Value=0, Name=Roughness A, Group=None }
+    CollectedScalarParameters[52] =
+    {
+        Value = 0.102381
+        Name = Sharpen Opacity Noise
+        Group = None
+    }
+    CollectedScalarParameters[53] = { Value=0, Name=Met A, Group=None }
+    CollectedScalarParameters[54] = { Value=1, Name=Tiling All V, Group=None }
+    CollectedScalarParameters[55] =
+    {
+        Value = 0.885714
+        Name = ModUV Tiling U (S)
+        Group = None
+    }
+    CollectedScalarParameters[56] =
+    {
+        Value = -0.012698
+        Name = ModUV Speed U (S) 2
+        Group = None
+    }
+    CollectedScalarParameters[57] = { Value=1, Name=Tiling All U, Group=None }
+    CollectedScalarParameters[58] =
+    {
+        Value = -0.330159
+        Name = ModUV Strength (S) 2
+        Group = None
+    }
+    CollectedScalarParameters[59] = { Value=1, Name=Diffuse Brightness A, Group=None }
+    CollectedScalarParameters[60] = { Value=0.711111, Name=Ice Sharpen, Group=None }
+    CollectedScalarParameters[61] = { Value=-0.01, Name=Speed V (S)_3, Group=None }
+    CollectedScalarParameters[62] = { Value=1, Name=UV scale A, Group=None }
+    CollectedScalarParameters[63] =
+    {
+        Value = 0.911111
+        Name = Coverage (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[64] = { Value=0.05, Name=Depth Ratio, Group=None }
+    CollectedScalarParameters[65] = { Value=0, Name=Roughness B, Group=None }
+    CollectedScalarParameters[66] = { Value=2, Name=Exp_2, Group=None }
+    CollectedScalarParameters[67] = { Value=1, Name=IceOpacity, Group=None }
+    CollectedScalarParameters[68] = { Value=0.01, Name=Speed U (S), Group=None }
+    CollectedScalarParameters[69] = { Value=0.796826, Name=Noise_Tiling, Group=None }
+    CollectedScalarParameters[70] = { Value=2, Name=Normal Tiling U, Group=None }
+    CollectedScalarParameters[71] = { Value=0.733333, Name=Tiling U (S), Group=None }
+    CollectedScalarParameters[72] = { Value=-0.590477, Name=Offset V (S), Group=None }
+    CollectedScalarParameters[73] = { Value=0, Name=AO A, Group=None }
+    CollectedScalarParameters[74] = { Value=1, Name=ColorExp, Group=None }
+    CollectedScalarParameters[75] = { Value=0.504762, Name=Tiling V (S), Group=None }
+    CollectedScalarParameters[76] = { Value=0, Name=Met B, Group=None }
+    CollectedScalarParameters[77] = { Value=0.196508, Name=Em_Noise_Tiling, Group=None }
+    CollectedScalarParameters[78] =
+    {
+        Value = -0.011746
+        Name = Speed U (S)_1 2
+        Group = None
+    }
+    CollectedScalarParameters[79] = { Value=1, Name=UV scale, Group=None }
+    CollectedScalarParameters[80] = { Value=-0.146032, Name=Offset U (S), Group=None }
+    CollectedScalarParameters[81] = { Value=0, Name=Speed U (S)_2 2, Group=None }
+    CollectedScalarParameters[82] =
+    {
+        Value = 0.3936
+        Name = Hole Hardness (0-1) (S)
+        Group = None
+    }
+    CollectedScalarParameters[83] = { Value=1, Name=Base Tiling, Group=None }
+    CollectedScalarParameters[84] = { Value=1, Name=Roughness Max, Group=None }
+    CollectedScalarParameters[85] =
+    {
+        Value = -0.549206
+        Name = WipeIn_Distortion
+        Group = None
+    }
+    CollectedScalarParameters[86] = { Value=0.02, Name=Speed V (S)_3 2, Group=None }
+    CollectedScalarParameters[87] = { Value=1, Name=Noise_Tiling 2, Group=None }
+    CollectedScalarParameters[88] = { Value=1, Name=B, Group=None }
+    CollectedScalarParameters[89] = { Value=1, Name=Ice Hardness (0-1), Group=None }
+}
+CollectedVectorParameters[6] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = Ice_SubSurface
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0.23814, G=0.270186, B=0.369792, A=1 }
+        Name = IceColor
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=30.9105, G=54.7587, B=100, A=1 }
+        Name = EmCol
+        Group = None
+    }
+    CollectedVectorParameters[3] =
+    {
+        Value = { R=0, G=0, B=0, A=1 }
+        Name = Base_Subsurface
+        Group = None
+    }
+    CollectedVectorParameters[4] =
+    {
+        Value = { R=0, G=55, B=208.377, A=1 }
+        Name = WipeIn_Offset
+        Group = None
+    }
+    CollectedVectorParameters[5] =
+    {
+        Value = { R=0.02, G=0.02, B=0.02, A=1 }
+        Name = Darken Center
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[12] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = base_flat_n
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = base_white_d
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = base_white_MSK
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 0.5
+        UVChannelIndex = 0
+        TextureName = VFX_T_AncMag_Icewall_01_MSK
+    }
+    TextureStreamingData[4] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_AncMag_Icewall_Brick_H
+    }
+    TextureStreamingData[5] =
+    {
+        SamplingScale = 2
+        UVChannelIndex = 0
+        TextureName = VFX_T_AncMag_IceWall_N
+    }
+    TextureStreamingData[6] =
+    {
+        SamplingScale = 1.5
+        UVChannelIndex = 0
+        TextureName = VFX_T_Cloud_SoftWisps_D
+    }
+    TextureStreamingData[7] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_Ice_D
+    }
+    TextureStreamingData[8] =
+    {
+        SamplingScale = 0.078125
+        UVChannelIndex = 2
+        TextureName = VFX_T_Noise05_D
+    }
+    TextureStreamingData[9] =
+    {
+        SamplingScale = 0.796875
+        UVChannelIndex = 0
+        TextureName = VFX_T_Noise_LowFreq_E
+    }
+    TextureStreamingData[10] =
+    {
+        SamplingScale = 0.203125
+        UVChannelIndex = 0
+        TextureName = VFX_T_NoiseTiled_1_D
+    }
+    TextureStreamingData[11] =
+    {
+        SamplingScale = 0.890625
+        UVChannelIndex = 0
+        TextureName = VFX_T_RibbonOffset_N
+    }
+}

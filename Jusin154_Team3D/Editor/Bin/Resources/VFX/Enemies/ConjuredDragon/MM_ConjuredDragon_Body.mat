@@ -1,0 +1,15 @@
+Diffuse=base_black_d
+Normal=base_flat_n
+Opacity=VFX_T_RanrakDragon_UpperAlpha_E
+Emissive=VFX_T_RanrakDragon_Upper_E
+Other[0]=Good64x64TilingNoiseHighFreq
+Other[1]=base_white_d
+Other[2]=T_GlassNoise_D
+Other[3]=T_Base011_MRO
+Other[4]=T_Blank_A
+Other[5]=T_WaterCaustics_Disorder_A
+Other[6]=T_ColorNoise512_D
+Other[7]=T_Forageable_Horklump_Gradient_D
+Other[8]=VFX_T_VerticalBeam_D
+Other[9]=VFX_T_Noise05_D
+Other[10]=VFX_T_RibbonOffset_N

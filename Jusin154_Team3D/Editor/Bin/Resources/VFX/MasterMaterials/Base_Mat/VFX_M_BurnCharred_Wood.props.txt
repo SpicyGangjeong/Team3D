@@ -1,0 +1,86 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[2] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/Environment/Hogsmeade/BLDG_ThreeBroomsticks/Textures/T_3Broomsticks_Plaster_01c_D.T_3Broomsticks_Plaster_01c_D'
+    ReferencedTextures[1] = Texture2D'/Game/Environment/Hogsmeade/BLDG_ThreeBroomsticks/Textures/T_3Broomsticks_Plaster_01c_N.T_3Broomsticks_Plaster_01c_N'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[2] =
+                {
+                    ParameterInfos[0] = { Name=Tile }
+                    ParameterInfos[1] = { Name=Scale }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=Color }
+                }
+            }
+            Entries[2] = { ParameterInfos[0]={} }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[2] = { 6, 0.1 }
+        VectorValues[1] =
+        {
+            VectorValues[0] = { R=0.01515, G=0.0151, B=0.020833, A=1 }
+        }
+        TextureValues[0] = {}
+    }
+    ReferencedTextures[2] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/Environment/Hogsmeade/BLDG_ThreeBroomsticks/Textures/T_3Broomsticks_Plaster_01c_N.T_3Broomsticks_Plaster_01c_N'
+        ReferencedTextures[1] = Texture2D'/Game/Environment/Hogsmeade/BLDG_ThreeBroomsticks/Textures/T_3Broomsticks_Plaster_01c_D.T_3Broomsticks_Plaster_01c_D'
+    }
+}
+BlendMode = BLEND_Opaque (0)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[0] = {}
+CollectedScalarParameters[2] =
+{
+    CollectedScalarParameters[0] = { Value=6, Name=Tile, Group=None }
+    CollectedScalarParameters[1] = { Value=0.1, Name=Scale, Group=None }
+}
+CollectedVectorParameters[1] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0.01515, G=0.0151, B=0.020833, A=1 }
+        Name = Color
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[2] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 6
+        UVChannelIndex = 0
+        TextureName = T_3Broomsticks_Plaster_01c_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 6
+        UVChannelIndex = 0
+        TextureName = T_3Broomsticks_Plaster_01c_N
+    }
+}

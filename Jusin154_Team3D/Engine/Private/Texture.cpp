@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Texture.h"
 #include "Shader.h"
 
@@ -9,9 +9,9 @@ CTexture::CTexture(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 CTexture::CTexture(const CTexture& rhs)
 	:CComponent(rhs)
-	, m_pSRVs{ rhs.m_pSRVs }
+	, m_SRVs{ rhs.m_SRVs }
 {
-	for (auto& iter : m_pSRVs) {
+	for (auto& iter : m_SRVs) {
 		SAFE_ADDREF(iter);
 	}
 }
@@ -19,27 +19,46 @@ CTexture::CTexture(const CTexture& rhs)
 
 HRESULT CTexture::Bind_ShaderResource(CShader* pShader, const _char* pConstantName, _uint iTextureIndex)
 {
-	return pShader->Bind_SRV(pConstantName, m_pSRVs[iTextureIndex]);
+	return pShader->Bind_SRV(pConstantName, m_SRVs[iTextureIndex]);
 }
 
 HRESULT CTexture::Bind_ShaderResources(CShader* pShader, const _char* pConstantName, _uint iOffset, _uint iCount)
 {
 
-	_uint iCnt = (iCount == UINT_MAX) ? (_uint)m_pSRVs.size() : iCount;
-	return pShader->Bind_SRVs(pConstantName, m_pSRVs.data(), 0, iCnt);
+	_uint iCnt = (iCount == UINT_MAX) ? (_uint)m_SRVs.size() : iCount;
+	return pShader->Bind_SRVs(pConstantName, m_SRVs.data(), iCnt);
 }
 
 ID3D11ShaderResourceView* CTexture::Get_SRV(_uint iTextureIndex)
 {
-	return m_pSRVs[iTextureIndex];
+	return m_SRVs[iTextureIndex];
 }
 
 _uint CTexture::Get_Size()
 {
-	return (_uint)m_pSRVs.size();
+	return (_uint)m_SRVs.size();
 }
 
-HRESULT CTexture::Initialize_Prototype(TEXTURE_LOAD_TYPE eType, const _tchar* pTextureFilePath, const _wstring& wstrTextureKey, _uint iNumTextures)
+_bool CTexture::Compare_GroupName(_wstring wstrGroupName)
+{
+	return m_wstrPrototypeName == wstrGroupName;
+}
+
+#ifdef _DEBUG
+void CTexture::HoverName()
+{
+	if (ImGui::IsItemHovered()) {
+
+		ImGui::BeginTooltip();           // íˆ´íŒ ì°½ ì‹œìž‘
+
+		ImGui::TextUnformatted(CMyTools::ToString(m_wstrPrototypeName).c_str());    // í…ìŠ¤íŠ¸ ì¶œë ¥ (Text ëŒ€ì‹  Unformatted ì¶”ì²œ)
+
+		ImGui::EndTooltip();             // íˆ´íŒ ì°½ ì¢…ë£Œ
+	}
+}
+#endif
+
+HRESULT CTexture::Initialize_Prototype(TEXTURE_LOAD_TYPE eType, const _tchar* pTextureFilePath, _uint iNumTextures, _wstring wstrPrototypeName)
 {
 	switch (eType)
 	{
@@ -49,7 +68,7 @@ HRESULT CTexture::Initialize_Prototype(TEXTURE_LOAD_TYPE eType, const _tchar* pT
 		if (FAILED(Load_SRV(CMyTools::ToString(pTextureFilePath).c_str(), &pSRV))) {
 			return E_FAIL;
 		}
-		m_pSRVs.push_back(pSRV);
+		m_SRVs.push_back(pSRV);
 	} break;
 	case Engine::TEXTURE_LOAD_TYPE::INCREMENTAL:
 		if (FAILED(ParseTextureIncrementalToSRVs(iNumTextures, pTextureFilePath))) {
@@ -64,6 +83,8 @@ HRESULT CTexture::Initialize_Prototype(TEXTURE_LOAD_TYPE eType, const _tchar* pT
 	default:
 		break;
 	}
+
+	m_wstrPrototypeName = wstrPrototypeName;
 
 	return S_OK;
 }
@@ -92,9 +113,9 @@ HRESULT CTexture::Load_SRV(const _char* szPath, ID3D11ShaderResourceView** ppSRV
 
 	HRESULT			hr = {};
 
-	hr = CreateDDSTextureFromFile(m_pDevice, CMyTools::ToWstring(szTextureFilePath).c_str(), nullptr, ppSRV); // ÀÏ´Ü dds·Î ½ÃµµÇÏ°í
+	hr = CreateDDSTextureFromFile(m_pDevice, CMyTools::ToWstring(szTextureFilePath).c_str(), nullptr, ppSRV); // ì¼ë‹¨ ddsë¡œ ì‹œë„í•˜ê³ 
 	if (FAILED(hr)) {
-		memset(szTextureFilePath, 0, sizeof(_char) * MAX_PATH); // ½ÇÆÐÇÏ¸é ¿ø·¡ È®ÀåÀÚ·Î ´Ù½Ã ½Ãµµ
+		memset(szTextureFilePath, 0, sizeof(_char) * MAX_PATH); // ì‹¤íŒ¨í•˜ë©´ ì›ëž˜ í™•ìž¥ìžë¡œ ë‹¤ì‹œ ì‹œë„
 		strcat_s(szTextureFilePath, szTextureFileName);
 		strcat_s(szTextureFilePath, szEXT);
 
@@ -111,7 +132,7 @@ HRESULT CTexture::Load_SRV(const _char* szPath, ID3D11ShaderResourceView** ppSRV
 
 HRESULT CTexture::ParseTextureIncrementalToSRVs(_uint iNumTextures, const _tchar* pTextureFilePath)
 {
-	m_pSRVs.reserve(iNumTextures);
+	m_SRVs.reserve(iNumTextures);
 
 	_tchar			szFullPath[MAX_PATH] = {};
 
@@ -129,7 +150,7 @@ HRESULT CTexture::ParseTextureIncrementalToSRVs(_uint iNumTextures, const _tchar
 			return E_FAIL;
 		}
 
-		m_pSRVs.push_back(pSRV);
+		m_SRVs.push_back(pSRV);
 	}
 	return S_OK;
 }
@@ -148,7 +169,7 @@ HRESULT CTexture::ParseTexturePathToSRVs(const _tchar* pTextureFolderPath)
 		files.reserve(128);
 		do {
 			if (fileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-				continue; // ..Æú´õ ¹«½Ã
+				continue; // ..í´ë” ë¬´ì‹œ
 			}
 			_wstring wstrName = fileData.cFileName;
 			_wstring wstrFull = wstrFolder + L"\\" + wstrName;
@@ -163,7 +184,7 @@ HRESULT CTexture::ParseTexturePathToSRVs(const _tchar* pTextureFolderPath)
 		}
 	}
 
-	m_pSRVs.reserve(files.size());
+	m_SRVs.reserve(files.size());
 	ID3D11ShaderResourceView* pSRV = { nullptr };
 	HRESULT hr;
 	for (const auto& filePath : files)
@@ -177,16 +198,16 @@ HRESULT CTexture::ParseTexturePathToSRVs(const _tchar* pTextureFolderPath)
 			return hr;
 		}
 
-		m_pSRVs.push_back(pSRV);
+		m_SRVs.push_back(pSRV);
 	}
 
 	return S_OK;
 }
-CTexture* CTexture::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TEXTURE_LOAD_TYPE eType, const _tchar* pTextureFilePath, const _wstring& wstrTextureKey, _uint iNumTextures)
+CTexture* CTexture::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TEXTURE_LOAD_TYPE eType, const _tchar* pTextureFilePath, _uint iNumTextures, _wstring wstrGroupName)
 {
 	CTexture* pInstance = new CTexture(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype(eType, pTextureFilePath, wstrTextureKey, iNumTextures)))
+	if (FAILED(pInstance->Initialize_Prototype(eType, pTextureFilePath, iNumTextures, wstrGroupName)))
 	{
 		MSG_BOX("Failed to Created : CTexture");
 		SAFE_RELEASE(pInstance);
@@ -212,7 +233,7 @@ CComponent* CTexture::Clone(void* pArg, CGameObject* pOwner)
 void CTexture::Free()
 {
 	__super::Free();
-	for (auto& pSRV : m_pSRVs) {
+	for (auto& pSRV : m_SRVs) {
 		SAFE_RELEASE(pSRV);
 	}
 }

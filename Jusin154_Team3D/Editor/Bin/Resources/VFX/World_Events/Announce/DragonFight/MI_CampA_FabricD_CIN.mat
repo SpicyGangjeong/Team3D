@@ -1,0 +1,11 @@
+Diffuse=T_CampA_Fabric_D_D
+Normal=T_CampA_Fabric_D_N
+Other[0]=T_Fabric001_N
+Other[1]=T_CampA_Fabric_D_MROA
+Other[2]=T_CampA_ClothA_D
+Other[3]=base_black_d
+Other[4]=base_flat_n
+Other[5]=base_white_d
+Other[6]=base_white_MSK
+Other[7]=T_Base011_MRO
+Other[8]=VFX_T_Noise_Soft_D

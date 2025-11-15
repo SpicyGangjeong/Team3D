@@ -44,7 +44,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <EnableASAN>true</EnableASAN>
+    <EnableASAN>false</EnableASAN>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -110,7 +110,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>EDITOR_PROJECT;_DEBUG;_WINDOWS;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>../Public/;../../EngineSDK/Inc/;../../EngineSDK/Inc/DirectXTK/;../../EngineSDK/Inc/fMod/;../../EngineSDK/Inc/IMGUI/;../../EngineSDK/Inc/FX11/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -125,6 +125,10 @@
       <AdditionalLibraryDirectories>../../EngineSDK/Lib/$(ConfigurationName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Engine.lib;fmod_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -132,7 +136,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>EDITOR_PROJECT;NDEBUG;_WINDOWS;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>../Public/;../../EngineSDK/Inc/;../../EngineSDK/Inc/DirectXTK/;../../EngineSDK/Inc/fMod/;../../EngineSDK/Inc/IMGUI/;../../EngineSDK/Inc/FX11/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -147,6 +151,10 @@
       <AdditionalLibraryDirectories>../../EngineSDK/Lib/$(ConfigurationName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Engine.lib;fmod_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Client_Define.h" />

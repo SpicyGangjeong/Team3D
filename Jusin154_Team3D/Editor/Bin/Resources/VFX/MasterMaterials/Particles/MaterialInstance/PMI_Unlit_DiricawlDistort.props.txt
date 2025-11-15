@@ -1,0 +1,102 @@
+Parent = Material3'/Game/VFX/MasterMaterials/Particles/VFX_MM_Main.VFX_MM_Main'
+ScalarParameterValues[6] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=FadeDistance }
+        ParameterValue = 80
+        ParameterName = None
+    }
+    ScalarParameterValues[1] =
+    {
+        ParameterInfo = { Name=Normal Strength }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[2] =
+    {
+        ParameterInfo = { Name=Refraction Amount }
+        ParameterValue = 1.42857
+        ParameterName = None
+    }
+    ScalarParameterValues[3] =
+    {
+        ParameterInfo = { Name=Refraction Fade Distance }
+        ParameterValue = 2000
+        ParameterName = None
+    }
+    ScalarParameterValues[4] =
+    {
+        ParameterInfo = { Name=SphereMask Power }
+        ParameterValue = 1.3
+        ParameterName = None
+    }
+    ScalarParameterValues[5] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[1] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=Normal Texture }
+        ParameterValue = Texture2D'/Game/VFX/Textures/VFX_T_Cone_N.VFX_T_Cone_N'
+        ParameterName = None
+    }
+}
+VectorParameterValues[0] = {}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Translucent (2)
+    bOverride_TwoSided = false
+    TwoSided = false
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[4] =
+    {
+        StaticSwitchParameters[0] =
+        {
+            Value = false
+            ParameterInfo = { Name=Use Alpha }
+            bOverride = true
+        }
+        StaticSwitchParameters[1] =
+        {
+            Value = true
+            ParameterInfo = { Name=Use Normal Map }
+            bOverride = true
+        }
+        StaticSwitchParameters[2] =
+        {
+            Value = true
+            ParameterInfo = { Name=Use Refraction }
+            bOverride = true
+        }
+        StaticSwitchParameters[3] =
+        {
+            Value = true
+            ParameterInfo = { Name=Use SphereMask }
+            bOverride = true
+        }
+    }
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

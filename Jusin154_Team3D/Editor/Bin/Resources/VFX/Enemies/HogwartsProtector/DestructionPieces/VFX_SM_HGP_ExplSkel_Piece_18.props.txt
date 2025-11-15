@@ -1,0 +1,38 @@
+Materials[2] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Enemies/HogwartsProtector/DestructionPieces/VFX_MI_GOL_CombatGruntA_BPEChunks.VFX_MI_GOL_CombatGruntA_BPEChunks'
+    Materials[1] = MaterialInstanceConstant'/Game/VFX/Enemies/HogwartsProtector/DestructionPieces/VFX_MI_GOL_CombatGruntB_BPEChunks.VFX_MI_GOL_CombatGruntB_BPEChunks'
+}
+SourceModels[0] = {}
+StaticMaterials[2] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Enemies/HogwartsProtector/DestructionPieces/VFX_MI_GOL_CombatGruntA_BPEChunks.VFX_MI_GOL_CombatGruntA_BPEChunks'
+        MaterialSlotName = MI_GOL_CombatGruntA1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 380.768, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Enemies/HogwartsProtector/DestructionPieces/VFX_MI_GOL_CombatGruntB_BPEChunks.VFX_MI_GOL_CombatGruntB_BPEChunks'
+        MaterialSlotName = MI_GOL_CombatGruntB1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 358.165, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=29.9623, Y=9.05405, Z=22.3446 }
+    BoxExtent = { X=16.2891, Y=29.8733, Z=23.019 }
+    SphereRadius = 37.4613
+}

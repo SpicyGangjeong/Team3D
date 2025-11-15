@@ -1,0 +1,120 @@
+Parent = MaterialInstanceConstant'/Game/RiggedObjects/MasterMaterials/LOD/MI_HairSheet_LOD_Low.MI_HairSheet_LOD_Low'
+ScalarParameterValues[2] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=Dye Opacity }
+        ParameterValue = 0.1
+        ParameterName = None
+    }
+    ScalarParameterValues[1] =
+    {
+        ParameterInfo = { Name=Value Variation }
+        ParameterValue = 0.9
+        ParameterName = None
+    }
+}
+TextureParameterValues[9] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=Skin Diffuse }
+        ParameterValue = None
+        ParameterName = None
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=Skin Normal }
+        ParameterValue = None
+        ParameterName = None
+    }
+    TextureParameterValues[2] =
+    {
+        ParameterInfo = { Name=DAO Mask }
+        ParameterValue = Texture2D'/Game/RiggedObjects/Characters/Human/Hair/Hair_F/STUHair23/Textures/T_HUM_F_Hair_StuHair23_AfroWrap_DFOA_MSK.T_HUM_F_Hair_StuHair23_AfroWrap_DFOA_MSK'
+        ParameterName = None
+    }
+    TextureParameterValues[3] =
+    {
+        ParameterInfo = { Name=THV Mask }
+        ParameterValue = Texture2D'/Game/RiggedObjects/Characters/Human/Hair/Hair_F/STUHair23/Textures/T_HUM_F_Hair_StuHair23_AfroWrap_THV_MSK.T_HUM_F_Hair_StuHair23_AfroWrap_THV_MSK'
+        ParameterName = None
+    }
+    TextureParameterValues[4] =
+    {
+        ParameterInfo = { Name=Base_Color }
+        ParameterValue = None
+        ParameterName = None
+    }
+    TextureParameterValues[5] =
+    {
+        ParameterInfo = { Name=Base_Normal }
+        ParameterValue = None
+        ParameterName = None
+    }
+    TextureParameterValues[6] =
+    {
+        ParameterInfo = { Name=Base_SRO }
+        ParameterValue = None
+        ParameterName = None
+    }
+    TextureParameterValues[7] =
+    {
+        ParameterInfo = { Name=ID }
+        ParameterValue = None
+        ParameterName = None
+    }
+    TextureParameterValues[8] =
+    {
+        ParameterInfo = { Name=ID_Blend }
+        ParameterValue = None
+        ParameterName = None
+    }
+}
+VectorParameterValues[3] =
+{
+    VectorParameterValues[0] =
+    {
+        ParameterInfo = { Name=RootColor }
+        ParameterValue = { R=0.021875, G=0.010771, B=0.009821, A=1 }
+        ParameterName = None
+    }
+    VectorParameterValues[1] =
+    {
+        ParameterInfo = { Name=TipColor }
+        ParameterValue = { R=0.041667, G=0.027123, B=0.021485, A=1 }
+        ParameterName = None
+    }
+    VectorParameterValues[2] =
+    {
+        ParameterInfo = { Name=Dye Color }
+        ParameterValue = { R=0.125, G=0.071977, B=0.042318, A=1 }
+        ParameterName = None
+    }
+}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Opaque (0)
+    bOverride_TwoSided = false
+    TwoSided = true
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[0] = {}
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

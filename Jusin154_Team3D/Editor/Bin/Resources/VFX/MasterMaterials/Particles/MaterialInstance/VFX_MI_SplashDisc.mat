@@ -1,0 +1,6 @@
+Diffuse=VFX_T_SplashDisc_D
+Normal=VFX_T_SplashDisc_N
+SpecPower=VFX_T_SplashDisc_D
+Other[0]=VFX_T_NoiseTiled_2_D
+Other[1]=VFX_T_HeatTile3_N
+Other[2]=T_GobMine_WaterDrop_CubeMap_HDR

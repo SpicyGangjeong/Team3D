@@ -11,10 +11,21 @@ float g_LifeRatio;
 float g_fRimStrength;
 float g_fRimPower;
 float3 g_vRimColor;
+float4 g_TestColor;
 vector g_vCamPosition;
 
 Texture2D g_DiffuseTexture;
 Texture2D g_NormalTexture;
+Texture2D g_DAOTexture;
+Texture2D g_THVTexture;
+
+float3 g_RootColor;
+float3 g_TipColor;
+float3 g_DyeColor;
+
+float g_DyeOpacity;
+float g_HairRoughness;
+
 
 matrix g_BoneMatrices[512];
 
@@ -150,7 +161,7 @@ VS_OUT_SHADOW VS_MAIN_SHADOW(VS_IN In)
         g_BoneMatrices[In.vBlendIndex.z] * In.vBlendWeight.z +
         g_BoneMatrices[In.vBlendIndex.w] * fWeightW;
     
-    /* 스키닝 */
+    /* ?ㅽ궎??*/
     vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
    
     matrix matWV, matWVP;
@@ -272,6 +283,73 @@ PS_OUT_BLUR PS_MAIN_BLUR(PS_IN_BLUR In)
     return Out;
 }
 
+PS_OUT PS_HAIR(PS_IN In)
+{
+    PS_OUT Out;
+
+    float4 DAO = g_DAOTexture.Sample(DefaultSampler, In.vTexcoord);
+    float alpha = DAO.a;
+    if (alpha < 0.1f)
+        discard;
+
+    float4 THV = g_THVTexture.Sample(DefaultSampler, In.vTexcoord);
+    float rootMask = THV.r;
+    float tipMask = THV.g;
+    float variation = THV.b;
+
+    float3 baseColor = lerp(g_RootColor, g_TipColor, tipMask);
+
+    baseColor *= lerp(0.8, 1.2, variation);
+
+    baseColor = lerp(baseColor, g_DyeColor, g_DyeOpacity);
+
+    float4 vNormalDesc = g_NormalTexture.Sample(MirrorSampler, In.vTexcoord);
+    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
+    float3 normal = mul(vNormalDesc.xyz * 2.f - 1.f, WorldMatrix);
+
+    if (g_bRimLight)
+    {
+        float fRim = GetRimLight(g_vCamPosition.xyz, In.vWorldPos.xyz, normal, g_fRimPower, g_fRimStrength);
+        baseColor = lerp(baseColor, g_vRimColor.rgb, fRim);
+    }
+
+    Out.vDiffuse = float4(baseColor, alpha);
+    Out.vNormal = float4(normal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.0f, 1.f);
+
+    return Out;
+}
+
+PS_OUT PS_EYELASH(PS_IN In)
+{
+    PS_OUT Out;
+    
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    if (vMtrlDiffuse.a < 0.4f)
+    {
+        discard;
+    }
+    
+    vector vNormalDesc = g_NormalTexture.Sample(MirrorSampler, In.vTexcoord);
+    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
+    
+    float3 vNormal = mul(vNormalDesc.xyz * 2.f - 1.f, WorldMatrix);
+    
+    if (true == g_bRimLight)
+    {
+        float fRimLight = GetRimLight(g_vCamPosition.xyz, In.vWorldPos.xyz, vNormal, g_fRimPower, g_fRimStrength);
+        vMtrlDiffuse.xyz = (vMtrlDiffuse.xyz * (1 - fRimLight)) + g_vRimColor * fRimLight;
+    }
+    
+    
+    Out.vDiffuse = float4(vMtrlDiffuse.rgb, vMtrlDiffuse.g);
+    Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.0f, 1.f);
+    
+    
+    return Out;
+}
+
 
 technique11 DefaultTechnique
 {
@@ -312,5 +390,25 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN_BLUR();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_BLUR();
+    }
+
+    pass HairPass
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_HAIR();
+    }
+
+    pass EyeLashPass
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_EYELASH();
     }
 }

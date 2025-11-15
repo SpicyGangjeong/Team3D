@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Niagara/Corruption/VFX_MI_ConjuredDragonFireball02b_Core.VFX_MI_ConjuredDragonFireball02b_Core'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Niagara/Corruption/VFX_MI_ConjuredDragonFireball02b_Core.VFX_MI_ConjuredDragonFireball02b_Core'
+        MaterialSlotName = RepDragonProjectile_02b_Core
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 193.277, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-37.8653, Y=-1.88361, Z=-1.69631 }
+    BoxExtent = { X=68.2624, Y=45.4709, Z=46.2485 }
+    SphereRadius = 69.0667
+}

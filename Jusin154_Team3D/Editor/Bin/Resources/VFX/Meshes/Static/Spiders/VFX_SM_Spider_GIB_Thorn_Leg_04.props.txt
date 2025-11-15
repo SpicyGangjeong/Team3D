@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/RiggedObjects/Characters/Creatures/Insects/Spiders/Thornback/Biting/Materials/MI_Spider_Thornback_Biting.MI_Spider_Thornback_Biting'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/RiggedObjects/Characters/Creatures/Insects/Spiders/Thornback/Biting/Materials/MI_Spider_Thornback_Biting.MI_Spider_Thornback_Biting'
+        MaterialSlotName = MI_Spider_Thornback_Matriarch
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 302.265, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=-4.09948, Z=-11.9903 }
+    BoxExtent = { X=7.65535, Y=30.7694, Z=19.2343 }
+    SphereRadius = 32.7052
+}

@@ -1,0 +1,339 @@
+Parent = Material3'/Game/VFX/World_Events/Sanctum/TowerBossFight/MM_WorldAligned_DetailBlend_FloorRipple.MM_WorldAligned_DetailBlend_FloorRipple'
+ScalarParameterValues[19] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=Roughness }
+        ParameterValue = 0.1
+        ParameterName = None
+    }
+    ScalarParameterValues[1] =
+    {
+        ParameterInfo = { Name=Distortion Emissive Brightness }
+        ParameterValue = 0.5
+        ParameterName = None
+    }
+    ScalarParameterValues[2] =
+    {
+        ParameterInfo = { Name=Distortion Tiling }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[3] =
+    {
+        ParameterInfo = { Name=Distortion Bottom Tiling }
+        ParameterValue = 15
+        ParameterName = None
+    }
+    ScalarParameterValues[4] =
+    {
+        ParameterInfo = { Name=Disorder Opacity Bottom  }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[5] =
+    {
+        ParameterInfo = { Name=Disorder Strength Bottom (S) }
+        ParameterValue = 0.2
+        ParameterName = None
+    }
+    ScalarParameterValues[6] =
+    {
+        ParameterInfo = { Name=Distortion Top Tiling }
+        ParameterValue = 15
+        ParameterName = None
+    }
+    ScalarParameterValues[7] =
+    {
+        ParameterInfo = { Name=Disorder Opacity Top }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[8] =
+    {
+        ParameterInfo = { Name=Disorder Strength Top (S) }
+        ParameterValue = 0.2
+        ParameterName = None
+    }
+    ScalarParameterValues[9] =
+    {
+        ParameterInfo = { Name=Diffuse Brightness A }
+        ParameterValue = 2.5
+        ParameterName = None
+    }
+    ScalarParameterValues[10] =
+    {
+        ParameterInfo = { Name=Normal A Height }
+        ParameterValue = 1.5
+        ParameterName = None
+    }
+    ScalarParameterValues[11] =
+    {
+        ParameterInfo = { Name=Diffuse Brightness B }
+        ParameterValue = 8
+        ParameterName = None
+    }
+    ScalarParameterValues[12] =
+    {
+        ParameterInfo = { Name=Diffuse Desaturation B }
+        ParameterValue = 0.5
+        ParameterName = None
+    }
+    ScalarParameterValues[13] =
+    {
+        ParameterInfo = { Name=Met B }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[14] =
+    {
+        ParameterInfo = { Name=Roughness B }
+        ParameterValue = -0.1
+        ParameterName = None
+    }
+    ScalarParameterValues[15] =
+    {
+        ParameterInfo = { Name=Normal B Height }
+        ParameterValue = 1.2
+        ParameterName = None
+    }
+    ScalarParameterValues[16] =
+    {
+        ParameterInfo = { Name=Texture Size }
+        ParameterValue = 512
+        ParameterName = None
+    }
+    ScalarParameterValues[17] =
+    {
+        ParameterInfo = { Name=Texture Size B }
+        ParameterValue = 512
+        ParameterName = None
+    }
+    ScalarParameterValues[18] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[11] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=Distortion Map }
+        ParameterValue = Texture2D'/Game/Environment/MasterMaterials/BaseTextures/WaterCaustics/T_WaterCaustics_Disorder3_A.T_WaterCaustics_Disorder3_A'
+        ParameterName = None
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=Distortion Bottom }
+        ParameterValue = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Ceiling/T_Sanctum_10meter_Flat_Ceiling_01_C_D.T_Sanctum_10meter_Flat_Ceiling_01_C_D'
+        ParameterName = None
+    }
+    TextureParameterValues[2] =
+    {
+        ParameterInfo = { Name=Distortion Top }
+        ParameterValue = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Wall/T_SanctumDun_MarbleB_N_D.T_SanctumDun_MarbleB_N_D'
+        ParameterName = None
+    }
+    TextureParameterValues[3] =
+    {
+        ParameterInfo = { Name=Base MRO/SRO }
+        ParameterValue = Texture2D'/Game/Environment/Cavern_Dungeon/Textures/Rocks/T_CavernDun_Sanctum_Rock_MD_A_SRO.T_CavernDun_Sanctum_Rock_MD_A_SRO'
+        ParameterName = None
+    }
+    TextureParameterValues[4] =
+    {
+        ParameterInfo = { Name=Base Normal }
+        ParameterValue = Texture2D'/Game/Environment/Cavern_Dungeon/Textures/Rocks/T_CavernDun_Sanctum_Rock_MD_A_N.T_CavernDun_Sanctum_Rock_MD_A_N'
+        ParameterName = None
+    }
+    TextureParameterValues[5] =
+    {
+        ParameterInfo = { Name=Diffuse }
+        ParameterValue = Texture2D'/Game/Environment/Cavern_Dungeon/Textures/Rocks/T_Cav_RockBase_01_Bslt_D.T_Cav_RockBase_01_Bslt_D'
+        ParameterName = None
+    }
+    TextureParameterValues[6] =
+    {
+        ParameterInfo = { Name=Diffuse B }
+        ParameterValue = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Floor/T_SanctumDun_Floor_B_D.T_SanctumDun_Floor_B_D'
+        ParameterName = None
+    }
+    TextureParameterValues[7] =
+    {
+        ParameterInfo = { Name=MRO/SRO }
+        ParameterValue = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Wall/T_Sanctum__Marble_BlackA_MRO.T_Sanctum__Marble_BlackA_MRO'
+        ParameterName = None
+    }
+    TextureParameterValues[8] =
+    {
+        ParameterInfo = { Name=MRO/SRO B }
+        ParameterValue = Texture2D'/Game/Environment/Cavern_Dungeon/Textures/Rocks/T_CavernDun_Rock_B_SRO.T_CavernDun_Rock_B_SRO'
+        ParameterName = None
+    }
+    TextureParameterValues[9] =
+    {
+        ParameterInfo = { Name=Normal Map }
+        ParameterValue = Texture2D'/Game/Environment/Cavern_Dungeon/Textures/Rocks/T_Cav_RockBase_01_Bslt_N.T_Cav_RockBase_01_Bslt_N'
+        ParameterName = None
+    }
+    TextureParameterValues[10] =
+    {
+        ParameterInfo = { Name=Normal Map B }
+        ParameterValue = Texture2D'/Game/Environment/Sanctum_Dungeon/Textures/Floor/T_SanctumDun_Floor_B_N.T_SanctumDun_Floor_B_N'
+        ParameterName = None
+    }
+}
+VectorParameterValues[2] =
+{
+    VectorParameterValues[0] =
+    {
+        ParameterInfo = { Name=Disorder Speed Bottom (V2) }
+        ParameterValue = { R=0.01, G=0.01, B=0, A=0 }
+        ParameterName = None
+    }
+    VectorParameterValues[1] =
+    {
+        ParameterInfo = { Name=Disorder Speed Top (V2) }
+        ParameterValue = { R=0.01, G=0.01, B=0, A=0 }
+        ParameterName = None
+    }
+}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Opaque (0)
+    bOverride_TwoSided = false
+    TwoSided = false
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[15] =
+    {
+        StaticSwitchParameters[0] =
+        {
+            Value = true
+            ParameterInfo = { Name=Use PBR Adjusters }
+            bOverride = true
+        }
+        StaticSwitchParameters[1] =
+        {
+            Value = true
+            ParameterInfo = { Name=Use Double Layer Distortion }
+            bOverride = true
+        }
+        StaticSwitchParameters[2] =
+        {
+            Value = true
+            ParameterInfo = { Name=Use Height Vertex Color Blend }
+            bOverride = true
+        }
+        StaticSwitchParameters[3] =
+        {
+            Value = true
+            ParameterInfo = { Name=Use Base SRO/MRO }
+            bOverride = true
+        }
+        StaticSwitchParameters[4] =
+        {
+            Value = true
+            ParameterInfo = { Name=Use Brightness Adjusters for A }
+            bOverride = true
+        }
+        StaticSwitchParameters[5] =
+        {
+            Value = false
+            ParameterInfo = { Name=Use Desaturation A }
+            bOverride = true
+        }
+        StaticSwitchParameters[6] =
+        {
+            Value = false
+            ParameterInfo = { Name=Use PBR Adjusters for A }
+            bOverride = true
+        }
+        StaticSwitchParameters[7] =
+        {
+            Value = true
+            ParameterInfo = { Name=Use Normal Adjuster for A }
+            bOverride = true
+        }
+        StaticSwitchParameters[8] =
+        {
+            Value = true
+            ParameterInfo = { Name=Enable Blend Layer }
+            bOverride = true
+        }
+        StaticSwitchParameters[9] =
+        {
+            Value = true
+            ParameterInfo = { Name=Use Brightness Adjusters for B }
+            bOverride = true
+        }
+        StaticSwitchParameters[10] =
+        {
+            Value = true
+            ParameterInfo = { Name=Use Desaturation B }
+            bOverride = true
+        }
+        StaticSwitchParameters[11] =
+        {
+            Value = true
+            ParameterInfo = { Name=Use PBR Adjusters for B }
+            bOverride = true
+        }
+        StaticSwitchParameters[12] =
+        {
+            Value = true
+            ParameterInfo = { Name=Use Normal Adjuster for B }
+            bOverride = true
+        }
+        StaticSwitchParameters[13] =
+        {
+            Value = true
+            ParameterInfo = { Name=Only Use Diffuse and Norma B }
+            bOverride = true
+        }
+        StaticSwitchParameters[14] =
+        {
+            Value = true
+            ParameterInfo = { Name=Only Use Diffuse and Normal }
+            bOverride = true
+        }
+    }
+    StaticComponentMaskParameters[1] =
+    {
+        StaticComponentMaskParameters[0] =
+        {
+            R = true
+            G = true
+            B = true
+            A = false
+            ParameterInfo = { Name=Blend Vertex Color }
+            bOverride = true
+        }
+    }
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[1] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_CavernDun_Sanctum_Rock_MD_A_SRO
+    }
+}

@@ -1,0 +1,134 @@
+Parent = MaterialInstanceConstant'/Game/VFX/Enemies/Spider/GooNWebs/VFX_MI_Goo_Splat_Geo.VFX_MI_Goo_Splat_Geo'
+ScalarParameterValues[9] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=A Mask Strength (S) }
+        ParameterValue = 0.75
+        ParameterName = None
+    }
+    ScalarParameterValues[1] =
+    {
+        ParameterInfo = { Name=Frame }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[2] =
+    {
+        ParameterInfo = { Name=Horizontal }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[3] =
+    {
+        ParameterInfo = { Name=Vertical }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[4] =
+    {
+        ParameterInfo = { Name=Tiling U (S) }
+        ParameterValue = 1
+        ParameterName = None
+    }
+    ScalarParameterValues[5] =
+    {
+        ParameterInfo = { Name=Tiling V (S) }
+        ParameterValue = 2
+        ParameterName = None
+    }
+    ScalarParameterValues[6] =
+    {
+        ParameterInfo = { Name=Speed U (S) }
+        ParameterValue = 0
+        ParameterName = None
+    }
+    ScalarParameterValues[7] =
+    {
+        ParameterInfo = { Name=Speed V (S) }
+        ParameterValue = 0.1
+        ParameterName = None
+    }
+    ScalarParameterValues[8] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[3] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=Alpha Erosion }
+        ParameterValue = Texture2D'/Game/VFX/Textures/Liquid/VFX_T_CausticNoise_C_Seamless_D.VFX_T_CausticNoise_C_Seamless_D'
+        ParameterName = None
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=Diffuse Texture }
+        ParameterValue = Texture2D'/Game/VFX/Textures/Noises/VFX_T_ChromaticCellNoise_Color_D.VFX_T_ChromaticCellNoise_Color_D'
+        ParameterName = None
+    }
+    TextureParameterValues[2] =
+    {
+        ParameterInfo = { Name=Normal Texture }
+        ParameterValue = Texture2D'/Game/VFX/Textures/VFX_T_Ground_ClumpySnow_2k_N.VFX_T_Ground_ClumpySnow_2k_N'
+        ParameterName = None
+    }
+}
+VectorParameterValues[1] =
+{
+    VectorParameterValues[0] =
+    {
+        ParameterInfo = { Name=AlphaChannel }
+        ParameterValue = { R=0, G=1, B=0, A=0 }
+        ParameterName = None
+    }
+}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Masked (1)
+    bOverride_TwoSided = true
+    TwoSided = false
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[3] =
+    {
+        StaticSwitchParameters[0] =
+        {
+            Value = true
+            ParameterInfo = { Name=UseSameTilingONAlpha }
+            bOverride = true
+        }
+        StaticSwitchParameters[1] =
+        {
+            Value = false
+            ParameterInfo = { Name=Use SubUVs }
+            bOverride = true
+        }
+        StaticSwitchParameters[2] =
+        {
+            Value = false
+            ParameterInfo = { Name=Use UV Mod }
+            bOverride = true
+        }
+    }
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[0] = {}

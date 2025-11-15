@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Base.h"
 
@@ -33,6 +33,12 @@ private:
 public:
 	static CGameObject_Manager* Create(_uint iNumLevels);
 	virtual void Free() override;
+
+#ifdef _DEBUG
+	void Describe_Entity();
+#endif // _DEBUG
+
+	
 
 };
 

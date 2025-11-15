@@ -1,0 +1,6 @@
+Diffuse=VFX_T_Ice_D
+Normal=T_Cairn_RockPile_N
+Other[0]=Good64x64TilingNoiseHighFreq
+Other[1]=T_Cairn_RockPile_MSK
+Other[2]=VFX_T_Ice_N
+Other[3]=VFX_T_Ice_R

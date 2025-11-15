@@ -1,0 +1,6 @@
+Diffuse=VFX_T_mud_drop_D
+Other[0]=DefaultDiffuse
+Other[1]=Good64x64TilingNoiseHighFreq
+Other[2]=DebugNumberStrip
+Other[3]=DebugNumberPeriod
+Other[4]=VFX_T_NoiseCaustics02_Color_D

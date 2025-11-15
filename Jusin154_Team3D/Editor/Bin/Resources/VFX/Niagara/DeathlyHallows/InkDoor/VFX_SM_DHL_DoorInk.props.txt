@@ -1,0 +1,38 @@
+Materials[2] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Niagara/DeathlyHallows/InkDoor/VFX_MI_DHL_DoorInk_Mesh.VFX_MI_DHL_DoorInk_Mesh'
+    Materials[1] = MaterialInstanceConstant'/Game/VFX/Niagara/DeathlyHallows/InkDoor/VFX_MI_DHL_DoorInk_Mesh_B.VFX_MI_DHL_DoorInk_Mesh_B'
+}
+SourceModels[0] = {}
+StaticMaterials[2] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Niagara/DeathlyHallows/InkDoor/VFX_MI_DHL_DoorInk_Mesh.VFX_MI_DHL_DoorInk_Mesh'
+        MaterialSlotName = principledshader
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 565.511, 0, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Niagara/DeathlyHallows/InkDoor/VFX_MI_DHL_DoorInk_Mesh_B.VFX_MI_DHL_DoorInk_Mesh_B'
+        MaterialSlotName = principledshader1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 651.128, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0.182678, Y=-212.713, Z=402.806 }
+    BoxExtent = { X=346.897, Y=184.252, Z=395.103 }
+    SphereRadius = 524.802
+}

@@ -1,0 +1,107 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[4] =
+{
+    ReferencedTextures[0] = Texture2D'/Game/Environment/FIG_07/Textures/T_Fig07_GraphornWallDoor_D.T_Fig07_GraphornWallDoor_D'
+    ReferencedTextures[1] = Texture2D'/Game/Environment/FIG_07/Textures/T_Fig07_GraphornWallDoor_MROH.T_Fig07_GraphornWallDoor_MROH'
+    ReferencedTextures[2] = Texture2D'/Game/Environment/FIG_07/Textures/T_Fig07_GraphornWallDoor_N.T_Fig07_GraphornWallDoor_N'
+    ReferencedTextures[3] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_GraphornDoorSpiral_InnerGradient1_D.VFX_T_GraphornDoorSpiral_InnerGradient1_D'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[4] =
+                {
+                    ParameterInfos[0] = { Name=brightnessStrength }
+                    ParameterInfos[1] = { Name=Power }
+                    ParameterInfos[2] = { Name=gradientshift }
+                    ParameterInfos[3] = { Name=gradient }
+                }
+            }
+            Entries[1] = { ParameterInfos[0]={} }
+            Entries[2] =
+            {
+                ParameterInfos[1] =
+                {
+                    ParameterInfos[0] = { Name=gradient }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[4] = { 20, 1, 0, 1 }
+        VectorValues[0] = {}
+        TextureValues[1] =
+        {
+            TextureValues[0] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_GraphornDoorSpiral_InnerGradient1_D.VFX_T_GraphornDoorSpiral_InnerGradient1_D'
+        }
+    }
+    ReferencedTextures[5] =
+    {
+        ReferencedTextures[0] = Texture2D'/Game/Environment/FIG_07/Textures/T_Fig07_GraphornWallDoor_D.T_Fig07_GraphornWallDoor_D'
+        ReferencedTextures[1] = Texture2D'/Game/Environment/FIG_07/Textures/T_Fig07_GraphornWallDoor_MROH.T_Fig07_GraphornWallDoor_MROH'
+        ReferencedTextures[2] = Texture2D'/Game/Environment/FIG_07/Textures/T_Fig07_GraphornWallDoor_N.T_Fig07_GraphornWallDoor_N'
+        ReferencedTextures[3] = Texture2D'/Game/VFX/CurveAtlas/VFX_CA_Fig07.VFX_CA_Fig07'
+        ReferencedTextures[4] = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_GraphornDoorSpiral_InnerGradient1_D.VFX_T_GraphornDoorSpiral_InnerGradient1_D'
+    }
+}
+BlendMode = BLEND_Opaque (0)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[1] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'/Game/VFX/Textures/Meshes/VFX_T_GraphornDoorSpiral_InnerGradient1_D.VFX_T_GraphornDoorSpiral_InnerGradient1_D'
+        Name = gradient
+        Group = None
+    }
+}
+CollectedScalarParameters[4] =
+{
+    CollectedScalarParameters[0] = { Value=20, Name=brightnessStrength, Group=None }
+    CollectedScalarParameters[1] = { Value=1, Name=Power, Group=None }
+    CollectedScalarParameters[2] = { Value=0, Name=gradientshift, Group=None }
+    CollectedScalarParameters[3] = { Value=1, Name=gradient, Group=None }
+}
+CollectedVectorParameters[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[4] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Fig07_GraphornWallDoor_D
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Fig07_GraphornWallDoor_MROH
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_Fig07_GraphornWallDoor_N
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = VFX_T_GraphornDoorSpiral_InnerGradient1_D
+    }
+}

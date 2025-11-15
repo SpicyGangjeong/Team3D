@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/VFX_MI_StinkBomb_Rat.VFX_MI_StinkBomb_Rat'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/MasterMaterials/MaterialInstance/VFX_MI_StinkBomb_Rat.VFX_MI_StinkBomb_Rat'
+        MaterialSlotName = lambert1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 62.2435, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=-19.1825, Z=11.4911 }
+    BoxExtent = { X=10.1007, Y=48.1054, Z=11.5782 }
+    SphereRadius = 48.1172
+}

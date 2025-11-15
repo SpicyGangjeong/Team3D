@@ -24,6 +24,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 {
 #ifdef _DEBUG
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    //_CrtSetBreakAlloc(1157440);
 #endif
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
@@ -157,7 +158,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
     RECT     rcWindow = { 0, 0, g_iWinSizeX, g_iWinSizeY };
 
-    AdjustWindowRect(&rcWindow, WS_OVERLAPPEDWINDOW, TRUE);
+    AdjustWindowRect(&rcWindow, WS_OVERLAPPEDWINDOW, FALSE);
 
     HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT, 0, rcWindow.right - rcWindow.left, rcWindow.bottom - rcWindow.top, nullptr, nullptr, hInstance, nullptr);

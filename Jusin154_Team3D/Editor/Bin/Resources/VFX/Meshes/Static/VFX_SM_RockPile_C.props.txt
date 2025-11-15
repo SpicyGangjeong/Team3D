@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/Game/VFX/Niagara/AncientMagic/IceBreakables/VFX_MI_AncientMagicCrystal_Rocks.VFX_MI_AncientMagicCrystal_Rocks'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/Game/VFX/Niagara/AncientMagic/IceBreakables/VFX_MI_AncientMagicCrystal_Rocks.VFX_MI_AncientMagicCrystal_Rocks'
+        MaterialSlotName = MI_Cairn_PopulationAssets04
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 298.883, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=-1.90735e-06, Z=3.8147e-06 }
+    BoxExtent = { X=31.1133, Y=22.9623, Z=22.1915 }
+    SphereRadius = 34.5347
+}

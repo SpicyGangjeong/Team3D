@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = Material3'/Game/VFX/MasterMaterials/VFX_MM_Ice_Opaque.VFX_MM_Ice_Opaque'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = Material3'/Game/VFX/MasterMaterials/VFX_MM_Ice_Opaque.VFX_MM_Ice_Opaque'
+        MaterialSlotName = lambert1
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 533.329, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-7.62939e-06, Y=-1.52588e-05, Z=4.61989 }
+    BoxExtent = { X=83.2995, Y=83.2996, Z=0 }
+    SphereRadius = 83.2996
+}
