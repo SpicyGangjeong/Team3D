@@ -49,7 +49,7 @@ void CHair::Late_Update(_float fTimeDelta)
 
 HRESULT CHair::Render()
 {
-	if (!m_pModelCom ||!m_pTextureCom)
+	if (!m_pModelCom || !m_pTHV_TextureCom || !m_pDAO_TextureCom)
 		return S_OK;
 
 	if (FAILED(Bind_ShaderResources())) {
@@ -64,7 +64,7 @@ HRESULT CHair::Render()
 			return E_FAIL;
 		}
 
-		/*if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom, "g_DiffuseTexture", aiTextureType_DIFFUSE, 0))) {
+	/*	if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom, "g_DiffuseTexture", aiTextureType_DIFFUSE, 0))) {
 			return E_FAIL;
 		}
 		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom, "g_NormalTexture", aiTextureType_NORMALS, 0))) {
@@ -94,11 +94,6 @@ HRESULT CHair::Ready_Components()
 
 	}
 
-
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("MaskTexture"),
-		reinterpret_cast<CComponent**>(&m_pTextureCom))))
-		return E_FAIL;
-
 	return S_OK;
 }
 
@@ -119,14 +114,30 @@ HRESULT CHair::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_MaskingTexture", iTextureIndex))) {
+	if (FAILED(m_pDAO_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_DAOTexture", 0))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pTHV_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_THVTexture", 0))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_TestColor",&m_vColor,sizeof(_float4)))) {
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_RootColor", &m_vRootColor, sizeof(_float3)))){
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_TipColor", &m_vTipColor, sizeof(_float3)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_DyeColor", &m_vDyeColor, sizeof(_float3)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_DyeOpacity", &m_fDyeOpacity, sizeof(_float)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_HairRoughness", &m_fHairRoughness, sizeof(_float)))) {
 		return E_FAIL;
 	}
 
+	
 	return S_OK;
 }
 CHair* CHair::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -158,8 +169,6 @@ CGameObject* CHair::Clone(void* pArg, CGameObject* pOwner)
 void CHair::Free()
 {
 	__super::Free();
-
-	SAFE_RELEASE(m_pTextureCom);
 }
 
 void CHair::Describe_Entity()
@@ -167,7 +176,7 @@ void CHair::Describe_Entity()
 	if (!m_pModelCom )
 		return;
 
-	for (_uint i = 0; i < dynamic_cast<CTexture*>(m_pTextureCom)->Get_Size(); i++)
+	/*for (_uint i = 0; i < dynamic_cast<CTexture*>(m_pTextureCom)->Get_Size(); i++)
 	{
 		_char label[128];
 
@@ -180,8 +189,12 @@ void CHair::Describe_Entity()
 
 		if (i % dynamic_cast<CTexture*>(m_pTextureCom)->Get_Size()   != dynamic_cast<CTexture*>(m_pTextureCom)->Get_Size()-1)
 			GUI::SameLine();
-	}
+	}*/
 
-	GUI::DragFloat4("COLOR", (_float*)&m_vColor, 0.1f);
+	GUI::DragFloat3("RootColor", (_float*)&m_vRootColor, 0.1f);
+	GUI::DragFloat3("TipColor", (_float*)&m_vTipColor, 0.1f);
+	GUI::DragFloat3("DyeColor", (_float*)&m_vDyeColor, 0.1f);
+	GUI::DragFloat("DyeOpacity", &m_fDyeOpacity, 0.1f);
+	GUI::DragFloat("HairRoughness", &m_fHairRoughness, 0.1f);
 
 }

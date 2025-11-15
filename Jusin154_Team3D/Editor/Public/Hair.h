@@ -2,9 +2,7 @@
 
 #include "Editor_Define.h"
 #include "ModelParts.h"
-NS_BEGIN(Engine)
-class CTexture;
-NS_END
+
 
 NS_BEGIN(Editor)
 
@@ -26,8 +24,14 @@ private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
 private:
-	CTexture* m_pTextureCom = { nullptr };
 	_uint iTextureIndex = { 0 };
+	_float3 m_vRootColor = _float3{ 1.f,1.f,1.f };
+	_float3 m_vTipColor = _float3{ 1.f,1.f,1.f };
+	_float3 m_vDyeColor = _float3{ 1.f,1.f,1.f };
+
+	_float m_fDyeOpacity = 0.0f;
+	_float m_fHairRoughness = 0.4f;
+
 
 public:
 	static CHair* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
