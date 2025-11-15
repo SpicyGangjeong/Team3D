@@ -99,7 +99,7 @@ void CS_MAIN(
         }
         
         particle.vLifeTime.x = 0.f;
-        particle.vTranslation.y = 0.f;
+       
     }
     
     Billboard(particle);

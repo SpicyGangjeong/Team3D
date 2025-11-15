@@ -97,6 +97,7 @@ protected:
 	_string		m_strModelName = {};
 	_string     m_strEmissiveName = {};
 
+
 public:
 	virtual void Free() override;
 };
