@@ -21,10 +21,11 @@ public:
 #pragma endregion 
 #pragma region Animation
 	void	Change_AnimationIndex(_int iAnimationIndex, _bool bIsLoop, _float fLerpDuration, _bool bIgnoreCurrentIndex = false);	// 애니메이션을 다른 인덱스로 변경함
-	_bool	Play_Animation(_float fTimeDelta); // 애니메이션에 델타타임을 넣어줌
+	_bool	Play_Animation(_float fTimeDelta, class CTransform* pTransform); // 애니메이션에 델타타임을 넣어줌
 	void	RefreshAnim(); // 애님을 현재 애님의 초기상태로 되돌림
 	void	Set_AnimationIndex(_uint iIndex, _bool isLoop = true);
 	void	Stop_Animation(); // 애니메이션을 정지 (초기상태로)
+	void	Set_Anim(CModel* Source);
 	_bool	IsFinishedAnim() const { return m_bIsFinishedAnim; }
 	_bool	IsFinishedLerp() const { return m_bIsFinishedLerp; }
 	_float	Get_AnimProgressRatio();

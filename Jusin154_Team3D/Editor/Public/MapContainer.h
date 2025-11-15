@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Editor_Define.h"
 #include "ContainerObject.h"
@@ -42,6 +42,8 @@ protected:
 	_float3		m_vPosition = {};
 	_float3		m_vRotation = {};
 	_float3		m_vScale = {};
+
+	vector<class CPartObject*>			m_ColiisonPartObjects;
 
 public:
 	virtual void Free() override;

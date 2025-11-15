@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Level_MapViewer.h"
 #include "GameInstance.h"
 
@@ -23,7 +23,7 @@ void CLevel_MapViewer::Update(_float fTimeDelta)
 
 HRESULT CLevel_MapViewer::Render()
 {
-	SetWindowText(g_hWnd, TEXT("MapEditor·¹º§ÀÔ´Ï´Ù"));
+	SetWindowText(g_hWnd, TEXT("MapEditorë ˆë²¨ìž…ë‹ˆë‹¤"));
 	GUI::ShowDemoWindow();
 	return S_OK;
 }
@@ -73,12 +73,14 @@ HRESULT CLevel_MapViewer::Ready_Layer_Camera(const _wstring& strLayerTag)
 	CameraDesc.vEye = _float3(0.f, 10.f, -10.f);
 	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
 	CameraDesc.fSpeedPerSec = 2.f;
+	CameraDesc.pCameraKey = TEXT("Debug_Camera");
 	CameraDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 	CameraDesc.fMouseSensor = 0.1f;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDebugCamera>(g_iStaticLevel, NEXT_LEVEL,
 		strLayerTag, &CameraDesc)))
 		return E_FAIL;
+
 
 	return S_OK;
 }

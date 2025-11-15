@@ -52,7 +52,7 @@
 #include "VIBuffer_Terrain.h"
 #include "Terrain.h"
 #include "BuildingContainer.h"
-#include "MapObject_Static.h"
+#include "MapObject_Collision.h"
 #include "MapObject_LOD.h"
 #include "MapObject_Manager.h"
 #include "MapElement_Interactable.h"
@@ -650,7 +650,7 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CMapObject_Static>(g_iStaticLevel, CMapObject_Static::Create(m_pDevice, m_pContext))))
+	if (FAILED(m_pGameInstance->Add_Prototype<CMapObject_Collision>(g_iStaticLevel, CMapObject_Collision::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CMapObject_LOD>(g_iStaticLevel, CMapObject_LOD::Create(m_pDevice, m_pContext))))
@@ -684,6 +684,60 @@ HRESULT CLoader::Asset_FileLoad(const _char* pDirectoryPath, const _tchar* pPreN
 
 		AddPrototypeEvent(wstrFileName, szFilePath);
 
+	}
+
+	return S_OK;
+}
+
+HRESULT CLoader::MapFolderLoad(const _char* pDirectoryPath, const _char* pFileExt, _bool bUseTag, vector<_wstring>& ModelPrototypeTags, vector<filesystem::path>& ModelPrototypePath)
+{
+	for (const auto& file : filesystem::directory_iterator(pDirectoryPath))
+	{
+		if (file.is_directory())
+			continue;
+
+		string ext = file.path().extension().string();
+
+		if (strcmp(ext.c_str(), pFileExt)) {
+			continue;
+		}
+
+		_char szFilePath[MAX_PATH] = {};
+
+		strcpy_s(szFilePath, MAX_PATH, file.path().string().c_str());
+
+		_wstring strFileName = L"Prototype_GameObject_" + file.path().stem().wstring();
+
+		CModel* pModel = CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, szFilePath);
+
+		/*For Prototype_Component_Model_*/
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, strFileName, pModel)))
+			return E_FAIL;
+
+		if(bUseTag)
+		{
+			ModelPrototypeTags.push_back(strFileName);
+			ModelPrototypePath.emplace_back(file.path());
+		}
+
+		_uint iNumMesh = pModel->Get_NumMeshes();
+
+
+		CRigidBody::RIGIDBODY_PROTOTYPEDESC Desc{};
+		for (_uint i = 0; i < iNumMesh; ++i) {
+			_string strDestName = pModel->Get_MeshName(i) + to_string(i);
+			{
+				Desc.eType = ACTOR::TRIANGLEMESH;
+				Desc.ePxRigidBodyFlags = {};
+				Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+				Desc.ePxMaterialTypes = PXMATERIAL::DEFAULT;
+				Desc.vMatInfo = _float3(0.5f, 0.5f, 0.6f);
+				Desc.fContactOffset = 0.f;
+			}
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, CMyTools::ToWstring(strDestName).c_str(), CRigidBody::Create(m_pDevice, m_pContext, Desc)))) {
+				return E_FAIL;
+			}
+		}
 	}
 
 	return S_OK;
@@ -863,6 +917,11 @@ HRESULT CLoader::Loading_For_MapViewer()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("CollisionDebug"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Effect/Noises/VFX_T_noise6_D.png"), 0)))) {
+		return E_FAIL;
+	}
+
 	m_strMessage = TEXT("모델를(을) 로딩 중 입니다.");
 
 	/* For.Prototype_Component_SkyboxModel */
@@ -873,56 +932,28 @@ HRESULT CLoader::Loading_For_MapViewer()
 	vector<_wstring> ModelPrototypeTags = {};
 	vector<filesystem::path> ModelPrototypePath = {};
 
-	//for (const auto& file : filesystem::directory_iterator("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Meshes"))
-	for (const auto& file : filesystem::directory_iterator("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogwarts\\SUB_GreatHall\\Static_Mesh\\Kit_INT"))
-	//for (const auto& file : filesystem::directory_iterator("C:\\Users\\kimnuri\\Desktop\\Hogwart\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Terrain"))
-	{
-		if (file.is_directory())
-			continue;
+	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Collision\\Terrain",
+		".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Terrain",
+		".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_TScrolls\\Collisions",
+		".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_TScrolls\\Meshes",
+		".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Collision",
+		".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Meshes",
+		".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Meshes\\3Broom_Kit",
+		".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
 
-		string ext = file.path().extension().string();
-
-		//if (strcmp(ext.c_str(), ".bin")){
-		//	continue;
-		//}
-		if (strcmp(ext.c_str(), ".fbx")){
-			continue;
-		}
-
-		_char szFilePath[MAX_PATH] = {};
-
-		strcpy_s(szFilePath, MAX_PATH, file.path().string().c_str());
-
-		_wstring strFileName = L"Prototype_GameObject_" + file.path().stem().wstring();
-
-		CModel* pModel = CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, szFilePath);
-
-		/*For Prototype_Component_Model_*/
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, strFileName, pModel)))
-			return E_FAIL;
-
-		ModelPrototypeTags.push_back(strFileName);
-		ModelPrototypePath.emplace_back(file.path());
-
-		_uint iNumMesh = pModel->Get_NumMeshes();
-
-
-		CRigidBody::RIGIDBODY_PROTOTYPEDESC Desc{};
-		for (_uint i = 0; i < iNumMesh; ++i) {
-			_string strDestName = pModel->Get_MeshName(i) + to_string(i);
-			{
-				Desc.eType = ACTOR::TRIANGLEMESH;
-				Desc.ePxRigidBodyFlags = {};
-				Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
-				Desc.ePxMaterialTypes = PXMATERIAL::DEFAULT;
-				Desc.vMatInfo = _float3(0.5f, 0.5f, 0.6f);
-				Desc.fContactOffset = 0.f;
-			}
-			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, CMyTools::ToWstring(strDestName).c_str(), CRigidBody::Create(m_pDevice, m_pContext, Desc)))) {
-				return E_FAIL;
-			}
-		}
-	}
 
 	m_strMessage = TEXT("쉐이더를(을) 로딩 중 입니다.");
 
@@ -942,8 +973,8 @@ HRESULT CLoader::Loading_For_MapViewer()
 	if (FAILED(m_pGameInstance->Add_Prototype<CBuildingContainer>(g_iStaticLevel, CBuildingContainer::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	/* For.Prototype_GameObject_MapObject_Static */
-	if (FAILED(m_pGameInstance->Add_Prototype<CMapObject_Static>(g_iStaticLevel, CMapObject_Static::Create(m_pDevice, m_pContext))))
+	/* For.Prototype_GameObject_MapObject_Collision */
+	if (FAILED(m_pGameInstance->Add_Prototype<CMapObject_Collision>(g_iStaticLevel, CMapObject_Collision::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_MapObject_LOD */

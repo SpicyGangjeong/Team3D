@@ -1,5 +1,5 @@
 ﻿#include "pch.h"
-#include "MapObject_Static.h"
+#include "MapObject_Collision.h"
 
 #include "GameInstance.h"
 #include "DebugCamera.h"
@@ -8,29 +8,29 @@
 #include "VIBuffer_Terrain.h"
 #include "MapObject_Manager.h"
 
-CMapObject_Static::CMapObject_Static(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CMapObject_Collision::CMapObject_Collision(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMapObject(pDevice, pContext)
 {
 }
 
-CMapObject_Static::CMapObject_Static(const CMapObject_Static& Prototype)
+CMapObject_Collision::CMapObject_Collision(const CMapObject_Collision& Prototype)
 	: CMapObject(Prototype)
 {
 }
 
-void CMapObject_Static::Priority_Update(_float fTimeDelta)
+void CMapObject_Collision::Priority_Update(_float fTimeDelta)
 {
 #ifdef _DEBUG
 	m_bSelected = false;
 #endif 
 }
 
-void CMapObject_Static::Update(_float fTimeDelta)
+void CMapObject_Collision::Update(_float fTimeDelta)
 {
 
 }
 
-void CMapObject_Static::Late_Update(_float fTimeDelta)
+void CMapObject_Collision::Late_Update(_float fTimeDelta)
 {
 #ifdef _DEBUG
 	if (m_bSelected)
@@ -41,30 +41,33 @@ void CMapObject_Static::Late_Update(_float fTimeDelta)
 	}
 #endif 
 
-	XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_XMWorldMatrix() * m_pParentTransformCom->Get_XMWorldMatrix());
+	if(m_pGameInstance->Key_Pressing(DIK_Z))
+	{
+		XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_XMWorldMatrix() * m_pParentTransformCom->Get_XMWorldMatrix());
 
-	_float4 vPos;
-	XMStoreFloat4(&vPos, m_pTransformCom->Get_State(STATE::POSITION));
-	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this, vPos, 20.f);
+		_float4 vPos;
+		XMStoreFloat4(&vPos, m_pTransformCom->Get_State(STATE::POSITION));
+		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this, vPos, 20.f);
+	}
 }
 
-HRESULT CMapObject_Static::Render()
+HRESULT CMapObject_Collision::Render()
 {
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
 
-	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+	_uint		iNumMeshes = m_pModelComs[m_iLodIndex]->Get_NumMeshes();
 
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
-		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom, "g_DiffuseTexture", aiTextureType_DIFFUSE, 0))) {
-			return E_FAIL;
-		}
-		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom, "g_NormalTexture", aiTextureType_NORMALS, 0))) {
+		if (FAILED(m_pShaderCom->Bind_SRV("g_DiffuseTexture", m_pTextureCom->Get_SRV(0)))) {
 			return E_FAIL;
 		}
 
+		if (FAILED(m_pModelComs[0]->Bind_Material(i, m_pShaderCom, "g_NormalTexture", aiTextureType_NORMALS, 0))) {
+			return E_FAIL;
+		}
 		if (m_bSelected)
 		{
 			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::MAPTOOL)))) {
@@ -78,7 +81,7 @@ HRESULT CMapObject_Static::Render()
 			}
 		}
 
-		if (FAILED(m_pModelCom->Render(i))) {
+		if (FAILED(m_pModelComs[m_iLodIndex]->Render(i))) {
 			return E_FAIL;
 		}
 	}
@@ -86,20 +89,24 @@ HRESULT CMapObject_Static::Render()
 	return S_OK;
 }
 
-HRESULT CMapObject_Static::Initialize_Prototype()
+HRESULT CMapObject_Collision::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CMapObject_Static::Initialize(void* pArg)
+HRESULT CMapObject_Collision::Initialize(void* pArg)
 {
 	m_iMaxLodLevel = 0;
 
-	MAPOBJECT_STATIC_DESC* pDesc = static_cast<MAPOBJECT_STATIC_DESC*>(pArg);
+	MAPOBJECT_LOD_DESC* pDesc = static_cast<MAPOBJECT_LOD_DESC*>(pArg);
 
-	m_strModelPrototypeTag = pDesc->strModelPrototypeTag;
-	m_iModelPathIndex = pDesc->iModelPathIndex;
+	m_iMaxLodLevel = pDesc->iMaxLodLevel;
 
+	for (_uint i = 0; i < m_iMaxLodLevel + 1; i++)
+	{
+		m_ModelPrototypeTags.push_back(pDesc->ModelPrototypeTags[i]);
+		//m_ModelPathIndices.push_back((*pDesc->pModelPathIndices)[i]);
+	}
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -121,29 +128,44 @@ HRESULT CMapObject_Static::Initialize(void* pArg)
 	return S_OK;
 }
 
-_wstring CMapObject_Static::Get_PrototypeTag(_uint iLodIndex)
+_wstring CMapObject_Collision::Get_PrototypeTag(_uint iLodIndex)
 {
-	return m_strModelPrototypeTag;
+	if (m_iMaxLodLevel < iLodIndex)
+		return m_ModelPrototypeTags[0];
+
+	return m_ModelPrototypeTags[iLodIndex];
 }
 
-HRESULT CMapObject_Static::Ready_Components()
+HRESULT CMapObject_Collision::Ready_Components()
 {
 	__super::Ready_Components();
 
-	/* Com_Model */
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_strModelPrototypeTag,
-		reinterpret_cast<CComponent**>(&m_pModelCom))))
-		return E_FAIL;
+	for (_uint i = 0; i < m_iMaxLodLevel + 1; ++i)
+	{
+		CModel* pModel = { nullptr };
+
+		/* Com_Model */
+		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_ModelPrototypeTags[i],
+			reinterpret_cast<CComponent**>(&pModel))))
+			return E_FAIL;
+
+		m_pModelComs.push_back(pModel);
+	}
 
 	/* Com_Shader */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_MESH,
 		reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
+	/* Com_Texture */
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("CollisionDebug"), reinterpret_cast<CComponent**>(&m_pTextureCom), nullptr))) {
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 
-HRESULT CMapObject_Static::Bind_ShaderResources()
+HRESULT CMapObject_Collision::Bind_ShaderResources()
 {
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix))) {
 		return E_FAIL;
@@ -162,9 +184,9 @@ HRESULT CMapObject_Static::Bind_ShaderResources()
 	return S_OK;
 }
 
-CMapObject_Static* CMapObject_Static::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CMapObject_Collision* CMapObject_Collision::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CMapObject_Static* pInstance = new CMapObject_Static(pDevice, pContext);
+	CMapObject_Collision* pInstance = new CMapObject_Collision(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
@@ -175,28 +197,32 @@ CMapObject_Static* CMapObject_Static::Create(ID3D11Device* pDevice, ID3D11Device
 	return pInstance;
 }
 
-CGameObject* CMapObject_Static::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CMapObject_Collision::Clone(void* pArg, CGameObject* pOwner)
 {
-	CMapObject_Static* pInstance = new CMapObject_Static(*this);
+	CMapObject_Collision* pInstance = new CMapObject_Collision(*this);
 	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CMapObject_Static");
+		MSG_BOX("Failed to Cloned : CMapObject_Collision");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CMapObject_Static::Free()
+void CMapObject_Collision::Free()
 {
 	__super::Free();
 
 	SAFE_RELEASE(m_pShaderCom);
-	SAFE_RELEASE(m_pModelCom);
+	SAFE_RELEASE(m_pTextureCom);
+
+	for (auto& pModel : m_pModelComs)
+		Safe_Release(pModel);
+	m_pModelComs.clear();
 }
 
-void CMapObject_Static::Describe_Entity()
+void CMapObject_Collision::Describe_Entity()
 {
 	if (m_bDead)
 		return;
@@ -204,6 +230,7 @@ void CMapObject_Static::Describe_Entity()
 		return;
 
 	//ImGui::Text(CMyTools::ToString(m_strModelPrototypeTag).c_str());
+	GUI::Checkbox("Visible", &m_bVisible);
 	ImGui::Text("----- Transfrom ----");
 	ImGui::InputFloat("X##Position", &m_vPosition.x, 0.1f, 1.f);
 	ImGui::InputFloat("Y##Position", &m_vPosition.y, 0.1f, 1.f);
@@ -216,7 +243,6 @@ void CMapObject_Static::Describe_Entity()
 		{
 			pTerrain->Get_Component<CVIBuffer_Terrain>()->Picking(pTerrain->Get_Component<CTransform>(), m_vPosition);
 		}
-
 	}
 
 	ImGui::Text("----- Rotation ----");
@@ -241,31 +267,31 @@ void CMapObject_Static::Describe_Entity()
 		GUI::OpenPopup("BakeStaticPhysXMesh##popup");
 	}
 
-	if (GUI::BeginPopup("BakeStaticPhysXMesh##popup")) {
-		if (GUI::Button("No")) {
-			GUI::CloseCurrentPopup();
-		}
-		GUI::SameLine();
-		if (GUI::Button("Bake!!!")) {
-			CMapObject_Manager* pManager = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_MAPOBJECTMANAGER)->Get_Object<CMapObject_Manager>();
+	//if (GUI::BeginPopup("BakeStaticPhysXMesh##popup")) {
+	//	if (GUI::Button("No")) {
+	//		GUI::CloseCurrentPopup();
+	//	}
+	//	GUI::SameLine();
+	//	if (GUI::Button("Bake!!!")) {
+	//		CMapObject_Manager* pManager = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_MAPOBJECTMANAGER)->Get_Object<CMapObject_Manager>();
 
-			filesystem::path filePath = pManager->Get_PrototypePath(m_iModelPathIndex);
-			m_pModelCom->Save_PhysXTriMeshes(CMyTools::ToString(pManager->Get_PrototypePath(m_iModelPathIndex)).c_str());
-			_uint iNumMesh = m_pModelCom->Get_NumMeshes();
+	//		filesystem::path filePath = pManager->Get_PrototypePath(m_iModelPathIndex);
+	//		m_pModelCom->Save_PhysXTriMeshes(CMyTools::ToString(pManager->Get_PrototypePath(m_iModelPathIndex)).c_str());
+	//		_uint iNumMesh = m_pModelCom->Get_NumMeshes();
 
-			CRigidBody::RIGIDBODY_DESC Desc{};
-			for (_uint i = 0; i < iNumMesh; ++i)
-			{ // RIGID_BODY
-				Desc.szMeshName = _string(m_pModelCom->Get_MeshName(i) + to_string(i)).c_str();
+	//		CRigidBody::RIGIDBODY_DESC Desc{};
+	//		for (_uint i = 0; i < iNumMesh; ++i)
+	//		{ // RIGID_BODY
+	//			Desc.szMeshName = _string(m_pModelCom->Get_MeshName(i) + to_string(i)).c_str();
 
-				if (FAILED(Add_Asset_Component(g_iStaticLevel, CMyTools::ToWstring(Desc.szMeshName).c_str(), nullptr, &Desc))) {
-					assert(false);
-				}
-			}
-			GUI::CloseCurrentPopup();
-		}
-		GUI::EndPopup();
-	}
+	//			if (FAILED(Add_Asset_Component(g_iStaticLevel, CMyTools::ToWstring(Desc.szMeshName).c_str(), nullptr, &Desc))) {
+	//				assert(false);
+	//			}
+	//		}
+	//		GUI::CloseCurrentPopup();
+	//	}
+	//	GUI::EndPopup();
+	//}
 
 	m_bSelected = true;
 }

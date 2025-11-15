@@ -266,7 +266,7 @@ void CLevel_ObjectViewer::Show_AnimList()
 			{
 				pModel->Set_AnimationIndex(i);
 				pModel->Set_CurrentTrackPosition(0.f);
-				pModel->Play_Animation(0.f);
+				//pModel->Play_Animation(0.f);
 			}
 		}
 	}
