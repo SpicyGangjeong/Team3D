@@ -12,7 +12,9 @@ public:
 	{
 		_float3					vhalfGeometryInfo;		// 박스는 vSize, 캡슐은 radius, height로 씀
 		_float					fDensity = { 1000.f };	// 밀도, 실제 무게는 부피에 따라 달라짐
-		_float3					vMassCenter = {};
+		PSX::PxRigidDynamicLockFlags eLockFlag = {};
+		PSX::PxTransform		pxMassCenter = {};
+		_float2					vAutoDamping = {}; // 0, 0 이면 off, 선형감쇠값, 각 감쇠값
 	}RIGIDBODY_PROTOTYPE_DYNAMIC_DESC;
 
 	typedef struct tagRigidBody_DYNAMIC_Desc : public CRigidBody::RIGIDBODY_DESC
@@ -40,9 +42,11 @@ public:
 
 private:
 	PSX::PxRigidDynamic*	m_pRigidBody = { nullptr };		// 실제 시뮬레이션을 도는 본체
+	PSX::PxRigidDynamicLockFlags m_eLockFlag = { };
+	PSX::PxTransform		m_PxMassCenter = {}; // 회전축
 	_float3					m_vMatInfo = {};
 	_float3					m_vhalfGeometryInfo = {};
-	_float3					m_vMassCenter = {}; // 회전축
+	_float2					m_vDamping = { 0.f, 0.f };
 	_float					m_fDensity = { 1000.f };
 
 #ifdef _DEBUG

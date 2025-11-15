@@ -1,25 +1,25 @@
 ﻿#include "pch.h"
-#include "Dummy_PhysXBox.h"
+#include "Dummy_PhysXPlatform.h"
 
 #include "GameInstance.h"
 
 
-CDummy_PhysXBox::CDummy_PhysXBox(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CDummy_PhysXPlatform::CDummy_PhysXPlatform(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject{ pDevice, pContext }
 {
 }
 
-CDummy_PhysXBox::CDummy_PhysXBox(const CDummy_PhysXBox& rhs)
+CDummy_PhysXPlatform::CDummy_PhysXPlatform(const CDummy_PhysXPlatform& rhs)
 	: CGameObject(rhs)
 {
 }
 
-HRESULT CDummy_PhysXBox::Initialize_Prototype()
+HRESULT CDummy_PhysXPlatform::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CDummy_PhysXBox::Initialize(void* pArg)
+HRESULT CDummy_PhysXPlatform::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg))) {
 		return E_FAIL;
@@ -32,48 +32,38 @@ HRESULT CDummy_PhysXBox::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CDummy_PhysXBox::Priority_Update(_float fTimeDelta)
+void CDummy_PhysXPlatform::Priority_Update(_float fTimeDelta)
 {
 
 }
 
-void CDummy_PhysXBox::Update(_float fTimeDelta)
+void CDummy_PhysXPlatform::Update(_float fTimeDelta)
 {
-	//if (m_pGameInstance->Key_Pressing(DIK_LCONTROL)) {
-	//	if (m_pGameInstance->Key_Down(DIK_X)) {
-	//		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor());
-	//	}
-	//}
-	//else {
-	//	if (m_pGameInstance->Key_Down(DIK_X)) {
-	//		m_pGameInstance->Attach_Actor(*m_pRigidBody->Get_Actor());
-	//	}
-	//}
 }
 
-void CDummy_PhysXBox::Late_Update(_float fTimeDelta)
+void CDummy_PhysXPlatform::Late_Update(_float fTimeDelta)
 {
 	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
 		m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
 	}
 }
 
-HRESULT CDummy_PhysXBox::Render()
+HRESULT CDummy_PhysXPlatform::Render()
 {
-	if (FAILED(Bind_ShaderResources())) {
-		return E_FAIL;
-	}
+	//if (FAILED(Bind_ShaderResources())) {
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pModelCom->Bind_Material(0, m_pShaderCom, "g_DiffuseTexture", aiTextureType_DIFFUSE, 0))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::DEFAULT)))) {
-		return E_FAIL;
-	}
+	//if (FAILED(m_pModelCom->Bind_Material(0, m_pShaderCom, "g_DiffuseTexture", aiTextureType_DIFFUSE, 0))) {
+	//	return E_FAIL;
+	//}
+	//if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::DEFAULT)))) {
+	//	return E_FAIL;
+	//}
 
-	if (FAILED(m_pModelCom->Render(0))) {
-		return E_FAIL;
-	}
+	//if (FAILED(m_pModelCom->Render(0))) {
+	//	return E_FAIL;
+	//}
 #ifdef _DEBUG
 	if (FAILED(m_pRigidBody->Render())) {
 		return E_FAIL;
@@ -84,7 +74,7 @@ HRESULT CDummy_PhysXBox::Render()
 	return S_OK;
 }
 
-HRESULT CDummy_PhysXBox::Ready_Components(void* pArg)
+HRESULT CDummy_PhysXPlatform::Ready_Components(void* pArg)
 {
 	if (FAILED(__super::Ready_Components(pArg))) {
 		return E_FAIL;
@@ -98,14 +88,14 @@ HRESULT CDummy_PhysXBox::Ready_Components(void* pArg)
 	{ // RIGID_BODY
 		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
 
-		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_PLATFORM"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}
 	}
 
 	/* Com_Shader */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_MESH,
-		reinterpret_cast<CComponent**>(&m_pShaderCom)))){
+		reinterpret_cast<CComponent**>(&m_pShaderCom)))) {
 		return E_FAIL;
 	}
 
@@ -117,7 +107,7 @@ HRESULT CDummy_PhysXBox::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-HRESULT CDummy_PhysXBox::Bind_ShaderResources()
+HRESULT CDummy_PhysXPlatform::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
 		return E_FAIL;
@@ -135,38 +125,34 @@ HRESULT CDummy_PhysXBox::Bind_ShaderResources()
 	return S_OK;
 }
 
-CDummy_PhysXBox* CDummy_PhysXBox::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CDummy_PhysXPlatform* CDummy_PhysXPlatform::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CDummy_PhysXBox* pInstance = new CDummy_PhysXBox(pDevice, pContext);
+	CDummy_PhysXPlatform* pInstance = new CDummy_PhysXPlatform(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CDummy_PhysXBox");
+		MSG_BOX("Failed to Created : CDummy_PhysXPlatform");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CDummy_PhysXBox::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CDummy_PhysXPlatform::Clone(void* pArg, CGameObject* pOwner)
 {
-	CDummy_PhysXBox* pInstance = new CDummy_PhysXBox(*this);
+	CDummy_PhysXPlatform* pInstance = new CDummy_PhysXPlatform(*this);
 	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CDummy_PhysXBox");
+		MSG_BOX("Failed to Cloned : CDummy_PhysXPlatform");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CDummy_PhysXBox::Free()
+void CDummy_PhysXPlatform::Free()
 {
-	if (nullptr != m_pRigidBody) {
-		m_pGameInstance->Release_Actor(*m_pRigidBody->Get_Actor());
-	}
-
 	__super::Free();
 
 	SAFE_RELEASE(m_pRigidBody);
@@ -174,6 +160,6 @@ void CDummy_PhysXBox::Free()
 	SAFE_RELEASE(m_pModelCom);
 }
 
-void CDummy_PhysXBox::Describe_Entity()
+void CDummy_PhysXPlatform::Describe_Entity()
 {
 }

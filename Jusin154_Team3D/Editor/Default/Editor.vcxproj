@@ -169,6 +169,11 @@
     <ClInclude Include="..\Public\CallBack_Playable_HitRepot.h" />
     <ClInclude Include="..\Public\DummyObject.h" />
     <ClInclude Include="..\public\DummySkyBox.h" />
+    <ClInclude Include="..\Public\Dummy_PhysXPlatform.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dummy_PhysXWall.h" />
     <ClInclude Include="..\Public\Dummy_Plane.h" />
     <ClInclude Include="..\Public\Dummy_PhysXPlayable.h" />
     <ClInclude Include="..\public\GamePlay_Canvas.h" />
@@ -239,6 +244,11 @@
     <ClCompile Include="..\Private\CallBack_Playable_HitRepot.cpp" />
     <ClCompile Include="..\Private\DummyObject.cpp" />
     <ClCompile Include="..\private\DummySkyBox.cpp" />
+    <ClCompile Include="..\Private\Dummy_PhysXPlatform.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_PhysXWall.cpp" />
     <ClCompile Include="..\Private\Dummy_Plane.cpp" />
     <ClCompile Include="..\Private\Dummy_PhysXPlayable.cpp" />
     <ClCompile Include="..\private\GamePlay_Canvas.cpp" />

@@ -1,4 +1,4 @@
-#include "pch.h"
+Ôªø#include "pch.h"
 #include "Transform.h"
 #include "Shader.h"
 
@@ -40,7 +40,7 @@ _vector CTransform::Get_RollPitchYawVector() const
 	_vector vQuaternion = XMQuaternionNormalize(Get_QuarternionVector());
 
 	_float roll, pitch, yaw;
-	{ // XMMatrixRotationRollPitchYawFromVector∑Œ øœ∫Æ»˜ ∫π±∏µ 
+	{ // XMMatrixRotationRollPitchYawFromVectorÎ°ú ÏôÑÎ≤ΩÌûà Î≥µÍµ¨Îê®
 		XMFLOAT4 q;
 		XMStoreFloat4(&q, vQuaternion);
 

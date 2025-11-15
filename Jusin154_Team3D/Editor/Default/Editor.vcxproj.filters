@@ -220,6 +220,12 @@
     <Filter Include="02.GameObjects\Dummys\DummyPhysX\PhysXDoor">
       <UniqueIdentifier>{3131278b-18f5-4b84-ba85-73104998e9c9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\PhysXPlatform">
+      <UniqueIdentifier>{efffeaa6-b7a5-49fe-bd2e-9dfa9e4a67d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\PhysXWall">
+      <UniqueIdentifier>{813d68fb-0603-44e9-8fda-5c5dd84d0eb1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -432,6 +438,12 @@
     <ClInclude Include="..\Public\Dummy_PhysXDoor.h">
       <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXDoor</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Dummy_PhysXPlatform.h">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dummy_PhysXWall.h">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXWall</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -639,6 +651,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Dummy_PhysXDoor.cpp">
       <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXDoor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_PhysXPlatform.cpp">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_PhysXWall.cpp">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXWall</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
