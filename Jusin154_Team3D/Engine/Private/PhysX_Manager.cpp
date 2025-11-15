@@ -513,10 +513,17 @@ HRESULT CPhysX_Manager::Initialize()
 	// m_pScene->overlap();??????
 
 #ifdef 기무리
+	PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
+	PlaneData.iSubKind = UINT_MAX;
+	PlaneData.pOwner = nullptr;
+	PlaneData.pBody = nullptr;
+
 	m_pMaterials.reserve(ENUM_CLASS(PXMATERIAL::END));
 	m_pMaterials.push_back(m_pPhysics->createMaterial(0.5f, 0.5f, 0.6f));
 	PSX::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *m_pMaterials[ENUM_CLASS(PXMATERIAL::DEFAULT)]);
-	m_pScene->addActor(*pGroundPlane);
+	pGroundPlane->userData = &PlaneData;
+	pGroundPlane->setName("PHYSX_MANAGER_PLANE");
+	m_pScene->addActor(*pGroundPlane);;
 
 	//{
 	//	float halfExtent = .5f;
@@ -556,7 +563,9 @@ HRESULT CPhysX_Manager::Connect_DebugServer()
 		assert(false);
 		return E_FAIL;
 	}
-	m_pPvd->connect(*m_pTransport, PSX::PxPvdInstrumentationFlag::eALL);
+	if (false == (m_pPvd->connect(*m_pTransport, PSX::PxPvdInstrumentationFlag::eALL))) {
+		return E_FAIL;
+	}
 	return S_OK;
 }
 

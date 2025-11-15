@@ -78,6 +78,11 @@ private:
 	list<pair<CRigidBody*, PSX::PxActor*>>		m_RigidBodys = { };
 	map<_wstring, PSX::PxTriangleMesh*>			m_TriangleMeshes = {};
 	map<_wstring, PSX::PxTriangleMeshGeometry*>	m_TriangleMeshGeometry = {};
+#ifdef 기무리
+	PhsXUserData PlaneData = {};
+
+#endif // 기무리
+
 
 	vector<PSX::PxMaterial*> m_pMaterials = { };
 	_uint m_iNumLevel = {};

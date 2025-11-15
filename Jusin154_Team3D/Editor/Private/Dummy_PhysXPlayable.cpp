@@ -1,6 +1,5 @@
 ﻿#include "pch.h"
 #include "Dummy_PhysXPlayable.h"
-
 #include "GameInstance.h"
 
 CDummy_PhysXPlayable::CDummy_PhysXPlayable(ID3D11Device* pDevice, ID3D11DeviceContext* pContext):
@@ -119,6 +118,8 @@ HRESULT CDummy_PhysXPlayable::Ready_Components(void* pArg)
 		Desc.fStepOffset = { 0.05f };
 		Desc.fRadius = 0.5f;
 		Desc.fHeight = 1.0f;
+		Desc.pCallback_HitReport = &m_pCallBack_HitReport;
+		Desc.pCallback_Behavior = &m_pCallBack_Behavior;
 		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), (CComponent**)&m_pCharacter_Controller, &Desc))) {
 			return E_FAIL;

@@ -723,7 +723,7 @@ HRESULT CLoader::MapFolderLoad(const _char* pDirectoryPath, const _char* pFileEx
 		_uint iNumMesh = pModel->Get_NumMeshes();
 
 
-		CRigidBody::RIGIDBODY_PROTOTYPEDESC Desc{};
+		CRigidBody_Static::RIGIDBODY_STATIC_PROTOTYPEDESC Desc{};
 		for (_uint i = 0; i < iNumMesh; ++i) {
 			_string strDestName = pModel->Get_MeshName(i) + to_string(i);
 			{
@@ -734,7 +734,7 @@ HRESULT CLoader::MapFolderLoad(const _char* pDirectoryPath, const _char* pFileEx
 				Desc.vMatInfo = _float3(0.5f, 0.5f, 0.6f);
 				Desc.fContactOffset = 0.f;
 			}
-			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, CMyTools::ToWstring(strDestName).c_str(), CRigidBody::Create(m_pDevice, m_pContext, Desc)))) {
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, CMyTools::ToWstring(strDestName).c_str(), CRigidBody_Static::Create(m_pDevice, m_pContext, Desc)))) {
 				return E_FAIL;
 			}
 		}
