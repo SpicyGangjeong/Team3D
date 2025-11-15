@@ -39,6 +39,18 @@ void CDummy_PhysXPlatform::Priority_Update(_float fTimeDelta)
 
 void CDummy_PhysXPlatform::Update(_float fTimeDelta)
 {
+	if (m_pGameInstance->Key_Pressing(DIK_I)) {
+		m_pRigidBody->Add_Force(XMVectorSet(0.f, 0.f, 1.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta, PSX::PxForceMode::eACCELERATION);
+	}
+	if (m_pGameInstance->Key_Pressing(DIK_J)) {
+		m_pRigidBody->Add_Force(XMVectorSet(-1.f, 0.f, 0.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta, PSX::PxForceMode::eACCELERATION);
+	}
+	if (m_pGameInstance->Key_Pressing(DIK_K)) {
+		m_pRigidBody->Add_Force(XMVectorSet(0.f, 0.f, -1.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta, PSX::PxForceMode::eACCELERATION);
+	}
+	if (m_pGameInstance->Key_Pressing(DIK_L)) {
+		m_pRigidBody->Add_Force(XMVectorSet(1.f, 0.f, 0.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta, PSX::PxForceMode::eACCELERATION);
+	}
 }
 
 void CDummy_PhysXPlatform::Late_Update(_float fTimeDelta)
@@ -76,7 +88,10 @@ HRESULT CDummy_PhysXPlatform::Render()
 
 HRESULT CDummy_PhysXPlatform::Ready_Components(void* pArg)
 {
-	if (FAILED(__super::Ready_Components(pArg))) {
+	CTransform::TRANSFORM_DESC Desc = { };
+	Desc.fSpeedPerSec = 1000.f;
+	Desc.fRotationPerSec = XMConvertToDegrees(90.f);
+	if (FAILED(__super::Ready_Components(&Desc))) {
 		return E_FAIL;
 	}
 	BOXSTARTPOS_DESC* pBox = static_cast<BOXSTARTPOS_DESC*>(pArg);

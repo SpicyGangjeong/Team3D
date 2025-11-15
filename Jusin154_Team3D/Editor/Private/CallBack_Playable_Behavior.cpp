@@ -21,7 +21,8 @@ PSX::PxControllerBehaviorFlags CCallBack_Playable_Behavior::getBehaviorFlags(con
 			| PSX::PxControllerBehaviorFlag::eCCT_SLIDE;
 		break;
 	case PHYSX_KIND::BODY_DYNAMIC:
-		return PSX::PxControllerBehaviorFlag::eCCT_SLIDE;
+		return PSX::PxControllerBehaviorFlag::eCCT_CAN_RIDE_ON_OBJECT
+			| PSX::PxControllerBehaviorFlag::eCCT_SLIDE;
 		break;
 	case PHYSX_KIND::CCTActor:
 		// Action

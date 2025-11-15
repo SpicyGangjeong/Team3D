@@ -31,7 +31,7 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	CRigidBody* m_pRigidBody = { nullptr };
+	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
 	const PSX::PxRigidDynamic* m_pActor = { nullptr };
 	CModel* m_pModelCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
