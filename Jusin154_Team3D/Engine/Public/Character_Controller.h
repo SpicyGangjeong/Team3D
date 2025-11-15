@@ -12,9 +12,6 @@ class ENGINE_DLL CCharacter_Controller final :
 	// kinematic 기반임
 public:
 #pragma region STRUCT
-	struct CapsuleInfo
-	{
-	};
 	typedef struct tagCharacter_ControllerDesc
 	{
 		CTransform*			pTransform			= { nullptr };
@@ -23,7 +20,7 @@ public:
 		_float3				fMaterial			= { 0.5f, 0.5f, 0.6f };
 		_bool				bAutoStepping		= { false }; // 계단 높이 타게 할건지 // 박스 콜라이더는 생각한대로 되는데 캡슐은 바닥의 구체 때문에 예상보다 더 높은 곳까지 오를 수 있음
 		_float				fStepOffset			= { 0.05f }; // 허용가능한 계단 높이, 작게 유지하는게 좋음
-
+		_uint				iSubKind = { };
 		PSX::PxUserControllerHitReport*		pCallback_HitReport = { }; // move가 호출될 때 호출 됨 // dll을 받는 각 프로젝트에서 구현해야함
 		PSX::PxControllerBehaviorCallback*	pCallback_Behavior	= { }; // move가 호출될 때 호출 됨 // dll을 받는 각 프로젝트에서 구현해야함
 

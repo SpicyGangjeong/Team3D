@@ -89,15 +89,15 @@ HRESULT CDummy_PhysXBox::Ready_Components(void* pArg)
 	if (FAILED(__super::Ready_Components(pArg))) {
 		return E_FAIL;
 	}
-	BOXSTARTPOS_DESC* pBox = static_cast<BOXSTARTPOS_DESC*>(pArg);
+	PHYSXDUMMY_DESC* pPhysXDummyDesc = static_cast<PHYSXDUMMY_DESC*>(pArg);
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pBox->vPos), 1.f));
-	m_pTransformCom->Rotation(pBox->vRotRPY.x, pBox->vRotRPY.y, pBox->vRotRPY.z);
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pPhysXDummyDesc->vPos), 1.f));
+	m_pTransformCom->Rotation(pPhysXDummyDesc->vRotRPY.x, pPhysXDummyDesc->vRotRPY.y, pPhysXDummyDesc->vRotRPY.z);
 
 
 	{ // RIGID_BODY
 		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
-
+		Desc.iSubKind = pPhysXDummyDesc->iSubKind;
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}

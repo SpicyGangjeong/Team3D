@@ -108,16 +108,17 @@ HRESULT CDummy_PhysXPlayable::Ready_Components(void* pArg)
 	CTransform::TRANSFORM_DESC TransformDesc{};
 	TransformDesc.fRadius = 100.f;
 	TransformDesc.fRotationPerSec = XMConvertToRadians(60.f);
-	TransformDesc.fSpeedPerSec = 30.f;
+	TransformDesc.fSpeedPerSec = 15.f;
 	if (FAILED(__super::Ready_Components(&TransformDesc))) {
 		return E_FAIL;
 	}
-	PlayableSTARTPOS_DESC* pDesc = static_cast<PlayableSTARTPOS_DESC*>(pArg);
+	PHYSXDUMMY_DESC* pDesc = static_cast<PHYSXDUMMY_DESC*>(pArg);
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pDesc->vPos), 1.f));
 	m_pTransformCom->Rotation(pDesc->vRotRPY.x, pDesc->vRotRPY.y, pDesc->vRotRPY.z);
 	{
 		CCharacter_Controller::Character_Controller_DESC Desc{};
 
+		Desc.iSubKind = pDesc->iSubKind;
 		Desc.pTransform = m_pTransformCom;
 		Desc.eBodyType = ACTOR::CAPSULE;
 		Desc.fContactOffset = 0.1f;

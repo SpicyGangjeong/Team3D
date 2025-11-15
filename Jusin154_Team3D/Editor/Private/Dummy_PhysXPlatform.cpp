@@ -39,6 +39,18 @@ void CDummy_PhysXPlatform::Priority_Update(_float fTimeDelta)
 
 void CDummy_PhysXPlatform::Update(_float fTimeDelta)
 {
+	if (m_pGameInstance->Key_Pressing(DIK_I)) {
+		m_pRigidBody->Add_Force(XMVectorSet(0.f, 0.f, 1.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta, PSX::PxForceMode::eACCELERATION);
+	}
+	if (m_pGameInstance->Key_Pressing(DIK_J)) {
+		m_pRigidBody->Add_Force(XMVectorSet(-1.f, 0.f, 0.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta, PSX::PxForceMode::eACCELERATION);
+	}
+	if (m_pGameInstance->Key_Pressing(DIK_K)) {
+		m_pRigidBody->Add_Force(XMVectorSet(0.f, 0.f, -1.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta, PSX::PxForceMode::eACCELERATION);
+	}
+	if (m_pGameInstance->Key_Pressing(DIK_L)) {
+		m_pRigidBody->Add_Force(XMVectorSet(1.f, 0.f, 0.f, 0.f) * m_pTransformCom->Get_Speed() * fTimeDelta, PSX::PxForceMode::eACCELERATION);
+	}
 }
 
 void CDummy_PhysXPlatform::Late_Update(_float fTimeDelta)
@@ -76,18 +88,21 @@ HRESULT CDummy_PhysXPlatform::Render()
 
 HRESULT CDummy_PhysXPlatform::Ready_Components(void* pArg)
 {
-	if (FAILED(__super::Ready_Components(pArg))) {
+	CTransform::TRANSFORM_DESC Desc = { };
+	Desc.fSpeedPerSec = 1000.f;
+	Desc.fRotationPerSec = XMConvertToDegrees(90.f);
+	if (FAILED(__super::Ready_Components(&Desc))) {
 		return E_FAIL;
 	}
-	BOXSTARTPOS_DESC* pBox = static_cast<BOXSTARTPOS_DESC*>(pArg);
+	PHYSXDUMMY_DESC* pPhysXDummyDesc = static_cast<PHYSXDUMMY_DESC*>(pArg);
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pBox->vPos), 1.f));
-	m_pTransformCom->Rotation(pBox->vRotRPY.x, pBox->vRotRPY.y, pBox->vRotRPY.z);
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pPhysXDummyDesc->vPos), 1.f));
+	m_pTransformCom->Rotation(pPhysXDummyDesc->vRotRPY.x, pPhysXDummyDesc->vRotRPY.y, pPhysXDummyDesc->vRotRPY.z);
 
 
 	{ // RIGID_BODY
 		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
-
+		Desc.iSubKind = pPhysXDummyDesc->iSubKind;
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_PLATFORM"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}

@@ -75,6 +75,7 @@
 #include "Dummy_PhysXPlayable.h"
 #include "Dummy_PhysXMesh.h"
 #include "Dummy_PhysXPlatform.h"
+#include "Dummy_PhysXDoor.h"
 #include "Dummy_PhysXWall.h"
 
 #pragma endregion 
@@ -588,8 +589,36 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 			return E_FAIL;
 		}
 	}
+	{ // Door
+		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
+		{
+			Desc.eType = ACTOR::BOX;
+			Desc.ePxRigidBodyFlags = { /*PSX::PxRigidBodyFlag::eKINEMATIC*/ };
+			Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+			Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
+			Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
+			Desc.fContactOffset = { 0.05f };
+			Desc.vhalfGeometryInfo = { 1.5f, 1.5f, 0.0625f };
+			Desc.fDensity = 100.f;
+			PSX::PxTransform pxPivotTransform = PSX::PxTransform(PSX::PxVec3(1.5f, 1.5f, 0.f));
 
-	{
+			Desc.pxMassCenter = pxPivotTransform;
+			Desc.eLockFlag = { 
+				PSX::PxRigidDynamicLockFlag::eLOCK_ANGULAR_X   |
+				//PSX::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y |
+				PSX::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z   |
+				PSX::PxRigidDynamicLockFlag::eLOCK_LINEAR_Y    |
+				PSX::PxRigidDynamicLockFlag::eLOCK_LINEAR_X    |
+				PSX::PxRigidDynamicLockFlag::eLOCK_LINEAR_Z
+			};
+			Desc.vAutoDamping = { 10.f, 10.f };
+		}
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_DOOR"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
+			return E_FAIL;
+		}
+	}
+
+	{ 
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), CCharacter_Controller::Create(m_pDevice, m_pContext)))) {
 			return E_FAIL;
 		}
@@ -687,6 +716,9 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXBox>(g_iStaticLevel, CDummy_PhysXBox::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXDoor>(g_iStaticLevel, CDummy_PhysXDoor::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXPlayable>(g_iStaticLevel, CDummy_PhysXPlayable::Create(m_pDevice, m_pContext)))){
 		return E_FAIL;
 	}
@@ -699,11 +731,9 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXPlatform>(g_iStaticLevel, CDummy_PhysXPlatform::Create(m_pDevice, m_pContext)))){
 		return E_FAIL;
 	}
-
 	if (FAILED(m_pGameInstance->Add_Prototype<CMapObject_Collision>(g_iStaticLevel, CMapObject_Collision::Create(m_pDevice, m_pContext)))){
 		return E_FAIL;
 	}
-
 	if (FAILED(m_pGameInstance->Add_Prototype<CMapObject_LOD>(g_iStaticLevel, CMapObject_LOD::Create(m_pDevice, m_pContext)))){
 		return E_FAIL;
 	}

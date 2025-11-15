@@ -198,7 +198,10 @@
     <ClInclude Include="..\public\MapObject_Manager.h" />
     <ClInclude Include="..\Public\MainLight.h" />
     <ClInclude Include="..\public\MapObject_Collision.h" />
-    <ClInclude Include="..\Public\Dummy_PhysXDoor.h" />
+    <ClInclude Include="..\Public\Dummy_PhysXDoor.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\Public\Level_PhysXLab.h" />
     <ClInclude Include="..\Public\TestEffect.h" />
@@ -273,7 +276,10 @@
     <ClCompile Include="..\private\MapObject_Manager.cpp" />
     <ClCompile Include="..\Private\MainLight.cpp" />
     <ClCompile Include="..\private\MapObject_Collision.cpp" />
-    <ClCompile Include="..\Private\Dummy_PhysXDoor.cpp" />
+    <ClCompile Include="..\Private\Dummy_PhysXDoor.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\Private\Level_PhysXLab.cpp" />
     <ClCompile Include="..\Private\TestEffect.cpp" />
