@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "Graphic_Device.h"
+#include "Shader.h"
 
 CGraphic_Device::CGraphic_Device()
 	: m_pDevice{ nullptr }
@@ -81,6 +82,14 @@ HRESULT CGraphic_Device::Present()
 		return E_FAIL;
 
 	return m_pSwapChain->Present(0, 0);
+}
+
+HRESULT CGraphic_Device::Bind_DepthStencil(CShader* pShader, const _char* pContantName)
+{
+	if (FAILED(pShader->Bind_SRV(pContantName, m_pDepthStencilSRV)))
+		return E_FAIL;
+
+	return S_OK;
 }
 
 
@@ -172,20 +181,37 @@ HRESULT CGraphic_Device::Ready_DepthStencilView(_uint iWinCX, _uint iWinCY)
 	TextureDesc.Height = iWinCY;
 	TextureDesc.MipLevels = 1;
 	TextureDesc.ArraySize = 1;
-	TextureDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	TextureDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
 
 	TextureDesc.SampleDesc.Quality = 0;
 	TextureDesc.SampleDesc.Count = 1;
 
 	TextureDesc.Usage = D3D11_USAGE_DEFAULT;
-	TextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	TextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
 	TextureDesc.CPUAccessFlags = 0;
 	TextureDesc.MiscFlags = 0;
+
 
 	if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, &pDepthStencilTexture)))
 		return E_FAIL;
 
-	if (FAILED(m_pDevice->CreateDepthStencilView(pDepthStencilTexture, nullptr, &m_pDepthStencilView)))
+	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	dsvDesc.Texture2D.MipSlice = 0;
+
+
+	if (FAILED(m_pDevice->CreateDepthStencilView(pDepthStencilTexture, &dsvDesc, &m_pDepthStencilView)))
+		return E_FAIL;
+
+	/* DepthStencil SRV */
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+	srvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS; // 뎁스 샘플링용
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MipLevels = 1;
+	srvDesc.Texture2D.MostDetailedMip = 0;
+
+	if(FAILED(m_pDevice->CreateShaderResourceView(pDepthStencilTexture, &srvDesc, &m_pDepthStencilSRV)))
 		return E_FAIL;
 
 	SAFE_RELEASE(pDepthStencilTexture);
@@ -212,6 +238,7 @@ void CGraphic_Device::Free()
 	SAFE_RELEASE(m_pDepthStencilView);
 	SAFE_RELEASE(m_pBackBufferRTV);
 	SAFE_RELEASE(m_pDeviceContext);
+	SAFE_RELEASE(m_pDepthStencilSRV);
 
 #if defined(DEBUG) || defined(_DEBUG)
 	ID3D11Debug* d3dDebug;

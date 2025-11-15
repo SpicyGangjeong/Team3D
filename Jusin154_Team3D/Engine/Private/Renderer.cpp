@@ -111,6 +111,7 @@ void CRenderer::Render()
 	Render_Blur();
 	Render_Combined();
 	Render_Effect();
+	Render_WeightBlend();
 	Render_NonLight();
 	Render_Blend();
 	Render_LastColor();
@@ -317,9 +318,10 @@ void CRenderer::Render_Combined()
 
 void CRenderer::Render_Effect()
 {
-	if (FAILED(m_pGameInstance->Begin_MRT_Include_BackBuffer(TEXT("MRT_Color")))) {
+	if (FAILED(m_pGameInstance->Begin_MRT_NO_DepthStencil(TEXT("MRT_WB")))) {
 		return;
 	}
+
 
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::EFFECT)])
 	{
@@ -335,6 +337,30 @@ void CRenderer::Render_Effect()
 	if (FAILED(m_pGameInstance->End_MRT())) {
 		return;
 	}
+}
+
+void CRenderer::Render_WeightBlend()
+{
+	// Bind_Resorces
+
+	m_pWeightBlendShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix);
+	m_pWeightBlendShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix);
+	m_pWeightBlendShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix);
+
+
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_WB_Color"), m_pWeightBlendShader, "g_MixedDiffuseTexture"))) {
+		return;
+	}
+
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_WB_Revealage"), m_pWeightBlendShader, "g_RevealageTexture"))) {
+		return;
+	}
+
+	m_pWeightBlendShader->Begin(0);
+
+	m_pVIBuffer->Bind_Resources();
+	m_pVIBuffer->Render();
+
 }
 
 void CRenderer::Render_NonLight()
@@ -464,9 +490,9 @@ void CRenderer::Render_LastColor()
 
 }
 
-HRESULT CRenderer::Ready_DepthStencilView(_uint iSizeX, _uint iSizeY)
+HRESULT CRenderer::Ready_ShadowDepthStencilView(_uint iSizeX, _uint iSizeY)
 {
-	ID3D11Texture2D* pDepthStencilTexture = nullptr;
+	ID3D11Texture2D* pShadowDepthStencilTexture = nullptr;
 
 	D3D11_TEXTURE2D_DESC	TextureDesc;
 	ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
@@ -485,16 +511,16 @@ HRESULT CRenderer::Ready_DepthStencilView(_uint iSizeX, _uint iSizeY)
 	TextureDesc.CPUAccessFlags = 0;
 	TextureDesc.MiscFlags = 0;
 
-	if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, &pDepthStencilTexture))) {
+	if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, &pShadowDepthStencilTexture))) {
 		return E_FAIL;
 	}
 
 
-	if (FAILED(m_pDevice->CreateDepthStencilView(pDepthStencilTexture, nullptr, &m_pShadowDSV))) {
+	if (FAILED(m_pDevice->CreateDepthStencilView(pShadowDepthStencilTexture, nullptr, &m_pShadowDSV))) {
 		return E_FAIL;
 	}
 
-	SAFE_RELEASE(pDepthStencilTexture);
+	SAFE_RELEASE(pShadowDepthStencilTexture);
 
 	return S_OK;
 }
@@ -608,19 +634,20 @@ HRESULT CRenderer::Initialize()
 
 		/*WB_COLOR*/
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_WB_Color"), (_uint)Viewport.Width, (_uint)Viewport.Height,
-			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 1.0f)))) {
 			return E_FAIL;
 		}
 
 
 		/* WB_A*/
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_WB_Revealage"), (_uint)Viewport.Width, (_uint)Viewport.Height,
-			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(1.0f, 1.0f, 1.0f, 1.0f)))) {
 			return E_FAIL;
 		}
 
 
-		if (FAILED(Ready_DepthStencilView(g_iMaxShadowWidth, g_iMaxShadowHeight))) {
+		
+		if (FAILED(Ready_ShadowDepthStencilView(g_iMaxShadowWidth, g_iMaxShadowHeight))) {
 			return E_FAIL;
 		}
 
@@ -703,7 +730,12 @@ HRESULT CRenderer::Initialize()
 		return E_FAIL;
 	}
 
+	m_pWeightBlendShader = (CShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, TEXT("FX_WEIGHTBELND"), nullptr, nullptr);
 	
+	if (nullptr == m_pWeightBlendShader) {
+		return E_FAIL;
+	}
+
 	m_pVIBuffer = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
 	if (nullptr == m_pVIBuffer) {
 		return E_FAIL;
@@ -752,6 +784,7 @@ void CRenderer::Free()
 	SAFE_RELEASE(m_pShadowDSV);
 	SAFE_RELEASE(m_pShader);
 	SAFE_RELEASE(m_pLastColorShader);
+	SAFE_RELEASE(m_pWeightBlendShader);
 	SAFE_RELEASE(m_pVIBuffer);
 	SAFE_RELEASE(m_pDevice);
 	SAFE_RELEASE(m_pContext);

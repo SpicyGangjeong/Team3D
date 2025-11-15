@@ -40,6 +40,9 @@ HRESULT CEffectObject::Render()
 			return E_FAIL;
 		}
 
+		if (FAILED(m_pGameInstance->Bind_DepthStencil(m_pShaderCom, "g_DepthStencilTexture")))
+			return E_FAIL;
+
 		if (FAILED(m_pInstance_ModelCom->Bind_CS_Output(5, 1)))
 			return E_FAIL;
 
@@ -48,8 +51,6 @@ HRESULT CEffectObject::Render()
 		{
 			return E_FAIL;
 		}
-
-
 	}
 
 	return S_OK;
@@ -97,6 +98,18 @@ HRESULT CEffectObject::Render_Blur()
 
 HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 {
+
+	SAFE_RELEASE(m_pDiffuse_TextureCom);
+	SAFE_RELEASE(m_pNoise_TextureCom);
+	SAFE_RELEASE(m_pMasking_TextureCom);
+	SAFE_RELEASE(m_pDissolve_TextureCom);
+	SAFE_RELEASE(m_pEmissive_TextureCom);
+
+	SAFE_RELEASE(m_pInstance_ModelCom);
+
+	if (m_pLightCom != nullptr)
+		SAFE_RELEASE(m_pLightCom);
+	
 	_string strPerfectFilePath = pFilePath;
 	
 	strPerfectFilePath += ".bin";

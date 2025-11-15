@@ -29,9 +29,14 @@ Texture2D g_NormalTexture : register(t1);
 Texture2D g_MaskingTexture : register(t2);
 Texture2D g_DissolveTexture : register(t3);
 Texture2D g_NoiseTexture : register(t4);
-Texture2D g_EmissiveTexture : register(t6);
 
 StructuredBuffer<ParticleValue> g_ParticleValue : register(t5);
+
+
+Texture2D g_EmissiveTexture : register(t6);
+Texture2D g_DepthStencilTexture : register(t7);
+
+
 
 float4 g_vCamPosition;
 
@@ -70,7 +75,6 @@ bool g_isEmissive;
 
 bool g_isDiffuseUVMove;
 bool g_isMaskUVMove;
-bool g_isBlendedWeight;
 
 float g_fFar;
 
@@ -114,7 +118,6 @@ float2 SelectLerpUV(float2 fAmount, float _fRatio, int iSelectOption)
     return fAmount * fRatio;
 
 }
-
 
 struct VS_IN
 {
@@ -189,8 +192,48 @@ struct PS_IN
 struct PS_OUT
 {
     float4 vDiffuse : SV_TARGET0;
-    float4 vColorTarget : SV_TARGET1;
+    float4 vRevealage : SV_TARGET1;
+    float4 vColorTarget : SV_TARGET2;
 };
+
+
+PS_OUT BlendedWeight(vector fDiffuse, float fLinearZ , PS_IN In , float fProjZ)
+{
+    PS_OUT Out;
+    
+
+    
+    float3 vColor = fDiffuse.rgb;
+    float fAlpha = fDiffuse.a;
+    
+
+//    float fWeight =
+//max(
+//    min(1.0, max(max(vColor.r, vColor.g), vColor.b) * fAlpha),
+//    fAlpha
+//) *
+//clamp(
+//    0.01 / (1e-4 + pow(fLinearZ / 200, 4.0)),
+//   0.01f, 1000
+//);
+
+    
+    
+    float fWeight = clamp(0.03f / (1e-5 + pow(fLinearZ, 2.0f)), 0.01, 3e3);
+    fWeight = max(fWeight, 1.0);
+    
+    //이게 오리지널 웨이트 함수
+    
+    //float fWeight = pow(fLinearZ, -2.5);
+    //float fWeight = clamp(pow(fLinearZ, -2.5f), 1.0f, 1000.0f);
+
+    Out.vDiffuse = vector(vColor.rgb * fAlpha, fAlpha) * fWeight;
+    
+
+    Out.vRevealage.a = fAlpha;
+
+    return Out;
+}
 
 PS_OUT PS_MAIN(PS_IN In)
 {
@@ -229,7 +272,7 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     vector vMtrlNoise;
     vector vMtrlDissolve;
     
-    float fAnimIndex = g_ParticleValue[In.iGPUIndex].vAniIndex.x;
+    float  fAnimIndex = g_ParticleValue[In.iGPUIndex].vAniIndex.x;
     float2 vDiffuseTime = g_ParticleValue[In.iGPUIndex].vDiffuseUVMoveTime;
     float2 vMaskingTime = g_ParticleValue[In.iGPUIndex].vMaskingUVMoveTime;
     float2 vNoiseUVMoveTime = g_ParticleValue[In.iGPUIndex].vNoiseUVMoveTime;
@@ -315,6 +358,9 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     
     vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * vMtrlMask.r);
     
+    if (vMtrlDiffuse.a <= 0.f)
+        discard;
+    
     if (g_isDissolve == true)
     {
         vMtrlDissolve = g_DissolveTexture.Sample(DefaultSampler, In.vTexcoord);
@@ -323,7 +369,7 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
             discard;
     }
     
-    Out.vDiffuse = vMtrlDiffuse;
+
     
     // 색깔 추가할 처리 (이미시브)
     
@@ -333,12 +379,24 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     {
         vEmissiveMtrl = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
     }
+
+    int2 texel = int2(In.vPosition.xy);
     
-    if (vMtrlDiffuse.a >= g_fEmissiveCutAlpha)
-        Out.vColorTarget = vector(g_vEmissive.rgb + vEmissiveMtrl.rgb, g_fColorOption / 10.f);
-    else
-        Out.vColorTarget = vector(0.f, 0.f, 0.f, 0.f);
+    float fDepthStencilValue = g_DepthStencilTexture.Load(int3(texel, 0));
     
+
+    float bias = 0.0005f;
+    
+    if (fDepthStencilValue + bias < In.vProjPos.z / In.vProjPos.w)
+        discard;
+    
+    Out = BlendedWeight(vMtrlDiffuse, In.vProjPos.w, In, In.vProjPos.z / In.vProjPos.w);
+    
+        
+    //if (vMtrlDiffuse.a >= g_fEmissiveCutAlpha)
+    //    Out.vColorTarget = vector(g_vEmissive.rgb + vEmissiveMtrl.rgb, g_fColorOption / 10.f);
+    //else
+    //    Out.vColorTarget = vector(0.f, 0.f, 0.f, 0.f);
     
     return Out;
 }
@@ -528,8 +586,8 @@ technique11 DefaultTechnique
     pass NON_NOMALMAP
     {
         SetRasterizerState(RS_Nocull);
-        SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_WB_Acc, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_NON_NORMALMAP();
@@ -544,6 +602,8 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_BLUR();
     }
+
+
 
 }
 
