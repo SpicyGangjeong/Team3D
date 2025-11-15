@@ -19,7 +19,7 @@ private:
 	CTransform(const CTransform& rhs);
 	virtual ~CTransform() = default;
 public:
-	HRESULT Bind_ShaderResource(class CShader* pShader, const _char* pConstantName) const;
+	HRESULT		Bind_ShaderResource(class CShader* pShader, const _char* pConstantName) const;
 
 	void		Set_Scale(_float3& vScale);
 	void		Mult_Scale(_float3& vScale);

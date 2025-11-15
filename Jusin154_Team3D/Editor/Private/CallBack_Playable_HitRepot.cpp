@@ -45,7 +45,7 @@ void CCallBack_Playable_HitRepot::onShapeHit(const PSX::PxControllerShapeHit& hi
 
 void CCallBack_Playable_HitRepot::onControllerHit(const PSX::PxControllersHit& hit)
 {
-	PSX::PxController* pController = hit.controller;
+	PSX::PxController*		pController = hit.controller;
 	PSX::PxExtendedVec3		vWorldPos = hit.worldPos;		// 접촉지점
 	PSX::PxVec3				vWorldNormal = hit.worldNormal;	// 접촉노말
 	PSX::PxVec3				vDir = hit.dir;			// 시도한 move 방향

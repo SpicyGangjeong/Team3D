@@ -10,7 +10,10 @@ CRigidBody_Dynamic::CRigidBody_Dynamic(ID3D11Device* pDevice, ID3D11DeviceContex
 CRigidBody_Dynamic::CRigidBody_Dynamic(const CRigidBody_Dynamic& rhs) :
     CRigidBody(rhs),
     m_vMatInfo(rhs.m_vMatInfo),
-    m_vhalfGeometryInfo(rhs.m_vhalfGeometryInfo)
+    m_vhalfGeometryInfo(rhs.m_vhalfGeometryInfo),
+	m_PxMassCenter(rhs.m_PxMassCenter),
+	m_eLockFlag(rhs.m_eLockFlag),
+	m_vDamping(rhs.m_vDamping)
 {
 }
 
@@ -75,7 +78,9 @@ HRESULT CRigidBody_Dynamic::Initialize_Prototype(RIGIDBODY_PROTOTYPE_DYNAMIC_DES
 	m_fContactOffset	= Desc.fContactOffset;
 	m_vhalfGeometryInfo = Desc.vhalfGeometryInfo;
 	m_fDensity			= Desc.fDensity;
-	m_vMassCenter		= Desc.vMassCenter;
+	m_eLockFlag			= Desc.eLockFlag;
+	m_PxMassCenter		= Desc.pxMassCenter;
+	m_vDamping			= Desc.vAutoDamping;
 
 	return S_OK;
 }
@@ -97,6 +102,12 @@ HRESULT CRigidBody_Dynamic::Initialize(void* pArg)
 	m_tagData.pBody = this;
 	m_pRigidBody = m_pGameInstance->Add_DynamicActor(*this);
 	m_pRigidBody->userData = &m_tagData;
+	m_pRigidBody->setCMassLocalPose(m_PxMassCenter);
+	m_pRigidBody->setRigidDynamicLockFlags(m_eLockFlag);
+	m_pRigidBody->setLinearDamping(m_vDamping.x);
+	m_pRigidBody->setAngularDamping(m_vDamping.y);
+	//m_pRigidBody->joint;
+	//PSX::PxRevol
 
 	return S_OK;
 }
