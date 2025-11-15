@@ -36,9 +36,6 @@ HRESULT CSpell_Slot::Initialize(void* pArg)
 	{
 		return E_FAIL;
 	}
-
-	m_pVIBuffer_UI_InstanceCom->Set_Size(m_fSizeX, m_fSizeY);
-
 	return S_OK;
 }
 
@@ -57,10 +54,9 @@ void CSpell_Slot::Update(_float fTimeDelta)
 	{
 		return;
 	}
-
-	m_pVIBuffer_UI_InstanceCom->Set_Pos(m_fX, m_fY, /*m_pOwner->Get_WorldPostion().m128_f32[0], m_pOwner->Get_WorldPostion().m128_f32[1]*/0.f, 0.f, 75.f);
-
 	m_fTime += fTimeDelta * m_fTimeMult;
+
+	__super::Update(fTimeDelta);
 
 }
 
@@ -72,7 +68,7 @@ void CSpell_Slot::Late_Update(_float fTimeDelta)
 	}
 	if (m_bVisible) {
 		_float4* vPos = (_float4*)(m_pTransformCom->Get_WorldMatrixPtr()->m[3]);
-		m_pGameInstance->Add_RenderGroup(RENDER::UI, this, *vPos, m_pTransformCom->Get_Radius());
+		m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
 	}
 }
 
@@ -85,9 +81,12 @@ HRESULT CSpell_Slot::Render()
 		return E_FAIL;
 	}
 
-	m_pVIBuffer_UI_InstanceCom->Bind_Resources();
-
-	m_pVIBuffer_UI_InstanceCom->Render();
+	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pVIBufferCom->Render())) {
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -124,8 +123,7 @@ HRESULT CSpell_Slot::Bind_ShaderResources()
 
 HRESULT CSpell_Slot::Ready_Components(void* pArg)
 {
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_ActionSkillRect"),
-		reinterpret_cast<CComponent**>(&m_pVIBuffer_UI_InstanceCom))))
+	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
 	{
 		return E_FAIL;
 	}
@@ -173,7 +171,7 @@ void CSpell_Slot::Free()
 
 	SAFE_RELEASE(m_pDiffuse_TextureCom);
 	SAFE_RELEASE(m_pShaderCom);
-	SAFE_RELEASE(m_pVIBuffer_UI_InstanceCom);
+	SAFE_RELEASE(m_pVIBufferCom);
 }
 
 void CSpell_Slot::Describe_Entity()

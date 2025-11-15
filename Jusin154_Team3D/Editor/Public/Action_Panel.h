@@ -36,6 +36,7 @@ private:
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
 	CGameObject* m_pSpell_Slot = { nullptr };
+	CGameObject* m_pLoadingWidget = { nullptr };
 
 public:
 	static CAction_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

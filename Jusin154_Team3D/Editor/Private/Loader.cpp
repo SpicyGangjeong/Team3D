@@ -352,14 +352,6 @@ HRESULT CLoader::Loading_For_UI()
 
 	m_strMessage = TEXT("Model Loading..");
 
-	CVIBuffer_UI_Instance::UI_INSTANCE_DESC		UIDesc{};
-
-	UIDesc.UINum = 4;
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_ActionSkillRect"),
-		CVIBuffer_UI_Instance::Create(m_pDevice, m_pContext, &UIDesc))))
-		return E_FAIL;
-
 	m_strMessage = TEXT("Shader Loading..");
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_UIEDITOR,

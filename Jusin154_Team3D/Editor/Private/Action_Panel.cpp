@@ -2,6 +2,7 @@
 #include "Action_Panel.h"
 #include "GameInstance.h"
 #include "Spell_Slot.h"
+#include "LoadingWidget.h"
 
 CAction_Panel::CAction_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     :CPanelObject(pDevice, pContext)
@@ -73,7 +74,7 @@ void CAction_Panel::Late_Update(_float fTimeDelta)
 
 	if (m_bVisible) {
 		_float4* vPos = (_float4*)(m_pTransformCom->Get_WorldMatrixPtr()->m[3]);
-		m_pGameInstance->Add_RenderGroup(RENDER::UI, this, *vPos, m_pTransformCom->Get_Radius());
+		m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
 	}
 	__super::Late_Update(fTimeDelta);
 
@@ -153,6 +154,11 @@ HRESULT CAction_Panel::Ready_Element(void* pArg)
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Spell_Slot"), m_pSpell_Slot);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLoadingWidget>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CLoadingWidget**>(&m_pLoadingWidget))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("LoadingWidget"), m_pLoadingWidget);
 	return S_OK;
 }
 

@@ -9,9 +9,9 @@ class ENGINE_DLL CVIBuffer_Instance abstract : public CVIBuffer
 public:
 	typedef struct tagInstanceDesc
 	{
-		_uint UINum = {};
+		_uint	iNum = {};
 		_float2 vSize = { };
-		_float2 vCenter = {};
+		_float2 vPsition = {};
 	}INSTANCE_DESC;
 protected:
 	CVIBuffer_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

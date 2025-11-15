@@ -200,7 +200,6 @@
     <ClInclude Include="..\Public\MainLight.h" />
     <ClInclude Include="..\public\MapObject_Collision.h" />
     <ClInclude Include="..\Public\Dummy_PhysXDoor.h" />
-    <ClInclude Include="..\public\MapObject_Static.h" />
     <ClInclude Include="..\public\Spell_Slot.h" />
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\Public\Level_PhysXLab.h" />
@@ -278,7 +277,6 @@
     <ClCompile Include="..\Private\MainLight.cpp" />
     <ClCompile Include="..\private\MapObject_Collision.cpp" />
     <ClCompile Include="..\Private\Dummy_PhysXDoor.cpp" />
-    <ClCompile Include="..\private\MapObject_Static.cpp" />
     <ClCompile Include="..\private\Spell_Slot.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\Private\Level_PhysXLab.cpp" />
