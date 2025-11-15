@@ -1,9 +1,17 @@
 ﻿#include "pch.h"
 #include "CallBack_Playable_HitRepot.h"
 #include "GameInstance.h"
+#include "GameObject.h"
 
-CCallBack_Playable_HitRepot::CCallBack_Playable_HitRepot()
+CCallBack_Playable_HitRepot::CCallBack_Playable_HitRepot():
+	m_pGameInstance(CGameInstance::GetInstance())
 {
+	SAFE_ADDREF(m_pGameInstance);
+}
+
+CCallBack_Playable_HitRepot::~CCallBack_Playable_HitRepot()
+{
+	SAFE_RELEASE(m_pGameInstance);
 }
 
 void CCallBack_Playable_HitRepot::onShapeHit(const PSX::PxControllerShapeHit& hit)
@@ -18,17 +26,32 @@ void CCallBack_Playable_HitRepot::onShapeHit(const PSX::PxControllerShapeHit& hi
 	PSX::PxRigidActor* pActor = hit.actor;
 
 	if (nullptr != pController && nullptr != pActor) {
-		PhsXUserData* pActorData = static_cast<PhsXUserData*>(pActor->userData);
-		if (nullptr == pActorData) { // missing user data
+		PhsXUserData* pTargetActorData = static_cast<PhsXUserData*>(pActor->userData);
+		PhsXUserData* pOwnerActorData = static_cast<PhsXUserData*>(pController->getActor()->userData);
+		if (nullptr == pTargetActorData) { // missing user data
 			return;
 		}
-		switch (pActorData->eKind)
+
+		switch (pTargetActorData->eKind)
 		{
 		case PHYSX_KIND::BODY_STATIC:
 			// action
 			break;
 		case PHYSX_KIND::BODY_DYNAMIC:
 		{
+			switch (pTargetActorData->iSubKind)
+			{
+			case 23: // 무거운데 올라갈 수 있는 벽
+				if (m_pGameInstance->Key_Pressing(DIK_E)) {
+					pOwnerActorData->pOwner->Get_Component<CTransform>()->BookMomentum(fLength * XMVectorSet(0.f, 1.f, 0.f, 0.f));
+				}																			   					  
+				else if (m_pGameInstance->Key_Pressing(DIK_R)) {							   					  
+					pOwnerActorData->pOwner->Get_Component<CTransform>()->BookMomentum(fLength * XMVectorSet(0.f, -1.f, 0.f, 0.f));
+				}
+				break;
+			default:
+				break;
+			}
 			PSX::PxRigidDynamic* pDynamic = static_cast<PSX::PxRigidDynamic*>(pActor);
 			pDynamic->addForce(vDir * fLength * 100000.f, PSX::PxForceMode::eIMPULSE);
 		}	break;

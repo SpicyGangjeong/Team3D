@@ -3,8 +3,15 @@
 #include "GameInstance.h"
 
 
-CCallBack_Playable_Behavior::CCallBack_Playable_Behavior()
+CCallBack_Playable_Behavior::CCallBack_Playable_Behavior():
+	m_pGameInstance(CGameInstance::GetInstance())
 {
+	SAFE_ADDREF(m_pGameInstance);
+}
+
+CCallBack_Playable_Behavior::~CCallBack_Playable_Behavior()
+{
+	SAFE_RELEASE(m_pGameInstance);
 }
 
 PSX::PxControllerBehaviorFlags CCallBack_Playable_Behavior::getBehaviorFlags(const PSX::PxShape& shape, const PSX::PxActor& actor)
@@ -12,17 +19,31 @@ PSX::PxControllerBehaviorFlags CCallBack_Playable_Behavior::getBehaviorFlags(con
 	if (nullptr == actor.userData) {
 		return PSX::PxControllerBehaviorFlags(0);
 	}
+	PSX::PxControllerBehaviorFlags eResults = PSX::PxControllerBehaviorFlags(0);
 	PhsXUserData* pActorData = static_cast<PhsXUserData*>(actor.userData);
-
 	switch (pActorData->eKind)
 	{
 	case PHYSX_KIND::BODY_STATIC:
-		return PSX::PxControllerBehaviorFlag::eCCT_CAN_RIDE_ON_OBJECT
-			| PSX::PxControllerBehaviorFlag::eCCT_SLIDE;
+		eResults = PSX::PxControllerBehaviorFlag::eCCT_SLIDE | PSX::PxControllerBehaviorFlag::eCCT_CAN_RIDE_ON_OBJECT;
 		break;
 	case PHYSX_KIND::BODY_DYNAMIC:
-		return PSX::PxControllerBehaviorFlag::eCCT_CAN_RIDE_ON_OBJECT
-			| PSX::PxControllerBehaviorFlag::eCCT_SLIDE;
+		switch (pActorData->iSubKind)
+		{
+		case 20:
+			eResults = PSX::PxControllerBehaviorFlag::eCCT_SLIDE;
+			break;
+		case 21:
+			eResults = PSX::PxControllerBehaviorFlag::eCCT_CAN_RIDE_ON_OBJECT;
+			break;
+		case 22:
+			eResults = PSX::PxControllerBehaviorFlag::eCCT_SLIDE | PSX::PxControllerBehaviorFlag::eCCT_CAN_RIDE_ON_OBJECT;
+			break;
+		case 23:
+			eResults = PSX::PxControllerBehaviorFlag::eCCT_CAN_RIDE_ON_OBJECT;
+			break;
+		default:
+			break;
+		}
 		break;
 	case PHYSX_KIND::CCTActor:
 		// Action
@@ -33,9 +54,7 @@ PSX::PxControllerBehaviorFlags CCallBack_Playable_Behavior::getBehaviorFlags(con
 		break;
 	}
 
-
-	// 나머지는 아무 특별 동작 없음
-	return PSX::PxControllerBehaviorFlags(0);
+	return eResults;
 }
 
 PSX::PxControllerBehaviorFlags CCallBack_Playable_Behavior::getBehaviorFlags(const PSX::PxController& controller)
