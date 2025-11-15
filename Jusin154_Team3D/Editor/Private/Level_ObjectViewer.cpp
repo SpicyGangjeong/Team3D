@@ -248,6 +248,52 @@ void CLevel_ObjectViewer::Category_PartsModelList(const _char* Category, const _
 						iIndex = ENUM_CLASS(CRootModelPart::PARTSTYPE::HAIR);
 
 					m_HumanRoot->Change_Model(iIndex);
+
+					filesystem::path fullPath(szCategory);
+					filesystem::path folder = fullPath.parent_path();
+					_string baseName = fullPath.stem().string();
+
+					_string defaultModel = fullPath.filename().string();
+
+					for (auto& entry : filesystem::directory_iterator(folder))
+					{
+						if (!entry.is_regular_file())
+							continue;
+
+						auto file = entry.path().filename().string();
+						auto stem = entry.path().stem().string();
+						auto ext = entry.path().extension().string();
+
+						if (ext != ".png")
+							continue;
+
+						if (strstr(stem.c_str(),"DAO_MSK"))
+						{
+							_string Name = folder.string() +"/" + file;
+
+							const _wchar* Prototype = TEXT("DAO_MSK");
+
+							if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, Prototype,
+								CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, CMyTools::ToWstring(Name).c_str(), 0)))) {
+								return;
+							}
+
+							m_HumanRoot->Set_Texture(iIndex, Prototype);
+						}
+						if (strstr(stem.c_str(), "THV_MSK"))
+						{
+							_string Name = folder.string() + "/" + file;
+
+							const _wchar* Prototype = TEXT("THV_MSK");
+
+							if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, Prototype,
+								CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, CMyTools::ToWstring(Name).c_str(), 0)))) {
+								return;
+							}
+
+							m_HumanRoot->Set_Texture(iIndex, Prototype);
+						}
+					}
 				}
 			}
 		}
@@ -266,7 +312,7 @@ void CLevel_ObjectViewer::Show_AnimList()
 			{
 				pModel->Set_AnimationIndex(i);
 				pModel->Set_CurrentTrackPosition(0.f);
-				//pModel->Play_Animation(0.f);
+				pModel->Play_Animation(0.f);
 			}
 		}
 	}
