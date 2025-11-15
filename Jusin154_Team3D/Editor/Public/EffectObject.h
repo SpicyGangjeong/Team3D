@@ -97,6 +97,8 @@ protected:
 	_string		m_strModelName = {};
 	_string     m_strEmissiveName = {};
 
+	_bool		m_isBlendedWeight = {};
+
 public:
 	virtual void Free() override;
 };

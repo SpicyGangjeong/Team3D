@@ -70,6 +70,7 @@ bool g_isEmissive;
 
 bool g_isDiffuseUVMove;
 bool g_isMaskUVMove;
+bool g_isBlendedWeight;
 
 float g_fFar;
 

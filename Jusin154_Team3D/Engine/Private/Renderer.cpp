@@ -606,6 +606,19 @@ HRESULT CRenderer::Initialize()
 		}
 
 
+		/*WB_COLOR*/
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_WB_Color"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+
+
+		/* WB_A*/
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_WB_Revealage"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+
 
 		if (FAILED(Ready_DepthStencilView(g_iMaxShadowWidth, g_iMaxShadowHeight))) {
 			return E_FAIL;
@@ -661,8 +674,23 @@ HRESULT CRenderer::Initialize()
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Color"), TEXT("Target_Color")))) {
 			return E_FAIL;
 		}
+
+		/* MRT_WB */
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_WB"), TEXT("Target_WB_Color")))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_WB"), TEXT("Target_WB_Revealage")))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_WB"), TEXT("Target_Color")))) {
+			return E_FAIL;
+		}
+
 		
 	}
+
 	m_pShader = (CShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, TEXT("FX_DEFERRED"), nullptr, nullptr);
 	if (nullptr == m_pShader) {
 		return E_FAIL;
@@ -676,7 +704,6 @@ HRESULT CRenderer::Initialize()
 	}
 
 	
-
 	m_pVIBuffer = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
 	if (nullptr == m_pVIBuffer) {
 		return E_FAIL;
