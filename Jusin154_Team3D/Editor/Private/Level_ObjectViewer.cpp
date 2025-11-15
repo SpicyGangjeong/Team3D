@@ -424,10 +424,10 @@ void CLevel_ObjectViewer::Dummy_Object_Setting()
 
 				for (size_t i = 0; i < m_KeyFrame.size(); i++)
 				{
-					_uint EventSize = (_uint)m_Events[i].size();
+					_uint EventSize = (_uint)m_Events[i].size() + 1;
 					fwrite(&m_KeyFrame[i], sizeof(_float), 1, fp);
 					fwrite(&EventSize, sizeof(_uint), 1, fp);
-					fwrite(EventName, sizeof(_char), EventSize, fp);
+					fwrite(m_Events[i].c_str(), sizeof(_char), EventSize, fp);
 				}
 
 
@@ -514,16 +514,16 @@ void CLevel_ObjectViewer::Parts_Object_Setting()
 					fopen_s(&fp, "../Bin/Resources/Models/Human/KeyFrame.bin", "wb");
 					if (!fp) return;
 
-					_uint KeyFrameSize = (_uint)m_KeyFrame.size();
+					_uint KeyFrameSize = (_uint)m_KeyFrame.size() + 1;
 
 					fwrite(&KeyFrameSize, sizeof(_uint), 1, fp);
 
 					for (size_t i = 0; i < m_KeyFrame.size(); i++)
 					{
-						_uint EventSize = (_uint)m_Events[i].size();
+						_uint EventSize = (_uint)m_Events[i].size() + 1;
 						fwrite(&m_KeyFrame[i], sizeof(_float), 1, fp);
 						fwrite(&EventSize, sizeof(_uint), 1, fp);
-						fwrite(EventName, sizeof(_char), EventSize, fp);
+						fwrite(m_Events[i].c_str(), sizeof(_char), EventSize, fp);
 					}
 
 					fclose(fp);
