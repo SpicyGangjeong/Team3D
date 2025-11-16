@@ -29,6 +29,7 @@ HRESULT CDummy_PhysXDoor::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
+
 	return S_OK;
 }
 
@@ -39,12 +40,6 @@ void CDummy_PhysXDoor::Priority_Update(_float fTimeDelta)
 
 void CDummy_PhysXDoor::Update(_float fTimeDelta)
 {
-#ifdef 기무리
-	//if (m_pActor->is wakeup)
-	//	_vector vRPY = m_pTransformCom->Get_RollPitchYawVector();
-	//_float fRadian = XMConvertToRadians(XMVectorGetZ(vRPY));
-	//if (tanf(fRadian)
-#endif // 기무리
 }
 
 void CDummy_PhysXDoor::Late_Update(_float fTimeDelta)
@@ -56,20 +51,31 @@ void CDummy_PhysXDoor::Late_Update(_float fTimeDelta)
 
 HRESULT CDummy_PhysXDoor::Render()
 {
+	_vector vRPY = m_pTransformCom->Get_RollPitchYawVector();
+	//_float fCurrentRadian = XMVectorGetY(vRPY);
+
+	//m_pTransformCom->Rotation(XMVectorSetY(vRPY, ClampRadian(fCurrentRadian)));
+
 	//if (FAILED(Bind_ShaderResources())) {
 	//	return E_FAIL;
 	//}
-
 	//if (FAILED(m_pModelCom->Bind_Material(0, m_pShaderCom, "g_DiffuseTexture", aiTextureType_DIFFUSE, 0))) {
 	//	return E_FAIL;
 	//}
 	//if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::DEFAULT)))) {
 	//	return E_FAIL;
 	//}
-
 	//if (FAILED(m_pModelCom->Render(0))) {
 	//	return E_FAIL;
 	//}
+	GUI::Begin("Door");
+	m_pTransformCom->Describe_Entity();
+	GUI::Text("Current Roll : %f", XMConvertToDegrees(XMVectorGetX(vRPY)));
+	GUI::Text("Current Pitch : %f", XMConvertToDegrees(XMVectorGetY(vRPY)));
+	GUI::Text("Current Yaw : %f", XMConvertToDegrees(XMVectorGetZ(vRPY)));
+	GUI::Text("Current Limit Left : %f", XMConvertToDegrees(m_vRadianYAngle.x));
+	GUI::Text("Current Limit Right : %f", XMConvertToDegrees(m_vRadianYAngle.z));
+	GUI::End();
 #ifdef _DEBUG
 	if (FAILED(m_pRigidBody->Render())) {
 		return E_FAIL;
@@ -90,9 +96,9 @@ HRESULT CDummy_PhysXDoor::Ready_Components(void* pArg)
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pPhysXDummyDesc->vPos), 1.f));
 	m_pTransformCom->Rotation(pPhysXDummyDesc->vRotRPY.x, pPhysXDummyDesc->vRotRPY.y, pPhysXDummyDesc->vRotRPY.z);
 
-	m_vRadianYAngle.y = pPhysXDummyDesc->vRotRPY.y;
-	m_vRadianYAngle.x = m_vRadianYAngle.y + XMConvertToRadians(-70.f);
-	m_vRadianYAngle.z = m_vRadianYAngle.y + XMConvertToRadians(70.f);
+	m_vRadianYAngle.y = pPhysXDummyDesc->vRotRPY.z;
+	m_vRadianYAngle.x = m_vRadianYAngle.y + XMConvertToRadians(-pPhysXDummyDesc->fAngleLimit);
+	m_vRadianYAngle.z = m_vRadianYAngle.y + XMConvertToRadians(pPhysXDummyDesc->fAngleLimit);
 
 	{ // RIGID_BODY
 		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
@@ -131,6 +137,19 @@ HRESULT CDummy_PhysXDoor::Bind_ShaderResources()
 		return E_FAIL;
 	}
 	return S_OK;
+}
+
+_float CDummy_PhysXDoor::ClampRadian(_float fNewRadian)
+{
+	// 시작 라디안에서 부터 델타라디안을 구함
+	_float fDeltaRadian = CMyTools::NormalizeRadian(fNewRadian - m_vRadianYAngle.y);
+	if (fDeltaRadian < m_vRadianYAngle.x) {
+		fDeltaRadian = m_vRadianYAngle.x;
+	}
+	else if (fDeltaRadian > m_vRadianYAngle.z) {
+		fDeltaRadian = m_vRadianYAngle.z;
+	}
+	return CMyTools::NormalizeRadian(m_vRadianYAngle.y + fDeltaRadian);
 }
 
 CDummy_PhysXDoor* CDummy_PhysXDoor::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

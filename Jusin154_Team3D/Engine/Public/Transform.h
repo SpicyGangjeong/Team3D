@@ -59,6 +59,7 @@ public:
 	void Rotation(_fvector vAxis, _float fRadian);
 	void Rotation(_float fRadianX, _float fRadianY, _float fRadianZ);
 	void Rotation(_float3& vRadian);
+	void Rotation(_fvector vRPY);
 
 	// Up, Down 벡터를 바라보게 하면 터짐
 	void LookAt(_fvector vAt);

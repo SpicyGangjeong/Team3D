@@ -19,6 +19,7 @@ public:
 		_float3 vPos = { };
 		_float3 vRotRPY = { };
 		_uint iSubKind = { };
+		_float fAngleLimit = {};
 	}PHYSXDUMMY_DESC;
 private:
 	CDummy_PhysXDoor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -44,6 +45,8 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual HRESULT Ready_Components(void* pArg) override;
 	virtual HRESULT Bind_ShaderResources() override;
+	_float ClampRadian(_float fNewRadian);
+
 
 public:
 	static CDummy_PhysXDoor* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

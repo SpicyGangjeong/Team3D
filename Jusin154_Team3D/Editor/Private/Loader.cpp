@@ -598,7 +598,7 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 			Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 			Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
 			Desc.fContactOffset = { 0.05f };
-			Desc.vhalfGeometryInfo = { 1.5f, 1.5f, 0.0625f };
+			Desc.vhalfGeometryInfo = { 1.5f, 1.5f, 0.25f };
 			Desc.fDensity = 100.f;
 			PSX::PxTransform pxPivotTransform = PSX::PxTransform(PSX::PxVec3(1.5f, 1.5f, 0.f));
 
