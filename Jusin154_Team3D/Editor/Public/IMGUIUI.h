@@ -46,10 +46,14 @@ private:
 	_float					m_fAlpha{};
 	_float2					m_UV{};
 
+	_int					m_iSkillType{};
+
 	_vector					m_vLerpPosition{};
 	_float					m_fLerpX{};
 	_float					m_fLerpY{};
 	_float					m_fMoveSpeed{};
+
+	_float					m_fAngle{};
 
 	_float					m_fLeft{};
 	_float					m_fRight{};

@@ -98,9 +98,13 @@ void CIMGUIUI::Priority_Update(_float fTimeDelta)
 
 void CIMGUIUI::Update(_float fTimeDelta)
 {
+	static const char* SpellTypeNames[] = { "SHADOW", "CONTROL","POWER", "DAMAGE","UTILITY", "TRANSFORM",  "CURSE",	"ESSENTIAL" };
+	int itemCount = sizeof(SpellTypeNames) / sizeof(const char*);
 	if (m_pGamePlay_Canvas != nullptr)
 	{
 		m_fCanvasAlpha = static_cast<CCanvasObject*>(m_pGamePlay_Canvas)->Get_Alpha();
+
+		
 	}
 	if (m_pPanelObject != nullptr)
 	{
@@ -144,6 +148,8 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		m_fLerpX = static_cast<CElementObject*>(m_pElementObject)->Get_Lerp_Pos().m128_f32[0];
 		m_fLerpY = static_cast<CElementObject*>(m_pElementObject)->Get_Lerp_Pos().m128_f32[1];
 		m_fMoveSpeed = static_cast<CElementObject*>(m_pElementObject)->Get_Speed();
+		m_fAngle = static_cast<CElementObject*>(m_pElementObject)->Get_Angle();
+		m_iSkillType = static_cast<CElementObject*>(m_pElementObject)->Get_SkillType();
 	}
 	GUI::Begin("Current_PanelObject_Info");
 	if (m_pGamePlay_Canvas != nullptr)
@@ -393,6 +399,18 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		if (GUI::DragFloat("Speed", &m_fMoveSpeed, 0.1f, 0.f, 100.f))
 		{
 			static_cast<CElementObject*>(m_pElementObject)->Set_Speed(m_fMoveSpeed);
+		}
+
+		GUI::Text("Angle %.1f", m_fAngle);
+		if (GUI::DragFloat("Angle", &m_fAngle, 0.f, -180.0f, 180.f))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->Set_Angle(m_fAngle);
+		}
+
+		GUI::Text("SkillType %d", m_iSkillType);
+		if (GUI::Combo("SkillType", &m_iSkillType, SpellTypeNames, itemCount))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->Set_SkillType(m_iSkillType);
 		}
 	}
 	GUI::End();

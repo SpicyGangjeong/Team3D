@@ -59,8 +59,6 @@ void CMiniMap_TrimBorder::Update(_float fTimeDelta)
 		return;
 	}
 
-	m_fOwnerAlpha = static_cast<CUIObject*>(m_pOwner)->Get_Alpha();
-	m_fCanvasAlpha = static_cast<CUIObject*>(m_pOwner)->Get_OwnerAlpha();
 	if (m_bFadeIn == true)
 	{
 		if (m_fAlpha <= 1.f)
@@ -174,7 +172,7 @@ HRESULT CMiniMap_TrimBorder::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_ActionItemGoldleaf_4K"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_HUD_MiniMap_TrimBorder"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}

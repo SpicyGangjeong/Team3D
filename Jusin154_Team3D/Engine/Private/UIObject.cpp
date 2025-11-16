@@ -412,6 +412,26 @@ _float CUIObject::Get_Speed()
 	return m_fMoveSpeed;
 }
 
+void CUIObject::Set_Angle(_float fAngle)
+{
+	m_fAngle = XMConvertToRadians(fAngle);
+}
+
+_float CUIObject::Get_Angle()
+{
+	return XMConvertToDegrees(m_fAngle);
+}
+
+void CUIObject::Set_SkillType(_int eType)
+{
+	m_iSkillType = eType;
+}
+
+_int CUIObject::Get_SkillType()
+{
+	return m_iSkillType;
+}
+
 void CUIObject::Free()
 {
 	__super::Free();

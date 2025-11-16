@@ -7,6 +7,9 @@ NS_BEGIN(Engine)
 class ENGINE_DLL CUIObject abstract : public CGameObject
 {
 public:
+	enum class SKILLTYPE { SHADOW, CONTROL, POWER, DAMAGE,
+		UTILITY ,TRANSFORM, CURSE, ESSENTIAL
+	};
 	typedef struct tagUIObjectDesc
 	{
 		_float fX, fY = {};
@@ -87,6 +90,12 @@ public:
 	virtual _float MovDir(_float Start, _float End, _float Speed);
 	virtual void Set_Speed(_float Speed);
 	virtual _float Get_Speed();
+
+	virtual void Set_Angle(_float fAngle);
+	virtual _float Get_Angle();
+
+	virtual void Set_SkillType(_int eType);
+	virtual _int Get_SkillType();
 protected:
 	_vector					m_fOrigin_Position_vector{};
 	_float2					m_fOrigin_Position{};
@@ -122,8 +131,11 @@ protected:
 	_float3					m_vScale{};								// UI의 스케일을 조절하기 위해서 필요함
 
 	_float2					m_vUVScale{};
+	_float					m_fAngle{};
 
 	RECT					m_pRect{};
+
+	_int					m_iSkillType{};
 
 	_float					m_fMoveSpeed{};
 

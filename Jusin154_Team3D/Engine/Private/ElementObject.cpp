@@ -32,6 +32,8 @@ void CElementObject::Priority_Update(_float fTimeDelta)
 
 void CElementObject::Update(_float fTimeDelta)
 {
+	m_fOwnerAlpha = static_cast<CUIObject*>(m_pOwner)->Get_Alpha();
+	m_fCanvasAlpha = static_cast<CUIObject*>(m_pOwner)->Get_OwnerAlpha();
 	m_vScale = _float3(m_fSizeX, m_fSizeY, 1.f);
 	m_pTransformCom->Set_Scale(m_vScale);
 

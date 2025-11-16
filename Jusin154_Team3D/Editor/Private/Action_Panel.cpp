@@ -2,7 +2,8 @@
 #include "Action_Panel.h"
 #include "GameInstance.h"
 #include "Spell_Slot.h"
-#include "LoadingWidget.h"
+#include "Spell_Image.h"
+#include "Spell_Overlay.h"
 
 CAction_Panel::CAction_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     :CPanelObject(pDevice, pContext)
@@ -154,11 +155,18 @@ HRESULT CAction_Panel::Ready_Element(void* pArg)
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Spell_Slot"), m_pSpell_Slot);
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLoadingWidget>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CLoadingWidget**>(&m_pLoadingWidget))))
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Image>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Image**>(&m_pSpell_Image))))
 	{
 		return E_FAIL;
 	}
-	Add_Element(TEXT("LoadingWidget"), m_pLoadingWidget);
+	Add_Element(TEXT("SpellImage"), m_pSpell_Image);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Overlay>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Overlay**>(&m_pSpell_Overlay))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("SpellOverlay"), m_pSpell_Overlay);
 	return S_OK;
 }
 
