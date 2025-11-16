@@ -21,10 +21,13 @@ struct ParticleValue
     
     float2 vMaskingUVMoveTime;
     float2 vDiffuseUVMoveTime;
+    float2 vDistortionUVMoveTime;
     float2 vNoiseUVMoveTime;
     float2 vAniTime;
     
     float2 vAniIndex;
+    
+
 };
 
 
