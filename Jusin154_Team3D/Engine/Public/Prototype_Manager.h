@@ -13,7 +13,8 @@
 #include "Instance_Model.h"
 #include "Character_Controller.h"
 #include "Light.h"
-
+#include "FSM.h"
+#include "State.h"
 
 NS_BEGIN(Engine)
 class CGameInstance;

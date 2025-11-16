@@ -15,7 +15,7 @@
 #include "DummySkyBox.h"
 #include "MainLight.h"
 #include "Terrain.h"
-
+#include "Player.h"
 
 CLevel_ObjectViewer::CLevel_ObjectViewer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -54,6 +54,8 @@ void CLevel_ObjectViewer::Update(_float fTimeDelta)
 	Dummy_Object_Setting();
 
 	Parts_Object_Setting();
+
+	Find_Anim();
 }
 
 HRESULT CLevel_ObjectViewer::Render()
@@ -373,6 +375,14 @@ void CLevel_ObjectViewer::Dummy_Object_Setting()
 
 		GUI::Button(pModel->Get_AnimList(pModel->Get_AnimIndex()));
 
+		GUI::SameLine();
+
+		_char label[24];
+
+		sprintf_s(label, "%s %d", "AnimIndex", pModel->Get_AnimIndex());
+
+		GUI::Text(label);
+
 		_float AnimTrack = pModel->Get_CurrentTrackPosition();
 		GUI::DragFloat("AnimTrack", &AnimTrack);
 
@@ -619,7 +629,27 @@ void CLevel_ObjectViewer::Load_KeyFrame(const _char* Name)
 	fclose(fp);
 }
 
+void CLevel_ObjectViewer::Find_Anim()
+{
+	GUI::InputText("FindAnim", m_FindAnimName, sizeof(m_FindAnimName));
 
+	if (!m_Objects.empty())
+	{
+		CModel* pModel = m_Objects[m_iObjectIndex]->Get_Component<CModel>();
+		for (_uint i = 0; i < pModel->Get_AnimSize(); i++)
+		{
+			if (strstr(pModel->Get_AnimList(i), m_FindAnimName))
+			{
+				if (GUI::Button(pModel->Get_AnimList(i)))
+				{
+					pModel->Set_AnimationIndex(i);
+					pModel->Set_CurrentTrackPosition(0.f);
+					pModel->Play_Animation(0.f);
+				}
+			}
+		}
+	}
+}
 
 
 HRESULT CLevel_ObjectViewer::Ready_Layer_Camera(const _wstring& strLayerTag)
@@ -662,6 +692,9 @@ HRESULT CLevel_ObjectViewer::Ready_Layer_Dummy(const _wstring& strLayerTag)
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
 		return E_FAIL;
+
+	/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
+		return E_FAIL;*/
 
 	return S_OK;
 }
