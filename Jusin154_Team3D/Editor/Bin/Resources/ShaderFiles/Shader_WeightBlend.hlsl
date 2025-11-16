@@ -48,14 +48,21 @@ PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out;
     
+
+    
     vector vMixedDiffuse = g_MixedDiffuseTexture.Sample(PointSampler, In.vTexcoord);
-    vector vRevealage = g_RevealageTexture.Sample(PointSampler, In.vTexcoord);
+    float fRevealage = g_RevealageTexture.Sample(PointSampler, In.vTexcoord);
+
     
-    if(vRevealage.b >= 1.f)
-        discard;
+    Out.vBackBuffer = vector(vMixedDiffuse.rgb / fRevealage , fRevealage);
     
-    Out.vBackBuffer = vector(vMixedDiffuse.rgb / max(vMixedDiffuse.a, 1e-5), 1 - vRevealage.r);
-   
+    //float fClamp;
+    
+
+    //fClamp = clamp(vMixedDiffuse.a, 1e-4, 5e4);
+    
+    //Out.vBackBuffer = vector(vMixedDiffuse.rgb / fClamp, fRevealage);
+    
     
     return Out;
 }
