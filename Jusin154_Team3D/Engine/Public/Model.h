@@ -108,6 +108,11 @@ private:
 	_bool						m_bIsFinishedAnim = { false };			// 대상 애니메이션이 끝났는지
 	_bool						m_bIsFinishedLerp = { false };			// 럴프 애니메이션이 끝났는지
 	_bool						m_bPlayAnim = { true };
+
+	_int						m_iPreAnimIndex = { 0 };
+	_float						m_fBlendTime = { 0.f };
+	_float						m_fBlendDuration = { 0.3f };
+
 	vector<class CAnimation*>	m_Animations;						// 애니메이션의 벡터, 
 
 	class CLerpAnim* m_pLerpAnim = { nullptr };			// 럴프전용 애니메이션
@@ -122,7 +127,6 @@ private:
 	SaveModel* m_pSaveModel = { nullptr };
 	list<SaveModel> m_SaveModel;
 	//
-
 private:
 	// 바이너리
 	virtual HRESULT Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix);
