@@ -26,6 +26,7 @@ HRESULT CRenderer::Add_RenderGroup(RENDER eRenderGroup, CGameObject* pRenderObje
 	if (RENDER::UI == eRenderGroup || RENDER::PRIORITY == eRenderGroup /* || RENDER::SHADOW == eRenderGroup*/ || RENDER::BLUR == eRenderGroup) {
 		bPossible = true;
 	}
+
 	bPossible = true;
 	if (true == bPossible) {
 		m_RenderObjects[ENUM_CLASS(eRenderGroup)].push_back(pRenderObject);
@@ -72,7 +73,7 @@ void CRenderer::Render()
 
 #ifdef _DEBUG
 	m_pGameInstance->RenderTarget_Debuger();
-	
+
 	if(m_pGameInstance->Key_Pressing(DIK_F10))
 		Render_Debug();
 #endif
@@ -587,14 +588,14 @@ HRESULT CRenderer::Initialize()
 
 		/*WB_COLOR*/
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_WB_Color"), (_uint)Viewport.Width, (_uint)Viewport.Height,
-			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 1.0f)))) {
+			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
 			return E_FAIL;
 		}
 
 
 		/* WB_A*/
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_WB_Revealage"), (_uint)Viewport.Width, (_uint)Viewport.Height,
-			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(1.0f, 1.0f, 1.0f, 1.0f)))) {
+			DXGI_FORMAT_R16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
 			return E_FAIL;
 		}
 

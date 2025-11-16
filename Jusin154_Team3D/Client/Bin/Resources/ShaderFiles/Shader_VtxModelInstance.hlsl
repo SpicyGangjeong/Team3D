@@ -29,9 +29,14 @@ Texture2D g_NormalTexture : register(t1);
 Texture2D g_MaskingTexture : register(t2);
 Texture2D g_DissolveTexture : register(t3);
 Texture2D g_NoiseTexture : register(t4);
-Texture2D g_EmissiveTexture : register(t6);
 
 StructuredBuffer<ParticleValue> g_ParticleValue : register(t5);
+
+
+Texture2D g_EmissiveTexture : register(t6);
+Texture2D g_DepthStencilTexture : register(t7);
+
+
 
 float4 g_vCamPosition;
 
@@ -204,25 +209,24 @@ PS_OUT BlendedWeight(vector fDiffuse, float fLinearZ)
 
     float fWeight =
 max(
-    min(1.0, max(max(vColor.r, vColor.g), vColor.b) * fAlpha),
-    fAlpha
-) *
-clamp(
-    0.03 / (1e-4 + pow(fLinearZ / 200, 4.0)),
-    1e-2, 3e3
-);
+  min(1.0, max(max(vColor.r, vColor.g), vColor.b) * fAlpha), fAlpha) 
+    *
+  clamp( 0.01 / (1e-4 + pow(fLinearZ / 200, 4.0)), 0.01f, 1000 );
+
     
     
-    //float fWeight = clamp(0.03f / (1e-5 + pow(fLinearZ, 4.0f)), 0.01, 3e3);
+    //float fWeight = clamp(0.03f / (1e-5 + pow(fLinearZ, 2.0f)), 0.01, 3e3);
     //fWeight = max(fWeight, 1.0);
+    
     //이게 오리지널 웨이트 함수
     
     //float fWeight = pow(fLinearZ, -2.5);
     //float fWeight = clamp(pow(fLinearZ, -2.5f), 1.0f, 1000.0f);
-    
+
     Out.vDiffuse = vector(vColor.rgb * fAlpha, fAlpha) * fWeight;
-    Out.vRevealage.r = fAlpha;
-    Out.vColorTarget = vector(0.f, 0.f, 0.f, 0.f);
+   
+    Out.vRevealage.a = fAlpha;
+
     return Out;
 }
 
@@ -349,6 +353,9 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     
     vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * vMtrlMask.r);
     
+    if (vMtrlDiffuse.a <= 0.f)
+        discard;
+    
     if (g_isDissolve == true)
     {
         vMtrlDissolve = g_DissolveTexture.Sample(DefaultSampler, In.vTexcoord);
@@ -369,7 +376,18 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     }
 
     
-    Out = BlendedWeight(vMtrlDiffuse , In.vProjPos.w);
+    int2 iTexel = int2(In.vPosition.xy);
+    
+    float fDepthStencilValue = g_DepthStencilTexture.Load(int3(iTexel, 0)).r;
+    
+    float fbias = 0.00005f;
+    
+    if (fDepthStencilValue <= In.vProjPos.z / In.vProjPos.w + fbias)
+        discard;
+    
+    
+    
+    Out = BlendedWeight(vMtrlDiffuse, In.vProjPos.w);
     
         
     //if (vMtrlDiffuse.a >= g_fEmissiveCutAlpha)
@@ -565,7 +583,7 @@ technique11 DefaultTechnique
     pass NON_NOMALMAP
     {
         SetRasterizerState(RS_Nocull);
-        SetDepthStencilState(DSS_Default, 0);
+        SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_WB_Acc, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;

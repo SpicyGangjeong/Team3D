@@ -26,6 +26,7 @@ public:
 
 		_float2		vMaskingUVMoveTime = { 1.f, 1.f };
 		_float2		vDiffuseUVMoveTime = { 1.f, 1.f };
+		_float2     vDistortionUVMoveTime = { 1.f , 1.f };
 		_float2		vNoiseUVMoveTime = { 1.f ,1.f };
 		_float2		vAniTime = { 1.f , 1.f };
 		_float2	    vAniIndex = {};
@@ -60,6 +61,7 @@ public:
 
 		_float2	 vMaskingUVMoveTime = {};
 		_float2	 vDiffuseUVMoveTime = {};
+		_float2  vDistortionUVMoveTime = {};
 		_float2  vNoiseUVMoveTime = {};
 		_float2	 vAniTime = {};
 
