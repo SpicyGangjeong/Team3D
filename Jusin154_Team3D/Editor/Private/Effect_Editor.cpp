@@ -303,6 +303,7 @@ HRESULT CEffect_Editor::Load_Edit(const _char* pPath)
 
 	if (m_pEditEffect == nullptr)
 		return E_FAIL;
+	
 
 	if (FAILED(m_pEditEffect->Load(pPath, LEVEL::EFFECT)))
 	{
@@ -402,6 +403,7 @@ void CEffect_Editor::Describe_Entity()
 
 			if (FAILED(Add_PartObject<CEditEffect>("EffectObject" + to_string(m_iNumPart++), ENUM_CLASS(LEVEL::EFFECT), nullptr, &PartsDesc)))
 				return;
+
 
 
 		}

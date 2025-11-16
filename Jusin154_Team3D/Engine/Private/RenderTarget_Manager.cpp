@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "RenderTarget_Manager.h"
 #include "RenderTarget.h"
 
@@ -111,6 +111,33 @@ HRESULT CRenderTarget_Manager::Begin_MRT_Include_BackBuffer(const _wstring& strM
     }
 
     m_pContext->OMSetRenderTargets(iNumRenderTargets, pRenderTargetViews, (nullptr == pDSV) ? m_pOriginalDSV : pDSV);
+
+    return S_OK;
+}
+HRESULT CRenderTarget_Manager::Begin_MRT_NO_DepthStencil(const _wstring& strMRTTag)
+{
+    m_pContext->OMGetRenderTargets(1, &m_pBackBufferRTV, &m_pOriginalDSV);
+
+    list<CRenderTarget*>* pMRTList = Find_MRT(strMRTTag);
+
+    if (nullptr == pMRTList)
+        return E_FAIL;
+
+    _uint iNumRenderTargets = { 0 };
+    ID3D11RenderTargetView* pRenderTargetViews[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT] = {};
+
+    m_pContext->OMSetRenderTargets(0, nullptr, nullptr);
+
+    for (auto& pRenderTarget : *pMRTList)
+    {
+        pRenderTarget->Clear();
+        pRenderTargetViews[iNumRenderTargets++] = pRenderTarget->Get_RTV();
+    }
+    if (0 == iNumRenderTargets) {
+        return E_FAIL;
+    }
+
+    m_pContext->OMSetRenderTargets(iNumRenderTargets, pRenderTargetViews, nullptr);
 
     return S_OK;
 }
