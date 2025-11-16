@@ -42,7 +42,7 @@ PSX::PxControllerBehaviorFlags CCallBack_Playable_Behavior::getBehaviorFlags(con
 			eResults = PSX::PxControllerBehaviorFlag::eCCT_CAN_RIDE_ON_OBJECT;
 			break;
 		case 24:
-			eResults = PSX::PxControllerBehaviorFlags(0);;
+			eResults = PSX::PxControllerBehaviorFlags(0);
 			break;
 		default:
 			break;

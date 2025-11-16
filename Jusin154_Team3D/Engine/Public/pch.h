@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <d3d11.h>
 
@@ -76,6 +76,7 @@ using namespace FMOD;
 
 #include "PhysX/PxPhysics.h"
 #include "PhysX/PxPhysicsAPI.h"
+#include "PhysX/extensions/PxExtensionsAPI.h"
 
 #pragma warning(pop)
 

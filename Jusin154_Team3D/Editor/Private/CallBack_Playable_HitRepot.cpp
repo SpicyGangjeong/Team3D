@@ -55,6 +55,17 @@ void CCallBack_Playable_HitRepot::onShapeHit(const PSX::PxControllerShapeHit& hi
 				PSX::PxRigidDynamic* pDynamic = static_cast<PSX::PxRigidDynamic*>(pActor);
 				_float fDot = vDir.dot(PSX::PxVec3(0.f, 1.f, 0.f));
 				if (fDot > 0) {
+					pDynamic->addTorque(PSX::PxVec3(0.f, 1.f, 0.f) * fLength * 100000.f, PSX::PxForceMode::eIMPULSE);
+				}
+				else {
+					pDynamic->addTorque(PSX::PxVec3(0.f, -1.f, 0.f) * fLength * 100000.f, PSX::PxForceMode::eIMPULSE);
+				}
+			} break;
+			case 25: // 문짝
+			{
+				PSX::PxRigidDynamic* pDynamic = static_cast<PSX::PxRigidDynamic*>(pActor);
+				_float fDot = vDir.dot(PSX::PxVec3(0.f, 1.f, 0.f));
+				if (fDot > 0) {
 					pDynamic->addTorque(PSX::PxVec3(0.f, 1.f, 0.f) * fLength * 100000.f, PSX::PxForceMode::eFORCE);
 				}
 				else {

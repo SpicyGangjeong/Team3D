@@ -124,6 +124,15 @@ PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody_Static& RigidBody
 	return pActor;
 }
 
+PSX::PxRevoluteJoint* CPhysX_Manager::Create_PxRevoluteJoint(PSX::PxRigidActor* pActorFrame, PSX::PxTransform& pxLocalWallFrame, PSX::PxRigidActor* pActorObject, PSX::PxTransform& pxLocalActorFrame)
+{
+	PSX::PxRevoluteJoint* pJoint = PSX::PxRevoluteJointCreate(*m_pPhysics, pActorFrame, pxLocalWallFrame, pActorObject, pxLocalActorFrame);
+
+	assert(nullptr != pJoint);
+
+	return pJoint;
+}
+
 PSX::PxMaterial* CPhysX_Manager::Create_Material(const _float3* vMatInfo)
 {
 	PSX::PxMaterial* pPxMaterial = m_pPhysics->createMaterial(vMatInfo->x, vMatInfo->y, vMatInfo->z);
@@ -404,6 +413,8 @@ HRESULT CPhysX_Manager::Initialize()
 		
 
 		m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, m_ToleranceScale, true, m_pPvd);
+		_bool bExtentionInitialized = PxInitExtensions(*m_pPhysics, m_pPvd);
+		assert(bExtentionInitialized);
 
 		m_pCookingParam = new PSX::PxCookingParams(m_pPhysics->getTolerancesScale());
 		m_pCookingParam->meshPreprocessParams |= PSX::PxMeshPreprocessingFlag::eWELD_VERTICES;

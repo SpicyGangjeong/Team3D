@@ -75,8 +75,11 @@
 #include "Dummy_PhysXPlayable.h"
 #include "Dummy_PhysXMesh.h"
 #include "Dummy_PhysXPlatform.h"
-#include "Dummy_PhysXDoor.h"
+#include "Dummy_PhysXFreeDoor.h"
 #include "Dummy_PhysXWall.h"
+//#include "Dummy_PhysXDoorFrame.h"
+//#include "Dummy_PhysXFixedDoor.h"
+//#include "Dummy_PhysXDoorSet.h"
 
 #pragma endregion 
 
@@ -560,8 +563,8 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 			Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 			Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
 			Desc.fContactOffset = { 0.05f };
-			Desc.vhalfGeometryInfo = { 4.5f, 4.5f, 4.5f };
-			Desc.fDensity = 1000.f;
+			Desc.vhalfGeometryInfo = { 2.5f, 4.5f, 3.5f };
+			Desc.fDensity = 10.f;
 			Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
 			Desc.eLockFlag = {};
 			Desc.vAutoDamping = { 100.f, 100.f };
@@ -598,9 +601,9 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 			Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 			Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
 			Desc.fContactOffset = { 0.05f };
-			Desc.vhalfGeometryInfo = { 1.5f, 1.5f, 0.25f };
-			Desc.fDensity = 100.f;
-			PSX::PxTransform pxPivotTransform = PSX::PxTransform(PSX::PxVec3(1.5f, 1.5f, 0.f));
+			Desc.vhalfGeometryInfo = { 3.5f, 1.5f, 0.25f };
+			Desc.fDensity = 10.f;
+			PSX::PxTransform pxPivotTransform = PSX::PxTransform(PSX::PxVec3(3.5f, 1.5f, 0.f));
 
 			Desc.pxMassCenter = pxPivotTransform;
 			Desc.eLockFlag = { 
@@ -611,6 +614,27 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 				PSX::PxRigidDynamicLockFlag::eLOCK_LINEAR_X    |
 				PSX::PxRigidDynamicLockFlag::eLOCK_LINEAR_Z
 			};
+			Desc.vAutoDamping = { 10.f, 10.f };
+		}
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_DOOR"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
+			return E_FAIL;
+		}
+	}
+	{ // FixedDoor
+		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
+		{
+			Desc.eType = ACTOR::BOX;
+			Desc.ePxRigidBodyFlags = { /*PSX::PxRigidBodyFlag::eKINEMATIC*/ };
+			Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+			Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
+			Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
+			Desc.fContactOffset = { 0.05f };
+			Desc.vhalfGeometryInfo = { 1.5f, 1.5f, 0.25f };
+			Desc.fDensity = 10.f;
+			PSX::PxTransform pxPivotTransform = PSX::PxTransform(PSX::PxVec3(1.5f, 1.5f, 0.f));
+
+			Desc.pxMassCenter = pxPivotTransform;
+			Desc.eLockFlag = { };
 			Desc.vAutoDamping = { 10.f, 10.f };
 		}
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_DOOR"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
@@ -716,12 +740,22 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXBox>(g_iStaticLevel, CDummy_PhysXBox::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXDoor>(g_iStaticLevel, CDummy_PhysXDoor::Create(m_pDevice, m_pContext)))) {
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXFreeDoor>(g_iStaticLevel, CDummy_PhysXFreeDoor::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
+	//if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXDoorSet>(g_iStaticLevel, CDummy_PhysXDoorSet::Create(m_pDevice, m_pContext)))) {
+	//	return E_FAIL;
+	//}
+	//if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXDoorFrame>(g_iStaticLevel, CDummy_PhysXDoorFrame::Create(m_pDevice, m_pContext)))) {
+	//	return E_FAIL;
+	//}
+	//if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXFixedDoor>(g_iStaticLevel, CDummy_PhysXFixedDoor::Create(m_pDevice, m_pContext)))) {
+	//	return E_FAIL;
+	//}
 	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXPlayable>(g_iStaticLevel, CDummy_PhysXPlayable::Create(m_pDevice, m_pContext)))){
 		return E_FAIL;
 	}
+
 	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXMesh>(g_iStaticLevel, CDummy_PhysXMesh::Create(m_pDevice, m_pContext)))){
 		return E_FAIL;
 	}

@@ -608,6 +608,10 @@ PSX::PxRigidStatic* CGameInstance::Add_StaticActor(CRigidBody_Static& RigidBody)
 {
 	return m_pPhysX_Manager->Add_StaticActor(RigidBody);
 }
+PSX::PxRevoluteJoint* CGameInstance::Create_PxRevoluteJoint(PSX::PxRigidActor* pActorFrame, PSX::PxTransform& pxLocalWallFrame, PSX::PxRigidActor* pActorObject, PSX::PxTransform& pxLocalActorFrame)
+{
+	return m_pPhysX_Manager->Create_PxRevoluteJoint(pActorFrame, pxLocalWallFrame, pActorObject, pxLocalActorFrame);
+}
 PSX::PxController* CGameInstance::Add_CapsuleController(PSX::PxCapsuleControllerDesc& Desc)
 {
 	return m_pPhysX_Manager->Add_CapsuleController(Desc);

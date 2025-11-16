@@ -178,6 +178,21 @@ public:
 		return fRadian;
 	}
 
+	inline static void	 RotateRadianTowards(_float& fSrcRadian, const _float& fDstRadian, _float fRotateSpeed) {
+		_float fDiffRadian = fmodf(fSrcRadian - fDstRadian, 2 * XM_PI);
+		if (fDiffRadian < 0) fDiffRadian += 2 * XM_PI;
+
+		if (fDiffRadian < (fRotateSpeed * XM_PI) / 180.f) {
+			fSrcRadian = fDstRadian;
+			return;
+		}
+		if (fDiffRadian < XM_PI) {
+			fSrcRadian -= (fRotateSpeed * XM_PI) / 180.f;
+		}
+		else if (fDiffRadian > XM_PI) {
+			fSrcRadian += (fRotateSpeed * XM_PI) / 180.f;
+		}
+	}
 
 #pragma region FileSystem
 	//static void Folder_Func(/* 재귀적으로 탐색할지		*/	_In_	_bool											bRecursive,
