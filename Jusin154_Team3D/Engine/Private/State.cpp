@@ -42,6 +42,7 @@ void CState::Free()
     __super::Free();
 
     SAFE_RELEASE(m_pGameInstance);
+    SAFE_RELEASE(m_pParent);
 }
 
 void CState::Describe_Entity()
