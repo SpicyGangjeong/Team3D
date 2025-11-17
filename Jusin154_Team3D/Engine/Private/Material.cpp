@@ -252,19 +252,31 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 	/* Find type */
 	if (!strcmp(FileType.c_str(), "D"))
 		eTexture = aiTextureType::aiTextureType_DIFFUSE;
+	else if (!strcmp(FileType.c_str(), "Diff"))
+		eTexture = aiTextureType::aiTextureType_DIFFUSE;
+	else if (!strcmp(FileType.c_str(), "d"))
+		eTexture = aiTextureType::aiTextureType_DIFFUSE;
 	else if (!strcmp(FileType.c_str(), "N"))
 		eTexture = aiTextureType::aiTextureType_NORMALS;
 	else if (!strcmp(FileType.c_str(), "normal"))
+		eTexture = aiTextureType::aiTextureType_NORMALS;
+	else if (!strcmp(FileType.c_str(), "Norm"))
 		eTexture = aiTextureType::aiTextureType_NORMALS;
 	else if (!strcmp(FileType.c_str(), "n"))
 		eTexture = aiTextureType::aiTextureType_NORMALS;
 	else if (!strcmp(FileType.c_str(), "MRO"))
 		eTexture = aiTextureType::aiTextureType_METALNESS;
+	else if (!strcmp(FileType.c_str(), "3Broom"))
+		eTexture = aiTextureType::aiTextureType_METALNESS;
 	else if (!strcmp(FileType.c_str(), "MROH"))
+		eTexture = aiTextureType::aiTextureType_METALNESS;
+	else if (!strcmp(FileType.c_str(), "MRAB"))
 		eTexture = aiTextureType::aiTextureType_METALNESS;
 	else if (!strcmp(FileType.c_str(), "MROA"))
 		eTexture = aiTextureType::aiTextureType_SPECULAR;
 	else if (!strcmp(FileType.c_str(), "SRO"))
+		eTexture = aiTextureType::aiTextureType_SPECULAR;
+	else if (!strcmp(FileType.c_str(), "HRO"))
 		eTexture = aiTextureType::aiTextureType_SPECULAR;
 	else if (!strcmp(FileType.c_str(), "SROH"))
 		eTexture = aiTextureType::aiTextureType_SPECULAR;

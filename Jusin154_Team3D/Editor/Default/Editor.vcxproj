@@ -187,6 +187,7 @@
     <ClInclude Include="..\Public\Effect_Editor.h" />
     <ClInclude Include="..\Public\EditEffect.h" />
     <ClInclude Include="..\Public\Information.h" />
+    <ClInclude Include="..\public\Land.h" />
     <ClInclude Include="..\public\Level_MapViewer.h" />
     <ClInclude Include="..\Public\LoadingWidget.h" />
     <ClInclude Include="..\public\MapContainer.h" />
@@ -271,6 +272,7 @@
     <ClCompile Include="..\Private\Effect_Editor.cpp" />
     <ClCompile Include="..\Private\EditEffect.cpp" />
     <ClCompile Include="..\Private\Information.cpp" />
+    <ClCompile Include="..\private\Land.cpp" />
     <ClCompile Include="..\private\Level_MapViewer.cpp" />
     <ClCompile Include="..\Private\LoadingWidget.cpp" />
     <ClCompile Include="..\private\MapContainer.cpp" />
