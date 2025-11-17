@@ -278,7 +278,7 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 		eTexture = aiTextureType::aiTextureType_SPECULAR;
 	else if (!strcmp(FileType.c_str(), "HRO"))
 		eTexture = aiTextureType::aiTextureType_SPECULAR;
-	else if (!strcmp(FileType.c_str(), "SROH"))
+	else if (!strcmp(FileType.c_str(), "SROH"))			
 		eTexture = aiTextureType::aiTextureType_SPECULAR;
 	else if (!strcmp(FileType.c_str(), "SROA"))
 		eTexture = aiTextureType::aiTextureType_SPECULAR;

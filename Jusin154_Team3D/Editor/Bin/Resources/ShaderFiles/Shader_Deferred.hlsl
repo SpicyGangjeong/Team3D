@@ -336,6 +336,107 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     return Out;
 }
 
+PS_OUT_BACKBUFFER PS_MAIN_MROCOMBINED(PS_IN In)
+{
+    PS_OUT_BACKBUFFER Out;
+    
+    vector vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    
+    if (0.f == vDiffuse.a)
+    {
+        discard;
+    }
+    
+    vector vShade = g_ShadeTexture.Sample(DefaultSampler, In.vTexcoord);
+    
+    vector vSpecular = g_SpecularTexture.Sample(DefaultSampler, In.vTexcoord);
+    
+    Out.vBackBuffer = vDiffuse * vShade + vSpecular;
+    
+    vector vDepthDesc = g_DepthTexture.Sample(DefaultSampler, In.vTexcoord);
+    
+
+    float fViewZ = vDepthDesc.y * g_fFar;
+    
+    
+    vector vPosition, vPreShadowPosition;
+    
+    /* (로컬위치 * 월드 * 뷰 * 투영 / w) -> (로컬위치 * 월드)   */
+    vPosition.x = In.vTexcoord.x * 2.f - 1.f;
+    vPosition.y = In.vTexcoord.y * -2.f + 1.f;
+    vPosition.z = vDepthDesc.x;
+    vPosition.w = 1.f;
+    
+    vPosition = vPosition * fViewZ;
+    
+    vPosition = mul(vPosition, g_invmatProj);
+    vPosition = mul(vPosition, g_invMatView);
+    vPreShadowPosition = vPosition;
+    /* (로컬위치 * 월드) -> (로컬위치 * 월드 * 광원의 뷰 * 광원의 투영 ) */
+    vPosition = mul(vPosition, g_LightViewMatrix);
+    vPosition = mul(vPosition, g_LightProjMatrix);
+    vPreShadowPosition = mul(vPreShadowPosition, g_PreShadowLightViewMatrix);
+    vPreShadowPosition = mul(vPreShadowPosition, g_PreShadowLightProjMatrix);
+    
+    /* (로컬위치 * 월드 * 광원의 뷰 * 광원의 투영 ) -> (로컬위치 * 월드 * 광원의 뷰 * 광원의 투영 * (/w) */
+    float2 vTexcoord, vPreShadowTexcoord;
+    vTexcoord.x = (vPosition.x / vPosition.w) * 0.5f + 0.5f;
+    vTexcoord.y = (vPosition.y / vPosition.w) * -0.5f + 0.5f;
+    vPreShadowTexcoord.x = (vPreShadowPosition.x / vPreShadowPosition.w) * 0.5f + 0.5f;
+    vPreShadowTexcoord.y = (vPreShadowPosition.y / vPreShadowPosition.w) * -0.5f + 0.5f;
+    
+    /* 광원의 NDC에서 샘플링 */
+    float fVisibility_Dynamic = ShadowVisibility_hwPCF(g_ShadowTexture, vPosition, float2(g_iMaxShadowWidth, g_iMaxShadowHeight), 0.0005f);
+    float fVisibility_Static = ShadowVisibility_hwPCF(g_PreShadowTexture, vPreShadowPosition, float2(g_iMaxShadowWidth, g_iMaxShadowHeight), 0.0005f);
+    
+    Out.vBackBuffer.rgb *= lerp(0.5f, 1.f, min(fVisibility_Dynamic, fVisibility_Static));
+    //float fShadowDepth = g_ShadowTexture.Sample(DefaultSampler, vTexcoord).x;
+    //float fPreShadowDepth = g_PreShadowTexture.Sample(DefaultSampler, vPreShadowTexcoord).x;
+    //bool IsShadow = { false };
+    //if (vPosition.z - 0.0005f > fShadowDepth)
+    //{
+    //    IsShadow = true;
+    //}
+    //if (vPreShadowPosition.z - 0.0005f > fPreShadowDepth)
+    //{
+    //    IsShadow = true;
+    //}
+    //if (true == IsShadow)
+    //{
+    //    Out.vBackBuffer *= 0.5f;
+    //}
+    float4 vColor = 0.f;
+    
+    //int iBlurWeight = g_BlurWeightTexture.Sample(ClampSampler, In.vTexcoord).r * 32.f;
+    
+    //int iBlurMin;
+    //int iBlurMax;
+    
+    //if (iBlurWeight % 2 == 0)
+    //{
+    //    iBlurMin = -1 * iBlurWeight / 2;
+    //    iBlurMax = iBlurWeight / 2;
+    //}
+    //else
+    //{
+    //    iBlurMin = -iBlurWeight / 2;
+    //    iBlurMax = iBlurWeight / 2 + 1;
+    //}
+    
+    //[loop]  // 변수로 루프돌리려면 반드시 필요함
+    for (int i = -15; i < 16; ++i)
+    {
+        vTexcoord.x = In.vTexcoord.x;
+        vTexcoord.y = In.vTexcoord.y + (float) i / g_vResolution.y;
+        
+        vColor += g_fWeights[i + 15] * g_BlurXTexture.Sample(ClampSampler, vTexcoord);
+    }
+    
+    Out.vBackBuffer += vColor;
+    
+    return Out;
+}
+
 struct PS_OUT_BLUR_X
 {
     float4 vBlurX : SV_TARGET0;
@@ -443,5 +544,14 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_SPOT();
+    }
+    pass MROCombinedPass
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_MROCOMBINED();
     }
 }

@@ -172,6 +172,7 @@
     <ClInclude Include="..\Public\CallBack_Playable_HitReport.h" />
     <ClInclude Include="..\Public\DummyObject.h" />
     <ClInclude Include="..\public\DummySkyBox.h" />
+    <ClInclude Include="..\Public\Dummy_Globe.h" />
     <ClInclude Include="..\Public\Dummy_PhysXDoorFrame.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -204,6 +205,7 @@
     <ClInclude Include="..\Public\EditEffect.h" />
     <ClInclude Include="..\Public\Information.h" />
     <ClInclude Include="..\public\Land.h" />
+    <ClInclude Include="..\Public\Level_BloomViewer.h" />
     <ClInclude Include="..\public\Level_MapViewer.h" />
     <ClInclude Include="..\Public\LoadingWidget.h" />
     <ClInclude Include="..\public\MapContainer.h" />
@@ -276,6 +278,7 @@
     <ClCompile Include="..\Private\CallBack_Playable_HitReport.cpp" />
     <ClCompile Include="..\Private\DummyObject.cpp" />
     <ClCompile Include="..\private\DummySkyBox.cpp" />
+    <ClCompile Include="..\Private\Dummy_Globe.cpp" />
     <ClCompile Include="..\Private\Dummy_PhysXDoorFrame.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -308,6 +311,7 @@
     <ClCompile Include="..\Private\EditEffect.cpp" />
     <ClCompile Include="..\Private\Information.cpp" />
     <ClCompile Include="..\private\Land.cpp" />
+    <ClCompile Include="..\Private\Level_BloomViewer.cpp" />
     <ClCompile Include="..\private\Level_MapViewer.cpp" />
     <ClCompile Include="..\Private\LoadingWidget.cpp" />
     <ClCompile Include="..\private\MapContainer.cpp" />
