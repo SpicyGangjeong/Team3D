@@ -7,6 +7,9 @@
 #include "Terrain.h"
 #include "VIBuffer_Terrain.h"
 #include "MapObject_Manager.h"
+#include "Character_Controller.h"
+#include "Bounding_Sphere.h"
+#include "Collider.h"
 
 CMapObject_LOD::CMapObject_LOD(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMapObject(pDevice, pContext)
@@ -55,8 +58,21 @@ HRESULT CMapObject_LOD::Initialize(void* pArg)
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
 	m_pTransformCom->Set_Scale(m_vScale);
 	m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
-#endif // _DEBUG
 
+	XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_XMWorldMatrix() * m_pParentTransformCom->Get_XMWorldMatrix());
+
+	_float3 vOffset = m_pModelComs[0]->Get_RadiusOffset();
+	_matrix ColliderMatrix = XMMatrixTranslation(vOffset.x, vOffset.y, vOffset.z) * XMLoadFloat4x4(&m_CombinedWorldMatrix);
+	XMStoreFloat4(&m_vExtentPosition, ColliderMatrix.r[3]);
+
+	
+
+	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+
+
+	//m_pColliderCom->Update(ColliderMatrix);
+
+#endif // _DEBUG
 	return S_OK;
 }
 
@@ -69,30 +85,32 @@ void CMapObject_LOD::Priority_Update(_float fTimeDelta)
 
 void CMapObject_LOD::Update(_float fTimeDelta)
 {
-	_vector		vCamPosition = XMLoadFloat4(m_pGameInstance->Get_CamPosition());
-
-	m_fCamDepth = XMVectorGetX(XMVector3LengthSq(vCamPosition - XMLoadFloat4(reinterpret_cast<_float4*>(m_CombinedWorldMatrix.m[3]))));
-
-	m_iLodIndex = min(m_iMaxLodLevel, (_uint)m_fCamDepth / 200);
-
-	if (0 == m_iLodIndex)
-		m_bSelected = true;
+	//if (0 == m_iLodIndex)
+	//	m_bSelected = true;
 }
 
 void CMapObject_LOD::Late_Update(_float fTimeDelta)
 {
 #ifdef _DEBUG
-	if (m_bSelected)
+	/*if (m_bSelected)
 	{
 		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
 		m_pTransformCom->Set_Scale(m_vScale);
 		m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
-	}
+	}*/
 #endif 
+	_float fRaius = m_pModelComs[0]->Get_Radius();
+	if (m_pGameInstance->isIn_WorldFrustum(XMLoadFloat4(&m_vExtentPosition), fRaius)) {
+		
+		_vector		vCamPosition = XMLoadFloat4(m_pGameInstance->Get_CamPosition());
 
-	XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_XMWorldMatrix() * m_pParentTransformCom->Get_XMWorldMatrix());
+		m_fCamDepth = XMVectorGetX(XMVector3LengthSq(vCamPosition - XMLoadFloat4(&m_vExtentPosition)));
 
-	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
+		m_iLodIndex = min(m_iMaxLodLevel, (_uint)(m_fCamDepth / (fRaius * fRaius + 3600.f)));
+
+		if (m_pGameInstance->Key_Pressing(DIK_Z))
+			m_iLodIndex = 0;
+
 		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 	}
 }
