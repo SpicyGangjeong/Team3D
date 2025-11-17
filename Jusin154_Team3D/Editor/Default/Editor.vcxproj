@@ -163,6 +163,7 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\Action_Panel.h" />
     <ClInclude Include="..\Public\Body.h" />
     <ClInclude Include="..\public\Active_Icon.h" />
     <ClInclude Include="..\Public\CallBack_Playable_Behavior.h" />
@@ -209,6 +210,10 @@
     <ClInclude Include="..\Public\State_Jump.h" />
     <ClInclude Include="..\Public\State_Sprint.h" />
     <ClInclude Include="..\Public\State_Walk.h" />
+    <ClInclude Include="..\Public\Dummy_PhysXDoor.h" />
+    <ClInclude Include="..\public\Spell_Image.h" />
+    <ClInclude Include="..\public\Spell_Overlay.h" />
+    <ClInclude Include="..\public\Spell_Slot.h" />
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\Public\Level_PhysXLab.h" />
     <ClInclude Include="..\Public\TestEffect.h" />
@@ -248,6 +253,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\Action_Panel.cpp" />
     <ClCompile Include="..\Private\Body.cpp" />
     <ClCompile Include="..\private\Active_Icon.cpp" />
     <ClCompile Include="..\Private\CallBack_Playable_Behavior.cpp" />
@@ -294,6 +300,10 @@
     <ClCompile Include="..\Private\State_Jump.cpp" />
     <ClCompile Include="..\Private\State_Sprint.cpp" />
     <ClCompile Include="..\Private\State_Walk.cpp" />
+    <ClCompile Include="..\Private\Dummy_PhysXDoor.cpp" />
+    <ClCompile Include="..\private\Spell_Image.cpp" />
+    <ClCompile Include="..\private\Spell_Overlay.cpp" />
+    <ClCompile Include="..\private\Spell_Slot.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\Private\Level_PhysXLab.cpp" />
     <ClCompile Include="..\Private\TestEffect.cpp" />
