@@ -202,6 +202,51 @@
     <Filter Include="02.GameObjects\Layer_Effect\Dummy_Plane">
       <UniqueIdentifier>{6872c5bc-5eac-46a1-b6d8-3ec0f4fb2cd5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\Callback">
+      <UniqueIdentifier>{b6d1496a-c8ef-4b7a-9ed4-f00b0a244313}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\Callback\Playable">
+      <UniqueIdentifier>{a225d78f-7eec-4407-bdfd-9e14452f3338}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\Callback\Playable\Playable">
+      <UniqueIdentifier>{a32d5869-5562-4099-925a-f8c022e9aac7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\Callback\Playable\Behavior">
+      <UniqueIdentifier>{83781d7f-b84d-45a3-8361-b6bed2722b74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\Callback">
+      <UniqueIdentifier>{b6d1496a-c8ef-4b7a-9ed4-f00b0a244313}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\PhysXDoor">
+      <UniqueIdentifier>{3131278b-18f5-4b84-ba85-73104998e9c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\PhysXPlatform">
+      <UniqueIdentifier>{efffeaa6-b7a5-49fe-bd2e-9dfa9e4a67d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\PhysXWall">
+      <UniqueIdentifier>{813d68fb-0603-44e9-8fda-5c5dd84d0eb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State">
+      <UniqueIdentifier>{9c21aba5-00c1-4b4c-8a82-dac7a156fd9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\State_Dodge">
+      <UniqueIdentifier>{b017e167-f48d-4417-a924-765ab802cff5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\State_Idle">
+      <UniqueIdentifier>{d5681f71-af29-4418-bf3a-a1486c6ba171}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\State_Walk">
+      <UniqueIdentifier>{43bc0f97-0b7d-406b-900c-0fae023023ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\State_Sprint">
+      <UniqueIdentifier>{1cac1aa6-ea12-429e-8a84-ca2bf44c2be4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\State_Jump">
+      <UniqueIdentifier>{904a7ae5-33fe-49a1-9f31-27443acc9e1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Player">
+      <UniqueIdentifier>{680910fd-aee2-4f69-b644-12b36b0f635b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -405,6 +450,39 @@
     <ClInclude Include="..\Public\Dummy_Plane.h">
       <Filter>02.GameObjects\Layer_Effect\Dummy_Plane</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CallBack_Playable_HitRepot.h">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\Callback\Playable\Playable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CallBack_Playable_Behavior.h">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\Callback\Playable\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dummy_PhysXDoor.h">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXDoor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dummy_PhysXPlatform.h">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dummy_PhysXWall.h">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXWall</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Dodge.h">
+      <Filter>80.State\State_Dodge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Idle.h">
+      <Filter>80.State\State_Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Walk.h">
+      <Filter>80.State\State_Walk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Sprint.h">
+      <Filter>80.State\State_Sprint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Jump.h">
+      <Filter>80.State\State_Jump</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player.h">
+      <Filter>02.GameObjects\Player</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -603,6 +681,39 @@
     </ClCompile>
     <ClCompile Include="..\Private\Dummy_Plane.cpp">
       <Filter>02.GameObjects\Layer_Effect\Dummy_Plane</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CallBack_Playable_HitRepot.cpp">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\Callback\Playable\Playable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CallBack_Playable_Behavior.cpp">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\Callback\Playable\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_PhysXDoor.cpp">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXDoor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_PhysXPlatform.cpp">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_PhysXWall.cpp">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXWall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Dodge.cpp">
+      <Filter>80.State\State_Dodge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Idle.cpp">
+      <Filter>80.State\State_Idle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Walk.cpp">
+      <Filter>80.State\State_Walk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Sprint.cpp">
+      <Filter>80.State\State_Sprint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Jump.cpp">
+      <Filter>80.State\State_Jump</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player.cpp">
+      <Filter>02.GameObjects\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

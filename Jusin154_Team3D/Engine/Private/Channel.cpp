@@ -166,6 +166,8 @@ void CChannel::Update_TransformationMatirx(const vector<CBone*>& Bones, _float f
 
 		_vector vDeltaWorld = vRight * dx + vUp * dz + vLook * dy;
 
+		vDeltaWorld *= 0.01f;
+
 		_vector vCurrentPos = pTransform->Get_State(STATE::POSITION);
 		_vector vTargetPos = vCurrentPos + vDeltaWorld;
 
@@ -175,9 +177,9 @@ void CChannel::Update_TransformationMatirx(const vector<CBone*>& Bones, _float f
 		vTranslation = XMVectorZero();
 	}
 
-	_matrix BoneTransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vTranslation);
+	m_BoneTransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vTranslation);
 
-	Bones[m_iBoneIndex]->Set_TransformationMatrix(BoneTransformationMatrix);
+	Bones[m_iBoneIndex]->Set_TransformationMatrix(m_BoneTransformationMatrix);
 }
 
 

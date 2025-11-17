@@ -5,14 +5,16 @@
 #include "VIBuffer_Cell.h"
 #include "Shader.h"
 #include "Navigation.h"
-#include "RigidBody.h"
+#include "RigidBody_Dynamic.h"
+#include "RigidBody_Static.h"
 #include "Texture.h"
 #include "Cell.h"
 #include "Model.h"
 #include "Instance_Model.h"
 #include "Character_Controller.h"
 #include "Light.h"
-
+#include "FSM.h"
+#include "State.h"
 
 NS_BEGIN(Engine)
 class CGameInstance;

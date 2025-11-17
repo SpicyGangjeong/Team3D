@@ -33,6 +33,7 @@ private:
 	HRESULT         Ready_Child();
 	HRESULT			Bind_ShaderResources() override;
 private:
+	HRESULT			ReSaveFile(const _char* pDirectoryPath);
 	void			ReadMaterials(const char* pDirectoryName);
 	void            ReadMaterial(_wstring wstrFileName, const char* pFilePath);
 

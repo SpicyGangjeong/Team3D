@@ -4,6 +4,7 @@
 #include "Channel.h"
 #include "Model.h"
 #include "Transform.h"
+#include "Bone.h"
 
 CAnimation::CAnimation()
 {
@@ -48,8 +49,11 @@ _bool CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bone
 	}
 
 	_uint iIndex = {};
+	if (m_vBoneTransformationMatrix.size() > 0)
+		m_vBoneTransformationMatrix.clear();
 	for (auto& pChannel : m_Channels) {
 		pChannel->Update_TransformationMatirx(Bones, m_fCurrentTrackPosition, &m_CurrentKeyFrameIndices[iIndex++],pTransform);
+		m_vBoneTransformationMatrix.push_back(pChannel->Get_BoneTransformationMatrix());
 	}
 
 	return false;
@@ -105,18 +109,78 @@ vector<_int>* CAnimation::Capture_Bones()
 	return &m_DestBones;
 }
 
-void CAnimation::Remap_Channels_By_Name(CModel* TargetModel)
+
+void CAnimation::InterpAnim(CAnimation* pPreAnim, vector<CBone*>& Bones, float fRatio)
 {
-	for (auto& channel : m_Channels)
+	if (!pPreAnim) return;
+	if (m_Channels.empty() || pPreAnim->m_Channels.empty()) return;
+
+	size_t CurCount = m_vBoneTransformationMatrix.size();
+	size_t PreCount = pPreAnim->m_vBoneTransformationMatrix.size();
+
+	if (CurCount == 0 || PreCount == 0)
+		return;
+
+	if (CurCount > PreCount)
 	{
-		const string& name = channel->Get_Name();
+		pPreAnim->m_vBoneTransformationMatrix.resize(CurCount, XMMatrixIdentity());
+	}
+	else if (CurCount < PreCount)
+	{
+		m_vBoneTransformationMatrix.resize(PreCount, XMMatrixIdentity());
+	}
 
-		int idx = TargetModel->Get_BoneIndex(name.c_str());
+	size_t Count = m_vBoneTransformationMatrix.size();
 
-		if (idx != -1)
-			channel->Set_BoneIndex(idx);
-		else
-			channel->Set_BoneIndex(-1);
+	unordered_map<_string, int> PreBoneMap;
+	PreBoneMap.reserve(pPreAnim->m_Channels.size());
+
+	for (size_t j = 0; j < pPreAnim->m_Channels.size(); j++)
+	{
+		PreBoneMap[pPreAnim->m_pSaveAnim->Channels[j].ChannelName] = (int)j;
+	}
+
+	for (size_t i = 0; i < m_Channels.size(); i++)
+	{
+		const _string& BoneName = m_pSaveAnim->Channels[i].ChannelName;
+
+		auto iter = PreBoneMap.find(BoneName);
+		if (iter == PreBoneMap.end())
+		{
+			_int BoneIndex = m_Channels[i]->Get_BoneIndex();
+			if (BoneIndex < Bones.size())
+				Bones[BoneIndex]->Set_TransformationMatrix(m_vBoneTransformationMatrix[i]);
+			continue;
+		}
+
+		int PreIndex = iter->second;
+
+		_matrix CurMat = m_vBoneTransformationMatrix[i];
+		_matrix PreMat = pPreAnim->m_vBoneTransformationMatrix[PreIndex];
+
+		_vector CurScale, CurRot, CurPos;
+		_vector PreScale, PreRot, PrePos;
+		XMMatrixDecompose(&CurScale, &CurRot, &CurPos, CurMat);
+		XMMatrixDecompose(&PreScale, &PreRot, &PrePos, PreMat);
+
+		_vector FinalScale = XMVectorLerp(PreScale, CurScale, fRatio);
+		_vector FinalRot = XMQuaternionSlerp(PreRot, CurRot, fRatio);
+		_vector FinalPos = XMVectorLerp(PrePos, CurPos, fRatio);
+
+		if (BoneName == "Reference")
+		{
+			FinalPos = XMVectorZero();
+		}
+
+		_matrix FinalMat = XMMatrixAffineTransformation(FinalScale, XMVectorZero(), FinalRot, FinalPos);
+
+		int BoneIndex = m_Channels[i]->Get_BoneIndex();
+		if (BoneIndex < Bones.size())
+		{
+			Bones[BoneIndex]->Set_TransformationMatrix(FinalMat);
+		}
+
+		m_vBoneTransformationMatrix[i] = FinalMat;
 	}
 }
 

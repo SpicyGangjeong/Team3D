@@ -151,11 +151,25 @@ _bool CModel::Play_Animation(_float fTimeDelta,CTransform* pTransform)
 		return false; // 잘못된 초기화
 	}
 
-	if (true == m_pLerpAnim->IsLerping()) { // 럴프중이면 자동으로 럴프 Update를 부름
-		m_bIsFinishedLerp = m_pLerpAnim->Update_TransformationMatrices(m_Bones, fTimeDelta);
-	}
-	else { // 럴프중이지 않다면 실제 애니메이션 재생을 시작함
+	if (m_iPreAnimIndex != m_iCurrentAnimIndex && m_iPreAnimIndex != 0)
+	{
+		m_fBlendTime += fTimeDelta;
+		_float fRatio = m_fBlendTime / m_fBlendDuration;
+		fRatio = min(fRatio, 1.f);
+
 		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_bIsLoop, fTimeDelta, pTransform);
+		m_Animations[m_iCurrentAnimIndex]->InterpAnim(m_Animations[m_iPreAnimIndex], m_Bones, fRatio);
+
+		if (fRatio >= 1.f)
+		{
+			m_iPreAnimIndex = m_iCurrentAnimIndex;
+			m_fBlendTime = 0.f;
+		}
+	}
+	else
+	{
+		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_bIsLoop, fTimeDelta, pTransform);
+		m_iPreAnimIndex = m_iCurrentAnimIndex;
 	}
 
 	for (_int i = 0; i < m_Bones.size(); ++i)
@@ -199,6 +213,7 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop)
 		m_iCurrentAnimIndex = iIndex;
 		m_bIsLoop = isLoop;
 		m_Animations[m_iCurrentAnimIndex]->ResetRootMotion();
+		m_Animations[m_iCurrentAnimIndex]->Depart_Animation();
 	}
 	else
 		m_iCurrentAnimIndex = -1;
@@ -315,12 +330,12 @@ void CModel::Set_AnimSpeed(_float fSpeed)
 
 void CModel::Set_Anim(CModel* Source)
 {
-	m_Animations = Source->m_Animations;
+	for (auto& Animations : Source->m_Animations)
+	{
+		m_Animations.push_back(Animations);
+	}
 
-	for (auto& anim : m_Animations)
-		anim->Remap_Channels_By_Name(this);
-
-	m_iNumAnimations = (_uint)m_Animations.size();
+	m_iNumAnimations += (_uint)Source->m_Animations.size();
 }
 
 
@@ -881,6 +896,7 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 	}
 	m_pSaveModel = m_pGameInstance->Load_SaveModel(pModelFilePath);
 
+	LoadAdditionalAnimations(pModelFilePath);
 
 	XMStoreFloat4x4(&m_PreTransformMatrix, PreTransformMatrix);
 
@@ -909,6 +925,35 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 	return S_OK;
 }
 
+void CModel::LoadAdditionalAnimations(const char* ModelFilePath)
+{
+	filesystem::path fullPath(ModelFilePath);
+	filesystem::path folder = fullPath.parent_path();
+	_string baseName = fullPath.stem().string();
+
+	_string defaultModel = fullPath.filename().string();
+
+	for (auto& entry : filesystem::directory_iterator(folder))
+	{
+		if (!entry.is_regular_file())
+			continue;
+
+		auto file = entry.path().filename().string();
+		auto stem = entry.path().stem().string();
+		auto ext = entry.path().extension().string();
+
+		if (ext != ".bin")
+			continue;
+
+		if (file == defaultModel)
+			continue;
+
+		if (stem.rfind(baseName, 0) == 0)
+		{
+			LoadAnim(entry.path().string().c_str());
+		}
+	}
+}
 
 
 _bool CModel::LoadData(const _char* filename)
@@ -1042,6 +1087,108 @@ _bool CModel::LoadData(const _char* filename)
 
 	return true;
 }
+
+void CModel::LoadAnim(const _char* fileName)
+{
+	FILE* fp = nullptr;
+	fopen_s(&fp, fileName, "rb");
+	if (!fp) return;
+
+	_uint MeshCount, MaterialCount, AnimationCount, NodeCount;
+
+	fread(&MeshCount, sizeof(_uint), 1, fp);
+	fread(&MaterialCount, sizeof(_uint), 1, fp);
+	fread(&AnimationCount, sizeof(_uint), 1, fp);
+	fread(&NodeCount, sizeof(_uint), 1, fp);
+
+	for (_uint i = 0; i < MeshCount; i++)
+	{
+		_uint nameSize, vtxCount, idxCount, matIndex, boneCount;
+
+		fread(&nameSize, sizeof(_uint), 1, fp);
+		fseek(fp, nameSize, SEEK_CUR);
+
+		fread(&vtxCount, sizeof(_uint), 1, fp);
+		fread(&idxCount, sizeof(_uint), 1, fp);
+		fread(&matIndex, sizeof(_uint), 1, fp);
+		fread(&boneCount, sizeof(_uint), 1, fp);
+
+		fseek(fp, sizeof(SaveVertex) * vtxCount, SEEK_CUR);
+
+		fseek(fp, sizeof(_uint) * idxCount, SEEK_CUR);
+
+		for (_uint b = 0; b < boneCount; b++)
+		{
+			_uint boneNameSize = 0;
+			fread(&boneNameSize, sizeof(_uint), 1, fp);
+			fseek(fp, boneNameSize, SEEK_CUR);
+
+			fseek(fp, sizeof(_float4x4), SEEK_CUR);
+
+			_uint weightCount = 0;
+			fread(&weightCount, sizeof(_uint), 1, fp);
+			fseek(fp, (sizeof(_uint) + sizeof(_float)) * weightCount, SEEK_CUR);
+		}
+	}
+
+	for (_uint i = 0; i < NodeCount; i++)
+	{
+		_uint nodeNameSize;
+		fread(&nodeNameSize, sizeof(_uint), 1, fp);
+		fseek(fp, nodeNameSize, SEEK_CUR);
+
+		fseek(fp, sizeof(int), SEEK_CUR);
+		fseek(fp, sizeof(XMFLOAT4X4), SEEK_CUR);
+
+		_uint childrenCount;
+		fread(&childrenCount, sizeof(_uint), 1, fp);
+		fseek(fp, sizeof(_int) * childrenCount, SEEK_CUR);
+	}
+
+	for (_uint i = 0; i < AnimationCount; i++)
+	{
+		SaveAnimation saveAnim = {};
+
+		fread(&saveAnim.AnimNameSize, sizeof(_uint), 1, fp);
+		saveAnim.AnimName.resize(saveAnim.AnimNameSize);
+		fread(saveAnim.AnimName.data(), 1, saveAnim.AnimNameSize, fp);
+
+		fread(&saveAnim.mDuration, sizeof(_float), 1, fp);
+		fread(&saveAnim.mTicksPerSecond, sizeof(_float), 1, fp);
+
+		fread(&saveAnim.ChannelCount, sizeof(_uint), 1, fp);
+		saveAnim.Channels.resize(saveAnim.ChannelCount);
+
+		for (size_t j = 0; j < saveAnim.ChannelCount; j++)
+		{
+			fread(&saveAnim.Channels[j].ChannelNameSize, sizeof(_uint), 1, fp);
+
+			saveAnim.Channels[j].ChannelName.resize(saveAnim.Channels[j].ChannelNameSize);
+			fread(saveAnim.Channels[j].ChannelName.data(), 1, saveAnim.Channels[j].ChannelNameSize, fp);
+
+			fread(&saveAnim.Channels[j].ScalingKeyCount, sizeof(_uint), 1, fp);
+			saveAnim.Channels[j].ScalingKeys.resize(saveAnim.Channels[j].ScalingKeyCount);
+			fread(saveAnim.Channels[j].ScalingKeys.data(),
+				sizeof(SaveKeyFrameVec), saveAnim.Channels[j].ScalingKeyCount, fp);
+
+			fread(&saveAnim.Channels[j].RotationKeyCount, sizeof(_uint), 1, fp);
+			saveAnim.Channels[j].RotationKeys.resize(saveAnim.Channels[j].RotationKeyCount);
+			fread(saveAnim.Channels[j].RotationKeys.data(),
+				sizeof(SaveKeyFrameRotation), saveAnim.Channels[j].RotationKeyCount, fp);
+
+			fread(&saveAnim.Channels[j].PositionKeyCount, sizeof(_uint), 1, fp);
+			saveAnim.Channels[j].PositionKeys.resize(saveAnim.Channels[j].PositionKeyCount);
+			fread(saveAnim.Channels[j].PositionKeys.data(),
+				sizeof(SaveKeyFrameVec), saveAnim.Channels[j].PositionKeyCount, fp);
+		}
+
+		m_pSaveModel->Animations.push_back(saveAnim);
+		m_pSaveModel->AnimationCount++;
+	}
+
+	fclose(fp);
+}
+
 
 HRESULT CModel::Initialize(void* pArg)
 {

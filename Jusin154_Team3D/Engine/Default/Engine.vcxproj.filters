@@ -244,14 +244,8 @@
     <Filter Include="01.Utility\06.Picking">
       <UniqueIdentifier>{a60a7ba5-a937-41d7-baac-db67f86f3ba1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Element\02.Component\08.Character_Controller\Collision_Callback">
-      <UniqueIdentifier>{05865481-fa20-4432-a5a7-945d4f8c7f3c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Element\02.Component\07.RigidBody\10.Dynamic">
       <UniqueIdentifier>{bed0de44-4e62-4b5f-9767-65cfc8a933a3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.Element\02.Component\07.RigidBody\11.Kinematic">
-      <UniqueIdentifier>{33ac85a2-be8e-4ad9-a179-1239d818dc9c}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.Element\02.Component\07.RigidBody\00.Static">
       <UniqueIdentifier>{fda41884-634b-4dd4-8bd2-f6f7ad68ab1f}</UniqueIdentifier>
@@ -261,6 +255,18 @@
     </Filter>
     <Filter Include="03.Management\03.Light_Manager">
       <UniqueIdentifier>{8727e975-e9e2-4b59-9a52-27ad3ad79f2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\08.Character_Controller\CallBack">
+      <UniqueIdentifier>{05865481-fa20-4432-a5a7-945d4f8c7f3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\10.FSM">
+      <UniqueIdentifier>{0014599a-3877-4fe8-b32f-1dafc3753c6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\10.FSM\State">
+      <UniqueIdentifier>{cf6beeeb-6caa-46ef-b9d9-3b1daf43a7f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\01.GameObject\Unit">
+      <UniqueIdentifier>{a4560f1b-c4f4-4705-bbf8-6a60977d3211}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -438,9 +444,6 @@
     <ClCompile Include="..\Private\PhysX_Manager.cpp">
       <Filter>03.Management\21.PhysX_Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\RigidBody.cpp">
-      <Filter>02.Element\02.Component\07.RigidBody</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\UIComponent.cpp">
       <Filter>02.Element\02.Component\50.UI</Filter>
     </ClCompile>
@@ -477,8 +480,29 @@
     <ClCompile Include="..\Private\Light_Manager.cpp">
       <Filter>03.Management\03.Light_Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Collision_Callback.cpp">
-      <Filter>02.Element\02.Component\08.Character_Controller\Collision_Callback</Filter>
+    <ClCompile Include="..\Private\RigidBody_Static.cpp">
+      <Filter>02.Element\02.Component\07.RigidBody\00.Static</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RigidBody_Dynamic.cpp">
+      <Filter>02.Element\02.Component\07.RigidBody\10.Dynamic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RigidBody.cpp">
+      <Filter>02.Element\02.Component\07.RigidBody</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\NCallBack_Playable_HitRepot.cpp">
+      <Filter>02.Element\02.Component\08.Character_Controller\CallBack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\NCallBack_Playable_Behavior.cpp">
+      <Filter>02.Element\02.Component\08.Character_Controller\CallBack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\FSM.cpp">
+      <Filter>02.Element\02.Component\10.FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State.cpp">
+      <Filter>02.Element\02.Component\10.FSM\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Unit.cpp">
+      <Filter>02.Element\01.GameObject\Unit</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1061,8 +1085,26 @@
     <ClInclude Include="..\Public\Light_Manager.h">
       <Filter>03.Management\03.Light_Manager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Collision_Callback.h">
-      <Filter>02.Element\02.Component\08.Character_Controller\Collision_Callback</Filter>
+    <ClInclude Include="..\Public\RigidBody_Static.h">
+      <Filter>02.Element\02.Component\07.RigidBody\00.Static</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RigidBody_Dynamic.h">
+      <Filter>02.Element\02.Component\07.RigidBody\10.Dynamic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\NCallBack_Playable_HitRepot.h">
+      <Filter>02.Element\02.Component\08.Character_Controller\CallBack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\NCallBack_Playable_Behavior.h">
+      <Filter>02.Element\02.Component\08.Character_Controller\CallBack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\FSM.h">
+      <Filter>02.Element\02.Component\10.FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State.h">
+      <Filter>02.Element\02.Component\10.FSM\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Unit.h">
+      <Filter>02.Element\01.GameObject\Unit</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1126,6 +1168,9 @@
       <Filter>99.Define\01.SHADER</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_LastColor.hlsl">
+      <Filter>99.Define\01.SHADER</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_WeightBlend.hlsl">
       <Filter>99.Define\01.SHADER</Filter>
     </FxCompile>
   </ItemGroup>

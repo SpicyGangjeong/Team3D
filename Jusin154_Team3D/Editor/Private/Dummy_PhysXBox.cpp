@@ -39,31 +39,41 @@ void CDummy_PhysXBox::Priority_Update(_float fTimeDelta)
 
 void CDummy_PhysXBox::Update(_float fTimeDelta)
 {
+	//if (m_pGameInstance->Key_Pressing(DIK_LCONTROL)) {
+	//	if (m_pGameInstance->Key_Down(DIK_X)) {
+	//		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor());
+	//	}
+	//}
+	//else {
+	//	if (m_pGameInstance->Key_Down(DIK_X)) {
+	//		m_pGameInstance->Attach_Actor(*m_pRigidBody->Get_Actor());
+	//	}
+	//}
 }
 
 void CDummy_PhysXBox::Late_Update(_float fTimeDelta)
 {
-	_float4 vPos;
-	XMStoreFloat4(&vPos, Get_WorldPostion());
-	m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this, vPos, 20.f);
+	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
+		m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
+	}
 }
 
 HRESULT CDummy_PhysXBox::Render()
 {
-	//if (FAILED(Bind_ShaderResources())) {
-	//	return E_FAIL;
-	//}
+	if (FAILED(Bind_ShaderResources())) {
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pModelCom->Bind_Material(0, m_pShaderCom, "g_DiffuseTexture", aiTextureType_DIFFUSE, 0))) {
-	//	return E_FAIL;
-	//}
-	//if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::DEFAULT)))) {
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pModelCom->Bind_Material(0, m_pShaderCom, "g_DiffuseTexture", aiTextureType_DIFFUSE, 0))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::DEFAULT)))) {
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pModelCom->Render(0))) {
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pModelCom->Render(0))) {
+		return E_FAIL;
+	}
 #ifdef _DEBUG
 	if (FAILED(m_pRigidBody->Render())) {
 		return E_FAIL;
@@ -79,15 +89,15 @@ HRESULT CDummy_PhysXBox::Ready_Components(void* pArg)
 	if (FAILED(__super::Ready_Components(pArg))) {
 		return E_FAIL;
 	}
-	BOXSTARTPOS_DESC* pBox = static_cast<BOXSTARTPOS_DESC*>(pArg);
+	PHYSXDUMMY_DESC* pPhysXDummyDesc = static_cast<PHYSXDUMMY_DESC*>(pArg);
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pBox->vPos), 1.f));
-	m_pTransformCom->Rotation(pBox->vRotRPY.x, pBox->vRotRPY.y, pBox->vRotRPY.z);
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pPhysXDummyDesc->vPos), 1.f));
+	m_pTransformCom->Rotation(pPhysXDummyDesc->vRotRPY.x, pPhysXDummyDesc->vRotRPY.y, pPhysXDummyDesc->vRotRPY.z);
 
 
 	{ // RIGID_BODY
-		CRigidBody::RIGIDBODY_DESC Desc{};
-
+		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
+		Desc.iSubKind = pPhysXDummyDesc->iSubKind;
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}
@@ -95,8 +105,9 @@ HRESULT CDummy_PhysXBox::Ready_Components(void* pArg)
 
 	/* Com_Shader */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_MESH,
-		reinterpret_cast<CComponent**>(&m_pShaderCom))))
+		reinterpret_cast<CComponent**>(&m_pShaderCom)))){
 		return E_FAIL;
+	}
 
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_Box"), (CComponent**)&m_pModelCom))) {
 		return E_FAIL;
@@ -152,6 +163,10 @@ CGameObject* CDummy_PhysXBox::Clone(void* pArg, CGameObject* pOwner)
 
 void CDummy_PhysXBox::Free()
 {
+	if (nullptr != m_pRigidBody) {
+		m_pGameInstance->Release_Actor(*m_pRigidBody->Get_Actor());
+	}
+
 	__super::Free();
 
 	SAFE_RELEASE(m_pRigidBody);

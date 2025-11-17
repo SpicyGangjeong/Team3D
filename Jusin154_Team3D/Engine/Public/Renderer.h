@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Base.h"
 
@@ -11,9 +11,8 @@ private:
 	virtual ~CRenderer() = default;
 
 public:
-	void	Refresh_Renderer();
 	void	Render();
-	HRESULT Add_RenderGroup(RENDER eRenderGroup, class CGameObject* pRenderObject, _float4& vPos, _float fCullRadius);
+	HRESULT Add_RenderGroup(RENDER eRenderGroup, class CGameObject* pRenderObject);
 
 #ifdef _DEBUG
 private:
@@ -32,18 +31,13 @@ private:
 private:
 	class CShader* m_pShader = { nullptr };
 	class CShader* m_pLastColorShader = { nullptr };
+	class CShader* m_pWeightBlendShader = { nullptr };
 	class CVIBuffer_Rect* m_pVIBuffer = { nullptr };
 
 private:
 	_float4x4					m_WorldMatrix = {};
 	_float4x4					m_ViewMatrix = {};
 	_float4x4					m_ProjMatrix = {};
-	_float4						m_vPlanes[6] = {};
-	_float3						m_CubeViewFrustum[8] = {};
-	_float3						m_CubeNDC[8] = {
-		{ -1.f, -1.f, 0.f }, { 1.f, -1.f, 0.f }, { 1.f, 1.f, 0.f }, { -1.f, 1.f, 0.f },
-		{ -1.f, -1.f, 1.f }, { 1.f, -1.f, 1.f }, { 1.f, 1.f, 1.f }, { -1.f, 1.f, 1.f }
-	};
 
 	ID3D11DepthStencilView* m_pShadowDSV = { nullptr };
 
@@ -59,6 +53,7 @@ private:
 	void Render_Blur(); 
 	void Render_Combined();
 	void Render_Effect();
+	void Render_WeightBlend();
 	void Render_NonLight();
 	void Render_Blend();
 	void Render_LastColor();
@@ -71,9 +66,7 @@ private:
 #endif
 
 private:
-	HRESULT Ready_DepthStencilView(_uint iSizeX, _uint iSizeY);
-
-
+	HRESULT Ready_ShadowDepthStencilView(_uint iSizeX, _uint iSizeY);
 
 private:
 	HRESULT Initialize();

@@ -4,6 +4,8 @@
 
 NS_BEGIN(Engine)
 class CRigidBody;
+class CRigidBody_Dynamic;
+class CRigidBody_Static;
 class CTransform;
 class CMesh;
 
@@ -20,8 +22,8 @@ public:
 // HRESULT Update_RegionOfInterest(); ( 충돌 컬링, 필터링도 검색해야함 )
 // Aggregate ( 충돌 그룹, 이 그룹끼리는 서로 충돌검사를 하지 않음, 지형, 레그돌 등 )
 
-	PSX::PxRigidDynamic* Add_DynamicActor(CRigidBody& RigidBody);
-	PSX::PxRigidStatic* Add_StaticActor(CRigidBody& RigidBody);
+	PSX::PxRigidDynamic* Add_DynamicActor(CRigidBody_Dynamic& RigidBody);
+	PSX::PxRigidStatic* Add_StaticActor(CRigidBody_Static& RigidBody);
 	
 	void RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh);
 	PSX::PxMaterial* Create_Material(const _float3* vMatInfo);
@@ -30,14 +32,14 @@ public:
 	HRESULT SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
 	HRESULT LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
 	//HRESULT LoadTriMeshes_Binary(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
-	PSX::PxTriangleMesh* Find_TriangleMesh(const _wstring& wstrMeshKey);
+	PSX::PxTriangleMesh* Find_TriangleMesh(const _tchar* pMeshName);
 
 	void Update(_float fTimeDelta);
 	void ClearScene();
-	void Attach_Actor(CRigidBody& RigidBody, PSX::PxActor& Actor);
-	void Detach_Actor(CRigidBody& RigidBody, PSX::PxActor*& pActor);
+	void Attach_Actor(PSX::PxActor& Actor);
+	unordered_set<PSX::PxActor*>::iterator Detach_Actor(PSX::PxActor& Actor);
+	void Release_Actor(PSX::PxActor& Actor);
 #pragma endregion
-
 #pragma region CHARACTER_CONTROLLER
 	/* dev-treadmill.tistory.com/158  */
 
@@ -73,9 +75,15 @@ private:
 
 
 
-	list<pair<CRigidBody*, PSX::PxActor*>>		m_RigidBodys = { };
+	unordered_set<PSX::PxActor*>				m_pActiveBodys = { };
+	unordered_set<PSX::PxActor*>				m_pRestBodies = { }; // 피직스의 액터로 구별되기 때문에 피직스액터 포인터를 키로 사용함
 	map<_wstring, PSX::PxTriangleMesh*>			m_TriangleMeshes = {};
 	map<_wstring, PSX::PxTriangleMeshGeometry*>	m_TriangleMeshGeometry = {};
+#ifdef 기무리
+	PhsXUserData PlaneData = {};
+
+#endif // 기무리
+
 
 	vector<PSX::PxMaterial*> m_pMaterials = { };
 	_uint m_iNumLevel = {};

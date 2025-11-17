@@ -15,71 +15,25 @@ CRenderer::CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	SAFE_ADDREF(m_pGameInstance); 
 }
 
-
-void CRenderer::Refresh_Renderer()
+HRESULT CRenderer::Add_RenderGroup(RENDER eRenderGroup, CGameObject* pRenderObject)
 {
-	if (nullptr == m_pGameInstance->Get_CamPosition()) {
-		return;
-	}
-	_matrix matViewInv = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
-	_matrix matProjInv = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
-
-	matProjInv = XMMatrixInverse(nullptr, matProjInv);
-	matViewInv = XMMatrixInverse(nullptr, matViewInv);
-
-	memcpy_s(&m_CubeViewFrustum, sizeof(_float3) * 8, m_CubeNDC, sizeof(_float3) * 8);
-
-	for (int i = 0; i < 8; ++i) {
-		XMStoreFloat3(&m_CubeViewFrustum[i], XMVector3TransformCoord(XMVectorSet(m_CubeViewFrustum[i].x, m_CubeViewFrustum[i].y, m_CubeViewFrustum[i].z, 1.f), matProjInv));
-		XMStoreFloat3(&m_CubeViewFrustum[i], XMVector3TransformCoord(XMVectorSet(m_CubeViewFrustum[i].x, m_CubeViewFrustum[i].y, m_CubeViewFrustum[i].z, 1.f), matViewInv));
-	}
-	// 0(1, 3, 4), 6(2, 5, 7) ( 법선벡터 후보 )
-	// 0, 6( 한 점 후보)
-	//_float3								m_CubeNDC[8] = {
-	//	근	좌하	우하	우상	좌상
-	//	원	좌하	우하	우상	좌상
-	//		0,		1,		2,		3
-	//		4,		5,		6,		7
-	//{ -1.f, -1.f, 0.f }, { 1.f, -1.f, 0.f }, { 1.f, 1.f, 0.f }, { -1.f, 1.f, 0.f },
-	//{ -1.f, -1.f, 1.f }, { 1.f, -1.f, 1.f }, { 1.f, 1.f, 1.f }, { -1.f, 1.f, 1.f }
-	//};
-	_vector vPlanes[8] = {};
-	XMStoreFloat4(&m_vPlanes[0], XMPlaneNormalize(XMPlaneFromPoints(XMLoadFloat3(&m_CubeViewFrustum[0]), XMLoadFloat3(&m_CubeViewFrustum[3]), XMLoadFloat3(&m_CubeViewFrustum[4]))));
-	XMStoreFloat4(&m_vPlanes[1], XMPlaneNormalize(XMPlaneFromPoints(XMLoadFloat3(&m_CubeViewFrustum[5]), XMLoadFloat3(&m_CubeViewFrustum[6]), XMLoadFloat3(&m_CubeViewFrustum[2]))));
-	XMStoreFloat4(&m_vPlanes[2], XMPlaneNormalize(XMPlaneFromPoints(XMLoadFloat3(&m_CubeViewFrustum[1]), XMLoadFloat3(&m_CubeViewFrustum[2]), XMLoadFloat3(&m_CubeViewFrustum[3]))));
-	XMStoreFloat4(&m_vPlanes[3], XMPlaneNormalize(XMPlaneFromPoints(XMLoadFloat3(&m_CubeViewFrustum[4]), XMLoadFloat3(&m_CubeViewFrustum[7]), XMLoadFloat3(&m_CubeViewFrustum[6]))));
-	XMStoreFloat4(&m_vPlanes[4], XMPlaneNormalize(XMPlaneFromPoints(XMLoadFloat3(&m_CubeViewFrustum[0]), XMLoadFloat3(&m_CubeViewFrustum[4]), XMLoadFloat3(&m_CubeViewFrustum[5]))));
-	XMStoreFloat4(&m_vPlanes[5], XMPlaneNormalize(XMPlaneFromPoints(XMLoadFloat3(&m_CubeViewFrustum[3]), XMLoadFloat3(&m_CubeViewFrustum[2]), XMLoadFloat3(&m_CubeViewFrustum[7]))));
-}
-
-HRESULT CRenderer::Add_RenderGroup(RENDER eRenderGroup, CGameObject* pRenderObject, _float4& vPos, _float fCullRadius)
-{
-	if (nullptr == pRenderObject)
+	if (nullptr == pRenderObject || pRenderObject->isDead()){
 		return E_FAIL;
+	}
 
-	_bool	bPossible = { true };
-	//if (pRenderObject->isDead()) {
-	//	return E_FAIL;
-	//}
-	//// 프러스텀컬링 예외 추가
-	//if (RENDER::UI == eRenderGroup || RENDER::PRIORITY == eRenderGroup /* || RENDER::SHADOW == eRenderGroup*/ || RENDER::BLUR == eRenderGroup) {
-	//	m_RenderObjects[ENUM_CLASS(eRenderGroup)].push_back(pRenderObject);
-	//	SAFE_ADDREF(pRenderObject);
-	//	return S_OK;
-	//}
-	//for (int i = 0; i < 6; ++i) {
-	//	if (XMVectorGetX(XMVector4Dot(XMLoadFloat4(&m_vPlanes[i]),
-	//		XMLoadFloat4(&vPos))) + fCullRadius < 0) {
-	//		bPossible = false;
-	//		break;
-	//	}
-	//}
-	if (bPossible) {
+	_bool	bPossible = { false };
+	// 프러스텀컬링 예외 추가
+	if (RENDER::UI == eRenderGroup || RENDER::PRIORITY == eRenderGroup /* || RENDER::SHADOW == eRenderGroup*/ || RENDER::BLUR == eRenderGroup) {
+		bPossible = true;
+	}
+
+	bPossible = true;
+	if (true == bPossible) {
 		m_RenderObjects[ENUM_CLASS(eRenderGroup)].push_back(pRenderObject);
 		SAFE_ADDREF(pRenderObject);
 		return S_OK;
 	}
-	return S_OK;
+	return E_FAIL;
 }
 
 #ifdef _DEBUG
@@ -111,6 +65,7 @@ void CRenderer::Render()
 	Render_Blur();
 	Render_Combined();
 	Render_Effect();
+	Render_WeightBlend();
 	Render_NonLight();
 	Render_Blend();
 	Render_LastColor();
@@ -118,7 +73,7 @@ void CRenderer::Render()
 
 #ifdef _DEBUG
 	m_pGameInstance->RenderTarget_Debuger();
-	
+
 	if(m_pGameInstance->Key_Pressing(DIK_F10))
 		Render_Debug();
 #endif
@@ -317,9 +272,10 @@ void CRenderer::Render_Combined()
 
 void CRenderer::Render_Effect()
 {
-	if (FAILED(m_pGameInstance->Begin_MRT_Include_BackBuffer(TEXT("MRT_Color")))) {
+	if (FAILED(m_pGameInstance->Begin_MRT_NO_DepthStencil(TEXT("MRT_WB")))) {
 		return;
 	}
+
 
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::EFFECT)])
 	{
@@ -335,6 +291,30 @@ void CRenderer::Render_Effect()
 	if (FAILED(m_pGameInstance->End_MRT())) {
 		return;
 	}
+}
+
+void CRenderer::Render_WeightBlend()
+{
+	// Bind_Resorces
+
+	m_pWeightBlendShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix);
+	m_pWeightBlendShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix);
+	m_pWeightBlendShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix);
+
+
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_WB_Color"), m_pWeightBlendShader, "g_MixedDiffuseTexture"))) {
+		return;
+	}
+
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_WB_Revealage"), m_pWeightBlendShader, "g_RevealageTexture"))) {
+		return;
+	}
+
+	m_pWeightBlendShader->Begin(0);
+
+	m_pVIBuffer->Bind_Resources();
+	m_pVIBuffer->Render();
+
 }
 
 void CRenderer::Render_NonLight()
@@ -464,9 +444,9 @@ void CRenderer::Render_LastColor()
 
 }
 
-HRESULT CRenderer::Ready_DepthStencilView(_uint iSizeX, _uint iSizeY)
+HRESULT CRenderer::Ready_ShadowDepthStencilView(_uint iSizeX, _uint iSizeY)
 {
-	ID3D11Texture2D* pDepthStencilTexture = nullptr;
+	ID3D11Texture2D* pShadowDepthStencilTexture = nullptr;
 
 	D3D11_TEXTURE2D_DESC	TextureDesc;
 	ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
@@ -485,16 +465,16 @@ HRESULT CRenderer::Ready_DepthStencilView(_uint iSizeX, _uint iSizeY)
 	TextureDesc.CPUAccessFlags = 0;
 	TextureDesc.MiscFlags = 0;
 
-	if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, &pDepthStencilTexture))) {
+	if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, &pShadowDepthStencilTexture))) {
 		return E_FAIL;
 	}
 
 
-	if (FAILED(m_pDevice->CreateDepthStencilView(pDepthStencilTexture, nullptr, &m_pShadowDSV))) {
+	if (FAILED(m_pDevice->CreateDepthStencilView(pShadowDepthStencilTexture, nullptr, &m_pShadowDSV))) {
 		return E_FAIL;
 	}
 
-	SAFE_RELEASE(pDepthStencilTexture);
+	SAFE_RELEASE(pShadowDepthStencilTexture);
 
 	return S_OK;
 }
@@ -606,8 +586,22 @@ HRESULT CRenderer::Initialize()
 		}
 
 
+		/*WB_COLOR*/
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_WB_Color"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
 
-		if (FAILED(Ready_DepthStencilView(g_iMaxShadowWidth, g_iMaxShadowHeight))) {
+
+		/* WB_A*/
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_WB_Revealage"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+
+
+		
+		if (FAILED(Ready_ShadowDepthStencilView(g_iMaxShadowWidth, g_iMaxShadowHeight))) {
 			return E_FAIL;
 		}
 
@@ -661,8 +655,23 @@ HRESULT CRenderer::Initialize()
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Color"), TEXT("Target_Color")))) {
 			return E_FAIL;
 		}
+
+		/* MRT_WB */
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_WB"), TEXT("Target_WB_Color")))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_WB"), TEXT("Target_WB_Revealage")))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_WB"), TEXT("Target_Color")))) {
+			return E_FAIL;
+		}
+
 		
 	}
+
 	m_pShader = (CShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, TEXT("FX_DEFERRED"), nullptr, nullptr);
 	if (nullptr == m_pShader) {
 		return E_FAIL;
@@ -675,7 +684,11 @@ HRESULT CRenderer::Initialize()
 		return E_FAIL;
 	}
 
+	m_pWeightBlendShader = (CShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, TEXT("FX_WEIGHTBELND"), nullptr, nullptr);
 	
+	if (nullptr == m_pWeightBlendShader) {
+		return E_FAIL;
+	}
 
 	m_pVIBuffer = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
 	if (nullptr == m_pVIBuffer) {
@@ -725,6 +738,7 @@ void CRenderer::Free()
 	SAFE_RELEASE(m_pShadowDSV);
 	SAFE_RELEASE(m_pShader);
 	SAFE_RELEASE(m_pLastColorShader);
+	SAFE_RELEASE(m_pWeightBlendShader);
 	SAFE_RELEASE(m_pVIBuffer);
 	SAFE_RELEASE(m_pDevice);
 	SAFE_RELEASE(m_pContext);

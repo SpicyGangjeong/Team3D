@@ -2,7 +2,8 @@
 #include "PhysX_Manager.h"
 #include "GameObject.h"
 #include "GameInstance.h"
-#include "RigidBody.h"
+#include "RigidBody_Dynamic.h"
+#include "RigidBody_Static.h"
 #include "Mesh.h"
 
 CPhysX_Manager::CPhysX_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext) :
@@ -15,7 +16,7 @@ CPhysX_Manager::CPhysX_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 	SAFE_ADDREF(m_pGameInstance);
 }
 
-PSX::PxRigidDynamic* CPhysX_Manager::Add_DynamicActor(CRigidBody& RigidBody)
+PSX::PxRigidDynamic* CPhysX_Manager::Add_DynamicActor(CRigidBody_Dynamic& RigidBody)
 {
 	_matrix WorldMatrix = RigidBody.Get_TransformPtr()->Get_XMWorldMatrix();
 	PSX::PxTransform pxWorldMatrix = XMWorldToPx_NoScale(WorldMatrix);
@@ -54,8 +55,6 @@ PSX::PxRigidDynamic* CPhysX_Manager::Add_DynamicActor(CRigidBody& RigidBody)
 	PSX::PxRigidBodyFlags pxRigidFlags = RigidBody.Get_RigidBodyFlags();
 	pActorDynamic->setRigidBodyFlags(pxRigidFlags);
 
-
-
 	if (pxRigidFlags.isSet(PSX::PxRigidBodyFlag::eKINEMATIC)) {
 
 	}
@@ -63,12 +62,13 @@ PSX::PxRigidDynamic* CPhysX_Manager::Add_DynamicActor(CRigidBody& RigidBody)
 		PSX::PxRigidBodyExt::updateMassAndInertia(*pActorDynamic, (PSX::PxReal)RigidBody.Get_Density());
 	}
 
-	Attach_Actor(RigidBody, *pActorDynamic);
+	m_pRestBodies.insert(pActorDynamic);
+	Attach_Actor(*pActorDynamic);
 
 	return pActorDynamic;
 }
 
-PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody& RigidBody)
+PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody_Static& RigidBody)
 {
 	_matrix WorldMatrix = RigidBody.Get_TransformPtr()->Get_XMWorldMatrix();
 	PSX::PxTransform pxWorldMatrix = XMWorldToPx_NoScale(WorldMatrix);
@@ -118,8 +118,8 @@ PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody& RigidBody)
 	pShape->setContactOffset(RigidBody.Get_ContactOffset());
 	pShape->setRestOffset(0.f);
 	
-
-	Attach_Actor(RigidBody, *pActor);
+	m_pRestBodies.insert(pActor);
+	Attach_Actor(*pActor);
 
 	return pActor;
 }
@@ -222,47 +222,9 @@ HRESULT CPhysX_Manager::LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangle
 	return S_OK;
 }
 
-// 바이너리 로드에는 128B 정렬된 메모리 포인터를 넘겨야 함. InputData 그대로 넘기면 안됨
-// 심지어 바이너리로 불러온 블럭은 피직스의 모든 메시들을 릴리즈 한 뒤에 해제 해야 함
-//_bool CPhysX_Manager::LoadTriMeshes_Binary(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes)
-//{
-//	filesystem::path pathPhysX = pPath;
-//	pathPhysX.replace_extension(".bmap");
-//
-//	PSX::PxSerializationRegistry* pSerializationRegistry = PSX::PxSerialization::createSerializationRegistry(*m_pPhysics);
-//
-//	PSX::PxDefaultFileInputData InputData(pathPhysX.string().c_str());
-//	PSX::PxCollection* extRefs = PxCreateCollection();
-//
-//	PSX::PxCollection* pCollections = PSX::PxSerialization::createCollectionFromBinary(&InputData, *pSerializationRegistry, extRefs); 
-//	if (nullptr == pCollections) {
-//		extRefs->release();
-//		pSerializationRegistry->release();
-//		assert(pCollections);
-//		return false;
-//	}
-//
-//	const PSX::PxU32 iNumTriMeshes = pCollections->getNbObjects();
-//	TriMeshes.reserve(iNumTriMeshes);
-//	for (PSX::PxU32 i = 0; i < iNumTriMeshes; ++i) {
-//		PSX::PxBase& pObject = pCollections->getObject(i);
-//
-//		if (pObject.getConcreteType() == PSX::PxConcreteType::eTRIANGLE_MESH_BVH34) {
-//			PSX::PxTriangleMesh* pTriMesh = static_cast<PSX::PxTriangleMesh*>(&pObject);
-//			pTriMesh->acquireReference();
-//			TriMeshes.push_back(pTriMesh);
-//		}
-//	}
-//
-//	extRefs->release();
-//	pCollections->release();
-//	pSerializationRegistry->release();
-//	return true;
-//}
-
-PSX::PxTriangleMesh* CPhysX_Manager::Find_TriangleMesh(const _wstring& wstrMeshKey)
+PSX::PxTriangleMesh* CPhysX_Manager::Find_TriangleMesh(const _tchar* pMeshName)
 {
-	map<_wstring, PSX::PxTriangleMesh*>::iterator iter = m_TriangleMeshes.find(wstrMeshKey);
+	map<_wstring, PSX::PxTriangleMesh*>::iterator iter = m_TriangleMeshes.find(pMeshName);
 	if (iter != m_TriangleMeshes.end()) {
 		return iter->second;
 	}
@@ -271,18 +233,16 @@ PSX::PxTriangleMesh* CPhysX_Manager::Find_TriangleMesh(const _wstring& wstrMeshK
 
 void CPhysX_Manager::Update_Kinematic()
 {
-	for (auto& pairBody : m_RigidBodys) {
-		PSX::PxRigidDynamic* pActor = pairBody.second->is<PSX::PxRigidDynamic>();
+	for (auto& pBody : m_pActiveBodys) {
+		PSX::PxRigidDynamic* pActor = pBody->is<PSX::PxRigidDynamic>();
 		if (nullptr == pActor) {
 			continue;
 		}
 
 		if (pActor->getRigidBodyFlags() & PSX::PxRigidBodyFlag::eKINEMATIC)
 		{
-			CRigidBody* pBody = pairBody.first;
-			const CTransform* pTransform = pBody->Get_TransformPtr();
+			const CTransform* pTransform = static_cast<PhsXUserData*>(pBody->userData)->pOwner->Get_Component<CTransform>();
 			
-
 			pActor->setKinematicTarget(XMWorldToPx_NoScale(pTransform->Get_XMWorldMatrix()));
 		}
 	}
@@ -320,10 +280,6 @@ void CPhysX_Manager::Update_Dynamic_ActiveActors()
 			}
 			CTransform* pTransform = pUserData->pOwner->Get_Component<CTransform>();
 
-
-			// PSX::PxTransform pPrevPxTransform = pUserData->m_BeforeMatrix;
-			// XMMatrixDecompose(nullptr, (_vector*)&pPrevPxTransform.q, (_vector*)&pPrevPxTransform.p, XMLoadFloat4x4(&pUserData->m_BeforeMatrix));
-
 			PSX::PxTransform pPxTransform = pActorDynamic->getGlobalPose();
 			_float3 vOriginalScale = pTransform->Get_Scale();
 			_matrix WorldMatrix = {};
@@ -332,60 +288,58 @@ void CPhysX_Manager::Update_Dynamic_ActiveActors()
 			pTransform->Set_WorldMatrix(WorldMatrix);
 		}
 	}
-	//_uint iNumActor = (_uint)m_RigidBodys.size();
-	//for (_uint i = 0; i < iNumActor; ++i) {
-	//for (auto& pairBody : m_RigidBodys)
-	//	pairBody.second->userData
-	//}
 }
-
-//void CPhysX_Manager::Update_Dynamic_AllActors()
-//{
-//	for (pair<CRigidBody*, PSX::PxActor*>& pairActors : m_RigidBodys) {
-//		PSX::PxRigidDynamic* pActorDynamic = pairActors.second->is<PSX::PxRigidDynamic>();
-//		if (nullptr != pActorDynamic) {
-//			CTransform* pTransform = ((CRigidBody*)(pActorDynamic->userData))->Get_TransformPtr();
-//
-//			PSX::PxTransform pxTransform = pActorDynamic->getGlobalPose();
-//			_float3 vOriginalScale = pTransform->Get_Scale();
-//			_matrix WorldMatrix = {};
-//			WorldMatrix = XMMatrixAffineTransformation(XMLoadFloat3(&vOriginalScale), XMVectorZero(), XMLoadFloat4((_float4*)&pxTransform.q), XMLoadFloat3((_float3*)&pxTransform.p));
-//			pTransform->Set_WorldMatrix(WorldMatrix);
-//		}
-//	}
-//}
 
 void CPhysX_Manager::ClearScene()
 {
-	for (auto& pObject : m_RigidBodys) {
-		pObject.second->release();
-	} m_RigidBodys.clear();
+	for (auto& pBody : m_pActiveBodys) {
+		pBody->release();
+	} m_pActiveBodys.clear();
+	for (auto& pBody : m_pRestBodies) {
+		pBody->release();
+	} m_pRestBodies.clear();
 }
-void CPhysX_Manager::Attach_Actor(CRigidBody& RigidBody, PSX::PxActor& Actor)
+void CPhysX_Manager::Attach_Actor(PSX::PxActor& Actor)
 {
-	if (m_pScene == nullptr){
+	unordered_set<PSX::PxActor*>::iterator iter = m_pRestBodies.find(&Actor);
+	if (m_pRestBodies.end() == iter) {
 		return;
 	}
-
-	m_RigidBodys.emplace_back(&RigidBody, &Actor);
-	m_pScene->addActor(Actor);
+	else {
+		m_pRestBodies.erase(&Actor);
+	}
+	m_pActiveBodys.insert(&Actor);
+	if (m_pScene != nullptr) {
+		m_pScene->addActor(Actor);
+	}
 }
 
-void CPhysX_Manager::Detach_Actor(CRigidBody& RigidBody, PSX::PxActor*& pActor)
+unordered_set<PSX::PxActor*>::iterator CPhysX_Manager::Detach_Actor(PSX::PxActor& Actor)
 {
-	if (m_pScene == nullptr){
-		return;
-	}
-
-	list<pair<CRigidBody*, PSX::PxActor*>>::iterator iter = m_RigidBodys.begin();
-	for (; iter != m_RigidBodys.end(); ++iter){
-		if ((*iter).second == pActor) {
-			m_RigidBodys.erase(iter);
-			break;
+	unordered_set<PSX::PxActor*>::iterator iterOut = m_pRestBodies.end();
+	unordered_set<PSX::PxActor*>::iterator iter = m_pActiveBodys.find(&Actor);
+	if (m_pActiveBodys.end() != iter) {
+		m_pActiveBodys.erase(iter); // 액터를 활성화 맵에서 분리 해주고
+		iterOut = m_pRestBodies.insert(&Actor).first; // 액터를 다시 쓸 수 있기 때문에 따로 보관해줌
+		if (m_pScene != nullptr) {
+			m_pScene->removeActor(Actor);
 		}
 	}
-	
-	m_pScene->removeActor(*pActor);
+	return iterOut;
+}
+
+void CPhysX_Manager::Release_Actor(PSX::PxActor& Actor)
+{
+	// 혹시 활성화 맵에 들어있을 수도 있으니 검사
+	unordered_set<PSX::PxActor*>::iterator iterResult = Detach_Actor(Actor);
+	if (m_pRestBodies.end() != iterResult) { // 방금 전까지만 해도 활성화 중이었던 액터 라면
+		m_pRestBodies.erase(iterResult); // 바로 지워줌
+	}
+	else {
+		m_pActiveBodys.erase(&Actor);
+		m_pRestBodies.erase(&Actor);
+	}
+	Actor.release();
 }
 
 PSX::PxController* CPhysX_Manager::Add_CapsuleController(PSX::PxCapsuleControllerDesc& Desc)
@@ -441,7 +395,7 @@ HRESULT CPhysX_Manager::Initialize()
 	}
 
 	if (FAILED(Connect_DebugServer())) {
-		assert(false);
+		ASSERT_NURI(false);
 	}
 
 	{ // 씬 세팅
@@ -512,10 +466,17 @@ HRESULT CPhysX_Manager::Initialize()
 	// m_pScene->overlap();??????
 
 #ifdef 기무리
+	PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
+	PlaneData.iSubKind = UINT_MAX;
+	PlaneData.pOwner = nullptr;
+	PlaneData.pBody = nullptr;
+
 	m_pMaterials.reserve(ENUM_CLASS(PXMATERIAL::END));
 	m_pMaterials.push_back(m_pPhysics->createMaterial(0.5f, 0.5f, 0.6f));
 	PSX::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *m_pMaterials[ENUM_CLASS(PXMATERIAL::DEFAULT)]);
-	m_pScene->addActor(*pGroundPlane);
+	pGroundPlane->userData = &PlaneData;
+	pGroundPlane->setName("PHYSX_MANAGER_PLANE");
+	m_pScene->addActor(*pGroundPlane);;
 
 	//{
 	//	float halfExtent = .5f;
@@ -555,7 +516,9 @@ HRESULT CPhysX_Manager::Connect_DebugServer()
 		assert(false);
 		return E_FAIL;
 	}
-	m_pPvd->connect(*m_pTransport, PSX::PxPvdInstrumentationFlag::eALL);
+	if (false == (m_pPvd->connect(*m_pTransport, PSX::PxPvdInstrumentationFlag::eALL))) {
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
@@ -571,9 +534,7 @@ CPhysX_Manager* CPhysX_Manager::Create(ID3D11Device* pDevice, ID3D11DeviceContex
 
 void CPhysX_Manager::Free()
 {
-	for (auto& pObjects : m_RigidBodys) {
-		pObjects.second->release();
-	} m_RigidBodys.clear();
+	ClearScene();
 
 	for (auto& pMeshes : m_TriangleMeshes) {
 		pMeshes.second->release();

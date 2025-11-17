@@ -21,7 +21,7 @@ public:
 #pragma endregion 
 #pragma region Animation
 	void	Change_AnimationIndex(_int iAnimationIndex, _bool bIsLoop, _float fLerpDuration, _bool bIgnoreCurrentIndex = false);	// 애니메이션을 다른 인덱스로 변경함
-	_bool	Play_Animation(_float fTimeDelta, class CTransform* pTransform); // 애니메이션에 델타타임을 넣어줌
+	_bool	Play_Animation(_float fTimeDelta, class CTransform* pTransform = nullptr); // 애니메이션에 델타타임을 넣어줌
 	void	RefreshAnim(); // 애님을 현재 애님의 초기상태로 되돌림
 	void	Set_AnimationIndex(_uint iIndex, _bool isLoop = true);
 	void	Stop_Animation(); // 애니메이션을 정지 (초기상태로)
@@ -108,6 +108,11 @@ private:
 	_bool						m_bIsFinishedAnim = { false };			// 대상 애니메이션이 끝났는지
 	_bool						m_bIsFinishedLerp = { false };			// 럴프 애니메이션이 끝났는지
 	_bool						m_bPlayAnim = { true };
+
+	_int						m_iPreAnimIndex = { 0 };
+	_float						m_fBlendTime = { 0.f };
+	_float						m_fBlendDuration = { 0.3f };
+
 	vector<class CAnimation*>	m_Animations;						// 애니메이션의 벡터, 
 
 	class CLerpAnim* m_pLerpAnim = { nullptr };			// 럴프전용 애니메이션
@@ -122,11 +127,12 @@ private:
 	SaveModel* m_pSaveModel = { nullptr };
 	list<SaveModel> m_SaveModel;
 	//
-
 private:
 	// 바이너리
 	virtual HRESULT Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix);
+	void LoadAdditionalAnimations(const char* ModelFilePath);
 	bool LoadData(const _char* filename);
+	void LoadAnim(const _char* fileName);
 	//
 	virtual HRESULT Initialize(void* pArg) override;
 
