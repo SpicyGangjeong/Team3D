@@ -18,13 +18,6 @@ void CState_Sprint::Update(_float fTimeDelta)
 	if (CheckExitState())
 		return;
 
-	auto Transform = m_pOwner->Get_Component<CTransform>();
-
-	if (m_pGameInstance->Key_Pressing(DIK_LEFT))
-		Transform->Turn(-Transform->Get_State(STATE::UP), fTimeDelta);
-
-	if (m_pGameInstance->Key_Pressing(DIK_RIGHT))
-		Transform->Turn(Transform->Get_State(STATE::UP), fTimeDelta);
 }
 
 void CState_Sprint::Exit()
@@ -33,9 +26,10 @@ void CState_Sprint::Exit()
 
 _bool CState_Sprint::CheckExitState()
 {
-	if (!m_pOwner->IsSprint())
+	if (!m_pOwner->Check(FSMSTATE::SPRINT))
 		m_pFSM->Change_State(FSMSTATE::WALK);
-	else if (!m_pOwner->IsWalking())
+	
+	else if (!m_pOwner->Check(FSMSTATE::WALK))
 		m_pFSM->Change_State(FSMSTATE::IDLE);
 
 	return false;

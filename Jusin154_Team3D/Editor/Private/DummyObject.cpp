@@ -8,6 +8,7 @@
 #include "State_Dodge.h"
 #include "State_Sprint.h"
 #include "State_Jump.h"
+#include "State_Skill.h"
 
 CDummyObject::CDummyObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUnit(pDevice, pContext)
@@ -37,11 +38,7 @@ HRESULT CDummyObject::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	Add_FSM();
-
-	Set_Anim();
-
-	m_pFSM->Change_State(FSMSTATE::IDLE);
+	m_pModelCom->Set_AnimationIndex(0);
 
 	return S_OK;
 }
@@ -53,10 +50,6 @@ void CDummyObject::Priority_Update(_float fTimeDelta)
 
 void CDummyObject::Update(_float fTimeDelta)
 {
-	Check_State();
-
-	m_pFSM->Update(fTimeDelta);
-
 	m_pModelCom->Play_Animation(fTimeDelta,m_pTransformCom);
 }
 
@@ -98,42 +91,6 @@ HRESULT CDummyObject::Render()
 	return S_OK;
 }
 
-_bool CDummyObject::IsWalking()
-{
-	if (m_pGameInstance->Key_Pressing(DIK_UP) || m_pGameInstance->Key_Pressing(DIK_DOWN))
-	{
-		return true;
-	}
-	return false;
-}
-
-_bool CDummyObject::IsDodge()
-{
-	if (m_pGameInstance->Key_Down(DIK_LCONTROL))
-	{
-		return true;
-	}
-	return false;
-}
-
-_bool CDummyObject::IsSprint()
-{
-	if (m_pGameInstance->Key_Pressing(DIK_LSHIFT) && m_pGameInstance->Key_Pressing(DIK_UP))
-	{
-		return true;
-	}
-	return false;
-}
-
-_bool CDummyObject::IsJump()
-{
-	if (m_pGameInstance->Key_Down(DIK_SPACE))
-	{
-		return true;
-	}
-	return false;
-}
-
 HRESULT CDummyObject::Ready_Components()
 {
 	CTransform::TRANSFORM_DESC Desc = {};
@@ -173,34 +130,6 @@ HRESULT CDummyObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 	return S_OK;
-}
-
-void CDummyObject::Add_FSM()
-{
-	m_pFSM->Add_State(FSMSTATE::IDLE, new CState_Idle());
-	m_pFSM->Add_State(FSMSTATE::WALK, new CState_Walk());
-	m_pFSM->Add_State(FSMSTATE::DODGE, new CState_Dodge());
-	m_pFSM->Add_State(FSMSTATE::SPRINT, new CState_Sprint());
-	m_pFSM->Add_State(FSMSTATE::JUMP, new CState_Jump());
-}
-
-void CDummyObject::Set_Anim()
-{
-	m_Animation[FSMSTATE::IDLE] = { 41,true };
-	m_Animation[FSMSTATE::DODGE] = { 802,false };
-	m_Animation[FSMSTATE::WALK_FWD] = { 167,true };
-	m_Animation[FSMSTATE::WALK_BWD] = { 166,true };
-	m_Animation[FSMSTATE::SPRINT] = { 599,true };
-	m_Animation[FSMSTATE::JUMP] = { 205,false };
-}
-
-void CDummyObject::Check_State()
-{
-	IsWalking();
-
-	IsDodge();
-
-	IsSprint();
 }
 
 CDummyObject* CDummyObject::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
