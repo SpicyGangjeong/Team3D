@@ -124,6 +124,15 @@ PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody_Static& RigidBody
 	return pActor;
 }
 
+PSX::PxRevoluteJoint* CPhysX_Manager::Create_PxRevoluteJoint(PSX::PxRigidActor* pActorFrame, PSX::PxTransform& pxLocalWallFrame, PSX::PxRigidActor* pActorObject, PSX::PxTransform& pxLocalActorFrame)
+{
+	PSX::PxRevoluteJoint* pJoint = PSX::PxRevoluteJointCreate(*m_pPhysics, pActorFrame, pxLocalWallFrame, pActorObject, pxLocalActorFrame);
+
+	assert(nullptr != pJoint);
+
+	return pJoint;
+}
+
 PSX::PxMaterial* CPhysX_Manager::Create_Material(const _float3* vMatInfo)
 {
 	PSX::PxMaterial* pPxMaterial = m_pPhysics->createMaterial(vMatInfo->x, vMatInfo->y, vMatInfo->z);
@@ -347,6 +356,7 @@ PSX::PxController* CPhysX_Manager::Add_CapsuleController(PSX::PxCapsuleControlle
 	PSX::PxController* pController = { nullptr };
 
 	pController = m_pCCTManager->createController(Desc);
+
 	return pController;
 }
 
@@ -551,7 +561,11 @@ void CPhysX_Manager::Free()
 		m_pCCTManager->release();
 		m_pCCTManager = nullptr;
 	}
-
+	for (PSX::PxMaterial* pMat : m_pMaterials) {
+		if (pMat) {
+			pMat->release();
+		}
+	} m_pMaterials.clear();
 	if (nullptr != m_pScene) {
 		m_pScene->release(); m_pScene = nullptr;
 	}

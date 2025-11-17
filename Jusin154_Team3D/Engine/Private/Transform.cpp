@@ -86,6 +86,14 @@ void CTransform::Mult_Scale(_float3& vScale)
 	Set_State(STATE::LOOK, vLook * vScale.z);
 }
 
+void CTransform::Set_WorldMatrix(PSX::PxTransform dstMatrix)
+{
+	_float3 vScale = Get_Scale();
+
+	XMStoreFloat4x4(&m_WorldMatrix,
+		XMMatrixAffineTransformation(XMLoadFloat3(&vScale), XMVectorZero(), XMLoadFloat4((_float4*)&dstMatrix.q), XMLoadFloat3((_float3*)&dstMatrix.p)));
+}
+
 HRESULT CTransform::Initialize_Prototype()
 {
 	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());
@@ -237,6 +245,7 @@ void CTransform::Rotation(_fvector vAxis, _float fRadian)
 
 void CTransform::Rotation(_float fRadianX, _float fRadianY, _float fRadianZ)
 {
+	// _fvector 버전이랑 FromVector만 다른거임
 	_float3 vScale = Get_Scale();
 	_vector vRight = XMVectorSet(1.f, 0.f, 0.f, 0.f) * vScale.x;
 	_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f) * vScale.y;
@@ -257,6 +266,26 @@ void CTransform::Rotation(_float fRadianX, _float fRadianY, _float fRadianZ)
 void CTransform::Rotation(_float3& vRadian)
 {
 	Rotation(vRadian.x, vRadian.y, vRadian.z);
+}
+
+void CTransform::Rotation(_fvector vRPY)
+{
+	// _float3 버전이랑 FromVector만 다른거임
+	_float3 vScale = Get_Scale();
+	_vector vRight = XMVectorSet(1.f, 0.f, 0.f, 0.f) * vScale.x;
+	_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f) * vScale.y;
+	_vector vLook = XMVectorSet(0.f, 0.f, 1.f, 0.f) * vScale.z;
+
+	_vector vQuternion = XMQuaternionRotationRollPitchYawFromVector(vRPY);
+	_matrix RotationMatrix = XMMatrixRotationQuaternion(vQuternion);
+
+	vRight = XMVector3TransformNormal(vRight, RotationMatrix);
+	vUp = XMVector3TransformNormal(vUp, RotationMatrix);
+	vLook = XMVector3TransformNormal(vLook, RotationMatrix);
+
+	Set_State(STATE::RIGHT, vRight);
+	Set_State(STATE::UP, vUp);
+	Set_State(STATE::LOOK, vLook);
 }
 
 void CTransform::LookAt(_fvector vAt)
@@ -307,12 +336,23 @@ void CTransform::Free()
 void CTransform::Describe_Entity()
 {
 	if (GUI::TreeNode("Transform")) {
-		GUI::DragFloat4("Right", (_float*)(&m_WorldMatrix._11), 1.f, 0.f, 0.f, "%.3f", ImGuiSliderFlags_NoInput);
-		GUI::DragFloat4("Up", (_float*)(&m_WorldMatrix._21), 1.f, 0.f, 0.f, "%.3f", ImGuiSliderFlags_NoInput);
-		GUI::DragFloat4("Look", (_float*)(&m_WorldMatrix._31), 1.f, 0.f, 0.f, "%.3f", ImGuiSliderFlags_NoInput);
-		GUI::DragFloat4("Pos", (_float*)(&m_WorldMatrix._41), 1.f, 0.f, 0.f, "%.3f", ImGuiSliderFlags_NoInput);
+
+		GUI::DragFloat4("Right", (_float*)(&m_WorldMatrix._11), 1.f, 0.f, 0.f, "%.3f");
+		GUI::DragFloat4("Up", (_float*)(&m_WorldMatrix._21), 1.f, 0.f, 0.f, "%.3f");
+		GUI::DragFloat4("Look", (_float*)(&m_WorldMatrix._31), 1.f, 0.f, 0.f, "%.3f");
+		GUI::DragFloat4("Pos", (_float*)(&m_WorldMatrix._41), 1.f, 0.f, 0.f, "%.3f");
+
+
+		static _float3 s_vRotation = {};
+
+		if(GUI::InputFloat3("Rotation", (_float*)&s_vRotation))
+		{
+			Rotation(s_vRotation.x, s_vRotation.y, s_vRotation.z);
+		}
 
 		GUI::TreePop();
 		GUI::Spacing();
+
+		
 	}
 }

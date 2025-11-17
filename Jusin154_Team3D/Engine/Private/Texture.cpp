@@ -47,14 +47,7 @@ _bool CTexture::Compare_GroupName(_wstring wstrGroupName)
 #ifdef _DEBUG
 void CTexture::HoverName()
 {
-	if (ImGui::IsItemHovered()) {
 
-		ImGui::BeginTooltip();           // 툴팁 창 시작
-
-		ImGui::TextUnformatted(CMyTools::ToString(m_wstrPrototypeName).c_str());    // 텍스트 출력 (Text 대신 Unformatted 추천)
-
-		ImGui::EndTooltip();             // 툴팁 창 종료
-	}
 }
 #endif
 

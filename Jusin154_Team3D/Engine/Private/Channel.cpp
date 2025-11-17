@@ -164,7 +164,7 @@ void CChannel::Update_TransformationMatirx(const vector<CBone*>& Bones, _float f
 		_float dy = XMVectorGetY(vDeltaAdjusted);
 		_float dz = XMVectorGetZ(vDeltaAdjusted);
 
-		_vector vDeltaWorld = vRight * dx + vUp * dz + vLook * dy;
+		_vector vDeltaWorld = vRight * dx + (-vUp * dz)  + vLook * dy;
 
 		vDeltaWorld *= 0.01f;
 

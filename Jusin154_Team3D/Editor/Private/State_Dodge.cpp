@@ -29,7 +29,7 @@ _bool CState_Dodge::CheckExitState()
 	if (m_pModel->IsFinishedAnim())
 		m_pFSM->Change_State(FSMSTATE::IDLE);
 
-	if (m_pOwner->IsWalking())
+	if (m_pOwner->Check(FSMSTATE::WALK) && m_pOwner->IsCurrentKeyFrame("Dodge"))
 		m_pFSM->Change_State(FSMSTATE::WALK);
 
 	return false;

@@ -9,14 +9,13 @@ CState_Walk::CState_Walk()
 
 void CState_Walk::Enter()
 {
-	if (m_pGameInstance->Key_Down(DIK_UP))
+	if(m_pOwner->Check(FSMSTATE::WALK_FWD))
 	{
 		auto anim = m_pOwner->Get_AnimInfo(FSMSTATE::WALK_FWD);
 		m_pModel->Set_AnimationIndex(anim.first, anim.second);
-
 	}
 
-	if (m_pGameInstance->Key_Down(DIK_DOWN))
+	if (m_pOwner->Check(FSMSTATE::WALK_BWD))
 	{
 		auto anim = m_pOwner->Get_AnimInfo(FSMSTATE::WALK_BWD);
 		m_pModel->Set_AnimationIndex(anim.first, anim.second);
@@ -27,14 +26,6 @@ void CState_Walk::Update(_float fTimeDelta)
 {
 	if (CheckExitState())
 		return;
-
-	auto Transform = m_pOwner->Get_Component<CTransform>();
-
-	if (m_pGameInstance->Key_Pressing(DIK_LEFT))
-		Transform->Turn(-Transform->Get_State(STATE::UP), fTimeDelta);
-
-	if (m_pGameInstance->Key_Pressing(DIK_RIGHT))
-		Transform->Turn(Transform->Get_State(STATE::UP), fTimeDelta);
 }
 
 void CState_Walk::Exit()
@@ -43,13 +34,13 @@ void CState_Walk::Exit()
 
 _bool CState_Walk::CheckExitState()
 {
-	if (m_pOwner->IsSprint())
+	if (m_pOwner->Check(FSMSTATE::SPRINT))
 		m_pFSM->Change_State(FSMSTATE::SPRINT);
 
-	else if (m_pOwner->IsDodge())
+	else if (m_pOwner->Check(FSMSTATE::DODGE))
 		m_pFSM->Change_State(FSMSTATE::DODGE);
 
-	else if (!m_pOwner->IsWalking())
+	else if (!m_pOwner->Check(FSMSTATE::WALK))
 		m_pFSM->Change_State(FSMSTATE::IDLE);
 
 	return false;

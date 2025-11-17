@@ -24,6 +24,7 @@ public:
 
 	PSX::PxRigidDynamic* Add_DynamicActor(CRigidBody_Dynamic& RigidBody);
 	PSX::PxRigidStatic* Add_StaticActor(CRigidBody_Static& RigidBody);
+	PSX::PxRevoluteJoint* Create_PxRevoluteJoint(PSX::PxRigidActor* pActorFrame, PSX::PxTransform& pxLocalWallFrame, PSX::PxRigidActor* pActorObject, PSX::PxTransform& pxLocalActorFrame);
 	
 	void RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh);
 	PSX::PxMaterial* Create_Material(const _float3* vMatInfo);

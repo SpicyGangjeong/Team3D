@@ -3,7 +3,7 @@
 #include "Editor_Define.h"
 #include "GameObject.h"
 #include "CallBack_Playable_Behavior.h"
-#include "CallBack_Playable_HitRepot.h"
+#include "CallBack_Playable_HitReport.h"
 
 NS_BEGIN(Engine)
 class CModel;
@@ -34,12 +34,13 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
-	CModel* m_pModelCom = { nullptr };
-	CShader* m_pShaderCom = { nullptr };
+	CCharacter_Controller*		m_pCharacter_Controller = { nullptr };
+	CRigidBody_Dynamic*			m_pRigidBody = { nullptr };
+	CModel*		m_pModelCom = { nullptr };
+	CShader*	m_pShaderCom = { nullptr };
 	
-	CCallBack_Playable_Behavior m_pCallBack_Behavior = {};
-	CCallBack_Playable_HitRepot m_pCallBack_HitReport = {};
+	CCallBack_Playable_Behavior* m_pCallBack_Behavior = { nullptr };
+	CCallBack_Playable_HitReport* m_pCallBack_HitReport = { nullptr };
 
 private:
 	virtual HRESULT Initialize_Prototype() override;

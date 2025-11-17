@@ -26,8 +26,8 @@ void CState_Jump::Exit()
 
 _bool CState_Jump::CheckExitState()
 {
-	if (m_pModel->IsFinishedAnim())
-		m_pFSM->Change_State(FSMSTATE::IDLE);
+	if (m_pOwner->IsCurrentKeyFrame("Jump"))
+		m_pFSM->Change_State(FSMSTATE::LAND);
 
 	return false;
 }

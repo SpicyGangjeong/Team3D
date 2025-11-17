@@ -98,9 +98,13 @@ void CIMGUIUI::Priority_Update(_float fTimeDelta)
 
 void CIMGUIUI::Update(_float fTimeDelta)
 {
+	static const char* SpellTypeNames[] = { "SHADOW", "CONTROL","POWER", "DAMAGE","UTILITY", "TRANSFORM",  "CURSE",	"ESSENTIAL" };
+	int itemCount = sizeof(SpellTypeNames) / sizeof(const char*);
 	if (m_pGamePlay_Canvas != nullptr)
 	{
 		m_fCanvasAlpha = static_cast<CCanvasObject*>(m_pGamePlay_Canvas)->Get_Alpha();
+
+		
 	}
 	if (m_pPanelObject != nullptr)
 	{
@@ -139,6 +143,14 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		m_fRight = static_cast<CElementObject*>(m_pElementObject)->Get_Nine_Slice_Right();
 		m_fTop = static_cast<CElementObject*>(m_pElementObject)->Get_Nine_Slice_Top();
 		m_fBottom = static_cast<CElementObject*>(m_pElementObject)->Get_Nine_Slice_Bottom();
+
+		m_vLerpPosition = static_cast<CElementObject*>(m_pElementObject)->Get_Lerp_Pos();
+		m_fLerpX = static_cast<CElementObject*>(m_pElementObject)->Get_Lerp_Pos().m128_f32[0];
+		m_fLerpY = static_cast<CElementObject*>(m_pElementObject)->Get_Lerp_Pos().m128_f32[1];
+		m_fMoveSpeed = static_cast<CElementObject*>(m_pElementObject)->Get_Speed();
+		m_fAngle = static_cast<CElementObject*>(m_pElementObject)->Get_Angle();
+		m_iSkillType = static_cast<CElementObject*>(m_pElementObject)->Get_SkillType();
+		m_fCoolTime = static_cast<CElementObject*>(m_pElementObject)->Get_CoolTime();
 	}
 	GUI::Begin("Current_PanelObject_Info");
 	if (m_pGamePlay_Canvas != nullptr)
@@ -347,23 +359,66 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		if (GUI::DragFloat("Left", &m_fLeft, 0.1f, 0, m_fSize.x))
 		{
 			static_cast<CElementObject*>(m_pElementObject)->Nine_Slice_Left(m_fLeft);
-		}		
-		
-		if (GUI::DragFloat("Right", &m_fRight, 0.1f,0.5f, m_fSize.x))
+		}
+
+		if (GUI::DragFloat("Right", &m_fRight, 0.1f, 0.5f, m_fSize.x))
 		{
 			static_cast<CElementObject*>(m_pElementObject)->Nine_Slice_Right(m_fRight);
-		}		
-		
+		}
+
 		if (GUI::DragFloat("Top", &m_fTop, 0.1f, 0, m_fSize.y))
 		{
 			static_cast<CElementObject*>(m_pElementObject)->Nine_Slice_Top(m_fTop);
-		}		
-		
-		if (GUI::DragFloat("Bottom", &m_fBottom, 0.1f,0, m_fSize.y))
+		}
+
+		if (GUI::DragFloat("Bottom", &m_fBottom, 0.1f, 0, m_fSize.y))
 		{
 			static_cast<CElementObject*>(m_pElementObject)->Nine_Slice_Bottom(m_fBottom);
 		}
 
+		GUI::Text("Lerp");
+		GUI::Text("Lerp Position : %.1f, %.1f", m_vLerpPosition.m128_f32[0], m_vLerpPosition.m128_f32[1]);
+		if (GUI::DragFloat("LerpX", &m_fLerpX, 0.1f, -1920.f, 1920.f))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->Lerp_PosX(m_fLerpX);
+		}
+
+		if (GUI::DragFloat("LerpY", &m_fLerpY, 0.1f, -1080.f, 1080.f))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->Lerp_PosY(m_fLerpY);
+		}
+		if (GUI::Button("LerpOn"))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->LerpOn();
+		}
+		if (GUI::Button("LerpOut"))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->LerpOff();
+		}
+
+		GUI::Text("Speed %.1f", m_fMoveSpeed);
+		if (GUI::DragFloat("Speed", &m_fMoveSpeed, 0.1f, 0.f, 100.f))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->Set_Speed(m_fMoveSpeed);
+		}
+
+		GUI::Text("Angle %.1f", m_fAngle);
+		if (GUI::DragFloat("Angle", &m_fAngle, 0.f, -180.0f, 180.f))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->Set_Angle(m_fAngle);
+		}
+
+		GUI::Text("SkillType %d", m_iSkillType);
+		if (GUI::Combo("SkillType", &m_iSkillType, SpellTypeNames, itemCount))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->Set_SkillType(m_iSkillType);
+		}
+
+		GUI::Text("CoolTime %.1f", m_fCoolTime);
+		if (GUI::SliderFloat("CoolTime", &m_fCoolTime, 1.f, 90.f))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->Set_CoolTime(m_fCoolTime);
+		}
 	}
 	GUI::End();
 }
