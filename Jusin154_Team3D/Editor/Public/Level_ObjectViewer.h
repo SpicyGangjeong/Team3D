@@ -39,7 +39,7 @@ private:
 	void Save_LayerName(const _char* Layer);
 	_wchar* Save_ModelName(const _char* Category);
 	void Load_KeyFrame(const _char* Name);
-	
+	void Find_Anim();
 
 private:
 	vector<CGameObject*>	m_Objects;
@@ -56,6 +56,7 @@ private:
 	_wchar					m_wszLayer[MAX_PATH];
 	_wchar					m_wszPreLayer[MAX_PATH];
 	_char					m_DummyPath[MAX_PATH];
+	_char					m_FindAnimName[256] = {};
 public:
 	static CLevel_ObjectViewer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID);
 	virtual void Free() override;

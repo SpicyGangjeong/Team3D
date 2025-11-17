@@ -226,6 +226,27 @@
     <Filter Include="02.GameObjects\Dummys\DummyPhysX\PhysXWall">
       <UniqueIdentifier>{813d68fb-0603-44e9-8fda-5c5dd84d0eb1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="80.State">
+      <UniqueIdentifier>{9c21aba5-00c1-4b4c-8a82-dac7a156fd9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\State_Dodge">
+      <UniqueIdentifier>{b017e167-f48d-4417-a924-765ab802cff5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\State_Idle">
+      <UniqueIdentifier>{d5681f71-af29-4418-bf3a-a1486c6ba171}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\State_Walk">
+      <UniqueIdentifier>{43bc0f97-0b7d-406b-900c-0fae023023ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\State_Sprint">
+      <UniqueIdentifier>{1cac1aa6-ea12-429e-8a84-ca2bf44c2be4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\State_Jump">
+      <UniqueIdentifier>{904a7ae5-33fe-49a1-9f31-27443acc9e1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Player">
+      <UniqueIdentifier>{680910fd-aee2-4f69-b644-12b36b0f635b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -444,6 +465,24 @@
     <ClInclude Include="..\Public\Dummy_PhysXWall.h">
       <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXWall</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\State_Dodge.h">
+      <Filter>80.State\State_Dodge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Idle.h">
+      <Filter>80.State\State_Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Walk.h">
+      <Filter>80.State\State_Walk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Sprint.h">
+      <Filter>80.State\State_Sprint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Jump.h">
+      <Filter>80.State\State_Jump</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player.h">
+      <Filter>02.GameObjects\Player</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -657,6 +696,24 @@
     </ClCompile>
     <ClCompile Include="..\Private\Dummy_PhysXWall.cpp">
       <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXWall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Dodge.cpp">
+      <Filter>80.State\State_Dodge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Idle.cpp">
+      <Filter>80.State\State_Idle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Walk.cpp">
+      <Filter>80.State\State_Walk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Sprint.cpp">
+      <Filter>80.State\State_Sprint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Jump.cpp">
+      <Filter>80.State\State_Jump</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player.cpp">
+      <Filter>02.GameObjects\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
