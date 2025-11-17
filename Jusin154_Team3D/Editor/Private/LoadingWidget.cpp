@@ -45,6 +45,7 @@ HRESULT CLoadingWidget::Initialize(void* pArg)
 	m_fEndTime = 1.8f;
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 3.f;
+	m_fMoveSpeed = 10.f;
 	return S_OK;
 }
 
@@ -64,8 +65,6 @@ void CLoadingWidget::Update(_float fTimeDelta)
 		return;
 	}
 
-	m_fOwnerAlpha = static_cast<CUIObject*>(m_pOwner)->Get_Alpha();
-	m_fCanvasAlpha = static_cast<CUIObject*>(m_pOwner)->Get_OwnerAlpha();
 	if (m_bFadeIn == true)
 	{
 		if (m_fAlpha <= 1.f)
@@ -89,7 +88,15 @@ void CLoadingWidget::Update(_float fTimeDelta)
 			m_fAlpha = 0.f;
 		}
 	}
+	if (m_bLerpOn == true)
+	{
+		Start_Lerp(m_fMoveSpeed);
+	}
 
+	if (m_bLerpOff == true)
+	{
+		Reset_Pos(m_fMoveSpeed);
+	}
 	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
 }

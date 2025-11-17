@@ -34,6 +34,11 @@ HRESULT CMapObject_LOD::Initialize(void* pArg)
 		m_ModelPrototypeTags.push_back(pDesc->ModelPrototypeTags[i]);
 		//m_ModelPathIndices.push_back((*pDesc->pModelPathIndices)[i]);
 	}
+	
+	if (_wstring::npos != m_ModelPrototypeTags.front().find(L"Glass"))
+		m_iShaderPass = 12;
+	else
+		m_iShaderPass = ENUM_CLASS(SHADER_PASS_MESH::DEFAULT);
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -64,7 +69,14 @@ void CMapObject_LOD::Priority_Update(_float fTimeDelta)
 
 void CMapObject_LOD::Update(_float fTimeDelta)
 {
+	_vector		vCamPosition = XMLoadFloat4(m_pGameInstance->Get_CamPosition());
 
+	m_fCamDepth = XMVectorGetX(XMVector3LengthSq(vCamPosition - XMLoadFloat4(reinterpret_cast<_float4*>(m_CombinedWorldMatrix.m[3]))));
+
+	m_iLodIndex = min(m_iMaxLodLevel, (_uint)m_fCamDepth / 200);
+
+	if (0 == m_iLodIndex)
+		m_bSelected = true;
 }
 
 void CMapObject_LOD::Late_Update(_float fTimeDelta)
@@ -102,6 +114,7 @@ HRESULT CMapObject_LOD::Render()
 		if (FAILED(m_pModelComs[0]->Bind_Material(i, m_pShaderCom, "g_NormalTexture", aiTextureType_NORMALS, 0))) {
 			return E_FAIL;
 		}
+
 		if (m_bSelected)
 		{
 			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::MAPTOOL)))) {
@@ -110,7 +123,7 @@ HRESULT CMapObject_LOD::Render()
 		}
 		else
 		{
-			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::DEFAULT)))) {
+			if (FAILED(m_pShaderCom->Begin(m_iShaderPass))) {
 				return E_FAIL;
 			}
 		}
@@ -251,6 +264,15 @@ void CMapObject_LOD::Describe_Entity()
 		if (nullptr != pTerrain)
 		{
 			pTerrain->Get_Component<CVIBuffer_Terrain>()->Picking(pTerrain->Get_Component<CTransform>(), m_vPosition);
+		}
+
+	}
+	if (m_pGameInstance->Mouse_Down(DIM_LBUTTON) && m_pGameInstance->Key_Pressing(DIK_LCONTROL))
+	{
+		_float3 vPosition = {};
+		if (m_pGameInstance->isPicking(&vPosition))
+		{
+			memcpy(&m_vPosition, &vPosition, sizeof(_float3));
 		}
 
 	}

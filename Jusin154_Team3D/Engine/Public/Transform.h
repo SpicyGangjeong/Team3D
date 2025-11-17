@@ -26,6 +26,7 @@ public:
 	void		Set_State(STATE eState, _fvector vState) { XMStoreFloat4(reinterpret_cast<_float4*>(&m_WorldMatrix.m[ENUM_CLASS(eState)]), vState); }
 	void		Set_WorldMatrix(_float4x4& dstMatrix) { memcpy_s(&m_WorldMatrix, sizeof(_float4x4), &dstMatrix, sizeof(_float4x4)); }
 	void		Set_WorldMatrix(_fmatrix& dstMatrix) { XMStoreFloat4x4(&m_WorldMatrix, dstMatrix); }
+	void		Set_WorldMatrix(PSX::PxTransform dstMatrix);
 	_float		Get_Speed() const { return m_fSpeedPerSec; }
 	_float		Get_RotationSpeed() const { return m_fRotationPerSec; }
 	_float		Get_Radius() const { return m_fRadius; }
@@ -59,6 +60,7 @@ public:
 	void Rotation(_fvector vAxis, _float fRadian);
 	void Rotation(_float fRadianX, _float fRadianY, _float fRadianZ);
 	void Rotation(_float3& vRadian);
+	void Rotation(_fvector vRPY);
 
 	// Up, Down 벡터를 바라보게 하면 터짐
 	void LookAt(_fvector vAt);
