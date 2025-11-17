@@ -256,6 +256,15 @@
     <Filter Include="02.Element\02.Component\08.Character_Controller\CallBack">
       <UniqueIdentifier>{05865481-fa20-4432-a5a7-945d4f8c7f3c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Element\02.Component\10.FSM">
+      <UniqueIdentifier>{0014599a-3877-4fe8-b32f-1dafc3753c6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\10.FSM\State">
+      <UniqueIdentifier>{cf6beeeb-6caa-46ef-b9d9-3b1daf43a7f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\01.GameObject\Unit">
+      <UniqueIdentifier>{a4560f1b-c4f4-4705-bbf8-6a60977d3211}</UniqueIdentifier>
+        </Filter>
     <Filter Include="02.Element\01.GameObject\00.ContainerObject\01.PartObject">
       <UniqueIdentifier>{b3742605-653a-4bdf-bad9-329d993e7f52}</UniqueIdentifier>
     </Filter>
@@ -489,6 +498,15 @@
     <ClCompile Include="..\Public\NCallBack_Playable_Behavior.cpp">
       <Filter>02.Element\02.Component\08.Character_Controller\CallBack</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\FSM.cpp">
+      <Filter>02.Element\02.Component\10.FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State.cpp">
+      <Filter>02.Element\02.Component\10.FSM\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Unit.cpp">
+      <Filter>02.Element\01.GameObject\Unit</Filter>
+      </ClCompile>
     <ClCompile Include="..\private\VIBuffer_UI_Instance.cpp">
       <Filter>02.Element\02.Component\02.VIBuffer\Instance\UI_nstance</Filter>
     </ClCompile>
@@ -1088,6 +1106,15 @@
     <ClInclude Include="..\Public\NCallBack_Playable_Behavior.h">
       <Filter>02.Element\02.Component\08.Character_Controller\CallBack</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\FSM.h">
+      <Filter>02.Element\02.Component\10.FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State.h">
+      <Filter>02.Element\02.Component\10.FSM\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Unit.h">
+      <Filter>02.Element\01.GameObject\Unit</Filter>
+       </ClInclude>
     <ClInclude Include="..\public\VIBuffer_UI_Instance.h">
       <Filter>02.Element\02.Component\02.VIBuffer\Instance\UI_nstance</Filter>
     </ClInclude>
@@ -1156,6 +1183,9 @@
       <Filter>99.Define\01.SHADER</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_LastColor.hlsl">
+      <Filter>99.Define\01.SHADER</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_WeightBlend.hlsl">
       <Filter>99.Define\01.SHADER</Filter>
     </FxCompile>
   </ItemGroup>

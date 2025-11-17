@@ -29,6 +29,8 @@ HRESULT CRigidBody::Initialize(void* pArg)
 	m_pTransform = m_pOwner->Get_Component<CTransform>();
 	SAFE_ADDREF(m_pTransform);
 
+	m_tagData.iSubKind = pDesc->iSubKind;
+
 	return S_OK;
 }
 

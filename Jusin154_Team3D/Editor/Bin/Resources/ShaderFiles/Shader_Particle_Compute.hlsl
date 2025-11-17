@@ -21,10 +21,13 @@ struct ParticleValue
     
     float2 vMaskingUVMoveTime;
     float2 vDiffuseUVMoveTime;
+    float2 vDistortionUVMoveTime;
     float2 vNoiseUVMoveTime;
     float2 vAniTime;
     
     float2 vAniIndex;
+    
+
 };
 
 
@@ -99,7 +102,7 @@ void CS_MAIN(
         }
         
         particle.vLifeTime.x = 0.f;
-        particle.vTranslation.y = 0.f;
+       
     }
     
     Billboard(particle);

@@ -195,6 +195,7 @@ HRESULT CCharacter_Controller::Initialize(void* pArg)
 		m_tagData.pOwner = m_pOwner;
 		XMStoreFloat4x4(&m_tagData.BeforeMatrix, m_pTransform->Get_XMWorldMatrix());
 		m_tagData.pCharacter = this;
+		m_tagData.iSubKind = pDesc->iSubKind;
 	}
 
 	switch (m_eBodyType)

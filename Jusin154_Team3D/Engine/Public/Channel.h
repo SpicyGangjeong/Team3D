@@ -23,6 +23,7 @@ public:
 	_int Get_BoneIndex() { return { m_iBoneIndex }; }
 	void Set_BoneIndex(_int iBoneIndex) { m_iBoneIndex = iBoneIndex; }
 	void ResetRootMotion() { m_vPrevRootPos = { 0.f, 0.f, 0.f }; }
+	_matrix Get_BoneTransformationMatrix() { return m_BoneTransformationMatrix; }
 
 	KEYFRAME* Get_Frame(_uint iIndex);
 	void Set_Frame(_uint iIndex, KEYFRAME& kf);
@@ -45,6 +46,7 @@ private:
 	_float4x4				m_PreTransformMatrix = {};
 	vector<KEYFRAME>		m_KeyFrames;	// 키프레임 벡터
 	_float3					m_vPrevRootPos = { 0.f, 0.f, 0.f };
+	_matrix					m_BoneTransformationMatrix = {};
 public:
 	static CChannel* Create(const vector<class CBone*>& Bones, _uint iIndex); // 럴프전용
 	static CChannel* Create(HANDLE hFile, DWORD& dwByte);

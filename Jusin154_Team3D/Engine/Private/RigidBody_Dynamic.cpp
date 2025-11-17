@@ -60,7 +60,7 @@ void CRigidBody_Dynamic::Add_Torque(_fvector vDirection, PSX::PxForceMode::Enum 
 {
 	PSX::PxVec3 vPxTorque = {};
 	XMStoreFloat3((_float3*)&vPxTorque, vDirection);
-	m_pRigidBody->addForce(vPxTorque, eType);
+	m_pRigidBody->addTorque(vPxTorque, eType);
 }
 
 void CRigidBody_Dynamic::Set_Kinematic(_bool bKinematic)
@@ -118,14 +118,15 @@ HRESULT CRigidBody_Dynamic::Add_DebugShape()
 	switch (m_eActorType)
 	{
 	case ACTOR::BOX:
-		m_pMainShape = (GeometricPrimitive::CreateBox(m_pContext, m_vhalfGeometryInfo, false, false));
+		_float3 vDXGeometricSize = { m_vhalfGeometryInfo.x * 2.f, m_vhalfGeometryInfo.y * 2.f, m_vhalfGeometryInfo.z * 2.f };
+		m_pMainShape = (GeometricPrimitive::CreateBox(m_pContext, vDXGeometricSize, false, false));
 		break;
 	case ACTOR::CAPSULE:
-		m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, m_vhalfGeometryInfo.x, 10, false, false));
-		m_pMainShape = (GeometricPrimitive::CreateCylinder(m_pContext, m_vhalfGeometryInfo.y, m_vhalfGeometryInfo.x, 10, false));
+		m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, m_vhalfGeometryInfo.x * 2.f, 10, false, false));
+		m_pMainShape = (GeometricPrimitive::CreateCylinder(m_pContext, m_vhalfGeometryInfo.y * 2.f, m_vhalfGeometryInfo.x * 2.f, 10, false));
 		break;
 	case ACTOR::SPHERE:
-		m_pMainShape = (GeometricPrimitive::CreateSphere(m_pContext, m_vhalfGeometryInfo.x, 10, false, false));
+		m_pMainShape = (GeometricPrimitive::CreateSphere(m_pContext, m_vhalfGeometryInfo.x * 2.f, 10, false, false));
 		break;
 	default:
 		break;

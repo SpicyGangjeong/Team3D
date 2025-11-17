@@ -151,11 +151,25 @@ _bool CModel::Play_Animation(_float fTimeDelta,CTransform* pTransform)
 		return false; // 잘못된 초기화
 	}
 
-	if (true == m_pLerpAnim->IsLerping()) { // 럴프중이면 자동으로 럴프 Update를 부름
-		m_bIsFinishedLerp = m_pLerpAnim->Update_TransformationMatrices(m_Bones, fTimeDelta);
-	}
-	else { // 럴프중이지 않다면 실제 애니메이션 재생을 시작함
+	if (m_iPreAnimIndex != m_iCurrentAnimIndex && m_iPreAnimIndex != 0)
+	{
+		m_fBlendTime += fTimeDelta;
+		_float fRatio = m_fBlendTime / m_fBlendDuration;
+		fRatio = min(fRatio, 1.f);
+
 		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_bIsLoop, fTimeDelta, pTransform);
+		m_Animations[m_iCurrentAnimIndex]->InterpAnim(m_Animations[m_iPreAnimIndex], m_Bones, fRatio);
+
+		if (fRatio >= 1.f)
+		{
+			m_iPreAnimIndex = m_iCurrentAnimIndex;
+			m_fBlendTime = 0.f;
+		}
+	}
+	else
+	{
+		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_bIsLoop, fTimeDelta, pTransform);
+		m_iPreAnimIndex = m_iCurrentAnimIndex;
 	}
 
 	for (_int i = 0; i < m_Bones.size(); ++i)
@@ -199,6 +213,7 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop)
 		m_iCurrentAnimIndex = iIndex;
 		m_bIsLoop = isLoop;
 		m_Animations[m_iCurrentAnimIndex]->ResetRootMotion();
+		m_Animations[m_iCurrentAnimIndex]->Depart_Animation();
 	}
 	else
 		m_iCurrentAnimIndex = -1;
@@ -899,13 +914,14 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 		return E_FAIL;
 	}
 
-
+#ifdef 기무리
 	if (MODEL::ENVIROMENT == m_eType) {
 		m_pGameInstance->LoadTriMeshes(pModelFilePath, m_TriMeshes);
 		for (_uint i = 0; i < m_iNumMeshes; ++i) {
 			m_pGameInstance->RegistTriMesh(m_Meshes[i]->Get_Name(), m_TriMeshes[i]);
 		}
 	}
+#endif // 
 
 	return S_OK;
 }

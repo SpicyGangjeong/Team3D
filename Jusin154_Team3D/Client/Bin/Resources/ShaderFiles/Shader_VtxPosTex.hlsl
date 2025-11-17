@@ -98,6 +98,7 @@ technique11 PosTexTechnique11
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
     }
+
     pass ScissorPass
     {
         SetRasterizerState(RS_Scissor);
@@ -107,6 +108,7 @@ technique11 PosTexTechnique11
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
     }
+
     pass UIPass
     {
         SetRasterizerState(RS_Nocull);
@@ -116,6 +118,7 @@ technique11 PosTexTechnique11
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
     }
+
     pass UVMovePass
     {
         SetRasterizerState(RS_Nocull);
@@ -125,6 +128,7 @@ technique11 PosTexTechnique11
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_UVMove();
     }
+
     pass TrailPass
     {
         SetRasterizerState(RS_Nocull);
@@ -134,4 +138,5 @@ technique11 PosTexTechnique11
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Trail();
     }
+
 }

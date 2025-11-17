@@ -31,6 +31,7 @@ private:
 private:
 	class CShader* m_pShader = { nullptr };
 	class CShader* m_pLastColorShader = { nullptr };
+	class CShader* m_pWeightBlendShader = { nullptr };
 	class CVIBuffer_Rect* m_pVIBuffer = { nullptr };
 
 private:
@@ -52,6 +53,7 @@ private:
 	void Render_Blur(); 
 	void Render_Combined();
 	void Render_Effect();
+	void Render_WeightBlend();
 	void Render_NonLight();
 	void Render_Blend();
 	void Render_LastColor();
@@ -64,9 +66,7 @@ private:
 #endif
 
 private:
-	HRESULT Ready_DepthStencilView(_uint iSizeX, _uint iSizeY);
-
-
+	HRESULT Ready_ShadowDepthStencilView(_uint iSizeX, _uint iSizeY);
 
 private:
 	HRESULT Initialize();

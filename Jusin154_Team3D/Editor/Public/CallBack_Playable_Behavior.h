@@ -2,6 +2,10 @@
 
 #include "Editor_Define.h"
 
+NS_BEGIN(Engine)
+class CGameInstance;
+NS_END
+
 NS_BEGIN(Editor)
 
 class CCallBack_Playable_Behavior final : public PSX::PxControllerBehaviorCallback
@@ -15,7 +19,7 @@ class CCallBack_Playable_Behavior final : public PSX::PxControllerBehaviorCallba
 
 public:
 	CCallBack_Playable_Behavior();
-	~CCallBack_Playable_Behavior() = default;
+	~CCallBack_Playable_Behavior();
 
 public:
 	// PxControllerBehaviorCallback을(를) 통해 상속됨
@@ -27,5 +31,7 @@ public:
 	virtual PSX::PxControllerBehaviorFlags getBehaviorFlags(const PSX::PxController& controller) override;
 
 	virtual PSX::PxControllerBehaviorFlags getBehaviorFlags(const PSX::PxObstacle& obstacle) override;
+private:
+	CGameInstance* m_pGameInstance = { nullptr };
 };
 NS_END

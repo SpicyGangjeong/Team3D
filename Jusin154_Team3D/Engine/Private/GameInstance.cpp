@@ -104,7 +104,7 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 	m_pMouse_Manager->Update();
 	//m_pSound_Manager->Update();
 
-	//m_pPicking->Update();
+	m_pPicking->Update();
 
 	m_pObject_Manager->Priority_Update(fTimeDelta);
 
@@ -223,6 +223,11 @@ void CGameInstance::Render_End()
 #ifdef _DEBUG
 	Compute_TimeDelta(TEXT("Timer_Present"));
 #endif // _DEBUG
+}
+
+HRESULT CGameInstance::Bind_DepthStencil(CShader* pShader, const _char* pContantName)
+{
+	return m_pGraphic_Device->Bind_DepthStencil(pShader , pContantName);
 }
 
 _float CGameInstance::Get_TimeDelta(const _wstring& strTimerTag)
@@ -492,6 +497,11 @@ HRESULT CGameInstance::Begin_MRT(const _wstring& strMRTTag, ID3D11DepthStencilVi
 HRESULT CGameInstance::Begin_MRT_Include_BackBuffer(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV)
 {
 	return m_pRenderTarget_Manager->Begin_MRT_Include_BackBuffer(strMRTTag, pDSV);
+}
+
+HRESULT CGameInstance::Begin_MRT_NO_DepthStencil(const _wstring& strMRTTag)
+{
+	return m_pRenderTarget_Manager->Begin_MRT_NO_DepthStencil(strMRTTag);
 }
 
 HRESULT CGameInstance::End_MRT()

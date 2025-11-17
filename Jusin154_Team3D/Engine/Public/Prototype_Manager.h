@@ -13,6 +13,8 @@
 #include "Instance_Model.h"
 #include "Character_Controller.h"
 #include "Light.h"
+#include "FSM.h"
+#include "State.h"
 #include "VIBuffer_UI_Instance.h"
 
 

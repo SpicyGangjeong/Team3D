@@ -14,11 +14,12 @@ NS_BEGIN(Editor)
 class CDummy_PhysXDoor final : public CGameObject
 {
 public:
-	typedef struct tagBoxStartPos
+	typedef struct tagPhysXDummyDesc
 	{
-		_float3 vPos = {};
-		_float3 vRotRPY = {};
-	}BOXSTARTPOS_DESC;
+		_float3 vPos = { };
+		_float3 vRotRPY = { };
+		_uint iSubKind = { };
+	}PHYSXDUMMY_DESC;
 private:
 	CDummy_PhysXDoor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CDummy_PhysXDoor(const CDummy_PhysXDoor& rhs);
@@ -33,8 +34,9 @@ public:
 private:
 	CRigidBody* m_pRigidBody = { nullptr };
 	const PSX::PxRigidDynamic* m_pActor = { nullptr };
-	CModel* m_pModelCom = { nullptr };
-	CShader* m_pShaderCom = { nullptr };
+	CModel*		m_pModelCom = { nullptr };
+	CShader*	m_pShaderCom = { nullptr };
+	_float3		m_vRadianYAngle = {};
 
 
 private:
