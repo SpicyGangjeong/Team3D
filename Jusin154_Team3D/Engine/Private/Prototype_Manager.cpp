@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Prototype_Manager.h"
 #include "GameObject.h"
 
@@ -115,6 +115,13 @@ HRESULT CPrototype_Manager::Ready_EngineAssets()
 			VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)))) {
 		return E_FAIL;
 	}
+
+	if (FAILED(Add_Asset_Prototype(g_iStaticLevel, TEXT("FX_WEIGHTBELND"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_WeightBlend.hlsl"),
+			VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)))) {
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 

@@ -105,6 +105,9 @@ HRESULT CMapContainer::Save_PartObjects(tinyxml2::XMLDocument& Doc, tinyxml2::XM
 
 		_float3 vRotation = {};
 		XMStoreFloat3(&vRotation, pMapObject->Get_Component<CTransform>()->Get_RollPitchYawVector());
+		vRotation.x = XMConvertToDegrees(vRotation.x);
+		vRotation.y = XMConvertToDegrees(vRotation.y);
+		vRotation.z = XMConvertToDegrees(vRotation.z);
 
 		RotationElem->SetAttribute("x", vRotation.x);
 		RotationElem->SetAttribute("y", vRotation.y);

@@ -888,7 +888,16 @@ HRESULT CMapObject_Manager::Load_ContainerData(const _char* pFileName, const _ch
 			Rotation->QueryFloatAttribute("y", &Desc.vRotation.y);
 			Rotation->QueryFloatAttribute("z", &Desc.vRotation.z);
 
-			pContainerObject->Add_Part<CMapObject_LOD>(strKey, g_iStaticLevel, nullptr, &Desc);
+			CMapObject_LOD* pMapObjectLOD = { nullptr };
+
+			if (FAILED(pContainerObject->Add_Part<CMapObject_LOD>(strKey, g_iStaticLevel, &pMapObjectLOD, &Desc)))
+			{
+				MSG_BOX("Failed to Add PartObject");
+				return E_FAIL;
+			}
+			pMapObjectLOD->Set_KeyIndex(iKeyIndex);
+
+			SAFE_RELEASE(pMapObjectLOD);
 #pragma endregion
 
 	}

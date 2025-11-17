@@ -2,6 +2,10 @@
 
 #include "Editor_Define.h"
 
+NS_BEGIN(Engine)
+class CGameInstance;
+NS_END
+
 NS_BEGIN(Editor)
 
 class CCallBack_Playable_HitRepot final : public PSX::PxUserControllerHitReport
@@ -15,7 +19,7 @@ class CCallBack_Playable_HitRepot final : public PSX::PxUserControllerHitReport
 
 public:
 	CCallBack_Playable_HitRepot();
-	~CCallBack_Playable_HitRepot() = default;
+	~CCallBack_Playable_HitRepot();
 
 public:
 	// PxUserControllerHitReport을(를) 통해 상속됨
@@ -26,5 +30,8 @@ public:
 	virtual void onControllerHit(const PSX::PxControllersHit& hit) override; // 다른 CCT와 부딪힌 경우
 
 	virtual void onObstacleHit(const PSX::PxControllerObstacleHit& hit) override; // 사용자 정의 장애물과 부딪힌 경우
+
+private:
+	CGameInstance* m_pGameInstance = { nullptr };
 };
 NS_END

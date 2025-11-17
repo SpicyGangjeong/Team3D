@@ -20,7 +20,10 @@ enum class PXMATERIAL {
     DEFAULT,
     END,
 };
-
+enum class PXBODYSTATE {
+    DYNAMIC,
+    KINEMATIC,
+};
 
 enum class MOUSEKEYSTATE { LBUTTON, RBUTTON, WBUTTON, XBUTTON };
 enum class MOUSEMOVESTATE { X, Y, W };

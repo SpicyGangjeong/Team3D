@@ -57,31 +57,9 @@ PS_OUT_BACKBUFFER PS_OUT_LASTCOLOR(PS_IN In)
         discard;
     }
     
-    int iOption = vColorTexture.a * 10;
+    Out.vBackBuffer = vColorTexture;
     
 
-    switch (iOption)
-    {
-        case 1:
-            Out.vBackBuffer.rgb /= vColorTexture.rgb;
-            break;
-        case 2:
-            Out.vBackBuffer.rgb += vColorTexture.rgb;
-            break;
-        case 3:
-            Out.vBackBuffer.rgb -= vColorTexture.rgb;
-            break;
-        case 4:
-            Out.vBackBuffer.rgb *= vColorTexture.rgb;
-            break;
-        case 5:
-            Out.vBackBuffer.rgb = vColorTexture.rgb;
-            break;
-        default:
-            break;
-    }
-    
-    
     return Out;
 }
 

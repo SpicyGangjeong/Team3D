@@ -20,6 +20,8 @@ public:
 
 	HRESULT Present();
 
+	HRESULT Bind_DepthStencil(class CShader* pShader, const _char* pContantName);
+
 private:
 	ID3D11Device* m_pDevice = { nullptr };
 	ID3D11DeviceContext* m_pDeviceContext = { nullptr };
@@ -27,7 +29,7 @@ private:
 	IDXGISwapChain* m_pSwapChain = { nullptr };
 	ID3D11RenderTargetView* m_pBackBufferRTV = { nullptr };
 	ID3D11DepthStencilView* m_pDepthStencilView = { nullptr };
-
+	ID3D11ShaderResourceView* m_pDepthStencilSRV = { nullptr };
 private:
 	HRESULT Ready_SwapChain(HWND hWnd, _uint iWinCX, _uint iWinCY);
 	HRESULT Ready_BackBufferRenderTargetView();

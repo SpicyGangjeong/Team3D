@@ -20,6 +20,7 @@ public:
 	_int			Get_AnimProgressPostion(const _char* pAnimChannelName);
 	void			Set_AnimProgressPostion(const _char* pChannelName, _uint iPosition);
 	vector<_int>* Capture_Bones();
+	void InterpAnim(CAnimation* pPreAnim, vector<CBone*>& Bones, float fRatio);
 	vector<LERPDESC> Get_StartFrameInformations() { return m_StartKeyFrames; }
 	const _string& Get_Name() const { return m_strName; }
 
@@ -28,7 +29,6 @@ public:
 	_float Get_CurrentTrackPosition() { return m_fCurrentTrackPosition; }
 	void Set_AnimSpeed(_float fSpeed) { m_fAnimSpeed = fSpeed; }
 	_float Get_AnimSpeed() { return m_fAnimSpeed; }
-	void Remap_Channels_By_Name(class CModel* TargetModel);
 #ifdef EDITOR_PROJECT
 private:
 	HRESULT Initialize(const vector<class CBone*>& Bones, const aiAnimation* pAIAnimation);
@@ -63,7 +63,7 @@ private:
 
 	vector<_int>			m_DestBones;					// 이 애니메이션에서 영향을 받는 본들의 집합
 	vector<LERPDESC>		m_StartKeyFrames;	// 이 애니메이션의 영향을 받는 본들의 초기값
-
+	vector<_matrix>				m_vBoneTransformationMatrix = {};
 public:
 	static CAnimation* Create(HANDLE hFile, DWORD& dwByte);
 	// 바이너리
