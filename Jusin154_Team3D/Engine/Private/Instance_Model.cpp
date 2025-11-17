@@ -88,6 +88,19 @@ HRESULT CInstance_Model::Ready_Meshes(MODEL eType, const aiScene* pAIScene, _fma
 
 	return S_OK;
 }
+HRESULT CInstance_Model::PreLoad(HANDLE hFile)
+{
+	DWORD dwByte = {};
+
+	if (!ReadFile(hFile, &m_InstanceDesc, sizeof(PRE_INSTANCE_DESC), &dwByte, nullptr)) {
+		return E_FAIL;
+	}
+
+	Change_NumInstance();
+
+	return S_OK;
+
+}
 HRESULT CInstance_Model::Save_InstanceModel(HANDLE hFile)
 {
 	DWORD dwByte = {};
@@ -263,8 +276,9 @@ void CInstance_Model::Drop(_float fTimeDelta)
 
 		pDesc->fTimeDelta = fTimeDelta;
 		pDesc->isLoop = m_InstanceDesc.isLoop;
-		pDesc->isBillboard = m_InstanceDesc.isBillboard;
-		pDesc->CamViewInvMatrix = *m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW_INV);
+		pDesc->isDrop = m_InstanceDesc.isDrop;
+		pDesc->isMoveForward = m_InstanceDesc.isMoveForward;
+		pDesc->isSinWave = m_InstanceDesc.isSinWave;
 
 		m_pContext->Unmap(m_pConstantBuffer, 0);
 	}
@@ -355,9 +369,9 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 				);
 
 				_matrix RotationMatrix = XMMatrixRotationRollPitchYaw(
-					XMConvertToDegrees(vRoataion.x),
-					XMConvertToDegrees(vRoataion.y),
-					XMConvertToDegrees(vRoataion.z)
+					XMConvertToRadians(vRoataion.x),
+					XMConvertToRadians(vRoataion.y),
+					XMConvertToRadians(vRoataion.z)
 				);
 
 
@@ -377,21 +391,33 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 					m_pGameInstance->Random_Float(m_InstanceDesc.vCenter.z - m_InstanceDesc.vRange.z * 0.5f, m_InstanceDesc.vCenter.z + m_InstanceDesc.vRange.z * 0.5f),
 					1.f);
 
+				_float3			vSinAmount = _float3(
+					m_pGameInstance->Random_Float(m_InstanceDesc.vSinMinAmount.x, m_InstanceDesc.vSinMaxAmount.x),
+					m_pGameInstance->Random_Float(m_InstanceDesc.vSinMinAmount.y, m_InstanceDesc.vSinMaxAmount.y),
+					m_pGameInstance->Random_Float(m_InstanceDesc.vSinMinAmount.z, m_InstanceDesc.vSinMaxAmount.z)
+				);
+
+				pParticleValues[i].vSinAmount = vSinAmount;
+
+
 				//라이프 타임 설정
 				pVertices[i].vLifeTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vLifeTime.x, m_InstanceDesc.vLifeTime.y));
 
 				pParticleValues[i].vAniTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vAniTime.x, m_InstanceDesc.vAniTime.y));
 				pParticleValues[i].vMaskingUVMoveTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vMaskingUVMoveTime.x, m_InstanceDesc.vMaskingUVMoveTime.y));
 				pParticleValues[i].vDiffuseUVMoveTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vDiffuseUVMoveTime.x, m_InstanceDesc.vDiffuseUVMoveTime.y));
+				pParticleValues[i].vDistortionUVMoveTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vDistortionUVMoveTime.x, m_InstanceDesc.vDistortionUVMoveTime.y));
 				pParticleValues[i].vNoiseUVMoveTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vNoiseUVMoveTime.x, m_InstanceDesc.vNoiseUVMoveTime.y));
 				pParticleValues[i].fSpeed = m_pGameInstance->Random_Float(m_InstanceDesc.vSpeed.x, m_InstanceDesc.vSpeed.y);
 				pParticleValues[i].fRotaionSpeed = m_pGameInstance->Random_Float(m_InstanceDesc.vRotationSpeed.x, m_InstanceDesc.vRotationSpeed.y);
 				pParticleValues[i].vAniIndex = _float2(0.f, m_InstanceDesc.vAniIndex.y);
+				pParticleValues[i].fGravity = m_pGameInstance->Random_Float(m_InstanceDesc.vGravity.x, m_InstanceDesc.vGravity.y);
+
 
 				memcpy(&pParticleValues[i].vOriginRight, SRMatrix.m[0], sizeof(_float4));
 				memcpy(&pParticleValues[i].vOriginUp, SRMatrix.m[1], sizeof(_float4));
 				memcpy(&pParticleValues[i].vOriginLook, SRMatrix.m[2], sizeof(_float4));
-				memcpy(&pParticleValues[i].vOriginTranslation, SRMatrix.m[3], sizeof(_float4));
+				memcpy(&pParticleValues[i].vOriginTranslation, &pVertices[i].vTranslation, sizeof(_float4));
 			}
 
 			m_pContext->Unmap(m_pParticleValueBuffer, 0);
@@ -479,7 +505,17 @@ void CInstance_Model::Describe_Entity()
 			Instane_Buffer_ReStruct();
 		}
 
-		if (GUI::Checkbox("BillBoard", &m_InstanceDesc.isBillboard))
+		if (GUI::Checkbox("Drop", &m_InstanceDesc.isDrop))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
+		if (GUI::Checkbox("Forward Move", &m_InstanceDesc.isMoveForward))
+		{
+			Instane_Buffer_ReStruct();
+		}
+		
+		if (GUI::Checkbox("Sin Wave", &m_InstanceDesc.isSinWave))
 		{
 			Instane_Buffer_ReStruct();
 		}
@@ -559,6 +595,22 @@ void CInstance_Model::Describe_Entity()
 		{
 			Instane_Buffer_ReStruct();
 		}
+
+		if (ImGui::DragFloat2("Gravity", reinterpret_cast<_float*>(&m_InstanceDesc.vGravity)))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
+		if (ImGui::DragFloat3("SinWaveMin", reinterpret_cast<_float*>(&m_InstanceDesc.vSinMinAmount)))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
+		if (ImGui::DragFloat3("SinWaveMax", reinterpret_cast<_float*>(&m_InstanceDesc.vSinMaxAmount)))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
 
 		ImGui::PopItemWidth();
 		ImGui::TreePop();

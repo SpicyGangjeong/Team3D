@@ -544,7 +544,7 @@ HRESULT CEffectObject::LoadPre(const _char* pFilePath, LEVEL eLevel)
 		reinterpret_cast<CComponent**>(&m_pInstance_ModelCom))))
 		return E_FAIL;;
 
-	m_pInstance_ModelCom->Load_InstanceModel(hFile);
+	m_pInstance_ModelCom->PreLoad(hFile);
 
 	CloseHandle(hFile);
 	

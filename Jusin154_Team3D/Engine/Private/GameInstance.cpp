@@ -164,6 +164,11 @@ void CGameInstance::BillBoard(CTransform* pTransform)
 
 	_matrix BillBoardMatrix = Get_Transform_Matrix(D3DTS::VIEW_INV);
 
+	for (int i = 0; i < 3; ++i)
+	{
+		BillBoardMatrix.r[i] = XMVector3Normalize(BillBoardMatrix.r[i]);
+	}
+
 	_float3 vScale = pTransform->Get_Scale();
 
 	_vector vPosition = pTransform->Get_State(STATE::POSITION);
@@ -174,7 +179,7 @@ void CGameInstance::BillBoard(CTransform* pTransform)
 
 	BillBoardMatrix.r[3] = vPosition;
 
-	pTransform->Set_WorldMatrix(ScaleMatrix * RotationMatrix * BillBoardMatrix);
+	pTransform->Set_WorldMatrix(ScaleMatrix * BillBoardMatrix * RotationMatrix);
 
 
 }

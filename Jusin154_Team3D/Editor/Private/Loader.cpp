@@ -424,6 +424,8 @@ HRESULT CLoader::Loading_For_UI()
 HRESULT CLoader::Loading_For_Effect()
 {
 
+	m_strMessage = TEXT("Texture Loading..");
+
 	Asset_FileLoad("../Bin/Resources/Textures/Effect/Noises", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath) {
 
 		_string strFilePath = pFilePath;
@@ -431,7 +433,7 @@ HRESULT CLoader::Loading_For_Effect()
 
 
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::EFFECT), wstrFileName,
-			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
+			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0, wstrFileName)))) {
 			return E_FAIL;
 		}
 
@@ -497,6 +499,16 @@ HRESULT CLoader::Loading_For_Effect()
 		});
 
 	Asset_FileLoad("../Bin/Resources/Models/Effect/Goo", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::EFFECT), wstrFileName,
+			CInstance_Model::Create(m_pDevice, m_pContext, pFilePath, MODEL::NONANIM, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixIdentity(), 0))))
+			return E_FAIL;
+
+		return S_OK;
+
+		});
+
+	Asset_FileLoad("../Bin/Resources/Models/Effect/NomalMesh", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
 
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::EFFECT), wstrFileName,
 			CInstance_Model::Create(m_pDevice, m_pContext, pFilePath, MODEL::NONANIM, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixIdentity(), 0))))

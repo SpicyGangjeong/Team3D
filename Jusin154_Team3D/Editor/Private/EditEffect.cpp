@@ -41,15 +41,15 @@ void CEditEffect::Update(_float fTimeDelta)
 
 
 
-	if (m_EffectInfo.isBillboard)
-		m_pGameInstance->BillBoard(m_pTransformCom);
+
 
 	if (m_pInstance_ModelCom == nullptr)
 		return;
 
 	m_pInstance_ModelCom->Drop(fTimeDelta);
 
-
+	if (m_EffectInfo.isBillboard)
+		m_pGameInstance->BillBoard(m_pTransformCom);
 
 }
 
@@ -664,11 +664,11 @@ void CEditEffect::Describe_Entity()
 			GUI::Spacing();
 
 
-			_int iMaskMoveLerpOption = (_int)m_EffectInfo.iNoiseMoveLerpOption;
+			_int iNoiseMoveLerpOption = (_int)m_EffectInfo.iNoiseMoveLerpOption;
 
-			if (ImGui::Combo("Lerp NoiseMove Option", &iMaskMoveLerpOption, pLerp, 9))
+			if (ImGui::Combo("Lerp NoiseMove Option", &iNoiseMoveLerpOption, pLerp, 9))
 			{
-				m_EffectInfo.iMaskMoveLerpOption = iMaskMoveLerpOption;
+				m_EffectInfo.iNoiseMoveLerpOption = iNoiseMoveLerpOption;
 			}
 
 			if (GUI::TreeNode("NOISE_TEX"))
