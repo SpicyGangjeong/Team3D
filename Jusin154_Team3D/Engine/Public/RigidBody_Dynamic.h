@@ -40,6 +40,10 @@ public:
 	virtual void			Add_Torque(_fvector vDirection, PSX::PxForceMode::Enum eType = PSX::PxForceMode::Enum::eFORCE); // 방향 ( 회전축은 MassCenter )
 	void					Set_Kinematic(_bool bKinematic);
 
+	HRESULT					ConvertToCCT(class CCharacter_Controller& CCTOriginal);
+	_bool					IsActive() const { return m_bActive; }
+	void					SetActive(_bool bCondition) { m_bActive = bCondition; }
+
 private:
 	PSX::PxRigidDynamic*	m_pRigidBody = { nullptr };		// 실제 시뮬레이션을 도는 본체
 	PSX::PxRigidDynamicLockFlags m_eLockFlag = { };
@@ -48,6 +52,7 @@ private:
 	_float3					m_vhalfGeometryInfo = {};
 	_float2					m_vDamping = { 0.f, 0.f };
 	_float					m_fDensity = { 1000.f };
+	_bool					m_bActive = { true };
 
 #ifdef _DEBUG
 	unique_ptr<GeometricPrimitive> m_pMainShape = { nullptr };

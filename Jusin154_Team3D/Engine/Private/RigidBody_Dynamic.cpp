@@ -68,6 +68,21 @@ void CRigidBody_Dynamic::Set_Kinematic(_bool bKinematic)
 	m_pRigidBody->setRigidBodyFlag(PSX::PxRigidBodyFlag::eKINEMATIC, bKinematic);
 }
 
+HRESULT CRigidBody_Dynamic::ConvertToCCT(CCharacter_Controller& CCTOriginal)
+{
+	m_pTransform->Set_WorldMatrix(m_pRigidBody->getGlobalPose());
+	CCTOriginal.Set_Position(m_pTransform->Get_State(STATE::POSITION));
+
+	m_pRigidBody->setAngularVelocity(PSX::PxZERO()); // DO 객체 이동 제거
+	m_pRigidBody->setLinearVelocity(PSX::PxZERO());
+
+	m_pGameInstance->Detach_Actor(*m_pRigidBody); // 현재 액터 비활성화
+	m_bActive = false;
+	CCTOriginal.SetActive(true);
+
+	return E_FAIL;
+}
+
 HRESULT CRigidBody_Dynamic::Initialize_Prototype(RIGIDBODY_PROTOTYPE_DYNAMIC_DESC& Desc)
 {
 	m_eActorType		= Desc.eType;

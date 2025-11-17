@@ -3,6 +3,8 @@ vector g_vMtrlDiffuse = 1.f;
 vector g_vMtrlAmbient = 1.f;
 vector g_vMtrlSpecular = 1.f;
 
+float PI = 3.14592;
+
 sampler DefaultSampler = sampler_state
 {
     Filter = MIN_MAG_MIP_LINEAR;

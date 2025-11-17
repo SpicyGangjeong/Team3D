@@ -166,10 +166,25 @@
     <ClInclude Include="..\Public\Action_Panel.h" />
     <ClInclude Include="..\Public\Body.h" />
     <ClInclude Include="..\public\Active_Icon.h" />
+    <ClInclude Include="..\Public\CallBack_Monster_Behavior.h" />
+    <ClInclude Include="..\Public\CallBack_Monster_HitReport.h" />
     <ClInclude Include="..\Public\CallBack_Playable_Behavior.h" />
-    <ClInclude Include="..\Public\CallBack_Playable_HitRepot.h" />
+    <ClInclude Include="..\Public\CallBack_Playable_HitReport.h" />
     <ClInclude Include="..\Public\DummyObject.h" />
     <ClInclude Include="..\public\DummySkyBox.h" />
+    <ClInclude Include="..\Public\Dummy_PhysXDoorFrame.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dummy_PhysXDoorSet.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dummy_PhysXFixedDoor.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dummy_PhysXMonster.h" />
     <ClInclude Include="..\Public\Dummy_PhysXPlatform.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
@@ -187,6 +202,7 @@
     </ClInclude>
     <ClInclude Include="..\Public\Effect_Editor.h" />
     <ClInclude Include="..\Public\EditEffect.h" />
+    <ClInclude Include="..\Public\Goblin.h" />
     <ClInclude Include="..\Public\Information.h" />
     <ClInclude Include="..\public\Land.h" />
     <ClInclude Include="..\public\Level_MapViewer.h" />
@@ -200,17 +216,22 @@
     <ClInclude Include="..\public\MapObject_Manager.h" />
     <ClInclude Include="..\Public\MainLight.h" />
     <ClInclude Include="..\public\MapObject_Collision.h" />
-    <ClInclude Include="..\Public\Dummy_PhysXDoor.h">
+    <ClInclude Include="..\Public\Dummy_PhysXFreeDoor.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\Public\Player.h" />
+    <ClInclude Include="..\Public\State_Cast.h" />
+    <ClInclude Include="..\Public\State_Combat.h" />
     <ClInclude Include="..\Public\State_Dodge.h" />
     <ClInclude Include="..\Public\State_Idle.h" />
     <ClInclude Include="..\Public\State_Jump.h" />
+    <ClInclude Include="..\Public\State_Land.h" />
+    <ClInclude Include="..\Public\State_LightAttack.h" />
+    <ClInclude Include="..\Public\State_Move.h" />
+    <ClInclude Include="..\Public\State_Skill.h" />
     <ClInclude Include="..\Public\State_Sprint.h" />
     <ClInclude Include="..\Public\State_Walk.h" />
-    <ClInclude Include="..\Public\Dummy_PhysXDoor.h" />
     <ClInclude Include="..\public\Spell_Image.h" />
     <ClInclude Include="..\public\Spell_Overlay.h" />
     <ClInclude Include="..\public\Spell_Slot.h" />
@@ -256,10 +277,25 @@
     <ClCompile Include="..\Private\Action_Panel.cpp" />
     <ClCompile Include="..\Private\Body.cpp" />
     <ClCompile Include="..\private\Active_Icon.cpp" />
+    <ClCompile Include="..\Private\CallBack_Monster_Behavior.cpp" />
+    <ClCompile Include="..\Private\CallBack_Monster_HitReport.cpp" />
     <ClCompile Include="..\Private\CallBack_Playable_Behavior.cpp" />
-    <ClCompile Include="..\Private\CallBack_Playable_HitRepot.cpp" />
+    <ClCompile Include="..\Private\CallBack_Playable_HitReport.cpp" />
     <ClCompile Include="..\Private\DummyObject.cpp" />
     <ClCompile Include="..\private\DummySkyBox.cpp" />
+    <ClCompile Include="..\Private\Dummy_PhysXDoorFrame.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_PhysXDoorSet.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_PhysXFixedDoor.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_PhysXMonster.cpp" />
     <ClCompile Include="..\Private\Dummy_PhysXPlatform.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
@@ -277,6 +313,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\Effect_Editor.cpp" />
     <ClCompile Include="..\Private\EditEffect.cpp" />
+    <ClCompile Include="..\Private\Goblin.cpp" />
     <ClCompile Include="..\Private\Information.cpp" />
     <ClCompile Include="..\private\Land.cpp" />
     <ClCompile Include="..\private\Level_MapViewer.cpp" />
@@ -290,17 +327,22 @@
     <ClCompile Include="..\private\MapObject_Manager.cpp" />
     <ClCompile Include="..\Private\MainLight.cpp" />
     <ClCompile Include="..\private\MapObject_Collision.cpp" />
-    <ClCompile Include="..\Private\Dummy_PhysXDoor.cpp">
+    <ClCompile Include="..\Private\Dummy_PhysXFreeDoor.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\Private\Player.cpp" />
+    <ClCompile Include="..\Private\State_Cast.cpp" />
+    <ClCompile Include="..\Private\State_Combat.cpp" />
     <ClCompile Include="..\Private\State_Dodge.cpp" />
     <ClCompile Include="..\Private\State_Idle.cpp" />
     <ClCompile Include="..\Private\State_Jump.cpp" />
+    <ClCompile Include="..\Private\State_Land.cpp" />
+    <ClCompile Include="..\Private\State_LightAttack.cpp" />
+    <ClCompile Include="..\Private\State_Move.cpp" />
+    <ClCompile Include="..\Private\State_Skill.cpp" />
     <ClCompile Include="..\Private\State_Sprint.cpp" />
     <ClCompile Include="..\Private\State_Walk.cpp" />
-    <ClCompile Include="..\Private\Dummy_PhysXDoor.cpp" />
     <ClCompile Include="..\private\Spell_Image.cpp" />
     <ClCompile Include="..\private\Spell_Overlay.cpp" />
     <ClCompile Include="..\private\Spell_Slot.cpp" />

@@ -4,12 +4,11 @@ NS_BEGIN(FSMSTATE)
 enum ESTATE
 {
     IDLE,
-    WALK,WALK_FWD, WALK_BWD,
-    JOG,
-    SPRINT,
+    MOVE, WALK, WALK_FWD, WALK_BWD, JOG, SPRINT,
     JUMP,
+    LAND,
     DODGE,
-    ATTACK,
+    COMBAT, LIGHT_ATTACK, CAST, SKILL,
     END
 };
 NS_END
@@ -31,9 +30,13 @@ public:
     void Change_State(_uint iIndex);
     void Update(_float fTimeDelta);
 
+    _uint Get_CurrState();
+    _uint Get_PrevState();
+    void Set_Parent(FSMSTATE::ESTATE Child, FSMSTATE::ESTATE Parent);
 private:
-    vector<CState*> m_States;
-    CState* m_pCurrent = { nullptr };
+    vector<CState*>     m_States;
+    CState*             m_pCurrent = { nullptr };
+    CState*             m_pPrevious = { nullptr };
 
 private:
     virtual HRESULT Initialize_Prototype() override;

@@ -271,6 +271,9 @@
     <Filter Include="02.Element\02.Component\02.VIBuffer\Instance\UI_nstance">
       <UniqueIdentifier>{3266e85d-44bb-4144-bf85-fadc48d85a38}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Element\02.Component\07.RigidBody\20.Joint">
+      <UniqueIdentifier>{869c0ee8-a853-40d4-90ea-3e1501fa8529}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -512,6 +515,9 @@
     </ClCompile>
     <ClCompile Include="..\private\VIBuffer_Instance.cpp">
       <Filter>02.Element\02.Component\02.VIBuffer\Instance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RigidBody_Dynamic_Joint.cpp">
+      <Filter>02.Element\02.Component\07.RigidBody\20.Joint</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1120,6 +1126,9 @@
     </ClInclude>
     <ClInclude Include="..\public\VIBuffer_Instance.h">
       <Filter>02.Element\02.Component\02.VIBuffer\Instance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RigidBody_Dynamic_Joint.h">
+      <Filter>02.Element\02.Component\07.RigidBody\20.Joint</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

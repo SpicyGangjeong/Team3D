@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Engine_Define.h"
 
 NS_BEGIN(Engine)
@@ -38,7 +38,7 @@ public:
 	}
 #pragma endregion
 
-	// wstring --> string º¯È¯
+	// wstring --> string ë³€í™˜
 	static _string ToString(const _wstring& var)
 	{
 		int size_needed = WideCharToMultiByte(CP_UTF8, 0, var.c_str(),
@@ -51,7 +51,7 @@ public:
 		return strTo;
 	}
 
-	// string --> wstring º¯È¯
+	// string --> wstring ë³€í™˜
 	static _wstring ToWstring(const _string& var)
 	{
 		int size_needed = MultiByteToWideChar(CP_UTF8, 0, var.c_str(),
@@ -64,13 +64,13 @@ public:
 		return wstrTo;
 	}
 
-	// ratio·Î ÇöÀç value °¡Á®¿À±â
+	// ratioë¡œ í˜„ì¬ value ê°€ì ¸ì˜¤ê¸°
 	static _float Lerp_f1D(_float fA, _float fB, _float fRatio)
 	{
 		return fA + (fB - fA) * fRatio;
 	}
 
-	// value·Î ÇöÀç ratio °¡Á®¿À±â
+	// valueë¡œ í˜„ì¬ ratio ê°€ì ¸ì˜¤ê¸°
 	static _float InverseLerp_f1D(_float fA, _float fB, _float fValue)
 	{
 		if (fA == fB) return 0.0f;
@@ -78,7 +78,7 @@ public:
 	}
 
 	
-	// A -> B, A- >CÀÇ ¿ÜÀûÀÌ ¾÷º¤ÅÍ ¹æÇâÀ¸·Î ¿ÜÀûµÇµµ·Ï B C¸¦ ±³Á¤
+	// A -> B, A- >Cì˜ ì™¸ì ì´ ì—…ë²¡í„° ë°©í–¥ìœ¼ë¡œ ì™¸ì ë˜ë„ë¡ B Cë¥¼ êµì •
 	static void CorrectTriangleToUpHead(_float3& dotA, _float3& dotB, _float3& dotC) {
 		_vector vDotA = XMLoadFloat3(&dotA);
 		_vector vDotB = XMLoadFloat3(&dotB);
@@ -89,7 +89,7 @@ public:
 		}
 	}
 
-	// dx9¿¡ ÀÖ´ø ±×°Å
+	// dx9ì— ìˆë˜ ê·¸ê±°
 	static _bool IntersectTri(
 		const _fvector& vPos, const _fvector& vDir,
 		const _fvector& vertexA, const _gvector& vertexB, const _hvector& vertexC,
@@ -116,7 +116,7 @@ public:
 		return t >= 0.f;
 	}
 
-	// source¿¡ keyword°¡ ÀÖ´ÂÁö °Ë»ç
+	// sourceì— keywordê°€ ìˆëŠ”ì§€ ê²€ì‚¬
 	static _bool ContainsString(const char* source, const char* keyword) {
 		if (!source || !keyword || *keyword == '\0') {
 			return false;
@@ -124,7 +124,7 @@ public:
 		return (strstr(source, keyword) != nullptr);
 	}
 
-	// ¸ÅÆ®¸¯½º ·²ÇÁ
+	// ë§¤íŠ¸ë¦­ìŠ¤ ëŸ´í”„
 	static void MatrixLerp(	_In_ _float4x4* pMatOrigin, // Origin -> 0
 							_In_ _float4x4* pMatTarget, // Target -> 1
 							_Out_ _float4x4& matOut, _float fRatio) {
@@ -146,7 +146,7 @@ public:
 		XMStoreFloat4x4(&matOut, (XMMatrixAffineTransformation(vTargetScale, XMVectorZero(), vTargetRotq, vTargetTrans)));
 	}
 
-	// ºñ½ÁÇÏ¸é 1 Á÷±³ÇÏ¸é 0 ¿ÏÀü ¹İ´ë¹æÇâÀÏ¼ö·Ï -1
+	// ë¹„ìŠ·í•˜ë©´ 1 ì§êµí•˜ë©´ 0 ì™„ì „ ë°˜ëŒ€ë°©í–¥ì¼ìˆ˜ë¡ -1
 	static _float DirectionCompare(_vector a, _vector b)
 	{
 		_vector vNormalA = XMVector3Normalize(a);
@@ -154,7 +154,7 @@ public:
 		return XMVectorGetX(XMVector3Dot(vNormalA, vNormalB));
 	}
 
-	// hlsl¿¡ ÀÖ´Â Saturate ±×°ÅÀÓ
+	// hlslì— ìˆëŠ” Saturate ê·¸ê±°ì„
 	static _float Saturate(_float fValue) {
 		if (fValue > 1.f) {
 			fValue = 1.f;
@@ -165,14 +165,43 @@ public:
 		return fValue;
 	}
 
+	// ì…ë ¥ ë¼ë””ì•ˆì´ ë“¤ì–´ì˜¤ë©´ -PI ~ +PIë¡œ ì •ê·œí™”ëœ ë¼ë””ì•ˆìœ¼ë¡œ ë³€ê²½
+	static _float NormalizeRadian(_float fRadian)
+	{
+		fRadian = fmodf(fRadian, XM_2PI);
+		if (fRadian <= -XM_PI) {
+			fRadian += XM_2PI;
+		}
+		else if (fRadian > XM_PI) {
+			fRadian -= XM_2PI;
+		}
+		return fRadian;
+	}
+
+	inline static void	 RotateRadianTowards(_float& fSrcRadian, const _float& fDstRadian, _float fRotateSpeed) {
+		_float fDiffRadian = fmodf(fSrcRadian - fDstRadian, 2 * XM_PI);
+		if (fDiffRadian < 0) fDiffRadian += 2 * XM_PI;
+
+		if (fDiffRadian < (fRotateSpeed * XM_PI) / 180.f) {
+			fSrcRadian = fDstRadian;
+			return;
+		}
+		if (fDiffRadian < XM_PI) {
+			fSrcRadian -= (fRotateSpeed * XM_PI) / 180.f;
+		}
+		else if (fDiffRadian > XM_PI) {
+			fSrcRadian += (fRotateSpeed * XM_PI) / 180.f;
+		}
+	}
+
 #pragma region FileSystem
-	//static void Folder_Func(/* Àç±ÍÀûÀ¸·Î Å½»öÇÒÁö		*/	_In_	_bool											bRecursive,
-	//						/* Å½»öÇÒ Æú´õ °æ·Î			*/	_In_	const _wstring&									TargetPath,
-	//						/* Å½»öÇÒ ¶§¸¶´Ù ½ÇÇàÇÒ ·ÎÁ÷*/	_In_	function<void(filesystem::directory_entry)>		funcLogic,
-	//						/* Å½»öÇÒ È®ÀåÀÚµé			*/	_In_	const vector<_wstring>&							targetExtentions,
-	//						/* °á°ú °æ·Îµé				*/	_Out_	vector<_wstring>&								Paths ) 
+	//static void Folder_Func(/* ì¬ê·€ì ìœ¼ë¡œ íƒìƒ‰í• ì§€		*/	_In_	_bool											bRecursive,
+	//						/* íƒìƒ‰í•  í´ë” ê²½ë¡œ			*/	_In_	const _wstring&									TargetPath,
+	//						/* íƒìƒ‰í•  ë•Œë§ˆë‹¤ ì‹¤í–‰í•  ë¡œì§*/	_In_	function<void(filesystem::directory_entry)>		funcLogic,
+	//						/* íƒìƒ‰í•  í™•ì¥ìë“¤			*/	_In_	const vector<_wstring>&							targetExtentions,
+	//						/* ê²°ê³¼ ê²½ë¡œë“¤				*/	_Out_	vector<_wstring>&								Paths ) 
 	//{
-	//	// °æ·Î ¿¹½Ã -> "../Bin/Resources/Models/Environment/Hogwarts/SUB_ClockTowerCourtyard/Static_Mesh_EXT"
+	//	// ê²½ë¡œ ì˜ˆì‹œ -> "../Bin/Resources/Models/Environment/Hogwarts/SUB_ClockTowerCourtyard/Static_Mesh_EXT"
 	//	filesystem::path path = TargetPath;
 	//	for (const filesystem::directory_entry& file : filesystem::directory_iterator(path, filesystem::directory_options::skip_permission_denied)) 
 	//	{
@@ -182,24 +211,24 @@ public:
 	//			}
 	//			continue;
 	//		}
-	//		if (true == targetExtentions.empty()) { // È®ÀåÀÚ Á¦ÇÑ ¾øÀ½
+	//		if (true == targetExtentions.empty()) { // í™•ì¥ì ì œí•œ ì—†ìŒ
 	//			Paths.emplace_back(file.path().wstring());
 	//			funcLogic(file);
 	//			continue;
 	//		}
-	//		for (const _wstring& ext : targetExtentions) { // È®ÀåÀÚ Á¦ÇÑ ÀÖÀ½
+	//		for (const _wstring& ext : targetExtentions) { // í™•ì¥ì ì œí•œ ìˆìŒ
 	//			if (file.path().extension() == ext) {
 	//				Paths.emplace_back(file.path().wstring());
 	//				funcLogic(file);
 	//				break;
 	//			}
 	//		}
-	//		// file.path().extension(); // È®ÀåÀÚ
-	//		// file.path().filename();  // ÆÄÀÏ¸í(È®ÀåÀÚÆ÷ÇÔ)
-	//		// file.path().stem();      // ÆÄÀÏ¸í(È®ÀåÀÚÁ¦¿Ü)
-	//		// file.path().parent_path(); // »óÀ§ Æú´õ °æ·Î
-	//		// file.path().wstring(); // ÀüÃ¼ °æ·Î
-	//		// file.path().string();  // ÀüÃ¼ °æ·Î (string)
+	//		// file.path().extension(); // í™•ì¥ì
+	//		// file.path().filename();  // íŒŒì¼ëª…(í™•ì¥ìí¬í•¨)
+	//		// file.path().stem();      // íŒŒì¼ëª…(í™•ì¥ìì œì™¸)
+	//		// file.path().parent_path(); // ìƒìœ„ í´ë” ê²½ë¡œ
+	//		// file.path().wstring(); // ì „ì²´ ê²½ë¡œ
+	//		// file.path().string();  // ì „ì²´ ê²½ë¡œ (string)
 	//	}
 	//}
 #pragma endregion

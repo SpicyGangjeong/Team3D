@@ -24,7 +24,7 @@ HRESULT CEffect_Editor::Initialize_Prototype()
 
 
 	
-	ReadMaterials("../Bin/Resources/VFX/Particles/Magic/Confringo");
+	ReadMaterials("../Bin/Resources/VFX/Particles/Magic/Glacius");
 
 
 	for (auto iter : m_MatFiles)

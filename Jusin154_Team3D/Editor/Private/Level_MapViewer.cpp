@@ -10,6 +10,7 @@
 #include "DummySkyBox.h"
 #include "MainLight.h"
 #include "Land.h"
+#include "Player.h"
 
 CLevel_MapViewer::CLevel_MapViewer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }

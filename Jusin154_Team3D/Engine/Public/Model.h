@@ -13,9 +13,11 @@ private:
 
 public:
 #pragma region Model
-	MODEL	Get_Type() const { return m_eType; }
-	_float4x4* Get_PreTransformMatrixPtr() { return &m_PreTransformMatrix; }
-	_float4x4 Get_PreTransformMatrix() const { return m_PreTransformMatrix; };
+	MODEL		Get_Type() const { return m_eType; }
+	_float		Get_Radius() const { return m_fRadius; }
+	_float3&	Get_RadiusOffset() { return m_vRadiusOffset; }
+	_float4x4*	Get_PreTransformMatrixPtr() { return &m_PreTransformMatrix; }
+	_float4x4	Get_PreTransformMatrix() const { return m_PreTransformMatrix; };
 	virtual HRESULT Render(_uint iMeshIndex);
 	virtual HRESULT Render_Indexed(_uint iMeshIndex, _uint IndexCount, _uint StartIndexLocation, _uint BaseVertexLocation);
 #pragma endregion 
@@ -112,6 +114,9 @@ private:
 	_int						m_iPreAnimIndex = { 0 };
 	_float						m_fBlendTime = { 0.f };
 	_float						m_fBlendDuration = { 0.3f };
+
+	_float						m_fRadius = { 0.f };			// 컬링용 Radius
+	_float3						m_vRadiusOffset = {};			// 컬링용 Radius Offset
 
 	vector<class CAnimation*>	m_Animations;						// 애니메이션의 벡터, 
 
