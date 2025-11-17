@@ -76,10 +76,19 @@ void CPanelObject::Update(_float fTimeDelta)
 			m_fAlpha = 0.f;
 		}
 	}
+
+	for (auto& iter : m_Elements)
+	{
+
+	}
 }
 
 void CPanelObject::Late_Update(_float fTimeDelta)
 {
+	for (size_t i = 0; i < m_Elements.size(); ++i)
+	{
+
+	}
 }
 
 HRESULT CPanelObject::Render()
@@ -129,9 +138,23 @@ void CPanelObject::ElementAllVisible(_bool bVisible)
 	}
 }
 
-void CPanelObject::Add_Element(wstring Name, CGameObject* pPanel)
+void CPanelObject::Add_Function(wstring Name, function<void()>Event)
 {
-	if (pPanel == nullptr)
+	m_ElementFunction_map.emplace(Name, Event);
+}
+
+void CPanelObject::Function_Callback(wstring Name)
+{
+	auto range = m_ElementFunction_map.equal_range(Name);
+	for (auto it = range.first; it != range.second; ++it)
+	{
+		it->second();
+	}
+}
+
+void CPanelObject::Add_Element(wstring Name, CGameObject* pElement)
+{
+	if (pElement == nullptr)
 	{
 		return;
 	}
@@ -141,9 +164,9 @@ void CPanelObject::Add_Element(wstring Name, CGameObject* pPanel)
 		return;
 	}
 
-	m_Elements.push_back(pPanel);
+	m_Elements.push_back(pElement);
 	m_ElementName.push_back(Name);
-	m_Elements_map.emplace(Name, pPanel);
+	m_Elements_map.emplace(Name, pElement);
 	m_iElements_Count++;
 }
 

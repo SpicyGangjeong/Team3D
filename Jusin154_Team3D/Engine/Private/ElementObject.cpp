@@ -40,7 +40,7 @@ void CElementObject::Update(_float fTimeDelta)
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(
 		m_fX + m_pOwner->Get_WorldPostion().m128_f32[0],
 		-m_fY + m_pOwner->Get_WorldPostion().m128_f32[1],
-		0.f, 1.f));
+		m_fSortZ, 1.f));
 
 	m_fCurrent_Position = XMVectorSet(m_fX, m_fY, 0.f, 1.f);
 	m_vNine_Slice = _float4(m_fLeft, m_fRight, m_fTop, m_fBottom);

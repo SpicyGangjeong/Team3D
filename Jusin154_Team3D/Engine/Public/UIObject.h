@@ -7,14 +7,15 @@ NS_BEGIN(Engine)
 class ENGINE_DLL CUIObject abstract : public CGameObject
 {
 public:
-	enum class SKILLTYPE { SHADOW, CONTROL, POWER, DAMAGE,
-		UTILITY ,TRANSFORM, CURSE, ESSENTIAL
-	};
-	typedef struct tagUIObjectDesc
-	{
-		_float fX, fY = {};
-		_float fSizeX, fSizeY = {};
-	}UIOBJECT_DESC;
+	enum class SKILLTYPE {
+ SHADOW, CONTROL, POWER, DAMAGE,
+UTILITY ,TRANSFORM, CURSE, ESSENTIAL
+};
+typedef struct tagUIObjectDesc
+{
+	_float fX, fY = {};
+	_float fSizeX, fSizeY = {};
+}UIOBJECT_DESC;
 
 protected:
 	CUIObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -99,6 +100,9 @@ public:
 
 	virtual void Set_CoolTime(_float CoolTime);
 	virtual _float Get_CoolTime();
+
+	virtual void Add_Function(wstring Name, function<void()> Evnet);
+	virtual void Function_Callback(wstring Name);
 protected:
 	_vector					m_fOrigin_Position_vector{};
 	_float2					m_fOrigin_Position{};
@@ -122,6 +126,7 @@ protected:
 	_bool					m_bOwnerFadeOut = { false };
 	_bool					m_bLerpOn = { false };
 	_bool					m_bLerpOff = { false };
+	_bool					m_bEventOn = { false };
 
 	_float					m_fAlpha{};								// UI의 알파값을 조절해서 서서히 나오거나 서서히 사라지게 하기 위함
 	_float					m_fOwnerAlpha{};						// 부모의 알파값인데 부모가 어두워지면 자식들도 어두워 져야해서 설정을 해준다.
@@ -142,7 +147,7 @@ protected:
 	RECT					m_pRect{};
 
 	_int					m_iSkillType{};
-
+	_float					m_fSortZ{};
 	_float					m_fMoveSpeed{};
 
 	_float4					m_vNine_Slice{};
