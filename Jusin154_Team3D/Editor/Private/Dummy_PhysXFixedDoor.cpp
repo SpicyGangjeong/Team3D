@@ -1,25 +1,25 @@
 ﻿#include "pch.h"
-#include "Dummy_PhysXDoor.h"
+#include "Dummy_PhysXFixedDoor.h"
 
 #include "GameInstance.h"
 
 
-CDummy_PhysXDoor::CDummy_PhysXDoor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject{ pDevice, pContext }
+CDummy_PhysXFixedDoor::CDummy_PhysXFixedDoor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	: CPartObject{ pDevice, pContext }
 {
 }
 
-CDummy_PhysXDoor::CDummy_PhysXDoor(const CDummy_PhysXDoor& rhs)
-	: CGameObject(rhs)
+CDummy_PhysXFixedDoor::CDummy_PhysXFixedDoor(const CDummy_PhysXFixedDoor& rhs)
+	: CPartObject(rhs)
 {
 }
 
-HRESULT CDummy_PhysXDoor::Initialize_Prototype()
+HRESULT CDummy_PhysXFixedDoor::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CDummy_PhysXDoor::Initialize(void* pArg)
+HRESULT CDummy_PhysXFixedDoor::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg))) {
 		return E_FAIL;
@@ -32,44 +32,34 @@ HRESULT CDummy_PhysXDoor::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CDummy_PhysXDoor::Priority_Update(_float fTimeDelta)
+void CDummy_PhysXFixedDoor::Priority_Update(_float fTimeDelta)
 {
 
 }
 
-void CDummy_PhysXDoor::Update(_float fTimeDelta)
+void CDummy_PhysXFixedDoor::Update(_float fTimeDelta)
 {
-#ifdef 기무리
-	//if (m_pActor->is wakeup)
-	//	_vector vRPY = m_pTransformCom->Get_RollPitchYawVector();
-	//_float fRadian = XMConvertToRadians(XMVectorGetZ(vRPY));
-	//if (tanf(fRadian)
-#endif // 기무리
+	XMStoreFloat4x4(&m_CombinedWorldMatrix,
+		XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrixPtr()) * XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr()));
 }
 
-void CDummy_PhysXDoor::Late_Update(_float fTimeDelta)
+void CDummy_PhysXFixedDoor::Late_Update(_float fTimeDelta)
 {
 	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
 		m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
 	}
 }
 
-HRESULT CDummy_PhysXDoor::Render()
+HRESULT CDummy_PhysXFixedDoor::Render()
 {
-	//if (FAILED(Bind_ShaderResources())) {
-	//	return E_FAIL;
-	//}
+	_vector vRPY = m_pTransformCom->Get_RollPitchYawVector();
 
-	//if (FAILED(m_pModelCom->Bind_Material(0, m_pShaderCom, "g_DiffuseTexture", aiTextureType_DIFFUSE, 0))) {
-	//	return E_FAIL;
-	//}
-	//if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::DEFAULT)))) {
-	//	return E_FAIL;
-	//}
-
-	//if (FAILED(m_pModelCom->Render(0))) {
-	//	return E_FAIL;
-	//}
+	//GUI::Begin("FixedDoor");
+	//m_pTransformCom->Describe_Entity();
+	//GUI::Text("Current Roll : %f", XMConvertToDegrees(XMVectorGetX(vRPY)));
+	//GUI::Text("Current Pitch : %f", XMConvertToDegrees(XMVectorGetY(vRPY)));
+	//GUI::Text("Current Yaw : %f", XMConvertToDegrees(XMVectorGetZ(vRPY)));
+	//GUI::End();
 #ifdef _DEBUG
 	if (FAILED(m_pRigidBody->Render())) {
 		return E_FAIL;
@@ -80,19 +70,21 @@ HRESULT CDummy_PhysXDoor::Render()
 	return S_OK;
 }
 
-HRESULT CDummy_PhysXDoor::Ready_Components(void* pArg)
+PSX::PxRigidDynamic* CDummy_PhysXFixedDoor::Get_Actor()
+{
+	return m_pRigidBody->Get_Actor();
+}
+
+HRESULT CDummy_PhysXFixedDoor::Ready_Components(void* pArg)
 {
 	if (FAILED(__super::Ready_Components(pArg))) {
 		return E_FAIL;
 	}
+
 	PHYSXDUMMY_DESC* pPhysXDummyDesc = static_cast<PHYSXDUMMY_DESC*>(pArg);
 
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pPhysXDummyDesc->vPos), 1.f));
 	m_pTransformCom->Rotation(pPhysXDummyDesc->vRotRPY.x, pPhysXDummyDesc->vRotRPY.y, pPhysXDummyDesc->vRotRPY.z);
-
-	m_vRadianYAngle.y = pPhysXDummyDesc->vRotRPY.y;
-	m_vRadianYAngle.x = m_vRadianYAngle.y + XMConvertToRadians(-70.f);
-	m_vRadianYAngle.z = m_vRadianYAngle.y + XMConvertToRadians(70.f);
 
 	{ // RIGID_BODY
 		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
@@ -115,7 +107,7 @@ HRESULT CDummy_PhysXDoor::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-HRESULT CDummy_PhysXDoor::Bind_ShaderResources()
+HRESULT CDummy_PhysXFixedDoor::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
 		return E_FAIL;
@@ -133,33 +125,33 @@ HRESULT CDummy_PhysXDoor::Bind_ShaderResources()
 	return S_OK;
 }
 
-CDummy_PhysXDoor* CDummy_PhysXDoor::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CDummy_PhysXFixedDoor* CDummy_PhysXFixedDoor::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CDummy_PhysXDoor* pInstance = new CDummy_PhysXDoor(pDevice, pContext);
+	CDummy_PhysXFixedDoor* pInstance = new CDummy_PhysXFixedDoor(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CDummy_PhysXDoor");
+		MSG_BOX("Failed to Created : CDummy_PhysXFixedDoor");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CDummy_PhysXDoor::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CDummy_PhysXFixedDoor::Clone(void* pArg, CGameObject* pOwner)
 {
-	CDummy_PhysXDoor* pInstance = new CDummy_PhysXDoor(*this);
+	CDummy_PhysXFixedDoor* pInstance = new CDummy_PhysXFixedDoor(*this);
 	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CDummy_PhysXDoor");
+		MSG_BOX("Failed to Cloned : CDummy_PhysXFixedDoor");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CDummy_PhysXDoor::Free()
+void CDummy_PhysXFixedDoor::Free()
 {
 	__super::Free();
 
@@ -168,6 +160,6 @@ void CDummy_PhysXDoor::Free()
 	SAFE_RELEASE(m_pModelCom);
 }
 
-void CDummy_PhysXDoor::Describe_Entity()
+void CDummy_PhysXFixedDoor::Describe_Entity()
 {
 }

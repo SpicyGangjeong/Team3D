@@ -1,9 +1,7 @@
 ﻿#pragma once
 
 #include "Editor_Define.h"
-#include "GameObject.h"
-#include "CallBack_Playable_Behavior.h"
-#include "CallBack_Playable_HitReport.h"
+#include "ContainerObject.h"
 
 NS_BEGIN(Engine)
 class CModel;
@@ -13,19 +11,19 @@ NS_END
 
 NS_BEGIN(Editor)
 
-class CDummy_PhysXPlayable final : public CGameObject
+class CDummy_PhysXDoorSet final : public CContainerObject
 {
 public:
 	typedef struct tagPhysXDummyDesc
 	{
 		_float3 vPos = { };
 		_float3 vRotRPY = { };
-		_uint iSubKind = { };
+		_float fAngleLimit = {};
 	}PHYSXDUMMY_DESC;
 private:
-	CDummy_PhysXPlayable(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CDummy_PhysXPlayable(const CDummy_PhysXPlayable& rhs);
-	virtual ~CDummy_PhysXPlayable() = default;
+	CDummy_PhysXDoorSet(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CDummy_PhysXDoorSet(const CDummy_PhysXDoorSet& rhs);
+	virtual ~CDummy_PhysXDoorSet() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta) override;
@@ -34,22 +32,22 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	CCharacter_Controller*		m_pCharacter_Controller = { nullptr };
-	CRigidBody_Dynamic*			m_pRigidBody = { nullptr };
-	CModel*		m_pModelCom = { nullptr };
-	CShader*	m_pShaderCom = { nullptr };
-	
-	CCallBack_Playable_Behavior* m_pCallBack_Behavior = { nullptr };
-	CCallBack_Playable_HitReport* m_pCallBack_HitReport = { nullptr };
+	class CDummy_PhysXFixedDoor* m_pDoorPart = { nullptr };
+	class CDummy_PhysXDoorFrame* m_pFramePart = { nullptr };
+	PSX::PxRevoluteJoint* m_pPSXJoint = { nullptr };
+	_float3		m_vRadianYAngle = {};
+
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual HRESULT Ready_Components(void* pArg) override;
+	virtual HRESULT Ready_PartObject(void* pArg);
 	virtual HRESULT Bind_ShaderResources() override;
 
+
 public:
-	static CDummy_PhysXPlayable* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CDummy_PhysXDoorSet* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 	void Describe_Entity() override;

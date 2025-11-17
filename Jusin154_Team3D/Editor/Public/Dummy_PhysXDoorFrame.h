@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "Editor_Define.h"
-#include "GameObject.h"
+#include "PartObject.h"
 
 NS_BEGIN(Engine)
 class CModel;
@@ -11,19 +11,19 @@ NS_END
 
 NS_BEGIN(Editor)
 
-class CDummy_PhysXDoor final : public CGameObject
+class CDummy_PhysXDoorFrame final : public CPartObject
 {
 public:
-	typedef struct tagPhysXDummyDesc
+	typedef struct tagPhysXDummyDesc : public CPartObject::PARTOBJECT_DESC
 	{
 		_float3 vPos = { };
 		_float3 vRotRPY = { };
 		_uint iSubKind = { };
 	}PHYSXDUMMY_DESC;
 private:
-	CDummy_PhysXDoor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CDummy_PhysXDoor(const CDummy_PhysXDoor& rhs);
-	virtual ~CDummy_PhysXDoor() = default;
+	CDummy_PhysXDoorFrame(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CDummy_PhysXDoorFrame(const CDummy_PhysXDoorFrame& rhs);
+	virtual ~CDummy_PhysXDoorFrame() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta) override;
@@ -31,12 +31,13 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+	PSX::PxRigidDynamic* Get_Actor();
+
 private:
-	CRigidBody* m_pRigidBody = { nullptr };
+	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
 	const PSX::PxRigidDynamic* m_pActor = { nullptr };
-	CModel*		m_pModelCom = { nullptr };
-	CShader*	m_pShaderCom = { nullptr };
-	_float3		m_vRadianYAngle = {};
+	CModel* m_pModelCom = { nullptr };
+	CShader* m_pShaderCom = { nullptr };
 
 
 private:
@@ -46,7 +47,7 @@ private:
 	virtual HRESULT Bind_ShaderResources() override;
 
 public:
-	static CDummy_PhysXDoor* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CDummy_PhysXDoorFrame* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 	void Describe_Entity() override;

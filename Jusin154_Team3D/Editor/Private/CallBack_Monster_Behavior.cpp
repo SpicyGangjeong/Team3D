@@ -1,17 +1,17 @@
 ﻿#include "pch.h"
-#include "CallBack_Playable_Behavior.h"
+#include "CallBack_Monster_Behavior.h"
 #include "GameInstance.h"
 
 
-CCallBack_Playable_Behavior::CCallBack_Playable_Behavior()
+CCallBack_Monster_Behavior::CCallBack_Monster_Behavior()
 {
 }
 
-CCallBack_Playable_Behavior::~CCallBack_Playable_Behavior()
+CCallBack_Monster_Behavior::~CCallBack_Monster_Behavior()
 {
 }
 
-PSX::PxControllerBehaviorFlags CCallBack_Playable_Behavior::getBehaviorFlags(const PSX::PxShape& shape, const PSX::PxActor& actor)
+PSX::PxControllerBehaviorFlags CCallBack_Monster_Behavior::getBehaviorFlags(const PSX::PxShape& shape, const PSX::PxActor& actor)
 {
 	if (nullptr == actor.userData) {
 		return PSX::PxControllerBehaviorFlags(0);
@@ -57,13 +57,13 @@ PSX::PxControllerBehaviorFlags CCallBack_Playable_Behavior::getBehaviorFlags(con
 	return eResults;
 }
 
-PSX::PxControllerBehaviorFlags CCallBack_Playable_Behavior::getBehaviorFlags(const PSX::PxController& controller)
+PSX::PxControllerBehaviorFlags CCallBack_Monster_Behavior::getBehaviorFlags(const PSX::PxController& controller)
 {
 	// CCT끼리 부딪힐 때를 굳이 안 쓰면 0 리턴
 	return PSX::PxControllerBehaviorFlags(0);
 }
 
-PSX::PxControllerBehaviorFlags CCallBack_Playable_Behavior::getBehaviorFlags(const PSX::PxObstacle& obstacle)
+PSX::PxControllerBehaviorFlags CCallBack_Monster_Behavior::getBehaviorFlags(const PSX::PxObstacle& obstacle)
 {
 	// Obstacle이 움직이는 발판이다? 
 	// 여기서 ride/slide 세팅
@@ -72,7 +72,7 @@ PSX::PxControllerBehaviorFlags CCallBack_Playable_Behavior::getBehaviorFlags(con
 	return PSX::PxControllerBehaviorFlags(0);
 }
 
-HRESULT CCallBack_Playable_Behavior::Initialize(CCharacter_Controller* pController, CRigidBody_Dynamic* pPartDynamicObject)
+HRESULT CCallBack_Monster_Behavior::Initialize(CCharacter_Controller* pController, CRigidBody_Dynamic* pPartDynamicObject)
 {
 	m_pController = pController;
 	m_pPartDynamicBody = pPartDynamicObject;
@@ -83,7 +83,7 @@ HRESULT CCallBack_Playable_Behavior::Initialize(CCharacter_Controller* pControll
 	return S_OK;
 }
 
-HRESULT CCallBack_Playable_Behavior::Finalize()
+HRESULT CCallBack_Monster_Behavior::Finalize()
 {
 	SAFE_RELEASE(m_pGameInstance);
 	SAFE_RELEASE(m_pPartDynamicBody);
@@ -91,7 +91,7 @@ HRESULT CCallBack_Playable_Behavior::Finalize()
 	return S_OK;
 }
 
-CCallBack_Playable_Behavior* CCallBack_Playable_Behavior::Create()
+CCallBack_Monster_Behavior* CCallBack_Monster_Behavior::Create()
 {
-	return new CCallBack_Playable_Behavior();
+	return new CCallBack_Monster_Behavior();;
 }

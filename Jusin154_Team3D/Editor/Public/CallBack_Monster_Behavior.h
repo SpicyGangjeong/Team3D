@@ -9,7 +9,7 @@ NS_END
 
 NS_BEGIN(Editor)
 
-class CCallBack_Playable_Behavior final : public PSX::PxControllerBehaviorCallback
+class CCallBack_Monster_Behavior final : public PSX::PxControllerBehaviorCallback
 {
 	// 구현 예시 
 	// CCT는 RigidBody의 PxSimulationEventCallback에 안걸리고, 이 전용 콜백에서 처리되는 구조임
@@ -18,9 +18,10 @@ class CCallBack_Playable_Behavior final : public PSX::PxControllerBehaviorCallba
 	// PxControllerBehaviorCallback		= "부딪힌 것에 대해 어떤 행동 정책을 쓸지 물어봄(질의)"
 	// PxSimulationEventCallback		= "씬 전체에 대한 글로벌 콜백(일반 물리 이벤트)" 
 private:
-	CCallBack_Playable_Behavior();
+	CCallBack_Monster_Behavior();
 public:
-	~CCallBack_Playable_Behavior();
+	~CCallBack_Monster_Behavior();
+
 
 public:
 	// PxControllerBehaviorCallback을(를) 통해 상속됨
@@ -36,12 +37,13 @@ public:
 public:
 	HRESULT Initialize(CCharacter_Controller* pController, CRigidBody_Dynamic* pPartDynamicObject);
 	HRESULT Finalize();
+	
 private:
 	CCharacter_Controller*	m_pController = { nullptr };
 	CRigidBody_Dynamic*		m_pPartDynamicBody = { nullptr };
 	CGameInstance*			m_pGameInstance = { nullptr };
 
 public:
-	static CCallBack_Playable_Behavior* Create();
+	static CCallBack_Monster_Behavior* Create();
 };
 NS_END
