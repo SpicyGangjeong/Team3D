@@ -3,6 +3,10 @@
 #include "Editor_Define.h"
 #include "MapObject.h"
 
+NS_BEGIN(Engine)
+class CCollider;
+NS_END
+
 NS_BEGIN(Editor)
 
 class CMapObject_LOD final : public CMapObject // LOD 있는 애들
@@ -36,9 +40,6 @@ private:
 
 	vector<_wstring>	m_ModelPrototypeTags;
 	vector<_uint>		m_ModelPathIndices = { };
-
-
-	
 
 private:
 	HRESULT Ready_Components();
