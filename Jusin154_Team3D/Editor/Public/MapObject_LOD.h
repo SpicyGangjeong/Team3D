@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Editor_Define.h"
 #include "MapObject.h"
 
 NS_BEGIN(Editor)
 
-class CMapObject_LOD final : public CMapObject // LOD ÀÖ´Â ¾Öµé
+class CMapObject_LOD final : public CMapObject // LOD ìžˆëŠ” ì• ë“¤
 {
 private:
 	CMapObject_LOD(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -32,6 +32,7 @@ private:
 	vector<CModel*>		m_pModelComs;
 
 	_uint				m_iLodIndex = {};
+	_uint				m_iShaderPass = {};
 
 	vector<_wstring>	m_ModelPrototypeTags;
 	vector<_uint>		m_ModelPathIndices = { };

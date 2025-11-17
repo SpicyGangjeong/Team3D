@@ -3,15 +3,12 @@
 #include "GameInstance.h"
 
 
-CCallBack_Playable_Behavior::CCallBack_Playable_Behavior():
-	m_pGameInstance(CGameInstance::GetInstance())
+CCallBack_Playable_Behavior::CCallBack_Playable_Behavior()
 {
-	SAFE_ADDREF(m_pGameInstance);
 }
 
 CCallBack_Playable_Behavior::~CCallBack_Playable_Behavior()
 {
-	SAFE_RELEASE(m_pGameInstance);
 }
 
 PSX::PxControllerBehaviorFlags CCallBack_Playable_Behavior::getBehaviorFlags(const PSX::PxShape& shape, const PSX::PxActor& actor)
@@ -42,7 +39,7 @@ PSX::PxControllerBehaviorFlags CCallBack_Playable_Behavior::getBehaviorFlags(con
 			eResults = PSX::PxControllerBehaviorFlag::eCCT_CAN_RIDE_ON_OBJECT;
 			break;
 		case 24:
-			eResults = PSX::PxControllerBehaviorFlags(0);;
+			eResults = PSX::PxControllerBehaviorFlags(0);
 			break;
 		default:
 			break;
@@ -73,4 +70,28 @@ PSX::PxControllerBehaviorFlags CCallBack_Playable_Behavior::getBehaviorFlags(con
 	//return PSX::PxControllerBehaviorFlag::eCCT_CAN_RIDE_ON_OBJECT;
 
 	return PSX::PxControllerBehaviorFlags(0);
+}
+
+HRESULT CCallBack_Playable_Behavior::Initialize(CCharacter_Controller* pController, CRigidBody_Dynamic* pPartDynamicObject)
+{
+	m_pController = pController;
+	m_pPartDynamicBody = pPartDynamicObject;
+	m_pGameInstance = CGameInstance::GetInstance();
+	SAFE_ADDREF(m_pController);
+	SAFE_ADDREF(m_pPartDynamicBody);
+	SAFE_ADDREF(m_pGameInstance);
+	return S_OK;
+}
+
+HRESULT CCallBack_Playable_Behavior::Finalize()
+{
+	SAFE_RELEASE(m_pGameInstance);
+	SAFE_RELEASE(m_pPartDynamicBody);
+	SAFE_RELEASE(m_pController);
+	return S_OK;
+}
+
+CCallBack_Playable_Behavior* CCallBack_Playable_Behavior::Create()
+{
+	return new CCallBack_Playable_Behavior();
 }

@@ -48,15 +48,14 @@ private:
 	_int					m_iObjectIndex = { 0 };
 	_int					m_iPartsObjectIndex = { 0 };
 	_float					m_fKeyFrame = {};
-	vector<_float>			m_KeyFrame;
-	vector<_string>			m_Events;
-	_string					m_strEvent;
+	map<_string, _float>    m_KeyFrames;
 	_char					m_szName[MAX_PATH];
 	_wchar					m_wszName[MAX_PATH];
 	_wchar					m_wszLayer[MAX_PATH];
 	_wchar					m_wszPreLayer[MAX_PATH];
 	_char					m_DummyPath[MAX_PATH];
 	_char					m_FindAnimName[256] = {};
+	class CPlayer* m_Test = { nullptr };
 public:
 	static CLevel_ObjectViewer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID);
 	virtual void Free() override;

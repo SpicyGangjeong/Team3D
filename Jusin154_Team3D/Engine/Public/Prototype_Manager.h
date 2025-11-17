@@ -15,6 +15,8 @@
 #include "Light.h"
 #include "FSM.h"
 #include "State.h"
+#include "VIBuffer_UI_Instance.h"
+
 
 NS_BEGIN(Engine)
 class CGameInstance;

@@ -27,14 +27,12 @@ public:
 		// 타고 올라갈 수 없는 경사면의 각도를 정의함.  0.f 면 비활성화 됨
 		// _float fSlopeLimit = { 코사인각도 };
 		
-		
-		
 		// Box인 경우 채워넣기
 		_float3				vBoxSize = { 0.5f, 0.5f, 0.5f };						// CCT박스는 회전없는 AABB임
 
 		// Capsule인 경우 채워넣기
-		_float fRadius;
-		_float fHeight;
+		_float fRadius = { 0.5f };
+		_float fHeight = { 1.f };
 		PSX::PxCapsuleClimbingMode::Enum eClimbingMode; // 기본 (eEASY, stepOffset 값이 무제한), (eCONSTRAINED, stepOffset 값이 제대로 먹음)
 	}Character_Controller_DESC;
 #pragma endregion
@@ -48,6 +46,7 @@ public:
 	virtual HRESULT Render() override;
 #endif
 	PSX::PxRigidDynamic* Get_Actor();
+	PSX::PxController*	Get_Controller();
 
 	_float			Get_ContactOffset() const { return m_pController->getContactOffset(); }
 	void			Set_ContactOffset(_float fValue) { return m_pController->setContactOffset((PSX::PxF32)fValue); }
@@ -61,6 +60,10 @@ public:
 	void			Modify_Volume(_float3 fVolume);
 	_float3			Get_Volume();
 
+	HRESULT			ConvertToDO(class CRigidBody_Dynamic& BodyOriginal);
+	_bool			IsActive() const { return m_bActive; }
+	void			SetActive(_bool bCondition) { m_bActive = bCondition; }
+
 private:
 	ACTOR					m_eBodyType = { ACTOR::END };
 	PSX::PxController*		m_pController = { nullptr };
@@ -70,6 +73,7 @@ private:
 	PhsXUserData			m_tagData = {};
 	
 	PSX::PxControllerCollisionFlags m_eBeforeCollisionFlags = {};
+	_bool					m_bActive = { true };
 #ifdef _DEBUG
 	unique_ptr<GeometricPrimitive> m_pMainShape = { nullptr };
 	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };
