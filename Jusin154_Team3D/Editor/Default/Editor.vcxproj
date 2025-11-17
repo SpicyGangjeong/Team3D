@@ -214,6 +214,12 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\Public\Player.h" />
+    <ClInclude Include="..\Public\State_Dodge.h" />
+    <ClInclude Include="..\Public\State_Idle.h" />
+    <ClInclude Include="..\Public\State_Jump.h" />
+    <ClInclude Include="..\Public\State_Sprint.h" />
+    <ClInclude Include="..\Public\State_Walk.h" />
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\Public\Level_PhysXLab.h" />
     <ClInclude Include="..\Public\TestEffect.h" />
@@ -304,6 +310,12 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\Private\Player.cpp" />
+    <ClCompile Include="..\Private\State_Dodge.cpp" />
+    <ClCompile Include="..\Private\State_Idle.cpp" />
+    <ClCompile Include="..\Private\State_Jump.cpp" />
+    <ClCompile Include="..\Private\State_Sprint.cpp" />
+    <ClCompile Include="..\Private\State_Walk.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\Private\Level_PhysXLab.cpp" />
     <ClCompile Include="..\Private\TestEffect.cpp" />

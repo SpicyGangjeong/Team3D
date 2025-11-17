@@ -540,6 +540,12 @@ void CInstance_Model::Describe_Entity()
 			Instane_Buffer_ReStruct();
 		}
 
+
+		if (ImGui::DragFloat2("DistortionUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vDistortionUVMoveTime)))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
 		if (ImGui::DragFloat2("NoiseUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vNoiseUVMoveTime)))
 		{
 			Instane_Buffer_ReStruct();

@@ -194,8 +194,8 @@ BlendState BS_WeightBlend
     BlendEnable[7] = true;
 
 
-    SrcBlend[0] = Inv_Src_Alpha;
-    DestBlend[0] = Src_Alpha;
+    SrcBlend[0] = Src_Alpha;
+    DestBlend[0] = Inv_Src_Alpha;
     
     BlendOp[0] = Add;
 
