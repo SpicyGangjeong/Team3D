@@ -42,7 +42,7 @@ void CMapObject_Collision::Late_Update(_float fTimeDelta)
 #endif 
 
 	XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_XMWorldMatrix() * m_pParentTransformCom->Get_XMWorldMatrix());
-
+	if (m_pGameInstance->Key_Pressing(DIK_V)){
 		if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
 			m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 		}

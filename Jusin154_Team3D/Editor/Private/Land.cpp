@@ -31,7 +31,7 @@ void CLand::Update(_float fTimeDelta)
 void CLand::Late_Update(_float fTimeDelta)
 {
 	_float4* vPos = (_float4*)(m_pTransformCom->Get_WorldMatrixPtr()->m[3]);
-	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this, *vPos, FLT_MAX);
+	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 }
 
 HRESULT CLand::Render()
