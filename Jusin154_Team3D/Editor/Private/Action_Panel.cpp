@@ -6,12 +6,12 @@
 #include "Spell_Overlay.h"
 
 CAction_Panel::CAction_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-    :CPanelObject(pDevice, pContext)
+	:CPanelObject(pDevice, pContext)
 {
 }
 
 CAction_Panel::CAction_Panel(const CAction_Panel& rhs)
-    :CPanelObject(rhs)
+	:CPanelObject(rhs)
 {
 }
 
@@ -74,8 +74,7 @@ void CAction_Panel::Late_Update(_float fTimeDelta)
 	}
 
 	if (m_bVisible) {
-		_float4* vPos = (_float4*)(m_pTransformCom->Get_WorldMatrixPtr()->m[3]);
-		m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
+
 	}
 	__super::Late_Update(fTimeDelta);
 

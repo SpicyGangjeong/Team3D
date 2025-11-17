@@ -21,8 +21,8 @@ HRESULT CMissionBanner_Border::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = -248.f;
-	Desc.fY = 100.f;
+	Desc.fX = -207.f;
+	Desc.fY = 150.f;
 	Desc.fSizeX = 256.f;
 	Desc.fSizeY = 128.f;
 
@@ -38,11 +38,16 @@ HRESULT CMissionBanner_Border::Initialize(void* pArg)
 	}
 
 	m_fTimeMult = 3.f;
-	m_fAlpha = 1.f;
-	m_fAlphaTime = 3.f;
-
-	m_vUVScale = _float2(1.f,1.f);
-
+	m_fAlpha = 0.f;
+	m_fAlphaTime = 5.f;
+	m_fMoveSpeed = 5.f;
+	m_fLerpX = m_fX;
+	m_fSortZ = 0.11f;
+	m_vUVScale = _float2(1.f, 1.f);
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Missiom_On"), [this]() {this->Set_FadeIn(); });
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Missiom_On"), [this]() {this->LerpOn(); });
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Missiom_Off"), [this]() {this->Set_FadeOut(); });
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Missiom_Off"), [this]() {this->LerpOff(); });
 	return S_OK;
 }
 
@@ -64,8 +69,11 @@ void CMissionBanner_Border::Update(_float fTimeDelta)
 
 	if (m_bFadeIn == true)
 	{
+
 		if (m_fAlpha <= 1.f)
+		{
 			m_fAlpha += fTimeDelta * m_fAlphaTime;
+		}
 
 		if (m_fAlpha >= 1.f)
 		{
@@ -76,14 +84,26 @@ void CMissionBanner_Border::Update(_float fTimeDelta)
 
 	if (m_bFadeOut == true)
 	{
+
 		if (m_fAlpha >= 0.f)
-			m_fAlpha -= fTimeDelta;
+			m_fAlpha -= fTimeDelta * m_fAlphaTime;
 
 		if (m_fAlpha <= 0.f)
 		{
 			m_bFadeOut = false;
 			m_fAlpha = 0.f;
 		}
+	}
+
+	if (m_bLerpOn == true)
+	{
+
+		Start_Lerp(m_fMoveSpeed);
+	}
+
+	if (m_bLerpOff == true)
+	{
+		Reset_Pos(m_fMoveSpeed);
 	}
 
 	m_fTime += fTimeDelta * m_fTimeMult;
@@ -109,7 +129,7 @@ HRESULT CMissionBanner_Border::Render()
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::ALPHABLEND)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::MISSION)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
@@ -141,7 +161,11 @@ HRESULT CMissionBanner_Border::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pDiffuse_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
+	if (FAILED(m_pDiffuse_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture1", 0)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pDiffuse_TextureCom1->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
 	{
 		return E_FAIL;
 	}
@@ -165,10 +189,6 @@ HRESULT CMissionBanner_Border::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDeltaV", &m_vUVScale.y, sizeof(_float))))
-	{
-		return E_FAIL;
-	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fNine_Slice", &m_vNine_Slice, sizeof(_float4))))
 	{
 		return E_FAIL;
@@ -177,10 +197,7 @@ HRESULT CMissionBanner_Border::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCurrent_Size", &m_fCurrent_Position, sizeof(_float2))))
-	{
-		return E_FAIL;
-	}
+
 	return S_OK;
 }
 
@@ -191,6 +208,10 @@ HRESULT CMissionBanner_Border::Ready_Components(void* pArg)
 		return E_FAIL;
 	}
 	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_MissionBanner_Border"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_ConjurationHUDPanelBack"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -232,6 +253,7 @@ void CMissionBanner_Border::Free()
 {
 	__super::Free();
 
+	SAFE_RELEASE(m_pDiffuse_TextureCom1);
 	SAFE_RELEASE(m_pDiffuse_TextureCom);
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
