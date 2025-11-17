@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Editor_Define.h"
 #include "PartObject.h"
@@ -29,7 +29,7 @@ public:
 	_uint		Get_iKeyIndex() const { return m_iKeyIndex; }
 
 protected:
-
+	_float4		m_vExtentPosition = {};
 
 protected:
 	virtual HRESULT Initialize_Prototype() override;

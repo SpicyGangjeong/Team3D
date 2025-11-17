@@ -110,6 +110,10 @@ void CMapObject_Manager::Update(_float fTimeDelta)
 	{
 		Load_ContainerData("ContainerTest", m_szSaveContainerName);
 	}
+	if (GUI::Button("Load_Container To MapObject"))
+	{
+		Load_ContainerToMapObject("ContainerTest", m_szSaveContainerName);
+	}
 	GUI::End();
 
 	Update_PrototypeList();
@@ -943,6 +947,151 @@ HRESULT CMapObject_Manager::Load_ContainerData(const _char* pFileName, const _ch
 		Rotation->QueryFloatAttribute("z", &Desc.vRotation.z);
 
 		pContainerObject->Add_Collision<CMapObject_Collision>(g_iStaticLevel, &Desc);
+#pragma endregion
+
+	}
+#pragma endregion
+
+
+	return S_OK;
+}
+HRESULT CMapObject_Manager::Load_ContainerToMapObject(const _char* pFileName, const _char* pContainerName)
+{
+	tinyxml2::XMLDocument xmlDoc;
+
+	string strPath = "../Bin/Resources/Data/Map/" + string(pFileName) + ".xml";
+
+	if ((tinyxml2::XML_SUCCESS != xmlDoc.LoadFile(strPath.c_str())))
+		return E_FAIL;
+
+	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("Land");
+
+	if (nullptr == root)
+	{
+		MSG_BOX("Failed to Find root");
+		return S_OK;
+	}
+
+	tinyxml2::XMLElement* TargetContainer = { nullptr };
+
+	for (auto* Container = root->FirstChildElement("Container"); Container; Container = Container->NextSiblingElement("Container"))
+	{
+		const _char* pName = {};
+
+		Container->QueryStringAttribute("Name", &pName);
+
+		if (!strcmp(pContainerName, pName))
+		{
+			TargetContainer = Container;
+			break;
+		}
+	}
+
+	/* Failed to find Container */
+	if (nullptr == TargetContainer)
+	{
+		xmlDoc.Clear();
+		MSG_BOX("Failed to find Container");
+		return S_OK;
+	}
+
+#pragma region ADD_PARTOBJECT
+	for (auto* PartObject = TargetContainer->FirstChildElement("PartObject"); PartObject; PartObject = PartObject->NextSiblingElement("PartObject"))
+	{
+		_uint iLodLevel = {};
+		_uint iKeyIndex = {};
+
+		PartObject->QueryUnsignedAttribute("Lod_Level", &iLodLevel);
+		PartObject->QueryUnsignedAttribute("Key_Index", &iKeyIndex);
+
+#pragma region MAPOBJECT_LOD
+		MAPOBJECT_LOD_DESC Desc = {};
+		string strTag = {};
+		for (auto* PrototypeTag = PartObject->FirstChildElement("PrototypeTag"); PrototypeTag; PrototypeTag = PrototypeTag->NextSiblingElement("PrototypeTag"))
+		{
+			strTag = PrototypeTag->GetText();
+
+			Desc.ModelPrototypeTags.push_back(CMyTools::ToWstring(strTag));
+		}
+		Desc.iMaxLodLevel = iLodLevel;
+		Desc.pParentTransform = m_pTransformCom;
+		const string strKey = CMyTools::ToString(Desc.ModelPrototypeTags.front()) + to_string(iKeyIndex);
+
+		/* Position */
+		tinyxml2::XMLElement* Position = PartObject->FirstChildElement("Position");
+		Position->QueryFloatAttribute("x", &Desc.vPosition.x);
+		Position->QueryFloatAttribute("y", &Desc.vPosition.y);
+		Position->QueryFloatAttribute("z", &Desc.vPosition.z);
+
+		/* Scale */
+		tinyxml2::XMLElement* Scale = PartObject->FirstChildElement("Scale");
+		Scale->QueryFloatAttribute("x", &Desc.vScale.x);
+		Scale->QueryFloatAttribute("y", &Desc.vScale.y);
+		Scale->QueryFloatAttribute("z", &Desc.vScale.z);
+
+		/* Rotation */
+		tinyxml2::XMLElement* Rotation = PartObject->FirstChildElement("Rotation");
+		Rotation->QueryFloatAttribute("x", &Desc.vRotation.x);
+		Rotation->QueryFloatAttribute("y", &Desc.vRotation.y);
+		Rotation->QueryFloatAttribute("z", &Desc.vRotation.z);
+
+		CMapObject_LOD* pMapObject = { nullptr };
+
+		pMapObject = m_pGameInstance->Clone_Prototype<CMapObject_LOD>(g_iStaticLevel, &Desc);
+		pMapObject->Set_KeyIndex(Get_KeyCount(CMyTools::ToWstring(strKey)));
+
+		m_MapObjects.push_back(pMapObject);
+
+#pragma endregion
+
+	}
+#pragma endregion
+
+#pragma region ADD_COLLISION
+	for (auto* Collision = TargetContainer->FirstChildElement("Collision"); Collision; Collision = Collision->NextSiblingElement("Collision"))
+	{
+		_uint iLodLevel = {};
+		_uint iKeyIndex = {};
+
+		Collision->QueryUnsignedAttribute("Lod_Level", &iLodLevel);
+		Collision->QueryUnsignedAttribute("Key_Index", &iKeyIndex);
+
+#pragma region MAPOBJECT_LOD
+		MAPOBJECT_LOD_DESC Desc = {};
+		string strTag = {};
+		for (auto* PrototypeTag = Collision->FirstChildElement("PrototypeTag"); PrototypeTag; PrototypeTag = PrototypeTag->NextSiblingElement("PrototypeTag"))
+		{
+			strTag = PrototypeTag->GetText();
+
+			Desc.ModelPrototypeTags.push_back(CMyTools::ToWstring(strTag));
+		}
+		Desc.iMaxLodLevel = iLodLevel;
+		Desc.pParentTransform = m_pTransformCom;
+
+		/* Position */
+		tinyxml2::XMLElement* Position = Collision->FirstChildElement("Position");
+		Position->QueryFloatAttribute("x", &Desc.vPosition.x);
+		Position->QueryFloatAttribute("y", &Desc.vPosition.y);
+		Position->QueryFloatAttribute("z", &Desc.vPosition.z);
+
+		/* Scale */
+		tinyxml2::XMLElement* Scale = Collision->FirstChildElement("Scale");
+		Scale->QueryFloatAttribute("x", &Desc.vScale.x);
+		Scale->QueryFloatAttribute("y", &Desc.vScale.y);
+		Scale->QueryFloatAttribute("z", &Desc.vScale.z);
+
+		/* Rotation */
+		tinyxml2::XMLElement* Rotation = Collision->FirstChildElement("Rotation");
+		Rotation->QueryFloatAttribute("x", &Desc.vRotation.x);
+		Rotation->QueryFloatAttribute("y", &Desc.vRotation.y);
+		Rotation->QueryFloatAttribute("z", &Desc.vRotation.z);
+
+		CMapObject_Collision* pMapObject = { nullptr };
+
+		pMapObject = m_pGameInstance->Clone_Prototype<CMapObject_Collision>(g_iStaticLevel, &Desc);
+
+		if (nullptr != pMapObject)
+			m_Collision.push_back(pMapObject);
 #pragma endregion
 
 	}
