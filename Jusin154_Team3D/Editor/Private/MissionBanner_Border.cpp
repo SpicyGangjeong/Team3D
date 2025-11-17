@@ -62,8 +62,6 @@ void CMissionBanner_Border::Update(_float fTimeDelta)
 		return;
 	}
 
-	m_fOwnerAlpha = static_cast<CUIObject*>(m_pOwner)->Get_Alpha();
-	m_fCanvasAlpha = static_cast<CUIObject*>(m_pOwner)->Get_OwnerAlpha();
 	if (m_bFadeIn == true)
 	{
 		if (m_fAlpha <= 1.f)
@@ -179,7 +177,7 @@ HRESULT CMissionBanner_Border::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCurrent_Size", &m_fCurrent_Posigion, sizeof(_float2))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCurrent_Size", &m_fCurrent_Position, sizeof(_float2))))
 	{
 		return E_FAIL;
 	}

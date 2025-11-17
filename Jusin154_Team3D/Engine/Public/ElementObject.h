@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "UIObject.h"
 
@@ -29,6 +29,10 @@ public:
 	virtual _float Get_Nine_Slice_Right() override;
 	virtual _float Get_Nine_Slice_Top() override;
 	virtual _float Get_Nine_Slice_Bottom() override;
+
+	virtual void Start_Lerp(_float fTimeDelta, _bool Alpha = false) override;
+	virtual void Reset_Pos(_float fTimeDelta, _bool Alpha = false) override;
+	virtual _vector Get_Lerp_Pos() override;
 
 protected:
 	virtual HRESULT Initialize_Prototype();
