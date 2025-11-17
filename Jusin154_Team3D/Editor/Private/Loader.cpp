@@ -74,6 +74,7 @@
 
 #include "Dummy_PhysXBox.h"
 #include "Dummy_PhysXPlayable.h"
+#include "Dummy_PhysXMonster.h"
 #include "Dummy_PhysXMesh.h"
 #include "Dummy_PhysXPlatform.h"
 #include "Dummy_PhysXFreeDoor.h"
@@ -766,7 +767,9 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXPlayable>(g_iStaticLevel, CDummy_PhysXPlayable::Create(m_pDevice, m_pContext)))){
 		return E_FAIL;
 	}
-
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXMonster>(g_iStaticLevel, CDummy_PhysXMonster::Create(m_pDevice, m_pContext)))){
+		return E_FAIL;
+	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXMesh>(g_iStaticLevel, CDummy_PhysXMesh::Create(m_pDevice, m_pContext)))){
 		return E_FAIL;
 	}

@@ -86,6 +86,14 @@ void CTransform::Mult_Scale(_float3& vScale)
 	Set_State(STATE::LOOK, vLook * vScale.z);
 }
 
+void CTransform::Set_WorldMatrix(PSX::PxTransform dstMatrix)
+{
+	_float3 vScale = Get_Scale();
+
+	XMStoreFloat4x4(&m_WorldMatrix,
+		XMMatrixAffineTransformation(XMLoadFloat3(&vScale), XMVectorZero(), XMLoadFloat4((_float4*)&dstMatrix.q), XMLoadFloat3((_float3*)&dstMatrix.p)));
+}
+
 HRESULT CTransform::Initialize_Prototype()
 {
 	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());

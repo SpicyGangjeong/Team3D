@@ -1,20 +1,17 @@
 ﻿#include "pch.h"
-#include "CallBack_Playable_HitRepot.h"
+#include "CallBack_Playable_HitReport.h"
 #include "GameInstance.h"
 #include "GameObject.h"
 
-CCallBack_Playable_HitRepot::CCallBack_Playable_HitRepot():
-	m_pGameInstance(CGameInstance::GetInstance())
+CCallBack_Playable_HitReport::CCallBack_Playable_HitReport()
 {
-	SAFE_ADDREF(m_pGameInstance);
 }
 
-CCallBack_Playable_HitRepot::~CCallBack_Playable_HitRepot()
+CCallBack_Playable_HitReport::~CCallBack_Playable_HitReport()
 {
-	SAFE_RELEASE(m_pGameInstance);
 }
 
-void CCallBack_Playable_HitRepot::onShapeHit(const PSX::PxControllerShapeHit& hit)
+void CCallBack_Playable_HitReport::onShapeHit(const PSX::PxControllerShapeHit& hit)
 {
 	PSX::PxController*		pController = hit.controller;
 	PSX::PxExtendedVec3		vWorldPos = hit.worldPos;		// 접촉지점
@@ -91,7 +88,7 @@ void CCallBack_Playable_HitRepot::onShapeHit(const PSX::PxControllerShapeHit& hi
 	}
 }
 
-void CCallBack_Playable_HitRepot::onControllerHit(const PSX::PxControllersHit& hit)
+void CCallBack_Playable_HitReport::onControllerHit(const PSX::PxControllersHit& hit)
 {
 	PSX::PxController*		pController = hit.controller;
 	PSX::PxExtendedVec3		vWorldPos = hit.worldPos;		// 접촉지점
@@ -124,7 +121,7 @@ void CCallBack_Playable_HitRepot::onControllerHit(const PSX::PxControllersHit& h
 	}
 }
 
-void CCallBack_Playable_HitRepot::onObstacleHit(const PSX::PxControllerObstacleHit& hit)
+void CCallBack_Playable_HitReport::onObstacleHit(const PSX::PxControllerObstacleHit& hit)
 {
 	PSX::PxController*		pController = hit.controller;
 	PSX::PxExtendedVec3		vWorldPos = hit.worldPos;		// 접촉지점
@@ -139,4 +136,28 @@ void CCallBack_Playable_HitRepot::onObstacleHit(const PSX::PxControllerObstacleH
 	//default:
 	//	break;
 	//}
+}
+
+HRESULT CCallBack_Playable_HitReport::Initialize(CCharacter_Controller* pController, CRigidBody_Dynamic* pPartDynamicObject)
+{
+	m_pController = pController;
+	m_pPartDynamicBody = pPartDynamicObject;
+	m_pGameInstance = CGameInstance::GetInstance();
+	SAFE_ADDREF(m_pController);
+	SAFE_ADDREF(m_pPartDynamicBody);
+	SAFE_ADDREF(m_pGameInstance);
+	return S_OK;
+}
+
+HRESULT CCallBack_Playable_HitReport::Finalize()
+{
+	SAFE_RELEASE(m_pGameInstance);
+	SAFE_RELEASE(m_pPartDynamicBody);
+	SAFE_RELEASE(m_pController);
+	return S_OK;
+}
+
+CCallBack_Playable_HitReport* CCallBack_Playable_HitReport::Create()
+{
+	return new CCallBack_Playable_HitReport();
 }

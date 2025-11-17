@@ -7,6 +7,7 @@
 #include "Terrain.h"
 #include "Dummy_PhysXBox.h"
 #include "Dummy_PhysXPlayable.h"
+#include "Dummy_PhysXMonster.h"
 #include "Dummy_PhysXMesh.h"
 #include "Dummy_PhysXWall.h"
 #include "Dummy_PhysXPlatform.h"
@@ -169,6 +170,15 @@ HRESULT CLevel_PhysXLab::Ready_Layer_PhysXObjects(const _wstring& strLayerTag)
 		Desc.vRotRPY = { 0.f, 0.f, 0.f };
 		Desc.iSubKind = 10;
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXPlayable>(g_iStaticLevel, NEXT_LEVEL, LAYER_PLAYER, &Desc))) {
+			return E_FAIL;
+		}
+	}
+	{
+		CDummy_PhysXMonster::PHYSXDUMMY_DESC Desc{};
+		Desc.vPos = { 0.f, 100.f, 0.f };
+		Desc.vRotRPY = { 12.f, 0.f, 0.f };
+		Desc.iSubKind = 10;
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXMonster>(g_iStaticLevel, NEXT_LEVEL, LAYER_PLAYER, &Desc))) {
 			return E_FAIL;
 		}
 	}

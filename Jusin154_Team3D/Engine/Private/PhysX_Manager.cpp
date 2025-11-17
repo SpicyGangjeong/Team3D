@@ -356,6 +356,7 @@ PSX::PxController* CPhysX_Manager::Add_CapsuleController(PSX::PxCapsuleControlle
 	PSX::PxController* pController = { nullptr };
 
 	pController = m_pCCTManager->createController(Desc);
+
 	return pController;
 }
 
@@ -413,8 +414,6 @@ HRESULT CPhysX_Manager::Initialize()
 		
 
 		m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, m_ToleranceScale, true, m_pPvd);
-		_bool bExtentionInitialized = PxInitExtensions(*m_pPhysics, m_pPvd);
-		assert(bExtentionInitialized);
 
 		m_pCookingParam = new PSX::PxCookingParams(m_pPhysics->getTolerancesScale());
 		m_pCookingParam->meshPreprocessParams |= PSX::PxMeshPreprocessingFlag::eWELD_VERTICES;
@@ -562,7 +561,11 @@ void CPhysX_Manager::Free()
 		m_pCCTManager->release();
 		m_pCCTManager = nullptr;
 	}
-
+	for (PSX::PxMaterial* pMat : m_pMaterials) {
+		if (pMat) {
+			pMat->release();
+		}
+	} m_pMaterials.clear();
 	if (nullptr != m_pScene) {
 		m_pScene->release(); m_pScene = nullptr;
 	}

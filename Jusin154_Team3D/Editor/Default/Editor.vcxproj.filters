@@ -211,15 +211,6 @@
     <Filter Include="02.GameObjects\Dummys\DummyPhysX\00.Callback">
       <UniqueIdentifier>{b6d1496a-c8ef-4b7a-9ed4-f00b0a244313}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Dummys\DummyPhysX\00.Callback\Playable">
-      <UniqueIdentifier>{a225d78f-7eec-4407-bdfd-9e14452f3338}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Dummys\DummyPhysX\00.Callback\Playable\Playable">
-      <UniqueIdentifier>{a32d5869-5562-4099-925a-f8c022e9aac7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Dummys\DummyPhysX\00.Callback\Playable\Behavior">
-      <UniqueIdentifier>{83781d7f-b84d-45a3-8361-b6bed2722b74}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Dummys\DummyPhysX\PhysXDoorSet">
       <UniqueIdentifier>{6a026ae9-e454-45cd-9baa-ed093de3e60c}</UniqueIdentifier>
     </Filter>
@@ -252,6 +243,27 @@
     </Filter>
     <Filter Include="02.GameObjects\Player">
       <UniqueIdentifier>{680910fd-aee2-4f69-b644-12b36b0f635b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\PhysXMonster">
+      <UniqueIdentifier>{1bc9f833-8d1b-4576-9ae5-51a039f4d2ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\00.Callback\Behavior">
+      <UniqueIdentifier>{d0e9e4de-c3f2-45fa-ba22-f8882d7a2a7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\00.Callback\Behavior\Monster">
+      <UniqueIdentifier>{dabfa8ad-dc37-4dd6-8ea0-9fd46cfeadec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\00.Callback\Behavior\Playable">
+      <UniqueIdentifier>{a225d78f-7eec-4407-bdfd-9e14452f3338}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\00.Callback\HitReport">
+      <UniqueIdentifier>{e8c89ebe-2db4-47c1-b2cc-8b6d49bef902}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\00.Callback\HitReport\Monster">
+      <UniqueIdentifier>{af42cf4c-c875-43b8-9a5a-981d78e6aaf9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\00.Callback\HitReport\Playable">
+      <UniqueIdentifier>{83781d7f-b84d-45a3-8361-b6bed2722b74}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -456,12 +468,6 @@
     <ClInclude Include="..\Public\Dummy_Plane.h">
       <Filter>02.GameObjects\Layer_Effect\Dummy_Plane</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CallBack_Playable_HitRepot.h">
-      <Filter>02.GameObjects\Dummys\DummyPhysX\00.Callback\Playable\Playable</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\CallBack_Playable_Behavior.h">
-      <Filter>02.GameObjects\Dummys\DummyPhysX\00.Callback\Playable\Behavior</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Dummy_PhysXFreeDoor.h">
       <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXFreeDoor</Filter>
     </ClInclude>
@@ -497,6 +503,21 @@
     </ClInclude>
     <ClInclude Include="..\Public\Dummy_PhysXDoorFrame.h">
       <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXDoorSet\PhysXDoorFrame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dummy_PhysXMonster.h">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXMonster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CallBack_Monster_HitReport.h">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\00.Callback\HitReport\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CallBack_Monster_Behavior.h">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\00.Callback\Behavior\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CallBack_Playable_HitReport.h">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\00.Callback\HitReport\Playable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CallBack_Playable_Behavior.h">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\00.Callback\Behavior\Playable</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -697,12 +718,6 @@
     <ClCompile Include="..\Private\Dummy_Plane.cpp">
       <Filter>02.GameObjects\Layer_Effect\Dummy_Plane</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\CallBack_Playable_HitRepot.cpp">
-      <Filter>02.GameObjects\Dummys\DummyPhysX\00.Callback\Playable\Playable</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\CallBack_Playable_Behavior.cpp">
-      <Filter>02.GameObjects\Dummys\DummyPhysX\00.Callback\Playable\Behavior</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Dummy_PhysXFreeDoor.cpp">
       <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXFreeDoor</Filter>
     </ClCompile>
@@ -738,6 +753,21 @@
     </ClCompile>
     <ClCompile Include="..\Private\Player.cpp">
       <Filter>02.GameObjects\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_PhysXMonster.cpp">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXMonster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CallBack_Monster_HitReport.cpp">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\00.Callback\HitReport\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CallBack_Monster_Behavior.cpp">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\00.Callback\Behavior\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CallBack_Playable_HitReport.cpp">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\00.Callback\HitReport\Playable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CallBack_Playable_Behavior.cpp">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\00.Callback\Behavior\Playable</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
