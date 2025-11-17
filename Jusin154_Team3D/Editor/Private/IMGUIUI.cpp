@@ -150,6 +150,7 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		m_fMoveSpeed = static_cast<CElementObject*>(m_pElementObject)->Get_Speed();
 		m_fAngle = static_cast<CElementObject*>(m_pElementObject)->Get_Angle();
 		m_iSkillType = static_cast<CElementObject*>(m_pElementObject)->Get_SkillType();
+		m_fCoolTime = static_cast<CElementObject*>(m_pElementObject)->Get_CoolTime();
 	}
 	GUI::Begin("Current_PanelObject_Info");
 	if (m_pGamePlay_Canvas != nullptr)
@@ -411,6 +412,12 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		if (GUI::Combo("SkillType", &m_iSkillType, SpellTypeNames, itemCount))
 		{
 			static_cast<CElementObject*>(m_pElementObject)->Set_SkillType(m_iSkillType);
+		}
+
+		GUI::Text("CoolTime %.1f", m_fCoolTime);
+		if (GUI::SliderFloat("CoolTime", &m_fCoolTime, 1.f, 90.f))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->Set_CoolTime(m_fCoolTime);
 		}
 	}
 	GUI::End();

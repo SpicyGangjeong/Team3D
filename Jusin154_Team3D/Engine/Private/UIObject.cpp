@@ -432,6 +432,16 @@ _int CUIObject::Get_SkillType()
 	return m_iSkillType;
 }
 
+void CUIObject::Set_CoolTime(_float CoolTime)
+{
+	m_fCoolTime = CoolTime;
+}
+
+_float CUIObject::Get_CoolTime()
+{
+	return m_fCoolTime;
+}
+
 void CUIObject::Free()
 {
 	__super::Free();

@@ -96,6 +96,9 @@ public:
 
 	virtual void Set_SkillType(_int eType);
 	virtual _int Get_SkillType();
+
+	virtual void Set_CoolTime(_float CoolTime);
+	virtual _float Get_CoolTime();
 protected:
 	_vector					m_fOrigin_Position_vector{};
 	_float2					m_fOrigin_Position{};
@@ -125,6 +128,9 @@ protected:
 	_float					m_fCanvasAlpha{};						// 캔버스의 알파를 던지기 위해
 	_float					m_fAlphaTime{};							// UI의 알파값을 조절 할 때 알파는 0~1이라서 n을 나누거나 곱해서 시간을 늘리거나 빠르게 하기 위함
 	_float					m_fTime{};								// 캔버스는 아니더라도 패널전체랑 Element들은 필요함
+	_float					m_fCoolTime{};
+
+
 	_float					m_fEndTime{};							// UI의 움직임이 끝나는 시간
 	_float					m_fDelayTime{};							// UI의 딜레이 시간
 	_float					m_fTimeMult{1.f};						// 애니메이션 속도를 조절하기 위해서 필요

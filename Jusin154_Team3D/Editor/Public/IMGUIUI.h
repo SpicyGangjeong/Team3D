@@ -54,6 +54,7 @@ private:
 	_float					m_fMoveSpeed{};
 
 	_float					m_fAngle{};
+	_float					m_fCoolTime{};
 
 	_float					m_fLeft{};
 	_float					m_fRight{};

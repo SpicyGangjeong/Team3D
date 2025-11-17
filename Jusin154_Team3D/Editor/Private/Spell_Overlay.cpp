@@ -44,6 +44,8 @@ HRESULT CSpell_Overlay::Initialize(void* pArg)
 	m_fAngle = XMConvertToRadians(-135.f);
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 1.f;
+	m_vUVScale.y = 1.f; 
+	m_fCoolTime = 5.f;
 	m_iSkillType = ENUM_CLASS(SKILLTYPE::CONTROL);
 	return S_OK;
 }
@@ -86,6 +88,19 @@ void CSpell_Overlay::Update(_float fTimeDelta)
 			m_bFadeOut = false;
 			m_fAlpha = 0.f;
 		}
+	}
+
+	if (m_vUVScale.y >= 1.f)
+	{
+		if (m_pGameInstance->Key_Down(DIK_1))
+		{
+			m_vUVScale.y = 0.f;
+		}
+	}
+
+	if (m_vUVScale.y <= 1)
+	{
+		m_vUVScale.y += fTimeDelta * (1.f / m_fCoolTime);
 	}
 
 	m_fTime += fTimeDelta * m_fTimeMult;
@@ -197,6 +212,14 @@ HRESULT CSpell_Overlay::Bind_ShaderResources()
 		return E_FAIL;
 	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_iImageCountY", &m_iImageFrameY, sizeof(_int))))
+	{
+		return E_FAIL;
+	} 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDeltaV", &m_vUVScale.y, sizeof(_float))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCoolTime", &m_fCoolTime, sizeof(_float))))
 	{
 		return E_FAIL;
 	}

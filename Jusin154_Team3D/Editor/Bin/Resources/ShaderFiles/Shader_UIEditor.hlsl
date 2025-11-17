@@ -22,6 +22,7 @@ float g_fAlpha;
 float g_fOwnerAlpha;
 float g_fCanvasAlpha;
 float g_fAngle;
+float g_fCoolTime;
 
 float2 g_fOrigin_Size;
 float2 g_fCurrent_Size;
@@ -398,14 +399,18 @@ PS_OUT PS_Rotation(PS_IN In)
         if (tex2.a >= 0.9f)
             color = tex2;
     
+        float CoolTime = 1.f - g_fDeltaV;
+        
+        if (In.vTexcoord.y <= CoolTime)
+        {
+            color.a = 0.f;
+        }
+            
         color.a *= Alpha;
 
         Out.vColor = color;
     }
-   
-  
-   
-    
+       
     return Out;
 }
 
