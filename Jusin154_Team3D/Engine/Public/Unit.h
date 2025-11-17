@@ -28,29 +28,38 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	_wstring& Get_PrototypeTag() { return m_strModelPrototypeTag; }
-
+	void Load_KeyFrame();
 public:
+#pragma region STATE
 	pair<_uint, _bool> Get_AnimInfo(_uint iIndex) { return m_Animation[iIndex]; }
+	virtual _bool Check(FSMSTATE::ESTATE state) { return false; }
 
-	virtual _bool IsWalking() { return false; }
-	virtual _bool IsDodge() { return false; }
-	virtual _bool IsSprint() { return false; }
-	virtual _bool IsJump() { return false; }
+	void Reset_LightCombo() { m_iLightCombo = 0; }
+	_uint Next_LightCombo() { return ++m_iLightCombo; }
+	void Set_LightCombo(_uint LightCombo) { m_iLightCombo = LightCombo; }
+	_float Get_KeyFrame(_string FrameName);
+	_bool IsCurrentKeyFrame(_string FrameName);
+#pragma endregion
 
 protected:
-	CShader*	m_pShaderCom = { nullptr };
-	CModel*		m_pModelCom = { nullptr };
-	CFSM*		m_pFSM = { nullptr };
-	_wstring	m_strModelPrototypeTag;
-	_bool		m_bRimLight = { true };
-	_float		m_fRimLightPower = { 3.2f };
-	_float		m_fRimLightStrength = { 3.04f };
-	_float3		m_vRimLightColor = { 69.f / 255.f, 5.f / 255.f, 10.f / 255.f };
+	CShader*		m_pShaderCom = { nullptr };
+	CModel*			m_pModelCom = { nullptr };
+	CFSM*			m_pFSM = { nullptr };
+	_wstring		m_strModelPrototypeTag;
+	_bool			m_bRimLight = { true };
+	_float			m_fRimLightPower = { 3.2f };
+	_float			m_fRimLightStrength = { 3.04f };
+	_float3			m_vRimLightColor = { 69.f / 255.f, 5.f / 255.f, 10.f / 255.f };
+	_uint			m_iLightCombo = { 0 };
 
-	vector<pair<_uint,_bool>> m_Animation;
+	map<_string, _float> m_KeyFrames;
+
+	vector<pair<_uint, _bool>> m_Animation;
+
 
 private:
 	virtual void Add_FSM() {};
+	virtual void Set_FSM() {};
 	virtual void Set_Anim() {};
 
 protected:

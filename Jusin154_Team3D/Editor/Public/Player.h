@@ -7,6 +7,13 @@ NS_BEGIN(Editor)
 
 class CPlayer final : public CUnit
 {
+public:
+	struct InputCondition
+	{
+		FSMSTATE::ESTATE state;
+		function<_bool()> checker;
+	};
+
 private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CPlayer(const CPlayer& Prototype);
@@ -20,25 +27,35 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
-public:
-	virtual _bool IsWalking() override;
-	virtual _bool IsDodge() override;
-	virtual _bool IsSprint() override;
-	virtual _bool IsJump() override;
+private:
+	vector<InputCondition> m_InputConditions;
+
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
-
-	virtual void Add_FSM();
-	virtual void Set_Anim();
-	void Check_State();
-
+	void Setup_InputConditions();
+	void Key_Input(_float fTimeDelta);
 
 public:
 	static CPlayer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr) override;
 	virtual void Free() override;
 	virtual void Describe_Entity() override;
+
+#pragma region STATE
+private:
+	virtual void Add_FSM();
+	virtual void Set_FSM();
+	virtual void Set_Anim();
+	_bool Check(FSMSTATE::ESTATE state);
+
+
+
+#pragma endregion
+
+
+
+
 };
 
 NS_END
