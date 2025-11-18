@@ -268,6 +268,9 @@
     <Filter Include="02.Element\01.GameObject\Unit">
       <UniqueIdentifier>{a4560f1b-c4f4-4705-bbf8-6a60977d3211}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Element\02.Component\02.VIBuffer\Trail">
+      <UniqueIdentifier>{dae29f0c-1727-4423-a3ca-9ef27460520b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -503,6 +506,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Unit.cpp">
       <Filter>02.Element\01.GameObject\Unit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Trail.cpp">
+      <Filter>02.Element\02.Component\02.VIBuffer\Trail</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1105,6 +1111,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Unit.h">
       <Filter>02.Element\01.GameObject\Unit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Trail.h">
+      <Filter>02.Element\02.Component\02.VIBuffer\Trail</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
