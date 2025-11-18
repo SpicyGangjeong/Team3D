@@ -560,6 +560,9 @@ call Update_Lib.bat
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Defines.hlsli" />
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_PBR.hlsl">
+      <FileType>Document</FileType>
+    </FxCompile>
     <None Include="..\Public\Assimp\color4.inl" />
     <None Include="..\Public\Assimp\config.h.in" />
     <None Include="..\Public\Assimp\material.inl" />

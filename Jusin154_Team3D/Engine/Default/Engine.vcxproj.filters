@@ -264,7 +264,7 @@
     </Filter>
     <Filter Include="02.Element\01.GameObject\Unit">
       <UniqueIdentifier>{a4560f1b-c4f4-4705-bbf8-6a60977d3211}</UniqueIdentifier>
-        </Filter>
+    </Filter>
     <Filter Include="02.Element\01.GameObject\00.ContainerObject\01.PartObject">
       <UniqueIdentifier>{b3742605-653a-4bdf-bad9-329d993e7f52}</UniqueIdentifier>
     </Filter>
@@ -512,7 +512,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\Unit.cpp">
       <Filter>02.Element\01.GameObject\Unit</Filter>
-      </ClCompile>
+    </ClCompile>
     <ClCompile Include="..\private\VIBuffer_UI_Instance.cpp">
       <Filter>02.Element\02.Component\02.VIBuffer\Instance\UI_nstance</Filter>
     </ClCompile>
@@ -1126,7 +1126,7 @@
     </ClInclude>
     <ClInclude Include="..\Public\Unit.h">
       <Filter>02.Element\01.GameObject\Unit</Filter>
-       </ClInclude>
+    </ClInclude>
     <ClInclude Include="..\public\VIBuffer_UI_Instance.h">
       <Filter>02.Element\02.Component\02.VIBuffer\Instance\UI_nstance</Filter>
     </ClInclude>
@@ -1204,6 +1204,9 @@
       <Filter>99.Define\01.SHADER</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_WeightBlend.hlsl">
+      <Filter>99.Define\01.SHADER</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_PBR.hlsl">
       <Filter>99.Define\01.SHADER</Filter>
     </FxCompile>
   </ItemGroup>

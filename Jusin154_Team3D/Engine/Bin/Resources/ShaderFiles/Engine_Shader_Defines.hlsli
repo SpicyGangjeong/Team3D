@@ -256,3 +256,107 @@ float2 UV_Cutting(float2 vUV, float2 vUVCutting, int iCurrentFrame)
     
     return UV;
 }
+
+struct PBR_LIGHT_OUT
+{
+    float3 vShade;
+    float3 vSpecular;
+};
+
+// (Kd F(Lambert)) + (Ks F(cook-torrance))
+
+//float LambertDiffuse(float c)
+//{
+//    return c / PI;
+//}
+
+// F(cook-torrance)
+// DFG / (4 (Wo dot N) (Wi dot N))
+
+// D(distribution, NormalDistribution function), 표면의 거칠기에 영향을 받는 halfWay vector
+// G(Geometry, GeometryFunc), 에너지 보존법칙 적용
+// F(Fresnel-Fresnel equation), 표면 각도에 따른 반사율
+
+// F->D
+float NDF_ggxtr(float3 vNormal, float3 vHalfWayVector, float fAlpha) // NormalDistributionGGXTR, (H, halfWay vector), (A, Roughness), (N, Normal)
+{
+    float a2 = fAlpha * fAlpha;
+    float NdotH = saturate(dot(vNormal, vHalfWayVector));
+    float NdotH2 = NdotH * NdotH;
+    
+    float nom = a2;
+    float denom = (NdotH2 * (a2 - 1.f) + 1.f);
+    
+    denom = PI * denom * denom;
+    return (nom / denom);
+}
+
+// F->G
+// GschlickGGX(n, v, k) 
+// k는 이하 두개 조명 조건에 따라 가변적임
+// Direct //  Kdir -> ((a + 1) * (a + 1)) / 8 // direct lighting 추천
+// IBL Lighting // Kibl -> a * a / 2 // 이미지 기반 조명기법
+
+float Geometry_SchlickGGX(float NdotV, float fK)
+{
+    return NdotV / (NdotV * (1.0f - fK) + fK);
+}
+
+float Geometry_Smith(float3 vNormal, float3 vFromView, float3 vFromLight, float k)
+{
+    // Geometry Obstruction     
+    // 철이 있는, 주로 튀어나온 장애물
+    float NdotV = saturate(dot(vNormal, vFromView));
+    
+    // Geometry Shadowing       
+    // 요가 있는, 주로 음푹 들어간 장애물 (그래서 셰도잉)
+    float NdotL = saturate(dot(vNormal, vFromLight));
+
+    // 요철이 골고루 있다고 가정하고 적당히 섞음
+    return Geometry_SchlickGGX(NdotV, k) * Geometry_SchlickGGX(NdotL, k); 
+}
+
+// F -> F
+float3 Fresnel_Schlick(float cosTheta, float3 F0)
+{
+    // 모서리 부분의 반사
+    return F0 + (1.0f - F0) * pow(1.0f - cosTheta, 5.0f);
+}
+
+PBR_LIGHT_OUT PBR_Lighting(
+    float3 vNormal, float3 vFromView, float3 vFromLight,
+    float3 vAlbedo, float fMetallic, float fRoughness,
+    float3 vLightColor, float fAttenuation, float3 vFO
+) {
+    PBR_LIGHT_OUT Out;
+    Out.vShade = 0;
+    Out.vSpecular = 0;
+    
+    float3 vHalfVector = normalize(vFromView + vFromLight);
+    float NdotL = saturate(dot(vNormal, vFromLight));
+    float NdotV = saturate(dot(vNormal, vFromView));
+    if (NdotL <= 0 || NdotV <= 0)
+    {
+        return Out;
+    }
+    float fAlpha = max(fRoughness * fRoughness, 0.04f);
+    float k = ((fRoughness + 1.f) * (fRoughness + 1.f)) / 8.f;
+    
+    float D = NDF_ggxtr(vNormal, vHalfVector, fAlpha);
+    float G = Geometry_Smith(vNormal, vFromView, vFromLight, k);
+    float3 F = Fresnel_Schlick(saturate(dot(vHalfVector, vFromView)), vFO);
+    
+    float3 vNumerator = D * G * F;
+    float fDenom = max(4.f * NdotL * NdotV, 1e-7);
+    float3 specularBRDF = vNumerator / fDenom;
+    
+    float3 kS = F;
+    float3 kD = (1.f - kS) * (1.f -fMetallic);
+    
+    //Out.vShade = float(1.f, 1.f, 1. 1.f);
+    Out.vShade = (kD / PI) * (NdotL * fAttenuation) * vLightColor;
+    
+    Out.vSpecular = specularBRDF * vLightColor * fAttenuation * NdotL;
+    
+    return Out;
+}

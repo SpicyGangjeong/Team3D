@@ -109,6 +109,11 @@ HRESULT CPrototype_Manager::Ready_EngineAssets()
 			VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)))) {
 		return E_FAIL;
 	}
+	if (FAILED(Add_Asset_Prototype(g_iStaticLevel, TEXT("FX_PBR"), 
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_PBR.hlsl"), 
+			VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)))) {
+		return E_FAIL;
+	}
 
 	if (FAILED(Add_Asset_Prototype(g_iStaticLevel, TEXT("FX_LASTCOLOR"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_LastColor.hlsl"),

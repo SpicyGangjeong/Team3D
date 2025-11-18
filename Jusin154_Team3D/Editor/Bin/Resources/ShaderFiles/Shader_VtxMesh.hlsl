@@ -182,9 +182,19 @@ PS_OUT PS_MAIN(PS_IN In)
     
     return Out;
 }
-PS_OUT PS_PROP(PS_IN In)
+
+struct PS_PROP_OUT
 {
-    PS_OUT Out;
+    float4 vDiffuse : SV_TARGET0;
+    float4 vNormal : SV_TARGET1;
+    float4 vDepth : SV_TARGET2;
+    float4 vColor : SV_Target3;
+    float4 vMRO : SV_Target4;
+};
+
+PS_PROP_OUT PS_PROP(PS_IN In)
+{
+    PS_PROP_OUT Out;
 
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     if (vMtrlDiffuse.a < 0.2f)
@@ -197,12 +207,14 @@ PS_OUT PS_PROP(PS_IN In)
     
     float3 vNormal = mul(vNormalDesc.xyz * 2.f - 1.f, WorldMatrix);
     
-    float fRoughness = g_MROTexture.Sample(DefaultSampler, In.vTexcoord).g;
+    vector vMRO = g_MROTexture.Sample(DefaultSampler, In.vTexcoord);
     
     
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
-    Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, fRoughness, 1.f);
+    Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 1, 1.f);
+    Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
+    Out.vMRO = vMRO;
     
     return Out;
 }

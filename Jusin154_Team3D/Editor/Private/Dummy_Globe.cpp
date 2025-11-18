@@ -105,7 +105,7 @@ HRESULT CDummy_Globe::Ready_Components(void* pArg)
 		reinterpret_cast<CComponent**>(&m_pShaderCom)))){
 		return E_FAIL;
 	}
-
+	m_bMRO = true;
 	return S_OK;
 }
 
