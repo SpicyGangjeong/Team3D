@@ -22,9 +22,9 @@ HRESULT CMissionBanner_Border::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = -207.f;
-	Desc.fY = 150.f;
+	Desc.fY = 160.f;
 	Desc.fSizeX = 256.f;
-	Desc.fSizeY = 128.f;
+	Desc.fSizeY = 155.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -38,18 +38,21 @@ HRESULT CMissionBanner_Border::Initialize(void* pArg)
 	}
 
 	m_fTimeMult = 3.f;
-	m_fAlpha = 0.f;
+	m_fAlpha = 1.f;
 	m_fAlphaTime = 5.f;
 	m_fMoveSpeed = 5.f;
 	m_fLerpX = m_fX;
+	m_fLerpY = 100.f;
 	m_fSortZ = 0.11f;
 	m_vUVScale = _float2(1.f, 1.f);
-	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Missiom_On"), [this]() {this->Set_FadeIn(); });
-	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Missiom_On"), [this]() {this->LerpOn(); });
-	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Missiom_Off"), [this]() {this->Set_FadeOut(); });
-	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Missiom_Off"), [this]() {this->LerpOff(); });
+	m_vNine_Slice = _float4(80, 200, 50, 90);
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Mission_On"), [this](void* p) {this->Set_FadeIn(); });
+	////static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Mission_On"), [this]() {this->LerpOn(); });
+	//static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Mission_Off"), [this](void* p) {this->Set_FadeOut(); });
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Mission_Off"), [this](void* p) {this->LerpOff(); });
 	return S_OK;
 }
+
 
 void CMissionBanner_Border::Priority_Update(_float fTimeDelta)
 {
@@ -75,6 +78,10 @@ void CMissionBanner_Border::Update(_float fTimeDelta)
 			m_fAlpha += fTimeDelta * m_fAlphaTime;
 		}
 
+		if (m_fAlpha >= 0.5f)
+		{
+			LerpOn();
+		}
 		if (m_fAlpha >= 1.f)
 		{
 			m_bFadeIn = false;
@@ -97,13 +104,12 @@ void CMissionBanner_Border::Update(_float fTimeDelta)
 
 	if (m_bLerpOn == true)
 	{
-
-		Start_Lerp(m_fMoveSpeed);
+		SizeUpY(m_fSizeY);
 	}
 
 	if (m_bLerpOff == true)
 	{
-		Reset_Pos(m_fMoveSpeed);
+		SizeUpY(m_fOrigin_Size.y);
 	}
 
 	m_fTime += fTimeDelta * m_fTimeMult;
@@ -129,7 +135,7 @@ HRESULT CMissionBanner_Border::Render()
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::MISSION)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::NINECLICE)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
@@ -197,6 +203,10 @@ HRESULT CMissionBanner_Border::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCurrent_Size", &m_vScale, sizeof(_float2))))
+	{
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -221,6 +231,21 @@ HRESULT CMissionBanner_Border::Ready_Components(void* pArg)
 	}
 
 	return S_OK;
+}
+
+void CMissionBanner_Border::SizeUpX(_float fSizeX)
+{
+	m_fSizeX = fSizeX;
+	m_fX += (fSizeX - m_vScale.x) * 0.5f;
+	m_fLerpX += (fSizeX - m_vScale.x) * 0.5f;
+}
+
+void CMissionBanner_Border::SizeUpY(_float fSizeY)
+{
+	m_fSizeY = fSizeY;
+	m_fY -= (fSizeY - m_fSizeY) * 0.5f;
+	m_fLerpY -= (fSizeY - m_vScale.y) * 0.5f;
+	//static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Mission_SizeUp"), &(m_vScale.y));
 }
 
 CMissionBanner_Border* CMissionBanner_Border::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

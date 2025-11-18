@@ -222,7 +222,7 @@ PS_OUT PS_Sptire_Sheet(PS_IN In)
     
     int iTotalFrame = g_iImageCountX * g_iImageCountY;
     
-    int iCurrentFrame = int(floor(g_fTime / g_fFrame)) % iTotalFrame;
+    uint iCurrentFrame = uint(floor(g_fTime / g_fFrame)) % iTotalFrame;
     
     int iFrameX = iCurrentFrame % g_iImageCountX;
     int iFrameY = iCurrentFrame / g_iImageCountX;
@@ -285,46 +285,63 @@ PS_OUT PS_NineSlice(PS_IN In)
 {
     PS_OUT Out;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
-    float Left = g_fNine_Slice.x / g_fOrigin_Size.x;
-    float Right = (g_fOrigin_Size.x - g_fNine_Slice.y) / g_fOrigin_Size.x;
-    float Top = g_fNine_Slice.z / g_fOrigin_Size.y;
-    float Bottom = (g_fOrigin_Size.y - g_fNine_Slice.w) / g_fOrigin_Size.y;
+    float4 Color = float4(1.f, 1.f, 1.f, 1.f);
+    float2 uv = In.vTexcoord;
+    float2 CurrentPixelPosition =   uv *  g_fCurrent_Size;
+    float OriginLeft =              g_fNine_Slice.x;    
+    float OriginRight =             g_fNine_Slice.y;    
+    float OriginTop =               g_fNine_Slice.z;    
+    float OriginBottom =            g_fNine_Slice.w;    
     
-    float2 ratio = g_fCurrent_Size / g_fOrigin_Size;
+    float CurrentLeft =             OriginLeft;       
+    float CurrentRight =            g_fCurrent_Size.x - (g_fOrigin_Size.x - OriginRight); 
+    float CurrentTop =              OriginTop;        
+    float CurrentBottom =           g_fCurrent_Size.y - (g_fOrigin_Size.y - OriginBottom); 
     
-    float2 UV = In.vTexcoord * 0.5f + 0.5f;
-    float2 ScaledUV = UV;
-    
-    if (UV.x < Left)
+    float2 Finaluv = In.vTexcoord;
+
+    if(CurrentPixelPosition.x < CurrentLeft)
     {
-        ScaledUV.x = UV.x;
+        Finaluv.x = CurrentPixelPosition.x / g_fOrigin_Size.x;
     }
-    else if (UV.x > Right)
+    else if(CurrentPixelPosition.x >CurrentRight)
     {
-        ScaledUV.x = 1.0f - ((1.0f - UV.x) / ratio.x);
-    }
-    else
-    {
-        ScaledUV.x = Left + (UV.x - Left) / ratio.x;
-    }
-    
-    if (UV.y < Top)
-    {
-        ScaledUV.y = UV.y;
-    }
-    else if (UV.y > Bottom)
-    {
-        ScaledUV.y = 1.0f - ((1.0f - UV.y) / ratio.y);
+        float dist = CurrentPixelPosition.x - CurrentRight;
+        Finaluv.x = (OriginRight + dist) / g_fOrigin_Size.x;
     }
     else
     {
-        ScaledUV.y = Top + (UV.y - Top) / ratio.y;
+        float scale = (CurrentPixelPosition.x - CurrentLeft) / (CurrentRight - CurrentLeft);
+        Finaluv.x = (OriginLeft / g_fOrigin_Size.x) + scale * ((OriginRight - OriginLeft) / g_fOrigin_Size.x);
     }
     
-    float4 color = g_Texture.Sample(ClampSampler, ScaledUV);
+    if(CurrentPixelPosition.y < CurrentTop)
+    {
+        Finaluv.y = CurrentPixelPosition.y / g_fOrigin_Size.y;
+    }
+    else if(CurrentPixelPosition.y > CurrentBottom)
+    {
+        float dist = CurrentPixelPosition.y - CurrentBottom;
+        Finaluv.y = (OriginBottom + dist) / g_fOrigin_Size.y;
+    }
+    else
+    {
+        float scale = (CurrentPixelPosition.y - CurrentTop) / (CurrentBottom - CurrentTop);
+        Finaluv.y = (OriginTop / g_fOrigin_Size.y) + scale * ((OriginBottom - OriginTop) / g_fOrigin_Size.y);
+    }
     
-    color.a *= Alpha;
-    Out.vColor = color;
+    float4 tex1 = g_Texture.Sample(ClampSampler, Finaluv);
+    float4 tex2 = g_Texture1.Sample(ClampSampler, Finaluv);
+    
+    tex1.a *= 0.5f;
+
+    if (tex1.a >= 0.f)
+        Color = tex1;
+ 
+    Color = lerp(Color, tex2, tex2.a);
+    
+    Color.a *= Alpha;
+    Out.vColor = Color;
     return Out;
 }
 
@@ -446,6 +463,7 @@ PS_OUT PS_Slot(PS_IN In)
 PS_OUT PS_SpellAnim(PS_IN In)
 {
     PS_OUT Out;
+    float4 color = float4(1.f, 1.f, 1.f, 1.f);
     //float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
    
     //float2 center = float2(0.5f, 0.5f);
@@ -460,7 +478,7 @@ PS_OUT PS_SpellAnim(PS_IN In)
     
     //color.a *= Alpha;
 
-    //Out.vColor = color;
+    Out.vColor = color;
     
     return Out;
 }

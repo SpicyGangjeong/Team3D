@@ -43,7 +43,6 @@ void CElementObject::Update(_float fTimeDelta)
 		m_fSortZ, 1.f));
 
 	m_fCurrent_Position = XMVectorSet(m_fX, m_fY, 0.f, 1.f);
-	m_vNine_Slice = _float4(m_fLeft, m_fRight, m_fTop, m_fBottom);
 	m_vLerp_Position = XMVectorSet(m_fLerpX, m_fLerpY, 0.f, 1.f);
 }
 
@@ -85,45 +84,45 @@ _bool CElementObject::Chack_Visible()
 
 void CElementObject::Nine_Slice_Left(_float X)
 {
-	m_fLeft = X;
+	m_vNine_Slice.x = X;
 }
 
 void CElementObject::Nine_Slice_Right(_float Y)
 {
-	m_fRight = Y;
+	m_vNine_Slice.y = Y;
 }
 
 void CElementObject::Nine_Slice_Top(_float Z)
 {
-	m_fTop = Z;
+	m_vNine_Slice.z = Z;
 }
 
 void CElementObject::Nine_Slice_Bottom(_float W)
 {
-	m_fBottom = W;
+	m_vNine_Slice.w = W;
 }
 
 _float CElementObject::Get_Nine_Slice_Left()
 {
-	return m_fLeft;
+	return m_vNine_Slice.x;
 }
 
 _float CElementObject::Get_Nine_Slice_Right()
 {
-	return m_fRight;
+	return m_vNine_Slice.y;
 }
 
 _float CElementObject::Get_Nine_Slice_Top()
 {
-	return m_fTop;
+	return m_vNine_Slice.z;
 }
 
 _float CElementObject::Get_Nine_Slice_Bottom()
 {
-	return m_fBottom;
+	return m_vNine_Slice.w;
 }
 
-void CElementObject::Start_Lerp(_float fTimeDelta, _bool Alpha)
+void CElementObject::Start_Lerp(_float fTimeDelta)
 {
 	_vector Pos = m_fCurrent_Position;
 
@@ -150,7 +149,7 @@ void CElementObject::Start_Lerp(_float fTimeDelta, _bool Alpha)
 	}
 }
 
-void CElementObject::Reset_Pos(_float fTimeDelta, _bool Alpha)
+void CElementObject::Reset_Pos(_float fTimeDelta)
 {
 	_vector Pos = m_fCurrent_Position;
 
@@ -166,7 +165,7 @@ void CElementObject::Reset_Pos(_float fTimeDelta, _bool Alpha)
 	{
 		m_fX = m_fOrigin_Position.x;
 		m_fY = m_fOrigin_Position.y;
-		m_bLerpOn = false;
+		m_bLerpOff = false;
 	}
 
 	else
@@ -175,6 +174,14 @@ void CElementObject::Reset_Pos(_float fTimeDelta, _bool Alpha)
 		m_fX = (Pos + DirNorm * move).m128_f32[0];
 		m_fY = (Pos + DirNorm * move).m128_f32[1];
 	}
+}
+
+void CElementObject::Start_Size_Lerp(_float fTimeDelta)
+{
+}
+
+void CElementObject::Reset_Size_Lerp(_float fTimeDelta)
+{
 }
 
 _vector CElementObject::Get_Lerp_Pos()

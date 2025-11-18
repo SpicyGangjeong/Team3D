@@ -21,10 +21,10 @@ HRESULT CMission_Key::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = -296.f;
+	Desc.fX = -297.f;
 	Desc.fY = 158.f;
-	Desc.fSizeX = 37.f;
-	Desc.fSizeY = 37.f;
+	Desc.fSizeX = 40.f;
+	Desc.fSizeY = 40.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 

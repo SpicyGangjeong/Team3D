@@ -19,7 +19,8 @@ public:
 	virtual HRESULT Render() override;
 	virtual _vector Get_WorldPostion() override;
 
-
+	virtual void SizeUpX(_float fSizeX) override;
+	virtual void SizeUpY(_float fSizeY) override;
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;
@@ -31,7 +32,6 @@ private:
 	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
-
 
 public:
 	static CMissionBanner_Border* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

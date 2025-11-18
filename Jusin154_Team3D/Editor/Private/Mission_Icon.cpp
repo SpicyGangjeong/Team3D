@@ -22,7 +22,7 @@ HRESULT CMission_Icon::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = -275.f;
-	Desc.fY = 145.f;
+	Desc.fY = 115.f;
 	Desc.fSizeX = 60.f;
 	Desc.fSizeY = 60.f;
 
@@ -44,10 +44,15 @@ HRESULT CMission_Icon::Initialize(void* pArg)
 	m_fLerpX = m_fX;
 	m_fSortZ = 0.1f;
 	m_eQuestType = QUESTYPE::MAIN;
-	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Missiom_On"), [this]() {this->Set_FadeIn(); });
-	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Missiom_On"), [this]() {this->LerpOn(); });
-	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Missiom_Off"), [this]() {this->Set_FadeOut(); });
-	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Missiom_Off"), [this]() {this->LerpOff(); });
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Mission_SizeUp"), [this](void* p) {
+																			if (p == nullptr)
+																				return;
+																			_float fY = *reinterpret_cast<_float*>(p);
+																			this->Lerp_PosY(fY); });
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Mission_On"), [this] (void* p) {this->Set_FadeIn(); });
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Mission_On"), [this] (void* p) {this->LerpOn(); });
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Mission_Off"), [this](void* p) {this->Set_FadeOut(); });
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Mission_Off"), [this](void* p) {this->LerpOff(); });
 	m_iType = ENUM_CLASS(m_eQuestType);
 	return S_OK;
 }
@@ -98,7 +103,6 @@ void CMission_Icon::Update(_float fTimeDelta)
 	}
 	if (m_bLerpOn == true)
 	{
-
 		Start_Lerp(m_fMoveSpeed);
 	}
 
