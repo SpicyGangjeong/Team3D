@@ -312,6 +312,7 @@ call Update_Lib.bat
     <ClCompile Include="..\Private\VIBuffer_Cube.cpp" />
     <ClCompile Include="..\Private\Instance_Model.cpp" />
     <ClCompile Include="..\private\VIBuffer_Instance.cpp" />
+    <ClCompile Include="..\Private\Trail.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Rect.cpp" />
     <ClCompile Include="..\private\VIBuffer_UI_Instance.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Terrain.cpp" />
@@ -552,6 +553,7 @@ call Update_Lib.bat
     <ClInclude Include="..\Public\VIBuffer_Cube.h" />
     <ClInclude Include="..\Public\Instance_Model.h" />
     <ClInclude Include="..\public\VIBuffer_Instance.h" />
+    <ClInclude Include="..\Public\Trail.h" />
     <ClInclude Include="..\Public\VIBuffer_Rect.h" />
     <ClInclude Include="..\public\VIBuffer_UI_Instance.h" />
     <ClInclude Include="..\Public\VIBuffer_Terrain.h" />

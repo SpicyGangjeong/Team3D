@@ -1,7 +1,5 @@
 #include "Engine_Shader_Defines.hlsli"
 
-float PI = 3.141592;
-
 struct ParticleValue
 {
     float fSpeed;
@@ -312,12 +310,14 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
             //디스토션(노이즈) 텍스쳐로 uv를 왜곡함
 
             UV = UV + (vMtrlDistortion).rg * g_fNoiseDistortionIntensity;
+            
         }
         
  
         /* 최종 색깔  */
         vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, UV);
         
+ 
         
         if (g_vColor.a > 0)
             vMtrlDiffuse += g_vColor;
@@ -354,14 +354,14 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
         {
             float2 UV; // 이미지의 UV값
                
-            float2 vDistortionUV = In.vTexcoord + SelectLerpUV(g_vMaskDistortionUVGainAmount, (vNoiseUVMoveTime.x / vNoiseUVMoveTime.y), g_iMaskDistortionMoveLerpOption);
+            float2 vDistortionUV = In.vTexcoord + SelectLerpUV(g_vMaskDistortionUVGainAmount, (vDistortionUVMoveTime.x / vDistortionUVMoveTime.y), g_iMaskDistortionMoveLerpOption);
             
             vMtrlDistortion = g_DistortionTexture.Sample(DefaultSampler, vDistortionUV);
             
             //디스토션(노이즈) 텍스쳐로 uv를 왜곡함
-            vMaskTexcoord = vMaskTexcoord + (vMtrlDistortion - 0.5f).r / g_vUVCutting * g_fNoiseDistortionIntensity;
+            vMaskTexcoord = vMaskTexcoord + (vMtrlDistortion - 0.5f).r  * g_fNoiseDistortionIntensity;
             
-            vMtrlDiffuse *= vMtrlDistortion.r;
+
 
         }
         
@@ -529,8 +529,8 @@ PS_BLUR_OUT PS_BLUR(PS_BLUR_IN In)
             //0.5f를 빼는 이유는 중심을 0으로 옮겨서 양음수 방향으로 offset을 줄수 있다.
             vMtrlDistortion.rg -= 0.5f;
                         
-            //아마 분할되었다면 noise도 분할해야할듯 
-            vMtrlDistortion.rg /= g_vUVCutting;
+            ////아마 분할되었다면 noise도 분할해야할듯 
+            //vMtrlDistortion.rg /= g_vUVCutting;
             
             //디스토션(노이즈) 텍스쳐로 uv를 왜곡함
 
@@ -573,14 +573,13 @@ PS_BLUR_OUT PS_BLUR(PS_BLUR_IN In)
         {
             float2 UV; // 이미지의 UV값
                
-            float2 vDistortionUV = In.vTexcoord + SelectLerpUV(g_vMaskDistortionUVGainAmount, (vNoiseUVMoveTime.x / vNoiseUVMoveTime.y), g_iMaskDistortionMoveLerpOption);
+            float2 vDistortionUV = In.vTexcoord + SelectLerpUV(g_vMaskDistortionUVGainAmount, (vDistortionUVMoveTime.x / vDistortionUVMoveTime.y), g_iMaskDistortionMoveLerpOption);
             
             vMtrlDistortion = g_DistortionTexture.Sample(DefaultSampler, vDistortionUV);
             
             //디스토션(노이즈) 텍스쳐로 uv를 왜곡함
-            vMaskTexcoord = vMaskTexcoord + (vMtrlDistortion - 0.5f).r / g_vUVCutting * g_fNoiseDistortionIntensity;
-            
-            vMtrlDiffuse *= vMtrlDistortion.r;
+            vMaskTexcoord = vMaskTexcoord + (vMtrlDistortion - 0.5f).r  * g_fNoiseDistortionIntensity;
+           
 
         }
         

@@ -23,8 +23,8 @@ HRESULT CSpell_Overlay::Initialize(void* pArg)
 
 	Desc.fX = -160.f;
 	Desc.fY = 50.f;
-	Desc.fSizeX = 130.f;
-	Desc.fSizeY = 130.f;
+	Desc.fSizeX = 140.f;
+	Desc.fSizeY = 140.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -44,8 +44,9 @@ HRESULT CSpell_Overlay::Initialize(void* pArg)
 	m_fAngle = XMConvertToRadians(-135.f);
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 1.f;
-	m_vUVScale.y = 1.f; 
+	m_vUVScale.y = 1.f;
 	m_fCoolTime = 5.f;
+	m_fSortZ = 1.f;
 	m_iSkillType = ENUM_CLASS(SKILLTYPE::CONTROL);
 	return S_OK;
 }
@@ -182,7 +183,7 @@ HRESULT CSpell_Overlay::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fTime", &m_fTime, sizeof(_float))))
 	{
 		return E_FAIL;
-	}		
+	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFrame", &m_fFrame, sizeof(_float))))
 	{
 		return E_FAIL;
@@ -196,7 +197,7 @@ HRESULT CSpell_Overlay::Bind_ShaderResources()
 		return E_FAIL;
 	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_iSpellType", &m_iSkillType, sizeof(_float))))
-	{														
+	{
 		return E_FAIL;
 	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOwnerAlpha", &m_fOwnerAlpha, sizeof(_float))))
@@ -214,7 +215,7 @@ HRESULT CSpell_Overlay::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_iImageCountY", &m_iImageFrameY, sizeof(_int))))
 	{
 		return E_FAIL;
-	} 
+	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDeltaV", &m_vUVScale.y, sizeof(_float))))
 	{
 		return E_FAIL;

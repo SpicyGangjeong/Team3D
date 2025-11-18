@@ -27,12 +27,15 @@ HRESULT CFSM::Initialize(void* pArg)
 void CFSM::Add_State(_uint iIndex, CState* state)
 {
 	m_States[iIndex] = state;
+	m_States[iIndex]->Set_State(iIndex);
 	m_States[iIndex]->Set_Owner(m_pOwner);
 	m_States[iIndex]->Set_Component();
 }
 
 void CFSM::Change_State(_uint iIndex)
 {
+	m_pPrevious = m_pCurrent;
+
 	if (m_pCurrent)
 		m_pCurrent->Exit();
 
@@ -44,9 +47,39 @@ void CFSM::Change_State(_uint iIndex)
 
 void CFSM::Update(_float fTimeDelta)
 {
-	if (m_pCurrent)
-		m_pCurrent->Update(fTimeDelta);
+	vector<CState*> States;
+
+	CState* pCurrent = m_pCurrent;
+
+	while (pCurrent) 
+	{
+		States.push_back(pCurrent);
+		pCurrent = pCurrent->Get_Parent();
+	}
+
+	for (_int i = (_int)States.size() - 1; i >= 0; --i) {
+		States[i]->Update(fTimeDelta);
+	}
 }
+
+_uint CFSM::Get_CurrState()
+{
+	return m_pCurrent->Get_State();
+}
+
+_uint CFSM::Get_PrevState()
+{
+	return m_pPrevious->Get_State();
+}
+
+void CFSM::Set_Parent(FSMSTATE::ESTATE Child, FSMSTATE::ESTATE Parent)
+{
+	CState* pChild = m_States[Child];
+	CState* pParent = m_States[Parent];
+	if (pChild && pParent)
+		pChild->Set_Parent(pParent);
+}
+
 
 CFSM* CFSM::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
@@ -79,6 +112,7 @@ void CFSM::Free()
     __super::Free();
 
 	SAFE_RELEASE(m_pCurrent);
+	SAFE_RELEASE(m_pPrevious);
 
 	for (auto& states : m_States)
 	{

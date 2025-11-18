@@ -84,7 +84,6 @@ void CSpell_Slot::Update(_float fTimeDelta)
 		}
 	}
 	m_fTime += fTimeDelta * m_fTimeMult;
-
 	__super::Update(fTimeDelta);
 
 }
@@ -95,11 +94,14 @@ void CSpell_Slot::Late_Update(_float fTimeDelta)
 	{
 		return;
 	}
-	if (m_bVisible) {
-		if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
+	if (m_bVisible)
+	{
+		if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius()))
+		{
 			m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
 		}
 	}
+	__super::Late_Update(fTimeDelta);
 }
 
 HRESULT CSpell_Slot::Render()
@@ -112,11 +114,11 @@ HRESULT CSpell_Slot::Render()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pVIBufferCom->Bind_Resources())) 
+	if (FAILED(m_pVIBufferCom->Bind_Resources()))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pVIBufferCom->Render())) 
+	if (FAILED(m_pVIBufferCom->Render()))
 	{
 		return E_FAIL;
 	}
@@ -176,7 +178,7 @@ HRESULT CSpell_Slot::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_MeterIconBack_4K"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_ActionItemGoldleaf_4K"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}

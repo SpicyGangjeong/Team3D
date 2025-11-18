@@ -191,6 +191,28 @@ PS_OUT PS_Key_Hold_Rotation(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_Mission(PS_IN In)
+{
+    PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+    
+    float4 Color = float4(0.f, 0.f, 0.f, 0.f);
+    
+    float4 tex1 = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    float4 tex2 = g_Texture1.Sample(DefaultSampler, In.vTexcoord);
+    
+    tex1.a *= 0.5f;
+
+    if (tex1.a >= 0.f)
+        Color = tex1;
+    
+    Color = lerp(Color, tex2, tex2.a);
+    
+    Color.a *= Alpha;
+    Out.vColor = Color;
+    return Out;
+}
+
 PS_OUT PS_Sptire_Sheet(PS_IN In)
 {
     PS_OUT Out;
@@ -320,13 +342,12 @@ PS_OUT PS_Rotation(PS_IN In)
     Rotation.x = uv.x * cos(g_fAngle) - uv.y * sin(g_fAngle);
     Rotation.y = uv.x * sin(g_fAngle) + uv.y * cos(g_fAngle);
     Rotation += center;
-    
-    float4 tex1 = g_Texture.Sample(ClampSampler, Rotation);
-    float4 tex2 = g_Texture1.Sample(DefaultSampler, In.vTexcoord);
-    float3 BGColor = float3(1.f, 1.f, 1.f);
-        
+            
     if (g_iSpellType == 0)
     {
+        float4 tex1 = g_Texture.Sample(ClampSampler, Rotation);
+        float4 tex2 = g_Texture1.Sample(DefaultSampler, In.vTexcoord);
+        
         tex1.rgb *= 0.4f;
         color = tex1;
         tex2.rgb *= 0.3f;
@@ -337,9 +358,8 @@ PS_OUT PS_Rotation(PS_IN In)
         color.a *= Alpha;
 
         Out.vColor = color;
+        return Out;
     }
-    else
-    {
         //int iTotalFrame = g_iImageCountX * g_iImageCountY;
         //int iCurrentFrame = int(floor(g_fTime / g_fFrame)) % iTotalFrame;
         //int iFrameX = iCurrentFrame % g_iImageCountX;
@@ -354,63 +374,50 @@ PS_OUT PS_Rotation(PS_IN In)
         //float4 tex3 = g_Texture2.Sample(DefaultSampler, UV);
         //if (tex3.r <= 0.5f)
         //    discard;
-        switch (g_iSpellType)
-        {
-            case 1:
-                BGColor = float3(208.f, 179.f, 54.f) / 255.f;
-                tex1.rgb *= BGColor;
-                break;
-        
-            case 2:
-                BGColor = float3(89.f, 32.f, 215.f) / 255.f;
-                tex1.rgb *= BGColor;
-                break;
-        
-            case 3:
-                BGColor = float3(190.f, 46., 34.f) / 255.f;
-                tex1.rgb *= BGColor;
-                break;
-        
-            case 4:
-                BGColor = float3(37.f, 129.f, 162.f) / 255.f;
-                tex1.rgb *= BGColor;
-                break;
-        
-            case 5:
-                BGColor = float3(134.f, 171.f, 78.f) / 255.f;
-                tex1.rgb *= BGColor;
-                break;
-        
-            case 6:
-                BGColor = float3(0.f, 80.f, 55.f) / 255.f;
-                tex1.rgb *= BGColor;
-                break;
-        
-            case 7:
-                BGColor = float3(0.f, 0.f, 0.f);
-                tex1.rgb *= BGColor;
-                break;
-        }
-        
-        color = tex1;
+    float3 BGColor = float3(1.f, 1.f, 1.f);
     
-        //color = tex3;
-    
-        if (tex2.a >= 0.9f)
-            color = tex2;
-    
-        float CoolTime = 1.f - g_fDeltaV;
-        
-        if (In.vTexcoord.y <= CoolTime)
-        {
-            color.a = 0.f;
-        }
-            
-        color.a *= Alpha;
-
-        Out.vColor = color;
+    switch (g_iSpellType)
+    {
+        case 1:
+            BGColor = float3(208.f, 179.f, 54.f) / 255.f;
+            break;
+        case 2:
+            BGColor = float3(89.f, 32.f, 215.f) / 255.f;
+            break;
+        case 3:
+            BGColor = float3(190.f, 46., 34.f) / 255.f;
+            break;
+        case 4:
+            BGColor = float3(37.f, 129.f, 162.f) / 255.f;
+            break;
+        case 5:
+            BGColor = float3(134.f, 171.f, 78.f) / 255.f;
+            break;
+        case 6:
+            BGColor = float3(0.f, 80.f, 55.f) / 255.f;
+            break;
+        case 7:
+            BGColor = float3(0.f, 0.f, 0.f);
+            break;
     }
-       
+    
+    float4 tex1 = g_Texture.Sample(ClampSampler, Rotation);
+    tex1.rgb *= BGColor;
+    float4 tex2 = g_Texture1.Sample(DefaultSampler, In.vTexcoord);
+    if (tex2.a >= 0.9f)
+        tex1 = tex2;
+    color = tex1;
+    //color = tex3;
+
+    float CoolTime = 1.f - g_fDeltaV;
+    if (In.vTexcoord.y <= CoolTime)
+    {
+        color.a = 0.f;
+    }
+
+
+    color.a *= Alpha;
+    Out.vColor = color;
     return Out;
 }
 
@@ -518,6 +525,16 @@ technique11 PosTexTechnique11
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Key_Hold_Rotation();
+    }
+
+    pass Mission
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Mission();
     }
 
     pass QuestType

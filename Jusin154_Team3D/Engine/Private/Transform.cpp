@@ -336,12 +336,23 @@ void CTransform::Free()
 void CTransform::Describe_Entity()
 {
 	if (GUI::TreeNode("Transform")) {
-		GUI::DragFloat4("Right", (_float*)(&m_WorldMatrix._11), 1.f, 0.f, 0.f, "%.3f", ImGuiSliderFlags_NoInput);
-		GUI::DragFloat4("Up", (_float*)(&m_WorldMatrix._21), 1.f, 0.f, 0.f, "%.3f", ImGuiSliderFlags_NoInput);
-		GUI::DragFloat4("Look", (_float*)(&m_WorldMatrix._31), 1.f, 0.f, 0.f, "%.3f", ImGuiSliderFlags_NoInput);
-		GUI::DragFloat4("Pos", (_float*)(&m_WorldMatrix._41), 1.f, 0.f, 0.f, "%.3f", ImGuiSliderFlags_NoInput);
+
+		GUI::DragFloat4("Right", (_float*)(&m_WorldMatrix._11), 1.f, 0.f, 0.f, "%.3f");
+		GUI::DragFloat4("Up", (_float*)(&m_WorldMatrix._21), 1.f, 0.f, 0.f, "%.3f");
+		GUI::DragFloat4("Look", (_float*)(&m_WorldMatrix._31), 1.f, 0.f, 0.f, "%.3f");
+		GUI::DragFloat4("Pos", (_float*)(&m_WorldMatrix._41), 1.f, 0.f, 0.f, "%.3f");
+
+
+		static _float3 s_vRotation = {};
+
+		if(GUI::InputFloat3("Rotation", (_float*)&s_vRotation))
+		{
+			Rotation(s_vRotation.x, s_vRotation.y, s_vRotation.z);
+		}
 
 		GUI::TreePop();
 		GUI::Spacing();
+
+		
 	}
 }

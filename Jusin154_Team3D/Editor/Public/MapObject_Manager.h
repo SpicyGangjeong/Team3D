@@ -59,6 +59,7 @@ private:
 
 	HRESULT		Save_ContainerData(const _char* pFileName, const _char* pContainerName);
 	HRESULT		Load_ContainerData(const _char* pFileName, const _char* pContainerName);
+	HRESULT		Load_ContainerToMapObject(const _char* pFileName, const _char* pContainerName);
 #pragma endregion
 
 	void		Update_PrototypeList();
