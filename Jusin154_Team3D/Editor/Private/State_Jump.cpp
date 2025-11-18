@@ -10,7 +10,20 @@ CState_Jump::CState_Jump()
 
 void CState_Jump::Enter()
 {
-	auto anim = m_pOwner->Get_AnimInfo(FSMSTATE::JUMP);
+	if (m_pOwner->Check(FSMSTATE::SPRINT))
+	{
+		auto anim = m_pOwner->Get_AnimInfo(STATEANIM::JUMP_SPRINT);
+		m_pModel->Set_AnimationIndex(anim.first, anim.second);
+		return;
+	}
+	if (m_pOwner->Check(FSMSTATE::WALK))
+	{
+		auto anim = m_pOwner->Get_AnimInfo(STATEANIM::JUMP_WALK);
+		m_pModel->Set_AnimationIndex(anim.first, anim.second);
+		return;
+	}
+
+	auto anim = m_pOwner->Get_AnimInfo(STATEANIM::JUMP);
 	m_pModel->Set_AnimationIndex(anim.first, anim.second);
 }
 

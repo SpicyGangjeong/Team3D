@@ -10,7 +10,7 @@ CState_Land::CState_Land()
 
 void CState_Land::Enter()
 {
-	auto anim = m_pOwner->Get_AnimInfo(FSMSTATE::LAND);
+	auto anim = m_pOwner->Get_AnimInfo(STATEANIM::LAND);
 	m_pModel->Set_AnimationIndex(anim.first, anim.second);
 }
 

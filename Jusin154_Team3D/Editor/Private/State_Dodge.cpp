@@ -10,7 +10,7 @@ CState_Dodge::CState_Dodge()
 
 void CState_Dodge::Enter()
 {
-	auto anim = m_pOwner->Get_AnimInfo(FSMSTATE::DODGE);
+	auto anim = m_pOwner->Get_AnimInfo(STATEANIM::DODGE);
 	m_pModel->Set_AnimationIndex(anim.first, anim.second);
 }
 

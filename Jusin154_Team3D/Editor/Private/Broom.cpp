@@ -1,54 +1,56 @@
 ﻿#include "pch.h"
-#include "Goblin.h"
+#include "Broom.h"
 
 #include "GameInstance.h"
-#include "Player.h"
 
-CGoblin::CGoblin(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CMonster(pDevice, pContext)
+CBroom::CBroom(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	: CGameObject(pDevice, pContext)
 {
 }
 
-CGoblin::CGoblin(const CGoblin& Prototype)
-	: CMonster(Prototype)
+CBroom::CBroom(const CBroom& Prototype)
+	: CGameObject(Prototype)
 {
 }
 
-HRESULT CGoblin::Initialize_Prototype()
+HRESULT CBroom::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CGoblin::Initialize(void* pArg)
+HRESULT CBroom::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	m_pModelCom->Set_AnimationIndex(1);
+	m_pModelCom->Set_AnimationIndex(5);
 
 	return S_OK;
 }
 
-void CGoblin::Priority_Update(_float fTimeDelta)
+void CBroom::Priority_Update(_float fTimeDelta)
 {
-
 }
 
-void CGoblin::Update(_float fTimeDelta)
+void CBroom::Update(_float fTimeDelta)
 {
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 }
 
-void CGoblin::Late_Update(_float fTimeDelta)
+void CBroom::Late_Update(_float fTimeDelta)
 {
 	m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
 }
 
-HRESULT CGoblin::Render()
+HRESULT CBroom::Render()
 {
+	if (!m_pModelCom)
+		return S_OK;
+
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
@@ -80,7 +82,7 @@ HRESULT CGoblin::Render()
 	return S_OK;
 }
 
-HRESULT CGoblin::Ready_Components()
+HRESULT CBroom::Ready_Components()
 {
 	CTransform::TRANSFORM_DESC Desc = {};
 
@@ -90,21 +92,25 @@ HRESULT CGoblin::Ready_Components()
 
 	__super::Ready_Components(&Desc);
 
-	m_strModelPrototypeTag = TEXT("Prototype_Component_Goblin_Model");
-
 	/* Com_Model */
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_strModelPrototypeTag,
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_Broom_Model"),
 		reinterpret_cast<CComponent**>(&m_pModelCom))))
+		return E_FAIL;
+
+	/* Com_Shader */
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_ANIMMESH,
+		reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
 	return S_OK;
 }
 
-HRESULT CGoblin::Bind_ShaderResources()
+HRESULT CBroom::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
 		return E_FAIL;
 	}
+
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))) {
 		return E_FAIL;
 	}
@@ -115,39 +121,46 @@ HRESULT CGoblin::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 		return E_FAIL;
 	}
+
 	return S_OK;
 }
 
-CGoblin* CGoblin::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CBroom* CBroom::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CGoblin* pInstance = new CGoblin(pDevice, pContext);
+	CBroom* pInstance = new CBroom(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CGoblin");
+		MSG_BOX("Failed to Created : CBroom");
 		SAFE_RELEASE(pInstance);
 	}
+
 	return pInstance;
 }
 
-CGameObject* CGoblin::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CBroom::Clone(void* pArg, CGameObject* pOwner)
 {
-	CGoblin* pInstance = new CGoblin(*this);
-
+	CBroom* pInstance = new CBroom(*this);
+	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CGoblin");
+		MSG_BOX("Failed to Cloned : CBroom");
 		SAFE_RELEASE(pInstance);
 	}
+
 	return pInstance;
 }
 
-void CGoblin::Free()
+void CBroom::Free()
 {
 	__super::Free();
 
+	SAFE_RELEASE(m_pShaderCom);
+	SAFE_RELEASE(m_pModelCom);
+
+
 }
 
-void CGoblin::Describe_Entity()
+void CBroom::Describe_Entity()
 {
 }

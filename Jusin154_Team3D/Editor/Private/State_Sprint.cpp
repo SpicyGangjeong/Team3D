@@ -9,7 +9,7 @@ CState_Sprint::CState_Sprint()
 
 void CState_Sprint::Enter()
 {
-	auto anim = m_pOwner->Get_AnimInfo(FSMSTATE::SPRINT);
+	auto anim = m_pOwner->Get_AnimInfo(STATEANIM::SPRINT);
 	m_pModel->Set_AnimationIndex(anim.first, anim.second);
 }
 
@@ -27,10 +27,16 @@ void CState_Sprint::Exit()
 _bool CState_Sprint::CheckExitState()
 {
 	if (!m_pOwner->Check(FSMSTATE::SPRINT))
+	{
+		m_pOwner->Reset_Sprint();
 		m_pFSM->Change_State(FSMSTATE::WALK);
-	
-	else if (!m_pOwner->Check(FSMSTATE::WALK))
-		m_pFSM->Change_State(FSMSTATE::IDLE);
+	}
+
+	else if (m_pOwner->Check(FSMSTATE::DODGE))
+		m_pFSM->Change_State(FSMSTATE::DODGE);
+
+	if (m_pOwner->Check(FSMSTATE::JUMP))
+		m_pFSM->Change_State(FSMSTATE::JUMP);
 
 	return false;
 }

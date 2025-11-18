@@ -17,7 +17,7 @@
 #include "Terrain.h"
 #include "Player.h"
 #include "Goblin.h"
-
+#include "Broom.h"
 CLevel_ObjectViewer::CLevel_ObjectViewer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
 {
@@ -368,9 +368,12 @@ void CLevel_ObjectViewer::Dummy_Object_Setting()
 	GUI::Begin("Object_Info");
 	if (!m_Objects.empty())
 	{
-		_float3 Pos;
-		XMStoreFloat3(&Pos, m_Objects[m_iObjectIndex]->Get_Component<CTransform>()->Get_State(STATE::POSITION));
-		GUI::DragFloat3("Pos", (_float*)&Pos);
+		_float4 Pos;
+		XMStoreFloat4(&Pos, m_Objects[m_iObjectIndex]->Get_Component<CTransform>()->Get_State(STATE::POSITION));
+		if (GUI::DragFloat3("Pos", (_float*)&Pos))
+		{
+			m_Objects[m_iObjectIndex]->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&Pos));
+		}
 
 		Show_ObjectList();
 
@@ -698,6 +701,9 @@ HRESULT CLevel_ObjectViewer::Ready_Layer_Dummy(const _wstring& strLayerTag)
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
 		return E_FAIL;
 
 	return S_OK;
