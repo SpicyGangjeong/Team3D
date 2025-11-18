@@ -6,22 +6,28 @@ Texture2D g_DepthTexture;
 int g_iImageCountX;
 int g_iImageCountY;
 
+uint g_iIndexU;
+uint g_iIndexV;
+uint g_iQuestType;
+uint g_iSpellType;
+
+float g_fPI;
 float g_fFar;
 float g_fTime;
 float g_fTimeMult;
 float g_fFrame;
+float g_fDeltaU;
+float g_fDeltaV;
 float g_fAlpha;
 float g_fOwnerAlpha;
 float g_fCanvasAlpha;
-float g_fDeltaU;
-float g_fDeltaV;
-uint g_iIndexU;
-uint g_iIndexV;
-float4 g_fNine_Slice;
+float g_fAngle;
+float g_fCoolTime;
+
 float2 g_fOrigin_Size;
 float2 g_fCurrent_Size;
-uint g_iQuestType;
-float g_fPI;
+
+float4 g_fNine_Slice;
 
 Texture2D g_Texture;
 Texture2D g_Texture1;
@@ -71,12 +77,13 @@ struct PS_OUT
 PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out;
-    
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     float4 Color = g_Texture.Sample(DefaultSampler, In.vTexcoord);
     
     if (Color.a <= 0.1f)
         discard;
     
+    Color.a *= Alpha;
     Out.vColor = Color;
     return Out;
 }
@@ -84,9 +91,11 @@ PS_OUT PS_MAIN(PS_IN In)
 PS_OUT PS_AlphaBlend(PS_IN In)
 {
     PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     
     float4 Color = g_Texture.Sample(DefaultSampler, In.vTexcoord);
 
+    Color.a *= Alpha;
     Out.vColor = Color;
     
     return Out;
@@ -95,45 +104,47 @@ PS_OUT PS_AlphaBlend(PS_IN In)
 PS_OUT PS_Clamp(PS_IN In)
 {
     PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     
     float4 Color = g_Texture.Sample(DefaultSampler, In.vTexcoord);
 
+    Color.a *= Alpha;
     Out.vColor = Color;
-
     
     return Out;
 }
 
-PS_OUT PS_Cursor(PS_IN In) 
+PS_OUT PS_Cursor(PS_IN In)
 {
     PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     
-    float4 Color = float4(0.f, 0.f, 0.f, 0.f); 
-    float4 White = float4(1.f, 1.f, 1.f, 1.f); 
+    float4 Color = float4(0.f, 0.f, 0.f, 0.f);
+    float4 White = float4(1.f, 1.f, 1.f, 1.f);
     
-    float2 UV = In.vTexcoord; 
-    float2 Center = float2(0.5f, 0.5f); 
+    float2 UV = In.vTexcoord;
+    float2 Center = float2(0.5f, 0.5f);
     
-    float CW = -g_fTime; 
-    float CCW = g_fTime; 
+    float CW = -g_fTime;
+    float CCW = g_fTime;
     
-    float2 RedCircle = UV; 
-    float2 RedUV = UV - Center; 
+    float2 RedCircle = UV;
+    float2 RedUV = UV - Center;
                                                                         
-    RedCircle.x = RedUV.x * cos(CCW) - RedUV.y * sin(CCW); 
-    RedCircle.y = RedUV.x * sin(CCW) + RedUV.y * cos(CCW); 
-    RedCircle = RedCircle + Center; 
+    RedCircle.x = RedUV.x * cos(CCW) - RedUV.y * sin(CCW);
+    RedCircle.y = RedUV.x * sin(CCW) + RedUV.y * cos(CCW);
+    RedCircle = RedCircle + Center;
     
-    float2 BlueCircle = UV; 
+    float2 BlueCircle = UV;
     float2 BlueUV = UV - Center;
                                                                         
-    BlueCircle.x = BlueUV.x * cos(CW) - BlueUV.y * sin(CW); 
-    BlueCircle.y = BlueUV.x * sin(CW) + BlueUV.y * cos(CW); 
-    BlueCircle = BlueCircle + Center; 
+    BlueCircle.x = BlueUV.x * cos(CW) - BlueUV.y * sin(CW);
+    BlueCircle.y = BlueUV.x * sin(CW) + BlueUV.y * cos(CW);
+    BlueCircle = BlueCircle + Center;
     
                                                                    
-    float4 Texture1 = g_Texture.Sample(ClampSampler, RedCircle);   
-    float4 Texture2 = g_Texture2.Sample(ClampSampler, BlueCircle); 
+    float4 Texture1 = g_Texture.Sample(ClampSampler, RedCircle);
+    float4 Texture2 = g_Texture2.Sample(ClampSampler, BlueCircle);
     
     if (Texture1.r >= 0.7f)                                            
         Color = Texture1;
@@ -144,7 +155,9 @@ PS_OUT PS_Cursor(PS_IN In)
     if (all(Color.rgb <= 0.5f))                                         
         discard;
     
-    Color = White; 
+    Color = White;
+    
+    Color.a *= Alpha;
     
     Out.vColor = Color;
     
@@ -154,6 +167,7 @@ PS_OUT PS_Cursor(PS_IN In)
 PS_OUT PS_Key_Hold_Rotation(PS_IN In)
 {
     PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
 
     float2 uv = In.vTexcoord;
 
@@ -170,30 +184,53 @@ PS_OUT PS_Key_Hold_Rotation(PS_IN In)
 
     tex.rgb = (angle <= rotation) ? 1.0 : tex.rgb;
 
+    tex.a *= Alpha;
+    
     Out.vColor = tex;
     
+    return Out;
+}
+
+PS_OUT PS_Mission(PS_IN In)
+{
+    PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+    
+    float4 Color = float4(0.f, 0.f, 0.f, 0.f);
+    
+    float4 tex1 = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    float4 tex2 = g_Texture1.Sample(DefaultSampler, In.vTexcoord);
+    
+    tex1.a *= 0.5f;
+
+    if (tex1.a >= 0.f)
+        Color = tex1;
+    
+    Color = lerp(Color, tex2, tex2.a);
+    
+    Color.a *= Alpha;
+    Out.vColor = Color;
     return Out;
 }
 
 PS_OUT PS_Sptire_Sheet(PS_IN In)
 {
     PS_OUT Out;
-    
-    float4 Color = float4(0.f, 0.f, 0.f, 0.f); 
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+    float4 Color = float4(0.f, 0.f, 0.f, 0.f);
     float2 UV = In.vTexcoord;
     
     int iTotalFrame = g_iImageCountX * g_iImageCountY;
     
-    int iCurrentFrame = int(floor(g_fTime / g_fFrame)) % iTotalFrame; 
+    int iCurrentFrame = int(floor(g_fTime / g_fFrame)) % iTotalFrame;
     
-    int iFrameX = iCurrentFrame % g_iImageCountX; 
-    int iFrameY = iCurrentFrame / g_iImageCountX; 
+    int iFrameX = iCurrentFrame % g_iImageCountX;
+    int iFrameY = iCurrentFrame / g_iImageCountX;
     
-    float fFreamWidth = 1.0 / g_iImageCountX;  
-    float fFreamHeight = 1.0 / g_iImageCountY; 
+    float fFreamWidth = 1.0 / g_iImageCountX;
+    float fFreamHeight = 1.0 / g_iImageCountY;
     
-    UV.x = UV.x * fFreamWidth + iFrameX * fFreamWidth;  
+    UV.x = UV.x * fFreamWidth + iFrameX * fFreamWidth;
     UV.y = UV.y * fFreamHeight + iFrameY * fFreamHeight;
     
     float4 Texture = g_Texture.Sample(DefaultSampler, UV);
@@ -203,7 +240,7 @@ PS_OUT PS_Sptire_Sheet(PS_IN In)
     if (Color.r <= 0.4f)
         discard;
     
-    Color.a = Alpha;
+    Color.a *= Alpha;
     
     Out.vColor = Color;
     
@@ -213,6 +250,7 @@ PS_OUT PS_Sptire_Sheet(PS_IN In)
 PS_OUT PS_QuestType(PS_IN In)
 {
     PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     float3 Color = float3(253.f, 207.f, 11.f) / 255.f;
     float4 Texture1 = g_Texture.Sample(DefaultSampler, In.vTexcoord);
     
@@ -224,6 +262,7 @@ PS_OUT PS_QuestType(PS_IN In)
         }
     }
 
+    Texture1.a *= Alpha;
     Out.vColor = Texture1;
     
     return Out;
@@ -232,9 +271,11 @@ PS_OUT PS_QuestType(PS_IN In)
 PS_OUT PS_UVMult(PS_IN In)
 {
     PS_OUT Out;
-
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     float4 color = g_Texture.Sample(DefaultSampler, In.vTexcoord);
     
+    
+    color.a *= Alpha;
     Out.vColor = color;
 
     return Out;
@@ -243,6 +284,7 @@ PS_OUT PS_UVMult(PS_IN In)
 PS_OUT PS_NineSlice(PS_IN In)
 {
     PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     float Left = g_fNine_Slice.x / g_fOrigin_Size.x;
     float Right = (g_fOrigin_Size.x - g_fNine_Slice.y) / g_fOrigin_Size.x;
     float Top = g_fNine_Slice.z / g_fOrigin_Size.y;
@@ -253,11 +295,11 @@ PS_OUT PS_NineSlice(PS_IN In)
     float2 UV = In.vTexcoord * 0.5f + 0.5f;
     float2 ScaledUV = UV;
     
-    if(UV.x < Left)
+    if (UV.x < Left)
     {
         ScaledUV.x = UV.x;
     }
-    else if(UV.x > Right)
+    else if (UV.x > Right)
     {
         ScaledUV.x = 1.0f - ((1.0f - UV.x) / ratio.x);
     }
@@ -266,11 +308,11 @@ PS_OUT PS_NineSlice(PS_IN In)
         ScaledUV.x = Left + (UV.x - Left) / ratio.x;
     }
     
-    if(UV.y < Top)
+    if (UV.y < Top)
     {
         ScaledUV.y = UV.y;
     }
-    else if(UV.y > Bottom)
+    else if (UV.y > Bottom)
     {
         ScaledUV.y = 1.0f - ((1.0f - UV.y) / ratio.y);
     }
@@ -281,8 +323,145 @@ PS_OUT PS_NineSlice(PS_IN In)
     
     float4 color = g_Texture.Sample(ClampSampler, ScaledUV);
     
+    color.a *= Alpha;
     Out.vColor = color;
+    return Out;
+}
 
+PS_OUT PS_Rotation(PS_IN In)
+{
+    PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+   
+    float4 color = float4(0.f, 0.f, 0.f, 0.f);
+    
+    float2 center = float2(0.5f, 0.5f);
+    float2 uv = In.vTexcoord - center;
+    uv *= sqrt(2.0f);
+    float2 Rotation = In.vTexcoord;
+    Rotation.x = uv.x * cos(g_fAngle) - uv.y * sin(g_fAngle);
+    Rotation.y = uv.x * sin(g_fAngle) + uv.y * cos(g_fAngle);
+    Rotation += center;
+            
+    if (g_iSpellType == 0)
+    {
+        float4 tex1 = g_Texture.Sample(ClampSampler, Rotation);
+        float4 tex2 = g_Texture1.Sample(DefaultSampler, In.vTexcoord);
+        
+        tex1.rgb *= 0.4f;
+        color = tex1;
+        tex2.rgb *= 0.3f;
+        
+        if (tex2.a >= 0.9f)
+            color = tex2;
+    
+        color.a *= Alpha;
+
+        Out.vColor = color;
+        return Out;
+    }
+        //int iTotalFrame = g_iImageCountX * g_iImageCountY;
+        //int iCurrentFrame = int(floor(g_fTime / g_fFrame)) % iTotalFrame;
+        //int iFrameX = iCurrentFrame % g_iImageCountX;
+        //int iFrameY = iCurrentFrame / g_iImageCountX;
+        //float fFreamWidth = 1.0 / g_iImageCountX;
+        //float fFreamHeight = 1.0 / g_iImageCountY;
+    
+        //float2 UV = In.vTexcoord;
+        //UV.x = UV.x * fFreamWidth + iFrameX * fFreamWidth;
+        //UV.y = UV.y * fFreamHeight + iFrameY * fFreamHeight;
+    
+        //float4 tex3 = g_Texture2.Sample(DefaultSampler, UV);
+        //if (tex3.r <= 0.5f)
+        //    discard;
+    float3 BGColor = float3(1.f, 1.f, 1.f);
+    
+    switch (g_iSpellType)
+    {
+        case 1:
+            BGColor = float3(208.f, 179.f, 54.f) / 255.f;
+            break;
+        case 2:
+            BGColor = float3(89.f, 32.f, 215.f) / 255.f;
+            break;
+        case 3:
+            BGColor = float3(190.f, 46., 34.f) / 255.f;
+            break;
+        case 4:
+            BGColor = float3(37.f, 129.f, 162.f) / 255.f;
+            break;
+        case 5:
+            BGColor = float3(134.f, 171.f, 78.f) / 255.f;
+            break;
+        case 6:
+            BGColor = float3(0.f, 80.f, 55.f) / 255.f;
+            break;
+        case 7:
+            BGColor = float3(0.f, 0.f, 0.f);
+            break;
+    }
+    
+    float4 tex1 = g_Texture.Sample(ClampSampler, Rotation);
+    tex1.rgb *= BGColor;
+    float4 tex2 = g_Texture1.Sample(DefaultSampler, In.vTexcoord);
+    if (tex2.a >= 0.9f)
+        tex1 = tex2;
+    color = tex1;
+    //color = tex3;
+
+    float CoolTime = 1.f - g_fDeltaV;
+    if (In.vTexcoord.y <= CoolTime)
+    {
+        color.a = 0.f;
+    }
+
+
+    color.a *= Alpha;
+    Out.vColor = color;
+    return Out;
+}
+
+PS_OUT PS_Slot(PS_IN In)
+{
+    PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+   
+    float2 center = float2(0.5f, 0.5f);
+    float2 uv = In.vTexcoord - center;
+    uv *= sqrt(2.0f);
+    float2 Rotation = In.vTexcoord;
+    Rotation.x = uv.x * cos(g_fAngle) - uv.y * sin(g_fAngle);
+    Rotation.y = uv.x * sin(g_fAngle) + uv.y * cos(g_fAngle);
+    Rotation += center;
+    
+    float4 color = g_Texture.Sample(ClampSampler, Rotation);
+    
+    color.a *= Alpha;
+
+    Out.vColor = color;
+    
+    return Out;
+}
+
+PS_OUT PS_SpellAnim(PS_IN In)
+{
+    PS_OUT Out;
+    //float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+   
+    //float2 center = float2(0.5f, 0.5f);
+    //float2 uv = In.vTexcoord - center;
+    //uv *= sqrt(2.0f);
+    //float2 Rotation = In.vTexcoord;
+    //Rotation.x = uv.x * cos(g_fAngle) - uv.y * sin(g_fAngle);
+    //Rotation.y = uv.x * sin(g_fAngle) + uv.y * cos(g_fAngle);
+    //Rotation += center;
+    
+    //float4 color = g_Texture.Sample(ClampSampler, Rotation);
+    
+    //color.a *= Alpha;
+
+    //Out.vColor = color;
+    
     return Out;
 }
 
@@ -292,7 +471,7 @@ technique11 PosTexTechnique11
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
@@ -348,6 +527,16 @@ technique11 PosTexTechnique11
         PixelShader = compile ps_5_0 PS_Key_Hold_Rotation();
     }
 
+    pass Mission
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Mission();
+    }
+
     pass QuestType
     {
         SetRasterizerState(RS_Default);
@@ -378,4 +567,33 @@ technique11 PosTexTechnique11
         PixelShader = compile ps_5_0 PS_NineSlice();
     }
 
+    pass Rotation
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Rotation();
+    }
+
+    pass Slot
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Slot();
+    }
+
+    pass SpellAnim
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_SpellAnim();
+    }
 }

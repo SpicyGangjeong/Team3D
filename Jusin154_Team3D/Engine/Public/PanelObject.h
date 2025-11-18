@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "UIObject.h"
 
@@ -7,7 +7,7 @@ NS_BEGIN(Engine)
 class ENGINE_DLL CPanelObject abstract : public CUIObject
 {
 protected:
-	CPanelObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CPanelObject(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);
 	CPanelObject(const CPanelObject& rhs);
 	virtual ~CPanelObject() = default;
 
@@ -31,15 +31,20 @@ public:
 	virtual const vector<wstring> Element_Name();
 	virtual void ElementAllVisible(_bool bVisible);
 
+	virtual void Add_Function(wstring Name, function<void()> Evnet) override;
+	virtual void Function_Callback(wstring Name) override;
 protected:
-	virtual void Add_Element(wstring Name, class CGameObject* pPanel);
+	virtual void Add_Element(wstring Name, class CGameObject* pElement);
 	virtual _bool Chack_Visible() override;
 
 protected:
-	vector<class CGameObject*>			m_Elements;				// ÆĞ³ÎÀÌ ¿¤¸®¸ÕÃ÷¸¦ °ü¸®ÇÏ±â À§ÇØ ¸¸µë
-	vector<wstring>						m_ElementName;			// ¿¤¸®¸àÆ®µéÀÇ ÀÌ¸§À» ÀüÇØÁÖ±â À§ÇØ¼­
-	map<wstring, class CGameObject*>	m_Elements_map;			// Äµ¹ö½º¿¡¼­ ³»°¡ ¿øÇÏ´Â ÆĞ³ÎÀ» Ã£±â À§ÇØ¼­
-	_int								m_iElements_Count{};	// ÀüÃ¼ ¿¤¸®¸àÆ®ÀÇ °¹¼ö
+	vector<class CGameObject*>			m_Elements;				// íŒ¨ë„ì´ ì—˜ë¦¬ë¨¼ì¸ ë¥¼ ê´€ë¦¬í•˜ê¸° ìœ„í•´ ë§Œë“¬
+	vector<wstring>						m_ElementName;			// ì—˜ë¦¬ë©˜íŠ¸ë“¤ì˜ ì´ë¦„ì„ ì „í•´ì£¼ê¸° ìœ„í•´ì„œ
+	map<wstring, class CGameObject*>	m_Elements_map;			// ìº”ë²„ìŠ¤ì—ì„œ ë‚´ê°€ ì›í•˜ëŠ” íŒ¨ë„ì„ ì°¾ê¸° ìœ„í•´ì„œ
+
+	multimap<wstring, function<void()>>		m_ElementFunction_map;
+
+	_int								m_iElements_Count{};	// ì „ì²´ ì—˜ë¦¬ë©˜íŠ¸ì˜ ê°¯ìˆ˜
 
 private:
 	virtual class CGameObject* Find_Element(const wstring& Name);

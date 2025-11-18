@@ -133,9 +133,6 @@
     <Filter Include="02.Element\02.Component\06.Model">
       <UniqueIdentifier>{bcf90b04-c793-4f99-b64d-3f0321d9a8ce}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Element\01.GameObject\01.PartObject">
-      <UniqueIdentifier>{b3742605-653a-4bdf-bad9-329d993e7f52}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Element\01.GameObject\00.ContainerObject">
       <UniqueIdentifier>{acf78d53-8123-45d9-91d4-c038c6cc4872}</UniqueIdentifier>
     </Filter>
@@ -267,6 +264,15 @@
     </Filter>
     <Filter Include="02.Element\01.GameObject\Unit">
       <UniqueIdentifier>{a4560f1b-c4f4-4705-bbf8-6a60977d3211}</UniqueIdentifier>
+        </Filter>
+    <Filter Include="02.Element\01.GameObject\00.ContainerObject\01.PartObject">
+      <UniqueIdentifier>{b3742605-653a-4bdf-bad9-329d993e7f52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\02.VIBuffer\Instance\UI_nstance">
+      <UniqueIdentifier>{3266e85d-44bb-4144-bf85-fadc48d85a38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\07.RigidBody\20.Joint">
+      <UniqueIdentifier>{869c0ee8-a853-40d4-90ea-3e1501fa8529}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.Element\02.Component\02.VIBuffer\Trail">
       <UniqueIdentifier>{dae29f0c-1727-4423-a3ca-9ef27460520b}</UniqueIdentifier>
@@ -406,7 +412,7 @@
       <Filter>02.Element\01.GameObject\00.ContainerObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PartObject.cpp">
-      <Filter>02.Element\01.GameObject\01.PartObject</Filter>
+      <Filter>02.Element\01.GameObject\00.ContainerObject\01.PartObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Navigation.cpp">
       <Filter>02.Element\02.Component\05.Navigation</Filter>
@@ -506,6 +512,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Unit.cpp">
       <Filter>02.Element\01.GameObject\Unit</Filter>
+      </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_UI_Instance.cpp">
+      <Filter>02.Element\02.Component\02.VIBuffer\Instance\UI_nstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_Instance.cpp">
+      <Filter>02.Element\02.Component\02.VIBuffer\Instance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RigidBody_Dynamic_Joint.cpp">
+      <Filter>02.Element\02.Component\07.RigidBody\20.Joint</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Trail.cpp">
       <Filter>02.Element\02.Component\02.VIBuffer\Trail</Filter>
@@ -1011,7 +1026,7 @@
       <Filter>02.Element\01.GameObject\00.ContainerObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PartObject.h">
-      <Filter>02.Element\01.GameObject\01.PartObject</Filter>
+      <Filter>02.Element\01.GameObject\00.ContainerObject\01.PartObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Navigation.h">
       <Filter>02.Element\02.Component\05.Navigation</Filter>
@@ -1111,6 +1126,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\Unit.h">
       <Filter>02.Element\01.GameObject\Unit</Filter>
+       </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_UI_Instance.h">
+      <Filter>02.Element\02.Component\02.VIBuffer\Instance\UI_nstance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_Instance.h">
+      <Filter>02.Element\02.Component\02.VIBuffer\Instance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RigidBody_Dynamic_Joint.h">
+      <Filter>02.Element\02.Component\07.RigidBody\20.Joint</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Trail.h">
       <Filter>02.Element\02.Component\02.VIBuffer\Trail</Filter>
