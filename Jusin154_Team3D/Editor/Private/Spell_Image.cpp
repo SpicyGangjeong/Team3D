@@ -23,8 +23,8 @@ HRESULT CSpell_Image::Initialize(void* pArg)
 
 	Desc.fX = -160.f;
 	Desc.fY = 50.f;
-	Desc.fSizeX = 130.f;
-	Desc.fSizeY = 130.f;
+	Desc.fSizeX = 140.f;
+	Desc.fSizeY = 140.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -41,12 +41,14 @@ HRESULT CSpell_Image::Initialize(void* pArg)
 	m_fAngle = XMConvertToRadians(-135.f);
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 1.f;
+	m_fSortZ = 1.f;
 	m_iSkillType = ENUM_CLASS(SKILLTYPE::SHADOW);
 	return S_OK;
 }
 
 void CSpell_Image::Priority_Update(_float fTimeDelta)
-{if (!__super::Chack_Visible())
+{
+	if (!__super::Chack_Visible())
 	{
 		return;
 	}
