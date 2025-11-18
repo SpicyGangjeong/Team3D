@@ -25,11 +25,23 @@ void CState_Combat::Exit()
 
 _bool CState_Combat::CheckExitState()
 {
-    if (m_pOwner->Check(FSMSTATE::MOVE))
+    if (m_pOwner->Check(FSMSTATE::MOVE) && 
+        !m_pOwner->Check(FSMSTATE::COMBAT))
     {
         m_pFSM->Change_State(FSMSTATE::MOVE);
+
+        if (m_pOwner->Check(FSMSTATE::WALK))
+            m_pFSM->Change_State(FSMSTATE::WALK);
+
+        if (m_pOwner->Check(FSMSTATE::SPRINT))
+            m_pFSM->Change_State(FSMSTATE::SPRINT);
+
+        if (m_pOwner->Check(FSMSTATE::DODGE))
+            m_pFSM->Change_State(FSMSTATE::DODGE);
+
         return true;
     }
+
     return false;
 }
 

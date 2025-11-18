@@ -301,6 +301,18 @@
     <Filter Include="80.State\State_Combat\State_Dodge">
       <UniqueIdentifier>{b017e167-f48d-4417-a924-765ab802cff5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="80.State\State_Combat\State_Skill2">
+      <UniqueIdentifier>{3614836d-9988-4ec0-95a8-f8ebc25a9a13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\State_Idle\State_Idle_Turn">
+      <UniqueIdentifier>{98f012a4-2f13-456f-85ba-6929b1535de6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\State_Move\State_Jog">
+      <UniqueIdentifier>{3ad2f4c4-95e6-47fa-9f4c-b9fcdbd77277}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Broom">
+      <UniqueIdentifier>{a9862861-6eaa-4e04-b7f6-217a32db7db4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -591,6 +603,18 @@
     <ClInclude Include="..\Public\State_Combat.h">
       <Filter>80.State\State_Combat</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\State_Skill2.h">
+      <Filter>80.State\State_Combat\State_Skill2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Idle_Turn.h">
+      <Filter>80.State\State_Idle\State_Idle_Turn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Jog.h">
+      <Filter>80.State\State_Move\State_Jog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Broom.h">
+      <Filter>02.GameObjects\Broom</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -876,6 +900,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\State_Combat.cpp">
       <Filter>80.State\State_Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Skill2.cpp">
+      <Filter>80.State\State_Combat\State_Skill2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Idle_Turn.cpp">
+      <Filter>80.State\State_Idle\State_Idle_Turn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Jog.cpp">
+      <Filter>80.State\State_Move\State_Jog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Broom.cpp">
+      <Filter>02.GameObjects\Broom</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,15 +1,15 @@
 ﻿#include "pch.h"
-#include "State_Walk.h"
+#include "State_Jog.h"
 #include "Unit.h"
 
-CState_Walk::CState_Walk()
+CState_Jog::CState_Jog()
 	:CState()
 {
 }
 
-void CState_Walk::Enter()
+void CState_Jog::Enter()
 {
-	if(m_pOwner->Check(FSMSTATE::WALK_FWD))
+	if (m_pOwner->Check(FSMSTATE::WALK_FWD))
 	{
 		auto anim = m_pOwner->Get_AnimInfo(STATEANIM::WALK_FWD);
 		m_pModel->Set_AnimationIndex(anim.first, anim.second);
@@ -22,17 +22,17 @@ void CState_Walk::Enter()
 	}
 }
 
-void CState_Walk::Update(_float fTimeDelta)
+void CState_Jog::Update(_float fTimeDelta)
 {
 	if (CheckExitState())
 		return;
 }
 
-void CState_Walk::Exit()
+void CState_Jog::Exit()
 {
 }
 
-_bool CState_Walk::CheckExitState()
+_bool CState_Jog::CheckExitState()
 {
 	if (m_pOwner->Check(FSMSTATE::SPRINT))
 		m_pFSM->Change_State(FSMSTATE::SPRINT);
@@ -40,20 +40,17 @@ _bool CState_Walk::CheckExitState()
 	else if (m_pOwner->Check(FSMSTATE::DODGE))
 		m_pFSM->Change_State(FSMSTATE::DODGE);
 
-	else if (!m_pOwner->Check(FSMSTATE::WALK))
+	else if (!m_pOwner->Check(FSMSTATE::JOG))
 		m_pFSM->Change_State(FSMSTATE::IDLE);
-
-	if (m_pOwner->Check(FSMSTATE::JUMP))
-		m_pFSM->Change_State(FSMSTATE::JUMP);
 
 	return false;
 }
 
-void CState_Walk::Free()
+void CState_Jog::Free()
 {
 	__super::Free();
 }
 
-void CState_Walk::Describe_Entity()
+void CState_Jog::Describe_Entity()
 {
 }

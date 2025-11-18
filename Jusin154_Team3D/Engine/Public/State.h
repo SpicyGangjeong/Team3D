@@ -1,6 +1,22 @@
 ﻿#pragma once
 #include "Base.h"
 
+NS_BEGIN(STATEANIM)
+enum ESTATE
+{
+    IDLE, IDLE_TURN_L, IDLE_TURN_R, IDLE_TURN_BWD,
+    MOVE, 
+    WALK, WALK_FWD, WALK_BWD, WALK_STOP,
+    JOG,
+    SPRINT,
+    JUMP,JUMP_WALK,JUMP_SPRINT,
+    LAND,
+    DODGE,
+    COMBAT, LIGHT_ATTACK, CAST, SKILL, SKILL2,
+    END
+};
+NS_END
+
 NS_BEGIN(Engine)
 class CUnit;
 class CModel;

@@ -22,6 +22,7 @@
 #include "DummyObject.h"
 #include "Player.h"
 #include "Goblin.h"
+#include "Broom.h"
 #include <filesystem>
 
 #pragma endregion
@@ -1147,6 +1148,11 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 
 	/* For.Prototype_GameObject_Goblin */
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin>(g_iStaticLevel, CGoblin::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	/* For.Prototype_GameObject_Broom */
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroom>(g_iStaticLevel, CBroom::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	m_strMessage = TEXT("Loading Success!");
