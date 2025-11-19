@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "VIBuffer.h"
 
@@ -32,7 +32,7 @@ public:
 #endif // EDITOR_PROJECT
 
 public:
-	//ÀÎ½ºÅÏ½Ì ¸ğµ¨ Àü¿ë µå·Î¿ì, ¹ÙÀÎµù ÇÔ¼ö 
+	//ì¸ìŠ¤í„´ì‹± ëª¨ë¸ ì „ìš© ë“œë¡œìš°, ë°”ì¸ë”© í•¨ìˆ˜ 
 	virtual HRESULT Bind_Resources_Instance(ID3D11Buffer* pVBInstance, _uint iInstanceStride, _uint iBufferCount);
 	virtual HRESULT Render_Instance(_uint iNumInstance);
 	
@@ -41,7 +41,7 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 	HRESULT Ready_VertexBuffer_For_NonAnim(HANDLE hFile, DWORD& dwByte);
 	HRESULT Ready_VertexBuffer_For_Anim(HANDLE hFile, DWORD& dwByte);
-	// ¹ÙÀÌ³Ê¸®
+	// ë°”ì´ë„ˆë¦¬
 	virtual HRESULT Initialize_Prototype(MODEL eType, const class CModel* pModel, SaveMesh* _SaveMesh, _fmatrix PreTransformMatrix);
 	HRESULT Ready_VertexBuffer_For_NonAnim(SaveMesh* _SaveMesh, _fmatrix PreTransformMatrix);
 	HRESULT Ready_VertexBuffer_For_Anim(const class CModel* pModel, SaveMesh* _SaveMesh);
@@ -54,14 +54,14 @@ private:
 	vector<_int>		m_BoneIndices;
 	_float4x4*			m_pBoneMatrices = { nullptr };
 	vector<_float4x4>	m_offsetMatrices;
-	// ¹ÙÀÌ³Ê¸®
+	// ë°”ì´ë„ˆë¦¬
 	std::vector<_uint>   m_Indices;
 	std::vector<_float3> m_Vertices;
 	//
 
 public:
 	static CMesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, HANDLE hFile, DWORD& dwByte);
-	// ¹ÙÀÌ³Ê¸®
+	// ë°”ì´ë„ˆë¦¬
 	static CMesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const class CModel* pModel, SaveMesh* _SaveMesh, _fmatrix PreTransformMatrix);
 	//
 	virtual CMesh* Clone(void* pArg, class CGameObject* pOwner = nullptr) override;

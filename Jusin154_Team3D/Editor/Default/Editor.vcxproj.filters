@@ -271,6 +271,12 @@
     <Filter Include="02.GameObjects\Dummys\DummyPhysX\00.Callback\HitReport\Playable">
       <UniqueIdentifier>{83781d7f-b84d-45a3-8361-b6bed2722b74}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Level\65.BloomViewer">
+      <UniqueIdentifier>{19c5f600-e566-4903-ab74-448904dcbc99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyGlobe">
+      <UniqueIdentifier>{04d044a9-3cab-4425-9adf-8eea436e71d4}</UniqueIdentifier>
+    </Filter>
     <Filter Include="80.State\State_Land">
       <UniqueIdentifier>{0b8cac41-419f-48ce-87bc-805b8962b4df}</UniqueIdentifier>
     </Filter>
@@ -582,6 +588,12 @@
     <ClInclude Include="..\Public\CallBack_Playable_Behavior.h">
       <Filter>02.GameObjects\Dummys\DummyPhysX\00.Callback\Behavior\Playable</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Level_BloomViewer.h">
+      <Filter>01.Level\65.BloomViewer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dummy_Globe.h">
+      <Filter>02.GameObjects\Dummys\DummyGlobe</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\State_Skill.h">
       <Filter>80.State\State_Combat\State_Skill</Filter>
     </ClInclude>
@@ -879,6 +891,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\CallBack_Playable_Behavior.cpp">
       <Filter>02.GameObjects\Dummys\DummyPhysX\00.Callback\Behavior\Playable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_BloomViewer.cpp">
+      <Filter>01.Level\65.BloomViewer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_Globe.cpp">
+      <Filter>02.GameObjects\Dummys\DummyGlobe</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\State_Skill.cpp">
       <Filter>80.State\State_Combat\State_Skill</Filter>

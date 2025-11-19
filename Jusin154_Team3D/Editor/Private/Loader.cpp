@@ -23,7 +23,7 @@
 #include "Player.h"
 #include "Goblin.h"
 #include "Broom.h"
-#include <filesystem>
+
 
 #pragma endregion
 
@@ -94,6 +94,12 @@
 
 #pragma endregion 
 
+#pragma region BLOOM_HEADER
+
+#include "Dummy_Globe.h"
+
+#pragma endregion
+
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice{ pDevice }
 	, m_pContext{ pContext }
@@ -123,8 +129,9 @@ HRESULT CLoader::Initialize(LEVEL eNextLevelID)
 	InitializeCriticalSection(&m_CriticalSection);
 
 	m_hThread = (HANDLE)_beginthreadex(nullptr, 0, LoadingMain, this, 0, nullptr);
-	if (0 == m_hThread)
+	if (0 == m_hThread){
 		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -163,9 +170,9 @@ HRESULT CLoader::Loading()
 	case LEVEL::PHYSX:
 		hr = Loading_For_PhysXLevel();
 		break;
-		//case LEVEL::PARTICLE:
-		//	hr = Loading_For_Particle();
-		//	break;
+	case LEVEL::BLOOM:
+		hr = Loading_For_Bloom();
+		break;
 	default:
 		assert(false);
 		break;
@@ -900,6 +907,57 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 
 	m_isFinished = true;
 
+
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_For_Bloom()
+{
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Desc_Box"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Box/Box.bin", XMMatrixScaling(10.f, 10.f, 10.f) *  XMMatrixIdentity())))){
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Model_DummyPlane"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Effect/DummyPlane/DummyPlane.fbx", XMMatrixTranslation(0.f, -10.f, 0.f) * XMMatrixIdentity())))){
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Desc_Globe"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Object/DragonGlobe/DragonGlobe.fbx", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixIdentity())))){
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Desc_Globe2"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Object/DragonGlobe2/DragonGlobe.fbx", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixIdentity())))){
+		return E_FAIL;
+	}
+
+	vector<_wstring> ModelPrototypeTags = {};
+	vector<filesystem::path> ModelPrototypePath = {};
+
+	/* Hog_Props */
+	if (FAILED(MapFolderLoad("C:\\Users\\kimnuri\\Desktop\\MeshTable\\Game\\Environment\\Hogwarts\\Meshes\\Props",
+		".fbx", true, ModelPrototypeTags, ModelPrototypePath))){
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_Globe>(g_iStaticLevel, CDummy_Globe::Create(m_pDevice, m_pContext)))){
+		return E_FAIL;
+	}
+	
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_Cube>(g_iStaticLevel, CDummy_Cube::Create(m_pDevice, m_pContext)))){
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_Plane>(g_iStaticLevel, CDummy_Plane::Create(m_pDevice, m_pContext)))){
+		return E_FAIL;
+	}
+
+	m_strMessage = TEXT("Loading Success!");
+
+	m_isFinished = true;
 
 	return S_OK;
 }
