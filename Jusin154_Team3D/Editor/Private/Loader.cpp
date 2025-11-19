@@ -929,10 +929,24 @@ HRESULT CLoader::Loading_For_Bloom()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_Globe>(g_iStaticLevel, CDummy_Globe::Create(m_pDevice, m_pContext)))){
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Desc_Globe2"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Object/DragonGlobe2/DragonGlobe.fbx", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixIdentity())))){
 		return E_FAIL;
 	}
 
+	vector<_wstring> ModelPrototypeTags = {};
+	vector<filesystem::path> ModelPrototypePath = {};
+
+	/* Hog_Props */
+	if (FAILED(MapFolderLoad("C:\\Users\\kimnuri\\Desktop\\MeshTable\\Game\\Environment\\Hogwarts\\Meshes\\Props",
+		".fbx", true, ModelPrototypeTags, ModelPrototypePath))){
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_Globe>(g_iStaticLevel, CDummy_Globe::Create(m_pDevice, m_pContext)))){
+		return E_FAIL;
+	}
+	
 	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_Cube>(g_iStaticLevel, CDummy_Cube::Create(m_pDevice, m_pContext)))){
 		return E_FAIL;
 	}

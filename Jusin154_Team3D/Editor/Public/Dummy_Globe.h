@@ -12,6 +12,11 @@ NS_BEGIN(Editor)
 
 class CDummy_Globe final : public CGameObject
 {
+public:
+	typedef struct tagGlobeDesc {
+		_wstring wstrKey = {};
+		_float3 vPos = {};
+	}GLOBE_DESC;
 private:
 	CDummy_Globe(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CDummy_Globe(const CDummy_Globe& rhs);

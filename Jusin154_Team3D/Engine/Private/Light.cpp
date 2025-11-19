@@ -12,7 +12,7 @@ CLight::CLight(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CLight::CLight(const CLight& rhs)
-	: CComponent{ rhs }
+	: CComponent(rhs)
 {
 
 }
@@ -64,7 +64,7 @@ HRESULT CLight::Render(CShader* pShader, CVIBuffer* pVIBuffer) const
 		if (FAILED(pShader->Bind_RawValue("g_vLightDir", m_LightDesc.pDirection, sizeof(_float4)))) {
 			return E_FAIL;
 		}
-		iPassIndex = ENUM_CLASS(SHADER_PASS_PBR::DIRECTIONAL);
+		iPassIndex = ENUM_CLASS(SHADER_PASS_DEFERRED::DIRECTIONAL);
 	}
 	else if (LIGHT::SPOT == m_LightDesc.eType) {
 		if (FAILED(pShader->Bind_RawValue("g_vLightDir", m_LightDesc.pDirection, sizeof(_float4)))) {
@@ -85,7 +85,7 @@ HRESULT CLight::Render(CShader* pShader, CVIBuffer* pVIBuffer) const
 		if (FAILED(pShader->Bind_RawValue("g_fSpotOuterAngle", &m_LightDesc.vSpotAngles.y, sizeof(_float)))) {
 			return E_FAIL;
 		}
-		iPassIndex = ENUM_CLASS(SHADER_PASS_PBR::SPOT);
+		iPassIndex = ENUM_CLASS(SHADER_PASS_DEFERRED::SPOT);
 	}
 	else {
 		if (FAILED(pShader->Bind_RawValue("g_vLightPos", m_LightDesc.pPosition, sizeof(_float4)))) {
@@ -97,7 +97,7 @@ HRESULT CLight::Render(CShader* pShader, CVIBuffer* pVIBuffer) const
 		if (FAILED(pShader->Bind_RawValue("g_fLightRange", &m_LightDesc.fRange, sizeof(_float)))) {
 			return E_FAIL;
 		}
-		iPassIndex = ENUM_CLASS(SHADER_PASS_PBR::POINT);
+		iPassIndex = ENUM_CLASS(SHADER_PASS_DEFERRED::POINT);
 	}
 
 	if (FAILED(pShader->Bind_RawValue("g_vLightDiffuse", &m_LightDesc.vDiffuse, sizeof(_float4)))) {

@@ -119,7 +119,7 @@ void CModel::Change_AnimationIndex(_int iAnimationIndex, _bool bIsLoop, _float f
 	m_pLerpAnim->Begin(m_Bones, LerpStartFrames, LerpEndFrames, fLerpDuration, m_iRootBoneIndex);
 
 }
-HRESULT CModel::Bind_Material(_uint iMeshIndex, CShader* pShader, const _char* pConstantName, _uint iType, _uint iTextureIndex)
+HRESULT CModel::Bind_Material(_uint iMeshIndex, CShader* pShader)
 {
 	if (iMeshIndex >= m_iNumMeshes) {
 		return E_FAIL;
@@ -130,7 +130,7 @@ HRESULT CModel::Bind_Material(_uint iMeshIndex, CShader* pShader, const _char* p
 	if (iMaterialIndex >= m_iNumMaterials) {
 		return E_FAIL;
 	}
-	return m_Materials[iMaterialIndex]->Bind_SRV(pShader, pConstantName, iType, iTextureIndex);
+	return m_Materials[iMaterialIndex]->Bind_SRV(pShader);
 }
 
 HRESULT CModel::Bind_BoneMatrices(_uint iMeshIndex, CShader* pShader, const _char* pConstantName)

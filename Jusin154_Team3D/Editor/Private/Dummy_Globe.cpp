@@ -58,27 +58,12 @@ HRESULT CDummy_Globe::Render()
 
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
-		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom, "g_DiffuseTexture", aiTextureType_DIFFUSE, 0))) {
+		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
-		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom, "g_NormalTexture", aiTextureType_NORMALS, 0))) {
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::DEFAULT)))) {
 			return E_FAIL;
 		}
-		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom, "g_MROTexture", aiTextureType_SHININESS, 0))) {
-			return E_FAIL;
-		}
-
-		if (true == m_bMRO) {
-			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::PROP)))) {
-				return E_FAIL;
-			}
-		}
-		else {
-			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::NOMROPROP)))) {
-				return E_FAIL;
-			}
-		}
-
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
 		}
@@ -90,12 +75,13 @@ HRESULT CDummy_Globe::Render()
 
 HRESULT CDummy_Globe::Ready_Components(void* pArg)
 {
-	if (FAILED(__super::Ready_Components(pArg))) {
+	if (FAILED(__super::Ready_Components(nullptr))) {
 		return E_FAIL;
 	}
+	GLOBE_DESC* pDesc = static_cast<GLOBE_DESC*>(pArg);
 
 	/* Com_Model */
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Desc_Globe"),
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, pDesc->wstrKey,
 		reinterpret_cast<CComponent**>(&m_pModelCom)))){
 		return E_FAIL;
 	}
@@ -105,7 +91,8 @@ HRESULT CDummy_Globe::Ready_Components(void* pArg)
 		reinterpret_cast<CComponent**>(&m_pShaderCom)))){
 		return E_FAIL;
 	}
-	m_bMRO = true;
+
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pDesc->vPos), 1.f));
 	return S_OK;
 }
 
@@ -124,6 +111,7 @@ HRESULT CDummy_Globe::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 		return E_FAIL;
 	}
+
 	return S_OK;
 }
 

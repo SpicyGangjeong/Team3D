@@ -277,6 +277,12 @@
     <Filter Include="02.Element\02.Component\02.VIBuffer\Trail">
       <UniqueIdentifier>{dae29f0c-1727-4423-a3ca-9ef27460520b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="99.Define\01.SHADER\Inc">
+      <UniqueIdentifier>{1e10fa90-da5b-4285-a7a3-c4211b4cccbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.System\02.ThreadHolder">
+      <UniqueIdentifier>{701cf231-2892-4d72-9615-dbe9285c28f4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -524,6 +530,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Trail.cpp">
       <Filter>02.Element\02.Component\02.VIBuffer\Trail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ThreadHolder.cpp">
+      <Filter>00.System\02.ThreadHolder</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1139,6 +1148,9 @@
     <ClInclude Include="..\Public\Trail.h">
       <Filter>02.Element\02.Component\02.VIBuffer\Trail</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\ThreadHolder.h">
+      <Filter>00.System\02.ThreadHolder</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Public\Assimp\color4.inl">
@@ -1186,9 +1198,6 @@
     <None Include="..\Public\fMod\fmod_errors.cs">
       <Filter>99.Define\99.THIRDPARTY\FMOD</Filter>
     </None>
-    <None Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Defines.hlsli">
-      <Filter>99.Define\01.SHADER</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Cell.hlsl">
@@ -1206,8 +1215,23 @@
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_WeightBlend.hlsl">
       <Filter>99.Define\01.SHADER</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_PBR.hlsl">
-      <Filter>99.Define\01.SHADER</Filter>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Defines.hlsli">
+      <Filter>99.Define\01.SHADER\Inc</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Constants.hlsli">
+      <Filter>99.Define\01.SHADER\Inc</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Structures.hlsli">
+      <Filter>99.Define\01.SHADER\Inc</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_States.hlsli">
+      <Filter>99.Define\01.SHADER\Inc</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Samplers.hlsli">
+      <Filter>99.Define\01.SHADER\Inc</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Functions.hlsli">
+      <Filter>99.Define\01.SHADER\Inc</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

@@ -185,7 +185,7 @@ void CRenderer::Render_LightAcc()
 	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Depth"), m_pShader, "g_DepthTexture"))) {
 		return;
 	}
-	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_MRO"), m_pShader, "g_MROTexture"))) {
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Surface"), m_pShader, "g_SurfaceTexture"))) {
 		return;
 	}
 
@@ -270,7 +270,7 @@ void CRenderer::Render_Combined()
 
 	}
 
-	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_PBR::COMBINED));
+	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::COMBINED));
 
 	m_pVIBuffer->Bind_Resources();
 	m_pVIBuffer->Render();
@@ -544,8 +544,8 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 
-		/* Target_MRO */
-		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_MRO"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+		/* Target_Surface */
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Surface"), (_uint)Viewport.Width, (_uint)Viewport.Height,
 			DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.0f, 0.f, 0.f, 0.f)))) {
 			return E_FAIL;
 		}
@@ -632,7 +632,7 @@ HRESULT CRenderer::Initialize()
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Color")))) {
 			return E_FAIL;
 		}
-		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_MRO")))) {
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Surface")))) {
 			return E_FAIL;
 		}
 
@@ -687,19 +687,19 @@ HRESULT CRenderer::Initialize()
 		
 	}
 
-	m_pShader = (CShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, TEXT("FX_PBR"), nullptr, nullptr);
+	m_pShader = (CShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, FX_DEFERRED, nullptr, nullptr);
 	if (nullptr == m_pShader) {
 		return E_FAIL;
 	}
 
 
-	m_pLastColorShader = (CShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, TEXT("FX_LASTCOLOR"), nullptr, nullptr);
+	m_pLastColorShader = (CShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, FX_LASTCOLOR, nullptr, nullptr);
 
 	if (nullptr == m_pLastColorShader) {
 		return E_FAIL;
 	}
 
-	m_pWeightBlendShader = (CShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, TEXT("FX_WEIGHTBELND"), nullptr, nullptr);
+	m_pWeightBlendShader = (CShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, FX_WEIGHTBELND, nullptr, nullptr);
 	
 	if (nullptr == m_pWeightBlendShader) {
 		return E_FAIL;

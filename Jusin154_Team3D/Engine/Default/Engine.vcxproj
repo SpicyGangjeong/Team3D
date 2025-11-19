@@ -298,6 +298,7 @@ call Update_Lib.bat
     <ClCompile Include="..\Private\SoundSrc.cpp" />
     <ClCompile Include="..\Private\State.cpp" />
     <ClCompile Include="..\Private\Texture.cpp" />
+    <ClCompile Include="..\Private\ThreadHolder.cpp" />
     <ClCompile Include="..\Private\Timer.cpp" />
     <ClCompile Include="..\Private\Timer_Manager.cpp" />
     <ClCompile Include="..\Private\tinyxml2.cpp">
@@ -541,6 +542,7 @@ call Update_Lib.bat
     <ClInclude Include="..\Public\SoundSrc.h" />
     <ClInclude Include="..\Public\State.h" />
     <ClInclude Include="..\Public\Texture.h" />
+    <ClInclude Include="..\Public\ThreadHolder.h" />
     <ClInclude Include="..\Public\Timer.h" />
     <ClInclude Include="..\Public\Timer_Manager.h" />
     <ClInclude Include="..\Public\tinyxml2.h" />
@@ -559,9 +561,35 @@ call Update_Lib.bat
     <ClInclude Include="..\Public\VIBuffer_Terrain.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Defines.hlsli" />
-    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_PBR.hlsl">
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Samplers.hlsli">
       <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_States.hlsli">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Constants.hlsli">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Defines.hlsli">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Functions.hlsli">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Structures.hlsli">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExcludedFromBuild>
     </FxCompile>
     <None Include="..\Public\Assimp\color4.inl" />
     <None Include="..\Public\Assimp\config.h.in" />
