@@ -395,13 +395,30 @@ HRESULT CLoader::Loading_For_UI()
 
 	m_strMessage = TEXT("Model Loading..");
 
+	CVIBuffer_UI_Instance::UI_INSTANCE_DESC UIDesc{};
 
+	UIDesc.iNum = 4;
+	UIDesc.vSize = _float2(1.f,1.f);
+	UIDesc.fPositionOffSetX = 75.f;
+	UIDesc.fPositionOffSetY = 0.f;
+	UIDesc.vPsition = _float2(100.f, 100.f);
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_UI_Instance"),
+		CVIBuffer_UI_Instance::Create(m_pDevice, m_pContext, &UIDesc)))) {
+		return E_FAIL;
+	}
 
 	m_strMessage = TEXT("Shader Loading..");
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_UIEDITOR,
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_UIEditor.hlsl"),
 			VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_UIINSTANCE,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_UI_Instance.hlsl"),
+			VTX_POSTEX_INSTANCE_UI::Elements, VTX_POSTEX_INSTANCE_UI::iNumElements)))) {
 		return E_FAIL;
 	}
 

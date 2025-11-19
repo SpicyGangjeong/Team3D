@@ -22,7 +22,7 @@ HRESULT CMission_Key::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = -297.f;
-	Desc.fY = 158.f;
+	Desc.fY = 159.f;
 	Desc.fSizeX = 40.f;
 	Desc.fSizeY = 40.f;
 

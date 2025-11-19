@@ -156,7 +156,7 @@ BlendState BS_UIBlend
     DestBlendAlpha = Zero;
     BlendOpAlpha = Add;
 
-    RenderTargetWriteMask[0] = 0x0F; // RGBA 모두 출력
+    RenderTargetWriteMask[0] = 0x0F; // RGBA 紐⑤몢 異쒕젰
 };
 
 BlendState BS_WB_Acc
@@ -241,18 +241,18 @@ float2 Get_MovedUV(float2 vOriginalUV, float fDeltaU, float fDeltaV, uint iIndex
 
 float2 UV_Cutting(float2 vUV, float2 vUVCutting, int iCurrentFrame)
 {
-    float2 UV = vUV; // 이미지의 UV값
+    float2 UV = vUV; // ?대?吏??UV媛?
     
-    int iTotalFrame = vUVCutting.x * vUVCutting.y; // 이미지의 최대 프레임 (몇 곱하기 몇인지)
+    int iTotalFrame = vUVCutting.x * vUVCutting.y; // ?대?吏??理쒕? ?꾨젅??(紐?怨깊븯湲?紐뉗씤吏)
     
-    int iFrameX = iCurrentFrame % (int) vUVCutting.x; // 현재 x축의 위치(현재 이미지의 몇번째 칸을 보여줄 지)
-    int iFrameY = iCurrentFrame / (int) vUVCutting.x; // 현재 y축의 위치(현재 이미지의 몇번째 줄을 보여줄 지)
+    int iFrameX = iCurrentFrame % (int) vUVCutting.x; // ?꾩옱 x異뺤쓽 ?꾩튂(?꾩옱 ?대?吏??紐뉖쾲吏?移몄쓣 蹂댁뿬以?吏)
+    int iFrameY = iCurrentFrame / (int) vUVCutting.x; // ?꾩옱 y異뺤쓽 ?꾩튂(?꾩옱 ?대?吏??紐뉖쾲吏?以꾩쓣 蹂댁뿬以?吏)
     
-    float fFreamWidth = 1.0 / vUVCutting.x; // 1.0 나누기 이미지 갯수를 해서 한칸에 얼마나 갈지 정해준다.
-    float fFreamHeight = 1.0 / vUVCutting.y; // 1.0 나누기 이미지 갯수를 해서 한줄에 얼마나 갈지 정해준다.
+    float fFreamWidth = 1.0 / vUVCutting.x; // 1.0 ?섎늻湲??대?吏 媛?닔瑜??댁꽌 ?쒖뭏???쇰쭏??媛덉? ?뺥빐以??
+    float fFreamHeight = 1.0 / vUVCutting.y; // 1.0 ?섎늻湲??대?吏 媛?닔瑜??댁꽌 ?쒖쨪???쇰쭏??媛덉? ?뺥빐以??
     
-    UV.x = UV.x * fFreamWidth + iFrameX * fFreamWidth; // 먼저 uv를 0~1이 아닌 0~fFrameWidth로 만든 다음에 한칸씩 옆으로 밀어준다.
-    UV.y = UV.y * fFreamHeight + iFrameY * fFreamHeight; // 먼저 uv를 0~1이 아닌 0~fFrameHeight로 만든 다음에 한줄씩 밑으로 내려준다.
+    UV.x = UV.x * fFreamWidth + iFrameX * fFreamWidth; // 癒쇱? uv瑜?0~1???꾨땶 0~fFrameWidth濡?留뚮뱺 ?ㅼ쓬???쒖뭏???놁쑝濡?諛?댁???
+    UV.y = UV.y * fFreamHeight + iFrameY * fFreamHeight; // 癒쇱? uv瑜?0~1???꾨땶 0~fFrameHeight濡?留뚮뱺 ?ㅼ쓬???쒖쨪??諛묒쑝濡??대젮以??
     
     return UV;
 }

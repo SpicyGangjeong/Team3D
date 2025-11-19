@@ -19,6 +19,7 @@ namespace Editor {
 #define FX_PARTICLE			TEXT("FX_PARTICLE")
 #define FX_INSTANCE_MODEL   TEXT("FX_INSTANCE_MODEL")
 #define FX_UIEDITOR			TEXT("FX_UIEDITOR")
+#define FX_UIINSTANCE		TEXT("FX_UIINSTANCE")
 
 
 #pragma endregion
