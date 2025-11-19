@@ -104,7 +104,7 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 	m_pMouse_Manager->Update();
 	//m_pSound_Manager->Update();
 
-	//m_pPicking->Update();
+	m_pPicking->Update();
 
 	m_pObject_Manager->Priority_Update(fTimeDelta);
 
@@ -164,6 +164,12 @@ void CGameInstance::BillBoard(CTransform* pTransform)
 
 	_matrix BillBoardMatrix = Get_Transform_Matrix(D3DTS::VIEW_INV);
 
+
+ 	for (_uint i = 0; i < 3; ++i)
+	{
+		BillBoardMatrix.r[i] = XMVector3Normalize(BillBoardMatrix.r[i]);
+	}
+
 	_float3 vScale = pTransform->Get_Scale();
 
 	_vector vPosition = pTransform->Get_State(STATE::POSITION);
@@ -175,7 +181,6 @@ void CGameInstance::BillBoard(CTransform* pTransform)
 	BillBoardMatrix.r[3] = vPosition;
 
 	pTransform->Set_WorldMatrix(ScaleMatrix * RotationMatrix * BillBoardMatrix);
-
 
 }
 
@@ -223,6 +228,11 @@ void CGameInstance::Render_End()
 #ifdef _DEBUG
 	Compute_TimeDelta(TEXT("Timer_Present"));
 #endif // _DEBUG
+}
+
+HRESULT CGameInstance::Bind_DepthStencil(CShader* pShader, const _char* pContantName)
+{
+	return m_pGraphic_Device->Bind_DepthStencil(pShader , pContantName);
 }
 
 _float CGameInstance::Get_TimeDelta(const _wstring& strTimerTag)
@@ -494,6 +504,11 @@ HRESULT CGameInstance::Begin_MRT_Include_BackBuffer(const _wstring& strMRTTag, I
 	return m_pRenderTarget_Manager->Begin_MRT_Include_BackBuffer(strMRTTag, pDSV);
 }
 
+HRESULT CGameInstance::Begin_MRT_NO_DepthStencil(const _wstring& strMRTTag)
+{
+	return m_pRenderTarget_Manager->Begin_MRT_NO_DepthStencil(strMRTTag);
+}
+
 HRESULT CGameInstance::End_MRT()
 {
 	return m_pRenderTarget_Manager->End_MRT();
@@ -597,6 +612,10 @@ PSX::PxRigidDynamic* CGameInstance::Add_DynamicActor(CRigidBody_Dynamic& RigidBo
 PSX::PxRigidStatic* CGameInstance::Add_StaticActor(CRigidBody_Static& RigidBody)
 {
 	return m_pPhysX_Manager->Add_StaticActor(RigidBody);
+}
+PSX::PxRevoluteJoint* CGameInstance::Create_PxRevoluteJoint(PSX::PxRigidActor* pActorFrame, PSX::PxTransform& pxLocalWallFrame, PSX::PxRigidActor* pActorObject, PSX::PxTransform& pxLocalActorFrame)
+{
+	return m_pPhysX_Manager->Create_PxRevoluteJoint(pActorFrame, pxLocalWallFrame, pActorObject, pxLocalActorFrame);
 }
 PSX::PxController* CGameInstance::Add_CapsuleController(PSX::PxCapsuleControllerDesc& Desc)
 {

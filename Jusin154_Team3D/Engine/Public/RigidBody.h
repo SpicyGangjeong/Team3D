@@ -26,7 +26,7 @@ protected: // MORE INFO ON ENGINE_ENUM
 
 	typedef struct tagRigidBody_Desc
 	{
-
+		_uint iSubKind = { };
 	}RIGIDBODY_DESC;
 
 protected:

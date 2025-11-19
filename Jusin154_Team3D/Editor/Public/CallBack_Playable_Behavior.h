@@ -1,6 +1,11 @@
 ﻿#pragma once
 
 #include "Editor_Define.h"
+#include "GameObject.h"
+
+NS_BEGIN(Engine)
+class CGameInstance;
+NS_END
 
 NS_BEGIN(Editor)
 
@@ -12,10 +17,10 @@ class CCallBack_Playable_Behavior final : public PSX::PxControllerBehaviorCallba
 	// PxUserControllerHitReport		= "무엇과 부딪혔는지 알려줌(이벤트 알림)"
 	// PxControllerBehaviorCallback		= "부딪힌 것에 대해 어떤 행동 정책을 쓸지 물어봄(질의)"
 	// PxSimulationEventCallback		= "씬 전체에 대한 글로벌 콜백(일반 물리 이벤트)" 
-
-public:
+private:
 	CCallBack_Playable_Behavior();
-	~CCallBack_Playable_Behavior() = default;
+public:
+	~CCallBack_Playable_Behavior();
 
 public:
 	// PxControllerBehaviorCallback을(를) 통해 상속됨
@@ -27,5 +32,16 @@ public:
 	virtual PSX::PxControllerBehaviorFlags getBehaviorFlags(const PSX::PxController& controller) override;
 
 	virtual PSX::PxControllerBehaviorFlags getBehaviorFlags(const PSX::PxObstacle& obstacle) override;
+
+public:
+	HRESULT Initialize(CCharacter_Controller* pController, CRigidBody_Dynamic* pPartDynamicObject);
+	HRESULT Finalize();
+private:
+	CCharacter_Controller*	m_pController = { nullptr };
+	CRigidBody_Dynamic*		m_pPartDynamicBody = { nullptr };
+	CGameInstance*			m_pGameInstance = { nullptr };
+
+public:
+	static CCallBack_Playable_Behavior* Create();
 };
 NS_END

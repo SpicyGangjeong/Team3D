@@ -41,15 +41,15 @@ void CEditEffect::Update(_float fTimeDelta)
 
 
 
-	if (m_EffectInfo.isBillboard)
-		m_pGameInstance->BillBoard(m_pTransformCom);
+
 
 	if (m_pInstance_ModelCom == nullptr)
 		return;
 
 	m_pInstance_ModelCom->Drop(fTimeDelta);
 
-
+	if (m_EffectInfo.isBillboard)
+		m_pGameInstance->BillBoard(m_pTransformCom);
 
 }
 
@@ -59,20 +59,14 @@ void CEditEffect::Late_Update(_float fTimeDelta)
 	if (m_pInstance_ModelCom == nullptr)
 		return;
 
-	ASSERT_JINWOO(false && "이거 고쳐야됨, 아래꺼를 위에껄로")
-	//{
-	//	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
-	//		m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
-	//	}
-	//}
-	//{
-	//	_float4* vPos = (_float4*)(m_pTransformCom->Get_WorldMatrixPtr()->m[3]);
 
-	//	if (m_EffectInfo.isBlur == true)
-	//		m_pGameInstance->Add_RenderGroup(RENDER::BLUR, this, *vPos, m_pTransformCom->Get_Radius());
+	if (m_EffectInfo.isBlur == true)
+	{
+		m_pGameInstance->Add_RenderGroup(RENDER::BLUR, this);
+	}
 
-	//	m_pGameInstance->Add_RenderGroup(m_EffectInfo.eRenderOrder, this, *vPos, m_pTransformCom->Get_Radius());
-	//}
+	m_pGameInstance->Add_RenderGroup(RENDER::EFFECT, this);
+
 }
 
 void CEditEffect::Reference_Mat_For_EditEffect()
@@ -80,9 +74,9 @@ void CEditEffect::Reference_Mat_For_EditEffect()
 
 	string strName = {};
 
-	const char* pCompute[] = { "DIFFUSE" , "MASK", "NOISE", "DISSOLVE" };
+	const char* pCompute[] = { "DIFFUSE" , "MASK", "NOISE", "DISSOLVE" , "DISTORTION" , "EMISSIVE"};
 
-	if (ImGui::Combo("OPTION", &m_iSelectTextureNum, pCompute, 4))
+	if (ImGui::Combo("OPTION", &m_iSelectTextureNum, pCompute, 6))
 	{
 	}
 	switch (m_iSelectTextureNum)
@@ -117,6 +111,24 @@ void CEditEffect::Reference_Mat_For_EditEffect()
 		if (strName != "")
 		{
 			m_strDissolveName = strName;
+		}
+
+		break;
+	case 4:
+		strName = dynamic_cast<CEffect_Editor*>(m_pOwner)->Reference_Mat_For_EditEffect((CComponent**)&m_pDistortion_TextureCom, this);
+
+		if (strName != "")
+		{
+			m_strDistortionName = strName;
+		}
+
+		break;
+	case 5:
+		strName = dynamic_cast<CEffect_Editor*>(m_pOwner)->Reference_Mat_For_EditEffect((CComponent**)&m_pEmissive_TextureCom, this);
+
+		if (strName != "")
+		{
+			m_strEmissiveName = strName;
 		}
 
 		break;
@@ -245,6 +257,24 @@ HRESULT CEditEffect::Save_Effect(const _char* pPath)
 		}
 	}
 
+	if (m_EffectInfo.isDistortion)
+	{
+		size_t iComponentLength = m_strDistortionName.length();
+		const _char* pFileComponentPath = m_strDistortionName.c_str();
+
+		if (!WriteFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+			return E_FAIL;
+		}
+
+		if (iComponentLength != 0)
+		{
+			if (!WriteFile(hFile, pFileComponentPath, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+				return E_FAIL;
+			}
+		}
+	}
+	
+
 	size_t iComponentLength = m_strModelName.length();
 	const _char* pFileComponentPath = m_strModelName.c_str();
 
@@ -332,6 +362,7 @@ void CEditEffect::Describe_Entity()
 	GUI::Checkbox("Diffuse", &m_EffectInfo.isDiffuse);
 	GUI::Checkbox("Masking", &m_EffectInfo.isMasking);
 	GUI::Checkbox("Dissolve", &m_EffectInfo.isDissolve);
+	GUI::Checkbox("Distortion", &m_EffectInfo.isDistortion);
 	GUI::Checkbox("Noise", &m_EffectInfo.isNoise);
 
 
@@ -365,14 +396,6 @@ void CEditEffect::Describe_Entity()
 
 	if (GUI::TreeNode("EMISSIVE"))
 	{
-		const char* pCompute[] = {"NONE",  "DIV" , "PLUS", "SUBSTRACT", "MULTY" , "EQUL" };
-
-		_int iColorOption = (_int)m_EffectInfo.fColorOption;
-
-		if (ImGui::Combo("OPTION", &iColorOption, pCompute , 6))
-		{
-			m_EffectInfo.fColorOption = (_float)iColorOption;
-		}
 
 		ImGui::PushItemWidth(80);
 		GUI::DragFloat("EmissiveCutAlpha", &m_EffectInfo.fEmissiveCutAlpha, 0.005f, 0.f, 1.f);
@@ -465,6 +488,7 @@ void CEditEffect::Describe_Entity()
 		if (GUI::TreeNode("DIFFUSE"))
 		{
 
+			GUI::DragFloat("Diffuse Alpha", &m_EffectInfo.fDiffuseAlpha , 0.01f, 0.f, 1.f);
 
 			ImGui::PushItemWidth(80);
 			GUI::Checkbox("DiffuseUVMove", &m_EffectInfo.isDiffuseUVMove);
@@ -554,6 +578,9 @@ void CEditEffect::Describe_Entity()
 		{
 			if (GUI::TreeNode("DISSOLV_TEX"))
 			{
+
+				GUI::Checkbox("Reverse Dissolve", &m_EffectInfo.isReverseDissolve);
+
 				_string strName = m_strDissolveName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISSOLVE_TEXTURE", (CComponent**)&m_pDissolve_TextureCom, nullptr, this);
 				
 				if (strName != "") {
@@ -568,39 +595,81 @@ void CEditEffect::Describe_Entity()
 		}
 
 	}
+	if (m_EffectInfo.isDistortion == true)
+	{
+		if (GUI::TreeNode("DISTORTION"))
+		{
+			ImGui::PushItemWidth(80);
+
+			GUI::DragFloat("DistortionIntensity", &m_EffectInfo.fNoiseDistortionIntensity, 0.005f, 0.f, 1.f);
+
+			GUI::Spacing();
+
+			GUI::DragFloat2("DiffuseDistortionUVGainAmount", (_float*)&m_EffectInfo.vDiffuseDistortionUVGainAmount, 0.01f);
+
+			_int iDiffuseNoiseMoveLerpOption = (_int)m_EffectInfo.iDiffuseDistortionMoveLerpOption;
+
+			if (ImGui::Combo("LerpDiffuseDistortionMove Option", &iDiffuseNoiseMoveLerpOption, pLerp, 9))
+			{
+				m_EffectInfo.iDiffuseDistortionMoveLerpOption = iDiffuseNoiseMoveLerpOption;
+			}
+
+			GUI::Spacing();
+
+			GUI::DragFloat2("MaskDistortionUVGainAmount", (_float*)&m_EffectInfo.vMaskDistortionUVGainAmount, 0.01f);
+
+			_int iMaskNoiseMoveLerpOption = (_int)m_EffectInfo.iMaskDistortionMoveLerpOption;
+
+			if (ImGui::Combo("Lerp MaskDistortionMove Option", &iMaskNoiseMoveLerpOption, pLerp, 9))
+			{
+				m_EffectInfo.iMaskDistortionMoveLerpOption = iMaskNoiseMoveLerpOption;
+			}
+
+			GUI::Spacing();
+
+			ImGui::PopItemWidth();
+
+			if (GUI::TreeNode("DISTORTION_TEX"))
+			{
+				_string strName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISTORTION_TEXTURE", (CComponent**)&m_pDistortion_TextureCom, nullptr, this);
+
+				if (strName != "") {
+					m_strDistortionName = strName;
+				}
+
+				GUI::TreePop();
+			}
+
+			GUI::TreePop();
+		}
+
+	}
+
+
+
+		
+
 	if (m_EffectInfo.isNoise == true)
 	{
 		if (GUI::TreeNode("NOISE"))
 		{
+
+			GUI::Checkbox("NoiseMove", &m_EffectInfo.isNoiseUVMove);
+
 			ImGui::PushItemWidth(80);
-
-			GUI::DragFloat("NoiseDistortionIntensity", &m_EffectInfo.fNoiseDistortionIntensity, 0.005f, 0.f, 1.f);
-			
-			GUI::Spacing();
-
-			GUI::DragFloat2("DiffuseNoiseUVGainAmount", (_float*)&m_EffectInfo.vDiffuseNoiseUVGainAmount, 0.01f);
-
-			_int iDiffuseNoiseMoveLerpOption = (_int)m_EffectInfo.iDiffuseNoiseMoveLerpOption;
-
-			if (ImGui::Combo("Lerp DiffuseNoiseMove Option", &iDiffuseNoiseMoveLerpOption, pLerp, 9))
-			{
-				m_EffectInfo.iDiffuseNoiseMoveLerpOption = iDiffuseNoiseMoveLerpOption;
-			}
-
-			GUI::Spacing();
-
-			GUI::DragFloat2("MaskNoiseUVGainAmount", (_float*)&m_EffectInfo.vMaskNoiseUVGainAmount, 0.01f);
-
-			_int iMaskNoiseMoveLerpOption = (_int)m_EffectInfo.iMaskNoiseMoveLerpOption;
-
-			if (ImGui::Combo("Lerp MaskNoiseMove Option", &iMaskNoiseMoveLerpOption, pLerp, 9))
-			{
-				m_EffectInfo.iMaskNoiseMoveLerpOption = iMaskNoiseMoveLerpOption;
-			}
-			
-			GUI::Spacing();
-
+			GUI::DragFloat2("NoiseUVGainAmount", (_float*)&m_EffectInfo.vNoiseUVGainAmount, 0.01f);
 			ImGui::PopItemWidth();
+
+
+			GUI::Spacing();
+
+
+			_int iNoiseMoveLerpOption = (_int)m_EffectInfo.iNoiseMoveLerpOption;
+
+			if (ImGui::Combo("Lerp NoiseMove Option", &iNoiseMoveLerpOption, pLerp, 9))
+			{
+				m_EffectInfo.iNoiseMoveLerpOption = iNoiseMoveLerpOption;
+			}
 
 			if (GUI::TreeNode("NOISE_TEX"))
 			{
@@ -609,14 +678,16 @@ void CEditEffect::Describe_Entity()
 				if (strName != "") {
 					m_strNoiseName = strName;
 				}
+
 				GUI::TreePop();
 			}
 
-			GUI::Separator(); GUI::Spacing();
-
 			GUI::TreePop();
 		}
+
 	}
+
+	GUI::Separator(); GUI::Spacing();
 
 
 

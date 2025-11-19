@@ -100,6 +100,9 @@ HRESULT CDummy_PhysXPlayable::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
+	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
+	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
+
 	return S_OK;
 }
 
@@ -108,16 +111,17 @@ HRESULT CDummy_PhysXPlayable::Ready_Components(void* pArg)
 	CTransform::TRANSFORM_DESC TransformDesc{};
 	TransformDesc.fRadius = 100.f;
 	TransformDesc.fRotationPerSec = XMConvertToRadians(60.f);
-	TransformDesc.fSpeedPerSec = 30.f;
+	TransformDesc.fSpeedPerSec = 15.f;
 	if (FAILED(__super::Ready_Components(&TransformDesc))) {
 		return E_FAIL;
 	}
-	PlayableSTARTPOS_DESC* pDesc = static_cast<PlayableSTARTPOS_DESC*>(pArg);
+	PHYSXDUMMY_DESC* pDesc = static_cast<PHYSXDUMMY_DESC*>(pArg);
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pDesc->vPos), 1.f));
 	m_pTransformCom->Rotation(pDesc->vRotRPY.x, pDesc->vRotRPY.y, pDesc->vRotRPY.z);
-	{
+	{ // CCT
 		CCharacter_Controller::Character_Controller_DESC Desc{};
 
+		Desc.iSubKind = pDesc->iSubKind;
 		Desc.pTransform = m_pTransformCom;
 		Desc.eBodyType = ACTOR::CAPSULE;
 		Desc.fContactOffset = 0.1f;
@@ -126,19 +130,27 @@ HRESULT CDummy_PhysXPlayable::Ready_Components(void* pArg)
 		Desc.fStepOffset = { 0.05f };
 		Desc.fRadius = 0.5f;
 		Desc.fHeight = 1.0f;
-		Desc.pCallback_HitReport = &m_pCallBack_HitReport;
-		Desc.pCallback_Behavior = &m_pCallBack_Behavior;
+		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Playable_HitReport::Create();
+		Desc.pCallback_Behavior = m_pCallBack_Behavior = CCallBack_Playable_Behavior::Create();
 		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), (CComponent**)&m_pCharacter_Controller, &Desc))) {
 			return E_FAIL;
 		}
 	}
 	m_pCharacter_Controller->Set_Position(m_pTransformCom->Get_State(STATE::POSITION));
-
+	{ // DO
+		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
+		Desc.iSubKind = pDesc->iSubKind;
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
+			return E_FAIL;
+		}
+		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor());
+	}
 	/* Com_Shader */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_MESH,
-		reinterpret_cast<CComponent**>(&m_pShaderCom))))
+		reinterpret_cast<CComponent**>(&m_pShaderCom)))){
 		return E_FAIL;
+	}
 
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_Box"), (CComponent**)&m_pModelCom))) {
 		return E_FAIL;
@@ -159,7 +171,6 @@ HRESULT CDummy_PhysXPlayable::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ)))) {
 		return E_FAIL;
 	}
-
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 		return E_FAIL;
 	}
@@ -195,8 +206,16 @@ CGameObject* CDummy_PhysXPlayable::Clone(void* pArg, CGameObject* pOwner)
 void CDummy_PhysXPlayable::Free()
 {
 	__super::Free();
-
+	if (nullptr != m_pCallBack_Behavior) {
+		m_pCallBack_Behavior->Finalize();
+	}
+	if (nullptr != m_pCallBack_HitReport) {
+		m_pCallBack_HitReport->Finalize();
+	}
 	SAFE_RELEASE(m_pCharacter_Controller);
+	SAFE_RELEASE(m_pRigidBody);
+	Safe_Delete(m_pCallBack_Behavior);
+	Safe_Delete(m_pCallBack_HitReport);
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pModelCom);
 }

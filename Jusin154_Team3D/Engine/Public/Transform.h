@@ -26,6 +26,7 @@ public:
 	void		Set_State(STATE eState, _fvector vState) { XMStoreFloat4(reinterpret_cast<_float4*>(&m_WorldMatrix.m[ENUM_CLASS(eState)]), vState); }
 	void		Set_WorldMatrix(_float4x4& dstMatrix) { memcpy_s(&m_WorldMatrix, sizeof(_float4x4), &dstMatrix, sizeof(_float4x4)); }
 	void		Set_WorldMatrix(_fmatrix& dstMatrix) { XMStoreFloat4x4(&m_WorldMatrix, dstMatrix); }
+	void		Set_WorldMatrix(PSX::PxTransform dstMatrix);
 	_float		Get_Speed() const { return m_fSpeedPerSec; }
 	_float		Get_RotationSpeed() const { return m_fRotationPerSec; }
 	_float		Get_Radius() const { return m_fRadius; }
@@ -56,9 +57,11 @@ public:
 	void	BookMomentum(_fvector vMomentum);
 
 	void Turn(_fvector vAxis, _float fTimeDelta);
+	void TurnAngle(_vector vAxis, _float fAngle);
 	void Rotation(_fvector vAxis, _float fRadian);
 	void Rotation(_float fRadianX, _float fRadianY, _float fRadianZ);
 	void Rotation(_float3& vRadian);
+	void Rotation(_fvector vRPY);
 
 	// Up, Down 벡터를 바라보게 하면 터짐
 	void LookAt(_fvector vAt);
@@ -67,7 +70,7 @@ private:
 	_float				m_fSpeedPerSec = {};
 	_float				m_fRotationPerSec = {};
 	_float4x4			m_WorldMatrix = {};
-	_float				m_fRadius = {20.f};
+	_float				m_fRadius = { 20.f };
 
 	_float3				m_vMomentum = {}; // 현재 프레임에 계산된 이동량
 	_float3				m_vBackMomentum = {}; // 다음 프레임에 계산될 이동량

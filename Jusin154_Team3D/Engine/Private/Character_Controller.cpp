@@ -20,7 +20,7 @@ HRESULT CCharacter_Controller::Render()
 	_vector  vPos = Get_Position();
 	_float3  vVolume = Get_Volume(); 
 	_matrix  WorldMatrix = XMMatrixTranslationFromVector(vPos);
-
+	
 	_matrix ViewMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
 	_matrix ProjMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
 	_vector vColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0x2fc48000, 1.f);
@@ -40,10 +40,9 @@ HRESULT CCharacter_Controller::Render()
 	{
 		_float fHalf = vVolume.y;
 
-		_matrix ScaleMatrix =
-			XMMatrixScaling(vVolume.x / 0.5f,
-				fHalf / (2.f * 0.5f),
-				vVolume.x / 0.5f);
+		_matrix ScaleMatrix = XMMatrixScaling(vVolume.x / 0.5f,
+												fHalf / (2.f * 0.5f),
+												vVolume.x / 0.5f);
 		m_pMainShape->Draw(ScaleMatrix * WorldMatrix, ViewMatrix, ProjMatrix, vColor, nullptr, true);
 
 		_matrix ScaleSphereMatrix = XMMatrixScaling(vVolume.x / 0.5f, vVolume.x / 0.5f, vVolume.x / 0.5f);
@@ -63,6 +62,11 @@ HRESULT CCharacter_Controller::Render()
 PSX::PxRigidDynamic* CCharacter_Controller::Get_Actor()
 {
 	return m_pController->getActor();
+}
+
+PSX::PxController* CCharacter_Controller::Get_Controller()
+{
+	return m_pController;
 }
 
 #endif // _DEBUG
@@ -88,8 +92,7 @@ void CCharacter_Controller::Modify_Volume(_float3 fVolume)
 		if (0 != fVolume.z) {
 			pBox->setHalfForwardExtent(fVolume.z);
 		}
-	}
-		break;
+	} break;
 	case Engine::ACTOR::CAPSULE:
 	{
 		PSX::PxCapsuleController* pCapsule = static_cast<PSX::PxCapsuleController*>(m_pController);
@@ -99,8 +102,7 @@ void CCharacter_Controller::Modify_Volume(_float3 fVolume)
 		if (0 != fVolume.y) {
 			pCapsule->setHeight(fVolume.y);
 		}
-	}
-		break;
+	} break;
 	default:
 		break;
 	}
@@ -119,8 +121,7 @@ _float3 CCharacter_Controller::Get_Volume()
 			pBox->getHalfHeight(),
 			pBox->getHalfForwardExtent()
 		};
-	}
-		break;
+	} break;
 	case Engine::ACTOR::CAPSULE:
 	{
 		PSX::PxCapsuleController* pCapsule = static_cast<PSX::PxCapsuleController*>(m_pController);
@@ -129,12 +130,27 @@ _float3 CCharacter_Controller::Get_Volume()
 			pCapsule->getHeight(),
 			0.f
 		};
-	}
-		break;
+	} break;
 	default:
 		return { -1.f, -1.f, -1.f };
 		break;
 	}
+}
+
+HRESULT CCharacter_Controller::ConvertToDO(CRigidBody_Dynamic& BodyOriginal)
+{	
+	PSX::PxRigidDynamic* pDOActor = BodyOriginal.Get_Actor();
+	PSX::PxRigidDynamic* pCCTActor = m_pController->getActor();
+
+	m_bActive = false;
+	BodyOriginal.SetActive(true);
+
+	m_pGameInstance->Attach_Actor(*pDOActor); // DO 액터 활성화
+
+	PSX::PxTransform pxTransform = pCCTActor->getGlobalPose(); 
+	pDOActor->setGlobalPose(pxTransform);
+
+	return E_FAIL;
 }
 
 void CCharacter_Controller::Move(_float fTimeDelta)
@@ -147,7 +163,6 @@ void CCharacter_Controller::Move(_float fTimeDelta)
 	XMStoreFloat3((_float3*)&pxVecMomentum, m_pTransform->Get_CurrentMomentum());
 
 	m_eBeforeCollisionFlags = m_pController->move(pxVecMomentum, fMinimumDistant, fTimeDelta, pxFilter, pPxObstacles);
-
 
 	//PSX::PxUserControllerHitReport* pHitCallBack = { nullptr };
 	//PSX::PxControllerShapeHit ShapeHit = {};
@@ -195,11 +210,12 @@ HRESULT CCharacter_Controller::Initialize(void* pArg)
 		m_tagData.pOwner = m_pOwner;
 		XMStoreFloat4x4(&m_tagData.BeforeMatrix, m_pTransform->Get_XMWorldMatrix());
 		m_tagData.pCharacter = this;
+		m_tagData.iSubKind = pDesc->iSubKind;
 	}
 
 	switch (m_eBodyType)
 	{
-	case Engine::ACTOR::BOX:
+	case ACTOR::BOX:
 	{
 		PSX::PxBoxControllerDesc Desc{};
 		Desc.halfHeight			= pDesc->vBoxSize.y;
@@ -213,7 +229,7 @@ HRESULT CCharacter_Controller::Initialize(void* pArg)
 		m_pController->setUserData(&m_tagData);
 		m_pController->getActor()->userData = &m_tagData;
 	} break;
-	case Engine::ACTOR::CAPSULE:
+	case ACTOR::CAPSULE:
 	{
 		PSX::PxCapsuleControllerDesc Desc{};
 		Desc.radius				= pDesc->fRadius;

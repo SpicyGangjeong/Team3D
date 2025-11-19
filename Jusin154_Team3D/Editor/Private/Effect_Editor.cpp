@@ -23,7 +23,8 @@ HRESULT CEffect_Editor::Initialize_Prototype()
 {
 
 
-	ReadMaterials("../Bin/Resources/VFX/Particles/Magic/Protego");
+	
+	ReadMaterials("../Bin/Resources/VFX/Particles/Magic/Glacius");
 
 
 	for (auto iter : m_MatFiles)
@@ -33,7 +34,7 @@ HRESULT CEffect_Editor::Initialize_Prototype()
 		{
 			if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::EFFECT), vec_iter.first,
 				CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, vec_iter.second.c_str(), 0, vec_iter.first)))) {
-				return E_FAIL;
+				continue;
 			}
 		}
 
@@ -100,6 +101,61 @@ HRESULT CEffect_Editor::Ready_Child()
 	SAFE_RELEASE(m_pEditEffect);
 
 
+
+	return S_OK;
+}
+
+HRESULT CEffect_Editor::ReSaveFile(const _char* pDirectoryPath)
+{
+	_uint iIndex = {};
+
+	for (const auto& file : filesystem::directory_iterator(pDirectoryPath))
+	{
+		if (file.is_directory())
+			continue;
+
+		string ext = file.path().extension().string();
+
+		if (strcmp(ext.c_str(),".bin"))
+			continue;
+
+		_char szFilePath[MAX_PATH] = {};
+
+		strcpy_s(szFilePath, MAX_PATH, file.path().string().c_str());
+
+
+		/////////////////////////////
+
+		CEditEffect* pEditEffect = nullptr;
+
+		CPartObject::PARTOBJECT_DESC PartsDesc{};
+
+		PartsDesc.pParentTransform = m_pTransformCom;
+
+		
+
+		if (FAILED(Add_PartObject<CEditEffect>("ReSaveFile" + iIndex++ , ENUM_CLASS(LEVEL::EFFECT), &pEditEffect, &PartsDesc)))
+			return E_FAIL;
+		
+		if (FAILED(pEditEffect->LoadPre(szFilePath, LEVEL::EFFECT)))
+		{
+			Safe_Release(pEditEffect);
+			continue;
+		}
+
+		_string strPath = szFilePath;
+
+
+		size_t iPos;
+
+		while ((iPos = strPath.find(ext)) != std::string::npos) {
+			strPath.erase(iPos, ext.length());
+		};
+
+		pEditEffect->Save_Effect(strPath.c_str());
+
+		Safe_Release(pEditEffect);
+	}
 
 	return S_OK;
 }
@@ -283,8 +339,12 @@ _string CEffect_Editor::Reference_Mat_For_EditEffect(CComponent** pTexture, CGam
 					, wstrTextureInfo.first // 이름
 				);
 				
-				if(strName != "")
+				if (strName != "")
+				{
+					GUI::TreePop();
 					return strName;
+				}
+
 			};
 
 
@@ -303,6 +363,7 @@ HRESULT CEffect_Editor::Load_Edit(const _char* pPath)
 
 	if (m_pEditEffect == nullptr)
 		return E_FAIL;
+	
 
 	if (FAILED(m_pEditEffect->Load(pPath, LEVEL::EFFECT)))
 	{
@@ -373,6 +434,11 @@ void CEffect_Editor::Describe_Entity()
 	{
 		Load_Edit(m_strSavePath.c_str());
 	}
+
+	if (GUI::Button("RESAVE"))
+	{
+		ReSaveFile(m_strSavePath.c_str());
+	}
 	
 	ImGui::End();
 
@@ -402,6 +468,7 @@ void CEffect_Editor::Describe_Entity()
 
 			if (FAILED(Add_PartObject<CEditEffect>("EffectObject" + to_string(m_iNumPart++), ENUM_CLASS(LEVEL::EFFECT), nullptr, &PartsDesc)))
 				return;
+
 
 
 		}

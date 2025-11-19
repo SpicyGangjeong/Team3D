@@ -21,8 +21,8 @@ HRESULT CMission_Icon::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = -290.f;
-	Desc.fY = 103.f;
+	Desc.fX = -275.f;
+	Desc.fY = 145.f;
 	Desc.fSizeX = 60.f;
 	Desc.fSizeY = 60.f;
 
@@ -38,9 +38,16 @@ HRESULT CMission_Icon::Initialize(void* pArg)
 	}
 
 	m_fTimeMult = 3.f;
-	m_fAlpha = 1.f;
+	m_fAlpha = 0.f;
 	m_fAlphaTime = 3.f;
+	m_fMoveSpeed = 5.f;
+	m_fLerpX = m_fX;
+	m_fSortZ = 0.1f;
 	m_eQuestType = QUESTYPE::MAIN;
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Missiom_On"), [this]() {this->Set_FadeIn(); });
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Missiom_On"), [this]() {this->LerpOn(); });
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Missiom_Off"), [this]() {this->Set_FadeOut(); });
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Missiom_Off"), [this]() {this->LerpOff(); });
 	m_iType = ENUM_CLASS(m_eQuestType);
 	return S_OK;
 }
@@ -66,8 +73,6 @@ void CMission_Icon::Update(_float fTimeDelta)
 		return;
 	}
 
-	m_fOwnerAlpha = static_cast<CUIObject*>(m_pOwner)->Get_Alpha();
-	m_fCanvasAlpha = static_cast<CUIObject*>(m_pOwner)->Get_OwnerAlpha();
 	if (m_bFadeIn == true)
 	{
 		if (m_fAlpha <= 1.f)
@@ -90,6 +95,16 @@ void CMission_Icon::Update(_float fTimeDelta)
 			m_bFadeOut = false;
 			m_fAlpha = 0.f;
 		}
+	}
+	if (m_bLerpOn == true)
+	{
+
+		Start_Lerp(m_fMoveSpeed);
+	}
+
+	if (m_bLerpOff == true)
+	{
+		Reset_Pos(m_fMoveSpeed);
 	}
 
 	m_fTime += fTimeDelta * m_fTimeMult;
@@ -146,7 +161,7 @@ HRESULT CMission_Icon::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 	{
 		return E_FAIL;
-	}	
+	}
 	if (FAILED(m_pDiffuse_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", m_iType)))
 	{
 		return E_FAIL;

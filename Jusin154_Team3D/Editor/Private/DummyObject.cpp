@@ -3,14 +3,20 @@
 
 #include "GameInstance.h"
 #include "DebugCamera.h"
+#include "State_Idle.h"
+#include "State_Walk.h"
+#include "State_Dodge.h"
+#include "State_Sprint.h"
+#include "State_Jump.h"
+#include "State_Skill.h"
 
 CDummyObject::CDummyObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+	: CUnit(pDevice, pContext)
 {
 }
 
 CDummyObject::CDummyObject(const CDummyObject& Prototype)
-	: CGameObject(Prototype)
+	: CUnit(Prototype)
 {
 }
 
@@ -49,9 +55,7 @@ void CDummyObject::Update(_float fTimeDelta)
 
 void CDummyObject::Late_Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
-		m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
-	}
+	m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
 }
 
 HRESULT CDummyObject::Render()
@@ -89,7 +93,13 @@ HRESULT CDummyObject::Render()
 
 HRESULT CDummyObject::Ready_Components()
 {
-	__super::Ready_Components(nullptr);
+	CTransform::TRANSFORM_DESC Desc = {};
+
+	Desc.fSpeedPerSec = 10.f;
+	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
+	Desc.fRadius = 10.f;
+
+	__super::Ready_Components(&Desc);
 
 	/* Com_Model */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_strModelPrototypeTag,
@@ -131,7 +141,6 @@ CDummyObject* CDummyObject::Create(ID3D11Device* pDevice, ID3D11DeviceContext* p
 		MSG_BOX("Failed to Created : CDummyObject");
 		SAFE_RELEASE(pInstance);
 	}
-
 	return pInstance;
 }
 
@@ -144,18 +153,12 @@ CGameObject* CDummyObject::Clone(void* pArg, CGameObject* pOwner)
 		MSG_BOX("Failed to Cloned : CDummyObject");
 		SAFE_RELEASE(pInstance);
 	}
-
 	return pInstance;
 }
-
-
 
 void CDummyObject::Free()
 {
 	__super::Free();
-
-	SAFE_RELEASE(m_pShaderCom);
-	SAFE_RELEASE(m_pModelCom);
 }
 
 void CDummyObject::Describe_Entity()

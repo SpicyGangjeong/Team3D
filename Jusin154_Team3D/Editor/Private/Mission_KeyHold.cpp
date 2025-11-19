@@ -3,12 +3,12 @@
 #include "GameInstance.h"
 
 CMission_KeyHold::CMission_KeyHold(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-    :CElementObject(pDevice, pContext)
+	:CElementObject(pDevice, pContext)
 {
 }
 
 CMission_KeyHold::CMission_KeyHold(const CMission_KeyHold& rhs)
-    :CElementObject(rhs)
+	:CElementObject(rhs)
 {
 }
 
@@ -60,8 +60,6 @@ void CMission_KeyHold::Update(_float fTimeDelta)
 		return;
 	}
 
-	m_fOwnerAlpha = static_cast<CUIObject*>(m_pOwner)->Get_Alpha();
-	m_fCanvasAlpha = static_cast<CUIObject*>(m_pOwner)->Get_OwnerAlpha();
 	if (m_bFadeIn == true)
 	{
 		if (m_fAlpha <= 1.f)
@@ -86,13 +84,39 @@ void CMission_KeyHold::Update(_float fTimeDelta)
 		}
 	}
 
-	if (m_pGameInstance->Key_Pressing(DIK_V))
+
+	if (m_bKeyHold == false)
 	{
-		m_fTime += fTimeDelta * m_fTimeMult;
+		if (m_pGameInstance->Key_Pressing(DIK_V))
+		{
+			m_fTime += fTimeDelta * m_fTimeMult;
+		}
+		else
+		{
+			m_fTime = 0.f;
+			m_bKeyHold = false;
+		}
+	}
+
+	if (m_pGameInstance->Key_Up(DIK_V))
+	{
+		m_bKeyHold = false;
+	}
+
+	if (m_fTimeMult <= m_fTime)
+	{
+		m_fTime = 0.f;
+		m_bisHoldOn = !m_bisHoldOn;
+		m_bKeyHold = true;
+	}
+
+	if (m_bisHoldOn)
+	{
+		static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Missiom_On"));
 	}
 	else
 	{
-		m_fTime = 0.f;
+		static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Missiom_Off"));
 	}
 
 	__super::Update(fTimeDelta);

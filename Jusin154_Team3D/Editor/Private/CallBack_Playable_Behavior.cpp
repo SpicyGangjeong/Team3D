@@ -7,21 +7,43 @@ CCallBack_Playable_Behavior::CCallBack_Playable_Behavior()
 {
 }
 
+CCallBack_Playable_Behavior::~CCallBack_Playable_Behavior()
+{
+}
+
 PSX::PxControllerBehaviorFlags CCallBack_Playable_Behavior::getBehaviorFlags(const PSX::PxShape& shape, const PSX::PxActor& actor)
 {
 	if (nullptr == actor.userData) {
 		return PSX::PxControllerBehaviorFlags(0);
 	}
+	PSX::PxControllerBehaviorFlags eResults = PSX::PxControllerBehaviorFlags(0);
 	PhsXUserData* pActorData = static_cast<PhsXUserData*>(actor.userData);
-
 	switch (pActorData->eKind)
 	{
 	case PHYSX_KIND::BODY_STATIC:
-		return PSX::PxControllerBehaviorFlag::eCCT_CAN_RIDE_ON_OBJECT
-			| PSX::PxControllerBehaviorFlag::eCCT_SLIDE;
+		eResults = PSX::PxControllerBehaviorFlag::eCCT_SLIDE | PSX::PxControllerBehaviorFlag::eCCT_CAN_RIDE_ON_OBJECT;
 		break;
 	case PHYSX_KIND::BODY_DYNAMIC:
-		return PSX::PxControllerBehaviorFlag::eCCT_SLIDE;
+		switch (pActorData->iSubKind)
+		{
+		case 20:
+			eResults = PSX::PxControllerBehaviorFlag::eCCT_SLIDE;
+			break;
+		case 21:
+			eResults = PSX::PxControllerBehaviorFlag::eCCT_CAN_RIDE_ON_OBJECT;
+			break;
+		case 22:
+			eResults = PSX::PxControllerBehaviorFlag::eCCT_SLIDE | PSX::PxControllerBehaviorFlag::eCCT_CAN_RIDE_ON_OBJECT;
+			break;
+		case 23:
+			eResults = PSX::PxControllerBehaviorFlag::eCCT_CAN_RIDE_ON_OBJECT;
+			break;
+		case 24:
+			eResults = PSX::PxControllerBehaviorFlags(0);
+			break;
+		default:
+			break;
+		}
 		break;
 	case PHYSX_KIND::CCTActor:
 		// Action
@@ -32,9 +54,7 @@ PSX::PxControllerBehaviorFlags CCallBack_Playable_Behavior::getBehaviorFlags(con
 		break;
 	}
 
-
-	// 나머지는 아무 특별 동작 없음
-	return PSX::PxControllerBehaviorFlags(0);
+	return eResults;
 }
 
 PSX::PxControllerBehaviorFlags CCallBack_Playable_Behavior::getBehaviorFlags(const PSX::PxController& controller)
@@ -50,4 +70,28 @@ PSX::PxControllerBehaviorFlags CCallBack_Playable_Behavior::getBehaviorFlags(con
 	//return PSX::PxControllerBehaviorFlag::eCCT_CAN_RIDE_ON_OBJECT;
 
 	return PSX::PxControllerBehaviorFlags(0);
+}
+
+HRESULT CCallBack_Playable_Behavior::Initialize(CCharacter_Controller* pController, CRigidBody_Dynamic* pPartDynamicObject)
+{
+	m_pController = pController;
+	m_pPartDynamicBody = pPartDynamicObject;
+	m_pGameInstance = CGameInstance::GetInstance();
+	SAFE_ADDREF(m_pController);
+	SAFE_ADDREF(m_pPartDynamicBody);
+	SAFE_ADDREF(m_pGameInstance);
+	return S_OK;
+}
+
+HRESULT CCallBack_Playable_Behavior::Finalize()
+{
+	SAFE_RELEASE(m_pGameInstance);
+	SAFE_RELEASE(m_pPartDynamicBody);
+	SAFE_RELEASE(m_pController);
+	return S_OK;
+}
+
+CCallBack_Playable_Behavior* CCallBack_Playable_Behavior::Create()
+{
+	return new CCallBack_Playable_Behavior();
 }

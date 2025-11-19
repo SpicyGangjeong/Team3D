@@ -13,7 +13,8 @@ public:
 		_int		iNumInstance = { 1 }; // 인스턴스 개수
 
 		_bool		isLoop = { true };
-		_bool		isBillboard = { false };
+		_bool		isDrop = { false };
+
 		_float2		vLifeTime = { 1.f , 1.f }; // 라이프 타임 min , max
 		_float3		vSizeMin = { 1.f, 1.f ,1.f }; // 사이즈 min xyz
 		_float3		vSizeMax = { 1.f ,1.f ,1.f }; // 사이즈 max xyz
@@ -26,20 +27,58 @@ public:
 
 		_float2		vMaskingUVMoveTime = { 1.f, 1.f };
 		_float2		vDiffuseUVMoveTime = { 1.f, 1.f };
+		_float2     vDistortionUVMoveTime = { 1.f , 1.f };
 		_float2		vNoiseUVMoveTime = { 1.f ,1.f };
 		_float2		vAniTime = { 1.f , 1.f };
 		_float2	    vAniIndex = {};
 
+		_bool		isMoveForward = {};
+		_float2		vGravity = { 0.f , 9.8f };
+		_bool		isSinWave = {};
+		_float3     vSinMinAmount = { 0.f , 0.f , 0.f};
+		_float3     vSinMaxAmount = { 0.f , 0.f , 0.f };
+
 	}INSTANCE_DESC;
+
+	typedef struct tagPreInstanceDesc
+	{
+		_int		iNumInstance = { 1 }; // 인스턴스 개수
+
+		_bool		isLoop = { true };
+		_bool		isDrop = { false };
+
+		_float2		vLifeTime = { 1.f , 1.f }; // 라이프 타임 min , max
+		_float3		vSizeMin = { 1.f, 1.f ,1.f }; // 사이즈 min xyz
+		_float3		vSizeMax = { 1.f ,1.f ,1.f }; // 사이즈 max xyz
+		_float3		vRotationAngleMin = {};  // 로테이션 min x y z for angle
+		_float3		vRotationAngleMax = {};// 로테이션 max x y z for angle
+		_float2		vRotationSpeed = {}; // 로테이션 스피드 min , max
+		_float2		vSpeed = {}; // 스피드 min , max
+		_float3		vCenter = {}; // 센터 위치 
+		_float3		vRange = {}; // 위치 범위 
+
+		_float2		vMaskingUVMoveTime = { 1.f, 1.f };
+		_float2		vDiffuseUVMoveTime = { 1.f, 1.f };
+		_float2     vDistortionUVMoveTime = { 1.f , 1.f };
+		_float2		vNoiseUVMoveTime = { 1.f ,1.f };
+		_float2		vAniTime = { 1.f , 1.f };
+		_float2	    vAniIndex = {};
+
+		_bool		isMoveForward = {};
+		_float2		vGravity = { 0.f , 9.8f };
+		_bool		isSinWave = {};
+		_float3     vSinMinAmount = { 0.f , 0.f , 0.f };
+		_float3     vSinMaxAmount = { 0.f , 0.f , 0.f };
+	}PRE_INSTANCE_DESC;
 
 	typedef struct tagCSParticleDesc
 	{
 		_float4x4 CamViewInvMatrix = {};
 
 		_int	 isLoop = {};
-		_int     isBillboard = {};
-		_int     isPadding2 = {};
-		_int     isPadding3 = {};
+		_int     isDrop = {};
+		_int     isMoveForward = {};
+		_int     isSinWave = {};
 
 		_float   fTimeDelta = {};
 		_float	 fPadding2 = {};
@@ -60,10 +99,14 @@ public:
 
 		_float2	 vMaskingUVMoveTime = {};
 		_float2	 vDiffuseUVMoveTime = {};
+		_float2  vDistortionUVMoveTime = {};
 		_float2  vNoiseUVMoveTime = {};
 		_float2	 vAniTime = {};
 
 		_float2	 vAniIndex = {};
+		_float   fGravity = {};
+
+		_float3  vSinAmount = {};
 
 	}CS_PARTICLE_VALUE_DESC;
 
@@ -76,6 +119,7 @@ public:
 #ifdef EDITOR_PROJECT
 	virtual HRESULT Initialize_Prototype(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex);
 	HRESULT			Save_InstanceModel(HANDLE hFile);
+	HRESULT			PreLoad(HANDLE hFile);
 #endif	
 
 	virtual HRESULT Initialize(void* pArg) override;

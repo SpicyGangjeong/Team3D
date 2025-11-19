@@ -9,6 +9,8 @@
 #include "BuildingContainer.h"
 #include "DummySkyBox.h"
 #include "MainLight.h"
+#include "Land.h"
+#include "Player.h"
 
 CLevel_MapViewer::CLevel_MapViewer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -88,6 +90,9 @@ HRESULT CLevel_MapViewer::Ready_Layer_Camera(const _wstring& strLayerTag)
 HRESULT CLevel_MapViewer::Ready_Layer_Background(const _wstring& strLayerTag)
 {
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummySkyBox>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
 		return E_FAIL;
 
 	return S_OK;

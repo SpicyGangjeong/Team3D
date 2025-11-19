@@ -3,7 +3,7 @@
 #include "Editor_Define.h"
 #include "GameObject.h"
 #include "CallBack_Playable_Behavior.h"
-#include "CallBack_Playable_HitRepot.h"
+#include "CallBack_Playable_HitReport.h"
 
 NS_BEGIN(Engine)
 class CModel;
@@ -16,11 +16,12 @@ NS_BEGIN(Editor)
 class CDummy_PhysXPlayable final : public CGameObject
 {
 public:
-	typedef struct tagPlayableStartPos
+	typedef struct tagPhysXDummyDesc
 	{
-		_float3 vPos = {};
-		_float3 vRotRPY = {};
-	}PlayableSTARTPOS_DESC;
+		_float3 vPos = { };
+		_float3 vRotRPY = { };
+		_uint iSubKind = { };
+	}PHYSXDUMMY_DESC;
 private:
 	CDummy_PhysXPlayable(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CDummy_PhysXPlayable(const CDummy_PhysXPlayable& rhs);
@@ -33,12 +34,13 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
-	CModel* m_pModelCom = { nullptr };
-	CShader* m_pShaderCom = { nullptr };
+	CCharacter_Controller*		m_pCharacter_Controller = { nullptr };
+	CRigidBody_Dynamic*			m_pRigidBody = { nullptr };
+	CModel*		m_pModelCom = { nullptr };
+	CShader*	m_pShaderCom = { nullptr };
 	
-	CCallBack_Playable_Behavior m_pCallBack_Behavior = {};
-	CCallBack_Playable_HitRepot m_pCallBack_HitReport = {};
+	CCallBack_Playable_Behavior* m_pCallBack_Behavior = { nullptr };
+	CCallBack_Playable_HitReport* m_pCallBack_HitReport = { nullptr };
 
 private:
 	virtual HRESULT Initialize_Prototype() override;

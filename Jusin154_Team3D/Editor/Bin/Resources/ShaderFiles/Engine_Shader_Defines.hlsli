@@ -3,6 +3,8 @@ vector g_vMtrlDiffuse = 1.f;
 vector g_vMtrlAmbient = 1.f;
 vector g_vMtrlSpecular = 1.f;
 
+float PI = 3.14592;
+
 sampler DefaultSampler = sampler_state
 {
     Filter = MIN_MAG_MIP_LINEAR;
@@ -155,6 +157,52 @@ BlendState BS_UIBlend
     BlendOpAlpha = Add;
 
     RenderTargetWriteMask[0] = 0x0F; // RGBA 모두 출력
+};
+
+BlendState BS_WB_Acc
+{
+    BlendEnable[0] = true;
+    BlendEnable[1] = true;
+    BlendEnable[2] = true;
+    BlendEnable[3] = true;
+    BlendEnable[4] = true;
+    BlendEnable[5] = true;
+    BlendEnable[6] = true;
+    BlendEnable[7] = true;
+
+    SrcBlend[0] = one;
+    DestBlend[0] = one;
+    BlendOp[0] = Add;
+
+    SrcBlend[1] = Zero;
+    DestBlend[1] = Inv_Src_Alpha;
+    BlendOp[1] = Add;
+
+
+    SrcBlend[2] = one;
+    DestBlend[2] = one;
+    BlendOp[2] = Add;
+};
+
+BlendState BS_WeightBlend
+{
+    BlendEnable[0] = true;
+    BlendEnable[1] = true;
+    BlendEnable[2] = true;
+    BlendEnable[3] = true;
+    BlendEnable[4] = true;
+    BlendEnable[5] = true;
+    BlendEnable[6] = true;
+    BlendEnable[7] = true;
+
+
+    SrcBlend[0] = Src_Alpha;
+    DestBlend[0] = Inv_Src_Alpha;
+    
+    BlendOp[0] = Add;
+
+    
+
 };
 
 float ShadowVisibility_hwPCF(Texture2D ShadowMap, float4 vLightClip, float2 vShadowMapSize, float bias)
