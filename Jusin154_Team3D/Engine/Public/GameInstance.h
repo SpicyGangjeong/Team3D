@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "Prototype_Manager.h"
+#include "ThreadHolder.h"
 #include "GameObject_Manager.h"
 
 NS_BEGIN(Engine)
@@ -92,7 +93,6 @@ public:
 	class CLayer* Get_Layer(_uint iLayerLevelIndex, const _wstring& strLayerTag);
 	void Clear_Objects_With_Layers(_uint iLevelIndex);
 #pragma endregion
-
 
 #pragma region RENDERER
 	HRESULT Add_RenderGroup(RENDER eRenderGroup, class CGameObject* pRenderObject);
@@ -203,7 +203,16 @@ public:
 	HRESULT SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
 	HRESULT LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes); // 모델 불러왔던 경로에 그대로 있음
 #pragma endregion
-
+#pragma region THREADHOLDER
+	template<class Function, class... Args>
+	future<invoke_result_t<Function, Args...>> EnqueueJob(Function&& func, Args&&... args)
+	{
+		return m_pThreadHolder->EnqueueJob(
+			forward<Function>(func),
+			forward<Args>(args)...
+		);
+	}
+#pragma endregion
 
 public:
 	void Add_ModelToMap(const _char* filePath, CModel* pModel)
@@ -244,6 +253,7 @@ private:
 	class CCollider_Manager*		m_pCollider_Manager = { nullptr };
 	class CPhysX_Manager*			m_pPhysX_Manager = { nullptr };
 	class CPicking*					m_pPicking = { nullptr };
+	class CThreadHolder*			m_pThreadHolder = { nullptr };
 
 #ifdef _DEBUG
 private:
