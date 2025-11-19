@@ -207,6 +207,7 @@ call Update_Lib.bat
     <ClCompile Include="..\Private\ComputeShader.cpp" />
     <ClCompile Include="..\Private\ContainerObject.cpp" />
     <ClCompile Include="..\Private\DebugDraw.cpp" />
+    <ClCompile Include="..\private\QuadTree.cpp" />
     <ClCompile Include="..\Private\RigidBody_Dynamic_Joint.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -418,6 +419,7 @@ call Update_Lib.bat
     <ClInclude Include="..\Public\Bounding_OBB.h" />
     <ClInclude Include="..\Public\Bounding_Sphere.h" />
     <ClInclude Include="..\public\FSM.h" />
+    <ClInclude Include="..\public\QuadTree.h" />
     <ClInclude Include="..\Public\RigidBody_Dynamic_Joint.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
