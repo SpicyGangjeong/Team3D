@@ -33,24 +33,30 @@ HRESULT CTerrain::Initialize(void* pArg)
 
 void CTerrain::Priority_Update(_float fTimeDelta)
 {
+	GUI::Begin("Picking Position");
+	if (m_pGameInstance->Mouse_Pressing(0))
+	{
+		if (m_pGameInstance->isPicking(&m_vPickingPosition))
+		{
+			m_pVIBufferCom->FitY(m_pTransformCom->Get_XMWorldMatrix(), m_vPickingPosition.y);
+		}
+	}
 
+	GUI::DragFloat3("Pos", (_float*)(&m_vPickingPosition));
+
+	GUI::End();
 }
 
 void CTerrain::Update(_float fTimeDelta)
 {
-	GUI::Begin("Picking Position");
-	if (m_pGameInstance->Mouse_Down(0))
-		m_pVIBufferCom->Picking(m_pTransformCom, m_vPickingPosition);
-
-	GUI::DragFloat3("Pos", (_float*)(&m_vPickingPosition));
-	GUI::End();
+	m_pVIBufferCom->Culling(XMMatrixIdentity());
 }
 
 void CTerrain::Late_Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
+	//if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
 		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-	}
+	//}
 }
 
 HRESULT CTerrain::Render()

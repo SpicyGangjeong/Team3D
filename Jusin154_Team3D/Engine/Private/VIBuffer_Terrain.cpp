@@ -1,39 +1,46 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "VIBuffer_Terrain.h"
-
 #include "GameInstance.h"
+#include "QuadTree.h"
 
-CVIBuffer_Terrain::CVIBuffer_Terrain(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CVIBuffer_Terrain::CVIBuffer_Terrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CVIBuffer{ pDevice, pContext }
 {
 }
 
-CVIBuffer_Terrain::CVIBuffer_Terrain(CVIBuffer_Terrain& rhs)
-	:CVIBuffer(rhs),
-	m_iNumVerticesX{ rhs.m_iNumVerticesX },
-	m_iNumVerticesZ{ rhs.m_iNumVerticesZ }
+CVIBuffer_Terrain::CVIBuffer_Terrain(const CVIBuffer_Terrain& rhs)
+	: CVIBuffer(rhs)
+	, m_iNumVerticesX{ rhs.m_iNumVerticesX }
+	, m_iNumVerticesZ{ rhs.m_iNumVerticesZ }
+	, m_pQuadTree{ rhs.m_pQuadTree }
 {
+	Safe_AddRef(m_pQuadTree);
 }
 
 HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _char* pFilePath, _uint iSizeX, _uint iSizeZ)
 {
-	m_bChange = { false };
 
-	m_iNumVerticesX = iSizeX;
-	m_iNumVerticesZ = iSizeZ;
+	_ulong			dwByte = {};
+	HANDLE			hFile = CreateFile(CMyTools::ToWstring(pFilePath).c_str(), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+
+	BITMAPFILEHEADER			fh{};
+	BITMAPINFOHEADER			ih{};
+	
+	ReadFile(hFile, &fh, sizeof fh, &dwByte, nullptr);
+	ReadFile(hFile, &ih, sizeof ih, &dwByte, nullptr);
+
+	m_iNumVerticesX = ih.biWidth + 1;//iSizeX;
+	m_iNumVerticesZ = ih.biHeight + 1;//iSizeZ;
 	m_iNumVertices = m_iNumVerticesX * m_iNumVerticesZ;
-
-	m_pVertexPositions = new _float3[m_iNumVertices];
-	ZeroMemory(m_pVertexPositions, sizeof(_float3) * m_iNumVertices);
-
-	//if (FAILED(Load_HeightFile(pFilePath)))
-	//	return E_FAIL;
-
-	m_iNumVertexBuffers = 1;
-	m_iVertexStride = sizeof(VTXNORTEX);
 
 	_uint* pPixels = new _uint[m_iNumVertices];
 	ZeroMemory(pPixels, sizeof(_uint) * m_iNumVertices);
+
+	ReadFile(hFile, pPixels, sizeof(_uint) * ih.biHeight * ih.biWidth, &dwByte, nullptr);
+
+	m_iNumVertexBuffers = 1;
+
+	m_iVertexStride = sizeof(VTXNORTEX);
 
 	m_iNumIndices = (m_iNumVerticesX - 1) * (m_iNumVerticesZ - 1) * 2 * 3;
 	m_iIndexStride = 4;
@@ -41,103 +48,107 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _char* pFilePath, _uint iS
 	m_eIndexFormat = DXGI_FORMAT_R32_UINT;
 	m_ePrimitive = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
-#pragma region VETEX_BUFFER
-	D3D11_BUFFER_DESC VBDesc = {};
+#pragma region VERTEX_BUFFER
+	D3D11_BUFFER_DESC		VBDesc{};
 	VBDesc.ByteWidth = m_iVertexStride * m_iNumVertices;
-	VBDesc.Usage = D3D11_USAGE_DEFAULT;
-	VBDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	VBDesc.Usage = D3D11_USAGE_STAGING;
+	VBDesc.BindFlags = 0;//D3D11_BIND_VERTEX_BUFFER;
 	VBDesc.StructureByteStride = m_iVertexStride;
-	VBDesc.CPUAccessFlags = 0;
+	VBDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ;
 	VBDesc.MiscFlags = 0;
 
 	VTXNORTEX* pVertices = new VTXNORTEX[m_iNumVertices];
 	ZeroMemory(pVertices, sizeof(VTXNORTEX) * m_iNumVertices);
 
-	for (_uint i = 0; i < m_iNumVerticesZ; ++i)
-	{
-		for (_uint j = 0; j < m_iNumVerticesX; ++j)
-		{
-			_uint iIndex = j + i * m_iNumVerticesX;
+	m_pVertexPositions = new _float3[m_iNumVertices];
+	ZeroMemory(m_pVertexPositions, sizeof(_float3) * m_iNumVertices);
 
-			m_pVertexPositions[iIndex] = pVertices[iIndex].vPosition = _float3((_float)j, 0.f, (_float)i);
+	for (_uint i = 0; i < m_iNumVerticesZ; i++)
+	{
+		for (_uint j = 0; j < m_iNumVerticesX; j++)
+		{
+			_uint		iIndex = i * m_iNumVerticesX + j;
+
+			m_pVertexPositions[iIndex] = pVertices[iIndex].vPosition = _float3((_float)j, (_float)(pPixels[iIndex] & 0x000000ff) / 5.f, (_float)i);
 			pVertices[iIndex].vNormal = _float3(0.f, 0.f, 0.f);
 			pVertices[iIndex].vTexcoord = _float2(j / (m_iNumVerticesX - 1.f), i / (m_iNumVerticesZ - 1.f));
 		}
 	}
-	D3D11_SUBRESOURCE_DATA InitVBData = {};
-	InitVBData.pSysMem = pVertices;
+
+	D3D11_SUBRESOURCE_DATA	InitialVBData{};
+	InitialVBData.pSysMem = pVertices;
 #pragma endregion
 
 #pragma region INDEX_BUFFER
-	D3D11_BUFFER_DESC IBDesc = {};
-	IBDesc.ByteWidth = m_iNumIndices * m_iIndexStride;
-	IBDesc.Usage = D3D11_USAGE_DEFAULT;
+	D3D11_BUFFER_DESC		IBDesc{};
+	IBDesc.ByteWidth = m_iIndexStride * m_iNumIndices;
+	IBDesc.Usage = D3D11_USAGE_DYNAMIC;
 	IBDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	IBDesc.StructureByteStride = m_iIndexStride;
-	IBDesc.CPUAccessFlags = 0;
+	IBDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	IBDesc.MiscFlags = 0;
+
 
 	_uint* pIndices = new _uint[m_iNumIndices];
 	ZeroMemory(pIndices, sizeof(_uint) * m_iNumIndices);
 
-	_uint iNumIndex = {};
-	_uint iCountZ = m_iNumVerticesZ - 1;
-	_uint iCountX = m_iNumVerticesX - 1;
-	for (_uint i = 0; i < iCountZ; ++i)
-	{
-		for (_uint j = 0; j < iCountX; ++j)
-		{
-			_uint iIndex = j + i * m_iNumVerticesX;
+	_uint		iNumIndices = {};
 
-			_uint Indices[4] = {
+	for (_uint i = 0; i < m_iNumVerticesZ - 1; i++)
+	{
+		for (_uint j = 0; j < m_iNumVerticesX - 1; j++)
+		{
+			_uint		iIndex = i * m_iNumVerticesX + j;
+
+			_uint		iIndices[4] = {
 				iIndex + m_iNumVerticesX,
 				iIndex + m_iNumVerticesX + 1,
 				iIndex + 1,
-				iIndex,
+				iIndex
 			};
 
-			pIndices[iNumIndex++] = Indices[0];
-			pIndices[iNumIndex++] = Indices[1];
-			pIndices[iNumIndex++] = Indices[2];
+			_vector		vSourDir, vDestDir, vNormal;
 
-			_vector vSrc, vDst, vNormal;
+			pIndices[iNumIndices++] = iIndices[0];
+			pIndices[iNumIndices++] = iIndices[1];
+			pIndices[iNumIndices++] = iIndices[2];
 
-			vSrc = XMLoadFloat3(&pVertices[Indices[1]].vPosition) - XMLoadFloat3(&pVertices[Indices[0]].vPosition);
-			vDst = XMLoadFloat3(&pVertices[Indices[2]].vPosition) - XMLoadFloat3(&pVertices[Indices[0]].vPosition);
+			vSourDir = XMLoadFloat3(&pVertices[iIndices[1]].vPosition) - XMLoadFloat3(&pVertices[iIndices[0]].vPosition);
+			vDestDir = XMLoadFloat3(&pVertices[iIndices[2]].vPosition) - XMLoadFloat3(&pVertices[iIndices[1]].vPosition);
+			vNormal = XMVector3Normalize(XMVector3Cross(vSourDir, vDestDir));
 
-			vNormal = XMVector3Normalize(XMVector3Cross(vSrc, vDst));
+			XMStoreFloat3(&pVertices[iIndices[0]].vNormal, XMLoadFloat3(&pVertices[iIndices[0]].vNormal) + vNormal);
+			XMStoreFloat3(&pVertices[iIndices[1]].vNormal, XMLoadFloat3(&pVertices[iIndices[1]].vNormal) + vNormal);
+			XMStoreFloat3(&pVertices[iIndices[2]].vNormal, XMLoadFloat3(&pVertices[iIndices[2]].vNormal) + vNormal);
 
-			XMStoreFloat3(&pVertices[Indices[0]].vNormal, XMLoadFloat3(&pVertices[Indices[0]].vNormal) + vNormal);
-			XMStoreFloat3(&pVertices[Indices[1]].vNormal, XMLoadFloat3(&pVertices[Indices[1]].vNormal) + vNormal);
-			XMStoreFloat3(&pVertices[Indices[2]].vNormal, XMLoadFloat3(&pVertices[Indices[2]].vNormal) + vNormal);
+			pIndices[iNumIndices++] = iIndices[0];
+			pIndices[iNumIndices++] = iIndices[2];
+			pIndices[iNumIndices++] = iIndices[3];
 
-			pIndices[iNumIndex++] = Indices[0];
-			pIndices[iNumIndex++] = Indices[2];
-			pIndices[iNumIndex++] = Indices[3];
+			vSourDir = XMLoadFloat3(&pVertices[iIndices[2]].vPosition) - XMLoadFloat3(&pVertices[iIndices[0]].vPosition);
+			vDestDir = XMLoadFloat3(&pVertices[iIndices[3]].vPosition) - XMLoadFloat3(&pVertices[iIndices[2]].vPosition);
+			vNormal = XMVector3Normalize(XMVector3Cross(vSourDir, vDestDir));
 
-			vSrc = XMLoadFloat3(&pVertices[Indices[2]].vPosition) - XMLoadFloat3(&pVertices[Indices[0]].vPosition);
-			vDst = XMLoadFloat3(&pVertices[Indices[3]].vPosition) - XMLoadFloat3(&pVertices[Indices[2]].vPosition);
-
-			vNormal = XMVector3Normalize(XMVector3Cross(vSrc, vDst));
-
-			XMStoreFloat3(&pVertices[Indices[0]].vNormal, XMLoadFloat3(&pVertices[Indices[0]].vNormal) + vNormal);
-			XMStoreFloat3(&pVertices[Indices[2]].vNormal, XMLoadFloat3(&pVertices[Indices[2]].vNormal) + vNormal);
-			XMStoreFloat3(&pVertices[Indices[3]].vNormal, XMLoadFloat3(&pVertices[Indices[3]].vNormal) + vNormal);
+			XMStoreFloat3(&pVertices[iIndices[0]].vNormal, XMLoadFloat3(&pVertices[iIndices[0]].vNormal) + vNormal);
+			XMStoreFloat3(&pVertices[iIndices[2]].vNormal, XMLoadFloat3(&pVertices[iIndices[2]].vNormal) + vNormal);
+			XMStoreFloat3(&pVertices[iIndices[3]].vNormal, XMLoadFloat3(&pVertices[iIndices[3]].vNormal) + vNormal);
 		}
 	}
 
-	for (_uint i = 0; i < m_iNumVertices; ++i)
+	for (size_t i = 0; i < m_iNumVertices; i++)
 	{
-		XMStoreFloat3(&pVertices[i].vNormal, XMVector3Normalize(XMLoadFloat3(&pVertices[i].vNormal)));
+		XMStoreFloat3(&pVertices[i].vNormal,
+			XMVector3Normalize(XMLoadFloat3(&pVertices[i].vNormal)));
 	}
 
-	D3D11_SUBRESOURCE_DATA InitIBData = {};
-	InitIBData.pSysMem = pIndices;
+	D3D11_SUBRESOURCE_DATA	InitialIBData{};
+	InitialIBData.pSysMem = pIndices;
+#pragma endregion
 
-	if (FAILED(m_pDevice->CreateBuffer(&VBDesc, &InitVBData, &m_pVB)))
+	if (FAILED(m_pDevice->CreateBuffer(&VBDesc, &InitialVBData, &m_pVB)))
 		return E_FAIL;
 
-	if (FAILED(m_pDevice->CreateBuffer(&IBDesc, &InitIBData, &m_pIB)))
+	if (FAILED(m_pDevice->CreateBuffer(&IBDesc, &InitialIBData, &m_pIB)))
 		return E_FAIL;
 
 	Safe_Delete_Array(pVertices);
@@ -145,7 +156,11 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _char* pFilePath, _uint iS
 
 	Safe_Delete_Array(pPixels);
 
-#pragma endregion
+	m_pQuadTree = CQuadTree::Create(m_iNumVerticesX * m_iNumVerticesZ - m_iNumVerticesX, m_iNumVerticesX * m_iNumVerticesZ - 1, m_iNumVerticesX - 1, 0);
+	if (nullptr == m_pQuadTree)
+		return E_FAIL;
+
+	m_pQuadTree->SetUp_Neighbors();
 
 	return S_OK;
 }
@@ -155,74 +170,82 @@ HRESULT CVIBuffer_Terrain::Initialize(void* pArg)
 	return S_OK;
 }
 
-_bool CVIBuffer_Terrain::Picking(CTransform* pTransform, _float3& pOut)
+_bool CVIBuffer_Terrain::Picking(_fmatrix WorldMatrix, _float3* pOut)
 {
-	_matrix WorldMatrixInv = pTransform->Get_WorldMatrixInv();
+	_matrix WorldInv = XMMatrixInverse(nullptr, WorldMatrix);
 
-	m_pGameInstance->Ray_WorldToLocal(&WorldMatrixInv);
-
-	_uint iNumIndices = {};
-
-	for (_uint i = 0; i < m_iNumVerticesZ - 1; i++)
-	{
-		for (_uint j = 0; j < m_iNumVerticesX - 1; j++)
-		{
-			_uint	iIndex = i * m_iNumVerticesX + j;
-
-			_uint	iIndices[4] = {
-				iIndex + m_iNumVerticesX,
-				iIndex + m_iNumVerticesX + 1,
-				iIndex + 1,
-				iIndex
-			};
-
-			if (true == m_pGameInstance->MousePicking_InLocalSpace(m_pVertexPositions[iIndices[0]], m_pVertexPositions[iIndices[1]], m_pVertexPositions[iIndices[2]], pOut))
-			{
-				XMStoreFloat3(&pOut, XMVector3TransformCoord(XMLoadFloat3(&pOut), XMLoadFloat4x4(pTransform->Get_WorldMatrixPtr())));
-				return true;
-			}
-
-			if (true == m_pGameInstance->MousePicking_InWorldSpace(m_pVertexPositions[iIndices[0]], m_pVertexPositions[iIndices[2]], m_pVertexPositions[iIndices[3]], pOut))
-			{
-				XMStoreFloat3(&pOut, XMVector3TransformCoord(XMLoadFloat3(&pOut), XMLoadFloat4x4(pTransform->Get_WorldMatrixPtr())));
-				return true;
-			}
-		}
-	}
-
-	return false;
+	m_pGameInstance->Ray_WorldToLocal(&WorldInv);
+	return m_pQuadTree->Picking(m_pGameInstance,m_pVertexPositions, *pOut, WorldMatrix);
 }
 
+void CVIBuffer_Terrain::Culling(_fmatrix WorldMatrix)
+{
+	m_pGameInstance->Transform_Frustum_ToLocalSpace(XMMatrixInverse(nullptr, WorldMatrix));
 
-CVIBuffer_Terrain * CVIBuffer_Terrain::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const _char * pFilePath, _uint iSizeX, _uint iSizeZ)
+	D3D11_MAPPED_SUBRESOURCE	SubResource{};
+
+	m_pContext->Map(m_pIB, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource);
+
+	_uint* pIndices = static_cast<_uint*>(SubResource.pData);
+
+	_uint		iNumIndices = {};
+
+	m_pQuadTree->Culling(m_pGameInstance, m_pVertexPositions, pIndices, &iNumIndices);
+
+	m_pContext->Unmap(m_pIB, 0);
+
+	m_iNumIndices = iNumIndices;
+}
+
+void CVIBuffer_Terrain::FitY(_fmatrix WorldMatrix, _float fY)
+{
+	m_pGameInstance->Transform_Frustum_ToLocalSpace(XMMatrixInverse(nullptr, WorldMatrix));
+
+	D3D11_MAPPED_SUBRESOURCE	SubResource{};
+
+	m_pContext->Map(m_pVB, 0, D3D11_MAP_WRITE, 0, &SubResource);
+
+	VTXNORTEX* pVertices = static_cast<VTXNORTEX*>(SubResource.pData);
+
+	_matrix WorldInv = XMMatrixInverse(nullptr, WorldMatrix);
+
+	m_pGameInstance->Ray_WorldToLocal(&WorldInv);
+
+	m_pQuadTree->Set_Y(m_pGameInstance, m_pVertexPositions, pVertices, WorldMatrix, fY);
+
+	m_pContext->Unmap(m_pVB, 0);
+}
+
+CVIBuffer_Terrain* CVIBuffer_Terrain::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pFilePath, _uint iSizeX, _uint iSizeZ)
 {
 	CVIBuffer_Terrain* pInstance = new CVIBuffer_Terrain(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype(pFilePath, iSizeX, iSizeZ)))
 	{
-		MSG_BOX("Failed to Create : CVIBuffer_Terrain");
-		SAFE_RELEASE(pInstance);
+		MSG_BOX("Failed to Created : CVIBuffer_Terrain");
+		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CVIBuffer_Terrain* CVIBuffer_Terrain::Clone(void* pArg, CGameObject* pOwner)
+CComponent* CVIBuffer_Terrain::Clone(void* pArg, class CGameObject* pOwner)
 {
 	CVIBuffer_Terrain* pInstance = new CVIBuffer_Terrain(*this);
-	pInstance->m_pOwner = pOwner;
+
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
 		MSG_BOX("Failed to Cloned : CVIBuffer_Terrain");
-		SAFE_RELEASE(pInstance);
+		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
-
 void CVIBuffer_Terrain::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pQuadTree);
 }
 
 void CVIBuffer_Terrain::Describe_Entity()
