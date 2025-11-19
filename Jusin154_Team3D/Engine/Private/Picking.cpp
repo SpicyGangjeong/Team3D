@@ -66,9 +66,12 @@ _bool CPicking::isPicking(_float3* pOut)
 
 	_uint iMouseIndex = ptMouse.y * m_iNumPixelW + ptMouse.x;
 
-	if (0.f == m_pPixels[iMouseIndex].w)
+	if (iMouseIndex > m_iNumPixelW * m_iNumPixelH)
 		return false;
 
+	if (0.f == m_pPixels[iMouseIndex].w)
+		return false;
+	 
 	_float3 vMousePos = _float3(0.f, 0.f, 0.f);
 
 	vMousePos.x = ptMouse.x / (m_iNumPixelW * 0.5f) - 1.f;

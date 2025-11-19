@@ -22,7 +22,11 @@ public:
 	void Update_TransformationMatirx(const vector<class CBone*>& Bones, _float fCurrentTrackPosition, _uint* pCurrentKeyFrameIndex,class CTransform* pTransform=nullptr);
 	_int Get_BoneIndex() { return { m_iBoneIndex }; }
 	void Set_BoneIndex(_int iBoneIndex) { m_iBoneIndex = iBoneIndex; }
-	void ResetRootMotion() { m_vPrevRootPos = { 0.f, 0.f, 0.f }; }
+	void ResetRootMotion() { 
+		m_vPrevRootPos = { 0.f, 0.f, 0.f }; 
+		m_vPrevRootRot = { 0.f,0.f,0.f,0.f };
+		m_bInitialRootRotSaved = false;
+	}
 	_matrix Get_BoneTransformationMatrix() { return m_BoneTransformationMatrix; }
 
 	KEYFRAME* Get_Frame(_uint iIndex);
@@ -38,7 +42,6 @@ private:
 	//
 	HRESULT Initialize(const vector<class CBone*>& Bones, _uint iIndex);
 
-
 private:
 	_char					m_szName[MAX_PATH] = {};	// 영향을 받을 본의 이름
 	_int					m_iBoneIndex = { -1 };		// 본 벡터에서 본의 인덱스
@@ -46,7 +49,11 @@ private:
 	_float4x4				m_PreTransformMatrix = {};
 	vector<KEYFRAME>		m_KeyFrames;	// 키프레임 벡터
 	_float3					m_vPrevRootPos = { 0.f, 0.f, 0.f };
+	_float4					m_vPrevRootRot = { 0.f, 0.f, 0.f,0.f };
 	_matrix					m_BoneTransformationMatrix = {};
+	_float m_fPrevYaw = 0.f;
+	_bool m_bInitialRootRotSaved = {false};
+_float4 m_vInitialRootRot = {};
 public:
 	static CChannel* Create(const vector<class CBone*>& Bones, _uint iIndex); // 럴프전용
 	static CChannel* Create(HANDLE hFile, DWORD& dwByte);

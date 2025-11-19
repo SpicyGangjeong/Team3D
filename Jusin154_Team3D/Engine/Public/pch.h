@@ -54,6 +54,9 @@ using namespace DirectX;
 #include <random>
 #include <fstream>
 #include <filesystem>
+#include <Thread>
+#include <mutex>
+
 
 using namespace std;
 

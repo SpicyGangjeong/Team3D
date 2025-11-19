@@ -166,12 +166,14 @@
     <ClInclude Include="..\Public\Action_Panel.h" />
     <ClInclude Include="..\Public\Body.h" />
     <ClInclude Include="..\public\Active_Icon.h" />
+    <ClInclude Include="..\Public\Broom.h" />
     <ClInclude Include="..\Public\CallBack_Monster_Behavior.h" />
     <ClInclude Include="..\Public\CallBack_Monster_HitReport.h" />
     <ClInclude Include="..\Public\CallBack_Playable_Behavior.h" />
     <ClInclude Include="..\Public\CallBack_Playable_HitReport.h" />
     <ClInclude Include="..\Public\DummyObject.h" />
     <ClInclude Include="..\public\DummySkyBox.h" />
+    <ClInclude Include="..\Public\Dummy_Globe.h" />
     <ClInclude Include="..\Public\Dummy_PhysXDoorFrame.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -207,6 +209,7 @@
     <ClInclude Include="..\Public\Goblin.h" />
     <ClInclude Include="..\Public\Information.h" />
     <ClInclude Include="..\public\Land.h" />
+    <ClInclude Include="..\Public\Level_BloomViewer.h" />
     <ClInclude Include="..\public\Level_MapViewer.h" />
     <ClInclude Include="..\Public\LoadingWidget.h" />
     <ClInclude Include="..\public\MapContainer.h" />
@@ -227,11 +230,14 @@
     <ClInclude Include="..\Public\State_Combat.h" />
     <ClInclude Include="..\Public\State_Dodge.h" />
     <ClInclude Include="..\Public\State_Idle.h" />
+    <ClInclude Include="..\Public\State_Idle_Turn.h" />
+    <ClInclude Include="..\Public\State_Jog.h" />
     <ClInclude Include="..\Public\State_Jump.h" />
     <ClInclude Include="..\Public\State_Land.h" />
     <ClInclude Include="..\Public\State_LightAttack.h" />
     <ClInclude Include="..\Public\State_Move.h" />
     <ClInclude Include="..\Public\State_Skill.h" />
+    <ClInclude Include="..\Public\State_Skill2.h" />
     <ClInclude Include="..\Public\State_Sprint.h" />
     <ClInclude Include="..\Public\State_Walk.h" />
     <ClInclude Include="..\public\Spell_Image.h" />
@@ -280,12 +286,14 @@
     <ClCompile Include="..\Private\Action_Panel.cpp" />
     <ClCompile Include="..\Private\Body.cpp" />
     <ClCompile Include="..\private\Active_Icon.cpp" />
+    <ClCompile Include="..\Private\Broom.cpp" />
     <ClCompile Include="..\Private\CallBack_Monster_Behavior.cpp" />
     <ClCompile Include="..\Private\CallBack_Monster_HitReport.cpp" />
     <ClCompile Include="..\Private\CallBack_Playable_Behavior.cpp" />
     <ClCompile Include="..\Private\CallBack_Playable_HitReport.cpp" />
     <ClCompile Include="..\Private\DummyObject.cpp" />
     <ClCompile Include="..\private\DummySkyBox.cpp" />
+    <ClCompile Include="..\Private\Dummy_Globe.cpp" />
     <ClCompile Include="..\Private\Dummy_PhysXDoorFrame.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -321,6 +329,7 @@
     <ClCompile Include="..\Private\Goblin.cpp" />
     <ClCompile Include="..\Private\Information.cpp" />
     <ClCompile Include="..\private\Land.cpp" />
+    <ClCompile Include="..\Private\Level_BloomViewer.cpp" />
     <ClCompile Include="..\private\Level_MapViewer.cpp" />
     <ClCompile Include="..\Private\LoadingWidget.cpp" />
     <ClCompile Include="..\private\MapContainer.cpp" />
@@ -341,11 +350,14 @@
     <ClCompile Include="..\Private\State_Combat.cpp" />
     <ClCompile Include="..\Private\State_Dodge.cpp" />
     <ClCompile Include="..\Private\State_Idle.cpp" />
+    <ClCompile Include="..\Private\State_Idle_Turn.cpp" />
+    <ClCompile Include="..\Private\State_Jog.cpp" />
     <ClCompile Include="..\Private\State_Jump.cpp" />
     <ClCompile Include="..\Private\State_Land.cpp" />
     <ClCompile Include="..\Private\State_LightAttack.cpp" />
     <ClCompile Include="..\Private\State_Move.cpp" />
     <ClCompile Include="..\Private\State_Skill.cpp" />
+    <ClCompile Include="..\Private\State_Skill2.cpp" />
     <ClCompile Include="..\Private\State_Sprint.cpp" />
     <ClCompile Include="..\Private\State_Walk.cpp" />
     <ClCompile Include="..\private\Spell_Image.cpp" />

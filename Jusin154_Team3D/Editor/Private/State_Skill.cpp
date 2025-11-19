@@ -10,7 +10,7 @@ CState_Skill::CState_Skill()
 
 void CState_Skill::Enter()
 {
-	auto anim = m_pOwner->Get_AnimInfo(FSMSTATE::SKILL);
+	auto anim = m_pOwner->Get_AnimInfo(STATEANIM::SKILL);
 	m_pModel->Set_AnimationIndex(anim.first, anim.second);
 }
 

@@ -15,7 +15,6 @@ namespace Client {
 #define FX_POSTEX			TEXT("FX_POSTEX")
 #define FX_NORTEX			TEXT("FX_NORTEX")
 #define FX_CELL				TEXT("FX_CELL")
-#define FX_DEFERRED			TEXT("FX_DEFFERED")
 #define FX_PARTICLE			TEXT("FX_PARTICLE")
 #define FX_UIEDITOR			TEXT("FX_UIEDITOR")
 

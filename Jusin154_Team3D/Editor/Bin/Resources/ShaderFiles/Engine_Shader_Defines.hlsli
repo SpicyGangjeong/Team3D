@@ -1,7 +1,11 @@
+#ifndef ENGINE_SHADER_DEFINES_HLSLI
+#define ENGINE_SHADER_DEFINES_HLSLI
 
-vector g_vMtrlDiffuse = 1.f;
-vector g_vMtrlAmbient = 1.f;
-vector g_vMtrlSpecular = 1.f;
+#include "Engine_Shader_Constants.hlsli"
+#include "Engine_Shader_Structures.hlsli"
+#include "Engine_Shader_Samplers.hlsli"
+#include "Engine_Shader_States.hlsli"
+#include "Engine_Shader_Functions.hlsli"
 
 float PI = 3.14592;
 
@@ -256,3 +260,5 @@ float2 UV_Cutting(float2 vUV, float2 vUVCutting, int iCurrentFrame)
     
     return UV;
 }
+#endif // ENGINE_SHADER_DEFINES_HLSLI
+

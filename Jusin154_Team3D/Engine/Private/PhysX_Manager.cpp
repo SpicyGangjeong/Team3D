@@ -405,7 +405,7 @@ HRESULT CPhysX_Manager::Initialize()
 	}
 
 	if (FAILED(Connect_DebugServer())) {
-		ASSERT_NURI(false);
+		//ASSERT_NURI(false);
 	}
 
 	{ // 씬 세팅

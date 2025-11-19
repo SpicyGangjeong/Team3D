@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Level_Logo.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
@@ -42,10 +42,10 @@ void CLevel_Logo::Update(_float fTimeDelta)
 		if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::PHYSX))))
 			return;
 	}
-	//else if (GUI::Button("Particle Editor", { 100, 100 })) {
-	//	if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::PARTICLE))))
-	//		return;
-	//}
+	else if (GUI::SameLine(), GUI::Button("Bloom Editor", { 100, 100 })) {
+		if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::BLOOM))))
+			return;
+	}
 	else if (GUI::Button("UI Editor", { 100, 100 })) {
 		if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::UI))))
 			return;
@@ -55,7 +55,7 @@ void CLevel_Logo::Update(_float fTimeDelta)
 
 HRESULT CLevel_Logo::Render()
 {
-	SetWindowText(g_hWnd, TEXT("·Î°í·¹º§ÀÔ´Ï´Ù"));
+	SetWindowText(g_hWnd, TEXT("ë¡œê³ ë ˆë²¨ìž…ë‹ˆë‹¤"));
 	GUI::ShowDemoWindow();
 	return S_OK;
 }
