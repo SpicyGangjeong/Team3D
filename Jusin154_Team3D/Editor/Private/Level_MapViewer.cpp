@@ -74,7 +74,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_Camera(const _wstring& strLayerTag)
 	CameraDesc.fFar = 500.f;
 	CameraDesc.vEye = _float3(0.f, 10.f, -10.f);
 	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
-	CameraDesc.fSpeedPerSec = 2.f;
+	CameraDesc.fSpeedPerSec = 5.f;
 	CameraDesc.pCameraKey = TEXT("Debug_Camera");
 	CameraDesc.fRotationPerSec = XMConvertToRadians(90.0f);
 	CameraDesc.fMouseSensor = 0.1f;

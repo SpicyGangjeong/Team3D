@@ -26,12 +26,25 @@ void CLand::Update(_float fTimeDelta)
 	//m_pTransformCom->Set_State(STATE::POSITION, XMLoadFloat4(&m_vPosition));
 
 	//GUI::End();
+
+	_float3 vPos = {};
+	if (m_pGameInstance->Mouse_Pressing(DIM_LBUTTON))
+	{
+		if (m_pGameInstance->isPicking(&vPos))
+		{
+			
+		}
+	}
+
+	GUI::Begin("TEEEEE");
+	GUI::InputFloat3("Pos", (_float*)(&vPos));
+	GUI::End();
 }
 
 void CLand::Late_Update(_float fTimeDelta)
 {
 	_float4* vPos = (_float4*)(m_pTransformCom->Get_WorldMatrixPtr()->m[3]);
-	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+	//m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 }
 
 HRESULT CLand::Render()
@@ -72,7 +85,9 @@ HRESULT CLand::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(66.f, 18.f, 96.f, 1.f));
+	//m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(66.f, 18.f, 96.f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 0.f,0.f, 1.f));
+
 
 	return S_OK;
 }
@@ -101,9 +116,11 @@ HRESULT CLand::Bind_ShaderResources()
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
 		return E_FAIL;
 	}
+
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))) {
 		return E_FAIL;
 	}
+
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ)))) {
 		return E_FAIL;
 	}

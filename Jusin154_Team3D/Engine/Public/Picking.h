@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Base.h"
 
@@ -14,6 +14,7 @@ public:
 	HRESULT	Initialize(HWND hWnd, _uint iSizeX, _uint iSizeY);
 	void	Update();
 	_bool	isPicking(_float3* pOut);
+
 private:
 	HWND					m_hWnd = { };
 	ID3D11Device*			m_pDevice = { nullptr };

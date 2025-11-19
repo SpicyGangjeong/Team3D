@@ -1226,7 +1226,7 @@ HRESULT CLoader::Loading_For_MapViewer()
 	m_strMessage = TEXT("텍스쳐를(을) 로딩 중 입니다.");
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("TerrainTest"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Cursor/UI_T_CursorRings.dds"), 0)))) {
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/T_C_Dun_Moss_D.png"), 0)))) {
 		return E_FAIL;
 	}
 
@@ -1251,193 +1251,193 @@ HRESULT CLoader::Loading_For_MapViewer()
 	vector<filesystem::path> ModelPrototypePath = {};
 
 #pragma region HOGSMEADE
-	/* Terrain*/
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Collision\\Terrain",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Terrain",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
+	///* Terrain*/
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Collision\\Terrain",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Terrain",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
 
-	/* TScrolls*/
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_TScrolls\\Meshes",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_TScrolls\\Collisions",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
+	///* TScrolls*/
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_TScrolls\\Meshes",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_TScrolls\\Collisions",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
 
-	/* 3BroomStick*/
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Meshes",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Collision",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Meshes\\3Broom_Kit",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
+	///* 3BroomStick*/
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Meshes",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Collision",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Meshes\\3Broom_Kit",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
 
-	/* Ollivanders*/
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Ollivanders\\Meshes",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Ollivanders\\Collision",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
+	///* Ollivanders*/
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Ollivanders\\Meshes",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Ollivanders\\Collision",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
 
-	/* Gatehouse*/
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Gatehouse\\Meshes",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
+	///* Gatehouse*/
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Gatehouse\\Meshes",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
 
-	/* BLDG_QuidditchShop */
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_QuidditchShop\\Meshes",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_QuidditchShop\\Collision",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
+	///* BLDG_QuidditchShop */
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_QuidditchShop\\Meshes",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_QuidditchShop\\Collision",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+
+	///* BLDG_HogsheadInn */
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_HogsheadInn\\Meshes",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_HogsheadInn\\Collision",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+
+	///* BLDG_Honeydukes */
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Honeydukes\\Meshes",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Honeydukes\\Collision",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+
+	///* BLDG_OwlPost */
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_OwlPost\\Meshes",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_OwlPost\\Collision",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+
+	///* BLDG_TeaShop */
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_TeaShop\\Meshes",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_TeaShop\\Collision",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+
+	///* BLDG_Zonkos */
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Zonkos\\Meshes",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Zonkos\\Collision",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+
+	///* BLDG_DB_GR */
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_DB_GR\\Meshes",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_DB_GR\\Collision",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+
+	///* BLDG_Potions */
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Potions\\Meshes",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Potions\\Collisions",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+
+	///* BLDG_Salon */
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Salon\\Meshes",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Salon\\Collision",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+
+	///* Hengist_Tree */
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Vegetation\\Hengist_Tree",
+	//	".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Collision\\Vegetation",
+	//	".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+
+	///* GEN A*/
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_A\\Meshes",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_A\\Collision",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+
+	///* GEN B*/
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_B\\Meshes",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_B\\Collision",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+
+	///* GEN C*/
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_C\\Meshes",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_C\\Collision",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+
+	///* GEN E*/
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_E\\Meshes",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_E\\Collision",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+
+	///* GEN F*/
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_F\\Meshes",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_F\\Collision",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+
+	///* GEN G*/
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_G\\Meshes",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_G\\Collision",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+
+	///* GEN H*/
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_H\\Meshes",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_H\\Collision",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+
+	///* GEN J*/
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_J\\Meshes",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_J\\Collision",
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	return E_FAIL;
+
 #pragma endregion
 
-	/* BLDG_HogsheadInn */
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_HogsheadInn\\Meshes",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_HogsheadInn\\Collision",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-
-	/* BLDG_Honeydukes */
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Honeydukes\\Meshes",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Honeydukes\\Collision",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-
-	/* BLDG_OwlPost */
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_OwlPost\\Meshes",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_OwlPost\\Collision",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-
-	/* BLDG_TeaShop */
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_TeaShop\\Meshes",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_TeaShop\\Collision",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-
-	/* BLDG_Zonkos */
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Zonkos\\Meshes",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Zonkos\\Collision",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-
-	/* BLDG_DB_GR */
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_DB_GR\\Meshes",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_DB_GR\\Collision",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-
-	/* BLDG_Potions */
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Potions\\Meshes",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Potions\\Collisions",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-
-	/* BLDG_Salon */
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Salon\\Meshes",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Salon\\Collision",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-
-	/* Hengist_Tree */
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Vegetation\\Hengist_Tree",
-		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Collision\\Vegetation",
-		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-
-	/* GEN A*/
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_A\\Meshes",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_A\\Collision",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-
-	/* GEN B*/
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_B\\Meshes",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_B\\Collision",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-
-	/* GEN C*/
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_C\\Meshes",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_C\\Collision",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-
-	/* GEN E*/
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_E\\Meshes",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_E\\Collision",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-
-	/* GEN F*/
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_F\\Meshes",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_F\\Collision",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-
-	/* GEN G*/
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_G\\Meshes",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_G\\Collision",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-
-	/* GEN H*/
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_H\\Meshes",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_H\\Collision",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-
-	/* GEN J*/
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_J\\Meshes",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-	if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_J\\Collision",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-		return E_FAIL;
-
-
-
+	
 	m_strMessage = TEXT("쉐이더를(을) 로딩 중 입니다.");
 
 	m_strMessage = TEXT("객체원형를(을) 로딩 중 입니다.");
@@ -1450,7 +1450,7 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 	/* For.Prototype_Component_VIBuffer_Terrain */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Terrain"),
-		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, nullptr, 100, 100))))
+		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, "../Bin/Resources/Data/Map/Height.bmp", 257, 257))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_SkyBox */

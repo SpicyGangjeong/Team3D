@@ -283,6 +283,9 @@
     <Filter Include="00.System\02.ThreadHolder">
       <UniqueIdentifier>{701cf231-2892-4d72-9615-dbe9285c28f4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Element\02.Component\02.VIBuffer\Terrain\QuadTree">
+      <UniqueIdentifier>{d9f03f43-e9d1-4a50-b465-e1000462bd3e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -530,6 +533,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Trail.cpp">
       <Filter>02.Element\02.Component\02.VIBuffer\Trail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\QuadTree.cpp">
+      <Filter>02.Element\02.Component\02.VIBuffer\Terrain\QuadTree</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ThreadHolder.cpp">
       <Filter>00.System\02.ThreadHolder</Filter>
@@ -1147,6 +1153,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Trail.h">
       <Filter>02.Element\02.Component\02.VIBuffer\Trail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\QuadTree.h">
+      <Filter>02.Element\02.Component\02.VIBuffer\Terrain\QuadTree</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ThreadHolder.h">
       <Filter>00.System\02.ThreadHolder</Filter>
