@@ -8,6 +8,7 @@ NS_BEGIN(Engine)
 class ENGINE_DLL CGameObject abstract
 	: public CBase
 {
+
 protected:
 	CGameObject(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);
 	CGameObject(const CGameObject& rhs);

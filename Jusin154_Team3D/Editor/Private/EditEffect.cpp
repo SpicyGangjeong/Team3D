@@ -39,10 +39,6 @@ void CEditEffect::Priority_Update(_float fTimeDelta)
 void CEditEffect::Update(_float fTimeDelta)
 {
 
-
-
-
-
 	if (m_pInstance_ModelCom == nullptr)
 		return;
 
@@ -51,6 +47,7 @@ void CEditEffect::Update(_float fTimeDelta)
 	if (m_EffectInfo.isBillboard)
 		m_pGameInstance->BillBoard(m_pTransformCom);
 
+
 }
 
 void CEditEffect::Late_Update(_float fTimeDelta)
@@ -58,6 +55,9 @@ void CEditEffect::Late_Update(_float fTimeDelta)
 
 	if (m_pInstance_ModelCom == nullptr)
 		return;
+
+
+	 XMStoreFloat4x4(&m_CombinedWorldMatrix , m_pTransformCom->Get_XMWorldMatrix() * m_pParentTransformCom->Get_XMWorldMatrix());
 
 
 	if (m_EffectInfo.isBlur == true)
@@ -141,7 +141,6 @@ void CEditEffect::Reference_Mat_For_EditEffect()
 
 HRESULT CEditEffect::Save_Effect(const _char* pPath)
 {
-
 	_string strPerfectFilePath = pPath;
 	strPerfectFilePath += ".bin";
 	
@@ -154,12 +153,12 @@ HRESULT CEditEffect::Save_Effect(const _char* pPath)
 
 
 	if (hFile == INVALID_HANDLE_VALUE) {
-		MessageBox(NULL, L"오브젝트 저장 실패", L"System Message", MB_OK);
+		MessageBox(NULL, L"이펙트 오브젝트 저장 실패", L"System Message", MB_OK);
 		return E_FAIL;
 	}
 
+	m_strPath = strPerfectFilePath;
 
-	
 	DWORD	dwByte(0);
 
 	if (m_pLightCom != nullptr) 
@@ -291,7 +290,35 @@ HRESULT CEditEffect::Save_Effect(const _char* pPath)
 
 	m_pInstance_ModelCom->Save_InstanceModel(hFile);
 
+
+	MessageBox(NULL, L"이펙트 저장 성공", L"System Message", MB_OK);
+
 	CloseHandle(hFile);
+
+	return S_OK;
+}
+
+HRESULT CEditEffect::Save_Path(HANDLE hFile)
+{
+	DWORD dwByte;
+
+	size_t iObjectLength = m_strPath.length();
+	const _char* pFilePath = m_strPath.c_str();
+
+	if (!WriteFile(hFile, &m_EffectInfo.eEffectType, sizeof(EFFECT_TYPE), &dwByte, nullptr)) {
+		return E_FAIL;
+	}
+
+	if (!WriteFile(hFile, &iObjectLength, sizeof(size_t), &dwByte, nullptr)) {
+		return E_FAIL;
+	}
+
+	if (pFilePath != 0)
+	{
+		if (!WriteFile(hFile, pFilePath, sizeof(_char) * ((DWORD)iObjectLength + 1), &dwByte, nullptr)) {
+			return E_FAIL;
+		}
+	}
 
 	return S_OK;
 }
@@ -307,6 +334,7 @@ HRESULT CEditEffect::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
+
 
 	return S_OK;
 }
@@ -341,6 +369,7 @@ CGameObject* CEditEffect::Clone(void* pArg, CGameObject* pOwner)
 void CEditEffect::Free()
 {
 	__super::Free();
+
 }
 
 void CEditEffect::Describe_Entity()
@@ -364,7 +393,6 @@ void CEditEffect::Describe_Entity()
 	GUI::Checkbox("Dissolve", &m_EffectInfo.isDissolve);
 	GUI::Checkbox("Distortion", &m_EffectInfo.isDistortion);
 	GUI::Checkbox("Noise", &m_EffectInfo.isNoise);
-
 
 	if (GUI::Checkbox("Billboard", &m_EffectInfo.isBillboard))
 	{
