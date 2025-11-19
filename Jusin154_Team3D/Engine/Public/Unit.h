@@ -39,6 +39,7 @@ public:
 	void Set_LightCombo(_uint LightCombo) { m_iLightCombo = LightCombo; }
 	_float Get_KeyFrame(_string FrameName);
 	_bool IsCurrentKeyFrame(_string FrameName);
+	virtual void Reset_Sprint() {};
 #pragma endregion
 
 protected:

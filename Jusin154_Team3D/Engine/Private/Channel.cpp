@@ -164,7 +164,7 @@ void CChannel::Update_TransformationMatirx(const vector<CBone*>& Bones, _float f
 		_float dy = XMVectorGetY(vDeltaAdjusted);
 		_float dz = XMVectorGetZ(vDeltaAdjusted);
 
-		_vector vDeltaWorld = vRight * dx + (-vUp * dz)  + vLook * dy;
+		_vector vDeltaWorld = vRight * dx + (-vUp * dz) + vLook * dy;
 
 		vDeltaWorld *= 0.01f;
 
@@ -175,13 +175,51 @@ void CChannel::Update_TransformationMatirx(const vector<CBone*>& Bones, _float f
 
 		m_vPrevRootPos = vCurRootPos;
 		vTranslation = XMVectorZero();
+
+		/////////////////////////////////////
+
+		_float4 curRotF4;
+		XMStoreFloat4(&curRotF4, vRotation);
+		_vector qCur = XMLoadFloat4(&curRotF4);
+
+		if (!m_bInitialRootRotSaved)
+		{
+			m_vInitialRootRot = curRotF4;
+			m_vPrevRootRot = curRotF4;
+			m_bInitialRootRotSaved = true;
+		}
+		else
+		{
+			_vector qPrev = XMLoadFloat4(&m_vPrevRootRot);
+
+			_vector qInvPrev = XMQuaternionInverse(qPrev);
+			_vector qDelta = XMQuaternionMultiply(qInvPrev, qCur);
+
+			_vector axisLocal;
+			_float    angle = 0.f;
+			XMQuaternionToAxisAngle(&axisLocal, &angle, qDelta);
+
+			_vector axisWorld = XMVector3TransformNormal(axisLocal, pre);
+			axisWorld = XMVector3Normalize(axisWorld);
+
+			_float4 axis;
+			XMStoreFloat4(&axis, axisWorld);
+			swap(axis.z, axis.y);
+
+
+			if (angle > 0 )
+				pTransform->TurnAngle(XMLoadFloat4(&axis), -angle);
+		}
+
+		XMStoreFloat4(&m_vPrevRootRot, qCur);
+
+		vRotation = XMLoadFloat4(&m_vInitialRootRot);
 	}
 
 	m_BoneTransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vTranslation);
 
 	Bones[m_iBoneIndex]->Set_TransformationMatrix(m_BoneTransformationMatrix);
 }
-
 
 KEYFRAME* CChannel::Get_Frame(_uint iIndex)
 {

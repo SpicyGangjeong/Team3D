@@ -69,7 +69,9 @@ _uint CFSM::Get_CurrState()
 
 _uint CFSM::Get_PrevState()
 {
-	return m_pPrevious->Get_State();
+	if (m_pPrevious)
+		return m_pPrevious->Get_State();
+	return 0;
 }
 
 void CFSM::Set_Parent(FSMSTATE::ESTATE Child, FSMSTATE::ESTATE Parent)

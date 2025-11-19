@@ -13,7 +13,7 @@ void CState_Cast::Enter()
     if (m_pFSM->Get_PrevState() == FSMSTATE::CAST)
         return;
 
-    auto anim = m_pOwner->Get_AnimInfo(FSMSTATE::CAST);
+    auto anim = m_pOwner->Get_AnimInfo(STATEANIM::CAST);
     m_pModel->Set_AnimationIndex(anim.first, anim.second);
 }
 
@@ -29,13 +29,6 @@ void CState_Cast::Exit()
 
 _bool CState_Cast::CheckExitState()
 {
-    if (m_pOwner->Check(FSMSTATE::WALK))
-    {
-        m_pOwner->Reset_LightCombo();
-        m_pFSM->Change_State(FSMSTATE::WALK);
-        return true;
-    }
-
     if (m_pModel->IsFinishedAnim())
     {
         m_pOwner->Reset_LightCombo();
@@ -54,11 +47,18 @@ _bool CState_Cast::CheckExitState()
             return true;
         }
 
-        auto anim = m_pOwner->Get_AnimInfo(FSMSTATE::CAST);
+        auto anim = m_pOwner->Get_AnimInfo(STATEANIM::CAST);
         m_pModel->Set_AnimationIndex(anim.first + combo, anim.second);
 
         m_pFSM->Change_State(FSMSTATE::CAST);
 
+        return true;
+    }
+
+    if (m_pOwner->Check(FSMSTATE::SKILL2))
+    {
+        m_pOwner->Reset_LightCombo();
+        m_pFSM->Change_State(FSMSTATE::SKILL2);
         return true;
     }
 

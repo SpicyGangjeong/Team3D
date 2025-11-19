@@ -169,7 +169,7 @@ void CAnimation::InterpAnim(CAnimation* pPreAnim, vector<CBone*>& Bones, float f
 
 		if (BoneName == "Reference")
 		{
-			FinalPos = XMVectorZero();
+			//FinalPos = XMVectorZero();
 		}
 
 		_matrix FinalMat = XMMatrixAffineTransformation(FinalScale, XMVectorZero(), FinalRot, FinalPos);
