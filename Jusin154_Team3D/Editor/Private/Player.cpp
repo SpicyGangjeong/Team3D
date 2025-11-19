@@ -7,15 +7,18 @@
 #pragma region STATE
 #include "State_Idle.h"
 #include "State_Walk.h"
-#include "State_Dodge.h"
+#include "State_Jog.h"
 #include "State_Sprint.h"
+#include "State_Dodge.h"
 #include "State_Jump.h"
 #include "State_Skill.h"
+#include "State_Skill2.h"
 #include "State_LightAttack.h"
 #include "State_Land.h"
 #include "State_Cast.h"
 #include "State_Move.h"
 #include "State_Combat.h"
+#include "State_Idle_Turn.h"
 #pragma endregion
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -155,17 +158,19 @@ void CPlayer::Setup_InputConditions()
 {
 	m_InputConditions =
 	{
-		{ FSMSTATE::MOVE,		 [&]() {return Check(FSMSTATE::WALK) && Check(FSMSTATE::SPRINT) && Check(FSMSTATE::JOG); }},
+		{ FSMSTATE::IDLE_TURN,   [&]() { return m_pGameInstance->Key_Down(DIK_LEFT) || m_pGameInstance->Key_Down(DIK_RIGHT) || m_pGameInstance->Key_Down(DIK_DOWN); }},
+		{ FSMSTATE::MOVE,		 [&]() { return Check(FSMSTATE::WALK) || Check(FSMSTATE::SPRINT) || Check(FSMSTATE::JOG) || Check(FSMSTATE::DODGE); }},
 		{ FSMSTATE::WALK,        [&]() { return m_pGameInstance->Key_Pressing(DIK_UP)
-										   || m_pGameInstance->Key_Pressing(DIK_DOWN); }},
+										   /*|| m_pGameInstance->Key_Pressing(DIK_DOWN)*/; }},
 		{ FSMSTATE::WALK_FWD,    [&]() { return m_pGameInstance->Key_Pressing(DIK_UP); }},
 		{ FSMSTATE::WALK_BWD,    [&]() { return m_pGameInstance->Key_Pressing(DIK_DOWN); }},
-		{ FSMSTATE::SPRINT,      [&]() { return m_pGameInstance->Key_Pressing(DIK_LSHIFT)
+		{ FSMSTATE::SPRINT,      [&]() { return m_bSprintToggle
 										   && m_pGameInstance->Key_Pressing(DIK_UP); }},
-
-		{ FSMSTATE::COMBAT,		 [&]() {return Check(FSMSTATE::DODGE) && Check(FSMSTATE::SKILL) && Check(FSMSTATE::LIGHT_ATTACK) && Check(FSMSTATE::CAST); }},
 		{ FSMSTATE::DODGE,       [&]() { return m_pGameInstance->Key_Down(DIK_LCONTROL); }},
+
+		{ FSMSTATE::COMBAT,		 [&]() { return Check(FSMSTATE::SKILL) || Check(FSMSTATE::LIGHT_ATTACK) || Check(FSMSTATE::CAST) || Check(FSMSTATE::SKILL2); }},
 		{ FSMSTATE::SKILL,       [&]() { return m_pGameInstance->Key_Down(DIK_R); }},
+		{ FSMSTATE::SKILL2,      [&]() { return m_pGameInstance->Key_Down(DIK_Q); }},
 		{ FSMSTATE::LIGHT_ATTACK,[&]() { return m_pGameInstance->Mouse_Up(ENUM_CLASS(MOUSEKEYSTATE::LBUTTON)); }},
 		{ FSMSTATE::CAST,        [&]() { return m_pGameInstance->Key_Down(DIK_1); }},
 
@@ -185,6 +190,8 @@ void CPlayer::Key_Input(_float fTimeDelta)
 		if (m_pGameInstance->Key_Pressing(DIK_RIGHT))
 			m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::UP), fTimeDelta);
 	}
+
+	IsSprint();
 }
 
 void CPlayer::Add_FSM()
@@ -192,17 +199,20 @@ void CPlayer::Add_FSM()
 #pragma region MOVE
 	m_pFSM->Add_State(FSMSTATE::MOVE, new CState_Move());
 	m_pFSM->Add_State(FSMSTATE::WALK, new CState_Walk());
+	m_pFSM->Add_State(FSMSTATE::JOG, new CState_Jog());
 	m_pFSM->Add_State(FSMSTATE::SPRINT, new CState_Sprint());
+	m_pFSM->Add_State(FSMSTATE::DODGE, new CState_Dodge());
 #pragma endregion
 
 #pragma region COMBAT
 	m_pFSM->Add_State(FSMSTATE::COMBAT, new CState_Combat());
 	m_pFSM->Add_State(FSMSTATE::SKILL, new CState_Skill());
+	m_pFSM->Add_State(FSMSTATE::SKILL2, new CState_Skill2());
 	m_pFSM->Add_State(FSMSTATE::LIGHT_ATTACK, new CState_LightAttack());
 	m_pFSM->Add_State(FSMSTATE::CAST, new CState_Cast());
-	m_pFSM->Add_State(FSMSTATE::DODGE, new CState_Dodge());
 #pragma endregion
 	m_pFSM->Add_State(FSMSTATE::IDLE, new CState_Idle());
+	m_pFSM->Add_State(FSMSTATE::IDLE_TURN, new CState_Idle_Turn());
 	m_pFSM->Add_State(FSMSTATE::JUMP, new CState_Jump());
 	m_pFSM->Add_State(FSMSTATE::LAND, new CState_Land());
 	
@@ -216,28 +226,44 @@ void CPlayer::Set_FSM()
 	m_pFSM->Set_Parent(FSMSTATE::WALK_FWD, FSMSTATE::MOVE);
 	m_pFSM->Set_Parent(FSMSTATE::JOG, FSMSTATE::MOVE);
 	m_pFSM->Set_Parent(FSMSTATE::SPRINT, FSMSTATE::MOVE);
+	m_pFSM->Set_Parent(FSMSTATE::DODGE, FSMSTATE::MOVE);
 #pragma endregion
 
 #pragma region COMBAT
 	m_pFSM->Set_Parent(FSMSTATE::SKILL, FSMSTATE::COMBAT);
+	m_pFSM->Set_Parent(FSMSTATE::SKILL2, FSMSTATE::COMBAT);
 	m_pFSM->Set_Parent(FSMSTATE::LIGHT_ATTACK, FSMSTATE::COMBAT);
 	m_pFSM->Set_Parent(FSMSTATE::CAST, FSMSTATE::COMBAT);
-	m_pFSM->Set_Parent(FSMSTATE::DODGE, FSMSTATE::COMBAT);
 #pragma endregion
 }
 
 void CPlayer::Set_Anim()
 {
-	m_Animation[FSMSTATE::IDLE] = { 266,true };
-	m_Animation[FSMSTATE::DODGE] = { 802,false };
-	m_Animation[FSMSTATE::WALK_FWD] = { 167,true };
-	m_Animation[FSMSTATE::WALK_BWD] = { 166,true };
-	m_Animation[FSMSTATE::SPRINT] = { 599,true };
-	m_Animation[FSMSTATE::JUMP] = { 205,false };
-	m_Animation[FSMSTATE::SKILL] = { 593,false };
-	m_Animation[FSMSTATE::LIGHT_ATTACK] = { 413,false };
-	m_Animation[FSMSTATE::LAND] = { 259,false };
-	m_Animation[FSMSTATE::CAST] = { 696,false };
+
+	m_Animation[STATEANIM::DODGE] = { 802,false };
+
+	m_Animation[STATEANIM::JOG] = { 166,true };
+
+	m_Animation[STATEANIM::SKILL] = { 593,false };
+	m_Animation[STATEANIM::SKILL2] = { 915,false };
+	m_Animation[STATEANIM::LIGHT_ATTACK] = { 413,false };
+	m_Animation[STATEANIM::LAND] = { 259,false };
+	m_Animation[STATEANIM::CAST] = { 696,false };
+
+	m_Animation[STATEANIM::IDLE] = { 266,true };
+	m_Animation[STATEANIM::IDLE_TURN_L] = { 270,false };
+	m_Animation[STATEANIM::IDLE_TURN_R] = { 430,false };
+	m_Animation[STATEANIM::IDLE_TURN_BWD] = { 268,false };
+
+	m_Animation[STATEANIM::WALK_FWD] = { 167,true };
+	m_Animation[STATEANIM::WALK_BWD] = { 166,true };
+	m_Animation[STATEANIM::WALK_STOP] = { 289,false };
+
+	m_Animation[STATEANIM::JUMP] = { 205,false };
+	m_Animation[STATEANIM::JUMP_WALK] = { 203,false };
+	m_Animation[STATEANIM::JUMP_SPRINT] = { 207,false };
+
+	m_Animation[STATEANIM::SPRINT] = { 599,true };
 }
 
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -279,6 +305,21 @@ void CPlayer::Describe_Entity()
 		GUI::Text(label);
 	}
 
+	_float3 Pos;
+	XMStoreFloat3(&Pos, Get_WorldPostion());
+
+	float Pos3[3] = { Pos.x, Pos.y, Pos.z };
+	GUI::DragFloat3("Pos", Pos3);
+
+
+	_float RotR,RotU,RotL;
+	RotR = XMVectorGetX(m_pTransformCom->Get_State(STATE::RIGHT));
+	RotU = XMVectorGetY(m_pTransformCom->Get_State(STATE::UP));
+	RotL = XMVectorGetZ(m_pTransformCom->Get_State(STATE::LOOK));
+
+	float Rot3[3] = { RotR, RotU,RotL };
+	GUI::DragFloat3("Rot", Rot3);
+	
 }
 
 _bool CPlayer::Check(FSMSTATE::ESTATE state)
@@ -287,6 +328,15 @@ _bool CPlayer::Check(FSMSTATE::ESTATE state)
 	{
 		if (cond.state == state)
 			return cond.checker();
+	}
+	return false;
+}
+
+_bool CPlayer::IsSprint()
+{
+	if (m_pGameInstance->Key_Down(DIK_LSHIFT))
+	{
+		return m_bSprintToggle = !m_bSprintToggle;
 	}
 	return false;
 }

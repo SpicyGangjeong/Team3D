@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Editor_Define.h"
 #include "ElementObject.h"
@@ -31,8 +31,9 @@ private:
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
-	_float m_fPI{};
-
+	_float	m_fPI{};
+	_bool	m_bisHoldOn = { false };
+	_bool	m_bKeyHold = { false };
 public:
 	static CMission_KeyHold* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

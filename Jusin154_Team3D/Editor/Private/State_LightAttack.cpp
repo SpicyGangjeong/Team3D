@@ -13,7 +13,7 @@ void CState_LightAttack::Enter()
     if (m_pFSM->Get_PrevState() == FSMSTATE::LIGHT_ATTACK)
         return;
 
-	auto anim = m_pOwner->Get_AnimInfo(FSMSTATE::LIGHT_ATTACK);
+	auto anim = m_pOwner->Get_AnimInfo(STATEANIM::LIGHT_ATTACK);
 	m_pModel->Set_AnimationIndex(anim.first, anim.second);
 }
 
@@ -29,12 +29,6 @@ void CState_LightAttack::Exit()
 
 _bool CState_LightAttack::CheckExitState()
 {
-    if (m_pOwner->Check(FSMSTATE::WALK))
-    {
-        m_pOwner->Reset_LightCombo();
-        m_pFSM->Change_State(FSMSTATE::WALK);
-        return true;
-    }
     if (m_pModel->IsFinishedAnim())
     {
         m_pOwner->Reset_LightCombo();
@@ -53,7 +47,7 @@ _bool CState_LightAttack::CheckExitState()
             return true;
         }
 
-        auto anim = m_pOwner->Get_AnimInfo(FSMSTATE::LIGHT_ATTACK);
+        auto anim = m_pOwner->Get_AnimInfo(STATEANIM::LIGHT_ATTACK);
         m_pModel->Set_AnimationIndex(anim.first + combo, anim.second);
 
         m_pFSM->Change_State(FSMSTATE::LIGHT_ATTACK);
@@ -61,6 +55,13 @@ _bool CState_LightAttack::CheckExitState()
         return true;
     }
 
+
+    if (m_pOwner->Check(FSMSTATE::SKILL2))
+    {
+        m_pOwner->Reset_LightCombo();
+        m_pFSM->Change_State(FSMSTATE::SKILL2);
+        return true;
+    }
 
     return false;
 }

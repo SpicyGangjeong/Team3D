@@ -23,7 +23,7 @@ HRESULT CUnit::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_Animation.resize(FSMSTATE::END);
+	m_Animation.resize(STATEANIM::END);
 
 	return S_OK;
 }
