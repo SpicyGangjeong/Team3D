@@ -174,8 +174,8 @@ BlendState BS_WB_Acc
     DestBlend[0] = one;
     BlendOp[0] = Add;
 
-    SrcBlend[1] = Zero;
-    DestBlend[1] = Inv_Src_Alpha;
+    SrcBlend[1] = Inv_Src_Alpha;
+    DestBlend[1] = Zero;
     BlendOp[1] = Add;
 
 

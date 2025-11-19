@@ -192,6 +192,8 @@
     <ClInclude Include="..\Public\Dummy_PhysXWall.h" />
     <ClInclude Include="..\Public\Dummy_Plane.h" />
     <ClInclude Include="..\Public\Dummy_PhysXPlayable.h" />
+    <ClInclude Include="..\Public\NomalJap.h" />
+    <ClInclude Include="..\Public\Effect_Container.h" />
     <ClInclude Include="..\public\GamePlay_Canvas.h" />
     <ClInclude Include="..\public\BuildingContainer.h" />
     <ClInclude Include="..\Public\DebugCamera.h" />
@@ -237,6 +239,7 @@
     <ClInclude Include="..\public\Spell_Slot.h" />
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\Public\Level_PhysXLab.h" />
+    <ClInclude Include="..\Public\TrailObject.h" />
     <ClInclude Include="..\Public\TestEffect.h" />
     <ClInclude Include="..\Public\EffectObject.h" />
     <ClInclude Include="..\Public\DummyRect.h" />
@@ -303,6 +306,8 @@
     <ClCompile Include="..\Private\Dummy_PhysXWall.cpp" />
     <ClCompile Include="..\Private\Dummy_Plane.cpp" />
     <ClCompile Include="..\Private\Dummy_PhysXPlayable.cpp" />
+    <ClCompile Include="..\Private\NomalJap.cpp" />
+    <ClCompile Include="..\Private\Effect_Container.cpp" />
     <ClCompile Include="..\private\GamePlay_Canvas.cpp" />
     <ClCompile Include="..\private\BuildingContainer.cpp" />
     <ClCompile Include="..\Private\DebugCamera.cpp" />
@@ -348,6 +353,7 @@
     <ClCompile Include="..\private\Spell_Slot.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\Private\Level_PhysXLab.cpp" />
+    <ClCompile Include="..\Private\TrailObject.cpp" />
     <ClCompile Include="..\Private\TestEffect.cpp" />
     <ClCompile Include="..\Private\EffectObject.cpp" />
     <ClCompile Include="..\Private\DummyRect.cpp" />

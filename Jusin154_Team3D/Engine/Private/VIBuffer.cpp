@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "VIBuffer.h"
 
 CVIBuffer::CVIBuffer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -49,6 +49,7 @@ HRESULT CVIBuffer::Bind_Resources()
 HRESULT CVIBuffer::Render()
 {
 	m_pContext->DrawIndexed(m_iNumIndices, 0, 0);
+
 	return S_OK;
 }
 

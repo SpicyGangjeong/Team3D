@@ -13,39 +13,40 @@ CTrail::CTrail(const CTrail& rhs)
 
 HRESULT CTrail::Initialize_Prototype()
 {
+	return S_OK;
+}
+
+HRESULT CTrail::Initialize(void* pArg)
+{
+	TRAIL_DESC* pDesc = static_cast<TRAIL_DESC*>(pArg);
+
+	if (pDesc == nullptr)
+		return E_FAIL;
+
+	m_TrailDesc = *pDesc;
+
 	m_iNumVertexBuffers = 1;
-	m_iNumVertices = 4;
+	m_iNumVertices = 256;
 	m_iVertexStride = sizeof(VTXPOSTEX);
 
-	m_iNumIndices = 6;
+	m_iNumIndices = (m_iNumVertices / 2 - 1) * 6;
 	m_iIndexStride = 4;
 
 	m_eIndexFormat = DXGI_FORMAT_R32_UINT;
 	m_ePrimitive = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
+	m_pVertices = new VTXPOSTEX[m_iNumVertices];
+
 #pragma region VTX_BUFFER
 	D3D11_BUFFER_DESC VBDesc{};
 	VBDesc.ByteWidth = m_iVertexStride * m_iNumVertices;
-	VBDesc.Usage = D3D11_USAGE_DEFAULT;
+	VBDesc.Usage = D3D11_USAGE_DYNAMIC;
 	VBDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	VBDesc.CPUAccessFlags = 0;
+	VBDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	VBDesc.MiscFlags = 0;
 	VBDesc.StructureByteStride = m_iVertexStride;
 
 	VTXPOSTEX* pVertices = new VTXPOSTEX[m_iNumVertices]{};
-	m_pVertexPositions = new _float3[m_iNumIndices]{};
-
-	m_pVertexPositions[0] = pVertices[0].vPosition = _float3(-0.5f, 0.5f, 0.f);
-	pVertices[0].vTexcoord = _float2(0.0f, 0.0f);
-
-	m_pVertexPositions[1] = pVertices[1].vPosition = _float3(0.5f, 0.5f, 0.f);
-	pVertices[1].vTexcoord = _float2(1.0f, 0.0f);
-
-	m_pVertexPositions[2] = pVertices[2].vPosition = _float3(0.5f, -0.5f, 0.f);
-	pVertices[2].vTexcoord = _float2(1.0f, 1.0f);
-
-	m_pVertexPositions[3] = pVertices[3].vPosition = _float3(-0.5f, -0.5f, 0.f);
-	pVertices[3].vTexcoord = _float2(0.0f, 1.0f);
 
 	D3D11_SUBRESOURCE_DATA InitialVBDate{};
 	InitialVBDate.pSysMem = pVertices;
@@ -58,9 +59,10 @@ HRESULT CTrail::Initialize_Prototype()
 #pragma endregion
 
 #pragma region IDX_BUFFER
+
 	D3D11_BUFFER_DESC IBDesc{};
 	IBDesc.ByteWidth = m_iIndexStride * m_iNumIndices;
-	IBDesc.Usage = D3D11_USAGE_DEFAULT;
+	IBDesc.Usage = D3D11_USAGE_IMMUTABLE;
 	IBDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	IBDesc.CPUAccessFlags = 0;
 	IBDesc.MiscFlags = 0;
@@ -69,13 +71,27 @@ HRESULT CTrail::Initialize_Prototype()
 
 	_uint* pIndices = new _uint[m_iNumIndices]{};
 
-	pIndices[0] = 0;
-	pIndices[1] = 1;
-	pIndices[2] = 2;
+	_uint iIndex = { 0 };
 
-	pIndices[3] = 0;
-	pIndices[4] = 2;
-	pIndices[5] = 3;
+	for (_uint i = 0; i < m_iNumVertices / 2 - 1; i++)
+	{
+		_uint iStartIndex = i * 2;
+
+		_uint Indicies[4] = {
+			iStartIndex ,
+			iStartIndex + 1,
+			iStartIndex + 2,
+			iStartIndex + 3
+		};
+
+		pIndices[iIndex++] = Indicies[0];
+		pIndices[iIndex++] = Indicies[1];
+		pIndices[iIndex++] = Indicies[2];
+
+		pIndices[iIndex++] = Indicies[1];
+		pIndices[iIndex++] = Indicies[3];
+		pIndices[iIndex++] = Indicies[2];
+	}
 
 	D3D11_SUBRESOURCE_DATA InitialIBDate{};
 	InitialIBDate.pSysMem = pIndices;
@@ -83,16 +99,116 @@ HRESULT CTrail::Initialize_Prototype()
 	if (FAILED(m_pDevice->CreateBuffer(&IBDesc, &InitialIBDate, &m_pIB))) {
 		return E_FAIL;
 	}
+
 	Safe_Delete_Array(pIndices);
 #pragma endregion
-
-
 
 	return S_OK;
 }
 
-HRESULT CTrail::Initialize(void* pArg)
+void CTrail::Trail_Update(_float fDeltaTime, _fmatrix WorldMatrix)
 {
+	
+	_vector vLow = XMVector3TransformCoord(XMLoadFloat3(&m_TrailDesc.vLow), WorldMatrix);
+	_vector vHigh = XMVector3TransformCoord(XMLoadFloat3(&m_TrailDesc.vHigh), WorldMatrix);
+
+
+	//한칸씩 밀기
+	memmove(m_PreLow, m_PreLow + 1, sizeof(VTXPOSTEX));
+	memmove(m_PreHigh, m_PreHigh + 1, sizeof(VTXPOSTEX));
+
+	m_PreLow[1] = vLow;
+	m_PreHigh[1] = vHigh;
+
+	if (m_iNumCount < 4)
+	{
+		XMStoreFloat3(&m_pVertices[m_iNumCount++].vPosition, vLow);
+		XMStoreFloat3(&m_pVertices[m_iNumCount++].vPosition, vHigh); 
+
+		//카운트가 적으면 시도하지 않음
+		return;
+	}
+
+	//시작점 끝점 내점 두개를 이용하여 보간할 것임
+
+	for (size_t i = 0; i < 4; i++)
+	{
+		_float iRatio =  (_float)i / 3;
+		_vector vLerpLow = XMVectorCatmullRom(XMLoadFloat3(&m_pVertices[m_iNumCount - 2].vPosition), m_PreLow[0], m_PreLow[1], m_PreLow[1] + (m_PreLow[1] - m_PreLow[0]), iRatio); // LoW
+		_vector vLerpHigh = XMVectorCatmullRom(XMLoadFloat3(&m_pVertices[m_iNumCount - 1].vPosition), m_PreHigh[0], m_PreHigh[1], m_PreHigh[1] + (m_PreHigh[1] - m_PreHigh[0]), iRatio);
+
+		XMStoreFloat3(&m_pVertices[m_iNumCount++].vPosition, vLerpLow);
+		XMStoreFloat3(&m_pVertices[m_iNumCount++].vPosition, vLerpHigh);
+
+		if (m_iNumCount >= m_iNumVertices)
+		{
+			memmove(m_pVertices, m_pVertices + 2, sizeof(VTXPOSTEX) * (m_iNumCount - 2));
+
+			m_iNumCount -= 2;
+		}
+
+	}
+
+	//XMStoreFloat3(&m_pVertices[0].vPosition, vLow);
+	//XMStoreFloat3(&m_pVertices[1].vPosition, vHigh);
+
+	for (_uint i = 0; i < m_iNumCount; i += 2)
+	{
+
+		_float u = ((_float)i / (m_iNumCount - 2));
+
+		if (m_iNumCount - 2 <= 0)
+			u = 0;
+
+		m_pVertices[i].vTexcoord = _float2(u, 0); // Low
+
+		m_pVertices[i + 1].vTexcoord = _float2(u, 1); // High
+	}
+
+
+	D3D11_MAPPED_SUBRESOURCE		VBResource{};
+
+	if (SUCCEEDED(m_pContext->Map(m_pVB, 0, D3D11_MAP_WRITE_DISCARD, 0, &VBResource)))
+	{
+
+		memcpy(VBResource.pData, m_pVertices, sizeof(VTXPOSTEX) * m_iNumVertices);
+		
+		m_pContext->Unmap(m_pVB, 0);
+	}
+
+}
+
+#ifdef _DEBUG
+HRESULT CTrail::Save_Trail(HANDLE hFile)
+{
+	DWORD	dwByte(0);
+
+	if (!WriteFile(hFile, &m_TrailDesc, sizeof(TRAIL_DESC), &dwByte, nullptr)) {
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+#endif
+
+HRESULT CTrail::Load_Trail(HANDLE hFile)
+{
+	DWORD	dwByte(0);
+
+	if (!ReadFile(hFile, &m_TrailDesc, sizeof(TRAIL_DESC), &dwByte, nullptr)) {
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+HRESULT CTrail::Render()
+{
+	if (m_iNumCount < 4)
+		return S_OK;
+
+	m_pContext->DrawIndexed( ((m_iNumCount / 2) - 1) * 6, 0, 0);
+
 	return S_OK;
 }
 
@@ -126,9 +242,13 @@ void CTrail::Free()
 {
 	__super::Free();
 
-
+	Safe_Delete_Array(m_pVertices);
 }
 
 void CTrail::Describe_Entity()
 {
+
+	GUI::InputFloat3("Low", (_float*)&m_TrailDesc.vLow);
+	GUI::InputFloat3("High", (_float*)&m_TrailDesc.vHigh);
+	
 }

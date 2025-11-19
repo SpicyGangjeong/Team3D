@@ -34,7 +34,7 @@ private:
 private:
 	vector<ID3D11ShaderResourceView*>	m_pInputSRV = {};
 	vector<ID3D11UnorderedAccessView*>	m_pOutputUAV = {};
-	vector<	ID3D11ShaderResourceView*>	m_pOutputSRV = {};
+	vector<ID3D11ShaderResourceView*>	m_pOutputSRV = {};
 
 	vector<ID3D11Buffer*>				m_pInputBuffer = {};
 	vector<ID3D11Buffer*>				m_pOutputBuffer = {};

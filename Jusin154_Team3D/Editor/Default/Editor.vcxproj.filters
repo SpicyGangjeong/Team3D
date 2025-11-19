@@ -301,6 +301,15 @@
     <Filter Include="80.State\State_Combat\State_Dodge">
       <UniqueIdentifier>{b017e167-f48d-4417-a924-765ab802cff5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\03.TrailObject">
+      <UniqueIdentifier>{f5cd19e8-186b-418f-b7fa-af73046a80d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\04.Effect_Container">
+      <UniqueIdentifier>{a193f87a-e222-4dd8-9766-cb32bb368ccb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\05.NomalJap">
+      <UniqueIdentifier>{8882358e-c8eb-4222-a87e-01d902533b8f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -591,6 +600,15 @@
     <ClInclude Include="..\Public\State_Combat.h">
       <Filter>80.State\State_Combat</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\TrailObject.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\03.TrailObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_Container.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\04.Effect_Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\NomalJap.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\05.NomalJap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -876,6 +894,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\State_Combat.cpp">
       <Filter>80.State\State_Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TrailObject.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\03.TrailObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect_Container.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\04.Effect_Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\NomalJap.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\05.NomalJap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

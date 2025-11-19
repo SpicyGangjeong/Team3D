@@ -75,6 +75,8 @@
 #include "EditEffect.h"
 #include "Effect_Editor.h"
 #include "Dummy_Plane.h"
+#include "TrailObject.h"
+#include "NomalJap.h"
 
 #pragma endregion
 
@@ -642,6 +644,15 @@ HRESULT CLoader::Loading_For_Effect()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_Plane>(ENUM_CLASS(LEVEL::EFFECT), CDummy_Plane::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CTrail>(ENUM_CLASS(LEVEL::EFFECT), CTrail::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CTrailObject>(ENUM_CLASS(LEVEL::EFFECT), CTrailObject::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CNomalJap>(ENUM_CLASS(LEVEL::EFFECT), CNomalJap::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 
