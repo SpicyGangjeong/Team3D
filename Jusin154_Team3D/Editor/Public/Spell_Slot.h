@@ -29,7 +29,7 @@ private:
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
-	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
+	CVIBuffer_UI_Instance* m_pVIBufferCom = { nullptr };
 
 public:
 	static CSpell_Slot* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

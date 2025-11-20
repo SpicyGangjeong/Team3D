@@ -989,5 +989,8 @@
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxModelInstance.hlsl">
       <Filter>99.Define\SHADER</Filter>
     </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_UI_Instance.hlsl">
+      <Filter>99.Define\SHADER</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

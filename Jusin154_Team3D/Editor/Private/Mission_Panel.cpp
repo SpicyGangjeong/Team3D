@@ -1,10 +1,9 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Mission_Panel.h"
 #include "GameInstance.h"
 #include "Mission_KeyHold.h"
 #include "Mission_Key.h"
 #include "Active_Icon.h"
-#include "Mission_Icon.h"
 #include "MissionBanner_Border.h"
 #include "MissionBanner_Key.h"
 
@@ -148,13 +147,6 @@ HRESULT CMission_Panel::Ready_Element(void* pArg)
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Mission_Key"), m_pMission_Key);
-
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMission_Icon>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMission_Icon**>(&m_pMission_Icon))))
-	{
-		return E_FAIL;
-	}
-	Add_Element(TEXT("Mission_Icon"), m_pMission_Icon);
-
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CActive_Icon>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CActive_Icon**>(&m_pActive_Icon))))
 	{
 		return E_FAIL;

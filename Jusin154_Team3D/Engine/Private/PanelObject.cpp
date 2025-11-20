@@ -138,17 +138,17 @@ void CPanelObject::ElementAllVisible(_bool bVisible)
 	}
 }
 
-void CPanelObject::Add_Function(wstring Name, function<void()>Event)
+void CPanelObject::Add_Function(wstring Name, function<void(void*)>Event)
 {
 	m_ElementFunction_map.emplace(Name, Event);
 }
 
-void CPanelObject::Function_Callback(wstring Name)
+void CPanelObject::Function_Callback(wstring Name, void* pArg)
 {
 	auto range = m_ElementFunction_map.equal_range(Name);
 	for (auto it = range.first; it != range.second; ++it)
 	{
-		it->second();
+		it->second(pArg);
 	}
 }
 

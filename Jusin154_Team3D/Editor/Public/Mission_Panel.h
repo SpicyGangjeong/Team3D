@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Editor_Define.h"
 #include "PanelObject.h"
@@ -36,7 +36,6 @@ private:
 	CGameObject* m_pMissionBanner_Key = { nullptr };
 	CGameObject* m_pMission_KeyHold = { nullptr };
 	CGameObject* m_pMission_Key = { nullptr };
-	CGameObject* m_pMission_Icon = { nullptr };
 	CGameObject* m_pActive_Icon = { nullptr };
 
 public:
