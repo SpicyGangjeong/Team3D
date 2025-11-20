@@ -1,14 +1,16 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Level_Logo.h"
 
 #include "GameInstance.h"
 #include "Level_Loading.h"
+#include "InfoInstance.h"
 
 
 CLevel_Logo::CLevel_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
 {
-
+	m_pInfoInstance = CInfoInstance::GetInstance();
+	SAFE_ADDREF(m_pInfoInstance);
 }
 
 HRESULT CLevel_Logo::Initialize()
@@ -23,6 +25,12 @@ void CLevel_Logo::Update(_float fTimeDelta)
 {
 	if (m_pGameInstance->Mouse_Up(DIM_RBUTTON))
 	{
+		m_pGameInstance->Set_LevelToChange();
+	}
+
+	m_pInfoInstance->Update(fTimeDelta);
+
+	if (true == m_pGameInstance->Check_LevelShouldChange()) {
 		if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::GAMEPLAY)))) {
 			return;
 		}
@@ -31,7 +39,7 @@ void CLevel_Logo::Update(_float fTimeDelta)
 
 HRESULT CLevel_Logo::Render()
 {
-	SetWindowText(g_hWnd, TEXT("·Î°í·¹º§ÀÔ´Ï´Ù"));
+	SetWindowText(g_hWnd, TEXT("ë¡œê³ ë ˆë²¨ìž…ë‹ˆë‹¤"));
 	return S_OK;
 }
 
@@ -57,5 +65,5 @@ void CLevel_Logo::Free()
 {
 	__super::Free();
 
-
+	SAFE_RELEASE(m_pInfoInstance);
 }

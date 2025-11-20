@@ -145,7 +145,6 @@ void CGameInstance::Clear_Resources(_uint iLevelIndex)
 	m_pCamera_Manager->Clear_Cameras(iLevelIndex);
 	m_pObject_Manager->Clear(iLevelIndex);
 	m_pLight_Manager->Light_Clear(iLevelIndex);
-
 }
 
 _float CGameInstance::Random_Normal()

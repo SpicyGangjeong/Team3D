@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Light_Manager.h"
 #include "Light.h"
 
@@ -74,10 +74,9 @@ const LIGHT_DESC* CLight_Manager::Get_Light_Info(_uint _iCurrentLevel, _uint _iL
 }
 
 
-HRESULT CLight_Manager::Render_Lights(_uint _iCurrentLevel, CShader* pShader, CVIBuffer* pVIBuffer)
+HRESULT CLight_Manager::Render_Lights(_uint iCurrentLevel, CShader* pShader, CVIBuffer* pVIBuffer)
 {
-
-    for (auto& pLight : m_Lights[_iCurrentLevel])
+    for (auto& pLight : m_Lights[iCurrentLevel])
     {
         pLight->Render(pShader, pVIBuffer);
     }

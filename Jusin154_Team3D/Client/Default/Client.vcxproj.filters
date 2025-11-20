@@ -37,6 +37,33 @@
     <ClInclude Include="..\Public\Level_GamePlay.h">
       <Filter>01.Levels\02.GamePlay</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Client_Struct.h">
+      <Filter>99.Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\InfoInstance.h">
+      <Filter>03.InfoInstance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Field.h">
+      <Filter>01.Levels\10.Field</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Restart.h">
+      <Filter>01.Levels\99.Restart</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Camera_Debug.h">
+      <Filter>02.GameObjects\Cameras\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Light_Main.h">
+      <Filter>02.GameObjects\Environment\Lights\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerInfo.h">
+      <Filter>03.InfoInstance\00.PlayerInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MonsterInfo.h">
+      <Filter>03.InfoInstance\01.MonsterInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MapInfo.h">
+      <Filter>03.InfoInstance\02.MapInfo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -74,9 +101,6 @@
     <Filter Include="02.GameObjects">
       <UniqueIdentifier>{27434478-691e-42a8-83c7-ecd1a60f46ce}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.Information">
-      <UniqueIdentifier>{cdfbb346-6cae-4094-93cd-b82685efa68e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Cameras">
       <UniqueIdentifier>{7efd65d5-eb4d-4331-a746-f0fa2de6275b}</UniqueIdentifier>
     </Filter>
@@ -97,6 +121,78 @@
     </Filter>
     <Filter Include="02.GameObjects\NPC\Ally">
       <UniqueIdentifier>{a7d0a3fa-b3dc-40c6-b258-ffcde49b05c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic">
+      <UniqueIdentifier>{b5bef783-5315-4488-ac64-cb98d16a84a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\Item">
+      <UniqueIdentifier>{31681680-d5de-43c9-bc2d-2c91ca58a593}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State">
+      <UniqueIdentifier>{1bfec6dc-f008-4d18-87d6-be38824b1272}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\NPC">
+      <UniqueIdentifier>{3eb21e8e-e01c-47fe-828e-800212456eb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\PLAYER">
+      <UniqueIdentifier>{9f952e5a-835c-4de9-b7b5-9a731912774d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\Skill">
+      <UniqueIdentifier>{c5b61cb3-bc5f-4429-8715-b309dcf054b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\10.Field">
+      <UniqueIdentifier>{2b209526-b728-4fba-a184-b9224d72903a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\99.Restart">
+      <UniqueIdentifier>{e12b3048-dd6d-41bf-b346-e4abdaa4f215}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\Lights">
+      <UniqueIdentifier>{74f21f9b-30bf-412e-ba4e-526958ab2a52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Cameras\Debug">
+      <UniqueIdentifier>{8d89a59c-fbd2-4a4a-ab01-a70abb80cc49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Cameras\Shoulder">
+      <UniqueIdentifier>{708bbc88-47fb-42c5-b060-14cec7d646f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\Lights\Main">
+      <UniqueIdentifier>{b24c78ef-dccc-41f0-a086-053ae6b7fbf4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\Plane">
+      <UniqueIdentifier>{603938cc-e4fe-44d8-890b-784174a86161}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\Player">
+      <UniqueIdentifier>{11250d84-e19c-4999-a5d6-d9f89123e7ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\NPC\Hostile\Monster">
+      <UniqueIdentifier>{b72a9bb0-1b21-416b-bd0c-ba943cd7cc9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\Prop">
+      <UniqueIdentifier>{2814c935-13d9-4b9a-94ba-c9e470219a18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\Prop\SkyBox">
+      <UniqueIdentifier>{19ee2ea4-2d79-46bd-b857-c759e3ec6cf4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\Prop\SkyBox\TriggerBox">
+      <UniqueIdentifier>{2561df42-3dfa-4045-a30c-85f44cd65e09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Cameras\CameraPosition">
+      <UniqueIdentifier>{25ad4a41-5b06-4659-bd29-c0c4265a3277}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Cameras\CameraPosition\Player">
+      <UniqueIdentifier>{5a667a7b-6c90-44f6-9c9f-aac3108b6561}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.InfoInstance">
+      <UniqueIdentifier>{cdfbb346-6cae-4094-93cd-b82685efa68e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.InfoInstance\00.PlayerInfo">
+      <UniqueIdentifier>{1cfdfc05-0b0d-4c58-8c2d-58090efea4fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.InfoInstance\01.MonsterInfo">
+      <UniqueIdentifier>{621b87a7-54b8-4d90-84b2-fa8cd26cc396}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.InfoInstance\02.MapInfo">
+      <UniqueIdentifier>{413e6692-6e4a-4b00-8306-edf652bd876a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -120,6 +216,30 @@
     </ClCompile>
     <ClCompile Include="..\Private\Level_GamePlay.cpp">
       <Filter>01.Levels\02.GamePlay</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\InfoInstance.cpp">
+      <Filter>03.InfoInstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Field.cpp">
+      <Filter>01.Levels\10.Field</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Restart.cpp">
+      <Filter>01.Levels\99.Restart</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera_Debug.cpp">
+      <Filter>02.GameObjects\Cameras\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Light_Main.cpp">
+      <Filter>02.GameObjects\Environment\Lights\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerInfo.cpp">
+      <Filter>03.InfoInstance\00.PlayerInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MonsterInfo.cpp">
+      <Filter>03.InfoInstance\01.MonsterInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MapInfo.cpp">
+      <Filter>03.InfoInstance\02.MapInfo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,8 +1,6 @@
 ﻿#pragma once
 
 #include "Component.h"
-#include "Assimp/scene.h"
-
 NS_BEGIN(Engine)
 
 class ENGINE_DLL CInstance_Model final : public CComponent
