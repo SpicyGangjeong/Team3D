@@ -167,6 +167,8 @@
     <ClInclude Include="..\Public\Body.h" />
     <ClInclude Include="..\public\Active_Icon.h" />
     <ClInclude Include="..\Public\Broom.h" />
+    <ClInclude Include="..\Public\CallBack_EffectHitBox_Behavior.h" />
+    <ClInclude Include="..\Public\CallBack_EffectHitBox_HitReport.h" />
     <ClInclude Include="..\Public\CallBack_Monster_Behavior.h" />
     <ClInclude Include="..\Public\CallBack_Monster_HitReport.h" />
     <ClInclude Include="..\Public\CallBack_Playable_Behavior.h" />
@@ -182,9 +184,13 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\Public\Dummy_PhysXEffectHitBox.h" />
     <ClInclude Include="..\Public\Dummy_PhysXFixedDoor.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dummy_PhysXHitBox.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\Public\Dummy_PhysXMonster.h" />
     <ClInclude Include="..\Public\Dummy_PhysXPlatform.h">
@@ -287,6 +293,8 @@
     <ClCompile Include="..\Private\Body.cpp" />
     <ClCompile Include="..\private\Active_Icon.cpp" />
     <ClCompile Include="..\Private\Broom.cpp" />
+    <ClCompile Include="..\Private\CallBack_EffectHitBox_Behavior.cpp" />
+    <ClCompile Include="..\Private\CallBack_EffectHitBox_HitReport.cpp" />
     <ClCompile Include="..\Private\CallBack_Monster_Behavior.cpp" />
     <ClCompile Include="..\Private\CallBack_Monster_HitReport.cpp" />
     <ClCompile Include="..\Private\CallBack_Playable_Behavior.cpp" />
@@ -302,9 +310,13 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\Private\Dummy_PhysXEffectHitBox.cpp" />
     <ClCompile Include="..\Private\Dummy_PhysXFixedDoor.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_PhysXHitBox.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\Private\Dummy_PhysXMonster.cpp" />
     <ClCompile Include="..\Private\Dummy_PhysXPlatform.cpp">

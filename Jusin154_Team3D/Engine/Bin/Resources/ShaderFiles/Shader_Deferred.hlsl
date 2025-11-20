@@ -407,6 +407,7 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     float fVisibility_Static = ShadowVisibility_hwPCF(g_PreShadowTexture, vPreShadowPosition, float2(g_iMaxShadowWidth, g_iMaxShadowHeight), 0.0005f);
     
     Out.vBackBuffer.rgb *= lerp(0.5f, 1.f, min(fVisibility_Dynamic, fVisibility_Static));
+    
     //float fShadowDepth = g_ShadowTexture.Sample(DefaultSampler, vTexcoord).x;
     //float fPreShadowDepth = g_PreShadowTexture.Sample(DefaultSampler, vPreShadowTexcoord).x;
     //bool IsShadow = { false };
@@ -441,6 +442,7 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     //}
     
     //[loop]  // 변수로 루프돌리려면 반드시 필요함
+    
     for (int i = -15; i < 16; ++i)
     {
         vTexcoord.x = In.vTexcoord.x;

@@ -56,7 +56,7 @@ public:
 		_float  fDiffuseAlpha = { 1.f };
 		_float  fBlurIntensity = {};
 		_float  fNoiseDistortionIntensity = {};
-		_float  fEmissiveCutAlpha = {};
+		_float  fEmissiveCutAlpha = { 0.f };
 
 		LIGHT_DESC	LightDesc = {};
 		RENDER		eRenderOrder = { RENDER::EFFECT };

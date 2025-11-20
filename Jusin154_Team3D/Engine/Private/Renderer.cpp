@@ -65,9 +65,9 @@ void CRenderer::Render()
 	Render_Blur();
 	Render_Combined();
 	Render_Effect();
-	Render_WeightBlend();
 	Render_NonLight();
 	Render_Blend();
+	Render_WeightBlend();
 	Render_LastColor();
 	Render_UI();
 
@@ -264,9 +264,6 @@ void CRenderer::Render_Combined()
 		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur_X"), m_pShader, "g_BlurXTexture"))) {
 			return;
 		}
-		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur_Weight"), m_pShader, "g_BlurWeightTexture"))) {
-			return;
-		}
 
 	}
 
@@ -370,11 +367,6 @@ void CRenderer::Render_Blur()
 	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur"), m_pShader, "g_BlurTexture"))) {
 		return;
 	}
-
-	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur_Weight"), m_pShader, "g_BlurWeightTexture"))) {
-		return;
-	}
-
 	
 	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::BLUR));
 
@@ -654,10 +646,6 @@ HRESULT CRenderer::Initialize()
 
 		/* MRT_Blur */
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Blur"), TEXT("Target_Blur")))) {
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Blur"), TEXT("Target_Blur_Weight")))) {
 			return E_FAIL;
 		}
 

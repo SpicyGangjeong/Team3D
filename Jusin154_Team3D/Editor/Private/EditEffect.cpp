@@ -27,6 +27,8 @@ HRESULT CEditEffect::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
+	
+	Set_Visible(false);
 
 	return S_OK;
 }
@@ -38,6 +40,9 @@ void CEditEffect::Priority_Update(_float fTimeDelta)
 
 void CEditEffect::Update(_float fTimeDelta)
 {
+
+	if (m_bVisible == false)
+		return;
 
 	if (m_pInstance_ModelCom == nullptr)
 		return;
@@ -53,12 +58,14 @@ void CEditEffect::Update(_float fTimeDelta)
 void CEditEffect::Late_Update(_float fTimeDelta)
 {
 
+	if (m_bVisible == false)
+		return;
+
 	if (m_pInstance_ModelCom == nullptr)
 		return;
 
 
 	 XMStoreFloat4x4(&m_CombinedWorldMatrix , m_pTransformCom->Get_XMWorldMatrix() * m_pParentTransformCom->Get_XMWorldMatrix());
-
 
 	if (m_EffectInfo.isBlur == true)
 	{
@@ -385,6 +392,8 @@ void CEditEffect::Describe_Entity()
 	{
 		m_EffectInfo.eRenderOrder = static_cast<RENDER>(iCurrentItem);
 	}
+	
+	GUI::Checkbox("Visible", &m_bVisible);
 
 	m_pTransformCom->Describe_Entity();
 
@@ -609,7 +618,7 @@ void CEditEffect::Describe_Entity()
 
 				GUI::Checkbox("Reverse Dissolve", &m_EffectInfo.isReverseDissolve);
 
-				_string strName = m_strDissolveName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISSOLVE_TEXTURE", (CComponent**)&m_pDissolve_TextureCom, nullptr, this);
+				_string strName  = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISSOLVE_TEXTURE", (CComponent**)&m_pDissolve_TextureCom, nullptr, this);
 				
 				if (strName != "") {
 					m_strDissolveName = strName;
