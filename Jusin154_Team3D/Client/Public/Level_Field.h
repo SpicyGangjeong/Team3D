@@ -17,6 +17,9 @@ public:
 	virtual HRESULT Render() override;
 
 private:
+	class CInfoInstance* m_pInfoInstance = { nullptr };
+
+private:
 	virtual HRESULT Initialize() override;
 	HRESULT Initialize(void* pArg);
 	HRESULT Ready_Lights();

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Client_Define.h"
 #include "Level.h"
@@ -14,6 +14,9 @@ private:
 public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+
+private:
+	class CInfoInstance* m_pInfoInstance = { nullptr };
 
 private:
 	virtual HRESULT Initialize() override;

@@ -165,7 +165,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClInclude>
-    <ClInclude Include="..\Public\Information.h" />
+    <ClInclude Include="..\Public\InfoInstance.h" />
     <ClInclude Include="..\Public\Level_Field.h" />
     <ClInclude Include="..\Public\Level_GamePlay.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
@@ -174,6 +174,9 @@
     <ClInclude Include="..\Public\Light_Main.h" />
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\Public\MainApp.h" />
+    <ClInclude Include="..\Public\MapInfo.h" />
+    <ClInclude Include="..\Public\MonsterInfo.h" />
+    <ClInclude Include="..\Public\PlayerInfo.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -181,7 +184,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Camera_Debug.cpp" />
-    <ClCompile Include="..\Private\Information.cpp" />
+    <ClCompile Include="..\Private\InfoInstance.cpp" />
     <ClCompile Include="..\Private\Level_Field.cpp" />
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />
@@ -190,10 +193,13 @@
     <ClCompile Include="..\Private\Light_Main.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />
+    <ClCompile Include="..\Private\MapInfo.cpp" />
+    <ClCompile Include="..\Private\MonsterInfo.cpp" />
     <ClCompile Include="..\Private\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\Private\PlayerInfo.cpp" />
     <ClCompile Include="Client.cpp" />
   </ItemGroup>
   <ItemGroup>

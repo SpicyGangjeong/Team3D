@@ -40,8 +40,8 @@
     <ClInclude Include="..\Public\Client_Struct.h">
       <Filter>99.Define</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Information.h">
-      <Filter>03.Information</Filter>
+    <ClInclude Include="..\Public\InfoInstance.h">
+      <Filter>03.InfoInstance</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_Field.h">
       <Filter>01.Levels\10.Field</Filter>
@@ -49,11 +49,20 @@
     <ClInclude Include="..\Public\Level_Restart.h">
       <Filter>01.Levels\99.Restart</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Light_Main.h">
-      <Filter>02.GameObjects\Environment\Lights</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Camera_Debug.h">
       <Filter>02.GameObjects\Cameras\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Light_Main.h">
+      <Filter>02.GameObjects\Environment\Lights\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerInfo.h">
+      <Filter>03.InfoInstance\00.PlayerInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MonsterInfo.h">
+      <Filter>03.InfoInstance\01.MonsterInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MapInfo.h">
+      <Filter>03.InfoInstance\02.MapInfo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -92,9 +101,6 @@
     <Filter Include="02.GameObjects">
       <UniqueIdentifier>{27434478-691e-42a8-83c7-ecd1a60f46ce}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.Information">
-      <UniqueIdentifier>{cdfbb346-6cae-4094-93cd-b82685efa68e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Cameras">
       <UniqueIdentifier>{7efd65d5-eb4d-4331-a746-f0fa2de6275b}</UniqueIdentifier>
     </Filter>
@@ -115,15 +121,6 @@
     </Filter>
     <Filter Include="02.GameObjects\NPC\Ally">
       <UniqueIdentifier>{a7d0a3fa-b3dc-40c6-b258-ffcde49b05c1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03.Information\00.PlayerInfo">
-      <UniqueIdentifier>{1cfdfc05-0b0d-4c58-8c2d-58090efea4fd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03.Information\01.MonsterInfo">
-      <UniqueIdentifier>{621b87a7-54b8-4d90-84b2-fa8cd26cc396}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03.Information\02.NeutralInfo">
-      <UniqueIdentifier>{caa3de9a-fe01-426c-9cea-195c2f9b18f6}</UniqueIdentifier>
     </Filter>
     <Filter Include="04.Mechanic">
       <UniqueIdentifier>{b5bef783-5315-4488-ac64-cb98d16a84a9}</UniqueIdentifier>
@@ -158,6 +155,45 @@
     <Filter Include="02.GameObjects\Cameras\Shoulder">
       <UniqueIdentifier>{708bbc88-47fb-42c5-b060-14cec7d646f2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Environment\Lights\Main">
+      <UniqueIdentifier>{b24c78ef-dccc-41f0-a086-053ae6b7fbf4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\Plane">
+      <UniqueIdentifier>{603938cc-e4fe-44d8-890b-784174a86161}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\Player">
+      <UniqueIdentifier>{11250d84-e19c-4999-a5d6-d9f89123e7ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\NPC\Hostile\Monster">
+      <UniqueIdentifier>{b72a9bb0-1b21-416b-bd0c-ba943cd7cc9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\Prop">
+      <UniqueIdentifier>{2814c935-13d9-4b9a-94ba-c9e470219a18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\Prop\SkyBox">
+      <UniqueIdentifier>{19ee2ea4-2d79-46bd-b857-c759e3ec6cf4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\Prop\SkyBox\TriggerBox">
+      <UniqueIdentifier>{2561df42-3dfa-4045-a30c-85f44cd65e09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Cameras\CameraPosition">
+      <UniqueIdentifier>{25ad4a41-5b06-4659-bd29-c0c4265a3277}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Cameras\CameraPosition\Player">
+      <UniqueIdentifier>{5a667a7b-6c90-44f6-9c9f-aac3108b6561}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.InfoInstance">
+      <UniqueIdentifier>{cdfbb346-6cae-4094-93cd-b82685efa68e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.InfoInstance\00.PlayerInfo">
+      <UniqueIdentifier>{1cfdfc05-0b0d-4c58-8c2d-58090efea4fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.InfoInstance\01.MonsterInfo">
+      <UniqueIdentifier>{621b87a7-54b8-4d90-84b2-fa8cd26cc396}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.InfoInstance\02.MapInfo">
+      <UniqueIdentifier>{413e6692-6e4a-4b00-8306-edf652bd876a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -181,8 +217,8 @@
     <ClCompile Include="..\Private\Level_GamePlay.cpp">
       <Filter>01.Levels\02.GamePlay</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Information.cpp">
-      <Filter>03.Information</Filter>
+    <ClCompile Include="..\Private\InfoInstance.cpp">
+      <Filter>03.InfoInstance</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_Field.cpp">
       <Filter>01.Levels\10.Field</Filter>
@@ -190,11 +226,20 @@
     <ClCompile Include="..\Private\Level_Restart.cpp">
       <Filter>01.Levels\99.Restart</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Light_Main.cpp">
-      <Filter>02.GameObjects\Environment\Lights</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Camera_Debug.cpp">
       <Filter>02.GameObjects\Cameras\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Light_Main.cpp">
+      <Filter>02.GameObjects\Environment\Lights\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerInfo.cpp">
+      <Filter>03.InfoInstance\00.PlayerInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MonsterInfo.cpp">
+      <Filter>03.InfoInstance\01.MonsterInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MapInfo.cpp">
+      <Filter>03.InfoInstance\02.MapInfo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

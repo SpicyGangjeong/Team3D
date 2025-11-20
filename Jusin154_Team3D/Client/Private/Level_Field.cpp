@@ -2,12 +2,15 @@
 #include "Level_Field.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
+#include "InfoInstance.h"
+#include "Light_Main.h"
 #include "Layer.h"
 
 CLevel_Field::CLevel_Field(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
 {
-
+	m_pInfoInstance = CInfoInstance::GetInstance();
+	SAFE_ADDREF(m_pInfoInstance);
 }
 
 HRESULT CLevel_Field::Initialize(void* pArg)
@@ -37,34 +40,31 @@ HRESULT CLevel_Field::Initialize()
 
 void CLevel_Field::Update(_float fTimeDelta)
 {
+	if (m_pGameInstance->Mouse_Up(DIM_RBUTTON))
+	{
+		m_pGameInstance->Set_LevelToChange();
+	}
+
+	m_pInfoInstance->Update(fTimeDelta);
+
 	if (true == m_pGameInstance->Check_LevelShouldChange()) {
-		//if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::WOODS)))) {
-		//	return;
-		//}
+		if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::RESTART)))) {
+			return;
+		}
 	}
 }
 
 HRESULT CLevel_Field::Render()
 {
-	SetWindowText(g_hWnd, TEXT("게임플레이레벨입니다"));
+	SetWindowText(g_hWnd, TEXT("필드레벨"));
 	return S_OK;
 }
 
 HRESULT CLevel_Field::Ready_Lights()
 {
-	LIGHT_DESC			LightDesc{};
-
-	LightDesc.eType = LIGHT::DIRECTIONAL;
-	LightDesc.vDiffuse = _float4(0.8f, 0.8f, 0.8f, 0.f);
-	LightDesc.vAmbient = _float4(0.2f, 0.2f, 0.2f, 0.f);
-	LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 0.f);
-	//LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
-
-	//if (FAILED(m_pGameInstance->On_Light(NEXT_LEVEL, TEXT("Main_Light"), LightDesc, nullptr))) {
-	//	return E_FAIL;
-	//}
-
-
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLight_Main>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT))) {
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
@@ -111,4 +111,5 @@ void CLevel_Field::Free()
 {
 	__super::Free();
 
+	SAFE_RELEASE(m_pInfoInstance);
 }

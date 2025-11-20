@@ -56,6 +56,9 @@ HRESULT CLoader::Loading()
 	case LEVEL::FIELD:
 		hr = Loading_For_Field();
 		break;
+	case LEVEL::RESTART:
+		hr = Loading_For_Restart();
+		break;
 	default:
 		break;
 	}
@@ -121,6 +124,27 @@ HRESULT CLoader::Loading_For_GamePlay()
 }
 
 HRESULT CLoader::Loading_For_Field()
+{
+	m_strMessage = TEXT("텍스쳐를(을) 로딩 중 입니다.");
+
+	m_strMessage = TEXT("모델를(을) 로딩 중 입니다.");
+
+	m_strMessage = TEXT("셰이더를(을) 로딩 중 입니다.");
+
+	m_strMessage = TEXT("이펙트를(을) 로딩 중 입니다.");
+
+	m_strMessage = TEXT("객체원형를(을) 로딩 중 입니다.");
+
+	m_strMessage = TEXT("정보를 불러오는 중입니다.");
+
+	m_strMessage = TEXT("로딩이 완료되었습니다..");
+
+	m_isFinished = true;
+
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_For_Restart()
 {
 	m_strMessage = TEXT("텍스쳐를(을) 로딩 중 입니다.");
 

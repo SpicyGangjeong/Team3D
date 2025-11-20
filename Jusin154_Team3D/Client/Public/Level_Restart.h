@@ -18,7 +18,11 @@ public:
 	virtual HRESULT Render() override;
 
 private:
+	class CInfoInstance* m_pInfoInstance = { nullptr };
+
+private:
 	virtual HRESULT Initialize() override;
+
 private:
 	LEVEL m_eNextLevel = {};
 public:

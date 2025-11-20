@@ -4,12 +4,14 @@
 #include "Level_Loading.h"
 #include "Light_Main.h"
 #include "Camera_Debug.h"
+#include "InfoInstance.h"
 #include "Layer.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
 {
-
+	m_pInfoInstance = CInfoInstance::GetInstance();
+	SAFE_ADDREF(m_pInfoInstance);
 }
 
 HRESULT CLevel_GamePlay::Initialize(void* pArg)
@@ -17,7 +19,6 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	if (FAILED(Ready_Lights())) {
 		return E_FAIL;
 	}
-
 	if (FAILED(Ready_Markers())) {
 		return E_FAIL;
 	}
@@ -39,10 +40,17 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
+	if (m_pGameInstance->Mouse_Up(DIM_RBUTTON))
+	{
+		m_pGameInstance->Set_LevelToChange();
+	}
+
+	m_pInfoInstance->Update(fTimeDelta);
+
 	if (true == m_pGameInstance->Check_LevelShouldChange()) {
-		//if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::WOODS)))) {
-		//	return;
-		//}
+		if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::FIELD)))) {
+			return;
+		}
 	}
 }
 
@@ -54,8 +62,9 @@ HRESULT CLevel_GamePlay::Render()
 
 HRESULT CLevel_GamePlay::Ready_Lights()
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLight_Main>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLight_Main>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT))){
 		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -77,6 +86,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 	Camera_Desc.pCameraKey = CAMERA_DEBUG;
 	Camera_Desc.fRotationPerSec = XMConvertToRadians(90.0f);
 	Camera_Desc.fMouseSensor = 0.1f;
+	Camera_Desc.iPriority = 99;
+	Camera_Desc.pFollowTarget = { nullptr };
+	Camera_Desc.pLookTarget = { nullptr };
 
 	CCamera_Debug* pCamera = { nullptr };
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCamera_Debug>(g_iStaticLevel, NEXT_LEVEL, LAYER_CAMERA, &Camera_Desc, nullptr, &pCamera))){
@@ -122,4 +134,5 @@ void CLevel_GamePlay::Free()
 {
 	__super::Free();
 
+	SAFE_RELEASE(m_pInfoInstance);
 }

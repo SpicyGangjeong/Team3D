@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Level_Loading.h"
 
 #include "Loader.h"
@@ -6,6 +6,8 @@
 #include "Layer.h"
 #include "Level_Logo.h"
 #include "Level_GamePlay.h"
+#include "Level_Restart.h"
+#include "Level_Field.h"
 
 CLevel_Loading::CLevel_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -47,7 +49,17 @@ void CLevel_Loading::Update(_float fTimeDelta)
 		{
 			pairLevel = CLevel_GamePlay::Create(m_pDevice, m_pContext, m_eNextLevelID, nullptr);
 		} break;
+		case LEVEL::FIELD:
+		{
+			pairLevel = CLevel_Field::Create(m_pDevice, m_pContext, m_eNextLevelID, nullptr);
+		} break;
+		case LEVEL::RESTART:
+		{
+			pairLevel = CLevel_Restart::Create(m_pDevice, m_pContext, m_eNextLevelID);
+		} break;
+
 		default:
+			assert(false); // E_IMPL
 			break;
 		}
 
@@ -59,7 +71,7 @@ void CLevel_Loading::Update(_float fTimeDelta)
 			return;
 		}
 		else /* FAILED */ {
-			assert(false); // ·¹º§ º¯°æ ½ÇÆÐ
+			assert(false); // ë ˆë²¨ ë³€ê²½ ì‹¤íŒ¨
 		}
 	}
 }

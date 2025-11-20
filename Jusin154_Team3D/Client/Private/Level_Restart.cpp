@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 #include "Level_Restart.h"
-#include "Information.h"
+#include "InfoInstance.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
 
@@ -9,25 +9,36 @@
 CLevel_Restart::CLevel_Restart(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
 {
-
+	m_pInfoInstance = CInfoInstance::GetInstance();
+	SAFE_ADDREF(m_pInfoInstance);
 }
 
 HRESULT CLevel_Restart::Initialize()
 {
-	//m_eNextLevel = CInformation::GetInstance()->Get_RestartLevel();
+	m_eNextLevel = m_pInfoInstance->Get_RestartLevel();
 
 	return S_OK;
 }
 
 void CLevel_Restart::Update(_float fTimeDelta)
 {
-	if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, m_eNextLevel)))) {
-		return;
+	if (m_pGameInstance->Mouse_Up(DIM_RBUTTON))
+	{
+		m_pGameInstance->Set_LevelToChange();
+	}
+
+	m_pInfoInstance->Update(fTimeDelta);
+
+	if (true == m_pGameInstance->Check_LevelShouldChange()) {
+		if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, m_eNextLevel)))) {
+			return;
+		}
 	}
 }
 
 HRESULT CLevel_Restart::Render()
 {
+	SetWindowText(g_hWnd, TEXT("리스타트레벨"));
 	return S_OK;
 }
 
@@ -48,4 +59,5 @@ void CLevel_Restart::Free()
 {
 	__super::Free();
 
+	SAFE_RELEASE(m_pInfoInstance);
 }
