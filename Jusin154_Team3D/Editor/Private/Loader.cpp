@@ -1246,8 +1246,12 @@ HRESULT CLoader::Loading_For_MapViewer()
 {
 	m_strMessage = TEXT("텍스쳐를(을) 로딩 중 입니다.");
 
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("TerrainTest"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/T_C_Dun_Moss_D.png"), 0)))) {
+	//	return E_FAIL;
+	//}
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("TerrainTest"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/T_C_Dun_Moss_D.png"), 0)))) {
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/T_LandscapeStreamingProxy_0_LOD1_Summer_D.png"), 0)))) {
 		return E_FAIL;
 	}
 
@@ -1471,7 +1475,7 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 	/* For.Prototype_Component_VIBuffer_Terrain */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Terrain"),
-		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, "../Bin/Resources/Data/Map/Height.bmp", 257, 257))))
+		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, "../Bin/Resources/Data/Map/T_LandscapeStreamingProxy_0_LOD1_D.png", 512, 512))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_SkyBox */

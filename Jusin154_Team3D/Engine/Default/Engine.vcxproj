@@ -543,6 +543,7 @@ call Update_Lib.bat
     <ClInclude Include="..\Public\Shadow.h" />
     <ClInclude Include="..\Public\SoundSrc.h" />
     <ClInclude Include="..\Public\State.h" />
+    <ClInclude Include="..\Public\stb_image.h" />
     <ClInclude Include="..\Public\Texture.h" />
     <ClInclude Include="..\Public\ThreadHolder.h" />
     <ClInclude Include="..\Public\Timer.h" />
