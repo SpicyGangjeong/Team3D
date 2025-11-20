@@ -56,7 +56,7 @@ public:
 		_float  fDiffuseAlpha = { 1.f };
 		_float  fBlurIntensity = {};
 		_float  fNoiseDistortionIntensity = {};
-		_float  fEmissiveCutAlpha = {};
+		_float  fEmissiveCutAlpha = { 0.f };
 
 		LIGHT_DESC	LightDesc = {};
 		RENDER		eRenderOrder = { RENDER::EFFECT };
@@ -64,6 +64,8 @@ public:
 		_bool   isReverseDissolve = {};
 
 		EFFECT_TYPE eEffectType = { EFFECT_TYPE::EFFECT };
+
+		_bool   isEmissiveDissolve = { false };
 
 	}EFFECT_INFO;
 
@@ -111,10 +113,9 @@ public:
 
 		LIGHT_DESC	LightDesc = {};
 		RENDER		eRenderOrder = { RENDER::EFFECT };
-
 		_bool   isReverseDissolve = {};
-
-
+		EFFECT_TYPE eEffectType = { EFFECT_TYPE::EFFECT };
+		_bool   isEmissiveDissolve = { false };
 
 	}PRE_EFFECT_INFO;
 

@@ -319,6 +319,9 @@ CComponent* CCharacter_Controller::Clone(void* pArg, class CGameObject* pOwner)
 
 void CCharacter_Controller::Free()
 {
+	if (nullptr != m_pController) {
+		m_pController->release();
+	}
 	__super::Free();
 }
 

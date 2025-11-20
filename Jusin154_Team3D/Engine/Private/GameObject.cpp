@@ -53,7 +53,7 @@ void CGameObject::Late_Update(_float fTimeDelta)
 {
 }
 
-void CGameObject::OnCollision(CGameObject* pOther)
+void CGameObject::OnCollision(CGameObject* pOther , void* pDesc)
 {
 }
 void CGameObject::OnHit(CGameObject* pOther, CGameObject* pCaller)

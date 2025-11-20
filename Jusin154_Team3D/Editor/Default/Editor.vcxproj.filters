@@ -325,6 +325,18 @@
     <Filter Include="02.GameObjects\Broom">
       <UniqueIdentifier>{a9862861-6eaa-4e04-b7f6-217a32db7db4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\PhysXHitBox">
+      <UniqueIdentifier>{80f4e763-20bb-47c1-b1de-ac11bc28bad8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\00.Callback\Behavior\HitBox">
+      <UniqueIdentifier>{d35cf4c8-1838-4cf3-80ff-69ef27435792}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\00.Callback\HitReport\HitBox">
+      <UniqueIdentifier>{1b1b3388-cfea-4d6a-b93d-aa174317f573}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Dummys\DummyPhysX\PhysXEffectHitBox">
+      <UniqueIdentifier>{7b7439b1-f2e5-4233-bf26-4db2b41307b7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -639,6 +651,18 @@
     <ClInclude Include="..\Public\Broom.h">
       <Filter>02.GameObjects\Broom</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Dummy_PhysXHitBox.h">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXHitBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CallBack_EffectHitBox_HitReport.h">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\00.Callback\HitReport\HitBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CallBack_EffectHitBox_Behavior.h">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\00.Callback\Behavior\HitBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dummy_PhysXEffectHitBox.h">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXEffectHitBox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -948,6 +972,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\Broom.cpp">
       <Filter>02.GameObjects\Broom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_PhysXHitBox.cpp">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXHitBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CallBack_EffectHitBox_HitReport.cpp">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\00.Callback\HitReport\HitBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CallBack_EffectHitBox_Behavior.cpp">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\00.Callback\Behavior\HitBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_PhysXEffectHitBox.cpp">
+      <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXEffectHitBox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
