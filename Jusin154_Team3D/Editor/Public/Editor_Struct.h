@@ -1,6 +1,8 @@
 ﻿#pragma once
 NS_BEGIN(Engine)
 class CTransform;
+class CModel;
+class CRigidBody_Static;
 NS_END
 
 NS_BEGIN(Editor)
@@ -36,6 +38,14 @@ typedef struct tagOnCollsionInfo
 
 }ON_COLLISION_INFO;
 
+typedef struct tagFolderLoad {
+	const _tchar*						pModelTag;
+	CModel*								pLoadedModel;
+	filesystem::path					pathModel;
+
+	vector<const _tchar*>				pRigidBodyTags;
+	vector<CRigidBody_Static*>			LoadedRigidBody;
+}FOLDER_LOAD;
 
 
 NS_END

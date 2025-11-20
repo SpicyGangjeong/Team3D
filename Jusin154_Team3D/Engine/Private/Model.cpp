@@ -944,16 +944,6 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 	if (FAILED(Ready_Animations())) {
 		return E_FAIL;
 	}
-
-#ifdef 기무리
-	if (MODEL::ENVIROMENT == m_eType) {
-		m_pGameInstance->LoadTriMeshes(pModelFilePath, m_TriMeshes);
-		for (_uint i = 0; i < m_iNumMeshes; ++i) {
-			m_pGameInstance->RegistTriMesh(m_Meshes[i]->Get_Name(), m_TriMeshes[i]);
-		}
-	}
-#endif // 
-
 	return S_OK;
 }
 
