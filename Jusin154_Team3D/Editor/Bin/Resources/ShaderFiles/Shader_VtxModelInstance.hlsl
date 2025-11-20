@@ -333,16 +333,16 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
    
     if(g_isNoise)
     {
+        float2 vNoiseUV = In.vTexcoord + SelectLerpUV(g_vNoiseUVGainAmount, (vNoiseUVMoveTime.x / vNoiseUVMoveTime.y), g_iNoiseMoveLerpOption);
         
-        vMtrlNoise = g_NoiseTexture.Sample(DefaultSampler, In.vTexcoord);
+        vMtrlNoise = g_NoiseTexture.Sample(DefaultSampler, vNoiseUV);
         
-            
         vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * vMtrlNoise.r);
         
         vMtrlDiffuse *= vMtrlNoise;
-        
     }
     
+    /* 마스크 */ 
     if (g_isMasking == true)
     {
         float2 vMaskTexcoord = In.vTexcoord;
@@ -361,8 +361,6 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
             //디스토션(노이즈) 텍스쳐로 uv를 왜곡함
             vMaskTexcoord = vMaskTexcoord + (vMtrlDistortion - 0.5f).r  * g_fNoiseDistortionIntensity;
             
-
-
         }
         
         if (g_isMaskUVMove)
@@ -529,18 +527,18 @@ PS_BLUR_OUT PS_BLUR(PS_BLUR_IN In)
             //0.5f를 빼는 이유는 중심을 0으로 옮겨서 양음수 방향으로 offset을 줄수 있다.
             vMtrlDistortion.rg -= 0.5f;
                         
-            ////아마 분할되었다면 noise도 분할해야할듯 
-            //vMtrlDistortion.rg /= g_vUVCutting;
+            //아마 분할되었다면 noise도 분할해야할듯 
+            vMtrlDistortion.rg /= g_vUVCutting;
             
             //디스토션(노이즈) 텍스쳐로 uv를 왜곡함
 
             UV = UV + (vMtrlDistortion).rg * g_fNoiseDistortionIntensity;
+            
         }
         
  
         /* 최종 색깔  */
         vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, UV);
-        
         
         if (g_vColor.a > 0)
             vMtrlDiffuse += g_vColor;
@@ -556,12 +554,16 @@ PS_BLUR_OUT PS_BLUR(PS_BLUR_IN In)
    
     if (g_isNoise)
     {
-        vMtrlNoise = g_NoiseTexture.Sample(DefaultSampler, In.vTexcoord);
+        float2 vNoiseUV = In.vTexcoord + SelectLerpUV(g_vNoiseUVGainAmount, (vNoiseUVMoveTime.x / vNoiseUVMoveTime.y), g_iNoiseMoveLerpOption);
+        
+        vMtrlNoise = g_NoiseTexture.Sample(DefaultSampler, vNoiseUV);
+        
+        vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * vMtrlNoise.r);
         
         vMtrlDiffuse *= vMtrlNoise;
-        
     }
     
+    /* 마스크 */ 
     if (g_isMasking == true)
     {
         float2 vMaskTexcoord = In.vTexcoord;
@@ -578,8 +580,9 @@ PS_BLUR_OUT PS_BLUR(PS_BLUR_IN In)
             vMtrlDistortion = g_DistortionTexture.Sample(DefaultSampler, vDistortionUV);
             
             //디스토션(노이즈) 텍스쳐로 uv를 왜곡함
-            vMaskTexcoord = vMaskTexcoord + (vMtrlDistortion - 0.5f).r  * g_fNoiseDistortionIntensity;
-           
+            vMaskTexcoord = vMaskTexcoord + (vMtrlDistortion - 0.5f).r * g_fNoiseDistortionIntensity;
+            
+
 
         }
         
@@ -596,12 +599,8 @@ PS_BLUR_OUT PS_BLUR(PS_BLUR_IN In)
     {
         vMtrlMask.r = 1.f;
     }
-    
 
-    
     vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * vMtrlMask.r);
-    
-
     
     if (vMtrlDiffuse.a <= 0.f)
         discard;
@@ -610,7 +609,7 @@ PS_BLUR_OUT PS_BLUR(PS_BLUR_IN In)
     {
         vMtrlDissolve = g_DissolveTexture.Sample(DefaultSampler, In.vTexcoord);
         
-             if(g_isReverseDissolve == true)
+        if (g_isReverseDissolve == true)
         {
             if (vMtrlDissolve.r >= (In.vLifeTime.x / In.vLifeTime.y))
                 discard;
@@ -620,7 +619,6 @@ PS_BLUR_OUT PS_BLUR(PS_BLUR_IN In)
             if (vMtrlDissolve.r < (In.vLifeTime.x / In.vLifeTime.y))
                 discard;
         }
-
     }
     
     vMtrlDiffuse.a *= g_fDiffuseAlpha;
@@ -633,6 +631,7 @@ PS_BLUR_OUT PS_BLUR(PS_BLUR_IN In)
     {
         vEmissiveMtrl = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
     }
+
 
     
     Out.vDiffuse = vMtrlDiffuse * g_fBlurIntensity;

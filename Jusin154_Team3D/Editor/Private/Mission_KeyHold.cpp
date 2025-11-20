@@ -21,10 +21,10 @@ HRESULT CMission_KeyHold::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = -296.f;
+	Desc.fX = -297.f;
 	Desc.fY = 158.f;
-	Desc.fSizeX = 86.f;
-	Desc.fSizeY = 86.f;
+	Desc.fSizeX = 94.f;
+	Desc.fSizeY = 94.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -112,11 +112,11 @@ void CMission_KeyHold::Update(_float fTimeDelta)
 
 	if (m_bisHoldOn)
 	{
-		static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Missiom_On"));
+		static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Mission_On"));
 	}
 	else
 	{
-		static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Missiom_Off"));
+		static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Mission_Off"));
 	}
 
 	__super::Update(fTimeDelta);

@@ -1,0 +1,10 @@
+#ifndef ENGINE_SHADER_STRUCTURES_HLSLI
+#define ENGINE_SHADER_STRUCTURES_HLSLI
+
+struct PBR_LIGHT_OUT
+{
+    float3 vShade;
+    float3 vSpecular;
+};
+
+#endif // ENGINE_SHADER_STRUCTURES_HLSLI

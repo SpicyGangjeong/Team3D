@@ -220,8 +220,9 @@ HRESULT CMaterial::Read_MaterialFile(const _char* pMaterialFilePath, const _char
 					getline(file, strText);
 
 					// Add Texture
-					if (FAILED(Add_Texture(szTextureFilePath, Type)))
+					if (FAILED(Add_Texture(szTextureFilePath, Type))){
 						return E_FAIL;
+					}
 
 					break;
 
@@ -250,49 +251,70 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 	aiTextureType eTexture = {};
 	
 	/* Find type */
-	if (!strcmp(FileType.c_str(), "D"))
+	if (!strcmp(FileType.c_str(), "D")){
 		eTexture = aiTextureType::aiTextureType_DIFFUSE;
-	else if (!strcmp(FileType.c_str(), "Diff"))
+	}
+	else if (!strcmp(FileType.c_str(), "Diff")){
 		eTexture = aiTextureType::aiTextureType_DIFFUSE;
-	else if (!strcmp(FileType.c_str(), "d"))
+	}
+	else if (!strcmp(FileType.c_str(), "d")){
 		eTexture = aiTextureType::aiTextureType_DIFFUSE;
-	else if (!strcmp(FileType.c_str(), "N"))
+	}
+	else if (!strcmp(FileType.c_str(), "basecolor")) {
+		eTexture = aiTextureType::aiTextureType_DIFFUSE;
+	}
+	else if (!strcmp(FileType.c_str(), "N")){
 		eTexture = aiTextureType::aiTextureType_NORMALS;
-	else if (!strcmp(FileType.c_str(), "normal"))
+	}
+	else if (!strcmp(FileType.c_str(), "normal")){
 		eTexture = aiTextureType::aiTextureType_NORMALS;
-	else if (!strcmp(FileType.c_str(), "Norm"))
+	}
+	else if (!strcmp(FileType.c_str(), "Norm")){
 		eTexture = aiTextureType::aiTextureType_NORMALS;
-	else if (!strcmp(FileType.c_str(), "n"))
+	}
+	else if (!strcmp(FileType.c_str(), "n")){
 		eTexture = aiTextureType::aiTextureType_NORMALS;
-	else if (!strcmp(FileType.c_str(), "MRO"))
+	}
+	else if (!strcmp(FileType.c_str(), "MRO")){
 		eTexture = aiTextureType::aiTextureType_METALNESS;
-	else if (!strcmp(FileType.c_str(), "3Broom"))
+	}
+	else if (!strcmp(FileType.c_str(), "MROH")){
 		eTexture = aiTextureType::aiTextureType_METALNESS;
-	else if (!strcmp(FileType.c_str(), "MROH"))
+	}
+	else if (!strcmp(FileType.c_str(), "MRAB")){
 		eTexture = aiTextureType::aiTextureType_METALNESS;
-	else if (!strcmp(FileType.c_str(), "MRAB"))
+	}
+	else if (!strcmp(FileType.c_str(), "MROA")){
 		eTexture = aiTextureType::aiTextureType_METALNESS;
-	else if (!strcmp(FileType.c_str(), "MROA"))
+	}
+	else if (!strcmp(FileType.c_str(), "SRO")){
 		eTexture = aiTextureType::aiTextureType_SPECULAR;
-	else if (!strcmp(FileType.c_str(), "SRO"))
+	}
+	else if (!strcmp(FileType.c_str(), "HRO")){
 		eTexture = aiTextureType::aiTextureType_SPECULAR;
-	else if (!strcmp(FileType.c_str(), "HRO"))
+	}
+	else if (!strcmp(FileType.c_str(), "SROH")) {
 		eTexture = aiTextureType::aiTextureType_SPECULAR;
-	else if (!strcmp(FileType.c_str(), "SROH"))
+	}
+	else if (!strcmp(FileType.c_str(), "SROA")){
 		eTexture = aiTextureType::aiTextureType_SPECULAR;
-	else if (!strcmp(FileType.c_str(), "SROA"))
-		eTexture = aiTextureType::aiTextureType_SPECULAR;
+	}
+	else if (!strcmp(FileType.c_str(), "3Broom")) {
+		eTexture = aiTextureType::aiTextureType_UNKNOWN;
+	}
 	else if (!strcmp(FileType.c_str(), "HDR"))
 		return S_OK;
-	else if (!strcmp(FileType.c_str(), "MSK"))
+	else if (!strcmp(FileType.c_str(), "MSK")){
 		eTexture = aiTextureType::aiTextureType_AMBIENT_OCCLUSION;
-	else if (!strcmp(FileType.c_str(), "basecolor"))
-		eTexture = aiTextureType::aiTextureType_DIFFUSE;
-	else if (!strcmp(FileType.c_str(), "E"))
+	}
+	else if (!strcmp(FileType.c_str(), "E")){
 		eTexture = aiTextureType::aiTextureType_EMISSIVE;
+	}
 	else
 	{
+#ifndef 기무리
 		MSG_BOX("Failed to Path Material Texture Type");
+#endif // !기무리
 		return S_OK;
 	}
 	_char TexturePath[MAX_PATH] = {};
@@ -319,8 +341,10 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 
 		if (FAILED(CreateWICTextureFromFile(m_pDevice, szTextureFilePath_Png, nullptr, &pSRV)))
 		{
+#ifndef 기무리
 			MSG_BOX("Failed to Load TextureFile");
-			return E_FAIL;
+#endif // !기무리
+			return S_OK;
 		}
 		strTexturePath = CMyTools::ToString(szTextureFilePath_Png);
 	}
@@ -360,25 +384,6 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 
 	return S_OK;
 }
-HRESULT CMaterial::SaveAsBinary(HANDLE hFile, DWORD& dwByte)
-{
-	// 실제 값을 저장하지 않고 파일이름.확장자명의 문자열을 저장해서 수정하기 편하게 만들기
-	// 대신 리소스를 공유해야함
-	// 텍스쳐를 저장하지 않고
-	// 텍스쳐 경로만 ( "이름.확장자" ) 만 저장함
-	for (int i = 0; i < AI_TEXTURE_TYPE_MAX; ++i) {
-		_uint iNumSrv = (_uint)m_strPath[i].size();
-		WriteFile(hFile, &i, sizeof(_uint), &dwByte, nullptr); // 종류 저장
-		WriteFile(hFile, &iNumSrv, sizeof(_uint), &dwByte, nullptr); // 종류의 갯수 저장
-		for (_uint j = 0; j < iNumSrv; ++j) {
-			m_strPath[i][j].shrink_to_fit();
-			_uint strLength = (_uint)(sizeof(_char) * m_strPath[i][j].length());
-			WriteFile(hFile, &strLength, sizeof(_uint), &dwByte, nullptr); // 사이즈 저장
-			WriteFile(hFile, m_strPath[i][j].data(), strLength, &dwByte, nullptr); // 실제 값 저장
-		}
-	}
-	return S_OK;
-}
 CMaterial* CMaterial::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, const aiMaterial* pAIMaterial)
 {
 	CMaterial* pInstance = new CMaterial(pDevice, pContext);
@@ -406,15 +411,111 @@ CMaterial* CMaterial::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 }
 #endif
 
-HRESULT CMaterial::Bind_SRV(CShader* pShader, const _char* pConstantName, _uint iType, _uint iTextureIndex)
+HRESULT CMaterial::Bind_SRV(CShader* pShader)
 {
-	if (m_SRVs[iType].empty()) {
-		//assert(false);
-		return S_OK;
+	//if (m_SRVs[iType].empty()) {
+	//	//assert(false);
+	//	return S_OK;
+	//}
+
+	const _char* pConstantName = "";
+	_float fZero = 0.f;
+	if (FAILED(pShader->Bind_RawValue("g_fUsingSurfaceParams", &fZero, sizeof(_float)))) {
+		return E_FAIL;
+	}
+	if (FAILED(pShader->Bind_SRV("g_SurfaceParamsTexture", nullptr))) {
+		return E_FAIL;
 	}
 
+	for (_uint iTextureType = 0; iTextureType < AI_TEXTURE_TYPE_MAX; ++iTextureType) {
+		if (m_SRVs[iTextureType].empty()) {
+			continue;
+		}
+		switch (aiTextureType(iTextureType))
+		{
+		case aiTextureType_NONE:
+			break;
+		case aiTextureType_DIFFUSE:
+			pConstantName = "g_DiffuseTexture";
+			break;
+		case aiTextureType_SPECULAR:
+		{
+			_float fUsingSurfaceParams = ((_float)iTextureType / (_float)AI_TEXTURE_TYPE_MAX);
+			pConstantName = "g_SurfaceParamsTexture";
+			pShader->Bind_RawValue("g_fUsingSurfaceParams", &fUsingSurfaceParams, sizeof(_float));
+		}
+			break;
+		case aiTextureType_AMBIENT:
+			break;
+		case aiTextureType_EMISSIVE:
+			break;
+		case aiTextureType_HEIGHT:
+			break;
+		case aiTextureType_NORMALS:
+			pConstantName = "g_NormalTexture";
+			break;
+		case aiTextureType_SHININESS:
+		{
+			_float fUsingSurfaceParams = ((_float)aiTextureType_SPECULAR / (_float)AI_TEXTURE_TYPE_MAX);
+			pConstantName = "g_SurfaceParamsTexture";
+			pShader->Bind_RawValue("g_fUsingSurfaceParams", &fUsingSurfaceParams, sizeof(_float));
+		}
+			break;
+		case aiTextureType_OPACITY:
+			break;
+		case aiTextureType_DISPLACEMENT:
+			break;
+		case aiTextureType_LIGHTMAP:
+			break;
+		case aiTextureType_REFLECTION:
+			break;
+		case aiTextureType_BASE_COLOR:
+			break;
+		case aiTextureType_NORMAL_CAMERA:
+			break;
+		case aiTextureType_EMISSION_COLOR:
+			break;
+		case aiTextureType_METALNESS:
+		{
+			_float fUsingSurfaceParams = ((_float)iTextureType / (_float)AI_TEXTURE_TYPE_MAX);
+			pConstantName = "g_SurfaceParamsTexture";
+			pShader->Bind_RawValue("g_fUsingSurfaceParams", &fUsingSurfaceParams, sizeof(_float));
+		}
+			break;
+		case aiTextureType_DIFFUSE_ROUGHNESS:
+			break;
+		case aiTextureType_AMBIENT_OCCLUSION:
+			break;
+		case aiTextureType_UNKNOWN:
+			break;
+		case aiTextureType_SHEEN:
+			break;
+		case aiTextureType_CLEARCOAT:
+			break;
+		case aiTextureType_TRANSMISSION:
+			break;
+		case aiTextureType_MAYA_BASE:
+			break;
+		case aiTextureType_MAYA_SPECULAR:
+			break;
+		case aiTextureType_MAYA_SPECULAR_COLOR:
+			break;
+		case aiTextureType_MAYA_SPECULAR_ROUGHNESS:
+			break;
+		case aiTextureType_ANISOTROPY:
+			break;
+		case aiTextureType_GLTF_METALLIC_ROUGHNESS:
+			break;
+		case _aiTextureType_Force32Bit:
+			break;
+		default:
+			break;
+		}
 
-	return pShader->Bind_SRV(pConstantName, m_SRVs[iType][iTextureIndex]);
+		pShader->Bind_SRV(pConstantName, m_SRVs[iTextureType][0]);
+	}
+
+	return S_OK;
 }
 
 HRESULT CMaterial::Initialize(const _char* pModelFilePath, const SaveMaterial& _SaveMaterial)
@@ -448,8 +549,9 @@ HRESULT CMaterial::Initialize(const _char* pModelFilePath, const SaveMaterial& _
 					hr = CreateWICTextureFromFile(m_pDevice, szPerfectPath, nullptr, &pSRV);
 			}
 
-			if (FAILED(hr))
+			if (FAILED(hr)){
 				return E_FAIL;
+			}
 
 			m_SRVs[type].push_back(pSRV);
 		}

@@ -10,7 +10,9 @@ public:
 	typedef struct tagInstanceDesc
 	{
 		_uint	iNum = {};
-		_float2 vSize = { };
+		_float2 vSize = {};
+		_float	fPositionOffSetX{};
+		_float	fPositionOffSetY{};
 		_float2 vPsition = {};
 	}INSTANCE_DESC;
 protected:

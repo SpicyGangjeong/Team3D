@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Level_Loading.h"
 #include "Loader.h"
 #include "GameInstance.h"
@@ -8,6 +8,7 @@
 #include "Level_ObjectViewer.h"
 #include "Level_EffectViewer.h"
 #include "Level_MapViewer.h"
+#include "Level_BloomViewer.h"
 #include "Level_PhysXLab.h"
 
 
@@ -62,9 +63,9 @@ void CLevel_Loading::Update(_float fTimeDelta)
 		case LEVEL::PHYSX:
 			pNewLevel = CLevel_PhysXLab::Create(m_pDevice, m_pContext, m_eNextLevelID);
 			break;
-		//case LEVEL::PARTICLE:
-		//	pNewLevel = CLevel_ParticleViewer::Create(m_pDevice, m_pContext, m_eNextLevelID);
-		//	break;
+		case LEVEL::BLOOM:
+			pNewLevel = CLevel_BloomViewer::Create(m_pDevice, m_pContext, m_eNextLevelID);
+			break;
 		}
 
 		if (FAILED(m_pGameInstance->Change_Level(pNewLevel)))

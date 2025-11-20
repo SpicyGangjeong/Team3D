@@ -23,7 +23,7 @@
 #include "Player.h"
 #include "Goblin.h"
 #include "Broom.h"
-#include <filesystem>
+
 
 #pragma endregion
 
@@ -76,6 +76,8 @@
 #include "EditEffect.h"
 #include "Effect_Editor.h"
 #include "Dummy_Plane.h"
+#include "TrailObject.h"
+#include "NomalJap.h"
 
 #pragma endregion
 
@@ -93,6 +95,12 @@
 //#include "Dummy_PhysXDoorSet.h"
 
 #pragma endregion 
+
+#pragma region BLOOM_HEADER
+
+#include "Dummy_Globe.h"
+
+#pragma endregion
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice{ pDevice }
@@ -120,11 +128,7 @@ HRESULT CLoader::Initialize(LEVEL eNextLevelID)
 {
 	m_eNextLevelID = eNextLevelID;
 
-	InitializeCriticalSection(&m_CriticalSection);
-
-	m_hThread = (HANDLE)_beginthreadex(nullptr, 0, LoadingMain, this, 0, nullptr);
-	if (0 == m_hThread)
-		return E_FAIL;
+	m_pGameInstance->EnqueueJob(&LoadingMain, this);
 
 	return S_OK;
 }
@@ -136,7 +140,6 @@ HRESULT CLoader::Loading()
 		return E_FAIL;
 	}
 
-	EnterCriticalSection(&m_CriticalSection);
 
 	HRESULT		hr = {};
 
@@ -163,15 +166,14 @@ HRESULT CLoader::Loading()
 	case LEVEL::PHYSX:
 		hr = Loading_For_PhysXLevel();
 		break;
-		//case LEVEL::PARTICLE:
-		//	hr = Loading_For_Particle();
-		//	break;
+	case LEVEL::BLOOM:
+		hr = Loading_For_Bloom();
+		break;
 	default:
 		assert(false);
 		break;
 	}
 
-	LeaveCriticalSection(&m_CriticalSection);
 
 	if (FAILED(hr))
 		return E_FAIL;
@@ -396,13 +398,30 @@ HRESULT CLoader::Loading_For_UI()
 
 	m_strMessage = TEXT("Model Loading..");
 
+	CVIBuffer_UI_Instance::UI_INSTANCE_DESC UIDesc{};
 
+	UIDesc.iNum = 4;
+	UIDesc.vSize = _float2(1.f,1.f);
+	UIDesc.fPositionOffSetX = 75.f;
+	UIDesc.fPositionOffSetY = 0.f;
+	UIDesc.vPsition = _float2(100.f, 100.f);
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_UI_Instance"),
+		CVIBuffer_UI_Instance::Create(m_pDevice, m_pContext, &UIDesc)))) {
+		return E_FAIL;
+	}
 
 	m_strMessage = TEXT("Shader Loading..");
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_UIEDITOR,
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_UIEditor.hlsl"),
 			VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_UIINSTANCE,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_UI_Instance.hlsl"),
+			VTX_POSTEX_INSTANCE_UI::Elements, VTX_POSTEX_INSTANCE_UI::iNumElements)))) {
 		return E_FAIL;
 	}
 
@@ -643,6 +662,15 @@ HRESULT CLoader::Loading_For_Effect()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_Plane>(ENUM_CLASS(LEVEL::EFFECT), CDummy_Plane::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CTrail>(ENUM_CLASS(LEVEL::EFFECT), CTrail::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CTrailObject>(ENUM_CLASS(LEVEL::EFFECT), CTrailObject::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CNomalJap>(ENUM_CLASS(LEVEL::EFFECT), CNomalJap::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 
@@ -900,6 +928,57 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 
 	m_isFinished = true;
 
+
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_For_Bloom()
+{
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Desc_Box"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Box/Box.bin", XMMatrixScaling(10.f, 10.f, 10.f) *  XMMatrixIdentity())))){
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Model_DummyPlane"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Effect/DummyPlane/DummyPlane.fbx", XMMatrixTranslation(0.f, -10.f, 0.f) * XMMatrixIdentity())))){
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Desc_Globe"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Object/DragonGlobe/DragonGlobe.fbx", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixIdentity())))){
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Desc_Globe2"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Object/DragonGlobe2/DragonGlobe.fbx", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixIdentity())))){
+		return E_FAIL;
+	}
+
+	vector<_wstring> ModelPrototypeTags = {};
+	vector<filesystem::path> ModelPrototypePath = {};
+
+	/* Hog_Props */
+	if (FAILED(MapFolderLoad("C:\\Users\\kimnuri\\Desktop\\MeshTable\\Game\\Environment\\Hogwarts\\Meshes\\Props",
+		".fbx", true, ModelPrototypeTags, ModelPrototypePath))){
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_Globe>(g_iStaticLevel, CDummy_Globe::Create(m_pDevice, m_pContext)))){
+		return E_FAIL;
+	}
+	
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_Cube>(g_iStaticLevel, CDummy_Cube::Create(m_pDevice, m_pContext)))){
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_Plane>(g_iStaticLevel, CDummy_Plane::Create(m_pDevice, m_pContext)))){
+		return E_FAIL;
+	}
+
+	m_strMessage = TEXT("Loading Success!");
+
+	m_isFinished = true;
 
 	return S_OK;
 }
@@ -1460,12 +1539,6 @@ CLoader* CLoader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, L
 void CLoader::Free()
 {
 	__super::Free();
-
-	WaitForSingleObject(m_hThread, INFINITE);
-
-	CloseHandle(m_hThread);
-
-	DeleteCriticalSection(&m_CriticalSection);
 
 	SAFE_RELEASE(m_pGameInstance);
 	SAFE_RELEASE(m_pDevice);

@@ -3,17 +3,18 @@
 
 #include "GameInstance.h"
 #include "EditEffect.h"
+#include "TrailObject.h"
 
 
 #include <sstream>
 
 CEffect_Editor::CEffect_Editor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CContainerObject{ pDevice, pContext }
+	: CEffect_Container{ pDevice, pContext }
 {
 }
 
 CEffect_Editor::CEffect_Editor(const CEffect_Editor& rhs)
-	: CContainerObject(rhs)
+	: CEffect_Container(rhs)
 	, m_MatFiles(rhs.m_MatFiles)
 {
 
@@ -22,8 +23,6 @@ CEffect_Editor::CEffect_Editor(const CEffect_Editor& rhs)
 HRESULT CEffect_Editor::Initialize_Prototype()
 {
 
-
-	
 	ReadMaterials("../Bin/Resources/VFX/Particles/Magic/Glacius");
 
 
@@ -70,6 +69,18 @@ void CEffect_Editor::Update(_float fTimeDelta)
 	Describe_Entity();
 	__super::Update(fTimeDelta);
 
+	if (m_pGameInstance->Key_Pressing(DIK_UP))
+		m_pTransformCom->Go_Straight(fTimeDelta);
+	if (m_pGameInstance->Key_Pressing(DIK_DOWN))
+		m_pTransformCom->Go_Backward(fTimeDelta);
+	if (m_pGameInstance->Key_Pressing(DIK_RIGHT))
+		m_pTransformCom->Go_Right(fTimeDelta);
+	if (m_pGameInstance->Key_Pressing(DIK_LEFT))
+		m_pTransformCom->Go_Left(fTimeDelta);
+
+	if (m_pGameInstance->Key_Pressing(DIK_Z))
+		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta);
+
 }
 
 void CEffect_Editor::Late_Update(_float fTimeDelta)
@@ -79,7 +90,13 @@ void CEffect_Editor::Late_Update(_float fTimeDelta)
 
 HRESULT CEffect_Editor::Ready_Components(void* pArg)
 {
-	if (FAILED(__super::Ready_Components(pArg))) {
+	CTransform::TRANSFORM_DESC TransformDesc = {};
+
+	TransformDesc.fRadius = 20.f;
+	TransformDesc.fRotationPerSec = 10.f;
+	TransformDesc.fSpeedPerSec = 10.f;
+
+	if (FAILED(__super::Ready_Components(&TransformDesc))) {
 		return E_FAIL;
 	}
 
@@ -90,15 +107,15 @@ HRESULT CEffect_Editor::Ready_Child()
 {
 
 
-	CPartObject::PARTOBJECT_DESC PartsDesc{};
+	//CPartObject::PARTOBJECT_DESC PartsDesc{};
 
-	PartsDesc.pParentTransform = m_pTransformCom;
+	//PartsDesc.pParentTransform = m_pTransformCom;
 
-	if (FAILED(Add_PartObject<CEditEffect>("EffectObject" + to_string(m_iNumPart++), ENUM_CLASS(LEVEL::EFFECT), &m_pEditEffect, &PartsDesc)))
-		return E_FAIL;
+	//if (FAILED(Add_PartObject<CEditEffect>("EffectObject" + to_string(m_iNumPart++), ENUM_CLASS(LEVEL::EFFECT), nullptr, &PartsDesc)))
+	//	return E_FAIL;
 
-	m_strCurrentEffectName = "EffectObject0";
-	SAFE_RELEASE(m_pEditEffect);
+	//m_strCurrentEffectName = "EffectObject0" ;
+
 
 
 
@@ -388,12 +405,14 @@ CEffect_Editor* CEffect_Editor::Create(ID3D11Device* pDevice, ID3D11DeviceContex
 	}
 
 	return pInstance;
+
 }
 
 CGameObject* CEffect_Editor::Clone(void* pArg, CGameObject* pOwner)
 {
 	CEffect_Editor* pInstance = new CEffect_Editor(*this);
 	pInstance->m_pOwner = pOwner;
+
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
 		MSG_BOX("Failed to Cloned : CEffect_Editor");
@@ -408,6 +427,7 @@ void CEffect_Editor::Free()
 	__super::Free();
 
 	SAFE_RELEASE(m_pEditEffect);
+	SAFE_RELEASE(m_pTrailObject);
 }
 
 void CEffect_Editor::Describe_Entity()
@@ -417,29 +437,15 @@ void CEffect_Editor::Describe_Entity()
 	GUI::TextColored(ImVec4(1.f, 0.f, 1.f, 1.f), m_strCurrentEffectName.c_str());
 
 	if (m_pEditEffect != nullptr)
+	{
 		m_pEditEffect->Describe_Entity();
-
-	GUI::InputTextMultiline("FILE PATH", m_szBuffer, sizeof(m_szBuffer), ImVec2(250, 25));
-
-	m_strSavePath = m_szBuffer;
-
-	if (GUI::Button("SAVE"))
-	{
-		m_pEditEffect->Save_Effect(m_strSavePath.c_str());
-	}
-	
-	GUI::SameLine();
-
-	if (GUI::Button("LOAD"))
-	{
-		Load_Edit(m_strSavePath.c_str());
 	}
 
-	if (GUI::Button("RESAVE"))
+	if (m_pTrailObject != nullptr)
 	{
-		ReSaveFile(m_strSavePath.c_str());
+		m_pTrailObject->Describe_Entity();
 	}
-	
+
 	ImGui::End();
 
 	ImGui::Begin("Reference Material");
@@ -467,10 +473,32 @@ void CEffect_Editor::Describe_Entity()
 			PartsDesc.pParentTransform = m_pTransformCom;
 
 			if (FAILED(Add_PartObject<CEditEffect>("EffectObject" + to_string(m_iNumPart++), ENUM_CLASS(LEVEL::EFFECT), nullptr, &PartsDesc)))
+			{
+				ImGui::EndPopup();
 				return;
+			}
+		}
 
+		if (ImGui::MenuItem("Create Trail"))
+		{
 
+			if (m_pTrailObject == nullptr)
+			{
 
+				CPartObject::PARTOBJECT_DESC PartsDesc{};
+
+				PartsDesc.pParentTransform = m_pTransformCom;
+
+				if (FAILED(Add_PartObject<CTrailObject>("TrailObject", ENUM_CLASS(LEVEL::EFFECT), &m_pTrailObject, &PartsDesc)))
+				{
+					ImGui::EndPopup();
+				}
+
+				CTrailObject* pTrailObject = m_pTrailObject;
+
+				SAFE_RELEASE(pTrailObject);
+
+			}
 		}
 
 		ImGui::EndPopup();
@@ -482,7 +510,12 @@ void CEffect_Editor::Describe_Entity()
 
 	for (auto& pPartObject : m_PartObjects)
 	{
-		_string strName = "EffectObject" + to_string(iIndex);
+		_string strName = {};
+
+		if( nullptr != dynamic_cast<CTrailObject*>(pPartObject.second))
+			strName = "TrailObject" + to_string(iIndex);
+		else
+			strName = "EffectObject" + to_string(iIndex);
 
 		if (GUI::TreeNode(strName.c_str()))
 		{
@@ -555,6 +588,74 @@ void CEffect_Editor::Describe_Entity()
 
 
 	ImGui::End();
+
+	ImGui::Begin("Effect Save");
+
+	GUI::InputTextMultiline("FILE PATH", m_szBuffer, sizeof(m_szBuffer), ImVec2(250, 25));
+
+	m_strSavePath = m_szBuffer;
+
+	if (GUI::Button("SAVE"))
+	{
+		m_pEditEffect->Save_Effect(m_strSavePath.c_str());
+	}
+
+	GUI::SameLine();
+
+	if (GUI::Button("LOAD"))
+	{
+		Load_Edit(m_strSavePath.c_str());
+	}
+
+	GUI::SameLine();
+
+	if (GUI::Button("RESAVE"))
+	{
+		ReSaveFile(m_strSavePath.c_str());
+	}
+
+
+
+	GUI::InputTextMultiline("PACKAGE FILE PATH", m_szPackageBuffer, sizeof(m_szPackageBuffer), ImVec2(250, 25));
+
+	m_strPackageSavePath = m_szPackageBuffer;
+
+	if (GUI::Button("PACKAING"))
+	{
+		Save_Package(m_strPackageSavePath.c_str());
+	}
+
+	GUI::SameLine();
+
+	if (GUI::Button("LOAD PACKAGE"))
+	{
+		Load_Package(m_strPackageSavePath.c_str());
+	}
+
+	GUI::InputTextMultiline("TRAIL FILE PATH", m_szTrailBuffer, sizeof(m_szTrailBuffer), ImVec2(250, 25));
+
+	m_strTrailSavePath = m_szTrailBuffer;
+
+	if (GUI::Button("TRAIL SAVE"))
+	{
+		if (m_pTrailObject != nullptr)
+		{
+			m_pTrailObject->Save_Trail(m_strTrailSavePath.c_str());
+		}
+	}
+
+	GUI::SameLine();
+
+	if (GUI::Button("TRAIL LOAD"))
+	{
+		if (m_pTrailObject != nullptr)
+		{
+			m_pTrailObject->Load_Trail(m_strTrailSavePath.c_str(), LEVEL::EFFECT);
+		}
+	}
+
+	ImGui::End();
+
 }
 
 HRESULT CEffect_Editor::Bind_ShaderResources()

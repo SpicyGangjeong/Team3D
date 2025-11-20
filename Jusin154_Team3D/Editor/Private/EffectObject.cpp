@@ -53,6 +53,7 @@ HRESULT CEffectObject::Render()
 		}
 	}
 
+
 	return S_OK;
 }
 
@@ -93,12 +94,14 @@ HRESULT CEffectObject::Render_Blur()
 
 
 
+
 	return S_OK;
 }
 
+
+
 HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 {
-
 	SAFE_RELEASE(m_pDiffuse_TextureCom);
 	SAFE_RELEASE(m_pNoise_TextureCom);
 	SAFE_RELEASE(m_pMasking_TextureCom);
@@ -130,6 +133,8 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 		return E_FAIL;
 	}
 
+	// 나중에 패키징할때 패스를 저장할거임
+	m_strPath = strPerfectFilePath;
 
 	DWORD	dwByte(0);
 
@@ -323,12 +328,13 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 
 	CloseHandle(hFile);
 
+
+	MessageBox(NULL, L"이펙트 로드 성공", L"System Message", MB_OK);
+
 	return S_OK;
 }
 
 #ifdef _DEBUG
-
-
 
 HRESULT CEffectObject::LoadPre(const _char* pFilePath, LEVEL eLevel)
 {
@@ -555,7 +561,7 @@ HRESULT CEffectObject::LoadPre(const _char* pFilePath, LEVEL eLevel)
 HRESULT CEffectObject::Bind_ShaderResources()
 {
 
-	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix))) {
 		return E_FAIL;
 	}
 
@@ -636,7 +642,6 @@ HRESULT CEffectObject::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vNoiseUVGainAmount", &m_EffectInfo.vNoiseUVGainAmount, sizeof(_float2)))) {
 		return E_FAIL;
 	}
-
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDiffuseDistortionUVGainAmount", &m_EffectInfo.vDiffuseDistortionUVGainAmount, sizeof(_float2)))) {
 		return E_FAIL;
@@ -735,7 +740,14 @@ HRESULT CEffectObject::Bind_ShaderResources()
 
 HRESULT CEffectObject::Ready_Components(void* pArg)
 {
-	if (FAILED(__super::Ready_Components(pArg))) {
+	CTransform::TRANSFORM_DESC TransformDesc = {};
+
+	TransformDesc.fRadius = 20.f;
+	TransformDesc.fRotationPerSec = 10.f;
+	TransformDesc.fSpeedPerSec = 10.f;
+
+
+	if (FAILED(__super::Ready_Components(&TransformDesc))) {
 		return E_FAIL;
 	}
 	 
