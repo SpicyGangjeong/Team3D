@@ -1,5 +1,4 @@
 ﻿#pragma once
-
 NS_BEGIN(Engine)
 class CTransform;
 NS_END
@@ -7,7 +6,8 @@ NS_END
 NS_BEGIN(Editor)
 
 typedef struct tagMapObject_Desc {
-	CTransform* pParentTransform = { nullptr };
+	_uint					iRenderType{};
+	CTransform*				pParentTransform = { nullptr };
 	_float3					vScale;
 	_float3					vRotation;
 	_float3					vPosition;

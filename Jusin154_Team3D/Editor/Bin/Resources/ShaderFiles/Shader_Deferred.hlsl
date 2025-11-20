@@ -119,7 +119,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     
     float3 vF0 = float3(0.04f, 0.04f, 0.04f);
     float fMetallic = 0.f;
-    float fRoughness = 0.5f;
+    float fRoughness = 0.f;
     float fOcclusion = 1.f;
     float fAttenuation = 1.f;
 
@@ -146,12 +146,12 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
         fOcclusion      = vSRO.b;
     }
     
-    float fDiffuseAOStrength = lerp(0.3f, 1.f, fOcclusion);
+    float fDiffuseAOStrength = lerp(0.3f, 5.f, fOcclusion);
     
     PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
     
     PBR_Out.vShade *= fDiffuseAOStrength;
-    
+    saturate(PBR_Out.vShade);
     Out.vShade = float4(PBR_Out.vShade, 1.f);
     Out.vSpecular = float4(PBR_Out.vSpecular, 1.f);
     
