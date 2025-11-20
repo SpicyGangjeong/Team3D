@@ -27,8 +27,8 @@ public:
 
 #ifdef _DEBUG
 private:
-	_int m_iSizeX = { 100 };
-	_int m_iSizeY = { 100 };
+	_int m_iSizeX = { 200 };
+	_int m_iSizeY = { 200 };
 #endif // _DEBUG
 
 private:

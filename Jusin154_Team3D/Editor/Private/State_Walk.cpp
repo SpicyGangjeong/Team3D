@@ -11,13 +11,13 @@ void CState_Walk::Enter()
 {
 	if(m_pOwner->Check(FSMSTATE::WALK_FWD))
 	{
-		auto anim = m_pOwner->Get_AnimInfo(FSMSTATE::WALK_FWD);
+		auto anim = m_pOwner->Get_AnimInfo(STATEANIM::WALK_FWD);
 		m_pModel->Set_AnimationIndex(anim.first, anim.second);
 	}
 
 	if (m_pOwner->Check(FSMSTATE::WALK_BWD))
 	{
-		auto anim = m_pOwner->Get_AnimInfo(FSMSTATE::WALK_BWD);
+		auto anim = m_pOwner->Get_AnimInfo(STATEANIM::WALK_BWD);
 		m_pModel->Set_AnimationIndex(anim.first, anim.second);
 	}
 }
@@ -42,6 +42,9 @@ _bool CState_Walk::CheckExitState()
 
 	else if (!m_pOwner->Check(FSMSTATE::WALK))
 		m_pFSM->Change_State(FSMSTATE::IDLE);
+
+	if (m_pOwner->Check(FSMSTATE::JUMP))
+		m_pFSM->Change_State(FSMSTATE::JUMP);
 
 	return false;
 }

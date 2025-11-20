@@ -71,6 +71,11 @@
 #define PURE = 0
 #endif
 
+#define FX_DEFERRED			TEXT("FX_DEFERRED")
+#define FX_LASTCOLOR		TEXT("FX_LASTCOLOR")
+#define FX_WEIGHTBELND		TEXT("FX_WEIGHTBELND")
+
+
 #define			SAFE_ADDREF(pInstance)		Safe_AddRef(pInstance)
 #define			SAFE_RELEASE(pInstance)		Safe_Release(pInstance)
 

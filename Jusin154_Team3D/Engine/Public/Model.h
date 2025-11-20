@@ -62,7 +62,7 @@ static	_int Get_BoneIndex(const _char* pBoneName, vector<class CBone*> Bones);	/
 		_matrix Get_BoneMatrix(_uint iBoneIndex);
 #pragma endregion
 #pragma region Material
-		HRESULT Bind_Material(_uint iMeshIndex, class CShader* pShader, const _char* pConstantName, _uint iType, _uint iTextureIndex);
+		HRESULT Bind_Material(_uint iMeshIndex, class CShader* pShader);
 
 #pragma endregion
 

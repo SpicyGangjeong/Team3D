@@ -122,7 +122,7 @@ struct SaveMesh
 
 struct SaveMaterial
 {
-	vector<string> Path[27];
+	vector<string> Path[AI_TEXTURE_TYPE_MAX];
 
 };
 

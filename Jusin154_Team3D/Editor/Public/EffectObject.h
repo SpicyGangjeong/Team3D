@@ -8,6 +8,7 @@ class CInstance_Model;
 class CShader;
 class CTexture;
 class CLight;
+class CTrail;
 NS_END
 
 NS_BEGIN(Editor)
@@ -62,6 +63,8 @@ public:
 
 		_bool   isReverseDissolve = {};
 
+		EFFECT_TYPE eEffectType = { EFFECT_TYPE::EFFECT };
+
 	}EFFECT_INFO;
 
 	typedef struct tagPreEffectInfo
@@ -109,6 +112,10 @@ public:
 		LIGHT_DESC	LightDesc = {};
 		RENDER		eRenderOrder = { RENDER::EFFECT };
 
+		_bool   isReverseDissolve = {};
+
+
+
 	}PRE_EFFECT_INFO;
 
 protected:
@@ -150,6 +157,7 @@ protected:
 
 	CInstance_Model* m_pInstance_ModelCom = { nullptr };
 
+
 protected:
 	EFFECT_INFO m_EffectInfo = {};
 	_string		m_strDiffuseName = {};
@@ -159,6 +167,9 @@ protected:
 	_string		m_strModelName = {};
 	_string     m_strEmissiveName = {};
 	_string     m_strDistortionName = {};
+
+	_string		m_strPath = {};
+	_string     m_strName = {};
 
 public:
 	virtual void Free() override;

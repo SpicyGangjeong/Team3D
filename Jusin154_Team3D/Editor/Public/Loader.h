@@ -48,6 +48,7 @@ private:
 	HRESULT Loading_For_UI();
 	HRESULT Loading_For_Effect();
 	HRESULT Loading_For_PhysXLevel();
+	HRESULT Loading_For_Bloom();
 
 private:
 	HRESULT Asset_FileLoad(const _char* pDirectoryPath, const _tchar* pPreName, function<HRESULT(_wstring, const _char*)> AddPrototypeEvent);

@@ -16,6 +16,7 @@
 #include "FSM.h"
 #include "State.h"
 #include "VIBuffer_UI_Instance.h"
+#include "Trail.h"
 
 
 NS_BEGIN(Engine)

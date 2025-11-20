@@ -104,19 +104,18 @@ HRESULT CPrototype_Manager::Ready_StaticComponents()
 
 HRESULT CPrototype_Manager::Ready_EngineAssets()
 {
-	if (FAILED(Add_Asset_Prototype(g_iStaticLevel, TEXT("FX_DEFERRED"), 
+	if (FAILED(Add_Asset_Prototype(g_iStaticLevel, FX_DEFERRED,
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_Deferred.hlsl"), 
 			VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)))) {
 		return E_FAIL;
 	}
-
-	if (FAILED(Add_Asset_Prototype(g_iStaticLevel, TEXT("FX_LASTCOLOR"),
+	if (FAILED(Add_Asset_Prototype(g_iStaticLevel, FX_LASTCOLOR,
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_LastColor.hlsl"),
 			VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(Add_Asset_Prototype(g_iStaticLevel, TEXT("FX_WEIGHTBELND"),
+	if (FAILED(Add_Asset_Prototype(g_iStaticLevel, FX_WEIGHTBELND,
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_WeightBlend.hlsl"),
 			VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)))) {
 		return E_FAIL;

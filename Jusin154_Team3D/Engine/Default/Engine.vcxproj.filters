@@ -264,7 +264,7 @@
     </Filter>
     <Filter Include="02.Element\01.GameObject\Unit">
       <UniqueIdentifier>{a4560f1b-c4f4-4705-bbf8-6a60977d3211}</UniqueIdentifier>
-        </Filter>
+    </Filter>
     <Filter Include="02.Element\01.GameObject\00.ContainerObject\01.PartObject">
       <UniqueIdentifier>{b3742605-653a-4bdf-bad9-329d993e7f52}</UniqueIdentifier>
     </Filter>
@@ -273,6 +273,18 @@
     </Filter>
     <Filter Include="02.Element\02.Component\07.RigidBody\20.Joint">
       <UniqueIdentifier>{869c0ee8-a853-40d4-90ea-3e1501fa8529}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\02.VIBuffer\Trail">
+      <UniqueIdentifier>{dae29f0c-1727-4423-a3ca-9ef27460520b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Define\01.SHADER\Inc">
+      <UniqueIdentifier>{1e10fa90-da5b-4285-a7a3-c4211b4cccbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.System\02.ThreadHolder">
+      <UniqueIdentifier>{701cf231-2892-4d72-9615-dbe9285c28f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\02.VIBuffer\Terrain\QuadTree">
+      <UniqueIdentifier>{d9f03f43-e9d1-4a50-b465-e1000462bd3e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -509,7 +521,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\Unit.cpp">
       <Filter>02.Element\01.GameObject\Unit</Filter>
-      </ClCompile>
+    </ClCompile>
     <ClCompile Include="..\private\VIBuffer_UI_Instance.cpp">
       <Filter>02.Element\02.Component\02.VIBuffer\Instance\UI_nstance</Filter>
     </ClCompile>
@@ -518,6 +530,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\RigidBody_Dynamic_Joint.cpp">
       <Filter>02.Element\02.Component\07.RigidBody\20.Joint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Trail.cpp">
+      <Filter>02.Element\02.Component\02.VIBuffer\Trail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\QuadTree.cpp">
+      <Filter>02.Element\02.Component\02.VIBuffer\Terrain\QuadTree</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ThreadHolder.cpp">
+      <Filter>00.System\02.ThreadHolder</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1120,7 +1141,7 @@
     </ClInclude>
     <ClInclude Include="..\Public\Unit.h">
       <Filter>02.Element\01.GameObject\Unit</Filter>
-       </ClInclude>
+    </ClInclude>
     <ClInclude Include="..\public\VIBuffer_UI_Instance.h">
       <Filter>02.Element\02.Component\02.VIBuffer\Instance\UI_nstance</Filter>
     </ClInclude>
@@ -1129,6 +1150,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\RigidBody_Dynamic_Joint.h">
       <Filter>02.Element\02.Component\07.RigidBody\20.Joint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Trail.h">
+      <Filter>02.Element\02.Component\02.VIBuffer\Trail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\QuadTree.h">
+      <Filter>02.Element\02.Component\02.VIBuffer\Terrain\QuadTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ThreadHolder.h">
+      <Filter>00.System\02.ThreadHolder</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1177,9 +1207,6 @@
     <None Include="..\Public\fMod\fmod_errors.cs">
       <Filter>99.Define\99.THIRDPARTY\FMOD</Filter>
     </None>
-    <None Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Defines.hlsli">
-      <Filter>99.Define\01.SHADER</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Cell.hlsl">
@@ -1196,6 +1223,24 @@
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_WeightBlend.hlsl">
       <Filter>99.Define\01.SHADER</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Defines.hlsli">
+      <Filter>99.Define\01.SHADER\Inc</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Constants.hlsli">
+      <Filter>99.Define\01.SHADER\Inc</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Structures.hlsli">
+      <Filter>99.Define\01.SHADER\Inc</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_States.hlsli">
+      <Filter>99.Define\01.SHADER\Inc</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Samplers.hlsli">
+      <Filter>99.Define\01.SHADER\Inc</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Functions.hlsli">
+      <Filter>99.Define\01.SHADER\Inc</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
