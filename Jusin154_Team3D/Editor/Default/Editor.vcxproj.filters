@@ -16,9 +16,6 @@
     <Filter Include="02.GameObjects">
       <UniqueIdentifier>{79dcc46a-5ae9-48bb-962b-8984b15e4f5a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.Information">
-      <UniqueIdentifier>{fc210c4d-b8a6-4ed4-b19c-4bd175232e5f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="00.MainApp">
       <UniqueIdentifier>{47a1f529-dd0e-4f37-9ada-5aa6731dea0b}</UniqueIdentifier>
     </Filter>
@@ -315,7 +312,7 @@
     </Filter>
     <Filter Include="02.GameObjects\Layer_Effect\Effect\05.NomalJap">
       <UniqueIdentifier>{8882358e-c8eb-4222-a87e-01d902533b8f}</UniqueIdentifier>
-     </Filter>
+    </Filter>
     <Filter Include="80.State\State_Combat\State_Skill2">
       <UniqueIdentifier>{3614836d-9988-4ec0-95a8-f8ebc25a9a13}</UniqueIdentifier>
     </Filter>
@@ -522,9 +519,6 @@
     <ClInclude Include="..\public\DummySkyBox.h">
       <Filter>02.GameObjects\Dummys\DummySkyBox</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Information.h">
-      <Filter>03.Information</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\MainLight.h">
       <Filter>02.GameObjects\MainLight</Filter>
     </ClInclude>
@@ -632,8 +626,7 @@
     </ClInclude>
     <ClInclude Include="..\Public\NomalJap.h">
       <Filter>02.GameObjects\Layer_Effect\Effect\05.NomalJap</Filter>
-     </ClInclude>
-
+    </ClInclude>
     <ClInclude Include="..\Public\State_Skill2.h">
       <Filter>80.State\State_Combat\State_Skill2</Filter>
     </ClInclude>
@@ -645,7 +638,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Broom.h">
       <Filter>02.GameObjects\Broom</Filter>
-
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -837,9 +829,6 @@
     <ClCompile Include="..\private\DummySkyBox.cpp">
       <Filter>02.GameObjects\Dummys\DummySkyBox</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Information.cpp">
-      <Filter>03.Information</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\MainLight.cpp">
       <Filter>02.GameObjects\MainLight</Filter>
     </ClCompile>
@@ -959,7 +948,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Broom.cpp">
       <Filter>02.GameObjects\Broom</Filter>
-
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

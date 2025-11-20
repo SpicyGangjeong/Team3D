@@ -207,7 +207,6 @@
     <ClInclude Include="..\Public\Effect_Editor.h" />
     <ClInclude Include="..\Public\EditEffect.h" />
     <ClInclude Include="..\Public\Goblin.h" />
-    <ClInclude Include="..\Public\Information.h" />
     <ClInclude Include="..\public\Land.h" />
     <ClInclude Include="..\Public\Level_BloomViewer.h" />
     <ClInclude Include="..\public\Level_MapViewer.h" />
@@ -327,7 +326,6 @@
     <ClCompile Include="..\Private\Effect_Editor.cpp" />
     <ClCompile Include="..\Private\EditEffect.cpp" />
     <ClCompile Include="..\Private\Goblin.cpp" />
-    <ClCompile Include="..\Private\Information.cpp" />
     <ClCompile Include="..\private\Land.cpp" />
     <ClCompile Include="..\Private\Level_BloomViewer.cpp" />
     <ClCompile Include="..\private\Level_MapViewer.cpp" />
