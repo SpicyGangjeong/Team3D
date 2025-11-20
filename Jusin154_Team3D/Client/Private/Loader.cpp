@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Loader.h"
 #include "GameInstance.h"
 #include "MainApp.h"
@@ -29,11 +29,7 @@ HRESULT CLoader::Initialize(LEVEL eNextLevelID)
 {
 	m_eNextLevelID = eNextLevelID;
 
-	InitializeCriticalSection(&m_CriticalSection);
-
-	m_hThread = (HANDLE)_beginthreadex(nullptr, 0, LoadingMain, this, 0, nullptr);
-	if (0 == m_hThread)
-		return E_FAIL;
+	m_pGameInstance->EnqueueJob(&LoadingMain, this);
 
 	return S_OK;
 }
@@ -44,8 +40,6 @@ HRESULT CLoader::Loading()
 	if (FAILED(CoInitializeEx(nullptr, 0))) {
 		return E_FAIL;
 	}
-
-	EnterCriticalSection(&m_CriticalSection);
 
 	HRESULT		hr = {};
 
@@ -61,10 +55,9 @@ HRESULT CLoader::Loading()
 		break;
 	}
 
-	LeaveCriticalSection(&m_CriticalSection);
-
-	if (FAILED(hr))
+	if (FAILED(hr)){
 		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -76,17 +69,17 @@ void CLoader::Output()
 
 HRESULT CLoader::Loading_For_Logo()
 {
-	m_strMessage = TEXT("ÅØ½ºÃÄ¸¦(À») ·Îµù Áß ÀÔ´Ï´Ù.");
+	m_strMessage = TEXT("í…ìŠ¤ì³ë¥¼(ì„) ë¡œë”© ì¤‘ ì…ë‹ˆë‹¤.");
 
-	m_strMessage = TEXT("»ç¿îµå¸¦(À») ·Îµù Áß ÀÔ´Ï´Ù.");
+	m_strMessage = TEXT("ì‚¬ìš´ë“œë¥¼(ì„) ë¡œë”© ì¤‘ ì…ë‹ˆë‹¤.");
 
-	m_strMessage = TEXT("¸ğµ¨¸¦(À») ·Îµù Áß ÀÔ´Ï´Ù.");
+	m_strMessage = TEXT("ëª¨ë¸ë¥¼(ì„) ë¡œë”© ì¤‘ ì…ë‹ˆë‹¤.");
 
-	m_strMessage = TEXT("¼ÎÀÌ´õ¸¦(À») ·Îµù Áß ÀÔ´Ï´Ù.");
+	m_strMessage = TEXT("ì…°ì´ë”ë¥¼(ì„) ë¡œë”© ì¤‘ ì…ë‹ˆë‹¤.");
 
-	m_strMessage = TEXT("°´Ã¼¿øÇü¸¦(À») ·Îµù Áß ÀÔ´Ï´Ù.");
+	m_strMessage = TEXT("ê°ì²´ì›í˜•ë¥¼(ì„) ë¡œë”© ì¤‘ ì…ë‹ˆë‹¤.");
 
-	m_strMessage = TEXT("·ÎµùÀÌ ¿Ï·áµÇ¾ú½À´Ï´Ù..");
+	m_strMessage = TEXT("ë¡œë”©ì´ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤..");
 
 	m_isFinished = true;
 
@@ -95,19 +88,19 @@ HRESULT CLoader::Loading_For_Logo()
 
 HRESULT CLoader::Loading_For_GamePlay()
 {
-	m_strMessage = TEXT("ÅØ½ºÃÄ¸¦(À») ·Îµù Áß ÀÔ´Ï´Ù.");
+	m_strMessage = TEXT("í…ìŠ¤ì³ë¥¼(ì„) ë¡œë”© ì¤‘ ì…ë‹ˆë‹¤.");
 
-	m_strMessage = TEXT("¸ğµ¨¸¦(À») ·Îµù Áß ÀÔ´Ï´Ù.");
+	m_strMessage = TEXT("ëª¨ë¸ë¥¼(ì„) ë¡œë”© ì¤‘ ì…ë‹ˆë‹¤.");
 
-	m_strMessage = TEXT("¼ÎÀÌ´õ¸¦(À») ·Îµù Áß ÀÔ´Ï´Ù.");
+	m_strMessage = TEXT("ì…°ì´ë”ë¥¼(ì„) ë¡œë”© ì¤‘ ì…ë‹ˆë‹¤.");
 
-	m_strMessage = TEXT("ÀÌÆåÆ®¸¦(À») ·Îµù Áß ÀÔ´Ï´Ù.");
+	m_strMessage = TEXT("ì´í™íŠ¸ë¥¼(ì„) ë¡œë”© ì¤‘ ì…ë‹ˆë‹¤.");
 
-	m_strMessage = TEXT("°´Ã¼¿øÇü¸¦(À») ·Îµù Áß ÀÔ´Ï´Ù.");
+	m_strMessage = TEXT("ê°ì²´ì›í˜•ë¥¼(ì„) ë¡œë”© ì¤‘ ì…ë‹ˆë‹¤.");
 
-	m_strMessage = TEXT("Á¤º¸¸¦ ºÒ·¯¿À´Â ÁßÀÔ´Ï´Ù.");
+	m_strMessage = TEXT("ì •ë³´ë¥¼ ë¶ˆëŸ¬ì˜¤ëŠ” ì¤‘ì…ë‹ˆë‹¤.");
 
-	m_strMessage = TEXT("·ÎµùÀÌ ¿Ï·áµÇ¾ú½À´Ï´Ù..");
+	m_strMessage = TEXT("ë¡œë”©ì´ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤..");
 
 	m_isFinished = true;
 
@@ -132,11 +125,6 @@ void CLoader::Free()
 {
 	__super::Free();
 
-	WaitForSingleObject(m_hThread, INFINITE);
-
-	CloseHandle(m_hThread);
-
-	DeleteCriticalSection(&m_CriticalSection);
 
 	SAFE_RELEASE(m_pGameInstance);
 	SAFE_RELEASE(m_pDevice);

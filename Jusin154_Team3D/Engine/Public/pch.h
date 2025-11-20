@@ -55,6 +55,8 @@ using namespace DirectX;
 #include <fstream>
 #include <filesystem>
 #include <Thread>
+#include <future>
+#include <condition_variable>
 #include <mutex>
 
 

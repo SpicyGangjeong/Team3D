@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Client_Define.h"
 #include "Base.h"
@@ -27,8 +27,6 @@ private:
 	ID3D11DeviceContext*	m_pContext = { nullptr };
 	LEVEL					m_eNextLevelID = { LEVEL::END };
 
-	HANDLE					m_hThread = {};
-	CRITICAL_SECTION		m_CriticalSection = {};
 	_wstring				m_strMessage = {};
 	_bool					m_isFinished = { false };
 
