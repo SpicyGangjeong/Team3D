@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Base.h"
 
@@ -9,8 +9,6 @@ class CLight_Manager final : public CBase
 private:
 	CLight_Manager();
 	virtual ~CLight_Manager() = default;
-
-
 public:
 	void			  Add_Light(_uint _iCurrentLevel, class CLight* _pLight);
 	void			  Delete_Light(_uint _iCurrentLevel, class CLight* _pLight);
@@ -18,7 +16,7 @@ public:
 	const LIGHT_DESC* Get_Light_Info(_uint _iCurrentLevel ,_uint _iLightIndex);
 
 public:
-	HRESULT Render_Lights(_uint _iCurrentLevel, class CShader* pShader, class CVIBuffer* pVIBuffer);
+	HRESULT Render_Lights(_uint iCurrentLevel, class CShader* pShader, class CVIBuffer* pVIBuffer);
 
 private:
 	HRESULT Initialize(_uint iNumLevels);

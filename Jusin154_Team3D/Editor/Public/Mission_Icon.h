@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Editor_Define.h"
 #include "ElementObject.h"
@@ -19,7 +19,9 @@ public:
 	virtual HRESULT Render() override;
 	virtual _vector Get_WorldPostion() override;
 
-
+	virtual void MoveX(_float fX)override;
+	virtual void MoveY(_float fY)override;
+	virtual void Lerp_PosY(_float fLerpY) override;
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;
@@ -30,8 +32,8 @@ public:
 	void QuestType(QUESTYPE eType);
 
 private:
-	CTexture*		m_pDiffuse_TextureCom = { nullptr };
-	CShader*		m_pShaderCom = { nullptr };
+	CTexture* m_pDiffuse_TextureCom = { nullptr };
+	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 	QUESTYPE		m_eQuestType = QUESTYPE::END;
 	_uint			m_iType{};

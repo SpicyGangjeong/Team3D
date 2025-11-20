@@ -456,7 +456,7 @@ HRESULT CMaterial::Bind_SRV(CShader* pShader)
 			break;
 		case aiTextureType_SHININESS:
 		{
-			_float fUsingSurfaceParams = ((_float)aiTextureType_METALNESS / (_float)AI_TEXTURE_TYPE_MAX);
+			_float fUsingSurfaceParams = ((_float)aiTextureType_SPECULAR / (_float)AI_TEXTURE_TYPE_MAX);
 			pConstantName = "g_SurfaceParamsTexture";
 			pShader->Bind_RawValue("g_fUsingSurfaceParams", &fUsingSurfaceParams, sizeof(_float));
 		}

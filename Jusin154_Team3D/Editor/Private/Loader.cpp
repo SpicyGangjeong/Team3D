@@ -129,12 +129,7 @@ HRESULT CLoader::Initialize(LEVEL eNextLevelID)
 {
 	m_eNextLevelID = eNextLevelID;
 
-	InitializeCriticalSection(&m_CriticalSection);
-
-	m_hThread = (HANDLE)_beginthreadex(nullptr, 0, LoadingMain, this, 0, nullptr);
-	if (0 == m_hThread){
-		return E_FAIL;
-	}
+	m_pGameInstance->EnqueueJob(&LoadingMain, this);
 
 	return S_OK;
 }
@@ -146,7 +141,6 @@ HRESULT CLoader::Loading()
 		return E_FAIL;
 	}
 
-	EnterCriticalSection(&m_CriticalSection);
 
 	HRESULT		hr = {};
 
@@ -181,7 +175,6 @@ HRESULT CLoader::Loading()
 		break;
 	}
 
-	LeaveCriticalSection(&m_CriticalSection);
 
 	if (FAILED(hr))
 		return E_FAIL;
@@ -406,13 +399,30 @@ HRESULT CLoader::Loading_For_UI()
 
 	m_strMessage = TEXT("Model Loading..");
 
+	CVIBuffer_UI_Instance::UI_INSTANCE_DESC UIDesc{};
 
+	UIDesc.iNum = 4;
+	UIDesc.vSize = _float2(1.f,1.f);
+	UIDesc.fPositionOffSetX = 75.f;
+	UIDesc.fPositionOffSetY = 0.f;
+	UIDesc.vPsition = _float2(100.f, 100.f);
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_UI_Instance"),
+		CVIBuffer_UI_Instance::Create(m_pDevice, m_pContext, &UIDesc)))) {
+		return E_FAIL;
+	}
 
 	m_strMessage = TEXT("Shader Loading..");
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_UIEDITOR,
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_UIEditor.hlsl"),
 			VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_UIINSTANCE,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_UI_Instance.hlsl"),
+			VTX_POSTEX_INSTANCE_UI::Elements, VTX_POSTEX_INSTANCE_UI::iNumElements)))) {
 		return E_FAIL;
 	}
 
@@ -1312,8 +1322,12 @@ HRESULT CLoader::Loading_For_MapViewer()
 {
 	m_strMessage = TEXT("텍스쳐를(을) 로딩 중 입니다.");
 
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("TerrainTest"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/T_C_Dun_Moss_D.png"), 0)))) {
+	//	return E_FAIL;
+	//}
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("TerrainTest"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/T_C_Dun_Moss_D.png"), 0)))) {
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/T_LandscapeStreamingProxy_0_LOD1_Summer_D.png"), 0)))) {
 		return E_FAIL;
 	}
 
@@ -1537,7 +1551,7 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 	/* For.Prototype_Component_VIBuffer_Terrain */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Terrain"),
-		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, "../Bin/Resources/Data/Map/Height.bmp", 257, 257))))
+		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, "../Bin/Resources/Data/Map/T_LandscapeStreamingProxy_0_LOD1_D.png", 512, 512))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_SkyBox */
@@ -1605,12 +1619,6 @@ CLoader* CLoader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, L
 void CLoader::Free()
 {
 	__super::Free();
-
-	WaitForSingleObject(m_hThread, INFINITE);
-
-	CloseHandle(m_hThread);
-
-	DeleteCriticalSection(&m_CriticalSection);
 
 	SAFE_RELEASE(m_pGameInstance);
 	SAFE_RELEASE(m_pDevice);

@@ -29,7 +29,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -543,6 +543,7 @@ call Update_Lib.bat
     <ClInclude Include="..\Public\Shadow.h" />
     <ClInclude Include="..\Public\SoundSrc.h" />
     <ClInclude Include="..\Public\State.h" />
+    <ClInclude Include="..\Public\stb_image.h" />
     <ClInclude Include="..\Public\Texture.h" />
     <ClInclude Include="..\Public\ThreadHolder.h" />
     <ClInclude Include="..\Public\Timer.h" />

@@ -38,7 +38,7 @@ PSX::PxRigidDynamic* CPhysX_Manager::Add_DynamicActor(CRigidBody_Dynamic& RigidB
 		pShape = PSX::PxRigidActorExt::createExclusiveShape(*pActorDynamic, geoHolder.capsule(), *m_pMaterials[ENUM_CLASS(RigidBody.Get_MaterialType())]);
 		break;
 	case ACTOR::SPHERE:
-		geoHolder = PSX::PxCapsuleGeometry(vVolume.x);
+		geoHolder = PSX::PxSphereGeometry(vVolume.x);
 		pShape = PSX::PxRigidActorExt::createExclusiveShape(*pActorDynamic, geoHolder.sphere(), *m_pMaterials[ENUM_CLASS(RigidBody.Get_MaterialType())]);
 		break;
 	default:
@@ -475,7 +475,7 @@ HRESULT CPhysX_Manager::Initialize()
 	}
 
 	// m_pScene->overlap();??????
-
+#ifdef EDITOR_PROJECT
 #ifdef 기무리
 	PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
 	PlaneData.iSubKind = UINT_MAX;
@@ -506,6 +506,8 @@ HRESULT CPhysX_Manager::Initialize()
 	//	}
 	//}
 #endif // 기무리
+#endif // EDITOR_PROJECT
+
 
 #ifdef 진우
 	PlaneData.eKind = PHYSX_KIND::BODY_STATIC;

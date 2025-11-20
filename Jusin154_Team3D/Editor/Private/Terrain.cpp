@@ -49,7 +49,7 @@ void CTerrain::Priority_Update(_float fTimeDelta)
 
 void CTerrain::Update(_float fTimeDelta)
 {
-	m_pVIBufferCom->Culling(XMMatrixIdentity());
+	//m_pVIBufferCom->Culling(XMMatrixIdentity());
 }
 
 void CTerrain::Late_Update(_float fTimeDelta)
@@ -65,7 +65,7 @@ HRESULT CTerrain::Render()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NORTEX::TERRAIN)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NORTEX::DEFAULT)))) {
 		return E_FAIL;
 	}
 

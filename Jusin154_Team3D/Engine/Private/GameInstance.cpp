@@ -16,6 +16,7 @@
 #include "Collider_Manager.h"
 #include "Picking.h"
 #include "PhysX_Manager.h"
+#include "ThreadHolder.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -46,6 +47,10 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 				return E_FAIL;
 			}
 		}
+	}
+	m_pThreadHolder = CThreadHolder::Create(4);
+	if (nullptr == m_pThreadHolder) {
+		return E_FAIL;
 	}
 	m_pObject_Manager = CGameObject_Manager::Create(EngineDesc.iNumLevels);
 	if (nullptr == m_pObject_Manager) {
@@ -140,7 +145,6 @@ void CGameInstance::Clear_Resources(_uint iLevelIndex)
 	m_pCamera_Manager->Clear_Cameras(iLevelIndex);
 	m_pObject_Manager->Clear(iLevelIndex);
 	m_pLight_Manager->Light_Clear(iLevelIndex);
-
 }
 
 _float CGameInstance::Random_Normal()
@@ -764,6 +768,8 @@ _bool	CGameInstance::Toggle_MouseCenter()
 
 void CGameInstance::Release_Engine()
 {
+	SAFE_RELEASE(m_pThreadHolder);
+
 	DestroyInstance();
 
 	SAFE_RELEASE(m_pPicking);

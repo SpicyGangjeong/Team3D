@@ -21,8 +21,8 @@ HRESULT CSpell_Slot::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = -160.f;
-	Desc.fY = 50.f;
+	Desc.fX = 0.f;
+	Desc.fY = 98.f;
 	Desc.fSizeX = 140.f;
 	Desc.fSizeY = 140.f;
 
@@ -41,6 +41,9 @@ HRESULT CSpell_Slot::Initialize(void* pArg)
 	m_fTimeMult = 3.f;
 	m_fAngle = XMConvertToRadians(-135);
 	m_fAlphaTime = 1.f;
+	m_pVIBufferCom->Set_Cloned(true);
+	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
+	m_pVIBufferCom->Set_Pos(m_fX, m_fY, 150.f,0.f,4);
 	return S_OK;
 }
 
@@ -85,7 +88,6 @@ void CSpell_Slot::Update(_float fTimeDelta)
 	}
 	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
-
 }
 
 void CSpell_Slot::Late_Update(_float fTimeDelta)
@@ -110,7 +112,7 @@ HRESULT CSpell_Slot::Render()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::SLOT))))
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::DEFAULT))))
 	{
 		return E_FAIL;
 	}
@@ -174,7 +176,7 @@ HRESULT CSpell_Slot::Bind_ShaderResources()
 
 HRESULT CSpell_Slot::Ready_Components(void* pArg)
 {
-	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_UI_Instance"), (CComponent**)&m_pVIBufferCom, nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -182,7 +184,7 @@ HRESULT CSpell_Slot::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, FX_UIEDITOR, (CComponent**)&m_pShaderCom, nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, FX_UIINSTANCE, (CComponent**)&m_pShaderCom, nullptr)))
 	{
 		return E_FAIL;
 	}

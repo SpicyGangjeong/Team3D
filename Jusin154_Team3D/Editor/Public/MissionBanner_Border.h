@@ -19,6 +19,10 @@ public:
 	virtual HRESULT Render() override;
 	virtual _vector Get_WorldPostion() override;
 
+	virtual void SizeUpX(_float fSizeX) override;
+	virtual void Lerp_PosY(_float fSizeY) override;
+	void Size_LerpOn(_float LerpX, _float fTimeDelta);
+	void Size_LerpOff(_float fTimeDelta);
 
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
@@ -32,6 +36,9 @@ private:
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
+	CGameObject* m_pMission_Icon = { nullptr };
+
+	_float 	m_fLerpTime{};
 
 public:
 	static CMissionBanner_Border* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

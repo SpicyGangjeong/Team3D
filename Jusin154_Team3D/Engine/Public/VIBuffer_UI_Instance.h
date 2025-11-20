@@ -20,7 +20,7 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 
 public:
-	virtual void Set_Pos(_float fX, _float fY,_float OffSet);
+	virtual void Set_Pos(_float fX, _float fY, _float OffSetX, _float OffSetY, _uint iCols);
 	virtual void Set_Size(_float fSizeX, _float fSizeY);
 	virtual void Set_Cloned(_bool isCloned) { m_isCloned = isCloned; }
 
@@ -28,6 +28,8 @@ private:
 	VTX_INSTANCE_UI*	m_pInstanceVertices = { nullptr };
 	_bool				m_isCloned = { false };
 	_float2*			m_fSize{ nullptr };
+	_float*				m_fPositionOffSetX{};
+	_float*				m_fPositionOffSetY{};
 	_float2*			m_fPosition{ nullptr };
 	_float				m_fAddPosition{};
 
