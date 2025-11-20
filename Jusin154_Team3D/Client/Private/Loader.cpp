@@ -2,6 +2,8 @@
 #include "Loader.h"
 #include "GameInstance.h"
 #include "MainApp.h"
+#include "Light_Main.h"
+#include "Camera_Debug.h"
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice{ pDevice }
@@ -51,6 +53,9 @@ HRESULT CLoader::Loading()
 	case LEVEL::GAMEPLAY:
 		hr = Loading_For_GamePlay();
 		break;
+	case LEVEL::FIELD:
+		hr = Loading_For_Field();
+		break;
 	default:
 		break;
 	}
@@ -79,6 +84,14 @@ HRESULT CLoader::Loading_For_Logo()
 
 	m_strMessage = TEXT("객체원형를(을) 로딩 중 입니다.");
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CCamera_Debug>(g_iStaticLevel, CCamera_Debug::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CLight_Main>(g_iStaticLevel, CLight_Main::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
 	m_strMessage = TEXT("로딩이 완료되었습니다..");
 
 	m_isFinished = true;
@@ -87,6 +100,27 @@ HRESULT CLoader::Loading_For_Logo()
 }
 
 HRESULT CLoader::Loading_For_GamePlay()
+{
+	m_strMessage = TEXT("텍스쳐를(을) 로딩 중 입니다.");
+
+	m_strMessage = TEXT("모델를(을) 로딩 중 입니다.");
+
+	m_strMessage = TEXT("셰이더를(을) 로딩 중 입니다.");
+
+	m_strMessage = TEXT("이펙트를(을) 로딩 중 입니다.");
+
+	m_strMessage = TEXT("객체원형를(을) 로딩 중 입니다.");
+
+	m_strMessage = TEXT("정보를 불러오는 중입니다.");
+
+	m_strMessage = TEXT("로딩이 완료되었습니다..");
+
+	m_isFinished = true;
+
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_For_Field()
 {
 	m_strMessage = TEXT("텍스쳐를(을) 로딩 중 입니다.");
 

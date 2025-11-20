@@ -2,6 +2,8 @@
 #include "Level_GamePlay.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
+#include "Light_Main.h"
+#include "Camera_Debug.h"
 #include "Layer.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
@@ -52,19 +54,8 @@ HRESULT CLevel_GamePlay::Render()
 
 HRESULT CLevel_GamePlay::Ready_Lights()
 {
-	LIGHT_DESC			LightDesc{};
-
-	LightDesc.eType = LIGHT::DIRECTIONAL;
-	LightDesc.vDiffuse = _float4(0.8f, 0.8f, 0.8f, 0.f);
-	LightDesc.vAmbient = _float4(0.2f, 0.2f, 0.2f, 0.f);
-	LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 0.f);
-	//LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
-
-	//if (FAILED(m_pGameInstance->On_Light(NEXT_LEVEL, TEXT("Main_Light"), LightDesc, nullptr))) {
-	//	return E_FAIL;
-	//}
-	assert(false);
-
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLight_Main>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -76,6 +67,25 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 {
+	CCamera_Debug::CAMERA_DEBUG_DESC            Camera_Desc{};
+	Camera_Desc.fFovy = XMConvertToRadians(60.0f);
+	Camera_Desc.fNear = 0.1f;
+	Camera_Desc.fFar = 200.f;
+	Camera_Desc.vEye = _float3(0.f, 10.f, -10.f);
+	Camera_Desc.vAt = _float3(0.f, 0.f, 0.f);
+	Camera_Desc.fSpeedPerSec = 5.f;
+	Camera_Desc.pCameraKey = CAMERA_DEBUG;
+	Camera_Desc.fRotationPerSec = XMConvertToRadians(90.0f);
+	Camera_Desc.fMouseSensor = 0.1f;
+
+	CCamera_Debug* pCamera = { nullptr };
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCamera_Debug>(g_iStaticLevel, NEXT_LEVEL, LAYER_CAMERA, &Camera_Desc, nullptr, &pCamera))){
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_Camera(NEXT_LEVEL, CAMERA_DEBUG, true))) {
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 
