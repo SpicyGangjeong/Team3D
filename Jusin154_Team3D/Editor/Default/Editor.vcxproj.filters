@@ -315,7 +315,7 @@
     </Filter>
     <Filter Include="02.GameObjects\Layer_Effect\Effect\05.NomalJap">
       <UniqueIdentifier>{8882358e-c8eb-4222-a87e-01d902533b8f}</UniqueIdentifier>
-     </Filter>
+    </Filter>
     <Filter Include="80.State\State_Combat\State_Skill2">
       <UniqueIdentifier>{3614836d-9988-4ec0-95a8-f8ebc25a9a13}</UniqueIdentifier>
     </Filter>
@@ -327,6 +327,9 @@
     </Filter>
     <Filter Include="02.GameObjects\Broom">
       <UniqueIdentifier>{a9862861-6eaa-4e04-b7f6-217a32db7db4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\Slot_Number">
+      <UniqueIdentifier>{0db597d8-c4e7-479a-9b7e-9014b79a5e03}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -632,8 +635,7 @@
     </ClInclude>
     <ClInclude Include="..\Public\NomalJap.h">
       <Filter>02.GameObjects\Layer_Effect\Effect\05.NomalJap</Filter>
-     </ClInclude>
-
+    </ClInclude>
     <ClInclude Include="..\Public\State_Skill2.h">
       <Filter>80.State\State_Combat\State_Skill2</Filter>
     </ClInclude>
@@ -645,8 +647,8 @@
     </ClInclude>
     <ClInclude Include="..\Public\Broom.h">
       <Filter>02.GameObjects\Broom</Filter>
-
     </ClInclude>
+    <ClInclude Include="..\public\Slot_Number.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -959,8 +961,8 @@
     </ClCompile>
     <ClCompile Include="..\Private\Broom.cpp">
       <Filter>02.GameObjects\Broom</Filter>
-
     </ClCompile>
+    <ClCompile Include="..\private\Slot_Number.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Editor.rc">

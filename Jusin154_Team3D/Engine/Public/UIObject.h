@@ -8,7 +8,7 @@ class ENGINE_DLL CUIObject abstract : public CGameObject
 {
 public:
 	enum class SKILLTYPE {
- SHADOW, CONTROL, POWER, DAMAGE,
+CONTROL, POWER, DAMAGE,
 UTILITY ,TRANSFORM, CURSE, ESSENTIAL
 };
 typedef struct tagUIObjectDesc
