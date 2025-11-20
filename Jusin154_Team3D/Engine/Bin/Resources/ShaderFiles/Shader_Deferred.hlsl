@@ -100,9 +100,8 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     
     float2 uv = In.vTexcoord;
     
-    // float3 vNormal = normalize(g_NormalTexture.Sample(DefaultSampler, uv).xyz * 2.f - 1);
-    float3 vNormal = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, uv);
-    
+    float3 vAlbedo = g_DiffuseTexture.Sample(DefaultSampler, uv).rgb;
+    float3 vNormal = normalize(g_NormalTexture.Sample(DefaultSampler, uv).xyz * 2.f - 1.f);
     float4 vDepth = g_DepthTexture.Sample(DefaultSampler, uv);
     
     float fViewZ = vDepth.y * g_fFar;
@@ -118,17 +117,15 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
         vWorldPosition = mul(vWorldPosition, g_invMatView);
     }
     
-    float3 vF0;
-    float fMetallic;
-    float fRoughness;
-    float fOcclusion;
-    float fAttenuation;
+    float3 vF0 = float3(0.04f, 0.04f, 0.04f);
+    float fMetallic = 0.f;
+    float fRoughness = 0.5f;
+    float fOcclusion = 1.f;
+    float fAttenuation = 1.f;
 
-    float3 vWPos = vWorldPosition.xyz;
-    float3 vFromView = normalize(vWPos - g_vCamPosition.xyz); // 카메라에서 픽셀로 가는 방향
-    float3 vFromLight = normalize(g_vLightDir.xyz); // 라이트에서 오는 라이트 벡터
+    float3 vToView = normalize(g_vCamPosition.xyz - vWorldPosition.xyz); // 픽셀에서 카메라로
+    float3 vToLight = normalize(-g_vLightDir.xyz); // 픽셀에서 라이트로
     
-    float3 vAlbedo = g_DiffuseTexture.Sample(DefaultSampler, uv).rgb;
     
     if (true == AlmostEqual3(vDepth.b, AI_TEXTURE_TYPE_METALNESS)) // Metallic
     {
@@ -141,29 +138,17 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     }
     else if (true == AlmostEqual3(vDepth.b, AI_TEXTURE_TYPE_SPECULAR)) // Specular
     {
+        fMetallic = 0.f;
+        
         float3 vSRO = g_SurfaceTexture.Sample(DefaultSampler, uv).rgb;
-        float3 vSpec = vSRO.r;
-        
-        fMetallic = 0.f;
-        fRoughness = vSRO.g;
-        fOcclusion = vSRO.b;
-        
-        
-        vF0 = vSpec.xxx;
+        vF0             = vSRO.rrr;
+        fRoughness      = vSRO.g;
+        fOcclusion      = vSRO.b;
     }
-    else
-    {
-        fMetallic = 0.f;
-        fRoughness = 0.5f;
-        fOcclusion = 1.f;
-        vF0 = float3(0.04f, 0.04f, 0.04f);
-    }
-    
-    fAttenuation = 1.f;
     
     float fDiffuseAOStrength = lerp(0.3f, 1.f, fOcclusion);
     
-    PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vFromView, vFromLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
+    PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
     
     PBR_Out.vShade *= fDiffuseAOStrength;
     
@@ -179,8 +164,8 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     
     float2 uv = In.vTexcoord;
     
-    float3 vNormal = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, uv);
-    
+    float3 vAlbedo = g_DiffuseTexture.Sample(DefaultSampler, uv).rgb;
+    float3 vNormal = normalize(g_NormalTexture.Sample(DefaultSampler, uv).xyz * 2.f - 1.f);
     float4 vDepth = g_DepthTexture.Sample(DefaultSampler, uv);
     
     float fViewZ = vDepth.y * g_fFar;
@@ -196,27 +181,21 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
         vWorldPosition = mul(vWorldPosition, g_invMatView);
     }
     
-    float3 vWPos = vWorldPosition.xyz;
-    float3 vFromView = normalize(vWPos - g_vCamPosition.xyz); // 카메라에서 픽셀로 가는 방향
-    float3 vFromLight = normalize(g_vLightDir.xyz); // 라이트에서 오는 라이트 벡터
+    float3 vF0 = float3(0.04f, 0.04f, 0.04f);
+    float fMetallic = 0.f;
+    float fRoughness = 0.5f;
+    float fOcclusion = 1.f;
+    float fAttenuation = 1.f;
     
-    float3 vF0;
-    float fMetallic;
-    float fRoughness;
-    float fOcclusion;
-    float fAttenuation;
+    float3 vToView = normalize(g_vCamPosition.xyz - vWorldPosition.xyz); // 픽셀에서 카메라로
+    float3 vToLight = normalize(g_vLightPos.xyz - vWorldPosition.xyz); // 픽셀에서 라이트로
     
     {
-        float fDistance = length(vFromLight);
+        float fDistance = length(vToLight);
         fAttenuation = saturate((g_fLightRange - fDistance) / g_fLightRange);
-        if (fAttenuation <= 0.f)
-        {
-            discard;
-        }
+        if (fAttenuation <= 0.f) { discard; }
     }
 
-    float3 vAlbedo = g_DiffuseTexture.Sample(DefaultSampler, uv).rgb;
-    
     if (true == AlmostEqual3(vDepth.b, AI_TEXTURE_TYPE_METALNESS)) // Metallic
     {
         float3 vMRO = g_SurfaceTexture.Sample(DefaultSampler, uv).rgb;
@@ -228,27 +207,14 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     }
     else if (true == AlmostEqual3(vDepth.b, AI_TEXTURE_TYPE_SPECULAR)) // Specular
     {
-        float3 vSRO = g_SurfaceTexture.Sample(DefaultSampler, uv).rgb;
-        float3 vSpec = vSRO.r;
-        
         fMetallic = 0.f;
+        float3 vSRO = g_SurfaceTexture.Sample(DefaultSampler, uv).rgb;
+        vF0 = vSRO.rrr;
         fRoughness = vSRO.g;
         fOcclusion = vSRO.b;
-        
-        
-        vF0 = vSpec.xxx;
-    }
-    else
-    {
-        fMetallic = 0.f;
-        fRoughness = 0.5f;
-        fOcclusion = 1.f;
-        vF0 = float3(0.04f, 0.04f, 0.04f);
     }
     
-    PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vFromView, vFromLight,
-    vAlbedo, fMetallic, fRoughness,
-    g_vLightDiffuse.rgb, fAttenuation, vF0);
+    PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
     
     Out.vShade = float4(PBR_Out.vShade, 1.f);
     Out.vSpecular = float4(PBR_Out.vSpecular, 1.f);
@@ -262,8 +228,8 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
     
     float2 uv = In.vTexcoord;
     
-    float3 vNormal = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, uv);
-    
+    float3 vAlbedo = g_DiffuseTexture.Sample(DefaultSampler, uv).rgb;
+    float3 vNormal = normalize(g_NormalTexture.Sample(DefaultSampler, uv).xyz * 2.f - 1.f);
     float4 vDepth = g_DepthTexture.Sample(DefaultSampler, uv);
     
     float fViewZ = vDepth.y * g_fFar;
@@ -279,32 +245,25 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
         vWorldPosition = mul(vWorldPosition, g_invMatView);
     }
     
-    float3 vWPos = vWorldPosition.xyz;
-    float3 vFromView = normalize(vWPos - g_vCamPosition.xyz); // 카메라에서 픽셀로 가는 방향
-    float3 vFromLight = normalize(g_vLightDir.xyz); // 라이트에서 오는 라이트 벡터
+    float3 vF0 = float3(0.04f, 0.04f, 0.04f);
+    float fMetallic = 0.f;
+    float fRoughness = 0.5f;
+    float fOcclusion = 1.f;
+    float fAttenuation = 1.f;
     
-    float3 vF0;
-    float fMetallic;
-    float fRoughness;
-    float fOcclusion;
-    float fAttenuation;
+    float3 vToView = normalize(g_vCamPosition.xyz - vWorldPosition.xyz); // 픽셀에서 카메라로
+    float3 vToLight = normalize(g_vLightPos.xyz - vWorldPosition.xyz); // 픽셀에서 라이트로
+    
     {
-        float fDistance = length(vFromLight);
+        float fDistance = length(vToLight);
         fAttenuation = saturate((g_fLightRange - fDistance) / g_fLightRange);
-        if (fAttenuation <= 0.f)
-        {
-            discard;
-        }
+        if (fAttenuation <= 0.f) { discard; }
     }
-    float fCosAngle = dot(vFromLight, g_vLightDir.xyz);
-    if (fCosAngle < g_fSpotOuterAngle)
-    {
-        discard;
-    }
+    float fCosAngle = dot(vToView, g_vLightDir.xyz);
+    if (fCosAngle < g_fSpotOuterAngle) { discard; }
+    
     float fSpotAttenenuation = saturate((fCosAngle - g_fSpotInnerAngle) / (g_fSpotInnerAngle - g_fSpotOuterAngle));
     fAttenuation *= fSpotAttenenuation;
-    
-    float3 vAlbedo = g_DiffuseTexture.Sample(DefaultSampler, uv).rgb;
     
     if (true == AlmostEqual3(vDepth.b, AI_TEXTURE_TYPE_METALNESS)) // Metallic
     {
@@ -317,25 +276,14 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
     }
     else if (true == AlmostEqual3(vDepth.b, AI_TEXTURE_TYPE_SPECULAR)) // Specular
     {
-        float3 vSRO = g_SurfaceTexture.Sample(DefaultSampler, uv).rgb;
-        float3 vSpec = vSRO.r;
-        
         fMetallic = 0.f;
+        float3 vSRO = g_SurfaceTexture.Sample(DefaultSampler, uv).rgb;
+        vF0 = vSRO.rrr;
         fRoughness = vSRO.g;
         fOcclusion = vSRO.b;
-        
-        
-        vF0 = vSpec.xxx;
-    }
-    else
-    {
-        fMetallic = 0.f;
-        fRoughness = 0.5f;
-        fOcclusion = 1.f;
-        vF0 = float3(0.04f, 0.04f, 0.04f);
     }
     
-    PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vFromView, vFromLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
+    PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
     
     Out.vShade = float4(PBR_Out.vShade, 1.f);
     Out.vSpecular = float4(PBR_Out.vSpecular, 1.f);

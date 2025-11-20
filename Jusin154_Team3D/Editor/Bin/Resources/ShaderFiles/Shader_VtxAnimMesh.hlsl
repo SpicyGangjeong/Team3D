@@ -202,30 +202,28 @@ PS_OUT PS_MAIN(PS_IN In)
     PS_OUT Out;
     
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-    if (vMtrlDiffuse.a < 0.4f)
-    {
-        discard;
-    }
+    vector vSurface = g_SurfaceParamsTexture.Sample(DefaultSampler, In.vTexcoord);
+    if (vMtrlDiffuse.a < 0.2f) { discard; }
     
-    vector vNormalDesc = g_NormalTexture.Sample(MirrorSampler, In.vTexcoord);
+    float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
     
-    float3 vNormal = mul(vNormalDesc.xyz * 2.f - 1.f, WorldMatrix);
+    float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
     
     if (true == g_bRimLight)
     {
         float fRimLight = GetRimLight(g_vCamPosition.xyz, In.vWorldPos.xyz, vNormal, g_fRimPower, g_fRimStrength);
         vMtrlDiffuse.xyz = (vMtrlDiffuse.xyz * (1 - fRimLight)) + g_vRimColor * fRimLight;
     }
-    vector vSurface = g_SurfaceParamsTexture.Sample(DefaultSampler, In.vTexcoord);
-    
     
     Out.vAlbedo = vMtrlDiffuse;
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
-    Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, g_fUsingSurfaceParams, 1.f);
+    Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
+    (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
+    g_fUsingSurfaceParams, // 서페이스 파라미터
+    1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = vSurface;
-    
     
     return Out;
 }

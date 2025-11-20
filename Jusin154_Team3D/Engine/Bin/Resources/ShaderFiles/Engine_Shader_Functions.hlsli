@@ -131,7 +131,7 @@ float3 Fresnel_Schlick(float cosTheta, float3 F0)
 }
 
 PBR_LIGHT_OUT PBR_Lighting(
-    float3 vNormal, float3 vFromView, float3 vFromLight,
+    float3 vNormal, float3 vToView, float3 vToLight,
     float3 vAlbedo, float fMetallic, float fRoughness,
     float3 vLightColor, float fAttenuation, float3 vFO
 ) {
@@ -139,23 +139,24 @@ PBR_LIGHT_OUT PBR_Lighting(
     Out.vShade = 0;
     Out.vSpecular = 0;
     
-    float3 vHalfVector = normalize(vFromView + vFromLight);
-    float NdotL = saturate(dot(vNormal, vFromLight));
-    float NdotV = saturate(dot(vNormal, vFromView));
+    float3 vHalfVector = normalize(vToView + vToLight);
+    float NdotL = saturate(dot(vNormal, vToLight));
+    float NdotV = saturate(dot(vNormal, vToView));
     if (NdotL <= 0 || NdotV <= 0)
     {
         return Out;
     }
+    
     float fAlpha = max(fRoughness * fRoughness, 0.04f);
     float k = ((fRoughness + 1.f) * (fRoughness + 1.f)) / 8.f;
     
     float D = NDF_ggxtr(vNormal, vHalfVector, fAlpha);
-    float G = Geometry_Smith(vNormal, vFromView, vFromLight, k);
-    float3 F = Fresnel_Schlick(saturate(dot(vHalfVector, vFromView)), vFO);
+    float G = Geometry_Smith(vNormal, vToView, vToLight, k);
+    float3 F = Fresnel_Schlick(saturate(dot(vHalfVector, vToView)), vFO);
     
     float3 vNumerator = D * G * F;
-    float fDenom = max(4.f * NdotL * NdotV, 1e-7);
-    float3 specularBRDF = vNumerator / fDenom;
+    float fDenominator = max(4.f * NdotL * NdotV, 1e-7);
+    float3 specularBRDF = vNumerator / fDenominator;
     
     float3 kS = F;
     float3 kD = (1.f - kS) * (1.f -fMetallic);
