@@ -3,6 +3,9 @@
 #include "GameInstance.h"
 #include "QuadTree.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 CVIBuffer_Terrain::CVIBuffer_Terrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CVIBuffer{ pDevice, pContext }
 {
@@ -20,23 +23,105 @@ CVIBuffer_Terrain::CVIBuffer_Terrain(const CVIBuffer_Terrain& rhs)
 HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _char* pFilePath, _uint iSizeX, _uint iSizeZ)
 {
 
-	_ulong			dwByte = {};
-	HANDLE			hFile = CreateFile(CMyTools::ToWstring(pFilePath).c_str(), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
-	BITMAPFILEHEADER			fh{};
-	BITMAPINFOHEADER			ih{};
+	//_ulong			dwByte = {};
+	//HANDLE			hFile = CreateFile(CMyTools::ToWstring(pFilePath).c_str(), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+
+	//BITMAPFILEHEADER			fh{};
+	//BITMAPINFOHEADER			ih{};
+	//
+	//ReadFile(hFile, &fh, sizeof fh, &dwByte, nullptr);
+	//ReadFile(hFile, &ih, sizeof ih, &dwByte, nullptr);
+
 	
-	ReadFile(hFile, &fh, sizeof fh, &dwByte, nullptr);
-	ReadFile(hFile, &ih, sizeof ih, &dwByte, nullptr);
 
-	m_iNumVerticesX = ih.biWidth + 1;//iSizeX;
-	m_iNumVerticesZ = ih.biHeight + 1;//iSizeZ;
+
+	//ReadFile(hFile, pPixels, sizeof(_uint) * ih.biHeight * ih.biWidth, &dwByte, nullptr);
+
+	HANDLE	hFile = CreateFile(TEXT("../Bin/Bina.bin"),
+		GENERIC_WRITE,
+		FILE_SHARE_READ | FILE_SHARE_WRITE,
+		NULL, CREATE_ALWAYS,
+		FILE_ATTRIBUTE_NORMAL, NULL
+	);
+	if (hFile == INVALID_HANDLE_VALUE) {
+		MessageBox(NULL, L"오브젝트 저장 실패", L"System Message", MB_OK);
+		return E_FAIL;
+	}
+
+	_int iWidth = {};
+	_int iHeight = {};
+	_int iComp = {};
+	unsigned char* pTexture = {};
+	pTexture = stbi_load(pFilePath, &iWidth, &iHeight, &iComp, 0);
+
+	if (!pTexture)
+	{
+		MSG_BOX("Failed to Load HeightMapFile");
+		return E_FAIL;
+	}
+
+	m_iNumVerticesX = iWidth + 1;//iSizeX;
+	m_iNumVerticesZ = iHeight + 1;//iSizeZ;
 	m_iNumVertices = m_iNumVerticesX * m_iNumVerticesZ;
 
-	_uint* pPixels = new _uint[m_iNumVertices];
-	ZeroMemory(pPixels, sizeof(_uint) * m_iNumVertices);
+	_float* pPixels = new _float[m_iNumVertices];
+	ZeroMemory(pPixels, sizeof(_float) * m_iNumVertices);
 
-	ReadFile(hFile, pPixels, sizeof(_uint) * ih.biHeight * ih.biWidth, &dwByte, nullptr);
+	_uint iIndex = {};
+	for (int i = 0; i < iHeight; ++i) {
+		for (int j = 0; j < iWidth; ++j) {
+			int index =
+				iComp * (i * iWidth + j);
+			if (iComp < 3) {
+				// 흑백
+				int grey =
+					(int)pTexture[index + 0];
+
+				// 알파 채널
+				int alpha;
+				if (iComp > 1) {
+					int alpha =
+						(int)pTexture[index + 1];
+				}
+				else {
+					alpha = 255;
+				}
+			}
+			else {
+				// RGB 컬러
+				_uint height16 = ((int)pTexture[index + 0]<< 8) | (int)pTexture[index + 1];        // 0 ~ 65535
+				pPixels[iIndex++] = height16 / 65535.0f;
+
+				int color_r = (int)pTexture[index + 0];
+				int color_g = (int)pTexture[index + 1];
+				int color_b = (int)pTexture[index + 2];
+
+				// 알파 채널
+				int alpha;
+				if (iComp > 3) {
+					/*pPixels[iIndex++] =
+						(int)pTexture[index + 3];*/
+				}
+				else {
+					alpha = 255;
+				}
+
+				if (!WriteFile(hFile, &pPixels[iIndex - 1], sizeof(size_t), nullptr, nullptr)) {
+					return E_FAIL;
+				}
+			}
+		}
+	}
+
+	stbi_image_free(pTexture);
+
+
+
+
+	CloseHandle(hFile);
+
+
 
 	m_iNumVertexBuffers = 1;
 
@@ -69,9 +154,11 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _char* pFilePath, _uint iS
 		{
 			_uint		iIndex = i * m_iNumVerticesX + j;
 
-			m_pVertexPositions[iIndex] = pVertices[iIndex].vPosition = _float3((_float)j, (_float)(pPixels[iIndex] & 0x000000ff) / 5.f, (_float)i);
+			m_pVertexPositions[iIndex] = pVertices[iIndex].vPosition = _float3((_float)j, (_float)(pPixels[iIndex]) * 5 * 256.f, (_float)i);
 			pVertices[iIndex].vNormal = _float3(0.f, 0.f, 0.f);
-			pVertices[iIndex].vTexcoord = _float2(j / (m_iNumVerticesX - 1.f), i / (m_iNumVerticesZ - 1.f));
+			pVertices[iIndex].vTexcoord = _float2((_float)j / (m_iNumVerticesX - 1.f) /32.f, (_float)i / (m_iNumVerticesZ - 1.f) / 32.f);
+			//pVertices[iIndex].vTexcoord = _float2(1.f - ((float)i / (m_iNumVerticesZ - 1.f)) / 32.f,
+				//((float)j / (m_iNumVerticesX - 1.f)) / 32.f);
 		}
 	}
 
