@@ -34,8 +34,6 @@ HRESULT CEffect_Container::Initialize(void* pArg)
 	if (FAILED(Ready_Child()))
 		return E_FAIL;
 
-
-
 	return S_OK;
 }
 
@@ -53,6 +51,10 @@ void CEffect_Container::Update(_float fTimeDelta)
 void CEffect_Container::Late_Update(_float fTimeDelta)
 {
 	__super::Late_Update(fTimeDelta);
+}
+
+void CEffect_Container::OnCollision(CGameObject* pOther, void* pDesc)
+{
 }
 
 #ifdef _DEBUG
@@ -141,6 +143,7 @@ HRESULT CEffect_Container::Load_Package(const _char* pPath)
 	_int iObjectCount = {};
 
 	if (!ReadFile(hFile, &iObjectCount, sizeof(_int), &dwByte, nullptr)) {
+		CloseHandle(hFile);
 		return E_FAIL;
 	}
 
@@ -149,12 +152,14 @@ HRESULT CEffect_Container::Load_Package(const _char* pPath)
 		EFFECT_TYPE eEffectType = {};
 
 		if (!ReadFile(hFile, &eEffectType, sizeof(EFFECT_TYPE), &dwByte, nullptr)) {
+			CloseHandle(hFile);
 			return E_FAIL;
 		}
 
 		size_t iFilePathLength = {};
 
 		if (!ReadFile(hFile, &iFilePathLength, sizeof(size_t), &dwByte, nullptr)) {
+			CloseHandle(hFile);
 			return E_FAIL;
 		}
 
@@ -163,6 +168,7 @@ HRESULT CEffect_Container::Load_Package(const _char* pPath)
 		if (iFilePathLength != 0)
 		{
 			if (!ReadFile(hFile, szFilePath, sizeof(_char) * ((DWORD)iFilePathLength + 1), &dwByte, nullptr)) {
+				CloseHandle(hFile);
 				return E_FAIL;
 			}
 		}
@@ -188,6 +194,7 @@ HRESULT CEffect_Container::Load_Package(const _char* pPath)
 
 			if (FAILED(Add_PartObject<CEditEffect>("EffectObject" + i, ENUM_CLASS(LEVEL::EFFECT), &pEditEffect, &PartsDesc)))
 			{
+				CloseHandle(hFile);
 				return E_FAIL;
 			}
 
@@ -204,6 +211,7 @@ HRESULT CEffect_Container::Load_Package(const _char* pPath)
 
 			if (FAILED(Add_PartObject<CTrailObject>("TrailObject" + i, ENUM_CLASS(LEVEL::EFFECT), &pTrailEffect, &PartsDesc)))
 			{
+				CloseHandle(hFile);
 				return E_FAIL;
 			}
 
@@ -222,7 +230,7 @@ HRESULT CEffect_Container::Load_Package(const _char* pPath)
 
 	CloseHandle(hFile);
 
-	MessageBox(NULL, L"패키징 로드 성공", L"System Message", MB_OK);
+
 
 	return S_OK;
 }
@@ -265,7 +273,7 @@ void CEffect_Container::Update_Event(_float fTimeDelta)
 	m_fPreAccTime = m_fAccTime;
 	m_fAccTime += fTimeDelta;
 
-	if (m_fAccTime >= m_fDelay && m_isDelayed == false) // 아직 딜레이되지 않았고 딜레이를 넘어섰다면
+	if (m_fAccTime >= m_fDelay || m_isDelayed == false) // 아직 딜레이되지 않았고 딜레이를 넘어섰다면
 	{
 		m_isDelayed = true;
 	}
@@ -282,6 +290,10 @@ void CEffect_Container::Update_Event(_float fTimeDelta)
 			m_fAccTime = 0.f;
 			m_fPreAccTime = 0.f;
 			m_isDelayed = false;
+		}
+		else
+		{
+			m_bVisible = false;
 		}
 	}
 

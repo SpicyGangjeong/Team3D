@@ -27,6 +27,8 @@ HRESULT CEditEffect::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
+	
+	Set_Visible(false);
 
 	return S_OK;
 }
@@ -38,6 +40,9 @@ void CEditEffect::Priority_Update(_float fTimeDelta)
 
 void CEditEffect::Update(_float fTimeDelta)
 {
+
+	if (m_bVisible == false)
+		return;
 
 	if (m_pInstance_ModelCom == nullptr)
 		return;
@@ -53,11 +58,11 @@ void CEditEffect::Update(_float fTimeDelta)
 void CEditEffect::Late_Update(_float fTimeDelta)
 {
 
-	if (m_pInstance_ModelCom == nullptr)
+	if (m_bVisible == false)
 		return;
 
-
-	 XMStoreFloat4x4(&m_CombinedWorldMatrix , m_pTransformCom->Get_XMWorldMatrix() * m_pParentTransformCom->Get_XMWorldMatrix());
+	if (m_pInstance_ModelCom == nullptr)
+		return;
 
 
 	if (m_EffectInfo.isBlur == true)
@@ -385,6 +390,8 @@ void CEditEffect::Describe_Entity()
 	{
 		m_EffectInfo.eRenderOrder = static_cast<RENDER>(iCurrentItem);
 	}
+	
+	GUI::Checkbox("Visible", &m_bVisible);
 
 	m_pTransformCom->Describe_Entity();
 
@@ -432,6 +439,7 @@ void CEditEffect::Describe_Entity()
 		GUI::ColorEdit4("Emissive", (_float*)&m_EffectInfo.vEmissive);
 
 		GUI::Checkbox("EmissiveTex", &m_EffectInfo.isEmissive);
+		GUI::Checkbox("EmissiveDissolve", &m_EffectInfo.isEmissiveDissolve);
 
 		if (m_EffectInfo.isEmissive)
 		{
@@ -609,7 +617,7 @@ void CEditEffect::Describe_Entity()
 
 				GUI::Checkbox("Reverse Dissolve", &m_EffectInfo.isReverseDissolve);
 
-				_string strName = m_strDissolveName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISSOLVE_TEXTURE", (CComponent**)&m_pDissolve_TextureCom, nullptr, this);
+				_string strName  = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISSOLVE_TEXTURE", (CComponent**)&m_pDissolve_TextureCom, nullptr, this);
 				
 				if (strName != "") {
 					m_strDissolveName = strName;
@@ -714,6 +722,21 @@ void CEditEffect::Describe_Entity()
 		}
 
 	}
+
+	ImGui::Begin("Simple Plot");
+
+	// samples.data()와 개수, optional offset 인덱스 등 넘길 수 있음
+	ImGui::PlotLines("Value", m_ValueVector.data(), (int)m_ValueVector.size(), 0, nullptr, FLT_MAX, FLT_MAX, ImVec2(0, 100));
+
+	GUI::InputFloat("InputValue", &m_fInputValue);
+
+	if (GUI::Button("AddValue"))
+	{
+		m_ValueVector.push_back(m_fInputValue);
+	}
+
+	ImGui::End();
+
 
 	GUI::Separator(); GUI::Spacing();
 

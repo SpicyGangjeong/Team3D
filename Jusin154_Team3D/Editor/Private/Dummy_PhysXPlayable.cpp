@@ -1,6 +1,8 @@
 ﻿#include "pch.h"
 #include "Dummy_PhysXPlayable.h"
+#include "Dummy_PhysXEffectHitBox.h"
 #include "GameInstance.h"
+#include "NomalJap.h"
 
 CDummy_PhysXPlayable::CDummy_PhysXPlayable(ID3D11Device* pDevice, ID3D11DeviceContext* pContext):
 	CGameObject(pDevice, pContext)
@@ -46,6 +48,14 @@ void CDummy_PhysXPlayable::Update(_float fTimeDelta)
 	else {
 		if (m_pGameInstance->Key_Down(DIK_V)) {
 			m_pGameInstance->Attach_Actor(*m_pCharacter_Controller->Get_Actor());
+		}
+	}
+	if (m_pGameInstance->Key_Up(DIK_O)) {
+		{
+			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNomalJap>(ENUM_CLASS(LEVEL::EFFECT), CURRENT_LEVEL, LAYER_HITBOX, nullptr, this))) {
+				assert(false);
+				return;
+			}
 		}
 	}
 	m_pTransformCom->AccumulateMomentum(XMVectorSet(0.f, -GRAVITY * fTimeDelta, 0.f, 0.f));

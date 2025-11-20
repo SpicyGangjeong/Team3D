@@ -16,7 +16,9 @@ namespace Client {
 #define FX_NORTEX			TEXT("FX_NORTEX")
 #define FX_CELL				TEXT("FX_CELL")
 #define FX_PARTICLE			TEXT("FX_PARTICLE")
+#define FX_INSTANCE_MODEL   TEXT("FX_INSTANCE_MODEL")
 #define FX_UIEDITOR			TEXT("FX_UIEDITOR")
+#define FX_UIINSTANCE		TEXT("FX_UIINSTANCE")
 
 #pragma endregion
 #pragma region MACRO_PROTOTYPE
@@ -26,6 +28,7 @@ namespace Client {
 #pragma endregion
 #pragma region OBJECT
 
+#define CAMERA_DEBUG			TEXT("CAMERA_DEBUG")
 #pragma endregion
 #pragma region COMPONENT
 
@@ -48,7 +51,9 @@ namespace Client {
 #define LAYER_DOT			TEXT("Layer_Dot")
 #define LAYER_CELL			TEXT("Layer_Cell")
 #define LAYER_TRIGGER		TEXT("Layer_Trigger")
+#define LAYER_LIGHT			TEXT("Layer_Light")
 
+#define LAYER_MAPOBJECTMANAGER		TEXT("Layer_MapObjectManager")
 
 #pragma endregion
 #pragma region MACRO_TEXTURE

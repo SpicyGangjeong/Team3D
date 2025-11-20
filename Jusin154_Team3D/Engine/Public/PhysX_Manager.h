@@ -84,6 +84,10 @@ private:
 	PhsXUserData PlaneData = {};
 
 #endif // 기무리
+#ifdef 진우
+	PhsXUserData PlaneData = {};
+
+#endif // 기무리
 
 
 	vector<PSX::PxMaterial*> m_pMaterials = { };

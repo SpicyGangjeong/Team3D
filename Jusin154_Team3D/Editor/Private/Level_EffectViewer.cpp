@@ -8,6 +8,11 @@
 #include "Dummy_Cube.h"
 #include "MainLight.h"
 #include "Dummy_Plane.h"
+#include "DummySkyBox.h"
+#include "Dummy_PhysXBox.h"
+#include "Dummy_PhysXPlayable.h"
+#include "Dummy_PhysXMonster.h"
+#include "Dummy_PhysXWall.h"
 
 CLevel_EffectViewer::CLevel_EffectViewer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -21,6 +26,10 @@ HRESULT CLevel_EffectViewer::Initialize()
 		return E_FAIL;
 	}
 
+	if (FAILED(Ready_Layer_PhysX(TEXT("Layer_PhysX"))))
+	{
+		return E_FAIL;
+	}
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 	{
 		return E_FAIL;
@@ -34,11 +43,14 @@ HRESULT CLevel_EffectViewer::Initialize()
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEffect_Editor>(ENUM_CLASS(LEVEL::EFFECT), NEXT_LEVEL, TEXT("Layer_Editor"))))
 		return E_FAIL;
 
+	/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_Plane>(ENUM_CLASS(LEVEL::EFFECT), NEXT_LEVEL, LAYER_CUBE)))
+		return E_FAIL;*/
+
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_Cube>(ENUM_CLASS(LEVEL::EFFECT), NEXT_LEVEL, LAYER_CUBE)))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_Plane>(ENUM_CLASS(LEVEL::EFFECT), NEXT_LEVEL, LAYER_CUBE)))
-		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummySkyBox>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Sky"))))
+	//	return E_FAIL;
 
 
 	return S_OK;
@@ -96,6 +108,49 @@ HRESULT CLevel_EffectViewer::Ready_Layer_UI(const _wstring& strLayerTag)
 HRESULT CLevel_EffectViewer::Ready_Layer_Effect(const _wstring& strLayerTag)
 {
 
+	return S_OK;
+}
+
+HRESULT CLevel_EffectViewer::Ready_Layer_PhysX(const _wstring& strLayerTag)
+{
+	for (int i = 0; i < 10; ++i) {
+		CDummy_PhysXBox::PHYSXDUMMY_DESC Desc{};
+		Desc.vPos = { m_pGameInstance->Random_Float(0.f, 30.f), m_pGameInstance->Random_Float(3.f, 33.f), m_pGameInstance->Random_Float(0.f, 30.f) };
+		Desc.vRotRPY = { m_pGameInstance->Random_Float(0.f, XM_2PI), m_pGameInstance->Random_Float(0.f, XM_2PI), m_pGameInstance->Random_Float(0.f, XM_2PI) };
+		Desc.iSubKind = 0;
+
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXBox>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE, &Desc))) {
+			return E_FAIL;
+		}
+	}
+	{
+		CDummy_PhysXWall::PHYSXDUMMY_DESC Desc{};
+		Desc.vPos = { -15.f, 3.f, 15.f };
+		Desc.vRotRPY = { 0.f, m_pGameInstance->Random_Float(0.f, XM_2PI), 0.f };
+		Desc.iSubKind = 23;
+
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXWall>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE, &Desc))) {
+			return E_FAIL;
+		}
+	} 
+	{
+		CDummy_PhysXPlayable::PHYSXDUMMY_DESC Desc{};
+		Desc.vPos = { 0.f, 100.f, 0.f };
+		Desc.vRotRPY = { 0.f, 0.f, 0.f };
+		Desc.iSubKind = 10;
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXPlayable>(g_iStaticLevel, NEXT_LEVEL, LAYER_PLAYER, &Desc))) {
+			return E_FAIL;
+		}
+	}
+	{
+		CDummy_PhysXMonster::PHYSXDUMMY_DESC Desc{};
+		Desc.vPos = { 0.f, 150.f, 5.f };
+		Desc.vRotRPY = { 12.f, 0.f, 0.f };
+		Desc.iSubKind = 10;
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXMonster>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER, &Desc))) {
+			return E_FAIL;
+		}
+	}
 	return S_OK;
 }
 
