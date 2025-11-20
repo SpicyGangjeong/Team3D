@@ -474,11 +474,22 @@ HRESULT CMapObject_Manager::Save_ContainerData(const _char* pFileName, const _ch
 
 		PartObject->SetAttribute("Lod_Level", iLodLvel);
 		PartObject->SetAttribute("Key_Index", pMapObject->Get_iKeyIndex());
+
+		/* Set Render Type*/
+		_wstring ProrotypeTag = pMapObject->Get_PrototypeTag(0);
+
+		if(_wstring::npos != ProrotypeTag.find(L"decal") || _wstring::npos != ProrotypeTag.find(L"Decal"))
+			PartObject->SetAttribute("Render_Type", 1);
+		else if(_wstring::npos != ProrotypeTag.find(L"glass") || _wstring::npos != ProrotypeTag.find(L"Glass"))
+			PartObject->SetAttribute("Render_Type", 2);
+		else
+			PartObject->SetAttribute("Render_Type", 0);
+
 		container->InsertEndChild(PartObject);
 
 		for (_uint i = 0; i < pMapObject->Get_LodLevel() + 1; ++i)
 		{
-			// <PrototypeTag>ÅØ½ºÆ®</PrototypeTag>
+			// <PrototypeTag>ProrotypeTag</PrototypeTag>
 			tinyxml2::XMLElement* proto = doc.NewElement("PrototypeTag");
 			proto->SetText(CMyTools::ToString(pMapObject->Get_PrototypeTag(i)).c_str());
 			PartObject->InsertEndChild(proto);
