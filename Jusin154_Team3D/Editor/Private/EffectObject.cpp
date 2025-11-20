@@ -609,9 +609,8 @@ HRESULT CEffectObject::LoadPre(const _char* pFilePath, LEVEL eLevel)
 HRESULT CEffectObject::Bind_ShaderResources()
 {
 
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix))) {
+	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
-	}
 
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))) {
 		return E_FAIL;
@@ -660,8 +659,12 @@ HRESULT CEffectObject::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_isReverseDissolve", &m_EffectInfo.isReverseDissolve, sizeof(_bool)))) {
 		return E_FAIL;
 	}
-	
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isEmissiveDissolve", &m_EffectInfo.isEmissiveDissolve, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+	
+	
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vColor", &m_EffectInfo.vColor, sizeof(_float4)))) {
 		return E_FAIL;

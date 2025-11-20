@@ -29,8 +29,8 @@ private:
 	HRESULT			Bind_ShaderResources() override;
 	virtual void	OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr) override;
 private:
-	_wstring		m_wstrEffectName = {};
-
+	_wstring						  m_wstrEffectName = {};
+	class CDummy_PhysXEffectHitBox*   m_pPhysHitBox = {};
 public:
 	static CNomalJap* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

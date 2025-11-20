@@ -40,6 +40,7 @@ HRESULT CNomalJap::Initialize(void* pArg)
 	m_wstrEffectName = L"Nomal_Jap";
 
 	m_PartObjects.begin()->second->Set_Visible(true);
+	m_PartObjects.begin()->second->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
 
 	m_fDuration = 5.f;
 
@@ -91,7 +92,7 @@ HRESULT CNomalJap::Ready_Child()
 	Desc.vDeltaPos = { 0.f, 0.f, 1.f };
 	Desc.vLifeTime = { 0.f, 2.f };
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXEffectHitBox>(g_iStaticLevel, CURRENT_LEVEL, LAYER_HITBOX, &Desc, this))) {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXEffectHitBox>(g_iStaticLevel, CURRENT_LEVEL, LAYER_HITBOX, &Desc, this , &m_pPhysHitBox))) {
 		assert(false);
 		return E_FAIL;
 	}
@@ -138,11 +139,17 @@ void CNomalJap::OnCollision(CGameObject* pOther , void* pDesc)
 	}
 
 	m_PartObjects.begin()->second->Set_Visible(false);
+
+	m_pPhysHitBox->Set_Dead();
 }
 
 void CNomalJap::Free()
 {
 	__super::Free();
+
+	//if(m_pPhysHitBox != nullptr)
+	//	if (m_pPhysHitBox->Get_Depth() == false)
+	//		SAFE_RELEASE(m_pPhysHitBox);
 
 }
 

@@ -65,8 +65,6 @@ void CEditEffect::Late_Update(_float fTimeDelta)
 		return;
 
 
-	 XMStoreFloat4x4(&m_CombinedWorldMatrix , m_pTransformCom->Get_XMWorldMatrix() * m_pParentTransformCom->Get_XMWorldMatrix());
-
 	if (m_EffectInfo.isBlur == true)
 	{
 		m_pGameInstance->Add_RenderGroup(RENDER::BLUR, this);
@@ -441,6 +439,7 @@ void CEditEffect::Describe_Entity()
 		GUI::ColorEdit4("Emissive", (_float*)&m_EffectInfo.vEmissive);
 
 		GUI::Checkbox("EmissiveTex", &m_EffectInfo.isEmissive);
+		GUI::Checkbox("EmissiveDissolve", &m_EffectInfo.isEmissiveDissolve);
 
 		if (m_EffectInfo.isEmissive)
 		{
@@ -723,6 +722,21 @@ void CEditEffect::Describe_Entity()
 		}
 
 	}
+
+	ImGui::Begin("Simple Plot");
+
+	// samples.data()와 개수, optional offset 인덱스 등 넘길 수 있음
+	ImGui::PlotLines("Value", m_ValueVector.data(), (int)m_ValueVector.size(), 0, nullptr, FLT_MAX, FLT_MAX, ImVec2(0, 100));
+
+	GUI::InputFloat("InputValue", &m_fInputValue);
+
+	if (GUI::Button("AddValue"))
+	{
+		m_ValueVector.push_back(m_fInputValue);
+	}
+
+	ImGui::End();
+
 
 	GUI::Separator(); GUI::Spacing();
 

@@ -65,6 +65,8 @@ public:
 
 		EFFECT_TYPE eEffectType = { EFFECT_TYPE::EFFECT };
 
+		_bool   isEmissiveDissolve = { false };
+
 	}EFFECT_INFO;
 
 	typedef struct tagPreEffectInfo
@@ -111,10 +113,9 @@ public:
 
 		LIGHT_DESC	LightDesc = {};
 		RENDER		eRenderOrder = { RENDER::EFFECT };
-
 		_bool   isReverseDissolve = {};
-
-
+		EFFECT_TYPE eEffectType = { EFFECT_TYPE::EFFECT };
+		_bool   isEmissiveDissolve = { false };
 
 	}PRE_EFFECT_INFO;
 

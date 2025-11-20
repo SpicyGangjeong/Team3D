@@ -82,6 +82,7 @@ bool g_isMaskUVMove;
 bool g_isNoiseUVMove;
 
 bool g_isReverseDissolve;
+bool g_isEmissiveDissolve;
 
 float g_fFar;
 
@@ -427,14 +428,23 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
         discard;
     
     Out = BlendedWeight(vMtrlDiffuse, In.vProjPos.w);
+    
 
-    if (vMtrlDiffuse.a / g_fDiffuseAlpha > g_fEmissiveCutAlpha)
+    float fEmissiveCutAlpha = g_fEmissiveCutAlpha;
+    
+    if (g_isEmissiveDissolve == true)
     {
-        float3 vEmissiveColor = g_vEmissive.rgb * g_vEmissive.a + vEmissiveMtrl.rgb * (1 - g_vEmissive.a);
-        Out.vColorTarget = vector(vEmissiveColor, vMtrlDiffuse.a);
+        fEmissiveCutAlpha += (In.vLifeTime.x / In.vLifeTime.y) / 2;
     }
-    else
-        Out.vColorTarget = vector(0.f, 0.f, 0.f, 0.f);
+    
+    float fSmoothAlpha = smoothstep(fEmissiveCutAlpha - 0.1f, fEmissiveCutAlpha + 0.1f, vMtrlDiffuse.a);
+    
+   
+    
+    float3 vEmissiveColor = g_vEmissive.rgb * g_vEmissive.a + vEmissiveMtrl.rgb * (1 - g_vEmissive.a);
+    
+    Out.vColorTarget = vector(vEmissiveColor * fSmoothAlpha, vMtrlDiffuse.a);
+
     
     return Out;
 }
@@ -623,18 +633,21 @@ PS_BLUR_OUT PS_BLUR(PS_BLUR_IN In)
 
     }
     
-    //vMtrlDiffuse.a *= g_fDiffuseAlpha;
+    vMtrlDiffuse.a *= g_fDiffuseAlpha;
     
-    //// 색깔 추가할 처리 (이미시브)
+    // 색깔 추가할 처리 (이미시브)
     
-    //float4 vEmissiveMtrl = vector(0.f, 0.f, 0.f, 0.f);
+    vector vEmissive;
     
-    //if (g_isEmissive == true)
-    //{
-    //    vEmissiveMtrl = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
-    //}
+    float4 vEmissiveMtrl = vector(0.f, 0.f, 0.f, 0.f);
     
-    Out.vDiffuse = vMtrlDiffuse * g_fBlurIntensity;
+    float fSmoothAlpha = smoothstep(g_fEmissiveCutAlpha - 0.02f, g_fEmissiveCutAlpha + 0.02f, vMtrlDiffuse.a);
+
+    float3 vEmissiveColor = g_vEmissive.rgb * g_vEmissive.a + vEmissiveMtrl.rgb * (1 - g_vEmissive.a);
+    
+    vEmissive = vector(vEmissiveColor * fSmoothAlpha, vMtrlDiffuse.a);
+    
+    Out.vDiffuse = vMtrlDiffuse * g_fBlurIntensity + vEmissive;
     
     return Out;
 }
