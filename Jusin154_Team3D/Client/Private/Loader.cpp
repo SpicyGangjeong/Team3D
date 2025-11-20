@@ -55,6 +55,8 @@ HRESULT CLoader::Loading()
 		break;
 	}
 
+	CoUninitialize();
+
 	if (FAILED(hr)){
 		return E_FAIL;
 	}
