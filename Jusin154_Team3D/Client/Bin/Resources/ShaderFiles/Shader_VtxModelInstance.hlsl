@@ -1,7 +1,5 @@
 #include "Engine_Shader_Defines.hlsli"
 
-float PI = 3.141592;
-
 struct ParticleValue
 {
     float fSpeed;
@@ -14,6 +12,7 @@ struct ParticleValue
     
     float2 vMaskingUVMoveTime;
     float2 vDiffuseUVMoveTime;
+    float2 vDistortionUVMoveTime;
     float2 vNoiseUVMoveTime;
     float2 vAniTime;
     
@@ -35,6 +34,7 @@ StructuredBuffer<ParticleValue> g_ParticleValue : register(t5);
 
 Texture2D g_EmissiveTexture : register(t6);
 Texture2D g_DepthStencilTexture : register(t7);
+Texture2D g_DistortionTexture : register(t8);
 
 
 
@@ -44,27 +44,30 @@ vector g_vColor;
 
 float2 g_vDiffuseUVGainAmount;
 float2 g_vMaskingUVGainAmount;
+float2 g_vNoiseUVGainAmount;
 
-float2 g_vDiffuseNoiseUVGainAmount;
-float2 g_vMaskNoiseUVGainAmount;
-
-//
 int    g_iMaskMoveLerpOption;
 int    g_iDiffuseMoveLerpOption;
-int    g_iMaskNoiseMoveLerpOption;
-int    g_iDiffuseNoiseMoveLerpOption;
+int    g_iNoiseMoveLerpOption;
+
+//
+float2 g_vDiffuseDistortionUVGainAmount;
+float2 g_vMaskDistortionUVGainAmount;
+
+int    g_iMaskDistortionMoveLerpOption;
+int    g_iDiffuseDistortionMoveLerpOption;
 //
 
 float2 g_vUVCutting;
 float2 g_vUVMaskCutting;
 
+float g_fDiffuseAlpha;
 
 int   g_iBlurWeight; // 블러 강도
 float g_fBlurIntensity; //블러 세기
-float g_fNoiseDistortionIntensity; // 노이즈 왜곡 세기
+float g_fNoiseDistortionIntensity; // 디스토션 왜곡 세기
 
 float4 g_vEmissive;
-float g_fColorOption;
 float g_fEmissiveCutAlpha;
 
 bool g_isDiffuse;
@@ -72,9 +75,14 @@ bool g_isMasking;
 bool g_isDissolve;
 bool g_isNoise;
 bool g_isEmissive;
+bool g_isDistortion;
 
 bool g_isDiffuseUVMove;
 bool g_isMaskUVMove;
+bool g_isNoiseUVMove;
+
+bool g_isReverseDissolve;
+bool g_isEmissiveDissolve;
 
 float g_fFar;
 
@@ -151,11 +159,11 @@ VS_OUT VS_MAIN(VS_IN In, uint iGPUIndex : SV_InstanceID)
 {
     VS_OUT Out = (VS_OUT) 0;
 
-    row_major matrix matW, matWV, matWVP;
+    matrix matW, matWV, matWVP;
     
-    row_major matrix TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
+    matrix TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
     
-    matW = mul(g_WorldMatrix, TransformMatrix);
+    matW = mul(TransformMatrix, g_WorldMatrix);
     matWV = mul(matW, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
     
@@ -201,31 +209,32 @@ PS_OUT BlendedWeight(vector fDiffuse, float fLinearZ)
 {
     PS_OUT Out;
     
-
-    
     float3 vColor = fDiffuse.rgb;
     float fAlpha = fDiffuse.a;
     
 
-    float fWeight =
-max(
-  min(1.0, max(max(vColor.r, vColor.g), vColor.b) * fAlpha), fAlpha) 
-    *
-  clamp( 0.01 / (1e-4 + pow(fLinearZ / 200, 4.0)), 0.01f, 1000 );
+//    float fWeight =
+//max(
+//  min(1.0, max(max(vColor.r, vColor.g), vColor.b) * fAlpha), fAlpha)
+//    *
+//  clamp(0.01 / (1e-4 + pow(fLinearZ / 200, 4.0)), 0.01f, 1000);
 
     
     
-    //float fWeight = clamp(0.03f / (1e-5 + pow(fLinearZ, 2.0f)), 0.01, 3e3);
+    //float fWeight = clamp(0.03f / (1e-5 + pow(fLinearZ, 4.0f)), 0.01, 3e3);
     //fWeight = max(fWeight, 1.0);
     
     //이게 오리지널 웨이트 함수
     
     //float fWeight = pow(fLinearZ, -2.5);
-    //float fWeight = clamp(pow(fLinearZ, -2.5f), 1.0f, 1000.0f);
-
+    
+    float fWeight = clamp(pow(fLinearZ, -2.5f), 1.0f, 1000.0f);
+    
+    
     Out.vDiffuse = vector(vColor.rgb * fAlpha, fAlpha) * fWeight;
    
-    Out.vRevealage.a = fAlpha;
+    Out.vRevealage.r = fAlpha;
+
 
     return Out;
 }
@@ -266,11 +275,13 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     vector vMtrlMask;
     vector vMtrlNoise;
     vector vMtrlDissolve;
+    vector vMtrlDistortion;
     
     float  fAnimIndex = g_ParticleValue[In.iGPUIndex].vAniIndex.x;
     float2 vDiffuseTime = g_ParticleValue[In.iGPUIndex].vDiffuseUVMoveTime;
     float2 vMaskingTime = g_ParticleValue[In.iGPUIndex].vMaskingUVMoveTime;
     float2 vNoiseUVMoveTime = g_ParticleValue[In.iGPUIndex].vNoiseUVMoveTime;
+    float2 vDistortionUVMoveTime = g_ParticleValue[In.iGPUIndex].vDistortionUVMoveTime;
     
     if (g_isDiffuse == true)
     {
@@ -283,57 +294,74 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
             UV += SelectLerpUV((g_vDiffuseUVGainAmount / g_vUVCutting), (vDiffuseTime.x / vDiffuseTime.y), g_iDiffuseMoveLerpOption);
         }
 
-        /* 노이즈 */
-        if (g_isNoise == true)
+        /*  디퓨즈 디스토션 */
+        if (g_isDistortion == true)
         {
             
-            float2 vNoiseUV = In.vTexcoord + SelectLerpUV(g_vDiffuseNoiseUVGainAmount, (vNoiseUVMoveTime.x / vNoiseUVMoveTime.y), g_iDiffuseNoiseMoveLerpOption);
+            float2 vDistortion = In.vTexcoord + SelectLerpUV(g_vDiffuseDistortionUVGainAmount, (vDistortionUVMoveTime.x / vDistortionUVMoveTime.y), g_iDiffuseDistortionMoveLerpOption);
             
-            vMtrlNoise = g_NoiseTexture.Sample(DefaultSampler, vNoiseUV);
+            vMtrlDistortion = g_DistortionTexture.Sample(DefaultSampler, vDistortion);
 
             //0.5f를 빼는 이유는 중심을 0으로 옮겨서 양음수 방향으로 offset을 줄수 있다.
-            vMtrlNoise.rg -= 0.5f;
+            vMtrlDistortion.rg -= 0.5f;
                         
             //아마 분할되었다면 noise도 분할해야할듯 
-            vMtrlNoise.rg /= g_vUVCutting;
+            vMtrlDistortion.rg /= g_vUVCutting;
             
-            //노이즈 텍스쳐로 uv를 왜곡함
+            //디스토션(노이즈) 텍스쳐로 uv를 왜곡함
 
-            UV = UV + (vMtrlNoise).rg * g_fNoiseDistortionIntensity;
+            UV = UV + (vMtrlDistortion).rg * g_fNoiseDistortionIntensity;
+            
         }
         
  
         /* 최종 색깔  */
         vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, UV);
         
+ 
+        
         if (g_vColor.a > 0)
             vMtrlDiffuse += g_vColor;
         
-        if (vMtrlDiffuse.a < 0.3f)
-            discard;
-
     }
     else
     {
         vMtrlDiffuse = g_vColor;
     }
     
+    
+    /*  노이즈 */
+   
+    if(g_isNoise)
+    {
+        float2 vNoiseUV = In.vTexcoord + SelectLerpUV(g_vNoiseUVGainAmount, (vNoiseUVMoveTime.x / vNoiseUVMoveTime.y), g_iNoiseMoveLerpOption);
+        
+        vMtrlNoise = g_NoiseTexture.Sample(DefaultSampler, vNoiseUV);
+        
+        vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * vMtrlNoise.r);
+        
+        vMtrlDiffuse *= vMtrlNoise;
+    }
+    
+    /* 마스크 */ 
     if (g_isMasking == true)
     {
         float2 vMaskTexcoord = In.vTexcoord;
         
         vMaskTexcoord = UV_Cutting(In.vTexcoord, g_vUVMaskCutting, int(fAnimIndex.x));
         
-        if (g_isNoise == true)
+        // 마스크 디스토션 
+        if (g_isDistortion == true)
         {
             float2 UV; // 이미지의 UV값
                
-            float2 vNoiseUV = In.vTexcoord + SelectLerpUV(g_vMaskNoiseUVGainAmount, (vNoiseUVMoveTime.x / vNoiseUVMoveTime.y), g_iMaskNoiseMoveLerpOption);
+            float2 vDistortionUV = In.vTexcoord + SelectLerpUV(g_vMaskDistortionUVGainAmount, (vDistortionUVMoveTime.x / vDistortionUVMoveTime.y), g_iMaskDistortionMoveLerpOption);
             
-            vMtrlNoise = g_NoiseTexture.Sample(DefaultSampler, vNoiseUV);
+            vMtrlDistortion = g_DistortionTexture.Sample(DefaultSampler, vDistortionUV);
             
-            //노이즈 텍스쳐로 uv를 왜곡함
-            vMaskTexcoord = vMaskTexcoord + (vMtrlNoise - 0.5f).rg * g_fNoiseDistortionIntensity;
+            //디스토션(노이즈) 텍스쳐로 uv를 왜곡함
+            vMaskTexcoord = vMaskTexcoord + (vMtrlDistortion - 0.5f).r  * g_fNoiseDistortionIntensity;
+            
         }
         
         if (g_isMaskUVMove)
@@ -343,6 +371,7 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
         }
         
         vMtrlMask = g_MaskingTexture.Sample(PointSampler, vMaskTexcoord);
+
     }
     else
     {
@@ -353,6 +382,8 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     
     vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * vMtrlMask.r);
     
+
+    
     if (vMtrlDiffuse.a <= 0.f)
         discard;
     
@@ -360,15 +391,26 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     {
         vMtrlDissolve = g_DissolveTexture.Sample(DefaultSampler, In.vTexcoord);
         
-        if (vMtrlDissolve.r < (In.vLifeTime.x / In.vLifeTime.y))
-            discard;
+        if(g_isReverseDissolve == true)
+        {
+            if (vMtrlDissolve.r >= (In.vLifeTime.x / In.vLifeTime.y))
+                discard;
+        }
+        else
+        {
+            if (vMtrlDissolve.r < (In.vLifeTime.x / In.vLifeTime.y))
+                discard;
+        }
+
+        
+        
     }
     
-
+    vMtrlDiffuse.a *= g_fDiffuseAlpha;
     
     // 색깔 추가할 처리 (이미시브)
     
-    float4 vEmissiveMtrl;
+    float4 vEmissiveMtrl = vector(0.f ,0.f ,0.f ,0.f);
     
     if (g_isEmissive == true)
     {
@@ -380,20 +422,29 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     
     float fDepthStencilValue = g_DepthStencilTexture.Load(int3(iTexel, 0)).r;
     
-    float fbias = 0.00005f;
+    float fbias = 0.000005f;
     
     if (fDepthStencilValue <= In.vProjPos.z / In.vProjPos.w + fbias)
         discard;
     
-    
-    
     Out = BlendedWeight(vMtrlDiffuse, In.vProjPos.w);
     
-        
-    //if (vMtrlDiffuse.a >= g_fEmissiveCutAlpha)
-    //    Out.vColorTarget = vector(g_vEmissive.rgb + vEmissiveMtrl.rgb, g_fColorOption / 10.f);
-    //else
-    //    Out.vColorTarget = vector(0.f, 0.f, 0.f, 0.f);
+
+    float fEmissiveCutAlpha = g_fEmissiveCutAlpha;
+    
+    if (g_isEmissiveDissolve == true)
+    {
+        fEmissiveCutAlpha += (In.vLifeTime.x / In.vLifeTime.y) / 2;
+    }
+    
+    float fSmoothAlpha = smoothstep(fEmissiveCutAlpha - 0.1f, fEmissiveCutAlpha + 0.1f, vMtrlDiffuse.a);
+    
+   
+    
+    float3 vEmissiveColor = g_vEmissive.rgb * g_vEmissive.a + vEmissiveMtrl.rgb * (1 - g_vEmissive.a);
+    
+    Out.vColorTarget = vector(vEmissiveColor * fSmoothAlpha, vMtrlDiffuse.a);
+
     
     return Out;
 }
@@ -414,7 +465,7 @@ VS_BLUR_OUT VS_BLUR(VS_IN In, uint iGPUIndex : SV_InstanceID)
     
     row_major matrix TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
     
-    matW = mul(g_WorldMatrix, TransformMatrix);
+    matW = mul(TransformMatrix, g_WorldMatrix);
     matWV = mul(matW, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
     
@@ -441,7 +492,6 @@ struct PS_BLUR_IN
 struct PS_BLUR_OUT
 {
     float4 vDiffuse : SV_TARGET0;
-    float4 vBlurWeight : SV_TARGET1;
 };
 
 
@@ -450,16 +500,17 @@ PS_BLUR_OUT PS_BLUR(PS_BLUR_IN In)
    
     PS_BLUR_OUT Out;
     
-       
     vector vMtrlDiffuse;
     vector vMtrlMask;
     vector vMtrlNoise;
     vector vMtrlDissolve;
+    vector vMtrlDistortion;
     
     float fAnimIndex = g_ParticleValue[In.iGPUIndex].vAniIndex.x;
     float2 vDiffuseTime = g_ParticleValue[In.iGPUIndex].vDiffuseUVMoveTime;
     float2 vMaskingTime = g_ParticleValue[In.iGPUIndex].vMaskingUVMoveTime;
     float2 vNoiseUVMoveTime = g_ParticleValue[In.iGPUIndex].vNoiseUVMoveTime;
+    float2 vDistortionUVMoveTime = g_ParticleValue[In.iGPUIndex].vDistortionUVMoveTime;
     
     if (g_isDiffuse == true)
     {
@@ -472,57 +523,74 @@ PS_BLUR_OUT PS_BLUR(PS_BLUR_IN In)
             UV += SelectLerpUV((g_vDiffuseUVGainAmount / g_vUVCutting), (vDiffuseTime.x / vDiffuseTime.y), g_iDiffuseMoveLerpOption);
         }
 
-        /* 노이즈 */
-        if (g_isNoise == true)
+        /*  디퓨즈 디스토션 */
+        if (g_isDistortion == true)
         {
             
-            float2 vNoiseUV = In.vTexcoord + SelectLerpUV(g_vDiffuseNoiseUVGainAmount, (vNoiseUVMoveTime.x / vNoiseUVMoveTime.y), g_iDiffuseNoiseMoveLerpOption);
+            float2 vDistortion = In.vTexcoord + SelectLerpUV(g_vDiffuseDistortionUVGainAmount, (vDistortionUVMoveTime.x / vDistortionUVMoveTime.y), g_iDiffuseDistortionMoveLerpOption);
             
-            vMtrlNoise = g_NoiseTexture.Sample(DefaultSampler, vNoiseUV);
+            vMtrlDistortion = g_DistortionTexture.Sample(DefaultSampler, vDistortion);
 
             //0.5f를 빼는 이유는 중심을 0으로 옮겨서 양음수 방향으로 offset을 줄수 있다.
-            vMtrlNoise.rg -= 0.5f;
+            vMtrlDistortion.rg -= 0.5f;
                         
             //아마 분할되었다면 noise도 분할해야할듯 
-            vMtrlNoise.rg /= g_vUVCutting;
+            vMtrlDistortion.rg /= g_vUVCutting;
             
-            //노이즈 텍스쳐로 uv를 왜곡함
+            //디스토션(노이즈) 텍스쳐로 uv를 왜곡함
 
-            UV = UV + (vMtrlNoise).rg * g_fNoiseDistortionIntensity;
+            UV = UV + (vMtrlDistortion).rg * g_fNoiseDistortionIntensity;
+            
         }
         
  
         /* 최종 색깔  */
         vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, UV);
         
+ 
+        
         if (g_vColor.a > 0)
             vMtrlDiffuse += g_vColor;
         
-        if (vMtrlDiffuse.a < 0.3f)
-            discard;
-
     }
     else
     {
         vMtrlDiffuse = g_vColor;
     }
     
+    
+    /*  노이즈 */
+   
+    if (g_isNoise)
+    {
+        float2 vNoiseUV = In.vTexcoord + SelectLerpUV(g_vNoiseUVGainAmount, (vNoiseUVMoveTime.x / vNoiseUVMoveTime.y), g_iNoiseMoveLerpOption);
+        
+        vMtrlNoise = g_NoiseTexture.Sample(DefaultSampler, vNoiseUV);
+        
+        vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * vMtrlNoise.r);
+        
+        vMtrlDiffuse *= vMtrlNoise;
+    }
+    
+    /* 마스크 */ 
     if (g_isMasking == true)
     {
         float2 vMaskTexcoord = In.vTexcoord;
         
         vMaskTexcoord = UV_Cutting(In.vTexcoord, g_vUVMaskCutting, int(fAnimIndex.x));
         
-        if (g_isNoise == true)
+        // 마스크 디스토션 
+        if (g_isDistortion == true)
         {
             float2 UV; // 이미지의 UV값
                
-            float2 vNoiseUV = In.vTexcoord + SelectLerpUV(g_vMaskNoiseUVGainAmount, (vNoiseUVMoveTime.x / vNoiseUVMoveTime.y), g_iMaskNoiseMoveLerpOption);
+            float2 vDistortionUV = In.vTexcoord + SelectLerpUV(g_vMaskDistortionUVGainAmount, (vDistortionUVMoveTime.x / vDistortionUVMoveTime.y), g_iMaskDistortionMoveLerpOption);
             
-            vMtrlNoise = g_NoiseTexture.Sample(DefaultSampler, vNoiseUV);
+            vMtrlDistortion = g_DistortionTexture.Sample(DefaultSampler, vDistortionUV);
             
-            //노이즈 텍스쳐로 uv를 왜곡함
-            vMaskTexcoord = vMaskTexcoord + (vMtrlNoise - 0.5f).rg * g_fNoiseDistortionIntensity;
+            //디스토션(노이즈) 텍스쳐로 uv를 왜곡함
+            vMaskTexcoord = vMaskTexcoord + (vMtrlDistortion - 0.5f).r * g_fNoiseDistortionIntensity;
+            
         }
         
         if (g_isMaskUVMove)
@@ -532,6 +600,7 @@ PS_BLUR_OUT PS_BLUR(PS_BLUR_IN In)
         }
         
         vMtrlMask = g_MaskingTexture.Sample(PointSampler, vMaskTexcoord);
+
     }
     else
     {
@@ -542,27 +611,43 @@ PS_BLUR_OUT PS_BLUR(PS_BLUR_IN In)
     
     vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * vMtrlMask.r);
     
-    if (g_isDissolve == true)
-    {
-        vMtrlDissolve = g_DissolveTexture.Sample(DefaultSampler, In.vTexcoord);
-        
-        if (vMtrlDissolve.r < (In.vLifeTime.x / In.vLifeTime.y))
-            discard;
-    }
 
     
-    vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * vMtrlMask.r);
+    if (vMtrlDiffuse.a <= 0.f)
+        discard;
     
     if (g_isDissolve == true)
     {
         vMtrlDissolve = g_DissolveTexture.Sample(DefaultSampler, In.vTexcoord);
         
-        if (vMtrlDissolve.r < (In.vLifeTime.x / In.vLifeTime.y))
-            discard;
+        if (g_isReverseDissolve == true)
+        {
+            if (vMtrlDissolve.r >= (In.vLifeTime.x / In.vLifeTime.y))
+                discard;
+        }
+        else
+        {
+            if (vMtrlDissolve.r < (In.vLifeTime.x / In.vLifeTime.y))
+                discard;
+        }
+
     }
     
-    Out.vDiffuse = vMtrlDiffuse * g_fBlurIntensity;
-    Out.vBlurWeight.r = g_iBlurWeight / 32.f;
+    vMtrlDiffuse.a *= g_fDiffuseAlpha;
+    
+    // 색깔 추가할 처리 (이미시브)
+    
+    vector vEmissive;
+    
+    float4 vEmissiveMtrl = vector(0.f, 0.f, 0.f, 0.f);
+    
+    float fSmoothAlpha = smoothstep(g_fEmissiveCutAlpha - 0.02f, g_fEmissiveCutAlpha + 0.02f, vMtrlDiffuse.a);
+
+    float3 vEmissiveColor = g_vEmissive.rgb * g_vEmissive.a + vEmissiveMtrl.rgb * (1 - g_vEmissive.a);
+    
+    vEmissive = vector(vEmissiveColor * fSmoothAlpha, vMtrlDiffuse.a);
+    
+    Out.vDiffuse = vMtrlDiffuse * g_fBlurIntensity + vEmissive;
     
     return Out;
 }
@@ -584,7 +669,7 @@ technique11 DefaultTechnique
     {
         SetRasterizerState(RS_Nocull);
         SetDepthStencilState(DSS_None, 0);
-        SetBlendState(BS_WB_Acc, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_NON_NORMALMAP();
@@ -593,7 +678,7 @@ technique11 DefaultTechnique
     pass Blur
     {
         SetRasterizerState(RS_Nocull);
-        SetDepthStencilState(DSS_Default, 0);
+        SetDepthStencilState(DSS_Effect, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_BLUR();
         GeometryShader = NULL;

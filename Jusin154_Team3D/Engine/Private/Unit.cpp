@@ -4,12 +4,12 @@
 #include "GameInstance.h"
 
 CUnit::CUnit(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+	: CContainerObject(pDevice, pContext)
 {
 }
 
 CUnit::CUnit(const CUnit& Prototype)
-	: CGameObject(Prototype)
+	: CContainerObject(Prototype)
 {
 }
 
@@ -30,15 +30,17 @@ HRESULT CUnit::Initialize(void* pArg)
 
 void CUnit::Priority_Update(_float fTimeDelta)
 {
-
+	__super::Priority_Update(fTimeDelta);
 }
 
 void CUnit::Update(_float fTimeDelta)
 {
+	__super::Update(fTimeDelta);
 }
 
 void CUnit::Late_Update(_float fTimeDelta)
 {
+	__super::Late_Update(fTimeDelta);
 }
 
 HRESULT CUnit::Render()
