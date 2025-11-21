@@ -35,6 +35,8 @@ public:
 		return !strcmp(pChannelname, m_szName);
 	}
 	_char* Get_Name() { return m_szName; }
+	KEYFRAME_DESC Get_KeyFrameDesc() { return m_KeyFrame; }
+	_int Get_KeyFrameCount() { return (_int)m_KeyFrames.size(); }
 private:
 	HRESULT Initialize(HANDLE hFile, DWORD& dwByte);
 	// 바이너리
@@ -53,7 +55,9 @@ private:
 	_matrix					m_BoneTransformationMatrix = {};
 	_float m_fPrevYaw = 0.f;
 	_bool m_bInitialRootRotSaved = {false};
-_float4 m_vInitialRootRot = {};
+	_float4 m_vInitialRootRot = {};
+
+	KEYFRAME_DESC m_KeyFrame;
 public:
 	static CChannel* Create(const vector<class CBone*>& Bones, _uint iIndex); // 럴프전용
 	static CChannel* Create(HANDLE hFile, DWORD& dwByte);

@@ -27,14 +27,13 @@ public:
 	_float3 Get_LocalPosition();
 	void Update_CombinedTransformationMatrix(const vector<CBone*>& Bones, _fmatrix PreTransformMatrix);
 	void Set_TransformationMatrix(_fmatrix TransformationMatrix); // 애니메이션에서 현재 로컬 매트릭스를 변경할 때 사용된다
-
+	_int Get_ParentBoneIndex() { return m_iParentBoneIndex; }
 private:
 	_char m_szName[MAX_PATH] = {};						// 본의 이름
 	_float4x4 m_TransformationMatrix = {};				// 본의 현재 로컬 매트릭스
 	_float4x4 m_CombinedTransformationMatrix = {};		// 본의 루트노드로부터 상대적인 복합매트릭스 ( 부모노드는 PreTranformMatrix와 월드좌표로부터 상대적임 )
 	_int m_iParentBoneIndex = { -1 };					// 부모본의 인덱스 ( 모델에 있는 본벡터의 인덱스 ) ( 부모는 인덱스 -1 고정 )
 	_float4x4 m_matInitial = {};
-
 private:
 	HRESULT Initialize(HANDLE hFile, DWORD& dwByte);
 	// 바이너리

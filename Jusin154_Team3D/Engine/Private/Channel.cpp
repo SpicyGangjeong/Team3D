@@ -54,6 +54,12 @@ HRESULT CChannel::Initialize(const vector<CBone*>& Bones, const aiNodeAnim* pAIC
 		KeyFrame.vRotation = vRotation;
 		KeyFrame.vTranslation = vTranslation;
 
+
+		m_KeyFrame.fTrackPosition = KeyFrame.fTrackPosition;
+		m_KeyFrame.vScale = vScale;
+		m_KeyFrame.vRotation = vRotation;
+		m_KeyFrame.vTranslation = vTranslation;
+
 		m_KeyFrames.push_back(KeyFrame);
 	}
 
@@ -300,6 +306,11 @@ HRESULT CChannel::Initialize(const CModel* pModel, SaveChannel* pSaveChannel)
 		KeyFrame.vScale = vScale;
 		KeyFrame.vRotation = vRotation;
 		KeyFrame.vTranslation = vTranslation;
+
+		m_KeyFrame.fTrackPosition = KeyFrame.fTrackPosition;
+		m_KeyFrame.vScale = vScale;
+		m_KeyFrame.vRotation = vRotation;
+		m_KeyFrame.vTranslation = vTranslation;
 
 		m_KeyFrames.push_back(KeyFrame);
 	}

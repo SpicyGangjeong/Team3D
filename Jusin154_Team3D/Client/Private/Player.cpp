@@ -83,8 +83,6 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 
 void CPlayer::Update(_float fTimeDelta)
 {
-	m_pModelCom->ComputeSkinning();
-
 	Key_Input(fTimeDelta);
 
 	m_pFSM->Update(fTimeDelta);
@@ -123,9 +121,6 @@ HRESULT CPlayer::Render()
 		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
 			return E_FAIL;
 		}
-
-		if (FAILED(m_pModelCom->Bind_CS_Output(5, i)))
-			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;

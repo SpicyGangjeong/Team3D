@@ -187,6 +187,24 @@ void CAnimation::InterpAnim(CAnimation* pPreAnim, vector<CBone*>& Bones, float f
 
 #ifdef EDITOR_PROJECT
 
+void CAnimation::Set_KeyFrameDesc()
+{
+	for (auto& Channel : m_Channels)
+	{
+		m_KeyFrame.push_back(Channel->Get_KeyFrameDesc());
+	}
+}
+
+_uint CAnimation::Get_KeyFrameCount()
+{
+	for (auto& Channel : m_Channels)
+	{
+		m_KeyCount+=Channel->Get_KeyFrameCount();
+	}
+
+	return m_KeyCount;
+}
+
 HRESULT CAnimation::Initialize(const vector<CBone*>& Bones, const aiAnimation* pAIAnimation)
 {
 	m_strName = pAIAnimation->mName.data;
@@ -216,6 +234,8 @@ HRESULT CAnimation::Initialize(const vector<CBone*>& Bones, const aiAnimation* p
 	if (FAILED(Combined_Initialize())) {
 		return E_FAIL;
 	}
+
+
 	return S_OK;
 }
 HRESULT CAnimation::SaveAsBinary(HANDLE hFile, DWORD& dwByte)

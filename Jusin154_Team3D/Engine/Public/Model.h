@@ -7,32 +7,15 @@ NS_BEGIN(Engine)
 class ENGINE_DLL CModel final : public CComponent
 {
 public:
-	typedef struct tagMeshDesc
+	typedef struct tagAnimStateDesc
 	{
-		_float3		vPosition = {};
-		_float3		vNormal = {};
-		_float3		vTangent = {};
-		_float3		vBinormal = {};
-		_float2			vTexcoord = {};
+		_float CurrentTime;
+		_float Duration;
+		_float Speed;
+		_int BoneCount;
+		_float4x4 PreTransformMatrix;
 
-		XMUINT4			vBlendIndex = {};
-		_float4			vBlendWeight = {};
-	}MESH_DESC;
-
-	typedef struct tagSkinngMeshDesc
-	{
-		_float3			vPosition = {};
-		_float3			vNormal = {};
-		_float3			vTangent = {};
-		_float3			vBinormal = {};
-		_float2			vTexcoord = {};
-
-	}SKINNG_MESH_DESC;
-
-	typedef struct tagBoneDesc
-	{
-		_float4x4 BoneMatrix[512];
-	}BONE_DESC;
+	}ANIMSTATE_DESC;
 
 private:
 	CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -94,9 +77,13 @@ static	_int Get_BoneIndex(const _char* pBoneName, vector<class CBone*> Bones);	/
 		HRESULT Bind_Material(_uint iMeshIndex, class CShader* pShader);
 
 #pragma endregion
-		void ComputeSkinning();
+
 		void Create_Con();
 		HRESULT			Bind_CS_Output(_uint Index, _uint iBufferIndex);
+		void UpdateAnimationCS();
+		void ComputeAnimation();
+		HRESULT Create_KeyFrameVB();
+		HRESULT Create_BoneInfoVB();
 		void Get_BoneMatrix();
 
 public:
@@ -169,13 +156,15 @@ private:
 private:
 	HRESULT			Create_CS();
 
-	MESH_DESC				m_MeshDesc = {};
-	BONE_DESC				m_BoneDesc = {};
 	_uint					m_iNumBuffer = {};
+	vector<KEYFRAME_DESC> m_KeyFrame = {};
+	vector<BONEINFO_DESC> m_BoneInfo = {};
 
 	class CComputeShader* m_pComputeShader = {};
 	ID3D11Buffer* m_pConstantBuffer = { nullptr };
-	_uint AccumulatedVertexCount = {};
+
+	ID3D11Buffer* m_pKeyFrameBuffer = { nullptr };
+	ID3D11Buffer* m_pBoneInfoBuffer = { nullptr };
 
 private:
 	// 바이너리

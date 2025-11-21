@@ -358,4 +358,27 @@ typedef struct tagOnCollsionInfo
 
 }ON_COLLISION_INFO;
 
+typedef struct tagKeyFrameDesc
+{
+	_float3 vScale;
+	_float4 vRotation;
+	_float3 vTranslation;
+	_float fTrackPosition;
+
+}KEYFRAME_DESC;
+
+typedef struct tagBoneInfo
+{
+	_int ParentIndex;
+
+}BONEINFO_DESC;
+
+
+typedef struct tagBoneMatrix
+{
+	_float4x4 LocalMatrix;
+	_float4x4 CombinedMatrix;
+
+}BONE_DESC;
+
 NS_END

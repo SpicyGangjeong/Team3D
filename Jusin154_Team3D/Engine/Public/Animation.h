@@ -29,6 +29,13 @@ public:
 	_float Get_CurrentTrackPosition() { return m_fCurrentTrackPosition; }
 	void Set_AnimSpeed(_float fSpeed) { m_fAnimSpeed = fSpeed; }
 	_float Get_AnimSpeed() { return m_fAnimSpeed; }
+
+	_uint Get_ChannelCount() { return m_iNumChannels; }
+	_float Get_Duration() { return m_fDuration; }
+	void Set_KeyFrameDesc();
+	KEYFRAME_DESC Get_KeyFrameDesc(_uint iIndex) { return m_KeyFrame[iIndex]; }
+	_uint Get_KeyCount() { return (_uint)m_KeyFrame.size(); }
+	_uint Get_KeyFrameCount();
 #ifdef EDITOR_PROJECT
 private:
 	HRESULT Initialize(const vector<class CBone*>& Bones, const aiAnimation* pAIAnimation);
@@ -64,6 +71,10 @@ private:
 	vector<_int>			m_DestBones;					// 이 애니메이션에서 영향을 받는 본들의 집합
 	vector<LERPDESC>		m_StartKeyFrames;	// 이 애니메이션의 영향을 받는 본들의 초기값
 	vector<_matrix>				m_vBoneTransformationMatrix = {};
+
+	_int						m_iRawVertexStride = {};
+	vector<KEYFRAME_DESC> m_KeyFrame;
+	_int m_KeyCount = {};
 public:
 	static CAnimation* Create(HANDLE hFile, DWORD& dwByte);
 	// 바이너리

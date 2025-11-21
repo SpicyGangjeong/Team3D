@@ -39,8 +39,6 @@ void CBroom::Priority_Update(_float fTimeDelta)
 void CBroom::Update(_float fTimeDelta)
 {
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
-
-	m_pModelCom->ComputeSkinning();
 }
 
 void CBroom::Late_Update(_float fTimeDelta)
@@ -61,6 +59,9 @@ HRESULT CBroom::Render()
 
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
+		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
+			return E_FAIL;
+		}
 
 		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
@@ -68,9 +69,6 @@ HRESULT CBroom::Render()
 		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
 			return E_FAIL;
 		}
-
-		if (FAILED(m_pModelCom->Bind_CS_Output(5, i)))
-			return E_FAIL;
 
 
 		if (FAILED(m_pModelCom->Render(i))) {
