@@ -35,7 +35,8 @@ typedef struct tagFolderLoad {
 	CModel*								pLoadedModel;
 	filesystem::path					pathModel;
 
-	vector<const _tchar*>				pRigidBodyTags;
+	_bool								bLoadTags;
+	vector<_wstring>					pRigidBodyTags;
 	vector<CRigidBody_Static*>			LoadedRigidBody;
 }FOLDER_LOAD;
 
