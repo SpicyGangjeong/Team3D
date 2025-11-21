@@ -1,30 +1,30 @@
 ﻿#include "pch.h"
-#include "Spell_Image.h"
+#include "Slot_Number.h"
 #include "GameInstance.h"
 
-CSpell_Image::CSpell_Image(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	:CElementObject(pDevice, pContext)
+CSlot_Number::CSlot_Number(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+    :CElementObject(pDevice, pContext)
 {
 }
 
-CSpell_Image::CSpell_Image(const CSpell_Image& rhs)
-	:CElementObject(rhs)
+CSlot_Number::CSlot_Number(const CSlot_Number& rhs)
+    :CElementObject(rhs)
 {
 }
 
-HRESULT CSpell_Image::Initialize_Prototype()
+HRESULT CSlot_Number::Initialize_Prototype()
 {
-	return S_OK;
+    return S_OK;
 }
 
-HRESULT CSpell_Image::Initialize(void* pArg)
+HRESULT CSlot_Number::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = -1.f;
-	Desc.fY = 0.f;
-	Desc.fSizeX = 100.f;
-	Desc.fSizeY = 100.f;
+	Desc.fX = 0.f;
+	Desc.fY = 98.f;
+	Desc.fSizeX = 150.f;
+	Desc.fSizeY = 150.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -37,15 +37,20 @@ HRESULT CSpell_Image::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	m_fTimeMult = 3.f;
-	m_fAngle = XMConvertToRadians(-135.f);
 	m_fAlpha = 1.f;
+	m_fTimeMult = 3.f;
+	m_fAngle = XMConvertToRadians(-135);
 	m_fAlphaTime = 1.f;
-	m_fSortZ = 1.f;
+	m_fOffSetX = 101.f;
+	m_fOffSetY = 101.f;
+	m_iCols = 4;
+	m_pVIBufferCom->Set_Cloned(true);
+	m_pVIBufferCom->Set_Pos(m_fX, m_fY, m_fOffSetX, m_fOffSetY, m_iCols);
+	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
 	return S_OK;
 }
 
-void CSpell_Image::Priority_Update(_float fTimeDelta)
+void CSlot_Number::Priority_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -54,7 +59,7 @@ void CSpell_Image::Priority_Update(_float fTimeDelta)
 	__super::Priority_Update(fTimeDelta);
 }
 
-void CSpell_Image::Update(_float fTimeDelta)
+void CSlot_Number::Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -84,49 +89,73 @@ void CSpell_Image::Update(_float fTimeDelta)
 			m_fAlpha = 0.f;
 		}
 	}
-
 	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
 }
 
-void CSpell_Image::Late_Update(_float fTimeDelta)
+void CSlot_Number::Late_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
 		return;
 	}
-	if (m_bVisible) {
-		if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
+	if (m_bVisible)
+	{
+		if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius()))
+		{
 			m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
 		}
-		__super::Late_Update(fTimeDelta);
 	}
+	__super::Late_Update(fTimeDelta);
 }
 
-HRESULT CSpell_Image::Render()
+HRESULT CSlot_Number::Render()
 {
-	if (FAILED(Bind_ShaderResources())) {
+	if (FAILED(Bind_ShaderResources()))
+	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::ROTATION)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::DEFAULT))))
+	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
+	if (FAILED(m_pVIBufferCom->Bind_Resources()))
+	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pVIBufferCom->Render())) {
+	if (FAILED(m_pVIBufferCom->Render()))
+	{
 		return E_FAIL;
 	}
 
 	return S_OK;
 }
 
-_vector CSpell_Image::Get_WorldPostion()
+_vector CSlot_Number::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
 }
 
-HRESULT CSpell_Image::Bind_ShaderResources()
+void CSlot_Number::SizeUpX(_float fSizeX)
+{
+	m_fSizeX = fSizeX;
+	m_pVIBufferCom->Set_SizeX(m_fSizeX);
+}
+
+void CSlot_Number::SizeUpY(_float fSizeY)
+{
+	m_fSizeY = fSizeY;
+	m_pVIBufferCom->Set_SizeY(m_fSizeY);
+}
+
+void CSlot_Number::SizeUpdate(_float fSizeX, _float fSizeY)
+{
+	m_fSizeX = fSizeX;
+	m_fSizeY = fSizeY;
+	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
+}
+
+HRESULT CSlot_Number::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 	{
@@ -144,15 +173,7 @@ HRESULT CSpell_Image::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pDiffuse_TextureCom1->Bind_ShaderResource(m_pShaderCom, "g_Texture1", 0)))
-	{
-		return E_FAIL;
-	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float))))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fTime", &m_fTime, sizeof(_float))))
 	{
 		return E_FAIL;
 	}
@@ -172,65 +193,63 @@ HRESULT CSpell_Image::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	return S_OK;
-}
-HRESULT CSpell_Image::Ready_Components(void* pArg)
-{
-	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_ActionItemBack_4K"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_spellmeter_Accio_Overlay"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, FX_UIEDITOR, (CComponent**)&m_pShaderCom, nullptr)))
-	{
-		return E_FAIL;
-	}
+
 	return S_OK;
 }
 
-CSpell_Image* CSpell_Image::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+HRESULT CSlot_Number::Ready_Components(void* pArg)
 {
-	CSpell_Image* pInstance = new CSpell_Image(pDevice, pContext);
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_UI_Instance"), (CComponent**)&m_pVIBufferCom, nullptr)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_ActionItemGoldleaf_4K"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, FX_UIINSTANCE, (CComponent**)&m_pShaderCom, nullptr)))
+	{
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+CSlot_Number* CSlot_Number::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+{
+	CSlot_Number* pInstance = new CSlot_Number(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CSpell_Image");
+		MSG_BOX("Failed to Created : CSlot_Number");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CSpell_Image::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CSlot_Number::Clone(void* pArg, CGameObject* pOwner)
 {
-	CSpell_Image* pInstance = new CSpell_Image(*this);
+	CSlot_Number* pInstance = new CSlot_Number(*this);
 	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CSpell_Image");
+		MSG_BOX("Failed to Cloned : CSlot_Number");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CSpell_Image::Free()
+void CSlot_Number::Free()
 {
 	__super::Free();
 
 	SAFE_RELEASE(m_pDiffuse_TextureCom);
-	SAFE_RELEASE(m_pDiffuse_TextureCom1);
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
-void CSpell_Image::Describe_Entity()
+void CSlot_Number::Describe_Entity()
 {
 }

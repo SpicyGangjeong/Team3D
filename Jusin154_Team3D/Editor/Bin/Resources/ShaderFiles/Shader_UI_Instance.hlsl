@@ -29,14 +29,17 @@ VS_OUT VS_MAIN(VS_IN In)
 {
     VS_OUT Out;
 
-    matrix matWV = mul(g_WorldMatrix, g_ViewMatrix);
-    matrix matWVP = mul(matWV, g_ProjMatrix);
+    matrix matVP = mul(g_ViewMatrix, g_ProjMatrix);
 
-    float3 scaledPos = In.vPosition;
-    scaledPos.xy *= In.vSize; // 인스턴스 스케일 적용
-    scaledPos.xy += In.Pos; // 인스턴스 위치 적용
+    float3 vLocalPos = In.vPosition;
+    vLocalPos.xy *= In.vSize;
+    vLocalPos.xy += In.Pos; 
 
-    Out.vPosition = mul(float4(scaledPos, 1.f), matWVP);
+    float3 vParentPos = float3(g_WorldMatrix._41, g_WorldMatrix._42, g_WorldMatrix._43);
+
+    float3 vFinalWorldPos = vLocalPos + vParentPos;
+
+    Out.vPosition = mul(float4(vFinalWorldPos, 1.f), matVP);
     Out.vTexcoord = In.vTexcoord;
 
     return Out;

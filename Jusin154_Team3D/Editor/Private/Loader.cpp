@@ -401,16 +401,23 @@ HRESULT CLoader::Loading_For_UI()
 
 	m_strMessage = TEXT("Model Loading..");
 
-	CVIBuffer_UI_Instance::UI_INSTANCE_DESC UIDesc{};
+	CVIBuffer_UI_Instance::UI_INSTANCE_DESC SpellSlotUIDesc{};
 
-	UIDesc.iNum = 4;
-	UIDesc.vSize = _float2(1.f,1.f);
-	UIDesc.fPositionOffSetX = 75.f;
-	UIDesc.fPositionOffSetY = 0.f;
-	UIDesc.vPsition = _float2(100.f, 100.f);
+	SpellSlotUIDesc.iNum = 4;
+	SpellSlotUIDesc.vPsition = _float2(100.f, 100.f);
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_UI_Instance"),
-		CVIBuffer_UI_Instance::Create(m_pDevice, m_pContext, &UIDesc)))) {
+		CVIBuffer_UI_Instance::Create(m_pDevice, m_pContext, &SpellSlotUIDesc)))) {
+		return E_FAIL;
+	}
+
+	CVIBuffer_UI_Instance::UI_INSTANCE_DESC SlotNumberUIDesc{};
+
+	SlotNumberUIDesc.iNum = 4;
+	SlotNumberUIDesc.vPsition = _float2(100.f, 100.f);
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Slot_Number_UI_Instance"),
+		CVIBuffer_UI_Instance::Create(m_pDevice, m_pContext, &SlotNumberUIDesc)))) {
 		return E_FAIL;
 	}
 
