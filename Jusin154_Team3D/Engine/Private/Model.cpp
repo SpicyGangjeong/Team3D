@@ -1317,10 +1317,10 @@ HRESULT CModel::Initialize(void* pArg)
 	m_pTransform = m_pOwner->Get_Component<CTransform>();
 	SAFE_ADDREF(m_pTransform);
 
-	Create_Con();
+	/*Create_Con();
 
 	if (FAILED(Create_CS()))
-		return E_FAIL;
+		return E_FAIL;*/
 
 
 
