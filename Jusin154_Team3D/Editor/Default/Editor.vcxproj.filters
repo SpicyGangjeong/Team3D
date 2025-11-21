@@ -336,6 +336,9 @@
     </Filter>
     <Filter Include="02.GameObjects\Dummys\DummyPhysX\PhysXEffectHitBox">
       <UniqueIdentifier>{7b7439b1-f2e5-4233-bf26-4db2b41307b7}</UniqueIdentifier>
+      </Filter>  
+    <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\Slot_Number">
+      <UniqueIdentifier>{0db597d8-c4e7-479a-9b7e-9014b79a5e03}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -663,6 +666,7 @@
     <ClInclude Include="..\Public\Dummy_PhysXEffectHitBox.h">
       <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXEffectHitBox</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Slot_Number.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -985,6 +989,7 @@
     <ClCompile Include="..\Private\Dummy_PhysXEffectHitBox.cpp">
       <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXEffectHitBox</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Slot_Number.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Editor.rc">

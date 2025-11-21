@@ -274,7 +274,6 @@ void CPhysX_Manager::Update(_float fTimeDelta)
 		//Update_Dynamic_AllActors();
 	}
 }
-
 void CPhysX_Manager::Update_Dynamic_ActiveActors()
 {
 	PSX::PxU32 iNumActiveActor = {};

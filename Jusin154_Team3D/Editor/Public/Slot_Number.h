@@ -5,12 +5,12 @@
 
 NS_BEGIN(Editor)
 
-class CSpell_Slot final : public CElementObject
+class CSlot_Number final : public CElementObject
 {
 private:
-	CSpell_Slot(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CSpell_Slot(const CSpell_Slot& rhs);
-	virtual ~CSpell_Slot() = default;
+	CSlot_Number(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CSlot_Number(const CSlot_Number& rhs);
+	virtual ~CSlot_Number() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -39,7 +39,7 @@ private:
 	_uint  m_iCols{};
 
 public:
-	static CSpell_Slot* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CSlot_Number* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 	void Describe_Entity() override;
