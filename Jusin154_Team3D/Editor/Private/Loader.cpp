@@ -1962,6 +1962,13 @@ for (_uint i = 0; i < Contents.size(); ++i) {
 
 	m_isFinished = true;
 
+	for (_uint i = 0; i < Contents.size(); ++i) {
+		for (_uint j = 0; j < (Contents[i])->size(); ++j) {
+			Safe_Delete((*Contents[i])[j]);
+		}
+		Safe_Delete(Contents[i]);
+	}
+
 	return S_OK;
 }
 
