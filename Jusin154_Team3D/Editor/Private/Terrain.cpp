@@ -28,6 +28,9 @@ HRESULT CTerrain::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
+	m_vRotation = _float3{ 0.f, 0.f, 0.f };
+	//m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-128.f, -100.f, -128.f, 1.f));
+
 	return S_OK;
 }
 
@@ -41,8 +44,20 @@ void CTerrain::Priority_Update(_float fTimeDelta)
 			m_pVIBufferCom->FitY(m_pTransformCom->Get_XMWorldMatrix(), m_vPickingPosition.y);
 		}
 	}
+	
+	GUI::InputFloat("Height Ratio", &m_fHeightRatio);
+	max(0.01f, m_fHeightRatio);
 
-	GUI::DragFloat3("Pos", (_float*)(&m_vPickingPosition));
+	//m_pVIBufferCom->Change_HeigthRatio(m_fHeightRatio);
+	GUI::DragFloat3("Picking", (_float*)(&m_vPickingPosition));
+	_float4 vPos = {};
+	_float3 vRotation = {};
+	XMStoreFloat4(&vPos, m_pTransformCom->Get_State(STATE::POSITION));
+	GUI::DragFloat3("Pos", (_float*)(&vPos));
+	GUI::DragFloat3("Rota", (_float*)(&m_vRotation));
+
+	m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
+	m_pTransformCom->Set_State(STATE::POSITION, XMLoadFloat4(&vPos));
 
 	GUI::End();
 }
@@ -50,6 +65,7 @@ void CTerrain::Priority_Update(_float fTimeDelta)
 void CTerrain::Update(_float fTimeDelta)
 {
 	m_pVIBufferCom->Culling(XMMatrixIdentity());
+
 }
 
 void CTerrain::Late_Update(_float fTimeDelta)
@@ -65,7 +81,7 @@ HRESULT CTerrain::Render()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NORTEX::TERRAIN)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NORTEX::DEFAULT)))) {
 		return E_FAIL;
 	}
 

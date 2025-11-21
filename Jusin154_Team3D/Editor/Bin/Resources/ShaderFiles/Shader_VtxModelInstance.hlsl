@@ -82,6 +82,7 @@ bool g_isMaskUVMove;
 bool g_isNoiseUVMove;
 
 bool g_isReverseDissolve;
+bool g_isEmissiveDissolve;
 
 float g_fFar;
 
@@ -158,11 +159,11 @@ VS_OUT VS_MAIN(VS_IN In, uint iGPUIndex : SV_InstanceID)
 {
     VS_OUT Out = (VS_OUT) 0;
 
-    row_major matrix matW, matWV, matWVP;
+    matrix matW, matWV, matWVP;
     
-    row_major matrix TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
+    matrix TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
     
-    matW = mul(g_WorldMatrix, TransformMatrix);
+    matW = mul(TransformMatrix, g_WorldMatrix);
     matWV = mul(matW, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
     
@@ -427,15 +428,23 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
         discard;
     
     Out = BlendedWeight(vMtrlDiffuse, In.vProjPos.w);
+    
 
-    if (vMtrlDiffuse.a / g_fDiffuseAlpha  > g_fEmissiveCutAlpha)
+    float fEmissiveCutAlpha = g_fEmissiveCutAlpha;
+    
+    if (g_isEmissiveDissolve == true)
     {
-        float3 vEmissiveColor= g_vEmissive.rgb * g_vEmissive.a + vEmissiveMtrl.rgb * (1 - g_vEmissive.a);
-        Out.vColorTarget = vector(vEmissiveColor, vMtrlDiffuse.a);
+        fEmissiveCutAlpha += (In.vLifeTime.x / In.vLifeTime.y) / 2;
     }
-       
-    else
-        Out.vColorTarget = vector(0.f, 0.f, 0.f, 0.f);
+    
+    float fSmoothAlpha = smoothstep(fEmissiveCutAlpha - 0.1f, fEmissiveCutAlpha + 0.1f, vMtrlDiffuse.a);
+    
+   
+    
+    float3 vEmissiveColor = g_vEmissive.rgb * g_vEmissive.a + vEmissiveMtrl.rgb * (1 - g_vEmissive.a);
+    
+    Out.vColorTarget = vector(vEmissiveColor * fSmoothAlpha, vMtrlDiffuse.a);
+
     
     return Out;
 }
@@ -456,7 +465,7 @@ VS_BLUR_OUT VS_BLUR(VS_IN In, uint iGPUIndex : SV_InstanceID)
     
     row_major matrix TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
     
-    matW = mul(g_WorldMatrix, TransformMatrix);
+    matW = mul(TransformMatrix, g_WorldMatrix);
     matWV = mul(matW, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
     
@@ -483,7 +492,6 @@ struct PS_BLUR_IN
 struct PS_BLUR_OUT
 {
     float4 vDiffuse : SV_TARGET0;
-    float4 vBlurWeight : SV_TARGET1;
 };
 
 
@@ -492,7 +500,6 @@ PS_BLUR_OUT PS_BLUR(PS_BLUR_IN In)
    
     PS_BLUR_OUT Out;
     
-       
     vector vMtrlDiffuse;
     vector vMtrlMask;
     vector vMtrlNoise;
@@ -540,6 +547,8 @@ PS_BLUR_OUT PS_BLUR(PS_BLUR_IN In)
         /* 최종 색깔  */
         vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, UV);
         
+ 
+        
         if (g_vColor.a > 0)
             vMtrlDiffuse += g_vColor;
         
@@ -582,8 +591,6 @@ PS_BLUR_OUT PS_BLUR(PS_BLUR_IN In)
             //디스토션(노이즈) 텍스쳐로 uv를 왜곡함
             vMaskTexcoord = vMaskTexcoord + (vMtrlDistortion - 0.5f).r * g_fNoiseDistortionIntensity;
             
-
-
         }
         
         if (g_isMaskUVMove)
@@ -599,8 +606,12 @@ PS_BLUR_OUT PS_BLUR(PS_BLUR_IN In)
     {
         vMtrlMask.r = 1.f;
     }
+    
 
+    
     vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * vMtrlMask.r);
+    
+
     
     if (vMtrlDiffuse.a <= 0.f)
         discard;
@@ -619,23 +630,24 @@ PS_BLUR_OUT PS_BLUR(PS_BLUR_IN In)
             if (vMtrlDissolve.r < (In.vLifeTime.x / In.vLifeTime.y))
                 discard;
         }
+
     }
     
     vMtrlDiffuse.a *= g_fDiffuseAlpha;
     
     // 색깔 추가할 처리 (이미시브)
     
+    vector vEmissive;
+    
     float4 vEmissiveMtrl = vector(0.f, 0.f, 0.f, 0.f);
     
-    if (g_isEmissive == true)
-    {
-        vEmissiveMtrl = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
-    }
+    float fSmoothAlpha = smoothstep(g_fEmissiveCutAlpha - 0.02f, g_fEmissiveCutAlpha + 0.02f, vMtrlDiffuse.a);
 
-
+    float3 vEmissiveColor = g_vEmissive.rgb * g_vEmissive.a + vEmissiveMtrl.rgb * (1 - g_vEmissive.a);
     
-    Out.vDiffuse = vMtrlDiffuse * g_fBlurIntensity;
-    Out.vBlurWeight.r = g_iBlurWeight / 32.f;
+    vEmissive = vector(vEmissiveColor * fSmoothAlpha, vMtrlDiffuse.a);
+    
+    Out.vDiffuse = vMtrlDiffuse * g_fBlurIntensity + vEmissive;
     
     return Out;
 }

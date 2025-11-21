@@ -1,5 +1,4 @@
-#pragma once
-
+﻿#pragma once
 NS_BEGIN(Engine)
 class CTransform;
 NS_END
@@ -7,7 +6,8 @@ NS_END
 NS_BEGIN(Editor)
 
 typedef struct tagMapObject_Desc {
-	CTransform* pParentTransform = { nullptr };
+	_uint					iRenderType{};
+	CTransform*				pParentTransform = { nullptr };
 	_float3					vScale;
 	_float3					vRotation;
 	_float3					vPosition;
@@ -26,5 +26,16 @@ typedef struct tagMapObjectLodDesc : public tagMapObject_Desc
 	vector<_wstring>		ModelPrototypeTags;
 	vector<_uint>*			pModelPathIndices = { nullptr };
 }MAPOBJECT_LOD_DESC;
+
+typedef struct tagOnCollsionInfo 
+{
+	_vector vWorldPos = {};		// 접촉지점
+	_vector vWorldNomal = {};	// 접촉노말
+	_vector vHitDir = {};		// 시도한 move 방향
+	_float  fLength = {};		// 작용된 힘
+
+}ON_COLLISION_INFO;
+
+
 
 NS_END

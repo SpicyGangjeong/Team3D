@@ -1160,6 +1160,9 @@
     <ClInclude Include="..\Public\ThreadHolder.h">
       <Filter>00.System\02.ThreadHolder</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\stb_image.h">
+      <Filter>99.Define\99.THIRDPARTY</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Public\Assimp\color4.inl">

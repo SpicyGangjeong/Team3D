@@ -353,33 +353,33 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 		strTexturePath = CMyTools::ToString(szTextureFilePath);
 	}
 
-	_string strPrefix = "../Bin/Resources/Models/MapMesh/";
-	_string strSearchString = "MeshTable";
-	_string strResultPath = {};
+	//_string strPrefix = "C:";
+	//_string strSearchString = "MeshTable";
+	//_string strResultPath = {};
 
-	size_t mapRePos = strTexturePath.find(strSearchString);
+	//size_t mapRePos = strTexturePath.find(strSearchString);
 
-	if (mapRePos != std::string::npos) 
-	{
-		size_t startPos = mapRePos + strSearchString.length();
+	//if (mapRePos != std::string::npos) 
+	//{
+	//	size_t startPos = mapRePos + strSearchString.length();
 
-		// 'MapRe' 뒤에 오는 경로 건너뛰기
-		if (startPos < strTexturePath.length() &&
-			(strTexturePath[startPos] == '\\' || strTexturePath[startPos] == '/')) {
-			startPos++;
-		}
+	//	// 'MapRe' 뒤에 오는 경로 건너뛰기
+	//	if (startPos < strTexturePath.length() &&
+	//		(strTexturePath[startPos] == '\\' || strTexturePath[startPos] == '/')) {
+	//		startPos++;
+	//	}
 
-		// 'MapRe' 이후의 나머지 경로를 추출
-		strResultPath = strPrefix + strTexturePath.substr(startPos);
-	}
-	else
-	{
-		MSG_BOX("FAILED to Find Path");
-	}
+	//	// 'MapRe' 이후의 나머지 경로를 추출
+	//	strResultPath = strTexturePath;//.substr(startPos);
+	//}
+	//else
+	//{
+	//	MSG_BOX("FAILED to Find Path");
+	//}
 
-	replace(strResultPath.begin(), strResultPath.end(), '\\', '/');
+	//replace(strResultPath.begin(), strResultPath.end(), '\\', '/');
 
-	m_SaveMaterial.Path[ENUM_CLASS(eTexture)].push_back(strResultPath);
+	m_SaveMaterial.Path[ENUM_CLASS(eTexture)].push_back(strTexturePath);
 	m_SRVs[ENUM_CLASS(eTexture)].push_back(pSRV);
 
 	return S_OK;
@@ -456,7 +456,7 @@ HRESULT CMaterial::Bind_SRV(CShader* pShader)
 			break;
 		case aiTextureType_SHININESS:
 		{
-			_float fUsingSurfaceParams = ((_float)aiTextureType_METALNESS / (_float)AI_TEXTURE_TYPE_MAX);
+			_float fUsingSurfaceParams = ((_float)aiTextureType_SPECULAR / (_float)AI_TEXTURE_TYPE_MAX);
 			pConstantName = "g_SurfaceParamsTexture";
 			pShader->Bind_RawValue("g_fUsingSurfaceParams", &fUsingSurfaceParams, sizeof(_float));
 		}

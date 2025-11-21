@@ -31,7 +31,6 @@ public:
 private:
 	CModel* m_pModelCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
-	_bool m_bMRO = { false };
 
 private:
 	virtual HRESULT Initialize_Prototype() override;

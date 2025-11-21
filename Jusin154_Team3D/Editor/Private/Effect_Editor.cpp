@@ -81,6 +81,7 @@ void CEffect_Editor::Update(_float fTimeDelta)
 	if (m_pGameInstance->Key_Pressing(DIK_Z))
 		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta);
 
+	Update_Event(fTimeDelta);
 }
 
 void CEffect_Editor::Late_Update(_float fTimeDelta)
@@ -387,6 +388,8 @@ HRESULT CEffect_Editor::Load_Edit(const _char* pPath)
 		Safe_Release(m_pEditEffect);
 		return E_FAIL;
 	}
+	else
+		MessageBox(NULL, L"이펙트 로드 성공", L"System Message", MB_OK);
 
 	Safe_Release(m_pEditEffect);
 
@@ -629,7 +632,11 @@ void CEffect_Editor::Describe_Entity()
 
 	if (GUI::Button("LOAD PACKAGE"))
 	{
-		Load_Package(m_strPackageSavePath.c_str());
+	
+		if (SUCCEEDED(Load_Package(m_strPackageSavePath.c_str())))
+		{
+			MessageBox(NULL, L"패키징 로드 성공", L"System Message", MB_OK);
+		}
 	}
 
 	GUI::InputTextMultiline("TRAIL FILE PATH", m_szTrailBuffer, sizeof(m_szTrailBuffer), ImVec2(250, 25));

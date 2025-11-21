@@ -25,6 +25,8 @@ public:
 	_bool	Picking(_fmatrix WorldMatrix, _float3* pOut);
 	void	Culling(_fmatrix WorldMatrix);
 	void	FitY(_fmatrix WorldMatrix, _float fY);
+	void    Change_HeigthRatio(_float fRatio);
+
 private:
 	_bool				m_bChange = {};
 	_uint				m_iNumVerticesX = {};

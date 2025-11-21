@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Client_Define.h"
 #include "Base.h"
@@ -27,8 +27,6 @@ private:
 	ID3D11DeviceContext*	m_pContext = { nullptr };
 	LEVEL					m_eNextLevelID = { LEVEL::END };
 
-	HANDLE					m_hThread = {};
-	CRITICAL_SECTION		m_CriticalSection = {};
 	_wstring				m_strMessage = {};
 	_bool					m_isFinished = { false };
 
@@ -36,6 +34,8 @@ private:
 	HRESULT Initialize(LEVEL eNextLevelID);
 	HRESULT Loading_For_Logo();
 	HRESULT Loading_For_GamePlay();
+	HRESULT Loading_For_Field();
+	HRESULT Loading_For_Restart();
 
 public:
 	static CLoader* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevelID);

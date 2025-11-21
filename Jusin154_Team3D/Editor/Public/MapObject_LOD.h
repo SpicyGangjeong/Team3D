@@ -32,14 +32,15 @@ public:
 	}
 
 private:
-	CShader*			m_pShaderCom = { nullptr };
-	vector<CModel*>		m_pModelComs;
+	MAPOBJECT_RENDER_TYPE	m_Type = {};
+	CShader*				m_pShaderCom = { nullptr };
+	vector<CModel*>			m_pModelComs;
 
-	_uint				m_iLodIndex = {};
-	_uint				m_iShaderPass = {};
+	_uint					m_iLodIndex = {};
+	_uint					m_iShaderPass = {};
 
-	vector<_wstring>	m_ModelPrototypeTags;
-	vector<_uint>		m_ModelPathIndices = { };
+	vector<_wstring>		m_ModelPrototypeTags;
+	vector<_uint>			m_ModelPathIndices = { };
 
 private:
 	HRESULT Ready_Components();

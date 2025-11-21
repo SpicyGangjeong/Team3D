@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Editor_Define.h"
 #include "GameObject.h"
@@ -27,11 +27,13 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	CShader* m_pShaderCom = { nullptr };
-	CVIBuffer_Terrain* m_pVIBufferCom = { nullptr };
-	CTexture* m_pTextureCom = { nullptr };
+	CShader*				m_pShaderCom = { nullptr };
+	CVIBuffer_Terrain*		m_pVIBufferCom = { nullptr };
+	CTexture*				m_pTextureCom = { nullptr };
 
+	_float					m_fHeightRatio = {1.f};
 	_float3					m_vPickingPosition = {};
+	_float3					m_vRotation = {};
 
 private:
 	HRESULT Ready_Components();
