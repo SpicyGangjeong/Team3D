@@ -35,7 +35,7 @@ HRESULT CNomalJap::Initialize(void* pArg)
 	if (FAILED(Ready_Child()))
 		return E_FAIL;
 
-	Load_Package("../Bin/Resources/Data/Effect/Package/Jap");
+	Load_Package("../Bin/Resources/Data/Effect/Package/Jap3");
 
 	m_wstrEffectName = L"Nomal_Jap";
 
@@ -89,7 +89,7 @@ HRESULT CNomalJap::Ready_Child()
 
 	Desc.vRotRPY = { 0.f, 0.f, 0.f };
 	Desc.iSubKind = 70;
-	Desc.vDeltaPos = { 0.f, 0.f, 1.f };
+	Desc.vDeltaPos = { 0.f, 0.f, 2.f };
 	Desc.vLifeTime = { 0.f, 2.f };
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXEffectHitBox>(g_iStaticLevel, CURRENT_LEVEL, LAYER_HITBOX, &Desc, this , &m_pPhysHitBox))) {

@@ -181,5 +181,53 @@ float3 DecodeNormalFromRG(Texture2D NormalMap, SamplerState Samp, float2 uv)
     return normalize(n);
 }
 
+float4x4 RotateX(float fAngle)
+{
+    float fCos = cos(radians(fAngle));
+    float fSin = sin(radians(fAngle));
+    
+    float4x4 RotateXMat =
+    {
+        1,      0,      0,     0,
+        0,   fCos,  -fSin,     0,
+        0,   fSin,   fCos,     0,
+        0,      0,      0,     1,  
+    };
+
+    return RotateXMat;
+}
+
+float4x4 RotateY(float fAngle)
+{
+    float fCos = cos(radians(fAngle));
+    float fSin = sin(radians(fAngle));
+    
+    float4x4 RotateYMat =
+    {
+        fCos  ,    0,   fSin,       0,
+        0     ,    1,      0,       0,
+        -fSin ,    0,   fCos,       0,
+        0     ,    0,      0,       1
+    };
+
+    return RotateYMat;
+}
+
+float4x4 RotateZ(float fAngle)
+{
+    float fCos = cos(radians(fAngle));
+    float fSin = sin(radians(fAngle));
+    
+    float4x4 RotateZMat =
+    {
+        fCos,  -fSin,     0,    0,
+        fSin,   fCos,     0,    0,
+           0,      0,     1,    0,
+           0,      0,     0,    1,
+    };
+
+    return RotateZMat;
+}
+
 
 #endif // ENGINE_SHADER_FUNCTIONS_HLSLI

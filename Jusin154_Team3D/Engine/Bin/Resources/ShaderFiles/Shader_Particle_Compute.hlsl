@@ -1,5 +1,4 @@
-
-float PI = 3.141592;
+#include "Engine_Shader_Functions.hlsli"
 
 struct Particle
 {
@@ -30,7 +29,8 @@ struct ParticleValue
     float2 vAniIndex;
     float  fGravity;
     
-    float3 vSinAmount;
+    float3 vSinAmount;   
+    float3 vDeltaAngle;
 };
 
 
@@ -48,6 +48,11 @@ cbuffer g_ConstantBuffer : register(b0) // b0 << 이 숫자와 컨스턴트 쉐�
     bool isDrop;
     bool isMoveForward;
     bool isSinWave;
+    
+    bool IsTurn;
+    bool isPadding1;
+    bool isPadding2;
+    bool isPadding3;
 
     float fTimeDelta;
     float fPadding1; // 반드시 상수버퍼는 16바이트 배수로 만들어져야 한다.
@@ -74,8 +79,6 @@ void CS_MAIN(
     {
         if (isLoop == false)
         {
-         
-            
             return;
         }
         
@@ -92,7 +95,7 @@ void CS_MAIN(
    
     if (isMoveForward)
     {
-        float4 vVelocity = vector(normalize(particleValue.vOriginLook.xyz) * particleValue.fSpeed, 1.f);
+        float4 vVelocity = vector(normalize(particle.vLook.xyz) * particleValue.fSpeed, 1.f);
     
         particle.vTranslation += vVelocity * fTimeDelta;
     }
@@ -106,6 +109,28 @@ void CS_MAIN(
     if(isSinWave == true)
     {
         particle.vTranslation += vector( sin(particle.vLifeTime.x * 3.141592 * 2.f) * particleValue.vSinAmount, 0.f);
+    }
+    
+    if (IsTurn == true)
+    {
+        /* ROTATE */
+        float4x4 RotateXMat = RotateX(particleValue.vDeltaAngle.x * fTimeDelta);
+        float4x4 RotateYMat = RotateY(particleValue.vDeltaAngle.y * fTimeDelta);
+        float4x4 RotateZMat = RotateZ(particleValue.vDeltaAngle.z * fTimeDelta);
+       
+        
+        float4x4 CombinedRotMat = mul(RotateZMat, mul(RotateYMat, RotateXMat));
+        
+        float4x4 CurRotatemat = {particle.vRight, particle.vUp, particle.vLook, vector(0.f , 0.f, 0.f, 1.f)};
+        
+        
+       
+        CurRotatemat = mul(CombinedRotMat, CurRotatemat);
+        
+        particle.vRight = CurRotatemat[0].xyzw;
+        particle.vUp = CurRotatemat[1].xyzw;
+        particle.vLook = CurRotatemat[2].xyzw;
+        
     }
        
     //애니메이션 속도 , 인덱스

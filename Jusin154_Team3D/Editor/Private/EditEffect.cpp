@@ -41,8 +41,8 @@ void CEditEffect::Priority_Update(_float fTimeDelta)
 void CEditEffect::Update(_float fTimeDelta)
 {
 
-	if (m_bVisible == false)
-		return;
+	//if (m_bVisible == false)
+	//	return;
 
 	if (m_pInstance_ModelCom == nullptr)
 		return;
@@ -573,6 +573,7 @@ void CEditEffect::Describe_Entity()
 
 			GUI::InputFloat2("MaskUVCutting", (_float*)&m_EffectInfo.vUVMaskCutting);
 			GUI::Checkbox("MaskUVMove", &m_EffectInfo.isMaskUVMove);
+			GUI::Checkbox("MaskClampSample", &m_EffectInfo.isMaskClampSample);
 
 			ImGui::PushItemWidth(80);
 			GUI::DragFloat2("MaskingUVGainAmount", (_float*)&m_EffectInfo.vMaskingUVGainAmount, 0.01f);
@@ -614,7 +615,7 @@ void CEditEffect::Describe_Entity()
 		{
 			if (GUI::TreeNode("DISSOLV_TEX"))
 			{
-
+				GUI::Checkbox("Nomal Dissolve", &m_EffectInfo.isNomalDissolve);
 				GUI::Checkbox("Reverse Dissolve", &m_EffectInfo.isReverseDissolve);
 
 				_string strName  = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISSOLVE_TEXTURE", (CComponent**)&m_pDissolve_TextureCom, nullptr, this);
@@ -689,7 +690,8 @@ void CEditEffect::Describe_Entity()
 	{
 		if (GUI::TreeNode("NOISE"))
 		{
-
+			GUI::Checkbox("NoiseColor", &m_EffectInfo.isNoiseColor);
+			GUI::Checkbox("NoiseAlpha", &m_EffectInfo.isNoiseAlpha);
 			GUI::Checkbox("NoiseMove", &m_EffectInfo.isNoiseUVMove);
 
 			ImGui::PushItemWidth(80);
@@ -721,21 +723,22 @@ void CEditEffect::Describe_Entity()
 			GUI::TreePop();
 		}
 
+		ImGui::Begin("Simple Plot");
+
+
+		ImGui::PlotLines("Value", m_ValueVector.data(), (int)m_ValueVector.size(), 0, nullptr, FLT_MAX, FLT_MAX, ImVec2(0, 100));
+
+		GUI::InputFloat("InputValue", &m_fInputValue);
+
+		if (GUI::Button("AddValue"))
+		{
+			m_ValueVector.push_back(m_fInputValue);
+		}
+
+		ImGui::End();
+
 	}
 
-	ImGui::Begin("Simple Plot");
-
-	// samples.data()와 개수, optional offset 인덱스 등 넘길 수 있음
-	ImGui::PlotLines("Value", m_ValueVector.data(), (int)m_ValueVector.size(), 0, nullptr, FLT_MAX, FLT_MAX, ImVec2(0, 100));
-
-	GUI::InputFloat("InputValue", &m_fInputValue);
-
-	if (GUI::Button("AddValue"))
-	{
-		m_ValueVector.push_back(m_fInputValue);
-	}
-
-	ImGui::End();
 
 
 	GUI::Separator(); GUI::Spacing();

@@ -84,7 +84,7 @@ vector<D3D11_MAPPED_SUBRESOURCE> CComputeShader::Dispatch(_uint iSRVIndex, _uint
 		if (SUCCEEDED(m_pContext->Map(m_pOutputStagingBuffer[i], 0, D3D11_MAP_READ, 0, &StagingSubResource)))
 		{
 
-
+			CInstance_Model::CS_PARTICLE_VALUE_DESC* pValueDesc = static_cast<CInstance_Model::CS_PARTICLE_VALUE_DESC*>(StagingSubResource.pData);
 
 			StagingSubResources.push_back(StagingSubResource);
 
