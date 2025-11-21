@@ -34,6 +34,11 @@ private:
 	_bool m_bWalkToggle = { false };
 	class CCamPosition_Player* m_pCamPosition_TopDown_LookPart = { nullptr };
 	class CCamPosition_Arm* m_pCamPosition_TopDown_FollowPart = { nullptr };
+
+	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
+	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
+	class	CCallBack_Playable_Behavior* m_pCallBack_Behavior = { nullptr };
+	class	CCallBack_Playable_HitReport* m_pCallBack_HitReport = { nullptr };
 private:
 	HRESULT Ready_Components();
 	HRESULT Ready_Parts();

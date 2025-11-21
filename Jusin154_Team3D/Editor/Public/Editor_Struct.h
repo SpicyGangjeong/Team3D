@@ -27,14 +27,6 @@ typedef struct tagMapObjectLodDesc : public tagMapObject_Desc
 	vector<_uint>*			pModelPathIndices = { nullptr };
 }MAPOBJECT_LOD_DESC;
 
-typedef struct tagOnCollsionInfo 
-{
-	_vector vWorldPos = {};		// 접촉지점
-	_vector vWorldNomal = {};	// 접촉노말
-	_vector vHitDir = {};		// 시도한 move 방향
-	_float  fLength = {};		// 작용된 힘
-
-}ON_COLLISION_INFO;
 
 
 
