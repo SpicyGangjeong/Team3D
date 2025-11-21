@@ -24,7 +24,7 @@ void	Safe_Delete_Array(T& Pointer)
 }
 
 template<typename T>
-unsigned long SAFE_ADDREF(T& pInstance)
+unsigned long Safe_AddRef(T& pInstance)
 {
 	unsigned long		dwRefCnt = 0;
 

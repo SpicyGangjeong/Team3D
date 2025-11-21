@@ -148,10 +148,10 @@ void CBuildingContainer::Describe_Entity()
     if (m_pGameInstance->Mouse_Down(DIM_LBUTTON) && m_pGameInstance->Key_Pressing(DIK_LSHIFT))
     {
         CTerrain* pTerrain = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Terrain"))->Get_Object<CTerrain>();
-        if (nullptr != pTerrain)
+        /*if (nullptr != pTerrain)
         {
             pTerrain->Get_Component<CVIBuffer_Terrain>()->Picking(pTerrain->Get_Component<CTransform>(), m_vPosition);
-        }
+        }*/
     }
 
     GUI::Text("----- Rotation ----");

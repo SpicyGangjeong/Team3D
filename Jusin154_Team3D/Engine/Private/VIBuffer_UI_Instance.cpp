@@ -10,7 +10,6 @@ CVIBuffer_UI_Instance::CVIBuffer_UI_Instance(ID3D11Device* pDevice, ID3D11Device
 CVIBuffer_UI_Instance::CVIBuffer_UI_Instance(const CVIBuffer_UI_Instance& Prototype)
 	: CVIBuffer_Instance{ Prototype }
 	, m_pInstanceVertices{ Prototype.m_pInstanceVertices }
-	, m_fSize{ Prototype.m_fSize }
 	, m_fPosition{ Prototype.m_fPosition }
 {
 }
@@ -112,16 +111,13 @@ HRESULT CVIBuffer_UI_Instance::Initialize_Prototype(const INSTANCE_DESC* pInstan
 	m_pInstanceVertices = new VTX_INSTANCE_UI[m_iNumInstance];
 	ZeroMemory(m_pInstanceVertices, sizeof(VTX_INSTANCE_UI) * m_iNumInstance);
 
-	m_fSize = new _float2[m_iNumInstance];
-	ZeroMemory(m_fSize, sizeof(_float2) * m_iNumInstance);
-
 	m_fPosition = new _float2[m_iNumInstance];
 	ZeroMemory(m_fPosition, sizeof(_float2) * m_iNumInstance);
 
+
 	for (size_t i = 0; i < m_iNumInstance; ++i)
 	{
-		m_pInstanceVertices[i].fSize = (pDesc->vSize);
-		m_pInstanceVertices[i].fPos = _float2(pDesc->vPsition.x + 75 * i, pDesc->vPsition.y);
+		m_pInstanceVertices[i].fPos = _float2(pDesc->vPsition.x, pDesc->vPsition.y);
 	}
 
 	m_InstanceInitialDesc.pSysMem = m_pInstanceVertices;
@@ -140,19 +136,23 @@ HRESULT CVIBuffer_UI_Instance::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CVIBuffer_UI_Instance::Set_Pos(_float fX, _float fY, _float OffSet)
+void CVIBuffer_UI_Instance::Set_Pos(_float fX, _float fY, _float OffSetX, _float OffSetY, _uint iCols)
 {
-	D3D11_MAPPED_SUBRESOURCE SubResource{};
 
+	D3D11_MAPPED_SUBRESOURCE SubResource{};
 	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
 
 	VTX_INSTANCE_UI* pVertices = static_cast<VTX_INSTANCE_UI*>(SubResource.pData);
 
-	for (size_t i = 0; i < m_iNumInstance; i++)
+	for (_uint i = 0; i < m_iNumInstance; i++)
 	{
-		pVertices[i].fPos.x = fX + m_pInstanceVertices[i].fPos.x; // 인덱스 * 간격
-		pVertices[i].fPos.y = fY;
+		_uint col = i % iCols;      // 가로 인덱스
+		_uint row = i / iCols;      // 세로 인덱스
+
+		pVertices[i].fPos.x = fX + col * OffSetX;
+		pVertices[i].fPos.y = fY + row * OffSetY;
 	}
+
 	m_pContext->Unmap(m_pVBInstance, 0);
 }
 
@@ -168,7 +168,38 @@ void CVIBuffer_UI_Instance::Set_Size(_float fSizeX, _float fSizeY)
 	{
 		pVertices[i].fSize.x = fSizeX;
 		pVertices[i].fSize.y = fSizeY;
+	}
 
+	m_pContext->Unmap(m_pVBInstance, 0);
+}
+
+void CVIBuffer_UI_Instance::Set_SizeX(_float fSizeX)
+{
+	D3D11_MAPPED_SUBRESOURCE		SubResource{};
+
+	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+
+	VTX_INSTANCE_UI* pVertices = static_cast<VTX_INSTANCE_UI*>(SubResource.pData);
+
+	for (size_t i = 0; i < m_iNumInstance; i++)
+	{
+		pVertices[i].fSize.x = fSizeX;
+	}
+
+	m_pContext->Unmap(m_pVBInstance, 0);
+}
+
+void CVIBuffer_UI_Instance::Set_SizeY(_float fSizeY)
+{
+	D3D11_MAPPED_SUBRESOURCE		SubResource{};
+
+	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+
+	VTX_INSTANCE_UI* pVertices = static_cast<VTX_INSTANCE_UI*>(SubResource.pData);
+
+	for (size_t i = 0; i < m_iNumInstance; i++)
+	{
+		pVertices[i].fSize.y = fSizeY;
 	}
 
 	m_pContext->Unmap(m_pVBInstance, 0);
@@ -183,7 +214,7 @@ CVIBuffer_UI_Instance* CVIBuffer_UI_Instance::Create(ID3D11Device* pDevice, ID3D
 		MSG_BOX("Failed to Created : CVIBuffer_UI_Instance");
 		Safe_Release(pInstance);
 	}
-		
+
 	return pInstance;
 }
 

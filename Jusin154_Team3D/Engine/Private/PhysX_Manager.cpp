@@ -38,7 +38,7 @@ PSX::PxRigidDynamic* CPhysX_Manager::Add_DynamicActor(CRigidBody_Dynamic& RigidB
 		pShape = PSX::PxRigidActorExt::createExclusiveShape(*pActorDynamic, geoHolder.capsule(), *m_pMaterials[ENUM_CLASS(RigidBody.Get_MaterialType())]);
 		break;
 	case ACTOR::SPHERE:
-		geoHolder = PSX::PxCapsuleGeometry(vVolume.x);
+		geoHolder = PSX::PxSphereGeometry(vVolume.x);
 		pShape = PSX::PxRigidActorExt::createExclusiveShape(*pActorDynamic, geoHolder.sphere(), *m_pMaterials[ENUM_CLASS(RigidBody.Get_MaterialType())]);
 		break;
 	default:
@@ -274,7 +274,6 @@ void CPhysX_Manager::Update(_float fTimeDelta)
 		//Update_Dynamic_AllActors();
 	}
 }
-
 void CPhysX_Manager::Update_Dynamic_ActiveActors()
 {
 	PSX::PxU32 iNumActiveActor = {};
@@ -405,7 +404,8 @@ HRESULT CPhysX_Manager::Initialize()
 	}
 
 	if (FAILED(Connect_DebugServer())) {
-		ASSERT_NURI(false);
+		//ASSERT_NURI(false);
+		//ASSERT_JINWOO(false);
 	}
 
 	{ // 씬 세팅
@@ -474,7 +474,7 @@ HRESULT CPhysX_Manager::Initialize()
 	}
 
 	// m_pScene->overlap();??????
-
+#ifdef EDITOR_PROJECT
 #ifdef 기무리
 	PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
 	PlaneData.iSubKind = UINT_MAX;
@@ -505,6 +505,39 @@ HRESULT CPhysX_Manager::Initialize()
 	//	}
 	//}
 #endif // 기무리
+#endif // EDITOR_PROJECT
+
+
+#ifdef 진우
+	PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
+	PlaneData.iSubKind = UINT_MAX;
+	PlaneData.pOwner = nullptr;
+	PlaneData.pBody = nullptr;
+
+	m_pMaterials.reserve(ENUM_CLASS(PXMATERIAL::END));
+	m_pMaterials.push_back(m_pPhysics->createMaterial(0.5f, 0.5f, 0.6f));
+	PSX::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *m_pMaterials[ENUM_CLASS(PXMATERIAL::DEFAULT)]);
+	pGroundPlane->userData = &PlaneData;
+	pGroundPlane->setName("PHYSX_MANAGER_PLANE");
+	m_pScene->addActor(*pGroundPlane);;
+
+	//{
+	//	float halfExtent = .5f;
+	//	physx::PxShape* shape = m_pPhysics->createShape(physx::PxSphereGeometry(halfExtent), *pMaterial);
+	//	physx::PxU32 size = 30;
+	//	physx::PxTransform pxTransform(physx::PxVec3(0));
+
+	//	for (physx::PxU32 i = 0; i < size; i++) {
+	//		for (physx::PxU32 j = 0; j < size - i; j++) {
+	//			physx::PxTransform localTm(physx::PxVec3(physx::PxReal(j * 2) - physx::PxReal(size - i) + 100, physx::PxReal(i * 2 + 1), 0) * halfExtent);
+	//			physx::PxRigidDynamic* body = m_pPhysics->createRigidDynamic(pxTransform.transform(localTm));
+	//			body->attachShape(*shape);
+	//			physx::PxRigidBodyExt::updateMassAndInertia(*body, 10.0f);
+	//			m_pScene->addActor(*body);
+	//		}
+	//	}
+	//}
+#endif // 진우
 
 	
 

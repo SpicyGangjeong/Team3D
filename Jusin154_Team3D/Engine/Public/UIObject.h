@@ -8,7 +8,7 @@ class ENGINE_DLL CUIObject abstract : public CGameObject
 {
 public:
 	enum class SKILLTYPE {
- SHADOW, CONTROL, POWER, DAMAGE,
+CONTROL, POWER, DAMAGE,
 UTILITY ,TRANSFORM, CURSE, ESSENTIAL
 };
 typedef struct tagUIObjectDesc
@@ -33,6 +33,8 @@ public:
 	virtual void MoveX(_float fX);
 	virtual void MoveY(_float fY);
 	virtual void SizeUpdate(_float fSizeX, _float fSizeY);
+	virtual void SizeUpX(_float fSizeX);
+	virtual void SizeUpY(_float fSizeY);
 	virtual void SizeUpdate_float(_float3 fSizeXY);
 	virtual void Set_Time(_float fTime);
 	virtual void Set_TimeMult(_float Mult);
@@ -80,8 +82,10 @@ public:
 
 	virtual void Lerp_PosX(_float PosX);
 	virtual void Lerp_PosY(_float PosY);
-	virtual void Start_Lerp(_float fTimeDelta, _bool Alpha = true);
-	virtual void Reset_Pos(_float fTimeDelta, _bool Alpha = true);
+	virtual void Start_Lerp(_float fTimeDelta);
+	virtual void Reset_Pos(_float fTimeDelta);
+	virtual void Start_Size_Lerp(_float fTimeDelta);
+	virtual void Reset_Size_Lerp(_float fTimeDelta);
 	virtual _vector Get_Lerp_Pos();
 	virtual void LerpOn();
 	virtual void LerpOff();
@@ -101,8 +105,8 @@ public:
 	virtual void Set_CoolTime(_float CoolTime);
 	virtual _float Get_CoolTime();
 
-	virtual void Add_Function(wstring Name, function<void()> Evnet);
-	virtual void Function_Callback(wstring Name);
+	virtual void Add_Function(wstring Name, function<void(void*)> Evnet);
+	virtual void Function_Callback(wstring Name, void* pArg = nullptr);
 protected:
 	_vector					m_fOrigin_Position_vector{};
 	_float2					m_fOrigin_Position{};
@@ -151,10 +155,6 @@ protected:
 	_float					m_fMoveSpeed{};
 
 	_float4					m_vNine_Slice{};
-	_float					m_fLeft{};
-	_float					m_fRight{};
-	_float					m_fTop{};
-	_float					m_fBottom{};
 
 protected:
 	virtual HRESULT Initialize_Prototype();

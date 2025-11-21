@@ -21,10 +21,10 @@ HRESULT CSpell_Slot::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = -160.f;
-	Desc.fY = 50.f;
-	Desc.fSizeX = 140.f;
-	Desc.fSizeY = 140.f;
+	Desc.fX = 0.f;
+	Desc.fY = 98.f;
+	Desc.fSizeX = 100.f;
+	Desc.fSizeY = 100.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -41,6 +41,12 @@ HRESULT CSpell_Slot::Initialize(void* pArg)
 	m_fTimeMult = 3.f;
 	m_fAngle = XMConvertToRadians(-135);
 	m_fAlphaTime = 1.f;
+	m_fOffSetX = 101.f;
+	m_fOffSetY = 101.f;
+	m_iCols = 4;
+	m_pVIBufferCom->Set_Cloned(true);
+	m_pVIBufferCom->Set_Pos(m_fX, m_fY, m_fOffSetX, m_fOffSetY, m_iCols);
+	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
 	return S_OK;
 }
 
@@ -85,7 +91,6 @@ void CSpell_Slot::Update(_float fTimeDelta)
 	}
 	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
-
 }
 
 void CSpell_Slot::Late_Update(_float fTimeDelta)
@@ -110,7 +115,7 @@ HRESULT CSpell_Slot::Render()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::SLOT))))
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::DEFAULT))))
 	{
 		return E_FAIL;
 	}
@@ -129,6 +134,25 @@ HRESULT CSpell_Slot::Render()
 _vector CSpell_Slot::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
+}
+
+void CSpell_Slot::SizeUpX(_float fSizeX)
+{
+	m_fSizeX = fSizeX;
+	m_pVIBufferCom->Set_SizeX(m_fSizeX);
+}
+
+void CSpell_Slot::SizeUpY(_float fSizeY)
+{
+	m_fSizeY = fSizeY;
+	m_pVIBufferCom->Set_SizeY(m_fSizeY);
+}
+
+void CSpell_Slot::SizeUpdate(_float fSizeX, _float fSizeY)
+{
+	m_fSizeX = fSizeX;
+	m_fSizeY = fSizeY;
+	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
 }
 
 HRESULT CSpell_Slot::Bind_ShaderResources()
@@ -169,12 +193,13 @@ HRESULT CSpell_Slot::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+	
 	return S_OK;
 }
 
 HRESULT CSpell_Slot::Ready_Components(void* pArg)
 {
-	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_UI_Instance"), (CComponent**)&m_pVIBufferCom, nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -182,7 +207,7 @@ HRESULT CSpell_Slot::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, FX_UIEDITOR, (CComponent**)&m_pShaderCom, nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, FX_UIINSTANCE, (CComponent**)&m_pShaderCom, nullptr)))
 	{
 		return E_FAIL;
 	}

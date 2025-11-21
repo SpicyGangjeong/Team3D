@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "VIBuffer.h"
 
 NS_BEGIN(Engine)
@@ -13,7 +13,7 @@ private:
 	}VIBUFFER_TERRAIN_DESC;
 private:
 	CVIBuffer_Terrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CVIBuffer_Terrain(CVIBuffer_Terrain& rhs);
+	CVIBuffer_Terrain(const CVIBuffer_Terrain& rhs);
 	virtual ~CVIBuffer_Terrain() = default;
 
 	_float2 Get_Size() { return _float2((_float)m_iNumVerticesX, (_float)m_iNumVerticesZ); }
@@ -22,7 +22,10 @@ public:
 	virtual HRESULT Initialize_Prototype(const _char* pFilePath, _uint iSizeX, _uint iSizeZ);
 	virtual HRESULT Initialize(void* pArg);
 
-	_bool	Picking(class CTransform* pTransform, _float3& pOut);
+	_bool	Picking(_fmatrix WorldMatrix, _float3* pOut);
+	void	Culling(_fmatrix WorldMatrix);
+	void	FitY(_fmatrix WorldMatrix, _float fY);
+	void    Change_HeigthRatio(_float fRatio);
 
 private:
 	_bool				m_bChange = {};
@@ -31,9 +34,11 @@ private:
 
 	vector<_float>		m_HeigthValues = {};
 
+	class CQuadTree*	m_pQuadTree = { nullptr };
+
 public:
 	static CVIBuffer_Terrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pFilePath, _uint iSizeX, _uint iSizeZ);
-	virtual CVIBuffer_Terrain* Clone(void* pArg, class CGameObject* pOwner = nullptr) override;
+	virtual CComponent* Clone(void* pArg, class CGameObject* pOwner = nullptr) override;
 	virtual void Free() override;
 	virtual void Describe_Entity() override;
 };

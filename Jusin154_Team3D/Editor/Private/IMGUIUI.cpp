@@ -316,8 +316,22 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		{
 			static_cast<CElementObject*>(m_pElementObject)->SizeUpdate(m_fSize.x, m_fSize.y);
 		}
+		if (GUI::SliderFloat("X##Sizex", &m_fSize.x, 1.f, 1920.f))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->SizeUpX(m_fSize.x);
+		}
 
-		if (GUI::SliderFloat("Size", &m_fSizeXY.x, 1.f, 1980.f))
+		if (GUI::SliderFloat("Y##Sizey", &m_fSize.y, 1.f, 1080.f))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->SizeUpY(m_fSize.y);
+		}
+
+		if (GUI::SliderFloat("Size", &m_fSize.x, 1.f, 1980.f))
+		{
+			m_fSize.y = m_fSize.x;
+			static_cast<CElementObject*>(m_pElementObject)->SizeUpdate(m_fSize.x, m_fSize.y);
+		}
+		if (GUI::SliderFloat("Size_vector3", &m_fSizeXY.x, 1.f, 1980.f))
 		{
 			m_fSizeXY.y = m_fSizeXY.x;
 			static_cast<CElementObject*>(m_pElementObject)->SizeUpdate_float(m_fSizeXY);

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Client_Define.h"
 #include "Base.h"
@@ -23,6 +23,7 @@ public:
 
 private:
 	CGameInstance* m_pGameInstance = { nullptr };
+	class CInfoInstance* m_pInfoInstance = { nullptr };
 	ID3D11Device* m_pDevice = { nullptr };
 	ID3D11DeviceContext* m_pContext = { nullptr };
 

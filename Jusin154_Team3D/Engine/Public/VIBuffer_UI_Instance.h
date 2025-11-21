@@ -20,8 +20,10 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 
 public:
-	virtual void Set_Pos(_float fX, _float fY,_float OffSet);
+	virtual void Set_Pos(_float fX, _float fY, _float OffSetX, _float OffSetY, _uint iCols);
 	virtual void Set_Size(_float fSizeX, _float fSizeY);
+	virtual void Set_SizeX(_float fSizeX);
+	virtual void Set_SizeY(_float fSizeY);
 	virtual void Set_Cloned(_bool isCloned) { m_isCloned = isCloned; }
 
 private:

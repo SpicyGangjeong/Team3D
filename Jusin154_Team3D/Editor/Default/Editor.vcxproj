@@ -29,7 +29,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -167,12 +167,15 @@
     <ClInclude Include="..\Public\Body.h" />
     <ClInclude Include="..\public\Active_Icon.h" />
     <ClInclude Include="..\Public\Broom.h" />
+    <ClInclude Include="..\Public\CallBack_EffectHitBox_Behavior.h" />
+    <ClInclude Include="..\Public\CallBack_EffectHitBox_HitReport.h" />
     <ClInclude Include="..\Public\CallBack_Monster_Behavior.h" />
     <ClInclude Include="..\Public\CallBack_Monster_HitReport.h" />
     <ClInclude Include="..\Public\CallBack_Playable_Behavior.h" />
     <ClInclude Include="..\Public\CallBack_Playable_HitReport.h" />
     <ClInclude Include="..\Public\DummyObject.h" />
     <ClInclude Include="..\public\DummySkyBox.h" />
+    <ClInclude Include="..\Public\Dummy_Globe.h" />
     <ClInclude Include="..\Public\Dummy_PhysXDoorFrame.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -181,9 +184,13 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\Public\Dummy_PhysXEffectHitBox.h" />
     <ClInclude Include="..\Public\Dummy_PhysXFixedDoor.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dummy_PhysXHitBox.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\Public\Dummy_PhysXMonster.h" />
     <ClInclude Include="..\Public\Dummy_PhysXPlatform.h">
@@ -193,6 +200,8 @@
     <ClInclude Include="..\Public\Dummy_PhysXWall.h" />
     <ClInclude Include="..\Public\Dummy_Plane.h" />
     <ClInclude Include="..\Public\Dummy_PhysXPlayable.h" />
+    <ClInclude Include="..\Public\NomalJap.h" />
+    <ClInclude Include="..\Public\Effect_Container.h" />
     <ClInclude Include="..\public\GamePlay_Canvas.h" />
     <ClInclude Include="..\public\BuildingContainer.h" />
     <ClInclude Include="..\Public\DebugCamera.h" />
@@ -204,8 +213,8 @@
     <ClInclude Include="..\Public\Effect_Editor.h" />
     <ClInclude Include="..\Public\EditEffect.h" />
     <ClInclude Include="..\Public\Goblin.h" />
-    <ClInclude Include="..\Public\Information.h" />
     <ClInclude Include="..\public\Land.h" />
+    <ClInclude Include="..\Public\Level_BloomViewer.h" />
     <ClInclude Include="..\public\Level_MapViewer.h" />
     <ClInclude Include="..\Public\LoadingWidget.h" />
     <ClInclude Include="..\public\MapContainer.h" />
@@ -222,6 +231,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\Public\Player.h" />
+    <ClInclude Include="..\public\Slot_Number.h" />
     <ClInclude Include="..\Public\State_Cast.h" />
     <ClInclude Include="..\Public\State_Combat.h" />
     <ClInclude Include="..\Public\State_Dodge.h" />
@@ -241,6 +251,7 @@
     <ClInclude Include="..\public\Spell_Slot.h" />
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\Public\Level_PhysXLab.h" />
+    <ClInclude Include="..\Public\TrailObject.h" />
     <ClInclude Include="..\Public\TestEffect.h" />
     <ClInclude Include="..\Public\EffectObject.h" />
     <ClInclude Include="..\Public\DummyRect.h" />
@@ -282,12 +293,15 @@
     <ClCompile Include="..\Private\Body.cpp" />
     <ClCompile Include="..\private\Active_Icon.cpp" />
     <ClCompile Include="..\Private\Broom.cpp" />
+    <ClCompile Include="..\Private\CallBack_EffectHitBox_Behavior.cpp" />
+    <ClCompile Include="..\Private\CallBack_EffectHitBox_HitReport.cpp" />
     <ClCompile Include="..\Private\CallBack_Monster_Behavior.cpp" />
     <ClCompile Include="..\Private\CallBack_Monster_HitReport.cpp" />
     <ClCompile Include="..\Private\CallBack_Playable_Behavior.cpp" />
     <ClCompile Include="..\Private\CallBack_Playable_HitReport.cpp" />
     <ClCompile Include="..\Private\DummyObject.cpp" />
     <ClCompile Include="..\private\DummySkyBox.cpp" />
+    <ClCompile Include="..\Private\Dummy_Globe.cpp" />
     <ClCompile Include="..\Private\Dummy_PhysXDoorFrame.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -296,9 +310,13 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\Private\Dummy_PhysXEffectHitBox.cpp" />
     <ClCompile Include="..\Private\Dummy_PhysXFixedDoor.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_PhysXHitBox.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\Private\Dummy_PhysXMonster.cpp" />
     <ClCompile Include="..\Private\Dummy_PhysXPlatform.cpp">
@@ -308,6 +326,8 @@
     <ClCompile Include="..\Private\Dummy_PhysXWall.cpp" />
     <ClCompile Include="..\Private\Dummy_Plane.cpp" />
     <ClCompile Include="..\Private\Dummy_PhysXPlayable.cpp" />
+    <ClCompile Include="..\Private\NomalJap.cpp" />
+    <ClCompile Include="..\Private\Effect_Container.cpp" />
     <ClCompile Include="..\private\GamePlay_Canvas.cpp" />
     <ClCompile Include="..\private\BuildingContainer.cpp" />
     <ClCompile Include="..\Private\DebugCamera.cpp" />
@@ -319,8 +339,8 @@
     <ClCompile Include="..\Private\Effect_Editor.cpp" />
     <ClCompile Include="..\Private\EditEffect.cpp" />
     <ClCompile Include="..\Private\Goblin.cpp" />
-    <ClCompile Include="..\Private\Information.cpp" />
     <ClCompile Include="..\private\Land.cpp" />
+    <ClCompile Include="..\Private\Level_BloomViewer.cpp" />
     <ClCompile Include="..\private\Level_MapViewer.cpp" />
     <ClCompile Include="..\Private\LoadingWidget.cpp" />
     <ClCompile Include="..\private\MapContainer.cpp" />
@@ -337,6 +357,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\Private\Player.cpp" />
+    <ClCompile Include="..\private\Slot_Number.cpp" />
     <ClCompile Include="..\Private\State_Cast.cpp" />
     <ClCompile Include="..\Private\State_Combat.cpp" />
     <ClCompile Include="..\Private\State_Dodge.cpp" />
@@ -356,6 +377,7 @@
     <ClCompile Include="..\private\Spell_Slot.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\Private\Level_PhysXLab.cpp" />
+    <ClCompile Include="..\Private\TrailObject.cpp" />
     <ClCompile Include="..\Private\TestEffect.cpp" />
     <ClCompile Include="..\Private\EffectObject.cpp" />
     <ClCompile Include="..\Private\DummyRect.cpp" />
@@ -402,6 +424,7 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_UI_Instance.hlsl" />
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxAnimMesh.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>

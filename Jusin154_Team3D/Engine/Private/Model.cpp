@@ -23,7 +23,9 @@ CModel::CModel(const CModel& rhs)
 	m_Materials(rhs.m_Materials),
 	m_iNumMaterials(rhs.m_iNumMaterials),
 	m_iNumAnimations(rhs.m_iNumAnimations),
-	m_pLerpAnim(rhs.m_pLerpAnim)
+	m_pLerpAnim(rhs.m_pLerpAnim),
+	m_fRadius(rhs.m_fRadius),
+	m_vRadiusOffset(rhs.m_vRadiusOffset)
 {
 	_uint iNumBones = (_uint)(rhs.m_Bones.size());
 	m_Bones.reserve(iNumBones);
@@ -119,7 +121,7 @@ void CModel::Change_AnimationIndex(_int iAnimationIndex, _bool bIsLoop, _float f
 	m_pLerpAnim->Begin(m_Bones, LerpStartFrames, LerpEndFrames, fLerpDuration, m_iRootBoneIndex);
 
 }
-HRESULT CModel::Bind_Material(_uint iMeshIndex, CShader* pShader, const _char* pConstantName, _uint iType, _uint iTextureIndex)
+HRESULT CModel::Bind_Material(_uint iMeshIndex, CShader* pShader)
 {
 	if (iMeshIndex >= m_iNumMeshes) {
 		return E_FAIL;
@@ -130,7 +132,7 @@ HRESULT CModel::Bind_Material(_uint iMeshIndex, CShader* pShader, const _char* p
 	if (iMaterialIndex >= m_iNumMaterials) {
 		return E_FAIL;
 	}
-	return m_Materials[iMaterialIndex]->Bind_SRV(pShader, pConstantName, iType, iTextureIndex);
+	return m_Materials[iMaterialIndex]->Bind_SRV(pShader);
 }
 
 HRESULT CModel::Bind_BoneMatrices(_uint iMeshIndex, CShader* pShader, const _char* pConstantName)
@@ -479,6 +481,29 @@ HRESULT CModel::Ready_Materials_FromFile(const aiScene* pAIScene, const _char* p
 		m_Materials.push_back(pMaterial);
 	}
 	m_Materials.shrink_to_fit();
+
+	while (true)
+	{
+		getline(file, strText);
+		if (string::npos != strText.find("Origin"))
+		{
+			size_t iXPos = strText.find_first_of("X");
+			size_t iYPos = strText.find_first_of("Y");
+			size_t iZPos = strText.find_first_of("Z");
+			size_t iEndPos = strText.find_first_of("}");
+
+			m_vRadiusOffset.x = stof(strText.substr(iXPos + 2, iYPos - 2)) * 0.01f;
+			m_vRadiusOffset.z = stof(strText.substr(iYPos + 2, iZPos - 2)) * -0.01f;
+			m_vRadiusOffset.y = stof(strText.substr(iZPos + 2, iEndPos)) * 0.01f;
+		}
+		if (string::npos != strText.find("SphereRadius"))
+		{
+			size_t iBeginIndex = strText.find_first_of("=");
+			m_fRadius = stof(strText.substr(iBeginIndex + 1)) / 100.f;
+			break;
+		}
+	}
+
 	return S_OK;
 }
 
@@ -777,6 +802,12 @@ _bool CModel::SaveAssimpModel(const _char* filename)
 				fwrite(path.c_str(), sizeof(_char), len, fp);
 			}
 		}
+	}
+
+	if (MODEL::ENVIROMENT == m_eType)
+	{
+		fwrite(&m_fRadius, sizeof(_float), 1, fp);
+		fwrite(&m_vRadiusOffset, sizeof(_float3), 1, fp);
 	}
 
 	fclose(fp);
@@ -1079,6 +1110,11 @@ _bool CModel::LoadData(const _char* filename)
 		NewModel.Materials.push_back(mat);
 	}
 
+	if (MODEL::ENVIROMENT == m_eType)
+	{
+		fread(&m_fRadius, sizeof(_float), 1, fp);
+		fread(&m_vRadiusOffset, sizeof(_float3), 1, fp);
+	}
 
 	fclose(fp);
 

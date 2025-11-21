@@ -34,6 +34,9 @@ private:
 	CShader*			m_pShaderCom = { nullptr };
 	CModel*				m_pModelCom = { nullptr };
 	_float4				m_vPosition = {};
+
+	_float4x4    m_ProjMatrix = {};
+	_float4x4    m_ViewMatrix = {};
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

@@ -27,6 +27,8 @@ HRESULT CEditEffect::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
+	
+	Set_Visible(false);
 
 	return S_OK;
 }
@@ -39,9 +41,8 @@ void CEditEffect::Priority_Update(_float fTimeDelta)
 void CEditEffect::Update(_float fTimeDelta)
 {
 
-
-
-
+	if (m_bVisible == false)
+		return;
 
 	if (m_pInstance_ModelCom == nullptr)
 		return;
@@ -51,10 +52,14 @@ void CEditEffect::Update(_float fTimeDelta)
 	if (m_EffectInfo.isBillboard)
 		m_pGameInstance->BillBoard(m_pTransformCom);
 
+
 }
 
 void CEditEffect::Late_Update(_float fTimeDelta)
 {
+
+	if (m_bVisible == false)
+		return;
 
 	if (m_pInstance_ModelCom == nullptr)
 		return;
@@ -141,7 +146,6 @@ void CEditEffect::Reference_Mat_For_EditEffect()
 
 HRESULT CEditEffect::Save_Effect(const _char* pPath)
 {
-
 	_string strPerfectFilePath = pPath;
 	strPerfectFilePath += ".bin";
 	
@@ -154,12 +158,12 @@ HRESULT CEditEffect::Save_Effect(const _char* pPath)
 
 
 	if (hFile == INVALID_HANDLE_VALUE) {
-		MessageBox(NULL, L"오브젝트 저장 실패", L"System Message", MB_OK);
+		MessageBox(NULL, L"이펙트 오브젝트 저장 실패", L"System Message", MB_OK);
 		return E_FAIL;
 	}
 
+	m_strPath = strPerfectFilePath;
 
-	
 	DWORD	dwByte(0);
 
 	if (m_pLightCom != nullptr) 
@@ -291,7 +295,35 @@ HRESULT CEditEffect::Save_Effect(const _char* pPath)
 
 	m_pInstance_ModelCom->Save_InstanceModel(hFile);
 
+
+	MessageBox(NULL, L"이펙트 저장 성공", L"System Message", MB_OK);
+
 	CloseHandle(hFile);
+
+	return S_OK;
+}
+
+HRESULT CEditEffect::Save_Path(HANDLE hFile)
+{
+	DWORD dwByte;
+
+	size_t iObjectLength = m_strPath.length();
+	const _char* pFilePath = m_strPath.c_str();
+
+	if (!WriteFile(hFile, &m_EffectInfo.eEffectType, sizeof(EFFECT_TYPE), &dwByte, nullptr)) {
+		return E_FAIL;
+	}
+
+	if (!WriteFile(hFile, &iObjectLength, sizeof(size_t), &dwByte, nullptr)) {
+		return E_FAIL;
+	}
+
+	if (pFilePath != 0)
+	{
+		if (!WriteFile(hFile, pFilePath, sizeof(_char) * ((DWORD)iObjectLength + 1), &dwByte, nullptr)) {
+			return E_FAIL;
+		}
+	}
 
 	return S_OK;
 }
@@ -307,6 +339,7 @@ HRESULT CEditEffect::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
+
 
 	return S_OK;
 }
@@ -341,6 +374,7 @@ CGameObject* CEditEffect::Clone(void* pArg, CGameObject* pOwner)
 void CEditEffect::Free()
 {
 	__super::Free();
+
 }
 
 void CEditEffect::Describe_Entity()
@@ -356,6 +390,8 @@ void CEditEffect::Describe_Entity()
 	{
 		m_EffectInfo.eRenderOrder = static_cast<RENDER>(iCurrentItem);
 	}
+	
+	GUI::Checkbox("Visible", &m_bVisible);
 
 	m_pTransformCom->Describe_Entity();
 
@@ -364,7 +400,6 @@ void CEditEffect::Describe_Entity()
 	GUI::Checkbox("Dissolve", &m_EffectInfo.isDissolve);
 	GUI::Checkbox("Distortion", &m_EffectInfo.isDistortion);
 	GUI::Checkbox("Noise", &m_EffectInfo.isNoise);
-
 
 	if (GUI::Checkbox("Billboard", &m_EffectInfo.isBillboard))
 	{
@@ -404,6 +439,7 @@ void CEditEffect::Describe_Entity()
 		GUI::ColorEdit4("Emissive", (_float*)&m_EffectInfo.vEmissive);
 
 		GUI::Checkbox("EmissiveTex", &m_EffectInfo.isEmissive);
+		GUI::Checkbox("EmissiveDissolve", &m_EffectInfo.isEmissiveDissolve);
 
 		if (m_EffectInfo.isEmissive)
 		{
@@ -581,7 +617,7 @@ void CEditEffect::Describe_Entity()
 
 				GUI::Checkbox("Reverse Dissolve", &m_EffectInfo.isReverseDissolve);
 
-				_string strName = m_strDissolveName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISSOLVE_TEXTURE", (CComponent**)&m_pDissolve_TextureCom, nullptr, this);
+				_string strName  = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISSOLVE_TEXTURE", (CComponent**)&m_pDissolve_TextureCom, nullptr, this);
 				
 				if (strName != "") {
 					m_strDissolveName = strName;
@@ -686,6 +722,21 @@ void CEditEffect::Describe_Entity()
 		}
 
 	}
+
+	ImGui::Begin("Simple Plot");
+
+	// samples.data()와 개수, optional offset 인덱스 등 넘길 수 있음
+	ImGui::PlotLines("Value", m_ValueVector.data(), (int)m_ValueVector.size(), 0, nullptr, FLT_MAX, FLT_MAX, ImVec2(0, 100));
+
+	GUI::InputFloat("InputValue", &m_fInputValue);
+
+	if (GUI::Button("AddValue"))
+	{
+		m_ValueVector.push_back(m_fInputValue);
+	}
+
+	ImGui::End();
+
 
 	GUI::Separator(); GUI::Spacing();
 

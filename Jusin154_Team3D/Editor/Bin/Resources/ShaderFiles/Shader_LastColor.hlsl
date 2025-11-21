@@ -50,7 +50,7 @@ PS_OUT_BACKBUFFER PS_OUT_LASTCOLOR(PS_IN In)
     
     Out.vBackBuffer = float4(0.f, 0.f, 0.f, 0.f);
     
-    vector vColorTexture = g_ColorTexture.Sample(ClampSampler, In.vTexcoord);
+    vector vColorTexture = g_ColorTexture.Sample(DefaultSampler, In.vTexcoord);
     
     if (0.f == vColorTexture.a)
     {

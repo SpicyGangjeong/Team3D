@@ -84,6 +84,8 @@ vector<D3D11_MAPPED_SUBRESOURCE> CComputeShader::Dispatch(_uint iSRVIndex, _uint
 		if (SUCCEEDED(m_pContext->Map(m_pOutputStagingBuffer[i], 0, D3D11_MAP_READ, 0, &StagingSubResource)))
 		{
 
+
+
 			StagingSubResources.push_back(StagingSubResource);
 
 			m_pContext->Unmap(m_pOutputStagingBuffer[i], 0);
@@ -320,7 +322,7 @@ CComputeShader* CComputeShader::Create(ID3D11Device* pDevice, ID3D11DeviceContex
 {
 	CComputeShader* pInstance = new CComputeShader(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize(pShaderFilePath, pStartFunctionName, iNumElement, iNumInputBuffer, iNumOutputBuffer, iOutputStructStride, iInputStructStride)))
+	if (FAILED(pInstance->Initialize(pShaderFilePath, pStartFunctionName, iNumElement, iNumInputBuffer, iNumOutputBuffer, iInputStructStride, iOutputStructStride)))
 	{
 		MSG_BOX("Failed to Created : CComputeShader Prototype");
 		SAFE_RELEASE(pInstance);

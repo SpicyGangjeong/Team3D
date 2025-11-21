@@ -65,9 +65,9 @@ void CRenderer::Render()
 	Render_Blur();
 	Render_Combined();
 	Render_Effect();
-	Render_WeightBlend();
 	Render_NonLight();
 	Render_Blend();
+	Render_WeightBlend();
 	Render_LastColor();
 	Render_UI();
 
@@ -176,10 +176,16 @@ void CRenderer::Render_LightAcc()
 	m_pShader->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float4));
 	m_pShader->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float));
 
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Diffuse"), m_pShader, "g_DiffuseTexture"))) {
+		return;
+	}
 	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Normal"), m_pShader, "g_NormalTexture"))) {
 		return;
 	}
 	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Depth"), m_pShader, "g_DepthTexture"))) {
+		return;
+	}
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Surface"), m_pShader, "g_SurfaceTexture"))) {
 		return;
 	}
 
@@ -256,9 +262,6 @@ void CRenderer::Render_Combined()
 			return;
 		}
 		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur_X"), m_pShader, "g_BlurXTexture"))) {
-			return;
-		}
-		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur_Weight"), m_pShader, "g_BlurWeightTexture"))) {
 			return;
 		}
 
@@ -364,11 +367,6 @@ void CRenderer::Render_Blur()
 	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur"), m_pShader, "g_BlurTexture"))) {
 		return;
 	}
-
-	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur_Weight"), m_pShader, "g_BlurWeightTexture"))) {
-		return;
-	}
-
 	
 	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::BLUR));
 
@@ -538,6 +536,12 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 
+		/* Target_Surface */
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Surface"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.0f, 0.f, 0.f, 0.f)))) {
+			return E_FAIL;
+		}
+
 		/* Target_Shade */
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Shade"), (_uint)Viewport.Width, (_uint)Viewport.Height,
 			DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.0f, 0.f, 0.f, 1.f)))) {
@@ -620,6 +624,9 @@ HRESULT CRenderer::Initialize()
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Color")))) {
 			return E_FAIL;
 		}
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Surface")))) {
+			return E_FAIL;
+		}
 
 		/* MRT_LightAcc */
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_LightAcc"), TEXT("Target_Shade")))) {
@@ -639,10 +646,6 @@ HRESULT CRenderer::Initialize()
 
 		/* MRT_Blur */
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Blur"), TEXT("Target_Blur")))) {
-			return E_FAIL;
-		}
-
-		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Blur"), TEXT("Target_Blur_Weight")))) {
 			return E_FAIL;
 		}
 
@@ -672,19 +675,19 @@ HRESULT CRenderer::Initialize()
 		
 	}
 
-	m_pShader = (CShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, TEXT("FX_DEFERRED"), nullptr, nullptr);
+	m_pShader = (CShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, FX_DEFERRED, nullptr, nullptr);
 	if (nullptr == m_pShader) {
 		return E_FAIL;
 	}
 
 
-	m_pLastColorShader = (CShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, TEXT("FX_LASTCOLOR"), nullptr, nullptr);
+	m_pLastColorShader = (CShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, FX_LASTCOLOR, nullptr, nullptr);
 
 	if (nullptr == m_pLastColorShader) {
 		return E_FAIL;
 	}
 
-	m_pWeightBlendShader = (CShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, TEXT("FX_WEIGHTBELND"), nullptr, nullptr);
+	m_pWeightBlendShader = (CShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, FX_WEIGHTBELND, nullptr, nullptr);
 	
 	if (nullptr == m_pWeightBlendShader) {
 		return E_FAIL;

@@ -31,8 +31,8 @@ public:
 	virtual const vector<wstring> Element_Name();
 	virtual void ElementAllVisible(_bool bVisible);
 
-	virtual void Add_Function(wstring Name, function<void()> Evnet) override;
-	virtual void Function_Callback(wstring Name) override;
+	virtual void Add_Function(wstring Name, function<void(void*)> Evnet) override;
+	virtual void Function_Callback(wstring Name, void* pArg = nullptr) override;
 protected:
 	virtual void Add_Element(wstring Name, class CGameObject* pElement);
 	virtual _bool Chack_Visible() override;
@@ -42,7 +42,7 @@ protected:
 	vector<wstring>						m_ElementName;			// 엘리멘트들의 이름을 전해주기 위해서
 	map<wstring, class CGameObject*>	m_Elements_map;			// 캔버스에서 내가 원하는 패널을 찾기 위해서
 
-	multimap<wstring, function<void()>>		m_ElementFunction_map;
+	multimap<wstring, function<void(void*)>>		m_ElementFunction_map;
 
 	_int								m_iElements_Count{};	// 전체 엘리멘트의 갯수
 

@@ -9,7 +9,7 @@ NS_END
 
 NS_BEGIN(Editor)
 
-class CMapObject_Collision final : public CMapObject // LOD 모델이 없는 애들
+class CMapObject_Collision final : public CMapObject // 충돌용 Mesh
 {
 private:
 	CMapObject_Collision(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
