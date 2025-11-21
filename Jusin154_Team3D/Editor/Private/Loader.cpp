@@ -1155,6 +1155,7 @@ void APIENTRY Deferred_FolderLoad_Main(ID3D11Device* pDevice, ID3D11DeviceContex
 		if (strcmp(file.path().extension().string().c_str(), pFileExt)) { continue; }
 
 		FOLDER_LOAD* pContents = new FOLDER_LOAD;
+		pContents->bLoadTags = bUseTag;
 		{ // FOLDER_LOAD
 			_char szFilePath[MAX_PATH] = {};
 			strcpy_s(szFilePath, MAX_PATH, file.path().string().c_str());
@@ -1166,8 +1167,12 @@ void APIENTRY Deferred_FolderLoad_Main(ID3D11Device* pDevice, ID3D11DeviceContex
 			_uint iNumMesh = pModel->Get_NumMeshes();
 
 			{
-				pContents->pModelTag = wstrFileName;
-				pContents->pathModel = file.path();
+				if (true == bUseTag)
+				{
+					pContents->pModelTag = wstrFileName;
+					pContents->pathModel = file.path();
+				}
+
 				pContents->pLoadedModel = pModel;
 
 				pContents->pRigidBodyTags.reserve(iNumMesh);
@@ -1631,19 +1636,19 @@ vector<vector<FOLDER_LOAD*>*> Contents(iLoadCount);
 	{ /* Terrain */
 		jobFutures.emplace_back(Deferred_FolderLoad(
 			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Collision\\Terrain",
-			".fbx", false,
+			".bin", false,
 			&Contents[jobFutures.size()]
 		));
 		jobFutures.emplace_back(Deferred_FolderLoad(
 			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Terrain",
-			".fbx", false,
+			".bin", false,
 			&Contents[jobFutures.size()]
 		));
 	}
 	{ /* TScrolls */
 		jobFutures.emplace_back(Deferred_FolderLoad(
 			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_TScrolls\\Meshes",
-			".fbx", false,
+			".bin", false,
 			&Contents[jobFutures.size()]
 		));
 		jobFutures.emplace_back(Deferred_FolderLoad(
@@ -1914,8 +1919,10 @@ for (auto& jobFuture : jobFutures)
 for (_uint i = 0; i < Contents.size(); ++i) {
 	for (_uint j = 0; j < (Contents[i])->size(); ++j) {
 		FOLDER_LOAD* pContents = (*Contents[i])[j];
-		ModelPrototypeTags.push_back(pContents->pModelTag);
-		ModelPrototypePath.push_back(pContents->pathModel);
+		if (true == pContents->bLoadTags) {
+			ModelPrototypeTags.push_back(pContents->pModelTag);
+			ModelPrototypePath.push_back(pContents->pathModel);
+		}
 
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, pContents->pModelTag, pContents->pLoadedModel))) {
 			return E_FAIL;
