@@ -505,7 +505,6 @@ HRESULT CPhysX_Manager::Initialize()
 	//	}
 	//}
 #endif // 기무리
-#endif // EDITOR_PROJECT
 
 
 #ifdef 진우
@@ -538,6 +537,7 @@ HRESULT CPhysX_Manager::Initialize()
 	//	}
 	//}
 #endif // 진우
+#endif // EDITOR_PROJECT
 
 #ifdef Bin
 	PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
