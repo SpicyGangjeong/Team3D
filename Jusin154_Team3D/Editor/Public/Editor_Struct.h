@@ -29,21 +29,14 @@ typedef struct tagMapObjectLodDesc : public tagMapObject_Desc
 	vector<_uint>*			pModelPathIndices = { nullptr };
 }MAPOBJECT_LOD_DESC;
 
-typedef struct tagOnCollsionInfo 
-{
-	_vector vWorldPos = {};		// 접촉지점
-	_vector vWorldNomal = {};	// 접촉노말
-	_vector vHitDir = {};		// 시도한 move 방향
-	_float  fLength = {};		// 작용된 힘
-
-}ON_COLLISION_INFO;
 
 typedef struct tagFolderLoad {
 	_wstring							pModelTag;
 	CModel*								pLoadedModel;
 	filesystem::path					pathModel;
+
 	_bool								bLoadTags;
-	vector<const _tchar*>				pRigidBodyTags;
+	vector<_wstring>					pRigidBodyTags;
 	vector<CRigidBody_Static*>			LoadedRigidBody;
 }FOLDER_LOAD;
 
