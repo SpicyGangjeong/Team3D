@@ -27,12 +27,16 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	_bool Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
+
 private:
 	vector<InputCondition> m_InputConditions;
 	_bool m_bSprintToggle = { false };
-
+	_bool m_bWalkToggle = { false };
+	class CCamPosition_Player* m_pCamPosition_TopDown_LookPart = { nullptr };
+	class CCamPosition_Arm* m_pCamPosition_TopDown_FollowPart = { nullptr };
 private:
 	HRESULT Ready_Components();
+	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
 	void Setup_InputConditions();
 	void Key_Input(_float fTimeDelta);
@@ -50,8 +54,10 @@ private:
 	virtual void Set_Anim();
 	_bool Check(FSMSTATE::ESTATE state);
 	_bool IsSprint();
+	_bool IsWalk();
 public:
 	virtual void Reset_Sprint() { m_bSprintToggle = false; }
+	virtual void Reset_Walk() { m_bWalkToggle = false; }
 
 
 #pragma endregion
