@@ -8,6 +8,7 @@ class ENGINE_DLL CBone final : public CBase
 {
 private:
 	CBone();
+	CBone(const CBone& other);
 	virtual ~CBone() = default;
 public:
 	_matrix Get_CombinedTransformationMatrix() const {
