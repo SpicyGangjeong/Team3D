@@ -171,7 +171,8 @@ void CChannel::Update_TransformationMatirx(const vector<CBone*>& Bones, _float f
 		_vector vCurrentPos = pTransform->Get_State(STATE::POSITION);
 		_vector vTargetPos = vCurrentPos + vDeltaWorld;
 
-		pTransform->Set_State(STATE::POSITION, vTargetPos);
+		//pTransform->Set_State(STATE::POSITION, vTargetPos);
+		pTransform->AccumulateMomentum(vDeltaWorld);
 
 		m_vPrevRootPos = vCurRootPos;
 		vTranslation = XMVectorZero();

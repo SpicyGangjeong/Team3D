@@ -306,7 +306,7 @@ void CGameInstance::Present_TimeCost() const
 		GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
 		GUI::Text("Timer_Occupancy %d", int(m_fTimer_Present / fTotal * 100.f));
 	}
-	GUI::Text("GameInstance RefCNT : %d", m_iRefCnt);
+	GUI::Text("GameInstance RefCNT : %d", m_iRefCnt.load());
 	static float values[60] = {};
 	static int values_offset = 0;
 	static double refresh_time = 0.0;

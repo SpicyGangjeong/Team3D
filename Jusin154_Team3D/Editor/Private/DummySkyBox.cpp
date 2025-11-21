@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "DebugCamera.h"
 #include "Layer.h"
+#include "Camera_Gaze.h"
 
 CDummySkyBox::CDummySkyBox(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject{ pDevice, pContext }
