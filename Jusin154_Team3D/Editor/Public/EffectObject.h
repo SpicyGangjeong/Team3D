@@ -51,6 +51,7 @@ public:
 		_bool	isMaskUVMove = {};
 		_bool   isBlur = {};
 		_bool   isBillboard = {};
+	
 
 		_float4 vEmissive = { 0.f ,0.f ,0.f ,0.f };
 		_float  fDiffuseAlpha = { 1.f };
@@ -66,6 +67,11 @@ public:
 		EFFECT_TYPE eEffectType = { EFFECT_TYPE::EFFECT };
 
 		_bool   isEmissiveDissolve = { false };
+
+		_bool   isMaskClampSample = { false };
+		_bool   isNoiseColor = { false };
+		_bool   isNoiseAlpha = { false };
+		_bool	isNomalDissolve = {};
 
 	}EFFECT_INFO;
 
@@ -116,6 +122,10 @@ public:
 		_bool   isReverseDissolve = {};
 		EFFECT_TYPE eEffectType = { EFFECT_TYPE::EFFECT };
 		_bool   isEmissiveDissolve = { false };
+		_bool   isMaskClampSample = { false };
+		_bool   isNoiseColor = { false };
+		_bool   isNoiseAlpha = { false };
+		_bool	isNomalDissolve = {};
 
 	}PRE_EFFECT_INFO;
 
