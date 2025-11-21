@@ -39,7 +39,7 @@ typedef struct tagOnCollsionInfo
 }ON_COLLISION_INFO;
 
 typedef struct tagFolderLoad {
-	const _tchar*						pModelTag;
+	_wstring							pModelTag;
 	CModel*								pLoadedModel;
 	filesystem::path					pathModel;
 
