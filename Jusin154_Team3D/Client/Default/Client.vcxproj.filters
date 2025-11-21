@@ -64,6 +64,72 @@
     <ClInclude Include="..\Public\MapInfo.h">
       <Filter>03.InfoInstance\02.MapInfo</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Player.h">
+      <Filter>02.GameObjects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Wand.h">
+      <Filter>02.GameObjects\Wand</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Root.h">
+      <Filter>80.State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Combat.h">
+      <Filter>80.State\State_Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Cast.h">
+      <Filter>80.State\State_Combat\State_Cast</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_LightAttack.h">
+      <Filter>80.State\State_Combat\State_LightAttack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Skill.h">
+      <Filter>80.State\State_Combat\State_Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Skill2.h">
+      <Filter>80.State\State_Combat\State_Skill2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Move.h">
+      <Filter>80.State\State_Move</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Idle.h">
+      <Filter>80.State\State_Move\State_Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Jog.h">
+      <Filter>80.State\State_Move\State_Jog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Walk.h">
+      <Filter>80.State\State_Move\State_Walk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Sprint.h">
+      <Filter>80.State\State_Move\State_Sprint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Dodge.h">
+      <Filter>80.State\State_Move\State_Dodge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Idle_Turn.h">
+      <Filter>80.State\State_Move\State_Idle_Turn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Jump.h">
+      <Filter>80.State\State_Jump</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Land.h">
+      <Filter>80.State\State_Land</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CamPosition_Player.h">
+      <Filter>02.GameObjects\Cameras\CameraPosition\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CamPosition_Arm.h">
+      <Filter>02.GameObjects\Cameras\CameraPosition\Arm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CamPosition.h">
+      <Filter>02.GameObjects\Cameras\CameraPosition</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Camera_Gaze.h">
+      <Filter>02.GameObjects\Cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SkyBox.h">
+      <Filter>02.GameObjects\SkyBox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -194,6 +260,60 @@
     <Filter Include="03.InfoInstance\02.MapInfo">
       <UniqueIdentifier>{413e6692-6e4a-4b00-8306-edf652bd876a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Wand">
+      <UniqueIdentifier>{b719d948-fce3-4144-9d2c-edcab4cfceaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State">
+      <UniqueIdentifier>{be963729-ed65-4506-82f2-24213f5ecf5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\State_Combat">
+      <UniqueIdentifier>{fb0a8b8b-5376-4606-8e6e-b020abf2d476}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\State_Combat\State_Cast">
+      <UniqueIdentifier>{5e4bd8c2-9ace-4617-880b-9c7fa826dfd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\State_Combat\State_LightAttack">
+      <UniqueIdentifier>{28b2cdcb-e307-4da5-a222-24a77480605c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\State_Combat\State_Skill">
+      <UniqueIdentifier>{8f9ce518-cd40-4a0c-ac4f-f77459a13cfd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\State_Combat\State_Skill2">
+      <UniqueIdentifier>{68ec69bb-6697-42aa-abf4-cd6d148a1648}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\State_Move">
+      <UniqueIdentifier>{99f16910-04c8-44e2-84ff-17321d94d1f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\State_Move\State_Idle">
+      <UniqueIdentifier>{e2599ab3-3d02-420c-b29c-0f87b4263429}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\State_Move\State_Jog">
+      <UniqueIdentifier>{3110d3d0-422e-42eb-a045-c8c784528165}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\State_Move\State_Walk">
+      <UniqueIdentifier>{cd90a5f0-2428-4537-801f-a65b7273c3be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\State_Move\State_Sprint">
+      <UniqueIdentifier>{5f5abe29-f43a-4de7-8955-b21ca1c6fb94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\State_Move\State_Dodge">
+      <UniqueIdentifier>{03cf23a9-5c0f-4cb1-a32b-5807a612c039}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\State_Move\State_Idle_Turn">
+      <UniqueIdentifier>{b3fdd366-2689-49c9-b1c1-6843772e9661}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\State_Jump">
+      <UniqueIdentifier>{309d0593-507f-484c-92aa-7c8fc483941b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\State_Land">
+      <UniqueIdentifier>{a3ab0237-10b3-4699-a39d-63c625024f67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Cameras\CameraPosition\Arm">
+      <UniqueIdentifier>{f0da95a0-107f-42ff-9e77-3503bb48aa12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\SkyBox">
+      <UniqueIdentifier>{e83f88ec-c414-43b4-b437-52288cee431a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -240,6 +360,72 @@
     </ClCompile>
     <ClCompile Include="..\Private\MapInfo.cpp">
       <Filter>03.InfoInstance\02.MapInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player.cpp">
+      <Filter>02.GameObjects\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Wand.cpp">
+      <Filter>02.GameObjects\Wand</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Root.cpp">
+      <Filter>80.State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Combat.cpp">
+      <Filter>80.State\State_Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Cast.cpp">
+      <Filter>80.State\State_Combat\State_Cast</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_LightAttack.cpp">
+      <Filter>80.State\State_Combat\State_LightAttack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Skill.cpp">
+      <Filter>80.State\State_Combat\State_Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Skill2.cpp">
+      <Filter>80.State\State_Combat\State_Skill2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Move.cpp">
+      <Filter>80.State\State_Move</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Idle.cpp">
+      <Filter>80.State\State_Move\State_Idle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Jog.cpp">
+      <Filter>80.State\State_Move\State_Jog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Walk.cpp">
+      <Filter>80.State\State_Move\State_Walk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Sprint.cpp">
+      <Filter>80.State\State_Move\State_Sprint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Dodge.cpp">
+      <Filter>80.State\State_Move\State_Dodge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Idle_Turn.cpp">
+      <Filter>80.State\State_Move\State_Idle_Turn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Jump.cpp">
+      <Filter>80.State\State_Jump</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Land.cpp">
+      <Filter>80.State\State_Land</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CamPosition_Player.cpp">
+      <Filter>02.GameObjects\Cameras\CameraPosition\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CamPosition_Arm.cpp">
+      <Filter>02.GameObjects\Cameras\CameraPosition\Arm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CamPosition.cpp">
+      <Filter>02.GameObjects\Cameras\CameraPosition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera_Gaze.cpp">
+      <Filter>02.GameObjects\Cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SkyBox.cpp">
+      <Filter>02.GameObjects\SkyBox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -3,8 +3,9 @@
 NS_BEGIN(FSMSTATE)
 enum ESTATE
 {
+    ROOT,
     IDLE,IDLE_TURN,
-    MOVE, WALK, WALK_FWD, WALK_BWD, JOG, SPRINT,
+    MOVE, WALK, FWD, BWD, JOG, SPRINT,
     JUMP,
     LAND,
     DODGE,
@@ -29,6 +30,7 @@ public:
     void Change_State(_uint iIndex);
     void Update(_float fTimeDelta);
 
+    CState* Get_Current() { return m_pCurrent; }
     _uint Get_CurrState();
     _uint Get_PrevState();
     void Set_Parent(FSMSTATE::ESTATE Child, FSMSTATE::ESTATE Parent);

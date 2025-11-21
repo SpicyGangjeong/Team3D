@@ -82,7 +82,6 @@ void CFSM::Set_Parent(FSMSTATE::ESTATE Child, FSMSTATE::ESTATE Parent)
 		pChild->Set_Parent(pParent);
 }
 
-
 CFSM* CFSM::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CFSM* pInstance = new CFSM(pDevice, pContext);

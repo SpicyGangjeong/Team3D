@@ -6,7 +6,6 @@ NS_BEGIN(Engine)
 
 class ENGINE_DLL CComputeShader final : public CBase
 {
-
 private:
 	CComputeShader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CComputeShader() = default;
@@ -17,6 +16,7 @@ public:
 public:
 	vector<D3D11_MAPPED_SUBRESOURCE> Dispatch(_uint iSRVIndex, _uint iUAVIndex, _float3 vGroupCount, ID3D11Buffer** ppBuffers, ID3D11Buffer* pConstantBuffer = nullptr);
 	void    Bind_OutPut_SRV(_uint iIndex, _uint iBufferIndex);
+	ID3D11ComputeShader* Get_Compute() { return m_pComputeShader; }
 private:
 	void	Bind_SRV(_uint iIndex);
 	void	Bind_UAV(_uint iIndex);
@@ -43,7 +43,7 @@ private:
 	vector<ID3D11Buffer*>				m_pOutputStagingBuffer = {};
 
 	ID3D11ComputeShader* m_pComputeShader = nullptr;
-
+	
 
 
 private:
