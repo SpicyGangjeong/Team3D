@@ -89,6 +89,11 @@ private:
 
 #endif // 기무리
 
+#ifdef Bin
+	PhsXUserData PlaneData = {};
+
+#endif // 기무리
+
 
 	vector<PSX::PxMaterial*> m_pMaterials = { };
 	_uint m_iNumLevel = {};

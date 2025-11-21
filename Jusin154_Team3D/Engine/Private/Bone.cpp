@@ -5,6 +5,16 @@ CBone::CBone()
 {
 }
 
+CBone::CBone(const CBone& other):
+	CBase()
+{
+	memcpy_s(m_szName, sizeof(_char) * MAX_PATH, other.m_szName, sizeof(_char) * MAX_PATH);
+	m_TransformationMatrix = other.m_TransformationMatrix;
+	m_CombinedTransformationMatrix = other.m_CombinedTransformationMatrix;
+	m_iParentBoneIndex = other.m_iParentBoneIndex;
+	m_matInitial = other.m_matInitial;
+}
+
 void CBone::Get_KeyFrame(KEYFRAME& kf, _bool bIsCurrentFrame)
 {
 	_vector vScale = {};

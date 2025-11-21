@@ -29,7 +29,8 @@ private:
 	HRESULT Ready_Layer_Camera();
 	HRESULT Ready_Layer_Sound();
 	HRESULT Ready_Layer_Effect(const _wstring& strLayerTag);
-	
+	HRESULT Ready_Layer_Player(const _wstring& strLayerTag);
+	HRESULT Ready_Layer_SkyBox(const _wstring& strLayerTag);
 
 public:
 	static pair<CLevel*, function<void()>> Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID, void* pArg);
