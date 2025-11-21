@@ -6,6 +6,10 @@
 #include "Camera_Gaze.h"
 #include "CamPosition_Arm.h"
 #include "Wand.h"
+#include "Character_Controller.h"
+#include "CallBack_Playable_Behavior.h"
+#include "CallBack_Playable_HitReport.h"
+#include "Character_Controller.h"
 
 #pragma region STATE
 #include "State_Root.h"
@@ -65,11 +69,15 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	m_pFSM->Change_State(FSMSTATE::ROOT);
 
+	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
+	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
 	return S_OK;
 }
 
 void CPlayer::Priority_Update(_float fTimeDelta)
 {
+	m_pTransformCom->RewindMomentum();
+	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_Position());
 	__super::Priority_Update(fTimeDelta);
 }
 
@@ -84,6 +92,8 @@ void CPlayer::Update(_float fTimeDelta)
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
 	__super::Update(fTimeDelta);
+	Describe_Entity();
+	m_pCharacter_Controller->Move(fTimeDelta);
 }
 
 void CPlayer::Late_Update(_float fTimeDelta)
@@ -122,6 +132,11 @@ HRESULT CPlayer::Render()
 		}
 	}
 
+#ifdef _DEBUG
+	m_pCharacter_Controller->Render();
+	//m_pRigidBody->Render();
+#endif
+
 	return S_OK;
 }
 
@@ -147,6 +162,35 @@ HRESULT CPlayer::Ready_Components()
 		reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
+	{ // CCT
+		CCharacter_Controller::Character_Controller_DESC Desc{};
+
+		Desc.iSubKind = ENUM_CLASS(COLLIDABLEOBJECT::PLAYER);
+		Desc.pTransform = m_pTransformCom;
+		Desc.eBodyType = ACTOR::CAPSULE;
+		Desc.fContactOffset = 0.1f;
+		Desc.fMaterial = { 0.5f, 0.5f, 0.6f };
+		Desc.bAutoStepping = { false };
+		Desc.fStepOffset = { 0.05f };
+		Desc.fRadius = 0.5f;
+		Desc.fHeight = 1.0f;
+		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Playable_HitReport::Create();
+		Desc.pCallback_Behavior = m_pCallBack_Behavior = CCallBack_Playable_Behavior::Create();
+		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), (CComponent**)&m_pCharacter_Controller, &Desc))) {
+			return E_FAIL;
+		}
+	}
+
+	{ // DO
+		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
+		Desc.iSubKind = ENUM_CLASS(COLLIDABLEOBJECT::PLAYER);
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
+			return E_FAIL;
+		}
+		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor());
+	}
+
 	return S_OK;
 }
 
@@ -165,7 +209,6 @@ HRESULT CPlayer::Ready_Parts()
 	CCamPosition_Player::CAMERAPOSITION_PLAYER_DESC Desc{};
 
 	Desc.pParentTransform = m_pTransformCom;
-	//Desc.pSocketMatrices = m_pModelCom->Get_BoneMatrixPtr("SKT_HeadCamera");
 
 	if (FAILED(Add_PartObject<CCamPosition_Player>("Cam_TopDown_Look", g_iStaticLevel, &m_pCamPosition_TopDown_LookPart, &Desc)))
 	{
@@ -387,12 +430,26 @@ void CPlayer::Free()
 {
 	__super::Free();
 
+	if (nullptr != m_pCallBack_Behavior) {
+		m_pCallBack_Behavior->Finalize();
+	}
+	if (nullptr != m_pCallBack_HitReport) {
+		m_pCallBack_HitReport->Finalize();
+	}
+	SAFE_RELEASE(m_pCharacter_Controller);
+	SAFE_RELEASE(m_pRigidBody);
+	Safe_Delete(m_pCallBack_Behavior);
+	Safe_Delete(m_pCallBack_HitReport);
 	SAFE_RELEASE(m_pCamPosition_TopDown_FollowPart);
 	SAFE_RELEASE(m_pCamPosition_TopDown_LookPart);
 }
 
 void CPlayer::Describe_Entity()
 {
+	m_pCharacter_Controller->Describe_Entity();
+	_float4 vMomentum = {};
+	XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());
+	GUI::Text("%.1f %.1f %.1f %.1f ", vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);
 	_char label[256];
 	for (auto& iter : m_KeyFrames)
 	{

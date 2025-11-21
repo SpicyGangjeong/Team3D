@@ -68,7 +68,7 @@
       <Filter>02.GameObjects\Player</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Wand.h">
-      <Filter>02.GameObjects\Wand</Filter>
+      <Filter>02.GameObjects\Item\Wand</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\State_Root.h">
       <Filter>80.State</Filter>
@@ -129,6 +129,33 @@
     </ClInclude>
     <ClInclude Include="..\Public\SkyBox.h">
       <Filter>02.GameObjects\SkyBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Broom.h">
+      <Filter>02.GameObjects\Item\Broom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dummy_PhysXWall.h">
+      <Filter>02.GameObjects\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dummy_PhysXPlayable.h">
+      <Filter>02.GameObjects\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CallBack_EffectHitBox_Behavior.h">
+      <Filter>02.GameObjects\PhysX\CallBack\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CallBack_Monster_Behavior.h">
+      <Filter>02.GameObjects\PhysX\CallBack\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CallBack_Playable_Behavior.h">
+      <Filter>02.GameObjects\PhysX\CallBack\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CallBack_Playable_HitReport.h">
+      <Filter>02.GameObjects\PhysX\CallBack\HitReport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CallBack_EffectHitBox_HitReport.h">
+      <Filter>02.GameObjects\PhysX\CallBack\HitReport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CallBack_Monster_HitReport.h">
+      <Filter>02.GameObjects\PhysX\CallBack\HitReport</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -260,9 +287,6 @@
     <Filter Include="03.InfoInstance\02.MapInfo">
       <UniqueIdentifier>{413e6692-6e4a-4b00-8306-edf652bd876a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Wand">
-      <UniqueIdentifier>{b719d948-fce3-4144-9d2c-edcab4cfceaf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="80.State">
       <UniqueIdentifier>{be963729-ed65-4506-82f2-24213f5ecf5a}</UniqueIdentifier>
     </Filter>
@@ -313,6 +337,27 @@
     </Filter>
     <Filter Include="02.GameObjects\SkyBox">
       <UniqueIdentifier>{e83f88ec-c414-43b4-b437-52288cee431a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Item">
+      <UniqueIdentifier>{9cc88058-bda3-4ed0-9ec9-1968963fdda4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Item\Broom">
+      <UniqueIdentifier>{aac01a47-304a-4319-8bd8-fdd9020ddf18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Item\Wand">
+      <UniqueIdentifier>{b719d948-fce3-4144-9d2c-edcab4cfceaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\PhysX">
+      <UniqueIdentifier>{ddf8c8e6-ca51-42e0-b08f-13ae0fd9d842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\PhysX\CallBack">
+      <UniqueIdentifier>{5fd99d60-e641-4229-9a72-8f5d7744c6b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\PhysX\CallBack\Behavior">
+      <UniqueIdentifier>{ad7a67bd-df18-4c03-85eb-960881922128}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\PhysX\CallBack\HitReport">
+      <UniqueIdentifier>{dc05dfc9-22e5-4a2a-b016-c55b215c0c68}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -365,7 +410,7 @@
       <Filter>02.GameObjects\Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Wand.cpp">
-      <Filter>02.GameObjects\Wand</Filter>
+      <Filter>02.GameObjects\Item\Wand</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\State_Root.cpp">
       <Filter>80.State</Filter>
@@ -426,6 +471,33 @@
     </ClCompile>
     <ClCompile Include="..\Private\SkyBox.cpp">
       <Filter>02.GameObjects\SkyBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Broom.cpp">
+      <Filter>02.GameObjects\Item\Broom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_PhysXWall.cpp">
+      <Filter>02.GameObjects\PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dummy_PhysXPlayable.cpp">
+      <Filter>02.GameObjects\PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CallBack_Monster_Behavior.cpp">
+      <Filter>02.GameObjects\PhysX\CallBack\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CallBack_Playable_Behavior.cpp">
+      <Filter>02.GameObjects\PhysX\CallBack\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CallBack_EffectHitBox_Behavior.cpp">
+      <Filter>02.GameObjects\PhysX\CallBack\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CallBack_EffectHitBox_HitReport.cpp">
+      <Filter>02.GameObjects\PhysX\CallBack\HitReport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CallBack_Monster_HitReport.cpp">
+      <Filter>02.GameObjects\PhysX\CallBack\HitReport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CallBack_Playable_HitReport.cpp">
+      <Filter>02.GameObjects\PhysX\CallBack\HitReport</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

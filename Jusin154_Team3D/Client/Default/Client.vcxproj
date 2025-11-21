@@ -157,6 +157,13 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\Broom.h" />
+    <ClInclude Include="..\Public\CallBack_EffectHitBox_Behavior.h" />
+    <ClInclude Include="..\Public\CallBack_EffectHitBox_HitReport.h" />
+    <ClInclude Include="..\Public\CallBack_Monster_Behavior.h" />
+    <ClInclude Include="..\Public\CallBack_Monster_HitReport.h" />
+    <ClInclude Include="..\Public\CallBack_Playable_Behavior.h" />
+    <ClInclude Include="..\Public\CallBack_Playable_HitReport.h" />
     <ClInclude Include="..\Public\Camera_Debug.h" />
     <ClInclude Include="..\Public\Camera_Gaze.h" />
     <ClInclude Include="..\Public\CamPosition.h" />
@@ -169,6 +176,8 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\Public\Dummy_PhysXPlayable.h" />
+    <ClInclude Include="..\Public\Dummy_PhysXWall.h" />
     <ClInclude Include="..\Public\SkyBox.h" />
     <ClInclude Include="..\Public\InfoInstance.h" />
     <ClInclude Include="..\Public\Level_Field.h" />
@@ -205,11 +214,20 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\Broom.cpp" />
+    <ClCompile Include="..\Private\CallBack_EffectHitBox_Behavior.cpp" />
+    <ClCompile Include="..\Private\CallBack_EffectHitBox_HitReport.cpp" />
+    <ClCompile Include="..\Private\CallBack_Monster_Behavior.cpp" />
+    <ClCompile Include="..\Private\CallBack_Monster_HitReport.cpp" />
+    <ClCompile Include="..\Private\CallBack_Playable_Behavior.cpp" />
+    <ClCompile Include="..\Private\CallBack_Playable_HitReport.cpp" />
     <ClCompile Include="..\Private\Camera_Debug.cpp" />
     <ClCompile Include="..\Private\Camera_Gaze.cpp" />
     <ClCompile Include="..\Private\CamPosition.cpp" />
     <ClCompile Include="..\Private\CamPosition_Arm.cpp" />
     <ClCompile Include="..\Private\CamPosition_Player.cpp" />
+    <ClCompile Include="..\Private\Dummy_PhysXPlayable.cpp" />
+    <ClCompile Include="..\Private\Dummy_PhysXWall.cpp" />
     <ClCompile Include="..\Private\SkyBox.cpp" />
     <ClCompile Include="..\Private\InfoInstance.cpp" />
     <ClCompile Include="..\Private\Level_Field.cpp" />

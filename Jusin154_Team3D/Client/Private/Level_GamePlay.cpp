@@ -8,6 +8,9 @@
 #include "Layer.h"
 #include "Player.h"
 #include "SkyBox.h"
+#include "Broom.h"
+#include "Dummy_PhysXWall.h"
+#include "Dummy_PhysXPlayable.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -132,6 +135,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -139,6 +145,15 @@ HRESULT CLevel_GamePlay::Ready_Layer_SkyBox(const _wstring& strLayerTag)
 {
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSkyBox>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE)))
 		return E_FAIL;
+
+	CDummy_PhysXWall::PHYSXDUMMY_DESC Desc{};
+	Desc.vPos = { 0.f, 0.f, 0.f };
+	Desc.vRotRPY = { 0.f, m_pGameInstance->Random_Float(0.f, XM_2PI), 0.f };
+	Desc.iSubKind = 23;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXWall>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE, &Desc))) {
+		return E_FAIL;
+	}
 
 	return S_OK;
 }

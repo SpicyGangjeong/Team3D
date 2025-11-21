@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "Editor_Define.h"
+#include "Client_Define.h"
 #include "GameObject.h"
 
 NS_BEGIN(Engine)
@@ -8,7 +8,7 @@ class CShader;
 class CModel;
 NS_END
 
-NS_BEGIN(Editor)
+NS_BEGIN(Client)
 
 class CBroom final : public CGameObject
 {
