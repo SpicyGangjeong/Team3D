@@ -10,9 +10,6 @@ CVIBuffer_UI_Instance::CVIBuffer_UI_Instance(ID3D11Device* pDevice, ID3D11Device
 CVIBuffer_UI_Instance::CVIBuffer_UI_Instance(const CVIBuffer_UI_Instance& Prototype)
 	: CVIBuffer_Instance{ Prototype }
 	, m_pInstanceVertices{ Prototype.m_pInstanceVertices }
-	, m_fSize{ Prototype.m_fSize }
-	, m_fPositionOffSetX{ Prototype.m_fPositionOffSetX }
-	, m_fPositionOffSetY{ Prototype.m_fPositionOffSetY }
 	, m_fPosition{ Prototype.m_fPosition }
 {
 }
@@ -114,21 +111,12 @@ HRESULT CVIBuffer_UI_Instance::Initialize_Prototype(const INSTANCE_DESC* pInstan
 	m_pInstanceVertices = new VTX_INSTANCE_UI[m_iNumInstance];
 	ZeroMemory(m_pInstanceVertices, sizeof(VTX_INSTANCE_UI) * m_iNumInstance);
 
-	m_fSize = new _float2[m_iNumInstance];
-	ZeroMemory(m_fSize, sizeof(_float2) * m_iNumInstance);
-
 	m_fPosition = new _float2[m_iNumInstance];
 	ZeroMemory(m_fPosition, sizeof(_float2) * m_iNumInstance);
 
-	m_fPositionOffSetX = new _float[m_iNumInstance];
-	ZeroMemory(m_fPositionOffSetX, sizeof(_float) * m_iNumInstance);
-
-	m_fPositionOffSetY = new _float[m_iNumInstance];
-	ZeroMemory(m_fPositionOffSetY, sizeof(_float) * m_iNumInstance);
 
 	for (size_t i = 0; i < m_iNumInstance; ++i)
 	{
-		m_pInstanceVertices[i].fSize = (pDesc->vSize);
 		m_pInstanceVertices[i].fPos = _float2(pDesc->vPsition.x, pDesc->vPsition.y);
 	}
 
@@ -180,7 +168,38 @@ void CVIBuffer_UI_Instance::Set_Size(_float fSizeX, _float fSizeY)
 	{
 		pVertices[i].fSize.x = fSizeX;
 		pVertices[i].fSize.y = fSizeY;
+	}
 
+	m_pContext->Unmap(m_pVBInstance, 0);
+}
+
+void CVIBuffer_UI_Instance::Set_SizeX(_float fSizeX)
+{
+	D3D11_MAPPED_SUBRESOURCE		SubResource{};
+
+	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+
+	VTX_INSTANCE_UI* pVertices = static_cast<VTX_INSTANCE_UI*>(SubResource.pData);
+
+	for (size_t i = 0; i < m_iNumInstance; i++)
+	{
+		pVertices[i].fSize.x = fSizeX;
+	}
+
+	m_pContext->Unmap(m_pVBInstance, 0);
+}
+
+void CVIBuffer_UI_Instance::Set_SizeY(_float fSizeY)
+{
+	D3D11_MAPPED_SUBRESOURCE		SubResource{};
+
+	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+
+	VTX_INSTANCE_UI* pVertices = static_cast<VTX_INSTANCE_UI*>(SubResource.pData);
+
+	for (size_t i = 0; i < m_iNumInstance; i++)
+	{
+		pVertices[i].fSize.y = fSizeY;
 	}
 
 	m_pContext->Unmap(m_pVBInstance, 0);

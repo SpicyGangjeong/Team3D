@@ -6,6 +6,34 @@ NS_BEGIN(Engine)
 
 class ENGINE_DLL CModel final : public CComponent
 {
+public:
+	typedef struct tagMeshDesc
+	{
+		_float3		vPosition = {};
+		_float3		vNormal = {};
+		_float3		vTangent = {};
+		_float3		vBinormal = {};
+		_float2			vTexcoord = {};
+
+		XMUINT4			vBlendIndex = {};
+		_float4			vBlendWeight = {};
+	}MESH_DESC;
+
+	typedef struct tagSkinngMeshDesc
+	{
+		_float3			vPosition = {};
+		_float3			vNormal = {};
+		_float3			vTangent = {};
+		_float3			vBinormal = {};
+		_float2			vTexcoord = {};
+
+	}SKINNG_MESH_DESC;
+
+	typedef struct tagBoneDesc
+	{
+		_float4x4 BoneMatrix[512];
+	}BONE_DESC;
+
 private:
 	CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CModel(const CModel& rhs);
@@ -60,12 +88,16 @@ public:
 static	_int Get_BoneIndex(const _char* pBoneName, vector<class CBone*> Bones);	// 본의 벡터와 이름을 넘겨주면 인덱스를 넘겨줌 ( n 순회 )
 		_int Get_BoneIndex(const _char* pBoneName) const;
 		_matrix Get_BoneMatrix(_uint iBoneIndex);
+
 #pragma endregion
 #pragma region Material
 		HRESULT Bind_Material(_uint iMeshIndex, class CShader* pShader);
 
 #pragma endregion
-
+		void ComputeSkinning();
+		void Create_Con();
+		HRESULT			Bind_CS_Output(_uint Index, _uint iBufferIndex);
+		void Get_BoneMatrix();
 
 public:
 #ifdef EDITOR_PROJECT	
@@ -127,11 +159,24 @@ private:
 	_matrix						m_DeltaAnimationMatrix = {};		// 루트본의 델타애니메이션
 	class CTransform* m_pTransform = { nullptr };			// 모델 대상의 트랜스폼
 
-
 	// 바이너리
 	SaveModel* m_pSaveModel = { nullptr };
 	list<SaveModel> m_SaveModel;
 	//
+
+	vector<_float4x4> m_BoneMatrix;
+
+private:
+	HRESULT			Create_CS();
+
+	MESH_DESC				m_MeshDesc = {};
+	BONE_DESC				m_BoneDesc = {};
+	_uint					m_iNumBuffer = {};
+
+	class CComputeShader* m_pComputeShader = {};
+	ID3D11Buffer* m_pConstantBuffer = { nullptr };
+	_uint AccumulatedVertexCount = {};
+
 private:
 	// 바이너리
 	virtual HRESULT Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix);

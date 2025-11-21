@@ -45,10 +45,6 @@ HRESULT CLevel_PhysXLab::Initialize()
 		return E_FAIL;
 	}
 
-	if (FAILED(Ready_Layer_Terrain(TEXT("Layer_Terrain")))) {
-		return E_FAIL;
-	}
-
 	if (FAILED(Ready_Layer_PhysXObjects(TEXT("Layer_PhysXObject")))) {
 		return E_FAIL;
 	}
@@ -80,19 +76,6 @@ HRESULT CLevel_PhysXLab::Ready_Layer_Camera(const _wstring& strLayerTag)
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDebugCamera>(g_iStaticLevel, NEXT_LEVEL,
 		strLayerTag, &CameraDesc)))
 		return E_FAIL;
-
-	return S_OK;
-}
-
-HRESULT CLevel_PhysXLab::Ready_Layer_Terrain(const _wstring& strLayerTag)
-{
-
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))){
-		return E_FAIL;
-	}
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapObject_Manager>(g_iStaticLevel, NEXT_LEVEL, LAYER_MAPOBJECTMANAGER))){
-		return E_FAIL;
-	}
 
 	return S_OK;
 }

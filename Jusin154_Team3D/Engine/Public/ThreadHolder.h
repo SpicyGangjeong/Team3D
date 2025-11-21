@@ -30,8 +30,6 @@ public:
 		return job_result_future;
 	}
 
-
-
 private:
 	_uint						m_iNumThreads = {};
 	vector<thread>				m_Workers = {};

@@ -42,9 +42,9 @@ void CDummy_Cube::Update(_float fTimeDelta)
 
 void CDummy_Cube::Late_Update(_float fTimeDelta)
 {
-	//if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
-	//	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-	//}
+	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
+		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+	}
 }
 
 HRESULT CDummy_Cube::Render()

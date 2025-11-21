@@ -7,6 +7,7 @@
 #include "LerpAnim.h"
 #include "GameObject.h"
 #include "Transform.h"
+#include "ComputeShader.h"
 
 CModel::CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent{ pDevice, pContext }
@@ -23,7 +24,9 @@ CModel::CModel(const CModel& rhs)
 	m_Materials(rhs.m_Materials),
 	m_iNumMaterials(rhs.m_iNumMaterials),
 	m_iNumAnimations(rhs.m_iNumAnimations),
-	m_pLerpAnim(rhs.m_pLerpAnim)
+	m_pLerpAnim(rhs.m_pLerpAnim),
+	m_fRadius(rhs.m_fRadius),
+	m_vRadiusOffset(rhs.m_vRadiusOffset)
 {
 	_uint iNumBones = (_uint)(rhs.m_Bones.size());
 	m_Bones.reserve(iNumBones);
@@ -479,6 +482,29 @@ HRESULT CModel::Ready_Materials_FromFile(const aiScene* pAIScene, const _char* p
 		m_Materials.push_back(pMaterial);
 	}
 	m_Materials.shrink_to_fit();
+
+	while (true)
+	{
+		getline(file, strText);
+		if (string::npos != strText.find("Origin"))
+		{
+			size_t iXPos = strText.find_first_of("X");
+			size_t iYPos = strText.find_first_of("Y");
+			size_t iZPos = strText.find_first_of("Z");
+			size_t iEndPos = strText.find_first_of("}");
+
+			m_vRadiusOffset.x = stof(strText.substr(iXPos + 2, iYPos - 2)) * 0.01f;
+			m_vRadiusOffset.z = stof(strText.substr(iYPos + 2, iZPos - 2)) * -0.01f;
+			m_vRadiusOffset.y = stof(strText.substr(iZPos + 2, iEndPos)) * 0.01f;
+		}
+		if (string::npos != strText.find("SphereRadius"))
+		{
+			size_t iBeginIndex = strText.find_first_of("=");
+			m_fRadius = stof(strText.substr(iBeginIndex + 1)) / 100.f;
+			break;
+		}
+	}
+
 	return S_OK;
 }
 
@@ -779,6 +805,12 @@ _bool CModel::SaveAssimpModel(const _char* filename)
 		}
 	}
 
+	if (MODEL::ENVIROMENT == m_eType)
+	{
+		fwrite(&m_fRadius, sizeof(_float), 1, fp);
+		fwrite(&m_vRadiusOffset, sizeof(_float3), 1, fp);
+	}
+
 	fclose(fp);
 
 	return true;
@@ -868,6 +900,96 @@ HRESULT CModel::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fma
 
 #endif // EDITOR_PROJECT
 
+HRESULT CModel::Create_CS()
+{
+	_uint vertexCount = 0;
+	_uint MaxvertexCount = 0;
+	for (_uint i = 0; i < m_Meshes.size(); ++i)
+	{
+		vertexCount = m_Meshes[i]->Get_Vertex();
+		if (MaxvertexCount < vertexCount)
+			MaxvertexCount = vertexCount;
+	}
+	
+	_uint		CS_InputStrides[] = {
+	sizeof(MESH_DESC)
+	};
+
+	size_t meshCount = m_Meshes.size();
+
+	_uint* CS_OutputStrides = new _uint[meshCount];
+
+	for (size_t i = 0; i < meshCount; i++)
+	{
+		CS_OutputStrides[i] = sizeof(SKINNG_MESH_DESC)*(_uint)meshCount;
+	}
+
+
+	m_pComputeShader = CComputeShader::Create(m_pDevice, m_pContext,
+		L"../Bin/Resources/ShaderFiles/Shader_Mesh_Compute.hlsl", "CS_MAIN", MaxvertexCount, 1, (_uint)meshCount, CS_InputStrides,CS_OutputStrides);
+
+	if (m_pComputeShader == nullptr)
+		return E_FAIL;
+
+	Safe_Delete_Array(CS_OutputStrides);
+
+	return S_OK;
+}
+
+void CModel::ComputeSkinning()
+{
+	Get_BoneMatrix();
+	for (_uint i = 0; i < m_iNumMeshes; ++i)
+	{
+		D3D11_MAPPED_SUBRESOURCE ConstantSubResource{};
+		if (SUCCEEDED(m_pContext->Map(m_pConstantBuffer, 0,
+			D3D11_MAP_WRITE_DISCARD, 0, &ConstantSubResource)))
+		{
+			CMesh::BONE_DESC* pDesc =
+				static_cast<CMesh::BONE_DESC*>(ConstantSubResource.pData);
+
+			m_Meshes[i]->FillBoneDesc(m_BoneMatrix,pDesc);
+
+			m_pContext->Unmap(m_pConstantBuffer, 0);
+		}
+
+		m_Meshes[i]->ComputSkinning(m_pComputeShader, m_pConstantBuffer);
+	}
+}
+
+void CModel::Create_Con()
+{
+	D3D11_BUFFER_DESC cbDesc = {};
+	cbDesc.Usage = D3D11_USAGE_DYNAMIC;
+	cbDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	cbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	cbDesc.ByteWidth = sizeof(BONE_DESC);
+
+	if (FAILED(m_pDevice->CreateBuffer(&cbDesc, nullptr, &m_pConstantBuffer)))
+		return;
+}
+
+HRESULT CModel::Bind_CS_Output(_uint Index, _uint iBufferIndex)
+{
+	if (m_pComputeShader == nullptr)
+		return E_FAIL;
+
+	m_pComputeShader->Bind_OutPut_SRV(Index, iBufferIndex);
+
+	return S_OK;
+}
+
+void CModel::Get_BoneMatrix()
+{
+	m_BoneMatrix.resize(m_Bones.size());
+	for (size_t i =0; i < m_Bones.size(); i++)
+	{
+		m_BoneMatrix[i] = (*m_Bones[i]->Get_CombinedTransformationMatrixPtr());
+	}
+}
+
+
+
 HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix)
 {
 	m_eType = eType;
@@ -913,16 +1035,6 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 	if (FAILED(Ready_Animations())) {
 		return E_FAIL;
 	}
-
-#ifdef 기무리
-	if (MODEL::ENVIROMENT == m_eType) {
-		m_pGameInstance->LoadTriMeshes(pModelFilePath, m_TriMeshes);
-		for (_uint i = 0; i < m_iNumMeshes; ++i) {
-			m_pGameInstance->RegistTriMesh(m_Meshes[i]->Get_Name(), m_TriMeshes[i]);
-		}
-	}
-#endif // 
-
 	return S_OK;
 }
 
@@ -1079,6 +1191,11 @@ _bool CModel::LoadData(const _char* filename)
 		NewModel.Materials.push_back(mat);
 	}
 
+	if (MODEL::ENVIROMENT == m_eType)
+	{
+		fread(&m_fRadius, sizeof(_float), 1, fp);
+		fread(&m_vRadiusOffset, sizeof(_float3), 1, fp);
+	}
 
 	fclose(fp);
 
@@ -1199,6 +1316,13 @@ HRESULT CModel::Initialize(void* pArg)
 	}
 	m_pTransform = m_pOwner->Get_Component<CTransform>();
 	SAFE_ADDREF(m_pTransform);
+
+	Create_Con();
+
+	if (FAILED(Create_CS()))
+		return E_FAIL;
+
+
 
 	return S_OK;
 }
@@ -1323,8 +1447,11 @@ void CModel::Free()
 	SAFE_RELEASE(m_pLerpAnim);
 
 	m_SaveModel.clear();
-}
 
+	SAFE_RELEASE(m_pComputeShader);
+	SAFE_RELEASE(m_pConstantBuffer);
+
+}
 void CModel::Describe_Entity()
 {
 	//GUI::Begin("Model_Desc");
