@@ -96,9 +96,7 @@ void CSpell_Image::Late_Update(_float fTimeDelta)
 		return;
 	}
 	if (m_bVisible) {
-		if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
 			m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
-		}
 		__super::Late_Update(fTimeDelta);
 	}
 }
@@ -174,6 +172,7 @@ HRESULT CSpell_Image::Bind_ShaderResources()
 	}
 	return S_OK;
 }
+
 HRESULT CSpell_Image::Ready_Components(void* pArg)
 {
 	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))

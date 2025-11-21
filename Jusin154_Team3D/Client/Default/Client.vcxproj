@@ -165,6 +165,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\public\GamePlay_Canvas.h" />
     <ClInclude Include="..\Public\InfoInstance.h" />
     <ClInclude Include="..\Public\Level_Field.h" />
     <ClInclude Include="..\Public\Level_GamePlay.h" />
@@ -173,6 +174,8 @@
     <ClInclude Include="..\Public\Level_Restart.h" />
     <ClInclude Include="..\Public\Light_Main.h" />
     <ClInclude Include="..\Public\Loader.h" />
+    <ClInclude Include="..\public\LoadingWidget.h" />
+    <ClInclude Include="..\public\Loading_Panel.h" />
     <ClInclude Include="..\Public\MainApp.h" />
     <ClInclude Include="..\Public\MapInfo.h" />
     <ClInclude Include="..\Public\MonsterInfo.h" />
@@ -184,6 +187,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Camera_Debug.cpp" />
+    <ClCompile Include="..\private\GamePlay_Canvas.cpp" />
     <ClCompile Include="..\Private\InfoInstance.cpp" />
     <ClCompile Include="..\Private\Level_Field.cpp" />
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />
@@ -192,6 +196,8 @@
     <ClCompile Include="..\Private\Level_Restart.cpp" />
     <ClCompile Include="..\Private\Light_Main.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
+    <ClCompile Include="..\private\LoadingWidget.cpp" />
+    <ClCompile Include="..\private\Loading_Panel.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />
     <ClCompile Include="..\Private\MapInfo.cpp" />
     <ClCompile Include="..\Private\MonsterInfo.cpp" />

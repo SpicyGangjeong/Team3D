@@ -18,6 +18,7 @@ Texture2D g_DiffuseTexture;
 Texture2D g_NormalTexture;
 Texture2D g_DAOTexture;
 Texture2D g_THVTexture;
+Texture2D g_SurfaceParamsTexture;
 
 float3 g_RootColor;
 float3 g_TipColor;
@@ -25,6 +26,7 @@ float3 g_DyeColor;
 
 float g_DyeOpacity;
 float g_HairRoughness;
+float g_fUsingSurfaceParams;
 
 
 matrix g_BoneMatrices[512];
@@ -156,10 +158,10 @@ VS_OUT_SHADOW VS_MAIN_SHADOW(VS_IN In)
     
     float fWeightW = 1.f - (In.vBlendWeight.x + In.vBlendWeight.y + In.vBlendWeight.z);
     
-    matrix BoneMatrix = g_BoneMatrices[In.vBlendIndex.x] * In.vBlendWeight.x +
-        g_BoneMatrices[In.vBlendIndex.y] * In.vBlendWeight.y +
-        g_BoneMatrices[In.vBlendIndex.z] * In.vBlendWeight.z +
-        g_BoneMatrices[In.vBlendIndex.w] * fWeightW;
+    matrix BoneMatrix = mul(g_BoneMatrices[In.vBlendIndex.x], In.vBlendWeight.x) +
+                        mul(g_BoneMatrices[In.vBlendIndex.y], In.vBlendWeight.y) +
+                        mul(g_BoneMatrices[In.vBlendIndex.z], In.vBlendWeight.z) +
+                        mul(g_BoneMatrices[In.vBlendIndex.w], fWeightW);
     
     /* ?ㅽ궎??*/
     vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
@@ -188,9 +190,11 @@ struct PS_IN
 
 struct PS_OUT
 {
-    float4 vDiffuse : SV_TARGET0;
+    float4 vAlbedo : SV_TARGET0;
     float4 vNormal : SV_TARGET1;
     float4 vDepth : SV_TARGET2;
+    float4 vColor : SV_Target3;
+    float4 vSurface : SV_Target4;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -198,15 +202,13 @@ PS_OUT PS_MAIN(PS_IN In)
     PS_OUT Out;
     
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-    if (vMtrlDiffuse.a < 0.4f)
-    {
-        discard;
-    }
+    vector vSurface = g_SurfaceParamsTexture.Sample(DefaultSampler, In.vTexcoord);
+    if (vMtrlDiffuse.a < 0.2f) { discard; }
     
-    vector vNormalDesc = g_NormalTexture.Sample(MirrorSampler, In.vTexcoord);
+    float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
     
-    float3 vNormal = mul(vNormalDesc.xyz * 2.f - 1.f, WorldMatrix);
+    float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
     
     if (true == g_bRimLight)
     {
@@ -214,11 +216,14 @@ PS_OUT PS_MAIN(PS_IN In)
         vMtrlDiffuse.xyz = (vMtrlDiffuse.xyz * (1 - fRimLight)) + g_vRimColor * fRimLight;
     }
     
-    
-    Out.vDiffuse = vMtrlDiffuse;
+    Out.vAlbedo = vMtrlDiffuse;
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
-    Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.0f, 1.f);
-    
+    Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
+    (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
+    g_fUsingSurfaceParams, // 서페이스 파라미터
+    1.f);
+    Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
+    Out.vSurface = vSurface;
     
     return Out;
 }
@@ -313,7 +318,7 @@ PS_OUT PS_HAIR(PS_IN In)
         baseColor = lerp(baseColor, g_vRimColor.rgb, fRim);
     }
 
-    Out.vDiffuse = float4(baseColor, alpha);
+    Out.vAlbedo = float4(baseColor, alpha);
     Out.vNormal = float4(normal * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.0f, 1.f);
 
@@ -342,7 +347,7 @@ PS_OUT PS_EYELASH(PS_IN In)
     }
     
     
-    Out.vDiffuse = float4(vMtrlDiffuse.rgb, vMtrlDiffuse.g);
+    Out.vAlbedo = float4(vMtrlDiffuse.rgb, vMtrlDiffuse.g);
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.0f, 1.f);
     

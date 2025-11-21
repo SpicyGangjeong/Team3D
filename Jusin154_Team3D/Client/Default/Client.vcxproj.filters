@@ -64,6 +64,15 @@
     <ClInclude Include="..\Public\MapInfo.h">
       <Filter>03.InfoInstance\02.MapInfo</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\LoadingWidget.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Loding_Panel\LoadingWidget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\GamePlay_Canvas.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Loading_Panel.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Loding_Panel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -194,6 +203,27 @@
     <Filter Include="03.InfoInstance\02.MapInfo">
       <UniqueIdentifier>{413e6692-6e4a-4b00-8306-edf652bd876a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas">
+      <UniqueIdentifier>{c152f9ff-2525-4b4b-938c-5818f8d65a40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Action_Panel">
+      <UniqueIdentifier>{b819d017-f55f-4e1d-9c09-127a00b7ff57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Loding_Panel">
+      <UniqueIdentifier>{7f5280a9-3955-40ab-bde5-ef52acc0512f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\MiniMap_Panel">
+      <UniqueIdentifier>{4791d5ef-35cd-494d-8c39-bcca14488323}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Mission_Panel">
+      <UniqueIdentifier>{9d92d05f-697c-4437-a44a-b82e54255bcc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Loding_Panel\LoadingWidget">
+      <UniqueIdentifier>{f19404dc-7bc1-4d89-9c4a-72959db5a701}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Loding_Panel\LoadingWidget_Flame">
+      <UniqueIdentifier>{f7f22fc0-0e66-4e6e-a60a-0c612d58d802}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -240,6 +270,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\MapInfo.cpp">
       <Filter>03.InfoInstance\02.MapInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\LoadingWidget.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Loding_Panel\LoadingWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\GamePlay_Canvas.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Loading_Panel.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Loding_Panel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

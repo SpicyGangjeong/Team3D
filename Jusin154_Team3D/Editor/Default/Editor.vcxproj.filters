@@ -340,6 +340,9 @@
     <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\Slot_Number">
       <UniqueIdentifier>{0db597d8-c4e7-479a-9b7e-9014b79a5e03}</UniqueIdentifier>
     </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\HPBarBG">
+      <UniqueIdentifier>{7e8b7123-11fb-4946-99fe-3265932d0536}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -669,6 +672,9 @@
     <ClInclude Include="..\public\Slot_Number.h">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel\Slot_Number</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\HpBarBG.h">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\HPBarBG</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -993,6 +999,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Slot_Number.cpp">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel\Slot_Number</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\HpBarBG.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\HPBarBG</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
