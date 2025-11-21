@@ -1,2 +1,2 @@
 ﻿
-xcopy			/y/s	.\Editor\Bin\Resources\*.*					.\Client\Bin\Resources\
+xcopy			/y /s	.\Editor\Bin\Resources\*.*					.\Client\Bin\Resources\
