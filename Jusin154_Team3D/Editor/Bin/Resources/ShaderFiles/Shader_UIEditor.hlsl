@@ -23,9 +23,11 @@ float g_fOwnerAlpha;
 float g_fCanvasAlpha;
 float g_fAngle;
 float g_fCoolTime;
+float g_fHp;
 
 float2 g_fOrigin_Size;
 float2 g_fCurrent_Size;
+float2 g_fHpBG;
 
 float4 g_fNine_Slice;
 
@@ -522,14 +524,22 @@ PS_OUT PS_HpBar(PS_IN In)
     }
     
     float4 tex1 = g_Texture.Sample(ClampSampler, Finaluv);
+    Color = tex1;
+
+    float2 reversuv = In.vTexcoord;
+    
+    reversuv.x = 1.0f - Finaluv;
+
     float4 tex2 = g_Texture1.Sample(ClampSampler, Finaluv);
     
-   
-    Color = tex1;
-        
+    if (reversuv.x >= g_fHp)
+    {
+        tex2.rgb = float3(0.f, 0.f, 0.f);
+    }
+    
     tex2.rgb *= float3(112.f, 241.f, 31.f) / 255.f;
     
-    if(Color.r >= 0.01f)
+    if (all(Color.rgb >= float3(70.f / 255.f, 70.f / 255.f, 70.f / 255.f)))
         Color = tex2;
         
     Color.a *= Alpha;
