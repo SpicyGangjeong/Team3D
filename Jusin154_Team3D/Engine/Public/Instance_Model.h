@@ -41,6 +41,18 @@ public:
 		_float3     vDeltaAngleMin = {};
 		_float3     vDeltaAngleMax = {};
 
+		_bool       isAxisTurn;
+		_float3     vDeltaAxisAngleMin = {};
+		_float3     vDeltaAxisAngleMax = {};
+
+		_bool       isPivotMove = {};
+		_float2		vDrag = {};
+		_float3     vPivotMin = {};
+		_float3     vPivotMax = {};
+
+		_bool       isSizeLerp = {};
+		_float3     vDeltaSize = {};
+		_float2     vSizeDrag = {};
 
 	}INSTANCE_DESC;
 
@@ -79,6 +91,15 @@ public:
 		_float3     vDeltaAngleMin = {};
 		_float3     vDeltaAngleMax = {};
 
+		_bool       isAxisTurn;
+		_float3     vDeltaAxisAngleMin = {};
+		_float3     vDeltaAxisAngleMax = {};
+
+		_bool       isPivotMove = {};
+		_float2		vDrag = {};
+		_float3     vPivotMin = {};
+		_float3     vPivotMax = {};
+
 	}PRE_INSTANCE_DESC;
 
 	typedef struct tagCSParticleDesc
@@ -91,9 +112,9 @@ public:
 		_int     isSinWave = {};
 
 		_int	 isTurn = {};
-		_int     isPadding1 = {};
-		_int     isPadding2 = {};
-		_int     isPadding3 = {};
+		_int     isAxisTurn = {};
+		_int     isPivotMove = {};
+		_int     isSizeLerp = {};
 
 		_float   fTimeDelta = {};
 		_float	 fPadding2 = {};
@@ -124,6 +145,14 @@ public:
 
 		_float3   vSinAmount = {};
 		_float3   vDeltaAngle = {};
+		_float3	  vDeltaAxisAngle = {};
+
+		_float    fDrag;
+		_float3   vPivot = {};
+
+		_float    fSizeDrag = {};
+		_float3   vDeltaSize = {};
+
 
 	}CS_PARTICLE_VALUE_DESC;
 
