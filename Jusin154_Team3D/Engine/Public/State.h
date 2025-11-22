@@ -22,33 +22,31 @@ class CUnit;
 class CModel;
 class CFSM;
 class CGameInstance;
+
 class ENGINE_DLL CState abstract : public CBase
 {
+protected:
+    typedef struct tagStateDesc {
+        class CUnit* pOwner = { nullptr };
+    }STATEDESC;
+
 protected:
     CState();
     virtual ~CState() = default;
 
 public:
-    virtual void Enter();
-    virtual void Update(_float fTimeDelta);
-    virtual void Exit();
-    virtual _bool CheckExitState();
-    void Set_Owner(class CGameObject* pOwner);
-    virtual void Set_Component();
+    virtual void Enter()PURE;
+    virtual HRESULT Update(_float fTimeDelta)PURE;
+    virtual void Exit()PURE;
 
-    void Set_State(_uint State) { m_eState = State; }
-    _uint Get_State() { return m_eState; }
-    void Set_Parent(CState* State) { m_pParent = State; }
-    CState* Get_Parent() { return m_pParent; }
 protected:
     CUnit*              m_pOwner = { nullptr };
     CModel*             m_pModel = { nullptr };
     CFSM*               m_pFSM = { nullptr };
-    CState*             m_pParent = { nullptr };
     CGameInstance*      m_pGameInstance = { nullptr };
-    _uint               m_eState = {};
 
-
+protected:
+    HRESULT Initialize(STATEDESC* pArg);
 
 public:
     virtual void Free() override;
