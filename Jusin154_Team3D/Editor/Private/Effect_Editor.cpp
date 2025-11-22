@@ -152,8 +152,10 @@ HRESULT CEffect_Editor::ReSaveFile(const _char* pDirectoryPath)
 
 		
 
-		if (FAILED(Add_PartObject<CEditEffect>("ReSaveFile" + iIndex++ , ENUM_CLASS(LEVEL::EFFECT), &pEditEffect, &PartsDesc)))
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEditEffect>(ENUM_CLASS(LEVEL::EFFECT), CURRENT_LEVEL, TEXT("Layer_Effect"), &PartsDesc, this , &pEditEffect))) {
+			assert(false);
 			return E_FAIL;
+		}
 		
 		if (FAILED(pEditEffect->LoadPre(szFilePath, LEVEL::EFFECT)))
 		{
@@ -172,7 +174,7 @@ HRESULT CEffect_Editor::ReSaveFile(const _char* pDirectoryPath)
 
 		pEditEffect->Save_Effect(strPath.c_str());
 
-		Safe_Release(pEditEffect);
+		pEditEffect->Set_Dead();
 	}
 
 	return S_OK;

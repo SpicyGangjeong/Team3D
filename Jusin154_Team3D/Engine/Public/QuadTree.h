@@ -14,6 +14,11 @@ private:
 	virtual ~CQuadTree() = default;
 
 public:
+#ifdef _DEBUG
+	void Set_CullingRadius(_float fRadius);
+#endif // _DEBUG
+
+
 	void Culling(class CGameInstance* pGameInstance, const _float3* pVertexPositions, _uint* pIndices, _uint* pNumIndices);
 	void SetUp_Neighbors();
 	_bool Picking(class CGameInstance* pGameInstance, const _float3* pVertexPositions, _float3& Out, _fmatrix WorldMatrix);
@@ -22,6 +27,8 @@ public:
 private:
 	_uint			m_iCorners[CORNER_END] = { };
 	_uint			m_iCenter = {};
+
+	_float			m_fCullingRadius = { 0.2f };
 
 	CQuadTree*		m_pChildren[CORNER_END] = { nullptr };
 	CQuadTree*		m_pNeighbors[NEIGHBOR_END] = { nullptr, nullptr, nullptr, nullptr };

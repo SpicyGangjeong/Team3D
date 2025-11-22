@@ -17,6 +17,10 @@ struct ParticleValue
     float2 vAniTime;
     
     float2 vAniIndex;
+    float fGravity;
+    
+    float3 vSinAmount;
+    float3 vDeltaAngle;
 };
 
 
@@ -83,6 +87,11 @@ bool g_isNoiseUVMove;
 
 bool g_isReverseDissolve;
 bool g_isEmissiveDissolve;
+bool g_isMaskClampSample;
+
+bool g_isNoiseColor;
+bool g_isNoiseAlpha;
+bool g_isNomalDissolve;
 
 float g_fFar;
 
@@ -161,7 +170,7 @@ VS_OUT VS_MAIN(VS_IN In, uint iGPUIndex : SV_InstanceID)
 
     matrix matW, matWV, matWVP;
     
-    matrix TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
+    row_major matrix TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
     
     matW = mul(TransformMatrix, g_WorldMatrix);
     matWV = mul(matW, g_ViewMatrix);
@@ -230,6 +239,7 @@ PS_OUT BlendedWeight(vector fDiffuse, float fLinearZ)
     
     float fWeight = clamp(pow(fLinearZ, -2.5f), 1.0f, 1000.0f);
     
+   
     
     Out.vDiffuse = vector(vColor.rgb * fAlpha, fAlpha) * fWeight;
    
@@ -277,7 +287,7 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     vector vMtrlDissolve;
     vector vMtrlDistortion;
     
-    float  fAnimIndex = g_ParticleValue[In.iGPUIndex].vAniIndex.x;
+    float fAnimIndex = g_ParticleValue[In.iGPUIndex].vAniIndex.x;
     float2 vDiffuseTime = g_ParticleValue[In.iGPUIndex].vDiffuseUVMoveTime;
     float2 vMaskingTime = g_ParticleValue[In.iGPUIndex].vMaskingUVMoveTime;
     float2 vNoiseUVMoveTime = g_ParticleValue[In.iGPUIndex].vNoiseUVMoveTime;
@@ -287,7 +297,7 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     {
         float2 UV; // 이미지의 UV값
    
-        UV = UV_Cutting(In.vTexcoord, g_vUVCutting, int(fAnimIndex.x));
+        UV = UV_Cutting(In.vTexcoord, g_vUVCutting, int(fAnimIndex));
         
         if (g_isDiffuseUVMove)
         {   
@@ -334,13 +344,18 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
    
     if(g_isNoise)
     {
-        float2 vNoiseUV = In.vTexcoord + SelectLerpUV(g_vNoiseUVGainAmount, (vNoiseUVMoveTime.x / vNoiseUVMoveTime.y), g_iNoiseMoveLerpOption);
+        float2 vNoiseUV = In.vTexcoord;
+        
+        if (g_isNoiseUVMove == true)
+            vNoiseUV = In.vTexcoord + SelectLerpUV(g_vNoiseUVGainAmount, (vNoiseUVMoveTime.x / vNoiseUVMoveTime.y), g_iNoiseMoveLerpOption);
         
         vMtrlNoise = g_NoiseTexture.Sample(DefaultSampler, vNoiseUV);
         
-        vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * vMtrlNoise.r);
+        if (g_isNoiseAlpha)
+            vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * vMtrlNoise.r);
         
-        vMtrlDiffuse *= vMtrlNoise;
+        if (g_isNoiseColor)
+            vMtrlDiffuse *= vMtrlNoise;
     }
     
     /* 마스크 */ 
@@ -348,7 +363,7 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     {
         float2 vMaskTexcoord = In.vTexcoord;
         
-        vMaskTexcoord = UV_Cutting(In.vTexcoord, g_vUVMaskCutting, int(fAnimIndex.x));
+        vMaskTexcoord = UV_Cutting(In.vTexcoord, g_vUVMaskCutting, int(fAnimIndex));
         
         // 마스크 디스토션 
         if (g_isDistortion == true)
@@ -370,8 +385,10 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
                 vMaskTexcoord += SelectLerpUV(g_vMaskingUVGainAmount / g_vUVMaskCutting, (vMaskingTime.x / vMaskingTime.y), g_iMaskMoveLerpOption);
         }
         
-        vMtrlMask = g_MaskingTexture.Sample(PointSampler, vMaskTexcoord);
-
+        if (g_isMaskClampSample == true)
+            vMtrlMask = g_MaskingTexture.Sample(ClampSampler, vMaskTexcoord);
+        else
+            vMtrlMask = g_MaskingTexture.Sample(PointSampler, vMaskTexcoord);
     }
     else
     {
@@ -387,35 +404,31 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     if (vMtrlDiffuse.a <= 0.f)
         discard;
     
+    vMtrlDiffuse.a *= g_fDiffuseAlpha;
+    
     if (g_isDissolve == true)
     {
-        vMtrlDissolve = g_DissolveTexture.Sample(DefaultSampler, In.vTexcoord);
-        
-        if(g_isReverseDissolve == true)
+        if (g_isNomalDissolve)
         {
-            if (vMtrlDissolve.r >= (In.vLifeTime.x / In.vLifeTime.y))
-                discard;
+            vMtrlDiffuse.a *= (0.95f - In.vLifeTime.x / In.vLifeTime.y);
         }
         else
         {
-            if (vMtrlDissolve.r < (In.vLifeTime.x / In.vLifeTime.y))
-                discard;
+            vMtrlDissolve = g_DissolveTexture.Sample(DefaultSampler, In.vTexcoord);
+        
+            if (g_isReverseDissolve == true)
+            {
+                if (vMtrlDissolve.r >= (In.vLifeTime.x / In.vLifeTime.y))
+                    discard;
+            }
+            else
+            {
+                if (vMtrlDissolve.r < (In.vLifeTime.x / In.vLifeTime.y))
+                    discard;
+            }
         }
-
-        
-        
     }
     
-    vMtrlDiffuse.a *= g_fDiffuseAlpha;
-    
-    // 색깔 추가할 처리 (이미시브)
-    
-    float4 vEmissiveMtrl = vector(0.f ,0.f ,0.f ,0.f);
-    
-    if (g_isEmissive == true)
-    {
-        vEmissiveMtrl = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
-    }
 
     
     int2 iTexel = int2(In.vPosition.xy);
@@ -430,22 +443,36 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     Out = BlendedWeight(vMtrlDiffuse, In.vProjPos.w);
     
 
+    // 색깔 추가할 처리 (이미시브)
+    
+    float4 vEmissiveMtrl = vector(0.f, 0.f, 0.f, 0.f);
+    
+    if (g_isEmissive == true)
+    {
+        vEmissiveMtrl = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
+    }
+    else
+    {
+        vEmissiveMtrl = g_vEmissive;
+    }
+    
     float fEmissiveCutAlpha = g_fEmissiveCutAlpha;
+   
+    if (g_fEmissiveCutAlpha >= vMtrlDiffuse.a)
+    {
+            
+        Out.vColorTarget = vector(0.f, 0.f, 0.f, 0.f);
+        
+        return Out;
+    }
     
     if (g_isEmissiveDissolve == true)
     {
-        fEmissiveCutAlpha += (In.vLifeTime.x / In.vLifeTime.y) / 2;
+        vEmissiveMtrl *= (1.f - In.vLifeTime.x / In.vLifeTime.y);
     }
-    
-    float fSmoothAlpha = smoothstep(fEmissiveCutAlpha - 0.1f, fEmissiveCutAlpha + 0.1f, vMtrlDiffuse.a);
-    
    
-    
-    float3 vEmissiveColor = g_vEmissive.rgb * g_vEmissive.a + vEmissiveMtrl.rgb * (1 - g_vEmissive.a);
-    
-    Out.vColorTarget = vector(vEmissiveColor * fSmoothAlpha, vMtrlDiffuse.a);
-
-    
+    Out.vColorTarget = pow(vEmissiveMtrl, 2.2f);
+   
     return Out;
 }
 
@@ -563,13 +590,18 @@ PS_BLUR_OUT PS_BLUR(PS_BLUR_IN In)
    
     if (g_isNoise)
     {
-        float2 vNoiseUV = In.vTexcoord + SelectLerpUV(g_vNoiseUVGainAmount, (vNoiseUVMoveTime.x / vNoiseUVMoveTime.y), g_iNoiseMoveLerpOption);
+        float2 vNoiseUV = In.vTexcoord;
+        
+        if(g_isNoiseUVMove == true)
+            vNoiseUV = In.vTexcoord + SelectLerpUV(g_vNoiseUVGainAmount, (vNoiseUVMoveTime.x / vNoiseUVMoveTime.y), g_iNoiseMoveLerpOption);
         
         vMtrlNoise = g_NoiseTexture.Sample(DefaultSampler, vNoiseUV);
         
-        vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * vMtrlNoise.r);
+        if (g_isNoiseAlpha)
+            vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * vMtrlNoise.r);
         
-        vMtrlDiffuse *= vMtrlNoise;
+        if (g_isNoiseColor)
+            vMtrlDiffuse *= vMtrlNoise;
     }
     
     /* 마스크 */ 
@@ -599,7 +631,10 @@ PS_BLUR_OUT PS_BLUR(PS_BLUR_IN In)
                 vMaskTexcoord += SelectLerpUV(g_vMaskingUVGainAmount / g_vUVMaskCutting, (vMaskingTime.x / vMaskingTime.y), g_iMaskMoveLerpOption);
         }
         
-        vMtrlMask = g_MaskingTexture.Sample(PointSampler, vMaskTexcoord);
+        if (g_isMaskClampSample == true)
+            vMtrlMask = g_MaskingTexture.Sample(ClampSampler, vMaskTexcoord);
+        else
+            vMtrlMask = g_MaskingTexture.Sample(PointSampler, vMaskTexcoord);
 
     }
     else
@@ -616,38 +651,58 @@ PS_BLUR_OUT PS_BLUR(PS_BLUR_IN In)
     if (vMtrlDiffuse.a <= 0.f)
         discard;
     
+    vMtrlDiffuse.a *= g_fDiffuseAlpha;
+    
     if (g_isDissolve == true)
     {
         vMtrlDissolve = g_DissolveTexture.Sample(DefaultSampler, In.vTexcoord);
         
-        if (g_isReverseDissolve == true)
+        if (g_isNomalDissolve)
         {
-            if (vMtrlDissolve.r >= (In.vLifeTime.x / In.vLifeTime.y))
-                discard;
+            vMtrlDiffuse.a *= (0.95f - In.vLifeTime.x / In.vLifeTime.y);
         }
         else
         {
-            if (vMtrlDissolve.r < (In.vLifeTime.x / In.vLifeTime.y))
-                discard;
+            vMtrlDissolve = g_DissolveTexture.Sample(DefaultSampler, In.vTexcoord);
+        
+            if (g_isReverseDissolve == true)
+            {
+                if (vMtrlDissolve.r >= (In.vLifeTime.x / In.vLifeTime.y))
+                    discard;
+            }
+            else
+            {
+                if (vMtrlDissolve.r < (In.vLifeTime.x / In.vLifeTime.y))
+                    discard;
+            }
         }
-
     }
     
-    vMtrlDiffuse.a *= g_fDiffuseAlpha;
+        // 색깔 추가할 처리 (이미시브)
     
-    // 색깔 추가할 처리 (이미시브)
+
     
-    vector vEmissive;
-    
+
     float4 vEmissiveMtrl = vector(0.f, 0.f, 0.f, 0.f);
     
-    float fSmoothAlpha = smoothstep(g_fEmissiveCutAlpha - 0.02f, g_fEmissiveCutAlpha + 0.02f, vMtrlDiffuse.a);
-
+    if (g_isEmissive == true)
+    {
+        vEmissiveMtrl = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
+    }
+    
+    float fEmissiveCutAlpha = g_fEmissiveCutAlpha;
+    
+    float fSmoothAlpha = smoothstep(fEmissiveCutAlpha - 0.3f, fEmissiveCutAlpha + 0.3f, vMtrlDiffuse.a);
+   
+  
+    if (g_isEmissiveDissolve == true)
+    {
+        fSmoothAlpha *= (1.f - In.vLifeTime.x / In.vLifeTime.y);
+    }
+    
     float3 vEmissiveColor = g_vEmissive.rgb * g_vEmissive.a + vEmissiveMtrl.rgb * (1 - g_vEmissive.a);
     
-    vEmissive = vector(vEmissiveColor * fSmoothAlpha, vMtrlDiffuse.a);
-    
-    Out.vDiffuse = vMtrlDiffuse * g_fBlurIntensity + vEmissive;
+    Out.vDiffuse = vector(vMtrlDiffuse.rgb * g_fBlurIntensity, vMtrlDiffuse.a); /** vector(vEmissiveColor * fSmoothAlpha, vMtrlDiffuse.a);*/
     
     return Out;
 }

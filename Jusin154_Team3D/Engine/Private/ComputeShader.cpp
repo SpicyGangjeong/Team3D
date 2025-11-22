@@ -84,7 +84,7 @@ vector<D3D11_MAPPED_SUBRESOURCE> CComputeShader::Dispatch(_uint iSRVIndex, _uint
 		if (SUCCEEDED(m_pContext->Map(m_pOutputStagingBuffer[i], 0, D3D11_MAP_READ, 0, &StagingSubResource)))
 		{
 
-
+			CInstance_Model::CS_PARTICLE_VALUE_DESC* pValueDesc = static_cast<CInstance_Model::CS_PARTICLE_VALUE_DESC*>(StagingSubResource.pData);
 
 			StagingSubResources.push_back(StagingSubResource);
 
@@ -113,9 +113,14 @@ void CComputeShader::Bind_UAV(_uint iIndex)
 
 void CComputeShader::Bind_OutPut_SRV(_uint iIndex, _uint iBufferIndex)
 {
-	m_pContext->PSSetShaderResources(iIndex, // 시작슬롯 번호
-		1,  // 버퍼 개수
-		&m_pOutputSRV[iBufferIndex]); // 버퍼 시작 주소
+	//m_pContext->PSSetShaderResources(iIndex, // 시작슬롯 번호
+	//	1,  // 버퍼 개수
+	//	&m_pOutputSRV[iBufferIndex]); // 버퍼 시작 주소
+
+	ID3D11ShaderResourceView* pSRV = m_pOutputSRV[iBufferIndex];
+
+	// VS에 바인딩
+	m_pContext->VSSetShaderResources(iIndex, 1, &pSRV);
 
 }
 

@@ -7,6 +7,11 @@
 #include "InfoInstance.h"
 #include "GamePlay_Canvas.h"
 #include "Layer.h"
+#include "Player.h"
+#include "SkyBox.h"
+#include "Broom.h"
+#include "Dummy_PhysXWall.h"
+#include "Dummy_PhysXPlayable.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -27,6 +32,14 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 		return E_FAIL;
 	}
 	if (FAILED(Ready_Layer_Effect(LAYER_EFFECT))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(Ready_Layer_Player(LAYER_PLAYER))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(Ready_Layer_SkyBox(TEXT("Layer_SkyBox")))) {
 		return E_FAIL;
 	}
 
@@ -81,7 +94,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 {
-	CCamera_Debug::CAMERA_DEBUG_DESC            Camera_Desc{};
+	/*CCamera_Debug::CAMERA_DEBUG_DESC            Camera_Desc{};
 	Camera_Desc.fFovy = XMConvertToRadians(60.0f);
 	Camera_Desc.fNear = 0.1f;
 	Camera_Desc.fFar = 200.f;
@@ -101,7 +114,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 	}
 	if (FAILED(m_pGameInstance->Bind_Camera(NEXT_LEVEL, CAMERA_DEBUG, true))) {
 		return E_FAIL;
-	}
+	}*/
 
 	return S_OK;
 }
@@ -119,6 +132,34 @@ HRESULT CLevel_GamePlay::Ready_Markers()
 
 HRESULT CLevel_GamePlay::Ready_Layer_Effect(const _wstring& strLayerTag)
 {
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
+{
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_SkyBox(const _wstring& strLayerTag)
+{
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSkyBox>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE)))
+		return E_FAIL;
+
+	CDummy_PhysXWall::PHYSXDUMMY_DESC Desc{};
+	Desc.vPos = { 0.f, 0.f, 0.f };
+	Desc.vRotRPY = { 0.f, m_pGameInstance->Random_Float(0.f, XM_2PI), 0.f };
+	Desc.iSubKind = 23;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXWall>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE, &Desc))) {
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 

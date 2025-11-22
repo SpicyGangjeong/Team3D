@@ -1,5 +1,5 @@
 ﻿
-xcopy			/y/s	.\Engine\Public\*.*					.\EngineSDK\Inc\
+xcopy			/y /s	.\Engine\Public\*.*					.\EngineSDK\Inc\
 
 xcopy			/y		.\Engine\Bin\Debug\Engine.dll				.\Client\Bin\Debug\
 xcopy			/y		.\Engine\Bin\Release\Engine.dll				.\Client\Bin\Release\

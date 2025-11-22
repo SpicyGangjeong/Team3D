@@ -16,7 +16,7 @@ public:
 	_uint Release();
 
 protected:
-	_uint		m_iRefCnt = {};
+	atomic<_uint>	m_iRefCnt = { 0 };
 
 public:
 	virtual void Free();

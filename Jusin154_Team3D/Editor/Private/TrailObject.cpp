@@ -28,6 +28,8 @@ HRESULT CTrailObject::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
+	//Load_Trail("")
+
 
 	return S_OK;
 }

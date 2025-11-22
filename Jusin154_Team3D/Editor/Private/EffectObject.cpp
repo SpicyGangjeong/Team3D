@@ -40,11 +40,13 @@ HRESULT CEffectObject::Render()
 			return E_FAIL;
 		}
 
+		if (FAILED(m_pInstance_ModelCom->Bind_CS_Output(5, 1)))
+			return E_FAIL;
+
 		if (FAILED(m_pGameInstance->Bind_DepthStencil(m_pShaderCom, "g_DepthStencilTexture")))
 			return E_FAIL;
 
-		if (FAILED(m_pInstance_ModelCom->Bind_CS_Output(5, 1)))
-			return E_FAIL;
+
 
 
 		if (FAILED(m_pInstance_ModelCom->Render(i)))
@@ -76,6 +78,7 @@ HRESULT CEffectObject::Render_Blur()
 
 	for (_uint i = 0; i < m_pInstance_ModelCom->Get_NumMeshes(); i++)
 	{
+	
 
 		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_INSTANCE_MODEL::BLUR)))) {
 			return E_FAIL;
@@ -446,11 +449,13 @@ HRESULT CEffectObject::LoadPre(const _char* pFilePath, LEVEL eLevel)
 
 			m_strDiffuseName = szName;
 
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strDiffuseName),
+				reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom))))
+				return E_FAIL;
+
 		}
 
-		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strDiffuseName),
-			reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom))))
-			return E_FAIL;
+
 	}
 
 	if (m_EffectInfo.isNoise)
@@ -471,11 +476,13 @@ HRESULT CEffectObject::LoadPre(const _char* pFilePath, LEVEL eLevel)
 			}
 
 			m_strNoiseName = szName;
+
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strNoiseName),
+				reinterpret_cast<CComponent**>(&m_pNoise_TextureCom))))
+				return E_FAIL;
 		}
 
-		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strNoiseName),
-			reinterpret_cast<CComponent**>(&m_pNoise_TextureCom))))
-			return E_FAIL;
+
 	}
 
 	if (m_EffectInfo.isMasking)
@@ -497,11 +504,13 @@ HRESULT CEffectObject::LoadPre(const _char* pFilePath, LEVEL eLevel)
 			}
 
 			m_strMaskingName = szName;
+
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strMaskingName),
+				reinterpret_cast<CComponent**>(&m_pMasking_TextureCom))))
+				return E_FAIL;
 		}
 
-		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strMaskingName),
-			reinterpret_cast<CComponent**>(&m_pMasking_TextureCom))))
-			return E_FAIL;
+
 	}
 
 	if (m_EffectInfo.isDissolve)
@@ -521,11 +530,13 @@ HRESULT CEffectObject::LoadPre(const _char* pFilePath, LEVEL eLevel)
 			}
 
 			m_strDissolveName = szName;
+
+
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strDissolveName),
+				reinterpret_cast<CComponent**>(&m_pDissolve_TextureCom))))
+				return E_FAIL;
 		}
 
-		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strDissolveName),
-			reinterpret_cast<CComponent**>(&m_pDissolve_TextureCom))))
-			return E_FAIL;
 	}
 
 	if (m_EffectInfo.isEmissive)
@@ -545,11 +556,13 @@ HRESULT CEffectObject::LoadPre(const _char* pFilePath, LEVEL eLevel)
 			}
 
 			m_strEmissiveName = szName;
+
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strEmissiveName),
+				reinterpret_cast<CComponent**>(&m_pEmissive_TextureCom))))
+				return E_FAIL;
 		}
 
-		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strEmissiveName),
-			reinterpret_cast<CComponent**>(&m_pEmissive_TextureCom))))
-			return E_FAIL;
+
 	}
 
 	if (m_EffectInfo.isDistortion)
@@ -569,11 +582,13 @@ HRESULT CEffectObject::LoadPre(const _char* pFilePath, LEVEL eLevel)
 			}
 
 			m_strDistortionName = szName;
+
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strDistortionName),
+				reinterpret_cast<CComponent**>(&m_pDistortion_TextureCom))))
+				return E_FAIL;
 		}
 
-		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strDistortionName),
-			reinterpret_cast<CComponent**>(&m_pDistortion_TextureCom))))
-			return E_FAIL;
+
 	}
 
 	size_t iComponentLength = {};
@@ -592,11 +607,13 @@ HRESULT CEffectObject::LoadPre(const _char* pFilePath, LEVEL eLevel)
 		}
 
 		m_strModelName = szName;
+
+
+		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strModelName),
+			reinterpret_cast<CComponent**>(&m_pInstance_ModelCom))))
+			return E_FAIL;;
 	}
 
-	if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strModelName),
-		reinterpret_cast<CComponent**>(&m_pInstance_ModelCom))))
-		return E_FAIL;;
 
 	m_pInstance_ModelCom->PreLoad(hFile);
 
@@ -663,8 +680,22 @@ HRESULT CEffectObject::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_isEmissiveDissolve", &m_EffectInfo.isEmissiveDissolve, sizeof(_bool)))) {
 		return E_FAIL;
 	}
-	
-	
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isMaskClampSample", &m_EffectInfo.isMaskClampSample, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isNoiseColor", &m_EffectInfo.isNoiseColor, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isNoiseAlpha", &m_EffectInfo.isNoiseAlpha, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isNomalDissolve", &m_EffectInfo.isNomalDissolve, sizeof(_bool)))) {
+		return E_FAIL;
+	}
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vColor", &m_EffectInfo.vColor, sizeof(_float4)))) {
 		return E_FAIL;
@@ -729,6 +760,8 @@ HRESULT CEffectObject::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_iDiffuseDistortionMoveLerpOption", &m_EffectInfo.iDiffuseDistortionMoveLerpOption, sizeof(_int)))) {
 		return E_FAIL;
 	}
+
+
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDiffuseAlpha", &m_EffectInfo.fDiffuseAlpha, sizeof(_float)))) {
 		return E_FAIL;

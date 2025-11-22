@@ -1,14 +1,14 @@
 ﻿#pragma once
 
 #include "Engine_Define.h"
-#include "GameObject.h"
+#include "ContainerObject.h"
 
 NS_BEGIN(Engine)
 class CShader;
 class CModel;
 class CFSM;
 
-class ENGINE_DLL CUnit abstract : public CGameObject
+class ENGINE_DLL CUnit abstract : public CContainerObject
 {
 public:
 	typedef struct tagObjectDesc
@@ -30,6 +30,7 @@ public:
 	_wstring& Get_PrototypeTag() { return m_strModelPrototypeTag; }
 	void Load_KeyFrame();
 public:
+
 #pragma region STATE
 	pair<_uint, _bool> Get_AnimInfo(_uint iIndex) { return m_Animation[iIndex]; }
 	virtual _bool Check(FSMSTATE::ESTATE state) { return false; }
@@ -40,6 +41,7 @@ public:
 	_float Get_KeyFrame(_string FrameName);
 	_bool IsCurrentKeyFrame(_string FrameName);
 	virtual void Reset_Sprint() {};
+	virtual void Reset_Walk() {};
 #pragma endregion
 
 protected:
