@@ -1,18 +1,18 @@
 ﻿#pragma once
 #include "Editor_Define.h"
-#include "State_Player.h"
+#include "State_Root.h"
 
 NS_BEGIN(Editor)
 
-class CState_Player_Land final : public CState_Player
+class CState_Land final : public CState_Root
 {
 public:
-    typedef struct tagLand : public CState_Player::STATE_PLAYER_DESC {
+    typedef struct tagLand : public CState_Root::STATE_ROOT_DESC {
 
-    }STATE_PLAYER_LAND_DESC;
+    }STATE_LAND_DESC;
 private:
-    CState_Player_Land();
-    virtual ~CState_Player_Land() = default;
+    CState_Land();
+    virtual ~CState_Land() = default;
 
 public:
     virtual void Enter();
@@ -20,10 +20,10 @@ public:
     virtual void Exit();
 
 private:
-    HRESULT Initialize(STATE_PLAYER_LAND_DESC* pDesc);
+    HRESULT Initialize(STATE_LAND_DESC* pDesc);
 
 public:
-    static CState_Player_Land* Create(STATE_PLAYER_LAND_DESC* pDesc);
+    static CState_Land* Create(STATE_LAND_DESC* pDesc);
     virtual void Free() override;
     virtual void Describe_Entity();
 };

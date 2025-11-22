@@ -218,8 +218,7 @@ void CPlayer::Setup_InputConditions()
 	m_InputConditions =
 	{
 		{ FSMSTATE::IDLE_TURN,   [&]() { return m_pGameInstance->Key_Down(DIK_LEFT) || m_pGameInstance->Key_Down(DIK_RIGHT) || m_pGameInstance->Key_Down(DIK_DOWN); }},
-		{ FSMSTATE::MOVE,		 [&]() { return Check(FSMSTATE::WALK) || Check(FSMSTATE::SPRINT) || Check(FSMSTATE::JOG) || 
-		Check(FSMSTATE::DODGE) || Check(FSMSTATE::IDLE_TURN); }},
+		{ FSMSTATE::MOVE,		 [&]() { return Check(FSMSTATE::WALK) || Check(FSMSTATE::SPRINT) || Check(FSMSTATE::JOG) ||  Check(FSMSTATE::DODGE) || Check(FSMSTATE::IDLE_TURN); }},
 
 
 
@@ -230,8 +229,7 @@ void CPlayer::Setup_InputConditions()
 
 		{ FSMSTATE::WALK,    [&]() { return m_bWalkToggle && m_pGameInstance->Key_Pressing(DIK_UP); }},
 
-		{ FSMSTATE::SPRINT,      [&]() { return m_bSprintToggle
-										   && m_pGameInstance->Key_Pressing(DIK_UP); }},
+		{ FSMSTATE::SPRINT,      [&]() { return m_bSprintToggle && m_pGameInstance->Key_Pressing(DIK_UP); }},
 		{ FSMSTATE::DODGE,       [&]() { return m_pGameInstance->Key_Down(DIK_LCONTROL); }},
 
 		{ FSMSTATE::COMBAT,		 [&]() { return Check(FSMSTATE::SKILL) || Check(FSMSTATE::LIGHT_ATTACK) || Check(FSMSTATE::CAST) || Check(FSMSTATE::SKILL2); }},
@@ -248,11 +246,13 @@ void CPlayer::Key_Input(_float fTimeDelta)
 {
 	if (m_pFSM->IsEnable(FSMSTATE::WALK|FSMSTATE::SPRINT |FSMSTATE::DODGE |FSMSTATE::JOG))
 	{
-		if (m_pGameInstance->Key_Pressing(DIK_LEFT))
+		if (m_pGameInstance->Key_Pressing(DIK_LEFT)){
 			m_pTransformCom->Turn(-m_pTransformCom->Get_State(STATE::UP), fTimeDelta);
+		}
 
-		if (m_pGameInstance->Key_Pressing(DIK_RIGHT))
+		if (m_pGameInstance->Key_Pressing(DIK_RIGHT)){
 			m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::UP), fTimeDelta);
+		}
 	}
 
 	IsSprint();
@@ -260,35 +260,256 @@ void CPlayer::Key_Input(_float fTimeDelta)
 	IsWalk();
 }
 
+HRESULT CPlayer::InputSystem()
+{
+	if (m_pGameInstance->Key_Down(DIK_1)
+		|| m_pGameInstance->Key_Down(DIK_2)
+		|| m_pGameInstance->Key_Down(DIK_3)
+		|| m_pGameInstance->Key_Down(DIK_4)
+		|| m_pGameInstance->Key_Down(DIK_5)
+		|| m_pGameInstance->Key_Down(DIK_6))
+	{
+		return S_OK;
+	}
+	return E_FAIL;
+}
+
+HRESULT CPlayer::InputSkill()
+{
+	if (m_pGameInstance->Key_Down(DIK_SPACE)
+		|| m_pGameInstance->Key_Down(DIK_Q)
+		|| m_pGameInstance->Key_Down(DIK_E)
+		|| m_pGameInstance->Key_Down(DIK_R)
+		|| m_pGameInstance->Key_Down(DIK_F)
+		|| m_pGameInstance->Key_Down(DIK_Z)
+		|| m_pGameInstance->Key_Down(DIK_X)
+		|| m_pGameInstance->Key_Down(DIK_C)
+		|| m_pGameInstance->Key_Down(DIK_V)
+		|| m_pGameInstance->Key_Down(DIK_T)
+		|| m_pGameInstance->Key_Down(DIK_G)
+		|| m_pGameInstance->Key_Down(DIK_B))
+	{
+		return S_OK;
+	}
+	return E_FAIL;
+}
+
+HRESULT CPlayer::InputRun()
+{
+	if (m_pGameInstance->Mouse_Pressing(DIK_UP)
+		|| m_pGameInstance->Mouse_Pressing(DIK_LEFT)
+		|| m_pGameInstance->Mouse_Pressing(DIK_DOWN)
+		|| m_pGameInstance->Mouse_Pressing(DIK_RIGHT))
+	{
+		return S_OK;
+	}
+	return E_FAIL;
+}
+
+void CPlayer::Behavior_IdleEnter() {
+	pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::IDLE];
+
+	if (m_pFSM->IsEnable_Previous(FSMSTATE::JOG|FSMSTATE::WALK)) {
+		if (m_pFSM->IsEnable_Previous(FSMSTATE::JOG)) {
+			pairAnimInfo = m_Animation[STATEANIM::JOG_STOP];
+		}
+		else if (m_pFSM->IsEnable_Previous(FSMSTATE::WALK)) {
+			pairAnimInfo = m_Animation[STATEANIM::WALK_STOP];
+		}
+	}
+
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+}
+
+HRESULT CPlayer::Behavior_IdleExitCheck()
+{
+	// S_OK -> 현 상태 유지
+	// E_FAIL -> 현 상태 탈출
+	if (SUCCEEDED(InputSystem())) {
+		//Event
+		return S_OK;
+	}
+	if (SUCCEEDED(InputSkill())) {
+		// Action
+		return E_FAIL;
+	}
+	if (SUCCEEDED(InputRun())) {
+		m_pFSM->Change_State(FSMSTATE::MOVE);
+		return E_FAIL;
+	}
+	return S_OK;
+}
+
+void CPlayer::Behavior_MoveEnter()
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+
+	if (m_pFSM->IsEnable_Previous(FSMSTATE::IDLE)) {
+		// Idle -> Move
+	} 
+	else if (m_pFSM->IsEnable_Previous(FSMSTATE::DODGE | FSMSTATE::LAND)) {
+		// OtherMove -> AnotherMove
+	}
+	else if (m_pFSM->IsEnable_Previous(FSMSTATE::COMBAT)) {
+		// Combat -> Move
+	}
+	else {
+		if (true == m_bSprintToggle) {
+			pairAnimInfo = m_Animation[STATEANIM::SPRINT];
+		}
+		else if (true == m_bWalkToggle) {
+			if (true == m_pGameInstance->Key_Pressing(DIK_UP)) {
+				pairAnimInfo = m_Animation[STATEANIM::WALK_FWD];
+			}
+			else {
+				pairAnimInfo = m_Animation[STATEANIM::WALK_BWD];
+			}
+		}
+	}
+
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+}
+
+HRESULT CPlayer::Behavior_MoveExitCheck()
+{
+	if (SUCCEEDED(InputSystem())) {
+		//Event
+		return S_OK;
+	}
+	if (SUCCEEDED(InputSkill())) {
+		// Action
+		return E_FAIL;
+	}
+	if (SUCCEEDED(InputRun())) {
+		return S_OK;
+	}
+	m_pFSM->Change_State(FSMSTATE::IDLE);
+	return E_FAIL;
+}
+
+void CPlayer::Behavior_JumpEnter()
+{
+	pair<_uint, _bool> pairAnimInfo = Get_AnimInfo(STATEANIM::JUMP_SPRINT);
+	if (m_pFSM->IsEnable_Previous(FSMSTATE::IDLE|FSMSTATE::JOG|FSMSTATE::WALK)) {
+		if (m_pFSM->IsEnable_Previous(FSMSTATE::IDLE)) {
+			// Idle -> Jump
+			// pairAnimInfo = Get_AnimInfo(STATEANIM::Jump_IDLE);
+		}
+		else if (m_pFSM->IsEnable_Previous(FSMSTATE::JOG)) {
+			pairAnimInfo = Get_AnimInfo(STATEANIM::JUMP_JOG);
+		}
+		else if (m_pFSM->IsEnable_Previous(FSMSTATE::WALK)) {
+
+		}
+	}
+	else {
+		// Drop?
+	}
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+}
+
+HRESULT CPlayer::Behavior_JumpExitCheck()
+{
+	if (SUCCEEDED(InputSystem())) {
+		//Event
+		return S_OK;
+	}
+	if (IsCurrentKeyFrame("Jump")) {
+		m_pFSM->Change_State(FSMSTATE::LAND);
+		return E_FAIL;
+	}
+	return S_OK;
+}
+
+void CPlayer::Behavior_LandEnter()
+{
+	pair<_uint, _bool> pairAnimInfo = Get_AnimInfo(STATEANIM::LAND);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+}
+
+HRESULT CPlayer::Behavior_LandExitCheck()
+{
+	if (SUCCEEDED(InputSystem())) {
+		//Event
+		//return S_OK;
+	}
+	if (m_pModelCom->IsFinishedAnim()){
+		m_pFSM->Change_State(FSMSTATE::IDLE);
+		return E_FAIL;
+	} // 혹시 Land to (Jog, Sprint, Dodge) 같은 애니메이션 있으면 여기에 분기 조건 넣으면 됨
+	return S_OK;
+}
+
+void CPlayer::Behavior_DodgeEnter()
+{
+	// 혹시 @@ to Dodge 있으면 여기에
+	pair<_uint, _bool> pairAnimInfo = Get_AnimInfo(STATEANIM::DODGE);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+}
+
+HRESULT CPlayer::Behavior_DodgeExitCheck()
+{
+	if (SUCCEEDED(InputSystem())) {
+		//Event
+		//return S_OK;
+	}
+	if (m_pModelCom->IsFinishedAnim()){
+		m_pFSM->Change_State(FSMSTATE::IDLE);
+		return E_FAIL;
+	}
+	return S_OK;
+}
+
 void CPlayer::Add_FSM()
 {
 #pragma region Behavior_Movement_NotFocus
 	{
-		CState_Player_Idle::STATE_PLAYER_IDLE_DESC Desc{};
+		CState_Idle::STATE_IDLE_DESC Desc{};
 		Desc.pOwner = this;
-		m_States.emplace(FSMSTATE::MOVE, CState_Player_Idle::Create(&Desc));
+		Desc.funcEnterEvent = [this]() { Behavior_IdleEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_IdleExitCheck(); };
+		Desc.funcExitEvent = nullptr;
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::IDLE, CState_Idle::Create(&Desc));
 	}
 	{
-		CState_Player_Move::STATE_PLAYER_MOVE_DESC Desc{};
+		CState_Move::STATE_MOVE_DESC Desc{};
 		Desc.pOwner = this;
-		m_States.emplace(FSMSTATE::MOVE, CState_Player_Move::Create(&Desc));
+		Desc.funcEnterEvent = [this]() { Behavior_MoveEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_MoveExitCheck(); };
+		Desc.funcExitEvent = nullptr;
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::MOVE, CState_Move::Create(&Desc));
 	}
 #pragma endregion
 #pragma region Behavior_Movement_Focus
 	{
-		CState_Player_Jump::STATE_PLAYER_JUMP_DESC Desc{};
+		CState_Jump::STATE_JUMP_DESC Desc{};
 		Desc.pOwner = this;
-		m_States.emplace(FSMSTATE::LAND, CState_Player_Jump::Create(&Desc));
+		Desc.funcEnterEvent = [this]() { Behavior_JumpEnter(); };
+		Desc.funcExitCheck = [this](_float fTimeDelta) { return Behavior_JumpExitCheck(); };
+		Desc.funcExitEvent = nullptr;
+		m_States.emplace(FSMSTATE::JUMP, CState_Jump::Create(&Desc));
 	}
 	{
-		CState_Player_Land::STATE_PLAYER_LAND_DESC Desc{};
+		CState_Land::STATE_LAND_DESC Desc{};
 		Desc.pOwner = this;
-		m_States.emplace(FSMSTATE::LAND, CState_Player_Land::Create(&Desc));
+		Desc.funcEnterEvent = [this]() { Behavior_LandEnter(); };
+		Desc.funcExitCheck = [this](_float fTimeDelta) { return Behavior_LandExitCheck(); };
+		Desc.funcExitEvent = nullptr;
+		m_States.emplace(FSMSTATE::LAND, CState_Land::Create(&Desc));
 	}
 	{
-		CState_Player_Dodge::STATE_PLAYER_DODGE_DESC Desc{};
+		CState_Dodge::STATE_DODGE_DESC Desc{};
 		Desc.pOwner = this;
-		m_States.emplace(FSMSTATE::LAND, CState_Player_Dodge::Create(&Desc));
+		Desc.funcEnterEvent = [this]() { Behavior_DodgeEnter(); };
+		Desc.funcExitCheck = [this](_float fTimeDelta) { return Behavior_DodgeExitCheck(); };
+		Desc.funcExitEvent = nullptr;
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::DODGE, CState_Dodge::Create(&Desc));
 	}
 #pragma endregion
 #pragma region Behavior_Combat_NotFocus

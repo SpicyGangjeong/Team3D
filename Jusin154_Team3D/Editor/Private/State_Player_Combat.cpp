@@ -3,17 +3,17 @@
 #include "Unit.h"
 
 
-CState_Player_Combat::CState_Player_Combat()
-    :CState_Player()
+CState_Combat::CState_Combat()
+    :CState_Root()
 {
 }
 
-void CState_Player_Combat::Enter()
+void CState_Combat::Enter()
 {
     __super::Enter();
 }
 
-HRESULT CState_Player_Combat::Update(_float fTimeDelta)
+HRESULT CState_Combat::Update(_float fTimeDelta)
 {
     if (E_FAIL == (__super::Update(fTimeDelta))) {
         return E_FAIL;
@@ -21,12 +21,12 @@ HRESULT CState_Player_Combat::Update(_float fTimeDelta)
     return S_OK;
 }
 
-void CState_Player_Combat::Exit()
+void CState_Combat::Exit()
 {
     __super::Exit();
 }
 
-HRESULT CState_Player_Combat::Initialize(STATE_PLAYER_COMBAT_DESC* pDesc)
+HRESULT CState_Combat::Initialize(STATE_COMBAT_DESC* pDesc)
 {
     if (FAILED(__super::Initialize(pDesc))) {
         return E_FAIL;
@@ -38,20 +38,20 @@ HRESULT CState_Player_Combat::Initialize(STATE_PLAYER_COMBAT_DESC* pDesc)
     return S_OK;
 }
 
-CState_Player_Combat* CState_Player_Combat::Create(STATE_PLAYER_COMBAT_DESC* pDesc)
+CState_Combat* CState_Combat::Create(STATE_COMBAT_DESC* pDesc)
 {
-    CState_Player_Combat* pInstance = new CState_Player_Combat;
+    CState_Combat* pInstance = new CState_Combat;
     if (FAILED(pInstance->Initialize(pDesc))) {
         SAFE_RELEASE(pInstance);
     }
     return pInstance;
 }
 
-void CState_Player_Combat::Free()
+void CState_Combat::Free()
 {
     __super::Free();
 }
 
-void CState_Player_Combat::Describe_Entity()
+void CState_Combat::Describe_Entity()
 {
 }

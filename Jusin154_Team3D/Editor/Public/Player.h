@@ -45,6 +45,27 @@ private:
 	void Setup_InputConditions();
 	void Key_Input(_float fTimeDelta);
 
+
+	HRESULT InputSystem();
+	HRESULT InputSkill();
+	HRESULT InputRun();
+
+	void	Behavior_IdleEnter();
+	HRESULT Behavior_IdleExitCheck();
+
+	void	Behavior_MoveEnter();
+	HRESULT Behavior_MoveExitCheck();
+
+	void	Behavior_JumpEnter();
+	HRESULT Behavior_JumpExitCheck();
+
+	void	Behavior_LandEnter();
+	HRESULT Behavior_LandExitCheck();
+
+	void	Behavior_DodgeEnter();
+	HRESULT Behavior_DodgeExitCheck();
+	
+
 public:
 	static CPlayer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr) override;

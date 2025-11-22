@@ -3,54 +3,63 @@
 #include "Unit.h"
 
 
-CState_Player_Move::CState_Player_Move()
-    :CState_Player()
+CState_Move::CState_Move()
+    :CState_Root()
 {
 }
 
-void CState_Player_Move::Enter()
+void CState_Move::Enter()
 {
     __super::Enter();
 }
 
-HRESULT CState_Player_Move::Update(_float fTimeDelta)
+HRESULT CState_Move::Update(_float fTimeDelta)
 {
+    if (nullptr != m_funcPriorityUpdate) {
+        m_funcPriorityUpdate(fTimeDelta);
+    }
     if (E_FAIL == (__super::Update(fTimeDelta))) {
         return E_FAIL;
+    }
+    if (nullptr != m_funcLateUpdate) {
+        m_funcLateUpdate(fTimeDelta);
     }
     return S_OK;
 }
 
-void CState_Player_Move::Exit()
+void CState_Move::Exit()
 {
     __super::Exit();
 }
 
-HRESULT CState_Player_Move::Initialize(STATE_PLAYER_MOVE_DESC* pDesc)
+HRESULT CState_Move::Initialize(STATE_MOVE_DESC* pDesc)
 {
     if (FAILED(__super::Initialize(pDesc))) {
         return E_FAIL;
     }
+    m_funcPriorityUpdate = pDesc->funcPriorityUpdate;
+    m_funcLateUpdate = pDesc->funcLateUpdate;
+
     m_pModel = m_pOwner->Get_Component<CModel>();
     m_pFSM = m_pOwner->Get_Component<CFSM>();
 
     return S_OK;
 }
 
-CState_Player_Move* CState_Player_Move::Create(STATE_PLAYER_MOVE_DESC* pDesc)
+CState_Move* CState_Move::Create(STATE_MOVE_DESC* pDesc)
 {
-    CState_Player_Move* pInstance = new CState_Player_Move;
+    CState_Move* pInstance = new CState_Move;
     if (FAILED(pInstance->Initialize(pDesc))) {
         SAFE_RELEASE(pInstance);
     }
     return pInstance;
 }
 
-void CState_Player_Move::Free()
+void CState_Move::Free()
 {
     __super::Free();
 }
 
-void CState_Player_Move::Describe_Entity()
+void CState_Move::Describe_Entity()
 {
 }

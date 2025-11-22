@@ -3,17 +3,17 @@
 #include "Unit.h"
 
 
-CState_Player_Jump::CState_Player_Jump()
-    :CState_Player()
+CState_Jump::CState_Jump()
+    :CState_Root()
 {
 }
 
-void CState_Player_Jump::Enter()
+void CState_Jump::Enter()
 {
     __super::Enter();
 }
 
-HRESULT CState_Player_Jump::Update(_float fTimeDelta)
+HRESULT CState_Jump::Update(_float fTimeDelta)
 {
     if (E_FAIL == (__super::Update(fTimeDelta))) {
         return E_FAIL;
@@ -21,12 +21,12 @@ HRESULT CState_Player_Jump::Update(_float fTimeDelta)
     return S_OK;
 }
 
-void CState_Player_Jump::Exit()
+void CState_Jump::Exit()
 {
     __super::Exit();
 }
 
-HRESULT CState_Player_Jump::Initialize(STATE_PLAYER_JUMP_DESC* pDesc)
+HRESULT CState_Jump::Initialize(STATE_JUMP_DESC* pDesc)
 {
     if (FAILED(__super::Initialize(pDesc))) {
         return E_FAIL;
@@ -37,20 +37,20 @@ HRESULT CState_Player_Jump::Initialize(STATE_PLAYER_JUMP_DESC* pDesc)
     return S_OK;
 }
 
-CState_Player_Jump* CState_Player_Jump::Create(STATE_PLAYER_JUMP_DESC* pDesc)
+CState_Jump* CState_Jump::Create(STATE_JUMP_DESC* pDesc)
 {
-    CState_Player_Jump* pInstance = new CState_Player_Jump;
+    CState_Jump* pInstance = new CState_Jump;
     if (FAILED(pInstance->Initialize(pDesc))) {
         SAFE_RELEASE(pInstance);
     }
     return pInstance;
 }
 
-void CState_Player_Jump::Free()
+void CState_Jump::Free()
 {
     __super::Free();
 }
 
-void CState_Player_Jump::Describe_Entity()
+void CState_Jump::Describe_Entity()
 {
 }

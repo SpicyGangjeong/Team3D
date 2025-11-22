@@ -337,9 +337,6 @@
     <Filter Include="80.State\Focus\State_Land">
       <UniqueIdentifier>{0b8cac41-419f-48ce-87bc-805b8962b4df}</UniqueIdentifier>
     </Filter>
-    <Filter Include="80.State\Casting">
-      <UniqueIdentifier>{c1e05cd0-4551-487b-8e47-4119db646c60}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -660,7 +657,7 @@
     <ClInclude Include="..\Public\Wand.h">
       <Filter>02.GameObjects\Wand</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\State_Player.h">
+    <ClInclude Include="..\Public\State_Root.h">
       <Filter>80.State</Filter>
     </ClInclude>
   </ItemGroup>
@@ -976,7 +973,7 @@
     <ClCompile Include="..\Private\Wand.cpp">
       <Filter>02.GameObjects\Wand</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\State_Player.cpp">
+    <ClCompile Include="..\Private\State_Root.cpp">
       <Filter>80.State</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player.cpp">

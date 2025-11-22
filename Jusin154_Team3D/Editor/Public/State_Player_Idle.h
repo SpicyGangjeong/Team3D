@@ -1,16 +1,17 @@
 ﻿#pragma once
 #include "Editor_Define.h"
-#include "State_Player.h"
+#include "State_Root.h"
 
-class CState_Player_Idle final : public CState_Player
+class CState_Idle final : public CState_Root
 {
 public:
-    typedef struct tagIdle : public CState_Player::STATE_PLAYER_DESC {
-
-    }STATE_PLAYER_IDLE_DESC;
+    typedef struct tagIdle : public CState_Root::STATE_ROOT_DESC {
+        function<void(_float fTimeDelta)> funcPriorityUpdate = { nullptr };
+        function<void(_float fTimeDelta)> funcLateUpdate = { nullptr };
+    }STATE_IDLE_DESC;
 public:
-    CState_Player_Idle();
-    virtual ~CState_Player_Idle() = default;
+    CState_Idle();
+    virtual ~CState_Idle() = default;
 
 public:
     virtual void Enter();
@@ -18,10 +19,14 @@ public:
     virtual void Exit();
 
 private:
-    HRESULT Initialize(STATE_PLAYER_IDLE_DESC* pDesc);
+    function<void(_float fTimeDelta)> m_funcPriorityUpdate = { nullptr };
+    function<void(_float fTimeDelta)> m_funcLateUpdate = { nullptr };
+
+private:
+    HRESULT Initialize(STATE_IDLE_DESC* pDesc);
 
 public:
-    static CState_Player_Idle* Create(STATE_PLAYER_IDLE_DESC* pDesc);
+    static CState_Idle* Create(STATE_IDLE_DESC* pDesc);
     virtual void Free() override;
     virtual void Describe_Entity();
 };

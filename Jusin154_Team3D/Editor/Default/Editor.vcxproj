@@ -242,7 +242,7 @@
     <ClInclude Include="..\Public\State_Player_Jump.h" />
     <ClInclude Include="..\Public\State_Player_Land.h" />
     <ClInclude Include="..\Public\State_Player_Move.h" />
-    <ClInclude Include="..\Public\State_Player.h" />
+    <ClInclude Include="..\Public\State_Root.h" />
     <ClInclude Include="..\public\Spell_Image.h" />
     <ClInclude Include="..\public\Spell_Overlay.h" />
     <ClInclude Include="..\public\Spell_Slot.h" />
@@ -366,7 +366,7 @@
     <ClCompile Include="..\Private\State_Player_Jump.cpp" />
     <ClCompile Include="..\Private\State_Player_Land.cpp" />
     <ClCompile Include="..\Private\State_Player_Move.cpp" />
-    <ClCompile Include="..\Private\State_Player.cpp" />
+    <ClCompile Include="..\Private\State_Root.cpp" />
     <ClCompile Include="..\private\Spell_Image.cpp" />
     <ClCompile Include="..\private\Spell_Overlay.cpp" />
     <ClCompile Include="..\private\Spell_Slot.cpp" />

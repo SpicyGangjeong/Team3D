@@ -40,11 +40,11 @@ void CFSM::Change_State(size_t iStateMask)
 	m_pCurrentState->Enter();
 }
 
-void CFSM::Update_State(_float fTimeDelta)
+HRESULT CFSM::Update_State(_float fTimeDelta)
 {
 	if (nullptr != m_pCurrentState)
 	{
-		m_pCurrentState->Update(fTimeDelta);
+		return m_pCurrentState->Update(fTimeDelta);
 	}
 }
 

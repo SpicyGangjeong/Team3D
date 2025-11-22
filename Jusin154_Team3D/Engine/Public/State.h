@@ -48,7 +48,7 @@ protected:
 protected:
     HRESULT Initialize(STATEDESC* pArg);
 
-public:
+protected:
     virtual void Free() override;
     virtual void Describe_Entity();
 };

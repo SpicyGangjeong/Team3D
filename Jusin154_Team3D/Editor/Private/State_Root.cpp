@@ -1,20 +1,20 @@
 ﻿#include "pch.h"
-#include "State_Player.h"
+#include "State_Root.h"
 #include "Unit.h"
 
-CState_Player::CState_Player()
+CState_Root::CState_Root()
     :CState()
 {
 }
 
-void CState_Player::Enter()
+void CState_Root::Enter()
 {
 	if (nullptr != m_funcEnterEvent) {
 		m_funcEnterEvent();
 	}
 }
 
-HRESULT CState_Player::Update(_float fTimeDelta)
+HRESULT CState_Root::Update(_float fTimeDelta)
 {
 	HRESULT hr = { S_OK };
 	if (nullptr != m_funcExitCheck) {
@@ -23,14 +23,14 @@ HRESULT CState_Player::Update(_float fTimeDelta)
 	return hr;
 }
 
-void CState_Player::Exit()
+void CState_Root::Exit()
 {
 	if (nullptr != m_funcExitEvent) {
 		m_funcExitEvent();
 	}
 }
 
-HRESULT CState_Player::Initialize(STATE_PLAYER_DESC* pArg)
+HRESULT CState_Root::Initialize(STATE_ROOT_DESC* pArg)
 {
 	if (FAILED(__super::Initialize(pArg))) {
 		return E_FAIL;
@@ -41,11 +41,11 @@ HRESULT CState_Player::Initialize(STATE_PLAYER_DESC* pArg)
     return S_OK;
 }
 
-void CState_Player::Free()
+void CState_Root::Free()
 {
     __super::Free();
 }
 
-void CState_Player::Describe_Entity()
+void CState_Root::Describe_Entity()
 {
 }

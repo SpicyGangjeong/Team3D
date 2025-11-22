@@ -4,18 +4,18 @@
 
 NS_BEGIN(Editor)
 
-class CState_Player abstract : public CState
+class CState_Root abstract : public CState
 {
 protected:
-    typedef struct tagStatePlayer : public CState::STATEDESC {
+    typedef struct tagStateRoot : public CState::STATEDESC {
         function<HRESULT(_float fTimedelta)> funcExitCheck = { nullptr };
         function<void()> funcEnterEvent = { nullptr };
         function<void()> funcExitEvent = { nullptr };
-    }STATE_PLAYER_DESC;
+    }STATE_ROOT_DESC;
 
 protected:
-    CState_Player();
-    virtual ~CState_Player() = default;
+    CState_Root();
+    virtual ~CState_Root() = default;
 
 protected:
     virtual void Enter() override;
@@ -28,9 +28,9 @@ protected:
     function<void()> m_funcExitEvent = { nullptr };
 
 protected:
-    HRESULT Initialize(STATE_PLAYER_DESC* pArg);
+    HRESULT Initialize(STATE_ROOT_DESC* pArg);
 
-public:
+protected:
     virtual void Free() override;
     virtual void Describe_Entity();
 };

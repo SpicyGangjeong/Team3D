@@ -33,7 +33,7 @@ private:
 
 public:
     void Change_State(size_t iStateMask);
-    void Update_State(_float fTimeDelta);
+    HRESULT Update_State(_float fTimeDelta);
 
     CState* Get_PrevState() { return m_pPreviousState; }
     size_t  Get_PrevStateMask() { return m_iPreviousStateMask; }
