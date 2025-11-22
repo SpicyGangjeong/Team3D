@@ -1,20 +1,20 @@
 ﻿#pragma once
 
-#include "Editor_Define.h"
-#include "PanelObject.h"
+#include "Client_Define.h"
+#include "CanvasObject.h"
 
 NS_BEGIN(Engine)
 class CGameObject;
 NS_END
 
-NS_BEGIN(Editor)
+NS_BEGIN(Client)
 
-class CAction_Panel final : public CPanelObject
+class CGamePlay_Canvas final : public CCanvasObject
 {
 private:
-	CAction_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CAction_Panel(const CAction_Panel& rhs);
-	virtual ~CAction_Panel() = default;
+	CGamePlay_Canvas(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CGamePlay_Canvas(const CGamePlay_Canvas& rhs);
+	virtual ~CGamePlay_Canvas() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -26,23 +26,22 @@ public:
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;
-	virtual HRESULT Ready_Element(void* pArg) override;
+	virtual HRESULT	Ready_Panel(void* pArg) override;
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
-private:
-	CTexture* m_pDiffuse_TextureCom = { nullptr };
-	CShader* m_pShaderCom = { nullptr };
-	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
+public:
+	void Clear_Penel();
 
-	CGameObject* m_pSpell_Slot = { nullptr };
-	CGameObject* m_pSpell_Image	= { nullptr };
-	CGameObject* m_pSpell_Overlay = { nullptr };
-	CGameObject* m_pSlot_Number = { nullptr };
-	CGameObject* m_pHpBarBG= { nullptr };
+private:
+	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
+	CGameObject* m_pMission_Panel = { nullptr };
+	CGameObject* m_pMinimap_Panel = { nullptr };
+	CGameObject* m_pLoading_Panel = { nullptr };
+	CGameObject* m_pAction_Panel = { nullptr };
 
 public:
-	static CAction_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CGamePlay_Canvas* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 	void Describe_Entity() override;

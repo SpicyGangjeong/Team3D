@@ -1,20 +1,20 @@
 ﻿#pragma once
 
-#include "Editor_Define.h"
+#include "Client_Define.h"
 #include "PanelObject.h"
 
 NS_BEGIN(Engine)
 class CGameObject;
 NS_END
 
-NS_BEGIN(Editor)
+NS_BEGIN(Client)
 
-class CAction_Panel final : public CPanelObject
+class CLoading_Panel final : public CPanelObject
 {
 private:
-	CAction_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CAction_Panel(const CAction_Panel& rhs);
-	virtual ~CAction_Panel() = default;
+	CLoading_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CLoading_Panel(const CLoading_Panel& rhs);
+	virtual ~CLoading_Panel() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -31,18 +31,13 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 
 private:
-	CTexture* m_pDiffuse_TextureCom = { nullptr };
-	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
+	CGameObject* m_pLoadingWidget = { nullptr };
+	CGameObject* m_pLoadingWidget_Flame = { nullptr };
 
-	CGameObject* m_pSpell_Slot = { nullptr };
-	CGameObject* m_pSpell_Image	= { nullptr };
-	CGameObject* m_pSpell_Overlay = { nullptr };
-	CGameObject* m_pSlot_Number = { nullptr };
-	CGameObject* m_pHpBarBG= { nullptr };
 
 public:
-	static CAction_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CLoading_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 	void Describe_Entity() override;

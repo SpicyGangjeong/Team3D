@@ -74,8 +74,7 @@ void CMission_Panel::Late_Update(_float fTimeDelta)
 	}
 
 	if (m_bVisible) {
-		//_float4* vPos = (_float4*)(m_pTransformCom->Get_WorldMatrixPtr()->m[3]);
-		//m_pGameInstance->Add_RenderGroup(RENDER::UI, this, *vPos, m_pTransformCom->Get_Radius());
+
 	}
 	__super::Late_Update(fTimeDelta);
 

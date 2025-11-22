@@ -56,6 +56,8 @@
 #include "Spell_Slot.h"
 #include "Spell_Image.h"
 #include "Spell_Overlay.h"
+#include "Slot_Number.h"
+#include "HpBarBG.h"
 
 #include "IMGUIUI.h"
 
@@ -409,7 +411,6 @@ HRESULT CLoader::Loading_For_UI()
 	CVIBuffer_UI_Instance::UI_INSTANCE_DESC SpellSlotUIDesc{};
 
 	SpellSlotUIDesc.iNum = 4;
-	SpellSlotUIDesc.vPsition = _float2(100.f, 100.f);
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_UI_Instance"),
 		CVIBuffer_UI_Instance::Create(m_pDevice, m_pContext, &SpellSlotUIDesc)))) {
@@ -419,7 +420,6 @@ HRESULT CLoader::Loading_For_UI()
 	CVIBuffer_UI_Instance::UI_INSTANCE_DESC SlotNumberUIDesc{};
 
 	SlotNumberUIDesc.iNum = 4;
-	SlotNumberUIDesc.vPsition = _float2(100.f, 100.f);
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Slot_Number_UI_Instance"),
 		CVIBuffer_UI_Instance::Create(m_pDevice, m_pContext, &SlotNumberUIDesc)))) {
@@ -519,6 +519,14 @@ HRESULT CLoader::Loading_For_UI()
 		return E_FAIL;
 	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_Overlay>(g_iStaticLevel, CSpell_Overlay::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CSlot_Number>(g_iStaticLevel, CSlot_Number::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CHpBarBG>(g_iStaticLevel, CHpBarBG::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}

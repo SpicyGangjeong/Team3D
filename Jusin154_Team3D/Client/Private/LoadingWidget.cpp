@@ -1,30 +1,30 @@
 ﻿#include "pch.h"
-#include "Mission_Key.h"
+#include "LoadingWidget.h"
 #include "GameInstance.h"
 
-CMission_Key::CMission_Key(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CLoadingWidget::CLoadingWidget(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
 {
 }
 
-CMission_Key::CMission_Key(const CMission_Key& rhs)
+CLoadingWidget::CLoadingWidget(const CLoadingWidget& rhs)
 	:CElementObject(rhs)
 {
 }
 
-HRESULT CMission_Key::Initialize_Prototype()
+HRESULT CLoadingWidget::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CMission_Key::Initialize(void* pArg)
+HRESULT CLoadingWidget::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = -297.f;
-	Desc.fY = 159.f;
-	Desc.fSizeX = 40.f;
-	Desc.fSizeY = 40.f;
+	Desc.fX = 600.f;
+	Desc.fY = 0.f;
+	Desc.fSizeX = 200.f;
+	Desc.fSizeY = 200.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -37,13 +37,21 @@ HRESULT CMission_Key::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
+	m_iImageFrameX = 6;
+	m_iImageFrameY = 6;
+	m_fFrame = 0.2f;
 	m_fTimeMult = 3.f;
+	m_fDelayTime = 1.f;
+	m_fEndTime = 1.8f;
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 3.f;
+	m_fMoveSpeed = 10.f;
+	m_bVisible = true;
+	m_bActive = true;
 	return S_OK;
 }
 
-void CMission_Key::Priority_Update(_float fTimeDelta)
+void CLoadingWidget::Priority_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -52,7 +60,7 @@ void CMission_Key::Priority_Update(_float fTimeDelta)
 	__super::Priority_Update(fTimeDelta);
 }
 
-void CMission_Key::Update(_float fTimeDelta)
+void CLoadingWidget::Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -82,12 +90,20 @@ void CMission_Key::Update(_float fTimeDelta)
 			m_fAlpha = 0.f;
 		}
 	}
+	if (m_bLerpOn == true)
+	{
+		Start_Lerp(m_fMoveSpeed);
+	}
 
+	if (m_bLerpOff == true)
+	{
+		Reset_Pos(m_fMoveSpeed);
+	}
 	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
 }
 
-void CMission_Key::Late_Update(_float fTimeDelta)
+void CLoadingWidget::Late_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -99,12 +115,12 @@ void CMission_Key::Late_Update(_float fTimeDelta)
 	}
 }
 
-HRESULT CMission_Key::Render()
+HRESULT CLoadingWidget::Render()
 {
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::DEFAULT)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::LODING)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
@@ -117,12 +133,12 @@ HRESULT CMission_Key::Render()
 	return S_OK;
 }
 
-_vector CMission_Key::Get_WorldPostion()
+_vector CLoadingWidget::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
 }
 
-HRESULT CMission_Key::Bind_ShaderResources()
+HRESULT CLoadingWidget::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 	{
@@ -148,6 +164,10 @@ HRESULT CMission_Key::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFrame", &m_fFrame, sizeof(_float))))
+	{
+		return E_FAIL;
+	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
 	{
 		return E_FAIL;
@@ -160,16 +180,24 @@ HRESULT CMission_Key::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iImageCountX", &m_iImageFrameX, sizeof(_int))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iImageCountY", &m_iImageFrameY, sizeof(_int))))
+	{
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
-HRESULT CMission_Key::Ready_Components(void* pArg)
+HRESULT CLoadingWidget::Ready_Components(void* pArg)
 {
 	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_Keyboard_V"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("LoadingWidget"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -181,33 +209,33 @@ HRESULT CMission_Key::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-CMission_Key* CMission_Key::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CLoadingWidget* CLoadingWidget::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CMission_Key* pInstance = new CMission_Key(pDevice, pContext);
+	CLoadingWidget* pInstance = new CLoadingWidget(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CMission_Key");
+		MSG_BOX("Failed to Created : CLoadingWidget");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CMission_Key::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CLoadingWidget::Clone(void* pArg, CGameObject* pOwner)
 {
-	CMission_Key* pInstance = new CMission_Key(*this);
+	CLoadingWidget* pInstance = new CLoadingWidget(*this);
 	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CMission_Key");
+		MSG_BOX("Failed to Cloned : CLoadingWidget");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CMission_Key::Free()
+void CLoadingWidget::Free()
 {
 	__super::Free();
 
@@ -216,6 +244,6 @@ void CMission_Key::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
-void CMission_Key::Describe_Entity()
+void CLoadingWidget::Describe_Entity()
 {
 }

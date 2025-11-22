@@ -1,30 +1,30 @@
 ﻿#include "pch.h"
-#include "Mission_Key.h"
+#include "HpBarBG.h"
 #include "GameInstance.h"
 
-CMission_Key::CMission_Key(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CHpBarBG::CHpBarBG(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
 {
 }
 
-CMission_Key::CMission_Key(const CMission_Key& rhs)
+CHpBarBG::CHpBarBG(const CHpBarBG& rhs)
 	:CElementObject(rhs)
 {
 }
 
-HRESULT CMission_Key::Initialize_Prototype()
+HRESULT CHpBarBG::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CMission_Key::Initialize(void* pArg)
+HRESULT CHpBarBG::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = -297.f;
-	Desc.fY = 159.f;
-	Desc.fSizeX = 40.f;
-	Desc.fSizeY = 40.f;
+	Desc.fX = 0.f;
+	Desc.fY = 0.f;
+	Desc.fSizeX = 194.f;
+	Desc.fSizeY = 32.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -39,11 +39,12 @@ HRESULT CMission_Key::Initialize(void* pArg)
 
 	m_fTimeMult = 3.f;
 	m_fAlpha = 1.f;
-	m_fAlphaTime = 3.f;
+	m_fAlphaTime = 1.f;
+	m_vNine_Slice = _float4(27.f, 165.f, m_fSizeY * 0.5f, m_fSizeY * 0.5f);
 	return S_OK;
 }
 
-void CMission_Key::Priority_Update(_float fTimeDelta)
+void CHpBarBG::Priority_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -52,7 +53,7 @@ void CMission_Key::Priority_Update(_float fTimeDelta)
 	__super::Priority_Update(fTimeDelta);
 }
 
-void CMission_Key::Update(_float fTimeDelta)
+void CHpBarBG::Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -87,24 +88,24 @@ void CMission_Key::Update(_float fTimeDelta)
 	__super::Update(fTimeDelta);
 }
 
-void CMission_Key::Late_Update(_float fTimeDelta)
+void CHpBarBG::Late_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
 		return;
 	}
 	if (m_bVisible) {
-			m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
+		m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
 		__super::Late_Update(fTimeDelta);
 	}
 }
 
-HRESULT CMission_Key::Render()
+HRESULT CHpBarBG::Render()
 {
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::DEFAULT)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::HPBAR)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
@@ -117,12 +118,12 @@ HRESULT CMission_Key::Render()
 	return S_OK;
 }
 
-_vector CMission_Key::Get_WorldPostion()
+_vector CHpBarBG::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
 }
 
-HRESULT CMission_Key::Bind_ShaderResources()
+HRESULT CHpBarBG::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 	{
@@ -137,6 +138,10 @@ HRESULT CMission_Key::Bind_ShaderResources()
 		return E_FAIL;
 	}
 	if (FAILED(m_pDiffuse_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pDiffuse_TextureCom1->Bind_ShaderResource(m_pShaderCom, "g_Texture1", 0)))
 	{
 		return E_FAIL;
 	}
@@ -160,16 +165,32 @@ HRESULT CMission_Key::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fNine_Slice", &m_vNine_Slice, sizeof(_float4))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOrigin_Size", &m_fOrigin_Size, sizeof(_float2))))
+	{
+		return E_FAIL;
+	} 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCurrent_Size", &m_vScale, sizeof(_float2))))
+	{
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
-HRESULT CMission_Key::Ready_Components(void* pArg)
+HRESULT CHpBarBG::Ready_Components(void* pArg)
 {
 	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_Keyboard_V"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_HealthMeter_Middle_4K"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_HUD_HealthMeterFill"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -177,45 +198,45 @@ HRESULT CMission_Key::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-
 	return S_OK;
 }
 
-CMission_Key* CMission_Key::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CHpBarBG* CHpBarBG::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CMission_Key* pInstance = new CMission_Key(pDevice, pContext);
+	CHpBarBG* pInstance = new CHpBarBG(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CMission_Key");
+		MSG_BOX("Failed to Created : CHpBarBG");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CMission_Key::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CHpBarBG::Clone(void* pArg, CGameObject* pOwner)
 {
-	CMission_Key* pInstance = new CMission_Key(*this);
+	CHpBarBG* pInstance = new CHpBarBG(*this);
 	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CMission_Key");
+		MSG_BOX("Failed to Cloned : CSpell_Image");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CMission_Key::Free()
+void CHpBarBG::Free()
 {
 	__super::Free();
 
 	SAFE_RELEASE(m_pDiffuse_TextureCom);
+	SAFE_RELEASE(m_pDiffuse_TextureCom1);
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
-void CMission_Key::Describe_Entity()
+void CHpBarBG::Describe_Entity()
 {
 }
