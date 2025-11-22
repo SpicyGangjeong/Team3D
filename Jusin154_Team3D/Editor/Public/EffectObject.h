@@ -57,7 +57,7 @@ public:
 		_float  fDiffuseAlpha = { 1.f };
 		_float  fBlurIntensity = {};
 		_float  fNoiseDistortionIntensity = {};
-		_float  fEmissiveCutAlpha = { 0.f };
+		_float  fEmissiveStrength = { 0.f };
 
 		LIGHT_DESC	LightDesc = {};
 		RENDER		eRenderOrder = { RENDER::EFFECT };
@@ -72,6 +72,15 @@ public:
 		_bool   isNoiseColor = { false };
 		_bool   isNoiseAlpha = { false };
 		_bool	isNomalDissolve = {};
+
+		_float fSoftenExp = { 1.31429f };
+		_float fSoftStrength = {};
+		_float fCoreBoost = {};
+		_float fRadius = {};
+
+		_float fSoftMaskEdge;
+		_float fSoftMask;
+
 
 	}EFFECT_INFO;
 
@@ -115,7 +124,7 @@ public:
 		_float  fDiffuseAlpha = { 1.f };
 		_float  fBlurIntensity = {};
 		_float  fNoiseDistortionIntensity = {};
-		_float  fEmissiveCutAlpha = {};
+		_float  fEmissiveStrength = {};
 
 		LIGHT_DESC	LightDesc = {};
 		RENDER		eRenderOrder = { RENDER::EFFECT };
@@ -126,6 +135,11 @@ public:
 		_bool   isNoiseColor = { false };
 		_bool   isNoiseAlpha = { false };
 		_bool	isNomalDissolve = {};
+
+		_float fSoftenExp = { 1.31429f };
+		_float fSoftStrength = {};
+		_float fCoreBoost = {};
+		_float fRadius = {};
 
 	}PRE_EFFECT_INFO;
 
