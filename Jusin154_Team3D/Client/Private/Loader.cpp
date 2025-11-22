@@ -4,9 +4,9 @@
 #include "MainApp.h"
 #include "Light_Main.h"
 #include "Camera_Debug.h"
-#include "GamePlay_Canvas.h"
-#include "Loading_Panel.h"
-#include "LoadingWidget.h"
+//#include "GamePlay_Canvas.h"
+//#include "Loading_Panel.h"
+//#include "LoadingWidget.h"
 
 #include "Player.h"
 #include "Camera_Gaze.h"
@@ -204,15 +204,15 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	m_strMessage = TEXT("객체원형를(을) 로딩 중 입니다.");
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CGamePlay_Canvas>(g_iStaticLevel, CGamePlay_Canvas::Create(m_pDevice, m_pContext)))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pGameInstance->Add_Prototype<CLoading_Panel>(g_iStaticLevel, CLoading_Panel::Create(m_pDevice, m_pContext)))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pGameInstance->Add_Prototype<CLoadingWidget>(g_iStaticLevel, CLoadingWidget::Create(m_pDevice, m_pContext)))) {
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_Prototype<CGamePlay_Canvas>(g_iStaticLevel, CGamePlay_Canvas::Create(m_pDevice, m_pContext)))) {
+	//	return E_FAIL;
+	//}
+	//if (FAILED(m_pGameInstance->Add_Prototype<CLoading_Panel>(g_iStaticLevel, CLoading_Panel::Create(m_pDevice, m_pContext)))) {
+	//	return E_FAIL;
+	//}
+	//if (FAILED(m_pGameInstance->Add_Prototype<CLoadingWidget>(g_iStaticLevel, CLoadingWidget::Create(m_pDevice, m_pContext)))) {
+	//	return E_FAIL;
+	//}
 		
 	/* For.Prototype_GameObject_SkyBox */
 	if (FAILED(m_pGameInstance->Add_Prototype<CSkyBox>(g_iStaticLevel, CSkyBox::Create(m_pDevice, m_pContext))))
