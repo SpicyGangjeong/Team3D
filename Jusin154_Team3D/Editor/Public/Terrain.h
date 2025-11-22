@@ -29,11 +29,18 @@ public:
 private:
 	CShader*				m_pShaderCom = { nullptr };
 	CVIBuffer_Terrain*		m_pVIBufferCom = { nullptr };
-	CTexture*				m_pTextureCom = { nullptr };
+	CTexture*				m_pDiffuseTextureCom = { nullptr };
+	CTexture*				m_pNormalTextureCom = { nullptr };
+	CTexture*				m_pMROTextureCom = { nullptr };
+	CTexture*				m_pMaskTextureCom = { nullptr };
 
+	_float					m_fUsingSurfaceParams = {};
 	_float					m_fHeightRatio = {1.f};
 	_float3					m_vPickingPosition = {};
 	_float3					m_vRotation = {};
+	_float					m_fCullingRadius = { 0.2f };
+
+	_uint					m_iTextureIndex = {};
 
 private:
 	HRESULT Ready_Components();

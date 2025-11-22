@@ -21,10 +21,10 @@ HRESULT CSpell_Image::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = -160.f;
-	Desc.fY = 50.f;
-	Desc.fSizeX = 140.f;
-	Desc.fSizeY = 140.f;
+	Desc.fX = -1.f;
+	Desc.fY = 0.f;
+	Desc.fSizeX = 100.f;
+	Desc.fSizeY = 100.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -42,7 +42,6 @@ HRESULT CSpell_Image::Initialize(void* pArg)
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 1.f;
 	m_fSortZ = 1.f;
-	m_iSkillType = ENUM_CLASS(SKILLTYPE::SHADOW);
 	return S_OK;
 }
 
@@ -97,9 +96,7 @@ void CSpell_Image::Late_Update(_float fTimeDelta)
 		return;
 	}
 	if (m_bVisible) {
-		if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
 			m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
-		}
 		__super::Late_Update(fTimeDelta);
 	}
 }
@@ -161,10 +158,6 @@ HRESULT CSpell_Image::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_iSpellType", &m_iSkillType, sizeof(_float))))
-	{
-		return E_FAIL;
-	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
 	{
 		return E_FAIL;
@@ -179,6 +172,7 @@ HRESULT CSpell_Image::Bind_ShaderResources()
 	}
 	return S_OK;
 }
+
 HRESULT CSpell_Image::Ready_Components(void* pArg)
 {
 	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))

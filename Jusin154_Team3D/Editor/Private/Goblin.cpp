@@ -40,6 +40,8 @@ void CGoblin::Priority_Update(_float fTimeDelta)
 void CGoblin::Update(_float fTimeDelta)
 {
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
+
+	m_pModelCom->ComputeSkinning();
 }
 
 void CGoblin::Late_Update(_float fTimeDelta)
@@ -68,6 +70,9 @@ HRESULT CGoblin::Render()
 		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
 			return E_FAIL;
 		}
+
+		if (FAILED(m_pModelCom->Bind_CS_Output(5, 0)))
+			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;

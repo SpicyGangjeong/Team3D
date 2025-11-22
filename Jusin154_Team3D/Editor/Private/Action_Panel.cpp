@@ -4,6 +4,8 @@
 #include "Spell_Slot.h"
 #include "Spell_Image.h"
 #include "Spell_Overlay.h"
+#include "Slot_Number.h"
+#include "HpBarBG.h"
 
 CAction_Panel::CAction_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPanelObject(pDevice, pContext)
@@ -105,45 +107,11 @@ _vector CAction_Panel::Get_WorldPostion()
 
 HRESULT CAction_Panel::Bind_ShaderResources()
 {
-	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pDiffuse_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float))))
-	{
-		return E_FAIL;
-	}
-
 	return S_OK;
 }
 
 HRESULT CAction_Panel::Ready_Components(void* pArg)
 {
-	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_ActionItemGoldleaf_4K"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, FX_UIEDITOR, (CComponent**)&m_pShaderCom, nullptr)))
-	{
-		return E_FAIL;
-	}
-
 	return S_OK;
 }
 
@@ -159,13 +127,23 @@ HRESULT CAction_Panel::Ready_Element(void* pArg)
 	{
 		return E_FAIL;
 	}
-	Add_Element(TEXT("SpellImage"), m_pSpell_Image);
+	Add_Element(TEXT("Spell_Image"), m_pSpell_Image);
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Overlay>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Overlay**>(&m_pSpell_Overlay))))
 	{
 		return E_FAIL;
 	}
-	Add_Element(TEXT("SpellOverlay"), m_pSpell_Overlay);
+	Add_Element(TEXT("Spell_Overlay"), m_pSpell_Overlay);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSlot_Number>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSlot_Number**>(&m_pSlot_Number))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Slot_Number"), m_pSlot_Number);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CHpBarBG>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CHpBarBG**>(&m_pHpBarBG))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("HpBarBG"), m_pHpBarBG);
 	return S_OK;
 }
 

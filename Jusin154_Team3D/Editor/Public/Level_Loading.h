@@ -1,10 +1,10 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Editor_Define.h"
 #include "Level.h"
 
 
-/* 2. ÀÚ¿øÀ» ·ÎµåÇÏ´Â µ¿¾È, È­¸é¿¡ ·Îµù »óÅÂ¸¦ Ç¥ÇöÇØÁØ´Ù. */
+/* 2. ìì›ì„ ë¡œë“œí•˜ëŠ” ë™ì•ˆ, í™”ë©´ì— ë¡œë”© ìƒíƒœë¥¼ í‘œí˜„í•´ì¤€ë‹¤. */
 
 NS_BEGIN(Editor)
 
@@ -21,7 +21,7 @@ public:
 
 private:
 	LEVEL			m_eNextLevelID = { LEVEL::END };
-	class CLoader* m_pLoader = { nullptr };
+	class CLoader*	m_pLoader = { nullptr };
 
 private:
 	virtual HRESULT Initialize(LEVEL eNextLevelID);

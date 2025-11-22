@@ -173,6 +173,10 @@
     <ClInclude Include="..\Public\CallBack_Monster_HitReport.h" />
     <ClInclude Include="..\Public\CallBack_Playable_Behavior.h" />
     <ClInclude Include="..\Public\CallBack_Playable_HitReport.h" />
+    <ClInclude Include="..\Public\Camera_Gaze.h" />
+    <ClInclude Include="..\Public\CamPosition.h" />
+    <ClInclude Include="..\Public\CamPosition_Arm.h" />
+    <ClInclude Include="..\Public\CamPosition_Player.h" />
     <ClInclude Include="..\Public\DummyObject.h" />
     <ClInclude Include="..\public\DummySkyBox.h" />
     <ClInclude Include="..\Public\Dummy_Globe.h" />
@@ -200,6 +204,7 @@
     <ClInclude Include="..\Public\Dummy_PhysXWall.h" />
     <ClInclude Include="..\Public\Dummy_Plane.h" />
     <ClInclude Include="..\Public\Dummy_PhysXPlayable.h" />
+    <ClInclude Include="..\public\HpBarBG.h" />
     <ClInclude Include="..\Public\NomalJap.h" />
     <ClInclude Include="..\Public\Effect_Container.h" />
     <ClInclude Include="..\public\GamePlay_Canvas.h" />
@@ -231,6 +236,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\Public\Player.h" />
+    <ClInclude Include="..\public\Slot_Number.h" />
     <ClInclude Include="..\Public\State_Cast.h" />
     <ClInclude Include="..\Public\State_Combat.h" />
     <ClInclude Include="..\Public\State_Dodge.h" />
@@ -241,6 +247,7 @@
     <ClInclude Include="..\Public\State_Land.h" />
     <ClInclude Include="..\Public\State_LightAttack.h" />
     <ClInclude Include="..\Public\State_Move.h" />
+    <ClInclude Include="..\Public\State_Root.h" />
     <ClInclude Include="..\Public\State_Skill.h" />
     <ClInclude Include="..\Public\State_Skill2.h" />
     <ClInclude Include="..\Public\State_Sprint.h" />
@@ -282,6 +289,7 @@
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\public\Mouse_Cursor.h" />
     <ClInclude Include="..\Public\RootModelPart.h" />
+    <ClInclude Include="..\Public\Wand.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -298,6 +306,10 @@
     <ClCompile Include="..\Private\CallBack_Monster_HitReport.cpp" />
     <ClCompile Include="..\Private\CallBack_Playable_Behavior.cpp" />
     <ClCompile Include="..\Private\CallBack_Playable_HitReport.cpp" />
+    <ClCompile Include="..\Private\Camera_Gaze.cpp" />
+    <ClCompile Include="..\Private\CamPosition.cpp" />
+    <ClCompile Include="..\Private\CamPosition_Arm.cpp" />
+    <ClCompile Include="..\Private\CamPosition_Player.cpp" />
     <ClCompile Include="..\Private\DummyObject.cpp" />
     <ClCompile Include="..\private\DummySkyBox.cpp" />
     <ClCompile Include="..\Private\Dummy_Globe.cpp" />
@@ -325,6 +337,7 @@
     <ClCompile Include="..\Private\Dummy_PhysXWall.cpp" />
     <ClCompile Include="..\Private\Dummy_Plane.cpp" />
     <ClCompile Include="..\Private\Dummy_PhysXPlayable.cpp" />
+    <ClCompile Include="..\private\HpBarBG.cpp" />
     <ClCompile Include="..\Private\NomalJap.cpp" />
     <ClCompile Include="..\Private\Effect_Container.cpp" />
     <ClCompile Include="..\private\GamePlay_Canvas.cpp" />
@@ -356,6 +369,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\Private\Player.cpp" />
+    <ClCompile Include="..\private\Slot_Number.cpp" />
     <ClCompile Include="..\Private\State_Cast.cpp" />
     <ClCompile Include="..\Private\State_Combat.cpp" />
     <ClCompile Include="..\Private\State_Dodge.cpp" />
@@ -366,6 +380,7 @@
     <ClCompile Include="..\Private\State_Land.cpp" />
     <ClCompile Include="..\Private\State_LightAttack.cpp" />
     <ClCompile Include="..\Private\State_Move.cpp" />
+    <ClCompile Include="..\Private\State_Root.cpp" />
     <ClCompile Include="..\Private\State_Skill.cpp" />
     <ClCompile Include="..\Private\State_Skill2.cpp" />
     <ClCompile Include="..\Private\State_Sprint.cpp" />
@@ -408,6 +423,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\Private\RootModelPart.cpp" />
+    <ClCompile Include="..\Private\Wand.cpp" />
     <ClCompile Include="Editor.cpp" />
   </ItemGroup>
   <ItemGroup>

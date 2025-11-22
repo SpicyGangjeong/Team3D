@@ -28,8 +28,11 @@ HRESULT CTerrain::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
+	m_fUsingSurfaceParams = 15.f / 27.f;
 	m_vRotation = _float3{ 0.f, 0.f, 0.f };
-	//m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-128.f, -100.f, -128.f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-194, 18.5f, -153.f, 1.f));
+
+	//m_pVIBufferCom->Set_CullingRadius(0.04f);
 
 	return S_OK;
 }
@@ -37,34 +40,39 @@ HRESULT CTerrain::Initialize(void* pArg)
 void CTerrain::Priority_Update(_float fTimeDelta)
 {
 	GUI::Begin("Picking Position");
-	if (m_pGameInstance->Mouse_Pressing(0))
+	if (m_pGameInstance->Mouse_Pressing(DIM_LBUTTON))
 	{
-		if (m_pGameInstance->isPicking(&m_vPickingPosition))
+		if (m_pVIBufferCom->Picking(m_pTransformCom->Get_XMWorldMatrix(), &m_vPickingPosition))
 		{
-			m_pVIBufferCom->FitY(m_pTransformCom->Get_XMWorldMatrix(), m_vPickingPosition.y);
+			if(m_pGameInstance->Key_Pressing(DIK_PERIOD))
+				m_pVIBufferCom->FitY(m_pTransformCom->Get_XMWorldMatrix(), 0.01f);
+			if(m_pGameInstance->Key_Pressing(DIK_COMMA))
+				m_pVIBufferCom->FitY(m_pTransformCom->Get_XMWorldMatrix(), -0.01f);
 		}
 	}
 	
-	GUI::InputFloat("Height Ratio", &m_fHeightRatio);
+	/*GUI::InputFloat("Height Ratio", &m_fHeightRatio);
 	max(0.01f, m_fHeightRatio);
-
+*/
 	//m_pVIBufferCom->Change_HeigthRatio(m_fHeightRatio);
-	GUI::DragFloat3("Picking", (_float*)(&m_vPickingPosition));
+	//GUI::DragFloat3("Picking", (_float*)(&m_vPickingPosition));
 	_float4 vPos = {};
 	_float3 vRotation = {};
 	XMStoreFloat4(&vPos, m_pTransformCom->Get_State(STATE::POSITION));
 	GUI::DragFloat3("Pos", (_float*)(&vPos));
 	GUI::DragFloat3("Rota", (_float*)(&m_vRotation));
 
-	m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
+	//m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
 	m_pTransformCom->Set_State(STATE::POSITION, XMLoadFloat4(&vPos));
+
+	GUI::DragFloat("Culling Radius", &m_fCullingRadius, 0.01f, 0.01f, 2.f);
 
 	GUI::End();
 }
 
 void CTerrain::Update(_float fTimeDelta)
 {
-	m_pVIBufferCom->Culling(XMMatrixIdentity());
+	//m_pVIBufferCom->Culling(XMMatrixIdentity());
 
 }
 
@@ -111,7 +119,20 @@ HRESULT CTerrain::Ready_Components()
 		return E_FAIL;
 
 	/* Com_Texture */
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("TerrainTest"), reinterpret_cast<CComponent**>(&m_pTextureCom), nullptr))) {
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Terrain_Diffuse"), reinterpret_cast<CComponent**>(&m_pDiffuseTextureCom), nullptr))) {
+		return E_FAIL;
+	}
+	/* Com_Texture */
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Terrain_Normal"), reinterpret_cast<CComponent**>(&m_pNormalTextureCom), nullptr))) {
+		return E_FAIL;
+	}
+	/* Com_Texture */
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Terrain_MRO"), reinterpret_cast<CComponent**>(&m_pMROTextureCom), nullptr))) {
+		return E_FAIL;
+	}
+
+	/* Com_Texture */
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Terrain_Mask"), reinterpret_cast<CComponent**>(&m_pMaskTextureCom), nullptr))) {
 		return E_FAIL;
 	}
 
@@ -134,9 +155,21 @@ HRESULT CTerrain::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pShaderCom->Bind_SRV("g_DiffuseTexture", m_pTextureCom->Get_SRV(0)))) {
+	if (FAILED(m_pDiffuseTextureCom->Bind_ShaderResources(m_pShaderCom, "g_DiffuseTextures", 0, m_pDiffuseTextureCom->Get_Size()))){
 		return E_FAIL;
 	}
+	if (FAILED(m_pNormalTextureCom->Bind_ShaderResources(m_pShaderCom, "g_NormalTextures", 0, m_pNormalTextureCom->Get_Size()))){
+		return E_FAIL;
+	}
+	if (FAILED(m_pMROTextureCom->Bind_ShaderResources(m_pShaderCom, "g_SurfaceParamsTextures", 0, m_pMROTextureCom->Get_Size()))){
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_SRV("g_MaskTexture", m_pMaskTextureCom->Get_SRV(0)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fUsingSurfaceParams", &m_fUsingSurfaceParams, sizeof(_float))))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -173,7 +206,10 @@ void CTerrain::Free()
 
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
-	SAFE_RELEASE(m_pTextureCom);
+	SAFE_RELEASE(m_pDiffuseTextureCom);
+	SAFE_RELEASE(m_pNormalTextureCom);
+	SAFE_RELEASE(m_pMROTextureCom);
+	SAFE_RELEASE(m_pMaskTextureCom);
 }
 
 void CTerrain::Describe_Entity()

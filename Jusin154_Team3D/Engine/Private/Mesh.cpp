@@ -3,7 +3,7 @@
 #include "Model.h"
 #include "Bone.h"
 #include "Shader.h"
-
+#include "ComputeShader.h"
 CMesh::CMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CVIBuffer{ pDevice, pContext }
 {
@@ -112,8 +112,6 @@ HRESULT CMesh::Initialize_Prototype(MODEL eType, vector<class CBone*>& Bones, co
 	Safe_Delete_Array(pIndices);
 
 #pragma endregion
-
-
 
 	return S_OK;
 }
@@ -291,7 +289,7 @@ HRESULT CMesh::Initialize_Prototype(MODEL eType, const CModel* pModel, SaveMesh*
 
 #pragma endregion
 
-
+	Create_RawVB(m_RawVertices);
 
 	return S_OK;
 }
@@ -509,10 +507,81 @@ HRESULT CMesh::Ready_VertexBuffer_For_Anim(const CModel* pModel, SaveMesh* _Save
 	if (FAILED(m_pDevice->CreateBuffer(&VBDesc, &InitialVBData, &m_pVB)))
 		return E_FAIL;
 
+	
+	m_RawVertices.resize(m_iNumVertices);
+
+	for (_uint i = 0; i < m_iNumVertices; i++)
+	{
+		m_RawVertices[i].vPosition = pVertices[i].vPosition;
+		m_RawVertices[i].vNormal = pVertices[i].vNormal;
+		m_RawVertices[i].vTangent = pVertices[i].vTangent;
+		m_RawVertices[i].vBinormal = pVertices[i].vBinormal;
+		m_RawVertices[i].vTexcoord = pVertices[i].vTexcoord;
+
+		m_RawVertices[i].vBlendIndex = pVertices[i].vBlendIndex;
+		m_RawVertices[i].vBlendWeight = pVertices[i].vBlendWeight;
+	}
+
 	Safe_Delete_Array(pVertices);
 
 	return S_OK;
 }
+
+
+HRESULT CMesh::Create_RawVB(vector<MESH_DESC>& RawVertices)
+{
+	m_iRawVertexStride = sizeof(MESH_DESC); 
+
+	D3D11_BUFFER_DESC desc{};
+	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.ByteWidth = m_iRawVertexStride *m_iNumVertices;
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	desc.CPUAccessFlags = 0;
+	desc.StructureByteStride = m_iRawVertexStride;
+	desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+
+	D3D11_SUBRESOURCE_DATA init{};
+	init.pSysMem = RawVertices.data();
+
+	m_pDevice->CreateBuffer(&desc, &init, &m_pVBMesh);
+
+
+	return S_OK;
+}
+
+
+void CMesh::ComputSkinning(CComputeShader* ComputeShader, ID3D11Buffer* ConstantBuffer)
+{
+	if (ComputeShader == nullptr)
+		return;
+
+	_uint iGroupCountX = (m_iNumVertices + 255) / 256;
+
+	ID3D11Buffer* CSBuffers[] = {
+		 m_pVBMesh
+	};
+
+	vector<D3D11_MAPPED_SUBRESOURCE> OutSubResources = {};
+	D3D11_MAPPED_SUBRESOURCE VBInstanceResource = {};
+
+	OutSubResources = ComputeShader->Dispatch(0, 0, _float3((_float)iGroupCountX, 1.f, 1.f), CSBuffers, ConstantBuffer);
+}
+
+void CMesh::FillBoneDesc(const vector<_float4x4>& CombinedMatrices, BONE_DESC* pOut)
+{
+	for (size_t i = 0; i < m_iNumBones; ++i)
+	{
+		const _float4x4& offset = m_offsetMatrices[i];
+		const _float4x4& combined = CombinedMatrices[m_BoneIndices[i]];
+
+		_matrix matOffset = XMLoadFloat4x4(&offset);
+		_matrix matCombined = XMLoadFloat4x4(&combined);
+
+		XMStoreFloat4x4(&pOut->BoneMatrix[i], matOffset * matCombined);
+	}
+}
+
+
 
 HRESULT CMesh::Initialize(void* pArg)
 {
@@ -822,6 +891,7 @@ void CMesh::Free()
 	__super::Free();
 
 	Safe_Delete_Array(m_pBoneMatrices);
+	SAFE_RELEASE(m_pVBMesh);
 }
 
 void CMesh::Describe_Entity()

@@ -337,6 +337,27 @@
     <Filter Include="02.GameObjects\Dummys\DummyPhysX\PhysXEffectHitBox">
       <UniqueIdentifier>{7b7439b1-f2e5-4233-bf26-4db2b41307b7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\Slot_Number">
+      <UniqueIdentifier>{0db597d8-c4e7-479a-9b7e-9014b79a5e03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\HPBarBG">
+      <UniqueIdentifier>{7e8b7123-11fb-4946-99fe-3265932d0536}</UniqueIdentifier>
+	</Filter>
+    <Filter Include="02.GameObjects\Camera">
+      <UniqueIdentifier>{072a4e85-ba07-4ffd-bdb1-ddac02558242}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Camera\Camera_Gaze">
+      <UniqueIdentifier>{4982a8ed-d04a-4d4d-804f-3f45ca1d9dd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Camera\CameraPosition">
+      <UniqueIdentifier>{1c11a2a1-ad0a-4f0b-8a86-5ab9fc68a69f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Camera\CameraPosition\Player">
+      <UniqueIdentifier>{b899b53a-c8cf-451a-ab5d-6945cac88276}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Wand">
+      <UniqueIdentifier>{92110a48-81d0-4e98-be06-05dd078d0488}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -663,6 +684,30 @@
     <ClInclude Include="..\Public\Dummy_PhysXEffectHitBox.h">
       <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXEffectHitBox</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Slot_Number.h">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\Slot_Number</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\HpBarBG.h">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\HPBarBG</Filter>
+	</ClInclude>
+    <ClInclude Include="..\Public\Camera_Gaze.h">
+      <Filter>02.GameObjects\Camera\Camera_Gaze</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CamPosition.h">
+      <Filter>02.GameObjects\Camera\CameraPosition</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CamPosition_Player.h">
+      <Filter>02.GameObjects\Camera\CameraPosition\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CamPosition_Arm.h">
+      <Filter>02.GameObjects\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Root.h">
+      <Filter>80.State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Wand.h">
+      <Filter>02.GameObjects\Wand</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -984,6 +1029,30 @@
     </ClCompile>
     <ClCompile Include="..\Private\Dummy_PhysXEffectHitBox.cpp">
       <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXEffectHitBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Slot_Number.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\Slot_Number</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\HpBarBG.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\HPBarBG</Filter>
+	</ClCompile>
+    <ClCompile Include="..\Private\Camera_Gaze.cpp">
+      <Filter>02.GameObjects\Camera\Camera_Gaze</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CamPosition.cpp">
+      <Filter>02.GameObjects\Camera\CameraPosition</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CamPosition_Player.cpp">
+      <Filter>02.GameObjects\Camera\CameraPosition\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CamPosition_Arm.cpp">
+      <Filter>02.GameObjects\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Root.cpp">
+      <Filter>80.State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Wand.cpp">
+      <Filter>02.GameObjects\Wand</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

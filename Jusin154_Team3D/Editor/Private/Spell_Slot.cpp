@@ -22,9 +22,9 @@ HRESULT CSpell_Slot::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 0.f;
-	Desc.fY = 98.f;
-	Desc.fSizeX = 140.f;
-	Desc.fSizeY = 140.f;
+	Desc.fY = 0.f;
+	Desc.fSizeX = 100.f;
+	Desc.fSizeY = 100.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -39,11 +39,15 @@ HRESULT CSpell_Slot::Initialize(void* pArg)
 
 	m_fAlpha = 1.f;
 	m_fTimeMult = 3.f;
-	m_fAngle = XMConvertToRadians(-135);
+	m_fAngle = XMConvertToRadians(45);
 	m_fAlphaTime = 1.f;
+	m_fOffSetX = 101.f;
+	m_fOffSetY = 101.f;
+	m_iCols = 4;
 	m_pVIBufferCom->Set_Cloned(true);
+	m_pVIBufferCom->Set_Pos(0.f, 0.f, m_fOffSetX, m_fOffSetY, m_iCols);
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
-	m_pVIBufferCom->Set_Pos(m_fX, m_fY, 150.f,0.f,4);
+	m_pVIBufferCom->Set_ImageUV();
 	return S_OK;
 }
 
@@ -98,10 +102,7 @@ void CSpell_Slot::Late_Update(_float fTimeDelta)
 	}
 	if (m_bVisible)
 	{
-		if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius()))
-		{
 			m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
-		}
 	}
 	__super::Late_Update(fTimeDelta);
 }
@@ -131,6 +132,25 @@ HRESULT CSpell_Slot::Render()
 _vector CSpell_Slot::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
+}
+
+void CSpell_Slot::SizeUpX(_float fSizeX)
+{
+	m_fSizeX = fSizeX;
+	m_pVIBufferCom->Set_SizeX(m_fSizeX);
+}
+
+void CSpell_Slot::SizeUpY(_float fSizeY)
+{
+	m_fSizeY = fSizeY;
+	m_pVIBufferCom->Set_SizeY(m_fSizeY);
+}
+
+void CSpell_Slot::SizeUpdate(_float fSizeX, _float fSizeY)
+{
+	m_fSizeX = fSizeX;
+	m_fSizeY = fSizeY;
+	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
 }
 
 HRESULT CSpell_Slot::Bind_ShaderResources()
@@ -171,6 +191,7 @@ HRESULT CSpell_Slot::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+	
 	return S_OK;
 }
 

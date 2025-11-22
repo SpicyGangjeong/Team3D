@@ -6,10 +6,10 @@ enum ESTATE
 {
     IDLE, IDLE_TURN_L, IDLE_TURN_R, IDLE_TURN_BWD,
     MOVE, 
-    WALK, WALK_FWD, WALK_BWD, WALK_STOP,
-    JOG,
+    WALK, WALK_FWD, WALK_BWD,WALK_STOP,
+    JOG,JOG_FWD, JOG_STOP,
     SPRINT,
-    JUMP,JUMP_WALK,JUMP_SPRINT,
+    JUMP,JUMP_JOG,JUMP_SPRINT,
     LAND,
     DODGE,
     COMBAT, LIGHT_ATTACK, CAST, SKILL, SKILL2,
@@ -40,7 +40,6 @@ public:
     _uint Get_State() { return m_eState; }
     void Set_Parent(CState* State) { m_pParent = State; }
     CState* Get_Parent() { return m_pParent; }
-
 protected:
     CUnit*              m_pOwner = { nullptr };
     CModel*             m_pModel = { nullptr };

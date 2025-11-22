@@ -16,7 +16,9 @@ struct VS_IN
     float2 vTexcoord : TEXCOORD0;
 
     float2 vSize : TEXCOORD1;
-    float2 Pos : TEXCOORD2;
+    float2 vPos : TEXCOORD2;
+    float2 vUVStart : TEXCOORD3;
+    float2 vUVEnd: TEXCOORD4;
 };
 
 struct VS_OUT
@@ -29,15 +31,18 @@ VS_OUT VS_MAIN(VS_IN In)
 {
     VS_OUT Out;
 
-    matrix matWV = mul(g_WorldMatrix, g_ViewMatrix);
-    matrix matWVP = mul(matWV, g_ProjMatrix);
+    matrix matVP = mul(g_ViewMatrix, g_ProjMatrix);
+    float3 vLocalPos = In.vPosition;
+    vLocalPos.xy *= In.vSize;
+    vLocalPos.xy += In.vPos; 
+    float2 StartUV = In.vUVStart;
+    float2 EndUV = In.vUVEnd;
+    float3 vParentPos = float3(g_WorldMatrix._41, g_WorldMatrix._42, g_WorldMatrix._43);
 
-    float3 scaledPos = In.vPosition;
-    scaledPos.xy *= In.vSize; // 인스턴스 스케일 적용
-    scaledPos.xy += In.Pos; // 인스턴스 위치 적용
+    float3 vFinalWorldPos = vLocalPos + vParentPos;
 
-    Out.vPosition = mul(float4(scaledPos, 1.f), matWVP);
-    Out.vTexcoord = In.vTexcoord;
+    Out.vPosition = mul(float4(vFinalWorldPos, 1.f), matVP);
+    Out.vTexcoord = StartUV + In.vTexcoord * (EndUV - StartUV);
 
     return Out;
 }
@@ -75,6 +80,23 @@ PS_OUT PS_MAIN(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_Alpha_Blend(PS_IN In)
+{
+    PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+   
+    float4 color = g_Texture.Sample(ClampSampler, In.vTexcoord);
+    
+    if(color.a <= 0.4f)
+        discard;
+        
+    color.a *= Alpha;
+
+    Out.vColor = color;
+    
+    return Out;
+}
+
 technique11 PosTexTechnique11
 {
     pass Default
@@ -86,5 +108,16 @@ technique11 PosTexTechnique11
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
+    }
+
+    pass AlphaBlend
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Alpha_Blend();
     }
 }

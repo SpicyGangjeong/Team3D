@@ -287,24 +287,24 @@ PS_OUT PS_NineSlice(PS_IN In)
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     float4 Color = float4(1.f, 1.f, 1.f, 1.f);
     float2 uv = In.vTexcoord;
-    float2 CurrentPixelPosition =   uv *  g_fCurrent_Size;
-    float OriginLeft =              g_fNine_Slice.x;    
-    float OriginRight =             g_fNine_Slice.y;    
-    float OriginTop =               g_fNine_Slice.z;    
-    float OriginBottom =            g_fNine_Slice.w;    
+    float2 CurrentPixelPosition = uv * g_fCurrent_Size;
+    float OriginLeft = g_fNine_Slice.x;
+    float OriginRight = g_fNine_Slice.y;
+    float OriginTop = g_fNine_Slice.z;
+    float OriginBottom = g_fNine_Slice.w;
     
-    float CurrentLeft =             OriginLeft;       
-    float CurrentRight =            g_fCurrent_Size.x - (g_fOrigin_Size.x - OriginRight); 
-    float CurrentTop =              OriginTop;        
-    float CurrentBottom =           g_fCurrent_Size.y - (g_fOrigin_Size.y - OriginBottom); 
+    float CurrentLeft = OriginLeft;
+    float CurrentRight = g_fCurrent_Size.x - (g_fOrigin_Size.x - OriginRight);
+    float CurrentTop = OriginTop;
+    float CurrentBottom = g_fCurrent_Size.y - (g_fOrigin_Size.y - OriginBottom);
     
     float2 Finaluv = In.vTexcoord;
 
-    if(CurrentPixelPosition.x < CurrentLeft)
+    if (CurrentPixelPosition.x < CurrentLeft)
     {
         Finaluv.x = CurrentPixelPosition.x / g_fOrigin_Size.x;
     }
-    else if(CurrentPixelPosition.x >CurrentRight)
+    else if (CurrentPixelPosition.x > CurrentRight)
     {
         float dist = CurrentPixelPosition.x - CurrentRight;
         Finaluv.x = (OriginRight + dist) / g_fOrigin_Size.x;
@@ -315,11 +315,11 @@ PS_OUT PS_NineSlice(PS_IN In)
         Finaluv.x = (OriginLeft / g_fOrigin_Size.x) + scale * ((OriginRight - OriginLeft) / g_fOrigin_Size.x);
     }
     
-    if(CurrentPixelPosition.y < CurrentTop)
+    if (CurrentPixelPosition.y < CurrentTop)
     {
         Finaluv.y = CurrentPixelPosition.y / g_fOrigin_Size.y;
     }
-    else if(CurrentPixelPosition.y > CurrentBottom)
+    else if (CurrentPixelPosition.y > CurrentBottom)
     {
         float dist = CurrentPixelPosition.y - CurrentBottom;
         Finaluv.y = (OriginBottom + dist) / g_fOrigin_Size.y;
@@ -360,82 +360,21 @@ PS_OUT PS_Rotation(PS_IN In)
     Rotation.y = uv.x * sin(g_fAngle) + uv.y * cos(g_fAngle);
     Rotation += center;
             
-    if (g_iSpellType == 0)
-    {
-        float4 tex1 = g_Texture.Sample(ClampSampler, Rotation);
-        float4 tex2 = g_Texture1.Sample(DefaultSampler, In.vTexcoord);
-        
-        tex1.rgb *= 0.4f;
-        color = tex1;
-        tex2.rgb *= 0.3f;
-        
-        if (tex2.a >= 0.9f)
-            color = tex2;
-    
-        color.a *= Alpha;
-
-        Out.vColor = color;
-        return Out;
-    }
-        //int iTotalFrame = g_iImageCountX * g_iImageCountY;
-        //int iCurrentFrame = int(floor(g_fTime / g_fFrame)) % iTotalFrame;
-        //int iFrameX = iCurrentFrame % g_iImageCountX;
-        //int iFrameY = iCurrentFrame / g_iImageCountX;
-        //float fFreamWidth = 1.0 / g_iImageCountX;
-        //float fFreamHeight = 1.0 / g_iImageCountY;
-    
-        //float2 UV = In.vTexcoord;
-        //UV.x = UV.x * fFreamWidth + iFrameX * fFreamWidth;
-        //UV.y = UV.y * fFreamHeight + iFrameY * fFreamHeight;
-    
-        //float4 tex3 = g_Texture2.Sample(DefaultSampler, UV);
-        //if (tex3.r <= 0.5f)
-        //    discard;
-    float3 BGColor = float3(1.f, 1.f, 1.f);
-    
-    switch (g_iSpellType)
-    {
-        case 1:
-            BGColor = float3(208.f, 179.f, 54.f) / 255.f;
-            break;
-        case 2:
-            BGColor = float3(89.f, 32.f, 215.f) / 255.f;
-            break;
-        case 3:
-            BGColor = float3(190.f, 46., 34.f) / 255.f;
-            break;
-        case 4:
-            BGColor = float3(37.f, 129.f, 162.f) / 255.f;
-            break;
-        case 5:
-            BGColor = float3(134.f, 171.f, 78.f) / 255.f;
-            break;
-        case 6:
-            BGColor = float3(0.f, 80.f, 55.f) / 255.f;
-            break;
-        case 7:
-            BGColor = float3(0.f, 0.f, 0.f);
-            break;
-    }
-    
     float4 tex1 = g_Texture.Sample(ClampSampler, Rotation);
-    tex1.rgb *= BGColor;
     float4 tex2 = g_Texture1.Sample(DefaultSampler, In.vTexcoord);
-    if (tex2.a >= 0.9f)
-        tex1 = tex2;
+        
+    tex1.rgb *= 0.4f;
     color = tex1;
-    //color = tex3;
-
-    float CoolTime = 1.f - g_fDeltaV;
-    if (In.vTexcoord.y <= CoolTime)
-    {
-        color.a = 0.f;
-    }
-
-
+    tex2.rgb *= 0.3f;
+        
+    if (tex2.a >= 0.9f)
+        color = tex2;
+    
     color.a *= Alpha;
+
     Out.vColor = color;
     return Out;
+   
 }
 
 PS_OUT PS_Slot(PS_IN In)
@@ -463,23 +402,138 @@ PS_OUT PS_Slot(PS_IN In)
 PS_OUT PS_SpellAnim(PS_IN In)
 {
     PS_OUT Out;
-    float4 color = float4(1.f, 1.f, 1.f, 1.f);
-    //float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+    
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
    
-    //float2 center = float2(0.5f, 0.5f);
-    //float2 uv = In.vTexcoord - center;
-    //uv *= sqrt(2.0f);
-    //float2 Rotation = In.vTexcoord;
-    //Rotation.x = uv.x * cos(g_fAngle) - uv.y * sin(g_fAngle);
-    //Rotation.y = uv.x * sin(g_fAngle) + uv.y * cos(g_fAngle);
-    //Rotation += center;
+    float4 color = float4(1.f, 1.f, 1.f, 1.f);
+   
+    float3 BGColor = float3(1.f, 1.f, 1.f);
     
-    //float4 color = g_Texture.Sample(ClampSampler, Rotation);
+    switch (g_iSpellType)
+    {
+        case 0:
+            BGColor = float3(208.f, 179.f, 54.f) / 255.f;
+            break;
+        case 1:
+            BGColor = float3(89.f, 32.f, 215.f) / 255.f;
+            break;
+        case 2:
+            BGColor = float3(190.f, 46., 34.f) / 255.f;
+            break;
+        case 3:
+            BGColor = float3(37.f, 129.f, 162.f) / 255.f;
+            break;
+        case 4:
+            BGColor = float3(134.f, 171.f, 78.f) / 255.f;
+            break;
+        case 5:
+            BGColor = float3(0.f, 80.f, 55.f) / 255.f;
+            break;
+        case 6:
+            BGColor = float3(0.f, 0.f, 0.f);
+            break;
+    }
     
-    //color.a *= Alpha;
+    float2 uv = In.vTexcoord;
+    float CoolTime = 1.f - g_fDeltaV;
+    float CoolTime2 = 1.f - g_fDeltaV + 0.05;
+    
+    float4 tex1 = g_Texture.Sample(ClampSampler, uv);
+    tex1.rgb *= BGColor;
+    float4 tex2 = g_Texture1.Sample(DefaultSampler, uv);
+    
+    if (tex2.a >= 0.9f)
+        tex1 = tex2;
+    
+    color = tex1;
+        
+    float wave1 = sin(uv.x * 10.f + g_fTime * 2.f) * 0.01f;
+    float wave2 = sin(uv.x * 10.f + g_fTime * 2.f) * 0.01f;
+   
+    float waveThreshold1 = CoolTime + wave1;
+    float waveThreshold2 = CoolTime2 + wave2;
 
-    Out.vColor = color;
+    if (g_fDeltaV <= 1.f)
+    {
+        if (uv.y >= waveThreshold1 && uv.y <= waveThreshold2)
+        {
+            color.rgb = float3(1.f, 1.f, 1.f);
+        }
+    }
     
+    if (uv.y <= CoolTime)
+    {
+        color.a = 0.f;
+    }
+        
+    color.a *= Alpha;
+    
+    Out.vColor = color;
+    return Out;
+}
+
+PS_OUT PS_HpBar(PS_IN In)
+{
+    PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+    float4 Color = float4(1.f, 1.f, 1.f, 1.f);
+    float2 uv = In.vTexcoord;
+    float2 CurrentPixelPosition = uv * g_fCurrent_Size;
+    float OriginLeft = g_fNine_Slice.x;
+    float OriginRight = g_fNine_Slice.y;
+    float OriginTop = g_fNine_Slice.z;
+    float OriginBottom = g_fNine_Slice.w;
+    
+    float CurrentLeft = OriginLeft;
+    float CurrentRight = g_fCurrent_Size.x - (g_fOrigin_Size.x - OriginRight);
+    float CurrentTop = OriginTop;
+    float CurrentBottom = g_fCurrent_Size.y - (g_fOrigin_Size.y - OriginBottom);
+    
+    float2 Finaluv = In.vTexcoord;
+
+    if (CurrentPixelPosition.x < CurrentLeft)
+    {
+        Finaluv.x = CurrentPixelPosition.x / g_fOrigin_Size.x;
+    }
+    else if (CurrentPixelPosition.x > CurrentRight)
+    {
+        float dist = CurrentPixelPosition.x - CurrentRight;
+        Finaluv.x = (OriginRight + dist) / g_fOrigin_Size.x;
+    }
+    else
+    {
+        float scale = (CurrentPixelPosition.x - CurrentLeft) / (CurrentRight - CurrentLeft);
+        Finaluv.x = (OriginLeft / g_fOrigin_Size.x) + scale * ((OriginRight - OriginLeft) / g_fOrigin_Size.x);
+    }
+    
+    if (CurrentPixelPosition.y < CurrentTop)
+    {
+        Finaluv.y = CurrentPixelPosition.y / g_fOrigin_Size.y;
+    }
+    else if (CurrentPixelPosition.y > CurrentBottom)
+    {
+        float dist = CurrentPixelPosition.y - CurrentBottom;
+        Finaluv.y = (OriginBottom + dist) / g_fOrigin_Size.y;
+    }
+    else
+    {
+        float scale = (CurrentPixelPosition.y - CurrentTop) / (CurrentBottom - CurrentTop);
+        Finaluv.y = (OriginTop / g_fOrigin_Size.y) + scale * ((OriginBottom - OriginTop) / g_fOrigin_Size.y);
+    }
+    
+    float4 tex1 = g_Texture.Sample(ClampSampler, Finaluv);
+    float4 tex2 = g_Texture1.Sample(ClampSampler, Finaluv);
+    
+   
+    Color = tex1;
+        
+    tex2.rgb *= float3(112.f, 241.f, 31.f) / 255.f;
+    
+    if(Color.r >= 0.01f)
+        Color = tex2;
+        
+    Color.a *= Alpha;
+    Out.vColor = Color;
     return Out;
 }
 
@@ -613,5 +667,14 @@ technique11 PosTexTechnique11
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_SpellAnim();
+    }
+    pass HpBar
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_HpBar();
     }
 }

@@ -21,10 +21,10 @@ HRESULT CSpell_Overlay::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = -160.f;
-	Desc.fY = 50.f;
-	Desc.fSizeX = 140.f;
-	Desc.fSizeY = 140.f;
+	Desc.fX = -1.f;
+	Desc.fY = 0.f;
+	Desc.fSizeX = 100.f;
+	Desc.fSizeY = 100.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -116,9 +116,7 @@ void CSpell_Overlay::Late_Update(_float fTimeDelta)
 		return;
 	}
 	if (m_bVisible) {
-		if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
 			m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
-		}
 	}
 	__super::Late_Update(fTimeDelta);
 }
@@ -129,7 +127,7 @@ HRESULT CSpell_Overlay::Render()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::ROTATION))))
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::SPELLTYPE))))
 	{
 		return E_FAIL;
 	}
@@ -233,7 +231,7 @@ HRESULT CSpell_Overlay::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_SpellType_Generic"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_spellmeter_Generic"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}

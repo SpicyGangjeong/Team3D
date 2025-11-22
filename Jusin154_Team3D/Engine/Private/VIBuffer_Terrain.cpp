@@ -104,23 +104,23 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _char* pFilePath, _uint iS
 	VTXNORTEX* pVertices = new VTXNORTEX[m_iNumVertices];
 	ZeroMemory(pVertices, sizeof(VTXNORTEX) * m_iNumVertices);
 
-	m_pVertexPositions = new _float3[m_iNumVertices];
+	m_pVertexPositions = new     _float3[m_iNumVertices];
 	ZeroMemory(m_pVertexPositions, sizeof(_float3) * m_iNumVertices);
 
-	for (_uint i = 0; i < m_iNumVerticesZ - 1; i++)
+	for (_uint i = 0; i < m_iNumVerticesZ; i++)
 	{
-		for (_uint j = 0; j < m_iNumVerticesX - 1; j++)
+		for (_uint j = 0; j < m_iNumVerticesX; j++)
 		{
 			_uint		iIndex = i * m_iNumVerticesX + j;
 
 			m_pVertexPositions[iIndex] = pVertices[iIndex].vPosition =	_float3(
 				(_float)j * m_iNumVerticesX / (m_iNumVerticesX - 1.f), 
-				(_float)(pPixels[iIndex]) * 5 * 256.f,
+				(_float)(pPixels[iIndex]) * 10.f * 256.f - 256.f,
 				(_float)i * m_iNumVerticesZ / (m_iNumVerticesZ -1.f)
 			);
-
+			m_HeigthValues.push_back((_float)(pPixels[iIndex]) * 10.f * 256.f - 256.f);
 			pVertices[iIndex].vNormal = _float3(0.f, 0.f, 0.f);
-			pVertices[iIndex].vTexcoord = _float2((_float)j / (m_iNumVerticesX - 1.f) / 32.f, (_float)i / (m_iNumVerticesZ - 1.f) / 32.f);
+			pVertices[iIndex].vTexcoord = _float2((_float)j / (m_iNumVerticesX), (_float)i / m_iNumVerticesZ );
 		}
 	}
 
@@ -279,6 +279,11 @@ void CVIBuffer_Terrain::Change_HeigthRatio(_float fRatio)
 	}
 
 	m_pContext->Unmap(m_pVB, 0);
+}
+
+void CVIBuffer_Terrain::Set_CullingRadius(_float fRaduis)
+{
+	m_pQuadTree->Set_CullingRadius(fRaduis);
 }
 
 CVIBuffer_Terrain* CVIBuffer_Terrain::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pFilePath, _uint iSizeX, _uint iSizeZ)
