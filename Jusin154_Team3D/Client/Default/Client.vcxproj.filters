@@ -67,9 +67,6 @@
     <ClInclude Include="..\Public\Wand.h">
       <Filter>02.GameObjects\Item\Wand</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CamPosition_Player.h">
-      <Filter>02.GameObjects\Cameras\CameraPosition\Player</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\CamPosition_Arm.h">
       <Filter>02.GameObjects\Cameras\CameraPosition\Arm</Filter>
     </ClInclude>
@@ -129,6 +126,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\State_Move.h">
       <Filter>04.Mechanic\State\Movement\Move</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CamPosition_Socket.h">
+      <Filter>02.GameObjects\Cameras\CameraPosition\Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CamPosition_Target.h">
+      <Filter>02.GameObjects\Cameras\CameraPosition\Player\Target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CamPosition_Shoulder.h">
+      <Filter>02.GameObjects\Cameras\CameraPosition\Player\Shoulder</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -211,9 +217,6 @@
     </Filter>
     <Filter Include="02.GameObjects\Cameras\Debug">
       <UniqueIdentifier>{8d89a59c-fbd2-4a4a-ab01-a70abb80cc49}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Cameras\Shoulder">
-      <UniqueIdentifier>{708bbc88-47fb-42c5-b060-14cec7d646f2}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Environment\Lights\Main">
       <UniqueIdentifier>{b24c78ef-dccc-41f0-a086-053ae6b7fbf4}</UniqueIdentifier>
@@ -326,6 +329,15 @@
     <Filter Include="04.Mechanic\State\Movement\Move">
       <UniqueIdentifier>{0a3f9629-27d1-411c-806e-b550af8f1ca1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Cameras\CameraPosition\Player\Target">
+      <UniqueIdentifier>{1f9c16e8-b675-419f-b166-b79662407259}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Cameras\CameraPosition\Player\Shoulder">
+      <UniqueIdentifier>{708bbc88-47fb-42c5-b060-14cec7d646f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Cameras\CameraPosition\Socket">
+      <UniqueIdentifier>{2e4f0394-e25c-4508-937a-7e73d005ae5f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -378,9 +390,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Wand.cpp">
       <Filter>02.GameObjects\Item\Wand</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\CamPosition_Player.cpp">
-      <Filter>02.GameObjects\Cameras\CameraPosition\Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CamPosition_Arm.cpp">
       <Filter>02.GameObjects\Cameras\CameraPosition\Arm</Filter>
@@ -441,6 +450,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\State_Move.cpp">
       <Filter>04.Mechanic\State\Movement\Move</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CamPosition_Socket.cpp">
+      <Filter>02.GameObjects\Cameras\CameraPosition\Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CamPosition_Target.cpp">
+      <Filter>02.GameObjects\Cameras\CameraPosition\Player\Target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CamPosition_Shoulder.cpp">
+      <Filter>02.GameObjects\Cameras\CameraPosition\Player\Shoulder</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
