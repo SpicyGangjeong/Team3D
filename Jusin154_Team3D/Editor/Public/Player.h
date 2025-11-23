@@ -37,6 +37,8 @@ private:
 	_bool m_bSprintToggle = { false };
 	_bool m_bWalkToggle = { false };
 
+	_int m_iCombo = { 0 };
+
 	class CCamPosition_Player* m_pCamPosition_TopDown_LookPart = { nullptr };
 	class CCamPosition_Arm* m_pCamPosition_TopDown_FollowPart = { nullptr };
 private:
@@ -53,11 +55,8 @@ public:
 private:
 	virtual void Add_FSM();
 	virtual void Set_Anim();
-	_bool IsSprint();
-	_bool IsWalk();
 
-	HRESULT InputSystem();
-	HRESULT InputSkill();
+	HRESULT InputAction();
 	HRESULT InputMove();
 
 	void	Behavior_IdleEnter();
@@ -79,6 +78,10 @@ private:
 	void	Behavior_DodgeEnter();
 	HRESULT Behavior_DodgeExitCheck();
 	void	Behavior_DodgeExit();
+
+	void	Behavior_CombatEnter();
+	HRESULT Behavior_CombatExitCheck();
+	void	Behavior_CombatExit();
 
 
 public:

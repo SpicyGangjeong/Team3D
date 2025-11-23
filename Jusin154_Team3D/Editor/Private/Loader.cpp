@@ -2005,7 +2005,7 @@ vector<vector<FOLDER_LOAD*>*> Contents(iLoadCount);
 		}
 	}
 
-#endif 
+
 
 	
 	m_strMessage = TEXT("쉐이더를(을) 로딩 중 입니다.");
@@ -2074,7 +2074,7 @@ vector<vector<FOLDER_LOAD*>*> Contents(iLoadCount);
 		}
 		Safe_Delete(Contents[i]);
 	}
-
+#endif
 	return S_OK;
 }
 

@@ -36,16 +36,6 @@ HRESULT CLerpAnim::Initialize(_uint iNumBone, _float fTickPerSecond, const vecto
 	m_InitialFrames.resize(m_iNumChannels);
 	m_Channels.reserve(m_iNumChannels);
 
-	for (_uint i = 0; i < m_iNumChannels; ++i) {
-		CChannel* pChannel = CChannel::Create(Bones, i);
-		if (nullptr == pChannel) {
-			return E_FAIL;
-		}
-		m_Channels.push_back(pChannel);
-		Bones[i]->Get_KeyFrame(m_InitialFrames[i], false);
-		m_InitialFrames[i].fTrackPosition = m_fDuration;
-		pChannel->Set_Frame(1, m_InitialFrames[i]);
-	}
 	return S_OK;
 }
 void CLerpAnim::Begin(const vector<class CBone*>& Bones, vector<LERPDESC>& StartFrames, vector<LERPDESC>& EndFrames, _float fDuration, _uint iRootBoneIndex)

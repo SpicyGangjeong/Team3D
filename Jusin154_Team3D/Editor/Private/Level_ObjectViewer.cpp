@@ -30,10 +30,10 @@ HRESULT CLevel_ObjectViewer::Initialize()
 		return E_FAIL;
 	}
 
-	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
+	//{
+	//	return E_FAIL;
+	//}
 
 	if (FAILED(Ready_Layer_Dummy(TEXT("Layer_Dummy"))))
 	{
@@ -58,7 +58,11 @@ void CLevel_ObjectViewer::Update(_float fTimeDelta)
 
 	Find_Anim();
 
-	//m_Test->Describe_Entity();
+	if (m_Test)
+	{
+		m_Test->Describe_Entity();
+	}
+
 }
 
 HRESULT CLevel_ObjectViewer::Render()

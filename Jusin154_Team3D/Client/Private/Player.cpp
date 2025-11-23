@@ -77,9 +77,6 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 
 void CPlayer::Update(_float fTimeDelta)
 {
-	m_pModelCom->ComputeAnimation();
-
-
 	IsSprint();
 	IsWalk();
 
