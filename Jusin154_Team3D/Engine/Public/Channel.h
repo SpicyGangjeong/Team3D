@@ -13,19 +13,23 @@ private:
 #ifdef EDITOR_PROJECT
 private:
 	HRESULT Initialize(const vector<class CBone*>& Bones, const aiNodeAnim* pAIChannel);
+
 public:
 	HRESULT SaveAsBinary(HANDLE hFile, DWORD& dwByte);
 	static CChannel* Create(const vector<class CBone*>& Bones, const aiNodeAnim* pAIChannel);
+	void Fill_GPU_Keyframes(vector<KEYFRAME_DESC>& outKeyframes);
+	CHANNEL_DESC Fill_GPU_ChannelDesc();
 #endif // EDITOR_PROJECT
 
 public:
-	void Update_TransformationMatirx(const vector<class CBone*>& Bones, _float fCurrentTrackPosition, _uint* pCurrentKeyFrameIndex,class CTransform* pTransform=nullptr);
+	void Update_TransformationMatirx(const vector<class CBone*>& Bones, const LOCALPOS_DESC* pLocalPosArray, _float fCurrentTrackPosition, _uint* pCurrentKeyFrameIndex,class CTransform* pTransform=nullptr);
 	_int Get_BoneIndex() { return { m_iBoneIndex }; }
 	void Set_BoneIndex(_int iBoneIndex) { m_iBoneIndex = iBoneIndex; }
 	void ResetRootMotion() { 
 		m_vPrevRootPos = { 0.f, 0.f, 0.f }; 
 		m_vPrevRootRot = { 0.f,0.f,0.f,0.f };
 		m_bInitialRootRotSaved = false;
+		m_bInitialRootPos = false;
 	}
 	_matrix Get_BoneTransformationMatrix() { return m_BoneTransformationMatrix; }
 
@@ -35,8 +39,6 @@ public:
 		return !strcmp(pChannelname, m_szName);
 	}
 	_char* Get_Name() { return m_szName; }
-	KEYFRAME_DESC Get_KeyFrameDesc() { return m_KeyFrame; }
-	_int Get_KeyFrameCount() { return (_int)m_KeyFrames.size(); }
 private:
 	HRESULT Initialize(HANDLE hFile, DWORD& dwByte);
 	// 바이너리
@@ -55,9 +57,10 @@ private:
 	_matrix					m_BoneTransformationMatrix = {};
 	_float m_fPrevYaw = 0.f;
 	_bool m_bInitialRootRotSaved = {false};
+	_bool m_bInitialRootPos = { false };
 	_float4 m_vInitialRootRot = {};
 
-	KEYFRAME_DESC m_KeyFrame;
+	vector<KEYFRAME_DESC> m_KeyFrameDesc;
 public:
 	static CChannel* Create(const vector<class CBone*>& Bones, _uint iIndex); // 럴프전용
 	static CChannel* Create(HANDLE hFile, DWORD& dwByte);

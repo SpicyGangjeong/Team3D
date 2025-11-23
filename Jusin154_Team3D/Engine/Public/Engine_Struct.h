@@ -371,18 +371,33 @@ typedef struct tagKeyFrameDesc
 
 }KEYFRAME_DESC;
 
-typedef struct tagBoneInfo
+typedef struct tagChannelDesc
+{
+	_uint StartIndex; 
+	_uint KeyCount;
+	_uint BoneIndex;
+	//_uint Padding;
+}CHANNEL_DESC;
+
+
+typedef struct tagParentDesc
 {
 	_int ParentIndex;
+}PARENT_DESC;
 
-}BONEINFO_DESC;
-
-
-typedef struct tagBoneMatrix
+typedef struct tagLocalPos
 {
-	_float4x4 LocalMatrix;
-	_float4x4 CombinedMatrix;
+	_float3 Scale;
+	_float  pad0;
+	_float4 Rotation;
+	_float3 Translation;
+	_float  pad1;
+}LOCALPOS_DESC;
 
+typedef struct tagBoneDesc
+{
+	_float4x4 Combined;
 }BONE_DESC;
+
 
 NS_END

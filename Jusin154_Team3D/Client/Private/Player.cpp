@@ -77,18 +77,23 @@ HRESULT CPlayer::Initialize(void* pArg)
 void CPlayer::Priority_Update(_float fTimeDelta)
 {
 	m_pTransformCom->RewindMomentum();
-	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_Position());
+
 	__super::Priority_Update(fTimeDelta);
 }
 
 void CPlayer::Update(_float fTimeDelta)
 {
+	m_pModelCom->ComputeAnimation();
+
+
 	Key_Input(fTimeDelta);
-
+	
 	m_pFSM->Update(fTimeDelta);
-
+	
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
+
+	
 	__super::Update(fTimeDelta);
 	Describe_Entity();
 	m_pCharacter_Controller->Move(fTimeDelta);
@@ -96,6 +101,9 @@ void CPlayer::Update(_float fTimeDelta)
 
 void CPlayer::Late_Update(_float fTimeDelta)
 {
+
+	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_Position());
+
 	m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
 
 	__super::Late_Update(fTimeDelta);

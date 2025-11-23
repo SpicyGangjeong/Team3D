@@ -79,11 +79,9 @@ static	_int Get_BoneIndex(const _char* pBoneName, vector<class CBone*> Bones);	/
 #pragma endregion
 
 		void Create_Con();
-		HRESULT			Bind_CS_Output(_uint Index, _uint iBufferIndex);
 		void UpdateAnimationCS();
 		void ComputeAnimation();
-		HRESULT Create_KeyFrameVB();
-		HRESULT Create_BoneInfoVB();
+		HRESULT Create_ParentVB();
 		void Get_BoneMatrix();
 
 public:
@@ -156,16 +154,23 @@ private:
 private:
 	HRESULT			Create_CS();
 
-	_uint					m_iNumBuffer = {};
-	vector<KEYFRAME_DESC> m_KeyFrame = {};
-	vector<BONEINFO_DESC> m_BoneInfo = {};
+	void			Create_Temp();
 
-	class CComputeShader* m_pComputeShader = {};
+	void Create_LocalPosVB();
+
+	_uint					m_iNumBuffer = {};
+
+	vector<PARENT_DESC>		m_Parent = {};
+	vector<ANIMSTATE_DESC> m_AnimRanges;
+
+	LOCALPOS_DESC* m_pLocalPos = { nullptr };
+
+	class CComputeShader* m_pComputeShader = nullptr;
+
 	ID3D11Buffer* m_pConstantBuffer = { nullptr };
 
-	ID3D11Buffer* m_pKeyFrameBuffer = { nullptr };
-	ID3D11Buffer* m_pBoneInfoBuffer = { nullptr };
-
+	ID3D11Buffer* m_pParentBuffer = { nullptr };
+	ID3D11Buffer* m_pLocalPosBuffer = { nullptr };
 private:
 	// 바이너리
 	virtual HRESULT Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix);
@@ -180,7 +185,7 @@ private:
 	HRESULT Ready_Meshes();
 	HRESULT Ready_Materials(const _char* pModelFilePath);
 	HRESULT Ready_Bones(const std::vector<SaveNode>& allNodes, _int currentIndex, _int parentIndex);
-	HRESULT Ready_Animations();
+	HRESULT Ready_Animations(const vector<CBone*>& Bones);
 	//
 
 public:

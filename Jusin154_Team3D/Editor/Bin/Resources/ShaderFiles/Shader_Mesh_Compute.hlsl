@@ -8,127 +8,144 @@ struct KeyFrame
     float fTrackPosition;
 };
 
-struct BoneInfo
+struct Channel
 {
-    int ParentIndex;
+    uint StartIndex;
+    uint KeyCount;
+    uint BoneIndex;
 };
 
-struct BoneMatrix
+struct LocalPos
 {
-    row_major float4x4 LocalMatrix;
-    row_major float4x4 CombinedMatrix;
+    float3 Scale;
+    float pad0;
 
+    float4 Rotation;
+
+    float3 Translation;
+    float pad1;
 };
 
-StructuredBuffer<KeyFrame> g_KeyFrameBufferInput : register(t0);
-StructuredBuffer<BoneInfo> g_BoneInoBufferInput : register(t1);
 
-RWStructuredBuffer<BoneMatrix> gBoneMatrixOutput : register(u0);
+StructuredBuffer<KeyFrame> g_KeyFrameBuffer : register(t0);
+StructuredBuffer<Channel> g_ChannelBuffer : register(t1);
 
-cbuffer g_ConstantBuffer : register(b0)
+RWStructuredBuffer<LocalPos> g_LocalPosOutput : register(u0);
+
+
+cbuffer AnimCB : register(b0)
 {
     float CurrentTime;
     float Duration;
     float Speed;
     int BoneCount;
     
-    float4x4 PreTransformMatrix;
-
+    row_major float4x4 PreTransformMatrix;
 };
 
-float4x4 QuatToMatrix(float4 q)
+float4 quatSlerp(float4 q1, float4 q2, float t)
 {
-    float x = q.x;
-    float y = q.y;
-    float z = q.z;
-    float w = q.w;
+    float cosTheta = dot(q1, q2);
 
-    float xx = x * x;
-    float yy = y * y;
-    float zz = z * z;
+    if (cosTheta < 0.0f)
+    {
+        q2 = -q2;
+        cosTheta = -cosTheta;
+    }
 
-    float xy = x * y;
-    float xz = x * z;
-    float yz = y * z;
-    float wx = w * x;
-    float wy = w * y;
-    float wz = w * z;
+    if (cosTheta > 0.9995f)
+        return normalize(lerp(q1, q2, t));
 
-    float4x4 m;
+    float theta = acos(cosTheta);
+    float sinTheta = sin(theta);
 
-    m[0][0] = 1.0 - 2.0 * (yy + zz);
-    m[0][1] = 2.0 * (xy + wz);
-    m[0][2] = 2.0 * (xz - wy);
-    m[0][3] = 0.0;
+    float w1 = sin((1.0f - t) * theta) / sinTheta;
+    float w2 = sin(t * theta) / sinTheta;
 
-    m[1][0] = 2.0 * (xy - wz);
-    m[1][1] = 1.0 - 2.0 * (xx + zz);
-    m[1][2] = 2.0 * (yz + wx);
-    m[1][3] = 0.0;
-
-    m[2][0] = 2.0 * (xz + wy);
-    m[2][1] = 2.0 * (yz - wx);
-    m[2][2] = 1.0 - 2.0 * (xx + yy);
-    m[2][3] = 0.0;
-
-    m[3][0] = 0.0;
-    m[3][1] = 0.0;
-    m[3][2] = 0.0;
-    m[3][3] = 1.0;
-
-    return m;
+    return q1 * w1 + q2 * w2;
 }
 
-float4x4 MakeTRS(float3 scale, float4 rot, float3 trans)
-{
-    float4x4 S =
-    {
-        scale.x, 0, 0, 0,
-        0, scale.y, 0, 0,
-        0, 0, scale.z, 0,
-        0, 0, 0, 1
-    };
-
-    float4x4 R = QuatToMatrix(normalize(rot));
-
-    float4x4 T =
-    {
-        1, 0, 0, 0,
-        0, 1, 0, 0,
-        0, 0, 1, 0,
-        trans.x, trans.y, trans.z, 1
-    };
-
-    return mul(S, mul(R, T));
-}
 
 [numthreads(256, 1, 1)]
-void CS_MAIN(uint3 DispatchThreadID : SV_DispatchThreadID)
+void CS_LocalSRT(uint3 DTID : SV_DispatchThreadID)
 {
-    uint boneIndex = DispatchThreadID.x;
-    if (boneIndex >= BoneCount)
+    uint boneIndex = DTID.x;
+    if (boneIndex >= (uint) BoneCount)
         return;
 
-    KeyFrame k = g_KeyFrameBufferInput[boneIndex];
-    BoneInfo bi = g_BoneInoBufferInput[boneIndex];
+    float time = CurrentTime;
+    if (Duration > 0)
+        time = min(time, Duration);
 
-    float3 s = k.vScale;
-    float4 r = k.vRotation;
-    float3 t = k.vTranslation;
+    Channel channel = g_ChannelBuffer[boneIndex];
 
-    float4x4 local = MakeTRS(s, r, t);
+    LocalPos result;
 
-    float4x4 combined;
-
-    if (bi.ParentIndex < 0)
+    if (channel.KeyCount == 0)
     {
-        combined = mul(local, PreTransformMatrix);
-    }
-    else
-    {
-        combined = mul(local, gBoneMatrixOutput[bi.ParentIndex].CombinedMatrix);
+        result.Scale = float3(1, 1, 1);
+        result.Rotation = float4(0, 0, 0, 1);
+        result.Translation = float3(0, 0, 0);
+        result.pad0 = result.pad1 = 0.0f;
+
+        g_LocalPosOutput[boneIndex] = result;
+        return;
     }
 
-    gBoneMatrixOutput[boneIndex].LocalMatrix = local;
-    gBoneMatrixOutput[boneIndex].CombinedMatrix = combined;
+    uint firstIndex = channel.StartIndex;
+    uint lastIndex = channel.StartIndex + channel.KeyCount - 1;
+
+    KeyFrame keyframe1 = g_KeyFrameBuffer[firstIndex];
+    KeyFrame keyframe2 = g_KeyFrameBuffer[lastIndex];
+
+    if (time <= keyframe1.fTrackPosition)
+    {
+        result.Scale = keyframe1.vScale;
+        result.Rotation = keyframe1.vRotation;
+        result.Translation = keyframe1.vTranslation;
+        result.pad0 = result.pad1 = 0.0f;
+
+        g_LocalPosOutput[boneIndex] = result;
+        return;
+    }
+
+    if (time >= keyframe2.fTrackPosition)
+    {
+        result.Scale = keyframe2.vScale;
+        result.Rotation = keyframe2.vRotation;
+        result.Translation = keyframe2.vTranslation;
+        result.pad0 = result.pad1 = 0.0f;
+
+        g_LocalPosOutput[boneIndex] = result;
+        return;
+    }
+
+    for (uint i = 0; i < channel.KeyCount - 1; ++i)
+    {
+        uint A = channel.StartIndex + i;
+        uint B = channel.StartIndex + i + 1;
+
+        KeyFrame ka = g_KeyFrameBuffer[A];
+        KeyFrame kb = g_KeyFrameBuffer[B];
+
+        if (time >= ka.fTrackPosition && time <= kb.fTrackPosition)
+        {
+            float t = (time - ka.fTrackPosition) / (kb.fTrackPosition - ka.fTrackPosition);
+
+            result.Scale = lerp(ka.vScale, kb.vScale, t);
+            result.Rotation = quatSlerp(ka.vRotation, kb.vRotation, t);
+            result.Translation = lerp(ka.vTranslation, kb.vTranslation, t);
+            result.pad0 = result.pad1 = 0.0f;
+
+            g_LocalPosOutput[boneIndex] = result;
+            return;
+        }
+    }
+
+    result.Scale = keyframe2.vScale;
+    result.Rotation = keyframe2.vRotation;
+    result.Translation = keyframe2.vTranslation;
+    result.pad0 = result.pad1 = 0.0f;
+
+    g_LocalPosOutput[boneIndex] = result;
 }

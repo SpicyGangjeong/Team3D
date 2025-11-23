@@ -11,7 +11,7 @@ private:
 	CAnimation(const CAnimation& rhs);
 	virtual ~CAnimation() = default;
 public:
-	_bool			Update_TransformationMatrices(const vector<class CBone*>& Bones, _bool bIsLoop, _float fTimeDelta, class CTransform* pTransform = nullptr);
+	_bool			Update_TransformationMatrices(const vector<class CBone*>& Bones, const LOCALPOS_DESC* pLocalPosArray, _bool bIsLoop, _float fTimeDelta, class CTransform* pTransform = nullptr);
 	void			ResetRootMotion();
 	void			Depart_Animation();
 	void			Set_AnimPause(_bool bValue) { m_bPause = bValue; }
@@ -21,6 +21,7 @@ public:
 	void			Set_AnimProgressPostion(const _char* pChannelName, _uint iPosition);
 	vector<_int>* Capture_Bones();
 	void InterpAnim(CAnimation* pPreAnim, vector<CBone*>& Bones, float fRatio);
+	void CreateGPUData(ID3D11Device* pDevice);
 	vector<LERPDESC> Get_StartFrameInformations() { return m_StartKeyFrames; }
 	const _string& Get_Name() const { return m_strName; }
 
@@ -32,10 +33,11 @@ public:
 
 	_uint Get_ChannelCount() { return m_iNumChannels; }
 	_float Get_Duration() { return m_fDuration; }
-	void Set_KeyFrameDesc();
-	KEYFRAME_DESC Get_KeyFrameDesc(_uint iIndex) { return m_KeyFrame[iIndex]; }
-	_uint Get_KeyCount() { return (_uint)m_KeyFrame.size(); }
-	_uint Get_KeyFrameCount();
+
+	ID3D11Buffer* Get_KeyFrameBuffer() { return m_pKeyFrameBuffer; }
+	ID3D11Buffer* Get_ChannelBuffer() { return m_pChannelBuffer; }
+	ID3D11ShaderResourceView* Get_KeyFrameSrv() { return m_pKeyFrameSrv; }
+	ID3D11ShaderResourceView* Get_ChannelSrv() { return m_pChannelSrv; }
 #ifdef EDITOR_PROJECT
 private:
 	HRESULT Initialize(const vector<class CBone*>& Bones, const aiAnimation* pAIAnimation);
@@ -47,10 +49,15 @@ public:
 private:
 	HRESULT Initialize(HANDLE hFile, DWORD& dwByte);
 	// 바이너리
-	HRESULT Initialize(const class CModel* pModel,SaveAnimation* pSaveAnimation);
+	HRESULT Initialize(const vector<CBone*>& Bones, const class CModel* pModel,SaveAnimation* pSaveAnimation);
 	//
 	HRESULT Combined_Initialize();
 	_uint Get_BoneIndex(const char* pChannelName);
+
+	HRESULT CreateKeyFrameBuffer(ID3D11Device* pDevice, vector<KEYFRAME_DESC> keyframe);
+	HRESULT CreateChannelBuffer(ID3D11Device* pDevice, vector<CHANNEL_DESC> channel);
+
+
 
 private:
 	SaveAnimation*			m_pSaveAnim = { nullptr };
@@ -70,15 +77,22 @@ private:
 
 	vector<_int>			m_DestBones;					// 이 애니메이션에서 영향을 받는 본들의 집합
 	vector<LERPDESC>		m_StartKeyFrames;	// 이 애니메이션의 영향을 받는 본들의 초기값
-	vector<_matrix>				m_vBoneTransformationMatrix = {};
+	vector<_matrix>			m_vBoneTransformationMatrix = {};
 
-	_int						m_iRawVertexStride = {};
-	vector<KEYFRAME_DESC> m_KeyFrame;
-	_int m_KeyCount = {};
+	_uint m_iChannelCount;
+	_uint m_iKeyframeCount;
+	_uint m_iBoneCount;
+	vector<KEYFRAME_DESC>	m_KeyFrameDesc;
+	vector<CHANNEL_DESC>    m_ChannelDesc;
+
+	ID3D11Buffer* m_pKeyFrameBuffer;
+	ID3D11Buffer* m_pChannelBuffer;
+	ID3D11ShaderResourceView* m_pKeyFrameSrv = {};
+	ID3D11ShaderResourceView* m_pChannelSrv = {};
 public:
 	static CAnimation* Create(HANDLE hFile, DWORD& dwByte);
 	// 바이너리
-	static CAnimation* Create(const class CModel* pModel, SaveAnimation* pSaveAnimation);
+	static CAnimation* Create(const vector<CBone*>& Bones, const class CModel* pModel, SaveAnimation* pSaveAnimation);
 	//
 	CAnimation* Clone();
 	virtual void Free() override;
