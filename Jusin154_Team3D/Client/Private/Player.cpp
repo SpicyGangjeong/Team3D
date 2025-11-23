@@ -12,22 +12,7 @@
 #include "Character_Controller.h"
 
 #pragma region STATE
-#include "State_Root.h"
 
-#include "State_Idle.h"
-#include "State_Walk.h"
-#include "State_Jog.h"
-#include "State_Sprint.h"
-#include "State_Dodge.h"
-#include "State_Jump.h"
-#include "State_Skill.h"
-#include "State_Skill2.h"
-#include "State_LightAttack.h"
-#include "State_Land.h"
-#include "State_Cast.h"
-#include "State_Move.h"
-#include "State_Combat.h"
-#include "State_Idle_Turn.h"
 #pragma endregion
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -61,13 +46,16 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	Add_FSM();
 
-	Set_FSM();
-
 	Set_Anim();
 
-	Setup_InputConditions();
+	{
+		CFSM::FSM_DESC FSMDesc{};
+		FSMDesc.pStates = &m_States;
+		FSMDesc.pStateMask = &m_iStateMask;
 
-	m_pFSM->Change_State(FSMSTATE::ROOT);
+		m_pFSM->Bind_States(FSMDesc);
+		m_pFSM->Change_State(FSMSTATE::IDLE);
+	}
 
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
@@ -85,9 +73,11 @@ void CPlayer::Update(_float fTimeDelta)
 {
 	m_pModelCom->ComputeSkinning();
 
-	Key_Input(fTimeDelta);
+	IsSprint();
+	IsWalk();
 
-	m_pFSM->Update(fTimeDelta);
+	m_pFSM->Update_State(fTimeDelta);
+
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
@@ -267,108 +257,14 @@ HRESULT CPlayer::Bind_ShaderResources()
 	return S_OK;
 }
 
-void CPlayer::Setup_InputConditions()
-{
-	m_InputConditions =
-	{
-		{ FSMSTATE::IDLE_TURN,   [&]() { return m_pGameInstance->Key_Down(DIK_LEFT) || m_pGameInstance->Key_Down(DIK_RIGHT) || m_pGameInstance->Key_Down(DIK_DOWN); }},
-		{ FSMSTATE::MOVE,		 [&]() { return Check(FSMSTATE::WALK) || Check(FSMSTATE::SPRINT) || Check(FSMSTATE::JOG) || 
-		Check(FSMSTATE::DODGE) || Check(FSMSTATE::IDLE_TURN); }},
-
-
-
-		{ FSMSTATE::JOG,        [&]() { return m_pGameInstance->Key_Pressing(DIK_UP)
-										   /*|| m_pGameInstance->Key_Pressing(DIK_DOWN)*/; }},
-		{ FSMSTATE::FWD,    [&]() { return m_pGameInstance->Key_Pressing(DIK_UP); }},
-		{ FSMSTATE::BWD,    [&]() { return m_pGameInstance->Key_Pressing(DIK_DOWN); }},
-
-		{ FSMSTATE::WALK,    [&]() { return m_bWalkToggle && m_pGameInstance->Key_Pressing(DIK_UP); }},
-
-		{ FSMSTATE::SPRINT,      [&]() { return m_bSprintToggle
-										   && m_pGameInstance->Key_Pressing(DIK_UP); }},
-		{ FSMSTATE::DODGE,       [&]() { return m_pGameInstance->Key_Down(DIK_LCONTROL); }},
-
-		{ FSMSTATE::COMBAT,		 [&]() { return Check(FSMSTATE::SKILL) || Check(FSMSTATE::LIGHT_ATTACK) || Check(FSMSTATE::CAST) || Check(FSMSTATE::SKILL2); }},
-		{ FSMSTATE::SKILL,       [&]() { return m_pGameInstance->Key_Down(DIK_R); }},
-		{ FSMSTATE::SKILL2,      [&]() { return m_pGameInstance->Key_Down(DIK_Q); }},
-		{ FSMSTATE::LIGHT_ATTACK,[&]() { return m_pGameInstance->Mouse_Up(DIM_LBUTTON); }},
-		{ FSMSTATE::CAST,        [&]() { return m_pGameInstance->Key_Down(DIK_1); }},
-
-		{ FSMSTATE::JUMP,        [&]() { return m_pGameInstance->Key_Down(DIK_SPACE); } }
-	};
-}
-
-void CPlayer::Key_Input(_float fTimeDelta)
-{
-	if (m_pFSM->Get_CurrState() == FSMSTATE::WALK ||
-		m_pFSM->Get_CurrState() == FSMSTATE::SPRINT||
-		m_pFSM->Get_CurrState() == FSMSTATE::DODGE||
-		m_pFSM->Get_CurrState() == FSMSTATE::JOG)
-	{
-		if (m_pGameInstance->Key_Pressing(DIK_LEFT))
-			m_pTransformCom->Turn(-m_pTransformCom->Get_State(STATE::UP), fTimeDelta);
-
-		if (m_pGameInstance->Key_Pressing(DIK_RIGHT))
-			m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::UP), fTimeDelta);
-	}
-
-	IsSprint();
-
-	IsWalk();
-}
-
 void CPlayer::Add_FSM()
 {
 #pragma region MOVE
-	m_pFSM->Add_State(FSMSTATE::MOVE, new CState_Move());
-	m_pFSM->Add_State(FSMSTATE::IDLE, new CState_Idle());
-	m_pFSM->Add_State(FSMSTATE::IDLE_TURN, new CState_Idle_Turn());
-	m_pFSM->Add_State(FSMSTATE::WALK, new CState_Walk());
-	m_pFSM->Add_State(FSMSTATE::JOG, new CState_Jog());
-	m_pFSM->Add_State(FSMSTATE::SPRINT, new CState_Sprint());
-	m_pFSM->Add_State(FSMSTATE::DODGE, new CState_Dodge());
 #pragma endregion
 
 #pragma region COMBAT
-	m_pFSM->Add_State(FSMSTATE::COMBAT, new CState_Combat());
-	m_pFSM->Add_State(FSMSTATE::SKILL, new CState_Skill());
-	m_pFSM->Add_State(FSMSTATE::SKILL2, new CState_Skill2());
-	m_pFSM->Add_State(FSMSTATE::LIGHT_ATTACK, new CState_LightAttack());
-	m_pFSM->Add_State(FSMSTATE::CAST, new CState_Cast());
 #pragma endregion
-
-	m_pFSM->Add_State(FSMSTATE::JUMP, new CState_Jump());
-	m_pFSM->Add_State(FSMSTATE::LAND, new CState_Land());
-
-	m_pFSM->Add_State(FSMSTATE::ROOT, new CState_Root());
 	
-}
-
-void CPlayer::Set_FSM()
-{
-#pragma region ROOT
-	m_pFSM->Set_Parent(FSMSTATE::MOVE, FSMSTATE::ROOT);
-	m_pFSM->Set_Parent(FSMSTATE::COMBAT, FSMSTATE::ROOT);
-
-#pragma endregion
-
-#pragma region MOVE
-	m_pFSM->Set_Parent(FSMSTATE::IDLE, FSMSTATE::MOVE);
-	m_pFSM->Set_Parent(FSMSTATE::IDLE_TURN, FSMSTATE::MOVE);
-	m_pFSM->Set_Parent(FSMSTATE::WALK, FSMSTATE::MOVE);
-	m_pFSM->Set_Parent(FSMSTATE::BWD, FSMSTATE::MOVE);
-	m_pFSM->Set_Parent(FSMSTATE::FWD, FSMSTATE::MOVE);
-	m_pFSM->Set_Parent(FSMSTATE::JOG, FSMSTATE::MOVE);
-	m_pFSM->Set_Parent(FSMSTATE::SPRINT, FSMSTATE::MOVE);
-	m_pFSM->Set_Parent(FSMSTATE::DODGE, FSMSTATE::MOVE);
-#pragma endregion
-
-#pragma region COMBAT
-	m_pFSM->Set_Parent(FSMSTATE::SKILL, FSMSTATE::COMBAT);
-	m_pFSM->Set_Parent(FSMSTATE::SKILL2, FSMSTATE::COMBAT);
-	m_pFSM->Set_Parent(FSMSTATE::LIGHT_ATTACK, FSMSTATE::COMBAT);
-	m_pFSM->Set_Parent(FSMSTATE::CAST, FSMSTATE::COMBAT);
-#pragma endregion
 }
 
 void CPlayer::Set_Anim()
@@ -473,16 +369,6 @@ void CPlayer::Describe_Entity()
 	float Rot3[3] = { RotR, RotU,RotL };
 	GUI::DragFloat3("Rot", Rot3);
 	
-}
-
-_bool CPlayer::Check(FSMSTATE::ESTATE state)
-{
-	for (auto& cond : m_InputConditions)
-	{
-		if (cond.state == state)
-			return cond.checker();
-	}
-	return false;
 }
 
 _bool CPlayer::IsSprint()

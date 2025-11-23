@@ -29,9 +29,14 @@ public:
 	_bool Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
 
 private:
+	unordered_map<size_t, CState*> m_States = { };
+	size_t m_iStateMask = { 0 };
+	_float m_fDirectionRadian = 0.f;
+
 	vector<InputCondition> m_InputConditions;
 	_bool m_bSprintToggle = { false };
 	_bool m_bWalkToggle = { false };
+
 	class CCamPosition_Player* m_pCamPosition_TopDown_LookPart = { nullptr };
 	class CCamPosition_Arm* m_pCamPosition_TopDown_FollowPart = { nullptr };
 
@@ -43,8 +48,6 @@ private:
 	HRESULT Ready_Components();
 	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
-	void Setup_InputConditions();
-	void Key_Input(_float fTimeDelta);
 
 public:
 	static CPlayer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -55,9 +58,7 @@ public:
 #pragma region STATE
 private:
 	virtual void Add_FSM();
-	virtual void Set_FSM();
 	virtual void Set_Anim();
-	_bool Check(FSMSTATE::ESTATE state);
 	_bool IsSprint();
 	_bool IsWalk();
 public:
