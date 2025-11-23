@@ -9,9 +9,9 @@ float g_fUsingSurfaceParams;
 Texture2D g_DiffuseTexture;
 Texture2D g_NormalTexture;
 Texture2D g_SurfaceParamsTexture;
-Texture2D g_DiffuseTextures[2];
-Texture2D g_NormalTextures[2];
-Texture2D g_SurfaceParamsTextures[2];
+Texture2D g_DiffuseTextures[4];
+Texture2D g_NormalTextures[4];
+Texture2D g_SurfaceParamsTextures[4];
 Texture2D g_MaskTexture;
 
 struct VS_IN
@@ -69,24 +69,39 @@ PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out;
 
-    float2 tileUV = In.vWorldPos.xz / 64.f;
+    float2 tileUV = In.vWorldPos.xz / 16.f;
     
     vector vMask = g_MaskTexture.Sample(DefaultSampler, In.vTexcoord);
 
     vector vMtrlDiffuse_0 = g_DiffuseTextures[0].Sample(DefaultSampler, tileUV);
     vector vMtrlDiffuse_1 = g_DiffuseTextures[1].Sample(DefaultSampler, tileUV);
+    vector vMtrlDiffuse_2 = g_DiffuseTextures[2].Sample(DefaultSampler, tileUV);
+    vector vMtrlDiffuse_3 = g_DiffuseTextures[3].Sample(DefaultSampler, tileUV);
     
-    vector vMtrlDiffuse = lerp(vMtrlDiffuse_0, vMtrlDiffuse_1, vMask.r);
+    vector vMtrlDiffuse = float4(float3(vMtrlDiffuse_0.xyz * vMask.r +
+                            vMtrlDiffuse_1.xyz * vMask.g +
+                            vMtrlDiffuse_2.xyz * vMask.b + 
+                            vMtrlDiffuse_3.xyz * vMask.a), 1.f);
     
     vector vSurface_0 = g_SurfaceParamsTextures[0].Sample(DefaultSampler, tileUV);
     vector vSurface_1 = g_SurfaceParamsTextures[1].Sample(DefaultSampler, tileUV);
+    vector vSurface_2 = g_SurfaceParamsTextures[2].Sample(DefaultSampler, tileUV);
+    vector vSurface_3 = g_SurfaceParamsTextures[3].Sample(DefaultSampler, tileUV);
     
-    vector vSurface = lerp(vSurface_0, vSurface_1, vMask.r);
+    vector vSurface = (vSurface_0 * vMask.r +
+                        vSurface_1 * vMask.g +
+                        vSurface_2 * vMask.b + 
+                        vSurface_3 * vMask.a);
     
     float3 vNormalDecoded_0 = DecodeNormalFromRG(g_NormalTextures[0], DefaultSampler, tileUV);
-    float3 vNormalDecoded_1 = DecodeNormalFromRG(g_NormalTextures[0], DefaultSampler, tileUV);
+    float3 vNormalDecoded_1 = DecodeNormalFromRG(g_NormalTextures[1], DefaultSampler, tileUV);
+    float3 vNormalDecoded_2 = DecodeNormalFromRG(g_NormalTextures[2], DefaultSampler, tileUV);
+    float3 vNormalDecoded_3 = DecodeNormalFromRG(g_NormalTextures[3], DefaultSampler, tileUV);
     
-    float3 vNormalDecoded = normalize(lerp(vNormalDecoded_0, vNormalDecoded_1, vMask.r));
+    float3 vNormalDecoded = normalize(vNormalDecoded_0.xyz * vMask.r +
+                            vNormalDecoded_1.xyz * vMask.g + 
+                               vNormalDecoded_1.xyz * vMask.b +
+                             vNormalDecoded_1.xyz * vMask.a);
     
     float3 vBinormal = cross(In.vNormal.xyz, float3(1.f, 0.f, 0.f));
     

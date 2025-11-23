@@ -120,6 +120,7 @@ HRESULT CTexture::Load_SRV(const _char* szPath, ID3D11ShaderResourceView** ppSRV
 			hr = CreateWICTextureFromFile(m_pDevice, CMyTools::ToWstring(szTextureFilePath).c_str(), nullptr, ppSRV);
 		}
 	}
+
 	return hr;
 }
 
@@ -142,7 +143,6 @@ HRESULT CTexture::ParseTextureIncrementalToSRVs(_uint iNumTextures, const _tchar
 		if (FAILED(hr)) {
 			return E_FAIL;
 		}
-
 		m_SRVs.push_back(pSRV);
 	}
 	return S_OK;
