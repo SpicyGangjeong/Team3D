@@ -70,6 +70,9 @@ void CEditEffect::Late_Update(_float fTimeDelta)
 		m_pGameInstance->Add_RenderGroup(RENDER::BLUR, this);
 	}
 
+	if (m_EffectInfo.isOnlyBlur == true)
+		return;
+
 	m_pGameInstance->Add_RenderGroup(RENDER::EFFECT, this);
 
 }
@@ -424,10 +427,11 @@ void CEditEffect::Describe_Entity()
 	if (GUI::TreeNode("BLUR"))
 	{
 		GUI::Checkbox("Blur", &m_EffectInfo.isBlur);
+		GUI::Checkbox("OnlyBlur", &m_EffectInfo.isOnlyBlur);
 
 		ImGui::PushItemWidth(80);
 		GUI::DragFloat("BlurIntensity", &m_EffectInfo.fBlurIntensity, 0.005f, 0.f, 1.f);
-		GUI::DragInt("BlurWeight", &m_EffectInfo.iBlurWeight, 1.f, 0, 32);
+		GUI::DragInt("BlurWeight", &m_EffectInfo.iBlurWeight, 2.f, 0, 128);
 
 		
 		ImGui::PopItemWidth();
@@ -740,19 +744,19 @@ void CEditEffect::Describe_Entity()
 			GUI::TreePop();
 		}
 
-		ImGui::Begin("Simple Plot");
+		//ImGui::Begin("Simple Plot");
 
 
-		ImGui::PlotLines("Value", m_ValueVector.data(), (int)m_ValueVector.size(), 0, nullptr, FLT_MAX, FLT_MAX, ImVec2(0, 100));
+		//ImGui::PlotLines("Value", m_ValueVector.data(), (int)m_ValueVector.size(), 0, nullptr, FLT_MAX, FLT_MAX, ImVec2(0, 100));
 
-		GUI::InputFloat("InputValue", &m_fInputValue);
+		//GUI::InputFloat("InputValue", &m_fInputValue);
 
-		if (GUI::Button("AddValue"))
-		{
-			m_ValueVector.push_back(m_fInputValue);
-		}
+		//if (GUI::Button("AddValue"))
+		//{
+		//	m_ValueVector.push_back(m_fInputValue);
+		//}
 
-		ImGui::End();
+		//ImGui::End();
 
 	}
 

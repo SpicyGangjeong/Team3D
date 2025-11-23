@@ -117,15 +117,6 @@ HRESULT CDummy_PhysXPlayable::Initialize(void* pArg)
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
 
-	CPartObject::PARTOBJECT_DESC PartsDesc{};
-
-	PartsDesc.pParentTransform = m_pTransformCom;
-
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTrailObject>(ENUM_CLASS(LEVEL::EFFECT), CURRENT_LEVEL, LAYER_HITBOX, &PartsDesc, this))) {
-		assert(false);
-		return E_FAIL;
-	}
-
 
 	return S_OK;
 }

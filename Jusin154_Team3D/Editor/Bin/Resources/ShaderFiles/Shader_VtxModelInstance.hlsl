@@ -80,7 +80,7 @@ float g_fBlurIntensity; //블러 세기
 float g_fNoiseDistortionIntensity; // 디스토션 왜곡 세기
 
 float4 g_vEmissive;
-float g_fEmissiveStrength;
+float  g_fEmissiveStrength;
     
 float g_fSoftenExp;
 float g_fSoftStrength;
@@ -103,12 +103,16 @@ bool g_isMaskUVMove;
 bool g_isNoiseUVMove;
 
 bool g_isReverseDissolve;
+
 bool g_isEmissiveDissolve;
+bool g_isEmissiveDissolveReverse;
+
 bool g_isMaskClampSample;
 
 bool g_isNoiseColor;
 bool g_isNoiseAlpha;
 bool g_isNomalDissolve;
+
 
 float g_fFar;
 
@@ -504,6 +508,13 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
         fEmissiveStrength *= (1.f - In.vLifeTime.x / In.vLifeTime.y);
     }
     
+    if (g_isEmissiveDissolveReverse == true)
+    {
+        fEmissiveStrength *= (In.vLifeTime.x / In.vLifeTime.y);
+    }
+    
+
+    
     Out.vColorTarget = vEmissiveMtrl * fEmissive * fEmissiveStrength; // 이미시브 스트랭스
     
     return Out;
@@ -552,6 +563,7 @@ struct PS_BLUR_IN
 struct PS_BLUR_OUT
 {
     float4 vDiffuse : SV_TARGET0;
+    float4 vBlurWeight : SV_TARGET1;
 };
 
 
@@ -756,6 +768,7 @@ PS_BLUR_OUT PS_BLUR(PS_BLUR_IN In)
     
    
     Out.vDiffuse = vector(vMtrlDiffuse.rgb * g_fBlurIntensity + vEmissiveMtrl.rgb, vMtrlDiffuse.a); /** vector(vEmissiveColor * fSmoothAlpha, vMtrlDiffuse.a);*/
+    Out.vBlurWeight = g_iBlurWeight / 128.f;
     
     return Out;
 }
@@ -792,8 +805,6 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_BLUR();
     }
-
-
 
 }
 

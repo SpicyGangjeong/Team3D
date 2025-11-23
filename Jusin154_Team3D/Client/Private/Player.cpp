@@ -21,6 +21,8 @@
 #include "State_Combat.h"
 #pragma endregion
 
+#include "Bombard.h"
+
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUnit(pDevice, pContext)
 {
@@ -79,6 +81,14 @@ void CPlayer::Update(_float fTimeDelta)
 {
 	m_pModelCom->ComputeAnimation();
 
+	if (m_pGameInstance->Key_Up(DIK_O)) {
+		{
+			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBombard>(ENUM_CLASS(LEVEL::GAMEPLAY), CURRENT_LEVEL, LAYER_HITBOX, nullptr, this))) {
+				assert(false);
+				return;
+			}
+		}
+	}
 
 	IsSprint();
 	IsWalk();
@@ -207,45 +217,45 @@ HRESULT CPlayer::Ready_Parts()
 		return E_FAIL;
 	}
 
-	CCamPosition_Player::CAMERAPOSITION_PLAYER_DESC Desc{};
+	//CCamPosition_Player::CAMERAPOSITION_PLAYER_DESC Desc{};
 
-	Desc.pParentTransform = m_pTransformCom;
+	//Desc.pParentTransform = m_pTransformCom;
 
-	if (FAILED(Add_PartObject<CCamPosition_Player>("Cam_TopDown_Look", g_iStaticLevel, &m_pCamPosition_TopDown_LookPart, &Desc)))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(Add_PartObject<CCamPosition_Player>("Cam_TopDown_Look", g_iStaticLevel, &m_pCamPosition_TopDown_LookPart, &Desc)))
+	//{
+	//	return E_FAIL;
+	//}
 
-	CCamPosition_Arm::CameraArm_DESC CameraArmDesc{};
-	XMStoreFloat3(&CameraArmDesc.fAt, m_pTransformCom->Get_State(STATE::POSITION));
-	CameraArmDesc.pParentTransform = m_pTransformCom;
-	CameraArmDesc.fEye = { 0.f, 10.f, 10.f };
-	CameraArmDesc.fMouseSensor = 0.4f;
-	CameraArmDesc.fDistance = 4.f;
-	CameraArmDesc.pParentTransform = m_pTransformCom;
+	//CCamPosition_Arm::CameraArm_DESC CameraArmDesc{};
+	//XMStoreFloat3(&CameraArmDesc.fAt, m_pTransformCom->Get_State(STATE::POSITION));
+	//CameraArmDesc.pParentTransform = m_pTransformCom;
+	//CameraArmDesc.fEye = { 0.f, 10.f, 10.f };
+	//CameraArmDesc.fMouseSensor = 0.4f;
+	//CameraArmDesc.fDistance = 4.f;
+	//CameraArmDesc.pParentTransform = m_pTransformCom;
 
-	if (FAILED(Add_PartObject<CCamPosition_Arm>("Cam_TopDown_Follow", g_iStaticLevel, &m_pCamPosition_TopDown_FollowPart, &CameraArmDesc))) {
-		return E_FAIL;
-	}
+	//if (FAILED(Add_PartObject<CCamPosition_Arm>("Cam_TopDown_Follow", g_iStaticLevel, &m_pCamPosition_TopDown_FollowPart, &CameraArmDesc))) {
+	//	return E_FAIL;
+	//}
 
-	CCamera_Gaze::CAMERA_GAZE_DESC CameraDesc{};
-	CameraDesc.fFovy = XMConvertToRadians(60.0f);
-	CameraDesc.fNear = 0.1f;
-	CameraDesc.fFar = 300.f;
-	CameraDesc.fSpeedPerSec = 5.f;
-	CameraDesc.fRotationPerSec = XMConvertToRadians(90.f);
-	CameraDesc.pFollowTarget = m_pCamPosition_TopDown_FollowPart;
-	CameraDesc.pLookTarget = m_pCamPosition_TopDown_LookPart;
-	CameraDesc.iPriority = 51;
+	//CCamera_Gaze::CAMERA_GAZE_DESC CameraDesc{};
+	//CameraDesc.fFovy = XMConvertToRadians(60.0f);
+	//CameraDesc.fNear = 0.1f;
+	//CameraDesc.fFar = 300.f;
+	//CameraDesc.fSpeedPerSec = 5.f;
+	//CameraDesc.fRotationPerSec = XMConvertToRadians(90.f);
+	//CameraDesc.pFollowTarget = m_pCamPosition_TopDown_FollowPart;
+	//CameraDesc.pLookTarget = m_pCamPosition_TopDown_LookPart;
+	//CameraDesc.iPriority = 51;
 
-	CCamera_Gaze* pCamera = { nullptr };
+	//CCamera_Gaze* pCamera = { nullptr };
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCamera_Gaze>(g_iStaticLevel, NEXT_LEVEL, LAYER_CAMERA, &CameraDesc, nullptr, &pCamera)))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCamera_Gaze>(g_iStaticLevel, NEXT_LEVEL, LAYER_CAMERA, &CameraDesc, nullptr, &pCamera)))
+	//{
+	//	return E_FAIL;
+	//}
 
-	m_pGameInstance->Add_Camera(NEXT_LEVEL, pCamera, TEXT("CAM_TOPVIEW"));
+	//m_pGameInstance->Add_Camera(NEXT_LEVEL, pCamera, TEXT("CAM_TOPVIEW"));
 
 	return S_OK;
 }

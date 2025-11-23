@@ -264,6 +264,9 @@ void CRenderer::Render_Combined()
 		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur_X"), m_pShader, "g_BlurXTexture"))) {
 			return;
 		}
+		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur_X_Weight"), m_pShader, "g_BlurWeightXTexture"))) {
+			return;
+		}
 
 	}
 
@@ -368,13 +371,18 @@ void CRenderer::Render_Blur()
 		return;
 	}
 	
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur_Weight"), m_pShader, "g_BlurWeightTexture"))) {
+		return;
+	}
+	
 	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::BLUR));
 
 	m_pVIBuffer->Bind_Resources();
 
 	m_pVIBuffer->Render();
 
-	if (FAILED(m_pGameInstance->End_MRT())) {
+	if (FAILED(m_pGameInstance->End_MRT()))
+	{
 		return;
 	}
 
@@ -566,22 +574,29 @@ HRESULT CRenderer::Initialize()
 		}
 
 		/* Target_Blur */
-
-		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Blur_Weight"), (_uint)Viewport.Width, (_uint)Viewport.Height,
-			DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.0f, 0.0f, 0.0f, 1.0f)))) {
-			return E_FAIL;
-		}
-
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Blur"), (_uint)Viewport.Width, (_uint)Viewport.Height,
 			DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
 			return E_FAIL;
 		}
+
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Blur_Weight"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 1.0f)))) {
+			return E_FAIL;
+		}
+
 
 		/* Target_Blur_X */
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Blur_X"), (_uint)Viewport.Width, (_uint)Viewport.Height,
 			DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
 			return E_FAIL;
 		}
+
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Blur_X_Weight"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 1.0f)))) {
+			return E_FAIL;
+		}
+
+
 
 		/* Target_Color*/
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Color"), (_uint)Viewport.Width, (_uint)Viewport.Height,
@@ -649,11 +664,20 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Blur"), TEXT("Target_Blur_Weight")))) {
+			return E_FAIL;
+		}
+
 		/* MRT_Blur_X */
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Blur_X"), TEXT("Target_Blur_X")))) {
 			return E_FAIL;
 		}
 
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Blur_X"), TEXT("Target_Blur_X_Weight")))) {
+			return E_FAIL;
+		}
+
+		
 		/* MRT_Color */
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Color"), TEXT("Target_Color")))) {
 			return E_FAIL;

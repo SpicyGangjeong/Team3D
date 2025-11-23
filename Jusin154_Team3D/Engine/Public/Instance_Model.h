@@ -222,9 +222,9 @@ private:
 	ID3D11Buffer*			m_pParticleValueBuffer = { nullptr }; // 컴퓨트 쉐이드 두번째 버퍼 (스피드, 로테이션)
 
 public:
-#ifdef EDITOR_PROJECT	
+	//인스턴싱으로 바꾸기
 	static CInstance_Model* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex);
-#endif	
+
 	virtual CComponent* Clone(void* pArg, class CGameObject* pOwner = nullptr);
 	virtual void Free() override;
 	void Describe_Entity() override;

@@ -130,6 +130,27 @@
     <ClInclude Include="..\Public\State_Move.h">
       <Filter>04.Mechanic\State\Movement\Move</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Effect_Container.h">
+      <Filter>02.GameObjects\Effect\Effect_Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EffectParts.h">
+      <Filter>02.GameObjects\Effect\EffectParts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EffectObject.h">
+      <Filter>02.GameObjects\Effect\EffectObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TrailObject.h">
+      <Filter>02.GameObjects\Effect\TrailObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bombard.h">
+      <Filter>02.GameObjects\Effect\Effects\Bombard</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\NomalJap.h">
+      <Filter>02.GameObjects\Effect\Effects\NomalJap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PhysXEffectHitBox.h">
+      <Filter>02.GameObjects\PhysX\EffectHitBox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -326,6 +347,33 @@
     <Filter Include="04.Mechanic\State\Movement\Move">
       <UniqueIdentifier>{0a3f9629-27d1-411c-806e-b550af8f1ca1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect">
+      <UniqueIdentifier>{23fc95c4-0db3-4569-bd37-4d9bc32938ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effect_Container">
+      <UniqueIdentifier>{a88b2e75-92f7-4bed-b12a-76fb8763f533}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\EffectParts">
+      <UniqueIdentifier>{482050d0-23dc-4744-b0db-0673a84f40e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\EffectObject">
+      <UniqueIdentifier>{129abdf3-e499-467e-aca8-917e66827890}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\TrailObject">
+      <UniqueIdentifier>{b3077955-b37e-41f8-bb7a-7b1483fcecdc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects">
+      <UniqueIdentifier>{6fc43376-8b17-4888-b347-9beef7bee2ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Bombard">
+      <UniqueIdentifier>{3a613328-d01e-43e5-a095-9a6912cb3cf0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\NomalJap">
+      <UniqueIdentifier>{639cba10-a93e-465c-a921-4541fe317446}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\PhysX\EffectHitBox">
+      <UniqueIdentifier>{54169d8d-f771-4638-a71e-3aca3eeff9bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -441,6 +489,27 @@
     </ClCompile>
     <ClCompile Include="..\Private\State_Move.cpp">
       <Filter>04.Mechanic\State\Movement\Move</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect_Container.cpp">
+      <Filter>02.GameObjects\Effect\Effect_Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EffectParts.cpp">
+      <Filter>02.GameObjects\Effect\EffectParts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EffectObject.cpp">
+      <Filter>02.GameObjects\Effect\EffectObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TrailObject.cpp">
+      <Filter>02.GameObjects\Effect\TrailObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bombard.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Bombard</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\NomalJap.cpp">
+      <Filter>02.GameObjects\Effect\Effects\NomalJap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PhysXEffectHitBox.cpp">
+      <Filter>02.GameObjects\PhysX\EffectHitBox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

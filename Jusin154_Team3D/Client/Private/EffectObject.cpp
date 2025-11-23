@@ -8,8 +8,7 @@ CEffectObject::CEffectObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 }
 
 CEffectObject::CEffectObject(const CEffectObject& rhs)
-	:CPartObject(rhs),
-	m_strPath(rhs.m_strPath)
+	:CPartObject(rhs)
 {
 }
 
@@ -118,8 +117,6 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 		SAFE_RELEASE(m_pLightCom);
 	
 	_string strPerfectFilePath = pFilePath;
-
-	m_strPath = strPerfectFilePath;
 
 	strPerfectFilePath += ".bin";
 
@@ -388,252 +385,7 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 	return S_OK;
 }
 
-HRESULT CEffectObject::Load()
-{
 
-	if (FAILED(Load(m_strPath.c_str(), static_cast<LEVEL>(NEXT_LEVEL))))
-		return E_FAIL;
-
-
-
-	return S_OK;
-}
-
-#ifdef _DEBUG
-
-HRESULT CEffectObject::LoadPre(const _char* pFilePath, LEVEL eLevel)
-{
-
-	_string strPerfectFilePath = pFilePath;
-
-	HANDLE hFile = CreateFileW(
-		CMyTools::ToWstring(strPerfectFilePath).c_str(),               // 파일 이름
-		GENERIC_READ,              // 읽기 모드
-		FILE_SHARE_READ,           // 다른 프로세스도 읽기 가능
-		NULL,
-		OPEN_EXISTING,             // 기존 파일 열기
-		FILE_ATTRIBUTE_NORMAL,
-		NULL
-	);
-
-
-	if (hFile == INVALID_HANDLE_VALUE) {
-		MessageBox(NULL, L"오브젝트 읽기 실패", L"System Message", MB_OK);
-		return E_FAIL;
-	}
-
-
-	DWORD	dwByte(0);
-
-	PRE_EFFECT_INFO PreEffectInfo = {};
-
-	if (!ReadFile(hFile, &PreEffectInfo, sizeof(PRE_EFFECT_INFO), &dwByte, nullptr)) {
-		return E_FAIL;
-	}
-
-	memcpy(&m_EffectInfo, &PreEffectInfo, sizeof(PRE_EFFECT_INFO));
-
-	m_EffectInfo.LightDesc.pPosition = m_pTransformCom->Get_StatePtr(STATE::POSITION);
-	m_EffectInfo.LightDesc.iLevel = ENUM_CLASS(eLevel);
-
-	if (m_EffectInfo.LightDesc.eType != LIGHT::DIRECTIONAL) // 0이 아닐때만 생성
-	{
-		if (FAILED(Add_Component<CLight>(g_iStaticLevel, &m_pLightCom, &m_EffectInfo.LightDesc)))
-		{
-			return E_FAIL;
-		}
-	}
-
-
-	if (m_EffectInfo.isDiffuse)
-	{
-		size_t iComponentLength = {};
-
-		if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
-			return E_FAIL;
-		}
-
-		if (iComponentLength != 0)
-		{
-			_char szName[MAX_PATH] = {};
-
-			if (!ReadFile(hFile, &szName, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
-				return E_FAIL;
-			}
-
-			m_strDiffuseName = szName;
-
-			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strDiffuseName),
-				reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom))))
-				return E_FAIL;
-
-		}
-	}
-
-	if (m_EffectInfo.isNoise)
-	{
-		size_t iComponentLength = {};
-
-
-		if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
-			return E_FAIL;
-		}
-
-		if (iComponentLength != 0)
-		{
-			_char szName[MAX_PATH] = {};
-
-			if (!ReadFile(hFile, &szName, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
-				return E_FAIL;
-			}
-
-			m_strNoiseName = szName;
-
-			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strNoiseName),
-				reinterpret_cast<CComponent**>(&m_pNoise_TextureCom))))
-				return E_FAIL;
-		}
-
-
-	}
-
-	if (m_EffectInfo.isMasking)
-	{
-		size_t iComponentLength = {};
-
-
-		if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
-			return E_FAIL;
-		}
-
-		if (iComponentLength != 0)
-		{
-
-			_char szName[MAX_PATH] = {};
-
-			if (!ReadFile(hFile, &szName, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
-				return E_FAIL;
-			}
-
-			m_strMaskingName = szName;
-
-			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strMaskingName),
-				reinterpret_cast<CComponent**>(&m_pMasking_TextureCom))))
-				return E_FAIL;
-		}
-
-
-	}
-
-	if (m_EffectInfo.isDissolve)
-	{
-		size_t iComponentLength = {};
-
-		if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
-			return E_FAIL;
-		}
-
-		if (iComponentLength != 0)
-		{
-			_char szName[MAX_PATH] = {};
-
-			if (!ReadFile(hFile, &szName, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
-				return E_FAIL;
-			}
-
-			m_strDissolveName = szName;
-
-
-			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strDissolveName),
-				reinterpret_cast<CComponent**>(&m_pDissolve_TextureCom))))
-				return E_FAIL;
-		}
-
-	}
-
-	if (m_EffectInfo.isEmissive)
-	{
-		size_t iComponentLength = {};
-
-		if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
-			return E_FAIL;
-		}
-
-		if (iComponentLength != 0)
-		{
-			_char szName[MAX_PATH] = {};
-
-			if (!ReadFile(hFile, &szName, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
-				return E_FAIL;
-			}
-
-			m_strEmissiveName = szName;
-
-			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strEmissiveName),
-				reinterpret_cast<CComponent**>(&m_pEmissive_TextureCom))))
-				return E_FAIL;
-		}
-
-
-	}
-
-	if (m_EffectInfo.isDistortion)
-	{
-		size_t iComponentLength = {};
-
-		if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
-			return E_FAIL;
-		}
-
-		if (iComponentLength != 0)
-		{
-			_char szName[MAX_PATH] = {};
-
-			if (!ReadFile(hFile, &szName, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
-				return E_FAIL;
-			}
-
-			m_strDistortionName = szName;
-
-			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strDistortionName),
-				reinterpret_cast<CComponent**>(&m_pDistortion_TextureCom))))
-				return E_FAIL;
-		}
-
-
-	}
-
-	size_t iComponentLength = {};
-
-
-	if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
-		return E_FAIL;
-	}
-
-	if (iComponentLength != 0)
-	{
-		_char szName[MAX_PATH] = {};
-
-		if (!ReadFile(hFile, &szName, sizeof(_char) * ((DWORD)(DWORD)iComponentLength + 1), &dwByte, nullptr)) {
-			return E_FAIL;
-		}
-
-		m_strModelName = szName;
-
-
-		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strModelName),
-			reinterpret_cast<CComponent**>(&m_pInstance_ModelCom))))
-			return E_FAIL;;
-	}
-
-
-	m_pInstance_ModelCom->PreLoad(hFile);
-
-	CloseHandle(hFile);
-	
-	return S_OK;
-}
-#endif // _DEBUG
 
 HRESULT CEffectObject::Bind_ShaderResources()
 {
@@ -708,12 +460,6 @@ HRESULT CEffectObject::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_isNomalDissolve", &m_EffectInfo.isNomalDissolve, sizeof(_bool)))) {
 		return E_FAIL;
 	}
-
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_isEmissiveDissolveReverse", &m_EffectInfo.isEmissiveDissolveReverse, sizeof(_bool)))) {
-		return E_FAIL;
-	}
-
-	
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vColor", &m_EffectInfo.vColor, sizeof(_float4)))) {
 		return E_FAIL;

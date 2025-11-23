@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "Editor_Define.h"
+#include "Client_Define.h"
 #include "PartObject.h"
 
 NS_BEGIN(Engine)
@@ -11,7 +11,7 @@ class CLight;
 class CTrail;
 NS_END
 
-NS_BEGIN(Editor)
+NS_BEGIN(Client)
 
 class CEffectObject abstract : public CPartObject
 {
@@ -81,71 +81,9 @@ public:
 		_float fSoftMaskEdge = {};
 		_float fSoftMask = {};
 
-		_bool   isEmissiveDissolveReverse = { false };
-		_bool   isOnlyBlur = { false };
+
 	}EFFECT_INFO;
 
-	typedef struct tagPreEffectInfo
-	{
-		_float4 vColor = { 0.f ,0.f ,0.f ,1.f };
-
-		_float2 vDiffuseUVGainAmount = {};
-		_float2 vMaskingUVGainAmount = {};
-		_float2 vNoiseUVGainAmount = {};
-
-		_float2 vDiffuseDistortionUVGainAmount = {};
-		_float2 vMaskDistortionUVGainAmount = {};
-
-		_float2 vUVCutting = { 1.f ,1.f };
-		_float2 vUVMaskCutting = { 1.f ,1.f };
-
-		_int    iMaskMoveLerpOption = { 0 };
-		_int    iDiffuseMoveLerpOption = { 0 };
-		_int    iNoiseMoveLerpOption = { 0 };
-
-		_int    iMaskDistortionMoveLerpOption = { 0 };
-		_int    iDiffuseDistortionMoveLerpOption = { 0 };
-
-		_int	iBlurWeight = { 0 };
-
-
-		_bool	isDiffuse = {};
-		_bool	isMasking = {};
-		_bool	isDissolve = {};
-		_bool	isNoise = {};
-		_bool   isEmissive = {};
-		_bool   isDistortion = {};
-		_bool	isDiffuseUVMove = {};
-		_bool   isNoiseUVMove = {};
-		_bool	isMaskUVMove = {};
-		_bool   isBlur = {};
-		_bool   isBillboard = {};
-
-		_float4 vEmissive = { 0.f ,0.f ,0.f ,0.f };
-		_float  fDiffuseAlpha = { 1.f };
-		_float  fBlurIntensity = {};
-		_float  fNoiseDistortionIntensity = {};
-		_float  fEmissiveStrength = {};
-
-		LIGHT_DESC	LightDesc = {};
-		RENDER		eRenderOrder = { RENDER::EFFECT };
-		_bool   isReverseDissolve = {};
-		EFFECT_TYPE eEffectType = { EFFECT_TYPE::EFFECT };
-		_bool   isEmissiveDissolve = { false };
-		_bool   isMaskClampSample = { false };
-		_bool   isNoiseColor = { false };
-		_bool   isNoiseAlpha = { false };
-		_bool	isNomalDissolve = {};
-
-		_float fSoftenExp = { 1.31429f };
-		_float fSoftStrength = {};
-		_float fCoreBoost = {};
-		_float fRadius = {};
-
-		_float fSoftMaskEdge = {};
-		_float fSoftMask = {};
-
-	}PRE_EFFECT_INFO;
 
 protected:
 	CEffectObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -160,12 +98,6 @@ public:
 	virtual HRESULT Render_Blur() override;
 public:
 	HRESULT Load(const _char* pFilePath, LEVEL eLevel);
-	HRESULT Load();
-public:
-#ifdef _DEBUG
-		HRESULT LoadPre(const _char* pFilePath, LEVEL eLevel);
-#endif // DEBUG
-
 
 protected:
 	virtual HRESULT	Bind_ShaderResources() override;
@@ -196,9 +128,6 @@ protected:
 	_string		m_strModelName = {};
 	_string     m_strEmissiveName = {};
 	_string     m_strDistortionName = {};
-
-	_string		m_strPath = {};
-	_string     m_strName = {};
 
 public:
 	virtual void Free() override;

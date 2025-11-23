@@ -2,8 +2,8 @@
 #include "NomalJap.h"
 
 #include "GameInstance.h"
-#include "EditEffect.h"
-#include "Dummy_PhysXEffectHitBox.h"
+#include "EffectParts.h"
+#include "PhysXEffectHitBox.h"
 
 
 CNomalJap::CNomalJap(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -34,8 +34,6 @@ HRESULT CNomalJap::Initialize(void* pArg)
 
 	if (FAILED(Ready_Child()))
 		return E_FAIL;
-
-	Load_Package("../Bin/Resources/Data/Effect/Package/Jap3");
 
 	m_wstrEffectName = L"Nomal_Jap";
 
@@ -81,7 +79,7 @@ HRESULT CNomalJap::Ready_Components(void* pArg)
 
 HRESULT CNomalJap::Ready_Child()
 {
-	CDummy_PhysXEffectHitBox::PHYSXDUMMY_DESC Desc{};
+	CPhysXEffectHitBox::PHYSXDUMMY_DESC Desc{};
 
 	m_pTransformCom->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
 
@@ -92,7 +90,7 @@ HRESULT CNomalJap::Ready_Child()
 	Desc.vDeltaPos = { 0.f, 0.f, 2.f };
 	Desc.vLifeTime = { 0.f, 2.f };
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXEffectHitBox>(g_iStaticLevel, CURRENT_LEVEL, LAYER_HITBOX, &Desc, this , &m_pPhysHitBox))) {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPhysXEffectHitBox>(g_iStaticLevel, CURRENT_LEVEL, LAYER_HITBOX, &Desc, this , &m_pPhysHitBox))) {
 		assert(false);
 		return E_FAIL;
 	}
