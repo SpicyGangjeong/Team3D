@@ -6,6 +6,19 @@ CQuadTree::CQuadTree()
 {
 }
 
+void CQuadTree::Set_CullingRadius(_float fRadius)
+{
+	m_fCullingRadius = fRadius;
+
+	if (nullptr == m_pChildren[CORNER_LT])
+		return;
+
+	for (_uint i = 0; i < CORNER_END; i++)
+	{
+		m_pChildren[i]->Set_CullingRadius(fRadius);
+	}
+}
+
 void CQuadTree::Culling(CGameInstance* pGameInstance, const _float3* pVertexPositions, _uint* pIndices, _uint* pNumIndices)
 {
 	/* 해당 노드에서 그릴건지 확인 */
@@ -158,7 +171,7 @@ void CQuadTree::Culling(CGameInstance* pGameInstance, const _float3* pVertexPosi
 	/* Range 는 사각형의 중심에서 꼭짓점까지의 거리 */
 	_float		fRange = XMVector3Length(XMLoadFloat3(&pVertexPositions[m_iCorners[CORNER_LT]]) - XMLoadFloat3(&pVertexPositions[m_iCenter])).m128_f32[0];
 
-	if (true == pGameInstance->isIn_LocalFrustum(XMLoadFloat3(&pVertexPositions[m_iCenter]), fRange))
+	if (true == pGameInstance->isIn_LocalFrustum(XMLoadFloat3(&pVertexPositions[m_iCenter]), fRange * 1.5f))
 	{
 		for (size_t i = 0; i < CORNER_END; i++)
 		{
@@ -262,9 +275,9 @@ _bool CQuadTree::Set_Y(CGameInstance* pGameInstance, const _float3* pVertexPosit
 	{
 		if (nullptr == m_pChildren[CORNER_LT])
 		{
-			pVertices[m_iCorners[CORNER_LT]].vPosition.y = fY;
-			pVertices[m_iCorners[CORNER_RT]].vPosition.y = fY;
-			pVertices[m_iCorners[CORNER_RB]].vPosition.y = fY;
+			pVertices[m_iCorners[CORNER_LT]].vPosition.y += fY;
+			pVertices[m_iCorners[CORNER_RT]].vPosition.y += fY;
+			pVertices[m_iCorners[CORNER_RB]].vPosition.y += fY;
 
 			XMStoreFloat3(&Out, XMVector3TransformCoord(XMLoadFloat3(&Out), WorldMatrix));
 			return true;
@@ -276,9 +289,9 @@ _bool CQuadTree::Set_Y(CGameInstance* pGameInstance, const _float3* pVertexPosit
 	{
 		if (nullptr == m_pChildren[CORNER_LT])
 		{
-			pVertices[m_iCorners[CORNER_LT]].vPosition.y = fY;
-			pVertices[m_iCorners[CORNER_RB]].vPosition.y = fY;
-			pVertices[m_iCorners[CORNER_LB]].vPosition.y = fY;
+			pVertices[m_iCorners[CORNER_LT]].vPosition.y += fY;
+			pVertices[m_iCorners[CORNER_RB]].vPosition.y += fY;
+			pVertices[m_iCorners[CORNER_LB]].vPosition.y += fY;
 
 			XMStoreFloat3(&Out, XMVector3TransformCoord(XMLoadFloat3(&Out), WorldMatrix));
 			return true;
@@ -303,7 +316,7 @@ _bool CQuadTree::isDraw(CGameInstance* pGameInstance, const _float3* pVertexPosi
 	_vector		vCamPos = XMLoadFloat4(pGameInstance->Get_CamPosition());
 	_vector		vCenter = XMLoadFloat3(&pVertexPositions[m_iCenter]);
 
-	if (m_iCorners[CORNER_RT] - m_iCorners[CORNER_LT] < XMVectorGetX(XMVector3Length(vCamPos - vCenter)) * 0.2f)
+	if (m_iCorners[CORNER_RT] - m_iCorners[CORNER_LT] < XMVectorGetX(XMVector3Length(vCamPos - vCenter)) * 0.04f)
 		return true;
 
 	return false;

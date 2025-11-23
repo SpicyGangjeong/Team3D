@@ -1,5 +1,4 @@
-
-float PI = 3.141592;
+#include "Engine_Shader_Functions.hlsli"
 
 struct Particle
 {
@@ -30,7 +29,15 @@ struct ParticleValue
     float2 vAniIndex;
     float  fGravity;
     
-    float3 vSinAmount;
+    float3 vSinAmount;   
+    float3 vDeltaAngle;
+    float3 vDeltaAxisAngle;
+    
+    float  fDrag;
+    float3 vPivot;
+    
+    float  fSizeDrag;
+    float3 vDeltaSize;
 };
 
 
@@ -48,6 +55,11 @@ cbuffer g_ConstantBuffer : register(b0) // b0 << 이 숫자와 컨스턴트 쉐�
     bool isDrop;
     bool isMoveForward;
     bool isSinWave;
+    
+    bool isTurn;
+    bool isAxisTurn;
+    bool isPivotMove;
+    bool isSizeMove;
 
     float fTimeDelta;
     float fPadding1; // 반드시 상수버퍼는 16바이트 배수로 만들어져야 한다.
@@ -74,9 +86,7 @@ void CS_MAIN(
     {
         if (isLoop == false)
         {
-         
-            
-            return;
+            return ;
         }
         
         //초기화
@@ -86,15 +96,45 @@ void CS_MAIN(
         particle.vTranslation = particleValue.vOriginTranslation;
         
         particle.vLifeTime.x = 0.f;
+        particleValue.vAniIndex.x = 0.f;
        
+        
+        g_VBInstanceOutput[iIndex] = particle;
+        g_ParticleValueOutput[iIndex] = particleValue;
+        
+        return ;
     }
   
    
     if (isMoveForward)
     {
-        float4 vVelocity = vector(normalize(particleValue.vOriginLook.xyz) * particleValue.fSpeed, 1.f);
+        float fTime = (particle.vLifeTime.x / particle.vLifeTime.y);
+
+        float fRatio = 1 - (1 - fTime * fTime);
+        
+        float fDrag = particleValue.fDrag;
+        
+        if (particleValue.fDrag < FLT_EPSILON5)
+            fDrag = 1;
+        
+        float4 vVelocity = vector(normalize(particle.vLook.xyz) * particleValue.fSpeed, 1.f);
     
-        particle.vTranslation += vVelocity * fTimeDelta;
+        particle.vTranslation += vVelocity * fTimeDelta * fDrag;
+    }
+    
+    if (isPivotMove)
+    {
+        float3 vDir = normalize(particleValue.vPivot - particleValue.vOriginTranslation.xyz);
+        
+        float fDrag = particleValue.fDrag;
+        
+        if (particleValue.fDrag < FLT_EPSILON5)
+            fDrag = 1;
+        
+        float4 vVelocity = vector(vDir * particleValue.fSpeed, 1.f);
+    
+        particle.vTranslation += vVelocity * fTimeDelta * fDrag;
+        
     }
    
     if (isDrop == true)
@@ -106,6 +146,86 @@ void CS_MAIN(
     if(isSinWave == true)
     {
         particle.vTranslation += vector( sin(particle.vLifeTime.x * 3.141592 * 2.f) * particleValue.vSinAmount, 0.f);
+    }
+    
+    if (isTurn == true)
+    {
+        /* ROTATE */
+        float4x4 RotateXMat = RotateX(particleValue.vDeltaAngle.x * fTimeDelta);
+        float4x4 RotateYMat = RotateY(particleValue.vDeltaAngle.y * fTimeDelta);
+        float4x4 RotateZMat = RotateZ(particleValue.vDeltaAngle.z * fTimeDelta);
+       
+        
+        float4x4 CombinedRotMat = mul(RotateZMat, mul(RotateYMat, RotateXMat));
+        
+        float4x4 CurRotatemat = {particle.vRight, particle.vUp, particle.vLook, vector(0.f , 0.f, 0.f, 1.f)};
+        
+        
+       
+        CurRotatemat = mul(CombinedRotMat, CurRotatemat);
+        
+        particle.vRight = CurRotatemat[0].xyzw;
+        particle.vUp = CurRotatemat[1].xyzw;
+        particle.vLook = CurRotatemat[2].xyzw;
+        
+    }
+    
+    if (isAxisTurn)
+    {
+        float4x4 RotateAxisRightMat = RotateAxis(particle.vRight, particleValue.vDeltaAxisAngle.x * fTimeDelta);
+        float4x4 RotateAxisUpMat = RotateAxis(particle.vUp, particleValue.vDeltaAxisAngle.y * fTimeDelta);
+        float4x4 RotateAxisLookMat = RotateAxis(particle.vLook, particleValue.vDeltaAxisAngle.z * fTimeDelta);
+        
+         
+        float4x4 CombinedRotMat = mul(RotateAxisLookMat, mul(RotateAxisUpMat, RotateAxisRightMat));
+        
+        float4x4 CurRotatemat = { particle.vRight, particle.vUp, particle.vLook, vector(0.f, 0.f, 0.f, 1.f) };
+        
+       
+        CurRotatemat = mul(CurRotatemat ,CombinedRotMat);
+        
+        particle.vRight = CurRotatemat[0].xyzw;
+        particle.vUp = CurRotatemat[1].xyzw;
+        particle.vLook = CurRotatemat[2].xyzw;
+
+
+    }
+    
+    if (isSizeMove == true)
+    {
+        float3 CurLength =
+        {
+            length(particle.vRight),
+            length(particle.vUp),
+            length(particle.vLook),
+        };
+        
+        float fTime = (particle.vLifeTime.x / particle.vLifeTime.y);
+        
+        float fRatio = 1 - (1 - fTime * fTime);
+        
+        float fDrag = particleValue.fSizeDrag;
+        
+        if (particleValue.fSizeDrag < FLT_EPSILON5)
+            fDrag = 1;
+        
+        //fDrag *= fRatio;
+        
+        CurLength += particleValue.vDeltaSize * fTimeDelta * fDrag;
+        
+        if (CurLength.x < FLT_EPSILON5)
+            CurLength.x = FLT_EPSILON5;
+        
+        if (CurLength.y < FLT_EPSILON5)
+            CurLength.y = FLT_EPSILON5;
+        
+        if (CurLength.z < FLT_EPSILON5)
+            CurLength.z = FLT_EPSILON5;
+     
+        particle.vRight = normalize(particle.vRight) * CurLength.x;
+        particle.vUp = normalize(particle.vUp) * CurLength.y;
+        particle.vLook = normalize(particle.vLook) * CurLength.z;
+        
     }
        
     //애니메이션 속도 , 인덱스

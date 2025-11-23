@@ -55,6 +55,15 @@ HRESULT CLevel_BloomViewer::Initialize()
 			return E_FAIL;
 		}
 	}
+
+	{
+		CDummy_Globe::GLOBE_DESC Desc{};
+		Desc.wstrKey = TEXT("Desc_Globe2");
+		Desc.vPos = { 6.f, 0.f, 0.f };
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_Globe>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE, &Desc))) {
+			return E_FAIL;
+		}
+	}
 	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_Cube>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE))){
 	//	return E_FAIL;
 	//}

@@ -10,6 +10,11 @@ public:
 	typedef struct tagUIInstanceDesc final : public CVIBuffer_Instance::INSTANCE_DESC
 	{
 	}UI_INSTANCE_DESC;
+	typedef struct tagUIAtlasDesc
+	{
+		_float2 fUVStart{};
+		_float2 fUVEnd{};
+	}UI_ATLAS_DESC;
 private:
 	CVIBuffer_UI_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CVIBuffer_UI_Instance(const CVIBuffer_UI_Instance& Prototype);
@@ -25,6 +30,7 @@ public:
 	virtual void Set_SizeX(_float fSizeX);
 	virtual void Set_SizeY(_float fSizeY);
 	virtual void Set_Cloned(_bool isCloned) { m_isCloned = isCloned; }
+	virtual void Set_ImageUV(UI_ATLAS_DESC* AtlasUV = nullptr);
 
 private:
 	VTX_INSTANCE_UI*	m_pInstanceVertices = { nullptr };

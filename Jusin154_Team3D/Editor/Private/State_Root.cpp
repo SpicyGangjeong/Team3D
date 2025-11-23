@@ -2,7 +2,6 @@
 #include "State_Root.h"
 #include "Unit.h"
 
-
 CState_Root::CState_Root()
     :CState()
 {
@@ -10,47 +9,37 @@ CState_Root::CState_Root()
 
 void CState_Root::Enter()
 {
-    if (m_pOwner->Check(FSMSTATE::COMBAT))
-        m_pFSM->Change_State(FSMSTATE::COMBAT);
-
-    else
-        m_pFSM->Change_State(FSMSTATE::MOVE);
+	if (nullptr != m_funcEnterEvent) {
+		m_funcEnterEvent();
+	}
 }
 
-void CState_Root::Update(_float fTimeDelta)
+HRESULT CState_Root::Update(_float fTimeDelta)
 {
-    if (CheckExitState())
-        return;
+	HRESULT hr = { S_OK };
+	if (nullptr != m_funcExitCheck) {
+		hr = m_funcExitCheck(fTimeDelta);
+	}
+	return hr;
 }
 
 void CState_Root::Exit()
 {
+	if (nullptr != m_funcExitEvent) {
+		m_funcExitEvent();
+	}
 }
 
-_bool CState_Root::CheckExitState()
+HRESULT CState_Root::Initialize(STATE_ROOT_DESC* pArg)
 {
-    if (m_pOwner->Check(FSMSTATE::COMBAT))
-    {
-        if (m_pFSM->Get_Current()->Get_Parent()->Get_State() != FSMSTATE::COMBAT)
-            m_pFSM->Change_State(FSMSTATE::COMBAT);
-
-        return true;
-    }
-
-    if (m_pFSM->Get_Current()->Get_Parent()->Get_State() == FSMSTATE::COMBAT)
-        return false;
-
-    if (m_pOwner->Check(FSMSTATE::MOVE))
-    {
-        if (m_pFSM->Get_Current()->Get_Parent()->Get_State() != FSMSTATE::MOVE)
-            m_pFSM->Change_State(FSMSTATE::MOVE);
-
-        return true;
-    }
-
-    return false;
+	if (FAILED(__super::Initialize(pArg))) {
+		return E_FAIL;
+	}
+    m_funcExitCheck = pArg->funcExitCheck;
+    m_funcEnterEvent = pArg->funcEnterEvent;
+    m_funcExitEvent = pArg->funcExitEvent;
+    return S_OK;
 }
-
 
 void CState_Root::Free()
 {

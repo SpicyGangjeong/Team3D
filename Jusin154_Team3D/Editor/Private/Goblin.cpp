@@ -40,6 +40,8 @@ void CGoblin::Priority_Update(_float fTimeDelta)
 void CGoblin::Update(_float fTimeDelta)
 {
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
+
+	m_pModelCom->ComputeAnimation();
 }
 
 void CGoblin::Late_Update(_float fTimeDelta)

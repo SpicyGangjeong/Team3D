@@ -28,8 +28,7 @@ CMapObject_Manager::CMapObject_Manager(const CMapObject_Manager& rhs)
 
 HRESULT CMapObject_Manager::Initialize_Prototype(vector<_wstring>& ModelPrototypeTags, vector<filesystem::path>& ModelPrototypePaths)
 {
-	//for (auto& Tag : ModelPrototypeTags)
-	for (_uint i = 0 ; i < ModelPrototypeTags.size(); ++i)
+	/*for (_uint i = 0 ; i < ModelPrototypeTags.size(); ++i)
 	{
 		if (_wstring::npos != ModelPrototypeTags[i].find(L"Lod"))
 		{
@@ -42,7 +41,7 @@ HRESULT CMapObject_Manager::Initialize_Prototype(vector<_wstring>& ModelPrototyp
 
 		m_ModelPrototypeTags.push_back(ModelPrototypeTags[i]);
 		m_ModelPrototypePaths.push_back(ModelPrototypePaths[i]);
-	}
+	}*/
 
 	return S_OK;
 }

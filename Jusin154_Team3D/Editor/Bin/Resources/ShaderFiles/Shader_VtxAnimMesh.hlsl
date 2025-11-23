@@ -20,6 +20,7 @@ Texture2D g_DAOTexture;
 Texture2D g_THVTexture;
 Texture2D g_SurfaceParamsTexture;
 
+
 float3 g_RootColor;
 float3 g_TipColor;
 float3 g_DyeColor;

@@ -119,7 +119,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     
     float3 vF0 = float3(0.04f, 0.04f, 0.04f);
     float fMetallic = 0.f;
-    float fRoughness = 0.f;
+    float fRoughness = 0.5f;
     float fOcclusion = 1.f;
     float fAttenuation = 1.f;
 
@@ -145,13 +145,20 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
         fRoughness      = vSRO.g;
         fOcclusion      = vSRO.b;
     }
+    else // basic Lighting(phong blinn) // if you were here, you miss some assets.
+    {
+        Out.vShade = g_vLightDiffuse * saturate(max(dot(normalize(g_vLightDir.xyz) * -1.f, vNormal), 0.f) + (g_vLightAmbient * g_vMtrlAmbient));
+        Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(max(dot(vToView * -1.f, vToLight), 0.f), 50.f);
     
-    float fDiffuseAOStrength = lerp(0.3f, 5.f, fOcclusion);
+        return Out;
+    }
+    
+    float fDiffuseAOStrength = lerp(0.3f, 1.f, fOcclusion);
     
     PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
     
     PBR_Out.vShade *= fDiffuseAOStrength;
-    saturate(PBR_Out.vShade);
+
     Out.vShade = float4(PBR_Out.vShade, 1.f);
     Out.vSpecular = float4(PBR_Out.vSpecular, 1.f);
     
@@ -184,6 +191,7 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     float3 vF0 = float3(0.04f, 0.04f, 0.04f);
     float fMetallic = 0.f;
     float fRoughness = 0.5f;
+    
     float fOcclusion = 1.f;
     float fAttenuation = 1.f;
     
@@ -212,6 +220,13 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
         vF0 = vSRO.rrr;
         fRoughness = vSRO.g;
         fOcclusion = vSRO.b;
+    }
+    else // basic Lighting(phong blinn) // if you were here, you miss some assets.
+    {
+        Out.vShade = fAttenuation * (g_vLightDiffuse * saturate(max(dot(vToLight * -1.f, vNormal), 0.f) + (g_vLightAmbient * g_vMtrlAmbient)));
+        Out.vSpecular = fAttenuation * ((g_vLightSpecular * g_vMtrlSpecular) * pow(max(dot(vToView * -1.f, vToLight), 0.f), 50.f));
+    
+        return Out;
     }
     
     PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
@@ -281,6 +296,13 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
         vF0 = vSRO.rrr;
         fRoughness = vSRO.g;
         fOcclusion = vSRO.b;
+    }
+    else // basic Lighting(phong blinn) // if you were here, you miss some assets.
+    {
+        Out.vShade = fAttenuation * (g_vLightDiffuse * saturate(max(dot(vToLight * -1.f, vNormal), 0.f) + (g_vLightAmbient * g_vMtrlAmbient)));
+        Out.vSpecular = fAttenuation * ((g_vLightSpecular * g_vMtrlSpecular) * pow(max(dot(vToView * -1.f, vToLight), 0.f), 50.f));
+    
+        return Out;
     }
     
     PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);

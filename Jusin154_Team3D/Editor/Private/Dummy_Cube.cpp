@@ -62,7 +62,7 @@ HRESULT CDummy_Cube::Render()
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::DEFAULT)))) {
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::SKYBOX)))) {
 			return E_FAIL;
 		}
 
