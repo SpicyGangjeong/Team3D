@@ -13,6 +13,7 @@ enum ESTATE
     LAND,
     DODGE,
     COMBAT, LIGHT_ATTACK, CAST, SKILL, SKILL2,
+    MAPHELP,
     END
 };
 NS_END

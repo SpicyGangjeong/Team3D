@@ -87,22 +87,6 @@ CHANNEL_DESC CChannel::Fill_GPU_ChannelDesc()
 }
 
 
-
-HRESULT CChannel::SaveAsBinary(HANDLE hFile, DWORD& dwByte)
-{
-	string strName = m_szName;
-	strName.shrink_to_fit();
-	DWORD iLength = (DWORD)strName.length();
-	WriteFile(hFile, &iLength, sizeof(_uint), &dwByte, nullptr);
-	WriteFile(hFile, strName.data(), iLength, &dwByte, nullptr);
-	WriteFile(hFile, &m_iBoneIndex, sizeof(_int), &dwByte, nullptr);
-	WriteFile(hFile, &m_iNumKeyFrames, sizeof(_uint), &dwByte, nullptr);
-	for (auto& keyFrame : m_KeyFrames) {
-		WriteFile(hFile, &keyFrame, sizeof(KEYFRAME), &dwByte, nullptr);
-	}
-	return S_OK;
-}
-
 CChannel* CChannel::Create(const vector<CBone*>& Bones, const aiNodeAnim* pAIChannel)
 {
 	CChannel* pInstance = new CChannel();
@@ -190,14 +174,14 @@ void CChannel::Update_TransformationMatirx(const vector<CBone*>& Bones, const LO
 		XMStoreFloat3(&vCurRootPos, vTranslation);
 
 		XMMATRIX pre = XMLoadFloat4x4(&m_PreTransformMatrix);
-		    
+	/*	    
 		if (!m_bInitialRootPos)
 		{
 			m_bInitialRootPos = true;
 			vTranslation = XMVectorZero();
 		}
 		else 
-		{
+		{*/
 			_vector vDeltaLocal = XMLoadFloat3(&vCurRootPos) - XMLoadFloat3(&m_vPrevRootPos);
 
 			_vector vDeltaAdjusted = {};
@@ -224,7 +208,7 @@ void CChannel::Update_TransformationMatirx(const vector<CBone*>& Bones, const LO
 
 			m_vPrevRootPos = vCurRootPos;
 			vTranslation = XMVectorZero();
-		}
+		//}
 		///////////////////////////////////
 
 		_float4 curRotF4;
@@ -354,32 +338,6 @@ HRESULT CChannel::Initialize(const CModel* pModel, SaveChannel* pSaveChannel)
 	}
 
 	return S_OK;
-}
-
-CChannel* CChannel::Create(const vector<CBone*>& Bones, _uint iIndex)
-{
-	CChannel* pInstance = new CChannel();
-
-	if (FAILED(pInstance->Initialize(Bones, iIndex)))
-	{
-		MSG_BOX("Failed to Created : CChannel");
-		SAFE_RELEASE(pInstance);
-	}
-
-	return pInstance;
-}
-
-CChannel* CChannel::Create(HANDLE hFile, DWORD& dwByte)
-{
-	CChannel* pInstance = new CChannel();
-
-	if (FAILED(pInstance->Initialize(hFile, dwByte)))
-	{
-		MSG_BOX("Failed to Created : CChannel");
-		SAFE_RELEASE(pInstance);
-	}
-
-	return pInstance;
 }
 
 CChannel* CChannel::Create(const CModel* pModel, SaveChannel* pSaveChannel)

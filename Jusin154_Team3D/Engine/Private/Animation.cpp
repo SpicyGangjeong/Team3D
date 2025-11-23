@@ -248,20 +248,6 @@ HRESULT CAnimation::Initialize(const vector<CBone*>& Bones, const aiAnimation* p
 
 	return S_OK;
 }
-HRESULT CAnimation::SaveAsBinary(HANDLE hFile, DWORD& dwByte)
-{
-	size_t iNameLength = m_strName.length();
-	WriteFile(hFile, &iNameLength, sizeof(size_t), &dwByte, nullptr);
-	WriteFile(hFile, m_strName.data(), (DWORD)m_strName.length(), &dwByte, nullptr);
-	WriteFile(hFile, &m_fDuration, sizeof(_float), &dwByte, nullptr);
-	WriteFile(hFile, &m_TickPerSeconds, sizeof(_float) * 2, &dwByte, nullptr);
-	WriteFile(hFile, &m_iNumChannels, sizeof(_uint), &dwByte, nullptr);
-
-	for (_uint i = 0; i < m_iNumChannels; ++i) {
-		m_Channels[i]->SaveAsBinary(hFile, dwByte);
-	}
-	return S_OK;
-}
 
 CAnimation* CAnimation::Create(const vector<CBone*>& Bones, const aiAnimation* pAnimation)
 {
@@ -273,36 +259,6 @@ CAnimation* CAnimation::Create(const vector<CBone*>& Bones, const aiAnimation* p
 }
 #endif
 
-
-HRESULT CAnimation::Initialize(HANDLE hFile, DWORD& dwByte)
-{
-	size_t iNameLength = {};
-	if (!ReadFile(hFile, &iNameLength, sizeof(size_t), &dwByte, nullptr)) {
-		return E_FAIL;
-	}
-	m_strName.resize(iNameLength);
-	if (!ReadFile(hFile, (void*)m_strName.data(), (DWORD)iNameLength, &dwByte, nullptr)) {
-		return E_FAIL;
-	}
-	if (!ReadFile(hFile, &m_fDuration, sizeof(_float), &dwByte, nullptr)) {
-		return E_FAIL;
-	}
-	if (!ReadFile(hFile, &m_TickPerSeconds, sizeof(_float) * 2, &dwByte, nullptr)) {
-		return E_FAIL;
-	}
-	if (!ReadFile(hFile, &m_iNumChannels, sizeof(_uint), &dwByte, nullptr)) {
-		return E_FAIL;
-	}
-	m_CurrentKeyFrameIndices.resize(m_iNumChannels);
-	m_Channels.reserve(m_iNumChannels);
-	for (_uint i = 0; i < m_iNumChannels; ++i) {
-		m_Channels.push_back(CChannel::Create(hFile, dwByte));
-	}
-	if (FAILED(Combined_Initialize())) {
-		return E_FAIL;
-	}
-	return S_OK;
-}
 
 HRESULT CAnimation::Initialize(const vector<CBone*>& Bones, const CModel* pModel, SaveAnimation* pSaveAnimation)
 {
@@ -401,19 +357,6 @@ HRESULT CAnimation::CreateChannelBuffer(ID3D11Device* pDevice, vector<CHANNEL_DE
 		return E_FAIL;
 
 	return S_OK;
-}
-
-CAnimation* CAnimation::Create(HANDLE hFile, DWORD& dwByte)
-{
-	CAnimation* pInstance = new CAnimation();
-
-	if (FAILED(pInstance->Initialize(hFile, dwByte)))
-	{
-		MSG_BOX("Failed to Created : CAnimation");
-		SAFE_RELEASE(pInstance);
-	}
-
-	return pInstance;
 }
 
 CAnimation* CAnimation::Create(const vector<CBone*>& Bones, const CModel* pModel, SaveAnimation* pSaveAnimation)
