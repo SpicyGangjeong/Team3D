@@ -37,8 +37,9 @@ private:
 	_bool m_bSprintToggle = { false };
 	_bool m_bWalkToggle = { false };
 
-	class CCamPosition_Player* m_pCamPosition_TopDown_LookPart = { nullptr };
+	class CCamPosition_Socket* m_pCamPosition_TopDown_LookPart = { nullptr };
 	class CCamPosition_Arm* m_pCamPosition_TopDown_FollowPart = { nullptr };
+	class CCamPosition_Shoulder* m_pCamPosition_ShoulderPart = { nullptr };
 
 	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
 	CRigidBody_Dynamic* m_pRigidBody = { nullptr };

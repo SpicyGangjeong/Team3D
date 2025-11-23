@@ -26,8 +26,9 @@ public:
 	const _string& Get_Name() const { return m_strName; }
 
 	const _char* Get_SZName() const { return m_szName; }
-	void Set_CurrentTrackPosition(_float TrackPosition) { m_fCurrentTrackPosition =TrackPosition; }
+	void Set_CurrentTrackPosition(_float TrackPosition) { m_fCurrentTrackPosition = TrackPosition; }
 	_float Get_CurrentTrackPosition() { return m_fCurrentTrackPosition; }
+	_float Get_CurrentTrackProgressRatio() { return m_fCurrentTrackPosition / m_fDuration; }
 	void Set_AnimSpeed(_float fSpeed) { m_fAnimSpeed = fSpeed; }
 	_float Get_AnimSpeed() { return m_fAnimSpeed; }
 
@@ -42,12 +43,10 @@ public:
 private:
 	HRESULT Initialize(const vector<class CBone*>& Bones, const aiAnimation* pAIAnimation);
 public:
-	HRESULT SaveAsBinary(HANDLE hFile, DWORD& dwByte);
 	static CAnimation* Create(const vector<class CBone*>& Bones, const aiAnimation* pAnimation);
 #endif // EDITOR_PROJECT
 
 private:
-	HRESULT Initialize(HANDLE hFile, DWORD& dwByte);
 	// 바이너리
 	HRESULT Initialize(const vector<CBone*>& Bones, const class CModel* pModel,SaveAnimation* pSaveAnimation);
 	//
@@ -90,7 +89,6 @@ private:
 	ID3D11ShaderResourceView* m_pKeyFrameSrv = {};
 	ID3D11ShaderResourceView* m_pChannelSrv = {};
 public:
-	static CAnimation* Create(HANDLE hFile, DWORD& dwByte);
 	// 바이너리
 	static CAnimation* Create(const vector<CBone*>& Bones, const class CModel* pModel, SaveAnimation* pSaveAnimation);
 	//

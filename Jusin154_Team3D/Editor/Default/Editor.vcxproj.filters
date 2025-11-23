@@ -346,6 +346,9 @@
     <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\HpBarBG">
       <UniqueIdentifier>{7e8b7123-11fb-4946-99fe-3265932d0536}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Env\05.AlphaMap">
+      <UniqueIdentifier>{54eef1b7-a5ee-444f-9577-44ffc8c3d8bc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -675,6 +678,12 @@
     <ClInclude Include="..\Public\State_Root.h">
       <Filter>80.State</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Wand.h">
+      <Filter>02.GameObjects\Wand</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\AlphaMap.h">
+      <Filter>02.GameObjects\Env\05.AlphaMap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -999,6 +1008,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Bombard.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect\06.Bombard</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\AlphaMap.cpp">
+      <Filter>02.GameObjects\Env\05.AlphaMap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

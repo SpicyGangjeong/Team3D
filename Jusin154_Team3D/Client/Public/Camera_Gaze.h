@@ -10,6 +10,9 @@ class CCamera_Gaze final : public CCamera
 public:
 	typedef struct tagCamera_Gaze : public CCamera::CAMERA_DESC
 	{
+		_bool bTransitionLerp	= { false };
+		_bool bLookLerp			= { false };
+		_bool bFollowLerp		= { false };
 	}CAMERA_GAZE_DESC;
 private:
 	CCamera_Gaze(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

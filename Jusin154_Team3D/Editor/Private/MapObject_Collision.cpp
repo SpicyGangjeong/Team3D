@@ -219,6 +219,9 @@ void CMapObject_Collision::Free()
 	for (auto& pModel : m_pModelComs)
 		Safe_Release(pModel);
 	m_pModelComs.clear();
+
+	m_ModelPrototypeTags.clear();
+	m_ModelPathIndices.clear();
 }
 
 void CMapObject_Collision::Describe_Entity()

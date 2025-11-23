@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "DebugCamera.h"
 #include "VIBuffer_Terrain.h"
+#include "AlphaMap.h"
 
 CTerrain::CTerrain(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext)
@@ -28,28 +29,60 @@ HRESULT CTerrain::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
+	if (FAILED(Ready_AlphaMap()))
+		return E_FAIL;
+
 	m_fUsingSurfaceParams = 15.f / 27.f;
 	m_vRotation = _float3{ 0.f, 0.f, 0.f };
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-194, 18.5f, -153.f, 1.f));
 
 	//m_pVIBufferCom->Set_CullingRadius(0.04f);
 
+	m_pAlphaMap->Load_ToFile("Hogsmeade_AlphaMap.bin");
+
 	return S_OK;
 }
 
 void CTerrain::Priority_Update(_float fTimeDelta)
 {
-	GUI::Begin("Picking Position");
+	GUI::Begin("Terrain");
+
+#pragma region ALPHA_MAP
+	//GUI::InputInt("Color", &m_iColorIndex);
+	//m_iColorIndex = max(0, min(4, m_iColorIndex));
+
+	//GUI::InputInt("Rnage", (_int*)(&m_iMaskRange));
+	//GUI::DragFloat("Value", &m_fMaskValue, 0.01f, -1.0f, 1.f);
+	//if (GUI::Button("Save", ImVec2(100.f, 30.f)))
+	//{
+	//	m_pAlphaMap->Save_ToFile("Hogsmeade_AlphaMap.bin");
+	//}
+	//if (GUI::Button("Load", ImVec2(100.f, 30.f)))
+	//{
+	//	m_pAlphaMap->Load_ToFile("Hogsmeade_AlphaMap.bin");
+	//}
+
+
+	GUI::DragFloat("Up", &m_fUpValue, 0.01f, -1.0f, 1.f);
 	if (m_pGameInstance->Mouse_Pressing(DIM_LBUTTON))
 	{
-		if (m_pVIBufferCom->Picking(m_pTransformCom->Get_XMWorldMatrix(), &m_vPickingPosition))
+		if (m_pGameInstance->isPicking(&m_vPickingPosition))
 		{
-			if(m_pGameInstance->Key_Pressing(DIK_PERIOD))
-				m_pVIBufferCom->FitY(m_pTransformCom->Get_XMWorldMatrix(), 0.01f);
-			if(m_pGameInstance->Key_Pressing(DIK_COMMA))
-				m_pVIBufferCom->FitY(m_pTransformCom->Get_XMWorldMatrix(), -0.01f);
+			if (m_pGameInstance->Key_Pressing(DIK_PERIOD))
+				m_pVIBufferCom->FitY(m_pTransformCom->Get_XMWorldMatrix(), m_fUpValue);
+			if (m_pGameInstance->Key_Pressing(DIK_COMMA))
+				m_pVIBufferCom->FitY(m_pTransformCom->Get_XMWorldMatrix(), m_fUpValue * -1.f);
+
+
+			//XMStoreFloat3(&m_vPickingPosition, XMVector3TransformCoord(XMLoadFloat3(&m_vPickingPosition), m_pTransformCom->Get_WorldMatrixInv()));
+
+			//m_pAlphaMap->Update(m_vPickingPosition, m_iColorIndex, m_fMaskValue, m_iMaskRange);
+
 		}
 	}
+#pragma endregion
+
+	
 	
 	/*GUI::InputFloat("Height Ratio", &m_fHeightRatio);
 	max(0.01f, m_fHeightRatio);
@@ -73,6 +106,7 @@ void CTerrain::Priority_Update(_float fTimeDelta)
 void CTerrain::Update(_float fTimeDelta)
 {
 	//m_pVIBufferCom->Culling(XMMatrixIdentity());
+	
 
 }
 
@@ -164,11 +198,21 @@ HRESULT CTerrain::Bind_ShaderResources()
 	if (FAILED(m_pMROTextureCom->Bind_ShaderResources(m_pShaderCom, "g_SurfaceParamsTextures", 0, m_pMROTextureCom->Get_Size()))){
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_SRV("g_MaskTexture", m_pMaskTextureCom->Get_SRV(0)))) {
+	if (FAILED(m_pShaderCom->Bind_SRV("g_MaskTexture", m_pAlphaMap->Get_SRV()))) {
 		return E_FAIL;
 	}
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fUsingSurfaceParams", &m_fUsingSurfaceParams, sizeof(_float))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CTerrain::Ready_AlphaMap()
+{
+	m_pAlphaMap = CAlphaMap::Create(m_pDevice, m_pContext, 2048, 2048);
+
+	if(nullptr == m_pAlphaMap)
 		return E_FAIL;
 
 	return S_OK;
@@ -204,6 +248,7 @@ void CTerrain::Free()
 {
 	__super::Free();
 
+	SAFE_RELEASE(m_pAlphaMap);
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 	SAFE_RELEASE(m_pDiffuseTextureCom);

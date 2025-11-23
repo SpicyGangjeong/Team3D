@@ -169,7 +169,9 @@
     <ClInclude Include="..\Public\Camera_Gaze.h" />
     <ClInclude Include="..\Public\CamPosition.h" />
     <ClInclude Include="..\Public\CamPosition_Arm.h" />
-    <ClInclude Include="..\Public\CamPosition_Player.h" />
+    <ClInclude Include="..\Public\CamPosition_Shoulder.h" />
+    <ClInclude Include="..\Public\CamPosition_Socket.h" />
+    <ClInclude Include="..\Public\CamPosition_Target.h" />
     <ClInclude Include="..\Public\Client_Define.h" />
     <ClInclude Include="..\Public\Client_Enum.h" />
     <ClInclude Include="..\Public\Client_Macro.h" />
@@ -223,6 +225,9 @@
     <ClCompile Include="..\Private\CamPosition_Arm.cpp" />
     <ClCompile Include="..\Private\CamPosition_Player.cpp" />
     <ClCompile Include="..\Private\PhysXEffectHitBox.cpp" />
+    <ClCompile Include="..\Private\CamPosition_Shoulder.cpp" />
+    <ClCompile Include="..\Private\CamPosition_Socket.cpp" />
+    <ClCompile Include="..\Private\CamPosition_Target.cpp" />
     <ClCompile Include="..\Private\Dummy_PhysXPlayable.cpp" />
     <ClCompile Include="..\Private\Dummy_PhysXWall.cpp" />
     <ClCompile Include="..\Private\EffectParts.cpp" />

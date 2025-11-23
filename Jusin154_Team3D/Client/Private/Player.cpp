@@ -2,14 +2,14 @@
 #include "Player.h"
 
 #include "GameInstance.h"
-#include "CamPosition_Player.h"
+#include "CamPosition_Socket.h"
 #include "Camera_Gaze.h"
 #include "CamPosition_Arm.h"
 #include "Wand.h"
 #include "Character_Controller.h"
 #include "CallBack_Playable_Behavior.h"
+#include "CamPosition_Shoulder.h"
 #include "CallBack_Playable_HitReport.h"
-#include "Character_Controller.h"
 
 #pragma region STATE
 
@@ -79,17 +79,6 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 
 void CPlayer::Update(_float fTimeDelta)
 {
-	m_pModelCom->ComputeAnimation();
-
-	if (m_pGameInstance->Key_Up(DIK_O)) {
-		{
-			if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBombard>(ENUM_CLASS(LEVEL::GAMEPLAY), CURRENT_LEVEL, LAYER_HITBOX, nullptr, this))) {
-				assert(false);
-				return;
-			}
-		}
-	}
-
 	IsSprint();
 	IsWalk();
 
@@ -217,45 +206,61 @@ HRESULT CPlayer::Ready_Parts()
 		return E_FAIL;
 	}
 
-	//CCamPosition_Player::CAMERAPOSITION_PLAYER_DESC Desc{};
-
-	//Desc.pParentTransform = m_pTransformCom;
-
-	//if (FAILED(Add_PartObject<CCamPosition_Player>("Cam_TopDown_Look", g_iStaticLevel, &m_pCamPosition_TopDown_LookPart, &Desc)))
 	//{
-	//	return E_FAIL;
+	//	CCamPosition_Socket::CAMERAPOSITION_PLAYER_DESC Desc{};
+
+	//	Desc.pParentTransform = m_pTransformCom;
+
+	//	if (FAILED(Add_PartObject<CCamPosition_Socket>("Cam_TopDown_Look", g_iStaticLevel, &m_pCamPosition_TopDown_LookPart, &Desc)))
+	//	{
+	//		return E_FAIL;
+	//	}
+
+	//	CCamPosition_Arm::CameraArm_DESC CameraArmDesc{};
+	//	XMStoreFloat3(&CameraArmDesc.fAt, m_pTransformCom->Get_State(STATE::POSITION));
+	//	CameraArmDesc.pParentTransform = m_pTransformCom;
+	//	CameraArmDesc.fEye = { 0.f, 10.f, 10.f };
+	//	CameraArmDesc.fMouseSensor = 0.4f;
+	//	CameraArmDesc.fDistance = 4.f;
+	//	CameraArmDesc.pParentTransform = m_pTransformCom;
+
+	//	if (FAILED(Add_PartObject<CCamPosition_Arm>("Cam_TopDown_Follow", g_iStaticLevel, &m_pCamPosition_TopDown_FollowPart, &CameraArmDesc))) {
+	//		return E_FAIL;
+	//	}
+
+	//	CCamera_Gaze::CAMERA_GAZE_DESC CameraDesc{};
+	//	CameraDesc.fFovy = XMConvertToRadians(60.0f);
+	//	CameraDesc.fNear = 0.1f;
+	//	CameraDesc.fFar = 300.f;
+	//	CameraDesc.fSpeedPerSec = 5.f;
+	//	CameraDesc.fRotationPerSec = XMConvertToRadians(90.f);
+	//	CameraDesc.pFollowTarget = m_pCamPosition_TopDown_FollowPart;
+	//	CameraDesc.pLookTarget = m_pCamPosition_TopDown_LookPart;
+	//	CameraDesc.iPriority = 51;
+
+	//	CCamera_Gaze* pCamera = { nullptr };
+
+	//	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCamera_Gaze>(g_iStaticLevel, NEXT_LEVEL, LAYER_CAMERA, &CameraDesc, nullptr, &pCamera)))
+	//	{
+	//		return E_FAIL;
+	//	}
+
+	//	m_pGameInstance->Add_Camera(NEXT_LEVEL, pCamera, TEXT("CAM_TOPVIEW"));
 	//}
 
-	//CCamPosition_Arm::CameraArm_DESC CameraArmDesc{};
-	//XMStoreFloat3(&CameraArmDesc.fAt, m_pTransformCom->Get_State(STATE::POSITION));
-	//CameraArmDesc.pParentTransform = m_pTransformCom;
-	//CameraArmDesc.fEye = { 0.f, 10.f, 10.f };
-	//CameraArmDesc.fMouseSensor = 0.4f;
-	//CameraArmDesc.fDistance = 4.f;
-	//CameraArmDesc.pParentTransform = m_pTransformCom;
+	{
+		CCamPosition_Shoulder::CAMERA_SHOULDER_DESC Desc;
+		Desc.pParentTransform = m_pTransformCom;
+		Desc.fMouseSensor = 0.5f;
+		Desc.fShoulderDistance = 2.f;
+		Desc.fBackFrontRatio = 0.9f;
+		Desc.fCameraFocalLength = 10.f;
+		Desc.vInitialLook = { 1.f, 2.f, -1.f };
 
-	//if (FAILED(Add_PartObject<CCamPosition_Arm>("Cam_TopDown_Follow", g_iStaticLevel, &m_pCamPosition_TopDown_FollowPart, &CameraArmDesc))) {
-	//	return E_FAIL;
-	//}
-
-	//CCamera_Gaze::CAMERA_GAZE_DESC CameraDesc{};
-	//CameraDesc.fFovy = XMConvertToRadians(60.0f);
-	//CameraDesc.fNear = 0.1f;
-	//CameraDesc.fFar = 300.f;
-	//CameraDesc.fSpeedPerSec = 5.f;
-	//CameraDesc.fRotationPerSec = XMConvertToRadians(90.f);
-	//CameraDesc.pFollowTarget = m_pCamPosition_TopDown_FollowPart;
-	//CameraDesc.pLookTarget = m_pCamPosition_TopDown_LookPart;
-	//CameraDesc.iPriority = 51;
-
-	//CCamera_Gaze* pCamera = { nullptr };
-
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCamera_Gaze>(g_iStaticLevel, NEXT_LEVEL, LAYER_CAMERA, &CameraDesc, nullptr, &pCamera)))
-	//{
-	//	return E_FAIL;
-	//}
-
-	//m_pGameInstance->Add_Camera(NEXT_LEVEL, pCamera, TEXT("CAM_TOPVIEW"));
+		if (FAILED(Add_PartObject<CCamPosition_Shoulder>("Cam_Shoulder_Part", g_iStaticLevel, &m_pCamPosition_ShoulderPart, &Desc))) {
+			return E_FAIL;
+		}
+	}
 
 	return S_OK;
 }
@@ -277,6 +282,8 @@ HRESULT CPlayer::Bind_ShaderResources()
 	}
 	return S_OK;
 }
+
+#pragma region STATE
 
 HRESULT CPlayer::InputSystem()
 {
@@ -599,6 +606,7 @@ void CPlayer::Behavior_DodgeExit()
 	m_pFSM->Disable_State(FSMSTATE::DODGE);
 }
 
+
 void CPlayer::Add_FSM()
 {
 #pragma region Behavior_Movement_NotFocus
@@ -690,6 +698,7 @@ void CPlayer::Set_Anim()
 	m_Animation[STATEANIM::SPRINT] = { 599,true };
 
 }
+#pragma endregion STATE
 
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
@@ -731,6 +740,7 @@ void CPlayer::Free()
 	Safe_Delete(m_pCallBack_HitReport);
 	SAFE_RELEASE(m_pCamPosition_TopDown_FollowPart);
 	SAFE_RELEASE(m_pCamPosition_TopDown_LookPart);
+	SAFE_RELEASE(m_pCamPosition_ShoulderPart);
 }
 
 void CPlayer::Describe_Entity()

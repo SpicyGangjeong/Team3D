@@ -83,45 +83,6 @@ _int CModel::Get_BoneIndex(const _char* pBoneName) const
 	return iBoneIndex;
 }
 
-void CModel::Change_AnimationIndex(_int iAnimationIndex, _bool bIsLoop, _float fLerpDuration, _bool bIgnoreCurrentIndex)
-{
-	if (false == bIgnoreCurrentIndex && m_iCurrentAnimIndex == iAnimationIndex) { return; }
-	m_iCurrentAnimIndex = iAnimationIndex;
-	m_bIsLoop = bIsLoop;
-	RefreshAnim();
-
-	m_PrevAnimationMatrix = Get_BoneMatrix(m_iRootBoneIndex);
-
-
-	m_Animations[m_iCurrentAnimIndex]->Depart_Animation(); // 애니메이션 종료 이벤트 ( 럴프애님은 자체적으로 불림 )
-	vector<_int>* BeforeAnimIndex = m_Animations[m_iCurrentAnimIndex]->Capture_Bones(); // 영향을 받는 본 인덱스 추출 1
-	vector<_int>* AfterAnimIndex = m_Animations[iAnimationIndex]->Capture_Bones(); // 영향을 받는 본 인덱스 추출 2
-	unordered_set<_int> UnionAnimIndex = {};
-
-	vector<LERPDESC> LerpStartFrames;
-	for (_int i : *BeforeAnimIndex) {
-		UnionAnimIndex.insert(i);
-	}
-	for (_int i : *AfterAnimIndex) {
-		UnionAnimIndex.insert(i);
-	}
-	LerpStartFrames.reserve(UnionAnimIndex.size()); // 영향을 받는 모든 현재 본을 가져옴
-
-	// 스타팅 키프레임 채우기 pair < 본 인덱스, 키프레임 >
-	for (auto iter = UnionAnimIndex.begin(); iter != UnionAnimIndex.end(); ++iter) {
-		LERPDESC desc = {};
-		desc.iSlot = *iter;
-		m_Bones[desc.iSlot]->Get_KeyFrame(desc.tagKeyFrame, true); // 스타팅 키프레임 채우기
-		LerpStartFrames.emplace_back(desc);
-	}
-
-	// 엔딩 키프레임 채우기 pair < 본인덱스, 키프레임 >
-	vector<LERPDESC> LerpEndFrames = m_Animations[iAnimationIndex]->Get_StartFrameInformations();
-
-	// 럴프 애니메이션 시작
-	m_pLerpAnim->Begin(m_Bones, LerpStartFrames, LerpEndFrames, fLerpDuration, m_iRootBoneIndex);
-
-}
 HRESULT CModel::Bind_Material(_uint iMeshIndex, CShader* pShader)
 {
 	if (iMeshIndex >= m_iNumMeshes) {
@@ -153,6 +114,8 @@ _bool CModel::Play_Animation(_float fTimeDelta,CTransform* pTransform)
 	{
 		return false; // 잘못된 초기화
 	}
+
+	ComputeAnimation();
 
 	if (m_iPreAnimIndex != m_iCurrentAnimIndex && m_iPreAnimIndex != 0)
 	{
@@ -204,55 +167,6 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop)
 		m_iCurrentAnimIndex = -1;
 }
 
-void CModel::Stop_Animation()
-{
-	if (-1 == m_iCurrentAnimIndex  // 정지 혹은 시작을 안시켜준 애님
-		|| m_iCurrentAnimIndex >= (_int)m_iNumAnimations)  // 애님 인덱스 초과됨
-	{
-		return; // 잘못된 초기화
-	}
-
-	m_Animations[m_iCurrentAnimIndex]->Depart_Animation(); // 애님이 퇴근할 때 불리는 함수를 부르면서 초기상태로 되돌림
-}
-
-void CModel::RefreshAnim()
-{
-	m_bIsFinishedAnim = false;
-	m_bIsFinishedLerp = false;
-}
-_float CModel::Get_AnimProgressRatio()
-{
-	return m_Animations[m_iCurrentAnimIndex]->Get_AnimProgressRatio();
-}
-_int CModel::Get_AnimProgressPostion(const _char* pAnimChannelName)
-{
-	return m_Animations[m_iCurrentAnimIndex]->Get_AnimProgressPostion(pAnimChannelName);
-}
-_float CModel::Get_AnimEstimatedDuration()
-{
-	if (MODEL::ANIM == m_eType) {
-		return m_Animations[m_iCurrentAnimIndex]->Get_AnimEstimatedDuration();
-	}
-	else {
-		return 0.f;
-	}
-
-}
-void CModel::Set_AnimProgressPostion(const _char* pChannelName, _uint iPosition)
-{
-	return m_Animations[m_iCurrentAnimIndex]->Set_AnimProgressPostion(pChannelName, iPosition);
-}
-void CModel::Set_AnimPauseState(_bool bValue) {
-	m_Animations[m_iCurrentAnimIndex]->Set_AnimPause(bValue);
-}
-
-void CModel::ReallocateResources(CTransform* pTransform)
-{
-	SAFE_RELEASE(m_pTransform);
-	m_pTransform = pTransform;
-	SAFE_ADDREF(m_pTransform);
-}
-
 const _float4x4* CModel::Get_BoneMatrixPtr(const _char* pBoneName) const
 {
 	vector<CBone*>::const_iterator	iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone)->_bool
@@ -278,15 +192,6 @@ _matrix CModel::Get_BoneMatrix(_uint iBoneIndex)
 	return m_Bones[iBoneIndex]->Get_CombinedTransformationMatrix();
 }
 
-void CModel::Get_BoneMatrices(_float4x4* pOut)
-{
-	if (0 == m_Bones.size()) {
-		return;
-	}
-	for (_uint i = 0; i < m_Bones.size(); ++i) {
-		pOut[i] = *m_Bones[i]->Get_CombinedTransformationMatrixPtr();
-	}
-}
 
 void CModel::Set_CurrentTrackPosition(_float TrackPosition)
 {
@@ -303,6 +208,11 @@ _float CModel::Get_CurrentTrackPosition()
 	return m_Animations[m_iCurrentAnimIndex]->Get_CurrentTrackPosition();
 }
 
+_float CModel::Get_CurrentTrackProgressRatio()
+{
+	return m_Animations[m_iCurrentAnimIndex]->Get_CurrentTrackProgressRatio();
+}
+
 _float CModel::Get_AnimSpeed()
 {
 	return m_Animations[m_iCurrentAnimIndex]->Get_AnimSpeed();
@@ -311,16 +221,6 @@ _float CModel::Get_AnimSpeed()
 void CModel::Set_AnimSpeed(_float fSpeed)
 {
 	m_Animations[m_iCurrentAnimIndex]->Set_AnimSpeed(fSpeed);
-}
-
-void CModel::Set_Anim(CModel* Source)
-{
-	for (auto& Animations : Source->m_Animations)
-	{
-		m_Animations.push_back(Animations);
-	}
-
-	m_iNumAnimations += (_uint)Source->m_Animations.size();
 }
 
 
@@ -1005,16 +905,6 @@ HRESULT CModel::Create_ParentVB()
 
 	return S_OK;
 }
-
-void CModel::Get_BoneMatrix()
-{
-	m_BoneMatrix.resize(m_Bones.size());
-	for (size_t i =0; i < m_Bones.size(); i++)
-	{
-		m_BoneMatrix[i] = (*m_Bones[i]->Get_CombinedTransformationMatrixPtr());
-	}
-}
-
 HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix)
 {
 	m_eType = eType;
