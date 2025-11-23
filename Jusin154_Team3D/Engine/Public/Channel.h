@@ -15,7 +15,6 @@ private:
 	HRESULT Initialize(const vector<class CBone*>& Bones, const aiNodeAnim* pAIChannel);
 
 public:
-	HRESULT SaveAsBinary(HANDLE hFile, DWORD& dwByte);
 	static CChannel* Create(const vector<class CBone*>& Bones, const aiNodeAnim* pAIChannel);
 	void Fill_GPU_Keyframes(vector<KEYFRAME_DESC>& outKeyframes);
 	CHANNEL_DESC Fill_GPU_ChannelDesc();
@@ -29,7 +28,6 @@ public:
 		m_vPrevRootPos = { 0.f, 0.f, 0.f }; 
 		m_vPrevRootRot = { 0.f,0.f,0.f,0.f };
 		m_bInitialRootRotSaved = false;
-		m_bInitialRootPos = false;
 	}
 	_matrix Get_BoneTransformationMatrix() { return m_BoneTransformationMatrix; }
 
@@ -55,15 +53,11 @@ private:
 	_float3					m_vPrevRootPos = { 0.f, 0.f, 0.f };
 	_float4					m_vPrevRootRot = { 0.f, 0.f, 0.f,0.f };
 	_matrix					m_BoneTransformationMatrix = {};
-	_float m_fPrevYaw = 0.f;
-	_bool m_bInitialRootRotSaved = {false};
-	_bool m_bInitialRootPos = { false };
-	_float4 m_vInitialRootRot = {};
+	_bool					m_bInitialRootRotSaved = {false};
+	_float4					m_vInitialRootRot = {};
 
-	vector<KEYFRAME_DESC> m_KeyFrameDesc;
+	vector<KEYFRAME_DESC>	m_KeyFrameDesc;
 public:
-	static CChannel* Create(const vector<class CBone*>& Bones, _uint iIndex); // 럴프전용
-	static CChannel* Create(HANDLE hFile, DWORD& dwByte);
 	// 바이너리
 	static CChannel* Create(const class CModel* pModel, SaveChannel* pSaveChannel);
 	//

@@ -38,18 +38,6 @@ void CBroom::Priority_Update(_float fTimeDelta)
 
 void CBroom::Update(_float fTimeDelta)
 {
-	m_pModelCom->ComputeAnimation();
-
-	static _uint m_iIndex = 0;
-
-	if (m_pGameInstance->Key_Down(DIK_1))
-		m_iIndex++;
-	if (m_pGameInstance->Key_Down(DIK_2))
-		m_iIndex--;
-
-	m_pModelCom->Set_AnimationIndex(m_iIndex);
-
-
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 }
 

@@ -60,7 +60,7 @@ HRESULT CMapObject_LOD::Initialize(void* pArg)
 
 	
 
-	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+	//m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 
 
 	//m_pColliderCom->Update(ColliderMatrix);
@@ -81,9 +81,9 @@ void CMapObject_LOD::Update(_float fTimeDelta)
 	//if (0 == m_iLodIndex)
 	//	m_bSelected = true;
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
-	m_pTransformCom->Set_Scale(m_vScale);
-	m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
+	//m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
+	//m_pTransformCom->Set_Scale(m_vScale);
+	//m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
 
 	XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_XMWorldMatrix() * m_pParentTransformCom->Get_XMWorldMatrix());
 
@@ -270,6 +270,9 @@ void CMapObject_LOD::Free()
 	for(auto& pModel : m_pModelComs)
 		SAFE_RELEASE(pModel);
 	m_pModelComs.clear();
+
+	m_ModelPrototypeTags.clear();
+	m_ModelPathIndices.clear();
 }
 
 void CMapObject_LOD::Describe_Entity()

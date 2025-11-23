@@ -42,9 +42,18 @@ private:
 
 	_uint					m_iTextureIndex = {};
 
+
+	class CAlphaMap*		m_pAlphaMap = { nullptr };
+	_uint					m_iMaskRange = {1};
+	_int					m_iColorIndex = {0};
+	_float					m_fMaskValue = {0.1f};
+
+	_float					m_fUpValue = { 0.01f };
+
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
+	HRESULT Ready_AlphaMap();
 
 public:
 	static CTerrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
