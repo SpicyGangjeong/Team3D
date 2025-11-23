@@ -31,6 +31,7 @@ public:
 private:
 	unordered_map<size_t, CState*> m_States = { };
 	size_t m_iStateMask = { 0 };
+	_float m_fDirectionRadian = 0.f;
 
 	vector<InputCondition> m_InputConditions;
 	_bool m_bSprintToggle = { false };
@@ -42,13 +43,10 @@ private:
 	HRESULT Ready_Components();
 	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
-	void Setup_InputConditions();
-	void Key_Input(_float fTimeDelta);
-
 
 	HRESULT InputSystem();
 	HRESULT InputSkill();
-	HRESULT InputRun();
+	HRESULT InputMove();
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();
@@ -76,7 +74,6 @@ public:
 private:
 	virtual void Add_FSM();
 	virtual void Set_Anim();
-	_bool Check(FSMSTATE::ESTATE state);
 	_bool IsSprint();
 	_bool IsWalk();
 public:

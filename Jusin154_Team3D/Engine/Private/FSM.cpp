@@ -12,6 +12,17 @@ CFSM::CFSM(const CFSM& rhs)
 {
 }
 
+HRESULT CFSM::Bind_States(FSM_DESC& Desc)
+{
+	if (nullptr != m_pStateMask) {
+		return E_FAIL;
+	}
+
+	m_pStateMask = Desc.pStateMask;
+	m_pStates = Desc.pStates;
+	return S_OK;
+}
+
 HRESULT CFSM::Initialize_Prototype()
 {
     return S_OK;
@@ -46,6 +57,7 @@ HRESULT CFSM::Update_State(_float fTimeDelta)
 	{
 		return m_pCurrentState->Update(fTimeDelta);
 	}
+	return S_OK;
 }
 
 CFSM* CFSM::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

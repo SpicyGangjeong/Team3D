@@ -50,9 +50,14 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	Set_Anim();
 
-	Setup_InputConditions();
+	{
+		CFSM::FSM_DESC FSMDesc{};
+		FSMDesc.pStates = &m_States;
+		FSMDesc.pStateMask = &m_iStateMask;
 
-	m_pFSM->Change_State(FSMSTATE::ROOT);
+		m_pFSM->Bind_States(FSMDesc);
+		m_pFSM->Change_State(FSMSTATE::IDLE);
+	}
 
 	return S_OK;
 }
@@ -66,7 +71,8 @@ void CPlayer::Update(_float fTimeDelta)
 {
 	m_pModelCom->ComputeSkinning();
 
-	Key_Input(fTimeDelta);
+	IsSprint();
+	IsWalk();
 
 	m_pFSM->Update_State(fTimeDelta);
 
@@ -122,7 +128,10 @@ HRESULT CPlayer::Ready_Components()
 	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
 	Desc.fRadius = 10.f;
 
-	__super::Ready_Components(&Desc);
+	if (FAILED(__super::Ready_Components(&Desc))) {
+		return E_FAIL;
+	}
+	
 
 	m_strModelPrototypeTag = TEXT("Prototype_Component_Npc_Model");
 
@@ -206,58 +215,10 @@ HRESULT CPlayer::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ)))) {
 		return E_FAIL;
 	}
-
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 		return E_FAIL;
 	}
 	return S_OK;
-}
-
-void CPlayer::Setup_InputConditions()
-{
-	m_InputConditions =
-	{
-		{ FSMSTATE::IDLE_TURN,   [&]() { return m_pGameInstance->Key_Down(DIK_LEFT) || m_pGameInstance->Key_Down(DIK_RIGHT) || m_pGameInstance->Key_Down(DIK_DOWN); }},
-		{ FSMSTATE::MOVE,		 [&]() { return Check(FSMSTATE::WALK) || Check(FSMSTATE::SPRINT) || Check(FSMSTATE::JOG) ||  Check(FSMSTATE::DODGE) || Check(FSMSTATE::IDLE_TURN); }},
-
-
-
-		{ FSMSTATE::JOG,        [&]() { return m_pGameInstance->Key_Pressing(DIK_UP)
-										   /*|| m_pGameInstance->Key_Pressing(DIK_DOWN)*/; }},
-		{ FSMSTATE::FWD,    [&]() { return m_pGameInstance->Key_Pressing(DIK_UP); }},
-		{ FSMSTATE::BWD,    [&]() { return m_pGameInstance->Key_Pressing(DIK_DOWN); }},
-
-		{ FSMSTATE::WALK,    [&]() { return m_bWalkToggle && m_pGameInstance->Key_Pressing(DIK_UP); }},
-
-		{ FSMSTATE::SPRINT,      [&]() { return m_bSprintToggle && m_pGameInstance->Key_Pressing(DIK_UP); }},
-		{ FSMSTATE::DODGE,       [&]() { return m_pGameInstance->Key_Down(DIK_LCONTROL); }},
-
-		{ FSMSTATE::COMBAT,		 [&]() { return Check(FSMSTATE::SKILL) || Check(FSMSTATE::LIGHT_ATTACK) || Check(FSMSTATE::CAST) || Check(FSMSTATE::SKILL2); }},
-		{ FSMSTATE::SKILL,       [&]() { return m_pGameInstance->Key_Down(DIK_R); }},
-		{ FSMSTATE::SKILL2,      [&]() { return m_pGameInstance->Key_Down(DIK_Q); }},
-		{ FSMSTATE::LIGHT_ATTACK,[&]() { return m_pGameInstance->Mouse_Up(DIM_LBUTTON); }},
-		{ FSMSTATE::CAST,        [&]() { return m_pGameInstance->Key_Down(DIK_1); }},
-
-		{ FSMSTATE::JUMP,        [&]() { return m_pGameInstance->Key_Down(DIK_SPACE); } }
-	};
-}
-
-void CPlayer::Key_Input(_float fTimeDelta)
-{
-	if (m_pFSM->IsEnable(FSMSTATE::WALK|FSMSTATE::SPRINT |FSMSTATE::DODGE |FSMSTATE::JOG))
-	{
-		if (m_pGameInstance->Key_Pressing(DIK_LEFT)){
-			m_pTransformCom->Turn(-m_pTransformCom->Get_State(STATE::UP), fTimeDelta);
-		}
-
-		if (m_pGameInstance->Key_Pressing(DIK_RIGHT)){
-			m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::UP), fTimeDelta);
-		}
-	}
-
-	IsSprint();
-
-	IsWalk();
 }
 
 HRESULT CPlayer::InputSystem()
@@ -294,12 +255,12 @@ HRESULT CPlayer::InputSkill()
 	return E_FAIL;
 }
 
-HRESULT CPlayer::InputRun()
+HRESULT CPlayer::InputMove()
 {
-	if (m_pGameInstance->Mouse_Pressing(DIK_UP)
-		|| m_pGameInstance->Mouse_Pressing(DIK_LEFT)
-		|| m_pGameInstance->Mouse_Pressing(DIK_DOWN)
-		|| m_pGameInstance->Mouse_Pressing(DIK_RIGHT))
+	if (m_pGameInstance->Key_Pressing(DIK_UP)
+		|| m_pGameInstance->Key_Pressing(DIK_LEFT)
+		|| m_pGameInstance->Key_Pressing(DIK_DOWN)
+		|| m_pGameInstance->Key_Pressing(DIK_RIGHT))
 	{
 		return S_OK;
 	}
@@ -333,7 +294,7 @@ HRESULT CPlayer::Behavior_IdleExitCheck()
 		// Action
 		return E_FAIL;
 	}
-	if (SUCCEEDED(InputRun())) {
+	if (SUCCEEDED(InputMove())) {
 		m_pFSM->Change_State(FSMSTATE::MOVE);
 		return E_FAIL;
 	}
@@ -342,23 +303,45 @@ HRESULT CPlayer::Behavior_IdleExitCheck()
 
 void CPlayer::Behavior_MoveEnter()
 {
-	pair<_uint, _bool> pairAnimInfo = {};
+	pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::SPRINT];
+	_bool bFoward		= m_pGameInstance->Key_Pressing(DIK_UP);
+	_bool bLeft			= m_pGameInstance->Key_Pressing(DIK_LEFT);
+	_bool bRight		= m_pGameInstance->Key_Pressing(DIK_RIGHT);
+	_bool bBackward		= m_pGameInstance->Key_Pressing(DIK_DOWN);
 
-	if (m_pFSM->IsEnable_Previous(FSMSTATE::IDLE)) {
-		// Idle -> Move
-	} 
-	else if (m_pFSM->IsEnable_Previous(FSMSTATE::DODGE | FSMSTATE::LAND)) {
-		// OtherMove -> AnotherMove
+	if (m_pFSM->IsEnable_Previous(FSMSTATE::IDLE | FSMSTATE::DODGE | FSMSTATE::LAND | FSMSTATE::COMBAT)) {
+		if (m_pFSM->IsEnable_Previous(FSMSTATE::IDLE)) {
+			// Idle -> Move
+			if (true == m_bSprintToggle) {
+				if (true == bFoward) {
+					pairAnimInfo = m_Animation[STATEANIM::SPRINT];
+				}
+			}
+			else if (true == m_bWalkToggle) {
+				if (true == bFoward) {
+					pairAnimInfo = m_Animation[STATEANIM::WALK_FWD];
+				}
+				else {
+					pairAnimInfo = m_Animation[STATEANIM::WALK_BWD];
+				}
+			}
+		}
+		else if (m_pFSM->IsEnable_Previous(FSMSTATE::DODGE | FSMSTATE::LAND)) {
+			// OtherMove -> AnotherMove
+
+		}
+		else if (m_pFSM->IsEnable_Previous(FSMSTATE::COMBAT)) {
+			// Combat -> Move
+
+		}
 	}
-	else if (m_pFSM->IsEnable_Previous(FSMSTATE::COMBAT)) {
-		// Combat -> Move
-	}
-	else {
+	else { // While Moving
 		if (true == m_bSprintToggle) {
 			pairAnimInfo = m_Animation[STATEANIM::SPRINT];
+
 		}
 		else if (true == m_bWalkToggle) {
-			if (true == m_pGameInstance->Key_Pressing(DIK_UP)) {
+			if (true == bFoward) {
 				pairAnimInfo = m_Animation[STATEANIM::WALK_FWD];
 			}
 			else {
@@ -380,7 +363,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck()
 		// Action
 		return E_FAIL;
 	}
-	if (SUCCEEDED(InputRun())) {
+	if (SUCCEEDED(InputMove())) {
 		return S_OK;
 	}
 	m_pFSM->Change_State(FSMSTATE::IDLE);
@@ -389,14 +372,14 @@ HRESULT CPlayer::Behavior_MoveExitCheck()
 
 void CPlayer::Behavior_JumpEnter()
 {
-	pair<_uint, _bool> pairAnimInfo = Get_AnimInfo(STATEANIM::JUMP_SPRINT);
+	pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::JUMP_SPRINT];
 	if (m_pFSM->IsEnable_Previous(FSMSTATE::IDLE|FSMSTATE::JOG|FSMSTATE::WALK)) {
 		if (m_pFSM->IsEnable_Previous(FSMSTATE::IDLE)) {
 			// Idle -> Jump
 			// pairAnimInfo = Get_AnimInfo(STATEANIM::Jump_IDLE);
 		}
 		else if (m_pFSM->IsEnable_Previous(FSMSTATE::JOG)) {
-			pairAnimInfo = Get_AnimInfo(STATEANIM::JUMP_JOG);
+			pairAnimInfo = m_Animation[STATEANIM::JUMP_JOG];
 		}
 		else if (m_pFSM->IsEnable_Previous(FSMSTATE::WALK)) {
 
@@ -609,16 +592,6 @@ void CPlayer::Describe_Entity()
 	float Rot3[3] = { RotR, RotU,RotL };
 	GUI::DragFloat3("Rot", Rot3);
 	
-}
-
-_bool CPlayer::Check(FSMSTATE::ESTATE state)
-{
-	for (auto& cond : m_InputConditions)
-	{
-		if (cond.state == state)
-			return cond.checker();
-	}
-	return false;
 }
 
 _bool CPlayer::IsSprint()

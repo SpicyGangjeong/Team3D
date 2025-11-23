@@ -128,12 +128,8 @@ public:
 	static void MatrixLerp(	_In_ _float4x4* pMatOrigin, // Origin -> 0
 							_In_ _float4x4* pMatTarget, // Target -> 1
 							_Out_ _float4x4& matOut, _float fRatio) {
-		if (0.f > fRatio) {
-			fRatio = 0.f;
-		}
-		if (1.f < fRatio) {
-			fRatio = 1.f;
-		}
+		fRatio = Saturate(fRatio);
+
 		_vector vTargetScale{}, vTargetRotq{}, vTargetTrans{};
 		_vector vOriginScale{}, vOriginRotq{}, vOriginTrans{};
 		XMMatrixDecompose(&vTargetScale, &vTargetRotq, &vTargetTrans, XMLoadFloat4x4(pMatTarget));
@@ -179,8 +175,8 @@ public:
 	}
 
 	inline static void	 RotateRadianTowards(_float& fSrcRadian, const _float& fDstRadian, _float fRotateSpeed) {
-		_float fDiffRadian = fmodf(fSrcRadian - fDstRadian, 2 * XM_PI);
-		if (fDiffRadian < 0) fDiffRadian += 2 * XM_PI;
+		_float fDiffRadian = fmodf(fSrcRadian - fDstRadian, XM_2PI);
+		if (fDiffRadian < 0) fDiffRadian += XM_2PI;
 
 		if (fDiffRadian < (fRotateSpeed * XM_PI) / 180.f) {
 			fSrcRadian = fDstRadian;
@@ -192,6 +188,16 @@ public:
 		else if (fDiffRadian > XM_PI) {
 			fSrcRadian += (fRotateSpeed * XM_PI) / 180.f;
 		}
+	}
+
+	inline static _float Get_Direction2D(_float2 fOrigianlDir, _float2 fInputDir) {
+		_vector vOriginal	= XMVector2Normalize(XMLoadFloat2(&fOrigianlDir));
+		_vector vInput		= XMVector2Normalize(XMLoadFloat2(&fInputDir));
+		
+		_float fDiffAngle	= XMVectorGetX(XMVector2AngleBetweenNormals(vOriginal, vInput));
+		_float fCross		= XMVectorGetZ(XMVector2Cross(vOriginal, vInput));
+
+		return fDiffAngle * (fCross < 0 ? -1.f : 1.f);
 	}
 
 #pragma region FileSystem

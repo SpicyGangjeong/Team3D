@@ -337,6 +337,9 @@
     <Filter Include="80.State\Focus\State_Land">
       <UniqueIdentifier>{0b8cac41-419f-48ce-87bc-805b8962b4df}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Level\NewFilter1">
+      <UniqueIdentifier>{37f63815-c3b1-4e85-8b38-a502635d43e6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">

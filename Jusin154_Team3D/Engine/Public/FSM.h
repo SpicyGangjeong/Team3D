@@ -1,14 +1,17 @@
 ﻿#include "Component.h"
 
 NS_BEGIN(FSMSTATE)
-enum ESTATE
+enum ESTATE : Engine::_u64Flag
 {
-    ROOT,
-    IDLE,IDLE_TURN,
-    MOVE, WALK, FWD, BWD, JOG, SPRINT,
-    JUMP,
-    LAND,
-    DODGE,
+    NOT_DEFINE                  = 0,
+    IDLE                        = 1ULL << 0,
+    MOVE                        = 1ULL << 1,
+    WALK                        = 1ULL << 2,
+    JOG                         = 1ULL << 3,
+    SPRINT                      = 1ULL << 4,
+    JUMP                        = 1ULL << 5,
+    LAND                        = 1ULL << 6,
+    DODGE                       = 1ULL << 7,
     COMBAT, LIGHT_ATTACK, CAST, SKILL,SKILL2,
     END
 };
@@ -45,6 +48,8 @@ public:
     inline _bool	IsEnable(size_t stateMask) const { return (*m_pStateMask & stateMask) != 0; }
     inline _bool	IsEnable_Previous(size_t stateMask) const { return (m_iPreviousStateMask & stateMask) != 0; }
 
+
+    HRESULT Bind_States(FSM_DESC& Desc);
 private:
     unordered_map<size_t, class CState*>*   m_pStates = { nullptr };
     size_t*                                 m_pStateMask = { nullptr };

@@ -109,7 +109,16 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 	m_pMouse_Manager->Update();
 	//m_pSound_Manager->Update();
 
+#ifdef 기무리
+	static _bool bPicking = false;
+	GUI::Checkbox("Picking Enable", &bPicking);
+	if (bPicking) {
+		m_pPicking->Update();
+	}
+#endif // 기무리
+#ifndef 기무리
 	m_pPicking->Update();
+#endif // !기무리
 
 	m_pObject_Manager->Priority_Update(fTimeDelta);
 
