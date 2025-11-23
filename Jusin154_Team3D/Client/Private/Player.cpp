@@ -473,6 +473,19 @@ HRESULT CPlayer::Behavior_MoveExitCheck()
 		return E_FAIL;
 	}
 	if (SUCCEEDED(InputMove())) {
+
+		if (m_pGameInstance->Key_Pressing(DIK_W)){
+
+			}
+		if (m_pGameInstance->Key_Pressing(DIK_A)){
+
+			}
+		if (m_pGameInstance->Key_Pressing(DIK_S)){
+
+			}
+		if (m_pGameInstance->Key_Pressing(DIK_D)){
+
+			}
 		return S_OK;
 	}
 	m_pFSM->Change_State(FSMSTATE::IDLE);
