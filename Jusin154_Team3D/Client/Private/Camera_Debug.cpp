@@ -21,6 +21,7 @@ void CCamera_Debug::Update(_float fTimeDelta)
 	Transition(fTimeDelta);
 	_float3 vCamPos = {};
 	XMStoreFloat3(&vCamPos, m_pTransformCom->Get_State(STATE::POSITION));
+
 	GUI::Text("Cam Coord %.2f, %.2f, %.2f", vCamPos.x, vCamPos.y, vCamPos.z);
 	if (m_pGameInstance->Key_Up(DIK_GRAVE)) {
 		m_bMovable = !m_bMovable;
