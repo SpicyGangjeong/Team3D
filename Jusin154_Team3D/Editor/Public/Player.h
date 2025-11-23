@@ -50,18 +50,23 @@ private:
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();
+	void	Behavior_IdleExit();
 
 	void	Behavior_MoveEnter();
 	HRESULT Behavior_MoveExitCheck();
+	void	Behavior_MoveExit();
 
 	void	Behavior_JumpEnter();
 	HRESULT Behavior_JumpExitCheck();
+	void	Behavior_JumpExit();
 
 	void	Behavior_LandEnter();
 	HRESULT Behavior_LandExitCheck();
+	void	Behavior_LandExit();
 
 	void	Behavior_DodgeEnter();
 	HRESULT Behavior_DodgeExitCheck();
+	void	Behavior_DodgeExit();
 	
 
 public:

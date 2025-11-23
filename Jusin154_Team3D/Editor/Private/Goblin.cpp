@@ -41,7 +41,7 @@ void CGoblin::Update(_float fTimeDelta)
 {
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
-	m_pModelCom->ComputeSkinning();
+	//m_pModelCom->ComputeSkinning();
 }
 
 void CGoblin::Late_Update(_float fTimeDelta)
@@ -71,8 +71,8 @@ HRESULT CGoblin::Render()
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pModelCom->Bind_CS_Output(5, 0)))
-			return E_FAIL;
+		//if (FAILED(m_pModelCom->Bind_CS_Output(5, 0)))
+		//	return E_FAIL;
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;

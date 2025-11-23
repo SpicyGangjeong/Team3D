@@ -41,9 +41,9 @@ public:
     CState* Get_PrevState() { return m_pPreviousState; }
     size_t  Get_PrevStateMask() { return m_iPreviousStateMask; }
 
-    //inline void		Enable_State(size_t stateMask) { *m_pStateMask |= stateMask; }
-    //inline void		Set_State(size_t initialStateMask) { *m_pStateMask = initialStateMask; }
-    //inline void		Disable_State(size_t stateMask) { *m_pStateMask &= ~stateMask; }
+    inline void		Enable_State(size_t stateMask) { *m_pStateMask |= stateMask; }
+    inline void		Set_State(size_t initialStateMask) { *m_pStateMask = initialStateMask; }
+    inline void		Disable_State(size_t stateMask) { *m_pStateMask &= ~stateMask; }
     
     inline _bool	IsEnable(size_t stateMask) const { return (*m_pStateMask & stateMask) != 0; }
     inline _bool	IsEnable_Previous(size_t stateMask) const { return (m_iPreviousStateMask & stateMask) != 0; }

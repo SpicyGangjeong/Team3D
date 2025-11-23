@@ -300,7 +300,7 @@
     </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\HPBarBG">
       <UniqueIdentifier>{7e8b7123-11fb-4946-99fe-3265932d0536}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="02.GameObjects\Camera">
       <UniqueIdentifier>{072a4e85-ba07-4ffd-bdb1-ddac02558242}</UniqueIdentifier>
     </Filter>
@@ -339,9 +339,6 @@
     </Filter>
     <Filter Include="80.State\Focus\State_Land">
       <UniqueIdentifier>{0b8cac41-419f-48ce-87bc-805b8962b4df}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Level\NewFilter1">
-      <UniqueIdentifier>{37f63815-c3b1-4e85-8b38-a502635d43e6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -650,7 +647,7 @@
     </ClInclude>
     <ClInclude Include="..\public\HpBarBG.h">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel\HPBarBG</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\Camera_Gaze.h">
       <Filter>02.GameObjects\Camera\Camera_Gaze</Filter>
     </ClInclude>
@@ -969,7 +966,7 @@
     </ClCompile>
     <ClCompile Include="..\private\HpBarBG.cpp">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel\HPBarBG</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\Private\Camera_Gaze.cpp">
       <Filter>02.GameObjects\Camera\Camera_Gaze</Filter>
     </ClCompile>
