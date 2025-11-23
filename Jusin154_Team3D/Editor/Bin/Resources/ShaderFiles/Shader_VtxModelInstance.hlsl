@@ -17,10 +17,19 @@ struct ParticleValue
     float2 vAniTime;
     
     float2 vAniIndex;
-    float fGravity;
+    float  fGravity;
     
     float3 vSinAmount;
     float3 vDeltaAngle;
+    float3 vDeltaAxisAngle;
+    
+    float  fDrag;
+    float3 vPivot;
+    
+    float  fSizeDrag;
+    float3 vDeltaSize;
+    
+
 };
 
 
@@ -72,7 +81,16 @@ float g_fBlurIntensity; //블러 세기
 float g_fNoiseDistortionIntensity; // 디스토션 왜곡 세기
 
 float4 g_vEmissive;
-float g_fEmissiveCutAlpha;
+float g_fEmissiveStrength;
+    
+float g_fSoftenExp;
+float g_fSoftStrength;
+float g_fCoreBoost;
+float g_fRadius;
+
+    
+float g_fSoftMaskEdge;
+float g_fSoftMask;
 
 bool g_isDiffuse;
 bool g_isMasking;
@@ -394,12 +412,14 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     {
         vMtrlMask.r = 1.f;
     }
-    
 
     
-    vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * vMtrlMask.r);
+    float fSoftMask;
     
-
+    if (g_fSoftMask > FLT_EPSILON5)
+        fSoftMask = saturate((vMtrlMask.r - g_fSoftMaskEdge) * g_fSoftMask);
+    
+    vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * fSoftMask);
     
     if (vMtrlDiffuse.a <= 0.f)
         discard;
@@ -443,10 +463,23 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     Out = BlendedWeight(vMtrlDiffuse, In.vProjPos.w);
     
 
-    // 색깔 추가할 처리 (이미시브)
+    //// 색깔 추가할 처리 (이미시브)
     
     float4 vEmissiveMtrl = vector(0.f, 0.f, 0.f, 0.f);
+
+      
+    float2 CenteredUV = In.vTexcoord - 0.5f;
     
+    float fDistance = saturate(length(CenteredUV) / g_fRadius); // 마스크의 크기를 어느정도할지 
+    
+    float fMaskAlpha = vMtrlMask.a;
+    
+    float fSoftEdge = pow(saturate(1.0f - fDistance), g_fSoftenExp) * g_fSoftStrength; //SoftenExp  엣지감쇠지수 , Strength
+   
+    float fCore = pow(saturate(1.0 - fDistance * 2.f), max(0.001, g_fCoreBoost)) * g_fCoreBoost; // CoreBust 중심강조
+    
+    float fEmissive = fSoftEdge + fCore;
+   
     if (g_isEmissive == true)
     {
         vEmissiveMtrl = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
@@ -456,23 +489,15 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
         vEmissiveMtrl = g_vEmissive;
     }
     
-    float fEmissiveCutAlpha = g_fEmissiveCutAlpha;
-   
-    if (g_fEmissiveCutAlpha >= vMtrlDiffuse.a)
-    {
-            
-        Out.vColorTarget = vector(0.f, 0.f, 0.f, 0.f);
-        
-        return Out;
-    }
+    float fEmissiveStrength = g_fEmissiveStrength;
     
     if (g_isEmissiveDissolve == true)
     {
-        vEmissiveMtrl *= (1.f - In.vLifeTime.x / In.vLifeTime.y);
+        fEmissiveStrength *= (1.f - In.vLifeTime.x / In.vLifeTime.y);
     }
-   
-    Out.vColorTarget = pow(vEmissiveMtrl, 2.2f);
-   
+    
+    Out.vColorTarget = vEmissiveMtrl * fEmissive * fEmissiveStrength; // 이미시브 스트랭스
+    
     return Out;
 }
 
@@ -642,9 +667,12 @@ PS_BLUR_OUT PS_BLUR(PS_BLUR_IN In)
         vMtrlMask.r = 1.f;
     }
     
+      
 
     
-    vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * vMtrlMask.r);
+    float softMask = saturate((vMtrlMask.r - 0.1) * 1.0);
+    
+    vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * softMask);
     
 
     
@@ -682,27 +710,41 @@ PS_BLUR_OUT PS_BLUR(PS_BLUR_IN In)
     
 
     
-
     float4 vEmissiveMtrl = vector(0.f, 0.f, 0.f, 0.f);
+
+      
+    float2 CenteredUV = In.vTexcoord - 0.5f;
     
+    float fDistance = saturate(length(CenteredUV) / g_fRadius); // 마스크의 크기를 어느정도할지 
+    
+    float fMaskAlpha = vMtrlMask.a;
+    
+    float fSoftEdge = pow(saturate(1.0f - fDistance), g_fSoftenExp) * g_fSoftStrength; //SoftenExp  엣지감쇠지수 , Strength
+   
+    float fCore = pow(saturate(1.0 - fDistance * 2.f), max(0.001, g_fCoreBoost)) * g_fCoreBoost; // CoreBust 중심강조
+    
+    float fEmissive = fSoftEdge + fCore;
+   
     if (g_isEmissive == true)
     {
         vEmissiveMtrl = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
     }
-    
-    float fEmissiveCutAlpha = g_fEmissiveCutAlpha;
-    
-    float fSmoothAlpha = smoothstep(fEmissiveCutAlpha - 0.3f, fEmissiveCutAlpha + 0.3f, vMtrlDiffuse.a);
-   
-  
-    if (g_isEmissiveDissolve == true)
+    else
     {
-        fSmoothAlpha *= (1.f - In.vLifeTime.x / In.vLifeTime.y);
+        vEmissiveMtrl = g_vEmissive;
     }
     
-    float3 vEmissiveColor = g_vEmissive.rgb * g_vEmissive.a + vEmissiveMtrl.rgb * (1 - g_vEmissive.a);
+    float fEmissiveStrength = g_fEmissiveStrength;
     
-    Out.vDiffuse = vector(vMtrlDiffuse.rgb * g_fBlurIntensity, vMtrlDiffuse.a); /** vector(vEmissiveColor * fSmoothAlpha, vMtrlDiffuse.a);*/
+    if (g_isEmissiveDissolve == true)
+    {
+        fEmissiveStrength *= (1.f - In.vLifeTime.x / In.vLifeTime.y);
+    }
+    
+    vEmissiveMtrl = vEmissiveMtrl * fEmissive * fEmissiveStrength;
+    
+   
+    Out.vDiffuse = vector(vMtrlDiffuse.rgb * g_fBlurIntensity + vEmissiveMtrl.rgb, vMtrlDiffuse.a); /** vector(vEmissiveColor * fSmoothAlpha, vMtrlDiffuse.a);*/
     
     return Out;
 }

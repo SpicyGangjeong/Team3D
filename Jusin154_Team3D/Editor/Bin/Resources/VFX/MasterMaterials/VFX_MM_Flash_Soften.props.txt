@@ -90,6 +90,6 @@ MobileBaseTexture = None
 MobileNormalTexture = None
 bUseMobileSpecular = false
 MobileSpecularPower = 16
-MobileSpecularMask = MSM_Constant (0)
+MobileSpecularMask = MSM_Constant (0)6
 MobileMaskTexture = None
 TextureStreamingData[0] = {}

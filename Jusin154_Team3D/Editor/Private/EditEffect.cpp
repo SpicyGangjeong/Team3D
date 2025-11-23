@@ -433,10 +433,16 @@ void CEditEffect::Describe_Entity()
 	{
 
 		ImGui::PushItemWidth(80);
-		GUI::DragFloat("EmissiveCutAlpha", &m_EffectInfo.fEmissiveCutAlpha, 0.005f, 0.f, 1.f);
+		GUI::DragFloat("EmissiveStrength", &m_EffectInfo.fEmissiveStrength, 0.005f, 0.f, 1.f);
+		GUI::DragFloat("Radius", &m_EffectInfo.fRadius, 0.005f);
+		GUI::DragFloat("CoreBoost", &m_EffectInfo.fCoreBoost, 0.005f);
+		GUI::DragFloat("SoftStrength", &m_EffectInfo.fSoftStrength, 0.005f);
+		GUI::DragFloat("SoftenExp", &m_EffectInfo.fSoftenExp, 0.005f);
 		ImGui::PopItemWidth();
 
 		GUI::ColorEdit4("Emissive", (_float*)&m_EffectInfo.vEmissive);
+
+
 
 		GUI::Checkbox("EmissiveTex", &m_EffectInfo.isEmissive);
 		GUI::Checkbox("EmissiveDissolve", &m_EffectInfo.isEmissiveDissolve);
@@ -577,6 +583,10 @@ void CEditEffect::Describe_Entity()
 
 			ImGui::PushItemWidth(80);
 			GUI::DragFloat2("MaskingUVGainAmount", (_float*)&m_EffectInfo.vMaskingUVGainAmount, 0.01f);
+			GUI::Spacing();
+			GUI::DragFloat("SoftMask", &m_EffectInfo.fSoftMask, 0.01f, 0.f);
+			GUI::DragFloat("fSoftMaskEdge", &m_EffectInfo.fSoftMaskEdge, 0.01f, 0.f);
+			
 			ImGui::PopItemWidth();
 
 
