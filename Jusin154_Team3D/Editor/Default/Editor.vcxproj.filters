@@ -358,6 +358,15 @@
     <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\HpBarBG">
       <UniqueIdentifier>{7e8b7123-11fb-4946-99fe-3265932d0536}</UniqueIdentifier>
     </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\Spell_Slot_Preview">
+      <UniqueIdentifier>{b4e1da25-c952-4ff4-92fd-7f1501d8c005}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\Potion">
+      <UniqueIdentifier>{7683f642-58f7-4a79-a78c-b29540bdab10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\Magic_Meter">
+      <UniqueIdentifier>{b6ec3441-6b18-45d1-80ba-03aa6df7f9e2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -708,6 +717,15 @@
     <ClInclude Include="..\Public\Wand.h">
       <Filter>02.GameObjects\Wand</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Spell_Slot_Preview.h">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\Spell_Slot_Preview</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Potion.h">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\Potion</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Magic_Meter.h">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\Magic_Meter</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -1053,6 +1071,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Wand.cpp">
       <Filter>02.GameObjects\Wand</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Spell_Slot_Preview.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\Spell_Slot_Preview</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Potion.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\Potion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Magic_Meter.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\Magic_Meter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
