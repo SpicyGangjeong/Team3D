@@ -34,7 +34,7 @@ public:
 		_float2		vGravity = { 0.f , 9.8f };
 
 		_bool		isSinWave = {};
-		_float3     vSinMinAmount = { 0.f , 0.f , 0.f};
+		_float3     vSinMinAmount = { 0.f , 0.f , 0.f };
 		_float3     vSinMaxAmount = { 0.f , 0.f , 0.f };
 
 		_bool		isTurn;
@@ -53,6 +53,8 @@ public:
 		_bool       isSizeLerp = {};
 		_float3     vDeltaSize = {};
 		_float2     vSizeDrag = {};
+
+		_float2     vDelay = {};
 
 	}INSTANCE_DESC;
 
@@ -87,11 +89,11 @@ public:
 		_float3     vSinMinAmount = { 0.f , 0.f , 0.f };
 		_float3     vSinMaxAmount = { 0.f , 0.f , 0.f };
 
-		_bool		isTurn;
+		_bool		isTurn = {};
 		_float3     vDeltaAngleMin = {};
 		_float3     vDeltaAngleMax = {};
 
-		_bool       isAxisTurn;
+		_bool       isAxisTurn = {};
 		_float3     vDeltaAxisAngleMin = {};
 		_float3     vDeltaAxisAngleMax = {};
 
@@ -99,6 +101,12 @@ public:
 		_float2		vDrag = {};
 		_float3     vPivotMin = {};
 		_float3     vPivotMax = {};
+
+		_bool       isSizeLerp = {};
+		_float3     vDeltaSize = {};
+		_float2     vSizeDrag = {};
+
+		_float2     vDelay = {};
 
 	}PRE_INSTANCE_DESC;
 
@@ -147,12 +155,13 @@ public:
 		_float3   vDeltaAngle = {};
 		_float3	  vDeltaAxisAngle = {};
 
-		_float    fDrag;
+		_float    fDrag = {};
 		_float3   vPivot = {};
 
 		_float    fSizeDrag = {};
 		_float3   vDeltaSize = {};
 
+		_float2   vDelay = {};
 
 	}CS_PARTICLE_VALUE_DESC;
 

@@ -78,8 +78,8 @@ public:
 		_float fCoreBoost = {};
 		_float fRadius = {};
 
-		_float fSoftMaskEdge;
-		_float fSoftMask;
+		_float fSoftMaskEdge = {};
+		_float fSoftMask = {};
 
 
 	}EFFECT_INFO;
@@ -141,6 +141,9 @@ public:
 		_float fCoreBoost = {};
 		_float fRadius = {};
 
+		_float fSoftMaskEdge = {};
+		_float fSoftMask = {};
+
 	}PRE_EFFECT_INFO;
 
 protected:
@@ -156,7 +159,7 @@ public:
 	virtual HRESULT Render_Blur() override;
 public:
 	HRESULT Load(const _char* pFilePath, LEVEL eLevel);
-
+	HRESULT Load();
 public:
 #ifdef _DEBUG
 		HRESULT LoadPre(const _char* pFilePath, LEVEL eLevel);

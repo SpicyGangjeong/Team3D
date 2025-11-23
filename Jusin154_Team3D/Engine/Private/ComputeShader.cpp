@@ -113,14 +113,9 @@ void CComputeShader::Bind_UAV(_uint iIndex)
 
 void CComputeShader::Bind_OutPut_SRV(_uint iIndex, _uint iBufferIndex)
 {
-	//m_pContext->PSSetShaderResources(iIndex, // 시작슬롯 번호
-	//	1,  // 버퍼 개수
-	//	&m_pOutputSRV[iBufferIndex]); // 버퍼 시작 주소
-
-	ID3D11ShaderResourceView* pSRV = m_pOutputSRV[iBufferIndex];
-
-	// VS에 바인딩
-	m_pContext->VSSetShaderResources(iIndex, 1, &pSRV);
+	m_pContext->PSSetShaderResources(iIndex, // 시작슬롯 번호
+		1,  // 버퍼 개수
+		&m_pOutputSRV[iBufferIndex]); // 버퍼 시작 주
 
 }
 

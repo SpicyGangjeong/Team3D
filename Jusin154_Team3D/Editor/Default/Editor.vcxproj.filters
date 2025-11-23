@@ -342,7 +342,7 @@
     </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\HPBarBG">
       <UniqueIdentifier>{7e8b7123-11fb-4946-99fe-3265932d0536}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="02.GameObjects\Camera">
       <UniqueIdentifier>{072a4e85-ba07-4ffd-bdb1-ddac02558242}</UniqueIdentifier>
     </Filter>
@@ -357,6 +357,9 @@
     </Filter>
     <Filter Include="02.GameObjects\Wand">
       <UniqueIdentifier>{92110a48-81d0-4e98-be06-05dd078d0488}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\06.Bombard">
+      <UniqueIdentifier>{c81350c7-0edb-4e51-babf-09bf627414f1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -689,7 +692,7 @@
     </ClInclude>
     <ClInclude Include="..\public\HpBarBG.h">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel\HPBarBG</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\Camera_Gaze.h">
       <Filter>02.GameObjects\Camera\Camera_Gaze</Filter>
     </ClInclude>
@@ -707,6 +710,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Wand.h">
       <Filter>02.GameObjects\Wand</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bombard.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\06.Bombard</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1035,7 +1041,7 @@
     </ClCompile>
     <ClCompile Include="..\private\HpBarBG.cpp">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel\HPBarBG</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\Private\Camera_Gaze.cpp">
       <Filter>02.GameObjects\Camera\Camera_Gaze</Filter>
     </ClCompile>
@@ -1053,6 +1059,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Wand.cpp">
       <Filter>02.GameObjects\Wand</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bombard.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\06.Bombard</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

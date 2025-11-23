@@ -85,6 +85,7 @@
 #include "Dummy_Plane.h"
 #include "TrailObject.h"
 #include "NomalJap.h"
+#include "Bombard.h"
 
 #pragma endregion
 
@@ -736,16 +737,14 @@ HRESULT CLoader::Loading_For_Effect()
 	if (FAILED(m_pGameInstance->Add_Prototype<CDebugCamera>(ENUM_CLASS(LEVEL::EFFECT), CDebugCamera::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
-
+	if (FAILED(m_pGameInstance->Add_Prototype<CEditEffect>(ENUM_CLASS(LEVEL::EFFECT), CEditEffect::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CTestEffect>(ENUM_CLASS(LEVEL::EFFECT), CTestEffect::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CEffect_Editor>(ENUM_CLASS(LEVEL::EFFECT), CEffect_Editor::Create(m_pDevice, m_pContext)))) {
-		return E_FAIL;
-	}
-
-	if (FAILED(m_pGameInstance->Add_Prototype<CEditEffect>(ENUM_CLASS(LEVEL::EFFECT), CEditEffect::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
@@ -768,7 +767,9 @@ HRESULT CLoader::Loading_For_Effect()
 	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_Cube>(ENUM_CLASS(LEVEL::EFFECT), CDummy_Cube::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-
+	if (FAILED(m_pGameInstance->Add_Prototype<CBombard>(ENUM_CLASS(LEVEL::EFFECT), CBombard::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	
 
 	m_strMessage = TEXT("Loading Success!");
 

@@ -74,7 +74,7 @@ HRESULT CNomalJap::Ready_Components(void* pArg)
 {
 	if (FAILED(__super::Ready_Components(pArg))) {
 		return E_FAIL;
-	}
+	}`
 
 	return S_OK;
 }

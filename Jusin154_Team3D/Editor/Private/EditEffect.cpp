@@ -41,8 +41,8 @@ void CEditEffect::Priority_Update(_float fTimeDelta)
 void CEditEffect::Update(_float fTimeDelta)
 {
 
-	//if (m_bVisible == false)
-	//	return;
+	if (m_bVisible == false)
+		return;
 
 	if (m_pInstance_ModelCom == nullptr)
 		return;
@@ -383,14 +383,21 @@ void CEditEffect::Describe_Entity()
 
 	const char* pLerp[] = { "Linear" , "EaseInQuad", "EaseOutQuad", "EaseInCubic" , "EaseOutCubic" , "EaseInOutSin" , "EaseInBack" , "Expo" , "Circle" };
 	const char* pRenderNames[] = { "PRIORITY" , "SHADOW", "NONBLEND", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" , "UI" };
+	const char* pEffectType[] = { "EFFECT" , "TRAIL" };
 
 	_int iCurrentItem = static_cast<_int>(m_EffectInfo.eRenderOrder);
+	_int iCurrentType = static_cast<_int>(m_EffectInfo.eEffectType);
 
 	if (ImGui::Combo("Render Order", &iCurrentItem, pRenderNames, ENUM_CLASS(RENDER::END)))
 	{
 		m_EffectInfo.eRenderOrder = static_cast<RENDER>(iCurrentItem);
 	}
-	
+
+	if (ImGui::Combo("Effect Type", &iCurrentType, pEffectType, ENUM_CLASS(EFFECT_TYPE::END)))
+	{
+		m_EffectInfo.eEffectType = static_cast<EFFECT_TYPE>(iCurrentType);
+	}
+
 	GUI::Checkbox("Visible", &m_bVisible);
 
 	m_pTransformCom->Describe_Entity();

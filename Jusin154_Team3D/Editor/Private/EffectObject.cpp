@@ -8,7 +8,8 @@ CEffectObject::CEffectObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 }
 
 CEffectObject::CEffectObject(const CEffectObject& rhs)
-	:CPartObject(rhs)
+	:CPartObject(rhs),
+	m_strPath(rhs.m_strPath)
 {
 }
 
@@ -117,7 +118,9 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 		SAFE_RELEASE(m_pLightCom);
 	
 	_string strPerfectFilePath = pFilePath;
-	
+
+	m_strPath = strPerfectFilePath;
+
 	strPerfectFilePath += ".bin";
 
 	HANDLE hFile = CreateFileW(
@@ -137,7 +140,7 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 	}
 
 	// 나중에 패키징할때 패스를 저장할거임
-	m_strPath = strPerfectFilePath;
+
 
 	DWORD	dwByte(0);
 
@@ -379,6 +382,17 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 	m_pInstance_ModelCom->Load_InstanceModel(hFile);
 
 	CloseHandle(hFile);
+
+
+
+	return S_OK;
+}
+
+HRESULT CEffectObject::Load()
+{
+
+	if (FAILED(Load(m_strPath.c_str(), static_cast<LEVEL>(NEXT_LEVEL))))
+		return E_FAIL;
 
 
 
