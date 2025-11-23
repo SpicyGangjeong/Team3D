@@ -18,8 +18,12 @@ public:
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render() override;
 	virtual _vector Get_WorldPostion() override;
+	virtual void Lerp_PosX(_float X) override;
 
-
+public:
+	void Heal(_float fTimeDelta);
+	void Hit(_float fTimeDelta);
+	virtual void SizeUpX(_float SizeX) override;
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;
@@ -27,11 +31,17 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 
 private:
-	CTexture* m_pDiffuse_TextureCom = { nullptr };
-	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
-	CShader* m_pShaderCom = { nullptr };
-	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
+	CTexture*			m_pDiffuse_TextureCom = { nullptr };
+	CTexture*			m_pDiffuse_TextureCom1 = { nullptr };
+	CShader*			m_pShaderCom = { nullptr };
+	CVIBuffer_Rect*		m_pVIBufferCom = { nullptr };
 
+	_float				m_fMaxHp{};
+	_float				m_fCurrentHp{};
+	_float				m_fHpBar{};
+	_float				m_fDamage{};
+	_float				TargetHp{};
+	_float2				m_fHpBG{};
 public:
 	static CHpBarBG* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
