@@ -4,6 +4,10 @@
 #include "Level_Loading.h"
 #include "InfoInstance.h"
 
+NS_BEGIN(Engine)
+class CGameInstance;
+NS_END
+
 
 #ifdef _DEBUG
 _float g_fTimeMult = 1.f;

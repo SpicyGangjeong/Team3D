@@ -172,10 +172,6 @@
     <ClInclude Include="..\Public\Client_Define.h" />
     <ClInclude Include="..\Public\Client_Enum.h" />
     <ClInclude Include="..\Public\Client_Macro.h" />
-    <ClInclude Include="..\Public\Client_Struct.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClInclude>
     <ClInclude Include="..\Public\Dummy_PhysXPlayable.h" />
     <ClInclude Include="..\Public\Dummy_PhysXWall.h" />
     <ClInclude Include="..\Public\SkyBox.h" />
@@ -192,21 +188,13 @@
     <ClInclude Include="..\Public\MonsterInfo.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\PlayerInfo.h" />
-    <ClInclude Include="..\Public\State_Cast.h" />
     <ClInclude Include="..\Public\State_Combat.h" />
     <ClInclude Include="..\Public\State_Dodge.h" />
     <ClInclude Include="..\Public\State_Idle.h" />
-    <ClInclude Include="..\Public\State_Idle_Turn.h" />
-    <ClInclude Include="..\Public\State_Jog.h" />
     <ClInclude Include="..\Public\State_Jump.h" />
     <ClInclude Include="..\Public\State_Land.h" />
-    <ClInclude Include="..\Public\State_LightAttack.h" />
     <ClInclude Include="..\Public\State_Move.h" />
     <ClInclude Include="..\Public\State_Root.h" />
-    <ClInclude Include="..\Public\State_Skill.h" />
-    <ClInclude Include="..\Public\State_Skill2.h" />
-    <ClInclude Include="..\Public\State_Sprint.h" />
-    <ClInclude Include="..\Public\State_Walk.h" />
     <ClInclude Include="..\Public\Wand.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
@@ -246,21 +234,13 @@
     </ClCompile>
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\PlayerInfo.cpp" />
-    <ClCompile Include="..\Private\State_Cast.cpp" />
     <ClCompile Include="..\Private\State_Combat.cpp" />
     <ClCompile Include="..\Private\State_Dodge.cpp" />
     <ClCompile Include="..\Private\State_Idle.cpp" />
-    <ClCompile Include="..\Private\State_Idle_Turn.cpp" />
-    <ClCompile Include="..\Private\State_Jog.cpp" />
     <ClCompile Include="..\Private\State_Jump.cpp" />
     <ClCompile Include="..\Private\State_Land.cpp" />
-    <ClCompile Include="..\Private\State_LightAttack.cpp" />
     <ClCompile Include="..\Private\State_Move.cpp" />
     <ClCompile Include="..\Private\State_Root.cpp" />
-    <ClCompile Include="..\Private\State_Skill.cpp" />
-    <ClCompile Include="..\Private\State_Skill2.cpp" />
-    <ClCompile Include="..\Private\State_Sprint.cpp" />
-    <ClCompile Include="..\Private\State_Walk.cpp" />
     <ClCompile Include="..\Private\Wand.cpp" />
     <ClCompile Include="Client.cpp" />
   </ItemGroup>

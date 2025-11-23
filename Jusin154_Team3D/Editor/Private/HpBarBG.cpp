@@ -21,10 +21,10 @@ HRESULT CHpBarBG::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = 0.f;
-	Desc.fY = 0.f;
-	Desc.fSizeX = 194.f;
-	Desc.fSizeY = 32.f;
+	Desc.fX = 220.f;
+	Desc.fY = 180.f;
+	Desc.fSizeX = 144.f;
+	Desc.fSizeY = 24.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -40,7 +40,11 @@ HRESULT CHpBarBG::Initialize(void* pArg)
 	m_fTimeMult = 3.f;
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 1.f;
-	m_vNine_Slice = _float4(27.f, 165.f, m_fSizeY * 0.5f, m_fSizeY * 0.5f);
+	m_vNine_Slice = _float4(27.f, 125.f, m_fSizeY * 0.5f, m_fSizeY * 0.5f);
+	m_fMaxHp = 20.f;
+	m_fCurrentHp = m_fMaxHp;
+	m_fMoveSpeed = 5.f;
+	m_fHpBG = _float2(0, m_fSizeX);
 	return S_OK;
 }
 
@@ -82,9 +86,27 @@ void CHpBarBG::Update(_float fTimeDelta)
 			m_bFadeOut = false;
 			m_fAlpha = 0.f;
 		}
-	}
+	} 
+
+	if (m_pGameInstance->Key_Down(DIK_2))
+		Lerp_PosX(10.f);
+	if (m_pGameInstance->Key_Down(DIK_3))
+		Lerp_PosX(-10.f);
+
+	if (m_fCurrentHp < 0.f)
+		m_fCurrentHp = 0.f;
+	if (m_fDamage <= 0.f)
+		m_fDamage = 0.f;
+	TargetHp = m_fMaxHp - m_fDamage;
+
+	if (TargetHp > m_fCurrentHp)
+		Heal(fTimeDelta);
+	else if(TargetHp < m_fCurrentHp)
+		Hit(fTimeDelta);
+	m_fHpBar = m_fCurrentHp / m_fMaxHp;
 
 	m_fTime += fTimeDelta * m_fTimeMult;
+
 	__super::Update(fTimeDelta);
 }
 
@@ -121,6 +143,27 @@ HRESULT CHpBarBG::Render()
 _vector CHpBarBG::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
+}
+
+void CHpBarBG::Lerp_PosX(_float X)
+{
+	m_fDamage += X;
+}
+
+void CHpBarBG::Heal(_float fTimeDelta)
+{
+	m_fCurrentHp = CMyTools::Lerp_f1D(TargetHp, m_fCurrentHp, fTimeDelta * m_fMoveSpeed);
+}
+
+void CHpBarBG::Hit(_float fTimeDelta)
+{
+	m_fCurrentHp = CMyTools::Lerp_f1D(m_fCurrentHp, TargetHp, fTimeDelta * m_fMoveSpeed);
+}
+
+void CHpBarBG::SizeUpX(_float fSizeX)
+{
+	m_fSizeX = fSizeX;
+	m_fX -= (fSizeX - m_vScale.x) * 0.5f;
 }
 
 HRESULT CHpBarBG::Bind_ShaderResources()
@@ -172,8 +215,16 @@ HRESULT CHpBarBG::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOrigin_Size", &m_fOrigin_Size, sizeof(_float2))))
 	{
 		return E_FAIL;
-	} 
+	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCurrent_Size", &m_vScale, sizeof(_float2))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fHp", &m_fHpBar, sizeof(_float))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fHpBG", &m_fHpBG, sizeof(_float2))))
 	{
 		return E_FAIL;
 	}
@@ -186,7 +237,7 @@ HRESULT CHpBarBG::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_HealthMeter_Middle_4K"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_HpBarBG"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}

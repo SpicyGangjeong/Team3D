@@ -160,7 +160,7 @@ _bool CModel::Play_Animation(_float fTimeDelta,CTransform* pTransform)
 		_float fRatio = m_fBlendTime / m_fBlendDuration;
 		fRatio = min(fRatio, 1.f);
 
-		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_bIsLoop, fTimeDelta, pTransform);
+		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, pTransform);
 		m_Animations[m_iCurrentAnimIndex]->InterpAnim(m_Animations[m_iPreAnimIndex], m_Bones, fRatio);
 
 		if (fRatio >= 1.f)
@@ -171,38 +171,20 @@ _bool CModel::Play_Animation(_float fTimeDelta,CTransform* pTransform)
 	}
 	else
 	{
-		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_bIsLoop, fTimeDelta, pTransform);
+		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, pTransform);
 		m_iPreAnimIndex = m_iCurrentAnimIndex;
 	}
 
-	for (_int i = 0; i < m_Bones.size(); ++i)
+	for (auto& pBone : m_Bones)
 	{
-		m_Bones[i]->Update_CombinedTransformationMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
-
-		if (i == m_iRootBoneIndex) { // 루트본의 매트릭스를 갱신했다면 애니메이션에 맞게 이동량을 루트본에서 트랜스폼으로 보정시킴
-			if (true == m_pLerpAnim->IsLerping()) { // 럴프중이었으면 이동량 반영 x
-				_matrix currAnimMatrix = Get_BoneMatrix(m_iRootBoneIndex);
-				currAnimMatrix.r[3] = XMVectorSet(0.f, 0.f, 0.f, 1.f);
-				m_Bones[i]->Set_CombinedTransformationMatrixPtr(currAnimMatrix);
-			}
-			else {
-				_matrix currAnimMatrix = Get_BoneMatrix(m_iRootBoneIndex); // 현재 루트본의 컴바인드 트랜스폼을 꺼내오고
-				_matrix deltaAnimMatrix = XMMatrixMultiply(XMMatrixInverse(nullptr, m_PrevAnimationMatrix), currAnimMatrix); // 이전 트랜스폼이랑 비교해서 델타매트릭스를 꺼냄
-				_vector momentum = XMMatrixMultiply(deltaAnimMatrix, XMMatrixRotationQuaternion(m_pTransform->Get_QuarternionVector())).r[3];
-				deltaAnimMatrix.r[3] = XMVectorSetW(momentum, 0.f);
-
-				m_pTransform->AccumulateMomentum(deltaAnimMatrix.r[3]); // 모체 트랜스폼에 이동량 반영
-				//m_pTransform->Set_State(STATE::POSITION, m_pTransform->Get_State(STATE::POSITION) + deltaAnimMatrix.r[3]);
-
-				m_PrevAnimationMatrix = currAnimMatrix;
-				currAnimMatrix.r[3] = XMVectorSet(0.f, 0.f, 0.f, 1.f);
-				m_Bones[i]->Set_CombinedTransformationMatrixPtr(currAnimMatrix); // 루트본의 이동량 소거
-			}
-		}
+		pBone->Update_CombinedTransformationMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
 	}
 
-	if(m_bIsFinishedAnim)
+	if (m_bIsFinishedAnim)
+	{
 		m_Animations[m_iCurrentAnimIndex]->ResetRootMotion();
+		m_Animations[m_iCurrentAnimIndex]->Depart_Animation();
+	}
 
 	return m_bIsFinishedAnim;
 }
@@ -902,60 +884,52 @@ HRESULT CModel::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fma
 
 HRESULT CModel::Create_CS()
 {
-	_uint vertexCount = 0;
-	_uint MaxvertexCount = 0;
-	for (_uint i = 0; i < m_Meshes.size(); ++i)
-	{
-		vertexCount = m_Meshes[i]->Get_Vertex();
-		if (MaxvertexCount < vertexCount)
-			MaxvertexCount = vertexCount;
-	}
-	
-	_uint		CS_InputStrides[] = {
-	sizeof(MESH_DESC)
+	_uint CS1_InputStrides[] = {
+		sizeof(KEYFRAME_DESC),
+		sizeof(CHANNEL_DESC),
 	};
 
-	size_t meshCount = m_Meshes.size();
-
-	_uint* CS_OutputStrides = new _uint[meshCount];
-
-	for (size_t i = 0; i < meshCount; i++)
-	{
-		CS_OutputStrides[i] = sizeof(SKINNG_MESH_DESC)*(_uint)meshCount;
-	}
+	_uint CS1_OutputStrides[] = {
+		sizeof(LOCALPOS_DESC),
+	};
 
 
-	m_pComputeShader = CComputeShader::Create(m_pDevice, m_pContext,
-		L"../Bin/Resources/ShaderFiles/Shader_Mesh_Compute.hlsl", "CS_MAIN", MaxvertexCount, 1, (_uint)meshCount, CS_InputStrides,CS_OutputStrides);
+	m_pComputeShader = CComputeShader::Create(m_pDevice, m_pContext, L"../Bin/Resources/ShaderFiles/Shader_Mesh_Compute.hlsl",
+		"CS_LocalSRT", (_uint)m_Bones.size(), 0, 1, nullptr, CS1_OutputStrides
+	);
 
-	if (m_pComputeShader == nullptr)
+	if (!m_pComputeShader)
 		return E_FAIL;
-
-	Safe_Delete_Array(CS_OutputStrides);
 
 	return S_OK;
 }
 
-void CModel::ComputeSkinning()
+void CModel::Create_Temp()
 {
-	Get_BoneMatrix();
-	for (_uint i = 0; i < m_iNumMeshes; ++i)
+	for (auto& anim : m_Animations)
 	{
-		D3D11_MAPPED_SUBRESOURCE ConstantSubResource{};
-		if (SUCCEEDED(m_pContext->Map(m_pConstantBuffer, 0,
-			D3D11_MAP_WRITE_DISCARD, 0, &ConstantSubResource)))
-		{
-			CMesh::BONE_DESC* pDesc =
-				static_cast<CMesh::BONE_DESC*>(ConstantSubResource.pData);
-
-			m_Meshes[i]->FillBoneDesc(m_BoneMatrix,pDesc);
-
-			m_pContext->Unmap(m_pConstantBuffer, 0);
-		}
-
-		m_Meshes[i]->ComputSkinning(m_pComputeShader, m_pConstantBuffer);
+		anim->CreateGPUData(m_pDevice);
 	}
 }
+
+void CModel::Create_LocalPosVB()
+{
+	_uint iCount = (_uint)m_Bones.size();
+	_uint iStride = sizeof(LOCALPOS_DESC);
+
+	D3D11_BUFFER_DESC desc = {};
+	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.ByteWidth = iStride * iCount;
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS;
+	desc.CPUAccessFlags = 0;
+	desc.StructureByteStride = iStride;
+	desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+
+	HRESULT hr = m_pDevice->CreateBuffer(&desc, nullptr, &m_pLocalPosBuffer);
+
+	return;
+}
+
 
 void CModel::Create_Con()
 {
@@ -963,18 +937,71 @@ void CModel::Create_Con()
 	cbDesc.Usage = D3D11_USAGE_DYNAMIC;
 	cbDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	cbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	cbDesc.ByteWidth = sizeof(BONE_DESC);
+	cbDesc.ByteWidth = sizeof(ANIMSTATE_DESC);
 
 	if (FAILED(m_pDevice->CreateBuffer(&cbDesc, nullptr, &m_pConstantBuffer)))
 		return;
 }
 
-HRESULT CModel::Bind_CS_Output(_uint Index, _uint iBufferIndex)
-{
-	if (m_pComputeShader == nullptr)
-		return E_FAIL;
 
-	m_pComputeShader->Bind_OutPut_SRV(Index, iBufferIndex);
+void CModel::UpdateAnimationCS()
+{
+	D3D11_MAPPED_SUBRESOURCE sub{};
+	if (SUCCEEDED(m_pContext->Map(m_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &sub)))
+	{
+		ANIMSTATE_DESC* pDesc = (ANIMSTATE_DESC*)sub.pData;
+
+		CAnimation* pAnim = m_Animations[m_iCurrentAnimIndex];
+		pDesc->CurrentTime = pAnim->Get_CurrentTrackPosition();
+		pDesc->Duration = pAnim->Get_Duration();
+		pDesc->Speed = pAnim->Get_AnimSpeed();
+		pDesc->BoneCount = (_uint)m_Bones.size();
+		pDesc->PreTransformMatrix = m_PreTransformMatrix;
+		m_pContext->Unmap(m_pConstantBuffer, 0);
+	}
+}
+
+void CModel::ComputeAnimation()
+{
+	UpdateAnimationCS();
+
+	_uint iGroupCountX = ((_uint)m_Bones.size() + 255) / 256;
+
+	CAnimation* pAnim = m_Animations[m_iCurrentAnimIndex];
+	ID3D11ShaderResourceView* srvs[2] = {
+		pAnim->Get_KeyFrameSrv(),
+		pAnim->Get_ChannelSrv(),
+	};
+
+	m_pContext->CSSetShader(m_pComputeShader->Get_Compute(), nullptr, 0);
+	m_pContext->CSSetConstantBuffers(0, 1, &m_pConstantBuffer);
+	m_pContext->CSSetShaderResources(0, 2, srvs);
+
+	ID3D11UnorderedAccessView* uavs[1] = { m_pComputeShader->GetOutputUAV(0) };
+	m_pContext->CSSetUnorderedAccessViews(0, 1, uavs, nullptr);
+
+	m_pContext->Dispatch(iGroupCountX, 1, 1);
+
+	auto outSubs = m_pComputeShader->ReadBackOutputs();
+	m_pLocalPos = static_cast<LOCALPOS_DESC*>(outSubs[0].pData);
+}
+
+
+HRESULT CModel::Create_ParentVB()
+{
+	D3D11_BUFFER_DESC desc{};
+	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.ByteWidth = (_int)sizeof(PARENT_DESC) * (_uint)m_Bones.size();
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	desc.CPUAccessFlags = 0;
+	desc.StructureByteStride = (_int)sizeof(PARENT_DESC);
+	desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+
+	D3D11_SUBRESOURCE_DATA init{};
+	init.pSysMem = m_Parent.data();
+
+	m_pDevice->CreateBuffer(&desc, &init, &m_pParentBuffer);
+
 
 	return S_OK;
 }
@@ -987,8 +1014,6 @@ void CModel::Get_BoneMatrix()
 		m_BoneMatrix[i] = (*m_Bones[i]->Get_CombinedTransformationMatrixPtr());
 	}
 }
-
-
 
 HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix)
 {
@@ -1032,7 +1057,7 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 		return E_FAIL;
 	}
 
-	if (FAILED(Ready_Animations())) {
+	if (FAILED(Ready_Animations(m_Bones))) {
 		return E_FAIL;
 	}
 	return S_OK;
@@ -1317,12 +1342,25 @@ HRESULT CModel::Initialize(void* pArg)
 	m_pTransform = m_pOwner->Get_Component<CTransform>();
 	SAFE_ADDREF(m_pTransform);
 
-	/*Create_Con();
+	
+	if (m_eType == MODEL::ANIM)
+	{	
+		Create_Temp();
+		m_Parent.resize(m_Bones.size());
+		for (size_t i = 0; i < (_uint)m_Bones.size(); i++)
+		{
+			m_Parent[i].ParentIndex = m_Bones[i]->Get_ParentBoneIndex();
+		}
 
-	if (FAILED(Create_CS()))
-		return E_FAIL;*/
+		if (FAILED(Create_CS()))
+			return E_FAIL;
 
+		Create_Con();
+		Create_LocalPosVB();
+		Create_ParentVB();
 
+	}
+	
 
 	return S_OK;
 }
@@ -1378,13 +1416,13 @@ HRESULT CModel::Ready_Bones(const std::vector<SaveNode>& allNodes, _int currentI
 	return S_OK;
 }
 
-HRESULT CModel::Ready_Animations()
+HRESULT CModel::Ready_Animations(const vector<CBone*>& Bones)
 {
 	m_iNumAnimations = m_pSaveModel->AnimationCount;
 
 	for (size_t i = 0; i < m_iNumAnimations; i++)
 	{
-		CAnimation* pAnimation = CAnimation::Create(this, &m_pSaveModel->Animations[i]);
+		CAnimation* pAnimation = CAnimation::Create(Bones,this, &m_pSaveModel->Animations[i]);
 		if (nullptr == pAnimation)
 			return E_FAIL;
 
@@ -1425,6 +1463,11 @@ void CModel::Free()
 {
 	__super::Free();
 
+
+	SAFE_RELEASE(m_pComputeShader);
+	SAFE_RELEASE(m_pConstantBuffer);
+	SAFE_RELEASE(m_pParentBuffer);
+	SAFE_RELEASE(m_pLocalPosBuffer);
 	for (auto& pAnimation : m_Animations) {
 		SAFE_RELEASE(pAnimation);
 	}
@@ -1448,8 +1491,8 @@ void CModel::Free()
 
 	m_SaveModel.clear();
 
-	SAFE_RELEASE(m_pComputeShader);
-	SAFE_RELEASE(m_pConstantBuffer);
+	m_Parent.clear();
+	m_AnimRanges.clear();
 
 }
 void CModel::Describe_Entity()

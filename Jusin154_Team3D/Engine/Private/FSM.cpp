@@ -5,13 +5,22 @@
 CFSM::CFSM(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CComponent(pDevice, pContext)
 {
-	m_States.resize(FSMSTATE::END);
 }
 
 CFSM::CFSM(const CFSM& rhs)
-	: CComponent(rhs),
-	m_States(rhs.m_States)
+	: CComponent(rhs)
 {
+}
+
+HRESULT CFSM::Bind_States(FSM_DESC& Desc)
+{
+	if (nullptr != m_pStateMask) {
+		return E_FAIL;
+	}
+
+	m_pStateMask = Desc.pStateMask;
+	m_pStates = Desc.pStates;
+	return S_OK;
 }
 
 HRESULT CFSM::Initialize_Prototype()
@@ -24,62 +33,31 @@ HRESULT CFSM::Initialize(void* pArg)
     return S_OK;
 }
 
-void CFSM::Add_State(_uint iIndex, CState* state)
+void CFSM::Change_State(size_t iStateMask)
 {
-	m_States[iIndex] = state;
-	m_States[iIndex]->Set_State(iIndex);
-	m_States[iIndex]->Set_Owner(m_pOwner);
-	m_States[iIndex]->Set_Component();
+	if (nullptr != m_pCurrentState) {	// 현재 스테이트가 비워져 있으면 우회
+		if (IsEnable(iStateMask)) {		// 이미 활성화 된 스테이트면 리턴
+			return;
+		}
+		m_iPreviousStateMask = *m_pStateMask;
+
+		m_pCurrentState->Exit();
+		SAFE_RELEASE(m_pPreviousState); // Prev State 를 지움
+		m_pPreviousState = m_pCurrentState;
+	}
+
+	m_pCurrentState = m_pStates->at(iStateMask);
+	SAFE_ADDREF(m_pCurrentState);
+	m_pCurrentState->Enter();
 }
 
-void CFSM::Change_State(_uint iIndex)
+HRESULT CFSM::Update_State(_float fTimeDelta)
 {
-	m_pPrevious = m_pCurrent;
-
-	if (m_pCurrent)
-		m_pCurrent->Exit();
-
-	m_pCurrent = m_States[iIndex];
-
-	if (m_pCurrent)
-		m_pCurrent->Enter();
-}
-
-void CFSM::Update(_float fTimeDelta)
-{
-	vector<CState*> States;
-
-	CState* pCurrent = m_pCurrent;
-
-	while (pCurrent) 
+	if (nullptr != m_pCurrentState)
 	{
-		States.push_back(pCurrent);
-		pCurrent = pCurrent->Get_Parent();
+		return m_pCurrentState->Update(fTimeDelta);
 	}
-
-	for (_int i = (_int)States.size() - 1; i >= 0; --i) {
-		States[i]->Update(fTimeDelta);
-	}
-}
-
-_uint CFSM::Get_CurrState()
-{
-	return m_pCurrent->Get_State();
-}
-
-_uint CFSM::Get_PrevState()
-{
-	if (m_pPrevious)
-		return m_pPrevious->Get_State();
-	return 0;
-}
-
-void CFSM::Set_Parent(FSMSTATE::ESTATE Child, FSMSTATE::ESTATE Parent)
-{
-	CState* pChild = m_States[Child];
-	CState* pParent = m_States[Parent];
-	if (pChild && pParent)
-		pChild->Set_Parent(pParent);
+	return S_OK;
 }
 
 CFSM* CFSM::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -95,7 +73,7 @@ CFSM* CFSM::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	return pInstance;
 }
 
-CComponent* CFSM::Clone(void* pArg, class CGameObject* pOwner)
+CFSM* CFSM::Clone(void* pArg, class CGameObject* pOwner)
 {
 	CFSM* pInstance = new CFSM(*this);
 	pInstance->m_pOwner = pOwner;
@@ -112,14 +90,16 @@ void CFSM::Free()
 {
     __super::Free();
 
-	SAFE_RELEASE(m_pCurrent);
-	SAFE_RELEASE(m_pPrevious);
+	SAFE_RELEASE(m_pCurrentState);
+	SAFE_RELEASE(m_pPreviousState);
 
-	for (auto& states : m_States)
-	{
-		SAFE_RELEASE(states);
+	if (nullptr != m_pStates) {
+		unordered_map<size_t, class CState*>::iterator iter = m_pStates->begin();
+		for (; iter != m_pStates->end(); ++iter) {
+			SAFE_RELEASE(iter->second);
+		}
+		m_pStates = nullptr;
 	}
-	m_States.clear();
 }
 
 void CFSM::Describe_Entity()

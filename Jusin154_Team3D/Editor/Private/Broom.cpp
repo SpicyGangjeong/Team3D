@@ -66,9 +66,6 @@ HRESULT CBroom::Render()
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pModelCom->Bind_CS_Output(5, i)))
-			return E_FAIL;
-
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
 		}

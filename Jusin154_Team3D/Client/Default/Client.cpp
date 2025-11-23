@@ -11,7 +11,7 @@ HWND        g_hWnd;
 WCHAR       szTitle[MAX_LOADSTRING];
 WCHAR       szWindowClass[MAX_LOADSTRING];
 
-// 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
+
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);

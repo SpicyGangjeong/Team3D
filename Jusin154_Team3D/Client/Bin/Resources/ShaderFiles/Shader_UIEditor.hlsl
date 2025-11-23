@@ -23,9 +23,11 @@ float g_fOwnerAlpha;
 float g_fCanvasAlpha;
 float g_fAngle;
 float g_fCoolTime;
+float g_fHp;
 
 float2 g_fOrigin_Size;
 float2 g_fCurrent_Size;
+float2 g_fHpBG;
 
 float4 g_fNine_Slice;
 
@@ -461,7 +463,7 @@ PS_OUT PS_SpellAnim(PS_IN In)
         }
     }
     
-    if (uv.y <= CoolTime) 
+    if (uv.y <= CoolTime)
     {
         color.a = 0.f;
     }
@@ -469,6 +471,79 @@ PS_OUT PS_SpellAnim(PS_IN In)
     color.a *= Alpha;
     
     Out.vColor = color;
+    return Out;
+}
+
+PS_OUT PS_HpBar(PS_IN In)
+{
+    PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+    float4 Color = float4(1.f, 1.f, 1.f, 1.f);
+    float2 uv = In.vTexcoord;
+    float2 CurrentPixelPosition = uv * g_fCurrent_Size;
+    float OriginLeft = g_fNine_Slice.x;
+    float OriginRight = g_fNine_Slice.y;
+    float OriginTop = g_fNine_Slice.z;
+    float OriginBottom = g_fNine_Slice.w;
+    
+    float CurrentLeft = OriginLeft;
+    float CurrentRight = g_fCurrent_Size.x - (g_fOrigin_Size.x - OriginRight);
+    float CurrentTop = OriginTop;
+    float CurrentBottom = g_fCurrent_Size.y - (g_fOrigin_Size.y - OriginBottom);
+    
+    float2 Finaluv = In.vTexcoord;
+
+    if (CurrentPixelPosition.x < CurrentLeft)
+    {
+        Finaluv.x = CurrentPixelPosition.x / g_fOrigin_Size.x;
+    }
+    else if (CurrentPixelPosition.x > CurrentRight)
+    {
+        float dist = CurrentPixelPosition.x - CurrentRight;
+        Finaluv.x = (OriginRight + dist) / g_fOrigin_Size.x;
+    }
+    else
+    {
+        float scale = (CurrentPixelPosition.x - CurrentLeft) / (CurrentRight - CurrentLeft);
+        Finaluv.x = (OriginLeft / g_fOrigin_Size.x) + scale * ((OriginRight - OriginLeft) / g_fOrigin_Size.x);
+    }
+    
+    if (CurrentPixelPosition.y < CurrentTop)
+    {
+        Finaluv.y = CurrentPixelPosition.y / g_fOrigin_Size.y;
+    }
+    else if (CurrentPixelPosition.y > CurrentBottom)
+    {
+        float dist = CurrentPixelPosition.y - CurrentBottom;
+        Finaluv.y = (OriginBottom + dist) / g_fOrigin_Size.y;
+    }
+    else
+    {
+        float scale = (CurrentPixelPosition.y - CurrentTop) / (CurrentBottom - CurrentTop);
+        Finaluv.y = (OriginTop / g_fOrigin_Size.y) + scale * ((OriginBottom - OriginTop) / g_fOrigin_Size.y);
+    }
+    
+    float4 tex1 = g_Texture.Sample(ClampSampler, Finaluv);
+    Color = tex1;
+
+    float2 reversuv = In.vTexcoord;
+    
+    reversuv.x = 1.0f - Finaluv;
+
+    float4 tex2 = g_Texture1.Sample(ClampSampler, Finaluv);
+    
+    if (reversuv.x >= g_fHp)
+    {
+        tex2.rgb = float3(0.f, 0.f, 0.f);
+    }
+    
+    tex2.rgb *= float3(112.f, 241.f, 31.f) / 255.f;
+    
+    if (all(Color.rgb >= float3(70.f / 255.f, 70.f / 255.f, 70.f / 255.f)))
+        Color = tex2;
+        
+    Color.a *= Alpha;
+    Out.vColor = Color;
     return Out;
 }
 
@@ -602,5 +677,14 @@ technique11 PosTexTechnique11
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_SpellAnim();
+    }
+    pass HpBar
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_HpBar();
     }
 }

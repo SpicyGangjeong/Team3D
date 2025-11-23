@@ -4,9 +4,6 @@
 #include "ContainerObject.h"
 
 NS_BEGIN(Engine)
-class CShader;
-class CModel;
-class CFSM;
 
 class ENGINE_DLL CUnit abstract : public CContainerObject
 {

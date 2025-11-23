@@ -83,9 +83,6 @@ vector<D3D11_MAPPED_SUBRESOURCE> CComputeShader::Dispatch(_uint iSRVIndex, _uint
 
 		if (SUCCEEDED(m_pContext->Map(m_pOutputStagingBuffer[i], 0, D3D11_MAP_READ, 0, &StagingSubResource)))
 		{
-
-			CInstance_Model::CS_PARTICLE_VALUE_DESC* pValueDesc = static_cast<CInstance_Model::CS_PARTICLE_VALUE_DESC*>(StagingSubResource.pData);
-
 			StagingSubResources.push_back(StagingSubResource);
 
 			m_pContext->Unmap(m_pOutputStagingBuffer[i], 0);
@@ -117,6 +114,37 @@ void CComputeShader::Bind_OutPut_SRV(_uint iIndex, _uint iBufferIndex)
 		1,  // 버퍼 개수
 		&m_pOutputSRV[iBufferIndex]); // 버퍼 시작 주
 
+}
+
+ID3D11UnorderedAccessView* CComputeShader::GetOutputUAV(_uint iIndex) const
+{
+	return m_pOutputUAV[iIndex];
+}
+
+vector<D3D11_MAPPED_SUBRESOURCE> CComputeShader::ReadBackOutputs()
+{
+	std::vector<D3D11_MAPPED_SUBRESOURCE> StagingSubResources;
+	StagingSubResources.reserve(m_iNumOutputBuffer);
+
+	for (_uint i = 0; i < m_iNumOutputBuffer; ++i)
+	{
+		if (m_pOutputStagingBuffer[i] == nullptr || m_pOutputBuffer[i] == nullptr)
+			continue;
+
+		m_pContext->CopyResource(m_pOutputStagingBuffer[i], m_pOutputBuffer[i]);
+
+		D3D11_MAPPED_SUBRESOURCE mapped = {};
+		if (SUCCEEDED(m_pContext->Map(m_pOutputStagingBuffer[i], 0,
+			D3D11_MAP_READ, 0, &mapped)))
+		{
+			StagingSubResources.push_back(mapped);
+
+			m_pContext->Unmap(m_pOutputStagingBuffer[i], 0);
+		}
+	}
+
+	return StagingSubResources;
+	
 }
 
 void CComputeShader::Reset()

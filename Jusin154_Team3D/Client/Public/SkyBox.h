@@ -3,11 +3,6 @@
 #include "Client_Define.h"
 #include "GameObject.h"
 
-NS_BEGIN(Engine)
-class CModel;
-class CShader;
-NS_END
-
 NS_BEGIN(Client)
 
 class CSkyBox final : public CGameObject
