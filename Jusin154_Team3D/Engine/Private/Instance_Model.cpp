@@ -232,7 +232,7 @@ HRESULT CInstance_Model::Create_CS()
 	};
 
 	m_pComputeShader = CComputeShader::Create(m_pDevice, m_pContext,
-		L"../Bin/Resources/ShaderFiles/Shader_Particle_Compute.hlsl", "CS_MAIN", m_iNumInstance, 2, 2, CS_OutputStrides, CS_InputStrides);
+		L"../Bin/Resources/ShaderFiles/Shader_Particle_Compute.hlsl", "CS_MAIN", m_iNumInstance, 2, 2, CS_InputStrides, CS_OutputStrides);
 
 	if (m_pComputeShader == nullptr)
 		return E_FAIL;
@@ -277,8 +277,12 @@ void CInstance_Model::Drop(_float fTimeDelta)
 		pDesc->fTimeDelta = fTimeDelta;
 		pDesc->isLoop = m_InstanceDesc.isLoop;
 		pDesc->isDrop = m_InstanceDesc.isDrop;
+		pDesc->isTurn = m_InstanceDesc.isTurn;
+		pDesc->isAxisTurn = m_InstanceDesc.isAxisTurn;
 		pDesc->isMoveForward = m_InstanceDesc.isMoveForward;
 		pDesc->isSinWave = m_InstanceDesc.isSinWave;
+		pDesc->isPivotMove = m_InstanceDesc.isPivotMove;
+		pDesc->isSizeLerp = m_InstanceDesc.isSizeLerp;
 
 		m_pContext->Unmap(m_pConstantBuffer, 0);
 	}
@@ -314,6 +318,7 @@ void CInstance_Model::Drop(_float fTimeDelta)
 		CS_PARTICLE_VALUE_DESC* pValueDesc = static_cast<CS_PARTICLE_VALUE_DESC*>(OutSubResources[1].pData);
 
 		memcpy(ParticleValueResource.pData, OutSubResources[1].pData, sizeof(CS_PARTICLE_VALUE_DESC) * m_InstanceDesc.iNumInstance); // 아웃풋 버퍼에 들어온 값들을 전부 복사한다.
+
 
 		m_pContext->Unmap(m_pParticleValueBuffer, 0);
 	}
@@ -399,6 +404,38 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 
 				pParticleValues[i].vSinAmount = vSinAmount;
 
+				_float3			vDeltaAngle = _float3(
+					m_pGameInstance->Random_Float(m_InstanceDesc.vDeltaAngleMin.x, m_InstanceDesc.vDeltaAngleMax.x),
+					m_pGameInstance->Random_Float(m_InstanceDesc.vDeltaAngleMin.y, m_InstanceDesc.vDeltaAngleMax.y),
+					m_pGameInstance->Random_Float(m_InstanceDesc.vDeltaAngleMin.z, m_InstanceDesc.vDeltaAngleMax.z)
+				);
+
+				pParticleValues[i].vDeltaAngle = vDeltaAngle;
+
+				_float3			vDeltaAxisAngle = _float3(
+					m_pGameInstance->Random_Float(m_InstanceDesc.vDeltaAxisAngleMin.x, m_InstanceDesc.vDeltaAxisAngleMax.x),
+					m_pGameInstance->Random_Float(m_InstanceDesc.vDeltaAxisAngleMin.y, m_InstanceDesc.vDeltaAxisAngleMax.y),
+					m_pGameInstance->Random_Float(m_InstanceDesc.vDeltaAxisAngleMin.z, m_InstanceDesc.vDeltaAxisAngleMax.z)
+				);
+
+				pParticleValues[i].vDeltaAxisAngle = vDeltaAxisAngle;
+
+				_float3			vPivot = _float3(
+					m_pGameInstance->Random_Float(m_InstanceDesc.vPivotMin.x, m_InstanceDesc.vPivotMax.x),
+					m_pGameInstance->Random_Float(m_InstanceDesc.vPivotMin.y, m_InstanceDesc.vPivotMax.y),
+					m_pGameInstance->Random_Float(m_InstanceDesc.vPivotMin.z, m_InstanceDesc.vPivotMax.z)
+				);
+
+				pParticleValues[i].vPivot = vPivot;
+
+				_float3			vSizeLerp = _float3(
+					m_InstanceDesc.vDeltaSize.x,
+					m_InstanceDesc.vDeltaSize.y,
+					m_InstanceDesc.vDeltaSize.z
+				);
+
+				pParticleValues[i].vDeltaSize = vSizeLerp;
+
 
 				//라이프 타임 설정
 				pVertices[i].vLifeTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vLifeTime.x, m_InstanceDesc.vLifeTime.y));
@@ -412,6 +449,8 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 				pParticleValues[i].fRotaionSpeed = m_pGameInstance->Random_Float(m_InstanceDesc.vRotationSpeed.x, m_InstanceDesc.vRotationSpeed.y);
 				pParticleValues[i].vAniIndex = _float2(0.f, m_InstanceDesc.vAniIndex.y);
 				pParticleValues[i].fGravity = m_pGameInstance->Random_Float(m_InstanceDesc.vGravity.x, m_InstanceDesc.vGravity.y);
+				pParticleValues[i].fDrag = m_pGameInstance->Random_Float(m_InstanceDesc.vDrag.x, m_InstanceDesc.vDrag.y);
+				pParticleValues[i].fSizeDrag = m_pGameInstance->Random_Float(m_InstanceDesc.vSizeDrag.x, m_InstanceDesc.vSizeDrag.y);
 
 
 				memcpy(&pParticleValues[i].vOriginRight, SRMatrix.m[0], sizeof(_float4));
@@ -520,6 +559,29 @@ void CInstance_Model::Describe_Entity()
 			Instane_Buffer_ReStruct();
 		}
 
+		if (GUI::Checkbox("Turn", &m_InstanceDesc.isTurn))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
+		if (GUI::Checkbox("AxisTurn", &m_InstanceDesc.isAxisTurn))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
+		if (GUI::Checkbox("PivotMove", &m_InstanceDesc.isPivotMove))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
+		if (GUI::Checkbox("SizeLerp", &m_InstanceDesc.isSizeLerp))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
+		
+
+
 		if (ImGui::DragFloat3("SizeMin", reinterpret_cast<_float*>(&m_InstanceDesc.vSizeMin)))
 		{
 			Instane_Buffer_ReStruct();
@@ -607,6 +669,53 @@ void CInstance_Model::Describe_Entity()
 		}
 
 		if (ImGui::DragFloat3("SinWaveMax", reinterpret_cast<_float*>(&m_InstanceDesc.vSinMaxAmount)))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
+		if (ImGui::DragFloat3("DeltaAngleMin", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaAngleMin)))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
+		if (ImGui::DragFloat3("DeltaAngleMax", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaAngleMax)))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
+
+		if (ImGui::DragFloat3("DeltaAxisAngleMin", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaAxisAngleMin)))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
+		if (ImGui::DragFloat3("DeltaAxisAngleMax", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaAxisAngleMax)))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
+
+		if (ImGui::DragFloat3("PivotMin", reinterpret_cast<_float*>(&m_InstanceDesc.vPivotMin)))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
+		if (ImGui::DragFloat3("PivotMax", reinterpret_cast<_float*>(&m_InstanceDesc.vPivotMax)))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
+		if (ImGui::DragFloat2("Drag", reinterpret_cast<_float*>(&m_InstanceDesc.vDrag)))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
+		if (ImGui::DragFloat3("LerpSizeAmount", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaSize)))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
+		if (ImGui::DragFloat2("Size Drag", reinterpret_cast<_float*>(&m_InstanceDesc.vSizeDrag)))
 		{
 			Instane_Buffer_ReStruct();
 		}

@@ -22,7 +22,7 @@ HRESULT CSpell_Slot::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 0.f;
-	Desc.fY = 98.f;
+	Desc.fY = 0.f;
 	Desc.fSizeX = 100.f;
 	Desc.fSizeY = 100.f;
 
@@ -39,14 +39,15 @@ HRESULT CSpell_Slot::Initialize(void* pArg)
 
 	m_fAlpha = 1.f;
 	m_fTimeMult = 3.f;
-	m_fAngle = XMConvertToRadians(-135);
+	m_fAngle = XMConvertToRadians(45);
 	m_fAlphaTime = 1.f;
 	m_fOffSetX = 101.f;
 	m_fOffSetY = 101.f;
 	m_iCols = 4;
 	m_pVIBufferCom->Set_Cloned(true);
-	m_pVIBufferCom->Set_Pos(m_fX, m_fY, m_fOffSetX, m_fOffSetY, m_iCols);
+	m_pVIBufferCom->Set_Pos(0.f, 0.f, m_fOffSetX, m_fOffSetY, m_iCols);
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
+	m_pVIBufferCom->Set_ImageUV();
 	return S_OK;
 }
 
@@ -101,10 +102,7 @@ void CSpell_Slot::Late_Update(_float fTimeDelta)
 	}
 	if (m_bVisible)
 	{
-		if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius()))
-		{
 			m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
-		}
 	}
 	__super::Late_Update(fTimeDelta);
 }

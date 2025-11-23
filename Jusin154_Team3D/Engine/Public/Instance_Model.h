@@ -32,9 +32,27 @@ public:
 
 		_bool		isMoveForward = {};
 		_float2		vGravity = { 0.f , 9.8f };
+
 		_bool		isSinWave = {};
 		_float3     vSinMinAmount = { 0.f , 0.f , 0.f};
 		_float3     vSinMaxAmount = { 0.f , 0.f , 0.f };
+
+		_bool		isTurn;
+		_float3     vDeltaAngleMin = {};
+		_float3     vDeltaAngleMax = {};
+
+		_bool       isAxisTurn;
+		_float3     vDeltaAxisAngleMin = {};
+		_float3     vDeltaAxisAngleMax = {};
+
+		_bool       isPivotMove = {};
+		_float2		vDrag = {};
+		_float3     vPivotMin = {};
+		_float3     vPivotMax = {};
+
+		_bool       isSizeLerp = {};
+		_float3     vDeltaSize = {};
+		_float2     vSizeDrag = {};
 
 	}INSTANCE_DESC;
 
@@ -64,9 +82,24 @@ public:
 
 		_bool		isMoveForward = {};
 		_float2		vGravity = { 0.f , 9.8f };
+
 		_bool		isSinWave = {};
 		_float3     vSinMinAmount = { 0.f , 0.f , 0.f };
 		_float3     vSinMaxAmount = { 0.f , 0.f , 0.f };
+
+		_bool		isTurn;
+		_float3     vDeltaAngleMin = {};
+		_float3     vDeltaAngleMax = {};
+
+		_bool       isAxisTurn;
+		_float3     vDeltaAxisAngleMin = {};
+		_float3     vDeltaAxisAngleMax = {};
+
+		_bool       isPivotMove = {};
+		_float2		vDrag = {};
+		_float3     vPivotMin = {};
+		_float3     vPivotMax = {};
+
 	}PRE_INSTANCE_DESC;
 
 	typedef struct tagCSParticleDesc
@@ -78,10 +111,16 @@ public:
 		_int     isMoveForward = {};
 		_int     isSinWave = {};
 
+		_int	 isTurn = {};
+		_int     isAxisTurn = {};
+		_int     isPivotMove = {};
+		_int     isSizeLerp = {};
+
 		_float   fTimeDelta = {};
 		_float	 fPadding2 = {};
 		_float   fPadding3 = {};
 		_float   fPadding4 = {};
+
 
 	}CS_PARTICLE_DESC;
 
@@ -104,7 +143,16 @@ public:
 		_float2	 vAniIndex = {};
 		_float   fGravity = {};
 
-		_float3  vSinAmount = {};
+		_float3   vSinAmount = {};
+		_float3   vDeltaAngle = {};
+		_float3	  vDeltaAxisAngle = {};
+
+		_float    fDrag;
+		_float3   vPivot = {};
+
+		_float    fSizeDrag = {};
+		_float3   vDeltaSize = {};
+
 
 	}CS_PARTICLE_VALUE_DESC;
 

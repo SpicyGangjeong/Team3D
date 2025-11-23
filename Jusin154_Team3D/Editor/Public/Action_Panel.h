@@ -38,6 +38,8 @@ private:
 	CGameObject* m_pSpell_Slot = { nullptr };
 	CGameObject* m_pSpell_Image	= { nullptr };
 	CGameObject* m_pSpell_Overlay = { nullptr };
+	CGameObject* m_pSlot_Number = { nullptr };
+	CGameObject* m_pHpBarBG= { nullptr };
 
 public:
 	static CAction_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

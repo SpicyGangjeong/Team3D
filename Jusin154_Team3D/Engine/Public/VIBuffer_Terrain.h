@@ -27,6 +27,11 @@ public:
 	void	FitY(_fmatrix WorldMatrix, _float fY);
 	void    Change_HeigthRatio(_float fRatio);
 
+#ifdef _DEBUG
+	void Set_CullingRadius(_float fRaduis);
+#endif // _DEBUG
+
+
 private:
 	_bool				m_bChange = {};
 	_uint				m_iNumVerticesX = {};

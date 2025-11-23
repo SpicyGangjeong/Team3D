@@ -3,18 +3,18 @@
 #include "GameInstance.h"
 
 CSlot_Number::CSlot_Number(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-    :CElementObject(pDevice, pContext)
+	:CElementObject(pDevice, pContext)
 {
 }
 
 CSlot_Number::CSlot_Number(const CSlot_Number& rhs)
-    :CElementObject(rhs)
+	:CElementObject(rhs)
 {
 }
 
 HRESULT CSlot_Number::Initialize_Prototype()
 {
-    return S_OK;
+	return S_OK;
 }
 
 HRESULT CSlot_Number::Initialize(void* pArg)
@@ -22,9 +22,9 @@ HRESULT CSlot_Number::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 0.f;
-	Desc.fY = 98.f;
-	Desc.fSizeX = 150.f;
-	Desc.fSizeY = 150.f;
+	Desc.fY = 0.f;
+	Desc.fSizeX = 35.f;
+	Desc.fSizeY = 35.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -36,17 +36,17 @@ HRESULT CSlot_Number::Initialize(void* pArg)
 	{
 		return E_FAIL;
 	}
-
 	m_fAlpha = 1.f;
 	m_fTimeMult = 3.f;
-	m_fAngle = XMConvertToRadians(-135);
 	m_fAlphaTime = 1.f;
 	m_fOffSetX = 101.f;
 	m_fOffSetY = 101.f;
 	m_iCols = 4;
+	UV();
 	m_pVIBufferCom->Set_Cloned(true);
-	m_pVIBufferCom->Set_Pos(m_fX, m_fY, m_fOffSetX, m_fOffSetY, m_iCols);
+	m_pVIBufferCom->Set_Pos(-30.f, 30.f, m_fOffSetX, m_fOffSetY, m_iCols);
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
+	m_pVIBufferCom->Set_ImageUV(pUVDesc);
 	return S_OK;
 }
 
@@ -101,10 +101,7 @@ void CSlot_Number::Late_Update(_float fTimeDelta)
 	}
 	if (m_bVisible)
 	{
-		if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius()))
-		{
 			m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
-		}
 	}
 	__super::Late_Update(fTimeDelta);
 }
@@ -115,7 +112,7 @@ HRESULT CSlot_Number::Render()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::DEFAULT))))
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::ALPHABLEND))))
 	{
 		return E_FAIL;
 	}
@@ -177,10 +174,6 @@ HRESULT CSlot_Number::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fAngle", &m_fAngle, sizeof(_float))))
-	{
-		return E_FAIL;
-	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
 	{
 		return E_FAIL;
@@ -199,11 +192,11 @@ HRESULT CSlot_Number::Bind_ShaderResources()
 
 HRESULT CSlot_Number::Ready_Components(void* pArg)
 {
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_UI_Instance"), (CComponent**)&m_pVIBufferCom, nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Slot_Number_UI_Instance"), (CComponent**)&m_pVIBufferCom, nullptr)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_ActionItemGoldleaf_4K"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_Atlas_Number"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -213,6 +206,55 @@ HRESULT CSlot_Number::Ready_Components(void* pArg)
 	}
 
 	return S_OK;
+}
+
+void CSlot_Number::UV()
+{
+	pUVDesc[0].fUVStart = Compute_UVX(1);
+	pUVDesc[0].fUVEnd = Compute_UVY(1);
+	pUVDesc[1].fUVStart = Compute_UVX(2);
+	pUVDesc[1].fUVEnd = Compute_UVY(2);
+	pUVDesc[2].fUVStart = Compute_UVX(3);
+	pUVDesc[2].fUVEnd = Compute_UVY(3);
+	pUVDesc[3].fUVStart = Compute_UVX(4);
+	pUVDesc[3].fUVEnd = Compute_UVY(4);
+}
+
+_float2 CSlot_Number::Compute_UVX(_uint Number)
+{
+	m_fIamge_Size = { 320.f, 128.f };
+
+	_uint iXCount = 5;
+	_uint iYCount = 2;
+
+	_float frameWidth = 64.f;
+	_float frameHeight = 64.f;
+
+	_uint frameX = Number % iXCount;
+	_uint frameY = Number / iXCount;
+
+	_float2 UVStart;
+	UVStart.x = frameX * frameWidth / m_fIamge_Size.x;
+	UVStart.y = frameY * frameHeight / m_fIamge_Size.y;
+
+	return UVStart;
+}
+
+_float2 CSlot_Number::Compute_UVY(_uint Number)
+{
+	m_fIamge_Size = { 320.f, 128.f };
+
+	_float frameWidth = 64.f;
+	_float frameHeight = 64.f;
+
+	// Start 구함
+	_float2 UVStart = Compute_UVX(Number);
+
+	_float2 UVEnd;
+	UVEnd.x = UVStart.x + (frameWidth / m_fIamge_Size.x);
+	UVEnd.y = UVStart.y + (frameHeight / m_fIamge_Size.y);
+
+	return UVEnd;
 }
 
 CSlot_Number* CSlot_Number::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

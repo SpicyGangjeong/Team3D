@@ -3608,4 +3608,158 @@
             <Rotation x="0" y="0" z="0"/>
         </Collision>
     </Container>
+    <Container Name="Street_Main">
+        <Position x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_Hogshead</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_A</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_B</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_A_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_B</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_B_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_C</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_C_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stairwalls_3Broomsticks</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_LowerHiStreet_Zonkos</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_AA_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_AA_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_BB_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_BB_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_CC_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_CC_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_DD_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_DD_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_EE_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_EE_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_FF_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_FF_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_GG_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_GG_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_HH_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_HH_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_A_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_A_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_B_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_B_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_C_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_C_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_D_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_D_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_Streets_SideStreet_E_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_Streets_SideStreet_E_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_Streets_SideStreet_F_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_Streets_SideStreet_F_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+    </Container>
 </Land>
