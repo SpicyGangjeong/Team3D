@@ -164,6 +164,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Action_Panel.h" />
+    <ClInclude Include="..\public\AlphaMap.h" />
     <ClInclude Include="..\Public\Body.h" />
     <ClInclude Include="..\public\Active_Icon.h" />
     <ClInclude Include="..\Public\Broom.h" />
@@ -289,6 +290,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Action_Panel.cpp" />
+    <ClCompile Include="..\private\AlphaMap.cpp" />
     <ClCompile Include="..\Private\Body.cpp" />
     <ClCompile Include="..\private\Active_Icon.cpp" />
     <ClCompile Include="..\Private\Broom.cpp" />

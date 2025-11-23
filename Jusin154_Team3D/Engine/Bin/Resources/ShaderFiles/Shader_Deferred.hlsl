@@ -153,7 +153,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
         return Out;
     }
     
-    float fDiffuseAOStrength = lerp(1.3f, 2.f, fOcclusion);
+    float fDiffuseAOStrength = lerp(0.3f, 5.f, fOcclusion);
     
     PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
     

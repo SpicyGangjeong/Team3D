@@ -533,6 +533,9 @@ HRESULT CMaterial::Initialize(const _char* pModelFilePath, const SaveMaterial& _
 			ID3D11ShaderResourceView* pSRV = nullptr;
 			HRESULT hr = S_OK;
 
+			if (!m_SRVs[type].empty())
+				continue;
+
 			const char* ext = strrchr(szFullPath, '.');
 			if (ext)
 			{
@@ -547,7 +550,6 @@ HRESULT CMaterial::Initialize(const _char* pModelFilePath, const SaveMaterial& _
 			if (FAILED(hr)){
 				return E_FAIL;
 			}
-
 			m_SRVs[type].push_back(pSRV);
 		}
 	}
