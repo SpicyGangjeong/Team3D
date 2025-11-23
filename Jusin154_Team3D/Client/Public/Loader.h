@@ -36,7 +36,8 @@ private:
 	HRESULT Loading_For_GamePlay();
 	HRESULT Loading_For_Field();
 	HRESULT Loading_For_Restart();
-
+private:
+	HRESULT Asset_FileLoad(const _char* pDirectoryPath, const _tchar* pPreName, function<HRESULT(_wstring, const _char*)> AddPrototypeEvent);
 public:
 	static CLoader* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevelID);
 	virtual void Free() override;
