@@ -1,7 +1,5 @@
 
-#include "Engine_Shader_Defines.hlsli"
-
-
+#include "Engine_Shader_Defines.hlsli" 
 
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
@@ -16,11 +14,11 @@ float3 g_vRimColor;
 float4 g_TestColor;
 vector g_vCamPosition;
 
-Texture2D g_DiffuseTexture : register(t0);
-Texture2D g_NormalTexture : register(t1);
-Texture2D g_DAOTexture : register(t2);
-Texture2D g_THVTexture : register(t3);
-Texture2D g_SurfaceParamsTexture : register(t4);
+Texture2D g_DiffuseTexture;
+Texture2D g_NormalTexture;
+Texture2D g_DAOTexture;
+Texture2D g_THVTexture;
+Texture2D g_SurfaceParamsTexture;
 
 
 float3 g_RootColor;
@@ -57,23 +55,26 @@ struct VS_OUT
     float4 vWorldPos : TEXCOORD1;
     float4 vProjPos : TEXCOORD2;
 };
+
 VS_OUT VS_MAIN(VS_IN In)
 {
     VS_OUT Out;
     
     float fWeightW = 1.f - (In.vBlendWeight.x + In.vBlendWeight.y + In.vBlendWeight.z);
+    
     matrix BoneMatrix =
-    mul(g_BoneMatrices[In.vBlendIndex.x], In.vBlendWeight.x) +
-    mul(g_BoneMatrices[In.vBlendIndex.y], In.vBlendWeight.y) +
-    mul(g_BoneMatrices[In.vBlendIndex.z], In.vBlendWeight.z) +
-    mul(g_BoneMatrices[In.vBlendIndex.w], fWeightW);
+        mul(g_BoneMatrices[In.vBlendIndex.x], In.vBlendWeight.x) +
+        mul(g_BoneMatrices[In.vBlendIndex.y], In.vBlendWeight.y) +
+        mul(g_BoneMatrices[In.vBlendIndex.z], In.vBlendWeight.z) +
+        mul(g_BoneMatrices[In.vBlendIndex.w], fWeightW);
+    
     vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
     vector vNormal = mul(vector(In.vNormal, 0.f), BoneMatrix);
     vector vBinormal = mul(vector(In.vBinormal, 0.f), BoneMatrix);
     vector vTangent = mul(vector(In.vTangent, 0.f), BoneMatrix);
     
+
     matrix matWV, matWVP;
-    
     matWV = mul(g_WorldMatrix, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
     
@@ -82,7 +83,6 @@ VS_OUT VS_MAIN(VS_IN In)
     Out.vBinormal = normalize(mul(vBinormal, g_WorldMatrix)).xyz;
     Out.vTangent = normalize(mul(vTangent, g_WorldMatrix)).xyz;
     Out.vTexcoord = In.vTexcoord;
-    //In.vTexcoord;
     Out.vWorldPos = mul(vPosition, g_WorldMatrix);
     Out.vProjPos = Out.vPosition;
     return Out;
@@ -106,10 +106,10 @@ VS_OUT_CAPTUREDMODEL VS_CAPTUREDMODEL(VS_IN In)
     
     float fWeightW = 1.f - (In.vBlendWeight.x + In.vBlendWeight.y + In.vBlendWeight.z);
     
-    matrix BoneMatrix = 
-        mul(g_BoneMatrices[In.vBlendIndex.x], In.vBlendWeight.x ) +
-        mul(g_BoneMatrices[In.vBlendIndex.y], In.vBlendWeight.y ) +
-        mul(g_BoneMatrices[In.vBlendIndex.z], In.vBlendWeight.z ) +
+    matrix BoneMatrix =
+        mul(g_BoneMatrices[In.vBlendIndex.x], In.vBlendWeight.x) +
+        mul(g_BoneMatrices[In.vBlendIndex.y], In.vBlendWeight.y) +
+        mul(g_BoneMatrices[In.vBlendIndex.z], In.vBlendWeight.z) +
         mul(g_BoneMatrices[In.vBlendIndex.w], fWeightW);
     
     vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
@@ -201,10 +201,13 @@ struct PS_OUT
 PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out;
-
+    
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     vector vSurface = g_SurfaceParamsTexture.Sample(DefaultSampler, In.vTexcoord);
-    if (vMtrlDiffuse.a < 0.2f) { discard; }
+    if (vMtrlDiffuse.a < 0.2f)
+    {
+        discard;
+    }
     
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);

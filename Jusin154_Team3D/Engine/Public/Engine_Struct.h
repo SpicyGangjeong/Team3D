@@ -362,4 +362,42 @@ typedef struct tagOnCollsionInfo
 
 }ON_COLLISION_INFO;
 
+typedef struct tagKeyFrameDesc
+{
+	_float3 vScale;
+	_float4 vRotation;
+	_float3 vTranslation;
+	_float fTrackPosition;
+
+}KEYFRAME_DESC;
+
+typedef struct tagChannelDesc
+{
+	_uint StartIndex; 
+	_uint KeyCount;
+	_uint BoneIndex;
+	//_uint Padding;
+}CHANNEL_DESC;
+
+
+typedef struct tagParentDesc
+{
+	_int ParentIndex;
+}PARENT_DESC;
+
+typedef struct tagLocalPos
+{
+	_float3 Scale;
+	_float  pad0;
+	_float4 Rotation;
+	_float3 Translation;
+	_float  pad1;
+}LOCALPOS_DESC;
+
+typedef struct tagBoneDesc
+{
+	_float4x4 Combined;
+}BONE_DESC;
+
+
 NS_END

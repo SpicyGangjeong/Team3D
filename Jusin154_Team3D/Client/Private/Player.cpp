@@ -71,13 +71,14 @@ HRESULT CPlayer::Initialize(void* pArg)
 void CPlayer::Priority_Update(_float fTimeDelta)
 {
 	m_pTransformCom->RewindMomentum();
-	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_Position());
+
 	__super::Priority_Update(fTimeDelta);
 }
 
 void CPlayer::Update(_float fTimeDelta)
 {
-	//m_pModelCom->ComputeSkinning();
+	m_pModelCom->ComputeAnimation();
+
 
 	IsSprint();
 	IsWalk();
@@ -87,6 +88,8 @@ void CPlayer::Update(_float fTimeDelta)
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
+
+	
 	__super::Update(fTimeDelta);
 	Describe_Entity();
 	m_pCharacter_Controller->Move(fTimeDelta);
@@ -94,6 +97,9 @@ void CPlayer::Update(_float fTimeDelta)
 
 void CPlayer::Late_Update(_float fTimeDelta)
 {
+
+	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_Position());
+
 	m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
 
 	__super::Late_Update(fTimeDelta);
@@ -119,9 +125,6 @@ HRESULT CPlayer::Render()
 		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
 			return E_FAIL;
 		}
-
-		//if (FAILED(m_pModelCom->Bind_CS_Output(5, i)))
-		//	return E_FAIL;
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;

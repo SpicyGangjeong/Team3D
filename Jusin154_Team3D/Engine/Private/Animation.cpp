@@ -23,6 +23,7 @@ CAnimation::CAnimation(const CAnimation& rhs)
 	, m_fTickPerSecond{ rhs.m_fTickPerSecond }
 	, m_pSaveAnim{ rhs.m_pSaveAnim }
 	, m_fAnimSpeed{rhs.m_fAnimSpeed }
+	,m_iBoneCount{rhs.m_iBoneCount}
 {
 	memcpy_s(m_TickPerSeconds, sizeof(_float) * 2, rhs.m_TickPerSeconds, sizeof(_float) * 2);
 
@@ -32,7 +33,7 @@ CAnimation::CAnimation(const CAnimation& rhs)
 		SAFE_ADDREF(pChannel);
 	}
 }
-_bool CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bones, _bool bIsLoop, _float fTimeDelta,CTransform*pTransform)
+_bool CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bones, const LOCALPOS_DESC* pLocalPosArray, _bool bIsLoop, _float fTimeDelta,CTransform*pTransform)
 {
 	//m_fCurrentTrackPosition += m_TickPerSeconds[m_bPause] * fTimeDelta;
 	m_fCurrentTrackPosition += m_fTickPerSecond * fTimeDelta * m_fAnimSpeed;
@@ -52,7 +53,7 @@ _bool CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bone
 	if (m_vBoneTransformationMatrix.size() > 0)
 		m_vBoneTransformationMatrix.clear();
 	for (auto& pChannel : m_Channels) {
-		pChannel->Update_TransformationMatirx(Bones, m_fCurrentTrackPosition, &m_CurrentKeyFrameIndices[iIndex++],pTransform);
+		pChannel->Update_TransformationMatirx(Bones, pLocalPosArray, m_fCurrentTrackPosition, &m_CurrentKeyFrameIndices[iIndex++],pTransform);
 		m_vBoneTransformationMatrix.push_back(pChannel->Get_BoneTransformationMatrix());
 	}
 
@@ -184,8 +185,35 @@ void CAnimation::InterpAnim(CAnimation* pPreAnim, vector<CBone*>& Bones, float f
 	}
 }
 
+void CAnimation::CreateGPUData(ID3D11Device* pDevice)
+{
+	vector<CHANNEL_DESC> channels;
+	vector<KEYFRAME_DESC> keyframes;
+
+	channels.resize(m_iBoneCount);
+
+	for (auto& pChannel : m_Channels)
+	{
+		CHANNEL_DESC desc = pChannel->Fill_GPU_ChannelDesc();
+		desc.StartIndex = (_uint)keyframes.size();
+
+		pChannel->Fill_GPU_Keyframes(keyframes);
+
+		channels[desc.BoneIndex] = desc;
+	}
+
+	m_iChannelCount = (_uint)channels.size();
+	m_iKeyframeCount = (_uint)keyframes.size();
+
+	CreateKeyFrameBuffer(pDevice, keyframes);
+	CreateChannelBuffer(pDevice, channels);
+
+}
+
 
 #ifdef EDITOR_PROJECT
+
+
 
 HRESULT CAnimation::Initialize(const vector<CBone*>& Bones, const aiAnimation* pAIAnimation)
 {
@@ -216,6 +244,8 @@ HRESULT CAnimation::Initialize(const vector<CBone*>& Bones, const aiAnimation* p
 	if (FAILED(Combined_Initialize())) {
 		return E_FAIL;
 	}
+
+
 	return S_OK;
 }
 HRESULT CAnimation::SaveAsBinary(HANDLE hFile, DWORD& dwByte)
@@ -274,7 +304,7 @@ HRESULT CAnimation::Initialize(HANDLE hFile, DWORD& dwByte)
 	return S_OK;
 }
 
-HRESULT CAnimation::Initialize(const CModel* pModel, SaveAnimation* pSaveAnimation)
+HRESULT CAnimation::Initialize(const vector<CBone*>& Bones, const CModel* pModel, SaveAnimation* pSaveAnimation)
 {
 	m_pSaveAnim = pSaveAnimation;
 
@@ -285,6 +315,8 @@ HRESULT CAnimation::Initialize(const CModel* pModel, SaveAnimation* pSaveAnimati
 	m_iNumChannels = pSaveAnimation->ChannelCount;
 
 	m_CurrentKeyFrameIndices.resize(m_iNumChannels);
+
+	m_iBoneCount = (_uint)Bones.size();
 
 	for (size_t i = 0; i < m_iNumChannels; i++)
 	{
@@ -313,6 +345,64 @@ _uint CAnimation::Get_BoneIndex(const char* pChannelName)
 	return _uint();
 }
 
+HRESULT CAnimation::CreateKeyFrameBuffer(ID3D11Device* pDevice,vector<KEYFRAME_DESC> keyframe)
+{
+	D3D11_BUFFER_DESC desc{};
+	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.ByteWidth = (_int)sizeof(KEYFRAME_DESC) * m_iKeyframeCount;
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	desc.CPUAccessFlags = 0;
+	desc.StructureByteStride = (_int)sizeof(KEYFRAME_DESC);
+	desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+
+	D3D11_SUBRESOURCE_DATA init{};
+	init.pSysMem = keyframe.data();
+
+	pDevice->CreateBuffer(&desc, &init, &m_pKeyFrameBuffer);
+
+
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFEREX;
+	srvDesc.Format = DXGI_FORMAT_UNKNOWN;
+	srvDesc.Buffer.FirstElement = 0;
+	srvDesc.Buffer.NumElements = m_iKeyframeCount;
+
+	if (FAILED(pDevice->CreateShaderResourceView(m_pKeyFrameBuffer, &srvDesc, &m_pKeyFrameSrv)))
+		return E_FAIL;
+
+
+	return S_OK;
+}
+
+HRESULT CAnimation::CreateChannelBuffer(ID3D11Device* pDevice, vector<CHANNEL_DESC> channel)
+{
+	D3D11_BUFFER_DESC desc{};
+	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.ByteWidth = (_int)sizeof(CHANNEL_DESC) * m_iChannelCount;
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	desc.CPUAccessFlags = 0;
+	desc.StructureByteStride = (_int)sizeof(CHANNEL_DESC);
+	desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+
+	D3D11_SUBRESOURCE_DATA init{};
+	init.pSysMem = channel.data();
+
+	pDevice->CreateBuffer(&desc, &init, &m_pChannelBuffer);
+
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFEREX;
+	srvDesc.Format = DXGI_FORMAT_UNKNOWN;
+	srvDesc.Buffer.FirstElement = 0;
+	srvDesc.Buffer.NumElements = m_iChannelCount;
+
+	if (FAILED(pDevice->CreateShaderResourceView(m_pChannelBuffer, &srvDesc, &m_pChannelSrv)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 CAnimation* CAnimation::Create(HANDLE hFile, DWORD& dwByte)
 {
 	CAnimation* pInstance = new CAnimation();
@@ -326,11 +416,11 @@ CAnimation* CAnimation::Create(HANDLE hFile, DWORD& dwByte)
 	return pInstance;
 }
 
-CAnimation* CAnimation::Create(const CModel* pModel, SaveAnimation* pSaveAnimation)
+CAnimation* CAnimation::Create(const vector<CBone*>& Bones, const CModel* pModel, SaveAnimation* pSaveAnimation)
 {
 	CAnimation* pInstance = new CAnimation();
 
-	if (FAILED(pInstance->Initialize(pModel, pSaveAnimation)))
+	if (FAILED(pInstance->Initialize(Bones,pModel, pSaveAnimation)))
 	{
 		MSG_BOX("Failed to Created : CAnimation");
 		SAFE_RELEASE(pInstance);
@@ -354,6 +444,18 @@ void CAnimation::Free()
 	m_Channels.clear();
 
 	m_CurrentKeyFrameIndices.clear();
+
+	m_KeyFrameDesc.clear();
+	m_ChannelDesc.clear();
+
+	if (m_pKeyFrameSrv&& m_pChannelSrv)
+	{
+		SAFE_RELEASE(m_pKeyFrameBuffer);
+		SAFE_RELEASE(m_pChannelBuffer);
+		SAFE_RELEASE(m_pKeyFrameSrv);
+		SAFE_RELEASE(m_pChannelSrv);
+	}
+
 }
 ;
 void CAnimation::Describe_Entity()

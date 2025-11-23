@@ -1,4 +1,4 @@
-#include "pch.h"
+Ôªø#include "pch.h"
 #include "LerpAnim.h"
 #include "Channel.h"
 #include "Bone.h"
@@ -17,13 +17,13 @@ _bool CLerpAnim::Update_TransformationMatrices(const vector<CBone*>& Bones, _flo
 		return false;
 	}
 
-	_uint iIndex = {};
+	/*_uint iIndex = {};
 	for (auto& pChannel : m_Channels) {
 		if (true == m_Movable[iIndex]) {
 			pChannel->Update_TransformationMatirx(Bones, m_fCurrentTrackPosition, &m_CurrentKeyFrameIndices[iIndex]);
 		}
 		iIndex++;
-	}
+	}*/
 	return true;
 }
 
@@ -50,9 +50,9 @@ HRESULT CLerpAnim::Initialize(_uint iNumBone, _float fTickPerSecond, const vecto
 }
 void CLerpAnim::Begin(const vector<class CBone*>& Bones, vector<LERPDESC>& StartFrames, vector<LERPDESC>& EndFrames, _float fDuration, _uint iRootBoneIndex)
 {
-	{ // √ ±‚»≠
+	{ // Ï¥àÍ∏∞Ìôî
 
-		//KEYFRAME kf = { // «◊µÓ«‡∑ƒ¿« ≈∞«¡∑π¿”
+		//KEYFRAME kf = { // Ìï≠Îì±ÌñâÎ†¨Ïùò ÌÇ§ÌîÑÎ†àÏûÑ
 		//	{ 1.f, 1.f, 1.f },
 		//	{ 0.f, 0.f, 0.f, 1.f },
 		//	{ 0.f, 0.f, 0.f},
@@ -61,19 +61,19 @@ void CLerpAnim::Begin(const vector<class CBone*>& Bones, vector<LERPDESC>& Start
 		m_fDuration = fDuration;
 		m_fCurrentTrackPosition = 0.f;
 		for (_uint i = 0; i < m_iNumChannels; ++i) {
-			m_Channels[i]->Set_Frame(1, m_InitialFrames[i]); // ≥°«¡∑π¿”¿ª √ ±‚ ∞™¿∏∑Œ √§øÏ±‚
+			m_Channels[i]->Set_Frame(1, m_InitialFrames[i]); // ÎÅùÌîÑÎ†àÏûÑÏùÑ Ï¥àÍ∏∞ Í∞íÏúºÎ°ú Ï±ÑÏö∞Í∏∞
 		}
 		fill(m_CurrentKeyFrameIndices.begin(), m_CurrentKeyFrameIndices.end(), 0);
 		fill(m_Movable.begin(), m_Movable.end(), false);
 	}
-	{ // Ω«¡¶ ∞™ √§øÏ±‚
-		for (LERPDESC& Desc : EndFrames) // ≥°«¡∑π¿”¿ª Ω«¡¶ ∞™¿∏∑Œ √§øÏ±‚
+	{ // Ïã§Ï†ú Í∞í Ï±ÑÏö∞Í∏∞
+		for (LERPDESC& Desc : EndFrames) // ÎÅùÌîÑÎ†àÏûÑÏùÑ Ïã§Ï†ú Í∞íÏúºÎ°ú Ï±ÑÏö∞Í∏∞
 		{
 			_int iIndex = Desc.iSlot;
 			Desc.tagKeyFrame.fTrackPosition = m_fDuration;
 			m_Channels[iIndex]->Set_Frame(1, Desc.tagKeyFrame);
 		}
-		for (_uint i = 0; i < StartFrames.size(); ++i) { // Ω√¿€ «¡∑π¿”¿ª «ˆ¿Á ∫ª ªÛ≈¬ ≈∞«¡∑π¿”¿∏∑Œ √§øÏ±‚
+		for (_uint i = 0; i < StartFrames.size(); ++i) { // ÏãúÏûë ÌîÑÎ†àÏûÑÏùÑ ÌòÑÏû¨ Î≥∏ ÏÉÅÌÉú ÌÇ§ÌîÑÎ†àÏûÑÏúºÎ°ú Ï±ÑÏö∞Í∏∞
 			_int iIndex = StartFrames[i].iSlot;
 			m_Movable[iIndex] = true;
 			m_Channels[iIndex]->Set_Frame(0, StartFrames[i].tagKeyFrame);
