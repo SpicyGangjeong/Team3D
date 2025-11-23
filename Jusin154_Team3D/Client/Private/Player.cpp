@@ -21,6 +21,8 @@
 #include "State_Combat.h"
 #pragma endregion
 
+#include "Bombard.h"
+
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUnit(pDevice, pContext)
 {

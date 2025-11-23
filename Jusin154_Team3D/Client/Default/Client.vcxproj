@@ -157,6 +157,7 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\Bombard.h" />
     <ClInclude Include="..\Public\Broom.h" />
     <ClInclude Include="..\Public\CallBack_EffectHitBox_Behavior.h" />
     <ClInclude Include="..\Public\CallBack_EffectHitBox_HitReport.h" />
@@ -174,8 +175,13 @@
     <ClInclude Include="..\Public\Client_Define.h" />
     <ClInclude Include="..\Public\Client_Enum.h" />
     <ClInclude Include="..\Public\Client_Macro.h" />
+    <ClInclude Include="..\Public\PhysXEffectHitBox.h" />
     <ClInclude Include="..\Public\Dummy_PhysXPlayable.h" />
     <ClInclude Include="..\Public\Dummy_PhysXWall.h" />
+    <ClInclude Include="..\Public\EffectParts.h" />
+    <ClInclude Include="..\Public\EffectObject.h" />
+    <ClInclude Include="..\Public\Effect_Container.h" />
+    <ClInclude Include="..\Public\NomalJap.h" />
     <ClInclude Include="..\Public\SkyBox.h" />
     <ClInclude Include="..\Public\InfoInstance.h" />
     <ClInclude Include="..\Public\Level_Field.h" />
@@ -197,6 +203,7 @@
     <ClInclude Include="..\Public\State_Land.h" />
     <ClInclude Include="..\Public\State_Move.h" />
     <ClInclude Include="..\Public\State_Root.h" />
+    <ClInclude Include="..\Public\TrailObject.h" />
     <ClInclude Include="..\Public\Wand.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
@@ -204,6 +211,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\Bombard.cpp" />
     <ClCompile Include="..\Private\Broom.cpp" />
     <ClCompile Include="..\Private\CallBack_EffectHitBox_Behavior.cpp" />
     <ClCompile Include="..\Private\CallBack_EffectHitBox_HitReport.cpp" />
@@ -215,11 +223,17 @@
     <ClCompile Include="..\Private\Camera_Gaze.cpp" />
     <ClCompile Include="..\Private\CamPosition.cpp" />
     <ClCompile Include="..\Private\CamPosition_Arm.cpp" />
+    <ClCompile Include="..\Private\CamPosition_Player.cpp" />
+    <ClCompile Include="..\Private\PhysXEffectHitBox.cpp" />
     <ClCompile Include="..\Private\CamPosition_Shoulder.cpp" />
     <ClCompile Include="..\Private\CamPosition_Socket.cpp" />
     <ClCompile Include="..\Private\CamPosition_Target.cpp" />
     <ClCompile Include="..\Private\Dummy_PhysXPlayable.cpp" />
     <ClCompile Include="..\Private\Dummy_PhysXWall.cpp" />
+    <ClCompile Include="..\Private\EffectParts.cpp" />
+    <ClCompile Include="..\Private\EffectObject.cpp" />
+    <ClCompile Include="..\Private\Effect_Container.cpp" />
+    <ClCompile Include="..\Private\NomalJap.cpp" />
     <ClCompile Include="..\Private\SkyBox.cpp" />
     <ClCompile Include="..\Private\InfoInstance.cpp" />
     <ClCompile Include="..\Private\Level_Field.cpp" />
@@ -245,6 +259,7 @@
     <ClCompile Include="..\Private\State_Land.cpp" />
     <ClCompile Include="..\Private\State_Move.cpp" />
     <ClCompile Include="..\Private\State_Root.cpp" />
+    <ClCompile Include="..\Private\TrailObject.cpp" />
     <ClCompile Include="..\Private\Wand.cpp" />
     <ClCompile Include="Client.cpp" />
   </ItemGroup>

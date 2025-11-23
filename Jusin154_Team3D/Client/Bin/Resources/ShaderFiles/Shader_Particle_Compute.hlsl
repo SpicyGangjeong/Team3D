@@ -38,6 +38,7 @@ struct ParticleValue
     
     float  fSizeDrag;
     float3 vDeltaSize;
+    float2 vDelay;
 };
 
 
@@ -79,6 +80,17 @@ void CS_MAIN(
     
     ParticleValue particleValue = g_ParticleValueBufferInput[iIndex];
     
+    particleValue.vDelay.x += fTimeDelta;
+    
+    if (particleValue.vDelay.x < particleValue.vDelay.y)
+    {
+             
+        g_VBInstanceOutput[iIndex] = particle;
+        g_ParticleValueOutput[iIndex] = particleValue;
+        
+        return;
+    }
+    
     // 라이프타임 움직임    
     particle.vLifeTime.x += fTimeDelta;
     
@@ -97,7 +109,7 @@ void CS_MAIN(
         
         particle.vLifeTime.x = 0.f;
         particleValue.vAniIndex.x = 0.f;
-       
+        particleValue.vDelay.x = 0.f;
         
         g_VBInstanceOutput[iIndex] = particle;
         g_ParticleValueOutput[iIndex] = particleValue;

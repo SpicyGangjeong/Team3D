@@ -451,8 +451,8 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 				pParticleValues[i].fGravity = m_pGameInstance->Random_Float(m_InstanceDesc.vGravity.x, m_InstanceDesc.vGravity.y);
 				pParticleValues[i].fDrag = m_pGameInstance->Random_Float(m_InstanceDesc.vDrag.x, m_InstanceDesc.vDrag.y);
 				pParticleValues[i].fSizeDrag = m_pGameInstance->Random_Float(m_InstanceDesc.vSizeDrag.x, m_InstanceDesc.vSizeDrag.y);
-
-
+				pParticleValues[i].vDelay = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vDelay.x, m_InstanceDesc.vDelay.y));
+				
 				memcpy(&pParticleValues[i].vOriginRight, SRMatrix.m[0], sizeof(_float4));
 				memcpy(&pParticleValues[i].vOriginUp, SRMatrix.m[1], sizeof(_float4));
 				memcpy(&pParticleValues[i].vOriginLook, SRMatrix.m[2], sizeof(_float4));
@@ -624,6 +624,11 @@ void CInstance_Model::Describe_Entity()
 		}
 
 		if (ImGui::DragFloat2("LifeTime", reinterpret_cast<_float*>(&m_InstanceDesc.vLifeTime)))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
+		if (ImGui::DragFloat2("Delay", reinterpret_cast<_float*>(&m_InstanceDesc.vDelay)))
 		{
 			Instane_Buffer_ReStruct();
 		}
