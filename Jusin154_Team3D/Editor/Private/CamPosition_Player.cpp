@@ -75,7 +75,7 @@ CCamPosition_Player* CCamPosition_Player::Create(ID3D11Device* pDevice, ID3D11De
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CCamPosition_Player");
+		MSG_BOX("Failed to Created : CCamPosition_Socket");
 		SAFE_RELEASE(pInstance);
 	}
 
@@ -88,7 +88,7 @@ CCamPosition_Player* CCamPosition_Player::Clone(void* pArg, class CGameObject* p
 	pInstance->m_pOwner = pOWner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CCamPosition_Player");
+		MSG_BOX("Failed to Cloned : CCamPosition_Socket");
 		SAFE_RELEASE(pInstance);
 	}
 

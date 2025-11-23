@@ -6,12 +6,10 @@ CCamPosition_Arm::CCamPosition_Arm(ID3D11Device* pDevice, ID3D11DeviceContext* p
 	: CCamPosition(pDevice, pContext)
 {
 }
-
 CCamPosition_Arm::CCamPosition_Arm(const CCamPosition_Arm& rhs)
 	: CCamPosition(rhs)
 {
 }
-
 HRESULT CCamPosition_Arm::Initialize_Prototype()
 {
 	return S_OK;
@@ -44,6 +42,7 @@ void CCamPosition_Arm::Priority_Update(_float fTimeDelta)
 
 void CCamPosition_Arm::Update(_float fTimeDelta)
 {
+
 }
 
 void CCamPosition_Arm::Late_Update(_float fTimeDelta)
@@ -96,12 +95,10 @@ CCamPosition_Arm* CCamPosition_Arm::Clone(void* pArg, class CGameObject* pOWner)
 
 	return pInstance;
 }
-
 void CCamPosition_Arm::Free()
 {
 	__super::Free();
 }
-
 void CCamPosition_Arm::Describe_Entity()
 {
 }
