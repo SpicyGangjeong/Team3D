@@ -1,19 +1,19 @@
 ﻿#include "pch.h"
-#include "State_Player_Land.h"
+#include "State_Jump.h"
 #include "Unit.h"
 
 
-CState_Land::CState_Land()
+CState_Jump::CState_Jump()
     :CState_Root()
 {
 }
 
-void CState_Land::Enter()
+void CState_Jump::Enter()
 {
     __super::Enter();
 }
 
-HRESULT CState_Land::Update(_float fTimeDelta)
+HRESULT CState_Jump::Update(_float fTimeDelta)
 {
     if (E_FAIL == (__super::Update(fTimeDelta))) {
         return E_FAIL;
@@ -21,12 +21,12 @@ HRESULT CState_Land::Update(_float fTimeDelta)
     return S_OK;
 }
 
-void CState_Land::Exit()
+void CState_Jump::Exit()
 {
     __super::Exit();
 }
 
-HRESULT CState_Land::Initialize(STATE_LAND_DESC* pDesc)
+HRESULT CState_Jump::Initialize(STATE_JUMP_DESC* pDesc)
 {
     if (FAILED(__super::Initialize(pDesc))) {
         return E_FAIL;
@@ -37,20 +37,20 @@ HRESULT CState_Land::Initialize(STATE_LAND_DESC* pDesc)
     return S_OK;
 }
 
-CState_Land* CState_Land::Create(STATE_LAND_DESC* pDesc)
+CState_Jump* CState_Jump::Create(STATE_JUMP_DESC* pDesc)
 {
-    CState_Land* pInstance = new CState_Land;
+    CState_Jump* pInstance = new CState_Jump;
     if (FAILED(pInstance->Initialize(pDesc))) {
         SAFE_RELEASE(pInstance);
     }
     return pInstance;
 }
 
-void CState_Land::Free()
+void CState_Jump::Free()
 {
     __super::Free();
 }
 
-void CState_Land::Describe_Entity()
+void CState_Jump::Describe_Entity()
 {
 }

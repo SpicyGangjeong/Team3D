@@ -43,6 +43,18 @@ private:
 	HRESULT Ready_Components();
 	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
+public:
+	static CPlayer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr) override;
+	virtual void Free() override;
+	virtual void Describe_Entity() override;
+
+#pragma region STATE
+private:
+	virtual void Add_FSM();
+	virtual void Set_Anim();
+	_bool IsSprint();
+	_bool IsWalk();
 
 	HRESULT InputSystem();
 	HRESULT InputSkill();
@@ -67,20 +79,8 @@ private:
 	void	Behavior_DodgeEnter();
 	HRESULT Behavior_DodgeExitCheck();
 	void	Behavior_DodgeExit();
-	
 
-public:
-	static CPlayer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr) override;
-	virtual void Free() override;
-	virtual void Describe_Entity() override;
 
-#pragma region STATE
-private:
-	virtual void Add_FSM();
-	virtual void Set_Anim();
-	_bool IsSprint();
-	_bool IsWalk();
 public:
 	virtual void Reset_Sprint() { m_bSprintToggle = false; }
 	virtual void Reset_Walk() { m_bWalkToggle = false; }

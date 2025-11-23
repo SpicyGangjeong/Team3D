@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
-#include "State_Player_Idle.h"
+#include "State_Idle.h"
+#include "GameInstance.h"
 #include "Unit.h"
 
 CState_Idle::CState_Idle()

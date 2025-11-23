@@ -1,7 +1,7 @@
 ﻿#include "Component.h"
 
 NS_BEGIN(FSMSTATE)
-enum ESTATE : Engine::_u64Flag
+enum ESTATE : _u64Flag
 {
     NOT_DEFINE                  = 0,
     IDLE                        = 1ULL << 0,

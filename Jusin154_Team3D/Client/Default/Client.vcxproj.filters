@@ -112,22 +112,22 @@
     <ClInclude Include="..\Public\State_Root.h">
       <Filter>04.Mechanic\State</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\State_Player_Combat.h">
+    <ClInclude Include="..\Public\State_Combat.h">
       <Filter>04.Mechanic\State\State_Combat</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\State_Player_Dodge.h">
+    <ClInclude Include="..\Public\State_Dodge.h">
       <Filter>04.Mechanic\State\Focus\Dodge</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\State_Player_Jump.h">
+    <ClInclude Include="..\Public\State_Jump.h">
       <Filter>04.Mechanic\State\Focus\Jump</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\State_Player_Land.h">
+    <ClInclude Include="..\Public\State_Land.h">
       <Filter>04.Mechanic\State\Focus\Land</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\State_Player_Idle.h">
+    <ClInclude Include="..\Public\State_Idle.h">
       <Filter>04.Mechanic\State\Movement\Idle</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\State_Player_Move.h">
+    <ClInclude Include="..\Public\State_Move.h">
       <Filter>04.Mechanic\State\Movement\Move</Filter>
     </ClInclude>
   </ItemGroup>
@@ -424,22 +424,22 @@
     <ClCompile Include="..\Private\State_Root.cpp">
       <Filter>04.Mechanic\State</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\State_Player_Combat.cpp">
+    <ClCompile Include="..\Private\State_Combat.cpp">
       <Filter>04.Mechanic\State\State_Combat</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\State_Player_Dodge.cpp">
+    <ClCompile Include="..\Private\State_Dodge.cpp">
       <Filter>04.Mechanic\State\Focus\Dodge</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\State_Player_Jump.cpp">
+    <ClCompile Include="..\Private\State_Jump.cpp">
       <Filter>04.Mechanic\State\Focus\Jump</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\State_Player_Land.cpp">
+    <ClCompile Include="..\Private\State_Land.cpp">
       <Filter>04.Mechanic\State\Focus\Land</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\State_Player_Idle.cpp">
+    <ClCompile Include="..\Private\State_Idle.cpp">
       <Filter>04.Mechanic\State\Movement\Idle</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\State_Player_Move.cpp">
+    <ClCompile Include="..\Private\State_Move.cpp">
       <Filter>04.Mechanic\State\Movement\Move</Filter>
     </ClCompile>
   </ItemGroup>

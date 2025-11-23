@@ -40,7 +40,7 @@ public:
     virtual void Exit()PURE;
 
 protected:
-    CUnit*              m_pOwner = { nullptr };
+    class CUnit*              m_pOwner = { nullptr };
     CModel*             m_pModel = { nullptr };
     CFSM*               m_pFSM = { nullptr };
     CGameInstance*      m_pGameInstance = { nullptr };

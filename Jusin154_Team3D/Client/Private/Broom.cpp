@@ -40,7 +40,7 @@ void CBroom::Update(_float fTimeDelta)
 {
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
-	m_pModelCom->ComputeSkinning();
+	//m_pModelCom->ComputeSkinning();
 }
 
 void CBroom::Late_Update(_float fTimeDelta)
@@ -69,8 +69,8 @@ HRESULT CBroom::Render()
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pModelCom->Bind_CS_Output(5, i)))
-			return E_FAIL;
+		//if (FAILED(m_pModelCom->Bind_CS_Output(5, i)))
+		//	return E_FAIL;
 
 
 		if (FAILED(m_pModelCom->Render(i))) {

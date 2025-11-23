@@ -549,13 +549,13 @@
     <ClInclude Include="..\Public\Dummy_PhysXWall.h">
       <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXWall</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\State_Player_Dodge.h">
+    <ClInclude Include="..\Public\State_Dodge.h">
       <Filter>80.State\Focus\State_Dodge</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\State_Player_Idle.h">
+    <ClInclude Include="..\Public\State_Idle.h">
       <Filter>80.State\Movement\State_Idle</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\State_Player_Jump.h">
+    <ClInclude Include="..\Public\State_Jump.h">
       <Filter>80.State\Focus\State_Jump</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player.h">
@@ -606,16 +606,16 @@
     <ClInclude Include="..\Public\Dummy_Globe.h">
       <Filter>02.GameObjects\Dummys\DummyGlobe</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\State_Player_Land.h">
+    <ClInclude Include="..\Public\State_Land.h">
       <Filter>80.State\Focus\State_Land</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Goblin.h">
       <Filter>02.GameObjects\Monster\Goblin</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\State_Player_Move.h">
+    <ClInclude Include="..\Public\State_Move.h">
       <Filter>80.State\Movement\State_Move</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\State_Player_Combat.h">
+    <ClInclude Include="..\Public\State_Combat.h">
       <Filter>80.State\State_Combat</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\TrailObject.h">
@@ -880,13 +880,13 @@
     <ClCompile Include="..\Private\Dummy_PhysXDoorFrame.cpp">
       <Filter>02.GameObjects\Dummys\DummyPhysX\PhysXDoorSet\PhysXDoorFrame</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\State_Player_Dodge.cpp">
+    <ClCompile Include="..\Private\State_Dodge.cpp">
       <Filter>80.State\Focus\State_Dodge</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\State_Player_Idle.cpp">
+    <ClCompile Include="..\Private\State_Idle.cpp">
       <Filter>80.State\Movement\State_Idle</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\State_Player_Jump.cpp">
+    <ClCompile Include="..\Private\State_Jump.cpp">
       <Filter>80.State\Focus\State_Jump</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Land.cpp">
@@ -925,16 +925,16 @@
     <ClCompile Include="..\Private\Dummy_Globe.cpp">
       <Filter>02.GameObjects\Dummys\DummyGlobe</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\State_Player_Land.cpp">
+    <ClCompile Include="..\Private\State_Land.cpp">
       <Filter>80.State\Focus\State_Land</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Goblin.cpp">
       <Filter>02.GameObjects\Monster\Goblin</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\State_Player_Move.cpp">
+    <ClCompile Include="..\Private\State_Move.cpp">
       <Filter>80.State\Movement\State_Move</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\State_Player_Combat.cpp">
+    <ClCompile Include="..\Private\State_Combat.cpp">
       <Filter>80.State\State_Combat</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\TrailObject.cpp">

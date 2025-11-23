@@ -33,3 +33,4 @@ public:
     virtual void Describe_Entity();
 };
 
+NS_END

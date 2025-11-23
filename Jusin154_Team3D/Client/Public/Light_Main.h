@@ -3,10 +3,6 @@
 #include "Client_Define.h"
 #include "GameObject.h"
 
-NS_BEGIN(Engine)
-class CLight;
-NS_END
-
 NS_BEGIN(Client)
 
 class CLight_Main final : public CGameObject

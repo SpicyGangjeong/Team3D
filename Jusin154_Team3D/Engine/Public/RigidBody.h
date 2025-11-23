@@ -1,11 +1,6 @@
 ﻿#pragma once
 #include "Component.h"
 
-NS_BEGIN(PSX)
-class PxActor;
-class PxMaterial;
-NS_END
-
 NS_BEGIN(Engine)
 class CTransform;
 class CMesh;

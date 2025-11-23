@@ -9,12 +9,12 @@
 
 #pragma region STATE
 
-#include "State_Player_Idle.h"
-#include "State_Player_Dodge.h"
-#include "State_Player_Jump.h"
-#include "State_Player_Land.h"
-#include "State_Player_Move.h"
-#include "State_Player_Combat.h"
+#include "State_Idle.h"
+#include "State_Dodge.h"
+#include "State_Jump.h"
+#include "State_Land.h"
+#include "State_Move.h"
+#include "State_Combat.h"
 #pragma endregion
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

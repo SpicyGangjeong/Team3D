@@ -13,6 +13,12 @@
 
 #pragma region STATE
 
+#include "State_Idle.h"
+#include "State_Dodge.h"
+#include "State_Jump.h"
+#include "State_Land.h"
+#include "State_Move.h"
+#include "State_Combat.h"
 #pragma endregion
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -71,7 +77,7 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 
 void CPlayer::Update(_float fTimeDelta)
 {
-	m_pModelCom->ComputeSkinning();
+	//m_pModelCom->ComputeSkinning();
 
 	IsSprint();
 	IsWalk();
@@ -114,8 +120,8 @@ HRESULT CPlayer::Render()
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pModelCom->Bind_CS_Output(5, i)))
-			return E_FAIL;
+		//if (FAILED(m_pModelCom->Bind_CS_Output(5, i)))
+		//	return E_FAIL;
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
@@ -138,7 +144,9 @@ HRESULT CPlayer::Ready_Components()
 	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
 	Desc.fRadius = 10.f;
 
-	__super::Ready_Components(&Desc);
+	if (FAILED(__super::Ready_Components(&Desc))) {
+		return E_FAIL;
+	}
 
 	m_strModelPrototypeTag = TEXT("Prototype_Component_Npc_Model");
 
@@ -257,14 +265,373 @@ HRESULT CPlayer::Bind_ShaderResources()
 	return S_OK;
 }
 
+HRESULT CPlayer::InputSystem()
+{
+	if (m_pGameInstance->Key_Down(DIK_1)
+		|| m_pGameInstance->Key_Down(DIK_2)
+		|| m_pGameInstance->Key_Down(DIK_3)
+		|| m_pGameInstance->Key_Down(DIK_4)
+		|| m_pGameInstance->Key_Down(DIK_5)
+		|| m_pGameInstance->Key_Down(DIK_6))
+	{
+		return S_OK;
+	}
+	return E_FAIL;
+}
+
+HRESULT CPlayer::InputSkill()
+{
+	if (
+		m_pGameInstance->Key_Down(DIK_SPACE)
+		|| m_pGameInstance->Key_Down(DIK_LCONTROL)
+		|| m_pGameInstance->Key_Down(DIK_E)
+		|| m_pGameInstance->Key_Down(DIK_R)
+		|| m_pGameInstance->Key_Down(DIK_Q)
+		|| m_pGameInstance->Mouse_Up(DIM_LBUTTON)
+		|| m_pGameInstance->Key_Down(DIK_1)
+		//|| m_pGameInstance->Key_Down(DIK_C)
+		//|| m_pGameInstance->Key_Down(DIK_V)
+		//|| m_pGameInstance->Key_Down(DIK_T)
+		//|| m_pGameInstance->Key_Down(DIK_G)
+		//|| m_pGameInstance->Key_Down(DIK_B)
+		)
+	{
+		return S_OK;
+	}
+	return E_FAIL;
+}
+
+HRESULT CPlayer::InputMove()
+{
+	if (m_pGameInstance->Key_Pressing(DIK_W)
+		|| m_pGameInstance->Key_Pressing(DIK_A)
+		|| m_pGameInstance->Key_Pressing(DIK_S)
+		|| m_pGameInstance->Key_Pressing(DIK_D))
+	{
+		return S_OK;
+	}
+	return E_FAIL;
+}
+
+void CPlayer::Behavior_IdleEnter() {
+	pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::IDLE];
+
+	if (m_pFSM->IsEnable_Previous(FSMSTATE::JOG | FSMSTATE::WALK)) {
+		if (m_pFSM->IsEnable_Previous(FSMSTATE::JOG)) {
+			pairAnimInfo = m_Animation[STATEANIM::JOG_STOP];
+		}
+		else if (m_pFSM->IsEnable_Previous(FSMSTATE::WALK)) {
+			pairAnimInfo = m_Animation[STATEANIM::WALK_STOP];
+		}
+		else if (m_pFSM->IsEnable_Previous(FSMSTATE::SPRINT)) {
+			//	pairAnimInfo = m_Animation[STATEANIM::spr]
+		}
+	}
+
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+}
+
+HRESULT CPlayer::Behavior_IdleExitCheck()
+{
+	// S_OK -> 현 상태 유지
+	// E_FAIL -> 현 상태 탈출
+	if (SUCCEEDED(InputSystem())) {
+		//Event
+		return S_OK;
+	}
+	if (SUCCEEDED(InputSkill())) {
+		if (m_pGameInstance->Key_Down(DIK_SPACE)) {
+			m_pFSM->Change_State(FSMSTATE::JUMP);
+		}
+		else if (m_pGameInstance->Key_Down(DIK_LCONTROL)) {
+			m_pFSM->Change_State(FSMSTATE::DODGE);
+		}
+		else if (m_pGameInstance->Key_Down(DIK_E)) {
+			//m_pFSM->Change_State(FSMSTATE::AAA);
+		}
+		else if (m_pGameInstance->Key_Down(DIK_R)) {
+			//m_pFSM->Change_State(FSMSTATE::SKILL);
+		}
+		else if (m_pGameInstance->Key_Down(DIK_Q)) {
+			//m_pFSM->Change_State(FSMSTATE::SKILL2);
+		}
+		else if (m_pGameInstance->Mouse_Up(DIM_LBUTTON)) {
+			//m_pFSM->Change_State(FSMSTATE::LIGHT_ATTACK);
+		}
+		else if (m_pGameInstance->Key_Down(DIK_1)) {
+			//m_pFSM->Change_State(FSMSTATE::CAST);
+		}
+		return E_FAIL;
+	}
+	if (SUCCEEDED(InputMove())) {
+		m_pFSM->Change_State(FSMSTATE::MOVE);
+		return E_FAIL;
+	}
+	return S_OK;
+}
+
+void CPlayer::Behavior_IdleExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::IDLE);
+}
+
+void CPlayer::Behavior_MoveEnter()
+{
+	pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::SPRINT];
+	_bool bFoward = m_pGameInstance->Key_Pressing(DIK_W);
+	_bool bLeft = m_pGameInstance->Key_Pressing(DIK_A);
+	_bool bRight = m_pGameInstance->Key_Pressing(DIK_D);
+	_bool bBackward = m_pGameInstance->Key_Pressing(DIK_S);
+
+	if (m_pFSM->IsEnable_Previous(FSMSTATE::IDLE | FSMSTATE::DODGE | FSMSTATE::LAND | FSMSTATE::COMBAT)) {
+		if (m_pFSM->IsEnable_Previous(FSMSTATE::IDLE)) {
+			// Idle -> Move
+			if (true == m_bSprintToggle) {
+				m_pFSM->Enable_State(FSMSTATE::SPRINT);
+
+				if (true == bFoward) {
+					pairAnimInfo = m_Animation[STATEANIM::SPRINT];
+				}
+				else {
+					// ?
+				}
+			}
+			else if (true == m_bWalkToggle) {
+				m_pFSM->Enable_State(FSMSTATE::WALK);
+
+				if (true == bFoward) {
+					pairAnimInfo = m_Animation[STATEANIM::WALK_FWD];
+				}
+				else if (true == bBackward) {
+					pairAnimInfo = m_Animation[STATEANIM::WALK_BWD];
+				}
+			}
+		}
+		else if (m_pFSM->IsEnable_Previous(FSMSTATE::DODGE | FSMSTATE::LAND)) {
+			// OtherMove -> AnotherMove
+
+		}
+		else if (m_pFSM->IsEnable_Previous(FSMSTATE::COMBAT)) {
+			// Combat -> Move
+
+		}
+	}
+	else { // While Moving
+		if (true == m_bSprintToggle) {
+			m_pFSM->Enable_State(FSMSTATE::SPRINT);
+			pairAnimInfo = m_Animation[STATEANIM::SPRINT];
+
+		}
+		else if (true == m_bWalkToggle) {
+			m_pFSM->Enable_State(FSMSTATE::WALK);
+			if (true == bFoward) {
+				pairAnimInfo = m_Animation[STATEANIM::WALK_FWD];
+			}
+			else if (true == bBackward) {
+				pairAnimInfo = m_Animation[STATEANIM::WALK_BWD];
+			}
+			//else if (true == bLeft){
+			//	pairAnimInfo = m_Animation[STATEANIM::WALK_STOP];
+			//}
+			//else if (true == bRight){
+			//	pairAnimInfo = m_Animation[STATEANIM::WALK_BWD];
+			//}
+		}
+	}
+
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+}
+
+HRESULT CPlayer::Behavior_MoveExitCheck()
+{
+	if (SUCCEEDED(InputSystem())) {
+		//Event
+		return S_OK;
+	}
+	if (SUCCEEDED(InputSkill())) {
+		if (m_pGameInstance->Key_Down(DIK_SPACE)) {
+			m_pFSM->Change_State(FSMSTATE::JUMP);
+		}
+		else if (m_pGameInstance->Key_Down(DIK_LCONTROL)) {
+			m_pFSM->Change_State(FSMSTATE::DODGE);
+		}
+		else if (m_pGameInstance->Key_Down(DIK_E)) {
+			//m_pFSM->Change_State(FSMSTATE::AAA);
+		}
+		else if (m_pGameInstance->Key_Down(DIK_R)) {
+			//m_pFSM->Change_State(FSMSTATE::SKILL);
+		}
+		else if (m_pGameInstance->Key_Down(DIK_Q)) {
+			//m_pFSM->Change_State(FSMSTATE::SKILL2);
+		}
+		else if (m_pGameInstance->Mouse_Up(DIM_LBUTTON)) {
+			//m_pFSM->Change_State(FSMSTATE::LIGHT_ATTACK);
+		}
+		else if (m_pGameInstance->Key_Down(DIK_1)) {
+			//m_pFSM->Change_State(FSMSTATE::CAST);
+		}
+		return E_FAIL;
+	}
+	if (SUCCEEDED(InputMove())) {
+		return S_OK;
+	}
+	m_pFSM->Change_State(FSMSTATE::IDLE);
+	return E_FAIL;
+}
+
+void CPlayer::Behavior_MoveExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::MOVE | FSMSTATE::SPRINT | FSMSTATE::JOG | FSMSTATE::WALK);
+}
+
+void CPlayer::Behavior_JumpEnter()
+{
+	pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::JUMP_SPRINT];
+	m_pFSM->Enable_State(FSMSTATE::JUMP);
+	if (m_pFSM->IsEnable_Previous(FSMSTATE::IDLE | FSMSTATE::JOG | FSMSTATE::WALK)) {
+		if (m_pFSM->IsEnable_Previous(FSMSTATE::IDLE)) {
+			// Idle -> Jump
+			// pairAnimInfo = Get_AnimInfo(STATEANIM::Jump_IDLE);
+		}
+		else if (m_pFSM->IsEnable_Previous(FSMSTATE::JOG)) {
+			pairAnimInfo = m_Animation[STATEANIM::JUMP_JOG];
+		}
+		else if (m_pFSM->IsEnable_Previous(FSMSTATE::WALK)) {
+
+		}
+	}
+	else {
+		// Drop?
+	}
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+}
+
+HRESULT CPlayer::Behavior_JumpExitCheck()
+{
+	if (SUCCEEDED(InputSystem())) {
+		//Event
+		return S_OK;
+	}
+	if (IsCurrentKeyFrame("Jump")) {
+		m_pFSM->Change_State(FSMSTATE::LAND);
+		return E_FAIL;
+	}
+	return S_OK;
+}
+
+void CPlayer::Behavior_JumpExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::JUMP);
+}
+
+void CPlayer::Behavior_LandEnter()
+{
+	pair<_uint, _bool> pairAnimInfo = Get_AnimInfo(STATEANIM::LAND);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+}
+
+HRESULT CPlayer::Behavior_LandExitCheck()
+{
+	if (SUCCEEDED(InputSystem())) {
+		//Event
+		//return S_OK;
+	}
+	if (m_pModelCom->IsFinishedAnim()) {
+		m_pFSM->Change_State(FSMSTATE::IDLE);
+		return E_FAIL;
+	} // 혹시 Land to (Jog, Sprint, Dodge) 같은 애니메이션 있으면 여기에 분기 조건 넣으면 됨
+	return S_OK;
+}
+
+void CPlayer::Behavior_LandExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::LAND);
+}
+
+void CPlayer::Behavior_DodgeEnter()
+{
+	// 혹시 @@ to Dodge 있으면 여기에
+	pair<_uint, _bool> pairAnimInfo = Get_AnimInfo(STATEANIM::DODGE);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+}
+
+HRESULT CPlayer::Behavior_DodgeExitCheck()
+{
+	if (SUCCEEDED(InputSystem())) {
+		//Event
+		//return S_OK;
+	}
+	if (m_pModelCom->IsFinishedAnim()) {
+		m_pFSM->Change_State(FSMSTATE::IDLE);
+		return E_FAIL;
+	}
+	return S_OK;
+}
+
+void CPlayer::Behavior_DodgeExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::DODGE);
+}
+
 void CPlayer::Add_FSM()
 {
-#pragma region MOVE
+#pragma region Behavior_Movement_NotFocus
+	{
+		CState_Idle::STATE_IDLE_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_IdleEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_IdleExitCheck(); };
+		Desc.funcExitEvent = [this]() { Behavior_IdleExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::IDLE, CState_Idle::Create(&Desc));
+	}
+	{
+		CState_Move::STATE_MOVE_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_MoveEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_MoveExitCheck(); };
+		Desc.funcExitEvent = [this]() { Behavior_MoveExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::MOVE, CState_Move::Create(&Desc));
+	}
+#pragma endregion
+#pragma region Behavior_Movement_Focus
+	{
+		CState_Jump::STATE_JUMP_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_JumpEnter(); };
+		Desc.funcExitCheck = [this](_float fTimeDelta) { return Behavior_JumpExitCheck(); };
+		Desc.funcExitEvent = [this]() { Behavior_JumpExit(); };
+		m_States.emplace(FSMSTATE::JUMP, CState_Jump::Create(&Desc));
+	}
+	{
+		CState_Land::STATE_LAND_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_LandEnter(); };
+		Desc.funcExitCheck = [this](_float fTimeDelta) { return Behavior_LandExitCheck(); };
+		Desc.funcExitEvent = [this]() { Behavior_LandExit(); };
+		m_States.emplace(FSMSTATE::LAND, CState_Land::Create(&Desc));
+	}
+	{
+		CState_Dodge::STATE_DODGE_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_DodgeEnter(); };
+		Desc.funcExitCheck = [this](_float fTimeDelta) { return Behavior_DodgeExitCheck(); };
+		Desc.funcExitEvent = [this]() { Behavior_DodgeExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::DODGE, CState_Dodge::Create(&Desc));
+	}
+#pragma endregion
+#pragma region Behavior_Combat_NotFocus
+
+#pragma endregion
+#pragma region Behavior_Combat_Focus
+
 #pragma endregion
 
-#pragma region COMBAT
-#pragma endregion
-	
 }
 
 void CPlayer::Set_Anim()
