@@ -44,7 +44,7 @@ void CDummyObject::Priority_Update(_float fTimeDelta)
 
 void CDummyObject::Update(_float fTimeDelta)
 {
-	m_pModelCom->ComputeSkinning();
+	m_pModelCom->ComputeAnimation();
 
 	m_pModelCom->Play_Animation(fTimeDelta,m_pTransformCom);
 
@@ -77,9 +77,6 @@ HRESULT CDummyObject::Render()
 		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
 			return E_FAIL;
 		}
-		
-		if (FAILED(m_pModelCom->Bind_CS_Output(5, i)))
-			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;

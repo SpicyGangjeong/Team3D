@@ -69,10 +69,7 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 
 void CPlayer::Update(_float fTimeDelta)
 {
-	//m_pModelCom->ComputeSkinning();
-
-	IsSprint();
-	IsWalk();
+	m_pModelCom->ComputeAnimation();
 
 	m_pFSM->Update_State(fTimeDelta);
 
@@ -109,8 +106,6 @@ HRESULT CPlayer::Render()
 			return E_FAIL;
 		}
 
-		//if (FAILED(m_pModelCom->Bind_CS_Output(5, i)))
-		//	return E_FAIL;
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
