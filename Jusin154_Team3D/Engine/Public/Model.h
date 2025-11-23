@@ -7,32 +7,15 @@ NS_BEGIN(Engine)
 class ENGINE_DLL CModel final : public CComponent
 {
 public:
-	typedef struct tagMeshDesc
+	typedef struct tagAnimStateDesc
 	{
-		_float3		vPosition = {};
-		_float3		vNormal = {};
-		_float3		vTangent = {};
-		_float3		vBinormal = {};
-		_float2			vTexcoord = {};
+		_float CurrentTime;
+		_float Duration;
+		_float Speed;
+		_int BoneCount;
+		_float4x4 PreTransformMatrix;
 
-		XMUINT4			vBlendIndex = {};
-		_float4			vBlendWeight = {};
-	}MESH_DESC;
-
-	typedef struct tagSkinngMeshDesc
-	{
-		_float3			vPosition = {};
-		_float3			vNormal = {};
-		_float3			vTangent = {};
-		_float3			vBinormal = {};
-		_float2			vTexcoord = {};
-
-	}SKINNG_MESH_DESC;
-
-	typedef struct tagBoneDesc
-	{
-		_float4x4 BoneMatrix[512];
-	}BONE_DESC;
+	}ANIMSTATE_DESC;
 
 private:
 	CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -94,9 +77,11 @@ static	_int Get_BoneIndex(const _char* pBoneName, vector<class CBone*> Bones);	/
 		HRESULT Bind_Material(_uint iMeshIndex, class CShader* pShader);
 
 #pragma endregion
-		void ComputeSkinning();
+
 		void Create_Con();
-		HRESULT			Bind_CS_Output(_uint Index, _uint iBufferIndex);
+		void UpdateAnimationCS();
+		void ComputeAnimation();
+		HRESULT Create_ParentVB();
 		void Get_BoneMatrix();
 
 public:
@@ -169,14 +154,23 @@ private:
 private:
 	HRESULT			Create_CS();
 
-	MESH_DESC				m_MeshDesc = {};
-	BONE_DESC				m_BoneDesc = {};
+	void			Create_Temp();
+
+	void Create_LocalPosVB();
+
 	_uint					m_iNumBuffer = {};
 
-	class CComputeShader* m_pComputeShader = {};
-	ID3D11Buffer* m_pConstantBuffer = { nullptr };
-	_uint AccumulatedVertexCount = {};
+	vector<PARENT_DESC>		m_Parent = {};
+	vector<ANIMSTATE_DESC> m_AnimRanges;
 
+	LOCALPOS_DESC* m_pLocalPos = { nullptr };
+
+	class CComputeShader* m_pComputeShader = nullptr;
+
+	ID3D11Buffer* m_pConstantBuffer = { nullptr };
+
+	ID3D11Buffer* m_pParentBuffer = { nullptr };
+	ID3D11Buffer* m_pLocalPosBuffer = { nullptr };
 private:
 	// 바이너리
 	virtual HRESULT Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix);
@@ -191,7 +185,7 @@ private:
 	HRESULT Ready_Meshes();
 	HRESULT Ready_Materials(const _char* pModelFilePath);
 	HRESULT Ready_Bones(const std::vector<SaveNode>& allNodes, _int currentIndex, _int parentIndex);
-	HRESULT Ready_Animations();
+	HRESULT Ready_Animations(const vector<CBone*>& Bones);
 	//
 
 public:

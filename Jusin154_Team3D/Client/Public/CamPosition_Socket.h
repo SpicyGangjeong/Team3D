@@ -4,7 +4,7 @@
 
 NS_BEGIN(Client)
 
-class CCamPosition_Player final : public CCamPosition
+class CCamPosition_Socket final : public CCamPosition
 {
 public:
 	typedef struct tagCamPosition_Player : public CCamPosition::CAMERAPOSITION_DESC
@@ -12,9 +12,9 @@ public:
 		 const _float4x4* pSocketMatrices = {  };
 	}CAMERAPOSITION_PLAYER_DESC;
 private:
-	CCamPosition_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CCamPosition_Player(const CCamPosition_Player& rhs);
-	virtual ~CCamPosition_Player() = default;
+	CCamPosition_Socket(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CCamPosition_Socket(const CCamPosition_Socket& rhs);
+	virtual ~CCamPosition_Socket() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta) override;
@@ -30,8 +30,8 @@ private:
 	const _float4x4* m_pSocketMatrices = {  };
 
 public:
-	static CCamPosition_Player* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual CCamPosition_Player* Clone(void* pArg, class CGameObject* pOWner) override;
+	static CCamPosition_Socket* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual CCamPosition_Socket* Clone(void* pArg, class CGameObject* pOWner) override;
 	virtual void Free() override;
 	void Describe_Entity() override;
 };

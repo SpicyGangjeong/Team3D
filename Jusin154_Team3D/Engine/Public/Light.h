@@ -13,7 +13,7 @@ private:
 
 public:
 	_bool operator==(const CLight& rhs) const;
-	_bool operator==(const Engine::LIGHT_DESC& rhs) const;
+	_bool operator==(const LIGHT_DESC& rhs) const;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;

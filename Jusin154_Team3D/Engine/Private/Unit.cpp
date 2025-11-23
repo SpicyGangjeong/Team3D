@@ -112,11 +112,14 @@ _bool CUnit::IsCurrentKeyFrame(_string FrameName)
 
 HRESULT CUnit::Ready_Components(void *pArg)
 {
-	__super::Ready_Components(pArg);
+	if (FAILED(__super::Ready_Components(pArg))) {
+		return E_FAIL;
+	}
 
 	/* Com_FSM */
-	if (FAILED(Add_Component<CFSM>(g_iStaticLevel, &m_pFSM)))
+	if (FAILED(Add_Component<CFSM>(g_iStaticLevel, &m_pFSM))){
 		return E_FAIL;
+	}
 
 	return S_OK;
 }

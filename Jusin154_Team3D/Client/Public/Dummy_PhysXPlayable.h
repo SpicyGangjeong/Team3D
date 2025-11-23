@@ -5,12 +5,6 @@
 #include "CallBack_Playable_Behavior.h"
 #include "CallBack_Playable_HitReport.h"
 
-NS_BEGIN(Engine)
-class CModel;
-class CShader;
-class CRigidBody;
-NS_END
-
 NS_BEGIN(Client)
 
 class CDummy_PhysXPlayable final : public CGameObject

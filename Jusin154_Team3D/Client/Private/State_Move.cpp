@@ -4,46 +4,56 @@
 
 
 CState_Move::CState_Move()
-    :CState()
+    :CState_Root()
 {
 }
 
 void CState_Move::Enter()
 {
-
-    if (m_pOwner->Check(FSMSTATE::WALK))
-        m_pFSM->Change_State(FSMSTATE::WALK);
-
-    if (m_pOwner->Check(FSMSTATE::JOG))
-        m_pFSM->Change_State(FSMSTATE::JOG);
-
-    if (m_pOwner->Check(FSMSTATE::SPRINT))
-        m_pFSM->Change_State(FSMSTATE::SPRINT);
-
-    if (m_pOwner->Check(FSMSTATE::DODGE))
-        m_pFSM->Change_State(FSMSTATE::DODGE);
-
-    if (m_pOwner->Check(FSMSTATE::IDLE_TURN))
-        m_pFSM->Change_State(FSMSTATE::IDLE_TURN);
-
-    m_pFSM->Change_State(FSMSTATE::IDLE);
+    __super::Enter();
 }
 
-void CState_Move::Update(_float fTimeDelta)
+HRESULT CState_Move::Update(_float fTimeDelta)
 {
-    if (CheckExitState())
-        return;
+    if (nullptr != m_funcPriorityUpdate) {
+        m_funcPriorityUpdate(fTimeDelta);
+    }
+    if (E_FAIL == (__super::Update(fTimeDelta))) {
+        return E_FAIL;
+    }
+    if (nullptr != m_funcLateUpdate) {
+        m_funcLateUpdate(fTimeDelta);
+    }
+    return S_OK;
 }
 
 void CState_Move::Exit()
 {
+    __super::Exit();
 }
 
-_bool CState_Move::CheckExitState()
+HRESULT CState_Move::Initialize(STATE_MOVE_DESC* pDesc)
 {
-    return false;
+    if (FAILED(__super::Initialize(pDesc))) {
+        return E_FAIL;
+    }
+    m_funcPriorityUpdate = pDesc->funcPriorityUpdate;
+    m_funcLateUpdate = pDesc->funcLateUpdate;
+
+    m_pModel = m_pOwner->Get_Component<CModel>();
+    m_pFSM = m_pOwner->Get_Component<CFSM>();
+
+    return S_OK;
 }
 
+CState_Move* CState_Move::Create(STATE_MOVE_DESC* pDesc)
+{
+    CState_Move* pInstance = new CState_Move;
+    if (FAILED(pInstance->Initialize(pDesc))) {
+        SAFE_RELEASE(pInstance);
+    }
+    return pInstance;
+}
 
 void CState_Move::Free()
 {

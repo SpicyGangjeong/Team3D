@@ -4,44 +4,51 @@
 
 
 CState_Land::CState_Land()
-	:CState()
+    :CState_Root()
 {
 }
 
 void CState_Land::Enter()
 {
-	auto anim = m_pOwner->Get_AnimInfo(STATEANIM::LAND);
-	m_pModel->Set_AnimationIndex(anim.first, anim.second);
+    __super::Enter();
 }
 
-void CState_Land::Update(_float fTimeDelta)
+HRESULT CState_Land::Update(_float fTimeDelta)
 {
-	if (CheckExitState())
-		return;
+    if (E_FAIL == (__super::Update(fTimeDelta))) {
+        return E_FAIL;
+    }
+    return S_OK;
 }
 
 void CState_Land::Exit()
 {
+    __super::Exit();
 }
 
-_bool CState_Land::CheckExitState()
+HRESULT CState_Land::Initialize(STATE_LAND_DESC* pDesc)
 {
-	if (m_pModel->IsFinishedAnim())
-		m_pFSM->Change_State(FSMSTATE::IDLE);
+    if (FAILED(__super::Initialize(pDesc))) {
+        return E_FAIL;
+    }
+    m_pModel = m_pOwner->Get_Component<CModel>();
+    m_pFSM = m_pOwner->Get_Component<CFSM>();
 
+    return S_OK;
+}
 
-	if (m_pOwner->Check(FSMSTATE::JOG))
-		m_pFSM->Change_State(FSMSTATE::JOG);
-
-	if (m_pOwner->Check(FSMSTATE::SPRINT))
-		m_pFSM->Change_State(FSMSTATE::SPRINT);
-
-	return false;
+CState_Land* CState_Land::Create(STATE_LAND_DESC* pDesc)
+{
+    CState_Land* pInstance = new CState_Land;
+    if (FAILED(pInstance->Initialize(pDesc))) {
+        SAFE_RELEASE(pInstance);
+    }
+    return pInstance;
 }
 
 void CState_Land::Free()
 {
-	__super::Free();
+    __super::Free();
 }
 
 void CState_Land::Describe_Entity()

@@ -1,18 +1,18 @@
 ﻿#include "pch.h"
 
-#include "CamPosition_Player.h"
+#include "CamPosition_Socket.h"
 
-CCamPosition_Player::CCamPosition_Player(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CCamPosition_Socket::CCamPosition_Socket(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CCamPosition(pDevice, pContext)
 {
 }
 
-CCamPosition_Player::CCamPosition_Player(const CCamPosition_Player& rhs)
+CCamPosition_Socket::CCamPosition_Socket(const CCamPosition_Socket& rhs)
 	:CCamPosition(rhs)
 {
 }
 
-void CCamPosition_Player::Priority_Update(_float fTimeDelta)
+void CCamPosition_Socket::Priority_Update(_float fTimeDelta)
 {
 	/*_matrix socketMatrix = {};
 
@@ -24,20 +24,20 @@ void CCamPosition_Player::Priority_Update(_float fTimeDelta)
 	m_pTransformCom->Set_WorldMatrix(/*socketMatrix * */XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr()));
 }
 
-void CCamPosition_Player::Update(_float fTimeDelta)
+void CCamPosition_Socket::Update(_float fTimeDelta)
 {
 }
 
-void CCamPosition_Player::Late_Update(_float fTimeDelta)
+void CCamPosition_Socket::Late_Update(_float fTimeDelta)
 {
 }
 
-HRESULT CCamPosition_Player::Initialize_Prototype()
+HRESULT CCamPosition_Socket::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CCamPosition_Player::Initialize(void* pArg)
+HRESULT CCamPosition_Socket::Initialize(void* pArg)
 {
 	CAMERAPOSITION_PLAYER_DESC* pDesc = static_cast<CAMERAPOSITION_PLAYER_DESC*> (pArg);
 	//m_pSocketMatrices = pDesc->pSocketMatrices;
@@ -54,7 +54,7 @@ HRESULT CCamPosition_Player::Initialize(void* pArg)
 	return S_OK;
 }
 
-HRESULT CCamPosition_Player::Ready_Components(void* pArg)
+HRESULT CCamPosition_Socket::Ready_Components(void* pArg)
 {
 	if (FAILED(__super::Ready_Components(pArg))) 
 	{
@@ -64,14 +64,14 @@ HRESULT CCamPosition_Player::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-HRESULT CCamPosition_Player::Bind_ShaderResources()
+HRESULT CCamPosition_Socket::Bind_ShaderResources()
 {
 	return S_OK;
 }
 
-CCamPosition_Player* CCamPosition_Player::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CCamPosition_Socket* CCamPosition_Socket::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CCamPosition_Player* pInstance = new CCamPosition_Player(pDevice, pContext);
+	CCamPosition_Socket* pInstance = new CCamPosition_Socket(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
@@ -82,9 +82,9 @@ CCamPosition_Player* CCamPosition_Player::Create(ID3D11Device* pDevice, ID3D11De
 	return pInstance;
 }
 
-CCamPosition_Player* CCamPosition_Player::Clone(void* pArg, class CGameObject* pOWner)
+CCamPosition_Socket* CCamPosition_Socket::Clone(void* pArg, class CGameObject* pOWner)
 {
-	CCamPosition_Player* pInstance = new CCamPosition_Player(*this);
+	CCamPosition_Socket* pInstance = new CCamPosition_Socket(*this);
 	pInstance->m_pOwner = pOWner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
@@ -95,11 +95,11 @@ CCamPosition_Player* CCamPosition_Player::Clone(void* pArg, class CGameObject* p
 	return pInstance;
 }
 
-void CCamPosition_Player::Free()
+void CCamPosition_Socket::Free()
 {
 	__super::Free();
 }
 
-void CCamPosition_Player::Describe_Entity()
+void CCamPosition_Socket::Describe_Entity()
 {
 }
