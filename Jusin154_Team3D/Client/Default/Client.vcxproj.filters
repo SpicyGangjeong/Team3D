@@ -37,9 +37,6 @@
     <ClInclude Include="..\Public\Level_GamePlay.h">
       <Filter>01.Levels\02.GamePlay</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Client_Struct.h">
-      <Filter>99.Define</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\InfoInstance.h">
       <Filter>03.InfoInstance</Filter>
     </ClInclude>
@@ -111,6 +108,27 @@
     </ClInclude>
     <ClInclude Include="..\Public\CallBack_Monster_HitReport.h">
       <Filter>02.GameObjects\PhysX\CallBack\HitReport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Root.h">
+      <Filter>04.Mechanic\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Player_Combat.h">
+      <Filter>04.Mechanic\State\State_Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Player_Dodge.h">
+      <Filter>04.Mechanic\State\Focus\Dodge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Player_Jump.h">
+      <Filter>04.Mechanic\State\Focus\Jump</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Player_Land.h">
+      <Filter>04.Mechanic\State\Focus\Land</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Player_Idle.h">
+      <Filter>04.Mechanic\State\Movement\Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Player_Move.h">
+      <Filter>04.Mechanic\State\Movement\Move</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -284,6 +302,30 @@
     <Filter Include="02.GameObjects\PhysX\CallBack\HitReport">
       <UniqueIdentifier>{dc05dfc9-22e5-4a2a-b016-c55b215c0c68}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Mechanic\State\Focus">
+      <UniqueIdentifier>{0834c76d-83d8-4ef5-9d19-7277686d28c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat">
+      <UniqueIdentifier>{017fc692-bac0-4635-843c-02fb59009f5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Movement">
+      <UniqueIdentifier>{349939a0-8b9a-4a1a-8f0a-ca5014cd4e18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Focus\Dodge">
+      <UniqueIdentifier>{5fa1e5a9-acd8-499d-90ee-9cf17441b3a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Focus\Jump">
+      <UniqueIdentifier>{41d2e34e-5280-4b3c-961e-064484f1449d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Focus\Land">
+      <UniqueIdentifier>{1034dd61-dd17-456a-990b-628c45f74b51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Movement\Idle">
+      <UniqueIdentifier>{2999d0c5-81e4-44d6-99b3-4801e6f84dd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Movement\Move">
+      <UniqueIdentifier>{0a3f9629-27d1-411c-806e-b550af8f1ca1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -378,6 +420,27 @@
     </ClCompile>
     <ClCompile Include="..\Private\CallBack_Playable_HitReport.cpp">
       <Filter>02.GameObjects\PhysX\CallBack\HitReport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Root.cpp">
+      <Filter>04.Mechanic\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Player_Combat.cpp">
+      <Filter>04.Mechanic\State\State_Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Player_Dodge.cpp">
+      <Filter>04.Mechanic\State\Focus\Dodge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Player_Jump.cpp">
+      <Filter>04.Mechanic\State\Focus\Jump</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Player_Land.cpp">
+      <Filter>04.Mechanic\State\Focus\Land</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Player_Idle.cpp">
+      <Filter>04.Mechanic\State\Movement\Idle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Player_Move.cpp">
+      <Filter>04.Mechanic\State\Movement\Move</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
