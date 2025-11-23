@@ -454,8 +454,6 @@ HRESULT CEffectObject::LoadPre(const _char* pFilePath, LEVEL eLevel)
 				return E_FAIL;
 
 		}
-
-
 	}
 
 	if (m_EffectInfo.isNoise)
@@ -705,7 +703,7 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fEmissiveCutAlpha", &m_EffectInfo.fEmissiveCutAlpha, sizeof(_float)))) {
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fEmissiveStrength", &m_EffectInfo.fEmissiveStrength, sizeof(_float)))) {
 		return E_FAIL;
 	}
 
@@ -767,8 +765,30 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fSoftenExp", &m_EffectInfo.fSoftenExp, sizeof(_float)))) {
+		return E_FAIL;
+	}
 
-	
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fSoftStrength", &m_EffectInfo.fSoftStrength, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCoreBoost", &m_EffectInfo.fCoreBoost, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fRadius", &m_EffectInfo.fRadius, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fSoftMaskEdge", &m_EffectInfo.fSoftMaskEdge, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fSoftMask", &m_EffectInfo.fSoftMask, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
 
 	if (m_pDiffuse_TextureCom != nullptr)
 	{

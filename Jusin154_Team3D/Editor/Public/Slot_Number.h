@@ -26,17 +26,22 @@ public:
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;
+			void	UV();
+			_float2 Compute_UVX(_uint Numver);
+			_float2 Compute_UVY(_uint Numver);
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
 private:
-	CTexture* m_pDiffuse_TextureCom = { nullptr };
-	CShader* m_pShaderCom = { nullptr };
-	CVIBuffer_UI_Instance* m_pVIBufferCom = { nullptr };
+	CTexture*								m_pDiffuse_TextureCom = { nullptr };
+	CShader*								m_pShaderCom = { nullptr };
+	CVIBuffer_UI_Instance*					m_pVIBufferCom = { nullptr };
+	CVIBuffer_UI_Instance::UI_ATLAS_DESC	pUVDesc[4];
 
-	_float m_fOffSetX{};
-	_float m_fOffSetY{};
-	_uint  m_iCols{};
+	_float2									m_fIamge_Size{};
+	_float									m_fOffSetX{};
+	_float									m_fOffSetY{};
+	_uint									m_iCols{};
 
 public:
 	static CSlot_Number* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

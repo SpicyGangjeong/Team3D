@@ -23,6 +23,7 @@ public:
 	virtual void SizeUpY(_float fSizeY) override;
 	virtual void SizeUpdate(_float fSizeX, _float fSizeY) override;
 
+
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;

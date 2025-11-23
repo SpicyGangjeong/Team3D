@@ -115,11 +115,6 @@ HRESULT CVIBuffer_UI_Instance::Initialize_Prototype(const INSTANCE_DESC* pInstan
 	ZeroMemory(m_fPosition, sizeof(_float2) * m_iNumInstance);
 
 
-	for (size_t i = 0; i < m_iNumInstance; ++i)
-	{
-		m_pInstanceVertices[i].fPos = _float2(pDesc->vPsition.x, pDesc->vPsition.y);
-	}
-
 	m_InstanceInitialDesc.pSysMem = m_pInstanceVertices;
 
 #pragma endregion
@@ -205,6 +200,31 @@ void CVIBuffer_UI_Instance::Set_SizeY(_float fSizeY)
 	m_pContext->Unmap(m_pVBInstance, 0);
 }
 
+void CVIBuffer_UI_Instance::Set_ImageUV(UI_ATLAS_DESC* AtlasUV)
+{
+	D3D11_MAPPED_SUBRESOURCE		SubResource{};
+
+	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+
+	VTX_INSTANCE_UI* pVertices = static_cast<VTX_INSTANCE_UI*>(SubResource.pData);
+
+	for (size_t i = 0; i < m_iNumInstance; i++)
+	{
+		if (AtlasUV == nullptr)
+		{
+			pVertices[i].fUVStart = _float2(0.f, 0.f);
+			pVertices[i].fUVStart = _float2(1.f,1.f);
+		}
+		else
+		{
+			pVertices[i].fUVStart = AtlasUV[i].fUVStart;
+			pVertices[i].fUVEnd = AtlasUV[i].fUVEnd;
+		}
+	}
+
+	m_pContext->Unmap(m_pVBInstance, 0);
+}
+
 CVIBuffer_UI_Instance* CVIBuffer_UI_Instance::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const INSTANCE_DESC* pInstanceDesc)
 {
 	CVIBuffer_UI_Instance* pInstance = new CVIBuffer_UI_Instance(pDevice, pContext);
@@ -239,6 +259,7 @@ void CVIBuffer_UI_Instance::Free()
 	if (false == m_isCloned)
 	{
 		Safe_Delete_Array(m_pInstanceVertices);
+		Safe_Delete_Array(m_fPosition);
 	}
 }
 

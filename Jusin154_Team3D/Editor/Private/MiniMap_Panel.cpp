@@ -68,9 +68,6 @@ void CMiniMap_Panel::Late_Update(_float fTimeDelta)
 		return;
 	}
 	if (m_bVisible) {
-		if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
-			m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
-		}
 	}
 	__super::Late_Update(fTimeDelta);
 }
@@ -92,10 +89,7 @@ HRESULT CMiniMap_Panel::Bind_ShaderResources()
 
 HRESULT CMiniMap_Panel::Ready_Components(void* pArg)
 {
-	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
-	{
-		return E_FAIL;
-	}
+
 	return S_OK;
 }
 
