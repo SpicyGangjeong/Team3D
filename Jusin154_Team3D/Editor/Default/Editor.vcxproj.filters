@@ -1066,6 +1066,9 @@
     <ClCompile Include="..\Private\Player_States.cpp">
       <Filter>02.GameObjects\Player</Filter>
     </ClCompile>
+    <ClCompile Include="Goblin_States.cpp">
+      <Filter>02.GameObjects\Monster\Goblin</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Editor.rc">

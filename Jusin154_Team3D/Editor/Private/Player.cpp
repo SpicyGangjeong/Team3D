@@ -84,10 +84,7 @@ void CPlayer::Update(_float fTimeDelta)
 {
 	m_pFSM->Update_State(fTimeDelta);
 
-
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
-
-
 
 	__super::Update(fTimeDelta);
 	Describe_Entity();
@@ -108,8 +105,6 @@ void CPlayer::Late_Update(_float fTimeDelta)
 
 HRESULT CPlayer::Render()
 {
-	if (!m_bVisible)
-		return S_OK;
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
@@ -321,6 +316,6 @@ void CPlayer::Describe_Entity()
 	string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
 	GUI::Text(AnimList.c_str());
 
-	GUI::Checkbox("Render", &m_bVisible);
+	//GUI::Checkbox("Render", &m_bVisible);
 	
 }
