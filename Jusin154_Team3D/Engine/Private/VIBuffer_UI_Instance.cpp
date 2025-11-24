@@ -251,25 +251,6 @@ void CVIBuffer_UI_Instance::Set_ImageUV(UI_ATLAS_DESC* AtlasUV)
 	m_pContext->Unmap(m_pVBInstance, 0);
 }
 
-void CVIBuffer_UI_Instance::Add_InstanceOvject(vector<_uint> VisileIndices)
-{
-	m_VisibleIndices = VisileIndices;
-	D3D11_MAPPED_SUBRESOURCE		SubResource{};
-
-	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
-
-	VTX_INSTANCE_UI* pVertices = static_cast<VTX_INSTANCE_UI*>(SubResource.pData);
-
-	for (_uint i = 0; i < m_VisibleIndices.size(); ++i)
-	{
-		pVertices[i] = m_pInstanceVertices[m_VisibleIndices[i]];
-	}
-
-
-	m_pContext->Unmap(m_pVBInstance, 0);
-
-}
-
 CVIBuffer_UI_Instance* CVIBuffer_UI_Instance::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const INSTANCE_DESC* pInstanceDesc)
 {
 	CVIBuffer_UI_Instance* pInstance = new CVIBuffer_UI_Instance(pDevice, pContext);

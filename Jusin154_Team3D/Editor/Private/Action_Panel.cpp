@@ -7,6 +7,7 @@
 #include "Slot_Number.h"
 #include "HpBarBG.h"
 #include "Magic_Meter.h"
+#include "Magic_Icon.h"
 
 CAction_Panel::CAction_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPanelObject(pDevice, pContext)
@@ -47,6 +48,10 @@ HRESULT CAction_Panel::Initialize(void* pArg)
 	}
 
 	m_bVisible = true;
+	m_bActive = true;
+	Magic_Meter_UV();
+	Magic_Meter_Visible(1, true);
+	Magic_Meter_Visible(5, true);
 	return S_OK;
 }
 
@@ -65,6 +70,8 @@ void CAction_Panel::Update(_float fTimeDelta)
 	{
 		return;
 	}
+	
+	Matic_Meter_Move();
 
 	__super::Update(fTimeDelta);
 }
@@ -106,6 +113,77 @@ _vector CAction_Panel::Get_WorldPostion()
 	return m_pTransformCom->Get_State(STATE::POSITION);
 }
 
+void CAction_Panel::Magic_Meter_Visible(_uint iIndex, _bool bVisible)
+{
+	switch (iIndex)
+	{
+	case 1:
+		static_cast<CMagic_Meter*>(m_pMagic_Meter1)->Visible(bVisible);
+		break;
+	case 2:
+		static_cast<CMagic_Meter*>(m_pMagic_Meter2)->Visible(bVisible);
+		break;
+	case 3:
+		static_cast<CMagic_Meter*>(m_pMagic_Meter3)->Visible(bVisible);
+		break;
+	case 4:
+		static_cast<CMagic_Meter*>(m_pMagic_Meter4)->Visible(bVisible);
+		break;
+	case 5:
+		static_cast<CMagic_Meter*>(m_pMagic_Meter5)->Visible(bVisible);
+		break;
+
+	default:
+		return;
+	}
+	if (bVisible)
+		m_iMagic_Meter_Count++;
+	else
+		m_iMagic_Meter_Count--;
+}
+
+void CAction_Panel::Magic_Meter_UV()
+{
+	static_cast<CMagic_Meter*>(m_pMagic_Meter1)->Meter_Index(2);
+	static_cast<CMagic_Meter*>(m_pMagic_Meter2)->Meter_Index(1);
+	static_cast<CMagic_Meter*>(m_pMagic_Meter3)->Meter_Index(1);
+	static_cast<CMagic_Meter*>(m_pMagic_Meter4)->Meter_Index(1);
+	static_cast<CMagic_Meter*>(m_pMagic_Meter5)->Meter_Index(0);
+
+	for (_uint i = 0; i < 5; ++i)
+	{
+		m_vMagic_MeterUV[i].x = 190.f - (55.f * i);
+		m_vMagic_MeterUV[i].y = 145.f;
+	}
+}
+
+void CAction_Panel::Matic_Meter_Move()
+{
+
+	static_cast<CMagic_Meter*>(m_pMagic_Meter1)->Move(m_vMagic_MeterUV[0].x, m_vMagic_MeterUV[0].y);
+	static_cast<CMagic_Meter*>(m_pMagic_Meter5)->Move(m_vMagic_MeterUV[1].x, m_vMagic_MeterUV[1].y);
+
+	if (static_cast<CMagic_Meter*>(m_pMagic_Meter2)->Get_Active() == true)
+	{
+		static_cast<CMagic_Meter*>(m_pMagic_Meter2)->Move(m_vMagic_MeterUV[1].x, m_vMagic_MeterUV[1].y);
+		static_cast<CMagic_Meter*>(m_pMagic_Meter5)->Move(m_vMagic_MeterUV[2].x, m_vMagic_MeterUV[2].y);
+	}
+	if (static_cast<CMagic_Meter*>(m_pMagic_Meter3)->Get_Active() == true)
+	{
+		static_cast<CMagic_Meter*>(m_pMagic_Meter2)->Move(m_vMagic_MeterUV[1].x, m_vMagic_MeterUV[1].y); 
+		static_cast<CMagic_Meter*>(m_pMagic_Meter3)->Move(m_vMagic_MeterUV[2].x, m_vMagic_MeterUV[2].y);
+		static_cast<CMagic_Meter*>(m_pMagic_Meter5)->Move(m_vMagic_MeterUV[3].x, m_vMagic_MeterUV[3].y);
+	}
+	if (static_cast<CMagic_Meter*>(m_pMagic_Meter4)->Get_Active() == true)
+	{
+		static_cast<CMagic_Meter*>(m_pMagic_Meter2)->Move(m_vMagic_MeterUV[1].x, m_vMagic_MeterUV[1].y); 
+		static_cast<CMagic_Meter*>(m_pMagic_Meter3)->Move(m_vMagic_MeterUV[2].x, m_vMagic_MeterUV[2].y);
+		static_cast<CMagic_Meter*>(m_pMagic_Meter4)->Move(m_vMagic_MeterUV[3].x, m_vMagic_MeterUV[3].y);
+		static_cast<CMagic_Meter*>(m_pMagic_Meter5)->Move(m_vMagic_MeterUV[4].x, m_vMagic_MeterUV[4].y);
+	}
+
+}
+
 HRESULT CAction_Panel::Bind_ShaderResources()
 {
 	return S_OK;
@@ -145,18 +223,43 @@ HRESULT CAction_Panel::Ready_Element(void* pArg)
 		return E_FAIL;
 	}
 	Add_Element(TEXT("HpBarBG"), m_pHpBarBG);
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMagic_Meter>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMagic_Meter**>(&m_pMagic_Meter))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMagic_Meter>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMagic_Meter**>(&m_pMagic_Meter1))))
 	{
 		return E_FAIL;
 	}
-	Add_Element(TEXT("Magic_Meter"), m_pMagic_Meter);
+	Add_Element(TEXT("Magic_Meter1"), m_pMagic_Meter1);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMagic_Meter>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMagic_Meter**>(&m_pMagic_Meter2))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Magic_Meter2"), m_pMagic_Meter2);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMagic_Meter>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMagic_Meter**>(&m_pMagic_Meter3))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Magic_Meter3"), m_pMagic_Meter3);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMagic_Meter>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMagic_Meter**>(&m_pMagic_Meter4))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Magic_Meter4"), m_pMagic_Meter4);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMagic_Meter>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMagic_Meter**>(&m_pMagic_Meter5))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Magic_Meter5"), m_pMagic_Meter5);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMagic_Icon>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMagic_Icon**>(&m_pMagic_Icon))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Magic_Icon"), m_pMagic_Icon);
 	return S_OK;
 }
 
 CAction_Panel* CAction_Panel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CAction_Panel* pInstance = new CAction_Panel(pDevice, pContext);
-	
+
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
 		MSG_BOX("Failed to Created : CAction_Panel");

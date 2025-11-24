@@ -89,20 +89,15 @@ void CHpBarBG::Update(_float fTimeDelta)
 		}
 	} 
 
-	if (m_pGameInstance->Key_Down(DIK_2))
-		Lerp_PosX(10.f);
-	if (m_pGameInstance->Key_Down(DIK_3))
-		Lerp_PosX(-10.f);
-
 	if (m_fCurrentHp < 0.f)
 		m_fCurrentHp = 0.f;
 	if (m_fDamage <= 0.f)
 		m_fDamage = 0.f;
-	TargetHp = m_fMaxHp - m_fDamage;
+	m_fTargetHp = m_fMaxHp - m_fDamage;
 
-	if (TargetHp > m_fCurrentHp)
+	if (m_fTargetHp > m_fCurrentHp)
 		Heal(fTimeDelta);
-	else if(TargetHp < m_fCurrentHp)
+	else if(m_fTargetHp < m_fCurrentHp)
 		Hit(fTimeDelta);
 	m_fHpBar = m_fCurrentHp / m_fMaxHp;
 
@@ -153,12 +148,12 @@ void CHpBarBG::Lerp_PosX(_float X)
 
 void CHpBarBG::Heal(_float fTimeDelta)
 {
-	m_fCurrentHp = CMyTools::Lerp_f1D(TargetHp, m_fCurrentHp, fTimeDelta * m_fMoveSpeed);
+	m_fCurrentHp = CMyTools::Lerp_f1D(m_fTargetHp, m_fCurrentHp, fTimeDelta * m_fMoveSpeed);
 }
 
 void CHpBarBG::Hit(_float fTimeDelta)
 {
-	m_fCurrentHp = CMyTools::Lerp_f1D(m_fCurrentHp, TargetHp, fTimeDelta * m_fMoveSpeed);
+	m_fCurrentHp = CMyTools::Lerp_f1D(m_fCurrentHp, m_fTargetHp, fTimeDelta * m_fMoveSpeed);
 }
 
 void CHpBarBG::SizeUpX(_float fSizeX)

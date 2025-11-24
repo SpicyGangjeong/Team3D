@@ -40,7 +40,7 @@ private:
 	_float				m_fCurrentHp{};
 	_float				m_fHpBar{};
 	_float				m_fDamage{};
-	_float				TargetHp{};
+	_float				m_fTargetHp{};
 	_float2				m_fHpBG{};
 public:
 	static CHpBarBG* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

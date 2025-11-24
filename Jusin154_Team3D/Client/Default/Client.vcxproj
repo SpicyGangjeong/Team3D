@@ -223,7 +223,6 @@
     <ClCompile Include="..\Private\Camera_Gaze.cpp" />
     <ClCompile Include="..\Private\CamPosition.cpp" />
     <ClCompile Include="..\Private\CamPosition_Arm.cpp" />
-    <ClCompile Include="..\Private\CamPosition_Player.cpp" />
     <ClCompile Include="..\Private\PhysXEffectHitBox.cpp" />
     <ClCompile Include="..\Private\CamPosition_Shoulder.cpp" />
     <ClCompile Include="..\Private\CamPosition_Socket.cpp" />
