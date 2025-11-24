@@ -112,7 +112,7 @@ void CAlphaMap::Load_ToFile(const _char* pFilePath)
 	if (FAILED(m_pContext->Map(m_pTexture2D, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource)))
 		return;
 
-	MSG_BOX("Success to Load Binanry File");
+	//MSG_BOX("Success to Load Binanry File");
 
 	memcpy(SubResource.pData, m_pPixels, sizeof(_float4) * m_iNumPixels);
 

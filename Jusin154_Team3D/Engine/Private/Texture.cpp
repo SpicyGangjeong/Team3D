@@ -106,7 +106,7 @@ HRESULT CTexture::Load_SRV(const _char* szPath, ID3D11ShaderResourceView** ppSRV
 
 	HRESULT			hr = {};
 
-	hr = CreateDDSTextureFromFile(m_pDevice, CMyTools::ToWstring(szTextureFilePath).c_str(), nullptr, ppSRV); // 일단 dds로 시도하고
+	hr = CreateDDSTextureFromFile(m_pDevice, CMyTools::ToWstring(szTextureFilePath).c_str(), nullptr, ppSRV, 1024); // 일단 dds로 시도하고
 	if (FAILED(hr)) {
 		memset(szTextureFilePath, 0, sizeof(_char) * MAX_PATH); // 실패하면 원래 확장자로 다시 시도
 		strcat_s(szTextureFilePath, szTextureFileName);
