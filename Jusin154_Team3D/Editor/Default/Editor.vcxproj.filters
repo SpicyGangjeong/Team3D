@@ -696,7 +696,7 @@
     <ClInclude Include="..\public\AlphaMap.h">
       <Filter>02.GameObjects\Env\05.AlphaMap</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\DebugCamera.h">
+    <ClInclude Include="..\Public\Camera_Debug.h">
       <Filter>02.GameObjects\Camera\Debug</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CamPosition_Arm.h">
@@ -1048,10 +1048,7 @@
     <ClCompile Include="..\private\Magic_Meter.cpp">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel\Magic_Meter</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Player_States.cpp">
-      <Filter>02.GameObjects\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\DebugCamera.cpp">
+    <ClCompile Include="..\Private\Camera_Debug.cpp">
       <Filter>02.GameObjects\Camera\Debug</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CamPosition_Arm.cpp">
@@ -1065,6 +1062,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\CamPosition_Target.cpp">
       <Filter>02.GameObjects\Camera\CameraPosition\Player\Target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_States.cpp">
+      <Filter>02.GameObjects\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

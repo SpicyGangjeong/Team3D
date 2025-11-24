@@ -43,7 +43,6 @@ private:
 	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
 
-	void TestKeyInput(_float fTimeDelta);
 public:
 	static CPlayer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr) override;
@@ -57,6 +56,7 @@ public:
 	virtual void Reset_Walk() { m_bWalkToggle = false; }
 
 private:
+	void TestKeyInput(_float fTimeDelta);
 	virtual void Add_FSM();
 	virtual void Set_Anim();
 

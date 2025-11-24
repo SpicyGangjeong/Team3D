@@ -1,5 +1,5 @@
 ﻿#include "pch.h"
-#include "DebugCamera.h"
+#include "Camera_Debug.h"
 #include "Shader.h"
 
 CCamera_Debug::CCamera_Debug(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -14,7 +14,7 @@ CCamera_Debug::CCamera_Debug(const CCamera_Debug& rhs)
 
 void CCamera_Debug::Priority_Update(_float fTimeDelta)
 {
-	m_pGameInstance->Bind_Camera(CURRENT_LEVEL, CAMERA_DEBUG, false);
+	m_pGameInstance->Bind_Camera(g_iStaticLevel, CAMERA_DEBUG, false);
 }
 
 void CCamera_Debug::Update(_float fTimeDelta)
@@ -104,8 +104,6 @@ HRESULT CCamera_Debug::Initialize(void* pArg)
 	m_matInitial = *m_pTransformCom->Get_WorldMatrixPtr();
 	m_bActive = true;
 
-	m_pGameInstance->Add_Camera(NEXT_LEVEL, this, m_pCameraKey);
-	m_pGameInstance->Bind_Camera(NEXT_LEVEL, m_pCameraKey, false);
 	return S_OK;
 }
 

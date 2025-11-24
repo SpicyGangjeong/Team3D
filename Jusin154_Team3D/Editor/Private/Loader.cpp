@@ -4,7 +4,7 @@
 
 #pragma region DEFAULT_HEADER
 
-#include "DebugCamera.h"
+#include "Camera_Debug.h"
 #include "DummyRect.h"
 #include "MainApp.h"
 #include "Dummy_Cube.h"

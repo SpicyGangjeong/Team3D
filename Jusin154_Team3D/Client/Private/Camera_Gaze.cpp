@@ -41,6 +41,7 @@ void CCamera_Gaze::Priority_Update(_float fTimeDelta)
 
 void CCamera_Gaze::Update(_float fTimeDelta)
 {
+	GUI::Text("%d", m_iPriority);
 	if (false == m_bActive) {
 		return;
 	}
@@ -103,6 +104,9 @@ void CCamera_Gaze::Toggle_Priority()
 
 void CCamera_Gaze::Late_Update(_float fTimeDelta)
 {
+	if (false == m_bActive) {
+		return;
+	}
 }
 HRESULT CCamera_Gaze::Render()
 {

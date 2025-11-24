@@ -39,15 +39,15 @@ HRESULT CPlayer::Initialize_Prototype()
 
 HRESULT CPlayer::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg))){
+	if (FAILED(__super::Initialize(pArg))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(Ready_Components())){
+	if (FAILED(Ready_Components())) {
 		return E_FAIL;
 	}
 
-	if (FAILED(Ready_Parts())){
+	if (FAILED(Ready_Parts())) {
 		return E_FAIL;
 	}
 
@@ -56,6 +56,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	Add_FSM();
 
 	Set_Anim();
+
+	m_eSpell = STATEANIM::DESCENDO;
 
 	{
 		CFSM::FSM_DESC FSMDesc{};
@@ -86,12 +88,13 @@ void CPlayer::Update(_float fTimeDelta)
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
 
-	
+
 	__super::Update(fTimeDelta);
 	Describe_Entity();
 
 
 	m_pCharacter_Controller->Move(fTimeDelta);
+	TestKeyInput(fTimeDelta);
 }
 
 void CPlayer::Late_Update(_float fTimeDelta)
@@ -105,6 +108,8 @@ void CPlayer::Late_Update(_float fTimeDelta)
 
 HRESULT CPlayer::Render()
 {
+	if (!m_bVisible)
+		return S_OK;
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
@@ -153,13 +158,13 @@ HRESULT CPlayer::Ready_Components()
 
 	/* Com_Model */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_strModelPrototypeTag,
-		reinterpret_cast<CComponent**>(&m_pModelCom)))){
+		reinterpret_cast<CComponent**>(&m_pModelCom)))) {
 		return E_FAIL;
 	}
 
 	/* Com_Shader */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_ANIMMESH,
-		reinterpret_cast<CComponent**>(&m_pShaderCom)))){
+		reinterpret_cast<CComponent**>(&m_pShaderCom)))) {
 		return E_FAIL;
 	}
 
@@ -235,13 +240,11 @@ HRESULT CPlayer::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ)))) {
 		return E_FAIL;
 	}
-
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 		return E_FAIL;
 	}
 	return S_OK;
 }
-
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CPlayer* pInstance = new CPlayer(pDevice, pContext);
@@ -306,12 +309,18 @@ void CPlayer::Describe_Entity()
 	GUI::DragFloat3("Pos", Pos3);
 
 
-	_float RotR,RotU,RotL;
+	_float RotR, RotU, RotL;
 	RotR = XMVectorGetX(m_pTransformCom->Get_State(STATE::RIGHT));
 	RotU = XMVectorGetY(m_pTransformCom->Get_State(STATE::UP));
 	RotL = XMVectorGetZ(m_pTransformCom->Get_State(STATE::LOOK));
 
 	float Rot3[3] = { RotR, RotU,RotL };
 	GUI::DragFloat3("Rot", Rot3);
-	
+
+
+	string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
+	GUI::Text(AnimList.c_str());
+
+	GUI::Checkbox("Render", &m_bVisible);
+
 }

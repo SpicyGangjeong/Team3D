@@ -7,7 +7,7 @@
 #include "Head.h"
 #include "Hair.h"
 #include "Dummy_Cube.h"
-#include "DebugCamera.h"
+#include "Camera_Debug.h"
 #include "Layer.h"
 #include "GameObject.h"
 #include "DummyObject.h"
@@ -680,8 +680,8 @@ HRESULT CLevel_ObjectViewer::Ready_Layer_Camera(const _wstring& strLayerTag)
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCamera_Debug>(g_iStaticLevel, NEXT_LEVEL, LAYER_CAMERA, &Camera_Desc, nullptr, &pCamera))) {
 		return E_FAIL;
 	}
-	m_pGameInstance->Add_Camera(NEXT_LEVEL, pCamera, CAMERA_DEBUG);
-	if (FAILED(m_pGameInstance->Bind_Camera(NEXT_LEVEL, CAMERA_DEBUG, true))) {
+	m_pGameInstance->Add_Camera(g_iStaticLevel, pCamera, CAMERA_DEBUG);
+	if (FAILED(m_pGameInstance->Bind_Camera(g_iStaticLevel, CAMERA_DEBUG, true))) {
 		return E_FAIL;
 	}
 
