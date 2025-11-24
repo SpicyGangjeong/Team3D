@@ -349,7 +349,7 @@
     <Filter Include="02.GameObjects\Env\05.AlphaMap">
       <UniqueIdentifier>{54eef1b7-a5ee-444f-9577-44ffc8c3d8bc}</UniqueIdentifier>
     </Filter>
-      <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\Spell_Slot_Preview">
+    <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\Spell_Slot_Preview">
       <UniqueIdentifier>{b4e1da25-c952-4ff4-92fd-7f1501d8c005}</UniqueIdentifier>
     </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\Potion">
