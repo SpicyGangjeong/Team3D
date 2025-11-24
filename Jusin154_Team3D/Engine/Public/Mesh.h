@@ -73,7 +73,11 @@ public:
 	//
 	virtual CMesh* Clone(void* pArg, class CGameObject* pOwner = nullptr) override;
 	virtual void Free() override;
+#ifdef _DEBUG
 	void Describe_Entity() override;
+
+#endif // _DEBUG
+
 };
 
 NS_END

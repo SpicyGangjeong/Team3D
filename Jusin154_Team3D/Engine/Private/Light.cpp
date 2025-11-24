@@ -151,6 +151,7 @@ void CLight::Free()
 
 }
 
+#ifdef _DEBUG
 
 void CLight::Describe_Entity()
 {
@@ -187,3 +188,5 @@ void CLight::Describe_Entity()
 
 	GUI::Separator();
 }
+
+#endif // _DEBUG

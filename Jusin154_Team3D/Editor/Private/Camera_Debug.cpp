@@ -1,23 +1,27 @@
 ﻿#include "pch.h"
-#include "DebugCamera.h"
+#include "Camera_Debug.h"
 #include "Shader.h"
 
-CDebugCamera::CDebugCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CCamera_Debug::CCamera_Debug(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCamera(pDevice, pContext)
 {
 }
 
-CDebugCamera::CDebugCamera(const CDebugCamera& rhs)
+CCamera_Debug::CCamera_Debug(const CCamera_Debug& rhs)
 	: CCamera(rhs)
 {
 }
 
-void CDebugCamera::Priority_Update(_float fTimeDelta)
+void CCamera_Debug::Priority_Update(_float fTimeDelta)
 {
+	m_pGameInstance->Bind_Camera(g_iStaticLevel, CAMERA_DEBUG, false);
 }
 
-void CDebugCamera::Update(_float fTimeDelta)
+void CCamera_Debug::Update(_float fTimeDelta)
 {
+	if (false == m_bActive) {
+		return;
+	}
 	Transition(fTimeDelta);
 	_float3 vCamPos = {};
 	XMStoreFloat3(&vCamPos, m_pTransformCom->Get_State(STATE::POSITION));
@@ -66,21 +70,24 @@ void CDebugCamera::Update(_float fTimeDelta)
 	__super::Bind_Matrices();
 }
 
-void CDebugCamera::Late_Update(_float fTimeDelta)
+void CCamera_Debug::Late_Update(_float fTimeDelta)
 {
+	if (false == m_bActive) {
+		return;
+	}
 }
 
-HRESULT CDebugCamera::Render()
-{
-	return S_OK;
-}
-
-HRESULT CDebugCamera::Initialize_Prototype()
+HRESULT CCamera_Debug::Render()
 {
 	return S_OK;
 }
 
-HRESULT CDebugCamera::Initialize(void* pArg)
+HRESULT CCamera_Debug::Initialize_Prototype()
+{
+	return S_OK;
+}
+
+HRESULT CCamera_Debug::Initialize(void* pArg)
 {
 	CAMERA_DEBUG_DESC* pDesc = static_cast<CAMERA_DEBUG_DESC*>(pArg);
 	m_fMouseSensor = pDesc->fMouseSensor;
@@ -97,12 +104,10 @@ HRESULT CDebugCamera::Initialize(void* pArg)
 	m_matInitial = *m_pTransformCom->Get_WorldMatrixPtr();
 	m_bActive = true;
 
-	m_pGameInstance->Add_Camera(NEXT_LEVEL, this, m_pCameraKey);
-	m_pGameInstance->Bind_Camera(NEXT_LEVEL, m_pCameraKey, false);
 	return S_OK;
 }
 
-HRESULT CDebugCamera::Ready_Components(void* pArg)
+HRESULT CCamera_Debug::Ready_Components(void* pArg)
 {
 	if (FAILED(__super::Ready_Components(pArg))) {
 		return E_FAIL;
@@ -111,46 +116,46 @@ HRESULT CDebugCamera::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-HRESULT CDebugCamera::Bind_ShaderResources()
+HRESULT CCamera_Debug::Bind_ShaderResources()
 {
 	return S_OK;
 }
 
-void CDebugCamera::Set_InitialPos()
+void CCamera_Debug::Set_InitialPos()
 {
 	m_pTransformCom->Set_WorldMatrix(m_matInitial);
 }
 
-CDebugCamera* CDebugCamera::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CCamera_Debug* CCamera_Debug::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CDebugCamera* pInstance = new CDebugCamera(pDevice, pContext);
+	CCamera_Debug* pInstance = new CCamera_Debug(pDevice, pContext);
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CDebugCamera");
+		MSG_BOX("Failed to Created : CCamera_Debug");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CDebugCamera::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CCamera_Debug::Clone(void* pArg, CGameObject* pOwner)
 {
-	CDebugCamera* pInstance = new CDebugCamera(*this);
+	CCamera_Debug* pInstance = new CCamera_Debug(*this);
 	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CDebugCamera");
+		MSG_BOX("Failed to Cloned : CCamera_Debug");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CDebugCamera::Free()
+void CCamera_Debug::Free()
 {
 	__super::Free();
 }
 
-void CDebugCamera::Describe_Entity()
+void CCamera_Debug::Describe_Entity()
 {
 }

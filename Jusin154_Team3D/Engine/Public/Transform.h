@@ -33,7 +33,9 @@ public:
 	_float3		Get_Scale() const;
 	_vector		Get_QuarternionVector() const; // 현재 회전정보를 담고 있는 쿼터니언 벡터를 out 
 	_vector		Get_RollPitchYawVector() const;
-	_vector		Get_State(STATE eState) const { return XMLoadFloat4(reinterpret_cast<const _float4*>(&m_WorldMatrix.m[ENUM_CLASS(eState)])); }
+	_vector		Get_State(STATE eState) const { 
+		return XMLoadFloat4(reinterpret_cast<const _float4*>(&m_WorldMatrix.m[ENUM_CLASS(eState)])); 
+	}
 	const _float4* Get_StatePtr(STATE eState) { return reinterpret_cast<_float4*>(&m_WorldMatrix.m[ENUM_CLASS(eState)]); }
 	const _float4x4* Get_WorldMatrixPtr() const { return &m_WorldMatrix; }
 	const _matrix Get_XMWorldMatrix() const { return XMLoadFloat4x4(&m_WorldMatrix); }
@@ -66,6 +68,8 @@ public:
 	// Up, Down 벡터를 바라보게 하면 터짐
 	void LookAt(_fvector vAt);
 
+	_float TargetDis(_fvector vTarget);
+
 private:
 	_float				m_fSpeedPerSec = {};
 	_float				m_fRotationPerSec = {};
@@ -84,7 +88,9 @@ public:
 	static CTransform* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CComponent* Clone(void* pArg, class CGameObject* pOwner = nullptr) override;
 	virtual void Free() override;
-	virtual void Describe_Entity() override;
+#ifdef _DEBUG
+	void Describe_Entity() override;
+#endif // _DEBUG
 };
 
 NS_END

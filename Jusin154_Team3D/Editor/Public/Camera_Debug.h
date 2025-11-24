@@ -5,7 +5,7 @@
 
 NS_BEGIN(Editor)
 
-class CDebugCamera final : public CCamera
+class CCamera_Debug final : public CCamera
 {
 public:
 	typedef struct tagCamera_Debug : public CCamera::CAMERA_DESC
@@ -14,9 +14,9 @@ public:
 		_float		fMouseSensor{};
 	}CAMERA_DEBUG_DESC;
 private:
-	CDebugCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CDebugCamera(const CDebugCamera& rhs);
-	virtual ~CDebugCamera() = default;
+	CCamera_Debug(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CCamera_Debug(const CCamera_Debug& rhs);
+	virtual ~CCamera_Debug() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta) override;
@@ -37,7 +37,7 @@ private:
 	void Set_InitialPos();
 
 public:
-	static CDebugCamera* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CCamera_Debug* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner) override;
 	virtual void Free() override;
 	void Describe_Entity() override;

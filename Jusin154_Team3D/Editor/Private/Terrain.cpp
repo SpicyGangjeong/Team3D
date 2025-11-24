@@ -2,7 +2,7 @@
 #include "Terrain.h"
 
 #include "GameInstance.h"
-#include "DebugCamera.h"
+#include "Camera_Debug.h"
 #include "VIBuffer_Terrain.h"
 #include "AlphaMap.h"
 
@@ -40,6 +40,9 @@ HRESULT CTerrain::Initialize(void* pArg)
 
 	m_pAlphaMap->Load_ToFile("Hogsmeade_AlphaMap.bin");
 
+	if (FAILED(m_pVIBufferCom->Load_HeightMap("Hogsmeade_HeightMap.bin")))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -63,7 +66,7 @@ void CTerrain::Priority_Update(_float fTimeDelta)
 	//}
 
 
-	GUI::DragFloat("Up", &m_fUpValue, 0.01f, -1.0f, 1.f);
+	//GUI::DragFloat("Up", &m_fUpValue, 0.01f, -1.0f, 1.f);
 	if (m_pGameInstance->Mouse_Pressing(DIM_LBUTTON))
 	{
 		if (m_pGameInstance->isPicking(&m_vPickingPosition))
@@ -82,23 +85,24 @@ void CTerrain::Priority_Update(_float fTimeDelta)
 	}
 #pragma endregion
 
+#pragma region HEIGHT MAP
+	//HRESULT hr = {};
+	//if(GUI::Button("Save HeightMap"))
+	//	hr = m_pVIBufferCom->Save_HeightMap("Hogsmeade_HeightMap.bin");
+	//if(GUI::Button("Load HeightMap"))
+	//	hr = m_pVIBufferCom->Load_HeightMap("Hogsmeade_HeightMap.bin");
+#pragma endregion
 	
-	
-	/*GUI::InputFloat("Height Ratio", &m_fHeightRatio);
-	max(0.01f, m_fHeightRatio);
-*/
-	//m_pVIBufferCom->Change_HeigthRatio(m_fHeightRatio);
-	//GUI::DragFloat3("Picking", (_float*)(&m_vPickingPosition));
-	_float4 vPos = {};
-	_float3 vRotation = {};
-	XMStoreFloat4(&vPos, m_pTransformCom->Get_State(STATE::POSITION));
-	GUI::DragFloat3("Pos", (_float*)(&vPos));
-	GUI::DragFloat3("Rota", (_float*)(&m_vRotation));
+	//_float4 vPos = {};
+	//_float3 vRotation = {};
+	//XMStoreFloat4(&vPos, m_pTransformCom->Get_State(STATE::POSITION));
+	//GUI::DragFloat3("Pos", (_float*)(&vPos));
+	//GUI::DragFloat3("Rota", (_float*)(&m_vRotation));
 
 	//m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
-	m_pTransformCom->Set_State(STATE::POSITION, XMLoadFloat4(&vPos));
+	//m_pTransformCom->Set_State(STATE::POSITION, XMLoadFloat4(&vPos));
 
-	GUI::DragFloat("Culling Radius", &m_fCullingRadius, 0.01f, 0.01f, 2.f);
+	//GUI::DragFloat("Culling Radius", &m_fCullingRadius, 0.01f, 0.01f, 2.f);
 
 	GUI::End();
 }
@@ -107,7 +111,10 @@ void CTerrain::Update(_float fTimeDelta)
 {
 	//m_pVIBufferCom->Culling(XMMatrixIdentity());
 	
-
+	if(m_pGameInstance->Key_Down(DIK_LSHIFT) && m_pGameInstance->Key_Down(DIK_W))
+	{
+		m_bWasWireFrame = !m_bWasWireFrame;
+	}
 }
 
 void CTerrain::Late_Update(_float fTimeDelta)
@@ -122,9 +129,18 @@ HRESULT CTerrain::Render()
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NORTEX::DEFAULT)))) {
-		return E_FAIL;
+	
+	if(m_bWasWireFrame)
+	{
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NORTEX::TERRAIN)))) {
+			return E_FAIL;
+		}
+	}
+	else
+	{
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NORTEX::DEFAULT)))) {
+			return E_FAIL;
+		}
 	}
 
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {

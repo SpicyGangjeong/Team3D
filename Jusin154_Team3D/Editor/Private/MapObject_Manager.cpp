@@ -2,7 +2,7 @@
 #include "MapObject_Manager.h"
 
 #include "GameInstance.h"
-#include "DebugCamera.h"
+#include "Camera_Debug.h"
 #include "Layer.h"
 #include "MapObject.h"
 #include "MapObject_LOD.h"
@@ -1348,7 +1348,7 @@ void CMapObject_Manager::Update_ContainerObject()
 
 		for (auto& pObject : (*pList))
 		{
-			if (GUI::Button((dynamic_cast<CMapContainer*>(pObject)->Get_Name().c_str())))
+			if (GUI::Button((dynamic_cast<CMapContainer*>(pObject)->Get_Name() + to_string(iIndex)).c_str()))
 			{
 				m_iContainerObjectIndex = iIndex;
 			}

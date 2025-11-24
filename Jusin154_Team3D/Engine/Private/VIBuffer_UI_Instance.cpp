@@ -288,7 +288,10 @@ void CVIBuffer_UI_Instance::Free()
 		Safe_Delete_Array(m_fPosition);
 	}
 }
+#ifdef _DEBUG
 
 void CVIBuffer_UI_Instance::Describe_Entity()
 {
 }
+
+#endif // _DEBUG

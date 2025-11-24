@@ -86,8 +86,6 @@ HRESULT CEffectParts::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-
-
 	return S_OK;
 }
 

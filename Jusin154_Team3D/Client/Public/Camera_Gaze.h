@@ -22,6 +22,7 @@ public:
 	void Update_LerpTimer(Engine::_float fTimeDelta);
 	void Enable_FollowLerp();
 	void Enable_LookLerp();
+	void Toggle_Priority();
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 

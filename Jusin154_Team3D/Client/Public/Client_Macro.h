@@ -29,6 +29,7 @@ namespace Client {
 #pragma region OBJECT
 
 #define CAMERA_DEBUG			TEXT("CAMERA_DEBUG")
+#define CAMERA_SHOULDER			TEXT("CAMERA_SHOULDER")
 #pragma endregion
 #pragma region COMPONENT
 
@@ -38,6 +39,7 @@ namespace Client {
 #define LAYER_FLOOR			TEXT("Layer_Floor")
 #define LAYER_WALL			TEXT("Layer_Wall")
 #define LAYER_CUBE			TEXT("Layer_Cube")
+#define LAYER_SKYBOX		TEXT("Layer_SkyBox")
 #define LAYER_EDITOR_CAMERA TEXT("Layer_Editor_Camera")
 #define LAYER_BACKGROUND	TEXT("Layer_BackGround")
 #define LAYER_MARKER		TEXT("Layer_Marker")

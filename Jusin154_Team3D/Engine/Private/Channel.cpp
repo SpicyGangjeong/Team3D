@@ -112,50 +112,54 @@ HRESULT CChannel::Initialize(const vector<CBone*>& Bones, _uint iIndex)
 }
 
 
-void CChannel::Update_TransformationMatirx(const vector<CBone*>& Bones, const LOCALPOS_DESC* pLocalPosArray, _float fCurrentTrackPosition, _uint* pCurrentKeyFrameIndex, CTransform* pTransform)
+void CChannel::Update_TransformationMatirx(
+	const vector<CBone*>& Bones,
+	const LOCALPOS_DESC* pLocalPosArray,
+	_float fCurrentTrackPosition,
+	_uint* pCurrentKeyFrameIndex,
+	CTransform* pTransform,_float m_fAmount)
 {
-	
-	//if (0.f == fCurrentTrackPosition) {
-	//	*pCurrentKeyFrameIndex = 0;
-	//}
-	//KEYFRAME LastKeyFrame = m_KeyFrames.back();
+	/*if (0.f == fCurrentTrackPosition)
+		*pCurrentKeyFrameIndex = 0;
 
-	//_vector vScale = {};
-	//_vector vRotation = {};
-	//_vector vTranslation = {};
+	KEYFRAME		LastKeyFrame = m_KeyFrames.back();
 
-	//if (fCurrentTrackPosition >= LastKeyFrame.fTrackPosition)
-	//{
-	//	vScale = XMLoadFloat3(&LastKeyFrame.vScale);
-	//	vRotation = XMLoadFloat4(&LastKeyFrame.vRotation);
-	//	vTranslation = XMVectorSetW(XMLoadFloat3(&LastKeyFrame.vTranslation), 1.f);
-	//}
-	//else {
-	//	while (fCurrentTrackPosition >= m_KeyFrames[*pCurrentKeyFrameIndex + 1].fTrackPosition) {
-	//		++*pCurrentKeyFrameIndex;
-	//	}
+	_vector			vScale{};
+	_vector			vRotation{};
+	_vector			vTranslation{};
 
-	//	_float3 vSrcScale = {}, vDstScale = {};
-	//	_float4 vSrcRotation = {}, vDstRotation = {};
-	//	_float3 vSrcTranslation = {}, vDstTranslation = {};
+	if (fCurrentTrackPosition >= LastKeyFrame.fTrackPosition)
+	{
+		vScale = XMLoadFloat3(&LastKeyFrame.vScale);
+		vRotation = XMLoadFloat4(&LastKeyFrame.vRotation);
+		vTranslation = XMVectorSetW(XMLoadFloat3(&LastKeyFrame.vTranslation), 1.f);
+	}
 
-	//	vSrcScale = m_KeyFrames[*pCurrentKeyFrameIndex].vScale;
-	//	vDstScale = m_KeyFrames[*pCurrentKeyFrameIndex + 1].vScale;
+	else
+	{
+		while (fCurrentTrackPosition >= m_KeyFrames[*pCurrentKeyFrameIndex + 1].fTrackPosition)
+			++*pCurrentKeyFrameIndex;
 
-	//	vSrcRotation = m_KeyFrames[*pCurrentKeyFrameIndex].vRotation;
-	//	vDstRotation = m_KeyFrames[*pCurrentKeyFrameIndex + 1].vRotation;
+		_float3		vSourScale{}, vDestScale{};
+		_float4		vSourRotation{}, vDestRotation{};
+		_float3		vSourTranslation{}, vDestTranslation{};
 
-	//	vSrcTranslation = m_KeyFrames[*pCurrentKeyFrameIndex].vTranslation;
-	//	vDstTranslation = m_KeyFrames[*pCurrentKeyFrameIndex + 1].vTranslation;
+		vSourScale = m_KeyFrames[*pCurrentKeyFrameIndex].vScale;
+		vDestScale = m_KeyFrames[*pCurrentKeyFrameIndex + 1].vScale;
 
-	//	_float fRatio = (fCurrentTrackPosition - m_KeyFrames[*pCurrentKeyFrameIndex].fTrackPosition) /
-	//		(m_KeyFrames[*pCurrentKeyFrameIndex + 1].fTrackPosition - m_KeyFrames[*pCurrentKeyFrameIndex].fTrackPosition);
+		vSourRotation = m_KeyFrames[*pCurrentKeyFrameIndex].vRotation;
+		vDestRotation = m_KeyFrames[*pCurrentKeyFrameIndex + 1].vRotation;
 
-	//	vScale = XMVectorLerp(XMLoadFloat3(&vSrcScale), XMLoadFloat3(&vDstScale), fRatio);
-	//	vRotation = XMQuaternionSlerp(XMLoadFloat4(&vSrcRotation), XMLoadFloat4(&vDstRotation), fRatio);
-	//	vTranslation = XMVectorSetW(XMVectorLerp(XMLoadFloat3(&vSrcTranslation), XMLoadFloat3(&vDstTranslation), fRatio), 1.f);
-	//}
+		vSourTranslation = m_KeyFrames[*pCurrentKeyFrameIndex].vTranslation;
+		vDestTranslation = m_KeyFrames[*pCurrentKeyFrameIndex + 1].vTranslation;
 
+		_float		fRatio = (fCurrentTrackPosition - m_KeyFrames[*pCurrentKeyFrameIndex].fTrackPosition) /
+			(m_KeyFrames[*pCurrentKeyFrameIndex + 1].fTrackPosition - m_KeyFrames[*pCurrentKeyFrameIndex].fTrackPosition);
+
+		vScale = XMVectorLerp(XMLoadFloat3(&vSourScale), XMLoadFloat3(&vDestScale), fRatio);
+		vRotation = XMQuaternionSlerp(XMLoadFloat4(&vSourRotation), XMLoadFloat4(&vDestRotation), fRatio);
+		vTranslation = XMVectorSetW(XMVectorLerp(XMLoadFloat3(&vSourTranslation), XMLoadFloat3(&vDestTranslation), fRatio), 1.f);
+	}*/
 
 
 	const LOCALPOS_DESC& LocalPos = pLocalPosArray[m_iBoneIndex];
@@ -173,20 +177,18 @@ void CChannel::Update_TransformationMatirx(const vector<CBone*>& Bones, const LO
 		_float3 vCurRootPos;
 		XMStoreFloat3(&vCurRootPos, vTranslation);
 
-		XMMATRIX pre = XMLoadFloat4x4(&m_PreTransformMatrix);
-	/*	    
+		_matrix pre = XMLoadFloat4x4(&m_PreTransformMatrix);
+		    
 		if (!m_bInitialRootPos)
 		{
 			m_bInitialRootPos = true;
+			m_vPrevRootPos = vCurRootPos;
 			vTranslation = XMVectorZero();
 		}
-		else 
-		{*/
+		else
+		{
 			_vector vDeltaLocal = XMLoadFloat3(&vCurRootPos) - XMLoadFloat3(&m_vPrevRootPos);
-
-			_vector vDeltaAdjusted = {};
-
-			vDeltaAdjusted = XMVector3TransformNormal(vDeltaLocal, pre);
+			_vector vDeltaAdjusted = XMVector3TransformNormal(vDeltaLocal, pre);
 
 			_vector vRight = pTransform->Get_State(STATE::RIGHT);
 			_vector vUp = pTransform->Get_State(STATE::UP);
@@ -196,20 +198,18 @@ void CChannel::Update_TransformationMatirx(const vector<CBone*>& Bones, const LO
 			_float dy = XMVectorGetY(vDeltaAdjusted);
 			_float dz = XMVectorGetZ(vDeltaAdjusted);
 
-			_vector vDeltaWorld = vRight * dx + (-vUp * dz) + vLook * dy;
+			_vector vDeltaWorld = vRight * dx + (vUp * dz) + (-vLook * dy);
 
 			vDeltaWorld *= 0.01f;
+			vDeltaWorld *= m_fAmount;
 
-			_vector vCurrentPos = pTransform->Get_State(STATE::POSITION);
-			_vector vTargetPos = vCurrentPos + vDeltaWorld;
-
-			pTransform->Set_State(STATE::POSITION, vTargetPos);
-			//pTransform->AccumulateMomentum(vDeltaWorld);
+			vDeltaWorld = XMVectorSetW(vDeltaWorld, 1.f);
+			//pTransform->Set_State(STATE::POSITION,vDeltaWorld);
+			pTransform->AccumulateMomentum(vDeltaWorld);
 
 			m_vPrevRootPos = vCurRootPos;
 			vTranslation = XMVectorZero();
-		//}
-		///////////////////////////////////
+		}
 
 		_float4 curRotF4;
 		XMStoreFloat4(&curRotF4, vRotation);
@@ -224,12 +224,11 @@ void CChannel::Update_TransformationMatirx(const vector<CBone*>& Bones, const LO
 		else
 		{
 			_vector qPrev = XMLoadFloat4(&m_vPrevRootRot);
-
 			_vector qInvPrev = XMQuaternionInverse(qPrev);
 			_vector qDelta = XMQuaternionMultiply(qInvPrev, qCur);
 
 			_vector axisLocal;
-			_float    angle = 0.f;
+			_float angle = 0.f;
 			XMQuaternionToAxisAngle(&axisLocal, &angle, qDelta);
 
 			_vector axisWorld = XMVector3TransformNormal(axisLocal, pre);
@@ -241,18 +240,21 @@ void CChannel::Update_TransformationMatirx(const vector<CBone*>& Bones, const LO
 
 
 			if (angle > 0 )
-				pTransform->TurnAngle(XMLoadFloat4(&axis), -angle);
+				pTransform->TurnAngle(XMLoadFloat4(&axis), angle);
 		}
 
 		XMStoreFloat4(&m_vPrevRootRot, qCur);
-
 		vRotation = XMLoadFloat4(&m_vInitialRootRot);
 	}
 
-	m_BoneTransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vTranslation);
+	m_BoneTransformationMatrix =
+		XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vTranslation);
 
 	Bones[m_iBoneIndex]->Set_TransformationMatrix(m_BoneTransformationMatrix);
 }
+
+
+
 
 KEYFRAME* CChannel::Get_Frame(_uint iIndex)
 {

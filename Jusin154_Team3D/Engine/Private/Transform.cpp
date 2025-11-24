@@ -327,6 +327,14 @@ void CTransform::LookAt(_fvector vAt)
 	Set_State(STATE::LOOK, XMVector3Normalize(vLook) * vScale.z);
 }
 
+_float CTransform::TargetDis(_fvector vTarget)
+{
+	_vector vTargetDis = vTarget - Get_State(STATE::POSITION);
+	_float dist = XMVectorGetX(
+		XMVector3Length(vTargetDis));
+	return dist;
+}
+
 CTransform* CTransform::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CTransform* pInstance = new CTransform(pDevice, pContext);
@@ -358,6 +366,7 @@ void CTransform::Free()
 	__super::Free();
 
 }
+#ifdef _DEBUG
 
 void CTransform::Describe_Entity()
 {
@@ -382,3 +391,5 @@ void CTransform::Describe_Entity()
 		
 	}
 }
+
+#endif // _DEBUG

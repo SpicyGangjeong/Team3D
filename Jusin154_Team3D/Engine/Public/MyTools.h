@@ -191,16 +191,65 @@ public:
 			fSrcRadian += (fRotateSpeed * XM_PI) / 180.f;
 		}
 	}
-
-	inline static _float Get_Direction2D(_float2 fOrigianlDir, _float2 fInputDir) {
-		_vector vOriginal	= XMVector2Normalize(XMLoadFloat2(&fOrigianlDir));
-		_vector vInput		= XMVector2Normalize(XMLoadFloat2(&fInputDir));
+	
+	// 2D 평면에 사상된 방향을 교정해서 리턴
+	// float -> Radian값
+	// -, + 
+	inline static _float Get_Direction2D(_float2 vOrigianlDir, _float2 vInputDir) {
+		_vector vOriginal	= XMVector2Normalize(XMLoadFloat2(&vOrigianlDir));
+		_vector vInput		= XMVector2Normalize(XMLoadFloat2(&vInputDir));
 		
 		_float fDiffAngle	= XMVectorGetX(XMVector2AngleBetweenNormals(vOriginal, vInput));
 		_float fCross		= XMVectorGetZ(XMVector2Cross(vOriginal, vInput));
 
 		return fDiffAngle * (fCross < 0 ? -1.f : 1.f);
 	}
+	// yaw 360도 자동 커트
+	// pitch 80도 클램프
+	inline static void AdjustAccumulateDegreePitchYawDegree(_float2& vAccumulateDegreePitchYaw, float fPitchLimitDegree = 80.f)
+	{
+		if (vAccumulateDegreePitchYaw.y > 360.f)
+		{
+			vAccumulateDegreePitchYaw.y -= 360.f;
+		}
+		else if (vAccumulateDegreePitchYaw.y < -360.f)
+		{
+			vAccumulateDegreePitchYaw.y += 360.f;
+		}
+
+		if (vAccumulateDegreePitchYaw.x > fPitchLimitDegree)
+		{
+			vAccumulateDegreePitchYaw.x = fPitchLimitDegree;
+		}
+		else if (vAccumulateDegreePitchYaw.x < -fPitchLimitDegree)
+		{
+			vAccumulateDegreePitchYaw.x = -fPitchLimitDegree;
+		}
+	}
+
+	// yaw 360도 자동 커트
+	// pitch 80도 클램프
+	inline void AdjustAccumulateDegreePitchYawRadian(_float2& vAccumulateRadianPitchYaw, float fPitchLimitRadian = XMConvertToRadians(80.f))
+	{
+		if (vAccumulateRadianPitchYaw.y > XM_PI)
+		{
+			vAccumulateRadianPitchYaw.y -= XM_PI;
+		}
+		else if (vAccumulateRadianPitchYaw.y < -XM_PI)
+		{
+			vAccumulateRadianPitchYaw.y += XM_PI;
+		}
+
+		if (vAccumulateRadianPitchYaw.x > fPitchLimitRadian)
+		{
+			vAccumulateRadianPitchYaw.x = fPitchLimitRadian;
+		}
+		else if (vAccumulateRadianPitchYaw.x < -fPitchLimitRadian)
+		{
+			vAccumulateRadianPitchYaw.x = -fPitchLimitRadian;
+		}
+	}
+
 
 	inline static _uint AlphabetToInt(_tchar Alphabet)
 	{

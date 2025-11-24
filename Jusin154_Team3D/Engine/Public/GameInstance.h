@@ -157,6 +157,7 @@ public:
 	HRESULT End_MRT();
 	HRESULT Bind_RenderTarget(const _wstring& strTargetTag, class CShader* pShader, const _char* pConstantName);
 	HRESULT Copy_RenderTarget(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D);
+	HRESULT Refit_RenderTarget(class CShader* pShader, const _wstring& wstrRenderTargetInput, const _wstring& wstrRenderTargetOutput);
 #ifdef _DEBUG
 	void    RenderTarget_Debuger();
 	HRESULT Render_RenderTarget_Debug(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
@@ -168,6 +169,7 @@ public:
 	HRESULT Add_Camera(_uint iLevel, class CCamera* pCamera, const _wstring& strCameraKey);
 	HRESULT Bind_Camera(_uint iLevel, const _wstring& strCameraKey, _bool bIgnorePriority);
 	HRESULT IsBinded_Camera(const _wstring& strCameraKey);
+	_vector Get_CameraLook();
 	const _float* Get_CurrentCameraFar();
 	void Force_CamPosition(_fvector vPos);
 #pragma endregion
@@ -198,9 +200,10 @@ public:
 	void				Attach_Actor(PSX::PxActor& Actor);
 	void				Detach_Actor(PSX::PxActor& pActor);
 	void				Release_Actor(PSX::PxActor& Actor);
-
+#ifdef EDITOR_PROJECT
 	HRESULT ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix = XMMatrixIdentity());
 	HRESULT SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
+#endif // EDITOR_PROJECT
 	HRESULT LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes); // 모델 불러왔던 경로에 그대로 있음
 #pragma endregion
 #pragma region THREADHOLDER
@@ -215,26 +218,19 @@ public:
 #pragma endregion
 
 public:
-	void Add_ModelToMap(const _char* filePath, CModel* pModel)
-	{
-		m_ModelMap[filePath] = pModel;
-	}
+	void Add_ModelToMap(const _char* filePath, CModel* pModel);
 
-	void Add_SaveModel(const _char* filePath, SaveModel sModel)
-	{
-		m_sModelMap[filePath] = sModel;
-	}
-
-#ifdef EDITOR_PROJECT
-	_bool SaveAssimpModel(const _char* filename);
-#endif
+	void Add_SaveModel(const _char* filePath, SaveModel sModel);
 
 	SaveModel* Load_SaveModel(const _char* filePath);
+#ifdef EDITOR_PROJECT
+	_bool SaveAssimpModel(const _char* filename);
 	void Save_ModelFilePath(const _char* FilePath);
 	const _char* Load_ModelFilePath(_uint iIndex);
 	const _char* Load_BinaryModelFilePath(_uint iIndex);
 	size_t BinaryModelFilePathCount();
 	size_t ModelFilePathCount();
+#endif
 
 private:
 	class CGraphic_Device*			m_pGraphic_Device = { nullptr };

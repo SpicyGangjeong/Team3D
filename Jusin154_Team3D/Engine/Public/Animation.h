@@ -11,7 +11,8 @@ private:
 	CAnimation(const CAnimation& rhs);
 	virtual ~CAnimation() = default;
 public:
-	_bool			Update_TransformationMatrices(const vector<class CBone*>& Bones, const LOCALPOS_DESC* pLocalPosArray, _bool bIsLoop, _float fTimeDelta, class CTransform* pTransform = nullptr);
+	_bool			Update_TransformationMatrices(const vector<class CBone*>& Bones, const LOCALPOS_DESC* pLocalPosArray, _bool bIsLoop, _float fTimeDelta, class CTransform* pTransform = nullptr, _float m_fAmount = 1.f);
+	void Reset();
 	void			ResetRootMotion();
 	void			Depart_Animation();
 	void			Set_AnimPause(_bool bValue) { m_bPause = bValue; }
@@ -94,7 +95,10 @@ public:
 	//
 	CAnimation* Clone();
 	virtual void Free() override;
+#ifdef _DEBUG
 	void Describe_Entity();
+#endif // _DEBUG
+
 };
 
 NS_END
