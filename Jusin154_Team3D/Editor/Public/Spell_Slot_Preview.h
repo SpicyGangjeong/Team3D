@@ -1,16 +1,16 @@
 ﻿#pragma once
 
 #include "Editor_Define.h"
-#include "PanelObject.h"
+#include "ElementObject.h"
 
 NS_BEGIN(Editor)
 
-class CAction_Panel final : public CPanelObject
+class CSpell_Slot_Preview final : public CElementObject
 {
 private:
-	CAction_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CAction_Panel(const CAction_Panel& rhs);
-	virtual ~CAction_Panel() = default;
+	CSpell_Slot_Preview(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CSpell_Slot_Preview(const CSpell_Slot_Preview& rhs);
+	virtual ~CSpell_Slot_Preview() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -22,24 +22,16 @@ public:
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;
-	virtual HRESULT Ready_Element(void* pArg) override;
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
-	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
-
-	CGameObject* m_pSpell_Slot = { nullptr };
-	CGameObject* m_pSpell_Image	= { nullptr };
-	CGameObject* m_pSpell_Overlay = { nullptr };
-	CGameObject* m_pSlot_Number = { nullptr };
-	CGameObject* m_pHpBarBG= { nullptr };
-	CGameObject* m_pMagic_Meter = { nullptr };
+	CVIBuffer_UI_Instance* m_pVIBufferCom = { nullptr };
 
 public:
-	static CAction_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CSpell_Slot_Preview* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 	void Describe_Entity() override;

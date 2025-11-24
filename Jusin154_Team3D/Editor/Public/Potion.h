@@ -1,16 +1,16 @@
 ﻿#pragma once
 
 #include "Editor_Define.h"
-#include "PanelObject.h"
+#include "ElementObject.h"
 
 NS_BEGIN(Editor)
 
-class CAction_Panel final : public CPanelObject
+class CPotion final : public CElementObject
 {
 private:
-	CAction_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CAction_Panel(const CAction_Panel& rhs);
-	virtual ~CAction_Panel() = default;
+	CPotion(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CPotion(const CPotion& rhs);
+	virtual ~CPotion() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -22,7 +22,6 @@ public:
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;
-	virtual HRESULT Ready_Element(void* pArg) override;
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
@@ -31,15 +30,8 @@ private:
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
-	CGameObject* m_pSpell_Slot = { nullptr };
-	CGameObject* m_pSpell_Image	= { nullptr };
-	CGameObject* m_pSpell_Overlay = { nullptr };
-	CGameObject* m_pSlot_Number = { nullptr };
-	CGameObject* m_pHpBarBG= { nullptr };
-	CGameObject* m_pMagic_Meter = { nullptr };
-
 public:
-	static CAction_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CPotion* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 	void Describe_Entity() override;
