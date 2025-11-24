@@ -49,7 +49,7 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Up(DIK_0))
+	if (m_pGameInstance->Key_Up(DIK_F1))
 	{
 		m_pGameInstance->Set_LevelToChange();
 	}
@@ -99,7 +99,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 	Camera_Desc.pCameraKey = CAMERA_DEBUG;
 	Camera_Desc.fRotationPerSec = XMConvertToRadians(90.0f);
 	Camera_Desc.fMouseSensor = 0.1f;
-	Camera_Desc.iPriority = 37;
+	Camera_Desc.iPriority = 70;
 	Camera_Desc.pFollowTarget = { nullptr };
 	Camera_Desc.pLookTarget = { nullptr };
 
@@ -107,12 +107,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCamera_Debug>(g_iStaticLevel, NEXT_LEVEL, LAYER_CAMERA, &Camera_Desc, nullptr, &pCamera))){
 		return E_FAIL;
 	}
-	//if (FAILED(m_pGameInstance->Bind_Camera(NEXT_LEVEL, CAMERA_DEBUG, true))) {
-	//	return E_FAIL;
-	//}
-	if (FAILED(m_pGameInstance->Bind_Camera(NEXT_LEVEL, CAMERA_SHOULDER, true))) {
+
+	m_pGameInstance->Add_Camera(NEXT_LEVEL, pCamera, CAMERA_DEBUG);
+	if (FAILED(m_pGameInstance->Bind_Camera(NEXT_LEVEL, CAMERA_DEBUG, true))) {
 		return E_FAIL;
 	}
+
 
 	return S_OK;
 }

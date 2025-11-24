@@ -20,8 +20,6 @@ private:
 	virtual ~CPlayer() = default;
 
 public:
-	virtual HRESULT Initialize_Prototype() override;
-	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Priority_Update(_float fTimeDelta) override;
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
@@ -37,15 +35,19 @@ private:
 	_bool m_bSprintToggle = { false };
 	_bool m_bWalkToggle = { false };
 
-	class CCamPosition_Socket* m_pCamPosition_TopDown_LookPart = { nullptr };
-	class CCamPosition_Arm* m_pCamPosition_TopDown_FollowPart = { nullptr };
-	class CCamPosition_Shoulder* m_pCamPosition_ShoulderPart = { nullptr };
+	_int m_iCombo = { 0 };
 
-	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
-	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
+	class CCamPosition_Socket*		m_pCamPosition_TopDown_LookPart = { nullptr };
+	class CCamPosition_Arm*			m_pCamPosition_TopDown_FollowPart = { nullptr };
+	class CCamPosition_Shoulder*	m_pCamPosition_ShoulderPart = { nullptr };
+
+	CCharacter_Controller*			m_pCharacter_Controller = { nullptr };
+	CRigidBody_Dynamic*				m_pRigidBody = { nullptr };
 	class	CCallBack_Playable_Behavior* m_pCallBack_Behavior = { nullptr };
 	class	CCallBack_Playable_HitReport* m_pCallBack_HitReport = { nullptr };
 private:
+	virtual HRESULT Initialize_Prototype() override;
+	virtual HRESULT Initialize(void* pArg) override;
 	HRESULT Ready_Components();
 	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
@@ -57,14 +59,16 @@ public:
 	virtual void Describe_Entity() override;
 
 #pragma region STATE
+
+public:
+	virtual void Reset_Sprint() { m_bSprintToggle = false; }
+	virtual void Reset_Walk() { m_bWalkToggle = false; }
+
 private:
 	virtual void Add_FSM();
 	virtual void Set_Anim();
-	_bool IsSprint();
-	_bool IsWalk();
 
-	HRESULT InputSystem();
-	HRESULT InputSkill();
+	HRESULT InputAction();
 	HRESULT InputMove();
 
 	void	Behavior_IdleEnter();
@@ -87,17 +91,11 @@ private:
 	HRESULT Behavior_DodgeExitCheck();
 	void	Behavior_DodgeExit();
 
-
-public:
-	virtual void Reset_Sprint() { m_bSprintToggle = false; }
-	virtual void Reset_Walk() { m_bWalkToggle = false; }
-
+	void	Behavior_CombatEnter();
+	HRESULT Behavior_CombatExitCheck();
+	void	Behavior_CombatExit();
 
 #pragma endregion
-
-
-
-
 };
 
 NS_END

@@ -13,6 +13,9 @@ CCamera_Gaze::CCamera_Gaze(const CCamera_Gaze& rhs)
 
 void CCamera_Gaze::Priority_Update(_float fTimeDelta)
 {
+	if (false == m_bActive) {
+		return;
+	}
 	if (false == m_bIsCurrentTransition) {
 		if (m_bEnable_FollowLerp) {
 			_vector vNewPos = XMVectorSetW(XMVectorLerp(XMLoadFloat3(&m_vFollowPos_Src), XMLoadFloat3(&m_vFollowPos_Dest), m_vFollowLerpTime.x / m_vFollowLerpTime.y), 1.f);
@@ -38,6 +41,9 @@ void CCamera_Gaze::Priority_Update(_float fTimeDelta)
 
 void CCamera_Gaze::Update(_float fTimeDelta)
 {
+	if (false == m_bActive) {
+		return;
+	}
 	Transition(fTimeDelta);
 	Update_LerpTimer(fTimeDelta);
 
@@ -46,6 +52,9 @@ void CCamera_Gaze::Update(_float fTimeDelta)
 
 void CCamera_Gaze::Update_LerpTimer(Engine::_float fTimeDelta)
 {
+	if (false == m_bActive) {
+		return;
+	}
 	if (true == m_bEnable_LookLerp) {
 		m_vLookLerpTime.x += fTimeDelta;
 		if (m_vLookLerpTime.y <= m_vLookLerpTime.x) {
@@ -79,6 +88,17 @@ void CCamera_Gaze::Enable_LookLerp()
 	m_bEnable_LookLerp = true;
 	m_vLookLerpTime.x = 0.f;
 	XMStoreFloat3(&m_vLookPos_Src, m_pLookTarget->Get_WorldPostion());
+}
+
+void CCamera_Gaze::Toggle_Priority()
+{
+	if (m_iPriority == 99) {
+		m_iPriority = 51;
+	}
+	else {
+		m_iPriority = 99;
+		m_pGameInstance->Bind_Camera(g_iStaticLevel, CAMERA_SHOULDER, false);
+	}
 }
 
 void CCamera_Gaze::Late_Update(_float fTimeDelta)

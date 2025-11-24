@@ -14,10 +14,17 @@ CCamera_Debug::CCamera_Debug(const CCamera_Debug& rhs)
 
 void CCamera_Debug::Priority_Update(_float fTimeDelta)
 {
+	m_pGameInstance->Bind_Camera(CURRENT_LEVEL, CAMERA_DEBUG, false);
+	if (false == m_bActive) {
+		return;
+	}
 }
 
 void CCamera_Debug::Update(_float fTimeDelta)
 {
+	if (false == m_bActive) {
+		return;
+	}
 	Transition(fTimeDelta);
 	_float3 vCamPos = {};
 	XMStoreFloat3(&vCamPos, m_pTransformCom->Get_State(STATE::POSITION));
@@ -69,6 +76,9 @@ void CCamera_Debug::Update(_float fTimeDelta)
 
 void CCamera_Debug::Late_Update(_float fTimeDelta)
 {
+	if (false == m_bActive) {
+		return;
+	}
 }
 
 HRESULT CCamera_Debug::Render()

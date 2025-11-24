@@ -233,6 +233,7 @@
     <ClCompile Include="..\Private\EffectObject.cpp" />
     <ClCompile Include="..\Private\Effect_Container.cpp" />
     <ClCompile Include="..\Private\NomalJap.cpp" />
+    <ClCompile Include="..\Private\Player_States.cpp" />
     <ClCompile Include="..\Private\SkyBox.cpp" />
     <ClCompile Include="..\Private\InfoInstance.cpp" />
     <ClCompile Include="..\Private\Level_Field.cpp" />

@@ -25,7 +25,9 @@
 #include "Broom.h"
 #include <filesystem>
 #include "Camera_Gaze.h"
-#include "CamPosition_Player.h"
+#include "CamPosition_Socket.h"
+#include "CamPosition_Target.h"
+#include "CamPosition_Shoulder.h"
 #include "CamPosition_Arm.h"
 #include "Wand.h"
 
@@ -255,7 +257,7 @@ HRESULT CLoader::Loading_For_Logo()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CDebugCamera>(g_iStaticLevel, CDebugCamera::Create(m_pDevice, m_pContext)))) {
+	if (FAILED(m_pGameInstance->Add_Prototype<CCamera_Debug>(g_iStaticLevel, CCamera_Debug::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
@@ -732,9 +734,6 @@ HRESULT CLoader::Loading_For_Effect()
 		return E_FAIL;
 	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXWall>(g_iStaticLevel, CDummy_PhysXWall::Create(m_pDevice, m_pContext)))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pGameInstance->Add_Prototype<CDebugCamera>(ENUM_CLASS(LEVEL::EFFECT), CDebugCamera::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CEditEffect>(ENUM_CLASS(LEVEL::EFFECT), CEditEffect::Create(m_pDevice, m_pContext)))) {
@@ -1245,6 +1244,32 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 
 	m_strMessage = TEXT("Model Loading..");
 
+	// Heavy Wall
+	CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
+	{
+		Desc.eType = ACTOR::BOX;
+		Desc.ePxRigidBodyFlags = { /*PSX::PxRigidBodyFlag::eKINEMATIC*/ };
+		Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+		Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
+		Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
+		Desc.fContactOffset = { 0.05f };
+		Desc.vhalfGeometryInfo = { 2.5f, 4.5f, 3.5f };
+		Desc.fDensity = 10.f;
+		Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
+		Desc.eLockFlag = {};
+		Desc.vAutoDamping = { 100.f, 100.f };
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_HEAVY_WALL"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), CCharacter_Controller::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 	vector<future<pair<_wstring, CModel*>*>> futures = {};
 
 #pragma region BODY
@@ -1428,7 +1453,15 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_CamPosition_Player */
-	if (FAILED(m_pGameInstance->Add_Prototype<CCamPosition_Player>(g_iStaticLevel, CCamPosition_Player::Create(m_pDevice, m_pContext))))
+	if (FAILED(m_pGameInstance->Add_Prototype<CCamPosition_Socket>(g_iStaticLevel, CCamPosition_Socket::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_CamPosition_Shoulder */
+	if (FAILED(m_pGameInstance->Add_Prototype<CCamPosition_Shoulder>(g_iStaticLevel, CCamPosition_Shoulder::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_CamPosition_Target */
+	if (FAILED(m_pGameInstance->Add_Prototype<CCamPosition_Target>(g_iStaticLevel, CCamPosition_Target::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_CamPosition_Arm */

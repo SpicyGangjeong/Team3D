@@ -529,6 +529,9 @@
     <ClCompile Include="..\Private\CamPosition_Shoulder.cpp">
       <Filter>02.GameObjects\Cameras\CameraPosition\Player\Shoulder</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Player_States.cpp">
+      <Filter>02.GameObjects\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
