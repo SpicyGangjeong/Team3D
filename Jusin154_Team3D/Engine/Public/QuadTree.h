@@ -19,10 +19,11 @@ public:
 #endif // _DEBUG
 
 
-	void Culling(class CGameInstance* pGameInstance, const _float3* pVertexPositions, _uint* pIndices, _uint* pNumIndices);
-	void SetUp_Neighbors();
-	_bool Picking(class CGameInstance* pGameInstance, const _float3* pVertexPositions, _float3& Out, _fmatrix WorldMatrix);
-	_bool Set_Y(class CGameInstance* pGameInstance, const _float3* pVertexPositions, VTXNORTEX* pVertices, _fmatrix WorldMatrix, _float fY);
+	void	Culling(class CGameInstance* pGameInstance, const _float3* pVertexPositions, _uint* pIndices, _uint* pNumIndices);
+	void	SetUp_Neighbors();
+	_bool	Picking(class CGameInstance* pGameInstance, const _float3* pVertexPositions, _float3& Out, _fmatrix WorldMatrix);
+	_bool	Set_Y(class CGameInstance* pGameInstance, const _float3* pVertexPositions, VTXNORTEX* pVertices, _fmatrix WorldMatrix, _float fY);
+	void	Add_Y(VTXNORTEX* pVertices, _float fY);
 
 private:
 	_uint			m_iCorners[CORNER_END] = { };

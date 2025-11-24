@@ -173,7 +173,7 @@ void CChannel::Update_TransformationMatirx(const vector<CBone*>& Bones, const LO
 		_float3 vCurRootPos;
 		XMStoreFloat3(&vCurRootPos, vTranslation);
 
-		XMMATRIX pre = XMLoadFloat4x4(&m_PreTransformMatrix);
+		_matrix pre = XMLoadFloat4x4(&m_PreTransformMatrix);
 	/*	    
 		if (!m_bInitialRootPos)
 		{
@@ -196,7 +196,7 @@ void CChannel::Update_TransformationMatirx(const vector<CBone*>& Bones, const LO
 			_float dy = XMVectorGetY(vDeltaAdjusted);
 			_float dz = XMVectorGetZ(vDeltaAdjusted);
 
-			_vector vDeltaWorld = vRight * dx + (-vUp * dz) + vLook * dy;
+			_vector vDeltaWorld = vRight * dx + (vUp * dz) + (-vLook * dy);
 
 			vDeltaWorld *= 0.01f;
 
@@ -240,7 +240,7 @@ void CChannel::Update_TransformationMatirx(const vector<CBone*>& Bones, const LO
 
 
 			if (angle > 0 )
-				pTransform->TurnAngle(XMLoadFloat4(&axis), -angle);
+				pTransform->TurnAngle(XMLoadFloat4(&axis), angle);
 		}
 
 		XMStoreFloat4(&m_vPrevRootRot, qCur);

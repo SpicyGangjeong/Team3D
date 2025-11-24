@@ -70,7 +70,10 @@ void CRigidBody_Static::Free()
         m_pRigidBody = nullptr;
     }
 }
+#ifdef _DEBUG
 
 void CRigidBody_Static::Describe_Entity()
 {
 }
+
+#endif // _DEBUG

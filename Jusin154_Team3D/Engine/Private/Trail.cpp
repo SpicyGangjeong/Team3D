@@ -244,6 +244,7 @@ void CTrail::Free()
 
 	Safe_Delete_Array(m_pVertices);
 }
+#ifdef _DEBUG
 
 void CTrail::Describe_Entity()
 {
@@ -252,3 +253,5 @@ void CTrail::Describe_Entity()
 	GUI::InputFloat3("High", (_float*)&m_TrailDesc.vHigh);
 	
 }
+
+#endif // _DEBUG

@@ -66,6 +66,11 @@ HRESULT CCamera_Manager::IsBinded_Camera(const _wstring& wstrCameraKey)
     return E_FAIL;
 }
 
+_vector CCamera_Manager::Get_CameraLook()
+{
+    return m_pCurrentMainCamera->Get_Component<CTransform>()->Get_State(STATE::LOOK);
+}
+
 void CCamera_Manager::Force_CamPosition(_fvector vPos)
 {
     if (nullptr == m_pCurrentMainCamera)

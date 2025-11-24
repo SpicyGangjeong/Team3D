@@ -4,6 +4,7 @@
 #include "QuadTree.h"
 
 #define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image.h"
 
 CVIBuffer_Terrain::CVIBuffer_Terrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -26,6 +27,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _char* pFilePath, _uint iS
 	_int iWidth = {};
 	_int iHeight = {};
 	_int iComp = {};
+
 	unsigned char* pTexture = {};
 	pTexture = stbi_load(pFilePath, &iWidth, &iHeight, &iComp, 0);
 
@@ -252,7 +254,7 @@ void CVIBuffer_Terrain::FitY(_fmatrix WorldMatrix, _float fY)
 
 	D3D11_MAPPED_SUBRESOURCE	SubResource{};
 
-	m_pContext->Map(m_pVB, 0, D3D11_MAP_WRITE, 0, &SubResource);
+	m_pContext->Map(m_pVB, 0, D3D11_MAP_READ_WRITE, 0, &SubResource);
 
 	VTXNORTEX* pVertices = static_cast<VTXNORTEX*>(SubResource.pData);
 
@@ -261,6 +263,12 @@ void CVIBuffer_Terrain::FitY(_fmatrix WorldMatrix, _float fY)
 	m_pGameInstance->Ray_WorldToLocal(&WorldInv);
 
 	m_pQuadTree->Set_Y(m_pGameInstance, m_pVertexPositions, pVertices, WorldMatrix, fY);
+
+	for (_uint i = 0; i < m_iNumVertices; ++i)
+	{
+		memcpy(&m_pVertexPositions[i], &pVertices[i].vPosition, sizeof(_float3));
+	}
+
 
 	m_pContext->Unmap(m_pVB, 0);
 }
@@ -280,10 +288,81 @@ void CVIBuffer_Terrain::Change_HeigthRatio(_float fRatio)
 
 	m_pContext->Unmap(m_pVB, 0);
 }
+#ifdef _DEBUG
 
 void CVIBuffer_Terrain::Set_CullingRadius(_float fRaduis)
 {
 	m_pQuadTree->Set_CullingRadius(fRaduis);
+}
+#endif // _DEBUG
+
+
+HRESULT CVIBuffer_Terrain::Save_HeightMap(const _char* pFilePath)
+{
+	string strFilePath = "../Bin/Resources/Data/Map/" + string(pFilePath);
+
+	ofstream  out(strFilePath, ios::binary);
+
+	if (false == out.is_open())
+	{
+		MSG_BOX("Failed to Save Binanry File");
+		return E_FAIL;
+	}
+
+	D3D11_MAPPED_SUBRESOURCE	SubResource{};
+
+	m_pContext->Map(m_pVB, 0, D3D11_MAP_READ, 0, &SubResource);
+
+	VTXNORTEX* pVertices = static_cast<VTXNORTEX*>(SubResource.pData);
+
+	for (_uint i = 0; i < m_iNumVerticesZ; ++i)
+	{
+		for (_uint j = 0; j < m_iNumVerticesX; ++j)
+		{
+			_uint		iIndex = i * m_iNumVerticesX + j;
+			out.write(reinterpret_cast<const _char*>(&pVertices[iIndex].vPosition.y), sizeof(_float));
+		}
+	}
+	m_pContext->Unmap(m_pVB, 0);
+
+	out.close();
+
+	MSG_BOX("Success to Load Binanry File");
+
+	return S_OK;
+}
+
+HRESULT CVIBuffer_Terrain::Load_HeightMap(const _char* pFilePath)
+{
+	string strFilePath = "../Bin/Resources/Data/Map/" + string(pFilePath);
+
+	ifstream in(strFilePath, ios::binary);
+
+	if (false == in.is_open())
+	{
+		MSG_BOX("Failed to Load Model Binanry File");
+		return E_FAIL;
+	}
+
+	D3D11_MAPPED_SUBRESOURCE	SubResource{};
+	m_pContext->Map(m_pVB, 0, D3D11_MAP_WRITE, 0, &SubResource);
+
+	VTXNORTEX* pVertices = static_cast<VTXNORTEX*>(SubResource.pData);
+
+	for (_uint i = 0; i < m_iNumVerticesZ; ++i)
+	{
+		for (_uint j = 0; j < m_iNumVerticesX; ++j)
+		{
+			_uint		iIndex = i * m_iNumVerticesX + j;
+			in.read(reinterpret_cast<_char*>(&pVertices[iIndex].vPosition.y), sizeof(_float));
+		}
+	}
+
+	in.close();
+
+	m_pContext->Unmap(m_pVB, 0);
+
+	return S_OK;
 }
 
 CVIBuffer_Terrain* CVIBuffer_Terrain::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pFilePath, _uint iSizeX, _uint iSizeZ)
@@ -317,7 +396,9 @@ void CVIBuffer_Terrain::Free()
 
 	Safe_Release(m_pQuadTree);
 }
+#ifdef _DEBUG
 
 void CVIBuffer_Terrain::Describe_Entity()
 {
 }
+#endif // _DEBUG

@@ -40,7 +40,10 @@ void CRigidBody::Free()
 
 	SAFE_RELEASE(m_pTransform);
 }
+#ifdef _DEBUG
 
 void CRigidBody::Describe_Entity()
 {
 }
+
+#endif // _DEBUG

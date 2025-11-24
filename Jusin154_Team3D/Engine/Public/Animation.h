@@ -94,7 +94,10 @@ public:
 	//
 	CAnimation* Clone();
 	virtual void Free() override;
+#ifdef _DEBUG
 	void Describe_Entity();
+#endif // _DEBUG
+
 };
 
 NS_END

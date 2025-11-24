@@ -525,7 +525,6 @@ PS_OUT PS_HpBar(PS_IN In)
     
     float4 tex1 = g_Texture.Sample(ClampSampler, Finaluv);
     Color = tex1;
-
     float2 reversuv = In.vTexcoord;
     
     reversuv.x = 1.0f - Finaluv;
@@ -537,7 +536,9 @@ PS_OUT PS_HpBar(PS_IN In)
         tex2.rgb = float3(0.f, 0.f, 0.f);
     }
     
-    tex2.rgb *= float3(112.f, 241.f, 31.f) / 255.f;
+    float3 Green = float3(112.f, 241.f, 31.f) / 255.f;
+    Green *= 1.2f;
+    tex2.rgb *= Green;
     
     if (all(Color.rgb >= float3(70.f / 255.f, 70.f / 255.f, 70.f / 255.f)))
         Color = tex2;
