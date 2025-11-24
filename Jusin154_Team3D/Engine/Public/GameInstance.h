@@ -168,6 +168,7 @@ public:
 	HRESULT Add_Camera(_uint iLevel, class CCamera* pCamera, const _wstring& strCameraKey);
 	HRESULT Bind_Camera(_uint iLevel, const _wstring& strCameraKey, _bool bIgnorePriority);
 	HRESULT IsBinded_Camera(const _wstring& strCameraKey);
+	_vector Get_CameraLook();
 	const _float* Get_CurrentCameraFar();
 	void Force_CamPosition(_fvector vPos);
 #pragma endregion

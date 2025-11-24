@@ -572,6 +572,10 @@ HRESULT CGameInstance::IsBinded_Camera(const _wstring& strCameraKey)
 {
 	return m_pCamera_Manager->IsBinded_Camera(strCameraKey);
 }
+_vector CGameInstance::Get_CameraLook()
+{
+	return m_pCamera_Manager->Get_CameraLook();
+}
 const _float* CGameInstance::Get_CurrentCameraFar()
 {
 	return m_pCamera_Manager->Get_CurrentCameraFar();

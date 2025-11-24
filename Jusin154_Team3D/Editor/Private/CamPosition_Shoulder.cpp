@@ -66,6 +66,7 @@ void CCamPosition_Shoulder::Priority_Update(_float fTimeDelta)
 	if (true == m_bMovable) {
 		m_vAccDegreeXY.y += m_pGameInstance->Get_MouseMove().x * m_fMouseSensor;
 		m_vAccDegreeXY.x += m_pGameInstance->Get_MouseMove().y * m_fMouseSensor;
+		CMyTools::AdjustAccumulateDegreePitchYawDegree(m_vAccDegreeXY);
 	}
 	
 	_vector vLook = XMVector3Normalize(XMLoadFloat3(&m_vShoulderPosRatio));

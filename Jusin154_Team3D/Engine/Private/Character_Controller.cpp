@@ -23,7 +23,7 @@ HRESULT CCharacter_Controller::Render()
 	
 	_matrix ViewMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
 	_matrix ProjMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
-	_vector vColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0x2fc48000, 1.f);
+	_vector vColor = DirectX::Colors::GhostWhite;
 
 	switch (m_eBodyType)
 	{
@@ -160,14 +160,13 @@ void CCharacter_Controller::Move(_float fTimeDelta)
 	PSX::PxControllerFilters		pxFilter = {};						// 충돌 대상 필터
 	const PSX::PxObstacleContext*	pPxObstacles = { nullptr };			// 캐릭터가 충돌해야할 추가적인 장애물 객체?, 닿은 장애물은 캐시된다?
 
+	if (true == m_bGravity) {
+		m_pTransform->AccumulateMomentum(XMVectorSet(0.f, -GRAVITY * fTimeDelta, 0.f, 0.f));
+	}
 	XMStoreFloat3((_float3*)&pxVecMomentum, m_pTransform->Get_CurrentMomentum());
 
 	m_eBeforeCollisionFlags = m_pController->move(pxVecMomentum, fMinimumDistant, fTimeDelta, pxFilter, pPxObstacles);
 
-	//PSX::PxUserControllerHitReport* pHitCallBack = { nullptr };
-	//PSX::PxControllerShapeHit ShapeHit = {};
-	//ShapeHit.
-	//pHitCallBack->onShapeHit();
 }
 
 void CCharacter_Controller::Set_Position(_fvector vNewPos)

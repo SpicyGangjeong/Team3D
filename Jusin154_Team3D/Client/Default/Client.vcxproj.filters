@@ -245,9 +245,6 @@
     <Filter Include="02.GameObjects\Environment\Plane">
       <UniqueIdentifier>{603938cc-e4fe-44d8-890b-784174a86161}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Environment\Player">
-      <UniqueIdentifier>{11250d84-e19c-4999-a5d6-d9f89123e7ae}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\NPC\Hostile\Monster">
       <UniqueIdentifier>{b72a9bb0-1b21-416b-bd0c-ba943cd7cc9d}</UniqueIdentifier>
     </Filter>
@@ -304,15 +301,6 @@
     </Filter>
     <Filter Include="02.GameObjects\SkyBox">
       <UniqueIdentifier>{e83f88ec-c414-43b4-b437-52288cee431a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Item">
-      <UniqueIdentifier>{9cc88058-bda3-4ed0-9ec9-1968963fdda4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Item\Broom">
-      <UniqueIdentifier>{aac01a47-304a-4319-8bd8-fdd9020ddf18}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Item\Wand">
-      <UniqueIdentifier>{b719d948-fce3-4144-9d2c-edcab4cfceaf}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\PhysX">
       <UniqueIdentifier>{ddf8c8e6-ca51-42e0-b08f-13ae0fd9d842}</UniqueIdentifier>
@@ -388,6 +376,15 @@
     </Filter>
     <Filter Include="02.GameObjects\Cameras\Camera_Gaze">
       <UniqueIdentifier>{470c4db5-b306-4fb8-8338-0a99ac77ac89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Item">
+      <UniqueIdentifier>{9cc88058-bda3-4ed0-9ec9-1968963fdda4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Item\Broom">
+      <UniqueIdentifier>{aac01a47-304a-4319-8bd8-fdd9020ddf18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Item\Wand">
+      <UniqueIdentifier>{b719d948-fce3-4144-9d2c-edcab4cfceaf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
