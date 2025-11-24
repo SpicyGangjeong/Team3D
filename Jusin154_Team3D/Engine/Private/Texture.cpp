@@ -230,7 +230,10 @@ void CTexture::Free()
 		SAFE_RELEASE(pSRV);
 	}
 }
+#ifdef _DEBUG
 
 void CTexture::Describe_Entity()
 {
 }
+
+#endif // _DEBUG

@@ -280,11 +280,14 @@ void CVIBuffer_Terrain::Change_HeigthRatio(_float fRatio)
 
 	m_pContext->Unmap(m_pVB, 0);
 }
+#ifdef _DEBUG
 
 void CVIBuffer_Terrain::Set_CullingRadius(_float fRaduis)
 {
 	m_pQuadTree->Set_CullingRadius(fRaduis);
 }
+#endif // _DEBUG
+
 
 CVIBuffer_Terrain* CVIBuffer_Terrain::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pFilePath, _uint iSizeX, _uint iSizeZ)
 {
@@ -317,7 +320,9 @@ void CVIBuffer_Terrain::Free()
 
 	Safe_Release(m_pQuadTree);
 }
+#ifdef _DEBUG
 
 void CVIBuffer_Terrain::Describe_Entity()
 {
 }
+#endif // _DEBUG

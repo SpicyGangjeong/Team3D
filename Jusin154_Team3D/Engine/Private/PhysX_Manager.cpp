@@ -143,6 +143,7 @@ void CPhysX_Manager::RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxT
 {
 	m_TriangleMeshes.emplace(CMyTools::ToWstring(pName), pPxTriMesh);
 }
+#ifdef EDITOR_PROJECT
 
 HRESULT CPhysX_Manager::ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix)
 {
@@ -194,6 +195,7 @@ HRESULT CPhysX_Manager::SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangle
 	assert(ok);
 	return (ok ? S_OK : E_FAIL);
 }
+#endif // EDITOR_PROJECT
 
 HRESULT CPhysX_Manager::LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes)
 {

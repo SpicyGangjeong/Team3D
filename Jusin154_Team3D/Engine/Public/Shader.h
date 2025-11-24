@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 
 #include "Component.h"
 
@@ -53,8 +53,9 @@ public:
 	virtual CComponent* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 
-	// CComponent¿ª(∏¶) ≈Î«ÿ ªÛº”µ 
+#ifdef _DEBUG
 	void Describe_Entity() override;
+#endif // _DEBUG
 };
 
 NS_END

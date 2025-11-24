@@ -324,7 +324,7 @@ void CCharacter_Controller::Free()
 	}
 	__super::Free();
 }
-
+#ifdef _DEBUG
 void CCharacter_Controller::Describe_Entity()
 {
 	GUI::Begin("Character_Controller");
@@ -381,3 +381,5 @@ void CCharacter_Controller::Describe_Entity()
 
 	GUI::End();
 }
+
+#endif // _DEBUG
