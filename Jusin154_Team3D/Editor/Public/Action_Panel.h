@@ -3,10 +3,6 @@
 #include "Editor_Define.h"
 #include "PanelObject.h"
 
-NS_BEGIN(Engine)
-class CGameObject;
-NS_END
-
 NS_BEGIN(Editor)
 
 class CAction_Panel final : public CPanelObject
@@ -40,6 +36,7 @@ private:
 	CGameObject* m_pSpell_Overlay = { nullptr };
 	CGameObject* m_pSlot_Number = { nullptr };
 	CGameObject* m_pHpBarBG= { nullptr };
+	CGameObject* m_pMagic_Meter = { nullptr };
 
 public:
 	static CAction_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

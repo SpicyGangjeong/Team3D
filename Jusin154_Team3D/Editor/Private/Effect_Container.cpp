@@ -198,7 +198,11 @@ HRESULT CEffect_Container::Load_Package(const _char* pPath)
 				return E_FAIL;
 			}
 
-			pEditEffect->Load(strPath.c_str(), LEVEL::EFFECT);
+			if (FAILED(pEditEffect->Load(strPath.c_str(), LEVEL::EFFECT)))
+			{
+				CloseHandle(hFile);
+				return E_FAIL;
+			}
 
 			SAFE_RELEASE(pEditEffect);
 
@@ -231,6 +235,66 @@ HRESULT CEffect_Container::Load_Package(const _char* pPath)
 	CloseHandle(hFile);
 
 
+
+	return S_OK;
+}
+
+HRESULT CEffect_Container::Load_Directory(const _char* pPath)
+{
+
+	for (const auto& file : filesystem::directory_iterator(pPath))
+	{
+		if (file.is_directory())
+			continue;
+
+		string ext = file.path().extension().string();
+
+		if (strcmp(ext.c_str(), ".bin"))
+			continue;
+
+		_char szFilePath[MAX_PATH] = {};
+
+		strcpy_s(szFilePath, MAX_PATH, file.path().string().c_str());
+
+
+		/////////////////////////////
+
+		CEditEffect* pEditEffect = nullptr;
+
+		CPartObject::PARTOBJECT_DESC PartsDesc{};
+
+		PartsDesc.pParentTransform = m_pTransformCom;
+
+
+
+
+		/*이펙트 껍데기 생성*/
+
+		_wstring wstrFileName = file.path().stem().wstring(); //이름 넣기
+
+		if (FAILED(Add_PartObject<CEditEffect>(CMyTools::ToString(wstrFileName), NEXT_LEVEL, &pEditEffect, &PartsDesc))) {
+			assert(false);
+			return E_FAIL;
+		}
+		
+
+		/*이펙트 로드 로드*/
+		size_t iPos = {};
+		_string strFilePath = szFilePath;
+
+		while ((iPos = strFilePath.find(".bin")) != std::string::npos) {
+			strFilePath.erase(iPos, 4);
+		};
+
+
+		if (FAILED(pEditEffect->Load(strFilePath.c_str(), LEVEL::EFFECT)))
+		{
+			Safe_Release(pEditEffect);
+			continue;
+		}
+
+		Safe_Release(pEditEffect);
+	}
 
 	return S_OK;
 }

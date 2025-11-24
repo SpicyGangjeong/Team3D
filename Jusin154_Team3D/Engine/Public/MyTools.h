@@ -37,7 +37,7 @@ public:
 		return XMVectorSet(r, g, b, a);
 	}
 #pragma endregion
-
+#pragma region String
 	// wstring --> string 변환
 	static _string ToString(const _wstring& var)
 	{
@@ -64,6 +64,16 @@ public:
 		return wstrTo;
 	}
 
+	// source에 keyword가 있는지 검사
+	static _bool ContainsString(const char* source, const char* keyword) {
+		if (!source || !keyword || *keyword == '\0') {
+			return false;
+		}
+		return (strstr(source, keyword) != nullptr);
+	}
+
+#pragma endregion
+#pragma region Mathematics
 	// ratio로 현재 value 가져오기
 	static _float Lerp_f1D(_float fA, _float fB, _float fRatio)
 	{
@@ -76,7 +86,6 @@ public:
 		if (fA == fB) return 0.0f;
 		return (fValue - fA) / (fB - fA);
 	}
-
 	
 	// A -> B, A- >C의 외적이 업벡터 방향으로 외적되도록 B C를 교정
 	static void CorrectTriangleToUpHead(_float3& dotA, _float3& dotB, _float3& dotC) {
@@ -89,7 +98,7 @@ public:
 		}
 	}
 
-	// dx9에 있던 그거
+	// dx9에 있던 IntersectTri
 	static _bool IntersectTri(
 		const _fvector& vPos, const _fvector& vDir,
 		const _fvector& vertexA, const _gvector& vertexB, const _hvector& vertexC,
@@ -114,14 +123,6 @@ public:
 		t = XMVectorGetX(XMVector3Dot(edge2, q)) * inverseDet;
 
 		return t >= 0.f;
-	}
-
-	// source에 keyword가 있는지 검사
-	static _bool ContainsString(const char* source, const char* keyword) {
-		if (!source || !keyword || *keyword == '\0') {
-			return false;
-		}
-		return (strstr(source, keyword) != nullptr);
 	}
 
 	// 매트릭스 럴프
@@ -150,7 +151,7 @@ public:
 		return XMVectorGetX(XMVector3Dot(vNormalA, vNormalB));
 	}
 
-	// hlsl에 있는 Saturate 그거임
+	// hlsl에 있는 Saturate 
 	static _float Saturate(_float fValue) {
 		if (fValue > 1.f) {
 			fValue = 1.f;
@@ -174,6 +175,7 @@ public:
 		return fRadian;
 	}
 
+	// 입력라디안에서 출력라디안까지 로테이션 스피드만큼 돌려주고 보정해서 SrcRadian에 넣어줌
 	inline static void	 RotateRadianTowards(_float& fSrcRadian, const _float& fDstRadian, _float fRotateSpeed) {
 		_float fDiffRadian = fmodf(fSrcRadian - fDstRadian, XM_2PI);
 		if (fDiffRadian < 0) fDiffRadian += XM_2PI;
@@ -199,7 +201,7 @@ public:
 
 		return fDiffAngle * (fCross < 0 ? -1.f : 1.f);
 	}
-
+#pragma endregion
 #pragma region FileSystem
 	//static void Folder_Func(/* 재귀적으로 탐색할지		*/	_In_	_bool											bRecursive,
 	//						/* 탐색할 폴더 경로			*/	_In_	const _wstring&									TargetPath,

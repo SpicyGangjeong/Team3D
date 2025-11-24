@@ -6,6 +6,7 @@
 #include "Spell_Overlay.h"
 #include "Slot_Number.h"
 #include "HpBarBG.h"
+#include "Magic_Meter.h"
 
 CAction_Panel::CAction_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPanelObject(pDevice, pContext)
@@ -144,13 +145,18 @@ HRESULT CAction_Panel::Ready_Element(void* pArg)
 		return E_FAIL;
 	}
 	Add_Element(TEXT("HpBarBG"), m_pHpBarBG);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMagic_Meter>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMagic_Meter**>(&m_pMagic_Meter))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Magic_Meter"), m_pMagic_Meter);
 	return S_OK;
 }
 
 CAction_Panel* CAction_Panel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CAction_Panel* pInstance = new CAction_Panel(pDevice, pContext);
-
+	
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
 		MSG_BOX("Failed to Created : CAction_Panel");

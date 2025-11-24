@@ -520,7 +520,7 @@ void CEffect_Editor::Describe_Entity()
 		if( nullptr != dynamic_cast<CTrailObject*>(pPartObject.second))
 			strName = "TrailObject" + to_string(iIndex);
 		else
-			strName = "EffectObject" + to_string(iIndex);
+			strName = pPartObject.first;
 
 		if (GUI::TreeNode(strName.c_str()))
 		{
@@ -632,12 +632,12 @@ void CEffect_Editor::Describe_Entity()
 
 	GUI::SameLine();
 
-	if (GUI::Button("LOAD PACKAGE"))
+	if (GUI::Button("LOAD DIRECTORY"))
 	{
 	
-		if (SUCCEEDED(Load_Package(m_strPackageSavePath.c_str())))
+		if (SUCCEEDED(Load_Directory(m_strPackageSavePath.c_str())))
 		{
-			MessageBox(NULL, L"패키징 로드 성공", L"System Message", MB_OK);
+			MessageBox(NULL, L"파일 로드 성공", L"System Message", MB_OK);
 		}
 	}
 

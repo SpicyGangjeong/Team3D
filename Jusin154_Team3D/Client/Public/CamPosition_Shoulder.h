@@ -43,8 +43,16 @@ private:
 	_float2	m_vAccDegreeXY = {};
 	_float3 m_vShoulderPosRatio = { 1.f, 2.f, -1.f };
 
+	_float3 m_vShoulderStartRatio = { 1.f, 2.f, -1.f };
+	_float3 m_vShoulderOtherRatio = { 1.f, 2.f, -1.f };
+
+	_bool m_bLerp = { false };
+	_float2 m_vLerpTimer = { 0.f, 1.f };
+
+
 	CCamPosition_Target* m_pTarget_LookPart = { nullptr };
 	CCamPosition_Target* m_pTarget_FollowPart = { nullptr };
+	class CCamera_Gaze* m_pBinded_Camera = { nullptr };
 
 public:
 	static CCamPosition_Shoulder* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

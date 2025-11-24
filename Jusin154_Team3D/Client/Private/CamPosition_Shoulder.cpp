@@ -36,8 +36,12 @@ HRESULT CCamPosition_Shoulder::Initialize(void* pArg)
 		m_vAccDegreeXY = { 0.f, 0.f };
 		m_fCameraFocalLength = pDesc->fCameraFocalLength;
 		m_fBackFrontRatio = pDesc->fBackFrontRatio;
-		m_pTransformCom->Set_State(STATE::POSITION, m_pParentTransformCom->Get_State(STATE::POSITION) + XMVector3Normalize(XMLoadFloat3(&m_vShoulderPosRatio)) * m_fShoulderDistance);
 
+		m_vShoulderOtherRatio = m_vShoulderPosRatio = m_vShoulderStartRatio = pDesc->vInitialLook;
+		m_vShoulderStartRatio.x *= -1.f;
+		m_pTransformCom->Set_State(STATE::POSITION, 
+			m_pParentTransformCom->Get_State(STATE::POSITION) 
+			+ XMVector3Normalize(XMLoadFloat3(&m_vShoulderPosRatio)) * m_fShoulderDistance);
 
 		_vector vShoulderPos = Get_WorldPostion();
 		_vector vCameraLook = XMVectorSet(0.f, 0.f, 1.f, 0.f);
@@ -88,13 +92,25 @@ void CCamPosition_Shoulder::Update(_float fTimeDelta)
 		m_pGameInstance->Toggle_MouseCenter();
 	}
 	if (m_pGameInstance->Key_Up(DIK_P)) {
-		m_vShoulderPosRatio.x *= -1.f;
+		m_vShoulderOtherRatio = m_vShoulderPosRatio = m_vShoulderStartRatio;
+		m_vShoulderStartRatio.x *= -1.f;
+		m_bLerp = true;
+		m_vLerpTimer.x = 0.f;
 	}
 }
 
 void CCamPosition_Shoulder::Late_Update(_float fTimeDelta)
 {
+	if (true == m_bLerp) {
+		m_vLerpTimer.x += fTimeDelta;
+		XMStoreFloat3(&m_vShoulderPosRatio, XMVectorLerp(XMLoadFloat3(&m_vShoulderStartRatio), XMLoadFloat3(&m_vShoulderOtherRatio), m_vLerpTimer.x / m_vLerpTimer.y));
+		if (m_vLerpTimer.x > m_vLerpTimer.y) {
+			m_bLerp = false;
+			m_vLerpTimer.x = 0.f;
 
+			m_vShoulderPosRatio = m_vShoulderOtherRatio;
+		}
+	}
 }
 
 HRESULT CCamPosition_Shoulder::Render()
@@ -136,14 +152,19 @@ HRESULT CCamPosition_Shoulder::Ready_SubParts()
 	CameraDesc.pFollowTarget = m_pTarget_FollowPart;
 	CameraDesc.pLookTarget = m_pTarget_LookPart;
 	CameraDesc.iPriority = 51;
+	CameraDesc.pCameraKey = TEXT("CAM_SHOULDER");
+	CameraDesc.bEnableTransitionLerp = true;
+	CameraDesc.bEnableFollowLerp = true;
+	CameraDesc.bEnableLookLerp = true;
+	CameraDesc.vTransitionTime = { 0.f, 1.f };
+	CameraDesc.vFollowLerpTime = { 0.f, 0.16f };
+	CameraDesc.vLookLerpTime = { 0.f, 0.16f };
 
-	CCamera_Gaze* pCamera = { nullptr };
-
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCamera_Gaze>(g_iStaticLevel, NEXT_LEVEL, LAYER_CAMERA, &CameraDesc, nullptr, &pCamera)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCamera_Gaze>(g_iStaticLevel, NEXT_LEVEL, LAYER_CAMERA, &CameraDesc, nullptr, &m_pBinded_Camera)))
 	{
 		return E_FAIL;
 	}
-	m_pGameInstance->Add_Camera(NEXT_LEVEL, pCamera, TEXT("CAM_SHOULDER"));
+	m_pGameInstance->Add_Camera(NEXT_LEVEL, m_pBinded_Camera, TEXT("CAM_SHOULDER"));
 
 
 	return S_OK;

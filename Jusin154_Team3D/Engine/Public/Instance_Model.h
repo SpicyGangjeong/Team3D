@@ -34,7 +34,7 @@ public:
 		_float2		vGravity = { 0.f , 9.8f };
 
 		_bool		isSinWave = {};
-		_float3     vSinMinAmount = { 0.f , 0.f , 0.f};
+		_float3     vSinMinAmount = { 0.f , 0.f , 0.f };
 		_float3     vSinMaxAmount = { 0.f , 0.f , 0.f };
 
 		_bool		isTurn;
@@ -53,6 +53,8 @@ public:
 		_bool       isSizeLerp = {};
 		_float3     vDeltaSize = {};
 		_float2     vSizeDrag = {};
+
+		_float2     vDelay = {};
 
 	}INSTANCE_DESC;
 
@@ -87,11 +89,11 @@ public:
 		_float3     vSinMinAmount = { 0.f , 0.f , 0.f };
 		_float3     vSinMaxAmount = { 0.f , 0.f , 0.f };
 
-		_bool		isTurn;
+		_bool		isTurn = {};
 		_float3     vDeltaAngleMin = {};
 		_float3     vDeltaAngleMax = {};
 
-		_bool       isAxisTurn;
+		_bool       isAxisTurn = {};
 		_float3     vDeltaAxisAngleMin = {};
 		_float3     vDeltaAxisAngleMax = {};
 
@@ -99,6 +101,12 @@ public:
 		_float2		vDrag = {};
 		_float3     vPivotMin = {};
 		_float3     vPivotMax = {};
+
+		_bool       isSizeLerp = {};
+		_float3     vDeltaSize = {};
+		_float2     vSizeDrag = {};
+
+		_float2     vDelay = {};
 
 	}PRE_INSTANCE_DESC;
 
@@ -147,12 +155,13 @@ public:
 		_float3   vDeltaAngle = {};
 		_float3	  vDeltaAxisAngle = {};
 
-		_float    fDrag;
+		_float    fDrag = {};
 		_float3   vPivot = {};
 
 		_float    fSizeDrag = {};
 		_float3   vDeltaSize = {};
 
+		_float2   vDelay = {};
 
 	}CS_PARTICLE_VALUE_DESC;
 
@@ -213,9 +222,9 @@ private:
 	ID3D11Buffer*			m_pParticleValueBuffer = { nullptr }; // 컴퓨트 쉐이드 두번째 버퍼 (스피드, 로테이션)
 
 public:
-#ifdef EDITOR_PROJECT	
+	//인스턴싱으로 바꾸기
 	static CInstance_Model* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex);
-#endif	
+
 	virtual CComponent* Clone(void* pArg, class CGameObject* pOwner = nullptr);
 	virtual void Free() override;
 	void Describe_Entity() override;
