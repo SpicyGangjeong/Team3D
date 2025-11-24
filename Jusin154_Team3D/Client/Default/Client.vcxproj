@@ -223,7 +223,6 @@
     <ClCompile Include="..\Private\Camera_Gaze.cpp" />
     <ClCompile Include="..\Private\CamPosition.cpp" />
     <ClCompile Include="..\Private\CamPosition_Arm.cpp" />
-    <ClCompile Include="..\Private\CamPosition_Player.cpp" />
     <ClCompile Include="..\Private\PhysXEffectHitBox.cpp" />
     <ClCompile Include="..\Private\CamPosition_Shoulder.cpp" />
     <ClCompile Include="..\Private\CamPosition_Socket.cpp" />
@@ -234,6 +233,7 @@
     <ClCompile Include="..\Private\EffectObject.cpp" />
     <ClCompile Include="..\Private\Effect_Container.cpp" />
     <ClCompile Include="..\Private\NomalJap.cpp" />
+    <ClCompile Include="..\Private\Player_States.cpp" />
     <ClCompile Include="..\Private\SkyBox.cpp" />
     <ClCompile Include="..\Private\InfoInstance.cpp" />
     <ClCompile Include="..\Private\Level_Field.cpp" />

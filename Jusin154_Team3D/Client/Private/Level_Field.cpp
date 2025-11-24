@@ -40,7 +40,7 @@ HRESULT CLevel_Field::Initialize()
 
 void CLevel_Field::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Up(DIK_0))
+	if (m_pGameInstance->Key_Up(DIK_F1))
 	{
 		m_pGameInstance->Set_LevelToChange();
 	}

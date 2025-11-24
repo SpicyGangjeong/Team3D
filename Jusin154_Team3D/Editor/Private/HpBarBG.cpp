@@ -45,6 +45,7 @@ HRESULT CHpBarBG::Initialize(void* pArg)
 	m_fCurrentHp = m_fMaxHp;
 	m_fMoveSpeed = 5.f;
 	m_fHpBG = _float2(0, m_fSizeX);
+	SizeUpX(210.f);
 	return S_OK;
 }
 

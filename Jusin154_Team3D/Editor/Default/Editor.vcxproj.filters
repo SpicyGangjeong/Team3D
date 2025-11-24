@@ -40,9 +40,6 @@
     <Filter Include="02.GameObjects\Dummys">
       <UniqueIdentifier>{fb090860-8f24-4f71-9daf-7fd971a8f5c2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Dummys\DebugCamera">
-      <UniqueIdentifier>{0eeb6d5c-db23-4147-b981-8346c879a1eb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Dummys\DummyObject">
       <UniqueIdentifier>{085e6bcb-1fe4-4857-bfc6-ed6fc0218358}</UniqueIdentifier>
     </Filter>
@@ -310,9 +307,6 @@
     <Filter Include="02.GameObjects\Camera\CameraPosition">
       <UniqueIdentifier>{1c11a2a1-ad0a-4f0b-8a86-5ab9fc68a69f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Camera\CameraPosition\Player">
-      <UniqueIdentifier>{b899b53a-c8cf-451a-ab5d-6945cac88276}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Wand">
       <UniqueIdentifier>{92110a48-81d0-4e98-be06-05dd078d0488}</UniqueIdentifier>
     </Filter>
@@ -351,6 +345,33 @@
     </Filter>
     <Filter Include="02.GameObjects\Layer_Effect\Effect\07.Decendo">
       <UniqueIdentifier>{a94e6a94-cc46-4c16-8518-5032bfdbd235}</UniqueIdentifier>
+	</Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\Spell_Slot_Preview">
+      <UniqueIdentifier>{b4e1da25-c952-4ff4-92fd-7f1501d8c005}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\Potion">
+      <UniqueIdentifier>{7683f642-58f7-4a79-a78c-b29540bdab10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\Magic_Meter">
+      <UniqueIdentifier>{b6ec3441-6b18-45d1-80ba-03aa6df7f9e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Camera\Debug">
+      <UniqueIdentifier>{ee7ebf3c-8798-41cb-a261-31ca5041909c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Camera\CameraPosition\Arm">
+      <UniqueIdentifier>{94ad00fa-52a1-4d53-b44e-5bb849a25201}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Camera\CameraPosition\Socket">
+      <UniqueIdentifier>{0d5c1798-4922-498e-afed-d1778c8e77b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Camera\CameraPosition\Player">
+      <UniqueIdentifier>{b899b53a-c8cf-451a-ab5d-6945cac88276}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Camera\CameraPosition\Player\Shoulder">
+      <UniqueIdentifier>{1962eafc-d147-494f-8d09-d96b78014958}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Camera\CameraPosition\Player\Target">
+      <UniqueIdentifier>{1c4860c7-bc8a-4bed-b545-ed3ef0b02748}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -386,9 +407,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Level_Logo.h">
       <Filter>01.Level\01.Logo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\DebugCamera.h">
-      <Filter>02.GameObjects\Dummys\DebugCamera</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\DummyRect.h">
       <Filter>02.GameObjects\Dummys\DummyRect</Filter>
@@ -666,12 +684,6 @@
     <ClInclude Include="..\Public\CamPosition.h">
       <Filter>02.GameObjects\Camera\CameraPosition</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CamPosition_Player.h">
-      <Filter>02.GameObjects\Camera\CameraPosition\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\CamPosition_Arm.h">
-      <Filter>02.GameObjects\Camera</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Wand.h">
       <Filter>02.GameObjects\Wand</Filter>
     </ClInclude>
@@ -684,11 +696,35 @@
     <ClInclude Include="..\Public\Wand.h">
       <Filter>02.GameObjects\Wand</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\AlphaMap.h">
-      <Filter>02.GameObjects\Env\05.AlphaMap</Filter>
-    </ClInclude>
+	  <ClInclude Include="..\public\AlphaMap.h">
+		  <Filter>02.GameObjects\Env\05.AlphaMap</Filter>
+	  </ClInclude>
     <ClInclude Include="..\Public\Decendo.h">
       <Filter>02.GameObjects\Layer_Effect\Effect\07.Decendo</Filter>
+	</ClInclude>
+    <ClInclude Include="..\Public\Camera_Debug.h">
+      <Filter>02.GameObjects\Camera\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CamPosition_Arm.h">
+      <Filter>02.GameObjects\Camera\CameraPosition\Arm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CamPosition_Socket.h">
+      <Filter>02.GameObjects\Camera\CameraPosition\Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CamPosition_Shoulder.h">
+      <Filter>02.GameObjects\Camera\CameraPosition\Player\Shoulder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CamPosition_Target.h">
+      <Filter>02.GameObjects\Camera\CameraPosition\Player\Target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Spell_Slot_Preview.h">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\Spell_Slot_Preview</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Potion.h">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\Potion</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Magic_Meter.h">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\Magic_Meter</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -711,9 +747,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Level_Logo.cpp">
       <Filter>01.Level\01.Logo</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\DebugCamera.cpp">
-      <Filter>02.GameObjects\Dummys\DebugCamera</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\pch.cpp">
       <Filter>99.Define\DEFAULT</Filter>
@@ -997,12 +1030,6 @@
     <ClCompile Include="..\Private\CamPosition.cpp">
       <Filter>02.GameObjects\Camera\CameraPosition</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\CamPosition_Player.cpp">
-      <Filter>02.GameObjects\Camera\CameraPosition\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\CamPosition_Arm.cpp">
-      <Filter>02.GameObjects\Camera</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Wand.cpp">
       <Filter>02.GameObjects\Wand</Filter>
     </ClCompile>
@@ -1020,6 +1047,33 @@
     </ClCompile>
     <ClCompile Include="..\Private\Decendo.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect\07.Decendo</Filter>
+	</ClCompile>
+    <ClCompile Include="..\private\Spell_Slot_Preview.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\Spell_Slot_Preview</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Potion.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\Potion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Magic_Meter.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\Magic_Meter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera_Debug.cpp">
+      <Filter>02.GameObjects\Camera\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CamPosition_Arm.cpp">
+      <Filter>02.GameObjects\Camera\CameraPosition\Arm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CamPosition_Socket.cpp">
+      <Filter>02.GameObjects\Camera\CameraPosition\Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CamPosition_Shoulder.cpp">
+      <Filter>02.GameObjects\Camera\CameraPosition\Player\Shoulder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CamPosition_Target.cpp">
+      <Filter>02.GameObjects\Camera\CameraPosition\Player\Target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_States.cpp">
+      <Filter>02.GameObjects\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

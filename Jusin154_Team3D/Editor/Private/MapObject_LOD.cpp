@@ -2,7 +2,7 @@
 #include "MapObject_LOD.h"
 
 #include "GameInstance.h"
-#include "DebugCamera.h"
+#include "Camera_Debug.h"
 #include "Layer.h"
 #include "Terrain.h"
 #include "VIBuffer_Terrain.h"
@@ -57,9 +57,18 @@ HRESULT CMapObject_LOD::Initialize(void* pArg)
 	m_vRotation = pDesc->vRotation;
 
 	
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
+	m_pTransformCom->Set_Scale(m_vScale);
+	m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
+
+	XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_XMWorldMatrix() * m_pParentTransformCom->Get_XMWorldMatrix());
+
+	_float3 vOffset = m_pModelComs[0]->Get_RadiusOffset();
+	_matrix ColliderMatrix = XMMatrixTranslation(vOffset.x, vOffset.y, vOffset.z) * XMLoadFloat4x4(&m_CombinedWorldMatrix);
+	XMStoreFloat4(&m_vExtentPosition, ColliderMatrix.r[3]);
+
 
 	
-
 	//m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 
 
@@ -78,18 +87,12 @@ void CMapObject_LOD::Priority_Update(_float fTimeDelta)
 
 void CMapObject_LOD::Update(_float fTimeDelta)
 {
-	//if (0 == m_iLodIndex)
-	//	m_bSelected = true;
+	/*if (0 == m_iLodIndex)
+		m_bSelected = true;*/
 
-	//m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
-	//m_pTransformCom->Set_Scale(m_vScale);
-	//m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
-
-	XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_XMWorldMatrix() * m_pParentTransformCom->Get_XMWorldMatrix());
-
-	_float3 vOffset = m_pModelComs[0]->Get_RadiusOffset();
-	_matrix ColliderMatrix = XMMatrixTranslation(vOffset.x, vOffset.y, vOffset.z) * XMLoadFloat4x4(&m_CombinedWorldMatrix);
-	XMStoreFloat4(&m_vExtentPosition, ColliderMatrix.r[3]);
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
+	m_pTransformCom->Set_Scale(m_vScale);
+	m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
 }
 
 void CMapObject_LOD::Late_Update(_float fTimeDelta)
@@ -102,6 +105,12 @@ void CMapObject_LOD::Late_Update(_float fTimeDelta)
 		m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
 	}
 #endif 
+	XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_XMWorldMatrix() * m_pParentTransformCom->Get_XMWorldMatrix());
+
+	_float3 vOffset = m_pModelComs[0]->Get_RadiusOffset();
+	_matrix ColliderMatrix = XMMatrixTranslation(vOffset.x, vOffset.y, vOffset.z) * XMLoadFloat4x4(&m_CombinedWorldMatrix);
+	XMStoreFloat4(&m_vExtentPosition, ColliderMatrix.r[3]);
+
 	_float fRaius = m_pModelComs[0]->Get_Radius();
 	if (m_pGameInstance->isIn_WorldFrustum(XMLoadFloat4(&m_vExtentPosition), fRaius)) {
 		

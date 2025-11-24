@@ -43,10 +43,6 @@ void CWand::Priority_Update(_float fTimeDelta)
 	socketMatrix.r[i] = XMVector3Normalize(socketMatrix.r[i]);
 	}
 	m_pTransformCom->Set_WorldMatrix(socketMatrix * XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr()));
-
-
-	//_float3 Scale = _float3(10.f, 10.f, 10.f);
-	//m_pTransformCom->Set_Scale(Scale);
 }
 
 void CWand::Update(_float fTimeDelta)

@@ -49,6 +49,7 @@ private:
 	_float					m_fMaskValue = {0.1f};
 
 	_float					m_fUpValue = { 0.01f };
+	_bool					m_bWasWireFrame = { false };
 
 private:
 	HRESULT Ready_Components();
