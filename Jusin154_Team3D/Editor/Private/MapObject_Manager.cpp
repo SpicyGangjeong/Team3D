@@ -1348,7 +1348,7 @@ void CMapObject_Manager::Update_ContainerObject()
 
 		for (auto& pObject : (*pList))
 		{
-			if (GUI::Button((dynamic_cast<CMapContainer*>(pObject)->Get_Name().c_str())))
+			if (GUI::Button((dynamic_cast<CMapContainer*>(pObject)->Get_Name() + to_string(iIndex)).c_str()))
 			{
 				m_iContainerObjectIndex = iIndex;
 			}
