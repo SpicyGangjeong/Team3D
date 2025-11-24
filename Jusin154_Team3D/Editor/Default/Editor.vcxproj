@@ -167,6 +167,7 @@
     <ClInclude Include="..\public\AlphaMap.h" />
     <ClInclude Include="..\Public\Body.h" />
     <ClInclude Include="..\public\Active_Icon.h" />
+    <ClInclude Include="..\Public\Decendo.h" />
     <ClInclude Include="..\Public\Broom.h" />
     <ClInclude Include="..\Public\CallBack_EffectHitBox_Behavior.h" />
     <ClInclude Include="..\Public\CallBack_EffectHitBox_HitReport.h" />
@@ -294,6 +295,7 @@
     <ClCompile Include="..\private\AlphaMap.cpp" />
     <ClCompile Include="..\Private\Body.cpp" />
     <ClCompile Include="..\private\Active_Icon.cpp" />
+    <ClCompile Include="..\Private\Decendo.cpp" />
     <ClCompile Include="..\Private\Broom.cpp" />
     <ClCompile Include="..\Private\CallBack_EffectHitBox_Behavior.cpp" />
     <ClCompile Include="..\Private\CallBack_EffectHitBox_HitReport.cpp" />

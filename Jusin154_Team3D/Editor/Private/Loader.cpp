@@ -86,6 +86,7 @@
 #include "TrailObject.h"
 #include "NomalJap.h"
 #include "Bombard.h"
+#include "Decendo.h"
 
 #pragma endregion
 
@@ -769,7 +770,10 @@ HRESULT CLoader::Loading_For_Effect()
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CBombard>(ENUM_CLASS(LEVEL::EFFECT), CBombard::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
-	
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CDecendo>(ENUM_CLASS(LEVEL::EFFECT), CDecendo::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 
 	m_strMessage = TEXT("Loading Success!");
 

@@ -349,6 +349,9 @@
     <Filter Include="02.GameObjects\Env\05.AlphaMap">
       <UniqueIdentifier>{54eef1b7-a5ee-444f-9577-44ffc8c3d8bc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\07.Decendo">
+      <UniqueIdentifier>{a94e6a94-cc46-4c16-8518-5032bfdbd235}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -684,6 +687,9 @@
     <ClInclude Include="..\public\AlphaMap.h">
       <Filter>02.GameObjects\Env\05.AlphaMap</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Decendo.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\07.Decendo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -1011,6 +1017,9 @@
     </ClCompile>
     <ClCompile Include="..\private\AlphaMap.cpp">
       <Filter>02.GameObjects\Env\05.AlphaMap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Decendo.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\07.Decendo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

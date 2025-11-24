@@ -23,6 +23,7 @@ HRESULT CPartObject::Initialize(void* pArg)
     if (FAILED(__super::Initialize(pArg))){
         return E_FAIL;
     }
+
     PARTOBJECT_DESC* pDesc = static_cast<PARTOBJECT_DESC*>(pArg);
 
     m_pParentTransformCom = pDesc->pParentTransform;

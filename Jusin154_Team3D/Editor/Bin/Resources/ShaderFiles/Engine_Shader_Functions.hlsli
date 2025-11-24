@@ -242,7 +242,7 @@ float4x4 RotateAxis(float4 _vAxis , float fAngle)
         );
     }
     
-    float3 vAxis = normalize(_vAxis);
+    float3 vAxis = normalize(_vAxis.rgb);
     
     float fCos = cos(radians(fAngle));
     float fSin = sin(radians(fAngle));
@@ -264,5 +264,45 @@ float4x4 RotateAxis(float4 _vAxis , float fAngle)
 
 }
 
+float2 SelectLerpUV(float2 fAmount, float _fRatio, int iSelectOption)
+{
+    if (iSelectOption < 0)
+        return float2(0, 0);
+    
+    float fRatio = _fRatio;
+    switch (iSelectOption)
+    {
+        case 0:
+            fRatio = fRatio; // Linear 
+            break;
+        case 1:
+            fRatio = fRatio * fRatio; // EaseInQuad 후반에 속도 증가
+            break;
+        case 2:
+            fRatio = 1 - (1 - fRatio * fRatio); // EaseOutQuad 초반에 속도 증가
+            break;
+        case 3:
+            fRatio = fRatio * fRatio * fRatio; // EaseInCubic  더 강하게 후반 속도 증가
+            break;
+        case 4:
+            fRatio = 1 - (1 - fRatio * fRatio * fRatio); // EaseOutCubic 더 강하게 초반 속도 증가
+            break;
+        case 5:
+            fRatio = 0.5f * (1 - cos(PI * fRatio)); // EaseInOutSin 사인 곡선 
+            break;
+        case 6:
+            fRatio = sin(13 * PI * fRatio) * (1 - fRatio) * (1 - fRatio); // EaseInBack 뒤로갔다가 앞으로
+            break;
+        case 7:
+            fRatio = pow(2, 10 * (fRatio - 1)); // Expo 지수 함수
+            break;
+        case 8:
+            fRatio = 1 - pow(1 - fRatio * fRatio, 0.5); // 원형 궤적     
+            break;
+    }
+    
+    return fAmount * fRatio;
+
+}
 
 #endif // ENGINE_SHADER_FUNCTIONS_HLSLI
