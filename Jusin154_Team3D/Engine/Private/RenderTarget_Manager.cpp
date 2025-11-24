@@ -165,10 +165,10 @@ HRESULT CRenderTarget_Manager::Refit_RenderTarget(class CShader* pShader, const 
     m_pContext->RSGetViewports(&iNumViewPort, &vp);
     
     D3D11_TEXTURE2D_DESC OutputDesc = {};
+    pOutput->Get_TextureDesc(OutputDesc);
     vp.Width = (_float)OutputDesc.Width;
     vp.Height = (_float)OutputDesc.Height;
 
-    pOutput->Get_TextureDesc(OutputDesc);
     pOutput->Clear();
 
 
