@@ -28,7 +28,9 @@ public:
 	void    Change_HeigthRatio(_float fRatio);
 
 #ifdef _DEBUG
-	void Set_CullingRadius(_float fRaduis);
+	void	Set_CullingRadius(_float fRaduis);
+	HRESULT Save_HeightMap(const _char* pFilePath);
+	HRESULT Load_HeightMap(const _char* pFilePath);
 #endif // _DEBUG
 
 
