@@ -57,12 +57,6 @@ void CLevel_ObjectViewer::Update(_float fTimeDelta)
 	Parts_Object_Setting();
 
 	Find_Anim();
-
-	if (m_Test)
-	{
-		m_Test->Describe_Entity();
-	}
-
 }
 
 HRESULT CLevel_ObjectViewer::Render()
@@ -714,7 +708,7 @@ HRESULT CLevel_ObjectViewer::Ready_Layer_Dummy(const _wstring& strLayerTag)
 
 
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, m_Test)))
 		return E_FAIL;
 
 	/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))

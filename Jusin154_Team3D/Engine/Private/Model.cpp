@@ -123,7 +123,7 @@ _bool CModel::Play_Animation(_float fTimeDelta,CTransform* pTransform)
 		_float fRatio = m_fBlendTime / m_fBlendDuration;
 		fRatio = min(fRatio, 1.f);
 
-		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, pTransform);
+		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, pTransform, m_fAmount);
 		m_Animations[m_iCurrentAnimIndex]->InterpAnim(m_Animations[m_iPreAnimIndex], m_Bones, fRatio);
 
 		if (fRatio >= 1.f)
@@ -134,7 +134,7 @@ _bool CModel::Play_Animation(_float fTimeDelta,CTransform* pTransform)
 	}
 	else
 	{
-		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, pTransform);
+		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, pTransform, m_fAmount);
 		m_iPreAnimIndex = m_iCurrentAnimIndex;
 	}
 
@@ -152,7 +152,7 @@ _bool CModel::Play_Animation(_float fTimeDelta,CTransform* pTransform)
 	return m_bIsFinishedAnim;
 }
 
-void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop)
+void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop,_float fAmount)
 {
 	if (m_iCurrentAnimIndex == iIndex)
 		return;
@@ -160,6 +160,7 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop)
 	{
 		m_iCurrentAnimIndex = iIndex;
 		m_bIsLoop = isLoop;
+		m_fAmount = fAmount;
 		m_Animations[m_iCurrentAnimIndex]->ResetRootMotion();
 		m_Animations[m_iCurrentAnimIndex]->Depart_Animation();
 	}

@@ -19,6 +19,8 @@ public:
 	HRESULT Bind_RenderTarget(const _wstring& strTargetTag, class CShader* pShader, const _char* pConstantName);
 	HRESULT Copy_RenderTarget(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D);
 
+	HRESULT Refit_RenderTarget(class CShader* pShader, const _wstring& wstrRenderTargetInput, const _wstring& wstrRenderTargetOutput);
+
 #ifdef _DEBUG
 public:
 	HRESULT Render_RenderTarget_Debug(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);

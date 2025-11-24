@@ -37,6 +37,7 @@ public:
 	void Set_LightCombo(_uint LightCombo) { m_iLightCombo = LightCombo; }
 	_float Get_KeyFrame(_string FrameName);
 	_bool IsCurrentKeyFrame(_string FrameName);
+
 	virtual void Reset_Sprint() {};
 	virtual void Reset_Walk() {};
 #pragma endregion
@@ -56,6 +57,10 @@ protected:
 
 	vector<pair<_uint, _bool>> m_Animation;
 
+	unordered_map<size_t, CState*> m_States = { };
+	size_t m_iStateMask = { 0 };
+
+	STATEANIM::ESTATE m_eSpell = { STATEANIM::END };
 
 private:
 	virtual void Add_FSM() {};
