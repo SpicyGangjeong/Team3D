@@ -50,6 +50,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	Set_Anim();
 
+	m_eSpell = STATEANIM::DESCENDO;
+
 	{
 		CFSM::FSM_DESC FSMDesc{};
 		FSMDesc.pStates = &m_States;
@@ -69,11 +71,13 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 
 void CPlayer::Update(_float fTimeDelta)
 {
+	__super::Update(fTimeDelta);
+
 	m_pFSM->Update_State(fTimeDelta);
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
-	__super::Update(fTimeDelta);
+	TestKeyInput(fTimeDelta);
 }
 
 void CPlayer::Late_Update(_float fTimeDelta)
@@ -85,6 +89,8 @@ void CPlayer::Late_Update(_float fTimeDelta)
 
 HRESULT CPlayer::Render()
 {
+	if (!m_bVisible)
+		return S_OK;
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
@@ -214,6 +220,35 @@ HRESULT CPlayer::Bind_ShaderResources()
 	return S_OK;
 }
 
+void CPlayer::TestKeyInput(_float fTimeDelta)
+{
+	if (m_pGameInstance->Key_Down(DIK_F1))
+	{
+		m_eSpell = STATEANIM::ACCIO;
+	}
+	if (m_pGameInstance->Key_Down(DIK_F2))
+	{
+		m_eSpell = STATEANIM::DESCENDO;
+	}
+	if (m_pGameInstance->Key_Down(DIK_F3))
+	{
+		m_eSpell = STATEANIM::DEPULSO;
+	}
+	if (m_pGameInstance->Key_Down(DIK_F4))
+	{
+		m_eSpell = STATEANIM::DIFFINDO;
+	}
+	if (m_pGameInstance->Key_Down(DIK_F5))
+	{
+		m_eSpell = STATEANIM::DISILLUSION_ENTER;
+	}
+	if (m_pGameInstance->Key_Down(DIK_F6))
+	{
+		m_eSpell = STATEANIM::DISILLUSION_EXIT;
+	}
+
+}
+
 HRESULT CPlayer::InputAction()
 {
 	if (
@@ -223,7 +258,6 @@ HRESULT CPlayer::InputAction()
 		|| m_pGameInstance->Key_Down(DIK_R)
 		|| m_pGameInstance->Key_Down(DIK_Q)
 		|| m_pGameInstance->Mouse_Up(DIM_LBUTTON)
-		|| m_pGameInstance->Key_Down(DIK_1)
 		|| m_pGameInstance->Key_Down(DIK_LSHIFT)
 		|| m_pGameInstance->Key_Down(DIK_C)
 		|| m_pGameInstance->Key_Down(DIK_V)
@@ -246,11 +280,25 @@ HRESULT CPlayer::InputMove()
 	return E_FAIL;
 }
 
+HRESULT CPlayer::InputSpell()
+{
+	if (
+		m_pGameInstance->Key_Down(DIK_1)
+		|| m_pGameInstance->Key_Down(DIK_2)
+		|| m_pGameInstance->Key_Down(DIK_3)
+		|| m_pGameInstance->Key_Down(DIK_4)
+		)
+	{
+		return S_OK;
+	}
+	return E_FAIL;
+}
+
 void CPlayer::Behavior_IdleEnter() {
 	m_pFSM->Enable_State(FSMSTATE::IDLE);
 	pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::IDLE];
 
-	if (m_pFSM->IsEnable_Previous(FSMSTATE::JOG|FSMSTATE::WALK)) {
+	if (m_pFSM->IsEnable_Previous(FSMSTATE::JOG|FSMSTATE::WALK| FSMSTATE::SPRINT)) {
 		
 		if (m_pFSM->IsEnable_Previous(FSMSTATE::WALK)) {
 			pairAnimInfo = m_Animation[STATEANIM::WALK_STOP];
@@ -272,7 +320,7 @@ HRESULT CPlayer::Behavior_IdleExitCheck()
 {
 	// S_OK -> 현 상태 유지
 	// E_FAIL -> 현 상태 탈출
-	if (SUCCEEDED(InputAction())) {
+	if (SUCCEEDED(InputAction())|| SUCCEEDED(InputSpell())) {
 		if (m_pGameInstance->Key_Down(DIK_SPACE)) {
 			m_pFSM->Change_State(FSMSTATE::JUMP);
 		}
@@ -285,7 +333,7 @@ HRESULT CPlayer::Behavior_IdleExitCheck()
 		else if (m_pGameInstance->Key_Down(DIK_Q)) {
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
 		}
-		else if (m_pGameInstance->Key_Down(DIK_1)) {
+		else if (SUCCEEDED(InputSpell())) {
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
 		}
 		else if (m_pGameInstance->Mouse_Up(DIM_LBUTTON)) {
@@ -301,8 +349,12 @@ HRESULT CPlayer::Behavior_IdleExitCheck()
 		m_pFSM->Change_State(FSMSTATE::MOVE);
 		return E_FAIL;
 	}
-	pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::IDLE];
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
+	if (m_pModelCom->IsFinishedAnim())
+	{
+		pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::IDLE];
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+	}
 	return S_OK;
 }
 
@@ -376,7 +428,7 @@ void CPlayer::Behavior_MoveEnter()
 HRESULT CPlayer::Behavior_MoveExitCheck()
 {
 	pair<_uint, _bool> pairAnimInfo;
-	if (SUCCEEDED(InputAction())) {
+	if (SUCCEEDED(InputAction())|| SUCCEEDED(InputSpell())) {
 		if (m_pGameInstance->Key_Down(DIK_SPACE)) {
 			m_pFSM->Change_State(FSMSTATE::JUMP);
 		}
@@ -392,7 +444,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck()
 		else if (m_pGameInstance->Mouse_Up(DIM_LBUTTON)) {
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
 		}
-		else if (m_pGameInstance->Key_Down(DIK_1)) {
+		else if (SUCCEEDED(InputSpell())) {
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
 		}
 		else if (m_pGameInstance->Key_Down(DIK_V)) {
@@ -436,7 +488,9 @@ HRESULT CPlayer::Behavior_MoveExitCheck()
 	if (SUCCEEDED(InputMove())) {
 		return S_OK;
 	}
+
 	m_pFSM->Change_State(FSMSTATE::IDLE);
+
 	return E_FAIL;
 }
 
@@ -552,10 +606,35 @@ void CPlayer::Behavior_CombatEnter()
 		m_pFSM->Enable_State(FSMSTATE::LIGHT_ATTACK);
 		pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK];
 	}
-	else if (m_pGameInstance->Key_Down(DIK_1)) {
-		m_pFSM->Enable_State(FSMSTATE::CAST);
-		pairAnimInfo = m_Animation[STATEANIM::CAST];
-
+	else if (SUCCEEDED(InputSpell())) {
+		m_pFSM->Enable_State(FSMSTATE::SPELL);
+		if (m_eSpell != STATEANIM::END)
+		{
+			switch (m_eSpell)
+			{
+			case STATEANIM::DEPULSO:
+				pairAnimInfo = m_Animation[STATEANIM::DEPULSO];
+				m_eSpell = STATEANIM::END;
+				break;
+			case STATEANIM::DIFFINDO:
+				pairAnimInfo = m_Animation[STATEANIM::DIFFINDO];
+				m_eSpell = STATEANIM::END;
+				break;
+			case STATEANIM::DISILLUSION_ENTER:
+				pairAnimInfo = m_Animation[STATEANIM::DISILLUSION_ENTER];
+				m_eSpell = STATEANIM::END;
+				break;
+			case STATEANIM::DISILLUSION_EXIT:
+				pairAnimInfo = m_Animation[STATEANIM::DISILLUSION_EXIT];
+				m_eSpell = STATEANIM::END;
+				break;
+			default:
+				pairAnimInfo = m_Animation[STATEANIM::SPELL];
+				break;
+			}
+		}
+		else
+			pairAnimInfo = m_Animation[STATEANIM::SPELL];
 	}
 	else if (m_pGameInstance->Key_Down(DIK_V)) {
 		m_pFSM->Enable_State(FSMSTATE::MAPHELP);
@@ -563,14 +642,13 @@ void CPlayer::Behavior_CombatEnter()
 
 	}
 
-
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
 
 HRESULT CPlayer::Behavior_CombatExitCheck()
 {
 	pair<_uint, _bool> pairAnimInfo;
-	if (SUCCEEDED(InputAction())) {
+	if (SUCCEEDED(InputAction())|| SUCCEEDED(InputSpell())) {
 		if (m_pGameInstance->Key_Down(DIK_R)) 
 		{
 			m_pFSM->Enable_State(FSMSTATE::SKILL);
@@ -578,6 +656,8 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 		else if (m_pGameInstance->Key_Down(DIK_Q))
 		{
 			m_pFSM->Enable_State(FSMSTATE::SKILL2);
+			pairAnimInfo = m_Animation[STATEANIM::SKILL2];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		}
 		else if (m_pGameInstance->Mouse_Up(DIM_LBUTTON)) 
 		{
@@ -592,14 +672,14 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 				}
 			}
 		}
-		else if (m_pGameInstance->Key_Down(DIK_1)) 
+		else if (SUCCEEDED(InputSpell()))
 		{
-			m_pFSM->Enable_State(FSMSTATE::CAST);
+			m_pFSM->Enable_State(FSMSTATE::SPELL);
 			_uint iIndex = m_pModelCom->Get_AnimIndex();
-			if (m_Animation[STATEANIM::CAST].first <= iIndex && m_Animation[STATEANIM::CAST].first + 3 > iIndex) {
+			if (m_Animation[STATEANIM::SPELL].first <= iIndex && m_Animation[STATEANIM::SPELL].first + 3 > iIndex) {
 				_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
 				if (fRatio >= 0.15f) {
-					pairAnimInfo = m_Animation[STATEANIM::CAST];
+					pairAnimInfo = m_Animation[STATEANIM::SPELL];
 					pairAnimInfo.first = iIndex + 1;
 					m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 				}
@@ -611,8 +691,29 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 			pairAnimInfo = m_Animation[STATEANIM::MAPHELP];
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		}
-		return E_FAIL;
 	}
+
+	if (m_pFSM->IsEnable(FSMSTATE::SPELL)&& IsCurrentKeyFrame("Combat"))
+	{
+		if (m_eSpell != STATEANIM::END)
+		{
+			switch (m_eSpell)
+			{
+			case STATEANIM::ACCIO:
+				pairAnimInfo = m_Animation[STATEANIM::ACCIO];
+				break;
+			case STATEANIM::DESCENDO:
+				pairAnimInfo = m_Animation[STATEANIM::DESCENDO];
+				break;
+			default:
+				break;
+			}
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+			m_eSpell = STATEANIM::END;
+			return E_FAIL;
+		}
+	}
+
 	if (SUCCEEDED(InputMove()) && IsCurrentKeyFrame("Combat")) {
 		m_pFSM->Change_State(FSMSTATE::MOVE);
 		return E_FAIL;
@@ -628,7 +729,7 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 
 void CPlayer::Behavior_CombatExit()
 {
-	m_pFSM->Disable_State(FSMSTATE::COMBAT | FSMSTATE::LIGHT_ATTACK | FSMSTATE::CAST | FSMSTATE::SKILL | FSMSTATE::SKILL2 | FSMSTATE::MAPHELP);
+	m_pFSM->Disable_State(FSMSTATE::COMBAT | FSMSTATE::LIGHT_ATTACK | FSMSTATE::SPELL | FSMSTATE::SKILL | FSMSTATE::SKILL2 | FSMSTATE::MAPHELP);
 }
 
 void CPlayer::Add_FSM()
@@ -709,16 +810,6 @@ void CPlayer::Add_FSM()
 
 void CPlayer::Set_Anim()
 {
-
-	m_Animation[STATEANIM::DODGE] = { 802,false };
-
-	m_Animation[STATEANIM::SKILL] = { 593,false };
-	m_Animation[STATEANIM::SKILL2] = { 915,false };
-	m_Animation[STATEANIM::LIGHT_ATTACK] = { 413,false };
-	m_Animation[STATEANIM::LAND] = { 259,false };
-	m_Animation[STATEANIM::CAST] = { 696,false };
-	m_Animation[STATEANIM::MAPHELP] = { 122,false };
-
 	m_Animation[STATEANIM::IDLE] = { 266,true };
 	m_Animation[STATEANIM::IDLE_TURN_L] = { 270,false };
 	m_Animation[STATEANIM::IDLE_TURN_R] = { 430,false };
@@ -737,6 +828,22 @@ void CPlayer::Set_Anim()
 
 	m_Animation[STATEANIM::SPRINT] = { 599,true };
 
+	m_Animation[STATEANIM::LAND] = { 259,false };
+
+	m_Animation[STATEANIM::DODGE] = { 802,false };
+
+	m_Animation[STATEANIM::SKILL] = { 593,false };
+	m_Animation[STATEANIM::SKILL2] = { 915,false };
+	m_Animation[STATEANIM::LIGHT_ATTACK] = { 413,false };
+	m_Animation[STATEANIM::SPELL] = { 696,false };
+	m_Animation[STATEANIM::MAPHELP] = { 122,false };
+	m_Animation[STATEANIM::ACCIO] = { 417,false };
+	m_Animation[STATEANIM::DESCENDO] = { 418,false };
+	m_Animation[STATEANIM::DEPULSO] = { 782,false };
+	m_Animation[STATEANIM::DIFFINDO] = { 786,false };
+	m_Animation[STATEANIM::LUMOS] = { 782,false };
+	m_Animation[STATEANIM::DISILLUSION_ENTER] = { 585,false };
+	m_Animation[STATEANIM::DISILLUSION_EXIT] = { 586,false };
 }
 
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -799,5 +906,7 @@ void CPlayer::Describe_Entity()
 
 	string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
 	GUI::Text(AnimList.c_str());
+
+	GUI::Checkbox("Render", &m_bVisible);
 	
 }

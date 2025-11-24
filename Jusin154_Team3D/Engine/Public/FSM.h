@@ -14,7 +14,7 @@ enum ESTATE : _u64Flag
     DODGE                       = 1ULL << 7,
     COMBAT                      = 1ULL << 8,
     LIGHT_ATTACK                = 1ULL << 9,
-    CAST                        = 1ULL << 10,
+    SPELL                       = 1ULL << 10,
     SKILL                       = 1ULL << 11,
     SKILL2                      = 1ULL << 12,
     MAPHELP                     = 1ULL << 13,
