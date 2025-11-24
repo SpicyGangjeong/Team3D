@@ -201,8 +201,9 @@ HRESULT CRenderTarget_Manager::Refit_RenderTarget(class CShader* pShader, const 
     if (FAILED(pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::REFIT)))) {
         return E_FAIL;
     }
+    ID3D11ShaderResourceView* const pNullSRV[1] = { nullptr };
+    m_pContext->PSSetShaderResources(0, 1, pNullSRV);
 
-    m_pContext->PSSetShaderResources(0, 1, nullptr);
     return S_OK;
 }
 
