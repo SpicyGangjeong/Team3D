@@ -597,7 +597,10 @@ void CMesh::Free()
 
 	Safe_Delete_Array(m_pBoneMatrices);
 }
+#ifdef _DEBUG
 
 void CMesh::Describe_Entity()
 {
 }
+
+#endif // _DEBUG

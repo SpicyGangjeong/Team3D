@@ -1385,6 +1385,7 @@ void CModel::Free()
 	m_AnimRanges.clear();
 
 }
+#ifdef _DEBUG
 void CModel::Describe_Entity()
 {
 	//GUI::Begin("Model_Desc");
@@ -1433,3 +1434,6 @@ void CModel::Describe_Entity()
 	//}
 	//GUI::End();
 }
+
+#endif // _DEBUG
+

@@ -48,7 +48,6 @@ void CDummy_PhysXPlayable::Update(_float fTimeDelta)
 			m_pGameInstance->Attach_Actor(*m_pCharacter_Controller->Get_Actor());
 		}
 	}
-	m_pTransformCom->AccumulateMomentum(XMVectorSet(0.f, -GRAVITY * fTimeDelta, 0.f, 0.f));
 	m_pCharacter_Controller->Move(fTimeDelta);
 }
 

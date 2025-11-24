@@ -400,10 +400,13 @@ void CAnimation::Free()
 	}
 
 }
-;
+#ifdef _DEBUG
+
 void CAnimation::Describe_Entity()
 {
 	//if (GUI::CollapsingHeader(m_strName.c_str())) {
 	//	
 	//}
 }
+
+#endif // _DEBUG

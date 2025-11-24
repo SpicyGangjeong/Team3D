@@ -180,7 +180,9 @@ void CRigidBody_Dynamic::Free()
 		m_pRigidBody = nullptr;
 	}
 }
+#ifdef _DEBUG
 
 void CRigidBody_Dynamic::Describe_Entity()
 {
 }
+#endif // _DEBUG

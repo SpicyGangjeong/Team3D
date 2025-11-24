@@ -17,6 +17,7 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+	void Render_CameraCoordinateSystem();
 	_bool Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
 
 private:
@@ -26,6 +27,9 @@ private:
 
 	_bool m_bSprintToggle = { false };
 	_bool m_bWalkToggle = { false };
+
+	_float3 m_vCameraLookDir = { 0.f, 0.f, 1.f, };
+	_float3 m_vCameraRightDir = { 1.f, 0.f, 0.f };
 
 
 	class CCamPosition_Socket* m_pCamPosition_TopDown_LookPart = { nullptr };
@@ -42,6 +46,13 @@ private:
 	HRESULT Ready_Components();
 	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
+	void Update_CameraCoordinateSystem();
+
+#ifdef _DEBUG
+	unique_ptr<BasicEffect> m_BasicEffect;
+	unique_ptr<PrimitiveBatch<VertexPositionColor>> m_Batch;
+#endif // _DEBUG
+
 
 public:
 	static CPlayer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -5,6 +5,7 @@
 CQuadTree::CQuadTree()
 {
 }
+#ifdef _DEBUG
 
 void CQuadTree::Set_CullingRadius(_float fRadius)
 {
@@ -18,6 +19,7 @@ void CQuadTree::Set_CullingRadius(_float fRadius)
 		m_pChildren[i]->Set_CullingRadius(fRadius);
 	}
 }
+#endif // _DEBUG
 
 void CQuadTree::Culling(CGameInstance* pGameInstance, const _float3* pVertexPositions, _uint* pIndices, _uint* pNumIndices)
 {

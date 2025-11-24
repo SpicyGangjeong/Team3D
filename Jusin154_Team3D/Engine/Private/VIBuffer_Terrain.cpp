@@ -288,11 +288,14 @@ void CVIBuffer_Terrain::Change_HeigthRatio(_float fRatio)
 
 	m_pContext->Unmap(m_pVB, 0);
 }
+#ifdef _DEBUG
 
 void CVIBuffer_Terrain::Set_CullingRadius(_float fRaduis)
 {
 	m_pQuadTree->Set_CullingRadius(fRaduis);
 }
+#endif // _DEBUG
+
 
 HRESULT CVIBuffer_Terrain::Save_HeightMap(const _char* pFilePath)
 {
@@ -393,7 +396,9 @@ void CVIBuffer_Terrain::Free()
 
 	Safe_Release(m_pQuadTree);
 }
+#ifdef _DEBUG
 
 void CVIBuffer_Terrain::Describe_Entity()
 {
 }
+#endif // _DEBUG

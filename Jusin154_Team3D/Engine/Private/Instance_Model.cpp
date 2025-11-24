@@ -526,6 +526,7 @@ void CInstance_Model::Free()
 	SAFE_RELEASE(m_pConstantBuffer);
 	SAFE_RELEASE(m_pParticleValueBuffer);
 }
+#ifdef _DEBUG
 
 void CInstance_Model::Describe_Entity()
 {
@@ -732,3 +733,5 @@ void CInstance_Model::Describe_Entity()
 
 	ImGui::Separator();
 }
+
+#endif // _DEBUG

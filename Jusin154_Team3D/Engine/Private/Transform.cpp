@@ -358,6 +358,7 @@ void CTransform::Free()
 	__super::Free();
 
 }
+#ifdef _DEBUG
 
 void CTransform::Describe_Entity()
 {
@@ -382,3 +383,5 @@ void CTransform::Describe_Entity()
 		
 	}
 }
+
+#endif // _DEBUG

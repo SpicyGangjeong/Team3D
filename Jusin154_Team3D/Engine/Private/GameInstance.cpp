@@ -199,6 +199,8 @@ void CGameInstance::BillBoard(CTransform* pTransform)
 
 }
 
+#ifdef EDITOR_PROJECT
+
 
 void CGameInstance::Save_ModelFilePath(const _char* FilePath)
 {
@@ -228,6 +230,7 @@ size_t CGameInstance::ModelFilePathCount()
 	return m_FilePaths.size();
 }
 
+#endif // EDITOR_PROJECT
 void CGameInstance::Render_Begin(const _float4* pClearColor)
 {
 	m_pGraphic_Device->Clear_BackBuffer_View(pClearColor);
@@ -538,7 +541,7 @@ HRESULT CGameInstance::Copy_RenderTarget(const _wstring& strTargetTag, ID3D11Tex
 {
 	return m_pRenderTarget_Manager->Copy_RenderTarget(strTargetTag, pTexture2D);
 }
-
+#ifdef _DEBUG
 void CGameInstance::RenderTarget_Debuger()
 {
 	m_pRenderTarget_Manager->RenderTarget_Debuger();
@@ -548,6 +551,7 @@ HRESULT CGameInstance::Render_RenderTarget_Debug(CShader* pShader, CVIBuffer_Rec
 {
 	return m_pRenderTarget_Manager->Render_RenderTarget_Debug(pShader, pVIBuffer);
 }
+#endif // _DEBUG
 HRESULT CGameInstance::Clear_Cameras(_uint iLevel)
 {
 	return m_pCamera_Manager->Clear_Cameras(iLevel);
@@ -567,6 +571,10 @@ HRESULT CGameInstance::Bind_Camera(_uint iLevel, const _wstring& strCameraKey, _
 HRESULT CGameInstance::IsBinded_Camera(const _wstring& strCameraKey)
 {
 	return m_pCamera_Manager->IsBinded_Camera(strCameraKey);
+}
+_vector CGameInstance::Get_CameraLook()
+{
+	return m_pCamera_Manager->Get_CameraLook();
 }
 const _float* CGameInstance::Get_CurrentCameraFar()
 {
@@ -602,12 +610,20 @@ _bool CGameInstance::SaveAssimpModel(const _char* filename)
 	auto iter = m_ModelMap.find(filename);
 	return iter->second->SaveAssimpModel(filename);
 }
-#endif
+void CGameInstance::Add_ModelToMap(const _char* filePath, CModel* pModel)
+{
+	m_ModelMap[filePath] = pModel;
+}
+void CGameInstance::Add_SaveModel(const _char* filePath, SaveModel sModel)
+{
+	m_sModelMap[filePath] = sModel;
+}
 SaveModel* CGameInstance::Load_SaveModel(const _char* filePath)
 {
 	auto iter = m_sModelMap.find(filePath);
 	return &iter->second;
 }
+#endif
 
 #pragma region PhysX_Manager
 PSX::PxMaterial* CGameInstance::Create_Material(_float3* vMatInfo)
@@ -660,6 +676,7 @@ void CGameInstance::Release_Actor(PSX::PxActor& Actor)
 {
 	m_pPhysX_Manager->Detach_Actor(Actor);
 }
+#ifdef EDITOR_PROJECT
 HRESULT CGameInstance::ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix)
 {
 	return m_pPhysX_Manager->ConvertToTriMeshes(Meshes, pxTriMeshes, WorldMatrix);
@@ -668,6 +685,8 @@ HRESULT CGameInstance::SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleM
 {
 	return m_pPhysX_Manager->SaveTriMeshes(pPath, TriMeshes);
 }
+#endif // EDITOR_PROJECT
+
 HRESULT CGameInstance::LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes)
 {
 	return m_pPhysX_Manager->LoadTriMeshes(pPath, TriMeshes);

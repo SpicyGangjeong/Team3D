@@ -251,6 +251,7 @@ void CShader::Free()
 
 	m_InputLayouts.clear();
 }
+#ifdef _DEBUG
 
 void CShader::Describe_Entity()
 {
@@ -268,3 +269,5 @@ void CShader::Describe_Entity()
 	}
 
 }
+
+#endif // _DEBUG

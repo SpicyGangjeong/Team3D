@@ -48,7 +48,9 @@ public:
 	static CVIBuffer_UI_Instance* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const INSTANCE_DESC* pInstanceDesc);
 	virtual CComponent* Clone(void* pArg, class CGameObject* pOwner = nullptr) override;
 	virtual void Free() override;
-	virtual void Describe_Entity() override;
+#ifdef _DEBUG
+	void Describe_Entity() override;
+#endif // _DEBUG
 };
 
 NS_END
