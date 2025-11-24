@@ -182,7 +182,10 @@ public:
 	virtual CComponent* Clone(void* pArg, class CGameObject* pOwner = nullptr);
 
 virtual void Free(); public:
+#ifdef _DEBUG
 	void Describe_Entity() override;
+#endif // _DEBUG
+
 };
 
 NS_END
