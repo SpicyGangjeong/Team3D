@@ -185,6 +185,7 @@ void CAnimation::InterpAnim(CAnimation* pPreAnim, vector<CBone*>& Bones, float f
 	}
 }
 
+
 void CAnimation::CreateGPUData(ID3D11Device* pDevice)
 {
 	vector<CHANNEL_DESC> channels;

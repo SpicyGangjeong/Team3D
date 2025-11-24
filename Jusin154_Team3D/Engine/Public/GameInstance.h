@@ -260,9 +260,9 @@ private:
 
 	vector<const _char*>			m_FilePaths = {};
 	map<const _char*, CModel*>			m_ModelMap;
-	map<const _char*, SaveModel>		m_sModelMap;
-#endif // _DEBUG
 
+#endif // _DEBUG
+	map<const _char*, SaveModel>		m_sModelMap;
 public:
 	void Release_Engine();
 	virtual void Free() override;

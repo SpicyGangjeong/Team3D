@@ -905,6 +905,7 @@ HRESULT CModel::Create_ParentVB()
 
 	return S_OK;
 }
+#ifdef _DEBUG
 HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix)
 {
 	m_eType = eType;
@@ -927,6 +928,7 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 		if (FAILED(Assimp_Model_Load(pModelFilePath, eType, PreTransformMatrix, 0))) {
 			return E_FAIL;
 		}
+
 		SaveAssimpModel(Temp);
 
 		return S_OK;
@@ -952,6 +954,41 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 	}
 	return S_OK;
 }
+
+#endif // _DEBUG
+
+
+
+#ifndef _DEBUG
+
+HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix)
+{
+	m_eType = eType;
+
+	LoadData(pModelFilePath);
+	
+	m_pSaveModel = m_pGameInstance->Load_SaveModel(pModelFilePath);
+
+	LoadAdditionalAnimations(pModelFilePath);
+
+	XMStoreFloat4x4(&m_PreTransformMatrix, PreTransformMatrix);
+
+	Ready_Bones(m_pSaveModel->Nodes, 0, -1);
+
+	if (FAILED(Ready_Meshes())) {
+		return E_FAIL;
+	}
+
+	if (FAILED(Ready_Materials(pModelFilePath))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(Ready_Animations(m_Bones))) {
+		return E_FAIL;
+	}
+	return S_OK;
+}
+#endif 
 
 void CModel::LoadAdditionalAnimations(const char* ModelFilePath)
 {

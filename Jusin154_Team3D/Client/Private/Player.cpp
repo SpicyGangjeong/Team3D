@@ -287,6 +287,7 @@ void CPlayer::Free()
 	SAFE_RELEASE(m_pCamPosition_TopDown_LookPart);
 	SAFE_RELEASE(m_pCamPosition_ShoulderPart);
 }
+#ifdef _DEBUG
 
 void CPlayer::Describe_Entity()
 {
@@ -324,3 +325,7 @@ void CPlayer::Describe_Entity()
 	GUI::Checkbox("Render", &m_bVisible);
 
 }
+
+#endif // _DEBUG
+
+
