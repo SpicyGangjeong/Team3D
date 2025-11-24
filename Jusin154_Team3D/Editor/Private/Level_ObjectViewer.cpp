@@ -7,7 +7,7 @@
 #include "Head.h"
 #include "Hair.h"
 #include "Dummy_Cube.h"
-#include "DebugCamera.h"
+#include "Camera_Debug.h"
 #include "Layer.h"
 #include "GameObject.h"
 #include "DummyObject.h"
@@ -30,10 +30,10 @@ HRESULT CLevel_ObjectViewer::Initialize()
 		return E_FAIL;
 	}
 
-	//if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
+	{
+		return E_FAIL;
+	}
 
 	if (FAILED(Ready_Layer_Dummy(TEXT("Layer_Dummy"))))
 	{
@@ -662,20 +662,28 @@ void CLevel_ObjectViewer::Find_Anim()
 
 HRESULT CLevel_ObjectViewer::Ready_Layer_Camera(const _wstring& strLayerTag)
 {
-	CDebugCamera::CAMERA_DEBUG_DESC			CameraDesc{};
-	CameraDesc.fFovy = XMConvertToRadians(60.0f);
-	CameraDesc.fNear = 0.1f;
-	CameraDesc.fFar = 500.f;
-	CameraDesc.vEye = _float3(0.f, 5.f, -5.f);
-	CameraDesc.vAt = _float3(0.f, 0.f, 0.f);
-	CameraDesc.fSpeedPerSec = 5.f;
-	CameraDesc.pCameraKey = TEXT("Debug_Camera");
-	CameraDesc.fRotationPerSec = XMConvertToRadians(90.0f);
-	CameraDesc.fMouseSensor = 0.1f;
+	CCamera_Debug::CAMERA_DEBUG_DESC            Camera_Desc{};
+	Camera_Desc.fFovy = XMConvertToRadians(60.0f);
+	Camera_Desc.fNear = 0.1f;
+	Camera_Desc.fFar = 200.f;
+	Camera_Desc.vEye = _float3(0.f, 10.f, -10.f);
+	Camera_Desc.vAt = _float3(0.f, 0.f, 0.f);
+	Camera_Desc.fSpeedPerSec = 5.f;
+	Camera_Desc.pCameraKey = CAMERA_DEBUG;
+	Camera_Desc.fRotationPerSec = XMConvertToRadians(90.0f);
+	Camera_Desc.fMouseSensor = 0.1f;
+	Camera_Desc.iPriority = 70;
+	Camera_Desc.pFollowTarget = { nullptr };
+	Camera_Desc.pLookTarget = { nullptr };
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDebugCamera>(g_iStaticLevel, NEXT_LEVEL,
-		strLayerTag, &CameraDesc)))
+	CCamera_Debug* pCamera = { nullptr };
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCamera_Debug>(g_iStaticLevel, NEXT_LEVEL, LAYER_CAMERA, &Camera_Desc, nullptr, &pCamera))) {
 		return E_FAIL;
+	}
+	m_pGameInstance->Add_Camera(g_iStaticLevel, pCamera, CAMERA_DEBUG);
+	if (FAILED(m_pGameInstance->Bind_Camera(g_iStaticLevel, CAMERA_DEBUG, true))) {
+		return E_FAIL;
+	}
 
 	return S_OK;
 }

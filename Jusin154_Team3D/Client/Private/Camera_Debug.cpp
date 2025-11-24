@@ -14,19 +14,22 @@ CCamera_Debug::CCamera_Debug(const CCamera_Debug& rhs)
 
 void CCamera_Debug::Priority_Update(_float fTimeDelta)
 {
+	m_pGameInstance->Bind_Camera(g_iStaticLevel, CAMERA_DEBUG, false);
 }
 
 void CCamera_Debug::Update(_float fTimeDelta)
 {
+	if (false == m_bActive) {
+		return;
+	}
 	Transition(fTimeDelta);
 	_float3 vCamPos = {};
 	XMStoreFloat3(&vCamPos, m_pTransformCom->Get_State(STATE::POSITION));
-
 	GUI::Text("Cam Coord %.2f, %.2f, %.2f", vCamPos.x, vCamPos.y, vCamPos.z);
 	if (m_pGameInstance->Key_Up(DIK_GRAVE)) {
 		m_bMovable = !m_bMovable;
 	}
-	if (m_pGameInstance->Key_Down(DIK_1)) {
+	if (m_pGameInstance->Mouse_Down(DIM_RBUTTON)) {
 		m_pGameInstance->Toggle_MouseCenter();
 	}
 	if (m_bMovable) {
@@ -69,6 +72,9 @@ void CCamera_Debug::Update(_float fTimeDelta)
 
 void CCamera_Debug::Late_Update(_float fTimeDelta)
 {
+	if (false == m_bActive) {
+		return;
+	}
 }
 
 HRESULT CCamera_Debug::Render()
@@ -98,8 +104,6 @@ HRESULT CCamera_Debug::Initialize(void* pArg)
 	m_matInitial = *m_pTransformCom->Get_WorldMatrixPtr();
 	m_bActive = true;
 
-	m_pGameInstance->Add_Camera(NEXT_LEVEL, this, m_pCameraKey);
-	m_pGameInstance->Bind_Camera(NEXT_LEVEL, m_pCameraKey, false);
 	return S_OK;
 }
 
@@ -134,7 +138,7 @@ CCamera_Debug* CCamera_Debug::Create(ID3D11Device* pDevice, ID3D11DeviceContext*
 	return pInstance;
 }
 
-CCamera_Debug* CCamera_Debug::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CCamera_Debug::Clone(void* pArg, CGameObject* pOwner)
 {
 	CCamera_Debug* pInstance = new CCamera_Debug(*this);
 	pInstance->m_pOwner = pOwner;

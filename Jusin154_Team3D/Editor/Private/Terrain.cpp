@@ -2,7 +2,7 @@
 #include "Terrain.h"
 
 #include "GameInstance.h"
-#include "DebugCamera.h"
+#include "Camera_Debug.h"
 #include "VIBuffer_Terrain.h"
 #include "AlphaMap.h"
 

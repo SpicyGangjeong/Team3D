@@ -13,7 +13,6 @@ public:
 		_float3		vEye{}, vAt{};
 		_float		fMouseSensor{};
 	}CAMERA_DEBUG_DESC;
-
 private:
 	CCamera_Debug(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CCamera_Debug(const CCamera_Debug& rhs);
@@ -39,7 +38,7 @@ private:
 
 public:
 	static CCamera_Debug* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual CCamera_Debug* Clone(void* pArg, CGameObject* pOwner) override;
+	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner) override;
 	virtual void Free() override;
 	void Describe_Entity() override;
 

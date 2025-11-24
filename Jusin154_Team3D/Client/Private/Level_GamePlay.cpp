@@ -31,21 +31,12 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	if (FAILED(Ready_Layer_UI(LAYER_UI))) {
 		return E_FAIL;
 	}
-	if (FAILED(Ready_Layer_Effect(LAYER_EFFECT))) {
-		return E_FAIL;
-	}
-
 	if (FAILED(Ready_Layer_Player(LAYER_PLAYER))) {
 		return E_FAIL;
 	}
-
-	if (FAILED(Ready_Layer_Camera())) {
+	if (FAILED(Ready_Layer_SkyBox(TEXT("Layer_SkyBox")))) {
 		return E_FAIL;
 	}
-
-	//if (FAILED(Ready_Layer_SkyBox(TEXT("Layer_SkyBox")))) {
-	//	return E_FAIL;
-	//}
 
 	return S_OK;
 }
@@ -58,7 +49,7 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Up(DIK_0))
+	if (m_pGameInstance->Key_Up(DIK_F1))
 	{
 		m_pGameInstance->Set_LevelToChange();
 	}
@@ -108,7 +99,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 	Camera_Desc.pCameraKey = CAMERA_DEBUG;
 	Camera_Desc.fRotationPerSec = XMConvertToRadians(90.0f);
 	Camera_Desc.fMouseSensor = 0.1f;
-	Camera_Desc.iPriority = 99;
+	Camera_Desc.iPriority = 70;
 	Camera_Desc.pFollowTarget = { nullptr };
 	Camera_Desc.pLookTarget = { nullptr };
 
@@ -116,9 +107,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCamera_Debug>(g_iStaticLevel, NEXT_LEVEL, LAYER_CAMERA, &Camera_Desc, nullptr, &pCamera))){
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Bind_Camera(NEXT_LEVEL, CAMERA_DEBUG, true))) {
+
+	m_pGameInstance->Add_Camera(g_iStaticLevel, pCamera, CAMERA_DEBUG);
+	if (FAILED(m_pGameInstance->Bind_Camera(g_iStaticLevel, CAMERA_DEBUG, true))) {
 		return E_FAIL;
 	}
+
 
 	return S_OK;
 }
@@ -131,11 +125,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Sound()
 HRESULT CLevel_GamePlay::Ready_Markers()
 {
 
-	return S_OK;
-}
-
-HRESULT CLevel_GamePlay::Ready_Layer_Effect(const _wstring& strLayerTag)
-{
 	return S_OK;
 }
 
@@ -152,8 +141,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_SkyBox(const _wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSkyBox>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSkyBox>(g_iStaticLevel, NEXT_LEVEL, LAYER_SKYBOX))){
 		return E_FAIL;
+	}
 
 	CDummy_PhysXWall::PHYSXDUMMY_DESC Desc{};
 	Desc.vPos = { 0.f, 0.f, 0.f };

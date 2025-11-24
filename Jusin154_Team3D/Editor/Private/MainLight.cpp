@@ -2,7 +2,7 @@
 #include "MainLight.h"
 
 #include "GameInstance.h"
-#include "DebugCamera.h"
+#include "Camera_Debug.h"
 
 CMainLight::CMainLight(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)

@@ -73,9 +73,6 @@
     <ClInclude Include="..\Public\CamPosition.h">
       <Filter>02.GameObjects\Cameras\CameraPosition</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Camera_Gaze.h">
-      <Filter>02.GameObjects\Cameras</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\SkyBox.h">
       <Filter>02.GameObjects\SkyBox</Filter>
     </ClInclude>
@@ -156,6 +153,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\CamPosition_Shoulder.h">
       <Filter>02.GameObjects\Cameras\CameraPosition\Player\Shoulder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Camera_Gaze.h">
+      <Filter>02.GameObjects\Cameras\Camera_Gaze</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -386,6 +386,9 @@
     <Filter Include="02.GameObjects\Cameras\CameraPosition\Socket">
       <UniqueIdentifier>{2e4f0394-e25c-4508-937a-7e73d005ae5f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Cameras\Camera_Gaze">
+      <UniqueIdentifier>{470c4db5-b306-4fb8-8338-0a99ac77ac89}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -444,9 +447,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\CamPosition.cpp">
       <Filter>02.GameObjects\Cameras\CameraPosition</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Camera_Gaze.cpp">
-      <Filter>02.GameObjects\Cameras</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\SkyBox.cpp">
       <Filter>02.GameObjects\SkyBox</Filter>
@@ -528,6 +528,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\CamPosition_Shoulder.cpp">
       <Filter>02.GameObjects\Cameras\CameraPosition\Player\Shoulder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player_States.cpp">
+      <Filter>02.GameObjects\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera_Gaze.cpp">
+      <Filter>02.GameObjects\Cameras\Camera_Gaze</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
