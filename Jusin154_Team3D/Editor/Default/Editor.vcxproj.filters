@@ -361,6 +361,12 @@
     <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\Magic_Icon">
       <UniqueIdentifier>{4967d007-a0d8-4d57-b259-7bb47b5cf9ea}</UniqueIdentifier>
     </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\Spell_UI">
+      <UniqueIdentifier>{d3738a31-9700-478a-9c93-3d35ae9012b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\MiniMap_Panel\NoMountIcon">
+      <UniqueIdentifier>{93ae1d33-fb58-4793-9e7e-5b8d27e163d1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -708,6 +714,12 @@
     <ClInclude Include="..\public\Magic_Icon.h">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel\Magic_Icon</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\NoMountIcon.h">
+      <Filter>50.UI\GamePlay_Canvas\MiniMap_Panel\NoMountIcon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Spell_UI.h">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\Spell_UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -1047,6 +1059,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Magic_Icon.cpp">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel\Magic_Icon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\NoMountIcon.cpp">
+      <Filter>50.UI\GamePlay_Canvas\MiniMap_Panel\NoMountIcon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Spell_UI.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\Spell_UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

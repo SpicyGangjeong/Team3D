@@ -47,6 +47,7 @@
 #include "Active_Icon.h"
 
 #include "MiniMap_Panel.h"
+#include "NoMountIcon.h"
 
 #include "Loading_Panel.h"
 #include "LoadingWidget.h"
@@ -61,6 +62,7 @@
 #include "Potion.h"
 #include "Magic_Meter.h"
 #include "Magic_Icon.h"
+#include "Spell_UI.h"
 
 #include "IMGUIUI.h"
 
@@ -365,6 +367,21 @@ HRESULT CLoader::Loading_For_UI()
 			return S_OK;
 
 		});
+	Asset_FileLoad("../Bin/Resources/Textures/HUD", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
+		{
+
+			_string strFilePath = pFilePath;
+			_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
+
+
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), wstrFileName,
+				CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
+				return E_FAIL;
+			}
+
+			return S_OK;
+
+		});
 
 	Asset_FileLoad("../Bin/Resources/Textures/Loading", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
 		{
@@ -541,8 +558,11 @@ HRESULT CLoader::Loading_For_UI()
 	{
 		return E_FAIL;
 	}
-
 	if (FAILED(m_pGameInstance->Add_Prototype<CMiniMap_TrimBorder>(g_iStaticLevel, CMiniMap_TrimBorder::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CNoMountIcon>(g_iStaticLevel, CNoMountIcon::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
@@ -581,6 +601,10 @@ HRESULT CLoader::Loading_For_UI()
 		return E_FAIL;
 	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CMagic_Icon>(g_iStaticLevel, CMagic_Icon::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_UI>(g_iStaticLevel, CSpell_UI::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}

@@ -239,10 +239,12 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\public\NoMountIcon.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\public\Potion.h" />
     <ClInclude Include="..\public\Slot_Number.h" />
     <ClInclude Include="..\public\Spell_Slot_Preview.h" />
+    <ClInclude Include="..\public\Spell_UI.h" />
     <ClInclude Include="..\Public\State_Combat.h" />
     <ClInclude Include="..\Public\State_Dodge.h" />
     <ClInclude Include="..\Public\State_Idle.h" />
@@ -370,10 +372,12 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\private\NoMountIcon.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\private\Potion.cpp" />
     <ClCompile Include="..\private\Slot_Number.cpp" />
     <ClCompile Include="..\private\Spell_Slot_Preview.cpp" />
+    <ClCompile Include="..\private\Spell_UI.cpp" />
     <ClCompile Include="..\Private\State_Combat.cpp" />
     <ClCompile Include="..\Private\State_Dodge.cpp" />
     <ClCompile Include="..\Private\State_Idle.cpp" />

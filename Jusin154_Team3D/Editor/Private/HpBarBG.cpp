@@ -21,7 +21,7 @@ HRESULT CHpBarBG::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = 220.f;
+	Desc.fX = 600.f;
 	Desc.fY = 180.f;
 	Desc.fSizeX = 144.f;
 	Desc.fSizeY = 24.f;

@@ -49,6 +49,7 @@ private:
 	CGameObject* m_pMagic_Meter4 = { nullptr };
 	CGameObject* m_pMagic_Meter5 = { nullptr };
 	CGameObject* m_pMagic_Icon = { nullptr };
+	CGameObject* m_pSpell_UI = { nullptr };
 public:
 	static CAction_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
