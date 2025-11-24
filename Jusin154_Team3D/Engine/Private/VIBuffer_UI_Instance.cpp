@@ -131,6 +131,32 @@ HRESULT CVIBuffer_UI_Instance::Initialize(void* pArg)
 	return S_OK;
 }
 
+void CVIBuffer_UI_Instance::Set_Index_Position(_uint iIndex, _float fX, _float fY)
+{
+	D3D11_MAPPED_SUBRESOURCE SubResource{};
+	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+
+	VTX_INSTANCE_UI* pVertices = static_cast<VTX_INSTANCE_UI*>(SubResource.pData);
+
+	pVertices[iIndex].fPos.x = fX;
+	pVertices[iIndex].fPos.y = fY;
+
+	m_pContext->Unmap(m_pVBInstance, 0);
+}
+
+void CVIBuffer_UI_Instance::Set_Index_Size(_uint iIndex, _float fSizeX, _float fSizeY)
+{
+	D3D11_MAPPED_SUBRESOURCE SubResource{};
+	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+
+	VTX_INSTANCE_UI* pVertices = static_cast<VTX_INSTANCE_UI*>(SubResource.pData);
+
+	pVertices[iIndex].fSize.x = fSizeX;
+	pVertices[iIndex].fSize.y = fSizeY;
+
+	m_pContext->Unmap(m_pVBInstance, 0);
+}
+
 void CVIBuffer_UI_Instance::Set_Pos(_float fX, _float fY, _float OffSetX, _float OffSetY, _uint iCols)
 {
 
@@ -213,7 +239,7 @@ void CVIBuffer_UI_Instance::Set_ImageUV(UI_ATLAS_DESC* AtlasUV)
 		if (AtlasUV == nullptr)
 		{
 			pVertices[i].fUVStart = _float2(0.f, 0.f);
-			pVertices[i].fUVStart = _float2(1.f,1.f);
+			pVertices[i].fUVStart = _float2(1.f, 1.f);
 		}
 		else
 		{
@@ -223,6 +249,25 @@ void CVIBuffer_UI_Instance::Set_ImageUV(UI_ATLAS_DESC* AtlasUV)
 	}
 
 	m_pContext->Unmap(m_pVBInstance, 0);
+}
+
+void CVIBuffer_UI_Instance::Add_InstanceOvject(vector<_uint> VisileIndices)
+{
+	m_VisibleIndices = VisileIndices;
+	D3D11_MAPPED_SUBRESOURCE		SubResource{};
+
+	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+
+	VTX_INSTANCE_UI* pVertices = static_cast<VTX_INSTANCE_UI*>(SubResource.pData);
+
+	for (_uint i = 0; i < m_VisibleIndices.size(); ++i)
+	{
+		pVertices[i] = m_pInstanceVertices[m_VisibleIndices[i]];
+	}
+
+
+	m_pContext->Unmap(m_pVBInstance, 0);
+
 }
 
 CVIBuffer_UI_Instance* CVIBuffer_UI_Instance::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const INSTANCE_DESC* pInstanceDesc)

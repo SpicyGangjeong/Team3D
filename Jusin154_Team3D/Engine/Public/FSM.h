@@ -12,7 +12,12 @@ enum ESTATE : _u64Flag
     JUMP                        = 1ULL << 5,
     LAND                        = 1ULL << 6,
     DODGE                       = 1ULL << 7,
-    COMBAT, LIGHT_ATTACK, CAST, SKILL,SKILL2,
+    COMBAT                      = 1ULL << 8,
+    LIGHT_ATTACK                = 1ULL << 9,
+    SPELL                       = 1ULL << 10,
+    SKILL                       = 1ULL << 11,
+    SKILL2                      = 1ULL << 12,
+    MAPHELP                     = 1ULL << 13,
     END
 };
 NS_END

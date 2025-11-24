@@ -2,7 +2,7 @@
 #include "RootModelPart.h"
 
 #include "GameInstance.h"
-#include "DebugCamera.h"
+#include "Camera_Debug.h"
 #include "ModelParts.h"
 #include "Body.h"
 #include "Head.h"

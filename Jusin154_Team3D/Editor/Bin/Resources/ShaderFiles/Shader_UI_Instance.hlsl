@@ -3,6 +3,7 @@
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 Texture2D g_Texture;
+Texture2D g_Texture1;
 
 float g_fAlpha;
 float g_fOwnerAlpha;
@@ -97,6 +98,32 @@ PS_OUT PS_Alpha_Blend(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_Megic_Meter(PS_IN In)
+{
+    PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+    float3 Blue = float3(41.f, 165.f, 255.f) / 255.f;
+    
+    float4 color = float4(1.f, 1.f, 1.f, 1.f);
+    float4 tex1 = g_Texture.Sample(ClampSampler, In.vTexcoord);
+    float4 tex2 = g_Texture1.Sample(ClampSampler, In.vTexcoord);
+    
+    color = tex1;
+    tex2.rgb *= Blue * 1.5f;
+    
+    if (all(color.rgb >= float3(65.f / 255.f, 65.f / 255.f, 65.f / 255.f)))
+        color = tex2;
+    
+    //if(color.a <= 0.4f)
+    //    discard;
+        
+    color.a *= Alpha;
+
+    Out.vColor = color;
+    
+    return Out;
+}
+
 technique11 PosTexTechnique11
 {
     pass Default
@@ -119,5 +146,16 @@ technique11 PosTexTechnique11
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Alpha_Blend();
+    }
+
+    pass Megic_Meter
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Megic_Meter();
     }
 }

@@ -177,7 +177,9 @@
     <ClInclude Include="..\Public\Camera_Gaze.h" />
     <ClInclude Include="..\Public\CamPosition.h" />
     <ClInclude Include="..\Public\CamPosition_Arm.h" />
-    <ClInclude Include="..\Public\CamPosition_Player.h" />
+    <ClInclude Include="..\Public\CamPosition_Shoulder.h" />
+    <ClInclude Include="..\Public\CamPosition_Socket.h" />
+    <ClInclude Include="..\Public\CamPosition_Target.h" />
     <ClInclude Include="..\Public\DummyObject.h" />
     <ClInclude Include="..\public\DummySkyBox.h" />
     <ClInclude Include="..\Public\Dummy_Globe.h" />
@@ -206,11 +208,13 @@
     <ClInclude Include="..\Public\Dummy_Plane.h" />
     <ClInclude Include="..\Public\Dummy_PhysXPlayable.h" />
     <ClInclude Include="..\public\HpBarBG.h" />
+    <ClInclude Include="..\Public\Bombard.h" />
+    <ClInclude Include="..\public\Magic_Meter.h" />
     <ClInclude Include="..\Public\NomalJap.h" />
     <ClInclude Include="..\Public\Effect_Container.h" />
     <ClInclude Include="..\public\GamePlay_Canvas.h" />
     <ClInclude Include="..\public\BuildingContainer.h" />
-    <ClInclude Include="..\Public\DebugCamera.h" />
+    <ClInclude Include="..\Public\Camera_Debug.h" />
     <ClInclude Include="..\Public\Dummy_PhysXBox.h" />
     <ClInclude Include="..\Public\Dummy_PhysXMesh.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -237,7 +241,9 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\Public\Player.h" />
+    <ClInclude Include="..\public\Potion.h" />
     <ClInclude Include="..\public\Slot_Number.h" />
+    <ClInclude Include="..\public\Spell_Slot_Preview.h" />
     <ClInclude Include="..\Public\State_Combat.h" />
     <ClInclude Include="..\Public\State_Dodge.h" />
     <ClInclude Include="..\Public\State_Idle.h" />
@@ -303,7 +309,9 @@
     <ClCompile Include="..\Private\Camera_Gaze.cpp" />
     <ClCompile Include="..\Private\CamPosition.cpp" />
     <ClCompile Include="..\Private\CamPosition_Arm.cpp" />
-    <ClCompile Include="..\Private\CamPosition_Player.cpp" />
+    <ClCompile Include="..\Private\CamPosition_Shoulder.cpp" />
+    <ClCompile Include="..\Private\CamPosition_Socket.cpp" />
+    <ClCompile Include="..\Private\CamPosition_Target.cpp" />
     <ClCompile Include="..\Private\DummyObject.cpp" />
     <ClCompile Include="..\private\DummySkyBox.cpp" />
     <ClCompile Include="..\Private\Dummy_Globe.cpp" />
@@ -332,11 +340,13 @@
     <ClCompile Include="..\Private\Dummy_Plane.cpp" />
     <ClCompile Include="..\Private\Dummy_PhysXPlayable.cpp" />
     <ClCompile Include="..\private\HpBarBG.cpp" />
+    <ClCompile Include="..\Private\Bombard.cpp" />
+    <ClCompile Include="..\private\Magic_Meter.cpp" />
     <ClCompile Include="..\Private\NomalJap.cpp" />
     <ClCompile Include="..\Private\Effect_Container.cpp" />
     <ClCompile Include="..\private\GamePlay_Canvas.cpp" />
     <ClCompile Include="..\private\BuildingContainer.cpp" />
-    <ClCompile Include="..\Private\DebugCamera.cpp" />
+    <ClCompile Include="..\Private\Camera_Debug.cpp" />
     <ClCompile Include="..\Private\Dummy_PhysXBox.cpp" />
     <ClCompile Include="..\Private\Dummy_PhysXMesh.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -363,7 +373,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\Private\Player.cpp" />
+    <ClCompile Include="..\Private\Player_States.cpp" />
+    <ClCompile Include="..\private\Potion.cpp" />
     <ClCompile Include="..\private\Slot_Number.cpp" />
+    <ClCompile Include="..\private\Spell_Slot_Preview.cpp" />
     <ClCompile Include="..\Private\State_Combat.cpp" />
     <ClCompile Include="..\Private\State_Dodge.cpp" />
     <ClCompile Include="..\Private\State_Idle.cpp" />

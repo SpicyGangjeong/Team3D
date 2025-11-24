@@ -29,6 +29,8 @@ namespace Editor {
 #pragma endregion
 #pragma region OBJECT
 
+#define CAMERA_DEBUG			TEXT("CAMERA_DEBUG")
+#define CAMERA_SHOULDER			TEXT("CAMERA_SHOULDER")
 #pragma endregion
 #pragma region COMPONENT
 

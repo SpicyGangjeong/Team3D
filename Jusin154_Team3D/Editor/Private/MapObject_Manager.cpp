@@ -2,7 +2,7 @@
 #include "MapObject_Manager.h"
 
 #include "GameInstance.h"
-#include "DebugCamera.h"
+#include "Camera_Debug.h"
 #include "Layer.h"
 #include "MapObject.h"
 #include "MapObject_LOD.h"

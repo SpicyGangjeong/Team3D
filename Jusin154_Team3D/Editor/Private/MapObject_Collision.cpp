@@ -2,7 +2,7 @@
 #include "MapObject_Collision.h"
 
 #include "GameInstance.h"
-#include "DebugCamera.h"
+#include "Camera_Debug.h"
 #include "Layer.h"
 #include "Terrain.h"
 #include "VIBuffer_Terrain.h"

@@ -12,8 +12,19 @@ public:
 		_float			fFovy{}, fNear{}, fFar{};
 		_uint			iPriority = { UINT_MAX };
 		const _wchar*	pCameraKey = { };
-		CGameObject*	pFollowTarget = { nullptr };
-		CGameObject*	pLookTarget = { nullptr };
+
+		// Lerping
+			CGameObject* pFollowTarget = { nullptr };
+			CGameObject* pLookTarget = { nullptr };
+
+			_bool bEnableTransitionLerp = { false };
+			_float2 vTransitionTime = { 0.f, 1.f };
+
+			_bool bEnableLookLerp = { false };
+			_float2 vLookLerpTime = { 0.f, 0.16f };
+
+			_bool bEnableFollowLerp = { false };
+			_float2 vFollowLerpTime = { 0.f, 0.16f };
 	}CAMERA_DESC;
 
 protected:
@@ -40,12 +51,21 @@ protected:
 	_float			m_fNear = {};
 	_float			m_fFar = {};
 
-	_float			m_fTransitionMaxTime = { 1.f };
-	_float			m_fTransitionCurrentTime = { 0.f };
-
+	_float2			m_vTransitionTime	= { 0.f, 1.f };
+	_float2			m_vLookLerpTime		= { 0.f, 0.16f };
+	_float3			m_vLookPos_Src = { 0.f, 0.f, 1.f };
+	_float3			m_vLookPos_Dest = { 0.f, 0.f, 1.f };
+	_float2			m_vFollowLerpTime	= { 0.f, 0.16f };
+	_float3			m_vFollowPos_Src = { 0.f, 0.f, 0.f };
+	_float3			m_vFollowPos_Dest = { 0.f, 0.f, 0.f };
 	_uint			m_iPriority = { UINT_MAX };
 
 	_bool			m_bIsCurrentTransition = { false };
+	_bool			m_bEnable_TransitionLerp = { false };
+	_bool			m_bEnable_LookLerp = { false };
+	_bool			m_bEnable_FollowLerp = { false };
+
+
 
 	_bool			m_bActive = { false };
 
