@@ -136,9 +136,8 @@ HRESULT CRenderTarget_Manager::Begin_MRT_NO_DepthStencil(const _wstring& strMRTT
     if (0 == iNumRenderTargets) {
         return E_FAIL;
     }
-    ID3D11ShaderResourceView* const pNullSRV[1] = { nullptr };
-    m_pContext->PSSetShaderResources(0, 1, pNullSRV);
 
+    m_pContext->OMSetRenderTargets(iNumRenderTargets, pRenderTargetViews, nullptr);
 
     return S_OK;
 }
