@@ -424,6 +424,7 @@
     <ClCompile Include="..\Private\RootModelPart.cpp" />
     <ClCompile Include="..\Private\Wand.cpp" />
     <ClCompile Include="Editor.cpp" />
+    <ClCompile Include="Goblin_States.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Editor.rc" />

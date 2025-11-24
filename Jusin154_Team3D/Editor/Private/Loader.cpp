@@ -1390,7 +1390,7 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 #pragma region MONSTER
 
 	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "../Bin/Resources/Models/Monster/Goblin/Goblin.bin", XMMatrixIdentity(),
+		MODEL::ANIM, "../Bin/Resources/Models/Monster/Goblin/Goblin.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
 		TEXT("Prototype_Component_Goblin_Model")
 	));
 	futures.emplace_back(Deferred_ModelLoad(
@@ -1409,7 +1409,7 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 #pragma endregion
 
 	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "../Bin/Resources/Models/Human/Npc/Npc.bin", XMMatrixIdentity(),
+		MODEL::ANIM, "../Bin/Resources/Models/Human/Npc/Npc.bin",XMMatrixRotationY(XMConvertToRadians(180.f))* XMMatrixIdentity(),
 		TEXT("Prototype_Component_Npc_Model")
 	));
 	futures.emplace_back(Deferred_ModelLoad(

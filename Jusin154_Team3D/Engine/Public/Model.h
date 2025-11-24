@@ -33,7 +33,7 @@ public:
 #pragma endregion 
 #pragma region Animation
 	_bool	Play_Animation(_float fTimeDelta, class CTransform* pTransform = nullptr); // 애니메이션에 델타타임을 넣어줌
-	void	Set_AnimationIndex(_uint iIndex, _bool isLoop = true);
+	void	Set_AnimationIndex(_uint iIndex, _bool isLoop = true, _float fAmount = 1.f);
 	_bool	IsFinishedAnim() const { return m_bIsFinishedAnim; }
 	void	Set_CurrentTrackPosition(_float TrackPosition);
 	const _char* Get_AnimList(_uint iIndex);
@@ -109,6 +109,7 @@ private:
 	_bool						m_bIsFinishedAnim = { false };			// 대상 애니메이션이 끝났는지
 	_bool						m_bIsFinishedLerp = { false };			// 럴프 애니메이션이 끝났는지
 	_bool						m_bPlayAnim = { true };
+	_float m_fAmount = { 1.f };
 
 	_int						m_iPreAnimIndex = { 0 };
 	_float						m_fBlendTime = { 0.f };

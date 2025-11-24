@@ -21,8 +21,6 @@ public:
 	_bool Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
 
 private:
-	unordered_map<size_t, CState*> m_States = { };
-	size_t m_iStateMask = { 0 };
 	_float m_fDirectionRadian = 0.f;
 
 	_bool m_bSprintToggle = { false };
@@ -74,8 +72,6 @@ private:
 	HRESULT InputAction();
 	HRESULT InputMove();
 	HRESULT InputSpell();
-
-	STATEANIM::ESTATE m_eSpell = { STATEANIM::END };
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();
