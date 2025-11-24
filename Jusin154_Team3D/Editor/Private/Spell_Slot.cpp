@@ -45,7 +45,7 @@ HRESULT CSpell_Slot::Initialize(void* pArg)
 	m_fOffSetY = 101.f;
 	m_iCols = 4;
 	m_pVIBufferCom->Set_Cloned(true);
-	m_pVIBufferCom->Set_Pos(0.f, 0.f, m_fOffSetX, m_fOffSetY, m_iCols);
+	m_pVIBufferCom->Set_Pos(380.f, 0.f, m_fOffSetX, m_fOffSetY, m_iCols);
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
 	m_pVIBufferCom->Set_ImageUV();
 	return S_OK;

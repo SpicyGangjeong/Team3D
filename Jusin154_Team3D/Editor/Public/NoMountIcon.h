@@ -5,12 +5,12 @@
 
 NS_BEGIN(Editor)
 
-class CMission_Key final : public CElementObject
+class CNoMountIcon final : public CElementObject
 {
 private:
-	CMission_Key(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CMission_Key(const CMission_Key& rhs);
-	virtual ~CMission_Key() = default;
+	CNoMountIcon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CNoMountIcon(const CNoMountIcon& rhs);
+	virtual ~CNoMountIcon() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -19,9 +19,6 @@ public:
 	virtual HRESULT Render() override;
 	virtual _vector Get_WorldPostion() override;
 
-
-private:
-	_float4 AlphabetUV(_tchar Alphabet);
 
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
@@ -34,9 +31,9 @@ private:
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
-	_float4 m_vUV{};
+
 public:
-	static CMission_Key* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CNoMountIcon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 	void Describe_Entity() override;

@@ -22,9 +22,9 @@ HRESULT CMagic_Meter::Initialize(void* pArg)
 
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = 130.f;
+	Desc.fX = 190.f;
 	Desc.fY = 145.f;
-	Desc.fSizeX = 80.f;
+	Desc.fSizeX = 70.f;
 	Desc.fSizeY = 20.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
@@ -40,14 +40,10 @@ HRESULT CMagic_Meter::Initialize(void* pArg)
 
 	m_fAlpha = 1.f;
 	m_fTimeMult = 3.f;
-	m_fAngle = XMConvertToRadians(45);
 	m_fAlphaTime = 1.f;
-	m_iCols = 5;
-	UV();
-	m_pVIBufferCom->Set_Cloned(true);
-	m_pVIBufferCom->Set_Pos(0.f, 0.f, -65.f, m_fSizeY, m_iCols);
-	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
-	m_pVIBufferCom->Set_ImageUV(pUVDesc);
+	m_fMaxGauge = 20.f;
+	m_fCurrentGauge = 10.f;
+	Visible(false);
 	return S_OK;
 }
 
@@ -90,6 +86,14 @@ void CMagic_Meter::Update(_float fTimeDelta)
 			m_fAlpha = 0.f;
 		}
 	}
+	if (m_fCurrentGauge< 0.f)
+		m_fCurrentGauge = 0.f;
+	//if (m_fDamage <= 0.f)
+	//	m_fDamage = 0.f;
+	//m_fTargetHp = m_fMaxHp - m_fDamage;
+
+	m_fGaugeBar = m_fCurrentGauge / m_fMaxGauge;
+
 	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
 }
@@ -114,7 +118,7 @@ HRESULT CMagic_Meter::Render()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIINTANCE::MAGIC_METER))))
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::MAGIC_METER))))
 	{
 		return E_FAIL;
 	}
@@ -136,55 +140,9 @@ _vector CMagic_Meter::Get_WorldPostion()
 	return m_pTransformCom->Get_State(STATE::POSITION);
 }
 
-void CMagic_Meter::UV()
+void CMagic_Meter::Meter_Index(_uint Number)
 {
-	pUVDesc[0].fUVStart = Compute_UVX(1);
-	pUVDesc[0].fUVEnd = Compute_UVY(1);
-	pUVDesc[1].fUVStart = Compute_UVX(2);
-	pUVDesc[1].fUVEnd = Compute_UVY(2);
-	pUVDesc[2].fUVStart = Compute_UVX(2);
-	pUVDesc[2].fUVEnd = Compute_UVY(2);
-	pUVDesc[3].fUVStart = Compute_UVX(2);
-	pUVDesc[3].fUVEnd = Compute_UVY(2);
-	pUVDesc[4].fUVStart = Compute_UVX(0);
-	pUVDesc[4].fUVEnd = Compute_UVY(0);
-}
-
-_float2 CMagic_Meter::Compute_UVX(_uint Number)
-{
-	m_fIamge_Size = { 128, 96 };
-
-	_uint iXCount = 1;
-	_uint iYCount = 3;
-
-	_float frameWidth = 128.f;
-	_float frameHeight = 32.f;
-
-	_uint frameX = Number % iXCount;
-	_uint frameY = Number / iXCount;
-
-	_float2 UVStart;
-	UVStart.x = frameX * frameWidth / m_fIamge_Size.x;
-	UVStart.y = frameY * frameHeight / m_fIamge_Size.y;
-
-	return UVStart;
-}
-
-_float2 CMagic_Meter::Compute_UVY(_uint Number)
-{
-	m_fIamge_Size = { 320.f, 128.f };
-
-	_float frameWidth = 128.f;
-	_float frameHeight = 32.f;
-
-	// Start 구함
-	_float2 UVStart = Compute_UVX(Number);
-
-	_float2 UVEnd;
-	UVEnd.x = UVStart.x + (frameWidth / m_fIamge_Size.x);
-	UVEnd.y = UVStart.y + (frameHeight / m_fIamge_Size.y);
-
-	return UVEnd;
+	m_iImageCount = Number;
 }
 
 HRESULT CMagic_Meter::Bind_ShaderResources()
@@ -201,7 +159,7 @@ HRESULT CMagic_Meter::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pDiffuse_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
+	if (FAILED(m_pDiffuse_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", m_iImageCount)))
 	{
 		return E_FAIL;
 	}
@@ -225,17 +183,21 @@ HRESULT CMagic_Meter::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fHp", &m_fGaugeBar, sizeof(_float))))
+	{
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
 
 HRESULT CMagic_Meter::Ready_Components(void* pArg)
 {
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Magic_Meter_UI_Instance"), (CComponent**)&m_pVIBufferCom, nullptr)))
+	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_FinisherMeterOutline"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Megic_Metar"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -243,7 +205,7 @@ HRESULT CMagic_Meter::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, FX_UIINSTANCE, (CComponent**)&m_pShaderCom, nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, FX_UIEDITOR, (CComponent**)&m_pShaderCom, nullptr)))
 	{
 		return E_FAIL;
 	}
