@@ -343,6 +343,15 @@
     <Filter Include="02.GameObjects\Env\05.AlphaMap">
       <UniqueIdentifier>{54eef1b7-a5ee-444f-9577-44ffc8c3d8bc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\Spell_Slot_Preview">
+      <UniqueIdentifier>{b4e1da25-c952-4ff4-92fd-7f1501d8c005}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\Potion">
+      <UniqueIdentifier>{7683f642-58f7-4a79-a78c-b29540bdab10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\Magic_Meter">
+      <UniqueIdentifier>{b6ec3441-6b18-45d1-80ba-03aa6df7f9e2}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\Camera\Debug">
       <UniqueIdentifier>{ee7ebf3c-8798-41cb-a261-31ca5041909c}</UniqueIdentifier>
     </Filter>
@@ -702,6 +711,15 @@
     <ClInclude Include="..\Public\CamPosition_Target.h">
       <Filter>02.GameObjects\Camera\CameraPosition\Player\Target</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Spell_Slot_Preview.h">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\Spell_Slot_Preview</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Potion.h">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\Potion</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Magic_Meter.h">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\Magic_Meter</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -1020,6 +1038,15 @@
     </ClCompile>
     <ClCompile Include="..\private\AlphaMap.cpp">
       <Filter>02.GameObjects\Env\05.AlphaMap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Spell_Slot_Preview.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\Spell_Slot_Preview</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Potion.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\Potion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Magic_Meter.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\Magic_Meter</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player_States.cpp">
       <Filter>02.GameObjects\Player</Filter>

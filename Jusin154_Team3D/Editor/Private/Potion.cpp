@@ -1,23 +1,23 @@
 ﻿#include "pch.h"
-#include "HpBarBG.h"
+#include "Potion.h"
 #include "GameInstance.h"
 
-CHpBarBG::CHpBarBG(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CPotion::CPotion(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
 {
 }
 
-CHpBarBG::CHpBarBG(const CHpBarBG& rhs)
+CPotion::CPotion(const CPotion& rhs)
 	:CElementObject(rhs)
 {
 }
 
-HRESULT CHpBarBG::Initialize_Prototype()
+HRESULT CPotion::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CHpBarBG::Initialize(void* pArg)
+HRESULT CPotion::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
@@ -40,16 +40,10 @@ HRESULT CHpBarBG::Initialize(void* pArg)
 	m_fTimeMult = 3.f;
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 1.f;
-	m_vNine_Slice = _float4(27.f, 125.f, m_fSizeY * 0.5f, m_fSizeY * 0.5f);
-	m_fMaxHp = 20.f;
-	m_fCurrentHp = m_fMaxHp;
-	m_fMoveSpeed = 5.f;
-	m_fHpBG = _float2(0, m_fSizeX);
-	SizeUpX(210.f);
 	return S_OK;
 }
 
-void CHpBarBG::Priority_Update(_float fTimeDelta)
+void CPotion::Priority_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -58,7 +52,8 @@ void CHpBarBG::Priority_Update(_float fTimeDelta)
 	__super::Priority_Update(fTimeDelta);
 }
 
-void CHpBarBG::Update(_float fTimeDelta)
+
+void CPotion::Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -87,31 +82,14 @@ void CHpBarBG::Update(_float fTimeDelta)
 			m_bFadeOut = false;
 			m_fAlpha = 0.f;
 		}
-	} 
-
-	if (m_pGameInstance->Key_Down(DIK_2))
-		Lerp_PosX(10.f);
-	if (m_pGameInstance->Key_Down(DIK_3))
-		Lerp_PosX(-10.f);
-
-	if (m_fCurrentHp < 0.f)
-		m_fCurrentHp = 0.f;
-	if (m_fDamage <= 0.f)
-		m_fDamage = 0.f;
-	TargetHp = m_fMaxHp - m_fDamage;
-
-	if (TargetHp > m_fCurrentHp)
-		Heal(fTimeDelta);
-	else if(TargetHp < m_fCurrentHp)
-		Hit(fTimeDelta);
-	m_fHpBar = m_fCurrentHp / m_fMaxHp;
+	}
 
 	m_fTime += fTimeDelta * m_fTimeMult;
 
 	__super::Update(fTimeDelta);
 }
 
-void CHpBarBG::Late_Update(_float fTimeDelta)
+void CPotion::Late_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -123,12 +101,12 @@ void CHpBarBG::Late_Update(_float fTimeDelta)
 	}
 }
 
-HRESULT CHpBarBG::Render()
+HRESULT CPotion::Render()
 {
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::HPBAR)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::DEFAULT)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
@@ -141,33 +119,12 @@ HRESULT CHpBarBG::Render()
 	return S_OK;
 }
 
-_vector CHpBarBG::Get_WorldPostion()
+_vector CPotion::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
 }
 
-void CHpBarBG::Lerp_PosX(_float X)
-{
-	m_fDamage += X;
-}
-
-void CHpBarBG::Heal(_float fTimeDelta)
-{
-	m_fCurrentHp = CMyTools::Lerp_f1D(TargetHp, m_fCurrentHp, fTimeDelta * m_fMoveSpeed);
-}
-
-void CHpBarBG::Hit(_float fTimeDelta)
-{
-	m_fCurrentHp = CMyTools::Lerp_f1D(m_fCurrentHp, TargetHp, fTimeDelta * m_fMoveSpeed);
-}
-
-void CHpBarBG::SizeUpX(_float fSizeX)
-{
-	m_fSizeX = fSizeX;
-	m_fX -= (fSizeX - m_vScale.x) * 0.5f;
-}
-
-HRESULT CHpBarBG::Bind_ShaderResources()
+HRESULT CPotion::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 	{
@@ -182,10 +139,6 @@ HRESULT CHpBarBG::Bind_ShaderResources()
 		return E_FAIL;
 	}
 	if (FAILED(m_pDiffuse_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pDiffuse_TextureCom1->Bind_ShaderResource(m_pShaderCom, "g_Texture1", 0)))
 	{
 		return E_FAIL;
 	}
@@ -209,40 +162,16 @@ HRESULT CHpBarBG::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fNine_Slice", &m_vNine_Slice, sizeof(_float4))))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOrigin_Size", &m_fOrigin_Size, sizeof(_float2))))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCurrent_Size", &m_vScale, sizeof(_float2))))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fHp", &m_fHpBar, sizeof(_float))))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fHpBG", &m_fHpBG, sizeof(_float2))))
-	{
-		return E_FAIL;
-	}
 	return S_OK;
 }
 
-HRESULT CHpBarBG::Ready_Components(void* pArg)
+HRESULT CPotion::Ready_Components(void* pArg)
 {
 	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_HpBarBG"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_HUD_HealthMeterFill"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_WoundCleaning"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -253,22 +182,22 @@ HRESULT CHpBarBG::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-CHpBarBG* CHpBarBG::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CPotion* CPotion::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CHpBarBG* pInstance = new CHpBarBG(pDevice, pContext);
+	CPotion* pInstance = new CPotion(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CHpBarBG");
+		MSG_BOX("Failed to Created : CPotion");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CHpBarBG::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CPotion::Clone(void* pArg, CGameObject* pOwner)
 {
-	CHpBarBG* pInstance = new CHpBarBG(*this);
+	CPotion* pInstance = new CPotion(*this);
 	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
@@ -279,16 +208,15 @@ CGameObject* CHpBarBG::Clone(void* pArg, CGameObject* pOwner)
 	return pInstance;
 }
 
-void CHpBarBG::Free()
+void CPotion::Free()
 {
 	__super::Free();
 
 	SAFE_RELEASE(m_pDiffuse_TextureCom);
-	SAFE_RELEASE(m_pDiffuse_TextureCom1);
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
-void CHpBarBG::Describe_Entity()
+void CPotion::Describe_Entity()
 {
 }

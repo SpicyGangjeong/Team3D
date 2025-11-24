@@ -7,13 +7,6 @@ NS_BEGIN(Editor)
 
 class CPlayer final : public CUnit
 {
-public:
-	struct InputCondition
-	{
-		FSMSTATE::ESTATE state;
-		function<_bool()> checker;
-	};
-
 private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CPlayer(const CPlayer& Prototype);
@@ -31,11 +24,9 @@ private:
 	size_t m_iStateMask = { 0 };
 	_float m_fDirectionRadian = 0.f;
 
-	vector<InputCondition> m_InputConditions;
 	_bool m_bSprintToggle = { false };
 	_bool m_bWalkToggle = { false };
 
-	_int m_iCombo = { 0 };
 
 	class CCamPosition_Socket* m_pCamPosition_TopDown_LookPart = { nullptr };
 	class CCamPosition_Arm* m_pCamPosition_TopDown_FollowPart = { nullptr };
@@ -52,6 +43,7 @@ private:
 	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
 
+	void TestKeyInput(_float fTimeDelta);
 public:
 	static CPlayer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr) override;
@@ -70,6 +62,9 @@ private:
 
 	HRESULT InputAction();
 	HRESULT InputMove();
+	HRESULT InputSpell();
+
+	STATEANIM::ESTATE m_eSpell = { STATEANIM::END };
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();
