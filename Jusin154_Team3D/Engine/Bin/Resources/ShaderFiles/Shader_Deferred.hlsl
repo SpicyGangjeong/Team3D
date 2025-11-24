@@ -556,4 +556,14 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_SPOT();
     }
+
+    pass RefitPass // 6
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_SPOT();
+    }
 }
