@@ -457,6 +457,7 @@ void CEditEffect::Describe_Entity()
 
 		GUI::Checkbox("EmissiveTex", &m_EffectInfo.isEmissive);
 		GUI::Checkbox("EmissiveDissolve", &m_EffectInfo.isEmissiveDissolve);
+		GUI::Checkbox("EmissiveDissolveReverse", &m_EffectInfo.isEmissiveDissolveReverse);
 
 		if (m_EffectInfo.isEmissive)
 		{

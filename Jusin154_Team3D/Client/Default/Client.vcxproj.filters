@@ -377,6 +377,9 @@
     <Filter Include="02.GameObjects\Cameras\Camera_Gaze">
       <UniqueIdentifier>{470c4db5-b306-4fb8-8338-0a99ac77ac89}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Decendo">
+      <UniqueIdentifier>{3572e19c-c7cc-4c7a-add0-2012b81b3935}</UniqueIdentifier>
+	</Filter>
     <Filter Include="02.GameObjects\Item">
       <UniqueIdentifier>{9cc88058-bda3-4ed0-9ec9-1968963fdda4}</UniqueIdentifier>
     </Filter>

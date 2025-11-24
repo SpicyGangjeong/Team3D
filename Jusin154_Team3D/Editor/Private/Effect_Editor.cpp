@@ -619,22 +619,12 @@ void CEffect_Editor::Describe_Entity()
 		ReSaveFile(m_strSavePath.c_str());
 	}
 
-
-
-	GUI::InputTextMultiline("PACKAGE FILE PATH", m_szPackageBuffer, sizeof(m_szPackageBuffer), ImVec2(250, 25));
+	GUI::InputTextMultiline("DIRECTORY PATH", m_szPackageBuffer, sizeof(m_szPackageBuffer), ImVec2(250, 25));
 
 	m_strPackageSavePath = m_szPackageBuffer;
 
-	if (GUI::Button("PACKAING"))
-	{
-		Save_Package(m_strPackageSavePath.c_str());
-	}
-
-	GUI::SameLine();
-
 	if (GUI::Button("LOAD DIRECTORY"))
 	{
-	
 		if (SUCCEEDED(Load_Directory(m_strPackageSavePath.c_str())))
 		{
 			MessageBox(NULL, L"파일 로드 성공", L"System Message", MB_OK);
