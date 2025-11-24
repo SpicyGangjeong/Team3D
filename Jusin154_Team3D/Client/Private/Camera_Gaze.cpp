@@ -29,12 +29,16 @@ void CCamera_Gaze::Priority_Update(_float fTimeDelta)
 			m_pTransformCom->LookAt(m_pLookTarget->Get_Component<CTransform>()->Get_State(STATE::POSITION));
 		}
 	}
+	else {
+
+	}
 	m_bActive = true;
 	__super::Bind_Matrices();
 }
 
 void CCamera_Gaze::Update(_float fTimeDelta)
 {
+	Transition(fTimeDelta);
 	Update_LerpTimer(fTimeDelta);
 
 	Describe_Entity();

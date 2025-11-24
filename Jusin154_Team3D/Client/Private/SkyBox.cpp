@@ -39,7 +39,7 @@ void CSkyBox::Priority_Update(_float fTimeDelta)
 
 void CSkyBox::Update(_float fTimeDelta)
 {
-	m_pTransformCom->Set_State(STATE::POSITION, m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_CAMERA)->Get_Object<CCamera_Gaze>()->Get_WorldPostion());
+	m_pTransformCom->Set_State(STATE::POSITION, m_pGameInstance->Get_CamXMPosition());
 }
 
 void CSkyBox::Late_Update(_float fTimeDelta)

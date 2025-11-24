@@ -152,7 +152,7 @@ HRESULT CCamPosition_Shoulder::Ready_SubParts()
 	CameraDesc.pFollowTarget = m_pTarget_FollowPart;
 	CameraDesc.pLookTarget = m_pTarget_LookPart;
 	CameraDesc.iPriority = 51;
-	CameraDesc.pCameraKey = TEXT("CAM_SHOULDER");
+	CameraDesc.pCameraKey = CAMERA_SHOULDER;
 	CameraDesc.bEnableTransitionLerp = true;
 	CameraDesc.bEnableFollowLerp = true;
 	CameraDesc.bEnableLookLerp = true;
@@ -164,7 +164,7 @@ HRESULT CCamPosition_Shoulder::Ready_SubParts()
 	{
 		return E_FAIL;
 	}
-	m_pGameInstance->Add_Camera(NEXT_LEVEL, m_pBinded_Camera, TEXT("CAM_SHOULDER"));
+	m_pGameInstance->Add_Camera(NEXT_LEVEL, m_pBinded_Camera, CAMERA_SHOULDER);
 
 
 	return S_OK;
