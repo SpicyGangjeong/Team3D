@@ -3,12 +3,6 @@
 #include "Client_Define.h"
 #include "GameObject.h"
 
-NS_BEGIN(Engine)
-class CModel;
-class CShader;
-class CRigidBody;
-NS_END
-
 NS_BEGIN(Client)
 
 class CDummy_PhysXWall final : public CGameObject

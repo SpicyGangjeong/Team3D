@@ -3,11 +3,6 @@
 #include "Client_Define.h"
 #include "PartObject.h"
 
-NS_BEGIN(Engine)
-class CShader;
-class CModel;
-NS_END
-
 NS_BEGIN(Client)
 
 class CWand final : public CPartObject

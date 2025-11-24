@@ -149,87 +149,6 @@ HRESULT CMesh::Render_Instance(_uint iNumInstance)
 	return S_OK;
 }
 
-
-HRESULT CMesh::Initialize_Prototype(HANDLE hFile, DWORD& dwByte)
-{
-	{ // 멤버변수
-		if (!ReadFile(hFile, &m_iMaterialIndex, sizeof(_uint), &dwByte, nullptr)) {
-			return E_FAIL;
-		}
-		if (!ReadFile(hFile, &m_iNumVertexBuffers, sizeof(_uint), &dwByte, nullptr)) {
-			return E_FAIL;
-		}
-		if (!ReadFile(hFile, &m_iNumVertices, sizeof(_uint), &dwByte, nullptr)) {
-			return E_FAIL;
-		}
-		if (!ReadFile(hFile, &m_iVertexStride, sizeof(_uint), &dwByte, nullptr)) {
-			return E_FAIL;
-		}
-		if (!ReadFile(hFile, &m_iNumIndices, sizeof(_uint), &dwByte, nullptr)) {
-			return E_FAIL;
-		}
-		if (!ReadFile(hFile, &m_iIndexStride, sizeof(_uint), &dwByte, nullptr)) {
-			return E_FAIL;
-		}
-		if (!ReadFile(hFile, &m_iNumBones, sizeof(_uint), &dwByte, nullptr)) {
-			return E_FAIL;
-		}
-		if (!ReadFile(hFile, &m_eIndexFormat, sizeof(DXGI_FORMAT), &dwByte, nullptr)) {
-			return E_FAIL;
-		}
-		if (!ReadFile(hFile, &m_ePrimitive, sizeof(D3D_PRIMITIVE_TOPOLOGY), &dwByte, nullptr)) {
-			return E_FAIL;
-		}
-		DWORD iSize = {};
-		if (!ReadFile(hFile, &iSize, sizeof(DWORD), &dwByte, nullptr)) {
-			return E_FAIL;
-		}
-		m_BoneIndices.resize(iSize / sizeof(_int));
-		if (!ReadFile(hFile, m_BoneIndices.data(), iSize, &dwByte, nullptr)) {
-			return E_FAIL;
-		}
-		if (!ReadFile(hFile, &iSize, sizeof(DWORD), &dwByte, nullptr)) {
-			return E_FAIL;
-		}
-		m_offsetMatrices.resize(iSize / sizeof(_float4x4));
-		if (!ReadFile(hFile, m_offsetMatrices.data(), iSize, &dwByte, nullptr)) {
-			DWORD err = GetLastError();
-			return E_FAIL;
-		}
-
-		m_pBoneMatrices = new _float4x4[0 == m_iNumBones ? 1 : m_iNumBones];
-		ZeroMemory(m_pBoneMatrices, sizeof(_float4x4) * m_iNumBones);
-	}
-	{ // Vertex Buffer
-		HRESULT hr = (m_iVertexStride == sizeof(VTXMESH)) ?
-			Ready_VertexBuffer_For_NonAnim(hFile, dwByte) :
-			Ready_VertexBuffer_For_Anim(hFile, dwByte);
-	}
-	{ // Index Buffer
-		D3D11_BUFFER_DESC IBDesc{};
-		if (!ReadFile(hFile, &IBDesc, sizeof(D3D11_BUFFER_DESC), &dwByte, nullptr)) {
-			return E_FAIL;
-		}
-
-		_uint* pIndices = new _uint[m_iNumIndices];
-		ZeroMemory(pIndices, sizeof(_uint) * m_iNumIndices);
-
-		if (!ReadFile(hFile, pIndices, IBDesc.ByteWidth, &dwByte, nullptr)) {
-			return E_FAIL;
-		}
-
-		D3D11_SUBRESOURCE_DATA	InitialIBData{};
-		InitialIBData.pSysMem = pIndices;
-
-		if (FAILED(m_pDevice->CreateBuffer(&IBDesc, &InitialIBData, &m_pIB))) {
-			return E_FAIL;
-		}
-
-		Safe_Delete_Array(pIndices);
-	}
-	return S_OK;
-}
-
 HRESULT CMesh::Initialize_Prototype(MODEL eType, const CModel* pModel, SaveMesh* _SaveMesh, _fmatrix PreTransformMatrix)
 {
 	strcpy_s(m_szName, _SaveMesh->MeshName.c_str());
@@ -289,65 +208,7 @@ HRESULT CMesh::Initialize_Prototype(MODEL eType, const CModel* pModel, SaveMesh*
 
 #pragma endregion
 
-	Create_RawVB(m_RawVertices);
-
-	return S_OK;
-}
-
-HRESULT CMesh::Ready_VertexBuffer_For_NonAnim(HANDLE hFile, DWORD& dwByte)
-{
-	D3D11_BUFFER_DESC VBDesc{};
-	if (!ReadFile(hFile, &VBDesc, sizeof(D3D11_BUFFER_DESC), &dwByte, nullptr)) {
-		return E_FAIL;
-	}
-	VTXMESH* pVertices = new VTXMESH[m_iNumVertices]{};
-	ZeroMemory(pVertices, sizeof(VTXMESH) * m_iNumVertices);
-
-	m_pVertexPositions = new _float3[m_iNumVertices];
-	ZeroMemory(m_pVertexPositions, sizeof(_float3) * m_iNumVertices);
-	if (!ReadFile(hFile, pVertices, VBDesc.ByteWidth, &dwByte, nullptr)) {
-		return E_FAIL;
-	}
-	for (_uint i = 0; i < m_iNumVertices; ++i) {
-		m_pVertexPositions[i] = pVertices[i].vPosition;
-	}
-	D3D11_SUBRESOURCE_DATA	InitialVBData{};
-	InitialVBData.pSysMem = pVertices;
-
-	if (FAILED(m_pDevice->CreateBuffer(&VBDesc, &InitialVBData, &m_pVB))) {
-		return E_FAIL;
-	}
-
-	Safe_Delete_Array(pVertices);
-
-	return S_OK;
-}
-
-HRESULT CMesh::Ready_VertexBuffer_For_Anim(HANDLE hFile, DWORD& dwByte)
-{
-	D3D11_BUFFER_DESC VBDesc{};
-	if (!ReadFile(hFile, &VBDesc, sizeof(D3D11_BUFFER_DESC), &dwByte, nullptr)) {
-		return E_FAIL;
-	}
-	VTXANIMMESH* pVertices = new VTXANIMMESH[m_iNumVertices]{};
-	ZeroMemory(pVertices, sizeof(VTXANIMMESH) * m_iNumVertices);
-
-	m_pVertexPositions = new _float3[m_iNumVertices];
-	ZeroMemory(m_pVertexPositions, sizeof(_float3) * m_iNumVertices);
-	if (!ReadFile(hFile, pVertices, VBDesc.ByteWidth, &dwByte, nullptr)) {
-		return E_FAIL;
-	}
-	for (_uint i = 0; i < m_iNumVertices; ++i) {
-		m_pVertexPositions[i] = pVertices[i].vPosition;
-	}
-	D3D11_SUBRESOURCE_DATA	InitialVBData{};
-	InitialVBData.pSysMem = pVertices;
-
-	if (FAILED(m_pDevice->CreateBuffer(&VBDesc, &InitialVBData, &m_pVB))) {
-		return E_FAIL;
-	}
-
-	Safe_Delete_Array(pVertices);
+	//Create_RawVB(m_RawVertices);
 
 	return S_OK;
 }
@@ -507,80 +368,11 @@ HRESULT CMesh::Ready_VertexBuffer_For_Anim(const CModel* pModel, SaveMesh* _Save
 	if (FAILED(m_pDevice->CreateBuffer(&VBDesc, &InitialVBData, &m_pVB)))
 		return E_FAIL;
 
-	
-	m_RawVertices.resize(m_iNumVertices);
-
-	for (_uint i = 0; i < m_iNumVertices; i++)
-	{
-		m_RawVertices[i].vPosition = pVertices[i].vPosition;
-		m_RawVertices[i].vNormal = pVertices[i].vNormal;
-		m_RawVertices[i].vTangent = pVertices[i].vTangent;
-		m_RawVertices[i].vBinormal = pVertices[i].vBinormal;
-		m_RawVertices[i].vTexcoord = pVertices[i].vTexcoord;
-
-		m_RawVertices[i].vBlendIndex = pVertices[i].vBlendIndex;
-		m_RawVertices[i].vBlendWeight = pVertices[i].vBlendWeight;
-	}
 
 	Safe_Delete_Array(pVertices);
 
 	return S_OK;
 }
-
-
-HRESULT CMesh::Create_RawVB(vector<MESH_DESC>& RawVertices)
-{
-	m_iRawVertexStride = sizeof(MESH_DESC); 
-
-	D3D11_BUFFER_DESC desc{};
-	desc.Usage = D3D11_USAGE_DEFAULT;
-	desc.ByteWidth = m_iRawVertexStride *m_iNumVertices;
-	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-	desc.CPUAccessFlags = 0;
-	desc.StructureByteStride = m_iRawVertexStride;
-	desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
-
-	D3D11_SUBRESOURCE_DATA init{};
-	init.pSysMem = RawVertices.data();
-
-	m_pDevice->CreateBuffer(&desc, &init, &m_pVBMesh);
-
-
-	return S_OK;
-}
-
-
-void CMesh::ComputSkinning(CComputeShader* ComputeShader, ID3D11Buffer* ConstantBuffer)
-{
-	if (ComputeShader == nullptr)
-		return;
-
-	_uint iGroupCountX = (m_iNumVertices + 255) / 256;
-
-	ID3D11Buffer* CSBuffers[] = {
-		 m_pVBMesh
-	};
-
-	vector<D3D11_MAPPED_SUBRESOURCE> OutSubResources = {};
-	D3D11_MAPPED_SUBRESOURCE VBInstanceResource = {};
-
-	OutSubResources = ComputeShader->Dispatch(0, 0, _float3((_float)iGroupCountX, 1.f, 1.f), CSBuffers, ConstantBuffer);
-}
-
-void CMesh::FillBoneDesc(const vector<_float4x4>& CombinedMatrices, BONE_DESC* pOut)
-{
-	for (size_t i = 0; i < m_iNumBones; ++i)
-	{
-		const _float4x4& offset = m_offsetMatrices[i];
-		const _float4x4& combined = CombinedMatrices[m_BoneIndices[i]];
-
-		_matrix matOffset = XMLoadFloat4x4(&offset);
-		_matrix matCombined = XMLoadFloat4x4(&combined);
-
-		XMStoreFloat4x4(&pOut->BoneMatrix[i], matOffset * matCombined);
-	}
-}
-
 
 
 HRESULT CMesh::Initialize(void* pArg)
@@ -600,80 +392,6 @@ CMesh* CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL
 	}
 
 	return pInstance;
-}
-
-HRESULT CMesh::SaveAsBinary(HANDLE hFile, DWORD& dwByte)
-{
-	{ // 멤버변수
-		WriteFile(hFile, &m_iMaterialIndex, sizeof(_uint), &dwByte, nullptr);
-		WriteFile(hFile, &m_iNumVertexBuffers, sizeof(_uint), &dwByte, nullptr);
-		WriteFile(hFile, &m_iNumVertices, sizeof(_uint), &dwByte, nullptr);
-		WriteFile(hFile, &m_iVertexStride, sizeof(_uint), &dwByte, nullptr);
-		WriteFile(hFile, &m_iNumIndices, sizeof(_uint), &dwByte, nullptr);
-		WriteFile(hFile, &m_iIndexStride, sizeof(_uint), &dwByte, nullptr);
-		WriteFile(hFile, &m_iNumBones, sizeof(_uint), &dwByte, nullptr);
-		WriteFile(hFile, &m_eIndexFormat, sizeof(DXGI_FORMAT), &dwByte, nullptr);
-		WriteFile(hFile, &m_ePrimitive, sizeof(D3D_PRIMITIVE_TOPOLOGY), &dwByte, nullptr);
-
-		DWORD iSize = (DWORD)(sizeof(_int) * m_BoneIndices.size());
-		WriteFile(hFile, &iSize, sizeof(DWORD), &dwByte, nullptr);
-		WriteFile(hFile, m_BoneIndices.data(), iSize, &dwByte, nullptr);
-
-		iSize = (DWORD)(sizeof(_float4x4) * m_offsetMatrices.size());
-		WriteFile(hFile, &iSize, sizeof(DWORD), &dwByte, nullptr);
-		WriteFile(hFile, m_offsetMatrices.data(), iSize, &dwByte, nullptr);
-	}
-	{ // Vertex Buffer
-		D3D11_BUFFER_DESC VBDesc{};
-		m_pVB->GetDesc(&VBDesc); // 버퍼 디스크립션 저장
-		WriteFile(hFile, &VBDesc, sizeof(D3D11_BUFFER_DESC), &dwByte, nullptr);
-
-		D3D11_BUFFER_DESC StagingDesc{};
-		StagingDesc.Usage = D3D11_USAGE_STAGING;
-		StagingDesc.ByteWidth = VBDesc.ByteWidth;
-		StagingDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
-		StagingDesc.BindFlags = 0;
-		StagingDesc.MiscFlags = 0;
-
-		ID3D11Buffer* pStaging = nullptr;
-		if (FAILED(m_pDevice->CreateBuffer(&StagingDesc, nullptr, &pStaging)) || nullptr == pStaging) {
-			return E_FAIL;
-		}
-		m_pContext->CopyResource(pStaging, m_pVB); // 버퍼 복사
-
-		D3D11_MAPPED_SUBRESOURCE mapped{};
-		m_pContext->Map(pStaging, 0, D3D11_MAP_READ, 0, &mapped);
-		WriteFile(hFile, mapped.pData, VBDesc.ByteWidth, &dwByte, nullptr);
-
-		m_pContext->Unmap(pStaging, 0);
-		pStaging->Release();
-	}
-	{ // Index Buffer
-		D3D11_BUFFER_DESC IBDesc{};
-		m_pIB->GetDesc(&IBDesc);
-		WriteFile(hFile, &IBDesc, sizeof(D3D11_BUFFER_DESC), &dwByte, nullptr);
-
-		D3D11_BUFFER_DESC StagingDesc{};
-		StagingDesc.Usage = D3D11_USAGE_STAGING;
-		StagingDesc.ByteWidth = IBDesc.ByteWidth;
-		StagingDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
-		StagingDesc.BindFlags = 0;
-		StagingDesc.MiscFlags = 0;
-
-		ID3D11Buffer* pStaging = nullptr;
-		if (FAILED(m_pDevice->CreateBuffer(&StagingDesc, nullptr, &pStaging)) || nullptr == pStaging) {
-			return E_FAIL;
-		}
-		m_pContext->CopyResource(pStaging, m_pIB);
-
-		D3D11_MAPPED_SUBRESOURCE mapped{};
-		m_pContext->Map(pStaging, 0, D3D11_MAP_READ, 0, &mapped);
-		WriteFile(hFile, mapped.pData, IBDesc.ByteWidth, &dwByte, nullptr);
-
-		m_pContext->Unmap(pStaging, 0);
-		pStaging->Release();
-	}
-	return S_OK;
 }
 
 PSX::PxTriangleMesh* CMesh::ConvertToPxMesh(const PSX::PxCookingParams* pParam, PSX::PxPhysics* pPhysX, _matrix WorldMatrix)
@@ -848,19 +566,6 @@ HRESULT CMesh::Ready_VertexBuffer_For_Anim(vector<class CBone*>& Bones, const ai
 }
 #endif
 
-CMesh* CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, HANDLE hFile, DWORD& dwByte)
-{
-	CMesh* pInstance = new CMesh(pDevice, pContext);
-
-	if (FAILED(pInstance->Initialize_Prototype(hFile, dwByte)))
-	{
-		MSG_BOX("Failed to Created : CMesh");
-		SAFE_RELEASE(pInstance);
-	}
-
-	return pInstance;
-}
-
 CMesh* CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const CModel* pModel, SaveMesh* _SaveMesh, _fmatrix PreTransformMatrix)
 {
 	CMesh* pInstance = new CMesh(pDevice, pContext);
@@ -891,7 +596,6 @@ void CMesh::Free()
 	__super::Free();
 
 	Safe_Delete_Array(m_pBoneMatrices);
-	SAFE_RELEASE(m_pVBMesh);
 }
 
 void CMesh::Describe_Entity()

@@ -30,10 +30,10 @@ HRESULT CLevel_ObjectViewer::Initialize()
 		return E_FAIL;
 	}
 
-	/*if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
-	{
-		return E_FAIL;
-	}*/
+	//if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
+	//{
+	//	return E_FAIL;
+	//}
 
 	if (FAILED(Ready_Layer_Dummy(TEXT("Layer_Dummy"))))
 	{
@@ -58,7 +58,11 @@ void CLevel_ObjectViewer::Update(_float fTimeDelta)
 
 	Find_Anim();
 
-	m_Test->Describe_Entity();
+	if (m_Test)
+	{
+		m_Test->Describe_Entity();
+	}
+
 }
 
 HRESULT CLevel_ObjectViewer::Render()
@@ -702,8 +706,8 @@ HRESULT CLevel_ObjectViewer::Ready_Layer_Dummy(const _wstring& strLayerTag)
 
 
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
-		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
+	//	return E_FAIL;
 
 	/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
 		return E_FAIL;*/

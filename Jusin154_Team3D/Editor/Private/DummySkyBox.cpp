@@ -42,12 +42,7 @@ void CDummySkyBox::Update(_float fTimeDelta)
 {
 #ifdef gimch
 	m_pTransformCom->Set_State(STATE::POSITION, m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_CAMERA)->Get_Object<CDebugCamera>()->Get_WorldPostion());
-
-#else
-	m_pTransformCom->Set_State(STATE::POSITION, m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_CAMERA)->Get_Object<CCamera_Gaze>()->Get_WorldPostion());
-
-#endif // 기무리
-
+#endif // !기무리
 }
 
 void CDummySkyBox::Late_Update(_float fTimeDelta)

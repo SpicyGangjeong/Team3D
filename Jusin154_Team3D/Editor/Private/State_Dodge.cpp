@@ -4,43 +4,54 @@
 
 
 CState_Dodge::CState_Dodge()
-	:CState()
+	:CState_Root()
 {
 }
 
 void CState_Dodge::Enter()
 {
-	auto anim = m_pOwner->Get_AnimInfo(STATEANIM::DODGE);
-	m_pModel->Set_AnimationIndex(anim.first, anim.second);
+	__super::Enter();
 }
 
-void CState_Dodge::Update(_float fTimeDelta)
+HRESULT CState_Dodge::Update(_float fTimeDelta)
 {
-	if (CheckExitState())
-		return;
+	if (nullptr != m_funcPriorityUpdate) {
+		m_funcPriorityUpdate(fTimeDelta);
+	}
+	if (FAILED(__super::Update(fTimeDelta))) {
+		return E_FAIL;
+	}
+	if (nullptr != m_funcLateUpdate) {
+		m_funcLateUpdate(fTimeDelta);
+	}
+	return S_OK;
 }
 
 void CState_Dodge::Exit()
 {
+	__super::Exit();
 }
 
-_bool CState_Dodge::CheckExitState()
+HRESULT CState_Dodge::Initialize(STATE_DODGE_DESC* pDesc)
 {
-	if (m_pModel->IsFinishedAnim())
-		m_pFSM->Change_State(FSMSTATE::IDLE);
+	if (FAILED(__super::Initialize(pDesc))) {
+		return E_FAIL;
+	}
+	m_funcPriorityUpdate = pDesc->funcPriorityUpdate;
+	m_funcLateUpdate = pDesc->funcLateUpdate;
+	m_pModel = m_pOwner->Get_Component<CModel>();
+	m_pFSM = m_pOwner->Get_Component<CFSM>();
 
-	if (m_pOwner->Check(FSMSTATE::SPRINT) && m_pOwner->IsCurrentKeyFrame("Dodge"))
-		m_pFSM->Change_State(FSMSTATE::SPRINT);
+	return S_OK;
+}
 
-	if (m_pOwner->Check(FSMSTATE::WALK) && m_pOwner->IsCurrentKeyFrame("Dodge"))
-		m_pFSM->Change_State(FSMSTATE::WALK);
-
-	if (m_pOwner->Check(FSMSTATE::JOG) && m_pOwner->IsCurrentKeyFrame("Dodge"))
-		m_pFSM->Change_State(FSMSTATE::JOG);
-
-
-
-	return false;
+CState_Dodge* CState_Dodge::Create(STATE_DODGE_DESC* pDesc)
+{
+	CState_Dodge* pInstance = new CState_Dodge;
+	if (FAILED(pInstance->Initialize(pDesc))) {
+		SAFE_RELEASE(pInstance);
+	}
+	return pInstance;
 }
 
 void CState_Dodge::Free()

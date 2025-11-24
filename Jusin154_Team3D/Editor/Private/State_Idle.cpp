@@ -3,62 +3,54 @@
 #include "Unit.h"
 
 CState_Idle::CState_Idle()
-	:CState()
+	:CState_Root()
 {
 }
 
 void CState_Idle::Enter()
 {
-	if (m_pFSM->Get_PrevState() == FSMSTATE::JOG)
-	{
-		auto anim = m_pOwner->Get_AnimInfo(STATEANIM::JOG_STOP);
-		m_pModel->Set_AnimationIndex(anim.first, anim.second);
-		return;
-	}
-	if (m_pFSM->Get_PrevState() == FSMSTATE::WALK)
-	{
-		auto anim = m_pOwner->Get_AnimInfo(STATEANIM::WALK_STOP);
-		m_pModel->Set_AnimationIndex(anim.first, anim.second);
-		return;
-	}
-	else
-	{
-		auto anim = m_pOwner->Get_AnimInfo(STATEANIM::IDLE);
-		m_pModel->Set_AnimationIndex(anim.first, anim.second);
-	}
+	__super::Enter();
 }
 
-void CState_Idle::Update(_float fTimeDelta)
+HRESULT CState_Idle::Update(_float fTimeDelta)
 {
-	if (CheckExitState())
-		return;
+	if (nullptr != m_funcPriorityUpdate) {
+		m_funcPriorityUpdate(fTimeDelta);
+	}
+	if (E_FAIL == (__super::Update(fTimeDelta))) {
+		return E_FAIL;
+	}
+	if (nullptr != m_funcLateUpdate) {
+		m_funcLateUpdate(fTimeDelta);
+	}
+	return S_OK;
 }
 
 void CState_Idle::Exit()
 {
+	__super::Exit();
 }
 
-_bool CState_Idle::CheckExitState()
+HRESULT CState_Idle::Initialize(STATE_IDLE_DESC* pDesc)
 {
-	if (m_pOwner->Check(FSMSTATE::JOG))
-		m_pFSM->Change_State(FSMSTATE::JOG);
+	if (FAILED(__super::Initialize(pDesc))) {
+		return E_FAIL;
+	}
+	m_funcPriorityUpdate = pDesc->funcPriorityUpdate;
+	m_funcLateUpdate = pDesc->funcLateUpdate;
+	m_pModel = m_pOwner->Get_Component<CModel>();
+	m_pFSM = m_pOwner->Get_Component<CFSM>();
 
-	if (m_pOwner->Check(FSMSTATE::WALK))
-		m_pFSM->Change_State(FSMSTATE::WALK);
+	return S_OK;
+}
 
-	if (m_pOwner->Check(FSMSTATE::SPRINT))
-		m_pFSM->Change_State(FSMSTATE::SPRINT);
-
-	if (m_pOwner->Check(FSMSTATE::DODGE))
-		m_pFSM->Change_State(FSMSTATE::DODGE);
-
-	if (m_pOwner->Check(FSMSTATE::IDLE_TURN))
-		m_pFSM->Change_State(FSMSTATE::IDLE_TURN);
-
-	if (m_pOwner->Check(FSMSTATE::JUMP))
-		m_pFSM->Change_State(FSMSTATE::JUMP);
-
-	return false;
+CState_Idle* CState_Idle::Create(STATE_IDLE_DESC* pDesc)
+{
+	CState_Idle* pInstance = new CState_Idle;
+	if (FAILED(pInstance->Initialize(pDesc))) {
+		SAFE_RELEASE(pInstance);
+	}
+	return pInstance;
 }
 
 void CState_Idle::Free()

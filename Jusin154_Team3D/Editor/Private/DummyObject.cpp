@@ -3,12 +3,6 @@
 
 #include "GameInstance.h"
 #include "DebugCamera.h"
-#include "State_Idle.h"
-#include "State_Walk.h"
-#include "State_Dodge.h"
-#include "State_Sprint.h"
-#include "State_Jump.h"
-#include "State_Skill.h"
 
 CDummyObject::CDummyObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUnit(pDevice, pContext)
@@ -50,11 +44,7 @@ void CDummyObject::Priority_Update(_float fTimeDelta)
 
 void CDummyObject::Update(_float fTimeDelta)
 {
-	m_pModelCom->ComputeSkinning();
-
 	m_pModelCom->Play_Animation(fTimeDelta,m_pTransformCom);
-
-
 }
 
 void CDummyObject::Late_Update(_float fTimeDelta)
@@ -83,9 +73,6 @@ HRESULT CDummyObject::Render()
 		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
 			return E_FAIL;
 		}
-		
-		if (FAILED(m_pModelCom->Bind_CS_Output(5, i)))
-			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;

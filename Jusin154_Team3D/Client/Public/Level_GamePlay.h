@@ -2,8 +2,7 @@
 
 #include "Client_Define.h"
 #include "Level.h"
-NS_BEGIN(Engine)
-NS_END
+
 NS_BEGIN(Client)
 
 class CLevel_GamePlay final : public CLevel

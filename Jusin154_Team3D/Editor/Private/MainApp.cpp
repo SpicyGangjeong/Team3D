@@ -1,4 +1,4 @@
-#include "pch.h"
+Ôªø#include "pch.h"
 #include "MainApp.h"
 
 #include "GameInstance.h"
@@ -111,7 +111,7 @@ HRESULT CMainApp::Ready_IMGUI()
 	//string strFontTag = "C:\\Windows\\Fonts\\malgun.ttf";
 	string strFontTag = "../Bin/Resources/Fonts/malgunsl.TTF";
 	ImFontConfig cfg;
-	cfg.OversampleH = 2;  // ∞°µ∂º∫ «‚ªÛ
+	cfg.OversampleH = 2;  // Í∞ÄÎèÖÏÑ± Ìñ•ÏÉÅ
 	cfg.OversampleV = 2;
 	cfg.PixelSnapH = true;
 	ifstream ifile;

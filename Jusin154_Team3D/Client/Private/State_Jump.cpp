@@ -4,50 +4,51 @@
 
 
 CState_Jump::CState_Jump()
-	:CState()
+    :CState_Root()
 {
 }
 
 void CState_Jump::Enter()
 {
-	if (m_pOwner->Check(FSMSTATE::SPRINT))
-	{
-		auto anim = m_pOwner->Get_AnimInfo(STATEANIM::JUMP_SPRINT);
-		m_pModel->Set_AnimationIndex(anim.first, anim.second);
-		return;
-	}
-	if (m_pOwner->Check(FSMSTATE::JOG))
-	{
-		auto anim = m_pOwner->Get_AnimInfo(STATEANIM::JUMP_JOG);
-		m_pModel->Set_AnimationIndex(anim.first, anim.second);
-		return;
-	}
-
-	auto anim = m_pOwner->Get_AnimInfo(STATEANIM::JUMP);
-	m_pModel->Set_AnimationIndex(anim.first, anim.second);
+    __super::Enter();
 }
 
-void CState_Jump::Update(_float fTimeDelta)
+HRESULT CState_Jump::Update(_float fTimeDelta)
 {
-	if (CheckExitState())
-		return;
+    if (E_FAIL == (__super::Update(fTimeDelta))) {
+        return E_FAIL;
+    }
+    return S_OK;
 }
 
 void CState_Jump::Exit()
 {
+    __super::Exit();
 }
 
-_bool CState_Jump::CheckExitState()
+HRESULT CState_Jump::Initialize(STATE_JUMP_DESC* pDesc)
 {
-	if (m_pOwner->IsCurrentKeyFrame("Jump"))
-		m_pFSM->Change_State(FSMSTATE::LAND);
+    if (FAILED(__super::Initialize(pDesc))) {
+        return E_FAIL;
+    }
+    m_pModel = m_pOwner->Get_Component<CModel>();
+    m_pFSM = m_pOwner->Get_Component<CFSM>();
 
-	return false;
+    return S_OK;
+}
+
+CState_Jump* CState_Jump::Create(STATE_JUMP_DESC* pDesc)
+{
+    CState_Jump* pInstance = new CState_Jump;
+    if (FAILED(pInstance->Initialize(pDesc))) {
+        SAFE_RELEASE(pInstance);
+    }
+    return pInstance;
 }
 
 void CState_Jump::Free()
 {
-	__super::Free();
+    __super::Free();
 }
 
 void CState_Jump::Describe_Entity()

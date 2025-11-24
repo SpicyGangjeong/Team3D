@@ -37,9 +37,6 @@
     <ClInclude Include="..\Public\Level_GamePlay.h">
       <Filter>01.Levels\02.GamePlay</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Client_Struct.h">
-      <Filter>99.Define</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\InfoInstance.h">
       <Filter>03.InfoInstance</Filter>
     </ClInclude>
@@ -64,68 +61,11 @@
     <ClInclude Include="..\Public\MapInfo.h">
       <Filter>03.InfoInstance\02.MapInfo</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\LoadingWidget.h">
-      <Filter>02.GameObjects\UI\GamePlay_Canvas\Loding_Panel\LoadingWidget</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\GamePlay_Canvas.h">
-      <Filter>02.GameObjects\UI\GamePlay_Canvas</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Loading_Panel.h">
-      <Filter>02.GameObjects\UI\GamePlay_Canvas\Loding_Panel</Filter>
-	</ClInclude>
-      <ClInclude Include="..\Public\Player.h">
+    <ClInclude Include="..\Public\Player.h">
       <Filter>02.GameObjects\Player</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Wand.h">
       <Filter>02.GameObjects\Item\Wand</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\State_Root.h">
-      <Filter>80.State</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\State_Combat.h">
-      <Filter>80.State\State_Combat</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\State_Cast.h">
-      <Filter>80.State\State_Combat\State_Cast</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\State_LightAttack.h">
-      <Filter>80.State\State_Combat\State_LightAttack</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\State_Skill.h">
-      <Filter>80.State\State_Combat\State_Skill</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\State_Skill2.h">
-      <Filter>80.State\State_Combat\State_Skill2</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\State_Move.h">
-      <Filter>80.State\State_Move</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\State_Idle.h">
-      <Filter>80.State\State_Move\State_Idle</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\State_Jog.h">
-      <Filter>80.State\State_Move\State_Jog</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\State_Walk.h">
-      <Filter>80.State\State_Move\State_Walk</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\State_Sprint.h">
-      <Filter>80.State\State_Move\State_Sprint</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\State_Dodge.h">
-      <Filter>80.State\State_Move\State_Dodge</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\State_Idle_Turn.h">
-      <Filter>80.State\State_Move\State_Idle_Turn</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\State_Jump.h">
-      <Filter>80.State\State_Jump</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\State_Land.h">
-      <Filter>80.State\State_Land</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\CamPosition_Player.h">
-      <Filter>02.GameObjects\Cameras\CameraPosition\Player</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CamPosition_Arm.h">
       <Filter>02.GameObjects\Cameras\CameraPosition\Arm</Filter>
@@ -165,6 +105,57 @@
     </ClInclude>
     <ClInclude Include="..\Public\CallBack_Monster_HitReport.h">
       <Filter>02.GameObjects\PhysX\CallBack\HitReport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Root.h">
+      <Filter>04.Mechanic\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Combat.h">
+      <Filter>04.Mechanic\State\State_Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Dodge.h">
+      <Filter>04.Mechanic\State\Focus\Dodge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Jump.h">
+      <Filter>04.Mechanic\State\Focus\Jump</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Land.h">
+      <Filter>04.Mechanic\State\Focus\Land</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Idle.h">
+      <Filter>04.Mechanic\State\Movement\Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Move.h">
+      <Filter>04.Mechanic\State\Movement\Move</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_Container.h">
+      <Filter>02.GameObjects\Effect\Effect_Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EffectParts.h">
+      <Filter>02.GameObjects\Effect\EffectParts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EffectObject.h">
+      <Filter>02.GameObjects\Effect\EffectObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TrailObject.h">
+      <Filter>02.GameObjects\Effect\TrailObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bombard.h">
+      <Filter>02.GameObjects\Effect\Effects\Bombard</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\NomalJap.h">
+      <Filter>02.GameObjects\Effect\Effects\NomalJap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PhysXEffectHitBox.h">
+      <Filter>02.GameObjects\PhysX\EffectHitBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CamPosition_Socket.h">
+      <Filter>02.GameObjects\Cameras\CameraPosition\Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CamPosition_Target.h">
+      <Filter>02.GameObjects\Cameras\CameraPosition\Player\Target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CamPosition_Shoulder.h">
+      <Filter>02.GameObjects\Cameras\CameraPosition\Player\Shoulder</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -233,12 +224,6 @@
     <Filter Include="04.Mechanic\State">
       <UniqueIdentifier>{1bfec6dc-f008-4d18-87d6-be38824b1272}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Mechanic\State\NPC">
-      <UniqueIdentifier>{3eb21e8e-e01c-47fe-828e-800212456eb5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\PLAYER">
-      <UniqueIdentifier>{9f952e5a-835c-4de9-b7b5-9a731912774d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="04.Mechanic\Skill">
       <UniqueIdentifier>{c5b61cb3-bc5f-4429-8715-b309dcf054b2}</UniqueIdentifier>
     </Filter>
@@ -253,9 +238,6 @@
     </Filter>
     <Filter Include="02.GameObjects\Cameras\Debug">
       <UniqueIdentifier>{8d89a59c-fbd2-4a4a-ab01-a70abb80cc49}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Cameras\Shoulder">
-      <UniqueIdentifier>{708bbc88-47fb-42c5-b060-14cec7d646f2}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Environment\Lights\Main">
       <UniqueIdentifier>{b24c78ef-dccc-41f0-a086-053ae6b7fbf4}</UniqueIdentifier>
@@ -316,51 +298,6 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Loding_Panel\LoadingWidget_Flame">
       <UniqueIdentifier>{f7f22fc0-0e66-4e6e-a60a-0c612d58d802}</UniqueIdentifier>
-	</Filter>
-    <Filter Include="80.State">
-      <UniqueIdentifier>{be963729-ed65-4506-82f2-24213f5ecf5a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80.State\State_Combat">
-      <UniqueIdentifier>{fb0a8b8b-5376-4606-8e6e-b020abf2d476}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80.State\State_Combat\State_Cast">
-      <UniqueIdentifier>{5e4bd8c2-9ace-4617-880b-9c7fa826dfd4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80.State\State_Combat\State_LightAttack">
-      <UniqueIdentifier>{28b2cdcb-e307-4da5-a222-24a77480605c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80.State\State_Combat\State_Skill">
-      <UniqueIdentifier>{8f9ce518-cd40-4a0c-ac4f-f77459a13cfd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80.State\State_Combat\State_Skill2">
-      <UniqueIdentifier>{68ec69bb-6697-42aa-abf4-cd6d148a1648}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80.State\State_Move">
-      <UniqueIdentifier>{99f16910-04c8-44e2-84ff-17321d94d1f0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80.State\State_Move\State_Idle">
-      <UniqueIdentifier>{e2599ab3-3d02-420c-b29c-0f87b4263429}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80.State\State_Move\State_Jog">
-      <UniqueIdentifier>{3110d3d0-422e-42eb-a045-c8c784528165}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80.State\State_Move\State_Walk">
-      <UniqueIdentifier>{cd90a5f0-2428-4537-801f-a65b7273c3be}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80.State\State_Move\State_Sprint">
-      <UniqueIdentifier>{5f5abe29-f43a-4de7-8955-b21ca1c6fb94}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80.State\State_Move\State_Dodge">
-      <UniqueIdentifier>{03cf23a9-5c0f-4cb1-a32b-5807a612c039}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80.State\State_Move\State_Idle_Turn">
-      <UniqueIdentifier>{b3fdd366-2689-49c9-b1c1-6843772e9661}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80.State\State_Jump">
-      <UniqueIdentifier>{309d0593-507f-484c-92aa-7c8fc483941b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80.State\State_Land">
-      <UniqueIdentifier>{a3ab0237-10b3-4699-a39d-63c625024f67}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Cameras\CameraPosition\Arm">
       <UniqueIdentifier>{f0da95a0-107f-42ff-9e77-3503bb48aa12}</UniqueIdentifier>
@@ -388,6 +325,66 @@
     </Filter>
     <Filter Include="02.GameObjects\PhysX\CallBack\HitReport">
       <UniqueIdentifier>{dc05dfc9-22e5-4a2a-b016-c55b215c0c68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Focus">
+      <UniqueIdentifier>{0834c76d-83d8-4ef5-9d19-7277686d28c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat">
+      <UniqueIdentifier>{017fc692-bac0-4635-843c-02fb59009f5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Movement">
+      <UniqueIdentifier>{349939a0-8b9a-4a1a-8f0a-ca5014cd4e18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Focus\Dodge">
+      <UniqueIdentifier>{5fa1e5a9-acd8-499d-90ee-9cf17441b3a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Focus\Jump">
+      <UniqueIdentifier>{41d2e34e-5280-4b3c-961e-064484f1449d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Focus\Land">
+      <UniqueIdentifier>{1034dd61-dd17-456a-990b-628c45f74b51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Movement\Idle">
+      <UniqueIdentifier>{2999d0c5-81e4-44d6-99b3-4801e6f84dd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Movement\Move">
+      <UniqueIdentifier>{0a3f9629-27d1-411c-806e-b550af8f1ca1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect">
+      <UniqueIdentifier>{23fc95c4-0db3-4569-bd37-4d9bc32938ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effect_Container">
+      <UniqueIdentifier>{a88b2e75-92f7-4bed-b12a-76fb8763f533}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\EffectParts">
+      <UniqueIdentifier>{482050d0-23dc-4744-b0db-0673a84f40e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\EffectObject">
+      <UniqueIdentifier>{129abdf3-e499-467e-aca8-917e66827890}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\TrailObject">
+      <UniqueIdentifier>{b3077955-b37e-41f8-bb7a-7b1483fcecdc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects">
+      <UniqueIdentifier>{6fc43376-8b17-4888-b347-9beef7bee2ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Bombard">
+      <UniqueIdentifier>{3a613328-d01e-43e5-a095-9a6912cb3cf0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\NomalJap">
+      <UniqueIdentifier>{639cba10-a93e-465c-a921-4541fe317446}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\PhysX\EffectHitBox">
+      <UniqueIdentifier>{54169d8d-f771-4638-a71e-3aca3eeff9bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Cameras\CameraPosition\Player\Target">
+      <UniqueIdentifier>{1f9c16e8-b675-419f-b166-b79662407259}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Cameras\CameraPosition\Player\Shoulder">
+      <UniqueIdentifier>{708bbc88-47fb-42c5-b060-14cec7d646f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Cameras\CameraPosition\Socket">
+      <UniqueIdentifier>{2e4f0394-e25c-4508-937a-7e73d005ae5f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -436,68 +433,11 @@
     <ClCompile Include="..\Private\MapInfo.cpp">
       <Filter>03.InfoInstance\02.MapInfo</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\LoadingWidget.cpp">
-      <Filter>02.GameObjects\UI\GamePlay_Canvas\Loding_Panel\LoadingWidget</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\GamePlay_Canvas.cpp">
-      <Filter>02.GameObjects\UI\GamePlay_Canvas</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Loading_Panel.cpp">
-      <Filter>02.GameObjects\UI\GamePlay_Canvas\Loding_Panel</Filter>
-	</ClCompile>
     <ClCompile Include="..\Private\Player.cpp">
       <Filter>02.GameObjects\Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Wand.cpp">
       <Filter>02.GameObjects\Item\Wand</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\State_Root.cpp">
-      <Filter>80.State</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\State_Combat.cpp">
-      <Filter>80.State\State_Combat</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\State_Cast.cpp">
-      <Filter>80.State\State_Combat\State_Cast</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\State_LightAttack.cpp">
-      <Filter>80.State\State_Combat\State_LightAttack</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\State_Skill.cpp">
-      <Filter>80.State\State_Combat\State_Skill</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\State_Skill2.cpp">
-      <Filter>80.State\State_Combat\State_Skill2</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\State_Move.cpp">
-      <Filter>80.State\State_Move</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\State_Idle.cpp">
-      <Filter>80.State\State_Move\State_Idle</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\State_Jog.cpp">
-      <Filter>80.State\State_Move\State_Jog</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\State_Walk.cpp">
-      <Filter>80.State\State_Move\State_Walk</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\State_Sprint.cpp">
-      <Filter>80.State\State_Move\State_Sprint</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\State_Dodge.cpp">
-      <Filter>80.State\State_Move\State_Dodge</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\State_Idle_Turn.cpp">
-      <Filter>80.State\State_Move\State_Idle_Turn</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\State_Jump.cpp">
-      <Filter>80.State\State_Jump</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\State_Land.cpp">
-      <Filter>80.State\State_Land</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\CamPosition_Player.cpp">
-      <Filter>02.GameObjects\Cameras\CameraPosition\Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CamPosition_Arm.cpp">
       <Filter>02.GameObjects\Cameras\CameraPosition\Arm</Filter>
@@ -537,6 +477,57 @@
     </ClCompile>
     <ClCompile Include="..\Private\CallBack_Playable_HitReport.cpp">
       <Filter>02.GameObjects\PhysX\CallBack\HitReport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Root.cpp">
+      <Filter>04.Mechanic\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Combat.cpp">
+      <Filter>04.Mechanic\State\State_Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Dodge.cpp">
+      <Filter>04.Mechanic\State\Focus\Dodge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Jump.cpp">
+      <Filter>04.Mechanic\State\Focus\Jump</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Land.cpp">
+      <Filter>04.Mechanic\State\Focus\Land</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Idle.cpp">
+      <Filter>04.Mechanic\State\Movement\Idle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Move.cpp">
+      <Filter>04.Mechanic\State\Movement\Move</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect_Container.cpp">
+      <Filter>02.GameObjects\Effect\Effect_Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EffectParts.cpp">
+      <Filter>02.GameObjects\Effect\EffectParts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EffectObject.cpp">
+      <Filter>02.GameObjects\Effect\EffectObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TrailObject.cpp">
+      <Filter>02.GameObjects\Effect\TrailObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bombard.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Bombard</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\NomalJap.cpp">
+      <Filter>02.GameObjects\Effect\Effects\NomalJap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PhysXEffectHitBox.cpp">
+      <Filter>02.GameObjects\PhysX\EffectHitBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CamPosition_Socket.cpp">
+      <Filter>02.GameObjects\Cameras\CameraPosition\Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CamPosition_Target.cpp">
+      <Filter>02.GameObjects\Cameras\CameraPosition\Player\Target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CamPosition_Shoulder.cpp">
+      <Filter>02.GameObjects\Cameras\CameraPosition\Player\Shoulder</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

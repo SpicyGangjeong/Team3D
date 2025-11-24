@@ -4,51 +4,55 @@
 
 
 CState_Combat::CState_Combat()
-    :CState()
+    :CState_Root()
 {
 }
 
 void CState_Combat::Enter()
 {
-    if (m_pOwner->Check(FSMSTATE::LIGHT_ATTACK))
-        m_pFSM->Change_State(FSMSTATE::LIGHT_ATTACK);
-
-    if (m_pOwner->Check(FSMSTATE::CAST))
-        m_pFSM->Change_State(FSMSTATE::CAST);
-
-    if (m_pOwner->Check(FSMSTATE::SKILL))
-        m_pFSM->Change_State(FSMSTATE::SKILL);
-
-    if (m_pOwner->Check(FSMSTATE::SKILL))
-        m_pFSM->Change_State(FSMSTATE::SKILL);
-
-    if (m_pOwner->Check(FSMSTATE::SKILL2))
-        m_pFSM->Change_State(FSMSTATE::SKILL2);
-    
+    __super::Enter();
 }
 
-void CState_Combat::Update(_float fTimeDelta)
+HRESULT CState_Combat::Update(_float fTimeDelta)
 {
-    if (CheckExitState())
-        return;
+    if (nullptr != m_funcPriorityUpdate) {
+        m_funcPriorityUpdate(fTimeDelta);
+    }
+    if (E_FAIL == (__super::Update(fTimeDelta))) {
+        return E_FAIL;
+    }
+    if (nullptr != m_funcLateUpdate) {
+        m_funcLateUpdate(fTimeDelta);
+    }
+    return S_OK;
 }
 
 void CState_Combat::Exit()
 {
+    __super::Exit();
 }
 
-_bool CState_Combat::CheckExitState()
+HRESULT CState_Combat::Initialize(STATE_COMBAT_DESC* pDesc)
 {
-    if (m_pOwner->IsCurrentKeyFrame("Jump"))
-    {
-        m_pOwner->Reset_LightCombo();
-        m_pFSM->Change_State(FSMSTATE::MOVE);
-        return true;
+    if (FAILED(__super::Initialize(pDesc))) {
+        return E_FAIL;
     }
+    m_funcPriorityUpdate = pDesc->funcPriorityUpdate;
+    m_funcLateUpdate = pDesc->funcLateUpdate;
+    m_pModel = m_pOwner->Get_Component<CModel>();
+    m_pFSM = m_pOwner->Get_Component<CFSM>();
 
-    return false;
+    return S_OK;
 }
 
+CState_Combat* CState_Combat::Create(STATE_COMBAT_DESC* pDesc)
+{
+    CState_Combat* pInstance = new CState_Combat;
+    if (FAILED(pInstance->Initialize(pDesc))) {
+        SAFE_RELEASE(pInstance);
+    }
+    return pInstance;
+}
 
 void CState_Combat::Free()
 {

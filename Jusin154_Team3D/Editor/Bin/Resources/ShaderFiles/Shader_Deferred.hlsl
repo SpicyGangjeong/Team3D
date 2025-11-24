@@ -33,7 +33,9 @@ Texture2D g_ShadowTexture;
 Texture2D g_PreShadowTexture;
 Texture2D g_BlurTexture;
 Texture2D g_BlurXTexture;
+
 Texture2D g_BlurWeightTexture;
+Texture2D g_BlurWeightXTexture;
 
 Texture2D g_SurfaceTexture;
 
@@ -153,7 +155,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
         return Out;
     }
     
-    float fDiffuseAOStrength = lerp(0.3f, 1.f, fOcclusion);
+    float fDiffuseAOStrength = lerp(0.3f, 5.f, fOcclusion);
     
     PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
     
@@ -313,12 +315,33 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
     return Out;
 }
 
-float g_fWeights[32] =
+//float g_fWeights[32] =
+//{
+//    0.000400, 0.000700, 0.001200, 0.002000, 0.003200, 0.005000, 0.007500, 0.011000,
+//    0.015700, 0.021700, 0.029000, 0.037300, 0.046200, 0.055200, 0.063600, 0.070800,
+//    0.075900, 0.078500, 0.078500, 0.075900, 0.070800, 0.063600, 0.055200, 0.046200,
+//    0.037300, 0.029000, 0.021700, 0.015700, 0.011000, 0.007500, 0.005000, 0.003200
+//};
+
+float g_fWeights[128] =
 {
-    0.000400, 0.000700, 0.001200, 0.002000, 0.003200, 0.005000, 0.007500, 0.011000,
-    0.015700, 0.021700, 0.029000, 0.037300, 0.046200, 0.055200, 0.063600, 0.070800,
-    0.075900, 0.078500, 0.078500, 0.075900, 0.070800, 0.063600, 0.055200, 0.046200,
-    0.037300, 0.029000, 0.021700, 0.015700, 0.011000, 0.007500, 0.005000, 0.003200
+    0.000209902, 0.000241594, 0.000277451, 0.000317919, 0.000363477, 0.000414637, 0.000471944, 0.000535974,
+    0.000607333, 0.000686659, 0.000774615, 0.000871889, 0.00097919, 0.00109725, 0.00122679, 0.00136858,
+    0.00152334, 0.00169183, 0.00187477, 0.00207285, 0.00228675, 0.0025171, 0.00276448, 0.0030294,
+    0.00331231, 0.00361356, 0.00393342, 0.00427205, 0.00462949, 0.00500564, 0.0054003, 0.00581308,
+    0.00624346, 0.00669075, 0.00715411, 0.0076325, 0.00812472, 0.0086294, 0.009145, 0.0096698,
+    0.0102019, 0.0107393, 0.0112798, 0.0118211, 0.0123608, 0.0128962, 0.0134249, 0.0139441,
+    0.0144511, 0.0149431, 0.0154174, 0.0158713, 0.0163021, 0.0167073, 0.0170844, 0.0174311,
+    0.0177452, 0.0180246, 0.0182676, 0.0184726, 0.0186383, 0.0187635, 0.0188474, 0.0188895,
+
+    0.0188895, 0.0188474, 0.0187635, 0.0186383, 0.0184726, 0.0182676, 0.0180246, 0.0177452,
+    0.0174311, 0.0170844, 0.0167073, 0.0163021, 0.0158713, 0.0154174, 0.0149431, 0.0144511,
+    0.0139441, 0.0134249, 0.0128962, 0.0123608, 0.0118211, 0.0112798, 0.0107393, 0.0102019,
+    0.0096698, 0.009145, 0.0086294, 0.00812472, 0.0076325, 0.00715411, 0.00669076, 0.00624346,
+    0.00581308, 0.0054003, 0.00500564, 0.00462948, 0.00427205, 0.00393342, 0.00361356, 0.00331231,
+    0.0030294, 0.00276448, 0.0025171, 0.00228675, 0.00207285, 0.00187477, 0.00169183, 0.00152334,
+    0.00136858, 0.00122679, 0.00109725, 0.000979191, 0.000871889, 0.000774615, 0.000686658, 0.000607333,
+    0.000535973, 0.000471944, 0.000414637, 0.000363477, 0.000317919, 0.000277451, 0.000241594, 0.000209902
 };
 
 
@@ -395,30 +418,25 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     //}
     float4 vColor = 0.f;
     
-    //int iBlurWeight = g_BlurWeightTexture.Sample(ClampSampler, In.vTexcoord).r * 32.f;
     
-    //int iBlurMin;
-    //int iBlurMax;
     
-    //if (iBlurWeight % 2 == 0)
-    //{
-    //    iBlurMin = -1 * iBlurWeight / 2;
-    //    iBlurMax = iBlurWeight / 2;
-    //}
-    //else
-    //{
-    //    iBlurMin = -iBlurWeight / 2;
-    //    iBlurMax = iBlurWeight / 2 + 1;
-    //}
+    int iBlurWeight = (int)(round(g_BlurWeightXTexture.Sample(ClampSampler, In.vTexcoord).r) * 128.f);
     
-    //[loop]  // 변수로 루프돌리려면 반드시 필요함
+    int iBlurMin;
+    int iBlurMax;
     
-    for (int i = -15; i < 16; ++i)
+    iBlurMin = -1 * (iBlurWeight / 2) + 1;
+    iBlurMax = iBlurWeight / 2;
+    
+    //  // 변수로 루프돌리려면 반드시 필요함
+    
+  
+    for (int i = -63; i < 64; ++i)
     {
         vTexcoord.x = In.vTexcoord.x;
         vTexcoord.y = In.vTexcoord.y + (float) i / g_vResolution.y;
         
-        vColor += g_fWeights[i + 15] * g_BlurXTexture.Sample(ClampSampler, vTexcoord);
+        vColor += g_fWeights[i + 63] * g_BlurXTexture.Sample(ClampSampler, vTexcoord);
     }
     
     Out.vBackBuffer += vColor;
@@ -429,6 +447,7 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
 struct PS_OUT_BLUR_X
 {
     float4 vBlurX : SV_TARGET0;
+    float4 vBlurWeight : SV_TARGET1;
 };
 
 
@@ -439,35 +458,38 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_X(PS_IN In)
     float2 vTexcoord;
     float4 vColor = 0.f;
     
-    //TODO 블러 조절 해보려햇는데 실패함..
+    float fBlurWeight = g_BlurWeightTexture.Sample(ClampSampler, In.vTexcoord).r;
+    int iBlurWeight = (int) (round(fBlurWeight) * 128.f);
     
-    //int iBlurWeight = g_BlurWeightTexture.Sample(ClampSampler, In.vTexcoord).r * 32.f;
+
     
-    //int iBlurMin;
-    //int iBlurMax;
+    int iBlurMin;
+    int iBlurMax;
     
-    //if (iBlurWeight % 2 == 0)
+    iBlurMin = -1 * (iBlurWeight / 2) + 1;
+    iBlurMax = iBlurWeight / 2;
+    
+    //for (int i = -15; i < 16; ++i)
     //{
-    //    iBlurMin = -1 * iBlurWeight / 2;
-    //    iBlurMax = iBlurWeight / 2;
-    //}
-    //else
-    //{
-    //    iBlurMin = -iBlurWeight / 2;
-    //    iBlurMax = iBlurWeight / 2 + 1;
+    //    vTexcoord.x = In.vTexcoord.x;
+    //    vTexcoord.y = In.vTexcoord.y + (float) i / g_vResolution.y;
+        
+    //    vColor += g_fWeights[i + 15] * g_BlurXTexture.Sample(ClampSampler, vTexcoord);
     //}
     
-    //[loop]  // 변수로 루프돌리려면 반드시 필요함
+    //Out.vBackBuffer += vColor;
     
-    for (int i = -15; i < 16; ++i)
+
+    for (int i = -63; i < 64; ++i)
     {
         vTexcoord.x = In.vTexcoord.x + (float) i / g_vResolution.x;
         vTexcoord.y = In.vTexcoord.y;
         
-        vColor += g_fWeights[i + 15] * g_BlurTexture.Sample(ClampSampler, vTexcoord);
+        vColor += g_fWeights[i + 63] * g_BlurTexture.Sample(ClampSampler, vTexcoord);
     }
     
     Out.vBlurX = vColor;
+    Out.vBlurWeight = fBlurWeight;
     
     return Out;
 }

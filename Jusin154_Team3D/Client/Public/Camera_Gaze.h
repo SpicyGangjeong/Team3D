@@ -19,6 +19,9 @@ private:
 public:
 	virtual void Priority_Update(_float fTimeDelta) override;
 	virtual void Update(_float fTimeDelta) override;
+	void Update_LerpTimer(Engine::_float fTimeDelta);
+	void Enable_FollowLerp();
+	void Enable_LookLerp();
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 

@@ -39,9 +39,13 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	if (FAILED(Ready_Layer_SkyBox(TEXT("Layer_SkyBox")))) {
+	if (FAILED(Ready_Layer_Camera())) {
 		return E_FAIL;
 	}
+
+	//if (FAILED(Ready_Layer_SkyBox(TEXT("Layer_SkyBox")))) {
+	//	return E_FAIL;
+	//}
 
 	return S_OK;
 }
@@ -54,7 +58,7 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->Mouse_Up(DIM_RBUTTON))
+	if (m_pGameInstance->Key_Up(DIK_0))
 	{
 		m_pGameInstance->Set_LevelToChange();
 	}
@@ -94,7 +98,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 {
-	/*CCamera_Debug::CAMERA_DEBUG_DESC            Camera_Desc{};
+	CCamera_Debug::CAMERA_DEBUG_DESC            Camera_Desc{};
 	Camera_Desc.fFovy = XMConvertToRadians(60.0f);
 	Camera_Desc.fNear = 0.1f;
 	Camera_Desc.fFar = 200.f;
@@ -114,7 +118,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 	}
 	if (FAILED(m_pGameInstance->Bind_Camera(NEXT_LEVEL, CAMERA_DEBUG, true))) {
 		return E_FAIL;
-	}*/
+	}
 
 	return S_OK;
 }
@@ -140,8 +144,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
-		return E_FAIL;
+	/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
+		return E_FAIL;*/
 
 	return S_OK;
 }

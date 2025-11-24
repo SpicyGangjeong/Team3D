@@ -7,32 +7,15 @@ NS_BEGIN(Engine)
 class ENGINE_DLL CModel final : public CComponent
 {
 public:
-	typedef struct tagMeshDesc
+	typedef struct tagAnimStateDesc
 	{
-		_float3		vPosition = {};
-		_float3		vNormal = {};
-		_float3		vTangent = {};
-		_float3		vBinormal = {};
-		_float2			vTexcoord = {};
+		_float CurrentTime;
+		_float Duration;
+		_float Speed;
+		_int BoneCount;
+		_float4x4 PreTransformMatrix;
 
-		XMUINT4			vBlendIndex = {};
-		_float4			vBlendWeight = {};
-	}MESH_DESC;
-
-	typedef struct tagSkinngMeshDesc
-	{
-		_float3			vPosition = {};
-		_float3			vNormal = {};
-		_float3			vTangent = {};
-		_float3			vBinormal = {};
-		_float2			vTexcoord = {};
-
-	}SKINNG_MESH_DESC;
-
-	typedef struct tagBoneDesc
-	{
-		_float4x4 BoneMatrix[512];
-	}BONE_DESC;
+	}ANIMSTATE_DESC;
 
 private:
 	CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -41,7 +24,6 @@ private:
 
 public:
 #pragma region Model
-	MODEL		Get_Type() const { return m_eType; }
 	_float		Get_Radius() const { return m_fRadius; }
 	_float3&	Get_RadiusOffset() { return m_vRadiusOffset; }
 	_float4x4*	Get_PreTransformMatrixPtr() { return &m_PreTransformMatrix; }
@@ -50,24 +32,15 @@ public:
 	virtual HRESULT Render_Indexed(_uint iMeshIndex, _uint IndexCount, _uint StartIndexLocation, _uint BaseVertexLocation);
 #pragma endregion 
 #pragma region Animation
-	void	Change_AnimationIndex(_int iAnimationIndex, _bool bIsLoop, _float fLerpDuration, _bool bIgnoreCurrentIndex = false);	// 애니메이션을 다른 인덱스로 변경함
 	_bool	Play_Animation(_float fTimeDelta, class CTransform* pTransform = nullptr); // 애니메이션에 델타타임을 넣어줌
-	void	RefreshAnim(); // 애님을 현재 애님의 초기상태로 되돌림
 	void	Set_AnimationIndex(_uint iIndex, _bool isLoop = true);
-	void	Stop_Animation(); // 애니메이션을 정지 (초기상태로)
-	void	Set_Anim(CModel* Source);
 	_bool	IsFinishedAnim() const { return m_bIsFinishedAnim; }
-	_bool	IsFinishedLerp() const { return m_bIsFinishedLerp; }
-	_float	Get_AnimProgressRatio();
-	_int	Get_AnimProgressPostion(const _char* pAnimChannelName);
-	_float	Get_AnimEstimatedDuration();
-	void	Set_AnimProgressPostion(const _char* pChannelName, _uint iPosition);
-	void	Set_AnimPauseState(_bool bValue);// 애님을 현재상태로 정지
-	void	ReallocateResources(class CTransform* pTransform = nullptr); // 애님 이동의 대상 트랜스폼(이동시켜야할 트랜스폼)을 재지정함
-	void Set_CurrentTrackPosition(_float TrackPosition);
+	void	Set_CurrentTrackPosition(_float TrackPosition);
 	const _char* Get_AnimList(_uint iIndex);
-	size_t Get_AnimSize() { return m_Animations.size(); }
 	_float Get_CurrentTrackPosition();
+	_float Get_CurrentTrackProgressRatio();
+
+	size_t Get_AnimSize() { return m_Animations.size(); }
 	void Set_PlayAnim(_bool bPlayAnim) { m_bPlayAnim = bPlayAnim; }
 	_bool Get_PlayAnim() const { return m_bPlayAnim; }
 	_int Get_AnimIndex() const { return m_iCurrentAnimIndex; }
@@ -80,11 +53,7 @@ public:
 #pragma endregion
 #pragma region Bone
 	HRESULT Bind_BoneMatrices(_uint iMeshIndex, class CShader* pShader, const _char* pConstantName);
-	void Get_BoneMatrices(_float4x4* pOut);
-	_uint	Get_BonesNum() const { return (_uint)m_Bones.size(); }
 	const _float4x4* Get_BoneMatrixPtr(const _char* pBoneName) const;
-	_int	Get_RootBoneIndex() const { return m_iRootBoneIndex; }
-		void	Set_RootBoneIndex(_int iIndex) { m_iRootBoneIndex = iIndex; }
 static	_int Get_BoneIndex(const _char* pBoneName, vector<class CBone*> Bones);	// 본의 벡터와 이름을 넘겨주면 인덱스를 넘겨줌 ( n 순회 )
 		_int Get_BoneIndex(const _char* pBoneName) const;
 		_matrix Get_BoneMatrix(_uint iBoneIndex);
@@ -94,10 +63,8 @@ static	_int Get_BoneIndex(const _char* pBoneName, vector<class CBone*> Bones);	/
 		HRESULT Bind_Material(_uint iMeshIndex, class CShader* pShader);
 
 #pragma endregion
-		void ComputeSkinning();
-		void Create_Con();
-		HRESULT			Bind_CS_Output(_uint Index, _uint iBufferIndex);
-		void Get_BoneMatrix();
+
+		void			ComputeAnimation();
 
 public:
 #ifdef EDITOR_PROJECT	
@@ -166,16 +133,30 @@ private:
 
 	vector<_float4x4> m_BoneMatrix;
 
+
+#pragma region Compute
+
 private:
-	HRESULT			Create_CS();
+		HRESULT			Create_ParentVB();
+		HRESULT			Create_CS();
+		void			Create_Temp();
+		void			Create_LocalPosVB();
+		void			Create_Con();
+		void			UpdateAnimationCS();
+		_uint					m_iNumBuffer = {};
 
-	MESH_DESC				m_MeshDesc = {};
-	BONE_DESC				m_BoneDesc = {};
-	_uint					m_iNumBuffer = {};
+		vector<PARENT_DESC>		m_Parent = {};
+		vector<ANIMSTATE_DESC> m_AnimRanges;
 
-	class CComputeShader* m_pComputeShader = {};
-	ID3D11Buffer* m_pConstantBuffer = { nullptr };
-	_uint AccumulatedVertexCount = {};
+		LOCALPOS_DESC* m_pLocalPos = { nullptr };
+
+		class CComputeShader* m_pComputeShader = nullptr;
+
+		ID3D11Buffer* m_pConstantBuffer = { nullptr };
+
+		ID3D11Buffer* m_pParentBuffer = { nullptr };
+		ID3D11Buffer* m_pLocalPosBuffer = { nullptr };
+#pragma endregion
 
 private:
 	// 바이너리
@@ -191,7 +172,7 @@ private:
 	HRESULT Ready_Meshes();
 	HRESULT Ready_Materials(const _char* pModelFilePath);
 	HRESULT Ready_Bones(const std::vector<SaveNode>& allNodes, _int currentIndex, _int parentIndex);
-	HRESULT Ready_Animations();
+	HRESULT Ready_Animations(const vector<CBone*>& Bones);
 	//
 
 public:
