@@ -70,6 +70,13 @@ public:
 
 public:
 	void	     Set_Target(class CTransform* pTargetTransform);
+	void		 Set_Target(_float4x4* pMatrix) 
+	{
+		if (m_pParantsMatrix != nullptr)
+		{
+			m_pParantsMatrix = pMatrix;
+		}
+	}
 public:
 #ifdef _DEBUG
 	HRESULT Save_Trail(const _char* pPath);
@@ -108,7 +115,7 @@ private:
 	_string     m_strName = {};
 
 	TRAIL_INFO  m_TrailInfo = {};
-
+	_float4x4*  m_pParantsMatrix = {};
 
 };
 

@@ -42,7 +42,12 @@ void CTrailObject::Update(_float fTimeDelta)
 	if (m_bVisible == false)
 		return;
 
-	m_pTrailCom->Trail_Update(fTimeDelta, m_pParentTransformCom->Get_XMWorldMatrix());
+
+	m_CombinedMat = m_pParentTransformCom->Get_XMWorldMatrix();
+
+	m_CombinedMat.r[3] += m_vOffset;
+
+	m_pTrailCom->Trail_Update(fTimeDelta, m_CombinedMat);
 
 
 	if (m_TrailInfo.vDistortionTime.y == 0)
@@ -92,7 +97,7 @@ HRESULT CTrailObject::Ready_Components(void* pArg)
 	pTrailDesc.vHigh = _float3(0.f, 1.f, 0.f);
 	pTrailDesc.vLow = _float3(0.f, -1.f, 0.f);
 
-	if (FAILED(Add_Component<CTrail>(NEXT_LEVEL, &m_pTrailCom, &pTrailDesc))) {
+	if (FAILED(Add_Component<CTrail>(g_iStaticLevel, &m_pTrailCom, &pTrailDesc))) {
 		return E_FAIL;
 	}
 
@@ -237,6 +242,27 @@ HRESULT CTrailObject::Render()
 	return S_OK;
 }
 
+HRESULT CTrailObject::Render_Blur()
+{
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_POSTEX::TRAIL_BLUR))))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fBlurIntensity", &m_TrailInfo.fBlurIntensity, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iBlurWeight", &m_TrailInfo.iBlurWeight, sizeof(_int)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(Bind_ShaderResources()))
+		return E_FAIL;
+
+	if (FAILED(m_pTrailCom->Render()))
+		return E_FAIL;
+
+	return S_OK;
+}
 
 
 
@@ -279,6 +305,18 @@ void CTrailObject::Free()
 
 void CTrailObject::Describe_Entity()
 {
+	GUI::Begin("VALUE");
+
+	_float4 vValue = {};
+
+    XMStoreFloat4(&vValue, m_vOffset);
+
+	if(GUI::InputFloat4("OFFSET", (_float*)&vValue))
+	{
+		m_vOffset = XMLoadFloat4(&vValue);
+	}
+
+	GUI::End();
 }
 
 HRESULT CTrailObject::Bind_ShaderResources()
@@ -288,7 +326,8 @@ HRESULT CTrailObject::Bind_ShaderResources()
 	if (FAILED(m_pTrailCom->Bind_Resources()))
 		return E_FAIL;
 
-	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
+	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom,  "g_WorldMatrix"))) 
+	{
 		return E_FAIL;
 	}
 

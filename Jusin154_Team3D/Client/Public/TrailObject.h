@@ -69,6 +69,14 @@ public:
 
 public:
 	HRESULT Load_Trail(const _char* pPath, LEVEL eLevel);
+	void    Set_Target(const _float4x4* pMatrix , _fvector v0ffset) {
+
+		if (pMatrix != nullptr)
+		{
+			m_pParantsMatrix = pMatrix;
+			m_vOffset = v0ffset;
+		}
+	}
 
 private:
 	HRESULT Bind_ShaderResources() override;
@@ -76,6 +84,8 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual HRESULT Ready_Components(void* pArg) override;
 	virtual HRESULT Render() override;
+	virtual HRESULT Render_Blur() override;
+
 
 public:
 	static CTrailObject* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -102,6 +112,9 @@ private:
 
 	TRAIL_INFO  m_TrailInfo = {};
 
+	const _float4x4*   m_pParantsMatrix = {};
+	_vector			   m_vOffset = {};
+	_matrix		       m_CombinedMat = {};
 };
 
 NS_END
