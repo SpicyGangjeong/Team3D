@@ -288,7 +288,14 @@ void CPlayer::Describe_Entity()
 	m_pCharacter_Controller->Describe_Entity();
 	_float4 vMomentum = {};
 	XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());
-	GUI::Text("%.1f %.1f %.1f %.1f ", vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);
+	GUI::Text("%.2f %.2f %.2f %.1f ", vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);
+	
+	wchar_t buf[128];
+	swprintf_s(buf, L"Momentum: %.2f %.2f %.2f %.2f\n",
+		vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);
+
+	OutputDebugStringW(buf);
+
 	_char label[256];
 	for (auto& iter : m_KeyFrames)
 	{
