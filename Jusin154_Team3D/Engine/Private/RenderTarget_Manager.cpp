@@ -2,6 +2,7 @@
 #include "RenderTarget_Manager.h"
 #include "RenderTarget.h"
 #include "Shader.h"
+#include "VIBuffer_Rect.h"
 
 CRenderTarget_Manager::CRenderTarget_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     :CBase(),
@@ -154,7 +155,7 @@ HRESULT CRenderTarget_Manager::Copy_RenderTarget(const _wstring& strTargetTag, I
     return S_OK;
 }
 
-HRESULT CRenderTarget_Manager::Refit_RenderTarget(class CShader* pShader, const _wstring& wstrRenderTargetInput, const _wstring& wstrRenderTargetOutput)
+HRESULT CRenderTarget_Manager::Refit_RenderTarget(CVIBuffer_Rect* pVIBuffer, CShader* pShader, const _wstring& wstrRenderTargetInput, const _wstring& wstrRenderTargetOutput)
 {
     CRenderTarget* pInput = Find_RenderTarget(wstrRenderTargetInput);
     CRenderTarget* pOutput = Find_RenderTarget(wstrRenderTargetOutput);
@@ -201,12 +202,15 @@ HRESULT CRenderTarget_Manager::Refit_RenderTarget(class CShader* pShader, const 
     if (FAILED(pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::REFIT)))) {
         return E_FAIL;
     }
+    pVIBuffer->Bind_Resources();
+    pVIBuffer->Render();
+
     ID3D11ShaderResourceView* const pNullSRV[1] = { nullptr };
     m_pContext->PSSetShaderResources(0, 1, pNullSRV);
 
+
     return S_OK;
 }
-
 
 HRESULT CRenderTarget_Manager::End_MRT()
 {

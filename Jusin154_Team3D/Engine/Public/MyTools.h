@@ -250,6 +250,16 @@ public:
 		}
 	}
 
+
+	inline static _uint AlphabetToInt(_tchar Alphabet)
+	{
+		Alphabet = towupper(Alphabet);
+
+		if (Alphabet < 'A' || Alphabet > 'Z')
+			return 0;
+
+		return (Alphabet - 'A');
+	}
 #pragma endregion
 #pragma region FileSystem
 	//static void Folder_Func(/* 재귀적으로 탐색할지		*/	_In_	_bool											bRecursive,

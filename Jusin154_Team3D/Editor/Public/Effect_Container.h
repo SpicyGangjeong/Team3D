@@ -21,11 +21,7 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr) override;
 public:
-#ifdef _DEBUG
-	HRESULT Save_Package(const _char* pPath);
-#endif
-	HRESULT Load_Package(const _char* pPath);
-	HRESULT Load_Directory(const _char* pPath);
+	HRESULT			Load_Directory(const _char* pPath);
 protected:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

@@ -56,6 +56,7 @@ private:
 	void Render_WeightBlend();
 	void Render_NonLight();
 	void Render_Blend();
+	void Render_Bloom();
 	void Render_LastColor();
 	void Render_UI();
 

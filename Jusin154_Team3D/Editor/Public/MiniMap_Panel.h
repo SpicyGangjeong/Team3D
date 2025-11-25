@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Editor_Define.h"
 #include "PanelObject.h"
@@ -35,6 +35,7 @@ private:
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 	CGameObject* m_pMiniMap_TrimBorder = { nullptr };
+	CGameObject* m_pNoMountIcon = { nullptr };
 
 
 public:
