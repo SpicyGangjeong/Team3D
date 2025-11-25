@@ -44,7 +44,7 @@ HRESULT CSlot_Number::Initialize(void* pArg)
 	m_iCols = 4;
 	UV();
 	m_pVIBufferCom->Set_Cloned(true);
-	m_pVIBufferCom->Set_Pos(-30.f, 30.f, m_fOffSetX, m_fOffSetY, m_iCols);
+	m_pVIBufferCom->Set_Pos(350.f, 30.f, m_fOffSetX, m_fOffSetY, m_iCols);
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
 	m_pVIBufferCom->Set_ImageUV(pUVDesc);
 	return S_OK;
@@ -210,17 +210,17 @@ HRESULT CSlot_Number::Ready_Components(void* pArg)
 
 void CSlot_Number::UV()
 {
-	pUVDesc[0].fUVStart = Compute_UVX(1);
+	pUVDesc[0].fUVStart = Meter_Index(1);
 	pUVDesc[0].fUVEnd = Compute_UVY(1);
-	pUVDesc[1].fUVStart = Compute_UVX(2);
+	pUVDesc[1].fUVStart = Meter_Index(2);
 	pUVDesc[1].fUVEnd = Compute_UVY(2);
-	pUVDesc[2].fUVStart = Compute_UVX(3);
+	pUVDesc[2].fUVStart = Meter_Index(3);
 	pUVDesc[2].fUVEnd = Compute_UVY(3);
-	pUVDesc[3].fUVStart = Compute_UVX(4);
+	pUVDesc[3].fUVStart = Meter_Index(4);
 	pUVDesc[3].fUVEnd = Compute_UVY(4);
 }
 
-_float2 CSlot_Number::Compute_UVX(_uint Number)
+_float2 CSlot_Number::Meter_Index(_uint Number)
 {
 	m_fIamge_Size = { 320.f, 128.f };
 
@@ -248,7 +248,7 @@ _float2 CSlot_Number::Compute_UVY(_uint Number)
 	_float frameHeight = 64.f;
 
 	// Start 구함
-	_float2 UVStart = Compute_UVX(Number);
+	_float2 UVStart = Meter_Index(Number);
 
 	_float2 UVEnd;
 	UVEnd.x = UVStart.x + (frameWidth / m_fIamge_Size.x);

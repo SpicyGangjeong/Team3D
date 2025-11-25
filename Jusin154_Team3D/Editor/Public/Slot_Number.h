@@ -27,7 +27,7 @@ private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;
 			void	UV();
-			_float2 Compute_UVX(_uint Numver);
+			_float2 Meter_Index(_uint Numver);
 			_float2 Compute_UVY(_uint Numver);
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

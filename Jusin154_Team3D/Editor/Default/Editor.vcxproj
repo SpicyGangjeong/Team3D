@@ -167,6 +167,7 @@
     <ClInclude Include="..\public\AlphaMap.h" />
     <ClInclude Include="..\Public\Body.h" />
     <ClInclude Include="..\public\Active_Icon.h" />
+    <ClInclude Include="..\Public\Decendo.h" />
     <ClInclude Include="..\Public\Broom.h" />
     <ClInclude Include="..\Public\CallBack_EffectHitBox_Behavior.h" />
     <ClInclude Include="..\Public\CallBack_EffectHitBox_HitReport.h" />
@@ -209,6 +210,7 @@
     <ClInclude Include="..\Public\Dummy_PhysXPlayable.h" />
     <ClInclude Include="..\public\HpBarBG.h" />
     <ClInclude Include="..\Public\Bombard.h" />
+    <ClInclude Include="..\public\Magic_Icon.h" />
     <ClInclude Include="..\public\Magic_Meter.h" />
     <ClInclude Include="..\Public\NomalJap.h" />
     <ClInclude Include="..\Public\Effect_Container.h" />
@@ -240,10 +242,12 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\public\NoMountIcon.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\public\Potion.h" />
     <ClInclude Include="..\public\Slot_Number.h" />
     <ClInclude Include="..\public\Spell_Slot_Preview.h" />
+    <ClInclude Include="..\public\Spell_UI.h" />
     <ClInclude Include="..\Public\State_Combat.h" />
     <ClInclude Include="..\Public\State_Dodge.h" />
     <ClInclude Include="..\Public\State_Idle.h" />
@@ -299,6 +303,7 @@
     <ClCompile Include="..\private\AlphaMap.cpp" />
     <ClCompile Include="..\Private\Body.cpp" />
     <ClCompile Include="..\private\Active_Icon.cpp" />
+    <ClCompile Include="..\Private\Decendo.cpp" />
     <ClCompile Include="..\Private\Broom.cpp" />
     <ClCompile Include="..\Private\CallBack_EffectHitBox_Behavior.cpp" />
     <ClCompile Include="..\Private\CallBack_EffectHitBox_HitReport.cpp" />
@@ -341,6 +346,7 @@
     <ClCompile Include="..\Private\Dummy_PhysXPlayable.cpp" />
     <ClCompile Include="..\private\HpBarBG.cpp" />
     <ClCompile Include="..\Private\Bombard.cpp" />
+    <ClCompile Include="..\private\Magic_Icon.cpp" />
     <ClCompile Include="..\private\Magic_Meter.cpp" />
     <ClCompile Include="..\Private\NomalJap.cpp" />
     <ClCompile Include="..\Private\Effect_Container.cpp" />
@@ -372,11 +378,13 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\private\NoMountIcon.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\Player_States.cpp" />
     <ClCompile Include="..\private\Potion.cpp" />
     <ClCompile Include="..\private\Slot_Number.cpp" />
     <ClCompile Include="..\private\Spell_Slot_Preview.cpp" />
+    <ClCompile Include="..\private\Spell_UI.cpp" />
     <ClCompile Include="..\Private\State_Combat.cpp" />
     <ClCompile Include="..\Private\State_Dodge.cpp" />
     <ClCompile Include="..\Private\State_Idle.cpp" />
@@ -424,6 +432,7 @@
     <ClCompile Include="..\Private\RootModelPart.cpp" />
     <ClCompile Include="..\Private\Wand.cpp" />
     <ClCompile Include="Editor.cpp" />
+    <ClCompile Include="Goblin_States.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Editor.rc" />

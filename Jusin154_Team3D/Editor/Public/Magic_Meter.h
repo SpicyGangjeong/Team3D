@@ -19,11 +19,9 @@ public:
 	virtual HRESULT Render() override;
 	virtual _vector Get_WorldPostion() override;
 
-private:
-	void	UV();
-	_float2 Compute_UVX(_uint Number);
-	_float2 Compute_UVY(_uint Numver);
-
+public:
+	void Meter_Index(_uint Number);
+	//void Set_
 
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
@@ -35,12 +33,14 @@ private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
-	CVIBuffer_UI_Instance* m_pVIBufferCom = { nullptr };
-	CVIBuffer_UI_Instance::UI_ATLAS_DESC	pUVDesc[5];
+	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
-	_uint m_iCols{};
-	_float2 m_fIamge_Size{};
-	//_float2 Position[5];
+	_uint	m_iImageCount{};
+	_float4 m_vGaugeUV{};
+	_float m_fMaxGauge{};
+	_float m_fCurrentGauge{};
+	_float m_fGaugeBar{};
+	_float m_fTargetGauge{};
 public:
 	static CMagic_Meter* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

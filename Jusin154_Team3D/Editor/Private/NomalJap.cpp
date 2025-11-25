@@ -35,8 +35,6 @@ HRESULT CNomalJap::Initialize(void* pArg)
 	if (FAILED(Ready_Child()))
 		return E_FAIL;
 
-	Load_Package("../Bin/Resources/Data/Effect/Package/Jap3");
-
 	m_wstrEffectName = L"Nomal_Jap";
 
 	m_PartObjects.begin()->second->Set_Visible(true);

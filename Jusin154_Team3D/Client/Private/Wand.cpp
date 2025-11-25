@@ -2,6 +2,7 @@
 #include "Wand.h"
 
 #include "GameInstance.h"
+#include "TrailObject.h"
 
 CWand::CWand(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject(pDevice, pContext)
@@ -29,6 +30,21 @@ HRESULT CWand::Initialize(void* pArg)
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
+
+
+	CPartObject::PARTOBJECT_DESC PartsDesc{};
+
+	PartsDesc.pParentTransform = m_pTransformCom;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTrailObject>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Trail"), &PartsDesc, this , &pTrail))) {
+		assert(false);
+		return E_FAIL;
+	}
+
+	if (FAILED(pTrail->Load_Trail("../Bin/Resources/Data/Effect/Decendo/Proj_Trail" , static_cast<LEVEL>(NEXT_LEVEL))))
+		return E_FAIL;
+
+	pTrail->Set_Target(m_pModelCom->Get_BoneMatrixPtr("root" ), XMVectorSet(0.f, 1.f, 0.f , 0.f));
 
 	return S_OK;
 }

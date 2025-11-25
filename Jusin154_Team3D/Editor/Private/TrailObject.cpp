@@ -28,8 +28,6 @@ HRESULT CTrailObject::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	//Load_Trail("")
-
 
 	return S_OK;
 }
@@ -41,48 +39,61 @@ void CTrailObject::Priority_Update(_float fTimeDelta)
 
 void CTrailObject::Update(_float fTimeDelta)
 {
+
+	if (m_bVisible == false)
+		return;
+
 	m_pTrailCom->Trail_Update(fTimeDelta, m_pParentTransformCom->Get_XMWorldMatrix());
+
+
+	if (m_TrailInfo.vDistortionTime.y == 0)
+		return;
+
+	m_TrailInfo.vDistortionTime.x += fTimeDelta;
+
+	if (m_TrailInfo.vDistortionTime.x > m_TrailInfo.vDistortionTime.y)
+	{
+		m_TrailInfo.vDistortionTime.x = 0.f;
+	}
 }
 
 void CTrailObject::Late_Update(_float fTimeDelta)
 {
+	if (m_bVisible == false)
+		return;
+
+	if (m_TrailInfo.isBlur == true)
+	{
+		m_pGameInstance->Add_RenderGroup(RENDER::BLUR, this);
+	}
+
+	if (m_TrailInfo.isOnlyBlur == true)
+		return;
+
 	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
 		m_pGameInstance->Add_RenderGroup(RENDER::EFFECT, this);
 	}
 
 }
 
-#ifdef _DEBUG
-
-HRESULT CTrailObject::Save_Path(HANDLE hFile)
+void CTrailObject::Set_Target(CTransform* pTargetTransform)
 {
-	DWORD dwByte;
 
-	size_t iObjectLength = m_strPath.length();
-	const _char* pFilePath = m_strPath.c_str();
+	SAFE_RELEASE(m_pParentTransformCom);
 
-	if (!WriteFile(hFile, &m_eEffectType, sizeof(EFFECT_TYPE), &dwByte, nullptr)) {
-		return E_FAIL;
-	}
-
-	if (!WriteFile(hFile, &iObjectLength, sizeof(size_t), &dwByte, nullptr)) {
-		return E_FAIL;
-	}
-
-	if (pFilePath != 0)
-	{
-		if (!WriteFile(hFile, pFilePath, sizeof(_char) * ((DWORD)iObjectLength + 1), &dwByte, nullptr)) {
-			return E_FAIL;
-		}
-	}
-
-	return S_OK;
+	if(pTargetTransform != nullptr)
+		m_pParentTransformCom = pTargetTransform;
 }
+
+#ifdef _DEBUG
 
 HRESULT CTrailObject::Save_Trail(const _char* pPath)
 {
 	_string strPerfectFilePath = pPath;
-	strPerfectFilePath += ".bin";
+
+	m_strPath = pPath;
+
+	strPerfectFilePath += ".trail";
 
 	HANDLE	hFile = CreateFile(CMyTools::ToWstring(strPerfectFilePath).c_str(),
 		GENERIC_WRITE,
@@ -97,15 +108,7 @@ HRESULT CTrailObject::Save_Trail(const _char* pPath)
 		return E_FAIL;
 	}
 
-	m_strPath = strPerfectFilePath;
-
-	DWORD	dwByte(0);
-
-	if (!WriteFile(hFile, &m_eEffectType, sizeof(EFFECT_TYPE), &dwByte, nullptr)) {
-		return E_FAIL;
-	}
-
-
+	DWORD dwByte;
 
 	size_t iComponentLength = m_strTrailDiffuseName.length();
 	const _char* pFileComponentPath = m_strTrailDiffuseName.c_str();
@@ -150,7 +153,26 @@ HRESULT CTrailObject::Save_Trail(const _char* pPath)
 		}
 	}
 
+	iComponentLength = m_strTrailDistortionName.length();
+	pFileComponentPath = m_strTrailDistortionName.c_str();
+
+	if (!WriteFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+		return E_FAIL;
+	}
+
+	if (iComponentLength != 0)
+	{
+		if (!WriteFile(hFile, pFileComponentPath, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+			return E_FAIL;
+		}
+	}
+
 	m_pTrailCom->Save_Trail(hFile);
+
+
+	if (!WriteFile(hFile, &m_TrailInfo, sizeof(TRAIL_INFO), &dwByte, nullptr)) {
+		return E_FAIL;
+	}
 
 	CloseHandle(hFile);
 
@@ -165,10 +187,11 @@ HRESULT CTrailObject::Load_Trail(const _char* pPath, LEVEL eLevel)
 	SAFE_RELEASE(m_pDiffuse_TextureCom);
 	SAFE_RELEASE(m_pMasking_TextureCom);
 	SAFE_RELEASE(m_pNoise_TextureCom);
+	SAFE_RELEASE(m_pDistortion_TextureCom);
 
 	_string strPerfectFilePath = pPath;
 
-	strPerfectFilePath += ".bin";
+	strPerfectFilePath += ".trail";
 
 	DWORD	dwByte(0);
 
@@ -189,11 +212,6 @@ HRESULT CTrailObject::Load_Trail(const _char* pPath, LEVEL eLevel)
 		return E_FAIL;
 	}
 
-
-	if (!ReadFile(hFile, &m_eEffectType, sizeof(EFFECT_TYPE), &dwByte, nullptr)) {
-		return E_FAIL;
-	}
-
 	size_t iComponentLength = {};
 
 	if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
@@ -210,13 +228,9 @@ HRESULT CTrailObject::Load_Trail(const _char* pPath, LEVEL eLevel)
 
 		m_strTrailDiffuseName = szName;
 
-		m_isDiffuse = true;
-
 		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strTrailDiffuseName),
 			reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom))))
 			return E_FAIL;
-
-
 	}
 
 	if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
@@ -232,8 +246,6 @@ HRESULT CTrailObject::Load_Trail(const _char* pPath, LEVEL eLevel)
 		}
 
 		m_strTrailNoiseName = szName;
-
-		m_isNoise = true;
 
 		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strTrailNoiseName),
 			reinterpret_cast<CComponent**>(&m_pNoise_TextureCom))))
@@ -255,19 +267,41 @@ HRESULT CTrailObject::Load_Trail(const _char* pPath, LEVEL eLevel)
 		
 		m_strTrailMaskingName = szName;
 
-		m_isMask = true;
-
 		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strTrailMaskingName),
 			reinterpret_cast<CComponent**>(&m_pMasking_TextureCom))))
 			return E_FAIL;
 	}
 
+
+	if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+		return E_FAIL;
+	}
+
+	if (iComponentLength != 0)
+	{
+		_char szName[MAX_PATH] = {};
+
+		if (!ReadFile(hFile, &szName, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+			return E_FAIL;
+		}
+
+		m_strTrailDistortionName = szName;
+
+		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strTrailDistortionName),
+			reinterpret_cast<CComponent**>(&m_pDistortion_TextureCom))))
+			return E_FAIL;
+
+	}
+
+
 	m_pTrailCom->Load_Trail(hFile);
 
+
+	if (!ReadFile(hFile, &m_TrailInfo, sizeof(TRAIL_INFO), &dwByte, nullptr)) {
+		return E_FAIL;
+	}
+
 	CloseHandle(hFile);
-
-
-	MessageBox(NULL, L"트레일 로드 성공", L"System Message", MB_OK);
 
 	return S_OK;
 }
@@ -300,6 +334,28 @@ HRESULT CTrailObject::Render()
 {
 	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_POSTEX::TRAIL))))
 		return E_FAIL;
+
+	if (FAILED(Bind_ShaderResources()))
+		return E_FAIL;
+
+	if (FAILED(m_pTrailCom->Render()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CTrailObject::Render_Blur()
+{
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_POSTEX::TRAIL_BLUR))))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fBlurIntensity", &m_TrailInfo.fBlurIntensity, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iBlurWeight", &m_TrailInfo.iBlurWeight, sizeof(_int)))) {
+		return E_FAIL;
+	}
 
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
@@ -346,6 +402,7 @@ void CTrailObject::Free()
 	SAFE_RELEASE(m_pDiffuse_TextureCom);
 	SAFE_RELEASE(m_pMasking_TextureCom);
 	SAFE_RELEASE(m_pNoise_TextureCom);
+	SAFE_RELEASE(m_pDistortion_TextureCom);
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pTrailCom);
 }
@@ -357,15 +414,63 @@ void CTrailObject::Describe_Entity()
 	{
 		m_pTrailCom->Describe_Entity();
 
-		GUI::Checkbox("Diffuse", &m_isDiffuse);
-		GUI::Checkbox("Masking", &m_isMask);
-		GUI::Checkbox("Noise", &m_isNoise);
+		m_pShaderCom->Describe_Entity();
 
-		if (m_isDiffuse == true)
+		GUI::Checkbox("Diffuse", &m_TrailInfo.isDiffuse);
+		GUI::Checkbox("Masking", &m_TrailInfo.isMask);
+		GUI::Checkbox("Noise", &m_TrailInfo.isNoise);
+		GUI::Checkbox("Distortion", &m_TrailInfo.isDistortion);
+
+
+		GUI::ColorEdit4("MixColor", (_float*)&m_TrailInfo.vColor);
+
+		if (GUI::TreeNode("TRAIL BLUR"))
+		{
+			GUI::Checkbox("Blur", &m_TrailInfo.isBlur);
+			GUI::Checkbox("OnlyBlur", &m_TrailInfo.isOnlyBlur);
+
+			ImGui::PushItemWidth(80);
+			GUI::DragFloat("BlurIntensity", &m_TrailInfo.fBlurIntensity, 0.005f, 0.f, 1.f);
+			GUI::DragInt("BlurWeight", &m_TrailInfo.iBlurWeight, 2.f, 0, 128);
+			ImGui::PopItemWidth();
+
+			GUI::TreePop();
+		}
+
+		/* 이미시브 */
+		if (GUI::TreeNode("TRAIL EMISSIVE"))
+		{
+			GUI::ColorEdit4("MixColor", (_float*)&m_TrailInfo.vEmissive);
+
+			ImGui::PushItemWidth(80);
+
+			GUI::DragFloat("EmissiveStrength", &m_TrailInfo.fEmissiveStrength, 0.01f, 0.f);
+			GUI::DragFloat("SoftenExp", &m_TrailInfo.fSoftenExp, 0.01f, 0.f);
+			GUI::DragFloat("SoftStrength", &m_TrailInfo.fSoftStrength, 0.01f, 0.f);
+			GUI::DragFloat("CoreBoost", &m_TrailInfo.fCoreBoost, 0.01f, 0.f);
+			GUI::DragFloat("Radius", &m_TrailInfo.fRadius, 0.01f, 0.f , 1.f);
+			
+			ImGui::PopItemWidth();
+
+			GUI::TreePop();
+		}
+
+		if (m_TrailInfo.isDiffuse == true)
 		{
 			if (GUI::TreeNode("TRAIL DIFFUSE"))
 			{
-				_string strName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DIFFUSE_TEXTURE", (CComponent**)&m_pDiffuse_TextureCom, nullptr, this);
+				_string		strName = {};
+
+				ImGui::PushItemWidth(80);
+				GUI::DragFloat("Diffuse Alpha", &m_TrailInfo.fDiffuseAlpha, 0.01f, 0.f, 1.f);
+				ImGui::PopItemWidth();
+
+				if (GUI::TreeNode("DIFFUSE TEX"))
+				{
+					_string strName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DIFFUSE_TEXTURE", (CComponent**)&m_pDiffuse_TextureCom, nullptr, this);
+					
+					GUI::TreePop();
+				}
 
 				if (strName != "") {
 					m_strTrailDiffuseName = strName;
@@ -375,33 +480,97 @@ void CTrailObject::Describe_Entity()
 			}
 		}
 
-		if (m_isMask == true)
+		if (m_TrailInfo.isMask == true)
 		{
 			if (GUI::TreeNode("TRAIL MASK"))
 			{
-				_string strName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "MASK_TEXTURE", (CComponent**)&m_pMasking_TextureCom, nullptr, this);
+				_string strName = {};
 
-				if (strName != "") {
-					m_strTrailMaskingName = strName;
+				ImGui::PushItemWidth(80);
+				GUI::DragFloat("SoftMask", &m_TrailInfo.fSoftMask, 0.01f, 0.f);
+				GUI::DragFloat("fSoftMaskEdge", &m_TrailInfo.fSoftMaskEdge, 0.01f, 0.f);
+				ImGui::PopItemWidth();
+
+				if (GUI::TreeNode("MASK TEX"))
+				{
+
+					strName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "MASK_TEXTURE", (CComponent**)&m_pMasking_TextureCom, nullptr, this);
+
+					if (strName != "") {
+						m_strTrailMaskingName = strName;
+					}
+
+					GUI::TreePop();
 				}
 
 				GUI::TreePop();
 			}
 		}
 
-		if (m_isNoise == true)
+		if (m_TrailInfo.isNoise == true)
 		{
 			if (GUI::TreeNode("TRAIL NOISE"))
 			{
-				_string strName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "NOISE_TEXTURE", (CComponent**)&m_pNoise_TextureCom, nullptr, this);
+				_string strName = {};
 
-				if (strName != "") {
-					m_strTrailNoiseName = strName;
+				ImGui::PushItemWidth(80);
+				GUI::Checkbox("NoiseColor", &m_TrailInfo.isNoiseColor);
+				GUI::Checkbox("NoiseAlpha", &m_TrailInfo.isNoiseAlpha);
+				GUI::DragFloat("NoiseStrength", &m_TrailInfo.fNoiseStrength, 0.01f, 0.f);
+				ImGui::PopItemWidth();
+
+				if (GUI::TreeNode("NOISE TEX"))
+				{
+
+					strName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "NOISE_TEXTURE", (CComponent**)&m_pNoise_TextureCom, nullptr, this);
+
+					if (strName != "") {
+						m_strTrailNoiseName = strName;
+					}
+
+
+					GUI::TreePop();
 				}
 
 				GUI::TreePop();
 			}
 		}
+
+		if (m_TrailInfo.isDistortion == true)
+		{
+			if (GUI::TreeNode("TRAIL DISTORTION"))
+			{
+				_string strName = {};
+
+				_float2		vDiffuseDistortioUVAmount = {};
+				_float2		vMaskDistortionUVAmount = {};
+
+				ImGui::PushItemWidth(80);
+				GUI::DragFloat("DistortionIntensity", &m_TrailInfo.fDistortionIntensity, 0.005f, 0.f, 1.f);
+				GUI::InputFloat("DistortionTime", &m_TrailInfo.vDistortionTime.y, 0.1f, 0.f);
+
+				GUI::DragFloat2("DiffuseDistortionUVAmount", (_float*)&m_TrailInfo.vDiffuseDistortioUVAmount, 0.1f);
+				GUI::DragFloat2("MaskDistortionUVAmount", (_float*)&m_TrailInfo.vMaskDistortionUVAmount, 0.1f);
+
+				ImGui::PopItemWidth();
+
+				if (GUI::TreeNode("NOISE TEX"))
+				{
+
+					strName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISTORTION_TEXTURE", (CComponent**)&m_pDistortion_TextureCom, nullptr, this);
+
+					if (strName != "") {
+						m_strTrailDistortionName = strName;
+					}
+
+
+					GUI::TreePop();
+				}
+
+				GUI::TreePop();
+			}
+		}
+
 
 		GUI::TreePop();
 	}
@@ -424,21 +593,102 @@ HRESULT CTrailObject::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))) {
 		return E_FAIL;
 	}
+
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDiffuse", &m_isDiffuse, sizeof(_bool)))) {
+	/* 디퓨즈 */
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDiffuse", &m_TrailInfo.isDiffuse, sizeof(_bool)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_isMask", &m_isMask, sizeof(_bool)))) {
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDiffuseAlpha", &m_TrailInfo.fDiffuseAlpha, sizeof(_float)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_isNoise", &m_isNoise, sizeof(_bool)))) {
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vColor", &m_TrailInfo.vColor, sizeof(_float4)))) {
 		return E_FAIL;
 	}
+
+	/* 마스크 */
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isMask", &m_TrailInfo.isMask, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fSoftMask", &m_TrailInfo.fSoftMask, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fSoftMaskEdge", &m_TrailInfo.fSoftMaskEdge, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	/* 노이즈 */
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isNoise", &m_TrailInfo.isNoise, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isNoiseColor", &m_TrailInfo.isNoiseColor, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isNoiseAlpha", &m_TrailInfo.isNoiseAlpha, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fNoiseStrength", &m_TrailInfo.fNoiseStrength, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	/* 디스토션 */
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDistortion", &m_TrailInfo.isDistortion, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDistortionTime", &m_TrailInfo.vDistortionTime, sizeof(_float2)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDiffuseDistortionUVGainAmount", &m_TrailInfo.vDiffuseDistortioUVAmount, sizeof(_float2)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDistortionIntensity", &m_TrailInfo.fDistortionIntensity, sizeof(_float)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vMaskDistortionUVGainAmount", &m_TrailInfo.vMaskDistortionUVAmount, sizeof(_float2)))) {
+		return E_FAIL;
+	}
+
+
+	/* 이미시브 */
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vEmissive", &m_TrailInfo.vEmissive, sizeof(_float4)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fEmissiveStrength", &m_TrailInfo.fEmissiveStrength, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fSoftenExp", &m_TrailInfo.fSoftenExp, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fSoftStrength", &m_TrailInfo.fSoftStrength, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCoreBoost", &m_TrailInfo.fCoreBoost, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fRadius", &m_TrailInfo.fRadius, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
 
 	if (m_pDiffuse_TextureCom != nullptr)
 	{
@@ -457,6 +707,13 @@ HRESULT CTrailObject::Bind_ShaderResources()
 	if (m_pMasking_TextureCom != nullptr)
 	{
 		if (FAILED(m_pMasking_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_MaskingTexture", 0))) {
+			return E_FAIL;
+		}
+	}
+
+	if (m_pDistortion_TextureCom != nullptr)
+	{
+		if (FAILED(m_pMasking_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_DistortionTexture", 0))) {
 			return E_FAIL;
 		}
 	}
