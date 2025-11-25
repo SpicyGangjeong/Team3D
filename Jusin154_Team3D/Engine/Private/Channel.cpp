@@ -119,6 +119,7 @@ void CChannel::Update_TransformationMatirx(
 	_uint* pCurrentKeyFrameIndex,
 	CTransform* pTransform,_float m_fAmount)
 {
+	GUI::Text("PrevRootPos = %.2f, %.2f, %.2f", m_vPrevRootPos.x, m_vPrevRootPos.y, m_vPrevRootPos.z);
 	/*if (0.f == fCurrentTrackPosition)
 		*pCurrentKeyFrameIndex = 0;
 
@@ -251,6 +252,14 @@ void CChannel::Update_TransformationMatirx(
 		XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vTranslation);
 
 	Bones[m_iBoneIndex]->Set_TransformationMatrix(m_BoneTransformationMatrix);
+}
+
+void CChannel::ResetRootMotion()
+{
+	m_vPrevRootPos = { 0.f, 0.f, 0.f };
+	m_vPrevRootRot = { 0.f,0.f,0.f,0.f };
+	m_bInitialRootRotSaved = false;
+	m_bInitialRootPos = false;
 }
 
 

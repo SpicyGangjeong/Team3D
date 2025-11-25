@@ -50,8 +50,9 @@ _bool CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bone
 	}
 
 	_uint iIndex = {};
-	if (m_vBoneTransformationMatrix.size() > 0)
+	if (m_vBoneTransformationMatrix.size() > 0){
 		m_vBoneTransformationMatrix.clear();
+	}
 	for (auto& pChannel : m_Channels) {
 		pChannel->Update_TransformationMatirx(Bones, pLocalPosArray, m_fCurrentTrackPosition, &m_CurrentKeyFrameIndices[iIndex++],pTransform, m_fAmount);
 		m_vBoneTransformationMatrix.push_back(pChannel->Get_BoneTransformationMatrix());
@@ -62,8 +63,9 @@ _bool CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bone
 
 void CAnimation::ResetRootMotion()
 {
-	for (auto& pChannel : m_Channels)
+	for (auto& pChannel : m_Channels){
 		pChannel->ResetRootMotion();
+	}
 }
 
 void CAnimation::Depart_Animation()
