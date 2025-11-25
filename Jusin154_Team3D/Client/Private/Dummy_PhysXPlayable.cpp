@@ -219,8 +219,11 @@ void CDummy_PhysXPlayable::Free()
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pModelCom);
 }
+#ifdef _DEBUG
 
 void CDummy_PhysXPlayable::Describe_Entity()
 {
 	m_pCharacter_Controller->Describe_Entity();
 }
+
+#endif // _DEBUG

@@ -212,6 +212,8 @@ void CCamPosition_Shoulder::Free()
 	SAFE_RELEASE(m_pTarget_LookPart);
 	SAFE_RELEASE(m_pTarget_FollowPart);
 }
+#ifdef _DEBUG
+
 void CCamPosition_Shoulder::Describe_Entity()
 {
 	GUI::Begin("Cam_Shoulder");
@@ -223,3 +225,5 @@ void CCamPosition_Shoulder::Describe_Entity()
 	GUI::SliderFloat3("ShoulderPosRatio", (_float*)&m_vShoulderPosRatio, -2.f, 2.f, "%.1f");
 	GUI::End();
 }
+
+#endif // _DEBUG

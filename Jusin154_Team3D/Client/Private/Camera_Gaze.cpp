@@ -168,6 +168,9 @@ void CCamera_Gaze::Free()
 {
 	__super::Free();
 }
+
+#ifdef _DEBUG
+
 void CCamera_Gaze::Describe_Entity()
 {
 	GUI::Begin("Camera_Gaze_Describe");
@@ -196,3 +199,5 @@ void CCamera_Gaze::Describe_Entity()
 
 	GUI::End();
 }
+
+#endif // _DEBUG
