@@ -120,7 +120,7 @@ float Geometry_Smith(float3 vNormal, float3 vFromView, float3 vFromLight, float 
     float NdotL = saturate(dot(vNormal, vFromLight));
 
     // 요철이 골고루 있다고 가정하고 적당히 섞음
-    return Geometry_SchlickGGX(NdotV, k) * Geometry_SchlickGGX(NdotL, k); 
+    return Geometry_SchlickGGX(NdotV, k) * Geometry_SchlickGGX(NdotL, k);
 }
 
 // F -> F
@@ -134,7 +134,8 @@ PBR_LIGHT_OUT PBR_Lighting(
     float3 vNormal, float3 vToView, float3 vToLight,
     float3 vAlbedo, float fMetallic, float fRoughness,
     float3 vLightColor, float fAttenuation, float3 vFO
-) {
+)
+{
     PBR_LIGHT_OUT Out;
     Out.vShade = 0;
     Out.vSpecular = 0;
@@ -159,7 +160,7 @@ PBR_LIGHT_OUT PBR_Lighting(
     float3 specularBRDF = vNumerator / fDenominator;
     
     float3 kS = F;
-    float3 kD = (1.f - kS) * (1.f -fMetallic);
+    float3 kD = (1.f - kS) * (1.f - fMetallic);
     
     //Out.vShade = float(1.f, 1.f, 1. 1.f);
     Out.vShade = (kD / PI) * (NdotL * fAttenuation) * vLightColor;
@@ -188,10 +189,10 @@ float4x4 RotateX(float fAngle)
     
     float4x4 RotateXMat =
     {
-        1,      0,      0,     0,
-        0,   fCos,  -fSin,     0,
-        0,   fSin,   fCos,     0,
-        0,      0,      0,     1,  
+        1, 0, 0, 0,
+        0, fCos, -fSin, 0,
+        0, fSin, fCos, 0,
+        0, 0, 0, 1,
     };
 
     return RotateXMat;
@@ -204,10 +205,10 @@ float4x4 RotateY(float fAngle)
     
     float4x4 RotateYMat =
     {
-        fCos  ,    0,   fSin,       0,
-        0     ,    1,      0,       0,
-        -fSin ,    0,   fCos,       0,
-        0     ,    0,      0,       1
+        fCos, 0, fSin, 0,
+        0, 1, 0, 0,
+        -fSin, 0, fCos, 0,
+        0, 0, 0, 1
     };
 
     return RotateYMat;
@@ -220,16 +221,16 @@ float4x4 RotateZ(float fAngle)
     
     float4x4 RotateZMat =
     {
-        fCos,  -fSin,     0,    0,
-        fSin,   fCos,     0,    0,
-           0,      0,     1,    0,
-           0,      0,     0,    1,
+        fCos, -fSin, 0, 0,
+        fSin, fCos, 0, 0,
+           0, 0, 1, 0,
+           0, 0, 0, 1,
     };
 
     return RotateZMat;
 }
 
-float4x4 RotateAxis(float4 _vAxis , float fAngle)
+float4x4 RotateAxis(float4 _vAxis, float fAngle)
 {
     float flenhth = length(_vAxis);
     if (flenhth < FLT_EPSILON5)
@@ -242,7 +243,7 @@ float4x4 RotateAxis(float4 _vAxis , float fAngle)
         );
     }
     
-    float3 vAxis = normalize(_vAxis);
+    float3 vAxis = normalize(_vAxis.xyz);
     
     float fCos = cos(radians(fAngle));
     float fSin = sin(radians(fAngle));
@@ -254,10 +255,10 @@ float4x4 RotateAxis(float4 _vAxis , float fAngle)
     //Rodrigues 공식 기반 
     float4x4 RotateMat =
     float4x4(
-        fCos + fX * fX * (1.0 - fCos),               fX * fY * (1.0 - fCos) - fZ * fSin,         fX * fZ * (1.0 - fCos) + fY * fSin,                0.0,
-        fY * fX * (1.0 - fCos) + fZ * fSin,          fCos + fY * fY * (1.0 - fCos),              fY * fZ * (1.0 - fCos) - fX * fSin,                0.0,
-        fZ * fX * (1.0 - fCos) - fY * fSin,          fZ * fY * (1.0 - fCos) + fX * fSin,         fCos + fZ * fZ * (1.0 - fCos),                     0.0,
-        0.0,                                         0.0,                                        0.0,                                               1.0
+        fCos + fX * fX * (1.0 - fCos), fX * fY * (1.0 - fCos) - fZ * fSin, fX * fZ * (1.0 - fCos) + fY * fSin, 0.0,
+        fY * fX * (1.0 - fCos) + fZ * fSin, fCos + fY * fY * (1.0 - fCos), fY * fZ * (1.0 - fCos) - fX * fSin, 0.0,
+        fZ * fX * (1.0 - fCos) - fY * fSin, fZ * fY * (1.0 - fCos) + fX * fSin, fCos + fZ * fZ * (1.0 - fCos), 0.0,
+        0.0, 0.0, 0.0, 1.0
     );
     
     return RotateMat;

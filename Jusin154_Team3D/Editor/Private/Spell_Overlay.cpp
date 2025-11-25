@@ -170,10 +170,6 @@ HRESULT CSpell_Overlay::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pDiffuse_TextureCom2->Bind_ShaderResource(m_pShaderCom, "g_Texture2", 0)))
-	{
-		return E_FAIL;
-	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float))))
 	{
 		return E_FAIL;
@@ -236,10 +232,6 @@ HRESULT CSpell_Overlay::Ready_Components(void* pArg)
 		return E_FAIL;
 	}
 	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_spellmeter_Accio_Overlay"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_MagicEffect1"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom2), nullptr)))
 	{
 		return E_FAIL;
 	}

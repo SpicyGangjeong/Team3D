@@ -9,6 +9,7 @@
 #include "Magic_Meter.h"
 #include "Magic_Icon.h"
 #include "Spell_UI.h"
+#include "Potion.h"
 
 CAction_Panel::CAction_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPanelObject(pDevice, pContext)
@@ -309,6 +310,11 @@ HRESULT CAction_Panel::Ready_Element(void* pArg)
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Spell_UI"), m_pSpell_UI);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPotion>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CPotion**>(&m_pPotion))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Potion"), m_pPotion);
 	return S_OK;
 }
 
