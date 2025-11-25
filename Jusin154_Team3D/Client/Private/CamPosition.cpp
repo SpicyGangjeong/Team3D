@@ -43,7 +43,10 @@ CGameObject* CCamPosition::Clone(void* pArg, CGameObject* pOwner)
 {
 	return nullptr;
 }
+#ifdef _DEBUG
 
 void CCamPosition::Describe_Entity()
 {
 }
+
+#endif // _DEBUG

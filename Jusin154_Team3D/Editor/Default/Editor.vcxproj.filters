@@ -372,7 +372,10 @@
     </Filter>
     <Filter Include="02.GameObjects\Camera\CameraPosition\Player\Target">
       <UniqueIdentifier>{1c4860c7-bc8a-4bed-b545-ed3ef0b02748}</UniqueIdentifier>
-      </Filter>
+    </Filter>
+    <Filter Include="02.GameObjects\Env\06.InstancedProp">
+      <UniqueIdentifier>{27dd1f59-44a7-4ecf-ad44-d72b2b4f9d34}</UniqueIdentifier>
+    </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\Magic_Icon">
       <UniqueIdentifier>{4967d007-a0d8-4d57-b259-7bb47b5cf9ea}</UniqueIdentifier>
     </Filter>
@@ -705,12 +708,12 @@
     <ClInclude Include="..\Public\Wand.h">
       <Filter>02.GameObjects\Wand</Filter>
     </ClInclude>
-	  <ClInclude Include="..\public\AlphaMap.h">
-		  <Filter>02.GameObjects\Env\05.AlphaMap</Filter>
-	  </ClInclude>
+    <ClInclude Include="..\public\AlphaMap.h">
+      <Filter>02.GameObjects\Env\05.AlphaMap</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Decendo.h">
       <Filter>02.GameObjects\Layer_Effect\Effect\07.Decendo</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\Camera_Debug.h">
       <Filter>02.GameObjects\Camera\Debug</Filter>
     </ClInclude>
@@ -734,6 +737,9 @@
     </ClInclude>
     <ClInclude Include="..\public\Magic_Meter.h">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel\Magic_Meter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\InstancedProp.h">
+      <Filter>02.GameObjects\Env\06.InstancedProp</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Magic_Icon.h">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel\Magic_Icon</Filter>
@@ -1065,7 +1071,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\Decendo.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect\07.Decendo</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\private\Spell_Slot_Preview.cpp">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel\Spell_Slot_Preview</Filter>
     </ClCompile>
@@ -1093,9 +1099,9 @@
     <ClCompile Include="..\Private\Player_States.cpp">
       <Filter>02.GameObjects\Player</Filter>
     </ClCompile>
-    <ClCompile Include="Goblin_States.cpp">
-      <Filter>02.GameObjects\Monster\Goblin</Filter>
-          </ClCompile>
+    <ClCompile Include="..\private\InstancedProp.cpp">
+      <Filter>02.GameObjects\Env\06.InstancedProp</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\Magic_Icon.cpp">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel\Magic_Icon</Filter>
     </ClCompile>
@@ -1104,6 +1110,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Spell_UI.cpp">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel\Spell_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Goblin_States.cpp">
+      <Filter>02.GameObjects\Monster\Goblin</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1134,6 +1143,9 @@
       <Filter>99.Define\SHADER</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_UI_Instance.hlsl">
+      <Filter>99.Define\SHADER</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxWorldModelInstance.hlsl">
       <Filter>99.Define\SHADER</Filter>
     </FxCompile>
   </ItemGroup>

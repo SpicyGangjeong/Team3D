@@ -94,7 +94,10 @@ void CCamPosition_Shoulder::Update(_float fTimeDelta)
 	if (FAILED(m_pGameInstance->IsBinded_Camera(CAMERA_SHOULDER))) {
 		return;
 	}
+#ifdef _DEBUG
 	Describe_Entity();
+#endif // _DEBUG
+
 	if (m_pGameInstance->Key_Up(DIK_GRAVE)) {
 		m_bMovable = !m_bMovable;
 	}
@@ -213,6 +216,8 @@ void CCamPosition_Shoulder::Free()
 	SAFE_RELEASE(m_pTarget_LookPart);
 	SAFE_RELEASE(m_pTarget_FollowPart);
 }
+#ifdef _DEBUG
+
 void CCamPosition_Shoulder::Describe_Entity()
 {
 	GUI::Begin("Cam_Shoulder");
@@ -225,3 +230,5 @@ void CCamPosition_Shoulder::Describe_Entity()
 	GUI::SliderFloat3("ShoulderPosRatio", (_float*)&m_vShoulderPosRatio, -2.f, 2.f, "%.1f");
 	GUI::End();
 }
+
+#endif // _DEBUG

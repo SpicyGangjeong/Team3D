@@ -157,7 +157,7 @@ public:
 	HRESULT End_MRT();
 	HRESULT Bind_RenderTarget(const _wstring& strTargetTag, class CShader* pShader, const _char* pConstantName);
 	HRESULT Copy_RenderTarget(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D);
-	HRESULT Refit_RenderTarget(class CShader* pShader, const _wstring& wstrRenderTargetInput, const _wstring& wstrRenderTargetOutput);
+	HRESULT Refit_RenderTarget(class CVIBuffer_Rect* pVIBuffer, class CShader* pShader, const _wstring& wstrRenderTargetInput, const _wstring& wstrRenderTargetOutput);
 #ifdef _DEBUG
 	void    RenderTarget_Debuger();
 	HRESULT Render_RenderTarget_Debug(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
@@ -262,9 +262,9 @@ private:
 
 	vector<const _char*>			m_FilePaths = {};
 	map<const _char*, CModel*>			m_ModelMap;
-	map<const _char*, SaveModel>		m_sModelMap;
-#endif // _DEBUG
 
+#endif // _DEBUG
+	map<const _char*, SaveModel>		m_sModelMap;
 public:
 	void Release_Engine();
 	virtual void Free() override;

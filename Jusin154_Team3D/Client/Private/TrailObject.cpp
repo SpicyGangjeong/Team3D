@@ -301,10 +301,14 @@ void CTrailObject::Free()
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pTrailCom);
 }
+#ifdef _DEBUG
 
 void CTrailObject::Describe_Entity()
 {
+
 }
+#endif // _DEBUG
+
 
 HRESULT CTrailObject::Bind_ShaderResources()
 {

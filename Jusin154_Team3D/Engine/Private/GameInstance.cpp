@@ -541,9 +541,9 @@ HRESULT CGameInstance::Copy_RenderTarget(const _wstring& strTargetTag, ID3D11Tex
 {
 	return m_pRenderTarget_Manager->Copy_RenderTarget(strTargetTag, pTexture2D);
 }
-HRESULT CGameInstance::Refit_RenderTarget(CShader* pShader, const _wstring& wstrRenderTargetInput, const _wstring& wstrRenderTargetOutput)
+HRESULT CGameInstance::Refit_RenderTarget(CVIBuffer_Rect* pVIBuffer, CShader* pShader, const _wstring& wstrRenderTargetInput, const _wstring& wstrRenderTargetOutput)
 {
-	return m_pRenderTarget_Manager->Refit_RenderTarget(pShader, wstrRenderTargetInput, wstrRenderTargetOutput);
+	return m_pRenderTarget_Manager->Refit_RenderTarget(pVIBuffer,	pShader, wstrRenderTargetInput, wstrRenderTargetOutput);
 }
 #ifdef _DEBUG
 void CGameInstance::RenderTarget_Debuger()
@@ -618,16 +618,20 @@ void CGameInstance::Add_ModelToMap(const _char* filePath, CModel* pModel)
 {
 	m_ModelMap[filePath] = pModel;
 }
+
+
+#endif
+
 void CGameInstance::Add_SaveModel(const _char* filePath, SaveModel sModel)
 {
 	m_sModelMap[filePath] = sModel;
 }
+
 SaveModel* CGameInstance::Load_SaveModel(const _char* filePath)
 {
 	auto iter = m_sModelMap.find(filePath);
 	return &iter->second;
 }
-#endif
 
 #pragma region PhysX_Manager
 PSX::PxMaterial* CGameInstance::Create_Material(_float3* vMatInfo)

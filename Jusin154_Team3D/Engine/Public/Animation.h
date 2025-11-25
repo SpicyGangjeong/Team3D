@@ -13,6 +13,7 @@ private:
 public:
 	_bool			Update_TransformationMatrices(const vector<class CBone*>& Bones, const LOCALPOS_DESC* pLocalPosArray, _bool bIsLoop, _float fTimeDelta, class CTransform* pTransform = nullptr, _float m_fAmount = 1.f);
 	void Reset();
+	void ProgressAnimation(const vector<CBone*>& Bones, const LOCALPOS_DESC* pLocalPosArray, CTransform* pTransform, _float m_fAmount);
 	void			ResetRootMotion();
 	void			Depart_Animation();
 	void			Set_AnimPause(_bool bValue) { m_bPause = bValue; }
@@ -22,7 +23,12 @@ public:
 	void			Set_AnimProgressPostion(const _char* pChannelName, _uint iPosition);
 	vector<_int>* Capture_Bones();
 	void InterpAnim(CAnimation* pPreAnim, vector<CBone*>& Bones, float fRatio);
+
+
+
 	void CreateGPUData(ID3D11Device* pDevice);
+
+
 	vector<LERPDESC> Get_StartFrameInformations() { return m_StartKeyFrames; }
 	const _string& Get_Name() const { return m_strName; }
 

@@ -212,6 +212,7 @@ void CWand::Free()
 	SAFE_RELEASE(m_pEffectParts);
 	SAFE_RELEASE(m_pTrail);
 }
+#ifdef _DEBUG
 
 void CWand::Describe_Entity()
 {
@@ -225,3 +226,5 @@ void CWand::Describe_Entity()
 
 	GUI::End();
 }
+
+#endif // _DEBUG

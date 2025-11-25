@@ -185,11 +185,13 @@ void CBombard::Free()
 	SAFE_RELEASE(m_pLight_Projectile);
 
 }
+#ifdef _DEBUG
 
 void CBombard::Describe_Entity()
 {
 
 }
+#endif // _DEBUG
 
 HRESULT CBombard::Bind_ShaderResources()
 {

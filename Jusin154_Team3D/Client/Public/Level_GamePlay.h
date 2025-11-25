@@ -18,7 +18,7 @@ public:
 
 private:
 	class CInfoInstance* m_pInfoInstance = { nullptr };
-
+	class CPlayer* m_pPlayerTemp = { nullptr };
 private:
 	virtual HRESULT Initialize() override;
 	HRESULT Initialize(void* pArg);
@@ -29,6 +29,7 @@ private:
 	HRESULT Ready_Layer_Sound();
 	HRESULT Ready_Layer_Player(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_SkyBox(const _wstring& strLayerTag);
+	HRESULT Ready_Layer_Monster();
 
 public:
 	static pair<CLevel*, function<void()>> Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID, void* pArg);

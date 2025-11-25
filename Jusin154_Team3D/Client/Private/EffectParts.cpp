@@ -121,8 +121,11 @@ void CEffectParts::Free()
 	__super::Free();
 
 }
+#ifdef _DEBUG
 
 void CEffectParts::Describe_Entity()
 {
 
 }
+
+#endif // _DEBUG
