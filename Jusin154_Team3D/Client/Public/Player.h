@@ -74,6 +74,8 @@ private:
 	virtual void Add_FSM();
 	virtual void Set_Anim();
 
+	_float m_fAmount = { 1.f };
+
 	HRESULT InputAction();
 	HRESULT InputMove();
 	HRESULT InputSpell();
