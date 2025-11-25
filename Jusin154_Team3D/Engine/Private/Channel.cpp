@@ -60,6 +60,19 @@ HRESULT CChannel::Initialize(const vector<CBone*>& Bones, const aiNodeAnim* pAIC
 	return S_OK;
 }
 
+CChannel* CChannel::Create(const vector<CBone*>& Bones, const aiNodeAnim* pAIChannel)
+{
+	CChannel* pInstance = new CChannel();
+
+	if (FAILED(pInstance->Initialize(Bones, pAIChannel))) {
+		MSG_BOX("Failed to Created : CChannel");
+		SAFE_RELEASE(pInstance);
+	}
+	return pInstance;
+}
+
+#endif
+
 void CChannel::Fill_GPU_Keyframes(vector<KEYFRAME_DESC>& outKeyframes)
 {
 	for (_uint i = 0; i < m_iNumKeyFrames; i++)
@@ -85,20 +98,6 @@ CHANNEL_DESC CChannel::Fill_GPU_ChannelDesc()
 
 	return desc;
 }
-
-
-CChannel* CChannel::Create(const vector<CBone*>& Bones, const aiNodeAnim* pAIChannel)
-{
-	CChannel* pInstance = new CChannel();
-
-	if (FAILED(pInstance->Initialize(Bones, pAIChannel))) {
-		MSG_BOX("Failed to Created : CChannel");
-		SAFE_RELEASE(pInstance);
-	}
-	return pInstance;
-}
-
-#endif
 
 HRESULT CChannel::Initialize(const vector<CBone*>& Bones, _uint iIndex)
 {
