@@ -277,9 +277,7 @@ _bool CQuadTree::Set_Y(CGameInstance* pGameInstance, const _float3* pVertexPosit
 	{
 		if (nullptr == m_pChildren[CORNER_LT])
 		{
-			pVertices[m_iCorners[CORNER_LT]].vPosition.y += fY;
-			pVertices[m_iCorners[CORNER_RT]].vPosition.y += fY;
-			pVertices[m_iCorners[CORNER_RB]].vPosition.y += fY;
+			Add_Y(pVertices, fY);
 
 			XMStoreFloat3(&Out, XMVector3TransformCoord(XMLoadFloat3(&Out), WorldMatrix));
 			return true;
@@ -291,9 +289,7 @@ _bool CQuadTree::Set_Y(CGameInstance* pGameInstance, const _float3* pVertexPosit
 	{
 		if (nullptr == m_pChildren[CORNER_LT])
 		{
-			pVertices[m_iCorners[CORNER_LT]].vPosition.y += fY;
-			pVertices[m_iCorners[CORNER_RB]].vPosition.y += fY;
-			pVertices[m_iCorners[CORNER_LB]].vPosition.y += fY;
+			Add_Y(pVertices, fY);
 
 			XMStoreFloat3(&Out, XMVector3TransformCoord(XMLoadFloat3(&Out), WorldMatrix));
 			return true;
@@ -311,6 +307,24 @@ _bool CQuadTree::Set_Y(CGameInstance* pGameInstance, const _float3* pVertexPosit
 	}
 
 	return false;
+}
+
+void CQuadTree::Add_Y(VTXNORTEX* pVertices, _float fY)
+{
+	_float fValue = {};
+
+	fValue += pVertices[m_iCorners[CORNER_LT]].vPosition.y;
+	fValue += pVertices[m_iCorners[CORNER_RB]].vPosition.y;
+	fValue += pVertices[m_iCorners[CORNER_RT]].vPosition.y;
+	fValue += pVertices[m_iCorners[CORNER_LB]].vPosition.y;
+
+	fValue /= 4.0f;
+	fValue += fY;
+
+	pVertices[m_iCorners[CORNER_LT]].vPosition.y = fValue;
+	pVertices[m_iCorners[CORNER_RB]].vPosition.y = fValue;
+	pVertices[m_iCorners[CORNER_RT]].vPosition.y = fValue;
+	pVertices[m_iCorners[CORNER_LB]].vPosition.y = fValue;
 }
 
 _bool CQuadTree::isDraw(CGameInstance* pGameInstance, const _float3* pVertexPositions)

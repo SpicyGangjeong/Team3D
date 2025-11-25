@@ -1,4 +1,5 @@
 #include "Engine_Shader_Defines.hlsli"
+#include "Engine_Shader_Functions.hlsli"
 
 struct ParticleValue
 {
@@ -66,6 +67,7 @@ int    g_iNoiseMoveLerpOption;
 float2 g_vDiffuseDistortionUVGainAmount;
 float2 g_vMaskDistortionUVGainAmount;
 
+
 int    g_iMaskDistortionMoveLerpOption;
 int    g_iDiffuseDistortionMoveLerpOption;
 //
@@ -116,46 +118,7 @@ bool g_isNomalDissolve;
 
 float g_fFar;
 
-float2 SelectLerpUV(float2 fAmount, float _fRatio, int iSelectOption)
-{
-    if (iSelectOption < 0)
-        return float2(0 , 0);
-    
-    float fRatio = _fRatio;
-    switch (iSelectOption)
-    {
-        case 0:
-            fRatio = fRatio; // Linear 
-            break;
-        case 1:
-            fRatio = fRatio * fRatio; // EaseInQuad 후반에 속도 증가
-            break;
-        case 2:
-            fRatio = 1 - (1 - fRatio * fRatio); // EaseOutQuad 초반에 속도 증가
-            break;
-        case 3:
-            fRatio = fRatio * fRatio * fRatio; // EaseInCubic  더 강하게 후반 속도 증가
-            break;
-        case 4:
-            fRatio = 1 - (1 - fRatio * fRatio * fRatio); // EaseOutCubic 더 강하게 초반 속도 증가
-            break;
-        case 5:
-            fRatio = 0.5f * (1 - cos(PI * fRatio)); // EaseInOutSin 사인 곡선 
-            break;
-        case 6:
-            fRatio = sin(13 * PI * fRatio) * (1 - fRatio) * (1 - fRatio); // EaseInBack 뒤로갔다가 앞으로
-            break;
-        case 7:
-            fRatio = pow(2, 10 * (fRatio - 1)); // Expo 지수 함수
-            break;
-        case 8:
-            fRatio = 1 - pow(1 - fRatio * fRatio, 0.5); // 원형 궤적     
-            break;
-    }
-    
-    return fAmount * fRatio;
 
-}
 
 struct VS_IN
 {
@@ -358,7 +321,7 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
  
         
         if (g_vColor.a > 0)
-            vMtrlDiffuse += g_vColor;
+            vMtrlDiffuse = saturate(g_vColor + vMtrlDiffuse);
         
     }
     else
@@ -382,7 +345,8 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
             vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * vMtrlNoise.r);
         
         if (g_isNoiseColor)
-            vMtrlDiffuse *= vMtrlNoise;
+            vMtrlDiffuse.rgb *= vMtrlNoise.rgb;
+
     }
     
     /* 마스크 */ 
@@ -403,7 +367,6 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
             
             //디스토션(노이즈) 텍스쳐로 uv를 왜곡함
             vMaskTexcoord = vMaskTexcoord + (vMtrlDistortion - 0.5f).r  * g_fNoiseDistortionIntensity;
-            
         }
         
         if (g_isMaskUVMove)
@@ -415,7 +378,7 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
         if (g_isMaskClampSample == true)
             vMtrlMask = g_MaskingTexture.Sample(ClampSampler, vMaskTexcoord);
         else
-            vMtrlMask = g_MaskingTexture.Sample(PointSampler, vMaskTexcoord);
+            vMtrlMask = g_MaskingTexture.Sample(DefaultSampler, vMaskTexcoord);
         
             
         float fSoftMask;
@@ -431,12 +394,11 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
         vMtrlMask.r = 1.f;
     }
 
-
+    
+    vMtrlDiffuse.a *= g_fDiffuseAlpha;
       
     if (vMtrlDiffuse.a <= 0.f)
         discard;
-    
-    vMtrlDiffuse.a *= g_fDiffuseAlpha;
     
     if (g_isDissolve == true)
     {
@@ -484,8 +446,6 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     
     float fDistance = saturate(length(CenteredUV) / g_fRadius); // 마스크의 크기를 어느정도할지 
     
-    float fMaskAlpha = vMtrlMask.a;
-    
     float fSoftEdge = pow(saturate(1.0f - fDistance), g_fSoftenExp) * g_fSoftStrength; //SoftenExp  엣지감쇠지수 , Strength
    
     float fCore = pow(saturate(1.0 - fDistance * 2.f), max(0.001, g_fCoreBoost)) * g_fCoreBoost; // CoreBust 중심강조
@@ -506,14 +466,17 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     if (g_isEmissiveDissolve == true)
     {
         fEmissiveStrength *= (1.f - In.vLifeTime.x / In.vLifeTime.y);
+        
+        if (fEmissiveStrength <= 0.05f)
+            fEmissiveStrength = 0;
+        
     }
     
     if (g_isEmissiveDissolveReverse == true)
     {
         fEmissiveStrength *= (In.vLifeTime.x / In.vLifeTime.y);
+        
     }
-    
-
     
     Out.vColorTarget = vEmissiveMtrl * fEmissive * fEmissiveStrength; // 이미시브 스트랭스
     
@@ -684,7 +647,7 @@ PS_BLUR_OUT PS_BLUR(PS_BLUR_IN In)
         if (g_isMaskClampSample == true)
             vMtrlMask = g_MaskingTexture.Sample(ClampSampler, vMaskTexcoord);
         else
-            vMtrlMask = g_MaskingTexture.Sample(PointSampler, vMaskTexcoord);
+            vMtrlMask = g_MaskingTexture.Sample(DefaultSampler, vMaskTexcoord);
         
             
         float fSoftMask;
@@ -693,9 +656,7 @@ PS_BLUR_OUT PS_BLUR(PS_BLUR_IN In)
             fSoftMask = saturate((vMtrlMask.r - g_fSoftMaskEdge) * g_fSoftMask);
     
         vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * fSoftMask);
-    
-        if (vMtrlDiffuse.a <= 0.f)
-            discard;
+  
     }
     else
     {
@@ -703,6 +664,9 @@ PS_BLUR_OUT PS_BLUR(PS_BLUR_IN In)
     }
 
 
+      
+    if (vMtrlDiffuse.a <= 0.f)
+        discard;
     
     vMtrlDiffuse.a *= g_fDiffuseAlpha;
     
@@ -764,6 +728,16 @@ PS_BLUR_OUT PS_BLUR(PS_BLUR_IN In)
     if (g_isEmissiveDissolve == true)
     {
         fEmissiveStrength *= (1.f - In.vLifeTime.x / In.vLifeTime.y);
+        
+        if (fEmissiveStrength <= 0)
+            fEmissiveStrength = 0;
+
+    }
+    
+    if (g_isEmissiveDissolveReverse == true)
+    {
+        fEmissiveStrength *= (In.vLifeTime.x / In.vLifeTime.y);
+        
     }
     
    
@@ -790,7 +764,7 @@ technique11 DefaultTechnique
     {
         SetRasterizerState(RS_Nocull);
         SetDepthStencilState(DSS_None, 0);
-        SetBlendState(BS_WB_Acc, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_NON_NORMALMAP();

@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "RenderTarget.h"
 
 #include "Shader.h"
@@ -73,12 +73,16 @@ void CRenderTarget::Copy_Resource(ID3D11Texture2D* pTexture2D)
 {
     m_pContext->CopyResource(pTexture2D, m_pTexture2D);
 }
+void CRenderTarget::Get_TextureDesc(D3D11_TEXTURE2D_DESC& Desc)
+{
+    m_pTexture2D->GetDesc(&Desc);
+}
 #ifdef _DEBUG
 
 void CRenderTarget::Ready_Debug()
 {
 
-    XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity()); // µð¹ö±× ¿ùµå ¸ÞÆ®¸¯½º ÃÊ±âÈ­
+    XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity()); // ë””ë²„ê·¸ ì›”ë“œ ë©”íŠ¸ë¦­ìŠ¤ ì´ˆê¸°í™”
 
     _uint		iNumViewports = { 1 };
 

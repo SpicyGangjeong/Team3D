@@ -16,6 +16,7 @@ public:
 	HRESULT Add_Camera(_uint iLevel, CCamera* pCamera, const _wstring& wstrCameraKey);
 	HRESULT Bind_Camera(_uint iLevel, const _wstring& wstrCameraKey, _bool bIgnorePriority);
 	HRESULT IsBinded_Camera(const _wstring& wstrCameraKey);
+	_vector Get_CameraLook();
 
 
 	void Force_CamPosition(_fvector vPos);

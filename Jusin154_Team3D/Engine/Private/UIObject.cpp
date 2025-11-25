@@ -132,6 +132,12 @@ void CUIObject::MoveY(_float fY)
 	m_fY = fY;
 }
 
+void CUIObject::Move(_float fX, _float fY)
+{
+	m_fX = fX;
+	m_fY = fY;
+}
+
 void CUIObject::SizeUpdate(_float fSizeX, _float fSizeY)
 {
 	m_fSizeX = fSizeX;

@@ -66,6 +66,7 @@ void CCamPosition_Shoulder::Priority_Update(_float fTimeDelta)
 	if (true == m_bMovable) {
 		m_vAccDegreeXY.y += m_pGameInstance->Get_MouseMove().x * m_fMouseSensor;
 		m_vAccDegreeXY.x += m_pGameInstance->Get_MouseMove().y * m_fMouseSensor;
+		CMyTools::AdjustAccumulateDegreePitchYawDegree(m_vAccDegreeXY);
 	}
 	
 	_vector vLook = XMVector3Normalize(XMLoadFloat3(&m_vShoulderPosRatio));
@@ -218,10 +219,11 @@ void CCamPosition_Shoulder::Describe_Entity()
 {
 	GUI::Begin("Cam_Shoulder");
 	m_pTransformCom->Describe_Entity();
-	GUI::Text("fMouseSensor : %.1f", &m_fMouseSensor);
+
+	GUI::Text("fMouseSensor : %.1f", m_fMouseSensor);
 	GUI::SliderFloat("ShoulderDistance", &m_fShoulderDistance, 0.f, 10.f, "%.1f");
 	GUI::SliderFloat("BackFrontRatio", &m_fBackFrontRatio, 0.01f, 0.99f, "%.2f");
-	GUI::Text("Pitch Yaw : %f %f", &m_vAccDegreeXY.x, &m_vAccDegreeXY.y);
+	GUI::Text("Pitch Yaw : %f %f", m_vAccDegreeXY.x, m_vAccDegreeXY.y);
 	GUI::SliderFloat3("ShoulderPosRatio", (_float*)&m_vShoulderPosRatio, -2.f, 2.f, "%.1f");
 	GUI::End();
 }

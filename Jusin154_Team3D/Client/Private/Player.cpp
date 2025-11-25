@@ -70,6 +70,16 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
+
+#ifdef _DEBUG
+	m_BasicEffect = make_unique<BasicEffect>(m_pDevice);
+	m_BasicEffect->SetVertexColorEnabled(true);
+	m_BasicEffect->SetView(m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW));
+	m_BasicEffect->SetProjection(m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ));
+
+	m_Batch = make_unique<PrimitiveBatch<VertexPositionColor>>(m_pContext);
+#endif // _DEBUG
+
 	return S_OK;
 }
 
@@ -82,15 +92,16 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 
 void CPlayer::Update(_float fTimeDelta)
 {
+	Update_CameraCoordinateSystem();
 	m_pFSM->Update_State(fTimeDelta);
 
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
 
-
 	__super::Update(fTimeDelta);
 	Describe_Entity();
+
 
 
 	m_pCharacter_Controller->Move(fTimeDelta);
@@ -108,8 +119,9 @@ void CPlayer::Late_Update(_float fTimeDelta)
 
 HRESULT CPlayer::Render()
 {
-	if (!m_bVisible)
+	if (!m_bVisible){
 		return S_OK;
+	}
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
@@ -137,9 +149,50 @@ HRESULT CPlayer::Render()
 #ifdef _DEBUG
 	m_pCharacter_Controller->Render();
 	//m_pRigidBody->Render();
+	Render_CameraCoordinateSystem();
 #endif
 
 	return S_OK;
+}
+
+void CPlayer::Render_CameraCoordinateSystem()
+{
+	m_Batch->Begin();
+
+	const _float fArrowLength = 2.0f;
+	_vector xmvLook = XMVector4Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
+	_float2 vLook = { XMVectorGetX(xmvLook), XMVectorGetZ(xmvLook) };
+
+
+	GUI::Text("W : %.2f, %.2f, %.2f", m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z);
+	GUI::Text("A : %.2f, %.2f, %.2f", -m_vCameraRightDir.x, 0.f, -m_vCameraRightDir.z);
+	GUI::Text("S : %.2f, %.2f, %.2f", -m_vCameraLookDir.x, 0.f, -m_vCameraLookDir.z);
+	GUI::Text("D : %.2f, %.2f, %.2f", m_vCameraRightDir.x, 0.f, m_vCameraRightDir.z);
+	
+	GUI::Button("##0", { 100.f, 100.f }); GUI::SameLine();
+	GUI::Button(("W : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { m_vCameraLookDir.x , m_vCameraLookDir.z })))).c_str(), {100.f, 100.f}); GUI::SameLine();
+	GUI::Button("##2", {100.f, 100.f});
+	GUI::Button(("A : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { -m_vCameraRightDir.x , -m_vCameraRightDir.z })))).c_str(), { 100.f, 100.f }); GUI::SameLine();
+	GUI::Button("##4", { 100.f, 100.f }); GUI::SameLine();
+	GUI::Button(("D : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { m_vCameraRightDir.x , m_vCameraRightDir.z })))).c_str(), { 100.f, 100.f });
+	GUI::Button("##6", {100.f, 100.f}); GUI::SameLine();
+	GUI::Button(("S : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { -m_vCameraLookDir.x , -m_vCameraLookDir.z })))).c_str(), { 100.f, 100.f }); GUI::SameLine();
+	GUI::Button("##8", {100.f, 100.f});
+
+	m_Batch->DrawLine( // W
+		VertexPositionColor(fArrowLength * -XMLoadFloat3(&m_vCameraLookDir), DirectX::Colors::GhostWhite),
+		VertexPositionColor(fArrowLength * XMLoadFloat3(&m_vCameraLookDir), DirectX::Colors::Blue)
+	);
+	m_Batch->DrawLine( // D
+		VertexPositionColor(fArrowLength * -XMLoadFloat3(&m_vCameraRightDir), DirectX::Colors::GhostWhite),
+		VertexPositionColor(fArrowLength * XMLoadFloat3(&m_vCameraRightDir), DirectX::Colors::Red)
+	);
+	m_Batch->DrawLine( // PlayerLook
+		VertexPositionColor(XMVectorZero(), DirectX::Colors::GhostWhite),
+		VertexPositionColor(fArrowLength * xmvLook, DirectX::Colors::HotPink)
+	);
+
+	m_Batch->End();
 }
 
 HRESULT CPlayer::Ready_Components()
@@ -244,6 +297,13 @@ HRESULT CPlayer::Bind_ShaderResources()
 		return E_FAIL;
 	}
 	return S_OK;
+}
+void CPlayer::Update_CameraCoordinateSystem()
+{
+	_vector xmvCameraLook = XMVector3Normalize(XMVectorSetY(m_pGameInstance->Get_CameraLook(), 0.f));
+	_vector xmvUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+	XMStoreFloat3(&m_vCameraRightDir, XMVector3Normalize(XMVector3Cross(xmvUp, xmvCameraLook)));
+	XMStoreFloat3(&m_vCameraLookDir, xmvCameraLook);
 }
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

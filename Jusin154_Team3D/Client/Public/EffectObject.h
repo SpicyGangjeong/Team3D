@@ -73,14 +73,16 @@ public:
 		_bool   isNoiseAlpha = { false };
 		_bool	isNomalDissolve = {};
 
-		_float fSoftenExp = { 1.31429f };
-		_float fSoftStrength = {};
-		_float fCoreBoost = {};
-		_float fRadius = {};
+		_float	fSoftenExp = { 1.31429f };
+		_float	fSoftStrength = {};
+		_float	fCoreBoost = {};
+		_float	fRadius = {};
 
-		_float fSoftMaskEdge = {};
-		_float fSoftMask = {};
+		_float	fSoftMaskEdge = {};
+		_float	fSoftMask = {};
 
+		_bool   isEmissiveDissolveReverse = { false };
+		_bool   isOnlyBlur = { false };
 
 	}EFFECT_INFO;
 

@@ -26,11 +26,11 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	const _float4x4* m_pSocketMatrices = {  };
-	CShader* m_pShaderCom = { nullptr };
-	CModel* m_pModelCom = { nullptr };
+	const _float4x4*	 m_pSocketMatrices = {  };
+	CShader*			 m_pShaderCom = { nullptr };
+	CModel*				 m_pModelCom = { nullptr };
 
-
+	class CTrailObject*	 pTrail = { nullptr };
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();

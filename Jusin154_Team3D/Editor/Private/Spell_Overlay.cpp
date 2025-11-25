@@ -21,7 +21,7 @@ HRESULT CSpell_Overlay::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = -1.f;
+	Desc.fX = 380.f;
 	Desc.fY = 0.f;
 	Desc.fSizeX = 100.f;
 	Desc.fSizeY = 100.f;

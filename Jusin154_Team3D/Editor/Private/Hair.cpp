@@ -176,7 +176,7 @@ void CHair::Describe_Entity()
 	if (!m_pModelCom )
 		return;
 
-	/*for (_uint i = 0; i < dynamic_cast<CTexture*>(m_pTextureCom)->Get_Size(); i++)
+	/*for (_uint i = 0; i < dynamic_cast<CTexture*>(m_pTextureCom)->Get_TextureDesc(); i++)
 	{
 		_char label[128];
 
@@ -187,7 +187,7 @@ void CHair::Describe_Entity()
 			iTextureIndex = i;
 		}
 
-		if (i % dynamic_cast<CTexture*>(m_pTextureCom)->Get_Size()   != dynamic_cast<CTexture*>(m_pTextureCom)->Get_Size()-1)
+		if (i % dynamic_cast<CTexture*>(m_pTextureCom)->Get_TextureDesc()   != dynamic_cast<CTexture*>(m_pTextureCom)->Get_TextureDesc()-1)
 			GUI::SameLine();
 	}*/
 

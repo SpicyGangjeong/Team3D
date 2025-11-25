@@ -541,6 +541,10 @@ HRESULT CGameInstance::Copy_RenderTarget(const _wstring& strTargetTag, ID3D11Tex
 {
 	return m_pRenderTarget_Manager->Copy_RenderTarget(strTargetTag, pTexture2D);
 }
+HRESULT CGameInstance::Refit_RenderTarget(CShader* pShader, const _wstring& wstrRenderTargetInput, const _wstring& wstrRenderTargetOutput)
+{
+	return m_pRenderTarget_Manager->Refit_RenderTarget(pShader, wstrRenderTargetInput, wstrRenderTargetOutput);
+}
 #ifdef _DEBUG
 void CGameInstance::RenderTarget_Debuger()
 {
@@ -571,6 +575,10 @@ HRESULT CGameInstance::Bind_Camera(_uint iLevel, const _wstring& strCameraKey, _
 HRESULT CGameInstance::IsBinded_Camera(const _wstring& strCameraKey)
 {
 	return m_pCamera_Manager->IsBinded_Camera(strCameraKey);
+}
+_vector CGameInstance::Get_CameraLook()
+{
+	return m_pCamera_Manager->Get_CameraLook();
 }
 const _float* CGameInstance::Get_CurrentCameraFar()
 {

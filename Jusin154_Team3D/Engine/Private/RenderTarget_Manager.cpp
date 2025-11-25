@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "RenderTarget_Manager.h"
 #include "RenderTarget.h"
+#include "Shader.h"
 
 CRenderTarget_Manager::CRenderTarget_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     :CBase(),
@@ -149,6 +150,59 @@ HRESULT CRenderTarget_Manager::Copy_RenderTarget(const _wstring& strTargetTag, I
     }
 
     pRenderTarget->Copy_Resource(pTexture2D);
+
+    return S_OK;
+}
+
+HRESULT CRenderTarget_Manager::Refit_RenderTarget(class CShader* pShader, const _wstring& wstrRenderTargetInput, const _wstring& wstrRenderTargetOutput)
+{
+    CRenderTarget* pInput = Find_RenderTarget(wstrRenderTargetInput);
+    CRenderTarget* pOutput = Find_RenderTarget(wstrRenderTargetOutput);
+    if (nullptr == pInput || nullptr == pOutput) { return E_FAIL; }
+
+    _uint iNumViewPort = 1;
+    D3D11_VIEWPORT vp = {};
+    m_pContext->RSGetViewports(&iNumViewPort, &vp);
+    
+    D3D11_TEXTURE2D_DESC OutputDesc = {};
+    pOutput->Get_TextureDesc(OutputDesc);
+    vp.Width = (_float)OutputDesc.Width;
+    vp.Height = (_float)OutputDesc.Height;
+
+    pOutput->Clear();
+
+
+    { // Bind RTVs
+        _uint iNumRenderTargets = { 1 };
+        ID3D11RenderTargetView* pRenderTargetViews[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT] = { pOutput->Get_RTV(), };
+        m_pContext->OMSetRenderTargets(0, nullptr, nullptr);
+        m_pContext->OMSetRenderTargets(1, pRenderTargetViews, nullptr);
+    }
+
+    m_pContext->RSSetViewports(iNumViewPort, &vp);
+
+    { // Bind const
+        _float4x4 matIdentity = {};
+        XMStoreFloat4x4(&matIdentity, XMMatrixIdentity());
+        if (FAILED(pShader->Bind_Matrix("g_WorldMatrix", &matIdentity))) {
+            return E_FAIL;
+        }
+        if (FAILED(pShader->Bind_Matrix("g_ViewMatrix", &matIdentity))) {
+            return E_FAIL;
+        }
+        if (FAILED(pShader->Bind_Matrix("g_ProjMatrix", &matIdentity))) {
+            return E_FAIL;
+        }
+        if (FAILED(pInput->Bind_ShaderResource(pShader, "g_DiffuseTexture"))) {
+            return E_FAIL;
+        }
+    }
+
+    if (FAILED(pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::REFIT)))) {
+        return E_FAIL;
+    }
+    ID3D11ShaderResourceView* const pNullSRV[1] = { nullptr };
+    m_pContext->PSSetShaderResources(0, 1, pNullSRV);
 
     return S_OK;
 }

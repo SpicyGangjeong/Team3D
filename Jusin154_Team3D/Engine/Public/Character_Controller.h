@@ -61,6 +61,8 @@ public:
 	_float3			Get_Volume();
 
 	HRESULT			ConvertToDO(class CRigidBody_Dynamic& BodyOriginal);
+	_bool			IsGravity() { return m_bGravity; }
+	void			SetGravity(_bool bCondition) { m_bGravity = bCondition; };
 	_bool			IsActive() const { return m_bActive; }
 	void			SetActive(_bool bCondition) { m_bActive = bCondition; }
 
@@ -74,6 +76,7 @@ private:
 	
 	PSX::PxControllerCollisionFlags m_eBeforeCollisionFlags = {};
 	_bool					m_bActive = { true };
+	_bool					m_bGravity = { true };
 #ifdef _DEBUG
 	unique_ptr<GeometricPrimitive> m_pMainShape = { nullptr };
 	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };

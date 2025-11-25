@@ -32,6 +32,7 @@ public:
 public:
 	virtual void MoveX(_float fX);
 	virtual void MoveY(_float fY);
+	virtual void Move(_float fX, _float fY);
 	virtual void SizeUpdate(_float fSizeX, _float fSizeY);
 	virtual void SizeUpX(_float fSizeX);
 	virtual void SizeUpY(_float fSizeY);
