@@ -60,7 +60,6 @@ void CCamera_Gaze::Update_LerpTimer(Engine::_float fTimeDelta)
 		m_vLookLerpTime.x += fTimeDelta;
 		if (m_vLookLerpTime.y <= m_vLookLerpTime.x) {
 			m_vLookLerpTime.x = 0.f;
-			m_bEnable_LookLerp = false;
 			XMStoreFloat3(&m_vLookPos_Src, XMLoadFloat3(&m_vLookPos_Dest));
 			XMStoreFloat3(&m_vLookPos_Dest, m_pLookTarget->Get_WorldPostion());
 		}
@@ -70,7 +69,6 @@ void CCamera_Gaze::Update_LerpTimer(Engine::_float fTimeDelta)
 		m_vFollowLerpTime.x += fTimeDelta;
 		if (m_vFollowLerpTime.y <= m_vFollowLerpTime.x) {
 			m_vFollowLerpTime.x = 0.f;
-			m_bEnable_FollowLerp = false;
 			XMStoreFloat3(&m_vFollowPos_Src, m_pTransformCom->Get_State(STATE::POSITION));
 			XMStoreFloat3(&m_vFollowPos_Dest, m_pFollowTarget->Get_WorldPostion());
 		}
