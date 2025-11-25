@@ -123,7 +123,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>../../EngineSDK/Lib/$(ConfigurationName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Engine.lib;fmod_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Engine.lib;fmod_vc.lib;DirectXTKd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -175,6 +175,8 @@
     <ClInclude Include="..\Public\Client_Define.h" />
     <ClInclude Include="..\Public\Client_Enum.h" />
     <ClInclude Include="..\Public\Client_Macro.h" />
+    <ClInclude Include="..\Public\Goblin.h" />
+    <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\Public\PhysXEffectHitBox.h" />
     <ClInclude Include="..\Public\Dummy_PhysXPlayable.h" />
     <ClInclude Include="..\Public\Dummy_PhysXWall.h" />
@@ -223,6 +225,9 @@
     <ClCompile Include="..\Private\Camera_Gaze.cpp" />
     <ClCompile Include="..\Private\CamPosition.cpp" />
     <ClCompile Include="..\Private\CamPosition_Arm.cpp" />
+    <ClCompile Include="..\Private\Goblin.cpp" />
+    <ClCompile Include="..\Private\Goblin_States.cpp" />
+    <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\Private\PhysXEffectHitBox.cpp" />
     <ClCompile Include="..\Private\CamPosition_Shoulder.cpp" />
     <ClCompile Include="..\Private\CamPosition_Socket.cpp" />

@@ -12,6 +12,7 @@
 #include "Broom.h"
 #include "Dummy_PhysXWall.h"
 #include "Dummy_PhysXPlayable.h"
+#include "Goblin.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -37,6 +38,9 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	if (FAILED(Ready_Layer_SkyBox(TEXT("Layer_SkyBox")))) {
 		return E_FAIL;
 	}
+	if (FAILED(Ready_Layer_Monster())) {
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -49,7 +53,7 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Up(DIK_F1))
+	if (m_pGameInstance->Key_Up(DIK_ADD))
 	{
 		m_pGameInstance->Set_LevelToChange();
 	}
@@ -130,7 +134,7 @@ HRESULT CLevel_GamePlay::Ready_Markers()
 
 HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag,nullptr,nullptr,&m_pPlayerTemp)))
 		return E_FAIL;
 
 	/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
@@ -153,6 +157,14 @@ HRESULT CLevel_GamePlay::Ready_Layer_SkyBox(const _wstring& strLayerTag)
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXWall>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE, &Desc))) {
 		return E_FAIL;
 	}
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Monster()
+{
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER, m_pPlayerTemp)))
+		return E_FAIL;
 
 	return S_OK;
 }

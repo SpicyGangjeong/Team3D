@@ -26,11 +26,11 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	const _float4x4* m_pSocketMatrices = {  };
-	CShader* m_pShaderCom = { nullptr };
-	CModel* m_pModelCom = { nullptr };
+	const _float4x4*	 m_pSocketMatrices = {  };
+	CShader*			 m_pShaderCom = { nullptr };
+	CModel*				 m_pModelCom = { nullptr };
 
-
+	class CTrailObject*	 pTrail = { nullptr };
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
@@ -39,7 +39,10 @@ public:
 	static CWand* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr)override;
 	virtual void Free() override;
-	virtual void Describe_Entity() override;
+
+#ifdef _DEBUG
+	void Describe_Entity() override;
+#endif // _DEBUG
 };
 
 NS_END

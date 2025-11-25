@@ -40,7 +40,9 @@ public:
 	static CRigidBody_Static* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, RIGIDBODY_STATIC_PROTOTYPEDESC& Desc);
 	virtual CComponent* Clone(void* pArg, class CGameObject* pOwner = nullptr) override;
 	virtual void Free() override;
-	virtual void Describe_Entity() override;
+#ifdef _DEBUG
+	void Describe_Entity() override;
+#endif // _DEBUG
 
 };
 

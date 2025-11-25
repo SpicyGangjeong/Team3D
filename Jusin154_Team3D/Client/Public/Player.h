@@ -17,15 +17,19 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+#ifdef _DEBUG
+	void Render_CameraCoordinateSystem();
+#endif // _DEBUG
 	_bool Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
 
 private:
-	unordered_map<size_t, CState*> m_States = { };
-	size_t m_iStateMask = { 0 };
 	_float m_fDirectionRadian = 0.f;
 
 	_bool m_bSprintToggle = { false };
 	_bool m_bWalkToggle = { false };
+
+	_float3 m_vCameraLookDir = { 0.f, 0.f, 1.f, };
+	_float3 m_vCameraRightDir = { 1.f, 0.f, 0.f };
 
 
 	class CCamPosition_Socket* m_pCamPosition_TopDown_LookPart = { nullptr };
@@ -43,11 +47,21 @@ private:
 	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
 
+#ifdef _DEBUG
+	void Update_CameraCoordinateSystem();
+	unique_ptr<BasicEffect> m_BasicEffect;
+	unique_ptr<PrimitiveBatch<VertexPositionColor>> m_Batch;
+#endif // _DEBUG
+
+
 public:
 	static CPlayer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr) override;
 	virtual void Free() override;
+#ifdef _DEBUG
 	virtual void Describe_Entity() override;
+
+#endif // _DEBUG
 
 #pragma region STATE
 
@@ -60,11 +74,11 @@ private:
 	virtual void Add_FSM();
 	virtual void Set_Anim();
 
+	_float m_fAmount = { 1.f };
+
 	HRESULT InputAction();
 	HRESULT InputMove();
 	HRESULT InputSpell();
-
-	STATEANIM::ESTATE m_eSpell = { STATEANIM::END };
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();

@@ -121,6 +121,7 @@ void CPlayer::Behavior_IdleEnter() {
 
 HRESULT CPlayer::Behavior_IdleExitCheck()
 {
+	pair<_uint, _bool> pairAnimInfo;
 	// S_OK -> 현 상태 유지
 	// E_FAIL -> 현 상태 탈출
 	if (SUCCEEDED(InputAction()) || SUCCEEDED(InputSpell())) {
@@ -145,17 +146,18 @@ HRESULT CPlayer::Behavior_IdleExitCheck()
 		else if (m_pGameInstance->Key_Down(DIK_V)) {
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
 		}
-
 		return E_FAIL;
 	}
+
 	if (SUCCEEDED(InputMove())) {
+
 		m_pFSM->Change_State(FSMSTATE::MOVE);
 		return E_FAIL;
 	}
 
 	if (m_pModelCom->IsFinishedAnim())
 	{
-		pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::IDLE];
+		pairAnimInfo = m_Animation[STATEANIM::IDLE];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 	}
 	return S_OK;
@@ -197,7 +199,16 @@ void CPlayer::Behavior_MoveEnter()
 			m_pFSM->Enable_State(FSMSTATE::JOG);
 			m_bSprintToggle = false;
 			m_bWalkToggle = false;
-			pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
+			if (bFoward)
+			{
+				pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
+			}
+			else if (bBackward)
+			{
+				pairAnimInfo = m_Animation[STATEANIM::JOG_BWD];
+				m_fAmount = 0.2f;
+			}
+
 		}
 	}
 	else { // While Moving
@@ -221,11 +232,15 @@ void CPlayer::Behavior_MoveEnter()
 			m_pFSM->Enable_State(FSMSTATE::JOG);
 			m_bSprintToggle = false;
 			m_bWalkToggle = false;
-			pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
+			if (bFoward)
+			{
+				pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
+			}
 		}
 	}
 
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, m_fAmount);
+	m_fAmount = 1.f;
 }
 
 HRESULT CPlayer::Behavior_MoveExitCheck()
@@ -259,7 +274,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck()
 			if (m_bSprintToggle)
 			{
 				m_pFSM->Enable_State(FSMSTATE::SPRINT);
-
+				m_pFSM->Disable_State(FSMSTATE::JOG);
 				pairAnimInfo = m_Animation[STATEANIM::SPRINT];
 			}
 			else
@@ -276,6 +291,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck()
 			if (m_bWalkToggle)
 			{
 				m_pFSM->Enable_State(FSMSTATE::WALK);
+				m_pFSM->Disable_State(FSMSTATE::JOG);
 				pairAnimInfo = m_Animation[STATEANIM::WALK_FWD];
 			}
 			else
@@ -289,6 +305,11 @@ HRESULT CPlayer::Behavior_MoveExitCheck()
 		return E_FAIL;
 	}
 	if (SUCCEEDED(InputMove())) {
+		if (m_pModelCom->IsFinishedAnim() && m_pFSM->IsEnable(FSMSTATE::JOG))
+		{
+			pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		}
 		return S_OK;
 	}
 
@@ -378,6 +399,11 @@ HRESULT CPlayer::Behavior_DodgeExitCheck()
 {
 	if (m_pModelCom->IsFinishedAnim()) {
 		m_pFSM->Change_State(FSMSTATE::IDLE);
+		return E_FAIL;
+	}
+
+	if (SUCCEEDED(InputMove()) && IsCurrentKeyFrame("Dodge")) {
+		m_pFSM->Change_State(FSMSTATE::MOVE);
 		return E_FAIL;
 	}
 	return S_OK;
@@ -619,6 +645,7 @@ void CPlayer::Set_Anim()
 	m_Animation[STATEANIM::WALK_STOP] = { 344,false };
 
 	m_Animation[STATEANIM::JOG_FWD] = { 167,true };
+	m_Animation[STATEANIM::JOG_BWD] = { 154,false };
 	m_Animation[STATEANIM::JOG_STOP] = { 289,false };
 
 	m_Animation[STATEANIM::JUMP] = { 205,false };
@@ -630,6 +657,7 @@ void CPlayer::Set_Anim()
 	m_Animation[STATEANIM::LAND] = { 259,false };
 
 	m_Animation[STATEANIM::DODGE] = { 802,false };
+	m_Animation[STATEANIM::DODGE_BLINK] = { 799,true };
 
 	m_Animation[STATEANIM::SKILL] = { 593,false };
 	m_Animation[STATEANIM::SKILL2] = { 915,false };

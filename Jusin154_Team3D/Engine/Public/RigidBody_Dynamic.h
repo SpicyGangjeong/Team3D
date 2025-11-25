@@ -71,7 +71,9 @@ public:
 	static CRigidBody_Dynamic* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, RIGIDBODY_PROTOTYPE_DYNAMIC_DESC& Desc);
 	virtual CComponent* Clone(void* pArg, class CGameObject* pOwner = nullptr) override;
 	virtual void Free() override;
+#ifdef _DEBUG
 	virtual void Describe_Entity() override;
+#endif // _DEBUG
 };
 
 NS_END

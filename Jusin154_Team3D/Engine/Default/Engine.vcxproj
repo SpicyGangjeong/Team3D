@@ -110,7 +110,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>EDITOR_PROJECT;ENGINE_EXPORTS;IMGUI_EXPORTS;TINYXML2_EXPORT;$(USERNAME);_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>ENGINE_EXPORTS;IMGUI_EXPORTS;TINYXML2_EXPORT;EDITOR_PROJECT;$(USERNAME);_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>../Public/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -148,7 +148,7 @@ call Update_Lib.bat
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>EDITOR_PROJECT;ENGINE_EXPORTS;IMGUI_EXPORTS;TINYXML2_EXPORT;$(USERNAME);NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>ENGINE_EXPORTS;IMGUI_EXPORTS;TINYXML2_EXPORT;$(USERNAME);NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>../Public/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -304,6 +304,7 @@ call Update_Lib.bat
     <ClCompile Include="..\Private\Timer_Manager.cpp" />
     <ClCompile Include="..\Private\tinyxml2.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\Private\Transform.cpp" />
     <ClCompile Include="..\private\UIComponent.cpp" />
@@ -570,31 +571,43 @@ call Update_Lib.bat
       <FileType>Document</FileType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </ExcludedFromBuild>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_States.hlsli">
       <FileType>Document</FileType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </ExcludedFromBuild>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Constants.hlsli">
       <FileType>Document</FileType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </ExcludedFromBuild>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Defines.hlsli">
       <FileType>Document</FileType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </ExcludedFromBuild>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Functions.hlsli">
       <FileType>Document</FileType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </ExcludedFromBuild>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Structures.hlsli">
       <FileType>Document</FileType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </ExcludedFromBuild>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <None Include="..\Public\Assimp\color4.inl" />
     <None Include="..\Public\Assimp\config.h.in" />
@@ -613,7 +626,10 @@ call Update_Lib.bat
     <None Include="..\Public\fMod\fmod_errors.cs" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Mesh_Compute.hlsl" />
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Mesh_Compute.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_WeightBlend.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
@@ -627,10 +643,14 @@ call Update_Lib.bat
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Cell.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Deferred.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Particle_Compute.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>

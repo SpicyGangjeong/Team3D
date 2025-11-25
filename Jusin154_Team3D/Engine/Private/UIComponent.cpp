@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "UIComponent.h"
 
 CUIComponent ::CUIComponent(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -51,7 +51,9 @@ void CUIComponent::Free()
 {
 	__super::Free();
 }
+#ifdef _DEBUG
 
 void CUIComponent::Describe_Entity()
 {
 }
+#endif // _DEBUG

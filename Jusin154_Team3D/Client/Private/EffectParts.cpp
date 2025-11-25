@@ -86,8 +86,6 @@ HRESULT CEffectParts::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-
-
 	return S_OK;
 }
 
@@ -123,8 +121,11 @@ void CEffectParts::Free()
 	__super::Free();
 
 }
+#ifdef _DEBUG
 
 void CEffectParts::Describe_Entity()
 {
 
 }
+
+#endif // _DEBUG

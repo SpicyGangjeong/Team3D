@@ -30,10 +30,17 @@ float2 g_fCurrent_Size;
 float2 g_fHpBG;
 
 float4 g_fNine_Slice;
+float4 g_fImageUV;
+float4 g_fImageUV1;
+
+float2 g_fPosition[4];
+float4 g_fImagesUV[4];
 
 Texture2D g_Texture;
 Texture2D g_Texture1;
 Texture2D g_Texture2;
+Texture2D g_Texture3;
+Texture2D g_Texture4;
 Texture2D g_DiffuseTexture;
 Texture2D g_MaskingTexture;
 
@@ -97,6 +104,8 @@ PS_OUT PS_AlphaBlend(PS_IN In)
     
     float4 Color = g_Texture.Sample(DefaultSampler, In.vTexcoord);
 
+    Color.rgb *= 1.5f;
+    
     Color.a *= Alpha;
     Out.vColor = Color;
     
@@ -525,7 +534,6 @@ PS_OUT PS_HpBar(PS_IN In)
     
     float4 tex1 = g_Texture.Sample(ClampSampler, Finaluv);
     Color = tex1;
-
     float2 reversuv = In.vTexcoord;
     
     reversuv.x = 1.0f - Finaluv;
@@ -537,13 +545,134 @@ PS_OUT PS_HpBar(PS_IN In)
         tex2.rgb = float3(0.f, 0.f, 0.f);
     }
     
-    tex2.rgb *= float3(112.f, 241.f, 31.f) / 255.f;
+    float3 Green = float3(112.f, 241.f, 31.f) / 255.f;
+    Green *= 1.2f;
+    tex2.rgb *= Green;
     
     if (all(Color.rgb >= float3(70.f / 255.f, 70.f / 255.f, 70.f / 255.f)))
         Color = tex2;
         
     Color.a *= Alpha;
     Out.vColor = Color;
+    return Out;
+}
+
+PS_OUT PS_Magic_Meter(PS_IN In)
+{
+    PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+    float3 Blue = float3(41.f, 165.f, 255.f) / 255.f;
+    
+    float4 color = float4(1.f, 1.f, 1.f, 1.f);
+    float4 tex1 = g_Texture.Sample(ClampSampler, In.vTexcoord);
+    float4 tex2 = g_Texture1.Sample(ClampSampler, In.vTexcoord);
+    
+    float2 reverseuv = 1.f - In.vTexcoord;
+    
+    color = tex1;
+    tex2.rgb *= Blue * 1.5f;
+    
+    if (reverseuv.x >= g_fHp)
+    {
+        tex2.rgb = float3(0.f, 0.f, 0.f);
+    }
+    
+    if (all(color.rgb >= float3(65.f / 255.f, 65.f / 255.f, 65.f / 255.f)))
+        color = tex2;
+    
+    color.a *= Alpha;
+
+    Out.vColor = color;
+    
+    return Out;
+}
+
+
+PS_OUT PS_Magic_Icon(PS_IN In)
+{
+    PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+    
+    float4 Color = float4(1.f, 1.f, 1.f, 1.f);
+    
+    float4 tex1 = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    float2 uv = In.vTexcoord;
+    float2 center = float2(0.5, 0.5);
+    float scale = 1.2;
+
+    uv = (uv - center) * scale + center;
+    float4 tex2 = g_Texture1.Sample(ClampSampler, uv);
+
+    Color = tex1;
+    
+    Color = tex1 * (1 - tex2.a) + tex2;
+    
+    
+    Color.a *= Alpha;
+    Out.vColor = Color;
+    
+    return Out;
+}
+
+PS_OUT PS_RemapUV(PS_IN In)
+{
+    PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+    
+    float4 Color = float4(1.f, 1.f, 1.f, 1.f);
+    
+    
+    float2 startUV = g_fImageUV.xy;
+    float2 endUV = g_fImageUV.zw;
+
+    float2 atlasUV = startUV + In.vTexcoord * (endUV - startUV);
+    
+    float4 tex1 = g_Texture.Sample(DefaultSampler, atlasUV);
+    
+    Color = tex1;
+    
+    Color.a *= Alpha;
+    Out.vColor = Color;
+    
+    return Out;
+}
+
+PS_OUT PS_Revelio(PS_IN In)
+{
+    PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+    
+    float4 Color = float4(1.f, 1.f, 1.f, 1.f);
+    float2 UV = In.vTexcoord;
+    
+    float2 Position[4];
+    float2 startUV[4];
+    float2 endUV[4];
+
+    float2 Atlases[4];
+    
+    for (int i = 0; i < 4; ++i)
+    {
+        Position[i] = g_fPosition[i];
+        startUV[i] = g_fImagesUV[i].xy;
+        endUV[i] = g_fImagesUV[i].zw;
+        
+        Atlases[i] = startUV[i] + UV * (endUV[i] - startUV[i]);
+    }
+    
+    float4 tex1 = g_Texture.Sample(DefaultSampler, UV);
+    float4 tex2 = g_Texture1.Sample(DefaultSampler, Atlases[0]);
+    float4 tex3 = g_Texture1.Sample(DefaultSampler, Atlases[1]);
+    float4 tex4 = g_Texture2.Sample(DefaultSampler, Atlases[2]);
+    float4 tex5 = g_Texture2.Sample(DefaultSampler, Atlases[3]);
+    
+    
+    
+    //float2 atlasUV = startUV + In.vTexcoord * (endUV - startUV);
+    
+    Color.a *= Alpha;
+    Out.vColor = Color;
+    
     return Out;
 }
 
@@ -687,4 +816,44 @@ technique11 PosTexTechnique11
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_HpBar();
     }
+    pass Magic_Meter
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Magic_Meter();
+    }
+
+    pass Magic_Icon
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Magic_Icon();
+    }
+
+    pass RemapUV
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_RemapUV();
+    }
+
+    pass Revelio
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Revelio();
+    }
+
 }

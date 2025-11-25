@@ -343,6 +343,9 @@
     <Filter Include="02.GameObjects\Env\05.AlphaMap">
       <UniqueIdentifier>{54eef1b7-a5ee-444f-9577-44ffc8c3d8bc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\07.Decendo">
+      <UniqueIdentifier>{a94e6a94-cc46-4c16-8518-5032bfdbd235}</UniqueIdentifier>
+    </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\Spell_Slot_Preview">
       <UniqueIdentifier>{b4e1da25-c952-4ff4-92fd-7f1501d8c005}</UniqueIdentifier>
     </Filter>
@@ -372,6 +375,15 @@
     </Filter>
     <Filter Include="02.GameObjects\Env\06.InstancedProp">
       <UniqueIdentifier>{27dd1f59-44a7-4ecf-ad44-d72b2b4f9d34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\Magic_Icon">
+      <UniqueIdentifier>{4967d007-a0d8-4d57-b259-7bb47b5cf9ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\Spell_UI">
+      <UniqueIdentifier>{d3738a31-9700-478a-9c93-3d35ae9012b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\MiniMap_Panel\NoMountIcon">
+      <UniqueIdentifier>{93ae1d33-fb58-4793-9e7e-5b8d27e163d1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -699,6 +711,9 @@
     <ClInclude Include="..\public\AlphaMap.h">
       <Filter>02.GameObjects\Env\05.AlphaMap</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Decendo.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\07.Decendo</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Camera_Debug.h">
       <Filter>02.GameObjects\Camera\Debug</Filter>
     </ClInclude>
@@ -725,6 +740,15 @@
     </ClInclude>
     <ClInclude Include="..\public\InstancedProp.h">
       <Filter>02.GameObjects\Env\06.InstancedProp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Magic_Icon.h">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\Magic_Icon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\NoMountIcon.h">
+      <Filter>50.UI\GamePlay_Canvas\MiniMap_Panel\NoMountIcon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Spell_UI.h">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\Spell_UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1045,6 +1069,9 @@
     <ClCompile Include="..\private\AlphaMap.cpp">
       <Filter>02.GameObjects\Env\05.AlphaMap</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Decendo.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\07.Decendo</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\Spell_Slot_Preview.cpp">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel\Spell_Slot_Preview</Filter>
     </ClCompile>
@@ -1074,6 +1101,18 @@
     </ClCompile>
     <ClCompile Include="..\private\InstancedProp.cpp">
       <Filter>02.GameObjects\Env\06.InstancedProp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Magic_Icon.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\Magic_Icon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\NoMountIcon.cpp">
+      <Filter>50.UI\GamePlay_Canvas\MiniMap_Panel\NoMountIcon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Spell_UI.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\Spell_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Goblin_States.cpp">
+      <Filter>02.GameObjects\Monster\Goblin</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

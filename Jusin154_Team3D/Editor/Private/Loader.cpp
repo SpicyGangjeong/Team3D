@@ -49,6 +49,7 @@
 #include "Active_Icon.h"
 
 #include "MiniMap_Panel.h"
+#include "NoMountIcon.h"
 
 #include "Loading_Panel.h"
 #include "LoadingWidget.h"
@@ -62,6 +63,8 @@
 #include "HpBarBG.h"
 #include "Potion.h"
 #include "Magic_Meter.h"
+#include "Magic_Icon.h"
+#include "Spell_UI.h"
 
 #include "IMGUIUI.h"
 
@@ -93,6 +96,7 @@
 #include "TrailObject.h"
 #include "NomalJap.h"
 #include "Bombard.h"
+#include "Decendo.h"
 
 #pragma endregion
 
@@ -346,11 +350,30 @@ HRESULT CLoader::Loading_For_UI()
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("ActiveMission_Icon"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("../Bin/Resources/Textures/Mission/ActiveMission_Icon_%d.png"), 2)))) {
 		return E_FAIL;
+	}
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Megic_Metar"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("../Bin/Resources/Textures/Action/Megic_Meter%d.png"), 3)))) {
+		return E_FAIL;
 	}
 
 
 	Asset_FileLoad("../Bin/Resources/Textures/MiniMap", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
+		{
+
+			_string strFilePath = pFilePath;
+			_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
+
+
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), wstrFileName,
+				CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
+				return E_FAIL;
+			}
+
+			return S_OK;
+
+		});
+	Asset_FileLoad("../Bin/Resources/Textures/HUD", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
 		{
 
 			_string strFilePath = pFilePath;
@@ -541,8 +564,11 @@ HRESULT CLoader::Loading_For_UI()
 	{
 		return E_FAIL;
 	}
-
 	if (FAILED(m_pGameInstance->Add_Prototype<CMiniMap_TrimBorder>(g_iStaticLevel, CMiniMap_TrimBorder::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CNoMountIcon>(g_iStaticLevel, CNoMountIcon::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
@@ -577,6 +603,14 @@ HRESULT CLoader::Loading_For_UI()
 		return E_FAIL;
 	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CMagic_Meter>(g_iStaticLevel, CMagic_Meter::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CMagic_Icon>(g_iStaticLevel, CMagic_Icon::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_UI>(g_iStaticLevel, CSpell_UI::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
@@ -815,7 +849,10 @@ HRESULT CLoader::Loading_For_Effect()
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CBombard>(ENUM_CLASS(LEVEL::EFFECT), CBombard::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
-	
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CDecendo>(ENUM_CLASS(LEVEL::EFFECT), CDecendo::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 
 	m_strMessage = TEXT("Loading Success!");
 
@@ -1393,7 +1430,7 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 #pragma region MONSTER
 
 	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "../Bin/Resources/Models/Monster/Goblin/Goblin.bin", XMMatrixIdentity(),
+		MODEL::ANIM, "../Bin/Resources/Models/Monster/Goblin/Goblin.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
 		TEXT("Prototype_Component_Goblin_Model")
 	));
 	futures.emplace_back(Deferred_ModelLoad(
@@ -1412,11 +1449,11 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 #pragma endregion
 
 	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "../Bin/Resources/Models/Human/Npc/Npc.bin", XMMatrixIdentity(),
+		MODEL::ANIM, "../Bin/Resources/Models/Human/Npc/Npc.bin",XMMatrixRotationY(XMConvertToRadians(180.f))* XMMatrixIdentity(),
 		TEXT("Prototype_Component_Npc_Model")
 	));
 	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::NONANIM, "../Bin/Resources/Models/Object/Wand/Wand.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixIdentity(),
+		MODEL::ANIM, "../Bin/Resources/Models/Object/Wand/Wand.fbx",XMMatrixIdentity(),
 		TEXT("Prototype_Component_Wand_Model")
 	));
 	futures.emplace_back(Deferred_ModelLoad(

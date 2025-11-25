@@ -47,7 +47,7 @@ private:
 
 	_char												 m_szBuffer[MAX_PATH] = { "../Bin/Resources/Data/Effect/"};
 	_char												 m_szTrailBuffer[MAX_PATH] = { "../Bin/Resources/Data/Effect/Trail/" };
-	_char												 m_szPackageBuffer[MAX_PATH] = { "../Bin/Resources/Data/Effect/Package/" };
+	_char												 m_szPackageBuffer[MAX_PATH] = { "../Bin/Resources/Data/Effect/" };
 
 	_string												 m_strSavePath = {};
 	_string												 m_strTrailSavePath = {};

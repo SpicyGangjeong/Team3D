@@ -16,19 +16,17 @@ private:
 
 public:
 	static CChannel* Create(const vector<class CBone*>& Bones, const aiNodeAnim* pAIChannel);
+
+#endif // EDITOR_PROJECT
+public:
 	void Fill_GPU_Keyframes(vector<KEYFRAME_DESC>& outKeyframes);
 	CHANNEL_DESC Fill_GPU_ChannelDesc();
-#endif // EDITOR_PROJECT
 
 public:
-	void Update_TransformationMatirx(const vector<class CBone*>& Bones, const LOCALPOS_DESC* pLocalPosArray, _float fCurrentTrackPosition, _uint* pCurrentKeyFrameIndex,class CTransform* pTransform=nullptr);
+	void Update_TransformationMatirx(const vector<class CBone*>& Bones, const LOCALPOS_DESC* pLocalPosArray, _float fCurrentTrackPosition, _uint* pCurrentKeyFrameIndex,class CTransform* pTransform=nullptr,_float m_fAmount = 1.f);
 	_int Get_BoneIndex() { return { m_iBoneIndex }; }
 	void Set_BoneIndex(_int iBoneIndex) { m_iBoneIndex = iBoneIndex; }
-	void ResetRootMotion() { 
-		m_vPrevRootPos = { 0.f, 0.f, 0.f }; 
-		m_vPrevRootRot = { 0.f,0.f,0.f,0.f };
-		m_bInitialRootRotSaved = false;
-	}
+	void ResetRootMotion();
 	_matrix Get_BoneTransformationMatrix() { return m_BoneTransformationMatrix; }
 
 	KEYFRAME* Get_Frame(_uint iIndex);
@@ -53,6 +51,7 @@ private:
 	_float3					m_vPrevRootPos = { 0.f, 0.f, 0.f };
 	_float4					m_vPrevRootRot = { 0.f, 0.f, 0.f,0.f };
 	_matrix					m_BoneTransformationMatrix = {};
+	_bool					m_bInitialRootPos = { false };
 	_bool					m_bInitialRootRotSaved = {false};
 	_float4					m_vInitialRootRot = {};
 

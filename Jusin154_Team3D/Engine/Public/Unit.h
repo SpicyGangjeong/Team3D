@@ -25,7 +25,10 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	_wstring& Get_PrototypeTag() { return m_strModelPrototypeTag; }
+#ifdef _DEBUG
 	void Load_KeyFrame();
+#endif // _DEBUG
+
 public:
 
 #pragma region STATE
@@ -37,6 +40,7 @@ public:
 	void Set_LightCombo(_uint LightCombo) { m_iLightCombo = LightCombo; }
 	_float Get_KeyFrame(_string FrameName);
 	_bool IsCurrentKeyFrame(_string FrameName);
+
 	virtual void Reset_Sprint() {};
 	virtual void Reset_Walk() {};
 #pragma endregion
@@ -56,6 +60,10 @@ protected:
 
 	vector<pair<_uint, _bool>> m_Animation;
 
+	unordered_map<size_t, CState*> m_States = { };
+	size_t m_iStateMask = { 0 };
+
+	STATEANIM::ESTATE m_eSpell = { STATEANIM::END };
 
 private:
 	virtual void Add_FSM() {};
@@ -69,7 +77,10 @@ protected:
 public:
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr)PURE;
 	virtual void Free() override;
+#ifdef _DEBUG
 	virtual void Describe_Entity() override;
+#endif // _DEBUG
+
 };
 
 NS_END

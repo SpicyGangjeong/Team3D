@@ -33,7 +33,6 @@ public:
 	void Set_SizeY(_float fSizeY);
 	void Set_Cloned(_bool isCloned) { m_isCloned = isCloned; }
 	void Set_ImageUV(UI_ATLAS_DESC* AtlasUV = nullptr);
-	void Add_InstanceOvject(vector<_uint> VisileIndices);
 
 private:
 	VTX_INSTANCE_UI*	m_pInstanceVertices = { nullptr };
@@ -42,13 +41,14 @@ private:
 	_float2*			m_fPosition{ nullptr };
 	_float				m_fAddPosition{};
 
-	vector<_uint>		m_VisibleIndices;
 
 public:
 	static CVIBuffer_UI_Instance* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const INSTANCE_DESC* pInstanceDesc);
 	virtual CComponent* Clone(void* pArg, class CGameObject* pOwner = nullptr) override;
 	virtual void Free() override;
-	virtual void Describe_Entity() override;
+#ifdef _DEBUG
+	void Describe_Entity() override;
+#endif // _DEBUG
 };
 
 NS_END

@@ -79,18 +79,6 @@ CBone* CBone::Create(const aiNode* pAINode, _int iParentIndex)
 	return pInstance;
 }
 
-CBone* CBone::Create(const SaveNode& _SaveNode, _int iParentIndex)
-{
-	CBone* pInstance = new CBone();
-
-	if (FAILED(pInstance->Initialize(_SaveNode, iParentIndex)))
-	{
-		MSG_BOX("Failed to Created : CBone");
-		SAFE_RELEASE(pInstance);
-	}
-
-	return pInstance;
-}
 
 HRESULT CBone::Initialize(const aiNode* pAINode, _int iParentIndex)
 {
@@ -107,6 +95,18 @@ HRESULT CBone::Initialize(const aiNode* pAINode, _int iParentIndex)
 }
 #endif
 
+CBone* CBone::Create(const SaveNode& _SaveNode, _int iParentIndex)
+{
+	CBone* pInstance = new CBone();
+
+	if (FAILED(pInstance->Initialize(_SaveNode, iParentIndex)))
+	{
+		MSG_BOX("Failed to Created : CBone");
+		SAFE_RELEASE(pInstance);
+	}
+
+	return pInstance;
+}
 
 HRESULT CBone::Initialize(HANDLE hFile, DWORD& dwByte)
 {

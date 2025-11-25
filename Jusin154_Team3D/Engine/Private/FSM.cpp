@@ -101,6 +101,7 @@ void CFSM::Free()
 		m_pStates = nullptr;
 	}
 }
+#ifdef _DEBUG
 
 void CFSM::Describe_Entity()
 {
@@ -108,3 +109,4 @@ void CFSM::Describe_Entity()
 
 
 
+#endif // _DEBUG

@@ -48,13 +48,15 @@ void CDummy_PhysXPlayable::Update(_float fTimeDelta)
 			m_pGameInstance->Attach_Actor(*m_pCharacter_Controller->Get_Actor());
 		}
 	}
-	m_pTransformCom->AccumulateMomentum(XMVectorSet(0.f, -GRAVITY * fTimeDelta, 0.f, 0.f));
 	m_pCharacter_Controller->Move(fTimeDelta);
 }
 
 void CDummy_PhysXPlayable::Late_Update(_float fTimeDelta)
 {
+#ifdef _DEBUG
 	Describe_Entity();
+#endif // _DEBUG
+
 	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
 		m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
 	}
@@ -219,8 +221,11 @@ void CDummy_PhysXPlayable::Free()
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pModelCom);
 }
+#ifdef _DEBUG
 
 void CDummy_PhysXPlayable::Describe_Entity()
 {
 	m_pCharacter_Controller->Describe_Entity();
 }
+
+#endif // _DEBUG
