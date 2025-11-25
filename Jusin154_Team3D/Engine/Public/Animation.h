@@ -13,6 +13,7 @@ private:
 public:
 	_bool			Update_TransformationMatrices(const vector<class CBone*>& Bones, const LOCALPOS_DESC* pLocalPosArray, _bool bIsLoop, _float fTimeDelta, class CTransform* pTransform = nullptr, _float m_fAmount = 1.f);
 	void Reset();
+	void ProgressAnimation(const vector<CBone*>& Bones, const LOCALPOS_DESC* pLocalPosArray, CTransform* pTransform, _float m_fAmount);
 	void			ResetRootMotion();
 	void			Depart_Animation();
 	void			Set_AnimPause(_bool bValue) { m_bPause = bValue; }

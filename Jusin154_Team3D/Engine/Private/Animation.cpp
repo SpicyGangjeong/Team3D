@@ -35,35 +35,34 @@ CAnimation::CAnimation(const CAnimation& rhs)
 }
 _bool CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bones, const LOCALPOS_DESC* pLocalPosArray, _bool bIsLoop, _float fTimeDelta,CTransform*pTransform, _float m_fAmount)
 {
-	//m_fCurrentTrackPosition += m_TickPerSeconds[m_bPause] * fTimeDelta;
-	m_fCurrentTrackPosition += m_fTickPerSecond * fTimeDelta * m_fAnimSpeed;
+	_float fProgress = m_fTickPerSecond * fTimeDelta * m_fAnimSpeed;
+	m_fCurrentTrackPosition += fProgress;
+
 	if (m_fCurrentTrackPosition >= m_fDuration) {
-		m_fCurrentTrackPosition = 0.f; // 루프
 		if (false == bIsLoop) {
+			m_fCurrentTrackPosition = 0.f; // 루프
 			m_fCurrentTrackPosition = m_fDuration;
 			return true;
 		}
 		else {
 			Depart_Animation();
+			m_fCurrentTrackPosition = fProgress;
+			ResetRootMotion();
+			ProgressAnimation(Bones, pLocalPosArray, pTransform, m_fAmount);
 			return true;
 		}
 	}
 
-	_uint iIndex = {};
-	if (m_vBoneTransformationMatrix.size() > 0)
-		m_vBoneTransformationMatrix.clear();
-	for (auto& pChannel : m_Channels) {
-		pChannel->Update_TransformationMatirx(Bones, pLocalPosArray, m_fCurrentTrackPosition, &m_CurrentKeyFrameIndices[iIndex++],pTransform, m_fAmount);
-		m_vBoneTransformationMatrix.push_back(pChannel->Get_BoneTransformationMatrix());
-	}
+	ProgressAnimation(Bones, pLocalPosArray, pTransform, m_fAmount);
 
 	return false;
 }
 
 void CAnimation::ResetRootMotion()
 {
-	for (auto& pChannel : m_Channels)
+	for (auto& pChannel : m_Channels){
 		pChannel->ResetRootMotion();
+	}
 }
 
 void CAnimation::Depart_Animation()
@@ -308,6 +307,18 @@ HRESULT CAnimation::Initialize(const vector<CBone*>& Bones, const CModel* pModel
 	}
 
 	return S_OK;
+}
+
+void CAnimation::ProgressAnimation(const vector<CBone*>& Bones, const LOCALPOS_DESC* pLocalPosArray, CTransform* pTransform, _float m_fAmount)
+{
+	_uint iIndex = {};
+	if (m_vBoneTransformationMatrix.size() > 0) {
+		m_vBoneTransformationMatrix.clear();
+	}
+	for (auto& pChannel : m_Channels) {
+		pChannel->Update_TransformationMatirx(Bones, pLocalPosArray, m_fCurrentTrackPosition, &m_CurrentKeyFrameIndices[iIndex++], pTransform, m_fAmount);
+		m_vBoneTransformationMatrix.push_back(pChannel->Get_BoneTransformationMatrix());
+	}
 }
 
 HRESULT CAnimation::Combined_Initialize()

@@ -26,12 +26,7 @@ public:
 	void Update_TransformationMatirx(const vector<class CBone*>& Bones, const LOCALPOS_DESC* pLocalPosArray, _float fCurrentTrackPosition, _uint* pCurrentKeyFrameIndex,class CTransform* pTransform=nullptr,_float m_fAmount = 1.f);
 	_int Get_BoneIndex() { return { m_iBoneIndex }; }
 	void Set_BoneIndex(_int iBoneIndex) { m_iBoneIndex = iBoneIndex; }
-	void ResetRootMotion() { 
-		m_vPrevRootPos = { 0.f, 0.f, 0.f }; 
-		m_vPrevRootRot = { 0.f,0.f,0.f,0.f };
-		m_bInitialRootRotSaved = false;
-		m_bInitialRootPos = false;
-	}
+	void ResetRootMotion();
 	_matrix Get_BoneTransformationMatrix() { return m_BoneTransformationMatrix; }
 
 	KEYFRAME* Get_Frame(_uint iIndex);
