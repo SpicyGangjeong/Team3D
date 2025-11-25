@@ -370,6 +370,9 @@
     <Filter Include="02.GameObjects\Camera\CameraPosition\Player\Target">
       <UniqueIdentifier>{1c4860c7-bc8a-4bed-b545-ed3ef0b02748}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Env\06.InstancedProp">
+      <UniqueIdentifier>{27dd1f59-44a7-4ecf-ad44-d72b2b4f9d34}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -720,6 +723,9 @@
     <ClInclude Include="..\public\Magic_Meter.h">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel\Magic_Meter</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\InstancedProp.h">
+      <Filter>02.GameObjects\Env\06.InstancedProp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -1066,6 +1072,9 @@
     <ClCompile Include="..\Private\Player_States.cpp">
       <Filter>02.GameObjects\Player</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\InstancedProp.cpp">
+      <Filter>02.GameObjects\Env\06.InstancedProp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Editor.rc">
@@ -1095,6 +1104,9 @@
       <Filter>99.Define\SHADER</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_UI_Instance.hlsl">
+      <Filter>99.Define\SHADER</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxWorldModelInstance.hlsl">
       <Filter>99.Define\SHADER</Filter>
     </FxCompile>
   </ItemGroup>

@@ -10,6 +10,7 @@
 #include "DummySkyBox.h"
 #include "MainLight.h"
 #include "Land.h"
+#include "InstancedProp.h"
 #include "Player.h"
 
 CLevel_MapViewer::CLevel_MapViewer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
@@ -123,6 +124,9 @@ HRESULT CLevel_MapViewer::Ready_Layer_BuildingContainer(const _wstring& strLayer
 HRESULT CLevel_MapViewer::Ready_Layer_MapObjectManager(const _wstring& strLayerTag)
 {
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapObject_Manager>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
 		return E_FAIL;
 
 	return S_OK;
