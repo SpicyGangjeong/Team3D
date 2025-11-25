@@ -43,8 +43,8 @@ HRESULT CLevel_EffectViewer::Initialize()
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEffect_Editor>(ENUM_CLASS(LEVEL::EFFECT), NEXT_LEVEL, TEXT("Layer_Editor"))))
 		return E_FAIL;
 
-	/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_Plane>(ENUM_CLASS(LEVEL::EFFECT), NEXT_LEVEL, LAYER_CUBE)))
-		return E_FAIL;*/
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_Plane>(ENUM_CLASS(LEVEL::EFFECT), NEXT_LEVEL, LAYER_CUBE)))
+		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_Cube>(ENUM_CLASS(LEVEL::EFFECT), NEXT_LEVEL, LAYER_CUBE)))
 		return E_FAIL;

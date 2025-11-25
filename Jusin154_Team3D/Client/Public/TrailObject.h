@@ -68,15 +68,9 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 
 public:
+	void    Trail_Update(_fmatrix WorldMat, _float fTimeDelta);
 	HRESULT Load_Trail(const _char* pPath, LEVEL eLevel);
-	void    Set_Target(const _float4x4* pMatrix , _fvector v0ffset) {
 
-		if (pMatrix != nullptr)
-		{
-			m_pParantsMatrix = pMatrix;
-			m_vOffset = v0ffset;
-		}
-	}
 
 private:
 	HRESULT Bind_ShaderResources() override;
@@ -100,7 +94,7 @@ private:
 	CTexture*	m_pDiffuse_TextureCom = { nullptr };
 	CTexture*	m_pNoise_TextureCom = { nullptr };
 	CTexture*	m_pMasking_TextureCom = { nullptr };
-	CTexture* m_pDistortion_TextureCom = { nullptr };
+	CTexture*   m_pDistortion_TextureCom = { nullptr };
 
 	CShader*	m_pShaderCom = { nullptr };
 	CTrail*		m_pTrailCom = { nullptr };
@@ -114,10 +108,6 @@ private:
 	_string     m_strName = {};
 
 	TRAIL_INFO  m_TrailInfo = {};
-
-	const _float4x4*   m_pParantsMatrix = {};
-	_vector			   m_vOffset = {};
-	_matrix		       m_CombinedMat = {};
 };
 
 NS_END
