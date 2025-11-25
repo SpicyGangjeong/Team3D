@@ -302,6 +302,7 @@ void CTrailObject::Free()
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pTrailCom);
 }
+#ifdef _DEBUG
 
 void CTrailObject::Describe_Entity()
 {
@@ -309,15 +310,17 @@ void CTrailObject::Describe_Entity()
 
 	_float4 vValue = {};
 
-    XMStoreFloat4(&vValue, m_vOffset);
+	XMStoreFloat4(&vValue, m_vOffset);
 
-	if(GUI::InputFloat4("OFFSET", (_float*)&vValue))
+	if (GUI::InputFloat4("OFFSET", (_float*)&vValue))
 	{
 		m_vOffset = XMLoadFloat4(&vValue);
 	}
 
 	GUI::End();
 }
+#endif // _DEBUG
+
 
 HRESULT CTrailObject::Bind_ShaderResources()
 {

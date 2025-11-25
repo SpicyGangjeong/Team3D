@@ -17,7 +17,9 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+#ifdef _DEBUG
 	void Render_CameraCoordinateSystem();
+#endif // _DEBUG
 	_bool Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
 
 private:
@@ -44,9 +46,9 @@ private:
 	HRESULT Ready_Components();
 	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
-	void Update_CameraCoordinateSystem();
 
 #ifdef _DEBUG
+	void Update_CameraCoordinateSystem();
 	unique_ptr<BasicEffect> m_BasicEffect;
 	unique_ptr<PrimitiveBatch<VertexPositionColor>> m_Batch;
 #endif // _DEBUG
@@ -56,7 +58,10 @@ public:
 	static CPlayer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr) override;
 	virtual void Free() override;
+#ifdef _DEBUG
 	virtual void Describe_Entity() override;
+
+#endif // _DEBUG
 
 #pragma region STATE
 

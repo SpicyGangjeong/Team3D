@@ -160,6 +160,9 @@ void CGamePlay_Canvas::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
+#ifdef _DEBUG
 void CGamePlay_Canvas::Describe_Entity()
 {
 }
+
+#endif // _DEBUG

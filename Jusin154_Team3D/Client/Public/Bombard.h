@@ -36,7 +36,9 @@ public:
 	static CBombard* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;
 	CGameObject* Clone(void* pArg, CGameObject* pOwner) override;
+#ifdef _DEBUG
 	void Describe_Entity() override;
+#endif // _DEBUG
 };
 
 NS_END

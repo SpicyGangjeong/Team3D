@@ -25,7 +25,10 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	_wstring& Get_PrototypeTag() { return m_strModelPrototypeTag; }
+#ifdef _DEBUG
 	void Load_KeyFrame();
+#endif // _DEBUG
+
 public:
 
 #pragma region STATE
@@ -74,7 +77,10 @@ protected:
 public:
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr)PURE;
 	virtual void Free() override;
+#ifdef _DEBUG
 	virtual void Describe_Entity() override;
+#endif // _DEBUG
+
 };
 
 NS_END

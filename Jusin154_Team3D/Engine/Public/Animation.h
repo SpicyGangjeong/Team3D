@@ -22,7 +22,12 @@ public:
 	void			Set_AnimProgressPostion(const _char* pChannelName, _uint iPosition);
 	vector<_int>* Capture_Bones();
 	void InterpAnim(CAnimation* pPreAnim, vector<CBone*>& Bones, float fRatio);
+
+
+
 	void CreateGPUData(ID3D11Device* pDevice);
+
+
 	vector<LERPDESC> Get_StartFrameInformations() { return m_StartKeyFrames; }
 	const _string& Get_Name() const { return m_strName; }
 

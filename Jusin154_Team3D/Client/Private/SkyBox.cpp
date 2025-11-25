@@ -146,7 +146,10 @@ void CSkyBox::Free()
 	SAFE_RELEASE(m_pModelCom);
 	SAFE_RELEASE(m_pShaderCom);
 }
+#ifdef _DEBUG
 
 void CSkyBox::Describe_Entity()
 {
 }
+
+#endif // _DEBUG

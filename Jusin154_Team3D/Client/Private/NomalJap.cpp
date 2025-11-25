@@ -150,11 +150,14 @@ void CNomalJap::Free()
 	//		SAFE_RELEASE(m_pPhysHitBox);
 
 }
+#ifdef _DEBUG
 
 void CNomalJap::Describe_Entity()
 {
 
 }
+
+#endif // _DEBUG
 
 HRESULT CNomalJap::Bind_ShaderResources()
 {

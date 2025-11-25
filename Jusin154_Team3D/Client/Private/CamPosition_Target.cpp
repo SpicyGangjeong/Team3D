@@ -89,6 +89,10 @@ void CCamPosition_Target::Free()
 {
 	__super::Free();
 }
+#ifdef _DEBUG
+
 void CCamPosition_Target::Describe_Entity()
 {
 }
+
+#endif // _DEBUG

@@ -16,9 +16,11 @@ private:
 
 public:
 	static CChannel* Create(const vector<class CBone*>& Bones, const aiNodeAnim* pAIChannel);
+
+#endif // EDITOR_PROJECT
+public:
 	void Fill_GPU_Keyframes(vector<KEYFRAME_DESC>& outKeyframes);
 	CHANNEL_DESC Fill_GPU_ChannelDesc();
-#endif // EDITOR_PROJECT
 
 public:
 	void Update_TransformationMatirx(const vector<class CBone*>& Bones, const LOCALPOS_DESC* pLocalPosArray, _float fCurrentTrackPosition, _uint* pCurrentKeyFrameIndex,class CTransform* pTransform=nullptr,_float m_fAmount = 1.f);
