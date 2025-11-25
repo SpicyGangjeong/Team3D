@@ -119,10 +119,6 @@ void CChannel::Update_TransformationMatirx(
 	_uint* pCurrentKeyFrameIndex,
 	CTransform* pTransform,_float m_fAmount)
 {
-	GUI::Text("PrevRootPos = %.2f, %.2f, %.2f", m_vPrevRootPos.x, m_vPrevRootPos.y, m_vPrevRootPos.z);
-	/*if (0.f == fCurrentTrackPosition)
-		*pCurrentKeyFrameIndex = 0;
-
 	KEYFRAME		LastKeyFrame = m_KeyFrames.back();
 
 	_vector			vScale{};
@@ -138,8 +134,9 @@ void CChannel::Update_TransformationMatirx(
 
 	else
 	{
-		while (fCurrentTrackPosition >= m_KeyFrames[*pCurrentKeyFrameIndex + 1].fTrackPosition)
+		while (fCurrentTrackPosition >= m_KeyFrames[*pCurrentKeyFrameIndex + 1].fTrackPosition){
 			++*pCurrentKeyFrameIndex;
+		}
 
 		_float3		vSourScale{}, vDestScale{};
 		_float4		vSourRotation{}, vDestRotation{};
@@ -160,34 +157,27 @@ void CChannel::Update_TransformationMatirx(
 		vScale = XMVectorLerp(XMLoadFloat3(&vSourScale), XMLoadFloat3(&vDestScale), fRatio);
 		vRotation = XMQuaternionSlerp(XMLoadFloat4(&vSourRotation), XMLoadFloat4(&vDestRotation), fRatio);
 		vTranslation = XMVectorSetW(XMVectorLerp(XMLoadFloat3(&vSourTranslation), XMLoadFloat3(&vDestTranslation), fRatio), 1.f);
-	}*/
+	}
 
 
-	const LOCALPOS_DESC& LocalPos = pLocalPosArray[m_iBoneIndex];
+	//const LOCALPOS_DESC& LocalPos = pLocalPosArray[m_iBoneIndex];
 
-	_vector vScale = XMLoadFloat3(&LocalPos.Scale);
-	_vector vRotation = XMLoadFloat4(&LocalPos.Rotation);
-	_vector vTranslation = XMVectorSet(
-		LocalPos.Translation.x,
-		LocalPos.Translation.y,
-		LocalPos.Translation.z,
-		1.f);
+	//_vector vScale = XMLoadFloat3(&LocalPos.Scale);
+	//_vector vRotation = XMLoadFloat4(&LocalPos.Rotation);
+	//_vector vTranslation = XMVectorSet(
+	//	LocalPos.Translation.x,
+	//	LocalPos.Translation.y,
+	//	LocalPos.Translation.z,
+	//	1.f);
 
 	if (Bones[m_iBoneIndex]->Compare_Name("Reference") && pTransform != nullptr)
 	{
+		GUI::Text("fCurrentTrackPosition : %f", fCurrentTrackPosition);
 		_float3 vCurRootPos;
 		XMStoreFloat3(&vCurRootPos, vTranslation);
 
 		_matrix pre = XMLoadFloat4x4(&m_PreTransformMatrix);
-		    
-		if (!m_bInitialRootPos)
-		{
-			m_bInitialRootPos = true;
-			m_vPrevRootPos = vCurRootPos;
-			vTranslation = XMVectorZero();
-		}
-		else
-		{
+		
 			_vector vDeltaLocal = XMLoadFloat3(&vCurRootPos) - XMLoadFloat3(&m_vPrevRootPos);
 			_vector vDeltaAdjusted = XMVector3TransformNormal(vDeltaLocal, pre);
 
@@ -200,7 +190,9 @@ void CChannel::Update_TransformationMatirx(
 			_float dz = XMVectorGetZ(vDeltaAdjusted);
 
 			_vector vDeltaWorld = vRight * dx + (vUp * dz) + (-vLook * dy);
-
+			if (fabsf(dx) < FLT_EPSILON3 && fabsf(dy) < FLT_EPSILON3 && fabsf(dz) < FLT_EPSILON3) {
+				int a = 0;
+			}
 			vDeltaWorld *= 0.01f;
 			vDeltaWorld *= m_fAmount;
 
@@ -210,7 +202,6 @@ void CChannel::Update_TransformationMatirx(
 
 			m_vPrevRootPos = vCurRootPos;
 			vTranslation = XMVectorZero();
-		}
 
 		_float4 curRotF4;
 		XMStoreFloat4(&curRotF4, vRotation);
