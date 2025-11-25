@@ -178,8 +178,8 @@ public:
 	virtual ~CInstance_Model() = default;
 
 public:
-#ifdef EDITOR_PROJECT
 	virtual HRESULT Initialize_Prototype(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex);
+#ifdef EDITOR_PROJECT
 	HRESULT			Save_InstanceModel(HANDLE hFile);
 	HRESULT			PreLoad(HANDLE hFile);
 #endif	
@@ -194,16 +194,27 @@ public:
 	INSTANCE_DESC	Get_EffectValue() { return m_InstanceDesc; }
 	HRESULT			Load_InstanceModel(HANDLE hFile);
 private:
+		bool LoadData(const _char* filename);
+
+private:
 #ifdef EDITOR_PROJECT
 	HRESULT			Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex);
 	HRESULT			Ready_Meshes(MODEL eType, const aiScene* pAIScene, _fmatrix& PreTransformMatrix);
+	_bool			SaveAssimpModel(const _char* filename, const aiScene* pAIScene);
+#endif
 
-#endif	
+	HRESULT			Ready_Meshes();
 
 	HRESULT			Change_NumInstance();
 	HRESULT			Create_Instance_Buffer();
 	HRESULT         Create_SubResource_Buffer();
 	HRESULT			Create_CS();
+
+private:
+#ifdef EDITOR_PROJECT
+	const aiScene*		m_pAIScene = { nullptr };
+	Assimp::Importer	m_Importer;
+#endif	
 
 private:
 	ID3D11Buffer*			m_pVBInstance = { nullptr };
@@ -222,7 +233,7 @@ private:
 
 	vector<class CMesh*>	m_Meshes = {};
 	vector<class CBone*>	m_Bones = {}; // 나중에 혹시 애님메쉬를 인스턴싱 할 일이 있을지도 모르니 남겨놓음
-
+	SaveModel				m_SaveModel = {};
 private:
 	class CComputeShader*	m_pComputeShader = {};
 	ID3D11Buffer*			m_pConstantBuffer = { nullptr }; // 컴퓨트 쉐이드 전용 상수버퍼

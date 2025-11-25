@@ -169,6 +169,7 @@ HRESULT CMesh::Initialize_Prototype(MODEL eType, const CModel* pModel, SaveMesh*
 	m_Vertices.reserve(_SaveMesh->Vertices.size());
 
 	XMMATRIX matPre = PreTransformMatrix;
+
 	for (size_t i = 0; i < _SaveMesh->Vertices.size(); ++i)
 	{
 		_float3 pos = _SaveMesh->Vertices[i].Pos;
@@ -264,6 +265,9 @@ HRESULT CMesh::Ready_VertexBuffer_For_NonAnim(SaveMesh* SaveMesh, _fmatrix PreTr
 
 HRESULT CMesh::Ready_VertexBuffer_For_Anim(const CModel* pModel, SaveMesh* _SaveMesh)
 {
+	if (pModel == nullptr)
+		return S_OK;
+
 	m_iVertexStride = sizeof(VTXANIMMESH);
 	D3D11_BUFFER_DESC		VBDesc{};
 	VBDesc.ByteWidth = m_iVertexStride * m_iNumVertices;

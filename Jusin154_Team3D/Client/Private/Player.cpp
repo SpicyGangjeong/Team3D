@@ -112,7 +112,7 @@ void CPlayer::Late_Update(_float fTimeDelta)
 {
 	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_Position());
 
-	m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
+	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 
 	__super::Late_Update(fTimeDelta);
 }

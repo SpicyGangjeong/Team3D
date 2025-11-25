@@ -518,6 +518,7 @@ struct VS_BLUR_OUT
     float2 vTexcoord : TEXCOORD0;
     float2 vLifeTime : TEXCOORD1;
     uint iGPUIndex : TEXCOORD2;
+    float4 vProjPos : TEXCOORD3;
 };
 
 VS_BLUR_OUT VS_BLUR(VS_IN In, uint iGPUIndex : SV_InstanceID)
@@ -538,7 +539,7 @@ VS_BLUR_OUT VS_BLUR(VS_IN In, uint iGPUIndex : SV_InstanceID)
     Out.vTexcoord = In.vTexcoord;
     Out.vLifeTime = In.vLifeTime;
     Out.iGPUIndex = iGPUIndex;
-
+    Out.vProjPos = vPosition;
 
     return Out;
 }
@@ -561,7 +562,7 @@ VS_BLUR_OUT VS_BLUR_NOWORLD(VS_IN In, uint iGPUIndex : SV_InstanceID)
     Out.vTexcoord = In.vTexcoord;
     Out.vLifeTime = In.vLifeTime;
     Out.iGPUIndex = iGPUIndex;
-
+    Out.vProjPos = vPosition;
 
     return Out;
 }
@@ -572,7 +573,7 @@ struct PS_BLUR_IN
     float2 vTexcoord : TEXCOORD0;
     float2 vLifeTime : TEXCOORD1;
     uint iGPUIndex : TEXCOORD2;
-
+    float4 vProjPos : TEXCOORD3;
 };
 
 struct PS_BLUR_OUT
@@ -748,6 +749,14 @@ PS_BLUR_OUT PS_BLUR(PS_BLUR_IN In)
     
         // 색깔 추가할 처리 (이미시브)
     
+    int2 iTexel = int2(In.vPosition.xy);
+    
+    float fDepthStencilValue = g_DepthStencilTexture.Load(int3(iTexel, 0)).r;
+    
+    float fbias = 0.000005f;
+    
+    if (fDepthStencilValue <= In.vProjPos.z / In.vProjPos.w + fbias)
+        discard;
 
     
  
@@ -825,7 +834,7 @@ technique11 DefaultTechnique
     pass Blur
     {
         SetRasterizerState(RS_Nocull);
-        SetDepthStencilState(DSS_Effect, 0);
+        SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_BLUR();
         GeometryShader = NULL;
@@ -855,7 +864,7 @@ technique11 DefaultTechnique
     pass BLUR_NO_WORLD
     {
         SetRasterizerState(RS_Nocull);
-        SetDepthStencilState(DSS_Effect, 0);
+        SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_BLUR_NOWORLD();
         GeometryShader = NULL;

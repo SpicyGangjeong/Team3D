@@ -242,7 +242,7 @@ float4x4 RotateAxis(float4 _vAxis , float fAngle)
         );
     }
     
-    float3 vAxis = normalize(_vAxis);
+    float3 vAxis = normalize(_vAxis.xyz);
     
     float fCos = cos(radians(fAngle));
     float fSin = sin(radians(fAngle));

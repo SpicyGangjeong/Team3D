@@ -36,6 +36,10 @@ HRESULT CEffectObject::Render()
 	for (_uint i = 0; i < m_pInstance_ModelCom->Get_NumMeshes(); i++)
 	{
 
+	
+		if (FAILED(m_pGameInstance->Bind_DepthStencil(m_pShaderCom, "g_DepthStencilTexture")))
+			return E_FAIL;
+
 		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(m_EffectInfo.eShaderPass)))) {
 			return E_FAIL;
 		}
@@ -43,8 +47,7 @@ HRESULT CEffectObject::Render()
 		if (FAILED(m_pInstance_ModelCom->Bind_CS_Output(5, 1)))
 			return E_FAIL;
 
-		if (FAILED(m_pGameInstance->Bind_DepthStencil(m_pShaderCom, "g_DepthStencilTexture")))
-			return E_FAIL;
+
 
 
 

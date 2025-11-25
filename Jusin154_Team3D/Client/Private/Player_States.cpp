@@ -499,7 +499,20 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 			switch (m_eSpell)
 			{
 			case STATEANIM::ACCIO:
+			{
+				/* TODO 임시 방편 */
 				pairAnimInfo = m_Animation[STATEANIM::ACCIO];
+
+				CPartObject::PARTOBJECT_DESC PartsDesc{};
+
+				PartsDesc.pParentTransform = m_pTransformCom;
+
+				if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBombard>(NEXT_LEVEL, NEXT_LEVEL, TEXT("Layer_Effect"), &PartsDesc, this, nullptr))) {
+					assert(false);
+					return E_FAIL;
+				}
+
+			}
 				break;
 			case STATEANIM::DESCENDO:
 				pairAnimInfo = m_Animation[STATEANIM::DESCENDO];
@@ -609,7 +622,7 @@ void CPlayer::Add_FSM()
 
 void CPlayer::Set_Anim()
 {
-	m_Animation[STATEANIM::IDLE] = { 266,true };
+	m_Animation[STATEANIM::IDLE] = { 817,true };
 	m_Animation[STATEANIM::IDLE_TURN_L] = { 270,false };
 	m_Animation[STATEANIM::IDLE_TURN_R] = { 430,false };
 	m_Animation[STATEANIM::IDLE_TURN_BWD] = { 268,false };

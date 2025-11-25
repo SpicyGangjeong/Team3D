@@ -193,6 +193,14 @@ _matrix CModel::Get_BoneMatrix(_uint iBoneIndex)
 	return m_Bones[iBoneIndex]->Get_CombinedTransformationMatrix();
 }
 
+void CModel::Combined_BoneMatrix()
+{
+	for (auto& pBone : m_Bones)
+	{
+		pBone->Update_CombinedTransformationMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
+	}
+}
+
 
 void CModel::Set_CurrentTrackPosition(_float TrackPosition)
 {
@@ -913,7 +921,9 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 	_char		szDir[MAX_PATH] = {};
 	_char		szName[MAX_PATH] = {};
 	_char		szEXT[MAX_PATH] = {};
+
 	_splitpath_s(pModelFilePath, nullptr, 0, szDir, MAX_PATH, szName, MAX_PATH, szEXT, MAX_PATH);
+
 
 	if (strcmp(".bin", szEXT) == 0)
 	{
@@ -925,13 +935,16 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 		strcpy_s(Temp, szDir);
 		strcat_s(Temp, szName);
 		strcat_s(Temp, ".bin");
+
 		if (FAILED(Assimp_Model_Load(pModelFilePath, eType, PreTransformMatrix, 0))) {
 			return E_FAIL;
 		}
+
 		SaveAssimpModel(Temp);
 
 		return S_OK;
 	}
+
 	m_pSaveModel = m_pGameInstance->Load_SaveModel(pModelFilePath);
 
 	LoadAdditionalAnimations(pModelFilePath);

@@ -65,8 +65,6 @@ void CEditEffect::Late_Update(_float fTimeDelta)
 		return;
 
 
-
-
 	if (m_isGoStraight == true)
 	{
 		m_fAccTime += fTimeDelta;
