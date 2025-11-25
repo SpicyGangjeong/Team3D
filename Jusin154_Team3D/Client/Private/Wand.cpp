@@ -71,21 +71,14 @@ void CWand::Priority_Update(_float fTimeDelta)
 	m_pTransformCom->Set_WorldMatrix(socketMatrix * XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr()));
 	
 	Describe_Entity();
-	//트레일 업데이트
-
-
-
-	//m_pTrail->Trail_Update(CombinedMat, fTimeDelta);
-
-
-	//내 이펙트 파츠 업데이트
-
 
 
 }
 
 void CWand::Update(_float fTimeDelta)
 {
+
+	//m_pTrail->Trail_Update(CombinedMat, fTimeDelta);
 
 
 	m_pModelCom->Combined_BoneMatrix();
