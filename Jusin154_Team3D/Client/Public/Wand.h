@@ -31,6 +31,7 @@ private:
 	CModel*				 m_pModelCom = { nullptr };
 
 	class CTrailObject*	 pTrail = { nullptr };
+	class CEffectParts*   pEffectParts = { nullptr };
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();

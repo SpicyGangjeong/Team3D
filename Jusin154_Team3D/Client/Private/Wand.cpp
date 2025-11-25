@@ -3,6 +3,7 @@
 
 #include "GameInstance.h"
 #include "TrailObject.h"
+#include "EffectParts.h"
 
 CWand::CWand(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject(pDevice, pContext)
@@ -41,10 +42,16 @@ HRESULT CWand::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	if (FAILED(pTrail->Load_Trail("../Bin/Resources/Data/Effect/Decendo/Proj_Trail" , static_cast<LEVEL>(NEXT_LEVEL))))
+	if (FAILED(pTrail->Load_Trail("../Bin/Resources/Data/Effect/Trail/Bombard_Trail" , static_cast<LEVEL>(NEXT_LEVEL))))
 		return E_FAIL;
 
-	pTrail->Set_Target(m_pModelCom->Get_BoneMatrixPtr("root" ), XMVectorSet(0.f, 1.f, 0.f , 0.f));
+	pTrail->Set_Target(m_pModelCom->Get_BoneMatrixPtr("Effect"), XMVectorSet(0.f, 0.f, 0.f , 0.f));
+
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEffectParts>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Trail"), &PartsDesc, this, &pEffectParts))) {
+		assert(false);
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -67,6 +74,10 @@ void CWand::Priority_Update(_float fTimeDelta)
 
 void CWand::Update(_float fTimeDelta)
 {
+	_float4x4 WorldMat = *m_pModelCom->Get_BoneMatrixPtr("Effect");
+
+	pEffectParts->Get_Component<CTransform>()->Set_WorldMatrix(WorldMat);
+	pEffectParts->Set_Visible(true);
 }
 
 void CWand::Late_Update(_float fTimeDelta)
@@ -175,6 +186,8 @@ void CWand::Free()
 
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pModelCom);
+	SAFE_RELEASE(pEffectParts);
+	SAFE_RELEASE(pTrail);
 }
 
 void CWand::Describe_Entity()

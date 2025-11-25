@@ -5,6 +5,7 @@
 #include "GameInstance.h"
 #include "ComputeShader.h"
 #include "Bone.h"
+#include "GameObject.h"
 
 CInstance_Model::CInstance_Model(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CComponent{ pDevice  , pContext }
@@ -283,6 +284,9 @@ void CInstance_Model::Drop(_float fTimeDelta)
 		pDesc->isSinWave = m_InstanceDesc.isSinWave;
 		pDesc->isPivotMove = m_InstanceDesc.isPivotMove;
 		pDesc->isSizeLerp = m_InstanceDesc.isSizeLerp;
+		pDesc->isNoWorld = m_InstanceDesc.isNoWorld;
+		pDesc->WorldMatrix = *m_pOwner->Get_Component<CTransform>()->Get_WorldMatrixPtr();
+		
 
 		m_pContext->Unmap(m_pConstantBuffer, 0);
 	}
@@ -580,7 +584,10 @@ void CInstance_Model::Describe_Entity()
 			Instane_Buffer_ReStruct();
 		}
 
-		
+		if (GUI::Checkbox("NoWorld", &m_InstanceDesc.isNoWorld))
+		{
+			Instane_Buffer_ReStruct();
+		}
 
 
 		if (ImGui::DragFloat3("SizeMin", reinterpret_cast<_float*>(&m_InstanceDesc.vSizeMin)))

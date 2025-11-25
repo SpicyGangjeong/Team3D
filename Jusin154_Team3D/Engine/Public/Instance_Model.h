@@ -56,6 +56,7 @@ public:
 
 		_float2     vDelay = {};
 
+		_bool       isNoWorld = {};
 	}INSTANCE_DESC;
 
 	typedef struct tagPreInstanceDesc
@@ -112,7 +113,7 @@ public:
 
 	typedef struct tagCSParticleDesc
 	{
-		_float4x4 CamViewInvMatrix = {};
+		_float4x4 WorldMatrix = {};
 
 		_int	 isLoop = {};
 		_int     isDrop = {};
@@ -123,6 +124,12 @@ public:
 		_int     isAxisTurn = {};
 		_int     isPivotMove = {};
 		_int     isSizeLerp = {};
+
+
+		_int	 isNoWorld = {};
+		_int     isPadding0 = {};
+		_int     isPadding1 = {};
+		_int     isPadding2 = {};
 
 		_float   fTimeDelta = {};
 		_float	 fPadding2 = {};

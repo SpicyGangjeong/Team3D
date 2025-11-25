@@ -43,11 +43,7 @@ void CTrailObject::Update(_float fTimeDelta)
 		return;
 
 
-	m_CombinedMat = m_pParentTransformCom->Get_XMWorldMatrix();
-
-	m_CombinedMat.r[3] += m_vOffset;
-
-	m_pTrailCom->Trail_Update(fTimeDelta, m_CombinedMat);
+	m_pTrailCom->Trail_Update(fTimeDelta, m_pParentTransformCom->Get_XMWorldMatrix());
 
 
 	if (m_TrailInfo.vDistortionTime.y == 0)
