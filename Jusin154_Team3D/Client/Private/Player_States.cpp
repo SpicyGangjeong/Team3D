@@ -288,7 +288,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck()
 		}
 		return E_FAIL;
 	}
-	if (SUCCEEDED(InputMove())) {
+	if (SUCCEEDED(InputMove()) || true) {
 		return S_OK;
 	}
 
