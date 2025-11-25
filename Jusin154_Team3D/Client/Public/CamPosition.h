@@ -29,8 +29,9 @@ public:
 	CGameObject* Clone(void* pArg, CGameObject* pOwner)PURE;
 
 	virtual void Free() override;
-
+#ifdef _DEBUG
 	void Describe_Entity() override;
+#endif // _DEBUG
 
 };
 

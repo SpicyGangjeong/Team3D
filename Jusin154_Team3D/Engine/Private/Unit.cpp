@@ -138,7 +138,10 @@ void CUnit::Free()
 	SAFE_RELEASE(m_pModelCom);
 	SAFE_RELEASE(m_pFSM);
 }
+#ifdef _DEBUG
 
 void CUnit::Describe_Entity()
 {
 }
+
+#endif // _DEBUG

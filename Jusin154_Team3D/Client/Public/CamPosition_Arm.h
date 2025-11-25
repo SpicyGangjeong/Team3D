@@ -38,7 +38,10 @@ public:
 	static CCamPosition_Arm* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CCamPosition_Arm* Clone(void* pArg, class CGameObject* pOWner) override;
 	virtual void Free() override;
+#ifdef _DEBUG
 	void Describe_Entity() override;
+#endif // _DEBUG
+
 };
 
 NS_END

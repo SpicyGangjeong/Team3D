@@ -155,7 +155,10 @@ void CCamera_Debug::Free()
 {
 	__super::Free();
 }
+#ifdef _DEBUG
 
 void CCamera_Debug::Describe_Entity()
 {
 }
+
+#endif // _DEBUG

@@ -157,7 +157,10 @@ void CBroom::Free()
 
 
 }
+#ifdef _DEBUG
 
 void CBroom::Describe_Entity()
 {
 }
+
+#endif // _DEBUG

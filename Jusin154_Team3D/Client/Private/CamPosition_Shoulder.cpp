@@ -94,7 +94,10 @@ void CCamPosition_Shoulder::Update(_float fTimeDelta)
 	if (FAILED(m_pGameInstance->IsBinded_Camera(CAMERA_SHOULDER))) {
 		return;
 	}
+#ifdef _DEBUG
 	Describe_Entity();
+#endif // _DEBUG
+
 	if (m_pGameInstance->Key_Up(DIK_GRAVE)) {
 		m_bMovable = !m_bMovable;
 	}

@@ -50,8 +50,10 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Ready_Parts())) {
 		return E_FAIL;
 	}
-
+#ifdef _DEBUG
 	Load_KeyFrame();
+#endif // _DEBUG
+
 
 	Add_FSM();
 
@@ -92,7 +94,10 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 
 void CPlayer::Update(_float fTimeDelta)
 {
+#ifdef _DEBUG
 	Update_CameraCoordinateSystem();
+#endif // _DEBUG
+
 	m_pFSM->Update_State(fTimeDelta);
 
 
@@ -100,7 +105,9 @@ void CPlayer::Update(_float fTimeDelta)
 
 
 	__super::Update(fTimeDelta);
+#ifdef _DEBUG
 	Describe_Entity();
+#endif // _DEBUG
 
 
 
@@ -154,9 +161,12 @@ HRESULT CPlayer::Render()
 
 	return S_OK;
 }
+#ifdef _DEBUG
 
 void CPlayer::Render_CameraCoordinateSystem()
 {
+
+
 	m_Batch->Begin();
 
 	const _float fArrowLength = 2.0f;
@@ -194,6 +204,7 @@ void CPlayer::Render_CameraCoordinateSystem()
 
 	m_Batch->End();
 }
+#endif // _DEBUG
 
 HRESULT CPlayer::Ready_Components()
 {
@@ -298,6 +309,8 @@ HRESULT CPlayer::Bind_ShaderResources()
 	}
 	return S_OK;
 }
+#ifdef _DEBUG
+
 void CPlayer::Update_CameraCoordinateSystem()
 {
 	_vector xmvCameraLook = XMVector3Normalize(XMVectorSetY(m_pGameInstance->Get_CameraLook(), 0.f));
@@ -305,6 +318,8 @@ void CPlayer::Update_CameraCoordinateSystem()
 	XMStoreFloat3(&m_vCameraRightDir, XMVector3Normalize(XMVector3Cross(xmvUp, xmvCameraLook)));
 	XMStoreFloat3(&m_vCameraLookDir, xmvCameraLook);
 }
+#endif // _DEBUG
+
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CPlayer* pInstance = new CPlayer(pDevice, pContext);

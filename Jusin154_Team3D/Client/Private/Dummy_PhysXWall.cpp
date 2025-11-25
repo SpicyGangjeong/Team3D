@@ -161,7 +161,10 @@ void CDummy_PhysXWall::Free()
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pModelCom);
 }
+#ifdef _DEBUG
 
 void CDummy_PhysXWall::Describe_Entity()
 {
 }
+
+#endif // _DEBUG

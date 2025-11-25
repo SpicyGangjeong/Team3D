@@ -47,8 +47,10 @@ void CCamera_Gaze::Update(_float fTimeDelta)
 	}
 	Transition(fTimeDelta);
 	Update_LerpTimer(fTimeDelta);
-
+#ifdef _DEBUG
 	Describe_Entity();
+#endif // _DEBUG
+
 }
 
 void CCamera_Gaze::Update_LerpTimer(Engine::_float fTimeDelta)

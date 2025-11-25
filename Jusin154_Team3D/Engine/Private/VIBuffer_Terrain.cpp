@@ -294,7 +294,6 @@ void CVIBuffer_Terrain::Set_CullingRadius(_float fRaduis)
 {
 	m_pQuadTree->Set_CullingRadius(fRaduis);
 }
-#endif // _DEBUG
 
 
 HRESULT CVIBuffer_Terrain::Save_HeightMap(const _char* pFilePath)
@@ -364,6 +363,7 @@ HRESULT CVIBuffer_Terrain::Load_HeightMap(const _char* pFilePath)
 
 	return S_OK;
 }
+#endif // _DEBUG
 
 CVIBuffer_Terrain* CVIBuffer_Terrain::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pFilePath, _uint iSizeX, _uint iSizeZ)
 {

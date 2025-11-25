@@ -176,7 +176,10 @@ void CWand::Free()
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pModelCom);
 }
+#ifdef _DEBUG
 
 void CWand::Describe_Entity()
 {
 }
+
+#endif // _DEBUG
