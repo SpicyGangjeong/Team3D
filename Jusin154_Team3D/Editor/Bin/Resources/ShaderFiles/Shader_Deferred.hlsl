@@ -69,6 +69,17 @@ VS_OUT VS_MAIN(VS_IN In)
 
     return Out;
 }
+VS_OUT VS_CAPTURE(VS_IN In)
+{
+    VS_OUT Out;
+
+    float2 vClipPos = In.vPosition.xy * 2.0f; // → -1.0 ~ +1.0
+
+    Out.vPosition = float4(vClipPos, 0.0f, 1.0f);
+    Out.vTexcoord = In.vTexcoord;
+
+    return Out;
+}
 
 struct PS_IN
 {
@@ -362,8 +373,8 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     
     Out.vBackBuffer = vDiffuse * vShade + vSpecular;
     
-    vector vDepthDesc = g_DepthTexture.Sample(DefaultSampler, In.vTexcoord);
     
+    vector vDepthDesc = g_DepthTexture.Sample(DefaultSampler, In.vTexcoord);
 
     float fViewZ = vDepthDesc.y * g_fFar;
     
@@ -444,11 +455,69 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     return Out;
 }
 
+PS_OUT_BACKBUFFER PS_MAIN_REFIT(PS_IN In)
+{
+    PS_OUT_BACKBUFFER Out;
+
+    Out.vBackBuffer = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
+    
+    return Out;
+}
+
+PS_OUT_BACKBUFFER PS_MAIN_EMBOSS(PS_IN In)
+{
+    PS_OUT_BACKBUFFER Out;
+
+    float3 vColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord).xyz;
+    
+    // temp 이거 키면 겁나 빤짞빤짞 빛남 ㄷㄷ
+    // vColor *= 3.f;
+    // temp
+    
+    //float fIntensity = dot(vColor, float3(0.3333f, 0.3333f, 0.3333f)); // 대략적인 밝기
+    float fIntensity = dot(vColor, float3(0.2126f, 0.7152f, 0.0722f)); // 대략적인 밝기 ( 인간적인 )
+    if (fIntensity <= 1e-4f)
+    {
+        Out.vBackBuffer = 0;
+        return Out;
+    }
+    float fBloomIntensity = GetBloomCurve(fIntensity);
+    
+    float3 bloomColor = (vColor * fBloomIntensity) / fIntensity;
+    Out.vBackBuffer = float4(bloomColor, 1.f);
+    
+    return Out;
+}
+
 struct PS_OUT_BLUR_X
 {
     float4 vBlurX : SV_TARGET0;
     float4 vBlurWeight : SV_TARGET1;
 };
+
+PS_OUT_BACKBUFFER PS_MAIN_BLOOM_ACCUM(PS_IN In)
+{
+    PS_OUT_BACKBUFFER Out;
+    
+    float3 vColorSrcA = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord).xyz;
+    float3 vColorSrcB = g_BlurTexture.Sample(PointSampler, In.vTexcoord).xyz;
+    
+    Out.vBackBuffer = float4(saturate(vColorSrcA + vColorSrcB), 1.f);
+    
+    return Out;
+}
+
+PS_OUT_BACKBUFFER PS_MAIN_BLOOM_FINISH(PS_IN In)
+{
+    PS_OUT_BACKBUFFER Out;
+    
+    vector vColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
+    float3 vBloom = g_BlurTexture.Sample(PointSampler, In.vTexcoord).xyz;
+    Out.vBackBuffer = vColor;
+    Out.vBackBuffer += float4(vBloom, 1.f);
+    
+    return Out;
+}
 
 
 PS_OUT_BLUR_X PS_MAIN_BLUR_X(PS_IN In)
@@ -458,28 +527,6 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_X(PS_IN In)
     float2 vTexcoord;
     float4 vColor = 0.f;
     
-    float fBlurWeight = g_BlurWeightTexture.Sample(ClampSampler, In.vTexcoord).r;
-    int iBlurWeight = (int) (round(fBlurWeight) * 128.f);
-    
-
-    
-    int iBlurMin;
-    int iBlurMax;
-    
-    iBlurMin = -1 * (iBlurWeight / 2) + 1;
-    iBlurMax = iBlurWeight / 2;
-    
-    //for (int i = -15; i < 16; ++i)
-    //{
-    //    vTexcoord.x = In.vTexcoord.x;
-    //    vTexcoord.y = In.vTexcoord.y + (float) i / g_vResolution.y;
-        
-    //    vColor += g_fWeights[i + 15] * g_BlurXTexture.Sample(ClampSampler, vTexcoord);
-    //}
-    
-    //Out.vBackBuffer += vColor;
-    
-
     for (int i = -63; i < 64; ++i)
     {
         vTexcoord.x = In.vTexcoord.x + (float) i / g_vResolution.x;
@@ -489,7 +536,28 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_X(PS_IN In)
     }
     
     Out.vBlurX = vColor;
-    Out.vBlurWeight = fBlurWeight;
+    Out.vBlurWeight = 0.f;
+    
+    return Out;
+}
+
+PS_OUT_BLUR_X PS_MAIN_BLUR_Y(PS_IN In)
+{
+    PS_OUT_BLUR_X Out;
+    
+    float2 vTexcoord;
+    float4 vColor = 0.f;
+    
+    for (int i = -63; i < 64; ++i)
+    {
+        vTexcoord.x = In.vTexcoord.x;
+        vTexcoord.y = In.vTexcoord.y + (float) i / g_vResolution.y;
+        
+        vColor += g_fWeights[i + 63] * g_BlurTexture.Sample(ClampSampler, vTexcoord);
+    }
+    
+    Out.vBlurX = vColor;
+    Out.vBlurWeight = 0.f;
     
     return Out;
 }
@@ -562,8 +630,58 @@ technique11 DefaultTechnique
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_MAIN();
+        VertexShader = compile vs_5_0 VS_CAPTURE();
         GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN_SPOT();
+        PixelShader = compile ps_5_0 PS_MAIN_REFIT();
+    }
+
+    pass EmbossingPass // 7
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_CAPTURE();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_EMBOSS();
+    }
+
+    pass Bloom_BlurXPass // 8
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_CAPTURE();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_BLUR_X();
+    }
+
+    pass Bloom_BlurYPass // 9
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_CAPTURE();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_BLUR_Y();
+    }
+
+    pass Bloom_AccumPass // 10
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_CAPTURE();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_BLOOM_ACCUM();
+    }
+
+    pass Bloom_FinishPass // 11
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_CAPTURE();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_BLOOM_FINISH();
     }
 }

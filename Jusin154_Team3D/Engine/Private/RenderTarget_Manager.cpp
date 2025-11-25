@@ -155,11 +155,124 @@ HRESULT CRenderTarget_Manager::Copy_RenderTarget(const _wstring& strTargetTag, I
     return S_OK;
 }
 
-HRESULT CRenderTarget_Manager::Refit_RenderTarget(CVIBuffer_Rect* pVIBuffer, CShader* pShader, const _wstring& wstrRenderTargetInput, const _wstring& wstrRenderTargetOutput)
+HRESULT CRenderTarget_Manager::Paste_RenderTarget(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D)
 {
+    CRenderTarget* pRenderTarget = Find_RenderTarget(strTargetTag);
+    if (nullptr == pRenderTarget) {
+        return E_FAIL;
+    }
+
+    pRenderTarget->Paste_Resource(pTexture2D);
+
+    return S_OK;
+}
+
+HRESULT CRenderTarget_Manager::Accumulate_RenderTarget(CVIBuffer_Rect* pVIBuffer, CShader* pShader, 
+    const _wstring& wstrRenderTarget_SrcA, const _wstring& wstrRenderTarget_SrcB, 
+    const _wstring& wstrRenderTarget_Target, SHADER_PASS_DEFERRED ePass)
+{
+    if (nullptr == pVIBuffer || nullptr == pShader) {
+        return E_FAIL;
+    }
+    CRenderTarget* pSrcA = Find_RenderTarget(wstrRenderTarget_SrcA);
+    CRenderTarget* pSrcB = Find_RenderTarget(wstrRenderTarget_SrcB);
+    CRenderTarget* pOutput = Find_RenderTarget(wstrRenderTarget_Target);
+    if (nullptr == pSrcA || nullptr == pSrcB || nullptr == pOutput) { return E_FAIL; }
+
+    HRESULT hResult = S_OK;
+
+    m_pContext->OMGetRenderTargets(1, &m_pBackBufferRTV, &m_pOriginalDSV);
+
+    _uint iNumViewPorts = 1;
+    D3D11_VIEWPORT OriginalViewport = {};
+    m_pContext->RSGetViewports(&iNumViewPorts, &OriginalViewport);
+
+    _uint iNumViewPort = 1;
+    D3D11_VIEWPORT vp = {};
+    m_pContext->RSGetViewports(&iNumViewPort, &vp);
+
+    D3D11_TEXTURE2D_DESC OutputDesc = {};
+    pOutput->Get_TextureDesc(OutputDesc);
+
+    D3D11_VIEWPORT NewViewport = vp;
+    NewViewport.TopLeftX = 0.f;
+    NewViewport.TopLeftY = 0.f;
+    NewViewport.Width = static_cast<_float>(OutputDesc.Width);
+    NewViewport.Height = static_cast<_float>(OutputDesc.Height);
+    NewViewport.MinDepth = 0.f;
+    NewViewport.MaxDepth = 1.f;
+
+    pOutput->Clear();
+
+    { // Bind RTVs
+        _uint iNumRenderTargets = { 1 };
+        ID3D11RenderTargetView* pRenderTargetViews[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT] = { pOutput->Get_RTV(), };
+        m_pContext->OMSetRenderTargets(0, nullptr, nullptr);
+        m_pContext->OMSetRenderTargets(iNumRenderTargets, pRenderTargetViews, nullptr);
+    }
+
+    m_pContext->RSSetViewports(iNumViewPort, &NewViewport);
+
+    { // Bind const
+        _float4x4 matIdentity = {};
+        XMStoreFloat4x4(&matIdentity, XMMatrixIdentity());
+
+        if (FAILED(pShader->Bind_Matrix("g_WorldMatrix", &matIdentity))) {
+            hResult = E_FAIL;
+        }
+        else if (FAILED(pShader->Bind_Matrix("g_ViewMatrix", &matIdentity))) {
+            hResult = E_FAIL;
+        }
+        else if (FAILED(pShader->Bind_Matrix("g_ProjMatrix", &matIdentity))) {
+            hResult = E_FAIL;
+        }
+        else if (FAILED(pSrcA->Bind_ShaderResource(pShader, "g_DiffuseTexture"))) {
+            hResult = E_FAIL;
+        }
+        else if (FAILED(pSrcB->Bind_ShaderResource(pShader, "g_BlurTexture"))) {
+            hResult = E_FAIL;
+        }
+    }
+
+    if (SUCCEEDED(hResult)) {
+        if (FAILED(pShader->Begin(ENUM_CLASS(ePass)))) {
+            hResult = E_FAIL;
+        }
+        else {
+            pVIBuffer->Bind_Resources();
+            pVIBuffer->Render();
+        }
+    }
+
+    ID3D11ShaderResourceView* const pNullSRV[1] = { nullptr };
+    m_pContext->PSSetShaderResources(0, 1, pNullSRV);
+
+    m_pContext->OMSetRenderTargets(1, &m_pBackBufferRTV, m_pOriginalDSV);
+    m_pContext->RSSetViewports(iNumViewPorts, &OriginalViewport);
+
+    SAFE_RELEASE(m_pBackBufferRTV);
+    SAFE_RELEASE(m_pOriginalDSV);
+
+    return S_OK;
+}
+
+HRESULT CRenderTarget_Manager::Refit_RenderTarget(CVIBuffer_Rect* pVIBuffer, CShader* pShader,
+    const _wstring& wstrRenderTargetInput, const _wstring& wstrRenderTargetOutput, SHADER_PASS_DEFERRED ePass)
+{
+    if (nullptr == pVIBuffer || nullptr == pShader) {
+        return E_FAIL;
+    }
     CRenderTarget* pInput = Find_RenderTarget(wstrRenderTargetInput);
     CRenderTarget* pOutput = Find_RenderTarget(wstrRenderTargetOutput);
     if (nullptr == pInput || nullptr == pOutput) { return E_FAIL; }
+
+    HRESULT hResult = S_OK;
+
+    m_pContext->OMGetRenderTargets(1, &m_pBackBufferRTV, &m_pOriginalDSV);
+
+    _uint iNumViewPorts = 1;
+    D3D11_VIEWPORT OriginalViewport = {};
+    m_pContext->RSGetViewports(&iNumViewPorts, &OriginalViewport);
 
     _uint iNumViewPort = 1;
     D3D11_VIEWPORT vp = {};
@@ -167,47 +280,129 @@ HRESULT CRenderTarget_Manager::Refit_RenderTarget(CVIBuffer_Rect* pVIBuffer, CSh
     
     D3D11_TEXTURE2D_DESC OutputDesc = {};
     pOutput->Get_TextureDesc(OutputDesc);
-    vp.Width = (_float)OutputDesc.Width;
-    vp.Height = (_float)OutputDesc.Height;
+
+    D3D11_VIEWPORT NewViewport = vp;
+    NewViewport.TopLeftX = 0.f;
+    NewViewport.TopLeftY = 0.f;
+    NewViewport.Width = static_cast<_float>(OutputDesc.Width);
+    NewViewport.Height = static_cast<_float>(OutputDesc.Height);
+    NewViewport.MinDepth = 0.f;
+    NewViewport.MaxDepth = 1.f;
 
     pOutput->Clear();
-
 
     { // Bind RTVs
         _uint iNumRenderTargets = { 1 };
         ID3D11RenderTargetView* pRenderTargetViews[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT] = { pOutput->Get_RTV(), };
         m_pContext->OMSetRenderTargets(0, nullptr, nullptr);
-        m_pContext->OMSetRenderTargets(1, pRenderTargetViews, nullptr);
+        m_pContext->OMSetRenderTargets(iNumRenderTargets, pRenderTargetViews, nullptr);
     }
 
-    m_pContext->RSSetViewports(iNumViewPort, &vp);
+    m_pContext->RSSetViewports(iNumViewPort, &NewViewport);
+
+    const _char* pConstantName = { nullptr };
+    switch (ePass)
+    {
+    case Engine::SHADER_PASS_DEFERRED::BLOOM_BLURX:
+        pConstantName = "g_BlurTexture";
+        break;
+    case Engine::SHADER_PASS_DEFERRED::REFIT:
+        pConstantName = "g_DiffuseTexture";
+        break;
+    case Engine::SHADER_PASS_DEFERRED::EMBOSSING:
+        pConstantName = "g_DiffuseTexture";
+        break;
+    case Engine::SHADER_PASS_DEFERRED::BLOOM_BLURY:
+        pConstantName = "g_BlurTexture";
+        break;
+    default:
+        hResult = E_FAIL;
+        break;
+    }
 
     { // Bind const
         _float4x4 matIdentity = {};
         XMStoreFloat4x4(&matIdentity, XMMatrixIdentity());
+
         if (FAILED(pShader->Bind_Matrix("g_WorldMatrix", &matIdentity))) {
-            return E_FAIL;
+            hResult = E_FAIL;
         }
-        if (FAILED(pShader->Bind_Matrix("g_ViewMatrix", &matIdentity))) {
-            return E_FAIL;
+        else if (FAILED(pShader->Bind_Matrix("g_ViewMatrix", &matIdentity))) {
+            hResult = E_FAIL;
         }
-        if (FAILED(pShader->Bind_Matrix("g_ProjMatrix", &matIdentity))) {
-            return E_FAIL;
+        else if (FAILED(pShader->Bind_Matrix("g_ProjMatrix", &matIdentity))) {
+            hResult = E_FAIL;
         }
-        if (FAILED(pInput->Bind_ShaderResource(pShader, "g_DiffuseTexture"))) {
-            return E_FAIL;
+        else if (FAILED(pInput->Bind_ShaderResource(pShader, pConstantName))) {
+            hResult = E_FAIL;
         }
     }
 
-    if (FAILED(pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::REFIT)))) {
-        return E_FAIL;
+    if (SUCCEEDED(hResult)) {
+        if (FAILED(pShader->Begin(ENUM_CLASS(ePass)))) {
+            hResult = E_FAIL;
+        }
+        else {
+            pVIBuffer->Bind_Resources();
+            pVIBuffer->Render();
+        }
     }
-    pVIBuffer->Bind_Resources();
-    pVIBuffer->Render();
 
     ID3D11ShaderResourceView* const pNullSRV[1] = { nullptr };
     m_pContext->PSSetShaderResources(0, 1, pNullSRV);
 
+    m_pContext->OMSetRenderTargets(1, &m_pBackBufferRTV, m_pOriginalDSV);
+    m_pContext->RSSetViewports(iNumViewPorts, &OriginalViewport);
+
+    SAFE_RELEASE(m_pBackBufferRTV);
+    SAFE_RELEASE(m_pOriginalDSV);
+
+    return S_OK;
+}
+
+HRESULT CRenderTarget_Manager::Finish_RenderTarget(CVIBuffer_Rect* pVIBuffer, CShader* pShader, const _wstring& wstrRenderTargetOriginal, const _wstring& wstrRenderTargetBloomed, SHADER_PASS_DEFERRED ePass)
+{
+    if (nullptr == pVIBuffer || nullptr == pShader) {
+        return E_FAIL;
+    }
+    CRenderTarget* pInput = Find_RenderTarget(wstrRenderTargetOriginal);
+    CRenderTarget* pBloomed = Find_RenderTarget(wstrRenderTargetBloomed);
+    if (nullptr == pInput || nullptr == pBloomed) { 
+        return E_FAIL; 
+    }
+
+    HRESULT hResult = S_OK;
+    
+    { // Bind const
+        _float4x4 matIdentity = {};
+        XMStoreFloat4x4(&matIdentity, XMMatrixIdentity());
+
+        if (FAILED(pShader->Bind_Matrix("g_WorldMatrix", &matIdentity))) {
+            hResult = E_FAIL;
+        }
+        else if (FAILED(pShader->Bind_Matrix("g_ViewMatrix", &matIdentity))) {
+            hResult = E_FAIL;
+        }
+        else if (FAILED(pShader->Bind_Matrix("g_ProjMatrix", &matIdentity))) {
+            hResult = E_FAIL;
+        }
+        else if (FAILED(pInput->Bind_ShaderResource(pShader, "g_DiffuseTexture"))) {
+            hResult = E_FAIL;
+        }
+        else if (FAILED(pBloomed->Bind_ShaderResource(pShader, "g_BlurTexture"))) {
+            hResult = E_FAIL;
+        }
+    }
+
+    if (SUCCEEDED(hResult)) {
+        if (FAILED(pShader->Begin(ENUM_CLASS(ePass)))) {
+            hResult = E_FAIL;
+        }
+        else {
+            pVIBuffer->Bind_Resources();
+            pVIBuffer->Render();
+        }
+    }
 
     return S_OK;
 }

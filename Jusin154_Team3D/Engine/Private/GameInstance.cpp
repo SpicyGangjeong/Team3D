@@ -253,6 +253,11 @@ HRESULT CGameInstance::Bind_DepthStencil(CShader* pShader, const _char* pContant
 	return m_pGraphic_Device->Bind_DepthStencil(pShader , pContantName);
 }
 
+void CGameInstance::Get_BackBufferPTR(ID3D11Texture2D** pTexture2D)
+{
+	m_pGraphic_Device->Get_BackBufferPTR(pTexture2D);
+}
+
 _float CGameInstance::Get_TimeDelta(const _wstring& strTimerTag)
 {
 	return m_pTimer_Manager->Get_TimeDelta(strTimerTag);
@@ -541,9 +546,21 @@ HRESULT CGameInstance::Copy_RenderTarget(const _wstring& strTargetTag, ID3D11Tex
 {
 	return m_pRenderTarget_Manager->Copy_RenderTarget(strTargetTag, pTexture2D);
 }
-HRESULT CGameInstance::Refit_RenderTarget(CVIBuffer_Rect* pVIBuffer, CShader* pShader, const _wstring& wstrRenderTargetInput, const _wstring& wstrRenderTargetOutput)
+HRESULT CGameInstance::Paste_RenderTarget(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D)
 {
-	return m_pRenderTarget_Manager->Refit_RenderTarget(pVIBuffer,	pShader, wstrRenderTargetInput, wstrRenderTargetOutput);
+	return m_pRenderTarget_Manager->Paste_RenderTarget(strTargetTag, pTexture2D);
+}
+HRESULT CGameInstance::Accumulate_RenderTarget(CVIBuffer_Rect* pVIBuffer, CShader* pShader, const _wstring& wstrRenderTarget_SrcA, const _wstring& wstrRenderTarget_SrcB, const _wstring& wstrRenderTarget_Target, SHADER_PASS_DEFERRED ePass)
+{
+	return m_pRenderTarget_Manager->Accumulate_RenderTarget(pVIBuffer, pShader, wstrRenderTarget_SrcA, wstrRenderTarget_SrcB, wstrRenderTarget_Target, ePass);
+}
+HRESULT CGameInstance::Refit_RenderTarget(CVIBuffer_Rect* pVIBuffer, CShader* pShader, const _wstring& wstrRenderTargetInput, const _wstring& wstrRenderTargetOutput, SHADER_PASS_DEFERRED ePass)
+{
+	return m_pRenderTarget_Manager->Refit_RenderTarget(pVIBuffer,	pShader, wstrRenderTargetInput, wstrRenderTargetOutput, ePass);
+}
+HRESULT CGameInstance::Finish_RenderTarget(CVIBuffer_Rect* pVIBuffer, CShader* pShader, const _wstring& wstrRenderTargetOriginal, const _wstring& wstrRenderTargetBloomed, SHADER_PASS_DEFERRED ePass)
+{
+	return m_pRenderTarget_Manager->Finish_RenderTarget(pVIBuffer, pShader, wstrRenderTargetOriginal, wstrRenderTargetBloomed, ePass);
 }
 #ifdef _DEBUG
 void CGameInstance::RenderTarget_Debuger()
