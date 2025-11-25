@@ -541,9 +541,9 @@ HRESULT CGameInstance::Copy_RenderTarget(const _wstring& strTargetTag, ID3D11Tex
 {
 	return m_pRenderTarget_Manager->Copy_RenderTarget(strTargetTag, pTexture2D);
 }
-HRESULT CGameInstance::Refit_RenderTarget(CShader* pShader, const _wstring& wstrRenderTargetInput, const _wstring& wstrRenderTargetOutput)
+HRESULT CGameInstance::Refit_RenderTarget(CVIBuffer_Rect* pVIBuffer, CShader* pShader, const _wstring& wstrRenderTargetInput, const _wstring& wstrRenderTargetOutput)
 {
-	return m_pRenderTarget_Manager->Refit_RenderTarget(pShader, wstrRenderTargetInput, wstrRenderTargetOutput);
+	return m_pRenderTarget_Manager->Refit_RenderTarget(pVIBuffer,	pShader, wstrRenderTargetInput, wstrRenderTargetOutput);
 }
 #ifdef _DEBUG
 void CGameInstance::RenderTarget_Debuger()

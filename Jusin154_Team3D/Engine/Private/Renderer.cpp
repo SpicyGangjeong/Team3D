@@ -407,6 +407,11 @@ void CRenderer::Render_Blend()
 	m_RenderObjects[ENUM_CLASS(RENDER::BLEND)].clear();
 }
 
+void CRenderer::Render_Bloom()
+{
+
+}
+
 void CRenderer::Render_UI()
 {
 	m_RenderObjects[ENUM_CLASS(RENDER::UI)].sort([](CGameObject* pDest, CGameObject* pSrc)->_bool {
@@ -596,6 +601,32 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 
+		/* Target_Bloom */
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Bloom"), (_uint)(Viewport.Width), (_uint)(Viewport.Height),
+			DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Bloom_4x4"), (_uint)(Viewport.Width * 0.25f), (_uint)(Viewport.Height * 0.25f),
+			DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Bloom_8x8"), (_uint)(Viewport.Width * 0.125f), (_uint)(Viewport.Height * 0.125f),
+			DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Bloom_16x16"), (_uint)(Viewport.Width * 0.0625f), (_uint)(Viewport.Height * 0.0625f),
+			DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Bloom_8x8_2"), (_uint)(Viewport.Width * 0.125f), (_uint)(Viewport.Height * 0.125f),
+			DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Bloom_4x4_2"), (_uint)(Viewport.Width * 0.25f), (_uint)(Viewport.Height * 0.25f),
+			DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+
 
 
 		/* Target_Color*/
@@ -663,7 +694,6 @@ HRESULT CRenderer::Initialize()
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Blur"), TEXT("Target_Blur")))) {
 			return E_FAIL;
 		}
-
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Blur"), TEXT("Target_Blur_Weight")))) {
 			return E_FAIL;
 		}
@@ -677,7 +707,26 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 
-		
+		/* MRT_Bloom */
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Bloom"), TEXT("Target_Bloom")))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Bloom"), TEXT("Target_Bloom_4x4")))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Bloom"), TEXT("Target_Bloom_8x8")))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Bloom"), TEXT("Target_Bloom_16x16")))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Bloom"), TEXT("Target_Bloom_8x8_2")))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Bloom"), TEXT("Target_Bloom_4x4_2")))) {
+			return E_FAIL;
+		}
+
 		/* MRT_Color */
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Color"), TEXT("Target_Color")))) {
 			return E_FAIL;
