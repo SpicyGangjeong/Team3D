@@ -30,11 +30,10 @@ void CQuadTree::Culling(CGameInstance* pGameInstance, const _float3* pVertexPosi
 		_bool		isDraw[NEIGHBOR_END] = { true, true, true, true };
 
 		/* 이웃노드가 그려지는지 확인 */
-		for (size_t i = 0; i < NEIGHBOR_END; i++)
+		for (_uint i = 0; i < NEIGHBOR_END; i++)
 		{
 			if (nullptr != m_pNeighbors[i])
 				isDraw[i] = m_pNeighbors[i]->isDraw(pGameInstance, pVertexPositions);
-
 		}
 
 		/* 점들이 절두체 안에 있는지 확인 */
@@ -173,7 +172,7 @@ void CQuadTree::Culling(CGameInstance* pGameInstance, const _float3* pVertexPosi
 	/* Range 는 사각형의 중심에서 꼭짓점까지의 거리 */
 	_float		fRange = XMVector3Length(XMLoadFloat3(&pVertexPositions[m_iCorners[CORNER_LT]]) - XMLoadFloat3(&pVertexPositions[m_iCenter])).m128_f32[0];
 
-	if (true == pGameInstance->isIn_LocalFrustum(XMLoadFloat3(&pVertexPositions[m_iCenter]), fRange * 1.5f))
+	if (true == pGameInstance->isIn_LocalFrustum(XMLoadFloat3(&pVertexPositions[m_iCenter]), fRange ))
 	{
 		for (size_t i = 0; i < CORNER_END; i++)
 		{
@@ -332,7 +331,7 @@ _bool CQuadTree::isDraw(CGameInstance* pGameInstance, const _float3* pVertexPosi
 	_vector		vCamPos = XMLoadFloat4(pGameInstance->Get_CamPosition());
 	_vector		vCenter = XMLoadFloat3(&pVertexPositions[m_iCenter]);
 
-	if (m_iCorners[CORNER_RT] - m_iCorners[CORNER_LT] < XMVectorGetX(XMVector3Length(vCamPos - vCenter)) * 0.04f)
+	if (m_iCorners[CORNER_RT] - m_iCorners[CORNER_LT] < XMVectorGetX(XMVector3Length(vCamPos - vCenter)) * 0.05f)
 		return true;
 
 	return false;

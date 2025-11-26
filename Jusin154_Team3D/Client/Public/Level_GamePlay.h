@@ -23,6 +23,7 @@ private:
 	virtual HRESULT Initialize() override;
 	HRESULT Initialize(void* pArg);
 	HRESULT Ready_Lights();
+	HRESULT Ready_Background();
 	HRESULT Ready_Markers();
 	HRESULT Ready_Layer_UI(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_Camera();

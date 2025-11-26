@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "AlphaMap.h"
 #include "GameInstance.h"
+#include "ScreenGrab.h"
 
 CAlphaMap::CAlphaMap(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CBase{}
@@ -85,6 +86,8 @@ void CAlphaMap::Save_ToFile(const _char* pFilePath)
 	
 	out.close();
 
+
+
 	MSG_BOX("Success to Save Binanry File");
 }
 
@@ -117,6 +120,9 @@ void CAlphaMap::Load_ToFile(const _char* pFilePath)
 	memcpy(SubResource.pData, m_pPixels, sizeof(_float4) * m_iNumPixels);
 
 	m_pContext->Unmap(m_pTexture2D, 0);
+
+	//if (FAILED(SaveDDSTextureToFile(m_pContext, m_pTexture2D, L"../Bin/Resources/Data/Map/Hogsmeade_AlphaMap.dds")))
+	//	return;
 }
 
 HRESULT CAlphaMap::Initialize(_uint iSizeX, _uint iSizeY)
@@ -163,6 +169,8 @@ HRESULT CAlphaMap::Initialize(_uint iSizeX, _uint iSizeY)
 
 	m_iNumPixelW = iSizeX;
 	m_iNumPixelH = iSizeY;
+
+	
 
 	return S_OK;
 }

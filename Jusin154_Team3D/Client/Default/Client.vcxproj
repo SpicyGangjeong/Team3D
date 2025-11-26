@@ -159,6 +159,7 @@
   <ItemGroup>
     <ClInclude Include="..\Public\Bombard.h" />
     <ClInclude Include="..\Public\Broom.h" />
+    <ClInclude Include="..\public\BuildingContainer.h" />
     <ClInclude Include="..\Public\CallBack_EffectHitBox_Behavior.h" />
     <ClInclude Include="..\Public\CallBack_EffectHitBox_HitReport.h" />
     <ClInclude Include="..\Public\CallBack_Monster_Behavior.h" />
@@ -175,7 +176,12 @@
     <ClInclude Include="..\Public\Client_Define.h" />
     <ClInclude Include="..\Public\Client_Enum.h" />
     <ClInclude Include="..\Public\Client_Macro.h" />
+    <ClInclude Include="..\Public\Client_Struct.h" />
     <ClInclude Include="..\Public\Goblin.h" />
+    <ClInclude Include="..\public\MapContainer.h" />
+    <ClInclude Include="..\public\MapObject_Collision.h" />
+    <ClInclude Include="..\public\MapObject_Render.h" />
+    <ClInclude Include="..\public\MapPartObject.h" />
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\Public\PhysXEffectHitBox.h" />
     <ClInclude Include="..\Public\Dummy_PhysXPlayable.h" />
@@ -205,6 +211,7 @@
     <ClInclude Include="..\Public\State_Land.h" />
     <ClInclude Include="..\Public\State_Move.h" />
     <ClInclude Include="..\Public\State_Root.h" />
+    <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\Public\TrailObject.h" />
     <ClInclude Include="..\Public\Wand.h" />
     <ClInclude Include="Client.h" />
@@ -215,6 +222,7 @@
   <ItemGroup>
     <ClCompile Include="..\Private\Bombard.cpp" />
     <ClCompile Include="..\Private\Broom.cpp" />
+    <ClCompile Include="..\private\BuildingContainer.cpp" />
     <ClCompile Include="..\Private\CallBack_EffectHitBox_Behavior.cpp" />
     <ClCompile Include="..\Private\CallBack_EffectHitBox_HitReport.cpp" />
     <ClCompile Include="..\Private\CallBack_Monster_Behavior.cpp" />
@@ -227,6 +235,10 @@
     <ClCompile Include="..\Private\CamPosition_Arm.cpp" />
     <ClCompile Include="..\Private\Goblin.cpp" />
     <ClCompile Include="..\Private\Goblin_States.cpp" />
+    <ClCompile Include="..\private\MapContainer.cpp" />
+    <ClCompile Include="..\private\MapObject_Collision.cpp" />
+    <ClCompile Include="..\private\MapObject_Render.cpp" />
+    <ClCompile Include="..\private\MapPartObject.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\Private\PhysXEffectHitBox.cpp" />
     <ClCompile Include="..\Private\CamPosition_Shoulder.cpp" />
@@ -264,6 +276,7 @@
     <ClCompile Include="..\Private\State_Land.cpp" />
     <ClCompile Include="..\Private\State_Move.cpp" />
     <ClCompile Include="..\Private\State_Root.cpp" />
+    <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\Private\TrailObject.cpp" />
     <ClCompile Include="..\Private\Wand.cpp" />
     <ClCompile Include="Client.cpp" />
