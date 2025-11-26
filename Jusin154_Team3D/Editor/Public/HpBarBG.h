@@ -33,15 +33,19 @@ private:
 private:
 	CTexture*			m_pDiffuse_TextureCom = { nullptr };
 	CTexture*			m_pDiffuse_TextureCom1 = { nullptr };
+	CTexture*			m_pDiffuse_TextureCom2 = { nullptr };
 	CShader*			m_pShaderCom = { nullptr };
 	CVIBuffer_Rect*		m_pVIBufferCom = { nullptr };
 
+	_float				m_fBlinkTime{};
 	_float				m_fMaxHp{};
 	_float				m_fCurrentHp{};
 	_float				m_fHpBar{};
 	_float				m_fDamage{};
 	_float				m_fTargetHp{};
 	_float2				m_fHpBG{};
+	_float2				m_fHpBGPos{};
+	_float2				m_fHpBGSize{};
 public:
 	static CHpBarBG* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

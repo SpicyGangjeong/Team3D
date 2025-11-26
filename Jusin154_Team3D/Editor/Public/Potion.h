@@ -27,9 +27,15 @@ private:
 
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
+	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
+	CTexture* m_pDiffuse_TextureCom2 = { nullptr };
+	CTexture* m_pDiffuse_TextureCom3 = { nullptr };
+	CTexture* m_pDiffuse_TextureCom4 = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
+	_float2 m_vImageSlotPos{};
+	_float2 m_vImageSize{};
 public:
 	static CPotion* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

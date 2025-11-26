@@ -141,6 +141,10 @@ HRESULT CMagic_Icon::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+	if (FAILED(m_pDiffuse_TextureCom2->Bind_ShaderResource(m_pShaderCom, "g_Texture2", 0)))
+	{
+		return E_FAIL;
+	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float))))
 	{
 		return E_FAIL;
@@ -166,11 +170,15 @@ HRESULT CMagic_Icon::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_HealthMeter_LevelBox"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_ActionItemBack_4K"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_AncientMagicFinisher"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_ActionItemGoldleaf_4K"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_AncientMagicFinisher"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom2), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -214,6 +222,7 @@ void CMagic_Icon::Free()
 
 	SAFE_RELEASE(m_pDiffuse_TextureCom);
 	SAFE_RELEASE(m_pDiffuse_TextureCom1);
+	SAFE_RELEASE(m_pDiffuse_TextureCom2);
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }

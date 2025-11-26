@@ -13,6 +13,7 @@ uint g_iSpellType;
 
 float g_fPI;
 float g_fFar;
+float g_fBlinkTime;
 float g_fTime;
 float g_fTimeMult;
 float g_fFrame;
@@ -28,12 +29,20 @@ float g_fHp;
 float2 g_fOrigin_Size;
 float2 g_fCurrent_Size;
 float2 g_fHpBG;
+float2 g_Pos;
+float2 g_fImageSize;
 
 float4 g_fNine_Slice;
 float4 g_fImageUV;
 float4 g_fImageUV1;
 
+uint g_iArrayCount;
+float2 g_fItemPosition1;
+float2 g_fItemImageSizes1;
+float2 g_fItemPosition2;
+float2 g_fItemImageSizes2;
 float2 g_fPosition[4];
+float2 g_fImageSizes[4];
 float4 g_fImagesUV[4];
 
 Texture2D g_Texture;
@@ -41,6 +50,7 @@ Texture2D g_Texture1;
 Texture2D g_Texture2;
 Texture2D g_Texture3;
 Texture2D g_Texture4;
+Texture2D g_Texture5;
 Texture2D g_DiffuseTexture;
 Texture2D g_MaskingTexture;
 
@@ -251,6 +261,7 @@ PS_OUT PS_Sptire_Sheet(PS_IN In)
     if (Color.r <= 0.4f)
         discard;
     
+
     Color.a *= Alpha;
     
     Out.vColor = Color;
@@ -416,8 +427,30 @@ PS_OUT PS_SpellAnim(PS_IN In)
     
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
    
-    float4 color = float4(1.f, 1.f, 1.f, 1.f);
-   
+    float4 color = float4(0.f, 0.f, 0.f, 0.f);
+    
+    float2 center = float2(0.5f, 0.5f);
+    float2 uv = In.vTexcoord - center;
+    uv *= sqrt(2.0f);
+    float2 Rotation = In.vTexcoord;
+    Rotation.x = uv.x * cos(g_fAngle) - uv.y * sin(g_fAngle);
+    Rotation.y = uv.x * sin(g_fAngle) + uv.y * cos(g_fAngle);
+    Rotation += center;
+            
+    float2 startUV = g_fImageUV.xy;
+    float2 endUV = g_fImageUV.zw;
+
+    float2 atlasUV = startUV + In.vTexcoord * (endUV - startUV);
+    
+    float4 tex1 = g_Texture.Sample(ClampSampler, Rotation);
+    float4 tex2 = g_Texture2.Sample(DefaultSampler, atlasUV);
+        
+    tex1.rgb *= 0.4f;
+    color = tex1;
+    tex2.rgb *= 0.3f;
+        
+    if (tex2.a >= 0.9f)
+        color = tex2;
     float3 BGColor = float3(1.f, 1.f, 1.f);
     
     switch (g_iSpellType)
@@ -444,39 +477,42 @@ PS_OUT PS_SpellAnim(PS_IN In)
             BGColor = float3(0.f, 0.f, 0.f);
             break;
     }
+    float4 color1 = float4(1.f, 1.f, 1.f, 1.f);
     
-    float2 uv = In.vTexcoord;
+    float2 OverrayUV = In.vTexcoord;
     float CoolTime = 1.f - g_fDeltaV;
     float CoolTime2 = 1.f - g_fDeltaV + 0.05;
+    atlasUV = startUV + In.vTexcoord * (endUV - startUV);
+    float4 tex3 = g_Texture1.Sample(ClampSampler, OverrayUV);
+    tex3.rgb *= BGColor;
+    float4 tex4 = g_Texture2.Sample(DefaultSampler, atlasUV);
     
-    float4 tex1 = g_Texture.Sample(ClampSampler, uv);
-    tex1.rgb *= BGColor;
-    float4 tex2 = g_Texture1.Sample(DefaultSampler, uv);
+    if (tex4.a >= 0.9f)
+        tex3 = tex4;
     
-    if (tex2.a >= 0.9f)
-        tex1 = tex2;
-    
-    color = tex1;
+    color1 = tex3;
         
-    float wave1 = sin(uv.x * 10.f + g_fTime * 2.f) * 0.01f;
-    float wave2 = sin(uv.x * 10.f + g_fTime * 2.f) * 0.01f;
+    float wave1 = sin(OverrayUV.x * 10.f + g_fTime * 2.f) * 0.01f;
+    float wave2 = sin(OverrayUV.x * 10.f + g_fTime * 2.f) * 0.01f;
    
     float waveThreshold1 = CoolTime + wave1;
     float waveThreshold2 = CoolTime2 + wave2;
 
     if (g_fDeltaV <= 1.f)
     {
-        if (uv.y >= waveThreshold1 && uv.y <= waveThreshold2)
+        if (OverrayUV.y >= waveThreshold1 && OverrayUV.y <= waveThreshold2)
         {
-            color.rgb = float3(1.f, 1.f, 1.f);
+            color1.rgb = float3(1.f, 1.f, 1.f);
         }
     }
     
-    if (uv.y <= CoolTime)
+    if (OverrayUV.y <= CoolTime)
     {
-        color.a = 0.f;
+        color1.a = 0.f;
     }
         
+    color = lerp(color, color1, color1.a);
+    
     color.a *= Alpha;
     
     Out.vColor = color;
@@ -488,6 +524,7 @@ PS_OUT PS_HpBar(PS_IN In)
     PS_OUT Out;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     float4 Color = float4(1.f, 1.f, 1.f, 1.f);
+    float4 Color1 = float4(1.f, 1.f, 1.f, 1.f);
     float2 uv = In.vTexcoord;
     float2 CurrentPixelPosition = uv * g_fCurrent_Size;
     float OriginLeft = g_fNine_Slice.x;
@@ -533,24 +570,46 @@ PS_OUT PS_HpBar(PS_IN In)
     }
     
     float4 tex1 = g_Texture.Sample(ClampSampler, Finaluv);
+    tex1.rgb = float3(255.f, 0.f, 0.f) / 255.f;
+    if (g_fHp <= 0.3f)
+    {
+        tex1.a *= (sin(g_fBlinkTime) * 0.25f + 0.75f) * 1.5f;
+    }
+    else
+    {
+        tex1.a = 0.f;
+    }
     Color = tex1;
+    
+    float2 BGPos = g_Pos;
+    float2 BGSize = g_fImageSize;
+    float2 BGPixel = Finaluv * g_fOrigin_Size;
+    float2 localUV = (BGPixel - BGPos) / BGSize;
+    bool inside = all(localUV >= 0.0f && localUV <= 1.0f);
+    
+    float4 tex2 = g_Texture1.Sample(ClampSampler, localUV);
+    
+    if (inside)
+        Color = lerp(Color, tex2, tex2.a);
+    
     float2 reversuv = In.vTexcoord;
     
-    reversuv.x = 1.0f - Finaluv;
+    reversuv.x = 1.0f - localUV.x;
 
-    float4 tex2 = g_Texture1.Sample(ClampSampler, Finaluv);
+    float4 tex3 = g_Texture2.Sample(ClampSampler, localUV);
     
     if (reversuv.x >= g_fHp)
     {
-        tex2.rgb = float3(0.f, 0.f, 0.f);
+        tex3.rgb = float3(0.f, 0.f, 0.f);
     }
     
-    float3 Green = float3(112.f, 241.f, 31.f) / 255.f;
-    Green *= 1.2f;
-    tex2.rgb *= Green;
+    float3 Green = (float3(112.f, 241.f, 31.f) / 255.f) * 1.2f;
+    float3 Red = (float3(255.f, 0.f, 0.f) / 255.f) * 1.2f;
     
-    if (all(Color.rgb >= float3(70.f / 255.f, 70.f / 255.f, 70.f / 255.f)))
-        Color = tex2;
+    tex3.rgb *= lerp(Green, Red, g_fTime);
+    
+    if (all(Color.rgb >= float3(55.f / 255.f, 0.f / 255.f, 55.f / 255.f)))
+        Color = lerp(Color, tex3, tex3.a);
         
     Color.a *= Alpha;
     Out.vColor = Color;
@@ -595,18 +654,28 @@ PS_OUT PS_Magic_Icon(PS_IN In)
     
     float4 Color = float4(1.f, 1.f, 1.f, 1.f);
     
-    float4 tex1 = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    float2 center = float2(0.5f, 0.5f);
+    float2 BGuv = In.vTexcoord - center;
+    BGuv *= sqrt(2.0f);
+    float2 Rotation = In.vTexcoord;
+    Rotation.x = BGuv.x * cos(g_fAngle) - BGuv.y * sin(g_fAngle);
+    Rotation.y = BGuv.x * sin(g_fAngle) + BGuv.y * cos(g_fAngle);
+    Rotation += center;
+            
+    float4 tex1 = g_Texture.Sample(ClampSampler, Rotation);
+    float4 tex2 = g_Texture1.Sample(ClampSampler, Rotation);
+    
+    Color = tex1;
+    Color = lerp(tex1, tex2, tex2.a);
+    
     float2 uv = In.vTexcoord;
-    float2 center = float2(0.5, 0.5);
     float scale = 1.2;
 
     uv = (uv - center) * scale + center;
-    float4 tex2 = g_Texture1.Sample(ClampSampler, uv);
+    float4 tex3 = g_Texture2.Sample(ClampSampler, uv);
 
-    Color = tex1;
     
-    Color = tex1 * (1 - tex2.a) + tex2;
-    
+    Color = Color * (1 - tex3.a) + tex3;
     
     Color.a *= Alpha;
     Out.vColor = Color;
@@ -645,34 +714,197 @@ PS_OUT PS_Revelio(PS_IN In)
     float4 Color = float4(1.f, 1.f, 1.f, 1.f);
     float2 UV = In.vTexcoord;
     
-    float2 Position[4];
-    float2 startUV[4];
-    float2 endUV[4];
+    //float2 Position[4];
+    //float2 startUV[4];
+    //float2 endUV[4];
 
-    float2 Atlases[4];
+    //float2 Atlases[4];
     
-    for (int i = 0; i < 4; ++i)
-    {
-        Position[i] = g_fPosition[i];
-        startUV[i] = g_fImagesUV[i].xy;
-        endUV[i] = g_fImagesUV[i].zw;
+    //for (int i = 0; i < 4; ++i)
+    //{
+    //    Position[i] = g_fPosition[i];
+    //    startUV[i] = g_fImagesUV[i].xy;
+    //    endUV[i] = g_fImagesUV[i].zw;
         
-        Atlases[i] = startUV[i] + UV * (endUV[i] - startUV[i]);
-    }
+    //    Atlases[i] = startUV[i] + UV * (endUV[i] - startUV[i]);
+    //}
     
-    float4 tex1 = g_Texture.Sample(DefaultSampler, UV);
-    float4 tex2 = g_Texture1.Sample(DefaultSampler, Atlases[0]);
-    float4 tex3 = g_Texture1.Sample(DefaultSampler, Atlases[1]);
-    float4 tex4 = g_Texture2.Sample(DefaultSampler, Atlases[2]);
-    float4 tex5 = g_Texture2.Sample(DefaultSampler, Atlases[3]);
+    //float4 tex1 = g_Texture.Sample(DefaultSampler, UV);
+    //float4 tex2 = g_Texture1.Sample(DefaultSampler, Atlases[0]);
+    //float4 tex3 = g_Texture1.Sample(DefaultSampler, Atlases[1]);
+    //float4 tex4 = g_Texture2.Sample(DefaultSampler, Atlases[2]);
+    //float4 tex5 = g_Texture2.Sample(DefaultSampler, Atlases[3]);
     
     
     
-    //float2 atlasUV = startUV + In.vTexcoord * (endUV - startUV);
+    ////float2 atlasUV = startUV + In.vTexcoord * (endUV - startUV);
     
     Color.a *= Alpha;
     Out.vColor = Color;
     
+    return Out;
+}
+
+PS_OUT PS_Potion(PS_IN In)
+{
+    PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+    float4 Color = float4(214.f / 255.f, 225 / 255.f, 36 / 255.f, 1.f);
+    
+    float2 center = float2(0.5f, 0.5f);
+    float2 uv = In.vTexcoord - center;
+    uv *= sqrt(2.0f);
+    float2 Rotation = In.vTexcoord;
+    Rotation.x = uv.x * cos(g_fAngle) - uv.y * sin(g_fAngle);
+    Rotation.y = uv.x * sin(g_fAngle) + uv.y * cos(g_fAngle);
+    Rotation += center;
+
+    float4 tex1 = g_Texture.Sample(ClampSampler, Rotation);
+    Color = tex1;
+    
+    float4 tex2 = g_Texture1.Sample(DefaultSampler, In.vTexcoord);
+    //Color += tex2;
+    float4 tex3 = g_Texture2.Sample(ClampSampler, Rotation);
+    Color = lerp(Color, tex3, tex3.a);
+    
+    float2 Potionuv = In.vTexcoord;
+    float scale = 1.2;
+
+    Potionuv = (Potionuv - center) * scale + center;
+    float4 tex4 = g_Texture3.Sample(ClampSampler, Potionuv);
+    Color = lerp(Color, tex4, tex4.a);
+    
+    float2 tex5pos = g_Pos / g_fCurrent_Size;
+    float2 tex5size = g_fOrigin_Size / g_fCurrent_Size;
+    float2 tex5local = (In.vTexcoord - tex5pos) / tex5size;
+    bool inside = all(tex5local >= 0.0f && tex5local <= 1.0f);
+    float4 tex5 = g_Texture4.Sample(ClampSampler, tex5local);
+    if (inside)
+        Color = lerp(Color, tex5, tex5.a);
+    
+    Color.a *= Alpha;
+    Out.vColor = Color;
+    
+    return Out;
+}
+
+PS_OUT PS_Magic_Item(PS_IN In)
+{
+    PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+   
+    float4 color = float4(1.f, 1.f, 1.f, 1.f);
+    
+    float2 center = float2(0.5f, 0.5f);
+    float2 uv = In.vTexcoord - center;
+    uv *= sqrt(2.0f);
+    float2 Rotation = In.vTexcoord;
+    Rotation.x = uv.x * cos(g_fAngle) - uv.y * sin(g_fAngle);
+    Rotation.y = uv.x * sin(g_fAngle) + uv.y * cos(g_fAngle);
+    Rotation += center;
+            
+    float2 startUV = g_fImageUV.xy;
+    float2 endUV = g_fImageUV.zw;
+
+    float2 atlasUV = startUV + In.vTexcoord * (endUV - startUV);
+    
+    float4 tex1 = g_Texture.Sample(ClampSampler, Rotation);
+    float4 tex2 = g_Texture3.Sample(ClampSampler, atlasUV);
+        
+    tex1.rgb *= 0.4f;
+    color = tex1;
+    tex2.rgb *= 0.3f;
+        
+    if (tex2.a >= 0.9f)
+        color = tex2;
+    float3 BGColor = float3(1.f, 1.f, 1.f);
+    
+    switch (g_iSpellType)
+    {
+        case 0:
+            BGColor = float3(50.f, 50.f, 50.f) / 255.f;
+            break;
+        case 1:
+            BGColor = float3(89.f, 32.f, 215.f) / 255.f;
+            break;
+        case 2:
+            BGColor = float3(190.f, 46., 34.f) / 255.f;
+            break;
+        case 3:
+            BGColor = float3(37.f, 129.f, 162.f) / 255.f;
+            break;
+        case 4:
+            BGColor = float3(134.f, 171.f, 78.f) / 255.f;
+            break;
+    }
+    
+    float4 color1 = float4(1.f, 1.f, 1.f, 1.f);
+    
+    float2 OverrayUV = In.vTexcoord;
+    float CoolTime = 0.f + g_fDeltaV;
+    float CoolTime2 = 0.f + g_fDeltaV + 0.05;
+    atlasUV = startUV + In.vTexcoord * (endUV - startUV);
+    float4 tex3 = g_Texture1.Sample(ClampSampler, OverrayUV);
+    tex3.rgb *= BGColor;
+    float4 tex4 = g_Texture3.Sample(DefaultSampler, atlasUV);
+    
+    if (g_fDeltaV <= 1.f)
+    {
+        if (tex4.a >= 0.9f)
+            tex3 = tex4;
+    
+        color1 = tex3;
+        
+        float wave1 = sin(OverrayUV.x * 10.f + g_fTime * 2.f) * 0.01f;
+        float wave2 = sin(OverrayUV.x * 10.f + g_fTime * 2.f) * 0.01f;
+   
+        float waveThreshold1 = CoolTime + wave1;
+        float waveThreshold2 = CoolTime2 + wave2;
+
+        if (g_fDeltaV <= 1.f)
+        {
+            if (OverrayUV.y >= waveThreshold1 && OverrayUV.y <= waveThreshold2)
+            {
+                color1.rgb = float3(1.f, 1.f, 1.f);
+            }
+        }
+    
+        if (OverrayUV.y <= CoolTime)
+        {
+            color1.a = 0.f;
+        }
+    
+        color = lerp(color, color1, color1.a);
+    }
+    else if (g_fDeltaV >= 1.f)
+        color = lerp(color, tex4, tex4.a);
+    
+    float4 tex5 = g_Texture2.Sample(ClampSampler, Rotation);
+    color = lerp(color, tex5, tex5.a);
+    
+    float2 texpos1 = g_fItemPosition1 / g_fCurrent_Size;
+    float2 texpos2 = g_fItemPosition2 / g_fCurrent_Size;
+    float2 texsize1 = g_fItemImageSizes1 / g_fCurrent_Size;
+    float2 texsize2 = g_fItemImageSizes2 / g_fCurrent_Size;
+    float2 texlocal1 = (In.vTexcoord - texpos1) / texsize1;
+    float2 texlocal2 = (In.vTexcoord - texpos2) / texsize2;
+
+    
+    bool inside1 = all(texlocal1 >= 0.0f && texlocal1 <= 1.0f);
+    float4 tex6 = g_Texture4.Sample(DefaultSampler, texlocal1);
+    
+    if (inside1)
+        color = lerp(color, tex6, tex6.a);
+    
+    bool inside2 = all(texlocal2 >= 0.0f && texlocal2 <= 1.0f);
+    
+    float4 tex7 = g_Texture5.Sample(DefaultSampler, texlocal2);
+    if (inside2)
+        color = lerp(color, tex7, tex7.a);
+    
+    color.a *= Alpha;
+    
+    Out.vColor = color;
     return Out;
 }
 
@@ -854,6 +1086,26 @@ technique11 PosTexTechnique11
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Revelio();
+    }
+
+    pass Potion
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Potion();
+    }
+
+    pass Magic_Item
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Magic_Item();
     }
 
 }

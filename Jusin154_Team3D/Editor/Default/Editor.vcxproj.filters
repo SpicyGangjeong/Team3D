@@ -235,9 +235,6 @@
     <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\Spell_Overlay">
       <UniqueIdentifier>{93166105-4863-4435-b2a1-7c97f9f3226f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\Spell_Image">
-      <UniqueIdentifier>{a5069e0b-5f20-44e5-bb86-56d4febc0996}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Dummys\DummyPhysX\PhysXMonster">
       <UniqueIdentifier>{1bc9f833-8d1b-4576-9ae5-51a039f4d2ff}</UniqueIdentifier>
     </Filter>
@@ -384,6 +381,9 @@
     </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\MiniMap_Panel\NoMountIcon">
       <UniqueIdentifier>{93ae1d33-fb58-4793-9e7e-5b8d27e163d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\Magic_Item">
+      <UniqueIdentifier>{5b287b4f-4f71-4458-85a1-c753fd121c53}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -612,9 +612,6 @@
     <ClInclude Include="..\public\Spell_Slot.h">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel\Spell_Slot</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Spell_Image.h">
-      <Filter>50.UI\GamePlay_Canvas\Action_Panel\Spell_Image</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Spell_Overlay.h">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel\Spell_Overlay</Filter>
     </ClInclude>
@@ -749,6 +746,9 @@
     </ClInclude>
     <ClInclude Include="..\public\Spell_UI.h">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel\Spell_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Magic_Item.h">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\Magic_Item</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -979,9 +979,6 @@
     <ClCompile Include="..\private\Spell_Slot.cpp">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel\Spell_Slot</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Spell_Image.cpp">
-      <Filter>50.UI\GamePlay_Canvas\Action_Panel\Spell_Image</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Spell_Overlay.cpp">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel\Spell_Overlay</Filter>
     </ClCompile>
@@ -1101,6 +1098,9 @@
     </ClCompile>
     <ClCompile Include="..\private\InstancedProp.cpp">
       <Filter>02.GameObjects\Env\06.InstancedProp</Filter>
+          </ClCompile>
+    <ClCompile Include="Goblin_States.cpp">
+      <Filter>02.GameObjects\Monster\Goblin</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Magic_Icon.cpp">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel\Magic_Icon</Filter>
@@ -1113,6 +1113,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Goblin_States.cpp">
       <Filter>02.GameObjects\Monster\Goblin</Filter>
+          </ClCompile>
+    <ClCompile Include="..\private\Magic_Item.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Action_Panel\Magic_Item</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
