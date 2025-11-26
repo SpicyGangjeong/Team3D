@@ -78,7 +78,7 @@ void CGoblin::Late_Update(_float fTimeDelta)
 
 	m_pTransformCom->LookAt(m_pPlayerTransform->Get_State(STATE::POSITION));
 
-	m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
+	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 }
 
 HRESULT CGoblin::Render()
@@ -223,7 +223,10 @@ void CGoblin::Free()
 	Safe_Delete(m_pCallBack_Behavior);
 	Safe_Delete(m_pCallBack_HitReport);
 }
+#ifdef _DEBUG
 
 void CGoblin::Describe_Entity()
 {
 }
+
+#endif // _DEBUG

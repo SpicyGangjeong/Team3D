@@ -31,7 +31,11 @@ protected:
 public:
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr)PURE;
 	virtual void Free() override;
+#ifdef _DEBUG
 	virtual void Describe_Entity() override;
+
+#endif // _DEBUG
+
 };
 
 NS_END

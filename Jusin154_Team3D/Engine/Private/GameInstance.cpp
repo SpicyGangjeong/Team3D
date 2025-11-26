@@ -109,6 +109,9 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 	m_pMouse_Manager->Update();
 	//m_pSound_Manager->Update();
 
+#ifdef _DEBUG
+
+
 #ifdef 기무리
 	static _bool bPicking = false;
 	GUI::Checkbox("Picking Enable", &bPicking);
@@ -116,6 +119,7 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 		m_pPicking->Update();
 	}
 #endif // 기무리
+#endif // _DEBUG
 #ifndef 기무리
 	m_pPicking->Update();
 #endif // !기무리

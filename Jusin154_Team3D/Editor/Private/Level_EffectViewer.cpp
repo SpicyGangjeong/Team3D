@@ -13,6 +13,7 @@
 #include "Dummy_PhysXPlayable.h"
 #include "Dummy_PhysXMonster.h"
 #include "Dummy_PhysXWall.h"
+#include "Player.h"
 
 CLevel_EffectViewer::CLevel_EffectViewer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -46,11 +47,11 @@ HRESULT CLevel_EffectViewer::Initialize()
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_Plane>(ENUM_CLASS(LEVEL::EFFECT), NEXT_LEVEL, LAYER_CUBE)))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_Cube>(ENUM_CLASS(LEVEL::EFFECT), NEXT_LEVEL, LAYER_CUBE)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, LAYER_PLAYER)))
 		return E_FAIL;
 
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummySkyBox>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Sky"))))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummySkyBox>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Sky"))))
+		return E_FAIL;
 
 
 	return S_OK;
@@ -130,6 +131,7 @@ HRESULT CLevel_EffectViewer::Ready_Layer_PhysX(const _wstring& strLayerTag)
 			return E_FAIL;
 		}
 	}
+
 	{
 		CDummy_PhysXWall::PHYSXDUMMY_DESC Desc{};
 		Desc.vPos = { -15.f, 3.f, 15.f };
@@ -140,15 +142,7 @@ HRESULT CLevel_EffectViewer::Ready_Layer_PhysX(const _wstring& strLayerTag)
 			return E_FAIL;
 		}
 	} 
-	{
-		CDummy_PhysXPlayable::PHYSXDUMMY_DESC Desc{};
-		Desc.vPos = { 0.f, 100.f, 0.f };
-		Desc.vRotRPY = { 0.f, 0.f, 0.f };
-		Desc.iSubKind = 10;
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXPlayable>(g_iStaticLevel, NEXT_LEVEL, LAYER_PLAYER, &Desc))) {
-			return E_FAIL;
-		}
-	}
+
 	{
 		CDummy_PhysXMonster::PHYSXDUMMY_DESC Desc{};
 		Desc.vPos = { 0.f, 150.f, 5.f };

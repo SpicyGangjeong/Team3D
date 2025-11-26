@@ -18,6 +18,7 @@ enum ESTATE : _u64Flag
     SKILL                       = 1ULL << 11,
     SKILL2                      = 1ULL << 12,
     MAPHELP                     = 1ULL << 13,
+    STOP                        = 1ULL << 14,
     END
 };
 NS_END
