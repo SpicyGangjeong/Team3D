@@ -146,7 +146,6 @@ HRESULT CInstance_Model::Assimp_Model_Load(const _char* pModelFilePath, MODEL eT
 	return S_OK;
 #pragma endregion	
 }
-
 #endif
 
 #ifdef EDITOR_PROJECT
