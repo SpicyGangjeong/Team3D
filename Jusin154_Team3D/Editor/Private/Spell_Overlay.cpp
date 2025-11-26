@@ -48,7 +48,33 @@ HRESULT CSpell_Overlay::Initialize(void* pArg)
 	m_fCoolTime = 5.f;
 	m_fSortZ = 1.f;
 	m_iSkillType = ENUM_CLASS(SKILLTYPE::CONTROL);
+	Compute_UI(5);
 	return S_OK;
+}
+
+void CSpell_Overlay::Compute_UI(_uint SpellID)
+{
+	_float2 fImage_Size = { 1024.f, 1536.f };
+
+	_uint iCountX = 4;
+	_uint iCountY = 6;
+
+	_float iImageX = 256.f;
+	_float iImageY = 256.f;
+
+	_uint iframeX = SpellID % iCountX;
+	_uint iframeY = SpellID / iCountX;
+
+	_float2 UVStart;
+	UVStart.x = iframeX * iImageX / fImage_Size.x;
+	UVStart.y = iframeY * iImageY / fImage_Size.y;
+
+	_float2 UVEnd;
+	UVEnd.x = UVStart.x + (iImageX / fImage_Size.x);
+	UVEnd.y = UVStart.y + (iImageY / fImage_Size.y);
+
+	_float4 UV = _float4{UVStart.x, UVStart.y, UVEnd.x, UVEnd.y};
+	m_vUV = UV;
 }
 
 void CSpell_Overlay::Priority_Update(_float fTimeDelta)
@@ -170,6 +196,10 @@ HRESULT CSpell_Overlay::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+	if (FAILED(m_pDiffuse_TextureCom2->Bind_ShaderResource(m_pShaderCom, "g_Texture2", 0)))
+	{
+		return E_FAIL;
+	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float))))
 	{
 		return E_FAIL;
@@ -218,6 +248,10 @@ HRESULT CSpell_Overlay::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fImageUV", &m_vUV, sizeof(_float4))))
+	{
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
@@ -227,11 +261,15 @@ HRESULT CSpell_Overlay::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_spellmeter_Generic"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_ActionItemBack_4K"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_spellmeter_Accio_Overlay"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_spellmeter_Generic"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_Atlas_Spell"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom2), nullptr)))
 	{
 		return E_FAIL;
 	}

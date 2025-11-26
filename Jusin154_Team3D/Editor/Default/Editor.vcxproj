@@ -211,6 +211,7 @@
     <ClInclude Include="..\public\HpBarBG.h" />
     <ClInclude Include="..\Public\Bombard.h" />
     <ClInclude Include="..\public\Magic_Icon.h" />
+    <ClInclude Include="..\public\Magic_Item.h" />
     <ClInclude Include="..\public\Magic_Meter.h" />
     <ClInclude Include="..\Public\NomalJap.h" />
     <ClInclude Include="..\Public\Effect_Container.h" />
@@ -255,7 +256,6 @@
     <ClInclude Include="..\Public\State_Land.h" />
     <ClInclude Include="..\Public\State_Move.h" />
     <ClInclude Include="..\Public\State_Root.h" />
-    <ClInclude Include="..\public\Spell_Image.h" />
     <ClInclude Include="..\public\Spell_Overlay.h" />
     <ClInclude Include="..\public\Spell_Slot.h" />
     <ClInclude Include="..\public\Terrain.h" />
@@ -347,6 +347,7 @@
     <ClCompile Include="..\private\HpBarBG.cpp" />
     <ClCompile Include="..\Private\Bombard.cpp" />
     <ClCompile Include="..\private\Magic_Icon.cpp" />
+    <ClCompile Include="..\private\Magic_Item.cpp" />
     <ClCompile Include="..\private\Magic_Meter.cpp" />
     <ClCompile Include="..\Private\NomalJap.cpp" />
     <ClCompile Include="..\Private\Effect_Container.cpp" />
@@ -392,7 +393,6 @@
     <ClCompile Include="..\Private\State_Land.cpp" />
     <ClCompile Include="..\Private\State_Move.cpp" />
     <ClCompile Include="..\Private\State_Root.cpp" />
-    <ClCompile Include="..\private\Spell_Image.cpp" />
     <ClCompile Include="..\private\Spell_Overlay.cpp" />
     <ClCompile Include="..\private\Spell_Slot.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />

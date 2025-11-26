@@ -23,8 +23,8 @@ HRESULT CPotion::Initialize(void* pArg)
 
 	Desc.fX = 700.f;
 	Desc.fY = 150.f;
-	Desc.fSizeX = 74.f;
-	Desc.fSizeY = 74.f;
+	Desc.fSizeX = 80.f;
+	Desc.fSizeY = 80.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -40,7 +40,7 @@ HRESULT CPotion::Initialize(void* pArg)
 	m_fTimeMult = 3.f;
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 1.f;
-	m_vImageSlotPos = _float2(37.f,37.f);
+	m_vImageSlotPos = _float2(45.f,45.f);
 	m_vImageSize = _float2(32.f,32.f);
 	return S_OK;
 }
@@ -162,6 +162,10 @@ HRESULT CPotion::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+	if (FAILED(m_pDiffuse_TextureCom4->Bind_ShaderResource(m_pShaderCom, "g_Texture4", 0)))
+	{
+		return E_FAIL;
+	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float))))
 	{
 		return E_FAIL;
@@ -207,15 +211,19 @@ HRESULT CPotion::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_ActionItemGoldleaf_4K"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_FG_IndexIconBorder"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_WoundCleaning"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom2), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_ActionItemGoldleaf_4K"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom2), nullptr)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_AmountFrame"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom3), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_WoundCleaning"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom3), nullptr)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_AmountFrame"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom4), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -260,6 +268,7 @@ void CPotion::Free()
 	SAFE_RELEASE(m_pDiffuse_TextureCom1);
 	SAFE_RELEASE(m_pDiffuse_TextureCom2);
 	SAFE_RELEASE(m_pDiffuse_TextureCom3);
+	SAFE_RELEASE(m_pDiffuse_TextureCom4);
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }
