@@ -1441,51 +1441,41 @@ void CModel::Free()
 #ifdef _DEBUG
 void CModel::Describe_Entity()
 {
-	//GUI::Begin("Model_Desc");
-	//GUI::Text("Lerping : %d\nAnim : %d", m_pLerpAnim->IsLerping(), m_bIsFinishedAnim);
-	//for (_uint i = 0; i < m_iNumAnimations; ++i) {
-	//	if (GUI::Button(m_Animations[i]->Get_Name().c_str())) {
-	//		Change_AnimationIndex(i, false, 0.25f);
-	//	}
-	//}
-	//if (GUI::Button("SaveAnimIndexWithName")) {
-	//	_wstring wstrPath = TEXT("../Bin/AnimIndex.txt");
-	//	HANDLE	hFile = CreateFile(wstrPath.c_str(),
-	//		GENERIC_WRITE, NULL,
-	//		NULL, CREATE_ALWAYS,
-	//		FILE_ATTRIBUTE_NORMAL, NULL
-	//	);
+	GUI::Begin("Model_Desc");
+	if (GUI::Button("SaveAnimIndexWithName")) {
+		_wstring wstrPath = TEXT("../Bin/AnimIndex.txt");
+		HANDLE	hFile = CreateFile(wstrPath.c_str(),
+			GENERIC_WRITE, NULL,
+			NULL, CREATE_ALWAYS,
+			FILE_ATTRIBUTE_NORMAL, NULL
+		);
 
-	//	if (hFile == INVALID_HANDLE_VALUE)
-	//	{
-	//		GUI::End();
-	//		CloseHandle(hFile);
-	//		return;
-	//	}
+		if (hFile == INVALID_HANDLE_VALUE)
+		{
+			GUI::End();
+			CloseHandle(hFile);
+			return;
+		}
 
-	//	_string name = {};
-	//	for (_uint i = 0; i < m_iNumAnimations; ++i) {
-	//		
-	//		name.clear();
-	//		name.append(to_string(i) + '\t' + m_Animations[i]->Get_Name() + "\n");
-	//		name.shrink_to_fit();
-	//		WriteFile(hFile, name.data(),(DWORD) name.length(), nullptr, nullptr);
-	//	}
+		_string name = {};
+		for (_uint i = 0; i < m_iNumAnimations; ++i) {
+			
+			name.clear();
+			name.append(m_Animations[i]->Get_SZName());
 
-	//	CloseHandle(hFile);
+			size_t pos = name.find_last_of('|');
+			if (0 > pos) { pos = 0; }
+			else { pos++; }
+			name = name.substr(pos);
+			name = to_string(i) + '\t' + name + '\n';
+			name.shrink_to_fit();
+			WriteFile(hFile, name.data(),(DWORD) name.length(), nullptr, nullptr);
+		}
 
-	//}
-	//GUI::End();
-	//
-	//GUI::Begin("Bone_Desc");
-	//_uint iNumBones = (_uint)m_Bones.size();
-	//for (_uint i = 0; i < iNumBones; ++i){
-	//	_float3 vPos = m_Bones[i]->Get_LocalPosition();
-	//	GUI::PushID(i);
-	//	GUI::DragFloat3(m_Bones[i]->Get_Name(), (_float*)&vPos, 1.f, 0.f, 0.f, "%.3f", ImGuiSliderFlags_NoInput);
-	//	GUI::PopID();
-	//}
-	//GUI::End();
+		CloseHandle(hFile);
+
+	}
+	GUI::End();
 }
 
 #endif // _DEBUG

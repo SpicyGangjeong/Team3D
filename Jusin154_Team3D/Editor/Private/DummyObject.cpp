@@ -39,11 +39,11 @@ HRESULT CDummyObject::Initialize(void* pArg)
 
 void CDummyObject::Priority_Update(_float fTimeDelta)
 {
-
 }
 
 void CDummyObject::Update(_float fTimeDelta)
 {
+	Describe_Entity();
 	m_pModelCom->Play_Animation(fTimeDelta,m_pTransformCom);
 }
 
@@ -154,4 +154,7 @@ void CDummyObject::Free()
 
 void CDummyObject::Describe_Entity()
 {
+	if (nullptr != m_pModelCom) {
+		m_pModelCom->Describe_Entity();
+	}
 }
