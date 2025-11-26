@@ -5,6 +5,7 @@
 #include "GameInstance.h"
 #include "ComputeShader.h"
 #include "Bone.h"
+#include "GameObject.h"
 
 CInstance_Model::CInstance_Model(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CComponent{ pDevice  , pContext }
@@ -18,6 +19,7 @@ CInstance_Model::CInstance_Model(const CInstance_Model& rhs)
 	, m_iNumBuffer{ rhs.m_iNumBuffer }
 	, m_iNumMeshes{ rhs.m_iNumMeshes }
 	, m_Meshes{ rhs.m_Meshes }
+	, m_PreTransformMatrix{ rhs.m_PreTransformMatrix }
 {
 	for (auto& pMesh : m_Meshes) {
 		SAFE_ADDREF(pMesh);
@@ -25,7 +27,9 @@ CInstance_Model::CInstance_Model(const CInstance_Model& rhs)
 
 	SAFE_ADDREF(m_pVBInstance);
 }
+
 #ifdef EDITOR_PROJECT
+
 HRESULT CInstance_Model::Initialize_Prototype(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex)
 {
 	if (FAILED(__super::Initialize_Prototype()))
@@ -33,39 +37,117 @@ HRESULT CInstance_Model::Initialize_Prototype(const _char* pModelFilePath, MODEL
 
 	m_iNumBuffer = 2;
 
-	if (FAILED(Assimp_Model_Load(pModelFilePath, eType, PreTransformMatrix, iRootBoneIndex)))
+	XMStoreFloat4x4(&m_PreTransformMatrix, PreTransformMatrix);
+
+	m_eType = eType;
+	_char		szTextureFileName[MAX_PATH] = {};
+	_char		szDir[MAX_PATH] = {};
+	_char		szName[MAX_PATH] = {};
+	_char		szEXT[MAX_PATH] = {};
+
+	_splitpath_s(pModelFilePath, nullptr, 0, szDir, MAX_PATH, szName, MAX_PATH, szEXT, MAX_PATH);
+
+
+	if (strcmp(".bin", szEXT) == 0)
+	{
+		LoadData(pModelFilePath);
+	}
+	else if (strcmp(".fbx", szEXT) == 0)
+	{
+		_char Temp[256];
+		strcpy_s(Temp, szDir);
+		strcat_s(Temp, szName);
+		strcat_s(Temp, ".bin");
+
+		if (FAILED(Assimp_Model_Load(pModelFilePath, eType, PreTransformMatrix, 0))) {
+			return E_FAIL;
+		}
+
+		SaveAssimpModel(Temp , m_pAIScene);
+		return S_OK;
+	}
+#pragma region Mesh
+	if (FAILED(Ready_Meshes())) {
 		return E_FAIL;
+	}
+
+#pragma endregion
 
 	return S_OK;
 }
-HRESULT CInstance_Model::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex)
+#endif
+
+#ifndef EDITOR_PROJECT
+
+HRESULT CInstance_Model::Initialize_Prototype(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex)
 {
+	if (FAILED(__super::Initialize_Prototype()))
+		return E_FAIL;
 
-	_uint			iFlag = {};
-	iFlag = aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast;
+	m_iNumBuffer = 2;
 
-	if (MODEL::NONANIM == eType) {
-		iFlag |= aiProcess_PreTransformVertices;
+	XMStoreFloat4x4(&m_PreTransformMatrix, PreTransformMatrix);
+
+	m_eType = eType;
+	_char		szTextureFileName[MAX_PATH] = {};
+	_char		szDir[MAX_PATH] = {};
+	_char		szName[MAX_PATH] = {};
+	_char		szEXT[MAX_PATH] = {};
+
+	_splitpath_s(pModelFilePath, nullptr, 0, szDir, MAX_PATH, szName, MAX_PATH, szEXT, MAX_PATH);
+
+
+	if (strcmp(".bin", szEXT) == 0)
+	{
+		LoadData(pModelFilePath);
 	}
-	m_iRootBoneIndex = iRootBoneIndex;
-
-	Assimp::Importer Importer = {};
-	const aiScene* pAIScene = { nullptr };
-
-	pAIScene = Importer.ReadFile(pModelFilePath, iFlag);
-	if (nullptr == pAIScene) {
+	else {
 		return E_FAIL;
 	}
-
 #pragma region Mesh
-	if (FAILED(Ready_Meshes(eType, pAIScene, PreTransformMatrix))) {
+	if (FAILED(Ready_Meshes())) {
 		return E_FAIL;
 	}
+
 #pragma endregion
 
 	return S_OK;
 }
 
+#endif
+
+#ifdef EDITOR_PROJECT
+HRESULT CInstance_Model::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex)
+{
+	_uint			iFlag = {};
+	iFlag = aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast;
+
+	if (MODEL::NONANIM == eType || MODEL::ENVIROMENT == eType) {
+		iFlag |= aiProcess_PreTransformVertices;
+	}
+	m_iRootBoneIndex = iRootBoneIndex;
+
+	m_pAIScene = { nullptr };
+
+
+	m_pAIScene = m_Importer.ReadFile(pModelFilePath, iFlag);
+
+	if (nullptr == m_pAIScene)
+		return E_FAIL;
+
+
+
+#pragma region Mesh
+	if (FAILED(Ready_Meshes(eType, m_pAIScene, PreTransformMatrix))) {
+		return E_FAIL;
+	}
+
+	return S_OK;
+#pragma endregion	
+}
+#endif
+
+#ifdef EDITOR_PROJECT
 HRESULT CInstance_Model::Ready_Meshes(MODEL eType, const aiScene* pAIScene, _fmatrix& PreTransformMatrix)
 {
 	XMStoreFloat4x4(&m_PreTransformMatrix, PreTransformMatrix);
@@ -76,18 +158,154 @@ HRESULT CInstance_Model::Ready_Meshes(MODEL eType, const aiScene* pAIScene, _fma
 	for (size_t i = 0; i < m_iNumMeshes; ++i)
 	{
 		CMesh* pMesh = CMesh::Create(m_pDevice, m_pContext, eType, m_Bones, pAIScene->mMeshes[i], PreTransformMatrix);
-
 		if (nullptr == pMesh) {
 			return E_FAIL;
 		}
 
 		m_Meshes.push_back(pMesh);
 	}
-
 	m_Meshes.shrink_to_fit();
+	return S_OK;
+}
+#endif
+
+#ifdef EDITOR_PROJECT
+_bool CInstance_Model::SaveAssimpModel(const _char* filename , const aiScene* pAIScene)
+{
+	if (!pAIScene) return false;
+
+	_char szModel[MAX_PATH] = {};
+	_char szExt[MAX_PATH] = {};
+	_splitpath_s(filename, nullptr, 0, nullptr, 0, nullptr, 0, szExt, MAX_PATH);
+	strcat_s(szModel, sizeof(_char) * MAX_PATH, szExt);
+
+	_string savePath = filename;
+
+	SaveModel modelData;
+	modelData.MeshCount = pAIScene->mNumMeshes;
+
+	for (_uint i = 0; i < pAIScene->mNumMeshes; i++)
+	{
+		aiMesh* mesh = pAIScene->mMeshes[i];
+		SaveMesh saveMesh{};
+
+		saveMesh.MeshName = mesh->mName.C_Str();
+		saveMesh.MeshNameSize = (_int)saveMesh.MeshName.size() + 1;
+		saveMesh.VertexCount = mesh->mNumVertices;
+		saveMesh.IndexCount = mesh->mNumFaces * 3;
+		saveMesh.Vertices.resize(saveMesh.VertexCount);
+
+		for (_uint i = 0; i < mesh->mNumVertices; i++)
+		{
+			saveMesh.Vertices[i].Pos = XMFLOAT3{ mesh->mVertices[i].x , mesh->mVertices[i].y,mesh->mVertices[i].z };
+
+			if (mesh->HasNormals())
+			{
+				saveMesh.Vertices[i].Normal = XMFLOAT3{
+					mesh->mNormals[i].x,
+					mesh->mNormals[i].y,
+					mesh->mNormals[i].z
+				};
+				saveMesh.Vertices[i].bHasNormal = true;
+			}
+			else
+			{
+				saveMesh.Vertices[i].Normal = XMFLOAT3(0.f, 1.f, 0.f);
+				saveMesh.Vertices[i].bHasNormal = false;
+			}
+
+			if (mesh->HasTangentsAndBitangents())
+			{
+				saveMesh.Vertices[i].Tan = XMFLOAT3{
+					mesh->mTangents[i].x,
+					mesh->mTangents[i].y,
+					mesh->mTangents[i].z
+				};
+				saveMesh.Vertices[i].bHasTan = true;
+			}
+			else
+			{
+				saveMesh.Vertices[i].Tan = XMFLOAT3(1.f, 0.f, 0.f);
+				saveMesh.Vertices[i].bHasTan = false;
+			}
+
+			saveMesh.Vertices[i].BiNoraml = XMFLOAT3{
+				mesh->mBitangents[i].x,
+				mesh->mBitangents[i].y,
+				mesh->mBitangents[i].z
+			};
+
+			if (mesh->HasTextureCoords(0))
+			{
+				saveMesh.Vertices[i].UV = XMFLOAT2{
+					mesh->mTextureCoords[0][i].x,
+					mesh->mTextureCoords[0][i].y
+				};
+				saveMesh.Vertices[i].bHasUV = true;
+			}
+			else
+			{
+				saveMesh.Vertices[i].UV = XMFLOAT2(0.f, 0.f);
+				saveMesh.Vertices[i].bHasUV = false;
+			}
+			saveMesh.Vertices[i].BlendIndex = XMUINT4(0, 0, 0, 0);
+			saveMesh.Vertices[i].BlendWeight = XMFLOAT4(0.f, 0.f, 0.f, 0.f);
+		}
+
+		saveMesh.Indices.reserve(saveMesh.IndexCount);
+		for (_uint i = 0; i < mesh->mNumFaces; i++)
+		{
+			aiFace& face = mesh->mFaces[i];
+			for (_uint idx = 0; idx < face.mNumIndices; idx++)
+				saveMesh.Indices.push_back(face.mIndices[idx]);
+		}
+
+		modelData.Meshes.push_back(saveMesh);
+	}
+
+
+	FILE* fp = nullptr;
+	fopen_s(&fp, savePath.c_str(), "wb");
+	if (!fp) return false;
+
+	fwrite(&modelData.MeshCount, sizeof(_uint), 1, fp);
+
+	for (auto& mesh : modelData.Meshes)
+	{
+		fwrite(&mesh.MeshNameSize, sizeof(_uint), 1, fp);
+		fwrite(mesh.MeshName.data(), 1, mesh.MeshNameSize, fp);
+		fwrite(&mesh.VertexCount, sizeof(_uint), 1, fp);
+		fwrite(&mesh.IndexCount, sizeof(_uint), 1, fp);
+
+		fwrite(mesh.Vertices.data(), sizeof(SaveVertex), mesh.VertexCount, fp);
+		fwrite(mesh.Indices.data(), sizeof(_uint), mesh.IndexCount, fp);
+	}
+
+
+	fclose(fp);
+
+	return true;
+}
+
+#endif
+HRESULT CInstance_Model::Ready_Meshes()
+{
+	m_iNumMeshes = m_SaveModel.MeshCount;
+
+	for (size_t i = 0; i < m_iNumMeshes; i++)
+	{
+		CMesh* pMesh = CMesh::Create(m_pDevice, m_pContext, m_eType, nullptr, &m_SaveModel.Meshes[i], XMLoadFloat4x4(&m_PreTransformMatrix));
+		if (nullptr == pMesh)
+			return E_FAIL;
+
+		m_Meshes.push_back(pMesh);
+	}
 
 	return S_OK;
 }
+
+#ifdef EDITOR_PROJECT
+
 HRESULT CInstance_Model::PreLoad(HANDLE hFile)
 {
 	DWORD dwByte = {};
@@ -124,6 +342,43 @@ HRESULT CInstance_Model::Load_InstanceModel(HANDLE hFile)
 	Change_NumInstance();
 
 	return S_OK;
+}
+
+bool CInstance_Model::LoadData(const _char* filename)
+{
+	FILE* fp = nullptr;
+	fopen_s(&fp, filename, "rb");
+	if (!fp) return false;
+
+	SaveModel NewModel = {};
+
+	fread(&NewModel.MeshCount, sizeof(_uint), 1, fp);
+
+	for (_uint i = 0; i < NewModel.MeshCount; i++)
+	{
+		SaveMesh mesh{};
+
+		fread(&mesh.MeshNameSize, sizeof(_uint), 1, fp);
+		mesh.MeshName.resize(mesh.MeshNameSize);
+		fread(mesh.MeshName.data(), 1, mesh.MeshNameSize, fp);
+
+		fread(&mesh.VertexCount, sizeof(_uint), 1, fp);
+		fread(&mesh.IndexCount, sizeof(_uint), 1, fp);
+
+		mesh.Vertices.resize(mesh.VertexCount);
+		fread(mesh.Vertices.data(), sizeof(SaveVertex), mesh.VertexCount, fp);
+
+		mesh.Indices.resize(mesh.IndexCount);
+		fread(mesh.Indices.data(), sizeof(_uint), mesh.IndexCount, fp);
+
+		NewModel.Meshes.push_back(mesh);
+	}
+
+	fclose(fp);
+
+	m_SaveModel = NewModel;
+
+	return true;
 }
 
 HRESULT CInstance_Model::Change_NumInstance()
@@ -283,6 +538,9 @@ void CInstance_Model::Drop(_float fTimeDelta)
 		pDesc->isSinWave = m_InstanceDesc.isSinWave;
 		pDesc->isPivotMove = m_InstanceDesc.isPivotMove;
 		pDesc->isSizeLerp = m_InstanceDesc.isSizeLerp;
+		pDesc->isNoWorld = m_InstanceDesc.isNoWorld;
+		pDesc->WorldMatrix = *m_pOwner->Get_Component<CTransform>()->Get_WorldMatrixPtr();
+		
 
 		m_pContext->Unmap(m_pConstantBuffer, 0);
 	}
@@ -478,9 +736,7 @@ HRESULT CInstance_Model::Bind_CS_Output(_uint Index, _uint iBufferIndex)
 	return S_OK;
 }
 
-
-#ifdef EDITOR_PROJECT
-
+ 
 CInstance_Model* CInstance_Model::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex)
 {
 	CInstance_Model* pInstance = new CInstance_Model(pDevice, pContext);
@@ -493,7 +749,6 @@ CInstance_Model* CInstance_Model::Create(ID3D11Device* pDevice, ID3D11DeviceCont
 
 	return pInstance;
 }
-#endif
 
 CComponent* CInstance_Model::Clone(void* pArg, CGameObject* pOwner)
 {
@@ -519,12 +774,10 @@ void CInstance_Model::Free()
 	for (auto& pMesh : m_Meshes)
 		SAFE_RELEASE(pMesh);
 
-	for (auto& pBone : m_Bones)
-		SAFE_RELEASE(pBone);
-
 	SAFE_RELEASE(m_pComputeShader);
 	SAFE_RELEASE(m_pConstantBuffer);
 	SAFE_RELEASE(m_pParticleValueBuffer);
+;
 }
 #ifdef _DEBUG
 
@@ -580,7 +833,10 @@ void CInstance_Model::Describe_Entity()
 			Instane_Buffer_ReStruct();
 		}
 
-		
+		if (GUI::Checkbox("NoWorld", &m_InstanceDesc.isNoWorld))
+		{
+			Instane_Buffer_ReStruct();
+		}
 
 
 		if (ImGui::DragFloat3("SizeMin", reinterpret_cast<_float*>(&m_InstanceDesc.vSizeMin)))

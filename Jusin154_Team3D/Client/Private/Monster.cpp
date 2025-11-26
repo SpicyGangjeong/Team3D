@@ -73,7 +73,10 @@ void CMonster::Free()
 
 	SAFE_RELEASE(m_pPlayerTransform);
 }
+#ifdef _DEBUG
 
 void CMonster::Describe_Entity()
 {
 }
+
+#endif // _DEBUG

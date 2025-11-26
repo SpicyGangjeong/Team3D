@@ -105,9 +105,18 @@ HRESULT CBombard::Ready_Child()
 
 	XMStoreFloat3(&Desc.vPos, m_pOwner->Get_WorldPostion() + XMVectorSet(0.f, 0.f, 1.f, 0.f));
 
+
+	_vector vOwnerLook = m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK);
+
+	_float3 vDir = {};
+
+	XMStoreFloat3(&Desc.vPos, m_pOwner->Get_WorldPostion() + XMVectorSet(0.f, 0.f, 1.f, 0.f));
+
+	XMStoreFloat3(&vDir, vOwnerLook * 2.f);
+
 	Desc.vRotRPY = { 0.f, 0.f, 0.f };
 	Desc.iSubKind = 70;
-	Desc.vDeltaPos = { 0.f, 0.f, 2.f };
+	Desc.vDeltaPos = vDir;
 	Desc.vLifeTime = { 0.f, 2.f };
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXEffectHitBox>(g_iStaticLevel, CURRENT_LEVEL, LAYER_HITBOX, &Desc, this , &m_pPhysHitBox))) {

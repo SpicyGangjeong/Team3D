@@ -83,6 +83,9 @@ public:
 
 		_bool   isEmissiveDissolveReverse = { false };
 		_bool   isOnlyBlur = { false };
+
+		SHADER_PASS_INSTANCE_MODEL eShaderPass = { SHADER_PASS_INSTANCE_MODEL::NON_NOMALMAP };
+
 	}EFFECT_INFO;
 
 	typedef struct tagPreEffectInfo
@@ -144,6 +147,11 @@ public:
 
 		_float fSoftMaskEdge = {};
 		_float fSoftMask = {};
+
+		_bool   isEmissiveDissolveReverse = { false };
+		_bool   isOnlyBlur = { false };
+
+		SHADER_PASS_INSTANCE_MODEL eShaderPass = { SHADER_PASS_INSTANCE_MODEL::NON_NOMALMAP };
 
 	}PRE_EFFECT_INFO;
 

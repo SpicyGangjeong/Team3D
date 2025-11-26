@@ -70,13 +70,7 @@ public:
 
 public:
 	void	     Set_Target(class CTransform* pTargetTransform);
-	void		 Set_Target(_float4x4* pMatrix) 
-	{
-		if (m_pParantsMatrix != nullptr)
-		{
-			m_pParantsMatrix = pMatrix;
-		}
-	}
+	void         Trail_Update(_fmatrix WorldMat, _float fTimeDelta);
 public:
 #ifdef _DEBUG
 	HRESULT Save_Trail(const _char* pPath);

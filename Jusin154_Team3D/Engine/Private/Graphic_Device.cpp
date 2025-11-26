@@ -84,6 +84,11 @@ HRESULT CGraphic_Device::Present()
 	return m_pSwapChain->Present(0, 0);
 }
 
+void CGraphic_Device::Get_BackBufferPTR(ID3D11Texture2D** pTexture2D)
+{
+	m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)pTexture2D);
+}
+
 HRESULT CGraphic_Device::Bind_DepthStencil(CShader* pShader, const _char* pContantName)
 {
 	if (FAILED(pShader->Bind_SRV(pContantName, m_pDepthStencilSRV)))

@@ -43,7 +43,6 @@ void CTrailObject::Update(_float fTimeDelta)
 	if (m_bVisible == false)
 		return;
 
-	m_pTrailCom->Trail_Update(fTimeDelta, m_pParentTransformCom->Get_XMWorldMatrix());
 
 
 	if (m_TrailInfo.vDistortionTime.y == 0)
@@ -85,7 +84,13 @@ void CTrailObject::Set_Target(CTransform* pTargetTransform)
 		m_pParentTransformCom = pTargetTransform;
 }
 
+void CTrailObject::Trail_Update(_fmatrix WorldMat, _float fTimeDelta)
+{
+	m_pTrailCom->Trail_Update(fTimeDelta, WorldMat);
+}
+
 #ifdef _DEBUG
+
 
 HRESULT CTrailObject::Save_Trail(const _char* pPath)
 {
@@ -332,11 +337,12 @@ HRESULT CTrailObject::Ready_Components(void* pArg)
 
 HRESULT CTrailObject::Render()
 {
+	if (FAILED(Bind_ShaderResources()))
+		return E_FAIL;
+
 	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_POSTEX::TRAIL))))
 		return E_FAIL;
 
-	if (FAILED(Bind_ShaderResources()))
-		return E_FAIL;
 
 	if (FAILED(m_pTrailCom->Render()))
 		return E_FAIL;
@@ -346,8 +352,10 @@ HRESULT CTrailObject::Render()
 
 HRESULT CTrailObject::Render_Blur()
 {
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_POSTEX::TRAIL_BLUR))))
+
+	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
+
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fBlurIntensity", &m_TrailInfo.fBlurIntensity, sizeof(_float)))) {
 		return E_FAIL;
@@ -357,8 +365,10 @@ HRESULT CTrailObject::Render_Blur()
 		return E_FAIL;
 	}
 
-	if (FAILED(Bind_ShaderResources()))
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_POSTEX::TRAIL_BLUR))))
 		return E_FAIL;
+
+	
 
 	if (FAILED(m_pTrailCom->Render()))
 		return E_FAIL;
@@ -554,7 +564,7 @@ void CTrailObject::Describe_Entity()
 
 				ImGui::PopItemWidth();
 
-				if (GUI::TreeNode("NOISE TEX"))
+				if (GUI::TreeNode("DISTORTION TEX"))
 				{
 
 					strName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISTORTION_TEXTURE", (CComponent**)&m_pDistortion_TextureCom, nullptr, this);
@@ -664,6 +674,7 @@ HRESULT CTrailObject::Bind_ShaderResources()
 	}
 
 
+
 	/* 이미시브 */
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vEmissive", &m_TrailInfo.vEmissive, sizeof(_float4)))) {
 		return E_FAIL;
@@ -713,7 +724,7 @@ HRESULT CTrailObject::Bind_ShaderResources()
 
 	if (m_pDistortion_TextureCom != nullptr)
 	{
-		if (FAILED(m_pMasking_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_DistortionTexture", 0))) {
+		if (FAILED(m_pDistortion_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_DistortionTexture", 0))) {
 			return E_FAIL;
 		}
 	}
