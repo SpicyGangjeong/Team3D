@@ -2,13 +2,14 @@
 #include "Action_Panel.h"
 #include "GameInstance.h"
 #include "Spell_Slot.h"
-#include "Spell_Image.h"
 #include "Spell_Overlay.h"
 #include "Slot_Number.h"
 #include "HpBarBG.h"
 #include "Magic_Meter.h"
 #include "Magic_Icon.h"
 #include "Spell_UI.h"
+#include "Potion.h"
+#include "Magic_Item.h"
 
 CAction_Panel::CAction_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPanelObject(pDevice, pContext)
@@ -252,13 +253,6 @@ HRESULT CAction_Panel::Ready_Element(void* pArg)
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Spell_Slot"), m_pSpell_Slot);
-
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Image>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Image**>(&m_pSpell_Image))))
-	{
-		return E_FAIL;
-	}
-	Add_Element(TEXT("Spell_Image"), m_pSpell_Image);
-
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Overlay>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Overlay**>(&m_pSpell_Overlay))))
 	{
 		return E_FAIL;
@@ -309,6 +303,16 @@ HRESULT CAction_Panel::Ready_Element(void* pArg)
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Spell_UI"), m_pSpell_UI);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPotion>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CPotion**>(&m_pPotion))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Potion"), m_pPotion);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMagic_Item>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMagic_Item**>(&m_pMagic_Item))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Magic_Item"), m_pMagic_Item);
 	return S_OK;
 }
 
