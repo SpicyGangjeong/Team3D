@@ -37,56 +37,23 @@ CVIBuffer_Model_Instance::CVIBuffer_Model_Instance(const CVIBuffer_Model_Instanc
 	}
 }
 
-HRESULT CVIBuffer_Model_Instance::Initialize_Prototype(const _char* pFileName)
+HRESULT CVIBuffer_Model_Instance::Initialize_Prototype(const _char* pModelFilePath, const _char* pMatrialPath)
 {
-	SaveMesh SaveMesh_Desc = {};
-	
-	CModel* pModel = { nullptr };
-
-	/* Read File */
-	ifstream in(pFileName, ios::binary);
-
-	if (!in.is_open())
-	{
-		MSG_BOX("Failed to Load : Instance Data");
-		return E_FAIL;
-	}
-
-	in.read(reinterpret_cast<_char*>(&SaveMesh_Desc.MeshNameSize), sizeof(_uint));
-	in.read(reinterpret_cast<_char*>(&SaveMesh_Desc.VertexCount), sizeof(_uint));
-	in.read(reinterpret_cast<_char*>(&SaveMesh_Desc.IndexCount), sizeof(_uint));
-	in.read(reinterpret_cast<_char*>(&SaveMesh_Desc.MaterialIndex), sizeof(_uint));
-	in.read(reinterpret_cast<_char*>(&SaveMesh_Desc.BoneCount), sizeof(_uint));
-
-	in.read(reinterpret_cast<_char*>(&SaveMesh_Desc.MeshName), sizeof(char) * SaveMesh_Desc.MeshNameSize);
-	in.read(reinterpret_cast<_char*>(SaveMesh_Desc.Vertices.data()), sizeof(SaveVertex) * SaveMesh_Desc.VertexCount);
-	in.read(reinterpret_cast<_char*>(SaveMesh_Desc.Indices.data()), sizeof(_uint) * SaveMesh_Desc.IndexCount);
-
-	SaveMesh_Desc.Bones.resize(SaveMesh_Desc.BoneCount);
-
-	in.read(reinterpret_cast<_char*>(&m_iNumMeshes), sizeof(_uint));
-
-	if (FAILED(Load_InstanceData(in)))
+	if (FAILED(Load_ModelData(pModelFilePath)))
 		return E_FAIL;
 
-	for (_uint i = 0; i < m_iNumMeshes; ++i)
-	{
-		CMesh* pMesh = CMesh::Create(m_pDevice, m_pContext, MODEL::NONANIM, pModel, &SaveMesh_Desc, XMMatrixIdentity());
+	if (FAILED(Load_Material(pModelFilePath, pMatrialPath)))
+		return E_FAIL;
 
-		if (nullptr == pMesh)
-			return E_FAIL;
-
-		m_Meshes.push_back(pMesh);
-	}
-
-	in.close();
+	if (FAILED(Ready_Materials()))
+		return E_FAIL;
 
 	return S_OK;
 }
 
 HRESULT CVIBuffer_Model_Instance::Initialize(void* pArg)
 {
-	if (FAILED(Load_InstanceData_Editor()))
+	if (FAILED(Reay_Instance_Buffer()))
 		return E_FAIL;
 
 	return S_OK;
@@ -150,8 +117,6 @@ HRESULT CVIBuffer_Model_Instance::Load_WorldData(vector<_float4x4>& WorldMatrice
 
 HRESULT CVIBuffer_Model_Instance::Reay_Instance_Buffer()
 {
-	m_iNumInstance = m_InstanceDesc.iNum;
-
 	m_iInstanceStride = sizeof(VTX_INSTANCE_MODEL);
 
 	D3D11_BUFFER_DESC		InstanceBufferDesc = {};
@@ -198,6 +163,102 @@ HRESULT CVIBuffer_Model_Instance::Load_InstanceData(ifstream& in)
 	return S_OK;
 }
 
+HRESULT CVIBuffer_Model_Instance::Load_ModelData(const _char* pModelFilePath)
+{
+	ifstream In(pModelFilePath, ios::binary);
+
+	if (!In.is_open())
+	{
+		MSG_BOX("Failed to Load : Model Data");
+		return E_FAIL;
+	}
+
+	In.read(reinterpret_cast<_char*>(&m_iNumMeshes), sizeof(_uint));
+
+	for (_uint i = 0; i < m_iNumMeshes; ++i)
+	{
+		SaveMesh mesh{};
+
+		In.read(reinterpret_cast<_char*>(&mesh.MeshNameSize), sizeof(_uint));
+		mesh.MeshName.resize(mesh.MeshNameSize);
+		In.read(reinterpret_cast<_char*>(mesh.MeshName.data()), mesh.MeshNameSize);
+
+
+		In.read(reinterpret_cast<_char*>(&mesh.VertexCount), sizeof(_uint));
+		In.read(reinterpret_cast<_char*>(&mesh.IndexCount), sizeof(_uint));
+		In.read(reinterpret_cast<_char*>(&mesh.MaterialIndex), sizeof(_uint));
+		In.read(reinterpret_cast<_char*>(&mesh.BoneCount), sizeof(_uint));
+
+		mesh.Vertices.resize(mesh.VertexCount);
+		In.read(reinterpret_cast<_char*>(mesh.Vertices.data()), sizeof(SaveVertex) * mesh.VertexCount);
+
+		mesh.Indices.resize(mesh.IndexCount);
+		In.read(reinterpret_cast<_char*>(mesh.Indices.data()), sizeof(_uint) * mesh.IndexCount);
+
+		CModel* pModel = { nullptr };
+
+		CMesh* pMesh = CMesh::Create(m_pDevice, m_pContext, MODEL::NONANIM, pModel, &mesh, XMMatrixIdentity());
+
+		if (nullptr == pMesh)
+			return E_FAIL;
+
+		m_Meshes.push_back(pMesh);
+	}
+	In.read(reinterpret_cast<_char*>(&m_iNumInstance), sizeof(_uint));
+
+	m_iMaxNumInstance = m_iNumInstance;
+
+	In.close();
+
+	return S_OK;
+}
+
+HRESULT CVIBuffer_Model_Instance::Load_Material(const _char* pModelFilePath, const _char* pMatrialPath)
+{
+	tinyxml2::XMLDocument xmlDoc;
+
+	if ((tinyxml2::XML_SUCCESS != xmlDoc.LoadFile(pMatrialPath)))
+		return E_FAIL;
+
+	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("Instance");
+
+	_char szName[MAX_PATH] = {};
+
+	_splitpath_s(pModelFilePath, nullptr, 0, nullptr, 0, szName, MAX_PATH, nullptr, 0);
+
+	tinyxml2::XMLElement* Model = root->FirstChildElement(szName);
+
+	/* Check Mesh Num */
+	_uint iNumMesh = {};
+	Model->QueryUnsignedAttribute("mesh", &iNumMesh);
+
+	if (iNumMesh != m_iNumMeshes)
+		return E_FAIL;
+
+	for (auto* Mesh = Model->FirstChildElement("Mesh"); Mesh; Mesh = Mesh->NextSiblingElement("Mesh"))
+	{
+		vector<string> MaterialPathes = {};
+
+		for (auto* Material = Mesh->FirstChildElement("Material"); Material; Material = Material->NextSiblingElement("Material"))
+		{
+			MaterialPathes.push_back("../Bin/Resources/Models/InstanceProp/Textures/" + string(Material->GetText()) + ".dds");
+		}
+
+		m_MeshMaterialPathes.push_back(MaterialPathes);
+
+		auto* Surface = Mesh->FirstChildElement("Surface");
+		string strSurface = Surface->GetText();
+
+		if (string::npos != strSurface.find("SRO"))
+			m_SurfaceMaterialFlag.push_back(aiTextureType_SPECULAR);
+		else
+			m_SurfaceMaterialFlag.push_back(aiTextureType_METALNESS);
+	}
+
+	return S_OK;
+}
+
+
 HRESULT CVIBuffer_Model_Instance::Ready_Materials()
 {
 	for (_uint i = 0; i < m_iNumMeshes; ++i)
@@ -222,70 +283,15 @@ HRESULT CVIBuffer_Model_Instance::Ready_Materials()
 }
 
 #ifdef EDITOR_PROJECT
-HRESULT CVIBuffer_Model_Instance::Save_InstanceData(_char* pFileName)
+
+HRESULT CVIBuffer_Model_Instance::SaveAssimpModel(const _char* pModelFilePath)
 {
-#pragma region SAVE_MESH
-	SaveMesh saveMesh{};
-
-	if (SaveAssimpModel(saveMesh))
-		return E_FAIL;
-
-	ofstream out(pFileName, ios::binary);
-
-	if (!out.is_open())
-	{
-		MSG_BOX("Failed to Save : Instance Data");
-		return E_FAIL;
-	}
-
-	out.write(reinterpret_cast<_char*>(&saveMesh.MeshNameSize), sizeof(_uint));
-	out.write(reinterpret_cast<_char*>(&saveMesh.VertexCount), sizeof(_uint));
-	out.write(reinterpret_cast<_char*>(&saveMesh.IndexCount), sizeof(_uint));
-	out.write(reinterpret_cast<_char*>(&saveMesh.MaterialIndex), sizeof(_uint));
-	out.write(reinterpret_cast<_char*>(&saveMesh.BoneCount), sizeof(_uint));
-
-	out.write(reinterpret_cast<_char*>(&saveMesh.MeshName), sizeof(char) * saveMesh.MeshNameSize);
-	out.write(reinterpret_cast<_char*>(saveMesh.Vertices.data()), sizeof(SaveVertex) * saveMesh.VertexCount);
-	out.write(reinterpret_cast<_char*>(saveMesh.Indices.data()), sizeof(_uint) * saveMesh.IndexCount);
-
-	out.write(reinterpret_cast<const _char*>(&saveMesh.MeshNameSize), sizeof(_uint));
-
-	out.write(reinterpret_cast<_char*>(&m_iNumMeshes), sizeof(_uint));
-#pragma endregion
-
-
-#pragma region INSTANCE_DATA
-	out.write(reinterpret_cast<_char*>(&m_iCurrentNumInstance), sizeof(_uint));
-
-	D3D11_MAPPED_SUBRESOURCE		SubResource{};
-
-	if (FAILED(m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_READ, 0, &SubResource)))
-	{
-		out.close();
-		return E_FAIL;
-	}
-
-	VTX_INSTANCE_MODEL* pData = static_cast<VTX_INSTANCE_MODEL*>(SubResource.pData);
-
-	for (_uint i = 0; i < m_iCurrentNumInstance; ++i)
-	{
-		out.write(reinterpret_cast<_char*>(&pData[i]), sizeof(VTX_INSTANCE_MODEL));
-	}
-
-	m_pContext->Unmap(m_pVBInstance, 0);
-#pragma endregion
-
-	out.close();
-
-	return S_OK;
-}
-
-_bool CVIBuffer_Model_Instance::SaveAssimpModel(SaveMesh& saveMesh)
-{
-	if (!m_pAIScene) return false;
+	if (!m_pAIScene) return E_FAIL;
 
 	for (_uint i = 0; i < m_pAIScene->mNumMeshes; i++)
 	{
+		SaveMesh saveMesh{};
+
 		aiMesh* mesh = m_pAIScene->mMeshes[i];
 
 		saveMesh.MeshName = mesh->mName.C_Str();
@@ -351,23 +357,6 @@ _bool CVIBuffer_Model_Instance::SaveAssimpModel(SaveMesh& saveMesh)
 			saveMesh.Vertices[i].BlendIndex = XMUINT4(0, 0, 0, 0);
 			saveMesh.Vertices[i].BlendWeight = XMFLOAT4(0.f, 0.f, 0.f, 0.f);
 		}
-		saveMesh.BoneCount = mesh->mNumBones;
-		saveMesh.Bones.resize(mesh->mNumBones);
-		for (size_t j = 0; j < mesh->mNumBones; j++)
-		{
-			saveMesh.Bones[j].BoneName = mesh->mBones[j]->mName.C_Str();
-			saveMesh.Bones[j].BoneNameSize = (_int)saveMesh.Bones[j].BoneName.size();
-
-			memcpy(&saveMesh.Bones[j].OffsetMatrix, &mesh->mBones[j]->mOffsetMatrix, sizeof(_float4x4));
-			XMStoreFloat4x4(&saveMesh.Bones[j].OffsetMatrix, XMMatrixTranspose(XMLoadFloat4x4(&saveMesh.Bones[j].OffsetMatrix)));
-			saveMesh.Bones[j].WeightsCount = mesh->mBones[j]->mNumWeights;
-			saveMesh.Bones[j].Weights.resize(mesh->mBones[j]->mNumWeights);
-			for (size_t k = 0; k < saveMesh.Bones[j].WeightsCount; k++)
-			{
-				saveMesh.Bones[j].Weights[k].VertexId = mesh->mBones[j]->mWeights[k].mVertexId;
-				saveMesh.Bones[j].Weights[k].Weight = mesh->mBones[j]->mWeights[k].mWeight;
-			}
-		}
 
 		saveMesh.Indices.reserve(saveMesh.IndexCount);
 		for (_uint i = 0; i < mesh->mNumFaces; i++)
@@ -376,9 +365,45 @@ _bool CVIBuffer_Model_Instance::SaveAssimpModel(SaveMesh& saveMesh)
 			for (_uint idx = 0; idx < face.mNumIndices; idx++)
 				saveMesh.Indices.push_back(face.mIndices[idx]);
 		}
+
+		m_SaveMeshDesc.push_back(saveMesh);
 	}
 
-	return true;
+#pragma region SAVE_MESH
+	filesystem::path ModelPath = pModelFilePath;
+
+	string pFileName = ModelPath.parent_path().string() + "/" + ModelPath.stem().string() + ".bin";
+
+	ofstream out(pFileName, ios::binary);
+
+	if (!out.is_open())
+	{
+		MSG_BOX("Failed to Save : Instance Data");
+		return E_FAIL;
+	}
+	out.write(reinterpret_cast<_char*>(&m_iNumMeshes), sizeof(_uint));
+
+
+	for (auto& mesh : m_SaveMeshDesc)
+	{
+		out.write(reinterpret_cast<_char*>(&mesh.MeshNameSize), sizeof(_uint));
+		out.write(reinterpret_cast<_char*>(mesh.MeshName.data()), mesh.MeshNameSize);
+		out.write(reinterpret_cast<_char*>(&mesh.VertexCount), sizeof(_uint));
+		out.write(reinterpret_cast<_char*>(&mesh.IndexCount), sizeof(_uint));
+		out.write(reinterpret_cast<_char*>(&mesh.MaterialIndex), sizeof(_uint));
+		out.write(reinterpret_cast<_char*>(&mesh.BoneCount), sizeof(_uint));
+
+		out.write(reinterpret_cast<_char*>(mesh.Vertices.data()), sizeof(SaveVertex) * mesh.VertexCount);
+		out.write(reinterpret_cast<_char*>(mesh.Indices.data()), sizeof(_uint) * mesh.IndexCount);
+	}
+
+	out.write(reinterpret_cast<_char*>(&m_iMaxNumInstance), sizeof(_uint));
+#pragma endregion
+
+	out.close();
+
+
+	return S_OK;
 }
 
 HRESULT CVIBuffer_Model_Instance::Initialize_Prototype(const INSTANCE_DESC* pDesc, const _char* pModelFilePath, const _char* pMatrialPath)
@@ -394,6 +419,8 @@ HRESULT CVIBuffer_Model_Instance::Initialize_Prototype(const INSTANCE_DESC* pDes
 
 	if(FAILED(Ready_Materials()))
 		return E_FAIL;
+
+	
 
 	return S_OK;
 }
@@ -459,27 +486,27 @@ HRESULT CVIBuffer_Model_Instance::Assimp_Model_Load(const _char* pModelFilePath)
 	_uint			iFlag = {};
 	iFlag = aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast | aiProcess_PreTransformVertices;
 
-	Assimp::Importer Importer = {};
-	const aiScene* pAIScene = { nullptr };
-
-	pAIScene = Importer.ReadFile(pModelFilePath, iFlag);
-	if (nullptr == pAIScene) {
+	m_pAIScene = m_Importer.ReadFile(pModelFilePath, iFlag);
+	if (nullptr == m_pAIScene) {
 		return E_FAIL;
 	}
 
-	m_iNumMeshes = pAIScene->mNumMeshes;
+	m_iNumMeshes = m_pAIScene->mNumMeshes;
 
 	vector<class CBone*> bones;
 
 	for (_uint i = 0; i < m_iNumMeshes; ++i)
 	{
-		CMesh* pMesh = CMesh::Create(m_pDevice, m_pContext, MODEL::NONANIM, bones, pAIScene->mMeshes[i], XMMatrixIdentity());
+		CMesh* pMesh = CMesh::Create(m_pDevice, m_pContext, MODEL::NONANIM, bones, m_pAIScene->mMeshes[i], XMMatrixIdentity());
 
 		if (nullptr == pMesh)
 			return E_FAIL;
 
 		m_Meshes.push_back(pMesh);
 	}
+
+	if (FAILED(SaveAssimpModel(pModelFilePath)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -498,82 +525,13 @@ CVIBuffer_Model_Instance* CVIBuffer_Model_Instance::Create(ID3D11Device* pDevice
 }
 
 
-HRESULT CVIBuffer_Model_Instance::Reay_Instance_Buffer_Editor()
-{
-	m_iInstanceStride = sizeof(VTX_INSTANCE_MODEL);
-
-	D3D11_BUFFER_DESC		InstanceBufferDesc = {};
-
-	InstanceBufferDesc.ByteWidth = m_iInstanceStride * m_iNumInstance;
-	InstanceBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	InstanceBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	InstanceBufferDesc.StructureByteStride = m_iInstanceStride;
-	InstanceBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	InstanceBufferDesc.MiscFlags = 0;
-
-	if (FAILED(m_pDevice->CreateBuffer(&InstanceBufferDesc, nullptr, &m_pVBInstance)))
-		return E_FAIL;
-
-	return S_OK;
-}
-HRESULT CVIBuffer_Model_Instance::Load_InstanceData_Editor()
-{
-	if (FAILED(Reay_Instance_Buffer_Editor()))
-		return E_FAIL;
-
-	return S_OK;
-}
-HRESULT CVIBuffer_Model_Instance::Load_Material(const _char* pModelFilePath, const _char* pMatrialPath)
-{
-	tinyxml2::XMLDocument xmlDoc;
-
-	if ((tinyxml2::XML_SUCCESS != xmlDoc.LoadFile(pMatrialPath)))
-		return E_FAIL;
-
-	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("Instance");
-
-	_char szName[MAX_PATH] = {};
-
-	_splitpath_s(pModelFilePath, nullptr, 0, nullptr, 0, szName, MAX_PATH, nullptr, 0);
-
-	tinyxml2::XMLElement* Model = root->FirstChildElement(szName);
-
-	/* Check Mesh Num */
-	_uint iNumMesh = {};
-	Model->QueryUnsignedAttribute("mesh", &iNumMesh);
-
-	if (iNumMesh != m_iNumMeshes)
-		return E_FAIL;
-
-	for (auto* Mesh = Model->FirstChildElement("Mesh"); Mesh; Mesh = Mesh->NextSiblingElement("Mesh"))
-	{
-		vector<string> MaterialPathes = {};
-
-		for (auto* Material = Mesh->FirstChildElement("Material"); Material; Material = Material->NextSiblingElement("Material"))
-		{
-			MaterialPathes.push_back("../Bin/Resources/Models/InstanceProp/Textures/" + string(Material->GetText()) + ".dds");
-		}
-
-		m_MeshMaterialPathes.push_back(MaterialPathes);
-
-		auto* Surface = Mesh->FirstChildElement("Surface");
-		string strSurface = Surface->GetText();
-
-		if (string::npos != strSurface.find("SRO"))
-			m_SurfaceMaterialFlag.push_back(aiTextureType_SPECULAR);
-		else
-			m_SurfaceMaterialFlag.push_back(aiTextureType_METALNESS);
-	}
-
-	return S_OK;
-}
 #endif
 
-CVIBuffer_Model_Instance* CVIBuffer_Model_Instance::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pFileName)
+CVIBuffer_Model_Instance* CVIBuffer_Model_Instance::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, const _char* pMatrialPath)
 {
 	CVIBuffer_Model_Instance* pInstance = new CVIBuffer_Model_Instance(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype(pFileName)))
+	if (FAILED(pInstance->Initialize_Prototype(pModelFilePath, pMatrialPath)))
 	{
 		MSG_BOX("Failed to Created : CVIBuffer_Model_Instance");
 		SAFE_RELEASE(pInstance);
@@ -617,8 +575,9 @@ void CVIBuffer_Model_Instance::Free()
 
 	m_SurfaceMaterialFlag.clear();
 }
-
+#ifdef _DEBUG
 void CVIBuffer_Model_Instance::Describe_Entity()
 {
 	GUI::Text("Instance Count : %d / %d", m_iCurrentNumInstance, m_iMaxNumInstance);
 }
+#endif
