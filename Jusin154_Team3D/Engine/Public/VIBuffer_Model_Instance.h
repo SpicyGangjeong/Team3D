@@ -14,20 +14,22 @@ public:
 	_uint Get_NumMesh() const { return m_iNumMeshes; }
 
 public:
-	virtual HRESULT Initialize_Prototype(const _char* pModelFilePath);
+	virtual HRESULT Initialize_Prototype(const _char* pModelFilePath, const _char* pMatrialPath);
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual HRESULT Render(_uint iMeshIndex);
 
 	HRESULT Bind_Matrial(class CShader* pShader, _uint iMeshIndex);
 	HRESULT Load_WorldData(vector<_float4x4>& WorldMatrices);
 private:
-	_uint					m_iNumBuffer = {};
-	_uint					m_iNumMeshes = {};
+	_uint										m_iNumBuffer = {};
+	_uint										m_iNumMeshes = {};
 	
+	_uint										m_iCurrentNumInstance = {};
+	_uint										m_iMaxNumInstance = {};
 
-	INSTANCE_DESC			m_InstanceDesc = {};
+	INSTANCE_DESC								m_InstanceDesc = {};
 
-	vector<class CMesh*>	m_Meshes = {};
+	vector<class CMesh*>						m_Meshes = {};
 	vector<vector<ID3D11ShaderResourceView*>>	m_MeshMaterialsSRV = {};
 	vector<aiTextureType>						m_SurfaceMaterialFlag = {};
 
@@ -36,6 +38,8 @@ private:
 private:
 	HRESULT			Reay_Instance_Buffer();
 	HRESULT			Load_InstanceData(ifstream& in);
+	HRESULT         Load_ModelData(const _char* pModelFilePath);
+	HRESULT			Load_Material(const _char* pModelFilePath, const _char* pMatrialPath);
 	HRESULT			Ready_Materials();
 
 #ifdef EDITOR_PROJECT
@@ -47,25 +51,18 @@ public:
 
 	virtual HRESULT Initialize_Prototype(const INSTANCE_DESC* pDesc, const _char* pFileName, const _char* pMatrialPath);
 	HRESULT			Assimp_Model_Load(const _char* pModelFilePath);
-
-	HRESULT			Save_InstanceData(_char* pFileName);
-	_bool			SaveAssimpModel(SaveMesh& saveMesh);
-
-	HRESULT			Reay_Instance_Buffer_Editor();
-	HRESULT			Load_InstanceData_Editor();
-	HRESULT			Load_Material(const _char* pModelFilePath, const _char* pMatrialPath);
+	HRESULT			SaveAssimpModel(const _char* pModelFilePath);
 	
 public:
 	static CVIBuffer_Model_Instance* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const INSTANCE_DESC* pInstanceDesc, const _char* pModelFilePath, const _char* pMatrialPath);
 
 	const aiScene*			m_pAIScene = { nullptr };
 	Assimp::Importer		m_Importer;
-	_uint					m_iCurrentNumInstance = {};
-	_uint					m_iMaxNumInstance = {};
+	vector<SaveMesh> 		m_SaveMeshDesc = {};
 #endif
 
 public:
-	static CVIBuffer_Model_Instance* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pFileName);
+	static CVIBuffer_Model_Instance* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, const _char* pMatrialPath);
 	virtual CComponent* Clone(void* pArg, class CGameObject* pOwner = nullptr) override;
 	virtual void Free() override;
 #ifdef _DEBUG
