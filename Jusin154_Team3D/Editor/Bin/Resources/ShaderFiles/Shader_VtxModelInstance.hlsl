@@ -116,6 +116,13 @@ bool g_isNoiseAlpha;
 bool g_isNomalDissolve;
 
 
+bool g_isDiffuseBlur;
+bool g_isMaskBlur;
+bool g_isBlurDissolve;
+bool g_isBlurReverseDissolve;
+
+float g_fBluringStrength;
+
 float g_fFar;
 
 
@@ -176,6 +183,36 @@ VS_OUT VS_MAIN(VS_IN In, uint iGPUIndex : SV_InstanceID)
     
     return Out;
 }
+
+VS_OUT VS_NOWORLD(VS_IN In, uint iGPUIndex : SV_InstanceID)
+{
+    VS_OUT Out = (VS_OUT) 0;
+
+    matrix matW, matWV, matWVP;
+    
+    row_major matrix TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
+    
+    matW = TransformMatrix;
+    matWV = mul(matW, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+    
+
+
+    vector vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    
+    Out.vPosition = vPosition;
+    Out.vNormal = normalize(mul(vector(In.vNormal, 0.f), matW));
+    Out.vTangent = normalize(mul(vector(In.vTangent, 0.f), matW)).xyz;
+    Out.vBinormal = normalize(mul(vector(In.vBinormal, 0.f), matW)).xyz;
+    Out.vTexcoord = In.vTexcoord;
+    Out.vLifeTime = In.vLifeTime;
+    Out.vWorldPos = mul(vector(In.vPosition, 1.f), matW);
+    Out.iGPUIndex = iGPUIndex;
+    Out.vProjPos = vPosition;
+    
+    return Out;
+}
+
 
 struct PS_IN
 {
@@ -359,14 +396,14 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
         // 마스크 디스토션 
         if (g_isDistortion == true)
         {
-            float2 UV; // 이미지의 UV값
-               
+
             float2 vDistortionUV = In.vTexcoord + SelectLerpUV(g_vMaskDistortionUVGainAmount, (vDistortionUVMoveTime.x / vDistortionUVMoveTime.y), g_iMaskDistortionMoveLerpOption);
             
             vMtrlDistortion = g_DistortionTexture.Sample(DefaultSampler, vDistortionUV);
             
             //디스토션(노이즈) 텍스쳐로 uv를 왜곡함
-            vMaskTexcoord = vMaskTexcoord + (vMtrlDistortion - 0.5f).r  * g_fNoiseDistortionIntensity;
+            vMaskTexcoord = vMaskTexcoord + (vMtrlDistortion - 0.5f).r * g_fNoiseDistortionIntensity;
+          
         }
         
         if (g_isMaskUVMove)
@@ -381,13 +418,48 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
             vMtrlMask = g_MaskingTexture.Sample(DefaultSampler, vMaskTexcoord);
         
             
+        if (g_isMaskBlur)
+        {
+            float4 fAccMask;
+
+            
+            float fTexel = g_fBluringStrength;
+            
+            if (g_isBlurDissolve)
+            {
+                fTexel = saturate(g_fBluringStrength * (In.vLifeTime.x / In.vLifeTime.y));
+            }
+            
+            if (g_isBlurReverseDissolve)
+            {
+                fTexel = saturate(g_fBluringStrength * (1 - (In.vLifeTime.x / In.vLifeTime.y)));
+            }
+            
+            for (int x = -2; x <= 2; x++)
+            {
+                for (int y = -2; y <= 2; y++)
+                {
+                    fAccMask += g_MaskingTexture.Sample(DefaultSampler, vMaskTexcoord + float2(x * fTexel, y * fTexel));
+                }
+            }
+            
+            fAccMask = fAccMask / 9.0;
+            
+             /* 연산 마스크 대입*/
+            vMtrlMask.r = fAccMask;
+        }
+  
+        
         float fSoftMask;
     
         if (g_fSoftMask > FLT_EPSILON5)
             fSoftMask = saturate((vMtrlMask.r - g_fSoftMaskEdge) * g_fSoftMask);
-    
+        else
+            fSoftMask = vMtrlMask.r;
+        
         vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * fSoftMask);
-  
+        
+   
     }
     else
     {
@@ -397,8 +469,10 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     
     vMtrlDiffuse.a *= g_fDiffuseAlpha;
       
-    if (vMtrlDiffuse.a <= 0.f)
+    if (vMtrlDiffuse.a <= FLT_EPSILON5)
         discard;
+    
+    
     
     if (g_isDissolve == true)
     {
@@ -478,7 +552,7 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
         
     }
     
-    Out.vColorTarget = vEmissiveMtrl * fEmissive * fEmissiveStrength; // 이미시브 스트랭스
+    Out.vDiffuse += vEmissiveMtrl * fEmissive * fEmissiveStrength; // 이미시브 스트랭스
     
     return Out;
 }
@@ -489,6 +563,7 @@ struct VS_BLUR_OUT
     float2 vTexcoord : TEXCOORD0;
     float2 vLifeTime : TEXCOORD1;
     uint iGPUIndex : TEXCOORD2;
+    float4 vProjPos : TEXCOORD3;
 };
 
 VS_BLUR_OUT VS_BLUR(VS_IN In, uint iGPUIndex : SV_InstanceID)
@@ -509,7 +584,30 @@ VS_BLUR_OUT VS_BLUR(VS_IN In, uint iGPUIndex : SV_InstanceID)
     Out.vTexcoord = In.vTexcoord;
     Out.vLifeTime = In.vLifeTime;
     Out.iGPUIndex = iGPUIndex;
+    Out.vProjPos = vPosition;
 
+    return Out;
+}
+
+VS_BLUR_OUT VS_BLUR_NOWORLD(VS_IN In, uint iGPUIndex : SV_InstanceID)
+{
+    VS_BLUR_OUT Out = (VS_BLUR_OUT) 0;
+
+    row_major matrix matW, matWV, matWVP;
+    
+    row_major matrix TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
+    
+    matW = TransformMatrix;
+    matWV = mul(matW, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+    
+    vector vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    
+    Out.vPosition = vPosition;
+    Out.vTexcoord = In.vTexcoord;
+    Out.vLifeTime = In.vLifeTime;
+    Out.iGPUIndex = iGPUIndex;
+    Out.vProjPos = vPosition;
 
     return Out;
 }
@@ -520,7 +618,7 @@ struct PS_BLUR_IN
     float2 vTexcoord : TEXCOORD0;
     float2 vLifeTime : TEXCOORD1;
     uint iGPUIndex : TEXCOORD2;
-
+    float4 vProjPos : TEXCOORD3;
 };
 
 struct PS_BLUR_OUT
@@ -696,6 +794,14 @@ PS_BLUR_OUT PS_BLUR(PS_BLUR_IN In)
     
         // 색깔 추가할 처리 (이미시브)
     
+    //int2 iTexel = int2(In.vPosition.xy);
+    
+    //float fDepthStencilValue = g_DepthStencilTexture.Load(int3(iTexel, 0)).r;
+    
+    //float fbias = 0.000005f;
+    
+    //if (fDepthStencilValue <= In.vProjPos.z / In.vProjPos.w + fbias)
+    //    discard;
 
     
  
@@ -773,12 +879,54 @@ technique11 DefaultTechnique
     pass Blur
     {
         SetRasterizerState(RS_Nocull);
-        SetDepthStencilState(DSS_Effect, 0);
+        SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_BLUR();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_BLUR();
     }
+
+    pass WEIGHTBLEND
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_WB_Acc, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_NON_NORMALMAP();
+    }
+
+    pass NO_WORLD
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_NOWORLD();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_NON_NORMALMAP();
+    }
+
+    pass BLUR_NO_WORLD
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_BLUR_NOWORLD();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_BLUR();
+    }
+
+ 
+    pass ALPHA_BLEND
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_BLUR();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_BLUR();
+    }
+
 
 }
 

@@ -2,8 +2,11 @@
 
 #include <process.h>
 #include "../Default/framework.h"
+#include "Engine_Define.h"
 #include "Client_Enum.h"
 #include "Client_Macro.h"
+#include "Client_Struct.h"
+
 
 namespace Client
 {

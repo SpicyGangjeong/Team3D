@@ -35,6 +35,7 @@ public:
 	_bool	Play_Animation(_float fTimeDelta, class CTransform* pTransform = nullptr); // 애니메이션에 델타타임을 넣어줌
 	void	Set_AnimationIndex(_uint iIndex, _bool isLoop = true, _float fAmount = 1.f);
 	_bool	IsFinishedAnim() const { return m_bIsFinishedAnim; }
+	_bool	IsLoopAnim() const { return m_bIsLoop; }
 	void	Set_CurrentTrackPosition(_float TrackPosition);
 	const _char* Get_AnimList(_uint iIndex);
 	_float Get_CurrentTrackPosition();
@@ -52,11 +53,12 @@ public:
 	_uint	Get_NumMeshes() const { return m_iNumMeshes; }
 #pragma endregion
 #pragma region Bone
-	HRESULT Bind_BoneMatrices(_uint iMeshIndex, class CShader* pShader, const _char* pConstantName);
-	const _float4x4* Get_BoneMatrixPtr(const _char* pBoneName) const;
-static	_int Get_BoneIndex(const _char* pBoneName, vector<class CBone*> Bones);	// 본의 벡터와 이름을 넘겨주면 인덱스를 넘겨줌 ( n 순회 )
-		_int Get_BoneIndex(const _char* pBoneName) const;
-		_matrix Get_BoneMatrix(_uint iBoneIndex);
+HRESULT					Bind_BoneMatrices(_uint iMeshIndex, class CShader* pShader, const _char* pConstantName);
+const _float4x4*		Get_BoneMatrixPtr(const _char* pBoneName) const;
+static _int				Get_BoneIndex(const _char* pBoneName, vector<class CBone*> Bones);	// 본의 벡터와 이름을 넘겨주면 인덱스를 넘겨줌 ( n 순회 )
+_int					Get_BoneIndex(const _char* pBoneName) const;
+_matrix					Get_BoneMatrix(_uint iBoneIndex);
+void					Combined_BoneMatrix();
 
 #pragma endregion
 #pragma region Material

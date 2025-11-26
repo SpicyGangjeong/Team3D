@@ -59,7 +59,7 @@ void CMouse_Manager::Update()
 		}
 		m_ptOldMouseCur = m_ptCurrentMouseCur;
 
-
+#ifdef _DEBUG
 		GUI::Begin("Mouse_Manager");
 		GUI::Text("AccumulateMomentum %f, %f", m_vMove.x, m_vMove.y);
 		GUI::Text("CurPos %d, %d", m_ptCurrentMouseCur.x, m_ptCurrentMouseCur.y);
@@ -79,7 +79,7 @@ void CMouse_Manager::Update()
 		GUI::Text("INV_VPPOS: %f, %f", pt.x - (viewPort.Width * 0.5f), pt.y - (viewPort.Height * 0.5f));
 
 		GUI::End();
-
+#endif
 		Picking();
 	}
 	else {

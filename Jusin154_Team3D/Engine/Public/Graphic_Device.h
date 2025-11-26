@@ -20,6 +20,8 @@ public:
 
 	HRESULT Present();
 
+	void Get_BackBufferPTR(ID3D11Texture2D** pTexture2D);
+
 	HRESULT Bind_DepthStencil(class CShader* pShader, const _char* pContantName);
 
 private:

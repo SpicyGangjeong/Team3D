@@ -157,6 +157,33 @@
     <ClInclude Include="..\Public\Camera_Gaze.h">
       <Filter>02.GameObjects\Cameras\Camera_Gaze</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Goblin.h">
+      <Filter>02.GameObjects\Monster\Goblin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Monster.h">
+      <Filter>02.GameObjects\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapContainer.h">
+      <Filter>02.GameObjects\Environment\00.MapContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BuildingContainer.h">
+      <Filter>02.GameObjects\Environment\00.MapContainer\BuildingContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapPartObject.h">
+      <Filter>02.GameObjects\Environment\01.MapPartObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Struct.h">
+      <Filter>99.Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapObject_Collision.h">
+      <Filter>02.GameObjects\Environment\01.MapPartObject\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapObject_Render.h">
+      <Filter>02.GameObjects\Environment\01.MapPartObject\MapObject_Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Terrain.h">
+      <Filter>02.GameObjects\Environment\Terrain</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -379,7 +406,7 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\Effects\Decendo">
       <UniqueIdentifier>{3572e19c-c7cc-4c7a-add0-2012b81b3935}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="02.GameObjects\Item">
       <UniqueIdentifier>{9cc88058-bda3-4ed0-9ec9-1968963fdda4}</UniqueIdentifier>
     </Filter>
@@ -388,6 +415,30 @@
     </Filter>
     <Filter Include="02.GameObjects\Item\Wand">
       <UniqueIdentifier>{b719d948-fce3-4144-9d2c-edcab4cfceaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster">
+      <UniqueIdentifier>{d371e373-e343-4e0b-9a0c-34eae167c1cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\Goblin">
+      <UniqueIdentifier>{1ff3d6f1-f31d-47b7-84b7-d23efe98d7d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\00.MapContainer">
+      <UniqueIdentifier>{e2d84a8f-46c9-4689-bd91-cc45343d2b10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\00.MapContainer\BuildingContainer">
+      <UniqueIdentifier>{cd65118d-1ab2-4636-a57c-eb8e42c7d88b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\01.MapPartObject">
+      <UniqueIdentifier>{6012da88-b0d8-4cd1-8e56-8638f3e899b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\01.MapPartObject\Collision">
+      <UniqueIdentifier>{6a873b22-5d8b-455f-b632-45fde44a1dd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\01.MapPartObject\MapObject_Render">
+      <UniqueIdentifier>{2521a788-0b04-48f3-8efc-5198b2c51650}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\Terrain">
+      <UniqueIdentifier>{7db61780-d774-4a91-a429-2fb7634e43b3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -534,6 +585,33 @@
     </ClCompile>
     <ClCompile Include="..\Private\Camera_Gaze.cpp">
       <Filter>02.GameObjects\Cameras\Camera_Gaze</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Goblin.cpp">
+      <Filter>02.GameObjects\Monster\Goblin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Goblin_States.cpp">
+      <Filter>02.GameObjects\Monster\Goblin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Monster.cpp">
+      <Filter>02.GameObjects\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapContainer.cpp">
+      <Filter>02.GameObjects\Environment\00.MapContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BuildingContainer.cpp">
+      <Filter>02.GameObjects\Environment\00.MapContainer\BuildingContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapPartObject.cpp">
+      <Filter>02.GameObjects\Environment\01.MapPartObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapObject_Collision.cpp">
+      <Filter>02.GameObjects\Environment\01.MapPartObject\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapObject_Render.cpp">
+      <Filter>02.GameObjects\Environment\01.MapPartObject\MapObject_Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Terrain.cpp">
+      <Filter>02.GameObjects\Environment\Terrain</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -12,6 +12,8 @@
 #include "Broom.h"
 #include "Dummy_PhysXWall.h"
 #include "Dummy_PhysXPlayable.h"
+#include "Goblin.h"
+#include "Terrain.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -25,6 +27,9 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	if (FAILED(Ready_Lights())) {
 		return E_FAIL;
 	}
+	if (FAILED(Ready_Background())) {
+		return E_FAIL;
+	}
 	if (FAILED(Ready_Markers())) {
 		return E_FAIL;
 	}
@@ -35,6 +40,9 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 		return E_FAIL;
 	}
 	if (FAILED(Ready_Layer_SkyBox(TEXT("Layer_SkyBox")))) {
+		return E_FAIL;
+	}
+	if (FAILED(Ready_Layer_Monster())) {
 		return E_FAIL;
 	}
 
@@ -74,6 +82,24 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLight_Main>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT))){
 		return E_FAIL;
 	}
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Background()
+{
+	/* Terrain */
+	CTerrain::TERRAIN_DESC Terrain_Desc = {};
+	Terrain_Desc.vPosition = _float3(-194, 18.5f, -153.f);
+	Terrain_Desc.strDiffuseTextureTag = TEXT("Terrain_Diffuse");
+	Terrain_Desc.strNormalTextureTag = TEXT("Terrain_Normal");
+	Terrain_Desc.strMROTextureTag = TEXT("Terrain_MRO");
+	Terrain_Desc.strAlphaMapTextureTag = TEXT("HogsmeadeAlphaMap");
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_BACKGROUND, &Terrain_Desc))) {
+		return E_FAIL;
+	}
+
+	CInfoInstance::GetInstance()->Load_MapObjects("ClientTest");
 
 	return S_OK;
 }
@@ -130,7 +156,7 @@ HRESULT CLevel_GamePlay::Ready_Markers()
 
 HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag,nullptr,nullptr,&m_pPlayerTemp)))
 		return E_FAIL;
 
 	/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
@@ -153,6 +179,14 @@ HRESULT CLevel_GamePlay::Ready_Layer_SkyBox(const _wstring& strLayerTag)
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXWall>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE, &Desc))) {
 		return E_FAIL;
 	}
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Monster()
+{
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER, m_pPlayerTemp)))
+		return E_FAIL;
 
 	return S_OK;
 }

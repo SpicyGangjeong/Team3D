@@ -10,6 +10,7 @@
 #include "DummySkyBox.h"
 #include "MainLight.h"
 #include "Land.h"
+#include "InstancedProp.h"
 #include "Player.h"
 
 CLevel_MapViewer::CLevel_MapViewer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
@@ -43,6 +44,10 @@ HRESULT CLevel_MapViewer::Initialize()
 	}
 
 	if (FAILED(Ready_Layer_Terrain(TEXT("Layer_Terrain")))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(Ready_Layer_InstanceProp(TEXT("Layer_InstanceProp")))) {
 		return E_FAIL;
 	}
 
@@ -112,6 +117,27 @@ HRESULT CLevel_MapViewer::Ready_Layer_Terrain(const _wstring& strLayerTag)
 	return S_OK;
 }
 
+HRESULT CLevel_MapViewer::Ready_Layer_InstanceProp(const _wstring& strLayerTag)
+{
+	CInstancedProp::INSTANCE_PROP_DESC Desc = {};
+	Desc.bEditMode = false;
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_OakTree_MedA";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/OakTree_MedA.bin";
+
+	/* Oak_Tree */
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
+		return E_FAIL;
+
+	/* BearBerry */
+	Desc.bEditMode = true;
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_BearBerry_A";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/SM_BearBerry_A.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 HRESULT CLevel_MapViewer::Ready_Layer_BuildingContainer(const _wstring& strLayerTag)
 {
 	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBuildingContainer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
@@ -124,6 +150,8 @@ HRESULT CLevel_MapViewer::Ready_Layer_MapObjectManager(const _wstring& strLayerT
 {
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapObject_Manager>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
 		return E_FAIL;
+
+	
 
 	return S_OK;
 }

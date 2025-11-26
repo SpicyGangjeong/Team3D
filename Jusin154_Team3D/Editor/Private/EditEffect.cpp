@@ -49,9 +49,6 @@ void CEditEffect::Update(_float fTimeDelta)
 
 	m_pInstance_ModelCom->Drop(fTimeDelta);
 
-	if (m_EffectInfo.isBillboard)
-		m_pGameInstance->BillBoard(m_pTransformCom);
-
 
 }
 
@@ -64,6 +61,24 @@ void CEditEffect::Late_Update(_float fTimeDelta)
 	if (m_pInstance_ModelCom == nullptr)
 		return;
 
+	if (m_EffectInfo.isBillboard)
+		m_pGameInstance->BillBoard(m_pTransformCom);
+
+
+
+	if (m_isGoStraight == true)
+	{
+		m_fAccTime += fTimeDelta;
+
+		if (m_fAccTime > 1.f)
+		{
+			m_fAccTime = 0.f;
+			m_iSign *= -1;
+		}
+
+		m_pTransformCom->Go_Straight(3 * fTimeDelta * m_iSign);
+	}
+
 
 	if (m_EffectInfo.isBlur == true)
 	{
@@ -73,7 +88,7 @@ void CEditEffect::Late_Update(_float fTimeDelta)
 	if (m_EffectInfo.isOnlyBlur == true)
 		return;
 
-	m_pGameInstance->Add_RenderGroup(RENDER::EFFECT, this);
+	m_pGameInstance->Add_RenderGroup(m_EffectInfo.eRenderOrder, this);
 
 }
 
@@ -385,11 +400,13 @@ void CEditEffect::Describe_Entity()
 	//여기서 모델, 텍스쳐, 선택할 수 있도록 함
 
 	const char* pLerp[] = { "Linear" , "EaseInQuad", "EaseOutQuad", "EaseInCubic" , "EaseOutCubic" , "EaseInOutSin" , "EaseInBack" , "Expo" , "Circle" };
-	const char* pRenderNames[] = { "PRIORITY" , "SHADOW", "NONBLEND", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" , "UI" };
+	const char* pRenderNames[] = { "PRIORITY" , "SHADOW", "NONBLEND", "DECAL", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" , "UI" };
 	const char* pEffectType[] = { "EFFECT" , "TRAIL" };
+	const char* pShaderPass[] = { "DEFAULT" , "NON_NOMALMAP" , "BLUR" , "WEIGHTBLEND" , "NON_WORLD" , "NON_WORLD_BLUR", "ALPHA_BLEND"};
 
 	_int iCurrentItem = static_cast<_int>(m_EffectInfo.eRenderOrder);
 	_int iCurrentType = static_cast<_int>(m_EffectInfo.eEffectType);
+	_int iCurrentPass = static_cast<_int>(m_EffectInfo.eShaderPass);
 
 	if (ImGui::Combo("Render Order", &iCurrentItem, pRenderNames, ENUM_CLASS(RENDER::END)))
 	{
@@ -401,7 +418,14 @@ void CEditEffect::Describe_Entity()
 		m_EffectInfo.eEffectType = static_cast<EFFECT_TYPE>(iCurrentType);
 	}
 
+	if (ImGui::Combo("Shader Pass", &iCurrentPass, pShaderPass, ENUM_CLASS(SHADER_PASS_INSTANCE_MODEL::END)))
+	{
+		m_EffectInfo.eShaderPass = static_cast<SHADER_PASS_INSTANCE_MODEL>(iCurrentPass);
+	}
+
+
 	GUI::Checkbox("Visible", &m_bVisible);
+	GUI::Checkbox("GO", &m_isGoStraight);
 
 	m_pTransformCom->Describe_Entity();
 
@@ -438,6 +462,21 @@ void CEditEffect::Describe_Entity()
 
 		GUI::TreePop();
 	}
+
+	if (GUI::TreeNode("TEX BLUR"))
+	{
+		GUI::Checkbox("DiffuseBlur", &m_EffectInfo.isDiffuseBlur);
+		GUI::Checkbox("MaskBlur", &m_EffectInfo.isMaskBlur);
+		GUI::Checkbox("BlurDissolve", &m_EffectInfo.isBlurDissolve);
+		GUI::Checkbox("BlurReverseDissolve", &m_EffectInfo.isBlurReverseDissolve);
+
+		ImGui::PushItemWidth(80);
+		GUI::DragFloat("BluringStrength", &m_EffectInfo.fBluringStrength, 0.001f, 0.f, 1.f);
+		ImGui::PopItemWidth();
+
+		GUI::TreePop();
+	}
+
 
 
 	if (GUI::TreeNode("EMISSIVE"))

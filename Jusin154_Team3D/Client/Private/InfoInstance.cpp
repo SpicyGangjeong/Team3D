@@ -17,6 +17,11 @@ void CInfoInstance::Update(_float fTimeDelta)
 
 }
 
+HRESULT CInfoInstance::Load_MapObjects(const _char* pFilePath)
+{
+	return m_pMapInfo->Load_MapObjects(pFilePath);
+}
+
 LEVEL CInfoInstance::Get_RestartLevel()
 {
 	return LEVEL::GAMEPLAY;

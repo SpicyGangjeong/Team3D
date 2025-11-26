@@ -35,6 +35,10 @@ private:
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
 
+	class CTrailObject* m_pTrail = { nullptr };
+	class CEditEffect*  m_pEffectParts = { nullptr };
+
+	_float3				  m_vOffset = { 0.f , -0.3f ,0.f};
 
 private:
 	HRESULT Ready_Components();

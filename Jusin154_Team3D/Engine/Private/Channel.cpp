@@ -60,6 +60,19 @@ HRESULT CChannel::Initialize(const vector<CBone*>& Bones, const aiNodeAnim* pAIC
 	return S_OK;
 }
 
+CChannel* CChannel::Create(const vector<CBone*>& Bones, const aiNodeAnim* pAIChannel)
+{
+	CChannel* pInstance = new CChannel();
+
+	if (FAILED(pInstance->Initialize(Bones, pAIChannel))) {
+		MSG_BOX("Failed to Created : CChannel");
+		SAFE_RELEASE(pInstance);
+	}
+	return pInstance;
+}
+
+#endif
+
 void CChannel::Fill_GPU_Keyframes(vector<KEYFRAME_DESC>& outKeyframes)
 {
 	for (_uint i = 0; i < m_iNumKeyFrames; i++)
@@ -86,20 +99,6 @@ CHANNEL_DESC CChannel::Fill_GPU_ChannelDesc()
 	return desc;
 }
 
-
-CChannel* CChannel::Create(const vector<CBone*>& Bones, const aiNodeAnim* pAIChannel)
-{
-	CChannel* pInstance = new CChannel();
-
-	if (FAILED(pInstance->Initialize(Bones, pAIChannel))) {
-		MSG_BOX("Failed to Created : CChannel");
-		SAFE_RELEASE(pInstance);
-	}
-	return pInstance;
-}
-
-#endif
-
 HRESULT CChannel::Initialize(const vector<CBone*>& Bones, _uint iIndex)
 {
 	m_iBoneIndex = iIndex;
@@ -119,9 +118,6 @@ void CChannel::Update_TransformationMatirx(
 	_uint* pCurrentKeyFrameIndex,
 	CTransform* pTransform,_float m_fAmount)
 {
-	/*if (0.f == fCurrentTrackPosition)
-		*pCurrentKeyFrameIndex = 0;
-
 	KEYFRAME		LastKeyFrame = m_KeyFrames.back();
 
 	_vector			vScale{};
@@ -137,8 +133,9 @@ void CChannel::Update_TransformationMatirx(
 
 	else
 	{
-		while (fCurrentTrackPosition >= m_KeyFrames[*pCurrentKeyFrameIndex + 1].fTrackPosition)
+		while (fCurrentTrackPosition >= m_KeyFrames[*pCurrentKeyFrameIndex + 1].fTrackPosition){
 			++*pCurrentKeyFrameIndex;
+		}
 
 		_float3		vSourScale{}, vDestScale{};
 		_float4		vSourRotation{}, vDestRotation{};
@@ -159,34 +156,27 @@ void CChannel::Update_TransformationMatirx(
 		vScale = XMVectorLerp(XMLoadFloat3(&vSourScale), XMLoadFloat3(&vDestScale), fRatio);
 		vRotation = XMQuaternionSlerp(XMLoadFloat4(&vSourRotation), XMLoadFloat4(&vDestRotation), fRatio);
 		vTranslation = XMVectorSetW(XMVectorLerp(XMLoadFloat3(&vSourTranslation), XMLoadFloat3(&vDestTranslation), fRatio), 1.f);
-	}*/
+	}
 
 
-	const LOCALPOS_DESC& LocalPos = pLocalPosArray[m_iBoneIndex];
+	//const LOCALPOS_DESC& LocalPos = pLocalPosArray[m_iBoneIndex];
 
-	_vector vScale = XMLoadFloat3(&LocalPos.Scale);
-	_vector vRotation = XMLoadFloat4(&LocalPos.Rotation);
-	_vector vTranslation = XMVectorSet(
-		LocalPos.Translation.x,
-		LocalPos.Translation.y,
-		LocalPos.Translation.z,
-		1.f);
+	//_vector vScale = XMLoadFloat3(&LocalPos.Scale);
+	//_vector vRotation = XMLoadFloat4(&LocalPos.Rotation);
+	//_vector vTranslation = XMVectorSet(
+	//	LocalPos.Translation.x,
+	//	LocalPos.Translation.y,
+	//	LocalPos.Translation.z,
+	//	1.f);
 
 	if (Bones[m_iBoneIndex]->Compare_Name("Reference") && pTransform != nullptr)
 	{
+	
 		_float3 vCurRootPos;
 		XMStoreFloat3(&vCurRootPos, vTranslation);
 
 		_matrix pre = XMLoadFloat4x4(&m_PreTransformMatrix);
-		    
-		if (!m_bInitialRootPos)
-		{
-			m_bInitialRootPos = true;
-			m_vPrevRootPos = vCurRootPos;
-			vTranslation = XMVectorZero();
-		}
-		else
-		{
+		
 			_vector vDeltaLocal = XMLoadFloat3(&vCurRootPos) - XMLoadFloat3(&m_vPrevRootPos);
 			_vector vDeltaAdjusted = XMVector3TransformNormal(vDeltaLocal, pre);
 
@@ -199,7 +189,9 @@ void CChannel::Update_TransformationMatirx(
 			_float dz = XMVectorGetZ(vDeltaAdjusted);
 
 			_vector vDeltaWorld = vRight * dx + (vUp * dz) + (-vLook * dy);
-
+			if (fabsf(dx) < FLT_EPSILON3 && fabsf(dy) < FLT_EPSILON3 && fabsf(dz) < FLT_EPSILON3) {
+				int a = 0;
+			}
 			vDeltaWorld *= 0.01f;
 			vDeltaWorld *= m_fAmount;
 
@@ -209,7 +201,6 @@ void CChannel::Update_TransformationMatirx(
 
 			m_vPrevRootPos = vCurRootPos;
 			vTranslation = XMVectorZero();
-		}
 
 		_float4 curRotF4;
 		XMStoreFloat4(&curRotF4, vRotation);
@@ -251,6 +242,14 @@ void CChannel::Update_TransformationMatirx(
 		XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vTranslation);
 
 	Bones[m_iBoneIndex]->Set_TransformationMatrix(m_BoneTransformationMatrix);
+}
+
+void CChannel::ResetRootMotion()
+{
+	m_vPrevRootPos = { 0.f, 0.f, 0.f };
+	m_vPrevRootRot = { 0.f,0.f,0.f,0.f };
+	m_bInitialRootRotSaved = false;
+	m_bInitialRootPos = false;
 }
 
 

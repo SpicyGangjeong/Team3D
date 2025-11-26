@@ -105,26 +105,32 @@ HRESULT CModel::Bind_BoneMatrices(_uint iMeshIndex, CShader* pShader, const _cha
 	return m_Meshes[iMeshIndex]->Bind_BoneMatrices(m_Bones, pShader, pConstantName);
 }
 
-_bool CModel::Play_Animation(_float fTimeDelta,CTransform* pTransform)
+_bool CModel::Play_Animation(_float fTimeDelta, CTransform* pTransform)
 {
 	if (!m_bPlayAnim)
 		return false;
-	if (-1 == m_iCurrentAnimIndex  // 정지 혹은 시작을 안시켜준 애님
-		|| m_iCurrentAnimIndex >= (_int)m_iNumAnimations)  // 애님 인덱스 초과됨
-	{
-		return false; // 잘못된 초기화
-	}
+
+	if (m_iCurrentAnimIndex < 0 || m_iCurrentAnimIndex >= (_int)m_iNumAnimations)
+		return false;
 
 	ComputeAnimation();
 
-	if (m_iPreAnimIndex != m_iCurrentAnimIndex && m_iPreAnimIndex != 0)
+	if (m_iPreAnimIndex >= 0 && m_iPreAnimIndex != m_iCurrentAnimIndex)
 	{
 		m_fBlendTime += fTimeDelta;
-		_float fRatio = m_fBlendTime / m_fBlendDuration;
-		fRatio = min(fRatio, 1.f);
+		_float fRatio = (m_fBlendTime / m_fBlendDuration);
+		if (fRatio > 1.f) fRatio = 1.f;
 
-		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, pTransform, m_fAmount);
-		m_Animations[m_iCurrentAnimIndex]->InterpAnim(m_Animations[m_iPreAnimIndex], m_Bones, fRatio);
+		CAnimation* pCurAnim = m_Animations[m_iCurrentAnimIndex];
+		CAnimation* pPreAnim = m_Animations[m_iPreAnimIndex];
+
+		//_bool bPreFinished = pPreAnim->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, pTransform, m_fAmount);
+
+		_bool bCurFinished = pCurAnim->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, pTransform, m_fAmount);
+
+		pCurAnim->InterpAnim(pPreAnim, m_Bones, fRatio);
+
+		m_bIsFinishedAnim = bCurFinished;
 
 		if (fRatio >= 1.f)
 		{
@@ -135,6 +141,7 @@ _bool CModel::Play_Animation(_float fTimeDelta,CTransform* pTransform)
 	else
 	{
 		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, pTransform, m_fAmount);
+
 		m_iPreAnimIndex = m_iCurrentAnimIndex;
 	}
 
@@ -143,29 +150,25 @@ _bool CModel::Play_Animation(_float fTimeDelta,CTransform* pTransform)
 		pBone->Update_CombinedTransformationMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
 	}
 
-	if (m_bIsFinishedAnim)
-	{
-		m_Animations[m_iCurrentAnimIndex]->ResetRootMotion();
-		m_Animations[m_iCurrentAnimIndex]->Depart_Animation();
-	}
-
 	return m_bIsFinishedAnim;
 }
 
 void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop,_float fAmount)
 {
-	if (m_iCurrentAnimIndex == iIndex)
+	if (m_iCurrentAnimIndex == iIndex){
 		return;
+	}
 	if (iIndex >= 0 && iIndex < m_iNumAnimations)
 	{
 		m_iCurrentAnimIndex = iIndex;
 		m_bIsLoop = isLoop;
 		m_fAmount = fAmount;
-		m_Animations[m_iCurrentAnimIndex]->ResetRootMotion();
 		m_Animations[m_iCurrentAnimIndex]->Depart_Animation();
+		m_Animations[m_iCurrentAnimIndex]->ResetRootMotion();
 	}
-	else
+	else {
 		m_iCurrentAnimIndex = -1;
+	}
 }
 
 const _float4x4* CModel::Get_BoneMatrixPtr(const _char* pBoneName) const
@@ -191,6 +194,14 @@ const _char* CModel::Get_MeshName(_uint iIndex)
 _matrix CModel::Get_BoneMatrix(_uint iBoneIndex)
 {
 	return m_Bones[iBoneIndex]->Get_CombinedTransformationMatrix();
+}
+
+void CModel::Combined_BoneMatrix()
+{
+	for (auto& pBone : m_Bones)
+	{
+		pBone->Update_CombinedTransformationMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
+	}
 }
 
 
@@ -906,6 +917,7 @@ HRESULT CModel::Create_ParentVB()
 
 	return S_OK;
 }
+#ifdef _DEBUG
 HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix)
 {
 	m_eType = eType;
@@ -913,7 +925,9 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 	_char		szDir[MAX_PATH] = {};
 	_char		szName[MAX_PATH] = {};
 	_char		szEXT[MAX_PATH] = {};
+
 	_splitpath_s(pModelFilePath, nullptr, 0, szDir, MAX_PATH, szName, MAX_PATH, szEXT, MAX_PATH);
+
 
 	if (strcmp(".bin", szEXT) == 0)
 	{
@@ -925,13 +939,16 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 		strcpy_s(Temp, szDir);
 		strcat_s(Temp, szName);
 		strcat_s(Temp, ".bin");
+
 		if (FAILED(Assimp_Model_Load(pModelFilePath, eType, PreTransformMatrix, 0))) {
 			return E_FAIL;
 		}
+
 		SaveAssimpModel(Temp);
 
 		return S_OK;
 	}
+
 	m_pSaveModel = m_pGameInstance->Load_SaveModel(pModelFilePath);
 
 	LoadAdditionalAnimations(pModelFilePath);
@@ -953,6 +970,41 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 	}
 	return S_OK;
 }
+
+#endif // _DEBUG
+
+
+
+#ifndef _DEBUG
+
+HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix)
+{
+	m_eType = eType;
+
+	LoadData(pModelFilePath);
+	
+	m_pSaveModel = m_pGameInstance->Load_SaveModel(pModelFilePath);
+
+	LoadAdditionalAnimations(pModelFilePath);
+
+	XMStoreFloat4x4(&m_PreTransformMatrix, PreTransformMatrix);
+
+	Ready_Bones(m_pSaveModel->Nodes, 0, -1);
+
+	if (FAILED(Ready_Meshes())) {
+		return E_FAIL;
+	}
+
+	if (FAILED(Ready_Materials(pModelFilePath))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(Ready_Animations(m_Bones))) {
+		return E_FAIL;
+	}
+	return S_OK;
+}
+#endif 
 
 void CModel::LoadAdditionalAnimations(const char* ModelFilePath)
 {
