@@ -18,6 +18,7 @@ public:
 	HRESULT Bind_ShaderResource(class CShader* pShader, const _char* pConstantName);
 	void Clear();
 	void Copy_Resource(ID3D11Texture2D* pTexture2D);
+	void Paste_Resource(ID3D11Texture2D* pTexture2D);
 	void Get_TextureDesc(D3D11_TEXTURE2D_DESC& Desc);
 	ID3D11ShaderResourceView* Get_SRV() const { return m_pSRV; }
 

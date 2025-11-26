@@ -30,7 +30,10 @@ private:
 	CShader*			 m_pShaderCom = { nullptr };
 	CModel*				 m_pModelCom = { nullptr };
 
-	class CTrailObject*	 pTrail = { nullptr };
+	class CTrailObject*	  m_pTrail = { nullptr };
+	class CEffectParts*   m_pEffectParts = { nullptr };
+
+	_float3				  m_vOffset = {};
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();

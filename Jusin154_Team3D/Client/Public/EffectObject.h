@@ -51,7 +51,7 @@ public:
 		_bool	isMaskUVMove = {};
 		_bool   isBlur = {};
 		_bool   isBillboard = {};
-	
+
 
 		_float4 vEmissive = { 0.f ,0.f ,0.f ,0.f };
 		_float  fDiffuseAlpha = { 1.f };
@@ -73,16 +73,18 @@ public:
 		_bool   isNoiseAlpha = { false };
 		_bool	isNomalDissolve = {};
 
-		_float	fSoftenExp = { 1.31429f };
-		_float	fSoftStrength = {};
-		_float	fCoreBoost = {};
-		_float	fRadius = {};
+		_float fSoftenExp = { 1.31429f };
+		_float fSoftStrength = {};
+		_float fCoreBoost = {};
+		_float fRadius = {};
 
-		_float	fSoftMaskEdge = {};
-		_float	fSoftMask = {};
+		_float fSoftMaskEdge = {};
+		_float fSoftMask = {};
 
 		_bool   isEmissiveDissolveReverse = { false };
 		_bool   isOnlyBlur = { false };
+
+		SHADER_PASS_INSTANCE_MODEL eShaderPass = { SHADER_PASS_INSTANCE_MODEL::NON_NOMALMAP };
 
 	}EFFECT_INFO;
 

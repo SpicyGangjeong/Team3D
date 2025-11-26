@@ -27,7 +27,7 @@ HRESULT CDummy_Plane::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, -10.f, 0.f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, -5.f, 0.f, 1.f));
 
 	return S_OK;
 }
@@ -44,7 +44,7 @@ void CDummy_Plane::Update(_float fTimeDelta)
 void CDummy_Plane::Late_Update(_float fTimeDelta)
 {
 	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
-		m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
+		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 	}
 }
 
@@ -53,7 +53,6 @@ HRESULT CDummy_Plane::Render()
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
