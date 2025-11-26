@@ -147,6 +147,7 @@ HRESULT CInstance_Model::Assimp_Model_Load(const _char* pModelFilePath, MODEL eT
 #pragma endregion	
 }
 
+#endif
 
 #ifdef EDITOR_PROJECT
 HRESULT CInstance_Model::Ready_Meshes(MODEL eType, const aiScene* pAIScene, _fmatrix& PreTransformMatrix)
