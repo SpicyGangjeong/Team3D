@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Editor_Define.h"
 #include "Level.h"
@@ -21,6 +21,7 @@ private:
 	HRESULT Ready_Layer_Camera(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_Background(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_Terrain(const _wstring& strLayerTag);
+	HRESULT Ready_Layer_InstanceProp(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_BuildingContainer(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_MapObjectManager(const _wstring& strLayerTag);
 

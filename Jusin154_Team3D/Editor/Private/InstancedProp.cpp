@@ -18,23 +18,27 @@ void CInstancedProp::Priority_Update(_float fTimeDelta)
 
 void CInstancedProp::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->Mouse_Down(DIM_MBUTTON))
+	if(m_bEditMode)
 	{
-		m_pVIBufferInstanceCom->Add_Instance(m_pTransformCom->Get_XMWorldMatrix());
-		_float4x4 WorldMatrix = {};
-		XMStoreFloat4x4(&WorldMatrix, m_pTransformCom->Get_XMWorldMatrix());
-		m_WorldMatrices.push_back(WorldMatrix);
-		m_pVIBufferInstanceCom->Update_Instance();
-		m_vRotation.y = m_pGameInstance->Random_Float(0.f, 360.f);
-
-		_float3 vPosition = {};
-		if (m_pGameInstance->isPicking(&vPosition))
+		if (m_pGameInstance->Mouse_Down(DIM_MBUTTON))
 		{
-			memcpy(&m_vPosition, &vPosition, sizeof(_float3));
-		}
-	}
+			m_pVIBufferInstanceCom->Add_Instance(m_pTransformCom->Get_XMWorldMatrix());
+			_float4x4 WorldMatrix = {};
+			XMStoreFloat4x4(&WorldMatrix, m_pTransformCom->Get_XMWorldMatrix());
+			m_WorldMatrices.push_back(WorldMatrix);
+			m_pVIBufferInstanceCom->Update_Instance();
+			m_vRotation.y = m_pGameInstance->Random_Float(0.f, 360.f);
 
-	Describe_Entity();
+			_float3 vPosition = {};
+			if (m_pGameInstance->isPicking(&vPosition))
+			{
+				memcpy(&m_vPosition, &vPosition, sizeof(_float3));
+			}
+		}
+#ifdef _DEBUG
+		Describe_Entity();
+#endif 
+	}
 }
 
 void CInstancedProp::Late_Update(_float fTimeDelta)
@@ -59,7 +63,6 @@ HRESULT CInstancedProp::Render()
 
 		m_pVIBufferInstanceCom->Render(i);
 	}
-	
 
     return S_OK;
 }
@@ -71,8 +74,13 @@ HRESULT CInstancedProp::Initialize_Prototype()
 
 HRESULT CInstancedProp::Initialize(void* pArg)
 {
+	INSTANCE_PROP_DESC* pDesc = static_cast<INSTANCE_PROP_DESC*>(pArg);
+
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
+
+	m_bEditMode = pDesc->bEditMode;
+	m_strPrototypeTag = pDesc->strPrototypeTag;
 
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
@@ -83,6 +91,9 @@ HRESULT CInstancedProp::Initialize(void* pArg)
 
 	XMStoreFloat4x4(&m_WorldMatrixIdentity, XMMatrixIdentity());
 
+	if(!m_bEditMode)
+		Load_InstancedProp(pDesc->strInstanceDataPath.c_str());
+
     return S_OK;
 }
 
@@ -92,7 +103,7 @@ HRESULT CInstancedProp::Ready_Components(void* pArg)
         return E_FAIL;
 
 	/* Com_VIBuffer_Instance_Model */
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel"),
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_strPrototypeTag,
 		reinterpret_cast<CComponent**>(&m_pVIBufferInstanceCom))))
 		return E_FAIL;
 
@@ -100,26 +111,6 @@ HRESULT CInstancedProp::Ready_Components(void* pArg)
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_INSTANCE_PROP_MODEL,
 		reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
-
-	CTexture* pTexture = { nullptr };
-
-	/* Com_Texture */
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Terrain_Diffuse"), reinterpret_cast<CComponent**>(&pTexture), nullptr))) {
-		return E_FAIL;
-	}
-	m_pTextures.push_back(pTexture);
-
-	/* Com_Texture */
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Terrain_Normal"), reinterpret_cast<CComponent**>(&pTexture), nullptr))) {
-		return E_FAIL;
-	}
-	m_pTextures.push_back(pTexture);
-
-	/* Com_Texture */
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Terrain_MRO"), reinterpret_cast<CComponent**>(&pTexture), nullptr))) {
-		return E_FAIL;
-	}
-	m_pTextures.push_back(pTexture);
 
     return S_OK;
 }
@@ -246,18 +237,14 @@ void CInstancedProp::Free()
 
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferInstanceCom);
-
-	for (auto& pTexture : m_pTextures)
-		SAFE_RELEASE(pTexture);
-	m_pTextures.clear();
 }
-
 void CInstancedProp::Describe_Entity()
 {
 	GUI::Begin("Instanced Prop");
 
+#ifdef _DEBUG
 	m_pVIBufferInstanceCom->Describe_Entity();
-
+#endif // _DEBUG
 	GUI::Text("----- Transfrom ----");
 	GUI::InputFloat("X##Position", &m_vPosition.x, 0.1f, 1.f);
 	GUI::InputFloat("Y##Position", &m_vPosition.y, 0.1f, 1.f);
@@ -307,6 +294,7 @@ void CInstancedProp::Describe_Entity()
 	{
 		Load_InstancedProp(("../Bin/Resources/Data/Map/Instance/" + string(m_szFileName) + ".bin").c_str());
 	}
-
+	
 	GUI::End();
 }
+

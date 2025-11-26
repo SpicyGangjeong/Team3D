@@ -16,8 +16,9 @@ class CInstancedProp final : public CGameObject
 public:
 	typedef struct tagInstancedPropDesc
 	{
-		string 		strModelFilePath;
-		string 		strTextureFilePath;
+		_bool		bEditMode{};
+		_wstring 	strPrototypeTag;
+		string 		strInstanceDataPath;
 	}INSTANCE_PROP_DESC;
 private:
 	CInstancedProp(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -31,17 +32,20 @@ public:
 	virtual HRESULT Render() override;
 
 private:
+	_bool						m_bEditMode = {};
 	CVIBuffer_Model_Instance*	m_pVIBufferInstanceCom = { nullptr };
 	CShader*					m_pShaderCom = { nullptr };
 
-	vector<CTexture*>			m_pTextures = {};
 	vector<_float4x4>			m_WorldMatrices = {};
 	_float4x4 					m_WorldMatrixIdentity = {};
+	_wstring 					m_strPrototypeTag;
+
+	_float4						m_vPosition = {};
+	_float3						m_vRotation = {};
+	_float3						m_vScale = {};
 #ifdef _DEBUG
 	_char						m_szFileName[MAX_PATH] = {};
-	_float4		m_vPosition = {};
-	_float3		m_vRotation = {};
-	_float3		m_vScale = {};
+
 #endif // _DEBUG
 
 
@@ -63,6 +67,7 @@ public:
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 	void Describe_Entity() override;
+
 };
 
 NS_END

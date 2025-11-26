@@ -1568,19 +1568,10 @@ HRESULT CLoader::Loading_For_MapViewer()
 {
 	m_strMessage = TEXT("텍스쳐를(을) 로딩 중 입니다.");
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("TerrainTest"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/T_C_Dun_Moss_D.png"), 0)))) {
-	//	return E_FAIL;
-	//}
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("TerrainTest"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures//T_LandscapeStreamingProxy_0_LOD1_Summer_D.png"), 0)))) {
 		return E_FAIL;
 	}
-
-
-
-
-
 
 	/* Terrain_Mask */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Terrain_Mask"),
@@ -2151,10 +2142,16 @@ vector<vector<FOLDER_LOAD*>*> Contents(iLoadCount);
 
 	InstanceDesc.iNum = 500;
 
-	/* For.Prototype_Component_VIBuffer_Model_Instancel */
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel"),
-		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext, &InstanceDesc,
-			"../Bin/Resources/Models/InstanceProp/Tree/SM_OakTree_MedA.fbx", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+	///* For.Prototype_Component_VIBuffer_Model_Instancel */
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel"),
+	//	CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext, &InstanceDesc,
+	//		"../Bin/Resources/Models/InstanceProp/SM_OakTree_MedA.fbx", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+	//	return E_FAIL;
+
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_SM_OakTree_MedA */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_SM_OakTree_MedA"),
+		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_OakTree_MedA.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_SkyBox */
