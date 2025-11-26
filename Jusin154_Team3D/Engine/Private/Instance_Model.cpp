@@ -107,6 +107,7 @@ HRESULT CInstance_Model::Assimp_Model_Load(const _char* pModelFilePath, MODEL eT
 }
 #endif
 
+#ifdef EDITOR_PROJECT
 HRESULT CInstance_Model::Ready_Meshes(MODEL eType, const aiScene* pAIScene, _fmatrix& PreTransformMatrix)
 {
 	XMStoreFloat4x4(&m_PreTransformMatrix, PreTransformMatrix);
