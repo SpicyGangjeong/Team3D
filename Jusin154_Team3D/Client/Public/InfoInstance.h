@@ -23,6 +23,11 @@ public:
 	void Update(_float fTimeDelta);
 
 
+#pragma region MAP_INFO
+	HRESULT Load_MapObjects(const _char* pFilePath);
+#pragma endregion
+
+
 private:
 	CGameInstance*				m_pGameInstance = { nullptr };
 	ID3D11Device*				m_pDevice = { nullptr };

@@ -12,6 +12,30 @@
         <Material>T_BogTree_Oak_BarkA_N</Material>
         <Material>T_BogTree_Oak_BarkA_SROH</Material>
         <Surface>SRO</Surface>
-     </Mesh>
+    </Mesh>
    </SM_OakTree_MedA>
+   <SM_BearBerry_A mesh="1">
+    <Mesh>
+        <Material>T_BearBerry_Leaves_D</Material>
+        <Material>T_BearBerry_Leaves_N</Material>
+        <Material>T_BearBerry_Leaves_SRO</Material>
+        <Surface>SRO</Surface>
+    </Mesh>
+   </SM_BearBerry_A>
+   <SM_BogMyrtle_A mesh="1">
+    <Mesh>
+        <Material>T_BogMyrtle_Leaves_D</Material>
+        <Material>T_BogMyrtle_Leaves_N</Material>
+        <Material>T_BogMyrtle_Leaves_SRO</Material>
+        <Surface>SRO</Surface>
+    </Mesh>
+   </SM_BogMyrtle_A>
+    <SM_BogCotton_A_Master mesh="1">
+    <Mesh>
+        <Material>T_BogCotton_D</Material>
+        <Material>T_BogCotton_N</Material>
+        <Material>T_BogCotton_SRO</Material>
+        <Surface>SRO</Surface>
+    </Mesh>
+   </SM_BogCotton_A_Master>
 </Instance>

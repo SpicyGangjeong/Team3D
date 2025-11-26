@@ -90,6 +90,10 @@ private:
 	PhsXUserData PlaneData = {};
 
 #endif // 기무리
+#ifdef gimch
+	PhsXUserData PlaneData = {};
+
+#endif // 기무리
 
 #ifdef Bin
 	PhsXUserData PlaneData = {};
