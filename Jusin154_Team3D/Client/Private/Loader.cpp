@@ -405,12 +405,12 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	{ /* Terrain */
 		jobFutures.emplace_back(Deferred_FolderLoad(
-			"../Bin/Resources/Models/MeshTable/Game/Environment/Hogsmeade/Common/Collision/Terrain",
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Collision/Terrain",
 			".bin", false,
 			&Contents[jobFutures.size()]
 		));
 		jobFutures.emplace_back(Deferred_FolderLoad(
-			"../Bin/Resources/Models/MeshTable/Game/Environment/Hogsmeade/Common/Meshes/Terrain",
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Meshes/Terrain",
 			".bin", false,
 			&Contents[jobFutures.size()]
 		));
@@ -418,12 +418,12 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	{ /* Ollivanders*/
 		jobFutures.emplace_back(Deferred_FolderLoad(
-			"../Bin/Resources/Models/MeshTable/Game/Environment/Hogsmeade/BLDG_Ollivanders/Meshes",
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Ollivanders/Meshes",
 			".bin", false,
 			&Contents[jobFutures.size()]
 		));
 		jobFutures.emplace_back(Deferred_FolderLoad(
-			"../Bin/Resources/Models/MeshTable/Game/Environment/Hogsmeade/BLDG_Ollivanders/Collision",
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Ollivanders/Collision",
 			".bin", false,
 			&Contents[jobFutures.size()]
 		));
@@ -431,7 +431,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	{ /* Gatehouse*/
 		jobFutures.emplace_back(Deferred_FolderLoad(
-			"../Bin/Resources/Models/MeshTable/Game/Environment/Hogsmeade/BLDG_Gatehouse/Meshes",
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Gatehouse/Meshes",
 			".bin", false,
 			&Contents[jobFutures.size()]
 		));
