@@ -116,6 +116,13 @@ bool g_isNoiseAlpha;
 bool g_isNomalDissolve;
 
 
+bool g_isDiffuseBlur;
+bool g_isMaskBlur;
+bool g_isBlurDissolve;
+bool g_isBlurReverseDissolve;
+
+float g_fBluringStrength;
+
 float g_fFar;
 
 
@@ -395,7 +402,8 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
             vMtrlDistortion = g_DistortionTexture.Sample(DefaultSampler, vDistortionUV);
             
             //디스토션(노이즈) 텍스쳐로 uv를 왜곡함
-            vMaskTexcoord = vMaskTexcoord + (vMtrlDistortion - 0.5f).r  * g_fNoiseDistortionIntensity;
+            vMaskTexcoord = vMaskTexcoord + (vMtrlDistortion - 0.5f).r * g_fNoiseDistortionIntensity;
+          
         }
         
         if (g_isMaskUVMove)
@@ -410,13 +418,48 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
             vMtrlMask = g_MaskingTexture.Sample(DefaultSampler, vMaskTexcoord);
         
             
+        if (g_isMaskBlur)
+        {
+            float4 fAccMask;
+
+            
+            float fTexel = g_fBluringStrength;
+            
+            if (g_isBlurDissolve)
+            {
+                fTexel = saturate(g_fBluringStrength * (In.vLifeTime.x / In.vLifeTime.y));
+            }
+            
+            if (g_isBlurReverseDissolve)
+            {
+                fTexel = saturate(g_fBluringStrength * (1 - (In.vLifeTime.x / In.vLifeTime.y)));
+            }
+            
+            for (int x = -2; x <= 2; x++)
+            {
+                for (int y = -2; y <= 2; y++)
+                {
+                    fAccMask += g_MaskingTexture.Sample(DefaultSampler, vMaskTexcoord + float2(x * fTexel, y * fTexel));
+                }
+            }
+            
+            fAccMask = fAccMask / 9.0;
+            
+             /* 연산 마스크 대입*/
+            vMtrlMask.r = fAccMask;
+        }
+  
+        
         float fSoftMask;
     
         if (g_fSoftMask > FLT_EPSILON5)
             fSoftMask = saturate((vMtrlMask.r - g_fSoftMaskEdge) * g_fSoftMask);
-    
+        else
+            fSoftMask = vMtrlMask.r;
+        
         vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * fSoftMask);
-  
+        
+   
     }
     else
     {
@@ -428,6 +471,8 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
       
     if (vMtrlDiffuse.a <= FLT_EPSILON5)
         discard;
+    
+    
     
     if (g_isDissolve == true)
     {
@@ -507,7 +552,7 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
         
     }
     
-    Out.vColorTarget = vEmissiveMtrl * fEmissive * fEmissiveStrength; // 이미시브 스트랭스
+    Out.vDiffuse += vEmissiveMtrl * fEmissive * fEmissiveStrength; // 이미시브 스트랭스
     
     return Out;
 }
@@ -749,14 +794,14 @@ PS_BLUR_OUT PS_BLUR(PS_BLUR_IN In)
     
         // 색깔 추가할 처리 (이미시브)
     
-    int2 iTexel = int2(In.vPosition.xy);
+    //int2 iTexel = int2(In.vPosition.xy);
     
-    float fDepthStencilValue = g_DepthStencilTexture.Load(int3(iTexel, 0)).r;
+    //float fDepthStencilValue = g_DepthStencilTexture.Load(int3(iTexel, 0)).r;
     
-    float fbias = 0.000005f;
+    //float fbias = 0.000005f;
     
-    if (fDepthStencilValue <= In.vProjPos.z / In.vProjPos.w + fbias)
-        discard;
+    //if (fDepthStencilValue <= In.vProjPos.z / In.vProjPos.w + fbias)
+    //    discard;
 
     
  
@@ -870,6 +915,18 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_BLUR();
     }
+
+ 
+    pass ALPHA_BLEND
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_BLUR();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_BLUR();
+    }
+
 
 }
 
