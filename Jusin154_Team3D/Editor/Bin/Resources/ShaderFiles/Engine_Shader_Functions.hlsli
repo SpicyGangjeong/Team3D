@@ -168,7 +168,20 @@ PBR_LIGHT_OUT PBR_Lighting(
     
     return Out;
 }
+float GetBloomCurve(float x)
+{
+    float fResult = x;
+    float fThreshold = 0.68f * 2.f;
+    x *= 2.f;
+    
+    fResult = x * 0.05f // 최소 기본값 보장
+                + max(0, x - fThreshold) // 밝기값 68 이하는 기본값으로하고 초과하면 그 값만큼 더해줌
+                * 0.5f; // 0~2로 정규화 되어있기 때문에 강조 값 보정해줌
+    
+    return fResult * 0.5f;
+}
 
+// RG 노말맵에서 Z 벡터 복원
 float3 DecodeNormalFromRG(Texture2D NormalMap, SamplerState Samp, float2 uv)
 {
     float2 vSampledRG = (NormalMap.Sample(Samp, uv).rg * 2.f - 1.f);

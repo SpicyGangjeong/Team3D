@@ -28,6 +28,7 @@ CInstance_Model::CInstance_Model(const CInstance_Model& rhs)
 	SAFE_ADDREF(m_pVBInstance);
 }
 
+
 HRESULT CInstance_Model::Initialize_Prototype(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex)
 {
 	if (FAILED(__super::Initialize_Prototype()))
@@ -50,6 +51,7 @@ HRESULT CInstance_Model::Initialize_Prototype(const _char* pModelFilePath, MODEL
 	{
 		LoadData(pModelFilePath);
 	}
+#ifdef EDITOR_PROJECT
 	else if (strcmp(".fbx", szEXT) == 0)
 	{
 		_char Temp[256];
@@ -64,7 +66,7 @@ HRESULT CInstance_Model::Initialize_Prototype(const _char* pModelFilePath, MODEL
 		SaveAssimpModel(Temp , m_pAIScene);
 		return S_OK;
 	}
-
+#endif
 #pragma region Mesh
 	if (FAILED(Ready_Meshes())) {
 		return E_FAIL;
@@ -105,7 +107,6 @@ HRESULT CInstance_Model::Assimp_Model_Load(const _char* pModelFilePath, MODEL eT
 }
 #endif
 
-#ifdef EDITOR_PROJECT
 HRESULT CInstance_Model::Ready_Meshes(MODEL eType, const aiScene* pAIScene, _fmatrix& PreTransformMatrix)
 {
 	XMStoreFloat4x4(&m_PreTransformMatrix, PreTransformMatrix);
