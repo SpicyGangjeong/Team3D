@@ -39,7 +39,7 @@ HRESULT CDecendo::Initialize(void* pArg)
 		return E_FAIL;
 
 
-	m_wstrEffectName = L"Bombard";
+	m_wstrEffectName = L"Decendo";
 
 	m_pProjectile_Blur = Get_PartObject<CEditEffect>("Decendo_Proj_Blur");
 	m_pProjectile = Get_PartObject<CEditEffect>("Decendo_Proj");
@@ -50,8 +50,6 @@ HRESULT CDecendo::Initialize(void* pArg)
 	m_pProjectile->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
 	m_pProjectile_Blur->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
 
-	Get_PartObject<CTrailObject>()->Set_Target(m_pProjectile->Get_Component<CTransform>());
-
 	pCircle0->Set_Visible(true);
 	m_pProjectile->Set_Visible(true);
 	m_pProjectile_Blur->Set_Visible(true);
@@ -60,11 +58,11 @@ HRESULT CDecendo::Initialize(void* pArg)
 	SAFE_ADDREF(m_pProjectile);
 
 	//나아가는 벡터와 한점을 가져와 수직인 평면상에 하나의 점으로  DIR 을 만듬
-	_vector vOwnerLook = XMVector3Normalize(m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK));
+	m_vOwnerLook = XMVector3Normalize(m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK));
 	_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
 
 
-	_vector vQuaternion = XMQuaternionRotationAxis(vOwnerLook, m_pGameInstance->Random_Float(0.f, XM_PIDIV2));
+	_vector vQuaternion = XMQuaternionRotationAxis(m_vOwnerLook, m_pGameInstance->Random_Float(0.f, XM_PIDIV2));
 
 	m_vRotateUp = XMVector3Rotate(vUp, vQuaternion);
 
@@ -90,19 +88,19 @@ void CDecendo::Update(_float fTimeDelta)
 
 	Update_Event(fTimeDelta);
 
-	_vector vOwnerLook =  m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK);
 
-	m_pProjectile_Blur->Get_Component<CTransform>()->Translation(vOwnerLook * 1.f);
-	m_pProjectile->Get_Component<CTransform>()->Translation(vOwnerLook * 1.f);
+	m_pProjectile_Blur->Get_Component<CTransform>()->Translation(m_vOwnerLook * 0.5f);
+	m_pProjectile->Get_Component<CTransform>()->Translation(m_vOwnerLook * 0.5f);
 
-	
-	if (m_fAccTime > XM_PI)
+	Get_PartObject<CTrailObject>()->Trail_Update(m_pProjectile->Get_Component<CTransform>()->Get_XMWorldMatrix(), fTimeDelta);
+
+	if (m_fAccTime > XM_2PI)
 		return;
 
-	m_fAccTime += fTimeDelta * 3.f;
+	m_fAccTime += fTimeDelta * 7.5f;
 
-	m_pProjectile_Blur->Get_Component<CTransform>()->Translation(m_vRotateUp * 1.f * sinf(m_fAccTime));
-	m_pProjectile->Get_Component<CTransform>()->Translation(m_vRotateUp * 1.f * sinf(m_fAccTime));
+	m_pProjectile_Blur->Get_Component<CTransform>()->Translation(m_vRotateUp * 0.2f * sinf(m_fAccTime));
+	m_pProjectile->Get_Component<CTransform>()->Translation(m_vRotateUp * 0.2f * sinf(m_fAccTime));
 
 }
 
@@ -132,9 +130,17 @@ HRESULT CDecendo::Ready_Child()
 
 	XMStoreFloat3(&Desc.vPos, m_pOwner->Get_WorldPostion() + XMVectorSet(0.f, 0.f, 1.f, 0.f));
 
+	_vector vOwnerLook = m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK);
+
+	_float3 vDir = {};
+
+	XMStoreFloat3(&Desc.vPos, m_pOwner->Get_WorldPostion() + XMVectorSet(0.f, 0.f, 1.f, 0.f));
+
+	XMStoreFloat3(&vDir , vOwnerLook * 0.5f);
+
 	Desc.vRotRPY = { 0.f, 0.f, 0.f };
 	Desc.iSubKind = 70;
-	Desc.vDeltaPos = { 0.f, 0.f, 1.f };
+	Desc.vDeltaPos = vDir ;
 	Desc.vLifeTime = { 0.f, 1.f };
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXEffectHitBox>(g_iStaticLevel, CURRENT_LEVEL, LAYER_HITBOX, &Desc, this , &m_pPhysHitBox))) {
@@ -177,6 +183,7 @@ void CDecendo::OnCollision(CGameObject* pOther , void* pDesc)
 	//CTransform* pOtherTransform = p
 	ON_COLLISION_INFO*	CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
+
 	for (auto& pPair : m_PartObjects)
 	{
 		pPair.second->Set_Visible(true);
@@ -185,7 +192,13 @@ void CDecendo::OnCollision(CGameObject* pOther , void* pDesc)
 
 	m_pProjectile_Blur->Set_Visible(false);
 	m_pProjectile->Set_Visible(false);
-	
+
+
+
+	_vector vPlayerPos = m_pOwner->Get_Component<CTransform>()->Get_State(STATE::POSITION);
+
+	Get_PartObject<CEditEffect>("Decendo_Down")->Get_Component<CTransform>()->LookAt(vPlayerPos);
+
 
     Get_PartObject<CEditEffect>("Decendo_Cricle_S")->Set_Visible(false);
 	Get_PartObject<CTrailObject>()->Set_Visible(false);
@@ -208,7 +221,15 @@ void CDecendo::Free()
 
 void CDecendo::Describe_Entity()
 {
+	GUI::Begin("VALUE");
 
+	_float4 vValue = {};
+
+	if (GUI::InputFloat("TurnValue", (_float*)&m_fTurnValue))
+	{
+	}
+
+	GUI::End();
 }
 
 HRESULT CDecendo::Bind_ShaderResources()
