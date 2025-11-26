@@ -64,7 +64,7 @@ HRESULT CDummy_PhysXBox::Render()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pModelCom->Bind_Material(0, m_pShaderCom, "g_DiffuseTexture", aiTextureType_DIFFUSE, 0))) {
+	if (FAILED(m_pModelCom->Bind_Material(0, m_pShaderCom))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::DEFAULT)))) {

@@ -1,13 +1,17 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "MainApp.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
+#include "InfoInstance.h"
+
+NS_BEGIN(Engine)
+class CGameInstance;
+NS_END
 
 
 #ifdef _DEBUG
 _float g_fTimeMult = 1.f;
 #endif // _DEBUG
-
 
 CMainApp::CMainApp()
 	: m_pGameInstance{ CGameInstance::GetInstance() }
@@ -74,7 +78,7 @@ HRESULT CMainApp::Render()
 
 	m_pGameInstance->Draw();
 	GUI::Render();
-	//m_pGameInstance->Render_Font(TEXT("HYHL"), TEXT("ÇÇ°ïÇØ ¸ø ½á"), _float2(0.f, 0.f), XMVectorSet(1.f, 0.f, 0.f, 1.f));
+	//m_pGameInstance->Render_Font(TEXT("HYHL"), TEXT("í”¼ê³¤í•´ ëª» ì¨"), _float2(0.f, 0.f), XMVectorSet(1.f, 0.f, 0.f, 1.f));
 	ImGui_ImplDX11_RenderDrawData(GUI::GetDrawData());
 	m_pGameInstance->Render_End();
 
@@ -96,7 +100,14 @@ HRESULT CMainApp::Start_Level(LEVEL eLevelID)
 	if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, eLevelID)))) {
 		return E_FAIL;
 	}
-
+	m_pInfoInstance = CInfoInstance::GetInstance();
+	if (nullptr == m_pInfoInstance) {
+		return E_FAIL;
+	}
+	SAFE_ADDREF(m_pInfoInstance);
+	if (FAILED(m_pInfoInstance->Initialize_Information(m_pDevice, m_pContext))) {
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
@@ -119,16 +130,21 @@ HRESULT CMainApp::Ready_IMGUI()
 	ImGui_ImplWin32_Init(g_hWnd);
 	ImGui_ImplDX11_Init(m_pDevice, m_pContext);
 
-	string strFontTag = "../Bin/Resources/Fonts/SHOWG.TTF";
-
+	//string strFontTag = "C:\\Windows\\Fonts\\malgun.ttf";
+	string strFontTag = "../Bin/Resources/Fonts/malgunsl.TTF";
+	ImFontConfig cfg;
+	cfg.OversampleH = 2;  // ê°€ë…ì„± í–¥ìƒ
+	cfg.OversampleV = 2;
+	cfg.PixelSnapH = true;
 	ifstream ifile;
 
 	ifile.open(strFontTag);
 	if (ifile)
 	{
-		font = io.Fonts->AddFontFromFileTTF(strFontTag.c_str(), 10.f, NULL, io.Fonts->GetGlyphRangesKorean());
+		font = io.Fonts->AddFontFromFileTTF(strFontTag.c_str(), 16.f, NULL, io.Fonts->GetGlyphRangesKorean());
 	}
 	IM_ASSERT(font != NULL);
+	io.FontDefault = font;
 	return S_OK;
 }
 
@@ -156,6 +172,9 @@ CMainApp* CMainApp::Create()
 void CMainApp::Free()
 {
 	__super::Free();
+
+	m_pInfoInstance->Release_Information();
+	SAFE_RELEASE(m_pInfoInstance);
 
 	Release_IMGUI();
 

@@ -38,7 +38,7 @@ PSX::PxRigidDynamic* CPhysX_Manager::Add_DynamicActor(CRigidBody_Dynamic& RigidB
 		pShape = PSX::PxRigidActorExt::createExclusiveShape(*pActorDynamic, geoHolder.capsule(), *m_pMaterials[ENUM_CLASS(RigidBody.Get_MaterialType())]);
 		break;
 	case ACTOR::SPHERE:
-		geoHolder = PSX::PxCapsuleGeometry(vVolume.x);
+		geoHolder = PSX::PxSphereGeometry(vVolume.x);
 		pShape = PSX::PxRigidActorExt::createExclusiveShape(*pActorDynamic, geoHolder.sphere(), *m_pMaterials[ENUM_CLASS(RigidBody.Get_MaterialType())]);
 		break;
 	default:
@@ -47,11 +47,12 @@ PSX::PxRigidDynamic* CPhysX_Manager::Add_DynamicActor(CRigidBody_Dynamic& RigidB
 	}
 	assert(nullptr != pShape);
 
+	// createExclusiveShape를 하면 쉐이프가 actor에 attach 된 상태로 나오기 때문에
+	// 쉐이프 속성만 건드려서 액터의 쉐이프를 수정함
 	pShape->setFlags(RigidBody.Get_ShapeFlags());
 	pShape->setContactOffset(RigidBody.Get_ContactOffset());
 	pShape->setRestOffset(0.f);
 
-	pActorDynamic->attachShape(*pShape);
 	PSX::PxRigidBodyFlags pxRigidFlags = RigidBody.Get_RigidBodyFlags();
 	pActorDynamic->setRigidBodyFlags(pxRigidFlags);
 
@@ -101,7 +102,7 @@ PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody_Static& RigidBody
 			// GeoFlag 중 더블사이드는 이제 지원 안함, 할거면 노말 뒤집어서 하라고 함
 			// pPxMeshGeometry->meshFlags |= PSX::PxMeshGeometryFlag::eDOUBLE_SIDED;
 			// 유효성 체크
-			PX_ASSERT(pPxMeshGeometry.isValid());
+			PX_ASSERT(pPxMeshGeometry->isValid());
 			m_TriangleMeshGeometry.emplace(RigidBody.Get_PxMeshKey(), pPxMeshGeometry);
 		}
 		break;
@@ -143,6 +144,7 @@ void CPhysX_Manager::RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxT
 {
 	m_TriangleMeshes.emplace(CMyTools::ToWstring(pName), pPxTriMesh);
 }
+#ifdef EDITOR_PROJECT
 
 HRESULT CPhysX_Manager::ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix)
 {
@@ -194,6 +196,7 @@ HRESULT CPhysX_Manager::SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangle
 	assert(ok);
 	return (ok ? S_OK : E_FAIL);
 }
+#endif // EDITOR_PROJECT
 
 HRESULT CPhysX_Manager::LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes)
 {
@@ -274,7 +277,6 @@ void CPhysX_Manager::Update(_float fTimeDelta)
 		//Update_Dynamic_AllActors();
 	}
 }
-
 void CPhysX_Manager::Update_Dynamic_ActiveActors()
 {
 	PSX::PxU32 iNumActiveActor = {};
@@ -330,10 +332,19 @@ unordered_set<PSX::PxActor*>::iterator CPhysX_Manager::Detach_Actor(PSX::PxActor
 	if (m_pActiveBodys.end() != iter) {
 		m_pActiveBodys.erase(iter); // 액터를 활성화 맵에서 분리 해주고
 		iterOut = m_pRestBodies.insert(&Actor).first; // 액터를 다시 쓸 수 있기 때문에 따로 보관해줌
-		if (m_pScene != nullptr) {
-			m_pScene->removeActor(Actor);
-		}
 	}
+
+	PSX::PxScene* pOwnerScene = Actor.getScene();
+
+	if (pOwnerScene == nullptr) { // 액터가 씬에 없는 경우 nullptr이 나옴
+		return iterOut;
+	}
+
+	if (pOwnerScene != m_pScene) { // 액터가 속한 씬이 아닌경우 빼면 안됨
+		return iterOut;
+	}
+	m_pScene->removeActor(Actor);
+
 	return iterOut;
 }
 
@@ -405,7 +416,8 @@ HRESULT CPhysX_Manager::Initialize()
 	}
 
 	if (FAILED(Connect_DebugServer())) {
-		ASSERT_NURI(false);
+		//ASSERT_NURI(false);
+		//ASSERT_JINWOO(false);
 	}
 
 	{ // 씬 세팅
@@ -473,16 +485,30 @@ HRESULT CPhysX_Manager::Initialize()
 		pPvdClient->setScenePvdFlag(PSX::PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
 	}
 
-	// m_pScene->overlap();??????
+	m_pMaterials.reserve(ENUM_CLASS(PXMATERIAL::END));
+	m_pMaterials.push_back(m_pPhysics->createMaterial(0.5f, 0.5f, 0.6f));
 
+#ifndef _DEBUG
+	PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
+	PlaneData.iSubKind = UINT_MAX;
+	PlaneData.pOwner = nullptr;
+	PlaneData.pBody = nullptr;
+
+	PSX::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *m_pMaterials[ENUM_CLASS(PXMATERIAL::DEFAULT)]);
+	pGroundPlane->userData = &PlaneData;
+	pGroundPlane->setName("PHYSX_MANAGER_PLANE");
+	m_pScene->addActor(*pGroundPlane);;
+#endif // _DEBUG
+
+
+	// m_pScene->overlap();??????
+#ifdef EDITOR_PROJECT
 #ifdef 기무리
 	PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
 	PlaneData.iSubKind = UINT_MAX;
 	PlaneData.pOwner = nullptr;
 	PlaneData.pBody = nullptr;
 
-	m_pMaterials.reserve(ENUM_CLASS(PXMATERIAL::END));
-	m_pMaterials.push_back(m_pPhysics->createMaterial(0.5f, 0.5f, 0.6f));
 	PSX::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *m_pMaterials[ENUM_CLASS(PXMATERIAL::DEFAULT)]);
 	pGroundPlane->userData = &PlaneData;
 	pGroundPlane->setName("PHYSX_MANAGER_PLANE");
@@ -506,6 +532,65 @@ HRESULT CPhysX_Manager::Initialize()
 	//}
 #endif // 기무리
 
+
+#ifdef 진우
+	PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
+	PlaneData.iSubKind = UINT_MAX;
+	PlaneData.pOwner = nullptr;
+	PlaneData.pBody = nullptr;
+
+	PSX::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *m_pMaterials[ENUM_CLASS(PXMATERIAL::DEFAULT)]);
+	pGroundPlane->userData = &PlaneData;
+	pGroundPlane->setName("PHYSX_MANAGER_PLANE");
+	m_pScene->addActor(*pGroundPlane);;
+
+	//{
+	//	float halfExtent = .5f;
+	//	physx::PxShape* shape = m_pPhysics->createShape(physx::PxSphereGeometry(halfExtent), *pMaterial);
+	//	physx::PxU32 size = 30;
+	//	physx::PxTransform pxTransform(physx::PxVec3(0));
+
+	//	for (physx::PxU32 i = 0; i < size; i++) {
+	//		for (physx::PxU32 j = 0; j < size - i; j++) {
+	//			physx::PxTransform localTm(physx::PxVec3(physx::PxReal(j * 2) - physx::PxReal(size - i) + 100, physx::PxReal(i * 2 + 1), 0) * halfExtent);
+	//			physx::PxRigidDynamic* body = m_pPhysics->createRigidDynamic(pxTransform.transform(localTm));
+	//			body->attachShape(*shape);
+	//			physx::PxRigidBodyExt::updateMassAndInertia(*body, 10.0f);
+	//			m_pScene->addActor(*body);
+	//		}
+	//	}
+	//}
+#endif // 진우
+#endif // EDITOR_PROJECT
+
+#ifdef Bin
+	PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
+	PlaneData.iSubKind = UINT_MAX;
+	PlaneData.pOwner = nullptr;
+	PlaneData.pBody = nullptr;
+
+	PSX::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *m_pMaterials[ENUM_CLASS(PXMATERIAL::DEFAULT)]);
+	pGroundPlane->userData = &PlaneData;
+	pGroundPlane->setName("PHYSX_MANAGER_PLANE");
+	m_pScene->addActor(*pGroundPlane);;
+
+	//{
+	//	float halfExtent = .5f;
+	//	physx::PxShape* shape = m_pPhysics->createShape(physx::PxSphereGeometry(halfExtent), *pMaterial);
+	//	physx::PxU32 size = 30;
+	//	physx::PxTransform pxTransform(physx::PxVec3(0));
+
+	//	for (physx::PxU32 i = 0; i < size; i++) {
+	//		for (physx::PxU32 j = 0; j < size - i; j++) {
+	//			physx::PxTransform localTm(physx::PxVec3(physx::PxReal(j * 2) - physx::PxReal(size - i) + 100, physx::PxReal(i * 2 + 1), 0) * halfExtent);
+	//			physx::PxRigidDynamic* body = m_pPhysics->createRigidDynamic(pxTransform.transform(localTm));
+	//			body->attachShape(*shape);
+	//			physx::PxRigidBodyExt::updateMassAndInertia(*body, 10.0f);
+	//			m_pScene->addActor(*body);
+	//		}
+	//	}
+	//}
+#endif // 진우
 	
 
 	return S_OK;

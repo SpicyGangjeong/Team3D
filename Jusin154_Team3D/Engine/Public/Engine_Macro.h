@@ -19,10 +19,10 @@
 #ifdef 기무리
 #undef ASSERT_NURI
 #define ASSERT_NURI(expression) assert(expression)
-#elif kim05
+#elif 진우
 #undef ASSERT_JINWOO
 #define ASSERT_JINWOO(expression) assert(expression)
-#elif 82103
+#elif gimch
 #undef ASSERT_JINHO
 #define ASSERT_JINHO(expression) assert(expression)
 #elif Bin
@@ -70,6 +70,11 @@
 #ifndef PURE
 #define PURE = 0
 #endif
+
+#define FX_DEFERRED			TEXT("FX_DEFERRED")
+#define FX_LASTCOLOR		TEXT("FX_LASTCOLOR")
+#define FX_WEIGHTBELND		TEXT("FX_WEIGHTBELND")
+
 
 #define			SAFE_ADDREF(pInstance)		Safe_AddRef(pInstance)
 #define			SAFE_RELEASE(pInstance)		Safe_Release(pInstance)

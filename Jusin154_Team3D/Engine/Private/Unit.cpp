@@ -4,12 +4,12 @@
 #include "GameInstance.h"
 
 CUnit::CUnit(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+	: CContainerObject(pDevice, pContext)
 {
 }
 
 CUnit::CUnit(const CUnit& Prototype)
-	: CGameObject(Prototype)
+	: CContainerObject(Prototype)
 {
 }
 
@@ -30,15 +30,17 @@ HRESULT CUnit::Initialize(void* pArg)
 
 void CUnit::Priority_Update(_float fTimeDelta)
 {
-
+	__super::Priority_Update(fTimeDelta);
 }
 
 void CUnit::Update(_float fTimeDelta)
 {
+	__super::Update(fTimeDelta);
 }
 
 void CUnit::Late_Update(_float fTimeDelta)
 {
+	__super::Late_Update(fTimeDelta);
 }
 
 HRESULT CUnit::Render()
@@ -46,6 +48,7 @@ HRESULT CUnit::Render()
 	return S_OK;
 }
 
+#ifdef _DEBUG
 void CUnit::Load_KeyFrame()
 {
 	FILE* fp = nullptr;
@@ -88,7 +91,7 @@ void CUnit::Load_KeyFrame()
 		}
 	}
 }
-
+#endif
 _float CUnit::Get_KeyFrame(_string FrameName)
 {
 	auto iter = m_KeyFrames.find(FrameName);
@@ -110,11 +113,14 @@ _bool CUnit::IsCurrentKeyFrame(_string FrameName)
 
 HRESULT CUnit::Ready_Components(void *pArg)
 {
-	__super::Ready_Components(pArg);
+	if (FAILED(__super::Ready_Components(pArg))) {
+		return E_FAIL;
+	}
 
 	/* Com_FSM */
-	if (FAILED(Add_Component<CFSM>(g_iStaticLevel, &m_pFSM)))
+	if (FAILED(Add_Component<CFSM>(g_iStaticLevel, &m_pFSM))){
 		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -132,7 +138,10 @@ void CUnit::Free()
 	SAFE_RELEASE(m_pModelCom);
 	SAFE_RELEASE(m_pFSM);
 }
+#ifdef _DEBUG
 
 void CUnit::Describe_Entity()
 {
 }
+
+#endif // _DEBUG

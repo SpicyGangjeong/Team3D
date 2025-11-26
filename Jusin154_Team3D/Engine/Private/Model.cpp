@@ -7,6 +7,7 @@
 #include "LerpAnim.h"
 #include "GameObject.h"
 #include "Transform.h"
+#include "ComputeShader.h"
 
 CModel::CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent{ pDevice, pContext }
@@ -23,7 +24,9 @@ CModel::CModel(const CModel& rhs)
 	m_Materials(rhs.m_Materials),
 	m_iNumMaterials(rhs.m_iNumMaterials),
 	m_iNumAnimations(rhs.m_iNumAnimations),
-	m_pLerpAnim(rhs.m_pLerpAnim)
+	m_pLerpAnim(rhs.m_pLerpAnim),
+	m_fRadius(rhs.m_fRadius),
+	m_vRadiusOffset(rhs.m_vRadiusOffset)
 {
 	_uint iNumBones = (_uint)(rhs.m_Bones.size());
 	m_Bones.reserve(iNumBones);
@@ -80,46 +83,7 @@ _int CModel::Get_BoneIndex(const _char* pBoneName) const
 	return iBoneIndex;
 }
 
-void CModel::Change_AnimationIndex(_int iAnimationIndex, _bool bIsLoop, _float fLerpDuration, _bool bIgnoreCurrentIndex)
-{
-	if (false == bIgnoreCurrentIndex && m_iCurrentAnimIndex == iAnimationIndex) { return; }
-	m_iCurrentAnimIndex = iAnimationIndex;
-	m_bIsLoop = bIsLoop;
-	RefreshAnim();
-
-	m_PrevAnimationMatrix = Get_BoneMatrix(m_iRootBoneIndex);
-
-
-	m_Animations[m_iCurrentAnimIndex]->Depart_Animation(); // 애니메이션 종료 이벤트 ( 럴프애님은 자체적으로 불림 )
-	vector<_int>* BeforeAnimIndex = m_Animations[m_iCurrentAnimIndex]->Capture_Bones(); // 영향을 받는 본 인덱스 추출 1
-	vector<_int>* AfterAnimIndex = m_Animations[iAnimationIndex]->Capture_Bones(); // 영향을 받는 본 인덱스 추출 2
-	unordered_set<_int> UnionAnimIndex = {};
-
-	vector<LERPDESC> LerpStartFrames;
-	for (_int i : *BeforeAnimIndex) {
-		UnionAnimIndex.insert(i);
-	}
-	for (_int i : *AfterAnimIndex) {
-		UnionAnimIndex.insert(i);
-	}
-	LerpStartFrames.reserve(UnionAnimIndex.size()); // 영향을 받는 모든 현재 본을 가져옴
-
-	// 스타팅 키프레임 채우기 pair < 본 인덱스, 키프레임 >
-	for (auto iter = UnionAnimIndex.begin(); iter != UnionAnimIndex.end(); ++iter) {
-		LERPDESC desc = {};
-		desc.iSlot = *iter;
-		m_Bones[desc.iSlot]->Get_KeyFrame(desc.tagKeyFrame, true); // 스타팅 키프레임 채우기
-		LerpStartFrames.emplace_back(desc);
-	}
-
-	// 엔딩 키프레임 채우기 pair < 본인덱스, 키프레임 >
-	vector<LERPDESC> LerpEndFrames = m_Animations[iAnimationIndex]->Get_StartFrameInformations();
-
-	// 럴프 애니메이션 시작
-	m_pLerpAnim->Begin(m_Bones, LerpStartFrames, LerpEndFrames, fLerpDuration, m_iRootBoneIndex);
-
-}
-HRESULT CModel::Bind_Material(_uint iMeshIndex, CShader* pShader, const _char* pConstantName, _uint iType, _uint iTextureIndex)
+HRESULT CModel::Bind_Material(_uint iMeshIndex, CShader* pShader)
 {
 	if (iMeshIndex >= m_iNumMeshes) {
 		return E_FAIL;
@@ -130,7 +94,7 @@ HRESULT CModel::Bind_Material(_uint iMeshIndex, CShader* pShader, const _char* p
 	if (iMaterialIndex >= m_iNumMaterials) {
 		return E_FAIL;
 	}
-	return m_Materials[iMaterialIndex]->Bind_SRV(pShader, pConstantName, iType, iTextureIndex);
+	return m_Materials[iMaterialIndex]->Bind_SRV(pShader);
 }
 
 HRESULT CModel::Bind_BoneMatrices(_uint iMeshIndex, CShader* pShader, const _char* pConstantName)
@@ -143,21 +107,24 @@ HRESULT CModel::Bind_BoneMatrices(_uint iMeshIndex, CShader* pShader, const _cha
 
 _bool CModel::Play_Animation(_float fTimeDelta,CTransform* pTransform)
 {
-	if (!m_bPlayAnim)
+	if (!m_bPlayAnim){
 		return false;
+	}
 	if (-1 == m_iCurrentAnimIndex  // 정지 혹은 시작을 안시켜준 애님
 		|| m_iCurrentAnimIndex >= (_int)m_iNumAnimations)  // 애님 인덱스 초과됨
 	{
 		return false; // 잘못된 초기화
 	}
 
+	ComputeAnimation();
+
 	if (m_iPreAnimIndex != m_iCurrentAnimIndex && m_iPreAnimIndex != 0)
 	{
 		m_fBlendTime += fTimeDelta;
-		_float fRatio = m_fBlendTime / m_fBlendDuration;
+		_float fRatio = (m_fBlendTime / m_fBlendDuration);
 		fRatio = min(fRatio, 1.f);
 
-		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_bIsLoop, fTimeDelta, pTransform);
+		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, pTransform, m_fAmount);
 		m_Animations[m_iCurrentAnimIndex]->InterpAnim(m_Animations[m_iPreAnimIndex], m_Bones, fRatio);
 
 		if (fRatio >= 1.f)
@@ -168,104 +135,40 @@ _bool CModel::Play_Animation(_float fTimeDelta,CTransform* pTransform)
 	}
 	else
 	{
-		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_bIsLoop, fTimeDelta, pTransform);
+		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, pTransform, m_fAmount);
 		m_iPreAnimIndex = m_iCurrentAnimIndex;
 	}
 
-	for (_int i = 0; i < m_Bones.size(); ++i)
+	for (auto& pBone : m_Bones)
 	{
-		m_Bones[i]->Update_CombinedTransformationMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
-
-		if (i == m_iRootBoneIndex) { // 루트본의 매트릭스를 갱신했다면 애니메이션에 맞게 이동량을 루트본에서 트랜스폼으로 보정시킴
-			if (true == m_pLerpAnim->IsLerping()) { // 럴프중이었으면 이동량 반영 x
-				_matrix currAnimMatrix = Get_BoneMatrix(m_iRootBoneIndex);
-				currAnimMatrix.r[3] = XMVectorSet(0.f, 0.f, 0.f, 1.f);
-				m_Bones[i]->Set_CombinedTransformationMatrixPtr(currAnimMatrix);
-			}
-			else {
-				_matrix currAnimMatrix = Get_BoneMatrix(m_iRootBoneIndex); // 현재 루트본의 컴바인드 트랜스폼을 꺼내오고
-				_matrix deltaAnimMatrix = XMMatrixMultiply(XMMatrixInverse(nullptr, m_PrevAnimationMatrix), currAnimMatrix); // 이전 트랜스폼이랑 비교해서 델타매트릭스를 꺼냄
-				_vector momentum = XMMatrixMultiply(deltaAnimMatrix, XMMatrixRotationQuaternion(m_pTransform->Get_QuarternionVector())).r[3];
-				deltaAnimMatrix.r[3] = XMVectorSetW(momentum, 0.f);
-
-				m_pTransform->AccumulateMomentum(deltaAnimMatrix.r[3]); // 모체 트랜스폼에 이동량 반영
-				//m_pTransform->Set_State(STATE::POSITION, m_pTransform->Get_State(STATE::POSITION) + deltaAnimMatrix.r[3]);
-
-				m_PrevAnimationMatrix = currAnimMatrix;
-				currAnimMatrix.r[3] = XMVectorSet(0.f, 0.f, 0.f, 1.f);
-				m_Bones[i]->Set_CombinedTransformationMatrixPtr(currAnimMatrix); // 루트본의 이동량 소거
-			}
-		}
+		pBone->Update_CombinedTransformationMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
 	}
 
-	if(m_bIsFinishedAnim)
+	if (m_bIsFinishedAnim)
+	{
 		m_Animations[m_iCurrentAnimIndex]->ResetRootMotion();
+		m_Animations[m_iCurrentAnimIndex]->Depart_Animation();
+	}
 
 	return m_bIsFinishedAnim;
 }
 
-void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop)
+void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop,_float fAmount)
 {
-	if (m_iCurrentAnimIndex == iIndex)
+	if (m_iCurrentAnimIndex == iIndex){
 		return;
+	}
 	if (iIndex >= 0 && iIndex < m_iNumAnimations)
 	{
 		m_iCurrentAnimIndex = iIndex;
 		m_bIsLoop = isLoop;
+		m_fAmount = fAmount;
 		m_Animations[m_iCurrentAnimIndex]->ResetRootMotion();
 		m_Animations[m_iCurrentAnimIndex]->Depart_Animation();
 	}
-	else
-		m_iCurrentAnimIndex = -1;
-}
-
-void CModel::Stop_Animation()
-{
-	if (-1 == m_iCurrentAnimIndex  // 정지 혹은 시작을 안시켜준 애님
-		|| m_iCurrentAnimIndex >= (_int)m_iNumAnimations)  // 애님 인덱스 초과됨
-	{
-		return; // 잘못된 초기화
-	}
-
-	m_Animations[m_iCurrentAnimIndex]->Depart_Animation(); // 애님이 퇴근할 때 불리는 함수를 부르면서 초기상태로 되돌림
-}
-
-void CModel::RefreshAnim()
-{
-	m_bIsFinishedAnim = false;
-	m_bIsFinishedLerp = false;
-}
-_float CModel::Get_AnimProgressRatio()
-{
-	return m_Animations[m_iCurrentAnimIndex]->Get_AnimProgressRatio();
-}
-_int CModel::Get_AnimProgressPostion(const _char* pAnimChannelName)
-{
-	return m_Animations[m_iCurrentAnimIndex]->Get_AnimProgressPostion(pAnimChannelName);
-}
-_float CModel::Get_AnimEstimatedDuration()
-{
-	if (MODEL::ANIM == m_eType) {
-		return m_Animations[m_iCurrentAnimIndex]->Get_AnimEstimatedDuration();
-	}
 	else {
-		return 0.f;
+		m_iCurrentAnimIndex = -1;
 	}
-
-}
-void CModel::Set_AnimProgressPostion(const _char* pChannelName, _uint iPosition)
-{
-	return m_Animations[m_iCurrentAnimIndex]->Set_AnimProgressPostion(pChannelName, iPosition);
-}
-void CModel::Set_AnimPauseState(_bool bValue) {
-	m_Animations[m_iCurrentAnimIndex]->Set_AnimPause(bValue);
-}
-
-void CModel::ReallocateResources(CTransform* pTransform)
-{
-	SAFE_RELEASE(m_pTransform);
-	m_pTransform = pTransform;
-	SAFE_ADDREF(m_pTransform);
 }
 
 const _float4x4* CModel::Get_BoneMatrixPtr(const _char* pBoneName) const
@@ -293,15 +196,14 @@ _matrix CModel::Get_BoneMatrix(_uint iBoneIndex)
 	return m_Bones[iBoneIndex]->Get_CombinedTransformationMatrix();
 }
 
-void CModel::Get_BoneMatrices(_float4x4* pOut)
+void CModel::Combined_BoneMatrix()
 {
-	if (0 == m_Bones.size()) {
-		return;
-	}
-	for (_uint i = 0; i < m_Bones.size(); ++i) {
-		pOut[i] = *m_Bones[i]->Get_CombinedTransformationMatrixPtr();
+	for (auto& pBone : m_Bones)
+	{
+		pBone->Update_CombinedTransformationMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
 	}
 }
+
 
 void CModel::Set_CurrentTrackPosition(_float TrackPosition)
 {
@@ -318,6 +220,11 @@ _float CModel::Get_CurrentTrackPosition()
 	return m_Animations[m_iCurrentAnimIndex]->Get_CurrentTrackPosition();
 }
 
+_float CModel::Get_CurrentTrackProgressRatio()
+{
+	return m_Animations[m_iCurrentAnimIndex]->Get_CurrentTrackProgressRatio();
+}
+
 _float CModel::Get_AnimSpeed()
 {
 	return m_Animations[m_iCurrentAnimIndex]->Get_AnimSpeed();
@@ -326,16 +233,6 @@ _float CModel::Get_AnimSpeed()
 void CModel::Set_AnimSpeed(_float fSpeed)
 {
 	m_Animations[m_iCurrentAnimIndex]->Set_AnimSpeed(fSpeed);
-}
-
-void CModel::Set_Anim(CModel* Source)
-{
-	for (auto& Animations : Source->m_Animations)
-	{
-		m_Animations.push_back(Animations);
-	}
-
-	m_iNumAnimations += (_uint)Source->m_Animations.size();
 }
 
 
@@ -479,6 +376,29 @@ HRESULT CModel::Ready_Materials_FromFile(const aiScene* pAIScene, const _char* p
 		m_Materials.push_back(pMaterial);
 	}
 	m_Materials.shrink_to_fit();
+
+	while (true)
+	{
+		getline(file, strText);
+		if (string::npos != strText.find("Origin"))
+		{
+			size_t iXPos = strText.find_first_of("X");
+			size_t iYPos = strText.find_first_of("Y");
+			size_t iZPos = strText.find_first_of("Z");
+			size_t iEndPos = strText.find_first_of("}");
+
+			m_vRadiusOffset.x = stof(strText.substr(iXPos + 2, iYPos - 2)) * 0.01f;
+			m_vRadiusOffset.z = stof(strText.substr(iYPos + 2, iZPos - 2)) * -0.01f;
+			m_vRadiusOffset.y = stof(strText.substr(iZPos + 2, iEndPos)) * 0.01f;
+		}
+		if (string::npos != strText.find("SphereRadius"))
+		{
+			size_t iBeginIndex = strText.find_first_of("=");
+			m_fRadius = stof(strText.substr(iBeginIndex + 1)) / 100.f;
+			break;
+		}
+	}
+
 	return S_OK;
 }
 
@@ -779,6 +699,12 @@ _bool CModel::SaveAssimpModel(const _char* filename)
 		}
 	}
 
+	if (MODEL::ENVIROMENT == m_eType)
+	{
+		fwrite(&m_fRadius, sizeof(_float), 1, fp);
+		fwrite(&m_vRadiusOffset, sizeof(_float3), 1, fp);
+	}
+
 	fclose(fp);
 
 	return true;
@@ -868,6 +794,130 @@ HRESULT CModel::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fma
 
 #endif // EDITOR_PROJECT
 
+HRESULT CModel::Create_CS()
+{
+	_uint CS1_InputStrides[] = {
+		sizeof(KEYFRAME_DESC),
+		sizeof(CHANNEL_DESC),
+	};
+
+	_uint CS1_OutputStrides[] = {
+		sizeof(LOCALPOS_DESC),
+	};
+
+
+	m_pComputeShader = CComputeShader::Create(m_pDevice, m_pContext, L"../Bin/Resources/ShaderFiles/Shader_Mesh_Compute.hlsl",
+		"CS_LocalSRT", (_uint)m_Bones.size(), 0, 1, nullptr, CS1_OutputStrides
+	);
+
+	if (!m_pComputeShader)
+		return E_FAIL;
+
+	return S_OK;
+}
+
+void CModel::Create_Temp()
+{
+	for (auto& anim : m_Animations)
+	{
+		anim->CreateGPUData(m_pDevice);
+	}
+}
+
+void CModel::Create_LocalPosVB()
+{
+	_uint iCount = (_uint)m_Bones.size();
+	_uint iStride = sizeof(LOCALPOS_DESC);
+
+	D3D11_BUFFER_DESC desc = {};
+	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.ByteWidth = iStride * iCount;
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS;
+	desc.CPUAccessFlags = 0;
+	desc.StructureByteStride = iStride;
+	desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+
+	HRESULT hr = m_pDevice->CreateBuffer(&desc, nullptr, &m_pLocalPosBuffer);
+
+	return;
+}
+
+
+void CModel::Create_Con()
+{
+	D3D11_BUFFER_DESC cbDesc = {};
+	cbDesc.Usage = D3D11_USAGE_DYNAMIC;
+	cbDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	cbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	cbDesc.ByteWidth = sizeof(ANIMSTATE_DESC);
+
+	if (FAILED(m_pDevice->CreateBuffer(&cbDesc, nullptr, &m_pConstantBuffer)))
+		return;
+}
+
+
+void CModel::UpdateAnimationCS()
+{
+	D3D11_MAPPED_SUBRESOURCE sub{};
+	if (SUCCEEDED(m_pContext->Map(m_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &sub)))
+	{
+		ANIMSTATE_DESC* pDesc = (ANIMSTATE_DESC*)sub.pData;
+
+		CAnimation* pAnim = m_Animations[m_iCurrentAnimIndex];
+		pDesc->CurrentTime = pAnim->Get_CurrentTrackPosition();
+		pDesc->Duration = pAnim->Get_Duration();
+		pDesc->Speed = pAnim->Get_AnimSpeed();
+		pDesc->BoneCount = (_uint)m_Bones.size();
+		pDesc->PreTransformMatrix = m_PreTransformMatrix;
+		m_pContext->Unmap(m_pConstantBuffer, 0);
+	}
+}
+
+void CModel::ComputeAnimation()
+{
+	UpdateAnimationCS();
+
+	_uint iGroupCountX = ((_uint)m_Bones.size() + 255) / 256;
+
+	CAnimation* pAnim = m_Animations[m_iCurrentAnimIndex];
+	ID3D11ShaderResourceView* srvs[2] = {
+		pAnim->Get_KeyFrameSrv(),
+		pAnim->Get_ChannelSrv(),
+	};
+
+	m_pContext->CSSetShader(m_pComputeShader->Get_Compute(), nullptr, 0);
+	m_pContext->CSSetConstantBuffers(0, 1, &m_pConstantBuffer);
+	m_pContext->CSSetShaderResources(0, 2, srvs);
+
+	ID3D11UnorderedAccessView* uavs[1] = { m_pComputeShader->GetOutputUAV(0) };
+	m_pContext->CSSetUnorderedAccessViews(0, 1, uavs, nullptr);
+
+	m_pContext->Dispatch(iGroupCountX, 1, 1);
+
+	auto outSubs = m_pComputeShader->ReadBackOutputs();
+	m_pLocalPos = static_cast<LOCALPOS_DESC*>(outSubs[0].pData);
+}
+
+
+HRESULT CModel::Create_ParentVB()
+{
+	D3D11_BUFFER_DESC desc{};
+	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.ByteWidth = (_int)sizeof(PARENT_DESC) * (_uint)m_Bones.size();
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	desc.CPUAccessFlags = 0;
+	desc.StructureByteStride = (_int)sizeof(PARENT_DESC);
+	desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+
+	D3D11_SUBRESOURCE_DATA init{};
+	init.pSysMem = m_Parent.data();
+
+	m_pDevice->CreateBuffer(&desc, &init, &m_pParentBuffer);
+
+
+	return S_OK;
+}
+#ifdef _DEBUG
 HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix)
 {
 	m_eType = eType;
@@ -875,7 +925,9 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 	_char		szDir[MAX_PATH] = {};
 	_char		szName[MAX_PATH] = {};
 	_char		szEXT[MAX_PATH] = {};
+
 	_splitpath_s(pModelFilePath, nullptr, 0, szDir, MAX_PATH, szName, MAX_PATH, szEXT, MAX_PATH);
+
 
 	if (strcmp(".bin", szEXT) == 0)
 	{
@@ -887,13 +939,16 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 		strcpy_s(Temp, szDir);
 		strcat_s(Temp, szName);
 		strcat_s(Temp, ".bin");
+
 		if (FAILED(Assimp_Model_Load(pModelFilePath, eType, PreTransformMatrix, 0))) {
 			return E_FAIL;
 		}
+
 		SaveAssimpModel(Temp);
 
 		return S_OK;
 	}
+
 	m_pSaveModel = m_pGameInstance->Load_SaveModel(pModelFilePath);
 
 	LoadAdditionalAnimations(pModelFilePath);
@@ -910,21 +965,46 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 		return E_FAIL;
 	}
 
-	if (FAILED(Ready_Animations())) {
+	if (FAILED(Ready_Animations(m_Bones))) {
+		return E_FAIL;
+	}
+	return S_OK;
+}
+
+#endif // _DEBUG
+
+
+
+#ifndef _DEBUG
+
+HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix)
+{
+	m_eType = eType;
+
+	LoadData(pModelFilePath);
+	
+	m_pSaveModel = m_pGameInstance->Load_SaveModel(pModelFilePath);
+
+	LoadAdditionalAnimations(pModelFilePath);
+
+	XMStoreFloat4x4(&m_PreTransformMatrix, PreTransformMatrix);
+
+	Ready_Bones(m_pSaveModel->Nodes, 0, -1);
+
+	if (FAILED(Ready_Meshes())) {
 		return E_FAIL;
 	}
 
-#ifdef 기무리
-	if (MODEL::ENVIROMENT == m_eType) {
-		m_pGameInstance->LoadTriMeshes(pModelFilePath, m_TriMeshes);
-		for (_uint i = 0; i < m_iNumMeshes; ++i) {
-			m_pGameInstance->RegistTriMesh(m_Meshes[i]->Get_Name(), m_TriMeshes[i]);
-		}
+	if (FAILED(Ready_Materials(pModelFilePath))) {
+		return E_FAIL;
 	}
-#endif // 
 
+	if (FAILED(Ready_Animations(m_Bones))) {
+		return E_FAIL;
+	}
 	return S_OK;
 }
+#endif 
 
 void CModel::LoadAdditionalAnimations(const char* ModelFilePath)
 {
@@ -1079,6 +1159,11 @@ _bool CModel::LoadData(const _char* filename)
 		NewModel.Materials.push_back(mat);
 	}
 
+	if (MODEL::ENVIROMENT == m_eType)
+	{
+		fread(&m_fRadius, sizeof(_float), 1, fp);
+		fread(&m_vRadiusOffset, sizeof(_float3), 1, fp);
+	}
 
 	fclose(fp);
 
@@ -1200,6 +1285,26 @@ HRESULT CModel::Initialize(void* pArg)
 	m_pTransform = m_pOwner->Get_Component<CTransform>();
 	SAFE_ADDREF(m_pTransform);
 
+	
+	if (m_eType == MODEL::ANIM)
+	{	
+		Create_Temp();
+		m_Parent.resize(m_Bones.size());
+		for (size_t i = 0; i < (_uint)m_Bones.size(); i++)
+		{
+			m_Parent[i].ParentIndex = m_Bones[i]->Get_ParentBoneIndex();
+		}
+
+		if (FAILED(Create_CS()))
+			return E_FAIL;
+
+		Create_Con();
+		Create_LocalPosVB();
+		Create_ParentVB();
+
+	}
+	
+
 	return S_OK;
 }
 
@@ -1254,13 +1359,13 @@ HRESULT CModel::Ready_Bones(const std::vector<SaveNode>& allNodes, _int currentI
 	return S_OK;
 }
 
-HRESULT CModel::Ready_Animations()
+HRESULT CModel::Ready_Animations(const vector<CBone*>& Bones)
 {
 	m_iNumAnimations = m_pSaveModel->AnimationCount;
 
 	for (size_t i = 0; i < m_iNumAnimations; i++)
 	{
-		CAnimation* pAnimation = CAnimation::Create(this, &m_pSaveModel->Animations[i]);
+		CAnimation* pAnimation = CAnimation::Create(Bones,this, &m_pSaveModel->Animations[i]);
 		if (nullptr == pAnimation)
 			return E_FAIL;
 
@@ -1301,6 +1406,11 @@ void CModel::Free()
 {
 	__super::Free();
 
+
+	SAFE_RELEASE(m_pComputeShader);
+	SAFE_RELEASE(m_pConstantBuffer);
+	SAFE_RELEASE(m_pParentBuffer);
+	SAFE_RELEASE(m_pLocalPosBuffer);
 	for (auto& pAnimation : m_Animations) {
 		SAFE_RELEASE(pAnimation);
 	}
@@ -1323,8 +1433,12 @@ void CModel::Free()
 	SAFE_RELEASE(m_pLerpAnim);
 
 	m_SaveModel.clear();
-}
 
+	m_Parent.clear();
+	m_AnimRanges.clear();
+
+}
+#ifdef _DEBUG
 void CModel::Describe_Entity()
 {
 	//GUI::Begin("Model_Desc");
@@ -1373,3 +1487,6 @@ void CModel::Describe_Entity()
 	//}
 	//GUI::End();
 }
+
+#endif // _DEBUG
+

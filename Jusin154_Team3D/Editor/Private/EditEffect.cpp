@@ -27,6 +27,8 @@ HRESULT CEditEffect::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
+	
+	Set_Visible(false);
 
 	return S_OK;
 }
@@ -39,31 +41,52 @@ void CEditEffect::Priority_Update(_float fTimeDelta)
 void CEditEffect::Update(_float fTimeDelta)
 {
 
-
-
-
+	if (m_bVisible == false)
+		return;
 
 	if (m_pInstance_ModelCom == nullptr)
 		return;
 
 	m_pInstance_ModelCom->Drop(fTimeDelta);
 
-	if (m_EffectInfo.isBillboard)
-		m_pGameInstance->BillBoard(m_pTransformCom);
 
 }
 
 void CEditEffect::Late_Update(_float fTimeDelta)
 {
 
+	if (m_bVisible == false)
+		return;
+
 	if (m_pInstance_ModelCom == nullptr)
 		return;
+
+	if (m_EffectInfo.isBillboard)
+		m_pGameInstance->BillBoard(m_pTransformCom);
+
+
+
+	if (m_isGoStraight == true)
+	{
+		m_fAccTime += fTimeDelta;
+
+		if (m_fAccTime > 1.f)
+		{
+			m_fAccTime = 0.f;
+			m_iSign *= -1;
+		}
+
+		m_pTransformCom->Go_Straight(3 * fTimeDelta * m_iSign);
+	}
 
 
 	if (m_EffectInfo.isBlur == true)
 	{
 		m_pGameInstance->Add_RenderGroup(RENDER::BLUR, this);
 	}
+
+	if (m_EffectInfo.isOnlyBlur == true)
+		return;
 
 	m_pGameInstance->Add_RenderGroup(RENDER::EFFECT, this);
 
@@ -141,7 +164,6 @@ void CEditEffect::Reference_Mat_For_EditEffect()
 
 HRESULT CEditEffect::Save_Effect(const _char* pPath)
 {
-
 	_string strPerfectFilePath = pPath;
 	strPerfectFilePath += ".bin";
 	
@@ -154,12 +176,12 @@ HRESULT CEditEffect::Save_Effect(const _char* pPath)
 
 
 	if (hFile == INVALID_HANDLE_VALUE) {
-		MessageBox(NULL, L"오브젝트 저장 실패", L"System Message", MB_OK);
+		MessageBox(NULL, L"이펙트 오브젝트 저장 실패", L"System Message", MB_OK);
 		return E_FAIL;
 	}
 
+	m_strPath = strPerfectFilePath;
 
-	
 	DWORD	dwByte(0);
 
 	if (m_pLightCom != nullptr) 
@@ -291,7 +313,35 @@ HRESULT CEditEffect::Save_Effect(const _char* pPath)
 
 	m_pInstance_ModelCom->Save_InstanceModel(hFile);
 
+
+	MessageBox(NULL, L"이펙트 저장 성공", L"System Message", MB_OK);
+
 	CloseHandle(hFile);
+
+	return S_OK;
+}
+
+HRESULT CEditEffect::Save_Path(HANDLE hFile)
+{
+	DWORD dwByte;
+
+	size_t iObjectLength = m_strPath.length();
+	const _char* pFilePath = m_strPath.c_str();
+
+	if (!WriteFile(hFile, &m_EffectInfo.eEffectType, sizeof(EFFECT_TYPE), &dwByte, nullptr)) {
+		return E_FAIL;
+	}
+
+	if (!WriteFile(hFile, &iObjectLength, sizeof(size_t), &dwByte, nullptr)) {
+		return E_FAIL;
+	}
+
+	if (pFilePath != 0)
+	{
+		if (!WriteFile(hFile, pFilePath, sizeof(_char) * ((DWORD)iObjectLength + 1), &dwByte, nullptr)) {
+			return E_FAIL;
+		}
+	}
 
 	return S_OK;
 }
@@ -307,6 +357,7 @@ HRESULT CEditEffect::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
+
 
 	return S_OK;
 }
@@ -341,6 +392,7 @@ CGameObject* CEditEffect::Clone(void* pArg, CGameObject* pOwner)
 void CEditEffect::Free()
 {
 	__super::Free();
+
 }
 
 void CEditEffect::Describe_Entity()
@@ -349,13 +401,31 @@ void CEditEffect::Describe_Entity()
 
 	const char* pLerp[] = { "Linear" , "EaseInQuad", "EaseOutQuad", "EaseInCubic" , "EaseOutCubic" , "EaseInOutSin" , "EaseInBack" , "Expo" , "Circle" };
 	const char* pRenderNames[] = { "PRIORITY" , "SHADOW", "NONBLEND", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" , "UI" };
+	const char* pEffectType[] = { "EFFECT" , "TRAIL" };
+	const char* pShaderPass[] = { "DEFAULT" , "NON_NOMALMAP" , "BLUR" , "WEIGHTBLEND" , "NON_WORLD" , "NON_WORLD_BLUR"};
 
 	_int iCurrentItem = static_cast<_int>(m_EffectInfo.eRenderOrder);
+	_int iCurrentType = static_cast<_int>(m_EffectInfo.eEffectType);
+	_int iCurrentPass = static_cast<_int>(m_EffectInfo.eShaderPass);
 
 	if (ImGui::Combo("Render Order", &iCurrentItem, pRenderNames, ENUM_CLASS(RENDER::END)))
 	{
 		m_EffectInfo.eRenderOrder = static_cast<RENDER>(iCurrentItem);
 	}
+
+	if (ImGui::Combo("Effect Type", &iCurrentType, pEffectType, ENUM_CLASS(EFFECT_TYPE::END)))
+	{
+		m_EffectInfo.eEffectType = static_cast<EFFECT_TYPE>(iCurrentType);
+	}
+
+	if (ImGui::Combo("Shader Pass", &iCurrentPass, pShaderPass, ENUM_CLASS(SHADER_PASS_INSTANCE_MODEL::END)))
+	{
+		m_EffectInfo.eShaderPass = static_cast<SHADER_PASS_INSTANCE_MODEL>(iCurrentPass);
+	}
+
+
+	GUI::Checkbox("Visible", &m_bVisible);
+	GUI::Checkbox("GO", &m_isGoStraight);
 
 	m_pTransformCom->Describe_Entity();
 
@@ -364,7 +434,6 @@ void CEditEffect::Describe_Entity()
 	GUI::Checkbox("Dissolve", &m_EffectInfo.isDissolve);
 	GUI::Checkbox("Distortion", &m_EffectInfo.isDistortion);
 	GUI::Checkbox("Noise", &m_EffectInfo.isNoise);
-
 
 	if (GUI::Checkbox("Billboard", &m_EffectInfo.isBillboard))
 	{
@@ -382,10 +451,11 @@ void CEditEffect::Describe_Entity()
 	if (GUI::TreeNode("BLUR"))
 	{
 		GUI::Checkbox("Blur", &m_EffectInfo.isBlur);
+		GUI::Checkbox("OnlyBlur", &m_EffectInfo.isOnlyBlur);
 
 		ImGui::PushItemWidth(80);
 		GUI::DragFloat("BlurIntensity", &m_EffectInfo.fBlurIntensity, 0.005f, 0.f, 1.f);
-		GUI::DragInt("BlurWeight", &m_EffectInfo.iBlurWeight, 1.f, 0, 32);
+		GUI::DragInt("BlurWeight", &m_EffectInfo.iBlurWeight, 2.f, 0, 128);
 
 		
 		ImGui::PopItemWidth();
@@ -398,12 +468,20 @@ void CEditEffect::Describe_Entity()
 	{
 
 		ImGui::PushItemWidth(80);
-		GUI::DragFloat("EmissiveCutAlpha", &m_EffectInfo.fEmissiveCutAlpha, 0.005f, 0.f, 1.f);
+		GUI::DragFloat("EmissiveStrength", &m_EffectInfo.fEmissiveStrength, 0.005f, 0.f, 1.f);
+		GUI::DragFloat("Radius", &m_EffectInfo.fRadius, 0.005f);
+		GUI::DragFloat("CoreBoost", &m_EffectInfo.fCoreBoost, 0.005f);
+		GUI::DragFloat("SoftStrength", &m_EffectInfo.fSoftStrength, 0.005f);
+		GUI::DragFloat("SoftenExp", &m_EffectInfo.fSoftenExp, 0.005f);
 		ImGui::PopItemWidth();
 
 		GUI::ColorEdit4("Emissive", (_float*)&m_EffectInfo.vEmissive);
 
+
+
 		GUI::Checkbox("EmissiveTex", &m_EffectInfo.isEmissive);
+		GUI::Checkbox("EmissiveDissolve", &m_EffectInfo.isEmissiveDissolve);
+		GUI::Checkbox("EmissiveDissolveReverse", &m_EffectInfo.isEmissiveDissolveReverse);
 
 		if (m_EffectInfo.isEmissive)
 		{
@@ -537,9 +615,14 @@ void CEditEffect::Describe_Entity()
 
 			GUI::InputFloat2("MaskUVCutting", (_float*)&m_EffectInfo.vUVMaskCutting);
 			GUI::Checkbox("MaskUVMove", &m_EffectInfo.isMaskUVMove);
+			GUI::Checkbox("MaskClampSample", &m_EffectInfo.isMaskClampSample);
 
 			ImGui::PushItemWidth(80);
 			GUI::DragFloat2("MaskingUVGainAmount", (_float*)&m_EffectInfo.vMaskingUVGainAmount, 0.01f);
+			GUI::Spacing();
+			GUI::DragFloat("SoftMask", &m_EffectInfo.fSoftMask, 0.01f, 0.f);
+			GUI::DragFloat("fSoftMaskEdge", &m_EffectInfo.fSoftMaskEdge, 0.01f, 0.f);
+			
 			ImGui::PopItemWidth();
 
 
@@ -578,10 +661,10 @@ void CEditEffect::Describe_Entity()
 		{
 			if (GUI::TreeNode("DISSOLV_TEX"))
 			{
-
+				GUI::Checkbox("Nomal Dissolve", &m_EffectInfo.isNomalDissolve);
 				GUI::Checkbox("Reverse Dissolve", &m_EffectInfo.isReverseDissolve);
 
-				_string strName = m_strDissolveName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISSOLVE_TEXTURE", (CComponent**)&m_pDissolve_TextureCom, nullptr, this);
+				_string strName  = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISSOLVE_TEXTURE", (CComponent**)&m_pDissolve_TextureCom, nullptr, this);
 				
 				if (strName != "") {
 					m_strDissolveName = strName;
@@ -653,7 +736,8 @@ void CEditEffect::Describe_Entity()
 	{
 		if (GUI::TreeNode("NOISE"))
 		{
-
+			GUI::Checkbox("NoiseColor", &m_EffectInfo.isNoiseColor);
+			GUI::Checkbox("NoiseAlpha", &m_EffectInfo.isNoiseAlpha);
 			GUI::Checkbox("NoiseMove", &m_EffectInfo.isNoiseUVMove);
 
 			ImGui::PushItemWidth(80);
@@ -685,7 +769,23 @@ void CEditEffect::Describe_Entity()
 			GUI::TreePop();
 		}
 
+		//ImGui::Begin("Simple Plot");
+
+
+		//ImGui::PlotLines("Value", m_ValueVector.data(), (int)m_ValueVector.size(), 0, nullptr, FLT_MAX, FLT_MAX, ImVec2(0, 100));
+
+		//GUI::InputFloat("InputValue", &m_fInputValue);
+
+		//if (GUI::Button("AddValue"))
+		//{
+		//	m_ValueVector.push_back(m_fInputValue);
+		//}
+
+		//ImGui::End();
+
 	}
+
+
 
 	GUI::Separator(); GUI::Spacing();
 

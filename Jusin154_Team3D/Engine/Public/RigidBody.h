@@ -1,11 +1,6 @@
 ﻿#pragma once
 #include "Component.h"
 
-NS_BEGIN(PSX)
-class PxActor;
-class PxMaterial;
-NS_END
-
 NS_BEGIN(Engine)
 class CTransform;
 class CMesh;
@@ -58,7 +53,9 @@ protected:
 
 public:
 	virtual void Free() override;
+#ifdef _DEBUG
 	virtual void Describe_Entity() override;
+#endif // _DEBUG
 };
 
 NS_END

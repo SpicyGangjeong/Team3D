@@ -6,13 +6,15 @@ enum ESTATE
 {
     IDLE, IDLE_TURN_L, IDLE_TURN_R, IDLE_TURN_BWD,
     MOVE, 
-    WALK, WALK_FWD, WALK_BWD, WALK_STOP,
-    JOG,
+    WALK, WALK_FWD, WALK_BWD,WALK_STOP,
+    JOG,JOG_FWD, JOG_BWD,JOG_STOP,
     SPRINT,
-    JUMP,JUMP_WALK,JUMP_SPRINT,
+    JUMP,JUMP_JOG,JUMP_SPRINT,
     LAND,
-    DODGE,
-    COMBAT, LIGHT_ATTACK, CAST, SKILL, SKILL2,
+    DODGE,DODGE_BLINK,
+    COMBAT, LIGHT_ATTACK, SPELL, SKILL, SKILL2,
+    ACCIO,DESCENDO,DIFFINDO,DEPULSO,LUMOS,DISILLUSION_ENTER,DISILLUSION_EXIT,
+    MAPHELP,
     END
 };
 NS_END
@@ -22,36 +24,33 @@ class CUnit;
 class CModel;
 class CFSM;
 class CGameInstance;
+
 class ENGINE_DLL CState abstract : public CBase
 {
+protected:
+    typedef struct tagStateDesc {
+        class CUnit* pOwner = { nullptr };
+    }STATEDESC;
+
 protected:
     CState();
     virtual ~CState() = default;
 
 public:
-    virtual void Enter();
-    virtual void Update(_float fTimeDelta);
-    virtual void Exit();
-    virtual _bool CheckExitState();
-    void Set_Owner(class CGameObject* pOwner);
-    virtual void Set_Component();
-
-    void Set_State(_uint State) { m_eState = State; }
-    _uint Get_State() { return m_eState; }
-    void Set_Parent(CState* State) { m_pParent = State; }
-    CState* Get_Parent() { return m_pParent; }
+    virtual void Enter()PURE;
+    virtual HRESULT Update(_float fTimeDelta)PURE;
+    virtual void Exit()PURE;
 
 protected:
-    CUnit*              m_pOwner = { nullptr };
+    class CUnit*              m_pOwner = { nullptr };
     CModel*             m_pModel = { nullptr };
     CFSM*               m_pFSM = { nullptr };
-    CState*             m_pParent = { nullptr };
     CGameInstance*      m_pGameInstance = { nullptr };
-    _uint               m_eState = {};
 
+protected:
+    HRESULT Initialize(STATEDESC* pArg);
 
-
-public:
+protected:
     virtual void Free() override;
     virtual void Describe_Entity();
 };

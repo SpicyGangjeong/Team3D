@@ -21,8 +21,8 @@ HRESULT CMission_Icon::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = -275.f;
-	Desc.fY = 145.f;
+	Desc.fX = -70.f;
+	Desc.fY = -20.f;
 	Desc.fSizeX = 60.f;
 	Desc.fSizeY = 60.f;
 
@@ -38,16 +38,22 @@ HRESULT CMission_Icon::Initialize(void* pArg)
 	}
 
 	m_fTimeMult = 3.f;
-	m_fAlpha = 0.f;
+	m_fAlpha = 1.f;
 	m_fAlphaTime = 3.f;
 	m_fMoveSpeed = 5.f;
 	m_fLerpX = m_fX;
+	m_fLerpY = 45;
 	m_fSortZ = 0.1f;
 	m_eQuestType = QUESTYPE::MAIN;
-	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Missiom_On"), [this]() {this->Set_FadeIn(); });
-	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Missiom_On"), [this]() {this->LerpOn(); });
-	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Missiom_Off"), [this]() {this->Set_FadeOut(); });
-	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Missiom_Off"), [this]() {this->LerpOff(); });
+	//static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Mission_SizeUp"), [this](void* p) {
+	//																		if (p == nullptr)
+	//																			return;
+	//																		_float fY = *reinterpret_cast<_float*>(p);
+	//																		this->Lerp_PosY(fY); });
+	//static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Mission_On"), [this] (void* p) {this->Set_FadeIn(); });
+	////static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Mission_On"), [this] (void* p) {this->LerpOn(); });
+	//static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Mission_Off"), [this](void* p) {this->Set_FadeOut(); });
+	//static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Mission_Off"), [this](void* p) {this->LerpOff(); });
 	m_iType = ENUM_CLASS(m_eQuestType);
 	return S_OK;
 }
@@ -59,25 +65,22 @@ void CMission_Icon::QuestType(QUESTYPE eType)
 
 void CMission_Icon::Priority_Update(_float fTimeDelta)
 {
-	if (!__super::Chack_Visible())
-	{
-		return;
-	}
 	__super::Priority_Update(fTimeDelta);
 }
 
 void CMission_Icon::Update(_float fTimeDelta)
 {
-	if (!__super::Chack_Visible())
-	{
-		return;
-	}
-
 	if (m_bFadeIn == true)
 	{
 		if (m_fAlpha <= 1.f)
+		{
 			m_fAlpha += fTimeDelta * m_fAlphaTime;
+		}
 
+		if (m_fAlpha >= 0.2f)
+		{
+			LerpOn();
+		}
 		if (m_fAlpha >= 1.f)
 		{
 			m_bFadeIn = false;
@@ -98,7 +101,6 @@ void CMission_Icon::Update(_float fTimeDelta)
 	}
 	if (m_bLerpOn == true)
 	{
-
 		Start_Lerp(m_fMoveSpeed);
 	}
 
@@ -113,14 +115,7 @@ void CMission_Icon::Update(_float fTimeDelta)
 
 void CMission_Icon::Late_Update(_float fTimeDelta)
 {
-	if (!__super::Chack_Visible())
-	{
-		return;
-	}
 	if (m_bVisible) {
-		if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
-			m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
-		}
 		__super::Late_Update(fTimeDelta);
 	}
 }
@@ -146,6 +141,21 @@ HRESULT CMission_Icon::Render()
 _vector CMission_Icon::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
+}
+
+void CMission_Icon::MoveX(_float fX)
+{
+	m_fX -= fX;
+}
+
+void CMission_Icon::MoveY(_float fY)
+{
+	m_fY -= fY;
+}
+
+void CMission_Icon::Lerp_PosY(_float fLerpY)
+{
+	m_fLerpY -= fLerpY;
 }
 
 HRESULT CMission_Icon::Bind_ShaderResources()

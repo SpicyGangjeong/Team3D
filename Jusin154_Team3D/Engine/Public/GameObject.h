@@ -8,6 +8,7 @@ NS_BEGIN(Engine)
 class ENGINE_DLL CGameObject abstract
 	: public CBase
 {
+
 protected:
 	CGameObject(ID3D11Device * pDevice, ID3D11DeviceContext * pContext);
 	CGameObject(const CGameObject& rhs);
@@ -25,7 +26,7 @@ public:
 	virtual _float Get_Depth(); // z 소팅 할 때 쓰시면 됨
 
 	// 내가 맞음 ( Collider_Manager가 부름 )
-	virtual void OnCollision(CGameObject* pOther = nullptr);
+	virtual void OnCollision(CGameObject* pOther = nullptr ,void* pDesc = nullptr);
 
 	// 내가 때림 ( 히트박스가 부름 )
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr);
@@ -39,7 +40,7 @@ public:
 	_uint	Get_CollisionID() const { return m_iCollisionID; }
 	_bool	Get_Visible() const { return m_bVisible; }
 	void	Set_Visible(_bool bValue) { m_bVisible = bValue; }
-	const CGameObject* Get_Owner() const { return m_pOwner; }
+	CGameObject* Get_Owner() const { return m_pOwner; }
 
 public:
 	HRESULT Add_Asset_Component(_uint iTargetLevel, const _wstring strPrototypeTag, CComponent** ppOut, void* pArg = nullptr);
@@ -109,7 +110,10 @@ protected:
 public:
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner = nullptr)PURE;
 	virtual void Free() override;
+#ifdef _DEBUG
 	virtual void Describe_Entity()PURE;
+#endif // _DEBUG
+
 };
 
 NS_END

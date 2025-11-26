@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Editor_Define.h"
 #include "Level.h"
@@ -19,7 +19,6 @@ private:
 	virtual HRESULT Initialize() override;
 	HRESULT Ready_Layer_Light();
 	HRESULT Ready_Layer_Camera(const _wstring& strLayerTag);
-	HRESULT Ready_Layer_Terrain(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_PhysXObjects(const _wstring& strLayerTag);
 
 

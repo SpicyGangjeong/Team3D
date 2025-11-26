@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "RenderTarget.h"
 
 #include "Shader.h"
@@ -73,12 +73,20 @@ void CRenderTarget::Copy_Resource(ID3D11Texture2D* pTexture2D)
 {
     m_pContext->CopyResource(pTexture2D, m_pTexture2D);
 }
+void CRenderTarget::Paste_Resource(ID3D11Texture2D* pTexture2D)
+{
+    m_pContext->CopyResource(m_pTexture2D, pTexture2D);
+}
+void CRenderTarget::Get_TextureDesc(D3D11_TEXTURE2D_DESC& Desc)
+{
+    m_pTexture2D->GetDesc(&Desc);
+}
 #ifdef _DEBUG
 
 void CRenderTarget::Ready_Debug()
 {
 
-    XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity()); // µð¹ö±× ¿ùµå ¸ÞÆ®¸¯½º ÃÊ±âÈ­
+    XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity()); // ë””ë²„ê·¸ ì›”ë“œ ë©”íŠ¸ë¦­ìŠ¤ ì´ˆê¸°í™”
 
     _uint		iNumViewports = { 1 };
 
@@ -109,7 +117,6 @@ _bool CRenderTarget::Render_Debug(CShader* pShader, CVIBuffer_Rect* pVIBuffer ,_
     m_WorldMatrix._22 = fSizeY;
     m_WorldMatrix._41 = fX - m_ptWindowSize.x * 0.5f;
     m_WorldMatrix._42 = -fY + m_ptWindowSize.y * 0.5f;
-
 
     if (FAILED(pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
         return false;

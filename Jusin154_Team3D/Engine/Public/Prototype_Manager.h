@@ -16,6 +16,7 @@
 #include "FSM.h"
 #include "State.h"
 #include "VIBuffer_UI_Instance.h"
+#include "Trail.h"
 
 
 NS_BEGIN(Engine)
@@ -76,7 +77,7 @@ public:
 	//만들고 선택할 시에 내 ppOut에 클론하는 기능을 담당
 
 	template<typename T>
-	_string Asset_Description(_uint iLevel, const _char* pComponentName, Engine::CComponent** ppOut, void* pDesc, class CGameObject* pOwner = nullptr, _wstring wstrGroupName = L"")
+	_string Asset_Description(_uint iLevel, const _char* pComponentName, CComponent** ppOut, void* pDesc, class CGameObject* pOwner = nullptr, _wstring wstrGroupName = L"")
 	{
 		vector<const _char*> pComponentNames = {};
 		vector<_string> strNames = {};

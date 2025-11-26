@@ -2,7 +2,7 @@
 #include "MapObject_LOD.h"
 
 #include "GameInstance.h"
-#include "DebugCamera.h"
+#include "Camera_Debug.h"
 #include "Layer.h"
 #include "Terrain.h"
 #include "VIBuffer_Terrain.h"
@@ -30,6 +30,7 @@ HRESULT CMapObject_LOD::Initialize(void* pArg)
 {
 	MAPOBJECT_LOD_DESC* pDesc = static_cast<MAPOBJECT_LOD_DESC*>(pArg);
 
+	//m_Type = static_cast<MAPOBJECT_RENDER_TYPE>(pDesc->iRenderType);
 	m_iMaxLodLevel = pDesc->iMaxLodLevel;
 
 	for (_uint i = 0; i < m_iMaxLodLevel + 1; i++)
@@ -55,6 +56,7 @@ HRESULT CMapObject_LOD::Initialize(void* pArg)
 	m_vScale = pDesc->vScale;
 	m_vRotation = pDesc->vRotation;
 
+	
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
 	m_pTransformCom->Set_Scale(m_vScale);
 	m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
@@ -65,9 +67,9 @@ HRESULT CMapObject_LOD::Initialize(void* pArg)
 	_matrix ColliderMatrix = XMMatrixTranslation(vOffset.x, vOffset.y, vOffset.z) * XMLoadFloat4x4(&m_CombinedWorldMatrix);
 	XMStoreFloat4(&m_vExtentPosition, ColliderMatrix.r[3]);
 
-	
 
-	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+	
+	//m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 
 
 	//m_pColliderCom->Update(ColliderMatrix);
@@ -85,20 +87,30 @@ void CMapObject_LOD::Priority_Update(_float fTimeDelta)
 
 void CMapObject_LOD::Update(_float fTimeDelta)
 {
-	//if (0 == m_iLodIndex)
-	//	m_bSelected = true;
+	/*if (0 == m_iLodIndex)
+		m_bSelected = true;*/
+
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
+	m_pTransformCom->Set_Scale(m_vScale);
+	m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
 }
 
 void CMapObject_LOD::Late_Update(_float fTimeDelta)
 {
 #ifdef _DEBUG
-	/*if (m_bSelected)
+	if (m_bSelected)
 	{
 		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
 		m_pTransformCom->Set_Scale(m_vScale);
 		m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
-	}*/
+	}
 #endif 
+	XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_XMWorldMatrix() * m_pParentTransformCom->Get_XMWorldMatrix());
+
+	_float3 vOffset = m_pModelComs[0]->Get_RadiusOffset();
+	_matrix ColliderMatrix = XMMatrixTranslation(vOffset.x, vOffset.y, vOffset.z) * XMLoadFloat4x4(&m_CombinedWorldMatrix);
+	XMStoreFloat4(&m_vExtentPosition, ColliderMatrix.r[3]);
+
 	_float fRaius = m_pModelComs[0]->Get_Radius();
 	if (m_pGameInstance->isIn_WorldFrustum(XMLoadFloat4(&m_vExtentPosition), fRaius)) {
 		
@@ -111,7 +123,20 @@ void CMapObject_LOD::Late_Update(_float fTimeDelta)
 		if (m_pGameInstance->Key_Pressing(DIK_Z))
 			m_iLodIndex = 0;
 
-		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+		switch (m_Type)
+		{
+		case Editor::MAPOBJECT_RENDER_TYPE::NORMAL:
+			m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+			break;
+
+		case Editor::MAPOBJECT_RENDER_TYPE::DECAL:
+			m_pGameInstance->Add_RenderGroup(RENDER::DECAL, this);
+			break;
+		case Editor::MAPOBJECT_RENDER_TYPE::GLASS:
+			break;
+		default:
+			break;
+		}
 	}
 }
 
@@ -125,14 +150,10 @@ HRESULT CMapObject_LOD::Render()
 
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
-		if (FAILED(m_pModelComs[0]->Bind_Material(i, m_pShaderCom, "g_DiffuseTexture", aiTextureType_DIFFUSE, 0))) {
+		if (FAILED(m_pModelComs[0]->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
 	
-		if (FAILED(m_pModelComs[0]->Bind_Material(i, m_pShaderCom, "g_NormalTexture", aiTextureType_NORMALS, 0))) {
-			return E_FAIL;
-		}
-
 		if (m_bSelected)
 		{
 			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::MAPTOOL)))) {
@@ -258,6 +279,9 @@ void CMapObject_LOD::Free()
 	for(auto& pModel : m_pModelComs)
 		SAFE_RELEASE(pModel);
 	m_pModelComs.clear();
+
+	m_ModelPrototypeTags.clear();
+	m_ModelPathIndices.clear();
 }
 
 void CMapObject_LOD::Describe_Entity()
@@ -281,7 +305,7 @@ void CMapObject_LOD::Describe_Entity()
 		CTerrain* pTerrain = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Terrain"))->Get_Object<CTerrain>();
 		if (nullptr != pTerrain)
 		{
-			pTerrain->Get_Component<CVIBuffer_Terrain>()->Picking(pTerrain->Get_Component<CTransform>(), m_vPosition);
+			pTerrain->Get_Component<CVIBuffer_Terrain>()->Picking(pTerrain->Get_Component<CTransform>()->Get_XMWorldMatrix(), &m_vPosition);
 		}
 
 	}

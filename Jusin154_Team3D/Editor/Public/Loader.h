@@ -29,12 +29,9 @@ private:
 	ID3D11DeviceContext* m_pContext = { nullptr };
 	LEVEL				m_eNextLevelID = { LEVEL::END };
 
-	HANDLE				m_hThread = {};
-
 	_wstring			m_strMessage = {};
 	_bool				m_isFinished = { false };
 
-	CRITICAL_SECTION	m_CriticalSection = {};
 
 	CGameInstance* m_pGameInstance = { nullptr };
 
@@ -48,10 +45,13 @@ private:
 	HRESULT Loading_For_UI();
 	HRESULT Loading_For_Effect();
 	HRESULT Loading_For_PhysXLevel();
+	HRESULT Loading_For_Bloom();
 
 private:
 	HRESULT Asset_FileLoad(const _char* pDirectoryPath, const _tchar* pPreName, function<HRESULT(_wstring, const _char*)> AddPrototypeEvent);
 	HRESULT MapFolderLoad(const _char* pDirectoryPath, const _char* pFileExt, _bool bUseTag, vector<_wstring>& ModelPrototypeTags, vector<filesystem::path>& ModelPrototypePath);
+	future<void> Deferred_FolderLoad(const _char* pDirectoryPath, const _char* pFileExt, _bool bUseTag, vector<FOLDER_LOAD*>** OutContents);
+	future<pair<_wstring, CModel*>*> Deferred_ModelLoad(MODEL eType, const _char* pDirectoryPath, _fmatrix PreTransform, const _tchar* pPrototypeTag);
 
 public:
 	static CLoader* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevelID);

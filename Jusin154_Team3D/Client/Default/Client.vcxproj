@@ -29,7 +29,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -110,7 +110,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>EDITOR_PROJECT;_DEBUG;_WINDOWS;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>../Public/;../../EngineSDK/Inc/;../../EngineSDK/Inc/DirectXTK/;../../EngineSDK/Inc/fMod/;../../EngineSDK/Inc/IMGUI/;../../EngineSDK/Inc/FX11/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -123,7 +123,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>../../EngineSDK/Lib/$(ConfigurationName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Engine.lib;fmod_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Engine.lib;fmod_vc.lib;DirectXTKd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -136,7 +136,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>EDITOR_PROJECT;NDEBUG;_WINDOWS;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>../Public/;../../EngineSDK/Inc/;../../EngineSDK/Inc/DirectXTK/;../../EngineSDK/Inc/fMod/;../../EngineSDK/Inc/IMGUI/;../../EngineSDK/Inc/FX11/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -157,29 +157,115 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\Bombard.h" />
+    <ClInclude Include="..\Public\Broom.h" />
+    <ClInclude Include="..\Public\CallBack_EffectHitBox_Behavior.h" />
+    <ClInclude Include="..\Public\CallBack_EffectHitBox_HitReport.h" />
+    <ClInclude Include="..\Public\CallBack_Monster_Behavior.h" />
+    <ClInclude Include="..\Public\CallBack_Monster_HitReport.h" />
+    <ClInclude Include="..\Public\CallBack_Playable_Behavior.h" />
+    <ClInclude Include="..\Public\CallBack_Playable_HitReport.h" />
+    <ClInclude Include="..\Public\Camera_Debug.h" />
+    <ClInclude Include="..\Public\Camera_Gaze.h" />
+    <ClInclude Include="..\Public\CamPosition.h" />
+    <ClInclude Include="..\Public\CamPosition_Arm.h" />
+    <ClInclude Include="..\Public\CamPosition_Shoulder.h" />
+    <ClInclude Include="..\Public\CamPosition_Socket.h" />
+    <ClInclude Include="..\Public\CamPosition_Target.h" />
     <ClInclude Include="..\Public\Client_Define.h" />
     <ClInclude Include="..\Public\Client_Enum.h" />
     <ClInclude Include="..\Public\Client_Macro.h" />
+    <ClInclude Include="..\Public\Goblin.h" />
+    <ClInclude Include="..\Public\Monster.h" />
+    <ClInclude Include="..\Public\PhysXEffectHitBox.h" />
+    <ClInclude Include="..\Public\Dummy_PhysXPlayable.h" />
+    <ClInclude Include="..\Public\Dummy_PhysXWall.h" />
+    <ClInclude Include="..\Public\EffectParts.h" />
+    <ClInclude Include="..\Public\EffectObject.h" />
+    <ClInclude Include="..\Public\Effect_Container.h" />
+    <ClInclude Include="..\Public\NomalJap.h" />
+    <ClInclude Include="..\Public\SkyBox.h" />
+    <ClInclude Include="..\Public\InfoInstance.h" />
+    <ClInclude Include="..\Public\Level_Field.h" />
     <ClInclude Include="..\Public\Level_GamePlay.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
     <ClInclude Include="..\Public\Level_Logo.h" />
+    <ClInclude Include="..\Public\Level_Restart.h" />
+    <ClInclude Include="..\Public\Light_Main.h" />
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\Public\MainApp.h" />
+    <ClInclude Include="..\Public\MapInfo.h" />
+    <ClInclude Include="..\Public\MonsterInfo.h" />
+    <ClInclude Include="..\Public\Player.h" />
+    <ClInclude Include="..\Public\PlayerInfo.h" />
+    <ClInclude Include="..\Public\State_Combat.h" />
+    <ClInclude Include="..\Public\State_Dodge.h" />
+    <ClInclude Include="..\Public\State_Idle.h" />
+    <ClInclude Include="..\Public\State_Jump.h" />
+    <ClInclude Include="..\Public\State_Land.h" />
+    <ClInclude Include="..\Public\State_Move.h" />
+    <ClInclude Include="..\Public\State_Root.h" />
+    <ClInclude Include="..\Public\TrailObject.h" />
+    <ClInclude Include="..\Public\Wand.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\Bombard.cpp" />
+    <ClCompile Include="..\Private\Broom.cpp" />
+    <ClCompile Include="..\Private\CallBack_EffectHitBox_Behavior.cpp" />
+    <ClCompile Include="..\Private\CallBack_EffectHitBox_HitReport.cpp" />
+    <ClCompile Include="..\Private\CallBack_Monster_Behavior.cpp" />
+    <ClCompile Include="..\Private\CallBack_Monster_HitReport.cpp" />
+    <ClCompile Include="..\Private\CallBack_Playable_Behavior.cpp" />
+    <ClCompile Include="..\Private\CallBack_Playable_HitReport.cpp" />
+    <ClCompile Include="..\Private\Camera_Debug.cpp" />
+    <ClCompile Include="..\Private\Camera_Gaze.cpp" />
+    <ClCompile Include="..\Private\CamPosition.cpp" />
+    <ClCompile Include="..\Private\CamPosition_Arm.cpp" />
+    <ClCompile Include="..\Private\Goblin.cpp" />
+    <ClCompile Include="..\Private\Goblin_States.cpp" />
+    <ClCompile Include="..\Private\Monster.cpp" />
+    <ClCompile Include="..\Private\PhysXEffectHitBox.cpp" />
+    <ClCompile Include="..\Private\CamPosition_Shoulder.cpp" />
+    <ClCompile Include="..\Private\CamPosition_Socket.cpp" />
+    <ClCompile Include="..\Private\CamPosition_Target.cpp" />
+    <ClCompile Include="..\Private\Dummy_PhysXPlayable.cpp" />
+    <ClCompile Include="..\Private\Dummy_PhysXWall.cpp" />
+    <ClCompile Include="..\Private\EffectParts.cpp" />
+    <ClCompile Include="..\Private\EffectObject.cpp" />
+    <ClCompile Include="..\Private\Effect_Container.cpp" />
+    <ClCompile Include="..\Private\NomalJap.cpp" />
+    <ClCompile Include="..\Private\Player_States.cpp" />
+    <ClCompile Include="..\Private\SkyBox.cpp" />
+    <ClCompile Include="..\Private\InfoInstance.cpp" />
+    <ClCompile Include="..\Private\Level_Field.cpp" />
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />
     <ClCompile Include="..\Private\Level_Logo.cpp" />
+    <ClCompile Include="..\Private\Level_Restart.cpp" />
+    <ClCompile Include="..\Private\Light_Main.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />
+    <ClCompile Include="..\Private\MapInfo.cpp" />
+    <ClCompile Include="..\Private\MonsterInfo.cpp" />
     <ClCompile Include="..\Private\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\Private\Player.cpp" />
+    <ClCompile Include="..\Private\PlayerInfo.cpp" />
+    <ClCompile Include="..\Private\State_Combat.cpp" />
+    <ClCompile Include="..\Private\State_Dodge.cpp" />
+    <ClCompile Include="..\Private\State_Idle.cpp" />
+    <ClCompile Include="..\Private\State_Jump.cpp" />
+    <ClCompile Include="..\Private\State_Land.cpp" />
+    <ClCompile Include="..\Private\State_Move.cpp" />
+    <ClCompile Include="..\Private\State_Root.cpp" />
+    <ClCompile Include="..\Private\TrailObject.cpp" />
+    <ClCompile Include="..\Private\Wand.cpp" />
     <ClCompile Include="Client.cpp" />
   </ItemGroup>
   <ItemGroup>

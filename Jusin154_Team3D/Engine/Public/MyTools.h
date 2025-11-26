@@ -37,7 +37,7 @@ public:
 		return XMVectorSet(r, g, b, a);
 	}
 #pragma endregion
-
+#pragma region String
 	// wstring --> string 변환
 	static _string ToString(const _wstring& var)
 	{
@@ -64,6 +64,16 @@ public:
 		return wstrTo;
 	}
 
+	// source에 keyword가 있는지 검사
+	static _bool ContainsString(const char* source, const char* keyword) {
+		if (!source || !keyword || *keyword == '\0') {
+			return false;
+		}
+		return (strstr(source, keyword) != nullptr);
+	}
+
+#pragma endregion
+#pragma region Mathematics
 	// ratio로 현재 value 가져오기
 	static _float Lerp_f1D(_float fA, _float fB, _float fRatio)
 	{
@@ -76,7 +86,6 @@ public:
 		if (fA == fB) return 0.0f;
 		return (fValue - fA) / (fB - fA);
 	}
-
 	
 	// A -> B, A- >C의 외적이 업벡터 방향으로 외적되도록 B C를 교정
 	static void CorrectTriangleToUpHead(_float3& dotA, _float3& dotB, _float3& dotC) {
@@ -89,7 +98,7 @@ public:
 		}
 	}
 
-	// dx9에 있던 그거
+	// dx9에 있던 IntersectTri
 	static _bool IntersectTri(
 		const _fvector& vPos, const _fvector& vDir,
 		const _fvector& vertexA, const _gvector& vertexB, const _hvector& vertexC,
@@ -116,24 +125,12 @@ public:
 		return t >= 0.f;
 	}
 
-	// source에 keyword가 있는지 검사
-	static _bool ContainsString(const char* source, const char* keyword) {
-		if (!source || !keyword || *keyword == '\0') {
-			return false;
-		}
-		return (strstr(source, keyword) != nullptr);
-	}
-
 	// 매트릭스 럴프
 	static void MatrixLerp(	_In_ _float4x4* pMatOrigin, // Origin -> 0
 							_In_ _float4x4* pMatTarget, // Target -> 1
 							_Out_ _float4x4& matOut, _float fRatio) {
-		if (0.f > fRatio) {
-			fRatio = 0.f;
-		}
-		if (1.f < fRatio) {
-			fRatio = 1.f;
-		}
+		fRatio = Saturate(fRatio);
+
 		_vector vTargetScale{}, vTargetRotq{}, vTargetTrans{};
 		_vector vOriginScale{}, vOriginRotq{}, vOriginTrans{};
 		XMMatrixDecompose(&vTargetScale, &vTargetRotq, &vTargetTrans, XMLoadFloat4x4(pMatTarget));
@@ -154,7 +151,7 @@ public:
 		return XMVectorGetX(XMVector3Dot(vNormalA, vNormalB));
 	}
 
-	// hlsl에 있는 Saturate 그거임
+	// hlsl에 있는 Saturate 
 	static _float Saturate(_float fValue) {
 		if (fValue > 1.f) {
 			fValue = 1.f;
@@ -178,9 +175,10 @@ public:
 		return fRadian;
 	}
 
+	// 입력라디안에서 출력라디안까지 로테이션 스피드만큼 돌려주고 보정해서 SrcRadian에 넣어줌
 	inline static void	 RotateRadianTowards(_float& fSrcRadian, const _float& fDstRadian, _float fRotateSpeed) {
-		_float fDiffRadian = fmodf(fSrcRadian - fDstRadian, 2 * XM_PI);
-		if (fDiffRadian < 0) fDiffRadian += 2 * XM_PI;
+		_float fDiffRadian = fmodf(fSrcRadian - fDstRadian, XM_2PI);
+		if (fDiffRadian < 0) fDiffRadian += XM_2PI;
 
 		if (fDiffRadian < (fRotateSpeed * XM_PI) / 180.f) {
 			fSrcRadian = fDstRadian;
@@ -193,7 +191,76 @@ public:
 			fSrcRadian += (fRotateSpeed * XM_PI) / 180.f;
 		}
 	}
+	
+	// 2D 평면에 사상된 방향을 교정해서 리턴
+	// float -> Radian값
+	// -, + 
+	inline static _float Get_Direction2D(_float2 vOrigianlDir, _float2 vInputDir) {
+		_vector vOriginal	= XMVector2Normalize(XMLoadFloat2(&vOrigianlDir));
+		_vector vInput		= XMVector2Normalize(XMLoadFloat2(&vInputDir));
+		
+		_float fDiffAngle	= XMVectorGetX(XMVector2AngleBetweenNormals(vOriginal, vInput));
+		_float fCross		= XMVectorGetZ(XMVector2Cross(vOriginal, vInput));
 
+		return fDiffAngle * (fCross < 0 ? -1.f : 1.f);
+	}
+	// yaw 360도 자동 커트
+	// pitch 80도 클램프
+	inline static void AdjustAccumulateDegreePitchYawDegree(_float2& vAccumulateDegreePitchYaw, float fPitchLimitDegree = 80.f)
+	{
+		if (vAccumulateDegreePitchYaw.y > 360.f)
+		{
+			vAccumulateDegreePitchYaw.y -= 360.f;
+		}
+		else if (vAccumulateDegreePitchYaw.y < -360.f)
+		{
+			vAccumulateDegreePitchYaw.y += 360.f;
+		}
+
+		if (vAccumulateDegreePitchYaw.x > fPitchLimitDegree)
+		{
+			vAccumulateDegreePitchYaw.x = fPitchLimitDegree;
+		}
+		else if (vAccumulateDegreePitchYaw.x < -fPitchLimitDegree)
+		{
+			vAccumulateDegreePitchYaw.x = -fPitchLimitDegree;
+		}
+	}
+
+	// yaw 360도 자동 커트
+	// pitch 80도 클램프
+	inline void AdjustAccumulateDegreePitchYawRadian(_float2& vAccumulateRadianPitchYaw, float fPitchLimitRadian = XMConvertToRadians(80.f))
+	{
+		if (vAccumulateRadianPitchYaw.y > XM_PI)
+		{
+			vAccumulateRadianPitchYaw.y -= XM_PI;
+		}
+		else if (vAccumulateRadianPitchYaw.y < -XM_PI)
+		{
+			vAccumulateRadianPitchYaw.y += XM_PI;
+		}
+
+		if (vAccumulateRadianPitchYaw.x > fPitchLimitRadian)
+		{
+			vAccumulateRadianPitchYaw.x = fPitchLimitRadian;
+		}
+		else if (vAccumulateRadianPitchYaw.x < -fPitchLimitRadian)
+		{
+			vAccumulateRadianPitchYaw.x = -fPitchLimitRadian;
+		}
+	}
+
+
+	inline static _uint AlphabetToInt(_tchar Alphabet)
+	{
+		Alphabet = towupper(Alphabet);
+
+		if (Alphabet < 'A' || Alphabet > 'Z')
+			return 0;
+
+		return (Alphabet - 'A');
+	}
+#pragma endregion
 #pragma region FileSystem
 	//static void Folder_Func(/* 재귀적으로 탐색할지		*/	_In_	_bool											bRecursive,
 	//						/* 탐색할 폴더 경로			*/	_In_	const _wstring&									TargetPath,

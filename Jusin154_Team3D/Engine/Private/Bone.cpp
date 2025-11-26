@@ -5,6 +5,16 @@ CBone::CBone()
 {
 }
 
+CBone::CBone(const CBone& other):
+	CBase()
+{
+	memcpy_s(m_szName, sizeof(_char) * MAX_PATH, other.m_szName, sizeof(_char) * MAX_PATH);
+	m_TransformationMatrix = other.m_TransformationMatrix;
+	m_CombinedTransformationMatrix = other.m_CombinedTransformationMatrix;
+	m_iParentBoneIndex = other.m_iParentBoneIndex;
+	m_matInitial = other.m_matInitial;
+}
+
 void CBone::Get_KeyFrame(KEYFRAME& kf, _bool bIsCurrentFrame)
 {
 	_vector vScale = {};
@@ -69,18 +79,6 @@ CBone* CBone::Create(const aiNode* pAINode, _int iParentIndex)
 	return pInstance;
 }
 
-CBone* CBone::Create(const SaveNode& _SaveNode, _int iParentIndex)
-{
-	CBone* pInstance = new CBone();
-
-	if (FAILED(pInstance->Initialize(_SaveNode, iParentIndex)))
-	{
-		MSG_BOX("Failed to Created : CBone");
-		SAFE_RELEASE(pInstance);
-	}
-
-	return pInstance;
-}
 
 HRESULT CBone::Initialize(const aiNode* pAINode, _int iParentIndex)
 {
@@ -97,6 +95,18 @@ HRESULT CBone::Initialize(const aiNode* pAINode, _int iParentIndex)
 }
 #endif
 
+CBone* CBone::Create(const SaveNode& _SaveNode, _int iParentIndex)
+{
+	CBone* pInstance = new CBone();
+
+	if (FAILED(pInstance->Initialize(_SaveNode, iParentIndex)))
+	{
+		MSG_BOX("Failed to Created : CBone");
+		SAFE_RELEASE(pInstance);
+	}
+
+	return pInstance;
+}
 
 HRESULT CBone::Initialize(HANDLE hFile, DWORD& dwByte)
 {

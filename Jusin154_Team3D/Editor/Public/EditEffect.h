@@ -6,6 +6,7 @@
 NS_BEGIN(Engine)
 class CModel;
 class CShader;
+
 NS_END
 
 NS_BEGIN(Editor)
@@ -25,6 +26,7 @@ public:
 public:
 	void	Reference_Mat_For_EditEffect();
 	HRESULT Save_Effect(const _char* pPath);
+	HRESULT Save_Path(HANDLE hFile);
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -32,6 +34,13 @@ private:
 
 private:
 	_int			m_iSelectTextureNum = {};
+	vector<_float>	m_ValueVector = {};
+	_float			m_fInputValue = {};
+
+	_bool			m_isGoStraight = {};
+	_float          m_fAccTime = {};
+	_int			m_iSign = { 1 };
+
 public:
 	static CEditEffect* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

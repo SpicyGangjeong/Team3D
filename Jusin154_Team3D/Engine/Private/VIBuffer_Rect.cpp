@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "VIBuffer_Rect.h"
 
 CVIBuffer_Rect::CVIBuffer_Rect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -128,7 +128,10 @@ void CVIBuffer_Rect::Free()
 
 
 }
+#ifdef _DEBUG
 
 void CVIBuffer_Rect::Describe_Entity()
 {
 }
+
+#endif // _DEBUG

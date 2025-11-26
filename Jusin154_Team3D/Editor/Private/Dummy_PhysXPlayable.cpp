@@ -1,6 +1,13 @@
 ﻿#include "pch.h"
 #include "Dummy_PhysXPlayable.h"
+#include "Dummy_PhysXEffectHitBox.h"
 #include "GameInstance.h"
+
+#include "NomalJap.h"
+#include "Bombard.h"
+
+#include "TrailObject.h"
+#include "Decendo.h"
 
 CDummy_PhysXPlayable::CDummy_PhysXPlayable(ID3D11Device* pDevice, ID3D11DeviceContext* pContext):
 	CGameObject(pDevice, pContext)
@@ -48,6 +55,7 @@ void CDummy_PhysXPlayable::Update(_float fTimeDelta)
 			m_pGameInstance->Attach_Actor(*m_pCharacter_Controller->Get_Actor());
 		}
 	}
+
 	m_pTransformCom->AccumulateMomentum(XMVectorSet(0.f, -GRAVITY * fTimeDelta, 0.f, 0.f));
 	m_pCharacter_Controller->Move(fTimeDelta);
 }
@@ -102,6 +110,7 @@ HRESULT CDummy_PhysXPlayable::Initialize(void* pArg)
 
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
+
 
 	return S_OK;
 }

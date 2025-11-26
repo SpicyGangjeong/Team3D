@@ -1,5 +1,5 @@
 ﻿
-xcopy			/y/s	.\Engine\Public\*.*					.\EngineSDK\Inc\
+xcopy			/y /s	.\Engine\Public\*.*					.\EngineSDK\Inc\
 
 xcopy			/y		.\Engine\Bin\Debug\Engine.dll				.\Client\Bin\Debug\
 xcopy			/y		.\Engine\Bin\Release\Engine.dll				.\Client\Bin\Release\
@@ -53,3 +53,5 @@ xcopy			/y		.\Engine\ThirdPartyLib\Assimp\assimp-vc145-mt.lib				.\EngineSDK\Lib
 
 xcopy			/y		.\Engine\ThirdPartyLib\fMod\fmod_vc.lib				.\EngineSDK\Lib\Debug\
 xcopy			/y		.\Engine\ThirdPartyLib\fMod\fmod_vc.lib				.\EngineSDK\Lib\Release\
+
+xcopy			/y		.\Engine\ThirdPartyLib\DirectXTK\DirectXTKd.lib				.\EngineSDK\Lib\Debug\

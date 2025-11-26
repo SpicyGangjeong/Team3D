@@ -2,7 +2,7 @@
 #include "MapObject_Manager.h"
 
 #include "GameInstance.h"
-#include "DebugCamera.h"
+#include "Camera_Debug.h"
 #include "Layer.h"
 #include "MapObject.h"
 #include "MapObject_LOD.h"
@@ -28,8 +28,7 @@ CMapObject_Manager::CMapObject_Manager(const CMapObject_Manager& rhs)
 
 HRESULT CMapObject_Manager::Initialize_Prototype(vector<_wstring>& ModelPrototypeTags, vector<filesystem::path>& ModelPrototypePaths)
 {
-	//for (auto& Tag : ModelPrototypeTags)
-	for (_uint i = 0 ; i < ModelPrototypeTags.size(); ++i)
+	/*for (_uint i = 0 ; i < ModelPrototypeTags.size(); ++i)
 	{
 		if (_wstring::npos != ModelPrototypeTags[i].find(L"Lod"))
 		{
@@ -42,7 +41,7 @@ HRESULT CMapObject_Manager::Initialize_Prototype(vector<_wstring>& ModelPrototyp
 
 		m_ModelPrototypeTags.push_back(ModelPrototypeTags[i]);
 		m_ModelPrototypePaths.push_back(ModelPrototypePaths[i]);
-	}
+	}*/
 
 	return S_OK;
 }
@@ -474,11 +473,22 @@ HRESULT CMapObject_Manager::Save_ContainerData(const _char* pFileName, const _ch
 
 		PartObject->SetAttribute("Lod_Level", iLodLvel);
 		PartObject->SetAttribute("Key_Index", pMapObject->Get_iKeyIndex());
+
+		/* Set Render Type*/
+		_wstring ProrotypeTag = pMapObject->Get_PrototypeTag(0);
+
+		if(_wstring::npos != ProrotypeTag.find(L"decal") || _wstring::npos != ProrotypeTag.find(L"Decal"))
+			PartObject->SetAttribute("Render_Type", 1);
+		else if(_wstring::npos != ProrotypeTag.find(L"glass") || _wstring::npos != ProrotypeTag.find(L"Glass"))
+			PartObject->SetAttribute("Render_Type", 2);
+		else
+			PartObject->SetAttribute("Render_Type", 0);
+
 		container->InsertEndChild(PartObject);
 
 		for (_uint i = 0; i < pMapObject->Get_LodLevel() + 1; ++i)
 		{
-			// <PrototypeTag>ÅØ½ºÆ®</PrototypeTag>
+			// <PrototypeTag>ProrotypeTag</PrototypeTag>
 			tinyxml2::XMLElement* proto = doc.NewElement("PrototypeTag");
 			proto->SetText(CMyTools::ToString(pMapObject->Get_PrototypeTag(i)).c_str());
 			PartObject->InsertEndChild(proto);
@@ -1338,7 +1348,7 @@ void CMapObject_Manager::Update_ContainerObject()
 
 		for (auto& pObject : (*pList))
 		{
-			if (GUI::Button((dynamic_cast<CMapContainer*>(pObject)->Get_Name().c_str())))
+			if (GUI::Button((dynamic_cast<CMapContainer*>(pObject)->Get_Name() + to_string(iIndex)).c_str()))
 			{
 				m_iContainerObjectIndex = iIndex;
 			}

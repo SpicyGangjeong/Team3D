@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "Editor_Define.h"
-#include "ContainerObject.h"
+#include "Effect_Container.h"
 
 NS_BEGIN(Engine)
 class CModel;
@@ -10,7 +10,7 @@ NS_END
 
 NS_BEGIN(Editor)
 
-class CEffect_Editor final : public CContainerObject
+class CEffect_Editor final : public CEffect_Container
 {
 private:
 	CEffect_Editor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -41,11 +41,17 @@ private:
 	_string												 m_strCurrentEffectName = {};
 
 	_uint												 m_iNumPart = { 0 };
-	class CEditEffect*									 m_pEditEffect = { nullptr };
+	class CEditEffect*									 m_pEditEffect = { nullptr }; // 현재 선택된 이펙트 객체
+	class CTrailObject*									 m_pTrailObject = { nullptr };
 	map<_wstring, vector<pair<_wstring, _wstring>>>		 m_MatFiles = {}; // map<머테리얼 이름, vector<텍스쳐이름 , 텍스쳐 경로>>
 
 	_char												 m_szBuffer[MAX_PATH] = { "../Bin/Resources/Data/Effect/"};
+	_char												 m_szTrailBuffer[MAX_PATH] = { "../Bin/Resources/Data/Effect/Trail/" };
+	_char												 m_szPackageBuffer[MAX_PATH] = { "../Bin/Resources/Data/Effect/" };
+
 	_string												 m_strSavePath = {};
+	_string												 m_strTrailSavePath = {};
+	_string												 m_strPackageSavePath = {};
 
 public:
 	static CEffect_Editor* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -165,7 +165,9 @@ void CCollider::Free()
 
 	SAFE_RELEASE(m_pBounding);
 }
+#ifdef _DEBUG
 
 void CCollider::Describe_Entity()
 {
 }
+#endif // _DEBUG

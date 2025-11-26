@@ -4,8 +4,15 @@
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 float g_fFar;
+float g_fUsingSurfaceParams;
 
 Texture2D g_DiffuseTexture;
+Texture2D g_NormalTexture;
+Texture2D g_SurfaceParamsTexture;
+Texture2D g_DiffuseTextures[4];
+Texture2D g_NormalTextures[4];
+Texture2D g_SurfaceParamsTextures[4];
+Texture2D g_MaskTexture;
 
 struct VS_IN
 {
@@ -51,24 +58,68 @@ struct PS_IN
 
 struct PS_OUT
 {
-    float4 vDiffuse : SV_TARGET0;
-    float4 vNormal : SV_TARGET1;
-    float4 vDepth : SV_TARGET2;
+        float4 vAlbedo : SV_TARGET0;
+        float4 vNormal : SV_TARGET1;
+        float4 vDepth : SV_TARGET2;
+        float4 vColor : SV_Target3;
+        float4 vSurface : SV_Target4;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out;
+
+    float2 tileUV = In.vWorldPos.xz / 16.f;
     
-    vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord * 30.f);
-    if (vMtrlDiffuse.a < 0.4f)
-    {
-        discard;
-    }
-    Out.vDiffuse = vMtrlDiffuse;
+    vector vMask = g_MaskTexture.Sample(DefaultSampler, In.vTexcoord);
+
+    vector vMtrlDiffuse_0 = g_DiffuseTextures[0].Sample(DefaultSampler, tileUV);
+    vector vMtrlDiffuse_1 = g_DiffuseTextures[1].Sample(DefaultSampler, tileUV);
+    vector vMtrlDiffuse_2 = g_DiffuseTextures[2].Sample(DefaultSampler, tileUV);
+    vector vMtrlDiffuse_3 = g_DiffuseTextures[3].Sample(DefaultSampler, tileUV);
     
-    Out.vNormal = float4(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
-    Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.0f, 1.0f);
+    vector vMtrlDiffuse = float4(float3(vMtrlDiffuse_0.xyz * vMask.r +
+                            vMtrlDiffuse_1.xyz * vMask.g +
+                            vMtrlDiffuse_2.xyz * vMask.b + 
+                            vMtrlDiffuse_3.xyz * vMask.a), 1.f);
+    
+    vector vSurface_0 = g_SurfaceParamsTextures[0].Sample(DefaultSampler, tileUV);
+    vector vSurface_1 = g_SurfaceParamsTextures[1].Sample(DefaultSampler, tileUV);
+    vector vSurface_2 = g_SurfaceParamsTextures[2].Sample(DefaultSampler, tileUV);
+    vector vSurface_3 = g_SurfaceParamsTextures[3].Sample(DefaultSampler, tileUV);
+    
+    vector vSurface = (vSurface_0 * vMask.r +
+                        vSurface_1 * vMask.g +
+                        vSurface_2 * vMask.b + 
+                        vSurface_3 * vMask.a);
+    
+    float3 vNormalDecoded_0 = DecodeNormalFromRG(g_NormalTextures[0], DefaultSampler, tileUV);
+    float3 vNormalDecoded_1 = DecodeNormalFromRG(g_NormalTextures[1], DefaultSampler, tileUV);
+    float3 vNormalDecoded_2 = DecodeNormalFromRG(g_NormalTextures[2], DefaultSampler, tileUV);
+    float3 vNormalDecoded_3 = DecodeNormalFromRG(g_NormalTextures[3], DefaultSampler, tileUV);
+    
+    float3 vNormalDecoded = normalize(vNormalDecoded_0.xyz * vMask.r +
+                            vNormalDecoded_1.xyz * vMask.g + 
+                               vNormalDecoded_1.xyz * vMask.b +
+                             vNormalDecoded_1.xyz * vMask.a);
+    
+    float3 vBinormal = cross(In.vNormal.xyz, float3(1.f, 0.f, 0.f));
+    
+    float3 vTangent = cross(vBinormal, In.vNormal.xyz);
+    
+    float3x3 WorldMatrix = float3x3(vTangent, vBinormal, In.vNormal.xyz);
+    
+    float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
+    
+    Out.vAlbedo = vMtrlDiffuse;
+    Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
+    (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
+    g_fUsingSurfaceParams, // 서페이스 파라미터
+    1.f);
+    Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
+    Out.vSurface = vSurface;
+    
     return Out;
 }
 

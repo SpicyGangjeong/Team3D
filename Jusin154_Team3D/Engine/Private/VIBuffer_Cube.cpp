@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "VIBuffer_Cube.h"
 
 CVIBuffer_Cube::CVIBuffer_Cube(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -273,7 +273,10 @@ void CVIBuffer_Cube::Free()
 
 
 }
+#ifdef _DEBUG
 
 void CVIBuffer_Cube::Describe_Entity()
 {
 }
+
+#endif // _DEBUG

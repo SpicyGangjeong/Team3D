@@ -1,5 +1,6 @@
 
 #include "Engine_Shader_Defines.hlsli"
+#include "Engine_Shader_Functions.hlsli"
 
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 Texture2D g_DepthTexture;
@@ -13,7 +14,44 @@ uint    g_iIndexV;
 Texture2D g_Texture;
 Texture2D g_DiffuseTexture;
 Texture2D g_MaskingTexture;
+Texture2D g_NoiseTexture;
+Texture2D g_DistortionTexture;
 
+/* 디퓨즈 */
+bool    g_isDiffuse;
+float   g_fDiffuseAlpha;
+float4  g_vColor;
+
+/* 마스크 */
+bool g_isMask;
+float g_fSoftMaskEdge;
+float g_fSoftMask;
+
+/* 노이즈 */
+bool    g_isNoise;
+bool    g_isNoiseColor;
+bool    g_isNoiseAlpha;
+float   g_fNoiseStrength;
+
+/* 디스토션 */
+
+bool    g_isDistortion;
+float2  g_vDistortionTime;
+float2  g_vDiffuseDistortionUVGainAmount;
+float2  g_vMaskDistortionUVGainAmount;
+float   g_fDistortionIntensity; // 디스토션 왜곡 세기
+
+/* 이미시브 */
+float4  g_vEmissive;
+float   g_fEmissiveStrength;
+float   g_fSoftenExp;
+float   g_fSoftStrength;
+float   g_fCoreBoost;
+float   g_fRadius;
+
+/*  블러  */
+float   g_fBlurIntensity;
+float   g_iBlurWeight;
 
 struct VS_IN
 {
@@ -25,27 +63,55 @@ struct VS_OUT
 {
     float4 vPosition : SV_Position;
     float2 vTexcoord : TEXCOORD0;
+    float4 vProjPos : TEXCOORD1;
 };
 
 VS_OUT VS_MAIN(VS_IN In)
 {
     VS_OUT Out;
     
-    
+
+
     matrix matWV, matWVP;
     matWV = mul(g_WorldMatrix, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
     
+        
+    vector vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    
     Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
     Out.vTexcoord = In.vTexcoord;
+    Out.vProjPos = vPosition;
     
     return Out;
+}
+
+VS_OUT VS_TRAIL(VS_IN In)
+{
+    VS_OUT Out;
+    
+    
+    matrix matWVP;
+    
+    matWVP = mul(g_ViewMatrix , g_ProjMatrix); //월드행렬 곱해져서 오기때문에 월드 곱하지 않음
+
+   
+    vector vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    
+    Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    Out.vTexcoord = In.vTexcoord;
+    Out.vProjPos = vPosition;
+    
+    
+    return Out;
+    
 }
 
 struct PS_IN
 {
     float4 vPosition : SV_Position;
     float2 vTexcoord : TEXCOORD0;
+    float4 vProjPos : TEXCOORD1;
 };
 
 struct PS_OUT
@@ -72,17 +138,278 @@ PS_OUT PS_UVMove(PS_IN In)
 
     return Out;
 }
-PS_OUT PS_Trail(PS_IN In)
+
+
+struct PS_TRAILOUT
 {
-    PS_OUT Out;
+    float4 vDiffuse : SV_TARGET0;
+    float4 vRevealage : SV_TARGET1;
+    float4 vColorTarget : SV_TARGET2;
+};
+
+PS_TRAILOUT PS_Trail(PS_IN In)
+{
+    PS_TRAILOUT Out;
     
-    vector vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-    vector vMasking = g_MaskingTexture.Sample(DefaultSampler, In.vTexcoord);
+    vector vMtrlDiffuse;
+    vector vMtrlMask;
+    vector vMtrlNoise;
+    vector vMtrlDistortion;
     
-    vDiffuse.a = vDiffuse.a * vMasking.r;
-    Out.vColor = vDiffuse;
-    Out.vColor.a *= In.vTexcoord.x;
-    clip(Out.vColor.a - 0.01f);
+    /* 디퓨즈 */
+    
+    if (g_isDiffuse == true)
+    {
+        float2 vDiffuseTexcoord = In.vTexcoord;
+            
+        /*  디퓨즈 디스토션 */
+        if (g_isDistortion == true)
+        {
+            float2 vDistortion = In.vTexcoord + SelectLerpUV(g_vDiffuseDistortionUVGainAmount, (g_vDistortionTime.x / g_vDistortionTime.y), 0);
+            
+            vMtrlDistortion = g_DistortionTexture.Sample(DefaultSampler, vDistortion);
+
+            //0.5f를 빼는 이유는 중심을 0으로 옮겨서 양음수 방향으로 offset을 줄수 있다.
+            vMtrlDistortion.rg -= 0.5f;
+                        
+            
+            //디스토션(노이즈) 텍스쳐로 uv를 왜곡함
+
+            vDiffuseTexcoord = vDiffuseTexcoord + (vMtrlDistortion).rg * g_fDistortionIntensity;
+            
+        }
+        
+        vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, vDiffuseTexcoord);
+        
+        
+        vMtrlDiffuse.a *= g_fDiffuseAlpha;
+        
+        if (g_vColor.a > 0)
+            vMtrlDiffuse += g_vColor;
+    }
+    else
+        vMtrlDiffuse = g_vColor;
+    
+    /* 노이즈 */
+    
+    if (g_isNoise == true)
+    {
+        vMtrlNoise = g_NoiseTexture.Sample(DefaultSampler, In.vTexcoord);
+       
+        if (g_isNoiseAlpha)
+            vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * vMtrlNoise.r) * g_fNoiseStrength;
+        
+        if (g_isNoiseColor)
+            vMtrlDiffuse.rgb *= vMtrlNoise.rgb * g_fNoiseStrength;
+        
+    }
+    
+
+    /* 마스크 */
+    
+    if (g_isMask == true)
+    {
+        float2 vMaskTexcoord = In.vTexcoord;
+        
+        // 마스크 디스토션 
+        if (g_isDistortion == true)
+        {
+            float2 vDistortionUV = In.vTexcoord + SelectLerpUV(g_vMaskDistortionUVGainAmount, (g_vDistortionTime.x / g_vDistortionTime.y), 0);
+            
+            vMtrlDistortion = g_DistortionTexture.Sample(DefaultSampler, vDistortionUV);
+            
+            //디스토션(노이즈) 텍스쳐로 uv를 왜곡함
+            vMaskTexcoord = vMaskTexcoord + (vMtrlDistortion - 0.5f).r * g_fDistortionIntensity;
+
+            vMaskTexcoord = saturate(vMaskTexcoord);
+        }
+        
+        vMtrlMask = g_MaskingTexture.Sample(DefaultSampler, vMaskTexcoord);
+        
+        float fSoftMask;
+    
+        if (g_fSoftMask > FLT_EPSILON5)
+            fSoftMask = saturate((vMtrlMask.r - g_fSoftMaskEdge) * g_fSoftMask);
+        else
+            fSoftMask = vMtrlMask.r;
+    
+        vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * fSoftMask);
+    } 
+    else
+        vMtrlMask.r = 1.f;
+    
+
+
+    
+    /* 디퓨즈 알파 컷*/
+    if (vMtrlDiffuse.a <= FLT_EPSILON5)
+        discard;
+
+
+      
+
+    
+    /* 웨이트 블랜드 */
+    
+    float fWeight = clamp(pow(In.vProjPos.w, -2.5f), 1.0f, 1000.0f);
+    
+    Out.vDiffuse = vector(vMtrlDiffuse.rgb, vMtrlDiffuse.a) * fWeight;
+    Out.vRevealage.r = vMtrlDiffuse.a;
+    
+
+    /* 이미시브 */
+    
+    float4 vEmissiveMtrl = vector(0.f, 0.f, 0.f, 0.f);
+  
+    float2 CenteredUV = In.vTexcoord - 0.5f;
+    
+    float fDistance = saturate(length(CenteredUV) / g_fRadius); // 마스크의 크기를 어느정도할지 
+    
+    float fMaskAlpha = vMtrlMask.a;
+    
+    float fSoftEdge = pow(saturate(1.0f - fDistance), g_fSoftenExp) * g_fSoftStrength; //SoftenExp  엣지감쇠지수 , Strength
+   
+    float fCore = pow(saturate(1.0 - fDistance * 2.f), max(0.001, g_fCoreBoost)) * g_fCoreBoost; // CoreBust 중심강조
+    
+    float fEmissive = fSoftEdge + fCore;
+   
+    vEmissiveMtrl = g_vEmissive;
+    
+    Out.vColorTarget = vEmissiveMtrl * fEmissive * g_fEmissiveStrength; // 이미시브 스트랭스
+    
+    return Out;
+}
+
+struct PS_BLUR_IN
+{
+    float4 vPosition : SV_Position;
+    float2 vTexcoord : TEXCOORD0;
+};
+
+struct PS_BLUR_OUT
+{
+    float4 vDiffuse : SV_TARGET0;
+    float4 vBlurWeight : SV_TARGET1;
+};
+
+PS_BLUR_OUT PS_TRAIL_BLUR(PS_BLUR_IN In)
+{
+    PS_BLUR_OUT Out;
+    
+    vector vMtrlDiffuse;
+    vector vMtrlMask;
+    vector vMtrlNoise;
+    vector vMtrlDistortion;
+    
+    /* 디퓨즈 */
+    
+    if (g_isDiffuse == true)
+    {
+        float2 vDiffuseTexcoord = In.vTexcoord;
+            
+        /*  디퓨즈 디스토션 */
+        if (g_isDistortion == true)
+        {
+            float2 vDistortion = In.vTexcoord + SelectLerpUV(g_vDiffuseDistortionUVGainAmount, (g_vDistortionTime.x / g_vDistortionTime.y), 0);
+            
+            vMtrlDistortion = g_DistortionTexture.Sample(DefaultSampler, vDistortion);
+
+            //0.5f를 빼는 이유는 중심을 0으로 옮겨서 양음수 방향으로 offset을 줄수 있다.
+            vMtrlDistortion.rg -= 0.5f;
+                        
+            
+            //디스토션(노이즈) 텍스쳐로 uv를 왜곡함
+
+            vDiffuseTexcoord = vDiffuseTexcoord + (vMtrlDistortion).rg * g_fDistortionIntensity;
+            
+        }
+        
+        vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, vDiffuseTexcoord);
+        
+        
+        vMtrlDiffuse.a *= g_fDiffuseAlpha;
+        
+        if (g_vColor.a > 0)
+            vMtrlDiffuse += g_vColor;
+    }
+    else
+        vMtrlDiffuse = g_vColor;
+    
+    /* 노이즈 */
+    
+    if (g_isNoise == true)
+    {
+        vMtrlNoise = g_NoiseTexture.Sample(DefaultSampler, In.vTexcoord);
+       
+        if (g_isNoiseAlpha)
+            vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * vMtrlNoise.r) * g_fNoiseStrength;
+        
+        if (g_isNoiseColor)
+            vMtrlDiffuse.rgb *= vMtrlNoise.rgb * g_fNoiseStrength;
+        
+    }
+    
+
+    /* 마스크 */
+    
+    if (g_isMask == true)
+    {
+        float2 vMaskTexcoord = In.vTexcoord;
+        
+        // 마스크 디스토션 
+        if (g_isDistortion == true)
+        {
+            float2 vDistortionUV = In.vTexcoord + SelectLerpUV(g_vMaskDistortionUVGainAmount, (g_vDistortionTime.x / g_vDistortionTime.y), 0);
+            
+            vMtrlDistortion = g_DistortionTexture.Sample(DefaultSampler, vDistortionUV);
+            
+            //디스토션(노이즈) 텍스쳐로 uv를 왜곡함
+            vMaskTexcoord = vMaskTexcoord + (vMtrlDistortion - 0.5f).r * g_fDistortionIntensity;
+
+            vMaskTexcoord = saturate(vMaskTexcoord);
+        }
+        
+        vMtrlMask = g_MaskingTexture.Sample(DefaultSampler, vMaskTexcoord);
+        
+        float fSoftMask;
+    
+        if (g_fSoftMask > FLT_EPSILON5)
+            fSoftMask = saturate((vMtrlMask.r - g_fSoftMaskEdge) * g_fSoftMask);
+        else
+            fSoftMask = vMtrlMask.r;
+    
+        vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * fSoftMask);
+    }
+    else
+        vMtrlMask.r = 1.f;
+    
+
+    /* 디퓨즈 알파 컷*/
+    if (vMtrlDiffuse.a <= FLT_EPSILON5)
+        discard;
+
+
+    ///* 이미시브 */
+    
+    //float4 vEmissiveMtrl = vector(0.f, 0.f, 0.f, 0.f);
+  
+    //float2 CenteredUV = In.vTexcoord - 0.5f;
+    
+    //float fDistance = saturate(length(CenteredUV) / g_fRadius); // 마스크의 크기를 어느정도할지 
+    
+    //float fMaskAlpha = vMtrlMask.a;
+    
+    //float fSoftEdge = pow(saturate(1.0f - fDistance), g_fSoftenExp) * g_fSoftStrength; //SoftenExp  엣지감쇠지수 , Strength
+   
+    //float fCore = pow(saturate(1.0 - fDistance * 2.f), max(0.001, g_fCoreBoost)) * g_fCoreBoost; // CoreBust 중심강조
+    
+    //float fEmissive = fSoftEdge + fCore;
+   
+    //vEmissiveMtrl = g_vEmissive;
+    
+    Out.vDiffuse = vector(vMtrlDiffuse.rgb * g_fBlurIntensity, vMtrlDiffuse.a); // 이미시브 스트랭스
+    Out.vBlurWeight = g_iBlurWeight / 128.f;
+    
     return Out;
 }
 
@@ -137,6 +464,16 @@ technique11 PosTexTechnique11
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Trail();
+    }
+
+    pass TrailBlur
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_TRAIL_BLUR();
     }
 
 }

@@ -15,9 +15,10 @@ namespace Client {
 #define FX_POSTEX			TEXT("FX_POSTEX")
 #define FX_NORTEX			TEXT("FX_NORTEX")
 #define FX_CELL				TEXT("FX_CELL")
-#define FX_DEFERRED			TEXT("FX_DEFFERED")
 #define FX_PARTICLE			TEXT("FX_PARTICLE")
+#define FX_INSTANCE_MODEL   TEXT("FX_INSTANCE_MODEL")
 #define FX_UIEDITOR			TEXT("FX_UIEDITOR")
+#define FX_UIINSTANCE		TEXT("FX_UIINSTANCE")
 
 #pragma endregion
 #pragma region MACRO_PROTOTYPE
@@ -27,6 +28,8 @@ namespace Client {
 #pragma endregion
 #pragma region OBJECT
 
+#define CAMERA_DEBUG			TEXT("CAMERA_DEBUG")
+#define CAMERA_SHOULDER			TEXT("CAMERA_SHOULDER")
 #pragma endregion
 #pragma region COMPONENT
 
@@ -36,6 +39,7 @@ namespace Client {
 #define LAYER_FLOOR			TEXT("Layer_Floor")
 #define LAYER_WALL			TEXT("Layer_Wall")
 #define LAYER_CUBE			TEXT("Layer_Cube")
+#define LAYER_SKYBOX		TEXT("Layer_SkyBox")
 #define LAYER_EDITOR_CAMERA TEXT("Layer_Editor_Camera")
 #define LAYER_BACKGROUND	TEXT("Layer_BackGround")
 #define LAYER_MARKER		TEXT("Layer_Marker")
@@ -49,7 +53,9 @@ namespace Client {
 #define LAYER_DOT			TEXT("Layer_Dot")
 #define LAYER_CELL			TEXT("Layer_Cell")
 #define LAYER_TRIGGER		TEXT("Layer_Trigger")
+#define LAYER_LIGHT			TEXT("Layer_Light")
 
+#define LAYER_MAPOBJECTMANAGER		TEXT("Layer_MapObjectManager")
 
 #pragma endregion
 #pragma region MACRO_TEXTURE

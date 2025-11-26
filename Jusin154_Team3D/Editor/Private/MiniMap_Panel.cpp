@@ -2,6 +2,7 @@
 #include "MiniMap_Panel.h"
 #include "GameInstance.h"
 #include "MiniMap_TrimBorder.h"
+#include "NoMountIcon.h"
 
 CMiniMap_Panel::CMiniMap_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPanelObject(pDevice, pContext)
@@ -68,9 +69,6 @@ void CMiniMap_Panel::Late_Update(_float fTimeDelta)
 		return;
 	}
 	if (m_bVisible) {
-		if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
-			m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
-		}
 	}
 	__super::Late_Update(fTimeDelta);
 }
@@ -92,10 +90,7 @@ HRESULT CMiniMap_Panel::Bind_ShaderResources()
 
 HRESULT CMiniMap_Panel::Ready_Components(void* pArg)
 {
-	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
-	{
-		return E_FAIL;
-	}
+
 	return S_OK;
 }
 
@@ -106,6 +101,11 @@ HRESULT CMiniMap_Panel::Ready_Element(void* pArg)
 		return E_FAIL;
 	}
 	Add_Element(TEXT("MiniMap_TrimBorder"), m_pMiniMap_TrimBorder);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNoMountIcon>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CNoMountIcon**>(&m_pNoMountIcon))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("NoMountIcon"), m_pNoMountIcon);
 	return S_OK;
 }
 

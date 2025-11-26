@@ -30,8 +30,10 @@ public:
 	virtual _float Get_Nine_Slice_Top() override;
 	virtual _float Get_Nine_Slice_Bottom() override;
 
-	virtual void Start_Lerp(_float fTimeDelta, _bool Alpha = false) override;
-	virtual void Reset_Pos(_float fTimeDelta, _bool Alpha = false) override;
+	virtual void Start_Lerp(_float fTimeDelta) override;
+	virtual void Reset_Pos(_float fTimeDelta)override;
+	virtual void Start_Size_Lerp(_float fTimeDelta) override;
+	virtual void Reset_Size_Lerp(_float fTimeDelta) override;
 	virtual _vector Get_Lerp_Pos() override;
 
 protected:

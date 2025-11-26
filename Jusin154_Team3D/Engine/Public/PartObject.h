@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "GameObject.h"
 
@@ -7,7 +7,7 @@ NS_BEGIN(Engine)
 class ENGINE_DLL CPartObject abstract : public CGameObject
 {
 public:
-	typedef struct tagPartObjectDesc
+	typedef struct tagPartObjectDesc 
 	{
 		class CTransform* pParentTransform = { nullptr };
 	}PARTOBJECT_DESC;

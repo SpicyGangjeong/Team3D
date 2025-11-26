@@ -26,6 +26,20 @@ public:
 		return nullptr;
 	}
 
+	template<typename T>
+	T* Get_PartObject() {
+		
+		for (auto& pPart : m_PartObjects)
+		{
+			if (typeid((*pPart.second)) == typeid(T))
+			{
+				return dynamic_cast<T*>(pPart.second);
+			}
+			
+		}
+		return nullptr;
+	}
+
 protected:
 	unordered_map<_string, class CPartObject*>			m_PartObjects;
 	

@@ -2,8 +2,9 @@
 #include "Terrain.h"
 
 #include "GameInstance.h"
-#include "DebugCamera.h"
+#include "Camera_Debug.h"
 #include "VIBuffer_Terrain.h"
+#include "AlphaMap.h"
 
 CTerrain::CTerrain(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext)
@@ -28,29 +29,99 @@ HRESULT CTerrain::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
+	if (FAILED(Ready_AlphaMap()))
+		return E_FAIL;
+
+	m_fUsingSurfaceParams = 15.f / 27.f;
+	m_vRotation = _float3{ 0.f, 0.f, 0.f };
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-194, 18.5f, -153.f, 1.f));
+
+	//m_pVIBufferCom->Set_CullingRadius(0.04f);
+
+	m_pAlphaMap->Load_ToFile("Hogsmeade_AlphaMap.bin");
+
+	if (FAILED(m_pVIBufferCom->Load_HeightMap("Hogsmeade_HeightMap.bin")))
+		return E_FAIL;
+
 	return S_OK;
 }
 
 void CTerrain::Priority_Update(_float fTimeDelta)
 {
+	GUI::Begin("Terrain");
 
+#pragma region ALPHA_MAP
+	//GUI::InputInt("Color", &m_iColorIndex);
+	//m_iColorIndex = max(0, min(4, m_iColorIndex));
+
+	//GUI::InputInt("Rnage", (_int*)(&m_iMaskRange));
+	//GUI::DragFloat("Value", &m_fMaskValue, 0.01f, -1.0f, 1.f);
+	//if (GUI::Button("Save", ImVec2(100.f, 30.f)))
+	//{
+	//	m_pAlphaMap->Save_ToFile("Hogsmeade_AlphaMap.bin");
+	//}
+	//if (GUI::Button("Load", ImVec2(100.f, 30.f)))
+	//{
+	//	m_pAlphaMap->Load_ToFile("Hogsmeade_AlphaMap.bin");
+	//}
+
+
+	//GUI::DragFloat("Up", &m_fUpValue, 0.01f, -1.0f, 1.f);
+	if (m_pGameInstance->Mouse_Pressing(DIM_LBUTTON))
+	{
+		if (m_pGameInstance->isPicking(&m_vPickingPosition))
+		{
+			if (m_pGameInstance->Key_Pressing(DIK_PERIOD))
+				m_pVIBufferCom->FitY(m_pTransformCom->Get_XMWorldMatrix(), m_fUpValue);
+			if (m_pGameInstance->Key_Pressing(DIK_COMMA))
+				m_pVIBufferCom->FitY(m_pTransformCom->Get_XMWorldMatrix(), m_fUpValue * -1.f);
+
+
+			//XMStoreFloat3(&m_vPickingPosition, XMVector3TransformCoord(XMLoadFloat3(&m_vPickingPosition), m_pTransformCom->Get_WorldMatrixInv()));
+
+			//m_pAlphaMap->Update(m_vPickingPosition, m_iColorIndex, m_fMaskValue, m_iMaskRange);
+
+		}
+	}
+#pragma endregion
+
+#pragma region HEIGHT MAP
+	//HRESULT hr = {};
+	//if(GUI::Button("Save HeightMap"))
+	//	hr = m_pVIBufferCom->Save_HeightMap("Hogsmeade_HeightMap.bin");
+	//if(GUI::Button("Load HeightMap"))
+	//	hr = m_pVIBufferCom->Load_HeightMap("Hogsmeade_HeightMap.bin");
+#pragma endregion
+	
+	//_float4 vPos = {};
+	//_float3 vRotation = {};
+	//XMStoreFloat4(&vPos, m_pTransformCom->Get_State(STATE::POSITION));
+	//GUI::DragFloat3("Pos", (_float*)(&vPos));
+	//GUI::DragFloat3("Rota", (_float*)(&m_vRotation));
+
+	//m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
+	//m_pTransformCom->Set_State(STATE::POSITION, XMLoadFloat4(&vPos));
+
+	//GUI::DragFloat("Culling Radius", &m_fCullingRadius, 0.01f, 0.01f, 2.f);
+
+	GUI::End();
 }
 
 void CTerrain::Update(_float fTimeDelta)
 {
-	GUI::Begin("Picking Position");
-	if (m_pGameInstance->Mouse_Down(0))
-		m_pVIBufferCom->Picking(m_pTransformCom, m_vPickingPosition);
-
-	GUI::DragFloat3("Pos", (_float*)(&m_vPickingPosition));
-	GUI::End();
+	//m_pVIBufferCom->Culling(XMMatrixIdentity());
+	
+	if(m_pGameInstance->Key_Down(DIK_LSHIFT) && m_pGameInstance->Key_Down(DIK_W))
+	{
+		m_bWasWireFrame = !m_bWasWireFrame;
+	}
 }
 
 void CTerrain::Late_Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
+	//if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
 		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-	}
+	//}
 }
 
 HRESULT CTerrain::Render()
@@ -58,9 +129,18 @@ HRESULT CTerrain::Render()
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NORTEX::TERRAIN)))) {
-		return E_FAIL;
+	
+	if(m_bWasWireFrame)
+	{
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NORTEX::TERRAIN)))) {
+			return E_FAIL;
+		}
+	}
+	else
+	{
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NORTEX::DEFAULT)))) {
+			return E_FAIL;
+		}
 	}
 
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
@@ -89,7 +169,20 @@ HRESULT CTerrain::Ready_Components()
 		return E_FAIL;
 
 	/* Com_Texture */
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("TerrainTest"), reinterpret_cast<CComponent**>(&m_pTextureCom), nullptr))) {
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Terrain_Diffuse"), reinterpret_cast<CComponent**>(&m_pDiffuseTextureCom), nullptr))) {
+		return E_FAIL;
+	}
+	/* Com_Texture */
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Terrain_Normal"), reinterpret_cast<CComponent**>(&m_pNormalTextureCom), nullptr))) {
+		return E_FAIL;
+	}
+	/* Com_Texture */
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Terrain_MRO"), reinterpret_cast<CComponent**>(&m_pMROTextureCom), nullptr))) {
+		return E_FAIL;
+	}
+
+	/* Com_Texture */
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Terrain_Mask"), reinterpret_cast<CComponent**>(&m_pMaskTextureCom), nullptr))) {
 		return E_FAIL;
 	}
 
@@ -112,9 +205,31 @@ HRESULT CTerrain::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pShaderCom->Bind_SRV("g_DiffuseTexture", m_pTextureCom->Get_SRV(0)))) {
+	if (FAILED(m_pDiffuseTextureCom->Bind_ShaderResources(m_pShaderCom, "g_DiffuseTextures", 0, m_pDiffuseTextureCom->Get_Size()))){
 		return E_FAIL;
 	}
+	if (FAILED(m_pNormalTextureCom->Bind_ShaderResources(m_pShaderCom, "g_NormalTextures", 0, m_pNormalTextureCom->Get_Size()))){
+		return E_FAIL;
+	}
+	if (FAILED(m_pMROTextureCom->Bind_ShaderResources(m_pShaderCom, "g_SurfaceParamsTextures", 0, m_pMROTextureCom->Get_Size()))){
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_SRV("g_MaskTexture", m_pAlphaMap->Get_SRV()))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fUsingSurfaceParams", &m_fUsingSurfaceParams, sizeof(_float))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CTerrain::Ready_AlphaMap()
+{
+	m_pAlphaMap = CAlphaMap::Create(m_pDevice, m_pContext, 2048, 2048);
+
+	if(nullptr == m_pAlphaMap)
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -149,9 +264,13 @@ void CTerrain::Free()
 {
 	__super::Free();
 
+	SAFE_RELEASE(m_pAlphaMap);
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
-	SAFE_RELEASE(m_pTextureCom);
+	SAFE_RELEASE(m_pDiffuseTextureCom);
+	SAFE_RELEASE(m_pNormalTextureCom);
+	SAFE_RELEASE(m_pMROTextureCom);
+	SAFE_RELEASE(m_pMaskTextureCom);
 }
 
 void CTerrain::Describe_Entity()

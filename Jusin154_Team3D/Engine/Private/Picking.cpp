@@ -33,8 +33,9 @@ HRESULT CPicking::Initialize(HWND hWnd, _uint iSizeX, _uint iSizeY)
 	TextureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
 	TextureDesc.MiscFlags = 0;
 
-	if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, &m_pTexture2D)))
+	if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, &m_pTexture2D))){
 		return E_FAIL;
+	}
 
 	m_iNumPixels = iSizeX * iSizeY;
 	m_pPixels = new _float4[m_iNumPixels];
@@ -49,8 +50,9 @@ void CPicking::Update()
 	m_pGameInstance->Copy_RenderTarget(TEXT("Target_Depth"), m_pTexture2D);
 
 	D3D11_MAPPED_SUBRESOURCE		SubResource{};
-	if (FAILED(m_pContext->Map(m_pTexture2D, 0, D3D11_MAP_READ_WRITE, 0, &SubResource)))
+	if (FAILED(m_pContext->Map(m_pTexture2D, 0, D3D11_MAP_READ_WRITE, 0, &SubResource))){
 		return;
+	}
 
 	memcpy(m_pPixels, SubResource.pData, sizeof(_float4) * m_iNumPixels);
 
@@ -66,9 +68,12 @@ _bool CPicking::isPicking(_float3* pOut)
 
 	_uint iMouseIndex = ptMouse.y * m_iNumPixelW + ptMouse.x;
 
-	if (0.f == m_pPixels[iMouseIndex].w)
+	if (iMouseIndex > m_iNumPixelW * m_iNumPixelH)
 		return false;
 
+	if (0.f == m_pPixels[iMouseIndex].w)
+		return false;
+	 
 	_float3 vMousePos = _float3(0.f, 0.f, 0.f);
 
 	vMousePos.x = ptMouse.x / (m_iNumPixelW * 0.5f) - 1.f;

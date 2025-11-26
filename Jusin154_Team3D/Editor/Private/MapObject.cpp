@@ -2,7 +2,7 @@
 #include "MapObject.h"
 
 #include "GameInstance.h"
-#include "DebugCamera.h"
+#include "Camera_Debug.h"
 #include "Layer.h"
 #include "Terrain.h"
 #include "VIBuffer_Terrain.h"
@@ -69,7 +69,12 @@ HRESULT CMapObject::Initialize_Prototype()
 
 HRESULT CMapObject::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
+	MAPOBJECT_LOD_DESC* pDesc = static_cast<MAPOBJECT_LOD_DESC*>(pArg);
+
+	PARTOBJECT_DESC Desc = {};
+	Desc.pParentTransform = pDesc->pParentTransform;
+
+	if (FAILED(__super::Initialize(&Desc)))
 		return E_FAIL;
 
 #ifdef _DEBUG

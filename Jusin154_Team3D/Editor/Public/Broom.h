@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "Editor_Define.h"
-#include "PartObject.h"
+#include "GameObject.h"
 
 NS_BEGIN(Engine)
 class CShader;

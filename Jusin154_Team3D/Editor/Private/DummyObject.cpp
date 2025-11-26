@@ -2,13 +2,7 @@
 #include "DummyObject.h"
 
 #include "GameInstance.h"
-#include "DebugCamera.h"
-#include "State_Idle.h"
-#include "State_Walk.h"
-#include "State_Dodge.h"
-#include "State_Sprint.h"
-#include "State_Jump.h"
-#include "State_Skill.h"
+#include "Camera_Debug.h"
 
 CDummyObject::CDummyObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUnit(pDevice, pContext)
@@ -72,10 +66,7 @@ HRESULT CDummyObject::Render()
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom, "g_DiffuseTexture", aiTextureType_DIFFUSE, 0))) {
-			return E_FAIL;
-		}
-		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom, "g_NormalTexture", aiTextureType_NORMALS, 0))) {
+		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
 

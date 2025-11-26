@@ -10,15 +10,16 @@ namespace Editor {
 
 
 #pragma region FX_NAME
-#define FX_ANIMMESH			TEXT("FX_ANIMMESH")
-#define FX_MESH				TEXT("FX_MESH")
-#define FX_POSTEX			TEXT("FX_POSTEX")
-#define FX_NORTEX			TEXT("FX_NORTEX")
-#define FX_CELL				TEXT("FX_CELL")
-#define FX_DEFERRED			TEXT("FX_DEFFERED")
-#define FX_PARTICLE			TEXT("FX_PARTICLE")
-#define FX_INSTANCE_MODEL   TEXT("FX_INSTANCE_MODEL")
-#define FX_UIEDITOR			TEXT("FX_UIEDITOR")
+#define FX_ANIMMESH				TEXT("FX_ANIMMESH")
+#define FX_MESH					TEXT("FX_MESH")
+#define FX_POSTEX				TEXT("FX_POSTEX")
+#define FX_NORTEX				TEXT("FX_NORTEX")
+#define FX_CELL					TEXT("FX_CELL")
+#define FX_PARTICLE				TEXT("FX_PARTICLE")
+#define FX_INSTANCE_MODEL		TEXT("FX_INSTANCE_MODEL")
+#define FX_INSTANCE_PROP_MODEL  TEXT("FX_INSTANCE_PROP_MODEL")
+#define FX_UIEDITOR				TEXT("FX_UIEDITOR")
+#define FX_UIINSTANCE			TEXT("FX_UIINSTANCE")
 
 
 #pragma endregion
@@ -29,6 +30,8 @@ namespace Editor {
 #pragma endregion
 #pragma region OBJECT
 
+#define CAMERA_DEBUG			TEXT("CAMERA_DEBUG")
+#define CAMERA_SHOULDER			TEXT("CAMERA_SHOULDER")
 #pragma endregion
 #pragma region COMPONENT
 

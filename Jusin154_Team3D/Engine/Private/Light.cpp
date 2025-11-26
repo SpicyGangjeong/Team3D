@@ -12,7 +12,7 @@ CLight::CLight(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CLight::CLight(const CLight& rhs)
-	: CComponent{ rhs }
+	: CComponent(rhs)
 {
 
 }
@@ -151,6 +151,7 @@ void CLight::Free()
 
 }
 
+#ifdef _DEBUG
 
 void CLight::Describe_Entity()
 {
@@ -187,3 +188,5 @@ void CLight::Describe_Entity()
 
 	GUI::Separator();
 }
+
+#endif // _DEBUG

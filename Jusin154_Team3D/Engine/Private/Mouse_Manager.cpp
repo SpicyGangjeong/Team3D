@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Mouse_Manager.h"
 #include "GameObject.h"
 #include "GameInstance.h"
@@ -50,7 +50,7 @@ HRESULT CMouse_Manager::Initialize()
 void CMouse_Manager::Update()
 {
 	if (GetForegroundWindow() == m_ghWnd) {
-		/* ºäÆ÷Æ® ¸¶¿ì½º ÁÂÇ¥*/
+		/* ë·°í¬íŠ¸ ë§ˆìš°ìŠ¤ ì¢Œí‘œ*/
 		GetCursorPos(&m_ptCurrentMouseCur);
 
 		m_vMove = { _float(m_ptCurrentMouseCur.x - m_ptOldMouseCur.x), _float(m_ptCurrentMouseCur.y - m_ptOldMouseCur.y) , 0.f };
@@ -59,7 +59,7 @@ void CMouse_Manager::Update()
 		}
 		m_ptOldMouseCur = m_ptCurrentMouseCur;
 
-
+#ifdef _DEBUG
 		GUI::Begin("Mouse_Manager");
 		GUI::Text("AccumulateMomentum %f, %f", m_vMove.x, m_vMove.y);
 		GUI::Text("CurPos %d, %d", m_ptCurrentMouseCur.x, m_ptCurrentMouseCur.y);
@@ -79,7 +79,7 @@ void CMouse_Manager::Update()
 		GUI::Text("INV_VPPOS: %f, %f", pt.x - (viewPort.Width * 0.5f), pt.y - (viewPort.Height * 0.5f));
 
 		GUI::End();
-
+#endif
 		Picking();
 	}
 	else {
@@ -106,22 +106,22 @@ void CMouse_Manager::Picking()
 	_float4  vMousePos = {};
 	POINT  vViewPortMousePos = Get_MouseViewPortPos();
 
-	/* ºäÆ÷Æ® ÁÂÇ¥¸¦ Åõ¿µ ½ºÆäÀÌ½º ÁÂÇ¥·Î ¹Ù²Ù´Â ÀÛ¾÷ */
+	/* ë·°í¬íŠ¸ ì¢Œí‘œë¥¼ íˆ¬ì˜ ìŠ¤í˜ì´ìŠ¤ ì¢Œí‘œë¡œ ë°”ê¾¸ëŠ” ì‘ì—… */
 	vMousePos.x = vViewPortMousePos.x / (m_iWinCX * 0.5f) - 1.f;
 	vMousePos.y = vViewPortMousePos.y / -(m_iWinCY * 0.5f) + 1.f;
-	vMousePos.z = 0.f; // ±ÙÆò¸é»óÀÇ ÁÂÇ¥ÀÌ±â ¶§¹®¿¡ 0
-	vMousePos.w = 1.f; // W ³ª´©±â¸¦ ¼öÇàÇÑ »óÅÂÀÌ±â ¶§¹®¿¡ 1
+	vMousePos.z = 0.f; // ê·¼í‰ë©´ìƒì˜ ì¢Œí‘œì´ê¸° ë•Œë¬¸ì— 0
+	vMousePos.w = 1.f; // W ë‚˜ëˆ„ê¸°ë¥¼ ìˆ˜í–‰í•œ ìƒíƒœì´ê¸° ë•Œë¬¸ì— 1
 
-	/* Åõ¿µ½ºÆäÀÌ½º ÁÂÇ¥ -> ºä½ºÆäÀÌ½º ÁÂÇ¥*/
+	/* íˆ¬ì˜ìŠ¤í˜ì´ìŠ¤ ì¢Œí‘œ -> ë·°ìŠ¤í˜ì´ìŠ¤ ì¢Œí‘œ*/
 	_matrix InverseProjectionMatrix = XMMatrixInverse(nullptr, m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ));
 	XMStoreFloat4(&vMousePos, XMVector4Transform(XMLoadFloat4(&vMousePos), InverseProjectionMatrix));
 
 
-	/* ºä½ºÆäÀÌ½º ÁÂÇ¥  -> ¿ùµå ½ºÆäÀÌ½º ÁÂÇ¥*/
+	/* ë·°ìŠ¤í˜ì´ìŠ¤ ì¢Œí‘œ  -> ì›”ë“œ ìŠ¤í˜ì´ìŠ¤ ì¢Œí‘œ*/
 	_float3    vRayPos, vRayDir = {};
 
-	vRayPos = _float3{ 0.f,0.f,0.f }; // ºä½ºÆäÀÌ½º »ó¿¡¼­ Ä«¸Ş¶óÀÇ À§Ä¡´Â 0,0,0
-	vRayDir = _float3{ (_float)vMousePos.x, (_float)vMousePos.y, (_float)vMousePos.z }; // ·¹ÀÌÀÇ ¹æÇâº¤ÅÍ´Â ¸¶¿ì½ºÀ§Ä¡¿¡¼­ Ä«¸Ş¶ó À§Ä¡ »« °ª
+	vRayPos = _float3{ 0.f,0.f,0.f }; // ë·°ìŠ¤í˜ì´ìŠ¤ ìƒì—ì„œ ì¹´ë©”ë¼ì˜ ìœ„ì¹˜ëŠ” 0,0,0
+	vRayDir = _float3{ (_float)vMousePos.x, (_float)vMousePos.y, (_float)vMousePos.z }; // ë ˆì´ì˜ ë°©í–¥ë²¡í„°ëŠ” ë§ˆìš°ìŠ¤ìœ„ì¹˜ì—ì„œ ì¹´ë©”ë¼ ìœ„ì¹˜ ëº€ ê°’
 
 	_matrix InverseViewSpaceMatrix = XMMatrixInverse(nullptr, m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW));
 
@@ -165,7 +165,7 @@ _bool CMouse_Manager::MousePicking_InWorldSpace(const _float3& vPointA, const _f
 	_bool isCollision;
 
 	_float fU, fV, fDist = {};
-
+	
 	isCollision = CMyTools::IntersectTri(XMLoadFloat3(&m_vRayPos[ENUM_CLASS(RAY::WORLD)]), XMLoadFloat3(&m_vRayDir[ENUM_CLASS(RAY::WORLD)]),
 		XMLoadFloat3(&vPointA), XMLoadFloat3(&vPointB), XMLoadFloat3(&vPointC), fDist, fU, fV);
 
@@ -186,24 +186,24 @@ _bool CMouse_Manager::MousePicking_InWorldSpace(const _float3& vPointA, const _f
 //	const float cw = float(rc.right - rc.left);
 //	const float ch = float(rc.bottom - rc.top);
 //
-//	// 2) ºä/ÇÁ·ÎÁ§¼Ç: È­¸é ÁÂ»ó´Ü(0,0) ~ (cw,ch), Y-´Ù¿î
+//	// 2) ë·°/í”„ë¡œì ì…˜: í™”ë©´ ì¢Œìƒë‹¨(0,0) ~ (cw,ch), Y-ë‹¤ìš´
 //	XMFLOAT4X4 view{}, proj{};
 //	XMStoreFloat4x4(&view, XMMatrixIdentity());
 //	XMStoreFloat4x4(&proj, XMMatrixOrthographicOffCenterLH(0.f, cw, ch, 0.f, 0.f, 1.f));
 //
-//	// 3) ¸¶¿ì½º ÁÂÇ¥ (Å¬¶óÀÌ¾ğÆ® ÁÂÇ¥·Î º¯È¯)
+//	// 3) ë§ˆìš°ìŠ¤ ì¢Œí‘œ (í´ë¼ì´ì–¸íŠ¸ ì¢Œí‘œë¡œ ë³€í™˜)
 //	POINT pt{}; GetCursorPos(&pt); ScreenToClient(m_ghWnd, &pt);
 //
-//	// 4) ¿ùµå Çà·Ä: 30x30 ½ºÄÉÀÏ + À§Ä¡(ÇÈ¼¿ ¼¾ÅÍ Á¤·Ä: +0.5f)
+//	// 4) ì›”ë“œ í–‰ë ¬: 30x30 ìŠ¤ì¼€ì¼ + ìœ„ì¹˜(í”½ì…€ ì„¼í„° ì •ë ¬: +0.5f)
 //	XMFLOAT4X4 world{};
 //	world._11 = 30.f;  // width
 //	world._22 = 30.f;  // height
 //	world._33 = 1.f;   // keep
 //	world._44 = 1.f;   // keep
-//	world._41 = floorf((float)pt.x) + 0.5f;  // translation X (row-vector ±Ô¾à)
+//	world._41 = floorf((float)pt.x) + 0.5f;  // translation X (row-vector ê·œì•½)
 //	world._42 = floorf((float)pt.y) + 0.5f;  // translation Y
 //
-//	// 5) ¹ÙÀÎµù
+//	// 5) ë°”ì¸ë”©
 //	m_pShader->Bind_Matrix("g_WorldMatrix", &world);
 //	m_pShader->Bind_Matrix("g_ViewMatrix", &view);
 //	m_pShader->Bind_Matrix("g_ProjMatrix", &proj);
@@ -211,9 +211,9 @@ _bool CMouse_Manager::MousePicking_InWorldSpace(const _float3& vPointA, const _f
 //	m_pShader->Bind_SRV("g_Texture", m_pMouseSRV);
 //	m_pShader->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(float));
 //
-//	// 6) »óÅÂ ¼Â¾÷(±ÇÀå)
+//	// 6) ìƒíƒœ ì…‹ì—…(ê¶Œì¥)
 //	// - DepthTest OFF / DepthWrite OFF (UI)
-//	// - AlphaBlend ON (ÇÊ¿ä½Ã)
+//	// - AlphaBlend ON (í•„ìš”ì‹œ)
 //	m_pShader->Begin(2);
 //	m_pRect->Bind_Resources();
 //	m_pRect->Render();

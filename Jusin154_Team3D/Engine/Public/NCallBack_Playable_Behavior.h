@@ -1,10 +1,7 @@
 ﻿#pragma once
 
 #include "Base.h"
-NS_BEGIN(PSX)
-class PxControllerBehaviorCallback;
-class PxUserControllerHitReport;
-NS_END
+
 
 class CCallBack_Playable_Behavior final : public PSX::PxControllerBehaviorCallback
 {

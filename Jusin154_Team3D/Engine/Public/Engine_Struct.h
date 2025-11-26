@@ -122,7 +122,7 @@ struct SaveMesh
 
 struct SaveMaterial
 {
-	vector<string> Path[27];
+	vector<string> Path[AI_TEXTURE_TYPE_MAX];
 
 };
 
@@ -178,6 +178,14 @@ struct SaveModel
 
 #pragma region VTX
 
+typedef struct tagVertexInstance_Model
+{
+	_float4			vRight = {};
+	_float4			vUp = {};
+	_float4			vLook = {};
+	_float4			vTranslation = {};
+}VTX_INSTANCE_MODEL;
+
 typedef struct tagVertexInstance_Particle
 {
 	_float4			vRight = {};
@@ -192,6 +200,8 @@ typedef struct tagVertexInstance_UI
 {
 	_float2 fSize = {};
 	_float2 fPos = {};
+	_float2 fUVStart = {};
+	_float2 fUVEnd = {};
 }VTX_INSTANCE_UI;
 
 typedef struct tagVertexBlock
@@ -206,7 +216,6 @@ typedef struct tagVertexBlock
 		{ "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 24,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
-
 }VTXBLOCK;
 
 typedef struct tagVertexPosition {
@@ -319,13 +328,45 @@ typedef struct tagVertexModelInstanceParticleDesc
 	};
 }VTX_MODEL_INSTANCE_PARTICLE;
 
+typedef struct tagVertexModelInstanceModelDesc
+{
+	static constexpr _uint					iNumElements = { 9 };
+	static constexpr D3D11_INPUT_ELEMENT_DESC		Elements[] = {
+		{ "POSITION" , 0 , DXGI_FORMAT_R32G32B32_FLOAT , 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{ "NORMAL" , 0 , DXGI_FORMAT_R32G32B32_FLOAT , 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{ "TANGENT" , 0 , DXGI_FORMAT_R32G32B32_FLOAT , 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{ "BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 36, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 48, D3D11_INPUT_PER_VERTEX_DATA, 0},
+
+		{ "TEXCOORD", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "TEXCOORD", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "TEXCOORD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "TEXCOORD", 4, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1 }
+	};
+}VTX_MODEL_INSTANCE_MODEL;
+
 #pragma endregion
 
+typedef struct tagVertexInstance_UIDesc
+{
+	static constexpr unsigned int iNumElements = {6};
+	static constexpr D3D11_INPUT_ELEMENT_DESC		Elements[] = {
+	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+	{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+
+	{ "TEXCOORD", 1, DXGI_FORMAT_R32G32_FLOAT, 1, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+	{ "TEXCOORD", 2, DXGI_FORMAT_R32G32_FLOAT, 1, 8, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+	{ "TEXCOORD", 3, DXGI_FORMAT_R32G32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+	{ "TEXCOORD", 4, DXGI_FORMAT_R32G32_FLOAT, 1, 24, D3D11_INPUT_PER_INSTANCE_DATA, 1 }
+	};
+
+}VTX_POSTEX_INSTANCE_UI;
 
 typedef struct tagPhsXUserData {
 
-	PHYSX_KIND			eKind = PHYSX_KIND::NOT_DEFINED;
-	class CGameObject*	pOwner = { nullptr };
+	PHYSX_KIND			eKind = PHYSX_KIND::NOT_DEFINED; 
+
+	class CGameObject* pOwner = { nullptr };
 	_float4x4			BeforeMatrix = { };
 	_uint				iSubKind = UINT_MAX;
 
@@ -336,5 +377,52 @@ typedef struct tagPhsXUserData {
 	};
 
 }PhsXUserData;
+
+typedef struct tagOnCollsionInfo
+{
+	_vector vWorldPos = {};		// 접촉지점
+	_vector vWorldNomal = {};	// 접촉노말
+	_vector vHitDir = {};		// 시도한 move 방향
+	_float  fLength = {};		// 작용된 힘
+
+}ON_COLLISION_INFO;
+
+typedef struct tagKeyFrameDesc
+{
+	_float3 vScale;
+	_float4 vRotation;
+	_float3 vTranslation;
+	_float fTrackPosition;
+
+}KEYFRAME_DESC;
+
+typedef struct tagChannelDesc
+{
+	_uint StartIndex; 
+	_uint KeyCount;
+	_uint BoneIndex;
+	//_uint Padding;
+}CHANNEL_DESC;
+
+
+typedef struct tagParentDesc
+{
+	_int ParentIndex;
+}PARENT_DESC;
+
+typedef struct tagLocalPos
+{
+	_float3 Scale;
+	_float  pad0;
+	_float4 Rotation;
+	_float3 Translation;
+	_float  pad1;
+}LOCALPOS_DESC;
+
+typedef struct tagBoneDesc
+{
+	_float4x4 Combined;
+}BONE_DESC;
+
 
 NS_END

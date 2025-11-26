@@ -83,13 +83,6 @@ HRESULT CUIObject::Initialize(void* pArg)
 
 	m_bVisible = true;
 
-	m_fLeft = 0.f;
-	m_fRight = m_fSizeX;
-	m_fTop = 0.f;
-	m_fBottom = m_fSizeY;
-
-	m_vNine_Slice = _float4(m_fLeft, m_fRight, m_fTop, m_fBottom);
-
 	return S_OK;
 }
 
@@ -139,9 +132,25 @@ void CUIObject::MoveY(_float fY)
 	m_fY = fY;
 }
 
+void CUIObject::Move(_float fX, _float fY)
+{
+	m_fX = fX;
+	m_fY = fY;
+}
+
 void CUIObject::SizeUpdate(_float fSizeX, _float fSizeY)
 {
 	m_fSizeX = fSizeX;
+	m_fSizeY = fSizeY;
+}
+
+void CUIObject::SizeUpX(_float fSizeX)
+{
+	m_fSizeX = fSizeX;
+}
+
+void CUIObject::SizeUpY(_float fSizeY)
+{
 	m_fSizeY = fSizeY;
 }
 
@@ -280,42 +289,42 @@ _float2 CUIObject::Get_UV()
 
 void CUIObject::Nine_Slice_Left(_float X)
 {
-	m_fLeft = -m_fSizeX * 0.5f + X;
+	m_vNine_Slice.x = X;
 }
 
 void CUIObject::Nine_Slice_Right(_float Y)
 {
-	m_fRight = m_fSizeX * 0.5f - Y;
+	m_vNine_Slice.y =Y;
 }
 
 void CUIObject::Nine_Slice_Top(_float Z)
 {
-	m_fTop = -m_fSizeY * 0.5f + Z;
+	m_vNine_Slice.z = Z;
 }
 
 void CUIObject::Nine_Slice_Bottom(_float W)
 {
-	m_fBottom = m_fSizeY * 0.5f - W;
+	m_vNine_Slice.w = W;
 }
 
 _float CUIObject::Get_Nine_Slice_Left()
 {
-	return m_fLeft;
+	return m_vNine_Slice.y;
 }
 
 _float CUIObject::Get_Nine_Slice_Right()
 {
-	return m_fRight;
+	return m_vNine_Slice.y;
 }
 
 _float CUIObject::Get_Nine_Slice_Top()
 {
-	return m_fTop;
+	return m_vNine_Slice.z;
 }
 
 _float CUIObject::Get_Nine_Slice_Bottom()
 {
-	return m_fBottom;
+	return m_vNine_Slice.w;
 }
 
 _float2 CUIObject::Get_Origin_Position()
@@ -348,11 +357,19 @@ void CUIObject::Lerp_PosY(_float PosY)
 	m_fLerpY = PosY;
 }
 
-void CUIObject::Start_Lerp(_float fTimeDelta, _bool Alpha)
+void CUIObject::Start_Lerp(_float fTimeDelta)
 {
 }
 
-void CUIObject::Reset_Pos(_float fTimeDelta, _bool Alpha)
+void CUIObject::Reset_Pos(_float fTimeDelta)
+{
+}
+
+void CUIObject::Start_Size_Lerp(_float fTimeDelta)
+{
+}
+
+void CUIObject::Reset_Size_Lerp(_float fTimeDelta)
 {
 }
 
@@ -442,11 +459,11 @@ _float CUIObject::Get_CoolTime()
 	return m_fCoolTime;
 }
 
-void CUIObject::Add_Function(wstring Name, function<void()> Evnet)
+void CUIObject::Add_Function(wstring Name, function<void(void*)> Evnet)
 {
 }
 
-void CUIObject::Function_Callback(wstring Name)
+void CUIObject::Function_Callback(wstring Name, void* pArg)
 {
 }
 

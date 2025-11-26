@@ -21,6 +21,10 @@ public:
 	virtual HRESULT Render() override;
 
 protected:
+	CTransform* m_pPlayerTransform = { nullptr };
+	_float m_fTargetDistance = {};
+
+protected:
 	HRESULT Ready_Components(void* pArg);
 	HRESULT Bind_ShaderResources();
 

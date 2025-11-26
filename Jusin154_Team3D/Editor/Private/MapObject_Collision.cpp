@@ -2,7 +2,7 @@
 #include "MapObject_Collision.h"
 
 #include "GameInstance.h"
-#include "DebugCamera.h"
+#include "Camera_Debug.h"
 #include "Layer.h"
 #include "Terrain.h"
 #include "VIBuffer_Terrain.h"
@@ -64,7 +64,7 @@ HRESULT CMapObject_Collision::Render()
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pModelComs[0]->Bind_Material(i, m_pShaderCom, "g_NormalTexture", aiTextureType_NORMALS, 0))) {
+		if (FAILED(m_pModelComs[0]->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
 		if (m_bSelected)
@@ -219,6 +219,9 @@ void CMapObject_Collision::Free()
 	for (auto& pModel : m_pModelComs)
 		Safe_Release(pModel);
 	m_pModelComs.clear();
+
+	m_ModelPrototypeTags.clear();
+	m_ModelPathIndices.clear();
 }
 
 void CMapObject_Collision::Describe_Entity()
@@ -240,7 +243,7 @@ void CMapObject_Collision::Describe_Entity()
 		CTerrain* pTerrain = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Terrain"))->Get_Object<CTerrain>();
 		if (nullptr != pTerrain)
 		{
-			pTerrain->Get_Component<CVIBuffer_Terrain>()->Picking(pTerrain->Get_Component<CTransform>(), m_vPosition);
+			pTerrain->Get_Component<CVIBuffer_Terrain>()->Picking(pTerrain->Get_Component<CTransform>()->Get_XMWorldMatrix(), &m_vPosition);
 		}
 	}
 
