@@ -36,7 +36,7 @@ HRESULT CWand::Initialize(void* pArg)
 
 	PartsDesc.pParentTransform = m_pTransformCom;
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTrailObject>(NEXT_LEVEL, NEXT_LEVEL, TEXT("Layer_Trail"), &PartsDesc, this, &m_pTrail))) {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTrailObject>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Trail"), &PartsDesc, this, &m_pTrail))) {
 		assert(false);
 		return E_FAIL;
 	}
@@ -45,7 +45,7 @@ HRESULT CWand::Initialize(void* pArg)
 		return E_FAIL;
 
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEditEffect>(NEXT_LEVEL, NEXT_LEVEL, TEXT("Layer_Effect"), &PartsDesc, this, &m_pEffectParts))) {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEditEffect>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Effect"), &PartsDesc, this, &m_pEffectParts))) {
 		assert(false);
 		return E_FAIL;
 	}
