@@ -415,13 +415,18 @@ void CRenderer::Render_Bloom()
 		m_bPostProcessing_BLOOM = !m_bPostProcessing_BLOOM;
 	}
 	if(true == m_bPostProcessing_BLOOM) {
-		{ // BackBuffer
-			ID3D11Texture2D* pBackBuffer = nullptr;
-			m_pGameInstance->Get_BackBufferPTR(&pBackBuffer);
-			//m_pGameInstance->Copy_RenderTarget(TEXT("Target_Diffuse"), pBackBuffer);
-			m_pGameInstance->Paste_RenderTarget(TEXT("Target_Bloom_Input"), pBackBuffer);
-			SAFE_RELEASE(pBackBuffer);
-		}
+		GUI::Begin("PostProcessing_Bloom");
+		GUI::PushItemWidth(80);
+		GUI::DragFloat("g_fThreshold", &m_fThreshold, 0.01f, 0.02f, 100.f, "%.3f");
+		GUI::SliderInt("g_iEmbossingPass", &m_iBloomEmbossingPass, 0, 2, "%d");
+		GUI::End();
+		//{ // BackBuffer
+		//	ID3D11Texture2D* pBackBuffer = nullptr;
+		//	m_pGameInstance->Get_BackBufferPTR(&pBackBuffer);
+		//	//m_pGameInstance->Copy_RenderTarget(TEXT("Target_Diffuse"), pBackBuffer);
+		//	m_pGameInstance->Paste_RenderTarget(TEXT("Target_Bloom_Input"), pBackBuffer);
+		//	SAFE_RELEASE(pBackBuffer);
+		//}
 
 		// "Target_Bloom_Input"
 		// "Target_Bloom"
@@ -431,6 +436,9 @@ void CRenderer::Render_Bloom()
 		// "Target_Bloom_16x16_X"
 		// "Target_Bloom_8x8_2"
 		// "Target_Bloom_4x4_2"
+
+		m_pShader->Bind_RawValue("g_fThreshold", &m_fThreshold, sizeof(_float));
+		m_pShader->Bind_RawValue("g_iBloomEmbossingPass", &m_iBloomEmbossingPass, sizeof(_int));
 
 		m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_Input"), TEXT("Target_Bloom_4x4"), SHADER_PASS_DEFERRED::EMBOSSING); // 2
 		m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_4x4"), TEXT("Target_Bloom_8x8"), SHADER_PASS_DEFERRED::REFIT); // 3

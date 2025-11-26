@@ -11,6 +11,9 @@ uint g_iMaxShadowWidth;
 uint g_iMaxShadowHeight;
 float2 g_vResolution;
 
+uint g_iBloomEmbossingPass;
+float g_fThreshold;
+
 Texture2D g_Texture;
 
 float g_fLightRange;
@@ -90,6 +93,7 @@ struct PS_IN
 struct PS_OUT_BACKBUFFER
 {
     float4 vBackBuffer : SV_TARGET0;
+    float4 vBloomBuffer : SV_Target1;
 };
 
 PS_OUT_BACKBUFFER PS_MAIN_DEBUG(PS_IN In)
@@ -97,7 +101,7 @@ PS_OUT_BACKBUFFER PS_MAIN_DEBUG(PS_IN In)
     PS_OUT_BACKBUFFER Out;
     
     Out.vBackBuffer = g_Texture.Sample(DefaultSampler, In.vTexcoord);
-    
+    Out.vBloomBuffer = float4(0.f, 0.f, 0.f, 0.f);
     return Out;
 }
 
@@ -412,36 +416,8 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     
     Out.vBackBuffer.rgb *= lerp(0.5f, 1.f, min(fVisibility_Dynamic, fVisibility_Static));
     
-    //float fShadowDepth = g_ShadowTexture.Sample(DefaultSampler, vTexcoord).x;
-    //float fPreShadowDepth = g_PreShadowTexture.Sample(DefaultSampler, vPreShadowTexcoord).x;
-    //bool IsShadow = { false };
-    //if (vPosition.z - 0.0005f > fShadowDepth)
-    //{
-    //    IsShadow = true;
-    //}
-    //if (vPreShadowPosition.z - 0.0005f > fPreShadowDepth)
-    //{
-    //    IsShadow = true;
-    //}
-    //if (true == IsShadow)
-    //{
-    //    Out.vBackBuffer *= 0.5f;
-    //}
     float4 vColor = 0.f;
     
-    
-    
-    int iBlurWeight = (int)(round(g_BlurWeightXTexture.Sample(ClampSampler, In.vTexcoord).r) * 128.f);
-    
-    int iBlurMin;
-    int iBlurMax;
-    
-    iBlurMin = -1 * (iBlurWeight / 2) + 1;
-    iBlurMax = iBlurWeight / 2;
-    
-    //  // 변수로 루프돌리려면 반드시 필요함
-    
-  
     for (int i = -63; i < 64; ++i)
     {
         vTexcoord.x = In.vTexcoord.x;
@@ -451,40 +427,62 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     }
     
     Out.vBackBuffer += vColor;
+    Out.vBloomBuffer;
     
     return Out;
 }
 
-PS_OUT_BACKBUFFER PS_MAIN_REFIT(PS_IN In)
-{
-    PS_OUT_BACKBUFFER Out;
 
-    Out.vBackBuffer = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
+struct PS_OUT_FLT4_SINGLE
+{
+    vector vSingleTarget : SV_TARGET0;
+};
+
+
+PS_OUT_FLT4_SINGLE PS_MAIN_REFIT(PS_IN In)
+{
+    PS_OUT_FLT4_SINGLE Out;
+
+    Out.vSingleTarget = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
     
     return Out;
 }
 
-PS_OUT_BACKBUFFER PS_MAIN_EMBOSS(PS_IN In)
+PS_OUT_FLT4_SINGLE PS_MAIN_EMBOSS(PS_IN In)
 {
-    PS_OUT_BACKBUFFER Out;
+    PS_OUT_FLT4_SINGLE Out;
 
-    float3 vColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord).xyz;
+    vector vInput = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
+    //float fMask = g_BloomMaskTexture.Sample(PointSampler, In.vTexcoord).a;
+    float3 vColor = vInput.rgb;
+    uint iMask = (uint) round(vInput.a * 255.f);
     
-    // temp 이거 키면 겁나 빤짞빤짞 빛남 ㄷㄷ
-    //vColor *= 3.f;
-    // temp
+    switch (iMask)
+    {
+        case 0:
+            /* None */
+            vColor = float3(0.f, 0.f, 0.f);
+            break;
+        case 1:
+            /* Basic_Apply */
+            break;
+        case 2:
+            /* Multiply */
+            vColor *= 3;
+            break;
+    }
     
-    //float fIntensity = dot(vColor, float3(0.3333f, 0.3333f, 0.3333f)); // 대략적인 밝기
     float fIntensity = dot(vColor, float3(0.2126f, 0.7152f, 0.0722f)); // 대략적인 밝기 ( 인간적인 )
     if (fIntensity <= 1e-4f)
     {
-        Out.vBackBuffer = 0;
+        Out.vSingleTarget = 0;
         return Out;
     }
-    float fBloomIntensity = GetBloomCurve(fIntensity);
+    
+    float fBloomIntensity = GetBloomCurve(fIntensity, g_fThreshold, g_iBloomEmbossingPass);
     
     float3 bloomColor = (vColor * fBloomIntensity) / fIntensity;
-    Out.vBackBuffer = float4(bloomColor, 1.f);
+    Out.vSingleTarget = float4(bloomColor, 1.f);
     
     return Out;
 }
@@ -495,26 +493,26 @@ struct PS_OUT_BLUR_X
     float4 vBlurWeight : SV_TARGET1;
 };
 
-PS_OUT_BACKBUFFER PS_MAIN_BLOOM_ACCUM(PS_IN In)
+PS_OUT_FLT4_SINGLE PS_MAIN_BLOOM_ACCUM(PS_IN In)
 {
-    PS_OUT_BACKBUFFER Out;
+    PS_OUT_FLT4_SINGLE Out;
     
     float3 vColorSrcA = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord).xyz;
     float3 vColorSrcB = g_BlurTexture.Sample(PointSampler, In.vTexcoord).xyz;
     
-    Out.vBackBuffer = float4(saturate(vColorSrcA + vColorSrcB), 1.f);
+    Out.vSingleTarget = float4(saturate(vColorSrcA + vColorSrcB), 1.f);
     
     return Out;
 }
 
-PS_OUT_BACKBUFFER PS_MAIN_BLOOM_FINISH(PS_IN In)
+PS_OUT_FLT4_SINGLE PS_MAIN_BLOOM_FINISH(PS_IN In)
 {
-    PS_OUT_BACKBUFFER Out;
+    PS_OUT_FLT4_SINGLE Out;
     
     vector vColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
     float3 vBloom = g_BlurTexture.Sample(PointSampler, In.vTexcoord).xyz;
-    Out.vBackBuffer = vColor;
-    Out.vBackBuffer += float4(vBloom, 1.f);
+    Out.vSingleTarget = vColor;
+    Out.vSingleTarget += float4(vBloom, 1.f);
     
     return Out;
 }
