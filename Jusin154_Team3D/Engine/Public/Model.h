@@ -35,6 +35,7 @@ public:
 	_bool	Play_Animation(_float fTimeDelta, class CTransform* pTransform = nullptr); // 애니메이션에 델타타임을 넣어줌
 	void	Set_AnimationIndex(_uint iIndex, _bool isLoop = true, _float fAmount = 1.f);
 	_bool	IsFinishedAnim() const { return m_bIsFinishedAnim; }
+	_bool	IsLoopAnim() const { return m_bIsLoop; }
 	void	Set_CurrentTrackPosition(_float TrackPosition);
 	const _char* Get_AnimList(_uint iIndex);
 	_float Get_CurrentTrackPosition();
