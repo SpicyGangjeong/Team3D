@@ -171,7 +171,7 @@ void CChannel::Update_TransformationMatirx(
 
 	if (Bones[m_iBoneIndex]->Compare_Name("Reference") && pTransform != nullptr)
 	{
-		GUI::Text("fCurrentTrackPosition : %f", fCurrentTrackPosition);
+	
 		_float3 vCurRootPos;
 		XMStoreFloat3(&vCurRootPos, vTranslation);
 

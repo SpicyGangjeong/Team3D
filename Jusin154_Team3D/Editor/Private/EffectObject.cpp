@@ -720,7 +720,22 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
-	
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDiffuseBlur", &m_EffectInfo.isDiffuseBlur, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isMaskBlur", &m_EffectInfo.isMaskBlur, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isBlurDissolve", &m_EffectInfo.isBlurDissolve, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isBlurReverseDissolve", &m_EffectInfo.isBlurReverseDissolve, sizeof(_bool)))) {
+		return E_FAIL;
+	}
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vColor", &m_EffectInfo.vColor, sizeof(_float4)))) {
 		return E_FAIL;
@@ -815,6 +830,11 @@ HRESULT CEffectObject::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fSoftMask", &m_EffectInfo.fSoftMask, sizeof(_float)))) {
 		return E_FAIL;
 	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fBluringStrength", &m_EffectInfo.fBluringStrength, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
 
 
 	if (m_pDiffuse_TextureCom != nullptr)

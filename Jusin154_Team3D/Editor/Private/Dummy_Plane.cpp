@@ -17,7 +17,7 @@ CDummy_Plane::CDummy_Plane(const CDummy_Plane& rhs)
 HRESULT CDummy_Plane::Initialize_Prototype()
 {
 	return S_OK;
-}
+} 
 
 HRESULT CDummy_Plane::Initialize(void* pArg)
 {

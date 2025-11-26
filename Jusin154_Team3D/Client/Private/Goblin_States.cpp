@@ -49,7 +49,7 @@ void CGoblin::Behavior_MoveEnter()
 
 HRESULT CGoblin::Behavior_MoveExitCheck()
 {
-	if (m_fTargetDistance <= 3.f)
+	if (m_fTargetDistance <= 7.f &&m_fTargetDistance !=0.f)
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
 
 	return E_FAIL;
@@ -66,9 +66,9 @@ void CGoblin::Behavior_CombatEnter()
 
 	m_pFSM->Enable_State(FSMSTATE::COMBAT);
 
-	m_pFSM->Enable_State(FSMSTATE::SKILL);
+	m_pFSM->Enable_State(FSMSTATE::SKILL2);
 
-	pairAnimInfo = m_Animation[STATEANIM::SKILL];
+	pairAnimInfo = m_Animation[STATEANIM::SKILL2];
 
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }

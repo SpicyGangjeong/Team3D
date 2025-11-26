@@ -28,6 +28,7 @@ CInstance_Model::CInstance_Model(const CInstance_Model& rhs)
 	SAFE_ADDREF(m_pVBInstance);
 }
 
+#ifdef EDITOR_PROJECT
 
 HRESULT CInstance_Model::Initialize_Prototype(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex)
 {
@@ -51,7 +52,6 @@ HRESULT CInstance_Model::Initialize_Prototype(const _char* pModelFilePath, MODEL
 	{
 		LoadData(pModelFilePath);
 	}
-#ifdef EDITOR_PROJECT
 	else if (strcmp(".fbx", szEXT) == 0)
 	{
 		_char Temp[256];
@@ -66,7 +66,6 @@ HRESULT CInstance_Model::Initialize_Prototype(const _char* pModelFilePath, MODEL
 		SaveAssimpModel(Temp , m_pAIScene);
 		return S_OK;
 	}
-#endif
 #pragma region Mesh
 	if (FAILED(Ready_Meshes())) {
 		return E_FAIL;
@@ -76,7 +75,49 @@ HRESULT CInstance_Model::Initialize_Prototype(const _char* pModelFilePath, MODEL
 
 	return S_OK;
 }
+#endif
+
+#ifndef EDITOR_PROJECT
+
+HRESULT CInstance_Model::Initialize_Prototype(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex)
+{
+	if (FAILED(__super::Initialize_Prototype()))
+		return E_FAIL;
+
+	m_iNumBuffer = 2;
+
+	XMStoreFloat4x4(&m_PreTransformMatrix, PreTransformMatrix);
+
+	m_eType = eType;
+	_char		szTextureFileName[MAX_PATH] = {};
+	_char		szDir[MAX_PATH] = {};
+	_char		szName[MAX_PATH] = {};
+	_char		szEXT[MAX_PATH] = {};
+
+	_splitpath_s(pModelFilePath, nullptr, 0, szDir, MAX_PATH, szName, MAX_PATH, szEXT, MAX_PATH);
+
+
+	if (strcmp(".bin", szEXT) == 0)
+	{
+		LoadData(pModelFilePath);
+	}
+	else {
+		return E_FAIL;
+	}
+#pragma region Mesh
+	if (FAILED(Ready_Meshes())) {
+		return E_FAIL;
+	}
+
+#pragma endregion
+
+	return S_OK;
+}
+
+#endif
+
 #ifdef EDITOR_PROJECT
+
 HRESULT CInstance_Model::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex)
 {
 	_uint			iFlag = {};
@@ -105,7 +146,9 @@ HRESULT CInstance_Model::Assimp_Model_Load(const _char* pModelFilePath, MODEL eT
 	return S_OK;
 #pragma endregion	
 }
+#endif
 
+#ifdef EDITOR_PROJECT
 HRESULT CInstance_Model::Ready_Meshes(MODEL eType, const aiScene* pAIScene, _fmatrix& PreTransformMatrix)
 {
 	XMStoreFloat4x4(&m_PreTransformMatrix, PreTransformMatrix);
@@ -694,9 +737,7 @@ HRESULT CInstance_Model::Bind_CS_Output(_uint Index, _uint iBufferIndex)
 	return S_OK;
 }
 
-
-#ifdef EDITOR_PROJECT
-
+ 
 CInstance_Model* CInstance_Model::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex)
 {
 	CInstance_Model* pInstance = new CInstance_Model(pDevice, pContext);
@@ -709,7 +750,6 @@ CInstance_Model* CInstance_Model::Create(ID3D11Device* pDevice, ID3D11DeviceCont
 
 	return pInstance;
 }
-#endif
 
 CComponent* CInstance_Model::Clone(void* pArg, CGameObject* pOwner)
 {
