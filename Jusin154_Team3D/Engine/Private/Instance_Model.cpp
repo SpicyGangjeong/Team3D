@@ -74,7 +74,7 @@ HRESULT CInstance_Model::Initialize_Prototype(const _char* pModelFilePath, MODEL
 
 	return S_OK;
 }
-
+#ifdef EDITOR_PROJECT
 HRESULT CInstance_Model::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex)
 {
 	_uint			iFlag = {};
@@ -103,6 +103,7 @@ HRESULT CInstance_Model::Assimp_Model_Load(const _char* pModelFilePath, MODEL eT
 	return S_OK;
 #pragma endregion	
 }
+#endif
 
 #ifdef EDITOR_PROJECT
 HRESULT CInstance_Model::Ready_Meshes(MODEL eType, const aiScene* pAIScene, _fmatrix& PreTransformMatrix)

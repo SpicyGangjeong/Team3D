@@ -49,9 +49,6 @@ void CEditEffect::Update(_float fTimeDelta)
 
 	m_pInstance_ModelCom->Drop(fTimeDelta);
 
-	if (m_EffectInfo.isBillboard)
-		m_pGameInstance->BillBoard(m_pTransformCom);
-
 
 }
 
@@ -63,6 +60,10 @@ void CEditEffect::Late_Update(_float fTimeDelta)
 
 	if (m_pInstance_ModelCom == nullptr)
 		return;
+
+	if (m_EffectInfo.isBillboard)
+		m_pGameInstance->BillBoard(m_pTransformCom);
+
 
 
 	if (m_isGoStraight == true)

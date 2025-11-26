@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "EditEffect.h"
 #include "TrailObject.h"
+#include "GameObject.h"
 
 
 #include <sstream>
@@ -215,6 +216,11 @@ void CEffect_Container::Update_Event(_float fTimeDelta)
 		else
 		{
 			m_bVisible = false;
+			
+			for (auto& pPart : m_PartObjects)
+			{
+				pPart.second->Set_Visible(false);
+			}
 		}
 	}
 
