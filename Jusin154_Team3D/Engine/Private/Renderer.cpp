@@ -411,8 +411,10 @@ void CRenderer::Render_Blend()
 
 void CRenderer::Render_Bloom()
 {
-#ifdef 기무리
-	{
+	if (m_pGameInstance->Key_Up(DIK_HOME)) {
+		m_bPostProcessing_BLOOM = !m_bPostProcessing_BLOOM;
+	}
+	if(true == m_bPostProcessing_BLOOM) {
 		{ // BackBuffer
 			ID3D11Texture2D* pBackBuffer = nullptr;
 			m_pGameInstance->Get_BackBufferPTR(&pBackBuffer);
@@ -450,7 +452,6 @@ void CRenderer::Render_Bloom()
 		m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_4x4_2"), TEXT("Target_Bloom"), SHADER_PASS_DEFERRED::REFIT);
 		m_pGameInstance->Finish_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_Input"), TEXT("Target_Bloom"), SHADER_PASS_DEFERRED::BLOOM_FINISH); // 9
 	}
-#endif // 기무리
 }
 
 void CRenderer::Render_UI()

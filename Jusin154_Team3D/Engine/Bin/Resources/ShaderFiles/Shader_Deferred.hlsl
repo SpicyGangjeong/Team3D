@@ -471,7 +471,7 @@ PS_OUT_BACKBUFFER PS_MAIN_EMBOSS(PS_IN In)
     float3 vColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord).xyz;
     
     // temp 이거 키면 겁나 빤짞빤짞 빛남 ㄷㄷ
-    // vColor *= 3.f;
+    //vColor *= 3.f;
     // temp
     
     //float fIntensity = dot(vColor, float3(0.3333f, 0.3333f, 0.3333f)); // 대략적인 밝기

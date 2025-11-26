@@ -44,6 +44,8 @@ private:
 	SHADOW_LIGHT_DESC m_PreShadowDesc = {};
 	_float4x4 m_PreShadowMatrices[ENUM_CLASS(D3DTS::END)] = {};
 
+	_bool m_bPostProcessing_BLOOM = { false };
+
 
 private:
 	void Render_Priority();
