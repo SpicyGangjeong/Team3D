@@ -13,7 +13,7 @@ public:
 		_float2 vSize = {};
 		_float	fPositionOffSetX{};
 		_float	fPositionOffSetY{};
-		_float2 vPsition = {};
+		_float2 vPosition = {};
 	}INSTANCE_DESC;
 protected:
 	CVIBuffer_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -27,7 +27,7 @@ public:
 	virtual HRESULT Render() override;
 
 protected:
-	ID3D11Buffer* m_pVBInstance = { nullptr };
+	ID3D11Buffer*			m_pVBInstance = { nullptr };
 	D3D11_BUFFER_DESC		m_InstanceBufferDesc = {};
 	D3D11_SUBRESOURCE_DATA	m_InstanceInitialDesc = {};
 	_uint					m_iInstanceStride = {};

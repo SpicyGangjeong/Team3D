@@ -2,8 +2,9 @@
 #include "DummySkyBox.h"
 
 #include "GameInstance.h"
-#include "DebugCamera.h"
+#include "Camera_Debug.h"
 #include "Layer.h"
+#include "Camera_Gaze.h"
 
 CDummySkyBox::CDummySkyBox(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject{ pDevice, pContext }
@@ -39,7 +40,7 @@ void CDummySkyBox::Priority_Update(_float fTimeDelta)
 
 void CDummySkyBox::Update(_float fTimeDelta)
 {
-	m_pTransformCom->Set_State(STATE::POSITION, m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_CAMERA)->Get_Object<CDebugCamera>()->Get_WorldPostion());
+	m_pTransformCom->Set_State(STATE::POSITION, m_pGameInstance->Get_CamXMPosition());
 }
 
 void CDummySkyBox::Late_Update(_float fTimeDelta)

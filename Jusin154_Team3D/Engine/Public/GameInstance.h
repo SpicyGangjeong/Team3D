@@ -29,6 +29,7 @@ public:
 	void Render_Begin(const _float4* pClearColor);
 	void Render_End();
 	HRESULT Bind_DepthStencil(class CShader* pShader, const _char* pContantName);
+	void Get_BackBufferPTR(ID3D11Texture2D** pTexture2D);
 #pragma endregion
 
 #pragma region TIMER_MANAGER
@@ -68,7 +69,7 @@ public:
 	}
 
 	template<typename T>
-	_string Asset_Description(_uint iLevel, const _char* pComponentName, Engine::CComponent** ppOut, void* pDesc, class CGameObject* pOwner = nullptr, _wstring wstrGroupName = L"")
+	_string Asset_Description(_uint iLevel, const _char* pComponentName, CComponent** ppOut, void* pDesc, class CGameObject* pOwner = nullptr, _wstring wstrGroupName = L"")
 	{
 		return m_pPrototype_Manager->CPrototype_Manager::Asset_Description<T>(iLevel, pComponentName, ppOut, pDesc, pOwner, wstrGroupName);
 	}
@@ -157,6 +158,10 @@ public:
 	HRESULT End_MRT();
 	HRESULT Bind_RenderTarget(const _wstring& strTargetTag, class CShader* pShader, const _char* pConstantName);
 	HRESULT Copy_RenderTarget(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D);
+	HRESULT Paste_RenderTarget(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D);
+	HRESULT Accumulate_RenderTarget(class CVIBuffer_Rect* pVIBuffer, class CShader* pShader, const _wstring& wstrRenderTarget_SrcA, const _wstring& wstrRenderTarget_SrcB, const _wstring& wstrRenderTarget_Target, SHADER_PASS_DEFERRED ePass);
+	HRESULT Refit_RenderTarget(class CVIBuffer_Rect* pVIBuffer, class CShader* pShader, const _wstring& wstrRenderTargetInput, const _wstring& wstrRenderTargetOutput, SHADER_PASS_DEFERRED ePass);
+	HRESULT Finish_RenderTarget(class CVIBuffer_Rect* pVIBuffer, class CShader* pShader, const _wstring& wstrRenderTargetOriginal, const _wstring& wstrRenderTargetBloomed, SHADER_PASS_DEFERRED ePass);
 #ifdef _DEBUG
 	void    RenderTarget_Debuger();
 	HRESULT Render_RenderTarget_Debug(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
@@ -168,6 +173,7 @@ public:
 	HRESULT Add_Camera(_uint iLevel, class CCamera* pCamera, const _wstring& strCameraKey);
 	HRESULT Bind_Camera(_uint iLevel, const _wstring& strCameraKey, _bool bIgnorePriority);
 	HRESULT IsBinded_Camera(const _wstring& strCameraKey);
+	_vector Get_CameraLook();
 	const _float* Get_CurrentCameraFar();
 	void Force_CamPosition(_fvector vPos);
 #pragma endregion
@@ -198,9 +204,10 @@ public:
 	void				Attach_Actor(PSX::PxActor& Actor);
 	void				Detach_Actor(PSX::PxActor& pActor);
 	void				Release_Actor(PSX::PxActor& Actor);
-
+#ifdef EDITOR_PROJECT
 	HRESULT ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix = XMMatrixIdentity());
 	HRESULT SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
+#endif // EDITOR_PROJECT
 	HRESULT LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes); // 모델 불러왔던 경로에 그대로 있음
 #pragma endregion
 #pragma region THREADHOLDER
@@ -215,26 +222,19 @@ public:
 #pragma endregion
 
 public:
-	void Add_ModelToMap(const _char* filePath, CModel* pModel)
-	{
-		m_ModelMap[filePath] = pModel;
-	}
+	void Add_ModelToMap(const _char* filePath, CModel* pModel);
 
-	void Add_SaveModel(const _char* filePath, SaveModel sModel)
-	{
-		m_sModelMap[filePath] = sModel;
-	}
-
-#ifdef EDITOR_PROJECT
-	_bool SaveAssimpModel(const _char* filename);
-#endif
+	void Add_SaveModel(const _char* filePath, SaveModel sModel);
 
 	SaveModel* Load_SaveModel(const _char* filePath);
+#ifdef EDITOR_PROJECT
+	_bool SaveAssimpModel(const _char* filename);
 	void Save_ModelFilePath(const _char* FilePath);
 	const _char* Load_ModelFilePath(_uint iIndex);
 	const _char* Load_BinaryModelFilePath(_uint iIndex);
 	size_t BinaryModelFilePathCount();
 	size_t ModelFilePathCount();
+#endif
 
 private:
 	class CGraphic_Device*			m_pGraphic_Device = { nullptr };
@@ -266,9 +266,9 @@ private:
 
 	vector<const _char*>			m_FilePaths = {};
 	map<const _char*, CModel*>			m_ModelMap;
-	map<const _char*, SaveModel>		m_sModelMap;
-#endif // _DEBUG
 
+#endif // _DEBUG
+	map<const _char*, SaveModel>		m_sModelMap;
 public:
 	void Release_Engine();
 	virtual void Free() override;

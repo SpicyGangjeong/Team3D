@@ -2010,21 +2010,6 @@
             <Scale x="1" y="1" z="1"/>
             <Rotation x="0" y="0" z="0"/>
         </PartObject>
-        <PartObject Lod_Level="1" Key_Index="0">
-            <PrototypeTag>Prototype_GameObject_SM_HM_GEN_A_int_Floor</PrototypeTag>
-            <PrototypeTag>Prototype_GameObject_SM_HM_GEN_A_int_Floor_Lod1</PrototypeTag>
-            <Position x="0" y="0" z="0"/>
-            <Scale x="1" y="1" z="1"/>
-            <Rotation x="0" y="0" z="0"/>
-        </PartObject>
-        <PartObject Lod_Level="2" Key_Index="0">
-            <PrototypeTag>Prototype_GameObject_SM_HM_GEN_A_int_Walls</PrototypeTag>
-            <PrototypeTag>Prototype_GameObject_SM_HM_GEN_A_int_Walls_Lod1</PrototypeTag>
-            <PrototypeTag>Prototype_GameObject_SM_HM_GEN_A_int_Walls_Lod2</PrototypeTag>
-            <Position x="0" y="0" z="0"/>
-            <Scale x="1" y="1" z="1"/>
-            <Rotation x="0" y="0" z="0"/>
-        </PartObject>
         <Collision Lod_Level="1" Key_Index="0">
             <PrototypeTag>Prototype_GameObject_SM_HM_GEN_A_EXT_APL_COL</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_GEN_A_EXT_APL_COL_Lod1</PrototypeTag>

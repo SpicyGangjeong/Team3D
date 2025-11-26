@@ -168,7 +168,20 @@ PBR_LIGHT_OUT PBR_Lighting(
     
     return Out;
 }
+float GetBloomCurve(float x)
+{
+    float fResult = x;
+    float fThreshold = 0.68f * 2.f;
+    x *= 2.f;
+    
+    fResult = x * 0.05f // 최소 기본값 보장
+                + max(0, x - fThreshold) // 밝기값 68 이하는 기본값으로하고 초과하면 그 값만큼 더해줌
+                * 0.5f; // 0~2로 정규화 되어있기 때문에 강조 값 보정해줌
+    
+    return fResult * 0.5f;
+}
 
+// RG 노말맵에서 Z 벡터 복원
 float3 DecodeNormalFromRG(Texture2D NormalMap, SamplerState Samp, float2 uv)
 {
     float2 vSampledRG = (NormalMap.Sample(Samp, uv).rg * 2.f - 1.f);
@@ -181,5 +194,128 @@ float3 DecodeNormalFromRG(Texture2D NormalMap, SamplerState Samp, float2 uv)
     return normalize(n);
 }
 
+float4x4 RotateX(float fAngle)
+{
+    float fCos = cos(radians(fAngle));
+    float fSin = sin(radians(fAngle));
+    
+    float4x4 RotateXMat =
+    {
+        1,      0,      0,     0,
+        0,   fCos,  -fSin,     0,
+        0,   fSin,   fCos,     0,
+        0,      0,      0,     1,  
+    };
+
+    return RotateXMat;
+}
+
+float4x4 RotateY(float fAngle)
+{
+    float fCos = cos(radians(fAngle));
+    float fSin = sin(radians(fAngle));
+    
+    float4x4 RotateYMat =
+    {
+        fCos  ,    0,   fSin,       0,
+        0     ,    1,      0,       0,
+        -fSin ,    0,   fCos,       0,
+        0     ,    0,      0,       1
+    };
+
+    return RotateYMat;
+}
+
+float4x4 RotateZ(float fAngle)
+{
+    float fCos = cos(radians(fAngle));
+    float fSin = sin(radians(fAngle));
+    
+    float4x4 RotateZMat =
+    {
+        fCos,  -fSin,     0,    0,
+        fSin,   fCos,     0,    0,
+           0,      0,     1,    0,
+           0,      0,     0,    1,
+    };
+
+    return RotateZMat;
+}
+
+float4x4 RotateAxis(float4 _vAxis , float fAngle)
+{
+    float flenhth = length(_vAxis);
+    if (flenhth < FLT_EPSILON5)
+    {
+        return float4x4(
+            1.0, 0.0, 0.0, 0.0,
+            0.0, 1.0, 0.0, 0.0,
+            0.0, 0.0, 1.0, 0.0,
+            0.0, 0.0, 0.0, 1.0
+        );
+    }
+    
+    float3 vAxis = normalize(_vAxis);
+    
+    float fCos = cos(radians(fAngle));
+    float fSin = sin(radians(fAngle));
+    
+    float fX = vAxis.x;
+    float fY = vAxis.y;
+    float fZ = vAxis.z;
+    
+    //Rodrigues 공식 기반 
+    float4x4 RotateMat =
+    float4x4(
+        fCos + fX * fX * (1.0 - fCos),               fX * fY * (1.0 - fCos) - fZ * fSin,         fX * fZ * (1.0 - fCos) + fY * fSin,                0.0,
+        fY * fX * (1.0 - fCos) + fZ * fSin,          fCos + fY * fY * (1.0 - fCos),              fY * fZ * (1.0 - fCos) - fX * fSin,                0.0,
+        fZ * fX * (1.0 - fCos) - fY * fSin,          fZ * fY * (1.0 - fCos) + fX * fSin,         fCos + fZ * fZ * (1.0 - fCos),                     0.0,
+        0.0,                                         0.0,                                        0.0,                                               1.0
+    );
+    
+    return RotateMat;
+
+}
+
+float2 SelectLerpUV(float2 fAmount, float _fRatio, int iSelectOption)
+{
+    if (iSelectOption < 0)
+        return float2(0, 0);
+    
+    float fRatio = _fRatio;
+    switch (iSelectOption)
+    {
+        case 0:
+            fRatio = fRatio; // Linear 
+            break;
+        case 1:
+            fRatio = fRatio * fRatio; // EaseInQuad 후반에 속도 증가
+            break;
+        case 2:
+            fRatio = 1 - (1 - fRatio * fRatio); // EaseOutQuad 초반에 속도 증가
+            break;
+        case 3:
+            fRatio = fRatio * fRatio * fRatio; // EaseInCubic  더 강하게 후반 속도 증가
+            break;
+        case 4:
+            fRatio = 1 - (1 - fRatio * fRatio * fRatio); // EaseOutCubic 더 강하게 초반 속도 증가
+            break;
+        case 5:
+            fRatio = 0.5f * (1 - cos(PI * fRatio)); // EaseInOutSin 사인 곡선 
+            break;
+        case 6:
+            fRatio = sin(13 * PI * fRatio) * (1 - fRatio) * (1 - fRatio); // EaseInBack 뒤로갔다가 앞으로
+            break;
+        case 7:
+            fRatio = pow(2, 10 * (fRatio - 1)); // Expo 지수 함수
+            break;
+        case 8:
+            fRatio = 1 - pow(1 - fRatio * fRatio, 0.5); // 원형 궤적     
+            break;
+    }
+    
+    return fAmount * fRatio;
+
+}
 
 #endif // ENGINE_SHADER_FUNCTIONS_HLSLI

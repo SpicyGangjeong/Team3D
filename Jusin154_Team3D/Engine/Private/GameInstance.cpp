@@ -109,7 +109,20 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 	m_pMouse_Manager->Update();
 	//m_pSound_Manager->Update();
 
+#ifdef _DEBUG
+
+
+#ifdef 기무리
+	static _bool bPicking = false;
+	GUI::Checkbox("Picking Enable", &bPicking);
+	if (bPicking) {
+		m_pPicking->Update();
+	}
+#endif // 기무리
+#endif // _DEBUG
+#ifndef 기무리
 	m_pPicking->Update();
+#endif // !기무리
 
 	m_pObject_Manager->Priority_Update(fTimeDelta);
 
@@ -117,11 +130,13 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 
 	m_pObject_Manager->Update(fTimeDelta);
 
+	m_pPhysX_Manager->Update(fTimeDelta);
+
 	m_pObject_Manager->Late_Update(fTimeDelta);
 
 	m_pLevel_Manager->Update(fTimeDelta);
 	m_pObject_Manager->Clear_DeadObj();
-	m_pPhysX_Manager->Update(fTimeDelta);
+
 	//m_pObstacle_Manager->Refresh_Region();
 }
 
@@ -188,6 +203,8 @@ void CGameInstance::BillBoard(CTransform* pTransform)
 
 }
 
+#ifdef EDITOR_PROJECT
+
 
 void CGameInstance::Save_ModelFilePath(const _char* FilePath)
 {
@@ -217,6 +234,7 @@ size_t CGameInstance::ModelFilePathCount()
 	return m_FilePaths.size();
 }
 
+#endif // EDITOR_PROJECT
 void CGameInstance::Render_Begin(const _float4* pClearColor)
 {
 	m_pGraphic_Device->Clear_BackBuffer_View(pClearColor);
@@ -237,6 +255,11 @@ void CGameInstance::Render_End()
 HRESULT CGameInstance::Bind_DepthStencil(CShader* pShader, const _char* pContantName)
 {
 	return m_pGraphic_Device->Bind_DepthStencil(pShader , pContantName);
+}
+
+void CGameInstance::Get_BackBufferPTR(ID3D11Texture2D** pTexture2D)
+{
+	m_pGraphic_Device->Get_BackBufferPTR(pTexture2D);
 }
 
 _float CGameInstance::Get_TimeDelta(const _wstring& strTimerTag)
@@ -306,7 +329,7 @@ void CGameInstance::Present_TimeCost() const
 		GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
 		GUI::Text("Timer_Occupancy %d", int(m_fTimer_Present / fTotal * 100.f));
 	}
-	GUI::Text("GameInstance RefCNT : %d", m_iRefCnt);
+	GUI::Text("GameInstance RefCNT : %d", m_iRefCnt.load());
 	static float values[60] = {};
 	static int values_offset = 0;
 	static double refresh_time = 0.0;
@@ -527,7 +550,23 @@ HRESULT CGameInstance::Copy_RenderTarget(const _wstring& strTargetTag, ID3D11Tex
 {
 	return m_pRenderTarget_Manager->Copy_RenderTarget(strTargetTag, pTexture2D);
 }
-
+HRESULT CGameInstance::Paste_RenderTarget(const _wstring& strTargetTag, ID3D11Texture2D* pTexture2D)
+{
+	return m_pRenderTarget_Manager->Paste_RenderTarget(strTargetTag, pTexture2D);
+}
+HRESULT CGameInstance::Accumulate_RenderTarget(CVIBuffer_Rect* pVIBuffer, CShader* pShader, const _wstring& wstrRenderTarget_SrcA, const _wstring& wstrRenderTarget_SrcB, const _wstring& wstrRenderTarget_Target, SHADER_PASS_DEFERRED ePass)
+{
+	return m_pRenderTarget_Manager->Accumulate_RenderTarget(pVIBuffer, pShader, wstrRenderTarget_SrcA, wstrRenderTarget_SrcB, wstrRenderTarget_Target, ePass);
+}
+HRESULT CGameInstance::Refit_RenderTarget(CVIBuffer_Rect* pVIBuffer, CShader* pShader, const _wstring& wstrRenderTargetInput, const _wstring& wstrRenderTargetOutput, SHADER_PASS_DEFERRED ePass)
+{
+	return m_pRenderTarget_Manager->Refit_RenderTarget(pVIBuffer,	pShader, wstrRenderTargetInput, wstrRenderTargetOutput, ePass);
+}
+HRESULT CGameInstance::Finish_RenderTarget(CVIBuffer_Rect* pVIBuffer, CShader* pShader, const _wstring& wstrRenderTargetOriginal, const _wstring& wstrRenderTargetBloomed, SHADER_PASS_DEFERRED ePass)
+{
+	return m_pRenderTarget_Manager->Finish_RenderTarget(pVIBuffer, pShader, wstrRenderTargetOriginal, wstrRenderTargetBloomed, ePass);
+}
+#ifdef _DEBUG
 void CGameInstance::RenderTarget_Debuger()
 {
 	m_pRenderTarget_Manager->RenderTarget_Debuger();
@@ -537,6 +576,7 @@ HRESULT CGameInstance::Render_RenderTarget_Debug(CShader* pShader, CVIBuffer_Rec
 {
 	return m_pRenderTarget_Manager->Render_RenderTarget_Debug(pShader, pVIBuffer);
 }
+#endif // _DEBUG
 HRESULT CGameInstance::Clear_Cameras(_uint iLevel)
 {
 	return m_pCamera_Manager->Clear_Cameras(iLevel);
@@ -556,6 +596,10 @@ HRESULT CGameInstance::Bind_Camera(_uint iLevel, const _wstring& strCameraKey, _
 HRESULT CGameInstance::IsBinded_Camera(const _wstring& strCameraKey)
 {
 	return m_pCamera_Manager->IsBinded_Camera(strCameraKey);
+}
+_vector CGameInstance::Get_CameraLook()
+{
+	return m_pCamera_Manager->Get_CameraLook();
 }
 const _float* CGameInstance::Get_CurrentCameraFar()
 {
@@ -591,7 +635,19 @@ _bool CGameInstance::SaveAssimpModel(const _char* filename)
 	auto iter = m_ModelMap.find(filename);
 	return iter->second->SaveAssimpModel(filename);
 }
+void CGameInstance::Add_ModelToMap(const _char* filePath, CModel* pModel)
+{
+	m_ModelMap[filePath] = pModel;
+}
+
+
 #endif
+
+void CGameInstance::Add_SaveModel(const _char* filePath, SaveModel sModel)
+{
+	m_sModelMap[filePath] = sModel;
+}
+
 SaveModel* CGameInstance::Load_SaveModel(const _char* filePath)
 {
 	auto iter = m_sModelMap.find(filePath);
@@ -649,6 +705,7 @@ void CGameInstance::Release_Actor(PSX::PxActor& Actor)
 {
 	m_pPhysX_Manager->Detach_Actor(Actor);
 }
+#ifdef EDITOR_PROJECT
 HRESULT CGameInstance::ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix)
 {
 	return m_pPhysX_Manager->ConvertToTriMeshes(Meshes, pxTriMeshes, WorldMatrix);
@@ -657,6 +714,8 @@ HRESULT CGameInstance::SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleM
 {
 	return m_pPhysX_Manager->SaveTriMeshes(pPath, TriMeshes);
 }
+#endif // EDITOR_PROJECT
+
 HRESULT CGameInstance::LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes)
 {
 	return m_pPhysX_Manager->LoadTriMeshes(pPath, TriMeshes);

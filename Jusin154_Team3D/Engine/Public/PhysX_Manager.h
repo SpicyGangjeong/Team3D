@@ -28,9 +28,11 @@ public:
 	
 	void RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh);
 	PSX::PxMaterial* Create_Material(const _float3* vMatInfo);
+#ifdef EDITOR_PROJECT
 
 	HRESULT ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix);
 	HRESULT SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
+#endif // EDITOR_PROJECT
 	HRESULT LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
 	//HRESULT LoadTriMeshes_Binary(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
 	PSX::PxTriangleMesh* Find_TriangleMesh(const _tchar* pMeshName);
@@ -81,6 +83,15 @@ private:
 	map<_wstring, PSX::PxTriangleMesh*>			m_TriangleMeshes = {};
 	map<_wstring, PSX::PxTriangleMeshGeometry*>	m_TriangleMeshGeometry = {};
 #ifdef 기무리
+	PhsXUserData PlaneData = {};
+
+#endif // 기무리
+#ifdef 진우
+	PhsXUserData PlaneData = {};
+
+#endif // 기무리
+
+#ifdef Bin
 	PhsXUserData PlaneData = {};
 
 #endif // 기무리

@@ -65,17 +65,19 @@ void CRenderer::Render()
 	Render_Blur();
 	Render_Combined();
 	Render_Effect();
-	Render_WeightBlend();
 	Render_NonLight();
 	Render_Blend();
+	Render_WeightBlend();
+	Render_Bloom();
 	Render_LastColor();
 	Render_UI();
 
 #ifdef _DEBUG
 	m_pGameInstance->RenderTarget_Debuger();
 
-	if(m_pGameInstance->Key_Pressing(DIK_F10))
+	if(m_pGameInstance->Key_Pressing(DIK_F10)){
 		Render_Debug();
+	}
 #endif
 }
 
@@ -264,7 +266,7 @@ void CRenderer::Render_Combined()
 		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur_X"), m_pShader, "g_BlurXTexture"))) {
 			return;
 		}
-		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur_Weight"), m_pShader, "g_BlurWeightTexture"))) {
+		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur_X_Weight"), m_pShader, "g_BlurWeightXTexture"))) {
 			return;
 		}
 
@@ -370,11 +372,10 @@ void CRenderer::Render_Blur()
 	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur"), m_pShader, "g_BlurTexture"))) {
 		return;
 	}
-
+	
 	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur_Weight"), m_pShader, "g_BlurWeightTexture"))) {
 		return;
 	}
-
 	
 	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::BLUR));
 
@@ -382,7 +383,8 @@ void CRenderer::Render_Blur()
 
 	m_pVIBuffer->Render();
 
-	if (FAILED(m_pGameInstance->End_MRT())) {
+	if (FAILED(m_pGameInstance->End_MRT()))
+	{
 		return;
 	}
 
@@ -405,6 +407,51 @@ void CRenderer::Render_Blend()
 	}
 
 	m_RenderObjects[ENUM_CLASS(RENDER::BLEND)].clear();
+}
+
+void CRenderer::Render_Bloom()
+{
+	if (m_pGameInstance->Key_Up(DIK_HOME)) {
+		m_bPostProcessing_BLOOM = !m_bPostProcessing_BLOOM;
+	}
+	if(true == m_bPostProcessing_BLOOM) {
+		{ // BackBuffer
+			ID3D11Texture2D* pBackBuffer = nullptr;
+			m_pGameInstance->Get_BackBufferPTR(&pBackBuffer);
+			//m_pGameInstance->Copy_RenderTarget(TEXT("Target_Diffuse"), pBackBuffer);
+			m_pGameInstance->Paste_RenderTarget(TEXT("Target_Bloom_Input"), pBackBuffer);
+			SAFE_RELEASE(pBackBuffer);
+		}
+
+		// "Target_Bloom_Input"
+		// "Target_Bloom"
+		// "Target_Bloom_4x4"
+		// "Target_Bloom_8x8"
+		// "Target_Bloom_16x16"
+		// "Target_Bloom_16x16_X"
+		// "Target_Bloom_8x8_2"
+		// "Target_Bloom_4x4_2"
+
+		m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_Input"), TEXT("Target_Bloom_4x4"), SHADER_PASS_DEFERRED::EMBOSSING); // 2
+		m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_4x4"), TEXT("Target_Bloom_8x8"), SHADER_PASS_DEFERRED::REFIT); // 3
+		m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_8x8"), TEXT("Target_Bloom_16x16"), SHADER_PASS_DEFERRED::REFIT); // 4
+
+		m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_16x16"), TEXT("Target_Bloom_16x16_X"), SHADER_PASS_DEFERRED::BLOOM_BLURX);
+		m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_16x16_X"), TEXT("Target_Bloom_16x16"), SHADER_PASS_DEFERRED::BLOOM_BLURY); // 5
+		m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_16x16"), TEXT("Target_Bloom_8x8"), SHADER_PASS_DEFERRED::REFIT); // 6
+
+		m_pGameInstance->Accumulate_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_8x8"), TEXT("Target_Bloom_16x16"), TEXT("Target_Bloom_8x8_2"), SHADER_PASS_DEFERRED::BLOOM_ACCUM);
+		m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_8x8_2"), TEXT("Target_Bloom_8x8"), SHADER_PASS_DEFERRED::BLOOM_BLURX);
+		m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_8x8"), TEXT("Target_Bloom_8x8_2"), SHADER_PASS_DEFERRED::BLOOM_BLURY); // 7
+
+		m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_8x8_2"), TEXT("Target_Bloom_4x4"), SHADER_PASS_DEFERRED::REFIT);
+		m_pGameInstance->Accumulate_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_4x4"), TEXT("Target_Bloom_8x8_2"), TEXT("Target_Bloom_4x4_2"), SHADER_PASS_DEFERRED::BLOOM_ACCUM);
+		m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_4x4_2"), TEXT("Target_Bloom_4x4"), SHADER_PASS_DEFERRED::BLOOM_BLURX);
+		m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_4x4"), TEXT("Target_Bloom_4x4_2"), SHADER_PASS_DEFERRED::BLOOM_BLURY); // 8
+
+		m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_4x4_2"), TEXT("Target_Bloom"), SHADER_PASS_DEFERRED::REFIT);
+		m_pGameInstance->Finish_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_Input"), TEXT("Target_Bloom"), SHADER_PASS_DEFERRED::BLOOM_FINISH); // 9
+	}
 }
 
 void CRenderer::Render_UI()
@@ -574,22 +621,63 @@ HRESULT CRenderer::Initialize()
 		}
 
 		/* Target_Blur */
-
-		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Blur_Weight"), (_uint)Viewport.Width, (_uint)Viewport.Height,
-			DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.0f, 0.0f, 0.0f, 1.0f)))) {
-			return E_FAIL;
-		}
-
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Blur"), (_uint)Viewport.Width, (_uint)Viewport.Height,
 			DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
 			return E_FAIL;
 		}
+
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Blur_Weight"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 1.0f)))) {
+			return E_FAIL;
+		}
+
 
 		/* Target_Blur_X */
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Blur_X"), (_uint)Viewport.Width, (_uint)Viewport.Height,
 			DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
 			return E_FAIL;
 		}
+
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Blur_X_Weight"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 1.0f)))) {
+			return E_FAIL;
+		}
+
+		/* Target_Bloom */
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Bloom_Input"), (_uint)(Viewport.Width), (_uint)(Viewport.Height),
+			DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Bloom"), (_uint)(Viewport.Width), (_uint)(Viewport.Height),
+			DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Bloom_4x4"), (_uint)(Viewport.Width * 0.25f), (_uint)(Viewport.Height * 0.25f),
+			DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Bloom_8x8"), (_uint)(Viewport.Width * 0.125f), (_uint)(Viewport.Height * 0.125f),
+			DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Bloom_16x16"), (_uint)(Viewport.Width * 0.0625f), (_uint)(Viewport.Height * 0.0625f),
+			DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Bloom_16x16_X"), (_uint)(Viewport.Width * 0.0625f), (_uint)(Viewport.Height * 0.0625f),
+			DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Bloom_8x8_2"), (_uint)(Viewport.Width * 0.125f), (_uint)(Viewport.Height * 0.125f),
+			DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Bloom_4x4_2"), (_uint)(Viewport.Width * 0.25f), (_uint)(Viewport.Height * 0.25f),
+			DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+
+
 
 		/* Target_Color*/
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Color"), (_uint)Viewport.Width, (_uint)Viewport.Height,
@@ -643,6 +731,7 @@ HRESULT CRenderer::Initialize()
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_LightAcc"), TEXT("Target_Specular")))) {
 			return E_FAIL;
 		}
+
 		/* MRT_Shadow */
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Shadow"), TEXT("Target_Shadow")))) {
 			return E_FAIL;
@@ -656,13 +745,15 @@ HRESULT CRenderer::Initialize()
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Blur"), TEXT("Target_Blur")))) {
 			return E_FAIL;
 		}
-
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Blur"), TEXT("Target_Blur_Weight")))) {
 			return E_FAIL;
 		}
 
 		/* MRT_Blur_X */
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Blur_X"), TEXT("Target_Blur_X")))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Blur_X"), TEXT("Target_Blur_X_Weight")))) {
 			return E_FAIL;
 		}
 

@@ -5,7 +5,14 @@
 #include "Light_Main.h"
 #include "Camera_Debug.h"
 #include "InfoInstance.h"
+#include "GamePlay_Canvas.h"
 #include "Layer.h"
+#include "Player.h"
+#include "SkyBox.h"
+#include "Broom.h"
+#include "Dummy_PhysXWall.h"
+#include "Dummy_PhysXPlayable.h"
+#include "Goblin.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -25,7 +32,13 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	if (FAILED(Ready_Layer_UI(LAYER_UI))) {
 		return E_FAIL;
 	}
-	if (FAILED(Ready_Layer_Effect(LAYER_EFFECT))) {
+	if (FAILED(Ready_Layer_Player(LAYER_PLAYER))) {
+		return E_FAIL;
+	}
+	if (FAILED(Ready_Layer_SkyBox(TEXT("Layer_SkyBox")))) {
+		return E_FAIL;
+	}
+	if (FAILED(Ready_Layer_Monster())) {
 		return E_FAIL;
 	}
 
@@ -40,7 +53,7 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->Mouse_Up(DIM_RBUTTON))
+	if (m_pGameInstance->Key_Up(DIK_ADD))
 	{
 		m_pGameInstance->Set_LevelToChange();
 	}
@@ -71,6 +84,10 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 
 HRESULT CLevel_GamePlay::Ready_Layer_UI(const _wstring& strLayerTag)
 {
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGamePlay_Canvas>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_UI))) {
+	//	return E_FAIL;
+	//}
+
 	return S_OK;
 }
 
@@ -86,7 +103,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 	Camera_Desc.pCameraKey = CAMERA_DEBUG;
 	Camera_Desc.fRotationPerSec = XMConvertToRadians(90.0f);
 	Camera_Desc.fMouseSensor = 0.1f;
-	Camera_Desc.iPriority = 99;
+	Camera_Desc.iPriority = 70;
 	Camera_Desc.pFollowTarget = { nullptr };
 	Camera_Desc.pLookTarget = { nullptr };
 
@@ -94,9 +111,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCamera_Debug>(g_iStaticLevel, NEXT_LEVEL, LAYER_CAMERA, &Camera_Desc, nullptr, &pCamera))){
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Bind_Camera(NEXT_LEVEL, CAMERA_DEBUG, true))) {
+
+	m_pGameInstance->Add_Camera(g_iStaticLevel, pCamera, CAMERA_DEBUG);
+	if (FAILED(m_pGameInstance->Bind_Camera(g_iStaticLevel, CAMERA_DEBUG, true))) {
 		return E_FAIL;
 	}
+
 
 	return S_OK;
 }
@@ -112,8 +132,40 @@ HRESULT CLevel_GamePlay::Ready_Markers()
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_Effect(const _wstring& strLayerTag)
+HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag,nullptr,nullptr,&m_pPlayerTemp)))
+		return E_FAIL;
+
+	/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
+		return E_FAIL;*/
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_SkyBox(const _wstring& strLayerTag)
+{
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSkyBox>(g_iStaticLevel, NEXT_LEVEL, LAYER_SKYBOX))){
+		return E_FAIL;
+	}
+
+	CDummy_PhysXWall::PHYSXDUMMY_DESC Desc{};
+	Desc.vPos = { 0.f, 0.f, 0.f };
+	Desc.vRotRPY = { 0.f, m_pGameInstance->Random_Float(0.f, XM_2PI), 0.f };
+	Desc.iSubKind = 23;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXWall>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE, &Desc))) {
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Monster()
+{
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER, m_pPlayerTemp)))
+		return E_FAIL;
+
 	return S_OK;
 }
 

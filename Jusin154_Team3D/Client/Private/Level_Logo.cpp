@@ -23,7 +23,7 @@ HRESULT CLevel_Logo::Initialize()
 
 void CLevel_Logo::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->Mouse_Up(DIM_RBUTTON))
+	if (m_pGameInstance->Key_Up(DIK_F1))
 	{
 		m_pGameInstance->Set_LevelToChange();
 	}

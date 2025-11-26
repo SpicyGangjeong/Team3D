@@ -51,12 +51,13 @@ public:
 		_bool	isMaskUVMove = {};
 		_bool   isBlur = {};
 		_bool   isBillboard = {};
+	
 
 		_float4 vEmissive = { 0.f ,0.f ,0.f ,0.f };
 		_float  fDiffuseAlpha = { 1.f };
 		_float  fBlurIntensity = {};
 		_float  fNoiseDistortionIntensity = {};
-		_float  fEmissiveCutAlpha = {};
+		_float  fEmissiveStrength = { 0.f };
 
 		LIGHT_DESC	LightDesc = {};
 		RENDER		eRenderOrder = { RENDER::EFFECT };
@@ -64,6 +65,26 @@ public:
 		_bool   isReverseDissolve = {};
 
 		EFFECT_TYPE eEffectType = { EFFECT_TYPE::EFFECT };
+
+		_bool   isEmissiveDissolve = { false };
+
+		_bool   isMaskClampSample = { false };
+		_bool   isNoiseColor = { false };
+		_bool   isNoiseAlpha = { false };
+		_bool	isNomalDissolve = {};
+
+		_float fSoftenExp = { 1.31429f };
+		_float fSoftStrength = {};
+		_float fCoreBoost = {};
+		_float fRadius = {};
+
+		_float fSoftMaskEdge = {};
+		_float fSoftMask = {};
+
+		_bool   isEmissiveDissolveReverse = { false };
+		_bool   isOnlyBlur = { false };
+
+		SHADER_PASS_INSTANCE_MODEL eShaderPass = { SHADER_PASS_INSTANCE_MODEL::NON_NOMALMAP };
 
 	}EFFECT_INFO;
 
@@ -107,14 +128,30 @@ public:
 		_float  fDiffuseAlpha = { 1.f };
 		_float  fBlurIntensity = {};
 		_float  fNoiseDistortionIntensity = {};
-		_float  fEmissiveCutAlpha = {};
+		_float  fEmissiveStrength = {};
 
 		LIGHT_DESC	LightDesc = {};
 		RENDER		eRenderOrder = { RENDER::EFFECT };
-
 		_bool   isReverseDissolve = {};
+		EFFECT_TYPE eEffectType = { EFFECT_TYPE::EFFECT };
+		_bool   isEmissiveDissolve = { false };
+		_bool   isMaskClampSample = { false };
+		_bool   isNoiseColor = { false };
+		_bool   isNoiseAlpha = { false };
+		_bool	isNomalDissolve = {};
 
+		_float fSoftenExp = { 1.31429f };
+		_float fSoftStrength = {};
+		_float fCoreBoost = {};
+		_float fRadius = {};
 
+		_float fSoftMaskEdge = {};
+		_float fSoftMask = {};
+
+		_bool   isEmissiveDissolveReverse = { false };
+		_bool   isOnlyBlur = { false };
+
+		SHADER_PASS_INSTANCE_MODEL eShaderPass = { SHADER_PASS_INSTANCE_MODEL::NON_NOMALMAP };
 
 	}PRE_EFFECT_INFO;
 
@@ -131,7 +168,7 @@ public:
 	virtual HRESULT Render_Blur() override;
 public:
 	HRESULT Load(const _char* pFilePath, LEVEL eLevel);
-
+	HRESULT Load();
 public:
 #ifdef _DEBUG
 		HRESULT LoadPre(const _char* pFilePath, LEVEL eLevel);

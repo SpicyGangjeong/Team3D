@@ -40,6 +40,7 @@ HRESULT CMission_Key::Initialize(void* pArg)
 	m_fTimeMult = 3.f;
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 3.f;
+	AlphabetUV('V');
 	return S_OK;
 }
 
@@ -82,7 +83,6 @@ void CMission_Key::Update(_float fTimeDelta)
 			m_fAlpha = 0.f;
 		}
 	}
-
 	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
 }
@@ -94,9 +94,7 @@ void CMission_Key::Late_Update(_float fTimeDelta)
 		return;
 	}
 	if (m_bVisible) {
-		if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
 			m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
-		}
 		__super::Late_Update(fTimeDelta);
 	}
 }
@@ -106,7 +104,7 @@ HRESULT CMission_Key::Render()
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::DEFAULT)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::REMOVEUV)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
@@ -122,6 +120,32 @@ HRESULT CMission_Key::Render()
 _vector CMission_Key::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
+}
+
+_float4 CMission_Key::AlphabetUV(_tchar Alphabet)
+{
+	_uint Number = CMyTools::AlphabetToInt(Alphabet);
+
+	_float2 fIamge_Size = { 320.f, 384.f };
+
+	_uint iXCount = 5;
+	_uint iYCount = 6;
+
+	_float frameWidth = 64.f;
+	_float frameHeight = 64.f;
+
+	_uint frameX = Number % iXCount;
+	_uint frameY = Number / iXCount;
+
+	_float2 UVStart;
+	UVStart.x = frameX * frameWidth / fIamge_Size.x;
+	UVStart.y = frameY * frameHeight / fIamge_Size.y;
+
+	_float2 UVEnd;
+	UVEnd.x = UVStart.x + (frameWidth / fIamge_Size.x);
+	UVEnd.y = UVStart.y + (frameHeight / fIamge_Size.y);
+
+	return m_vUV = _float4(UVStart.x, UVStart.y, UVEnd.x, UVEnd.y);
 }
 
 HRESULT CMission_Key::Bind_ShaderResources()
@@ -162,6 +186,10 @@ HRESULT CMission_Key::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fImageUV", &m_vUV, sizeof(_float4))))
+	{
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
@@ -171,7 +199,7 @@ HRESULT CMission_Key::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_Keyboard_V"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_Atlas_Keyboard"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}

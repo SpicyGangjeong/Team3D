@@ -8,7 +8,8 @@ CEffectObject::CEffectObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 }
 
 CEffectObject::CEffectObject(const CEffectObject& rhs)
-	:CPartObject(rhs)
+	:CPartObject(rhs),
+	m_strPath(rhs.m_strPath)
 {
 }
 
@@ -36,7 +37,8 @@ HRESULT CEffectObject::Render()
 	for (_uint i = 0; i < m_pInstance_ModelCom->Get_NumMeshes(); i++)
 	{
 
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_INSTANCE_MODEL::NON_NOMALMAP)))) {
+
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(m_EffectInfo.eShaderPass)))) {
 			return E_FAIL;
 		}
 
@@ -45,7 +47,6 @@ HRESULT CEffectObject::Render()
 
 		if (FAILED(m_pInstance_ModelCom->Bind_CS_Output(5, 1)))
 			return E_FAIL;
-
 
 		if (FAILED(m_pInstance_ModelCom->Render(i)))
 		{
@@ -72,12 +73,22 @@ HRESULT CEffectObject::Render_Blur()
 		return E_FAIL;
 	}
 
-	
+	SHADER_PASS_INSTANCE_MODEL BlurPass = {};
+
+	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NON_WORLD)
+	{
+		BlurPass = SHADER_PASS_INSTANCE_MODEL::BLUR_NO_WORLD;
+	}
+	else
+	{
+		BlurPass = SHADER_PASS_INSTANCE_MODEL::BLUR;
+	}
 
 	for (_uint i = 0; i < m_pInstance_ModelCom->Get_NumMeshes(); i++)
 	{
+	
 
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_INSTANCE_MODEL::BLUR)))) {
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(BlurPass)))) {
 			return E_FAIL;
 		}
 
@@ -114,7 +125,9 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 		SAFE_RELEASE(m_pLightCom);
 	
 	_string strPerfectFilePath = pFilePath;
-	
+
+	m_strPath = strPerfectFilePath;
+
 	strPerfectFilePath += ".bin";
 
 	HANDLE hFile = CreateFileW(
@@ -134,11 +147,12 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 	}
 
 	// 나중에 패키징할때 패스를 저장할거임
-	m_strPath = strPerfectFilePath;
+
 
 	DWORD	dwByte(0);
 
 	if (!ReadFile(hFile, &m_EffectInfo, sizeof(EFFECT_INFO), &dwByte, nullptr)) {
+		CloseHandle(hFile);
 		return E_FAIL;
 	}
 
@@ -149,6 +163,7 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 	{
 		if (FAILED(Add_Component<CLight>(g_iStaticLevel, &m_pLightCom, &m_EffectInfo.LightDesc)))
 		{
+			CloseHandle(hFile);
 			return E_FAIL;
 		}
 	}
@@ -159,6 +174,7 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 		size_t iComponentLength = {};
 
 		if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+			CloseHandle(hFile);
 			return E_FAIL;
 		}
 
@@ -167,16 +183,22 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 			_char szName[MAX_PATH] = {};
 
 			if (!ReadFile(hFile, &szName, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+				CloseHandle(hFile);
 				return E_FAIL;
 			}
 
 			m_strDiffuseName = szName;
 
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strDiffuseName),
+				reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom))))
+			{
+				CloseHandle(hFile);
+				return E_FAIL;
+			}
+
 		}
 
-		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strDiffuseName),
-			reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom))))
-			return E_FAIL;
+
 	}
 
 	if (m_EffectInfo.isNoise)
@@ -185,6 +207,7 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 
 
 		if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+			CloseHandle(hFile);
 			return E_FAIL;
 		}
 
@@ -193,15 +216,18 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 			_char szName[MAX_PATH] = {};
 
 			if (!ReadFile(hFile, &szName, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+				CloseHandle(hFile);
 				return E_FAIL;
 			}
 
 			m_strNoiseName = szName;
+
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strNoiseName),
+				reinterpret_cast<CComponent**>(&m_pNoise_TextureCom))))
+				return E_FAIL;
 		}
 
-		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strNoiseName),
-			reinterpret_cast<CComponent**>(&m_pNoise_TextureCom))))
-			return E_FAIL;
+
 	}
 
 	if (m_EffectInfo.isMasking)
@@ -219,15 +245,21 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 			_char szName[MAX_PATH] = {};
 
 			if (!ReadFile(hFile, &szName, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+				CloseHandle(hFile);
 				return E_FAIL;
 			}
 
 			m_strMaskingName = szName;
+
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strMaskingName),
+				reinterpret_cast<CComponent**>(&m_pMasking_TextureCom))))
+			{
+				CloseHandle(hFile);
+				return E_FAIL;
+			}
 		}
 
-		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strMaskingName),
-			reinterpret_cast<CComponent**>(&m_pMasking_TextureCom))))
-			return E_FAIL;
+	
 	}
 
 	if (m_EffectInfo.isDissolve)
@@ -235,6 +267,7 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 		size_t iComponentLength = {};
 
 		if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+			CloseHandle(hFile);
 			return E_FAIL;
 		}
 
@@ -243,15 +276,23 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 			_char szName[MAX_PATH] = {};
 
 			if (!ReadFile(hFile, &szName, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+				CloseHandle(hFile);
 				return E_FAIL;
 			}
 
 			m_strDissolveName = szName;
+
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strDissolveName),
+				reinterpret_cast<CComponent**>(&m_pDissolve_TextureCom))))
+			{
+				CloseHandle(hFile);
+				return E_FAIL;
+			}
+
+
 		}
 
-		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strDissolveName),
-			reinterpret_cast<CComponent**>(&m_pDissolve_TextureCom))))
-			return E_FAIL;
+	
 	}
 
 	if (m_EffectInfo.isEmissive)
@@ -259,6 +300,7 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 		size_t iComponentLength = {};
 
 		if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+			CloseHandle(hFile);
 			return E_FAIL;
 		}
 
@@ -267,15 +309,21 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 			_char szName[MAX_PATH] = {};
 
 			if (!ReadFile(hFile, &szName, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+				CloseHandle(hFile);
 				return E_FAIL;
 			}
 
 			m_strEmissiveName = szName;
+
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strEmissiveName),
+				reinterpret_cast<CComponent**>(&m_pEmissive_TextureCom))))
+			{
+				CloseHandle(hFile);
+				return E_FAIL;
+			}
 		}
 
-		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strEmissiveName),
-			reinterpret_cast<CComponent**>(&m_pEmissive_TextureCom))))
-			return E_FAIL;
+	
 	}
 
 	if (m_EffectInfo.isDistortion)
@@ -283,6 +331,7 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 		size_t iComponentLength = {};
 
 		if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+			CloseHandle(hFile);
 			return E_FAIL;
 		}
 
@@ -291,21 +340,28 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 			_char szName[MAX_PATH] = {};
 
 			if (!ReadFile(hFile, &szName, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+				CloseHandle(hFile);
 				return E_FAIL;
 			}
 
 			m_strDistortionName = szName;
+
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strDistortionName),
+				reinterpret_cast<CComponent**>(&m_pDistortion_TextureCom))))
+			{
+				CloseHandle(hFile);
+				return E_FAIL;
+			}
 		}
 
-		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strDistortionName),
-			reinterpret_cast<CComponent**>(&m_pDistortion_TextureCom))))
-			return E_FAIL;
+
 	}
 
 	size_t iComponentLength = {};
 
 
 	if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+		CloseHandle(hFile);
 		return E_FAIL;
 	}
 
@@ -314,22 +370,38 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 		_char szName[MAX_PATH] = {};
 
 		if (!ReadFile(hFile, &szName, sizeof(_char) * ((DWORD)(DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+			CloseHandle(hFile);
 			return E_FAIL;
 		}
 
 		m_strModelName = szName;
+
+		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strModelName),
+			reinterpret_cast<CComponent**>(&m_pInstance_ModelCom))))
+		{
+			CloseHandle(hFile);
+			return E_FAIL;;
+		}
 	}
 
-	if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strModelName),
-		reinterpret_cast<CComponent**>(&m_pInstance_ModelCom))))
-		return E_FAIL;;
+
 
 	m_pInstance_ModelCom->Load_InstanceModel(hFile);
 
 	CloseHandle(hFile);
 
 
-	MessageBox(NULL, L"이펙트 로드 성공", L"System Message", MB_OK);
+
+	return S_OK;
+}
+
+HRESULT CEffectObject::Load()
+{
+
+	if (FAILED(Load(m_strPath.c_str(), static_cast<LEVEL>(NEXT_LEVEL))))
+		return E_FAIL;
+
+
 
 	return S_OK;
 }
@@ -398,11 +470,11 @@ HRESULT CEffectObject::LoadPre(const _char* pFilePath, LEVEL eLevel)
 
 			m_strDiffuseName = szName;
 
-		}
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strDiffuseName),
+				reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom))))
+				return E_FAIL;
 
-		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strDiffuseName),
-			reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom))))
-			return E_FAIL;
+		}
 	}
 
 	if (m_EffectInfo.isNoise)
@@ -423,11 +495,13 @@ HRESULT CEffectObject::LoadPre(const _char* pFilePath, LEVEL eLevel)
 			}
 
 			m_strNoiseName = szName;
+
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strNoiseName),
+				reinterpret_cast<CComponent**>(&m_pNoise_TextureCom))))
+				return E_FAIL;
 		}
 
-		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strNoiseName),
-			reinterpret_cast<CComponent**>(&m_pNoise_TextureCom))))
-			return E_FAIL;
+
 	}
 
 	if (m_EffectInfo.isMasking)
@@ -449,11 +523,13 @@ HRESULT CEffectObject::LoadPre(const _char* pFilePath, LEVEL eLevel)
 			}
 
 			m_strMaskingName = szName;
+
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strMaskingName),
+				reinterpret_cast<CComponent**>(&m_pMasking_TextureCom))))
+				return E_FAIL;
 		}
 
-		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strMaskingName),
-			reinterpret_cast<CComponent**>(&m_pMasking_TextureCom))))
-			return E_FAIL;
+
 	}
 
 	if (m_EffectInfo.isDissolve)
@@ -473,11 +549,13 @@ HRESULT CEffectObject::LoadPre(const _char* pFilePath, LEVEL eLevel)
 			}
 
 			m_strDissolveName = szName;
+
+
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strDissolveName),
+				reinterpret_cast<CComponent**>(&m_pDissolve_TextureCom))))
+				return E_FAIL;
 		}
 
-		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strDissolveName),
-			reinterpret_cast<CComponent**>(&m_pDissolve_TextureCom))))
-			return E_FAIL;
 	}
 
 	if (m_EffectInfo.isEmissive)
@@ -497,11 +575,13 @@ HRESULT CEffectObject::LoadPre(const _char* pFilePath, LEVEL eLevel)
 			}
 
 			m_strEmissiveName = szName;
+
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strEmissiveName),
+				reinterpret_cast<CComponent**>(&m_pEmissive_TextureCom))))
+				return E_FAIL;
 		}
 
-		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strEmissiveName),
-			reinterpret_cast<CComponent**>(&m_pEmissive_TextureCom))))
-			return E_FAIL;
+
 	}
 
 	if (m_EffectInfo.isDistortion)
@@ -521,11 +601,13 @@ HRESULT CEffectObject::LoadPre(const _char* pFilePath, LEVEL eLevel)
 			}
 
 			m_strDistortionName = szName;
+
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strDistortionName),
+				reinterpret_cast<CComponent**>(&m_pDistortion_TextureCom))))
+				return E_FAIL;
 		}
 
-		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strDistortionName),
-			reinterpret_cast<CComponent**>(&m_pDistortion_TextureCom))))
-			return E_FAIL;
+
 	}
 
 	size_t iComponentLength = {};
@@ -544,11 +626,13 @@ HRESULT CEffectObject::LoadPre(const _char* pFilePath, LEVEL eLevel)
 		}
 
 		m_strModelName = szName;
+
+
+		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strModelName),
+			reinterpret_cast<CComponent**>(&m_pInstance_ModelCom))))
+			return E_FAIL;;
 	}
 
-	if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strModelName),
-		reinterpret_cast<CComponent**>(&m_pInstance_ModelCom))))
-		return E_FAIL;;
 
 	m_pInstance_ModelCom->PreLoad(hFile);
 
@@ -561,9 +645,8 @@ HRESULT CEffectObject::LoadPre(const _char* pFilePath, LEVEL eLevel)
 HRESULT CEffectObject::Bind_ShaderResources()
 {
 
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix))) {
+	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
-	}
 
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))) {
 		return E_FAIL;
@@ -612,8 +695,32 @@ HRESULT CEffectObject::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_isReverseDissolve", &m_EffectInfo.isReverseDissolve, sizeof(_bool)))) {
 		return E_FAIL;
 	}
-	
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isEmissiveDissolve", &m_EffectInfo.isEmissiveDissolve, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isMaskClampSample", &m_EffectInfo.isMaskClampSample, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isNoiseColor", &m_EffectInfo.isNoiseColor, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isNoiseAlpha", &m_EffectInfo.isNoiseAlpha, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isNomalDissolve", &m_EffectInfo.isNomalDissolve, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isEmissiveDissolveReverse", &m_EffectInfo.isEmissiveDissolveReverse, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vColor", &m_EffectInfo.vColor, sizeof(_float4)))) {
 		return E_FAIL;
@@ -623,7 +730,7 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fEmissiveCutAlpha", &m_EffectInfo.fEmissiveCutAlpha, sizeof(_float)))) {
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fEmissiveStrength", &m_EffectInfo.fEmissiveStrength, sizeof(_float)))) {
 		return E_FAIL;
 	}
 
@@ -679,12 +786,36 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
+
+
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDiffuseAlpha", &m_EffectInfo.fDiffuseAlpha, sizeof(_float)))) {
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fSoftenExp", &m_EffectInfo.fSoftenExp, sizeof(_float)))) {
+		return E_FAIL;
+	}
 
-	
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fSoftStrength", &m_EffectInfo.fSoftStrength, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCoreBoost", &m_EffectInfo.fCoreBoost, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fRadius", &m_EffectInfo.fRadius, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fSoftMaskEdge", &m_EffectInfo.fSoftMaskEdge, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fSoftMask", &m_EffectInfo.fSoftMask, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
 
 	if (m_pDiffuse_TextureCom != nullptr)
 	{

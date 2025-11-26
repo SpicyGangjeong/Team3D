@@ -8,7 +8,7 @@ class ENGINE_DLL CUIObject abstract : public CGameObject
 {
 public:
 	enum class SKILLTYPE {
- SHADOW, CONTROL, POWER, DAMAGE,
+CONTROL, POWER, DAMAGE,
 UTILITY ,TRANSFORM, CURSE, ESSENTIAL
 };
 typedef struct tagUIObjectDesc
@@ -32,6 +32,7 @@ public:
 public:
 	virtual void MoveX(_float fX);
 	virtual void MoveY(_float fY);
+	virtual void Move(_float fX, _float fY);
 	virtual void SizeUpdate(_float fSizeX, _float fSizeY);
 	virtual void SizeUpX(_float fSizeX);
 	virtual void SizeUpY(_float fSizeY);

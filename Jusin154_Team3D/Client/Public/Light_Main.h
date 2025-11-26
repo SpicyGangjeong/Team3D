@@ -3,10 +3,6 @@
 #include "Client_Define.h"
 #include "GameObject.h"
 
-NS_BEGIN(Engine)
-class CLight;
-NS_END
-
 NS_BEGIN(Client)
 
 class CLight_Main final : public CGameObject
@@ -35,7 +31,11 @@ public:
 	static CLight_Main* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr) override;
 	virtual void Free() override;
+#ifdef _DEBUG
 	virtual void Describe_Entity() override;
+
+#endif // _DEBUG
+
 };
 
 NS_END

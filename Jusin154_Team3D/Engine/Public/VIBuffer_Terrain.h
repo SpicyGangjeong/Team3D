@@ -25,6 +25,15 @@ public:
 	_bool	Picking(_fmatrix WorldMatrix, _float3* pOut);
 	void	Culling(_fmatrix WorldMatrix);
 	void	FitY(_fmatrix WorldMatrix, _float fY);
+	void    Change_HeigthRatio(_float fRatio);
+
+#ifdef _DEBUG
+	void	Set_CullingRadius(_float fRaduis);
+	HRESULT Save_HeightMap(const _char* pFilePath);
+	HRESULT Load_HeightMap(const _char* pFilePath);
+#endif // _DEBUG
+
+
 private:
 	_bool				m_bChange = {};
 	_uint				m_iNumVerticesX = {};
@@ -38,7 +47,9 @@ public:
 	static CVIBuffer_Terrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pFilePath, _uint iSizeX, _uint iSizeZ);
 	virtual CComponent* Clone(void* pArg, class CGameObject* pOwner = nullptr) override;
 	virtual void Free() override;
-	virtual void Describe_Entity() override;
+#ifdef _DEBUG
+	void Describe_Entity() override;
+#endif // _DEBUG
 };
 
 NS_END

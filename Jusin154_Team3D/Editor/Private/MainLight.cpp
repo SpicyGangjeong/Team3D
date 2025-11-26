@@ -1,8 +1,8 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "MainLight.h"
 
 #include "GameInstance.h"
-#include "DebugCamera.h"
+#include "Camera_Debug.h"
 
 CMainLight::CMainLight(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -62,7 +62,7 @@ HRESULT CMainLight::Ready_Components()
 
 	LightDesc.eType = LIGHT::DIRECTIONAL;
 	LightDesc.vDiffuse = _float4(0.8f, 0.8f, 0.8f, 0.f);
-	LightDesc.vAmbient = _float4(0.6f, 0.6f, 0.6f, 0.f);
+	LightDesc.vAmbient = _float4(0.8f, 0.8f, 0.8f, 0.f);
 	LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 0.f);
 	LightDesc.pDirection = m_pTransformCom->Get_StatePtr(STATE::LOOK);
 	LightDesc.iLevel = NEXT_LEVEL;

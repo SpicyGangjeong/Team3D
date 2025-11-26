@@ -4,7 +4,7 @@
 
 #pragma region DEFAULT_HEADER
 
-#include "DebugCamera.h"
+#include "Camera_Debug.h"
 #include "DummyRect.h"
 #include "MainApp.h"
 #include "Dummy_Cube.h"
@@ -23,6 +23,13 @@
 #include "Player.h"
 #include "Goblin.h"
 #include "Broom.h"
+#include <filesystem>
+#include "Camera_Gaze.h"
+#include "CamPosition_Socket.h"
+#include "CamPosition_Target.h"
+#include "CamPosition_Shoulder.h"
+#include "CamPosition_Arm.h"
+#include "Wand.h"
 
 
 #pragma endregion
@@ -42,6 +49,7 @@
 #include "Active_Icon.h"
 
 #include "MiniMap_Panel.h"
+#include "NoMountIcon.h"
 
 #include "Loading_Panel.h"
 #include "LoadingWidget.h"
@@ -51,6 +59,12 @@
 #include "Spell_Slot.h"
 #include "Spell_Image.h"
 #include "Spell_Overlay.h"
+#include "Slot_Number.h"
+#include "HpBarBG.h"
+#include "Potion.h"
+#include "Magic_Meter.h"
+#include "Magic_Icon.h"
+#include "Spell_UI.h"
 
 #include "IMGUIUI.h"
 
@@ -67,6 +81,9 @@
 #include "MapElement_Static.h"
 #include "Land.h"
 #include "Collider.h"
+#include "VIBuffer_Model_Instance.h"
+#include "Instance_Model.h"
+#include "InstancedProp.h"
 #pragma endregion
 
 
@@ -78,6 +95,8 @@
 #include "Dummy_Plane.h"
 #include "TrailObject.h"
 #include "NomalJap.h"
+#include "Bombard.h"
+#include "Decendo.h"
 
 #pragma endregion
 
@@ -90,6 +109,7 @@
 #include "Dummy_PhysXPlatform.h"
 #include "Dummy_PhysXFreeDoor.h"
 #include "Dummy_PhysXWall.h"
+#include "Dummy_PhysXEffectHitBox.h"
 //#include "Dummy_PhysXDoorFrame.h"
 //#include "Dummy_PhysXFixedDoor.h"
 //#include "Dummy_PhysXDoorSet.h"
@@ -175,6 +195,8 @@ HRESULT CLoader::Loading()
 	}
 
 
+	CoUninitialize();
+
 	if (FAILED(hr))
 		return E_FAIL;
 
@@ -244,7 +266,7 @@ HRESULT CLoader::Loading_For_Logo()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CDebugCamera>(g_iStaticLevel, CDebugCamera::Create(m_pDevice, m_pContext)))) {
+	if (FAILED(m_pGameInstance->Add_Prototype<CCamera_Debug>(g_iStaticLevel, CCamera_Debug::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
@@ -328,11 +350,30 @@ HRESULT CLoader::Loading_For_UI()
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("ActiveMission_Icon"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("../Bin/Resources/Textures/Mission/ActiveMission_Icon_%d.png"), 2)))) {
 		return E_FAIL;
+	}
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Megic_Metar"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("../Bin/Resources/Textures/Action/Megic_Meter%d.png"), 3)))) {
+		return E_FAIL;
 	}
 
 
 	Asset_FileLoad("../Bin/Resources/Textures/MiniMap", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
+		{
+
+			_string strFilePath = pFilePath;
+			_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
+
+
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), wstrFileName,
+				CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
+				return E_FAIL;
+			}
+
+			return S_OK;
+
+		});
+	Asset_FileLoad("../Bin/Resources/Textures/HUD", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
 		{
 
 			_string strFilePath = pFilePath;
@@ -396,18 +437,57 @@ HRESULT CLoader::Loading_For_UI()
 
 		});
 
+	Asset_FileLoad("../Bin/Resources/Textures/Potions", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
+		{
+
+			_string strFilePath = pFilePath;
+			_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
+
+
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), wstrFileName,
+				CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
+				return E_FAIL;
+			}
+
+			return S_OK;
+
+		});
+
 	m_strMessage = TEXT("Model Loading..");
 
-	CVIBuffer_UI_Instance::UI_INSTANCE_DESC UIDesc{};
+	CVIBuffer_UI_Instance::UI_INSTANCE_DESC SpellSlotUIDesc{};
 
-	UIDesc.iNum = 4;
-	UIDesc.vSize = _float2(1.f,1.f);
-	UIDesc.fPositionOffSetX = 75.f;
-	UIDesc.fPositionOffSetY = 0.f;
-	UIDesc.vPsition = _float2(100.f, 100.f);
+	SpellSlotUIDesc.iNum = 4;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_UI_Instance"),
-		CVIBuffer_UI_Instance::Create(m_pDevice, m_pContext, &UIDesc)))) {
+		CVIBuffer_UI_Instance::Create(m_pDevice, m_pContext, &SpellSlotUIDesc)))) {
+		return E_FAIL;
+	}
+
+	CVIBuffer_UI_Instance::UI_INSTANCE_DESC SlotNumberUIDesc{};
+
+	SlotNumberUIDesc.iNum = 4;
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Slot_Number_UI_Instance"),
+		CVIBuffer_UI_Instance::Create(m_pDevice, m_pContext, &SlotNumberUIDesc)))) {
+		return E_FAIL;
+	}
+
+	CVIBuffer_UI_Instance::UI_INSTANCE_DESC Magic_MeterDesc{};
+
+	Magic_MeterDesc.iNum = 5;
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Magic_Meter_UI_Instance"),
+		CVIBuffer_UI_Instance::Create(m_pDevice, m_pContext, &Magic_MeterDesc)))) {
+		return E_FAIL;
+	}
+
+	CVIBuffer_UI_Instance::UI_INSTANCE_DESC Spell_Slot_PreviewDesc{};
+
+	Spell_Slot_PreviewDesc.iNum = 5;
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Spell_Slot_Previe_UI_Instance"),
+		CVIBuffer_UI_Instance::Create(m_pDevice, m_pContext, &Spell_Slot_PreviewDesc)))) {
 		return E_FAIL;
 	}
 
@@ -484,8 +564,11 @@ HRESULT CLoader::Loading_For_UI()
 	{
 		return E_FAIL;
 	}
-
 	if (FAILED(m_pGameInstance->Add_Prototype<CMiniMap_TrimBorder>(g_iStaticLevel, CMiniMap_TrimBorder::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CNoMountIcon>(g_iStaticLevel, CNoMountIcon::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
@@ -507,6 +590,30 @@ HRESULT CLoader::Loading_For_UI()
 	{
 		return E_FAIL;
 	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CSlot_Number>(g_iStaticLevel, CSlot_Number::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CHpBarBG>(g_iStaticLevel, CHpBarBG::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CPotion>(g_iStaticLevel, CPotion::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CMagic_Meter>(g_iStaticLevel, CMagic_Meter::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CMagic_Icon>(g_iStaticLevel, CMagic_Icon::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_UI>(g_iStaticLevel, CSpell_UI::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CIMGUIUI>(g_iStaticLevel, CIMGUIUI::Create(m_pDevice, m_pContext))))
 	{
@@ -524,6 +631,55 @@ HRESULT CLoader::Loading_For_UI()
 }
 HRESULT CLoader::Loading_For_Effect()
 {
+	
+	m_strMessage = TEXT("PhysX Meshes Loading..");
+	{ // Dumping Box
+		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
+		{
+			Desc.eType = ACTOR::BOX;
+			Desc.ePxRigidBodyFlags = { /*PSX::PxRigidBodyFlag::eKINEMATIC*/ };
+			Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+			Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
+			Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
+			Desc.fContactOffset = { 0.05f };
+			Desc.vhalfGeometryInfo = { 1.f, 1.f, 1.f };
+			Desc.fDensity = 10.f;
+			Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
+			Desc.eLockFlag = {};
+			Desc.vAutoDamping = { };
+		}
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
+			return E_FAIL;
+		}
+	} { // Heavy Wall
+		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
+		{
+			Desc.eType = ACTOR::BOX;
+			Desc.ePxRigidBodyFlags = { /*PSX::PxRigidBodyFlag::eKINEMATIC*/ };
+			Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+			Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
+			Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
+			Desc.fContactOffset = { 0.05f };
+			Desc.vhalfGeometryInfo = { 2.5f, 4.5f, 3.5f };
+			Desc.fDensity = 10.f;
+			Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
+			Desc.eLockFlag = {};
+			Desc.vAutoDamping = { 100.f, 100.f };
+		}
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_HEAVY_WALL"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
+			return E_FAIL;
+		}
+	}
+
+	{
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), CCharacter_Controller::Create(m_pDevice, m_pContext)))) {
+			return E_FAIL;
+		}
+	}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Box"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Box/Box.fbx", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixIdentity())))) {
+		return E_FAIL;
+	}
 
 	m_strMessage = TEXT("Texture Loading..");
 
@@ -532,9 +688,8 @@ HRESULT CLoader::Loading_For_Effect()
 		_string strFilePath = pFilePath;
 		_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
 
-
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::EFFECT), wstrFileName,
-			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0, wstrFileName)))) {
+			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
 			return E_FAIL;
 		}
 
@@ -589,6 +744,11 @@ HRESULT CLoader::Loading_For_Effect()
 
 	m_strMessage = TEXT("Model Loading..");
 
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_SkyboxModel"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/SkyBox/SkyBox.fbx", XMMatrixIdentity()))))
+		return E_FAIL;
+
 	Asset_FileLoad("../Bin/Resources/Models/Effect/ParticleMesh", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
 
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::EFFECT), wstrFileName,
@@ -628,6 +788,33 @@ HRESULT CLoader::Loading_For_Effect()
 		return E_FAIL;
 
 
+	vector<future<pair<_wstring, CModel*>*>> futures = {};
+
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::NONANIM, "../Bin/Resources/Models/SkyBox/SkyBox.fbx", XMMatrixIdentity(),
+		TEXT("Prototype_Component_SkyboxModel")
+	));	
+
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Human/Npc/Npc.bin", XMMatrixRotationY(XMConvertToRadians(180.f))* XMMatrixIdentity(),
+		TEXT("Prototype_Component_Npc_Model")
+	));
+
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Object/Wand/Wand.fbx", XMMatrixScaling(0.01f, 0.01f, 0.01f)* XMMatrixIdentity(),
+		TEXT("Prototype_Component_Wand_Model")
+	));
+
+	for (auto& job : futures) {
+		pair<_wstring, CModel*>* pResult = job.get();
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, pResult->first, pResult->second))) {
+			assert(false);
+			return E_FAIL;
+		}
+		Safe_Delete(pResult);
+	}
+
+
 
 	m_strMessage = TEXT("Shader Loading..");
 
@@ -642,10 +829,24 @@ HRESULT CLoader::Loading_For_Effect()
 	m_strMessage = TEXT("Prototype Loading..");
 
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CDebugCamera>(ENUM_CLASS(LEVEL::EFFECT), CDebugCamera::Create(m_pDevice, m_pContext)))) {
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXBox>(g_iStaticLevel, CDummy_PhysXBox::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
-
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXEffectHitBox>(g_iStaticLevel, CDummy_PhysXEffectHitBox::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXPlayable>(g_iStaticLevel, CDummy_PhysXPlayable::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXMonster>(g_iStaticLevel, CDummy_PhysXMonster::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXWall>(g_iStaticLevel, CDummy_PhysXWall::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CEditEffect>(ENUM_CLASS(LEVEL::EFFECT), CEditEffect::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CTestEffect>(ENUM_CLASS(LEVEL::EFFECT), CTestEffect::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
@@ -653,13 +854,6 @@ HRESULT CLoader::Loading_For_Effect()
 	if (FAILED(m_pGameInstance->Add_Prototype<CEffect_Editor>(ENUM_CLASS(LEVEL::EFFECT), CEffect_Editor::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
-
-	if (FAILED(m_pGameInstance->Add_Prototype<CEditEffect>(ENUM_CLASS(LEVEL::EFFECT), CEditEffect::Create(m_pDevice, m_pContext)))) {
-		return E_FAIL;
-	}
-
-	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_Cube>(ENUM_CLASS(LEVEL::EFFECT), CDummy_Cube::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_Plane>(ENUM_CLASS(LEVEL::EFFECT), CDummy_Plane::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -672,6 +866,55 @@ HRESULT CLoader::Loading_For_Effect()
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CNomalJap>(ENUM_CLASS(LEVEL::EFFECT), CNomalJap::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	/* For.Prototype_GameObject_DummySkyBox */
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummySkyBox>(g_iStaticLevel, CDummySkyBox::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_Cube>(ENUM_CLASS(LEVEL::EFFECT), CDummy_Cube::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CBombard>(ENUM_CLASS(LEVEL::EFFECT), CBombard::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CDecendo>(ENUM_CLASS(LEVEL::EFFECT), CDecendo::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	/* For.Prototype_GameObject_Wand */
+	if (FAILED(m_pGameInstance->Add_Prototype<CWand>(g_iStaticLevel, CWand::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_FSM */
+	if (FAILED(m_pGameInstance->Add_Prototype<CFSM>(g_iStaticLevel, CFSM::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_CamPosition_Arm */
+	if (FAILED(m_pGameInstance->Add_Prototype<CCamPosition_Arm>(g_iStaticLevel, CCamPosition_Arm::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Camera_Gaze */
+	if (FAILED(m_pGameInstance->Add_Prototype<CCamera_Gaze>(g_iStaticLevel, CCamera_Gaze::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_CamPosition_Player */
+	if (FAILED(m_pGameInstance->Add_Prototype<CCamPosition_Socket>(g_iStaticLevel, CCamPosition_Socket::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_CamPosition_Shoulder */
+	if (FAILED(m_pGameInstance->Add_Prototype<CCamPosition_Shoulder>(g_iStaticLevel, CCamPosition_Shoulder::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_CamPosition_Target */
+	if (FAILED(m_pGameInstance->Add_Prototype<CCamPosition_Target>(g_iStaticLevel, CCamPosition_Target::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Player */
+	if (FAILED(m_pGameInstance->Add_Prototype<CPlayer>(g_iStaticLevel, CPlayer::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+
 
 
 	m_strMessage = TEXT("Loading Success!");
@@ -878,15 +1121,6 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 
 	m_strMessage = TEXT("Prototype Loading..");
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Terrain"),
-		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, nullptr, 100, 100)))) {
-		return E_FAIL;
-	}
-
-	if (FAILED(m_pGameInstance->Add_Prototype<CTerrain>(g_iStaticLevel, CTerrain::Create(m_pDevice, m_pContext)))) {
-		return E_FAIL;
-	}
-
 	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXBox>(g_iStaticLevel, CDummy_PhysXBox::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
@@ -945,15 +1179,16 @@ HRESULT CLoader::Loading_For_Bloom()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Desc_Globe"),
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Desc_Globe"), // RG DDS NormalMap
 		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Object/DragonGlobe/DragonGlobe.fbx", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixIdentity())))){
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Desc_Globe2"),
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Desc_Globe2"), // RGB DDS NormalMap
 		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Object/DragonGlobe2/DragonGlobe.fbx", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixIdentity())))){
 		return E_FAIL;
 	}
+
 
 	vector<_wstring> ModelPrototypeTags = {};
 	vector<filesystem::path> ModelPrototypePath = {};
@@ -961,6 +1196,10 @@ HRESULT CLoader::Loading_For_Bloom()
 	/* Hog_Props */
 	if (FAILED(MapFolderLoad("C:\\Users\\kimnuri\\Desktop\\MeshTable\\Game\\Environment\\Hogwarts\\Meshes\\Props",
 		".fbx", true, ModelPrototypeTags, ModelPrototypePath))){
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CHair>(g_iStaticLevel, CHair::Create(m_pDevice, m_pContext)))){
 		return E_FAIL;
 	}
 
@@ -1062,132 +1301,254 @@ HRESULT CLoader::MapFolderLoad(const _char* pDirectoryPath, const _char* pFileEx
 	return S_OK;
 }
 
+void APIENTRY Deferred_FolderLoad_Main(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pDirectoryPath, const _char* pFileExt, _bool bUseTag, vector<FOLDER_LOAD*>** OutContents)
+{
+	if (FAILED(CoInitializeEx(nullptr, 0))) {
+		return ;
+	}
 
+	*OutContents = new vector<FOLDER_LOAD*>;
+	for (const auto& file : filesystem::directory_iterator(pDirectoryPath))
+	{
+		if (file.is_directory()){ continue; }
+		if (strcmp(file.path().extension().string().c_str(), pFileExt)) { continue; }
+
+		FOLDER_LOAD* pContents = new FOLDER_LOAD;
+		pContents->bLoadTags = bUseTag;
+		{ // FOLDER_LOAD
+			_char szFilePath[MAX_PATH] = {};
+			strcpy_s(szFilePath, MAX_PATH, file.path().string().c_str());
+
+			_wstring wstrFileName = L"Prototype_GameObject_" + file.path().stem().wstring();
+
+			CModel* pModel = CModel::Create(pDevice, pContext, MODEL::ENVIROMENT, szFilePath);
+
+			_uint iNumMesh = pModel->Get_NumMeshes();
+
+			{
+				pContents->pModelTag = wstrFileName;
+				pContents->pathModel = file.path();
+
+				pContents->pLoadedModel = pModel;
+
+				pContents->pRigidBodyTags.reserve(iNumMesh);
+				pContents->LoadedRigidBody.reserve(iNumMesh);
+			}
+
+			CRigidBody_Static::RIGIDBODY_STATIC_PROTOTYPEDESC Desc{};
+			for (_uint i = 0; i < iNumMesh; ++i) {
+				{
+					Desc.eType = ACTOR::TRIANGLEMESH;
+					Desc.ePxRigidBodyFlags = {};
+					Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+					Desc.ePxMaterialTypes = PXMATERIAL::DEFAULT;
+					Desc.vMatInfo = _float3(0.5f, 0.5f, 0.6f);
+					Desc.fContactOffset = 0.f;
+				}
+				pContents->pRigidBodyTags.emplace_back(CMyTools::ToWstring(pModel->Get_MeshName(i) + to_string(i)).c_str());
+				pContents->LoadedRigidBody.emplace_back(CRigidBody_Static::Create(pDevice, pContext, Desc));
+			}
+		}
+		(*OutContents)->emplace_back(pContents);
+	}
+	(*OutContents)->shrink_to_fit();
+
+	CoUninitialize();
+	return;
+}
+
+future<void> CLoader::Deferred_FolderLoad(const _char* pDirectoryPath, const _char* pFileExt, _bool bUseTag, vector<FOLDER_LOAD*>** OutContents)
+{
+	return m_pGameInstance->EnqueueJob(&Deferred_FolderLoad_Main, m_pDevice, m_pContext, pDirectoryPath, pFileExt, bUseTag, OutContents);
+}
+
+pair<_wstring, CModel*>* APIENTRY Deferred_ModelLoad_Main(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pDirectoryPath, const _tchar* pPrototypeTag, _fmatrix PreTransform)
+{
+	if (FAILED(CoInitializeEx(nullptr, 0))) {
+		assert(false);
+		return nullptr;
+	}
+
+	CModel* pModel = CModel::Create(pDevice, pContext, eType, pDirectoryPath, PreTransform);
+
+	CoUninitialize();
+	pair<_wstring, CModel*>* Out = new pair<_wstring, CModel*>(pPrototypeTag, pModel);
+	return Out;
+}
+
+future<pair<_wstring, CModel*>*> CLoader::Deferred_ModelLoad(MODEL eType, const _char* pDirectoryPath, _fmatrix PreTransform, const _tchar* pPrototypeTag) {
+	return m_pGameInstance->EnqueueJob(&Deferred_ModelLoad_Main, m_pDevice, m_pContext, eType, pDirectoryPath, pPrototypeTag, PreTransform);
+}
 
 HRESULT CLoader::Loading_For_ObjectViewer()
 {
 	m_strMessage = TEXT("Texture Loading..");
-
-	m_strMessage = TEXT("Model Loading..");
-
-#pragma region BODY
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_M_DADA_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Human/Body/Male/M_DADA/M_DADA.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity()))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_M_DarkWizardSoldier_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Human/Body/Male/M_DarkWizardSoldier/M_DarkWizardSoldier.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity()))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_M_DarkWizardGrunt_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Human/Body/Male/M_DarkWizardGrunt/M_DarkWizardGrunt.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity()))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_M_DarkWizardTank_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Human/Body/Male/M_DarkWizardTank/M_DarkWizardTank.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity()))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_F_DarkWizardMage_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Human/Body/FeMale/F_DarkWizardMage/F_DarkWizardMage.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity()))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_F_DarkWizardSniper_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Human/Body/FeMale/F_DarkWizardSniper/F_DarkWizardSniper.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity()))))
-		return E_FAIL;
-
-#pragma endregion
-
-#pragma region HEAD
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Young_M_Head_Ivory_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Human/Head/Male/Young_M_Head_Ivory.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity()))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_T_NPC_F_Head_Eye_Honey_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Human/Head/FeMale/T_NPC_F_Head_Eye_Honey.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity()))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_F_Head_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Human/Head/FeMale/F_Head.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity()))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_M_Head_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Human/Head/Male/M_Head.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity()))))
-		return E_FAIL;
-
-#pragma endregion
-
-#pragma region HAIR
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_M_Hair1_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Human/Hair/Male/M_Hair1/M_Hair1.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity()))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_M_Hair2_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Human/Hair/Male/M_Hair2/M_Hair2.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity()))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_M_Hair3_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Human/Hair/Male/M_Hair3/M_Hair3.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity()))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_F_Hair1_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Human/Hair/FeMale/F_Hair1/F_Hair1.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity()))))
-		return E_FAIL;
-#pragma endregion
-
-#pragma region MONSTER
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Monster/Goblin/Goblin.bin", XMMatrixIdentity()))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_TombProtector_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Monster/TombProtector/TombProtector.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity()))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Troll_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Monster/Troll/Troll.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity()))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Dragon_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Monster/Dragon/Dragon.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity()))))
-		return E_FAIL;
-
-#pragma endregion
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Npc_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Human/Npc/Npc.bin",XMMatrixIdentity()))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Broom_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Broom/Broom.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity()))))
-		return E_FAIL;
-
-	/* For.Prototype_Component_SkyboxModel */
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_SkyboxModel"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/SkyBox/SkyBox.fbx", XMMatrixIdentity()))))
-		return E_FAIL;
-
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Desc_Box"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Box/Box.bin", XMMatrixIdentity()))))
-		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("TerrainTest"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Cursor/UI_T_CursorRings.dds"), 0)))) {
 		return E_FAIL;
 	}
 
+	m_strMessage = TEXT("Model Loading..");
+
+	// Heavy Wall
+	CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
+	{
+		Desc.eType = ACTOR::BOX;
+		Desc.ePxRigidBodyFlags = { /*PSX::PxRigidBodyFlag::eKINEMATIC*/ };
+		Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+		Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
+		Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
+		Desc.fContactOffset = { 0.05f };
+		Desc.vhalfGeometryInfo = { 2.5f, 4.5f, 3.5f };
+		Desc.fDensity = 10.f;
+		Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
+		Desc.eLockFlag = {};
+		Desc.vAutoDamping = { 100.f, 100.f };
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_HEAVY_WALL"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), CCharacter_Controller::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	vector<future<pair<_wstring, CModel*>*>> futures = {};
+
+#pragma region BODY
+
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Human/Body/Male/M_DADA/M_DADA.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_M_DADA_Model")
+	));
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Human/Body/Male/M_DarkWizardSoldier/M_DarkWizardSoldier.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_M_DarkWizardSoldier_Model")
+	));
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Human/Body/Male/M_DarkWizardGrunt/M_DarkWizardGrunt.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_M_DarkWizardGrunt_Model")
+	));
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Human/Body/Male/M_DarkWizardTank/M_DarkWizardTank.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_M_DarkWizardTank_Model")
+	));
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Human/Body/FeMale/F_DarkWizardMage/F_DarkWizardMage.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_F_DarkWizardMage_Model")
+	));
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Human/Body/FeMale/F_DarkWizardSniper/F_DarkWizardSniper.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_F_DarkWizardSniper_Model")
+	));
+
+#pragma endregion
+
+#pragma region HEAD
+
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Human/Head/Male/Young_M_Head_Ivory.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_Young_M_Head_Ivory_Model")
+	));
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Human/Head/FeMale/T_NPC_F_Head_Eye_Honey.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_T_NPC_F_Head_Eye_Honey_Model")
+	));
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Human/Head/FeMale/F_Head.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_F_Head_Model")
+	));
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Human/Head/Male/M_Head.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_M_Head_Model")
+	));
+
+#pragma endregion
+
+#pragma region HAIR
+
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Human/Hair/Male/M_Hair1/M_Hair1.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_M_Hair1_Model")
+	));
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Human/Hair/Male/M_Hair2/M_Hair2.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_M_Hair2_Model")
+	));
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Human/Hair/Male/M_Hair3/M_Hair3.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_M_Hair3_Model")
+	));
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Human/Hair/FeMale/F_Hair1/F_Hair1.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_F_Hair1_Model")
+	));
+
+#pragma endregion
+
+#pragma region MONSTER
+
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Monster/Goblin/Goblin.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_Goblin_Model")
+	));
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Monster/TombProtector/TombProtector.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_TombProtector_Model")
+	));
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Monster/Troll/Troll.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_Troll_Model")
+	));
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Monster/Dragon/Dragon.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_Dragon_Model")
+	));
+
+#pragma endregion
+
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Human/Npc/Npc.bin",XMMatrixRotationY(XMConvertToRadians(180.f))* XMMatrixIdentity(),
+		TEXT("Prototype_Component_Npc_Model")
+	));
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Object/Wand/Wand.fbx",XMMatrixIdentity(),
+		TEXT("Prototype_Component_Wand_Model")
+	));
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Object/Broom/Broom.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_Broom_Model")
+	));
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::NONANIM, "../Bin/Resources/Models/SkyBox/SkyBox.fbx", XMMatrixIdentity(),
+		TEXT("Prototype_Component_SkyboxModel")
+	));
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::NONANIM, "../Bin/Resources/Models/Box/Box.bin", XMMatrixIdentity(),
+		TEXT("Desc_Box")
+	));
+
+	for (auto& job : futures) {
+		pair<_wstring, CModel*>* pResult = job.get();
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, pResult->first, pResult->second))) {
+			assert(false);
+			return E_FAIL;
+		}
+		Safe_Delete(pResult);
+	}
+
 	m_strMessage = TEXT("Shader Loading..");
 
 	m_strMessage = TEXT("Prototype Loading..");
 
-	/* For.Prototype_Component_VIBuffer_Terrain */
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Terrain"),
-		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, nullptr, 100, 100))))
-		return E_FAIL;
+	///* For.Prototype_Component_VIBuffer_Terrain */
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Terrain"),
+	//	CVIBuffer_Terrain::Create(m_pDevice, m_pContext, nullptr, 100, 100))))
+	//	return E_FAIL;
 
 	/* For.Prototype_GameObject_RootModelPart */
 	if (FAILED(m_pGameInstance->Add_Prototype<CRootModelPart>(g_iStaticLevel, CRootModelPart::Create(m_pDevice, m_pContext))))
@@ -1213,9 +1574,10 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	if (FAILED(m_pGameInstance->Add_Prototype<CDummySkyBox>(g_iStaticLevel, CDummySkyBox::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	/* For.Prototype_GameObject_Terrain */
-	if (FAILED(m_pGameInstance->Add_Prototype<CTerrain>(g_iStaticLevel, CTerrain::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
+
+	///* For.Prototype_GameObject_Terrain */
+	//if (FAILED(m_pGameInstance->Add_Prototype<CTerrain>(g_iStaticLevel, CTerrain::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
 
 	/* For.Prototype_Component_FSM */
 	if (FAILED(m_pGameInstance->Add_Prototype<CFSM>(g_iStaticLevel, CFSM::Create(m_pDevice, m_pContext))))
@@ -1229,9 +1591,32 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin>(g_iStaticLevel, CGoblin::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-
 	/* For.Prototype_GameObject_Broom */
 	if (FAILED(m_pGameInstance->Add_Prototype<CBroom>(g_iStaticLevel, CBroom::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Camera_Gaze */
+	if (FAILED(m_pGameInstance->Add_Prototype<CCamera_Gaze>(g_iStaticLevel, CCamera_Gaze::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_CamPosition_Player */
+	if (FAILED(m_pGameInstance->Add_Prototype<CCamPosition_Socket>(g_iStaticLevel, CCamPosition_Socket::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_CamPosition_Shoulder */
+	if (FAILED(m_pGameInstance->Add_Prototype<CCamPosition_Shoulder>(g_iStaticLevel, CCamPosition_Shoulder::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_CamPosition_Target */
+	if (FAILED(m_pGameInstance->Add_Prototype<CCamPosition_Target>(g_iStaticLevel, CCamPosition_Target::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_CamPosition_Arm */
+	if (FAILED(m_pGameInstance->Add_Prototype<CCamPosition_Arm>(g_iStaticLevel, CCamPosition_Arm::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Wand */
+	if (FAILED(m_pGameInstance->Add_Prototype<CWand>(g_iStaticLevel, CWand::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	m_strMessage = TEXT("Loading Success!");
@@ -1246,12 +1631,29 @@ HRESULT CLoader::Loading_For_MapViewer()
 {
 	m_strMessage = TEXT("텍스쳐를(을) 로딩 중 입니다.");
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("TerrainTest"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/T_C_Dun_Moss_D.png"), 0)))) {
-	//	return E_FAIL;
-	//}
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("TerrainTest"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/T_LandscapeStreamingProxy_0_LOD1_Summer_D.png"), 0)))) {
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures//T_LandscapeStreamingProxy_0_LOD1_Summer_D.png"), 0)))) {
+		return E_FAIL;
+	}
+
+	/* Terrain_Mask */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Terrain_Mask"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Data/Map/T_OL_GrassBlend_Mask_D.dds"), 0)))) {
+		return E_FAIL;
+	}
+	/* Terrain_Diffuse */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Terrain_Diffuse"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("../Bin/Resources/Textures/Terrain/Terrain_D_%d.dds"), 4)))) {
+		return E_FAIL;
+	}
+	/* Terrain_Normal */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Terrain_Normal"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("../Bin/Resources/Textures/Terrain/Terrain_N_%d.dds"), 4)))) {
+		return E_FAIL;
+	}
+	/* Terrain_MRO */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Terrain_MRO"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("../Bin/Resources/Textures/Terrain/Terrain_MRO_%d.dds"), 4)))) {
 		return E_FAIL;
 	}
 
@@ -1276,194 +1678,515 @@ HRESULT CLoader::Loading_For_MapViewer()
 	vector<filesystem::path> ModelPrototypePath = {};
 
 #pragma region HOGSMEADE
+	
 	///* Terrain*/
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Collision\\Terrain",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Collision\\Terrain",
+	//	".bin", true, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Terrain",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Terrain",
+	//	".bin", true, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* TScrolls*/
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_TScrolls\\Meshes",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_TScrolls\\Meshes",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_TScrolls\\Collisions",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_TScrolls\\Collisions",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* 3BroomStick*/
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Meshes",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Meshes",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Collision",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Collision",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Meshes\\3Broom_Kit",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Meshes\\3Broom_Kit",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* Ollivanders*/
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Ollivanders\\Meshes",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Ollivanders\\Meshes",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Ollivanders\\Collision",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Ollivanders\\Collision",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* Gatehouse*/
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Gatehouse\\Meshes",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Gatehouse\\Meshes",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* BLDG_QuidditchShop */
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_QuidditchShop\\Meshes",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_QuidditchShop\\Meshes",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_QuidditchShop\\Collision",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_QuidditchShop\\Collision",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* BLDG_HogsheadInn */
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_HogsheadInn\\Meshes",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_HogsheadInn\\Meshes",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_HogsheadInn\\Collision",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_HogsheadInn\\Collision",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* BLDG_Honeydukes */
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Honeydukes\\Meshes",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Honeydukes\\Meshes",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Honeydukes\\Collision",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Honeydukes\\Collision",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* BLDG_OwlPost */
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_OwlPost\\Meshes",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_OwlPost\\Meshes",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_OwlPost\\Collision",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_OwlPost\\Collision",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* BLDG_TeaShop */
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_TeaShop\\Meshes",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_TeaShop\\Meshes",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_TeaShop\\Collision",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_TeaShop\\Collision",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* BLDG_Zonkos */
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Zonkos\\Meshes",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Zonkos\\Meshes",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Zonkos\\Collision",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Zonkos\\Collision",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* BLDG_DB_GR */
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_DB_GR\\Meshes",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_DB_GR\\Meshes",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_DB_GR\\Collision",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_DB_GR\\Collision",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* BLDG_Potions */
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Potions\\Meshes",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Potions\\Meshes",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Potions\\Collisions",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Potions\\Collisions",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* BLDG_Salon */
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Salon\\Meshes",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Salon\\Meshes",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Salon\\Collision",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Salon\\Collision",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* Hengist_Tree */
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Vegetation\\Hengist_Tree",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Vegetation\\Hengist_Tree",
 	//	".bin", true, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Collision\\Vegetation",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Collision\\Vegetation",
 	//	".bin", true, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* GEN A*/
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_A\\Meshes",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_A\\Meshes",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_A\\Collision",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_A\\Collision",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* GEN B*/
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_B\\Meshes",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_B\\Meshes",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_B\\Collision",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_B\\Collision",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* GEN C*/
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_C\\Meshes",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_C\\Meshes",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_C\\Collision",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_C\\Collision",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* GEN E*/
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_E\\Meshes",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_E\\Meshes",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_E\\Collision",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_E\\Collision",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* GEN F*/
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_F\\Meshes",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_F\\Meshes",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_F\\Collision",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_F\\Collision",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* GEN G*/
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_G\\Meshes",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_G\\Meshes",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_G\\Collision",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_G\\Collision",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* GEN H*/
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_H\\Meshes",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_H\\Meshes",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_H\\Collision",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_H\\Collision",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* GEN J*/
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_J\\Meshes",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_J\\Meshes",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
-	//if (FAILED(MapFolderLoad("C:\\Users\\82103\\Desktop\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_J\\Collision",
+	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_J\\Collision",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 #pragma endregion
 
+#ifdef gimch
+
+vector<future<void>> jobFutures;
+
+_uint iLoadCount = 46;
+vector<vector<FOLDER_LOAD*>*> Contents(iLoadCount);
+
+{
+	{ /* Terrain */
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Collision\\Terrain",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Terrain",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* TScrolls */
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_TScrolls\\Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_TScrolls\\Collisions",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* 3BroomStick*/
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_ThreeBroomsticks\\Meshes\\3Broom_Kit",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* Ollivanders*/
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Ollivanders\\Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Ollivanders\\Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* Gatehouse*/
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Gatehouse\\Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* BLDG_QuidditchShop */
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_QuidditchShop\\Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_QuidditchShop\\Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* BLDG_HogsheadInn */
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_HogsheadInn\\Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_HogsheadInn\\Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* BLDG_Honeydukes */
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Honeydukes\\Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Honeydukes\\Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* BLDG_OwlPost */
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_OwlPost\\Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_OwlPost\\Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* BLDG_TeaShop */
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_TeaShop\\Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_TeaShop\\Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* BLDG_Zonkos */
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Zonkos\\Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Zonkos\\Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* BLDG_DB_GR */
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_DB_GR\\Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_DB_GR\\Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* BLDG_Potions */
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Potions\\Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Potions\\Collisions",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* BLDG_Salon */
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Salon\\Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Salon\\Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* Hengist_Tree */
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Vegetation\\Hengist_Tree",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Collision\\Vegetation",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* GEN A*/
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_A\\Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_A\\Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* GEN B*/
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_B\\Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_B\\Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* GEN C*/
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_C\\Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_C\\Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* GEN E*/
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_E\\Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_E\\Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* GEN F*/
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_F\\Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_F\\Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* GEN G*/
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_G\\Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_G\\Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* GEN H*/
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_H\\Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_H\\Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* GEN J*/
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_J\\Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_J\\Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+}
+
+	for (auto& jobFuture : jobFutures)
+	{
+		jobFuture.get();
+	}
+
+	for (_uint i = 0; i < Contents.size(); ++i) {
+		for (_uint j = 0; j < (Contents[i])->size(); ++j) {
+			FOLDER_LOAD* pContents = (*Contents[i])[j];
+			if (true == pContents->bLoadTags) {
+				ModelPrototypeTags.push_back(pContents->pModelTag);
+				ModelPrototypePath.push_back(pContents->pathModel);
+			}
+
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, pContents->pModelTag, pContents->pLoadedModel))) {
+				return E_FAIL;
+			}
+
+			for (_uint k = 0; k < pContents->pRigidBodyTags.size(); ++k) {
+				if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, pContents->pRigidBodyTags[k], pContents->LoadedRigidBody[k]))) {
+					return E_FAIL;
+				}
+			}
+
+		}
+	}
+
+
+
 	
 	m_strMessage = TEXT("쉐이더를(을) 로딩 중 입니다.");
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_INSTANCE_PROP_MODEL,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_VtxWorldModelInstance.hlsl"),
+			VTX_MODEL_INSTANCE_MODEL::Elements, VTX_MODEL_INSTANCE_MODEL::iNumElements)))) {
+		return E_FAIL;
+	}
 
 	m_strMessage = TEXT("객체원형를(을) 로딩 중 입니다.");
 
@@ -1476,6 +2199,22 @@ HRESULT CLoader::Loading_For_MapViewer()
 	/* For.Prototype_Component_VIBuffer_Terrain */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Terrain"),
 		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, "../Bin/Resources/Data/Map/T_LandscapeStreamingProxy_0_LOD1_D.png", 512, 512))))
+		return E_FAIL;
+
+	CVIBuffer_Model_Instance::INSTANCE_DESC InstanceDesc = {};
+
+	InstanceDesc.iNum = 500;
+
+	///* For.Prototype_Component_VIBuffer_Model_Instancel */
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel"),
+	//	CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext, &InstanceDesc,
+	//		"../Bin/Resources/Models/InstanceProp/SM_OakTree_MedA.fbx", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+	//	return E_FAIL;
+
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_SM_OakTree_MedA */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_SM_OakTree_MedA"),
+		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_OakTree_MedA.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_SkyBox */
@@ -1512,6 +2251,10 @@ HRESULT CLoader::Loading_For_MapViewer()
 	if (FAILED(m_pGameInstance->Add_Prototype<CTerrain>(g_iStaticLevel, CTerrain::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_InstancedProp */
+	if (FAILED(m_pGameInstance->Add_Prototype<CInstancedProp>(g_iStaticLevel, CInstancedProp::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_MapObject_Manager */
 	if (FAILED(m_pGameInstance->Add_Prototype<CMapObject_Manager>(g_iStaticLevel, CMapObject_Manager::Create(m_pDevice, m_pContext, ModelPrototypeTags, ModelPrototypePath))))
 		return E_FAIL;
@@ -1523,6 +2266,13 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 	m_isFinished = true;
 
+	for (_uint i = 0; i < Contents.size(); ++i) {
+		for (_uint j = 0; j < (Contents[i])->size(); ++j) {
+			Safe_Delete((*Contents[i])[j]);
+		}
+		Safe_Delete(Contents[i]);
+	}
+#endif
 	return S_OK;
 }
 

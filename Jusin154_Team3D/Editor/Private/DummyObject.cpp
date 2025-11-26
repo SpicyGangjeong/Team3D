@@ -2,13 +2,7 @@
 #include "DummyObject.h"
 
 #include "GameInstance.h"
-#include "DebugCamera.h"
-#include "State_Idle.h"
-#include "State_Walk.h"
-#include "State_Dodge.h"
-#include "State_Sprint.h"
-#include "State_Jump.h"
-#include "State_Skill.h"
+#include "Camera_Debug.h"
 
 CDummyObject::CDummyObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUnit(pDevice, pContext)

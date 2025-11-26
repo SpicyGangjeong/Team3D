@@ -33,10 +33,20 @@ HRESULT CCamera::Initialize(void* pArg)
     m_bActive = false;
     m_iPriority = pDesc->iPriority;
     m_pCameraKey = pDesc->pCameraKey;
+
+
     m_pFollowTarget = pDesc->pFollowTarget;
     SAFE_ADDREF(m_pFollowTarget);
     m_pLookTarget = pDesc->pLookTarget;
     SAFE_ADDREF(m_pLookTarget);
+    m_bEnable_TransitionLerp = pDesc->bEnableTransitionLerp;
+    m_vTransitionTime = pDesc->vTransitionTime;
+    m_bEnable_FollowLerp = pDesc->bEnableFollowLerp;
+    m_vLookLerpTime = pDesc->vLookLerpTime;
+    m_bEnable_LookLerp = pDesc->bEnableLookLerp;
+    m_vFollowLerpTime = pDesc->vFollowLerpTime;
+
+
 
     return S_OK;
 }
@@ -56,43 +66,41 @@ void CCamera::Transition(_float fTimeDelta)
     if (false == m_bIsCurrentTransition) {
         return;
     }
-    m_fTransitionCurrentTime += fTimeDelta;
-    _float fRatio = m_fTransitionCurrentTime / m_fTransitionMaxTime;
+    m_vTransitionTime.x += fTimeDelta;
+    _float fRatio = m_vTransitionTime.x / m_vTransitionTime.y;
     if (fRatio > 1.f) {
         fRatio = 1.f;
         m_bIsCurrentTransition = false;
     }
 
-    CTransform* pLookTransform = m_pLookTarget->Get_Component<CTransform>();
     _vector vFollowTarget = m_pFollowTarget->Get_Component<CTransform>()->Get_State(STATE::POSITION);
-    _vector vLookTarget = pLookTransform->Get_State(STATE::POSITION);
-    _matrix matTarget = XMMatrixInverse(nullptr, XMMatrixLookAtLH(vFollowTarget, vLookTarget, XMVectorSet(0.f, 1.f, 0.f, 0.f)));
+    _vector vLookTarget = m_pLookTarget->Get_Component<CTransform>()->Get_State(STATE::POSITION);
 
-    _vector vTargetScale{}, vTargetRotq{}, vTargetTrans{}, vOriginScale{}, vOriginRotq{}, vOriginTrans{};
-    XMMatrixDecompose(&vTargetScale, &vTargetRotq, &vTargetTrans, matTarget);
-    XMMatrixDecompose(&vOriginScale, &vOriginRotq, &vOriginTrans, m_pTransformCom->Get_XMWorldMatrix());
+    _matrix xmMatTarget = XMMatrixInverse(nullptr, XMMatrixLookAtLH(vFollowTarget, vLookTarget, XMVectorSet(0.f, 1.f, 0.f, 0.f)));
 
-    vTargetScale = XMVectorLerp(vOriginScale, vTargetScale, fRatio);
-    vTargetRotq = XMQuaternionSlerp(vOriginRotq, vTargetRotq, fRatio);
-    vTargetTrans = XMVectorLerp(vOriginTrans, vTargetTrans, fRatio);
+    _float4x4 matOrigin = *m_pTransformCom->Get_WorldMatrixPtr();
+    _float4x4 matTarget = {}; XMStoreFloat4x4(&matTarget, xmMatTarget);
+    _float4x4 matResult = {};
 
-    m_pTransformCom->Set_WorldMatrix(XMMatrixAffineTransformation(vTargetScale, XMVectorZero(), vTargetRotq, vTargetTrans));
+    CMyTools::MatrixLerp(&matOrigin, &matTarget, matResult, fRatio);
+
+    m_pTransformCom->Set_WorldMatrix(matResult);
 }
 
 void CCamera::Active_Camera(pair<_float4, _float3>& pairTransitionInfo)
 {
-    //if (true == m_bTransitionLerp) {
-    //    m_pTransformCom->Set_WorldMatrix(XMMatrixAffineTransformation(XMVectorSplatOne(), XMVectorZero(),
-    //        XMLoadFloat4(&pairTransitionInfo.first), XMLoadFloat3(&pairTransitionInfo.second)));
-    //    m_fTransitionCurrentTime = 0.f;
-    //    m_bIsCurrentTransition = true;
-    //}
+    if (true == m_bEnable_TransitionLerp) {
+        m_pTransformCom->Set_WorldMatrix(XMMatrixAffineTransformation(XMVectorSplatOne(), XMVectorZero(),
+            XMLoadFloat4(&pairTransitionInfo.first), XMLoadFloat3(&pairTransitionInfo.second)));
+        m_vTransitionTime.x = 0.f;
+        m_bIsCurrentTransition = true;
+    }
     m_bActive = true;
 }
 
 void CCamera::DeActive_Camera(pair<_float4, _float3>& pairTransition)
 {
-    m_bActive = false;
+    m_bActive = false; 
     m_bIsCurrentTransition = false;
     _vector vScale{}, vRotq{}, vTrans{};
     XMMatrixDecompose(&vScale, &vRotq, &vTrans, m_pTransformCom->Get_XMWorldMatrix());

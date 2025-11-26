@@ -2,7 +2,7 @@
 #include "MapObject_Collision.h"
 
 #include "GameInstance.h"
-#include "DebugCamera.h"
+#include "Camera_Debug.h"
 #include "Layer.h"
 #include "Terrain.h"
 #include "VIBuffer_Terrain.h"
@@ -219,6 +219,9 @@ void CMapObject_Collision::Free()
 	for (auto& pModel : m_pModelComs)
 		Safe_Release(pModel);
 	m_pModelComs.clear();
+
+	m_ModelPrototypeTags.clear();
+	m_ModelPathIndices.clear();
 }
 
 void CMapObject_Collision::Describe_Entity()

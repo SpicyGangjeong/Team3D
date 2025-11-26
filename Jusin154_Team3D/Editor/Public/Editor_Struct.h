@@ -1,13 +1,15 @@
-#pragma once
-
+﻿#pragma once
 NS_BEGIN(Engine)
 class CTransform;
+class CModel;
+class CRigidBody_Static;
 NS_END
 
 NS_BEGIN(Editor)
 
 typedef struct tagMapObject_Desc {
-	CTransform* pParentTransform = { nullptr };
+	_uint					iRenderType{};
+	CTransform*				pParentTransform = { nullptr };
 	_float3					vScale;
 	_float3					vRotation;
 	_float3					vPosition;
@@ -26,5 +28,17 @@ typedef struct tagMapObjectLodDesc : public tagMapObject_Desc
 	vector<_wstring>		ModelPrototypeTags;
 	vector<_uint>*			pModelPathIndices = { nullptr };
 }MAPOBJECT_LOD_DESC;
+
+
+typedef struct tagFolderLoad {
+	_wstring							pModelTag;
+	CModel*								pLoadedModel;
+	filesystem::path					pathModel;
+
+	_bool								bLoadTags;
+	vector<_wstring>					pRigidBodyTags;
+	vector<CRigidBody_Static*>			LoadedRigidBody;
+}FOLDER_LOAD;
+
 
 NS_END

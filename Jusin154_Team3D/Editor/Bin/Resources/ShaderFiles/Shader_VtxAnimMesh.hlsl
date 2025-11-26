@@ -1,5 +1,5 @@
 
-#include "Engine_Shader_Defines.hlsli"
+#include "Engine_Shader_Defines.hlsli" 
 
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
@@ -19,6 +19,7 @@ Texture2D g_NormalTexture;
 Texture2D g_DAOTexture;
 Texture2D g_THVTexture;
 Texture2D g_SurfaceParamsTexture;
+
 
 float3 g_RootColor;
 float3 g_TipColor;
@@ -105,10 +106,10 @@ VS_OUT_CAPTUREDMODEL VS_CAPTUREDMODEL(VS_IN In)
     
     float fWeightW = 1.f - (In.vBlendWeight.x + In.vBlendWeight.y + In.vBlendWeight.z);
     
-    matrix BoneMatrix = 
-        mul(g_BoneMatrices[In.vBlendIndex.x], In.vBlendWeight.x ) +
-        mul(g_BoneMatrices[In.vBlendIndex.y], In.vBlendWeight.y ) +
-        mul(g_BoneMatrices[In.vBlendIndex.z], In.vBlendWeight.z ) +
+    matrix BoneMatrix =
+        mul(g_BoneMatrices[In.vBlendIndex.x], In.vBlendWeight.x) +
+        mul(g_BoneMatrices[In.vBlendIndex.y], In.vBlendWeight.y) +
+        mul(g_BoneMatrices[In.vBlendIndex.z], In.vBlendWeight.z) +
         mul(g_BoneMatrices[In.vBlendIndex.w], fWeightW);
     
     vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
@@ -203,7 +204,10 @@ PS_OUT PS_MAIN(PS_IN In)
     
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     vector vSurface = g_SurfaceParamsTexture.Sample(DefaultSampler, In.vTexcoord);
-    if (vMtrlDiffuse.a < 0.2f) { discard; }
+    if (vMtrlDiffuse.a < 0.2f)
+    {
+        discard;
+    }
     
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);

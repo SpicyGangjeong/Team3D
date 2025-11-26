@@ -22,7 +22,7 @@ HRESULT CLevel_Restart::Initialize()
 
 void CLevel_Restart::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->Mouse_Up(DIM_RBUTTON))
+	if (m_pGameInstance->Key_Up(DIK_F1))
 	{
 		m_pGameInstance->Set_LevelToChange();
 	}

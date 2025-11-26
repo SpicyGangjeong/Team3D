@@ -5,7 +5,6 @@
 
 NS_BEGIN(Engine)
 class CGameInstance;
-class CGameObject;
 NS_END
 
 NS_BEGIN(Client)

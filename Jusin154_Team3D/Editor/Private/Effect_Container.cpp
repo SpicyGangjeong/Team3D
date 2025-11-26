@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "EditEffect.h"
 #include "TrailObject.h"
+#include "GameObject.h"
 
 
 #include <sstream>
@@ -34,8 +35,6 @@ HRESULT CEffect_Container::Initialize(void* pArg)
 	if (FAILED(Ready_Child()))
 		return E_FAIL;
 
-
-
 	return S_OK;
 }
 
@@ -55,174 +54,105 @@ void CEffect_Container::Late_Update(_float fTimeDelta)
 	__super::Late_Update(fTimeDelta);
 }
 
-#ifdef _DEBUG
-
-HRESULT CEffect_Container::Save_Package(const _char* pPath)
+void CEffect_Container::OnCollision(CGameObject* pOther, void* pDesc)
 {
-	_string strPerfectFilePath = pPath;
-	strPerfectFilePath += ".bin";
-
-	HANDLE	hFile = CreateFile(CMyTools::ToWstring(strPerfectFilePath).c_str(),
-		GENERIC_WRITE,
-		FILE_SHARE_READ | FILE_SHARE_WRITE,
-		NULL, CREATE_ALWAYS,
-		FILE_ATTRIBUTE_NORMAL, NULL
-	);
-
-
-	if (hFile == INVALID_HANDLE_VALUE) {
-		MessageBox(NULL, L"패키징 저장 실패", L"System Message", MB_OK);
-		return E_FAIL;
-	}
-
-	;
-
-	DWORD	dwByte(0);
-
-	_int iObjectCount = (_int)m_PartObjects.size();
-
-	if (!WriteFile(hFile, &iObjectCount, sizeof(_int), &dwByte, nullptr)) {
-		return E_FAIL;
-	}
-
-	// 자식 개수 저장
-
-	for (auto& pPartObejct : m_PartObjects)
-	{
-		CEditEffect* pEffectObject = dynamic_cast<CEditEffect*>(pPartObejct.second);
-		CTrailObject* pTrailObject = {};
-
-		if (pEffectObject == nullptr) // 이펙트 오브젝트가 아닐 경우
-		{
-			pTrailObject = dynamic_cast<CTrailObject*>(pPartObejct.second);
-
-			pTrailObject->Save_Path(hFile);
-		}
-		else
-		{
-			pEffectObject->Save_Path(hFile);
-		}
-	}
-
-
-	CloseHandle(hFile);
-
-
-	MessageBox(NULL, L"패키징 성공", L"System Message", MB_OK);
-
-	return S_OK;
 }
 
-#endif
-
-HRESULT CEffect_Container::Load_Package(const _char* pPath)
+HRESULT CEffect_Container::Load_Directory(const _char* pPath)
 {
-	_string strPerfectFilePath = pPath;
 
-	strPerfectFilePath += ".bin";
-
-	DWORD	dwByte(0);
-
-	HANDLE hFile = CreateFileW(
-		CMyTools::ToWstring(strPerfectFilePath).c_str(),               // 파일 이름
-		GENERIC_READ,              // 읽기 모드
-		FILE_SHARE_READ,           // 다른 프로세스도 읽기 가능
-		NULL,
-		OPEN_EXISTING,             // 기존 파일 열기
-		FILE_ATTRIBUTE_NORMAL,
-		NULL
-	);
-
-	if (hFile == INVALID_HANDLE_VALUE) {
-		MessageBox(NULL, L"패키징 읽기 실패", L"System Message", MB_OK);
-		return E_FAIL;
-	}
-
-	_int iObjectCount = {};
-
-	if (!ReadFile(hFile, &iObjectCount, sizeof(_int), &dwByte, nullptr)) {
-		return E_FAIL;
-	}
-
-	for (size_t i = 0; i < iObjectCount; i++)
+	for (const auto& file : filesystem::directory_iterator(pPath))
 	{
-		EFFECT_TYPE eEffectType = {};
+		if (file.is_directory())
+			continue;
 
-		if (!ReadFile(hFile, &eEffectType, sizeof(EFFECT_TYPE), &dwByte, nullptr)) {
-			return E_FAIL;
-		}
+		string ext = file.path().extension().string();
 
-		size_t iFilePathLength = {};
-
-		if (!ReadFile(hFile, &iFilePathLength, sizeof(size_t), &dwByte, nullptr)) {
-			return E_FAIL;
-		}
+		if (!(strcmp(ext.c_str(), ".bin") ^ strcmp(ext.c_str(), ".trail")))
+			continue;
 
 		_char szFilePath[MAX_PATH] = {};
 
-		if (iFilePathLength != 0)
+		strcpy_s(szFilePath, MAX_PATH, file.path().string().c_str());
+
+		/* Trail */
+
+		if (!strcmp(ext.c_str(), ".trail"))
 		{
-			if (!ReadFile(hFile, szFilePath, sizeof(_char) * ((DWORD)iFilePathLength + 1), &dwByte, nullptr)) {
+			CTrailObject* pTrail = nullptr;
+
+			CPartObject::PARTOBJECT_DESC PartsDesc{};
+
+			PartsDesc.pParentTransform = m_pTransformCom;
+
+
+			_wstring wstrFileName = file.path().stem().wstring(); //이름 넣기
+
+			if (FAILED(Add_PartObject<CTrailObject>(CMyTools::ToString(wstrFileName), NEXT_LEVEL, &pTrail, &PartsDesc))) {
+				assert(false);
 				return E_FAIL;
 			}
+
+
+			/*이펙트 로드 로드*/
+			size_t iPos = {};
+			_string strFilePath = szFilePath;
+
+			while ((iPos = strFilePath.find(".trail")) != std::string::npos) {
+				strFilePath.erase(iPos, 6);
+			};
+
+
+			if (FAILED(pTrail->Load_Trail(strFilePath.c_str(), LEVEL::EFFECT)))
+			{
+				Safe_Release(pTrail);
+				continue;
+			}
+
+			Safe_Release(pTrail);
+
+			continue;
 		}
 
-		_string strPath = szFilePath;
-		size_t iPos;
 
-		while ((iPos = strPath.find(".bin")) != std::string::npos) {
-			strPath.erase(iPos, 4);
+		/////////////////////////////
+
+		CEditEffect* pEditEffect = nullptr;
+
+		CPartObject::PARTOBJECT_DESC PartsDesc{};
+
+		PartsDesc.pParentTransform = m_pTransformCom;
+
+
+
+
+		/*이펙트 껍데기 생성*/
+
+		_wstring wstrFileName = file.path().stem().wstring(); //이름 넣기
+
+		if (FAILED(Add_PartObject<CEditEffect>(CMyTools::ToString(wstrFileName), NEXT_LEVEL, &pEditEffect, &PartsDesc))) {
+			assert(false);
+			return E_FAIL;
+		}
+		
+
+		/*이펙트 로드 로드*/
+		size_t iPos = {};
+		_string strFilePath = szFilePath;
+
+		while ((iPos = strFilePath.find(".bin")) != std::string::npos) {
+			strFilePath.erase(iPos, 4);
 		};
 
 
-		CPartObject::PARTOBJECT_DESC PartsDesc{};
-		CEditEffect*	pEditEffect = {};
-		CTrailObject*	pTrailEffect = {};
-		switch (eEffectType)
+		if (FAILED(pEditEffect->Load(strFilePath.c_str(), LEVEL::EFFECT)))
 		{
-		case EFFECT_TYPE::EFFECT:
-
-
-			PartsDesc.pParentTransform = m_pTransformCom;
-
-
-			if (FAILED(Add_PartObject<CEditEffect>("EffectObject" + i, ENUM_CLASS(LEVEL::EFFECT), &pEditEffect, &PartsDesc)))
-			{
-				return E_FAIL;
-			}
-
-			pEditEffect->Load(strPath.c_str(), LEVEL::EFFECT);
-
-			SAFE_RELEASE(pEditEffect);
-
-			break;
-
-		case EFFECT_TYPE::TRAIL:
-
-			PartsDesc.pParentTransform = m_pTransformCom;
-
-
-			if (FAILED(Add_PartObject<CTrailObject>("TrailObject" + i, ENUM_CLASS(LEVEL::EFFECT), &pTrailEffect, &PartsDesc)))
-			{
-				return E_FAIL;
-			}
-
-			pTrailEffect->Load_Trail(strPath.c_str(), LEVEL::EFFECT);
-
-			SAFE_RELEASE(pTrailEffect);
-
-			break;
-		case EFFECT_TYPE::END:
-			break;
-		default:
-			break;
+			Safe_Release(pEditEffect);
+			continue;
 		}
-	
+
+		Safe_Release(pEditEffect);
 	}
-
-	CloseHandle(hFile);
-
-	MessageBox(NULL, L"패키징 로드 성공", L"System Message", MB_OK);
 
 	return S_OK;
 }
@@ -265,7 +195,7 @@ void CEffect_Container::Update_Event(_float fTimeDelta)
 	m_fPreAccTime = m_fAccTime;
 	m_fAccTime += fTimeDelta;
 
-	if (m_fAccTime >= m_fDelay && m_isDelayed == false) // 아직 딜레이되지 않았고 딜레이를 넘어섰다면
+	if (m_fAccTime >= m_fDelay || m_isDelayed == false) // 아직 딜레이되지 않았고 딜레이를 넘어섰다면
 	{
 		m_isDelayed = true;
 	}
@@ -282,6 +212,15 @@ void CEffect_Container::Update_Event(_float fTimeDelta)
 			m_fAccTime = 0.f;
 			m_fPreAccTime = 0.f;
 			m_isDelayed = false;
+		}
+		else
+		{
+			m_bVisible = false;
+			
+			for (auto& pPart : m_PartObjects)
+			{
+				pPart.second->Set_Visible(false);
+			}
 		}
 	}
 

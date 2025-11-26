@@ -13,7 +13,7 @@ private:
 
 public:
 	_bool operator==(const CLight& rhs) const;
-	_bool operator==(const Engine::LIGHT_DESC& rhs) const;
+	_bool operator==(const LIGHT_DESC& rhs) const;
 
 public:
 	virtual HRESULT Initialize_Prototype() override;
@@ -29,7 +29,9 @@ public:
 	static CLight* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CComponent* Clone(void* pArg, CGameObject* pOwner) override;
 	virtual void Free() override;
+#ifdef _DEBUG
 	void Describe_Entity() override;
+#endif // _DEBUG
 
 };
 

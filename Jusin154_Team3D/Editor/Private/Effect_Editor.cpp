@@ -81,6 +81,13 @@ void CEffect_Editor::Update(_float fTimeDelta)
 	if (m_pGameInstance->Key_Pressing(DIK_Z))
 		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta);
 
+	/* 이펙트 컨테이너 업데이트 */
+	//Update_Event(fTimeDelta);
+
+	/* 트레일 업데이트 */
+	if (m_pTrailObject != nullptr)
+		m_pTrailObject->Trail_Update(m_pTransformCom->Get_XMWorldMatrix(), fTimeDelta);
+
 }
 
 void CEffect_Editor::Late_Update(_float fTimeDelta)
@@ -151,8 +158,10 @@ HRESULT CEffect_Editor::ReSaveFile(const _char* pDirectoryPath)
 
 		
 
-		if (FAILED(Add_PartObject<CEditEffect>("ReSaveFile" + iIndex++ , ENUM_CLASS(LEVEL::EFFECT), &pEditEffect, &PartsDesc)))
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEditEffect>(ENUM_CLASS(LEVEL::EFFECT), CURRENT_LEVEL, TEXT("Layer_Effect"), &PartsDesc, this , &pEditEffect))) {
+			assert(false);
 			return E_FAIL;
+		}
 		
 		if (FAILED(pEditEffect->LoadPre(szFilePath, LEVEL::EFFECT)))
 		{
@@ -171,7 +180,7 @@ HRESULT CEffect_Editor::ReSaveFile(const _char* pDirectoryPath)
 
 		pEditEffect->Save_Effect(strPath.c_str());
 
-		Safe_Release(pEditEffect);
+		pEditEffect->Set_Dead();
 	}
 
 	return S_OK;
@@ -387,6 +396,8 @@ HRESULT CEffect_Editor::Load_Edit(const _char* pPath)
 		Safe_Release(m_pEditEffect);
 		return E_FAIL;
 	}
+	else
+		MessageBox(NULL, L"이펙트 로드 성공", L"System Message", MB_OK);
 
 	Safe_Release(m_pEditEffect);
 
@@ -515,7 +526,7 @@ void CEffect_Editor::Describe_Entity()
 		if( nullptr != dynamic_cast<CTrailObject*>(pPartObject.second))
 			strName = "TrailObject" + to_string(iIndex);
 		else
-			strName = "EffectObject" + to_string(iIndex);
+			strName = pPartObject.first;
 
 		if (GUI::TreeNode(strName.c_str()))
 		{
@@ -614,22 +625,16 @@ void CEffect_Editor::Describe_Entity()
 		ReSaveFile(m_strSavePath.c_str());
 	}
 
-
-
-	GUI::InputTextMultiline("PACKAGE FILE PATH", m_szPackageBuffer, sizeof(m_szPackageBuffer), ImVec2(250, 25));
+	GUI::InputTextMultiline("DIRECTORY PATH", m_szPackageBuffer, sizeof(m_szPackageBuffer), ImVec2(250, 25));
 
 	m_strPackageSavePath = m_szPackageBuffer;
 
-	if (GUI::Button("PACKAING"))
+	if (GUI::Button("LOAD DIRECTORY"))
 	{
-		Save_Package(m_strPackageSavePath.c_str());
-	}
-
-	GUI::SameLine();
-
-	if (GUI::Button("LOAD PACKAGE"))
-	{
-		Load_Package(m_strPackageSavePath.c_str());
+		if (SUCCEEDED(Load_Directory(m_strPackageSavePath.c_str())))
+		{
+			MessageBox(NULL, L"파일 로드 성공", L"System Message", MB_OK);
+		}
 	}
 
 	GUI::InputTextMultiline("TRAIL FILE PATH", m_szTrailBuffer, sizeof(m_szTrailBuffer), ImVec2(250, 25));

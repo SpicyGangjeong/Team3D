@@ -2,6 +2,8 @@
 
 #include "Editor_Define.h"
 #include "Monster.h"
+#include "CallBack_Monster_Behavior.h"
+#include "CallBack_Monster_HitReport.h"
 
 NS_BEGIN(Editor)
 
@@ -21,6 +23,13 @@ public:
 	virtual HRESULT Render() override;
 
 private:
+	CCallBack_Monster_Behavior* m_pCallBack_Behavior = { nullptr };
+	CCallBack_Monster_HitReport* m_pCallBack_HitReport = { nullptr };
+
+	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
+	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
+
+private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
 
@@ -29,6 +38,24 @@ public:
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr) override;
 	virtual void Free() override;
 	virtual void Describe_Entity() override;
+
+private:
+	virtual void Add_FSM();
+	virtual void Set_Anim();
+
+
+	void	Behavior_IdleEnter();
+	HRESULT Behavior_IdleExitCheck();
+	void	Behavior_IdleExit();
+
+	void	Behavior_MoveEnter();
+	HRESULT Behavior_MoveExitCheck();
+	void	Behavior_MoveExit();
+
+	void	Behavior_CombatEnter();
+	HRESULT Behavior_CombatExitCheck();
+	void	Behavior_CombatExit();
+
 };
 
 NS_END

@@ -19,10 +19,10 @@
 #ifdef 기무리
 #undef ASSERT_NURI
 #define ASSERT_NURI(expression) assert(expression)
-#elif kim05
+#elif 진우
 #undef ASSERT_JINWOO
 #define ASSERT_JINWOO(expression) assert(expression)
-#elif 82103
+#elif gimch
 #undef ASSERT_JINHO
 #define ASSERT_JINHO(expression) assert(expression)
 #elif Bin

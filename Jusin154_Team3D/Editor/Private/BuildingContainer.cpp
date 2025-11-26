@@ -36,12 +36,15 @@ void CBuildingContainer::Update(_float fTimeDelta)
 
 void CBuildingContainer::Late_Update(_float fTimeDelta)
 {
+
+#ifdef _DEBUG
     if (m_bSelected)
     {
         m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
         m_pTransformCom->Set_Scale(m_vScale);
         m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
     }
+#endif // _DEBUG
 
     __super::Late_Update(fTimeDelta);
 
@@ -147,11 +150,9 @@ void CBuildingContainer::Describe_Entity()
 
     if (m_pGameInstance->Mouse_Down(DIM_LBUTTON) && m_pGameInstance->Key_Pressing(DIK_LSHIFT))
     {
-        CTerrain* pTerrain = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Terrain"))->Get_Object<CTerrain>();
-        /*if (nullptr != pTerrain)
+        if (m_pGameInstance->isPicking(&m_vPosition))
         {
-            pTerrain->Get_Component<CVIBuffer_Terrain>()->Picking(pTerrain->Get_Component<CTransform>(), m_vPosition);
-        }*/
+        }
     }
 
     GUI::Text("----- Rotation ----");
