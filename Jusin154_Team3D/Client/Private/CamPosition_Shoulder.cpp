@@ -170,8 +170,8 @@ HRESULT CCamPosition_Shoulder::Ready_SubParts()
 	CameraDesc.iPriority = 51;
 	CameraDesc.pCameraKey = CAMERA_SHOULDER;
 	CameraDesc.bEnableTransitionLerp = true;
-	CameraDesc.bEnableFollowLerp = true;
-	CameraDesc.bEnableLookLerp = true;
+	CameraDesc.bEnableFollowLerp = false;
+	CameraDesc.bEnableLookLerp = false;
 	CameraDesc.vTransitionTime = { 0.f, 1.f };
 	CameraDesc.vFollowLerpTime = { 0.f, 0.16f };
 	CameraDesc.vLookLerpTime = { 0.f, 0.16f };

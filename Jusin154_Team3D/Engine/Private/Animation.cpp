@@ -35,8 +35,8 @@ CAnimation::CAnimation(const CAnimation& rhs)
 }
 _bool CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bones, const LOCALPOS_DESC* pLocalPosArray, _bool bIsLoop, _float fTimeDelta,CTransform*pTransform, _float m_fAmount)
 {
-	_float fProgress = m_fTickPerSecond * fTimeDelta * m_fAnimSpeed;
-	m_fCurrentTrackPosition += fProgress;
+	m_fProgress = m_fTickPerSecond * fTimeDelta * m_fAnimSpeed;
+	m_fCurrentTrackPosition += m_fProgress;
 
 	if (m_fCurrentTrackPosition >= m_fDuration) {
 		if (false == bIsLoop) {
@@ -46,7 +46,7 @@ _bool CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bone
 		}
 		else {
 			Depart_Animation();
-			m_fCurrentTrackPosition = fProgress;
+			m_fCurrentTrackPosition = m_fProgress;
 			ResetRootMotion();
 			ProgressAnimation(Bones, pLocalPosArray, pTransform, m_fAmount);
 			return true;
@@ -195,6 +195,7 @@ void CAnimation::InterpAnim(CAnimation* pPreAnim, vector<CBone*>& Bones, _float 
 			if (boneName == "Reference")
 			{
 				finalT = XMVectorZero();
+
 			}
 		}
 
@@ -206,7 +207,6 @@ void CAnimation::InterpAnim(CAnimation* pPreAnim, vector<CBone*>& Bones, _float 
 	}
 
 }
-
 
 void CAnimation::CreateGPUData(ID3D11Device* pDevice)
 {

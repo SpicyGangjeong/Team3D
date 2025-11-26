@@ -105,27 +105,32 @@ HRESULT CModel::Bind_BoneMatrices(_uint iMeshIndex, CShader* pShader, const _cha
 	return m_Meshes[iMeshIndex]->Bind_BoneMatrices(m_Bones, pShader, pConstantName);
 }
 
-_bool CModel::Play_Animation(_float fTimeDelta,CTransform* pTransform)
+_bool CModel::Play_Animation(_float fTimeDelta, CTransform* pTransform)
 {
-	if (!m_bPlayAnim){
+	if (!m_bPlayAnim)
 		return false;
-	}
-	if (-1 == m_iCurrentAnimIndex  // 정지 혹은 시작을 안시켜준 애님
-		|| m_iCurrentAnimIndex >= (_int)m_iNumAnimations)  // 애님 인덱스 초과됨
-	{
-		return false; // 잘못된 초기화
-	}
+
+	if (m_iCurrentAnimIndex < 0 || m_iCurrentAnimIndex >= (_int)m_iNumAnimations)
+		return false;
 
 	ComputeAnimation();
 
-	if (m_iPreAnimIndex != m_iCurrentAnimIndex && m_iPreAnimIndex != 0)
+	if (m_iPreAnimIndex >= 0 && m_iPreAnimIndex != m_iCurrentAnimIndex)
 	{
 		m_fBlendTime += fTimeDelta;
 		_float fRatio = (m_fBlendTime / m_fBlendDuration);
-		fRatio = min(fRatio, 1.f);
+		if (fRatio > 1.f) fRatio = 1.f;
 
-		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, pTransform, m_fAmount);
-		m_Animations[m_iCurrentAnimIndex]->InterpAnim(m_Animations[m_iPreAnimIndex], m_Bones, fRatio);
+		CAnimation* pCurAnim = m_Animations[m_iCurrentAnimIndex];
+		CAnimation* pPreAnim = m_Animations[m_iPreAnimIndex];
+
+		_bool bPreFinished = pPreAnim->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, pTransform, m_fAmount * (1.f - fRatio));
+
+		_bool bCurFinished = pCurAnim->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, pTransform, m_fAmount * fRatio);
+
+		pCurAnim->InterpAnim(pPreAnim, m_Bones, fRatio);
+
+		m_bIsFinishedAnim = bCurFinished;
 
 		if (fRatio >= 1.f)
 		{
@@ -136,18 +141,13 @@ _bool CModel::Play_Animation(_float fTimeDelta,CTransform* pTransform)
 	else
 	{
 		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, pTransform, m_fAmount);
+
 		m_iPreAnimIndex = m_iCurrentAnimIndex;
 	}
 
 	for (auto& pBone : m_Bones)
 	{
 		pBone->Update_CombinedTransformationMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
-	}
-
-	if (m_bIsFinishedAnim)
-	{
-		m_Animations[m_iCurrentAnimIndex]->ResetRootMotion();
-		m_Animations[m_iCurrentAnimIndex]->Depart_Animation();
 	}
 
 	return m_bIsFinishedAnim;
@@ -163,8 +163,8 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop,_float fAmount)
 		m_iCurrentAnimIndex = iIndex;
 		m_bIsLoop = isLoop;
 		m_fAmount = fAmount;
-		m_Animations[m_iCurrentAnimIndex]->ResetRootMotion();
 		m_Animations[m_iCurrentAnimIndex]->Depart_Animation();
+		m_Animations[m_iCurrentAnimIndex]->ResetRootMotion();
 	}
 	else {
 		m_iCurrentAnimIndex = -1;

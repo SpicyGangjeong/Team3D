@@ -165,8 +165,6 @@ HRESULT CPlayer::Render()
 
 void CPlayer::Render_CameraCoordinateSystem()
 {
-
-
 	m_Batch->Begin();
 
 	const _float fArrowLength = 2.0f;
@@ -188,7 +186,10 @@ void CPlayer::Render_CameraCoordinateSystem()
 	GUI::Button("##6", {100.f, 100.f}); GUI::SameLine();
 	GUI::Button(("S : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { -m_vCameraLookDir.x , -m_vCameraLookDir.z })))).c_str(), { 100.f, 100.f }); GUI::SameLine();
 	GUI::Button("##8", {100.f, 100.f});
-
+	//W CMyTools::Get_Direction2D(vLook, { m_vCameraLookDir.x ,		m_vCameraLookDir.z })
+	//A CMyTools::Get_Direction2D(vLook, { -m_vCameraRightDir.x , -	m_vCameraRightDir.z })
+	//S CMyTools::Get_Direction2D(vLook, { m_vCameraRightDir.x ,	m_vCameraRightDir.z })
+	//D CMyTools::Get_Direction2D(vLook, { -m_vCameraLookDir.x , -	m_vCameraLookDir.z })
 	m_Batch->DrawLine( // W
 		VertexPositionColor(fArrowLength * -XMLoadFloat3(&m_vCameraLookDir), DirectX::Colors::GhostWhite),
 		VertexPositionColor(fArrowLength * XMLoadFloat3(&m_vCameraLookDir), DirectX::Colors::Blue)
@@ -279,7 +280,7 @@ HRESULT CPlayer::Ready_Parts()
 	{
 		CCamPosition_Shoulder::CAMERA_SHOULDER_DESC Desc;
 		Desc.pParentTransform = m_pTransformCom;
-		Desc.fMouseSensor = 0.5f;
+		Desc.fMouseSensor = 0.1f;
 		Desc.fShoulderDistance = 2.f;
 		Desc.fBackFrontRatio = 0.9f;
 		Desc.fCameraFocalLength = 10.f;
