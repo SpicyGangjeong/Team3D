@@ -438,8 +438,9 @@ HRESULT CRenderTarget_Manager::Render_RenderTarget_Debug(CShader* pShader, CVIBu
 
     for (auto& pRenderTarget : m_RenderTargets)
     {
-        if (pRenderTarget.second->Render_Debug(pShader, pVIBuffer, fX, fY, (_float)m_iSizeX, (_float)m_iSizeY) == false)
+        if (pRenderTarget.second->Render_Debug(pShader, pVIBuffer, fX, fY, (_float)m_iSizeX, (_float)m_iSizeY) == false){
             continue;
+        }
 
         fX += m_iSizeX;
 
@@ -467,11 +468,23 @@ void CRenderTarget_Manager::RenderTarget_Debuger()
     GUI::DragInt("Target Size X" , &m_iSizeX);
     GUI::DragInt("Target Size Y", &m_iSizeY);
     GUI::PopItemWidth();
-
-    for (auto& pTarget : m_RenderTargets)
+    ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
+    GUI::BeginChild("RTDebugger", { 120.f, 200.f }, ImGuiChildFlags_None, window_flags);
+    for (auto& [key, pRenderTarget] : m_RenderTargets)
     {
-        pTarget.second->Describe_Entity(CMyTools::ToString(pTarget.first).c_str());
+        _string strKey = CMyTools::ToString(key);
+        _string strTargetName = "NOT_STARTED_WITH_Target_";
+
+        _string TargetPrefix = "Target_";
+        if (size_t pos = strKey.find(TargetPrefix); pos != string::npos)
+        {
+            strTargetName = strKey.substr(pos + TargetPrefix.length());
+        }
+
+        pRenderTarget->Describe_Entity(strTargetName.c_str());
     }
+
+    GUI::EndChild();
 
     GUI::End();
 }
