@@ -21,6 +21,7 @@
 #pragma endregion
 
 #include "Bombard.h"
+#include "Decendo.h"
 
 #pragma region States
 void CPlayer::TestKeyInput(_float fTimeDelta)
@@ -526,9 +527,23 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 			{
 			case STATEANIM::ACCIO:
 				pairAnimInfo = m_Animation[STATEANIM::ACCIO];
+
+				if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBombard>(ENUM_CLASS(LEVEL::EFFECT), CURRENT_LEVEL, LAYER_HITBOX, nullptr, this))) {
+					assert(false);
+					return E_FAIL;
+				}
+
+			
 				break;
 			case STATEANIM::DESCENDO:
+			{
 				pairAnimInfo = m_Animation[STATEANIM::DESCENDO];
+
+				if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDecendo>(ENUM_CLASS(LEVEL::EFFECT), CURRENT_LEVEL, LAYER_HITBOX, nullptr, this))) {
+					assert(false);
+					return E_FAIL;
+				}
+			}
 				break;
 			default:
 				break;

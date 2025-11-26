@@ -38,6 +38,8 @@ private:
 	_vector							  m_vRotateUp = {};
 	_float							  m_fAccTime = {};
 	_float							  m_fLerpAmount = {};
+	_float							  m_fTurnValue = {};
+	_vector							  m_vOwnerLook = {};
 public:
 	static CDecendo* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;
