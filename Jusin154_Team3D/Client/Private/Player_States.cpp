@@ -106,11 +106,13 @@ void CPlayer::Behavior_IdleEnter() {
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
 
+// S_OK -> 현 상태 유지
+// E_FAIL -> 현 상태 탈출
 HRESULT CPlayer::Behavior_IdleExitCheck()
 {
 	pair<_uint, _bool> pairAnimInfo;
-	// S_OK -> 현 상태 유지
-	// E_FAIL -> 현 상태 탈출
+	_vector xmvLook = XMVector4Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
+	_vector xmvRight = XMVector4Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::RIGHT), 0.f));
 	if (SUCCEEDED(InputAction()) || SUCCEEDED(InputSpell())) {
 		if (m_pGameInstance->Key_Down(DIK_SPACE)) {
 			m_pFSM->Change_State(FSMSTATE::JUMP);
@@ -143,11 +145,6 @@ HRESULT CPlayer::Behavior_IdleExitCheck()
 			m_pFSM->Change_State(FSMSTATE::MOVE);
 			return E_FAIL;
 		}
-		/*if (m_pGameInstance->Key_Pressing(DIK_S))
-		{
-			m_pFSM->Change_State(FSMSTATE::MOVE);
-			return E_FAIL;
-		}*/
 	}
 
 	if (m_pGameInstance->Key_Down(DIK_D))
@@ -422,8 +419,6 @@ HRESULT CPlayer::Behavior_MoveExitCheck()
 			m_pFSM->Change_State(FSMSTATE::IDLE);
 			m_pFSM->Disable_State(FSMSTATE::STOP);
 		}
-		
-
 	
 		return S_OK;
 	}

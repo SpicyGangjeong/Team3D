@@ -124,9 +124,9 @@ _bool CModel::Play_Animation(_float fTimeDelta, CTransform* pTransform)
 		CAnimation* pCurAnim = m_Animations[m_iCurrentAnimIndex];
 		CAnimation* pPreAnim = m_Animations[m_iPreAnimIndex];
 
-		_bool bPreFinished = pPreAnim->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, pTransform, m_fAmount * (1.f - fRatio));
+		//_bool bPreFinished = pPreAnim->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, pTransform, m_fAmount);
 
-		_bool bCurFinished = pCurAnim->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, pTransform, m_fAmount * fRatio);
+		_bool bCurFinished = pCurAnim->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, pTransform, m_fAmount);
 
 		pCurAnim->InterpAnim(pPreAnim, m_Bones, fRatio);
 
