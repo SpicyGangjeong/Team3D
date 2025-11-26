@@ -223,7 +223,10 @@ void CGoblin::Free()
 	Safe_Delete(m_pCallBack_Behavior);
 	Safe_Delete(m_pCallBack_HitReport);
 }
+#ifdef _DEBUG
 
 void CGoblin::Describe_Entity()
 {
 }
+
+#endif // _DEBUG
