@@ -50,6 +50,8 @@ HRESULT CWand::Initialize(void* pArg)
 		assert(false);
 		return E_FAIL;
 	}
+	SAFE_ADDREF(m_pTrail);
+	SAFE_ADDREF(m_pEffectParts);
 
 	m_pEffectParts->Load("../Bin/Resources/Data/Effect/Lumos/Lumos", static_cast<LEVEL>(NEXT_LEVEL));
 
@@ -70,9 +72,10 @@ void CWand::Priority_Update(_float fTimeDelta)
 
 	m_pTransformCom->Set_WorldMatrix(socketMatrix * XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr()));
 	
+#ifdef _DEBUG
 	Describe_Entity();
 
-
+#endif // _DEBUG
 }
 
 void CWand::Update(_float fTimeDelta)

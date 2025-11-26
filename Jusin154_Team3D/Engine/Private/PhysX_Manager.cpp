@@ -47,11 +47,12 @@ PSX::PxRigidDynamic* CPhysX_Manager::Add_DynamicActor(CRigidBody_Dynamic& RigidB
 	}
 	assert(nullptr != pShape);
 
+	// createExclusiveShape를 하면 쉐이프가 actor에 attach 된 상태로 나오기 때문에
+	// 쉐이프 속성만 건드려서 액터의 쉐이프를 수정함
 	pShape->setFlags(RigidBody.Get_ShapeFlags());
 	pShape->setContactOffset(RigidBody.Get_ContactOffset());
 	pShape->setRestOffset(0.f);
 
-	pActorDynamic->attachShape(*pShape);
 	PSX::PxRigidBodyFlags pxRigidFlags = RigidBody.Get_RigidBodyFlags();
 	pActorDynamic->setRigidBodyFlags(pxRigidFlags);
 
@@ -101,7 +102,7 @@ PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody_Static& RigidBody
 			// GeoFlag 중 더블사이드는 이제 지원 안함, 할거면 노말 뒤집어서 하라고 함
 			// pPxMeshGeometry->meshFlags |= PSX::PxMeshGeometryFlag::eDOUBLE_SIDED;
 			// 유효성 체크
-			PX_ASSERT(pPxMeshGeometry.isValid());
+			PX_ASSERT(pPxMeshGeometry->isValid());
 			m_TriangleMeshGeometry.emplace(RigidBody.Get_PxMeshKey(), pPxMeshGeometry);
 		}
 		break;
@@ -331,10 +332,19 @@ unordered_set<PSX::PxActor*>::iterator CPhysX_Manager::Detach_Actor(PSX::PxActor
 	if (m_pActiveBodys.end() != iter) {
 		m_pActiveBodys.erase(iter); // 액터를 활성화 맵에서 분리 해주고
 		iterOut = m_pRestBodies.insert(&Actor).first; // 액터를 다시 쓸 수 있기 때문에 따로 보관해줌
-		if (m_pScene != nullptr) {
-			m_pScene->removeActor(Actor);
-		}
 	}
+
+	PSX::PxScene* pOwnerScene = Actor.getScene();
+
+	if (pOwnerScene == nullptr) { // 액터가 씬에 없는 경우 nullptr이 나옴
+		return iterOut;
+	}
+
+	if (pOwnerScene != m_pScene) { // 액터가 속한 씬이 아닌경우 빼면 안됨
+		return iterOut;
+	}
+	m_pScene->removeActor(Actor);
+
 	return iterOut;
 }
 
@@ -475,6 +485,19 @@ HRESULT CPhysX_Manager::Initialize()
 		pPvdClient->setScenePvdFlag(PSX::PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
 	}
 
+	m_pMaterials.reserve(ENUM_CLASS(PXMATERIAL::END));
+	m_pMaterials.push_back(m_pPhysics->createMaterial(0.5f, 0.5f, 0.6f));
+
+	PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
+	PlaneData.iSubKind = UINT_MAX;
+	PlaneData.pOwner = nullptr;
+	PlaneData.pBody = nullptr;
+
+	PSX::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *m_pMaterials[ENUM_CLASS(PXMATERIAL::DEFAULT)]);
+	pGroundPlane->userData = &PlaneData;
+	pGroundPlane->setName("PHYSX_MANAGER_PLANE");
+	m_pScene->addActor(*pGroundPlane);;
+
 	// m_pScene->overlap();??????
 #ifdef EDITOR_PROJECT
 #ifdef 기무리
@@ -483,8 +506,6 @@ HRESULT CPhysX_Manager::Initialize()
 	PlaneData.pOwner = nullptr;
 	PlaneData.pBody = nullptr;
 
-	m_pMaterials.reserve(ENUM_CLASS(PXMATERIAL::END));
-	m_pMaterials.push_back(m_pPhysics->createMaterial(0.5f, 0.5f, 0.6f));
 	PSX::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *m_pMaterials[ENUM_CLASS(PXMATERIAL::DEFAULT)]);
 	pGroundPlane->userData = &PlaneData;
 	pGroundPlane->setName("PHYSX_MANAGER_PLANE");
@@ -515,8 +536,6 @@ HRESULT CPhysX_Manager::Initialize()
 	PlaneData.pOwner = nullptr;
 	PlaneData.pBody = nullptr;
 
-	m_pMaterials.reserve(ENUM_CLASS(PXMATERIAL::END));
-	m_pMaterials.push_back(m_pPhysics->createMaterial(0.5f, 0.5f, 0.6f));
 	PSX::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *m_pMaterials[ENUM_CLASS(PXMATERIAL::DEFAULT)]);
 	pGroundPlane->userData = &PlaneData;
 	pGroundPlane->setName("PHYSX_MANAGER_PLANE");
@@ -547,8 +566,6 @@ HRESULT CPhysX_Manager::Initialize()
 	PlaneData.pOwner = nullptr;
 	PlaneData.pBody = nullptr;
 
-	m_pMaterials.reserve(ENUM_CLASS(PXMATERIAL::END));
-	m_pMaterials.push_back(m_pPhysics->createMaterial(0.5f, 0.5f, 0.6f));
 	PSX::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *m_pMaterials[ENUM_CLASS(PXMATERIAL::DEFAULT)]);
 	pGroundPlane->userData = &PlaneData;
 	pGroundPlane->setName("PHYSX_MANAGER_PLANE");
