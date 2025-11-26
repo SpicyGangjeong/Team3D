@@ -193,7 +193,10 @@ void CPhysXEffectHitBox::Free()
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pModelCom);
 }
+#ifdef _DEBUG
 
 void CPhysXEffectHitBox::Describe_Entity()
 {
 }
+
+#endif // _DEBUG

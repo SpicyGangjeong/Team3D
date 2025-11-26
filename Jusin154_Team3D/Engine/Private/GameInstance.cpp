@@ -635,16 +635,20 @@ void CGameInstance::Add_ModelToMap(const _char* filePath, CModel* pModel)
 {
 	m_ModelMap[filePath] = pModel;
 }
+
+
+#endif
+
 void CGameInstance::Add_SaveModel(const _char* filePath, SaveModel sModel)
 {
 	m_sModelMap[filePath] = sModel;
 }
+
 SaveModel* CGameInstance::Load_SaveModel(const _char* filePath)
 {
 	auto iter = m_sModelMap.find(filePath);
 	return &iter->second;
 }
-#endif
 
 #pragma region PhysX_Manager
 PSX::PxMaterial* CGameInstance::Create_Material(_float3* vMatInfo)

@@ -48,6 +48,7 @@ HRESULT CUnit::Render()
 	return S_OK;
 }
 
+#ifdef _DEBUG
 void CUnit::Load_KeyFrame()
 {
 	FILE* fp = nullptr;
@@ -90,7 +91,7 @@ void CUnit::Load_KeyFrame()
 		}
 	}
 }
-
+#endif
 _float CUnit::Get_KeyFrame(_string FrameName)
 {
 	auto iter = m_KeyFrames.find(FrameName);
@@ -137,7 +138,10 @@ void CUnit::Free()
 	SAFE_RELEASE(m_pModelCom);
 	SAFE_RELEASE(m_pFSM);
 }
+#ifdef _DEBUG
 
 void CUnit::Describe_Entity()
 {
 }
+
+#endif // _DEBUG

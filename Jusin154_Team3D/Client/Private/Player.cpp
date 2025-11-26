@@ -50,8 +50,10 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Ready_Parts())) {
 		return E_FAIL;
 	}
-
+#ifdef _DEBUG
 	Load_KeyFrame();
+#endif // _DEBUG
+
 
 	Add_FSM();
 
@@ -92,7 +94,10 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 
 void CPlayer::Update(_float fTimeDelta)
 {
+#ifdef _DEBUG
 	Update_CameraCoordinateSystem();
+#endif // _DEBUG
+
 	m_pFSM->Update_State(fTimeDelta);
 
 
@@ -100,7 +105,9 @@ void CPlayer::Update(_float fTimeDelta)
 
 
 	__super::Update(fTimeDelta);
+#ifdef _DEBUG
 	Describe_Entity();
+#endif // _DEBUG
 
 
 
@@ -112,7 +119,7 @@ void CPlayer::Late_Update(_float fTimeDelta)
 {
 	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_Position());
 
-	m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
+	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 
 	__super::Late_Update(fTimeDelta);
 }
@@ -154,9 +161,12 @@ HRESULT CPlayer::Render()
 
 	return S_OK;
 }
+#ifdef _DEBUG
 
 void CPlayer::Render_CameraCoordinateSystem()
 {
+
+
 	m_Batch->Begin();
 
 	const _float fArrowLength = 2.0f;
@@ -194,6 +204,7 @@ void CPlayer::Render_CameraCoordinateSystem()
 
 	m_Batch->End();
 }
+#endif // _DEBUG
 
 HRESULT CPlayer::Ready_Components()
 {
@@ -298,6 +309,8 @@ HRESULT CPlayer::Bind_ShaderResources()
 	}
 	return S_OK;
 }
+#ifdef _DEBUG
+
 void CPlayer::Update_CameraCoordinateSystem()
 {
 	_vector xmvCameraLook = XMVector3Normalize(XMVectorSetY(m_pGameInstance->Get_CameraLook(), 0.f));
@@ -305,6 +318,8 @@ void CPlayer::Update_CameraCoordinateSystem()
 	XMStoreFloat3(&m_vCameraRightDir, XMVector3Normalize(XMVector3Cross(xmvUp, xmvCameraLook)));
 	XMStoreFloat3(&m_vCameraLookDir, xmvCameraLook);
 }
+#endif // _DEBUG
+
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CPlayer* pInstance = new CPlayer(pDevice, pContext);
@@ -347,13 +362,14 @@ void CPlayer::Free()
 	SAFE_RELEASE(m_pCamPosition_TopDown_LookPart);
 	SAFE_RELEASE(m_pCamPosition_ShoulderPart);
 }
+#ifdef _DEBUG
 
 void CPlayer::Describe_Entity()
 {
 	m_pCharacter_Controller->Describe_Entity();
 	_float4 vMomentum = {};
 	XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());
-	GUI::Text("vMomentum : %.1f  %.1f  %.1f  %.1f ", vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);
+	GUI::Text("%.2f %.2f %.2f %.2f ", vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);
 	_char label[256];
 	for (auto& iter : m_KeyFrames)
 	{
@@ -384,3 +400,7 @@ void CPlayer::Describe_Entity()
 	GUI::Checkbox("Render", &m_bVisible);
 
 }
+
+#endif // _DEBUG
+
+

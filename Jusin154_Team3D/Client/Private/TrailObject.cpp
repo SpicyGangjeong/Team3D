@@ -42,14 +42,6 @@ void CTrailObject::Update(_float fTimeDelta)
 	if (m_bVisible == false)
 		return;
 
-
-	m_CombinedMat = m_pParentTransformCom->Get_XMWorldMatrix();
-
-	m_CombinedMat.r[3] += m_vOffset;
-
-	m_pTrailCom->Trail_Update(fTimeDelta, m_CombinedMat);
-
-
 	if (m_TrailInfo.vDistortionTime.y == 0)
 		return;
 
@@ -63,6 +55,7 @@ void CTrailObject::Update(_float fTimeDelta)
 
 void CTrailObject::Late_Update(_float fTimeDelta)
 {
+
 	if (m_bVisible == false)
 		return;
 
@@ -102,6 +95,11 @@ HRESULT CTrailObject::Ready_Components(void* pArg)
 	}
 
 	return S_OK;
+}
+
+void CTrailObject::Trail_Update(_fmatrix WorldMat , _float fTimeDelta)
+{
+	m_pTrailCom->Trail_Update(fTimeDelta, WorldMat);
 }
 
 HRESULT CTrailObject::Load_Trail(const _char* pPath, LEVEL eLevel)
@@ -299,35 +297,26 @@ void CTrailObject::Free()
 	SAFE_RELEASE(m_pDiffuse_TextureCom);
 	SAFE_RELEASE(m_pMasking_TextureCom);
 	SAFE_RELEASE(m_pNoise_TextureCom);
+	SAFE_RELEASE(m_pDistortion_TextureCom);
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pTrailCom);
 }
+#ifdef _DEBUG
 
 void CTrailObject::Describe_Entity()
 {
-	GUI::Begin("VALUE");
 
-	_float4 vValue = {};
-
-    XMStoreFloat4(&vValue, m_vOffset);
-
-	if(GUI::InputFloat4("OFFSET", (_float*)&vValue))
-	{
-		m_vOffset = XMLoadFloat4(&vValue);
-	}
-
-	GUI::End();
 }
+#endif // _DEBUG
+
 
 HRESULT CTrailObject::Bind_ShaderResources()
 {
 
-
 	if (FAILED(m_pTrailCom->Bind_Resources()))
 		return E_FAIL;
 
-	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom,  "g_WorldMatrix"))) 
-	{
+	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
 		return E_FAIL;
 	}
 
@@ -405,6 +394,7 @@ HRESULT CTrailObject::Bind_ShaderResources()
 	}
 
 
+
 	/* 이미시브 */
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vEmissive", &m_TrailInfo.vEmissive, sizeof(_float4)))) {
 		return E_FAIL;
@@ -454,7 +444,7 @@ HRESULT CTrailObject::Bind_ShaderResources()
 
 	if (m_pDistortion_TextureCom != nullptr)
 	{
-		if (FAILED(m_pMasking_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_DistortionTexture", 0))) {
+		if (FAILED(m_pDistortion_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_DistortionTexture", 0))) {
 			return E_FAIL;
 		}
 	}

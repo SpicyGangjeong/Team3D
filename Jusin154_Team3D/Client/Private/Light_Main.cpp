@@ -110,7 +110,10 @@ void CLight_Main::Free()
 
 	Safe_Release(m_pLightCom);
 }
+#ifdef _DEBUG
 
 void CLight_Main::Describe_Entity()
 {
 }
+
+#endif // _DEBUG

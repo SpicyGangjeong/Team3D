@@ -554,7 +554,7 @@ void CTrailObject::Describe_Entity()
 
 				ImGui::PopItemWidth();
 
-				if (GUI::TreeNode("NOISE TEX"))
+				if (GUI::TreeNode("DISTORTION TEX"))
 				{
 
 					strName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISTORTION_TEXTURE", (CComponent**)&m_pDistortion_TextureCom, nullptr, this);
@@ -664,6 +664,7 @@ HRESULT CTrailObject::Bind_ShaderResources()
 	}
 
 
+
 	/* 이미시브 */
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vEmissive", &m_TrailInfo.vEmissive, sizeof(_float4)))) {
 		return E_FAIL;
@@ -713,7 +714,7 @@ HRESULT CTrailObject::Bind_ShaderResources()
 
 	if (m_pDistortion_TextureCom != nullptr)
 	{
-		if (FAILED(m_pMasking_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_DistortionTexture", 0))) {
+		if (FAILED(m_pDistortion_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_DistortionTexture", 0))) {
 			return E_FAIL;
 		}
 	}

@@ -99,7 +99,7 @@ constexpr unsigned int g_iMaxShadowHeight = 9216;
 #define			KR_CSTR(str)			reinterpret_cast<const char*>(u8##str)
 
 #ifndef			MSG_BOX
-#define			MSG_BOX(_message)			MessageBox(NULL, TEXT(_message), L"System Message", MB_OK); assert(false)
+#define			MSG_BOX(_message)			MessageBox(NULL, TEXT(_message), L"System Message", MB_OK)
 #endif
 
 #define			NS_BEGIN(NAMESPACE)		namespace NAMESPACE {

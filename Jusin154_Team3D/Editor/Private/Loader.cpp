@@ -81,6 +81,9 @@
 #include "MapElement_Static.h"
 #include "Land.h"
 #include "Collider.h"
+#include "VIBuffer_Model_Instance.h"
+#include "Instance_Model.h"
+#include "InstancedProp.h"
 #pragma endregion
 
 
@@ -1450,7 +1453,7 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		TEXT("Prototype_Component_Npc_Model")
 	));
 	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::NONANIM, "../Bin/Resources/Models/Object/Wand/Wand.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixIdentity(),
+		MODEL::ANIM, "../Bin/Resources/Models/Object/Wand/Wand.fbx",XMMatrixIdentity(),
 		TEXT("Prototype_Component_Wand_Model")
 	));
 	futures.emplace_back(Deferred_ModelLoad(
@@ -2125,6 +2128,12 @@ vector<vector<FOLDER_LOAD*>*> Contents(iLoadCount);
 	
 	m_strMessage = TEXT("쉐이더를(을) 로딩 중 입니다.");
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_INSTANCE_PROP_MODEL,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_VtxWorldModelInstance.hlsl"),
+			VTX_MODEL_INSTANCE_MODEL::Elements, VTX_MODEL_INSTANCE_MODEL::iNumElements)))) {
+		return E_FAIL;
+	}
+
 	m_strMessage = TEXT("객체원형를(을) 로딩 중 입니다.");
 
 
@@ -2136,6 +2145,16 @@ vector<vector<FOLDER_LOAD*>*> Contents(iLoadCount);
 	/* For.Prototype_Component_VIBuffer_Terrain */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Terrain"),
 		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, "../Bin/Resources/Data/Map/T_LandscapeStreamingProxy_0_LOD1_D.png", 512, 512))))
+		return E_FAIL;
+
+	CVIBuffer_Model_Instance::INSTANCE_DESC InstanceDesc = {};
+
+	InstanceDesc.iNum = 500;
+
+	/* For.Prototype_Component_VIBuffer_Model_Instancel */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel"),
+		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext, &InstanceDesc,
+			"../Bin/Resources/Models/InstanceProp/Tree/SM_OakTree_MedA.fbx", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_SkyBox */
@@ -2170,6 +2189,10 @@ vector<vector<FOLDER_LOAD*>*> Contents(iLoadCount);
 
 	/* For.Prototype_GameObject_Terrain */
 	if (FAILED(m_pGameInstance->Add_Prototype<CTerrain>(g_iStaticLevel, CTerrain::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_InstancedProp */
+	if (FAILED(m_pGameInstance->Add_Prototype<CInstancedProp>(g_iStaticLevel, CInstancedProp::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_MapObject_Manager */

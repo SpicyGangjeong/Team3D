@@ -3,6 +3,7 @@
 
 #include "GameInstance.h"
 #include "TrailObject.h"
+#include "EffectParts.h"
 
 CWand::CWand(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject(pDevice, pContext)
@@ -36,15 +37,23 @@ HRESULT CWand::Initialize(void* pArg)
 
 	PartsDesc.pParentTransform = m_pTransformCom;
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTrailObject>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Trail"), &PartsDesc, this , &pTrail))) {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTrailObject>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Trail"), &PartsDesc, this , &m_pTrail))) {
 		assert(false);
 		return E_FAIL;
 	}
 
-	if (FAILED(pTrail->Load_Trail("../Bin/Resources/Data/Effect/Decendo/Proj_Trail" , static_cast<LEVEL>(NEXT_LEVEL))))
+	if (FAILED(m_pTrail->Load_Trail("../Bin/Resources/Data/Effect/Trail/Bombard_Trail" , static_cast<LEVEL>(NEXT_LEVEL))))
 		return E_FAIL;
 
-	pTrail->Set_Target(m_pModelCom->Get_BoneMatrixPtr("root" ), XMVectorSet(0.f, 1.f, 0.f , 0.f));
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEffectParts>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Trail"), &PartsDesc, this, &m_pEffectParts))) {
+		assert(false);
+		return E_FAIL;
+	}
+
+	m_pEffectParts->Load("../Bin/Resources/Data/Effect/Lumos/Lumos", static_cast<LEVEL>(NEXT_LEVEL));
+
+	m_pEffectParts->Set_Visible(true);
 
 	return S_OK;
 }
@@ -58,15 +67,33 @@ void CWand::Priority_Update(_float fTimeDelta)
 	for (int i = 0; i < 3; ++i) {
 	socketMatrix.r[i] = XMVector3Normalize(socketMatrix.r[i]);
 	}
+
 	m_pTransformCom->Set_WorldMatrix(socketMatrix * XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr()));
+	
+	Describe_Entity();
 
 
-	//_float3 Scale = _float3(10.f, 10.f, 10.f);
-	//m_pTransformCom->Set_Scale(Scale);
 }
 
 void CWand::Update(_float fTimeDelta)
 {
+
+	//m_pTrail->Trail_Update(CombinedMat, fTimeDelta);
+
+
+	m_pModelCom->Combined_BoneMatrix();
+
+	_matrix BoneMatrix = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("Effect"));
+
+	BoneMatrix = BoneMatrix * m_pTransformCom->Get_XMWorldMatrix();
+
+
+	BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[0]) * m_vOffset.x;
+	BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[1]) * m_vOffset.y;
+	BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[2]) * m_vOffset.z;
+
+	m_pEffectParts->Get_Component<CTransform>()->Set_WorldMatrix(BoneMatrix);
+
 }
 
 void CWand::Late_Update(_float fTimeDelta)
@@ -175,8 +202,22 @@ void CWand::Free()
 
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pModelCom);
+	SAFE_RELEASE(m_pEffectParts);
+	SAFE_RELEASE(m_pTrail);
 }
+#ifdef _DEBUG
 
 void CWand::Describe_Entity()
 {
+	GUI::Begin("VALUE");
+
+	_float4 vValue = {};
+
+	if (GUI::InputFloat3("OFFSET", (_float*)&m_vOffset))
+	{
+	}
+
+	GUI::End();
 }
+
+#endif // _DEBUG

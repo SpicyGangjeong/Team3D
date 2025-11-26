@@ -99,6 +99,10 @@ void CCamPosition_Arm::Free()
 {
 	__super::Free();
 }
+#ifdef _DEBUG
+
 void CCamPosition_Arm::Describe_Entity()
 {
 }
+
+#endif // _DEBUG

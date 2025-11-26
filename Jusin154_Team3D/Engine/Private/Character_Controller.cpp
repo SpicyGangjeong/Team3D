@@ -58,7 +58,7 @@ HRESULT CCharacter_Controller::Render()
 	}
 	return S_OK;
 }
-
+#endif // _DEBUG
 PSX::PxRigidDynamic* CCharacter_Controller::Get_Actor()
 {
 	return m_pController->getActor();
@@ -68,8 +68,6 @@ PSX::PxController* CCharacter_Controller::Get_Controller()
 {
 	return m_pController;
 }
-
-#endif // _DEBUG
 
 void CCharacter_Controller::Resize_Volume(_float fHeight)
 {

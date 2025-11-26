@@ -157,6 +157,12 @@
     <ClInclude Include="..\Public\Camera_Gaze.h">
       <Filter>02.GameObjects\Cameras\Camera_Gaze</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Goblin.h">
+      <Filter>02.GameObjects\Monster\Goblin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Monster.h">
+      <Filter>02.GameObjects\Monster</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -379,7 +385,7 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\Effects\Decendo">
       <UniqueIdentifier>{3572e19c-c7cc-4c7a-add0-2012b81b3935}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="02.GameObjects\Item">
       <UniqueIdentifier>{9cc88058-bda3-4ed0-9ec9-1968963fdda4}</UniqueIdentifier>
     </Filter>
@@ -388,6 +394,12 @@
     </Filter>
     <Filter Include="02.GameObjects\Item\Wand">
       <UniqueIdentifier>{b719d948-fce3-4144-9d2c-edcab4cfceaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster">
+      <UniqueIdentifier>{d371e373-e343-4e0b-9a0c-34eae167c1cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\Goblin">
+      <UniqueIdentifier>{1ff3d6f1-f31d-47b7-84b7-d23efe98d7d2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -534,6 +546,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Camera_Gaze.cpp">
       <Filter>02.GameObjects\Cameras\Camera_Gaze</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Goblin.cpp">
+      <Filter>02.GameObjects\Monster\Goblin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Goblin_States.cpp">
+      <Filter>02.GameObjects\Monster\Goblin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Monster.cpp">
+      <Filter>02.GameObjects\Monster</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
