@@ -75,13 +75,15 @@ private:
 	virtual void Set_Anim();
 
 	_float m_fAmount = { 1.f };
+	_float m_fInputTime = {};
 
 	HRESULT InputAction();
 	HRESULT InputMove();
+	HRESULT InputKeyUpMove();
 	HRESULT InputSpell();
 
 	void	Behavior_IdleEnter();
-	HRESULT Behavior_IdleExitCheck();
+	HRESULT Behavior_IdleExitCheck(_float fTimeDelta);
 	void	Behavior_IdleExit();
 
 	void	Behavior_MoveEnter();
