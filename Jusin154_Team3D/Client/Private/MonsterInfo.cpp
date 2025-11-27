@@ -2,6 +2,7 @@
 #include "MonsterInfo.h"
 #include "GameInstance.h"
 #include "InfoInstance.h"
+#include "Monster.h"
 
 CMonsterInfo::CMonsterInfo()
 {
@@ -9,6 +10,95 @@ CMonsterInfo::CMonsterInfo()
 
 void CMonsterInfo::Update(_float fTimeDelta)
 {
+	Refresh_PlayerAllies();
+	Refresh_LockOnMonsters();
+}
+
+void CMonsterInfo::Change_Level()
+{
+	SAFE_RELEASE(m_pLockOnMonster);
+	for (CMonster* pMonster : m_ActiveMonsters) {
+		SAFE_RELEASE(pMonster);
+	} m_ActiveMonsters.clear();
+	for (CUnit* pPlayerAlly : m_PlayerAllies) {
+		SAFE_RELEASE(pPlayerAlly);
+	} m_PlayerAllies.clear();
+}
+
+HRESULT CMonsterInfo::Regist_PlayerAlly(CUnit* pUnit)
+{
+	for (CUnit* pAlly : m_PlayerAllies) {
+		if (pAlly == pUnit) {
+			return E_ACCESSDENIED;
+		}
+	} m_PlayerAllies.push_back(pUnit);
+	SAFE_ADDREF(pUnit);
+	return S_OK;
+}
+
+HRESULT CMonsterInfo::Deregist_PlayerAlly(CUnit* pUnit)
+{
+	for (list<CUnit*>::iterator iter = m_PlayerAllies.begin(); iter != m_PlayerAllies.end();) {
+		if (*iter == pUnit) {
+			SAFE_RELEASE(*iter);
+			m_PlayerAllies.erase(iter);
+			break;
+		}
+	}
+	return E_FAIL;
+}
+
+HRESULT CMonsterInfo::Regist_ActiveMonster(CMonster* pUnit)
+{
+	for (CMonster* pMonster : m_ActiveMonsters) {
+		if (pMonster == pUnit) {
+			return E_ACCESSDENIED;
+		}
+	} m_ActiveMonsters.push_back(pUnit);
+	SAFE_ADDREF(pUnit);
+	return S_OK;
+}
+
+HRESULT CMonsterInfo::Deregist_ActiveMonster(CMonster* pUnit)
+{
+	for (list<CMonster*>::iterator iter = m_ActiveMonsters.begin(); iter != m_ActiveMonsters.end();) {
+		if (*iter == pUnit) {
+			SAFE_RELEASE(*iter);
+			m_ActiveMonsters.erase(iter);
+			break;
+		}
+	}
+	return E_FAIL;
+}
+
+CMonster* CMonsterInfo::Get_LockOnMonster()
+{
+	return m_pLockOnMonster;
+}
+
+pair<CUnit*, CTransform*> CMonsterInfo::Get_NearestPlayerAlly(_fvector vPos)
+{
+	_float fLength = FLT_MAX;
+	CTransform* pNearestTransform = { nullptr };
+	CUnit* pNearestPlayer = { nullptr };
+
+	for (list<CUnit*>::iterator iter = m_PlayerAllies.begin(); iter != m_PlayerAllies.end(); ++iter) {
+
+		CTransform* pTransform = (*iter)->Get_Component<CTransform>();
+		_float fNewLength = XMVectorGetX(XMVector3LengthSq(pTransform->Get_State(STATE::POSITION) - vPos));
+
+		if (nullptr == pNearestPlayer) {
+			pNearestPlayer = (*iter);
+			fLength = fNewLength;
+			continue;
+		}
+
+		if (fNewLength < fLength) {
+			pNearestPlayer = (*iter);
+			fLength = fNewLength;
+		}
+	}
+	return { pNearestPlayer, pNearestTransform };
 }
 
 HRESULT CMonsterInfo::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContex)
@@ -23,7 +113,30 @@ HRESULT CMonsterInfo::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 	SAFE_ADDREF(m_pDevice);
 	SAFE_ADDREF(m_pContext);
 
+	return S_OK;
+}
 
+HRESULT CMonsterInfo::Refresh_LockOnMonsters()
+{
+	SAFE_RELEASE(m_pLockOnMonster);
+	{ // 뷰프러스텀 순회해서 가장 중앙에 근접한 몬스터 찾기
+
+	}
+
+	return S_OK;
+}
+
+HRESULT CMonsterInfo::Refresh_PlayerAllies()
+{
+	for (list<CUnit*>::iterator iter = m_PlayerAllies.begin(); iter != m_PlayerAllies.end();) {
+		if (true == (*iter)->isDead()) {
+			SAFE_RELEASE(*iter);
+			iter = m_PlayerAllies.erase(iter);
+		}
+		else {
+			iter++;
+		}
+	}
 	return S_OK;
 }
 
@@ -41,6 +154,14 @@ CMonsterInfo* CMonsterInfo::Create(ID3D11Device* pDevice, ID3D11DeviceContext* p
 void CMonsterInfo::Free()
 {
 	__super::Free();
+
+	SAFE_RELEASE(m_pLockOnMonster);
+	for (CMonster* pMonster : m_ActiveMonsters) {
+		SAFE_RELEASE(pMonster);
+	} m_ActiveMonsters.clear();
+	for (CUnit* pAlly : m_PlayerAllies) {
+		SAFE_RELEASE(pAlly);
+	} m_PlayerAllies.clear();
 
 	SAFE_RELEASE(m_pGameInstance);
 	SAFE_RELEASE(m_pInfoInstance);

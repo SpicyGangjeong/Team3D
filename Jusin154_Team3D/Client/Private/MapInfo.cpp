@@ -15,6 +15,10 @@ void CMapInfo::Update(_float fTimeDelta)
 {
 }
 
+void CMapInfo::Change_Level()
+{
+}
+
 HRESULT CMapInfo::Load_MapObjects(const _char* pFileName)
 {
 	tinyxml2::XMLDocument xmlDoc;

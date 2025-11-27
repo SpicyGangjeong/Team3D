@@ -166,8 +166,9 @@ HRESULT CTerrain::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fUsingSurfaceParams", &m_fUsingSurfaceParams, sizeof(_float))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fUsingSurfaceParams", &m_fUsingSurfaceParams, sizeof(_float)))){
 		return E_FAIL;
+	}
 
 	return S_OK;
 }

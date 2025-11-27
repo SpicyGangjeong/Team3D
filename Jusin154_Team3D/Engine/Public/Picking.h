@@ -25,7 +25,6 @@ private:
 	_uint					m_iNumPixelW = {};
 	_uint					m_iNumPixelH = {};
 
-
 public:
 	static CPicking* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, HWND hWnd, _uint iSizeX, _uint iSizeY);
 	virtual void Free();

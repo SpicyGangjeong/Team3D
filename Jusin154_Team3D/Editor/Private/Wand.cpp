@@ -36,7 +36,7 @@ HRESULT CWand::Initialize(void* pArg)
 
 	PartsDesc.pParentTransform = m_pTransformCom;
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTrailObject>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Trail"), &PartsDesc, this, &m_pTrail))) {
+	/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTrailObject>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Trail"), &PartsDesc, this, &m_pTrail))) {
 		assert(false);
 		return E_FAIL;
 	}

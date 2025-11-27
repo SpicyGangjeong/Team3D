@@ -21,8 +21,9 @@ HRESULT CMonster::Initialize_Prototype()
 
 HRESULT CMonster::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
+	if (FAILED(__super::Initialize(pArg))){
 		return E_FAIL;
+	}
 
 	m_pPlayerTransform = static_cast<CPlayer*>(pArg)->Get_Component<CTransform>();
 	SAFE_ADDREF(m_pPlayerTransform);

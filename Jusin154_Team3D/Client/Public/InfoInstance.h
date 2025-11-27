@@ -21,6 +21,7 @@ public:
 	LEVEL Get_RestartLevel();
 public:
 	void Update(_float fTimeDelta);
+	void Change_Level();
 
 
 #pragma region MAP_INFO

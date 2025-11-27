@@ -17,6 +17,13 @@ void CInfoInstance::Update(_float fTimeDelta)
 
 }
 
+void CInfoInstance::Change_Level()
+{
+	m_pPlayerInfo->Change_Level();
+	m_pMonsterInfo->Change_Level();
+	m_pMapInfo->Change_Level();
+}
+
 HRESULT CInfoInstance::Load_MapObjects(const _char* pFilePath)
 {
 	return m_pMapInfo->Load_MapObjects(pFilePath);
