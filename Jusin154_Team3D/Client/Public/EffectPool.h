@@ -38,7 +38,10 @@ public:
 	static CEffectPool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr) override;
 	virtual void Free() override;
+#ifdef _DEBUG
 	virtual void Describe_Entity() override;
+#endif // _DEBUG
+
 };
 
 NS_END

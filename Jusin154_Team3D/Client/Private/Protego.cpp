@@ -164,11 +164,14 @@ void CProtego::Free()
 	SAFE_RELEASE(m_pCircle);
 
 }
+#ifdef _DEBUG
 
 void CProtego::Describe_Entity()
 {
 
 }
+
+#endif // _DEBUG
 
 HRESULT CProtego::Bind_ShaderResources()
 {
