@@ -100,23 +100,11 @@
     <Filter Include="50.UI\GamePlay_Canvas\Mission_Panel">
       <UniqueIdentifier>{b652ee5a-69ca-4c85-8c6c-def398a4dd23}</UniqueIdentifier>
     </Filter>
-    <Filter Include="50.UI\GamePlay_Canvas\Mission_Panel\Mission_Key">
-      <UniqueIdentifier>{887de1c6-ada2-4dc8-be5c-bcef4213e3b6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="50.UI\GamePlay_Canvas\Mission_Panel\Mission_KeyHold">
-      <UniqueIdentifier>{3804137e-7af7-40db-b729-8afa81035b35}</UniqueIdentifier>
-    </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Key">
       <UniqueIdentifier>{f897068c-184a-4bb2-a4fb-e74ec1877b02}</UniqueIdentifier>
     </Filter>
-    <Filter Include="50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Border">
-      <UniqueIdentifier>{d1c99bb3-369e-49b9-93f9-6b8536579cb5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Mission_Panel\Mission_Icon">
       <UniqueIdentifier>{5da34159-e4a2-4b4b-a7a0-a65966579e2f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="50.UI\GamePlay_Canvas\Mission_Panel\Active_Icon">
-      <UniqueIdentifier>{977fe4d3-c3b5-413c-80fe-777ece19453e}</UniqueIdentifier>
     </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\MiniMap_Panel">
       <UniqueIdentifier>{61a808c7-2765-42d9-8b4c-b4bed93b013e}</UniqueIdentifier>
@@ -385,6 +373,9 @@
     <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\Magic_Item">
       <UniqueIdentifier>{5b287b4f-4f71-4458-85a1-c753fd121c53}</UniqueIdentifier>
     </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Border">
+      <UniqueIdentifier>{a54567fa-e528-4c98-a605-289d7d300029}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -474,15 +465,6 @@
     <ClInclude Include="..\public\LoadingWidget.h">
       <Filter>50.UI\GamePlay_Canvas\Loding_Panel\LoadingWidget</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Mission_Key.h">
-      <Filter>50.UI\GamePlay_Canvas\Mission_Panel\Mission_Key</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\MissionBanner_Border.h">
-      <Filter>50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Border</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Mission_KeyHold.h">
-      <Filter>50.UI\GamePlay_Canvas\Mission_Panel\Mission_KeyHold</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\MissionBanner_Key.h">
       <Filter>50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Key</Filter>
     </ClInclude>
@@ -491,9 +473,6 @@
     </ClInclude>
     <ClInclude Include="..\public\MiniMap_TrimBorder.h">
       <Filter>50.UI\GamePlay_Canvas\MiniMap_Panel\MiniMap_TrimBorder</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Active_Icon.h">
-      <Filter>50.UI\GamePlay_Canvas\Mission_Panel\Active_Icon</Filter>
     </ClInclude>
     <ClInclude Include="..\public\IMGUIUI.h">
       <Filter>50.UI\IMGUIUI</Filter>
@@ -750,6 +729,9 @@
     <ClInclude Include="..\public\Magic_Item.h">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel\Magic_Item</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\MissionBanner_Border.h">
+      <Filter>50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Border</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -820,15 +802,6 @@
     <ClCompile Include="..\private\LoadingWidget.cpp">
       <Filter>50.UI\GamePlay_Canvas\Loding_Panel\LoadingWidget</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Mission_Key.cpp">
-      <Filter>50.UI\GamePlay_Canvas\Mission_Panel\Mission_Key</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\MissionBanner_Border.cpp">
-      <Filter>50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Border</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Mission_KeyHold.cpp">
-      <Filter>50.UI\GamePlay_Canvas\Mission_Panel\Mission_KeyHold</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\MissionBanner_Key.cpp">
       <Filter>50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Key</Filter>
     </ClCompile>
@@ -837,9 +810,6 @@
     </ClCompile>
     <ClCompile Include="..\private\MiniMap_TrimBorder.cpp">
       <Filter>50.UI\GamePlay_Canvas\MiniMap_Panel\MiniMap_TrimBorder</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Active_Icon.cpp">
-      <Filter>50.UI\GamePlay_Canvas\Mission_Panel\Active_Icon</Filter>
     </ClCompile>
     <ClCompile Include="..\private\IMGUIUI.cpp">
       <Filter>50.UI\IMGUIUI</Filter>
@@ -1098,9 +1068,6 @@
     </ClCompile>
     <ClCompile Include="..\private\InstancedProp.cpp">
       <Filter>02.GameObjects\Env\06.InstancedProp</Filter>
-          </ClCompile>
-    <ClCompile Include="Goblin_States.cpp">
-      <Filter>02.GameObjects\Monster\Goblin</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Magic_Icon.cpp">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel\Magic_Icon</Filter>
@@ -1113,9 +1080,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Goblin_States.cpp">
       <Filter>02.GameObjects\Monster\Goblin</Filter>
-          </ClCompile>
+    </ClCompile>
     <ClCompile Include="..\private\Magic_Item.cpp">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel\Magic_Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MissionBanner_Border.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Border</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

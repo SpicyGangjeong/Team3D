@@ -208,6 +208,9 @@
     <ClInclude Include="..\Public\NoMountIcon.h">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\MiniMap_Panel\NoMountIcon</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\LoadingWidget_Flame.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Loding_Panel\LoadingWidget_Flame</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -666,6 +669,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\NoMountIcon.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\MiniMap_Panel\NoMountIcon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LoadingWidget_Flame.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Loding_Panel\LoadingWidget_Flame</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

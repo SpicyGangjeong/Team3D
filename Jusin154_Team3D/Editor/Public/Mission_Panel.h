@@ -34,9 +34,6 @@ private:
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 	CGameObject* m_pMissionBanner_Border = { nullptr };
 	CGameObject* m_pMissionBanner_Key = { nullptr };
-	CGameObject* m_pMission_KeyHold = { nullptr };
-	CGameObject* m_pMission_Key = { nullptr };
-	CGameObject* m_pActive_Icon = { nullptr };
 
 public:
 	static CMission_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

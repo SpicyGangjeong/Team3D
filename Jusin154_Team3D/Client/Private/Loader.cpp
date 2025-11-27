@@ -6,23 +6,6 @@
 #include "Camera_Debug.h"
 #include "Client_Struct.h"
 #include "Model.h"
-
-#pragma region UI
-
-#include "GamePlay_Canvas.h"
-#include "Loading_Panel.h"
-#include "LoadingWidget.h"
-
-#include "Action_Panel.h"
-
-#include "MiniMap_Panel.h"
-#include "MiniMap_TrimBorder.h"
-#include "NoMountIcon.h"
-
-#include "Mission_Panel.h"
-
-#pragma endregion
-
 #include "Player.h"
 #include "Camera_Gaze.h"
 #include "CamPosition_Socket.h"
@@ -33,6 +16,23 @@
 #include "SkyBox.h"
 #include "Broom.h"
 #include "Goblin.h"
+
+#pragma region UI
+
+#include "GamePlay_Canvas.h"
+#include "Loading_Panel.h"
+#include "LoadingWidget.h"
+#include "LoadingWidget_Flame.h"
+
+#include "Action_Panel.h"
+
+#include "MiniMap_Panel.h"
+#include "MiniMap_TrimBorder.h"
+#include "NoMountIcon.h"
+
+#include "Mission_Panel.h"
+
+#pragma endregion
 
 #pragma region PHYSX
 
@@ -682,9 +682,22 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype<CLoading_Panel>(g_iStaticLevel, CLoading_Panel::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
+	/* For.Prototype_GameObject_LoadingWidget*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CLoadingWidget>(g_iStaticLevel, CLoadingWidget::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_LoadingWidget_Flame*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CLoadingWidget_Flame>(g_iStaticLevel, CLoadingWidget_Flame::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 
 	/* For.Prototype_GameObject_Mission_Panel*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CMission_Panel>(g_iStaticLevel, CMission_Panel::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_Minimap_Panel*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CMiniMap_Panel>(g_iStaticLevel, CMiniMap_Panel::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 	/* For.Prototype_GameObject_MiniMap_TrimBorder*/
@@ -696,16 +709,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
-	/* For.Prototype_GameObject_Minimap_Panel*/
-	if (FAILED(m_pGameInstance->Add_Prototype<CMiniMap_Panel>(g_iStaticLevel, CMiniMap_Panel::Create(m_pDevice, m_pContext)))) {
-		return E_FAIL;
-	}
-
-	/* For.Prototype_GameObject_LoadingWidget*/
-	if (FAILED(m_pGameInstance->Add_Prototype<CLoadingWidget>(g_iStaticLevel, CLoadingWidget::Create(m_pDevice, m_pContext)))) {
-		return E_FAIL;
-	}
-		
 	/* For.Prototype_GameObject_SkyBox */
 	if (FAILED(m_pGameInstance->Add_Prototype<CSkyBox>(g_iStaticLevel, CSkyBox::Create(m_pDevice, m_pContext))))
 		return E_FAIL;

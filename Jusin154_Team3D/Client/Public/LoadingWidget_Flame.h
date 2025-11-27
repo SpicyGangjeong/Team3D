@@ -1,16 +1,22 @@
 ﻿#pragma once
 
-#include "Editor_Define.h"
+#include "Client_Define.h"
 #include "ElementObject.h"
 
-NS_BEGIN(Editor)
+NS_BEGIN(Engine)
+class CTexture;
+class CShader;
+class CVIBuffer_Rect;
+NS_END
 
-class CMission_KeyHold final : public CElementObject
+NS_BEGIN(Client)
+
+class CLoadingWidget_Flame final : public CElementObject
 {
 private:
-	CMission_KeyHold(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CMission_KeyHold(const CMission_KeyHold& rhs);
-	virtual ~CMission_KeyHold() = default;
+	CLoadingWidget_Flame(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CLoadingWidget_Flame(const CLoadingWidget_Flame& rhs);
+	virtual ~CLoadingWidget_Flame() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -31,11 +37,12 @@ private:
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
-	_float	m_fPI{};
-	_bool	m_bisHoldOn = { false };
-	_bool	m_bKeyHold = { false };
+	_int m_iImageFrameX{};
+	_int m_iImageFrameY{};
+	_float m_fFrame{};
+
 public:
-	static CMission_KeyHold* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CLoadingWidget_Flame* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 	void Describe_Entity() override;

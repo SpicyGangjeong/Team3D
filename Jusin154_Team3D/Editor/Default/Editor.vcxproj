@@ -166,7 +166,6 @@
     <ClInclude Include="..\Public\Action_Panel.h" />
     <ClInclude Include="..\public\AlphaMap.h" />
     <ClInclude Include="..\Public\Body.h" />
-    <ClInclude Include="..\public\Active_Icon.h" />
     <ClInclude Include="..\Public\Decendo.h" />
     <ClInclude Include="..\Public\Broom.h" />
     <ClInclude Include="..\Public\CallBack_EffectHitBox_Behavior.h" />
@@ -214,6 +213,7 @@
     <ClInclude Include="..\public\Magic_Icon.h" />
     <ClInclude Include="..\public\Magic_Item.h" />
     <ClInclude Include="..\public\Magic_Meter.h" />
+    <ClInclude Include="..\Public\MissionBanner_Border.h" />
     <ClInclude Include="..\Public\NomalJap.h" />
     <ClInclude Include="..\Public\Effect_Container.h" />
     <ClInclude Include="..\public\GamePlay_Canvas.h" />
@@ -285,11 +285,8 @@
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\Public\MainApp.h" />
     <ClInclude Include="..\Public\ModelParts.h" />
-    <ClInclude Include="..\public\MissionBanner_Border.h" />
     <ClInclude Include="..\public\MissionBanner_Key.h" />
     <ClInclude Include="..\public\Mission_Icon.h" />
-    <ClInclude Include="..\public\Mission_Key.h" />
-    <ClInclude Include="..\public\Mission_KeyHold.h" />
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\public\Mouse_Cursor.h" />
     <ClInclude Include="..\Public\RootModelPart.h" />
@@ -303,7 +300,6 @@
     <ClCompile Include="..\Private\Action_Panel.cpp" />
     <ClCompile Include="..\private\AlphaMap.cpp" />
     <ClCompile Include="..\Private\Body.cpp" />
-    <ClCompile Include="..\private\Active_Icon.cpp" />
     <ClCompile Include="..\Private\Decendo.cpp" />
     <ClCompile Include="..\Private\Broom.cpp" />
     <ClCompile Include="..\Private\CallBack_EffectHitBox_Behavior.cpp" />
@@ -352,6 +348,7 @@
     <ClCompile Include="..\private\Magic_Icon.cpp" />
     <ClCompile Include="..\private\Magic_Item.cpp" />
     <ClCompile Include="..\private\Magic_Meter.cpp" />
+    <ClCompile Include="..\Private\MissionBanner_Border.cpp" />
     <ClCompile Include="..\Private\NomalJap.cpp" />
     <ClCompile Include="..\Private\Effect_Container.cpp" />
     <ClCompile Include="..\private\GamePlay_Canvas.cpp" />
@@ -421,11 +418,8 @@
     <ClCompile Include="..\Private\Level_ObjectViewer.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />
     <ClCompile Include="..\Private\ModelParts.cpp" />
-    <ClCompile Include="..\private\MissionBanner_Border.cpp" />
     <ClCompile Include="..\private\MissionBanner_Key.cpp" />
     <ClCompile Include="..\private\Mission_Icon.cpp" />
-    <ClCompile Include="..\private\Mission_Key.cpp" />
-    <ClCompile Include="..\private\Mission_KeyHold.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\private\Mouse_Cursor.cpp" />
     <ClCompile Include="..\Private\pch.cpp">

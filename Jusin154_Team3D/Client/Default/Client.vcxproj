@@ -181,6 +181,7 @@
     <ClInclude Include="..\public\GamePlay_Canvas.h" />
     <ClInclude Include="..\Public\Goblin.h" />
     <ClInclude Include="..\Public\LoadingWidget.h" />
+    <ClInclude Include="..\Public\LoadingWidget_Flame.h" />
     <ClInclude Include="..\Public\Loading_Panel.h" />
     <ClInclude Include="..\public\MapContainer.h" />
     <ClInclude Include="..\public\MapObject_Collision.h" />
@@ -246,6 +247,7 @@
     <ClCompile Include="..\Private\Goblin.cpp" />
     <ClCompile Include="..\Private\Goblin_States.cpp" />
     <ClCompile Include="..\Private\LoadingWidget.cpp" />
+    <ClCompile Include="..\Private\LoadingWidget_Flame.cpp" />
     <ClCompile Include="..\Private\Loading_Panel.cpp" />
     <ClCompile Include="..\private\MapContainer.cpp" />
     <ClCompile Include="..\private\MapObject_Collision.cpp" />
