@@ -61,6 +61,13 @@ DepthStencilState DSS_Effect
 BlendState BS_None
 {
     BlendEnable[0] = false;
+    BlendEnable[1] = false;
+    BlendEnable[2] = false;
+    BlendEnable[3] = false;
+    BlendEnable[4] = false;
+    BlendEnable[5] = false;
+    BlendEnable[6] = false;
+    BlendEnable[7] = false;
 };
 
 BlendState BS_AlphaBlend // ALPHA_BLEND

@@ -15,6 +15,7 @@
 #include "Goblin.h"
 #include "Terrain.h"
 #include "EffectPool.h"
+#include "InstancedProp.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -70,6 +71,7 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 	m_pInfoInstance->Update(fTimeDelta);
 
 	if (true == m_pGameInstance->Check_LevelShouldChange()) {
+		m_pInfoInstance->Change_Level();
 		if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::FIELD)))) {
 			return;
 		}
@@ -104,7 +106,26 @@ HRESULT CLevel_GamePlay::Ready_Background()
 		return E_FAIL;
 	}
 
+	/* Map Containters */
+	/* 테스트용 맵 */
 	CInfoInstance::GetInstance()->Load_MapObjects("ClientTest");
+	/* 전체 맵 */
+	// CInfoInstance::GetInstance()->Load_MapObjects("Map1124");
+
+	
+	CInstancedProp::INSTANCE_PROP_DESC Desc = {};
+
+	/* InstanceProp Oak_Tree*/
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_OakTree_MedA";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/OakTree_MedA.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	/* BearBerry */
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_BearBerry_A";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/BearBerry_A.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
 
 	return S_OK;
 }

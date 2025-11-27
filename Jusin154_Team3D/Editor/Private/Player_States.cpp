@@ -240,7 +240,7 @@ void CPlayer::Behavior_MoveEnter()
 		}
 	}
 
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, m_fAmount);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,m_fAmount);
 	m_fAmount = 1.f;
 }
 

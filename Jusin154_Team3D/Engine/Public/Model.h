@@ -32,8 +32,8 @@ public:
 	virtual HRESULT Render_Indexed(_uint iMeshIndex, _uint IndexCount, _uint StartIndexLocation, _uint BaseVertexLocation);
 #pragma endregion 
 #pragma region Animation
-	_bool	Play_Animation(_float fTimeDelta, class CTransform* pTransform = nullptr); // 애니메이션에 델타타임을 넣어줌
-	void	Set_AnimationIndex(_uint iIndex, _bool isLoop = true, _float fAmount = 1.f);
+	_bool	Play_Animation(_float fTimeDelta, class CTransform* pTransform = nullptr              ); // 애니메이션에 델타타임을 넣어줌
+	void	Set_AnimationIndex(_uint iIndex, _bool isLoop = true, _float fAmount = 1.f, _bool bRatio = false);
 	_bool	IsFinishedAnim() const { return m_bIsFinishedAnim; }
 	_bool	IsLoopAnim() const { return m_bIsLoop; }
 	void	Set_CurrentTrackPosition(_float TrackPosition);
@@ -47,6 +47,8 @@ public:
 	_int Get_AnimIndex() const { return m_iCurrentAnimIndex; }
 	_float Get_AnimSpeed();
 	void Set_AnimSpeed(_float fSpeed);
+
+	HRESULT Anim_Event(_float fRatio, _uint AnimIndex, function<void()> Event);
 #pragma endregion
 #pragma region Mesh
 	const _char* Get_MeshName(_uint iIndex);
@@ -111,7 +113,7 @@ private:
 	_bool						m_bIsFinishedAnim = { false };			// 대상 애니메이션이 끝났는지
 	_bool						m_bIsFinishedLerp = { false };			// 럴프 애니메이션이 끝났는지
 	_bool						m_bPlayAnim = { true };
-	_float m_fAmount = { 1.f };
+	_float						m_fAmount = { 1.f };
 
 	_int						m_iPreAnimIndex = { 0 };
 	_float						m_fBlendTime = { 0.f };
@@ -135,6 +137,7 @@ private:
 	//
 
 	vector<_float4x4> m_BoneMatrix;
+	_bool m_bRatio = { false };
 
 
 #pragma region Compute
@@ -146,6 +149,7 @@ private:
 		void			Create_LocalPosVB();
 		void			Create_Con();
 		void			UpdateAnimationCS();
+
 		_uint					m_iNumBuffer = {};
 
 		vector<PARENT_DESC>		m_Parent = {};

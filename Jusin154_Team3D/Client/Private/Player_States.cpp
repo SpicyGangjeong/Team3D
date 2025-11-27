@@ -22,6 +22,20 @@
 
 #include "EffectPool.h"
 
+template<typename T>
+void CPlayer::Spawn_Effect()
+{
+	CPartObject::PARTOBJECT_DESC PartsDesc{};
+
+	PartsDesc.pParentTransform = m_pTransformCom;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<T>(NEXT_LEVEL, NEXT_LEVEL, TEXT("Layer_Effect"), &PartsDesc, this, nullptr))) {
+		assert(false);
+		return;
+	}
+}
+
+
 #pragma region States
 void CPlayer::TestKeyInput(_float fTimeDelta)
 {
@@ -64,6 +78,7 @@ HRESULT CPlayer::InputAction()
 		|| m_pGameInstance->Key_Down(DIK_LSHIFT)
 		|| m_pGameInstance->Key_Down(DIK_C)
 		|| m_pGameInstance->Key_Down(DIK_V)
+		|| m_pGameInstance->Key_Down(DIK_Z)
 		)
 	{
 		return S_OK;
@@ -77,6 +92,18 @@ HRESULT CPlayer::InputMove()
 		|| m_pGameInstance->Key_Pressing(DIK_A)
 		|| m_pGameInstance->Key_Pressing(DIK_S)
 		|| m_pGameInstance->Key_Pressing(DIK_D))
+	{
+		return S_OK;
+	}
+	return E_FAIL;
+}
+
+HRESULT CPlayer::InputKeyUpMove()
+{
+	if (m_pGameInstance->Key_Up(DIK_W)
+		|| m_pGameInstance->Key_Up(DIK_A)
+		|| m_pGameInstance->Key_Up(DIK_S)
+		|| m_pGameInstance->Key_Up(DIK_D))
 	{
 		return S_OK;
 	}
@@ -108,11 +135,12 @@ void CPlayer::Behavior_IdleEnter() {
 
 // S_OK -> 현 상태 유지
 // E_FAIL -> 현 상태 탈출
-HRESULT CPlayer::Behavior_IdleExitCheck()
+HRESULT CPlayer::Behavior_IdleExitCheck(_float fTimeDelta)
 {
 	pair<_uint, _bool> pairAnimInfo;
 	_vector xmvLook = XMVector4Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
 	_vector xmvRight = XMVector4Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::RIGHT), 0.f));
+	_uint iCurrentAnimIndex = m_pModelCom->Get_AnimIndex();
 	if (SUCCEEDED(InputAction()) || SUCCEEDED(InputSpell())) {
 		if (m_pGameInstance->Key_Down(DIK_SPACE)) {
 			m_pFSM->Change_State(FSMSTATE::JUMP);
@@ -138,36 +166,76 @@ HRESULT CPlayer::Behavior_IdleExitCheck()
 		return E_FAIL;
 	}
 
-	if (SUCCEEDED(InputMove())) {
-
-		if (m_pGameInstance->Key_Pressing(DIK_W))
+	if (SUCCEEDED(InputMove()))
+	{
+		m_fInputTime += fTimeDelta;
+		if (m_fInputTime > 0.2f)
 		{
+			m_fInputTime = 0.f;
 			m_pFSM->Change_State(FSMSTATE::MOVE);
 			return E_FAIL;
 		}
 	}
 
-	if (m_pGameInstance->Key_Down(DIK_D))
+	if (SUCCEEDED(InputKeyUpMove()))
 	{
-		pairAnimInfo = m_Animation[STATEANIM::IDLE_TURN_R];
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		_vector xmvInputDir = XMVectorZero();
+
+		_vector xmvCamLook = XMVector4Normalize(XMVectorSet(m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z, 0.f));
+		_vector xmvCamRight = XMVector4Normalize(XMVectorSet(m_vCameraRightDir.x, 0.f, m_vCameraRightDir.z, 0.f));
+
+		if (m_pGameInstance->Key_Up(DIK_W))
+			xmvInputDir += xmvCamLook;
+		if (m_pGameInstance->Key_Up(DIK_S))
+			xmvInputDir -= xmvCamLook;
+		if (m_pGameInstance->Key_Up(DIK_A))
+			xmvInputDir -= xmvCamRight;
+		if (m_pGameInstance->Key_Up(DIK_D))
+			xmvInputDir += xmvCamRight;
+
+		if (XMVector3Equal(xmvInputDir, XMVectorZero()))
+			return E_FAIL;
+
+		xmvInputDir = XMVector3Normalize(xmvInputDir);
+
+		_float2 vInputDir = { XMVectorGetX(xmvInputDir),XMVectorGetZ(xmvInputDir) };
+
+		_vector xmvCurLook = XMVector4Normalize(
+			XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
+		_float2 vCurLook = { XMVectorGetX(xmvCurLook),XMVectorGetZ(xmvCurLook) };
+
+		_float vDir = CMyTools::Get_Direction2D(vCurLook, vInputDir);
+		_float absDir = fabsf(vDir);
+
+		_float cross = vCurLook.x * vInputDir.y - vCurLook.y * vInputDir.x;
+
+		if (m_pFSM->IsEnable(FSMSTATE::IDLE))
+		{
+			if (absDir < XMConvertToRadians(45.f))
+			{
+				m_pFSM->Change_State(FSMSTATE::MOVE);
+				return E_FAIL;
+			}
+			else if (absDir < XMConvertToRadians(135.f))
+			{
+				if (cross > 0.f) {
+					pairAnimInfo = m_Animation[STATEANIM::IDLE_TURN_L];
+				}
+				else { 
+					pairAnimInfo = m_Animation[STATEANIM::IDLE_TURN_R]; 
+				}
+			}
+			else
+			{
+				pairAnimInfo = m_Animation[STATEANIM::IDLE_TURN_BWD];
+			}
+
+			m_pFSM->Enable_State(FSMSTATE::IDLE_TURN);
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,m_fAmount);
+		}
+
 		return E_FAIL;
 	}
-
-	if (m_pGameInstance->Key_Down(DIK_A))
-	{
-		pairAnimInfo = m_Animation[STATEANIM::IDLE_TURN_L];
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-		return E_FAIL;
-	}
-
-	if (m_pGameInstance->Key_Down(DIK_S))
-	{
-		pairAnimInfo = m_Animation[STATEANIM::IDLE_TURN_BWD];
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-		return E_FAIL;
-	}
-
 
 	if (m_pModelCom->IsFinishedAnim())
 	{
@@ -179,7 +247,7 @@ HRESULT CPlayer::Behavior_IdleExitCheck()
 
 void CPlayer::Behavior_IdleExit()
 {
-	m_pFSM->Disable_State(FSMSTATE::IDLE);
+	m_pFSM->Disable_State(FSMSTATE::IDLE | FSMSTATE::IDLE_TURN);
 }
 
 void CPlayer::Behavior_MoveEnter()
@@ -213,14 +281,9 @@ void CPlayer::Behavior_MoveEnter()
 			m_pFSM->Enable_State(FSMSTATE::JOG);
 			m_bSprintToggle = false;
 			m_bWalkToggle = false;
-			if (bFoward)
+			if (SUCCEEDED(InputMove()))
 			{
 				pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
-			}
-			else if (bBackward)
-			{
-				pairAnimInfo = m_Animation[STATEANIM::JOG_BWD];
-				m_fAmount = 0.2f;
 			}
 		}
 	}
@@ -245,14 +308,12 @@ void CPlayer::Behavior_MoveEnter()
 			m_pFSM->Enable_State(FSMSTATE::JOG);
 			m_bSprintToggle = false;
 			m_bWalkToggle = false;
-			if (bFoward)
-			{
-				pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
-			}
+			pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
+			m_bRatio = true;
 		}
 	}
 
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, m_fAmount);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, m_fAmount, m_bRatio);
 	m_fAmount = 1.f;
 }
 
@@ -283,6 +344,9 @@ HRESULT CPlayer::Behavior_MoveExitCheck()
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
 		}
 		else if (m_pGameInstance->Key_Down(DIK_V)) {
+			m_pFSM->Change_State(FSMSTATE::COMBAT);
+		}
+		else if (m_pGameInstance->Key_Down(DIK_Z)) {
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
 		}
 		else if (m_pGameInstance->Key_Down(DIK_LSHIFT)) {
@@ -323,29 +387,36 @@ HRESULT CPlayer::Behavior_MoveExitCheck()
 	}
 
 	if (SUCCEEDED(InputMove())) {
-		_vector xmvPlayerDir = { };
+		_vector xmvInputDir = XMVectorZero();
 
-		{ // 이동방향 누적
-			if (m_pGameInstance->Key_Pressing(DIK_W)) {
-				xmvPlayerDir += xmvLook;
-			}
-			if (m_pGameInstance->Key_Pressing(DIK_A)) {
-				xmvPlayerDir -= xmvRight;
-			}
-			if (m_pGameInstance->Key_Pressing(DIK_S)) {
-				xmvPlayerDir -= xmvLook;
-			}
-			if (m_pGameInstance->Key_Pressing(DIK_D)) {
-				xmvPlayerDir += xmvRight;
-			}
-		}
+		_vector xmvCamLook = XMVector4Normalize(XMVectorSet(m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z, 0.f));
+		_vector xmvCamRight = XMVector4Normalize(XMVectorSet(m_vCameraRightDir.x, 0.f, m_vCameraRightDir.z, 0.f));
 
-		xmvPlayerDir = XMVectorSetW(XMVector3Normalize(xmvPlayerDir), 0.f);
+		if (m_pGameInstance->Key_Pressing(DIK_W))
+			xmvInputDir += xmvCamLook;
+		if (m_pGameInstance->Key_Pressing(DIK_S))
+			xmvInputDir -= xmvCamLook;
+		if (m_pGameInstance->Key_Pressing(DIK_A))
+			xmvInputDir -= xmvCamRight;
+		if (m_pGameInstance->Key_Pressing(DIK_D))
+			xmvInputDir += xmvCamRight;
 
-		_float2 vPlayerDir = { XMVectorGetX(xmvPlayerDir), XMVectorGetZ(xmvPlayerDir) };
-		_float2 vCameraLookDir = { m_vCameraLookDir.x, m_vCameraLookDir.z };
+		if (XMVector3Equal(xmvInputDir, XMVectorZero()))
+			return E_FAIL;
 
-		_float vDir = CMyTools::Get_Direction2D(vCameraLookDir, vPlayerDir);
+		xmvInputDir = XMVector3Normalize(xmvInputDir);
+
+		_float2 vInputDir = { XMVectorGetX(xmvInputDir),XMVectorGetZ(xmvInputDir) };
+
+		_vector xmvCurLook = XMVector4Normalize(
+			XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
+		_float2 vCurLook = { XMVectorGetX(xmvCurLook),XMVectorGetZ(xmvCurLook) };
+
+		_float vDir = CMyTools::Get_Direction2D(vCurLook, vInputDir);
+		_float absDir = fabsf(vDir);
+
+		_float cross = vCurLook.x * vInputDir.y - vCurLook.y * vInputDir.x;
+
 		_bool bSkipAngleCheck = { false };
 		if (m_pFSM->IsEnable(FSMSTATE::JOG)) {
 			if (iCurrentAnimIndex != m_Animation[STATEANIM::JOG_FWD].first) {
@@ -357,38 +428,31 @@ HRESULT CPlayer::Behavior_MoveExitCheck()
 				}
 			}
 			if (!bSkipAngleCheck) {
-				_bool bLeft = { true };
-				if (vDir < 0.f)
-				{
-					// + left
-				}
-				else
-				{
-					// - Right
-				}
-
 				_float absDir = fabsf(vDir);
-				if (absDir < XMConvertToRadians(160.f)) {
+				if (absDir <= XMConvertToRadians(80.f)) {
 					pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
 				}
-				else if (absDir < XMConvertToRadians(90.f)) {
-					// pairAnimInfo = m_Animation[STATEANIM::]
+				else if (absDir < XMConvertToRadians(160.f)) {
+					if (cross > 0)
+					{
+						pairAnimInfo = m_Animation[STATEANIM::JOG_LEFT];
+						m_fAmount = 0.2f;
+						m_bRatio = true;
+					}
+					else {
+						pairAnimInfo = m_Animation[STATEANIM::JOG_RIGHT];
+						m_fAmount = 0.2f;
+						m_bRatio = true;
+					}
 				}
-				else if (absDir < XMConvertToRadians(112.f)) {
-					// pairAnimInfo = m_Animation[STATEANIM::]
-				}
-				else if (absDir < XMConvertToRadians(135.f)) {
-					// pairAnimInfo = m_Animation[STATEANIM::]
-				}
-				else if (absDir < XMConvertToRadians(180.f)) {
+				else {
 					pairAnimInfo = m_Animation[STATEANIM::JOG_BWD];
-
+					m_fAmount = 0.2f;
+					m_bRatio = true;
 				}
 
-				{ // left Right
-
-				}
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,m_fAmount, m_bRatio);
+				m_fAmount = 1.f;
 			}
 		}
 		return S_OK;
@@ -413,7 +477,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck()
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 			}
 		}
-		else if (IsCurrentKeyFrame("Dodge"))
+		else if (IsCurrentKeyFrame("TurnStop"))
 
 		{
 			m_pFSM->Change_State(FSMSTATE::IDLE);
@@ -574,7 +638,10 @@ void CPlayer::Behavior_CombatEnter()
 	else if (m_pGameInstance->Key_Down(DIK_V)) {
 		m_pFSM->Enable_State(FSMSTATE::MAPHELP);
 		pairAnimInfo = m_Animation[STATEANIM::MAPHELP];
-
+	}
+	else if (m_pGameInstance->Key_Down(DIK_Z)) {
+		m_pFSM->Enable_State(FSMSTATE::ANCIENT_THROW);
+		pairAnimInfo = m_Animation[STATEANIM::ANCIENT_THROW];
 	}
 
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
@@ -629,6 +696,11 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 			pairAnimInfo = m_Animation[STATEANIM::MAPHELP];
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		}
+		else if (m_pGameInstance->Key_Down(DIK_Z)) {
+			m_pFSM->Enable_State(FSMSTATE::ANCIENT_THROW);
+			pairAnimInfo = m_Animation[STATEANIM::ANCIENT_THROW];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		}
 	}
 
 	if (m_pFSM->IsEnable(FSMSTATE::SPELL) && IsCurrentKeyFrame("Combat"))
@@ -639,32 +711,43 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 			{
 			case STATEANIM::ACCIO:
 			{
-				/* TODO 임시 방편 */
 				pairAnimInfo = m_Animation[STATEANIM::ACCIO];
-
-
 				m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARD, this);
 
 			}
 				break;
 			case STATEANIM::DESCENDO:
 				pairAnimInfo = m_Animation[STATEANIM::DESCENDO];
-
 				m_pEffectPool->Use_Skill(SKILL_TYPE::DECENDO, this);
 				break;
 			default:
 				break;
 			}
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-			m_eSpell = STATEANIM::END;
+			m_pModelCom->Anim_Event(0.1f, m_Animation[STATEANIM::ACCIO].first, [this]() {
+				Spawn_Effect<CBombard>();
+				m_eSpell = STATEANIM::END;
+				return E_FAIL;
+				});
+		}
+	}
+
+
+	if (m_pFSM->IsEnable(FSMSTATE::ANCIENT_THROW))
+	{
+		if (SUCCEEDED(InputMove()) && IsCurrentKeyFrame("Throw")) {
+			m_pFSM->Change_State(FSMSTATE::MOVE);
+			return E_FAIL;
+		}
+	}
+	else
+	{
+		if (SUCCEEDED(InputMove()) && IsCurrentKeyFrame("Combat")) {
+			m_pFSM->Change_State(FSMSTATE::MOVE);
 			return E_FAIL;
 		}
 	}
 
-	if (SUCCEEDED(InputMove()) && IsCurrentKeyFrame("Combat")) {
-		m_pFSM->Change_State(FSMSTATE::MOVE);
-		return E_FAIL;
-	}
 
 	if (m_pModelCom->IsFinishedAnim()) {
 		m_pFSM->Change_State(FSMSTATE::IDLE);
@@ -676,7 +759,7 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 
 void CPlayer::Behavior_CombatExit()
 {
-	m_pFSM->Disable_State(FSMSTATE::COMBAT | FSMSTATE::LIGHT_ATTACK | FSMSTATE::SPELL | FSMSTATE::SKILL | FSMSTATE::SKILL2 | FSMSTATE::MAPHELP);
+	m_pFSM->Disable_State(FSMSTATE::COMBAT | FSMSTATE::LIGHT_ATTACK | FSMSTATE::SPELL | FSMSTATE::SKILL | FSMSTATE::SKILL2 | FSMSTATE::MAPHELP | FSMSTATE::ANCIENT_THROW);
 }
 
 void CPlayer::Add_FSM()
@@ -686,7 +769,7 @@ void CPlayer::Add_FSM()
 		CState_Idle::STATE_IDLE_DESC Desc{};
 		Desc.pOwner = this;
 		Desc.funcEnterEvent = [this]() { Behavior_IdleEnter(); };
-		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_IdleExitCheck(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_IdleExitCheck(fTimedelta); };
 		Desc.funcExitEvent = [this]() { Behavior_IdleExit(); };
 		Desc.funcPriorityUpdate = nullptr;
 		Desc.funcLateUpdate = nullptr;
@@ -703,9 +786,13 @@ void CPlayer::Add_FSM()
 			_vector xmvPlayerDir = { };
 
 			{
-				_float3	fMove = m_pGameInstance->Get_MouseMove();
-				m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::UP), fTimeDelta * fMove.x* 0.1f);
-				m_pTransformCom->Turn(-m_pTransformCom->Get_State(STATE::UP), fTimeDelta * fMove.y * 0.1f);
+				if (!m_pFSM->IsEnable(FSMSTATE::STOP))
+				{
+					_float3	fMove = m_pGameInstance->Get_MouseMove();
+					m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::UP), fTimeDelta * fMove.x * 0.05f);
+					m_pTransformCom->Turn(-m_pTransformCom->Get_State(STATE::UP), fTimeDelta * fMove.y * 0.05f);
+				}
+
 
 				if (m_pGameInstance->Key_Pressing(DIK_A)) {
 					xmvPlayerDir -= xmvRight;
@@ -721,10 +808,10 @@ void CPlayer::Add_FSM()
 
 			_float vDir = CMyTools::Get_Direction2D(vCameraLookDir, vPlayerDir);
 			_float absDir = fabsf(vDir);
-			if (m_pGameInstance->Key_Pressing(DIK_A)&& vDir < XMConvertToRadians(140.f) ) {
+			/*if (m_pGameInstance->Key_Pressing(DIK_A)&& vDir < XMConvertToRadians(140.f) ) {
 				m_pTransformCom->Turn(-m_pTransformCom->Get_State(STATE::UP), fTimeDelta); }
 			if (m_pGameInstance->Key_Pressing(DIK_D)&& vDir > XMConvertToRadians(-140.f) ) {
-				m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::UP), fTimeDelta); };
+				m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::UP), fTimeDelta); };*/
 		
 	};
 
@@ -783,7 +870,7 @@ void CPlayer::Add_FSM()
 
 void CPlayer::Set_Anim()
 {
-	m_Animation[STATEANIM::IDLE] = { 817,true };
+	m_Animation[STATEANIM::IDLE] = { 266,true };
 	m_Animation[STATEANIM::IDLE_TURN_L] = { 270,false };
 	m_Animation[STATEANIM::IDLE_TURN_R] = { 430,false };
 	m_Animation[STATEANIM::IDLE_TURN_BWD] = { 268,false };
@@ -793,7 +880,9 @@ void CPlayer::Set_Anim()
 	m_Animation[STATEANIM::WALK_STOP] = { 344,false };
 
 	m_Animation[STATEANIM::JOG_FWD] = { 167,true };
-	m_Animation[STATEANIM::JOG_BWD] = { 154,false };
+	m_Animation[STATEANIM::JOG_LEFT] = { 164,false };
+	m_Animation[STATEANIM::JOG_RIGHT] = { 185,false };
+	m_Animation[STATEANIM::JOG_BWD] = { 154,false };//176
 	m_Animation[STATEANIM::JOG_STOP] = { 289,false };
 
 	m_Animation[STATEANIM::JUMP] = { 205,false };
@@ -819,6 +908,7 @@ void CPlayer::Set_Anim()
 	m_Animation[STATEANIM::LUMOS] = { 782,false };
 	m_Animation[STATEANIM::DISILLUSION_ENTER] = { 585,false };
 	m_Animation[STATEANIM::DISILLUSION_EXIT] = { 586,false };
+	m_Animation[STATEANIM::ANCIENT_THROW] = { 843,false };
 }
 #pragma endregion State
 

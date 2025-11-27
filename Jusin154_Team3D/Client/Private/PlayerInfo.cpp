@@ -11,6 +11,10 @@ void CPlayerInfo::Update(_float fTimeDelta)
 {
 }
 
+void CPlayerInfo::Change_Level()
+{
+}
+
 HRESULT CPlayerInfo::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContex)
 {
 	m_pGameInstance = CGameInstance::GetInstance();

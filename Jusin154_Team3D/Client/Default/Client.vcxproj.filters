@@ -190,6 +190,9 @@
     <ClInclude Include="..\Public\Decendo.h">
       <Filter>02.GameObjects\Effect\Effects\Decendo</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\InstancedProp.h">
+      <Filter>02.GameObjects\Environment\02.InstancedProp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -448,6 +451,9 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\EffectPool">
       <UniqueIdentifier>{bdd4863e-8ab9-4ce8-a88d-9a0c558a67fb}</UniqueIdentifier>
+  </Filter>
+    <Filter Include="02.GameObjects\Environment\02.InstancedProp">
+      <UniqueIdentifier>{4ef15d06-4520-4d55-ab49-1ae7179f145b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -627,6 +633,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Decendo.cpp">
       <Filter>02.GameObjects\Effect\Effects\Decendo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\InstancedProp.cpp">
+      <Filter>02.GameObjects\Environment\02.InstancedProp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

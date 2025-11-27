@@ -101,37 +101,39 @@ void CRenderTarget::Ready_Debug()
 
 void CRenderTarget::Describe_Entity(const _char* pName)
 {
-    if (GUI::Checkbox(pName, &m_isDraw))
-    {
-
-    }
+    GUI::Selectable(pName, &m_isDraw);
 }
 
 _bool CRenderTarget::Render_Debug(CShader* pShader, CVIBuffer_Rect* pVIBuffer ,_float fX, _float fY, _float fSizeX, _float fSizeY)
 {
-
-    if (m_isDraw == false)
+    if (m_isDraw == false) {
         return false;
+    }
 
     m_WorldMatrix._11 = fSizeX;
     m_WorldMatrix._22 = fSizeY;
     m_WorldMatrix._41 = fX - m_ptWindowSize.x * 0.5f;
     m_WorldMatrix._42 = -fY + m_ptWindowSize.y * 0.5f;
 
-    if (FAILED(pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
+    if (FAILED(pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix))){
         return false;
+    }
 
-    if (FAILED(pShader->Bind_SRV("g_Texture", m_pSRV)))
+    if (FAILED(pShader->Bind_SRV("g_Texture", m_pSRV))) {
         return false;
+    }
 
-    if (FAILED(pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::DEBUG))))
+    if (FAILED(pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::DEBUG)))) {
         return false;
+    }
 
-    if (FAILED(pVIBuffer->Bind_Resources()))
+    if (FAILED(pVIBuffer->Bind_Resources())) {
         return false;
+    }
 
-    if (FAILED(pVIBuffer->Render()))
+    if (FAILED(pVIBuffer->Render())) {
         return false;
+    }
 
     return true;
 }

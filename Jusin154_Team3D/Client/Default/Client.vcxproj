@@ -180,6 +180,7 @@
     <ClInclude Include="..\Public\Decendo.h" />
     <ClInclude Include="..\Public\EffectPool.h" />
     <ClInclude Include="..\Public\Goblin.h" />
+    <ClInclude Include="..\public\InstancedProp.h" />
     <ClInclude Include="..\public\MapContainer.h" />
     <ClInclude Include="..\public\MapObject_Collision.h" />
     <ClInclude Include="..\public\MapObject_Render.h" />
@@ -239,6 +240,7 @@
     <ClCompile Include="..\Private\EffectPool.cpp" />
     <ClCompile Include="..\Private\Goblin.cpp" />
     <ClCompile Include="..\Private\Goblin_States.cpp" />
+    <ClCompile Include="..\private\InstancedProp.cpp" />
     <ClCompile Include="..\private\MapContainer.cpp" />
     <ClCompile Include="..\private\MapObject_Collision.cpp" />
     <ClCompile Include="..\private\MapObject_Render.cpp" />

@@ -14,14 +14,55 @@ CInfoInstance::CInfoInstance()
 
 void CInfoInstance::Update(_float fTimeDelta)
 {
-
+	m_pPlayerInfo->Update(fTimeDelta);
+	m_pMonsterInfo->Update(fTimeDelta);
+	m_pMapInfo->Update(fTimeDelta);
 }
 
+void CInfoInstance::Change_Level()
+{
+	m_pPlayerInfo->Change_Level();
+	m_pMonsterInfo->Change_Level();
+	m_pMapInfo->Change_Level();
+}
+
+#pragma region MONSTER_INFO
+HRESULT CInfoInstance::Regist_PlayerAlly(CUnit* pUnit)
+{
+	return m_pMonsterInfo->Regist_PlayerAlly(pUnit);
+}
+
+HRESULT CInfoInstance::Deregist_PlayerAlly(CUnit* pUnit)
+{
+	return m_pMonsterInfo->Deregist_PlayerAlly(pUnit);
+}
+
+HRESULT CInfoInstance::Regist_ActiveMonster(CMonster* pUnit)
+{
+	return m_pMonsterInfo->Regist_ActiveMonster(pUnit);
+}
+
+HRESULT CInfoInstance::Deregist_ActiveMonster(CMonster* pUnit)
+{
+	return m_pMonsterInfo->Deregist_ActiveMonster(pUnit);
+}
+
+CMonster* CInfoInstance::Get_LockOnMonster()
+{
+	return m_pMonsterInfo->Get_LockOnMonster();
+}
+
+pair<CUnit*, CTransform*> CInfoInstance::Get_NearestPlayerAlly(_fvector vPos)
+{
+	return m_pMonsterInfo->Get_NearestPlayerAlly(vPos);
+}
+#pragma endregion
+#pragma region MAP_INFO
 HRESULT CInfoInstance::Load_MapObjects(const _char* pFilePath)
 {
 	return m_pMapInfo->Load_MapObjects(pFilePath);
 }
-
+#pragma endregion
 LEVEL CInfoInstance::Get_RestartLevel()
 {
 	return LEVEL::GAMEPLAY;
