@@ -230,11 +230,9 @@ void CTransform::TurnAngle(_vector vAxis, _float fAngle)
 	_vector vRight = Get_State(STATE::RIGHT);
 	_vector vUp = Get_State(STATE::UP);
 	_vector vLook = Get_State(STATE::LOOK);
-	if (vAxis.m128_f32[0] == 0)
-		return;
-	if (vAxis.m128_f32[1] == 0)
-		return;
-	if (vAxis.m128_f32[2] == 0)
+	if (vAxis.m128_f32[0] == 0&&
+		vAxis.m128_f32[1] == 0&&
+		vAxis.m128_f32[2] == 0)
 		return;
 
 	vAxis = XMVector3Normalize(vAxis);

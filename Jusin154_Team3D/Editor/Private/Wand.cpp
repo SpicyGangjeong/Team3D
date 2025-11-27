@@ -51,7 +51,7 @@ HRESULT CWand::Initialize(void* pArg)
 	}
 
 	m_pEffectParts->Load("../Bin/Resources/Data/Effect/Lumos/Lumos", static_cast<LEVEL>(NEXT_LEVEL));
-	m_pEffectParts->Set_Visible(true);
+	m_pEffectParts->Set_Visible(true);*/
 
 	return S_OK;
 }
@@ -75,18 +75,18 @@ void CWand::Update(_float fTimeDelta)
 
 	m_pModelCom->Combined_BoneMatrix();
 
-	_matrix BoneMatrix = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("root"));
+	//_matrix BoneMatrix = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("root"));
 
-	BoneMatrix = BoneMatrix * m_pTransformCom->Get_XMWorldMatrix();
+	//BoneMatrix = BoneMatrix * m_pTransformCom->Get_XMWorldMatrix();
 
 
-	BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[0]) * m_vOffset.x;
-	BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[1]) * m_vOffset.y;
-	BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[2]) * m_vOffset.z;
+	//BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[0]) * m_vOffset.x;
+	//BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[1]) * m_vOffset.y;
+	//BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[2]) * m_vOffset.z;
 
-	m_pEffectParts->Get_Component<CTransform>()->Set_WorldMatrix(BoneMatrix);
+	//m_pEffectParts->Get_Component<CTransform>()->Set_WorldMatrix(BoneMatrix);
 
-	m_pTrail->Trail_Update(BoneMatrix, fTimeDelta);
+	//m_pTrail->Trail_Update(BoneMatrix, fTimeDelta);
 
 }
 
