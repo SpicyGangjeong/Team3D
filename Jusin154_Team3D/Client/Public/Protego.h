@@ -1,19 +1,19 @@
 ﻿#pragma once
 
-#include "Editor_Define.h"
+#include "Client_Define.h"
 #include "Effect_Container.h"
 
 NS_BEGIN(Engine)
 NS_END
 
-NS_BEGIN(Editor)
+NS_BEGIN(Client)
 
-class CBombard final : public CEffect_Container
+class CProtego final : public CEffect_Container
 {
 private:
-	CBombard(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CBombard(const CBombard& rhs);
-	virtual ~CBombard() = default;
+	CProtego(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CProtego(const CProtego& rhs);
+	virtual ~CProtego() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta) override;
@@ -32,13 +32,17 @@ private:
 	virtual void	OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr) override;
 private:
 	_wstring						  m_wstrEffectName = {};
-	class CDummy_PhysXEffectHitBox*   m_pPhysHitBox = {};
-	class CPartObject*				  m_pLight_Projectile = {};
+
+	CPartObject* m_pSphere = { nullptr };
+	CPartObject* m_pBottom = { nullptr };
+	CPartObject* m_pCircle = { nullptr };
 public:
-	static CBombard* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CProtego* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;
 	CGameObject* Clone(void* pArg, CGameObject* pOwner) override;
+#ifdef _DEBUG
 	void Describe_Entity() override;
+#endif // _DEBUG
 };
 
 NS_END

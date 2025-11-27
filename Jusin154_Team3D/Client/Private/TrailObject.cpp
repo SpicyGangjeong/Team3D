@@ -228,14 +228,15 @@ HRESULT CTrailObject::Load_Trail(const _char* pPath, LEVEL eLevel)
 
 HRESULT CTrailObject::Render()
 {
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_POSTEX::TRAIL))))
+	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
-	if (FAILED(Bind_ShaderResources()))
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_POSTEX::TRAIL))))
 		return E_FAIL;
 
 	if (FAILED(m_pTrailCom->Render()))
 		return E_FAIL;
+
 
 	return S_OK;
 }

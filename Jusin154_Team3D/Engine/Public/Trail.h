@@ -19,6 +19,7 @@ protected:
 
 public:
 	void Trail_Update(_float fDeltaTime, _fmatrix WorldMatrix);
+	void Reset_Trail();
 
 #ifdef _DEBUG
 	HRESULT Save_Trail(HANDLE hFile);

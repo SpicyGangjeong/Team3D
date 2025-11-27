@@ -214,6 +214,7 @@
     <ClInclude Include="..\public\Magic_Icon.h" />
     <ClInclude Include="..\public\Magic_Item.h" />
     <ClInclude Include="..\public\Magic_Meter.h" />
+    <ClInclude Include="..\Public\EffectPool.h" />
     <ClInclude Include="..\Public\NomalJap.h" />
     <ClInclude Include="..\Public\Effect_Container.h" />
     <ClInclude Include="..\public\GamePlay_Canvas.h" />
@@ -352,6 +353,7 @@
     <ClCompile Include="..\private\Magic_Icon.cpp" />
     <ClCompile Include="..\private\Magic_Item.cpp" />
     <ClCompile Include="..\private\Magic_Meter.cpp" />
+    <ClCompile Include="..\Private\EffectPool.cpp" />
     <ClCompile Include="..\Private\NomalJap.cpp" />
     <ClCompile Include="..\Private\Effect_Container.cpp" />
     <ClCompile Include="..\private\GamePlay_Canvas.cpp" />

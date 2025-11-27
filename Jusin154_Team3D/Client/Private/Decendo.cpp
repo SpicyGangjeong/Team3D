@@ -2,8 +2,8 @@
 #include "Decendo.h"
 
 #include "GameInstance.h"
-#include "EditEffect.h"
-#include "Dummy_PhysXEffectHitBox.h"
+#include "EffectParts.h"
+#include "PhysXEffectHitBox.h"
 #include "TrailObject.h"
 
 
@@ -38,8 +38,8 @@ HRESULT CDecendo::Initialize(void* pArg)
 
 	m_wstrEffectName = L"Decendo";
 
-	m_pProjectile_Blur = Get_PartObject<CEditEffect>("Decendo_Proj_Blur");
-	m_pProjectile = Get_PartObject<CEditEffect>("Decendo_Proj");
+	m_pProjectile_Blur = Get_PartObject<CEffectParts>("Decendo_Proj_Blur");
+	m_pProjectile = Get_PartObject<CEffectParts>("Decendo_Proj");
 
 	SAFE_ADDREF(m_pProjectile_Blur);
 	SAFE_ADDREF(m_pProjectile);
@@ -107,7 +107,7 @@ HRESULT CDecendo::Pre_Setting(CGameObject* pObject)
 	m_fPreAccTime = 0.f;
 
 
-	CPartObject* pCircle0 = Get_PartObject<CEditEffect>("Decendo_Cricle_S");
+	CPartObject* pCircle0 = m_PartObjects.begin()->second;
 
 	/* 초기 객체 위치 초기화 */
 	pCircle0->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
@@ -151,7 +151,7 @@ HRESULT CDecendo::Ready_Components(void* pArg)
 
 HRESULT CDecendo::Ready_Child()
 {
-	CDummy_PhysXEffectHitBox::PHYSXDUMMY_DESC Desc{};
+	CPhysXEffectHitBox::PHYSXDUMMY_DESC Desc{};
 
 	m_pTransformCom->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
 
@@ -170,7 +170,7 @@ HRESULT CDecendo::Ready_Child()
 	Desc.vDeltaPos = vDir ;
 	Desc.vLifeTime = { 0.f, 1.f };
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXEffectHitBox>(g_iStaticLevel, CURRENT_LEVEL, LAYER_HITBOX, &Desc, this , &m_pPhysHitBox))) {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPhysXEffectHitBox>(g_iStaticLevel, CURRENT_LEVEL, LAYER_HITBOX, &Desc, this , &m_pPhysHitBox))) {
 		assert(false);
 		return E_FAIL;
 	}
@@ -226,10 +226,10 @@ void CDecendo::OnCollision(CGameObject* pOther , void* pDesc)
 
 	_vector vPlayerPos = m_pOwner->Get_Component<CTransform>()->Get_State(STATE::POSITION);
 
-	Get_PartObject<CEditEffect>("Decendo_Down")->Get_Component<CTransform>()->LookAt(vPlayerPos);
-	Get_PartObject<CEditEffect>("Decendo_Smoke")->Get_Component<CTransform>()->LookAt(vPlayerPos);
+	Get_PartObject<CEffectParts>("Decendo_Down")->Get_Component<CTransform>()->LookAt(vPlayerPos);
+	Get_PartObject<CEffectParts>("Decendo_Smoke")->Get_Component<CTransform>()->LookAt(vPlayerPos);
 
-    Get_PartObject<CEditEffect>("Decendo_Cricle_S")->Set_Visible(false);
+	m_PartObjects.begin()->second->Set_Visible(false);
 
 	Get_PartObject<CTrailObject>()->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
 	Get_PartObject<CTrailObject>()->Set_Visible(false);

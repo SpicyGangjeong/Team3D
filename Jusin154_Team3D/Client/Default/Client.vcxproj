@@ -159,6 +159,7 @@ call Update_Shaders.bat
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\Protego.h" />
     <ClInclude Include="..\Public\Bombard.h" />
     <ClInclude Include="..\Public\Broom.h" />
     <ClInclude Include="..\public\BuildingContainer.h" />
@@ -179,6 +180,8 @@ call Update_Shaders.bat
     <ClInclude Include="..\Public\Client_Enum.h" />
     <ClInclude Include="..\Public\Client_Macro.h" />
     <ClInclude Include="..\Public\Client_Struct.h" />
+    <ClInclude Include="..\Public\Decendo.h" />
+    <ClInclude Include="..\Public\EffectPool.h" />
     <ClInclude Include="..\Public\Goblin.h" />
     <ClInclude Include="..\public\InstancedProp.h" />
     <ClInclude Include="..\public\MapContainer.h" />
@@ -223,6 +226,7 @@ call Update_Shaders.bat
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\Protego.cpp" />
     <ClCompile Include="..\Private\Bombard.cpp" />
     <ClCompile Include="..\Private\Broom.cpp" />
     <ClCompile Include="..\private\BuildingContainer.cpp" />
@@ -236,6 +240,8 @@ call Update_Shaders.bat
     <ClCompile Include="..\Private\Camera_Gaze.cpp" />
     <ClCompile Include="..\Private\CamPosition.cpp" />
     <ClCompile Include="..\Private\CamPosition_Arm.cpp" />
+    <ClCompile Include="..\Private\Decendo.cpp" />
+    <ClCompile Include="..\Private\EffectPool.cpp" />
     <ClCompile Include="..\Private\Goblin.cpp" />
     <ClCompile Include="..\Private\Goblin_States.cpp" />
     <ClCompile Include="..\private\InstancedProp.cpp" />
