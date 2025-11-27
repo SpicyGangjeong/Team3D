@@ -20,6 +20,7 @@ CGamePlay_Canvas::CGamePlay_Canvas(const CGamePlay_Canvas& rhs)
 
 HRESULT CGamePlay_Canvas::Initialize_Prototype()
 {
+	_int a = 10;
 	return S_OK;
 }
 
