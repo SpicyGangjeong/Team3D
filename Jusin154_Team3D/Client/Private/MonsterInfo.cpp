@@ -41,8 +41,11 @@ HRESULT CMonsterInfo::Deregist_PlayerAlly(CUnit* pUnit)
 	for (list<CUnit*>::iterator iter = m_PlayerAllies.begin(); iter != m_PlayerAllies.end();) {
 		if (*iter == pUnit) {
 			SAFE_RELEASE(*iter);
-			m_PlayerAllies.erase(iter);
+			iter = m_PlayerAllies.erase(iter);
 			break;
+		}
+		else {
+			++iter;
 		}
 	}
 	return E_FAIL;
@@ -64,8 +67,11 @@ HRESULT CMonsterInfo::Deregist_ActiveMonster(CMonster* pUnit)
 	for (list<CMonster*>::iterator iter = m_ActiveMonsters.begin(); iter != m_ActiveMonsters.end();) {
 		if (*iter == pUnit) {
 			SAFE_RELEASE(*iter);
-			m_ActiveMonsters.erase(iter);
+			iter = m_ActiveMonsters.erase(iter);
 			break;
+		}
+		else {
+			++iter;
 		}
 	}
 	return E_FAIL;

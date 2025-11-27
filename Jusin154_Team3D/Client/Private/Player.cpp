@@ -34,7 +34,6 @@ CPlayer::CPlayer(const CPlayer& Prototype)
 	: CUnit(Prototype),
 	m_pInfoInstance(CInfoInstance::GetInstance())
 {
-	SAFE_ADDREF(m_pInfoInstance);
 }
 
 HRESULT CPlayer::Initialize_Prototype()
@@ -380,7 +379,9 @@ void CPlayer::Free()
 	SAFE_RELEASE(m_pLockOnMonster);
 
 	if (nullptr != m_pInfoInstance) {
-		m_pInfoInstance->Deregist_PlayerAlly(this);
+		CInfoInstance* pInfo = m_pInfoInstance;
+		m_pInfoInstance = nullptr;
+		pInfo->Deregist_PlayerAlly(this);
 	}
 
 	if (nullptr != m_pCallBack_Behavior) {
@@ -397,7 +398,6 @@ void CPlayer::Free()
 	SAFE_RELEASE(m_pCamPosition_TopDown_LookPart);
 	SAFE_RELEASE(m_pCamPosition_ShoulderPart);
 	SAFE_RELEASE(m_pEffectPool);
-	SAFE_RELEASE(m_pInfoInstance);
 }
 #ifdef _DEBUG
 

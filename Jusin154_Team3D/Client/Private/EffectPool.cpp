@@ -236,7 +236,10 @@ void CEffectPool::Free()
 		SAFE_RELEASE(pEffect);
 	}
 }
+#ifdef _DEBUG
 
 void CEffectPool::Describe_Entity()
 {
 }
+
+#endif // _DEBUG

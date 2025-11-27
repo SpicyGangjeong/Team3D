@@ -14,7 +14,6 @@ CMonster::CMonster(const CMonster& Prototype)
 	: CUnit(Prototype),
 	m_pInfoInstance(CInfoInstance::GetInstance())
 {
-	SAFE_ADDREF(m_pInfoInstance);
 }
 
 HRESULT CMonster::Initialize_Prototype()
@@ -140,9 +139,10 @@ void CMonster::Free()
 
 	SAFE_RELEASE(m_pTarget);
 	if (nullptr != m_pInfoInstance){
-		m_pInfoInstance->Deregist_ActiveMonster(this);
+		CInfoInstance* pInfo = m_pInfoInstance;  
+		m_pInfoInstance = nullptr;
+		pInfo->Deregist_ActiveMonster(this);
 	}
-	SAFE_RELEASE(m_pInfoInstance);
 }
 #ifdef _DEBUG
 
