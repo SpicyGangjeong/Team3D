@@ -26,7 +26,7 @@ public:
 	HRESULT Deregist_ActiveMonster(class CMonster* pUnit);
 
 	class CMonster* Get_LockOnMonster();
-	pair<CUnit*, _float> Get_NearestPlayerAlly(_fvector vPos);
+	pair<CUnit*, CTransform*> Get_NearestPlayerAlly(_fvector vPos);
 
 private:
 	CGameInstance*			m_pGameInstance = { nullptr };
@@ -37,6 +37,7 @@ private:
 	class CMonster*			m_pLockOnMonster = { nullptr };
 	list<class CMonster*>	m_ActiveMonsters = {};
 	list<CUnit*>			m_PlayerAllies = {};
+
 private:
 	HRESULT Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContex);
 	HRESULT	Refresh_LockOnMonsters();
