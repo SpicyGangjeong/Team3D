@@ -99,7 +99,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 		return E_FAIL;
 	}
 
-	CInfoInstance::GetInstance()->Load_MapObjects("ClientTest");
+	//CInfoInstance::GetInstance()->Load_MapObjects("ClientTest");
 
 	return S_OK;
 }

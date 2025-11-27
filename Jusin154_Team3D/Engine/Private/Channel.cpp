@@ -189,11 +189,10 @@ void CChannel::Update_TransformationMatirx(
 			_float dz = XMVectorGetZ(vDeltaAdjusted);
 
 			_vector vDeltaWorld = vRight * dx + (vUp * dz) + (-vLook * dy);
-			if (fabsf(dx) < FLT_EPSILON3 && fabsf(dy) < FLT_EPSILON3 && fabsf(dz) < FLT_EPSILON3) {
-				int a = 0;
-			}
 			vDeltaWorld *= 0.01f;
 			vDeltaWorld *= m_fAmount;
+
+			
 
 			vDeltaWorld = XMVectorSetW(vDeltaWorld, 1.f);
 			//pTransform->Set_State(STATE::POSITION,vDeltaWorld);
@@ -202,7 +201,7 @@ void CChannel::Update_TransformationMatirx(
 			m_vPrevRootPos = vCurRootPos;
 			vTranslation = XMVectorZero();
 
-		_float4 curRotF4;
+			_float4 curRotF4;
 		XMStoreFloat4(&curRotF4, vRotation);
 		_vector qCur = XMLoadFloat4(&curRotF4);
 
@@ -227,11 +226,9 @@ void CChannel::Update_TransformationMatirx(
 
 			_float4 axis;
 			XMStoreFloat4(&axis, axisWorld);
+
 			swap(axis.z, axis.y);
-
-
-			if (angle > 0 )
-				pTransform->TurnAngle(XMLoadFloat4(&axis), angle);
+			pTransform->TurnAngle(XMLoadFloat4(&axis), angle);
 		}
 
 		XMStoreFloat4(&m_vPrevRootRot, qCur);
