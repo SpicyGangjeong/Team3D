@@ -35,6 +35,7 @@
 #include "Bombard.h"
 #include "Decendo.h"
 #include "NomalJap.h"
+#include "Protego.h"
 
 #include "TrailObject.h"
 #include "Instance_Model.h"
@@ -375,6 +376,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CNomalJap>(NEXT_LEVEL, CNomalJap::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CProtego>(NEXT_LEVEL, CProtego::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 

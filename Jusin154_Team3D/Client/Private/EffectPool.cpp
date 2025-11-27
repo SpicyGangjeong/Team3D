@@ -7,7 +7,7 @@
 #include "Bombard.h"
 #include "NomalJap.h"
 #include "Decendo.h"
-
+#include "Protego.h"
 
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -130,7 +130,7 @@ HRESULT CEffectPool::Ready_Effect()
 		return pEffect;}
 	))) return E_FAIL;
 
-	if (FAILED(Create_Effect(SKILL_TYPE::DECENDO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::DESCENDO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
 
 		CDecendo* pEffect = nullptr;
 
@@ -138,6 +138,16 @@ HRESULT CEffectPool::Ready_Effect()
 
 		return pEffect;}
 	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::PROTEGO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
+
+		CProtego* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CProtego>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
 
 
 	return S_OK;

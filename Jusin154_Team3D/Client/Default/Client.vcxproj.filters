@@ -193,6 +193,9 @@
     <ClInclude Include="..\public\InstancedProp.h">
       <Filter>02.GameObjects\Environment\02.InstancedProp</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Protego.h">
+      <Filter>02.GameObjects\Effect\Effects\Protego</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -451,9 +454,12 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\EffectPool">
       <UniqueIdentifier>{bdd4863e-8ab9-4ce8-a88d-9a0c558a67fb}</UniqueIdentifier>
-  </Filter>
+    </Filter>
     <Filter Include="02.GameObjects\Environment\02.InstancedProp">
       <UniqueIdentifier>{4ef15d06-4520-4d55-ab49-1ae7179f145b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Protego">
+      <UniqueIdentifier>{37b6e4b9-42fb-4fda-9112-e62ab434bee0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -636,6 +642,9 @@
     </ClCompile>
     <ClCompile Include="..\private\InstancedProp.cpp">
       <Filter>02.GameObjects\Environment\02.InstancedProp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Protego.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Protego</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
