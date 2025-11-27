@@ -69,14 +69,19 @@ public:
 public:
 	virtual void Reset_Sprint() { m_bSprintToggle = false; }
 	virtual void Reset_Walk() { m_bWalkToggle = false; }
+	template<typename T>
+	void Spawn_Effect();
 
 private:
+
+
 	void TestKeyInput(_float fTimeDelta);
 	virtual void Add_FSM();
 	virtual void Set_Anim();
 
 	_float m_fAmount = { 1.f };
 	_float m_fInputTime = {};
+	_bool m_bRatio = { false };
 
 	HRESULT InputAction();
 	HRESULT InputMove();

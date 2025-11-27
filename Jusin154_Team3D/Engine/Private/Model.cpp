@@ -124,9 +124,15 @@ _bool CModel::Play_Animation(_float fTimeDelta, CTransform* pTransform)
 		CAnimation* pCurAnim = m_Animations[m_iCurrentAnimIndex];
 		CAnimation* pPreAnim = m_Animations[m_iPreAnimIndex];
 
-		//_bool bPreFinished = pPreAnim->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, pTransform, m_fAmount);
+		_bool bCurFinished;
 
-		_bool bCurFinished = pCurAnim->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, pTransform, m_fAmount);
+		if (m_bRatio) {
+			bCurFinished = pCurAnim->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, pTransform, m_fAmount * fRatio);
+		}
+		else {
+			bCurFinished = pCurAnim->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, pTransform, m_fAmount);
+		}
+
 
 		pCurAnim->InterpAnim(pPreAnim, m_Bones, fRatio);
 
@@ -136,6 +142,7 @@ _bool CModel::Play_Animation(_float fTimeDelta, CTransform* pTransform)
 		{
 			m_iPreAnimIndex = m_iCurrentAnimIndex;
 			m_fBlendTime = 0.f;
+			m_bRatio = false;
 		}
 	}
 	else
@@ -153,7 +160,7 @@ _bool CModel::Play_Animation(_float fTimeDelta, CTransform* pTransform)
 	return m_bIsFinishedAnim;
 }
 
-void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop,_float fAmount)
+void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop,_float fAmount,_bool bRatio)
 {
 	if (m_iCurrentAnimIndex == iIndex){
 		return;
@@ -163,6 +170,7 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop,_float fAmount)
 		m_iCurrentAnimIndex = iIndex;
 		m_bIsLoop = isLoop;
 		m_fAmount = fAmount;
+		m_bRatio = bRatio;
 		m_Animations[m_iCurrentAnimIndex]->Depart_Animation();
 		m_Animations[m_iCurrentAnimIndex]->ResetRootMotion();
 	}
@@ -233,6 +241,18 @@ _float CModel::Get_AnimSpeed()
 void CModel::Set_AnimSpeed(_float fSpeed)
 {
 	m_Animations[m_iCurrentAnimIndex]->Set_AnimSpeed(fSpeed);
+}
+
+HRESULT CModel::Anim_Event(_float fRatio,_uint AnimIndex,function<void()> Event)
+{
+	if (AnimIndex == m_iCurrentAnimIndex)
+	{
+		if (m_Animations[m_iCurrentAnimIndex]->Get_CurrentTrackProgressRatio() >= fRatio)
+		{
+			Event();
+		}
+	}
+	return E_FAIL;
 }
 
 
