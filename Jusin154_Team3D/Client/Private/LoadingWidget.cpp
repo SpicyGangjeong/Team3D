@@ -36,18 +36,18 @@ HRESULT CLoadingWidget::Initialize(void* pArg)
 	{
 		return E_FAIL;
 	}
-
-	m_iImageFrameX = 6;
-	m_iImageFrameY = 6;
-	m_fFrame = 0.2f;
-	m_fTimeMult = 3.f;
-	m_fDelayTime = 1.f;
-	m_fEndTime = 1.8f;
+	// UI의 알파값을 조절
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 3.f;
-	m_fMoveSpeed = 10.f;
-	m_bVisible = true;
-	m_bActive = true;
+
+	// 스프라이트 애니메이션의 정보
+	m_fTimeMult = 3.f;  // 속도
+	m_fDelayTime = 1.f; // 딜레이
+	m_fFrame = 0.2f;	// 프레임
+	m_iImageFrameX = 6; // 이미지의 x 갯수
+	m_iImageFrameY = 6; // 이미지의 y 갯수
+
+	//m_bActive = true;
 	return S_OK;
 }
 
@@ -90,15 +90,7 @@ void CLoadingWidget::Update(_float fTimeDelta)
 			m_fAlpha = 0.f;
 		}
 	}
-	if (m_bLerpOn == true)
-	{
-		Start_Lerp(m_fMoveSpeed);
-	}
 
-	if (m_bLerpOff == true)
-	{
-		Reset_Pos(m_fMoveSpeed);
-	}
 	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
 }
@@ -197,7 +189,7 @@ HRESULT CLoadingWidget::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("LoadingWidget"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_LoadingWidget"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}

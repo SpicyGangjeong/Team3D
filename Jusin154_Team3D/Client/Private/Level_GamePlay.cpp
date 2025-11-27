@@ -106,9 +106,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 
 HRESULT CLevel_GamePlay::Ready_Layer_UI(const _wstring& strLayerTag)
 {
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGamePlay_Canvas>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_UI))) {
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGamePlay_Canvas>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_UI))) {
+		return E_FAIL;
+	}
 
 	return S_OK;
 }

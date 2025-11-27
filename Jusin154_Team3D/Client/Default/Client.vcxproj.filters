@@ -184,6 +184,30 @@
     <ClInclude Include="..\public\Terrain.h">
       <Filter>02.GameObjects\Environment\Terrain</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\GamePlay_Canvas.h">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LoadingWidget.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Loding_Panel\LoadingWidget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Loading_Panel.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Loding_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Action_Panel.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MiniMap_Panel.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\MiniMap_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mission_Panel.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Mission_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MiniMap_TrimBorder.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\MiniMap_Panel\MiniMap_TrimBorder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\NoMountIcon.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\MiniMap_Panel\NoMountIcon</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -440,6 +464,12 @@
     <Filter Include="02.GameObjects\Environment\Terrain">
       <UniqueIdentifier>{7db61780-d774-4a91-a429-2fb7634e43b3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\MiniMap_Panel\MiniMap_TrimBorder">
+      <UniqueIdentifier>{59283aaa-2cb7-40da-97a7-2705ed78c830}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\MiniMap_Panel\NoMountIcon">
+      <UniqueIdentifier>{e5e2a92a-d549-4573-b8e7-d48e7a409888}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -612,6 +642,30 @@
     </ClCompile>
     <ClCompile Include="..\private\Terrain.cpp">
       <Filter>02.GameObjects\Environment\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Loading_Panel.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Loding_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LoadingWidget.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Loding_Panel\LoadingWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\GamePlay_Canvas.cpp">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Action_Panel.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MiniMap_Panel.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\MiniMap_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mission_Panel.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Mission_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MiniMap_TrimBorder.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\MiniMap_Panel\MiniMap_TrimBorder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\NoMountIcon.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\MiniMap_Panel\NoMountIcon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

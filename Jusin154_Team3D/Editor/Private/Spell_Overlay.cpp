@@ -22,9 +22,9 @@ HRESULT CSpell_Overlay::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 380.f;
-	Desc.fY = 0.f;
-	Desc.fSizeX = 100.f;
-	Desc.fSizeY = 100.f;
+	Desc.fY = 30.f;
+	Desc.fSizeX = 105.f;
+	Desc.fSizeY = 105.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 

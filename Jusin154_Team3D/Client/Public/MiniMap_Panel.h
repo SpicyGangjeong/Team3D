@@ -1,22 +1,20 @@
 ﻿#pragma once
 
 #include "Client_Define.h"
-#include "ElementObject.h"
+#include "PanelObject.h"
 
 NS_BEGIN(Engine)
-class CTexture;
-class CShader;
-class CVIBuffer_Rect;
+class CGameObject;
 NS_END
 
 NS_BEGIN(Client)
 
-class CLoadingWidget final : public CElementObject
+class CMiniMap_Panel final : public CPanelObject
 {
 private:
-	CLoadingWidget(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CLoadingWidget(const CLoadingWidget& rhs);
-	virtual ~CLoadingWidget() = default;
+	CMiniMap_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CMiniMap_Panel(const CMiniMap_Panel& rhs);
+	virtual ~CMiniMap_Panel() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -25,10 +23,10 @@ public:
 	virtual HRESULT Render() override;
 	virtual _vector Get_WorldPostion() override;
 
-
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;
+	virtual HRESULT Ready_Element(void* pArg) override;
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
@@ -36,12 +34,12 @@ private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
+	CGameObject* m_pMiniMap_TrimBorder = { nullptr };
+	CGameObject* m_pNoMountIcon = { nullptr };
 
-	_int m_iImageFrameX{};
-	_int m_iImageFrameY{};
-	_float m_fFrame{};
+
 public:
-	static CLoadingWidget* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CMiniMap_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 	void Describe_Entity() override;

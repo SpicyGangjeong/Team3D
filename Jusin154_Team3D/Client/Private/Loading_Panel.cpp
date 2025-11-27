@@ -41,7 +41,6 @@ HRESULT CLoading_Panel::Initialize(void* pArg)
 	{
 		return E_FAIL;
 	}
-	m_bVisible = true;
 	m_bActive = true;
 	return S_OK;
 }

@@ -11,12 +11,12 @@ NS_END
 
 NS_BEGIN(Client)
 
-class CLoadingWidget final : public CElementObject
+class CMiniMap_TrimBorder final : public CElementObject
 {
 private:
-	CLoadingWidget(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CLoadingWidget(const CLoadingWidget& rhs);
-	virtual ~CLoadingWidget() = default;
+	CMiniMap_TrimBorder(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CMiniMap_TrimBorder(const CMiniMap_TrimBorder& rhs);
+	virtual ~CMiniMap_TrimBorder() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -37,11 +37,9 @@ private:
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
-	_int m_iImageFrameX{};
-	_int m_iImageFrameY{};
-	_float m_fFrame{};
+
 public:
-	static CLoadingWidget* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CMiniMap_TrimBorder* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 	void Describe_Entity() override;
