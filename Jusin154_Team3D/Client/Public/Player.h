@@ -105,6 +105,9 @@ private:
 	void	Behavior_CombatExit();
 
 #pragma endregion
+
+private:
+	class CEffectPool* m_pEffectPool = nullptr;
 };
 
 NS_END

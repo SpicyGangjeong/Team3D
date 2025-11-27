@@ -33,9 +33,13 @@
 
 #include "EffectParts.h"
 #include "Bombard.h"
+#include "Decendo.h"
+#include "NomalJap.h"
+
 #include "TrailObject.h"
 #include "Instance_Model.h"
 #include "Trail.h"
+#include "EffectPool.h"
 
 #pragma endregion
 
@@ -358,6 +362,17 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CDecendo>(NEXT_LEVEL, CDecendo::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CNomalJap>(NEXT_LEVEL, CNomalJap::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CEffectPool>(g_iStaticLevel, CEffectPool::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 
 
 	m_strMessage = TEXT("Model Loading..");

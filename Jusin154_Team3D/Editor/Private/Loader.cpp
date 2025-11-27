@@ -97,6 +97,7 @@
 #include "NomalJap.h"
 #include "Bombard.h"
 #include "Decendo.h"
+#include "EffectPool.h"
 
 #pragma endregion
 
@@ -373,6 +374,7 @@ HRESULT CLoader::Loading_For_UI()
 			return S_OK;
 
 		});
+
 	Asset_FileLoad("../Bin/Resources/Textures/HUD", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
 		{
 
@@ -930,9 +932,14 @@ HRESULT CLoader::Loading_For_Effect()
 	if (FAILED(m_pGameInstance->Add_Prototype<CCamPosition_Target>(g_iStaticLevel, CCamPosition_Target::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CEffectPool>(g_iStaticLevel, CEffectPool::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_Player */
 	if (FAILED(m_pGameInstance->Add_Prototype<CPlayer>(g_iStaticLevel, CPlayer::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+
 
 
 

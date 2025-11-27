@@ -177,6 +177,8 @@
     <ClInclude Include="..\Public\Client_Enum.h" />
     <ClInclude Include="..\Public\Client_Macro.h" />
     <ClInclude Include="..\Public\Client_Struct.h" />
+    <ClInclude Include="..\Public\Decendo.h" />
+    <ClInclude Include="..\Public\EffectPool.h" />
     <ClInclude Include="..\Public\Goblin.h" />
     <ClInclude Include="..\public\MapContainer.h" />
     <ClInclude Include="..\public\MapObject_Collision.h" />
@@ -233,6 +235,8 @@
     <ClCompile Include="..\Private\Camera_Gaze.cpp" />
     <ClCompile Include="..\Private\CamPosition.cpp" />
     <ClCompile Include="..\Private\CamPosition_Arm.cpp" />
+    <ClCompile Include="..\Private\Decendo.cpp" />
+    <ClCompile Include="..\Private\EffectPool.cpp" />
     <ClCompile Include="..\Private\Goblin.cpp" />
     <ClCompile Include="..\Private\Goblin_States.cpp" />
     <ClCompile Include="..\private\MapContainer.cpp" />

@@ -27,8 +27,7 @@ HRESULT CEditEffect::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	
-	Set_Visible(false);
+	m_bVisible = false;
 
 	return S_OK;
 }
@@ -403,7 +402,6 @@ void CEditEffect::Describe_Entity()
 	const char* pRenderNames[] = { "PRIORITY" , "SHADOW", "NONBLEND", "DECAL", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" , "UI" };
 	const char* pEffectType[] = { "EFFECT" , "TRAIL" };
 	const char* pShaderPass[] = { "DEFAULT" , "NON_NOMALMAP" , "BLUR" , "WEIGHTBLEND" , "NON_WORLD" , "NON_WORLD_BLUR", "ALPHA_BLEND"};
-
 	_int iCurrentItem = static_cast<_int>(m_EffectInfo.eRenderOrder);
 	_int iCurrentType = static_cast<_int>(m_EffectInfo.eEffectType);
 	_int iCurrentPass = static_cast<_int>(m_EffectInfo.eShaderPass);
