@@ -56,7 +56,7 @@ HRESULT CCamera::Bind_Matrices()
     if (true == m_bActive) {
         m_pGameInstance->Set_Transform(D3DTS::VIEW, XMMatrixInverse(nullptr, XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrixPtr())));
         m_pGameInstance->Set_Transform(D3DTS::PROJ, XMMatrixPerspectiveFovLH(m_fFovy, m_fAspect, m_fNear, m_fFar));
-        Ready_Shadow();
+        //Ready_Shadow();
     }
     return S_OK;
 }

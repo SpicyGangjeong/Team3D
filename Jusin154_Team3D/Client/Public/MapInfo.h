@@ -16,6 +16,7 @@ private:
 	~CMapInfo() = default;
 public:
 	void Update(_float fTimeDelta);
+	void Change_Level();
 	HRESULT Load_MapObjects(const _char* pFilePath);
 
 

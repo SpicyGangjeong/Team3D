@@ -65,6 +65,7 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 	m_pInfoInstance->Update(fTimeDelta);
 
 	if (true == m_pGameInstance->Check_LevelShouldChange()) {
+		m_pInfoInstance->Change_Level();
 		if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::FIELD)))) {
 			return;
 		}
@@ -99,7 +100,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 		return E_FAIL;
 	}
 
-	CInfoInstance::GetInstance()->Load_MapObjects("ClientTest");
+	//CInfoInstance::GetInstance()->Load_MapObjects("ClientTest");
 
 	return S_OK;
 }

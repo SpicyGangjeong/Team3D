@@ -398,72 +398,72 @@ HRESULT CLoader::Loading_For_GamePlay()
 		});
 
 #pragma region MAP_MODELS
-	vector<future<void>> jobFutures;
+	//vector<future<void>> jobFutures;
 
-	_uint iLoadCount = 5;
-	vector<vector<FOLDER_LOAD*>*> Contents(iLoadCount);
+	//_uint iLoadCount = 5;
+	//vector<vector<FOLDER_LOAD*>*> Contents(iLoadCount);
 
-	{ /* Terrain */
-		jobFutures.emplace_back(Deferred_FolderLoad(
-			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Collision/Terrain",
-			".bin", false,
-			&Contents[jobFutures.size()]
-		));
-		jobFutures.emplace_back(Deferred_FolderLoad(
-			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Meshes/Terrain",
-			".bin", false,
-			&Contents[jobFutures.size()]
-		));
-	}
+	//{ /* Terrain */
+	//	jobFutures.emplace_back(Deferred_FolderLoad(
+	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Collision/Terrain",
+	//		".bin", false,
+	//		&Contents[jobFutures.size()]
+	//	));
+	//	jobFutures.emplace_back(Deferred_FolderLoad(
+	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Meshes/Terrain",
+	//		".bin", false,
+	//		&Contents[jobFutures.size()]
+	//	));
+	//}
 
-	{ /* Ollivanders*/
-		jobFutures.emplace_back(Deferred_FolderLoad(
-			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Ollivanders/Meshes",
-			".bin", false,
-			&Contents[jobFutures.size()]
-		));
-		jobFutures.emplace_back(Deferred_FolderLoad(
-			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Ollivanders/Collision",
-			".bin", false,
-			&Contents[jobFutures.size()]
-		));
-	}
+	//{ /* Ollivanders*/
+	//	jobFutures.emplace_back(Deferred_FolderLoad(
+	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Ollivanders/Meshes",
+	//		".bin", false,
+	//		&Contents[jobFutures.size()]
+	//	));
+	//	jobFutures.emplace_back(Deferred_FolderLoad(
+	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Ollivanders/Collision",
+	//		".bin", false,
+	//		&Contents[jobFutures.size()]
+	//	));
+	//}
 
-	{ /* Gatehouse*/
-		jobFutures.emplace_back(Deferred_FolderLoad(
-			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Gatehouse/Meshes",
-			".bin", false,
-			&Contents[jobFutures.size()]
-		));
-	}
+	//{ /* Gatehouse*/
+	//	jobFutures.emplace_back(Deferred_FolderLoad(
+	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Gatehouse/Meshes",
+	//		".bin", false,
+	//		&Contents[jobFutures.size()]
+	//	));
+	//}
 
-	for (auto& jobFuture : jobFutures)
-	{
-		jobFuture.get();
-	}
+	//for (auto& jobFuture : jobFutures)
+	//{
+	//	jobFuture.get();
+	//}
 
-	for (_uint i = 0; i < Contents.size(); ++i) {
-		for (_uint j = 0; j < (Contents[i])->size(); ++j) {
-			FOLDER_LOAD* pContents = (*Contents[i])[j];
-			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, pContents->pModelTag, pContents->pLoadedModel))) {
-				return E_FAIL;
-			}
+	//for (_uint i = 0; i < Contents.size(); ++i) {
+	//	for (_uint j = 0; j < (Contents[i])->size(); ++j) {
+	//		FOLDER_LOAD* pContents = (*Contents[i])[j];
+	//		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, pContents->pModelTag, pContents->pLoadedModel))) {
+	//			return E_FAIL;
+	//		}
 
-			for (_uint k = 0; k < pContents->pRigidBodyTags.size(); ++k) {
-				if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, pContents->pRigidBodyTags[k], pContents->LoadedRigidBody[k]))) {
-					return E_FAIL;
-				}
-			}
+	//		for (_uint k = 0; k < pContents->pRigidBodyTags.size(); ++k) {
+	//			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, pContents->pRigidBodyTags[k], pContents->LoadedRigidBody[k]))) {
+	//				return E_FAIL;
+	//			}
+	//		}
 
-		}
-	}
+	//	}
+	//}
 
-	for (_uint i = 0; i < Contents.size(); ++i) {
-		for (_uint j = 0; j < (Contents[i])->size(); ++j) {
-			Safe_Delete((*Contents[i])[j]);
-		}
-		Safe_Delete(Contents[i]);
-	}
+	//for (_uint i = 0; i < Contents.size(); ++i) {
+	//	for (_uint j = 0; j < (Contents[i])->size(); ++j) {
+	//		Safe_Delete((*Contents[i])[j]);
+	//	}
+	//	Safe_Delete(Contents[i]);
+	//}
 #pragma endregion
 
 

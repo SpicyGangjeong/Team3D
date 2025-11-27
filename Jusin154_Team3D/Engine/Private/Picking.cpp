@@ -30,15 +30,13 @@ HRESULT CPicking::Initialize(HWND hWnd, _uint iSizeX, _uint iSizeY)
 
 	TextureDesc.Usage = D3D11_USAGE_STAGING;
 	TextureDesc.BindFlags = 0;
-	TextureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
+	TextureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
 	TextureDesc.MiscFlags = 0;
 
 	if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, &m_pTexture2D))){
 		return E_FAIL;
 	}
 
-	m_iNumPixels = iSizeX * iSizeY;
-	m_pPixels = new _float4[m_iNumPixels];
 	m_iNumPixelW = iSizeX;
 	m_iNumPixelH = iSizeY;
 
@@ -48,45 +46,47 @@ HRESULT CPicking::Initialize(HWND hWnd, _uint iSizeX, _uint iSizeY)
 void CPicking::Update()
 {
 	m_pGameInstance->Copy_RenderTarget(TEXT("Target_Depth"), m_pTexture2D);
-
-	D3D11_MAPPED_SUBRESOURCE		SubResource{};
-	if (FAILED(m_pContext->Map(m_pTexture2D, 0, D3D11_MAP_READ_WRITE, 0, &SubResource))){
-		return;
-	}
-
-	memcpy(m_pPixels, SubResource.pData, sizeof(_float4) * m_iNumPixels);
-
-	m_pContext->Unmap(m_pTexture2D, 0);
 }
-
 _bool CPicking::isPicking(_float3* pOut)
 {
-	POINT		ptMouse{};
-
+	POINT ptMouse{};
 	GetCursorPos(&ptMouse);
 	ScreenToClient(m_hWnd, &ptMouse);
 
-	_uint iMouseIndex = ptMouse.y * m_iNumPixelW + ptMouse.x;
-
-	if (iMouseIndex > m_iNumPixelW * m_iNumPixelH)
+	if (ptMouse.x < 0 || ptMouse.x >= (LONG)m_iNumPixelW || ptMouse.y < 0 || ptMouse.y >= (LONG)m_iNumPixelH){
 		return false;
+	}
 
-	if (0.f == m_pPixels[iMouseIndex].w)
+	D3D11_MAPPED_SUBRESOURCE SubResource{};
+	if (FAILED(m_pContext->Map(m_pTexture2D, 0, D3D11_MAP_READ, 0, &SubResource))) {
 		return false;
-	 
-	_float3 vMousePos = _float3(0.f, 0.f, 0.f);
+	}
 
+	BYTE* pRowStart = static_cast<BYTE*>(SubResource.pData) + ptMouse.y * SubResource.RowPitch;
+	_float4* pPixelRow = reinterpret_cast<_float4*>(pRowStart);
+	_float4 Pixel = pPixelRow[ptMouse.x];
+
+	m_pContext->Unmap(m_pTexture2D, 0);
+
+	if (0.f == Pixel.w){
+		return false;
+	}
+
+	_float3 vMousePos{};
 	vMousePos.x = ptMouse.x / (m_iNumPixelW * 0.5f) - 1.f;
 	vMousePos.y = ptMouse.y / (m_iNumPixelH * -0.5f) + 1.f;
-	vMousePos.z = m_pPixels[iMouseIndex].x;
+	vMousePos.z = Pixel.x;
 
-	XMStoreFloat3(&vMousePos, XMVector3TransformCoord(XMLoadFloat3(&vMousePos), m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ_INV)));
-	XMStoreFloat3(&vMousePos, XMVector3TransformCoord(XMLoadFloat3(&vMousePos), m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW_INV)));
+	XMStoreFloat3(&vMousePos, XMVector3TransformCoord(XMLoadFloat3(&vMousePos),
+			m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ_INV)));
+
+	XMStoreFloat3(&vMousePos, XMVector3TransformCoord(XMLoadFloat3(&vMousePos),
+			m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW_INV)));
 
 	*pOut = vMousePos;
-
 	return true;
 }
+
 
 CPicking* CPicking::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, HWND hWnd, _uint iSizeX, _uint iSizeY)
 {
@@ -109,5 +109,4 @@ void CPicking::Free()
 	SAFE_RELEASE(m_pContext);
 	SAFE_RELEASE(m_pTexture2D);
 	SAFE_RELEASE(m_pGameInstance);
-	Safe_Delete_Array(m_pPixels);
 }

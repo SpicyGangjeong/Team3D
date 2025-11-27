@@ -15,8 +15,6 @@ private:
 	virtual ~CGoblin() = default;
 
 public:
-	virtual HRESULT Initialize_Prototype() override;
-	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Priority_Update(_float fTimeDelta) override;
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
@@ -30,6 +28,8 @@ private:
 	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
 
 private:
+	virtual HRESULT Initialize_Prototype() override;
+	virtual HRESULT Initialize(void* pArg) override;
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
 

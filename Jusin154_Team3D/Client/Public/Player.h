@@ -23,6 +23,7 @@ public:
 	_bool Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
 
 private:
+	CInfoInstance* m_pInfoInstance = { nullptr };
 	_float m_fDirectionRadian = 0.f;
 
 	_bool m_bSprintToggle = { false };
@@ -68,20 +69,27 @@ public:
 public:
 	virtual void Reset_Sprint() { m_bSprintToggle = false; }
 	virtual void Reset_Walk() { m_bWalkToggle = false; }
+	template<typename T>
+	void Spawn_Effect();
 
 private:
+
+
 	void TestKeyInput(_float fTimeDelta);
 	virtual void Add_FSM();
 	virtual void Set_Anim();
 
 	_float m_fAmount = { 1.f };
+	_float m_fInputTime = {};
+	_bool m_bRatio = { false };
 
 	HRESULT InputAction();
 	HRESULT InputMove();
+	HRESULT InputKeyUpMove();
 	HRESULT InputSpell();
 
 	void	Behavior_IdleEnter();
-	HRESULT Behavior_IdleExitCheck();
+	HRESULT Behavior_IdleExitCheck(_float fTimeDelta);
 	void	Behavior_IdleExit();
 
 	void	Behavior_MoveEnter();

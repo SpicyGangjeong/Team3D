@@ -105,6 +105,9 @@ void CPlayer::Late_Update(_float fTimeDelta)
 
 HRESULT CPlayer::Render()
 {
+
+	if (!m_bVisible)
+		return S_OK;
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
@@ -202,10 +205,10 @@ HRESULT CPlayer::Ready_Parts()
 	WandDesc.pParentTransform = m_pTransformCom;
 	WandDesc.pSocketMatrices = m_pModelCom->Get_BoneMatrixPtr("SKT_RightHand");
 
-	if (FAILED(Add_PartObject<CWand>("Wand", g_iStaticLevel, nullptr, &WandDesc)))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(Add_PartObject<CWand>("Wand", g_iStaticLevel, nullptr, &WandDesc)))
+	//{
+	//	return E_FAIL;
+	//}
 
 	{
 		CCamPosition_Shoulder::CAMERA_SHOULDER_DESC Desc;
@@ -323,6 +326,6 @@ void CPlayer::Describe_Entity()
 	string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
 	GUI::Text(AnimList.c_str());
 
-	//GUI::Checkbox("Render", &m_bVisible);
+	GUI::Checkbox("Render", &m_bVisible);
 	
 }

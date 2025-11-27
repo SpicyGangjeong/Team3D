@@ -126,7 +126,7 @@ _float4 CMission_Key::AlphabetUV(_tchar Alphabet)
 {
 	_uint Number = CMyTools::AlphabetToInt(Alphabet);
 
-	_float2 fIamge_Size = { 320.f, 384.f };
+	_float2 fImage_Size = { 320.f, 384.f };
 
 	_uint iXCount = 5;
 	_uint iYCount = 6;
@@ -134,16 +134,16 @@ _float4 CMission_Key::AlphabetUV(_tchar Alphabet)
 	_float frameWidth = 64.f;
 	_float frameHeight = 64.f;
 
-	_uint frameX = Number % iXCount;
-	_uint frameY = Number / iXCount;
+	_uint iframeX = Number % iXCount;
+	_uint iframeY = Number / iXCount;
 
 	_float2 UVStart;
-	UVStart.x = frameX * frameWidth / fIamge_Size.x;
-	UVStart.y = frameY * frameHeight / fIamge_Size.y;
+	UVStart.x = iframeX * frameWidth / fImage_Size.x;
+	UVStart.y = iframeY * frameHeight / fImage_Size.y;
 
 	_float2 UVEnd;
-	UVEnd.x = UVStart.x + (frameWidth / fIamge_Size.x);
-	UVEnd.y = UVStart.y + (frameHeight / fIamge_Size.y);
+	UVEnd.x = UVStart.x + (frameWidth / fImage_Size.x);
+	UVEnd.y = UVStart.y + (frameHeight / fImage_Size.y);
 
 	return m_vUV = _float4(UVStart.x, UVStart.y, UVEnd.x, UVEnd.y);
 }

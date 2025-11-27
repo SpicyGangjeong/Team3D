@@ -2,6 +2,7 @@
 #include "Player.h"
 
 #include "GameInstance.h"
+#include "InfoInstance.h"
 #include "CamPosition_Socket.h"
 #include "Camera_Gaze.h"
 #include "CamPosition_Arm.h"
@@ -28,8 +29,10 @@ CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CPlayer::CPlayer(const CPlayer& Prototype)
-	: CUnit(Prototype)
+	: CUnit(Prototype),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
+	SAFE_ADDREF(m_pInfoInstance);
 }
 
 HRESULT CPlayer::Initialize_Prototype()
@@ -72,6 +75,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
+
+	m_pInfoInstance->Regist_PlayerAlly(this);
 
 #ifdef _DEBUG
 	m_BasicEffect = make_unique<BasicEffect>(m_pDevice);
@@ -362,6 +367,7 @@ void CPlayer::Free()
 	SAFE_RELEASE(m_pCamPosition_TopDown_FollowPart);
 	SAFE_RELEASE(m_pCamPosition_TopDown_LookPart);
 	SAFE_RELEASE(m_pCamPosition_ShoulderPart);
+	SAFE_RELEASE(m_pInfoInstance);
 }
 #ifdef _DEBUG
 
