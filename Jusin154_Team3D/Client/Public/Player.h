@@ -95,7 +95,7 @@ private:
 	void	Behavior_IdleExit();
 
 	void	Behavior_MoveEnter();
-	HRESULT Behavior_MoveExitCheck();
+	HRESULT Behavior_MoveExitCheck(_float fTimeDelta);
 	void	Behavior_MoveExit();
 
 	void	Behavior_JumpEnter();

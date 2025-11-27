@@ -23,7 +23,7 @@ CAnimation::CAnimation(const CAnimation& rhs)
 	, m_fTickPerSecond{ rhs.m_fTickPerSecond }
 	, m_pSaveAnim{ rhs.m_pSaveAnim }
 	, m_fAnimSpeed{rhs.m_fAnimSpeed }
-	,m_iBoneCount{rhs.m_iBoneCount}
+	, m_iBoneCount{rhs.m_iBoneCount}
 {
 	memcpy_s(m_TickPerSeconds, sizeof(_float) * 2, rhs.m_TickPerSeconds, sizeof(_float) * 2);
 

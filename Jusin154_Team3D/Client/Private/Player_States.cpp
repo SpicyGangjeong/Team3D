@@ -317,7 +317,7 @@ void CPlayer::Behavior_MoveEnter()
 	m_fAmount = 1.f;
 }
 
-HRESULT CPlayer::Behavior_MoveExitCheck()
+HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 {
 	pair<_uint, _bool> pairAnimInfo;
 	_vector xmvLook = XMVector4Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
@@ -416,6 +416,45 @@ HRESULT CPlayer::Behavior_MoveExitCheck()
 		_float absDir = fabsf(vDir);
 
 		_float cross = vCurLook.x * vInputDir.y - vCurLook.y * vInputDir.x;
+
+		_vector vCameraLook = XMVectorSet(m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z, 0.f);
+
+		vCameraLook = XMVector3Normalize(vCameraLook);
+
+		_float2 fCamLook = { XMVectorGetX(vCameraLook), XMVectorGetZ(vCameraLook) };
+
+		_float angle = CMyTools::Get_Direction2D(vCurLook, fCamLook);
+
+		_float degree = XMConvertToDegrees(angle);
+		if (m_pModelCom->Get_AnimIndex() == m_Animation[STATEANIM::JOG_FWD].first)
+		{
+			_float targetAngle = degree;
+
+			if (m_pGameInstance->Key_Pressing(DIK_W))
+				targetAngle = 0.f;
+			if (m_pGameInstance->Key_Pressing(DIK_D))
+				targetAngle = 90.f;
+			if (m_pGameInstance->Key_Pressing(DIK_A))
+				targetAngle = -90.f;
+			if (m_pGameInstance->Key_Pressing(DIK_S))
+				targetAngle = 180.f;
+
+			_float angleDiff = degree - targetAngle;
+
+			if (angleDiff > 180.f)  angleDiff -= 360.f;
+			if (angleDiff < -180.f) angleDiff += 360.f;
+
+			_float threshold = 2.f;
+
+			if (angleDiff > threshold)
+			{
+				m_pTransformCom->Turn(-m_pTransformCom->Get_State(STATE::UP), fTimeDelta);
+			}
+			else if (angleDiff < -threshold)
+			{
+				m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::UP), fTimeDelta);
+			}
+		}
 
 		_bool bSkipAngleCheck = { false };
 		if (m_pFSM->IsEnable(FSMSTATE::JOG)) {
@@ -799,7 +838,7 @@ void CPlayer::Add_FSM()
 		CState_Move::STATE_MOVE_DESC Desc{};
 		Desc.pOwner = this;
 		Desc.funcEnterEvent = [this]() { Behavior_MoveEnter(); };
-		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_MoveExitCheck(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_MoveExitCheck(fTimedelta); };
 		Desc.funcExitEvent = [this]() { Behavior_MoveExit(); };
 		Desc.funcPriorityUpdate = [this](_float fTimeDelta) {
 			_vector xmvRight = XMVector4Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::RIGHT), 0.f));
