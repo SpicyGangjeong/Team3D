@@ -87,7 +87,8 @@ private:
 	void	Behavior_CombatEnter();
 	HRESULT Behavior_CombatExitCheck();
 	void	Behavior_CombatExit();
-
+private:
+	class CEffectPool* m_pEffectPool = nullptr;
 #pragma endregion
 };
 

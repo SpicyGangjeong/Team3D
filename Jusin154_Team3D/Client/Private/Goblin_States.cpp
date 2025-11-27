@@ -115,7 +115,6 @@ void CGoblin::Add_FSM()
 		m_States.emplace(FSMSTATE::MOVE, CState_Move::Create(&Desc));
 	}
 #pragma endregion
-
 #pragma region Behavior_Combat_NotFocus
 	{
 		CState_Combat::STATE_COMBAT_DESC Desc{};
@@ -136,15 +135,62 @@ void CGoblin::Add_FSM()
 
 void CGoblin::Set_Anim()
 {
-
 	m_Animation[STATEANIM::IDLE] = { 22,true };
+	m_Animation[STATEANIM::IDLE_TURN_BWD] = { 24, false };
+	m_Animation[STATEANIM::IDLE_TURN_L] = { 26, false };
+	m_Animation[STATEANIM::IDLE_TURN_R] = { 30, false };
 
 	m_Animation[STATEANIM::WALK_FWD] = { 50,true };
 	m_Animation[STATEANIM::WALK_STOP] = { 58,false };
+	m_Animation[STATEANIM::WALK_BWD] = { 49, true };
 
 	m_Animation[STATEANIM::JOG_FWD] = { 46,true };
 	m_Animation[STATEANIM::JOG_BWD] = { 154,false };
 
+	m_Animation[STATEANIM::DODGE_LEFT] = { 125, false };
+	m_Animation[STATEANIM::DODGE_RIGHT] = { 126, false };
+	m_Animation[STATEANIM::SPRINT] = { 90, true };
+
 	m_Animation[STATEANIM::SKILL] = { 70,false }; // 도끼 스윙
 	m_Animation[STATEANIM::SKILL2] = { 85,false }; // 나이프 던지기
+
+	m_Animation[STATEANIM::HIT_FWD] = { 353, false };
+	m_Animation[STATEANIM::HIT_BWD] = { 352, false };
+	m_Animation[STATEANIM::HIT_BWD2] = { 349, false };
+	m_Animation[STATEANIM::HIT_BWD3] = { 350, false };
+	m_Animation[STATEANIM::HIT_BWD4] = { 351, false };
+	m_Animation[STATEANIM::HIT_L] = { 354, false };
+	m_Animation[STATEANIM::HIT_R] = { 355, false };
+
+	m_Animation[STATEANIM::KNOCKDOWN_BWD] = { 374, false };
+	m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT] = { 375, false };
+	m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT_HOLD] = { 370, false };
+	m_Animation[STATEANIM::KNOCKDOWN_FWD] = { 371, false };
+	m_Animation[STATEANIM::KNOCKDOWN_FWD_SPLT] = { 372, false };
+	m_Animation[STATEANIM::KNOCKDOWN_FWD_SPLT_HOLD] = { 373, false };
+
+	m_Animation[STATEANIM::GETUP_BWD] = { 330, false };
+	m_Animation[STATEANIM::GETUP_FWD] = { 332, false };
+	m_Animation[STATEANIM::GETUP_L] = { 334, false };
+	m_Animation[STATEANIM::GETUP_L_FD] = { 336, false };
+	m_Animation[STATEANIM::GETUP_L_FU] = { 338, false };
+	m_Animation[STATEANIM::GETUP_R] = { 340, false };
+	m_Animation[STATEANIM::GETUP_R_FD] = { 342, false };
+	m_Animation[STATEANIM::GETUP_R_FU] = { 344, false };
+	m_Animation[STATEANIM::GETUP_SLOUCH] = { 346, false };
+
+	m_Animation[STATEANIM::KNOCKBACK] = { 377, true };
+	m_Animation[STATEANIM::KNOCKBACK2] = { 378, true };
+	m_Animation[STATEANIM::TUMBLE] = { 379, true };
+	m_Animation[STATEANIM::TUMBLE2] = { 380, true };
+	m_Animation[STATEANIM::PETRIFICUSED_START] = { 383, false };
+
+	m_Animation[STATEANIM::DEAD_BWD] = { 317, false };
+	m_Animation[STATEANIM::DEAD_BWD2] = { 318, false };
+	m_Animation[STATEANIM::DEAD_FWD] = { 319, false };
+	m_Animation[STATEANIM::DEAD_FWD2] = { 320, false };
+	m_Animation[STATEANIM::DEAD_L] = { 321, false };
+	m_Animation[STATEANIM::DEAD_L2] = { 322, false };
+	m_Animation[STATEANIM::DEAD_R] = { 323, false };
+	m_Animation[STATEANIM::DEAD_R2] = { 324, false };
 }

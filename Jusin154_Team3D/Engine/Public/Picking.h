@@ -22,11 +22,8 @@ private:
 	ID3D11Texture2D*		m_pTexture2D = { nullptr };
 	class CGameInstance*	m_pGameInstance = { nullptr };
 
-	_uint					m_iNumPixels = {};
 	_uint					m_iNumPixelW = {};
 	_uint					m_iNumPixelH = {};
-
-	_float4*				m_pPixels = { nullptr };
 
 public:
 	static CPicking* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, HWND hWnd, _uint iSizeX, _uint iSizeY);

@@ -5,6 +5,8 @@
 
 NS_BEGIN(Engine)
 class CGameInstance;
+class CTransform;
+class CUnit;
 NS_END
 
 NS_BEGIN(Client)
@@ -21,8 +23,17 @@ public:
 	LEVEL Get_RestartLevel();
 public:
 	void Update(_float fTimeDelta);
+	void Change_Level();
 
+#pragma region MONSTER_INFO
+	HRESULT Regist_PlayerAlly(CUnit* pUnit);
+	HRESULT Deregist_PlayerAlly(CUnit* pUnit);
+	HRESULT Regist_ActiveMonster(class CMonster* pUnit);
+	HRESULT Deregist_ActiveMonster(class CMonster* pUnit);
 
+	class CMonster* Get_LockOnMonster();
+	pair<CUnit*, CTransform*> Get_NearestPlayerAlly(_fvector vPos);
+#pragma endregion
 #pragma region MAP_INFO
 	HRESULT Load_MapObjects(const _char* pFilePath);
 #pragma endregion

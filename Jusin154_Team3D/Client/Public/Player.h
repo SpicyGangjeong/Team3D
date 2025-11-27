@@ -23,6 +23,8 @@ public:
 	_bool Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
 
 private:
+	CInfoInstance* m_pInfoInstance = { nullptr };
+	class CMonster* m_pLockOnMonster = { nullptr };
 	_float m_fDirectionRadian = 0.f;
 
 	_bool m_bSprintToggle = { false };
@@ -46,6 +48,7 @@ private:
 	HRESULT Ready_Components();
 	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
+	void ReLockOnTarget();
 
 #ifdef _DEBUG
 	void Update_CameraCoordinateSystem();
@@ -68,14 +71,19 @@ public:
 public:
 	virtual void Reset_Sprint() { m_bSprintToggle = false; }
 	virtual void Reset_Walk() { m_bWalkToggle = false; }
+	template<typename T>
+	void Spawn_Effect();
 
 private:
+
+
 	void TestKeyInput(_float fTimeDelta);
 	virtual void Add_FSM();
 	virtual void Set_Anim();
 
 	_float m_fAmount = { 1.f };
 	_float m_fInputTime = {};
+	_bool m_bRatio = { false };
 
 	HRESULT InputAction();
 	HRESULT InputMove();
@@ -107,6 +115,9 @@ private:
 	void	Behavior_CombatExit();
 
 #pragma endregion
+
+private:
+	class CEffectPool* m_pEffectPool = nullptr;
 };
 
 NS_END

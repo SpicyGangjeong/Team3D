@@ -373,6 +373,9 @@
     <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\Magic_Item">
       <UniqueIdentifier>{5b287b4f-4f71-4458-85a1-c753fd121c53}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\EffectPool">
+      <UniqueIdentifier>{c0589f6e-ed9c-4e76-8df2-4f95ce3c7b9a}</UniqueIdentifier>
+    </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Border">
       <UniqueIdentifier>{a54567fa-e528-4c98-a605-289d7d300029}</UniqueIdentifier>
     </Filter>
@@ -729,6 +732,9 @@
     <ClInclude Include="..\public\Magic_Item.h">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel\Magic_Item</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\EffectPool.h">
+      <Filter>02.GameObjects\Layer_Effect\EffectPool</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\MissionBanner_Border.h">
       <Filter>50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Border</Filter>
     </ClInclude>
@@ -1083,6 +1089,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Magic_Item.cpp">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel\Magic_Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EffectPool.cpp">
+      <Filter>02.GameObjects\Layer_Effect\EffectPool</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\MissionBanner_Border.cpp">
       <Filter>50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Border</Filter>

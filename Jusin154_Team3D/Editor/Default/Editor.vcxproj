@@ -213,6 +213,7 @@
     <ClInclude Include="..\public\Magic_Icon.h" />
     <ClInclude Include="..\public\Magic_Item.h" />
     <ClInclude Include="..\public\Magic_Meter.h" />
+    <ClInclude Include="..\Public\EffectPool.h" />
     <ClInclude Include="..\Public\MissionBanner_Border.h" />
     <ClInclude Include="..\Public\NomalJap.h" />
     <ClInclude Include="..\Public\Effect_Container.h" />
@@ -348,6 +349,7 @@
     <ClCompile Include="..\private\Magic_Icon.cpp" />
     <ClCompile Include="..\private\Magic_Item.cpp" />
     <ClCompile Include="..\private\Magic_Meter.cpp" />
+    <ClCompile Include="..\Private\EffectPool.cpp" />
     <ClCompile Include="..\Private\MissionBanner_Border.cpp" />
     <ClCompile Include="..\Private\NomalJap.cpp" />
     <ClCompile Include="..\Private\Effect_Container.cpp" />
@@ -441,8 +443,13 @@
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_UIEditor.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_UI_Instance.hlsl" />
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_UI_Instance.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxAnimMesh.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
@@ -479,7 +486,10 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxWorldModelInstance.hlsl" />
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxWorldModelInstance.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -22,6 +22,8 @@ public:
 	virtual HRESULT Render();
 	virtual HRESULT Render_Shadow() { return S_OK; }
 	virtual HRESULT Render_Blur() { return S_OK; }
+	virtual HRESULT Render_Bloom() { return S_OK; }
+	virtual HRESULT Render_OutLine() { return S_OK; }
 
 	virtual _float Get_Depth(); // z 소팅 할 때 쓰시면 됨
 

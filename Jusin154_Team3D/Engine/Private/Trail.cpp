@@ -178,6 +178,15 @@ void CTrail::Trail_Update(_float fDeltaTime, _fmatrix WorldMatrix)
 
 }
 
+void CTrail::Reset_Trail()
+{
+	ZeroMemory(m_pVertices, sizeof(VTXPOSTEX) * m_iNumVertices);
+	ZeroMemory(&m_PreHigh, sizeof(_vector) * 2);
+	ZeroMemory(&m_PreLow, sizeof(_vector) * 2);
+	m_iNumCount = 0;
+	m_fAccTime = 0.f;
+ }
+
 #ifdef _DEBUG
 HRESULT CTrail::Save_Trail(HANDLE hFile)
 {

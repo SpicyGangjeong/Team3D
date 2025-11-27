@@ -20,6 +20,8 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 
+public:
+	virtual	HRESULT	Pre_Setting(CGameObject* pObject) override;
 
 private:
 	virtual HRESULT Initialize_Prototype() override;

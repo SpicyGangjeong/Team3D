@@ -211,6 +211,18 @@
     <ClInclude Include="..\Public\LoadingWidget_Flame.h">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Loding_Panel\LoadingWidget_Flame</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\EffectPool.h">
+      <Filter>02.GameObjects\Effect\EffectPool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Decendo.h">
+      <Filter>02.GameObjects\Effect\Effects\Decendo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\InstancedProp.h">
+      <Filter>02.GameObjects\Environment\02.InstancedProp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Protego.h">
+      <Filter>02.GameObjects\Effect\Effects\Protego</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -467,6 +479,15 @@
     <Filter Include="02.GameObjects\Environment\Terrain">
       <UniqueIdentifier>{7db61780-d774-4a91-a429-2fb7634e43b3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\EffectPool">
+      <UniqueIdentifier>{bdd4863e-8ab9-4ce8-a88d-9a0c558a67fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\02.InstancedProp">
+      <UniqueIdentifier>{4ef15d06-4520-4d55-ab49-1ae7179f145b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Protego">
+      <UniqueIdentifier>{37b6e4b9-42fb-4fda-9112-e62ab434bee0}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\MiniMap_Panel\MiniMap_TrimBorder">
       <UniqueIdentifier>{59283aaa-2cb7-40da-97a7-2705ed78c830}</UniqueIdentifier>
     </Filter>
@@ -672,6 +693,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\LoadingWidget_Flame.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Loding_Panel\LoadingWidget_Flame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EffectPool.cpp">
+      <Filter>02.GameObjects\Effect\EffectPool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Decendo.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Decendo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\InstancedProp.cpp">
+      <Filter>02.GameObjects\Environment\02.InstancedProp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Protego.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Protego</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

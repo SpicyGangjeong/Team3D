@@ -206,10 +206,7 @@ HRESULT CMaterial::Read_MaterialFile(const _char* pMaterialFilePath, const _char
 					}
 					else
 						Value = strText.substr(iBeginIndex, iEndIndex - iBeginIndex);
-
-					strcpy_s(szTextureFilePath, pTextureFolderPath);
-					strcat_s(szTextureFilePath, Value.c_str());
-
+					
 					// name
 					iBeginIndex = (_uint)strText.find_last_of('_');
 					iEndIndex = (_uint)strText.rfind('\'');
@@ -220,7 +217,7 @@ HRESULT CMaterial::Read_MaterialFile(const _char* pMaterialFilePath, const _char
 					getline(file, strText);
 
 					// Add Texture
-					if (FAILED(Add_Texture(szTextureFilePath, Type))){
+					if (FAILED(Add_Texture(("C:/MeshTable" + Value).c_str(), Type))) {
 						return E_FAIL;
 					}
 

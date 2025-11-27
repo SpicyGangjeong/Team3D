@@ -58,11 +58,13 @@ HRESULT CGoblin::Initialize(void* pArg)
 
 void CGoblin::Priority_Update(_float fTimeDelta)
 {
-	m_pTransformCom->RewindMomentum();
+	__super::Priority_Update(fTimeDelta);
 }
 
 void CGoblin::Update(_float fTimeDelta)
 {
+	__super::Update(fTimeDelta);
+
 	m_pFSM->Update_State(fTimeDelta);
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
@@ -76,7 +78,7 @@ void CGoblin::Late_Update(_float fTimeDelta)
 	__super::Late_Update(fTimeDelta);
 	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_Position());
 
-	m_pTransformCom->LookAt(m_pPlayerTransform->Get_State(STATE::POSITION));
+	m_pTransformCom->LookAt(XMLoadFloat4(&m_vTargetPos));
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 }
@@ -108,6 +110,10 @@ HRESULT CGoblin::Render()
 		}
 	}
 
+	if (m_bDrawOutLine) {
+		Render_OutLine();
+	}
+
 #ifdef _DEBUG
 	m_pCharacter_Controller->Render();
 	//m_pRigidBody->Render();
@@ -130,8 +136,9 @@ HRESULT CGoblin::Ready_Components()
 
 	/* Com_Model */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_strModelPrototypeTag,
-		reinterpret_cast<CComponent**>(&m_pModelCom))))
+		reinterpret_cast<CComponent**>(&m_pModelCom)))){
 		return E_FAIL;
+	}
 
 	{ // CCT
 		CCharacter_Controller::Character_Controller_DESC Desc{};

@@ -21,6 +21,8 @@
 #pragma endregion
 
 #include "Bombard.h"
+#include "Layer.h"
+#include "EffectPool.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUnit(pDevice, pContext)
@@ -70,6 +72,10 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
+
+	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
+	SAFE_ADDREF(m_pEffectPool);
+
 	return S_OK;
 }
 
@@ -105,6 +111,9 @@ void CPlayer::Late_Update(_float fTimeDelta)
 
 HRESULT CPlayer::Render()
 {
+
+	if (!m_bVisible)
+		return S_OK;
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
@@ -202,10 +211,10 @@ HRESULT CPlayer::Ready_Parts()
 	WandDesc.pParentTransform = m_pTransformCom;
 	WandDesc.pSocketMatrices = m_pModelCom->Get_BoneMatrixPtr("SKT_RightHand");
 
-	if (FAILED(Add_PartObject<CWand>("Wand", g_iStaticLevel, nullptr, &WandDesc)))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(Add_PartObject<CWand>("Wand", g_iStaticLevel, nullptr, &WandDesc)))
+	//{
+	//	return E_FAIL;
+	//}
 
 	{
 		CCamPosition_Shoulder::CAMERA_SHOULDER_DESC Desc;
@@ -281,6 +290,8 @@ void CPlayer::Free()
 	SAFE_RELEASE(m_pCamPosition_TopDown_FollowPart);
 	SAFE_RELEASE(m_pCamPosition_TopDown_LookPart);
 	SAFE_RELEASE(m_pCamPosition_ShoulderPart);
+
+	SAFE_RELEASE(m_pEffectPool);
 }
 
 void CPlayer::Describe_Entity()
@@ -323,6 +334,6 @@ void CPlayer::Describe_Entity()
 	string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
 	GUI::Text(AnimList.c_str());
 
-	//GUI::Checkbox("Render", &m_bVisible);
+	GUI::Checkbox("Render", &m_bVisible);
 	
 }
