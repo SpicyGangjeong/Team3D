@@ -255,7 +255,6 @@ HRESULT CModel::Anim_Event(_float fRatio,_uint AnimIndex,function<void()> Event)
 	return E_FAIL;
 }
 
-
 HRESULT CModel::Render(_uint iMeshIndex)
 {
 	m_Meshes[iMeshIndex]->Bind_Resources();
