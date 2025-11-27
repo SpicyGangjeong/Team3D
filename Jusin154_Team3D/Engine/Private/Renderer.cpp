@@ -420,7 +420,8 @@ void CRenderer::Render_Bloom()
 		GUI::DragFloat("g_fThreshold", &m_fThreshold, 0.01f, 0.02f, 100.f, "%.3f");
 		GUI::SliderInt("g_iEmbossingPass", &m_iBloomEmbossingPass, 0, 2, "%d");
 		GUI::End();
-		//{ // BackBuffer
+
+		//{ // BackBuffer 
 		//	ID3D11Texture2D* pBackBuffer = nullptr;
 		//	m_pGameInstance->Get_BackBufferPTR(&pBackBuffer);
 		//	//m_pGameInstance->Copy_RenderTarget(TEXT("Target_Diffuse"), pBackBuffer);
@@ -436,6 +437,26 @@ void CRenderer::Render_Bloom()
 		// "Target_Bloom_16x16_X"
 		// "Target_Bloom_8x8_2"
 		// "Target_Bloom_4x4_2"
+
+		if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Bloom")))) {
+			return;
+		}
+
+		for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::BLOOM)])
+		{
+			if (nullptr != pRenderObject)
+				if (FAILED(pRenderObject->Render_Bloom())) {
+					assert(false);
+				}
+
+			SAFE_RELEASE(pRenderObject);
+		}
+
+		m_RenderObjects[ENUM_CLASS(RENDER::BLOOM)].clear();
+
+		if (FAILED(m_pGameInstance->End_MRT())) {
+			return;
+		}
 
 		m_pShader->Bind_RawValue("g_fThreshold", &m_fThreshold, sizeof(_float));
 		m_pShader->Bind_RawValue("g_iBloomEmbossingPass", &m_iBloomEmbossingPass, sizeof(_int));
@@ -754,6 +775,10 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Blur"), TEXT("Target_Blur_Weight")))) {
+			return E_FAIL;
+		}
+		/* MRT_Blur */
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Bloom"), TEXT("Target_Bloom_Input")))) {
 			return E_FAIL;
 		}
 
