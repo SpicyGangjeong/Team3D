@@ -15,7 +15,6 @@ float g_fPI;
 float g_fFar;
 float g_fBlinkTime;
 float g_fTime;
-float g_fTimeMult;
 float g_fFrame;
 float g_fDeltaU;
 float g_fDeltaV;
@@ -44,6 +43,10 @@ float2 g_fItemImageSizes2;
 float2 g_fPosition[4];
 float2 g_fImageSizes[4];
 float4 g_fImagesUV[4];
+
+float4 g_fImageSipos1;
+float4 g_fImageSipos2;
+float4 g_fImageSipos3;
 
 Texture2D g_Texture;
 Texture2D g_Texture1;
@@ -190,24 +193,70 @@ PS_OUT PS_Key_Hold_Rotation(PS_IN In)
     PS_OUT Out;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
 
-    float2 uv = In.vTexcoord;
-
-    float4 tex = g_Texture.Sample(DefaultSampler, uv);
-
-    float2 center = float2(0.5f, 0.5f);
-    float2 dir = uv - center;
-
-    float angle = atan2(dir.x, -dir.y);
-    if (angle < 0)
-        angle += g_fPI;
-
-    float rotation = saturate(g_fTime * g_fTimeMult) * g_fPI;
-
-    tex.rgb = (angle <= rotation) ? 1.0 : tex.rgb;
-
-    tex.a *= Alpha;
+    float4 Color = float4(1.f, 1.f, 1.f, 1.f);
     
-    Out.vColor = tex;
+    float4 tex1 = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    Color = tex1;
+    
+    float2 Imagetexpos1 = g_fImageSipos1.xy / g_fCurrent_Size;
+    float2 Imagetexsize1 = g_fImageSipos1.zw / g_fCurrent_Size;
+    float2 Imagelocal = (In.vTexcoord - Imagetexpos1) / Imagetexsize1;
+    bool inside1 = all(Imagelocal >= 0.0f && Imagelocal <= 1.0f);
+    float4 tex2 = g_Texture1.Sample(ClampSampler, Imagelocal);
+    if (inside1)
+    {
+        float2 center = float2(0.5f, 0.5f);
+        float2 dir = Imagelocal - center;
+
+        float angle = atan2(dir.x, -dir.y);
+        if (angle < 0)
+            angle += g_fPI;
+
+        float rotation = saturate(g_fTime) * g_fPI;
+
+        tex2.rgb = (angle <= rotation) ? 1.0 : tex2.rgb;
+
+       
+        Color = lerp(Color, tex2, tex2.a);
+    }
+    
+
+    
+    float2 Imagetexpos2 = g_fImageSipos2.xy / g_fCurrent_Size;
+    float2 Imagetexsize2 = g_fImageSipos2.zw / g_fCurrent_Size;
+    float2 Imagelocal2 = (In.vTexcoord - Imagetexpos2) / Imagetexsize2;
+    bool inside2 = all(Imagelocal2 >= 0.0f && Imagelocal2 <= 1.0f);
+    if (inside2)
+    {
+        float2 atlasUV = g_fImageUV.xy + Imagelocal2 * (g_fImageUV.zw - g_fImageUV.xy);
+        float2 safeUV = saturate(atlasUV);
+        float4 tex3 = g_Texture2.Sample(ClampSampler, safeUV);
+        Color = lerp(Color, tex3, tex3.a);
+    }
+
+    float2 Imagetexpos3 = g_fImageSipos3.xy / g_fCurrent_Size;
+    float2 Imagetexsize3 = g_fImageSipos3.zw / g_fCurrent_Size;
+    float2 Imagelocal3 = (In.vTexcoord - Imagetexpos3) / Imagetexsize3;
+    bool inside3 = all(Imagelocal3 >= 0.0f && Imagelocal3 <= 1.0f);
+    if (inside3)
+    {
+        float3 QuestColor = float3(253.f, 207.f, 11.f) / 255.f;
+        
+        float4 tex4 = g_Texture3.Sample(ClampSampler, Imagelocal3);
+        
+        if (g_iQuestType == 0)
+        {
+ 
+            tex4.rgb *= QuestColor;
+            
+        }
+        
+        Color = lerp(Color, tex4, tex4.a);
+    }
+
+    Color.a *= Alpha;
+    
+    Out.vColor = Color;
     
     return Out;
 }
