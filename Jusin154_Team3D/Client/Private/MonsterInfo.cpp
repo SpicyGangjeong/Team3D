@@ -76,10 +76,9 @@ CMonster* CMonsterInfo::Get_LockOnMonster()
 	return m_pLockOnMonster;
 }
 
-pair<CUnit*, CTransform*> CMonsterInfo::Get_NearestPlayerAlly(_fvector vPos)
+pair<CUnit*, _float> CMonsterInfo::Get_NearestPlayerAlly(_fvector vPos)
 {
 	_float fLength = FLT_MAX;
-	CTransform* pNearestTransform = { nullptr };
 	CUnit* pNearestPlayer = { nullptr };
 
 	for (list<CUnit*>::iterator iter = m_PlayerAllies.begin(); iter != m_PlayerAllies.end(); ++iter) {
@@ -98,29 +97,29 @@ pair<CUnit*, CTransform*> CMonsterInfo::Get_NearestPlayerAlly(_fvector vPos)
 			fLength = fNewLength;
 		}
 	}
-	return { pNearestPlayer, pNearestTransform };
-}
-
-HRESULT CMonsterInfo::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContex)
-{
-	m_pGameInstance = CGameInstance::GetInstance();
-	m_pInfoInstance = CInfoInstance::GetInstance();
-	m_pDevice = pDevice;
-	m_pContext = pContex;
-
-	SAFE_ADDREF(m_pGameInstance);
-	SAFE_ADDREF(m_pInfoInstance);
-	SAFE_ADDREF(m_pDevice);
-	SAFE_ADDREF(m_pContext);
-
-	return S_OK;
+	return { pNearestPlayer, fLength };
 }
 
 HRESULT CMonsterInfo::Refresh_LockOnMonsters()
 {
 	SAFE_RELEASE(m_pLockOnMonster);
 	{ // 뷰프러스텀 순회해서 가장 중앙에 근접한 몬스터 찾기
+		//for (list<CMonster*>::iterator iter = m_ActiveMonsters.begin(); iter != m_ActiveMonsters.end(); ++iter) {
 
+		//	CTransform* pTransform = (*iter)->Get_Component<CTransform>();
+		//	_float fNewLength = XMVectorGetX(XMVector3LengthSq(pTransform->Get_State(STATE::POSITION) - vPos));
+
+		//	if (nullptr == pNearestPlayer) {
+		//		pNearestPlayer = (*iter);
+		//		fLength = fNewLength;
+		//		continue;
+		//	}
+
+		//	if (fNewLength < fLength) {
+		//		pNearestPlayer = (*iter);
+		//		fLength = fNewLength;
+		//	}
+		//}
 	}
 
 	return S_OK;
@@ -137,6 +136,21 @@ HRESULT CMonsterInfo::Refresh_PlayerAllies()
 			iter++;
 		}
 	}
+	return S_OK;
+}
+
+HRESULT CMonsterInfo::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContex)
+{
+	m_pGameInstance = CGameInstance::GetInstance();
+	m_pInfoInstance = CInfoInstance::GetInstance();
+	m_pDevice = pDevice;
+	m_pContext = pContex;
+
+	SAFE_ADDREF(m_pGameInstance);
+	SAFE_ADDREF(m_pInfoInstance);
+	SAFE_ADDREF(m_pDevice);
+	SAFE_ADDREF(m_pContext);
+
 	return S_OK;
 }
 
