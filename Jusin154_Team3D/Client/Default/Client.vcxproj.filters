@@ -184,6 +184,9 @@
     <ClInclude Include="..\public\Terrain.h">
       <Filter>02.GameObjects\Environment\Terrain</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\InstancedProp.h">
+      <Filter>02.GameObjects\Environment\02.InstancedProp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -440,6 +443,9 @@
     <Filter Include="02.GameObjects\Environment\Terrain">
       <UniqueIdentifier>{7db61780-d774-4a91-a429-2fb7634e43b3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Environment\02.InstancedProp">
+      <UniqueIdentifier>{4ef15d06-4520-4d55-ab49-1ae7179f145b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -612,6 +618,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Terrain.cpp">
       <Filter>02.GameObjects\Environment\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\InstancedProp.cpp">
+      <Filter>02.GameObjects\Environment\02.InstancedProp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
