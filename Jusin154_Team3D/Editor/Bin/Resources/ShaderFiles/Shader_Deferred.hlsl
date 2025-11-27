@@ -150,7 +150,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
         fMetallic = vMRO.r;
         fRoughness = vMRO.g;
         fOcclusion = vMRO.b;
-
+        
         vF0 = lerp(float3(0.04f, 0.04f, 0.04f), vAlbedo, fMetallic);
     }
     else if (true == AlmostEqual3(vDepth.b, AI_TEXTURE_TYPE_SPECULAR)) // Specular

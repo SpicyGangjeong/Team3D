@@ -165,7 +165,7 @@ PBR_LIGHT_OUT PBR_Lighting(
     Out.vShade = (kD / PI) * (NdotL * fAttenuation) * vLightColor;
     
     Out.vSpecular = specularBRDF * vLightColor * fAttenuation * NdotL;
-    
+
     return Out;
 }
 float GetBloomCurve(float x, float fThreshold, uint iMethod)

@@ -289,6 +289,11 @@ HRESULT CRenderTarget_Manager::Refit_RenderTarget(CVIBuffer_Rect* pVIBuffer, CSh
     NewViewport.MinDepth = 0.f;
     NewViewport.MaxDepth = 1.f;
 
+    _float2 vResolution = { NewViewport.Width, NewViewport.Height };
+    if (FAILED(pShader->Bind_RawValue("g_vResolution", &vResolution, sizeof(_float2)))) {
+        assert(false);
+    }
+
     pOutput->Clear();
 
     { // Bind RTVs
@@ -354,6 +359,10 @@ HRESULT CRenderTarget_Manager::Refit_RenderTarget(CVIBuffer_Rect* pVIBuffer, CSh
     m_pContext->OMSetRenderTargets(1, &m_pBackBufferRTV, m_pOriginalDSV);
     m_pContext->RSSetViewports(iNumViewPorts, &OriginalViewport);
 
+    vResolution = { OriginalViewport.Width, OriginalViewport.Height };
+    if (FAILED(pShader->Bind_RawValue("g_vResolution", &vResolution, sizeof(_float2)))) {
+        assert(false);
+    }
     SAFE_RELEASE(m_pBackBufferRTV);
     SAFE_RELEASE(m_pOriginalDSV);
 
