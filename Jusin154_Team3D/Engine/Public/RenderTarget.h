@@ -27,6 +27,7 @@ public:
 	_bool Render_Debug(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer, _float fX, _float fY, _float fSizeX, _float fSizeY);
 	void Ready_Debug();
 	void Describe_Entity(const _char* pName);
+	void Toggle_RT_Debug();
 #endif
 
 private:

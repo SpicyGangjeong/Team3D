@@ -20,7 +20,7 @@
 #include "State_Combat.h"
 #pragma endregion
 
-#include "Bombard.h"
+#include "EffectPool.h"
 
 template<typename T>
 void CPlayer::Spawn_Effect()
@@ -598,10 +598,18 @@ void CPlayer::Behavior_CombatEnter()
 	else if (m_pGameInstance->Key_Down(DIK_Q)) {
 		m_pFSM->Enable_State(FSMSTATE::SKILL2);
 		pairAnimInfo = m_Animation[STATEANIM::SKILL2];
+
+		m_pEffectPool->Use_Skill(SKILL_TYPE::PROTEGO, this);
 	}
 	else if (m_pGameInstance->Mouse_Up(DIM_LBUTTON)) {
 		m_pFSM->Enable_State(FSMSTATE::LIGHT_ATTACK);
 		pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK];
+
+		m_pModelCom->Anim_Event(0.1f, m_Animation[STATEANIM::LIGHT_ATTACK].first, [this]() {
+			m_pEffectPool->Use_Skill(SKILL_TYPE::JAP, this);
+
+			return E_FAIL;
+		});
 	}
 	else if (SUCCEEDED(InputSpell())) {
 		m_pFSM->Enable_State(FSMSTATE::SPELL);
@@ -669,6 +677,9 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 					pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK];
 					pairAnimInfo.first = iIndex + 1;
 					m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
+					m_pEffectPool->Use_Skill(SKILL_TYPE::JAP, this);
+
 				}
 			}
 		}
@@ -706,23 +717,38 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 			{
 			case STATEANIM::ACCIO:
 			{
-				/* TODO 임시 방편 */
 				pairAnimInfo = m_Animation[STATEANIM::ACCIO];
-				
+
+
 			}
 				break;
 			case STATEANIM::DESCENDO:
 				pairAnimInfo = m_Animation[STATEANIM::DESCENDO];
+
 				break;
 			default:
 				break;
 			}
+
+
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
+
+
 			m_pModelCom->Anim_Event(0.1f, m_Animation[STATEANIM::ACCIO].first, [this]() {
-				Spawn_Effect<CBombard>();
+				m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARD, this);
+
 				m_eSpell = STATEANIM::END;
 				return E_FAIL;
 				});
+
+			m_pModelCom->Anim_Event(0.1f, m_Animation[STATEANIM::DESCENDO].first, [this]() {
+				m_pEffectPool->Use_Skill(SKILL_TYPE::DESCENDO, this);
+
+				m_eSpell = STATEANIM::END;
+				return E_FAIL;
+				});
+
 		}
 	}
 

@@ -24,6 +24,7 @@ public:
 
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
+	class CMonster* m_pLockOnMonster = { nullptr };
 	_float m_fDirectionRadian = 0.f;
 
 	_bool m_bSprintToggle = { false };
@@ -47,6 +48,7 @@ private:
 	HRESULT Ready_Components();
 	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
+	void ReLockOnTarget();
 
 #ifdef _DEBUG
 	void Update_CameraCoordinateSystem();
@@ -113,6 +115,9 @@ private:
 	void	Behavior_CombatExit();
 
 #pragma endregion
+
+private:
+	class CEffectPool* m_pEffectPool = nullptr;
 };
 
 NS_END

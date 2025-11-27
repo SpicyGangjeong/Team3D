@@ -64,15 +64,22 @@ void CEffectParts::Late_Update(_float fTimeDelta)
 	if (m_pInstance_ModelCom == nullptr)
 		return;
 
+	if (m_EffectInfo.isBillboard)
+		m_pGameInstance->BillBoard(m_pTransformCom);
+
 
 	if (m_EffectInfo.isBlur == true)
 	{
 		m_pGameInstance->Add_RenderGroup(RENDER::BLUR, this);
 	}
 
-	m_pGameInstance->Add_RenderGroup(RENDER::EFFECT, this);
+	if (m_EffectInfo.isOnlyBlur == true)
+		return;
+
+	m_pGameInstance->Add_RenderGroup(m_EffectInfo.eRenderOrder, this);
 
 }
+
 
 
 HRESULT CEffectParts::Ready_Components(void* pArg)

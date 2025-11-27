@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "EffectParts.h"
 #include "PhysXEffectHitBox.h"
+#include "TrailObject.h"
 
 
 CNomalJap::CNomalJap(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -32,13 +33,18 @@ HRESULT CNomalJap::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Child()))
-		return E_FAIL;
 
 	m_wstrEffectName = L"Nomal_Jap";
 
-	m_PartObjects.begin()->second->Set_Visible(true);
-	m_PartObjects.begin()->second->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Jap")))
+		return E_FAIL;
+
+
+	m_pProjectile_Side = Get_PartObject<CEffectParts>("JapProjSide");
+	m_pProjectile = Get_PartObject<CEffectParts>("JapProjCircle");
+
+	SAFE_ADDREF(m_pProjectile);
+	SAFE_ADDREF(m_pProjectile_Side);
 
 	m_fDuration = 5.f;
 
@@ -52,12 +58,26 @@ void CNomalJap::Priority_Update(_float fTimeDelta)
 
 void CNomalJap::Update(_float fTimeDelta)
 {
+
 	if (m_bVisible == false)
 		return;
 
 	__super::Update(fTimeDelta);
 
 	Update_Event(fTimeDelta);
+
+	m_pProjectile_Side->Get_Component<CTransform>()->Translation(m_vOwnerLook * 1.2f);
+	m_pProjectile->Get_Component<CTransform>()->Translation(m_vOwnerLook * 1.2f);
+
+
+
+	if (m_fAccTime > XM_2PI)
+		return;
+
+	m_fAccTime += fTimeDelta * 15.f;
+
+	m_pProjectile_Side->Get_Component<CTransform>()->Translation(m_vRotateUp * 0.6f * sinf(m_fAccTime));
+	m_pProjectile->Get_Component<CTransform>()->Translation(m_vRotateUp * 0.6f * sinf(m_fAccTime));
 }
 
 void CNomalJap::Late_Update(_float fTimeDelta)
@@ -65,7 +85,58 @@ void CNomalJap::Late_Update(_float fTimeDelta)
 	if (m_bVisible == false)
 		return;
 
+	Get_PartObject<CTrailObject>()->Trail_Update(m_pProjectile->Get_Component<CTransform>()->Get_XMWorldMatrix(), fTimeDelta);
+
 	__super::Late_Update(fTimeDelta);
+}
+
+HRESULT CNomalJap::Pre_Setting(CGameObject* pObject)
+{
+	if (pObject == nullptr)
+		return E_FAIL;
+
+	/* 부모 할당 */
+	m_pOwner = pObject;
+
+	/* 피직스 생성*/
+	if (FAILED(Ready_Child()))
+		return E_FAIL;
+
+	/* 초기 셋팅 초기화 */
+	Reset_EffectParts();
+	m_fAccTime = 0.f;
+	__super::m_fAccTime = 0.f;
+	m_fPreAccTime = 0.f;
+
+
+	/* 초기 객체 위치 초기화 */
+	m_pProjectile->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
+	m_pProjectile_Side->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
+
+	/* 초기 객체 비지블 */
+	m_pProjectile->Set_Visible(true);
+	m_pProjectile_Side->Set_Visible(true);
+
+	/*트레일 초기화 */
+	Get_PartObject<CTrailObject>()->Set_Visible(true);
+
+	Get_PartObject<CTrailObject>()->Get_Component<CTrail>()->Reset_Trail();
+
+
+	//나아가는 벡터와 한점을 가져와 수직인 평면상에 하나의 점으로  DIR 을 만듬
+	m_vOwnerLook = XMVector3Normalize(m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK));
+	_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+
+
+	_vector vQuaternion = XMQuaternionRotationAxis(m_vOwnerLook, m_pGameInstance->Random_Float(0.f, XM_PIDIV2));
+
+	m_vRotateUp = XMVector3Rotate(vUp, vQuaternion);
+
+	m_vRotateUp = XMVector3Normalize(m_vRotateUp);
+
+	m_bVisible = true;
+
+	return S_OK;
 }
 
 HRESULT CNomalJap::Ready_Components(void* pArg)
@@ -85,12 +156,22 @@ HRESULT CNomalJap::Ready_Child()
 
 	XMStoreFloat3(&Desc.vPos, m_pOwner->Get_WorldPostion() + XMVectorSet(0.f, 0.f, 1.f, 0.f));
 
+
+	_vector vOwnerLook = m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK);
+
+	_float3 vDir = {};
+
+	XMStoreFloat3(&Desc.vPos, m_pOwner->Get_WorldPostion() + XMVectorSet(0.f, 0.f, 1.f, 0.f));
+
+	XMStoreFloat3(&vDir, vOwnerLook * 0.6f);
+
+
 	Desc.vRotRPY = { 0.f, 0.f, 0.f };
 	Desc.iSubKind = 70;
-	Desc.vDeltaPos = { 0.f, 0.f, 2.f };
-	Desc.vLifeTime = { 0.f, 2.f };
+	Desc.vDeltaPos = vDir;
+	Desc.vLifeTime = { 0.f, 1.f };
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPhysXEffectHitBox>(g_iStaticLevel, CURRENT_LEVEL, LAYER_HITBOX, &Desc, this , &m_pPhysHitBox))) {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPhysXEffectHitBox>(g_iStaticLevel, CURRENT_LEVEL, LAYER_HITBOX, &Desc, this, &m_pPhysHitBox))) {
 		assert(false);
 		return E_FAIL;
 	}
@@ -125,18 +206,25 @@ CGameObject* CNomalJap::Clone(void* pArg, CGameObject* pOwner)
 	return pInstance;
 }
 
-void CNomalJap::OnCollision(CGameObject* pOther , void* pDesc)
+void CNomalJap::OnCollision(CGameObject* pOther, void* pDesc)
 {
 	//CTransform* pOtherTransform = p
-	ON_COLLISION_INFO*	CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
+	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
 	for (auto& pPair : m_PartObjects)
 	{
+
 		pPair.second->Set_Visible(true);
 		pPair.second->Get_Component<CTransform>()->Set_State(STATE::POSITION, CollisionDesc->vWorldPos);
 	}
 
-	m_PartObjects.begin()->second->Set_Visible(false);
+	Get_PartObject<CEffectParts>("JapPT0")->Get_Component<CTransform>()->LookAt(m_pOwner->Get_WorldPostion());
+
+	m_pProjectile_Side->Set_Visible(false);
+	m_pProjectile->Set_Visible(false);
+
+	Get_PartObject<CTrailObject>()->Set_Visible(false);
+	Get_PartObject<CTrailObject>()->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
 
 	m_pPhysHitBox->Set_Dead();
 }
@@ -149,15 +237,15 @@ void CNomalJap::Free()
 	//	if (m_pPhysHitBox->Get_Depth() == false)
 	//		SAFE_RELEASE(m_pPhysHitBox);
 
+	Safe_Release(m_pProjectile);
+	Safe_Release(m_pProjectile_Side);
+
 }
-#ifdef _DEBUG
 
 void CNomalJap::Describe_Entity()
 {
 
 }
-
-#endif // _DEBUG
 
 HRESULT CNomalJap::Bind_ShaderResources()
 {

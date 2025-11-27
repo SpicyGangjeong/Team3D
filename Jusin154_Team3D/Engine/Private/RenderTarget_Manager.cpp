@@ -474,6 +474,9 @@ void CRenderTarget_Manager::RenderTarget_Debuger()
     GUI::Spacing();
 
     GUI::PushItemWidth(80);
+    if (GUI::Button("ToggleAll")) {
+        Toggle_RT_Debugger();
+    }
     GUI::DragInt("Target Size X" , &m_iSizeX);
     GUI::DragInt("Target Size Y", &m_iSizeY);
     GUI::PopItemWidth();
@@ -496,6 +499,14 @@ void CRenderTarget_Manager::RenderTarget_Debuger()
     GUI::EndChild();
 
     GUI::End();
+}
+
+void CRenderTarget_Manager::Toggle_RT_Debugger()
+{
+    for (auto& [key, pRenderTarget] : m_RenderTargets)
+    {
+        pRenderTarget->Toggle_RT_Debug();
+    }
 }
 
 #endif // _DEBUG

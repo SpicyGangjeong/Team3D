@@ -455,7 +455,7 @@ PS_OUT_FLT4_SINGLE PS_MAIN_EMBOSS(PS_IN In)
     vector vInput = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
     //float fMask = g_BloomMaskTexture.Sample(PointSampler, In.vTexcoord).a;
     float3 vColor = vInput.rgb;
-    uint iMask = (uint) round(vInput.a * 255.f); // int a = 1 // vBloom.a = (enum / 255);
+    uint iMask = (uint) round(vInput.a * 255.f); // int a = 1  -> // vBloom.a = (enum / 255);
     
     switch (iMask)
     {

@@ -110,6 +110,10 @@ HRESULT CGoblin::Render()
 		}
 	}
 
+	if (m_bDrawOutLine) {
+		Render_OutLine();
+	}
+
 #ifdef _DEBUG
 	m_pCharacter_Controller->Render();
 	//m_pRigidBody->Render();
@@ -132,8 +136,9 @@ HRESULT CGoblin::Ready_Components()
 
 	/* Com_Model */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_strModelPrototypeTag,
-		reinterpret_cast<CComponent**>(&m_pModelCom))))
+		reinterpret_cast<CComponent**>(&m_pModelCom)))){
 		return E_FAIL;
+	}
 
 	{ // CCT
 		CCharacter_Controller::Character_Controller_DESC Desc{};
