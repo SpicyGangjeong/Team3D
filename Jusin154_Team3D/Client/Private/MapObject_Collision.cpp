@@ -1,0 +1,166 @@
+﻿#include "pch.h"
+#include "MapObject_Collision.h"
+
+#include "GameInstance.h"
+#include "Camera_Debug.h"
+#include "Layer.h"
+#include "VIBuffer_Terrain.h"
+
+CMapObject_Collision::CMapObject_Collision(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	: CMapPartObject(pDevice, pContext)
+{
+}
+
+CMapObject_Collision::CMapObject_Collision(const CMapObject_Collision& Prototype)
+	: CMapPartObject(Prototype)
+{
+}
+
+void CMapObject_Collision::Priority_Update(_float fTimeDelta)
+{
+
+}
+
+void CMapObject_Collision::Update(_float fTimeDelta)
+{
+
+}
+
+void CMapObject_Collision::Late_Update(_float fTimeDelta)
+{
+}
+
+HRESULT CMapObject_Collision::Render()
+{
+	return S_OK;
+}
+
+HRESULT CMapObject_Collision::Initialize_Prototype()
+{
+	return S_OK;
+}
+
+HRESULT CMapObject_Collision::Initialize(void* pArg)
+{
+	m_iMaxLodLevel = 0;
+
+	MAPOBJECT_DESC* pDesc = static_cast<MAPOBJECT_DESC*>(pArg);
+
+	m_iMaxLodLevel = pDesc->iMaxLodLevel;
+
+	for (_uint i = 0; i < m_iMaxLodLevel + 1; i++)
+	{
+		m_ModelPrototypeTags.push_back(pDesc->ModelPrototypeTags[i]);
+		//m_ModelPathIndices.push_back((*pDesc->pModelPathIndices)[i]);
+	}
+	if (FAILED(__super::Initialize(pArg)))
+		return E_FAIL;
+
+	if (FAILED(Ready_Components()))
+		return E_FAIL;
+
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pDesc->vPosition), 1.f));
+	m_pTransformCom->Set_Scale(pDesc->vScale);
+	m_pTransformCom->Rotation(XMConvertToRadians(pDesc->vRotation.x), XMConvertToRadians(pDesc->vRotation.y), XMConvertToRadians(pDesc->vRotation.z));
+
+	XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_XMWorldMatrix() * m_pParentTransformCom->Get_XMWorldMatrix());
+
+	return S_OK;
+}
+
+_wstring CMapObject_Collision::Get_PrototypeTag(_uint iLodIndex)
+{
+	if (m_iMaxLodLevel < iLodIndex)
+		return m_ModelPrototypeTags[0];
+
+	return m_ModelPrototypeTags[iLodIndex];
+}
+
+HRESULT CMapObject_Collision::Ready_Components()
+{
+	__super::Ready_Components();
+
+	for (_uint i = 0; i < m_iMaxLodLevel + 1; ++i)
+	{
+		CModel* pModel = { nullptr };
+
+		/* Com_Model */
+		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_ModelPrototypeTags[i],
+			reinterpret_cast<CComponent**>(&pModel))))
+			return E_FAIL;
+
+		m_pModelComs.push_back(pModel);
+	}
+
+	/* Com_Shader */
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_MESH,
+		reinterpret_cast<CComponent**>(&m_pShaderCom))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CMapObject_Collision::Bind_ShaderResources()
+{
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+CMapObject_Collision* CMapObject_Collision::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+{
+	CMapObject_Collision* pInstance = new CMapObject_Collision(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize_Prototype()))
+	{
+		MSG_BOX("Failed to Created : CMapObject_Static");
+		SAFE_RELEASE(pInstance);
+	}
+
+	return pInstance;
+}
+
+CGameObject* CMapObject_Collision::Clone(void* pArg, CGameObject* pOwner)
+{
+	CMapObject_Collision* pInstance = new CMapObject_Collision(*this);
+	pInstance->m_pOwner = pOwner;
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("Failed to Cloned : CMapObject_Collision");
+		SAFE_RELEASE(pInstance);
+	}
+
+	return pInstance;
+}
+
+void CMapObject_Collision::Free()
+{
+	__super::Free();
+
+	SAFE_RELEASE(m_pShaderCom);
+
+	for (auto& pModel : m_pModelComs)
+		Safe_Release(pModel);
+	m_pModelComs.clear();
+
+	m_ModelPrototypeTags.clear();
+	m_ModelPathIndices.clear();
+}
+#ifdef _DEBUG
+void CMapObject_Collision::Describe_Entity()
+{
+
+}
+#endif // _DEBUG

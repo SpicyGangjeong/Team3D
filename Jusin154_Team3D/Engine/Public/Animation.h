@@ -12,8 +12,7 @@ private:
 	virtual ~CAnimation() = default;
 public:
 	_bool			Update_TransformationMatrices(const vector<class CBone*>& Bones, const LOCALPOS_DESC* pLocalPosArray, _bool bIsLoop, _float fTimeDelta, class CTransform* pTransform = nullptr, _float m_fAmount = 1.f);
-	void Reset();
-	void ProgressAnimation(const vector<CBone*>& Bones, const LOCALPOS_DESC* pLocalPosArray, CTransform* pTransform, _float m_fAmount);
+	void			ProgressAnimation(const vector<CBone*>& Bones, const LOCALPOS_DESC* pLocalPosArray, CTransform* pTransform, _float m_fAmount);
 	void			ResetRootMotion();
 	void			Depart_Animation();
 	void			Set_AnimPause(_bool bValue) { m_bPause = bValue; }
@@ -46,6 +45,8 @@ public:
 	ID3D11Buffer* Get_ChannelBuffer() { return m_pChannelBuffer; }
 	ID3D11ShaderResourceView* Get_KeyFrameSrv() { return m_pKeyFrameSrv; }
 	ID3D11ShaderResourceView* Get_ChannelSrv() { return m_pChannelSrv; }
+
+	_float Get_Progress() { return m_fProgress; }
 #ifdef EDITOR_PROJECT
 private:
 	HRESULT Initialize(const vector<class CBone*>& Bones, const aiAnimation* pAIAnimation);
@@ -84,6 +85,7 @@ private:
 	vector<_int>			m_DestBones;					// 이 애니메이션에서 영향을 받는 본들의 집합
 	vector<LERPDESC>		m_StartKeyFrames;	// 이 애니메이션의 영향을 받는 본들의 초기값
 	vector<_matrix>			m_vBoneTransformationMatrix = {};
+	_float m_fProgress = {};
 
 	_uint m_iChannelCount;
 	_uint m_iKeyframeCount;

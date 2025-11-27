@@ -38,18 +38,20 @@ private:
 	_float2 m_vMagic_MeterUV[5] = {};
 	_uint	m_iMagic_Meter_Count{};
 
-	CGameObject* m_pSpell_Slot = { nullptr };
-	CGameObject* m_pSpell_Image	= { nullptr };
-	CGameObject* m_pSpell_Overlay = { nullptr };
-	CGameObject* m_pSlot_Number = { nullptr };
-	CGameObject* m_pHpBarBG= { nullptr };
-	CGameObject* m_pMagic_Meter1 = { nullptr };
-	CGameObject* m_pMagic_Meter2 = { nullptr };
-	CGameObject* m_pMagic_Meter3 = { nullptr };
-	CGameObject* m_pMagic_Meter4 = { nullptr };
-	CGameObject* m_pMagic_Meter5 = { nullptr };
-	CGameObject* m_pMagic_Icon = { nullptr };
-	CGameObject* m_pSpell_UI = { nullptr };
+	CGameObject* m_pSpell_Slot		= { nullptr };
+	CGameObject* m_pSpell_Overlay	= { nullptr };
+	CGameObject* m_pSlot_Number		= { nullptr };
+	CGameObject* m_pHpBarBG			= { nullptr };
+	CGameObject* m_pMagic_Meter1	= { nullptr };
+	CGameObject* m_pMagic_Meter2	= { nullptr };
+	CGameObject* m_pMagic_Meter3	= { nullptr };
+	CGameObject* m_pMagic_Meter4	= { nullptr };
+	CGameObject* m_pMagic_Meter5	= { nullptr };
+	CGameObject* m_pMagic_Icon		= { nullptr };
+	CGameObject* m_pSpell_UI		= { nullptr };
+	CGameObject* m_pPotion			= { nullptr };
+	CGameObject* m_pMagic_Item		= { nullptr };
+
 public:
 	static CAction_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

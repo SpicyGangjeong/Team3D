@@ -105,37 +105,50 @@ HRESULT CModel::Bind_BoneMatrices(_uint iMeshIndex, CShader* pShader, const _cha
 	return m_Meshes[iMeshIndex]->Bind_BoneMatrices(m_Bones, pShader, pConstantName);
 }
 
-_bool CModel::Play_Animation(_float fTimeDelta,CTransform* pTransform)
+_bool CModel::Play_Animation(_float fTimeDelta, CTransform* pTransform)
 {
-	if (!m_bPlayAnim){
+	if (!m_bPlayAnim)
 		return false;
-	}
-	if (-1 == m_iCurrentAnimIndex  // 정지 혹은 시작을 안시켜준 애님
-		|| m_iCurrentAnimIndex >= (_int)m_iNumAnimations)  // 애님 인덱스 초과됨
-	{
-		return false; // 잘못된 초기화
-	}
+
+	if (m_iCurrentAnimIndex < 0 || m_iCurrentAnimIndex >= (_int)m_iNumAnimations)
+		return false;
 
 	ComputeAnimation();
 
-	if (m_iPreAnimIndex != m_iCurrentAnimIndex && m_iPreAnimIndex != 0)
+	if (m_iPreAnimIndex >= 0 && m_iPreAnimIndex != m_iCurrentAnimIndex)
 	{
 		m_fBlendTime += fTimeDelta;
 		_float fRatio = (m_fBlendTime / m_fBlendDuration);
-		fRatio = min(fRatio, 1.f);
+		if (fRatio > 1.f) fRatio = 1.f;
 
-		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, pTransform, m_fAmount);
-		m_Animations[m_iCurrentAnimIndex]->InterpAnim(m_Animations[m_iPreAnimIndex], m_Bones, fRatio);
+		CAnimation* pCurAnim = m_Animations[m_iCurrentAnimIndex];
+		CAnimation* pPreAnim = m_Animations[m_iPreAnimIndex];
+
+		_bool bCurFinished;
+
+		if (m_bRatio) {
+			bCurFinished = pCurAnim->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, pTransform, m_fAmount * fRatio);
+		}
+		else {
+			bCurFinished = pCurAnim->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, pTransform, m_fAmount);
+		}
+
+
+		pCurAnim->InterpAnim(pPreAnim, m_Bones, fRatio);
+
+		m_bIsFinishedAnim = bCurFinished;
 
 		if (fRatio >= 1.f)
 		{
 			m_iPreAnimIndex = m_iCurrentAnimIndex;
 			m_fBlendTime = 0.f;
+			m_bRatio = false;
 		}
 	}
 	else
 	{
 		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, pTransform, m_fAmount);
+
 		m_iPreAnimIndex = m_iCurrentAnimIndex;
 	}
 
@@ -144,16 +157,10 @@ _bool CModel::Play_Animation(_float fTimeDelta,CTransform* pTransform)
 		pBone->Update_CombinedTransformationMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
 	}
 
-	if (m_bIsFinishedAnim)
-	{
-		m_Animations[m_iCurrentAnimIndex]->ResetRootMotion();
-		m_Animations[m_iCurrentAnimIndex]->Depart_Animation();
-	}
-
 	return m_bIsFinishedAnim;
 }
 
-void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop,_float fAmount)
+void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop,_float fAmount,_bool bRatio)
 {
 	if (m_iCurrentAnimIndex == iIndex){
 		return;
@@ -163,8 +170,9 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop,_float fAmount)
 		m_iCurrentAnimIndex = iIndex;
 		m_bIsLoop = isLoop;
 		m_fAmount = fAmount;
-		m_Animations[m_iCurrentAnimIndex]->ResetRootMotion();
+		m_bRatio = bRatio;
 		m_Animations[m_iCurrentAnimIndex]->Depart_Animation();
+		m_Animations[m_iCurrentAnimIndex]->ResetRootMotion();
 	}
 	else {
 		m_iCurrentAnimIndex = -1;
@@ -235,6 +243,17 @@ void CModel::Set_AnimSpeed(_float fSpeed)
 	m_Animations[m_iCurrentAnimIndex]->Set_AnimSpeed(fSpeed);
 }
 
+HRESULT CModel::Anim_Event(_float fRatio,_uint AnimIndex,function<void()> Event)
+{
+	if (AnimIndex == m_iCurrentAnimIndex)
+	{
+		if (m_Animations[m_iCurrentAnimIndex]->Get_CurrentTrackProgressRatio() >= fRatio)
+		{
+			Event();
+		}
+	}
+	return E_FAIL;
+}
 
 HRESULT CModel::Render(_uint iMeshIndex)
 {
@@ -1441,51 +1460,41 @@ void CModel::Free()
 #ifdef _DEBUG
 void CModel::Describe_Entity()
 {
-	//GUI::Begin("Model_Desc");
-	//GUI::Text("Lerping : %d\nAnim : %d", m_pLerpAnim->IsLerping(), m_bIsFinishedAnim);
-	//for (_uint i = 0; i < m_iNumAnimations; ++i) {
-	//	if (GUI::Button(m_Animations[i]->Get_Name().c_str())) {
-	//		Change_AnimationIndex(i, false, 0.25f);
-	//	}
-	//}
-	//if (GUI::Button("SaveAnimIndexWithName")) {
-	//	_wstring wstrPath = TEXT("../Bin/AnimIndex.txt");
-	//	HANDLE	hFile = CreateFile(wstrPath.c_str(),
-	//		GENERIC_WRITE, NULL,
-	//		NULL, CREATE_ALWAYS,
-	//		FILE_ATTRIBUTE_NORMAL, NULL
-	//	);
+	GUI::Begin("Model_Desc");
+	if (GUI::Button("SaveAnimIndexWithName")) {
+		_wstring wstrPath = TEXT("../Bin/AnimIndex.txt");
+		HANDLE	hFile = CreateFile(wstrPath.c_str(),
+			GENERIC_WRITE, NULL,
+			NULL, CREATE_ALWAYS,
+			FILE_ATTRIBUTE_NORMAL, NULL
+		);
 
-	//	if (hFile == INVALID_HANDLE_VALUE)
-	//	{
-	//		GUI::End();
-	//		CloseHandle(hFile);
-	//		return;
-	//	}
+		if (hFile == INVALID_HANDLE_VALUE)
+		{
+			GUI::End();
+			CloseHandle(hFile);
+			return;
+		}
 
-	//	_string name = {};
-	//	for (_uint i = 0; i < m_iNumAnimations; ++i) {
-	//		
-	//		name.clear();
-	//		name.append(to_string(i) + '\t' + m_Animations[i]->Get_Name() + "\n");
-	//		name.shrink_to_fit();
-	//		WriteFile(hFile, name.data(),(DWORD) name.length(), nullptr, nullptr);
-	//	}
+		_string name = {};
+		for (_uint i = 0; i < m_iNumAnimations; ++i) {
+			
+			name.clear();
+			name.append(m_Animations[i]->Get_SZName());
 
-	//	CloseHandle(hFile);
+			size_t pos = name.find_last_of('|');
+			if (0 > pos) { pos = 0; }
+			else { pos++; }
+			name = name.substr(pos);
+			name = to_string(i) + '\t' + name + '\n';
+			name.shrink_to_fit();
+			WriteFile(hFile, name.data(),(DWORD) name.length(), nullptr, nullptr);
+		}
 
-	//}
-	//GUI::End();
-	//
-	//GUI::Begin("Bone_Desc");
-	//_uint iNumBones = (_uint)m_Bones.size();
-	//for (_uint i = 0; i < iNumBones; ++i){
-	//	_float3 vPos = m_Bones[i]->Get_LocalPosition();
-	//	GUI::PushID(i);
-	//	GUI::DragFloat3(m_Bones[i]->Get_Name(), (_float*)&vPos, 1.f, 0.f, 0.f, "%.3f", ImGuiSliderFlags_NoInput);
-	//	GUI::PopID();
-	//}
-	//GUI::End();
+		CloseHandle(hFile);
+
+	}
+	GUI::End();
 }
 
 #endif // _DEBUG

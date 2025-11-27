@@ -13,20 +13,25 @@ protected:
 	virtual ~CMonster() = default;
 
 public:
-	virtual HRESULT Initialize_Prototype() override;
-	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Priority_Update(_float fTimeDelta) override;
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
-	virtual HRESULT Render() override;
+	virtual HRESULT Render_OutLine() override;
+	virtual void Set_DrawOutLine();
 
 protected:
-	CTransform* m_pPlayerTransform = { nullptr };
-	_float m_fTargetDistance = {};
+	CInfoInstance*	m_pInfoInstance = { nullptr };
+	CUnit*			m_pTarget = { nullptr };
+	_float4			m_vTargetPos = { };
+	_float3			m_vToTargetDir = { };
+	_float			m_fTargetDistance = { FLT_MAX };
+	_bool			m_bDrawOutLine = { false };
 
 protected:
+	virtual HRESULT Initialize_Prototype() override;
+	virtual HRESULT Initialize(void* pArg) override;
 	HRESULT Ready_Components(void* pArg);
-	HRESULT Bind_ShaderResources();
+	void Set_Target(CUnit& pTarget, CTransform& pTransform);
 
 public:
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr)PURE;

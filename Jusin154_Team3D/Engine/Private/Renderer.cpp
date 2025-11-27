@@ -225,12 +225,12 @@ void CRenderer::Render_Combined()
 			return;
 		}
 
-		if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShader, "g_LightViewMatrix", D3DTS::VIEW))) {
-			return;
-		}
-		if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShader, "g_LightProjMatrix", D3DTS::PROJ))) {
-			return;
-		}
+		//if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShader, "g_LightViewMatrix", D3DTS::VIEW))) {
+		//	return;
+		//}
+		//if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShader, "g_LightProjMatrix", D3DTS::PROJ))) {
+		//	return;
+		//}
 		if (FAILED(m_pShader->Bind_RawValue("g_fPreShadowFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 			return;
 		}
@@ -415,13 +415,19 @@ void CRenderer::Render_Bloom()
 		m_bPostProcessing_BLOOM = !m_bPostProcessing_BLOOM;
 	}
 	if(true == m_bPostProcessing_BLOOM) {
-		{ // BackBuffer
-			ID3D11Texture2D* pBackBuffer = nullptr;
-			m_pGameInstance->Get_BackBufferPTR(&pBackBuffer);
-			//m_pGameInstance->Copy_RenderTarget(TEXT("Target_Diffuse"), pBackBuffer);
-			m_pGameInstance->Paste_RenderTarget(TEXT("Target_Bloom_Input"), pBackBuffer);
-			SAFE_RELEASE(pBackBuffer);
-		}
+		GUI::Begin("PostProcessing_Bloom");
+		GUI::PushItemWidth(80);
+		GUI::DragFloat("g_fThreshold", &m_fThreshold, 0.01f, 0.02f, 100.f, "%.3f");
+		GUI::SliderInt("g_iEmbossingPass", &m_iBloomEmbossingPass, 0, 2, "%d");
+		GUI::End();
+
+		//{ // BackBuffer 
+		//	ID3D11Texture2D* pBackBuffer = nullptr;
+		//	m_pGameInstance->Get_BackBufferPTR(&pBackBuffer);
+		//	//m_pGameInstance->Copy_RenderTarget(TEXT("Target_Diffuse"), pBackBuffer);
+		//	m_pGameInstance->Paste_RenderTarget(TEXT("Target_Bloom_Input"), pBackBuffer);
+		//	SAFE_RELEASE(pBackBuffer);
+		//}
 
 		// "Target_Bloom_Input"
 		// "Target_Bloom"
@@ -431,6 +437,29 @@ void CRenderer::Render_Bloom()
 		// "Target_Bloom_16x16_X"
 		// "Target_Bloom_8x8_2"
 		// "Target_Bloom_4x4_2"
+
+		if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Bloom")))) {
+			return;
+		}
+
+		for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::BLOOM)])
+		{
+			if (nullptr != pRenderObject)
+				if (FAILED(pRenderObject->Render_Bloom())) {
+					assert(false);
+				}
+
+			SAFE_RELEASE(pRenderObject);
+		}
+
+		m_RenderObjects[ENUM_CLASS(RENDER::BLOOM)].clear();
+
+		if (FAILED(m_pGameInstance->End_MRT())) {
+			return;
+		}
+
+		m_pShader->Bind_RawValue("g_fThreshold", &m_fThreshold, sizeof(_float));
+		m_pShader->Bind_RawValue("g_iBloomEmbossingPass", &m_iBloomEmbossingPass, sizeof(_int));
 
 		m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_Input"), TEXT("Target_Bloom_4x4"), SHADER_PASS_DEFERRED::EMBOSSING); // 2
 		m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_4x4"), TEXT("Target_Bloom_8x8"), SHADER_PASS_DEFERRED::REFIT); // 3
@@ -746,6 +775,10 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Blur"), TEXT("Target_Blur_Weight")))) {
+			return E_FAIL;
+		}
+		/* MRT_Blur */
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Bloom"), TEXT("Target_Bloom_Input")))) {
 			return E_FAIL;
 		}
 

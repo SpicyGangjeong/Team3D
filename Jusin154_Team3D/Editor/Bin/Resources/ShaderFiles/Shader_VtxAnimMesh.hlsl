@@ -12,6 +12,9 @@ float g_fRimStrength;
 float g_fRimPower;
 float3 g_vRimColor;
 float4 g_TestColor;
+float3 g_vOutLineColor;
+float g_fOutLineThickness;
+//float g_fPow;
 vector g_vCamPosition;
 
 Texture2D g_DiffuseTexture;
@@ -88,6 +91,39 @@ VS_OUT VS_MAIN(VS_IN In)
     return Out;
 }
 
+struct VS_OUT_OUTLINE
+{
+    float4 vPosition : SV_Position;
+    float3 vNormal : NORMAL;
+    float4 vWorldPos : TEXCOORD1;
+};
+
+VS_OUT_OUTLINE VS_MAIN_OUTLINE(VS_IN In)
+{
+    VS_OUT_OUTLINE Out;
+    
+    float fWeightW = 1.f - (In.vBlendWeight.x + In.vBlendWeight.y + In.vBlendWeight.z);
+    
+    matrix BoneMatrix =
+        mul(g_BoneMatrices[In.vBlendIndex.x], In.vBlendWeight.x) +
+        mul(g_BoneMatrices[In.vBlendIndex.y], In.vBlendWeight.y) +
+        mul(g_BoneMatrices[In.vBlendIndex.z], In.vBlendWeight.z) +
+        mul(g_BoneMatrices[In.vBlendIndex.w], fWeightW);
+    
+    vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
+    vector vNormal = mul(vector(In.vNormal, 0.f), BoneMatrix);
+    vPosition.xyz += (vNormal.xyz * g_fOutLineThickness).xyz;
+
+
+    matrix matWV, matWVP;
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+    
+    Out.vPosition = mul(vPosition, matWVP);
+    Out.vNormal = normalize(mul(vNormal, g_WorldMatrix)).xyz;
+    Out.vWorldPos = mul(vPosition, g_WorldMatrix);
+    return Out;
+}
 struct VS_OUT_CAPTUREDMODEL
 {
     float4 vPosition : SV_Position;
@@ -252,6 +288,31 @@ PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN_SHADOW In)
     return Out;
 }
 
+struct PS_IN_OUTLINE
+{
+    float4 vPosition : SV_Position;
+    float3 vNormal : NORMAL;
+    float4 vWorldPos : TEXCOORD1;
+};
+struct PS_OUT_OUTLINE
+{
+    float4 vOutLine : SV_TARGET0;
+};
+
+PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
+{
+    PS_OUT_OUTLINE Out = (PS_OUT_OUTLINE) 0;
+    
+    float3 vToView = normalize(g_vCamPosition.xyz - In.vWorldPos.xyz); // 픽셀에서 카메라로
+    if (dot(vToView, In.vNormal) >= -0.12f)
+    {
+        discard;
+    }
+    Out.vOutLine = float4(g_vOutLineColor, 1.f);
+    
+    return Out;
+}
+
 struct PS_IN_CAPTUREDMODEL
 {
     float4 vPosition : SV_Position;
@@ -362,7 +423,7 @@ PS_OUT PS_EYELASH(PS_IN In)
 
 technique11 DefaultTechnique
 {
-    pass Default
+    pass Default // 0
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -372,7 +433,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 
-    pass ShadowPass
+    pass ShadowPass // 1
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -382,7 +443,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_SHADOW();
     }
 
-    pass CAPTUREDMODELPASS
+    pass CAPTUREDMODELPASS // 2
     {
         SetRasterizerState(RS_Nocull);
         SetDepthStencilState(DSS_Effect, 0);
@@ -391,7 +452,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_CAPTUREDMODEL();
     }
-    pass BlurPass // 9
+    pass BlurPass // 3
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -401,7 +462,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_BLUR();
     }
 
-    pass HairPass
+    pass HairPass // 4
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -411,7 +472,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_HAIR();
     }
 
-    pass EyeLashPass
+    pass EyeLashPass // 5
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -419,5 +480,15 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_EYELASH();
+    }
+
+    pass OutLinePass // 6
+    {
+        SetRasterizerState(RS_Front);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN_OUTLINE();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_OUTLINE();
     }
 }

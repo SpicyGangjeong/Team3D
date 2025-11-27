@@ -118,6 +118,10 @@ void CChannel::Update_TransformationMatirx(
 	_uint* pCurrentKeyFrameIndex,
 	CTransform* pTransform,_float m_fAmount)
 {
+
+	if (0.f == fCurrentTrackPosition)
+		*pCurrentKeyFrameIndex = 0;
+
 	KEYFRAME		LastKeyFrame = m_KeyFrames.back();
 
 	_vector			vScale{};
@@ -171,7 +175,6 @@ void CChannel::Update_TransformationMatirx(
 
 	if (Bones[m_iBoneIndex]->Compare_Name("Reference") && pTransform != nullptr)
 	{
-		GUI::Text("fCurrentTrackPosition : %f", fCurrentTrackPosition);
 		_float3 vCurRootPos;
 		XMStoreFloat3(&vCurRootPos, vTranslation);
 
@@ -189,9 +192,6 @@ void CChannel::Update_TransformationMatirx(
 			_float dz = XMVectorGetZ(vDeltaAdjusted);
 
 			_vector vDeltaWorld = vRight * dx + (vUp * dz) + (-vLook * dy);
-			if (fabsf(dx) < FLT_EPSILON3 && fabsf(dy) < FLT_EPSILON3 && fabsf(dz) < FLT_EPSILON3) {
-				int a = 0;
-			}
 			vDeltaWorld *= 0.01f;
 			vDeltaWorld *= m_fAmount;
 
@@ -202,7 +202,7 @@ void CChannel::Update_TransformationMatirx(
 			m_vPrevRootPos = vCurRootPos;
 			vTranslation = XMVectorZero();
 
-		_float4 curRotF4;
+			_float4 curRotF4;
 		XMStoreFloat4(&curRotF4, vRotation);
 		_vector qCur = XMLoadFloat4(&curRotF4);
 
@@ -227,16 +227,16 @@ void CChannel::Update_TransformationMatirx(
 
 			_float4 axis;
 			XMStoreFloat4(&axis, axisWorld);
+
 			swap(axis.z, axis.y);
-
-
-			if (angle > 0 )
-				pTransform->TurnAngle(XMLoadFloat4(&axis), angle);
+			pTransform->TurnAngle(XMLoadFloat4(&axis), angle);
 		}
 
 		XMStoreFloat4(&m_vPrevRootRot, qCur);
 		vRotation = XMLoadFloat4(&m_vInitialRootRot);
 	}
+
+
 
 	m_BoneTransformationMatrix =
 		XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vTranslation);
@@ -253,8 +253,6 @@ void CChannel::ResetRootMotion()
 }
 
 
-
-
 KEYFRAME* CChannel::Get_Frame(_uint iIndex)
 {
 	return &m_KeyFrames[iIndex];
@@ -263,31 +261,6 @@ KEYFRAME* CChannel::Get_Frame(_uint iIndex)
 void CChannel::Set_Frame(_uint iIndex, KEYFRAME& kf)
 {
 	m_KeyFrames[iIndex] = kf;
-}
-
-
-HRESULT CChannel::Initialize(HANDLE hFile, DWORD& dwByte)
-{
-	_uint iLength = { 0 };
-	if (!ReadFile(hFile, &iLength, sizeof(_uint), &dwByte, nullptr)) {
-		return E_FAIL;
-	}
-	if (!ReadFile(hFile, m_szName, iLength, &dwByte, nullptr)) {
-		return E_FAIL;
-	}
-	if (!ReadFile(hFile, &m_iBoneIndex, sizeof(_int), &dwByte, nullptr)) {
-		return E_FAIL;
-	}
-	if (!ReadFile(hFile, &m_iNumKeyFrames, sizeof(_uint), &dwByte, nullptr)) {
-		return E_FAIL;
-	}
-	m_KeyFrames.resize(m_iNumKeyFrames);
-	for (_uint i = 0; i < m_iNumKeyFrames; ++i) {
-		if (!ReadFile(hFile, &m_KeyFrames[i], sizeof(KEYFRAME), &dwByte, nullptr)) {
-			return E_FAIL;
-		}
-	}
-	return S_OK;
 }
 
 HRESULT CChannel::Initialize(const CModel* pModel, SaveChannel* pSaveChannel)

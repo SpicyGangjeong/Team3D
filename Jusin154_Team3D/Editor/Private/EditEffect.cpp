@@ -27,8 +27,7 @@ HRESULT CEditEffect::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	
-	Set_Visible(false);
+	m_bVisible = false;
 
 	return S_OK;
 }
@@ -88,7 +87,7 @@ void CEditEffect::Late_Update(_float fTimeDelta)
 	if (m_EffectInfo.isOnlyBlur == true)
 		return;
 
-	m_pGameInstance->Add_RenderGroup(RENDER::EFFECT, this);
+	m_pGameInstance->Add_RenderGroup(m_EffectInfo.eRenderOrder, this);
 
 }
 
@@ -400,10 +399,9 @@ void CEditEffect::Describe_Entity()
 	//여기서 모델, 텍스쳐, 선택할 수 있도록 함
 
 	const char* pLerp[] = { "Linear" , "EaseInQuad", "EaseOutQuad", "EaseInCubic" , "EaseOutCubic" , "EaseInOutSin" , "EaseInBack" , "Expo" , "Circle" };
-	const char* pRenderNames[] = { "PRIORITY" , "SHADOW", "NONBLEND", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" , "UI" };
+	const char* pRenderNames[] = { "PRIORITY" , "SHADOW", "NONBLEND", "DECAL", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" , "UI" };
 	const char* pEffectType[] = { "EFFECT" , "TRAIL" };
-	const char* pShaderPass[] = { "DEFAULT" , "NON_NOMALMAP" , "BLUR" , "WEIGHTBLEND" , "NON_WORLD" , "NON_WORLD_BLUR"};
-
+	const char* pShaderPass[] = { "DEFAULT" , "NON_NOMALMAP" , "BLUR" , "WEIGHTBLEND" , "NON_WORLD" , "NON_WORLD_BLUR", "ALPHA_BLEND"};
 	_int iCurrentItem = static_cast<_int>(m_EffectInfo.eRenderOrder);
 	_int iCurrentType = static_cast<_int>(m_EffectInfo.eEffectType);
 	_int iCurrentPass = static_cast<_int>(m_EffectInfo.eShaderPass);
@@ -462,6 +460,21 @@ void CEditEffect::Describe_Entity()
 
 		GUI::TreePop();
 	}
+
+	if (GUI::TreeNode("TEX BLUR"))
+	{
+		GUI::Checkbox("DiffuseBlur", &m_EffectInfo.isDiffuseBlur);
+		GUI::Checkbox("MaskBlur", &m_EffectInfo.isMaskBlur);
+		GUI::Checkbox("BlurDissolve", &m_EffectInfo.isBlurDissolve);
+		GUI::Checkbox("BlurReverseDissolve", &m_EffectInfo.isBlurReverseDissolve);
+
+		ImGui::PushItemWidth(80);
+		GUI::DragFloat("BluringStrength", &m_EffectInfo.fBluringStrength, 0.001f, 0.f, 1.f);
+		ImGui::PopItemWidth();
+
+		GUI::TreePop();
+	}
+
 
 
 	if (GUI::TreeNode("EMISSIVE"))

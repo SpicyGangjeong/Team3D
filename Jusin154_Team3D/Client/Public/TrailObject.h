@@ -91,13 +91,13 @@ public:
 #endif // _DEBUG
 
 private:
-	CTexture*	m_pDiffuse_TextureCom = { nullptr };
-	CTexture*	m_pNoise_TextureCom = { nullptr };
-	CTexture*	m_pMasking_TextureCom = { nullptr };
-	CTexture*   m_pDistortion_TextureCom = { nullptr };
+	CTexture* m_pDiffuse_TextureCom = { nullptr };
+	CTexture* m_pNoise_TextureCom = { nullptr };
+	CTexture* m_pMasking_TextureCom = { nullptr };
+	CTexture* m_pDistortion_TextureCom = { nullptr };
 
-	CShader*	m_pShaderCom = { nullptr };
-	CTrail*		m_pTrailCom = { nullptr };
+	CShader* m_pShaderCom = { nullptr };
+	CTrail* m_pTrailCom = { nullptr };
 
 	_string		m_strTrailDiffuseName = {};
 	_string		m_strTrailNoiseName = {};

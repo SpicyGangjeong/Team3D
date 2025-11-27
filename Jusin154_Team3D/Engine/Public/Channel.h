@@ -36,7 +36,6 @@ public:
 	}
 	_char* Get_Name() { return m_szName; }
 private:
-	HRESULT Initialize(HANDLE hFile, DWORD& dwByte);
 	// 바이너리
 	HRESULT Initialize(const class CModel* pModel, SaveChannel* pSaveChannel);
 	//

@@ -2,6 +2,7 @@
 #include "Player.h"
 
 #include "GameInstance.h"
+#include "InfoInstance.h"
 #include "CamPosition_Socket.h"
 #include "Camera_Gaze.h"
 #include "CamPosition_Arm.h"
@@ -10,6 +11,7 @@
 #include "CallBack_Playable_Behavior.h"
 #include "CamPosition_Shoulder.h"
 #include "CallBack_Playable_HitReport.h"
+#include "Monster.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -20,7 +22,8 @@
 #include "State_Combat.h"
 #pragma endregion
 
-#include "Bombard.h"
+#include "Layer.h"
+#include "EffectPool.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUnit(pDevice, pContext)
@@ -28,7 +31,8 @@ CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CPlayer::CPlayer(const CPlayer& Prototype)
-	: CUnit(Prototype)
+	: CUnit(Prototype),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -73,6 +77,12 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
 
+	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
+	SAFE_ADDREF(m_pEffectPool);
+
+	m_pInfoInstance->Regist_PlayerAlly(this);
+
+
 #ifdef _DEBUG
 	m_BasicEffect = make_unique<BasicEffect>(m_pDevice);
 	m_BasicEffect->SetVertexColorEnabled(true);
@@ -87,6 +97,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 void CPlayer::Priority_Update(_float fTimeDelta)
 {
+	ReLockOnTarget();
+
 	m_pTransformCom->RewindMomentum();
 
 	__super::Priority_Update(fTimeDelta);
@@ -122,6 +134,10 @@ void CPlayer::Late_Update(_float fTimeDelta)
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 
 	__super::Late_Update(fTimeDelta);
+
+	if (nullptr != m_pLockOnMonster && false == m_pLockOnMonster->isDead()) {
+		m_pLockOnMonster->Set_DrawOutLine();
+	}
 }
 
 HRESULT CPlayer::Render()
@@ -165,14 +181,13 @@ HRESULT CPlayer::Render()
 
 void CPlayer::Render_CameraCoordinateSystem()
 {
-
-
 	m_Batch->Begin();
 
 	const _float fArrowLength = 2.0f;
 	_vector xmvLook = XMVector4Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
 	_float2 vLook = { XMVectorGetX(xmvLook), XMVectorGetZ(xmvLook) };
 
+	GUI::Text("%d", m_pLockOnMonster);
 
 	GUI::Text("W : %.2f, %.2f, %.2f", m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z);
 	GUI::Text("A : %.2f, %.2f, %.2f", -m_vCameraRightDir.x, 0.f, -m_vCameraRightDir.z);
@@ -188,7 +203,10 @@ void CPlayer::Render_CameraCoordinateSystem()
 	GUI::Button("##6", {100.f, 100.f}); GUI::SameLine();
 	GUI::Button(("S : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { -m_vCameraLookDir.x , -m_vCameraLookDir.z })))).c_str(), { 100.f, 100.f }); GUI::SameLine();
 	GUI::Button("##8", {100.f, 100.f});
-
+	//W CMyTools::Get_Direction2D(vLook, { m_vCameraLookDir.x ,		m_vCameraLookDir.z })
+	//A CMyTools::Get_Direction2D(vLook, { -m_vCameraRightDir.x , -	m_vCameraRightDir.z })
+	//S CMyTools::Get_Direction2D(vLook, { m_vCameraRightDir.x ,	m_vCameraRightDir.z })
+	//D CMyTools::Get_Direction2D(vLook, { -m_vCameraLookDir.x , -	m_vCameraLookDir.z })
 	m_Batch->DrawLine( // W
 		VertexPositionColor(fArrowLength * -XMLoadFloat3(&m_vCameraLookDir), DirectX::Colors::GhostWhite),
 		VertexPositionColor(fArrowLength * XMLoadFloat3(&m_vCameraLookDir), DirectX::Colors::Blue)
@@ -279,7 +297,7 @@ HRESULT CPlayer::Ready_Parts()
 	{
 		CCamPosition_Shoulder::CAMERA_SHOULDER_DESC Desc;
 		Desc.pParentTransform = m_pTransformCom;
-		Desc.fMouseSensor = 0.5f;
+		Desc.fMouseSensor = 0.1f;
 		Desc.fShoulderDistance = 2.f;
 		Desc.fBackFrontRatio = 0.9f;
 		Desc.fCameraFocalLength = 10.f;
@@ -309,6 +327,15 @@ HRESULT CPlayer::Bind_ShaderResources()
 	}
 	return S_OK;
 }
+void CPlayer::ReLockOnTarget()
+{
+	SAFE_RELEASE(m_pLockOnMonster);
+	m_pLockOnMonster = m_pInfoInstance->Get_LockOnMonster();
+	if (nullptr != m_pLockOnMonster) {
+		SAFE_ADDREF(m_pLockOnMonster);
+	}
+}
+
 #ifdef _DEBUG
 
 void CPlayer::Update_CameraCoordinateSystem()
@@ -348,6 +375,15 @@ void CPlayer::Free()
 {
 	__super::Free();
 
+
+	SAFE_RELEASE(m_pLockOnMonster);
+
+	if (nullptr != m_pInfoInstance) {
+		CInfoInstance* pInfo = m_pInfoInstance;
+		m_pInfoInstance = nullptr;
+		pInfo->Deregist_PlayerAlly(this);
+	}
+
 	if (nullptr != m_pCallBack_Behavior) {
 		m_pCallBack_Behavior->Finalize();
 	}
@@ -361,6 +397,7 @@ void CPlayer::Free()
 	SAFE_RELEASE(m_pCamPosition_TopDown_FollowPart);
 	SAFE_RELEASE(m_pCamPosition_TopDown_LookPart);
 	SAFE_RELEASE(m_pCamPosition_ShoulderPart);
+	SAFE_RELEASE(m_pEffectPool);
 }
 #ifdef _DEBUG
 

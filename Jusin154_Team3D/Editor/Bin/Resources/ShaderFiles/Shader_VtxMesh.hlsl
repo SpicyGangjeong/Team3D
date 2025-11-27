@@ -11,6 +11,9 @@ float g_fFar;
 float g_fTime;
 float g_fDeltaU;
 float g_fDeltaV;
+float3 g_vOutLineColor;
+vector g_vCamPosition;
+float g_fOutLineThickness;
 uint g_iIndexU;
 uint g_iIndexV;
 
@@ -105,6 +108,32 @@ VS_OUT VS_MAIN(VS_IN In)
     Out.vTexcoord = In.vTexcoord;
     Out.vWorldPos = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
     Out.vProjPos = Out.vPosition;
+    return Out;
+}
+
+struct VS_OUT_OUTLINE
+{
+    float4 vPosition : SV_Position;
+    float3 vNormal : NORMAL;
+    float4 vWorldPos : TEXCOORD1;
+};
+
+VS_OUT_OUTLINE VS_MAIN_OUTLINE(VS_IN In)
+{
+    VS_OUT_OUTLINE Out;
+    
+    vector vPosition = vector(In.vPosition, 1.f);
+    vector vNormal = vector(In.vNormal, 1.f);
+    vPosition.xyz += (vNormal.xyz * g_fOutLineThickness).xyz;
+
+
+    matrix matWV, matWVP;
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+    
+    Out.vPosition = mul(vPosition, matWVP);
+    Out.vNormal = normalize(mul(vNormal, g_WorldMatrix)).xyz;
+    Out.vWorldPos = mul(vPosition, g_WorldMatrix);
     return Out;
 }
 
@@ -342,6 +371,31 @@ PS_OUT_EFFECT PS_EFFECT(PS_IN_EFFECT In)
     return Out;
 }
 
+struct PS_IN_OUTLINE
+{
+    float4 vPosition : SV_Position;
+    float3 vNormal : NORMAL;
+    float4 vWorldPos : TEXCOORD1;
+};
+struct PS_OUT_OUTLINE
+{
+    float4 vOutLine : SV_TARGET0;
+};
+
+PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
+{
+    PS_OUT_OUTLINE Out = (PS_OUT_OUTLINE) 0;
+    
+    float3 vToView = normalize(g_vCamPosition.xyz - In.vWorldPos.xyz); // 픽셀에서 카메라로
+    if (dot(vToView, In.vNormal) >= 0.3f)
+    {
+        discard;
+    }
+    Out.vOutLine = float4(g_vOutLineColor, 1.f);
+    
+    return Out;
+}
+
 struct PS_IN_CAPTUREDMODEL
 {
     float4 vPosition : SV_Position;
@@ -486,5 +540,15 @@ technique11 MeshTechnique11
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_GLASS();
+    }
+
+    pass OutLinePass // 13
+    {
+        SetRasterizerState(RS_Front);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN_OUTLINE();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_OUTLINE();
     }
 }

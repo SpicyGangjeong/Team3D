@@ -2,14 +2,17 @@
 
 #include <process.h>
 #include "../Default/framework.h"
+#include "Engine_Define.h"
 #include "Client_Enum.h"
 #include "Client_Macro.h"
+#include "Client_Struct.h"
+
 
 namespace Client
 {
 	const unsigned int g_iWinSizeX = 1920;
 	const unsigned int g_iWinSizeY = 1080;
-
+	class CInfoInstance;
 }
 
 using namespace Client;

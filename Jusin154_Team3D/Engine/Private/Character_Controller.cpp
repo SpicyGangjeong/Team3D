@@ -318,6 +318,7 @@ void CCharacter_Controller::Free()
 {
 	if (nullptr != m_pController) {
 		m_pController->release();
+		m_pController = nullptr;
 	}
 	__super::Free();
 }

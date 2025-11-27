@@ -423,44 +423,41 @@ void CLevel_ObjectViewer::Dummy_Object_Setting()
 				_float fKeyFrame = pModel->Get_CurrentTrackPosition();
 				m_KeyFrames.emplace(EventName, fKeyFrame);
 
-				_char szDir[MAX_PATH] = {};
-
-				_splitpath_s(m_DummyPath, nullptr, 0, szDir, MAX_PATH, nullptr, 0, nullptr, 0);
-
-				_string szFile = "KeyFrame.bin";
-				_string Path = szDir + szFile;
-
-				FILE* fp = nullptr;
-				fopen_s(&fp, Path.c_str(), "wb");
-				if (!fp) return;
-
-				_uint KeyFrameSize = (_uint)m_KeyFrames.size();
-
-				fwrite(&KeyFrameSize, sizeof(_uint), 1, fp);
-
-				for (auto& iter : m_KeyFrames)
-				{
-					_uint EventSize = (_uint)iter.first.size();
-					fwrite(&iter.second, sizeof(_float), 1, fp);
-					fwrite(&EventSize, sizeof(_uint), 1, fp);
-					fwrite(iter.first.c_str(), sizeof(_char), EventSize, fp);
-				}
-
-
-				fclose(fp);
+				Save_KeyFrame();
 
 				EventName[0] = '\0';
 			}
 		}
 
+
 		for (auto& iter : m_KeyFrames)
 		{
-			ImDrawList* draw = ImGui::GetForegroundDrawList();
-			ImVec2 center = ImGui::GetMainViewport()->GetCenter();
-			float scale = 50.f;
+			string keyName = iter.first;
 
-			GUI::DragFloat(iter.first.c_str(), &iter.second);
+			_bool isSelected = (m_SelectedKey == keyName);
+
+			if (ImGui::Selectable(keyName.c_str(), isSelected))
+			{
+				m_SelectedKey = keyName;
+			}
+
+			if (isSelected)
+			{
+				ImGui::Indent();
+
+				ImGui::DragFloat("KeyFrame", &iter.second, 0.01f);
+
+				if (ImGui::Button("Delete KeyFrame"))
+				{
+					m_KeyFrames.erase(keyName);
+					m_SelectedKey.clear();   
+					break;                     
+				}
+
+				ImGui::Unindent();
+			}
 		}
+
 
 		if (GUI::Button("Delete"))
 		{
@@ -651,6 +648,35 @@ void CLevel_ObjectViewer::Find_Anim()
 			}
 		}
 	}
+}
+
+void CLevel_ObjectViewer::Save_KeyFrame()
+{
+	_char szDir[MAX_PATH] = {};
+
+	_splitpath_s(m_DummyPath, nullptr, 0, szDir, MAX_PATH, nullptr, 0, nullptr, 0);
+
+	_string szFile = "KeyFrame.bin";
+	_string Path = szDir + szFile;
+
+	FILE* fp = nullptr;
+	fopen_s(&fp, Path.c_str(), "wb");
+	if (!fp) return;
+
+	_uint KeyFrameSize = (_uint)m_KeyFrames.size();
+
+	fwrite(&KeyFrameSize, sizeof(_uint), 1, fp);
+
+	for (auto& iter : m_KeyFrames)
+	{
+		_uint EventSize = (_uint)iter.first.size();
+		fwrite(&iter.second, sizeof(_float), 1, fp);
+		fwrite(&EventSize, sizeof(_uint), 1, fp);
+		fwrite(iter.first.c_str(), sizeof(_char), EventSize, fp);
+	}
+
+
+	fclose(fp);
 }
 
 
