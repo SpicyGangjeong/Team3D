@@ -37,10 +37,23 @@ RasterizerState RS_Scissor
     ScissorEnable = true;
 };
 
+RasterizerState RS_Front
+{
+    FillMode = Solid;
+    CullMode = Front;
+};
+
 DepthStencilState DSS_Default
 {
     DepthEnable = true;
     DepthWriteMask = all;
+    DepthFunc = less_equal;
+};
+
+DepthStencilState DSS_OutLine
+{
+    DepthEnable = true;
+    DepthWriteMask = Zero;
     DepthFunc = less_equal;
 };
 

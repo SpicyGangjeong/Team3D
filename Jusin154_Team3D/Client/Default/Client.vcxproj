@@ -126,8 +126,9 @@
       <AdditionalDependencies>Engine.lib;fmod_vc.lib;DirectXTKd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>
-      </Command>
+      <Command>cd /d "$(SolutionDir)"
+call Update_Shaders.bat
+</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -152,8 +153,9 @@
       <AdditionalDependencies>Engine.lib;fmod_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>
-      </Command>
+      <Command>cd /d "$(SolutionDir)"
+call Update_Shaders.bat
+</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

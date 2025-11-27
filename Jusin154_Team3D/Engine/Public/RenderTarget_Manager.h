@@ -28,6 +28,7 @@ public:
 public:
 	HRESULT Render_RenderTarget_Debug(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
 	void    RenderTarget_Debuger();
+	void	Toggle_RT_Debugger();
 #endif // _DEBUG
 
 #ifdef _DEBUG

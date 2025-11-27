@@ -43,11 +43,6 @@ void CUnit::Late_Update(_float fTimeDelta)
 	__super::Late_Update(fTimeDelta);
 }
 
-HRESULT CUnit::Render()
-{
-	return S_OK;
-}
-
 #ifdef _DEBUG
 void CUnit::Load_KeyFrame()
 {
@@ -122,11 +117,6 @@ HRESULT CUnit::Ready_Components(void *pArg)
 		return E_FAIL;
 	}
 
-	return S_OK;
-}
-
-HRESULT CUnit::Bind_ShaderResources()
-{
 	return S_OK;
 }
 

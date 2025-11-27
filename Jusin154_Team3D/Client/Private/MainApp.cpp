@@ -173,8 +173,6 @@ void CMainApp::Free()
 {
 	__super::Free();
 
-	m_pInfoInstance->Release_Information();
-	SAFE_RELEASE(m_pInfoInstance);
 
 	Release_IMGUI();
 
@@ -182,6 +180,8 @@ void CMainApp::Free()
 	SAFE_RELEASE(m_pContext);
 
 	m_pGameInstance->Release_Engine();
+	m_pInfoInstance->Release_Information();
+	SAFE_RELEASE(m_pInfoInstance);
 
 	SAFE_RELEASE(m_pGameInstance);
 }

@@ -1098,9 +1098,6 @@
     </ClCompile>
     <ClCompile Include="..\private\InstancedProp.cpp">
       <Filter>02.GameObjects\Env\06.InstancedProp</Filter>
-          </ClCompile>
-    <ClCompile Include="Goblin_States.cpp">
-      <Filter>02.GameObjects\Monster\Goblin</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Magic_Icon.cpp">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel\Magic_Icon</Filter>
@@ -1113,7 +1110,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\Goblin_States.cpp">
       <Filter>02.GameObjects\Monster\Goblin</Filter>
-          </ClCompile>
+    </ClCompile>
     <ClCompile Include="..\private\Magic_Item.cpp">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel\Magic_Item</Filter>
     </ClCompile>

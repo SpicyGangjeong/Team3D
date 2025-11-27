@@ -110,6 +110,10 @@ HRESULT CGoblin::Render()
 		}
 	}
 
+	if (m_bDrawOutLine) {
+		Render_OutLine();
+	}
+
 #ifdef _DEBUG
 	m_pCharacter_Controller->Render();
 	//m_pRigidBody->Render();

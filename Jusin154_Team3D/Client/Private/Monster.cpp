@@ -28,6 +28,7 @@ HRESULT CMonster::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
+	m_pInfoInstance->Regist_ActiveMonster(this);
 
 	return S_OK;
 }
@@ -57,9 +58,54 @@ void CMonster::Late_Update(_float fTimeDelta)
 	__super::Late_Update(fTimeDelta);
 }
 
-HRESULT CMonster::Render()
+HRESULT CMonster::Render_OutLine()
 {
+	m_bDrawOutLine = false;
+	if (FAILED(Bind_ShaderResources())) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vOutLineColor", DirectX::Colors::SeaShell, sizeof(_float3)))) {
+		return E_FAIL;
+	}
+	_float fSpeed = m_pTransformCom->Get_Speed() * 0.5f;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOutLineThickness", &(fSpeed), sizeof(_float)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float4)))) {
+		return E_FAIL;
+	}
+	//static _float fPower = 0.3f;
+	//GUI::DragFloat("OuTLineDegg", &fPower, 0.01f, -1.f, 1.f, "%.3f");
+	//if (FAILED(m_pShaderCom->Bind_RawValue("g_fPow", &fPower, sizeof(_float)))) {
+	//	return E_FAIL;
+	//}
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (_uint i = 0; i < iNumMeshes; i++)
+	{
+		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
+			return E_FAIL;
+		}
+
+
+		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::OUTLINE)))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pModelCom->Render(i))) {
+			return E_FAIL;
+		}
+	}
 	return S_OK;
+}
+
+void CMonster::Set_DrawOutLine()
+{
+	m_bDrawOutLine = true;
 }
 
 HRESULT CMonster::Ready_Components(void*pArg)
@@ -72,11 +118,6 @@ HRESULT CMonster::Ready_Components(void*pArg)
 		return E_FAIL;
 	}
 
-	return S_OK;
-}
-
-HRESULT CMonster::Bind_ShaderResources()
-{
 	return S_OK;
 }
 
@@ -98,6 +139,9 @@ void CMonster::Free()
 	__super::Free();
 
 	SAFE_RELEASE(m_pTarget);
+	if (nullptr != m_pInfoInstance){
+		m_pInfoInstance->Deregist_ActiveMonster(this);
+	}
 	SAFE_RELEASE(m_pInfoInstance);
 }
 #ifdef _DEBUG

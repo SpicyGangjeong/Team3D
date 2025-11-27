@@ -11,6 +11,7 @@
 #include "CallBack_Playable_Behavior.h"
 #include "CamPosition_Shoulder.h"
 #include "CallBack_Playable_HitReport.h"
+#include "Monster.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -92,6 +93,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 void CPlayer::Priority_Update(_float fTimeDelta)
 {
+	ReLockOnTarget();
+
 	m_pTransformCom->RewindMomentum();
 
 	__super::Priority_Update(fTimeDelta);
@@ -127,6 +130,10 @@ void CPlayer::Late_Update(_float fTimeDelta)
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 
 	__super::Late_Update(fTimeDelta);
+
+	if (nullptr != m_pLockOnMonster && false == m_pLockOnMonster->isDead()) {
+		m_pLockOnMonster->Set_DrawOutLine();
+	}
 }
 
 HRESULT CPlayer::Render()
@@ -176,6 +183,7 @@ void CPlayer::Render_CameraCoordinateSystem()
 	_vector xmvLook = XMVector4Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
 	_float2 vLook = { XMVectorGetX(xmvLook), XMVectorGetZ(xmvLook) };
 
+	GUI::Text("%d", m_pLockOnMonster);
 
 	GUI::Text("W : %.2f, %.2f, %.2f", m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z);
 	GUI::Text("A : %.2f, %.2f, %.2f", -m_vCameraRightDir.x, 0.f, -m_vCameraRightDir.z);
@@ -315,6 +323,15 @@ HRESULT CPlayer::Bind_ShaderResources()
 	}
 	return S_OK;
 }
+void CPlayer::ReLockOnTarget()
+{
+	SAFE_RELEASE(m_pLockOnMonster);
+	m_pLockOnMonster = m_pInfoInstance->Get_LockOnMonster();
+	if (nullptr != m_pLockOnMonster) {
+		SAFE_ADDREF(m_pLockOnMonster);
+	}
+}
+
 #ifdef _DEBUG
 
 void CPlayer::Update_CameraCoordinateSystem()
@@ -353,6 +370,13 @@ CGameObject* CPlayer::Clone(void* pArg, CGameObject* pOwner)
 void CPlayer::Free()
 {
 	__super::Free();
+
+
+	SAFE_RELEASE(m_pLockOnMonster);
+
+	if (nullptr != m_pInfoInstance) {
+		m_pInfoInstance->Deregist_PlayerAlly(this);
+	}
 
 	if (nullptr != m_pCallBack_Behavior) {
 		m_pCallBack_Behavior->Finalize();
