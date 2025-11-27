@@ -98,7 +98,7 @@ void CIMGUIUI::Priority_Update(_float fTimeDelta)
 
 void CIMGUIUI::Update(_float fTimeDelta)
 {
-	static const char* SpellTypeNames[] = { "SHADOW", "CONTROL","POWER", "DAMAGE","UTILITY", "TRANSFORM",  "CURSE",	"ESSENTIAL" };
+	static const char* SpellTypeNames[] = { "CONTROL","POWER", "DAMAGE","UTILITY", "TRANSFORM",  "CURSE",	"ESSENTIAL" };
 	int itemCount = sizeof(SpellTypeNames) / sizeof(const char*);
 	if (m_pGamePlay_Canvas != nullptr)
 	{
@@ -348,7 +348,7 @@ void CIMGUIUI::Update(_float fTimeDelta)
 			static_cast<CElementObject*>(m_pElementObject)->Set_TimeMult(m_fDelayTime);
 		}
 
-		if (GUI::DragFloat("TimeMult", &m_fTimeMult, 0.01f, 0.f, 10.f))
+		if (GUI::DragFloat("TimeMult", &m_fTimeMult, 0.01f, 0.f, 100.f))
 		{
 			static_cast<CElementObject*>(m_pElementObject)->Set_TimeMult(m_fTimeMult);
 		}
