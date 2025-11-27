@@ -18,7 +18,6 @@ public:
 
 private:
 	class CInfoInstance* m_pInfoInstance = { nullptr };
-	class CPlayer* m_pPlayerTemp = { nullptr };
 private:
 	virtual HRESULT Initialize() override;
 	HRESULT Initialize(void* pArg);

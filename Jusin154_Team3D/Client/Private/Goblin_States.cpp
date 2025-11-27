@@ -115,7 +115,6 @@ void CGoblin::Add_FSM()
 		m_States.emplace(FSMSTATE::MOVE, CState_Move::Create(&Desc));
 	}
 #pragma endregion
-
 #pragma region Behavior_Combat_NotFocus
 	{
 		CState_Combat::STATE_COMBAT_DESC Desc{};
