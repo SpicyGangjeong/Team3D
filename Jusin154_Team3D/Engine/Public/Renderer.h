@@ -45,7 +45,8 @@ private:
 	_float4x4 m_PreShadowMatrices[ENUM_CLASS(D3DTS::END)] = {};
 
 	_bool m_bPostProcessing_BLOOM = { false };
-
+	_int m_iBloomEmbossingPass = { 0 };
+	_float m_fThreshold = { 1.26f };
 
 private:
 	void Render_Priority();

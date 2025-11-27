@@ -205,10 +205,10 @@ HRESULT CPlayer::Ready_Parts()
 	WandDesc.pParentTransform = m_pTransformCom;
 	WandDesc.pSocketMatrices = m_pModelCom->Get_BoneMatrixPtr("SKT_RightHand");
 
-	if (FAILED(Add_PartObject<CWand>("Wand", g_iStaticLevel, nullptr, &WandDesc)))
-	{
-		return E_FAIL;
-	}
+	//if (FAILED(Add_PartObject<CWand>("Wand", g_iStaticLevel, nullptr, &WandDesc)))
+	//{
+	//	return E_FAIL;
+	//}
 
 	{
 		CCamPosition_Shoulder::CAMERA_SHOULDER_DESC Desc;

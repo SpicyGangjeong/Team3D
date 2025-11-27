@@ -48,6 +48,7 @@ void CLevel_Field::Update(_float fTimeDelta)
 	m_pInfoInstance->Update(fTimeDelta);
 
 	if (true == m_pGameInstance->Check_LevelShouldChange()) {
+		m_pInfoInstance->Change_Level();
 		if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, LEVEL::RESTART)))) {
 			return;
 		}

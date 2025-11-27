@@ -84,7 +84,7 @@ HRESULT CEffectObject::Render_Blur()
 
 	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NON_WORLD)
 	{
-		BlurPass = SHADER_PASS_INSTANCE_MODEL::BLUR_NO_WORLD;
+		BlurPass = SHADER_PASS_INSTANCE_MODEL::NON_WORLD_BLUR;
 	}
 	else
 	{

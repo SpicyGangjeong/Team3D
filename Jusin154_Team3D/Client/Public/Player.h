@@ -23,6 +23,7 @@ public:
 	_bool Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
 
 private:
+	CInfoInstance* m_pInfoInstance = { nullptr };
 	_float m_fDirectionRadian = 0.f;
 
 	_bool m_bSprintToggle = { false };
