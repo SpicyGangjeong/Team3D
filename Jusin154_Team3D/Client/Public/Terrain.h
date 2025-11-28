@@ -38,6 +38,7 @@ public:
 private:
 	CShader*				m_pShaderCom = { nullptr };
 	CVIBuffer_Terrain*		m_pVIBufferCom = { nullptr };
+	CRigidBody_Static*		m_pRigidBody = { nullptr };
 	CTexture*				m_pDiffuseTextureCom = { nullptr };
 	CTexture*				m_pNormalTextureCom = { nullptr };
 	CTexture*				m_pMROTextureCom = { nullptr };

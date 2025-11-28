@@ -35,6 +35,15 @@ HRESULT CTerrain::Initialize(void* pArg)
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pDesc->vPosition), 1.f));
 
 
+	CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc{};
+	Desc.pMeshName = TEXT("Hogsmeade_HeightMap");
+	Desc.iSubKind = 998;
+	/* Com_RigidBody */
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_RigidBody_Static_Terrain_Hogsmeade"),
+		reinterpret_cast<CComponent**>(&m_pRigidBody), &Desc))) {
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 
@@ -106,8 +115,10 @@ HRESULT CTerrain::Ready_Components(void* pArg)
 
 	/* Com_VIBuffer */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Terrain"),
-		reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
+		reinterpret_cast<CComponent**>(&m_pVIBufferCom)))){
 		return E_FAIL;
+	}
+
 
 	/* Com_Shader */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_NORTEX,
@@ -205,6 +216,7 @@ void CTerrain::Free()
 
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
+	SAFE_RELEASE(m_pRigidBody);
 	SAFE_RELEASE(m_pDiffuseTextureCom);
 	SAFE_RELEASE(m_pNormalTextureCom);
 	SAFE_RELEASE(m_pMROTextureCom);

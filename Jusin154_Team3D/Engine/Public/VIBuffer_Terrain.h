@@ -24,6 +24,7 @@ public:
 #endif // EDITOR_PROJECT
 	virtual HRESULT Initialize_Prototype(const _char* pFilePath, _uint iSizeX, _uint iSizeZ);
 	virtual HRESULT Initialize(void* pArg);
+	void ConvertToHeightField(const _tchar* pStaticKey);
 
 	_bool	Picking(_fmatrix WorldMatrix, _float3* pOut);
 	void	Culling(_fmatrix WorldMatrix);
