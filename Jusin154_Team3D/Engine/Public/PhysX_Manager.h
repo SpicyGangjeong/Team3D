@@ -89,7 +89,13 @@ private:
 	map<_wstring, PSX::PxHeightField*>			m_HeightFields = {};
 	map<_wstring, PSX::PxHeightFieldGeometry*>	m_HeightFieldGeometry = {};
 
+
+#ifdef EDITOR_PROJECT
+	_bool m_bDebugCreatePlane = { true };
 	PhsXUserData PlaneData = {};
+#else
+	_bool m_bDebugCreatePlane = { false };
+#endif // EDITOR_PROJECT
 
 	vector<PSX::PxMaterial*> m_pMaterials = { };
 	_uint m_iNumLevel = {};

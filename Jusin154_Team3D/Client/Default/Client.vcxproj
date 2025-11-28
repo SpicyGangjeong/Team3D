@@ -127,7 +127,7 @@
     </Link>
     <PreBuildEvent>
       <Command>cd /d "$(SolutionDir)"
-call Update_Shaders.bat
+call Update_Resources.bat
 </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
@@ -154,7 +154,7 @@ call Update_Shaders.bat
     </Link>
     <PreBuildEvent>
       <Command>cd /d "$(SolutionDir)"
-call Update_Shaders.bat
+call Update_Resources.bat
 </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>

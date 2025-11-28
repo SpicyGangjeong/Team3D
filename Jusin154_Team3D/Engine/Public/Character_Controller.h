@@ -69,9 +69,10 @@ public:
 private:
 	ACTOR					m_eBodyType = { ACTOR::END };
 	PSX::PxController*		m_pController = { nullptr };
-	CTransform*				m_pTransform = { nullptr };
+	CTransform*				m_pTransform = { nullptr };	
 	_bool					m_bAutoStepping = { false };
-	_float					m_fSlopeLimit = { 0.5f/*0~1*/}; // cosf각도, 오르막 경사각 제한. ( 추가설정 필요함 )
+	_float					m_fGravity = { 0.129f };
+	_float					m_fSlopeLimit = { 0.69f/*0~1*/}; // cosf각도, 오르막 경사각 제한. ( 추가설정 필요함 )
 	PhsXUserData			m_tagData = {};
 	
 	PSX::PxControllerCollisionFlags m_eBeforeCollisionFlags = {};

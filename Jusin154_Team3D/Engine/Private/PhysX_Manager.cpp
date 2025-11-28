@@ -534,16 +534,20 @@ HRESULT CPhysX_Manager::Initialize()
 	m_pMaterials.push_back(m_pPhysics->createMaterial(0.5f, 0.5f, 0.6f));
 
 	// m_pScene->overlap();??????
+#ifdef EDITOR_PROJECT
 
-	PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
-	PlaneData.iSubKind = UINT_MAX;
-	PlaneData.pOwner = nullptr;
-	PlaneData.pBody = nullptr;
+	if (true == m_bDebugCreatePlane) {
+		PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
+		PlaneData.iSubKind = UINT_MAX;
+		PlaneData.pOwner = nullptr;
+		PlaneData.pBody = nullptr;
 
-	PSX::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *m_pMaterials[ENUM_CLASS(PXMATERIAL::DEFAULT)]);
-	pGroundPlane->userData = &PlaneData;
-	pGroundPlane->setName("PHYSX_MANAGER_PLANE");
-	m_pScene->addActor(*pGroundPlane);;
+		PSX::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *m_pMaterials[ENUM_CLASS(PXMATERIAL::DEFAULT)]);
+		pGroundPlane->userData = &PlaneData;
+		pGroundPlane->setName("PHYSX_MANAGER_PLANE");
+		m_pScene->addActor(*pGroundPlane);
+	}
+#endif
 
 	return S_OK;
 }
@@ -582,7 +586,7 @@ CPhysX_Manager* CPhysX_Manager::Create(ID3D11Device* pDevice, ID3D11DeviceContex
 void CPhysX_Manager::Free()
 {
 	ClearScene();
-
+	
 	for (auto& pMeshes : m_TriangleMeshes) {
 		pMeshes.second->release();
 	} m_TriangleMeshes.clear();
@@ -590,6 +594,14 @@ void CPhysX_Manager::Free()
 	for (auto& pGeometry : m_TriangleMeshGeometry) {
 		Safe_Delete(pGeometry.second);
 	} m_TriangleMeshGeometry.clear();
+
+	for (auto& pGeometry : m_HeightFieldGeometry) {
+		Safe_Delete(pGeometry.second);
+	} m_HeightFieldGeometry.clear();
+
+	for (auto& pField : m_HeightFields) {
+		pField.second->release();
+	} m_HeightFields.clear();
 
 	if (nullptr != m_pCookingParam) {
 		Safe_Delete(m_pCookingParam);
