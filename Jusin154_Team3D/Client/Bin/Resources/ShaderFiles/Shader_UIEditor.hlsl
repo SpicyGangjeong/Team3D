@@ -530,7 +530,7 @@ PS_OUT PS_SpellAnim(PS_IN In)
     
     float2 OverrayUV = In.vTexcoord;
     float CoolTime = 1.f - g_fDeltaV;
-    float CoolTime2 = 1.f - g_fDeltaV + 0.05;
+    float CoolTime2 = 1.f - g_fDeltaV + 0.1f;
     atlasUV = startUV + In.vTexcoord * (endUV - startUV);
     float4 tex3 = g_Texture1.Sample(ClampSampler, OverrayUV);
     tex3.rgb *= BGColor;
@@ -541,21 +541,25 @@ PS_OUT PS_SpellAnim(PS_IN In)
     
     color1 = tex3;
         
-    float wave1 = sin(OverrayUV.x * 10.f + g_fTime * 2.f) * 0.01f;
-    float wave2 = sin(OverrayUV.x * 10.f + g_fTime * 2.f) * 0.01f;
-   
+    float wave1 = sin(OverrayUV.x * 10.f + g_fTime ) * 0.01f;
+    float wave2 = sin(OverrayUV.x * 10.f + g_fTime ) * 0.01f;
     float waveThreshold1 = CoolTime + wave1;
     float waveThreshold2 = CoolTime2 + wave2;
+    float2 waveUV =  float2(waveUV.x = OverrayUV.x * 2.f + g_fTime * 0.3f , waveUV.y = (OverrayUV.y - waveThreshold1) /(waveThreshold2 - waveThreshold1));
+    waveUV = saturate(waveUV);
+    float tex5 = g_Texture3.Sample(DefaultSampler, waveUV).r;
 
     if (g_fDeltaV <= 1.f)
     {
         if (OverrayUV.y >= waveThreshold1 && OverrayUV.y <= waveThreshold2)
         {
-            color1.rgb = float3(1.f, 1.f, 1.f);
+            color1.rgb += float3(1.f, 1.f, 1.f) * tex5 * g_fDeltaU;
         }
     }
     
-    if (OverrayUV.y <= CoolTime)
+    float waveThreshold = CoolTime + wave1;
+
+    if (OverrayUV.y <= waveThreshold)
     {
         color1.a = 0.f;
     }

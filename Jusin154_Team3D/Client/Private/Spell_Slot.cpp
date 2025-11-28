@@ -249,6 +249,8 @@ void CSpell_Slot::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
+#ifdef _DEBUG
 void CSpell_Slot::Describe_Entity()
 {
 }
+#endif // _DEBUG

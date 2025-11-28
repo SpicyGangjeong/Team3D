@@ -259,6 +259,8 @@ void CLoadingWidget_Flame::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
+#ifdef _DEBUG
 void CLoadingWidget_Flame::Describe_Entity()
 {
 }
+#endif // _DEBUG

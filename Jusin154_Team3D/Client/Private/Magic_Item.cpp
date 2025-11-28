@@ -365,6 +365,8 @@ void CMagic_Item::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
+#ifdef _DEBUG
 void CMagic_Item::Describe_Entity()
 {
 }
+#endif // _DEBUG

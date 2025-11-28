@@ -144,6 +144,8 @@ void CMiniMap_Panel::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
+#ifdef _DEBUG
 void CMiniMap_Panel::Describe_Entity()
 {
 }
+#endif // _DEBUG

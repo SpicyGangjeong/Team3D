@@ -319,7 +319,8 @@ void CSpell_Overlay::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
+#ifdef _DEBUG
 void CSpell_Overlay::Describe_Entity()
 {
 }
-
+#endif // _DEBUG

@@ -236,6 +236,8 @@ void CLoadingWidget::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
+#ifdef _DEBUG
 void CLoadingWidget::Describe_Entity()
 {
 }
+#endif // _DEBUG

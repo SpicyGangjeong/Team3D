@@ -251,6 +251,8 @@ void CMagic_Meter::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
+#ifdef _DEBUG
 void CMagic_Meter::Describe_Entity()
 {
 }
+#endif // _DEBUG
