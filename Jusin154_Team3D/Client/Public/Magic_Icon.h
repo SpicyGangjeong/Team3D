@@ -1,16 +1,22 @@
 ﻿#pragma once
 
-#include "Editor_Define.h"
+#include "Client_Define.h"
 #include "ElementObject.h"
 
-NS_BEGIN(Editor)
+NS_BEGIN(Engine)
+class CTexture;
+class CShader;
+class CVIBuffer_Rect;
+NS_END
 
-class CMission_Key final : public CElementObject
+NS_BEGIN(Client)
+
+class CMagic_Icon final : public CElementObject
 {
 private:
-	CMission_Key(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CMission_Key(const CMission_Key& rhs);
-	virtual ~CMission_Key() = default;
+	CMagic_Icon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CMagic_Icon(const CMagic_Icon& rhs);
+	virtual ~CMagic_Icon() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -21,9 +27,6 @@ public:
 
 
 private:
-	_float4 AlphabetUV(_tchar Alphabet);
-
-private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;
 	virtual HRESULT Initialize_Prototype() override;
@@ -31,15 +34,18 @@ private:
 
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
+	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
+	CTexture* m_pDiffuse_TextureCom2 = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
-	_float4 m_vUV{};
 public:
-	static CMission_Key* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CMagic_Icon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
+#ifdef _DEBUG
 	void Describe_Entity() override;
+#endif // _DEBUG
 };
 
 NS_END

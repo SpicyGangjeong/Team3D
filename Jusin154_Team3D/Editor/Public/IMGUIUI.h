@@ -35,6 +35,8 @@ private:
 
 private:
 	CGameObject*			m_pGamePlay_Canvas		= { nullptr };
+	CGameObject*			m_pSpell_Canvas			= { nullptr };
+	CGameObject*			m_pCurrent_Canvas		= { nullptr };
 	CGameObject*			m_pPanelObject			= { nullptr };
 	CGameObject*			m_pElementObject		= { nullptr };
 	_float2					m_fPos{};
@@ -92,7 +94,9 @@ public:
 	static CIMGUIUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
+#ifdef _DEBUG
 	void Describe_Entity() override;
+#endif // _DEBUG
 };
 
 NS_END

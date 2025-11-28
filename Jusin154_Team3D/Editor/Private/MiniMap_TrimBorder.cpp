@@ -22,9 +22,9 @@ HRESULT CMiniMap_TrimBorder::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = -20.f;
-	Desc.fY = 30;
-	Desc.fSizeX = 256.f;
-	Desc.fSizeY = 256.f;
+	Desc.fY = 0;
+	Desc.fSizeX = 290.f;
+	Desc.fSizeY = 290.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 

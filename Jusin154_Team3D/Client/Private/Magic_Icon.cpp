@@ -1,30 +1,30 @@
 ﻿#include "pch.h"
-#include "Active_Icon.h"
+#include "Magic_Icon.h"
 #include "GameInstance.h"
 
-CActive_Icon::CActive_Icon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CMagic_Icon::CMagic_Icon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
 {
 }
 
-CActive_Icon::CActive_Icon(const CActive_Icon& rhs)
+CMagic_Icon::CMagic_Icon(const CMagic_Icon& rhs)
 	:CElementObject(rhs)
 {
 }
 
-HRESULT CActive_Icon::Initialize_Prototype()
+HRESULT CMagic_Icon::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CActive_Icon::Initialize(void* pArg)
+HRESULT CMagic_Icon::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = -230.f;
-	Desc.fY = 160.f;
-	Desc.fSizeX = 35.f;
-	Desc.fSizeY = 35.f;
+	Desc.fX = 630.f;
+	Desc.fY = 125.f;
+	Desc.fSizeX = 65.f;
+	Desc.fSizeY = 65.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -40,16 +40,11 @@ HRESULT CActive_Icon::Initialize(void* pArg)
 	m_fTimeMult = 3.f;
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 3.f;
-	m_eType = QUESTYPE::MAIN;
+	m_bActive = true;
 	return S_OK;
 }
 
-void CActive_Icon::QuestType(QUESTYPE eType)
-{
-	m_eType = eType;
-}
-
-void CActive_Icon::Priority_Update(_float fTimeDelta)
+void CMagic_Icon::Priority_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -58,7 +53,7 @@ void CActive_Icon::Priority_Update(_float fTimeDelta)
 	__super::Priority_Update(fTimeDelta);
 }
 
-void CActive_Icon::Update(_float fTimeDelta)
+void CMagic_Icon::Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -90,37 +85,24 @@ void CActive_Icon::Update(_float fTimeDelta)
 		}
 	}
 
-	if (m_bLerpOn == true)
-	{
-		Start_Lerp(fTimeDelta);
-	}
-
-	if (m_bLerpOff == true)
-	{
-		Reset_Pos(fTimeDelta);
-	}
-
 	__super::Update(fTimeDelta);
 }
 
-void CActive_Icon::Late_Update(_float fTimeDelta)
+void CMagic_Icon::Late_Update(_float fTimeDelta)
 {
-	if (!__super::Chack_Visible())
+	if (__super::Chack_Visible())
 	{
-		return;
-	}
-	if (m_bVisible) {
-			m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
+		m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
 		__super::Late_Update(fTimeDelta);
 	}
 }
 
-HRESULT CActive_Icon::Render()
+HRESULT CMagic_Icon::Render()
 {
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::QUESTYPE)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::MAGIC_ICON)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
@@ -133,12 +115,12 @@ HRESULT CActive_Icon::Render()
 	return S_OK;
 }
 
-_vector CActive_Icon::Get_WorldPostion()
+_vector CMagic_Icon::Get_WorldPostion()
 {
 	return m_pOwner->Get_WorldPostion();
 }
 
-HRESULT CActive_Icon::Bind_ShaderResources()
+HRESULT CMagic_Icon::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 	{
@@ -156,11 +138,15 @@ HRESULT CActive_Icon::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float))))
+	if (FAILED(m_pDiffuse_TextureCom1->Bind_ShaderResource(m_pShaderCom, "g_Texture1", 0)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fTime", &m_fTime, sizeof(_float))))
+	if (FAILED(m_pDiffuse_TextureCom2->Bind_ShaderResource(m_pShaderCom, "g_Texture2", 0)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float))))
 	{
 		return E_FAIL;
 	}
@@ -176,20 +162,24 @@ HRESULT CActive_Icon::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_iQuestType", &m_eType, sizeof(_uint))))
-	{
-		return E_FAIL;
-	}
 	return S_OK;
 }
 
-HRESULT CActive_Icon::Ready_Components(void* pArg)
+HRESULT CMagic_Icon::Ready_Components(void* pArg)
 {
 	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("ActiveMission_Icon"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UI_T_ActionItemBack_4K"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UI_T_ActionItemGoldleaf_4K"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UI_T_AncientMagicFinisher"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom2), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -201,41 +191,45 @@ HRESULT CActive_Icon::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-CActive_Icon* CActive_Icon::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CMagic_Icon* CMagic_Icon::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CActive_Icon* pInstance = new CActive_Icon(pDevice, pContext);
+	CMagic_Icon* pInstance = new CMagic_Icon(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CActive_Icon");
+		MSG_BOX("Failed to Created : CMagic_Icon");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CActive_Icon::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CMagic_Icon::Clone(void* pArg, CGameObject* pOwner)
 {
-	CActive_Icon* pInstance = new CActive_Icon(*this);
+	CMagic_Icon* pInstance = new CMagic_Icon(*this);
 	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CActive_Icon");
+		MSG_BOX("Failed to Cloned : CMagic_Icon");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CActive_Icon::Free()
+void CMagic_Icon::Free()
 {
 	__super::Free();
 
 	SAFE_RELEASE(m_pDiffuse_TextureCom);
+	SAFE_RELEASE(m_pDiffuse_TextureCom1);
+	SAFE_RELEASE(m_pDiffuse_TextureCom2);
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
-void CActive_Icon::Describe_Entity()
+#ifdef _DEBUG
+void CMagic_Icon::Describe_Entity()
 {
 }
+#endif // _DEBUG

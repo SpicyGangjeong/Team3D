@@ -2,7 +2,7 @@
 #include "Loading_Panel.h"
 #include "GameInstance.h"
 #include "LoadingWidget.h"
-//#include "LoadingWidget_Flame.h"
+#include "LoadingWidget_Flame.h"
 
 CLoading_Panel::CLoading_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPanelObject(pDevice, pContext)
@@ -41,7 +41,6 @@ HRESULT CLoading_Panel::Initialize(void* pArg)
 	{
 		return E_FAIL;
 	}
-	m_bVisible = true;
 	m_bActive = true;
 	return S_OK;
 }
@@ -108,11 +107,11 @@ HRESULT CLoading_Panel::Ready_Element(void* pArg)
 		return E_FAIL;
 	}
 	Add_Element(TEXT("LoadingWidget"), m_pLoadingWidget);
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLoadingWidget_Flame>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CLoadingWidget_Flame**>(&m_pLoadingWidget_Flame))))
-	//{
-	//	return E_FAIL;
-	//}
-	//Add_Element(TEXT("LoadingWidget_Flame"), m_pLoadingWidget_Flame);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLoadingWidget_Flame>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CLoadingWidget_Flame**>(&m_pLoadingWidget_Flame))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("LoadingWidget_Flame"), m_pLoadingWidget_Flame);
 
 	return S_OK;
 }
@@ -150,6 +149,8 @@ void CLoading_Panel::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
+#ifdef _DEBUG
 void CLoading_Panel::Describe_Entity()
 {
 }
+#endif // _DEBUG
