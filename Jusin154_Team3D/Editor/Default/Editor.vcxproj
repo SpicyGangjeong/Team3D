@@ -249,6 +249,7 @@
     <ClInclude Include="..\public\NoMountIcon.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\public\Potion.h" />
+    <ClInclude Include="..\Public\Revelio.h" />
     <ClInclude Include="..\Public\Protego.h" />
     <ClInclude Include="..\public\Slot_Number.h" />
     <ClInclude Include="..\public\Spell_Canvas.h" />
@@ -390,6 +391,7 @@
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\Player_States.cpp" />
     <ClCompile Include="..\private\Potion.cpp" />
+    <ClCompile Include="..\Private\Revelio.cpp" />
     <ClCompile Include="..\Private\Protego.cpp" />
     <ClCompile Include="..\private\Slot_Number.cpp" />
     <ClCompile Include="..\private\Spell_Canvas.cpp" />

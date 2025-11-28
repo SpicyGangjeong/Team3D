@@ -39,6 +39,7 @@ struct ParticleValue
     float  fSizeDrag;
     float3 vDeltaSize;
     float2 vDelay;
+
 };
 
 
@@ -112,6 +113,7 @@ void CS_MAIN(
             particle.vTranslation = CurMat[3].xyzw;
         }
     }
+    
     // 라이프타임 움직임
     particle.vLifeTime.x += fTimeDelta;
     

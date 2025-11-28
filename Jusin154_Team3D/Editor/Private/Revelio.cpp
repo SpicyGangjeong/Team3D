@@ -1,0 +1,203 @@
+﻿#include "pch.h"
+#include "Revelio.h"
+
+#include "GameInstance.h"
+#include "EditEffect.h"
+#include "Player.h"
+
+
+CRevelio::CRevelio(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	: CEffect_Container{ pDevice, pContext }
+{
+}
+
+CRevelio::CRevelio(const CRevelio& rhs)
+	: CEffect_Container(rhs)
+{
+}
+
+HRESULT CRevelio::Initialize_Prototype()
+{
+
+	return S_OK;
+
+}
+
+HRESULT CRevelio::Initialize(void* pArg)
+{
+	if (FAILED(__super::Initialize(pArg)))
+		return E_FAIL;
+
+	if (FAILED(Ready_Components(pArg)))
+		return E_FAIL;
+
+
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Revelio")))
+		return E_FAIL;
+
+	m_pRevelioPT_Y = Get_PartObject<CEditEffect>("WandPT_Y");
+	m_pRevelioPT_B = Get_PartObject<CEditEffect>("WandPT_B");
+	m_pRevelioPT_R = Get_PartObject<CEditEffect>("WandPT_R");
+
+	SAFE_ADDREF(m_pRevelioPT_Y);
+	SAFE_ADDREF(m_pRevelioPT_B);
+	SAFE_ADDREF(m_pRevelioPT_R);
+
+	m_wstrEffectName = L"Revelio";
+
+
+
+	m_fDuration = 1.5f;
+
+	return S_OK;
+}
+
+void CRevelio::Priority_Update(_float fTimeDelta)
+{
+	__super::Priority_Update(fTimeDelta);
+
+}
+
+void CRevelio::Update(_float fTimeDelta)
+{
+	if (m_bVisible == false)
+		return;
+
+	__super::Update(fTimeDelta);
+
+	Update_Event(fTimeDelta);
+	
+	CPlayer*  pPlayer = static_cast<CPlayer*>(m_pOwner);
+
+	if (pPlayer == nullptr)
+		return;
+
+	_vector pPos = pPlayer->Get_WandPos().r[3];
+
+	m_pRevelioPT_Y->Get_Component<CTransform>()->Set_State(STATE::POSITION, pPos);
+	m_pRevelioPT_R->Get_Component<CTransform>()->Set_State(STATE::POSITION, pPos);
+	m_pRevelioPT_B->Get_Component<CTransform>()->Set_State(STATE::POSITION, pPos);
+
+}
+
+void CRevelio::Late_Update(_float fTimeDelta)
+{
+	if (m_bVisible == false)
+		return;
+
+	__super::Late_Update(fTimeDelta);
+
+
+}
+
+HRESULT CRevelio::Pre_Setting(CGameObject* pObject)
+{
+	if (pObject == nullptr)
+		return E_FAIL;
+
+	m_pOwner = pObject;
+
+	Reset_EffectParts();
+
+	m_fAccTime = 0.f;
+	__super::m_fAccTime = 0.f;
+	m_fPreAccTime = 0.f;
+
+
+	CPlayer* pPlayer = static_cast<CPlayer*>(m_pOwner);
+
+	if (pPlayer == nullptr)
+		return E_FAIL;
+
+	_vector pPos = pPlayer->Get_WandPos().r[3];
+
+	m_pRevelioPT_Y->Get_Component<CTransform>()->Set_State(STATE::POSITION, pPos);
+	m_pRevelioPT_R->Get_Component<CTransform>()->Set_State(STATE::POSITION, pPos);
+	m_pRevelioPT_B->Get_Component<CTransform>()->Set_State(STATE::POSITION, pPos);
+
+	m_pRevelioPT_Y->Set_Visible(true);
+	m_pRevelioPT_R->Set_Visible(true);
+	m_pRevelioPT_B->Set_Visible(true);
+
+	m_bVisible = true;
+
+	return S_OK;
+}
+
+HRESULT CRevelio::Ready_Components(void* pArg)
+{
+	if (FAILED(__super::Ready_Components(pArg))) {
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+HRESULT CRevelio::Ready_Child()
+{
+	return S_OK;
+}
+
+CRevelio* CRevelio::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+{
+	CRevelio* pInstance = new CRevelio(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize_Prototype()))
+	{
+		MSG_BOX("Failed to Created : CRevelio");
+		SAFE_RELEASE(pInstance);
+	}
+
+	return pInstance;
+}
+
+
+CGameObject* CRevelio::Clone(void* pArg, CGameObject* pOwner)
+{
+	CRevelio* pInstance = new CRevelio(*this);
+	pInstance->m_pOwner = pOwner;
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("Failed to Cloned : CRevelio");
+		SAFE_RELEASE(pInstance);
+	}
+
+	return pInstance;
+}
+
+void CRevelio::OnCollision(CGameObject* pOther, void* pDesc)
+{
+	//CTransform* pOtherTransform = p
+	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
+
+}
+
+void CRevelio::Free()
+{
+	__super::Free();
+
+	//if(m_pPhysHitBox != nullptr)
+	//	if (m_pPhysHitBox->Get_Depth() == false)
+	//		SAFE_RELEASE(m_pPhysHitBox);
+
+
+	SAFE_RELEASE(m_pRevelioPT_Y);
+	SAFE_RELEASE(m_pRevelioPT_B);
+	SAFE_RELEASE(m_pRevelioPT_R);
+
+}
+#ifdef _DEBUG
+
+void CRevelio::Describe_Entity()
+{
+
+}
+
+#endif // _DEBUG
+
+HRESULT CRevelio::Bind_ShaderResources()
+{
+	return S_OK;
+}
+
+

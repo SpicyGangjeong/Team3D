@@ -100,6 +100,7 @@
 #include "Decendo.h"
 #include "Protego.h"
 #include "EffectPool.h"
+#include "Revelio.h"
 
 #pragma endregion
 
@@ -935,6 +936,9 @@ HRESULT CLoader::Loading_For_Effect()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CProtego>(ENUM_CLASS(LEVEL::EFFECT), CProtego::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRevelio>(ENUM_CLASS(LEVEL::EFFECT), CRevelio::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 

@@ -210,9 +210,8 @@ void CBombard::Free()
 {
 	__super::Free();
 
-	if(m_pPhysHitBox != nullptr)
-		if (m_pPhysHitBox->isDead() == false)
-			SAFE_RELEASE(m_pPhysHitBox);
+	if (m_pPhysHitBox != nullptr)
+		SAFE_RELEASE(m_pPhysHitBox);
 
 	SAFE_RELEASE(m_pLight_Projectile);
 

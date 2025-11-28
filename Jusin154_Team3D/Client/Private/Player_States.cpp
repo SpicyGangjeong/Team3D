@@ -23,25 +23,6 @@
 #include "EffectPool.h"
 
 
-_matrix CPlayer::Get_WandPos()
-{
-
-	m_
-
-	_matrix BoneMatrix = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("root"));
-
-	BoneMatrix = BoneMatrix * m_pTransformCom->Get_XMWorldMatrix();
-
-
-	BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[0]) * m_vOffset.x;
-	BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[1]) * m_vOffset.y;
-	BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[2]) * m_vOffset.z;
-
-	m_pEffectParts->Get_Component<CTransform>()->Set_WorldMatrix(BoneMatrix);
-
-	return _matrix();
-}
-
 #pragma region States
 
 void CPlayer::TestKeyInput(_float fTimeDelta)
@@ -639,6 +620,8 @@ void CPlayer::Behavior_CombatEnter()
 	if (m_pGameInstance->Key_Down(DIK_R)) {
 		m_pFSM->Enable_State(FSMSTATE::SKILL);
 		pairAnimInfo = m_Animation[STATEANIM::SKILL];
+
+
 	}
 	else if (m_pGameInstance->Key_Down(DIK_Q)) {
 		m_pFSM->Enable_State(FSMSTATE::SKILL2);
