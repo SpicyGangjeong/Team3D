@@ -82,24 +82,9 @@ private:
 	unordered_set<PSX::PxActor*>				m_pRestBodies = { }; // 피직스의 액터로 구별되기 때문에 피직스액터 포인터를 키로 사용함
 	map<_wstring, PSX::PxTriangleMesh*>			m_TriangleMeshes = {};
 	map<_wstring, PSX::PxTriangleMeshGeometry*>	m_TriangleMeshGeometry = {};
-#ifdef 기무리
+
+
 	PhsXUserData PlaneData = {};
-
-#endif // 기무리
-#ifdef 진우
-	PhsXUserData PlaneData = {};
-
-#endif // 기무리
-#ifdef gimch
-	PhsXUserData PlaneData = {};
-
-#endif // 기무리
-
-#ifdef Bin
-	PhsXUserData PlaneData = {};
-
-#endif // 기무리
-
 
 	vector<PSX::PxMaterial*> m_pMaterials = { };
 	_uint m_iNumLevel = {};

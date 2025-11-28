@@ -1,30 +1,30 @@
 ﻿#include "pch.h"
-#include "Mission_KeyHold.h"
+#include "MiniMap_TrimBorder.h"
 #include "GameInstance.h"
 
-CMission_KeyHold::CMission_KeyHold(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CMiniMap_TrimBorder::CMiniMap_TrimBorder(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
 {
 }
 
-CMission_KeyHold::CMission_KeyHold(const CMission_KeyHold& rhs)
+CMiniMap_TrimBorder::CMiniMap_TrimBorder(const CMiniMap_TrimBorder& rhs)
 	:CElementObject(rhs)
 {
 }
 
-HRESULT CMission_KeyHold::Initialize_Prototype()
+HRESULT CMiniMap_TrimBorder::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CMission_KeyHold::Initialize(void* pArg)
+HRESULT CMiniMap_TrimBorder::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = -297.f;
-	Desc.fY = 158.f;
-	Desc.fSizeX = 94.f;
-	Desc.fSizeY = 94.f;
+	Desc.fX = -20.f;
+	Desc.fY = 0;
+	Desc.fSizeX = 290.f;
+	Desc.fSizeY = 290.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -37,14 +37,15 @@ HRESULT CMission_KeyHold::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	m_fTimeMult = 1.f;
+	m_fTimeMult = 3.f;
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 3.f;
-	m_fPI = AI_MATH_TWO_PI_F;
+
+	m_bActive = true;
 	return S_OK;
 }
 
-void CMission_KeyHold::Priority_Update(_float fTimeDelta)
+void CMiniMap_TrimBorder::Priority_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -53,7 +54,7 @@ void CMission_KeyHold::Priority_Update(_float fTimeDelta)
 	__super::Priority_Update(fTimeDelta);
 }
 
-void CMission_KeyHold::Update(_float fTimeDelta)
+void CMiniMap_TrimBorder::Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -84,45 +85,11 @@ void CMission_KeyHold::Update(_float fTimeDelta)
 		}
 	}
 
-
-	if (m_bKeyHold == false)
-	{
-		if (m_pGameInstance->Key_Pressing(DIK_V))
-		{
-			m_fTime += fTimeDelta * m_fTimeMult;
-		}
-		else
-		{
-			m_fTime = 0.f;
-			m_bKeyHold = false;
-		}
-	}
-
-	if (m_pGameInstance->Key_Up(DIK_V))
-	{
-		m_bKeyHold = false;
-	}
-
-	if (m_fTimeMult <= m_fTime)
-	{
-		m_fTime = 0.f;
-		m_bisHoldOn = !m_bisHoldOn;
-		m_bKeyHold = true;
-	}
-
-	if (m_bisHoldOn)
-	{
-		static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Mission_On"));
-	}
-	else
-	{
-		static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Mission_Off"));
-	}
-
+	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
 }
 
-void CMission_KeyHold::Late_Update(_float fTimeDelta)
+void CMiniMap_TrimBorder::Late_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -134,12 +101,12 @@ void CMission_KeyHold::Late_Update(_float fTimeDelta)
 	}
 }
 
-HRESULT CMission_KeyHold::Render()
+HRESULT CMiniMap_TrimBorder::Render()
 {
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::HOLD_ROTATION)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::ALPHABLEND)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
@@ -152,12 +119,12 @@ HRESULT CMission_KeyHold::Render()
 	return S_OK;
 }
 
-_vector CMission_KeyHold::Get_WorldPostion()
+_vector CMiniMap_TrimBorder::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
 }
 
-HRESULT CMission_KeyHold::Bind_ShaderResources()
+HRESULT CMiniMap_TrimBorder::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 	{
@@ -183,11 +150,7 @@ HRESULT CMission_KeyHold::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fTimeMult", &m_fTimeMult, sizeof(_float))))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fPI", &m_fPI, sizeof(_float))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
 	{
 		return E_FAIL;
 	}
@@ -199,17 +162,17 @@ HRESULT CMission_KeyHold::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+	
 	return S_OK;
 }
 
-
-HRESULT CMission_KeyHold::Ready_Components(void* pArg)
+HRESULT CMiniMap_TrimBorder::Ready_Components(void* pArg)
 {
 	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_Finishi_Rect"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_HUD_MiniMap_TrimBorder"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -221,33 +184,33 @@ HRESULT CMission_KeyHold::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-CMission_KeyHold* CMission_KeyHold::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CMiniMap_TrimBorder* CMiniMap_TrimBorder::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CMission_KeyHold* pInstance = new CMission_KeyHold(pDevice, pContext);
+	CMiniMap_TrimBorder* pInstance = new CMiniMap_TrimBorder(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CMission_KeyHold");
+		MSG_BOX("Failed to Created : CMiniMap_TrimBorder");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CMission_KeyHold::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CMiniMap_TrimBorder::Clone(void* pArg, CGameObject* pOwner)
 {
-	CMission_KeyHold* pInstance = new CMission_KeyHold(*this);
+	CMiniMap_TrimBorder* pInstance = new CMiniMap_TrimBorder(*this);
 	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CMission_KeyHold");
+		MSG_BOX("Failed to Cloned : CMiniMap_TrimBorder");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CMission_KeyHold::Free()
+void CMiniMap_TrimBorder::Free()
 {
 	__super::Free();
 
@@ -256,6 +219,6 @@ void CMission_KeyHold::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
-void CMission_KeyHold::Describe_Entity()
+void CMiniMap_TrimBorder::Describe_Entity()
 {
 }

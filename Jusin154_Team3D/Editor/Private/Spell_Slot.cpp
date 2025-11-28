@@ -23,8 +23,8 @@ HRESULT CSpell_Slot::Initialize(void* pArg)
 
 	Desc.fX = 0.f;
 	Desc.fY = 0.f;
-	Desc.fSizeX = 100.f;
-	Desc.fSizeY = 100.f;
+	Desc.fSizeX = 105.f;
+	Desc.fSizeY = 105.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -45,7 +45,7 @@ HRESULT CSpell_Slot::Initialize(void* pArg)
 	m_fOffSetY = 101.f;
 	m_iCols = 4;
 	m_pVIBufferCom->Set_Cloned(true);
-	m_pVIBufferCom->Set_Pos(380.f, 0.f, m_fOffSetX, m_fOffSetY, m_iCols);
+	m_pVIBufferCom->Set_Pos(380.f, -30.f, m_fOffSetX, m_fOffSetY, m_iCols);
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
 	m_pVIBufferCom->Set_ImageUV();
 	return S_OK;
@@ -197,7 +197,7 @@ HRESULT CSpell_Slot::Bind_ShaderResources()
 
 HRESULT CSpell_Slot::Ready_Components(void* pArg)
 {
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_UI_Instance"), (CComponent**)&m_pVIBufferCom, nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_UI_Spell_Slot"), (CComponent**)&m_pVIBufferCom, nullptr)))
 	{
 		return E_FAIL;
 	}

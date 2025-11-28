@@ -21,10 +21,10 @@ HRESULT CNoMountIcon::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = 100.f;
-	Desc.fY = -55;
-	Desc.fSizeX = 50.f;
-	Desc.fSizeY = 50.f;
+	Desc.fX = 120.f;
+	Desc.fY = -90;
+	Desc.fSizeX = 65.f;
+	Desc.fSizeY = 65.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 

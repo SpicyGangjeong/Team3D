@@ -1,16 +1,20 @@
 ﻿#pragma once
 
-#include "Editor_Define.h"
-#include "ElementObject.h"
+#include "Client_Define.h"
+#include "PanelObject.h"
 
-NS_BEGIN(Editor)
+NS_BEGIN(Engine)
+class CGameObject;
+NS_END
 
-class CMission_KeyHold final : public CElementObject
+NS_BEGIN(Client)
+
+class CMiniMap_Panel final : public CPanelObject
 {
 private:
-	CMission_KeyHold(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CMission_KeyHold(const CMission_KeyHold& rhs);
-	virtual ~CMission_KeyHold() = default;
+	CMiniMap_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CMiniMap_Panel(const CMiniMap_Panel& rhs);
+	virtual ~CMiniMap_Panel() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -19,10 +23,10 @@ public:
 	virtual HRESULT Render() override;
 	virtual _vector Get_WorldPostion() override;
 
-
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;
+	virtual HRESULT Ready_Element(void* pArg) override;
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
@@ -30,12 +34,12 @@ private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
+	CGameObject* m_pMiniMap_TrimBorder = { nullptr };
+	CGameObject* m_pNoMountIcon = { nullptr };
 
-	_float	m_fPI{};
-	_bool	m_bisHoldOn = { false };
-	_bool	m_bKeyHold = { false };
+
 public:
-	static CMission_KeyHold* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CMiniMap_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 	void Describe_Entity() override;
