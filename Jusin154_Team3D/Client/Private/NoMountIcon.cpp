@@ -219,6 +219,8 @@ void CNoMountIcon::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
+#ifdef _DEBUG
 void CNoMountIcon::Describe_Entity()
 {
 }
+#endif // _DEBUG

@@ -228,6 +228,8 @@ void CMagic_Icon::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
+#ifdef _DEBUG
 void CMagic_Icon::Describe_Entity()
 {
 }
+#endif // _DEBUG

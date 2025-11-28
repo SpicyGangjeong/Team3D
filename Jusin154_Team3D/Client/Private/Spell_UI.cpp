@@ -303,6 +303,8 @@ void CSpell_UI::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
+#ifdef _DEBUG
 void CSpell_UI::Describe_Entity()
 {
 }
+#endif // _DEBUG
