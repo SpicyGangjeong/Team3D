@@ -23,7 +23,7 @@ public:
 	CHANNEL_DESC Fill_GPU_ChannelDesc();
 
 public:
-	void Update_TransformationMatirx(const vector<class CBone*>& Bones, const LOCALPOS_DESC* pLocalPosArray, _float fCurrentTrackPosition, _uint* pCurrentKeyFrameIndex,class CTransform* pTransform=nullptr,_float m_fAmount = 1.f);
+	void Update_TransformationMatirx(const vector<class CBone*>& Bones, const LOCALPOS_DESC* pLocalPosArray, _float fCurrentTrackPosition, _uint* pCurrentKeyFrameIndex, _vector vector[3],_float m_fAmount = 1.f);
 	_int Get_BoneIndex() { return { m_iBoneIndex }; }
 	void Set_BoneIndex(_int iBoneIndex) { m_iBoneIndex = iBoneIndex; }
 	void ResetRootMotion();
@@ -40,6 +40,15 @@ private:
 	HRESULT Initialize(const class CModel* pModel, SaveChannel* pSaveChannel);
 	//
 	HRESULT Initialize(const vector<class CBone*>& Bones, _uint iIndex);
+
+	// 주소 출력 함수 (편하게 쓰려고)
+	void DebugPrintAddr(const char* name, const void* addr)
+	{
+		char buf[256];
+		sprintf_s(buf, "%s = %p\n", name, addr);
+		OutputDebugStringA(buf);
+	}
+
 
 private:
 	_char					m_szName[MAX_PATH] = {};	// 영향을 받을 본의 이름

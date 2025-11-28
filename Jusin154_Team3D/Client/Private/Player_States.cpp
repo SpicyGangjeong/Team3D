@@ -309,12 +309,10 @@ void CPlayer::Behavior_MoveEnter()
 			m_bSprintToggle = false;
 			m_bWalkToggle = false;
 			pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
-			m_bRatio = true;
 		}
 	}
 
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, m_fAmount, m_bRatio);
-	m_fAmount = 1.f;
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, m_fAmount);
 }
 
 HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
@@ -470,28 +468,29 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 				_float absDir = fabsf(vDir);
 				if (absDir <= XMConvertToRadians(80.f)) {
 					pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
+					m_fAmount = 1.f;
+					m_bRatio = true;
 				}
 				else if (absDir < XMConvertToRadians(160.f)) {
 					if (cross > 0)
 					{
 						pairAnimInfo = m_Animation[STATEANIM::JOG_LEFT];
-						m_fAmount = 0.2f;
+						m_fAmount = 0.8f;
 						m_bRatio = true;
 					}
 					else {
 						pairAnimInfo = m_Animation[STATEANIM::JOG_RIGHT];
-						m_fAmount = 0.2f;
+						m_fAmount = 0.8f;
 						m_bRatio = true;
 					}
 				}
 				else {
 					pairAnimInfo = m_Animation[STATEANIM::JOG_BWD];
-					m_fAmount = 0.2f;
+					m_fAmount = 0.8f;
 					m_bRatio = true;
 				}
 
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,m_fAmount, m_bRatio);
-				m_fAmount = 1.f;
 			}
 		}
 		return S_OK;
@@ -643,10 +642,8 @@ void CPlayer::Behavior_CombatEnter()
 	else if (m_pGameInstance->Mouse_Up(DIM_LBUTTON)) {
 		m_pFSM->Enable_State(FSMSTATE::LIGHT_ATTACK);
 		pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK];
-
 		m_pModelCom->Anim_Event(0.1f, m_Animation[STATEANIM::LIGHT_ATTACK].first, [this]() {
 			m_pEffectPool->Use_Skill(SKILL_TYPE::JAP, this);
-
 			return E_FAIL;
 		});
 	}
@@ -774,14 +771,14 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 
 
 
-			m_pModelCom->Anim_Event(0.1f, m_Animation[STATEANIM::ACCIO].first, [this]() {
+			m_pModelCom->Anim_Event(0.f, m_Animation[STATEANIM::ACCIO].first, [this]() {
 				m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARD, this);
 
 				m_eSpell = STATEANIM::END;
 				return E_FAIL;
 				});
 
-			m_pModelCom->Anim_Event(0.1f, m_Animation[STATEANIM::DESCENDO].first, [this]() {
+			m_pModelCom->Anim_Event(0.f, m_Animation[STATEANIM::DESCENDO].first, [this]() {
 				m_pEffectPool->Use_Skill(SKILL_TYPE::DESCENDO, this);
 
 				m_eSpell = STATEANIM::END;

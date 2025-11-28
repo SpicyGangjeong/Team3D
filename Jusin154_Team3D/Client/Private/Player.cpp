@@ -55,7 +55,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 		return E_FAIL;
 	}
 #ifdef _DEBUG
-	//Load_KeyFrame();
+	Load_KeyFrame();
 #endif // _DEBUG
 
 
