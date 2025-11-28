@@ -12,8 +12,7 @@ public:
 	}UI_INSTANCE_DESC;
 	typedef struct tagUIAtlasDesc
 	{
-		_float2 fUVStart{};
-		_float2 fUVEnd{};
+		_float4 fUV{};
 	}UI_ATLAS_DESC;
 private:
 	CVIBuffer_UI_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

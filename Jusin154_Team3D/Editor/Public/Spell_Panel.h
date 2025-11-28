@@ -36,6 +36,10 @@ private:
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr }; 
 
 	CGameObject* m_pCurrent_Spell_Slot = { nullptr };
+	CGameObject* m_pSpell_List = { nullptr };
+	CGameObject* m_pEessential_Spell_Slot = { nullptr };
+	CGameObject* m_pEessential_Spell = { nullptr };
+	CGameObject* m_pSpell_List_Image = { nullptr };
 
 public:
 	static CSpell_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

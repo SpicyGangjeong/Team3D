@@ -39,13 +39,13 @@ HRESULT CCurrent_Spell_Slot::Initialize(void* pArg)
 
 	m_fAlpha = 1.f;
 	m_fTimeMult = 3.f;
-	m_fAngle = XMConvertToRadians(45);
+	m_fAngle = XMConvertToRadians(-135);
 	m_fAlphaTime = 1.f;
 	m_fOffSetX = 105.f;
 	m_fOffSetY = 150.f;
 	m_iCols = 4;
 	m_pVIBufferCom->Set_Cloned(true);
-	m_pVIBufferCom->Set_Pos(-780.f, -110.f, m_fOffSetX, m_fOffSetY, m_iCols);
+	m_pVIBufferCom->Set_Pos(-780.f, 340.f, m_fOffSetX, m_fOffSetY, m_iCols);
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
 	m_pVIBufferCom->Set_ImageUV();
 	return S_OK;
@@ -113,7 +113,7 @@ HRESULT CCurrent_Spell_Slot::Render()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::DEFAULT))))
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIINTANCE::DEFAULT))))
 	{
 		return E_FAIL;
 	}

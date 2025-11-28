@@ -200,8 +200,7 @@ typedef struct tagVertexInstance_UI
 {
 	_float2 fSize = {};
 	_float2 fPos = {};
-	_float2 fUVStart = {};
-	_float2 fUVEnd = {};
+	_float4 fUV = {};
 }VTX_INSTANCE_UI;
 
 typedef struct tagVertexBlock
@@ -349,15 +348,14 @@ typedef struct tagVertexModelInstanceModelDesc
 
 typedef struct tagVertexInstance_UIDesc
 {
-	static constexpr unsigned int iNumElements = {6};
+	static constexpr unsigned int iNumElements = {5};
 	static constexpr D3D11_INPUT_ELEMENT_DESC		Elements[] = {
 	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
 	{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
 
 	{ "TEXCOORD", 1, DXGI_FORMAT_R32G32_FLOAT, 1, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 	{ "TEXCOORD", 2, DXGI_FORMAT_R32G32_FLOAT, 1, 8, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-	{ "TEXCOORD", 3, DXGI_FORMAT_R32G32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-	{ "TEXCOORD", 4, DXGI_FORMAT_R32G32_FLOAT, 1, 24, D3D11_INPUT_PER_INSTANCE_DATA, 1 }
+	{ "TEXCOORD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 }
 	};
 
 }VTX_POSTEX_INSTANCE_UI;

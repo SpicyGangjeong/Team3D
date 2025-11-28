@@ -2,6 +2,10 @@
 #include "Spell_Panel.h"
 #include "GameInstance.h"
 #include "Current_Spell_Slot.h"
+#include "Spell_List.h"
+#include "Eessential_Spell_Slot.h"
+#include "Eessential_Spell.h"
+#include "Spell_List_Image.h"
 
 CSpell_Panel::CSpell_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPanelObject(pDevice, pContext)
@@ -160,6 +164,30 @@ HRESULT CSpell_Panel::Ready_Element(void* pArg)
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Current_Spell_Slot"), m_pCurrent_Spell_Slot);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_List>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_List**>(&m_pSpell_List))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Spell_List"), m_pSpell_List);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEessential_Spell_Slot>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CEessential_Spell_Slot**>(&m_pEessential_Spell_Slot))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Eessential_Spell_Slot"), m_pEessential_Spell_Slot);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEessential_Spell>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CEessential_Spell**>(&m_pEessential_Spell))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Eessential_Spell"), m_pEessential_Spell);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_List_Image>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_List_Image**>(&m_pSpell_List_Image))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Spell_List_Image"), m_pSpell_List_Image);
 
 	return S_OK;
 }

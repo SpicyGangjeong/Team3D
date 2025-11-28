@@ -208,6 +208,8 @@
     <ClInclude Include="..\Public\Dummy_PhysXWall.h" />
     <ClInclude Include="..\Public\Dummy_Plane.h" />
     <ClInclude Include="..\Public\Dummy_PhysXPlayable.h" />
+    <ClInclude Include="..\public\Eessential_Spell.h" />
+    <ClInclude Include="..\public\Eessential_Spell_Slot.h" />
     <ClInclude Include="..\public\HpBarBG.h" />
     <ClInclude Include="..\Public\Bombard.h" />
     <ClInclude Include="..\public\InstancedProp.h" />
@@ -251,6 +253,8 @@
     <ClInclude Include="..\public\Potion.h" />
     <ClInclude Include="..\public\Slot_Number.h" />
     <ClInclude Include="..\public\Spell_Canvas.h" />
+    <ClInclude Include="..\public\Spell_List.h" />
+    <ClInclude Include="..\public\Spell_List_Image.h" />
     <ClInclude Include="..\public\Spell_Panel.h" />
     <ClInclude Include="..\public\Spell_Slot_Preview.h" />
     <ClInclude Include="..\public\Spell_UI.h" />
@@ -346,6 +350,8 @@
     <ClCompile Include="..\Private\Dummy_PhysXWall.cpp" />
     <ClCompile Include="..\Private\Dummy_Plane.cpp" />
     <ClCompile Include="..\Private\Dummy_PhysXPlayable.cpp" />
+    <ClCompile Include="..\private\Eessential_Spell.cpp" />
+    <ClCompile Include="..\private\Eessential_Spell_Slot.cpp" />
     <ClCompile Include="..\Private\Goblin_States.cpp" />
     <ClCompile Include="..\private\HpBarBG.cpp" />
     <ClCompile Include="..\Private\Bombard.cpp" />
@@ -391,6 +397,8 @@
     <ClCompile Include="..\private\Potion.cpp" />
     <ClCompile Include="..\private\Slot_Number.cpp" />
     <ClCompile Include="..\private\Spell_Canvas.cpp" />
+    <ClCompile Include="..\private\Spell_List.cpp" />
+    <ClCompile Include="..\private\Spell_List_Image.cpp" />
     <ClCompile Include="..\private\Spell_Panel.cpp" />
     <ClCompile Include="..\private\Spell_Slot_Preview.cpp" />
     <ClCompile Include="..\private\Spell_UI.cpp" />

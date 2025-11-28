@@ -39,7 +39,7 @@ HRESULT CSpell_Slot::Initialize(void* pArg)
 
 	m_fAlpha = 1.f;
 	m_fTimeMult = 3.f;
-	m_fAngle = XMConvertToRadians(45);
+	m_fAngle = XMConvertToRadians(-135);
 	m_fAlphaTime = 1.f;
 	m_fOffSetX = 101.f;
 	m_fOffSetY = 101.f;

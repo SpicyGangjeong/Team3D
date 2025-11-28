@@ -55,10 +55,10 @@ HRESULT CSpell_Overlay::Initialize(void* pArg)
 
 void CSpell_Overlay::Compute_UI(_uint SpellID)
 {
-	_float2 fImage_Size = { 1024.f, 1536.f };
+	_float2 fImage_Size = { 1024.f, 1792.f };
 
 	_uint iCountX = 4;
-	_uint iCountY = 6;
+	_uint iCountY = 7;
 
 	_float iImageX = 256.f;
 	_float iImageY = 256.f;

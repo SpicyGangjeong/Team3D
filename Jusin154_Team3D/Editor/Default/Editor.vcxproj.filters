@@ -388,6 +388,18 @@
     <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Current_Spell_Slot">
       <UniqueIdentifier>{c7b1ffc6-548f-464c-8f19-8b6ff5913b06}</UniqueIdentifier>
     </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_List">
+      <UniqueIdentifier>{8d15e456-f0d7-45b6-b725-7f1a8c0f6b0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Eessential_Spell_Slot">
+      <UniqueIdentifier>{bae34bc2-3b69-40c0-8c9a-278dba07c8aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Eessential_Spell">
+      <UniqueIdentifier>{1700ba11-4e28-4934-b757-bfed96b74503}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_List_Image">
+      <UniqueIdentifier>{da710064-ef45-41e1-8fc5-1fc544cb4cb8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -756,6 +768,18 @@
     <ClInclude Include="..\public\Current_Spell_Slot.h">
       <Filter>50.UI\Spell_Canvas\Spell_Panel\Current_Spell_Slot</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Spell_List.h">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_List</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Eessential_Spell_Slot.h">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Eessential_Spell_Slot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Eessential_Spell.h">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Eessential_Spell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Spell_List_Image.h">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_List_Image</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -1122,6 +1146,18 @@
     </ClCompile>
     <ClCompile Include="..\private\Current_Spell_Slot.cpp">
       <Filter>50.UI\Spell_Canvas\Spell_Panel\Current_Spell_Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Spell_List.cpp">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_List</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Eessential_Spell_Slot.cpp">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Eessential_Spell_Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Eessential_Spell.cpp">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Eessential_Spell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Spell_List_Image.cpp">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_List_Image</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

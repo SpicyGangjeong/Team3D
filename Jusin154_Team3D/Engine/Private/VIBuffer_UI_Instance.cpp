@@ -171,7 +171,7 @@ void CVIBuffer_UI_Instance::Set_Pos(_float fX, _float fY, _float OffSetX, _float
 		_uint row = i / iCols;      // 세로 인덱스
 
 		pVertices[i].fPos.x = fX + col * OffSetX;
-		pVertices[i].fPos.y = fY + row * OffSetY;
+		pVertices[i].fPos.y = fY - row * OffSetY;
 	}
 
 	m_pContext->Unmap(m_pVBInstance, 0);
@@ -238,13 +238,11 @@ void CVIBuffer_UI_Instance::Set_ImageUV(UI_ATLAS_DESC* AtlasUV)
 	{
 		if (AtlasUV == nullptr)
 		{
-			pVertices[i].fUVStart = _float2(0.f, 0.f);
-			pVertices[i].fUVStart = _float2(1.f, 1.f);
+			pVertices[i].fUV = _float4(0.f, 0.f,1.f,1.f);
 		}
 		else
 		{
-			pVertices[i].fUVStart = AtlasUV[i].fUVStart;
-			pVertices[i].fUVEnd = AtlasUV[i].fUVEnd;
+			pVertices[i].fUV = AtlasUV[i].fUV;
 		}
 	}
 
