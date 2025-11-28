@@ -351,7 +351,7 @@ _matrix CPlayer::Get_WandPos()
 	if (pWand == nullptr)
 		return _matrix();
 
-	_matrix BoneMatrix = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("root"));
+	_matrix BoneMatrix = XMLoadFloat4x4(pWand->Get_BoneMatrixPtr("root"));
 
 	BoneMatrix = BoneMatrix * m_pTransformCom->Get_XMWorldMatrix();
 

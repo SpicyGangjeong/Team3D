@@ -111,7 +111,7 @@ HRESULT CEffectPool::Bind_ShaderResources()
 HRESULT CEffectPool::Ready_Effect()
 {
 
-	if(FAILED(Create_Effect(SKILL_TYPE::JAP, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if(FAILED(Create_Effect(SKILL_TYPE::JAP, 10, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
 		CNomalJap* pEffect = nullptr;
 

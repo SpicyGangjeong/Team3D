@@ -89,6 +89,7 @@ private:
 	HRESULT InputMove();
 	HRESULT InputKeyUpMove();
 	HRESULT InputSpell();
+	HRESULT InputAim();
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck(_float fTimeDelta);
@@ -113,6 +114,9 @@ private:
 	void	Behavior_CombatEnter();
 	HRESULT Behavior_CombatExitCheck();
 	void	Behavior_CombatExit();
+
+
+	void Player_InterpTurn(_float fTimeDelta);
 
 #pragma endregion
 
