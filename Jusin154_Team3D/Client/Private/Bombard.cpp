@@ -150,6 +150,8 @@ HRESULT CBombard::Ready_Child()
 		return E_FAIL;
 	}
 
+	SAFE_ADDREF(m_pPhysHitBox);
+
 	return S_OK;
 }
 
@@ -201,15 +203,15 @@ void CBombard::OnCollision(CGameObject* pOther, void* pDesc)
 	Get_PartObject<CEffectParts>("Bombard_Circle0")->Set_Visible(false);
 
 	m_pPhysHitBox->Set_Dead();
+	SAFE_RELEASE(m_pPhysHitBox);
 }
 
 void CBombard::Free()
 {
 	__super::Free();
 
-	//if(m_pPhysHitBox != nullptr)
-	//	if (m_pPhysHitBox->Get_Depth() == false)
-	//		SAFE_RELEASE(m_pPhysHitBox);
+	if (m_pPhysHitBox != nullptr)
+		SAFE_RELEASE(m_pPhysHitBox);
 
 	SAFE_RELEASE(m_pLight_Projectile);
 

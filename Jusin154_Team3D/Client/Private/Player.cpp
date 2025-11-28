@@ -343,6 +343,26 @@ void CPlayer::Update_CameraCoordinateSystem()
 	XMStoreFloat3(&m_vCameraLookDir, xmvCameraLook);
 }
 
+_matrix CPlayer::Get_WandPos()
+{
+	CModel* pWand = Get_PartObject<CWand>()->Get_Component<CModel>();
+
+	if (pWand == nullptr)
+		return _matrix();
+
+	_matrix BoneMatrix = XMLoadFloat4x4(pWand->Get_BoneMatrixPtr("root"));
+
+	BoneMatrix = BoneMatrix * m_pTransformCom->Get_XMWorldMatrix();
+
+	_float3 vOffset = _float3(0.f, -0.27f, -0.32f);
+
+	BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[0]) * vOffset.x;
+	BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[1]) * vOffset.y;
+	BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[2]) * vOffset.z;
+
+	return BoneMatrix;
+}
+
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CPlayer* pInstance = new CPlayer(pDevice, pContext);

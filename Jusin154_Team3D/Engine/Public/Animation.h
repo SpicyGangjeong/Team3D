@@ -21,7 +21,7 @@ public:
 	_int			Get_AnimProgressPostion(const _char* pAnimChannelName);
 	void			Set_AnimProgressPostion(const _char* pChannelName, _uint iPosition);
 	vector<_int>* Capture_Bones();
-	void InterpAnim(CAnimation* pPreAnim, vector<CBone*>& Bones, float fRatio);
+	void InterpAnim(CAnimation* pPreAnim, vector<CBone*>& Bones, _float fRatio);
 
 
 

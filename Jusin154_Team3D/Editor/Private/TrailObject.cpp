@@ -44,22 +44,42 @@ void CTrailObject::Update(_float fTimeDelta)
 		return;
 
 
-
-	if (m_TrailInfo.vDistortionTime.y == 0)
-		return;
-
-	m_TrailInfo.vDistortionTime.x += fTimeDelta;
-
-	if (m_TrailInfo.vDistortionTime.x > m_TrailInfo.vDistortionTime.y)
+	/* 디졸브 타임*/
+	if (m_TrailInfo.vDistortionTime.y != 0)
 	{
-		m_TrailInfo.vDistortionTime.x = 0.f;
+		m_TrailInfo.vDistortionTime.x += fTimeDelta;
+
+		if (m_TrailInfo.vDistortionTime.x > m_TrailInfo.vDistortionTime.y)
+		{
+			m_TrailInfo.vDistortionTime.x = 0.f;
+		}
 	}
+
+	/* 블룸 타임*/
+
+	if (m_TrailInfo.vBloomTime.y != 0)
+	{
+		m_TrailInfo.vBloomTime.x += fTimeDelta;
+
+		if (m_TrailInfo.vBloomTime.x > m_TrailInfo.vBloomTime.y)
+		{
+			m_TrailInfo.vBloomTime.x = 0.f;
+		}
+	}
+
 }
 
 void CTrailObject::Late_Update(_float fTimeDelta)
 {
 	if (m_bVisible == false)
 		return;
+
+
+	if (m_TrailInfo.isBloom == true)
+	{
+		m_pGameInstance->Add_RenderGroup(RENDER::BLOOM, this);
+	}
+
 
 	if (m_TrailInfo.isBlur == true)
 	{
@@ -376,6 +396,43 @@ HRESULT CTrailObject::Render_Blur()
 	return S_OK;
 }
 
+HRESULT CTrailObject::Render_Bloom()
+{
+	if (FAILED(Bind_ShaderResources()))
+	{
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fBloomStrength", &m_TrailInfo.fBloomStrength, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iBloomType", &m_TrailInfo.eBloomType, sizeof(_int)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isBloomDissolve", &m_TrailInfo.isBloomDissolve, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isBloomReverseDissolve", &m_TrailInfo.isBloomReverseDissolve, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vBloomTime", &m_TrailInfo.vBloomTime, sizeof(_float2)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_POSTEX::TRAIL_BLOOM))))
+		return E_FAIL;
+
+
+
+	if (FAILED(m_pTrailCom->Render()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 
 
 
@@ -420,6 +477,9 @@ void CTrailObject::Free()
 void CTrailObject::Describe_Entity()
 {
 
+	const char* pBloomType[] = { "NONE" , "BASIC" , "MUILTY" };
+	_int iCurrentBloomType = static_cast<_int>(m_TrailInfo.eBloomType);
+
 	if (GUI::TreeNode("TRAIL"))
 	{
 		m_pTrailCom->Describe_Entity();
@@ -430,7 +490,7 @@ void CTrailObject::Describe_Entity()
 		GUI::Checkbox("Masking", &m_TrailInfo.isMask);
 		GUI::Checkbox("Noise", &m_TrailInfo.isNoise);
 		GUI::Checkbox("Distortion", &m_TrailInfo.isDistortion);
-
+		GUI::Checkbox("Bloom", &m_TrailInfo.isBloom);
 
 		GUI::ColorEdit4("MixColor", (_float*)&m_TrailInfo.vColor);
 
@@ -464,6 +524,27 @@ void CTrailObject::Describe_Entity()
 
 			GUI::TreePop();
 		}
+
+		if (m_TrailInfo.isBloom)
+		{
+			if (GUI::TreeNode("BLOOM"))
+			{
+				if (ImGui::Combo("Bloom Type", &iCurrentBloomType, pBloomType, ENUM_CLASS(BLOOM_TYPE::END)))
+				{
+					m_TrailInfo.eBloomType = static_cast<BLOOM_TYPE>(iCurrentBloomType);
+				}
+
+				GUI::Checkbox("BloomDissolve", &m_TrailInfo.isBloomDissolve);
+				GUI::Checkbox("BloomReverseDissolve", &m_TrailInfo.isBloomReverseDissolve);
+
+				ImGui::PushItemWidth(80);
+				GUI::DragFloat("fBloomStrength", &m_TrailInfo.fBloomStrength, 0.001f, 0.f);
+				GUI::DragFloat2("fBloomTime", (_float*)&m_TrailInfo.vBloomTime, 0.001f, 0.f);
+
+				GUI::TreePop();
+			}
+		}
+
 
 		if (m_TrailInfo.isDiffuse == true)
 		{

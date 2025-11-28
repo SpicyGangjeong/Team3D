@@ -20,8 +20,8 @@ public:
 #ifdef _DEBUG
 	void Render_CameraCoordinateSystem();
 #endif // _DEBUG
-	_bool Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
-
+	_bool   Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
+	_matrix Get_WandPos();
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
 	class CMonster* m_pLockOnMonster = { nullptr };
@@ -71,8 +71,8 @@ public:
 public:
 	virtual void Reset_Sprint() { m_bSprintToggle = false; }
 	virtual void Reset_Walk() { m_bWalkToggle = false; }
-	template<typename T>
-	void Spawn_Effect();
+
+
 
 private:
 
@@ -89,6 +89,7 @@ private:
 	HRESULT InputMove();
 	HRESULT InputKeyUpMove();
 	HRESULT InputSpell();
+	HRESULT InputAim();
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck(_float fTimeDelta);
@@ -113,6 +114,9 @@ private:
 	void	Behavior_CombatEnter();
 	HRESULT Behavior_CombatExitCheck();
 	void	Behavior_CombatExit();
+
+
+	void Player_InterpTurn(_float fTimeDelta);
 
 #pragma endregion
 

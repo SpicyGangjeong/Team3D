@@ -36,23 +36,6 @@ HRESULT CWand::Initialize(void* pArg)
 
 	PartsDesc.pParentTransform = m_pTransformCom;
 
-	/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTrailObject>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Trail"), &PartsDesc, this, &m_pTrail))) {
-		assert(false);
-		return E_FAIL;
-	}
-
-	if (FAILED(m_pTrail->Load_Trail("../Bin/Resources/Data/Effect/Trail/Bombard_Trail", static_cast<LEVEL>(NEXT_LEVEL))))
-		return E_FAIL;
-
-
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEditEffect>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Effect"), &PartsDesc, this, &m_pEffectParts))) {
-		assert(false);
-		return E_FAIL;
-	}
-
-	m_pEffectParts->Load("../Bin/Resources/Data/Effect/Lumos/Lumos", static_cast<LEVEL>(NEXT_LEVEL));
-	m_pEffectParts->Set_Visible(true);*/
-
 	return S_OK;
 }
 
@@ -72,8 +55,6 @@ void CWand::Update(_float fTimeDelta)
 {
 
 	Describe_Entity();
-
-	m_pModelCom->Combined_BoneMatrix();
 
 	//_matrix BoneMatrix = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("root"));
 

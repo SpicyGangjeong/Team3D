@@ -24,16 +24,13 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+public:
 
 private:
 	const _float4x4*	 m_pSocketMatrices = {  };
 	CShader*			 m_pShaderCom = { nullptr };
 	CModel*				 m_pModelCom = { nullptr };
 
-	class CTrailObject*	  m_pTrail = { nullptr };
-	class CEffectParts*   m_pEffectParts = { nullptr };
-
-	_float3				  m_vOffset = {};
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
