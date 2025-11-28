@@ -110,7 +110,6 @@ void CPlayer::Update(_float fTimeDelta)
 
 	m_pFSM->Update_State(fTimeDelta);
 
-
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
 
@@ -127,7 +126,7 @@ void CPlayer::Update(_float fTimeDelta)
 
 void CPlayer::Late_Update(_float fTimeDelta)
 {
-	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_Position());
+	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 

@@ -396,12 +396,13 @@ void CVIBuffer_Terrain::ConvertToHeightField(const _tchar* pStaticKey)
 
 	for (_uint iRow = 0; iRow < m_iNumVerticesZ; ++iRow) {
 		for (_uint iCol = 0; iCol < m_iNumVerticesX; ++iCol) {
-			_uint iIndex = iRow * m_iNumVerticesZ + iCol;
+			_uint iIndex = iRow * m_iNumVerticesX + iCol;
+			_uint iPhysXIndex = iCol * m_iNumVerticesZ + iRow;
 
 			_float fRealHeight = m_HeigthValues[iIndex];
 			PSX::PxI16 iClampHeight = (PSX::PxI16)(PSX::PxClamp(fRealHeight, -32767.f, 32767.f));
 
-			PSX::PxHeightFieldSample& pxSample = pxSamples[iIndex];
+			PSX::PxHeightFieldSample& pxSample = pxSamples[iPhysXIndex];
 
 			pxSample.height = iClampHeight;
 			pxSample.materialIndex0 = pxSample.materialIndex1 = 0;

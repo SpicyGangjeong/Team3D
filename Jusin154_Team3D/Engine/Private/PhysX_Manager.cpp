@@ -133,7 +133,6 @@ PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody_Static& RigidBody
 		m_HeightFieldGeometry.emplace(RigidBody.Get_PxMeshKey(), pPxHeightGeometry);
 	}
 	break;
-		break;
 	default:
 		assert(false);
 		break;
