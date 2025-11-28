@@ -53,6 +53,8 @@ public:
 #pragma region Mesh
 	const _char* Get_MeshName(_uint iIndex);
 	_uint	Get_NumMeshes() const { return m_iNumMeshes; }
+	void Update_RootBone(_float Amount =1.f);
+	void Initialize_RootBone();
 #pragma endregion
 #pragma region Bone
 HRESULT					Bind_BoneMatrices(_uint iMeshIndex, class CShader* pShader, const _char* pConstantName);
@@ -115,9 +117,9 @@ private:
 	_bool						m_bPlayAnim = { true };
 	_float						m_fAmount = { 1.f };
 
-	_int						m_iPreAnimIndex = { 0 };
+	_int						m_iPreAnimIndex = { -1 };
 	_float						m_fBlendTime = { 0.f };
-	_float						m_fBlendDuration = { 0.3f };
+	_float						m_fBlendDuration = { 0.2f };
 
 	_float						m_fRadius = { 0.f };			// 컬링용 Radius
 	_float3						m_vRadiusOffset = {};			// 컬링용 Radius Offset
@@ -131,6 +133,8 @@ private:
 	_matrix						m_DeltaAnimationMatrix = {};		// 루트본의 델타애니메이션
 	class CTransform* m_pTransform = { nullptr };			// 모델 대상의 트랜스폼
 
+	_float m_fRatio = {};
+
 	// 바이너리
 	SaveModel* m_pSaveModel = { nullptr };
 	list<SaveModel> m_SaveModel;
@@ -139,6 +143,14 @@ private:
 	vector<_float4x4> m_BoneMatrix;
 	_bool m_bRatio = { false };
 
+	_float3					m_vPrevRootPos = { 0.f, 0.f, 0.f };
+	_float4					m_vPrevRootRot = { 0.f, 0.f, 0.f,0.f };
+	_matrix					m_BoneTransformationMatrix = {};
+	_bool					m_bInitialRootPos = { false };
+	_bool					m_bInitialRootRotSaved = { false };
+	_float4					m_vInitialRootRot = {};
+
+	_vector					m_vector[3];
 
 #pragma region Compute
 

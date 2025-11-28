@@ -213,10 +213,13 @@ HRESULT CLevel_GamePlay::Ready_Layer_SkyBox(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 {
-	
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))){
-		return E_FAIL;
-	}
+	/*for (_uint i = 0; i < 2; ++i)
+	{
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER,&i))) {
+			return E_FAIL;
+		}
+	}*/
+
 
 	return S_OK;
 }

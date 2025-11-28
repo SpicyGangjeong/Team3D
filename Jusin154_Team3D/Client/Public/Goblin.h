@@ -26,6 +26,7 @@ private:
 
 	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
 	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
+	_uint iIndex;
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
