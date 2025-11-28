@@ -105,12 +105,12 @@ void CHpBarBG::Update(_float fTimeDelta)
 
 	if (m_pGameInstance->Key_Down(DIK_3))
 	{
-		Lerp_PosX(20.f);
+		Lerp_PosX(100.f);
 	}
 
 	if (m_pGameInstance->Key_Down(DIK_4))
 	{
-		Lerp_PosX(-20.f);
+		Lerp_PosX(-101.f);
 	}
 	if (m_fHpBar <= 0.3f)
 	{
@@ -327,8 +327,6 @@ void CHpBarBG::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
-#ifdef _DEBUG
 void CHpBarBG::Describe_Entity()
 {
 }
-#endif // _DEBUG
