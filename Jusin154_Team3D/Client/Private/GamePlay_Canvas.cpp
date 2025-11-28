@@ -151,7 +151,6 @@ void CGamePlay_Canvas::Free()
 {
 	__super::Free();
 
-	SAFE_RELEASE(m_pLoading_Panel);
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
