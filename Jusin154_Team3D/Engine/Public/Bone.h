@@ -28,6 +28,7 @@ public:
 	_float3 Get_LocalPosition();
 	void Update_CombinedTransformationMatrix(const vector<CBone*>& Bones, _fmatrix PreTransformMatrix);
 	void Set_TransformationMatrix(_fmatrix TransformationMatrix); // 애니메이션에서 현재 로컬 매트릭스를 변경할 때 사용된다
+	_float4x4 Get_TransformationMatrix() { return m_TransformationMatrix; }
 	_int Get_ParentBoneIndex() { return m_iParentBoneIndex; }
 private:
 	_char m_szName[MAX_PATH] = {};						// 본의 이름

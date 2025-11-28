@@ -51,7 +51,9 @@ HRESULT CGoblin::Initialize(void* pArg)
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
 
-	m_pCharacter_Controller->Set_Position(XMVectorSet(-10.f, 0.f, -10.f, 1.f));
+
+
+	m_pCharacter_Controller->Set_Position(XMVectorSet(m_pGameInstance->Random_Float(-20.f, 20.f), 0.f, m_pGameInstance->Random_Float(-20.f, 20.f), 1.f));
 
 	return S_OK;
 }
