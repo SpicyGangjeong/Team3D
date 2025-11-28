@@ -652,6 +652,11 @@ void CGameInstance::RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTr
 	return m_pPhysX_Manager->RegistTriMesh(pName, pPxTriMesh);
 }
 
+void CGameInstance::RegistHeight(const _tchar* pName, PSX::PxHeightFieldDesc& Desc)
+{
+	return m_pPhysX_Manager->RegistHeight(pName, Desc);
+}
+
 PSX::PxRigidDynamic* CGameInstance::Add_DynamicActor(CRigidBody_Dynamic& RigidBody)
 {
 	return m_pPhysX_Manager->Add_DynamicActor(RigidBody);

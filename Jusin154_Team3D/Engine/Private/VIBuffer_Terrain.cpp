@@ -389,6 +389,43 @@ HRESULT CVIBuffer_Terrain::Initialize(void* pArg)
 	return S_OK;
 }
 
+void CVIBuffer_Terrain::ConvertToHeightField(const _tchar* pStaticKey)
+{
+	vector<PSX::PxHeightFieldSample> pxSamples = {};
+	pxSamples.resize(m_iNumVerticesZ * m_iNumVerticesX);
+
+	for (_uint iRow = 0; iRow < m_iNumVerticesZ; ++iRow) {
+		for (_uint iCol = 0; iCol < m_iNumVerticesX; ++iCol) {
+			_uint iIndex = iRow * m_iNumVerticesZ + iCol;
+
+			_float fRealHeight = m_HeigthValues[iIndex];
+			PSX::PxI16 iClampHeight = (PSX::PxI16)(PSX::PxClamp(fRealHeight, -32767.f, 32767.f));
+
+			PSX::PxHeightFieldSample& pxSample = pxSamples[iIndex];
+
+			pxSample.height = iClampHeight;
+			pxSample.materialIndex0 = pxSample.materialIndex1 = 0;
+			pxSample.clearTessFlag();
+		}
+	}
+
+	PSX::PxHeightFieldDesc Desc{};
+	Desc.format = PSX::PxHeightFieldFormat::eS16_TM;
+	Desc.nbRows = m_iNumVerticesZ;
+	Desc.nbColumns = m_iNumVerticesX;
+
+	Desc.samples.data = pxSamples.data();
+	Desc.samples.stride = sizeof(PSX::PxHeightFieldSample);
+	Desc.convexEdgeThreshold = 0;
+	if (false == Desc.isValid()) {
+		assert(false);
+	}
+	else {
+		m_pGameInstance->RegistHeight(pStaticKey, Desc);
+	}
+	
+}
+
 _bool CVIBuffer_Terrain::Picking(_fmatrix WorldMatrix, _float3* pOut)
 {
 	_matrix WorldInv = XMMatrixInverse(nullptr, WorldMatrix);
