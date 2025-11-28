@@ -55,7 +55,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 		return E_FAIL;
 	}
 #ifdef _DEBUG
-	Load_KeyFrame();
+	//Load_KeyFrame();
 #endif // _DEBUG
 
 
@@ -106,9 +106,7 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 
 void CPlayer::Update(_float fTimeDelta)
 {
-#ifdef _DEBUG
 	Update_CameraCoordinateSystem();
-#endif // _DEBUG
 
 	m_pFSM->Update_State(fTimeDelta);
 
@@ -329,14 +327,14 @@ HRESULT CPlayer::Bind_ShaderResources()
 }
 void CPlayer::ReLockOnTarget()
 {
-	SAFE_RELEASE(m_pLockOnMonster);
 	m_pLockOnMonster = m_pInfoInstance->Get_LockOnMonster();
 	if (nullptr != m_pLockOnMonster) {
-		SAFE_ADDREF(m_pLockOnMonster);
+		if (true == m_pLockOnMonster->isDead()) {
+			m_pLockOnMonster = nullptr;
+		}
 	}
 }
 
-#ifdef _DEBUG
 
 void CPlayer::Update_CameraCoordinateSystem()
 {
@@ -345,7 +343,6 @@ void CPlayer::Update_CameraCoordinateSystem()
 	XMStoreFloat3(&m_vCameraRightDir, XMVector3Normalize(XMVector3Cross(xmvUp, xmvCameraLook)));
 	XMStoreFloat3(&m_vCameraLookDir, xmvCameraLook);
 }
-#endif // _DEBUG
 
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
@@ -375,8 +372,6 @@ void CPlayer::Free()
 {
 	__super::Free();
 
-
-	SAFE_RELEASE(m_pLockOnMonster);
 
 	if (nullptr != m_pInfoInstance) {
 		CInfoInstance* pInfo = m_pInfoInstance;
