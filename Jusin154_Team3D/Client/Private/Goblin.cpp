@@ -90,7 +90,10 @@ HRESULT CGoblin::Render()
 	}
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-
+	_uint iShaderPass = ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT);
+	if (true == m_bDrawOutLine) {
+		iShaderPass = ENUM_CLASS(SHADER_PASS_ANIM::OUTLINE_WRITE);
+	}
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
 		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
@@ -101,7 +104,7 @@ HRESULT CGoblin::Render()
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
+		if (FAILED(m_pShaderCom->Begin(iShaderPass))) {
 			return E_FAIL;
 		}
 
@@ -205,7 +208,7 @@ CGoblin* CGoblin::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 CGameObject* CGoblin::Clone(void* pArg, CGameObject* pOwner)
 {
 	CGoblin* pInstance = new CGoblin(*this);
-
+	
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
 		MSG_BOX("Failed to Cloned : CGoblin");
