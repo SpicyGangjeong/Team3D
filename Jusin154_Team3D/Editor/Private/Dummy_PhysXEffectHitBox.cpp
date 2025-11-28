@@ -40,10 +40,6 @@ void CDummy_PhysXEffectHitBox::Priority_Update(_float fTimeDelta)
 void CDummy_PhysXEffectHitBox::Update(_float fTimeDelta)
 {
 	m_pTransformCom->AccumulateMomentum(XMLoadFloat3(&m_vDeltaPos));
-	m_vLifeTime.x += fTimeDelta;
-	if (m_vLifeTime.x > m_vLifeTime.y) {
-		m_bDead = true;
-	}
 }
 
 void CDummy_PhysXEffectHitBox::Late_Update(_float fTimeDelta)
@@ -110,6 +106,8 @@ HRESULT CDummy_PhysXEffectHitBox::Ready_Components(void* pArg)
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), (CComponent**)&m_pCharacter_Controller, &Desc))) {
 			return E_FAIL;
 		}
+
+		m_pCharacter_Controller->SetGravity(pDesc->bGravity);
 	}
 	m_pCharacter_Controller->Set_Position(m_pTransformCom->Get_State(STATE::POSITION));
 	/* Com_Shader */

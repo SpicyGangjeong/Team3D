@@ -68,6 +68,11 @@ void CEffectParts::Late_Update(_float fTimeDelta)
 		m_pGameInstance->BillBoard(m_pTransformCom);
 
 
+	if (m_EffectInfo.isBloom == true)
+	{
+		m_pGameInstance->Add_RenderGroup(RENDER::BLOOM, this);
+	}
+
 	if (m_EffectInfo.isBlur == true)
 	{
 		m_pGameInstance->Add_RenderGroup(RENDER::BLUR, this);

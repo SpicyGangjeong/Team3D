@@ -31,10 +31,9 @@ private:
 	virtual void	OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr) override;
 private:
 	_wstring						  m_wstrEffectName = {};
-	class CDummy_PhysXEffectHitBox*   m_pPhysHitBox = {};
 
-	class CPartObject* m_pProjectile = {};
-	class CPartObject* m_pProjectile_Side = {};
+	class CPartObject*				  m_pProjectile = {};
+	class CPartObject*				  m_pProjectile_Side = {};
 
 	_vector							  m_vRotateUp = {};
 	_float							  m_fAccTime = {};

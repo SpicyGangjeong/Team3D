@@ -98,6 +98,7 @@
 #include "NomalJap.h"
 #include "Bombard.h"
 #include "Decendo.h"
+#include "Protego.h"
 #include "EffectPool.h"
 
 #pragma endregion
@@ -683,7 +684,9 @@ HRESULT CLoader::Loading_For_Effect()
 {
 	
 	m_strMessage = TEXT("PhysX Meshes Loading..");
-	{ // Dumping Box
+	{
+		
+		// Dumping Box
 		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
 		{
 			Desc.eType = ACTOR::BOX;
@@ -879,6 +882,7 @@ HRESULT CLoader::Loading_For_Effect()
 	m_strMessage = TEXT("Prototype Loading..");
 
 
+
 	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXBox>(g_iStaticLevel, CDummy_PhysXBox::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
@@ -928,6 +932,9 @@ HRESULT CLoader::Loading_For_Effect()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CDecendo>(ENUM_CLASS(LEVEL::EFFECT), CDecendo::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CProtego>(ENUM_CLASS(LEVEL::EFFECT), CProtego::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 
