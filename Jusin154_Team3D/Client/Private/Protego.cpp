@@ -3,7 +3,6 @@
 
 #include "GameInstance.h"
 #include "EffectParts.h"
-#include "PhysXEffectHitBox.h"
 
 
 CProtego::CProtego(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -46,6 +45,18 @@ HRESULT CProtego::Initialize(void* pArg)
 	m_wstrEffectName = L"Protego";
 
 
+	m_Events.emplace(1.3f, [&]() {
+
+		m_pSphere->Set_Dissolve(true);
+		m_pBottom->Set_Dissolve(true);
+		m_pCircle->Set_Dissolve(true);
+
+		});
+
+
+	m_fAmountSize = 0.1f;
+	m_fSpeed = 5.f;
+
 	m_fDuration = 2.5f;
 
 	return S_OK;
@@ -64,11 +75,25 @@ void CProtego::Update(_float fTimeDelta)
 
 	m_pSphere->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
 	m_pBottom->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
-	m_pCircle-> Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
+	m_pCircle->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
 
 	__super::Update(fTimeDelta);
 
 	Update_Event(fTimeDelta);
+
+
+
+	/* 시작 사이즈 러프 */
+	if (m_fSizeAccTime > XM_PIDIV2)
+		return;
+
+	m_fSizeAccTime += fTimeDelta * m_fSpeed;
+
+	_float fSize = 1 + sinf(m_fSizeAccTime) * m_fAmountSize;
+	_float3 vSize = _float3(fSize, fSize, fSize);
+
+	m_pSphere->Get_Component<CTransform>()->Set_Scale(vSize);
+	m_pCircle->Get_Component<CTransform>()->Set_Scale(vSize);
 }
 
 void CProtego::Late_Update(_float fTimeDelta)
@@ -94,9 +119,25 @@ HRESULT CProtego::Pre_Setting(CGameObject* pObject)
 	__super::m_fAccTime = 0.f;
 	m_fPreAccTime = 0.f;
 
+
+	m_pSphere->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
+	m_pBottom->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
+	m_pCircle->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
+
 	m_pSphere->Set_Visible(true);
 	m_pCircle->Set_Visible(true);
 	m_pBottom->Set_Visible(true);
+
+
+	_float3 vSize = _float3(1.f, 1.f, 1.f);
+	m_pSphere->Get_Component<CTransform>()->Set_Scale(vSize);
+	m_pCircle->Get_Component<CTransform>()->Set_Scale(vSize);
+
+	m_fSizeAccTime = 0.f;
+
+	m_pSphere->Set_Dissolve(false);
+	m_pBottom->Set_Dissolve(false);
+	m_pCircle->Set_Dissolve(false);
 
 	m_bVisible = true;
 
@@ -168,7 +209,12 @@ void CProtego::Free()
 
 void CProtego::Describe_Entity()
 {
+	GUI::Begin("PROTEGO");
 
+	GUI::DragFloat("fAmountSize", &m_fAmountSize);
+	GUI::DragFloat("fSpeed", &m_fSpeed);
+
+	GUI::End();
 }
 
 #endif // _DEBUG

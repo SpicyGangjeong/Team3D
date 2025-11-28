@@ -35,6 +35,8 @@ protected:
 	void			Update_Event(_float fTimeDelta);
 
 protected:
+	class CDummy_PhysXEffectHitBox* m_pPhysHitBox = {};
+protected:
 	_wstring						m_wstrEffectName = {};
 
 	_bool							m_isLoop = {};

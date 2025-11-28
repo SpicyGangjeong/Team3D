@@ -57,6 +57,8 @@ HRESULT CWand::Initialize(void* pArg)
 
 	m_pEffectParts->Set_Visible(true);
 
+	m_vOffset = _float3(0.f, -0.27f, -0.32f);
+
 	return S_OK;
 }
 

@@ -56,6 +56,17 @@ public:
 		_float		fBlurIntensity = {};
 		_int		iBlurWeight = {};
 
+		/* 블룸 */
+		_bool   isBloom = {};
+
+		_bool   isBloomDissolve = {};
+		_bool   isBloomReverseDissolve = {};
+
+		_float		fBloomStrength = {};
+
+		BLOOM_TYPE eBloomType = {};
+		_float2    vBloomTime = {};
+
 	}TRAIL_INFO;
 private:
 	CTrailObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -79,7 +90,7 @@ private:
 	virtual HRESULT Ready_Components(void* pArg) override;
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Blur() override;
-
+	virtual HRESULT Render_Bloom() override;
 
 public:
 	static CTrailObject* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

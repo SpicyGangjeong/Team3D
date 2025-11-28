@@ -35,6 +35,9 @@ protected:
 	void			Update_Event(_float fTimeDelta);
 	HRESULT			Reset_EffectParts();
 protected:
+	class CPhysXEffectHitBox* m_pPhysHitBox = {};
+
+protected:
 	_wstring						m_wstrEffectName = {};
 
 	_bool							m_isLoop = {};

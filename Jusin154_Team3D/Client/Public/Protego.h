@@ -33,9 +33,13 @@ private:
 private:
 	_wstring						  m_wstrEffectName = {};
 
-	CPartObject* m_pSphere = { nullptr };
-	CPartObject* m_pBottom = { nullptr };
-	CPartObject* m_pCircle = { nullptr };
+	class CEffectParts* m_pSphere = { nullptr };
+	class CEffectParts* m_pBottom = { nullptr };
+	class CEffectParts* m_pCircle = { nullptr };
+
+	_float		 m_fSizeAccTime = {};
+	_float       m_fAmountSize = {};
+	_float       m_fSpeed = {};
 public:
 	static CProtego* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

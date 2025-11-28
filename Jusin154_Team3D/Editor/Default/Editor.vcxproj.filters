@@ -388,6 +388,9 @@
     <Filter Include="02.GameObjects\Layer_Effect\EffectPool">
       <UniqueIdentifier>{c0589f6e-ed9c-4e76-8df2-4f95ce3c7b9a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\08.Protego">
+      <UniqueIdentifier>{8bb21e5b-933f-4930-8d49-1093e0c3ea77}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -756,6 +759,9 @@
     <ClInclude Include="..\Public\EffectPool.h">
       <Filter>02.GameObjects\Layer_Effect\EffectPool</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Protego.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\08.Protego</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -1122,6 +1128,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\EffectPool.cpp">
       <Filter>02.GameObjects\Layer_Effect\EffectPool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Protego.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\08.Protego</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
