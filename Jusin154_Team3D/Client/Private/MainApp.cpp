@@ -62,7 +62,7 @@ void CMainApp::Update(_float fTimeDelta)
 	GUI::NewFrame();
 #ifdef _DEBUG
 	m_pGameInstance->Present_TimeCost();
-	GUI::DragFloat("fTimeMult", &g_fTimeMult, 0.01f, 0.f, 4.f);
+	GUI::SliderFloat("fTimeMult", &g_fTimeMult, 0.01f, 4.f);
 	m_pGameInstance->Update_Engine(fTimeDelta * g_fTimeMult);
 #endif // _DEBUG
 #ifndef _DEBUG

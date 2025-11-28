@@ -50,8 +50,8 @@ private:
 	HRESULT Bind_ShaderResources();
 	void ReLockOnTarget();
 
-#ifdef _DEBUG
 	void Update_CameraCoordinateSystem();
+#ifdef _DEBUG
 	unique_ptr<BasicEffect> m_BasicEffect;
 	unique_ptr<PrimitiveBatch<VertexPositionColor>> m_Batch;
 #endif // _DEBUG
