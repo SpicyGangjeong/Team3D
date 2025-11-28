@@ -55,7 +55,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 		return E_FAIL;
 	}
 #ifdef _DEBUG
-	Load_KeyFrame();
+	//Load_KeyFrame();
 #endif // _DEBUG
 
 
@@ -106,9 +106,7 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 
 void CPlayer::Update(_float fTimeDelta)
 {
-#ifdef _DEBUG
 	Update_CameraCoordinateSystem();
-#endif // _DEBUG
 
 	m_pFSM->Update_State(fTimeDelta);
 
@@ -336,7 +334,6 @@ void CPlayer::ReLockOnTarget()
 	}
 }
 
-#ifdef _DEBUG
 
 void CPlayer::Update_CameraCoordinateSystem()
 {
@@ -345,7 +342,6 @@ void CPlayer::Update_CameraCoordinateSystem()
 	XMStoreFloat3(&m_vCameraRightDir, XMVector3Normalize(XMVector3Cross(xmvUp, xmvCameraLook)));
 	XMStoreFloat3(&m_vCameraLookDir, xmvCameraLook);
 }
-#endif // _DEBUG
 
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
