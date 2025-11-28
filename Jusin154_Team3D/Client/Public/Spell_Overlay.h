@@ -39,6 +39,7 @@ private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
 	CTexture* m_pDiffuse_TextureCom2 = { nullptr };
+	CTexture* m_pDiffuse_TextureCom3 = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
@@ -53,6 +54,7 @@ public:
 	virtual void Free() override;
 #ifdef _DEBUG
 	void Describe_Entity() override;
+
 #endif // _DEBUG
 };
 
