@@ -488,19 +488,6 @@ HRESULT CPhysX_Manager::Initialize()
 	m_pMaterials.reserve(ENUM_CLASS(PXMATERIAL::END));
 	m_pMaterials.push_back(m_pPhysics->createMaterial(0.5f, 0.5f, 0.6f));
 
-#ifndef _DEBUG
-	PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
-	PlaneData.iSubKind = UINT_MAX;
-	PlaneData.pOwner = nullptr;
-	PlaneData.pBody = nullptr;
-
-	PSX::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *m_pMaterials[ENUM_CLASS(PXMATERIAL::DEFAULT)]);
-	pGroundPlane->userData = &PlaneData;
-	pGroundPlane->setName("PHYSX_MANAGER_PLANE");
-	m_pScene->addActor(*pGroundPlane);;
-#endif // _DEBUG
-
-
 	// m_pScene->overlap();??????
 
 	PlaneData.eKind = PHYSX_KIND::BODY_STATIC;

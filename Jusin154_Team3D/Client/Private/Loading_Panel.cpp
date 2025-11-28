@@ -149,6 +149,8 @@ void CLoading_Panel::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
+#ifdef _DEBUG
 void CLoading_Panel::Describe_Entity()
 {
 }
+#endif // _DEBUG

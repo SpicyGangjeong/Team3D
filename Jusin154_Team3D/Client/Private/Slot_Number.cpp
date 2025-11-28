@@ -293,6 +293,8 @@ void CSlot_Number::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
+#ifdef _DEBUG
 void CSlot_Number::Describe_Entity()
 {
 }
+#endif // _DEBUG

@@ -274,6 +274,8 @@ void CPotion::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
+#ifdef _DEBUG
 void CPotion::Describe_Entity()
 {
 }
+#endif // _DEBUG
