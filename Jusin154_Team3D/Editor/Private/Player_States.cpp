@@ -98,6 +98,15 @@ HRESULT CPlayer::InputSpell()
 	return E_FAIL;
 }
 
+HRESULT CPlayer::InputAimMove()
+{
+	if (m_pGameInstance->Mouse_Pressing(DIM_RBUTTON))
+	{
+		return S_OK;
+	}
+	return E_FAIL;
+}
+
 void CPlayer::Behavior_IdleEnter() {
 	m_pFSM->Enable_State(FSMSTATE::IDLE);
 	pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::IDLE];
