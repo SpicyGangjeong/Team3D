@@ -13,8 +13,9 @@ float g_fRimPower;
 float3 g_vRimColor;
 float4 g_TestColor;
 float3 g_vOutLineColor;
+float g_fOutLineScale;
 float g_fOutLineThickness;
-//float g_fPow;
+float g_fOutLinePower;
 vector g_vCamPosition;
 
 Texture2D g_DiffuseTexture;
@@ -95,7 +96,11 @@ struct VS_OUT_OUTLINE
 {
     float4 vPosition : SV_Position;
     float3 vNormal : NORMAL;
+    float3 vTangent : TANGENT;
+    float3 vBinormal : BINORMAL;
+    float2 vTexcoord : TEXCOORD0;
     float4 vWorldPos : TEXCOORD1;
+    float4 vProjPos : TEXCOORD2;
 };
 
 VS_OUT_OUTLINE VS_MAIN_OUTLINE(VS_IN In)
@@ -112,6 +117,8 @@ VS_OUT_OUTLINE VS_MAIN_OUTLINE(VS_IN In)
     
     vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);
     vector vNormal = mul(vector(In.vNormal, 0.f), BoneMatrix);
+    vector vBinormal = mul(vector(In.vBinormal, 0.f), BoneMatrix);
+    vector vTangent = mul(vector(In.vTangent, 0.f), BoneMatrix);
     vPosition.xyz += (vNormal.xyz * g_fOutLineThickness).xyz;
 
 
@@ -121,7 +128,11 @@ VS_OUT_OUTLINE VS_MAIN_OUTLINE(VS_IN In)
     
     Out.vPosition = mul(vPosition, matWVP);
     Out.vNormal = normalize(mul(vNormal, g_WorldMatrix)).xyz;
+    Out.vBinormal = normalize(mul(vBinormal, g_WorldMatrix)).xyz;
+    Out.vTangent = normalize(mul(vTangent, g_WorldMatrix)).xyz;
+    Out.vTexcoord = In.vTexcoord;
     Out.vWorldPos = mul(vPosition, g_WorldMatrix);
+    Out.vProjPos = Out.vPosition;
     return Out;
 }
 struct VS_OUT_CAPTUREDMODEL
@@ -292,23 +303,40 @@ struct PS_IN_OUTLINE
 {
     float4 vPosition : SV_Position;
     float3 vNormal : NORMAL;
+    float3 vTangent : TANGENT;
+    float3 vBinormal : BINORMAL;
+    float2 vTexcoord : TEXCOORD0;
     float4 vWorldPos : TEXCOORD1;
+    float4 vProjPos : TEXCOORD2;
 };
 struct PS_OUT_OUTLINE
 {
     float4 vOutLine : SV_TARGET0;
+    float4 vNormal : SV_TARGET1;
+    float4 vDepth : SV_TARGET2;
 };
 
 PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
 {
     PS_OUT_OUTLINE Out = (PS_OUT_OUTLINE) 0;
     
-    float3 vToView = normalize(g_vCamPosition.xyz - In.vWorldPos.xyz); // 픽셀에서 카메라로
-    if (dot(vToView, In.vNormal) >= -0.12f)
-    {
-        discard;
-    }
-    Out.vOutLine = float4(g_vOutLineColor, 1.f);
+    float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
+    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
+    
+    float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
+    
+    float3 vToView = normalize(g_vCamPosition.xyz - In.vWorldPos.xyz);
+
+    float fNdotV = saturate(dot(vNormal, vToView));
+    float fRim = saturate((1.0f - fNdotV) * g_fOutLineScale);
+    fRim = pow(fRim, g_fOutLinePower);
+
+    Out.vOutLine = float4(g_vOutLineColor.rgb, fRim);
+    Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
+    (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
+    0, // 서페이스 파라미터
+    1.f);
     
     return Out;
 }
@@ -482,10 +510,20 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_EYELASH();
     }
 
-    pass OutLinePass // 6
+    pass OutLine_Write_Pass // 6
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default_OutLine_Write, 1);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN();
+    }
+
+    pass OutLine_Read_Pass // 7
     {
         SetRasterizerState(RS_Front);
-        SetDepthStencilState(DSS_Default, 0);
+        SetDepthStencilState(DSS_Default_OutLine_Read, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN_OUTLINE();
         GeometryShader = NULL;
