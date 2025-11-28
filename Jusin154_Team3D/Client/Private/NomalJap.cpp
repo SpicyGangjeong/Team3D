@@ -241,8 +241,7 @@ void CNomalJap::Free()
 	__super::Free();
 
 	if (m_pPhysHitBox != nullptr)
-		if (m_pPhysHitBox->isDead() == false)
-			SAFE_RELEASE(m_pPhysHitBox);
+		SAFE_RELEASE(m_pPhysHitBox);
 
 	Safe_Release(m_pProjectile);
 	Safe_Release(m_pProjectile_Side);

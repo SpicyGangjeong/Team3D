@@ -18,7 +18,7 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	_bool Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
-
+	_matrix Get_WandPos();
 private:
 	_float m_fDirectionRadian = 0.f;
 
