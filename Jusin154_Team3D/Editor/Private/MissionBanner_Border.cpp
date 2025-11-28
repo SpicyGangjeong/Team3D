@@ -26,7 +26,7 @@ HRESULT CMissionBanner_Border::Initialize(void* pArg)
 	Desc.fX = -207.f;
 	Desc.fY = 115.f;
 	Desc.fSizeX = 256.f;
-	Desc.fSizeY = 175.f;
+	Desc.fSizeY = 128.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 

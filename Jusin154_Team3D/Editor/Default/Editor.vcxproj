@@ -166,6 +166,7 @@
     <ClInclude Include="..\Public\Action_Panel.h" />
     <ClInclude Include="..\public\AlphaMap.h" />
     <ClInclude Include="..\Public\Body.h" />
+    <ClInclude Include="..\public\Current_Spell_Slot.h" />
     <ClInclude Include="..\Public\Decendo.h" />
     <ClInclude Include="..\Public\Broom.h" />
     <ClInclude Include="..\Public\CallBack_EffectHitBox_Behavior.h" />
@@ -303,6 +304,7 @@
     <ClCompile Include="..\Private\Action_Panel.cpp" />
     <ClCompile Include="..\private\AlphaMap.cpp" />
     <ClCompile Include="..\Private\Body.cpp" />
+    <ClCompile Include="..\private\Current_Spell_Slot.cpp" />
     <ClCompile Include="..\Private\Decendo.cpp" />
     <ClCompile Include="..\Private\Broom.cpp" />
     <ClCompile Include="..\Private\CallBack_EffectHitBox_Behavior.cpp" />

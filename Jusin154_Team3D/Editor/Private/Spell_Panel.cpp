@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Spell_Panel.h"
 #include "GameInstance.h"
+#include "Current_Spell_Slot.h"
 
 CSpell_Panel::CSpell_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPanelObject(pDevice, pContext)
@@ -154,6 +155,12 @@ HRESULT CSpell_Panel::Ready_Components(void* pArg)
 
 HRESULT CSpell_Panel::Ready_Element(void* pArg)
 {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCurrent_Spell_Slot>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CCurrent_Spell_Slot**>(&m_pCurrent_Spell_Slot))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Current_Spell_Slot"), m_pCurrent_Spell_Slot);
+
 	return S_OK;
 }
 

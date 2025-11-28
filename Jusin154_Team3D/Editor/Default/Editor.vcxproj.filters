@@ -385,6 +385,9 @@
     <Filter Include="50.UI\Spell_Canvas\Spell_Panel">
       <UniqueIdentifier>{d9a965e7-77c6-450f-88e8-ef69c42d9053}</UniqueIdentifier>
     </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Current_Spell_Slot">
+      <UniqueIdentifier>{c7b1ffc6-548f-464c-8f19-8b6ff5913b06}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -750,6 +753,9 @@
     <ClInclude Include="..\public\Spell_Panel.h">
       <Filter>50.UI\Spell_Canvas\Spell_Panel</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Current_Spell_Slot.h">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Current_Spell_Slot</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -1113,6 +1119,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Spell_Panel.cpp">
       <Filter>50.UI\Spell_Canvas\Spell_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Current_Spell_Slot.cpp">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Current_Spell_Slot</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
