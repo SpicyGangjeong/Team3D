@@ -3,6 +3,12 @@
 #include "Client_Define.h"
 #include "ElementObject.h"
 
+NS_BEGIN(Engine)
+class CTexture;
+class CShader;
+class CVIBuffer_Rect;
+NS_END
+
 NS_BEGIN(Client)
 
 class CLoadingWidget final : public CElementObject

@@ -1,30 +1,30 @@
 ﻿#include "pch.h"
-#include "Mission_Key.h"
+#include "NoMountIcon.h"
 #include "GameInstance.h"
 
-CMission_Key::CMission_Key(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CNoMountIcon::CNoMountIcon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
 {
 }
 
-CMission_Key::CMission_Key(const CMission_Key& rhs)
+CNoMountIcon::CNoMountIcon(const CNoMountIcon& rhs)
 	:CElementObject(rhs)
 {
 }
 
-HRESULT CMission_Key::Initialize_Prototype()
+HRESULT CNoMountIcon::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CMission_Key::Initialize(void* pArg)
+HRESULT CNoMountIcon::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = -297.f;
-	Desc.fY = 159.f;
-	Desc.fSizeX = 40.f;
-	Desc.fSizeY = 40.f;
+	Desc.fX = 120.f;
+	Desc.fY = -90;
+	Desc.fSizeX = 65.f;
+	Desc.fSizeY = 65.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -38,13 +38,14 @@ HRESULT CMission_Key::Initialize(void* pArg)
 	}
 
 	m_fTimeMult = 3.f;
-	m_fAlpha = 1.f;
+	m_fAlpha = 0.7f;
 	m_fAlphaTime = 3.f;
-	AlphabetUV('V');
+
+	m_bActive = true;
 	return S_OK;
 }
 
-void CMission_Key::Priority_Update(_float fTimeDelta)
+void CNoMountIcon::Priority_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -53,7 +54,7 @@ void CMission_Key::Priority_Update(_float fTimeDelta)
 	__super::Priority_Update(fTimeDelta);
 }
 
-void CMission_Key::Update(_float fTimeDelta)
+void CNoMountIcon::Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -62,13 +63,13 @@ void CMission_Key::Update(_float fTimeDelta)
 
 	if (m_bFadeIn == true)
 	{
-		if (m_fAlpha <= 1.f)
+		if (m_fAlpha <= 7.f)
 			m_fAlpha += fTimeDelta * m_fAlphaTime;
 
-		if (m_fAlpha >= 1.f)
+		if (m_fAlpha >= 7.f)
 		{
 			m_bFadeIn = false;
-			m_fAlpha = 1.f;
+			m_fAlpha = 7.f;
 		}
 	}
 
@@ -83,28 +84,29 @@ void CMission_Key::Update(_float fTimeDelta)
 			m_fAlpha = 0.f;
 		}
 	}
+
 	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
 }
 
-void CMission_Key::Late_Update(_float fTimeDelta)
+void CNoMountIcon::Late_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
 		return;
 	}
 	if (m_bVisible) {
-			m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
+		m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
 		__super::Late_Update(fTimeDelta);
 	}
 }
 
-HRESULT CMission_Key::Render()
+HRESULT CNoMountIcon::Render()
 {
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::REMOVEUV)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::ALPHABLEND)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
@@ -117,38 +119,12 @@ HRESULT CMission_Key::Render()
 	return S_OK;
 }
 
-_vector CMission_Key::Get_WorldPostion()
+_vector CNoMountIcon::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
 }
 
-_float4 CMission_Key::AlphabetUV(_tchar Alphabet)
-{
-	_uint Number = CMyTools::AlphabetToInt(Alphabet);
-
-	_float2 fImage_Size = { 320.f, 384.f };
-
-	_uint iXCount = 5;
-	_uint iYCount = 6;
-
-	_float frameWidth = 64.f;
-	_float frameHeight = 64.f;
-
-	_uint iframeX = Number % iXCount;
-	_uint iframeY = Number / iXCount;
-
-	_float2 UVStart;
-	UVStart.x = iframeX * frameWidth / fImage_Size.x;
-	UVStart.y = iframeY * frameHeight / fImage_Size.y;
-
-	_float2 UVEnd;
-	UVEnd.x = UVStart.x + (frameWidth / fImage_Size.x);
-	UVEnd.y = UVStart.y + (frameHeight / fImage_Size.y);
-
-	return m_vUV = _float4(UVStart.x, UVStart.y, UVEnd.x, UVEnd.y);
-}
-
-HRESULT CMission_Key::Bind_ShaderResources()
+HRESULT CNoMountIcon::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 	{
@@ -186,20 +162,17 @@ HRESULT CMission_Key::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fImageUV", &m_vUV, sizeof(_float4))))
-	{
-		return E_FAIL;
-	}
+
 	return S_OK;
 }
 
-HRESULT CMission_Key::Ready_Components(void* pArg)
+HRESULT CNoMountIcon::Ready_Components(void* pArg)
 {
 	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_Atlas_Keyboard"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UI_T_NoMountIcon"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -211,33 +184,33 @@ HRESULT CMission_Key::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-CMission_Key* CMission_Key::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CNoMountIcon* CNoMountIcon::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CMission_Key* pInstance = new CMission_Key(pDevice, pContext);
+	CNoMountIcon* pInstance = new CNoMountIcon(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CMission_Key");
+		MSG_BOX("Failed to Created : CNoMountIcon");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CMission_Key::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CNoMountIcon::Clone(void* pArg, CGameObject* pOwner)
 {
-	CMission_Key* pInstance = new CMission_Key(*this);
+	CNoMountIcon* pInstance = new CNoMountIcon(*this);
 	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CMission_Key");
+		MSG_BOX("Failed to Cloned : CNoMountIcon");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CMission_Key::Free()
+void CNoMountIcon::Free()
 {
 	__super::Free();
 
@@ -246,6 +219,6 @@ void CMission_Key::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
-void CMission_Key::Describe_Entity()
+void CNoMountIcon::Describe_Entity()
 {
 }

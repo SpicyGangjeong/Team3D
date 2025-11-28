@@ -35,6 +35,8 @@ private:
 
 private:
 	CGameObject*			m_pGamePlay_Canvas		= { nullptr };
+	CGameObject*			m_pSpell_Canvas			= { nullptr };
+	CGameObject*			m_pCurrent_Canvas		= { nullptr };
 	CGameObject*			m_pPanelObject			= { nullptr };
 	CGameObject*			m_pElementObject		= { nullptr };
 	_float2					m_fPos{};

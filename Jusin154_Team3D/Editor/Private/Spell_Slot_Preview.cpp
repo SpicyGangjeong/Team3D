@@ -99,7 +99,7 @@ void CSpell_Slot_Preview::Late_Update(_float fTimeDelta)
 	}
 	if (m_bVisible)
 	{
-		m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
+		//m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
 	}
 	__super::Late_Update(fTimeDelta);
 }
