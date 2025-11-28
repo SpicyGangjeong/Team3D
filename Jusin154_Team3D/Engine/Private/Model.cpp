@@ -1405,10 +1405,6 @@ void CModel::LoadAnim(const _char* fileName)
 
 HRESULT CModel::Initialize(void* pArg)
 {
-	m_pLerpAnim = CLerpAnim::Create((_uint)m_Bones.size(), 1.f, m_Bones);
-	if (nullptr == m_pLerpAnim) {
-		return E_FAIL;
-	}
 	m_pTransform = m_pOwner->Get_Component<CTransform>();
 	SAFE_ADDREF(m_pTransform);
 
