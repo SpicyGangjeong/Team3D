@@ -3,6 +3,12 @@
 #include "Client_Define.h"
 #include "ElementObject.h"
 
+NS_BEGIN(Engine)
+class CTexture;
+class CShader;
+class CVIBuffer_Rect;
+NS_END
+
 NS_BEGIN(Client)
 
 class CLoadingWidget final : public CElementObject
@@ -38,7 +44,9 @@ public:
 	static CLoadingWidget* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
+#ifdef _DEBUG
 	void Describe_Entity() override;
+#endif // _DEBUG
 };
 
 NS_END

@@ -79,6 +79,12 @@ void CEditEffect::Late_Update(_float fTimeDelta)
 	}
 
 
+	if (m_EffectInfo.isBloom == true)
+	{
+		m_pGameInstance->Add_RenderGroup(RENDER::BLOOM, this);
+	}
+
+
 	if (m_EffectInfo.isBlur == true)
 	{
 		m_pGameInstance->Add_RenderGroup(RENDER::BLUR, this);
@@ -401,9 +407,12 @@ void CEditEffect::Describe_Entity()
 	const char* pLerp[] = { "Linear" , "EaseInQuad", "EaseOutQuad", "EaseInCubic" , "EaseOutCubic" , "EaseInOutSin" , "EaseInBack" , "Expo" , "Circle" };
 	const char* pRenderNames[] = { "PRIORITY" , "SHADOW", "NONBLEND", "DECAL", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" , "UI" };
 	const char* pEffectType[] = { "EFFECT" , "TRAIL" };
-	const char* pShaderPass[] = { "DEFAULT" , "NON_NOMALMAP" , "BLUR" , "WEIGHTBLEND" , "NON_WORLD" , "NON_WORLD_BLUR", "ALPHA_BLEND"};
+	const char* pShaderPass[] = { "DEFAULT" , "NON_NOMALMAP" , "BLUR" , "WEIGHTBLEND" , "NON_WORLD" , "NON_WORLD_BLUR", "ALPHA_BLEND", "BLOOM"};
+	const char* pBloomType[] = { "NONE" , "BASIC" , "MUILTY"};
+
 	_int iCurrentItem = static_cast<_int>(m_EffectInfo.eRenderOrder);
 	_int iCurrentType = static_cast<_int>(m_EffectInfo.eEffectType);
+	_int iCurrentBloomType = static_cast<_int>(m_EffectInfo.eBloomType);
 	_int iCurrentPass = static_cast<_int>(m_EffectInfo.eShaderPass);
 
 	if (ImGui::Combo("Render Order", &iCurrentItem, pRenderNames, ENUM_CLASS(RENDER::END)))
@@ -422,6 +431,7 @@ void CEditEffect::Describe_Entity()
 	}
 
 
+
 	GUI::Checkbox("Visible", &m_bVisible);
 	GUI::Checkbox("GO", &m_isGoStraight);
 
@@ -432,6 +442,8 @@ void CEditEffect::Describe_Entity()
 	GUI::Checkbox("Dissolve", &m_EffectInfo.isDissolve);
 	GUI::Checkbox("Distortion", &m_EffectInfo.isDistortion);
 	GUI::Checkbox("Noise", &m_EffectInfo.isNoise);
+	GUI::Checkbox("Bloom", &m_EffectInfo.isBloom);
+	GUI::Checkbox("Blur", &m_EffectInfo.isBlur);
 
 	if (GUI::Checkbox("Billboard", &m_EffectInfo.isBillboard))
 	{
@@ -446,20 +458,24 @@ void CEditEffect::Describe_Entity()
 
 	ImGui::PopItemWidth();
 
-	if (GUI::TreeNode("BLUR"))
+	if (m_EffectInfo.isBlur)
 	{
-		GUI::Checkbox("Blur", &m_EffectInfo.isBlur);
-		GUI::Checkbox("OnlyBlur", &m_EffectInfo.isOnlyBlur);
+		if (GUI::TreeNode("BLUR"))
+		{
 
-		ImGui::PushItemWidth(80);
-		GUI::DragFloat("BlurIntensity", &m_EffectInfo.fBlurIntensity, 0.005f, 0.f, 1.f);
-		GUI::DragInt("BlurWeight", &m_EffectInfo.iBlurWeight, 2.f, 0, 128);
+			GUI::Checkbox("OnlyBlur", &m_EffectInfo.isOnlyBlur);
 
-		
-		ImGui::PopItemWidth();
+			ImGui::PushItemWidth(80);
+			GUI::DragFloat("BlurIntensity", &m_EffectInfo.fBlurIntensity, 0.005f, 0.f, 1.f);
+			GUI::DragInt("BlurWeight", &m_EffectInfo.iBlurWeight, 2.f, 0, 128);
 
-		GUI::TreePop();
+
+			ImGui::PopItemWidth();
+
+			GUI::TreePop();
+		}
 	}
+	
 
 	if (GUI::TreeNode("TEX BLUR"))
 	{
@@ -474,8 +490,26 @@ void CEditEffect::Describe_Entity()
 
 		GUI::TreePop();
 	}
+	if (m_EffectInfo.isBloom)
+	{
+		if (GUI::TreeNode("BLOOM"))
+		{
+			if (ImGui::Combo("Bloom Type", &iCurrentBloomType, pBloomType, ENUM_CLASS(BLOOM_TYPE::END)))
+			{
+				m_EffectInfo.eBloomType = static_cast<BLOOM_TYPE>(iCurrentBloomType);
+			}
 
+			GUI::Checkbox("BloomDissolve", &m_EffectInfo.isBloomDissolve);
+			GUI::Checkbox("BloomReverseDissolve", &m_EffectInfo.isBloomReverseDissolve);
 
+			ImGui::PushItemWidth(80);
+			GUI::DragFloat("fBloomStrength", &m_EffectInfo.fBloomStrength, 0.001f, 0.f);
+			ImGui::PopItemWidth();
+
+			GUI::TreePop();
+		}
+	}
+	
 
 	if (GUI::TreeNode("EMISSIVE"))
 	{

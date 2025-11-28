@@ -41,7 +41,7 @@ HRESULT CHpBarBG::Initialize(void* pArg)
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 1.f;
 	m_vNine_Slice = _float4(27.f, 125.f, m_fSizeY * 0.5f, m_fSizeY * 0.5f);
-	m_fMaxHp = 1000.f;
+	m_fMaxHp = 200.f;
 	m_fCurrentHp = m_fMaxHp;
 	m_fMoveSpeed = 5.f;
 	m_fHpBGSize = _float2(144.f, 24.f);

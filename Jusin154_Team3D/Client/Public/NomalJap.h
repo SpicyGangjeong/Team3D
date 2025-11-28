@@ -33,7 +33,6 @@ private:
 	virtual void	OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr) override;
 private:
 	_wstring						  m_wstrEffectName = {};
-	class CPhysXEffectHitBox*		  m_pPhysHitBox = {};
 
 	class CPartObject*				  m_pProjectile = {};
 	class CPartObject*				  m_pProjectile_Side = {};

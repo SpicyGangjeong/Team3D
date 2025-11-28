@@ -22,21 +22,28 @@
 
 #include "EffectPool.h"
 
-template<typename T>
-void CPlayer::Spawn_Effect()
+
+_matrix CPlayer::Get_WandPos()
 {
-	CPartObject::PARTOBJECT_DESC PartsDesc{};
 
-	PartsDesc.pParentTransform = m_pTransformCom;
+	m_
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<T>(NEXT_LEVEL, NEXT_LEVEL, TEXT("Layer_Effect"), &PartsDesc, this, nullptr))) {
-		assert(false);
-		return;
-	}
+	_matrix BoneMatrix = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("root"));
+
+	BoneMatrix = BoneMatrix * m_pTransformCom->Get_XMWorldMatrix();
+
+
+	BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[0]) * m_vOffset.x;
+	BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[1]) * m_vOffset.y;
+	BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[2]) * m_vOffset.z;
+
+	m_pEffectParts->Get_Component<CTransform>()->Set_WorldMatrix(BoneMatrix);
+
+	return _matrix();
 }
 
-
 #pragma region States
+
 void CPlayer::TestKeyInput(_float fTimeDelta)
 {
 	if (m_pGameInstance->Key_Down(DIK_F1))

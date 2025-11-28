@@ -1,30 +1,30 @@
 ﻿#include "pch.h"
-#include "Mission_KeyHold.h"
+#include "LoadingWidget_Flame.h"
 #include "GameInstance.h"
 
-CMission_KeyHold::CMission_KeyHold(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CLoadingWidget_Flame::CLoadingWidget_Flame(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
 {
 }
 
-CMission_KeyHold::CMission_KeyHold(const CMission_KeyHold& rhs)
+CLoadingWidget_Flame::CLoadingWidget_Flame(const CLoadingWidget_Flame& rhs)
 	:CElementObject(rhs)
 {
 }
 
-HRESULT CMission_KeyHold::Initialize_Prototype()
+HRESULT CLoadingWidget_Flame::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CMission_KeyHold::Initialize(void* pArg)
+HRESULT CLoadingWidget_Flame::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = -297.f;
-	Desc.fY = 158.f;
-	Desc.fSizeX = 94.f;
-	Desc.fSizeY = 94.f;
+	Desc.fX = -237.f;
+	Desc.fY = 90.f;
+	Desc.fSizeX = 100.f;
+	Desc.fSizeY = 100.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -37,14 +37,26 @@ HRESULT CMission_KeyHold::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	m_fTimeMult = 1.f;
+	// UI의 알파값을 조절
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 3.f;
-	m_fPI = AI_MATH_TWO_PI_F;
+
+	// 스프라이트 애니메이션의 정보
+	m_fTimeMult = 3.f;		// 속도
+	m_fDelayTime = 1.f;		// 딜레이
+	m_fFrame = 0.2f;		// 프레임
+	m_fEndTime = 1.8f;		// 한번 실행되는 시간
+	m_iImageFrameX = 3;		// 이미지의 x 갯수
+	m_iImageFrameY = 3;		// 이미지의 y 갯수
+
+	m_bActive = true;
+	// 이 친구는 FadeIn을 해주면 알아서 한번 깜빡이고 들어감
+	// 조절을 할꺼면 나중에 제대로 확인을 한 다음에 할 예정
+	Set_FadeIn();
 	return S_OK;
 }
 
-void CMission_KeyHold::Priority_Update(_float fTimeDelta)
+void CLoadingWidget_Flame::Priority_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -53,11 +65,30 @@ void CMission_KeyHold::Priority_Update(_float fTimeDelta)
 	__super::Priority_Update(fTimeDelta);
 }
 
-void CMission_KeyHold::Update(_float fTimeDelta)
+void CLoadingWidget_Flame::Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
 		return;
+	}
+
+	if (m_fAlpha >= 1.f)
+	{
+		if (m_fDelayTime >= 0.f)
+		{
+			m_fDelayTime -= fTimeDelta * m_fTimeMult;
+		}
+		else
+		{
+			m_fTime += fTimeDelta * m_fTimeMult;
+		}
+
+		if (m_fTime >= m_fEndTime)
+		{
+			m_fTime = 0.f;
+			m_fDelayTime = 1.f;
+			m_bFadeOut = true;
+		}
 	}
 
 	if (m_bFadeIn == true)
@@ -84,45 +115,10 @@ void CMission_KeyHold::Update(_float fTimeDelta)
 		}
 	}
 
-
-	if (m_bKeyHold == false)
-	{
-		if (m_pGameInstance->Key_Pressing(DIK_V))
-		{
-			m_fTime += fTimeDelta * m_fTimeMult;
-		}
-		else
-		{
-			m_fTime = 0.f;
-			m_bKeyHold = false;
-		}
-	}
-
-	if (m_pGameInstance->Key_Up(DIK_V))
-	{
-		m_bKeyHold = false;
-	}
-
-	if (m_fTimeMult <= m_fTime)
-	{
-		m_fTime = 0.f;
-		m_bisHoldOn = !m_bisHoldOn;
-		m_bKeyHold = true;
-	}
-
-	if (m_bisHoldOn)
-	{
-		static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Mission_On"));
-	}
-	else
-	{
-		static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Mission_Off"));
-	}
-
 	__super::Update(fTimeDelta);
 }
 
-void CMission_KeyHold::Late_Update(_float fTimeDelta)
+void CLoadingWidget_Flame::Late_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -134,12 +130,12 @@ void CMission_KeyHold::Late_Update(_float fTimeDelta)
 	}
 }
 
-HRESULT CMission_KeyHold::Render()
+HRESULT CLoadingWidget_Flame::Render()
 {
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::HOLD_ROTATION)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::LODING)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
@@ -152,12 +148,12 @@ HRESULT CMission_KeyHold::Render()
 	return S_OK;
 }
 
-_vector CMission_KeyHold::Get_WorldPostion()
+_vector CLoadingWidget_Flame::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
 }
 
-HRESULT CMission_KeyHold::Bind_ShaderResources()
+HRESULT CLoadingWidget_Flame::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 	{
@@ -183,11 +179,11 @@ HRESULT CMission_KeyHold::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fTimeMult", &m_fTimeMult, sizeof(_float))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFrame", &m_fFrame, sizeof(_float))))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fPI", &m_fPI, sizeof(_float))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
 	{
 		return E_FAIL;
 	}
@@ -195,21 +191,28 @@ HRESULT CMission_KeyHold::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iImageCountX", &m_iImageFrameX, sizeof(_int))))
+	{
+		return E_FAIL;
+	}	
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCanvasAlpha", &m_fCanvasAlpha, sizeof(_float))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iImageCountY", &m_iImageFrameY, sizeof(_int))))
 	{
 		return E_FAIL;
 	}
 	return S_OK;
 }
 
-
-HRESULT CMission_KeyHold::Ready_Components(void* pArg)
+HRESULT CLoadingWidget_Flame::Ready_Components(void* pArg)
 {
 	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_Finishi_Rect"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_LoadingWidget_Flame"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -221,33 +224,33 @@ HRESULT CMission_KeyHold::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-CMission_KeyHold* CMission_KeyHold::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CLoadingWidget_Flame* CLoadingWidget_Flame::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CMission_KeyHold* pInstance = new CMission_KeyHold(pDevice, pContext);
+	CLoadingWidget_Flame* pInstance = new CLoadingWidget_Flame(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CMission_KeyHold");
+		MSG_BOX("Failed to Created : CLoadingWidget_Flame");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CMission_KeyHold::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CLoadingWidget_Flame::Clone(void* pArg, CGameObject* pOwner)
 {
-	CMission_KeyHold* pInstance = new CMission_KeyHold(*this);
+	CLoadingWidget_Flame* pInstance = new CLoadingWidget_Flame(*this);
 	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CMission_KeyHold");
+		MSG_BOX("Failed to Cloned : CLoadingWidget_Flame");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CMission_KeyHold::Free()
+void CLoadingWidget_Flame::Free()
 {
 	__super::Free();
 
@@ -256,6 +259,8 @@ void CMission_KeyHold::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
-void CMission_KeyHold::Describe_Entity()
+#ifdef _DEBUG
+void CLoadingWidget_Flame::Describe_Entity()
 {
 }
+#endif // _DEBUG

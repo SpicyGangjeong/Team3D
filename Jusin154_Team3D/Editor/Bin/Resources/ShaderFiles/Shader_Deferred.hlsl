@@ -475,6 +475,7 @@ PS_OUT_FLT4_SINGLE PS_MAIN_EMBOSS(PS_IN In)
     }
     
     float fIntensity = dot(vColor, float3(0.2126f, 0.7152f, 0.0722f)); // 대략적인 밝기 ( 인간적인 )
+    
     if (fIntensity <= 1e-4f)
     {
         Out.vSingleTarget = 0;

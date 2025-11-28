@@ -90,7 +90,6 @@ HRESULT CMiniMap_Panel::Bind_ShaderResources()
 
 HRESULT CMiniMap_Panel::Ready_Components(void* pArg)
 {
-
 	return S_OK;
 }
 

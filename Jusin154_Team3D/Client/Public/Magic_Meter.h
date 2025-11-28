@@ -1,16 +1,22 @@
 ﻿#pragma once
 
-#include "Editor_Define.h"
+#include "Client_Define.h"
 #include "ElementObject.h"
 
-NS_BEGIN(Editor)
+NS_BEGIN(Engine)
+class CTexture;
+class CShader;
+class CVIBuffer_Rect;
+NS_END
 
-class CMission_KeyHold final : public CElementObject
+NS_BEGIN(Client)
+
+class CMagic_Meter final : public CElementObject
 {
 private:
-	CMission_KeyHold(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CMission_KeyHold(const CMission_KeyHold& rhs);
-	virtual ~CMission_KeyHold() = default;
+	CMagic_Meter(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CMagic_Meter(const CMagic_Meter& rhs);
+	virtual ~CMagic_Meter() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -19,6 +25,9 @@ public:
 	virtual HRESULT Render() override;
 	virtual _vector Get_WorldPostion() override;
 
+public:
+	void Meter_Index(_uint Number);
+	//void Set_
 
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
@@ -28,17 +37,23 @@ private:
 
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
+	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
-	_float	m_fPI{};
-	_bool	m_bisHoldOn = { false };
-	_bool	m_bKeyHold = { false };
+	_uint	m_iImageCount{};
+	_float4 m_vGaugeUV{};
+	_float m_fMaxGauge{};
+	_float m_fCurrentGauge{};
+	_float m_fGaugeBar{};
+	_float m_fTargetGauge{};
 public:
-	static CMission_KeyHold* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CMagic_Meter* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
+#ifdef _DEBUG
 	void Describe_Entity() override;
+#endif // _DEBUG
 };
 
 NS_END
