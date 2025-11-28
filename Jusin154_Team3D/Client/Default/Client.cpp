@@ -25,7 +25,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 {
 #ifdef _DEBUG
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-    _CrtSetBreakAlloc(45489776);
+    //_CrtSetBreakAlloc(45489776);
     //_CrtSetBreakAlloc(1182);
     //_CrtSetBreakAlloc(1183);
     //_CrtSetBreakAlloc(1184);
