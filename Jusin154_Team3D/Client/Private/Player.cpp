@@ -327,10 +327,11 @@ HRESULT CPlayer::Bind_ShaderResources()
 }
 void CPlayer::ReLockOnTarget()
 {
-	SAFE_RELEASE(m_pLockOnMonster);
 	m_pLockOnMonster = m_pInfoInstance->Get_LockOnMonster();
 	if (nullptr != m_pLockOnMonster) {
-		SAFE_ADDREF(m_pLockOnMonster);
+		if (true == m_pLockOnMonster->isDead()) {
+			m_pLockOnMonster = nullptr;
+		}
 	}
 }
 
@@ -371,8 +372,6 @@ void CPlayer::Free()
 {
 	__super::Free();
 
-
-	SAFE_RELEASE(m_pLockOnMonster);
 
 	if (nullptr != m_pInfoInstance) {
 		CInfoInstance* pInfo = m_pInfoInstance;
