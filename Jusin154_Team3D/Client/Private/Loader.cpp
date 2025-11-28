@@ -25,6 +25,15 @@
 #include "LoadingWidget_Flame.h"
 
 #include "Action_Panel.h"
+#include "Spell_Slot.h"
+#include "Spell_Overlay.h"
+#include "Slot_Number.h"
+#include "HpBarBG.h"
+#include "Potion.h"
+#include "Magic_Meter.h"
+#include "Magic_Icon.h"
+#include "Spell_UI.h"
+#include "Magic_Item.h"
 
 #include "MiniMap_Panel.h"
 #include "MiniMap_TrimBorder.h"
@@ -475,11 +484,35 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	m_strMessage = TEXT("모델를(을) 로딩 중 입니다.");
 
+	CVIBuffer_UI_Instance::UI_INSTANCE_DESC SpellSlotUIDesc{};
+
+	SpellSlotUIDesc.iNum = 4;
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_UI_Instance"),
+		CVIBuffer_UI_Instance::Create(m_pDevice, m_pContext, &SpellSlotUIDesc)))) {
+		return E_FAIL;
+	}
+
+	CVIBuffer_UI_Instance::UI_INSTANCE_DESC SlotNumberUIDesc{};
+
+	SlotNumberUIDesc.iNum = 4;
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Slot_Number_UI_Instance"),
+		CVIBuffer_UI_Instance::Create(m_pDevice, m_pContext, &SlotNumberUIDesc)))) {
+		return E_FAIL;
+	}
+
 	m_strMessage = TEXT("셰이더를(을) 로딩 중 입니다.");
 	
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_UIEDITOR,
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_UIEditor.hlsl"),
 			VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_UIINSTANCE,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_UI_Instance.hlsl"),
+			VTX_POSTEX_INSTANCE_UI::Elements, VTX_POSTEX_INSTANCE_UI::iNumElements)))) {
 		return E_FAIL;
 	}
 
@@ -952,6 +985,51 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_GameObject_Action_Panel*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CAction_Panel>(g_iStaticLevel, CAction_Panel::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_Spell_Slot*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_Slot>(g_iStaticLevel, CSpell_Slot::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_Spell_Overlay*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_Overlay>(g_iStaticLevel, CSpell_Overlay::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_Slot_Number*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CSlot_Number>(g_iStaticLevel, CSlot_Number::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_HpBarBG*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CHpBarBG>(g_iStaticLevel, CHpBarBG::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_Potion*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CPotion>(g_iStaticLevel, CPotion::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_Magic_Meter*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CMagic_Meter>(g_iStaticLevel, CMagic_Meter::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_Magic_Icon*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CMagic_Icon>(g_iStaticLevel, CMagic_Icon::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_Spell_UI*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_UI>(g_iStaticLevel, CSpell_UI::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_Magic_Item*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CMagic_Item>(g_iStaticLevel, CMagic_Item::Create(m_pDevice, m_pContext))))
+	{
 		return E_FAIL;
 	}
 

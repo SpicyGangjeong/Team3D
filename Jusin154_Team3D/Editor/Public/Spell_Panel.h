@@ -9,12 +9,12 @@ NS_END
 
 NS_BEGIN(Editor)
 
-class CMiniMap_Panel final : public CPanelObject
+class CSpell_Panel final : public CPanelObject
 {
 private:
-	CMiniMap_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CMiniMap_Panel(const CMiniMap_Panel& rhs);
-	virtual ~CMiniMap_Panel() = default;
+	CSpell_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CSpell_Panel(const CSpell_Panel& rhs);
+	virtual ~CSpell_Panel() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -31,13 +31,13 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 
 private:
-	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
-	CGameObject* m_pMiniMap_TrimBorder = { nullptr };
-	CGameObject* m_pNoMountIcon = { nullptr };
+	CTexture* m_pDiffuse_TextureCom = { nullptr };
+	CShader* m_pShaderCom = { nullptr };
+	CVIBuffer_Rect* m_pVIBufferCom = { nullptr }; 
 
 
 public:
-	static CMiniMap_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CSpell_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 	void Describe_Entity() override;

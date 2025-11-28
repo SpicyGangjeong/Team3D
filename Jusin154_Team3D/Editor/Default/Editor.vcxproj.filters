@@ -379,6 +379,12 @@
     <Filter Include="50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Border">
       <UniqueIdentifier>{a54567fa-e528-4c98-a605-289d7d300029}</UniqueIdentifier>
     </Filter>
+    <Filter Include="50.UI\Spell_Canvas">
+      <UniqueIdentifier>{612b0d39-53e3-4c8c-a32e-387b0d3b128c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel">
+      <UniqueIdentifier>{d9a965e7-77c6-450f-88e8-ef69c42d9053}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -738,6 +744,12 @@
     <ClInclude Include="..\Public\MissionBanner_Border.h">
       <Filter>50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Border</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Spell_Canvas.h">
+      <Filter>50.UI\Spell_Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Spell_Panel.h">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -1095,6 +1107,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\MissionBanner_Border.cpp">
       <Filter>50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Border</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Spell_Canvas.cpp">
+      <Filter>50.UI\Spell_Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Spell_Panel.cpp">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

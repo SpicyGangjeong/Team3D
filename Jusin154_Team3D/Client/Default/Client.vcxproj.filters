@@ -223,6 +223,33 @@
     <ClInclude Include="..\Public\Protego.h">
       <Filter>02.GameObjects\Effect\Effects\Protego</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\HpBarBG.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\HPBarBG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Magic_Icon.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Magic_Icon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Magic_Item.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Magic_Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Magic_Meter.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Magic_Meter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Spell_Slot.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Spell_Slot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Spell_Overlay.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Spell_Overlay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Spell_UI.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Spell_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Slot_Number.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Slot_Number</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Potion.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Potion</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -494,6 +521,33 @@
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\MiniMap_Panel\NoMountIcon">
       <UniqueIdentifier>{e5e2a92a-d549-4573-b8e7-d48e7a409888}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Action_Panel\HPBarBG">
+      <UniqueIdentifier>{5a49d7f9-f675-43f0-be32-f32c3e6523b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Magic_Icon">
+      <UniqueIdentifier>{ba2aee38-d721-4b54-bb39-5b9bb5ec3e9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Magic_Item">
+      <UniqueIdentifier>{b284d03c-90f5-4e1f-860c-f7b07b13309f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Magic_Meter">
+      <UniqueIdentifier>{dbb67727-3b9d-40d3-92d8-8faf19dee261}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Potion">
+      <UniqueIdentifier>{d92bccc9-1515-4701-9e57-d9162d8d5ed4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Slot_Number">
+      <UniqueIdentifier>{f3862ab8-1127-4efd-8739-0728b5aca058}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Spell_Overlay">
+      <UniqueIdentifier>{cca29e49-aaa7-4575-b29a-04aecf66e91c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Spell_Slot">
+      <UniqueIdentifier>{2ddf4d5c-bb90-4e5f-8c3a-98d07da215df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Spell_UI">
+      <UniqueIdentifier>{9914341c-f246-4fdb-b28c-de7a6d2d149b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -705,6 +759,33 @@
     </ClCompile>
     <ClCompile Include="..\Private\Protego.cpp">
       <Filter>02.GameObjects\Effect\Effects\Protego</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HpBarBG.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\HPBarBG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Magic_Icon.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Magic_Icon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Magic_Item.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Magic_Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Magic_Meter.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Magic_Meter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Spell_Slot.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Spell_Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Spell_Overlay.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Spell_Overlay</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Spell_UI.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Spell_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Slot_Number.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Slot_Number</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Potion.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Potion</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

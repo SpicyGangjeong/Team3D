@@ -1,30 +1,30 @@
 ﻿#include "pch.h"
-#include "Spell_Slot_Preview.h"
+#include "Spell_Slot.h"
 #include "GameInstance.h"
 
-CSpell_Slot_Preview::CSpell_Slot_Preview(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CSpell_Slot::CSpell_Slot(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
 {
 }
 
-CSpell_Slot_Preview::CSpell_Slot_Preview(const CSpell_Slot_Preview& rhs)
+CSpell_Slot::CSpell_Slot(const CSpell_Slot& rhs)
 	:CElementObject(rhs)
 {
 }
 
-HRESULT CSpell_Slot_Preview::Initialize_Prototype()
+HRESULT CSpell_Slot::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CSpell_Slot_Preview::Initialize(void* pArg)
+HRESULT CSpell_Slot::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 0.f;
 	Desc.fY = 0.f;
-	Desc.fSizeX = 100.f;
-	Desc.fSizeY = 100.f;
+	Desc.fSizeX = 105.f;
+	Desc.fSizeY = 105.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -41,14 +41,18 @@ HRESULT CSpell_Slot_Preview::Initialize(void* pArg)
 	m_fTimeMult = 3.f;
 	m_fAngle = XMConvertToRadians(45);
 	m_fAlphaTime = 1.f;
+	m_fOffSetX = 101.f;
+	m_fOffSetY = 101.f;
+	m_iCols = 4;
 	m_pVIBufferCom->Set_Cloned(true);
-	//m_pVIBufferCom->Set_Pos(0.f, 0.f, m_fOffSetX, m_fOffSetY, m_iCols);
+	m_pVIBufferCom->Set_Pos(380.f, -30.f, m_fOffSetX, m_fOffSetY, m_iCols);
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
 	m_pVIBufferCom->Set_ImageUV();
+	m_bActive = true;
 	return S_OK;
 }
 
-void CSpell_Slot_Preview::Priority_Update(_float fTimeDelta)
+void CSpell_Slot::Priority_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -57,7 +61,7 @@ void CSpell_Slot_Preview::Priority_Update(_float fTimeDelta)
 	__super::Priority_Update(fTimeDelta);
 }
 
-void CSpell_Slot_Preview::Update(_float fTimeDelta)
+void CSpell_Slot::Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -91,7 +95,7 @@ void CSpell_Slot_Preview::Update(_float fTimeDelta)
 	__super::Update(fTimeDelta);
 }
 
-void CSpell_Slot_Preview::Late_Update(_float fTimeDelta)
+void CSpell_Slot::Late_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -99,14 +103,14 @@ void CSpell_Slot_Preview::Late_Update(_float fTimeDelta)
 	}
 	if (m_bVisible)
 	{
-		//m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
+			m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
 	}
 	__super::Late_Update(fTimeDelta);
 }
 
-HRESULT CSpell_Slot_Preview::Render()
+HRESULT CSpell_Slot::Render()
 {
-	if(FAILED(Bind_ShaderResources()))
+	if (FAILED(Bind_ShaderResources()))
 	{
 		return E_FAIL;
 	}
@@ -126,12 +130,31 @@ HRESULT CSpell_Slot_Preview::Render()
 	return S_OK;
 }
 
-_vector CSpell_Slot_Preview::Get_WorldPostion()
+_vector CSpell_Slot::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
 }
 
-HRESULT CSpell_Slot_Preview::Bind_ShaderResources()
+void CSpell_Slot::SizeUpX(_float fSizeX)
+{
+	m_fSizeX = fSizeX;
+	m_pVIBufferCom->Set_SizeX(m_fSizeX);
+}
+
+void CSpell_Slot::SizeUpY(_float fSizeY)
+{
+	m_fSizeY = fSizeY;
+	m_pVIBufferCom->Set_SizeY(m_fSizeY);
+}
+
+void CSpell_Slot::SizeUpdate(_float fSizeX, _float fSizeY)
+{
+	m_fSizeX = fSizeX;
+	m_fSizeY = fSizeY;
+	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
+}
+
+HRESULT CSpell_Slot::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 	{
@@ -169,17 +192,17 @@ HRESULT CSpell_Slot_Preview::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-
+	
 	return S_OK;
 }
 
-HRESULT CSpell_Slot_Preview::Ready_Components(void* pArg)
+HRESULT CSpell_Slot::Ready_Components(void* pArg)
 {
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Spell_Slot_Previe_UI_Instance"), (CComponent**)&m_pVIBufferCom, nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_UI_Instance"), (CComponent**)&m_pVIBufferCom, nullptr)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_ActionItemGoldleaf_4K"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UI_T_ActionItemGoldleaf_4K"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -191,22 +214,22 @@ HRESULT CSpell_Slot_Preview::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-CSpell_Slot_Preview* CSpell_Slot_Preview::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CSpell_Slot* CSpell_Slot::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CSpell_Slot_Preview* pInstance = new CSpell_Slot_Preview(pDevice, pContext);
+	CSpell_Slot* pInstance = new CSpell_Slot(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CSpell_Slot_Preview");
+		MSG_BOX("Failed to Created : CSpell_Slot");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CSpell_Slot_Preview::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CSpell_Slot::Clone(void* pArg, CGameObject* pOwner)
 {
-	CSpell_Slot_Preview* pInstance = new CSpell_Slot_Preview(*this);
+	CSpell_Slot* pInstance = new CSpell_Slot(*this);
 	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
@@ -217,7 +240,7 @@ CGameObject* CSpell_Slot_Preview::Clone(void* pArg, CGameObject* pOwner)
 	return pInstance;
 }
 
-void CSpell_Slot_Preview::Free()
+void CSpell_Slot::Free()
 {
 	__super::Free();
 
@@ -226,6 +249,6 @@ void CSpell_Slot_Preview::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
-void CSpell_Slot_Preview::Describe_Entity()
+void CSpell_Slot::Describe_Entity()
 {
 }

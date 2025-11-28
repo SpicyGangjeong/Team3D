@@ -249,6 +249,8 @@
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\public\Potion.h" />
     <ClInclude Include="..\public\Slot_Number.h" />
+    <ClInclude Include="..\public\Spell_Canvas.h" />
+    <ClInclude Include="..\public\Spell_Panel.h" />
     <ClInclude Include="..\public\Spell_Slot_Preview.h" />
     <ClInclude Include="..\public\Spell_UI.h" />
     <ClInclude Include="..\Public\State_Combat.h" />
@@ -386,6 +388,8 @@
     <ClCompile Include="..\Private\Player_States.cpp" />
     <ClCompile Include="..\private\Potion.cpp" />
     <ClCompile Include="..\private\Slot_Number.cpp" />
+    <ClCompile Include="..\private\Spell_Canvas.cpp" />
+    <ClCompile Include="..\private\Spell_Panel.cpp" />
     <ClCompile Include="..\private\Spell_Slot_Preview.cpp" />
     <ClCompile Include="..\private\Spell_UI.cpp" />
     <ClCompile Include="..\Private\State_Combat.cpp" />

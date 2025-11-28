@@ -1,15 +1,15 @@
 ﻿#include "pch.h"
 #include "Action_Panel.h"
 #include "GameInstance.h"
-//#include "Spell_Slot.h"
-//#include "Spell_Overlay.h"
-//#include "Slot_Number.h"
-//#include "HpBarBG.h"
-//#include "Magic_Meter.h"
-//#include "Magic_Icon.h"
-//#include "Spell_UI.h"
-//#include "Potion.h"
-//#include "Magic_Item.h"
+#include "Spell_Slot.h"
+#include "Spell_Overlay.h"
+#include "Slot_Number.h"
+#include "HpBarBG.h"
+#include "Magic_Meter.h"
+#include "Magic_Icon.h"
+#include "Spell_UI.h"
+#include "Potion.h"
+#include "Magic_Item.h"
 
 CAction_Panel::CAction_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPanelObject(pDevice, pContext)
@@ -50,14 +50,11 @@ HRESULT CAction_Panel::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	m_fTimeMult = 3.f;
-	m_fAlpha = 1.f;
-	m_fAlphaTime = 3.f;
-	m_fOwnerAlpha = 1.f;
-	m_fCanvasAlpha = 1.f;
-	//Magic_Meter_UV();
-	//Magic_Meter_Visible(1, true);
-	//Magic_Meter_Visible(5, true);
+
+	Magic_Meter_UV();
+	Magic_Meter_Visible(1, true);
+	Magic_Meter_Visible(5, true);
+	m_bActive = true;
 	return S_OK;
 }
 
@@ -108,7 +105,7 @@ _vector CAction_Panel::Get_WorldPostion()
 
 void CAction_Panel::Magic_Meter_Visible(_uint iIndex, _bool bVisible)
 {
-	/*switch (iIndex)
+	switch (iIndex)
 	{
 	case 1:
 		static_cast<CMagic_Meter*>(m_pMagic_Meter1)->Visible(bVisible);
@@ -132,28 +129,27 @@ void CAction_Panel::Magic_Meter_Visible(_uint iIndex, _bool bVisible)
 	if (bVisible)
 		m_iMagic_Meter_Count++;
 	else
-		m_iMagic_Meter_Count--;*/
+		m_iMagic_Meter_Count--;
 }
 
 void CAction_Panel::Magic_Meter_UV()
 {
-	//static_cast<CMagic_Meter*>(m_pMagic_Meter1)->Meter_Index(2);
-	//static_cast<CMagic_Meter*>(m_pMagic_Meter2)->Meter_Index(1);
-	//static_cast<CMagic_Meter*>(m_pMagic_Meter3)->Meter_Index(1);
-	//static_cast<CMagic_Meter*>(m_pMagic_Meter4)->Meter_Index(1);
-	//static_cast<CMagic_Meter*>(m_pMagic_Meter5)->Meter_Index(0);
+	static_cast<CMagic_Meter*>(m_pMagic_Meter1)->Meter_Index(2);
+	static_cast<CMagic_Meter*>(m_pMagic_Meter2)->Meter_Index(1);
+	static_cast<CMagic_Meter*>(m_pMagic_Meter3)->Meter_Index(1);
+	static_cast<CMagic_Meter*>(m_pMagic_Meter4)->Meter_Index(1);
+	static_cast<CMagic_Meter*>(m_pMagic_Meter5)->Meter_Index(0);
 
-	//for (_uint i = 0; i < 5; ++i)
-	//{
-	//	m_vMagic_MeterUV[i].x = 570.f - (55.f * i);
-	//	m_vMagic_MeterUV[i].y = 145.f;
-	//}
+	for (_uint i = 0; i < 5; ++i)
+	{
+		m_vMagic_MeterUV[i].x = 570.f - (55.f * i);
+		m_vMagic_MeterUV[i].y = 145.f;
+	}
 }
 
 void CAction_Panel::Matic_Meter_Move()
 {
-
-	/*static_cast<CMagic_Meter*>(m_pMagic_Meter1)->Move(m_vMagic_MeterUV[0].x, m_vMagic_MeterUV[0].y);
+	static_cast<CMagic_Meter*>(m_pMagic_Meter1)->Move(m_vMagic_MeterUV[0].x, m_vMagic_MeterUV[0].y);
 	static_cast<CMagic_Meter*>(m_pMagic_Meter5)->Move(m_vMagic_MeterUV[1].x, m_vMagic_MeterUV[1].y);
 
 	if (static_cast<CMagic_Meter*>(m_pMagic_Meter2)->Get_Active() == true)
@@ -173,7 +169,7 @@ void CAction_Panel::Matic_Meter_Move()
 		static_cast<CMagic_Meter*>(m_pMagic_Meter3)->Move(m_vMagic_MeterUV[2].x, m_vMagic_MeterUV[2].y);
 		static_cast<CMagic_Meter*>(m_pMagic_Meter4)->Move(m_vMagic_MeterUV[3].x, m_vMagic_MeterUV[3].y);
 		static_cast<CMagic_Meter*>(m_pMagic_Meter5)->Move(m_vMagic_MeterUV[4].x, m_vMagic_MeterUV[4].y);
-	}*/
+	}
 
 }
 
@@ -189,7 +185,7 @@ HRESULT CAction_Panel::Ready_Components(void* pArg)
 
 HRESULT CAction_Panel::Ready_Element(void* pArg)
 {
-	/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Slot>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CSpell_Slot**>(&m_pSpell_Slot))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Slot>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast <CSpell_Slot**>(&m_pSpell_Slot))))
 	{
 		return E_FAIL;
 	}
@@ -253,7 +249,7 @@ HRESULT CAction_Panel::Ready_Element(void* pArg)
 	{
 		return E_FAIL;
 	}
-	Add_Element(TEXT("Magic_Item"), m_pMagic_Item);*/
+	Add_Element(TEXT("Magic_Item"), m_pMagic_Item);
 	return S_OK;
 }
 

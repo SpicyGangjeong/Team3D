@@ -1,20 +1,22 @@
 ﻿#pragma once
 
-#include "Editor_Define.h"
-#include "PanelObject.h"
+#include "Client_Define.h"
+#include "ElementObject.h"
 
 NS_BEGIN(Engine)
-class CGameObject;
+class CTexture;
+class CShader;
+class CVIBuffer_Rect;
 NS_END
 
-NS_BEGIN(Editor)
+NS_BEGIN(Client)
 
-class CMiniMap_Panel final : public CPanelObject
+class CMagic_Icon final : public CElementObject
 {
 private:
-	CMiniMap_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CMiniMap_Panel(const CMiniMap_Panel& rhs);
-	virtual ~CMiniMap_Panel() = default;
+	CMagic_Icon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CMagic_Icon(const CMagic_Icon& rhs);
+	virtual ~CMagic_Icon() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -23,21 +25,22 @@ public:
 	virtual HRESULT Render() override;
 	virtual _vector Get_WorldPostion() override;
 
+
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;
-	virtual HRESULT Ready_Element(void* pArg) override;
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
 private:
+	CTexture* m_pDiffuse_TextureCom = { nullptr };
+	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
+	CTexture* m_pDiffuse_TextureCom2 = { nullptr };
+	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
-	CGameObject* m_pMiniMap_TrimBorder = { nullptr };
-	CGameObject* m_pNoMountIcon = { nullptr };
-
 
 public:
-	static CMiniMap_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CMagic_Icon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 	void Describe_Entity() override;
