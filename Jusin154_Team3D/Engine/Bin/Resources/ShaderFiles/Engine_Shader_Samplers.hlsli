@@ -7,6 +7,18 @@ sampler DefaultSampler = sampler_state
     AddressU = wrap;
     AddressV = wrap;
 };
+sampler AnisoTropy_BLUR_Sampler = sampler_state
+{
+    Filter = AnisoTropic;
+    MaxAnisotropy = 16;
+    AddressU = wrap;
+    AddressV = wrap;
+    AddressW = wrap;
+    MipLodBias = 1.f; // 밉맵 레벨 +1시킴
+    MinLOD = 0;
+    MaxLOD = 0xFFFFFFFF;
+    ComparisonFunc = ALWAYS;
+};
 
 sampler ClampSampler = sampler_state
 {

@@ -123,7 +123,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     
     float fViewZ = vDepth.y * g_fFar;
     
-    float4 vWorldPosition;
+    float4 vWorldPosition; // 월드 복원
     {
         vWorldPosition.x = uv.x * 2 - 1;
         vWorldPosition.y = uv.y * -2 + 1;
@@ -140,6 +140,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     float fOcclusion = 1.f;
     float fAttenuation = 1.f;
 
+    float fDistance = length(g_vCamPosition.xyz - vWorldPosition.xyz);
     float3 vToView = normalize(g_vCamPosition.xyz - vWorldPosition.xyz); // 픽셀에서 카메라로
     float3 vToLight = normalize(-g_vLightDir.xyz); // 픽셀에서 라이트로
     
@@ -158,9 +159,9 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
         fMetallic = 0.f;
         
         float3 vSRO = g_SurfaceTexture.Sample(DefaultSampler, uv).rgb;
-        vF0             = vSRO.rrr;
-        fRoughness      = vSRO.g;
-        fOcclusion      = vSRO.b;
+        vF0 = vSRO.rrr;
+        fRoughness = vSRO.g;
+        fOcclusion = vSRO.b;
     }
     else // basic Lighting(phong blinn) // if you were here, you miss some assets.
     {
@@ -171,6 +172,13 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     }
     
     float fDiffuseAOStrength = lerp(0.3f, 5.f, fOcclusion);
+    { // 수치조정
+        float fMinRoughness = 0.05f;
+        fRoughness = max(fRoughness, fMinRoughness); // 러프니스 최소값 보장
+        fRoughness = saturate(saturate(fDistance * 0.01f) * 0.1f + fRoughness); // 거리기반 러프니스 ( 대충 멀수록 반짝반짝한건 더 뭉개져서 표현 )
+        vF0 = min(vF0, 0.9f); // 메탈릭 상한선
+    }
+    
     
     PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
     

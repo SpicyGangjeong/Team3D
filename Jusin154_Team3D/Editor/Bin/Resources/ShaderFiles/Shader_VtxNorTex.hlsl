@@ -5,6 +5,9 @@ matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 float g_fFar;
 float g_fUsingSurfaceParams;
+float g_fDiffuseMultiplier;
+float g_fSurfaceMultiplier;
+float g_fNormalMultiplier;
 
 Texture2D g_DiffuseTexture;
 Texture2D g_NormalTexture;
@@ -71,37 +74,37 @@ PS_OUT PS_MAIN(PS_IN In)
 
     float2 tileUV = In.vWorldPos.xz / 16.f;
     
-    vector vMask = g_MaskTexture.Sample(DefaultSampler, In.vTexcoord);
+    vector vMask = g_MaskTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
 
-    vector vMtrlDiffuse_0 = g_DiffuseTextures[0].Sample(DefaultSampler, tileUV);
-    vector vMtrlDiffuse_1 = g_DiffuseTextures[1].Sample(DefaultSampler, tileUV);
-    vector vMtrlDiffuse_2 = g_DiffuseTextures[2].Sample(DefaultSampler, tileUV);
-    vector vMtrlDiffuse_3 = g_DiffuseTextures[3].Sample(DefaultSampler, tileUV);
+    vector vMtrlDiffuse_0 = g_DiffuseTextures[0].Sample(AnisoTropy_BLUR_Sampler, In.vWorldPos.xz * g_fDiffuseMultiplier);
+    vector vMtrlDiffuse_1 = g_DiffuseTextures[1].Sample(AnisoTropy_BLUR_Sampler, In.vWorldPos.xz * g_fDiffuseMultiplier);
+    vector vMtrlDiffuse_2 = g_DiffuseTextures[2].Sample(AnisoTropy_BLUR_Sampler, In.vWorldPos.xz * g_fDiffuseMultiplier);
+    vector vMtrlDiffuse_3 = g_DiffuseTextures[3].Sample(AnisoTropy_BLUR_Sampler, In.vWorldPos.xz * g_fDiffuseMultiplier);
     
     vector vMtrlDiffuse = float4(float3(vMtrlDiffuse_0.xyz * vMask.r +
-                            vMtrlDiffuse_1.xyz * vMask.g +
-                            vMtrlDiffuse_2.xyz * vMask.b + 
-                            vMtrlDiffuse_3.xyz * vMask.a), 1.f);
+                                vMtrlDiffuse_1.xyz * vMask.g +
+                                vMtrlDiffuse_2.xyz * vMask.b + 
+                                vMtrlDiffuse_3.xyz * vMask.a), 1.f);
     
-    vector vSurface_0 = g_SurfaceParamsTextures[0].Sample(DefaultSampler, tileUV);
-    vector vSurface_1 = g_SurfaceParamsTextures[1].Sample(DefaultSampler, tileUV);
-    vector vSurface_2 = g_SurfaceParamsTextures[2].Sample(DefaultSampler, tileUV);
-    vector vSurface_3 = g_SurfaceParamsTextures[3].Sample(DefaultSampler, tileUV);
+    vector vSurface_0 = g_SurfaceParamsTextures[0].Sample(AnisoTropy_BLUR_Sampler, In.vWorldPos.xz * g_fSurfaceMultiplier);
+    vector vSurface_1 = g_SurfaceParamsTextures[1].Sample(AnisoTropy_BLUR_Sampler, In.vWorldPos.xz * g_fSurfaceMultiplier);
+    vector vSurface_2 = g_SurfaceParamsTextures[2].Sample(AnisoTropy_BLUR_Sampler, In.vWorldPos.xz * g_fSurfaceMultiplier);
+    vector vSurface_3 = g_SurfaceParamsTextures[3].Sample(AnisoTropy_BLUR_Sampler, In.vWorldPos.xz * g_fSurfaceMultiplier);
     
     vector vSurface = (vSurface_0 * vMask.r +
                         vSurface_1 * vMask.g +
                         vSurface_2 * vMask.b + 
                         vSurface_3 * vMask.a);
     
-    float3 vNormalDecoded_0 = DecodeNormalFromRG(g_NormalTextures[0], DefaultSampler, tileUV);
-    float3 vNormalDecoded_1 = DecodeNormalFromRG(g_NormalTextures[1], DefaultSampler, tileUV);
-    float3 vNormalDecoded_2 = DecodeNormalFromRG(g_NormalTextures[2], DefaultSampler, tileUV);
-    float3 vNormalDecoded_3 = DecodeNormalFromRG(g_NormalTextures[3], DefaultSampler, tileUV);
+    float3 vNormalDecoded_0 = DecodeNormalFromRG(g_NormalTextures[0], AnisoTropy_BLUR_Sampler, In.vWorldPos.xz * g_fNormalMultiplier);
+    float3 vNormalDecoded_1 = DecodeNormalFromRG(g_NormalTextures[1], AnisoTropy_BLUR_Sampler, In.vWorldPos.xz * g_fNormalMultiplier);
+    float3 vNormalDecoded_2 = DecodeNormalFromRG(g_NormalTextures[2], AnisoTropy_BLUR_Sampler, In.vWorldPos.xz * g_fNormalMultiplier);
+    float3 vNormalDecoded_3 = DecodeNormalFromRG(g_NormalTextures[3], AnisoTropy_BLUR_Sampler, In.vWorldPos.xz * g_fNormalMultiplier);
     
     float3 vNormalDecoded = normalize(vNormalDecoded_0.xyz * vMask.r +
-                            vNormalDecoded_1.xyz * vMask.g + 
-                               vNormalDecoded_1.xyz * vMask.b +
-                             vNormalDecoded_1.xyz * vMask.a);
+                                        vNormalDecoded_1.xyz * vMask.g + 
+                                        vNormalDecoded_1.xyz * vMask.b +
+                                        vNormalDecoded_1.xyz * vMask.a);
     
     float3 vBinormal = cross(In.vNormal.xyz, float3(1.f, 0.f, 0.f));
     
