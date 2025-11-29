@@ -38,7 +38,6 @@ public:
 
 	_bool	isDead() const { return m_bDead; }
 	void	Set_Dead() { m_bDead = true; }
-	void    Set_Draw(_bool bDraw) { m_bDraw = bDraw; }
 
 	_uint	Get_ObjectTag() const { return m_iObjectTag; }
 	_uint	Get_CollisionID() const { return m_iCollisionID; }
