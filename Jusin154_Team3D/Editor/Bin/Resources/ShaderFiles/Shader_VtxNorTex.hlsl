@@ -177,7 +177,7 @@ PS_OUT PS_MAIN_TERRAIN_ANISO(PS_IN In)
     Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
     (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
     g_fUsingSurfaceParams, // 서페이스 파라미터
-    1.f);
+    (1.f / 255.f)); // 지형은 1
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = vSurface;
     
@@ -207,7 +207,7 @@ technique11 NorTexTechnique11
     pass Environment_Terrain_Pass // 2
     {
         SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default, 0);
+        SetDepthStencilState(DSS_Default_Environment_SWrite, 1);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;

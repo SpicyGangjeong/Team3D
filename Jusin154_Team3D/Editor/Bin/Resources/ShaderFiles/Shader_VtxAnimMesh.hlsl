@@ -513,7 +513,7 @@ technique11 DefaultTechnique
     pass OutLine_Write_Pass // 6
     {
         SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default_OutLine_Write, 1);
+        SetDepthStencilState(DSS_Default_OutLine_SWrite, 2);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
@@ -523,7 +523,7 @@ technique11 DefaultTechnique
     pass OutLine_Read_Pass // 7
     {
         SetRasterizerState(RS_Front);
-        SetDepthStencilState(DSS_Default_OutLine_Read, 0);
+        SetDepthStencilState(DSS_Default_OutLine_SRead, 2);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN_OUTLINE();
         GeometryShader = NULL;
