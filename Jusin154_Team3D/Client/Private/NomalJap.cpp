@@ -249,11 +249,14 @@ void CNomalJap::Free()
 	Safe_Release(m_pProjectile_Side);
 
 }
+#ifdef _DEBUG
 
 void CNomalJap::Describe_Entity()
 {
 
 }
+
+#endif // _DEBUG
 
 HRESULT CNomalJap::Bind_ShaderResources()
 {
