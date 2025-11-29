@@ -110,7 +110,6 @@ void CPlayer::Update(_float fTimeDelta)
 
 	m_pFSM->Update_State(fTimeDelta);
 
-
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
 
@@ -127,7 +126,7 @@ void CPlayer::Update(_float fTimeDelta)
 
 void CPlayer::Late_Update(_float fTimeDelta)
 {
-	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_Position());
+	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 
@@ -254,7 +253,7 @@ HRESULT CPlayer::Ready_Components()
 		Desc.iSubKind = ENUM_CLASS(COLLIDABLEOBJECT::PLAYER);
 		Desc.pTransform = m_pTransformCom;
 		Desc.eBodyType = ACTOR::CAPSULE;
-		Desc.fContactOffset = 0.1f;
+		Desc.fContactOffset = 0.17f;
 		Desc.fMaterial = { 0.5f, 0.5f, 0.6f };
 		Desc.bAutoStepping = { false };
 		Desc.fStepOffset = { 0.05f };
@@ -351,7 +350,7 @@ _matrix CPlayer::Get_WandPos()
 	if (pWand == nullptr)
 		return _matrix();
 
-	_matrix BoneMatrix = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("root"));
+	_matrix BoneMatrix = XMLoadFloat4x4(pWand->Get_BoneMatrixPtr("root"));
 
 	BoneMatrix = BoneMatrix * m_pTransformCom->Get_XMWorldMatrix();
 

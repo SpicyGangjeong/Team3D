@@ -159,7 +159,7 @@ void CCharacter_Controller::Move(_float fTimeDelta)
 	const PSX::PxObstacleContext*	pPxObstacles = { nullptr };			// 캐릭터가 충돌해야할 추가적인 장애물 객체?, 닿은 장애물은 캐시된다?
 
 	if (true == m_bGravity) {
-		m_pTransform->AccumulateMomentum(XMVectorSet(0.f, -GRAVITY * fTimeDelta, 0.f, 0.f));
+		m_pTransform->AccumulateMomentum(XMVectorSet(0.f, -GRAVITY * m_fGravity * fTimeDelta, 0.f, 0.f));
 	}
 	XMStoreFloat3((_float3*)&pxVecMomentum, m_pTransform->Get_CurrentMomentum());
 
@@ -182,10 +182,10 @@ _vector CCharacter_Controller::Get_Position()
 	return XMVectorSet((_float)pxVPos.x, (_float)pxVPos.y, (_float)pxVPos.z, 1.f);
 }
 
-_float3 CCharacter_Controller::Get_FootPosition()
+_vector CCharacter_Controller::Get_FootPosition()
 {
 	PSX::PxExtendedVec3  pxLVecfootPos = m_pController->getFootPosition();
-	return { (_float)pxLVecfootPos.x, (_float)pxLVecfootPos.y, (_float)pxLVecfootPos.z };
+	return XMVectorSet((_float)pxLVecfootPos.x, (_float)pxLVecfootPos.y, (_float)pxLVecfootPos.z, 1.f );
 }
 
 HRESULT CCharacter_Controller::Initialize_Prototype()
@@ -372,7 +372,8 @@ void CCharacter_Controller::Describe_Entity()
 			GUIHelpMarker("A capsule is affected by its lower sphere and tends to generate an up vector on steps.\nIn eEASY, the up vector is combined with the step offset, allowing easier climbing; in eCONSTRAINED, the up vector is removed during step detection and only the step offset is used.");
 		}
 	}
-
+	GUI::Text("%.1f", XMConvertToDegrees(acosf(m_fSlopeLimit))); GUI::SameLine(); GUI::SliderFloat("m_fSlopeLimit", &m_fSlopeLimit, 0.0f, 1.f); 
+	GUI::SliderFloat("m_fGravity_Multiplier", &m_fGravity, 0.0f, 3.f);
 	if (GUI::SliderFloat3("Volume", (_float*)&vVolume, 0.1f, 10.f, "%.2f")) {
 		Modify_Volume(vVolume);
 	}GUIHelpMarker("Box uses vSize; Capsule uses x->fRadius, y->fHeight.\nThe capsule's fHeight is likely the distance from the lower sphere center to the upper sphere center.");

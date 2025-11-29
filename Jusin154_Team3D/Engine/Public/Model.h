@@ -119,7 +119,7 @@ private:
 
 	_int						m_iPreAnimIndex = { -1 };
 	_float						m_fBlendTime = { 0.f };
-	_float						m_fBlendDuration = { 0.2f };
+	_float						m_fBlendDuration = { 0.3f };
 
 	_float						m_fRadius = { 0.f };			// 컬링용 Radius
 	_float3						m_vRadiusOffset = {};			// 컬링용 Radius Offset

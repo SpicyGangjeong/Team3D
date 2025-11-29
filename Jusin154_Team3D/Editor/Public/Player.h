@@ -61,6 +61,7 @@ private:
 	HRESULT InputAction();
 	HRESULT InputMove();
 	HRESULT InputSpell();
+	HRESULT InputAimMove();
 
 	_float m_fAmount = { 1.f };
 

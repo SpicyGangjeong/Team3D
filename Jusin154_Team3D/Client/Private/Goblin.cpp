@@ -78,7 +78,7 @@ void CGoblin::Update(_float fTimeDelta)
 void CGoblin::Late_Update(_float fTimeDelta)
 {
 	__super::Late_Update(fTimeDelta);
-	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_Position());
+	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
 
 	m_pTransformCom->LookAt(XMLoadFloat4(&m_vTargetPos));
 

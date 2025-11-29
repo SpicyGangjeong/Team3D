@@ -27,6 +27,7 @@ public:
 	PSX::PxRevoluteJoint* Create_PxRevoluteJoint(PSX::PxRigidActor* pActorFrame, PSX::PxTransform& pxLocalWallFrame, PSX::PxRigidActor* pActorObject, PSX::PxTransform& pxLocalActorFrame);
 	
 	void RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh);
+	void RegistHeight(const _tchar* pName, PSX::PxHeightFieldDesc& Desc);
 	PSX::PxMaterial* Create_Material(const _float3* vMatInfo);
 #ifdef EDITOR_PROJECT
 
@@ -36,6 +37,7 @@ public:
 	HRESULT LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
 	//HRESULT LoadTriMeshes_Binary(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
 	PSX::PxTriangleMesh* Find_TriangleMesh(const _tchar* pMeshName);
+	PSX::PxHeightField* Find_HeightField(const _tchar* pFieldName);
 
 	void Update(_float fTimeDelta);
 	void ClearScene();
@@ -80,11 +82,20 @@ private:
 
 	unordered_set<PSX::PxActor*>				m_pActiveBodys = { };
 	unordered_set<PSX::PxActor*>				m_pRestBodies = { }; // 피직스의 액터로 구별되기 때문에 피직스액터 포인터를 키로 사용함
+
 	map<_wstring, PSX::PxTriangleMesh*>			m_TriangleMeshes = {};
 	map<_wstring, PSX::PxTriangleMeshGeometry*>	m_TriangleMeshGeometry = {};
 
+	map<_wstring, PSX::PxHeightField*>			m_HeightFields = {};
+	map<_wstring, PSX::PxHeightFieldGeometry*>	m_HeightFieldGeometry = {};
 
+
+#ifdef EDITOR_PROJECT
+	_bool m_bDebugCreatePlane = { true };
 	PhsXUserData PlaneData = {};
+#else
+	_bool m_bDebugCreatePlane = { false };
+#endif // EDITOR_PROJECT
 
 	vector<PSX::PxMaterial*> m_pMaterials = { };
 	_uint m_iNumLevel = {};

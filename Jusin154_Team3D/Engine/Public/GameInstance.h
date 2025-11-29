@@ -193,6 +193,7 @@ public:
 #pragma region PhysX_Manager
 	PSX::PxMaterial* Create_Material(_float3* vMatInfo);
 	void RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh);
+	void RegistHeight(const _tchar* pName, PSX::PxHeightFieldDesc& Desc);
 	PSX::PxRigidDynamic* Add_DynamicActor(CRigidBody_Dynamic& RigidBody);
 	PSX::PxRigidStatic* Add_StaticActor(CRigidBody_Static& RigidBody);
 	PSX::PxRevoluteJoint* Create_PxRevoluteJoint(PSX::PxRigidActor* pActorFrame, PSX::PxTransform& pxLocalWallFrame, PSX::PxRigidActor* pActorObject, PSX::PxTransform& pxLocalActorFrame);

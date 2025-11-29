@@ -237,7 +237,7 @@ void CModel::Update_RootBone(_float Amount)
 		if (!m_bInitialRootRotSaved)
 		{
 			m_vInitialRootRot = curRotF4;
-			//m_vPrevRootRot = curRotF4;
+			m_vPrevRootRot = curRotF4;
 			m_bInitialRootRotSaved = true;
 		}
 		else
