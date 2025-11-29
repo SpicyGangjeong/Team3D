@@ -27,6 +27,9 @@ public:
 	virtual void SizeUpY(_float fSizeY) override;
 	virtual void SizeUpdate(_float fSizeX, _float fSizeY) override;
 
+private:
+	void Color();
+	void Hover();
 
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
@@ -36,6 +39,7 @@ private:
 
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
+
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_UI_Instance* m_pVIBufferCom = { nullptr };
 

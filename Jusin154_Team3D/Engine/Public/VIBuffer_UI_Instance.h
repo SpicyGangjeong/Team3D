@@ -31,7 +31,9 @@ public:
 	void Set_SizeX(_float fSizeX);
 	void Set_SizeY(_float fSizeY);
 	void Set_Cloned(_bool isCloned) { m_isCloned = isCloned; }
-	void Set_ImageUV(UI_ATLAS_DESC* AtlasUV = nullptr);
+	void Set_ImageUV(UI_ATLAS_DESC* AtlasUV);
+	void Set_Index_Renge_Color(_uint StartIndex, _uint EndIndex, _float4 vColor);
+	_uint Set_Mouse_Hover(_float2 fMousePos);
 
 private:
 	VTX_INSTANCE_UI*	m_pInstanceVertices = { nullptr };

@@ -40,6 +40,10 @@ private:
 	CGameObject* m_pEessential_Spell_Slot = { nullptr };
 	CGameObject* m_pEessential_Spell = { nullptr };
 	CGameObject* m_pSpell_List_Image = { nullptr };
+	CGameObject* m_pSpell_State = { nullptr };
+	CGameObject* m_pSpell_Hover = { nullptr };
+	CGameObject* m_pSpell_Hover_Effect = { nullptr };
+	CGameObject* m_pSpell_Preview = { nullptr };
 
 public:
 	static CSpell_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

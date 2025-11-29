@@ -46,7 +46,6 @@ HRESULT CEessential_Spell_Slot::Initialize(void* pArg)
 	m_pVIBufferCom->Set_Cloned(true);
 	m_pVIBufferCom->Set_Pos( -731.f, -300.f, m_fOffSetX, m_fOffSetY, m_iCols);
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
-	m_pVIBufferCom->Set_ImageUV();
 	return S_OK;
 }
 
@@ -90,6 +89,7 @@ void CEessential_Spell_Slot::Update(_float fTimeDelta)
 		}
 	}
 	m_fTime += fTimeDelta * m_fTimeMult;
+	Hover();
 	__super::Update(fTimeDelta);
 }
 
@@ -150,6 +150,23 @@ void CEessential_Spell_Slot::SizeUpdate(_float fSizeX, _float fSizeY)
 	m_fSizeX = fSizeX;
 	m_fSizeY = fSizeY;
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
+}
+
+void CEessential_Spell_Slot::Hover()
+{
+	POINT ptMouse{};
+	GetCursorPos(&ptMouse);
+	ScreenToClient(g_hWnd, &ptMouse);
+	_float2 fMouse;
+	fMouse.x = ptMouse.x - (g_iWinSizeX * 0.5f);
+	fMouse.y = -(ptMouse.y - (g_iWinSizeY * 0.5f));
+
+	// 엘리먼트의 월드 위치를 더해주면 엘리먼트 좌표계 기준이 됨
+	fMouse.x -= m_pOwner->Get_WorldPostion().m128_f32[0];
+	fMouse.y -= m_pOwner->Get_WorldPostion().m128_f32[1];
+
+	m_pVIBufferCom->Set_Mouse_Hover(fMouse);
+
 }
 
 HRESULT CEessential_Spell_Slot::Bind_ShaderResources()

@@ -23,8 +23,8 @@ HRESULT CSpell_List::Initialize(void* pArg)
 
 	Desc.fX = 0.f;
 	Desc.fY = 0.f;
-	Desc.fSizeX = 150.f;
-	Desc.fSizeY = 150.f;
+	Desc.fSizeX = 105.f;
+	Desc.fSizeY = 105.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -46,7 +46,7 @@ HRESULT CSpell_List::Initialize(void* pArg)
 	m_pVIBufferCom->Set_Cloned(true);
 	m_pVIBufferCom->Set_Pos(-185.f, 375.f, m_fOffSetX, m_fOffSetY, m_iCols);
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
-	m_pVIBufferCom->Set_ImageUV();
+	Color();
 	return S_OK;
 }
 
@@ -90,6 +90,7 @@ void CSpell_List::Update(_float fTimeDelta)
 		}
 	}
 	m_fTime += fTimeDelta * m_fTimeMult;
+	Hover();
 	__super::Update(fTimeDelta);
 }
 
@@ -113,7 +114,7 @@ HRESULT CSpell_List::Render()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIINTANCE::DEFAULT))))
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIINTANCE::COLOR))))
 	{
 		return E_FAIL;
 	}
@@ -153,6 +154,34 @@ void CSpell_List::SizeUpdate(_float fSizeX, _float fSizeY)
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
 }
 
+void CSpell_List::Color()
+{
+	m_pVIBufferCom->Set_Index_Renge_Color(0, 3, _float4(255.f / 255.f, 255.f / 255.f, 0.f / 255.f, 1.f));
+	m_pVIBufferCom->Set_Index_Renge_Color(4, 7, _float4(150.f / 255.f, 120.f / 255.f, 240.f / 255.f, 1.f));
+	m_pVIBufferCom->Set_Index_Renge_Color(8, 12, _float4(190.f / 255.f, 46.f / 255.f, 34.f / 255.f, 1.f));
+	m_pVIBufferCom->Set_Index_Renge_Color(13, 16, _float4(24.f / 255.f, 190.f / 255.f, 255.f / 255.f, 1.f));
+	m_pVIBufferCom->Set_Index_Renge_Color(17, 19, _float4(200.f / 255.f, 220.f / 255.f, 150.f / 255.f, 1.f));
+	m_pVIBufferCom->Set_Index_Renge_Color(20, 22, _float4(50.f / 255.f, 150.f / 255.f, 110.f / 255.f, 1.f));
+	m_pVIBufferCom->Set_Index_Renge_Color(23, 25, _float4(24.f / 255.f, 190.f / 255.f, 255.f / 255.f, 1.f));
+}
+
+void CSpell_List::Hover()
+{
+	POINT ptMouse{};
+	GetCursorPos(&ptMouse);
+	ScreenToClient(g_hWnd, &ptMouse);
+	_float2 fMouse;
+	fMouse.x = ptMouse.x - (g_iWinSizeX * 0.5f);
+	fMouse.y = -(ptMouse.y - (g_iWinSizeY * 0.5f));
+
+	// 엘리먼트의 월드 위치를 더해주면 엘리먼트 좌표계 기준이 됨
+	fMouse.x -= m_pOwner->Get_WorldPostion().m128_f32[0];
+	fMouse.y -= m_pOwner->Get_WorldPostion().m128_f32[1];
+
+	m_pVIBufferCom->Set_Mouse_Hover(fMouse);
+
+}
+
 HRESULT CSpell_List::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
@@ -188,6 +217,10 @@ HRESULT CSpell_List::Bind_ShaderResources()
 		return E_FAIL;
 	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCanvasAlpha", &m_fCanvasAlpha, sizeof(_float))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fTime", &m_fTime, sizeof(_float))))
 	{
 		return E_FAIL;
 	}

@@ -10,7 +10,7 @@ int g_iImageCountY;
 uint g_iIndexU;
 uint g_iIndexV;
 uint g_iQuestType;
-uint g_iSpellType;
+int g_iSpellType;
 
 float g_fPI;
 float g_fFar;
@@ -506,22 +506,22 @@ PS_OUT PS_SpellAnim(PS_IN In)
     switch (g_iSpellType)
     {
         case 0:
-            BGColor = float3(208.f, 179.f, 54.f) / 255.f;
+            BGColor = float3(255.f, 255.f, 0.f) / 255.f;
             break;
         case 1:
-            BGColor = float3(89.f, 32.f, 215.f) / 255.f;
+            BGColor = float3(150.f, 120.f, 240.f) / 255.f;
             break;
         case 2:
             BGColor = float3(190.f, 46., 34.f) / 255.f;
             break;
         case 3:
-            BGColor = float3(37.f, 129.f, 162.f) / 255.f;
+            BGColor = float3(24.f, 190.f, 255.f) / 255.f;
             break;
         case 4:
-            BGColor = float3(134.f, 171.f, 78.f) / 255.f;
+            BGColor = float3(200.f, 220.f, 150.f) / 255.f;
             break;
         case 5:
-            BGColor = float3(0.f, 80.f, 55.f) / 255.f;
+            BGColor = float3(50.f, 150.f, 110.f) / 255.f;
             break;
         case 6:
             BGColor = float3(0.f, 0.f, 0.f);
@@ -542,11 +542,11 @@ PS_OUT PS_SpellAnim(PS_IN In)
     
     color1 = tex3;
         
-    float wave1 = sin(OverrayUV.x * 10.f + g_fTime ) * 0.01f;
-    float wave2 = sin(OverrayUV.x * 10.f + g_fTime ) * 0.01f;
+    float wave1 = sin(OverrayUV.x * 10.f + g_fTime) * 0.01f;
+    float wave2 = sin(OverrayUV.x * 10.f + g_fTime) * 0.01f;
     float waveThreshold1 = CoolTime + wave1;
     float waveThreshold2 = CoolTime2 + wave2;
-    float2 waveUV =  float2(waveUV.x = OverrayUV.x * 2.f + g_fTime * 0.3f , waveUV.y = (OverrayUV.y - waveThreshold1) /(waveThreshold2 - waveThreshold1));
+    float2 waveUV = float2(waveUV.x = OverrayUV.x * 2.f + g_fTime * 0.3f, waveUV.y = (OverrayUV.y - waveThreshold1) / (waveThreshold2 - waveThreshold1));
     waveUV = saturate(waveUV);
     float tex5 = g_Texture3.Sample(DefaultSampler, waveUV).r;
 
@@ -896,7 +896,7 @@ PS_OUT PS_Magic_Item(PS_IN In)
     
     float2 OverrayUV = In.vTexcoord;
     float CoolTime = 0.f + g_fDeltaV;
-    float CoolTime2 = 0.f + g_fDeltaV + 0.05;
+    float CoolTime2 = 0.f + g_fDeltaV + 0.1f;
     atlasUV = startUV + In.vTexcoord * (endUV - startUV);
     float4 tex3 = g_Texture1.Sample(ClampSampler, OverrayUV);
     tex3.rgb *= BGColor;
@@ -914,16 +914,20 @@ PS_OUT PS_Magic_Item(PS_IN In)
    
         float waveThreshold1 = CoolTime + wave1;
         float waveThreshold2 = CoolTime2 + wave2;
-
+        float2 waveUV = float2(waveUV.x = OverrayUV.x * 2.f + g_fTime * 0.3f, waveUV.y = (OverrayUV.y - waveThreshold1) / (waveThreshold2 - waveThreshold1));
+        waveUV = saturate(waveUV);
+        float Mask = g_MaskingTexture.Sample(DefaultSampler, waveUV).r;
         if (g_fDeltaV <= 1.f)
         {
             if (OverrayUV.y >= waveThreshold1 && OverrayUV.y <= waveThreshold2)
             {
-                color1.rgb = float3(1.f, 1.f, 1.f);
+                color1.rgb += float3(1.f, 1.f, 1.f) * Mask * 1.f;
             }
         }
     
-        if (OverrayUV.y <= CoolTime)
+        float waveThreshold = CoolTime + wave1;
+
+        if (OverrayUV.y <= waveThreshold)
         {
             color1.a = 0.f;
         }
@@ -959,6 +963,187 @@ PS_OUT PS_Magic_Item(PS_IN In)
     color.a *= Alpha;
     
     Out.vColor = color;
+    return Out;
+}
+
+PS_OUT PS_Spell_Preview(PS_IN In)
+{
+    PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+    float4 Color = float4(1.f, 1.f, 1.f, 1.f);
+    float2 uv = In.vTexcoord;
+    float2 CurrentPixelPosition = uv * g_fCurrent_Size;
+    float OriginLeft = g_fNine_Slice.x;
+    float OriginRight = g_fNine_Slice.y;
+    float OriginTop = g_fNine_Slice.z;
+    float OriginBottom = g_fNine_Slice.w;
+    
+    float CurrentLeft = OriginLeft;
+    float CurrentRight = g_fCurrent_Size.x - (g_fOrigin_Size.x - OriginRight);
+    float CurrentTop = OriginTop;
+    float CurrentBottom = g_fCurrent_Size.y - (g_fOrigin_Size.y - OriginBottom);
+    
+    float2 Finaluv = In.vTexcoord;
+
+    if (CurrentPixelPosition.x < CurrentLeft)
+    {
+        Finaluv.x = CurrentPixelPosition.x / g_fOrigin_Size.x;
+    }
+    else if (CurrentPixelPosition.x > CurrentRight)
+    {
+        float dist = CurrentPixelPosition.x - CurrentRight;
+        Finaluv.x = (OriginRight + dist) / g_fOrigin_Size.x;
+    }
+    else
+    {
+        float scale = (CurrentPixelPosition.x - CurrentLeft) / (CurrentRight - CurrentLeft);
+        Finaluv.x = (OriginLeft / g_fOrigin_Size.x) + scale * ((OriginRight - OriginLeft) / g_fOrigin_Size.x);
+    }
+    
+    if (CurrentPixelPosition.y < CurrentTop)
+    {
+        Finaluv.y = CurrentPixelPosition.y / g_fOrigin_Size.y;
+    }
+    else if (CurrentPixelPosition.y > CurrentBottom)
+    {
+        float dist = CurrentPixelPosition.y - CurrentBottom;
+        Finaluv.y = (OriginBottom + dist) / g_fOrigin_Size.y;
+    }
+    else
+    {
+        float scale = (CurrentPixelPosition.y - CurrentTop) / (CurrentBottom - CurrentTop);
+        Finaluv.y = (OriginTop / g_fOrigin_Size.y) + scale * ((OriginBottom - OriginTop) / g_fOrigin_Size.y);
+    }
+    
+    float4 tex1 = g_Texture.Sample(DefaultSampler, Finaluv);
+    float4 tex2 = g_Texture1.Sample(DefaultSampler, In.vTexcoord);
+    float4 tex3 = g_Texture2.Sample(DefaultSampler, Finaluv);
+    Color = tex1;
+ 
+    tex3.rgb = tex2.rgb;
+    
+    Color = lerp(Color, tex3, tex3.a);
+    
+    float2 Imagetexpos1 = g_fImageSipos1.xy / g_fCurrent_Size;
+    float2 Imagetexsize1 = g_fImageSipos1.zw / g_fCurrent_Size;
+    float2 Imagelocal = (In.vTexcoord - Imagetexpos1) / Imagetexsize1;
+    bool inside1 = all(Imagelocal >= 0.0f && Imagelocal <= 1.0f);
+    float4 tex4 = g_Texture3.Sample(DefaultSampler, Finaluv);
+    if (inside1)
+    {
+        Color = lerp(Color, tex4, tex4.a);
+    }
+    
+    Color.a *= Alpha;
+    
+    Out.vColor = Color;
+    
+    return Out;
+}
+
+PS_OUT PS_Spell_Header(PS_IN In)
+{
+    PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+    float4 Color = float4(1.f, 1.f, 1.f, 1.f);
+    
+    float3 BGColor= float3(1.f, 1.f, 1.f);
+    
+    switch (g_iSpellType)
+    {
+        case 0:
+            BGColor = float3(255.f, 255.f, 0.f) / 255.f;
+            break;
+        case 1:
+            BGColor = float3(150.f, 120.f, 240.f) / 255.f;
+            break;
+        case 2:
+            BGColor = float3(190.f, 46., 34.f) / 255.f;
+            break;
+        case 3:
+            BGColor = float3(24.f, 190.f, 255.f) / 255.f;
+            break;
+        case 4:
+            BGColor = float3(200.f, 220.f, 150.f) / 255.f;
+            break;
+        case 5:
+            BGColor = float3(50.f, 150.f, 110.f) / 255.f;
+            break;
+        case 6:
+            BGColor = float3(0.f, 0.f, 0.f);
+            break;
+    }
+    
+    float4 tex1 = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    Color = tex1;
+ 
+    Color.rgb *= BGColor;
+    
+    Color.a *= Alpha;
+    
+    Out.vColor = Color;
+    
+    return Out;
+}
+PS_OUT PS_Spell_Header_Line(PS_IN In)
+{
+    PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+    float4 Color = float4(1.f, 1.f, 1.f, 1.f);
+    float2 uv = In.vTexcoord;
+    float2 CurrentPixelPosition = uv * g_fCurrent_Size;
+    float OriginLeft = g_fNine_Slice.x;
+    float OriginRight = g_fNine_Slice.y;
+    float OriginTop = g_fNine_Slice.z;
+    float OriginBottom = g_fNine_Slice.w;
+    
+    float CurrentLeft = OriginLeft;
+    float CurrentRight = g_fCurrent_Size.x - (g_fOrigin_Size.x - OriginRight);
+    float CurrentTop = OriginTop;
+    float CurrentBottom = g_fCurrent_Size.y - (g_fOrigin_Size.y - OriginBottom);
+    
+    float2 Finaluv = In.vTexcoord;
+
+    if (CurrentPixelPosition.x < CurrentLeft)
+    {
+        Finaluv.x = CurrentPixelPosition.x / g_fOrigin_Size.x;
+    }
+    else if (CurrentPixelPosition.x > CurrentRight)
+    {
+        float dist = CurrentPixelPosition.x - CurrentRight;
+        Finaluv.x = (OriginRight + dist) / g_fOrigin_Size.x;
+    }
+    else
+    {
+        float scale = (CurrentPixelPosition.x - CurrentLeft) / (CurrentRight - CurrentLeft);
+        Finaluv.x = (OriginLeft / g_fOrigin_Size.x) + scale * ((OriginRight - OriginLeft) / g_fOrigin_Size.x);
+    }
+    
+    if (CurrentPixelPosition.y < CurrentTop)
+    {
+        Finaluv.y = CurrentPixelPosition.y / g_fOrigin_Size.y;
+    }
+    else if (CurrentPixelPosition.y > CurrentBottom)
+    {
+        float dist = CurrentPixelPosition.y - CurrentBottom;
+        Finaluv.y = (OriginBottom + dist) / g_fOrigin_Size.y;
+    }
+    else
+    {
+        float scale = (CurrentPixelPosition.y - CurrentTop) / (CurrentBottom - CurrentTop);
+        Finaluv.y = (OriginTop / g_fOrigin_Size.y) + scale * ((OriginBottom - OriginTop) / g_fOrigin_Size.y);
+    }
+    
+    float4 tex1 = g_Texture.Sample(DefaultSampler, Finaluv);
+    float4 tex2 = g_Texture1.Sample(DefaultSampler, In.vTexcoord);
+    Color = tex1;
+ 
+    //Color.rgb = tex2.rgb;
+    
+    Color.a *= Alpha;
+    
+    Out.vColor = Color;
+    
     return Out;
 }
 
@@ -1160,6 +1345,36 @@ technique11 PosTexTechnique11
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Magic_Item();
+    }
+
+    pass Spell_Preview
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Spell_Preview();
+    }
+
+    pass Spell_Header
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Spell_Header();
+    }
+
+    pass Spell_Header_Line
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Spell_Header_Line();
     }
 
 }
