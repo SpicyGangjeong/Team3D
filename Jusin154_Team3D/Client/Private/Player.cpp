@@ -20,6 +20,7 @@
 #include "State_Land.h"
 #include "State_Move.h"
 #include "State_Combat.h"
+#include "State_Broom_Ride.h"
 #pragma endregion
 
 #include "Layer.h"
@@ -58,6 +59,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	Load_KeyFrame();
 #endif // _DEBUG
 
+	m_pBroomModel = static_cast<CGameObject*>(pArg)->Get_Component<CModel>();
+	m_pBroomTransform = static_cast<CGameObject*>(pArg)->Get_Component<CTransform>();
 
 	Add_FSM();
 

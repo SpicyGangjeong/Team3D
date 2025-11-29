@@ -42,6 +42,9 @@ private:
 	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
 	class	CCallBack_Playable_Behavior* m_pCallBack_Behavior = { nullptr };
 	class	CCallBack_Playable_HitReport* m_pCallBack_HitReport = { nullptr };
+
+	class CModel* m_pBroomModel = { nullptr };
+	class CTransform* m_pBroomTransform = { nullptr };
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -75,8 +78,6 @@ public:
 
 
 private:
-
-
 	void TestKeyInput(_float fTimeDelta);
 	virtual void Add_FSM();
 	virtual void Set_Anim();
@@ -114,6 +115,14 @@ private:
 	void	Behavior_CombatEnter();
 	HRESULT Behavior_CombatExitCheck();
 	void	Behavior_CombatExit();
+
+	void	Behavior_HitEnter();
+	HRESULT Behavior_HitExitCheck();
+	void	Behavior_HitExit();
+
+	void	Behavior_Broom_RideEnter();
+	HRESULT Behavior_Broom_RideExitCheck();
+	void	Behavior_Broom_RideExit();
 
 
 	void Player_InterpTurn(_float fTimeDelta);

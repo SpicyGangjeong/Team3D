@@ -18,6 +18,7 @@ public:
 
 private:
 	class CInfoInstance* m_pInfoInstance = { nullptr };
+	class CBroom* m_pBroom = { nullptr };
 private:
 	virtual HRESULT Initialize() override;
 	HRESULT Initialize(void* pArg);
