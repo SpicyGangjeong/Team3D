@@ -10,7 +10,24 @@ CVIBuffer_Box::CVIBuffer_Box(const CVIBuffer_Box& rhs)
 	: CVIBuffer(rhs)
 {
 }
-#ifdef EDITOR_PROJECT
+
+HRESULT CVIBuffer_Box::Update(_float3* pVertexDatas)
+{
+	D3D11_MAPPED_SUBRESOURCE	SubResource{};
+	m_pContext->Map(m_pVB, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource);
+
+	VTXPOS* pVertices = static_cast<VTXPOS*>(SubResource.pData);
+	
+	for (_uint i = 0; i < m_iNumVertices; ++i)
+	{
+		memcpy(&pVertices[i].vPosition, &pVertexDatas[i], sizeof(_float3));
+	}
+
+	m_pContext->Unmap(m_pVB, 0);
+
+	return S_OK;
+}
+
 HRESULT CVIBuffer_Box::Initialize_Prototype()
 {
 	m_iNumVertexBuffers = 1;
@@ -75,59 +92,25 @@ HRESULT CVIBuffer_Box::Initialize_Prototype()
 
 HRESULT CVIBuffer_Box::Initialize(void* pArg)
 {
-#pragma region VTX_BUFFER
-	D3D11_BUFFER_DESC VBDesc{};
-	VBDesc.ByteWidth = m_iVertexStride * m_iNumVertices;
-	VBDesc.Usage = D3D11_USAGE_DYNAMIC;
-	VBDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	VBDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	VBDesc.MiscFlags = 0;
-	VBDesc.StructureByteStride = m_iVertexStride;
-
-	VTXPOS* pVertices = new VTXPOS[m_iNumVertices];
-	memset(pVertices, 0, sizeof(VTXPOS) * m_iNumVertices);
-
-	pVertices[0].vPosition = _float3(-0.5f, 0.5f, -0.5f);
-	pVertices[1].vPosition = _float3(0.5f, 0.5f, -0.5f);
-	pVertices[2].vPosition = _float3(0.5f, -0.5f, -0.5f);
-	pVertices[3].vPosition = _float3(-0.5f, -0.5f, -0.5f);
-	pVertices[4].vPosition = _float3(-0.5f, 0.5f, 0.5f);
-	pVertices[5].vPosition = _float3(0.5f, 0.5f, 0.5f);
-	pVertices[6].vPosition = _float3(0.5f, -0.5f, 0.5f);
-	pVertices[7].vPosition = _float3(-0.5f, -0.5f, 0.5f);
-
-	D3D11_SUBRESOURCE_DATA VBRes{};
-	VBRes.pSysMem = pVertices;
-
-	if (FAILED(m_pDevice->CreateBuffer(&VBDesc, &VBRes, &m_pVB))) {
-		return E_FAIL;
-	}
-	Safe_Delete_Array(pVertices);
-
-#pragma endregion
-
-	return S_OK;
-}
-
-HRESULT CVIBuffer_Box::Update(_float3* pVertexDatas)
-{
-	D3D11_MAPPED_SUBRESOURCE	SubResource{};
-	m_pContext->Map(m_pVB, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource);
-
-	VTXPOS* pVertices = static_cast<VTXPOS*>(SubResource.pData);
-	
-	for (_uint i = 0; i < m_iNumVertices; ++i)
+	if (nullptr == pArg)
 	{
-		memcpy(&pVertices[i].vPosition, &pVertexDatas[i], sizeof(_float3));
+#ifdef EDITOR_PROJECT
+		if(FAILED(Ready_VIBuffer_Editor()))
+			return E_FAIL;
+#else
+		return E_FAIL;
+#endif
 	}
-
-	m_pContext->Unmap(m_pVB, 0);
+	else
+	{
+		if(FAILED(Ready_VIBuffer(pArg)))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }
 
-#else
-HRESULT CVIBuffer_Box::Initialize(void* pArg)
+HRESULT CVIBuffer_Box::Ready_VIBuffer(void* pArg)
 {
 	_float3* pCorners = static_cast<_float3*>(pArg);
 
@@ -165,7 +148,42 @@ HRESULT CVIBuffer_Box::Initialize(void* pArg)
 	return S_OK;
 }
 
+#ifdef EDITOR_PROJECT
+HRESULT CVIBuffer_Box::Ready_VIBuffer_Editor()
+{
+#pragma region VTX_BUFFER
+	D3D11_BUFFER_DESC VBDesc{};
+	VBDesc.ByteWidth = m_iVertexStride * m_iNumVertices;
+	VBDesc.Usage = D3D11_USAGE_DYNAMIC;
+	VBDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	VBDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	VBDesc.MiscFlags = 0;
+	VBDesc.StructureByteStride = m_iVertexStride;
 
+	VTXPOS* pVertices = new VTXPOS[m_iNumVertices];
+	memset(pVertices, 0, sizeof(VTXPOS) * m_iNumVertices);
+
+	pVertices[0].vPosition = _float3(-0.5f, 0.5f, -0.5f);
+	pVertices[1].vPosition = _float3(0.5f, 0.5f, -0.5f);
+	pVertices[2].vPosition = _float3(0.5f, -0.5f, -0.5f);
+	pVertices[3].vPosition = _float3(-0.5f, -0.5f, -0.5f);
+	pVertices[4].vPosition = _float3(-0.5f, 0.5f, 0.5f);
+	pVertices[5].vPosition = _float3(0.5f, 0.5f, 0.5f);
+	pVertices[6].vPosition = _float3(0.5f, -0.5f, 0.5f);
+	pVertices[7].vPosition = _float3(-0.5f, -0.5f, 0.5f);
+
+	D3D11_SUBRESOURCE_DATA VBRes{};
+	VBRes.pSysMem = pVertices;
+
+	if (FAILED(m_pDevice->CreateBuffer(&VBDesc, &VBRes, &m_pVB))) {
+		return E_FAIL;
+	}
+	Safe_Delete_Array(pVertices);
+
+#pragma endregion
+
+	return S_OK;
+}
 #endif
 
 CVIBuffer_Box* CVIBuffer_Box::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

@@ -20,6 +20,7 @@ namespace Client {
 #define FX_INSTANCE_PROP_MODEL  TEXT("FX_INSTANCE_PROP_MODEL")
 #define FX_UIEDITOR				TEXT("FX_UIEDITOR")
 #define FX_UIINSTANCE			TEXT("FX_UIINSTANCE")
+#define FX_VTXPOS				TEXT("FX_VTXPOS")
 
 #pragma endregion
 #pragma region MACRO_PROTOTYPE
