@@ -40,6 +40,7 @@ private:
 	_float4x4					m_ProjMatrix = {};
 
 	ID3D11DepthStencilView* m_pShadowDSV = { nullptr };
+	ID3D11DepthStencilView* m_pOcclusionDSV = { nullptr };
 
 	SHADOW_LIGHT_DESC m_PreShadowDesc = {};
 	_float4x4 m_PreShadowMatrices[ENUM_CLASS(D3DTS::END)] = {};
@@ -56,6 +57,7 @@ private:
 
 
 private:
+	void Render_Occlusion();
 	void Render_Priority();
 	void Render_Shadow();
 	void Render_NonBlend();
@@ -79,6 +81,7 @@ private:
 
 private:
 	HRESULT Ready_ShadowDepthStencilView(_uint iSizeX, _uint iSizeY);
+	HRESULT Ready_OcclusionDepthStencilView(_uint iSizeX, _uint iSizeY);
 
 private:
 	HRESULT Initialize();

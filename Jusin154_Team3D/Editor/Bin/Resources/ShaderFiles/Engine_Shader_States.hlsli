@@ -15,6 +15,12 @@ RasterizerState RS_Nocull
     DepthClipEnable = false;
 };
 
+RasterizerState RS_NocullOcclusion
+{
+    FillMode = Solid;
+    CullMode = None;
+};
+
 RasterizerState RS_Nocull_Wireframe
 {
     FillMode = Wireframe;
@@ -162,6 +168,12 @@ DepthStencilState DSS_Default_OutLine_SRead
     BackFaceStencilFunc = NOT_Equal;
 };
 
+DepthStencilState DSS_Occlusion
+{
+    DepthEnable = true;
+    DepthWriteMask = zero;
+};
+
 BlendState BS_None
 {
     BlendEnable[0] = false;
@@ -274,6 +286,28 @@ BlendState BS_WeightBlend
 
     
 
+};
+
+BlendState BS_WhiteMask
+{
+    BlendEnable[0] = false;
+    BlendEnable[1] = false;
+    BlendEnable[2] = false;
+    BlendEnable[3] = false;
+    BlendEnable[4] = false;
+    BlendEnable[5] = false;
+    BlendEnable[6] = false;
+    BlendEnable[7] = false;
+
+    RenderTargetWriteMask[0] = 0;
+    RenderTargetWriteMask[1] = 0;
+    RenderTargetWriteMask[2] = 0;
+    RenderTargetWriteMask[3] = 0;
+    RenderTargetWriteMask[4] = 0;
+    RenderTargetWriteMask[5] = 0;
+    RenderTargetWriteMask[6] = 0;
+    RenderTargetWriteMask[7] = 0;
+  
 };
 
 #endif // ENGINE_SHADER_STATES_HLSLI

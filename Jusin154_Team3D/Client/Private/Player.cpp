@@ -20,6 +20,7 @@
 #include "State_Land.h"
 #include "State_Move.h"
 #include "State_Combat.h"
+#include "State_Broom_Ride.h"
 #pragma endregion
 
 #include "Layer.h"
@@ -58,6 +59,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	Load_KeyFrame();
 #endif // _DEBUG
 
+	m_pBroomModel = static_cast<CGameObject*>(pArg)->Get_Component<CModel>();
+	m_pBroomTransform = static_cast<CGameObject*>(pArg)->Get_Component<CTransform>();
 
 	Add_FSM();
 
@@ -297,8 +300,8 @@ HRESULT CPlayer::Ready_Parts()
 		Desc.fMouseSensor = 0.1f;
 		Desc.fShoulderDistance = 2.f;
 		Desc.fBackFrontRatio = 0.9f;
-		Desc.fCameraFocalLength = 10.f;
-		Desc.vInitialLook = { 1.f, 2.f, -1.f };
+		Desc.fCameraFocalLength = 13.4f;
+		Desc.vInitialLook = { 0.77f, 1.35f, -1.f };
 
 		if (FAILED(Add_PartObject<CCamPosition_Shoulder>("Cam_Shoulder_Part", g_iStaticLevel, &m_pCamPosition_ShoulderPart, &Desc))) {
 			return E_FAIL;
@@ -449,6 +452,8 @@ void CPlayer::Describe_Entity()
 	GUI::Text(AnimList.c_str());
 
 	GUI::Checkbox("Render", &m_bVisible);
+
+	GUI::Text("%d", m_iStateMask);
 
 }
 

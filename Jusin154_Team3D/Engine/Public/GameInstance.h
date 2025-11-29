@@ -255,6 +255,7 @@ private:
 	class CPhysX_Manager*			m_pPhysX_Manager = { nullptr };
 	class CPicking*					m_pPicking = { nullptr };
 	class CThreadHolder*			m_pThreadHolder = { nullptr };
+	class COcclusionQuery*			m_pOcclusionQuery = { nullptr };
 
 #ifdef _DEBUG
 private:

@@ -73,6 +73,8 @@
 
 #pragma region MAP_HEADER
 #include "VIBuffer_Terrain.h"
+#include "VIBuffer_Box.h"
+#include "OcclusionQuery.h"
 #include "Terrain.h"
 #include "BuildingContainer.h"
 #include "MapObject_Collision.h"
@@ -1613,7 +1615,7 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		TEXT("Prototype_Component_Wand_Model")
 	));
 	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "../Bin/Resources/Models/Object/Broom/Broom.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
+		MODEL::ANIM, "../Bin/Resources/Models/Object/Broom/Broom.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixRotationY(XMConvertToRadians(180.f))* XMMatrixIdentity(),
 		TEXT("Prototype_Component_Broom_Model")
 	));
 	futures.emplace_back(Deferred_ModelLoad(
@@ -2290,6 +2292,12 @@ vector<vector<FOLDER_LOAD*>*> Contents(iLoadCount);
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_VTXPOS,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_VtxPos.hlsl"),
+			VTXPOS::Elements, VTXPOS::iNumElements)))) {
+		return E_FAIL;
+	}
+
 	m_strMessage = TEXT("객체원형를(을) 로딩 중 입니다.");
 
 
@@ -2303,6 +2311,7 @@ vector<vector<FOLDER_LOAD*>*> Contents(iLoadCount);
 		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, "../Bin/Resources/Data/Map/T_LandscapeStreamingProxy_0_LOD1_D.png"))))
 		return E_FAIL;
 
+	
 	CVIBuffer_Model_Instance::INSTANCE_DESC InstanceDesc = {};
 
 	InstanceDesc.iNum = 200;
@@ -2323,6 +2332,16 @@ vector<vector<FOLDER_LOAD*>*> Contents(iLoadCount);
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_SM_BearBerry_A"),
 		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext, &InstanceDesc,
 			"../Bin/Resources/Models/InstanceProp/SM_BearBerry_A.fbx", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_VIBuffer_Box */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Box"),
+		CVIBuffer_Box::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_OcclusionQuery */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_OcclusionQuery"),
+		COcclusionQuery::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_SkyBox */

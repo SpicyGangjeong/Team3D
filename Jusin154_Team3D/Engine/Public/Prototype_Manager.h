@@ -16,7 +16,9 @@
 #include "FSM.h"
 #include "State.h"
 #include "VIBuffer_UI_Instance.h"
+#include "VIBuffer_Box.h"
 #include "Trail.h"
+#include "OcclusionQuery.h"
 
 
 NS_BEGIN(Engine)
