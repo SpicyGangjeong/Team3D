@@ -20,10 +20,11 @@ public:
 #ifdef _DEBUG
 	void Render_CameraCoordinateSystem();
 #endif // _DEBUG
-	_bool Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
-
+	_bool   Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
+	_matrix Get_WandPos();
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
+	class CMonster* m_pLockOnMonster = { nullptr };
 	_float m_fDirectionRadian = 0.f;
 
 	_bool m_bSprintToggle = { false };
@@ -47,9 +48,10 @@ private:
 	HRESULT Ready_Components();
 	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
+	void ReLockOnTarget();
 
-#ifdef _DEBUG
 	void Update_CameraCoordinateSystem();
+#ifdef _DEBUG
 	unique_ptr<BasicEffect> m_BasicEffect;
 	unique_ptr<PrimitiveBatch<VertexPositionColor>> m_Batch;
 #endif // _DEBUG
@@ -69,8 +71,8 @@ public:
 public:
 	virtual void Reset_Sprint() { m_bSprintToggle = false; }
 	virtual void Reset_Walk() { m_bWalkToggle = false; }
-	template<typename T>
-	void Spawn_Effect();
+
+
 
 private:
 
@@ -87,13 +89,14 @@ private:
 	HRESULT InputMove();
 	HRESULT InputKeyUpMove();
 	HRESULT InputSpell();
+	HRESULT InputAim();
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck(_float fTimeDelta);
 	void	Behavior_IdleExit();
 
 	void	Behavior_MoveEnter();
-	HRESULT Behavior_MoveExitCheck();
+	HRESULT Behavior_MoveExitCheck(_float fTimeDelta);
 	void	Behavior_MoveExit();
 
 	void	Behavior_JumpEnter();
@@ -112,7 +115,13 @@ private:
 	HRESULT Behavior_CombatExitCheck();
 	void	Behavior_CombatExit();
 
+
+	void Player_InterpTurn(_float fTimeDelta);
+
 #pragma endregion
+
+private:
+	class CEffectPool* m_pEffectPool = nullptr;
 };
 
 NS_END

@@ -361,6 +361,7 @@ void CMapObject_LOD::Describe_Entity()
 				{ // RIGID_BODY
 					_wstring dest = CMyTools::ToWstring(m_pModelComs[iModelIndex]->Get_MeshName(iMeshIndex) + to_string(iMeshIndex)).c_str();
 					Desc.pMeshName = dest.c_str();
+					Desc.iSubKind = 998;
 
 					if (FAILED(Add_Asset_Component(g_iStaticLevel, Desc.pMeshName, nullptr, &Desc))) {
 						assert(false);

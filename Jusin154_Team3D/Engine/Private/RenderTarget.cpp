@@ -104,6 +104,11 @@ void CRenderTarget::Describe_Entity(const _char* pName)
     GUI::Selectable(pName, &m_isDraw);
 }
 
+void CRenderTarget::Toggle_RT_Debug()
+{
+    m_isDraw = !m_isDraw;
+}
+
 _bool CRenderTarget::Render_Debug(CShader* pShader, CVIBuffer_Rect* pVIBuffer ,_float fX, _float fY, _float fSizeX, _float fSizeY)
 {
     if (m_isDraw == false) {

@@ -14,7 +14,7 @@ public:
 
 	}RIGIDBODY_STATIC_PROTOTYPEDESC;
 
-	typedef struct tagRigidBody_STATIC_Desc : public CRigidBody::RIGIDBODY_PROTOTYPEDESC
+	typedef struct tagRigidBody_STATIC_Desc : public CRigidBody::RIGIDBODY_DESC
 	{
 		const _tchar* pMeshName = { nullptr };
 	}RIGIDBODY_STATIC_DESC;

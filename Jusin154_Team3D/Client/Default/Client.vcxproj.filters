@@ -184,8 +184,71 @@
     <ClInclude Include="..\public\Terrain.h">
       <Filter>02.GameObjects\Environment\Terrain</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\GamePlay_Canvas.h">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LoadingWidget.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Loding_Panel\LoadingWidget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Loading_Panel.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Loding_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Action_Panel.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MiniMap_Panel.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\MiniMap_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mission_Panel.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Mission_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MiniMap_TrimBorder.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\MiniMap_Panel\MiniMap_TrimBorder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\NoMountIcon.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\MiniMap_Panel\NoMountIcon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LoadingWidget_Flame.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Loding_Panel\LoadingWidget_Flame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EffectPool.h">
+      <Filter>02.GameObjects\Effect\EffectPool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Decendo.h">
+      <Filter>02.GameObjects\Effect\Effects\Decendo</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\InstancedProp.h">
       <Filter>02.GameObjects\Environment\02.InstancedProp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Protego.h">
+      <Filter>02.GameObjects\Effect\Effects\Protego</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HpBarBG.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\HPBarBG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Magic_Icon.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Magic_Icon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Magic_Item.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Magic_Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Magic_Meter.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Magic_Meter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Spell_Slot.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Spell_Slot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Spell_Overlay.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Spell_Overlay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Spell_UI.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Spell_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Slot_Number.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Slot_Number</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Potion.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Potion</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -443,8 +506,47 @@
     <Filter Include="02.GameObjects\Environment\Terrain">
       <UniqueIdentifier>{7db61780-d774-4a91-a429-2fb7634e43b3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\EffectPool">
+      <UniqueIdentifier>{bdd4863e-8ab9-4ce8-a88d-9a0c558a67fb}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\Environment\02.InstancedProp">
       <UniqueIdentifier>{4ef15d06-4520-4d55-ab49-1ae7179f145b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Protego">
+      <UniqueIdentifier>{37b6e4b9-42fb-4fda-9112-e62ab434bee0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\MiniMap_Panel\MiniMap_TrimBorder">
+      <UniqueIdentifier>{59283aaa-2cb7-40da-97a7-2705ed78c830}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\MiniMap_Panel\NoMountIcon">
+      <UniqueIdentifier>{e5e2a92a-d549-4573-b8e7-d48e7a409888}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Action_Panel\HPBarBG">
+      <UniqueIdentifier>{5a49d7f9-f675-43f0-be32-f32c3e6523b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Magic_Icon">
+      <UniqueIdentifier>{ba2aee38-d721-4b54-bb39-5b9bb5ec3e9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Magic_Item">
+      <UniqueIdentifier>{b284d03c-90f5-4e1f-860c-f7b07b13309f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Magic_Meter">
+      <UniqueIdentifier>{dbb67727-3b9d-40d3-92d8-8faf19dee261}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Potion">
+      <UniqueIdentifier>{d92bccc9-1515-4701-9e57-d9162d8d5ed4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Slot_Number">
+      <UniqueIdentifier>{f3862ab8-1127-4efd-8739-0728b5aca058}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Spell_Overlay">
+      <UniqueIdentifier>{cca29e49-aaa7-4575-b29a-04aecf66e91c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Spell_Slot">
+      <UniqueIdentifier>{2ddf4d5c-bb90-4e5f-8c3a-98d07da215df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Spell_UI">
+      <UniqueIdentifier>{9914341c-f246-4fdb-b28c-de7a6d2d149b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -619,8 +721,71 @@
     <ClCompile Include="..\private\Terrain.cpp">
       <Filter>02.GameObjects\Environment\Terrain</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Loading_Panel.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Loding_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LoadingWidget.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Loding_Panel\LoadingWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\GamePlay_Canvas.cpp">
+      <Filter>02.GameObjects\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Action_Panel.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MiniMap_Panel.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\MiniMap_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mission_Panel.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Mission_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MiniMap_TrimBorder.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\MiniMap_Panel\MiniMap_TrimBorder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\NoMountIcon.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\MiniMap_Panel\NoMountIcon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LoadingWidget_Flame.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Loding_Panel\LoadingWidget_Flame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EffectPool.cpp">
+      <Filter>02.GameObjects\Effect\EffectPool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Decendo.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Decendo</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\InstancedProp.cpp">
       <Filter>02.GameObjects\Environment\02.InstancedProp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Protego.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Protego</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HpBarBG.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\HPBarBG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Magic_Icon.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Magic_Icon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Magic_Item.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Magic_Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Magic_Meter.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Magic_Meter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Spell_Slot.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Spell_Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Spell_Overlay.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Spell_Overlay</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Spell_UI.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Spell_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Slot_Number.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Slot_Number</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Potion.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Potion</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

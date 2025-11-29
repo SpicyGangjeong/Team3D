@@ -20,8 +20,8 @@
 #include "State_Combat.h"
 #pragma endregion
 
-#include "Bombard.h"
-#include "Decendo.h"
+#include "EffectPool.h"
+#include "Protego.h"
 
 #pragma region States
 void CPlayer::TestKeyInput(_float fTimeDelta)
@@ -98,6 +98,15 @@ HRESULT CPlayer::InputSpell()
 	return E_FAIL;
 }
 
+HRESULT CPlayer::InputAimMove()
+{
+	if (m_pGameInstance->Mouse_Pressing(DIM_RBUTTON))
+	{
+		return S_OK;
+	}
+	return E_FAIL;
+}
+
 void CPlayer::Behavior_IdleEnter() {
 	m_pFSM->Enable_State(FSMSTATE::IDLE);
 	pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::IDLE];
@@ -143,6 +152,7 @@ HRESULT CPlayer::Behavior_IdleExitCheck()
 		}
 		else if (m_pGameInstance->Mouse_Up(DIM_LBUTTON)) {
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
+
 		}
 		else if (m_pGameInstance->Key_Down(DIK_V)) {
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
@@ -427,10 +437,16 @@ void CPlayer::Behavior_CombatEnter()
 	else if (m_pGameInstance->Key_Down(DIK_Q)) {
 		m_pFSM->Enable_State(FSMSTATE::SKILL2);
 		pairAnimInfo = m_Animation[STATEANIM::SKILL2];
+
+		m_pEffectPool->Use_Skill(SKILL_TYPE::PROTEGO, this);
+
 	}
 	else if (m_pGameInstance->Mouse_Up(DIM_LBUTTON)) {
 		m_pFSM->Enable_State(FSMSTATE::LIGHT_ATTACK);
 		pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK];
+
+		m_pEffectPool->Use_Skill(SKILL_TYPE::JAP, this);
+
 	}
 	else if (SUCCEEDED(InputSpell())) {
 		m_pFSM->Enable_State(FSMSTATE::SPELL);
@@ -528,10 +544,7 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 			case STATEANIM::ACCIO:
 				pairAnimInfo = m_Animation[STATEANIM::ACCIO];
 
-				if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBombard>(ENUM_CLASS(LEVEL::EFFECT), CURRENT_LEVEL, LAYER_HITBOX, nullptr, this))) {
-					assert(false);
-					return E_FAIL;
-				}
+				m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARD, this);
 
 			
 				break;
@@ -539,10 +552,7 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 			{
 				pairAnimInfo = m_Animation[STATEANIM::DESCENDO];
 
-				if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDecendo>(ENUM_CLASS(LEVEL::EFFECT), CURRENT_LEVEL, LAYER_HITBOX, nullptr, this))) {
-					assert(false);
-					return E_FAIL;
-				}
+				m_pEffectPool->Use_Skill(SKILL_TYPE::DECENDO, this);
 			}
 				break;
 			default:

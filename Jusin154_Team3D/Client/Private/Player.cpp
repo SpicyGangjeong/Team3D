@@ -11,6 +11,7 @@
 #include "CallBack_Playable_Behavior.h"
 #include "CamPosition_Shoulder.h"
 #include "CallBack_Playable_HitReport.h"
+#include "Monster.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -21,7 +22,8 @@
 #include "State_Combat.h"
 #pragma endregion
 
-#include "Bombard.h"
+#include "Layer.h"
+#include "EffectPool.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUnit(pDevice, pContext)
@@ -32,7 +34,6 @@ CPlayer::CPlayer(const CPlayer& Prototype)
 	: CUnit(Prototype),
 	m_pInfoInstance(CInfoInstance::GetInstance())
 {
-	SAFE_ADDREF(m_pInfoInstance);
 }
 
 HRESULT CPlayer::Initialize_Prototype()
@@ -76,7 +77,11 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
 
+	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
+	SAFE_ADDREF(m_pEffectPool);
+
 	m_pInfoInstance->Regist_PlayerAlly(this);
+
 
 #ifdef _DEBUG
 	m_BasicEffect = make_unique<BasicEffect>(m_pDevice);
@@ -92,6 +97,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 void CPlayer::Priority_Update(_float fTimeDelta)
 {
+	ReLockOnTarget();
+
 	m_pTransformCom->RewindMomentum();
 
 	__super::Priority_Update(fTimeDelta);
@@ -99,12 +106,9 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 
 void CPlayer::Update(_float fTimeDelta)
 {
-#ifdef _DEBUG
 	Update_CameraCoordinateSystem();
-#endif // _DEBUG
 
 	m_pFSM->Update_State(fTimeDelta);
-
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
@@ -122,11 +126,15 @@ void CPlayer::Update(_float fTimeDelta)
 
 void CPlayer::Late_Update(_float fTimeDelta)
 {
-	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_Position());
+	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 
 	__super::Late_Update(fTimeDelta);
+
+	if (nullptr != m_pLockOnMonster && false == m_pLockOnMonster->isDead()) {
+		m_pLockOnMonster->Set_DrawOutLine();
+	}
 }
 
 HRESULT CPlayer::Render()
@@ -176,6 +184,7 @@ void CPlayer::Render_CameraCoordinateSystem()
 	_vector xmvLook = XMVector4Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
 	_float2 vLook = { XMVectorGetX(xmvLook), XMVectorGetZ(xmvLook) };
 
+	GUI::Text("%d", m_pLockOnMonster);
 
 	GUI::Text("W : %.2f, %.2f, %.2f", m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z);
 	GUI::Text("A : %.2f, %.2f, %.2f", -m_vCameraRightDir.x, 0.f, -m_vCameraRightDir.z);
@@ -244,7 +253,7 @@ HRESULT CPlayer::Ready_Components()
 		Desc.iSubKind = ENUM_CLASS(COLLIDABLEOBJECT::PLAYER);
 		Desc.pTransform = m_pTransformCom;
 		Desc.eBodyType = ACTOR::CAPSULE;
-		Desc.fContactOffset = 0.1f;
+		Desc.fContactOffset = 0.17f;
 		Desc.fMaterial = { 0.5f, 0.5f, 0.6f };
 		Desc.bAutoStepping = { false };
 		Desc.fStepOffset = { 0.05f };
@@ -288,8 +297,8 @@ HRESULT CPlayer::Ready_Parts()
 		Desc.fMouseSensor = 0.1f;
 		Desc.fShoulderDistance = 2.f;
 		Desc.fBackFrontRatio = 0.9f;
-		Desc.fCameraFocalLength = 10.f;
-		Desc.vInitialLook = { 1.f, 2.f, -1.f };
+		Desc.fCameraFocalLength = 13.4f;
+		Desc.vInitialLook = { 0.77f, 1.35f, -1.f };
 
 		if (FAILED(Add_PartObject<CCamPosition_Shoulder>("Cam_Shoulder_Part", g_iStaticLevel, &m_pCamPosition_ShoulderPart, &Desc))) {
 			return E_FAIL;
@@ -315,7 +324,16 @@ HRESULT CPlayer::Bind_ShaderResources()
 	}
 	return S_OK;
 }
-#ifdef _DEBUG
+void CPlayer::ReLockOnTarget()
+{
+	m_pLockOnMonster = m_pInfoInstance->Get_LockOnMonster();
+	if (nullptr != m_pLockOnMonster) {
+		if (true == m_pLockOnMonster->isDead()) {
+			m_pLockOnMonster = nullptr;
+		}
+	}
+}
+
 
 void CPlayer::Update_CameraCoordinateSystem()
 {
@@ -324,7 +342,26 @@ void CPlayer::Update_CameraCoordinateSystem()
 	XMStoreFloat3(&m_vCameraRightDir, XMVector3Normalize(XMVector3Cross(xmvUp, xmvCameraLook)));
 	XMStoreFloat3(&m_vCameraLookDir, xmvCameraLook);
 }
-#endif // _DEBUG
+
+_matrix CPlayer::Get_WandPos()
+{
+	CModel* pWand = Get_PartObject<CWand>()->Get_Component<CModel>();
+
+	if (pWand == nullptr)
+		return _matrix();
+
+	_matrix BoneMatrix = XMLoadFloat4x4(pWand->Get_BoneMatrixPtr("root"));
+
+	BoneMatrix = BoneMatrix * m_pTransformCom->Get_XMWorldMatrix();
+
+	_float3 vOffset = _float3(0.f, -0.27f, -0.32f);
+
+	BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[0]) * vOffset.x;
+	BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[1]) * vOffset.y;
+	BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[2]) * vOffset.z;
+
+	return BoneMatrix;
+}
 
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
@@ -354,6 +391,13 @@ void CPlayer::Free()
 {
 	__super::Free();
 
+
+	if (nullptr != m_pInfoInstance) {
+		CInfoInstance* pInfo = m_pInfoInstance;
+		m_pInfoInstance = nullptr;
+		pInfo->Deregist_PlayerAlly(this);
+	}
+
 	if (nullptr != m_pCallBack_Behavior) {
 		m_pCallBack_Behavior->Finalize();
 	}
@@ -367,7 +411,7 @@ void CPlayer::Free()
 	SAFE_RELEASE(m_pCamPosition_TopDown_FollowPart);
 	SAFE_RELEASE(m_pCamPosition_TopDown_LookPart);
 	SAFE_RELEASE(m_pCamPosition_ShoulderPart);
-	SAFE_RELEASE(m_pInfoInstance);
+	SAFE_RELEASE(m_pEffectPool);
 }
 #ifdef _DEBUG
 
@@ -405,6 +449,8 @@ void CPlayer::Describe_Entity()
 	GUI::Text(AnimList.c_str());
 
 	GUI::Checkbox("Render", &m_bVisible);
+
+	GUI::Text("%d", m_iStateMask);
 
 }
 

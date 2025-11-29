@@ -21,7 +21,10 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr) override;
 public:
-	HRESULT Load_Directory(const _char* pPath);
+	HRESULT			Load_Directory(const _char* pPath);
+	virtual	HRESULT	Pre_Setting(CGameObject* pObject);
+	HRESULT         Load_Package(const _char* pPath);
+
 protected:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -30,6 +33,9 @@ protected:
 	HRESULT			Bind_ShaderResources() override;
 
 	void			Update_Event(_float fTimeDelta);
+	HRESULT			Reset_EffectParts();
+protected:
+	class		CPhysXEffectHitBox* m_pPhysHitBox = {};
 
 protected:
 	_wstring						m_wstrEffectName = {};

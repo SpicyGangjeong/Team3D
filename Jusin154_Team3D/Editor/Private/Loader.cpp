@@ -42,11 +42,8 @@
 #include "MissionBanner_Border.h"
 #include "MissionBanner_Key.h"
 #include "Mission_Icon.h"
-#include "Mission_Key.h"
-#include "Mission_KeyHold.h"
 #include "Mouse_Cursor.h"
 #include "MiniMap_TrimBorder.h"
-#include "Active_Icon.h"
 
 #include "MiniMap_Panel.h"
 #include "NoMountIcon.h"
@@ -65,6 +62,10 @@
 #include "Magic_Icon.h"
 #include "Spell_UI.h"
 #include "Magic_Item.h"
+
+#include "Spell_Canvas.h"
+#include "Spell_Panel.h"
+#include "Current_Spell_Slot.h"
 
 #include "IMGUIUI.h"
 
@@ -97,6 +98,8 @@
 #include "NomalJap.h"
 #include "Bombard.h"
 #include "Decendo.h"
+#include "Protego.h"
+#include "EffectPool.h"
 
 #pragma endregion
 
@@ -341,6 +344,22 @@ HRESULT CLoader::Loading_For_UI()
 
 		});
 
+	Asset_FileLoad("../Bin/Resources/Textures/SpellWidget", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
+		{
+
+			_string strFilePath = pFilePath;
+			_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
+
+
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), wstrFileName,
+				CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
+				return E_FAIL;
+			}
+
+			return S_OK;
+
+		});
+
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Mission_Icon"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("../Bin/Resources/Textures/Mission/Mission_Icon_%d.png"), 2)))) {
 		return E_FAIL;
@@ -373,6 +392,7 @@ HRESULT CLoader::Loading_For_UI()
 			return S_OK;
 
 		});
+
 	Asset_FileLoad("../Bin/Resources/Textures/HUD", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
 		{
 
@@ -480,8 +500,17 @@ HRESULT CLoader::Loading_For_UI()
 
 	SpellSlotUIDesc.iNum = 4;
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_UI_Instance"),
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_UI_Spell_Slot"),
 		CVIBuffer_UI_Instance::Create(m_pDevice, m_pContext, &SpellSlotUIDesc)))) {
+		return E_FAIL;
+	}
+
+	CVIBuffer_UI_Instance::UI_INSTANCE_DESC CurrentSpellSlotUIDesc{};
+
+	CurrentSpellSlotUIDesc.iNum = 16;
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_UI_Current_Spell_Slot"),
+		CVIBuffer_UI_Instance::Create(m_pDevice, m_pContext, &CurrentSpellSlotUIDesc)))) {
 		return E_FAIL;
 	}
 
@@ -505,7 +534,7 @@ HRESULT CLoader::Loading_For_UI()
 
 	CVIBuffer_UI_Instance::UI_INSTANCE_DESC Spell_Slot_PreviewDesc{};
 
-	Spell_Slot_PreviewDesc.iNum = 5;
+	Spell_Slot_PreviewDesc.iNum = 4;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Spell_Slot_Previe_UI_Instance"),
 		CVIBuffer_UI_Instance::Create(m_pDevice, m_pContext, &Spell_Slot_PreviewDesc)))) {
@@ -568,18 +597,6 @@ HRESULT CLoader::Loading_For_UI()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Add_Prototype<CMission_Key>(g_iStaticLevel, CMission_Key::Create(m_pDevice, m_pContext))))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pGameInstance->Add_Prototype<CMission_KeyHold>(g_iStaticLevel, CMission_KeyHold::Create(m_pDevice, m_pContext))))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pGameInstance->Add_Prototype<CActive_Icon>(g_iStaticLevel, CActive_Icon::Create(m_pDevice, m_pContext))))
-	{
-		return E_FAIL;
-	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CMiniMap_Panel>(g_iStaticLevel, CMiniMap_Panel::Create(m_pDevice, m_pContext))))
 	{
@@ -636,6 +653,19 @@ HRESULT CLoader::Loading_For_UI()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_Canvas>(g_iStaticLevel, CSpell_Canvas::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_Panel>(g_iStaticLevel, CSpell_Panel::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CCurrent_Spell_Slot>(g_iStaticLevel, CCurrent_Spell_Slot::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
 	if (FAILED(m_pGameInstance->Add_Prototype<CIMGUIUI>(g_iStaticLevel, CIMGUIUI::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
@@ -654,7 +684,9 @@ HRESULT CLoader::Loading_For_Effect()
 {
 	
 	m_strMessage = TEXT("PhysX Meshes Loading..");
-	{ // Dumping Box
+	{
+		
+		// Dumping Box
 		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
 		{
 			Desc.eType = ACTOR::BOX;
@@ -850,6 +882,7 @@ HRESULT CLoader::Loading_For_Effect()
 	m_strMessage = TEXT("Prototype Loading..");
 
 
+
 	if (FAILED(m_pGameInstance->Add_Prototype<CDummy_PhysXBox>(g_iStaticLevel, CDummy_PhysXBox::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
@@ -901,6 +934,9 @@ HRESULT CLoader::Loading_For_Effect()
 	if (FAILED(m_pGameInstance->Add_Prototype<CDecendo>(ENUM_CLASS(LEVEL::EFFECT), CDecendo::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CProtego>(ENUM_CLASS(LEVEL::EFFECT), CProtego::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 
 	/* For.Prototype_GameObject_Wand */
 	if (FAILED(m_pGameInstance->Add_Prototype<CWand>(g_iStaticLevel, CWand::Create(m_pDevice, m_pContext))))
@@ -930,9 +966,14 @@ HRESULT CLoader::Loading_For_Effect()
 	if (FAILED(m_pGameInstance->Add_Prototype<CCamPosition_Target>(g_iStaticLevel, CCamPosition_Target::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CEffectPool>(g_iStaticLevel, CEffectPool::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_Player */
 	if (FAILED(m_pGameInstance->Add_Prototype<CPlayer>(g_iStaticLevel, CPlayer::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+
 
 
 

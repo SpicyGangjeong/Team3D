@@ -652,6 +652,11 @@ void CGameInstance::RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTr
 	return m_pPhysX_Manager->RegistTriMesh(pName, pPxTriMesh);
 }
 
+void CGameInstance::RegistHeight(const _tchar* pName, PSX::PxHeightFieldDesc& Desc)
+{
+	return m_pPhysX_Manager->RegistHeight(pName, Desc);
+}
+
 PSX::PxRigidDynamic* CGameInstance::Add_DynamicActor(CRigidBody_Dynamic& RigidBody)
 {
 	return m_pPhysX_Manager->Add_DynamicActor(RigidBody);
@@ -711,37 +716,37 @@ HRESULT CGameInstance::LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleM
 
 bool		CGameInstance::Key_Pressing(int _iKey)
 {
-	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+	//if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
 		return m_pKey_Manager->Key_Pressing(_iKey);
-	}
+	//}
 	return false;
 }
 bool		CGameInstance::Key_Up(int _iKey)
 {
-	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+	//if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
 		return m_pKey_Manager->Key_Up(_iKey);
-	}
+	//}
 	return false;
 }
 bool		CGameInstance::Key_Down(int _iKey)
 {
-	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+	//if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
 		return m_pKey_Manager->Key_Down(_iKey);
-	}
+	//}
 	return false;
 }
 _bool CGameInstance::Mouse_Pressing(int _iKey)
 {
-	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+	//if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
 		return m_pKey_Manager->Mouse_Pressing(_iKey);
-	}
+	//}
 	return false;
 }
 _bool CGameInstance::Mouse_Up(int _iKey)
 {
-	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+	//if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
 		return m_pKey_Manager->Mouse_Up(_iKey);
-	}
+	//}
 	return false;
 }
 _bool CGameInstance::Mouse_Down(int _iKey)

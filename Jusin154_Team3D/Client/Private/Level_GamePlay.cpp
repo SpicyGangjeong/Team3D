@@ -14,6 +14,7 @@
 #include "Dummy_PhysXPlayable.h"
 #include "Goblin.h"
 #include "Terrain.h"
+#include "EffectPool.h"
 #include "InstancedProp.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
@@ -37,6 +38,9 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	if (FAILED(Ready_Layer_UI(LAYER_UI))) {
 		return E_FAIL;
 	}
+	if (FAILED(Reday_Layer_EffectPool())) {	//플레이어보다 먼저 생성해야함!
+		return E_FAIL;
+	}
 	if (FAILED(Ready_Layer_Player(LAYER_PLAYER))) {
 		return E_FAIL;
 	}
@@ -46,6 +50,7 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	if (FAILED(Ready_Layer_Monster())) {
 		return E_FAIL;
 	}
+
 
 	return S_OK;
 }
@@ -127,9 +132,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 
 HRESULT CLevel_GamePlay::Ready_Layer_UI(const _wstring& strLayerTag)
 {
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGamePlay_Canvas>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_UI))) {
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGamePlay_Canvas>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_UI))) {
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -177,8 +182,10 @@ HRESULT CLevel_GamePlay::Ready_Markers()
 
 HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag,nullptr,nullptr,&m_pPlayerTemp)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))){
 		return E_FAIL;
+	}
+
 
 	/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
 		return E_FAIL;*/
@@ -206,8 +213,23 @@ HRESULT CLevel_GamePlay::Ready_Layer_SkyBox(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER, m_pPlayerTemp)))
+	for (_uint i = 0; i < 2; ++i)
+	{
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER,&i))) {
+			return E_FAIL;
+		}
+	}
+
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Reday_Layer_EffectPool()
+{
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEffectPool>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_EffectPool")))) //플레이어보다 먼저 생성해야함!
 		return E_FAIL;
+
 
 	return S_OK;
 }

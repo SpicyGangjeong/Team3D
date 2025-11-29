@@ -20,7 +20,8 @@ enum ESTATE : _u64Flag
     SKILL2                      = 1ULL << 13,
 	ANCIENT_THROW               = 1ULL << 14,        
     MAPHELP                     = 1ULL << 15,
-    STOP                        = 1ULL << 16,
+	POTION                      = 1ULL << 16,
+    STOP                        = 1ULL << 17,
     END
 };
 NS_END

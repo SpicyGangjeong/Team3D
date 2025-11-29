@@ -31,28 +31,16 @@ HRESULT CBombard::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Child()))
-		return E_FAIL;
 
-	if (FAILED(Load_Directory("../Bin/Resources/Data/Effect/Bombard/")))
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Bombard")))
 		return E_FAIL;
 
 
 	m_wstrEffectName = L"Bombard";
 
-	CPartObject* pShootPt = Get_PartObject<CEditEffect>("Bombard_Shoot_Pt");
 	m_pLight_Projectile = Get_PartObject<CEditEffect>("Bombard_Projectile");
-	CPartObject* pCircle0 = Get_PartObject<CEditEffect>("Bombard_Circle0");
-	
-	pShootPt->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
-	m_pLight_Projectile->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
-	pCircle0->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
-
-	pCircle0->Set_Visible(true);
-	pShootPt->Set_Visible(true);
-	m_pLight_Projectile->Set_Visible(true);
-
 	SAFE_ADDREF(m_pLight_Projectile);
+
 	m_fDuration = 2.5f;
 
 	return S_OK;
@@ -86,6 +74,44 @@ void CBombard::Late_Update(_float fTimeDelta)
 	__super::Late_Update(fTimeDelta);
 
 
+}
+
+HRESULT CBombard::Pre_Setting(CGameObject* pObject)
+{
+	if (pObject == nullptr)
+		return E_FAIL;
+
+	m_pOwner = pObject;
+
+	if (FAILED(Ready_Child()))
+		return E_FAIL;
+
+	Reset_EffectParts();
+
+	m_fAccTime = 0.f;
+	__super::m_fAccTime = 0.f;
+	m_fPreAccTime = 0.f;
+
+
+
+	CPartObject* pShootPt = Get_PartObject<CEditEffect>("Bombard_Shoot_Pt");
+
+	CPartObject* pCircle0 = Get_PartObject<CEditEffect>("Bombard_Circle0");
+
+	pShootPt->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
+	m_pLight_Projectile->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
+	pCircle0->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
+
+	pCircle0->Set_Visible(true);
+	pShootPt->Set_Visible(true);
+
+	m_pLight_Projectile->Set_Visible(true);
+
+
+	m_bVisible = true;
+
+
+	return S_OK;
 }
 
 HRESULT CBombard::Ready_Components(void* pArg)
@@ -124,6 +150,7 @@ HRESULT CBombard::Ready_Child()
 		return E_FAIL;
 	}
 
+	SAFE_ADDREF(m_pPhysHitBox);
 	return S_OK;
 }
 
@@ -174,16 +201,18 @@ void CBombard::OnCollision(CGameObject* pOther , void* pDesc)
 
 	Get_PartObject<CEditEffect>("Bombard_Circle0")->Set_Visible(false);
 
+
 	m_pPhysHitBox->Set_Dead();
+	SAFE_RELEASE(m_pPhysHitBox);
 }
 
 void CBombard::Free()
 {
 	__super::Free();
 
-	//if(m_pPhysHitBox != nullptr)
-	//	if (m_pPhysHitBox->Get_Depth() == false)
-	//		SAFE_RELEASE(m_pPhysHitBox);
+	if(m_pPhysHitBox != nullptr)
+		if (m_pPhysHitBox->isDead() == false)
+			SAFE_RELEASE(m_pPhysHitBox);
 
 	SAFE_RELEASE(m_pLight_Projectile);
 

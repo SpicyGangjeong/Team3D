@@ -455,7 +455,7 @@ PS_OUT_FLT4_SINGLE PS_MAIN_EMBOSS(PS_IN In)
     vector vInput = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
     //float fMask = g_BloomMaskTexture.Sample(PointSampler, In.vTexcoord).a;
     float3 vColor = vInput.rgb;
-    uint iMask = (uint) round(vInput.a * 255.f); // int a = 1 // vBloom.a = (enum / 255);
+    uint iMask = (uint) round(vInput.a * 255.f); // int a = 1  -> // vBloom.a = (enum / 255);
     
     switch (iMask)
     {
@@ -475,6 +475,7 @@ PS_OUT_FLT4_SINGLE PS_MAIN_EMBOSS(PS_IN In)
     }
     
     float fIntensity = dot(vColor, float3(0.2126f, 0.7152f, 0.0722f)); // 대략적인 밝기 ( 인간적인 )
+    
     if (fIntensity <= 1e-4f)
     {
         Out.vSingleTarget = 0;

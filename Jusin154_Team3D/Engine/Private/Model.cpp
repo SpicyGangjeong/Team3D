@@ -113,44 +113,62 @@ _bool CModel::Play_Animation(_float fTimeDelta, CTransform* pTransform)
 	if (m_iCurrentAnimIndex < 0 || m_iCurrentAnimIndex >= (_int)m_iNumAnimations)
 		return false;
 
+	if (m_bLoopRestarted)
+	{
+		m_vPrevRootPos = { 0,0,0 };
+		m_bLoopRestarted = false;
+	}
+
 	ComputeAnimation();
 
 	if (m_iPreAnimIndex >= 0 && m_iPreAnimIndex != m_iCurrentAnimIndex)
 	{
 		m_fBlendTime += fTimeDelta;
-		_float fRatio = (m_fBlendTime / m_fBlendDuration);
-		if (fRatio > 1.f) fRatio = 1.f;
+		m_fRatio = (m_fBlendTime / m_fBlendDuration);
+		if (m_fRatio > 1.f) m_fRatio = 1.f;
 
 		CAnimation* pCurAnim = m_Animations[m_iCurrentAnimIndex];
 		CAnimation* pPreAnim = m_Animations[m_iPreAnimIndex];
 
-		_bool bCurFinished;
+		m_bIsFinishedAnim = pCurAnim->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, m_vector);
+		
+		pCurAnim->InterpAnim(pPreAnim, m_Bones, m_fRatio);
 
-		if (m_bRatio) {
-			bCurFinished = pCurAnim->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, pTransform, m_fAmount * fRatio);
-		}
-		else {
-			bCurFinished = pCurAnim->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, pTransform, m_fAmount);
-		}
-
-
-		pCurAnim->InterpAnim(pPreAnim, m_Bones, fRatio);
-
-		m_bIsFinishedAnim = bCurFinished;
-
-		if (fRatio >= 1.f)
+		if (m_fRatio >= 1.f)
 		{
 			m_iPreAnimIndex = m_iCurrentAnimIndex;
 			m_fBlendTime = 0.f;
-			m_bRatio = false;
 		}
 	}
 	else
 	{
-		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, pTransform, m_fAmount);
+		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, m_vector, m_fAmount);
+	
 
 		m_iPreAnimIndex = m_iCurrentAnimIndex;
 	}
+
+	if (m_bRatio) {
+		Update_RootBone(m_fAmount * m_fRatio);
+	}
+	else
+	{
+		Update_RootBone();
+	}
+
+	if (m_bIsFinishedAnim)
+	{
+		if (m_bIsLoop)
+		{
+			m_bLoopRestarted = true;
+		}
+		else
+			XMStoreFloat3(&m_vPrevRootPos, m_vector[2]);
+
+		m_vPrevRootRot = { 0.f,0.f,0.f,0.f };
+		m_bInitialRootRotSaved = false;
+	}
+
 
 	for (auto& pBone : m_Bones)
 	{
@@ -167,15 +185,109 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop,_float fAmount,_bool 
 	}
 	if (iIndex >= 0 && iIndex < m_iNumAnimations)
 	{
+		m_vPrevRootPos = { 0.f, 0.f, 0.f };
+		m_vPrevRootRot = { 0.f,0.f,0.f,0.f };
+		m_bInitialRootRotSaved = false;
+		m_bInitialRootPos = false;
 		m_iCurrentAnimIndex = iIndex;
 		m_bIsLoop = isLoop;
 		m_fAmount = fAmount;
 		m_bRatio = bRatio;
 		m_Animations[m_iCurrentAnimIndex]->Depart_Animation();
 		m_Animations[m_iCurrentAnimIndex]->ResetRootMotion();
+
 	}
 	else {
 		m_iCurrentAnimIndex = -1;
+	}
+}
+
+void CModel::Update_RootBone(_float Amount)
+{
+	if (m_Bones[m_iRootBoneIndex]->Compare_Name("Reference") && m_pTransform != nullptr)
+	{
+		_float4x4 Root = m_Bones[m_iRootBoneIndex]->Get_TransformationMatrix();
+		_matrix local = XMLoadFloat4x4(&Root);
+		_float3 vCurRootPos;
+		XMStoreFloat3(&vCurRootPos, m_vector[2]);
+
+		_matrix pre = XMLoadFloat4x4(&m_PreTransformMatrix);
+
+		_vector vDeltaLocal = XMLoadFloat3(&vCurRootPos) - XMLoadFloat3(&m_vPrevRootPos);
+		_vector vDeltaAdjusted = XMVector3TransformNormal(vDeltaLocal, pre);
+
+		_vector vRight = m_pTransform->Get_State(STATE::RIGHT);
+		_vector vUp = m_pTransform->Get_State(STATE::UP);
+		_vector vLook = m_pTransform->Get_State(STATE::LOOK);
+
+		_float dx = XMVectorGetX(vDeltaAdjusted);
+		_float dy = XMVectorGetY(vDeltaAdjusted);
+		_float dz = XMVectorGetZ(vDeltaAdjusted);
+
+		 _vector vDeltaWorld = vRight * dx + (vUp * dz) + (-vLook * dy);
+
+		vDeltaWorld *= 0.01f;
+		vDeltaWorld *= Amount;
+
+		vDeltaWorld = XMVectorSetW(vDeltaWorld, 1.f);
+		m_pTransform->AccumulateMomentum(vDeltaWorld);
+
+		m_vPrevRootPos = vCurRootPos;
+
+		_float4 curRotF4;
+		XMStoreFloat4(&curRotF4, m_vector[1]);
+		_vector qCur = XMLoadFloat4(&curRotF4);
+
+		if (!m_bInitialRootRotSaved)
+		{
+			m_vInitialRootRot = curRotF4;
+			m_vPrevRootRot = curRotF4;
+			m_bInitialRootRotSaved = true;
+		}
+		else
+		{
+			_vector qPrev = XMLoadFloat4(&m_vPrevRootRot);
+			_vector qInvPrev = XMQuaternionInverse(qPrev);
+			_vector qDelta = XMQuaternionMultiply(qInvPrev, qCur);
+
+			_vector axisLocal;
+			_float angle = 0.f;
+			XMQuaternionToAxisAngle(&axisLocal, &angle, qDelta);
+
+			_vector axisWorld = XMVector3TransformNormal(axisLocal, pre);
+			axisWorld = XMVector3Normalize(axisWorld);
+
+			_float4 axis;
+			XMStoreFloat4(&axis, axisWorld);
+
+			swap(axis.z, axis.y);
+			m_pTransform->TurnAngle(XMLoadFloat4(&axis), angle);
+
+		}
+		XMStoreFloat4(&m_vPrevRootRot, qCur);
+
+		_vector qInit = XMLoadFloat4(&m_vInitialRootRot);
+
+		_vector scale, rot, trans;
+		XMMatrixDecompose(&scale, &rot, &trans, local);
+
+		rot = qInit;
+		trans = XMVectorZero();
+
+		local = XMMatrixAffineTransformation(scale, XMVectorSet(0.f, 0.f, 0.f, 1.f), rot, trans);
+
+		m_Bones[m_iRootBoneIndex]->Set_TransformationMatrix(local);
+	}
+}
+
+void CModel::Initialize_RootBone()
+{
+	for (_uint i = 0; i < (_uint)m_Bones.size(); i++)
+	{
+		if (m_Bones[i]->Compare_Name("Reference"))
+		{
+			m_iRootBoneIndex = i;
+		}
 	}
 }
 
@@ -254,7 +366,6 @@ HRESULT CModel::Anim_Event(_float fRatio,_uint AnimIndex,function<void()> Event)
 	}
 	return E_FAIL;
 }
-
 
 HRESULT CModel::Render(_uint iMeshIndex)
 {
@@ -1298,16 +1409,13 @@ void CModel::LoadAnim(const _char* fileName)
 
 HRESULT CModel::Initialize(void* pArg)
 {
-	m_pLerpAnim = CLerpAnim::Create((_uint)m_Bones.size(), 1.f, m_Bones);
-	if (nullptr == m_pLerpAnim) {
-		return E_FAIL;
-	}
 	m_pTransform = m_pOwner->Get_Component<CTransform>();
 	SAFE_ADDREF(m_pTransform);
 
 	
 	if (m_eType == MODEL::ANIM)
 	{	
+		Initialize_RootBone();
 		Create_Temp();
 		m_Parent.resize(m_Bones.size());
 		for (size_t i = 0; i < (_uint)m_Bones.size(); i++)

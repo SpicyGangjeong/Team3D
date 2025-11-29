@@ -20,6 +20,8 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 
+public:
+	virtual	HRESULT	Pre_Setting(CGameObject* pObject) override;
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
@@ -30,7 +32,6 @@ private:
 	virtual void	OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr) override;
 private:
 	_wstring						  m_wstrEffectName = {};
-	class CDummy_PhysXEffectHitBox*   m_pPhysHitBox = {};
 
 	class CPartObject*				  m_pProjectile = {};
 	class CPartObject*				  m_pProjectile_Blur = {};

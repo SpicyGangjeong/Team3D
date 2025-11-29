@@ -1,10 +1,10 @@
 ﻿#include "pch.h"
 #include "GamePlay_Canvas.h"
 #include "GameInstance.h"
-//#include "Mission_Panel.h"
-//#include "MiniMap_Panel.h"
+#include "Mission_Panel.h"
+#include "MiniMap_Panel.h"
 #include "Loading_Panel.h"
-//#include "Action_Panel.h"
+#include "Action_Panel.h"
 //#include "Mouse_Cursor.h"
 
 CGamePlay_Canvas::CGamePlay_Canvas(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -95,23 +95,23 @@ HRESULT CGamePlay_Canvas::Ready_Panel(void* pArg)
 	}
 	Add_Panel(TEXT("LoadingPanel"), m_pLoading_Panel);
 
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMiniMap_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMiniMap_Panel**>(&m_pMinimap_Panel))))
-	//{
-	//	return E_FAIL;
-	//}
-	//Add_Panel(TEXT("MinimapPanel"), m_pMinimap_Panel);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMiniMap_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMiniMap_Panel**>(&m_pMinimap_Panel))))
+	{
+		return E_FAIL;
+	}
+	Add_Panel(TEXT("MinimapPanel"), m_pMinimap_Panel);
 
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMission_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMission_Panel**>(&m_pMission_Panel))))
-	//{
-	//	return E_FAIL;
-	//}
-	//Add_Panel(TEXT("MissionPanel"), m_pMission_Panel);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMission_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMission_Panel**>(&m_pMission_Panel))))
+	{
+		return E_FAIL;
+	}
+	Add_Panel(TEXT("MissionPanel"), m_pMission_Panel);
 
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CAction_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CAction_Panel**>(&m_pAction_Panel))))
-	//{
-	//	return E_FAIL;
-	//}
-	//Add_Panel(TEXT("ActionPanel"), m_pAction_Panel);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CAction_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CAction_Panel**>(&m_pAction_Panel))))
+	{
+		return E_FAIL;
+	}
+	Add_Panel(TEXT("ActionPanel"), m_pAction_Panel);
 
 
 	return S_OK;
@@ -151,10 +151,11 @@ void CGamePlay_Canvas::Free()
 {
 	__super::Free();
 
-	SAFE_RELEASE(m_pLoading_Panel);
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
+#ifdef _DEBUG
 void CGamePlay_Canvas::Describe_Entity()
 {
 }
+#endif // _DEBUG

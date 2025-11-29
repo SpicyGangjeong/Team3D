@@ -23,7 +23,6 @@ public:
 	virtual void Priority_Update(_float fTimeDelta) override;
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
-	virtual HRESULT Render() override;
 	_wstring& Get_PrototypeTag() { return m_strModelPrototypeTag; }
 #ifdef _DEBUG
 	void Load_KeyFrame();
@@ -72,7 +71,6 @@ private:
 
 protected:
 	HRESULT Ready_Components(void*pArg);
-	HRESULT Bind_ShaderResources();
 
 public:
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr)PURE;

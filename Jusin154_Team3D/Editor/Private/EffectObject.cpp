@@ -109,6 +109,46 @@ HRESULT CEffectObject::Render_Blur()
 	return S_OK;
 }
 
+HRESULT CEffectObject::Render_Bloom()
+{
+	if (FAILED(Bind_ShaderResources()))
+	{
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fBloomStrength", &m_EffectInfo.fBloomStrength, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iBloomType", &m_EffectInfo.eBloomType, sizeof(_int)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isBloomDissolve", &m_EffectInfo.isBloomDissolve, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isBloomReverseDissolve", &m_EffectInfo.isBloomReverseDissolve, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	for (_uint i = 0; i < m_pInstance_ModelCom->Get_NumMeshes(); i++)
+	{
+
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_INSTANCE_MODEL::BLOOM)))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pInstance_ModelCom->Render(i)))
+		{
+			return E_FAIL;
+		}
+
+	}
+
+	return S_OK;
+}
+
 
 
 HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
@@ -439,6 +479,9 @@ HRESULT CEffectObject::LoadPre(const _char* pFilePath, LEVEL eLevel)
 	}
 
 	memcpy(&m_EffectInfo, &PreEffectInfo, sizeof(PRE_EFFECT_INFO));
+
+
+
 
 	m_EffectInfo.LightDesc.pPosition = m_pTransformCom->Get_StatePtr(STATE::POSITION);
 	m_EffectInfo.LightDesc.iLevel = ENUM_CLASS(eLevel);

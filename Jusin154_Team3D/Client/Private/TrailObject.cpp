@@ -51,6 +51,18 @@ void CTrailObject::Update(_float fTimeDelta)
 	{
 		m_TrailInfo.vDistortionTime.x = 0.f;
 	}
+
+	/* 블룸 타임*/
+
+	if (m_TrailInfo.vBloomTime.y != 0)
+	{
+		m_TrailInfo.vBloomTime.x += fTimeDelta;
+
+		if (m_TrailInfo.vBloomTime.x > m_TrailInfo.vBloomTime.y)
+		{
+			m_TrailInfo.vBloomTime.x = 0.f;
+		}
+	}
 }
 
 void CTrailObject::Late_Update(_float fTimeDelta)
@@ -58,6 +70,11 @@ void CTrailObject::Late_Update(_float fTimeDelta)
 
 	if (m_bVisible == false)
 		return;
+
+	if (m_TrailInfo.isBloom == true)
+	{
+		m_pGameInstance->Add_RenderGroup(RENDER::BLOOM, this);
+	}
 
 	if (m_TrailInfo.isBlur == true)
 	{
@@ -228,14 +245,15 @@ HRESULT CTrailObject::Load_Trail(const _char* pPath, LEVEL eLevel)
 
 HRESULT CTrailObject::Render()
 {
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_POSTEX::TRAIL))))
+	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
-	if (FAILED(Bind_ShaderResources()))
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_POSTEX::TRAIL))))
 		return E_FAIL;
 
 	if (FAILED(m_pTrailCom->Render()))
 		return E_FAIL;
+
 
 	return S_OK;
 }
@@ -308,6 +326,44 @@ void CTrailObject::Describe_Entity()
 
 }
 #endif // _DEBUG
+
+HRESULT CTrailObject::Render_Bloom()
+{
+	if (FAILED(Bind_ShaderResources()))
+	{
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fBloomStrength", &m_TrailInfo.fBloomStrength, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iBloomType", &m_TrailInfo.eBloomType, sizeof(_int)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isBloomDissolve", &m_TrailInfo.isBloomDissolve, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isBloomReverseDissolve", &m_TrailInfo.isBloomReverseDissolve, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vBloomTime", &m_TrailInfo.vBloomTime, sizeof(_float2)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_POSTEX::TRAIL_BLOOM))))
+		return E_FAIL;
+
+
+
+	if (FAILED(m_pTrailCom->Render()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 
 
 HRESULT CTrailObject::Bind_ShaderResources()

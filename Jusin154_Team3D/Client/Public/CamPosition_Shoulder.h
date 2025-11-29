@@ -49,6 +49,8 @@ private:
 	_bool m_bLerp = { false };
 	_float2 m_vLerpTimer = { 0.f, 1.f };
 
+	_bool m_bZoomIn = { false };
+
 
 	CCamPosition_Target* m_pTarget_LookPart = { nullptr };
 	CCamPosition_Target* m_pTarget_FollowPart = { nullptr };
