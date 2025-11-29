@@ -44,7 +44,7 @@ private:
 	CTexture*				m_pMROTextureCom = { nullptr };
 	CTexture*				m_pAlphaMapTextureCom = { nullptr };
 
-	_float3					m_vDRN = { 16.f, 16.f, 16.f };
+	_float3					m_vDRN = { (1.f / 16.f), (1.f / 16.f), (1.f / 16.f) };
 
 	_float					m_fUsingSurfaceParams = {};
 	_float3					m_vPickingPosition = {};
