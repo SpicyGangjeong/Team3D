@@ -24,19 +24,12 @@ void CStreetContainer::Update(_float fTimeDelta)
 {
     __super::Update(fTimeDelta);
 
-    m_fCamDepth = XMVectorGetX(XMVector3Length(XMLoadFloat4(m_pGameInstance->Get_CamPosition()) - XMLoadFloat3(&m_vExtentPosition)));
-
     for (auto& pCollisiton : m_ColiisonPartObjects)
         pCollisiton->Update(fTimeDelta);
 }
 
 void CStreetContainer::Late_Update(_float fTimeDelta)
 {
-    if (m_pOcclusionQueryCom->isDraw())
-        __super::Late_Update(fTimeDelta);
-
-    m_pGameInstance->Add_RenderGroup(RENDER::OCCLUSION, this);
-
     __super::Late_Update(fTimeDelta);
 
     for (auto& pCollisiton : m_ColiisonPartObjects)
@@ -45,45 +38,6 @@ void CStreetContainer::Late_Update(_float fTimeDelta)
 
 HRESULT CStreetContainer::Render()
 {
-    return S_OK;
-}
-
-HRESULT CStreetContainer::Render_BoundingBox()
-{
-    m_pOcclusionQueryCom->Begin_Query();
-
-    if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_BoundingBoxWorldMatirx))) {
-        return E_FAIL;
-    }
-
-    if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))) {
-        return E_FAIL;
-    }
-    if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ)))) {
-        return E_FAIL;
-    }
-    if (m_pGameInstance->Key_Pressing(DIK_Q))
-    {
-        if (FAILED(m_pShaderCom->Begin(1)))
-            return E_FAIL;
-    }
-    else
-    {
-        if (FAILED(m_pShaderCom->Begin(0)))
-            return E_FAIL;
-    }
-
-    if (FAILED(m_pShaderCom->Bind_RawValue("g_vRadius", &m_vExtentRadius, sizeof(_float3))))
-        return E_FAIL;
-
-    if (FAILED(m_pVIBufferCom->Bind_Resources()))
-        return E_FAIL;
-
-    if (FAILED(m_pVIBufferCom->Render()))
-        return E_FAIL;
-
-    m_pOcclusionQueryCom->End_Query();
-
     return S_OK;
 }
 
@@ -116,21 +70,6 @@ HRESULT CStreetContainer::Ready_Components(void* pArg)
     if (FAILED(__super::Ready_Components(pArg))) {
         return E_FAIL;
     }
-
-    ///* Com_Shader */
-    //if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_VTXPOS,
-    //    reinterpret_cast<CComponent**>(&m_pShaderCom))))
-    //    return E_FAIL;
-
-    /* Com_Shader */
-    if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Box"),
-        reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
-        return E_FAIL;
-
-    /* Com_OcclusionQuery */
-    if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_OcclusionQuery"),
-        reinterpret_cast<CComponent**>(&m_pOcclusionQueryCom))))
-        return E_FAIL;
 
     return S_OK;
 }
@@ -169,10 +108,6 @@ CGameObject* CStreetContainer::Clone(void* pArg, CGameObject* pOwner)
 void CStreetContainer::Free()
 {
     __super::Free();
-
-	SAFE_RELEASE(m_pShaderCom);
-	SAFE_RELEASE(m_pVIBufferCom);
-	SAFE_RELEASE(m_pOcclusionQueryCom);
 
     for (auto& pCollision : m_ColiisonPartObjects)
         SAFE_RELEASE(pCollision);
