@@ -43,7 +43,7 @@ void CBroom::Update(_float fTimeDelta)
 
 void CBroom::Late_Update(_float fTimeDelta)
 {
-	m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
+	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 }
 
 HRESULT CBroom::Render()
@@ -59,9 +59,14 @@ HRESULT CBroom::Render()
 
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
+		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
+			return E_FAIL;
+		}
+
 		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
+
 		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
 			return E_FAIL;
 		}

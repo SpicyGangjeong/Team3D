@@ -630,6 +630,22 @@ void CLevel_ObjectViewer::Load_KeyFrame(const _char* Name)
 
 void CLevel_ObjectViewer::Find_Anim()
 {
+	GUI::InputInt("FindAnimIndex", &m_iAnimIndex);
+
+	if (!m_Objects.empty())
+	{
+		CModel* pModel = m_Objects[m_iObjectIndex]->Get_Component<CModel>();
+		if (m_iAnimIndex <= pModel->Get_AnimSize())
+		{
+			if (GUI::Button(pModel->Get_AnimList(m_iAnimIndex)))
+			{
+				pModel->Set_AnimationIndex(m_iAnimIndex);
+				pModel->Set_CurrentTrackPosition(0.f);
+				pModel->Play_Animation(0.f);
+			}
+		}
+	}
+
 	GUI::InputText("FindAnim", m_FindAnimName, sizeof(m_FindAnimName));
 
 	if (!m_Objects.empty())
@@ -648,6 +664,7 @@ void CLevel_ObjectViewer::Find_Anim()
 			}
 		}
 	}
+
 }
 
 void CLevel_ObjectViewer::Save_KeyFrame()
@@ -737,8 +754,8 @@ HRESULT CLevel_ObjectViewer::Ready_Layer_Dummy(const _wstring& strLayerTag)
 	/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, m_Test)))
 		return E_FAIL;*/
 
-	/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
-		return E_FAIL;*/
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
+		return E_FAIL;
 
 	return S_OK;
 }

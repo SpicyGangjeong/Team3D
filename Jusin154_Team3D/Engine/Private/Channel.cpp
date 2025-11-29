@@ -116,7 +116,7 @@ void CChannel::Update_TransformationMatirx(
 	const LOCALPOS_DESC* pLocalPosArray,
 	_float fCurrentTrackPosition,
 	_uint* pCurrentKeyFrameIndex,
-	_vector vector[3],_float m_fAmount)
+	_vector vector[3])
 {
 	const LOCALPOS_DESC& LocalPos = pLocalPosArray[m_iBoneIndex];
 
@@ -133,16 +133,13 @@ void CChannel::Update_TransformationMatirx(
 		vector[0] = vScale;
 		vector[1] = vRotation;
 		vector[2] = vTranslation;
-		vTranslation = XMVectorZero();
 	}
 	
-		m_BoneTransformationMatrix =
-			XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vTranslation);
+	m_BoneTransformationMatrix =
+		XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vTranslation);
 
-		Bones[m_iBoneIndex]->Set_TransformationMatrix(m_BoneTransformationMatrix);
+	Bones[m_iBoneIndex]->Set_TransformationMatrix(m_BoneTransformationMatrix);
 }
-
-
 
 void CChannel::ResetRootMotion()
 {
