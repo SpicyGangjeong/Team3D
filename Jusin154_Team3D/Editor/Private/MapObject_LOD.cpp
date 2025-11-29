@@ -67,7 +67,7 @@ HRESULT CMapObject_LOD::Initialize(void* pArg)
 	_matrix ColliderMatrix = XMMatrixTranslation(vOffset.x, vOffset.y, vOffset.z) * XMLoadFloat4x4(&m_CombinedWorldMatrix);
 	XMStoreFloat4(&m_vExtentPosition, ColliderMatrix.r[3]);
 
-
+	XMStoreFloat3(&m_CombinedExtendPosition, XMVector3TransformCoord(XMLoadFloat3(&vOffset), XMLoadFloat4x4(&m_CombinedWorldMatrix)));
 	
 	//m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 
@@ -110,6 +110,8 @@ void CMapObject_LOD::Late_Update(_float fTimeDelta)
 	_float3 vOffset = m_pModelComs[0]->Get_RadiusOffset();
 	_matrix ColliderMatrix = XMMatrixTranslation(vOffset.x, vOffset.y, vOffset.z) * XMLoadFloat4x4(&m_CombinedWorldMatrix);
 	XMStoreFloat4(&m_vExtentPosition, ColliderMatrix.r[3]);
+
+	
 
 	_float fRaius = m_pModelComs[0]->Get_Radius();
 	if (m_pGameInstance->isIn_WorldFrustum(XMLoadFloat4(&m_vExtentPosition), fRaius)) {
@@ -182,6 +184,24 @@ _wstring CMapObject_LOD::Get_PrototypeTag(_uint iLodIndex)
 		return m_ModelPrototypeTags[0];
 
 	return m_ModelPrototypeTags[iLodIndex];
+}
+
+void CMapObject_LOD::Get_BoundingBox(_float3* pMinPosition, _float3* pMaxPosition)
+{
+	_float fRadius = m_pModelComs[0]->Get_Radius() / 2.f;
+	_float3 vOffset = m_pModelComs[0]->Get_RadiusOffset();
+
+	_float3 vPosition = {};
+
+	XMStoreFloat3(&vPosition, XMVector3TransformCoord(XMLoadFloat3(&vOffset), m_pTransformCom->Get_XMWorldMatrix()));
+
+	pMinPosition->x = vPosition.x - fRadius;
+	pMinPosition->y = vPosition.y - fRadius;
+	pMinPosition->z = vPosition.z - fRadius;
+
+	pMaxPosition->x = vPosition.x + fRadius;
+	pMaxPosition->y = vPosition.y + fRadius;
+	pMaxPosition->z = vPosition.z + fRadius;
 }
 
 HRESULT CMapObject_LOD::Add_LodModel(const _tchar* pModelPrototypeTag)

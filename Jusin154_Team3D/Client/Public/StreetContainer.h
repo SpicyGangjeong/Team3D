@@ -1,23 +1,27 @@
 ﻿#pragma once
 
-#include "Editor_Define.h"
+#include "Client_Define.h"
 #include "MapContainer.h"
-
 NS_BEGIN(Engine)
 class CShader;
 class CVIBuffer_Box;
 class COcclusionQuery;
-class CCollider;
 NS_END
 
-NS_BEGIN(Editor)
+NS_BEGIN(Client)
 
-class CBuildingContainer final : public CMapContainer
+class CStreetContainer final : public CMapContainer
 {
-public:
-	CBuildingContainer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CBuildingContainer(const CBuildingContainer& rhs);
-	~CBuildingContainer() = default;
+	typedef struct tagStreetContainerDesc : public MAP_CONTAINER_DESC
+	{
+		_float3		vExtentRadius = {};
+		_float3		vExtentPosition = {};
+	}STREET_CONTAINER_DESC;
+
+private:
+	CStreetContainer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CStreetContainer(const CStreetContainer& rhs);
+	~CStreetContainer() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta) override;
@@ -26,10 +30,6 @@ public:
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_BoundingBox() override;
 
-	_float3 Get_BoundingBox_Min() { return vContainerMin; }
-	_float3 Get_BoundingBox_Max() { return vContainerMax; }
-	void	Set_BoundingBox();
-	_bool	Is_OcclusionPassed() { return m_bOcclusionPassed; }
 public:
 	template<typename T>
 	HRESULT Add_Part(const _string& strPartKey, _uint iPrototypeLevelIndex, T** ppOut, void* pArg = nullptr) {
@@ -43,28 +43,21 @@ public:
 		if (nullptr == pPartObject) {
 			return E_FAIL;
 		}
-		
+
 		m_ColiisonPartObjects.push_back(pPartObject);
 
 		return S_OK;
 	}
 
-	vector<class CPartObject*>* Get_Collision() { return &m_ColiisonPartObjects; }
-
 private:
-	CShader*			m_pShaderCom = { nullptr };
-	CVIBuffer_Box*		m_pVIBufferCom = { nullptr };
-	COcclusionQuery*	m_pOcclusionQueryCom = { nullptr };
-	CCollider*			m_pCollider = { nullptr };
+	CShader*					m_pShaderCom = { nullptr };
+	CVIBuffer_Box*				m_pVIBufferCom = { nullptr };
+	COcclusionQuery*			m_pOcclusionQueryCom = { nullptr };
 
-	_bool				m_bOcclusionPassed = { true };
-	_float4x4			m_BoundingBoxWorldMatirx = {};
-	_float3				m_vBoxCorners[8] = {};
+	_float3						m_vExtentRadius = {};
+	_float3						m_vExtentPosition = {};
+	_float4x4					m_BoundingBoxWorldMatirx;
 
-	_float3				m_vExtentPosition = {};
-	_float3				m_vExtentRadius = {};
-	_float3				vContainerMin = { 999.f, 999.f, 999.f };
-	_float3				vContainerMax = { -999.f, -999.f, -999.f };
 
 private:
 	virtual HRESULT		Initialize_Prototype() override;
@@ -73,10 +66,13 @@ private:
 	virtual HRESULT		Bind_ShaderResources()override;
 
 public:
-	static CBuildingContainer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CStreetContainer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner = nullptr)override;
 	virtual void Free() override;
+#ifdef _DEBUG
 	virtual void Describe_Entity()override;
+#endif // _DEBUG
+
 };
 
 NS_END

@@ -250,6 +250,9 @@
     <ClInclude Include="..\Public\Potion.h">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Potion</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\StreetContainer.h">
+      <Filter>02.GameObjects\Environment\00.MapContainer\StreetContainer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -548,6 +551,9 @@
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Spell_UI">
       <UniqueIdentifier>{9914341c-f246-4fdb-b28c-de7a6d2d149b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Environment\00.MapContainer\StreetContainer">
+      <UniqueIdentifier>{e12a4228-0754-4217-b65d-7f962409f85c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -786,6 +792,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Potion.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Potion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\StreetContainer.cpp">
+      <Filter>02.GameObjects\Environment\00.MapContainer\StreetContainer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
