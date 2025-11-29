@@ -72,80 +72,49 @@ void CS_LocalSRT(uint3 DTID : SV_DispatchThreadID)
     uint boneIndex = DTID.x;
     if (boneIndex >= (uint) BoneCount)
         return;
-
+    
     float time = CurrentTime;
-    if (Duration > 0)
-        time = min(time, Duration);
-
+   
     Channel channel = g_ChannelBuffer[boneIndex];
 
     LocalPos result;
-
-    if (channel.KeyCount == 0)
-    {
-        result.Scale = float3(1, 1, 1);
-        result.Rotation = float4(0, 0, 0, 1);
-        result.Translation = float3(0, 0, 0);
-        result.pad0 = result.pad1 = 0.0f;
-
-        g_LocalPosOutput[boneIndex] = result;
-        return;
-    }
-
+   
     uint firstIndex = channel.StartIndex;
-    uint lastIndex = channel.StartIndex + channel.KeyCount - 1;
+    uint keyCount = channel.KeyCount;
+    uint lastIndex = firstIndex + keyCount - 1;
 
-    KeyFrame keyframe1 = g_KeyFrameBuffer[firstIndex];
-    KeyFrame keyframe2 = g_KeyFrameBuffer[lastIndex];
+    KeyFrame keyLast = g_KeyFrameBuffer[lastIndex];
 
-    if (time <= keyframe1.fTrackPosition)
+    if (time >= keyLast.fTrackPosition)
     {
-        result.Scale = keyframe1.vScale;
-        result.Rotation = keyframe1.vRotation;
-        result.Translation = keyframe1.vTranslation;
+        result.Scale = keyLast.vScale;
+        result.Rotation = keyLast.vRotation;
+        result.Translation = keyLast.vTranslation;
         result.pad0 = result.pad1 = 0.0f;
-
-        g_LocalPosOutput[boneIndex] = result;
-        return;
     }
-
-    if (time >= keyframe2.fTrackPosition)
+    else
     {
-        result.Scale = keyframe2.vScale;
-        result.Rotation = keyframe2.vRotation;
-        result.Translation = keyframe2.vTranslation;
-        result.pad0 = result.pad1 = 0.0f;
-
-        g_LocalPosOutput[boneIndex] = result;
-        return;
-    }
-
-    for (uint i = 0; i < channel.KeyCount - 1; ++i)
-    {
-        uint A = channel.StartIndex + i;
-        uint B = channel.StartIndex + i + 1;
-
-        KeyFrame ka = g_KeyFrameBuffer[A];
-        KeyFrame kb = g_KeyFrameBuffer[B];
-
-        if (time >= ka.fTrackPosition && time <= kb.fTrackPosition)
+        for (uint i = 0; i < keyCount - 1; ++i)
         {
-            float t = (time - ka.fTrackPosition) / (kb.fTrackPosition - ka.fTrackPosition);
+            KeyFrame Sour = g_KeyFrameBuffer[firstIndex + i];
+            KeyFrame Dest = g_KeyFrameBuffer[firstIndex + i + 1];
 
-            result.Scale = lerp(ka.vScale, kb.vScale, t);
-            result.Rotation = quatSlerp(ka.vRotation, kb.vRotation, t);
-            result.Translation = lerp(ka.vTranslation, kb.vTranslation, t);
-            result.pad0 = result.pad1 = 0.0f;
+            if (time >= Sour.fTrackPosition && time <= Dest.fTrackPosition)
+            {
+                float ratio = (time - Sour.fTrackPosition) /
+                          (Dest.fTrackPosition - Sour.fTrackPosition);
 
-            g_LocalPosOutput[boneIndex] = result;
-            return;
+                result.Scale = lerp(Sour.vScale, Dest.vScale, ratio);
+                result.Rotation = quatSlerp(Sour.vRotation, Dest.vRotation, ratio);
+                result.Translation = lerp(Sour.vTranslation, Dest.vTranslation, ratio);
+                result.pad0 = result.pad1 = 0.0f;
+                break;
+            }
         }
     }
 
-    result.Scale = keyframe2.vScale;
-    result.Rotation = keyframe2.vRotation;
-    result.Translation = keyframe2.vTranslation;
-    result.pad0 = result.pad1 = 0.0f;
+    g_LocalPosOutput[channel.BoneIndex] = result;
+    return;
 
-    g_LocalPosOutput[boneIndex] = result;
+
 }

@@ -151,6 +151,8 @@ private:
 	_float4					m_vInitialRootRot = {};
 
 	_vector					m_vector[3];
+	_bool m_bLoopRestarted = false;
+
 
 #pragma region Compute
 
