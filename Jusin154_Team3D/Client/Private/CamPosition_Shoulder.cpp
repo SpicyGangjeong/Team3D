@@ -88,6 +88,9 @@ void CCamPosition_Shoulder::Priority_Update(_float fTimeDelta)
 
 void CCamPosition_Shoulder::Update(_float fTimeDelta)
 {
+
+	GUI::DragFloat3("Camera Shoulder Position",(_float*)&m_vShoulderPosRatio,0.01f);
+	GUI::DragFloat("Camera Shoulder Length",&m_fCameraFocalLength, 0.01f);
 	if (m_pGameInstance->Key_Up(DIK_O)) {
 		m_pBinded_Camera->Toggle_Priority();
 	}
@@ -109,6 +112,14 @@ void CCamPosition_Shoulder::Update(_float fTimeDelta)
 		m_vShoulderStartRatio.x *= -1.f;
 		m_bLerp = true;
 		m_vLerpTimer.x = 0.f;
+	}
+	if (m_pGameInstance->Mouse_Pressing(DIM_RBUTTON)) {
+		m_pBinded_Camera->ZoomIn(fTimeDelta);
+		m_bZoomIn = true;
+	}
+	else if(m_bZoomIn)
+	{
+		m_pBinded_Camera->Set_Fov(XMConvertToRadians(60.f),fTimeDelta, m_bZoomIn);
 	}
 }
 

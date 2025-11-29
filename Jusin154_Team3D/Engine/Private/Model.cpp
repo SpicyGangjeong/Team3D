@@ -113,6 +113,12 @@ _bool CModel::Play_Animation(_float fTimeDelta, CTransform* pTransform)
 	if (m_iCurrentAnimIndex < 0 || m_iCurrentAnimIndex >= (_int)m_iNumAnimations)
 		return false;
 
+	if (m_bLoopRestarted)
+	{
+		m_vPrevRootPos = { 0,0,0 };
+		m_bLoopRestarted = false;
+	}
+
 	ComputeAnimation();
 
 	if (m_iPreAnimIndex >= 0 && m_iPreAnimIndex != m_iCurrentAnimIndex)
@@ -142,16 +148,6 @@ _bool CModel::Play_Animation(_float fTimeDelta, CTransform* pTransform)
 		m_iPreAnimIndex = m_iCurrentAnimIndex;
 	}
 
-	if (m_bIsFinishedAnim)
-	{
-		if (m_bIsLoop)
-		{
-			m_vPrevRootPos = { 0.f, 0.f, 0.f };
-		}
-		else
-			XMStoreFloat3(&m_vPrevRootPos, m_vector[2]);
-	}
-
 	if (m_bRatio) {
 		Update_RootBone(m_fAmount * m_fRatio);
 	}
@@ -162,9 +158,17 @@ _bool CModel::Play_Animation(_float fTimeDelta, CTransform* pTransform)
 
 	if (m_bIsFinishedAnim)
 	{
+		if (m_bIsLoop)
+		{
+			m_bLoopRestarted = true;
+		}
+		else
+			XMStoreFloat3(&m_vPrevRootPos, m_vector[2]);
+
 		m_vPrevRootRot = { 0.f,0.f,0.f,0.f };
 		m_bInitialRootRotSaved = false;
 	}
+
 
 	for (auto& pBone : m_Bones)
 	{

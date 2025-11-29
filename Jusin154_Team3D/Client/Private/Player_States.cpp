@@ -66,6 +66,7 @@ HRESULT CPlayer::InputAction()
 		|| m_pGameInstance->Key_Down(DIK_C)
 		|| m_pGameInstance->Key_Down(DIK_V)
 		|| m_pGameInstance->Key_Down(DIK_Z)
+		|| m_pGameInstance->Key_Down(DIK_G)
 		)
 	{
 		return S_OK;
@@ -114,7 +115,8 @@ HRESULT CPlayer::InputSpell()
 
 HRESULT CPlayer::InputAim()
 {
-	if (m_pGameInstance->Mouse_Pressing(DIM_RBUTTON))
+	if (m_pGameInstance->Mouse_Pressing(DIM_RBUTTON)||
+		m_pGameInstance->Mouse_Pressing(DIM_LBUTTON))
 	{
 		return S_OK;
 	}
@@ -127,7 +129,9 @@ void CPlayer::Behavior_IdleEnter() {
 
 	if (SUCCEEDED(InputAim()))
 	{
-		pairAnimInfo = m_Animation[STATEANIM::IDLE_AIM];
+		if (m_pGameInstance->Mouse_Pressing(DIM_LBUTTON)) {
+			pairAnimInfo = m_Animation[STATEANIM::IDLE_AIM];
+		}
 	}
 	else
 	{
@@ -167,6 +171,9 @@ HRESULT CPlayer::Behavior_IdleExitCheck(_float fTimeDelta)
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
 		}
 		else if (m_pGameInstance->Key_Down(DIK_V)) {
+			m_pFSM->Change_State(FSMSTATE::COMBAT);
+		}
+		else if (m_pGameInstance->Key_Down(DIK_G)) {
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
 		}
 		return E_FAIL;
@@ -292,7 +299,6 @@ void CPlayer::Behavior_MoveEnter()
 			if (SUCCEEDED(InputMove()))
 			{
 				pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
-				m_bRatio = true;
 			}
 		}
 	}
@@ -353,6 +359,9 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 		else if (m_pGameInstance->Key_Down(DIK_Z)) {
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
 		}
+		else if (m_pGameInstance->Key_Down(DIK_G)) {
+			m_pFSM->Change_State(FSMSTATE::COMBAT);
+		}
 		else if (m_pGameInstance->Key_Down(DIK_LSHIFT)) {
 			m_bSprintToggle = !m_bSprintToggle;
 			m_bWalkToggle = false;
@@ -387,7 +396,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 			}
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		}
-		return E_FAIL;
+		return S_OK;
 	}
 
 	if (SUCCEEDED(InputMove())) {
@@ -395,7 +404,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 
 		_vector xmvCamLook = XMVector4Normalize(XMVectorSet(m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z, 0.f));
 		_vector xmvCamRight = XMVector4Normalize(XMVectorSet(m_vCameraRightDir.x, 0.f, m_vCameraRightDir.z, 0.f));
-
+		
 		if (m_pGameInstance->Key_Pressing(DIK_W))
 			xmvInputDir += xmvCamLook;
 		if (m_pGameInstance->Key_Pressing(DIK_S))
@@ -411,7 +420,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 		xmvInputDir = XMVector3Normalize(xmvInputDir);
 
 		_float2 vInputDir = { XMVectorGetX(xmvInputDir),XMVectorGetZ(xmvInputDir) };
-
+		GUI::Text("%.1f, %.1f", vInputDir.x, vInputDir.y);
 		_vector xmvCurLook = XMVector4Normalize(
 			XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
 		_float2 vCurLook = { XMVectorGetX(xmvCurLook),XMVectorGetZ(xmvCurLook) };
@@ -422,35 +431,77 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 		_float cross = vCurLook.x * vInputDir.y - vCurLook.y * vInputDir.x;
 
 		_bool bSkipAngleCheck = { false };
-		if (m_pFSM->IsEnable(FSMSTATE::JOG)) {
-			if (iCurrentAnimIndex != m_Animation[STATEANIM::JOG_FWD].first) {
+		if (m_pFSM->IsEnable(FSMSTATE::JOG | FSMSTATE::WALK)) {
+			if (iCurrentAnimIndex != m_Animation[STATEANIM::JOG_FWD].first &&
+				iCurrentAnimIndex != m_Animation[STATEANIM::WALK_FWD].first) {
 				bSkipAngleCheck = true;
-				if (m_pModelCom->IsFinishedAnim()||
-					m_pFSM->IsEnable(FSMSTATE::STOP)) {
+				if (m_pModelCom->IsFinishedAnim() || m_pFSM->IsEnable(FSMSTATE::STOP)|| SUCCEEDED(InputAim())) {
 					m_pFSM->Disable_State(FSMSTATE::STOP);
 					bSkipAngleCheck = false;
 				}
 			}
 			if (!bSkipAngleCheck) {
 				_float absDir = fabsf(vDir);
-				if (absDir <= XMConvertToRadians(60.f)) {
-					pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
+				if (absDir <= XMConvertToRadians(70.f)) {
+					if (m_pFSM->IsEnable(FSMSTATE::JOG))
+					{
+						pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
+					}
+					if (m_pFSM->IsEnable(FSMSTATE::WALK))
+					{
+						pairAnimInfo = m_Animation[STATEANIM::WALK_FWD];
+					}
 				}
 				else if (absDir < XMConvertToRadians(160.f)) {
 					if (cross > 0)
 					{
-						pairAnimInfo = m_Animation[STATEANIM::JOG_LEFT];
+						if (SUCCEEDED(InputAim()))
+						{
+							pairAnimInfo = m_Animation[STATEANIM::JOG_AIM_LEFT];
+						}
+						else if (m_pFSM->IsEnable(FSMSTATE::JOG))
+						{
+							pairAnimInfo = m_Animation[STATEANIM::JOG_LEFT];
+						}
+						
+						/*if (m_pFSM->IsEnable(FSMSTATE::WALK))
+						{
+							pairAnimInfo = m_Animation[STATEANIM::WALK_LEFT];
+						}*/
 						m_fAmount = 0.5f;
 						m_bRatio = true;
 					}
 					else {
-						pairAnimInfo = m_Animation[STATEANIM::JOG_RIGHT];
+						if (SUCCEEDED(InputAim()))
+						{
+							pairAnimInfo = m_Animation[STATEANIM::JOG_AIM_RIGHT];
+						}
+						else if (m_pFSM->IsEnable(FSMSTATE::JOG))
+						{
+							pairAnimInfo = m_Animation[STATEANIM::JOG_RIGHT];
+						}
+						
+						/*if (m_pFSM->IsEnable(FSMSTATE::WALK))
+						{
+							pairAnimInfo = m_Animation[STATEANIM::WALK_RIGHT];
+						}*/
 						m_fAmount = 0.5f;
 						m_bRatio = true;
 					}
 				}
 				else {
-					pairAnimInfo = m_Animation[STATEANIM::JOG_BWD];
+					if (SUCCEEDED(InputAim()))
+					{
+						pairAnimInfo = m_Animation[STATEANIM::JOG_AIM_BWD];
+					}
+					else if (m_pFSM->IsEnable(FSMSTATE::JOG))
+					{
+						pairAnimInfo = m_Animation[STATEANIM::JOG_BWD];
+					}
+					else if (m_pFSM->IsEnable(FSMSTATE::WALK))
+					{
+						pairAnimInfo = m_Animation[STATEANIM::WALK_BWD];
+					}
 					m_fAmount = 0.5f;
 					m_bRatio = true;
 				}
@@ -462,7 +513,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 
 		Player_InterpTurn(fTimeDelta);
 
-		return E_FAIL;
+		return S_OK;
 	}
 
 	if (m_pFSM->IsEnable(FSMSTATE::JOG | FSMSTATE::WALK | FSMSTATE::SPRINT)||
@@ -580,7 +631,7 @@ HRESULT CPlayer::Behavior_DodgeExitCheck()
 		return E_FAIL;
 	}
 
-	if (SUCCEEDED(InputMove()) && IsCurrentKeyFrame("Dodge")) {
+	if (SUCCEEDED(InputMove()) && IsCurrentKeyFrame("Throw")) {
 		m_pFSM->Change_State(FSMSTATE::MOVE);
 		return E_FAIL;
 	}
@@ -654,6 +705,10 @@ void CPlayer::Behavior_CombatEnter()
 		m_pFSM->Enable_State(FSMSTATE::ANCIENT_THROW);
 		pairAnimInfo = m_Animation[STATEANIM::ANCIENT_THROW];
 	}
+	else if (m_pGameInstance->Key_Down(DIK_G)) {
+		m_pFSM->Enable_State(FSMSTATE::POTION);
+		pairAnimInfo = m_Animation[STATEANIM::POTION];
+	}
 
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
@@ -710,6 +765,11 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 		else if (m_pGameInstance->Key_Down(DIK_Z)) {
 			m_pFSM->Enable_State(FSMSTATE::ANCIENT_THROW);
 			pairAnimInfo = m_Animation[STATEANIM::ANCIENT_THROW];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		}
+		else if (m_pGameInstance->Key_Down(DIK_G)) {
+			m_pFSM->Enable_State(FSMSTATE::POTION);
+			pairAnimInfo = m_Animation[STATEANIM::POTION];
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		}
 	}
@@ -781,12 +841,16 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 
 void CPlayer::Behavior_CombatExit()
 {
-	m_pFSM->Disable_State(FSMSTATE::COMBAT | FSMSTATE::LIGHT_ATTACK | FSMSTATE::SPELL | FSMSTATE::SKILL | FSMSTATE::SKILL2 | FSMSTATE::MAPHELP | FSMSTATE::ANCIENT_THROW);
+	m_pFSM->Disable_State(FSMSTATE::COMBAT | FSMSTATE::LIGHT_ATTACK | FSMSTATE::SPELL | FSMSTATE::SKILL |
+		FSMSTATE::SKILL2 | FSMSTATE::MAPHELP | FSMSTATE::ANCIENT_THROW | FSMSTATE::POTION);
 }
 
 void CPlayer::Player_InterpTurn(_float fTimeDelta)
 {
-	if (m_pModelCom->Get_AnimIndex() != m_Animation[STATEANIM::JOG_FWD].first)
+	_uint iCurrIndex = m_pModelCom->Get_AnimIndex();
+	if (iCurrIndex != m_Animation[STATEANIM::JOG_FWD].first&&
+		iCurrIndex != m_Animation[STATEANIM::WALK_FWD].first&&
+		iCurrIndex != m_Animation[STATEANIM::SPRINT].first)
 		return;
 
 	_vector xmvCurLook = XMVector4Normalize(
@@ -873,6 +937,8 @@ void CPlayer::Add_FSM()
 					m_pTransformCom->Turn(-m_pTransformCom->Get_State(STATE::UP), fTimeDelta * fMove.y * 0.05f);
 				}
 			}
+
+		
 	};
 
 		Desc.funcLateUpdate = nullptr;
@@ -949,6 +1015,10 @@ void CPlayer::Set_Anim()
 	m_Animation[STATEANIM::JOG_BWD] = { 154,false }; // Turn
 	m_Animation[STATEANIM::JOG_STOP] = { 289,false }; 
 
+	m_Animation[STATEANIM::JOG_AIM_LEFT] = { 171,true };
+	m_Animation[STATEANIM::JOG_AIM_RIGHT] = { 175,true };
+	m_Animation[STATEANIM::JOG_AIM_BWD] = { 166,true };
+
 	m_Animation[STATEANIM::JUMP] = { 205,false };
 	m_Animation[STATEANIM::JUMP_JOG] = { 203,false };
 	m_Animation[STATEANIM::JUMP_SPRINT] = { 207,false };
@@ -965,6 +1035,7 @@ void CPlayer::Set_Anim()
 	m_Animation[STATEANIM::LIGHT_ATTACK] = { 413,false };
 	m_Animation[STATEANIM::SPELL] = { 696,false };
 	m_Animation[STATEANIM::MAPHELP] = { 122,false };
+	m_Animation[STATEANIM::POTION] = { 114,false };
 	m_Animation[STATEANIM::ACCIO] = { 417,false };
 	m_Animation[STATEANIM::DESCENDO] = { 418,false };
 	m_Animation[STATEANIM::DEPULSO] = { 782,false };
