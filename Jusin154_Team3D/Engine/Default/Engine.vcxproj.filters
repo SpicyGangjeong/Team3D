@@ -289,6 +289,12 @@
     <Filter Include="99.Define\99.THIRDPARTY\PHYSX">
       <UniqueIdentifier>{5948985e-f67e-4627-aca4-09b8e9edc359}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Element\02.Component\02.VIBuffer\Box">
+      <UniqueIdentifier>{f1ac53f8-59f6-4371-a48c-c331f337ebe7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\11.Query">
+      <UniqueIdentifier>{432b36d5-fdf6-456a-bc71-8bf793a42314}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -545,6 +551,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Model_Instance.cpp">
       <Filter>02.Element\02.Component\02.VIBuffer\Instance\Model_Instance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\OcclusionQuery.cpp">
+      <Filter>02.Element\02.Component\11.Query</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\VIBuffer_Box.cpp">
+      <Filter>02.Element\02.Component\02.VIBuffer\Box</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1171,6 +1183,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_Model_Instance.h">
       <Filter>02.Element\02.Component\02.VIBuffer\Instance\Model_Instance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\OcclusionQuery.h">
+      <Filter>02.Element\02.Component\11.Query</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\VIBuffer_Box.h">
+      <Filter>02.Element\02.Component\02.VIBuffer\Box</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -256,7 +256,7 @@ void CDecendo::Free()
 	SAFE_RELEASE(m_pProjectile);
 
 }
-
+#ifdef _DEBUG
 void CDecendo::Describe_Entity()
 {
 	GUI::Begin("VALUE");
@@ -269,6 +269,9 @@ void CDecendo::Describe_Entity()
 
 	GUI::End();
 }
+
+#endif // _DEBUG
+
 
 HRESULT CDecendo::Bind_ShaderResources()
 {

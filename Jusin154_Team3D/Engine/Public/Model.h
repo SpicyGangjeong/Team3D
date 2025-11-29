@@ -32,7 +32,7 @@ public:
 	virtual HRESULT Render_Indexed(_uint iMeshIndex, _uint IndexCount, _uint StartIndexLocation, _uint BaseVertexLocation);
 #pragma endregion 
 #pragma region Animation
-	_bool	Play_Animation(_float fTimeDelta, class CTransform* pTransform = nullptr              ); // 애니메이션에 델타타임을 넣어줌
+	_bool	Play_Animation(_float fTimeDelta, class CTransform* pTransform = nullptr); // 애니메이션에 델타타임을 넣어줌
 	void	Set_AnimationIndex(_uint iIndex, _bool isLoop = true, _float fAmount = 1.f, _bool bRatio = false);
 	_bool	IsFinishedAnim() const { return m_bIsFinishedAnim; }
 	_bool	IsLoopAnim() const { return m_bIsLoop; }
@@ -71,6 +71,7 @@ void					Combined_BoneMatrix();
 #pragma endregion
 
 		void			ComputeAnimation();
+		void			InItialize_SpineIndex();
 
 public:
 #ifdef EDITOR_PROJECT	
@@ -133,7 +134,8 @@ private:
 	_matrix						m_DeltaAnimationMatrix = {};		// 루트본의 델타애니메이션
 	class CTransform* m_pTransform = { nullptr };			// 모델 대상의 트랜스폼
 
-	_float m_fRatio = {};
+	_float						m_fRatio = {};
+	_int						m_iSpineIndex = { -1 };	
 
 	// 바이너리
 	SaveModel* m_pSaveModel = { nullptr };
@@ -151,6 +153,8 @@ private:
 	_float4					m_vInitialRootRot = {};
 
 	_vector					m_vector[3];
+	_bool m_bLoopRestarted = false;
+
 
 #pragma region Compute
 

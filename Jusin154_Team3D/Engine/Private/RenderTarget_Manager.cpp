@@ -58,8 +58,9 @@ HRESULT CRenderTarget_Manager::Begin_MRT(const _wstring& strMultiRenderTargetKey
 
     list<CRenderTarget*>* pMRTList = Find_MRT(strMultiRenderTargetKey);
 
-    if (nullptr == pMRTList)
+    if (nullptr == pMRTList){
         return E_FAIL;
+    }
 
     _uint iNumRenderTargets = { 0 };
     ID3D11RenderTargetView* pRenderTargetViews[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT] = {};

@@ -20,6 +20,7 @@
 #include "State_Land.h"
 #include "State_Move.h"
 #include "State_Combat.h"
+#include "State_Broom_Ride.h"
 #pragma endregion
 
 #include "Layer.h"
@@ -58,6 +59,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	Load_KeyFrame();
 #endif // _DEBUG
 
+	m_pBroomModel = static_cast<CGameObject*>(pArg)->Get_Component<CModel>();
+	m_pBroomTransform = static_cast<CGameObject*>(pArg)->Get_Component<CTransform>();
 
 	Add_FSM();
 
@@ -98,7 +101,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 void CPlayer::Priority_Update(_float fTimeDelta)
 {
 	ReLockOnTarget();
-
+	SetGravity();
 	m_pTransformCom->RewindMomentum();
 
 	__super::Priority_Update(fTimeDelta);
@@ -191,15 +194,16 @@ void CPlayer::Render_CameraCoordinateSystem()
 	GUI::Text("S : %.2f, %.2f, %.2f", -m_vCameraLookDir.x, 0.f, -m_vCameraLookDir.z);
 	GUI::Text("D : %.2f, %.2f, %.2f", m_vCameraRightDir.x, 0.f, m_vCameraRightDir.z);
 	
-	GUI::Button("##0", { 100.f, 100.f }); GUI::SameLine();
-	GUI::Button(("W : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { m_vCameraLookDir.x , m_vCameraLookDir.z })))).c_str(), {100.f, 100.f}); GUI::SameLine();
-	GUI::Button("##2", {100.f, 100.f});
-	GUI::Button(("A : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { -m_vCameraRightDir.x , -m_vCameraRightDir.z })))).c_str(), { 100.f, 100.f }); GUI::SameLine();
-	GUI::Button("##4", { 100.f, 100.f }); GUI::SameLine();
-	GUI::Button(("D : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { m_vCameraRightDir.x , m_vCameraRightDir.z })))).c_str(), { 100.f, 100.f });
-	GUI::Button("##6", {100.f, 100.f}); GUI::SameLine();
-	GUI::Button(("S : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { -m_vCameraLookDir.x , -m_vCameraLookDir.z })))).c_str(), { 100.f, 100.f }); GUI::SameLine();
-	GUI::Button("##8", {100.f, 100.f});
+	_float  fButtonSize = 25.f;
+	GUI::Button("##0", { fButtonSize, fButtonSize }); GUI::SameLine();
+	GUI::Button(("W : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { m_vCameraLookDir.x , m_vCameraLookDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
+	GUI::Button("##2", { fButtonSize, fButtonSize });
+	GUI::Button(("A : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { -m_vCameraRightDir.x , -m_vCameraRightDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
+	GUI::Button("##4", { fButtonSize, fButtonSize }); GUI::SameLine();
+	GUI::Button(("D : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { m_vCameraRightDir.x , m_vCameraRightDir.z })))).c_str(), { fButtonSize, fButtonSize });
+	GUI::Button("##6", { fButtonSize, fButtonSize }); GUI::SameLine();
+	GUI::Button(("S : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { -m_vCameraLookDir.x , -m_vCameraLookDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
+	GUI::Button("##8", { fButtonSize, fButtonSize });
 	//W CMyTools::Get_Direction2D(vLook, { m_vCameraLookDir.x ,		m_vCameraLookDir.z })
 	//A CMyTools::Get_Direction2D(vLook, { -m_vCameraRightDir.x , -	m_vCameraRightDir.z })
 	//S CMyTools::Get_Direction2D(vLook, { m_vCameraRightDir.x ,	m_vCameraRightDir.z })
@@ -255,7 +259,7 @@ HRESULT CPlayer::Ready_Components()
 		Desc.eBodyType = ACTOR::CAPSULE;
 		Desc.fContactOffset = 0.17f;
 		Desc.fMaterial = { 0.5f, 0.5f, 0.6f };
-		Desc.bAutoStepping = { false };
+		Desc.bAutoStepping = { true };
 		Desc.fStepOffset = { 0.05f };
 		Desc.fRadius = 0.5f;
 		Desc.fHeight = 1.0f;
@@ -265,6 +269,7 @@ HRESULT CPlayer::Ready_Components()
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), (CComponent**)&m_pCharacter_Controller, &Desc))) {
 			return E_FAIL;
 		}
+		m_pCharacter_Controller->SetGravity(false);
 	}
 
 	{ // DO
@@ -297,8 +302,8 @@ HRESULT CPlayer::Ready_Parts()
 		Desc.fMouseSensor = 0.1f;
 		Desc.fShoulderDistance = 2.f;
 		Desc.fBackFrontRatio = 0.9f;
-		Desc.fCameraFocalLength = 10.f;
-		Desc.vInitialLook = { 1.f, 2.f, -1.f };
+		Desc.fCameraFocalLength = 13.4f;
+		Desc.vInitialLook = { 0.77f, 1.35f, -1.f };
 
 		if (FAILED(Add_PartObject<CCamPosition_Shoulder>("Cam_Shoulder_Part", g_iStaticLevel, &m_pCamPosition_ShoulderPart, &Desc))) {
 			return E_FAIL;
@@ -334,6 +339,23 @@ void CPlayer::ReLockOnTarget()
 	}
 }
 
+void CPlayer::SetGravity()
+{
+	PSX::PxControllerCollisionFlags eCollisionFlags = m_pCharacter_Controller->Get_CollisionFlags();
+	eCollisionFlags;
+	if (	false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_DOWN) 
+		 &&	false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_SIDES)) {
+		if (false == m_pFSM->IsEnable(STATEANIM::JUMP)) { // 벽에 닿지 않았는데 점프 중이 아닐 땐 중력 on
+			m_pCharacter_Controller->SetGravity(true);
+		}
+		else { // 점프 중일 땐 off
+			m_pCharacter_Controller->SetGravity(false);
+		}
+	}
+	else { // 벽에 닿는중일 땐 항상 중력 off
+		m_pCharacter_Controller->SetGravity(false);
+	}
+}
 
 void CPlayer::Update_CameraCoordinateSystem()
 {
@@ -449,6 +471,8 @@ void CPlayer::Describe_Entity()
 	GUI::Text(AnimList.c_str());
 
 	GUI::Checkbox("Render", &m_bVisible);
+
+	GUI::Text("%d", m_iStateMask);
 
 }
 

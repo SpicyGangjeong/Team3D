@@ -57,13 +57,14 @@ void CRenderer::Render()
 	if (FAILED(m_pShader->Bind_RawValue("g_vResolution", &vResolution, sizeof(_float2)))) {
 		assert(false);
 	}
-
 	Render_Priority();
 	Render_Shadow();
 	Render_NonBlend();
 	Render_LightAcc();
 	Render_Blur();
 	Render_Combined();
+	Render_Occlusion();
+	Render_EnvironmentPostProcess();
 	Render_Effect();
 	Render_NonLight();
 	Render_Blend();
@@ -73,12 +74,33 @@ void CRenderer::Render()
 	Render_UI();
 
 #ifdef _DEBUG
+	Describe_Entitiy();
 	m_pGameInstance->RenderTarget_Debuger();
 
 	if(m_pGameInstance->Key_Pressing(DIK_F10)){
 		Render_Debug();
 	}
 #endif
+}
+
+void CRenderer::Render_Occlusion()
+{
+	m_RenderObjects[ENUM_CLASS(RENDER::OCCLUSION)].sort([](CGameObject* pSour, CGameObject* pDest)->_bool {
+		return pSour->Get_Depth() < pDest->Get_Depth();
+		});
+
+	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::OCCLUSION)])
+	{
+		if (nullptr != pRenderObject) {
+			if (FAILED(pRenderObject->Render_BoundingBox())) {
+				assert(false);
+			}
+		}
+
+		SAFE_RELEASE(pRenderObject);
+	}
+
+	m_RenderObjects[ENUM_CLASS(RENDER::OCCLUSION)].clear();
 }
 
 void CRenderer::Render_Priority()
@@ -205,6 +227,9 @@ void CRenderer::Render_LightAcc()
 
 void CRenderer::Render_Combined()
 {
+	if (FAILED(m_pGameInstance->Begin_MRT_Include_BackBuffer(TEXT("MRT_Combined")))) {
+		return;
+	}
 	{ 
 		// Bind_Resorces
 
@@ -276,6 +301,74 @@ void CRenderer::Render_Combined()
 
 	m_pVIBuffer->Bind_Resources();
 	m_pVIBuffer->Render();
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
+	}
+}
+
+void CRenderer::Render_EnvironmentPostProcess()
+{
+	if (m_pGameInstance->Key_Up(DIK_END)) {
+		m_bDOF_ENV = !m_bDOF_ENV;
+	}
+	if (false == m_bDOF_ENV) {
+		return;
+	}
+	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Blur_X")))) {
+		return;
+	}
+
+	m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix);
+	m_pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix);
+	m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix);
+	m_pShader->Bind_Matrix("g_invMatView", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW_INV));
+	m_pShader->Bind_Matrix("g_invmatProj", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ_INV));
+	m_pShader->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float));
+	m_pShader->Bind_RawValue("g_fDepthThreshold", &m_fDOF_ENV_CutThreshold, sizeof(_float));
+	m_pShader->Bind_RawValue("g_fFocusDistance", &m_fDOF_ENV_FocusDistance, sizeof(_float));
+	m_pShader->Bind_RawValue("g_fFarBlurStart", &m_fDOF_ENV_StartDistance, sizeof(_float));
+	m_pShader->Bind_RawValue("g_fFarBlurEnd", &m_fDOF_ENV_MaxEnd, sizeof(_float));
+	m_pShader->Bind_RawValue("g_fDOFBlurMultiplier", &m_fDOF_ENV_AmountRadius, sizeof(_float));
+
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Depth"), m_pShader, "g_DepthTexture"))) {
+		return;
+	}
+
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_AfterCombined"), m_pShader, "g_BlurTexture"))) {
+		return;
+	}
+	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::BLURX_ENVIRONMENT));
+
+	m_pVIBuffer->Bind_Resources();
+	m_pVIBuffer->Render();
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
+	}
+
+	m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix);
+	m_pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix);
+	m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix);
+	m_pShader->Bind_Matrix("g_invMatView", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW_INV));
+	m_pShader->Bind_Matrix("g_invmatProj", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ_INV));
+	m_pShader->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float));
+	m_pShader->Bind_RawValue("g_fDepthThreshold", &m_fDOF_ENV_CutThreshold, sizeof(_float));
+	m_pShader->Bind_RawValue("g_fFocusDistance", &m_fDOF_ENV_FocusDistance, sizeof(_float));
+	m_pShader->Bind_RawValue("g_fFarBlurStart", &m_fDOF_ENV_StartDistance, sizeof(_float));
+	m_pShader->Bind_RawValue("g_fFarBlurEnd", &m_fDOF_ENV_MaxEnd, sizeof(_float));
+	m_pShader->Bind_RawValue("g_fDOFBlurMultiplier", &m_fDOF_ENV_AmountRadius, sizeof(_float));
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Depth"), m_pShader, "g_DepthTexture"))) {
+		return;
+	}
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur_X"), m_pShader, "g_BlurTexture"))) {
+		return;
+	}
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_AfterCombined"), m_pShader, "g_DiffuseTexture"))) {
+		return;
+	}
+	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::POSTCOMBINED));
+
+	m_pVIBuffer->Bind_Resources();
+	m_pVIBuffer->Render();
 }
 
 void CRenderer::Render_Effect()
@@ -283,7 +376,6 @@ void CRenderer::Render_Effect()
 	if (FAILED(m_pGameInstance->Begin_MRT_NO_DepthStencil(TEXT("MRT_WB")))) {
 		return;
 	}
-
 
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::EFFECT)])
 	{
@@ -294,7 +386,6 @@ void CRenderer::Render_Effect()
 	}
 
 	m_RenderObjects[ENUM_CLASS(RENDER::EFFECT)].clear();
-
 
 	if (FAILED(m_pGameInstance->End_MRT())) {
 		return;
@@ -350,7 +441,7 @@ void CRenderer::Render_Blur()
 		if (nullptr != pRenderObject)
 			if (FAILED(pRenderObject->Render_Blur())) {
 				assert(false);
-			}
+			}  
 
 		SAFE_RELEASE(pRenderObject);
 	}
@@ -444,6 +535,15 @@ void CRenderer::Render_Bloom()
 			if (FAILED(pRenderObject->Render_Bloom())) {
 				assert(false);
 			}
+	if(true == m_bPostProcessing_BLOOM) {
+		//{ // BackBuffer 
+		//	ID3D11Texture2D* pBackBuffer = nullptr;
+		//	m_pGameInstance->Get_BackBufferPTR(&pBackBuffer);
+		//	//m_pGameInstance->Copy_RenderTarget(TEXT("Target_Diffuse"), pBackBuffer);
+		//	m_pGameInstance->Paste_RenderTarget(TEXT("Target_Bloom_Input"), pBackBuffer);
+		//	SAFE_RELEASE(pBackBuffer);
+		//}
+
 
 		SAFE_RELEASE(pRenderObject);
 	}
@@ -616,6 +716,12 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 
+		/* Target_Depth */
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Terrain_Depth"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.0f, 1.f, 0.f, 0.f)))) {
+			return E_FAIL;
+		}
+
 		/* Target_Surface */
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Surface"), (_uint)Viewport.Width, (_uint)Viewport.Height,
 			DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.0f, 0.f, 0.f, 0.f)))) {
@@ -702,6 +808,11 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 
+		/* Target_AfterCombined */
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_AfterCombined"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
 
 
 		/* Target_Color*/
@@ -746,6 +857,11 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Surface")))) {
+			return E_FAIL;
+		}
+
+		/* MRT_Combined */
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Combined"), TEXT("Target_AfterCombined")))) {
 			return E_FAIL;
 		}
 
@@ -804,8 +920,6 @@ HRESULT CRenderer::Initialize()
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_WB"), TEXT("Target_Color")))) {
 			return E_FAIL;
 		}
-
-		
 	}
 
 	m_pShader = (CShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, FX_DEFERRED, nullptr, nullptr);
@@ -880,3 +994,49 @@ void CRenderer::Free()
 	SAFE_RELEASE(m_pContext);
 	SAFE_RELEASE(m_pGameInstance);
 }
+#ifdef _DEBUG
+void CRenderer::Describe_Entitiy()
+{
+	GUI::Begin("Renderer");
+	GUI::PushItemWidth(80);
+	if (GUI::CollapsingHeader("PostProcessing_Bloom"))
+	{
+		GUI::BeginChild("PostProcessing_Bloom");
+		GUI::PushItemWidth(80);
+		GUI::DragFloat("g_fThreshold", &m_fThreshold, 0.01f, 0.02f, 100.f, "%.3f");
+		GUI::SliderInt("g_iEmbossingPass", &m_iBloomEmbossingPass, 0, 2, "%d");
+		GUI::PopItemWidth();
+		GUI::EndChild();
+	}
+	if (GUI::CollapsingHeader("Environment DOF"))
+	{
+		GUI::BeginChild("DOF_ENV", ImVec2(0, 0), true);
+		GUI::PushItemWidth(80.0f);
+
+		GUI::Text("Far DOF (Environment)");
+		GUI::Separator();
+
+		GUI::DragFloat("Depth Cut", &m_fDOF_ENV_CutThreshold, 0.001f, 0.0f, 20.0f, "%.4f");
+
+		GUI::DragFloat("Focus Dist", &m_fDOF_ENV_FocusDistance, 1.0f, 0.1f, 125.f, "%.1f");
+
+		GUI::DragFloat("Blur Start", &m_fDOF_ENV_StartDistance, 1.0f, 0.1f, 250.f, "%.1f");
+
+		GUI::DragFloat("Blur End", &m_fDOF_ENV_MaxEnd, 1.0f, 1.0f, 500.f, "%.1f");
+
+		GUI::DragFloat("Max Radius", &m_fDOF_ENV_AmountRadius, 0.1f, 0.0f, 10.0f, "%.2f");
+
+		if (m_fDOF_ENV_StartDistance < m_fDOF_ENV_FocusDistance){
+			m_fDOF_ENV_StartDistance = m_fDOF_ENV_FocusDistance;
+		}
+
+		if (m_fDOF_ENV_MaxEnd < m_fDOF_ENV_StartDistance + 1.0f){
+			m_fDOF_ENV_MaxEnd = m_fDOF_ENV_StartDistance + 1.0f;
+		}
+
+		GUI::PopItemWidth();
+		GUI::EndChild();
+	}
+	GUI::End();
+}
+#endif
