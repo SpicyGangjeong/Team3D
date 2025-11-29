@@ -75,9 +75,30 @@ HRESULT CTerrain::Render()
 		return E_FAIL;
 	}
 #ifdef _DEBUG
+	static _int iValue1 = 16;
+	static _int iValue2 = 16;
+	static _int iValue3 = 16;
+	GUI::SliderInt("DSN1", (_int*)&iValue1, 1, 1024);
+	GUI::SliderInt("DSN2", (_int*)&iValue2, 1, 1024);
+	GUI::SliderInt("DSN3", (_int*)&iValue3, 1, 1024);
+	m_vDRN.x = 1.f / (_float)iValue1;
+	m_vDRN.y = 1.f / (_float)iValue2;
+	m_vDRN.z = 1.f / (_float)iValue3;
+#endif // _DEBUG
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDiffuseMultiplier", &m_vDRN.x, sizeof(_float)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fSurfaceMultiplier", &m_vDRN.y, sizeof(_float)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fNormalMultiplier", &m_vDRN.z, sizeof(_float)))) {
+		return E_FAIL;
+	}
+#ifdef _DEBUG
 	if (m_bWasWireFrame)
 	{
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NORTEX::TERRAIN)))) {
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NORTEX::ENV_TERRAIN_ANISO)))) {
 			return E_FAIL;
 		}
 	}
@@ -87,14 +108,11 @@ HRESULT CTerrain::Render()
 			return E_FAIL;
 		}
 	}
-#else
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NORTEX::DEFAULT)))) {
+#endif // _DEBUG
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NORTEX::ENV_TERRAIN_ANISO)))) {
 		return E_FAIL;
 	}
 
-#endif // _DEBUG
-
-	
 
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
 		return E_FAIL;

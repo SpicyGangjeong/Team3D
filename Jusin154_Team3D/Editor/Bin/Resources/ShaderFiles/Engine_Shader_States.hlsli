@@ -85,7 +85,48 @@ DepthStencilState DSS_Effect
     StencilEnable = false;
 };
 
-DepthStencilState DSS_Default_OutLine_Write
+DepthStencilState DSS_Default_Environment_SWrite
+{
+    DepthEnable = true;
+    DepthWriteMask = true;
+    DepthFunc = less_equal;
+
+    StencilEnable = true;
+    StencilReadMask = 0xff;
+    StencilWriteMask = 0xff;
+
+    FrontFaceStencilFail = Keep;
+    FrontFaceStencilDepthFail = Keep;
+    FrontFaceStencilPass = Replace;
+    FrontFaceStencilFunc = Always;
+
+    BackFaceStencilFail = Keep;
+    BackFaceStencilDepthFail = Keep;
+    BackFaceStencilPass = Replace;
+    BackFaceStencilFunc = Always;
+};
+DepthStencilState DSS_Default_Environment_SRead
+{
+    DepthEnable = true;
+    DepthWriteMask = zero;
+    DepthFunc = less_equal;
+
+    StencilEnable = true;
+    StencilReadMask = 0xff; // <-- ff -> 1111 1111 씀
+    StencilWriteMask = 0x00; // <-- 00 -> 0000 0000 안씀
+
+    FrontFaceStencilFail = Keep;
+    FrontFaceStencilDepthFail = Keep;
+    FrontFaceStencilPass = Keep;
+    FrontFaceStencilFunc = Equal;
+
+    BackFaceStencilFail = Keep;
+    BackFaceStencilDepthFail = Keep;
+    BackFaceStencilPass = Keep;
+    BackFaceStencilFunc = NOT_Equal;
+};
+
+DepthStencilState DSS_Default_OutLine_SWrite
 {
     DepthEnable = true;
     DepthWriteMask = true;
@@ -106,7 +147,7 @@ DepthStencilState DSS_Default_OutLine_Write
     BackFaceStencilFunc = Always;
 };
 
-DepthStencilState DSS_Default_OutLine_Read
+DepthStencilState DSS_Default_OutLine_SRead
 {
     DepthEnable = true;
     DepthWriteMask = zero;
@@ -124,7 +165,7 @@ DepthStencilState DSS_Default_OutLine_Read
     BackFaceStencilFail = Keep;
     BackFaceStencilDepthFail = Keep;
     BackFaceStencilPass = Keep;
-    BackFaceStencilFunc = Equal;
+    BackFaceStencilFunc = NOT_Equal;
 };
 
 DepthStencilState DSS_Occlusion

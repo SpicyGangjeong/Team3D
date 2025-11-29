@@ -285,6 +285,7 @@ void CGameInstance::Present_TimeCost() const
 		+ m_fTimer_DrawCall
 		+ m_fTimer_Present;
 
+	GUI::PushItemWidth(80);
 	GUI::Begin("Previous_Frame_Timer");
 	{
 		GUI::ProgressBar(m_fTimer_PriorityUpdate / fTotal, ImVec2(200.f, 0.f));

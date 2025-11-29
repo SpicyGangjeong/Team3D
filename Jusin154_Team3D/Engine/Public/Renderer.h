@@ -46,8 +46,15 @@ private:
 	_float4x4 m_PreShadowMatrices[ENUM_CLASS(D3DTS::END)] = {};
 
 	_bool m_bPostProcessing_BLOOM = { false };
+	_bool m_bDOF_ENV = { false };
 	_int m_iBloomEmbossingPass = { 0 };
 	_float m_fThreshold = { 1.26f };
+	_float m_fDOF_ENV_CutThreshold = { 0.1350f };
+	_float m_fDOF_ENV_FocusDistance = { 31.1f };
+	_float m_fDOF_ENV_StartDistance = { 53.1f };
+	_float m_fDOF_ENV_MaxEnd = { 360.f };
+	_float m_fDOF_ENV_AmountRadius = { 1.f };
+
 
 private:
 	void Render_Occlusion();
@@ -57,6 +64,7 @@ private:
 	void Render_LightAcc();
 	void Render_Blur(); 
 	void Render_Combined();
+	void Render_EnvironmentPostProcess();
 	void Render_Effect();
 	void Render_WeightBlend();
 	void Render_NonLight();
@@ -80,6 +88,10 @@ private:
 public:
 	static CRenderer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free();
+#ifdef _DEBUG
+	virtual void Describe_Entitiy();
+#endif // _DEBUG
+
 };
 
 NS_END
