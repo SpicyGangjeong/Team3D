@@ -18,7 +18,10 @@ public:
 	void Update(_float fTimeDelta);
 	void Change_Level();
 	HRESULT Load_MapObjects(const _char* pFilePath);
-
+	HRESULT Load_BuildingContainer(tinyxml2::XMLElement* Container, class CMapContainer** ppContainerObject);
+	HRESULT Load_StreetContainer(tinyxml2::XMLElement* Container, class CMapContainer** ppContainerObject);
+	HRESULT Load_MapRenderObjects(tinyxml2::XMLElement* Container, class CMapContainer* pContainerObject);
+	HRESULT Load_MapCollisionObjects(tinyxml2::XMLElement* Container, class CMapContainer* pContainerObject);
 
 private:
 	CGameInstance*			m_pGameInstance = { nullptr };

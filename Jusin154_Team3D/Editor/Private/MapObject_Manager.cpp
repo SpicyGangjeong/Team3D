@@ -259,6 +259,32 @@ HRESULT CMapObject_Manager::Save_MapData(const _char* pFileName)
 		container->InsertEndChild(Rotation);
 #pragma endregion
 
+#pragma region BOUNDING_BOX
+		tinyxml2::XMLElement* MapContainerType = doc.NewElement("MapContainerType");
+		if(pContainerObject->Is_OcclusionPassed())
+			MapContainerType->SetAttribute("type", 0); // Building
+		else
+			MapContainerType->SetAttribute("type", 1); // Road
+
+		container->InsertEndChild(MapContainerType);
+
+		_float3 vMinPosition = dynamic_cast<CBuildingContainer*>(pGamObject)->Get_BoundingBox_Min();
+		_float3 vMaxPosition = dynamic_cast<CBuildingContainer*>(pGamObject)->Get_BoundingBox_Max();
+
+		tinyxml2::XMLElement* BoundingBox_Min = doc.NewElement("BoundingBox_Min");
+		BoundingBox_Min->SetAttribute("x", vMinPosition.x);
+		BoundingBox_Min->SetAttribute("y", vMinPosition.y);
+		BoundingBox_Min->SetAttribute("z", vMinPosition.z);
+		container->InsertEndChild(BoundingBox_Min);
+
+		tinyxml2::XMLElement* BoundingBox_Max = doc.NewElement("BoundingBox_Max");
+		BoundingBox_Max->SetAttribute("x", vMaxPosition.x);
+		BoundingBox_Max->SetAttribute("y", vMaxPosition.y);
+		BoundingBox_Max->SetAttribute("z", vMaxPosition.z);
+		container->InsertEndChild(BoundingBox_Max);
+#pragma endregion
+
+
 #pragma region SAVE_PARTOBJECT
 
 		if (FAILED(pContainerObject->Save_PartObjects(doc, container)))
@@ -709,6 +735,8 @@ HRESULT CMapObject_Manager::Load_MapData(const _char* pFileName)
 
 		}
 #pragma endregion
+
+		pContainerObject->Set_BoundingBox();
 
 #pragma region ADD_COLLISION
 		for (auto* Collision = Container->FirstChildElement("Collision"); Collision; Collision = Collision->NextSiblingElement("Collision"))
@@ -1341,6 +1369,17 @@ void CMapObject_Manager::Update_ContainerObject()
 	const list<CGameObject*>* pList = pLayer->Get_Objects();
 
 	_uint iIndex = {};
+
+	if (GUI::Button("Set Box"))
+	{
+		if (false == (*pList).empty())
+		{
+			for (auto& pObject : (*pList))
+			{
+				dynamic_cast<CBuildingContainer*>(pObject)->Set_BoundingBox();
+			}
+		}
+	}
 
 	if (false == (*pList).empty())
 	{

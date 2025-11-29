@@ -235,6 +235,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\State_Land.h" />
     <ClInclude Include="..\Public\State_Move.h" />
     <ClInclude Include="..\Public\State_Root.h" />
+    <ClInclude Include="..\public\StreetContainer.h" />
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\Public\TrailObject.h" />
     <ClInclude Include="..\Public\Wand.h" />
@@ -322,6 +323,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\State_Land.cpp" />
     <ClCompile Include="..\Private\State_Move.cpp" />
     <ClCompile Include="..\Private\State_Root.cpp" />
+    <ClCompile Include="..\private\StreetContainer.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\Private\TrailObject.cpp" />
     <ClCompile Include="..\Private\Wand.cpp" />

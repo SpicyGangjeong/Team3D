@@ -1166,5 +1166,8 @@
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxWorldModelInstance.hlsl">
       <Filter>99.Define\SHADER</Filter>
     </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxPos.hlsl">
+      <Filter>99.Define\SHADER</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

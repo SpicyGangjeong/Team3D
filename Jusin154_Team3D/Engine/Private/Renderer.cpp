@@ -57,13 +57,13 @@ void CRenderer::Render()
 	if (FAILED(m_pShader->Bind_RawValue("g_vResolution", &vResolution, sizeof(_float2)))) {
 		assert(false);
 	}
-
 	Render_Priority();
 	Render_Shadow();
 	Render_NonBlend();
 	Render_LightAcc();
 	Render_Blur();
 	Render_Combined();
+	Render_Occlusion();
 	Render_Effect();
 	Render_NonLight();
 	Render_Blend();
@@ -79,6 +79,26 @@ void CRenderer::Render()
 		Render_Debug();
 	}
 #endif
+}
+
+void CRenderer::Render_Occlusion()
+{
+	m_RenderObjects[ENUM_CLASS(RENDER::OCCLUSION)].sort([](CGameObject* pSour, CGameObject* pDest)->_bool {
+		return pSour->Get_Depth() < pDest->Get_Depth();
+		});
+
+	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::OCCLUSION)])
+	{
+		if (nullptr != pRenderObject) {
+			if (FAILED(pRenderObject->Render_BoundingBox())) {
+				assert(false);
+			}
+		}
+
+		SAFE_RELEASE(pRenderObject);
+	}
+
+	m_RenderObjects[ENUM_CLASS(RENDER::OCCLUSION)].clear();
 }
 
 void CRenderer::Render_Priority()
@@ -808,8 +828,6 @@ HRESULT CRenderer::Initialize()
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_WB"), TEXT("Target_Color")))) {
 			return E_FAIL;
 		}
-
-		
 	}
 
 	m_pShader = (CShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, FX_DEFERRED, nullptr, nullptr);

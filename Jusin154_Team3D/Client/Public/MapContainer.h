@@ -26,6 +26,25 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+public:
+	template<typename T>
+	HRESULT Add_Part(const _string& strPartKey, _uint iPrototypeLevelIndex, T** ppOut, void* pArg = nullptr) {
+		return Add_PartObject<T>(strPartKey, iPrototypeLevelIndex, ppOut, pArg);
+	}
+	template<typename T>
+	HRESULT Add_Collision(_uint iPrototypeLevelIndex, void* pArg = nullptr)
+	{
+		T* pPartObject = m_pGameInstance->Clone_Prototype<T>(iPrototypeLevelIndex, pArg, this);
+
+		if (nullptr == pPartObject) {
+			return E_FAIL;
+		}
+
+		m_ColiisonPartObjects.push_back(pPartObject);
+
+		return S_OK;
+	}
+
 protected:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

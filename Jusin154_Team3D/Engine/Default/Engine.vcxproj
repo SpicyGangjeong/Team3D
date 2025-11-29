@@ -208,6 +208,7 @@ call Update_Lib.bat
     <ClCompile Include="..\Private\ContainerObject.cpp" />
     <ClCompile Include="..\Private\DebugDraw.cpp" />
     <ClCompile Include="..\private\QuadTree.cpp" />
+    <ClCompile Include="..\private\OcclusionQuery.cpp" />
     <ClCompile Include="..\Private\RigidBody_Dynamic_Joint.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -311,6 +312,7 @@ call Update_Lib.bat
     <ClCompile Include="..\private\UIObject.cpp" />
     <ClCompile Include="..\Private\Unit.cpp" />
     <ClCompile Include="..\Private\VIBuffer.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Box.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Cell.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Cube.cpp" />
     <ClCompile Include="..\Private\Instance_Model.cpp" />
@@ -423,6 +425,7 @@ call Update_Lib.bat
     <ClInclude Include="..\Public\Bounding_Sphere.h" />
     <ClInclude Include="..\public\FSM.h" />
     <ClInclude Include="..\public\QuadTree.h" />
+    <ClInclude Include="..\public\OcclusionQuery.h" />
     <ClInclude Include="..\Public\RigidBody_Dynamic_Joint.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -556,6 +559,7 @@ call Update_Lib.bat
     <ClInclude Include="..\public\UIObject.h" />
     <ClInclude Include="..\Public\Unit.h" />
     <ClInclude Include="..\Public\VIBuffer.h" />
+    <ClInclude Include="..\public\VIBuffer_Box.h" />
     <ClInclude Include="..\Public\VIBuffer_Cell.h" />
     <ClInclude Include="..\Public\VIBuffer_Cube.h" />
     <ClInclude Include="..\Public\Instance_Model.h" />
