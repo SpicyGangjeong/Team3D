@@ -95,7 +95,7 @@ HRESULT CTerrain::Render()
 	}
 	if (m_bWasWireFrame)
 	{
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NORTEX::TERRAIN)))) {
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NORTEX::ENV_TERRAIN_ANISO)))) {
 			return E_FAIL;
 		}
 	}
@@ -106,13 +106,11 @@ HRESULT CTerrain::Render()
 		}
 	}
 #else
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NORTEX::DEFAULT)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NORTEX::ENV_TERRAIN_ANISO)))) {
 		return E_FAIL;
 	}
 
 #endif // _DEBUG
-
-	
 
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
 		return E_FAIL;
