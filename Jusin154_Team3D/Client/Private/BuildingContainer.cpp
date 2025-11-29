@@ -1,9 +1,6 @@
 ﻿#include "pch.h"
 #include "BuildingContainer.h"
 #include "PartObject.h"
-//#include "Terrain.h"
-//#include "Layer.h"
-//#include "VIBuffer_Terrain.h"
 
 CBuildingContainer::CBuildingContainer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     :CMapContainer(pDevice, pContext)

@@ -24,6 +24,7 @@ public:
 	virtual HRESULT Render_Blur() { return S_OK; }
 	virtual HRESULT Render_Bloom() { return S_OK; }
 	virtual HRESULT Render_OutLine() { return S_OK; }
+	virtual HRESULT Render_BoundingBox() { return S_OK; }
 
 	virtual _float Get_Depth(); // z 소팅 할 때 쓰시면 됨
 
@@ -37,6 +38,7 @@ public:
 
 	_bool	isDead() const { return m_bDead; }
 	void	Set_Dead() { m_bDead = true; }
+	void    Set_Draw(_bool bDraw) { m_bDraw = bDraw; }
 
 	_uint	Get_ObjectTag() const { return m_iObjectTag; }
 	_uint	Get_CollisionID() const { return m_iCollisionID; }

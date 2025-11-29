@@ -26,6 +26,7 @@ public:
 
 public:
 	virtual _wstring Get_PrototypeTag(_uint iLodIndex = 0);
+	void Get_BoundingBox(_float3* pMinPosition, _float3* pMaxPosition);
 	HRESULT Add_LodModel(const _tchar* pModelPrototypeTag);
 	void Set_KeyIndex(_uint iIndex) {
 		m_iKeyIndex = iIndex;
@@ -41,6 +42,8 @@ private:
 
 	vector<_wstring>		m_ModelPrototypeTags;
 	vector<_uint>			m_ModelPathIndices = { };
+	_float3					m_CombinedExtendPosition = {};
+
 
 private:
 	HRESULT Ready_Components();

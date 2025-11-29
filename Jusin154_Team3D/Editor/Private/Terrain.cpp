@@ -34,7 +34,7 @@ HRESULT CTerrain::Initialize(void* pArg)
 
 	m_fUsingSurfaceParams = 15.f / 27.f;
 	m_vRotation = _float3{ 0.f, 0.f, 0.f };
-	//m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-194, 18.5f, -153.f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-194, 18.5f, -153.f, 1.f));
 
 	//m_pVIBufferCom->Set_CullingRadius(0.04f);
 
@@ -109,7 +109,7 @@ void CTerrain::Priority_Update(_float fTimeDelta)
 
 void CTerrain::Update(_float fTimeDelta)
 {
-	m_pVIBufferCom->Culling(XMMatrixIdentity());
+	//m_pVIBufferCom->Culling(XMMatrixIdentity());
 	
 	if(m_pGameInstance->Key_Down(DIK_LSHIFT) && m_pGameInstance->Key_Down(DIK_W))
 	{
