@@ -149,6 +149,18 @@ void CTrail::Trail_Update(_float fDeltaTime, _fmatrix WorldMatrix)
 
 	}
 
+	if (m_isFixedTrail == true)
+	{
+		//만약 고정된 트레일을 켰다면 가장 첫번째 부분을 항상 내 위치로 고정함
+
+		_vector vLow = XMVector3TransformCoord(XMLoadFloat3(&m_TrailDesc.vLow), m_FixedMat);
+		_vector vHigh = XMVector3TransformCoord(XMLoadFloat3(&m_TrailDesc.vHigh), m_FixedMat);
+
+		XMStoreFloat3(&m_pVertices[m_iNumCount - 2].vPosition, vLow);
+		XMStoreFloat3(&m_pVertices[m_iNumCount -1].vPosition, vHigh);
+
+	}
+
 	//XMStoreFloat3(&m_pVertices[0].vPosition, vLow);
 	//XMStoreFloat3(&m_pVertices[1].vPosition, vHigh);
 
@@ -210,6 +222,14 @@ HRESULT CTrail::Load_Trail(HANDLE hFile)
 
 	return S_OK;
 }
+
+void CTrail::Fixed_Trail(_fmatrix WorldMatrix)
+{
+	m_isFixedTrail = true;
+	m_FixedMat = WorldMatrix;
+}
+
+
 
 HRESULT CTrail::Render()
 {

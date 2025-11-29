@@ -255,10 +255,14 @@ float4 DrawEffect(PS_IN In)
     float2 vDistortionUVMoveTime = g_ParticleValue[In.iGPUIndex].vDistortionUVMoveTime;
     float2 vDelay = g_ParticleValue[In.iGPUIndex].vDelay;
     
-    if (vDelay.x < vDelay.y)
+    if (vDelay.y > FLT_EPSILON5)
     {
-        discard;
+        if (vDelay.x <= vDelay.y)
+        {
+            discard;
+        }
     }
+
     
     if (g_isDiffuse == true)
     {
@@ -740,6 +744,8 @@ PS_BLOOM_OUT PS_BLEND(PS_IN In)
     
     vMtrlDiffuse = DrawEffect(In);
     
+   
+    
     //int2 iTexel = int2(In.vPosition.xy);
     
     //float fDepthStencilValue = g_DepthStencilTexture.Load(int3(iTexel, 0)).r;
@@ -751,7 +757,9 @@ PS_BLOOM_OUT PS_BLEND(PS_IN In)
    
     //// 색깔 추가할 처리 (이미시브)
    
-    Out.vDiffuse = vMtrlDiffuse + EmissiveDraw(In);
+    vMtrlDiffuse.rgb += EmissiveDraw(In).rgb;
+
+    Out.vDiffuse = vMtrlDiffuse;
     
     return Out;
 }
@@ -781,7 +789,7 @@ technique11 DefaultTechnique
     pass Blur
     {
         SetRasterizerState(RS_Nocull);
-        SetDepthStencilState(DSS_None, 0);
+        SetDepthStencilState(DSS_Effect, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_BLUR();
         GeometryShader = NULL;
@@ -811,7 +819,7 @@ technique11 DefaultTechnique
     pass BLUR_NO_WORLD
     {
         SetRasterizerState(RS_Nocull);
-        SetDepthStencilState(DSS_None, 0);
+        SetDepthStencilState(DSS_Effect, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_BLUR_NOWORLD();
         GeometryShader = NULL;
@@ -822,8 +830,8 @@ technique11 DefaultTechnique
     pass BLEND
     {
         SetRasterizerState(RS_Nocull);
-        SetDepthStencilState(DSS_None, 0);
-        SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetDepthStencilState(DSS_Effect, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_BLEND();
@@ -832,8 +840,8 @@ technique11 DefaultTechnique
     pass BLEND_NOWORLD
     {
         SetRasterizerState(RS_Nocull);
-        SetDepthStencilState(DSS_None, 0);
-        SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetDepthStencilState(DSS_Effect, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_NOWORLD();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_BLEND();

@@ -101,7 +101,7 @@
 #include "Protego.h"
 #include "EffectPool.h"
 #include "Revelio.h"
-
+#include "Levioso.h"
 #pragma endregion
 
 #pragma region PHYSX_HEADER
@@ -939,6 +939,9 @@ HRESULT CLoader::Loading_For_Effect()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CRevelio>(ENUM_CLASS(LEVEL::EFFECT), CRevelio::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CLevioso>(ENUM_CLASS(LEVEL::EFFECT), CLevioso::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 

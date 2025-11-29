@@ -628,6 +628,7 @@ void CPlayer::Behavior_CombatEnter()
 			case STATEANIM::DEPULSO:
 				pairAnimInfo = m_Animation[STATEANIM::DEPULSO];
 				m_eSpell = STATEANIM::END;
+
 				break;
 			case STATEANIM::DIFFINDO:
 				pairAnimInfo = m_Animation[STATEANIM::DIFFINDO];

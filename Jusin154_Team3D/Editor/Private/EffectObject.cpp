@@ -75,7 +75,7 @@ HRESULT CEffectObject::Render_Blur()
 
 	SHADER_PASS_INSTANCE_MODEL BlurPass = {};
 
-	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NON_WORLD)
+	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NON_WORLD || m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::BLEND_NOWORLD)
 	{
 		BlurPass = SHADER_PASS_INSTANCE_MODEL::NON_WORLD_BLUR;
 	}
@@ -132,10 +132,21 @@ HRESULT CEffectObject::Render_Bloom()
 		return E_FAIL;
 	}
 
+	SHADER_PASS_INSTANCE_MODEL BloomPass = {};
+
+	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NON_WORLD || m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::BLEND_NOWORLD)
+	{
+		BloomPass = SHADER_PASS_INSTANCE_MODEL::BLOOM_NOWORLD;
+	}
+	else
+	{
+		BloomPass = SHADER_PASS_INSTANCE_MODEL::BLOOM;
+	}
+
 	for (_uint i = 0; i < m_pInstance_ModelCom->Get_NumMeshes(); i++)
 	{
 
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_INSTANCE_MODEL::BLOOM)))) {
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(BloomPass)))) {
 			return E_FAIL;
 		}
 

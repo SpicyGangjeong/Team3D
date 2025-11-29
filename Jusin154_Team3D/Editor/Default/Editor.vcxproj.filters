@@ -394,6 +394,9 @@
     <Filter Include="02.GameObjects\Layer_Effect\Effect\09.Revelio">
       <UniqueIdentifier>{03dca491-c8d3-4204-b450-b6089287aa3d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\10.Levioso">
+      <UniqueIdentifier>{c87ea325-8242-4bc4-aec7-b102a5b1c847}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -768,6 +771,9 @@
     <ClInclude Include="..\Public\Revelio.h">
       <Filter>02.GameObjects\Layer_Effect\Effect\09.Revelio</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Levioso.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\10.Levioso</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -1140,6 +1146,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Revelio.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect\09.Revelio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Levioso.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\10.Levioso</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

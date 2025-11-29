@@ -26,6 +26,9 @@ public:
 #endif
 	HRESULT Load_Trail(HANDLE hFile);
 
+public:
+	void	Fixed_Trail(_fmatrix WorldMatrix);
+
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -52,6 +55,9 @@ private:
 	_float		m_fTrailUpdateTime = {};
 
 	_uint       m_iNumVerticesPerInstance = {};
+
+	_matrix     m_FixedMat = {};
+	_bool		m_isFixedTrail = {};
 };
 
 NS_END

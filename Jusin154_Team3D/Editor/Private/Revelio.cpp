@@ -47,7 +47,7 @@ HRESULT CRevelio::Initialize(void* pArg)
 
 
 
-	m_fDuration = 1.5f;
+	m_fDuration = 3.f;
 
 	return S_OK;
 }
@@ -67,16 +67,18 @@ void CRevelio::Update(_float fTimeDelta)
 
 	Update_Event(fTimeDelta);
 	
-	CPlayer*  pPlayer = static_cast<CPlayer*>(m_pOwner);
+	CPlayer* pPlayer = static_cast<CPlayer*>(m_pOwner);
 
 	if (pPlayer == nullptr)
 		return;
 
-	_vector pPos = pPlayer->Get_WandPos().r[3];
+	_matrix WandWorld = pPlayer->Get_WandPos();
 
-	m_pRevelioPT_Y->Get_Component<CTransform>()->Set_State(STATE::POSITION, pPos);
-	m_pRevelioPT_R->Get_Component<CTransform>()->Set_State(STATE::POSITION, pPos);
-	m_pRevelioPT_B->Get_Component<CTransform>()->Set_State(STATE::POSITION, pPos);
+	/*_vector pPos = pPlayer->Get_WandPos().r[3];*/
+
+	m_pRevelioPT_Y->Get_Component<CTransform>()->Set_WorldMatrix(WandWorld);
+	m_pRevelioPT_R->Get_Component<CTransform>()->Set_WorldMatrix(WandWorld);
+	m_pRevelioPT_B->Get_Component<CTransform>()->Set_WorldMatrix(WandWorld);
 
 }
 
@@ -97,6 +99,7 @@ HRESULT CRevelio::Pre_Setting(CGameObject* pObject)
 
 	m_pOwner = pObject;
 
+
 	Reset_EffectParts();
 
 	m_fAccTime = 0.f;
@@ -109,15 +112,21 @@ HRESULT CRevelio::Pre_Setting(CGameObject* pObject)
 	if (pPlayer == nullptr)
 		return E_FAIL;
 
-	_vector pPos = pPlayer->Get_WandPos().r[3];
+	_matrix WandWorld = pPlayer->Get_WandPos();
 
-	m_pRevelioPT_Y->Get_Component<CTransform>()->Set_State(STATE::POSITION, pPos);
-	m_pRevelioPT_R->Get_Component<CTransform>()->Set_State(STATE::POSITION, pPos);
-	m_pRevelioPT_B->Get_Component<CTransform>()->Set_State(STATE::POSITION, pPos);
+	/*_vector pPos = pPlayer->Get_WandPos().r[3];*/
+
+	m_pRevelioPT_Y->Get_Component<CTransform>()->Set_WorldMatrix(WandWorld);
+	m_pRevelioPT_R->Get_Component<CTransform>()->Set_WorldMatrix(WandWorld);
+	m_pRevelioPT_B->Get_Component<CTransform>()->Set_WorldMatrix(WandWorld);
 
 	m_pRevelioPT_Y->Set_Visible(true);
 	m_pRevelioPT_R->Set_Visible(true);
 	m_pRevelioPT_B->Set_Visible(true);
+
+
+	Get_PartObject<CEditEffect>("Revelio_Ring")->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
+	Get_PartObject<CEditEffect>("Revelio_Ring")->Set_Visible(true);
 
 	m_bVisible = true;
 

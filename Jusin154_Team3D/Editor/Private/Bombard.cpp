@@ -73,7 +73,6 @@ void CBombard::Late_Update(_float fTimeDelta)
 
 	__super::Late_Update(fTimeDelta);
 
-
 }
 
 HRESULT CBombard::Pre_Setting(CGameObject* pObject)
