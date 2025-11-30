@@ -131,9 +131,7 @@ void CSpell_Canvas::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
-#ifdef _DEBUG
 void CSpell_Canvas::Describe_Entity()
 {
 }
 
-#endif // _DEBUG

@@ -886,7 +886,7 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 			{
 				pairAnimInfo = m_Animation[STATEANIM::ACCIO];
 				Add_Event(pairAnimInfo.first,
-					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARD, this);m_eSpell = STATEANIM::END; },
+					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA, this);m_eSpell = STATEANIM::END; },
 					0.25f);
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 			}
