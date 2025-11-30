@@ -390,8 +390,12 @@ void CLevel_ObjectViewer::Dummy_Object_Setting()
 		_float AnimTrack = pModel->Get_CurrentTrackPosition();
 		if (GUI::DragFloat("AnimTrack", &AnimTrack))
 		{
-			pModel->Set_CurrentTrackPosition(AnimTrack);
+			if(AnimTrack>=0.f)
+				pModel->Set_CurrentTrackPosition(AnimTrack);
 		}
+
+		_float AnimRatio = pModel->Get_CurrentTrackProgressRatio();
+		GUI::DragFloat("AnimRatio", &AnimRatio);
 
 		_float AnimSpeed = pModel->Get_AnimSpeed();
 		GUI::DragFloat("AnimSpeed", &AnimSpeed, 0.1f);

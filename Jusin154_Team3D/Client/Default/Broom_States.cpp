@@ -102,10 +102,11 @@ HRESULT CBroom::Behavior_IdleExitCheck(_float fTimeDelta)
 		if (m_pGameInstance->Key_Down(DIK_B)) {
 			pairAnimInfo = m_Animation[STATEANIM::BROOM_MOUNT_B];
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+			m_pFSM->Enable_State(FSMSTATE::MOUNT_B);
 		}
 	}
 
-	if (SUCCEEDED(InputMove()))
+	if (SUCCEEDED(InputMove()) && m_pFSM->IsEnable(FSMSTATE::MOUNT_B))
 	{
 		m_pFSM->Change_State(FSMSTATE::MOVE);
 		return E_FAIL;
@@ -116,7 +117,7 @@ HRESULT CBroom::Behavior_IdleExitCheck(_float fTimeDelta)
 
 void CBroom::Behavior_IdleExit()
 {
-	m_pFSM->Disable_State(FSMSTATE::IDLE);
+	m_pFSM->Disable_State(FSMSTATE::IDLE | FSMSTATE::MOUNT_B);
 }
 
 void CBroom::Behavior_MoveEnter()
