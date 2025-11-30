@@ -49,8 +49,7 @@ void CEffectPool::Priority_Update(_float fTimeDelta)
 	{
 		if (false == (*iter)->Get_Visible())
 		{
-			//SAFE_RELEASE(*iter);
-			//iter = m_ActiveEffectList.erase(iter);
+			++iter;
 		}
 		else
 		{
@@ -58,6 +57,8 @@ void CEffectPool::Priority_Update(_float fTimeDelta)
 			++iter;
 		}
 	}
+
+	(*m_EffectList[ENUM_CLASS(SKILL_TYPE::LEVIOSO)].begin())->Describe_Entity();
 
 }
 
@@ -67,8 +68,7 @@ void CEffectPool::Update(_float fTimeDelta)
 	{
 		if (false == (*iter)->Get_Visible())
 		{
-			//SAFE_RELEASE(*iter);
-			//iter = m_ActiveEffectList.erase(iter);
+			++iter;
 		}
 		else 
 		{

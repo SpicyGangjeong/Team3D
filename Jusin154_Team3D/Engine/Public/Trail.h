@@ -20,6 +20,7 @@ protected:
 public:
 	void Trail_Update(_float fDeltaTime, _fmatrix WorldMatrix);
 	void Reset_Trail();
+	HRESULT ReStructVB(_uint iNumVertices);
 
 #ifdef _DEBUG
 	HRESULT Save_Trail(HANDLE hFile);
@@ -32,6 +33,7 @@ public:
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
+	HRESULT			Create_VB();
 
 public:
 	static CTrail* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

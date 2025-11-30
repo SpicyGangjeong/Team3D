@@ -49,7 +49,10 @@ HRESULT CLevioso::Initialize(void* pArg)
 
 	m_wstrEffectName = L"Levioso";
 
-	m_fDuration = 3.5f;
+	m_fTurnSpeed = 10.f;
+	m_fRange = 1.f;
+
+	m_fDuration = 1.5f;
 
 	return S_OK;
 }
@@ -74,17 +77,22 @@ void CLevioso::Update(_float fTimeDelta)
 	
 	
 
-	m_pLeviosoPJ_0->Get_Component<CTransform>()->Translation(m_vOwnerLook * 0.5f);
-	m_pLeviosoPJ_1->Get_Component<CTransform>()->Translation(m_vOwnerLook * 0.5f);
+	m_pLeviosoPJ_0->Get_Component<CTransform>()->Translation(m_vOwnerLook * 0.25f);
+	m_pLeviosoPJ_1->Get_Component<CTransform>()->Translation(m_vOwnerLook * 0.25f);
 
 
-	m_pTrail_PT_0->Get_Component<CTransform>()->Translation(m_vOwnerLook * 0.5f);
+	m_pTrail_PT_0->Get_Component<CTransform>()->Translation(m_vOwnerLook * 0.25f);
 
 
 
 	if (nullptr != m_pPhysHitBox) {
-		m_pPhysHitBox->Get_Component<CTransform>()->AccumulateMomentum(m_vOwnerLook * 0.5f);
+		m_pPhysHitBox->Get_Component<CTransform>()->AccumulateMomentum(m_vOwnerLook * 0.25f);
 	}
+
+
+	_matrix WorldMat = m_pTrail_PT_0->Get_Component<CTransform>()->Get_XMWorldMatrix();
+
+	m_pLeviosoTrail->Trail_Update(WorldMat, fTimeDelta);
 
 }
 
@@ -102,7 +110,7 @@ void CLevioso::Late_Update(_float fTimeDelta)
 
 	//m_pLeviosoTrail->Get_Component<CTrail>()->Fixed_Trail(WandWorld);
 
-	m_pLeviosoTrail->Trail_Update(m_pTrail_PT_0->Get_Component<CTransform>()->Get_XMWorldMatrix(), fTimeDelta);
+
 
 	__super::Late_Update(fTimeDelta);
 
@@ -119,10 +127,10 @@ HRESULT CLevioso::Pre_Setting(CGameObject* pObject)
 
 	Reset_EffectParts();
 
-	m_fAccTime = 0.f;
 	__super::m_fAccTime = 0.f;
 	m_fPreAccTime = 0.f;
 
+	m_fAccRotateTime = 0.f;
 
 
 
@@ -249,6 +257,11 @@ void CLevioso::Free()
 
 void CLevioso::Describe_Entity()
 {
+	GUI::Begin("LEVIOSO");
+
+	GUI::DragFloat("TURN SPEED", &m_fTurnSpeed);
+	GUI::DragFloat("RANGE", &m_fRange);
+	GUI::End();
 
 }
 

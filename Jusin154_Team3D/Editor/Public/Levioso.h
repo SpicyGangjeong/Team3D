@@ -40,6 +40,9 @@ private:
 	class CEditEffect*  m_pTrail_PT_0 = { nullptr };
 
 	_vector				m_vOwnerLook = {};
+	_float				m_fAccRotateTime = {};
+	_float				m_fTurnSpeed = {};
+	_float				m_fRange = {};
 public:
 	static CLevioso* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

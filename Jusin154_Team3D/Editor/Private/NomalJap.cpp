@@ -232,8 +232,12 @@ void CNomalJap::OnCollision(CGameObject* pOther , void* pDesc)
 	Get_PartObject<CTrailObject>()->Set_Visible(false);
 	Get_PartObject<CTrailObject>()->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
 
-	m_pPhysHitBox->Set_Dead();
-	SAFE_RELEASE(m_pPhysHitBox);
+	if (m_pPhysHitBox != nullptr)
+	{
+		m_pPhysHitBox->Set_Dead();
+		SAFE_RELEASE(m_pPhysHitBox);
+	}
+
 }
 
 void CNomalJap::Free()

@@ -37,24 +37,8 @@ HRESULT CTrail::Initialize(void* pArg)
 
 	m_pVertices = new VTXPOSTEX[m_iNumVertices];
 
-#pragma region VTX_BUFFER
-	D3D11_BUFFER_DESC VBDesc{};
-	VBDesc.ByteWidth = m_iVertexStride * m_iNumVertices;
-	VBDesc.Usage = D3D11_USAGE_DYNAMIC;
-	VBDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	VBDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	VBDesc.MiscFlags = 0;
-	VBDesc.StructureByteStride = m_iVertexStride;
-
-	VTXPOSTEX* pVertices = new VTXPOSTEX[m_iNumVertices]{};
-
-	D3D11_SUBRESOURCE_DATA InitialVBDate{};
-	InitialVBDate.pSysMem = pVertices;
-
-	if (FAILED(m_pDevice->CreateBuffer(&VBDesc, &InitialVBDate, &m_pVB))) {
+	if (FAILED(Create_VB()))
 		return E_FAIL;
-	}
-	Safe_Delete_Array(pVertices);
 
 #pragma endregion
 
@@ -102,6 +86,34 @@ HRESULT CTrail::Initialize(void* pArg)
 
 	Safe_Delete_Array(pIndices);
 #pragma endregion
+
+	return S_OK;
+}
+
+HRESULT CTrail::Create_VB()
+{
+
+	if (m_pVB != nullptr)
+		SAFE_RELEASE(m_pVB);
+
+#pragma region VTX_BUFFER
+	D3D11_BUFFER_DESC VBDesc{};
+	VBDesc.ByteWidth = m_iVertexStride * m_iNumVertices;
+	VBDesc.Usage = D3D11_USAGE_DYNAMIC;
+	VBDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	VBDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	VBDesc.MiscFlags = 0;
+	VBDesc.StructureByteStride = m_iVertexStride;
+
+	VTXPOSTEX* pVertices = new VTXPOSTEX[m_iNumVertices]{};
+
+	D3D11_SUBRESOURCE_DATA InitialVBDate{};
+	InitialVBDate.pSysMem = pVertices;
+
+	if (FAILED(m_pDevice->CreateBuffer(&VBDesc, &InitialVBDate, &m_pVB))) {
+		return E_FAIL;
+	}
+	Safe_Delete_Array(pVertices);
 
 	return S_OK;
 }
@@ -214,6 +226,16 @@ void CTrail::Reset_Trail()
 	m_fAccTime = 0.f;
  }
 
+HRESULT CTrail::ReStructVB(_uint iNumVertices)
+{
+	m_iNumVertices = iNumVertices;
+
+	if (FAILED(Create_VB()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 #ifdef _DEBUG
 HRESULT CTrail::Save_Trail(HANDLE hFile)
 {
@@ -300,13 +322,10 @@ void CTrail::Free()
 void CTrail::Describe_Entity()
 {
 
-	GUI::Begin("TRAIL");
 
-	
-	GUI::InputFloat3("FIRST", (_float*)&m_pVertices[0]);
-	GUI::InputFloat3("SECOND", (_float*)&m_pVertices[1]);
+	GUI::InputFloat3("Low", (_float*)&m_TrailDesc.vLow);
+	GUI::InputFloat3("High", (_float*)&m_TrailDesc.vHigh);
 
-	GUI::End();
 	
 }
 
