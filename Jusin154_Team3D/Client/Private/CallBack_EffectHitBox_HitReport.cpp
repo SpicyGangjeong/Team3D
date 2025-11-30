@@ -41,18 +41,15 @@ void CCallBack_EffectHitBox_HitReport::onShapeHit(const PSX::PxControllerShapeHi
 		{
 			switch (pTargetActorData->iSubKind)
 			{
-			case 23: // 무거운데 올라갈 수 있는 벽
+			case ENUM_CLASS(PXOBJECT::WALL):
 
 				/* OnCollision 함수에 넘길 값 */
-
-
 				CollisionDesc.vWorldPos = XMVectorSet( (_float)vWorldPos.x, (_float)vWorldPos.y, (_float)vWorldPos.z, 1.f);
 				memcpy(&CollisionDesc.vWorldNomal, &vWorldNormal, sizeof(_float3));
 				memcpy(&CollisionDesc.vHitDir, &vDir, sizeof(_float3));
 				CollisionDesc.fLength = fLength;
 
 				pOwnerActorData->pOwner->Get_Owner()->OnCollision(pTargetActorData->pOwner , &CollisionDesc);
-				
 				break;
 			default:
 			{
@@ -81,13 +78,17 @@ void CCallBack_EffectHitBox_HitReport::onControllerHit(const PSX::PxControllersH
 	PSX::PxVec3				vDir = hit.dir;			// 시도한 move 방향
 	_float					fLength = hit.length;		// 시도한 move 길이
 
-	PSX::PxController* pOtherController = hit.other;		// 다른 컨트롤러
+	PSX::PxController*		pOtherController = hit.other;		// 다른 컨트롤러
+	PSX::PxActor* pActor =	pOtherController->getActor();
+
+	ON_COLLISION_INFO CollisionDesc = {};
 
 	if (nullptr != pController && nullptr != pOtherController) {
-		PhsXUserData* pActorData = static_cast<PhsXUserData*>(pOtherController->getActor()->userData);
-		assert(nullptr != pActorData); // missing user data
+		PhsXUserData* pTargetActorData = static_cast<PhsXUserData*>(pActor->userData);
+		PhsXUserData* pOwnerActorData = static_cast<PhsXUserData*>(pController->getActor()->userData);
+		assert(nullptr != pTargetActorData); // missing user data
 
-		switch (pActorData->eKind)
+		switch (pTargetActorData->eKind)
 		{
 		case PHYSX_KIND::BODY_STATIC:
 			assert(false);
@@ -96,7 +97,26 @@ void CCallBack_EffectHitBox_HitReport::onControllerHit(const PSX::PxControllersH
 			assert(false);
 			break;
 		case PHYSX_KIND::CCTActor:
-			// Action
+			switch (pTargetActorData->iSubKind)
+			{
+			case ENUM_CLASS(PXOBJECT::GOBLIN_WARRIOR):
+
+				/* OnCollision 함수에 넘길 값 */
+				CollisionDesc.vWorldPos = XMVectorSet((_float)vWorldPos.x, (_float)vWorldPos.y, (_float)vWorldPos.z, 1.f);
+				memcpy(&CollisionDesc.vWorldNomal, &vWorldNormal, sizeof(_float3));
+				memcpy(&CollisionDesc.vHitDir, &vDir, sizeof(_float3));
+				CollisionDesc.fLength = fLength;
+
+				pOwnerActorData->pOwner->Get_Owner()->OnCollision(pTargetActorData->pOwner, &CollisionDesc);
+				pTargetActorData->pOwner->OnCollision(pOwnerActorData->pOwner, &CollisionDesc);
+				break;
+			default:
+			{
+				PSX::PxRigidDynamic* pDynamic = static_cast<PSX::PxRigidDynamic*>(pActor);
+				pDynamic->addForce(vDir * fLength * 100000.f, PSX::PxForceMode::eIMPULSE);
+			}
+			break;
+			}
 			break;
 		case PHYSX_KIND::OBSTACLEActor:
 			break;

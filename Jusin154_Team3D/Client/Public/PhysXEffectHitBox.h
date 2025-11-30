@@ -35,6 +35,7 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+	virtual void Move(_float fTimeDelta);
 
 private:
 	CCharacter_Controller*				m_pCharacter_Controller = { nullptr };

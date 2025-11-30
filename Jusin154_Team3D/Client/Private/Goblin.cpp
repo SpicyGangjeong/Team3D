@@ -71,14 +71,36 @@ void CGoblin::Update(_float fTimeDelta)
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
-	m_pCharacter_Controller->Move(fTimeDelta);
-	
+	GUI::Text("%d", m_pCharacter_Controller->IsActive());
+	GUI::Text("%f %f", m_vStunTimer.x, m_vStunTimer.y);
+	if (true == m_pCharacter_Controller->IsActive()) {
+		m_pCharacter_Controller->Move(fTimeDelta);
+		m_vStunTimer.x = 0.f;
+	}
+	else {
+		if (0.f == m_vStunTimer.x) {
+			PSX::PxExtendedVec3 pxControlllerPos = m_pCharacter_Controller->Get_Controller()->getPosition();
+			PSX::PxTransform pxTransform((_float)pxControlllerPos.x, (_float)pxControlllerPos.y + 100.f, (_float)pxControlllerPos.z);
+			m_pCharacter_Controller->Set_Position(XMLoadFloat3((_float3*)&pxTransform.p));
+			//m_pCharacter_Controller->Move(fTimeDelta);
+		}
+		m_vStunTimer.x += fTimeDelta;
+		m_pTransformCom->Set_WorldMatrix(m_pRigidBody->Get_Actor()->getGlobalPose());
+		if (m_vStunTimer.y < m_vStunTimer.x) {
+			m_pRigidBody->ConvertToCCT(*m_pCharacter_Controller);
+		}
+	}
 }
 
 void CGoblin::Late_Update(_float fTimeDelta)
 {
 	__super::Late_Update(fTimeDelta);
-	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
+	if (true == m_pCharacter_Controller->IsActive()) {
+		m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
+	}
+	else {
+		m_pTransformCom->Set_WorldMatrix(m_pRigidBody->Get_Actor()->getGlobalPose());
+	}
 
 	m_pTransformCom->LookAt(XMLoadFloat4(&m_vTargetPos));
 
@@ -120,11 +142,36 @@ HRESULT CGoblin::Render()
 	}
 
 #ifdef _DEBUG
-	m_pCharacter_Controller->Render();
-	//m_pRigidBody->Render();
+	if (true == m_pCharacter_Controller->IsActive()) {
+		if (FAILED(m_pCharacter_Controller->Render())) {
+			return E_FAIL;
+		}
+	}
+	else {
+		if (FAILED(m_pRigidBody->Render())) {
+			return E_FAIL;
+		}
+	}
 #endif
 
 	return S_OK;
+}
+
+void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
+{
+	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
+	_vector vWorldPos = {};		// 접촉지점
+	_vector vWorldNomal = {};	// 접촉노말
+	_vector vHitDir = {};		// 시도한 move 방향
+	_float  fLength = {};		// 작용된 힘
+
+	m_pCharacter_Controller->ConvertToDO(*m_pRigidBody);
+	m_pRigidBody->Add_Force(vHitDir * fLength * 100.f, PSX::PxForceMode::eIMPULSE);
+
+}
+
+void CGoblin::OnHit(CGameObject* pOther, CGameObject* pCaller)
+{
 }
 
 HRESULT CGoblin::Ready_Components()
@@ -155,8 +202,8 @@ HRESULT CGoblin::Ready_Components()
 		Desc.fMaterial = { 0.5f, 0.5f, 0.6f };
 		Desc.bAutoStepping = { false };
 		Desc.fStepOffset = { 0.05f };
-		Desc.fRadius = 0.5f;
-		Desc.fHeight = 1.0f;
+		Desc.fRadius = 0.6f;
+		Desc.fHeight = 0.7f;
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Monster_HitReport::Create();
 		Desc.pCallback_Behavior = m_pCallBack_Behavior = CCallBack_Monster_Behavior::Create();
 		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;

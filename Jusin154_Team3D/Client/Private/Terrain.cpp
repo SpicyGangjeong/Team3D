@@ -109,9 +109,11 @@ HRESULT CTerrain::Render()
 		}
 	}
 #endif // _DEBUG
+#ifndef _DEBUG
 	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NORTEX::ENV_TERRAIN_ANISO)))) {
 		return E_FAIL;
 	}
+#endif // !_DEBUG
 
 
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {

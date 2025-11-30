@@ -19,6 +19,9 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
+	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
+
 
 private:
 	CCallBack_Monster_Behavior* m_pCallBack_Behavior = { nullptr };
@@ -26,6 +29,7 @@ private:
 
 	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
 	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
+	_float2 m_vStunTimer = { 0.f, 4.f };
 	_uint iIndex;
 
 private:
