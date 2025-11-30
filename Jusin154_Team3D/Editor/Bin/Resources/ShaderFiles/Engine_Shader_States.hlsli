@@ -108,7 +108,7 @@ DepthStencilState DSS_Default_Environment_SWrite
 DepthStencilState DSS_Default_Environment_SRead
 {
     DepthEnable = true;
-    DepthWriteMask = true;
+    DepthWriteMask = false;
     DepthFunc = less_equal;
 
     StencilEnable = true;
