@@ -208,6 +208,7 @@
     <ClInclude Include="..\Public\Dummy_PhysXWall.h" />
     <ClInclude Include="..\Public\Dummy_Plane.h" />
     <ClInclude Include="..\Public\Dummy_PhysXPlayable.h" />
+    <ClInclude Include="..\public\GameTime.h" />
     <ClInclude Include="..\public\HpBarBG.h" />
     <ClInclude Include="..\Public\Bombard.h" />
     <ClInclude Include="..\public\InstancedProp.h" />
@@ -215,6 +216,7 @@
     <ClInclude Include="..\public\Magic_Item.h" />
     <ClInclude Include="..\public\Magic_Meter.h" />
     <ClInclude Include="..\Public\EffectPool.h" />
+    <ClInclude Include="..\public\MapElement_Light.h" />
     <ClInclude Include="..\Public\MissionBanner_Border.h" />
     <ClInclude Include="..\Public\NomalJap.h" />
     <ClInclude Include="..\Public\Effect_Container.h" />
@@ -347,6 +349,7 @@
     <ClCompile Include="..\Private\Dummy_PhysXWall.cpp" />
     <ClCompile Include="..\Private\Dummy_Plane.cpp" />
     <ClCompile Include="..\Private\Dummy_PhysXPlayable.cpp" />
+    <ClCompile Include="..\private\GameTime.cpp" />
     <ClCompile Include="..\Private\Goblin_States.cpp" />
     <ClCompile Include="..\private\HpBarBG.cpp" />
     <ClCompile Include="..\Private\Bombard.cpp" />
@@ -355,6 +358,7 @@
     <ClCompile Include="..\private\Magic_Item.cpp" />
     <ClCompile Include="..\private\Magic_Meter.cpp" />
     <ClCompile Include="..\Private\EffectPool.cpp" />
+    <ClCompile Include="..\private\MapElement_Light.cpp" />
     <ClCompile Include="..\Private\MissionBanner_Border.cpp" />
     <ClCompile Include="..\Private\NomalJap.cpp" />
     <ClCompile Include="..\Private\Effect_Container.cpp" />

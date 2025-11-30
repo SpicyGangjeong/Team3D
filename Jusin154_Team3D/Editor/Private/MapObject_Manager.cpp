@@ -10,6 +10,7 @@
 #include "BuildingContainer.h"
 #include "MapElement_Static.h"
 #include "MapElement_Interactable.h"
+#include "MapElement_Light.h"
 
 
 CMapObject_Manager::CMapObject_Manager(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -28,7 +29,7 @@ CMapObject_Manager::CMapObject_Manager(const CMapObject_Manager& rhs)
 
 HRESULT CMapObject_Manager::Initialize_Prototype(vector<_wstring>& ModelPrototypeTags, vector<filesystem::path>& ModelPrototypePaths)
 {
-	/*for (_uint i = 0 ; i < ModelPrototypeTags.size(); ++i)
+	for (_uint i = 0 ; i < ModelPrototypeTags.size(); ++i)
 	{
 		if (_wstring::npos != ModelPrototypeTags[i].find(L"Lod"))
 		{
@@ -41,7 +42,7 @@ HRESULT CMapObject_Manager::Initialize_Prototype(vector<_wstring>& ModelPrototyp
 
 		m_ModelPrototypeTags.push_back(ModelPrototypeTags[i]);
 		m_ModelPrototypePaths.push_back(ModelPrototypePaths[i]);
-	}*/
+	}
 
 	return S_OK;
 }
@@ -75,11 +76,12 @@ void CMapObject_Manager::Priority_Update(_float fTimeDelta)
 void CMapObject_Manager::Update(_float fTimeDelta)
 {
 	GUI::Begin("File");
-	const char* ModeNames[3] =
+	const char* ModeNames[4] =
 	{
 		"CONTAINER",
 		"ELEMENT_STATIC",
-		"ELEMENT_INTERACT"
+		"ELEMENT_INTERACT",
+		"ELEMENT_LIGHT"
 	};
 	GUI::Combo("MODE", (_int*)(&m_eType), ModeNames, IM_ARRAYSIZE(ModeNames));
 	GUI::Checkbox("Model View", &m_bModelVisable);
@@ -1156,23 +1158,10 @@ void CMapObject_Manager::Update_PrototypeList()
 
 		if (ImGui::Button(CMyTools::ToString(Tag).c_str()))
 		{
-			switch (m_eType)
-			{
-			case Editor::CMapObject_Manager::ADD_TYPE::CONTAINER:
+			if (ADD_TYPE::CONTAINER == m_eType)
 				Create_PartObject(Tag);
-				break;
-
-			case Editor::CMapObject_Manager::ADD_TYPE::ELEMENT_STATIC:
-				Create_Elemnt_Static(Tag);
-				break;
-
-			case Editor::CMapObject_Manager::ADD_TYPE::ELEMENT_INTERACT:
-				Create_Elemnt_Interact(Tag);
-				break;
-			default:
-				break;
-			}
-	
+			else
+				Create_Elemnt(Tag);
 		}
 	}
 	GUI::End();
@@ -1291,6 +1280,8 @@ void CMapObject_Manager::Update_ObjectList()
 			pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Element_Static"));
 		else if (ADD_TYPE::ELEMENT_INTERACT == m_eType)
 			pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Element_Interact"));
+		else if (ADD_TYPE::ELEMENT_LIGHT == m_eType)
+			pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Element_Light"));
 		
 		if (nullptr == pLayer)
 		{
@@ -1440,13 +1431,12 @@ void CMapObject_Manager::Create_PartObject(_wstring& strPrototypeTag)
 	m_MapObjects.push_back(pMapObject);
 }
 
-void CMapObject_Manager::Create_Elemnt_Static(_wstring& strPrototypeTag)
+void CMapObject_Manager::Create_Elemnt(_wstring& strPrototypeTag)
 {
-	vector<_uint> LodModelIndices;
-
 	MAPOBJECT_LOD_DESC Desc = {};
 
 	vector<_wstring> PrototypeTags;
+	vector<_uint> LodModelIndices;
 
 	Find_Lod_Prototype(strPrototypeTag, LodModelIndices);
 
@@ -1466,42 +1456,19 @@ void CMapObject_Manager::Create_Elemnt_Static(_wstring& strPrototypeTag)
 	Desc.vScale = _float3(1.f, 1.f, 1.f);
 	Desc.pModelPathIndices = &LodModelIndices;
 
-	CMapElement_Static* pMapObject = { nullptr };
-	const string strKey = CMyTools::ToString(strPrototypeTag);
-
-	m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Static>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Static"), &Desc);
-}
-
-void CMapObject_Manager::Create_Elemnt_Interact(_wstring& strPrototypeTag)
-{
-	vector<_uint> LodModelIndices;
-
-	MAPOBJECT_LOD_DESC Desc = {};
-
-	vector<_wstring> PrototypeTags;
-
-	Find_Lod_Prototype(strPrototypeTag, LodModelIndices);
-
-	PrototypeTags.push_back(strPrototypeTag);
-
-	for (_uint i = 0; i < LodModelIndices.size(); ++i)
+	if (ADD_TYPE::ELEMENT_STATIC == m_eType)
 	{
-		_wstring strLodTag = strPrototypeTag + L"_Lod" + to_wstring(i + 1);
-		PrototypeTags.push_back(strLodTag);
+		m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Static>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Static"), &Desc);
 	}
-
-	Desc.iMaxLodLevel = (_uint)LodModelIndices.size() - 1;
-	Desc.ModelPrototypeTags = PrototypeTags;
-	Desc.pParentTransform = m_pTransformCom;
-	Desc.vPosition = _float3(0.f, 0.f, 0.f);
-	Desc.vRotation = _float3(0.f, 0.f, 0.f);
-	Desc.vScale = _float3(1.f, 1.f, 1.f);
-	Desc.pModelPathIndices = &LodModelIndices;
-
-	CMapElement_Interactable* pMapObject = { nullptr };
-	const string strKey = CMyTools::ToString(strPrototypeTag);
-
-	m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Interactable>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Interact"), &Desc);
+	else if (ADD_TYPE::ELEMENT_INTERACT == m_eType)
+	{
+		m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Interactable>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Interact"), &Desc);
+	}
+	else if (ADD_TYPE::ELEMENT_LIGHT == m_eType)
+	{
+		m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Light>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Light"), &Desc);
+	}
+	
 }
 
 _bool CMapObject_Manager::Find_Lod_Prototype(_wstring strPrototypeTag, vector<_uint>& LodModelIndices)
@@ -1565,6 +1532,11 @@ CGameObject* CMapObject_Manager::Clone(void* pArg, CGameObject* pOwner)
 void CMapObject_Manager::Free()
 {
 	__super::Free();
+
+	m_ModelPrototypeTags.clear();
+	m_PartObjectKeyCount.clear();
+	m_LODModelPrototypeTags.clear();
+	m_ModelPrototypePaths.clear();
 
 	for (auto& pObject : m_MapObjects)
 	{

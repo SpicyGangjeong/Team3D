@@ -378,7 +378,7 @@
     </Filter>
     <Filter Include="02.GameObjects\Layer_Effect\Effect\08.Protego">
       <UniqueIdentifier>{8bb21e5b-933f-4930-8d49-1093e0c3ea77}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Border">
       <UniqueIdentifier>{a54567fa-e528-4c98-a605-289d7d300029}</UniqueIdentifier>
     </Filter>
@@ -390,6 +390,12 @@
     </Filter>
     <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Current_Spell_Slot">
       <UniqueIdentifier>{c7b1ffc6-548f-464c-8f19-8b6ff5913b06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameTime">
+      <UniqueIdentifier>{cf446efa-94e5-4fd2-83e1-dba2149eddc8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Env\03.MapElement\Light">
+      <UniqueIdentifier>{99652c97-4011-4d1f-84fb-7e6aa9f6ec1a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -749,7 +755,7 @@
     </ClInclude>
     <ClInclude Include="..\Public\Protego.h">
       <Filter>02.GameObjects\Layer_Effect\Effect\08.Protego</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\MissionBanner_Border.h">
       <Filter>50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Border</Filter>
     </ClInclude>
@@ -761,6 +767,12 @@
     </ClInclude>
     <ClInclude Include="..\public\Current_Spell_Slot.h">
       <Filter>50.UI\Spell_Canvas\Spell_Panel\Current_Spell_Slot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\GameTime.h">
+      <Filter>03.GameTime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapElement_Light.h">
+      <Filter>02.GameObjects\Env\03.MapElement\Light</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1119,7 +1131,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\Protego.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect\08.Protego</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\Private\MissionBanner_Border.cpp">
       <Filter>50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Border</Filter>
     </ClCompile>
@@ -1131,6 +1143,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Current_Spell_Slot.cpp">
       <Filter>50.UI\Spell_Canvas\Spell_Panel\Current_Spell_Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\GameTime.cpp">
+      <Filter>03.GameTime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapElement_Light.cpp">
+      <Filter>02.GameObjects\Env\03.MapElement\Light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
