@@ -69,6 +69,11 @@ PSX::PxController* CCharacter_Controller::Get_Controller()
 	return m_pController;
 }
 
+PSX::PxControllerCollisionFlags CCharacter_Controller::Get_CollisionFlags()
+{
+	return m_eBeforeCollisionFlags;
+}
+
 void CCharacter_Controller::Resize_Volume(_float fHeight)
 {
 	m_pController->resize(fHeight);
@@ -326,6 +331,7 @@ void CCharacter_Controller::Free()
 void CCharacter_Controller::Describe_Entity()
 {
 	GUI::Begin("Character_Controller");
+	GUI::Text("Gravity : %d ", m_bGravity);
 	m_pTransform->Describe_Entity();
 	GUI::TextLinkOpenURL("More details here", "https://dev-treadmill.tistory.com/158");
 	_float fContact = m_pController->getContactOffset();
