@@ -363,6 +363,7 @@ void CPlayer::Update_CameraCoordinateSystem()
 	_vector xmvUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
 	XMStoreFloat3(&m_vCameraRightDir, XMVector3Normalize(XMVector3Cross(xmvUp, xmvCameraLook)));
 	XMStoreFloat3(&m_vCameraLookDir, xmvCameraLook);
+	m_pInfoInstance->Update_CameraCoordinateSystem(m_vCameraLookDir, m_vRimLightColor);
 }
 
 _matrix CPlayer::Get_WandPos()

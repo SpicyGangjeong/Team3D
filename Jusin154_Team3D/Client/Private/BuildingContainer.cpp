@@ -64,14 +64,17 @@ HRESULT CBuildingContainer::Render_BoundingBox()
         return E_FAIL;
     }
    
-    if (FAILED(m_pShaderCom->Begin(0)))
+    if (FAILED(m_pShaderCom->Begin(0))) {
         return E_FAIL;
+    }
 
-    if (FAILED(m_pVIBufferCom->Bind_Resources()))
+    if (FAILED(m_pVIBufferCom->Bind_Resources())) {
         return E_FAIL;
+    }
 
-    if (FAILED(m_pVIBufferCom->Render()))
+    if (FAILED(m_pVIBufferCom->Render())) {
         return E_FAIL;
+    }
 
     m_pOcclusionQueryCom->End_Query();
 
@@ -112,8 +115,9 @@ HRESULT CBuildingContainer::Ready_Components(void* pArg)
 
     /* Com_Shader */
     if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_VTXPOS,
-         reinterpret_cast<CComponent**>(&m_pShaderCom))))
-         return E_FAIL;
+         reinterpret_cast<CComponent**>(&m_pShaderCom)))) {
+        return E_FAIL;
+    }
 
     MAP_CONTAINER_DESC* pDesc = static_cast<MAP_CONTAINER_DESC*>(pArg);
 
@@ -140,13 +144,15 @@ HRESULT CBuildingContainer::Ready_Components(void* pArg)
 
     /* Com_VIBuffer */
     if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Box"),
-        reinterpret_cast<CComponent**>(&m_pVIBufferCom), &vBoxCorners)))
+        reinterpret_cast<CComponent**>(&m_pVIBufferCom), &vBoxCorners))) {
         return E_FAIL;
+    }
 
     /* Com_OcclusionQuery */
     if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_OcclusionQuery"),
-        reinterpret_cast<CComponent**>(&m_pOcclusionQueryCom))))
+        reinterpret_cast<CComponent**>(&m_pOcclusionQueryCom)))) {
         return E_FAIL;
+    }
 
     return S_OK;
 }

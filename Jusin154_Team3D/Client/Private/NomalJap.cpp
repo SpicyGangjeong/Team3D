@@ -36,8 +36,9 @@ HRESULT CNomalJap::Initialize(void* pArg)
 
 	m_wstrEffectName = L"Nomal_Jap";
 
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Jap")))
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Jap"))){
 		return E_FAIL;
+	}
 
 
 	m_pProjectile_Side = Get_PartObject<CEffectParts>("JapProjSide");
@@ -114,8 +115,9 @@ HRESULT CNomalJap::Pre_Setting(CGameObject* pObject)
 	m_pOwner = pObject;
 
 	/* 피직스 생성*/
-	if (FAILED(Ready_Child()))
+	if (FAILED(Ready_Child())){
 		return E_FAIL;
+	}
 
 	/* 초기 셋팅 초기화 */
 	Reset_EffectParts();
@@ -137,11 +139,9 @@ HRESULT CNomalJap::Pre_Setting(CGameObject* pObject)
 
 	Get_PartObject<CTrailObject>()->Get_Component<CTrail>()->Reset_Trail();
 
-
 	//나아가는 벡터와 한점을 가져와 수직인 평면상에 하나의 점으로  DIR 을 만듬
 	m_vOwnerLook = XMVector3Normalize(m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK));
 	_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
-
 
 	_vector vQuaternion = XMQuaternionRotationAxis(m_vOwnerLook, m_pGameInstance->Random_Float(0.f, XM_PIDIV2));
 
