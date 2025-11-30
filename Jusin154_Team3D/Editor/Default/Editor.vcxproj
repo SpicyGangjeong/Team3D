@@ -264,6 +264,7 @@
     <ClInclude Include="..\public\Spell_Slot_Preview.h" />
     <ClInclude Include="..\public\Spell_State.h" />
     <ClInclude Include="..\public\Spell_UI.h" />
+    <ClInclude Include="..\public\Spell_Vidio_Border.h" />
     <ClInclude Include="..\Public\State_Combat.h" />
     <ClInclude Include="..\Public\State_Dodge.h" />
     <ClInclude Include="..\Public\State_Idle.h" />
@@ -414,6 +415,7 @@
     <ClCompile Include="..\private\Spell_Slot_Preview.cpp" />
     <ClCompile Include="..\private\Spell_State.cpp" />
     <ClCompile Include="..\private\Spell_UI.cpp" />
+    <ClCompile Include="..\private\Spell_Vidio_Border.cpp" />
     <ClCompile Include="..\Private\State_Combat.cpp" />
     <ClCompile Include="..\Private\State_Dodge.cpp" />
     <ClCompile Include="..\Private\State_Idle.cpp" />

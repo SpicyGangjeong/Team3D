@@ -418,6 +418,9 @@
     <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_Preview\Spell_Header_Line">
       <UniqueIdentifier>{754c2260-5073-4489-9fa8-0df8da6d0255}</UniqueIdentifier>
     </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_Vidio_Border">
+      <UniqueIdentifier>{9d80f32a-aaca-490e-babf-3a7fe4cc0600}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -816,6 +819,9 @@
     <ClInclude Include="..\public\Spell_Header_Line.h">
       <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Preview\Spell_Header_Line</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Spell_Vidio_Border.h">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Vidio_Border</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -1212,6 +1218,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Spell_Header_Line.cpp">
       <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Preview\Spell_Header_Line</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Spell_Vidio_Border.cpp">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Vidio_Border</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -44,6 +44,7 @@ private:
 	CGameObject* m_pSpell_Hover = { nullptr };
 	CGameObject* m_pSpell_Hover_Effect = { nullptr };
 	CGameObject* m_pSpell_Preview = { nullptr };
+	CGameObject* m_pSpell_Vidio_Border = { nullptr };
 
 public:
 	static CSpell_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

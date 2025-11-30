@@ -76,6 +76,7 @@
 #include "Spell_Preview.h"
 #include "Spell_Header.h"
 #include "Spell_Header_Line.h"
+#include "Spell_Vidio_Border.h"
 
 #include "IMGUIUI.h"
 
@@ -747,6 +748,10 @@ HRESULT CLoader::Loading_For_UI()
 		return E_FAIL;
 	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_Header_Line>(g_iStaticLevel, CSpell_Header_Line::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_Vidio_Border>(g_iStaticLevel, CSpell_Vidio_Border::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}

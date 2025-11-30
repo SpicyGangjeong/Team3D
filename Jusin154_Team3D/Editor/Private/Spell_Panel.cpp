@@ -10,6 +10,7 @@
 #include "Spell_Hover.h"
 #include "Spell_Hover_Effect.h"
 #include "Spell_Preview.h"
+#include "Spell_Vidio_Border.h"
 
 CSpell_Panel::CSpell_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPanelObject(pDevice, pContext)
@@ -216,6 +217,12 @@ HRESULT CSpell_Panel::Ready_Element(void* pArg)
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Spell_Preview"), m_pSpell_Preview);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Vidio_Border>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Vidio_Border**>(&m_pSpell_Vidio_Border))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Spell_Vidio_Border"), m_pSpell_Vidio_Border);
 
 	return S_OK;
 }
