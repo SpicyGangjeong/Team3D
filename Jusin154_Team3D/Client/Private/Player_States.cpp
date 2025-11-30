@@ -454,7 +454,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 			}
 			if (!bSkipAngleCheck) {
 				_float absDir = fabsf(vDir);
-				if (absDir <= XMConvertToRadians(80.f)) {
+				if (absDir <= XMConvertToRadians(90.f)) {
 					if (m_pFSM->IsEnable(FSMSTATE::JOG))
 					{
 						pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];

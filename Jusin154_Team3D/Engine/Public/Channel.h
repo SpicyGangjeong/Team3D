@@ -63,6 +63,10 @@ private:
 	_bool					m_bInitialRootRotSaved = {false};
 	_float4					m_vInitialRootRot = {};
 
+	_bool					m_IsUpper = false;
+	_int					m_ilayerIndex = 0;
+	LOCALPOS_DESC			LocalPos = {};
+
 	vector<KEYFRAME_DESC>	m_KeyFrameDesc;
 public:
 	// 바이너리

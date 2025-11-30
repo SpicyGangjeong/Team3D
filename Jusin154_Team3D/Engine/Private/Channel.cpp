@@ -120,14 +120,11 @@ void CChannel::Update_TransformationMatirx(
 	vector<_uint> BoneMask,
 	_vector vector[3])
 {
-	LOCALPOS_DESC& LocalPos = pLocalPosArray[0][m_iBoneIndex];
-	_bool isUpper = false;
-	_int layerIndex = 0;
 	if (!bIsSpine)
 	{
-		isUpper = BoneMask[m_iBoneIndex];
-		layerIndex = isUpper ? 1 : 0;
-		LocalPos = pLocalPosArray[layerIndex][m_iBoneIndex];
+		m_IsUpper = BoneMask[m_iBoneIndex];
+		m_ilayerIndex = m_IsUpper ? 1 : 0;
+		LocalPos = pLocalPosArray[m_ilayerIndex][m_iBoneIndex];
 	}
 	else
 	{
@@ -158,7 +155,7 @@ void CChannel::Update_TransformationMatirx(
 	}
 	else
 	{
-		if (layerIndex == 1)
+		if (m_ilayerIndex == 1)
 		{
 			m_BoneTransformationMatrix =
 				XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vTranslation);

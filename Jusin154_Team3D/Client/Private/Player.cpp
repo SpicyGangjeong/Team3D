@@ -58,11 +58,10 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	Load_KeyFrame();
 
-
-	/*m_pBroomModel = static_cast<CGameObject*>(pArg)->Get_Component<CModel>();
-	* SAFE_ADDREF(m_pBroomModel);
+	m_pBroomModel = static_cast<CGameObject*>(pArg)->Get_Component<CModel>();
+	SAFE_ADDREF(m_pBroomModel);
 	m_pBroomTransform = static_cast<CGameObject*>(pArg)->Get_Component<CTransform>();
-	SAFE_ADDREF(m_pBroomTransform);*/
+	SAFE_ADDREF(m_pBroomTransform);
 
 	Add_FSM();
 

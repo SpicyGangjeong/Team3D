@@ -1221,8 +1221,6 @@ void CModel::Initialize_BoneMasks()
 	}
 }
 
-
-
 HRESULT CModel::Create_ParentVB()
 {
 	D3D11_BUFFER_DESC desc{};
