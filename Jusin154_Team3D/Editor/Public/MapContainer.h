@@ -25,6 +25,7 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+
 	virtual _string& Get_Name() { return m_strName; }
 	virtual HRESULT Save_PartObjects(tinyxml2::XMLDocument& Doc, tinyxml2::XMLElement* Container);
 

@@ -7,6 +7,7 @@
 #include "Bombard.h"
 #include "NomalJap.h"
 #include "Decendo.h"
+#include "Protego.h"
 
 
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -54,6 +55,10 @@ void CEffectPool::Priority_Update(_float fTimeDelta)
 			++iter;
 		}
 	}
+
+
+	(*m_EffectList[ENUM_CLASS(SKILL_TYPE::PROTEGO)].begin())->Describe_Entity();
+
 }
 
 void CEffectPool::Update(_float fTimeDelta)
@@ -137,6 +142,16 @@ HRESULT CEffectPool::Ready_Effect()
 		pEffect = m_pGameInstance->Clone_Prototype<CDecendo>(iPrototypeLevel, nullptr);
 
 		return pEffect;}
+	))) return E_FAIL;
+
+
+	if (FAILED(Create_Effect(SKILL_TYPE::PROTEGO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
+
+		CProtego* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CProtego>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
 	))) return E_FAIL;
 
 

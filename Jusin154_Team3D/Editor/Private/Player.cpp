@@ -211,10 +211,10 @@ HRESULT CPlayer::Ready_Parts()
 	WandDesc.pParentTransform = m_pTransformCom;
 	WandDesc.pSocketMatrices = m_pModelCom->Get_BoneMatrixPtr("SKT_RightHand");
 
-	//if (FAILED(Add_PartObject<CWand>("Wand", g_iStaticLevel, nullptr, &WandDesc)))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(Add_PartObject<CWand>("Wand", g_iStaticLevel, nullptr, &WandDesc)))
+	{
+		return E_FAIL;
+	}
 
 	{
 		CCamPosition_Shoulder::CAMERA_SHOULDER_DESC Desc;
@@ -231,6 +231,26 @@ HRESULT CPlayer::Ready_Parts()
 	}
 
 	return S_OK;
+}
+
+_matrix CPlayer::Get_WandPos()
+{
+	CModel* pWand = Get_PartObject<CWand>()->Get_Component<CModel>();
+
+	if (pWand == nullptr)
+		return _matrix();
+
+	_matrix BoneMatrix = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("root"));
+
+	BoneMatrix = BoneMatrix * m_pTransformCom->Get_XMWorldMatrix();
+
+	_float3 vOffset = _float3(0.f, -0.27f, -0.32f);
+
+	BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[0]) * vOffset.x;
+	BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[1]) * vOffset.y;
+	BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[2]) * vOffset.z;
+
+	return BoneMatrix;
 }
 
 HRESULT CPlayer::Bind_ShaderResources()

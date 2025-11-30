@@ -207,11 +207,11 @@ PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out;
 
-    vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-    vector vSurface = g_SurfaceParamsTexture.Sample(DefaultSampler, In.vTexcoord);
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    vector vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
     if (vMtrlDiffuse.a < 0.2f) { discard; }
     
-    float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
+    float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, AnisoTropy_BLUR_Sampler, In.vTexcoord);
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
     
     float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
@@ -573,7 +573,7 @@ technique11 MeshTechnique11
     pass OutLine_Write_Pass // 13
     {
         SetRasterizerState(RS_Default);
-        SetDepthStencilState(DSS_Default_OutLine_Write, 1);
+        SetDepthStencilState(DSS_Default_OutLine_SWrite, 2);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
@@ -583,7 +583,7 @@ technique11 MeshTechnique11
     pass OutLine_Read_Pass // 14
     {
         SetRasterizerState(RS_Front);
-        SetDepthStencilState(DSS_Default_OutLine_Read, 0);
+        SetDepthStencilState(DSS_Default_OutLine_SRead, 2);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN_OUTLINE();
         GeometryShader = NULL;

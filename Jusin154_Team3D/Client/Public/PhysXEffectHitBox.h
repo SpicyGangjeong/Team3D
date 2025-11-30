@@ -23,6 +23,7 @@ public:
 		_uint   iSubKind = {};
 		_float3 vDeltaPos = {};
 		_float2 vLifeTime = {};
+		_bool   bGravity = {};
 	}PHYSXDUMMY_DESC;
 private:
 	CPhysXEffectHitBox(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -241,6 +241,18 @@ typedef struct tagVertexPositionTexcoord {
 
 }VTXPOSTEX;
 
+typedef struct tagVertexPositionNormal {
+	_float3	vPosition = {};
+	_float3	vNormal = {};
+
+	static constexpr _uint iNumElements = { 2 };
+	static constexpr D3D11_INPUT_ELEMENT_DESC Elements[] = {
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+	};
+
+}VTXPOSNOR;
+
 typedef struct tagVertexPositionNormalTexcoord {
 	_float3	vPosition = {};
 	_float3	vNormal = {};

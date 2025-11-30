@@ -26,14 +26,17 @@ HRESULT CDecendo::Initialize_Prototype()
 
 HRESULT CDecendo::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
+	if (FAILED(__super::Initialize(pArg))) {
 		return E_FAIL;
+	}
 
-	if (FAILED(Ready_Components(pArg)))
+	if (FAILED(Ready_Components(pArg))) {
 		return E_FAIL;
+	}
 
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Decendo")))
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Decendo"))) {
 		return E_FAIL;
+	}
 
 
 	m_wstrEffectName = L"Decendo";
@@ -53,12 +56,18 @@ void CDecendo::Priority_Update(_float fTimeDelta)
 {
 	__super::Priority_Update(fTimeDelta);
 
+
+	if (nullptr != m_pPhysHitBox) {
+		m_pPhysHitBox->Get_Component<CTransform>()->RewindMomentum();
+	}
+
 }
 
 void CDecendo::Update(_float fTimeDelta)
 {
-	if (m_bVisible == false)
+	if (m_bVisible == false){
 		return;
+	}
 
 	__super::Update(fTimeDelta);
 
@@ -68,6 +77,10 @@ void CDecendo::Update(_float fTimeDelta)
 	m_pProjectile->Get_Component<CTransform>()->Translation(m_vOwnerLook * 0.5f);
 
 
+	if (nullptr != m_pPhysHitBox) {
+		m_pPhysHitBox->Get_Component<CTransform>()->AccumulateMomentum(m_vOwnerLook * 0.5f);
+	}
+
 
 	if (m_fAccTime > XM_2PI)
 		return;
@@ -76,6 +89,10 @@ void CDecendo::Update(_float fTimeDelta)
 
 	m_pProjectile_Blur->Get_Component<CTransform>()->Translation(m_vRotateUp * 0.2f * sinf(m_fAccTime));
 	m_pProjectile->Get_Component<CTransform>()->Translation(m_vRotateUp * 0.2f * sinf(m_fAccTime));
+
+	if (nullptr != m_pPhysHitBox) {
+		m_pPhysHitBox->Get_Component<CTransform>()->AccumulateMomentum(m_vRotateUp * 0.2f * sinf(m_fAccTime));
+	}
 }
 
 void CDecendo::Late_Update(_float fTimeDelta)
@@ -90,15 +107,17 @@ void CDecendo::Late_Update(_float fTimeDelta)
 
 HRESULT CDecendo::Pre_Setting(CGameObject* pObject)
 {
-	if (pObject == nullptr)
+	if (pObject == nullptr) {
 		return E_FAIL;
+	}
 
 	/* 부모 할당 */
 	m_pOwner = pObject;
 
 	/* 피직스 생성*/
-	if (FAILED(Ready_Child()))
+	if (FAILED(Ready_Child())) {
 		return E_FAIL;
+	}
 
 	/* 초기 셋팅 초기화 */
 	Reset_EffectParts();
@@ -107,7 +126,7 @@ HRESULT CDecendo::Pre_Setting(CGameObject* pObject)
 	m_fPreAccTime = 0.f;
 
 
-	CPartObject* pCircle0 = m_PartObjects.begin()->second;
+	CPartObject* pCircle0 = Get_PartObject<CEffectParts>();
 
 	/* 초기 객체 위치 초기화 */
 	pCircle0->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
@@ -118,7 +137,7 @@ HRESULT CDecendo::Pre_Setting(CGameObject* pObject)
 	pCircle0->Set_Visible(true);
 	m_pProjectile->Set_Visible(true);
 	m_pProjectile_Blur->Set_Visible(true);
-	
+
 	/*트레일 초기화 */
 	Get_PartObject<CTrailObject>()->Set_Visible(true);
 	Get_PartObject<CTrailObject>()->Get_Component<CTrail>()->Reset_Trail();
@@ -132,7 +151,6 @@ HRESULT CDecendo::Pre_Setting(CGameObject* pObject)
 	_vector vQuaternion = XMQuaternionRotationAxis(m_vOwnerLook, m_pGameInstance->Random_Float(0.f, XM_PIDIV2));
 
 	m_vRotateUp = XMVector3Rotate(vUp, vQuaternion);
-
 	m_vRotateUp = XMVector3Normalize(m_vRotateUp);
 
 	m_bVisible = true;
@@ -157,24 +175,19 @@ HRESULT CDecendo::Ready_Child()
 
 	XMStoreFloat3(&Desc.vPos, m_pOwner->Get_WorldPostion() + XMVectorSet(0.f, 0.f, 1.f, 0.f));
 
-	_vector vOwnerLook = m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK);
-
-	_float3 vDir = {};
-
-	XMStoreFloat3(&Desc.vPos, m_pOwner->Get_WorldPostion() + XMVectorSet(0.f, 0.f, 1.f, 0.f));
-
-	XMStoreFloat3(&vDir , vOwnerLook * 0.5f);
 
 	Desc.vRotRPY = { 0.f, 0.f, 0.f };
+
 	Desc.iSubKind = 70;
-	Desc.vDeltaPos = vDir ;
+	Desc.vDeltaPos = _float3(0.f, 0.f, 0.f);
 	Desc.vLifeTime = { 0.f, 1.f };
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPhysXEffectHitBox>(g_iStaticLevel, CURRENT_LEVEL, LAYER_HITBOX, &Desc, this , &m_pPhysHitBox))) {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPhysXEffectHitBox>(g_iStaticLevel, CURRENT_LEVEL, LAYER_HITBOX, &Desc, this, &m_pPhysHitBox))) {
 		assert(false);
 		return E_FAIL;
 	}
 
+	SAFE_ADDREF(m_pPhysHitBox);
 	return S_OK;
 }
 
@@ -205,10 +218,10 @@ CGameObject* CDecendo::Clone(void* pArg, CGameObject* pOwner)
 	return pInstance;
 }
 
-void CDecendo::OnCollision(CGameObject* pOther , void* pDesc)
+void CDecendo::OnCollision(CGameObject* pOther, void* pDesc)
 {
 	//CTransform* pOtherTransform = p
-	ON_COLLISION_INFO*	CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
+	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
 
 	for (auto& pPair : m_PartObjects)
@@ -229,28 +242,29 @@ void CDecendo::OnCollision(CGameObject* pOther , void* pDesc)
 	Get_PartObject<CEffectParts>("Decendo_Down")->Get_Component<CTransform>()->LookAt(vPlayerPos);
 	Get_PartObject<CEffectParts>("Decendo_Smoke")->Get_Component<CTransform>()->LookAt(vPlayerPos);
 
-	m_PartObjects.begin()->second->Set_Visible(false);
+	Get_PartObject<CEffectParts>()->Set_Visible(false);
 
 	Get_PartObject<CTrailObject>()->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
 	Get_PartObject<CTrailObject>()->Set_Visible(false);
 
+
 	m_pPhysHitBox->Set_Dead();
+	SAFE_RELEASE(m_pPhysHitBox);
 }
 
 void CDecendo::Free()
 {
 	__super::Free();
 
-	//if(m_pPhysHitBox != nullptr)
-	//	if (m_pPhysHitBox->Get_Depth() == false)
-	//		SAFE_RELEASE(m_pPhysHitBox);
+	if (m_pPhysHitBox != nullptr){
+		SAFE_RELEASE(m_pPhysHitBox);
+	}
 
 	SAFE_RELEASE(m_pProjectile_Blur);
 	SAFE_RELEASE(m_pProjectile);
 
 }
 #ifdef _DEBUG
-
 void CDecendo::Describe_Entity()
 {
 	GUI::Begin("VALUE");
@@ -263,6 +277,7 @@ void CDecendo::Describe_Entity()
 
 	GUI::End();
 }
+
 #endif // _DEBUG
 
 

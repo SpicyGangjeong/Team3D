@@ -38,10 +38,13 @@ public:
 private:
 	CShader*				m_pShaderCom = { nullptr };
 	CVIBuffer_Terrain*		m_pVIBufferCom = { nullptr };
+	CRigidBody_Static*		m_pRigidBody = { nullptr };
 	CTexture*				m_pDiffuseTextureCom = { nullptr };
 	CTexture*				m_pNormalTextureCom = { nullptr };
 	CTexture*				m_pMROTextureCom = { nullptr };
 	CTexture*				m_pAlphaMapTextureCom = { nullptr };
+
+	_float3					m_vDRN = { (1.f / 16.f), (1.f / 16.f), (1.f / 16.f) };
 
 	_float					m_fUsingSurfaceParams = {};
 	_float3					m_vPickingPosition = {};

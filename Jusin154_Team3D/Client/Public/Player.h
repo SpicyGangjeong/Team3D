@@ -20,8 +20,8 @@ public:
 #ifdef _DEBUG
 	void Render_CameraCoordinateSystem();
 #endif // _DEBUG
-	_bool Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
-
+	_bool   Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
+	_matrix Get_WandPos();
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
 	class CMonster* m_pLockOnMonster = { nullptr };
@@ -42,6 +42,9 @@ private:
 	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
 	class	CCallBack_Playable_Behavior* m_pCallBack_Behavior = { nullptr };
 	class	CCallBack_Playable_HitReport* m_pCallBack_HitReport = { nullptr };
+
+	class CModel* m_pBroomModel = { nullptr };
+	class CTransform* m_pBroomTransform = { nullptr };
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -49,6 +52,7 @@ private:
 	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
 	void ReLockOnTarget();
+	void SetGravity();
 
 	void Update_CameraCoordinateSystem();
 #ifdef _DEBUG
@@ -71,12 +75,10 @@ public:
 public:
 	virtual void Reset_Sprint() { m_bSprintToggle = false; }
 	virtual void Reset_Walk() { m_bWalkToggle = false; }
-	template<typename T>
-	void Spawn_Effect();
+
+
 
 private:
-
-
 	void TestKeyInput(_float fTimeDelta);
 	virtual void Add_FSM();
 	virtual void Set_Anim();
@@ -89,6 +91,7 @@ private:
 	HRESULT InputMove();
 	HRESULT InputKeyUpMove();
 	HRESULT InputSpell();
+	HRESULT InputAim();
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck(_float fTimeDelta);
@@ -113,6 +116,17 @@ private:
 	void	Behavior_CombatEnter();
 	HRESULT Behavior_CombatExitCheck();
 	void	Behavior_CombatExit();
+
+	void	Behavior_HitEnter();
+	HRESULT Behavior_HitExitCheck();
+	void	Behavior_HitExit();
+
+	void	Behavior_Broom_RideEnter();
+	HRESULT Behavior_Broom_RideExitCheck();
+	void	Behavior_Broom_RideExit();
+
+
+	void Player_InterpTurn(_float fTimeDelta);
 
 #pragma endregion
 

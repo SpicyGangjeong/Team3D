@@ -57,6 +57,7 @@ private:
 	_char					m_DummyPath[MAX_PATH];
 	_char					m_FindAnimName[256] = {};
 	string					m_SelectedKey;
+	_int					m_iAnimIndex = {};
 
 	class CPlayer* m_Test = { nullptr };
 public:

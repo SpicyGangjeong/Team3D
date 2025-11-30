@@ -182,13 +182,15 @@ HRESULT CLevel_GamePlay::Ready_Markers()
 
 HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))){
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, strLayerTag,nullptr,nullptr,&m_pBroom)))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, m_pBroom))){
 		return E_FAIL;
 	}
 
 
-	/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
-		return E_FAIL;*/
+
 
 	return S_OK;
 }
@@ -202,7 +204,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_SkyBox(const _wstring& strLayerTag)
 	CDummy_PhysXWall::PHYSXDUMMY_DESC Desc{};
 	Desc.vPos = { 0.f, 0.f, 0.f };
 	Desc.vRotRPY = { 0.f, m_pGameInstance->Random_Float(0.f, XM_2PI), 0.f };
-	Desc.iSubKind = 23;
+	Desc.iSubKind = ENUM_CLASS(PXOBJECT::WALL);
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXWall>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE, &Desc))) {
 		return E_FAIL;
@@ -213,12 +215,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_SkyBox(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 {
-	/*for (_uint i = 0; i < 2; ++i)
+	for (_uint i = 0; i < 2; ++i)
 	{
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER,&i))) {
 			return E_FAIL;
 		}
-	}*/
+	}
 
 
 	return S_OK;

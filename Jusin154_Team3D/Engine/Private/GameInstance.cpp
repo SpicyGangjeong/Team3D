@@ -285,6 +285,7 @@ void CGameInstance::Present_TimeCost() const
 		+ m_fTimer_DrawCall
 		+ m_fTimer_Present;
 
+	GUI::PushItemWidth(80);
 	GUI::Begin("Previous_Frame_Timer");
 	{
 		GUI::ProgressBar(m_fTimer_PriorityUpdate / fTotal, ImVec2(200.f, 0.f));
@@ -650,6 +651,11 @@ PSX::PxMaterial* CGameInstance::Create_Material(_float3* vMatInfo)
 void CGameInstance::RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh)
 {
 	return m_pPhysX_Manager->RegistTriMesh(pName, pPxTriMesh);
+}
+
+void CGameInstance::RegistHeight(const _tchar* pName, PSX::PxHeightFieldDesc& Desc)
+{
+	return m_pPhysX_Manager->RegistHeight(pName, Desc);
 }
 
 PSX::PxRigidDynamic* CGameInstance::Add_DynamicActor(CRigidBody_Dynamic& RigidBody)

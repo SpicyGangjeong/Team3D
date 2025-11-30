@@ -1,11 +1,11 @@
 ﻿#pragma once
 
 #include "Client_Define.h"
-#include "GameObject.h"
+#include "Unit.h"
 
 NS_BEGIN(Client)
 
-class CBroom final : public CGameObject
+class CBroom final : public CUnit
 {
 private:
 	CBroom(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -21,14 +21,8 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	CShader* m_pShaderCom = { nullptr };
-	CModel* m_pModelCom = { nullptr };
-
-	_bool		m_bRimLight = { true };
-	_float		m_fRimLightPower = { 3.2f };
-	_float		m_fRimLightStrength = { 3.04f };
-	_float3		m_vRimLightColor = { 69.f / 255.f, 5.f / 255.f, 10.f / 255.f };
-
+	_bool m_bSprintToggle = { false };
+	_bool m_bWalkToggle = { false };
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
@@ -40,6 +34,31 @@ public:
 #ifdef _DEBUG
 	virtual void Describe_Entity() override;
 #endif // _DEBUG
+
+#pragma region STATE
+	virtual void Add_FSM();
+	virtual void Set_Anim();
+
+	_float m_fAmount = { 1.f };
+	_float m_fInputTime = {};
+	_bool m_bRatio = { false };
+
+	HRESULT InputAction();
+	HRESULT InputMove();
+	HRESULT InputKeyUpMove();
+	HRESULT InputSpell();
+	HRESULT InputAim();
+
+	void	Behavior_IdleEnter();
+	HRESULT Behavior_IdleExitCheck(_float fTimeDelta);
+	void	Behavior_IdleExit();
+
+	void	Behavior_MoveEnter();
+	HRESULT Behavior_MoveExitCheck(_float fTimeDelta);
+	void	Behavior_MoveExit();
+
+#pragma endregion
+
 
 };
 

@@ -113,6 +113,12 @@ _bool CModel::Play_Animation(_float fTimeDelta, CTransform* pTransform)
 	if (m_iCurrentAnimIndex < 0 || m_iCurrentAnimIndex >= (_int)m_iNumAnimations)
 		return false;
 
+	if (m_bLoopRestarted)
+	{
+		m_vPrevRootPos = { 0,0,0 };
+		m_bLoopRestarted = false;
+	}
+
 	ComputeAnimation();
 
 	if (m_iPreAnimIndex >= 0 && m_iPreAnimIndex != m_iCurrentAnimIndex)
@@ -136,20 +142,9 @@ _bool CModel::Play_Animation(_float fTimeDelta, CTransform* pTransform)
 	}
 	else
 	{
-		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, m_vector, m_fAmount);
-	
+		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, m_vector);
 
 		m_iPreAnimIndex = m_iCurrentAnimIndex;
-	}
-
-	if (m_bIsFinishedAnim)
-	{
-		if (m_bIsLoop)
-		{
-			m_vPrevRootPos = { 0.f, 0.f, 0.f };
-		}
-		else
-			XMStoreFloat3(&m_vPrevRootPos, m_vector[2]);
 	}
 
 	if (m_bRatio) {
@@ -162,9 +157,17 @@ _bool CModel::Play_Animation(_float fTimeDelta, CTransform* pTransform)
 
 	if (m_bIsFinishedAnim)
 	{
+		if (m_bIsLoop)
+		{
+			m_bLoopRestarted = true;
+		}
+		else
+			XMStoreFloat3(&m_vPrevRootPos, m_vector[2]);
+
 		m_vPrevRootRot = { 0.f,0.f,0.f,0.f };
 		m_bInitialRootRotSaved = false;
 	}
+
 
 	for (auto& pBone : m_Bones)
 	{
@@ -237,7 +240,7 @@ void CModel::Update_RootBone(_float Amount)
 		if (!m_bInitialRootRotSaved)
 		{
 			m_vInitialRootRot = curRotF4;
-			//m_vPrevRootRot = curRotF4;
+			m_vPrevRootRot = curRotF4;
 			m_bInitialRootRotSaved = true;
 		}
 		else
@@ -280,7 +283,7 @@ void CModel::Initialize_RootBone()
 {
 	for (_uint i = 0; i < (_uint)m_Bones.size(); i++)
 	{
-		if (m_Bones[i]->Compare_Name("Reference"))
+		if (m_Bones[i]->Compare_Name("Reference") || m_Bones[i]->Compare_Name("root"))
 		{
 			m_iRootBoneIndex = i;
 		}
@@ -1025,6 +1028,17 @@ void CModel::ComputeAnimation()
 	m_pLocalPos = static_cast<LOCALPOS_DESC*>(outSubs[0].pData);
 }
 
+void CModel::InItialize_SpineIndex()
+{
+	for (_uint i = 0; i < (_uint)m_Bones.size(); i++)
+	{
+		if (m_Bones[i]->Compare_Name("Spine"))
+		{
+			m_iSpineIndex = i;
+		}
+	}
+}
+
 
 HRESULT CModel::Create_ParentVB()
 {
@@ -1405,10 +1419,6 @@ void CModel::LoadAnim(const _char* fileName)
 
 HRESULT CModel::Initialize(void* pArg)
 {
-	m_pLerpAnim = CLerpAnim::Create((_uint)m_Bones.size(), 1.f, m_Bones);
-	if (nullptr == m_pLerpAnim) {
-		return E_FAIL;
-	}
 	m_pTransform = m_pOwner->Get_Component<CTransform>();
 	SAFE_ADDREF(m_pTransform);
 
@@ -1416,6 +1426,7 @@ HRESULT CModel::Initialize(void* pArg)
 	if (m_eType == MODEL::ANIM)
 	{	
 		Initialize_RootBone();
+		InItialize_SpineIndex();
 		Create_Temp();
 		m_Parent.resize(m_Bones.size());
 		for (size_t i = 0; i < (_uint)m_Bones.size(); i++)

@@ -93,6 +93,17 @@ public:
 
 		_float  fBluringStrength = { 0.01f };
 
+
+
+		_bool   isBloom = {};
+
+		_bool   isBloomDissolve = {};
+		_bool   isBloomReverseDissolve = {};
+
+		_float  fBloomStrength = {};
+
+		BLOOM_TYPE eBloomType = {};
+
 	}EFFECT_INFO;
 
 
@@ -107,9 +118,14 @@ public:
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Blur() override;
+	virtual HRESULT Render_Bloom() override;
 public:
 	HRESULT Load(const _char* pFilePath, LEVEL eLevel);
 
+	void	Set_Dissolve(_bool isDissolve)
+	{
+		m_EffectInfo.isDissolve = isDissolve;
+	}	
 protected:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT Ready_Components(void* pArg) override;

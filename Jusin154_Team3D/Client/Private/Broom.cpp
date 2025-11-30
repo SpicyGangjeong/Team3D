@@ -4,12 +4,12 @@
 #include "GameInstance.h"
 
 CBroom::CBroom(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+	: CUnit(pDevice, pContext)
 {
 }
 
 CBroom::CBroom(const CBroom& Prototype)
-	: CGameObject(Prototype)
+	: CUnit(Prototype)
 {
 }
 
@@ -20,14 +20,28 @@ HRESULT CBroom::Initialize_Prototype()
 
 HRESULT CBroom::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
+	if (FAILED(__super::Initialize(pArg))) {
 		return E_FAIL;
+	}
 
 
-	if (FAILED(Ready_Components()))
+	if (FAILED(Ready_Components())) {
 		return E_FAIL;
+	}
 
-	m_pModelCom->Set_AnimationIndex(5);
+	Add_FSM();
+
+	Set_Anim();
+
+	{
+		CFSM::FSM_DESC FSMDesc{};
+		FSMDesc.pStates = &m_States;
+		FSMDesc.pStateMask = &m_iStateMask;
+
+		m_pFSM->Bind_States(FSMDesc);
+		m_pFSM->Change_State(FSMSTATE::IDLE);
+	}
+
 
 	return S_OK;
 }
@@ -38,12 +52,14 @@ void CBroom::Priority_Update(_float fTimeDelta)
 
 void CBroom::Update(_float fTimeDelta)
 {
+	m_pFSM->Update_State(fTimeDelta);
+
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 }
 
 void CBroom::Late_Update(_float fTimeDelta)
 {
-	m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
+	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 }
 
 HRESULT CBroom::Render()
@@ -91,13 +107,16 @@ HRESULT CBroom::Ready_Components()
 
 	/* Com_Model */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_Broom_Model"),
-		reinterpret_cast<CComponent**>(&m_pModelCom))))
+		reinterpret_cast<CComponent**>(&m_pModelCom)))) {
 		return E_FAIL;
+	}
 
 	/* Com_Shader */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_ANIMMESH,
-		reinterpret_cast<CComponent**>(&m_pShaderCom))))
+		reinterpret_cast<CComponent**>(&m_pShaderCom)))) {
 		return E_FAIL;
+	}
+
 
 	return S_OK;
 }
@@ -151,11 +170,6 @@ CGameObject* CBroom::Clone(void* pArg, CGameObject* pOwner)
 void CBroom::Free()
 {
 	__super::Free();
-
-	SAFE_RELEASE(m_pShaderCom);
-	SAFE_RELEASE(m_pModelCom);
-
-
 }
 #ifdef _DEBUG
 
