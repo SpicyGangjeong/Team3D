@@ -55,12 +55,13 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Ready_Parts())) {
 		return E_FAIL;
 	}
-#ifdef _DEBUG
+
 	Load_KeyFrame();
-#endif // _DEBUG
 
 	m_pBroomModel = static_cast<CGameObject*>(pArg)->Get_Component<CModel>();
+	SAFE_ADDREF(m_pBroomModel);
 	m_pBroomTransform = static_cast<CGameObject*>(pArg)->Get_Component<CTransform>();
+	SAFE_ADDREF(m_pBroomTransform);
 
 	Add_FSM();
 
@@ -115,8 +116,9 @@ void CPlayer::Update(_float fTimeDelta)
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
+	Play_Event();
 
-	__super::Update(fTimeDelta);
+__super::Update(fTimeDelta);
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
@@ -386,6 +388,34 @@ _matrix CPlayer::Get_WandPos()
 	return BoneMatrix;
 }
 
+void CPlayer::Play_Event()
+{
+	for (auto iter = m_PendingEvents.begin(); iter != m_PendingEvents.end(); )
+	{
+		_float ratio = m_pModelCom->Get_CurrentTrackProgressRatio();
+		_uint curAnim = m_pModelCom->Get_AnimIndex();
+
+		if (curAnim == iter->AnimIndex && ratio >= iter->fRatio)
+		{
+			iter->Callback();
+			iter = m_PendingEvents.erase(iter);
+		}
+		else
+		{
+			++iter;
+		}
+	}
+}
+
+void CPlayer::Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio)
+{
+	PendingEvent Desc;
+	Desc.AnimIndex = AnimIndex;
+	Desc.fRatio = fRatio;
+	Desc.Callback = Callback;
+	m_PendingEvents.push_back(Desc);
+}
+
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CPlayer* pInstance = new CPlayer(pDevice, pContext);
@@ -435,6 +465,8 @@ void CPlayer::Free()
 	SAFE_RELEASE(m_pCamPosition_TopDown_LookPart);
 	SAFE_RELEASE(m_pCamPosition_ShoulderPart);
 	SAFE_RELEASE(m_pEffectPool);
+	SAFE_RELEASE(m_pBroomModel);
+	SAFE_RELEASE(m_pBroomTransform);
 }
 #ifdef _DEBUG
 
@@ -470,6 +502,8 @@ void CPlayer::Describe_Entity()
 
 	string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
 	GUI::Text(AnimList.c_str());
+
+	GUI::Text("AnimTrack %.2f", m_pModelCom->Get_CurrentTrackPosition());
 
 	GUI::Checkbox("Render", &m_bVisible);
 
