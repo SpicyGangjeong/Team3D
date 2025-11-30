@@ -33,7 +33,6 @@ private:
 	_float3 m_vCameraLookDir = { 0.f, 0.f, 1.f, };
 	_float3 m_vCameraRightDir = { 1.f, 0.f, 0.f };
 
-
 	class CCamPosition_Socket* m_pCamPosition_TopDown_LookPart = { nullptr };
 	class CCamPosition_Arm* m_pCamPosition_TopDown_FollowPart = { nullptr };
 	class CCamPosition_Shoulder* m_pCamPosition_ShoulderPart = { nullptr };

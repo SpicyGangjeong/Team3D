@@ -64,6 +64,7 @@ _int					Get_BoneIndex(const _char* pBoneName) const;
 _matrix					Get_BoneMatrix(_uint iBoneIndex);
 void					Combined_BoneMatrix();
 
+
 #pragma endregion
 #pragma region Material
 		HRESULT Bind_Material(_uint iMeshIndex, class CShader* pShader);
