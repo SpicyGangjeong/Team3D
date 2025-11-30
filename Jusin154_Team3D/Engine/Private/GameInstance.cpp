@@ -428,7 +428,7 @@ void CGameInstance::Clear_Objects_With_Layers(_uint iLevelIndex)
 }
 
 HRESULT CGameInstance::Add_RenderGroup(RENDER eRenderGroup, CGameObject* pRenderObject)
-{
+{	
 	return m_pRenderer->Add_RenderGroup(eRenderGroup, pRenderObject);
 }
 

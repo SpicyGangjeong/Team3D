@@ -53,8 +53,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MSG msg;
 
     pMainApp = CMainApp::Create();
-    if (nullptr == pMainApp)
+    if (nullptr == pMainApp){
         return FALSE;
+    }
 
     CGameInstance* pGameInstance = CGameInstance::GetInstance();
     SAFE_ADDREF(pGameInstance);
@@ -94,8 +95,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     {
         if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
         {
-            if (WM_QUIT == msg.message)
+            if (WM_QUIT == msg.message){
                 break;
+            }
             if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
             {
                 TranslateMessage(&msg);

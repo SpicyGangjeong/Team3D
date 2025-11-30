@@ -55,8 +55,10 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Ready_Parts())) {
 		return E_FAIL;
 	}
-
+#ifdef _DEBUG
 	Load_KeyFrame();
+#endif // _DEBUG
+
 
 	m_pBroomModel = static_cast<CGameObject*>(pArg)->Get_Component<CModel>();
 	SAFE_ADDREF(m_pBroomModel);
@@ -138,7 +140,7 @@ void CPlayer::Late_Update(_float fTimeDelta)
 	__super::Late_Update(fTimeDelta);
 
 	if (nullptr != m_pLockOnMonster && false == m_pLockOnMonster->isDead()) {
-		m_pLockOnMonster->Set_DrawOutLine();
+		static_cast<CMonster*>(m_pLockOnMonster)->Set_DrawOutLine();
 	}
 }
 
@@ -188,7 +190,7 @@ void CPlayer::Render_CameraCoordinateSystem()
 	const _float fArrowLength = 2.0f;
 	_vector xmvLook = XMVector4Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
 	_float2 vLook = { XMVectorGetX(xmvLook), XMVectorGetZ(xmvLook) };
-
+	GUI::Begin("Player_CAM_COOORD");
 	GUI::Text("%d", m_pLockOnMonster);
 
 	GUI::Text("W : %.2f, %.2f, %.2f", m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z);
@@ -206,6 +208,7 @@ void CPlayer::Render_CameraCoordinateSystem()
 	GUI::Button("##6", { fButtonSize, fButtonSize }); GUI::SameLine();
 	GUI::Button(("S : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { -m_vCameraLookDir.x , -m_vCameraLookDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
 	GUI::Button("##8", { fButtonSize, fButtonSize });
+	GUI::End();
 	//W CMyTools::Get_Direction2D(vLook, { m_vCameraLookDir.x ,		m_vCameraLookDir.z })
 	//A CMyTools::Get_Direction2D(vLook, { -m_vCameraRightDir.x , -	m_vCameraRightDir.z })
 	//S CMyTools::Get_Direction2D(vLook, { m_vCameraRightDir.x ,	m_vCameraRightDir.z })
@@ -333,7 +336,7 @@ HRESULT CPlayer::Bind_ShaderResources()
 }
 void CPlayer::ReLockOnTarget()
 {
-	m_pLockOnMonster = m_pInfoInstance->Get_LockOnMonster();
+	m_pLockOnMonster = m_pInfoInstance->Get_LockOnUnit();
 	if (nullptr != m_pLockOnMonster) {
 		if (true == m_pLockOnMonster->isDead()) {
 			m_pLockOnMonster = nullptr;

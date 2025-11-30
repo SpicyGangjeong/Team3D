@@ -32,7 +32,7 @@ public:
 	_matrix Get_WandPos();
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
-	class CMonster* m_pLockOnMonster = { nullptr };
+	CUnit* m_pLockOnMonster = { nullptr };
 	_float m_fDirectionRadian = 0.f;
 
 	_bool m_bSprintToggle = { false };
@@ -40,7 +40,6 @@ private:
 
 	_float3 m_vCameraLookDir = { 0.f, 0.f, 1.f, };
 	_float3 m_vCameraRightDir = { 1.f, 0.f, 0.f };
-
 
 	class CCamPosition_Socket* m_pCamPosition_TopDown_LookPart = { nullptr };
 	class CCamPosition_Arm* m_pCamPosition_TopDown_FollowPart = { nullptr };

@@ -173,7 +173,9 @@ HRESULT CInstance_Model::Ready_Meshes(MODEL eType, const aiScene* pAIScene, _fma
 #ifdef EDITOR_PROJECT
 _bool CInstance_Model::SaveAssimpModel(const _char* filename , const aiScene* pAIScene)
 {
-	if (!pAIScene) return false;
+	if (!pAIScene) {
+		return false;
+	}
 
 	_char szModel[MAX_PATH] = {};
 	_char szExt[MAX_PATH] = {};
@@ -267,7 +269,9 @@ _bool CInstance_Model::SaveAssimpModel(const _char* filename , const aiScene* pA
 
 	FILE* fp = nullptr;
 	fopen_s(&fp, savePath.c_str(), "wb");
-	if (!fp) return false;
+	if (!fp) {
+		return false;
+	}
 
 	fwrite(&modelData.MeshCount, sizeof(_uint), 1, fp);
 
@@ -349,7 +353,9 @@ bool CInstance_Model::LoadData(const _char* filename)
 {
 	FILE* fp = nullptr;
 	fopen_s(&fp, filename, "rb");
-	if (!fp) return false;
+	if (!fp) {
+		return false;
+	}
 
 	SaveModel NewModel = {};
 

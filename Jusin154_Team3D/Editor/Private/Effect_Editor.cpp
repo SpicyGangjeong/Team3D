@@ -4,6 +4,8 @@
 #include "GameInstance.h"
 #include "EditEffect.h"
 #include "TrailObject.h"
+#include "EffectPool.h"
+#include "Layer.h"
 
 
 #include <sstream>
@@ -55,6 +57,8 @@ HRESULT CEffect_Editor::Initialize(void* pArg)
 		return E_FAIL;
 
 
+	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
+	SAFE_ADDREF(m_pEffectPool);
 
 	return S_OK;
 }
@@ -521,6 +525,7 @@ void CEffect_Editor::Free()
 
 	SAFE_RELEASE(m_pEditEffect);
 	SAFE_RELEASE(m_pTrailObject);
+	SAFE_RELEASE(m_pEffectPool);
 }
 
 void CEffect_Editor::Describe_Entity()
@@ -769,6 +774,11 @@ void CEffect_Editor::Describe_Entity()
 			m_pTrailObject->Load_Trail(m_strTrailSavePath.c_str(), LEVEL::EFFECT);
 		}
 	}
+
+
+
+
+	m_pEffectPool->Describe_Entity();
 
 	ImGui::End();
 

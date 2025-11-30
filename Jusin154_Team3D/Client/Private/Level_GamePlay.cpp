@@ -63,9 +63,11 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Up(DIK_ADD))
-	{
-		m_pGameInstance->Set_LevelToChange();
+	if (m_pGameInstance->Key_Pressing(DIK_0)) {
+		if (m_pGameInstance->Key_Up(DIK_1))
+		{
+			m_pGameInstance->Set_LevelToChange();
+		}
 	}
 
 	m_pInfoInstance->Update(fTimeDelta);

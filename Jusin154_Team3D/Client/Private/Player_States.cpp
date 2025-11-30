@@ -23,6 +23,7 @@
 
 #include "EffectPool.h"
 
+
 #pragma region States
 
 void CPlayer::TestKeyInput(_float fTimeDelta)
@@ -682,6 +683,8 @@ void CPlayer::Behavior_CombatEnter()
 	if (m_pGameInstance->Key_Down(DIK_R)) {
 		m_pFSM->Enable_State(FSMSTATE::SKILL);
 		pairAnimInfo = m_Animation[STATEANIM::SKILL];
+
+
 	}
 	else if (m_pGameInstance->Key_Down(DIK_Q)) {
 		m_pFSM->Enable_State(FSMSTATE::SKILL2);
@@ -693,9 +696,7 @@ void CPlayer::Behavior_CombatEnter()
 	else if (m_pGameInstance->Mouse_Up(DIM_LBUTTON)) {
 		m_pFSM->Enable_State(FSMSTATE::LIGHT_ATTACK);
 		pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK];
-		Add_Event(pairAnimInfo.first,
-			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::JAP, this);},
-			0.1f);
+		Add_Event(pairAnimInfo.first, [this]() { m_pEffectPool->Use_Skill(SKILL_TYPE::JAP, Get_PartObject<CWand>());  }, 0.1f);
 	}
 	else if (SUCCEEDED(InputSpell())) {
 		m_pFSM->Enable_State(FSMSTATE::SPELL);
@@ -706,6 +707,7 @@ void CPlayer::Behavior_CombatEnter()
 			case STATEANIM::DEPULSO:
 				pairAnimInfo = m_Animation[STATEANIM::DEPULSO];
 				m_eSpell = STATEANIM::END;
+
 				break;
 			case STATEANIM::DIFFINDO:
 				pairAnimInfo = m_Animation[STATEANIM::DIFFINDO];
@@ -1064,8 +1066,12 @@ void CPlayer::Player_InterpTurn(_float fTimeDelta)
 
 	_float angleDiff = degree - targetAngle;
 
-	if (angleDiff > 180.f)  angleDiff -= 360.f;
-	if (angleDiff < -180.f) angleDiff += 360.f;
+	if (angleDiff > 180.f) {
+		angleDiff -= 360.f;
+	}
+	if (angleDiff < -180.f) {
+		angleDiff += 360.f;
+	}
 
 	_float Offset = 2.f;
 

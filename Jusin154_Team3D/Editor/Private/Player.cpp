@@ -240,9 +240,9 @@ _matrix CPlayer::Get_WandPos()
 	if (pWand == nullptr)
 		return _matrix();
 
-	_matrix BoneMatrix = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("root"));
+	_matrix BoneMatrix = XMLoadFloat4x4(pWand->Get_BoneMatrixPtr("root"));
 
-	BoneMatrix = BoneMatrix * m_pTransformCom->Get_XMWorldMatrix();
+	BoneMatrix = BoneMatrix * Get_PartObject<CWand>()->Get_Component<CTransform>()->Get_XMWorldMatrix();
 
 	_float3 vOffset = _float3(0.f, -0.27f, -0.32f);
 

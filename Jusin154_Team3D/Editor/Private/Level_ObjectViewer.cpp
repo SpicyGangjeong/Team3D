@@ -96,7 +96,9 @@ void CLevel_ObjectViewer::Add_Parts()
 			_bool bDisabled = {};
 			if (m_HumanRoot)
 				bDisabled = (m_HumanRoot->Get_MainModel());
-			if (!bDisabled) GUI::BeginDisabled();
+			if (!bDisabled) {
+				GUI::BeginDisabled();
+			}
 			if (GUI::BeginTabItem("Head"))
 			{
 				Category_PartsModelList("Human/Head/Male", "Head");
@@ -113,7 +115,9 @@ void CLevel_ObjectViewer::Add_Parts()
 
 				GUI::EndTabItem();
 			}
-			if (!bDisabled) GUI::EndDisabled();
+			if (!bDisabled) {
+				GUI::EndDisabled();
+			}
 			GUI::EndTabBar();
 		}
 		GUI::EndTabItem();
@@ -133,7 +137,9 @@ void CLevel_ObjectViewer::Add_Parts()
 			_bool bDisabled = {};
 			if (m_HumanRoot)
 				bDisabled = (m_HumanRoot->Get_MainModel());
-			if (!bDisabled) GUI::BeginDisabled();
+			if (!bDisabled) {
+				GUI::BeginDisabled();
+			}
 			if (GUI::BeginTabItem("Head"))
 			{
 				Category_PartsModelList("Human/Head/FeMale", "Head");
@@ -150,7 +156,9 @@ void CLevel_ObjectViewer::Add_Parts()
 
 				GUI::EndTabItem();
 			}
-			if (!bDisabled) GUI::EndDisabled();
+			if (!bDisabled) {
+				GUI::EndDisabled();
+			}
 			GUI::EndTabBar();
 		}
 		GUI::EndTabItem();
@@ -528,7 +536,9 @@ void CLevel_ObjectViewer::Parts_Object_Setting()
 
 					FILE* fp = nullptr;
 					fopen_s(&fp, "../Bin/Resources/Models/Human/KeyFrame.bin", "wb");
-					if (!fp) return;
+					if (!fp) {
+						return;
+					}
 
 					_uint KeyFrameSize = (_uint)m_KeyFrames.size();
 
@@ -609,8 +619,9 @@ void CLevel_ObjectViewer::Load_KeyFrame(const _char* Name)
 	}
 
 	fopen_s(&fp, Path.c_str(), "rb");
-	if (!fp) return;
-
+	if (!fp) {
+		return;
+	}
 	_uint KeyFrameSize = 0;
 	fread(&KeyFrameSize, sizeof(_uint), 1, fp);
 
@@ -682,7 +693,9 @@ void CLevel_ObjectViewer::Save_KeyFrame()
 
 	FILE* fp = nullptr;
 	fopen_s(&fp, Path.c_str(), "wb");
-	if (!fp) return;
+	if (!fp) {
+		return;
+	}
 
 	_uint KeyFrameSize = (_uint)m_KeyFrames.size();
 
