@@ -219,6 +219,10 @@ HRESULT CMagic_Item::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+	if (FAILED(m_pDiffuse_TextureCom6->Bind_ShaderResource(m_pShaderCom, "g_MaskingTexture", 0)))
+	{
+		return E_FAIL;
+	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float))))
 	{
 		return E_FAIL;
@@ -316,6 +320,10 @@ HRESULT CMagic_Item::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_tillingSmokes"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom6), nullptr)))
+	{
+		return E_FAIL;
+	}
 	if (FAILED(Add_Asset_Component(g_iStaticLevel, FX_UIEDITOR, (CComponent**)&m_pShaderCom, nullptr)))
 	{
 		return E_FAIL;
@@ -360,6 +368,7 @@ void CMagic_Item::Free()
 	SAFE_RELEASE(m_pDiffuse_TextureCom3);
 	SAFE_RELEASE(m_pDiffuse_TextureCom4);
 	SAFE_RELEASE(m_pDiffuse_TextureCom5);
+	SAFE_RELEASE(m_pDiffuse_TextureCom6);
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }

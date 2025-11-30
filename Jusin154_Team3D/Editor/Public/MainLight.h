@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Editor_Define.h"
 #include "GameObject.h"
@@ -11,6 +11,8 @@ NS_BEGIN(Editor)
 
 class CMainLight final : public CGameObject
 {
+public:
+	enum class DAY_PHASE { DAWN, DAY, DUSK, NIGHT, END };
 
 private:
 	CMainLight(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -26,7 +28,19 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	CLight* m_pLightCom = { nullptr };
+	CLight*				m_pLightCom = { nullptr };
+	class CGameTime*	m_pGameTime = { nullptr };
+	_float4				m_vCurDiffuse = {};
+	_float4				m_vAmbient = {};
+	_float4				m_vSpecular = {};
+
+	DAY_PHASE			m_eCurPhase = { DAY_PHASE::END};
+	DAY_PHASE			m_eNextPhase = { DAY_PHASE::END };
+
+	_float4				m_Diffuse_Colors[ENUM_CLASS(DAY_PHASE::END)] = {};
+	_float4				m_Ambient_Colors[ENUM_CLASS(DAY_PHASE::END)] = {};
+	_float4				m_Specular_Colors[ENUM_CLASS(DAY_PHASE::END)] = {};
+
 
 private:
 	HRESULT Ready_Components();
