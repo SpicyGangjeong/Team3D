@@ -991,8 +991,12 @@ void CPlayer::Player_InterpTurn(_float fTimeDelta)
 
 	_float angleDiff = degree - targetAngle;
 
-	if (angleDiff > 180.f)  angleDiff -= 360.f;
-	if (angleDiff < -180.f) angleDiff += 360.f;
+	if (angleDiff > 180.f) {
+		angleDiff -= 360.f;
+	}
+	if (angleDiff < -180.f) {
+		angleDiff += 360.f;
+	}
 
 	_float Offset = 2.f;
 

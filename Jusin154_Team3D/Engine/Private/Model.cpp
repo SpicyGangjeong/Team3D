@@ -125,7 +125,9 @@ _bool CModel::Play_Animation(_float fTimeDelta, CTransform* pTransform)
 	{
 		m_fBlendTime += fTimeDelta;
 		m_fRatio = (m_fBlendTime / m_fBlendDuration);
-		if (m_fRatio > 1.f) m_fRatio = 1.f;
+		if (m_fRatio > 1.f) {
+			m_fRatio = 1.f;
+		}
 
 		CAnimation* pCurAnim = m_Animations[m_iCurrentAnimIndex];
 		CAnimation* pPreAnim = m_Animations[m_iPreAnimIndex];
@@ -568,7 +570,9 @@ HRESULT CModel::Ready_Bones(const aiNode* pAINode, _int iParentIndex)
 }
 _bool CModel::SaveAssimpModel(const _char* filename)
 {
-	if (!m_pAIScene) return false;
+	if (!m_pAIScene) {
+		return false;
+	}
 
 	_char szModel[MAX_PATH] = {};
 	_char szExt[MAX_PATH] = {};
@@ -743,7 +747,9 @@ _bool CModel::SaveAssimpModel(const _char* filename)
 
 	FILE* fp = nullptr;
 	fopen_s(&fp, savePath.c_str(), "wb");
-	if (!fp) return false;
+	if (!fp) {
+		return false;
+	}
 
 	fwrite(&modelData.MeshCount, sizeof(_uint), 1, fp);
 	fwrite(&modelData.MaterialCount, sizeof(_uint), 1, fp);
@@ -1182,7 +1188,9 @@ _bool CModel::LoadData(const _char* filename)
 {
 	FILE* fp = nullptr;
 	fopen_s(&fp, filename, "rb");
-	if (!fp) return false;
+	if (!fp) {
+		return false;
+	}
 
 	SaveModel NewModel = {};
 
@@ -1319,7 +1327,9 @@ void CModel::LoadAnim(const _char* fileName)
 {
 	FILE* fp = nullptr;
 	fopen_s(&fp, fileName, "rb");
-	if (!fp) return;
+	if (!fp) {
+		return;
+	}
 
 	_uint MeshCount, MaterialCount, AnimationCount, NodeCount;
 
@@ -1485,8 +1495,9 @@ HRESULT CModel::Ready_Bones(const std::vector<SaveNode>& allNodes, _int currentI
 
 	CBone* pBone = CBone::Create(saveNode, parentIndex);
 
-	if (!pBone) return E_FAIL;
-
+	if (!pBone) {
+		return E_FAIL;
+	}
 	m_Bones.push_back(pBone);
 
 	_int myIndex = _int(m_Bones.size() - 1);

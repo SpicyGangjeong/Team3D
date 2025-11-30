@@ -24,7 +24,7 @@ public:
 	_matrix Get_WandPos();
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
-	class CMonster* m_pLockOnMonster = { nullptr };
+	CUnit* m_pLockOnMonster = { nullptr };
 	_float m_fDirectionRadian = 0.f;
 
 	_bool m_bSprintToggle = { false };

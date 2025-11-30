@@ -64,8 +64,9 @@ void CBroom::Late_Update(_float fTimeDelta)
 
 HRESULT CBroom::Render()
 {
-	if (!m_pModelCom)
+	if (!m_pModelCom){
 		return S_OK;
+	}
 
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;

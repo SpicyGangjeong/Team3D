@@ -1,6 +1,8 @@
 ﻿#include "pch.h"
 #include "NomalJap.h"
 
+#include "Unit.h"
+#include "InfoInstance.h"
 #include "GameInstance.h"
 #include "EffectParts.h"
 #include "PhysXEffectHitBox.h"
@@ -13,7 +15,8 @@ CNomalJap::CNomalJap(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CNomalJap::CNomalJap(const CNomalJap& rhs)
-	: CEffect_Container(rhs)
+	: CEffect_Container(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 
 }
@@ -72,26 +75,29 @@ void CNomalJap::Update(_float fTimeDelta)
 
 	Update_Event(fTimeDelta);
 
-	m_pProjectile_Side->Get_Component<CTransform>()->Translation(m_vOwnerLook * 1.2f);
-	m_pProjectile->Get_Component<CTransform>()->Translation(m_vOwnerLook * 1.2f);
+	_vector vCameraLook = XMLoadFloat3(&m_vCameraLook);
+
+	m_pProjectile_Side->Get_Component<CTransform>()->Translation(vCameraLook * 1.2f);
+	m_pProjectile->Get_Component<CTransform>()->Translation(vCameraLook * 1.2f);
+
 
 
 	if (nullptr != m_pPhysHitBox) {
-		m_pPhysHitBox->Get_Component<CTransform>()->AccumulateMomentum(m_vOwnerLook * 1.2f);
+		m_pPhysHitBox->Get_Component<CTransform>()->AccumulateMomentum(vCameraLook * 1.2f);
 	}
 
-
-	if (m_fAccTime > XM_2PI)
+	if (m_fAccTime > XM_2PI){
 		return;
+	}
 
-	m_fAccTime += fTimeDelta * 15.f;
+	_vector vRotateUp = XMLoadFloat3(&m_vRotateUp);
+	m_fAccTime += fTimeDelta * 15.f; // ? 15배? 매직 넘버 뭐임 
 
-	m_pProjectile_Side->Get_Component<CTransform>()->Translation(m_vRotateUp * 0.6f * sinf(m_fAccTime));
-	m_pProjectile->Get_Component<CTransform>()->Translation(m_vRotateUp * 0.6f * sinf(m_fAccTime));
-
+	m_pProjectile_Side->Get_Component<CTransform>()->Translation(vRotateUp * 0.6f * sinf(m_fAccTime));
+	m_pProjectile->Get_Component<CTransform>()->Translation(vRotateUp * 0.6f * sinf(m_fAccTime));
 
 	if (nullptr != m_pPhysHitBox) {
-		m_pPhysHitBox->Get_Component<CTransform>()->AccumulateMomentum(m_vRotateUp * 0.6f * sinf(m_fAccTime));
+		m_pPhysHitBox->Get_Component<CTransform>()->AccumulateMomentum(vRotateUp * 0.6f * sinf(m_fAccTime));
 	}
 
 }
@@ -125,7 +131,6 @@ HRESULT CNomalJap::Pre_Setting(CGameObject* pObject)
 	__super::m_fAccTime = 0.f;
 	m_fPreAccTime = 0.f;
 
-
 	/* 초기 객체 위치 초기화 */
 	m_pProjectile->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
 	m_pProjectile_Side->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
@@ -140,14 +145,25 @@ HRESULT CNomalJap::Pre_Setting(CGameObject* pObject)
 	Get_PartObject<CTrailObject>()->Get_Component<CTrail>()->Reset_Trail();
 
 	//나아가는 벡터와 한점을 가져와 수직인 평면상에 하나의 점으로  DIR 을 만듬
-	m_vOwnerLook = XMVector3Normalize(m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK));
+	pair<_float3, _float3> pairCameraLook = m_pInfoInstance->Get_CameraCoordinateSystem();
+	_vector vCameraLook = XMVector3Normalize(XMLoadFloat3(&pairCameraLook.first));
+	XMStoreFloat3(&m_vCameraLook, vCameraLook);
 	_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
 
-	_vector vQuaternion = XMQuaternionRotationAxis(m_vOwnerLook, m_pGameInstance->Random_Float(0.f, XM_PIDIV2));
+	_vector vQuaternion = XMQuaternionRotationAxis(vCameraLook, m_pGameInstance->Random_Float(0.f, XM_PIDIV2));
+	
+	{ /* 대상 위치 지정 */
+		m_pTargetUnit = m_pInfoInstance->Get_LockOnUnit();
+		if (nullptr != m_pTargetUnit) {
+			XMStoreFloat4(&m_vTargetPos, m_pTargetUnit->Get_WorldPostion()); // 타겟이 있다면 타겟 위치로 지정
+		}
+		else {
+			// 타겟이 없다면 현재위치 -> 카메라 룩벡터 * 4초간 예상 이동거리 를 대상으로 지정
+			XMStoreFloat4(&m_vTargetPos, m_pOwner->Get_WorldPostion() + vCameraLook * m_pTransformCom->Get_Speed() * 4.f);
+		}
+	}
 
-	m_vRotateUp = XMVector3Rotate(vUp, vQuaternion);
-
-	m_vRotateUp = XMVector3Normalize(m_vRotateUp);
+	XMStoreFloat3(&m_vRotateUp, XMVector3Normalize(XMVector3Rotate(vUp, vQuaternion)));
 
 	m_bVisible = true;
 
@@ -226,6 +242,7 @@ void CNomalJap::OnCollision(CGameObject* pOther, void* pDesc)
 
 	Get_PartObject<CEffectParts>("JapPT0")->Get_Component<CTransform>()->LookAt(m_pOwner->Get_WorldPostion());
 
+	m_pTargetUnit = nullptr;
 	m_pProjectile_Side->Set_Visible(false);
 	m_pProjectile->Set_Visible(false);
 

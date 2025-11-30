@@ -136,7 +136,7 @@ void CPlayer::Late_Update(_float fTimeDelta)
 	__super::Late_Update(fTimeDelta);
 
 	if (nullptr != m_pLockOnMonster && false == m_pLockOnMonster->isDead()) {
-		m_pLockOnMonster->Set_DrawOutLine();
+		static_cast<CMonster*>(m_pLockOnMonster)->Set_DrawOutLine();
 	}
 }
 
@@ -331,7 +331,7 @@ HRESULT CPlayer::Bind_ShaderResources()
 }
 void CPlayer::ReLockOnTarget()
 {
-	m_pLockOnMonster = m_pInfoInstance->Get_LockOnMonster();
+	m_pLockOnMonster = m_pInfoInstance->Get_LockOnUnit();
 	if (nullptr != m_pLockOnMonster) {
 		if (true == m_pLockOnMonster->isDead()) {
 			m_pLockOnMonster = nullptr;
