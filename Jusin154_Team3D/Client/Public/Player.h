@@ -52,6 +52,7 @@ private:
 	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
 	void ReLockOnTarget();
+	void SetGravity();
 
 	void Update_CameraCoordinateSystem();
 #ifdef _DEBUG

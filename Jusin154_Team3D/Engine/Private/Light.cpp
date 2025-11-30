@@ -57,6 +57,13 @@ HRESULT CLight::Initialize(void* pArg)
 	return S_OK;
 }
 
+void CLight::Set_Color(_float4& vDiffuse, _float4& vAmbient, _float4& vSpecular)
+{
+	memcpy(&m_LightDesc.vDiffuse, &vDiffuse, sizeof(_float4));
+	memcpy(&m_LightDesc.vAmbient, &vAmbient, sizeof(_float4));
+	memcpy(&m_LightDesc.vSpecular, &vSpecular, sizeof(_float4));
+}
+
 HRESULT CLight::Render(CShader* pShader, CVIBuffer* pVIBuffer) const
 {
 	_uint iPassIndex = { 0 };

@@ -26,6 +26,16 @@ void CInfoInstance::Change_Level()
 	m_pMapInfo->Change_Level();
 }
 
+void CInfoInstance::Update_CameraCoordinateSystem(_float3& vLook, _float3& vRight)
+{
+	m_pPlayerInfo->Update_CameraCoordinateSystem(vLook, vRight);
+}
+
+pair<_float3, _float3> CInfoInstance::Get_CameraCoordinateSystem()
+{
+	return m_pPlayerInfo->Get_CameraCoordinateSystem();
+}
+
 #pragma region MONSTER_INFO
 HRESULT CInfoInstance::Regist_PlayerAlly(CUnit* pUnit)
 {

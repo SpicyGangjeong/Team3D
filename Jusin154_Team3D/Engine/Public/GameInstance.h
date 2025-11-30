@@ -153,6 +153,7 @@ public:
 	HRESULT Add_RenderTarget(const _wstring& strRenderTargetKey, _uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixelFormat, const _float4& vClearColor);
 	HRESULT Add_MRT(const _wstring& strMultiRenderTargetKey, const _wstring& strRenderTargetKey);
 	HRESULT Begin_MRT(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV = nullptr);
+	HRESULT Begin_MRT_NonClear(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV = nullptr);
 	HRESULT Begin_MRT_Include_BackBuffer(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV = nullptr);
 	HRESULT Begin_MRT_NO_DepthStencil(const _wstring& strMRTTag);
 	HRESULT End_MRT();
@@ -222,6 +223,14 @@ public:
 	}
 #pragma endregion
 
+#pragma region FOG
+	void	Set_FogDensity(_float fFogDensity);
+	void	Set_FogColor(_float4& vFogColor);
+
+	HRESULT Bind_FogValue(class CShader* pShader);
+#pragma endregion
+
+
 public:
 	void Add_ModelToMap(const _char* filePath, CModel* pModel);
 
@@ -255,7 +264,8 @@ private:
 	class CPhysX_Manager*			m_pPhysX_Manager = { nullptr };
 	class CPicking*					m_pPicking = { nullptr };
 	class CThreadHolder*			m_pThreadHolder = { nullptr };
-	class COcclusionQuery*			m_pOcclusionQuery = { nullptr };
+	class CFog*						m_pFog = { nullptr };
+	
 
 #ifdef _DEBUG
 private:

@@ -28,7 +28,7 @@ HRESULT CMainApp::Initialize()
 	EngineDesc.iWinSizeY = g_iWinSizeY;
 	EngineDesc.iStaticLevel = g_iStaticLevel;
 	EngineDesc.iNumLevels = ENUM_CLASS(LEVEL::END);
-	EngineDesc.iNumCollidableGroup = ENUM_CLASS(COLLIDABLEOBJECT::END);
+	EngineDesc.iNumCollidableGroup = ENUM_CLASS(COLLIDABLEOBJECT_KIND::END);
 
 	//ShowCursor(false);
 

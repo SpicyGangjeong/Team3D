@@ -58,6 +58,11 @@ namespace Editor {
 
 #define LAYER_MAPOBJECTMANAGER		TEXT("Layer_MapObjectManager")
 
+#pragma region TIME
+#define SECONDS_PER_GAME_DAY						30.f
+#pragma endregion
+
+
 #pragma endregion
 #pragma region MACRO_TEXTURE
 

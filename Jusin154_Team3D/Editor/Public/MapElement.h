@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Editor_Define.h"
 #include "GameObject.h"
@@ -42,7 +42,6 @@ protected:
 	_float3		m_vRotation = {};
 	_float3		m_vScale = {};
 #endif // _DEBUG
-
 
 protected:
 	virtual HRESULT Initialize_Prototype() override;
