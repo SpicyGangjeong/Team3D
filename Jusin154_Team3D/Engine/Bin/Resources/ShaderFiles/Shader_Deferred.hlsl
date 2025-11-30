@@ -46,11 +46,16 @@ Texture2D g_BlurWeightTexture;
 Texture2D g_BlurWeightXTexture;
 
 Texture2D g_SurfaceTexture;
+Texture2D g_OriginalTexture;
 
 
 vector g_vLightDiffuse;
 vector g_vLightAmbient;
 vector g_vLightSpecular;
+
+float g_fFogDensity;
+float g_fFogPow;
+vector g_vFogColor;
 
 struct VS_IN
 {
@@ -776,6 +781,31 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_Y(PS_IN In)
     return Out;
 }
 
+PS_OUT_FLT4_SINGLE PS_MAIN_FOG(PS_IN In)
+{
+    PS_OUT_FLT4_SINGLE Out;
+    
+    vector vColor = g_OriginalTexture.Sample(DefaultSampler, In.vTexcoord);
+    vector vDepthDesc = g_DepthTexture.Sample(DefaultSampler, In.vTexcoord);
+    
+    vector vFinalColor;
+    float  fViewZ = vDepthDesc.y * g_fFar;
+    
+    float fRatio;
+    
+    fRatio = clamp(pow(exp(-(g_fFogDensity * fViewZ)), g_fFogPow), 0.f, 1.f);
+    
+    vFinalColor = lerp(g_vFogColor, vColor, max(fRatio, 0.2f));
+    vFinalColor.a = 1.f;
+    
+    if (1.f == vDepthDesc.y)
+        vFinalColor = float4(g_vFogColor);
+        
+    Out.vSingleTarget = vFinalColor;
+    
+    return Out;
+}
+
 
 technique11 DefaultTechnique
 {
@@ -915,5 +945,15 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_POSTCOMBINED();
+    }
+
+    pass FogPass // 14
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_FOG();
     }
 }
