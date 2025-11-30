@@ -53,26 +53,12 @@ void CWand::Priority_Update(_float fTimeDelta)
 
 void CWand::Update(_float fTimeDelta)
 {
-
-	Describe_Entity();
-
-	//_matrix BoneMatrix = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("root"));
-
-	//BoneMatrix = BoneMatrix * m_pTransformCom->Get_XMWorldMatrix();
-
-
-	//BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[0]) * m_vOffset.x;
-	//BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[1]) * m_vOffset.y;
-	//BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[2]) * m_vOffset.z;
-
-	//m_pEffectParts->Get_Component<CTransform>()->Set_WorldMatrix(BoneMatrix);
-
-	//m_pTrail->Trail_Update(BoneMatrix, fTimeDelta);
-
+	m_pModelCom->Combined_BoneMatrix();
 }
 
 void CWand::Late_Update(_float fTimeDelta)
 {
+
 	m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
 }
 

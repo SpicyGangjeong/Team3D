@@ -44,8 +44,8 @@ private:
 	SHADOW_LIGHT_DESC m_PreShadowDesc = {};
 	_float4x4 m_PreShadowMatrices[ENUM_CLASS(D3DTS::END)] = {};
 
-	_bool m_bPostProcessing_BLOOM = { false };
-	_bool m_bDOF_ENV = { false };
+	_bool m_bPostProcessing_BLOOM = { true };
+	_bool m_bDOF_ENV = { true };
 	_int m_iBloomEmbossingPass = { 0 };
 	_float m_fThreshold = { 1.26f };
 	_float m_fDOF_ENV_CutThreshold = { 0.1350f };

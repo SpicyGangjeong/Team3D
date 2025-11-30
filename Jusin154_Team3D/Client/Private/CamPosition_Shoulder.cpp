@@ -88,10 +88,10 @@ void CCamPosition_Shoulder::Priority_Update(_float fTimeDelta)
 
 void CCamPosition_Shoulder::Update(_float fTimeDelta)
 {
-
 	GUI::DragFloat3("Camera Shoulder Position",(_float*)&m_vShoulderPosRatio,0.01f);
 	GUI::DragFloat("Camera Shoulder Length",&m_fCameraFocalLength, 0.01f);
-	if (m_pGameInstance->Key_Up(DIK_O)) {
+	if (m_pGameInstance->Key_Up(DIK_INSERT)) {
+
 		m_pBinded_Camera->Toggle_Priority();
 	}
 	if (FAILED(m_pGameInstance->IsBinded_Camera(CAMERA_SHOULDER))) {

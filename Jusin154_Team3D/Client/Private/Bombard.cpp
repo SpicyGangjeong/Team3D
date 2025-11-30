@@ -57,8 +57,9 @@ void CBombard::Priority_Update(_float fTimeDelta)
 
 void CBombard::Update(_float fTimeDelta)
 {
-	if (m_bVisible == false)
+	if (m_bVisible == false){
 		return;
+	}
 
 	__super::Update(fTimeDelta);
 
@@ -71,8 +72,9 @@ void CBombard::Update(_float fTimeDelta)
 
 void CBombard::Late_Update(_float fTimeDelta)
 {
-	if (m_bVisible == false)
+	if (m_bVisible == false){
 		return;
+	}
 
 	__super::Late_Update(fTimeDelta);
 
@@ -215,9 +217,9 @@ void CBombard::Free()
 {
 	__super::Free();
 
-	if (m_pPhysHitBox != nullptr)
+	if (m_pPhysHitBox != nullptr){
 		SAFE_RELEASE(m_pPhysHitBox);
-
+	}
 	SAFE_RELEASE(m_pLight_Projectile);
 
 }

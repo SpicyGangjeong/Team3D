@@ -24,7 +24,7 @@ public:
 		_float2 vMaskingUVGainAmount = {};
 		_float2 vNoiseUVGainAmount = {};
 
-		_float2 vDiffuseDistortionUVGainAmount = {};
+		_float2 vDistortionTime = {};
 		_float2 vMaskDistortionUVGainAmount = {};
 
 		_float2 vUVCutting = { 1.f ,1.f };

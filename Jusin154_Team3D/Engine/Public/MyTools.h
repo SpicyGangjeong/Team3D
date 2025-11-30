@@ -83,7 +83,9 @@ public:
 	// value로 현재 ratio 가져오기
 	static _float InverseLerp_f1D(_float fA, _float fB, _float fValue)
 	{
-		if (fA == fB) return 0.0f;
+		if (fA == fB) {
+			return 0.0f;
+		}
 		return (fValue - fA) / (fB - fA);
 	}
 	
@@ -116,10 +118,14 @@ public:
 		_vector tv = XMVectorSubtract(vPos, vertexA);
 
 		u = XMVectorGetX(XMVector3Dot(tv, ray_cross_edge2)) * inverseDet;
-		if (u < 0.f || u > 1.f) return false;
+		if (u < 0.f || u > 1.f) {
+			return false;
+		}
 		_vector q = XMVector3Cross(tv, edge1);
 		v = XMVectorGetX(XMVector3Dot(vDir, q)) * inverseDet;
-		if (v < 0.f || u + v > 1.f) return false;
+		if (v < 0.f || u + v > 1.f) {
+			return false;
+		}
 		t = XMVectorGetX(XMVector3Dot(edge2, q)) * inverseDet;
 
 		return t >= 0.f;
@@ -178,7 +184,9 @@ public:
 	// 입력라디안에서 출력라디안까지 로테이션 스피드만큼 돌려주고 보정해서 SrcRadian에 넣어줌
 	inline static void	 RotateRadianTowards(_float& fSrcRadian, const _float& fDstRadian, _float fRotateSpeed) {
 		_float fDiffRadian = fmodf(fSrcRadian - fDstRadian, XM_2PI);
-		if (fDiffRadian < 0) fDiffRadian += XM_2PI;
+		if (fDiffRadian < 0) {
+			fDiffRadian += XM_2PI;
+		}
 
 		if (fDiffRadian < (fRotateSpeed * XM_PI) / 180.f) {
 			fSrcRadian = fDstRadian;

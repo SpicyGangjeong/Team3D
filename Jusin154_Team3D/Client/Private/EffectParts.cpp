@@ -47,10 +47,7 @@ void CEffectParts::Update(_float fTimeDelta)
 	if (m_pInstance_ModelCom == nullptr)
 		return;
 
-	m_pInstance_ModelCom->Drop(fTimeDelta);
 
-	if (m_EffectInfo.isBillboard)
-		m_pGameInstance->BillBoard(m_pTransformCom);
 
 
 }
@@ -63,6 +60,9 @@ void CEffectParts::Late_Update(_float fTimeDelta)
 
 	if (m_pInstance_ModelCom == nullptr)
 		return;
+
+	m_pInstance_ModelCom->Drop(fTimeDelta);
+
 
 	if (m_EffectInfo.isBillboard)
 		m_pGameInstance->BillBoard(m_pTransformCom);

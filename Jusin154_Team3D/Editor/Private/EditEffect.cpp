@@ -46,8 +46,6 @@ void CEditEffect::Update(_float fTimeDelta)
 	if (m_pInstance_ModelCom == nullptr)
 		return;
 
-	m_pInstance_ModelCom->Drop(fTimeDelta);
-
 
 }
 
@@ -59,6 +57,10 @@ void CEditEffect::Late_Update(_float fTimeDelta)
 
 	if (m_pInstance_ModelCom == nullptr)
 		return;
+
+
+	m_pInstance_ModelCom->Drop(fTimeDelta);
+
 
 	if (m_EffectInfo.isBillboard)
 		m_pGameInstance->BillBoard(m_pTransformCom);
@@ -405,9 +407,9 @@ void CEditEffect::Describe_Entity()
 	//여기서 모델, 텍스쳐, 선택할 수 있도록 함
 
 	const char* pLerp[] = { "Linear" , "EaseInQuad", "EaseOutQuad", "EaseInCubic" , "EaseOutCubic" , "EaseInOutSin" , "EaseInBack" , "Expo" , "Circle" };
-	const char* pRenderNames[] = { "PRIORITY" , "SHADOW", "NONBLEND", "DECAL", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" , "UI" };
+	const char* pRenderNames[] = { "PRIORITY" , "SHADOW", "NONBLEND", "DECAL", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" ,"BLOOM" , "UI", "OCCLUSION"};
 	const char* pEffectType[] = { "EFFECT" , "TRAIL" };
-	const char* pShaderPass[] = { "DEFAULT" , "NON_NOMALMAP" , "BLUR" , "WEIGHTBLEND" , "NON_WORLD" , "NON_WORLD_BLUR", "ALPHA_BLEND", "BLOOM"};
+	const char* pShaderPass[] = { "DEFAULT" , "NON_NOMALMAP" , "BLUR" , "WEIGHTBLEND" , "NON_WORLD" , "NON_WORLD_BLUR",  "BLEND", "BLEND_NOWORLD", "BLOOM" ,"BLOOM_NOWORLD" };
 	const char* pBloomType[] = { "NONE" , "BASIC" , "MUILTY"};
 
 	_int iCurrentItem = static_cast<_int>(m_EffectInfo.eRenderOrder);
@@ -735,7 +737,7 @@ void CEditEffect::Describe_Entity()
 
 			GUI::Spacing();
 
-			GUI::DragFloat2("DiffuseDistortionUVGainAmount", (_float*)&m_EffectInfo.vDiffuseDistortionUVGainAmount, 0.01f);
+			GUI::DragFloat2("vDistortionTime", (_float*)&m_EffectInfo.vDistortionTime, 0.01f);
 
 			_int iDiffuseNoiseMoveLerpOption = (_int)m_EffectInfo.iDiffuseDistortionMoveLerpOption;
 

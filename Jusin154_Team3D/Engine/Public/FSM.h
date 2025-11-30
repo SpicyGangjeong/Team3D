@@ -23,7 +23,8 @@ enum ESTATE : _u64Flag
 	POTION                      = 1ULL << 16,
     STOP                        = 1ULL << 17,
 	HIT                         = 1ULL << 18,
-	BROOM_RIDE                  = 1ULL << 19,        
+	BROOM_RIDE                  = 1ULL << 19,
+	MOUNT_B                     = 1ULL << 20,
     END
 };
 NS_END

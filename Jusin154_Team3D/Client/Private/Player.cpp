@@ -59,8 +59,11 @@ HRESULT CPlayer::Initialize(void* pArg)
 	Load_KeyFrame();
 #endif // _DEBUG
 
+
 	m_pBroomModel = static_cast<CGameObject*>(pArg)->Get_Component<CModel>();
+	SAFE_ADDREF(m_pBroomModel);
 	m_pBroomTransform = static_cast<CGameObject*>(pArg)->Get_Component<CTransform>();
+	SAFE_ADDREF(m_pBroomTransform);
 
 	Add_FSM();
 
@@ -115,8 +118,9 @@ void CPlayer::Update(_float fTimeDelta)
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
+	Play_Event();
 
-	__super::Update(fTimeDelta);
+__super::Update(fTimeDelta);
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
@@ -136,7 +140,7 @@ void CPlayer::Late_Update(_float fTimeDelta)
 	__super::Late_Update(fTimeDelta);
 
 	if (nullptr != m_pLockOnMonster && false == m_pLockOnMonster->isDead()) {
-		m_pLockOnMonster->Set_DrawOutLine();
+		static_cast<CMonster*>(m_pLockOnMonster)->Set_DrawOutLine();
 	}
 }
 
@@ -186,7 +190,7 @@ void CPlayer::Render_CameraCoordinateSystem()
 	const _float fArrowLength = 2.0f;
 	_vector xmvLook = XMVector4Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
 	_float2 vLook = { XMVectorGetX(xmvLook), XMVectorGetZ(xmvLook) };
-
+	GUI::Begin("Player_CAM_COOORD");
 	GUI::Text("%d", m_pLockOnMonster);
 
 	GUI::Text("W : %.2f, %.2f, %.2f", m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z);
@@ -204,6 +208,7 @@ void CPlayer::Render_CameraCoordinateSystem()
 	GUI::Button("##6", { fButtonSize, fButtonSize }); GUI::SameLine();
 	GUI::Button(("S : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { -m_vCameraLookDir.x , -m_vCameraLookDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
 	GUI::Button("##8", { fButtonSize, fButtonSize });
+	GUI::End();
 	//W CMyTools::Get_Direction2D(vLook, { m_vCameraLookDir.x ,		m_vCameraLookDir.z })
 	//A CMyTools::Get_Direction2D(vLook, { -m_vCameraRightDir.x , -	m_vCameraRightDir.z })
 	//S CMyTools::Get_Direction2D(vLook, { m_vCameraRightDir.x ,	m_vCameraRightDir.z })
@@ -331,7 +336,7 @@ HRESULT CPlayer::Bind_ShaderResources()
 }
 void CPlayer::ReLockOnTarget()
 {
-	m_pLockOnMonster = m_pInfoInstance->Get_LockOnMonster();
+	m_pLockOnMonster = m_pInfoInstance->Get_LockOnUnit();
 	if (nullptr != m_pLockOnMonster) {
 		if (true == m_pLockOnMonster->isDead()) {
 			m_pLockOnMonster = nullptr;
@@ -386,6 +391,34 @@ _matrix CPlayer::Get_WandPos()
 	return BoneMatrix;
 }
 
+void CPlayer::Play_Event()
+{
+	for (auto iter = m_PendingEvents.begin(); iter != m_PendingEvents.end(); )
+	{
+		_float ratio = m_pModelCom->Get_CurrentTrackProgressRatio();
+		_uint curAnim = m_pModelCom->Get_AnimIndex();
+
+		if (curAnim == iter->AnimIndex && ratio >= iter->fRatio)
+		{
+			iter->Callback();
+			iter = m_PendingEvents.erase(iter);
+		}
+		else
+		{
+			++iter;
+		}
+	}
+}
+
+void CPlayer::Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio)
+{
+	PendingEvent Desc;
+	Desc.AnimIndex = AnimIndex;
+	Desc.fRatio = fRatio;
+	Desc.Callback = Callback;
+	m_PendingEvents.push_back(Desc);
+}
+
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CPlayer* pInstance = new CPlayer(pDevice, pContext);
@@ -435,6 +468,8 @@ void CPlayer::Free()
 	SAFE_RELEASE(m_pCamPosition_TopDown_LookPart);
 	SAFE_RELEASE(m_pCamPosition_ShoulderPart);
 	SAFE_RELEASE(m_pEffectPool);
+	SAFE_RELEASE(m_pBroomModel);
+	SAFE_RELEASE(m_pBroomTransform);
 }
 #ifdef _DEBUG
 
@@ -470,6 +505,8 @@ void CPlayer::Describe_Entity()
 
 	string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
 	GUI::Text(AnimList.c_str());
+
+	GUI::Text("AnimTrack %.2f", m_pModelCom->Get_CurrentTrackPosition());
 
 	GUI::Checkbox("Render", &m_bVisible);
 

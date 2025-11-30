@@ -47,6 +47,7 @@ void CEffectPool::Priority_Update(_float fTimeDelta)
 		{
 			//SAFE_RELEASE(*iter);
 			//iter = m_ActiveEffectList.erase(iter);
+			++iter;
 		}
 		else
 		{
@@ -64,6 +65,7 @@ void CEffectPool::Update(_float fTimeDelta)
 		{
 			//SAFE_RELEASE(*iter);
 			//iter = m_ActiveEffectList.erase(iter);
+			++iter;
 		}
 		else 
 		{
