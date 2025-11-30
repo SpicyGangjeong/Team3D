@@ -47,7 +47,6 @@ void CEditEffect::Update(_float fTimeDelta)
 		return;
 
 
-
 }
 
 void CEditEffect::Late_Update(_float fTimeDelta)
@@ -61,6 +60,7 @@ void CEditEffect::Late_Update(_float fTimeDelta)
 
 
 	m_pInstance_ModelCom->Drop(fTimeDelta);
+
 
 	if (m_EffectInfo.isBillboard)
 		m_pGameInstance->BillBoard(m_pTransformCom);

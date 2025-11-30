@@ -84,9 +84,9 @@ HRESULT CTrail::Initialize(void* pArg)
 			iStartIndex + 3
 		};
 
-		pIndices[iIndex++] = Indicies[0];
 		pIndices[iIndex++] = Indicies[1];
 		pIndices[iIndex++] = Indicies[2];
+		pIndices[iIndex++] = Indicies[0];
 
 		pIndices[iIndex++] = Indicies[1];
 		pIndices[iIndex++] = Indicies[3];
@@ -109,8 +109,16 @@ HRESULT CTrail::Initialize(void* pArg)
 void CTrail::Trail_Update(_float fDeltaTime, _fmatrix WorldMatrix)
 {
 	
-	_vector vLow = XMVector3TransformCoord(XMLoadFloat3(&m_TrailDesc.vLow), WorldMatrix);
-	_vector vHigh = XMVector3TransformCoord(XMLoadFloat3(&m_TrailDesc.vHigh), WorldMatrix);
+
+	_matrix WorldMat = {};
+
+	WorldMat.r[0] = XMVector3Normalize(WorldMatrix.r[0]);
+	WorldMat.r[1] = XMVector3Normalize(WorldMatrix.r[1]);
+	WorldMat.r[2] = XMVector3Normalize(WorldMatrix.r[2]);
+	WorldMat.r[3] = WorldMatrix.r[3];
+
+	_vector vLow = XMVector3TransformCoord(XMLoadFloat3(&m_TrailDesc.vLow), WorldMat);
+	_vector vHigh = XMVector3TransformCoord(XMLoadFloat3(&m_TrailDesc.vHigh), WorldMat);
 
 
 	//한칸씩 밀기
@@ -151,15 +159,18 @@ void CTrail::Trail_Update(_float fDeltaTime, _fmatrix WorldMatrix)
 
 	if (m_isFixedTrail == true)
 	{
-		//만약 고정된 트레일을 켰다면 가장 첫번째 부분을 항상 내 위치로 고정함
+		//만약 고정된 트레일을 켰다면 가장 마지막 부분을 항상 내 위치로 고정함
+		_vector vFixedLow = XMVector3TransformCoord(XMLoadFloat3(&m_TrailDesc.vLow), m_FixedMat);
+		_vector vFixedHigh = XMVector3TransformCoord(XMLoadFloat3(&m_TrailDesc.vHigh), m_FixedMat);
 
-		_vector vLow = XMVector3TransformCoord(XMLoadFloat3(&m_TrailDesc.vLow), m_FixedMat);
-		_vector vHigh = XMVector3TransformCoord(XMLoadFloat3(&m_TrailDesc.vHigh), m_FixedMat);
+		XMStoreFloat3(&m_pVertices[0].vPosition, vFixedLow);
+		XMStoreFloat3(&m_pVertices[1].vPosition, vFixedHigh);
 
-		XMStoreFloat3(&m_pVertices[m_iNumCount - 2].vPosition, vLow);
-		XMStoreFloat3(&m_pVertices[m_iNumCount -1].vPosition, vHigh);
 
+	
 	}
+
+	Describe_Entity();
 
 	//XMStoreFloat3(&m_pVertices[0].vPosition, vLow);
 	//XMStoreFloat3(&m_pVertices[1].vPosition, vHigh);
@@ -175,6 +186,8 @@ void CTrail::Trail_Update(_float fDeltaTime, _fmatrix WorldMatrix)
 		m_pVertices[i].vTexcoord = _float2(u, 0); // Low
 
 		m_pVertices[i + 1].vTexcoord = _float2(u, 1); // High
+
+
 	}
 
 
@@ -184,6 +197,8 @@ void CTrail::Trail_Update(_float fDeltaTime, _fmatrix WorldMatrix)
 	{
 
 		memcpy(VBResource.pData, m_pVertices, sizeof(VTXPOSTEX) * m_iNumVertices);
+
+		VTXPOSTEX* pDebug = static_cast<VTXPOSTEX*>(VBResource.pData);
 		
 		m_pContext->Unmap(m_pVB, 0);
 	}
@@ -225,8 +240,15 @@ HRESULT CTrail::Load_Trail(HANDLE hFile)
 
 void CTrail::Fixed_Trail(_fmatrix WorldMatrix)
 {
+	_matrix WorldMat = {};
+
+	WorldMat.r[0] = XMVector3Normalize(WorldMatrix.r[0]);
+	WorldMat.r[1] = XMVector3Normalize(WorldMatrix.r[1]);
+	WorldMat.r[2] = XMVector3Normalize(WorldMatrix.r[2]);
+	WorldMat.r[3] = WorldMatrix.r[3];
+
 	m_isFixedTrail = true;
-	m_FixedMat = WorldMatrix;
+	m_FixedMat = WorldMat;
 }
 
 
@@ -278,8 +300,13 @@ void CTrail::Free()
 void CTrail::Describe_Entity()
 {
 
-	GUI::InputFloat3("Low", (_float*)&m_TrailDesc.vLow);
-	GUI::InputFloat3("High", (_float*)&m_TrailDesc.vHigh);
+	GUI::Begin("TRAIL");
+
+	
+	GUI::InputFloat3("FIRST", (_float*)&m_pVertices[0]);
+	GUI::InputFloat3("SECOND", (_float*)&m_pVertices[1]);
+
+	GUI::End();
 	
 }
 

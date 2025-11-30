@@ -537,13 +537,13 @@ void CRenderer::Render_Bloom()
 			}
 
 		//if (true == m_bPostProcessing_BLOOM) {
-		//	//{ // BackBuffer 
-		//	//	ID3D11Texture2D* pBackBuffer = nullptr;
-		//	//	m_pGameInstance->Get_BackBufferPTR(&pBackBuffer);
-		//	//	//m_pGameInstance->Copy_RenderTarget(TEXT("Target_Diffuse"), pBackBuffer);
-		//	//	m_pGameInstance->Paste_RenderTarget(TEXT("Target_Bloom_Input"), pBackBuffer);
-		//	//	SAFE_RELEASE(pBackBuffer);
-		//	//
+		//	{ // BackBuffer 
+		//		ID3D11Texture2D* pBackBuffer = nullptr;
+		//		m_pGameInstance->Get_BackBufferPTR(&pBackBuffer);
+		//		//m_pGameInstance->Copy_RenderTarget(TEXT("Target_Diffuse"), pBackBuffer);
+		//		m_pGameInstance->Paste_RenderTarget(TEXT("Target_Bloom_Input"), pBackBuffer);
+		//		SAFE_RELEASE(pBackBuffer);
+		//	
 		//}
 
 

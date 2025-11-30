@@ -49,7 +49,7 @@ HRESULT CLevioso::Initialize(void* pArg)
 
 	m_wstrEffectName = L"Levioso";
 
-	m_fDuration = 1.5f;
+	m_fDuration = 3.5f;
 
 	return S_OK;
 }
@@ -100,7 +100,7 @@ void CLevioso::Late_Update(_float fTimeDelta)
 
 	_matrix WandWorld = pPlayer->Get_WandPos();
 
-	m_pLeviosoTrail->Get_Component<CTrail>()->Fixed_Trail(WandWorld);
+	//m_pLeviosoTrail->Get_Component<CTrail>()->Fixed_Trail(WandWorld);
 
 	m_pLeviosoTrail->Trail_Update(m_pTrail_PT_0->Get_Component<CTransform>()->Get_XMWorldMatrix(), fTimeDelta);
 

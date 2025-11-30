@@ -255,11 +255,7 @@ float4 DrawEffect(PS_IN In)
     float2 vDistortionUVMoveTime = g_ParticleValue[In.iGPUIndex].vDistortionUVMoveTime;
     float2 vDelay = g_ParticleValue[In.iGPUIndex].vDelay;
     
-    if (vDelay.y > FLT_EPSILON5)
-    {
-    
-    }
-    
+
     if (vDelay.x <= vDelay.y)
     {
         discard;
@@ -704,12 +700,7 @@ PS_BLOOM_OUT PS_BLOOM(PS_IN In)
     vector vMtrlDiffuse;
     
     float2 vDelay = g_ParticleValue[In.iGPUIndex].vDelay;
-    
-    if (vDelay.x < vDelay.y)
-    {
-        discard;
-    }
-    
+
     
     vMtrlDiffuse = DrawEffect(In);
     
@@ -749,7 +740,7 @@ PS_BLOOM_OUT PS_BLEND(PS_IN In)
     
     //int2 iTexel = int2(In.vPosition.xy);
     
-    //float fDepthStencilValue = g_DepthStencilTexture.Load(int3(iTexel, 0)).r;
+    //float fDepthStencilValue = g_DepthStencilTexture.Load(int3(iTex el, 0)).r;
     
     //float fbias = 0.000005f;
     

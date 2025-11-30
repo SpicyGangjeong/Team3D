@@ -49,6 +49,9 @@ private:
 	_vector	    m_PreHigh[2] = {};
 	_vector	    m_PreLow[2] = {};
 
+	_vector     m_PreFixedHigh[3] = {};
+	_vector     m_PreFixedLow[3] = {};
+
 	VTXPOSTEX*  m_pVertices = { nullptr };
 
 	_float		m_fAccTime = {};
