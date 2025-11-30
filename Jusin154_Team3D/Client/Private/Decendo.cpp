@@ -171,6 +171,7 @@ HRESULT CDecendo::Ready_Child()
 
 
 	Desc.vRotRPY = { 0.f, 0.f, 0.f };
+
 	Desc.iSubKind = 70;
 	Desc.vDeltaPos = _float3(0.f, 0.f, 0.f);
 	Desc.vLifeTime = { 0.f, 1.f };

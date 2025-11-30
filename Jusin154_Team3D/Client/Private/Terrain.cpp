@@ -37,7 +37,7 @@ HRESULT CTerrain::Initialize(void* pArg)
 
 	CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc{};
 	Desc.pMeshName = TEXT("Hogsmeade_HeightMap");
-	Desc.iSubKind = 998;
+	Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
 	/* Com_RigidBody */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_RigidBody_Static_Terrain_Hogsmeade"),
 		reinterpret_cast<CComponent**>(&m_pRigidBody), &Desc))) {

@@ -254,7 +254,7 @@ HRESULT CPlayer::Ready_Components()
 	{ // CCT
 		CCharacter_Controller::Character_Controller_DESC Desc{};
 
-		Desc.iSubKind = ENUM_CLASS(COLLIDABLEOBJECT::PLAYER);
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::PLAYER);
 		Desc.pTransform = m_pTransformCom;
 		Desc.eBodyType = ACTOR::CAPSULE;
 		Desc.fContactOffset = 0.17f;
@@ -274,7 +274,7 @@ HRESULT CPlayer::Ready_Components()
 
 	{ // DO
 		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
-		Desc.iSubKind = ENUM_CLASS(COLLIDABLEOBJECT::PLAYER);
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::PLAYER);
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}

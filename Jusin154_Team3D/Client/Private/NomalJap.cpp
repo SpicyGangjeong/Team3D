@@ -172,7 +172,7 @@ HRESULT CNomalJap::Ready_Child()
 	XMStoreFloat3(&Desc.vPos, m_pOwner->Get_WorldPostion() + XMVectorSet(0.f, 0.f, 1.f, 0.f));
 
 	Desc.vRotRPY = { 0.f, 0.f, 0.f };
-	Desc.iSubKind = 70;
+	Desc.iSubKind = ENUM_CLASS(PXOBJECT::SKILL_NORMALJAP);
 	Desc.vDeltaPos = _float3(0.f, 0.f, 0.f);
 	Desc.vLifeTime = { 0.f, 1.f };
 

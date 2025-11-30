@@ -141,7 +141,7 @@ HRESULT CBombard::Ready_Child()
 	XMStoreFloat3(&vDir, vOwnerLook * 2.f);
 
 	Desc.vRotRPY = { 0.f, 0.f, 0.f };
-	Desc.iSubKind = 70;
+	Desc.iSubKind = ENUM_CLASS(PXOBJECT::SKILL_BOMBARD_STRIKE);
 	Desc.vDeltaPos = vDir;
 	Desc.vLifeTime = { 0.f, 2.f };
 
