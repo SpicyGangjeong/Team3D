@@ -60,6 +60,7 @@ void CCallBack_EffectHitBox_HitReport::onShapeHit(const PSX::PxControllerShapeHi
 				CollisionDesc.fLength = fLength;
 
 				pOwnerActorData->pOwner->Get_Owner()->OnCollision(pTargetActorData->pOwner , &CollisionDesc);
+				static_cast<CRigidBody_Dynamic*>(pTargetActorData->pBody)->Add_Force(CollisionDesc.vHitDir * fLength * 100.f, PSX::PxForceMode::eIMPULSE);
 				break;
 			default:
 			{
