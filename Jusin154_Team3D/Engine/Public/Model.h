@@ -33,8 +33,12 @@ public:
 #pragma endregion 
 #pragma region Animation
 	_bool	Play_Animation(_float fTimeDelta, class CTransform* pTransform = nullptr); // 애니메이션에 델타타임을 넣어줌
+	_bool	Play_Anim(_float fTimeDelta, CTransform* pTransform);
+	_bool	Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform);
 	void	Set_AnimationIndex(_uint iIndex, _bool isLoop = true, _float fAmount = 1.f, _bool bRatio = false);
+	void	Set_Second_AnimationIndex(_uint iIndex,_uint BoneIndex,_bool isLoop = false);
 	_bool	IsFinishedAnim() const { return m_bIsFinishedAnim; }
+	_bool	IsFinishedSecondAnim() const { return m_bIsSecondFinishedAnim; }
 	_bool	IsLoopAnim() const { return m_bIsLoop; }
 	void	Set_CurrentTrackPosition(_float TrackPosition);
 	const _char* Get_AnimList(_uint iIndex);
@@ -45,6 +49,7 @@ public:
 	void Set_PlayAnim(_bool bPlayAnim) { m_bPlayAnim = bPlayAnim; }
 	_bool Get_PlayAnim() const { return m_bPlayAnim; }
 	_int Get_AnimIndex() const { return m_iCurrentAnimIndex; }
+	_int Get_SecondAnimIndex() const { return m_iCurrSecondAnimIndex; }
 	_float Get_AnimSpeed();
 	void Set_AnimSpeed(_float fSpeed);
 
@@ -71,8 +76,11 @@ void					Combined_BoneMatrix();
 
 #pragma endregion
 
-		void			ComputeAnimation();
-		void			InItialize_SpineIndex();
+		void			ComputeAnimation(_uint AnimIndex);
+		void			ComputeAnimation_Second(_uint AnimIndex);
+		void			InItialize_BoneIndex();
+
+		void			Initialize_BoneMasks();
 
 public:
 #ifdef EDITOR_PROJECT	
@@ -136,7 +144,12 @@ private:
 	class CTransform* m_pTransform = { nullptr };			// 모델 대상의 트랜스폼
 
 	_float						m_fRatio = {};
-	_int						m_iSpineIndex = { -1 };	
+	_int						m_iBoneIndex[ENUM_CLASS(BLEND_BONE::END)] = {-1,-1,-1,-1,-1,-1};
+	_int						m_iCurrSecondAnimIndex = { -1 };	
+	_bool						m_bIsSecondFinishedAnim = { false };
+	_bool						m_bIsSecondLoop = { false };	
+	vector<vector<_uint>>		m_BoneMask;
+
 
 	// 바이너리
 	SaveModel* m_pSaveModel = { nullptr };
@@ -154,7 +167,9 @@ private:
 	_float4					m_vInitialRootRot = {};
 
 	_vector					m_vector[3];
-	_bool m_bLoopRestarted = false;
+	_bool					m_bLoopRestarted = false;
+
+	vector<_uint>			m_iBoneMask;
 
 
 #pragma region Compute
@@ -165,14 +180,14 @@ private:
 		void			Create_Temp();
 		void			Create_LocalPosVB();
 		void			Create_Con();
-		void			UpdateAnimationCS();
+		void			UpdateAnimationCS(_uint AnimIndex);
 
 		_uint					m_iNumBuffer = {};
 
 		vector<PARENT_DESC>		m_Parent = {};
 		vector<ANIMSTATE_DESC> m_AnimRanges;
 
-		LOCALPOS_DESC* m_pLocalPos = { nullptr };
+		LOCALPOS_DESC* m_pLocalPos[2] = {nullptr};
 
 		class CComputeShader* m_pComputeShader = nullptr;
 

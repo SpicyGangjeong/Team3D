@@ -42,7 +42,6 @@ HRESULT CBroom::Initialize(void* pArg)
 		m_pFSM->Change_State(FSMSTATE::IDLE);
 	}
 
-
 	return S_OK;
 }
 
