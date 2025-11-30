@@ -666,17 +666,27 @@ void CPlayer::Add_FSM()
 void CPlayer::Set_Anim()
 {
 	m_Animation[STATEANIM::IDLE] = { 266,true };
+	m_Animation[STATEANIM::IDLE_AIM] = { 5,true };
 	m_Animation[STATEANIM::IDLE_TURN_L] = { 270,false };
 	m_Animation[STATEANIM::IDLE_TURN_R] = { 430,false };
 	m_Animation[STATEANIM::IDLE_TURN_BWD] = { 268,false };
 
 	m_Animation[STATEANIM::WALK_FWD] = { 625,true };
-	m_Animation[STATEANIM::WALK_BWD] = { 166,true };
+	m_Animation[STATEANIM::WALK_LEFT] = { 337,false };
+	m_Animation[STATEANIM::WALK_RIGHT] = { 504,false };
+	m_Animation[STATEANIM::WALK_BWD] = { 352,false };
+
 	m_Animation[STATEANIM::WALK_STOP] = { 344,false };
 
 	m_Animation[STATEANIM::JOG_FWD] = { 167,true };
-	m_Animation[STATEANIM::JOG_BWD] = { 154,false};
+	m_Animation[STATEANIM::JOG_LEFT] = { 164,false }; // Turn
+	m_Animation[STATEANIM::JOG_RIGHT] = { 185,false };// Turn
+	m_Animation[STATEANIM::JOG_BWD] = { 154,false }; // Turn
 	m_Animation[STATEANIM::JOG_STOP] = { 289,false };
+
+	m_Animation[STATEANIM::JOG_AIM_LEFT] = { 171,true };
+	m_Animation[STATEANIM::JOG_AIM_RIGHT] = { 175,true };
+	m_Animation[STATEANIM::JOG_AIM_BWD] = { 166,true };
 
 	m_Animation[STATEANIM::JUMP] = { 205,false };
 	m_Animation[STATEANIM::JUMP_JOG] = { 203,false };
@@ -686,21 +696,41 @@ void CPlayer::Set_Anim()
 
 	m_Animation[STATEANIM::LAND] = { 259,false };
 
-	m_Animation[STATEANIM::DODGE] = { 802,false };
-	m_Animation[STATEANIM::DODGE_BLINK] = { 799,true };
+	m_Animation[STATEANIM::DODGE] = { 878,false };
+	m_Animation[STATEANIM::DODGE_BLINK] = { 876,true };
 
 	m_Animation[STATEANIM::SKILL] = { 593,false };
-	m_Animation[STATEANIM::SKILL2] = { 915,false };
+	m_Animation[STATEANIM::SKILL2] = { 991,false };
 	m_Animation[STATEANIM::LIGHT_ATTACK] = { 413,false };
-	m_Animation[STATEANIM::SPELL] = { 696,false };
+	m_Animation[STATEANIM::SPELL] = { 772,false };
 	m_Animation[STATEANIM::MAPHELP] = { 122,false };
+	m_Animation[STATEANIM::POTION] = { 114,false }; // 114 포션 // 909 루모스
 	m_Animation[STATEANIM::ACCIO] = { 417,false };
-	m_Animation[STATEANIM::DESCENDO] = { 418,false };
-	m_Animation[STATEANIM::DEPULSO] = { 782,false };
-	m_Animation[STATEANIM::DIFFINDO] = { 786,false };
-	m_Animation[STATEANIM::LUMOS] = { 782,false };
+	m_Animation[STATEANIM::DESCENDO] = { 857,false };
+	m_Animation[STATEANIM::DEPULSO] = { 858,false };
+	m_Animation[STATEANIM::DIFFINDO] = { 862,false };
+	m_Animation[STATEANIM::LUMOS] = { 909,true };
+	m_Animation[STATEANIM::LUMOS_STOP] = { 912,false };
 	m_Animation[STATEANIM::DISILLUSION_ENTER] = { 585,false };
 	m_Animation[STATEANIM::DISILLUSION_EXIT] = { 586,false };
+	m_Animation[STATEANIM::ANCIENT_THROW] = { 919,false };
+
+
+	m_Animation[STATEANIM::HIT_L] = { 1124,false };
+	m_Animation[STATEANIM::HIT_R] = { 1125,false };
+
+	m_Animation[STATEANIM::BROOM_IDLE] = { 679,true };
+	m_Animation[STATEANIM::BROOM_FWD] = { 680,true };
+
+	m_Animation[STATEANIM::BROOM_MOUNT] = { 734,false };
+	m_Animation[STATEANIM::BROOM_MOUNT_END] = { 737,false };
+	m_Animation[STATEANIM::BROOM_HOVER_START] = { 699,false };
+	m_Animation[STATEANIM::BROOM_HOVER_IDLE] = { 703,true };
+
+
+	m_Animation[STATEANIM::JOG_AIM_STOP_L] = { 295,false };
+	m_Animation[STATEANIM::JOG_AIM_STOP_R] = { 456,false };
+	m_Animation[STATEANIM::JOG_AIM_STOP_BWD] = { 444,false };
 }
 #pragma endregion State
 

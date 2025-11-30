@@ -73,17 +73,18 @@ void CDecendo::Update(_float fTimeDelta)
 
 	Update_Event(fTimeDelta);
 
-	m_pProjectile_Blur->Get_Component<CTransform>()->Translation(m_vOwnerLook * 0.5f);
-	m_pProjectile->Get_Component<CTransform>()->Translation(m_vOwnerLook * 0.5f);
+	m_pProjectile_Blur->Get_Component<CTransform>()->Translation(m_vCameraLook * 0.5f);
+	m_pProjectile->Get_Component<CTransform>()->Translation(m_vCameraLook * 0.5f);
 
 
 	if (nullptr != m_pPhysHitBox) {
-		m_pPhysHitBox->Get_Component<CTransform>()->AccumulateMomentum(m_vOwnerLook * 0.5f);
+		m_pPhysHitBox->Get_Component<CTransform>()->AccumulateMomentum(m_vCameraLook * 0.5f);
 	}
 
 
-	if (m_fAccTime > XM_2PI)
+	if (m_fAccTime > XM_2PI){
 		return;
+	}
 
 	m_fAccTime += fTimeDelta * 7.5f;
 
@@ -97,8 +98,9 @@ void CDecendo::Update(_float fTimeDelta)
 
 void CDecendo::Late_Update(_float fTimeDelta)
 {
-	if (m_bVisible == false)
+	if (m_bVisible == false){
 		return;
+	}
 
 	Get_PartObject<CTrailObject>()->Trail_Update(m_pProjectile->Get_Component<CTransform>()->Get_XMWorldMatrix(), fTimeDelta);
 
@@ -144,11 +146,11 @@ HRESULT CDecendo::Pre_Setting(CGameObject* pObject)
 
 
 	//나아가는 벡터와 한점을 가져와 수직인 평면상에 하나의 점으로  DIR 을 만듬
-	m_vOwnerLook = XMVector3Normalize(m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK));
+	m_vCameraLook = XMVector3Normalize(m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK));
 	_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
 
 
-	_vector vQuaternion = XMQuaternionRotationAxis(m_vOwnerLook, m_pGameInstance->Random_Float(0.f, XM_PIDIV2));
+	_vector vQuaternion = XMQuaternionRotationAxis(m_vCameraLook, m_pGameInstance->Random_Float(0.f, XM_PIDIV2));
 
 	m_vRotateUp = XMVector3Rotate(vUp, vQuaternion);
 	m_vRotateUp = XMVector3Normalize(m_vRotateUp);

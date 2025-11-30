@@ -42,7 +42,6 @@ HRESULT CBroom::Initialize(void* pArg)
 		m_pFSM->Change_State(FSMSTATE::IDLE);
 	}
 
-
 	return S_OK;
 }
 
@@ -64,8 +63,9 @@ void CBroom::Late_Update(_float fTimeDelta)
 
 HRESULT CBroom::Render()
 {
-	if (!m_pModelCom)
+	if (!m_pModelCom){
 		return S_OK;
+	}
 
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;

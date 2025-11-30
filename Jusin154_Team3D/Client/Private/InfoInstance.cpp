@@ -63,9 +63,12 @@ HRESULT CInfoInstance::Deregist_ActiveMonster(CMonster* pUnit)
 	return m_pMonsterInfo->Deregist_ActiveMonster(pUnit);
 }
 
-CMonster* CInfoInstance::Get_LockOnMonster()
+CUnit* CInfoInstance::Get_LockOnUnit()
 {
-	return m_pMonsterInfo->Get_LockOnMonster();
+	CUnit* pUnit = { nullptr };
+	pUnit = m_pMonsterInfo->Get_LockOnUnit();
+	// pUnit = m_pInfo->Get_LockOnUnit();
+	return pUnit;
 }
 
 pair<CUnit*, CTransform*> CInfoInstance::Get_NearestPlayerAlly(_fvector vPos)

@@ -160,8 +160,9 @@ HRESULT CEffectObject::Load(const _char* pFilePath, LEVEL eLevel)
 
 	SAFE_RELEASE(m_pInstance_ModelCom);
 
-	if (m_pLightCom != nullptr)
+	if (m_pLightCom != nullptr){
 		SAFE_RELEASE(m_pLightCom);
+	}
 
 	_string strPerfectFilePath = pFilePath;
 
@@ -730,8 +731,9 @@ void CEffectObject::Free()
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pInstance_ModelCom);
 
-	if (m_pLightCom != nullptr)
+	if (m_pLightCom != nullptr){
 		SAFE_RELEASE(m_pLightCom);
+	}
 }
 
 
