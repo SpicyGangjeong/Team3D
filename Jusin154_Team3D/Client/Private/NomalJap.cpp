@@ -99,7 +99,7 @@ void CNomalJap::Update(_float fTimeDelta)
 			XMStoreFloat3(&m_vDirection, XMVector4Normalize(vTargetPos - vCurrentPos));
 
 			_float fDistance = XMVectorGetX(XMVector3Length(vTargetPos - vCurrentPos));
-			m_fLinearSpeed = fDistance / (m_fDuration - m_fAccTime);
+			m_fLinearSpeed = fDistance / (m_fDuration - m_fAccTime) * 10 / 3;
 			SAFE_RELEASE(m_pTargetUnit);
 		}
 		return;
