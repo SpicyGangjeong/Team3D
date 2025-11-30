@@ -295,6 +295,9 @@
     <Filter Include="02.Element\02.Component\11.Query">
       <UniqueIdentifier>{432b36d5-fdf6-456a-bc71-8bf793a42314}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\07. Fog">
+      <UniqueIdentifier>{d566d9e6-6183-48dc-a196-25fd47a10c48}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -557,6 +560,9 @@
     </ClCompile>
     <ClCompile Include="..\private\VIBuffer_Box.cpp">
       <Filter>02.Element\02.Component\02.VIBuffer\Box</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Fog.cpp">
+      <Filter>01.Utility\07. Fog</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1189,6 +1195,9 @@
     </ClInclude>
     <ClInclude Include="..\public\VIBuffer_Box.h">
       <Filter>02.Element\02.Component\02.VIBuffer\Box</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Fog.h">
+      <Filter>01.Utility\07. Fog</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

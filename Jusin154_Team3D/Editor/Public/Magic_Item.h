@@ -35,6 +35,7 @@ private:
 	CTexture* m_pDiffuse_TextureCom3 = { nullptr };
 	CTexture* m_pDiffuse_TextureCom4 = { nullptr };
 	CTexture* m_pDiffuse_TextureCom5 = { nullptr };
+	CTexture* m_pDiffuse_TextureCom6 = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 

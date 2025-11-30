@@ -211,17 +211,13 @@ HRESULT CSlot_Number::Ready_Components(void* pArg)
 
 void CSlot_Number::UV()
 {
-	pUVDesc[0].fUVStart = Meter_Index(1);
-	pUVDesc[0].fUVEnd = Compute_UVY(1);
-	pUVDesc[1].fUVStart = Meter_Index(2);
-	pUVDesc[1].fUVEnd = Compute_UVY(2);
-	pUVDesc[2].fUVStart = Meter_Index(3);
-	pUVDesc[2].fUVEnd = Compute_UVY(3);
-	pUVDesc[3].fUVStart = Meter_Index(4);
-	pUVDesc[3].fUVEnd = Compute_UVY(4);
+	pUVDesc[0].fUV = Meter_Index(1);
+	pUVDesc[1].fUV = Meter_Index(2);
+	pUVDesc[2].fUV = Meter_Index(3);
+	pUVDesc[3].fUV = Meter_Index(4);
 }
 
-_float2 CSlot_Number::Meter_Index(_uint Number)
+_float4 CSlot_Number::Meter_Index(_uint Number)
 {
 	m_fIamge_Size = { 320.f, 128.f };
 
@@ -234,29 +230,15 @@ _float2 CSlot_Number::Meter_Index(_uint Number)
 	_uint frameX = Number % iXCount;
 	_uint frameY = Number / iXCount;
 
-	_float2 UVStart;
-	UVStart.x = frameX * frameWidth / m_fIamge_Size.x;
-	UVStart.y = frameY * frameHeight / m_fIamge_Size.y;
+	_float4 UV;
+	UV.x = frameX * frameWidth / m_fIamge_Size.x;
+	UV.y = frameY * frameHeight / m_fIamge_Size.y;
+	UV.z = UV.x + (frameWidth / m_fIamge_Size.x);
+	UV.w = UV.y + (frameHeight / m_fIamge_Size.y);
 
-	return UVStart;
+	return UV;
 }
 
-_float2 CSlot_Number::Compute_UVY(_uint Number)
-{
-	m_fIamge_Size = { 320.f, 128.f };
-
-	_float frameWidth = 64.f;
-	_float frameHeight = 64.f;
-
-	// Start 구함
-	_float2 UVStart = Meter_Index(Number);
-
-	_float2 UVEnd;
-	UVEnd.x = UVStart.x + (frameWidth / m_fIamge_Size.x);
-	UVEnd.y = UVStart.y + (frameHeight / m_fIamge_Size.y);
-
-	return UVEnd;
-}
 
 CSlot_Number* CSlot_Number::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

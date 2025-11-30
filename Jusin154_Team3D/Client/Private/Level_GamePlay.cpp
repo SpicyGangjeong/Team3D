@@ -204,7 +204,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_SkyBox(const _wstring& strLayerTag)
 	CDummy_PhysXWall::PHYSXDUMMY_DESC Desc{};
 	Desc.vPos = { 0.f, 0.f, 0.f };
 	Desc.vRotRPY = { 0.f, m_pGameInstance->Random_Float(0.f, XM_2PI), 0.f };
-	Desc.iSubKind = 23;
+	Desc.iSubKind = ENUM_CLASS(PXOBJECT::WALL);
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXWall>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE, &Desc))) {
 		return E_FAIL;

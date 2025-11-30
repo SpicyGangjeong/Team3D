@@ -441,12 +441,12 @@ _float CUIObject::Get_Angle()
 
 void CUIObject::Set_SkillType(_int eType)
 {
-	m_iSkillType = eType;
+	m_iSpellType = eType;
 }
 
 _int CUIObject::Get_SkillType()
 {
-	return m_iSkillType;
+	return m_iSpellType;
 }
 
 void CUIObject::Set_CoolTime(_float CoolTime)

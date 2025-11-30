@@ -25,6 +25,10 @@ public:
 	void Update(_float fTimeDelta);
 	void Change_Level();
 
+#pragma region PLAYER_INFO
+	void Update_CameraCoordinateSystem(_float3& vLook, _float3& vRight);
+	pair<_float3, _float3> Get_CameraCoordinateSystem();
+#pragma endregion
 #pragma region MONSTER_INFO
 	HRESULT Regist_PlayerAlly(CUnit* pUnit);
 	HRESULT Deregist_PlayerAlly(CUnit* pUnit);

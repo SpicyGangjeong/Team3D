@@ -17,6 +17,7 @@
 #include "Picking.h"
 #include "PhysX_Manager.h"
 #include "ThreadHolder.h"
+#include "Fog.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -100,6 +101,11 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 		return E_FAIL;
 	}
 
+	m_pFog = CFog::Create();
+	if (nullptr == m_pFog) {
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 
@@ -108,7 +114,9 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 	m_pKey_Manager->Update();
 	m_pMouse_Manager->Update();
 	//m_pSound_Manager->Update();
-
+#ifdef _DEBUG
+	m_pFog->Update_Fog();
+#endif // _DEBUG
 	m_pPicking->Update();
 
 	m_pObject_Manager->Priority_Update(fTimeDelta);
@@ -285,6 +293,7 @@ void CGameInstance::Present_TimeCost() const
 		+ m_fTimer_DrawCall
 		+ m_fTimer_Present;
 
+	GUI::PushItemWidth(80);
 	GUI::Begin("Previous_Frame_Timer");
 	{
 		GUI::ProgressBar(m_fTimer_PriorityUpdate / fTotal, ImVec2(200.f, 0.f));
@@ -513,6 +522,11 @@ HRESULT CGameInstance::Begin_MRT(const _wstring& strMRTTag, ID3D11DepthStencilVi
 	return m_pRenderTarget_Manager->Begin_MRT(strMRTTag, pDSV);
 }
 
+HRESULT CGameInstance::Begin_MRT_NonClear(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV)
+{
+	return m_pRenderTarget_Manager->Begin_MRT_NonClear(strMRTTag, pDSV);
+}
+
 HRESULT CGameInstance::Begin_MRT_Include_BackBuffer(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV)
 {
 	return m_pRenderTarget_Manager->Begin_MRT_Include_BackBuffer(strMRTTag, pDSV);
@@ -622,6 +636,7 @@ _bool CGameInstance::SaveAssimpModel(const _char* filename)
 	auto iter = m_ModelMap.find(filename);
 	return iter->second->SaveAssimpModel(filename);
 }
+
 void CGameInstance::Add_ModelToMap(const _char* filePath, CModel* pModel)
 {
 	m_ModelMap[filePath] = pModel;
@@ -713,6 +728,22 @@ HRESULT CGameInstance::LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleM
 	return m_pPhysX_Manager->LoadTriMeshes(pPath, TriMeshes);
 }
 #pragma endregion
+
+#pragma region FOG
+void CGameInstance::Set_FogDensity(_float fFogDensity)
+{
+	m_pFog->Set_FogDensity(fFogDensity);
+}
+void CGameInstance::Set_FogColor(_float4& vFogColor)
+{
+	m_pFog->Set_FogColor(vFogColor);
+}
+
+HRESULT CGameInstance::Bind_FogValue(class CShader* pShader)
+{
+	return m_pFog->Bind_FogValue(pShader);
+}
+#pragma endregion // FOG
 
 bool		CGameInstance::Key_Pressing(int _iKey)
 {
@@ -823,6 +854,7 @@ void CGameInstance::Release_Engine()
 
 	DestroyInstance();
 
+	SAFE_RELEASE(m_pFog);
 	SAFE_RELEASE(m_pPicking);
 	SAFE_RELEASE(m_pCollider_Manager);
 	SAFE_RELEASE(m_pShadow);

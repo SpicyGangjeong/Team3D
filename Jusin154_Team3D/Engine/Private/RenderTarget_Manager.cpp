@@ -58,8 +58,9 @@ HRESULT CRenderTarget_Manager::Begin_MRT(const _wstring& strMultiRenderTargetKey
 
     list<CRenderTarget*>* pMRTList = Find_MRT(strMultiRenderTargetKey);
 
-    if (nullptr == pMRTList)
+    if (nullptr == pMRTList){
         return E_FAIL;
+    }
 
     _uint iNumRenderTargets = { 0 };
     ID3D11RenderTargetView* pRenderTargetViews[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT] = {};
@@ -73,6 +74,37 @@ HRESULT CRenderTarget_Manager::Begin_MRT(const _wstring& strMultiRenderTargetKey
     for (auto& pRenderTarget : *pMRTList)
     {
         pRenderTarget->Clear();
+        pRenderTargetViews[iNumRenderTargets++] = pRenderTarget->Get_RTV();
+    }
+    if (0 == iNumRenderTargets) {
+        return E_FAIL;
+    }
+
+    m_pContext->OMSetRenderTargets(iNumRenderTargets, pRenderTargetViews, (nullptr == pDSV) ? m_pOriginalDSV : pDSV);
+
+    return S_OK;
+}
+HRESULT CRenderTarget_Manager::Begin_MRT_NonClear(const _wstring& strMultiRenderTargetKey, ID3D11DepthStencilView* pDSV)
+{
+    m_pContext->OMGetRenderTargets(1, &m_pBackBufferRTV, &m_pOriginalDSV);
+
+    list<CRenderTarget*>* pMRTList = Find_MRT(strMultiRenderTargetKey);
+
+    if (nullptr == pMRTList) {
+        return E_FAIL;
+    }
+
+    _uint iNumRenderTargets = { 0 };
+    ID3D11RenderTargetView* pRenderTargetViews[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT] = {};
+
+    m_pContext->OMSetRenderTargets(0, nullptr, nullptr);
+
+    if (nullptr != pDSV) {
+        m_pContext->ClearDepthStencilView(pDSV, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
+    }
+
+    for (auto& pRenderTarget : *pMRTList)
+    {
         pRenderTargetViews[iNumRenderTargets++] = pRenderTarget->Get_RTV();
     }
     if (0 == iNumRenderTargets) {

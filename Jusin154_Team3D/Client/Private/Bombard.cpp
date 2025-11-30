@@ -25,15 +25,18 @@ HRESULT CBombard::Initialize_Prototype()
 
 HRESULT CBombard::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
+	if (FAILED(__super::Initialize(pArg))){
 		return E_FAIL;
+	}
 
-	if (FAILED(Ready_Components(pArg)))
+	if (FAILED(Ready_Components(pArg))) {
 		return E_FAIL;
+	}
 
 
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Bombard")))
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Bombard"))) {
 		return E_FAIL;
+	}
 
 
 	m_wstrEffectName = L"Bombard";
@@ -78,13 +81,15 @@ void CBombard::Late_Update(_float fTimeDelta)
 
 HRESULT CBombard::Pre_Setting(CGameObject* pObject)
 {
-	if (pObject == nullptr)
+	if (pObject == nullptr) {
 		return E_FAIL;
+	}
 
 	m_pOwner = pObject;
 
-	if (FAILED(Ready_Child()))
+	if (FAILED(Ready_Child())) {
 		return E_FAIL;
+	}
 
 	Reset_EffectParts();
 
@@ -141,7 +146,7 @@ HRESULT CBombard::Ready_Child()
 	XMStoreFloat3(&vDir, vOwnerLook * 2.f);
 
 	Desc.vRotRPY = { 0.f, 0.f, 0.f };
-	Desc.iSubKind = 70;
+	Desc.iSubKind = ENUM_CLASS(PXOBJECT::SKILL_BOMBARD_STRIKE);
 	Desc.vDeltaPos = vDir;
 	Desc.vLifeTime = { 0.f, 2.f };
 

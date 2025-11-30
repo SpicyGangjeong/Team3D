@@ -103,7 +103,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 void CPlayer::Priority_Update(_float fTimeDelta)
 {
 	ReLockOnTarget();
-
+	SetGravity();
 	m_pTransformCom->RewindMomentum();
 
 	__super::Priority_Update(fTimeDelta);
@@ -197,15 +197,16 @@ void CPlayer::Render_CameraCoordinateSystem()
 	GUI::Text("S : %.2f, %.2f, %.2f", -m_vCameraLookDir.x, 0.f, -m_vCameraLookDir.z);
 	GUI::Text("D : %.2f, %.2f, %.2f", m_vCameraRightDir.x, 0.f, m_vCameraRightDir.z);
 	
-	GUI::Button("##0", { 100.f, 100.f }); GUI::SameLine();
-	GUI::Button(("W : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { m_vCameraLookDir.x , m_vCameraLookDir.z })))).c_str(), {100.f, 100.f}); GUI::SameLine();
-	GUI::Button("##2", {100.f, 100.f});
-	GUI::Button(("A : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { -m_vCameraRightDir.x , -m_vCameraRightDir.z })))).c_str(), { 100.f, 100.f }); GUI::SameLine();
-	GUI::Button("##4", { 100.f, 100.f }); GUI::SameLine();
-	GUI::Button(("D : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { m_vCameraRightDir.x , m_vCameraRightDir.z })))).c_str(), { 100.f, 100.f });
-	GUI::Button("##6", {100.f, 100.f}); GUI::SameLine();
-	GUI::Button(("S : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { -m_vCameraLookDir.x , -m_vCameraLookDir.z })))).c_str(), { 100.f, 100.f }); GUI::SameLine();
-	GUI::Button("##8", {100.f, 100.f});
+	_float  fButtonSize = 25.f;
+	GUI::Button("##0", { fButtonSize, fButtonSize }); GUI::SameLine();
+	GUI::Button(("W : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { m_vCameraLookDir.x , m_vCameraLookDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
+	GUI::Button("##2", { fButtonSize, fButtonSize });
+	GUI::Button(("A : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { -m_vCameraRightDir.x , -m_vCameraRightDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
+	GUI::Button("##4", { fButtonSize, fButtonSize }); GUI::SameLine();
+	GUI::Button(("D : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { m_vCameraRightDir.x , m_vCameraRightDir.z })))).c_str(), { fButtonSize, fButtonSize });
+	GUI::Button("##6", { fButtonSize, fButtonSize }); GUI::SameLine();
+	GUI::Button(("S : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { -m_vCameraLookDir.x , -m_vCameraLookDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
+	GUI::Button("##8", { fButtonSize, fButtonSize });
 	//W CMyTools::Get_Direction2D(vLook, { m_vCameraLookDir.x ,		m_vCameraLookDir.z })
 	//A CMyTools::Get_Direction2D(vLook, { -m_vCameraRightDir.x , -	m_vCameraRightDir.z })
 	//S CMyTools::Get_Direction2D(vLook, { m_vCameraRightDir.x ,	m_vCameraRightDir.z })
@@ -256,12 +257,12 @@ HRESULT CPlayer::Ready_Components()
 	{ // CCT
 		CCharacter_Controller::Character_Controller_DESC Desc{};
 
-		Desc.iSubKind = ENUM_CLASS(COLLIDABLEOBJECT::PLAYER);
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::PLAYER);
 		Desc.pTransform = m_pTransformCom;
 		Desc.eBodyType = ACTOR::CAPSULE;
 		Desc.fContactOffset = 0.17f;
 		Desc.fMaterial = { 0.5f, 0.5f, 0.6f };
-		Desc.bAutoStepping = { false };
+		Desc.bAutoStepping = { true };
 		Desc.fStepOffset = { 0.05f };
 		Desc.fRadius = 0.5f;
 		Desc.fHeight = 1.0f;
@@ -271,11 +272,12 @@ HRESULT CPlayer::Ready_Components()
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), (CComponent**)&m_pCharacter_Controller, &Desc))) {
 			return E_FAIL;
 		}
+		m_pCharacter_Controller->SetGravity(false);
 	}
 
 	{ // DO
 		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
-		Desc.iSubKind = ENUM_CLASS(COLLIDABLEOBJECT::PLAYER);
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::PLAYER);
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}
@@ -340,6 +342,23 @@ void CPlayer::ReLockOnTarget()
 	}
 }
 
+void CPlayer::SetGravity()
+{
+	PSX::PxControllerCollisionFlags eCollisionFlags = m_pCharacter_Controller->Get_CollisionFlags();
+	eCollisionFlags;
+	if (	false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_DOWN) 
+		 &&	false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_SIDES)) {
+		if (false == m_pFSM->IsEnable(STATEANIM::JUMP)) { // 벽에 닿지 않았는데 점프 중이 아닐 땐 중력 on
+			m_pCharacter_Controller->SetGravity(true);
+		}
+		else { // 점프 중일 땐 off
+			m_pCharacter_Controller->SetGravity(false);
+		}
+	}
+	else { // 벽에 닿는중일 땐 항상 중력 off
+		m_pCharacter_Controller->SetGravity(false);
+	}
+}
 
 void CPlayer::Update_CameraCoordinateSystem()
 {
@@ -347,6 +366,7 @@ void CPlayer::Update_CameraCoordinateSystem()
 	_vector xmvUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
 	XMStoreFloat3(&m_vCameraRightDir, XMVector3Normalize(XMVector3Cross(xmvUp, xmvCameraLook)));
 	XMStoreFloat3(&m_vCameraLookDir, xmvCameraLook);
+	m_pInfoInstance->Update_CameraCoordinateSystem(m_vCameraLookDir, m_vRimLightColor);
 }
 
 _matrix CPlayer::Get_WandPos()
