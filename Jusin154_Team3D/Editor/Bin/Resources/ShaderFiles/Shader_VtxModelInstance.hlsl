@@ -257,12 +257,13 @@ float4 DrawEffect(PS_IN In)
     
     if (vDelay.y > FLT_EPSILON5)
     {
-        if (vDelay.x <= vDelay.y)
-        {
-            discard;
-        }
+    
     }
-
+    
+    if (vDelay.x <= vDelay.y)
+    {
+        discard;
+    }
     
     if (g_isDiffuse == true)
     {
@@ -592,14 +593,14 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     
     vMtrlDiffuse = DrawEffect(In);
     
-    int2 iTexel = int2(In.vPosition.xy);
+    //int2 iTexel = int2(In.vPosition.xy);
     
-    float fDepthStencilValue = g_DepthStencilTexture.Load(int3(iTexel, 0)).r;
+    //float fDepthStencilValue = g_DepthStencilTexture.Load(int3(iTexel, 0)).r;
     
-    float fbias = 0.000005f;
+    //float fbias = 0.000005f;
     
-    if (fDepthStencilValue <= In.vProjPos.z / In.vProjPos.w + fbias)
-        discard;
+    //if (fDepthStencilValue <= In.vProjPos.z / In.vProjPos.w + fbias)
+    //    discard;
     
     Out = BlendedWeight(vMtrlDiffuse, In.vProjPos.w);
     
