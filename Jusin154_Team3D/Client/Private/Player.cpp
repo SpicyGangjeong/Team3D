@@ -55,8 +55,10 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Ready_Parts())) {
 		return E_FAIL;
 	}
-
+#ifdef _DEBUG
 	Load_KeyFrame();
+#endif // _DEBUG
+
 
 	m_pBroomModel = static_cast<CGameObject*>(pArg)->Get_Component<CModel>();
 	SAFE_ADDREF(m_pBroomModel);
