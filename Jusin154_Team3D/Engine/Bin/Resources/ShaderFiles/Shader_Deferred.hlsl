@@ -46,11 +46,16 @@ Texture2D g_BlurWeightTexture;
 Texture2D g_BlurWeightXTexture;
 
 Texture2D g_SurfaceTexture;
+Texture2D g_OriginalTexture;
 
 
 vector g_vLightDiffuse;
 vector g_vLightAmbient;
 vector g_vLightSpecular;
+
+float g_fFogDensity;
+float g_fFogPow;
+vector g_vFogColor;
 
 struct VS_IN
 {
@@ -145,7 +150,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     float fOcclusion = 1.f;
     float fAttenuation = 1.f;
 
-    float fDistance = length(g_vCamPosition.xyz - vWorldPosition.xyz);
+    float fCameraDistance = length(g_vCamPosition.xyz - vWorldPosition.xyz);
     float3 vToView = normalize(g_vCamPosition.xyz - vWorldPosition.xyz); // 픽셀에서 카메라로
     float3 vToLight = normalize(-g_vLightDir.xyz); // 픽셀에서 라이트로
     
@@ -177,10 +182,10 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     }
     
     float fDiffuseAOStrength = lerp(0.3f, 3.f, fOcclusion);
-    { // 수치조정
+    { // 수치조정 // 디렉셔널
         float fMinRoughness = 0.05f;
         fRoughness = max(fRoughness, fMinRoughness); // 러프니스 최소값 보장
-        fRoughness = saturate(saturate(fDistance * 0.01f) * 0.1f + fRoughness); // 거리기반 러프니스 ( 대충 멀수록 반짝반짝한건 더 뭉개져서 표현 )
+        fRoughness = saturate(saturate(fCameraDistance * 0.01f) * 0.1f + fRoughness); // 거리기반 러프니스 ( 대충 멀수록 반짝반짝한건 더 뭉개져서 표현 )
         vF0 = min(vF0, 0.9f); // 메탈릭 상한선
     }
     
@@ -221,31 +226,35 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     float3 vF0 = float3(0.04f, 0.04f, 0.04f);
     float fMetallic = 0.f;
     float fRoughness = 0.5f;
-    
     float fOcclusion = 1.f;
     float fAttenuation = 1.f;
     
-    float3 vToView = normalize(g_vCamPosition.xyz - vWorldPosition.xyz); // 픽셀에서 카메라로
-    float3 vToLight = normalize(g_vLightPos.xyz - vWorldPosition.xyz); // 픽셀에서 라이트로
+    float fCameraDistance   = length(g_vCamPosition.xyz     - vWorldPosition.xyz);
+    float fLightDistance    = length(g_vLightPos.xyz        - vWorldPosition.xyz);
+    float3 vToView          = normalize(g_vCamPosition.xyz  - vWorldPosition.xyz); // 픽셀에서 카메라로
+    float3 vToLight         = normalize(g_vLightPos.xyz     - vWorldPosition.xyz); // 픽셀에서 라이트로
     
+    fAttenuation = saturate((g_fLightRange - fLightDistance) / g_fLightRange);
+    if (fAttenuation <= 0.f)
     {
-        float fDistance = length(vToLight);
-        fAttenuation = saturate((g_fLightRange - fDistance) / g_fLightRange);
-        if (fAttenuation <= 0.f) { discard; }
+        Out.vShade = float4(0.f, 0.f, 0.f, 1.f);
+        Out.vSpecular = float4(0.f, 0.f, 0.f, 1.f);
+        return Out;
     }
-
+    
     if (true == AlmostEqual3(vDepth.b, AI_TEXTURE_TYPE_METALNESS)) // Metallic
     {
         float3 vMRO = g_SurfaceTexture.Sample(DefaultSampler, uv).rgb;
         fMetallic = vMRO.r;
         fRoughness = vMRO.g;
         fOcclusion = vMRO.b;
-
+        
         vF0 = lerp(float3(0.04f, 0.04f, 0.04f), vAlbedo, fMetallic);
     }
     else if (true == AlmostEqual3(vDepth.b, AI_TEXTURE_TYPE_SPECULAR)) // Specular
     {
         fMetallic = 0.f;
+        
         float3 vSRO = g_SurfaceTexture.Sample(DefaultSampler, uv).rgb;
         vF0 = vSRO.rrr;
         fRoughness = vSRO.g;
@@ -259,8 +268,18 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
         return Out;
     }
     
+    float fDiffuseAOStrength = lerp(0.3f, 3.f, fOcclusion);
+    { // 수치조정 // 점광원
+        float fMinRoughness = 0.05f;
+        fRoughness = max(fRoughness, fMinRoughness); // 러프니스 최소값 보장
+        fRoughness = saturate(saturate(fCameraDistance * 0.01f) * 0.1f + fRoughness); // 거리기반 러프니스 ( 대충 멀수록 반짝반짝한건 더 뭉개져서 표현 )
+        vF0 = min(vF0, 0.9f); // 메탈릭 상한선
+    }
+    
     PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
     
+    PBR_Out.vShade *= fDiffuseAOStrength;
+
     Out.vShade = float4(PBR_Out.vShade, 1.f);
     Out.vSpecular = float4(PBR_Out.vSpecular, 1.f);
     
@@ -279,7 +298,7 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
     
     float fViewZ = vDepth.y * g_fFar;
     
-    float4 vWorldPosition;
+    float4 vWorldPosition; // 월드 복원
     {
         vWorldPosition.x = uv.x * 2 - 1;
         vWorldPosition.y = uv.y * -2 + 1;
@@ -296,16 +315,26 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
     float fOcclusion = 1.f;
     float fAttenuation = 1.f;
     
+    float fCameraDistance = length(g_vCamPosition.xyz - vWorldPosition.xyz);
+    float fLightDistance = length(g_vLightPos.xyz - vWorldPosition.xyz);
     float3 vToView = normalize(g_vCamPosition.xyz - vWorldPosition.xyz); // 픽셀에서 카메라로
     float3 vToLight = normalize(g_vLightPos.xyz - vWorldPosition.xyz); // 픽셀에서 라이트로
     
+    fAttenuation = saturate((g_fLightRange - fLightDistance) / g_fLightRange);
+    if (fAttenuation <= 0.f)
     {
-        float fDistance = length(vToLight);
-        fAttenuation = saturate((g_fLightRange - fDistance) / g_fLightRange);
-        if (fAttenuation <= 0.f) { discard; }
+        Out.vShade = float4(0.f, 0.f, 0.f, 1.f);
+        Out.vSpecular = float4(0.f, 0.f, 0.f, 1.f);
+        return Out;
     }
+    
     float fCosAngle = dot(vToView, g_vLightDir.xyz);
-    if (fCosAngle < g_fSpotOuterAngle) { discard; }
+    if (fCosAngle < g_fSpotOuterAngle)
+    {
+        Out.vShade = float4(0.f, 0.f, 0.f, 1.f);
+        Out.vSpecular = float4(0.f, 0.f, 0.f, 1.f);
+        return Out;
+    }
     
     float fSpotAttenenuation = saturate((fCosAngle - g_fSpotInnerAngle) / (g_fSpotInnerAngle - g_fSpotOuterAngle));
     fAttenuation *= fSpotAttenenuation;
@@ -316,12 +345,13 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
         fMetallic = vMRO.r;
         fRoughness = vMRO.g;
         fOcclusion = vMRO.b;
-
+        
         vF0 = lerp(float3(0.04f, 0.04f, 0.04f), vAlbedo, fMetallic);
     }
     else if (true == AlmostEqual3(vDepth.b, AI_TEXTURE_TYPE_SPECULAR)) // Specular
     {
         fMetallic = 0.f;
+        
         float3 vSRO = g_SurfaceTexture.Sample(DefaultSampler, uv).rgb;
         vF0 = vSRO.rrr;
         fRoughness = vSRO.g;
@@ -335,8 +365,18 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
         return Out;
     }
     
+    float fDiffuseAOStrength = lerp(0.3f, 3.f, fOcclusion);
+    { // 수치조정 // 점광원
+        float fMinRoughness = 0.05f;
+        fRoughness = max(fRoughness, fMinRoughness); // 러프니스 최소값 보장
+        fRoughness = saturate(saturate(fCameraDistance * 0.01f) * 0.1f + fRoughness); // 거리기반 러프니스 ( 대충 멀수록 반짝반짝한건 더 뭉개져서 표현 )
+        vF0 = min(vF0, 0.9f); // 메탈릭 상한선
+    }
+    
     PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
     
+    PBR_Out.vShade *= fDiffuseAOStrength;
+
     Out.vShade = float4(PBR_Out.vShade, 1.f);
     Out.vSpecular = float4(PBR_Out.vSpecular, 1.f);
     
@@ -741,6 +781,31 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_Y(PS_IN In)
     return Out;
 }
 
+PS_OUT_FLT4_SINGLE PS_MAIN_FOG(PS_IN In)
+{
+    PS_OUT_FLT4_SINGLE Out;
+    
+    vector vColor = g_OriginalTexture.Sample(DefaultSampler, In.vTexcoord);
+    vector vDepthDesc = g_DepthTexture.Sample(DefaultSampler, In.vTexcoord);
+    
+    vector vFinalColor;
+    float  fViewZ = vDepthDesc.y * g_fFar;
+    
+    float fRatio;
+    
+    fRatio = clamp(pow(exp(-(g_fFogDensity * fViewZ)), g_fFogPow), 0.f, 1.f);
+    
+    vFinalColor = lerp(g_vFogColor, vColor, max(fRatio, 0.2f));
+    vFinalColor.a = 1.f;
+    
+    if (1.f == vDepthDesc.y)
+        vFinalColor = float4(g_vFogColor);
+        
+    Out.vSingleTarget = vFinalColor;
+    
+    return Out;
+}
+
 
 technique11 DefaultTechnique
 {
@@ -880,5 +945,15 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_POSTCOMBINED();
+    }
+
+    pass FogPass // 14
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_FOG();
     }
 }

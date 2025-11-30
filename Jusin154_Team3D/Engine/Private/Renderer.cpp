@@ -64,7 +64,8 @@ void CRenderer::Render()
 	Render_Blur();
 	Render_Combined();
 	Render_Occlusion();
-	//Render_EnvironmentPostProcess();
+	Render_EnvironmentPostProcess();
+	Render_Fog();
 	Render_Effect();
 	Render_NonLight();
 	Render_Blend();
@@ -117,6 +118,7 @@ void CRenderer::Render_Priority()
 	}
 
 	m_RenderObjects[ENUM_CLASS(RENDER::PRIORITY)].clear();
+
 }
 
 void CRenderer::Render_Shadow()
@@ -227,7 +229,7 @@ void CRenderer::Render_LightAcc()
 
 void CRenderer::Render_Combined()
 {
-	if (FAILED(m_pGameInstance->Begin_MRT_Include_BackBuffer(TEXT("MRT_Combined")))) {
+	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Combined")))) {
 		return;
 	}
 	{ 
@@ -319,7 +321,7 @@ void CRenderer::Render_EnvironmentPostProcess()
 	}
 
 	m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix);
-	m_pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix);
+	m_pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix); 
 	m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix);
 	m_pShader->Bind_Matrix("g_invMatView", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW_INV));
 	m_pShader->Bind_Matrix("g_invmatProj", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ_INV));
@@ -345,6 +347,10 @@ void CRenderer::Render_EnvironmentPostProcess()
 		return;
 	}
 
+	if (FAILED(m_pGameInstance->Begin_MRT_NonClear(TEXT("MRT_Fog")))) {
+		return;
+	}
+
 	m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix);
 	m_pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix);
 	m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix);
@@ -356,6 +362,7 @@ void CRenderer::Render_EnvironmentPostProcess()
 	m_pShader->Bind_RawValue("g_fFarBlurStart", &m_fDOF_ENV_StartDistance, sizeof(_float));
 	m_pShader->Bind_RawValue("g_fFarBlurEnd", &m_fDOF_ENV_MaxEnd, sizeof(_float));
 	m_pShader->Bind_RawValue("g_fDOFBlurMultiplier", &m_fDOF_ENV_AmountRadius, sizeof(_float));
+
 	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Depth"), m_pShader, "g_DepthTexture"))) {
 		return;
 	}
@@ -369,6 +376,31 @@ void CRenderer::Render_EnvironmentPostProcess()
 
 	m_pVIBuffer->Bind_Resources();
 	m_pVIBuffer->Render();
+
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
+	}
+}
+
+void CRenderer::Render_Fog()
+{
+	m_pShader->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float));
+
+	m_pGameInstance->Bind_FogValue(m_pShader);
+
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Fog"), m_pShader, "g_OriginalTexture"))) {
+		return;
+	}
+
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Depth"), m_pShader, "g_DepthTexture"))) {
+		return;
+	}
+
+	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::FOG));
+
+	m_pVIBuffer->Bind_Resources();
+	m_pVIBuffer->Render();
+
 }
 
 void CRenderer::Render_Effect()
@@ -837,6 +869,11 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 
+		/* Target_Diffuse */
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Fog"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.0f, 0.f, 0.f, 0.f)))) {
+			return E_FAIL;
+		}
 
 		
 		if (FAILED(Ready_ShadowDepthStencilView(g_iMaxShadowWidth, g_iMaxShadowHeight))) {
@@ -863,6 +900,9 @@ HRESULT CRenderer::Initialize()
 		}
 
 		/* MRT_Combined */
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Combined"), TEXT("Target_Fog")))) {
+			return E_FAIL;
+		}
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Combined"), TEXT("Target_AfterCombined")))) {
 			return E_FAIL;
 		}
@@ -923,6 +963,10 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 
+		/* MRT_Fog */
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Fog"), TEXT("Target_Fog")))) {
+			return E_FAIL;
+		}
 	}
 
 	m_pShader = (CShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, FX_DEFERRED, nullptr, nullptr);

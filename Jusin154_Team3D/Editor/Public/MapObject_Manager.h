@@ -12,7 +12,7 @@ NS_BEGIN(Editor)
 
 class CMapObject_Manager final : public CGameObject
 {
-	enum class ADD_TYPE {CONTAINER, ELEMENT_STATIC, ELEMENT_INTERACT};
+	enum class ADD_TYPE {CONTAINER, ELEMENT_STATIC, ELEMENT_INTERACT, ELEMENT_LIGHT };
 
 private:
 	CMapObject_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -68,8 +68,7 @@ private:
 	void		Update_ContainerObject();
 
 	void		Create_PartObject(_wstring& strPrototypeTag);
-	void		Create_Elemnt_Static(_wstring& strPrototypeTag);
-	void		Create_Elemnt_Interact(_wstring& strPrototypeTag);
+	void		Create_Elemnt(_wstring& strPrototypeTag);
 
 	_bool		Find_Lod_Prototype(_wstring strPrototypeTag, vector<_uint>& LodModelIndices);
 	_uint		Get_KeyCount(_wstring strPrototypeTag);
