@@ -51,6 +51,16 @@ void CCallBack_EffectHitBox_HitReport::onShapeHit(const PSX::PxControllerShapeHi
 
 				pOwnerActorData->pOwner->Get_Owner()->OnCollision(pTargetActorData->pOwner , &CollisionDesc);
 				break;
+			case ENUM_CLASS(PXOBJECT::GOBLIN_WARRIOR):
+
+				/* OnCollision 함수에 넘길 값 */
+				CollisionDesc.vWorldPos = XMVectorSet( (_float)vWorldPos.x, (_float)vWorldPos.y, (_float)vWorldPos.z, 1.f);
+				memcpy(&CollisionDesc.vWorldNomal, &vWorldNormal, sizeof(_float3));
+				memcpy(&CollisionDesc.vHitDir, &vDir, sizeof(_float3));
+				CollisionDesc.fLength = fLength;
+
+				pOwnerActorData->pOwner->Get_Owner()->OnCollision(pTargetActorData->pOwner , &CollisionDesc);
+				break;
 			default:
 			{
 				PSX::PxRigidDynamic* pDynamic = static_cast<PSX::PxRigidDynamic*>(pActor);
