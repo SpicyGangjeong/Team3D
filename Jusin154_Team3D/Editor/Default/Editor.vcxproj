@@ -255,6 +255,7 @@
     <ClInclude Include="..\public\Potion.h" />
     <ClInclude Include="..\Public\Protego.h" />
     <ClInclude Include="..\public\Slot_Number.h" />
+    <ClInclude Include="..\public\Spell_Anim.h" />
     <ClInclude Include="..\public\Spell_Canvas.h" />
     <ClInclude Include="..\public\Spell_Header.h" />
     <ClInclude Include="..\public\Spell_Header_Line.h" />
@@ -409,6 +410,7 @@
     <ClCompile Include="..\private\Potion.cpp" />
     <ClCompile Include="..\Private\Protego.cpp" />
     <ClCompile Include="..\private\Slot_Number.cpp" />
+    <ClCompile Include="..\private\Spell_Anim.cpp" />
     <ClCompile Include="..\private\Spell_Canvas.cpp" />
     <ClCompile Include="..\Private\Spell_Header.cpp" />
     <ClCompile Include="..\private\Spell_Header_Line.cpp" />

@@ -820,7 +820,7 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 
 			m_pModelCom->Anim_Event(0.f, m_Animation[STATEANIM::ACCIO].first, [this]() {
-				m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARD, this);
+				m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA, this);
 
 				m_eSpell = STATEANIM::END;
 				return E_FAIL;

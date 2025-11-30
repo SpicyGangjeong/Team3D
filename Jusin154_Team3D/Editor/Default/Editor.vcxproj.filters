@@ -430,6 +430,9 @@
     <Filter Include="02.GameObjects\Env\03.MapElement\Light">
       <UniqueIdentifier>{99652c97-4011-4d1f-84fb-7e6aa9f6ec1a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_Anim">
+      <UniqueIdentifier>{4aa98871-8d80-4757-b616-e96f4e840857}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -840,6 +843,9 @@
     <ClInclude Include="..\public\MapElement_Light.h">
       <Filter>02.GameObjects\Env\03.MapElement\Light</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Spell_Anim.h">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Anim</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -1248,6 +1254,9 @@
     </ClCompile>
     <ClCompile Include="..\private\MapElement_Light.cpp">
       <Filter>02.GameObjects\Env\03.MapElement\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Spell_Anim.cpp">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Anim</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

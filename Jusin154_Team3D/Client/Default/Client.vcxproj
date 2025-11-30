@@ -225,6 +225,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\PlayerInfo.h" />
     <ClInclude Include="..\Public\Slot_Number.h" />
+    <ClInclude Include="..\public\Skill_Data.h" />
     <ClInclude Include="..\Public\Spell_Overlay.h" />
     <ClInclude Include="..\Public\Spell_Slot.h" />
     <ClInclude Include="..\Public\Spell_UI.h" />
@@ -314,6 +315,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\PlayerInfo.cpp" />
     <ClCompile Include="..\Private\Slot_Number.cpp" />
+    <ClCompile Include="..\private\Skill_Data.cpp" />
     <ClCompile Include="..\Private\Spell_Overlay.cpp" />
     <ClCompile Include="..\Private\Spell_Slot.cpp" />
     <ClCompile Include="..\Private\Spell_UI.cpp" />
