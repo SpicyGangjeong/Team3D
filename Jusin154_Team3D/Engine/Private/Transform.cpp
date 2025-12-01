@@ -175,6 +175,36 @@ _vector CTransform::Go_Down(_float fTimeDelta)
 	return -vMomentum;
 }
 
+_vector CTransform::Go_LerpStraight(_float fSpeed, _float fTimeDelta)
+{
+	_vector		vPos = Get_State(STATE::POSITION);
+	_vector		vLook =Get_State(STATE::LOOK);
+	_vector		vMomentum = XMVector3Normalize(vLook) * fSpeed * fTimeDelta;
+	vPos += vMomentum;
+	Set_State(STATE::POSITION, vPos);
+	return +vMomentum;
+}
+
+_vector CTransform::Go_LerpUp(_float fSpeed, _float fTimeDelta)
+{
+	_vector		vPos = Get_State(STATE::POSITION);
+	_vector		vUp = Get_State(STATE::UP);
+	_vector		vMomentum = XMVector3Normalize(vUp) * fSpeed * fTimeDelta;
+	vPos += vMomentum;
+	Set_State(STATE::POSITION, vPos);
+	return +vMomentum;
+}
+
+_vector CTransform::Go_LerpDown(_float fSpeed, _float fTimeDelta)
+{
+	_vector		vPos = Get_State(STATE::POSITION);
+	_vector		vUp = Get_State(STATE::UP);
+	_vector		vMomentum = XMVector3Normalize(vUp) * fSpeed * fTimeDelta;
+	vPos -= vMomentum;
+	Set_State(STATE::POSITION, vPos);
+	return -vMomentum;
+}
+
 void CTransform::Translation(_float3& vTrans)
 {
 	Translation(XMLoadFloat3(&vTrans));

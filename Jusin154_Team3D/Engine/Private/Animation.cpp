@@ -26,6 +26,7 @@ CAnimation::CAnimation(const CAnimation& rhs)
 	, m_iBoneCount{rhs.m_iBoneCount}
 	, m_fProgress{rhs.m_fProgress }
 	, m_fDurationSeconds{ rhs.m_fDurationSeconds }
+	, m_fTempTrack{rhs.m_fTempTrack }
 {
 	memcpy_s(m_TickPerSeconds, sizeof(_float) * 2, rhs.m_TickPerSeconds, sizeof(_float) * 2);
 
@@ -72,6 +73,7 @@ void CAnimation::ResetRootMotion()
 void CAnimation::Depart_Animation()
 {
 	m_fCurrentTrackPosition = 0.f;
+	m_fTempTrack = 0.f;
 	fill(m_CurrentKeyFrameIndices.begin(), m_CurrentKeyFrameIndices.end(), 0);
 }
 _float CAnimation::Get_AnimProgressRatio()
@@ -200,6 +202,118 @@ void CAnimation::InterpAnim(CAnimation* pPreAnim, vector<CBone*>& Bones, _float 
 			{
 				finalT = XMVectorZero();
 
+			}
+		}
+
+		_matrix finalMat = XMMatrixAffineTransformation(finalS, XMVectorZero(), finalR, finalT);
+
+		Bones[boneIndex]->Set_TransformationMatrix(finalMat);
+
+		m_vBoneTransformationMatrix[i] = finalMat;
+	}
+
+}
+
+
+void CAnimation::InterpSecondAnim(CAnimation* pPreAnim, vector<_uint> BoneMask,vector<CBone*>& Bones, _float fRatio)
+{
+	if (!pPreAnim)
+		return;
+
+	if (m_Channels.empty() || pPreAnim->m_Channels.empty())
+		return;
+
+	if (Bones.empty())
+		return;
+
+	if (fRatio <= 0.f)
+		fRatio = 0.f;
+	else if (fRatio >= 1.f)
+		fRatio = 1.f;
+
+	_uint boneCount = (_uint)Bones.size();
+
+	vector<_matrix> preBoneMats(boneCount);
+	vector<_bool>    preHasBone(boneCount, false);
+
+	_uint preChannelCount = (_uint)pPreAnim->m_Channels.size();
+	_uint preMatCount = (_uint)pPreAnim->m_vBoneTransformationMatrix.size();
+
+	for (_uint i = 0; i < preChannelCount; ++i)
+	{
+		_uint boneIndex = pPreAnim->m_Channels[i]->Get_BoneIndex();
+		if (boneIndex < 0 || boneIndex >= boneCount)
+			continue;
+
+		if (i >= preMatCount)
+			continue;
+
+		preBoneMats[boneIndex] = pPreAnim->m_vBoneTransformationMatrix[i];
+		preHasBone[boneIndex] = true;
+	}
+
+	if (m_vBoneTransformationMatrix.size() < m_Channels.size())
+		m_vBoneTransformationMatrix.resize(m_Channels.size(), XMMatrixIdentity());
+
+	_bool hasSaveAnim = (m_pSaveAnim != nullptr);
+
+	_uint curChannelCount = (_uint)m_Channels.size();
+	_uint curMatCount = (_uint)m_vBoneTransformationMatrix.size();
+
+	for (_uint i = 0; i < curChannelCount; ++i)
+	{
+		_uint boneIndex = m_Channels[i]->Get_BoneIndex();
+		if (boneIndex < 0 || boneIndex >= (boneCount))
+			continue;
+
+		if (i >= curMatCount)
+			continue;
+
+		_matrix curMat = m_vBoneTransformationMatrix[i];
+
+		_bool isUpperBone = BoneMask[boneIndex];
+
+		if (!isUpperBone)
+		{
+			if (preHasBone[boneIndex])
+				Bones[boneIndex]->Set_TransformationMatrix(preBoneMats[boneIndex]);
+			else
+				Bones[boneIndex]->Set_TransformationMatrix(curMat);
+
+			continue;
+		}
+
+
+		if (!preHasBone[boneIndex] || fRatio <= 0.f)
+		{
+			Bones[boneIndex]->Set_TransformationMatrix(curMat);
+			continue;
+		}
+
+		if (fRatio >= 1.f)
+		{
+			Bones[boneIndex]->Set_TransformationMatrix(curMat);
+			continue;
+		}
+
+		_matrix preMat = preBoneMats[boneIndex];
+
+		_vector curS, curR, curT;
+		_vector preS, preR, preT;
+
+		XMMatrixDecompose(&curS, &curR, &curT, curMat);
+		XMMatrixDecompose(&preS, &preR, &preT, preMat);
+
+		_vector finalS = XMVectorLerp(preS, curS, fRatio);
+		_vector finalR = XMQuaternionSlerp(preR, curR, fRatio);
+		_vector finalT = XMVectorLerp(preT, curT, fRatio);
+
+		if (hasSaveAnim)
+		{
+			_string& boneName = m_pSaveAnim->Channels[i].ChannelName;
+			if (boneName == "Reference")
+			{
+				finalT = XMVectorZero();
 			}
 		}
 

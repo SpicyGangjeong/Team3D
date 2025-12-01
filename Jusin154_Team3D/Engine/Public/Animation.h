@@ -23,6 +23,8 @@ public:
 	vector<_int>* Capture_Bones();
 	void InterpAnim(CAnimation* pPreAnim, vector<CBone*>& Bones, _float fRatio);
 
+	void InterpSecondAnim(CAnimation* pPreAnim, vector<_uint> BoneMask, vector<CBone*>& Bones, _float fRatio);
+
 	void CreateGPUData(ID3D11Device* pDevice);
 
 
@@ -32,7 +34,7 @@ public:
 	const _char* Get_SZName() const { return m_szName; }
 	void Set_CurrentTrackPosition(_float TrackPosition) { m_fCurrentTrackPosition = TrackPosition; }
 	_float Get_CurrentTrackPosition() { return m_fCurrentTrackPosition; }
-	_float Get_CurrentTrackProgressRatio() { return m_fTempTrack / m_fDurationSeconds; }
+	_float Get_CurrentTrackProgressRatio() { return m_fTempTrack / m_fDurationSeconds;}
 	void Set_AnimSpeed(_float fSpeed) { m_fAnimSpeed = fSpeed; }
 	_float Get_AnimSpeed() { return m_fAnimSpeed; }
 

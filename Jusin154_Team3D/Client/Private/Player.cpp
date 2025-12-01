@@ -12,6 +12,7 @@
 #include "CamPosition_Shoulder.h"
 #include "CallBack_Playable_HitReport.h"
 #include "Monster.h"
+#include "Broom.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -59,10 +60,11 @@ HRESULT CPlayer::Initialize(void* pArg)
 	Load_KeyFrame();
 #endif // _DEBUG
 
-
-	m_pBroomModel = static_cast<CGameObject*>(pArg)->Get_Component<CModel>();
+	m_pBroom = static_cast<CBroom*>(pArg);
+	SAFE_ADDREF(m_pBroom);
+	m_pBroomModel = m_pBroom->Get_Component<CModel>();
 	SAFE_ADDREF(m_pBroomModel);
-	m_pBroomTransform = static_cast<CGameObject*>(pArg)->Get_Component<CTransform>();
+	m_pBroomTransform = m_pBroom->Get_Component<CTransform>();
 	SAFE_ADDREF(m_pBroomTransform);
 
 	Add_FSM();
@@ -358,11 +360,18 @@ void CPlayer::ReLockOnTarget()
 void CPlayer::SetGravity()
 {
 	PSX::PxControllerCollisionFlags eCollisionFlags = m_pCharacter_Controller->Get_CollisionFlags();
-	if (true == m_pFSM->IsEnable(FSMSTATE::JUMP)){
-		m_pCharacter_Controller->SetGravity(false);
+	eCollisionFlags;
+	if (	false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_DOWN) 
+		 &&	false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_SIDES)) {
+		if (false == m_pFSM->IsEnable(FSMSTATE::JUMP)) { // 벽에 닿지 않았는데 점프 중이 아닐 땐 중력 on
+			m_pCharacter_Controller->SetGravity(true);
+		}
+		else { // 점프 중일 땐 off
+			m_pCharacter_Controller->SetGravity(false);
+		}
 	}
-	else { // 점프 중일 땐 off
-		m_pCharacter_Controller->SetGravity(true);
+	else { // 벽에 닿는중일 땐 항상 중력 off
+		m_pCharacter_Controller->SetGravity(false);
 	}
 }
 
@@ -475,6 +484,7 @@ void CPlayer::Free()
 	SAFE_RELEASE(m_pEffectPool);
 	SAFE_RELEASE(m_pBroomModel);
 	SAFE_RELEASE(m_pBroomTransform);
+	SAFE_RELEASE(m_pBroom);
 }
 #ifdef _DEBUG
 
@@ -513,6 +523,7 @@ void CPlayer::Describe_Entity()
 	GUI::Text(AnimList.c_str());
 
 	GUI::Text("AnimTrack %.2f", m_pModelCom->Get_CurrentTrackPosition());
+	GUI::Text("AnimRatio %.2f", m_pModelCom->Get_TrackProgressRatio(417));
 
 	GUI::Checkbox("Render", &m_bVisible);
 
