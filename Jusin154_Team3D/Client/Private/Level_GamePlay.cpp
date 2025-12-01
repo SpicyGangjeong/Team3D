@@ -110,9 +110,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 
 	/* Map Containters */
 	/* 테스트용 맵 */
-	CInfoInstance::GetInstance()->Load_MapObjects("ClientTest");
+	// CInfoInstance::GetInstance()->Load_MapObjects("ClientTest");
 	/* 전체 맵 */
-	// CInfoInstance::GetInstance()->Load_MapObjects("Map1124");
+	CInfoInstance::GetInstance()->Load_MapObjects("Map1129");
 
 	
 	CInstancedProp::INSTANCE_PROP_DESC Desc = {};

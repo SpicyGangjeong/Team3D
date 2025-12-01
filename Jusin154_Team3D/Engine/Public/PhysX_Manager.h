@@ -102,7 +102,10 @@ private:
 	_uint m_iNumLevel = {};
 private:
 	HRESULT Initialize();
+#ifdef _DEBUG
 	HRESULT Connect_DebugServer();
+#endif // _DEBUG
+
 	void Update_Kinematic();
 	void Update_Dynamic_ActiveActors();
 	//void Update_Dynamic_AllActors();
