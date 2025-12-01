@@ -184,7 +184,7 @@ HRESULT CSpell_UI::Render()
 
 _vector CSpell_UI::Get_WorldPostion()
 {
-	return m_pOwner->Get_WorldPostion();
+	return m_pTransformCom->Get_State(STATE::POSITION);
 }
 
 HRESULT CSpell_UI::Bind_ShaderResources()

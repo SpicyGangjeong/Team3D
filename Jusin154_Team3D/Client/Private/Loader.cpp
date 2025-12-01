@@ -563,7 +563,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Wand_Model"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Wand/Wand.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixIdentity()))))
-
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Broom_Model"),
@@ -658,7 +657,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 #pragma region MAP_MODELS
 	vector<future<void>> jobFutures;
 
-	_uint iLoadCount = 5;
+	_uint iLoadCount = 46;
 	vector<vector<FOLDER_LOAD*>*> Contents(iLoadCount);
 {
 	{ /* Terrain */
@@ -694,253 +693,254 @@ HRESULT CLoader::Loading_For_GamePlay()
 			&Contents[jobFutures.size()]
 		));
 	}
-	//{ /* TScrolls */
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_TScrolls/Meshes",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_TScrolls/Collisions",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//}
-	//{ /* 3BroomStick*/
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_ThreeBroomsticks/Meshes",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_ThreeBroomsticks/Collision",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_ThreeBroomsticks/Meshes/3Broom_Kit",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//}
+
+	{ /* TScrolls */
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_TScrolls/Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_TScrolls/Collisions",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* 3BroomStick*/
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_ThreeBroomsticks/Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_ThreeBroomsticks/Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_ThreeBroomsticks/Meshes/3Broom_Kit",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
 
 
-	//{ /* BLDG_QuidditchShop */
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_QuidditchShop/Meshes",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_QuidditchShop/Collision",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//}
-	//{ /* BLDG_HogsheadInn */
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_HogsheadInn/Meshes",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_HogsheadInn/Collision",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//}
-	//{ /* BLDG_Honeydukes */
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Honeydukes/Meshes",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Honeydukes/Collision",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//}
-	//{ /* BLDG_OwlPost */
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_OwlPost/Meshes",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_OwlPost/Collision",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//}
-	//{ /* BLDG_TeaShop */
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_TeaShop/Meshes",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_TeaShop/Collision",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//}
-	//{ /* BLDG_Zonkos */
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Zonkos/Meshes",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Zonkos/Collision",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//}
-	//{ /* BLDG_DB_GR */
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_DB_GR/Meshes",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_DB_GR/Collision",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//}
-	//{ /* BLDG_Potions */
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Potions/Meshes",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Potions/Collisions",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//}
-	//{ /* BLDG_Salon */
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Salon/Meshes",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Salon/Collision",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//}
-	//{ /* Hengist_Tree */
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Meshes/Vegetation/Hengist_Tree",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Collision/Vegetation",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//}
-	//{ /* GEN A*/
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_GEN_A/Meshes",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_GEN_A/Collision",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//}
-	//{ /* GEN B*/
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_GEN_B/Meshes",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_GEN_B/Collision",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//}
-	//{ /* GEN C*/
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_GEN_C/Meshes",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_GEN_C/Collision",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//}
-	//{ /* GEN E*/
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_GEN_E/Meshes",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_GEN_E/Collision",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//}
-	//{ /* GEN F*/
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_GEN_F/Meshes",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_GEN_F/Collision",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//}
-	//{ /* GEN G*/
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_GEN_G/Meshes",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_GEN_G/Collision",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//}
-	//{ /* GEN H*/
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_GEN_H/Meshes",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_GEN_H/Collision",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//}
-	//{ /* GEN J*/
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_GEN_J/Meshes",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//	jobFutures.emplace_back(Deferred_FolderLoad(
-	//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_GEN_J/Collision",
-	//		".bin", false,
-	//		&Contents[jobFutures.size()]
-	//	));
-	//}
+	{ /* BLDG_QuidditchShop */
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_QuidditchShop/Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_QuidditchShop/Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* BLDG_HogsheadInn */
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_HogsheadInn/Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_HogsheadInn/Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* BLDG_Honeydukes */
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Honeydukes/Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Honeydukes/Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* BLDG_OwlPost */
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_OwlPost/Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_OwlPost/Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* BLDG_TeaShop */
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_TeaShop/Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_TeaShop/Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* BLDG_Zonkos */
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Zonkos/Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Zonkos/Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* BLDG_DB_GR */
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_DB_GR/Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_DB_GR/Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* BLDG_Potions */
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Potions/Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Potions/Collisions",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* BLDG_Salon */
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Salon/Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Salon/Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* Hengist_Tree */
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Meshes/Vegetation/Hengist_Tree",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Collision/Vegetation",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* GEN A*/
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_GEN_A/Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_GEN_A/Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* GEN B*/
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_GEN_B/Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_GEN_B/Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* GEN C*/
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_GEN_C/Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_GEN_C/Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* GEN E*/
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_GEN_E/Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_GEN_E/Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* GEN F*/
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_GEN_F/Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_GEN_F/Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* GEN G*/
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_GEN_G/Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_GEN_G/Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* GEN H*/
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_GEN_H/Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_GEN_H/Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
+	{ /* GEN J*/
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_GEN_J/Meshes",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+		jobFutures.emplace_back(Deferred_FolderLoad(
+			"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_GEN_J/Collision",
+			".bin", false,
+			&Contents[jobFutures.size()]
+		));
+	}
 }
 
 

@@ -255,6 +255,17 @@ HRESULT CPlayer::Ready_Components()
 		reinterpret_cast<CComponent**>(&m_pShaderCom)))) {
 		return E_FAIL;
 	}
+	LightDesc.eType = LIGHT::POINT;
+	LightDesc.fRange = 10.f;
+	LightDesc.iLevel = NEXT_LEVEL;
+	LightDesc.pPosition = m_pTransformCom->Get_StatePtr(STATE::POSITION);
+	LightDesc.vAmbient = CMyTools::ColorRGB_A_HEXtoFLOAT4(0xffffff, 1.f);
+	LightDesc.vDiffuse = CMyTools::ColorRGB_A_HEXtoFLOAT4(0xffffff, 1.f);
+	LightDesc.vSpecular = CMyTools::ColorRGB_A_HEXtoFLOAT4(0xffffff, 1.f);
+	if (FAILED(Add_Component<CLight>(g_iStaticLevel, &m_pLightCom, &LightDesc))) {
+		return E_FAIL;
+	}
+
 
 	{ // CCT
 		CCharacter_Controller::Character_Controller_DESC Desc{};
@@ -347,18 +358,11 @@ void CPlayer::ReLockOnTarget()
 void CPlayer::SetGravity()
 {
 	PSX::PxControllerCollisionFlags eCollisionFlags = m_pCharacter_Controller->Get_CollisionFlags();
-	eCollisionFlags;
-	if (	false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_DOWN) 
-		 &&	false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_SIDES)) {
-		if (false == m_pFSM->IsEnable(STATEANIM::JUMP)) { // 벽에 닿지 않았는데 점프 중이 아닐 땐 중력 on
-			m_pCharacter_Controller->SetGravity(true);
-		}
-		else { // 점프 중일 땐 off
-			m_pCharacter_Controller->SetGravity(false);
-		}
-	}
-	else { // 벽에 닿는중일 땐 항상 중력 off
+	if (true == m_pFSM->IsEnable(FSMSTATE::JUMP)){
 		m_pCharacter_Controller->SetGravity(false);
+	}
+	else { // 점프 중일 땐 off
+		m_pCharacter_Controller->SetGravity(true);
 	}
 }
 
@@ -462,6 +466,7 @@ void CPlayer::Free()
 	}
 	SAFE_RELEASE(m_pCharacter_Controller);
 	SAFE_RELEASE(m_pRigidBody);
+	SAFE_RELEASE(m_pLightCom);
 	Safe_Delete(m_pCallBack_Behavior);
 	Safe_Delete(m_pCallBack_HitReport);
 	SAFE_RELEASE(m_pCamPosition_TopDown_FollowPart);
@@ -475,6 +480,7 @@ void CPlayer::Free()
 
 void CPlayer::Describe_Entity()
 {
+	GUI::Begin("PLAYER_DESC");
 	m_pCharacter_Controller->Describe_Entity();
 	_float4 vMomentum = {};
 	XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());
@@ -512,6 +518,8 @@ void CPlayer::Describe_Entity()
 
 	GUI::Text("%d", m_iStateMask);
 
+	m_pLightCom->Describe_Entity();
+	GUI::End();
 }
 
 #endif // _DEBUG

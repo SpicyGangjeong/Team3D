@@ -25,6 +25,9 @@ float g_fLightRange;
 float g_fSpotInnerAngle;
 float g_fSpotOuterAngle;
 
+bool  g_bUsePowerLightAttenuation;
+float g_fLightAttenuationPower;
+
 vector g_vLightDir;
 vector g_vLightPos;
 vector g_vLightPosOffset;
@@ -181,7 +184,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
         return Out;
     }
     
-    float fDiffuseAOStrength = lerp(0.3f, 3.f, fOcclusion);
+    //float fDiffuseAOStrength = lerp(0.3f, 3.f, fOcclusion);
     { // 수치조정 // 디렉셔널
         float fMinRoughness = 0.05f;
         fRoughness = max(fRoughness, fMinRoughness); // 러프니스 최소값 보장
@@ -191,11 +194,14 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     
     
     PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
+    PBR_Out.vShade *= fOcclusion;
     
-    PBR_Out.vShade *= fDiffuseAOStrength;
+    float3 vAmbient = g_vLightAmbient.rgb * fOcclusion * fAttenuation;
+    float3 vFinalDiffuse = PBR_Out.vShade + vAmbient;
+    float3 vFinalSpecular = PBR_Out.vSpecular * g_vLightSpecular.rgb;
 
-    Out.vShade = float4(PBR_Out.vShade, 1.f);
-    Out.vSpecular = float4(PBR_Out.vSpecular, 1.f);
+    Out.vShade = float4(vFinalDiffuse, 1.f);
+    Out.vSpecular = float4(vFinalSpecular, 1.f);
     
     return Out;
 }
@@ -229,12 +235,23 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     float fOcclusion = 1.f;
     float fAttenuation = 1.f;
     
-    float fCameraDistance   = length(g_vCamPosition.xyz     - vWorldPosition.xyz);
-    float fLightDistance    = length(g_vLightPos.xyz        - vWorldPosition.xyz);
-    float3 vToView          = normalize(g_vCamPosition.xyz  - vWorldPosition.xyz); // 픽셀에서 카메라로
-    float3 vToLight         = normalize(g_vLightPos.xyz     - vWorldPosition.xyz); // 픽셀에서 라이트로
+    float3 vFinalLightPosition = g_vLightPos.xyz + g_vLightPosOffset.xyz;
     
-    fAttenuation = saturate((g_fLightRange - fLightDistance) / g_fLightRange);
+    float fCameraDistance   = length(g_vCamPosition.xyz     - vWorldPosition.xyz);
+    float fLightDistance    = length(vFinalLightPosition - vWorldPosition.xyz);
+    float3 vToView          = normalize(g_vCamPosition.xyz  - vWorldPosition.xyz); // 픽셀에서 카메라로
+    float3 vToLight         = normalize(vFinalLightPosition - vWorldPosition.xyz); // 픽셀에서 라이트로
+    
+    if (g_bUsePowerLightAttenuation)
+    {
+        fAttenuation = PowerAttenuation(g_fLightRange, fLightDistance, g_fLightAttenuationPower);
+    }
+    else
+    {
+        fAttenuation = LinearAttenuation(g_fLightRange, fLightDistance);
+    }
+    
+    
     if (fAttenuation <= 0.f)
     {
         Out.vShade = float4(0.f, 0.f, 0.f, 1.f);
@@ -268,7 +285,7 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
         return Out;
     }
     
-    float fDiffuseAOStrength = lerp(0.3f, 3.f, fOcclusion);
+    //float fDiffuseAOStrength = lerp(0.3f, 3.f, fOcclusion);
     { // 수치조정 // 점광원
         float fMinRoughness = 0.05f;
         fRoughness = max(fRoughness, fMinRoughness); // 러프니스 최소값 보장
@@ -278,10 +295,14 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     
     PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
     
-    PBR_Out.vShade *= fDiffuseAOStrength;
+    PBR_Out.vShade *= fOcclusion;
 
-    Out.vShade = float4(PBR_Out.vShade, 1.f);
-    Out.vSpecular = float4(PBR_Out.vSpecular, 1.f);
+    float3 vAmbient = g_vLightAmbient.rgb * fOcclusion * fAttenuation;
+    float3 vFinalDiffuse = PBR_Out.vShade + vAmbient;
+    float3 vFinalSpecular = PBR_Out.vSpecular * g_vLightSpecular.rgb;
+
+    Out.vShade = float4(vFinalDiffuse, 1.f);
+    Out.vSpecular = float4(vFinalSpecular, 1.f);
     
     return Out;
 }
@@ -319,8 +340,19 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
     float fLightDistance = length(g_vLightPos.xyz - vWorldPosition.xyz);
     float3 vToView = normalize(g_vCamPosition.xyz - vWorldPosition.xyz); // 픽셀에서 카메라로
     float3 vToLight = normalize(g_vLightPos.xyz - vWorldPosition.xyz); // 픽셀에서 라이트로
+    float3 vLightToPixel = -vToLight;
     
-    fAttenuation = saturate((g_fLightRange - fLightDistance) / g_fLightRange);
+    
+    if (g_bUsePowerLightAttenuation)
+    {
+        fAttenuation = PowerAttenuation(g_fLightRange, fLightDistance, g_fLightAttenuationPower);
+    }
+    else
+    {
+        fAttenuation = LinearAttenuation(g_fLightRange, fLightDistance);
+    }
+    
+    
     if (fAttenuation <= 0.f)
     {
         Out.vShade = float4(0.f, 0.f, 0.f, 1.f);
@@ -328,7 +360,10 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
         return Out;
     }
     
-    float fCosAngle = dot(vToView, g_vLightDir.xyz);
+    // 각도 기반 감쇠
+    float3 vLightDir = normalize(g_vLightDir.xyz); 
+    float fCosAngle = dot(vLightDir, vLightToPixel);
+
     if (fCosAngle < g_fSpotOuterAngle)
     {
         Out.vShade = float4(0.f, 0.f, 0.f, 1.f);
@@ -337,6 +372,7 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
     }
     
     float fSpotAttenenuation = saturate((fCosAngle - g_fSpotInnerAngle) / (g_fSpotInnerAngle - g_fSpotOuterAngle));
+    fSpotAttenenuation *= fSpotAttenenuation;
     fAttenuation *= fSpotAttenenuation;
     
     if (true == AlmostEqual3(vDepth.b, AI_TEXTURE_TYPE_METALNESS)) // Metallic
@@ -365,7 +401,6 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
         return Out;
     }
     
-    float fDiffuseAOStrength = lerp(0.3f, 3.f, fOcclusion);
     { // 수치조정 // 점광원
         float fMinRoughness = 0.05f;
         fRoughness = max(fRoughness, fMinRoughness); // 러프니스 최소값 보장
@@ -375,10 +410,14 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
     
     PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
     
-    PBR_Out.vShade *= fDiffuseAOStrength;
+    PBR_Out.vShade *= fOcclusion;
+    
+    float3 vAmbient = g_vLightAmbient.rgb * fOcclusion * fAttenuation;
+    float3 vFinalDiffuse = PBR_Out.vShade + vAmbient;
+    float3 vFinalSpecular = PBR_Out.vSpecular * g_vLightSpecular.rgb;
 
-    Out.vShade = float4(PBR_Out.vShade, 1.f);
-    Out.vSpecular = float4(PBR_Out.vSpecular, 1.f);
+    Out.vShade = float4(vFinalDiffuse, 1.f);
+    Out.vSpecular = float4(vFinalSpecular, 1.f);
     
     return Out;
 }

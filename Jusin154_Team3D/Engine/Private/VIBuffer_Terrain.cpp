@@ -400,7 +400,7 @@ void CVIBuffer_Terrain::ConvertToHeightField(const _tchar* pStaticKey)
 			_uint iIndex = iRow * m_iNumVerticesX + iCol;
 			_uint iPhysXIndex = iCol * m_iNumVerticesZ + iRow;
 
-			_float fRealHeight = m_HeigthValues[iIndex];
+			_float fRealHeight = m_pVertexPositions[iIndex].y * 100.f /* 100배의 정밀도 1cm 단위. */;
 			PSX::PxI16 iClampHeight = (PSX::PxI16)(PSX::PxClamp(fRealHeight, -32767.f, 32767.f));
 
 			PSX::PxHeightFieldSample& pxSample = pxSamples[iPhysXIndex];
