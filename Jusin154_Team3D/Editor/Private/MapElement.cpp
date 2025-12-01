@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "MapElement.h"
 
 #include "GameInstance.h"
@@ -72,4 +72,9 @@ void CMapElement::Free()
 
 void CMapElement::Describe_Entity()
 {
+}
+
+HRESULT CMapElement::Save_XML(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* root)
+{
+	return S_OK;
 }

@@ -22,9 +22,9 @@ private:
 public:
 	virtual HRESULT Initialize_Prototype(vector<_wstring>& ModelPrototypeTags, vector<filesystem::path>& ModelPrototypePaths);
 	virtual HRESULT Initialize(void* pArg) override;
-	virtual void Priority_Update(_float fTimeDelta) override;
-	virtual void Update(_float fTimeDelta) override;
-	virtual void Late_Update(_float fTimeDelta) override;
+	virtual void	Priority_Update(_float fTimeDelta) override;
+	virtual void	Update(_float fTimeDelta) override;
+	virtual void	Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
 	const filesystem::path Get_PrototypePath(_uint iModelIndex);
@@ -45,6 +45,7 @@ private:
 	vector<filesystem::path>			m_ModelPrototypePaths;
 
 	_uint								m_iContainerObjectIndex = {};
+	_int								m_iGlassIndex = { 1 };
 
 	class CBuildingContainer*			m_pContainer = { nullptr };
 	_char								m_szSaveFileName[MAX_PATH] = {};
@@ -62,6 +63,7 @@ private:
 	HRESULT		Load_ContainerToMapObject(const _char* pFileName, const _char* pContainerName);
 
 	HRESULT		Save_LightObject(const _char* pFileName);
+	HRESULT     Load_LightObject(const _char* pFileName);
 #pragma endregion
 
 	void		Update_PrototypeList();
