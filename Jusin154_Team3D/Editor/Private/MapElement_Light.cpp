@@ -78,10 +78,32 @@ void CMapElement_Light::Late_Update(_float fTimeDelta)
 	}
 #endif 
 
-	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pModelComs[0]->Get_Radius())) {
-		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-		if(m_bOnLight)
+	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pModelComs[0]->Get_Radius())) 
+	{
+		if (m_isLightOn)
+		{
+			_float fDistance = XMVectorGetX(XMVector3LengthSq(XMLoadFloat4(m_pGameInstance->Get_CamPosition()) - m_pTransformCom->Get_State(STATE::POSITION)));
+			if (m_LightAdded_Distance > fDistance) // 카메라 범위 안
+			{
+				if(!m_isLightAdded)
+				{
+					m_isLightAdded = true;
+					m_pGameInstance->Add_Light(CURRENT_LEVEL, m_pLightCom);
+				}
+			}
+			else
+			{
+				if (m_isLightAdded)
+				{
+					m_isLightAdded = false;
+					m_pGameInstance->Delete_Light(CURRENT_LEVEL, m_pLightCom);
+				}
+			}
+
 			m_pGameInstance->Add_RenderGroup(RENDER::BLOOM, this);
+		}
+
+		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 	}
 }
 
@@ -94,7 +116,7 @@ HRESULT CMapElement_Light::Render()
 	
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
-		if (true == m_bOnLight && m_iGlassMeshIndex == i)
+		if (true == m_isLightOn && m_iGlassMeshIndex == i)
 			continue;
 
 		if (m_iGlassMeshIndex == i)
@@ -121,7 +143,7 @@ HRESULT CMapElement_Light::Render()
 		}
 		else
 		{
-			if (FAILED(m_pModelComs[0]->Bind_Material(1, m_pShaderCom))) {
+			if (FAILED(m_pModelComs[0]->Bind_Material(i, m_pShaderCom))) {
 				return E_FAIL;
 			}
 
@@ -191,11 +213,15 @@ HRESULT CMapElement_Light::Ready_Components(void* pArg)
 	LightDesc.fRange = pDesc->fRange;
 	LightDesc.iLevel = NEXT_LEVEL;
 	LightDesc.pPosition = m_pTransformCom->Get_StatePtr(STATE::POSITION);
+	
 	/* Com_Light*/
 	if (FAILED(Add_Component<CLight>(g_iStaticLevel, &m_pLightCom, &LightDesc)))
 	{
 		return E_FAIL;
 	}
+
+	if(false == pDesc->isPow)
+		m_pLightCom->Switch_LightAttenationMethod();
 
 	return S_OK;
 }
@@ -245,12 +271,12 @@ HRESULT CMapElement_Light::Render_Bloom()
 
 void CMapElement_Light::Toggle_Light()
 {
-	if (m_bOnLight)
+	if (m_isLightOn)
 		m_pGameInstance->Delete_Light(CURRENT_LEVEL, m_pLightCom);
 	else
 		m_pGameInstance->Add_Light(CURRENT_LEVEL, m_pLightCom);
 
-	m_bOnLight = !m_bOnLight;
+	m_isLightAdded = m_isLightOn = !m_isLightOn;
 }
 
 CMapElement_Light* CMapElement_Light::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -302,7 +328,7 @@ void CMapElement_Light::Describe_Entity()
 	if (nullptr == m_pGameInstance)
 		return;
 	GUI::Text("LIGHT ");
-
+	GUI::InputFloat("Distacne", &m_LightAdded_Distance, 1.f, 10.f);
 	if (GUI::Button("Light ON / OFF"))
 		Toggle_Light();
 
@@ -344,4 +370,100 @@ void CMapElement_Light::Describe_Entity()
 
 
 	m_bSelected = true;
+}
+
+HRESULT CMapElement_Light::Save_XML(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* root)
+{
+	tinyxml2::XMLElement* object = doc.NewElement("Object");
+	object->SetAttribute("Type", ENUM_CLASS(MAPOBJECT_TYPE::ELEMENT_LIGHT));
+	object->SetAttribute("Lod_Level", m_iLodIndex);
+	root->InsertEndChild(object);
+
+#pragma region PROTOTYPETAG
+	for (_uint i = 0; i < m_iLodIndex + 1; ++i)
+	{
+		tinyxml2::XMLElement* prototype = doc.NewElement("PrototypeTag");
+		prototype->SetText(CMyTools::ToString(m_ModelPrototypeTags[i]).c_str());
+		object->InsertEndChild(prototype);
+	}
+#pragma endregion
+
+#pragma region TRANSFORM
+	_float3 vPosition = {};
+	XMStoreFloat3(&vPosition, m_pTransformCom->Get_State(STATE::POSITION));
+
+	_float3 vScale = m_pTransformCom->Get_Scale();
+
+	_float3 vRotation = {};
+	XMStoreFloat3(&vRotation, m_pTransformCom->Get_RollPitchYawVector());
+	vRotation.x = XMConvertToDegrees(vRotation.x);
+	vRotation.y = XMConvertToDegrees(vRotation.y);
+	vRotation.z = XMConvertToDegrees(vRotation.z);
+
+	tinyxml2::XMLElement* Position = doc.NewElement("Position");
+	Position->SetAttribute("x", vPosition.x);
+	Position->SetAttribute("y", vPosition.y);
+	Position->SetAttribute("z", vPosition.z);
+	object->InsertEndChild(Position);
+
+	tinyxml2::XMLElement* Scale = doc.NewElement("Scale");
+	Scale->SetAttribute("x", vScale.x);
+	Scale->SetAttribute("y", vScale.y);
+	Scale->SetAttribute("z", vScale.z);
+	object->InsertEndChild(Scale);
+
+	tinyxml2::XMLElement* Rotation = doc.NewElement("Rotation");
+	Rotation->SetAttribute("x", vRotation.x);
+	Rotation->SetAttribute("y", vRotation.y);
+	Rotation->SetAttribute("z", vRotation.z);
+	object->InsertEndChild(Rotation);
+#pragma endregion
+
+#pragma region LIGHT_DESC
+	const LIGHT_DESC* pLight = m_pLightCom->Get_LightDesc();
+
+	/* Diffuse */
+	tinyxml2::XMLElement* Diffuse = doc.NewElement("Diffuse");
+	Diffuse->SetAttribute("x", pLight->vDiffuse.x);
+	Diffuse->SetAttribute("y", pLight->vDiffuse.y);
+	Diffuse->SetAttribute("z", pLight->vDiffuse.z);
+	object->InsertEndChild(Diffuse);
+
+	/* Ambient */
+	tinyxml2::XMLElement* Ambient = doc.NewElement("Ambient");
+	Ambient->SetAttribute("x", pLight->vAmbient.x);
+	Ambient->SetAttribute("y", pLight->vAmbient.y);
+	Ambient->SetAttribute("z", pLight->vAmbient.z);
+	object->InsertEndChild(Ambient);
+
+	/* Specular */
+	tinyxml2::XMLElement* Specular = doc.NewElement("Specular");
+	Specular->SetAttribute("x", pLight->vSpecular.x);
+	Specular->SetAttribute("y", pLight->vSpecular.y);
+	Specular->SetAttribute("z", pLight->vSpecular.z);
+	object->InsertEndChild(Specular);
+	
+	/* PosOffset */
+	tinyxml2::XMLElement* PosOffset = doc.NewElement("PosOffset");
+	PosOffset->SetAttribute("x", pLight->vPosOffset.x);
+	PosOffset->SetAttribute("y", pLight->vPosOffset.y);
+	PosOffset->SetAttribute("z", pLight->vPosOffset.z);
+	object->InsertEndChild(PosOffset);
+
+	/* Info */
+	tinyxml2::XMLElement* Info = doc.NewElement("Info");
+	Info->SetAttribute("GlassIndex", m_iGlassMeshIndex);
+	Info->SetAttribute("BloomStrength", m_fBloomStrength);
+	Info->SetAttribute("Range", pLight->fRange);
+
+	if(false == m_pLightCom->Is_PowerLightAtt())
+		Info->SetAttribute("Pow", 0);
+	else
+		Info->SetAttribute("Pow", 1);
+
+	object->InsertEndChild(Info);
+#pragma endregion
+
+
+	return S_OK;
 }

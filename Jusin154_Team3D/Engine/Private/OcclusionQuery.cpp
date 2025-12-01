@@ -13,36 +13,54 @@ COcclusionQuery::COcclusionQuery(const COcclusionQuery& rhs)
 
 void COcclusionQuery::Begin_Query()
 {
-	m_pContext->Begin(m_pQuery);
+	m_pContext->Begin(m_pQuery[m_iCountFrame]);
 }
 
 _bool COcclusionQuery::isDraw()
 {
-	UINT64 iNumSample;
-	
-	if (m_pContext->GetData(m_pQuery, &iNumSample, sizeof(UINT64), 0) != S_OK)
-		return m_bPreFrameDraw;
+	static int sCheckFrame = 0;
 
-	0 < iNumSample ? m_bThisFrameDraw = true : m_bThisFrameDraw = false;
+	bool bVisible = m_bPreFrameDraw;
 
-	_bool bDraw = { false };
-	
-	if(true == m_bThisFrameDraw)
-		m_NumCullFrame = 0;
-	else
+	if (++sCheckFrame >= 5)
 	{
-		if(m_NumCullFrame < 5)
-			++m_NumCullFrame;
+		sCheckFrame = 0;
+
+		UINT64 sampleCount = 0;
+		HRESULT hr = m_pContext->GetData(
+			m_pQuery[m_iGetFrameIndex],
+			&sampleCount,
+			sizeof(UINT64),
+			D3D11_ASYNC_GETDATA_DONOTFLUSH
+		);
+
+		if (hr == S_OK)
+		{
+			bVisible = (sampleCount > 0);
+		}
 	}
 
-	m_bPreFrameDraw = m_bThisFrameDraw;
+	if (bVisible)
+	{
+		m_iNumCullFrame = 0;
+	}
+	else
+	{
+		if (m_iNumCullFrame < 2)
+			++m_iNumCullFrame;
+	}
 
-	return m_NumCullFrame < 5;
+	m_bPreFrameDraw = bVisible;
+	return (m_iNumCullFrame < 2);
 }
 
 void COcclusionQuery::End_Query()
 {
-	m_pContext->End(m_pQuery);
+	m_pContext->End(m_pQuery[m_iCountFrame]);
+	
+	m_iGetFrameIndex = (m_iCountFrame + 5 - 1) % 5;
+
+	m_iCountFrame = (m_iCountFrame + 1) % 5;
 }
 
 HRESULT COcclusionQuery::Initialize_Prototype()
@@ -57,14 +75,17 @@ HRESULT COcclusionQuery::Initialize(void* pArg)
 	queryDesc.Query = D3D11_QUERY_OCCLUSION;
 	queryDesc.MiscFlags = 0;
 
-	if (FAILED(m_pDevice->CreateQuery(&queryDesc, &m_pQuery)))
+	for (_uint i = 0; i < 5; i++)
 	{
-		MSG_BOX("Failed to Created : ID3D11Query");
-		return E_FAIL;
+		if (FAILED(m_pDevice->CreateQuery(&queryDesc, &m_pQuery[i])))
+		{
+			MSG_BOX("Failed to Created : ID3D11Query");
+			return E_FAIL;
+		}
 	}
 
 	m_bPreFrameDraw = m_bThisFrameDraw = true;
-	m_NumCullFrame = 0;
+	m_iNumCullFrame = 0;
 
 	return S_OK;
 }
@@ -99,7 +120,9 @@ void COcclusionQuery::Free()
 {
 	__super::Free();
 
-	SAFE_RELEASE(m_pQuery);
+	for(auto& pQuery : m_pQuery)
+		SAFE_RELEASE(pQuery);
+	
 }
 
 #ifdef _DEBUG
