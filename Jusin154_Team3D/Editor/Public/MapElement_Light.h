@@ -15,6 +15,7 @@ class CMapElement_Light : public CMapElement
 public:
 	typedef struct MapElement_Light_Desc : MAPOBJECT_LOD_DESC
 	{
+		_bool			isPow;
 		_uint			iGlassMeshIndex;
 		_float			fBloomStregth;
 		_float			fRange;
@@ -44,10 +45,13 @@ private:
 	CTexture*		m_pMaskTextureCom = { nullptr };
 	CTexture*		m_pGlassTextureCom = { nullptr };
 
-	_bool			m_bOnLight = { true };
+	_bool			m_isLightOn = { true };
+	_bool			m_isLightAdded = { false };
 	_uint			m_iGlassMeshIndex = {};
 	_float			m_fBloomStrength = {1.f};
 	_float			m_fGlassRatio = { 0.5f };
+
+	_float			m_LightAdded_Distance = { 5000.f };
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
@@ -61,6 +65,7 @@ public:
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 	void Describe_Entity() override;
+	virtual HRESULT Save_XML(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* root);
 };
 
 NS_END

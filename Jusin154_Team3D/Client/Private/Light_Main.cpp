@@ -68,7 +68,7 @@ HRESULT CLight_Main::Ready_Components()
 	{
 		return E_FAIL;
 	}
-
+	m_pGameInstance->Add_Light(NEXT_LEVEL, m_pLightCom);
 
 	return S_OK;
 }
