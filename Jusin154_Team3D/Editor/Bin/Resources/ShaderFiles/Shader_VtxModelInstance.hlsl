@@ -688,9 +688,6 @@ PS_BLOOM_OUT PS_BLOOM(PS_IN In)
         
     vector vMtrlDiffuse;
     
-    float2 vDelay = g_ParticleValue[In.iGPUIndex].vDelay;
-
-    
     vMtrlDiffuse = DrawEffect(In);
     
     

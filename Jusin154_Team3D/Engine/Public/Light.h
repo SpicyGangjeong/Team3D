@@ -18,6 +18,7 @@ public:
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
+
 public:
 	const LIGHT_DESC* Get_LightDesc() { return &m_LightDesc; }
 	void Set_Color(_float4& vDiffuse, _float4& vAmbient, _float4& vSpecular);

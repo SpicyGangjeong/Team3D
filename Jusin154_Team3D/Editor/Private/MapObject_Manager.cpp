@@ -1140,6 +1140,10 @@ HRESULT CMapObject_Manager::Load_ContainerToMapObject(const _char* pFileName, co
 
 	return S_OK;
 }
+HRESULT CMapObject_Manager::Save_LightObject(const _char* pFileName)
+{
+	return S_OK;
+}
 #pragma endregion
 
 
@@ -1434,7 +1438,7 @@ void CMapObject_Manager::Create_PartObject(_wstring& strPrototypeTag)
 void CMapObject_Manager::Create_Elemnt(_wstring& strPrototypeTag)
 {
 	MAPOBJECT_LOD_DESC Desc = {};
-
+	CMapElement_Light::MAPELEMENT_LIGHT_DESC Light_Desc = {};
 	vector<_wstring> PrototypeTags;
 	vector<_uint> LodModelIndices;
 
@@ -1448,13 +1452,13 @@ void CMapObject_Manager::Create_Elemnt(_wstring& strPrototypeTag)
 		PrototypeTags.push_back(strLodTag);
 	}
 
-	Desc.iMaxLodLevel = (_uint)LodModelIndices.size() - 1;
-	Desc.ModelPrototypeTags = PrototypeTags;
-	Desc.pParentTransform = m_pTransformCom;
-	Desc.vPosition = _float3(0.f, 0.f, 0.f);
-	Desc.vRotation = _float3(0.f, 0.f, 0.f);
-	Desc.vScale = _float3(1.f, 1.f, 1.f);
-	Desc.pModelPathIndices = &LodModelIndices;
+	Light_Desc.iMaxLodLevel = Desc.iMaxLodLevel = (_uint)LodModelIndices.size() - 1;
+	Light_Desc.ModelPrototypeTags = Desc.ModelPrototypeTags = PrototypeTags;
+	Light_Desc.pParentTransform = Desc.pParentTransform = m_pTransformCom;
+	Light_Desc.vPosition = Desc.vPosition = _float3(0.f, 0.f, 0.f);
+	Light_Desc.vRotation = Desc.vRotation = _float3(0.f, 0.f, 0.f);
+	Light_Desc.vScale = Desc.vScale = _float3(1.f, 1.f, 1.f);
+	Light_Desc.pModelPathIndices  =Desc.pModelPathIndices = &LodModelIndices;
 
 	if (ADD_TYPE::ELEMENT_STATIC == m_eType)
 	{
@@ -1466,7 +1470,15 @@ void CMapObject_Manager::Create_Elemnt(_wstring& strPrototypeTag)
 	}
 	else if (ADD_TYPE::ELEMENT_LIGHT == m_eType)
 	{
-		m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Light>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Light"), &Desc);
+		Light_Desc.iGlassMeshIndex = 0;
+		Light_Desc.fBloomStregth = 3.5f;
+		Light_Desc.fRange = 10.f;
+		Light_Desc.vDiffuse = _float4(1.f, 0.6f, 0.3f, 1.f);
+		Light_Desc.vAmbient = _float4(1.f, 0.6f, 0.3f, 1.f);
+		Light_Desc.vSpecular = _float4(0.f, 0.f, 0.f, 1.f);
+		Light_Desc.vPosOffset = _float4(0.f, 3.5f, 0.f, 1.f);
+
+		m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Light>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Light"), &Light_Desc);
 	}
 	
 }

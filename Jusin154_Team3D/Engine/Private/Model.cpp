@@ -264,9 +264,9 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 	return m_bIsFinishedAnim;
 }
 
-void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop,_float fAmount,_bool bRatio)
+void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fAmount, _bool bRatio)
 {
-	if (m_iCurrentAnimIndex == iIndex){
+	if (m_iCurrentAnimIndex == iIndex) {
 		return;
 	}
 	if (iIndex >= 0 && iIndex < m_iNumAnimations)
@@ -288,7 +288,7 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop,_float fAmount,_bool 
 	}
 }
 
-void CModel::Set_Second_AnimationIndex(_uint iIndex,  _uint BoneIndex,_bool isLoop)
+void CModel::Set_Second_AnimationIndex(_uint iIndex, _uint BoneIndex, _bool isLoop)
 {
 	if (m_iCurrSecondAnimIndex == iIndex) {
 		return;
@@ -326,7 +326,7 @@ void CModel::Update_RootBone(_float Amount)
 		_float dy = XMVectorGetY(vDeltaAdjusted);
 		_float dz = XMVectorGetZ(vDeltaAdjusted);
 
-		 _vector vDeltaWorld = vRight * dx + (vUp * dz) + (-vLook * dy);
+		_vector vDeltaWorld = vRight * dx + (vUp * dz) + (-vLook * dy);
 
 		vDeltaWorld *= 0.01f;
 		vDeltaWorld *= Amount;
@@ -457,7 +457,7 @@ void CModel::Set_AnimSpeed(_float fSpeed)
 	m_Animations[m_iCurrentAnimIndex]->Set_AnimSpeed(fSpeed);
 }
 
-HRESULT CModel::Anim_Event(_float fRatio,_uint AnimIndex,function<void()> Event)
+HRESULT CModel::Anim_Event(_float fRatio, _uint AnimIndex, function<void()> Event)
 {
 	if (AnimIndex == m_iCurrentAnimIndex)
 	{
@@ -1308,7 +1308,7 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 	m_eType = eType;
 
 	LoadData(pModelFilePath);
-	
+
 	m_pSaveModel = m_pGameInstance->Load_SaveModel(pModelFilePath);
 
 	LoadAdditionalAnimations(pModelFilePath);
@@ -1611,9 +1611,9 @@ HRESULT CModel::Initialize(void* pArg)
 	m_pTransform = m_pOwner->Get_Component<CTransform>();
 	SAFE_ADDREF(m_pTransform);
 
-	
+
 	if (m_eType == MODEL::ANIM)
-	{	
+	{
 		Initialize_RootBone();
 		InItialize_BoneIndex();
 		Initialize_BoneMasks();
@@ -1633,7 +1633,7 @@ HRESULT CModel::Initialize(void* pArg)
 		Create_ParentVB();
 
 	}
-	
+
 
 	return S_OK;
 }
@@ -1696,7 +1696,7 @@ HRESULT CModel::Ready_Animations(const vector<CBone*>& Bones)
 
 	for (size_t i = 0; i < m_iNumAnimations; i++)
 	{
-		CAnimation* pAnimation = CAnimation::Create(Bones,this, &m_pSaveModel->Animations[i]);
+		CAnimation* pAnimation = CAnimation::Create(Bones, this, &m_pSaveModel->Animations[i]);
 		if (nullptr == pAnimation)
 			return E_FAIL;
 
@@ -1790,7 +1790,7 @@ void CModel::Describe_Entity()
 
 		_string name = {};
 		for (_uint i = 0; i < m_iNumAnimations; ++i) {
-			
+
 			name.clear();
 			name.append(m_Animations[i]->Get_SZName());
 
@@ -1800,7 +1800,7 @@ void CModel::Describe_Entity()
 			name = name.substr(pos);
 			name = to_string(i) + '\t' + name + '\n';
 			name.shrink_to_fit();
-			WriteFile(hFile, name.data(),(DWORD) name.length(), nullptr, nullptr);
+			WriteFile(hFile, name.data(), (DWORD)name.length(), nullptr, nullptr);
 		}
 
 		CloseHandle(hFile);

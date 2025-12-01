@@ -32,6 +32,11 @@ Texture2D g_DisolveTexture;
 Texture2D g_NormalTexture;
 Texture2D g_GlowTexture;
 Texture2D g_SurfaceParamsTexture;
+Texture2D g_EmissiveTexture;
+Texture2D g_GlassTexture;
+
+float g_fBloomStrength;
+float g_fGlassRatio;
 
 struct VS_IN
 {
@@ -110,6 +115,20 @@ VS_OUT VS_MAIN(VS_IN In)
     Out.vTexcoord = In.vTexcoord;
     Out.vWorldPos = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
     Out.vProjPos = Out.vPosition;
+    return Out;
+}
+
+VS_OUT_BLUR VS_BLOOM(VS_IN In)
+{
+    VS_OUT_BLUR Out;
+    
+    matrix matWV, matWVP;
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+    
+    Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    Out.vTexcoord = In.vTexcoord;
+    
     return Out;
 }
 
@@ -253,17 +272,15 @@ PS_OUT PS_GLASS(PS_IN In)
 {
     PS_OUT Out;
 
-    vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    vector vGlassDiffuse = g_GlassTexture.Sample(DefaultSampler, In.vTexcoord);
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    vector vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
     
-    vector vNormalDesc = g_NormalTexture.Sample(MirrorSampler, In.vTexcoord);
-    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
-    
-    float3 vNormal = mul(vNormalDesc.xyz * 2.f - 1.f, WorldMatrix);
-    
-    Out.vAlbedo = lerp(vMtrlDiffuse, float4(1.f, 1.f, 1.f, 1.f), 0.5f);
-    float4(vMtrlDiffuse.xyz, 1.f);
-    Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
-    Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.0f, 1.f);
+    Out.vAlbedo = lerp(vGlassDiffuse, vMtrlDiffuse, g_fGlassRatio);
+    Out.vColor = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vNormal = float4(In.vNormal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 15.f / 27.f, 1.f);
+    Out.vSurface = vSurface;
     
     return Out;
 }
@@ -377,6 +394,17 @@ PS_OUT_EFFECT PS_EFFECT(PS_IN_EFFECT In)
     }
     
     Out.vColor = vDiffuse;
+    
+    return Out;
+}
+
+PS_OUT_EFFECT PS_BLOOM(PS_IN_EFFECT In)
+{
+    PS_OUT_EFFECT Out;
+    
+    vector vEmissive = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
+    
+    Out.vColor = float4((vEmissive * g_fBloomStrength).xyz, 2.f / 255.f);
     
     return Out;
 }
@@ -588,5 +616,15 @@ technique11 MeshTechnique11
         VertexShader = compile vs_5_0 VS_MAIN_OUTLINE();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_OUTLINE();
+    }
+
+    pass BloomPass // 15
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_BLOOM();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_BLOOM();
     }
 }

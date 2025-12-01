@@ -232,10 +232,12 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     float fOcclusion = 1.f;
     float fAttenuation = 1.f;
     
+    float3 vFinalLightPosition = g_vLightPos.xyz + g_vLightPosOffset.xyz;
+    
     float fCameraDistance   = length(g_vCamPosition.xyz     - vWorldPosition.xyz);
-    float fLightDistance    = length(g_vLightPos.xyz        - vWorldPosition.xyz);
+    float fLightDistance    = length(vFinalLightPosition - vWorldPosition.xyz);
     float3 vToView          = normalize(g_vCamPosition.xyz  - vWorldPosition.xyz); // 픽셀에서 카메라로
-    float3 vToLight         = normalize(g_vLightPos.xyz     - vWorldPosition.xyz); // 픽셀에서 라이트로
+    float3 vToLight         = normalize(vFinalLightPosition - vWorldPosition.xyz); // 픽셀에서 라이트로
     
     fAttenuation = saturate((g_fLightRange - fLightDistance) / g_fLightRange);
     if (fAttenuation <= 0.f)
