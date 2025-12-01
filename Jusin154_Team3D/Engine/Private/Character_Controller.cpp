@@ -324,7 +324,7 @@ HRESULT CCharacter_Controller::Initialize(void* pArg)
 		Desc.reportCallback		= pDesc->pCallback_HitReport;
 		Desc.behaviorCallback	= pDesc->pCallback_Behavior;
 		Desc.slopeLimit			= cosf(XMConvertToRadians(m_fWalkableSlopeDegree));
-		Desc.nonWalkableMode	= PSX::PxControllerNonWalkableMode::ePREVENT_CLIMBING;
+		Desc.nonWalkableMode	= PSX::PxControllerNonWalkableMode::ePREVENT_CLIMBING_AND_FORCE_SLIDING;
 		Desc.material			= m_pGameInstance->Create_Material(&pDesc->fMaterial);
 		m_pController			= m_pGameInstance->Add_BoxController(Desc);
 		m_pController->setUserData(&m_tagData);
@@ -340,7 +340,7 @@ HRESULT CCharacter_Controller::Initialize(void* pArg)
 		Desc.reportCallback		= pDesc->pCallback_HitReport;
 		Desc.behaviorCallback	= pDesc->pCallback_Behavior;
 		Desc.slopeLimit			= cosf(XMConvertToRadians(m_fWalkableSlopeDegree));
-		Desc.nonWalkableMode	= PSX::PxControllerNonWalkableMode::ePREVENT_CLIMBING;
+		Desc.nonWalkableMode	= PSX::PxControllerNonWalkableMode::ePREVENT_CLIMBING_AND_FORCE_SLIDING;
 		Desc.material			= m_pGameInstance->Create_Material(&pDesc->fMaterial);
 		m_pController			= m_pGameInstance->Add_CapsuleController(Desc);
 		m_pController->setUserData(&m_tagData);

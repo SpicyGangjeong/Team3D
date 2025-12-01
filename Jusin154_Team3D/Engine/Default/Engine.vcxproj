@@ -269,7 +269,6 @@ call Update_Lib.bat
     </ClCompile>
     <ClCompile Include="..\Private\Key_Manager.cpp" />
     <ClCompile Include="..\Private\Layer.cpp" />
-    <ClCompile Include="..\Private\LerpAnim.cpp" />
     <ClCompile Include="..\Private\Level.cpp" />
     <ClCompile Include="..\Private\Level_Manager.cpp" />
     <ClCompile Include="..\Private\Light.cpp" />
@@ -522,7 +521,6 @@ call Update_Lib.bat
     <ClInclude Include="..\Public\IMGUI\imstb_truetype.h" />
     <ClInclude Include="..\Public\Key_Manager.h" />
     <ClInclude Include="..\Public\Layer.h" />
-    <ClInclude Include="..\Public\LerpAnim.h" />
     <ClInclude Include="..\Public\Level.h" />
     <ClInclude Include="..\Public\Level_Manager.h" />
     <ClInclude Include="..\Public\Light.h" />
