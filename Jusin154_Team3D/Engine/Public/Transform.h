@@ -47,6 +47,10 @@ public:
 	_vector Go_Right(_float fTimeDelta);
 	_vector Go_Up(_float fTimeDelta);
 	_vector Go_Down(_float fTimeDelta);
+	///////////////////////////////////
+	_vector Go_LerpStraight(_float fSpeed, _float fTimeDelta);
+	_vector Go_LerpUp(_float fSpeed, _float fTimeDelta);
+	_vector Go_LerpDown(_float fSpeed, _float fTimeDelta);
 
 	void	Translation(_float3& vTrans);
 	void	Translation(_fvector vTrans);
