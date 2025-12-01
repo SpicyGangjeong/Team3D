@@ -137,6 +137,14 @@ _vector CSpell_Anim::Get_WorldPostion()
 	return m_pTransformCom->Get_State(STATE::POSITION);
 }
 
+void CSpell_Anim::Anim_Start(_uint iSpell_Id)
+{
+}
+
+void CSpell_Anim::Anim_End()
+{
+}
+
 HRESULT CSpell_Anim::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))

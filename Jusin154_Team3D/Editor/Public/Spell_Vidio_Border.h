@@ -32,6 +32,7 @@ private:
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
 	CGameObject* m_pSpell_Anim = { nullptr };
+
 public:
 	static CSpell_Vidio_Border* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
