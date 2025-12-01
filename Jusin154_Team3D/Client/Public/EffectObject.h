@@ -24,7 +24,7 @@ public:
 		_float2 vMaskingUVGainAmount = {};
 		_float2 vNoiseUVGainAmount = {};
 
-		_float2 vDiffuseDistortionUVGainAmount = {};
+		_float2 vDistortionTime = {};
 		_float2 vMaskDistortionUVGainAmount = {};
 
 		_float2 vUVCutting = { 1.f ,1.f };
@@ -94,7 +94,6 @@ public:
 		_float  fBluringStrength = { 0.01f };
 
 
-
 		_bool   isBloom = {};
 
 		_bool   isBloomDissolve = {};
@@ -103,6 +102,7 @@ public:
 		_float  fBloomStrength = {};
 
 		BLOOM_TYPE eBloomType = {};
+
 
 	}EFFECT_INFO;
 
