@@ -285,9 +285,9 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     
     PBR_Out.vShade *= fOcclusion;
 
-    float3 vAmbient = g_vLightAmbient.rgb * fOcclusion;
+    float3 vAmbient = g_vLightAmbient.rgb * fOcclusion * fAttenuation;
     float3 vFinalDiffuse = PBR_Out.vShade + vAmbient;
-    float3 vFinalSpecular = PBR_Out.vSpecular * g_vLightSpecular.rgb;
+    float3 vFinalSpecular = PBR_Out.vSpecular * g_vLightSpecular.rgb * fAttenuation;
 
     Out.vShade = float4(vFinalDiffuse, 1.f);
     Out.vSpecular = float4(vFinalSpecular, 1.f);
@@ -388,9 +388,9 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
     
     PBR_Out.vShade *= fOcclusion;
 
-    float3 vAmbient = g_vLightAmbient.rgb * fOcclusion;
+    float3 vAmbient = g_vLightAmbient.rgb * fOcclusion * fAttenuation;
     float3 vFinalDiffuse = PBR_Out.vShade + vAmbient;
-    float3 vFinalSpecular = PBR_Out.vSpecular * g_vLightSpecular.rgb;
+    float3 vFinalSpecular = PBR_Out.vSpecular * g_vLightSpecular.rgb * fAttenuation;
 
     Out.vShade = float4(vFinalDiffuse, 1.f);
     Out.vSpecular = float4(vFinalSpecular, 1.f);
