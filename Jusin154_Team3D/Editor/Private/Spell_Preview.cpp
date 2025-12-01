@@ -47,6 +47,7 @@ HRESULT CSpell_Preview::Initialize(void* pArg)
 	SizeUpX(512.f);
 	SizeUpY(270.f);
 	m_iSpellType = ENUM_CLASS(SPELLTYPE::CONTROL);
+	m_fSortZ = 0.02f;
 	return S_OK;
 }
 

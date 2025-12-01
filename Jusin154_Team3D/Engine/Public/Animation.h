@@ -23,8 +23,6 @@ public:
 	vector<_int>* Capture_Bones();
 	void InterpAnim(CAnimation* pPreAnim, vector<CBone*>& Bones, _float fRatio);
 
-
-
 	void CreateGPUData(ID3D11Device* pDevice);
 
 

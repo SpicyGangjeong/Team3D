@@ -433,14 +433,12 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 		xmvInputDir = XMVector3Normalize(xmvInputDir);
 
 		_float2 vInputDir = { XMVectorGetX(xmvInputDir),XMVectorGetZ(xmvInputDir) };
-		GUI::Text("%.1f, %.1f", vInputDir.x, vInputDir.y);
 		_vector xmvCurLook = XMVector4Normalize(
 			XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
 		_float2 vCurLook = { XMVectorGetX(xmvCurLook),XMVectorGetZ(xmvCurLook) };
 
 		_float vDir = CMyTools::Get_Direction2D(vCurLook, vInputDir);
 		_float absDir = fabsf(vDir);
-
 		_float cross = vCurLook.x * vInputDir.y - vCurLook.y * vInputDir.x;
 
 		_bool bSkipAngleCheck = { false };
@@ -455,7 +453,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 			}
 			if (!bSkipAngleCheck) {
 				_float absDir = fabsf(vDir);
-				if (absDir <= XMConvertToRadians(90.f)) {
+				if (absDir < XMConvertToRadians(80.f)) {
 					if (m_pFSM->IsEnable(FSMSTATE::JOG))
 					{
 						pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
@@ -887,7 +885,7 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 			{
 				pairAnimInfo = m_Animation[STATEANIM::ACCIO];
 				Add_Event(pairAnimInfo.first,
-					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARD, this);m_eSpell = STATEANIM::END; },
+					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA, this);m_eSpell = STATEANIM::END; },
 					0.25f);
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 			}
@@ -981,11 +979,10 @@ void CPlayer::Behavior_Broom_RideEnter()
 HRESULT CPlayer::Behavior_Broom_RideExitCheck()
 {
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
-
+	pair<_uint, _bool> pairAnimInfo;
 	if (iCurrAnimIndex == m_Animation[STATEANIM::BROOM_MOUNT].first)
 	{
 		if (m_pModelCom->IsFinishedAnim()) {
-			pair<_uint, _bool> pairAnimInfo;
 			pairAnimInfo = m_Animation[STATEANIM::BROOM_MOUNT_END];
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, true);
 		}
@@ -996,18 +993,34 @@ HRESULT CPlayer::Behavior_Broom_RideExitCheck()
 		return E_FAIL;
 	}*/
 
-	if (SUCCEEDED(InputMove()))
+	
+	if (m_pGameInstance->Key_Pressing(DIK_W))
 	{
-		pair<_uint, _bool> pairAnimInfo;
-		pairAnimInfo = Get_AnimInfo(STATEANIM::BROOM_HOVER_IDLE);
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		pairAnimInfo = Get_AnimInfo(STATEANIM::BROOM_FWD);
+	}
+	else if (m_pGameInstance->Key_Pressing(DIK_A))
+	{
+		pairAnimInfo = Get_AnimInfo(STATEANIM::BROOM_LEFT);
+	}
+	else if (m_pGameInstance->Key_Pressing(DIK_D))
+	{
+		pairAnimInfo = Get_AnimInfo(STATEANIM::BROOM_RIGHT);
+	}
+	else if (m_pGameInstance->Key_Pressing(DIK_LCONTROL))
+	{
+		pairAnimInfo = Get_AnimInfo(STATEANIM::BROOM_DOWN);
+	}
+	else if (m_pGameInstance->Key_Pressing(DIK_SPACE))
+	{
+		pairAnimInfo = Get_AnimInfo(STATEANIM::BROOM_UP);
 	}
 	else
 	{
-		pair<_uint, _bool> pairAnimInfo;
 		pairAnimInfo = Get_AnimInfo(STATEANIM::BROOM_HOVER_IDLE);
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 	}
+
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+	
 
 	if (m_pGameInstance->Key_Down(DIK_N)) {
 		m_pFSM->Change_State(FSMSTATE::IDLE);
@@ -1044,6 +1057,8 @@ void CPlayer::Player_InterpTurn(_float fTimeDelta)
 	_float angle = CMyTools::Get_Direction2D(vCurLook, fCamLook);
 
 	_float degree = XMConvertToDegrees(angle);
+
+	GUI::Text("Degree: %.3f", degree);
 
 	_vector xmvInput = XMVectorZero();
 
@@ -1180,33 +1195,50 @@ void CPlayer::Add_FSM()
 
 #pragma region Behavior_Broom_Ride
 	{
+
 		CState_Broom_Ride::STATE_BROOM_RIDE_DESC Desc{};
 		Desc.pOwner = this;
 		Desc.funcEnterEvent = [this]() { Behavior_Broom_RideEnter(); };
 		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_Broom_RideExitCheck(); };
 		Desc.funcExitEvent = [this]() { Behavior_Broom_RideExit(); };
 		Desc.funcPriorityUpdate = [this](_float fTimeDelta) {
+			_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 			if (m_pGameInstance->Key_Pressing(DIK_W))
 			{
 				_float3	fMove = m_pGameInstance->Get_MouseMove();
-				m_pBroomTransform->Turn(m_pTransformCom->Get_State(STATE::UP), fTimeDelta * fMove.x * 0.03f);
+				m_pBroomTransform->Turn(m_pBroomTransform->Get_State(STATE::UP), fTimeDelta * fMove.x * 0.03f);
 			}
 			_matrix BroomWorld = XMLoadFloat4x4(m_pBroomTransform->Get_WorldMatrixPtr());
 			_matrix BoneLocal = XMLoadFloat4x4(m_pBroomModel->Get_BoneMatrixPtr("broomSocket"));
 
-			XMVECTOR Scale, Rot, Trans;
+			_vector Scale, Rot, Trans;
+
 			XMMatrixDecompose(&Scale, &Rot, &Trans, BoneLocal);
 
 			_matrix BoneNoScale = XMMatrixRotationQuaternion(Rot) * XMMatrixTranslationFromVector(Trans);
-			static 	_float3 OffsetPos = { 0.f, 0.f, 0.f };
-			GUI::DragFloat3("BroomOffset", (_float*)&OffsetPos, 0.01f);
-			_matrix Offset = XMMatrixTranslation(OffsetPos.x,
-				OffsetPos.y, OffsetPos.z);
+
+			if (iCurrAnimIndex == m_Animation[STATEANIM::BROOM_FWD].first)
+			{
+				m_OffsetPos = { 0.f, 1.05f, 0.f };
+			}
+			else
+			{
+				m_OffsetPos = { 0.f, 1.18f, 0.f };
+			}
+			
+			GUI::DragFloat3("BroomOffset", (_float*)&m_OffsetPos, 0.01f);
+			_matrix Offset = XMMatrixTranslation(m_OffsetPos.x,
+				m_OffsetPos.y, m_OffsetPos.z);
 
 			_matrix SocketWorld = BoneNoScale * Offset* BroomWorld;
-		
-			m_pTransformCom->Set_WorldMatrix(SocketWorld);
-			m_pCharacter_Controller->Set_Position(SocketWorld.r[3]);
+
+			_matrix FixRot = XMMatrixRotationY(XMConvertToRadians(180.f));
+
+			_matrix FinalWorld = FixRot * SocketWorld;
+
+			m_pTransformCom->Set_WorldMatrix(FinalWorld);
+			m_pCharacter_Controller->Set_Position(FinalWorld.r[3]);
+
 			};
 		Desc.funcLateUpdate = nullptr;
 		m_States.emplace(FSMSTATE::BROOM_RIDE, CState_Broom_Ride::Create(&Desc));
@@ -1272,8 +1304,12 @@ void CPlayer::Set_Anim()
 	m_Animation[STATEANIM::HIT_L] = { 1124,false };
 	m_Animation[STATEANIM::HIT_R] = { 1125,false };
 
-	m_Animation[STATEANIM::BROOM_IDLE] = { 679,true }; 
-	m_Animation[STATEANIM::BROOM_FWD] = { 680,true }; 
+	m_Animation[STATEANIM::BROOM_IDLE] = { 710,true }; 
+	m_Animation[STATEANIM::BROOM_FWD] = { 711,true };
+	m_Animation[STATEANIM::BROOM_LEFT] = { 713,true };
+	m_Animation[STATEANIM::BROOM_RIGHT] = { 714,true };
+	m_Animation[STATEANIM::BROOM_DOWN] = { 712,true };
+	m_Animation[STATEANIM::BROOM_UP] = { 715,true };
 
 	m_Animation[STATEANIM::BROOM_MOUNT] = { 734,false };
 	m_Animation[STATEANIM::BROOM_MOUNT_END] = { 737,false };
@@ -1286,6 +1322,11 @@ void CPlayer::Set_Anim()
 	m_Animation[STATEANIM::JOG_AIM_STOP_BWD] = { 444,false };
 
 	//루모스 스탑 912
+
+	//713 왼쪽 슬로우
+	//714 오른쪽
+	//712 아래
+	//715 위
 }
 
 

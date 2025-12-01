@@ -257,7 +257,9 @@
     <ClInclude Include="..\Public\Revelio.h" />
     <ClInclude Include="..\Public\Protego.h" />
     <ClInclude Include="..\public\Slot_Number.h" />
+    <ClInclude Include="..\public\Spell_Anim.h" />
     <ClInclude Include="..\public\Spell_Canvas.h" />
+    <ClInclude Include="..\public\Spell_Data.h" />
     <ClInclude Include="..\public\Spell_Header.h" />
     <ClInclude Include="..\public\Spell_Header_Line.h" />
     <ClInclude Include="..\public\Spell_Hover.h" />
@@ -413,7 +415,9 @@
     <ClCompile Include="..\Private\Revelio.cpp" />
     <ClCompile Include="..\Private\Protego.cpp" />
     <ClCompile Include="..\private\Slot_Number.cpp" />
+    <ClCompile Include="..\private\Spell_Anim.cpp" />
     <ClCompile Include="..\private\Spell_Canvas.cpp" />
+    <ClCompile Include="..\private\Spell_Data.cpp" />
     <ClCompile Include="..\Private\Spell_Header.cpp" />
     <ClCompile Include="..\private\Spell_Header_Line.cpp" />
     <ClCompile Include="..\private\Spell_Hover.cpp" />
