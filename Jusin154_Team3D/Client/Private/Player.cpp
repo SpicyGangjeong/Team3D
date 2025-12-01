@@ -347,18 +347,11 @@ void CPlayer::ReLockOnTarget()
 void CPlayer::SetGravity()
 {
 	PSX::PxControllerCollisionFlags eCollisionFlags = m_pCharacter_Controller->Get_CollisionFlags();
-	eCollisionFlags;
-	if (	false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_DOWN) 
-		 &&	false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_SIDES)) {
-		if (false == m_pFSM->IsEnable(STATEANIM::JUMP)) { // 벽에 닿지 않았는데 점프 중이 아닐 땐 중력 on
-			m_pCharacter_Controller->SetGravity(true);
-		}
-		else { // 점프 중일 땐 off
-			m_pCharacter_Controller->SetGravity(false);
-		}
-	}
-	else { // 벽에 닿는중일 땐 항상 중력 off
+	if (true == m_pFSM->IsEnable(FSMSTATE::JUMP)){
 		m_pCharacter_Controller->SetGravity(false);
+	}
+	else { // 점프 중일 땐 off
+		m_pCharacter_Controller->SetGravity(true);
 	}
 }
 

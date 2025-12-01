@@ -113,6 +113,7 @@ PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody_Static& RigidBody
 	{ // SetUp HeightField
 		PSX::PxHeightField* pHeightField = Find_HeightField(RigidBody.Get_PxMeshKey());
 		PSX::PxHeightFieldGeometry* pPxHeightGeometry = new PSX::PxHeightFieldGeometry(pHeightField);
+		pPxHeightGeometry->heightScale = 0.01f/* 기본 정밀도 100배 0.01 -> 1cm, 1 -> 1m */;
 
 		// 유효성 체크
 		PX_ASSERT(pPxHeightGeometry->isValid());

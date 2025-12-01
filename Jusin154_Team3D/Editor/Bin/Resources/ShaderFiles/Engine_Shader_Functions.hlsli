@@ -145,6 +145,8 @@ PBR_LIGHT_OUT PBR_Lighting(
     if (NdotL <= 0 || NdotV <= 0)
     {
         return Out;
+        Out.vShade = 0;
+        Out.vSpecular = 0;
     }
     
     float fAlpha = max(fRoughness * fRoughness, 0.04f);
