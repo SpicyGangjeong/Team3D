@@ -212,18 +212,21 @@ _bool CCharacter_Controller::UpdateGroundByCast(_float fTimeDelta)
 				case PXOBJECT::FLOOR:
 				case PXOBJECT::ROAD:
 				{ // 임계값 이상이면 지면에 서서히 붙임
-					_float fYHitPos = hit.position.y;
-					_float fYFoot = (_float)m_pController->getFootPosition().y;
-					_float fDiff = (fYHitPos - fYFoot);
-					if (fDiff > m_vAccHeight.w) {
-						_vector vMomentum = m_pTransform->Get_CurrentMomentum();
-						_float fYCurrentMomentum = XMVectorGetY(vMomentum);
-						fYCurrentMomentum = fDiff * 0.3f;
-						m_pTransform->Set_CurrentMomentum(XMVectorSetY(vMomentum, fYCurrentMomentum));
-					}
-					else {
-						m_iIsOnGround = iCoyote_Counter;
-					}
+					m_iIsOnGround = iCoyote_Counter;
+
+
+					//_float fYHitPos = hit.position.y;
+					//_float fYFoot = (_float)m_pController->getFootPosition().y;
+					//_float fDiff = (fYHitPos - fYFoot);
+					//if (fDiff > m_vAccHeight.w) {
+					//	_vector vMomentum = m_pTransform->Get_CurrentMomentum();
+					//	_float fYCurrentMomentum = XMVectorGetY(vMomentum);
+					//	fYCurrentMomentum = fDiff * 0.3f;
+					//	m_pTransform->Set_CurrentMomentum(XMVectorSetY(vMomentum, fYCurrentMomentum));
+					//}
+					//else {
+					//	m_iIsOnGround = iCoyote_Counter;
+					//}
 				}
 					break;
 				default:
