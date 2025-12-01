@@ -58,6 +58,8 @@ void CBroom::Update(_float fTimeDelta)
 	m_pFSM->Update_State(fTimeDelta);
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
+
+	Describe_Entity();
 }
 
 void CBroom::Late_Update(_float fTimeDelta)
@@ -179,6 +181,15 @@ void CBroom::Free()
 
 void CBroom::Describe_Entity()
 {
+
+	GUI::DragFloat("MaxSpeed", &m_fFlyMaxSpeed, 0.01f);
+	GUI::DragFloat("Speed", &m_fSpeed, 0.01f);
+	GUI::DragFloat("Accle", &m_fAccel, 0.01f);
+	GUI::DragFloat("Decel", &m_fDecel, 0.01f);
+
+	string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
+	GUI::Text(AnimList.c_str());
+
 }
 
 #endif // _DEBUG

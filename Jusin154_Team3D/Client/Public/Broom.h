@@ -19,10 +19,23 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+	void Set_Ride(_bool bRide) { m_bRide = bRide; }
 
 private:
-	_bool m_bSprintToggle = { false };
+	_bool m_bHoverToggle = { true };
 	_bool m_bWalkToggle = { false };
+
+	_bool m_bRide = {false};
+
+	_float m_fSpeed = 0.f; 
+	_float m_fTurnSpeed = 0.f;
+	_float m_fTargetSpeed = 0.f;
+	_float m_fTurnMaxSpeed = 5.f;
+	_float m_fFlyMaxSpeed = 15.f;    
+	_float m_fHoverMaxSpeed = 7.f;
+	_float m_fAccel = 1.f;             
+	_float m_fDecel = 1.f;
+
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();

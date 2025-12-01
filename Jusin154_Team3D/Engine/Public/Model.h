@@ -44,6 +44,7 @@ public:
 	const _char* Get_AnimList(_uint iIndex);
 	_float Get_CurrentTrackPosition();
 	_float Get_CurrentTrackProgressRatio();
+	_float Get_TrackProgressRatio(_uint iIndex);
 
 	size_t Get_AnimSize() { return m_Animations.size(); }
 	void Set_PlayAnim(_bool bPlayAnim) { m_bPlayAnim = bPlayAnim; }
@@ -149,6 +150,9 @@ private:
 	_bool						m_bIsSecondFinishedAnim = { false };
 	_bool						m_bIsSecondLoop = { false };
 	vector<vector<_uint>>		m_BoneMask;
+	_float m_fSecondBlendTime = {};
+	_float m_fSecondBlendDuration = {0.3f};
+	_float m_fSecondRatio = {};
 
 
 	// 바이너리

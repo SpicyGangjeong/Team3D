@@ -209,6 +209,10 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 		m_fRatio = (m_fBlendTime / m_fBlendDuration);
 		if (m_fRatio > 1.f) m_fRatio = 1.f;
 
+		m_fSecondBlendTime += fTimeDelta;
+		m_fSecondRatio = (m_fSecondBlendTime / m_fSecondBlendDuration);
+		if (m_fSecondRatio > 1.f) m_fSecondRatio = 1.f;
+
 		CAnimation* pCurAnim = m_Animations[m_iCurrentAnimIndex];
 		CAnimation* pPreAnim = m_Animations[m_iPreAnimIndex];
 
@@ -217,17 +221,42 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 		m_bIsFinishedAnim = pCurAnim->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, true, m_iBoneMask, m_vector);
 		pCurAnim->InterpAnim(pPreAnim, m_Bones, m_fRatio);
 		m_bIsSecondFinishedAnim = pSecondAnim->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsSecondLoop, fTimeDelta, false, m_iBoneMask);
+		m_Animations[m_iCurrSecondAnimIndex]->InterpSecondAnim(m_Animations[m_iCurrentAnimIndex], m_iBoneMask, m_Bones, m_fSecondRatio);
 		if (m_fRatio >= 1.f)
 		{
 			m_iPreAnimIndex = m_iCurrentAnimIndex;
 			m_fBlendTime = 0.f;
 		}
+
+		if (m_bIsSecondFinishedAnim)
+		{
+			if (m_bIsSecondLoop)
+			{
+				m_fSecondRatio = 1.f;
+			}
+			else
+				m_fSecondBlendTime = 0.f;
+		}
 	}
 	else
 	{
+		m_fSecondBlendTime += fTimeDelta;
+		m_fSecondRatio = (m_fSecondBlendTime / m_fSecondBlendDuration);
+		if (m_fSecondRatio > 1.f) m_fSecondRatio = 1.f;
 		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, true, m_iBoneMask, m_vector);
 		m_bIsSecondFinishedAnim = m_Animations[m_iCurrSecondAnimIndex]->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsSecondLoop, fTimeDelta, false, m_iBoneMask);
+		m_Animations[m_iCurrSecondAnimIndex]->InterpSecondAnim(m_Animations[m_iCurrentAnimIndex], m_iBoneMask, m_Bones, m_fSecondRatio);
 		m_iPreAnimIndex = m_iCurrentAnimIndex;
+
+		if (m_bIsSecondFinishedAnim)
+		{
+			if (m_bIsSecondLoop)
+			{
+				m_fSecondRatio = 1.f;
+			}
+			else
+				m_fSecondBlendTime = 0.f;
+		}
 	}
 
 	if (m_bRatio) {
@@ -275,12 +304,16 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fAmount, _boo
 		m_vPrevRootRot = { 0.f,0.f,0.f,0.f };
 		m_bInitialRootRotSaved = false;
 		m_bInitialRootPos = false;
+		if (m_iCurrentAnimIndex != -1)
+		{
+			m_Animations[m_iCurrentAnimIndex]->Depart_Animation();
+			m_Animations[m_iCurrentAnimIndex]->ResetRootMotion();
+		}
 		m_iCurrentAnimIndex = iIndex;
 		m_bIsLoop = isLoop;
 		m_fAmount = fAmount;
 		m_bRatio = bRatio;
-		m_Animations[m_iCurrentAnimIndex]->Depart_Animation();
-		m_Animations[m_iCurrentAnimIndex]->ResetRootMotion();
+
 
 	}
 	else {
@@ -298,6 +331,7 @@ void CModel::Set_Second_AnimationIndex(_uint iIndex, _uint BoneIndex, _bool isLo
 		m_iCurrSecondAnimIndex = iIndex;
 		m_bIsSecondLoop = isLoop;
 		m_iBoneMask = m_BoneMask[BoneIndex];
+		m_fSecondBlendTime = 0.f;
 	}
 	else {
 		m_iCurrSecondAnimIndex = -1;
@@ -306,7 +340,8 @@ void CModel::Set_Second_AnimationIndex(_uint iIndex, _uint BoneIndex, _bool isLo
 
 void CModel::Update_RootBone(_float Amount)
 {
-	if (m_Bones[m_iRootBoneIndex]->Compare_Name("Reference") && m_pTransform != nullptr)
+	if (m_Bones[m_iRootBoneIndex]->Compare_Name("Reference")&& 
+		m_pTransform != nullptr)
 	{
 		_float4x4 Root = m_Bones[m_iRootBoneIndex]->Get_TransformationMatrix();
 		_matrix local = XMLoadFloat4x4(&Root);
@@ -445,6 +480,11 @@ _float CModel::Get_CurrentTrackPosition()
 _float CModel::Get_CurrentTrackProgressRatio()
 {
 	return m_Animations[m_iCurrentAnimIndex]->Get_CurrentTrackProgressRatio();
+}
+
+_float CModel::Get_TrackProgressRatio(_uint iIndex)
+{
+	return m_Animations[iIndex]->Get_CurrentTrackProgressRatio();
 }
 
 _float CModel::Get_AnimSpeed()
