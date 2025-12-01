@@ -55,6 +55,8 @@ public:
 	void Set_AnimSpeed(_float fSpeed);
 
 	HRESULT Anim_Event(_float fRatio, _uint AnimIndex, function<void()> Event);
+
+	void Set_BlendDuration(_float Duration) { m_fBlendDuration = Duration; }
 #pragma endregion
 #pragma region Mesh
 	const _char* Get_MeshName(_uint iIndex);

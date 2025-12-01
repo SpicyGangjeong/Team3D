@@ -129,6 +129,8 @@ void CBroom::Behavior_IdleExit()
 
 void CBroom::Behavior_MoveEnter()
 {
+	if (!m_bRide)
+		return;
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::MOVE);
 	if (m_pFSM->IsEnable_Previous(FSMSTATE::IDLE)) {
@@ -169,6 +171,8 @@ void CBroom::Behavior_MoveEnter()
 
 HRESULT CBroom::Behavior_MoveExitCheck(_float fTimeDelta)
 {
+	if (!m_bRide)
+		return E_FAIL;
 	pair<_uint, _bool> pairAnimInfo = {};
 	_uint iCurrentAnimIndex = m_pModelCom->Get_AnimIndex();
 	_bool bFwd = m_pGameInstance->Key_Pressing(DIK_W);
@@ -185,6 +189,7 @@ HRESULT CBroom::Behavior_MoveExitCheck(_float fTimeDelta)
 
 	if (m_bHoverToggle)
 	{
+		m_pModelCom->Set_BlendDuration(0.3f);
 		if (bFwd)
 		{
 			pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_IDLE_B];
@@ -220,25 +225,31 @@ HRESULT CBroom::Behavior_MoveExitCheck(_float fTimeDelta)
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		}
 
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 0.5f, true);
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, true);
 	}
 	else
 	{
-		m_fTargetSpeed = m_fFlyMaxSpeed;
-		m_fSpeed += (m_fTargetSpeed - m_fSpeed) * fTimeDelta * m_fAccel;
-
-		m_pTransformCom->Go_LerpStraight(m_fSpeed, fTimeDelta);
+		m_pModelCom->Set_BlendDuration(0.6f);
 		if (bFwd)
 		{
+			m_fTargetSpeed = m_fFlyMaxSpeed;
+			m_fSpeed += (m_fTargetSpeed - m_fSpeed) * fTimeDelta * m_fAccel;
 			pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_B];
+			Camera_InterpTurn(fTimeDelta);
 		}
 		else if (bLft)
 		{
+			m_fTargetSpeed = m_fTurnMaxSpeed;
+			m_fSpeed += (m_fTargetSpeed - m_fSpeed) * fTimeDelta * m_fTurnDecel;
 			pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_LEFT_B];
+			m_pTransformCom->Turn(-m_pTransformCom->Get_State(STATE::UP), fTimeDelta*0.1f);
 		}
 		else if (bRht)
 		{
+			m_fTargetSpeed = m_fTurnMaxSpeed;
+			m_fSpeed += (m_fTargetSpeed - m_fSpeed) * fTimeDelta * m_fTurnDecel;
 			pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_RIGHT_B];
+			m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::UP), fTimeDelta* 0.1f);
 		}
 		else if (bDown)
 		{
@@ -257,9 +268,13 @@ HRESULT CBroom::Behavior_MoveExitCheck(_float fTimeDelta)
 			m_pTransformCom->Go_LerpUp(m_fTurnSpeed, fTimeDelta);
 		}
 		else {
+			m_fTargetSpeed = m_fFlyMaxSpeed;
+			m_fSpeed += (m_fTargetSpeed - m_fSpeed) * fTimeDelta * m_fAccel;
 			pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_B];
 		}
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 0.5f, true);
+		
+		m_pTransformCom->Go_LerpStraight(m_fSpeed, fTimeDelta);
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, true);
 	}
 
 	if (m_bHoverToggle && !SUCCEEDED(InputMove()) && !SUCCEEDED(InputAction()))
@@ -275,18 +290,72 @@ HRESULT CBroom::Behavior_MoveExitCheck(_float fTimeDelta)
 		if (m_pModelCom->IsFinishedAnim() && iCurrentAnimIndex == m_Animation[STATEANIM::BROOM_HOVER_STOP_B].first)
 		{
 			m_pFSM->Change_State(FSMSTATE::IDLE);
+			m_pModelCom->Set_BlendDuration(0.3f);
 			return E_FAIL;
 		}
 		return S_OK;
 	}
-	
-		
 	return E_FAIL;
 }
 
 void CBroom::Behavior_MoveExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::MOVE | FSMSTATE::SPRINT | FSMSTATE::JOG | FSMSTATE::WALK);
+}
+
+
+void CBroom::Camera_InterpTurn(_float fTimeDelta)
+{
+	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+
+	if (iCurrAnimIndex != m_Animation[STATEANIM::BROOM_FLY_B].first)
+		return;
+
+	_vector xmvCurLook = XMVector4Normalize(
+		XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
+	_float2 vCurLook = { XMVectorGetX(xmvCurLook),XMVectorGetZ(xmvCurLook) };
+
+	_vector vCameraLook = XMVectorSet(m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z, 0.f);
+
+	_vector vCameraRight = XMVectorSet(m_vCameraRightDir.x, 0.f, m_vCameraRightDir.z, 0.f);
+
+	_float2 fCamLook = { XMVectorGetX(vCameraLook), XMVectorGetZ(vCameraLook) };
+
+	vCameraRight = XMVector3Normalize(vCameraRight);
+
+	_float angle = CMyTools::Get_Direction2D(vCurLook, fCamLook);
+
+	_float degree = XMConvertToDegrees(angle);
+
+	_vector xmvInput = XMVectorZero();
+
+	if (m_pGameInstance->Key_Pressing(DIK_W))
+		xmvInput += vCameraLook;
+
+	xmvInput = XMVector3Normalize(xmvInput);
+
+	_float2 fInput2D = { XMVectorGetX(xmvInput), XMVectorGetZ(xmvInput) };
+
+	_float targetAngle = XMConvertToDegrees(CMyTools::Get_Direction2D(fCamLook, fInput2D));
+
+	_float angleDiff = degree - targetAngle;
+	if (angleDiff > 180.f) {
+		angleDiff -= 360.f;
+	}
+	if (angleDiff < -180.f) {
+		angleDiff += 360.f;
+	}
+
+	_float Offset = 2.f;
+
+	if (angleDiff > Offset)
+	{
+		m_pTransformCom->Turn(-m_pTransformCom->Get_State(STATE::UP), fTimeDelta*0.3f);
+	}
+	else if (angleDiff < -Offset)
+	{
+		m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::UP), fTimeDelta * 0.3f);
+	}
 }
 
 void CBroom::Add_FSM()

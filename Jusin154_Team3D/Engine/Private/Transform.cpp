@@ -360,6 +360,28 @@ void CTransform::LookAt(_fvector vAt)
 	Set_State(STATE::LOOK, XMVector3Normalize(vLook) * vScale.z);
 }
 
+void CTransform::LookAt_Horizontal(_fvector vAt)
+{
+	_float3 vScale = Get_Scale();
+	_vector vPos = Get_State(STATE::POSITION);
+
+	_vector vLook = XMVectorSet(
+		XMVectorGetX(vAt) - XMVectorGetX(vPos),
+		0.f,
+		XMVectorGetZ(vAt) - XMVectorGetZ(vPos),
+		0.f
+	);
+
+	vLook = XMVector3Normalize(vLook);
+
+	_vector vRight = XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook);
+	_vector vUp = XMVector3Cross(vLook, vRight);
+
+	Set_State(STATE::RIGHT, XMVector3Normalize(vRight) * vScale.x);
+	Set_State(STATE::UP, XMVector3Normalize(vUp) * vScale.y);
+	Set_State(STATE::LOOK, XMVector3Normalize(vLook) * vScale.z);
+}
+
 _float CTransform::TargetDis(_fvector vTarget)
 {
 	_vector vTargetDis = vTarget - Get_State(STATE::POSITION);
