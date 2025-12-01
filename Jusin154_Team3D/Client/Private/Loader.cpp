@@ -532,8 +532,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 		Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 		Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
 		Desc.fContactOffset = { 0.05f };
-		Desc.vhalfGeometryInfo = { 2.5f, 4.5f, 3.5f };
-		Desc.fDensity = 10.f;
+		Desc.vhalfGeometryInfo = { 1.f, 1.f, 1.f };
+		Desc.fDensity = 1.f;
 		Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
 		Desc.eLockFlag = {};
 		Desc.vAutoDamping = { 100.f, 100.f };

@@ -92,6 +92,7 @@ void CNomalJap::Update(_float fTimeDelta)
 
 	if (false == m_bTrailPulseEnded && m_fAccTime > m_fDuration * 0.3f) {
 		m_bTrailPulseEnded = true;
+
 		if (nullptr != m_pTargetUnit && false == m_pTargetUnit->isDead()) {
 			_vector vCurrentPos = m_pProjectile->Get_WorldPostion();
 			_vector vTargetPos = m_pTargetUnit->Get_WorldPostion();
@@ -102,9 +103,12 @@ void CNomalJap::Update(_float fTimeDelta)
 			m_fLinearSpeed = fDistance / (m_fDuration - m_fAccTime) * 10 / 3;
 			SAFE_RELEASE(m_pTargetUnit);
 		}
+
+		MoveHitBox(fTimeDelta);
 		return;
 	}
 	if (true == m_bTrailPulseEnded) {
+		MoveHitBox(fTimeDelta);
 		return;
 	}
 	_vector vRotateUp = XMLoadFloat3(&m_vRotateUp);
@@ -116,8 +120,15 @@ void CNomalJap::Update(_float fTimeDelta)
 
 	if (nullptr != m_pPhysHitBox) {
 		m_pPhysHitBox->Get_Component<CTransform>()->AccumulateMomentum(vRotateUp * 0.6f * sinf(m_fAngularSpeed * m_fAccTime));
+		MoveHitBox(fTimeDelta);
 	}
+}
 
+void CNomalJap::MoveHitBox(Engine::_float fTimeDelta)
+{
+	if (nullptr != m_pPhysHitBox) {
+		m_pPhysHitBox->Get_Component<CCharacter_Controller>()->Move(fTimeDelta);
+	}
 }
 
 void CNomalJap::Late_Update(_float fTimeDelta)

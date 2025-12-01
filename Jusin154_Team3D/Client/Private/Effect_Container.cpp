@@ -127,7 +127,7 @@ HRESULT CEffect_Container::Ready_Components(void* pArg)
 	TransformDesc.fRadius = 20.f;
 	TransformDesc.fRotationPerSec = 10.f;
 	TransformDesc.fSpeedPerSec = 10.f;
-
+	
 	if (FAILED(__super::Ready_Components(&TransformDesc))) {
 		return E_FAIL;
 	}
