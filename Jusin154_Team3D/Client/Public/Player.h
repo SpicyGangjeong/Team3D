@@ -49,6 +49,8 @@ private:
 	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
 	class	CCallBack_Playable_Behavior* m_pCallBack_Behavior = { nullptr };
 	class	CCallBack_Playable_HitReport* m_pCallBack_HitReport = { nullptr };
+	CLight* m_pLightCom = { nullptr };
+	LIGHT_DESC LightDesc = {};
 
 	class CModel* m_pBroomModel = { nullptr };
 	class CTransform* m_pBroomTransform = { nullptr };
