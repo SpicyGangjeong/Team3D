@@ -37,6 +37,7 @@ private:
 
 	_bool m_bSprintToggle = { false };
 	_bool m_bWalkToggle = { false };
+	_bool m_bHoverToggle = { true };
 
 	_float3 m_vCameraLookDir = { 0.f, 0.f, 1.f, };
 	_float3 m_vCameraRightDir = { 1.f, 0.f, 0.f };
@@ -54,6 +55,7 @@ private:
 
 	class CModel* m_pBroomModel = { nullptr };
 	class CTransform* m_pBroomTransform = { nullptr };
+	class CBroom* m_pBroom = { nullptr };
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

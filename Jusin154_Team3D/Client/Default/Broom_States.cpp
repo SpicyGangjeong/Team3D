@@ -18,7 +18,7 @@ HRESULT CBroom::InputAction()
 		|| m_pGameInstance->Key_Pressing(DIK_E)
 		|| m_pGameInstance->Key_Pressing(DIK_R)
 		|| m_pGameInstance->Key_Pressing(DIK_Q)
-		|| m_pGameInstance->Key_Pressing(DIK_LSHIFT)
+		|| m_pGameInstance->Key_Down(DIK_LSHIFT)
 		|| m_pGameInstance->Key_Pressing(DIK_C)
 		|| m_pGameInstance->Key_Pressing(DIK_V)
 		|| m_pGameInstance->Key_Pressing(DIK_Z)
@@ -91,6 +91,7 @@ void CBroom::Behavior_IdleEnter() {
 
 HRESULT CBroom::Behavior_IdleExitCheck(_float fTimeDelta)
 {
+	_uint iCurrAnimIndex = m_Animation[STATEANIM::BROOM_MOUNT_B].first;
 	pair<_uint, _bool> pairAnimInfo;
 	if (SUCCEEDED(InputAction())) {
 		if (m_pGameInstance->Key_Down(DIK_B)) {
@@ -100,16 +101,21 @@ HRESULT CBroom::Behavior_IdleExitCheck(_float fTimeDelta)
 		}
 	}
 
-	if (SUCCEEDED(InputMove()) && m_pFSM->IsEnable(FSMSTATE::MOUNT_B))
+	if (SUCCEEDED(InputMove()) || SUCCEEDED(InputAction()))
 	{
-		m_pFSM->Change_State(FSMSTATE::MOVE);
-		return E_FAIL;
-	}
-	if (SUCCEEDED(InputMove()))
-	{
-		if (m_pFSM->IsEnable_Previous(FSMSTATE::MOVE))
+		if (m_bRide)
 		{
 			m_pFSM->Change_State(FSMSTATE::MOVE);
+			return E_FAIL;
+		}
+	}
+
+	if (iCurrAnimIndex == m_Animation[STATEANIM::BROOM_MOUNT_B].first)
+	{
+		if (m_pModelCom->IsFinishedAnim())
+		{
+			pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_IDLE_B];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		}
 	}
 
@@ -132,64 +138,138 @@ void CBroom::Behavior_MoveEnter()
 		{
 			if (m_pGameInstance->Key_Pressing(DIK_W))
 			{
-				pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_B];
+				pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_IDLE_B];
 			}
 			else if (m_pGameInstance->Key_Pressing(DIK_A))
 			{
-				pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_LEFT_B];
+				pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_LEFT_B];
 			}
 			else if (m_pGameInstance->Key_Pressing(DIK_D))
 			{
-				pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_RIGHT_B];
+				pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_RIGHT_B];
 			}
 			else if (m_pGameInstance->Key_Pressing(DIK_LCONTROL))
 			{
-				pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_DOWN_B];
+				pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_DOWN_B];
 			}
 			else if (m_pGameInstance->Key_Pressing(DIK_SPACE))
 			{
-				pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_UP_B];
+				pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_UP_B];
 			}
+
+			if (m_pGameInstance->Key_Up(DIK_LSHIFT))
+			{
+				pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_B];
+			}
+
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 0.5f, true);
 		}
 	}
-
-
 }
 
 HRESULT CBroom::Behavior_MoveExitCheck(_float fTimeDelta)
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	_uint iCurrentAnimIndex = m_pModelCom->Get_AnimIndex();
+	_bool bFwd = m_pGameInstance->Key_Pressing(DIK_W);
+	_bool bLft = m_pGameInstance->Key_Pressing(DIK_A);
+	_bool bRht = m_pGameInstance->Key_Pressing(DIK_D);
+	_bool bDown = m_pGameInstance->Key_Pressing(DIK_LCONTROL);
+	_bool bUp = m_pGameInstance->Key_Pressing(DIK_SPACE);
 
-	if (SUCCEEDED(InputMove()) || SUCCEEDED(InputAction()))
+	
+	if (m_pGameInstance->Key_Up(DIK_LSHIFT))
 	{
-		if (m_pGameInstance->Key_Pressing(DIK_W))
+		m_bHoverToggle = !m_bHoverToggle;
+	}
+
+	if (m_bHoverToggle)
+	{
+		if (bFwd)
 		{
-			pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_B];
-			m_pTransformCom->Go_Straight(fTimeDelta);
+			pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_IDLE_B];
+
+			m_fTargetSpeed = m_fHoverMaxSpeed;
+			m_fSpeed += (m_fTargetSpeed - m_fSpeed) * fTimeDelta * m_fAccel;
+			m_pTransformCom->Go_LerpStraight(m_fSpeed, fTimeDelta);
 		}
-		else if (m_pGameInstance->Key_Pressing(DIK_A))
+		else if (bLft)
 		{
-			pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_LEFT_B];
+			pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_LEFT_B];
 		}
-		else if (m_pGameInstance->Key_Pressing(DIK_D))
+		else if (bRht)
 		{
-			pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_RIGHT_B];
+			pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_RIGHT_B];
 		}
-		else if (m_pGameInstance->Key_Pressing(DIK_LCONTROL))
+		else if (bDown)
 		{
-			pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_DOWN_B];
+			pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_DOWN_B];
+			m_fTargetSpeed = m_fTurnMaxSpeed;
+			m_fSpeed += (m_fTargetSpeed - m_fSpeed) * fTimeDelta * m_fAccel;
+			m_pTransformCom->Go_LerpDown(m_fSpeed, fTimeDelta);
 		}
-		else if (m_pGameInstance->Key_Pressing(DIK_SPACE))
+		else if (bUp)
 		{
-			pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_UP_B];
+			pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_UP_B];
+			m_fTargetSpeed = m_fTurnMaxSpeed;
+			m_fSpeed += (m_fTargetSpeed - m_fSpeed) * fTimeDelta * m_fAccel;
+			m_pTransformCom->Go_LerpUp(m_fSpeed, fTimeDelta);
 		}
+		else {
+			pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_STOP_B];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		}
+
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 0.5f, true);
-		return S_OK;
 	}
 	else
 	{
+		m_fTargetSpeed = m_fFlyMaxSpeed;
+		m_fSpeed += (m_fTargetSpeed - m_fSpeed) * fTimeDelta * m_fAccel;
+
+		m_pTransformCom->Go_LerpStraight(m_fSpeed, fTimeDelta);
+		if (bFwd)
+		{
+			pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_B];
+		}
+		else if (bLft)
+		{
+			pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_LEFT_B];
+		}
+		else if (bRht)
+		{
+			pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_RIGHT_B];
+		}
+		else if (bDown)
+		{
+			pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_DOWN_B];
+			m_fTargetSpeed = m_fTurnMaxSpeed;
+			m_fTurnSpeed += (m_fTargetSpeed - m_fTurnSpeed) * fTimeDelta * m_fAccel;
+
+			m_pTransformCom->Go_LerpDown(m_fTurnSpeed, fTimeDelta);
+		}
+		else if (bUp)
+		{
+			pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_UP_B];
+			m_fTargetSpeed = m_fTurnMaxSpeed;
+			m_fTurnSpeed += (m_fTargetSpeed - m_fTurnSpeed) * fTimeDelta * m_fAccel;
+
+			m_pTransformCom->Go_LerpUp(m_fTurnSpeed, fTimeDelta);
+		}
+		else {
+			pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_B];
+		}
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 0.5f, true);
+	}
+
+	if (m_bHoverToggle && !SUCCEEDED(InputMove()) && !SUCCEEDED(InputAction()))
+	{
+		m_fTargetSpeed = 0.f;
+			
+		m_fSpeed += (m_fTargetSpeed - m_fSpeed) * fTimeDelta * m_fDecel;
+
+		m_pTransformCom->Go_LerpStraight(m_fSpeed, fTimeDelta);
+		
 		pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_STOP_B];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		if (m_pModelCom->IsFinishedAnim() && iCurrentAnimIndex == m_Animation[STATEANIM::BROOM_HOVER_STOP_B].first)
@@ -243,7 +323,13 @@ void CBroom::Set_Anim()
 	m_Animation[STATEANIM::BROOM_MOUNT_B] = { 29,false };
 	m_Animation[STATEANIM::BROOM_HOVER_IDLE_B] = { 24,true };
 	m_Animation[STATEANIM::BROOM_HOVER_STOP_B] = { 6,false };
-	m_Animation[STATEANIM::BROOM_FLY_B] = { 5,true };
+
+	m_Animation[STATEANIM::BROOM_HOVER_DOWN_B] = { 25,true };
+	m_Animation[STATEANIM::BROOM_HOVER_LEFT_B] = { 26,true };
+	m_Animation[STATEANIM::BROOM_HOVER_RIGHT_B] = { 27,true };
+	m_Animation[STATEANIM::BROOM_HOVER_UP_B] = { 28,true };
+
+	m_Animation[STATEANIM::BROOM_FLY_B] = { 12,true };
 	m_Animation[STATEANIM::BROOM_FLY_DOWN_B] = { 13,true };
 	m_Animation[STATEANIM::BROOM_FLY_LEFT_B] = { 15,true };
 	m_Animation[STATEANIM::BROOM_FLY_RIGHT_B] = { 16,true };
@@ -252,6 +338,11 @@ void CBroom::Set_Anim()
 	//호버 스탑 6
 	//호버 제자리 24
 	//플라이 업 17 다운 13 왼쪽15 오른쪽 16
+
+	//호버 다운		25
+	//호버 왼쪽 26
+	// 호버 오른쪽 27
+	//호버 업 28
 }
 #pragma endregion State
 
