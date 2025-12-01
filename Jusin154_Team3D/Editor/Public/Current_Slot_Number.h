@@ -3,18 +3,14 @@
 #include "Editor_Define.h"
 #include "ElementObject.h"
 
-NS_BEGIN(Engine)
-class CGameObject;
-NS_END
-
 NS_BEGIN(Editor)
 
-class CSpell_Hover_Effect final : public CElementObject
+class CCurrent_Slot_Number final : public CElementObject
 {
 private:
-	CSpell_Hover_Effect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CSpell_Hover_Effect(const CSpell_Hover_Effect& rhs);
-	virtual ~CSpell_Hover_Effect() = default;
+	CCurrent_Slot_Number(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CCurrent_Slot_Number(const CCurrent_Slot_Number& rhs);
+	virtual ~CCurrent_Slot_Number() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -30,21 +26,24 @@ public:
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;
+	void	UV();
+	_float4 Meter_Index(_uint Number);
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
-	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_UI_Instance* m_pVIBufferCom = { nullptr };
+	CVIBuffer_UI_Instance::UI_ATLAS_DESC	pUVDesc[4];
 
-	_float m_fOffSetX{};
-	_float m_fOffSetY{};
-	_uint  m_iCols{};
+	_float2									m_fIamge_Size{};
+	_float									m_fOffSetX{};
+	_float									m_fOffSetY{};
+	_uint									m_iCols{};
 
 public:
-	static CSpell_Hover_Effect* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CCurrent_Slot_Number* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 	void Describe_Entity() override;

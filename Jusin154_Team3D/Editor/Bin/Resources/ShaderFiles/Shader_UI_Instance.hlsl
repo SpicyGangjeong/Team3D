@@ -43,7 +43,7 @@ VS_OUT VS_MAIN(VS_IN In)
 
     matrix matVP = mul(g_ViewMatrix, g_ProjMatrix);
     float3 vLocalPos = In.vPosition;
-    if (In.bHover != 0)
+    if (In.bHover == 1)
         vLocalPos.xy *= In.vSize * 1.1f;
     else
         vLocalPos.xy *= In.vSize;
@@ -274,7 +274,7 @@ PS_OUT PS_Spell_Effect(PS_IN In)
     //float angle = -g_fTime;
     //float s = sin(angle);
     //float c = cos(angle);
-    //float2 rotUV = float2(
+    //float2 maskUV = float2(
     //uv.x * c - uv.y * s,
     //uv.x * s + uv.y * c
     //) + center;

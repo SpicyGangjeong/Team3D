@@ -25,7 +25,7 @@ public:
 
 
 private:
-	void Hover();
+	void Hover(_float fTimeDelta);
 
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
@@ -43,8 +43,10 @@ private:
 	_float m_fOffSetY{};
 	_uint  m_iCols{};
 
-	_bool m_bHover = { false };
-	_bool m_bPrevHover = { false };
+	_float m_fHoverTime{};
+	_int m_iPerSpell_Slot{};
+
+
 public:
 	static CEessential_Spell_Slot* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

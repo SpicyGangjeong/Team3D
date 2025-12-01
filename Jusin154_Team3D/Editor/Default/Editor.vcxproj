@@ -166,6 +166,7 @@
     <ClInclude Include="..\Public\Action_Panel.h" />
     <ClInclude Include="..\public\AlphaMap.h" />
     <ClInclude Include="..\Public\Body.h" />
+    <ClInclude Include="..\public\Current_Slot_Number.h" />
     <ClInclude Include="..\public\Current_Spell_Slot.h" />
     <ClInclude Include="..\Public\Decendo.h" />
     <ClInclude Include="..\Public\Broom.h" />
@@ -260,6 +261,7 @@
     <ClInclude Include="..\public\Spell_Anim.h" />
     <ClInclude Include="..\public\Spell_Canvas.h" />
     <ClInclude Include="..\public\Spell_Data.h" />
+    <ClInclude Include="..\public\Spell_Drag.h" />
     <ClInclude Include="..\public\Spell_Header.h" />
     <ClInclude Include="..\public\Spell_Header_Line.h" />
     <ClInclude Include="..\public\Spell_Hover.h" />
@@ -322,6 +324,7 @@
     <ClCompile Include="..\Private\Action_Panel.cpp" />
     <ClCompile Include="..\private\AlphaMap.cpp" />
     <ClCompile Include="..\Private\Body.cpp" />
+    <ClCompile Include="..\private\Current_Slot_Number.cpp" />
     <ClCompile Include="..\private\Current_Spell_Slot.cpp" />
     <ClCompile Include="..\Private\Decendo.cpp" />
     <ClCompile Include="..\Private\Broom.cpp" />
@@ -418,6 +421,7 @@
     <ClCompile Include="..\private\Spell_Anim.cpp" />
     <ClCompile Include="..\private\Spell_Canvas.cpp" />
     <ClCompile Include="..\private\Spell_Data.cpp" />
+    <ClCompile Include="..\private\Spell_Drag.cpp" />
     <ClCompile Include="..\Private\Spell_Header.cpp" />
     <ClCompile Include="..\private\Spell_Header_Line.cpp" />
     <ClCompile Include="..\private\Spell_Hover.cpp" />

@@ -207,14 +207,20 @@ _bool CUIObject::Chack_Visible()
 
 void CUIObject::Set_FadeIn()
 {
-	m_bFadeIn = true;
-	m_bFadeOut = false;
+	if (!m_bFadeIn && m_fAlpha < 1.f)
+	{
+		m_bFadeIn = true;
+		m_bFadeOut = false;
+	}
 }
 
 void CUIObject::Set_FadeOut()
 {
-	m_bFadeIn = false;
-	m_bFadeOut = true;
+	if (!m_bFadeOut && m_fAlpha > 0.f)
+	{
+		m_bFadeOut = true;
+		m_bFadeIn = false;
+	}
 }
 
 _bool CUIObject::Get_FadeIn()
@@ -465,6 +471,16 @@ void CUIObject::Add_Function(wstring Name, function<void(void*)> Evnet)
 
 void CUIObject::Function_Callback(wstring Name, void* pArg)
 {
+}
+
+_bool CUIObject::Get_Hover()
+{
+	return m_bHover;
+}
+
+const CUIObject::SPELLINFO CUIObject::Get_Info(_int Index)
+{
+	return SPELLINFO();
 }
 
 void CUIObject::Free()
