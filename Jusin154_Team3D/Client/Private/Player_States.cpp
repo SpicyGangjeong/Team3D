@@ -1280,6 +1280,7 @@ void CPlayer::Add_FSM()
 			_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 			if (m_pFSM->IsEnable(FSMSTATE::DISMOUNT))
 				return;
+
 			if (m_bHoverToggle)
 			{
 				_float3	fMove = m_pGameInstance->Get_MouseMove();
@@ -1294,7 +1295,7 @@ void CPlayer::Add_FSM()
 
 			_matrix BoneNoScale = XMMatrixRotationQuaternion(Rot) * XMMatrixTranslationFromVector(Trans);
 
-			m_OffsetPos = { 0.f, 1.18f, 0.f };
+			m_OffsetPos = { 0.f, 1.22f, 0.f };
 			
 			GUI::DragFloat3("BroomOffset", (_float*)&m_OffsetPos, 0.01f);
 			_matrix Offset = XMMatrixTranslation(m_OffsetPos.x,
@@ -1306,7 +1307,18 @@ void CPlayer::Add_FSM()
 
 			_matrix FinalWorld = FixRot * SocketWorld;
 
-			m_pTransformCom->Set_WorldMatrix(FinalWorld);
+			_vector SourS, SourR, SourT;
+			_vector DestS, DestR, DestT;
+			XMMatrixDecompose(&SourS, &SourR, &SourT, FinalWorld);
+			XMMatrixDecompose(&DestS, &DestR, &DestT, m_pTransformCom->Get_XMWorldMatrix());
+
+			_vector finalS = XMVectorLerp(SourS, DestS,fTimeDelta*0.7f);
+			_vector finalR = XMQuaternionSlerp(SourR,DestR, fTimeDelta * 0.7f);
+			_vector finalT = XMVectorLerp(SourT,DestT, fTimeDelta * 0.7f);
+
+			_matrix finalMat = XMMatrixAffineTransformation(finalS, XMVectorZero(), finalR, finalT);
+
+			m_pTransformCom->Set_WorldMatrix(finalMat);
 			m_pCharacter_Controller->Set_Position(FinalWorld.r[3]);
 
 			};

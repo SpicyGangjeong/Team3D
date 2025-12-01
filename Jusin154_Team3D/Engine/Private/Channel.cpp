@@ -139,11 +139,14 @@ void CChannel::Update_TransformationMatirx(
 		LocalPos.Translation.z,
 		1.f);
 
-	if (Bones[m_iBoneIndex]->Compare_Name("Reference") && vector)
+	if (Bones[m_iBoneIndex]->Compare_Name("Reference")|| Bones[m_iBoneIndex]->Compare_Name("root"))
 	{
-		vector[0] = vScale;
-		vector[1] = vRotation;
-		vector[2] = vTranslation;
+		if (vector)
+		{
+			vector[0] = vScale;
+			vector[1] = vRotation;
+			vector[2] = vTranslation;
+		}
 	}
 
 	if (bIsSpine)

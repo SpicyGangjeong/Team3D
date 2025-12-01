@@ -220,8 +220,10 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 
 		m_bIsFinishedAnim = pCurAnim->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, true, m_iBoneMask, m_vector);
 		pCurAnim->InterpAnim(pPreAnim, m_Bones, m_fRatio);
+
 		m_bIsSecondFinishedAnim = pSecondAnim->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsSecondLoop, fTimeDelta, false, m_iBoneMask);
-		m_Animations[m_iCurrSecondAnimIndex]->InterpSecondAnim(m_Animations[m_iCurrentAnimIndex], m_iBoneMask, m_Bones, m_fSecondRatio);
+
+		pSecondAnim->InterpSecondAnim(pCurAnim, m_iBoneMask, m_Bones, m_fSecondRatio);
 		if (m_fRatio >= 1.f)
 		{
 			m_iPreAnimIndex = m_iCurrentAnimIndex;
@@ -243,7 +245,9 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 		m_fSecondBlendTime += fTimeDelta;
 		m_fSecondRatio = (m_fSecondBlendTime / m_fSecondBlendDuration);
 		if (m_fSecondRatio > 1.f) m_fSecondRatio = 1.f;
+
 		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, true, m_iBoneMask, m_vector);
+
 		m_bIsSecondFinishedAnim = m_Animations[m_iCurrSecondAnimIndex]->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsSecondLoop, fTimeDelta, false, m_iBoneMask);
 		m_Animations[m_iCurrSecondAnimIndex]->InterpSecondAnim(m_Animations[m_iCurrentAnimIndex], m_iBoneMask, m_Bones, m_fSecondRatio);
 		m_iPreAnimIndex = m_iCurrentAnimIndex;
@@ -370,6 +374,58 @@ void CModel::Update_RootBone(_float Amount)
 		m_pTransform->AccumulateMomentum(vDeltaWorld);
 
 		m_vPrevRootPos = vCurRootPos;
+
+		_float4 curRotF4;
+		XMStoreFloat4(&curRotF4, m_vector[1]);
+		_vector qCur = XMLoadFloat4(&curRotF4);
+
+		if (!m_bInitialRootRotSaved)
+		{
+			m_vInitialRootRot = curRotF4;
+			m_vPrevRootRot = curRotF4;
+			m_bInitialRootRotSaved = true;
+		}
+		else
+		{
+			_vector qPrev = XMLoadFloat4(&m_vPrevRootRot);
+			_vector qInvPrev = XMQuaternionInverse(qPrev);
+			_vector qDelta = XMQuaternionMultiply(qInvPrev, qCur);
+
+			_vector axisLocal;
+			_float angle = 0.f;
+			XMQuaternionToAxisAngle(&axisLocal, &angle, qDelta);
+
+			_vector axisWorld = XMVector3TransformNormal(axisLocal, pre);
+			axisWorld = XMVector3Normalize(axisWorld);
+
+			_float4 axis;
+			XMStoreFloat4(&axis, axisWorld);
+
+			swap(axis.z, axis.y);
+			m_pTransform->TurnAngle(XMLoadFloat4(&axis), angle);
+
+		}
+		XMStoreFloat4(&m_vPrevRootRot, qCur);
+
+		_vector qInit = XMLoadFloat4(&m_vInitialRootRot);
+
+		_vector scale, rot, trans;
+		XMMatrixDecompose(&scale, &rot, &trans, local);
+
+		rot = qInit;
+		trans = XMVectorZero();
+
+		local = XMMatrixAffineTransformation(scale, XMVectorSet(0.f, 0.f, 0.f, 1.f), rot, trans);
+
+		m_Bones[m_iRootBoneIndex]->Set_TransformationMatrix(local);
+	}
+	else if (m_Bones[m_iRootBoneIndex]->Compare_Name("root") &&
+		m_pTransform != nullptr)
+	{
+		_float4x4 Root = m_Bones[m_iRootBoneIndex]->Get_TransformationMatrix();
+		_matrix local = XMLoadFloat4x4(&Root);
+
+		_matrix pre = XMLoadFloat4x4(&m_PreTransformMatrix);
 
 		_float4 curRotF4;
 		XMStoreFloat4(&curRotF4, m_vector[1]);
