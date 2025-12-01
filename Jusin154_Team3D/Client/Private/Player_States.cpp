@@ -684,6 +684,7 @@ void CPlayer::Behavior_CombatEnter()
 		m_pFSM->Enable_State(FSMSTATE::SKILL);
 		pairAnimInfo = m_Animation[STATEANIM::SKILL];
 
+		m_pEffectPool->Use_Skill(SKILL_TYPE::REVELIO, this);
 
 	}
 	else if (m_pGameInstance->Key_Down(DIK_Q)) {

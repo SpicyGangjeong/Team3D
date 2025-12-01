@@ -67,6 +67,8 @@ public:
 		BLOOM_TYPE eBloomType = {};
 		_float2    vBloomTime = {};
 
+		_int	   iNumVertex = {};
+
 	}TRAIL_INFO;
 private:
 	CTrailObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
