@@ -193,7 +193,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
     PBR_Out.vShade *= fOcclusion;
 
-    float3 vAmbient = g_vLightAmbient.rgb * fOcclusion; // 필요하면 * vAlbedo
+    float3 vAmbient = g_vLightAmbient.rgb * fOcclusion;
     float3 vFinalDiffuse = PBR_Out.vShade + vAmbient;
     float3 vFinalSpecular = PBR_Out.vSpecular * g_vLightSpecular.rgb;
 
@@ -283,7 +283,7 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     
     PBR_Out.vShade *= fOcclusion;
 
-    float3 vAmbient = g_vLightAmbient.rgb * fOcclusion; // 필요하면 * vAlbedo
+    float3 vAmbient = g_vLightAmbient.rgb * fOcclusion;
     float3 vFinalDiffuse = PBR_Out.vShade + vAmbient;
     float3 vFinalSpecular = PBR_Out.vSpecular * g_vLightSpecular.rgb;
 
@@ -386,7 +386,7 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
     
     PBR_Out.vShade *= fOcclusion;
 
-    float3 vAmbient = g_vLightAmbient.rgb * fOcclusion; // 필요하면 * vAlbedo
+    float3 vAmbient = g_vLightAmbient.rgb * fOcclusion;
     float3 vFinalDiffuse = PBR_Out.vShade + vAmbient;
     float3 vFinalSpecular = PBR_Out.vSpecular * g_vLightSpecular.rgb;
 
