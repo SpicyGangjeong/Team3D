@@ -11,6 +11,14 @@ CCallBack_Playable_HitReport::~CCallBack_Playable_HitReport()
 {
 }
 
+void CCallBack_Playable_HitReport::BeginFrame()
+{
+	// 매 프레임 초기화
+	m_vClimbNormal = { 0.f, 1.f, 0.f };
+	m_bGroundHit = { false };
+	m_fBestNormal = { 0.f };
+}
+
 void CCallBack_Playable_HitReport::onShapeHit(const PSX::PxControllerShapeHit& hit)
 {
 	PSX::PxController*		pController = hit.controller;
@@ -32,49 +40,35 @@ void CCallBack_Playable_HitReport::onShapeHit(const PSX::PxControllerShapeHit& h
 		switch (pTargetActorData->eKind)
 		{
 		case PHYSX_KIND::BODY_STATIC:
-			// action
+			switch (PXOBJECT(pTargetActorData->iSubKind))
+			{
+			case PXOBJECT::TERRAIN:
+			case PXOBJECT::FLOOR:
+			case PXOBJECT::ROAD:
+				if (vWorldNormal.y > 0) {
+					_float fDotValue = vWorldNormal.dot({ 0.f, 1.f, 0.f });
+					if (m_fBestNormal < fDotValue) {
+						m_bGroundHit = true;
+						m_fBestNormal = fDotValue;
+						m_vClimbNormal = { vWorldNormal.x, vWorldNormal.y, vWorldNormal.z };
+					}
+				}
+				break;
+			default:
+				break;
+			}
 			break;
 		case PHYSX_KIND::BODY_DYNAMIC:
 		{
-			switch (pTargetActorData->iSubKind)
+			switch (PXOBJECT(pTargetActorData->iSubKind))
 			{
-			case 23: // 무거운데 올라갈 수 있는 벽
-				if (m_pGameInstance->Key_Pressing(DIK_E)) {
-					pOwnerActorData->pOwner->Get_Component<CTransform>()->BookMomentum(fLength * XMVectorSet(0.f, 1.5f, 0.f, 0.f));
-				}																			   					  
-				else if (m_pGameInstance->Key_Pressing(DIK_R)) {							   					  
-					pOwnerActorData->pOwner->Get_Component<CTransform>()->BookMomentum(fLength * XMVectorSet(0.f, -1.f, 0.f, 0.f));
-				}
-				//pOwnerActorData->pOwner->Get_Component<CTransform>()->BookMomentum(XMVectorSet(0.f, 0.5f * GRAVITY, 0.f, 0.f));
+			case PXOBJECT::END:
 				break;
-			case 24: // 문짝
-			{
-				PSX::PxRigidDynamic* pDynamic = static_cast<PSX::PxRigidDynamic*>(pActor);
-				_float fDot = vDir.dot(PSX::PxVec3(0.f, 1.f, 0.f));
-				if (fDot > 0) {
-					pDynamic->addTorque(PSX::PxVec3(0.f, 1.f, 0.f) * fLength * 100000.f, PSX::PxForceMode::eIMPULSE);
-				}
-				else {
-					pDynamic->addTorque(PSX::PxVec3(0.f, -1.f, 0.f) * fLength * 100000.f, PSX::PxForceMode::eIMPULSE);
-				}
-			} break;
-			case 25: // 문짝
-			{
-				PSX::PxRigidDynamic* pDynamic = static_cast<PSX::PxRigidDynamic*>(pActor);
-				_float fDot = vDir.dot(PSX::PxVec3(0.f, 1.f, 0.f));
-				if (fDot > 0) {
-					pDynamic->addTorque(PSX::PxVec3(0.f, 1.f, 0.f) * fLength * 100000.f, PSX::PxForceMode::eFORCE);
-				}
-				else {
-					pDynamic->addTorque(PSX::PxVec3(0.f, -1.f, 0.f) * fLength * 100000.f, PSX::PxForceMode::eFORCE);
-				}
-			} break;
 			default:
 			{
 				PSX::PxRigidDynamic* pDynamic = static_cast<PSX::PxRigidDynamic*>(pActor);
 				pDynamic->addForce(vDir * fLength * 100000.f, PSX::PxForceMode::eIMPULSE);
-			}
-				break;
+			} break;
 			}
 		}	break;
 		case PHYSX_KIND::CCTActor:
@@ -138,6 +132,20 @@ void CCallBack_Playable_HitReport::onObstacleHit(const PSX::PxControllerObstacle
 	//}
 }
 
+void CCallBack_Playable_HitReport::Set_CurrentSlop()
+{
+	m_pController->Rewind_Grounded();
+	if (m_bGroundHit)
+	{
+		m_pController->Set_OnGroundFlag(m_bGroundHit);
+		float fDot = clamp(m_fBestNormal, -1.0f, 1.0f);
+		float fAngleRad = acosf(fDot);
+		float fAngleDeg = XMConvertToDegrees(fAngleRad);
+
+		m_pController->Set_CurrentSlope(fAngleDeg);
+	}
+}
+
 HRESULT CCallBack_Playable_HitReport::Initialize(CCharacter_Controller* pController, CRigidBody_Dynamic* pPartDynamicObject)
 {
 	m_pController = pController;
@@ -155,6 +163,16 @@ HRESULT CCallBack_Playable_HitReport::Finalize()
 	SAFE_RELEASE(m_pPartDynamicBody);
 	SAFE_RELEASE(m_pController);
 	return S_OK;
+}
+
+_bool CCallBack_Playable_HitReport::IsOnGround()
+{
+	return m_bGroundHit;
+}
+
+_vector CCallBack_Playable_HitReport::Get_GroundVector()
+{
+	return XMLoadFloat3(&m_vClimbNormal);
 }
 
 CCallBack_Playable_HitReport* CCallBack_Playable_HitReport::Create()

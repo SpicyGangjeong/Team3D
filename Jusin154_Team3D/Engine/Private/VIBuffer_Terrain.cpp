@@ -211,8 +211,9 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _char* pFilePath)
 	Safe_Delete_Array(pPixels);
 
 	m_pQuadTree = CQuadTree::Create(m_iNumVerticesX * m_iNumVerticesZ - m_iNumVerticesX, m_iNumVerticesX * m_iNumVerticesZ - 1, m_iNumVerticesX - 1, 0);
-	if (nullptr == m_pQuadTree)
+	if (nullptr == m_pQuadTree){
 		return E_FAIL;
+	}
 
 	m_pQuadTree->SetUp_Neighbors();
 

@@ -2303,6 +2303,10 @@ HRESULT CLoader::Loading_For_MapViewer()
 		".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
 		return E_FAIL;
 
+	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\LightFixtures",
+		".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+
 #pragma endregion
 
 #ifdef gimch

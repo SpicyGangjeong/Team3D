@@ -223,6 +223,10 @@ _vector CTransform::Get_CurrentMomentum() const
 {
 	return XMLoadFloat3(&m_vMomentum);
 }
+void CTransform::Set_CurrentMomentum(_fvector vMomentum)
+{
+	XMStoreFloat3(&m_vMomentum, vMomentum);
+}
 _vector CTransform::Get_EstimatedPositionByMomentum() const
 {
 	return XMVectorSetW(Get_State(STATE::POSITION) + XMLoadFloat3(&m_vMomentum), 1.f);
