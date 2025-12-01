@@ -90,6 +90,7 @@ void CGoblin::Update(_float fTimeDelta)
 			m_pRigidBody->ConvertToCCT(*m_pCharacter_Controller);
 		}
 	}
+	Describe_Entity();
 }
 
 void CGoblin::Late_Update(_float fTimeDelta)
@@ -102,7 +103,7 @@ void CGoblin::Late_Update(_float fTimeDelta)
 		m_pTransformCom->Set_WorldMatrix(m_pRigidBody->Get_Actor()->getGlobalPose());
 	}
 
-	m_pTransformCom->LookAt(XMLoadFloat4(&m_vTargetPos));
+	m_pTransformCom->LookAt_Horizontal(XMLoadFloat4(&m_vTargetPos));
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 }
@@ -287,6 +288,9 @@ void CGoblin::Free()
 
 void CGoblin::Describe_Entity()
 {
+	_float4 vMomentum = {};
+	XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());
+	GUI::Text("GoblinMomentum %.2f %.2f %.2f %.2f ", vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);
 }
 
 #endif // _DEBUG
