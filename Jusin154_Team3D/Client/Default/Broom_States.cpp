@@ -13,18 +13,17 @@
 HRESULT CBroom::InputAction()
 {
 	if (
-		m_pGameInstance->Key_Down(DIK_SPACE)
-		|| m_pGameInstance->Key_Down(DIK_LCONTROL)
-		|| m_pGameInstance->Key_Down(DIK_E)
-		|| m_pGameInstance->Key_Down(DIK_R)
-		|| m_pGameInstance->Key_Down(DIK_Q)
-		|| m_pGameInstance->Mouse_Up(DIM_LBUTTON)
-		|| m_pGameInstance->Key_Down(DIK_LSHIFT)
-		|| m_pGameInstance->Key_Down(DIK_C)
-		|| m_pGameInstance->Key_Down(DIK_V)
-		|| m_pGameInstance->Key_Down(DIK_Z)
-		|| m_pGameInstance->Key_Down(DIK_G)
-		|| m_pGameInstance->Key_Down(DIK_B)
+		m_pGameInstance->Key_Pressing(DIK_SPACE)
+		|| m_pGameInstance->Key_Pressing(DIK_LCONTROL)
+		|| m_pGameInstance->Key_Pressing(DIK_E)
+		|| m_pGameInstance->Key_Pressing(DIK_R)
+		|| m_pGameInstance->Key_Pressing(DIK_Q)
+		|| m_pGameInstance->Key_Pressing(DIK_LSHIFT)
+		|| m_pGameInstance->Key_Pressing(DIK_C)
+		|| m_pGameInstance->Key_Pressing(DIK_V)
+		|| m_pGameInstance->Key_Pressing(DIK_Z)
+		|| m_pGameInstance->Key_Pressing(DIK_G)
+		|| m_pGameInstance->Key_Pressing(DIK_B)
 		)
 	{
 		return S_OK;
@@ -62,10 +61,10 @@ HRESULT CBroom::InputSpell()
 		m_pGameInstance->Key_Down(DIK_1)
 		|| m_pGameInstance->Key_Down(DIK_2)
 		|| m_pGameInstance->Key_Down(DIK_3)
-		|| m_pGameInstance->Key_Down(DIK_4)
-		)
-	{
-		return S_OK;
+			|| m_pGameInstance->Key_Down(DIK_4)
+			)
+			{
+				return S_OK;
 	}
 	return E_FAIL;
 }
@@ -106,6 +105,13 @@ HRESULT CBroom::Behavior_IdleExitCheck(_float fTimeDelta)
 		m_pFSM->Change_State(FSMSTATE::MOVE);
 		return E_FAIL;
 	}
+	if (SUCCEEDED(InputMove()))
+	{
+		if (m_pFSM->IsEnable_Previous(FSMSTATE::MOVE))
+		{
+			m_pFSM->Change_State(FSMSTATE::MOVE);
+		}
+	}
 
 	return E_FAIL;
 }
@@ -118,59 +124,82 @@ void CBroom::Behavior_IdleExit()
 void CBroom::Behavior_MoveEnter()
 {
 	pair<_uint, _bool> pairAnimInfo = {};
-	_bool bFoward = m_pGameInstance->Key_Pressing(DIK_W);
-	_bool bLeft = m_pGameInstance->Key_Pressing(DIK_A);
-	_bool bRight = m_pGameInstance->Key_Pressing(DIK_D);
-	_bool bBackward = m_pGameInstance->Key_Pressing(DIK_S);
 	m_pFSM->Enable_State(FSMSTATE::MOVE);
 	if (m_pFSM->IsEnable_Previous(FSMSTATE::IDLE)) {
 		m_pFSM->Enable_State(FSMSTATE::JOG);
-		if (SUCCEEDED(InputMove()))
+
+		if (SUCCEEDED(InputMove()) || SUCCEEDED(InputAction()))
 		{
-			if (bFoward)
+			if (m_pGameInstance->Key_Pressing(DIK_W))
 			{
 				pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_B];
 			}
-			else if (bLeft)
+			else if (m_pGameInstance->Key_Pressing(DIK_A))
 			{
 				pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_LEFT_B];
 			}
-			else if (bRight)
+			else if (m_pGameInstance->Key_Pressing(DIK_D))
 			{
 				pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_RIGHT_B];
 			}
+			else if (m_pGameInstance->Key_Pressing(DIK_LCONTROL))
+			{
+				pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_DOWN_B];
+			}
+			else if (m_pGameInstance->Key_Pressing(DIK_SPACE))
+			{
+				pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_UP_B];
+			}
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 0.5f, true);
 		}
 	}
 
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
 }
 
 HRESULT CBroom::Behavior_MoveExitCheck(_float fTimeDelta)
 {
 	pair<_uint, _bool> pairAnimInfo = {};
-	_bool bFoward = m_pGameInstance->Key_Pressing(DIK_W);
-	_bool bLeft = m_pGameInstance->Key_Pressing(DIK_A);
-	_bool bRight = m_pGameInstance->Key_Pressing(DIK_D);
-	_bool bBackward = m_pGameInstance->Key_Pressing(DIK_S);
+	_uint iCurrentAnimIndex = m_pModelCom->Get_AnimIndex();
 
-	if (SUCCEEDED(InputMove()))
+	if (SUCCEEDED(InputMove()) || SUCCEEDED(InputAction()))
 	{
-		if (bFoward)
+		if (m_pGameInstance->Key_Pressing(DIK_W))
 		{
 			pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_B];
 			m_pTransformCom->Go_Straight(fTimeDelta);
 		}
-		else if (bLeft)
+		else if (m_pGameInstance->Key_Pressing(DIK_A))
 		{
 			pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_LEFT_B];
 		}
-		else if (bRight)
+		else if (m_pGameInstance->Key_Pressing(DIK_D))
 		{
 			pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_RIGHT_B];
 		}
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		else if (m_pGameInstance->Key_Pressing(DIK_LCONTROL))
+		{
+			pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_DOWN_B];
+		}
+		else if (m_pGameInstance->Key_Pressing(DIK_SPACE))
+		{
+			pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_UP_B];
+		}
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 0.5f, true);
 		return S_OK;
 	}
+	else
+	{
+		pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_STOP_B];
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		if (m_pModelCom->IsFinishedAnim() && iCurrentAnimIndex == m_Animation[STATEANIM::BROOM_HOVER_STOP_B].first)
+		{
+			m_pFSM->Change_State(FSMSTATE::IDLE);
+			return E_FAIL;
+		}
+		return S_OK;
+	}
+	
 		
 	return E_FAIL;
 }
@@ -192,20 +221,22 @@ void CBroom::Add_FSM()
 		Desc.funcPriorityUpdate = nullptr;
 		Desc.funcLateUpdate = nullptr;
 		m_States.emplace(FSMSTATE::IDLE, CState_Idle::Create(&Desc));
-	}
-	{
-		CState_Move::STATE_MOVE_DESC Desc{};
-		Desc.pOwner = this;
-		Desc.funcEnterEvent = [this]() { Behavior_MoveEnter(); };
-		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_MoveExitCheck(fTimedelta); };
-		Desc.funcExitEvent = [this]() { Behavior_MoveExit(); };
-		Desc.funcPriorityUpdate = nullptr;
-		Desc.funcLateUpdate = nullptr;
-		m_States.emplace(FSMSTATE::MOVE, CState_Move::Create(&Desc));
-	}
-#pragma endregion
+			}
 
+		{
+			CState_Move::STATE_MOVE_DESC Desc{};
+			Desc.pOwner = this;
+			Desc.funcEnterEvent = [this]() { Behavior_MoveEnter(); };
+			Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_MoveExitCheck(fTimedelta); };
+			Desc.funcExitEvent = [this]() { Behavior_MoveExit(); };
+			Desc.funcPriorityUpdate = nullptr;
+			Desc.funcLateUpdate = nullptr;
+			m_States.emplace(FSMSTATE::MOVE, CState_Move::Create(&Desc));
+		}
+#pragma endregion
 }
+
+
 
 void CBroom::Set_Anim()
 {
