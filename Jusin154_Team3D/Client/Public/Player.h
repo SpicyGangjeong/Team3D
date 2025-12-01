@@ -96,6 +96,7 @@ private:
 	vector<PendingEvent> m_PendingEvents;
 
 
+	_float3 m_OffsetPos = {};
 	_float m_fAmount = { 1.f };
 	_float m_fInputTime = {};
 	_bool m_bRatio = { false };

@@ -42,11 +42,15 @@ HRESULT CBroom::Initialize(void* pArg)
 		m_pFSM->Change_State(FSMSTATE::IDLE);
 	}
 
+
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 10.f, 0.f, 1.f));
+
 	return S_OK;
 }
 
 void CBroom::Priority_Update(_float fTimeDelta)
 {
+	
 }
 
 void CBroom::Update(_float fTimeDelta)
