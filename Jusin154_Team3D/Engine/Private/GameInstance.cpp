@@ -652,7 +652,9 @@ void CGameInstance::Add_SaveModel(const _char* filePath, SaveModel sModel)
 
 SaveModel* CGameInstance::Load_SaveModel(const _char* filePath)
 {
+	m_mtxLoadModelLock.lock();
 	auto iter = m_sModelMap.find(filePath);
+	m_mtxLoadModelLock.unlock();
 	return &iter->second;
 }
 
@@ -683,6 +685,10 @@ PSX::PxRigidStatic* CGameInstance::Add_StaticActor(CRigidBody_Static& RigidBody)
 PSX::PxRevoluteJoint* CGameInstance::Create_PxRevoluteJoint(PSX::PxRigidActor* pActorFrame, PSX::PxTransform& pxLocalWallFrame, PSX::PxRigidActor* pActorObject, PSX::PxTransform& pxLocalActorFrame)
 {
 	return m_pPhysX_Manager->Create_PxRevoluteJoint(pActorFrame, pxLocalWallFrame, pActorObject, pxLocalActorFrame);
+}
+_bool CGameInstance::SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
+{
+	return m_pPhysX_Manager->SphereCast(fRadius, vStartPos, vDir, fDistance, flagHitsData, flagQuery, hitBuffer);
 }
 PSX::PxController* CGameInstance::Add_CapsuleController(PSX::PxCapsuleControllerDesc& Desc)
 {
@@ -726,6 +732,10 @@ HRESULT CGameInstance::SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleM
 HRESULT CGameInstance::LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes)
 {
 	return m_pPhysX_Manager->LoadTriMeshes(pPath, TriMeshes);
+}
+void CGameInstance::Add_Editor_Plane(PhsXUserData& PlaneData)
+{
+	m_pPhysX_Manager->Add_Editor_Plane(PlaneData);
 }
 #pragma endregion
 

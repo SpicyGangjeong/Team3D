@@ -53,6 +53,7 @@ public:
 
 	void	AccumulateMomentum(_fvector vMomentum);
 	_vector Get_CurrentMomentum() const;
+	void	Set_CurrentMomentum(_fvector vMomentum);
 	void	RewindMomentum();
 
 	_vector Get_EstimatedPositionByMomentum() const;

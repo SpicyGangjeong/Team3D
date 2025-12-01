@@ -35,13 +35,12 @@ void CCallBack_EffectHitBox_HitReport::onShapeHit(const PSX::PxControllerShapeHi
 		switch (pTargetActorData->eKind)
 		{
 		case PHYSX_KIND::BODY_STATIC:
-			// action
 			break;
 		case PHYSX_KIND::BODY_DYNAMIC:
 		{
-			switch (pTargetActorData->iSubKind)
+			switch (PXOBJECT(pTargetActorData->iSubKind))
 			{
-			case ENUM_CLASS(PXOBJECT::WALL):
+			case PXOBJECT::WALL:
 
 				/* OnCollision 함수에 넘길 값 */
 				CollisionDesc.vWorldPos = XMVectorSet( (_float)vWorldPos.x, (_float)vWorldPos.y, (_float)vWorldPos.z, 1.f);
@@ -51,7 +50,7 @@ void CCallBack_EffectHitBox_HitReport::onShapeHit(const PSX::PxControllerShapeHi
 
 				pOwnerActorData->pOwner->Get_Owner()->OnCollision(pTargetActorData->pOwner , &CollisionDesc);
 				break;
-			case ENUM_CLASS(PXOBJECT::GOBLIN_WARRIOR):
+			case PXOBJECT::GOBLIN_WARRIOR:
 
 				/* OnCollision 함수에 넘길 값 */
 				CollisionDesc.vWorldPos = XMVectorSet( (_float)vWorldPos.x, (_float)vWorldPos.y, (_float)vWorldPos.z, 1.f);
@@ -108,9 +107,9 @@ void CCallBack_EffectHitBox_HitReport::onControllerHit(const PSX::PxControllersH
 			assert(false);
 			break;
 		case PHYSX_KIND::CCTActor:
-			switch (pTargetActorData->iSubKind)
+			switch (PXOBJECT(pTargetActorData->iSubKind))
 			{
-			case ENUM_CLASS(PXOBJECT::GOBLIN_WARRIOR):
+			case PXOBJECT::GOBLIN_WARRIOR:
 
 				/* OnCollision 함수에 넘길 값 */
 				CollisionDesc.vWorldPos = XMVectorSet((_float)vWorldPos.x, (_float)vWorldPos.y, (_float)vWorldPos.z, 1.f);

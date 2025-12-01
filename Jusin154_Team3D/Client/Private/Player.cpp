@@ -108,6 +108,7 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 	m_pTransformCom->RewindMomentum();
 
 	__super::Priority_Update(fTimeDelta);
+
 }
 
 void CPlayer::Update(_float fTimeDelta)
@@ -119,15 +120,19 @@ void CPlayer::Update(_float fTimeDelta)
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
 	Play_Event();
-
+	
 __super::Update(fTimeDelta);
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
 
+	
 
-
-	m_pCharacter_Controller->Move(fTimeDelta);
+	{ // 세트
+		m_pCallBack_HitReport->BeginFrame();
+		m_pCharacter_Controller->Move(fTimeDelta);
+		m_pCallBack_HitReport->Set_CurrentSlop();
+	}
 	TestKeyInput(fTimeDelta);
 }
 
@@ -198,7 +203,7 @@ void CPlayer::Render_CameraCoordinateSystem()
 	GUI::Text("S : %.2f, %.2f, %.2f", -m_vCameraLookDir.x, 0.f, -m_vCameraLookDir.z);
 	GUI::Text("D : %.2f, %.2f, %.2f", m_vCameraRightDir.x, 0.f, m_vCameraRightDir.z);
 	
-	_float  fButtonSize = 25.f;
+	_float  fButtonSize = 45.f;
 	GUI::Button("##0", { fButtonSize, fButtonSize }); GUI::SameLine();
 	GUI::Button(("W : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { m_vCameraLookDir.x , m_vCameraLookDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
 	GUI::Button("##2", { fButtonSize, fButtonSize });
@@ -273,7 +278,7 @@ HRESULT CPlayer::Ready_Components()
 		Desc.iSubKind = ENUM_CLASS(PXOBJECT::PLAYER);
 		Desc.pTransform = m_pTransformCom;
 		Desc.eBodyType = ACTOR::CAPSULE;
-		Desc.fContactOffset = 0.17f;
+		Desc.fContactOffset = 0.01f;
 		Desc.fMaterial = { 0.5f, 0.5f, 0.6f };
 		Desc.bAutoStepping = { true };
 		Desc.fStepOffset = { 0.05f };
@@ -282,6 +287,7 @@ HRESULT CPlayer::Ready_Components()
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Playable_HitReport::Create();
 		Desc.pCallback_Behavior = m_pCallBack_Behavior = CCallBack_Playable_Behavior::Create();
 		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
+		Desc.fWalkableSlope = 45.f;
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), (CComponent**)&m_pCharacter_Controller, &Desc))) {
 			return E_FAIL;
 		}
@@ -357,11 +363,11 @@ void CPlayer::ReLockOnTarget()
 
 void CPlayer::SetGravity()
 {
-	PSX::PxControllerCollisionFlags eCollisionFlags = m_pCharacter_Controller->Get_CollisionFlags();
 	if (true == m_pFSM->IsEnable(FSMSTATE::JUMP)){
+		// 점프 중일 땐 off
 		m_pCharacter_Controller->SetGravity(false);
 	}
-	else { // 점프 중일 땐 off
+	else {
 		m_pCharacter_Controller->SetGravity(true);
 	}
 }
