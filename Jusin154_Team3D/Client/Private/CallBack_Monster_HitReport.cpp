@@ -70,12 +70,16 @@ void CCallBack_Monster_HitReport::onControllerHit(const PSX::PxControllersHit& h
 	_float					fLength = hit.length;		// 시도한 move 길이
 
 	PSX::PxController* pOtherController = hit.other;		// 다른 컨트롤러
+	PSX::PxActor* pActor = pOtherController->getActor();
+
+	ON_COLLISION_INFO CollisionDesc = {};
 
 	if (nullptr != pController && nullptr != pOtherController) {
-		PhsXUserData* pActorData = static_cast<PhsXUserData*>(pOtherController->getActor()->userData);
-		assert(nullptr != pActorData); // missing user data
+		PhsXUserData* pTargetActorData = static_cast<PhsXUserData*>(pActor->userData);
+		PhsXUserData* pOwnerActorData = static_cast<PhsXUserData*>(pController->getActor()->userData);
+		assert(nullptr != pTargetActorData); // missing user data
 
-		switch (pActorData->eKind)
+		switch (pTargetActorData->eKind)
 		{
 		case PHYSX_KIND::BODY_STATIC:
 			assert(false);
@@ -84,7 +88,17 @@ void CCallBack_Monster_HitReport::onControllerHit(const PSX::PxControllersHit& h
 			assert(false);
 			break;
 		case PHYSX_KIND::CCTActor:
-			// Action
+			switch (pTargetActorData->iSubKind)
+			{
+			case ENUM_CLASS(PXOBJECT::SKILL_NORMALJAP):
+				break;
+			default:
+			{
+				PSX::PxRigidDynamic* pDynamic = static_cast<PSX::PxRigidDynamic*>(pActor);
+				pDynamic->addForce(vDir * fLength * 100000.f, PSX::PxForceMode::eIMPULSE);
+			}
+			break;
+			}
 			break;
 		case PHYSX_KIND::OBSTACLEActor:
 			break;

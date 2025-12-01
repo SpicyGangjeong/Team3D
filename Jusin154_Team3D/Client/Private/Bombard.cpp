@@ -25,18 +25,15 @@ HRESULT CBombard::Initialize_Prototype()
 
 HRESULT CBombard::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg))){
+	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
-	}
 
-	if (FAILED(Ready_Components(pArg))) {
+	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
-	}
 
 
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Bombard"))) {
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Bombard")))
 		return E_FAIL;
-	}
 
 
 	m_wstrEffectName = L"Bombard";
@@ -57,9 +54,8 @@ void CBombard::Priority_Update(_float fTimeDelta)
 
 void CBombard::Update(_float fTimeDelta)
 {
-	if (m_bVisible == false){
+	if (m_bVisible == false)
 		return;
-	}
 
 	__super::Update(fTimeDelta);
 
@@ -72,26 +68,22 @@ void CBombard::Update(_float fTimeDelta)
 
 void CBombard::Late_Update(_float fTimeDelta)
 {
-	if (m_bVisible == false){
+	if (m_bVisible == false)
 		return;
-	}
 
 	__super::Late_Update(fTimeDelta);
-
 
 }
 
 HRESULT CBombard::Pre_Setting(CGameObject* pObject)
 {
-	if (pObject == nullptr) {
+	if (pObject == nullptr)
 		return E_FAIL;
-	}
 
 	m_pOwner = pObject;
 
-	if (FAILED(Ready_Child())) {
+	if (FAILED(Ready_Child()))
 		return E_FAIL;
-	}
 
 	Reset_EffectParts();
 
@@ -148,7 +140,7 @@ HRESULT CBombard::Ready_Child()
 	XMStoreFloat3(&vDir, vOwnerLook * 2.f);
 
 	Desc.vRotRPY = { 0.f, 0.f, 0.f };
-	Desc.iSubKind = ENUM_CLASS(PXOBJECT::SKILL_BOMBARD_STRIKE);
+	Desc.iSubKind = 70;
 	Desc.vDeltaPos = vDir;
 	Desc.vLifeTime = { 0.f, 2.f };
 
@@ -158,7 +150,6 @@ HRESULT CBombard::Ready_Child()
 	}
 
 	SAFE_ADDREF(m_pPhysHitBox);
-
 	return S_OK;
 }
 
@@ -209,6 +200,7 @@ void CBombard::OnCollision(CGameObject* pOther, void* pDesc)
 
 	Get_PartObject<CEffectParts>("Bombard_Circle0")->Set_Visible(false);
 
+
 	m_pPhysHitBox->Set_Dead();
 	SAFE_RELEASE(m_pPhysHitBox);
 }
@@ -217,20 +209,18 @@ void CBombard::Free()
 {
 	__super::Free();
 
-	if (m_pPhysHitBox != nullptr){
+	if (m_pPhysHitBox != nullptr)
 		SAFE_RELEASE(m_pPhysHitBox);
-	}
+
 	SAFE_RELEASE(m_pLight_Projectile);
 
 }
 #ifdef _DEBUG
-
 void CBombard::Describe_Entity()
 {
 
 }
-
-#endif // _DEBUG
+#endif
 
 HRESULT CBombard::Bind_ShaderResources()
 {

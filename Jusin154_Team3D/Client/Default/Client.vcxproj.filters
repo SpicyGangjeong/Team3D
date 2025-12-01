@@ -256,6 +256,9 @@
     <ClInclude Include="..\Public\State_Broom_Ride.h">
       <Filter>04.Mechanic\State\Broom</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Revelio.h">
+      <Filter>02.GameObjects\Effect\Revelio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -560,6 +563,9 @@
     <Filter Include="02.GameObjects\Environment\00.MapContainer\StreetContainer">
       <UniqueIdentifier>{e12a4228-0754-4217-b65d-7f962409f85c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\Revelio">
+      <UniqueIdentifier>{19a2325e-1184-4ee0-92e1-657bf184418c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -807,6 +813,9 @@
     </ClCompile>
     <ClCompile Include="..\private\StreetContainer.cpp">
       <Filter>02.GameObjects\Environment\00.MapContainer\StreetContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Revelio.cpp">
+      <Filter>02.GameObjects\Effect\Revelio</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

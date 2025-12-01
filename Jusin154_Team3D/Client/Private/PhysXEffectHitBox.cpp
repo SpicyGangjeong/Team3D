@@ -39,13 +39,12 @@ void CPhysXEffectHitBox::Priority_Update(_float fTimeDelta)
 void CPhysXEffectHitBox::Update(_float fTimeDelta)
 {
 	m_pTransformCom->AccumulateMomentum(XMLoadFloat3(&m_vDeltaPos));
-
 }
 
 void CPhysXEffectHitBox::Late_Update(_float fTimeDelta)
 {
 	if (true == m_pCharacter_Controller->IsActive()) {
-		m_pCharacter_Controller->Move(fTimeDelta);
+		m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_Position());
 	}
 	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
 		m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
@@ -76,6 +75,13 @@ HRESULT CPhysXEffectHitBox::Render()
 
 
 	return S_OK;
+}
+
+void CPhysXEffectHitBox::Move(_float fTimeDelta)
+{
+	if (true == m_pCharacter_Controller->IsActive()) {
+		m_pCharacter_Controller->Move(fTimeDelta);
+	}
 }
 
 HRESULT CPhysXEffectHitBox::Ready_Components(void* pArg)
