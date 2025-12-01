@@ -45,6 +45,20 @@ float GetRimLight(float3 vCamPosition, float3 vPosition, float3 vNormal, float f
     return fRimLight;
 }
 
+float LinearAttenuation(float fLightRange, float fLightDistance)
+{
+    return saturate((fLightRange - fLightDistance) / fLightRange);
+}
+
+float PowerAttenuation(float fLightRange, float fLightDistance, float fPower)
+{
+    // 1 -> Linear, 
+    // ( 1 > fPower )-> 뾰족하게 감쇄
+    // ( 1 < fPower )-> 완만하게 감쇄
+    float fValue = saturate((fLightRange - fLightDistance) / fLightRange);
+    return pow(fValue, fPower);
+}
+
 float2 Get_MovedUV(float2 vOriginalUV, float fDeltaU, float fDeltaV, uint iIndexU, uint iIndexV)
 {
     float2 vDelta = float2(fDeltaU, fDeltaV);
