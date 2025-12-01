@@ -238,9 +238,12 @@ HRESULT CTrailObject::Load_Trail(const _char* pPath, LEVEL eLevel)
 		return E_FAIL;
 	}
 
+	m_pTrailCom->ReStructVB(m_TrailInfo.iNumVertex);
+
 	CloseHandle(hFile);
 
 	return S_OK;
+
 }
 
 HRESULT CTrailObject::Render()
@@ -260,8 +263,9 @@ HRESULT CTrailObject::Render()
 
 HRESULT CTrailObject::Render_Blur()
 {
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_POSTEX::TRAIL_BLUR))))
+	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
+
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fBlurIntensity", &m_TrailInfo.fBlurIntensity, sizeof(_float)))) {
 		return E_FAIL;
@@ -271,8 +275,10 @@ HRESULT CTrailObject::Render_Blur()
 		return E_FAIL;
 	}
 
-	if (FAILED(Bind_ShaderResources()))
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_POSTEX::TRAIL_BLUR))))
 		return E_FAIL;
+
+
 
 	if (FAILED(m_pTrailCom->Render()))
 		return E_FAIL;
