@@ -68,22 +68,33 @@ void CCamPosition_Shoulder::Priority_Update(_float fTimeDelta)
 		m_vAccDegreeXY.x += m_pGameInstance->Get_MouseMove().y * m_fMouseSensor;
 		CMyTools::AdjustAccumulateDegreePitchYawDegree(m_vAccDegreeXY);
 	}
-	
+
 	_vector vLook = XMVector3Normalize(XMLoadFloat3(&m_vShoulderPosRatio));
 	_vector vRotq = XMQuaternionRotationRollPitchYaw(0.f, XMConvertToRadians(m_vAccDegreeXY.y), 0.f);
 	vLook = XMVector3Normalize(XMVector3Rotate(vLook, vRotq));
 
+	/*m_vPosLerpTimer.x += fTimeDelta;
+	if (m_vPosLerpTimer.x > m_vPosLerpTimer.y) {
+		m_vPosLerpTimer.x = 0.f;
+		Start_LerpShoulderPos();
+	}
+	_vector vShoulderPos  = XMVectorLerp(XMLoadFloat4(&m_StartPos), XMLoadFloat4(&m_DestPos), (m_vPosLerpTimer.x / m_vPosLerpTimer.y));
+	m_pTransformCom->Set_State(STATE::POSITION, vShoulderPos);*/
+
 	m_pTransformCom->Set_State(STATE::POSITION, m_pParentTransformCom->Get_State(STATE::POSITION) + XMVector3Normalize(vLook) * m_fShoulderDistance);
 	_vector vShoulderPos = Get_WorldPostion();
 	_vector vCameraLook = XMVectorSet(0.f, 0.f, 1.f, 0.f);
+
 	_vector vRotCameraq = XMQuaternionRotationRollPitchYaw(XMConvertToRadians(m_vAccDegreeXY.x), XMConvertToRadians(m_vAccDegreeXY.y), 0.f);
 	vCameraLook = XMVector3Normalize(XMVector3Rotate(vCameraLook, vRotCameraq));
+
+	//_vector vCameraLook = XMVector3Normalize(XMVector3Rotate(XMVectorSet(0.f, 0.f, 1.f, 0.f), vRotCameraq));
 
 	CTransform* pLookTransform = m_pTarget_LookPart->Get_Component<CTransform>();
 	CTransform* pFollowTransform = m_pTarget_FollowPart->Get_Component<CTransform>();
 
-	pLookTransform->Set_State(STATE::POSITION, vShoulderPos + vCameraLook * (m_fCameraFocalLength * m_fBackFrontRatio));
-	pFollowTransform->Set_State(STATE::POSITION, vShoulderPos - vCameraLook * (m_fCameraFocalLength * (1 - m_fBackFrontRatio)));
+	pLookTransform->Set_State(STATE::POSITION,		vShoulderPos + vCameraLook * (m_fCameraFocalLength * m_fBackFrontRatio));
+	pFollowTransform->Set_State(STATE::POSITION,	vShoulderPos - vCameraLook * (m_fCameraFocalLength * (1 - m_fBackFrontRatio)));
 }
 
 void CCamPosition_Shoulder::Update(_float fTimeDelta)
@@ -110,8 +121,8 @@ void CCamPosition_Shoulder::Update(_float fTimeDelta)
 	if (m_pGameInstance->Key_Up(DIK_P)) {
 		m_vShoulderOtherRatio = m_vShoulderPosRatio = m_vShoulderStartRatio;
 		m_vShoulderStartRatio.x *= -1.f;
-		m_bLerp = true;
-		m_vLerpTimer.x = 0.f;
+		m_bShoulderLerp = true;
+		m_vShoulderLerpTimer.x = 0.f;
 	}
 	if (m_pGameInstance->Mouse_Pressing(DIM_RBUTTON)) {
 		m_pBinded_Camera->ZoomIn(fTimeDelta);
@@ -128,12 +139,12 @@ void CCamPosition_Shoulder::Late_Update(_float fTimeDelta)
 	if (FAILED(m_pGameInstance->IsBinded_Camera(CAMERA_SHOULDER))) {
 		return;
 	}
-	if (true == m_bLerp) {
-		m_vLerpTimer.x += fTimeDelta;
-		XMStoreFloat3(&m_vShoulderPosRatio, XMVectorLerp(XMLoadFloat3(&m_vShoulderStartRatio), XMLoadFloat3(&m_vShoulderOtherRatio), m_vLerpTimer.x / m_vLerpTimer.y));
-		if (m_vLerpTimer.x > m_vLerpTimer.y) {
-			m_bLerp = false;
-			m_vLerpTimer.x = 0.f;
+	if (true == m_bShoulderLerp) {
+		m_vShoulderLerpTimer.x += fTimeDelta;
+		XMStoreFloat3(&m_vShoulderPosRatio, XMVectorLerp(XMLoadFloat3(&m_vShoulderStartRatio), XMLoadFloat3(&m_vShoulderOtherRatio), m_vShoulderLerpTimer.x / m_vShoulderLerpTimer.y));
+		if (m_vShoulderLerpTimer.x > m_vShoulderLerpTimer.y) {
+			m_bShoulderLerp = false;
+			m_vShoulderLerpTimer.x = 0.f;
 
 			m_vShoulderPosRatio = m_vShoulderOtherRatio;
 		}
@@ -195,6 +206,16 @@ HRESULT CCamPosition_Shoulder::Ready_SubParts()
 
 
 	return S_OK;
+}
+void CCamPosition_Shoulder::Start_LerpShoulderPos()
+{
+	XMStoreFloat4(&m_StartPos, m_pTransformCom->Get_State(STATE::POSITION));
+
+	_vector vLook = XMVector3Normalize(XMLoadFloat3(&m_vShoulderPosRatio));
+	_vector vRotq = XMQuaternionRotationRollPitchYaw(0.f, XMConvertToRadians(m_vAccDegreeXY.y), 0.f);
+	vLook = XMVector3Normalize(XMVector3Rotate(vLook, vRotq));
+
+	XMStoreFloat4(&m_DestPos, m_pParentTransformCom->Get_State(STATE::POSITION) + XMVector3Normalize(vLook) * m_fShoulderDistance);
 }
 CCamPosition_Shoulder* CCamPosition_Shoulder::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

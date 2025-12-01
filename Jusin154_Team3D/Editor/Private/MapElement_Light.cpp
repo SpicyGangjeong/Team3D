@@ -24,9 +24,11 @@ HRESULT CMapElement_Light::Initialize_Prototype()
 
 HRESULT CMapElement_Light::Initialize(void* pArg)
 {
-	MAPOBJECT_LOD_DESC* pDesc = static_cast<MAPOBJECT_LOD_DESC*>(pArg);
+	MAPELEMENT_LIGHT_DESC* pDesc = static_cast<MAPELEMENT_LIGHT_DESC*>(pArg);
 
 	m_iMaxLodLevel = pDesc->iMaxLodLevel;
+	m_fBloomStrength = pDesc->fBloomStregth;
+	m_iGlassMeshIndex = pDesc->iGlassMeshIndex;
 
 	for (_uint i = 0; i < m_iMaxLodLevel + 1; i++)
 	{
@@ -63,7 +65,6 @@ void CMapElement_Light::Priority_Update(_float fTimeDelta)
 
 void CMapElement_Light::Update(_float fTimeDelta)
 {
-	m_pLightCom->Describe_Entity();
 }
 
 void CMapElement_Light::Late_Update(_float fTimeDelta)
@@ -77,7 +78,31 @@ void CMapElement_Light::Late_Update(_float fTimeDelta)
 	}
 #endif 
 
-	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
+	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pModelComs[0]->Get_Radius())) 
+	{
+		if (m_isLightOn)
+		{
+			_float fDistance = XMVectorGetX(XMVector3LengthSq(XMLoadFloat4(m_pGameInstance->Get_CamPosition()) - m_pTransformCom->Get_State(STATE::POSITION)));
+			if (m_LightAdded_Distance > fDistance) // 카메라 범위 안
+			{
+				if(!m_isLightAdded)
+				{
+					m_isLightAdded = true;
+					m_pGameInstance->Add_Light(CURRENT_LEVEL, m_pLightCom);
+				}
+			}
+			else
+			{
+				if (m_isLightAdded)
+				{
+					m_isLightAdded = false;
+					m_pGameInstance->Delete_Light(CURRENT_LEVEL, m_pLightCom);
+				}
+			}
+
+			m_pGameInstance->Add_RenderGroup(RENDER::BLOOM, this);
+		}
+
 		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 	}
 }
@@ -88,20 +113,40 @@ HRESULT CMapElement_Light::Render()
 		return E_FAIL;
 
 	_uint		iNumMeshes = m_pModelComs[m_iLodIndex]->Get_NumMeshes();
-
+	
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
-		if (FAILED(m_pModelComs[0]->Bind_Material(i, m_pShaderCom))) {
-			return E_FAIL;
-		}
-		if (m_bSelected)
+		if (true == m_isLightOn && m_iGlassMeshIndex == i)
+			continue;
+
+		if (m_iGlassMeshIndex == i)
 		{
-			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::MAPTOOL)))) {
+			if (FAILED(m_pModelComs[0]->Bind_Material(m_iGlassMeshIndex, m_pShaderCom))) {
+				return E_FAIL;
+			}
+
+			if (FAILED(m_pShaderCom->Bind_SRV("g_DiffuseTexture", m_pGlassTextureCom->Get_SRV(0)))) {
+				return E_FAIL;
+			}
+
+			if (FAILED(m_pShaderCom->Bind_SRV("g_GlassTexture", m_pMaskTextureCom->Get_SRV(0)))) {
+				return E_FAIL;
+			}
+
+			if (FAILED(m_pShaderCom->Bind_RawValue("g_fGlassRatio", &m_fGlassRatio, sizeof(_float)))) {
+				return E_FAIL;
+			}
+			
+			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::GLASS)))) {
 				return E_FAIL;
 			}
 		}
 		else
 		{
+			if (FAILED(m_pModelComs[0]->Bind_Material(i, m_pShaderCom))) {
+				return E_FAIL;
+			}
+
 			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::DEFAULT)))) {
 				return E_FAIL;
 			}
@@ -138,22 +183,45 @@ HRESULT CMapElement_Light::Ready_Components(void* pArg)
 		reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
+	/* Com_Texture */
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("LightPost_Emissive"),
+		reinterpret_cast<CComponent**>(&m_pEmissiveTextureCom))))
+		return E_FAIL;
+
+	/* Com_Texture */
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("LightPost_Mask"),
+		reinterpret_cast<CComponent**>(&m_pMaskTextureCom))))
+		return E_FAIL;
+
+	/* Com_Texture */
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("LightPost_Base"),
+		reinterpret_cast<CComponent**>(&m_pGlassTextureCom))))
+		return E_FAIL;
+
+
+	MAPELEMENT_LIGHT_DESC* pDesc = static_cast<MAPELEMENT_LIGHT_DESC*>(pArg);
+
 	LIGHT_DESC			LightDesc{};
 
 	LightDesc.eType = LIGHT::POINT;
-	LightDesc.vDiffuse = _float4(0.8f, 0.8f, 0.8f, 0.f);
-	LightDesc.vAmbient = _float4(0.8f, 0.8f, 0.8f, 0.f);
-	LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 0.f);
-	LightDesc.fRange = 5.f;
-	LightDesc.iLevel = NEXT_LEVEL;
 
+	memcpy(&LightDesc.vDiffuse, &pDesc->vDiffuse, sizeof(_float4));
+	memcpy(&LightDesc.vAmbient, &pDesc->vAmbient, sizeof(_float4));
+	memcpy(&LightDesc.vSpecular, &pDesc->vSpecular, sizeof(_float4));
+	memcpy(&LightDesc.vPosOffset, &pDesc->vPosOffset, sizeof(_float4));
+
+	LightDesc.fRange = pDesc->fRange;
+	LightDesc.iLevel = NEXT_LEVEL;
+	LightDesc.pPosition = m_pTransformCom->Get_StatePtr(STATE::POSITION);
+	
 	/* Com_Light*/
 	if (FAILED(Add_Component<CLight>(g_iStaticLevel, &m_pLightCom, &LightDesc)))
 	{
 		return E_FAIL;
 	}
 
-	
+	if(false == pDesc->isPow)
+		m_pLightCom->Switch_LightAttenationMethod();
 
 	return S_OK;
 }
@@ -175,6 +243,40 @@ HRESULT CMapElement_Light::Bind_ShaderResources()
 	}
 
 	return S_OK;
+}
+
+HRESULT CMapElement_Light::Render_Bloom()
+{
+	if (FAILED(Bind_ShaderResources()))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fBloomStrength", &m_fBloomStrength ,sizeof(_float))))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Bind_SRV("g_EmissiveTexture", m_pEmissiveTextureCom->Get_SRV(0))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_SRV("g_DiffuseTexture", m_pGlassTextureCom->Get_SRV(0))))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::BLOOM)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pModelComs[m_iLodIndex]->Render(m_iGlassMeshIndex))) {
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+void CMapElement_Light::Toggle_Light()
+{
+	if (m_isLightOn)
+		m_pGameInstance->Delete_Light(CURRENT_LEVEL, m_pLightCom);
+	else
+		m_pGameInstance->Add_Light(CURRENT_LEVEL, m_pLightCom);
+
+	m_isLightAdded = m_isLightOn = !m_isLightOn;
 }
 
 CMapElement_Light* CMapElement_Light::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -208,6 +310,9 @@ void CMapElement_Light::Free()
 	__super::Free();
 
 	SAFE_RELEASE(m_pLightCom);
+	SAFE_RELEASE(m_pEmissiveTextureCom);
+	SAFE_RELEASE(m_pMaskTextureCom);
+	SAFE_RELEASE(m_pGlassTextureCom);
 
 	SAFE_RELEASE(m_pShaderCom);
 	for (auto& pModel : m_pModelComs)
@@ -216,10 +321,19 @@ void CMapElement_Light::Free()
 
 void CMapElement_Light::Describe_Entity()
 {
+	m_pLightCom->Describe_Entity();
+
 	if (m_bDead)
 		return;
 	if (nullptr == m_pGameInstance)
 		return;
+	GUI::Text("LIGHT ");
+	GUI::InputFloat("Distacne", &m_LightAdded_Distance, 1.f, 10.f);
+	if (GUI::Button("Light ON / OFF"))
+		Toggle_Light();
+
+	GUI::InputFloat("BloomStrength", &m_fBloomStrength, 0.1f);
+	GUI::SliderFloat("GlassRatio", &m_fGlassRatio, 0.1f, 1.f);
 
 	GUI::Text(CMyTools::ToString(m_ModelPrototypeTags[m_iLodIndex]).c_str());
 	GUI::InputInt("Lod Level", (_int*)(&m_iLodIndex));
@@ -232,12 +346,8 @@ void CMapElement_Light::Describe_Entity()
 
 	if (m_pGameInstance->Mouse_Down(DIM_LBUTTON) && m_pGameInstance->Key_Pressing(DIK_LSHIFT))
 	{
-		CTerrain* pTerrain = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Terrain"))->Get_Object<CTerrain>();
-		if (nullptr != pTerrain)
-		{
-			pTerrain->Get_Component<CVIBuffer_Terrain>()->Picking(pTerrain->Get_Component<CTransform>()->Get_XMWorldMatrix(), &m_vPosition);
-		}
-
+		if(m_pGameInstance->isPicking(&m_vPosition))
+		{ }
 	}
 
 	GUI::Text("----- Rotation ----");
@@ -260,4 +370,100 @@ void CMapElement_Light::Describe_Entity()
 
 
 	m_bSelected = true;
+}
+
+HRESULT CMapElement_Light::Save_XML(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* root)
+{
+	tinyxml2::XMLElement* object = doc.NewElement("Object");
+	object->SetAttribute("Type", ENUM_CLASS(MAPOBJECT_TYPE::ELEMENT_LIGHT));
+	object->SetAttribute("Lod_Level", m_iLodIndex);
+	root->InsertEndChild(object);
+
+#pragma region PROTOTYPETAG
+	for (_uint i = 0; i < m_iLodIndex + 1; ++i)
+	{
+		tinyxml2::XMLElement* prototype = doc.NewElement("PrototypeTag");
+		prototype->SetText(CMyTools::ToString(m_ModelPrototypeTags[i]).c_str());
+		object->InsertEndChild(prototype);
+	}
+#pragma endregion
+
+#pragma region TRANSFORM
+	_float3 vPosition = {};
+	XMStoreFloat3(&vPosition, m_pTransformCom->Get_State(STATE::POSITION));
+
+	_float3 vScale = m_pTransformCom->Get_Scale();
+
+	_float3 vRotation = {};
+	XMStoreFloat3(&vRotation, m_pTransformCom->Get_RollPitchYawVector());
+	vRotation.x = XMConvertToDegrees(vRotation.x);
+	vRotation.y = XMConvertToDegrees(vRotation.y);
+	vRotation.z = XMConvertToDegrees(vRotation.z);
+
+	tinyxml2::XMLElement* Position = doc.NewElement("Position");
+	Position->SetAttribute("x", vPosition.x);
+	Position->SetAttribute("y", vPosition.y);
+	Position->SetAttribute("z", vPosition.z);
+	object->InsertEndChild(Position);
+
+	tinyxml2::XMLElement* Scale = doc.NewElement("Scale");
+	Scale->SetAttribute("x", vScale.x);
+	Scale->SetAttribute("y", vScale.y);
+	Scale->SetAttribute("z", vScale.z);
+	object->InsertEndChild(Scale);
+
+	tinyxml2::XMLElement* Rotation = doc.NewElement("Rotation");
+	Rotation->SetAttribute("x", vRotation.x);
+	Rotation->SetAttribute("y", vRotation.y);
+	Rotation->SetAttribute("z", vRotation.z);
+	object->InsertEndChild(Rotation);
+#pragma endregion
+
+#pragma region LIGHT_DESC
+	const LIGHT_DESC* pLight = m_pLightCom->Get_LightDesc();
+
+	/* Diffuse */
+	tinyxml2::XMLElement* Diffuse = doc.NewElement("Diffuse");
+	Diffuse->SetAttribute("x", pLight->vDiffuse.x);
+	Diffuse->SetAttribute("y", pLight->vDiffuse.y);
+	Diffuse->SetAttribute("z", pLight->vDiffuse.z);
+	object->InsertEndChild(Diffuse);
+
+	/* Ambient */
+	tinyxml2::XMLElement* Ambient = doc.NewElement("Ambient");
+	Ambient->SetAttribute("x", pLight->vAmbient.x);
+	Ambient->SetAttribute("y", pLight->vAmbient.y);
+	Ambient->SetAttribute("z", pLight->vAmbient.z);
+	object->InsertEndChild(Ambient);
+
+	/* Specular */
+	tinyxml2::XMLElement* Specular = doc.NewElement("Specular");
+	Specular->SetAttribute("x", pLight->vSpecular.x);
+	Specular->SetAttribute("y", pLight->vSpecular.y);
+	Specular->SetAttribute("z", pLight->vSpecular.z);
+	object->InsertEndChild(Specular);
+	
+	/* PosOffset */
+	tinyxml2::XMLElement* PosOffset = doc.NewElement("PosOffset");
+	PosOffset->SetAttribute("x", pLight->vPosOffset.x);
+	PosOffset->SetAttribute("y", pLight->vPosOffset.y);
+	PosOffset->SetAttribute("z", pLight->vPosOffset.z);
+	object->InsertEndChild(PosOffset);
+
+	/* Info */
+	tinyxml2::XMLElement* Info = doc.NewElement("Info");
+	Info->SetAttribute("GlassIndex", m_iGlassMeshIndex);
+	Info->SetAttribute("BloomStrength", m_fBloomStrength);
+	Info->SetAttribute("Range", pLight->fRange);
+
+	if(false == m_pLightCom->Is_PowerLightAtt())
+		Info->SetAttribute("Pow", 0);
+	else
+		Info->SetAttribute("Pow", 1);
+
+	object->InsertEndChild(Info);
+#pragma endregion
+
+
+	return S_OK;
 }

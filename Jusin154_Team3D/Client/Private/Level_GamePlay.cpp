@@ -7,15 +7,20 @@
 #include "InfoInstance.h"
 #include "GamePlay_Canvas.h"
 #include "Layer.h"
-#include "Player.h"
 #include "SkyBox.h"
 #include "Broom.h"
 #include "Dummy_PhysXWall.h"
 #include "Dummy_PhysXPlayable.h"
-#include "Goblin.h"
 #include "Terrain.h"
 #include "EffectPool.h"
 #include "InstancedProp.h"
+
+#pragma region ACTOR
+#include "Player.h"
+#include "Troll.h"
+#include "Goblin.h"
+#pragma endregion
+
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -39,6 +44,9 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 		return E_FAIL;
 	}
 	if (FAILED(Reday_Layer_EffectPool())) {	//플레이어보다 먼저 생성해야함!
+		return E_FAIL;
+	}
+	if (FAILED(Ready_Layer_Item(TEXT("Layer_Item")))) {	// 이것도 플레이어보다 먼저 생성해야함!
 		return E_FAIL;
 	}
 	if (FAILED(Ready_Layer_Player(LAYER_PLAYER))) {
@@ -184,15 +192,21 @@ HRESULT CLevel_GamePlay::Ready_Markers()
 
 HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, strLayerTag,nullptr,nullptr,&m_pBroom)))
-		return E_FAIL;
-
+	
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, m_pBroom))){
 		return E_FAIL;
 	}
 
 
 
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Item(const _wstring& strLayerTag)
+{
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, nullptr, nullptr, &m_pBroom)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -223,7 +237,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 			return E_FAIL;
 		}
 	}
-
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
+		return E_FAIL;
+	}
 
 	return S_OK;
 }

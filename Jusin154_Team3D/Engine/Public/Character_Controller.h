@@ -3,6 +3,9 @@
 
 NS_BEGIN(Engine)
 class CTransform;
+
+constexpr _int iCoyote_Counter = 3;
+
 class ENGINE_DLL CCharacter_Controller final :
 	public CComponent
 {
@@ -14,19 +17,19 @@ public:
 #pragma region STRUCT
 	typedef struct tagCharacter_ControllerDesc
 	{
-		CTransform*			pTransform			= { nullptr };
-		ACTOR				eBodyType			= { ACTOR::END };
-		_float				fContactOffset		= { 0.f };
-		_float3				fMaterial			= { 0.5f, 0.5f, 0.6f };
-		_bool				bAutoStepping		= { false }; // 계단 높이 타게 할건지 // 박스 콜라이더는 생각한대로 되는데 캡슐은 바닥의 구체 때문에 예상보다 더 높은 곳까지 오를 수 있음
-		_float				fStepOffset			= { 0.05f }; // 허용가능한 계단 높이, 작게 유지하는게 좋음
+		CTransform* pTransform = { nullptr };
+		ACTOR				eBodyType = { ACTOR::END };
+		_float				fContactOffset = { 0.f };
+		_float3				fMaterial = { 0.9f, 0.9f, 0.6f };
+		_bool				bAutoStepping = { false }; // 계단 높이 타게 할건지 // 박스 콜라이더는 생각한대로 되는데 캡슐은 바닥의 구체 때문에 예상보다 더 높은 곳까지 오를 수 있음
+		_float				fStepOffset = { 0.05f }; // 허용가능한 계단 높이, 작게 유지하는게 좋음
 		_uint				iSubKind = { };
-		PSX::PxUserControllerHitReport*		pCallback_HitReport = { }; // move가 호출될 때 호출 됨 // dll을 받는 각 프로젝트에서 구현해야함
-		PSX::PxControllerBehaviorCallback*	pCallback_Behavior	= { }; // move가 호출될 때 호출 됨 // dll을 받는 각 프로젝트에서 구현해야함
+		PSX::PxUserControllerHitReport* pCallback_HitReport = { }; // move가 호출될 때 호출 됨 // dll을 받는 각 프로젝트에서 구현해야함
+		PSX::PxControllerBehaviorCallback* pCallback_Behavior = { }; // move가 호출될 때 호출 됨 // dll을 받는 각 프로젝트에서 구현해야함
 
 		// 타고 올라갈 수 없는 경사면의 각도를 정의함.  0.f 면 비활성화 됨
-		// _float fSlopeLimit = { 코사인각도 };
-		
+		_float fWalkableSlope = { 22.f };
+
 		// Box인 경우 채워넣기
 		_float3				vBoxSize = { 0.5f, 0.5f, 0.5f };						// CCT박스는 회전없는 AABB임
 
@@ -46,7 +49,7 @@ public:
 	virtual HRESULT Render() override;
 #endif
 	PSX::PxRigidDynamic* Get_Actor();
-	PSX::PxController*	Get_Controller();
+	PSX::PxController* Get_Controller();
 
 	_float			Get_ContactOffset() const { return m_pController->getContactOffset(); }
 	void			Set_ContactOffset(_float fValue) { return m_pController->setContactOffset((PSX::PxF32)fValue); }
@@ -55,25 +58,32 @@ public:
 	void			Set_Position(_fvector vNewPos);	// 순간이동
 	_vector			Get_Position();
 	_vector			Get_FootPosition();				// ContactOffset이 고려된 발바닥 위치( 실제보다 바닥 위치가 더 아래에 위치한다는 뜻 )
-	
+
 	PSX::PxControllerCollisionFlags Get_CollisionFlags();
 	void			Resize_Volume(_float fHeight);	// 높이를 수정하고 바닥에 붙임
-	void			Modify_Volume(_float3 fVolume);
+	void			Modify_Volume(_float3 fVolume); // 높이 수정하고 바닥에 붙든 말든 상관안함
 	_float3			Get_Volume();
 
 	HRESULT			ConvertToDO(class CRigidBody_Dynamic& BodyOriginal);
+	void			Set_OnGroundFlag(_bool bOnGround);
 	_bool			IsGravity() { return m_bGravity; }
 	void			SetGravity(_bool bCondition) { m_bGravity = bCondition; };
+	void			Set_CurrentSlope(_float fSlope);
+	void			Rewind_Grounded();
 	_bool			IsActive() const { return m_bActive; }
 	void			SetActive(_bool bCondition) { m_bActive = bCondition; }
+	_bool			UpdateGroundByCast(_float fTimeDelta);
 
 private:
 	ACTOR					m_eBodyType = { ACTOR::END };
 	PSX::PxController*		m_pController = { nullptr };
 	CTransform*				m_pTransform = { nullptr };	
 	_bool					m_bAutoStepping = { false };
-	_float					m_fGravity = { 0.094f };
-	_float					m_fSlopeLimit = { 0.302f/*0~1*/}; // cosf각도, 오르막 경사각 제한. ( 추가설정 필요함 )
+	_float					m_fGravity = { 0.450f };
+	_float					m_fWalkableSlopeDegree = { 22.f }; // cosf각도, 오르막 경사각 제한. ( 추가설정 필요함 )
+	_float					m_fCurrentSlopeDegree = { 0.f };
+	_int					m_iIsOnGround = { 0 };
+	_float4					m_vAccHeight = { 0.f, 0.16f, 0.f, 0.01f };
 	PhsXUserData			m_tagData = {};
 	
 	PSX::PxControllerCollisionFlags m_eBeforeCollisionFlags = {};

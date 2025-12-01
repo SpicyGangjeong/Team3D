@@ -25,6 +25,7 @@ enum ESTATE : _u64Flag
 	HIT                         = 1ULL << 18,
 	BROOM_RIDE                  = 1ULL << 19,
 	MOUNT_B                     = 1ULL << 20,
+    DISMOUNT                    = 1ULL << 21,
     END
 };
 NS_END

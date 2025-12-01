@@ -138,7 +138,7 @@ HRESULT CLevel_PhysXLab::Ready_Layer_PhysXObjects(const _wstring& strLayerTag)
 	{
 		CDummy_PhysXFreeDoor::PHYSXDUMMY_DESC Desc{};
 		Desc.vPos = { 10.f, 2.f, 10.f };
-		Desc.vRotRPY = { 0.f, XMConvertToRadians(-XM_1DIV2PI), 0.f};
+		Desc.vRotRPY = { 0.f, XMConvertToRadians(-XM_PIDIV2), 0.f};
 		Desc.iSubKind = 24;
 		Desc.fAngleLimit = 70.f;
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXFreeDoor>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE, &Desc))) {

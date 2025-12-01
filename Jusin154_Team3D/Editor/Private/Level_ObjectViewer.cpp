@@ -385,6 +385,8 @@ void CLevel_ObjectViewer::Dummy_Object_Setting()
 
 		CModel* pModel = m_Objects[m_iObjectIndex]->Get_Component<CModel>();
 
+		if (pModel->Get_AnimSize() <= 0)
+			return;
 		GUI::Button(pModel->Get_AnimList(pModel->Get_AnimIndex()));
 
 		GUI::SameLine();
@@ -645,11 +647,15 @@ void CLevel_ObjectViewer::Load_KeyFrame(const _char* Name)
 
 void CLevel_ObjectViewer::Find_Anim()
 {
-	GUI::InputInt("FindAnimIndex", &m_iAnimIndex);
-
 	if (!m_Objects.empty())
 	{
 		CModel* pModel = m_Objects[m_iObjectIndex]->Get_Component<CModel>();
+		if (pModel->Get_AnimSize() <= 0)
+			return;
+		GUI::InputInt("FindAnimIndex", &m_iAnimIndex);
+
+
+
 		if (m_iAnimIndex <= pModel->Get_AnimSize())
 		{
 			if (GUI::Button(pModel->Get_AnimList(m_iAnimIndex)))
@@ -659,13 +665,11 @@ void CLevel_ObjectViewer::Find_Anim()
 				pModel->Play_Animation(0.f);
 			}
 		}
-	}
 
-	GUI::InputText("FindAnim", m_FindAnimName, sizeof(m_FindAnimName));
 
-	if (!m_Objects.empty())
-	{
-		CModel* pModel = m_Objects[m_iObjectIndex]->Get_Component<CModel>();
+		GUI::InputText("FindAnim", m_FindAnimName, sizeof(m_FindAnimName));
+
+
 		for (_uint i = 0; i < pModel->Get_AnimSize(); i++)
 		{
 			if (strstr(pModel->Get_AnimList(i), m_FindAnimName))
