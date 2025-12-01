@@ -42,14 +42,16 @@ HRESULT CLevel_EffectViewer::Initialize()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEffectPool>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_EffectPool")))) //플레이어보다 먼저 생성해야함!
+		return E_FAIL;
+
+
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEffect_Editor>(ENUM_CLASS(LEVEL::EFFECT), NEXT_LEVEL, TEXT("Layer_Editor"))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_Plane>(ENUM_CLASS(LEVEL::EFFECT), NEXT_LEVEL, LAYER_CUBE)))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEffectPool>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_EffectPool")))) //플레이어보다 먼저 생성해야함!
-		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, LAYER_PLAYER)))
 		return E_FAIL;

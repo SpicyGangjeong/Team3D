@@ -64,7 +64,7 @@ int    g_iDiffuseMoveLerpOption;
 int    g_iNoiseMoveLerpOption;
 
 //
-float2 g_vDiffuseDistortionUVGainAmount;
+float2 g_vDistortionTime;
 float2 g_vMaskDistortionUVGainAmount;
 
 
@@ -255,6 +255,7 @@ float4 DrawEffect(PS_IN In)
     float2 vDistortionUVMoveTime = g_ParticleValue[In.iGPUIndex].vDistortionUVMoveTime;
     float2 vDelay = g_ParticleValue[In.iGPUIndex].vDelay;
     
+
     if (vDelay.x < vDelay.y)
     {
         discard;
@@ -271,26 +272,6 @@ float4 DrawEffect(PS_IN In)
             UV += SelectLerpUV((g_vDiffuseUVGainAmount / g_vUVCutting), (vDiffuseTime.x / vDiffuseTime.y), g_iDiffuseMoveLerpOption);
         }
 
-        /*  디퓨즈 디스토션 */
-        if (g_isDistortion == true)
-        {
-            
-            float2 vDistortion = In.vTexcoord + SelectLerpUV(g_vDiffuseDistortionUVGainAmount, (vDistortionUVMoveTime.x / vDistortionUVMoveTime.y), g_iDiffuseDistortionMoveLerpOption);
-            
-            vMtrlDistortion = g_DistortionTexture.Sample(DefaultSampler, vDistortion);
-
-            //0.5f를 빼는 이유는 중심을 0으로 옮겨서 양음수 방향으로 offset을 줄수 있다.
-            vMtrlDistortion.rg -= 0.5f;
-                        
-            //아마 분할되었다면 noise도 분할해야할듯 
-            vMtrlDistortion.rg /= g_vUVCutting;
-            
-            //디스토션(노이즈) 텍스쳐로 uv를 왜곡함
-
-            UV = UV + (vMtrlDistortion).rg * g_fNoiseDistortionIntensity;
-            
-        }
-        
         if (g_isDiffuseBlur)
         {
             float4 fAccDiffuse;
@@ -373,8 +354,17 @@ float4 DrawEffect(PS_IN In)
             
             vMtrlDistortion = g_DistortionTexture.Sample(DefaultSampler, vDistortionUV);
             
+            
+            
+            float fDistortionIntensity = g_fNoiseDistortionIntensity;
+            
+            if (g_vDistortionTime.y != 0)
+            {
+                fDistortionIntensity = g_fNoiseDistortionIntensity * ((In.vLifeTime.x / In.vLifeTime.y));
+            }
+            
             //디스토션(노이즈) 텍스쳐로 uv를 왜곡함
-            vMaskTexcoord = vMaskTexcoord + (vMtrlDistortion - 0.5f).r * g_fNoiseDistortionIntensity;
+            vMaskTexcoord = vMaskTexcoord + (vMtrlDistortion - 0.5f).r * fDistortionIntensity;
           
         }
         
@@ -588,14 +578,14 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     
     vMtrlDiffuse = DrawEffect(In);
     
-    int2 iTexel = int2(In.vPosition.xy);
+    //int2 iTexel = int2(In.vPosition.xy);
     
-    float fDepthStencilValue = g_DepthStencilTexture.Load(int3(iTexel, 0)).r;
+    //float fDepthStencilValue = g_DepthStencilTexture.Load(int3(iTexel, 0)).r;
     
-    float fbias = 0.000005f;
+    //float fbias = 0.000005f;
     
-    if (fDepthStencilValue <= In.vProjPos.z / In.vProjPos.w + fbias)
-        discard;
+    //if (fDepthStencilValue <= In.vProjPos.z / In.vProjPos.w + fbias)
+    //    discard;
     
     Out = BlendedWeight(vMtrlDiffuse, In.vProjPos.w);
     
@@ -654,8 +644,6 @@ VS_OUT VS_BLUR_NOWORLD(VS_IN In, uint iGPUIndex : SV_InstanceID)
     return Out;
 }
 
-
-
 struct PS_BLUR_OUT
 {
     float4 vDiffuse : SV_TARGET0;
@@ -700,12 +688,15 @@ PS_BLOOM_OUT PS_BLOOM(PS_IN In)
         
     vector vMtrlDiffuse;
     
+    float2 vDelay = g_ParticleValue[In.iGPUIndex].vDelay;
+
     
     vMtrlDiffuse = DrawEffect(In);
     
+    
     //// 색깔 추가할 처리 (이미시브)
    
-    vMtrlDiffuse += EmissiveDraw(In);
+        vMtrlDiffuse += EmissiveDraw(In);
     
     float fBloomStrength = g_fBloomStrength;
     
@@ -726,6 +717,32 @@ PS_BLOOM_OUT PS_BLOOM(PS_IN In)
 
 }
 
+PS_BLOOM_OUT PS_BLEND(PS_IN In)
+{
+    PS_BLOOM_OUT Out;
+    
+    vector vMtrlDiffuse;
+    
+    vMtrlDiffuse = DrawEffect(In);
+    
+  
+    //int2 iTexel = int2(In.vPosition.xy);
+    
+    //float fDepthStencilValue = g_DepthStencilTexture.Load(int3(iTex el, 0)).r;
+    
+    //float fbias = 0.000005f;
+    
+    //if (fDepthStencilValue <= In.vProjPos.z / In.vProjPos.w + fbias)
+    //    discard;
+   
+    //// 색깔 추가할 처리 (이미시브)
+   
+    vMtrlDiffuse.rgb += EmissiveDraw(In).rgb;
+
+    Out.vDiffuse = vMtrlDiffuse;
+    
+    return Out;
+}
 
 technique11 DefaultTechnique
 {
@@ -752,7 +769,7 @@ technique11 DefaultTechnique
     pass Blur
     {
         SetRasterizerState(RS_Nocull);
-        SetDepthStencilState(DSS_None, 0);
+        SetDepthStencilState(DSS_Effect, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_BLUR();
         GeometryShader = NULL;
@@ -782,7 +799,7 @@ technique11 DefaultTechnique
     pass BLUR_NO_WORLD
     {
         SetRasterizerState(RS_Nocull);
-        SetDepthStencilState(DSS_None, 0);
+        SetDepthStencilState(DSS_Effect, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_BLUR_NOWORLD();
         GeometryShader = NULL;
@@ -790,14 +807,24 @@ technique11 DefaultTechnique
     }
 
  
-    pass ALPHA_BLEND
+    pass BLEND
     {
         SetRasterizerState(RS_Nocull);
-        SetDepthStencilState(DSS_None, 0);
-        SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-        VertexShader = compile vs_5_0 VS_BLUR();
+        SetDepthStencilState(DSS_Effect, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_BLUR();
+        PixelShader = compile ps_5_0 PS_BLEND();
+    }
+
+    pass BLEND_NOWORLD
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_Effect, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_NOWORLD();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_BLEND();
     }
 
     pass BLOOM
@@ -806,6 +833,16 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_BLOOM();
+    }
+
+    pass BLOOM_NOWORLD
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_NOWORLD();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_BLOOM();
     }

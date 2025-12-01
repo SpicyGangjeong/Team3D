@@ -23,6 +23,7 @@
 
 #include "EffectPool.h"
 
+
 #pragma region States
 
 void CPlayer::TestKeyInput(_float fTimeDelta)
@@ -682,6 +683,8 @@ void CPlayer::Behavior_CombatEnter()
 	if (m_pGameInstance->Key_Down(DIK_R)) {
 		m_pFSM->Enable_State(FSMSTATE::SKILL);
 		pairAnimInfo = m_Animation[STATEANIM::SKILL];
+
+
 	}
 	else if (m_pGameInstance->Key_Down(DIK_Q)) {
 		m_pFSM->Enable_State(FSMSTATE::SKILL2);
@@ -704,6 +707,7 @@ void CPlayer::Behavior_CombatEnter()
 			case STATEANIM::DEPULSO:
 				pairAnimInfo = m_Animation[STATEANIM::DEPULSO];
 				m_eSpell = STATEANIM::END;
+
 				break;
 			case STATEANIM::DIFFINDO:
 				pairAnimInfo = m_Animation[STATEANIM::DIFFINDO];
