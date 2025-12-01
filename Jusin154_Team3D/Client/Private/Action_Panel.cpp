@@ -126,10 +126,12 @@ void CAction_Panel::Magic_Meter_Visible(_uint iIndex, _bool bVisible)
 	default:
 		return;
 	}
-	if (bVisible)
+	if (bVisible){
 		m_iMagic_Meter_Count++;
-	else
+	}
+	else{
 		m_iMagic_Meter_Count--;
+	}
 }
 
 void CAction_Panel::Magic_Meter_UV()

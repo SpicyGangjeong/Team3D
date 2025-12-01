@@ -112,20 +112,8 @@ PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody_Static& RigidBody
 	case ACTOR::HEIGHTFIELD:
 	{ // SetUp HeightField
 		PSX::PxHeightField* pHeightField = Find_HeightField(RigidBody.Get_PxMeshKey());
-		PSX::PxHeightFieldGeometry* pPxHeightGeometry = { nullptr };
-
-		_vector vPos, vRotq, vScale;
-		XMMatrixDecompose(&vScale, &vRotq, &vPos, WorldMatrix);
-		vRotq = XMQuaternionNormalize(vRotq);
-
-		PSX::PxTransform out;
-		XMStoreFloat3((_float3*)&out.p, vPos);
-		XMStoreFloat4((_float4*)&out.q, vRotq);
-		PSX::PxMeshScale meshScale(
-			PSX::PxVec3(fabsf(vScale.m128_f32[0]), fabsf(vScale.m128_f32[1]), fabsf(vScale.m128_f32[2])),
-			PSX::PxQuat(PSX::PxIdentity) // 스케일 축은 로컬 기준
-		);
-		pPxHeightGeometry = new PSX::PxHeightFieldGeometry(pHeightField);
+		PSX::PxHeightFieldGeometry* pPxHeightGeometry = new PSX::PxHeightFieldGeometry(pHeightField);
+		pPxHeightGeometry->heightScale = 0.01f/* 기본 정밀도 100배 0.01 -> 1cm, 1 -> 1m */;
 
 		// 유효성 체크
 		PX_ASSERT(pPxHeightGeometry->isValid());

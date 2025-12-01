@@ -117,7 +117,7 @@ HRESULT CMagic_Icon::Render()
 
 _vector CMagic_Icon::Get_WorldPostion()
 {
-	return m_pOwner->Get_WorldPostion();
+	return m_pTransformCom->Get_State(STATE::POSITION);
 }
 
 HRESULT CMagic_Icon::Bind_ShaderResources()

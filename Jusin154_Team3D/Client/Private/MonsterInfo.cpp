@@ -77,7 +77,7 @@ HRESULT CMonsterInfo::Deregist_ActiveMonster(CMonster* pUnit)
 	return E_FAIL;
 }
 
-CMonster* CMonsterInfo::Get_LockOnMonster()
+CUnit* CMonsterInfo::Get_LockOnUnit()
 {
 	return m_pLockOnMonster;
 }

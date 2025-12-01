@@ -58,11 +58,14 @@
 #include "Decendo.h"
 #include "NomalJap.h"
 #include "Protego.h"
+#include "Revelio.h"
 
 #include "TrailObject.h"
 #include "Instance_Model.h"
 #include "Trail.h"
 #include "EffectPool.h"
+
+
 
 #pragma endregion
 
@@ -257,21 +260,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 
 	Asset_FileLoad("../Bin/Resources/Textures/MiniMap", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
-		{
-
-			_string strFilePath = pFilePath;
-			_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
-
-
-			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
-				CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
-				return E_FAIL;
-			}
-
-			return S_OK;
-
-		});
-	Asset_FileLoad("../Bin/Resources/Textures/HUD", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
 		{
 
 			_string strFilePath = pFilePath;
@@ -544,8 +532,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 		Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 		Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
 		Desc.fContactOffset = { 0.05f };
-		Desc.vhalfGeometryInfo = { 2.5f, 4.5f, 3.5f };
-		Desc.fDensity = 10.f;
+		Desc.vhalfGeometryInfo = { 1.f, 1.f, 1.f };
+		Desc.fDensity = 1.f;
 		Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
 		Desc.eLockFlag = {};
 		Desc.vAutoDamping = { 100.f, 100.f };
@@ -574,8 +562,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Wand_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Wand/Wand.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixIdentity()))))
-
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Wand/Wand.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixIdentity()))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Broom_Model"),
@@ -618,6 +605,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CProtego>(NEXT_LEVEL, CProtego::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CRevelio>(NEXT_LEVEL, CRevelio::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 

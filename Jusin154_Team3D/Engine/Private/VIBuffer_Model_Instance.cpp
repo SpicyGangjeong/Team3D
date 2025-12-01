@@ -286,7 +286,9 @@ HRESULT CVIBuffer_Model_Instance::Ready_Materials()
 
 HRESULT CVIBuffer_Model_Instance::SaveAssimpModel(const _char* pModelFilePath)
 {
-	if (!m_pAIScene) return E_FAIL;
+	if (!m_pAIScene) {
+		return E_FAIL;
+	}
 
 	for (_uint i = 0; i < m_pAIScene->mNumMeshes; i++)
 	{

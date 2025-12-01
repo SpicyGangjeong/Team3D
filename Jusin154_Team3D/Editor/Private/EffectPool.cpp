@@ -8,6 +8,8 @@
 #include "NomalJap.h"
 #include "Decendo.h"
 #include "Protego.h"
+#include "Revelio.h"
+#include "Levioso.h"
 
 
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -37,6 +39,7 @@ HRESULT CEffectPool::Initialize(void* pArg)
 	if (FAILED(Ready_Effect()))
 		return E_FAIL;
 
+
 	return S_OK;
 }
 
@@ -46,8 +49,7 @@ void CEffectPool::Priority_Update(_float fTimeDelta)
 	{
 		if (false == (*iter)->Get_Visible())
 		{
-			//SAFE_RELEASE(*iter);
-			//iter = m_ActiveEffectList.erase(iter);
+			++iter;
 		}
 		else
 		{
@@ -56,8 +58,7 @@ void CEffectPool::Priority_Update(_float fTimeDelta)
 		}
 	}
 
-
-	(*m_EffectList[ENUM_CLASS(SKILL_TYPE::PROTEGO)].begin())->Describe_Entity();
+	(*m_EffectList[ENUM_CLASS(SKILL_TYPE::LEVIOSO)].begin())->Describe_Entity();
 
 }
 
@@ -67,8 +68,7 @@ void CEffectPool::Update(_float fTimeDelta)
 	{
 		if (false == (*iter)->Get_Visible())
 		{
-			//SAFE_RELEASE(*iter);
-			//iter = m_ActiveEffectList.erase(iter);
+			++iter;
 		}
 		else 
 		{
@@ -126,7 +126,7 @@ HRESULT CEffectPool::Ready_Effect()
 	))) return E_FAIL;
 
 
-	if (FAILED(Create_Effect(SKILL_TYPE::BOMBARD, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::BOMBARDA, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
 
 		CBombard* pEffect = nullptr;
 
@@ -135,7 +135,7 @@ HRESULT CEffectPool::Ready_Effect()
 		return pEffect;}
 	))) return E_FAIL;
 
-	if (FAILED(Create_Effect(SKILL_TYPE::DECENDO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::DESCENDO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
 
 		CDecendo* pEffect = nullptr;
 
@@ -153,6 +153,27 @@ HRESULT CEffectPool::Ready_Effect()
 
 		return pEffect; }
 	))) return E_FAIL;
+
+
+	if (FAILED(Create_Effect(SKILL_TYPE::REVELIO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
+
+		CRevelio* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CRevelio>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+
+	if (FAILED(Create_Effect(SKILL_TYPE::LEVIOSO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
+
+		CLevioso* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CLevioso>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
 
 
 	return S_OK;
@@ -191,6 +212,33 @@ HRESULT CEffectPool::Use_Skill(SKILL_TYPE eType, CGameObject* pOwner)
 
 		break;
 	}
+
+	return S_OK;
+}
+
+HRESULT CEffectPool::Reset_Pool()
+{
+	for (size_t i = 0; i < ENUM_CLASS(SKILL_TYPE::END); i++)
+	{
+		for (auto& pEffect : m_EffectList[i])
+		{
+			SAFE_RELEASE(pEffect);
+		}
+
+		m_EffectList[i].clear();
+	}
+
+	for (auto& pEffect : m_ActiveEffectList)
+	{
+		SAFE_RELEASE(pEffect);
+	}
+
+
+	m_ActiveEffectList.clear();
+
+
+	if (FAILED(Ready_Effect()))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -234,14 +282,25 @@ void CEffectPool::Free()
 		{
 			SAFE_RELEASE(pEffect);
 		}
+
+		m_EffectList[i].clear();
 	}
 
 	for (auto& pEffect : m_ActiveEffectList)
 	{
 		SAFE_RELEASE(pEffect);
+
+
 	}
+
+	m_ActiveEffectList.clear();
 }
 
 void CEffectPool::Describe_Entity()
 {
+	if(GUI::Button("Reset Pool"))
+	{
+		Reset_Pool();
+	}
+
 }

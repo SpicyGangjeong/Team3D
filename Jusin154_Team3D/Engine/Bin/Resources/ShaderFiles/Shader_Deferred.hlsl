@@ -181,7 +181,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
         return Out;
     }
     
-    float fDiffuseAOStrength = lerp(0.3f, 3.f, fOcclusion);
+    //float fDiffuseAOStrength = lerp(0.3f, 3.f, fOcclusion);
     { // 수치조정 // 디렉셔널
         float fMinRoughness = 0.05f;
         fRoughness = max(fRoughness, fMinRoughness); // 러프니스 최소값 보장
@@ -191,11 +191,14 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     
     
     PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
-    
-    PBR_Out.vShade *= fDiffuseAOStrength;
+    PBR_Out.vShade *= fOcclusion;
 
-    Out.vShade = float4(PBR_Out.vShade, 1.f);
-    Out.vSpecular = float4(PBR_Out.vSpecular, 1.f);
+    float3 vAmbient = g_vLightAmbient.rgb * fOcclusion;
+    float3 vFinalDiffuse = PBR_Out.vShade + vAmbient;
+    float3 vFinalSpecular = PBR_Out.vSpecular * g_vLightSpecular.rgb;
+
+    Out.vShade = float4(vFinalDiffuse, 1.f);
+    Out.vSpecular = float4(vFinalSpecular, 1.f);
     
     return Out;
 }
@@ -268,7 +271,7 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
         return Out;
     }
     
-    float fDiffuseAOStrength = lerp(0.3f, 3.f, fOcclusion);
+    //float fDiffuseAOStrength = lerp(0.3f, 3.f, fOcclusion);
     { // 수치조정 // 점광원
         float fMinRoughness = 0.05f;
         fRoughness = max(fRoughness, fMinRoughness); // 러프니스 최소값 보장
@@ -278,10 +281,14 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     
     PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
     
-    PBR_Out.vShade *= fDiffuseAOStrength;
+    PBR_Out.vShade *= fOcclusion;
 
-    Out.vShade = float4(PBR_Out.vShade, 1.f);
-    Out.vSpecular = float4(PBR_Out.vSpecular, 1.f);
+    float3 vAmbient = g_vLightAmbient.rgb * fOcclusion;
+    float3 vFinalDiffuse = PBR_Out.vShade + vAmbient;
+    float3 vFinalSpecular = PBR_Out.vSpecular * g_vLightSpecular.rgb;
+
+    Out.vShade = float4(vFinalDiffuse, 1.f);
+    Out.vSpecular = float4(vFinalSpecular, 1.f);
     
     return Out;
 }
@@ -318,7 +325,9 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
     float fCameraDistance = length(g_vCamPosition.xyz - vWorldPosition.xyz);
     float fLightDistance = length(g_vLightPos.xyz - vWorldPosition.xyz);
     float3 vToView = normalize(g_vCamPosition.xyz - vWorldPosition.xyz); // 픽셀에서 카메라로
-    float3 vToLight = normalize(g_vLightPos.xyz - vWorldPosition.xyz); // 픽셀에서 라이트로
+    float3 vToLight = normalize(vWorldPosition.xyz - g_vLightPos.xyz); // 픽셀에서 라이트로
+    float3 vLightToPixel = normalize(vWorldPosition.xyz - g_vLightPos.xyz);
+    
     
     fAttenuation = saturate((g_fLightRange - fLightDistance) / g_fLightRange);
     if (fAttenuation <= 0.f)
@@ -328,7 +337,7 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
         return Out;
     }
     
-    float fCosAngle = dot(vToView, g_vLightDir.xyz);
+    float fCosAngle = dot(-vLightToPixel, normalize(g_vLightDir.xyz));
     if (fCosAngle < g_fSpotOuterAngle)
     {
         Out.vShade = float4(0.f, 0.f, 0.f, 1.f);
@@ -365,7 +374,7 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
         return Out;
     }
     
-    float fDiffuseAOStrength = lerp(0.3f, 3.f, fOcclusion);
+    //float fDiffuseAOStrength = lerp(0.3f, 3.f, fOcclusion);
     { // 수치조정 // 점광원
         float fMinRoughness = 0.05f;
         fRoughness = max(fRoughness, fMinRoughness); // 러프니스 최소값 보장
@@ -375,10 +384,14 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
     
     PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
     
-    PBR_Out.vShade *= fDiffuseAOStrength;
+    PBR_Out.vShade *= fOcclusion;
 
-    Out.vShade = float4(PBR_Out.vShade, 1.f);
-    Out.vSpecular = float4(PBR_Out.vSpecular, 1.f);
+    float3 vAmbient = g_vLightAmbient.rgb * fOcclusion;
+    float3 vFinalDiffuse = PBR_Out.vShade + vAmbient;
+    float3 vFinalSpecular = PBR_Out.vSpecular * g_vLightSpecular.rgb;
+
+    Out.vShade = float4(vFinalDiffuse, 1.f);
+    Out.vSpecular = float4(vFinalSpecular, 1.f);
     
     return Out;
 }

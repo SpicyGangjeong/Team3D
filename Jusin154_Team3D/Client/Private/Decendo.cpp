@@ -26,17 +26,14 @@ HRESULT CDecendo::Initialize_Prototype()
 
 HRESULT CDecendo::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg))) {
+	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
-	}
 
-	if (FAILED(Ready_Components(pArg))) {
+	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
-	}
 
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Decendo"))) {
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Decendo")))
 		return E_FAIL;
-	}
 
 
 	m_wstrEffectName = L"Decendo";
@@ -65,20 +62,19 @@ void CDecendo::Priority_Update(_float fTimeDelta)
 
 void CDecendo::Update(_float fTimeDelta)
 {
-	if (m_bVisible == false){
+	if (m_bVisible == false)
 		return;
-	}
 
 	__super::Update(fTimeDelta);
 
 	Update_Event(fTimeDelta);
 
-	m_pProjectile_Blur->Get_Component<CTransform>()->Translation(m_vOwnerLook * 0.5f);
-	m_pProjectile->Get_Component<CTransform>()->Translation(m_vOwnerLook * 0.5f);
+	m_pProjectile_Blur->Get_Component<CTransform>()->Translation(m_vCameraLook * 0.5f);
+	m_pProjectile->Get_Component<CTransform>()->Translation(m_vCameraLook * 0.5f);
 
 
 	if (nullptr != m_pPhysHitBox) {
-		m_pPhysHitBox->Get_Component<CTransform>()->AccumulateMomentum(m_vOwnerLook * 0.5f);
+		m_pPhysHitBox->Get_Component<CTransform>()->AccumulateMomentum(m_vCameraLook * 0.5f);
 	}
 
 
@@ -107,17 +103,15 @@ void CDecendo::Late_Update(_float fTimeDelta)
 
 HRESULT CDecendo::Pre_Setting(CGameObject* pObject)
 {
-	if (pObject == nullptr) {
+	if (pObject == nullptr)
 		return E_FAIL;
-	}
 
 	/* 부모 할당 */
 	m_pOwner = pObject;
 
 	/* 피직스 생성*/
-	if (FAILED(Ready_Child())) {
+	if (FAILED(Ready_Child()))
 		return E_FAIL;
-	}
 
 	/* 초기 셋팅 초기화 */
 	Reset_EffectParts();
@@ -144,11 +138,11 @@ HRESULT CDecendo::Pre_Setting(CGameObject* pObject)
 
 
 	//나아가는 벡터와 한점을 가져와 수직인 평면상에 하나의 점으로  DIR 을 만듬
-	m_vOwnerLook = XMVector3Normalize(m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK));
+	m_vCameraLook = XMVector3Normalize(m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK));
 	_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
 
 
-	_vector vQuaternion = XMQuaternionRotationAxis(m_vOwnerLook, m_pGameInstance->Random_Float(0.f, XM_PIDIV2));
+	_vector vQuaternion = XMQuaternionRotationAxis(m_vCameraLook, m_pGameInstance->Random_Float(0.f, XM_PIDIV2));
 
 	m_vRotateUp = XMVector3Rotate(vUp, vQuaternion);
 	m_vRotateUp = XMVector3Normalize(m_vRotateUp);
@@ -177,7 +171,6 @@ HRESULT CDecendo::Ready_Child()
 
 
 	Desc.vRotRPY = { 0.f, 0.f, 0.f };
-
 	Desc.iSubKind = 70;
 	Desc.vDeltaPos = _float3(0.f, 0.f, 0.f);
 	Desc.vLifeTime = { 0.f, 1.f };
@@ -256,9 +249,8 @@ void CDecendo::Free()
 {
 	__super::Free();
 
-	if (m_pPhysHitBox != nullptr){
+	if (m_pPhysHitBox != nullptr)
 		SAFE_RELEASE(m_pPhysHitBox);
-	}
 
 	SAFE_RELEASE(m_pProjectile_Blur);
 	SAFE_RELEASE(m_pProjectile);
@@ -267,20 +259,9 @@ void CDecendo::Free()
 #ifdef _DEBUG
 void CDecendo::Describe_Entity()
 {
-	GUI::Begin("VALUE");
 
-	_float4 vValue = {};
-
-	if (GUI::InputFloat("TurnValue", (_float*)&m_fTurnValue))
-	{
-	}
-
-	GUI::End();
 }
-
-#endif // _DEBUG
-
-
+#endif
 HRESULT CDecendo::Bind_ShaderResources()
 {
 	return S_OK;

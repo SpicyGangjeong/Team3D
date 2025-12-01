@@ -24,6 +24,8 @@ CAnimation::CAnimation(const CAnimation& rhs)
 	, m_pSaveAnim{ rhs.m_pSaveAnim }
 	, m_fAnimSpeed{rhs.m_fAnimSpeed }
 	, m_iBoneCount{rhs.m_iBoneCount}
+	, m_fProgress{rhs.m_fProgress }
+	, m_fDurationSeconds{ rhs.m_fDurationSeconds }
 {
 	memcpy_s(m_TickPerSeconds, sizeof(_float) * 2, rhs.m_TickPerSeconds, sizeof(_float) * 2);
 
@@ -33,27 +35,29 @@ CAnimation::CAnimation(const CAnimation& rhs)
 		SAFE_ADDREF(pChannel);
 	}
 }
-_bool CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bones, const LOCALPOS_DESC* pLocalPosArray, _bool bIsLoop, _float fTimeDelta,_vector vector[3])
+_bool CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bones, LOCALPOS_DESC** pLocalPosArray, _bool bIsLoop, _float fTimeDelta, _bool bIsSpine, vector<_uint> BoneMask,_vector vector[3])
 {
+	m_fTempTrack += fTimeDelta * m_fAnimSpeed;
 	m_fProgress = m_fTickPerSecond * fTimeDelta * m_fAnimSpeed;
 	m_fCurrentTrackPosition += m_fProgress;
 
 	if (m_fCurrentTrackPosition >= m_fDuration) {
 		if (false == bIsLoop) {
 			m_fCurrentTrackPosition = 0.f; // 루프
-			m_fCurrentTrackPosition = m_fDuration;
+			m_fTempTrack = 0.f;
 			return true;
 		}
 		else {
 			Depart_Animation();
 			m_fCurrentTrackPosition = m_fProgress;
+			m_fTempTrack = 0.f;
 			ResetRootMotion();
-			ProgressAnimation(Bones, pLocalPosArray, vector);
+			ProgressAnimation(Bones, pLocalPosArray, bIsSpine, BoneMask, vector);
 			return true;
 		}
 	}
 
-	ProgressAnimation(Bones, pLocalPosArray, vector);
+	ProgressAnimation(Bones, pLocalPosArray, bIsSpine, BoneMask, vector);
 
 	return false;
 }
@@ -256,6 +260,8 @@ HRESULT CAnimation::Initialize(const vector<CBone*>& Bones, const aiAnimation* p
 	m_iNumChannels = pAIAnimation->mNumChannels;
 	m_CurrentKeyFrameIndices.resize(m_iNumChannels);
 
+	m_fDurationSeconds = m_fDuration / m_fTickPerSecond;
+
 	for (_uint i = 0; i < m_iNumChannels; ++i) {
 		CChannel* pChannel = CChannel::Create(Bones, pAIAnimation->mChannels[i]);
 		if (nullptr == pChannel) {
@@ -297,6 +303,8 @@ HRESULT CAnimation::Initialize(const vector<CBone*>& Bones, const CModel* pModel
 
 	m_iBoneCount = (_uint)Bones.size();
 
+	m_fDurationSeconds = m_fDuration / m_fTickPerSecond;
+
 	for (size_t i = 0; i < m_iNumChannels; i++)
 	{
 		CChannel* pChannel = CChannel::Create(pModel, &pSaveAnimation->Channels[i]);
@@ -309,14 +317,14 @@ HRESULT CAnimation::Initialize(const vector<CBone*>& Bones, const CModel* pModel
 	return S_OK;
 }
 
-void CAnimation::ProgressAnimation(const vector<CBone*>& Bones, const LOCALPOS_DESC* pLocalPosArray,_vector vector[3])
+void CAnimation::ProgressAnimation(const vector<CBone*>& Bones, LOCALPOS_DESC** pLocalPosArray, _bool bIsSpine,vector<_uint>BoneMask,_vector vector[3])
 {
 	_uint iIndex = {};
 	if (m_vBoneTransformationMatrix.size() > 0) {
 		m_vBoneTransformationMatrix.clear();
 	}
 	for (auto& pChannel : m_Channels) {
-		pChannel->Update_TransformationMatirx(Bones, pLocalPosArray, m_fCurrentTrackPosition, &m_CurrentKeyFrameIndices[iIndex++], vector);
+		pChannel->Update_TransformationMatirx(Bones, pLocalPosArray, m_fCurrentTrackPosition, &m_CurrentKeyFrameIndices[iIndex++], bIsSpine, BoneMask, vector);
 		m_vBoneTransformationMatrix.push_back(pChannel->Get_BoneTransformationMatrix());
 	}
 }

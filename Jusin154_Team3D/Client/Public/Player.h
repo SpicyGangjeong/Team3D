@@ -7,6 +7,14 @@ NS_BEGIN(Client)
 
 class CPlayer final : public CUnit
 {
+public:
+	struct PendingEvent
+	{
+		_float fRatio = 0.f;
+		_uint AnimIndex = 0;
+		function<void()> Callback;
+	};
+
 private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CPlayer(const CPlayer& Prototype);
@@ -24,7 +32,7 @@ public:
 	_matrix Get_WandPos();
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
-	class CMonster* m_pLockOnMonster = { nullptr };
+	CUnit* m_pLockOnMonster = { nullptr };
 	_float m_fDirectionRadian = 0.f;
 
 	_bool m_bSprintToggle = { false };
@@ -32,7 +40,6 @@ private:
 
 	_float3 m_vCameraLookDir = { 0.f, 0.f, 1.f, };
 	_float3 m_vCameraRightDir = { 1.f, 0.f, 0.f };
-
 
 	class CCamPosition_Socket* m_pCamPosition_TopDown_LookPart = { nullptr };
 	class CCamPosition_Arm* m_pCamPosition_TopDown_FollowPart = { nullptr };
@@ -83,6 +90,13 @@ private:
 	virtual void Add_FSM();
 	virtual void Set_Anim();
 
+	void Play_Event();
+	void Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio = 0.f);
+
+	vector<PendingEvent> m_PendingEvents;
+
+
+	_float3 m_OffsetPos = {};
 	_float m_fAmount = { 1.f };
 	_float m_fInputTime = {};
 	_bool m_bRatio = { false };

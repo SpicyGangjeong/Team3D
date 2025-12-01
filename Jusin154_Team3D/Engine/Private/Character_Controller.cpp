@@ -153,7 +153,7 @@ HRESULT CCharacter_Controller::ConvertToDO(CRigidBody_Dynamic& BodyOriginal)
 	PSX::PxTransform pxTransform = pCCTActor->getGlobalPose(); 
 	pDOActor->setGlobalPose(pxTransform);
 
-	return E_FAIL;
+	return S_OK;
 }
 
 void CCharacter_Controller::Move(_float fTimeDelta)

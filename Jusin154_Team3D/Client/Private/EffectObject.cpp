@@ -74,7 +74,7 @@ HRESULT CEffectObject::Render_Blur()
 
 	SHADER_PASS_INSTANCE_MODEL BlurPass = {};
 
-	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NON_WORLD)
+	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NON_WORLD || m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::BLEND_NOWORLD)
 	{
 		BlurPass = SHADER_PASS_INSTANCE_MODEL::NON_WORLD_BLUR;
 	}
@@ -131,10 +131,21 @@ HRESULT CEffectObject::Render_Bloom()
 		return E_FAIL;
 	}
 
+	SHADER_PASS_INSTANCE_MODEL BloomPass = {};
+
+	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NON_WORLD || m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::BLEND_NOWORLD)
+	{
+		BloomPass = SHADER_PASS_INSTANCE_MODEL::BLOOM_NOWORLD;
+	}
+	else
+	{
+		BloomPass = SHADER_PASS_INSTANCE_MODEL::BLOOM;
+	}
+
 	for (_uint i = 0; i < m_pInstance_ModelCom->Get_NumMeshes(); i++)
 	{
 
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_INSTANCE_MODEL::BLOOM)))) {
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(BloomPass)))) {
 			return E_FAIL;
 		}
 
@@ -160,8 +171,9 @@ HRESULT CEffectObject::Load(const _char* pFilePath, LEVEL eLevel)
 
 	SAFE_RELEASE(m_pInstance_ModelCom);
 
-	if (m_pLightCom != nullptr)
+	if (m_pLightCom != nullptr){
 		SAFE_RELEASE(m_pLightCom);
+	}
 
 	_string strPerfectFilePath = pFilePath;
 
@@ -556,7 +568,7 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDiffuseDistortionUVGainAmount", &m_EffectInfo.vDiffuseDistortionUVGainAmount, sizeof(_float2)))) {
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDistortionTime", &m_EffectInfo.vDistortionTime, sizeof(_float2)))) {
 		return E_FAIL;
 	}
 
@@ -678,6 +690,9 @@ HRESULT CEffectObject::Bind_ShaderResources()
 
 
 	return S_OK;
+
+
+	return S_OK;
 }
 
 HRESULT CEffectObject::Ready_Components(void* pArg)
@@ -730,8 +745,9 @@ void CEffectObject::Free()
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pInstance_ModelCom);
 
-	if (m_pLightCom != nullptr)
+	if (m_pLightCom != nullptr){
 		SAFE_RELEASE(m_pLightCom);
+	}
 }
 
 

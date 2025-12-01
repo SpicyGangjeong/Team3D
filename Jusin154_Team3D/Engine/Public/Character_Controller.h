@@ -72,7 +72,7 @@ private:
 	PSX::PxController*		m_pController = { nullptr };
 	CTransform*				m_pTransform = { nullptr };	
 	_bool					m_bAutoStepping = { false };
-	_float					m_fGravity = { 0.094f };
+	_float					m_fGravity = { 0.259f };
 	_float					m_fSlopeLimit = { 0.302f/*0~1*/}; // cosf각도, 오르막 경사각 제한. ( 추가설정 필요함 )
 	PhsXUserData			m_tagData = {};
 	

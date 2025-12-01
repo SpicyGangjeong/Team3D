@@ -39,7 +39,7 @@ HRESULT CSpell_Slot::Initialize(void* pArg)
 
 	m_fAlpha = 1.f;
 	m_fTimeMult = 3.f;
-	m_fAngle = XMConvertToRadians(45);
+	m_fAngle = XMConvertToRadians(-135);
 	m_fAlphaTime = 1.f;
 	m_fOffSetX = 101.f;
 	m_fOffSetY = 101.f;
@@ -47,7 +47,6 @@ HRESULT CSpell_Slot::Initialize(void* pArg)
 	m_pVIBufferCom->Set_Cloned(true);
 	m_pVIBufferCom->Set_Pos(380.f, -30.f, m_fOffSetX, m_fOffSetY, m_iCols);
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
-	m_pVIBufferCom->Set_ImageUV();
 	m_bActive = true;
 	return S_OK;
 }

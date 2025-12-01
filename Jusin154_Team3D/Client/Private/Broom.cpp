@@ -43,11 +43,14 @@ HRESULT CBroom::Initialize(void* pArg)
 	}
 
 
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 10.f, 0.f, 1.f));
+
 	return S_OK;
 }
 
 void CBroom::Priority_Update(_float fTimeDelta)
 {
+	
 }
 
 void CBroom::Update(_float fTimeDelta)
@@ -64,8 +67,9 @@ void CBroom::Late_Update(_float fTimeDelta)
 
 HRESULT CBroom::Render()
 {
-	if (!m_pModelCom)
+	if (!m_pModelCom){
 		return S_OK;
+	}
 
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;

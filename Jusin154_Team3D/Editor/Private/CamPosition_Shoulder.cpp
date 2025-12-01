@@ -88,7 +88,7 @@ void CCamPosition_Shoulder::Priority_Update(_float fTimeDelta)
 
 void CCamPosition_Shoulder::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Up(DIK_O)) {
+	if (m_pGameInstance->Key_Up(DIK_INSERT)) {
 		m_pBinded_Camera->Toggle_Priority();
 	}
 	if (FAILED(m_pGameInstance->IsBinded_Camera(CAMERA_SHOULDER))) {

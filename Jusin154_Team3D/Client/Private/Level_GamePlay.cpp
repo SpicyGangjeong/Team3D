@@ -63,9 +63,11 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Up(DIK_ADD))
-	{
-		m_pGameInstance->Set_LevelToChange();
+	if (m_pGameInstance->Key_Pressing(DIK_0)) {
+		if (m_pGameInstance->Key_Up(DIK_1))
+		{
+			m_pGameInstance->Set_LevelToChange();
+		}
 	}
 
 	m_pInfoInstance->Update(fTimeDelta);
@@ -132,7 +134,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 
 HRESULT CLevel_GamePlay::Ready_Layer_UI(const _wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGamePlay_Canvas>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_UI))) {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGamePlay_Canvas>(g_iStaticLevel, g_iStaticLevel, LAYER_UI))) {
 		return E_FAIL;
 	}
 

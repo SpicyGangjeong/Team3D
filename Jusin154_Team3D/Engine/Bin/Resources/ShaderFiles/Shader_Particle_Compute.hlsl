@@ -39,6 +39,7 @@ struct ParticleValue
     float  fSizeDrag;
     float3 vDeltaSize;
     float2 vDelay;
+
 };
 
 
@@ -101,7 +102,7 @@ void CS_MAIN(
     {
         if (isNoWorld)
         {
-            float4x4 CurMat = { particle.vRight, particle.vUp, particle.vLook, particle.vTranslation };
+            row_major float4x4 CurMat = { particle.vRight, particle.vUp, particle.vLook, particle.vTranslation };
         
        
             CurMat = mul(CurMat, WorldMatrix);
@@ -112,6 +113,7 @@ void CS_MAIN(
             particle.vTranslation = CurMat[3].xyzw;
         }
     }
+    
     // 라이프타임 움직임
     particle.vLifeTime.x += fTimeDelta;
     
@@ -151,21 +153,26 @@ void CS_MAIN(
         if (particleValue.fDrag < FLT_EPSILON5)
             fDrag = 1;
         
-        float4 vVelocity = vector(normalize(particle.vLook.xyz) * particleValue.fSpeed, 1.f);
+        float4 vVelocity = vector(normalize(particle.vLook.xyz) * particleValue.fSpeed, 0.f);
     
         particle.vTranslation += vVelocity * fTimeDelta * fDrag;
     }
     
     if (isPivotMove)
     {
+        float fTime = (particle.vLifeTime.x / particle.vLifeTime.y);
+        
         float3 vDir = normalize(particleValue.vPivot - particleValue.vOriginTranslation.xyz);
         
-        float fDrag = particleValue.fDrag;
+        float fRatio = (1 - fTime * fTime);
         
+        float fDrag = particleValue.fDrag * fRatio;
+        
+
         if (particleValue.fDrag < FLT_EPSILON5)
             fDrag = 1;
         
-        float4 vVelocity = vector(vDir * particleValue.fSpeed, 1.f);
+        float4 vVelocity = vector(vDir * particleValue.fSpeed , 0.f);
     
         particle.vTranslation += vVelocity * fTimeDelta * fDrag;
         

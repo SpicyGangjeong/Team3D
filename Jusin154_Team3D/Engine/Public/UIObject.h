@@ -7,7 +7,7 @@ NS_BEGIN(Engine)
 class ENGINE_DLL CUIObject abstract : public CGameObject
 {
 public:
-	enum class SKILLTYPE {
+	enum class SPELLTYPE {
 CONTROL, POWER, DAMAGE,
 UTILITY ,TRANSFORM, CURSE, ESSENTIAL
 };
@@ -151,11 +151,13 @@ protected:
 
 	RECT					m_pRect{};
 
-	_int					m_iSkillType{};
+	_int					m_iSpellType{};
 	_float					m_fSortZ{};
 	_float					m_fMoveSpeed{};
 
 	_float4					m_vNine_Slice{};
+
+	_float					m_fTopY{};
 
 protected:
 	virtual HRESULT Initialize_Prototype();

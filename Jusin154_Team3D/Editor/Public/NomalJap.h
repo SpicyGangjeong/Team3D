@@ -39,7 +39,7 @@ private:
 	_float							  m_fAccTime = {};
 	_float							  m_fLerpAmount = {};
 	_float							  m_fTurnValue = {};
-	_vector							  m_vOwnerLook = {};
+	_vector							  m_vCameraLook = {};
 public:
 	static CNomalJap* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

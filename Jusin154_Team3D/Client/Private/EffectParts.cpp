@@ -47,10 +47,6 @@ void CEffectParts::Update(_float fTimeDelta)
 	if (m_pInstance_ModelCom == nullptr)
 		return;
 
-	m_pInstance_ModelCom->Drop(fTimeDelta);
-
-	if (m_EffectInfo.isBillboard)
-		m_pGameInstance->BillBoard(m_pTransformCom);
 
 
 }
@@ -58,11 +54,16 @@ void CEffectParts::Update(_float fTimeDelta)
 void CEffectParts::Late_Update(_float fTimeDelta)
 {
 
+
 	if (m_bVisible == false)
 		return;
 
 	if (m_pInstance_ModelCom == nullptr)
 		return;
+
+
+	m_pInstance_ModelCom->Drop(fTimeDelta);
+
 
 	if (m_EffectInfo.isBillboard)
 		m_pGameInstance->BillBoard(m_pTransformCom);
@@ -73,6 +74,7 @@ void CEffectParts::Late_Update(_float fTimeDelta)
 		m_pGameInstance->Add_RenderGroup(RENDER::BLOOM, this);
 	}
 
+
 	if (m_EffectInfo.isBlur == true)
 	{
 		m_pGameInstance->Add_RenderGroup(RENDER::BLUR, this);
@@ -82,6 +84,7 @@ void CEffectParts::Late_Update(_float fTimeDelta)
 		return;
 
 	m_pGameInstance->Add_RenderGroup(m_EffectInfo.eRenderOrder, this);
+
 
 }
 

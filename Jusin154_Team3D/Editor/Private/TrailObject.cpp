@@ -326,6 +326,8 @@ HRESULT CTrailObject::Load_Trail(const _char* pPath, LEVEL eLevel)
 		return E_FAIL;
 	}
 
+	m_pTrailCom->ReStructVB(m_TrailInfo.iNumVertex);
+
 	CloseHandle(hFile);
 
 	return S_OK;
@@ -485,6 +487,12 @@ void CTrailObject::Describe_Entity()
 		m_pTrailCom->Describe_Entity();
 
 		m_pShaderCom->Describe_Entity();
+
+		if(GUI::InputInt("NumVertex", &m_TrailInfo.iNumVertex))
+		{
+			m_pTrailCom->Reset_Trail();
+			m_pTrailCom->ReStructVB(m_TrailInfo.iNumVertex);
+		}
 
 		GUI::Checkbox("Diffuse", &m_TrailInfo.isDiffuse);
 		GUI::Checkbox("Masking", &m_TrailInfo.isMask);

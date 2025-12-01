@@ -48,7 +48,7 @@ HRESULT CSpell_Overlay::Initialize(void* pArg)
 	m_vUVScale.y = 1.f;
 	m_fCoolTime = 5.f;
 	m_fSortZ = 1.f;
-	m_iSkillType = ENUM_CLASS(SKILLTYPE::CONTROL);
+	m_iSpellType = ENUM_CLASS(SPELLTYPE::CONTROL);
 	Compute_UI(5);
 	return S_OK;
 }
@@ -154,7 +154,7 @@ HRESULT CSpell_Overlay::Render()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::SPELLTYPE))))
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::TYPE))))
 	{
 		return E_FAIL;
 	}
@@ -225,7 +225,7 @@ HRESULT CSpell_Overlay::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_iSpellType", &m_iSkillType, sizeof(_float))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iSpellType", &m_iSpellType, sizeof(_int))))
 	{
 		return E_FAIL;
 	}

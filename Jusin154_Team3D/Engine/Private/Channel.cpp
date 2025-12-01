@@ -113,12 +113,23 @@ HRESULT CChannel::Initialize(const vector<CBone*>& Bones, _uint iIndex)
 
 void CChannel::Update_TransformationMatirx(
 	const vector<CBone*>& Bones,
-	const LOCALPOS_DESC* pLocalPosArray,
+	LOCALPOS_DESC** pLocalPosArray,
 	_float fCurrentTrackPosition,
 	_uint* pCurrentKeyFrameIndex,
+	_bool bIsSpine,
+	vector<_uint> BoneMask,
 	_vector vector[3])
 {
-	const LOCALPOS_DESC& LocalPos = pLocalPosArray[m_iBoneIndex];
+	if (!bIsSpine)
+	{
+		m_IsUpper = BoneMask[m_iBoneIndex];
+		m_ilayerIndex = m_IsUpper ? 1 : 0;
+		LocalPos = pLocalPosArray[m_ilayerIndex][m_iBoneIndex];
+	}
+	else
+	{
+		LocalPos = pLocalPosArray[0][m_iBoneIndex];
+	}
 
 	_vector vScale = XMLoadFloat3(&LocalPos.Scale);
 	_vector vRotation = XMLoadFloat4(&LocalPos.Rotation);
@@ -128,17 +139,32 @@ void CChannel::Update_TransformationMatirx(
 		LocalPos.Translation.z,
 		1.f);
 
-	if (Bones[m_iBoneIndex]->Compare_Name("Reference"))
+	if (Bones[m_iBoneIndex]->Compare_Name("Reference") && vector)
 	{
 		vector[0] = vScale;
 		vector[1] = vRotation;
 		vector[2] = vTranslation;
 	}
-	
-	m_BoneTransformationMatrix =
-		XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vTranslation);
 
-	Bones[m_iBoneIndex]->Set_TransformationMatrix(m_BoneTransformationMatrix);
+	if (bIsSpine)
+	{
+		m_BoneTransformationMatrix =
+			XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vTranslation);
+
+		Bones[m_iBoneIndex]->Set_TransformationMatrix(m_BoneTransformationMatrix);
+	}
+	else
+	{
+		if (m_ilayerIndex == 1)
+		{
+			m_BoneTransformationMatrix =
+				XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vTranslation);
+
+			Bones[m_iBoneIndex]->Set_TransformationMatrix(m_BoneTransformationMatrix);
+		}
+	}
+	
+
 }
 
 void CChannel::ResetRootMotion()

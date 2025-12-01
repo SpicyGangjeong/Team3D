@@ -25,7 +25,7 @@ public:
 	HRESULT Regist_ActiveMonster(class CMonster* pUnit);
 	HRESULT Deregist_ActiveMonster(class CMonster* pUnit);
 
-	class CMonster* Get_LockOnMonster();
+	CUnit* Get_LockOnUnit();
 	pair<CUnit*, CTransform*> Get_NearestPlayerAlly(_fvector vPos);
 
 private:
