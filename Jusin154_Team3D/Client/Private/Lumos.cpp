@@ -98,6 +98,7 @@ HRESULT CLumos::Pre_Setting(CGameObject* pObject)
 	if (pWand == nullptr)
 		return E_FAIL;
 
+	m_pLumos_Light->Set_Visible(true);
 	m_pLumos_Light->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 
 	m_bVisible = true;

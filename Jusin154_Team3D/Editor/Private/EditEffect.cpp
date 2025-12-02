@@ -3,6 +3,9 @@
 
 #include "GameInstance.h"
 #include "Effect_Editor.h"
+#include "Layer.h"
+#include "Player.h"
+#include "Wand.h"
 
 CEditEffect::CEditEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEffectObject{ pDevice, pContext }
@@ -83,7 +86,9 @@ void CEditEffect::Late_Update(_float fTimeDelta)
 
 	if (m_isWandPos == true)
 	{
-		m_pTransformCom->Set_WorldMatrix()
+		_vector vWandPos = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_PLAYER)->Get_Object<CPlayer>()->Get_PartObject<CWand>()->Get_WorldPostion();
+
+		m_pTransformCom->Set_State(STATE::POSITION, vWandPos);
 	}
 
 	if (m_EffectInfo.isBloom == true)

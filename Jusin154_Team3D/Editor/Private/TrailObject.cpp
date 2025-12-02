@@ -44,6 +44,9 @@ void CTrailObject::Update(_float fTimeDelta)
 		return;
 
 
+
+
+
 	/* 디졸브 타임*/
 	if (m_TrailInfo.vDistortionTime.y != 0)
 	{

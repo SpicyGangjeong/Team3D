@@ -263,7 +263,7 @@
       <Filter>02.GameObjects\Effect\Effects\Revelio</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\NomalJapSide.h">
-      <Filter>02.GameObjects\Effect\Effects\NomalJapSide</Filter>
+      <Filter>02.GameObjects\Effect\Effects\NomalJap\NomalJapSide</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Levioso.h">
       <Filter>02.GameObjects\Effect\Effects\Levioso</Filter>
@@ -276,6 +276,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\Troll_Weapon.h">
       <Filter>02.GameObjects\Item\Troll_Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LeviosoSide.h">
+      <Filter>02.GameObjects\Effect\Effects\Levioso\LeviosoSide</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DecendoSide.h">
+      <Filter>02.GameObjects\Effect\Effects\Decendo\DecendoSide</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BombardSide.h">
+      <Filter>02.GameObjects\Effect\Effects\Bombard\BombardSide</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -581,10 +590,6 @@
     <Filter Include="02.GameObjects\Effect\Effects\Revelio">
       <UniqueIdentifier>{19a2325e-1184-4ee0-92e1-657bf184418c}</UniqueIdentifier>
     </Filter>
-
-    <Filter Include="02.GameObjects\Effect\Effects\NomalJapSide">
-      <UniqueIdentifier>{d260ec7e-150c-4a25-8e25-83eb141652bc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Effect\Effects\Levioso">
       <UniqueIdentifier>{b982d9d6-7561-43d4-b542-88483119047b}</UniqueIdentifier>
     </Filter>
@@ -602,6 +607,18 @@
     </Filter>
     <Filter Include="02.GameObjects\Item\Troll_Weapon">
       <UniqueIdentifier>{1d6c078d-dddd-493d-a6f0-f2cac2e4107e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\NomalJap\NomalJapSide">
+      <UniqueIdentifier>{d260ec7e-150c-4a25-8e25-83eb141652bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Levioso\LeviosoSide">
+      <UniqueIdentifier>{dc00cfd8-105f-419f-a4e4-109096258347}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Decendo\DecendoSide">
+      <UniqueIdentifier>{1cb823f5-a6fe-4bef-9292-b49480a42524}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Bombard\BombardSide">
+      <UniqueIdentifier>{b6076bdb-df15-498f-b951-6b2d0b777a0b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -855,7 +872,7 @@
       <Filter>02.GameObjects\Effect\Effects\Revelio</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\NomalJapSide.cpp">
-      <Filter>02.GameObjects\Effect\Effects\NomalJapSide</Filter>
+      <Filter>02.GameObjects\Effect\Effects\NomalJap\NomalJapSide</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Levioso.cpp">
       <Filter>02.GameObjects\Effect\Effects\Levioso</Filter>
@@ -874,6 +891,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Troll_Weapon.cpp">
       <Filter>02.GameObjects\Item\Troll_Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LeviosoSide.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Levioso\LeviosoSide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\DecendoSide.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Decendo\DecendoSide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BombardSide.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Bombard\BombardSide</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

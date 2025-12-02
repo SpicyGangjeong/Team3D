@@ -731,13 +731,45 @@ void CPlayer::Behavior_CombatEnter()
 		{
 			switch (m_eSpell)
 			{
+			case STATEANIM::ACCIO:
+
+				pairAnimInfo = m_Animation[STATEANIM::SPELL];
+
+				Add_Event(pairAnimInfo.first,
+					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA_SIDE, Get_PartObject<CWand>()); },
+					0.f);
+
+				break;
+
+			case STATEANIM::DESCENDO:
+
+				pairAnimInfo = m_Animation[STATEANIM::SPELL];
+
+				Add_Event(pairAnimInfo.first,
+					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::DESCENDO_SIDE, Get_PartObject<CWand>()); },
+					0.f);
+
+				break;
 			case STATEANIM::DEPULSO:
 				pairAnimInfo = m_Animation[STATEANIM::DEPULSO];
+
+
+				Add_Event(pairAnimInfo.first,
+					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO, this); },
+					0.2f);
+				
+				Add_Event(pairAnimInfo.first,
+					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO_SIDE, Get_PartObject<CWand>()); },
+					0.f);
+
 				m_eSpell = STATEANIM::END;
 
 				break;
 			case STATEANIM::DIFFINDO:
 				pairAnimInfo = m_Animation[STATEANIM::DIFFINDO];
+
+			
+
 				m_eSpell = STATEANIM::END;
 				break;
 			case STATEANIM::DISILLUSION_ENTER:
@@ -795,7 +827,12 @@ void CPlayer::Behavior_CombatEnter()
 			}
 		}
 		else
+		{
+
+			
+
 			pairAnimInfo = m_Animation[STATEANIM::SPELL];
+		}
 	}
 	else if (m_pGameInstance->Key_Down(DIK_V)) {
 		m_pFSM->Enable_State(FSMSTATE::MAPHELP);
@@ -924,6 +961,9 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 
 					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA, this);},
 					0.15f);
+
+
+
 				m_eSpell = STATEANIM::END;
 
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
@@ -935,10 +975,21 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 				Add_Event(pairAnimInfo.first,
 					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::DESCENDO, this);},
 					0.1f);
+
 				m_eSpell = STATEANIM::END;
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 			}
 				break;
+
+			case STATEANIM::DEPULSO:
+			{
+				pairAnimInfo = m_Animation[STATEANIM::DEPULSO];
+
+
+				m_eSpell = STATEANIM::END;
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+			}
+			break;
 			default:
 				break;
 			}

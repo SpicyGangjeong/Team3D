@@ -69,6 +69,9 @@
 #include "Protego.h"
 #include "Revelio.h"
 #include "NomalJapSide.h"
+#include "DecendoSide.h"
+#include "BombardSide.h"
+#include "LeviosoSide.h"
 
 #include "TrailObject.h"
 #include "Instance_Model.h"
@@ -909,6 +912,17 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype<CLumos>(NEXT_LEVEL, CLumos::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CLeviosoSide>(NEXT_LEVEL, CLeviosoSide::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CBombardSide>(NEXT_LEVEL, CBombardSide::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CDecendoSide>(NEXT_LEVEL, CDecendoSide::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
 
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CEffectPool>(g_iStaticLevel, CEffectPool::Create(m_pDevice, m_pContext)))) {

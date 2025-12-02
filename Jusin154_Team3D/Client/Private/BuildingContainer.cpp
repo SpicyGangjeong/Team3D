@@ -34,15 +34,15 @@ void CBuildingContainer::Update(_float fTimeDelta)
 
 void CBuildingContainer::Late_Update(_float fTimeDelta)
 {
-    if (m_pOcclusionQueryCom->isDraw()){
+   // if (m_pOcclusionQueryCom->isDraw()){
         __super::Late_Update(fTimeDelta);
-    }
+    //}
 
     for (auto& pCollisiton : m_ColiisonPartObjects){
         pCollisiton->Late_Update(fTimeDelta);
     }
 
-    m_pGameInstance->Add_RenderGroup(RENDER::OCCLUSION, this);
+    //m_pGameInstance->Add_RenderGroup(RENDER::OCCLUSION, this);
 }
 
 HRESULT CBuildingContainer::Render()

@@ -49,7 +49,7 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 			}
 		}
 	}
-	m_pThreadHolder = CThreadHolder::Create( 12 );
+	m_pThreadHolder = CThreadHolder::Create( 3 );
 	if (nullptr == m_pThreadHolder) {
 		return E_FAIL;
 	}
@@ -691,6 +691,10 @@ PSX::PxRevoluteJoint* CGameInstance::Create_PxRevoluteJoint(PSX::PxRigidActor* p
 	return m_pPhysX_Manager->Create_PxRevoluteJoint(pActorFrame, pxLocalWallFrame, pActorObject, pxLocalActorFrame);
 }
 _bool CGameInstance::SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
+{
+	return m_pPhysX_Manager->SphereCast(fRadius, vStartPos, vDir, fDistance, flagHitsData, flagQuery, hitBuffer);
+}
+_bool CGameInstance::SphereCast(_float fRadius, _fvector vStartPos, _fvector vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
 {
 	return m_pPhysX_Manager->SphereCast(fRadius, vStartPos, vDir, fDistance, flagHitsData, flagQuery, hitBuffer);
 }

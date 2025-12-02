@@ -165,6 +165,9 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Magic_Icon.h" />
     <ClInclude Include="..\Public\Magic_Item.h" />
     <ClInclude Include="..\Public\Magic_Meter.h" />
+    <ClInclude Include="..\Public\DecendoSide.h" />
+    <ClInclude Include="..\Public\BombardSide.h" />
+    <ClInclude Include="..\Public\LeviosoSide.h" />
     <ClInclude Include="..\Public\Potion.h" />
     <ClInclude Include="..\Public\NomalJapSide.h" />
     <ClInclude Include="..\Public\Lumos.h" />
@@ -259,6 +262,9 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Magic_Icon.cpp" />
     <ClCompile Include="..\Private\Magic_Item.cpp" />
     <ClCompile Include="..\Private\Magic_Meter.cpp" />
+    <ClCompile Include="..\Private\DecendoSide.cpp" />
+    <ClCompile Include="..\Private\BombardSide.cpp" />
+    <ClCompile Include="..\Private\LeviosoSide.cpp" />
     <ClCompile Include="..\Private\Potion.cpp" />
     <ClCompile Include="..\Private\NomalJapSide.cpp" />
     <ClCompile Include="..\Private\Lumos.cpp" />
