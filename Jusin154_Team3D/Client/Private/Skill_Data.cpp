@@ -137,7 +137,10 @@ void CSkill_Data::Free()
 	__super::Free();
 
 }
+#ifdef _DEBUG
 
 void CSkill_Data::Describe_Entity()
 {
 }
+
+#endif // _DEBUG
