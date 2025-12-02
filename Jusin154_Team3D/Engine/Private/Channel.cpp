@@ -120,24 +120,67 @@ void CChannel::Update_TransformationMatirx(
 	vector<_uint> BoneMask,
 	_vector vector[3])
 {
+
+	if (0.f == fCurrentTrackPosition)
+		*pCurrentKeyFrameIndex = 0;
+
+	KEYFRAME		LastKeyFrame = m_KeyFrames.back();
+
+	_vector			vScale{};
+	_vector			vRotation{};
+	_vector			vTranslation{};
+
+	if (fCurrentTrackPosition >= LastKeyFrame.fTrackPosition)
+	{
+		vScale = XMLoadFloat3(&LastKeyFrame.vScale);
+		vRotation = XMLoadFloat4(&LastKeyFrame.vRotation);
+		vTranslation = XMVectorSetW(XMLoadFloat3(&LastKeyFrame.vTranslation), 1.f);
+	}
+
+	else
+	{
+		while (fCurrentTrackPosition >= m_KeyFrames[*pCurrentKeyFrameIndex + 1].fTrackPosition)
+			++*pCurrentKeyFrameIndex;
+
+		_float3		vSourScale{}, vDestScale{};
+		_float4		vSourRotation{}, vDestRotation{};
+		_float3		vSourTranslation{}, vDestTranslation{};
+
+		vSourScale = m_KeyFrames[*pCurrentKeyFrameIndex].vScale;
+		vDestScale = m_KeyFrames[*pCurrentKeyFrameIndex + 1].vScale;
+
+		vSourRotation = m_KeyFrames[*pCurrentKeyFrameIndex].vRotation;
+		vDestRotation = m_KeyFrames[*pCurrentKeyFrameIndex + 1].vRotation;
+
+		vSourTranslation = m_KeyFrames[*pCurrentKeyFrameIndex].vTranslation;
+		vDestTranslation = m_KeyFrames[*pCurrentKeyFrameIndex + 1].vTranslation;
+
+		_float		fRatio = (fCurrentTrackPosition - m_KeyFrames[*pCurrentKeyFrameIndex].fTrackPosition) /
+			(m_KeyFrames[*pCurrentKeyFrameIndex + 1].fTrackPosition - m_KeyFrames[*pCurrentKeyFrameIndex].fTrackPosition);
+
+		vScale = XMVectorLerp(XMLoadFloat3(&vSourScale), XMLoadFloat3(&vDestScale), fRatio);
+		vRotation = XMQuaternionSlerp(XMLoadFloat4(&vSourRotation), XMLoadFloat4(&vDestRotation), fRatio);
+		vTranslation = XMVectorSetW(XMVectorLerp(XMLoadFloat3(&vSourTranslation), XMLoadFloat3(&vDestTranslation), fRatio), 1.f);
+
+	}
 	if (!bIsSpine)
 	{
 		m_IsUpper = BoneMask[m_iBoneIndex];
 		m_ilayerIndex = m_IsUpper ? 1 : 0;
-		LocalPos = pLocalPosArray[m_ilayerIndex][m_iBoneIndex];
+		//LocalPos = pLocalPosArray[m_ilayerIndex][m_iBoneIndex];
 	}
 	else
 	{
-		LocalPos = pLocalPosArray[0][m_iBoneIndex];
+		//LocalPos = pLocalPosArray[0][m_iBoneIndex];
 	}
 
-	_vector vScale = XMLoadFloat3(&LocalPos.Scale);
+	/*_vector vScale = XMLoadFloat3(&LocalPos.Scale);
 	_vector vRotation = XMLoadFloat4(&LocalPos.Rotation);
 	_vector vTranslation = XMVectorSet(
 		LocalPos.Translation.x,
 		LocalPos.Translation.y,
 		LocalPos.Translation.z,
-		1.f);
+		1.f);*/
 
 	if (Bones[m_iBoneIndex]->Compare_Name("Reference")|| Bones[m_iBoneIndex]->Compare_Name("root"))
 	{
