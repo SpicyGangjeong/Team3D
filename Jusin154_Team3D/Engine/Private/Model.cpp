@@ -123,13 +123,13 @@ _bool CModel::Play_Animation(_float fTimeDelta, CTransform* pTransform)
 
 _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 {
-	if (m_bLoopRestarted)
+	/*if (m_bLoopRestarted)
 	{
 		m_vPrevRootPos = { 0,0,0 };
 		m_bLoopRestarted = false;
-	}
+	}*/
 
-	ComputeAnimation(m_iCurrentAnimIndex);
+	//ComputeAnimation(m_iCurrentAnimIndex);
 
 	if (m_iPreAnimIndex >= 0 && m_iPreAnimIndex != m_iCurrentAnimIndex)
 	{
@@ -160,6 +160,19 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 		m_iPreAnimIndex = m_iCurrentAnimIndex;
 	}
 
+	
+	if (m_bIsFinishedAnim)
+	{
+		if (m_bIsLoop)
+		{
+			m_bLoopRestarted = true;
+			m_vPrevRootPos = { 0,0,0 };
+		}
+		else{
+			XMStoreFloat3(&m_vPrevRootPos, m_vector[2]);
+		}
+	}
+
 	if (m_bRatio) {
 		Update_RootBone(m_fAmount * m_fRatio);
 	}
@@ -170,18 +183,9 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 
 	if (m_bIsFinishedAnim)
 	{
-		if (m_bIsLoop)
-		{
-			m_bLoopRestarted = true;
-		}
-		else{
-			XMStoreFloat3(&m_vPrevRootPos, m_vector[2]);
-		}
-
 		m_vPrevRootRot = { 0.f,0.f,0.f,0.f };
 		m_bInitialRootRotSaved = false;
 	}
-
 
 	for (auto& pBone : m_Bones)
 	{
@@ -199,8 +203,8 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 		m_bLoopRestarted = false;
 	}
 
-	ComputeAnimation(m_iCurrentAnimIndex);
-	ComputeAnimation_Second(m_iCurrSecondAnimIndex);
+	//ComputeAnimation(m_iCurrentAnimIndex);
+	//ComputeAnimation_Second(m_iCurrSecondAnimIndex);
 
 	if (m_iPreAnimIndex >= 0 && m_iPreAnimIndex != m_iCurrentAnimIndex)
 	{
@@ -319,8 +323,6 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fAmount, _boo
 		m_bIsLoop = isLoop;
 		m_fAmount = fAmount;
 		m_bRatio = bRatio;
-
-
 	}
 	else {
 		m_iCurrentAnimIndex = -1;
@@ -1716,7 +1718,7 @@ HRESULT CModel::Initialize(void* pArg)
 		InItialize_BoneIndex();
 		Initialize_BoneMasks();
 
-		Create_Temp();
+		/*Create_Temp();
 		m_Parent.resize(m_Bones.size());
 		for (size_t i = 0; i < (_uint)m_Bones.size(); i++)
 		{
@@ -1728,7 +1730,7 @@ HRESULT CModel::Initialize(void* pArg)
 
 		Create_Con();
 		Create_LocalPosVB();
-		Create_ParentVB();
+		Create_ParentVB();*/
 
 	}
 
