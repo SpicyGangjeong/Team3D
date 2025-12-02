@@ -1,6 +1,8 @@
 ﻿#include "pch.h"
 #include "Player.h"
 
+#include "InfoInstance.h"
+
 #include "GameInstance.h"
 #include "CamPosition_Socket.h"
 #include "Camera_Gaze.h"
@@ -74,6 +76,7 @@ HRESULT CPlayer::InputAction()
 		|| m_pGameInstance->Key_Down(DIK_Z)
 		|| m_pGameInstance->Key_Down(DIK_G)
 		|| m_pGameInstance->Key_Down(DIK_B)
+		|| m_pGameInstance->Key_Down(DIK_T)
 		)
 	{
 		return S_OK;
@@ -187,6 +190,9 @@ HRESULT CPlayer::Behavior_IdleExitCheck(_float fTimeDelta)
 		}
 		else if (m_pGameInstance->Key_Down(DIK_B)) {
 			m_pFSM->Change_State(FSMSTATE::BROOM_RIDE);
+		}
+		else if (m_pGameInstance->Key_Down(DIK_T)) {
+			m_pInfoInstance->Change_Canvas();
 		}
 		return E_FAIL;
 	}

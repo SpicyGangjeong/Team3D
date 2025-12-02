@@ -28,6 +28,8 @@
 
 #pragma region UI
 
+#include "UI_Manager.h"
+
 #include "GamePlay_Canvas.h"
 #include "Loading_Panel.h"
 #include "LoadingWidget.h"
@@ -1576,6 +1578,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 
 	m_strMessage = TEXT("객체원형를(을) 로딩 중 입니다.");
+
+	/* For.Prototype_GameObject_UI_Manager*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CUI_Manager>(g_iStaticLevel, CUI_Manager::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 
 	/* For.Prototype_GameObject_GamePlay_Canvas*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CGamePlay_Canvas>(g_iStaticLevel, CGamePlay_Canvas::Create(m_pDevice, m_pContext)))) {

@@ -49,6 +49,7 @@ HRESULT CSpell_List::Initialize(void* pArg)
 	m_fDelayTime = 0.5f;
 	m_iPerSpell_Slot = -1;
 	Color();
+	m_bActive = true;
 	return S_OK;
 }
 

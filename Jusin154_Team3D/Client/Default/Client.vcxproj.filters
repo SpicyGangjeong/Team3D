@@ -328,6 +328,9 @@
     <ClInclude Include="..\public\MapElement_Light.h">
       <Filter>02.GameObjects\Environment\03.MapElement\Light</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\UI_Manager.h">
+      <Filter>02.GameObjects\UI\UI_Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -707,6 +710,9 @@
     <Filter Include="02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Header">
       <UniqueIdentifier>{00b37924-ab02-4287-b67e-80375a8d3268}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\UI_Manager">
+      <UniqueIdentifier>{9cc8fea6-837e-4f68-b116-134c9dc68a26}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1029,6 +1035,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Current_Slot_Number.cpp">
       <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Current_Slot_Number</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UI_Manager.cpp">
+      <Filter>02.GameObjects\UI\UI_Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

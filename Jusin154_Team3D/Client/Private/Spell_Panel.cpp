@@ -14,8 +14,8 @@
 #include "Current_Slot_Number.h"
 #include "Spell_Header.h"
 #include "Spell_Header_Line.h"
-//#include "Spell_Data.h"
 #include "Spell_Anim.h"
+#include "InfoInstance.h"
 
 CSpell_Panel::CSpell_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPanelObject(pDevice, pContext)
@@ -23,7 +23,8 @@ CSpell_Panel::CSpell_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CSpell_Panel::CSpell_Panel(const CSpell_Panel& rhs)
-	:CPanelObject(rhs)
+	:CPanelObject(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -58,7 +59,10 @@ HRESULT CSpell_Panel::Initialize(void* pArg)
 	m_iSpellType = -1;
 	m_iPendingSpell = -1;
 	m_fDelayTime = 1.f;
+	m_bActive = true;
+
 	Add_Function(TEXT("Hover"), [this](void* p) {this->Slot_Chack(p); });
+
 	return S_OK;
 }
 
@@ -132,10 +136,11 @@ _vector CSpell_Panel::Get_WorldPostion()
 	return m_pTransformCom->Get_State(STATE::POSITION);
 }
 
-const CUIObject::SPELLINFO CSpell_Panel::Get_Info(_int Index)
+const Client::SPELL_INFO CSpell_Panel::Get_SpellInfo(_int SkillID)
 {
-	return m_Info[Index];
+	return m_pInfoInstance->Get_Spell_Info(SkillID);
 }
+
 
 void CSpell_Panel::Slot_Chack(void* pArg)
 {
