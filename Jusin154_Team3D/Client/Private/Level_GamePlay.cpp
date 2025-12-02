@@ -6,6 +6,7 @@
 #include "Camera_Debug.h"
 #include "InfoInstance.h"
 #include "GamePlay_Canvas.h"
+#include "Spell_Canvas.h"
 #include "Layer.h"
 #include "SkyBox.h"
 #include "Broom.h"
@@ -120,9 +121,13 @@ HRESULT CLevel_GamePlay::Ready_Background()
 
 	/* Map Containters */
 	/* 테스트용 맵 */
-	 CInfoInstance::GetInstance()->Load_MapObjects("ClientTest");
+
+	//CInfoInstance::GetInstance()->Load_MapObjects("ClientTest");
 	/* 전체 맵 */
-	//CInfoInstance::GetInstance()->Load_MapObjects("Map1129");
+	CInfoInstance::GetInstance()->Load_MapObjects("Map1129");
+
+	/* 조명 오브젝트 */
+	CInfoInstance::GetInstance()->Load_LightElements("LightElement");
 
 	
 	CInstancedProp::INSTANCE_PROP_DESC Desc = {};
@@ -147,6 +152,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 HRESULT CLevel_GamePlay::Ready_Layer_UI(const _wstring& strLayerTag)
 {
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGamePlay_Canvas>(g_iStaticLevel, g_iStaticLevel, LAYER_UI))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Canvas>(g_iStaticLevel, g_iStaticLevel, LAYER_UI))) {
 		return E_FAIL;
 	}
 
@@ -233,15 +241,15 @@ HRESULT CLevel_GamePlay::Ready_Layer_SkyBox(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 {
-	//for (_uint i = 0; i < 2; ++i)
-	//{
-	//	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER,&i))) {
-	//		return E_FAIL;
-	//	}
-	//}
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
-	//	return E_FAIL;
-	//}
+	for (_uint i = 0; i < 2; ++i)
+	{
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER,&i))) {
+			return E_FAIL;
+		}
+	}
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
+		return E_FAIL;
+	}
 
 	return S_OK;
 }

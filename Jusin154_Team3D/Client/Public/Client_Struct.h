@@ -21,7 +21,9 @@ namespace Client
 		_uint		iSpell_ID{};
 		_wstring	pSpell_Name;
 		_uint		iSpell_Type{};
-		_uint		iSpell_CoolTime{};
+		_uint		iSkill_Type{};
+		_float		fSpell_CoolTime{};
+		_float		fDuration{};
 		_uint		iAnimNum{};
 		_wstring	pSpellInfo;
 		_bool		bSpell_Lock = false;

@@ -19,6 +19,12 @@ public:
 	virtual HRESULT Render() override;
 	virtual _vector Get_WorldPostion() override;
 
+//public:
+//	virtual const SPELLINFO Get_Info(_int Index) override;
+//
+//public:
+//	virtual void Set_SkillType(_int eType);
+
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;
@@ -31,7 +37,9 @@ private:
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
-	CGameObject* m_pSpell_Anim = { nullptr };
+	_float	m_fStertTimer{};
+	_int	m_iPerIndex{};
+	_bool	m_bStart = { false };
 
 public:
 	static CSpell_Vidio_Border* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

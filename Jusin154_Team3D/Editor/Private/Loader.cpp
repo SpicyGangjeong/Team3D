@@ -36,6 +36,8 @@
 
 #pragma region UI
 
+#include "Spell_Data.h"
+
 #include "GamePlay_Canvas.h"
 
 #include "Mission_Panel.h"
@@ -78,6 +80,7 @@
 #include "Spell_Header_Line.h"
 #include "Spell_Vidio_Border.h"
 #include "Spell_Anim.h"
+#include "Current_Slot_Number.h"
 
 #include "IMGUIUI.h"
 
@@ -813,6 +816,11 @@ HRESULT CLoader::Loading_For_UI()
 	m_strMessage = TEXT("Prototype Loading..");
 
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_Data>(g_iStaticLevel, CSpell_Data::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
 	if (FAILED(m_pGameInstance->Add_Prototype<CGamePlay_Canvas>(g_iStaticLevel, CGamePlay_Canvas::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
@@ -965,6 +973,10 @@ HRESULT CLoader::Loading_For_UI()
 		return E_FAIL;
 	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_Anim>(g_iStaticLevel, CSpell_Anim::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CCurrent_Slot_Number>(g_iStaticLevel, CCurrent_Slot_Number::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}

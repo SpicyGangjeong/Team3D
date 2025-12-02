@@ -160,6 +160,10 @@ call Update_Resources.bat
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Action_Panel.h" />
+    <ClInclude Include="..\Public\Current_Slot_Number.h" />
+    <ClInclude Include="..\Public\Current_Spell_Slot.h" />
+    <ClInclude Include="..\Public\Eessential_Spell.h" />
+    <ClInclude Include="..\Public\Eessential_Spell_Slot.h" />
     <ClInclude Include="..\Public\HpBarBG.h" />
     <ClInclude Include="..\Public\Levioso.h" />
     <ClInclude Include="..\Public\Magic_Icon.h" />
@@ -168,6 +172,8 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\DecendoSide.h" />
     <ClInclude Include="..\Public\BombardSide.h" />
     <ClInclude Include="..\Public\LeviosoSide.h" />
+    <ClInclude Include="..\public\MapElement.h" />
+    <ClInclude Include="..\public\MapElement_Light.h" />
     <ClInclude Include="..\Public\Potion.h" />
     <ClInclude Include="..\Public\NomalJapSide.h" />
     <ClInclude Include="..\Public\Lumos.h" />
@@ -233,9 +239,21 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\PlayerInfo.h" />
     <ClInclude Include="..\Public\Slot_Number.h" />
     <ClInclude Include="..\public\Skill_Data.h" />
+    <ClInclude Include="..\Public\Spell_Anim.h" />
+    <ClInclude Include="..\Public\Spell_Canvas.h" />
+    <ClInclude Include="..\Public\Spell_Header.h" />
+    <ClInclude Include="..\Public\Spell_Header_Line.h" />
+    <ClInclude Include="..\Public\Spell_Hover.h" />
+    <ClInclude Include="..\Public\Spell_Hover_Effect.h" />
+    <ClInclude Include="..\Public\Spell_List.h" />
+    <ClInclude Include="..\Public\Spell_List_Image.h" />
     <ClInclude Include="..\Public\Spell_Overlay.h" />
+    <ClInclude Include="..\Public\Spell_Panel.h" />
+    <ClInclude Include="..\Public\Spell_Preview.h" />
     <ClInclude Include="..\Public\Spell_Slot.h" />
+    <ClInclude Include="..\Public\Spell_State.h" />
     <ClInclude Include="..\Public\Spell_UI.h" />
+    <ClInclude Include="..\Public\Spell_Vidio_Border.h" />
     <ClInclude Include="..\Public\State_Broom_Ride.h" />
     <ClInclude Include="..\Public\State_Combat.h" />
     <ClInclude Include="..\Public\State_Dodge.h" />
@@ -257,6 +275,10 @@ call Update_Resources.bat
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Action_Panel.cpp" />
+    <ClCompile Include="..\Private\Current_Slot_Number.cpp" />
+    <ClCompile Include="..\Private\Current_Spell_Slot.cpp" />
+    <ClCompile Include="..\Private\Eessential_Spell.cpp" />
+    <ClCompile Include="..\Private\Eessential_Spell_Slot.cpp" />
     <ClCompile Include="..\Private\HpBarBG.cpp" />
     <ClCompile Include="..\Private\Levioso.cpp" />
     <ClCompile Include="..\Private\Magic_Icon.cpp" />
@@ -265,6 +287,8 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\DecendoSide.cpp" />
     <ClCompile Include="..\Private\BombardSide.cpp" />
     <ClCompile Include="..\Private\LeviosoSide.cpp" />
+    <ClCompile Include="..\private\MapElement.cpp" />
+    <ClCompile Include="..\private\MapElement_Light.cpp" />
     <ClCompile Include="..\Private\Potion.cpp" />
     <ClCompile Include="..\Private\NomalJapSide.cpp" />
     <ClCompile Include="..\Private\Lumos.cpp" />
@@ -332,9 +356,21 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\PlayerInfo.cpp" />
     <ClCompile Include="..\Private\Slot_Number.cpp" />
     <ClCompile Include="..\private\Skill_Data.cpp" />
+    <ClCompile Include="..\Private\Spell_Anim.cpp" />
+    <ClCompile Include="..\Private\Spell_Canvas.cpp" />
+    <ClCompile Include="..\Private\Spell_Header.cpp" />
+    <ClCompile Include="..\Private\Spell_Header_Line.cpp" />
+    <ClCompile Include="..\Private\Spell_Hover.cpp" />
+    <ClCompile Include="..\Private\Spell_Hover_Effect.cpp" />
+    <ClCompile Include="..\Private\Spell_List.cpp" />
+    <ClCompile Include="..\Private\Spell_List_Image.cpp" />
     <ClCompile Include="..\Private\Spell_Overlay.cpp" />
+    <ClCompile Include="..\Private\Spell_Panel.cpp" />
+    <ClCompile Include="..\Private\Spell_Preview.cpp" />
     <ClCompile Include="..\Private\Spell_Slot.cpp" />
+    <ClCompile Include="..\Private\Spell_State.cpp" />
     <ClCompile Include="..\Private\Spell_UI.cpp" />
+    <ClCompile Include="..\Private\Spell_Vidio_Border.cpp" />
     <ClCompile Include="..\Private\State_Broom_Ride.cpp" />
     <ClCompile Include="..\Private\State_Combat.cpp" />
     <ClCompile Include="..\Private\State_Dodge.cpp" />

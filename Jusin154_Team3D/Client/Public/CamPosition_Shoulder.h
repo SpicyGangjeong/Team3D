@@ -55,6 +55,7 @@ private:
 	_float4 m_DestPos = { };
 
 	_bool m_bZoomIn = { false };
+	_bool m_bLerp = {};
 
 
 	CCamPosition_Target* m_pTarget_LookPart = { nullptr };
