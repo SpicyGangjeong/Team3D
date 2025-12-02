@@ -40,7 +40,9 @@ HRESULT CGameObject_Manager::Add_GameObject_ToLayer(_uint iLayerLevelIndex, cons
 void CGameObject_Manager::Priority_Update(_float fTimeDelta)
 {
 #ifdef _DEBUG
+#ifndef gimch
 	Describe_Entity();
+#endif // !gimch
 	m_pGameInstance->Compute_TimeDelta(TEXT("Timer_PriorityUpdate"));
 #endif // _DEBUG
 	for (size_t i = 0; i < m_iNumLevels; i++)
