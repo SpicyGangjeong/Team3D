@@ -86,10 +86,10 @@ public:
 	void			Initialize_BoneMasks();
 
 public:
+	HRESULT Ready_PhysXMeshes(_fmatrix& PreTransformMatrix);
 #ifdef EDITOR_PROJECT	
 	HRESULT Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex);
 	HRESULT Ready_Meshes(MODEL eType, const aiScene* pAIScene, _fmatrix& PreTransformMatrix);
-	HRESULT Ready_PhysXMeshes();
 	HRESULT Save_PhysXTriMeshes(const _char* pModelFilePath);
 	HRESULT Ready_Materials(const aiScene* pAIScene, const _char* pModelFilePath);
 	HRESULT Ready_Materials_FromFile(const aiScene* pAIScene, const _char* pModelFilePath);

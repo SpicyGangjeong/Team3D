@@ -534,11 +534,15 @@ void CRenderer::Render_Blend()
 
 void CRenderer::Render_Bloom()
 {
+#ifdef _DEBUG
+
 	GUI::Begin("PostProcessing_Bloom");
 	GUI::PushItemWidth(80);
 	GUI::DragFloat("g_fThreshold", &m_fThreshold, 0.01f, 0.02f, 100.f, "%.3f");
 	GUI::SliderInt("g_iEmbossingPass", &m_iBloomEmbossingPass, 0, 2, "%d");
 	GUI::End();
+
+#endif // _DEBUG
 
 	//{ // BackBuffer 
 	//	ID3D11Texture2D* pBackBuffer = nullptr;

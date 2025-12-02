@@ -209,8 +209,8 @@ public:
 	void				Attach_Actor(PSX::PxActor& Actor);
 	void				Detach_Actor(PSX::PxActor& pActor);
 	void				Release_Actor(PSX::PxActor& Actor);
-#ifdef EDITOR_PROJECT
 	HRESULT ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix = XMMatrixIdentity());
+#ifdef EDITOR_PROJECT
 	HRESULT SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
 #endif // EDITOR_PROJECT
 	HRESULT LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes); // 모델 불러왔던 경로에 그대로 있음

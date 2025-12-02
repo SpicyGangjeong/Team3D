@@ -28,8 +28,8 @@ private:
 	HRESULT Ready_VertexBuffer_For_Anim(vector<class CBone*>& Bones, const aiMesh* pAIMesh);
 public:
 	static CMesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, vector<class CBone*>& Bones, const aiMesh* pAIMesh, _fmatrix& PreTransformMatrix);
-	PSX::PxTriangleMesh* ConvertToPxMesh(const PSX::PxCookingParams* pParam, PSX::PxPhysics* pPhysX, _matrix WorldMatrix);
 #endif // EDITOR_PROJECT
+	PSX::PxTriangleMesh* ConvertToPxMesh(const PSX::PxCookingParams* pParam, PSX::PxPhysics* pPhysX, _matrix WorldMatrix);
 
 public:
 	//인스턴싱 모델 전용 드로우, 바인딩 함수 
