@@ -20,9 +20,6 @@ public:
 	virtual _vector Get_WorldPostion() override;
 
 private:
-	virtual void MoveY(_float fY) override;
-
-private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;
 	virtual HRESULT Initialize_Prototype() override;

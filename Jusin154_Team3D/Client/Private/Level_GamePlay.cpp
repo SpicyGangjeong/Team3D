@@ -6,6 +6,7 @@
 #include "Camera_Debug.h"
 #include "InfoInstance.h"
 #include "GamePlay_Canvas.h"
+#include "Spell_Canvas.h"
 #include "Layer.h"
 #include "SkyBox.h"
 #include "Broom.h"
@@ -150,6 +151,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 HRESULT CLevel_GamePlay::Ready_Layer_UI(const _wstring& strLayerTag)
 {
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGamePlay_Canvas>(g_iStaticLevel, g_iStaticLevel, LAYER_UI))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Canvas>(g_iStaticLevel, g_iStaticLevel, LAYER_UI))) {
 		return E_FAIL;
 	}
 

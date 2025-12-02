@@ -28,6 +28,7 @@ private:
 private:
 	void Compute_UV(_uint iItemID);
 	void Compute_Image();
+
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
