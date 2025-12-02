@@ -4,6 +4,7 @@
 #include "MapInfo.h"
 #include "MonsterInfo.h"
 #include "PlayerInfo.h"
+#include "Skill_Data.h"
 
 IMPLEMENT_SINGLETON(CInfoInstance)
 
@@ -17,6 +18,7 @@ void CInfoInstance::Update(_float fTimeDelta)
 	m_pPlayerInfo->Update(fTimeDelta);
 	m_pMonsterInfo->Update(fTimeDelta);
 	m_pMapInfo->Update(fTimeDelta);
+	m_pSkillInfo->Update(fTimeDelta);
 }
 
 void CInfoInstance::Change_Level()
@@ -24,6 +26,7 @@ void CInfoInstance::Change_Level()
 	m_pPlayerInfo->Change_Level();
 	m_pMonsterInfo->Change_Level();
 	m_pMapInfo->Change_Level();
+	m_pSkillInfo->Change_Level();
 }
 
 void CInfoInstance::Update_CameraCoordinateSystem(_float3& vLook, _float3& vRight)
@@ -86,6 +89,21 @@ HRESULT CInfoInstance::Load_LightElements(const _char* pFilePath)
 	return m_pMapInfo->Load_LightElements(pFilePath);
 }
 #pragma endregion
+
+#pragma region SPELL_INFO
+HRESULT CInfoInstance::Load_SpellInfo(const _char* pFilePath)
+{
+	return m_pSkillInfo->Load_SpellInfo(pFilePath);
+}
+SPELL_INFO CInfoInstance::Get_Spell_Info(_int Spell_Info)
+{
+	return m_pSkillInfo->Get_Info(Spell_Info);
+}
+void CInfoInstance::Change_Canvas()
+{
+
+}
+#pragma endregion
 LEVEL CInfoInstance::Get_RestartLevel()
 {
 	return LEVEL::GAMEPLAY;
@@ -112,6 +130,10 @@ HRESULT CInfoInstance::Initialize_Information(ID3D11Device* pDevice, ID3D11Devic
 	if (nullptr == m_pMonsterInfo) {
 		return E_FAIL;
 	}
+	m_pSkillInfo = CSkill_Data::Create(pDevice, pContext);
+	if (nullptr == m_pSkillInfo) {
+		return E_FAIL;
+	}
 
 
 	return S_OK;
@@ -125,6 +147,7 @@ void CInfoInstance::Release_Information()
 	SAFE_RELEASE(m_pMapInfo);
 	SAFE_RELEASE(m_pPlayerInfo);
 	SAFE_RELEASE(m_pMonsterInfo);
+	SAFE_RELEASE(m_pSkillInfo);
 	SAFE_RELEASE(m_pDevice);
 	SAFE_RELEASE(m_pContext);
 	SAFE_RELEASE(m_pGameInstance);

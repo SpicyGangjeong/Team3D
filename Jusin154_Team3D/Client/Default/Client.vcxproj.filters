@@ -340,11 +340,8 @@
     <ClInclude Include="..\public\MapElement_Light.h">
       <Filter>02.GameObjects\Environment\03.MapElement\Light</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\MapElement.h">
-      <Filter>02.GameObjects\Environment\03.MapElement</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\MapElement_Light.h">
-      <Filter>02.GameObjects\Environment\03.MapElement\Light</Filter>
+    <ClInclude Include="..\public\UI_Manager.h">
+      <Filter>02.GameObjects\UI\UI_Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -668,12 +665,7 @@
     <Filter Include="02.GameObjects\Environment\03.MapElement\Light">
       <UniqueIdentifier>{71f6a568-488d-4ec1-be79-8fcce6677e27}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Environment\03.MapElement">
-      <UniqueIdentifier>{f3f219aa-034f-4aa2-9f2e-d75d15bd1f4a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Environment\03.MapElement\Light">
-      <UniqueIdentifier>{71f6a568-488d-4ec1-be79-8fcce6677e27}</UniqueIdentifier>
-    </Filter>
+
     <Filter Include="02.GameObjects\Monster\Troll">
       <UniqueIdentifier>{a1b1f17d-ed4f-4b20-aa8e-c52e693683d4}</UniqueIdentifier>
     </Filter>
@@ -742,6 +734,9 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Header">
       <UniqueIdentifier>{00b37924-ab02-4287-b67e-80375a8d3268}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\UI_Manager">
+      <UniqueIdentifier>{9cc8fea6-837e-4f68-b116-134c9dc68a26}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1009,12 +1004,6 @@
     <ClCompile Include="..\private\MapElement_Light.cpp">
       <Filter>02.GameObjects\Environment\03.MapElement\Light</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\MapElement.cpp">
-      <Filter>02.GameObjects\Environment\03.MapElement</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\MapElement_Light.cpp">
-      <Filter>02.GameObjects\Environment\03.MapElement\Light</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Troll.cpp">
       <Filter>02.GameObjects\Monster\Troll</Filter>
     </ClCompile>
@@ -1083,6 +1072,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Current_Slot_Number.cpp">
       <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Current_Slot_Number</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UI_Manager.cpp">
+      <Filter>02.GameObjects\UI\UI_Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

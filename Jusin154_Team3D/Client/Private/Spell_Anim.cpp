@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Spell_Anim.h"
 #include "GameInstance.h"
+#include "InfoInstance.h"
 
 CSpell_Anim::CSpell_Anim(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
@@ -8,7 +9,9 @@ CSpell_Anim::CSpell_Anim(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CSpell_Anim::CSpell_Anim(const CSpell_Anim& rhs)
-	:CElementObject(rhs)
+	:CElementObject(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
+
 {
 }
 
@@ -48,6 +51,7 @@ HRESULT CSpell_Anim::Initialize(void* pArg)
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Slot_Hover"), [this](void* p) {this->Set_SkillType(*reinterpret_cast<_int*>(p)); });
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("FadeIn"), [this](void* p) {this->Set_FadeIn(); });
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("FadeOut"), [this](void* p) {this->Set_FadeOut(); });
+	m_bActive = true;
 	return S_OK;
 }
 
@@ -160,8 +164,8 @@ void CSpell_Anim::Set_FadeIn()
 
 void CSpell_Anim::Change_Image(_int SpellID)
 {
-	_wstring pImageName = static_cast<CUIObject*>(m_pOwner)->Get_Info(SpellID).pImage_Name;
-	m_iTotalFrames = static_cast<CUIObject*>(m_pOwner)->Get_Info(SpellID).iAnimNum;
+	_wstring pImageName = m_pInfoInstance->Get_Spell_Info(SpellID).pImage_Name;
+	m_iTotalFrames = m_pInfoInstance->Get_Spell_Info(SpellID).iAnimNum;
 	if (m_pDiffuse_TextureCom)
 	{
 		Remove_Component<CTexture>();

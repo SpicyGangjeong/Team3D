@@ -48,6 +48,7 @@ HRESULT CSpell_List_Image::Initialize(void* pArg)
 	m_pVIBufferCom->Set_Pos(-185.f, 375.f, m_fOffSetX, m_fOffSetY, m_iCols);
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
 	m_pVIBufferCom->Set_ImageUV(pUVDesc);
+	m_bActive = true;
 	return S_OK;
 }
 
