@@ -24,8 +24,8 @@ namespace Client
 		BOMBARDA, INCENDIO, DISILLUSIONMENT, LUMOS, REPARO, WINGARDIUM_LEVIOSA,
 		CONJURING_SPELL, ALTERING_SPELL, EVANESCO, AVADA_KEDAVRA, CRUCIO, IMPERIO,
 		BEAST_PETTING_BRUSH, BEAST_FEED, NAB_SACK, JAP, REVELIO, PROTEGO, STUPEFY,
+
 		ANCIENT_MAGIC_THROW, ANCIENT_MAGIC, ALOHOMORA, PETRIFICUS_TOTALUS,
-		
 		JAP_SIDE
 		,END
 	};
@@ -48,94 +48,5 @@ namespace Client {
 		REGION,
 		NOCOLLIDE,
 		END,
-	};
-	enum class PXOBJECT : _uint {
-#pragma region NOT_DEFINE
-		NOT_DEFINE			= 000,
-#pragma endregion
-#pragma region PLAYER
-		PLAYER				= 010,
-#pragma endregion
-#pragma region MONSTER
-		MONSTER				= 030, 
-		GOBLIN_WARRIOR,		// 031
-		GOBLIN_MAGICIAN,
-		GOBLIN_THEIF,
-		TROLL,
-		PENSIVE_GUARDIAN,
-
-#pragma endregion
-#pragma region HOSTILE_HITBOX
-		HOSTILE_HITBOX		= 100, 
-		GOBLIN_SMASH,
-		GOBLIN_DAGGER,
-		GOBLIN_SHIELD_BREAK_MELEE,
-		GOBLIN_SHIELD_BREAK_MAGIC,
-		GOBLIN_NORMAL_MAGIC,
-
-#pragma endregion
-#pragma region ALLY_HITBOX
-		ALLY_HITBOX			= 200,
-		SKILL_REVAILIO,
-		SKILL_ACCIO,
-		SKILL_DEPULSO,
-		SKILL_DEPULSO_OBSTACLE,
-		SKILL_DEPULSO_OBSTACLE_FLAMED,
-		SKILL_NORMALJAP,
-		SKILL_NORMALJAP_FINAL,
-		SKILL_BOMBARD_STRIKE,
-		SKILL_BOMBARD_FLAME,
-		SKILL_INCENDIO_STRIKE,
-		SKILL_INCENDIO_SPREAD,
-
-#pragma endregion
-#pragma region NEUTRAL_HITBOX
-		NEUTRAL_HITBOX		= 300,
-		FLAMED_FLOOR,
-
-#pragma endregion
-#pragma region ENVIRIONMENT
-		ENVIRIONMENT		= 400,
-		TERRAIN,
-		WATER,
-		WALL,
-		WALL_BREAKABLE,
-		WALL_CLIMBABLE,
-		DOOR,
-		BUILDING,
-		BOX,
-#pragma endregion
-#pragma region NPC
-		NPC					= 500,
-
-#pragma endregion
-#pragma region ITEM
-		ITEM				= 600,
-		DROPITEM			= 630,
-		TRAP				= 660,
-
-#pragma endregion
-#pragma region TRIGGERBOX
-		TRIGGERBOX			= 700,
-		
-
-		CINEMATIC			= 770,
-		CINEMATIC_INTRO,
-		CINEMATIC_HOGSMEADE_ENTER,
-		CINEMATIC_TROLL_ENCOUNTER,
-		CINEMATIC_TROLL_DEAD,
-#pragma endregion
-#pragma region REGION
-		REGION				= 800,
-		HOGWARTS,
-		HOGSMEADE,
-
-#pragma endregion
-#pragma region NOCOLLIDE
-		NOCOLLIDE			= 900,
-		GAIL,
-
-#pragma endregion
-		END					= 999
 	};
 }

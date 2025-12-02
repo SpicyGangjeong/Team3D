@@ -3,18 +3,18 @@
 #include "GameInstance.h"
 
 CSpell_List::CSpell_List(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-    :CElementObject(pDevice, pContext)
+	:CElementObject(pDevice, pContext)
 {
 }
 
 CSpell_List::CSpell_List(const CSpell_List& rhs)
-    :CElementObject(rhs)
+	:CElementObject(rhs)
 {
 }
 
 HRESULT CSpell_List::Initialize_Prototype()
 {
-    return S_OK;
+	return S_OK;
 }
 
 HRESULT CSpell_List::Initialize(void* pArg)
@@ -178,7 +178,24 @@ void CSpell_List::Hover()
 	fMouse.x -= m_pOwner->Get_WorldPostion().m128_f32[0];
 	fMouse.y -= m_pOwner->Get_WorldPostion().m128_f32[1];
 
-	m_pVIBufferCom->Set_Mouse_Hover(fMouse);
+	m_bPrevHover = m_bHover;
+	m_bHover = (m_iSpellType = m_pVIBufferCom->Set_Mouse_Hover(fMouse));
+	if (m_iSpellType != -1)
+	{
+		m_bHover = true;
+		if (m_bHover == true && m_bPrevHover == false)
+		{
+			static_cast<CUIObject*>(m_pOwner)->Set_SkillType(m_iSpellType);
+		}
+	}
+	else
+	{
+		m_bHover = false;
+		if (m_bHover == false && m_bPrevHover == true)
+		{
+			static_cast<CUIObject*>(m_pOwner)->Set_SkillType(m_iSpellType);
+		}
+	}
 
 }
 

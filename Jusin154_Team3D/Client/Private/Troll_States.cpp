@@ -1,0 +1,190 @@
+﻿#include "pch.h"
+#include "Troll.h"
+
+#include "GameInstance.h"
+#include "Player.h"
+
+#pragma region STATE
+#include "State_Idle.h"
+#include "State_Dodge.h"
+#include "State_Jump.h"
+#include "State_Land.h"
+#include "State_Move.h"
+#include "State_Combat.h"
+#pragma endregion
+
+
+void CTroll::Behavior_IdleEnter()
+{
+	m_pFSM->Enable_State(FSMSTATE::IDLE);
+	pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::IDLE];
+
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+}
+
+HRESULT CTroll::Behavior_IdleExitCheck()
+{
+	if (m_fTargetDistance <= 15.f)
+		m_pFSM->Change_State(FSMSTATE::MOVE);
+
+	return E_FAIL;
+}
+
+void CTroll::Behavior_IdleExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::IDLE);
+}
+
+void CTroll::Behavior_MoveEnter()
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+
+	m_pFSM->Enable_State(FSMSTATE::MOVE);
+	m_pFSM->Enable_State(FSMSTATE::JOG);
+
+	pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
+
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+}
+
+HRESULT CTroll::Behavior_MoveExitCheck()
+{
+	if (m_fTargetDistance <= 7.f &&m_fTargetDistance !=0.f)
+		m_pFSM->Change_State(FSMSTATE::COMBAT);
+
+	return E_FAIL;
+}
+
+void CTroll::Behavior_MoveExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::MOVE | FSMSTATE::SPRINT | FSMSTATE::JOG | FSMSTATE::WALK);
+}
+
+void CTroll::Behavior_CombatEnter()
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+
+	m_pFSM->Enable_State(FSMSTATE::COMBAT);
+
+	m_pFSM->Enable_State(FSMSTATE::SKILL2);
+
+	pairAnimInfo = m_Animation[STATEANIM::SKILL2];
+
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+}
+
+HRESULT CTroll::Behavior_CombatExitCheck()
+{
+	if (m_pModelCom->IsFinishedAnim())
+	{
+		m_pFSM->Change_State(FSMSTATE::IDLE);
+	}
+	return E_FAIL;
+}
+
+void CTroll::Behavior_CombatExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::COMBAT | FSMSTATE::SKILL | FSMSTATE::SKILL2);
+}
+
+
+void CTroll::Add_FSM()
+{
+#pragma region Behavior_Movement_NotFocus
+	{
+		CState_Idle::STATE_IDLE_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_IdleEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_IdleExitCheck(); };
+		Desc.funcExitEvent = [this]() { Behavior_IdleExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::IDLE, CState_Idle::Create(&Desc));
+	}
+	{
+		CState_Move::STATE_MOVE_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_MoveEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_MoveExitCheck(); };
+		Desc.funcExitEvent = [this]() { Behavior_MoveExit(); };
+		Desc.funcPriorityUpdate = [this](_float fTimeDelta) {
+			if (m_pGameInstance->Key_Pressing(DIK_A)) { m_pTransformCom->Turn(-m_pTransformCom->Get_State(STATE::UP), fTimeDelta); }
+			if (m_pGameInstance->Key_Pressing(DIK_D)) { m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::UP), fTimeDelta); };
+			};
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::MOVE, CState_Move::Create(&Desc));
+	}
+#pragma endregion
+#pragma region Behavior_Combat_NotFocus
+	{
+		CState_Combat::STATE_COMBAT_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_CombatEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_CombatExitCheck(); };
+		Desc.funcExitEvent = [this]() { Behavior_CombatExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::COMBAT, CState_Combat::Create(&Desc));
+	}
+#pragma endregion
+#pragma region Behavior_Combat_Focus
+
+#pragma endregion
+
+}
+
+void CTroll::Set_Anim()
+{
+	m_Animation[STATEANIM::IDLE] = { 16,true };
+
+	m_Animation[STATEANIM::WALK_FWD] = { 22,true };
+
+	m_Animation[STATEANIM::JOG_FWD] = { 103,true };
+
+	m_Animation[STATEANIM::DODGE_LEFT] = { 125, false };
+	m_Animation[STATEANIM::DODGE_RIGHT] = { 126, false };
+	m_Animation[STATEANIM::SPRINT] = { 90, true };
+
+	m_Animation[STATEANIM::SKILL] = { 70,false }; 
+	m_Animation[STATEANIM::SKILL2] = { 66,false }; // 도끼 찍기
+
+	m_Animation[STATEANIM::HIT_FWD] = { 353, false };
+	m_Animation[STATEANIM::HIT_BWD] = { 167, false }; // 
+	m_Animation[STATEANIM::HIT_BWD2] = { 168, false }; //
+	m_Animation[STATEANIM::HIT_BWD3] = { 169, false }; // 
+	m_Animation[STATEANIM::HIT_BWD4] = { 351, false };
+	m_Animation[STATEANIM::HIT_L] = { 354, false };
+	m_Animation[STATEANIM::HIT_R] = { 355, false };
+
+	m_Animation[STATEANIM::KNOCKDOWN_BWD] = { 165, false }; // 
+	m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT] = { 375, false };
+	m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT_HOLD] = { 370, false };
+	m_Animation[STATEANIM::KNOCKDOWN_FWD] = { 371, false };
+	m_Animation[STATEANIM::KNOCKDOWN_FWD_SPLT] = { 372, false };
+	m_Animation[STATEANIM::KNOCKDOWN_FWD_SPLT_HOLD] = { 373, false };
+
+	m_Animation[STATEANIM::GETUP_BWD] = { 330, false };
+	m_Animation[STATEANIM::GETUP_FWD] = { 332, false };
+	m_Animation[STATEANIM::GETUP_L] = { 334, false };
+	m_Animation[STATEANIM::GETUP_L_FD] = { 336, false };
+	m_Animation[STATEANIM::GETUP_L_FU] = { 338, false };
+	m_Animation[STATEANIM::GETUP_R] = { 340, false };
+	m_Animation[STATEANIM::GETUP_R_FD] = { 342, false };
+	m_Animation[STATEANIM::GETUP_R_FU] = { 344, false };
+	m_Animation[STATEANIM::GETUP_SLOUCH] = { 346, false };
+
+	m_Animation[STATEANIM::KNOCKBACK] = { 377, true };
+	m_Animation[STATEANIM::KNOCKBACK2] = { 378, true };
+	m_Animation[STATEANIM::TUMBLE] = { 379, true };
+	m_Animation[STATEANIM::TUMBLE2] = { 380, true };
+	m_Animation[STATEANIM::PETRIFICUSED_START] = { 383, false };
+
+	m_Animation[STATEANIM::DEAD_BWD] = { 317, false };
+	m_Animation[STATEANIM::DEAD_BWD2] = { 318, false };
+	m_Animation[STATEANIM::DEAD_FWD] = { 319, false };
+	m_Animation[STATEANIM::DEAD_FWD2] = { 320, false };
+	m_Animation[STATEANIM::DEAD_L] = { 321, false };
+	m_Animation[STATEANIM::DEAD_L2] = { 322, false };
+	m_Animation[STATEANIM::DEAD_R] = { 323, false };
+	m_Animation[STATEANIM::DEAD_R2] = { 324, false };
+}

@@ -21,21 +21,21 @@ public:
 		return XMStoreFloat4x4(&m_CombinedTransformationMatrix, newMatrix);
 	}
 	_bool Compare_Name(const _char* pBoneName) const {
-		return !strcmp(pBoneName, m_szName);
+		return !strcmp(pBoneName, m_strName.c_str());
 	}
 	void Get_KeyFrame(KEYFRAME& kf, _bool bIsCurrentFrame);	// 현재 본의 로컬매트릭스를 캡쳐해서 키프레임으로 성분 분해하여 올려보낸다.
-	const _char* Get_Name() const { return m_szName; }
+	const _char* Get_Name() const { return m_strName.c_str(); }
 	_float3 Get_LocalPosition();
 	void Update_CombinedTransformationMatrix(const vector<CBone*>& Bones, _fmatrix PreTransformMatrix);
 	void Set_TransformationMatrix(_fmatrix TransformationMatrix); // 애니메이션에서 현재 로컬 매트릭스를 변경할 때 사용된다
 	_float4x4 Get_TransformationMatrix() { return m_TransformationMatrix; }
 	_int Get_ParentBoneIndex() { return m_iParentBoneIndex; }
 private:
-	_char m_szName[MAX_PATH] = {};						// 본의 이름
+	_string m_strName = {};
 	_float4x4 m_TransformationMatrix = {};				// 본의 현재 로컬 매트릭스
 	_float4x4 m_CombinedTransformationMatrix = {};		// 본의 루트노드로부터 상대적인 복합매트릭스 ( 부모노드는 PreTranformMatrix와 월드좌표로부터 상대적임 )
-	_int m_iParentBoneIndex = { -1 };					// 부모본의 인덱스 ( 모델에 있는 본벡터의 인덱스 ) ( 부모는 인덱스 -1 고정 )
 	_float4x4 m_matInitial = {};
+	_int m_iParentBoneIndex = { -1 };					// 부모본의 인덱스 ( 모델에 있는 본벡터의 인덱스 ) ( 부모는 인덱스 -1 고정 )
 private:
 	HRESULT Initialize(HANDLE hFile, DWORD& dwByte);
 	// 바이너리

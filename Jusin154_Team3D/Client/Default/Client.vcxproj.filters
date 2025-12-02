@@ -256,6 +256,9 @@
     <ClInclude Include="..\Public\State_Broom_Ride.h">
       <Filter>04.Mechanic\State\Broom</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Skill_Data.h">
+      <Filter>04.Mechanic\Skill\Skill_Data</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Revelio.h">
       <Filter>02.GameObjects\Effect\Effects\Revelio</Filter>
     </ClInclude>
@@ -267,6 +270,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Lumos.h">
       <Filter>02.GameObjects\Effect\Effects\Lumos</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll.h">
+      <Filter>02.GameObjects\Monster\Troll</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll_Weapon.h">
+      <Filter>02.GameObjects\Item\Troll_Weapon</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -334,9 +343,6 @@
     </Filter>
     <Filter Include="04.Mechanic\State">
       <UniqueIdentifier>{1bfec6dc-f008-4d18-87d6-be38824b1272}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\Skill">
-      <UniqueIdentifier>{c5b61cb3-bc5f-4429-8715-b309dcf054b2}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Levels\10.Field">
       <UniqueIdentifier>{2b209526-b728-4fba-a184-b9224d72903a}</UniqueIdentifier>
@@ -575,6 +581,7 @@
     <Filter Include="02.GameObjects\Effect\Effects\Revelio">
       <UniqueIdentifier>{19a2325e-1184-4ee0-92e1-657bf184418c}</UniqueIdentifier>
     </Filter>
+
     <Filter Include="02.GameObjects\Effect\Effects\NomalJapSide">
       <UniqueIdentifier>{d260ec7e-150c-4a25-8e25-83eb141652bc}</UniqueIdentifier>
     </Filter>
@@ -583,6 +590,18 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\Effects\Lumos">
       <UniqueIdentifier>{6bc9fd95-31bc-40f3-83cc-15ebb756b04a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\Skill">
+      <UniqueIdentifier>{c5b61cb3-bc5f-4429-8715-b309dcf054b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\Skill\Skill_Data">
+      <UniqueIdentifier>{2bc5b43e-0e24-49d4-95b0-549ad4428201}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\Troll">
+      <UniqueIdentifier>{a1b1f17d-ed4f-4b20-aa8e-c52e693683d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Item\Troll_Weapon">
+      <UniqueIdentifier>{1d6c078d-dddd-493d-a6f0-f2cac2e4107e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -843,6 +862,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\Lumos.cpp">
       <Filter>02.GameObjects\Effect\Effects\Lumos</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Skill_Data.cpp">
+      <Filter>04.Mechanic\Skill\Skill_Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll.cpp">
+      <Filter>02.GameObjects\Monster\Troll</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_States.cpp">
+      <Filter>02.GameObjects\Monster\Troll</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_Weapon.cpp">
+      <Filter>02.GameObjects\Item\Troll_Weapon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

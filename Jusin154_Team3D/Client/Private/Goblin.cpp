@@ -90,6 +90,10 @@ void CGoblin::Update(_float fTimeDelta)
 			m_pRigidBody->ConvertToCCT(*m_pCharacter_Controller);
 		}
 	}
+#ifdef _DEBUG
+	Describe_Entity();
+#endif // _DEBUG
+
 }
 
 void CGoblin::Late_Update(_float fTimeDelta)
@@ -102,7 +106,7 @@ void CGoblin::Late_Update(_float fTimeDelta)
 		m_pTransformCom->Set_WorldMatrix(m_pRigidBody->Get_Actor()->getGlobalPose());
 	}
 
-	m_pTransformCom->LookAt(XMLoadFloat4(&m_vTargetPos));
+	m_pTransformCom->LookAt_Horizontal(XMLoadFloat4(&m_vTargetPos));
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 }
@@ -207,6 +211,7 @@ HRESULT CGoblin::Ready_Components()
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Monster_HitReport::Create();
 		Desc.pCallback_Behavior = m_pCallBack_Behavior = CCallBack_Monster_Behavior::Create();
 		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
+		Desc.fWalkableSlope = 45.f;
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), (CComponent**)&m_pCharacter_Controller, &Desc))) {
 			return E_FAIL;
 		}
@@ -286,6 +291,9 @@ void CGoblin::Free()
 
 void CGoblin::Describe_Entity()
 {
+	_float4 vMomentum = {};
+	XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());
+	GUI::Text("GoblinMomentum %.2f %.2f %.2f %.2f ", vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);
 }
 
 #endif // _DEBUG

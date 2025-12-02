@@ -11,9 +11,9 @@ CChannel::CChannel()
 #ifdef EDITOR_PROJECT
 HRESULT CChannel::Initialize(const vector<CBone*>& Bones, const aiNodeAnim* pAIChannel)
 {
-	strcpy_s(m_szName, pAIChannel->mNodeName.data);
-
-	m_iBoneIndex = CModel::Get_BoneIndex(m_szName, Bones);
+	m_strName = pAIChannel->mNodeName.data;
+	m_strName.shrink_to_fit();
+	m_iBoneIndex = CModel::Get_BoneIndex(m_strName.c_str(), Bones);
 	if (-1 == m_iBoneIndex) {
 		return E_FAIL;
 	}
@@ -102,8 +102,8 @@ CHANNEL_DESC CChannel::Fill_GPU_ChannelDesc()
 HRESULT CChannel::Initialize(const vector<CBone*>& Bones, _uint iIndex)
 {
 	m_iBoneIndex = iIndex;
-	memcpy_s(m_szName, sizeof(_char) * MAX_PATH, Bones[iIndex]->Get_Name(), sizeof(_char) * MAX_PATH);
-
+	m_strName = Bones[iIndex]->Get_Name();
+	m_strName.shrink_to_fit();
 	m_iNumKeyFrames = 2;
 	m_KeyFrames.resize(m_iNumKeyFrames);
 
@@ -139,11 +139,14 @@ void CChannel::Update_TransformationMatirx(
 		LocalPos.Translation.z,
 		1.f);
 
-	if (Bones[m_iBoneIndex]->Compare_Name("Reference") && vector)
+	if (Bones[m_iBoneIndex]->Compare_Name("Reference")|| Bones[m_iBoneIndex]->Compare_Name("root"))
 	{
-		vector[0] = vScale;
-		vector[1] = vRotation;
-		vector[2] = vTranslation;
+		if (vector)
+		{
+			vector[0] = vScale;
+			vector[1] = vRotation;
+			vector[2] = vTranslation;
+		}
 	}
 
 	if (bIsSpine)
@@ -188,9 +191,9 @@ void CChannel::Set_Frame(_uint iIndex, KEYFRAME& kf)
 
 HRESULT CChannel::Initialize(const CModel* pModel, SaveChannel* pSaveChannel)
 {
-	strcpy_s(m_szName, pSaveChannel->ChannelName.c_str());
-
-	m_iBoneIndex = pModel->Get_BoneIndex(m_szName);
+	m_strName = pSaveChannel->ChannelName;
+	m_strName.shrink_to_fit();
+	m_iBoneIndex = pModel->Get_BoneIndex(m_strName.c_str());
 	m_PreTransformMatrix = pModel->Get_PreTransformMatrix();
 
 	m_iNumKeyFrames = max(pSaveChannel->ScalingKeyCount, pSaveChannel->RotationKeyCount);

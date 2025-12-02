@@ -49,6 +49,7 @@ HRESULT CSpell_Panel::Initialize(void* pArg)
 		return E_FAIL;
 	}
 	m_fCanvasAlpha = 1.f;
+	m_fSortZ = 0.04f;
 
 	return S_OK;
 }

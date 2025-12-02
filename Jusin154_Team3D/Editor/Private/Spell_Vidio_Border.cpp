@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Spell_Vidio_Border.h"
 #include "GameInstance.h"
+#include "Spell_Anim.h"
 
 CSpell_Vidio_Border::CSpell_Vidio_Border(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
@@ -87,6 +88,7 @@ void CSpell_Vidio_Border::Update(_float fTimeDelta)
 	}
 
 	m_fTime += fTimeDelta * m_fTimeMult;
+
 	__super::Update(fTimeDelta);
 
 }
@@ -185,7 +187,10 @@ HRESULT CSpell_Vidio_Border::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Anim>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Anim**>(&m_pSpell_Anim))))
+	{
+		return E_FAIL;
+	}
 	return S_OK;
 }
 

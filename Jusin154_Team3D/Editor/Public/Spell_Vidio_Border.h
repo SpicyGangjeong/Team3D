@@ -27,8 +27,11 @@ private:
 
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
+	CTexture* m_pDesendo_TextureCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
+
+	CGameObject* m_pSpell_Anim = { nullptr };
 
 public:
 	static CSpell_Vidio_Border* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

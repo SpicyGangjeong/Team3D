@@ -30,16 +30,18 @@ HRESULT CEffectPool::Initialize_Prototype()
 
 HRESULT CEffectPool::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
+	if (FAILED(__super::Initialize(pArg))){
 		return E_FAIL;
+	}
 
 
-	if (FAILED(Ready_Components()))
+	if (FAILED(Ready_Components())) {
 		return E_FAIL;
+	}
 
-	if (FAILED(Ready_Effect()))
+	if (FAILED(Ready_Effect())) {
 		return E_FAIL;
-
+	}
 	return S_OK;
 }
 
@@ -49,8 +51,6 @@ void CEffectPool::Priority_Update(_float fTimeDelta)
 	{
 		if (false == (*iter)->Get_Visible())
 		{
-			//SAFE_RELEASE(*iter);
-			//iter = m_ActiveEffectList.erase(iter);
 			++iter;
 		}
 		else
@@ -67,8 +67,6 @@ void CEffectPool::Update(_float fTimeDelta)
 	{
 		if (false == (*iter)->Get_Visible())
 		{
-			//SAFE_RELEASE(*iter);
-			//iter = m_ActiveEffectList.erase(iter);
 			++iter;
 		}
 		else 
@@ -81,7 +79,6 @@ void CEffectPool::Update(_float fTimeDelta)
 
 void CEffectPool::Late_Update(_float fTimeDelta)
 {
-
 	for (auto iter = m_ActiveEffectList.begin(); iter != m_ActiveEffectList.end(); )
 	{
 		if (false == (*iter)->Get_Visible())
@@ -105,7 +102,9 @@ HRESULT CEffectPool::Render()
 
 HRESULT CEffectPool::Ready_Components()
 {
-	__super::Ready_Components(nullptr);
+	if (FAILED(__super::Ready_Components(nullptr))) {
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
@@ -116,9 +115,7 @@ HRESULT CEffectPool::Bind_ShaderResources()
 
 HRESULT CEffectPool::Ready_Effect()
 {
-
 	if(FAILED(Create_Effect(SKILL_TYPE::JAP, 10, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
-
 		CNomalJap* pEffect = nullptr;
 
 		pEffect = m_pGameInstance->Clone_Prototype<CNomalJap>(iPrototypeLevel, nullptr);
@@ -202,8 +199,9 @@ HRESULT CEffectPool::Create_Effect(SKILL_TYPE eType, _uint iNumEffect, _uint iPr
 	{
 		CEffect_Container* pEffect_Container = AddPrototypeEvent(iPrototypeLevel, iCloneLevel);
 
-		if (pEffect_Container == nullptr)
+		if (pEffect_Container == nullptr) {
 			return E_FAIL;
+		}
 
 		m_EffectList[ENUM_CLASS(eType)].push_back(pEffect_Container);
 

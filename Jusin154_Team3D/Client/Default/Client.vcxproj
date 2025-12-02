@@ -229,6 +229,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\PlayerInfo.h" />
     <ClInclude Include="..\Public\Slot_Number.h" />
+    <ClInclude Include="..\public\Skill_Data.h" />
     <ClInclude Include="..\Public\Spell_Overlay.h" />
     <ClInclude Include="..\Public\Spell_Slot.h" />
     <ClInclude Include="..\Public\Spell_UI.h" />
@@ -243,6 +244,8 @@ call Update_Resources.bat
     <ClInclude Include="..\public\StreetContainer.h" />
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\Public\TrailObject.h" />
+    <ClInclude Include="..\Public\Troll.h" />
+    <ClInclude Include="..\Public\Troll_Weapon.h" />
     <ClInclude Include="..\Public\Wand.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
@@ -322,6 +325,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\PlayerInfo.cpp" />
     <ClCompile Include="..\Private\Slot_Number.cpp" />
+    <ClCompile Include="..\private\Skill_Data.cpp" />
     <ClCompile Include="..\Private\Spell_Overlay.cpp" />
     <ClCompile Include="..\Private\Spell_Slot.cpp" />
     <ClCompile Include="..\Private\Spell_UI.cpp" />
@@ -336,6 +340,9 @@ call Update_Resources.bat
     <ClCompile Include="..\private\StreetContainer.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\Private\TrailObject.cpp" />
+    <ClCompile Include="..\Private\Troll.cpp" />
+    <ClCompile Include="..\Private\Troll_States.cpp" />
+    <ClCompile Include="..\Private\Troll_Weapon.cpp" />
     <ClCompile Include="..\Private\Wand.cpp" />
     <ClCompile Include="Broom_States.cpp" />
     <ClCompile Include="Client.cpp" />

@@ -340,15 +340,27 @@ PS_OUT PS_QuestType(PS_IN In)
     return Out;
 }
 
-PS_OUT PS_UVMult(PS_IN In)
+PS_OUT PS_Spell_Anim(PS_IN In)
 {
     PS_OUT Out;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
-    float4 color = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    float4 Color = float4(1.f,1.f,1.f,1.f);
     
+    float4 tex1 = g_Texture.Sample(DefaultSampler, In.vTexcoord);
     
-    color.a *= Alpha;
-    Out.vColor = color;
+    Color = tex1;
+    
+    float2 texpos = g_fImageSipos1.xy / g_fCurrent_Size;
+    float2 texsize = g_fImageSipos1.zw / g_fCurrent_Size;
+    float2 texlocal = (In.vTexcoord - texpos) / texsize;
+    bool inside = all(texlocal >= 0.0f && texlocal <= 1.0f);
+    float4 tex2 = g_Texture1.Sample(DefaultSampler, In.vTexcoord);
+
+    if (inside)
+        Color = lerp(Color, tex2, tex2.a);
+    
+    Color.a *= Alpha;
+    Out.vColor = Color;
 
     return Out;
 }
@@ -1229,14 +1241,14 @@ technique11 PosTexTechnique11
         PixelShader = compile ps_5_0 PS_QuestType();
     }
 
-    pass UVMult
+    pass Spell_Anim
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_UVMult();
+        PixelShader = compile ps_5_0 PS_Spell_Anim();
     }
 
     pass NineSlice
