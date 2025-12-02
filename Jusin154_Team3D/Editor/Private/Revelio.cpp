@@ -100,7 +100,7 @@ HRESULT CRevelio::Pre_Setting(CGameObject* pObject)
 	m_pOwner = pObject;
 
 
-	Reset_EffectParts();
+	Reset_EditEffect();
 
 	m_fAccTime = 0.f;
 	__super::m_fAccTime = 0.f;

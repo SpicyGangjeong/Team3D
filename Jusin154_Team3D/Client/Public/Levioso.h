@@ -36,7 +36,7 @@ private:
 
 	class CEffectParts*  m_pLeviosoPJ_0   = { nullptr };
 	class CEffectParts*  m_pLeviosoPJ_1   = { nullptr };
-	class CTrailObject* m_pLeviosoTrail  = { nullptr };
+	class CTrailObject*  m_pLeviosoTrail  = { nullptr };
 	class CEffectParts*  m_pTrail_PT_0 = { nullptr };
 
 	_vector				m_vOwnerLook = {};

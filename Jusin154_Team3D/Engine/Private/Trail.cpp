@@ -178,8 +178,6 @@ void CTrail::Trail_Update(_float fDeltaTime, _fmatrix WorldMatrix)
 		XMStoreFloat3(&m_pVertices[0].vPosition, vFixedLow);
 		XMStoreFloat3(&m_pVertices[1].vPosition, vFixedHigh);
 
-
-	
 	}
 #ifdef _DEBUG
 	Describe_Entity();
