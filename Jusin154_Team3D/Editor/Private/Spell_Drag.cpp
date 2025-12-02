@@ -21,8 +21,8 @@ HRESULT CSpell_Drag::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = 380.f;
-	Desc.fY = 30.f;
+	Desc.fX = 0.f;
+	Desc.fY = 0.f;
 	Desc.fSizeX = 105.f;
 	Desc.fSizeY = 105.f;
 
@@ -40,6 +40,8 @@ HRESULT CSpell_Drag::Initialize(void* pArg)
 	m_fTimeMult = 3.f;
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 1.f;
+	m_fDelayTime = 0.2f;
+	m_fSortZ = 0.f;
 	m_iSkillType = ENUM_CLASS(SKILL_TYPE::ARRESTO_MOMENTUM);
 	Compute_UI(m_iSkillType);
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Slot_Hover"), [this](void* p) {this->Set_SpellType(*reinterpret_cast<_int*>(p)); });
@@ -85,8 +87,29 @@ void CSpell_Drag::Update(_float fTimeDelta)
 			m_fAlpha = 0.f;
 		}
 	}
-
 	m_fTime += fTimeDelta * m_fTimeMult;
+
+
+	if (m_pGameInstance->Mouse_Pressing(DIM_LBUTTON))
+	{
+		m_bHover = true;
+	}
+	if (m_pGameInstance->Mouse_Up(DIM_LBUTTON))
+	{
+		m_bHover = false;
+	}
+
+
+	POINT m_pPt{};
+	GetCursorPos(&m_pPt);
+	ScreenToClient(g_hWnd, &m_pPt);
+	_float2 fMouse{};
+	fMouse.x = m_pPt.x - (g_iWinSizeX * 0.5f);
+	fMouse.y = m_pPt.y - (g_iWinSizeY * 0.5f); 
+
+	MoveX(fMouse.x);
+	MoveY(fMouse.y);
+
 	__super::Update(fTimeDelta);
 
 }
@@ -98,29 +121,36 @@ void CSpell_Drag::Late_Update(_float fTimeDelta)
 		return;
 	}
 	if (m_bVisible) {
-		m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
+		if (m_bHover == true)
+		{
+			m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
+		}
 	}
 	__super::Late_Update(fTimeDelta);
 }
 
 HRESULT CSpell_Drag::Render()
 {
-	if (FAILED(Bind_ShaderResources()))
+	if (m_bHover == true)
 	{
-		return E_FAIL;
+		if (FAILED(Bind_ShaderResources()))
+		{
+			return E_FAIL;
+		}
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::SPELL_DRAG))))
+		{
+			return E_FAIL;
+		}
+		if (FAILED(m_pVIBufferCom->Bind_Resources()))
+		{
+			return E_FAIL;
+		}
+		if (FAILED(m_pVIBufferCom->Render()))
+		{
+			return E_FAIL;
+		}
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::SPELL_DRAG))))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pVIBufferCom->Bind_Resources()))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pVIBufferCom->Render()))
-	{
-		return E_FAIL;
-	}
+
 
 	return S_OK;
 }
@@ -188,7 +218,7 @@ HRESULT CSpell_Drag::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCurrent_Size", &m_vScale, sizeof(_float4))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCurrent_Size", &m_vScale, sizeof(_float2))))
 	{
 		return E_FAIL;
 	}

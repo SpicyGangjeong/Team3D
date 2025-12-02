@@ -16,6 +16,7 @@
 #include "Spell_Header_Line.h"
 #include "Spell_Data.h"
 #include "Spell_Anim.h"
+#include "Spell_Drag.h"
 
 CSpell_Panel::CSpell_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPanelObject(pDevice, pContext)
@@ -54,7 +55,7 @@ HRESULT CSpell_Panel::Initialize(void* pArg)
 		return E_FAIL;
 	}
 	m_fCanvasAlpha = 1.f;
-	m_fSortZ = 0.04f;
+	m_fSortZ = 0.05f;
 	m_iSpellType = -1;
 	m_iPendingSpell = -1;
 	m_fDelayTime = 1.f;
@@ -88,9 +89,9 @@ void CSpell_Panel::Update(_float fTimeDelta)
 		Function_Callback(TEXT("FadeOut"));
 	}
 
-	if (m_fHoverTimer >= m_fDelayTime && m_iPendingSpell != m_iSpellType)
+	if (m_fHoverTimer >= m_fDelayTime)
 	{
-		m_iPendingSpell = m_iSpellType;
+		
 		Function_Callback(TEXT("FadeIn"));
 	}
 
@@ -298,6 +299,12 @@ HRESULT CSpell_Panel::Ready_Element(void* pArg)
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Spell_Anim"), m_pSpell_Anim);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Drag>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Drag**>(&m_pCSpell_Drag))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Spell_Drag"), m_pCSpell_Drag);
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Data>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, m_Info, nullptr, reinterpret_cast<CSpell_Data**>(&m_pSpell_Data))))
 	{

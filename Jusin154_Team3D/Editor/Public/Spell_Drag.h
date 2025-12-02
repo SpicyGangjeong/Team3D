@@ -39,7 +39,7 @@ private:
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
 	_float4 m_vUV{};
-
+	_float2 m_fCenter{};
 public:
 	static CSpell_Drag* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

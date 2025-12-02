@@ -58,6 +58,7 @@ private:
 	CGameObject* m_pSpell_Header = { nullptr };
 	CGameObject* m_pSpell_Header_Line = { nullptr };
 	CGameObject* m_pSpell_Anim = { nullptr };
+	CGameObject* m_pCSpell_Drag = { nullptr };
 
 	_int		m_iHoverSlot[2] = { -1,-1 };
 
