@@ -322,12 +322,6 @@
     <ClInclude Include="..\public\MapElement_Light.h">
       <Filter>02.GameObjects\Environment\03.MapElement\Light</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\MapElement.h">
-      <Filter>02.GameObjects\Environment\03.MapElement</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\MapElement_Light.h">
-      <Filter>02.GameObjects\Environment\03.MapElement\Light</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\UI_Manager.h">
       <Filter>02.GameObjects\UI\UI_Manager</Filter>
     </ClInclude>
@@ -647,12 +641,7 @@
     <Filter Include="02.GameObjects\Environment\03.MapElement\Light">
       <UniqueIdentifier>{71f6a568-488d-4ec1-be79-8fcce6677e27}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Environment\03.MapElement">
-      <UniqueIdentifier>{f3f219aa-034f-4aa2-9f2e-d75d15bd1f4a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Environment\03.MapElement\Light">
-      <UniqueIdentifier>{71f6a568-488d-4ec1-be79-8fcce6677e27}</UniqueIdentifier>
-    </Filter>
+
     <Filter Include="02.GameObjects\Monster\Troll">
       <UniqueIdentifier>{a1b1f17d-ed4f-4b20-aa8e-c52e693683d4}</UniqueIdentifier>
     </Filter>
@@ -963,12 +952,6 @@
     </ClCompile>
     <ClCompile Include="..\private\Skill_Data.cpp">
       <Filter>04.Mechanic\Skill\Skill_Data</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\MapElement.cpp">
-      <Filter>02.GameObjects\Environment\03.MapElement</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\MapElement_Light.cpp">
-      <Filter>02.GameObjects\Environment\03.MapElement\Light</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MapElement.cpp">
       <Filter>02.GameObjects\Environment\03.MapElement</Filter>
