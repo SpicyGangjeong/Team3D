@@ -26,6 +26,9 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+	void ReadyForPhysX();
+	void ConvertToPhysX();
+
 public:
 	template<typename T>
 	HRESULT Add_Part(const _string& strPartKey, _uint iPrototypeLevelIndex, T** ppOut, void* pArg = nullptr) {
@@ -53,10 +56,14 @@ protected:
 protected:
 	_uint		m_iMaxLodLevel = {};
 
-	vector<class CPartObject*>			m_ColiisonPartObjects;
+	vector<class CPartObject*>			m_ColiisonPartObjects = {};
 
 public:
 	virtual void Free() override;
+#ifdef _DEBUG
+	virtual void Describe_Entity() override;
+#endif // _DEBUG
+
 };
 
 NS_END

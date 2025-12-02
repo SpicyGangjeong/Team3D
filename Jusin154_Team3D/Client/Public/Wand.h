@@ -25,6 +25,7 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	virtual _vector Get_WorldPostion() override;
+	_matrix			Get_WorldMatrix();
 public:
 
 private:

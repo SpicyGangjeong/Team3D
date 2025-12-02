@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "MapContainer.h"
 #include "PartObject.h"
+#include "MapObject_Collision.h"
 
 //#include "MapObject_LOD.h"
 
@@ -44,6 +45,10 @@ void CMapContainer::Priority_Update(_float fTimeDelta)
 
 void CMapContainer::Update(_float fTimeDelta)
 {
+#ifdef _DEBUG
+	Describe_Entity();
+#endif // _DEBUG
+
 	__super::Update(fTimeDelta);
 }
 
@@ -57,7 +62,33 @@ HRESULT CMapContainer::Render()
 	return S_OK;
 }
 
+void CMapContainer::ReadyForPhysX()
+{
+	vector<class CPartObject*>::iterator iter = m_ColiisonPartObjects.begin();
+	for (; iter != m_ColiisonPartObjects.end(); ++iter) {
+		CMapObject_Collision* pObject = static_cast<CMapObject_Collision*>(*iter);
+		pObject->ReadyForPhysX();
+	}
+}
+
+void CMapContainer::ConvertToPhysX()
+{
+	vector<class CPartObject*>::iterator iter = m_ColiisonPartObjects.begin();
+	for (; iter != m_ColiisonPartObjects.end(); ++iter) {
+		CMapObject_Collision* pObject = static_cast<CMapObject_Collision*>(*iter);
+		pObject->ConvertToPhysX();
+	}
+}
+
 void CMapContainer::Free()
 {
 	__super::Free();
 }
+
+#ifdef _DEBUG
+
+void CMapContainer::Describe_Entity()
+{
+}
+
+#endif // _DEBUG

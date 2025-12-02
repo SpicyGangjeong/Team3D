@@ -44,7 +44,7 @@ HRESULT CDecendo::Initialize(void* pArg)
 	SAFE_ADDREF(m_pProjectile_Blur);
 	SAFE_ADDREF(m_pProjectile);
 
-	m_fDuration = 2.5f;
+	m_fDuration = 4.f;
 
 	return S_OK;
 }

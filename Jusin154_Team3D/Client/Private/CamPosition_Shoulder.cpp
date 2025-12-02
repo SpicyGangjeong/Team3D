@@ -63,34 +63,59 @@ void CCamPosition_Shoulder::Priority_Update(_float fTimeDelta)
 	if (FAILED(m_pGameInstance->IsBinded_Camera(CAMERA_SHOULDER))) {
 		return;
 	}
+
+	if (m_pGameInstance->Key_Up(DIK_PGDN))
+	{
+		m_bLerp = !m_bLerp;
+	}
 	if (true == m_bMovable) {
 		m_vAccDegreeXY.y += m_pGameInstance->Get_MouseMove().x * m_fMouseSensor;
 		m_vAccDegreeXY.x += m_pGameInstance->Get_MouseMove().y * m_fMouseSensor;
 		CMyTools::AdjustAccumulateDegreePitchYawDegree(m_vAccDegreeXY);
 	}
 
-	m_vPosLerpTimer.x += fTimeDelta;
-	if (m_vPosLerpTimer.x > m_vPosLerpTimer.y) {
-		m_vPosLerpTimer.x = 0.f;
-		Start_LerpShoulderPos();
+	if (m_bLerp)
+	{
+		m_vPosLerpTimer.x += fTimeDelta;
+		if (m_vPosLerpTimer.x > m_vPosLerpTimer.y) {
+			m_vPosLerpTimer.x = 0.f;
+			Start_LerpShoulderPos();
+		}
+		_vector vShoulderPos = XMVectorLerp(XMLoadFloat4(&m_StartPos), XMLoadFloat4(&m_DestPos), (m_vPosLerpTimer.x / m_vPosLerpTimer.y));
+		m_pTransformCom->Set_State(STATE::POSITION, vShoulderPos);
+
+		_vector vRotCameraq = XMQuaternionRotationRollPitchYaw(XMConvertToRadians(m_vAccDegreeXY.x), XMConvertToRadians(m_vAccDegreeXY.y), 0.f);
+		_vector vCameraLook = XMVector3Normalize(XMVector3Rotate(XMVectorSet(0.f, 0.f, 1.f, 0.f), vRotCameraq));
+
+		CTransform* pLookTransform = m_pTarget_LookPart->Get_Component<CTransform>();
+		CTransform* pFollowTransform = m_pTarget_FollowPart->Get_Component<CTransform>();
+
+		pLookTransform->Set_State(STATE::POSITION, vShoulderPos + vCameraLook * (m_fCameraFocalLength * m_fBackFrontRatio));
+		pFollowTransform->Set_State(STATE::POSITION, vShoulderPos - vCameraLook * (m_fCameraFocalLength * (1 - m_fBackFrontRatio)));
 	}
-	_vector vShoulderPos  = XMVectorLerp(XMLoadFloat4(&m_StartPos), XMLoadFloat4(&m_DestPos), (m_vPosLerpTimer.x / m_vPosLerpTimer.y));
-	m_pTransformCom->Set_State(STATE::POSITION, vShoulderPos);
+	else
+	{
+		_vector vLook = XMVector3Normalize(XMLoadFloat3(&m_vShoulderPosRatio));
+		_vector vRotq = XMQuaternionRotationRollPitchYaw(0.f, XMConvertToRadians(m_vAccDegreeXY.y), 0.f);
+		vLook = XMVector3Normalize(XMVector3Rotate(vLook, vRotq));
 
-	_vector vRotCameraq = XMQuaternionRotationRollPitchYaw(XMConvertToRadians(m_vAccDegreeXY.x), XMConvertToRadians(m_vAccDegreeXY.y), 0.f);
-	_vector vCameraLook = XMVector3Normalize(XMVector3Rotate(XMVectorSet(0.f, 0.f, 1.f, 0.f), vRotCameraq));
+		m_pTransformCom->Set_State(STATE::POSITION, m_pParentTransformCom->Get_State(STATE::POSITION) + XMVector3Normalize(vLook) * m_fShoulderDistance);
+		_vector vShoulderPos = Get_WorldPostion();
+		_vector vCameraLook = XMVectorSet(0.f, 0.f, 1.f, 0.f);
+		_vector vRotCameraq = XMQuaternionRotationRollPitchYaw(XMConvertToRadians(m_vAccDegreeXY.x), XMConvertToRadians(m_vAccDegreeXY.y), 0.f);
+		vCameraLook = XMVector3Normalize(XMVector3Rotate(vCameraLook, vRotCameraq));
 
-	CTransform* pLookTransform = m_pTarget_LookPart->Get_Component<CTransform>();
-	CTransform* pFollowTransform = m_pTarget_FollowPart->Get_Component<CTransform>();
+		CTransform* pLookTransform = m_pTarget_LookPart->Get_Component<CTransform>();
+		CTransform* pFollowTransform = m_pTarget_FollowPart->Get_Component<CTransform>();
 
-	pLookTransform->Set_State(STATE::POSITION,		vShoulderPos + vCameraLook * (m_fCameraFocalLength * m_fBackFrontRatio));
-	pFollowTransform->Set_State(STATE::POSITION,	vShoulderPos - vCameraLook * (m_fCameraFocalLength * (1 - m_fBackFrontRatio)));
+		pLookTransform->Set_State(STATE::POSITION, vShoulderPos + vCameraLook * (m_fCameraFocalLength * m_fBackFrontRatio));
+		pFollowTransform->Set_State(STATE::POSITION, vShoulderPos - vCameraLook * (m_fCameraFocalLength * (1 - m_fBackFrontRatio)));
+	}
+	
 }
 
 void CCamPosition_Shoulder::Update(_float fTimeDelta)
 {
-	GUI::DragFloat3("Camera Shoulder Position",(_float*)&m_vShoulderPosRatio,0.01f);
-	GUI::DragFloat("Camera Shoulder Length",&m_fCameraFocalLength, 0.01f);
 	if (m_pGameInstance->Key_Up(DIK_INSERT)) {
 
 		m_pBinded_Camera->Toggle_Priority();

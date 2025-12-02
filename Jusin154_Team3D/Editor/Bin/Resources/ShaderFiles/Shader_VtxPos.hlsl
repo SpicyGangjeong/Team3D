@@ -7,6 +7,8 @@ float g_fFar;
 float3 g_vContainerMin;
 float3 g_vContainerMax;
 
+
+
 struct VS_IN
 {
     float3 vPosition : POSITION;

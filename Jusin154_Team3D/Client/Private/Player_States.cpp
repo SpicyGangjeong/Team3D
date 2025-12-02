@@ -58,6 +58,8 @@ void CPlayer::TestKeyInput(_float fTimeDelta)
 	if (m_pGameInstance->Key_Down(DIK_F7))
 	{
 		m_eSpell = STATEANIM::LUMOS;
+
+		m_pEffectPool->Use_Skill(SKILL_TYPE::LUMOS, Get_PartObject<CWand>());
 	}
 }
 
@@ -724,7 +726,10 @@ void CPlayer::Behavior_CombatEnter()
 	else if (m_pGameInstance->Mouse_Up(DIM_LBUTTON)) {
 		m_pFSM->Enable_State(FSMSTATE::LIGHT_ATTACK);
 		pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK];
+
 		Add_Event(pairAnimInfo.first, [this]() { m_pEffectPool->Use_Skill(SKILL_TYPE::JAP, Get_PartObject<CWand>());  }, 0.1f);
+
+		Add_Event(pairAnimInfo.first, [this]() { m_pEffectPool->Use_Skill(SKILL_TYPE::JAP_SIDE, Get_PartObject<CWand>());  }, 0.0f);
 	}
 	else if (SUCCEEDED(InputSpell())) {
 		m_pFSM->Enable_State(FSMSTATE::SPELL);
@@ -732,13 +737,45 @@ void CPlayer::Behavior_CombatEnter()
 		{
 			switch (m_eSpell)
 			{
+			case STATEANIM::ACCIO:
+
+				pairAnimInfo = m_Animation[STATEANIM::SPELL];
+
+				Add_Event(pairAnimInfo.first,
+					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA_SIDE, Get_PartObject<CWand>()); },
+					0.f);
+
+				break;
+
+			case STATEANIM::DESCENDO:
+
+				pairAnimInfo = m_Animation[STATEANIM::SPELL];
+
+				Add_Event(pairAnimInfo.first,
+					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::DESCENDO_SIDE, Get_PartObject<CWand>()); },
+					0.f);
+
+				break;
 			case STATEANIM::DEPULSO:
 				pairAnimInfo = m_Animation[STATEANIM::DEPULSO];
+
+
+				Add_Event(pairAnimInfo.first,
+					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO, this); },
+					0.2f);
+				
+				Add_Event(pairAnimInfo.first,
+					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO_SIDE, Get_PartObject<CWand>()); },
+					0.f);
+
 				m_eSpell = STATEANIM::END;
 
 				break;
 			case STATEANIM::DIFFINDO:
 				pairAnimInfo = m_Animation[STATEANIM::DIFFINDO];
+
+			
+
 				m_eSpell = STATEANIM::END;
 				break;
 			case STATEANIM::DISILLUSION_ENTER:
@@ -796,7 +833,12 @@ void CPlayer::Behavior_CombatEnter()
 			}
 		}
 		else
+		{
+
+			
+
 			pairAnimInfo = m_Animation[STATEANIM::SPELL];
+		}
 	}
 	else if (m_pGameInstance->Key_Down(DIK_V)) {
 		m_pFSM->Enable_State(FSMSTATE::MAPHELP);
@@ -922,9 +964,14 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 			{
 				pairAnimInfo = m_Animation[STATEANIM::ACCIO];
 				Add_Event(pairAnimInfo.first,
+
 					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA, this);},
 					0.15f);
+
+
+
 				m_eSpell = STATEANIM::END;
+
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 			}
 				break;
@@ -934,10 +981,21 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 				Add_Event(pairAnimInfo.first,
 					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::DESCENDO, this);},
 					0.1f);
+
 				m_eSpell = STATEANIM::END;
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 			}
 				break;
+
+			case STATEANIM::DEPULSO:
+			{
+				pairAnimInfo = m_Animation[STATEANIM::DEPULSO];
+
+
+				m_eSpell = STATEANIM::END;
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+			}
+			break;
 			default:
 				break;
 			}

@@ -91,3 +91,5 @@ void CSkill_Data::Free()
 {
 	__super::Free();
 }
+
+#endif // _DEBUG

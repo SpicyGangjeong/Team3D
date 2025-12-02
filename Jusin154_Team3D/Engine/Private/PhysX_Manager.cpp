@@ -106,7 +106,11 @@ PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody_Static& RigidBody
 			// 유효성 체크
 			PX_ASSERT(pPxMeshGeometry->isValid());
 			pGeometry = pPxMeshGeometry;
-			m_TriangleMeshGeometry.emplace(RigidBody.Get_PxMeshKey(), pPxMeshGeometry);
+			_bool bEmplaceSuccess = m_TriangleMeshGeometry.emplace(RigidBody.Get_PxMeshKey(), pPxMeshGeometry).second;
+			if (false == bEmplaceSuccess) {
+				Safe_Delete(pPxMeshGeometry);
+				pGeometry = (*m_TriangleMeshGeometry.find(RigidBody.Get_PxMeshKey())).second;
+			}
 		}
 		break;
 	case ACTOR::HEIGHTFIELD:
@@ -118,7 +122,11 @@ PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody_Static& RigidBody
 		// 유효성 체크
 		PX_ASSERT(pPxHeightGeometry->isValid());
 		pGeometry = pPxHeightGeometry;
-		m_HeightFieldGeometry.emplace(RigidBody.Get_PxMeshKey(), pPxHeightGeometry);
+		_bool bEmplaceSuccess = m_HeightFieldGeometry.emplace(RigidBody.Get_PxMeshKey(), pPxHeightGeometry).second;
+		if (false == bEmplaceSuccess) {
+			Safe_Delete(pPxHeightGeometry);
+			pGeometry = (*m_HeightFieldGeometry.find(RigidBody.Get_PxMeshKey())).second;
+		}
 	}
 	break;
 	default:
@@ -163,11 +171,37 @@ _bool CPhysX_Manager::SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir
 	PSX::PxTransform startPose(startPos, startRot);
 
 	PSX::PxVec3 sweepDir(vDir.x, vDir.y, vDir.z);
+
 	sweepDir.normalize();
 
 	PSX::PxQueryFilterData filterData(flagQuery);
-
+	
 	return m_pScene->sweep(sphereGeom, startPose, sweepDir, fDistance, hitBuffer, flagHitsData, filterData);
+}
+
+_bool CPhysX_Manager::SphereCast(_float fRadius, _fvector _vStartPos, _fvector _vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
+{
+	_float3 vDir = {};
+	_float3 vStartPos = {};
+
+	XMStoreFloat3(&vDir, _vDir);
+	XMStoreFloat3(&vStartPos, _vStartPos);
+
+	PSX::PxSphereGeometry sphereGeom(fRadius);
+
+	PSX::PxVec3 startPos(vStartPos.x, vStartPos.y, vStartPos.z);
+	PSX::PxQuat startRot(PSX::PxIdentity);
+
+	PSX::PxTransform startPose(startPos, startRot);
+
+	PSX::PxVec3 sweepDir(vDir.x, vDir.y, vDir.z);
+
+	sweepDir.normalize();
+
+	PSX::PxQueryFilterData filterData(flagQuery);
+	_bool bHit = m_pScene->sweep(sphereGeom, startPose, sweepDir, fDistance, hitBuffer, flagHitsData, filterData);
+
+	return bHit;
 }
 
 void CPhysX_Manager::RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh) 
@@ -185,8 +219,6 @@ void CPhysX_Manager::RegistHeight(const _tchar* pName, PSX::PxHeightFieldDesc& D
 	}
 
 }
-#ifdef EDITOR_PROJECT
-
 HRESULT CPhysX_Manager::ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix)
 {
 	for (size_t i = 0; i < Meshes.size(); ++i)
@@ -203,6 +235,8 @@ HRESULT CPhysX_Manager::ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<
 
 	return S_OK;
 }
+
+#ifdef EDITOR_PROJECT
 
 HRESULT CPhysX_Manager::SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes)
 {
@@ -613,7 +647,7 @@ void CPhysX_Manager::Free()
 	ClearScene();
 	
 	for (auto& pMeshes : m_TriangleMeshes) {
-		pMeshes.second->release();
+		pMeshes.second->release(); 
 	} m_TriangleMeshes.clear();
 
 	for (auto& pGeometry : m_TriangleMeshGeometry) {

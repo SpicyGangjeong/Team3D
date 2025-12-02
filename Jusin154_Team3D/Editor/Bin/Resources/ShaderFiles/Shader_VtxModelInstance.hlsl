@@ -116,8 +116,9 @@ bool g_isNoiseAlpha;
 bool g_isNomalDissolve;
 
 
-bool g_isDiffuseBlur;
-bool g_isMaskBlur;
+bool g_isBlurNoEmissive;
+bool g_isTexBlur;
+
 bool g_isBlurDissolve;
 bool g_isBlurReverseDissolve;
 
@@ -272,7 +273,7 @@ float4 DrawEffect(PS_IN In)
             UV += SelectLerpUV((g_vDiffuseUVGainAmount / g_vUVCutting), (vDiffuseTime.x / vDiffuseTime.y), g_iDiffuseMoveLerpOption);
         }
 
-        if (g_isDiffuseBlur)
+        if (g_isTexBlur)
         {
             float4 fAccDiffuse;
 
@@ -380,7 +381,7 @@ float4 DrawEffect(PS_IN In)
             vMtrlMask = g_MaskingTexture.Sample(DefaultSampler, vMaskTexcoord);
         
             
-        if (g_isMaskBlur)
+        if (g_isTexBlur)
         {
             float4 fAccMask;
 
@@ -504,7 +505,7 @@ float4 EmissiveDraw(PS_IN In)
         }
     }
     
-    return vEmissiveMtrl * fEmissive * fEmissiveStrength;
+    return saturate(vEmissiveMtrl * fEmissive * fEmissiveStrength);
     
 }
 
@@ -532,8 +533,6 @@ PS_OUT BlendedWeight(vector fDiffuse, float fLinearZ)
     //float fWeight = pow(fLinearZ, -2.5);
     
     float fWeight = clamp(pow(fLinearZ, -2.5f), 1.0f, 1000.0f);
-    
-   
     
     Out.vDiffuse = vector(vColor.rgb * fAlpha, fAlpha) * fWeight;
    
@@ -578,20 +577,22 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     
     vMtrlDiffuse = DrawEffect(In);
     
-    //int2 iTexel = int2(In.vPosition.xy);
+    int2 iTexel = int2(In.vPosition.xy);
     
-    //float fDepthStencilValue = g_DepthStencilTexture.Load(int3(iTexel, 0)).r;
+    float fDepthStencilValue = g_DepthStencilTexture.Load(int3(iTexel, 0)).r;
     
-    //float fbias = 0.000005f;
+    float fbias = 0.000005f;
     
-    //if (fDepthStencilValue <= In.vProjPos.z / In.vProjPos.w + fbias)
-    //    discard;
+    if (fDepthStencilValue <= In.vProjPos.z / In.vProjPos.w + fbias)
+        discard;
+    
+    vMtrlDiffuse.rgb += EmissiveDraw(In).rgb;
     
     Out = BlendedWeight(vMtrlDiffuse, In.vProjPos.w);
     
     //// 색깔 추가할 처리 (이미시브)
    
-    Out.vDiffuse += EmissiveDraw(In); // 이미시브 스트랭스
+    //Out.vDiffuse  // 이미시브 스트랭스
     Out.vColorTarget = vector(0.f, 0.f, 0.f, 0.f);
     
     return Out;
@@ -655,17 +656,17 @@ struct PS_BLOOM_OUT
     float4 vDiffuse : SV_TARGET0;
 };
 
-PS_BLUR_OUT PS_BLUR(PS_IN In)
+PS_BLUR_OUT PS_BLUR_NOEMISSIVE(PS_IN In)
 {
     PS_BLUR_OUT Out;
     
     vector vMtrlDiffuse;
     
-    vMtrlDiffuse = DrawEffect(In);
+    vMtrlDiffuse= DrawEffect(In);
     
     //// 색깔 추가할 처리 (이미시브)
-   
-    vMtrlDiffuse += EmissiveDraw(In); 
+    
+    vMtrlDiffuse.a = 1.f;
     
     if (g_isDissolve == true)
     {
@@ -676,6 +677,34 @@ PS_BLUR_OUT PS_BLUR(PS_IN In)
     }
    
     Out.vDiffuse = vector(vMtrlDiffuse.rgb * g_fBlurIntensity , vMtrlDiffuse.a); 
+    Out.vBlurWeight = g_iBlurWeight / 128.f;
+    
+    return Out;
+}
+
+PS_BLUR_OUT PS_BLUR(PS_IN In)
+{
+    PS_BLUR_OUT Out;
+    
+    vector vMtrlDiffuse;
+    
+    vMtrlDiffuse = DrawEffect(In);
+    
+    //// 색깔 추가할 처리 (이미시브)
+   
+    vMtrlDiffuse.rgb += EmissiveDraw(In).rgb;
+    
+    vMtrlDiffuse.a = 1.f;
+    
+    if (g_isDissolve == true)
+    {
+        if (g_isNomalDissolve)
+        {
+            vMtrlDiffuse.a *= (0.95f - In.vLifeTime.x / In.vLifeTime.y);
+        }
+    }
+   
+    Out.vDiffuse = vector(vMtrlDiffuse.rgb * g_fBlurIntensity, vMtrlDiffuse.a);
     Out.vBlurWeight = g_iBlurWeight / 128.f;
     
     return Out;
@@ -693,9 +722,9 @@ PS_BLOOM_OUT PS_BLOOM(PS_IN In)
     
     //// 색깔 추가할 처리 (이미시브)
    
-        vMtrlDiffuse += EmissiveDraw(In);
+    vMtrlDiffuse.rgb += EmissiveDraw(In).rgb;
     
-    float fBloomStrength = g_fBloomStrength;
+    float fBloomStrength = g_fBloomStrength; 
     
     if (g_isBloomDissolve == true)
     {
@@ -707,6 +736,9 @@ PS_BLOOM_OUT PS_BLOOM(PS_IN In)
     {
         fBloomStrength = g_fBloomStrength * ((In.vLifeTime.x / In.vLifeTime.y));
     }
+    
+    if (vMtrlDiffuse.a <= 0.1f)
+        discard;
    
     Out.vDiffuse = vector(vMtrlDiffuse.rgb * fBloomStrength, (float) g_iBloomType / 255.f);
     
@@ -722,21 +754,25 @@ PS_BLOOM_OUT PS_BLEND(PS_IN In)
     
     vMtrlDiffuse = DrawEffect(In);
     
-  
-    //int2 iTexel = int2(In.vPosition.xy);
-    
-    //float fDepthStencilValue = g_DepthStencilTexture.Load(int3(iTex el, 0)).r;
-    
-    //float fbias = 0.000005f;
-    
-    //if (fDepthStencilValue <= In.vProjPos.z / In.vProjPos.w + fbias)
-    //    discard;
-   
-    //// 색깔 추가할 처리 (이미시브)
-   
     vMtrlDiffuse.rgb += EmissiveDraw(In).rgb;
 
     Out.vDiffuse = vMtrlDiffuse;
+    
+    return Out;
+}
+
+PS_BLOOM_OUT PS_WEIGHTED_FOR_BLEND(PS_IN In)
+{
+    PS_BLOOM_OUT Out;
+    
+    vector vMtrlDiffuse;
+    
+    vMtrlDiffuse = DrawEffect(In);
+    
+    vMtrlDiffuse.rgb += EmissiveDraw(In).rgb;
+    
+    Out.vDiffuse = BlendedWeight(vMtrlDiffuse, In.vProjPos.w).vDiffuse;
+    
     
     return Out;
 }
@@ -842,6 +878,37 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_NOWORLD();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_BLOOM();
+    }
+
+
+    pass BLUR_NO_EMMISVE
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_Effect, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_BLUR();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_BLUR_NOEMISSIVE();
+    }
+
+    pass BLUR_NO_WORLD_NO_EMISSIVE
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_Effect, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_BLUR_NOWORLD();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_BLUR_NOEMISSIVE();
+    }
+
+    pass WEIGHTBLEND_FOR_BLEND
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_Effect, 0);
+        SetBlendState(BS_WB_Acc, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_WEIGHTED_FOR_BLEND();
     }
 
 }

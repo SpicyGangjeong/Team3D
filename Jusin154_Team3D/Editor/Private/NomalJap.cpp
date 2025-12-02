@@ -231,6 +231,8 @@ void CNomalJap::OnCollision(CGameObject* pOther , void* pDesc)
 
 	Get_PartObject<CTrailObject>()->Set_Visible(false);
 	Get_PartObject<CTrailObject>()->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+	Get_PartObject<CEditEffect>("Circle_Particle_Red")->Set_Visible(false);
+
 
 	if (m_pPhysHitBox != nullptr)
 	{

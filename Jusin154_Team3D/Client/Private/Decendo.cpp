@@ -6,6 +6,9 @@
 #include "PhysXEffectHitBox.h"
 #include "TrailObject.h"
 
+#include "Wand.h"
+#include "Player.h"
+
 
 CDecendo::CDecendo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEffect_Container{ pDevice, pContext }
@@ -53,11 +56,7 @@ void CDecendo::Priority_Update(_float fTimeDelta)
 {
 	__super::Priority_Update(fTimeDelta);
 
-
-	if (nullptr != m_pPhysHitBox) {
-		m_pPhysHitBox->Get_Component<CTransform>()->RewindMomentum();
-	}
-
+	XMStoreFloat4(&m_vStartPos, m_pProjectile->Get_WorldPostion());
 }
 
 void CDecendo::Update(_float fTimeDelta)
@@ -73,11 +72,6 @@ void CDecendo::Update(_float fTimeDelta)
 	m_pProjectile->Get_Component<CTransform>()->Translation(m_vCameraLook * 0.5f);
 
 
-	if (nullptr != m_pPhysHitBox) {
-		m_pPhysHitBox->Get_Component<CTransform>()->AccumulateMomentum(m_vCameraLook * 0.5f);
-	}
-
-
 	if (m_fAccTime > XM_2PI)
 		return;
 
@@ -86,9 +80,14 @@ void CDecendo::Update(_float fTimeDelta)
 	m_pProjectile_Blur->Get_Component<CTransform>()->Translation(m_vRotateUp * 0.2f * sinf(m_fAccTime));
 	m_pProjectile->Get_Component<CTransform>()->Translation(m_vRotateUp * 0.2f * sinf(m_fAccTime));
 
-	if (nullptr != m_pPhysHitBox) {
-		m_pPhysHitBox->Get_Component<CTransform>()->AccumulateMomentum(m_vRotateUp * 0.2f * sinf(m_fAccTime));
+
+	//TODO : 다시 위치 잡기 
+	if (true == m_pGameInstance->SphereCast(0.125f, XMLoadFloat4(&m_vStartPos), m_vCameraLook, XMVectorGetX(XMVector3Length(m_vCameraLook * 0.5f))
+		, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eSTATIC, hitBuffer))
+	{
+		OnCollision();
 	}
+
 }
 
 void CDecendo::Late_Update(_float fTimeDelta)
@@ -97,6 +96,8 @@ void CDecendo::Late_Update(_float fTimeDelta)
 		return;
 
 	Get_PartObject<CTrailObject>()->Trail_Update(m_pProjectile->Get_Component<CTransform>()->Get_XMWorldMatrix(), fTimeDelta);
+
+	XMStoreFloat4(&m_vEndPos, m_pProjectile->Get_WorldPostion());
 
 	__super::Late_Update(fTimeDelta);
 }
@@ -120,12 +121,18 @@ HRESULT CDecendo::Pre_Setting(CGameObject* pObject)
 	m_fPreAccTime = 0.f;
 
 
+	CWand* pWand = static_cast<CPlayer*>(m_pOwner)->Get_PartObject<CWand>();
+
+	if (pWand == nullptr)
+		return E_FAIL;
+
+
 	CPartObject* pCircle0 = Get_PartObject<CEffectParts>();
 
 	/* 초기 객체 위치 초기화 */
 	pCircle0->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
-	m_pProjectile->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
-	m_pProjectile_Blur->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
+	m_pProjectile->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
+	m_pProjectile_Blur->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 
 	/* 초기 객체 비지블 */
 	pCircle0->Set_Visible(true);
@@ -163,24 +170,6 @@ HRESULT CDecendo::Ready_Components(void* pArg)
 
 HRESULT CDecendo::Ready_Child()
 {
-	CPhysXEffectHitBox::PHYSXDUMMY_DESC Desc{};
-
-	m_pTransformCom->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
-
-	XMStoreFloat3(&Desc.vPos, m_pOwner->Get_WorldPostion() + XMVectorSet(0.f, 0.f, 1.f, 0.f));
-
-
-	Desc.vRotRPY = { 0.f, 0.f, 0.f };
-	Desc.iSubKind = 70;
-	Desc.vDeltaPos = _float3(0.f, 0.f, 0.f);
-	Desc.vLifeTime = { 0.f, 1.f };
-
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPhysXEffectHitBox>(g_iStaticLevel, CURRENT_LEVEL, LAYER_HITBOX, &Desc, this, &m_pPhysHitBox))) {
-		assert(false);
-		return E_FAIL;
-	}
-
-	SAFE_ADDREF(m_pPhysHitBox);
 	return S_OK;
 }
 
@@ -214,13 +203,13 @@ CGameObject* CDecendo::Clone(void* pArg, CGameObject* pOwner)
 void CDecendo::OnCollision(CGameObject* pOther, void* pDesc)
 {
 	//CTransform* pOtherTransform = p
-	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
+	_vector vPos = XMVectorSet(hitBuffer.block.position.x, hitBuffer.block.position.y, hitBuffer.block.position.z, 1.f);
 
 
 	for (auto& pPair : m_PartObjects)
 	{
 		pPair.second->Set_Visible(true);
-		pPair.second->Get_Component<CTransform>()->Set_State(STATE::POSITION, CollisionDesc->vWorldPos);
+		pPair.second->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
 	}
 
 
@@ -240,17 +229,11 @@ void CDecendo::OnCollision(CGameObject* pOther, void* pDesc)
 	Get_PartObject<CTrailObject>()->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
 	Get_PartObject<CTrailObject>()->Set_Visible(false);
 
-
-	m_pPhysHitBox->Set_Dead();
-	SAFE_RELEASE(m_pPhysHitBox);
 }
 
 void CDecendo::Free()
 {
 	__super::Free();
-
-	if (m_pPhysHitBox != nullptr)
-		SAFE_RELEASE(m_pPhysHitBox);
 
 	SAFE_RELEASE(m_pProjectile_Blur);
 	SAFE_RELEASE(m_pProjectile);

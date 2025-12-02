@@ -174,8 +174,9 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 		{
 			m_bLoopRestarted = true;
 		}
-		else
+		else{
 			XMStoreFloat3(&m_vPrevRootPos, m_vector[2]);
+		}
 
 		m_vPrevRootRot = { 0.f,0.f,0.f,0.f };
 		m_bInitialRootRotSaved = false;
@@ -234,8 +235,9 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 			{
 				m_fSecondRatio = 1.f;
 			}
-			else
+			else{
 				m_fSecondBlendTime = 0.f;
+			}
 		}
 	}
 	else
@@ -256,8 +258,9 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 			{
 				m_fSecondRatio = 1.f;
 			}
-			else
+			else{
 				m_fSecondBlendTime = 0.f;
+			}
 		}
 	}
 
@@ -275,8 +278,9 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 		{
 			m_bLoopRestarted = true;
 		}
-		else
+		else{
 			XMStoreFloat3(&m_vPrevRootPos, m_vector[2]);
+		}
 
 		m_vPrevRootRot = { 0.f,0.f,0.f,0.f };
 		m_bInitialRootRotSaved = false;
@@ -579,6 +583,19 @@ HRESULT CModel::Render_Indexed(_uint iMeshIndex, _uint IndexCount, _uint StartIn
 
 	return S_OK;
 }
+HRESULT CModel::Ready_PhysXMeshes(_fmatrix& PreTransformMatrix)
+{
+	m_iNumPhysXMeshes = m_iNumMeshes;
+
+	m_TriMeshes.reserve(m_iNumMeshes);
+
+	m_pGameInstance->ConvertToTriMeshes(m_Meshes, m_TriMeshes, PreTransformMatrix);
+
+	for (_uint i = 0; i < m_iNumMeshes; ++i) {
+		m_pGameInstance->RegistTriMesh((m_Meshes[i]->Get_Name() + to_string(i)).c_str(), m_TriMeshes[i]);
+	}
+	return S_OK;
+}
 #ifdef EDITOR_PROJECT
 
 HRESULT CModel::Ready_Meshes(MODEL eType, const aiScene* pAIScene, _fmatrix& PreTransformMatrix)
@@ -601,25 +618,8 @@ HRESULT CModel::Ready_Meshes(MODEL eType, const aiScene* pAIScene, _fmatrix& Pre
 	return S_OK;
 }
 
-HRESULT CModel::Ready_PhysXMeshes()
-{
-	m_iNumPhysXMeshes = m_iNumMeshes;
-
-	m_TriMeshes.reserve(m_iNumMeshes);
-
-	m_pGameInstance->ConvertToTriMeshes(m_Meshes, m_TriMeshes);
-
-	return S_OK;
-}
-
 HRESULT CModel::Save_PhysXTriMeshes(const _char* pModelFilePath)
 {
-	if (FAILED(Ready_PhysXMeshes())) {
-		return E_FAIL;
-	}
-	for (_uint i = 0; i < m_iNumMeshes; ++i) {
-		m_pGameInstance->RegistTriMesh((m_Meshes[i]->Get_Name() + to_string(i)).c_str(), m_TriMeshes[i]);
-	}
 	return m_pGameInstance->SaveTriMeshes(pModelFilePath, m_TriMeshes);
 }
 
@@ -1391,11 +1391,7 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 	if (FAILED(Ready_Animations(m_Bones))) {
 		return E_FAIL;
 	}
-//#ifdef 기무리
-//	if (MODEL::ENVIROMENT == eType) {
-//		Save_PhysXTriMeshes(pModelFilePath);
-//	}
-//#endif // _DEBUG
+
 	return S_OK;
 }
 
