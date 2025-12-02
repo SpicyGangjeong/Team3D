@@ -1,23 +1,23 @@
 ﻿#include "pch.h"
-#include "Spell_Slot.h"
+#include "Spell_List.h"
 #include "GameInstance.h"
 
-CSpell_Slot::CSpell_Slot(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CSpell_List::CSpell_List(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
 {
 }
 
-CSpell_Slot::CSpell_Slot(const CSpell_Slot& rhs)
+CSpell_List::CSpell_List(const CSpell_List& rhs)
 	:CElementObject(rhs)
 {
 }
 
-HRESULT CSpell_Slot::Initialize_Prototype()
+HRESULT CSpell_List::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CSpell_Slot::Initialize(void* pArg)
+HRESULT CSpell_List::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
@@ -39,19 +39,20 @@ HRESULT CSpell_Slot::Initialize(void* pArg)
 
 	m_fAlpha = 1.f;
 	m_fTimeMult = 3.f;
-	m_fAngle = XMConvertToRadians(-135);
 	m_fAlphaTime = 1.f;
-	m_fOffSetX = 101.f;
-	m_fOffSetY = 101.f;
+	m_fOffSetX = 120.f;
+	m_fOffSetY = 122.f;
 	m_iCols = 4;
 	m_pVIBufferCom->Set_Cloned(true);
-	m_pVIBufferCom->Set_Pos(380.f, -30.f, m_fOffSetX, m_fOffSetY, m_iCols);
+	m_pVIBufferCom->Set_Pos(-185.f, 375.f, m_fOffSetX, m_fOffSetY, m_iCols);
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
-	m_bActive = true;
+	m_fDelayTime = 0.5f;
+	m_iPerSpell_Slot = -1;
+	Color();
 	return S_OK;
 }
 
-void CSpell_Slot::Priority_Update(_float fTimeDelta)
+void CSpell_List::Priority_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -60,7 +61,7 @@ void CSpell_Slot::Priority_Update(_float fTimeDelta)
 	__super::Priority_Update(fTimeDelta);
 }
 
-void CSpell_Slot::Update(_float fTimeDelta)
+void CSpell_List::Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -91,10 +92,11 @@ void CSpell_Slot::Update(_float fTimeDelta)
 		}
 	}
 	m_fTime += fTimeDelta * m_fTimeMult;
+	Hover(fTimeDelta);
 	__super::Update(fTimeDelta);
 }
 
-void CSpell_Slot::Late_Update(_float fTimeDelta)
+void CSpell_List::Late_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -102,18 +104,19 @@ void CSpell_Slot::Late_Update(_float fTimeDelta)
 	}
 	if (m_bVisible)
 	{
-			m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
+		m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
 	}
 	__super::Late_Update(fTimeDelta);
 }
 
-HRESULT CSpell_Slot::Render()
+
+HRESULT CSpell_List::Render()
 {
 	if (FAILED(Bind_ShaderResources()))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::DEFAULT))))
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIINTANCE::COLOR))))
 	{
 		return E_FAIL;
 	}
@@ -129,31 +132,73 @@ HRESULT CSpell_Slot::Render()
 	return S_OK;
 }
 
-_vector CSpell_Slot::Get_WorldPostion()
+_vector CSpell_List::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
 }
 
-void CSpell_Slot::SizeUpX(_float fSizeX)
+void CSpell_List::SizeUpX(_float fSizeX)
 {
 	m_fSizeX = fSizeX;
 	m_pVIBufferCom->Set_SizeX(m_fSizeX);
 }
 
-void CSpell_Slot::SizeUpY(_float fSizeY)
+void CSpell_List::SizeUpY(_float fSizeY)
 {
 	m_fSizeY = fSizeY;
 	m_pVIBufferCom->Set_SizeY(m_fSizeY);
 }
 
-void CSpell_Slot::SizeUpdate(_float fSizeX, _float fSizeY)
+void CSpell_List::SizeUpdate(_float fSizeX, _float fSizeY)
 {
 	m_fSizeX = fSizeX;
 	m_fSizeY = fSizeY;
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
 }
 
-HRESULT CSpell_Slot::Bind_ShaderResources()
+void CSpell_List::Color()
+{
+	m_pVIBufferCom->Set_Index_Renge_Color(0, 3, _float4(255.f / 255.f, 255.f / 255.f, 0.f / 255.f, 1.f));
+	m_pVIBufferCom->Set_Index_Renge_Color(4, 7, _float4(150.f / 255.f, 120.f / 255.f, 240.f / 255.f, 1.f));
+	m_pVIBufferCom->Set_Index_Renge_Color(8, 12, _float4(190.f / 255.f, 46.f / 255.f, 34.f / 255.f, 1.f));
+	m_pVIBufferCom->Set_Index_Renge_Color(13, 16, _float4(24.f / 255.f, 190.f / 255.f, 255.f / 255.f, 1.f));
+	m_pVIBufferCom->Set_Index_Renge_Color(17, 19, _float4(200.f / 255.f, 220.f / 255.f, 150.f / 255.f, 1.f));
+	m_pVIBufferCom->Set_Index_Renge_Color(20, 22, _float4(50.f / 255.f, 150.f / 255.f, 110.f / 255.f, 1.f));
+	m_pVIBufferCom->Set_Index_Renge_Color(23, 25, _float4(24.f / 255.f, 190.f / 255.f, 255.f / 255.f, 1.f));
+}
+
+void CSpell_List::Hover(_float fTimeDelta)
+{
+	POINT ptMouse{};
+	GetCursorPos(&ptMouse);
+	ScreenToClient(g_hWnd, &ptMouse);
+	_float2 fMouse;
+	fMouse.x = ptMouse.x - (g_iWinSizeX * 0.5f);
+	fMouse.y = -(ptMouse.y - (g_iWinSizeY * 0.5f));
+
+	// 엘리먼트의 월드 위치를 더해주면 엘리먼트 좌표계 기준이 됨
+	fMouse.x -= m_pOwner->Get_WorldPostion().m128_f32[0];
+	fMouse.y -= m_pOwner->Get_WorldPostion().m128_f32[1];
+
+	m_iSpellType = m_pVIBufferCom->Set_Mouse_Hover(fMouse);
+
+	CUIObject::HOVER_INFO Info;
+	Info.iSlotID = 0;
+	if (m_iSpellType == -1)
+	{
+		Info.iHover_Index = -1;
+		static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Hover"), &Info);
+	}
+
+	else
+	{
+		Info.iHover_Index = m_iSpellType;
+		static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Hover"), &Info);
+	}
+
+}
+
+HRESULT CSpell_List::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 	{
@@ -191,17 +236,21 @@ HRESULT CSpell_Slot::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	
-	return S_OK;
-}
-
-HRESULT CSpell_Slot::Ready_Components(void* pArg)
-{
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_UI_Spell_Slot"), (CComponent**)&m_pVIBufferCom, nullptr)))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fTime", &m_fTime, sizeof(_float))))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UI_T_ActionItemGoldleaf_4K"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+
+	return S_OK;
+}
+
+HRESULT CSpell_List::Ready_Components(void* pArg)
+{
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_UI_Spell_List"), (CComponent**)&m_pVIBufferCom, nullptr)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UI_T_SpellType_Generic"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -213,33 +262,33 @@ HRESULT CSpell_Slot::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-CSpell_Slot* CSpell_Slot::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CSpell_List* CSpell_List::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CSpell_Slot* pInstance = new CSpell_Slot(pDevice, pContext);
+	CSpell_List* pInstance = new CSpell_List(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CSpell_Slot");
+		MSG_BOX("Failed to Created : CSpell_List");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CSpell_Slot::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CSpell_List::Clone(void* pArg, CGameObject* pOwner)
 {
-	CSpell_Slot* pInstance = new CSpell_Slot(*this);
+	CSpell_List* pInstance = new CSpell_List(*this);
 	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CSpell_Slot");
+		MSG_BOX("Failed to Cloned : CSpell_List");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CSpell_Slot::Free()
+void CSpell_List::Free()
 {
 	__super::Free();
 
@@ -249,7 +298,7 @@ void CSpell_Slot::Free()
 }
 
 #ifdef _DEBUG
-void CSpell_Slot::Describe_Entity()
+void CSpell_List::Describe_Entity()
 {
 }
 #endif // _DEBUG

@@ -1,35 +1,22 @@
 ﻿#pragma once
 
 #include "Client_Define.h"
-#include "GameObject.h"
+#include "CanvasObject.h"
 
 NS_BEGIN(Engine)
-class CGameInstance;
+class CTexture;
+class CShader;
+class CVIBuffer_Rect;
 NS_END
 
 NS_BEGIN(Client)
 
-class CSkill_Data final : public CGameObject
+class CSpell_Canvas final : public CCanvasObject
 {
-public:
-	typedef struct tagSpellInfo
-	{
-		_int		iSpell_ID{};
-		_string		pSpell_Name;
-		_string		pImage_Name;
-		_int		iSpell_Type{};
-		_int		iSkill_Type{};
-		_float		fSpell_CoolTime{};
-		_float		fDuration{};
-		_int		iAnimNum{};
-		_string		pSpellInfo;
-		_bool		bSpell_Lock = false;
-		_bool		bEquip_Spell = false;
-	}SPELLINFO;
 private:
-	CSkill_Data(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CSkill_Data(const CSkill_Data& rhs);
-	virtual ~CSkill_Data() = default;
+	CSpell_Canvas(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CSpell_Canvas(const CSpell_Canvas& rhs);
+	virtual ~CSpell_Canvas() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -41,22 +28,23 @@ public:
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;
+	virtual HRESULT	Ready_Panel(void* pArg) override;
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
 public:
-	//const SPELLINFO& Get_Info(_uint SpellID) const;
+	void Clear_Penel();
 
 private:
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 	CGameObject* m_pSpell_Panel = { nullptr };
-
-	SPELLINFO SpellInfo = {};
 public:
-	static CSkill_Data* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CSpell_Canvas* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
+#ifdef _DEBUG
 	void Describe_Entity() override;
+#endif // _DEBUG
 };
 
 NS_END

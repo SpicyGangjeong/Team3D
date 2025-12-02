@@ -11,12 +11,12 @@ NS_END
 
 NS_BEGIN(Client)
 
-class CMagic_Item final : public CElementObject
+class CSpell_Vidio_Border final : public CElementObject
 {
 private:
-	CMagic_Item(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CMagic_Item(const CMagic_Item& rhs);
-	virtual ~CMagic_Item() = default;
+	CSpell_Vidio_Border(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CSpell_Vidio_Border(const CSpell_Vidio_Border& rhs);
+	virtual ~CSpell_Vidio_Border() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -25,6 +25,12 @@ public:
 	virtual HRESULT Render() override;
 	virtual _vector Get_WorldPostion() override;
 
+//public:
+//	virtual const SPELLINFO Get_Info(_int Index) override;
+//
+//public:
+//	virtual void Set_SkillType(_int eType);
+
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;
@@ -32,27 +38,17 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 
 private:
-	void Compute_UV(_uint iItemID);
-	void Compute_Image();
-private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
-	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
-	CTexture* m_pDiffuse_TextureCom2 = { nullptr };
-	CTexture* m_pDiffuse_TextureCom3 = { nullptr };
-	CTexture* m_pDiffuse_TextureCom4 = { nullptr };
-	CTexture* m_pDiffuse_TextureCom5 = { nullptr };
-	CTexture* m_pDiffuse_TextureCom6 = { nullptr };
+	CTexture* m_pDesendo_TextureCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
-	_float4 m_vUV{};
-	_uint	m_iArratCount{};
-	_float2 m_vImageSize1 = {};
-	_float2 m_vImagePos1 = {};
-	_float2 m_vImageSize2 = {};
-	_float2 m_vImagePos2 = {};
+	_float	m_fStertTimer{};
+	_int	m_iPerIndex{};
+	_bool	m_bStart = { false };
+
 public:
-	static CMagic_Item* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CSpell_Vidio_Border* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 #ifdef _DEBUG

@@ -1,30 +1,31 @@
-﻿#include "pch.h"
-#include "Spell_Slot.h"
+﻿
+#include "pch.h"
+#include "Eessential_Spell.h"
 #include "GameInstance.h"
 
-CSpell_Slot::CSpell_Slot(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CEessential_Spell::CEessential_Spell(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
 {
 }
 
-CSpell_Slot::CSpell_Slot(const CSpell_Slot& rhs)
+CEessential_Spell::CEessential_Spell(const CEessential_Spell& rhs)
 	:CElementObject(rhs)
 {
 }
 
-HRESULT CSpell_Slot::Initialize_Prototype()
+HRESULT CEessential_Spell::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CSpell_Slot::Initialize(void* pArg)
+HRESULT CEessential_Spell::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 0.f;
 	Desc.fY = 0.f;
-	Desc.fSizeX = 105.f;
-	Desc.fSizeY = 105.f;
+	Desc.fSizeX = 40.f;
+	Desc.fSizeY = 40.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -39,19 +40,19 @@ HRESULT CSpell_Slot::Initialize(void* pArg)
 
 	m_fAlpha = 1.f;
 	m_fTimeMult = 3.f;
-	m_fAngle = XMConvertToRadians(-135);
 	m_fAlphaTime = 1.f;
-	m_fOffSetX = 101.f;
-	m_fOffSetY = 101.f;
+	m_fOffSetX = 80.f;
+	m_fOffSetY = 80.f;
 	m_iCols = 4;
+	UV();
 	m_pVIBufferCom->Set_Cloned(true);
-	m_pVIBufferCom->Set_Pos(380.f, -30.f, m_fOffSetX, m_fOffSetY, m_iCols);
+	m_pVIBufferCom->Set_Pos(-731.f, -300.f, m_fOffSetX, m_fOffSetY, m_iCols);
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
-	m_bActive = true;
+	m_pVIBufferCom->Set_ImageUV(pUVDesc);
 	return S_OK;
 }
 
-void CSpell_Slot::Priority_Update(_float fTimeDelta)
+void CEessential_Spell::Priority_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -60,7 +61,7 @@ void CSpell_Slot::Priority_Update(_float fTimeDelta)
 	__super::Priority_Update(fTimeDelta);
 }
 
-void CSpell_Slot::Update(_float fTimeDelta)
+void CEessential_Spell::Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -94,7 +95,7 @@ void CSpell_Slot::Update(_float fTimeDelta)
 	__super::Update(fTimeDelta);
 }
 
-void CSpell_Slot::Late_Update(_float fTimeDelta)
+void CEessential_Spell::Late_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -102,18 +103,18 @@ void CSpell_Slot::Late_Update(_float fTimeDelta)
 	}
 	if (m_bVisible)
 	{
-			m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
+		m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
 	}
 	__super::Late_Update(fTimeDelta);
 }
 
-HRESULT CSpell_Slot::Render()
+HRESULT CEessential_Spell::Render()
 {
 	if (FAILED(Bind_ShaderResources()))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::DEFAULT))))
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIINTANCE::EESSENTIAL_SPELL))))
 	{
 		return E_FAIL;
 	}
@@ -129,31 +130,61 @@ HRESULT CSpell_Slot::Render()
 	return S_OK;
 }
 
-_vector CSpell_Slot::Get_WorldPostion()
+_vector CEessential_Spell::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
 }
 
-void CSpell_Slot::SizeUpX(_float fSizeX)
+void CEessential_Spell::SizeUpX(_float fSizeX)
 {
 	m_fSizeX = fSizeX;
 	m_pVIBufferCom->Set_SizeX(m_fSizeX);
 }
 
-void CSpell_Slot::SizeUpY(_float fSizeY)
+void CEessential_Spell::SizeUpY(_float fSizeY)
 {
 	m_fSizeY = fSizeY;
 	m_pVIBufferCom->Set_SizeY(m_fSizeY);
 }
 
-void CSpell_Slot::SizeUpdate(_float fSizeX, _float fSizeY)
+void CEessential_Spell::SizeUpdate(_float fSizeX, _float fSizeY)
 {
 	m_fSizeX = fSizeX;
 	m_fSizeY = fSizeY;
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
 }
 
-HRESULT CSpell_Slot::Bind_ShaderResources()
+void CEessential_Spell::UV()
+{
+	for (_uint i = 0; i < 8; ++i)
+	{
+		pUVDesc[i].fUV = Meter_Index(i);
+	}
+}
+
+_float4 CEessential_Spell::Meter_Index(_uint Number)
+{
+	_float2 fImage_Size = _float2{ 512.f, 256.f};
+
+	_uint iXCount = 4;
+	_uint iYCount = 2;
+
+	_float frameWidth = 128.f;
+	_float frameHeight = 128.f;
+
+	_uint frameX = Number % iXCount;
+	_uint frameY = Number / iXCount;
+
+	_float4 UV{};
+	UV.x = frameX * frameWidth / fImage_Size.x;
+	UV.y = frameY * frameHeight / fImage_Size.y;
+	UV.z = UV.x + (frameWidth / fImage_Size.x);
+	UV.w = UV.y + (frameHeight / fImage_Size.y);
+
+	return UV;
+}
+
+HRESULT CEessential_Spell::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 	{
@@ -191,17 +222,17 @@ HRESULT CSpell_Slot::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	
+
 	return S_OK;
 }
 
-HRESULT CSpell_Slot::Ready_Components(void* pArg)
+HRESULT CEessential_Spell::Ready_Components(void* pArg)
 {
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_UI_Spell_Slot"), (CComponent**)&m_pVIBufferCom, nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_UI_Eessential_Spell"), (CComponent**)&m_pVIBufferCom, nullptr)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UI_T_ActionItemGoldleaf_4K"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_Altas_Eessential"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -213,33 +244,33 @@ HRESULT CSpell_Slot::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-CSpell_Slot* CSpell_Slot::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CEessential_Spell* CEessential_Spell::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CSpell_Slot* pInstance = new CSpell_Slot(pDevice, pContext);
+	CEessential_Spell* pInstance = new CEessential_Spell(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CSpell_Slot");
+		MSG_BOX("Failed to Created : CEessential_Spell");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CSpell_Slot::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CEessential_Spell::Clone(void* pArg, CGameObject* pOwner)
 {
-	CSpell_Slot* pInstance = new CSpell_Slot(*this);
+	CEessential_Spell* pInstance = new CEessential_Spell(*this);
 	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CSpell_Slot");
+		MSG_BOX("Failed to Cloned : CEessential_Spell");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CSpell_Slot::Free()
+void CEessential_Spell::Free()
 {
 	__super::Free();
 
@@ -249,7 +280,7 @@ void CSpell_Slot::Free()
 }
 
 #ifdef _DEBUG
-void CSpell_Slot::Describe_Entity()
+void CEessential_Spell::Describe_Entity()
 {
 }
 #endif // _DEBUG

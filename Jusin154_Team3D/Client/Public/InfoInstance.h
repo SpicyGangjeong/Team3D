@@ -41,6 +41,9 @@ public:
 #pragma region MAP_INFO
 	HRESULT Load_MapObjects(const _char* pFilePath);
 #pragma endregion
+#pragma region Spell_INFO
+	HRESULT Load_SpellInfo(const _char* pFilePath);
+#pragma endregion
 
 
 private:

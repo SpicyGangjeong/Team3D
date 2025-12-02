@@ -11,12 +11,12 @@ NS_END
 
 NS_BEGIN(Client)
 
-class CMagic_Item final : public CElementObject
+class CSpell_Anim final : public CElementObject
 {
 private:
-	CMagic_Item(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CMagic_Item(const CMagic_Item& rhs);
-	virtual ~CMagic_Item() = default;
+	CSpell_Anim(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CSpell_Anim(const CSpell_Anim& rhs);
+	virtual ~CSpell_Anim() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -25,6 +25,13 @@ public:
 	virtual HRESULT Render() override;
 	virtual _vector Get_WorldPostion() override;
 
+public:
+	virtual void Set_FadeIn() override;
+
+private:
+	void Change_Image(_int SpellID);
+	virtual void Set_SkillType(_int eType) override;
+
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;
@@ -32,27 +39,19 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 
 private:
-	void Compute_UV(_uint iItemID);
-	void Compute_Image();
-private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
-	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
-	CTexture* m_pDiffuse_TextureCom2 = { nullptr };
-	CTexture* m_pDiffuse_TextureCom3 = { nullptr };
-	CTexture* m_pDiffuse_TextureCom4 = { nullptr };
-	CTexture* m_pDiffuse_TextureCom5 = { nullptr };
-	CTexture* m_pDiffuse_TextureCom6 = { nullptr };
+	CTexture* m_pDesendo_TextureCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
-	_float4 m_vUV{};
-	_uint	m_iArratCount{};
-	_float2 m_vImageSize1 = {};
-	_float2 m_vImagePos1 = {};
-	_float2 m_vImageSize2 = {};
-	_float2 m_vImagePos2 = {};
+	_int	m_iTotalFrames{};			// 전체 프레임 수
+	_float	m_fFrameTime{};				// 한 프레임당 시간(초)
+	_int	m_iCurrentFrame{};			// 현재 보여줄 프레임
+
+	_int	m_iPerSpell{};
+	_bool	m_bAnim_Start = { false };
 public:
-	static CMagic_Item* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CSpell_Anim* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 #ifdef _DEBUG

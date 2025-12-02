@@ -81,6 +81,10 @@ HRESULT CInfoInstance::Load_MapObjects(const _char* pFilePath)
 {
 	return m_pMapInfo->Load_MapObjects(pFilePath);
 }
+HRESULT CInfoInstance::Load_SpellInfo(const _char* pFilePath)
+{
+	return E_NOTIMPL;
+}
 #pragma endregion
 LEVEL CInfoInstance::Get_RestartLevel()
 {
