@@ -40,6 +40,7 @@ public:
 #pragma endregion
 #pragma region MAP_INFO
 	HRESULT Load_MapObjects(const _char* pFilePath);
+	HRESULT Load_LightElements(const _char* pFilePath);
 #pragma endregion
 
 

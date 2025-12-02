@@ -7,6 +7,7 @@
 #include "MAPPartObject.h"
 #include "MapObject_Render.h"
 #include "MapObject_Collision.h"
+#include "MapElement_Light.h"
 
 CMapInfo::CMapInfo()
 {
@@ -265,6 +266,96 @@ HRESULT CMapInfo::Load_MapCollisionObjects(tinyxml2::XMLElement* Container, CMap
 
 	}
 #pragma endregion
+
+	return S_OK;
+}
+
+HRESULT CMapInfo::Load_LightElements(const _char* pFileName)
+{
+	tinyxml2::XMLDocument xmlDoc;
+
+	string strPath = "../Bin/Resources/Data/Map/" + string(pFileName) + ".xml";
+
+	if ((tinyxml2::XML_SUCCESS != xmlDoc.LoadFile(strPath.c_str())))
+		return E_FAIL;
+
+	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("MapLightObjects");
+
+	if (nullptr == root)
+	{
+		MSG_BOX("Failed to Find root");
+		return S_OK;
+	}
+
+	for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
+	{
+		CMapElement_Light::MAPELEMENT_LIGHT_DESC Desc = {};
+
+		/* Model Prototypes */
+		Object->QueryUnsignedAttribute("Lod_Level", &Desc.iMaxLodLevel);
+
+		string strTag = {};
+		for (auto* PrototypeTag = Object->FirstChildElement("PrototypeTag"); PrototypeTag; PrototypeTag = PrototypeTag->NextSiblingElement("PrototypeTag"))
+		{
+			strTag = PrototypeTag->GetText();
+
+			Desc.ModelPrototypeTags.push_back(CMyTools::ToWstring(strTag));
+		}
+
+		/* Transform */
+		auto* Position = Object->FirstChildElement("Position");
+		Position->QueryFloatAttribute("x", &Desc.vPosition.x);
+		Position->QueryFloatAttribute("y", &Desc.vPosition.y);
+		Position->QueryFloatAttribute("z", &Desc.vPosition.z);
+
+		auto* Scale = Object->FirstChildElement("Scale");
+		Scale->QueryFloatAttribute("x", &Desc.vScale.x);
+		Scale->QueryFloatAttribute("y", &Desc.vScale.y);
+		Scale->QueryFloatAttribute("z", &Desc.vScale.z);
+
+		auto* Rotation = Object->FirstChildElement("Rotation");
+		Rotation->QueryFloatAttribute("x", &Desc.vRotation.x);
+		Rotation->QueryFloatAttribute("y", &Desc.vRotation.y);
+		Rotation->QueryFloatAttribute("z", &Desc.vRotation.z);
+
+		/* Light Desc */
+		auto* Diffuse = Object->FirstChildElement("Diffuse");
+		Diffuse->QueryFloatAttribute("x", &Desc.vDiffuse.x);
+		Diffuse->QueryFloatAttribute("y", &Desc.vDiffuse.y);
+		Diffuse->QueryFloatAttribute("z", &Desc.vDiffuse.z);
+
+		auto* Ambient = Object->FirstChildElement("Ambient");
+		Ambient->QueryFloatAttribute("x", &Desc.vAmbient.x);
+		Ambient->QueryFloatAttribute("y", &Desc.vAmbient.y);
+		Ambient->QueryFloatAttribute("z", &Desc.vAmbient.z);
+
+		auto* Specular = Object->FirstChildElement("Specular");
+		Specular->QueryFloatAttribute("x", &Desc.vSpecular.x);
+		Specular->QueryFloatAttribute("y", &Desc.vSpecular.y);
+		Specular->QueryFloatAttribute("z", &Desc.vSpecular.z);
+
+		auto* PosOffset = Object->FirstChildElement("PosOffset");
+		PosOffset->QueryFloatAttribute("x", &Desc.vPosOffset.x);
+		PosOffset->QueryFloatAttribute("y", &Desc.vPosOffset.y);
+		PosOffset->QueryFloatAttribute("z", &Desc.vPosOffset.z);
+
+		auto* Info = Object->FirstChildElement("Info");
+		Info->QueryUnsignedAttribute("GlassIndex", &Desc.iGlassMeshIndex);
+		Info->QueryFloatAttribute("BloomStrength", &Desc.fBloomStregth);
+		Info->QueryFloatAttribute("Range", &Desc.fRange);
+		_uint iPow = {};
+		Info->QueryUnsignedAttribute("Pow", &iPow);
+
+		Desc.isPow = 0 == iPow ? false : true;
+
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Light>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Light"), &Desc)))
+			return E_FAIL;
+	}
+
+	MSG_BOX("Successed to Load File");
+
+
+	return S_OK;
 
 	return S_OK;
 }
