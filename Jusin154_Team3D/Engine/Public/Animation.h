@@ -31,7 +31,6 @@ public:
 	vector<LERPDESC> Get_StartFrameInformations() { return m_StartKeyFrames; }
 	const _string& Get_Name() const { return m_strName; }
 
-	const _char* Get_SZName() const { return m_szName; }
 	void Set_CurrentTrackPosition(_float TrackPosition) { m_fCurrentTrackPosition = TrackPosition; }
 	_float Get_CurrentTrackPosition() { return m_fCurrentTrackPosition; }
 	_float Get_CurrentTrackProgressRatio() { return m_fTempTrack / m_fDurationSeconds;}
@@ -68,14 +67,13 @@ private:
 
 private:
 	SaveAnimation*			m_pSaveAnim = { nullptr };
-	_char					m_szName[MAX_PATH] = {};
 	_float					m_fTickPerSecond = {};
 	_float					m_fAnimSpeed = {1.f};
 
-	_bool					m_bPause = { FALSE };							// 애님퍼즈 인덱스
 	_string					m_strName = {};									// 애님 이름
 	_float					m_fCurrentTrackPosition = {};					// 현재 트랙 위치
 	_float					m_fDuration = {};								// 트랙의 전체 길이
+	_bool					m_bPause = { FALSE };							// 애님퍼즈 인덱스
 	_float					m_TickPerSeconds[2] = { 0.f, 0.f };				// 초당 트랙 이동 거리
 	_uint					m_iNumChannels = {};							// 영향을 받는 본의 수
 	_float 					m_fTempTrack = {};						

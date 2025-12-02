@@ -55,6 +55,8 @@ namespace Client {
 #define LAYER_DOT			TEXT("Layer_Dot")
 #define LAYER_CELL			TEXT("Layer_Cell")
 #define LAYER_TRIGGER		TEXT("Layer_Trigger")
+#define LAYER_ITEM			TEXT("Layer_Item")
+#define LAYER_EFFECTPOOL	TEXT("Layer_EffectPool")
 #define LAYER_LIGHT			TEXT("Layer_Light")
 
 #define LAYER_MAPOBJECTMANAGER		TEXT("Layer_MapObjectManager")

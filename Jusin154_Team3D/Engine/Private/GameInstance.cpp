@@ -49,7 +49,7 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 			}
 		}
 	}
-	m_pThreadHolder = CThreadHolder::Create(4);
+	m_pThreadHolder = CThreadHolder::Create( 6 );
 	if (nullptr == m_pThreadHolder) {
 		return E_FAIL;
 	}
@@ -647,15 +647,19 @@ void CGameInstance::Add_ModelToMap(const _char* filePath, CModel* pModel)
 
 void CGameInstance::Add_SaveModel(const _char* filePath, SaveModel sModel)
 {
+	lock_guard<mutex> lock(m_mtxLoadModelLock);
 	m_sModelMap[filePath] = sModel;
 }
 
 SaveModel* CGameInstance::Load_SaveModel(const _char* filePath)
 {
-	m_mtxLoadModelLock.lock();
-	auto iter = m_sModelMap.find(filePath);
-	m_mtxLoadModelLock.unlock();
-	return &iter->second;
+	lock_guard<mutex> lock(m_mtxLoadModelLock);
+	map<const _char*, SaveModel>::iterator iter = m_sModelMap.find(filePath);
+	if (iter == m_sModelMap.end()) {
+		return nullptr;
+	}
+	SaveModel* pOut = &iter->second;
+	return pOut;
 }
 
 #pragma region PhysX_Manager
@@ -727,15 +731,15 @@ HRESULT CGameInstance::SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleM
 {
 	return m_pPhysX_Manager->SaveTriMeshes(pPath, TriMeshes);
 }
+void CGameInstance::Add_Editor_Plane(PhsXUserData& PlaneData)
+{
+	m_pPhysX_Manager->Add_Editor_Plane(PlaneData);
+}
 #endif // EDITOR_PROJECT
 
 HRESULT CGameInstance::LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes)
 {
 	return m_pPhysX_Manager->LoadTriMeshes(pPath, TriMeshes);
-}
-void CGameInstance::Add_Editor_Plane(PhsXUserData& PlaneData)
-{
-	m_pPhysX_Manager->Add_Editor_Plane(PlaneData);
 }
 #pragma endregion
 

@@ -93,7 +93,10 @@ void CTroll::Update(_float fTimeDelta)
 		}
 	}
 
+#ifdef _DEBUG
 	Describe_Entity();
+#endif // _DEBUG
+
 }
 
 void CTroll::Late_Update(_float fTimeDelta)

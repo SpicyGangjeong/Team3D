@@ -32,9 +32,9 @@ public:
 	KEYFRAME* Get_Frame(_uint iIndex);
 	void Set_Frame(_uint iIndex, KEYFRAME& kf);
 	_bool Compare_Name(const _char* pChannelname) const {
-		return !strcmp(pChannelname, m_szName);
+		return !strcmp(pChannelname, m_strName.c_str());
 	}
-	_char* Get_Name() { return m_szName; }
+	const _char* Get_Name() { return m_strName.c_str(); }
 private:
 	// 바이너리
 	HRESULT Initialize(const class CModel* pModel, SaveChannel* pSaveChannel);
@@ -51,23 +51,21 @@ private:
 
 
 private:
-	_char					m_szName[MAX_PATH] = {};	// 영향을 받을 본의 이름
+	_string					m_strName = {};
 	_int					m_iBoneIndex = { -1 };		// 본 벡터에서 본의 인덱스
 	_uint					m_iNumKeyFrames = {};		// Animation의 m_fDuration동안 이 본이 취해야할 키프레임의 갯수
 	_float4x4				m_PreTransformMatrix = {};
 	vector<KEYFRAME>		m_KeyFrames;	// 키프레임 벡터
 	_float3					m_vPrevRootPos = { 0.f, 0.f, 0.f };
-	_float4					m_vPrevRootRot = { 0.f, 0.f, 0.f,0.f };
-	_matrix					m_BoneTransformationMatrix = {};
-	_bool					m_bInitialRootPos = { false };
-	_bool					m_bInitialRootRotSaved = {false};
-	_float4					m_vInitialRootRot = {};
-
-	_bool					m_IsUpper = false;
 	_int					m_ilayerIndex = 0;
+	_float4					m_vPrevRootRot = { 0.f, 0.f, 0.f,0.f };
+	_float4					m_vInitialRootRot = {};
+	_matrix					m_BoneTransformationMatrix = {};
 	LOCALPOS_DESC			LocalPos = {};
-
 	vector<KEYFRAME_DESC>	m_KeyFrameDesc;
+	_bool					m_bInitialRootPos = { false };
+	_bool					m_bInitialRootRotSaved = { false };
+	_bool					m_IsUpper = false;
 public:
 	// 바이너리
 	static CChannel* Create(const class CModel* pModel, SaveChannel* pSaveChannel);

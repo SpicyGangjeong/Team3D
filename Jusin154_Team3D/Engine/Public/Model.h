@@ -103,21 +103,15 @@ public:
 
 
 private:
-#ifdef EDITOR_PROJECT
-	const aiScene* m_pAIScene = { nullptr };
-	Assimp::Importer			m_Importer;
-#endif
-
-private:
 	MODEL						m_eType = {};						// 모델의 타입
+
 	_float4x4					m_PreTransformMatrix = {};			// 사전에 루트본에 곱해줄 매트릭스
-
-	_uint						m_iNumMeshes = {};					// 메쉬의 갯수
 	vector<class CMesh*>		m_Meshes;							// 메쉬의 벡터
-	_uint						m_iNumPhysXMeshes = {};				// 피직스 메쉬의 갯수
 	vector<PSX::PxTriangleMesh*> m_TriMeshes = {};			// 피직스 메쉬의 갯수
-
+	_uint						m_iNumPhysXMeshes = {};				// 피직스 메쉬의 갯수
+	_uint						m_iNumMeshes = {};					// 메쉬의 갯수
 	_uint						m_iNumMaterials = {};				// 머테리얼의 갯수
+	_float						m_fAmount = { 1.f };
 	vector<class CMaterial*>	m_Materials;						// 머테리얼의 벡터
 
 	vector<class CBone*>		m_Bones;							// 본의 벡터, 정렬순서는 루트본부터 트리의 마지막 노드까지
@@ -128,33 +122,27 @@ private:
 	_bool						m_bIsFinishedAnim = { false };			// 대상 애니메이션이 끝났는지
 	_bool						m_bIsFinishedLerp = { false };			// 럴프 애니메이션이 끝났는지
 	_bool						m_bPlayAnim = { true };
-	_float						m_fAmount = { 1.f };
 
 	_int						m_iPreAnimIndex = { -1 };
 	_float						m_fBlendTime = { 0.f };
 	_float						m_fBlendDuration = { 0.3f };
 
-	_float						m_fRadius = { 0.f };			// 컬링용 Radius
 	_float3						m_vRadiusOffset = {};			// 컬링용 Radius Offset
+	_float m_fSecondBlendTime = {};
+	_float m_fSecondBlendDuration = { 0.3f };
+	_float m_fSecondRatio = {};
 
 	vector<class CAnimation*>	m_Animations;						// 애니메이션의 벡터, 
 
-	class CLerpAnim* m_pLerpAnim = { nullptr };			// 럴프전용 애니메이션
-
-	_int						m_iRootBoneIndex = { -1 };			// 루트본의 인덱스
 	_matrix						m_PrevAnimationMatrix = XMMatrixIdentity(); // 루트본의 이전 위치
 	_matrix						m_DeltaAnimationMatrix = {};		// 루트본의 델타애니메이션
 	class CTransform* m_pTransform = { nullptr };			// 모델 대상의 트랜스폼
 
 	_float						m_fRatio = {};
-	_int						m_iBoneIndex[ENUM_CLASS(BLEND_BONE::END)] = { -1,-1,-1,-1,-1,-1 };
 	_int						m_iCurrSecondAnimIndex = { -1 };
-	_bool						m_bIsSecondFinishedAnim = { false };
-	_bool						m_bIsSecondLoop = { false };
+	_int						m_iBoneIndex[ENUM_CLASS(BLEND_BONE::END)] = { -1,-1,-1,-1,-1,-1 };
 	vector<vector<_uint>>		m_BoneMask;
-	_float m_fSecondBlendTime = {};
-	_float m_fSecondBlendDuration = {0.3f};
-	_float m_fSecondRatio = {};
+
 
 
 	// 바이너리
@@ -163,19 +151,29 @@ private:
 	//
 
 	vector<_float4x4> m_BoneMatrix;
-	_bool m_bRatio = { false };
 
 	_float3					m_vPrevRootPos = { 0.f, 0.f, 0.f };
 	_float4					m_vPrevRootRot = { 0.f, 0.f, 0.f,0.f };
 	_matrix					m_BoneTransformationMatrix = {};
-	_bool					m_bInitialRootPos = { false };
-	_bool					m_bInitialRootRotSaved = { false };
 	_float4					m_vInitialRootRot = {};
 
+	_float						m_fRadius = { 0.f };			// 컬링용 Radius
+	_int						m_iRootBoneIndex = { -1 };			// 루트본의 인덱스
 	_vector					m_vector[3];
-	_bool					m_bLoopRestarted = false;
 
 	vector<_uint>			m_iBoneMask;
+	_bool					m_bInitialRootPos = { false };
+	_bool					m_bInitialRootRotSaved = { false };
+	_bool					m_bLoopRestarted = false;
+	_bool						m_bIsSecondFinishedAnim = { false };
+	_bool						m_bIsSecondLoop = { false };
+	_bool m_bRatio = { false };
+
+private:
+#ifdef EDITOR_PROJECT
+	const aiScene* m_pAIScene = { nullptr };
+	Assimp::Importer			m_Importer;
+#endif
 
 
 #pragma region Compute
@@ -226,7 +224,8 @@ public:
 	//
 	virtual CComponent* Clone(void* pArg, class CGameObject* pOwner = nullptr);
 
-virtual void Free(); public:
+	virtual void Free(); 
+public:
 #ifdef _DEBUG
 	void Describe_Entity() override;
 #endif // _DEBUG

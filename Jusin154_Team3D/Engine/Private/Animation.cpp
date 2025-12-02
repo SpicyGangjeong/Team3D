@@ -29,9 +29,7 @@ CAnimation::CAnimation(const CAnimation& rhs)
 	, m_fTempTrack{rhs.m_fTempTrack }
 {
 	memcpy_s(m_TickPerSeconds, sizeof(_float) * 2, rhs.m_TickPerSeconds, sizeof(_float) * 2);
-
-	strcpy_s(m_szName, sizeof(m_szName), rhs.m_szName);
-
+	
 	for (auto& pChannel : m_Channels) {
 		SAFE_ADDREF(pChannel);
 	}
@@ -359,7 +357,6 @@ void CAnimation::CreateGPUData(ID3D11Device* pDevice)
 HRESULT CAnimation::Initialize(const vector<CBone*>& Bones, const aiAnimation* pAIAnimation)
 {
 	m_strName = pAIAnimation->mName.data;
-	strcpy_s(m_szName, pAIAnimation->mName.data);
 	size_t pos = m_strName.find_last_of('|');
 	if (0 > pos) {
 		pos = 0;
@@ -368,6 +365,7 @@ HRESULT CAnimation::Initialize(const vector<CBone*>& Bones, const aiAnimation* p
 		pos++;
 	}
 	m_strName = m_strName.substr(pos);
+	m_strName.shrink_to_fit();
 
 	m_fDuration = (_float)pAIAnimation->mDuration;
 	m_TickPerSeconds[0] = (_float)pAIAnimation->mTicksPerSecond;
@@ -406,8 +404,8 @@ CAnimation* CAnimation::Create(const vector<CBone*>& Bones, const aiAnimation* p
 HRESULT CAnimation::Initialize(const vector<CBone*>& Bones, const CModel* pModel, SaveAnimation* pSaveAnimation)
 {
 	m_pSaveAnim = pSaveAnimation;
-
-	strcpy_s(m_szName, pSaveAnimation->AnimName.c_str());
+	m_strName = pSaveAnimation->AnimName;
+	m_strName.shrink_to_fit();
 	m_fDuration = pSaveAnimation->mDuration;
 	m_fTickPerSecond = pSaveAnimation->mTicksPerSecond;
 

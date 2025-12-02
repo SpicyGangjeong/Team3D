@@ -49,7 +49,6 @@ private:
 	_float m_fOffSetX{};
 	_float m_fOffSetY{};
 	_uint  m_iCols{};
-
 public:
 	static CSpell_Hover* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

@@ -26,11 +26,11 @@ private:
 
 public:
 	PSX::PxRigidStatic*	Get_Actor()		override { return m_pRigidBody; }
-	const _tchar*		Get_PxMeshKey()	const { return m_pMeshName; }
+	const _tchar*		Get_PxMeshKey()	const { return m_wstrMeshName.c_str(); }
 
 private:
 	PSX::PxRigidStatic*	m_pRigidBody = { nullptr };		// 실제 시뮬레이션을 도는 본체
-	const _tchar*		m_pMeshName = { nullptr };		// 짝꿍 스태틱 메시의 triangleMesh 키
+	_wstring		m_wstrMeshName = { };		// 짝꿍 스태틱 메시의 triangleMesh 키
 
 private:
 	HRESULT Initialize_Prototype(RIGIDBODY_STATIC_PROTOTYPEDESC& Desc);

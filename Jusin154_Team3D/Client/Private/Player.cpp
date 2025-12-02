@@ -60,11 +60,11 @@ HRESULT CPlayer::Initialize(void* pArg)
 	Load_KeyFrame();
 #endif // _DEBUG
 
-	m_pBroom = static_cast<CBroom*>(pArg);
-	SAFE_ADDREF(m_pBroom);
+	m_pBroom = m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_ITEM)->Get_Object<CBroom>();
 	m_pBroomModel = m_pBroom->Get_Component<CModel>();
-	SAFE_ADDREF(m_pBroomModel);
 	m_pBroomTransform = m_pBroom->Get_Component<CTransform>();
+	SAFE_ADDREF(m_pBroom);
+	SAFE_ADDREF(m_pBroomModel);
 	SAFE_ADDREF(m_pBroomTransform);
 
 	Add_FSM();
@@ -289,7 +289,7 @@ HRESULT CPlayer::Ready_Components()
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Playable_HitReport::Create();
 		Desc.pCallback_Behavior = m_pCallBack_Behavior = CCallBack_Playable_Behavior::Create();
 		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
-		Desc.fWalkableSlope = 22.5f;
+		Desc.fWalkableSlope = 45.f;
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), (CComponent**)&m_pCharacter_Controller, &Desc))) {
 			return E_FAIL;
 		}

@@ -62,7 +62,10 @@ void CBroom::Update(_float fTimeDelta)
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
+#ifdef _DEBUG
 	Describe_Entity();
+#endif // _DEBUG
+
 }
 
 void CBroom::Late_Update(_float fTimeDelta)

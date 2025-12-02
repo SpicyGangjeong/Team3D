@@ -81,6 +81,10 @@ HRESULT CInfoInstance::Load_MapObjects(const _char* pFilePath)
 {
 	return m_pMapInfo->Load_MapObjects(pFilePath);
 }
+HRESULT CInfoInstance::Load_LightElements(const _char* pFilePath)
+{
+	return m_pMapInfo->Load_LightElements(pFilePath);
+}
 #pragma endregion
 LEVEL CInfoInstance::Get_RestartLevel()
 {

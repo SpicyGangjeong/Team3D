@@ -1097,6 +1097,7 @@ PS_OUT PS_Spell_Header(PS_IN In)
     
     return Out;
 }
+
 PS_OUT PS_Spell_Header_Line(PS_IN In)
 {
     PS_OUT Out;
@@ -1152,6 +1153,39 @@ PS_OUT PS_Spell_Header_Line(PS_IN In)
  
     //Color.rgb = tex2.rgb;
     
+    Color.a *= Alpha;
+    
+    Out.vColor = Color;
+    
+    return Out;
+}
+
+PS_OUT PS_Spell_Drag(PS_IN In)
+{
+    PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+
+    float4 Color = float4(1.f, 1.f, 1.f, 1.f);
+    float4 tex1 = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    float4 tex2 = g_Texture1.Sample(DefaultSampler, In.vTexcoord);
+    float4 tex2Color = g_Texture3.Sample(DefaultSampler, In.vTexcoord);
+    
+    Color = tex1;
+    tex2.rgb = tex2Color;
+    
+    Color = lerp(Color, tex2, tex2.a);
+    
+    float2 Imagetexpos1 = g_fImageUV.xy / g_fCurrent_Size;
+    float2 Imagetexsize1 = g_fImageUV.zw / g_fCurrent_Size;
+    float2 Imagelocal = (In.vTexcoord - Imagetexpos1) / Imagetexsize1;
+    bool inside1 = all(Imagelocal >= 0.0f && Imagelocal <= 1.0f);
+    float4 tex3 = g_Texture2.Sample(DefaultSampler, In.vTexcoord);
+
+    if (inside1)
+    {
+        Color = lerp(Color, tex3, tex3.a);
+    }
+ 
     Color.a *= Alpha;
     
     Out.vColor = Color;
@@ -1387,6 +1421,16 @@ technique11 PosTexTechnique11
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Spell_Header_Line();
+    }
+
+    pass Spell_Drag
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Spell_Drag();
     }
 
 }

@@ -51,13 +51,15 @@ HRESULT CMapObject_Collision::Initialize(void* pArg)
 	for (_uint i = 0; i < m_iMaxLodLevel + 1; i++)
 	{
 		m_ModelPrototypeTags.push_back(pDesc->ModelPrototypeTags[i]);
-		//m_ModelPathIndices.push_back((*pDesc->pModelPathIndices)[i]);
+		//m_ModelPathIndices.push_back((*pDesc->pModelPathIndices)[iIndex]);
 	}
-	if (FAILED(__super::Initialize(pArg)))
+	if (FAILED(__super::Initialize(pArg))){
 		return E_FAIL;
+	}
 
-	if (FAILED(Ready_Components()))
+	if (FAILED(Ready_Components())){
 		return E_FAIL;
+	}
 
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pDesc->vPosition), 1.f));
 	m_pTransformCom->Set_Scale(pDesc->vScale);
@@ -80,23 +82,37 @@ HRESULT CMapObject_Collision::Ready_Components()
 {
 	__super::Ready_Components();
 
-	for (_uint i = 0; i < m_iMaxLodLevel + 1; ++i)
+	for (_uint iIndexLOD = 0; iIndexLOD < m_iMaxLodLevel + 1; ++iIndexLOD)
 	{
 		CModel* pModel = { nullptr };
 
 		/* Com_Model */
-		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_ModelPrototypeTags[i],
-			reinterpret_cast<CComponent**>(&pModel))))
+		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_ModelPrototypeTags[iIndexLOD],
+			reinterpret_cast<CComponent**>(&pModel)))){
 			return E_FAIL;
+		}
 
 		m_pModelComs.push_back(pModel);
+
+	//	_uint iMeshes = pModel->Get_NumMeshes();
+	//	for (_uint iIndex = 0; iIndex < iMeshes; ++iIndex) {
+	//		_wstring wstrName = CMyTools::ToWstring(pModel->Get_MeshName(iIndex)) + to_wstring(iIndex);
+	//		CRigidBody_Static* pRigidBody = { nullptr };
+	//		CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc = {};
+	//		Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
+	//		Desc.pMeshName = wstrName.c_str();
+	//		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, wstrName, (CComponent**)&pRigidBody, &Desc))) {
+	//			return E_FAIL;
+	//		}
+	//		m_RigidBodies[iIndexLOD].push_back(pRigidBody);
+	//	}
 	}
 
 	/* Com_Shader */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_MESH,
-		reinterpret_cast<CComponent**>(&m_pShaderCom))))
+		reinterpret_cast<CComponent**>(&m_pShaderCom)))){
 		return E_FAIL;
-
+	}
 	return S_OK;
 }
 
@@ -151,9 +167,15 @@ void CMapObject_Collision::Free()
 
 	SAFE_RELEASE(m_pShaderCom);
 
-	for (auto& pModel : m_pModelComs)
-		Safe_Release(pModel);
-	m_pModelComs.clear();
+	for (auto& pModel : m_pModelComs){
+		SAFE_RELEASE(pModel);
+	} m_pModelComs.clear();
+
+	for (_uint i = 0; i < m_RigidBodies.size(); ++i) {
+		for (_uint j = 0; j < m_RigidBodies[i].size(); ++j) {
+			SAFE_RELEASE(m_RigidBodies[i][j]);
+		}
+	} m_RigidBodies.clear();
 
 	m_ModelPrototypeTags.clear();
 	m_ModelPathIndices.clear();

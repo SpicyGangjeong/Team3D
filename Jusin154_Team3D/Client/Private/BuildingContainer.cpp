@@ -16,27 +16,31 @@ void CBuildingContainer::Priority_Update(_float fTimeDelta)
 {
     __super::Priority_Update(fTimeDelta);
 
-    for (auto& pCollisiton : m_ColiisonPartObjects)
+    for (auto& pCollisiton : m_ColiisonPartObjects){
         pCollisiton->Priority_Update(fTimeDelta);
+    }
 }
 
 void CBuildingContainer::Update(_float fTimeDelta)
 {
     __super::Update(fTimeDelta);
 
-    m_fCamDepth = XMVectorGetX(XMVector3Length(XMLoadFloat4(m_pGameInstance->Get_CamPosition()) - XMLoadFloat3(&m_vExtentWorldPosition)));
+    m_fCamDepth = XMVectorGetX(XMVector3LengthSq(XMLoadFloat4(m_pGameInstance->Get_CamPosition()) - XMLoadFloat3(&m_vExtentWorldPosition)));
 
-    for (auto& pCollisiton : m_ColiisonPartObjects)
+    for (auto& pCollisiton : m_ColiisonPartObjects){
         pCollisiton->Update(fTimeDelta);
+    }
 }
 
 void CBuildingContainer::Late_Update(_float fTimeDelta)
 {
-    if (m_pOcclusionQueryCom->isDraw())
+    if (m_pOcclusionQueryCom->isDraw()){
         __super::Late_Update(fTimeDelta);
+    }
 
-    for (auto& pCollisiton : m_ColiisonPartObjects)
+    for (auto& pCollisiton : m_ColiisonPartObjects){
         pCollisiton->Late_Update(fTimeDelta);
+    }
 
     m_pGameInstance->Add_RenderGroup(RENDER::OCCLUSION, this);
 }
@@ -196,8 +200,9 @@ void CBuildingContainer::Free()
     SAFE_RELEASE(m_pVIBufferCom);
     SAFE_RELEASE(m_pOcclusionQueryCom);
 
-    for (auto& pCollision : m_ColiisonPartObjects)
+    for (auto& pCollision : m_ColiisonPartObjects){
         SAFE_RELEASE(pCollision);
+    }
 }
 
 #ifdef _DEBUG
