@@ -16,7 +16,7 @@ public:
 		return m_iMaterialIndex;
 	}
 
-	const _char* Get_Name() const { return m_szName; }
+	const _char* Get_Name() const { return m_strName.c_str(); }
 	HRESULT Bind_BoneMatrices(const vector<class CBone*>& Bones, class CShader* pShader, const _char* pConstantName);
 	HRESULT Bind_BoneMatrices(_float4x4* pCombinedMatrices, class CShader* pShader, const _char* pConstantName);
 	HRESULT Render_Indexed(_uint IndexCount, _uint StartIndexLocation, _uint BaseVertexLocation);
@@ -44,11 +44,8 @@ private:
 	HRESULT Ready_VertexBuffer_For_NonAnim(SaveMesh* _SaveMesh, _fmatrix PreTransformMatrix);
 	HRESULT Ready_VertexBuffer_For_Anim(const class CModel* pModel, SaveMesh* _SaveMesh);
 
-
-
-	//
 private:
-	_char	m_szName[MAX_PATH] = {};
+	_string m_strName = { };
 	_uint	m_iMaterialIndex = {};
 	_uint	m_iNumBones = { };
 	_uint	m_iStartIndex = {};

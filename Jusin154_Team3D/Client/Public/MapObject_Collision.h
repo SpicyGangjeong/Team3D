@@ -23,6 +23,7 @@ public:
 
 private:
 	CShader* m_pShaderCom = { nullptr };
+	vector<vector<CRigidBody_Static*>> m_RigidBodies;
 	vector<CModel*>		m_pModelComs;
 
 	_uint				m_iLodIndex = {};

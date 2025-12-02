@@ -178,9 +178,6 @@
     <Filter Include="02.Element\02.Component\06.Model\Animation\Channel">
       <UniqueIdentifier>{3625aad6-89b2-490e-bd9c-3cff284605e4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Element\02.Component\06.Model\LerpAnim">
-      <UniqueIdentifier>{92ec7ae6-14ee-455c-a3ad-378e46f3b1f0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Element\02.Component\02.VIBuffer\Cube">
       <UniqueIdentifier>{be0d499e-e4cf-4dde-92a0-a0904e713045}</UniqueIdentifier>
     </Filter>
@@ -461,9 +458,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Channel.cpp">
       <Filter>02.Element\02.Component\06.Model\Animation\Channel</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\LerpAnim.cpp">
-      <Filter>02.Element\02.Component\06.Model\LerpAnim</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Cube.cpp">
       <Filter>02.Element\02.Component\02.VIBuffer\Cube</Filter>
@@ -1093,9 +1087,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Channel.h">
       <Filter>02.Element\02.Component\06.Model\Animation\Channel</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\LerpAnim.h">
-      <Filter>02.Element\02.Component\06.Model\LerpAnim</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_Cube.h">
       <Filter>02.Element\02.Component\02.VIBuffer\Cube</Filter>

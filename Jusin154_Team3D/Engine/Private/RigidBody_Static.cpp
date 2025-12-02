@@ -9,7 +9,7 @@ CRigidBody_Static::CRigidBody_Static(ID3D11Device* pDevice, ID3D11DeviceContext*
 
 CRigidBody_Static::CRigidBody_Static(const CRigidBody_Static& rhs) :
     CRigidBody(rhs),
-    m_pMeshName(rhs.m_pMeshName)
+    m_wstrMeshName(rhs.m_wstrMeshName)
 {
 }
 
@@ -31,7 +31,7 @@ HRESULT CRigidBody_Static::Initialize(void* pArg)
         return E_FAIL;
     }
     RIGIDBODY_STATIC_DESC* pDesc = static_cast<RIGIDBODY_STATIC_DESC*>(pArg);
-    m_pMeshName = pDesc->pMeshName;
+    m_wstrMeshName = pDesc->pMeshName;
     m_tagData.pOwner = m_pOwner;
     XMStoreFloat4x4(&m_tagData.BeforeMatrix, m_pTransform->Get_XMWorldMatrix());
     m_tagData.pBody = this;

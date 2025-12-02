@@ -14,7 +14,6 @@ class CPhysX_Manager final : public CBase
 private:
 	CPhysX_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CPhysX_Manager() = default;
-
 #pragma region RIGID_BODY
 
 public:
@@ -102,7 +101,10 @@ private:
 	_uint m_iNumLevel = {};
 private:
 	HRESULT Initialize();
+#ifdef _DEBUG
 	HRESULT Connect_DebugServer();
+#endif // _DEBUG
+
 	void Update_Kinematic();
 	void Update_Dynamic_ActiveActors();
 	//void Update_Dynamic_AllActors();

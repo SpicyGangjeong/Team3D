@@ -90,7 +90,10 @@ void CGoblin::Update(_float fTimeDelta)
 			m_pRigidBody->ConvertToCCT(*m_pCharacter_Controller);
 		}
 	}
+#ifdef _DEBUG
 	Describe_Entity();
+#endif // _DEBUG
+
 }
 
 void CGoblin::Late_Update(_float fTimeDelta)

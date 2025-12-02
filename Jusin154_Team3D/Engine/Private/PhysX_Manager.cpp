@@ -477,18 +477,26 @@ HRESULT CPhysX_Manager::Initialize()
 		assert(false);
 		return E_FAIL;
 	}
+#ifdef _DEBUG
 
 	if (FAILED(Connect_DebugServer())) {
 		//ASSERT_NURI(false);
 		//ASSERT_JINWOO(false);
 	}
 
+#endif // _DEBUG
+
 	{ // 씬 세팅
 		m_ToleranceScale.length = 1.f; // 1 meter
 		m_ToleranceScale.speed = GRAVITY; // 
 		
-
+#ifdef _DEBUG
 		m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, m_ToleranceScale, true, m_pPvd);
+#endif // _DEBUG
+#ifndef _DEBUG
+m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, m_ToleranceScale, true);
+#endif // _DEBUG
+
 
 		m_pCookingParam = new PSX::PxCookingParams(m_pPhysics->getTolerancesScale());
 		m_pCookingParam->meshPreprocessParams |= PSX::PxMeshPreprocessingFlag::eWELD_VERTICES;
@@ -565,6 +573,7 @@ HRESULT CPhysX_Manager::Initialize()
 
 	return S_OK;
 }
+#ifdef _DEBUG
 
 HRESULT CPhysX_Manager::Connect_DebugServer()
 {
@@ -586,6 +595,8 @@ HRESULT CPhysX_Manager::Connect_DebugServer()
 	}
 	return S_OK;
 }
+
+#endif // _DEBUG
 
 CPhysX_Manager* CPhysX_Manager::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
@@ -640,11 +651,14 @@ void CPhysX_Manager::Free()
 	if (nullptr != m_pPhysics) {
 		m_pPhysics->release(); m_pPhysics = nullptr;
 	}
+#ifdef _DEBUG
 
 	if (nullptr != m_pPvd) {
 		m_pPvd->disconnect();
 		m_pPvd->release(); m_pPvd = nullptr;
 	}
+
+#endif // _DEBUG
 
 	if (nullptr != m_pTransport) {
 		m_pTransport->release(); m_pTransport = nullptr;
