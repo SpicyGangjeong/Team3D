@@ -55,14 +55,17 @@ HRESULT CMapInfo::Load_MapObjects(const _char* pFileName)
 		{
 			Load_StreetContainer(Container, &pContainerObject);
 		}
-		else
+		else {
 			return E_FAIL;
+		}
 
-		if (FAILED(Load_MapRenderObjects(Container, pContainerObject)))
+		if (FAILED(Load_MapRenderObjects(Container, pContainerObject))){
 			return E_FAIL;
+		}
 
-		if (FAILED(Load_MapCollisionObjects(Container, pContainerObject)))
+		if (FAILED(Load_MapCollisionObjects(Container, pContainerObject))){
 			return E_FAIL;
+		}
 	}
 
 	for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))

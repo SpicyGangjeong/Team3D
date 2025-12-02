@@ -8,7 +8,7 @@ CBone::CBone()
 CBone::CBone(const CBone& other):
 	CBase()
 {
-	memcpy_s(m_szName, sizeof(_char) * MAX_PATH, other.m_szName, sizeof(_char) * MAX_PATH);
+	m_strName = other.m_strName;
 	m_TransformationMatrix = other.m_TransformationMatrix;
 	m_CombinedTransformationMatrix = other.m_CombinedTransformationMatrix;
 	m_iParentBoneIndex = other.m_iParentBoneIndex;
@@ -55,11 +55,10 @@ _float3 CBone::Get_LocalPosition()
 #ifdef EDITOR_PROJECT
 HRESULT CBone::SaveAsBinary(HANDLE hFile, DWORD& dwByte)
 {
-	string strName = m_szName;
-	strName.shrink_to_fit();
-	DWORD iLength = (DWORD)strName.length();
+	m_strName.shrink_to_fit();
+	DWORD iLength = (DWORD)m_strName.length();
 	WriteFile(hFile, &iLength, sizeof(_uint), &dwByte, nullptr);
-	WriteFile(hFile, strName.data(), iLength, &dwByte, nullptr);
+	WriteFile(hFile, m_strName.data(), iLength, &dwByte, nullptr);
 	WriteFile(hFile, &m_iParentBoneIndex, sizeof(_int), &dwByte, nullptr);
 	WriteFile(hFile, &m_TransformationMatrix, sizeof(_float4x4), &dwByte, nullptr);
 	WriteFile(hFile, &m_matInitial, sizeof(_float4x4), &dwByte, nullptr);
@@ -82,8 +81,8 @@ CBone* CBone::Create(const aiNode* pAINode, _int iParentIndex)
 
 HRESULT CBone::Initialize(const aiNode* pAINode, _int iParentIndex)
 {
-	strcpy_s(m_szName, pAINode->mName.data);
-
+	m_strName = pAINode->mName.data;
+	m_strName.shrink_to_fit();
 	m_iParentBoneIndex = iParentIndex;
 
 	memcpy(&m_TransformationMatrix, &pAINode->mTransformation, sizeof(_float4x4));
@@ -114,7 +113,8 @@ HRESULT CBone::Initialize(HANDLE hFile, DWORD& dwByte)
 	if (!ReadFile(hFile, &iLength, sizeof(_uint), &dwByte, nullptr)) {
 		return E_FAIL;
 	}
-	if (!ReadFile(hFile, m_szName, iLength, &dwByte, nullptr)) {
+	m_strName.resize(iLength);
+	if (!ReadFile(hFile, m_strName.data(), iLength, &dwByte, nullptr)) {
 		return E_FAIL;
 	}
 	if (!ReadFile(hFile, &m_iParentBoneIndex, sizeof(_int), &dwByte, nullptr)) {
@@ -134,8 +134,7 @@ HRESULT CBone::Initialize(HANDLE hFile, DWORD& dwByte)
 
 HRESULT CBone::Initialize(const SaveNode& _SaveNode, _int iParentIndex)
 {
-	strcpy_s(m_szName, _SaveNode.NodeName.c_str());
-
+	m_strName = _SaveNode.NodeName;
 	m_iParentBoneIndex = iParentIndex;
 
 	memcpy(&m_TransformationMatrix, &_SaveNode.Transformation, sizeof(_float4x4));

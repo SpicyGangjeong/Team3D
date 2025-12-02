@@ -4,7 +4,6 @@
 #include "Mesh.h"
 #include "Material.h"
 #include "Animation.h"
-#include "LerpAnim.h"
 #include "GameObject.h"
 #include "Transform.h"
 #include "ComputeShader.h"
@@ -24,7 +23,6 @@ CModel::CModel(const CModel& rhs)
 	m_Materials(rhs.m_Materials),
 	m_iNumMaterials(rhs.m_iNumMaterials),
 	m_iNumAnimations(rhs.m_iNumAnimations),
-	m_pLerpAnim(rhs.m_pLerpAnim),
 	m_fRadius(rhs.m_fRadius),
 	m_vRadiusOffset(rhs.m_vRadiusOffset)
 {
@@ -220,8 +218,10 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 
 		m_bIsFinishedAnim = pCurAnim->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, true, m_iBoneMask, m_vector);
 		pCurAnim->InterpAnim(pPreAnim, m_Bones, m_fRatio);
+
 		m_bIsSecondFinishedAnim = pSecondAnim->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsSecondLoop, fTimeDelta, false, m_iBoneMask);
-		m_Animations[m_iCurrSecondAnimIndex]->InterpSecondAnim(m_Animations[m_iCurrentAnimIndex], m_iBoneMask, m_Bones, m_fSecondRatio);
+
+		pSecondAnim->InterpSecondAnim(pCurAnim, m_iBoneMask, m_Bones, m_fSecondRatio);
 		if (m_fRatio >= 1.f)
 		{
 			m_iPreAnimIndex = m_iCurrentAnimIndex;
@@ -243,7 +243,9 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 		m_fSecondBlendTime += fTimeDelta;
 		m_fSecondRatio = (m_fSecondBlendTime / m_fSecondBlendDuration);
 		if (m_fSecondRatio > 1.f) m_fSecondRatio = 1.f;
+
 		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, true, m_iBoneMask, m_vector);
+
 		m_bIsSecondFinishedAnim = m_Animations[m_iCurrSecondAnimIndex]->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsSecondLoop, fTimeDelta, false, m_iBoneMask);
 		m_Animations[m_iCurrSecondAnimIndex]->InterpSecondAnim(m_Animations[m_iCurrentAnimIndex], m_iBoneMask, m_Bones, m_fSecondRatio);
 		m_iPreAnimIndex = m_iCurrentAnimIndex;
@@ -415,6 +417,58 @@ void CModel::Update_RootBone(_float Amount)
 
 		m_Bones[m_iRootBoneIndex]->Set_TransformationMatrix(local);
 	}
+	else if (m_Bones[m_iRootBoneIndex]->Compare_Name("root") &&
+		m_pTransform != nullptr)
+	{
+		_float4x4 Root = m_Bones[m_iRootBoneIndex]->Get_TransformationMatrix();
+		_matrix local = XMLoadFloat4x4(&Root);
+
+		_matrix pre = XMLoadFloat4x4(&m_PreTransformMatrix);
+
+		_float4 curRotF4;
+		XMStoreFloat4(&curRotF4, m_vector[1]);
+		_vector qCur = XMLoadFloat4(&curRotF4);
+
+		if (!m_bInitialRootRotSaved)
+		{
+			m_vInitialRootRot = curRotF4;
+			m_vPrevRootRot = curRotF4;
+			m_bInitialRootRotSaved = true;
+		}
+		else
+		{
+			_vector qPrev = XMLoadFloat4(&m_vPrevRootRot);
+			_vector qInvPrev = XMQuaternionInverse(qPrev);
+			_vector qDelta = XMQuaternionMultiply(qInvPrev, qCur);
+
+			_vector axisLocal;
+			_float angle = 0.f;
+			XMQuaternionToAxisAngle(&axisLocal, &angle, qDelta);
+
+			_vector axisWorld = XMVector3TransformNormal(axisLocal, pre);
+			axisWorld = XMVector3Normalize(axisWorld);
+
+			_float4 axis;
+			XMStoreFloat4(&axis, axisWorld);
+
+			swap(axis.z, axis.y);
+			m_pTransform->TurnAngle(XMLoadFloat4(&axis), angle);
+
+		}
+		XMStoreFloat4(&m_vPrevRootRot, qCur);
+
+		_vector qInit = XMLoadFloat4(&m_vInitialRootRot);
+
+		_vector scale, rot, trans;
+		XMMatrixDecompose(&scale, &rot, &trans, local);
+
+		rot = qInit;
+		trans = XMVectorZero();
+
+		local = XMMatrixAffineTransformation(scale, XMVectorSet(0.f, 0.f, 0.f, 1.f), rot, trans);
+
+		m_Bones[m_iRootBoneIndex]->Set_TransformationMatrix(local);
+	}
 }
 
 void CModel::Initialize_RootBone()
@@ -469,7 +523,7 @@ void CModel::Set_CurrentTrackPosition(_float TrackPosition)
 
 const _char* CModel::Get_AnimList(_uint iIndex)
 {
-	return m_Animations[iIndex]->Get_SZName();
+	return m_Animations[iIndex]->Get_Name().c_str();
 }
 
 _float CModel::Get_CurrentTrackPosition()
@@ -826,7 +880,7 @@ _bool CModel::SaveAssimpModel(const _char* filename)
 
 	for (size_t i = 0; i < m_Materials.size(); i++)
 	{
-		modelData.Materials.push_back(m_Materials[i]->Get_SaveMaterial());
+		modelData.Materials.emplace_back(m_Materials[i]->Get_SaveMaterial());
 	}
 
 	std::vector<SaveNode> allNodes;
@@ -1316,6 +1370,9 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 	}
 
 	m_pSaveModel = m_pGameInstance->Load_SaveModel(pModelFilePath);
+	if (nullptr == m_pSaveModel) {
+		return S_OK;
+	}
 
 	LoadAdditionalAnimations(pModelFilePath);
 
@@ -1334,6 +1391,11 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 	if (FAILED(Ready_Animations(m_Bones))) {
 		return E_FAIL;
 	}
+//#ifdef 기무리
+//	if (MODEL::ENVIROMENT == eType) {
+//		Save_PhysXTriMeshes(pModelFilePath);
+//	}
+//#endif // _DEBUG
 	return S_OK;
 }
 
@@ -1506,13 +1568,13 @@ _bool CModel::LoadData(const _char* filename)
 	NewModel.Materials.clear();
 	for (_uint i = 0; i < NewModel.MaterialCount; i++)
 	{
-		SaveMaterial mat;
+		SaveMaterial pMAt;
 
 		for (_uint k = 0; k < AI_TEXTURE_TYPE_MAX; k++)
 		{
 			_uint MaterialCount = 0;
 			fread(&MaterialCount, sizeof(_uint), 1, fp);
-			mat.Path[k].resize(MaterialCount);
+			pMAt.Path[k].resize(MaterialCount);
 			for (_uint j = 0; j < MaterialCount; j++)
 			{
 				_uint len = 0;
@@ -1520,11 +1582,11 @@ _bool CModel::LoadData(const _char* filename)
 				std::string temp;
 				temp.resize(len);
 				fread(&temp[0], sizeof(_char), len, fp);
-				mat.Path[k][j] = temp;
+				pMAt.Path[k][j] = temp;
 			}
 		}
 
-		NewModel.Materials.push_back(mat);
+		NewModel.Materials.push_back(pMAt);
 	}
 
 	if (MODEL::ENVIROMENT == m_eType)
@@ -1782,6 +1844,7 @@ void CModel::Free()
 	SAFE_RELEASE(m_pConstantBuffer);
 	SAFE_RELEASE(m_pParentBuffer);
 	SAFE_RELEASE(m_pLocalPosBuffer);
+	
 	for (auto& pAnimation : m_Animations) {
 		SAFE_RELEASE(pAnimation);
 	}
@@ -1801,7 +1864,6 @@ void CModel::Free()
 	m_Bones.clear();
 
 	SAFE_RELEASE(m_pTransform);
-	SAFE_RELEASE(m_pLerpAnim);
 
 	m_SaveModel.clear();
 
@@ -1832,7 +1894,7 @@ void CModel::Describe_Entity()
 		for (_uint i = 0; i < m_iNumAnimations; ++i) {
 
 			name.clear();
-			name.append(m_Animations[i]->Get_SZName());
+			name.append(m_Animations[i]->Get_Name().c_str());
 
 			size_t pos = name.find_last_of('|');
 			if (0 > pos) { pos = 0; }

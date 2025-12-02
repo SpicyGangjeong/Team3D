@@ -57,6 +57,7 @@ public:
 
 	void	AccumulateMomentum(_fvector vMomentum);
 	_vector Get_CurrentMomentum() const;
+	void	Set_CurrentMomentum(_fvector vMomentum);
 	void	RewindMomentum();
 
 	_vector Get_EstimatedPositionByMomentum() const;
@@ -71,7 +72,7 @@ public:
 
 	// Up, Down 벡터를 바라보게 하면 터짐
 	void LookAt(_fvector vAt);
-
+	void LookAt_Horizontal(_fvector vAt);
 	_float TargetDis(_fvector vTarget);
 
 private:

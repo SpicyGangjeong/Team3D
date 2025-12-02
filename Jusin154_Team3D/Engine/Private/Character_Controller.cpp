@@ -156,20 +156,120 @@ HRESULT CCharacter_Controller::ConvertToDO(CRigidBody_Dynamic& BodyOriginal)
 	return S_OK;
 }
 
+void CCharacter_Controller::Set_OnGroundFlag(_bool bOnGround)
+{
+	m_iIsOnGround = iCoyote_Counter;
+}
+
+void CCharacter_Controller::Set_CurrentSlope(_float fSlope)
+{
+	m_fCurrentSlopeDegree = fSlope;
+}
+
+void CCharacter_Controller::Rewind_Grounded()
+{
+	if (m_eBeforeCollisionFlags.isSet(PSX::PxControllerCollisionFlag::eCOLLISION_DOWN)) {
+		m_iIsOnGround = iCoyote_Counter;
+		return;
+	}
+	m_iIsOnGround -= 1;
+	if (0 > m_iIsOnGround) {
+		m_iIsOnGround = 0;
+	}
+}
+
+_bool CCharacter_Controller::UpdateGroundByCast(_float fTimeDelta)
+{
+	_vector vFoot = Get_FootPosition();
+	_float3 fFoot;
+	XMStoreFloat3(&fFoot, vFoot);
+	fFoot.y += 0.0625f;
+
+	PSX::PxSweepBuffer pxBuffer = {};
+
+	m_pController->getFootPosition();
+	_bool bHit = { false };
+
+	bHit = m_pGameInstance->SphereCast(0.0625f, fFoot, { 0.f, -1.f, 0.f }, 0.0625f, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eSTATIC, pxBuffer);
+
+	if (true == bHit) { // 쿼리해서 스태틱 중에 터레인 액터들이 맞으면 다시 갱신
+		const PSX::PxSweepHit& hit = pxBuffer.block;
+		
+		PSX::PxRigidActor* pActor = hit.actor;
+		PSX::PxShape* pShape = hit.shape;
+
+		if (nullptr != pActor && nullptr != pActor->userData)
+		{
+			PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+
+			switch (pUserData->eKind)
+			{
+			case PHYSX_KIND::BODY_STATIC:
+			{
+				switch (PXOBJECT(pUserData->iSubKind))
+				{
+				case PXOBJECT::TERRAIN:
+				case PXOBJECT::FLOOR:
+				case PXOBJECT::ROAD:
+				{ // 임계값 이상이면 지면에 서서히 붙임
+					m_iIsOnGround = iCoyote_Counter;
+
+
+					//_float fYHitPos = hit.position.y;
+					//_float fYFoot = (_float)m_pController->getFootPosition().y;
+					//_float fDiff = (fYHitPos - fYFoot);
+					//if (fDiff > m_vAccHeight.w) {
+					//	_vector vMomentum = m_pTransform->Get_CurrentMomentum();
+					//	_float fYCurrentMomentum = XMVectorGetY(vMomentum);
+					//	fYCurrentMomentum = fDiff * 0.3f;
+					//	m_pTransform->Set_CurrentMomentum(XMVectorSetY(vMomentum, fYCurrentMomentum));
+					//}
+					//else {
+					//	m_iIsOnGround = iCoyote_Counter;
+					//}
+				}
+					break;
+				default:
+					break;
+				}
+			} break;
+			case PHYSX_KIND::BODY_DYNAMIC:
+				break;
+			case PHYSX_KIND::CCTActor:
+			case PHYSX_KIND::OBSTACLEActor:
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	return bHit;
+}
+
 void CCharacter_Controller::Move(_float fTimeDelta)
 {
 	PSX::PxVec3						pxVecMomentum = {};					// 순간 이동량
 	_float							fMinimumDistant = FLT_EPSILON3;		// 이동량 오차 허용치, ( 크면 클수록 이동이 더 일찍 끝난다, 순간 이동량보다 같거나 더 크면 안움직일듯? )
 	PSX::PxControllerFilters		pxFilter = {};						// 충돌 대상 필터
 	const PSX::PxObstacleContext*	pPxObstacles = { nullptr };			// 캐릭터가 충돌해야할 추가적인 장애물 객체?, 닿은 장애물은 캐시된다?
-
 	if (true == m_bGravity) {
-		m_pTransform->AccumulateMomentum(XMVectorSet(0.f, -GRAVITY * m_fGravity * fTimeDelta, 0.f, 0.f));
+		if (0 >= m_iIsOnGround) {      // 공중: 무조건 중력
+			m_pTransform->AccumulateMomentum(XMVectorSet(0.f, -GRAVITY * m_fGravity * fTimeDelta, 0.f, 0.f));
+		}
+		else if ((iCoyote_Counter) >= m_iIsOnGround) {
+			UpdateGroundByCast(fTimeDelta); // 바닥에 플레이어 붙이게 함
+		}
+		else if (m_fCurrentSlopeDegree > m_fWalkableSlopeDegree) {        // 너무 가파른 경사: 중력
+			//m_pTransform->AccumulateMomentum(XMVectorSet(0.f, -GRAVITY * fTimeDelta, 0.f, 0.f));
+		}
+		else {
+			// 아니면 안함
+		}
 	}
 	XMStoreFloat3((_float3*)&pxVecMomentum, m_pTransform->Get_CurrentMomentum());
-
+	
 	m_eBeforeCollisionFlags = m_pController->move(pxVecMomentum, fMinimumDistant, fTimeDelta, pxFilter, pPxObstacles);
-
 }
 
 void CCharacter_Controller::Set_Position(_fvector vNewPos)
@@ -205,7 +305,7 @@ HRESULT CCharacter_Controller::Initialize(void* pArg)
 		m_eBodyType = pDesc->eBodyType;
 		m_bAutoStepping = pDesc->bAutoStepping;
 		m_pTransform = pDesc->pTransform;
-
+		m_fWalkableSlopeDegree = pDesc->fWalkableSlope;
 	}
 	{ // PhsXUserData
 		m_tagData.eKind = PHYSX_KIND::CCTActor;
@@ -226,6 +326,8 @@ HRESULT CCharacter_Controller::Initialize(void* pArg)
 		Desc.contactOffset		= pDesc->fContactOffset;
 		Desc.reportCallback		= pDesc->pCallback_HitReport;
 		Desc.behaviorCallback	= pDesc->pCallback_Behavior;
+		Desc.slopeLimit			= cosf(XMConvertToRadians(m_fWalkableSlopeDegree));
+		Desc.nonWalkableMode	= PSX::PxControllerNonWalkableMode::ePREVENT_CLIMBING_AND_FORCE_SLIDING;
 		Desc.material			= m_pGameInstance->Create_Material(&pDesc->fMaterial);
 		m_pController			= m_pGameInstance->Add_BoxController(Desc);
 		m_pController->setUserData(&m_tagData);
@@ -240,6 +342,8 @@ HRESULT CCharacter_Controller::Initialize(void* pArg)
 		Desc.contactOffset		= pDesc->fContactOffset;
 		Desc.reportCallback		= pDesc->pCallback_HitReport;
 		Desc.behaviorCallback	= pDesc->pCallback_Behavior;
+		Desc.slopeLimit			= cosf(XMConvertToRadians(m_fWalkableSlopeDegree));
+		Desc.nonWalkableMode	= PSX::PxControllerNonWalkableMode::ePREVENT_CLIMBING_AND_FORCE_SLIDING;
 		Desc.material			= m_pGameInstance->Create_Material(&pDesc->fMaterial);
 		m_pController			= m_pGameInstance->Add_CapsuleController(Desc);
 		m_pController->setUserData(&m_tagData);
@@ -255,8 +359,6 @@ HRESULT CCharacter_Controller::Initialize(void* pArg)
 		assert(false);
 		return E_FAIL;
 	}
-
-	m_pController->setSlopeLimit(m_fSlopeLimit);
 
 #ifdef _DEBUG
 	if (FAILED(Debug_Initialize())) {
@@ -378,7 +480,11 @@ void CCharacter_Controller::Describe_Entity()
 			GUIHelpMarker("A capsule is affected by its lower sphere and tends to generate an up vector on steps.\nIn eEASY, the up vector is combined with the step offset, allowing easier climbing; in eCONSTRAINED, the up vector is removed during step detection and only the step offset is used.");
 		}
 	}
-	GUI::Text("%.1f", XMConvertToDegrees(acosf(m_fSlopeLimit))); GUI::SameLine(); GUI::SliderFloat("m_fSlopeLimit", &m_fSlopeLimit, 0.0f, 1.f); 
+	GUI::Text("%.1f", m_fCurrentSlopeDegree);
+	GUI::Text("%.1f", m_fWalkableSlopeDegree); GUI::SameLine(); if (GUI::SliderFloat("m_fWalkableSlopeDegree", &m_fWalkableSlopeDegree, 0.0f, 90.f)) {
+		m_pController->setSlopeLimit(cosf(XMConvertToRadians(m_fWalkableSlopeDegree)));
+	}
+	GUI::DragFloat("m_vAccHeight.w", &m_vAccHeight.w, 0.01f, 0.f, 1.f);
 	GUI::SliderFloat("m_fGravity_Multiplier", &m_fGravity, 0.0f, 3.f);
 	if (GUI::SliderFloat3("Volume", (_float*)&vVolume, 0.1f, 10.f, "%.2f")) {
 		Modify_Volume(vVolume);
