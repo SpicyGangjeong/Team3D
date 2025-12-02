@@ -14,7 +14,6 @@ class CPhysX_Manager final : public CBase
 private:
 	CPhysX_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CPhysX_Manager() = default;
-
 #pragma region RIGID_BODY
 
 public:

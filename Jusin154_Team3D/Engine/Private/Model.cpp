@@ -1391,6 +1391,11 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 	if (FAILED(Ready_Animations(m_Bones))) {
 		return E_FAIL;
 	}
+//#ifdef 기무리
+//	if (MODEL::ENVIROMENT == eType) {
+//		Save_PhysXTriMeshes(pModelFilePath);
+//	}
+//#endif // _DEBUG
 	return S_OK;
 }
 

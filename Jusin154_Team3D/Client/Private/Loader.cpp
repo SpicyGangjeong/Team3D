@@ -1294,6 +1294,7 @@ vector<FOLDER_LOAD*>* APIENTRY Deferred_FolderLoad_Main(ID3D11Device* pDevice, I
 					Desc.vMatInfo = _float3(0.5f, 0.5f, 0.6f);
 					Desc.fContactOffset = 0.f;
 				}
+
 				pContents->pRigidBodyTags.emplace_back(CMyTools::ToWstring(pModel->Get_MeshName(i) + to_string(i)).c_str());
 				pContents->LoadedRigidBody.emplace_back(CRigidBody_Static::Create(pDevice, pContext, Desc));
 			}
