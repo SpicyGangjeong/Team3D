@@ -267,6 +267,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\TrailObject.h" />
     <ClInclude Include="..\Public\Troll.h" />
     <ClInclude Include="..\Public\Troll_Weapon.h" />
+    <ClInclude Include="..\public\UI_Manager.h" />
     <ClInclude Include="..\Public\Wand.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
@@ -385,6 +386,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Troll.cpp" />
     <ClCompile Include="..\Private\Troll_States.cpp" />
     <ClCompile Include="..\Private\Troll_Weapon.cpp" />
+    <ClCompile Include="..\private\UI_Manager.cpp" />
     <ClCompile Include="..\Private\Wand.cpp" />
     <ClCompile Include="Broom_States.cpp" />
     <ClCompile Include="Client.cpp" />

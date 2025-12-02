@@ -39,10 +39,14 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 
 private:
+	CInfoInstance* m_pInfoInstance = { nullptr };
+
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CTexture* m_pDesendo_TextureCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
+
+
 
 	_int	m_iTotalFrames{};			// 전체 프레임 수
 	_float	m_fFrameTime{};				// 한 프레임당 시간(초)

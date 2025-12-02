@@ -46,6 +46,8 @@ HRESULT CSpell_State::Initialize(void* pArg)
 	m_pVIBufferCom->Set_Cloned(true);
 	m_pVIBufferCom->Set_Pos(-185.f, 375.f, m_fOffSetX, m_fOffSetY, m_iCols);
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
+	m_bActive = true;
+
 	return S_OK;
 }
 

@@ -27,7 +27,7 @@ public:
 	virtual _vector Get_WorldPostion() override;
 
 public:
-	virtual const SPELLINFO Get_Info(_int Index) override;
+	const SPELL_INFO Get_SpellInfo(_int SkillID);
 
 private:
 	void Slot_Chack(void* pArg);
@@ -41,6 +41,8 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 
 private:
+	CInfoInstance* m_pInfoInstance = { nullptr };
+
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
@@ -63,7 +65,6 @@ private:
 
 	_int		m_iHoverSlot[2] = { -1,-1 };
 
-	SPELLINFO   m_Info[34] = {};
 	CUIObject::HOVER_INFO	m_Hover;
 
 	_int m_iPendingSpell = -1;   
