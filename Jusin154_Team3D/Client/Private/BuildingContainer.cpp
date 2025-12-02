@@ -25,7 +25,7 @@ void CBuildingContainer::Update(_float fTimeDelta)
 {
     __super::Update(fTimeDelta);
 
-    m_fCamDepth = XMVectorGetX(XMVector3LengthSq(XMLoadFloat4(m_pGameInstance->Get_CamPosition()) - XMLoadFloat3(&m_vExtentWorldPosition)));
+    m_fCamDepth = XMVectorGetX(XMVector3Length(XMLoadFloat4(m_pGameInstance->Get_CamPosition()) - XMLoadFloat3(&m_vExtentWorldPosition)));
 
     for (auto& pCollisiton : m_ColiisonPartObjects){
         pCollisiton->Update(fTimeDelta);

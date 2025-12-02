@@ -30,7 +30,7 @@ public:
 
 private:
 	MAPOBJECT_RENDER_TYPE	m_Type = {};
-	CShader*				m_pShaderCom = { nullptr };
+	CShader* m_pShaderCom = { nullptr };
 	vector<CModel*>			m_pModelComs;
 
 	_uint					m_iLodIndex = {};
