@@ -43,7 +43,7 @@ void CDummy_Globe::Update(_float fTimeDelta)
 void CDummy_Globe::Late_Update(_float fTimeDelta)
 {
 	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
-		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+		m_pGameInstance->Add_RenderGroup(RENDER::BLOOM, this);
 	}
 }
 

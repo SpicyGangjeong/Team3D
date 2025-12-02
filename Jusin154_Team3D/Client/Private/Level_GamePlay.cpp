@@ -7,15 +7,20 @@
 #include "InfoInstance.h"
 #include "GamePlay_Canvas.h"
 #include "Layer.h"
-#include "Player.h"
 #include "SkyBox.h"
 #include "Broom.h"
 #include "Dummy_PhysXWall.h"
 #include "Dummy_PhysXPlayable.h"
-#include "Goblin.h"
 #include "Terrain.h"
 #include "EffectPool.h"
 #include "InstancedProp.h"
+
+#pragma region ACTOR
+#include "Player.h"
+#include "Troll.h"
+#include "Goblin.h"
+#pragma endregion
+
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -38,7 +43,12 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	if (FAILED(Ready_Layer_UI(LAYER_UI))) {
 		return E_FAIL;
 	}
-	if (FAILED(Reday_Layer_EffectPool())) {	//플레이어보다 먼저 생성해야함!
+	//플레이어보다 먼저 생성해야함!
+	if (FAILED(Reday_Layer_EffectPool())) {	
+		return E_FAIL;
+	}
+	// 이것도 플레이어보다 먼저 생성해야함!
+	if (FAILED(Ready_Layer_Item(LAYER_ITEM))) {
 		return E_FAIL;
 	}
 	if (FAILED(Ready_Layer_Player(LAYER_PLAYER))) {
@@ -63,9 +73,11 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Up(DIK_ADD))
-	{
-		m_pGameInstance->Set_LevelToChange();
+	if (m_pGameInstance->Key_Pressing(DIK_0)) {
+		if (m_pGameInstance->Key_Up(DIK_1))
+		{
+			m_pGameInstance->Set_LevelToChange();
+		}
 	}
 
 	m_pInfoInstance->Update(fTimeDelta);
@@ -108,9 +120,12 @@ HRESULT CLevel_GamePlay::Ready_Background()
 
 	/* Map Containters */
 	/* 테스트용 맵 */
-	CInfoInstance::GetInstance()->Load_MapObjects("ClientTest");
+	//CInfoInstance::GetInstance()->Load_MapObjects("ClientTest");
 	/* 전체 맵 */
-	// CInfoInstance::GetInstance()->Load_MapObjects("Map1124");
+	CInfoInstance::GetInstance()->Load_MapObjects("Map1129");
+
+	/* 조명 오브젝트 */
+	CInfoInstance::GetInstance()->Load_LightElements("LightElement");
 
 	
 	CInstancedProp::INSTANCE_PROP_DESC Desc = {};
@@ -118,23 +133,25 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	/* InstanceProp Oak_Tree*/
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_OakTree_MedA";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/OakTree_MedA.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc))){
 		return E_FAIL;
+	}
 
 	/* BearBerry */
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_BearBerry_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/BearBerry_A.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc))){
 		return E_FAIL;
+	}
 
 	return S_OK;
 }
 
 HRESULT CLevel_GamePlay::Ready_Layer_UI(const _wstring& strLayerTag)
 {
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGamePlay_Canvas>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_UI))) {
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGamePlay_Canvas>(g_iStaticLevel, g_iStaticLevel, LAYER_UI))) {
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -186,9 +203,15 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 		return E_FAIL;
 	}
 
+	return S_OK;
+}
 
-	/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
-		return E_FAIL;*/
+HRESULT CLevel_GamePlay::Ready_Layer_Item(const _wstring& strLayerTag)
+{
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, LAYER_ITEM, nullptr, nullptr))) {
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -202,7 +225,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_SkyBox(const _wstring& strLayerTag)
 	CDummy_PhysXWall::PHYSXDUMMY_DESC Desc{};
 	Desc.vPos = { 0.f, 0.f, 0.f };
 	Desc.vRotRPY = { 0.f, m_pGameInstance->Random_Float(0.f, XM_2PI), 0.f };
-	Desc.iSubKind = 23;
+	Desc.iSubKind = ENUM_CLASS(PXOBJECT::WALL);
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXWall>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE, &Desc))) {
 		return E_FAIL;
@@ -213,10 +236,15 @@ HRESULT CLevel_GamePlay::Ready_Layer_SkyBox(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 {
-	
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))){
-		return E_FAIL;
-	}
+	//for (_uint i = 0; i < 2; ++i)
+	//{
+	//	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER,&i))) {
+	//		return E_FAIL;
+	//	}
+	//}
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
+	//	return E_FAIL;
+	//}
 
 	return S_OK;
 }
@@ -224,10 +252,10 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 HRESULT CLevel_GamePlay::Reday_Layer_EffectPool()
 {
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEffectPool>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_EffectPool")))) //플레이어보다 먼저 생성해야함!
+	//플레이어보다 먼저 생성해야함!
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEffectPool>(g_iStaticLevel, NEXT_LEVEL, LAYER_EFFECTPOOL))) {
 		return E_FAIL;
-
-
+	}
 	return S_OK;
 }
 

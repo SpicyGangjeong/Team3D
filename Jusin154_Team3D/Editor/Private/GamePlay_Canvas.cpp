@@ -44,7 +44,6 @@ HRESULT CGamePlay_Canvas::Initialize(void* pArg)
 	{
 		return E_FAIL;
 	}
-
 	return S_OK;
 }
 
@@ -61,9 +60,6 @@ void CGamePlay_Canvas::Update(_float fTimeDelta)
 void CGamePlay_Canvas::Late_Update(_float fTimeDelta)
 {
 	if (m_bVisible) {
-		if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
-			m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
-		}
 	}
 	__super::Late_Update(fTimeDelta);
 }
@@ -156,7 +152,6 @@ void CGamePlay_Canvas::Free()
 {
 	__super::Free();
 
-	SAFE_RELEASE(m_pLoading_Panel);
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 

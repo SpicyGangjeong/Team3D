@@ -40,7 +40,9 @@ HRESULT CGameObject_Manager::Add_GameObject_ToLayer(_uint iLayerLevelIndex, cons
 void CGameObject_Manager::Priority_Update(_float fTimeDelta)
 {
 #ifdef _DEBUG
+#ifndef gimch
 	Describe_Entity();
+#endif // !gimch
 	m_pGameInstance->Compute_TimeDelta(TEXT("Timer_PriorityUpdate"));
 #endif // _DEBUG
 	for (size_t i = 0; i < m_iNumLevels; i++)
@@ -123,8 +125,9 @@ CLayer* CGameObject_Manager::Find_Layer(_uint iLayerLevelIndex, const _wstring& 
 		return nullptr;
 
 	auto	iter = m_pLayers[iLayerLevelIndex].find(strLayerTag);
-	if (iter == m_pLayers[iLayerLevelIndex].end())
+	if (iter == m_pLayers[iLayerLevelIndex].end()){
 		return nullptr;
+	}
 
 	return iter->second;
 }
@@ -150,8 +153,10 @@ void CGameObject_Manager::Free()
 
 	for (size_t i = 0; i < m_iNumLevels; i++)
 	{
-		for (auto& Pair : m_pLayers[i])
+		for (auto& Pair : m_pLayers[i]){
+			Pair.second->Clear_Layer();
 			SAFE_RELEASE(Pair.second);
+		}
 
 		m_pLayers[i].clear();
 	}

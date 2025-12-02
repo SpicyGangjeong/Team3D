@@ -127,7 +127,7 @@
     </Link>
     <PreBuildEvent>
       <Command>cd /d "$(SolutionDir)"
-call Update_Shaders.bat
+call Update_Resources.bat
 </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
@@ -154,11 +154,19 @@ call Update_Shaders.bat
     </Link>
     <PreBuildEvent>
       <Command>cd /d "$(SolutionDir)"
-call Update_Shaders.bat
+call Update_Resources.bat
 </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\Action_Panel.h" />
+    <ClInclude Include="..\Public\HpBarBG.h" />
+    <ClInclude Include="..\Public\Magic_Icon.h" />
+    <ClInclude Include="..\Public\Magic_Item.h" />
+    <ClInclude Include="..\Public\Magic_Meter.h" />
+    <ClInclude Include="..\public\MapElement.h" />
+    <ClInclude Include="..\public\MapElement_Light.h" />
+    <ClInclude Include="..\Public\Potion.h" />
     <ClInclude Include="..\Public\Protego.h" />
     <ClInclude Include="..\Public\Bombard.h" />
     <ClInclude Include="..\Public\Broom.h" />
@@ -182,13 +190,21 @@ call Update_Shaders.bat
     <ClInclude Include="..\Public\Client_Struct.h" />
     <ClInclude Include="..\Public\Decendo.h" />
     <ClInclude Include="..\Public\EffectPool.h" />
+    <ClInclude Include="..\public\GamePlay_Canvas.h" />
     <ClInclude Include="..\Public\Goblin.h" />
+    <ClInclude Include="..\Public\LoadingWidget.h" />
+    <ClInclude Include="..\Public\LoadingWidget_Flame.h" />
+    <ClInclude Include="..\Public\Loading_Panel.h" />
     <ClInclude Include="..\public\InstancedProp.h" />
     <ClInclude Include="..\public\MapContainer.h" />
     <ClInclude Include="..\public\MapObject_Collision.h" />
     <ClInclude Include="..\public\MapObject_Render.h" />
     <ClInclude Include="..\public\MapPartObject.h" />
+    <ClInclude Include="..\Public\MiniMap_Panel.h" />
+    <ClInclude Include="..\Public\MiniMap_TrimBorder.h" />
+    <ClInclude Include="..\Public\Mission_Panel.h" />
     <ClInclude Include="..\Public\Monster.h" />
+    <ClInclude Include="..\Public\NoMountIcon.h" />
     <ClInclude Include="..\Public\PhysXEffectHitBox.h" />
     <ClInclude Include="..\Public\Dummy_PhysXPlayable.h" />
     <ClInclude Include="..\Public\Dummy_PhysXWall.h" />
@@ -196,6 +212,7 @@ call Update_Shaders.bat
     <ClInclude Include="..\Public\EffectObject.h" />
     <ClInclude Include="..\Public\Effect_Container.h" />
     <ClInclude Include="..\Public\NomalJap.h" />
+    <ClInclude Include="..\Public\Revelio.h" />
     <ClInclude Include="..\Public\SkyBox.h" />
     <ClInclude Include="..\Public\InfoInstance.h" />
     <ClInclude Include="..\Public\Level_Field.h" />
@@ -210,6 +227,12 @@ call Update_Shaders.bat
     <ClInclude Include="..\Public\MonsterInfo.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\PlayerInfo.h" />
+    <ClInclude Include="..\Public\Slot_Number.h" />
+    <ClInclude Include="..\public\Skill_Data.h" />
+    <ClInclude Include="..\Public\Spell_Overlay.h" />
+    <ClInclude Include="..\Public\Spell_Slot.h" />
+    <ClInclude Include="..\Public\Spell_UI.h" />
+    <ClInclude Include="..\Public\State_Broom_Ride.h" />
     <ClInclude Include="..\Public\State_Combat.h" />
     <ClInclude Include="..\Public\State_Dodge.h" />
     <ClInclude Include="..\Public\State_Idle.h" />
@@ -217,8 +240,11 @@ call Update_Shaders.bat
     <ClInclude Include="..\Public\State_Land.h" />
     <ClInclude Include="..\Public\State_Move.h" />
     <ClInclude Include="..\Public\State_Root.h" />
+    <ClInclude Include="..\public\StreetContainer.h" />
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\Public\TrailObject.h" />
+    <ClInclude Include="..\Public\Troll.h" />
+    <ClInclude Include="..\Public\Troll_Weapon.h" />
     <ClInclude Include="..\Public\Wand.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
@@ -226,6 +252,14 @@ call Update_Shaders.bat
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\Action_Panel.cpp" />
+    <ClCompile Include="..\Private\HpBarBG.cpp" />
+    <ClCompile Include="..\Private\Magic_Icon.cpp" />
+    <ClCompile Include="..\Private\Magic_Item.cpp" />
+    <ClCompile Include="..\Private\Magic_Meter.cpp" />
+    <ClCompile Include="..\private\MapElement.cpp" />
+    <ClCompile Include="..\private\MapElement_Light.cpp" />
+    <ClCompile Include="..\Private\Potion.cpp" />
     <ClCompile Include="..\Private\Protego.cpp" />
     <ClCompile Include="..\Private\Bombard.cpp" />
     <ClCompile Include="..\Private\Broom.cpp" />
@@ -242,14 +276,22 @@ call Update_Shaders.bat
     <ClCompile Include="..\Private\CamPosition_Arm.cpp" />
     <ClCompile Include="..\Private\Decendo.cpp" />
     <ClCompile Include="..\Private\EffectPool.cpp" />
+    <ClCompile Include="..\private\GamePlay_Canvas.cpp" />
     <ClCompile Include="..\Private\Goblin.cpp" />
     <ClCompile Include="..\Private\Goblin_States.cpp" />
     <ClCompile Include="..\private\InstancedProp.cpp" />
+    <ClCompile Include="..\Private\LoadingWidget.cpp" />
+    <ClCompile Include="..\Private\LoadingWidget_Flame.cpp" />
+    <ClCompile Include="..\Private\Loading_Panel.cpp" />
     <ClCompile Include="..\private\MapContainer.cpp" />
     <ClCompile Include="..\private\MapObject_Collision.cpp" />
     <ClCompile Include="..\private\MapObject_Render.cpp" />
     <ClCompile Include="..\private\MapPartObject.cpp" />
+    <ClCompile Include="..\Private\MiniMap_Panel.cpp" />
+    <ClCompile Include="..\Private\MiniMap_TrimBorder.cpp" />
+    <ClCompile Include="..\Private\Mission_Panel.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
+    <ClCompile Include="..\Private\NoMountIcon.cpp" />
     <ClCompile Include="..\Private\PhysXEffectHitBox.cpp" />
     <ClCompile Include="..\Private\CamPosition_Shoulder.cpp" />
     <ClCompile Include="..\Private\CamPosition_Socket.cpp" />
@@ -261,6 +303,7 @@ call Update_Shaders.bat
     <ClCompile Include="..\Private\Effect_Container.cpp" />
     <ClCompile Include="..\Private\NomalJap.cpp" />
     <ClCompile Include="..\Private\Player_States.cpp" />
+    <ClCompile Include="..\Private\Revelio.cpp" />
     <ClCompile Include="..\Private\SkyBox.cpp" />
     <ClCompile Include="..\Private\InfoInstance.cpp" />
     <ClCompile Include="..\Private\Level_Field.cpp" />
@@ -279,6 +322,12 @@ call Update_Shaders.bat
     </ClCompile>
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\PlayerInfo.cpp" />
+    <ClCompile Include="..\Private\Slot_Number.cpp" />
+    <ClCompile Include="..\private\Skill_Data.cpp" />
+    <ClCompile Include="..\Private\Spell_Overlay.cpp" />
+    <ClCompile Include="..\Private\Spell_Slot.cpp" />
+    <ClCompile Include="..\Private\Spell_UI.cpp" />
+    <ClCompile Include="..\Private\State_Broom_Ride.cpp" />
     <ClCompile Include="..\Private\State_Combat.cpp" />
     <ClCompile Include="..\Private\State_Dodge.cpp" />
     <ClCompile Include="..\Private\State_Idle.cpp" />
@@ -286,9 +335,14 @@ call Update_Shaders.bat
     <ClCompile Include="..\Private\State_Land.cpp" />
     <ClCompile Include="..\Private\State_Move.cpp" />
     <ClCompile Include="..\Private\State_Root.cpp" />
+    <ClCompile Include="..\private\StreetContainer.cpp" />
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\Private\TrailObject.cpp" />
+    <ClCompile Include="..\Private\Troll.cpp" />
+    <ClCompile Include="..\Private\Troll_States.cpp" />
+    <ClCompile Include="..\Private\Troll_Weapon.cpp" />
     <ClCompile Include="..\Private\Wand.cpp" />
+    <ClCompile Include="Broom_States.cpp" />
     <ClCompile Include="Client.cpp" />
   </ItemGroup>
   <ItemGroup>

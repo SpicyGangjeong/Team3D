@@ -39,16 +39,12 @@ void CPhysXEffectHitBox::Priority_Update(_float fTimeDelta)
 void CPhysXEffectHitBox::Update(_float fTimeDelta)
 {
 	m_pTransformCom->AccumulateMomentum(XMLoadFloat3(&m_vDeltaPos));
-	m_vLifeTime.x += fTimeDelta;
-	if (m_vLifeTime.x > m_vLifeTime.y) {
-		m_bDead = true;
-	}
 }
 
 void CPhysXEffectHitBox::Late_Update(_float fTimeDelta)
 {
 	if (true == m_pCharacter_Controller->IsActive()) {
-		m_pCharacter_Controller->Move(fTimeDelta);
+		m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_Position());
 	}
 	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
 		m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
@@ -81,6 +77,13 @@ HRESULT CPhysXEffectHitBox::Render()
 	return S_OK;
 }
 
+void CPhysXEffectHitBox::Move(_float fTimeDelta)
+{
+	if (true == m_pCharacter_Controller->IsActive()) {
+		m_pCharacter_Controller->Move(fTimeDelta);
+	}
+}
+
 HRESULT CPhysXEffectHitBox::Ready_Components(void* pArg)
 {
 	if (FAILED(__super::Ready_Components(pArg))) {
@@ -91,6 +94,9 @@ HRESULT CPhysXEffectHitBox::Ready_Components(void* pArg)
 	m_pTransformCom->Rotation(pDesc->vRotRPY.x, pDesc->vRotRPY.y, pDesc->vRotRPY.z);
 	m_vDeltaPos = pDesc->vDeltaPos;
 	m_vLifeTime = pDesc->vLifeTime;
+	
+
+
 	{ // CCT
 		CCharacter_Controller::Character_Controller_DESC Desc{};
 
@@ -106,9 +112,12 @@ HRESULT CPhysXEffectHitBox::Ready_Components(void* pArg)
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_EffectHitBox_HitReport::Create();
 		Desc.pCallback_Behavior = m_pCallBack_Behavior = CCallBack_EffectHitBox_Behavior::Create();
 		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
+		Desc.fWalkableSlope = 45.f;
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), (CComponent**)&m_pCharacter_Controller, &Desc))) {
 			return E_FAIL;
 		}
+
+		m_pCharacter_Controller->SetGravity(pDesc->bGravity);
 	}
 	m_pCharacter_Controller->Set_Position(m_pTransformCom->Get_State(STATE::POSITION));
 	/* Com_Shader */

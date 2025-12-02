@@ -62,7 +62,9 @@ void CUnit::Load_KeyFrame()
 			Path = _string(szDir) + "KeyFrame.bin";
 
 			fopen_s(&fp, Path.c_str(), "rb");
-			if (!fp) return;
+			if (!fp) {
+				return;
+			}
 
 			_uint KeyFrameSize = 0;
 			fread(&KeyFrameSize, sizeof(_uint), 1, fp);

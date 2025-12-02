@@ -75,7 +75,7 @@ HRESULT CEffectObject::Render_Blur()
 
 	SHADER_PASS_INSTANCE_MODEL BlurPass = {};
 
-	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NON_WORLD)
+	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NON_WORLD || m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::BLEND_NOWORLD)
 	{
 		BlurPass = SHADER_PASS_INSTANCE_MODEL::NON_WORLD_BLUR;
 	}
@@ -105,6 +105,57 @@ HRESULT CEffectObject::Render_Blur()
 
 
 
+
+	return S_OK;
+}
+
+HRESULT CEffectObject::Render_Bloom()
+{
+	if (FAILED(Bind_ShaderResources()))
+	{
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fBloomStrength", &m_EffectInfo.fBloomStrength, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iBloomType", &m_EffectInfo.eBloomType, sizeof(_int)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isBloomDissolve", &m_EffectInfo.isBloomDissolve, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isBloomReverseDissolve", &m_EffectInfo.isBloomReverseDissolve, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	SHADER_PASS_INSTANCE_MODEL BloomPass = {};
+
+	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NON_WORLD || m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::BLEND_NOWORLD)
+	{
+		BloomPass = SHADER_PASS_INSTANCE_MODEL::BLOOM_NOWORLD;
+	}
+	else
+	{
+		BloomPass = SHADER_PASS_INSTANCE_MODEL::BLOOM;
+	}
+
+	for (_uint i = 0; i < m_pInstance_ModelCom->Get_NumMeshes(); i++)
+	{
+
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(BloomPass)))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pInstance_ModelCom->Render(i)))
+		{
+			return E_FAIL;
+		}
+
+	}
 
 	return S_OK;
 }
@@ -440,6 +491,9 @@ HRESULT CEffectObject::LoadPre(const _char* pFilePath, LEVEL eLevel)
 
 	memcpy(&m_EffectInfo, &PreEffectInfo, sizeof(PRE_EFFECT_INFO));
 
+
+
+
 	m_EffectInfo.LightDesc.pPosition = m_pTransformCom->Get_StatePtr(STATE::POSITION);
 	m_EffectInfo.LightDesc.iLevel = ENUM_CLASS(eLevel);
 
@@ -765,7 +819,7 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDiffuseDistortionUVGainAmount", &m_EffectInfo.vDiffuseDistortionUVGainAmount, sizeof(_float2)))) {
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDistortionTime", &m_EffectInfo.vDistortionTime, sizeof(_float2)))) {
 		return E_FAIL;
 	}
 

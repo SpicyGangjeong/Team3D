@@ -63,21 +63,31 @@ HRESULT CMonster::Render_OutLine()
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vOutLineColor", DirectX::Colors::SeaShell, sizeof(_float3)))) {
+
+	GUI::SetNextItemWidth(80.f);
+	static _float3 vOutLineColor = _float3(1.f, 0.960784376f, 0.933333397f);
+	static _float fOutLineThickness = { 2.f }; // 카메라로부터 거리가 멀어지면 늘어나게끔 바꾸는걸 추천함
+	static _float fOutLineScale = { 1.f };
+	static _float fOutLinePower = { 1.f };
+	GUI::ColorPicker3("vOutLineColor", (_float*)&vOutLineColor);
+	GUI::SliderFloat("Thickness", &fOutLineThickness, 0.1f, 2.f, "%.1f");
+	GUI::SliderFloat("Scale", &fOutLineScale, 0.1f, 2.f, "%.1f");
+	GUI::SliderFloat("Power", &fOutLinePower, 0.1f, 2.f, "%.1f");
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vOutLineColor", &vOutLineColor, sizeof(_float3)))) {
 		return E_FAIL;
 	}
-	_float fSpeed = m_pTransformCom->Get_Speed() * 0.5f;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOutLineThickness", &(fSpeed), sizeof(_float)))) {
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOutLineThickness", &(fOutLineThickness), sizeof(_float)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOutLineScale", &(fOutLineScale), sizeof(_float)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOutLinePower", &(fOutLinePower), sizeof(_float)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float4)))) {
 		return E_FAIL;
 	}
-	//static _float fPower = 0.3f;
-	//GUI::DragFloat("OuTLineDegg", &fPower, 0.01f, -1.f, 1.f, "%.3f");
-	//if (FAILED(m_pShaderCom->Bind_RawValue("g_fPow", &fPower, sizeof(_float)))) {
-	//	return E_FAIL;
-	//}
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
 	for (_uint i = 0; i < iNumMeshes; i++)
@@ -86,12 +96,11 @@ HRESULT CMonster::Render_OutLine()
 			return E_FAIL;
 		}
 
-
 		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::OUTLINE)))) {
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::OUTLINE_READ)))) {
 			return E_FAIL;
 		}
 

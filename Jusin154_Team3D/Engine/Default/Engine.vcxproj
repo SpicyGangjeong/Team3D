@@ -207,7 +207,9 @@ call Update_Lib.bat
     <ClCompile Include="..\Private\ComputeShader.cpp" />
     <ClCompile Include="..\Private\ContainerObject.cpp" />
     <ClCompile Include="..\Private\DebugDraw.cpp" />
+    <ClCompile Include="..\private\Fog.cpp" />
     <ClCompile Include="..\private\QuadTree.cpp" />
+    <ClCompile Include="..\private\OcclusionQuery.cpp" />
     <ClCompile Include="..\Private\RigidBody_Dynamic_Joint.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -267,7 +269,6 @@ call Update_Lib.bat
     </ClCompile>
     <ClCompile Include="..\Private\Key_Manager.cpp" />
     <ClCompile Include="..\Private\Layer.cpp" />
-    <ClCompile Include="..\Private\LerpAnim.cpp" />
     <ClCompile Include="..\Private\Level.cpp" />
     <ClCompile Include="..\Private\Level_Manager.cpp" />
     <ClCompile Include="..\Private\Light.cpp" />
@@ -311,6 +312,7 @@ call Update_Lib.bat
     <ClCompile Include="..\private\UIObject.cpp" />
     <ClCompile Include="..\Private\Unit.cpp" />
     <ClCompile Include="..\Private\VIBuffer.cpp" />
+    <ClCompile Include="..\private\VIBuffer_Box.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Cell.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Cube.cpp" />
     <ClCompile Include="..\Private\Instance_Model.cpp" />
@@ -421,8 +423,10 @@ call Update_Lib.bat
     <ClInclude Include="..\Public\Bounding_AABB.h" />
     <ClInclude Include="..\Public\Bounding_OBB.h" />
     <ClInclude Include="..\Public\Bounding_Sphere.h" />
+    <ClInclude Include="..\public\Fog.h" />
     <ClInclude Include="..\public\FSM.h" />
     <ClInclude Include="..\public\QuadTree.h" />
+    <ClInclude Include="..\public\OcclusionQuery.h" />
     <ClInclude Include="..\Public\RigidBody_Dynamic_Joint.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -517,7 +521,6 @@ call Update_Lib.bat
     <ClInclude Include="..\Public\IMGUI\imstb_truetype.h" />
     <ClInclude Include="..\Public\Key_Manager.h" />
     <ClInclude Include="..\Public\Layer.h" />
-    <ClInclude Include="..\Public\LerpAnim.h" />
     <ClInclude Include="..\Public\Level.h" />
     <ClInclude Include="..\Public\Level_Manager.h" />
     <ClInclude Include="..\Public\Light.h" />
@@ -556,6 +559,7 @@ call Update_Lib.bat
     <ClInclude Include="..\public\UIObject.h" />
     <ClInclude Include="..\Public\Unit.h" />
     <ClInclude Include="..\Public\VIBuffer.h" />
+    <ClInclude Include="..\public\VIBuffer_Box.h" />
     <ClInclude Include="..\Public\VIBuffer_Cell.h" />
     <ClInclude Include="..\Public\VIBuffer_Cube.h" />
     <ClInclude Include="..\Public\Instance_Model.h" />

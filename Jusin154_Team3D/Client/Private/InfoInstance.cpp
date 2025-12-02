@@ -26,6 +26,16 @@ void CInfoInstance::Change_Level()
 	m_pMapInfo->Change_Level();
 }
 
+void CInfoInstance::Update_CameraCoordinateSystem(_float3& vLook, _float3& vRight)
+{
+	m_pPlayerInfo->Update_CameraCoordinateSystem(vLook, vRight);
+}
+
+pair<_float3, _float3> CInfoInstance::Get_CameraCoordinateSystem()
+{
+	return m_pPlayerInfo->Get_CameraCoordinateSystem();
+}
+
 #pragma region MONSTER_INFO
 HRESULT CInfoInstance::Regist_PlayerAlly(CUnit* pUnit)
 {
@@ -53,9 +63,12 @@ HRESULT CInfoInstance::Deregist_ActiveMonster(CMonster* pUnit)
 	return m_pMonsterInfo->Deregist_ActiveMonster(pUnit);
 }
 
-CMonster* CInfoInstance::Get_LockOnMonster()
+CUnit* CInfoInstance::Get_LockOnUnit()
 {
-	return m_pMonsterInfo->Get_LockOnMonster();
+	CUnit* pUnit = { nullptr };
+	pUnit = m_pMonsterInfo->Get_LockOnUnit();
+	// pUnit = m_pInfo->Get_LockOnUnit();
+	return pUnit;
 }
 
 pair<CUnit*, CTransform*> CInfoInstance::Get_NearestPlayerAlly(_fvector vPos)
@@ -67,6 +80,10 @@ pair<CUnit*, CTransform*> CInfoInstance::Get_NearestPlayerAlly(_fvector vPos)
 HRESULT CInfoInstance::Load_MapObjects(const _char* pFilePath)
 {
 	return m_pMapInfo->Load_MapObjects(pFilePath);
+}
+HRESULT CInfoInstance::Load_LightElements(const _char* pFilePath)
+{
+	return m_pMapInfo->Load_LightElements(pFilePath);
 }
 #pragma endregion
 LEVEL CInfoInstance::Get_RestartLevel()

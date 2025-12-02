@@ -187,6 +187,7 @@ HRESULT CPlayer::Ready_Components()
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Playable_HitReport::Create();
 		Desc.pCallback_Behavior = m_pCallBack_Behavior = CCallBack_Playable_Behavior::Create();
 		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
+		Desc.fWalkableSlope = 45.f;
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), (CComponent**)&m_pCharacter_Controller, &Desc))) {
 			return E_FAIL;
 		}
@@ -211,10 +212,10 @@ HRESULT CPlayer::Ready_Parts()
 	WandDesc.pParentTransform = m_pTransformCom;
 	WandDesc.pSocketMatrices = m_pModelCom->Get_BoneMatrixPtr("SKT_RightHand");
 
-	//if (FAILED(Add_PartObject<CWand>("Wand", g_iStaticLevel, nullptr, &WandDesc)))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(Add_PartObject<CWand>("Wand", g_iStaticLevel, nullptr, &WandDesc)))
+	{
+		return E_FAIL;
+	}
 
 	{
 		CCamPosition_Shoulder::CAMERA_SHOULDER_DESC Desc;
@@ -231,6 +232,26 @@ HRESULT CPlayer::Ready_Parts()
 	}
 
 	return S_OK;
+}
+
+_matrix CPlayer::Get_WandPos()
+{
+	CModel* pWand = Get_PartObject<CWand>()->Get_Component<CModel>();
+
+	if (pWand == nullptr)
+		return _matrix();
+
+	_matrix BoneMatrix = XMLoadFloat4x4(pWand->Get_BoneMatrixPtr("root"));
+
+	BoneMatrix = BoneMatrix * Get_PartObject<CWand>()->Get_Component<CTransform>()->Get_XMWorldMatrix();
+
+	_float3 vOffset = _float3(0.f, -0.27f, -0.32f);
+
+	BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[0]) * vOffset.x;
+	BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[1]) * vOffset.y;
+	BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[2]) * vOffset.z;
+
+	return BoneMatrix;
 }
 
 HRESULT CPlayer::Bind_ShaderResources()

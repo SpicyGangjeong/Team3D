@@ -77,15 +77,17 @@ PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody_Static& RigidBody
 	// PxRigidStatic		씬의 정적 바디 인터페이스
 	PSX::PxRigidStatic* pActor = m_pPhysics->createRigidStatic(pxWorldMatrix);
 	PSX::PxShape* pShape = { nullptr };
-	PSX::PxTriangleMesh* pPxMesh = Find_TriangleMesh(RigidBody.Get_PxMeshKey());
-	PSX::PxTriangleMeshGeometry* pPxMeshGeometry = { nullptr };
-	
+	PSX::PxGeometry* pGeometry = { nullptr };
+
 	switch (RigidBody.Get_Type())
 	{
 	case ACTOR::PLANE:
 		break;
 	case ACTOR::TRIANGLEMESH:
 		{ // SetUp Geometry
+			PSX::PxTriangleMesh* pPxMesh = Find_TriangleMesh(RigidBody.Get_PxMeshKey());
+			PSX::PxTriangleMeshGeometry* pPxMeshGeometry = { nullptr };
+
 			_vector vPos, vRotq, vScale;
 			XMMatrixDecompose(&vScale, &vRotq, &vPos, WorldMatrix);
 			vRotq = XMQuaternionNormalize(vRotq);
@@ -103,17 +105,28 @@ PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody_Static& RigidBody
 			// pPxMeshGeometry->meshFlags |= PSX::PxMeshGeometryFlag::eDOUBLE_SIDED;
 			// 유효성 체크
 			PX_ASSERT(pPxMeshGeometry->isValid());
+			pGeometry = pPxMeshGeometry;
 			m_TriangleMeshGeometry.emplace(RigidBody.Get_PxMeshKey(), pPxMeshGeometry);
 		}
 		break;
 	case ACTOR::HEIGHTFIELD:
-		break;
+	{ // SetUp HeightField
+		PSX::PxHeightField* pHeightField = Find_HeightField(RigidBody.Get_PxMeshKey());
+		PSX::PxHeightFieldGeometry* pPxHeightGeometry = new PSX::PxHeightFieldGeometry(pHeightField);
+		pPxHeightGeometry->heightScale = 0.01f/* 기본 정밀도 100배 0.01 -> 1cm, 1 -> 1m */;
+
+		// 유효성 체크
+		PX_ASSERT(pPxHeightGeometry->isValid());
+		pGeometry = pPxHeightGeometry;
+		m_HeightFieldGeometry.emplace(RigidBody.Get_PxMeshKey(), pPxHeightGeometry);
+	}
+	break;
 	default:
 		assert(false);
 		break;
 	}
 
-	pShape = PSX::PxRigidActorExt::createExclusiveShape(*pActor, *pPxMeshGeometry, *m_pMaterials[ENUM_CLASS(RigidBody.Get_MaterialType())]);
+	pShape = PSX::PxRigidActorExt::createExclusiveShape(*pActor, *pGeometry, *m_pMaterials[ENUM_CLASS(RigidBody.Get_MaterialType())]);
 
 	pShape->setFlags(RigidBody.Get_ShapeFlags());
 	pShape->setContactOffset(RigidBody.Get_ContactOffset());
@@ -140,9 +153,37 @@ PSX::PxMaterial* CPhysX_Manager::Create_Material(const _float3* vMatInfo)
 	return pPxMaterial;
 }
 
+_bool CPhysX_Manager::SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
+{
+	PSX::PxSphereGeometry sphereGeom(fRadius);
+
+	PSX::PxVec3 startPos(vStartPos.x, vStartPos.y, vStartPos.z);
+	PSX::PxQuat startRot(PSX::PxIdentity);
+
+	PSX::PxTransform startPose(startPos, startRot);
+
+	PSX::PxVec3 sweepDir(vDir.x, vDir.y, vDir.z);
+	sweepDir.normalize();
+
+	PSX::PxQueryFilterData filterData(flagQuery);
+
+	return m_pScene->sweep(sphereGeom, startPose, sweepDir, fDistance, hitBuffer, flagHitsData, filterData);
+}
+
 void CPhysX_Manager::RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh) 
 {
 	m_TriangleMeshes.emplace(CMyTools::ToWstring(pName), pPxTriMesh);
+}
+void CPhysX_Manager::RegistHeight(const _tchar* pName, PSX::PxHeightFieldDesc& Desc)
+{
+	PSX::PxHeightField* pHeightField = PxCreateHeightField(Desc);
+	if (nullptr == pHeightField) {
+		assert(false);
+	}
+	else {
+		m_HeightFields.emplace(pName, pHeightField);
+	}
+
 }
 #ifdef EDITOR_PROJECT
 
@@ -196,6 +237,19 @@ HRESULT CPhysX_Manager::SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangle
 	assert(ok);
 	return (ok ? S_OK : E_FAIL);
 }
+void CPhysX_Manager::Add_Editor_Plane(PhsXUserData& PlaneData)
+{
+	PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
+	PlaneData.iSubKind = UINT_MAX;
+	PlaneData.pOwner = nullptr;
+	PlaneData.pBody = nullptr;
+
+	PSX::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *m_pMaterials[ENUM_CLASS(PXMATERIAL::DEFAULT)]);
+	pGroundPlane->userData = &PlaneData;
+	pGroundPlane->setName("PHYSX_EDITPLANE");
+	m_pScene->addActor(*pGroundPlane);
+}
+
 #endif // EDITOR_PROJECT
 
 HRESULT CPhysX_Manager::LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes)
@@ -238,6 +292,15 @@ PSX::PxTriangleMesh* CPhysX_Manager::Find_TriangleMesh(const _tchar* pMeshName)
 {
 	map<_wstring, PSX::PxTriangleMesh*>::iterator iter = m_TriangleMeshes.find(pMeshName);
 	if (iter != m_TriangleMeshes.end()) {
+		return iter->second;
+	}
+	return nullptr;
+}
+
+PSX::PxHeightField* CPhysX_Manager::Find_HeightField(const _tchar* pFieldName)
+{
+	map<_wstring, PSX::PxHeightField*>::iterator iter = m_HeightFields.find(pFieldName);
+	if (iter != m_HeightFields.end()) {
 		return iter->second;
 	}
 	return nullptr;
@@ -414,18 +477,26 @@ HRESULT CPhysX_Manager::Initialize()
 		assert(false);
 		return E_FAIL;
 	}
+#ifdef _DEBUG
 
 	if (FAILED(Connect_DebugServer())) {
 		//ASSERT_NURI(false);
 		//ASSERT_JINWOO(false);
 	}
 
+#endif // _DEBUG
+
 	{ // 씬 세팅
 		m_ToleranceScale.length = 1.f; // 1 meter
 		m_ToleranceScale.speed = GRAVITY; // 
 		
-
+#ifdef _DEBUG
 		m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, m_ToleranceScale, true, m_pPvd);
+#endif // _DEBUG
+#ifndef _DEBUG
+m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, m_ToleranceScale, true);
+#endif // _DEBUG
+
 
 		m_pCookingParam = new PSX::PxCookingParams(m_pPhysics->getTolerancesScale());
 		m_pCookingParam->meshPreprocessParams |= PSX::PxMeshPreprocessingFlag::eWELD_VERTICES;
@@ -477,6 +548,7 @@ HRESULT CPhysX_Manager::Initialize()
 		m_pCCTManager->setPreventVerticalSlidingAgainstCeiling(false); // 천장타고 슬라이딩 허용 비허용
 	}
 
+#ifdef _DEBUG
 	// 디버그서버의 클라 세팅
 	PSX::PxPvdSceneClient* pPvdClient = m_pScene->getScenePvdClient();
 	if (nullptr != pPvdClient) {
@@ -484,147 +556,24 @@ HRESULT CPhysX_Manager::Initialize()
 		pPvdClient->setScenePvdFlag(PSX::PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
 		pPvdClient->setScenePvdFlag(PSX::PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
 	}
+#endif DEBUG
 
 	m_pMaterials.reserve(ENUM_CLASS(PXMATERIAL::END));
 	m_pMaterials.push_back(m_pPhysics->createMaterial(0.5f, 0.5f, 0.6f));
 
-#ifndef _DEBUG
 	PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
 	PlaneData.iSubKind = UINT_MAX;
 	PlaneData.pOwner = nullptr;
 	PlaneData.pBody = nullptr;
 
-	PSX::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *m_pMaterials[ENUM_CLASS(PXMATERIAL::DEFAULT)]);
+	PSX::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 50), *m_pMaterials[ENUM_CLASS(PXMATERIAL::DEFAULT)]);
 	pGroundPlane->userData = &PlaneData;
 	pGroundPlane->setName("PHYSX_MANAGER_PLANE");
-	m_pScene->addActor(*pGroundPlane);;
-#endif // _DEBUG
-
-
-	// m_pScene->overlap();??????
-#ifdef EDITOR_PROJECT
-#ifdef 기무리
-	PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
-	PlaneData.iSubKind = UINT_MAX;
-	PlaneData.pOwner = nullptr;
-	PlaneData.pBody = nullptr;
-
-	PSX::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *m_pMaterials[ENUM_CLASS(PXMATERIAL::DEFAULT)]);
-	pGroundPlane->userData = &PlaneData;
-	pGroundPlane->setName("PHYSX_MANAGER_PLANE");
-	m_pScene->addActor(*pGroundPlane);;
-
-	//{
-	//	float halfExtent = .5f;
-	//	physx::PxShape* shape = m_pPhysics->createShape(physx::PxSphereGeometry(halfExtent), *pMaterial);
-	//	physx::PxU32 size = 30;
-	//	physx::PxTransform pxTransform(physx::PxVec3(0));
-
-	//	for (physx::PxU32 i = 0; i < size; i++) {
-	//		for (physx::PxU32 j = 0; j < size - i; j++) {
-	//			physx::PxTransform localTm(physx::PxVec3(physx::PxReal(j * 2) - physx::PxReal(size - i) + 100, physx::PxReal(i * 2 + 1), 0) * halfExtent);
-	//			physx::PxRigidDynamic* body = m_pPhysics->createRigidDynamic(pxTransform.transform(localTm));
-	//			body->attachShape(*shape);
-	//			physx::PxRigidBodyExt::updateMassAndInertia(*body, 10.0f);
-	//			m_pScene->addActor(*body);
-	//		}
-	//	}
-	//}
-#endif // 기무리
-
-
-#ifdef 진우
-	PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
-	PlaneData.iSubKind = UINT_MAX;
-	PlaneData.pOwner = nullptr;
-	PlaneData.pBody = nullptr;
-
-	PSX::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *m_pMaterials[ENUM_CLASS(PXMATERIAL::DEFAULT)]);
-	pGroundPlane->userData = &PlaneData;
-	pGroundPlane->setName("PHYSX_MANAGER_PLANE");
-	m_pScene->addActor(*pGroundPlane);;
-
-	//{
-	//	float halfExtent = .5f;
-	//	physx::PxShape* shape = m_pPhysics->createShape(physx::PxSphereGeometry(halfExtent), *pMaterial);
-	//	physx::PxU32 size = 30;
-	//	physx::PxTransform pxTransform(physx::PxVec3(0));
-
-	//	for (physx::PxU32 i = 0; i < size; i++) {
-	//		for (physx::PxU32 j = 0; j < size - i; j++) {
-	//			physx::PxTransform localTm(physx::PxVec3(physx::PxReal(j * 2) - physx::PxReal(size - i) + 100, physx::PxReal(i * 2 + 1), 0) * halfExtent);
-	//			physx::PxRigidDynamic* body = m_pPhysics->createRigidDynamic(pxTransform.transform(localTm));
-	//			body->attachShape(*shape);
-	//			physx::PxRigidBodyExt::updateMassAndInertia(*body, 10.0f);
-	//			m_pScene->addActor(*body);
-	//		}
-	//	}
-	//}
-#endif // 진우
-#ifdef gimch
-	PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
-	PlaneData.iSubKind = UINT_MAX;
-	PlaneData.pOwner = nullptr;
-	PlaneData.pBody = nullptr;
-
-	m_pMaterials.reserve(ENUM_CLASS(PXMATERIAL::END));
-	m_pMaterials.push_back(m_pPhysics->createMaterial(0.5f, 0.5f, 0.6f));
-	PSX::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *m_pMaterials[ENUM_CLASS(PXMATERIAL::DEFAULT)]);
-	pGroundPlane->userData = &PlaneData;
-	pGroundPlane->setName("PHYSX_MANAGER_PLANE");
-	m_pScene->addActor(*pGroundPlane);;
-
-	//{
-	//	float halfExtent = .5f;
-	//	physx::PxShape* shape = m_pPhysics->createShape(physx::PxSphereGeometry(halfExtent), *pMaterial);
-	//	physx::PxU32 size = 30;
-	//	physx::PxTransform pxTransform(physx::PxVec3(0));
-
-	//	for (physx::PxU32 i = 0; i < size; i++) {
-	//		for (physx::PxU32 j = 0; j < size - i; j++) {
-	//			physx::PxTransform localTm(physx::PxVec3(physx::PxReal(j * 2) - physx::PxReal(size - i) + 100, physx::PxReal(i * 2 + 1), 0) * halfExtent);
-	//			physx::PxRigidDynamic* body = m_pPhysics->createRigidDynamic(pxTransform.transform(localTm));
-	//			body->attachShape(*shape);
-	//			physx::PxRigidBodyExt::updateMassAndInertia(*body, 10.0f);
-	//			m_pScene->addActor(*body);
-	//		}
-	//	}
-	//}
-#endif // 진우
-#endif // EDITOR_PROJECT
-
-#ifdef Bin
-	PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
-	PlaneData.iSubKind = UINT_MAX;
-	PlaneData.pOwner = nullptr;
-	PlaneData.pBody = nullptr;
-
-	PSX::PxRigidStatic* pGroundPlane = PxCreatePlane(*m_pPhysics, physx::PxPlane(0, 1, 0, 0), *m_pMaterials[ENUM_CLASS(PXMATERIAL::DEFAULT)]);
-	pGroundPlane->userData = &PlaneData;
-	pGroundPlane->setName("PHYSX_MANAGER_PLANE");
-	m_pScene->addActor(*pGroundPlane);;
-
-	//{
-	//	float halfExtent = .5f;
-	//	physx::PxShape* shape = m_pPhysics->createShape(physx::PxSphereGeometry(halfExtent), *pMaterial);
-	//	physx::PxU32 size = 30;
-	//	physx::PxTransform pxTransform(physx::PxVec3(0));
-
-	//	for (physx::PxU32 i = 0; i < size; i++) {
-	//		for (physx::PxU32 j = 0; j < size - i; j++) {
-	//			physx::PxTransform localTm(physx::PxVec3(physx::PxReal(j * 2) - physx::PxReal(size - i) + 100, physx::PxReal(i * 2 + 1), 0) * halfExtent);
-	//			physx::PxRigidDynamic* body = m_pPhysics->createRigidDynamic(pxTransform.transform(localTm));
-	//			body->attachShape(*shape);
-	//			physx::PxRigidBodyExt::updateMassAndInertia(*body, 10.0f);
-	//			m_pScene->addActor(*body);
-	//		}
-	//	}
-	//}
-#endif // 진우
-	
+	m_pScene->addActor(*pGroundPlane);
 
 	return S_OK;
 }
+#ifdef _DEBUG
 
 HRESULT CPhysX_Manager::Connect_DebugServer()
 {
@@ -647,6 +596,8 @@ HRESULT CPhysX_Manager::Connect_DebugServer()
 	return S_OK;
 }
 
+#endif // _DEBUG
+
 CPhysX_Manager* CPhysX_Manager::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CPhysX_Manager* pInstance = new CPhysX_Manager(pDevice, pContext);
@@ -660,7 +611,7 @@ CPhysX_Manager* CPhysX_Manager::Create(ID3D11Device* pDevice, ID3D11DeviceContex
 void CPhysX_Manager::Free()
 {
 	ClearScene();
-
+	
 	for (auto& pMeshes : m_TriangleMeshes) {
 		pMeshes.second->release();
 	} m_TriangleMeshes.clear();
@@ -668,6 +619,14 @@ void CPhysX_Manager::Free()
 	for (auto& pGeometry : m_TriangleMeshGeometry) {
 		Safe_Delete(pGeometry.second);
 	} m_TriangleMeshGeometry.clear();
+
+	for (auto& pGeometry : m_HeightFieldGeometry) {
+		Safe_Delete(pGeometry.second);
+	} m_HeightFieldGeometry.clear();
+
+	for (auto& pField : m_HeightFields) {
+		pField.second->release();
+	} m_HeightFields.clear();
 
 	if (nullptr != m_pCookingParam) {
 		Safe_Delete(m_pCookingParam);
@@ -692,11 +651,14 @@ void CPhysX_Manager::Free()
 	if (nullptr != m_pPhysics) {
 		m_pPhysics->release(); m_pPhysics = nullptr;
 	}
+#ifdef _DEBUG
 
 	if (nullptr != m_pPvd) {
 		m_pPvd->disconnect();
 		m_pPvd->release(); m_pPvd = nullptr;
 	}
+
+#endif // _DEBUG
 
 	if (nullptr != m_pTransport) {
 		m_pTransport->release(); m_pTransport = nullptr;

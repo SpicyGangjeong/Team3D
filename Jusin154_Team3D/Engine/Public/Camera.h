@@ -44,6 +44,8 @@ public:
 	_bool IsImportantThan(CCamera* pOther) const;
 	const _float* Get_CurrentFar();
 	HRESULT Ready_Shadow();
+	void ZoomIn(_float fTimeDelta);
+	void Set_Fov(_float fFovy,_float fTimeDelta, _bool& bZoomIn);
 
 protected:
 	_float			m_fFovy = {};

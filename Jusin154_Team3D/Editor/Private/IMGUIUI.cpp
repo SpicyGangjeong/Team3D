@@ -2,6 +2,7 @@
 #include "IMGUIUI.h"
 #include "UIObject.h"
 #include "GamePlay_Canvas.h"
+#include "Spell_Canvas.h"
 #include "PanelObject.h"
 #include "ElementObject.h"
 #include "Mouse_Cursor.h"
@@ -25,6 +26,9 @@ HRESULT CIMGUIUI::Initialize(void* pArg)
 {
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
+
+	m_pCurrent_Canvas = m_pGamePlay_Canvas;
+
 	return S_OK;
 }
 
@@ -100,11 +104,11 @@ void CIMGUIUI::Update(_float fTimeDelta)
 {
 	static const char* SpellTypeNames[] = { "CONTROL","POWER", "DAMAGE","UTILITY", "TRANSFORM",  "CURSE",	"ESSENTIAL" };
 	int itemCount = sizeof(SpellTypeNames) / sizeof(const char*);
-	if (m_pGamePlay_Canvas != nullptr)
+	static const char* CanvasNames[] = { "GamePlay Canvas", "Spell Canvas" };
+	static int iCanvasIndex = 0;
+	if (m_pCurrent_Canvas != nullptr)
 	{
-		m_fCanvasAlpha = static_cast<CCanvasObject*>(m_pGamePlay_Canvas)->Get_Alpha();
-
-		
+		m_fCanvasAlpha = static_cast<CCanvasObject*>(m_pCurrent_Canvas)->Get_Alpha();
 	}
 	if (m_pPanelObject != nullptr)
 	{
@@ -149,35 +153,45 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		m_fLerpY = static_cast<CElementObject*>(m_pElementObject)->Get_Lerp_Pos().m128_f32[1];
 		m_fMoveSpeed = static_cast<CElementObject*>(m_pElementObject)->Get_Speed();
 		m_fAngle = static_cast<CElementObject*>(m_pElementObject)->Get_Angle();
-		m_iSkillType = static_cast<CElementObject*>(m_pElementObject)->Get_SkillType();
+		m_iSpellType = static_cast<CElementObject*>(m_pElementObject)->Get_SkillType();
 		m_fCoolTime = static_cast<CElementObject*>(m_pElementObject)->Get_CoolTime();
 	}
 	GUI::Begin("Current_PanelObject_Info");
-	if (m_pGamePlay_Canvas != nullptr)
+	if (m_pCurrent_Canvas != nullptr)
 	{
-		if (m_pGamePlay_Canvas != nullptr)
+		if (GUI::Combo("Canvas", &iCanvasIndex, CanvasNames, 2))
 		{
-			m_bCanvasVisible = static_cast<CCanvasObject*>(m_pGamePlay_Canvas)->Get_Visible();
-			auto panelNames = static_cast<CCanvasObject*>(m_pGamePlay_Canvas)->Panel_Name();
+			if (iCanvasIndex == 0)
+				m_pCurrent_Canvas = m_pGamePlay_Canvas;
+			else
+				m_pCurrent_Canvas = m_pSpell_Canvas;
+		}
+	}
+	if (m_pCurrent_Canvas != nullptr)
+	{
+		if (m_pCurrent_Canvas != nullptr)
+		{
+			m_bCanvasVisible = static_cast<CCanvasObject*>(m_pCurrent_Canvas)->Get_Visible();
+			auto panelNames = static_cast<CCanvasObject*>(m_pCurrent_Canvas)->Panel_Name();
 			if (panelNames != m_iPanelNamewstring)
 			{
 				PanelwstringTostring(panelNames);
 			}
 			if (GUI::Combo("Panels", &m_iPanelCount, m_iPanelName.data(), static_cast<_int>(m_iPanelName.size())))
 			{
-				m_pPanelObject = static_cast<CCanvasObject*>(m_pGamePlay_Canvas)->Get_Panel(m_iPanelNamewstring[m_iPanelCount]);
+				m_pPanelObject = static_cast<CCanvasObject*>(m_pCurrent_Canvas)->Get_Panel(m_iPanelNamewstring[m_iPanelCount]);
 			}
 			if (GUI::Checkbox("Canvas Active", &m_bCanvasVisible))
 			{
-				static_cast<CCanvasObject*>(m_pGamePlay_Canvas)->Visible(m_bCanvasVisible);
+				static_cast<CCanvasObject*>(m_pCurrent_Canvas)->Visible(m_bCanvasVisible);
 			}
 			if (GUI::Button("CanvasFadeIn"))
 			{
-				static_cast<CCanvasObject*>(m_pGamePlay_Canvas)->Set_FadeIn();
+				static_cast<CCanvasObject*>(m_pCurrent_Canvas)->Set_FadeIn();
 			}
 			if (GUI::Button("CanvasFadeOut"))
 			{
-				static_cast<CCanvasObject*>(m_pGamePlay_Canvas)->Set_FadeOut();
+				static_cast<CCanvasObject*>(m_pCurrent_Canvas)->Set_FadeOut();
 			}
 			GUI::Text("PanelAlph : %.1f", m_fCanvasAlpha);
 
@@ -422,10 +436,10 @@ void CIMGUIUI::Update(_float fTimeDelta)
 			static_cast<CElementObject*>(m_pElementObject)->Set_Angle(m_fAngle);
 		}
 
-		GUI::Text("SkillType %d", m_iSkillType);
-		if (GUI::Combo("SkillType", &m_iSkillType, SpellTypeNames, itemCount))
+		GUI::Text("SkillType %d", m_iSpellType);
+		if (GUI::Combo("SkillType", &m_iSpellType, SpellTypeNames, itemCount))
 		{
-			static_cast<CElementObject*>(m_pElementObject)->Set_SkillType(m_iSkillType);
+			static_cast<CElementObject*>(m_pElementObject)->Set_SkillType(m_iSpellType);
 		}
 
 		GUI::Text("CoolTime %.1f", m_fCoolTime);
@@ -454,6 +468,11 @@ HRESULT CIMGUIUI::Bind_ShaderResources()
 HRESULT CIMGUIUI::Ready_Components(void* pArg)
 {
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGamePlay_Canvas>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CGamePlay_Canvas**>(&m_pGamePlay_Canvas))))
+	{
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Canvas>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Canvas**>(&m_pSpell_Canvas))))
 	{
 		return E_FAIL;
 	}

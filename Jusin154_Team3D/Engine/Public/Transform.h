@@ -47,12 +47,17 @@ public:
 	_vector Go_Right(_float fTimeDelta);
 	_vector Go_Up(_float fTimeDelta);
 	_vector Go_Down(_float fTimeDelta);
+	///////////////////////////////////
+	_vector Go_LerpStraight(_float fSpeed, _float fTimeDelta);
+	_vector Go_LerpUp(_float fSpeed, _float fTimeDelta);
+	_vector Go_LerpDown(_float fSpeed, _float fTimeDelta);
 
 	void	Translation(_float3& vTrans);
 	void	Translation(_fvector vTrans);
 
 	void	AccumulateMomentum(_fvector vMomentum);
 	_vector Get_CurrentMomentum() const;
+	void	Set_CurrentMomentum(_fvector vMomentum);
 	void	RewindMomentum();
 
 	_vector Get_EstimatedPositionByMomentum() const;
@@ -67,7 +72,7 @@ public:
 
 	// Up, Down 벡터를 바라보게 하면 터짐
 	void LookAt(_fvector vAt);
-
+	void LookAt_Horizontal(_fvector vAt);
 	_float TargetDis(_fvector vTarget);
 
 private:

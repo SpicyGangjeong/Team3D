@@ -3,10 +3,23 @@
 #include "Client_Define.h"
 #include "MapContainer.h"
 
+NS_BEGIN(Engine)
+class CShader;
+class CVIBuffer_Box;
+class COcclusionQuery;
+NS_END
+
 NS_BEGIN(Client)
 
-class CBuildingContainer final : public CMapContainer
+class CBuildingContainer final : public CMapContainer // OCCLUSION CONTAINER
 {
+public:
+	typedef struct tagMapContainerDesc : public CMapContainer::MAP_CONTAINER_DESC
+	{
+		_float3			vContainerMin;
+		_float3			vContainerMax;
+	}MAP_CONTAINER_DESC;
+
 private:
 	CBuildingContainer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CBuildingContainer(const CBuildingContainer& rhs);
@@ -17,25 +30,14 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+	virtual HRESULT Render_BoundingBox() override;
 
-public:
-	template<typename T>
-	HRESULT Add_Part(const _string& strPartKey, _uint iPrototypeLevelIndex, T** ppOut, void* pArg = nullptr) {
-		return Add_PartObject<T>(strPartKey, iPrototypeLevelIndex, ppOut, pArg);
-	}
-	template<typename T>
-	HRESULT Add_Collision(_uint iPrototypeLevelIndex, void* pArg = nullptr)
-	{
-		T* pPartObject = m_pGameInstance->Clone_Prototype<T>(iPrototypeLevelIndex, pArg, this);
+private:
+	CShader*				m_pShaderCom = { nullptr };
+	CVIBuffer_Box*			m_pVIBufferCom = { nullptr };
+	COcclusionQuery*		m_pOcclusionQueryCom = { nullptr };
 
-		if (nullptr == pPartObject) {
-			return E_FAIL;
-		}
-
-		m_ColiisonPartObjects.push_back(pPartObject);
-
-		return S_OK;
-	}
+	_float3					m_vExtentWorldPosition = {};
 
 private:
 	virtual HRESULT		Initialize_Prototype() override;

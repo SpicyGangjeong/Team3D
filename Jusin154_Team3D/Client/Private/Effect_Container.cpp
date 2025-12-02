@@ -5,6 +5,7 @@
 #include "EffectParts.h"
 #include "TrailObject.h"
 
+#include "PhysXEffectHitBox.h"
 
 #include <sstream>
 
@@ -126,7 +127,7 @@ HRESULT CEffect_Container::Ready_Components(void* pArg)
 	TransformDesc.fRadius = 20.f;
 	TransformDesc.fRotationPerSec = 10.f;
 	TransformDesc.fSpeedPerSec = 10.f;
-
+	
 	if (FAILED(__super::Ready_Components(&TransformDesc))) {
 		return E_FAIL;
 	}
@@ -145,8 +146,9 @@ HRESULT CEffect_Container::Reset_EffectParts()
 	{
 		CInstance_Model* pInstanceModel = iter.second->Get_Component<CInstance_Model>();
 
-		if (pInstanceModel == nullptr)
+		if (pInstanceModel == nullptr){
 			continue;
+		}
 
 		pInstanceModel->Instane_Buffer_ReStruct();
 	}
@@ -175,6 +177,7 @@ HRESULT CEffect_Container::Bind_ShaderResources()
 void CEffect_Container::Update_Event(_float fTimeDelta)
 {
 
+
 	m_fPreAccTime = m_fAccTime;
 	m_fAccTime += fTimeDelta;
 
@@ -198,12 +201,18 @@ void CEffect_Container::Update_Event(_float fTimeDelta)
 		}
 		else
 		{
+			m_bVisible = false;
+
 			for (auto& pPart : m_PartObjects)
 			{
 				pPart.second->Set_Visible(false);
 			}
 
-			m_bVisible = false;
+			if (m_pPhysHitBox != nullptr && m_pPhysHitBox->isDead() == false)
+			{
+				m_pPhysHitBox->Set_Dead();
+				SAFE_RELEASE(m_pPhysHitBox);
+			}
 		}
 	}
 

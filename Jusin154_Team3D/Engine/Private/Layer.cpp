@@ -73,6 +73,7 @@ HRESULT CLayer::Clear_Layer()
 {
 	for (auto& iter : m_ObjectList)
 	{
+		iter->Set_Dead();
 		SAFE_RELEASE(iter);
 	}
 
@@ -86,6 +87,7 @@ void CLayer::Free()
 
 	for (auto& iter : m_ObjectList)
 	{
+		iter->Set_Dead();
 		SAFE_RELEASE(iter);
 	} m_ObjectList.clear();
 

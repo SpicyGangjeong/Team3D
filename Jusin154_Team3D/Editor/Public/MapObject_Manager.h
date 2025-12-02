@@ -12,7 +12,7 @@ NS_BEGIN(Editor)
 
 class CMapObject_Manager final : public CGameObject
 {
-	enum class ADD_TYPE {CONTAINER, ELEMENT_STATIC, ELEMENT_INTERACT};
+	enum class ADD_TYPE {CONTAINER, ELEMENT_STATIC, ELEMENT_INTERACT, ELEMENT_LIGHT };
 
 private:
 	CMapObject_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -22,9 +22,9 @@ private:
 public:
 	virtual HRESULT Initialize_Prototype(vector<_wstring>& ModelPrototypeTags, vector<filesystem::path>& ModelPrototypePaths);
 	virtual HRESULT Initialize(void* pArg) override;
-	virtual void Priority_Update(_float fTimeDelta) override;
-	virtual void Update(_float fTimeDelta) override;
-	virtual void Late_Update(_float fTimeDelta) override;
+	virtual void	Priority_Update(_float fTimeDelta) override;
+	virtual void	Update(_float fTimeDelta) override;
+	virtual void	Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
 	const filesystem::path Get_PrototypePath(_uint iModelIndex);
@@ -45,6 +45,7 @@ private:
 	vector<filesystem::path>			m_ModelPrototypePaths;
 
 	_uint								m_iContainerObjectIndex = {};
+	_int								m_iGlassIndex = { 1 };
 
 	class CBuildingContainer*			m_pContainer = { nullptr };
 	_char								m_szSaveFileName[MAX_PATH] = {};
@@ -60,6 +61,9 @@ private:
 	HRESULT		Save_ContainerData(const _char* pFileName, const _char* pContainerName);
 	HRESULT		Load_ContainerData(const _char* pFileName, const _char* pContainerName);
 	HRESULT		Load_ContainerToMapObject(const _char* pFileName, const _char* pContainerName);
+
+	HRESULT		Save_LightObject(const _char* pFileName);
+	HRESULT     Load_LightObject(const _char* pFileName);
 #pragma endregion
 
 	void		Update_PrototypeList();
@@ -68,8 +72,7 @@ private:
 	void		Update_ContainerObject();
 
 	void		Create_PartObject(_wstring& strPrototypeTag);
-	void		Create_Elemnt_Static(_wstring& strPrototypeTag);
-	void		Create_Elemnt_Interact(_wstring& strPrototypeTag);
+	void		Create_Elemnt(_wstring& strPrototypeTag);
 
 	_bool		Find_Lod_Prototype(_wstring strPrototypeTag, vector<_uint>& LodModelIndices);
 	_uint		Get_KeyCount(_wstring strPrototypeTag);

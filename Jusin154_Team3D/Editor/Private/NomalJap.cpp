@@ -54,6 +54,11 @@ HRESULT CNomalJap::Initialize(void* pArg)
 void CNomalJap::Priority_Update(_float fTimeDelta)
 {
 	__super::Priority_Update(fTimeDelta);
+
+	if (nullptr != m_pPhysHitBox) {
+		m_pPhysHitBox->Get_Component<CTransform>()->RewindMomentum();
+	}
+
 }
 
 void CNomalJap::Update(_float fTimeDelta)
@@ -66,9 +71,13 @@ void CNomalJap::Update(_float fTimeDelta)
 
 	Update_Event(fTimeDelta);
 
-	m_pProjectile_Side->Get_Component<CTransform>()->Translation(m_vOwnerLook * 1.2f);
-	m_pProjectile->Get_Component<CTransform>()->Translation(m_vOwnerLook * 1.2f);
+	m_pProjectile_Side->Get_Component<CTransform>()->Translation(m_vCameraLook * 1.2f);
+	m_pProjectile->Get_Component<CTransform>()->Translation(m_vCameraLook * 1.2f);
 
+
+	if (nullptr != m_pPhysHitBox) {
+		m_pPhysHitBox->Get_Component<CTransform>()->AccumulateMomentum(m_vCameraLook * 1.2f);
+	}
 
 
 	if (m_fAccTime > XM_2PI)
@@ -78,6 +87,12 @@ void CNomalJap::Update(_float fTimeDelta)
 
 	m_pProjectile_Side->Get_Component<CTransform>()->Translation(m_vRotateUp * 0.6f * sinf(m_fAccTime));
 	m_pProjectile->Get_Component<CTransform>()->Translation(m_vRotateUp * 0.6f * sinf(m_fAccTime));
+
+
+	if (nullptr != m_pPhysHitBox) {
+		m_pPhysHitBox->Get_Component<CTransform>()->AccumulateMomentum(m_vRotateUp * 0.6f * sinf(m_fAccTime));
+	}
+
 }
 
 void CNomalJap::Late_Update(_float fTimeDelta)
@@ -124,11 +139,11 @@ HRESULT CNomalJap::Pre_Setting(CGameObject* pObject)
 
 
 	//나아가는 벡터와 한점을 가져와 수직인 평면상에 하나의 점으로  DIR 을 만듬
-	m_vOwnerLook = XMVector3Normalize(m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK));
+	m_vCameraLook = XMVector3Normalize(m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK));
 	_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
 
 
-	_vector vQuaternion = XMQuaternionRotationAxis(m_vOwnerLook, m_pGameInstance->Random_Float(0.f, XM_PIDIV2));
+	_vector vQuaternion = XMQuaternionRotationAxis(m_vCameraLook, m_pGameInstance->Random_Float(0.f, XM_PIDIV2));
 
 	m_vRotateUp = XMVector3Rotate(vUp, vQuaternion);
 
@@ -156,19 +171,9 @@ HRESULT CNomalJap::Ready_Child()
 
 	XMStoreFloat3(&Desc.vPos, m_pOwner->Get_WorldPostion() + XMVectorSet(0.f, 0.f, 1.f, 0.f));
 
-
-	_vector vOwnerLook = m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK);
-
-	_float3 vDir = {};
-
-	XMStoreFloat3(&Desc.vPos, m_pOwner->Get_WorldPostion() + XMVectorSet(0.f, 0.f, 1.f, 0.f));
-
-	XMStoreFloat3(&vDir, vOwnerLook * 0.6f);
-
-
 	Desc.vRotRPY = { 0.f, 0.f, 0.f };
 	Desc.iSubKind = 70;
-	Desc.vDeltaPos = vDir;
+	Desc.vDeltaPos = _float3(0.f, 0.f, 0.f);
 	Desc.vLifeTime = { 0.f, 1.f };
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXEffectHitBox>(g_iStaticLevel, CURRENT_LEVEL, LAYER_HITBOX, &Desc, this , &m_pPhysHitBox))) {
@@ -176,6 +181,7 @@ HRESULT CNomalJap::Ready_Child()
 		return E_FAIL;
 	}
 
+	SAFE_ADDREF(m_pPhysHitBox);
 	return S_OK;
 }
 
@@ -226,16 +232,20 @@ void CNomalJap::OnCollision(CGameObject* pOther , void* pDesc)
 	Get_PartObject<CTrailObject>()->Set_Visible(false);
 	Get_PartObject<CTrailObject>()->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
 
-	m_pPhysHitBox->Set_Dead();
+	if (m_pPhysHitBox != nullptr)
+	{
+		m_pPhysHitBox->Set_Dead();
+		SAFE_RELEASE(m_pPhysHitBox);
+	}
+
 }
 
 void CNomalJap::Free()
 {
 	__super::Free();
 
-	//if(m_pPhysHitBox != nullptr)
-	//	if (m_pPhysHitBox->Get_Depth() == false)
-	//		SAFE_RELEASE(m_pPhysHitBox);
+	if(m_pPhysHitBox != nullptr)
+		SAFE_RELEASE(m_pPhysHitBox);
 
 	Safe_Release(m_pProjectile);
 	Safe_Release(m_pProjectile_Side);

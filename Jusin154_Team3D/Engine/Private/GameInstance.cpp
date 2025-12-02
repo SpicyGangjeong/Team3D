@@ -17,6 +17,7 @@
 #include "Picking.h"
 #include "PhysX_Manager.h"
 #include "ThreadHolder.h"
+#include "Fog.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -48,7 +49,7 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 			}
 		}
 	}
-	m_pThreadHolder = CThreadHolder::Create(4);
+	m_pThreadHolder = CThreadHolder::Create( 6 );
 	if (nullptr == m_pThreadHolder) {
 		return E_FAIL;
 	}
@@ -100,6 +101,11 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 		return E_FAIL;
 	}
 
+	m_pFog = CFog::Create();
+	if (nullptr == m_pFog) {
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 
@@ -108,7 +114,9 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 	m_pKey_Manager->Update();
 	m_pMouse_Manager->Update();
 	//m_pSound_Manager->Update();
-
+#ifdef _DEBUG
+	m_pFog->Update_Fog();
+#endif // _DEBUG
 	m_pPicking->Update();
 
 	m_pObject_Manager->Priority_Update(fTimeDelta);
@@ -285,6 +293,7 @@ void CGameInstance::Present_TimeCost() const
 		+ m_fTimer_DrawCall
 		+ m_fTimer_Present;
 
+	GUI::PushItemWidth(80);
 	GUI::Begin("Previous_Frame_Timer");
 	{
 		GUI::ProgressBar(m_fTimer_PriorityUpdate / fTotal, ImVec2(200.f, 0.f));
@@ -419,7 +428,7 @@ void CGameInstance::Clear_Objects_With_Layers(_uint iLevelIndex)
 }
 
 HRESULT CGameInstance::Add_RenderGroup(RENDER eRenderGroup, CGameObject* pRenderObject)
-{
+{	
 	return m_pRenderer->Add_RenderGroup(eRenderGroup, pRenderObject);
 }
 
@@ -511,6 +520,11 @@ HRESULT CGameInstance::Add_MRT(const _wstring& strMultiRenderTargetKey, const _w
 HRESULT CGameInstance::Begin_MRT(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV)
 {
 	return m_pRenderTarget_Manager->Begin_MRT(strMRTTag, pDSV);
+}
+
+HRESULT CGameInstance::Begin_MRT_NonClear(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV)
+{
+	return m_pRenderTarget_Manager->Begin_MRT_NonClear(strMRTTag, pDSV);
 }
 
 HRESULT CGameInstance::Begin_MRT_Include_BackBuffer(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV)
@@ -622,6 +636,7 @@ _bool CGameInstance::SaveAssimpModel(const _char* filename)
 	auto iter = m_ModelMap.find(filename);
 	return iter->second->SaveAssimpModel(filename);
 }
+
 void CGameInstance::Add_ModelToMap(const _char* filePath, CModel* pModel)
 {
 	m_ModelMap[filePath] = pModel;
@@ -632,13 +647,19 @@ void CGameInstance::Add_ModelToMap(const _char* filePath, CModel* pModel)
 
 void CGameInstance::Add_SaveModel(const _char* filePath, SaveModel sModel)
 {
+	lock_guard<mutex> lock(m_mtxLoadModelLock);
 	m_sModelMap[filePath] = sModel;
 }
 
 SaveModel* CGameInstance::Load_SaveModel(const _char* filePath)
 {
-	auto iter = m_sModelMap.find(filePath);
-	return &iter->second;
+	lock_guard<mutex> lock(m_mtxLoadModelLock);
+	map<const _char*, SaveModel>::iterator iter = m_sModelMap.find(filePath);
+	if (iter == m_sModelMap.end()) {
+		return nullptr;
+	}
+	SaveModel* pOut = &iter->second;
+	return pOut;
 }
 
 #pragma region PhysX_Manager
@@ -652,6 +673,11 @@ void CGameInstance::RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTr
 	return m_pPhysX_Manager->RegistTriMesh(pName, pPxTriMesh);
 }
 
+void CGameInstance::RegistHeight(const _tchar* pName, PSX::PxHeightFieldDesc& Desc)
+{
+	return m_pPhysX_Manager->RegistHeight(pName, Desc);
+}
+
 PSX::PxRigidDynamic* CGameInstance::Add_DynamicActor(CRigidBody_Dynamic& RigidBody)
 {
 	return m_pPhysX_Manager->Add_DynamicActor(RigidBody);
@@ -663,6 +689,10 @@ PSX::PxRigidStatic* CGameInstance::Add_StaticActor(CRigidBody_Static& RigidBody)
 PSX::PxRevoluteJoint* CGameInstance::Create_PxRevoluteJoint(PSX::PxRigidActor* pActorFrame, PSX::PxTransform& pxLocalWallFrame, PSX::PxRigidActor* pActorObject, PSX::PxTransform& pxLocalActorFrame)
 {
 	return m_pPhysX_Manager->Create_PxRevoluteJoint(pActorFrame, pxLocalWallFrame, pActorObject, pxLocalActorFrame);
+}
+_bool CGameInstance::SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
+{
+	return m_pPhysX_Manager->SphereCast(fRadius, vStartPos, vDir, fDistance, flagHitsData, flagQuery, hitBuffer);
 }
 PSX::PxController* CGameInstance::Add_CapsuleController(PSX::PxCapsuleControllerDesc& Desc)
 {
@@ -701,6 +731,10 @@ HRESULT CGameInstance::SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleM
 {
 	return m_pPhysX_Manager->SaveTriMeshes(pPath, TriMeshes);
 }
+void CGameInstance::Add_Editor_Plane(PhsXUserData& PlaneData)
+{
+	m_pPhysX_Manager->Add_Editor_Plane(PlaneData);
+}
 #endif // EDITOR_PROJECT
 
 HRESULT CGameInstance::LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes)
@@ -709,39 +743,55 @@ HRESULT CGameInstance::LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleM
 }
 #pragma endregion
 
+#pragma region FOG
+void CGameInstance::Set_FogDensity(_float fFogDensity)
+{
+	m_pFog->Set_FogDensity(fFogDensity);
+}
+void CGameInstance::Set_FogColor(_float4& vFogColor)
+{
+	m_pFog->Set_FogColor(vFogColor);
+}
+
+HRESULT CGameInstance::Bind_FogValue(class CShader* pShader)
+{
+	return m_pFog->Bind_FogValue(pShader);
+}
+#pragma endregion // FOG
+
 bool		CGameInstance::Key_Pressing(int _iKey)
 {
-	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+	//if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
 		return m_pKey_Manager->Key_Pressing(_iKey);
-	}
+	//}
 	return false;
 }
 bool		CGameInstance::Key_Up(int _iKey)
 {
-	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+	//if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
 		return m_pKey_Manager->Key_Up(_iKey);
-	}
+	//}
 	return false;
 }
 bool		CGameInstance::Key_Down(int _iKey)
 {
-	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+	//if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
 		return m_pKey_Manager->Key_Down(_iKey);
-	}
+	//}
 	return false;
 }
 _bool CGameInstance::Mouse_Pressing(int _iKey)
 {
-	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+	//if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
 		return m_pKey_Manager->Mouse_Pressing(_iKey);
-	}
+	//}
 	return false;
 }
 _bool CGameInstance::Mouse_Up(int _iKey)
 {
-	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+	//if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
 		return m_pKey_Manager->Mouse_Up(_iKey);
-	}
+	//}
 	return false;
 }
 _bool CGameInstance::Mouse_Down(int _iKey)
@@ -818,6 +868,7 @@ void CGameInstance::Release_Engine()
 
 	DestroyInstance();
 
+	SAFE_RELEASE(m_pFog);
 	SAFE_RELEASE(m_pPicking);
 	SAFE_RELEASE(m_pCollider_Manager);
 	SAFE_RELEASE(m_pShadow);

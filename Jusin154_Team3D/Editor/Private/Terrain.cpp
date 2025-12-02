@@ -34,7 +34,7 @@ HRESULT CTerrain::Initialize(void* pArg)
 
 	m_fUsingSurfaceParams = 15.f / 27.f;
 	m_vRotation = _float3{ 0.f, 0.f, 0.f };
-	//m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-194, 18.5f, -153.f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-194, 18.5f, -153.f, 1.f));
 
 	//m_pVIBufferCom->Set_CullingRadius(0.04f);
 
@@ -109,7 +109,7 @@ void CTerrain::Priority_Update(_float fTimeDelta)
 
 void CTerrain::Update(_float fTimeDelta)
 {
-	m_pVIBufferCom->Culling(XMMatrixIdentity());
+	//m_pVIBufferCom->Culling(XMMatrixIdentity());
 	
 	if(m_pGameInstance->Key_Down(DIK_LSHIFT) && m_pGameInstance->Key_Down(DIK_W))
 	{
@@ -138,7 +138,7 @@ HRESULT CTerrain::Render()
 	}
 	else
 	{
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NORTEX::DEFAULT)))) {
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NORTEX::ENV_TERRAIN_ANISO)))) {
 			return E_FAIL;
 		}
 	}
@@ -191,6 +191,15 @@ HRESULT CTerrain::Ready_Components()
 
 HRESULT CTerrain::Bind_ShaderResources()
 {
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDiffuseMultiplier", &m_vDRN.x, sizeof(_float)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fSurfaceMultiplier", &m_vDRN.y, sizeof(_float)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fNormalMultiplier", &m_vDRN.z, sizeof(_float)))) {
+		return E_FAIL;
+	}
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
 		return E_FAIL;
 	}

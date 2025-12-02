@@ -100,23 +100,11 @@
     <Filter Include="50.UI\GamePlay_Canvas\Mission_Panel">
       <UniqueIdentifier>{b652ee5a-69ca-4c85-8c6c-def398a4dd23}</UniqueIdentifier>
     </Filter>
-    <Filter Include="50.UI\GamePlay_Canvas\Mission_Panel\Mission_Key">
-      <UniqueIdentifier>{887de1c6-ada2-4dc8-be5c-bcef4213e3b6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="50.UI\GamePlay_Canvas\Mission_Panel\Mission_KeyHold">
-      <UniqueIdentifier>{3804137e-7af7-40db-b729-8afa81035b35}</UniqueIdentifier>
-    </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Key">
       <UniqueIdentifier>{f897068c-184a-4bb2-a4fb-e74ec1877b02}</UniqueIdentifier>
     </Filter>
-    <Filter Include="50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Border">
-      <UniqueIdentifier>{d1c99bb3-369e-49b9-93f9-6b8536579cb5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Mission_Panel\Mission_Icon">
       <UniqueIdentifier>{5da34159-e4a2-4b4b-a7a0-a65966579e2f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="50.UI\GamePlay_Canvas\Mission_Panel\Active_Icon">
-      <UniqueIdentifier>{977fe4d3-c3b5-413c-80fe-777ece19453e}</UniqueIdentifier>
     </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\MiniMap_Panel">
       <UniqueIdentifier>{61a808c7-2765-42d9-8b4c-b4bed93b013e}</UniqueIdentifier>
@@ -217,9 +205,6 @@
     <Filter Include="02.GameObjects\Dummys\DummyPhysX\PhysXFreeDoor">
       <UniqueIdentifier>{3131278b-18f5-4b84-ba85-73104998e9c9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="80.State">
-      <UniqueIdentifier>{9c21aba5-00c1-4b4c-8a82-dac7a156fd9b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Player">
       <UniqueIdentifier>{680910fd-aee2-4f69-b644-12b36b0f635b}</UniqueIdentifier>
     </Filter>
@@ -310,30 +295,6 @@
     <Filter Include="02.GameObjects\Layer_Effect\Effect\06.Bombard">
       <UniqueIdentifier>{c81350c7-0edb-4e51-babf-09bf627414f1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="80.State\State_Combat">
-      <UniqueIdentifier>{a56502cb-b0b8-4ea7-bc5e-5482b416fef9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80.State\Movement">
-      <UniqueIdentifier>{8a70232d-f917-4ff6-b617-302e325996ae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80.State\Movement\State_Move">
-      <UniqueIdentifier>{dac78c4e-b898-45dc-8740-794899de0c69}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80.State\Movement\State_Idle">
-      <UniqueIdentifier>{d5681f71-af29-4418-bf3a-a1486c6ba171}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80.State\Focus">
-      <UniqueIdentifier>{029a22c4-ab06-4db0-9527-4e3cfa1a2e0d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80.State\Focus\State_Dodge">
-      <UniqueIdentifier>{b017e167-f48d-4417-a924-765ab802cff5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80.State\Focus\State_Jump">
-      <UniqueIdentifier>{904a7ae5-33fe-49a1-9f31-27443acc9e1a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="80.State\Focus\State_Land">
-      <UniqueIdentifier>{0b8cac41-419f-48ce-87bc-805b8962b4df}</UniqueIdentifier>
-    </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\HpBarBG">
       <UniqueIdentifier>{7e8b7123-11fb-4946-99fe-3265932d0536}</UniqueIdentifier>
     </Filter>
@@ -387,6 +348,99 @@
     </Filter>
     <Filter Include="02.GameObjects\Layer_Effect\EffectPool">
       <UniqueIdentifier>{c0589f6e-ed9c-4e76-8df2-4f95ce3c7b9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\08.Protego">
+      <UniqueIdentifier>{8bb21e5b-933f-4930-8d49-1093e0c3ea77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Border">
+      <UniqueIdentifier>{a54567fa-e528-4c98-a605-289d7d300029}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Spell_Canvas">
+      <UniqueIdentifier>{612b0d39-53e3-4c8c-a32e-387b0d3b128c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel">
+      <UniqueIdentifier>{d9a965e7-77c6-450f-88e8-ef69c42d9053}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Current_Spell_Slot">
+      <UniqueIdentifier>{c7b1ffc6-548f-464c-8f19-8b6ff5913b06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\09.Revelio">
+      <UniqueIdentifier>{03dca491-c8d3-4204-b450-b6089287aa3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\10.Levioso">
+      <UniqueIdentifier>{c87ea325-8242-4bc4-aec7-b102a5b1c847}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_List">
+      <UniqueIdentifier>{8d15e456-f0d7-45b6-b725-7f1a8c0f6b0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Eessential_Spell_Slot">
+      <UniqueIdentifier>{bae34bc2-3b69-40c0-8c9a-278dba07c8aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Eessential_Spell">
+      <UniqueIdentifier>{1700ba11-4e28-4934-b757-bfed96b74503}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_List_Image">
+      <UniqueIdentifier>{da710064-ef45-41e1-8fc5-1fc544cb4cb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_State">
+      <UniqueIdentifier>{78ffbbbe-930a-4770-93fc-ec46f7ff2c8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_Hober">
+      <UniqueIdentifier>{d5815cd9-96d2-4364-b0d6-be0bb10b02db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_Hover_Effect">
+      <UniqueIdentifier>{62f1bdfb-9162-434a-a462-b63f5e763277}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State">
+      <UniqueIdentifier>{9c21aba5-00c1-4b4c-8a82-dac7a156fd9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\State_Combat">
+      <UniqueIdentifier>{a56502cb-b0b8-4ea7-bc5e-5482b416fef9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\Movement">
+      <UniqueIdentifier>{8a70232d-f917-4ff6-b617-302e325996ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\Movement\State_Move">
+      <UniqueIdentifier>{dac78c4e-b898-45dc-8740-794899de0c69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\Movement\State_Idle">
+      <UniqueIdentifier>{d5681f71-af29-4418-bf3a-a1486c6ba171}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\Focus">
+      <UniqueIdentifier>{029a22c4-ab06-4db0-9527-4e3cfa1a2e0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\Focus\State_Dodge">
+      <UniqueIdentifier>{b017e167-f48d-4417-a924-765ab802cff5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\Focus\State_Jump">
+      <UniqueIdentifier>{904a7ae5-33fe-49a1-9f31-27443acc9e1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="80.State\Focus\State_Land">
+      <UniqueIdentifier>{0b8cac41-419f-48ce-87bc-805b8962b4df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_Preview">
+      <UniqueIdentifier>{99125f58-acb9-4e9c-af15-87bf4e09c9b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_Preview\Spell_Header">
+      <UniqueIdentifier>{261e2297-e48d-4e42-b57e-12b0c0e633a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_Preview\Spell_Header_Line">
+      <UniqueIdentifier>{754c2260-5073-4489-9fa8-0df8da6d0255}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_Vidio_Border">
+      <UniqueIdentifier>{9d80f32a-aaca-490e-babf-3a7fe4cc0600}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameTime">
+      <UniqueIdentifier>{cf446efa-94e5-4fd2-83e1-dba2149eddc8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Env\03.MapElement\Light">
+      <UniqueIdentifier>{99652c97-4011-4d1f-84fb-7e6aa9f6ec1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_Anim">
+      <UniqueIdentifier>{4aa98871-8d80-4757-b616-e96f4e840857}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Spell_Data">
+      <UniqueIdentifier>{3949bd3b-1686-43e3-822c-d3eabe41653e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -477,15 +531,6 @@
     <ClInclude Include="..\public\LoadingWidget.h">
       <Filter>50.UI\GamePlay_Canvas\Loding_Panel\LoadingWidget</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Mission_Key.h">
-      <Filter>50.UI\GamePlay_Canvas\Mission_Panel\Mission_Key</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\MissionBanner_Border.h">
-      <Filter>50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Border</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Mission_KeyHold.h">
-      <Filter>50.UI\GamePlay_Canvas\Mission_Panel\Mission_KeyHold</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\MissionBanner_Key.h">
       <Filter>50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Key</Filter>
     </ClInclude>
@@ -494,9 +539,6 @@
     </ClInclude>
     <ClInclude Include="..\public\MiniMap_TrimBorder.h">
       <Filter>50.UI\GamePlay_Canvas\MiniMap_Panel\MiniMap_TrimBorder</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Active_Icon.h">
-      <Filter>50.UI\GamePlay_Canvas\Mission_Panel\Active_Icon</Filter>
     </ClInclude>
     <ClInclude Include="..\public\IMGUIUI.h">
       <Filter>50.UI\IMGUIUI</Filter>
@@ -756,6 +798,72 @@
     <ClInclude Include="..\Public\EffectPool.h">
       <Filter>02.GameObjects\Layer_Effect\EffectPool</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Protego.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\08.Protego</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MissionBanner_Border.h">
+      <Filter>50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Border</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Spell_Canvas.h">
+      <Filter>50.UI\Spell_Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Spell_Panel.h">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Current_Spell_Slot.h">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Current_Spell_Slot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Revelio.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\09.Revelio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Levioso.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\10.Levioso</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Spell_List.h">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_List</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Eessential_Spell_Slot.h">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Eessential_Spell_Slot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Eessential_Spell.h">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Eessential_Spell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Spell_List_Image.h">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_List_Image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Spell_State.h">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Spell_Hover.h">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Hober</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Spell_Hover_Effect.h">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Hover_Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Spell_Preview.h">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Preview</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Spell_Header.h">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Preview\Spell_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Spell_Header_Line.h">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Preview\Spell_Header_Line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Spell_Vidio_Border.h">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Vidio_Border</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\GameTime.h">
+      <Filter>03.GameTime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapElement_Light.h">
+      <Filter>02.GameObjects\Env\03.MapElement\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Spell_Anim.h">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Anim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Spell_Data.h">
+      <Filter>50.UI\Spell_Data</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -826,15 +934,6 @@
     <ClCompile Include="..\private\LoadingWidget.cpp">
       <Filter>50.UI\GamePlay_Canvas\Loding_Panel\LoadingWidget</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Mission_Key.cpp">
-      <Filter>50.UI\GamePlay_Canvas\Mission_Panel\Mission_Key</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\MissionBanner_Border.cpp">
-      <Filter>50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Border</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Mission_KeyHold.cpp">
-      <Filter>50.UI\GamePlay_Canvas\Mission_Panel\Mission_KeyHold</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\MissionBanner_Key.cpp">
       <Filter>50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Key</Filter>
     </ClCompile>
@@ -843,9 +942,6 @@
     </ClCompile>
     <ClCompile Include="..\private\MiniMap_TrimBorder.cpp">
       <Filter>50.UI\GamePlay_Canvas\MiniMap_Panel\MiniMap_TrimBorder</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Active_Icon.cpp">
-      <Filter>50.UI\GamePlay_Canvas\Mission_Panel\Active_Icon</Filter>
     </ClCompile>
     <ClCompile Include="..\private\IMGUIUI.cpp">
       <Filter>50.UI\IMGUIUI</Filter>
@@ -1123,6 +1219,72 @@
     <ClCompile Include="..\Private\EffectPool.cpp">
       <Filter>02.GameObjects\Layer_Effect\EffectPool</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Protego.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\08.Protego</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MissionBanner_Border.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Border</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Spell_Canvas.cpp">
+      <Filter>50.UI\Spell_Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Spell_Panel.cpp">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Current_Spell_Slot.cpp">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Current_Spell_Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Revelio.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\09.Revelio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Levioso.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\10.Levioso</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Spell_List.cpp">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_List</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Eessential_Spell_Slot.cpp">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Eessential_Spell_Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Eessential_Spell.cpp">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Eessential_Spell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Spell_List_Image.cpp">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_List_Image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Spell_State.cpp">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Spell_Hover.cpp">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Hober</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Spell_Hover_Effect.cpp">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Hover_Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Spell_Preview.cpp">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Preview</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Spell_Header.cpp">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Preview\Spell_Header</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Spell_Header_Line.cpp">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Preview\Spell_Header_Line</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Spell_Vidio_Border.cpp">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Vidio_Border</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\GameTime.cpp">
+      <Filter>03.GameTime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapElement_Light.cpp">
+      <Filter>02.GameObjects\Env\03.MapElement\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Spell_Anim.cpp">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Anim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Spell_Data.cpp">
+      <Filter>50.UI\Spell_Data</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Editor.rc">
@@ -1155,6 +1317,9 @@
       <Filter>99.Define\SHADER</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxWorldModelInstance.hlsl">
+      <Filter>99.Define\SHADER</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxPos.hlsl">
       <Filter>99.Define\SHADER</Filter>
     </FxCompile>
   </ItemGroup>

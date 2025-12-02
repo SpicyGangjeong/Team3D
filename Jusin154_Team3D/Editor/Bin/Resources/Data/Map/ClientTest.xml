@@ -4,6 +4,9 @@
         <Position x="39.271946" y="3.7999978" z="70.609833"/>
         <Scale x="1" y="1" z="1"/>
         <Rotation x="-0" y="-60" z="-0"/>
+        <MapContainerType type="0"/>
+        <BoundingBox_Min x="-7.0020647" y="-0.45976496" z="-1.5148951"/>
+        <BoundingBox_Max x="6.3698497" y="12.858675" z="14.645905"/>
         <PartObject Lod_Level="1" Key_Index="4">
             <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Railing_Post_A</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Railing_Post_A_Lod1</PrototypeTag>
@@ -366,6 +369,9 @@
         <Position x="24" y="8" z="16"/>
         <Scale x="1" y="1" z="1"/>
         <Rotation x="0" y="0" z="0"/>
+        <MapContainerType type="1"/>
+        <BoundingBox_Min x="-35.479698" y="-22.290039" z="7.2240992"/>
+        <BoundingBox_Max x="91.70047" y="12.14246" z="98.067856"/>
         <PartObject Lod_Level="0" Key_Index="0">
             <PrototypeTag>Prototype_GameObject_SM_HM_LowerHiStreet_Zonkos</PrototypeTag>
             <Position x="0" y="0" z="0"/>
@@ -520,6 +526,9 @@
         <Position x="23.494474" y="0" z="2.9722724"/>
         <Scale x="1" y="1" z="1"/>
         <Rotation x="0" y="7.0000072" z="0"/>
+        <MapContainerType type="0"/>
+        <BoundingBox_Min x="-10.33712" y="-13.23702" z="-19.093868"/>
+        <BoundingBox_Max x="8.3332806" y="10.47531" z="17.818052"/>
         <PartObject Lod_Level="2" Key_Index="0">
             <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Bridge</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Bridge_Lod1</PrototypeTag>
@@ -716,6 +725,9 @@
         <Position x="108.25024" y="16.399971" z="131.35001"/>
         <Scale x="1" y="1" z="1"/>
         <Rotation x="0" y="0" z="0"/>
+        <MapContainerType type="1"/>
+        <BoundingBox_Min x="-16.85453" y="-16.870581" z="-19.638439"/>
+        <BoundingBox_Max x="19.18985" y="14.93294" z="34.01255"/>
         <PartObject Lod_Level="0" Key_Index="0">
             <PrototypeTag>Prototype_GameObject_SM_HM_PlazaMain_A</PrototypeTag>
             <Position x="0" y="0" z="0"/>
