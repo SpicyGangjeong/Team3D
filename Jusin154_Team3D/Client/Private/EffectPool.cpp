@@ -9,6 +9,14 @@
 #include "Decendo.h"
 #include "Protego.h"
 #include "Revelio.h"
+#include "Levioso.h"
+
+#include "BombardSide.h"
+#include "LeviosoSide.h"
+#include "DecendoSide.h"
+
+#include "NomalJapSide.h"
+#include "Lumos.h"
 
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -156,6 +164,65 @@ HRESULT CEffectPool::Ready_Effect()
 
 		return pEffect; }
 	))) return E_FAIL;
+
+
+	if (FAILED(Create_Effect(SKILL_TYPE::JAP_SIDE, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
+
+		CNomalJapSide* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CNomalJapSide>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::LEVIOSO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CLevioso* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CLevioso>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+
+	if (FAILED(Create_Effect(SKILL_TYPE::LUMOS, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CLumos* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CLumos>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+
+	if (FAILED(Create_Effect(SKILL_TYPE::BOMBARDA_SIDE, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CBombardSide* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CBombardSide>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::LEVIOSO_SIDE, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CLeviosoSide* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CLeviosoSide>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+
+	if (FAILED(Create_Effect(SKILL_TYPE::DESCENDO_SIDE, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CDecendoSide* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CDecendoSide>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
 
 
 	return S_OK;

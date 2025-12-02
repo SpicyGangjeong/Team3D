@@ -3,11 +3,6 @@
 #include "Editor_Define.h"
 #include "PartObject.h"
 
-NS_BEGIN(Engine)
-class CShader;
-class CModel;
-NS_END
-
 NS_BEGIN(Editor)
 
 class CWand final : public CPartObject
@@ -29,16 +24,21 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+	virtual _vector Get_WorldPostion() override;
+	_matrix			Get_WorldMatrix();
+public:
 
 private:
 	const _float4x4* m_pSocketMatrices = {  };
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
 
-	class CTrailObject* m_pTrail = { nullptr };
-	class CEditEffect*  m_pEffectParts = { nullptr };
+	_float4x4			 m_pWandTipMatrix = {};
 
-	_float3				  m_vOffset = { 0.f , -0.3f ,0.f};
+#ifdef _DEBUG
+	unique_ptr<GeometricPrimitive> m_pGripShape = { nullptr };
+	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };
+#endif // _DEBUG
 
 private:
 	HRESULT Ready_Components();
@@ -48,7 +48,10 @@ public:
 	static CWand* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr)override;
 	virtual void Free() override;
-	virtual void Describe_Entity() override;
+
+#ifdef _DEBUG
+	void Describe_Entity() override;
+#endif // _DEBUG
 };
 
 NS_END

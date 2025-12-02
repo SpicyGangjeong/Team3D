@@ -184,9 +184,6 @@
     <ClInclude Include="..\public\Terrain.h">
       <Filter>02.GameObjects\Environment\Terrain</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\GamePlay_Canvas.h">
-      <Filter>02.GameObjects\UI</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\LoadingWidget.h">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Loding_Panel\LoadingWidget</Filter>
     </ClInclude>
@@ -260,13 +257,82 @@
       <Filter>04.Mechanic\Skill\Skill_Data</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Revelio.h">
-      <Filter>02.GameObjects\Effect\Revelio</Filter>
+      <Filter>02.GameObjects\Effect\Effects\Revelio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\NomalJapSide.h">
+      <Filter>02.GameObjects\Effect\Effects\NomalJap\NomalJapSide</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Levioso.h">
+      <Filter>02.GameObjects\Effect\Effects\Levioso</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Lumos.h">
+      <Filter>02.GameObjects\Effect\Effects\Lumos</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Troll.h">
       <Filter>02.GameObjects\Monster\Troll</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Troll_Weapon.h">
       <Filter>02.GameObjects\Item\Troll_Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LeviosoSide.h">
+      <Filter>02.GameObjects\Effect\Effects\Levioso\LeviosoSide</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DecendoSide.h">
+      <Filter>02.GameObjects\Effect\Effects\Decendo\DecendoSide</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BombardSide.h">
+      <Filter>02.GameObjects\Effect\Effects\Bombard\BombardSide</Filter>
+	</ClInclude>
+    <ClInclude Include="..\public\GamePlay_Canvas.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Spell_Vidio_Border.h">
+      <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Vidio_Border</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Spell_State.h">
+      <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Spell_Preview.h">
+      <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Preview</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Spell_Panel.h">
+      <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Spell_List_Image.h">
+      <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_List_Image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Spell_List.h">
+      <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_List</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Spell_Hover_Effect.h">
+      <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Hover_Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Spell_Hover.h">
+      <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Hover</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Spell_Header_Line.h">
+      <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Header_Line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Spell_Header.h">
+      <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Spell_Canvas.h">
+      <Filter>02.GameObjects\UI\Spell_Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Spell_Anim.h">
+      <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Anim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Eessential_Spell_Slot.h">
+      <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Eessential_Spell_Slot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Eessential_Spell.h">
+      <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Eessential_Spell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Current_Spell_Slot.h">
+      <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Current_Spell_Slot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Current_Slot_Number.h">
+      <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Current_Slot_Number</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MapElement.h">
       <Filter>02.GameObjects\Environment\03.MapElement</Filter>
@@ -581,8 +647,14 @@
     <Filter Include="02.GameObjects\Environment\00.MapContainer\StreetContainer">
       <UniqueIdentifier>{e12a4228-0754-4217-b65d-7f962409f85c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Effect\Revelio">
+    <Filter Include="02.GameObjects\Effect\Effects\Revelio">
       <UniqueIdentifier>{19a2325e-1184-4ee0-92e1-657bf184418c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Levioso">
+      <UniqueIdentifier>{b982d9d6-7561-43d4-b542-88483119047b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Lumos">
+      <UniqueIdentifier>{6bc9fd95-31bc-40f3-83cc-15ebb756b04a}</UniqueIdentifier>
     </Filter>
     <Filter Include="04.Mechanic\Skill">
       <UniqueIdentifier>{c5b61cb3-bc5f-4429-8715-b309dcf054b2}</UniqueIdentifier>
@@ -607,6 +679,69 @@
     </Filter>
     <Filter Include="02.GameObjects\Item\Troll_Weapon">
       <UniqueIdentifier>{1d6c078d-dddd-493d-a6f0-f2cac2e4107e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\NomalJap\NomalJapSide">
+      <UniqueIdentifier>{d260ec7e-150c-4a25-8e25-83eb141652bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Levioso\LeviosoSide">
+      <UniqueIdentifier>{dc00cfd8-105f-419f-a4e4-109096258347}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Decendo\DecendoSide">
+      <UniqueIdentifier>{1cb823f5-a6fe-4bef-9292-b49480a42524}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Bombard\BombardSide">
+      <UniqueIdentifier>{b6076bdb-df15-498f-b951-6b2d0b777a0b}</UniqueIdentifier>
+	</Filter>
+    <Filter Include="02.GameObjects\UI\Spell_Canvas">
+      <UniqueIdentifier>{257a5a09-b15b-4fd2-9615-054a00cf4b25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Spell_Canvas\Spell_Panel">
+      <UniqueIdentifier>{978f1d19-2da4-48fe-ad5e-2622b0c668a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Spell_Canvas\Spell_Panel\Current_Slot_Number">
+      <UniqueIdentifier>{8c3162f4-bb70-443f-901d-61d194972ccc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Spell_Canvas\Spell_Panel\Current_Spell_Slot">
+      <UniqueIdentifier>{fa8badcc-02d7-4e2f-bd3d-5689cb13629c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Spell_Canvas\Spell_Panel\Eessential_Spell">
+      <UniqueIdentifier>{5519da22-ce61-4c5c-91fc-44859d126f26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Spell_Canvas\Spell_Panel\Eessential_Spell_Slot">
+      <UniqueIdentifier>{1584a13f-7fd5-413c-9b6b-11f07b50bf58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Anim">
+      <UniqueIdentifier>{378ce73b-f242-470c-8737-9a54b967bfd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Drag">
+      <UniqueIdentifier>{1f768f30-3484-4ce8-9bef-be71c043f229}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Hover_Effect">
+      <UniqueIdentifier>{6f8a7e8c-2b91-44c7-89c0-8da07283e656}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_List">
+      <UniqueIdentifier>{f0dcd3f2-2f47-4867-8f7a-27283d7f012f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_List_Image">
+      <UniqueIdentifier>{3db1d2a8-b9f2-4585-b044-49e38edf68b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Preview">
+      <UniqueIdentifier>{294d9db3-97d6-47a9-9087-adb17525d6ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_State">
+      <UniqueIdentifier>{3819fb90-dbd9-4465-a12e-bac7ba19c7d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Vidio_Border">
+      <UniqueIdentifier>{8628d773-0dcf-48e4-8c51-eca66e7f8d1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Hover">
+      <UniqueIdentifier>{ee8108db-4fe3-4ed7-ac2a-156e2b22591e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Header_Line">
+      <UniqueIdentifier>{e24f4ced-ec48-46dd-b52f-3eb4b0d9588f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Header">
+      <UniqueIdentifier>{00b37924-ab02-4287-b67e-80375a8d3268}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -787,9 +922,6 @@
     <ClCompile Include="..\Private\LoadingWidget.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Loding_Panel\LoadingWidget</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\GamePlay_Canvas.cpp">
-      <Filter>02.GameObjects\UI</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Action_Panel.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel</Filter>
     </ClCompile>
@@ -857,7 +989,16 @@
       <Filter>02.GameObjects\Environment\00.MapContainer\StreetContainer</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Revelio.cpp">
-      <Filter>02.GameObjects\Effect\Revelio</Filter>
+      <Filter>02.GameObjects\Effect\Effects\Revelio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\NomalJapSide.cpp">
+      <Filter>02.GameObjects\Effect\Effects\NomalJap\NomalJapSide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Levioso.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Levioso</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Lumos.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Lumos</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Skill_Data.cpp">
       <Filter>04.Mechanic\Skill\Skill_Data</Filter>
@@ -882,6 +1023,66 @@
     </ClCompile>
     <ClCompile Include="..\Private\Troll_Weapon.cpp">
       <Filter>02.GameObjects\Item\Troll_Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LeviosoSide.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Levioso\LeviosoSide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\DecendoSide.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Decendo\DecendoSide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BombardSide.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Bombard\BombardSide</Filter>
+	</ClCompile>
+    <ClCompile Include="..\private\GamePlay_Canvas.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Spell_Vidio_Border.cpp">
+      <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Vidio_Border</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Spell_State.cpp">
+      <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Spell_Preview.cpp">
+      <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Preview</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Spell_Panel.cpp">
+      <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Spell_List_Image.cpp">
+      <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_List_Image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Spell_List.cpp">
+      <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_List</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Spell_Hover_Effect.cpp">
+      <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Hover_Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Spell_Hover.cpp">
+      <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Hover</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Spell_Header_Line.cpp">
+      <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Header_Line</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Spell_Header.cpp">
+      <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Header</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Spell_Canvas.cpp">
+      <Filter>02.GameObjects\UI\Spell_Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Spell_Anim.cpp">
+      <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Anim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Eessential_Spell_Slot.cpp">
+      <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Eessential_Spell_Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Eessential_Spell.cpp">
+      <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Eessential_Spell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Current_Spell_Slot.cpp">
+      <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Current_Spell_Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Current_Slot_Number.cpp">
+      <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Current_Slot_Number</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

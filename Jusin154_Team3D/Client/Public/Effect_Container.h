@@ -25,6 +25,8 @@ public:
 	virtual	HRESULT	Pre_Setting(CGameObject* pObject);
 	HRESULT         Load_Package(const _char* pPath);
 
+public:
+
 protected:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -35,8 +37,9 @@ protected:
 	void			Update_Event(_float fTimeDelta);
 	HRESULT			Reset_EffectParts();
 protected:
-	class		CPhysXEffectHitBox* m_pPhysHitBox = {};
-
+	_float4			    m_vStartPos = {};
+	_float4			    m_vEndPos = {};
+	PSX::PxSweepBuffer  hitBuffer = {};
 protected:
 	_wstring						m_wstrEffectName = {};
 

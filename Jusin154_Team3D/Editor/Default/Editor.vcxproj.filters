@@ -82,9 +82,6 @@
     <Filter Include="02.GameObjects\Layer_Effect\Effect\00.EffectObject">
       <UniqueIdentifier>{8a5ffca8-725a-42ee-a3eb-3c79df09dec9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\01.TestEffect">
-      <UniqueIdentifier>{32718f84-d863-48d2-8611-90c40f2ba1c5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Layer_Effect\Effect\02.EditEffect">
       <UniqueIdentifier>{ba468252-bba3-46e4-bf61-e726a59060ad}</UniqueIdentifier>
     </Filter>
@@ -436,11 +433,23 @@
     <Filter Include="02.GameObjects\Env\03.MapElement\Light">
       <UniqueIdentifier>{99652c97-4011-4d1f-84fb-7e6aa9f6ec1a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\02.EditEffect\01.TestEffect">
+      <UniqueIdentifier>{32718f84-d863-48d2-8611-90c40f2ba1c5}</UniqueIdentifier>
+	</Filter>
     <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_Anim">
       <UniqueIdentifier>{4aa98871-8d80-4757-b616-e96f4e840857}</UniqueIdentifier>
     </Filter>
     <Filter Include="50.UI\Spell_Data">
       <UniqueIdentifier>{3949bd3b-1686-43e3-822c-d3eabe41653e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Current_Slot_Number">
+      <UniqueIdentifier>{2f8a3c68-c3d3-43cc-9649-16e0cfd168fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_Drag">
+      <UniqueIdentifier>{dcc220a9-4649-4f95-9205-9eee9af128ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_Anim">
+      <UniqueIdentifier>{4aa98871-8d80-4757-b616-e96f4e840857}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -520,7 +529,7 @@
       <Filter>02.GameObjects\Layer_Effect\Effect\00.EffectObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\TestEffect.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\01.TestEffect</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\02.EditEffect\01.TestEffect</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\EditEffect.h">
       <Filter>02.GameObjects\Layer_Effect\Effect\02.EditEffect</Filter>
@@ -864,6 +873,12 @@
     <ClInclude Include="..\public\Spell_Data.h">
       <Filter>50.UI\Spell_Data</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Current_Slot_Number.h">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Current_Slot_Number</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Spell_Drag.h">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Drag</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -923,7 +938,7 @@
       <Filter>02.GameObjects\Layer_Effect\Effect\00.EffectObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\TestEffect.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\01.TestEffect</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\02.EditEffect\01.TestEffect</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\EditEffect.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect\02.EditEffect</Filter>
@@ -1284,6 +1299,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Spell_Data.cpp">
       <Filter>50.UI\Spell_Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Current_Slot_Number.cpp">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Current_Slot_Number</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Spell_Drag.cpp">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Drag</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

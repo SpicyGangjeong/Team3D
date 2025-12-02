@@ -123,7 +123,9 @@ private:
 	_string     m_strName = {};
 
 	TRAIL_INFO  m_TrailInfo = {};
+	
 	_float4x4*  m_pParantsMatrix = {};
+
 
 };
 

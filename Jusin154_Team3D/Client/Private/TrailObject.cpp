@@ -254,6 +254,9 @@ HRESULT CTrailObject::Render()
 	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_POSTEX::TRAIL))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Bind_DepthStencil(m_pShaderCom, "g_DepthStencilTexture")))
+		return E_FAIL;
+
 	if (FAILED(m_pTrailCom->Render()))
 		return E_FAIL;
 
