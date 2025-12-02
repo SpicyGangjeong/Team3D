@@ -455,6 +455,16 @@ _int CUIObject::Get_SkillType()
 	return m_iSpellType;
 }
 
+void CUIObject::Set_SpellType(_int eType)
+{
+	m_iSkillType = eType;
+}
+
+_int CUIObject::Get_SpellType()
+{
+	return m_iSkillType;
+}
+
 void CUIObject::Set_CoolTime(_float CoolTime)
 {
 	m_fCoolTime = CoolTime;

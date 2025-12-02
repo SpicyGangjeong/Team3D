@@ -121,6 +121,8 @@ public:
 
 	virtual void Set_SkillType(_int eType);
 	virtual _int Get_SkillType();
+	virtual void Set_SpellType(_int eType);
+	virtual _int Get_SpellType();
 
 	virtual void Set_CoolTime(_float CoolTime);
 	virtual _float Get_CoolTime();
@@ -175,6 +177,7 @@ protected:
 	RECT					m_pRect{};
 
 	_int					m_iSpellType{};
+	_int					m_iSkillType{};
 	_float					m_fSortZ{};
 	_float					m_fMoveSpeed{};
 
