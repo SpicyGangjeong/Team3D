@@ -181,8 +181,10 @@ void CTrail::Trail_Update(_float fDeltaTime, _fmatrix WorldMatrix)
 
 	
 	}
-
+#ifdef _DEBUG
 	Describe_Entity();
+#endif // _DEBUG
+
 
 	//XMStoreFloat3(&m_pVertices[0].vPosition, vLow);
 	//XMStoreFloat3(&m_pVertices[1].vPosition, vHigh);

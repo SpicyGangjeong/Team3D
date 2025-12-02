@@ -27,6 +27,9 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+
+	
+
 protected:
 	_bool				m_bSelected = { false };
 	_uint				m_iMaxLodLevel = {};
@@ -53,6 +56,8 @@ public:
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) PURE;
 	virtual void Free() override;
 	void Describe_Entity() override;
+	virtual HRESULT Save_XML(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* root);
+
 };
 
 NS_END

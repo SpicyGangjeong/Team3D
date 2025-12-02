@@ -49,7 +49,9 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 			}
 		}
 	}
-	m_pThreadHolder = CThreadHolder::Create(4);
+
+	m_pThreadHolder = CThreadHolder::Create( 6 );
+
 	if (nullptr == m_pThreadHolder) {
 		return E_FAIL;
 	}
@@ -647,13 +649,19 @@ void CGameInstance::Add_ModelToMap(const _char* filePath, CModel* pModel)
 
 void CGameInstance::Add_SaveModel(const _char* filePath, SaveModel sModel)
 {
+	lock_guard<mutex> lock(m_mtxLoadModelLock);
 	m_sModelMap[filePath] = sModel;
 }
 
 SaveModel* CGameInstance::Load_SaveModel(const _char* filePath)
 {
-	auto iter = m_sModelMap.find(filePath);
-	return &iter->second;
+	lock_guard<mutex> lock(m_mtxLoadModelLock);
+	map<const _char*, SaveModel>::iterator iter = m_sModelMap.find(filePath);
+	if (iter == m_sModelMap.end()) {
+		return nullptr;
+	}
+	SaveModel* pOut = &iter->second;
+	return pOut;
 }
 
 #pragma region PhysX_Manager
@@ -684,6 +692,14 @@ PSX::PxRevoluteJoint* CGameInstance::Create_PxRevoluteJoint(PSX::PxRigidActor* p
 {
 	return m_pPhysX_Manager->Create_PxRevoluteJoint(pActorFrame, pxLocalWallFrame, pActorObject, pxLocalActorFrame);
 }
+_bool CGameInstance::SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
+{
+	return m_pPhysX_Manager->SphereCast(fRadius, vStartPos, vDir, fDistance, flagHitsData, flagQuery, hitBuffer);
+}
+_bool CGameInstance::SphereCast(_float fRadius, _fvector vStartPos, _fvector vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
+{
+	return m_pPhysX_Manager->SphereCast(fRadius, vStartPos, vDir, fDistance, flagHitsData, flagQuery, hitBuffer);
+}
 PSX::PxController* CGameInstance::Add_CapsuleController(PSX::PxCapsuleControllerDesc& Desc)
 {
 	return m_pPhysX_Manager->Add_CapsuleController(Desc);
@@ -712,14 +728,18 @@ void CGameInstance::Release_Actor(PSX::PxActor& Actor)
 {
 	m_pPhysX_Manager->Detach_Actor(Actor);
 }
-#ifdef EDITOR_PROJECT
 HRESULT CGameInstance::ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix)
 {
 	return m_pPhysX_Manager->ConvertToTriMeshes(Meshes, pxTriMeshes, WorldMatrix);
 }
+#ifdef EDITOR_PROJECT
 HRESULT CGameInstance::SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes)
 {
 	return m_pPhysX_Manager->SaveTriMeshes(pPath, TriMeshes);
+}
+void CGameInstance::Add_Editor_Plane(PhsXUserData& PlaneData)
+{
+	m_pPhysX_Manager->Add_Editor_Plane(PlaneData);
 }
 #endif // EDITOR_PROJECT
 

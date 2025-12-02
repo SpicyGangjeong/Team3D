@@ -32,7 +32,7 @@ private:
 	virtual void	OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr) override;
 private:
 	_wstring						  m_wstrEffectName = {};
-	class CPartObject*				  m_pLight_Projectile = {};
+	class CEffectParts*				  m_pLight_Projectile = {};
 	_vector							  m_vCameraLook = {};
 public:
 	static CBombard* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

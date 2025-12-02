@@ -265,7 +265,7 @@ void CVIBuffer_UI_Instance::Set_Index_Renge_Color(_uint StartIndex, _uint EndInd
 	m_pContext->Unmap(m_pVBInstance, 0);
 }
 
-_uint CVIBuffer_UI_Instance::Set_Mouse_Hover(_float2 fMousePos)
+_int CVIBuffer_UI_Instance::Set_Mouse_Hover(_float2 fMousePos)
 {
 	D3D11_MAPPED_SUBRESOURCE		SubResource{};
 
@@ -273,7 +273,10 @@ _uint CVIBuffer_UI_Instance::Set_Mouse_Hover(_float2 fMousePos)
 
 	VTX_INSTANCE_UI* pVertices = static_cast<VTX_INSTANCE_UI*>(SubResource.pData);
 
-	_uint hoveredIndex = (_uint)-1;
+	_int hoveredIndex = -1;
+	for (_uint i = 0; i < m_iNumInstance; i++)
+		pVertices[i].bHover = 0.f;
+
 	for (_uint i = 0; i < m_iNumInstance; i++)
 	{
 		_float2 pos = pVertices[i].fPos;
@@ -289,19 +292,42 @@ _uint CVIBuffer_UI_Instance::Set_Mouse_Hover(_float2 fMousePos)
 		pt.x = LONG(fMousePos.x);
 		pt.y = LONG(fMousePos.y);
 
-		 if (PtInRect(&rcInstance, pt))
-        {
-            pVertices[i].bHover = 1.f;
-            hoveredIndex = i;      // ✅ 인덱스 저장
-        }
-        else
-        {
-            pVertices[i].bHover = 0.f;
-        }
-    }
+		if (PtInRect(&rcInstance, pt))
+		{
+			pVertices[i].bHover = 1.f;
+			hoveredIndex = i;
+			break;
+		}
+		else
+		{
+			pVertices[i].bHover = 0.f;
+			hoveredIndex = -1;
+		}
+	}
 
-    m_pContext->Unmap(m_pVBInstance, 0);
-    return hoveredIndex;
+	m_pContext->Unmap(m_pVBInstance, 0);
+	return hoveredIndex;
+}
+
+void CVIBuffer_UI_Instance::Set_Hover_Index(_uint iIndex)
+{
+	D3D11_MAPPED_SUBRESOURCE		SubResource{};
+
+	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+
+	VTX_INSTANCE_UI* pVertices = static_cast<VTX_INSTANCE_UI*>(SubResource.pData);
+
+	for (_uint i = 0; i < m_iNumInstance; ++i)
+	{
+		if (i == iIndex)
+		{
+			pVertices[i].bHover = 1.f;
+		}
+		else
+			pVertices[i].bHover = 0.f;
+	}
+
+	m_pContext->Unmap(m_pVBInstance, 0);
 }
 
 CVIBuffer_UI_Instance* CVIBuffer_UI_Instance::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const INSTANCE_DESC* pInstanceDesc)

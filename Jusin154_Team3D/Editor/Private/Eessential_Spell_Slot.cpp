@@ -3,18 +3,18 @@
 #include "GameInstance.h"
 
 CEessential_Spell_Slot::CEessential_Spell_Slot(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-    :CElementObject(pDevice, pContext)
+	:CElementObject(pDevice, pContext)
 {
 }
 
 CEessential_Spell_Slot::CEessential_Spell_Slot(const CEessential_Spell_Slot& rhs)
-    :CElementObject(rhs)
+	:CElementObject(rhs)
 {
 }
 
 HRESULT CEessential_Spell_Slot::Initialize_Prototype()
 {
-    return S_OK;
+	return S_OK;
 }
 
 HRESULT CEessential_Spell_Slot::Initialize(void* pArg)
@@ -44,8 +44,10 @@ HRESULT CEessential_Spell_Slot::Initialize(void* pArg)
 	m_fOffSetY = 80.f;
 	m_iCols = 4;
 	m_pVIBufferCom->Set_Cloned(true);
-	m_pVIBufferCom->Set_Pos( -731.f, -300.f, m_fOffSetX, m_fOffSetY, m_iCols);
+	m_pVIBufferCom->Set_Pos(-731.f, -300.f, m_fOffSetX, m_fOffSetY, m_iCols);
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
+	m_fDelayTime = 0.5f;
+	m_iPerSpell_Slot = -1;
 	return S_OK;
 }
 
@@ -88,8 +90,10 @@ void CEessential_Spell_Slot::Update(_float fTimeDelta)
 			m_fAlpha = 0.f;
 		}
 	}
+
+	Hover(fTimeDelta);
+
 	m_fTime += fTimeDelta * m_fTimeMult;
-	Hover();
 	__super::Update(fTimeDelta);
 }
 
@@ -152,7 +156,7 @@ void CEessential_Spell_Slot::SizeUpdate(_float fSizeX, _float fSizeY)
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
 }
 
-void CEessential_Spell_Slot::Hover()
+void CEessential_Spell_Slot::Hover(_float fTimeDelta)
 {
 	POINT ptMouse{};
 	GetCursorPos(&ptMouse);
@@ -165,7 +169,23 @@ void CEessential_Spell_Slot::Hover()
 	fMouse.x -= m_pOwner->Get_WorldPostion().m128_f32[0];
 	fMouse.y -= m_pOwner->Get_WorldPostion().m128_f32[1];
 
-	m_pVIBufferCom->Set_Mouse_Hover(fMouse);
+
+	m_iSpellType = m_pVIBufferCom->Set_Mouse_Hover(fMouse);
+	CUIObject::HOVER_INFO Info;
+	Info.iSlotID = 1;
+	if (m_iSpellType == -1)
+	{
+		Info.iHover_Index = -1;
+		static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Hover"), &Info);
+
+	}
+
+	else
+	{
+		Info.iHover_Index = m_iSpellType + ENUM_CLASS(SKILL_TYPE::JAP);
+		static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Hover"), &Info);
+
+	}	
 
 }
 

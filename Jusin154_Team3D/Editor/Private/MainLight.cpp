@@ -33,8 +33,11 @@ HRESULT CMainLight::Initialize(void* pArg)
 
 	m_pGameTime = CGameTime::Create();
 
+	if (nullptr == m_pGameTime)
+		return E_FAIL;
+
 	// --- m_Diffuse_Colors 초기화 (주요 색상) ---
-	m_Diffuse_Colors[ENUM_CLASS(DAY_PHASE::DAWN)] = { 0.8f, 0.6f, 0.4f, 1.0f }; // 따뜻한 새벽 햇살
+	m_Diffuse_Colors[ENUM_CLASS(DAY_PHASE::DAWN)] = { 0.7f, 0.6f, 0.4f, 1.0f }; // 따뜻한 새벽 햇살
 	m_Diffuse_Colors[ENUM_CLASS(DAY_PHASE::DAY)] = { 1.0f, 1.0f, 1.0f, 1.0f }; // 순백색 주광
 	m_Diffuse_Colors[ENUM_CLASS(DAY_PHASE::DUSK)] = { 0.9f, 0.4f, 0.2f, 1.0f }; // 붉은 석양
 	m_Diffuse_Colors[ENUM_CLASS(DAY_PHASE::NIGHT)] = { 0.2f, 0.2f, 0.4f, 1.0f }; // 푸른 달빛
@@ -51,8 +54,6 @@ HRESULT CMainLight::Initialize(void* pArg)
 	m_Specular_Colors[ENUM_CLASS(DAY_PHASE::DUSK)] = { 0.8f, 0.6f, 0.4f, 1.0f }; // 석양 색이 입혀진 반사
 	m_Specular_Colors[ENUM_CLASS(DAY_PHASE::NIGHT)] = { 0.3f, 0.3f, 0.5f, 1.0f };
 
-	if (nullptr == m_pGameTime)
-		return E_FAIL;
 
 	return S_OK;
 }
@@ -108,7 +109,7 @@ void CMainLight::Update(_float fTimeDelta)
 
 	//m_pLightCom->Set_Color(m_vCurDiffuse, m_vAmbient, m_vSpecular);
 
-	//m_pLightCom->Describe_Entity();
+	Describe_Entity();
 }
 
 void CMainLight::Late_Update(_float fTimeDelta)
@@ -129,8 +130,8 @@ HRESULT CMainLight::Ready_Components()
 	LIGHT_DESC			LightDesc{};
 
 	LightDesc.eType = LIGHT::DIRECTIONAL;
-	LightDesc.vDiffuse = _float4(0.8f, 0.8f, 0.8f, 0.f);
-	LightDesc.vAmbient = _float4(0.8f, 0.8f, 0.8f, 0.f);
+	LightDesc.vDiffuse = _float4(0.3f, 0.3f, 0.1f, 0.f);
+	LightDesc.vAmbient = _float4(0.3f, 0.3f, 0.5f, 0.f);
 	LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 0.f);
 	LightDesc.pDirection = m_pTransformCom->Get_StatePtr(STATE::LOOK);
 	LightDesc.iLevel = NEXT_LEVEL;
@@ -141,6 +142,10 @@ HRESULT CMainLight::Ready_Components()
 		return E_FAIL;
 	}
 
+	m_pGameInstance->Add_Light(NEXT_LEVEL, m_pLightCom);
+
+	_float4 vColor = _float4(0.1f, 0.1f, 0.15f, 0.5f);
+	m_pGameInstance->Set_FogColor(vColor);
 
 	return S_OK;
 }
@@ -149,8 +154,6 @@ HRESULT CMainLight::Bind_ShaderResources()
 {
 	return S_OK;
 }
-
-
 
 CMainLight* CMainLight::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
@@ -178,8 +181,6 @@ CGameObject* CMainLight::Clone(void* pArg, CGameObject* pOwner)
 	return pInstance;
 }
 
-
-
 void CMainLight::Free()
 {
 	__super::Free();
@@ -190,4 +191,7 @@ void CMainLight::Free()
 
 void CMainLight::Describe_Entity()
 {
+	GUI::Begin("MainLight");
+	m_pLightCom->Describe_Entity();
+	GUI::End();
 }

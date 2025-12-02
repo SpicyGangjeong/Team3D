@@ -1,6 +1,9 @@
 ﻿#include "pch.h"
 #include "Camera_Debug.h"
 #include "Shader.h"
+#include "Layer.h"
+#include "Player.h"
+
 
 CCamera_Debug::CCamera_Debug(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCamera(pDevice, pContext)
@@ -55,6 +58,15 @@ void CCamera_Debug::Update(_float fTimeDelta)
 		}
 		if (m_pGameInstance->Key_Pressing(DIK_TAB)) {
 			Set_InitialPos();
+		}
+		if (m_pGameInstance->Key_Pressing(DIK_LCONTROL)) {
+			if (m_pGameInstance->Key_Up(DIK_SCROLL)) {
+				CLayer* pLayer = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_PLAYER);
+				if (nullptr != pLayer) {
+					CPlayer* pPlayer = pLayer->Get_Object<CPlayer>();
+					pPlayer->Get_Component<CCharacter_Controller>()->Set_Position(Get_WorldPostion());
+				}
+			}
 		}
 
 #pragma endregion

@@ -14,7 +14,6 @@ class CPhysX_Manager final : public CBase
 private:
 	CPhysX_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CPhysX_Manager() = default;
-
 #pragma region RIGID_BODY
 
 public:
@@ -29,10 +28,17 @@ public:
 	void RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh);
 	void RegistHeight(const _tchar* pName, PSX::PxHeightFieldDesc& Desc);
 	PSX::PxMaterial* Create_Material(const _float3* vMatInfo);
+
+	_bool SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer);
+	_bool SphereCast(_float fRadius, _fvector vStartPos, _fvector vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer);
+
+	
+	HRESULT ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix);
+
 #ifdef EDITOR_PROJECT
 
-	HRESULT ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix);
 	HRESULT SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
+	void Add_Editor_Plane(PhsXUserData& PlaneData);
 #endif // EDITOR_PROJECT
 	HRESULT LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
 	//HRESULT LoadTriMeshes_Binary(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
@@ -74,7 +80,9 @@ private:
 
 	PSX::PxScene*						m_pScene = { nullptr };							// 피직스 시뮬레이션의 공간
 	PSX::PxControllerManager*			m_pCCTManager = { nullptr };					// 피직스 캐릭터 컨트롤러를 전부 추적하고 매니징함
-	PSX::PxPvd*							m_pPvd = { nullptr };							// 피직스 시뮬레이션 디버깅을 위한 도구
+#ifdef _DEBUG
+	PSX::PxPvd* m_pPvd = { nullptr };							// 피직스 시뮬레이션 디버깅을 위한 도구
+#endif // _DEBUG
 	PSX::PxCookingParams*				m_pCookingParam = { nullptr };
 	PSX::PxPvdTransport*				m_pTransport = { nullptr };
 
@@ -90,18 +98,16 @@ private:
 	map<_wstring, PSX::PxHeightFieldGeometry*>	m_HeightFieldGeometry = {};
 
 
-#ifdef EDITOR_PROJECT
-	_bool m_bDebugCreatePlane = { true };
 	PhsXUserData PlaneData = {};
-#else
-	_bool m_bDebugCreatePlane = { false };
-#endif // EDITOR_PROJECT
 
 	vector<PSX::PxMaterial*> m_pMaterials = { };
 	_uint m_iNumLevel = {};
 private:
 	HRESULT Initialize();
+#ifdef _DEBUG
 	HRESULT Connect_DebugServer();
+#endif // _DEBUG
+
 	void Update_Kinematic();
 	void Update_Dynamic_ActiveActors();
 	//void Update_Dynamic_AllActors();

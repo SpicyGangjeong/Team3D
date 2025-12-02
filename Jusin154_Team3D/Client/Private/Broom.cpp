@@ -2,14 +2,15 @@
 #include "Broom.h"
 
 #include "GameInstance.h"
-
+#include "InfoInstance.h"
 CBroom::CBroom(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUnit(pDevice, pContext)
 {
 }
 
 CBroom::CBroom(const CBroom& Prototype)
-	: CUnit(Prototype)
+	: CUnit(Prototype),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -42,18 +43,29 @@ HRESULT CBroom::Initialize(void* pArg)
 		m_pFSM->Change_State(FSMSTATE::IDLE);
 	}
 
+
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 10.f, 0.f, 1.f));
+
 	return S_OK;
 }
 
 void CBroom::Priority_Update(_float fTimeDelta)
 {
+	
 }
 
 void CBroom::Update(_float fTimeDelta)
 {
+	Update_CameraCoordinateSystem();
+
 	m_pFSM->Update_State(fTimeDelta);
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
+
+#ifdef _DEBUG
+	Describe_Entity();
+#endif // _DEBUG
+
 }
 
 void CBroom::Late_Update(_float fTimeDelta)
@@ -141,6 +153,15 @@ HRESULT CBroom::Bind_ShaderResources()
 	return S_OK;
 }
 
+void CBroom::Update_CameraCoordinateSystem()
+{
+	_vector xmvCameraLook = XMVector3Normalize(XMVectorSetY(m_pGameInstance->Get_CameraLook(), 0.f));
+	_vector xmvUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+	XMStoreFloat3(&m_vCameraRightDir, XMVector3Normalize(XMVector3Cross(xmvUp, xmvCameraLook)));
+	XMStoreFloat3(&m_vCameraLookDir, xmvCameraLook);
+	m_pInfoInstance->Update_CameraCoordinateSystem(m_vCameraLookDir, m_vRimLightColor);
+}
+
 CBroom* CBroom::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CBroom* pInstance = new CBroom(pDevice, pContext);
@@ -175,6 +196,15 @@ void CBroom::Free()
 
 void CBroom::Describe_Entity()
 {
+
+	GUI::DragFloat("MaxSpeed", &m_fFlyMaxSpeed, 0.01f);
+	GUI::DragFloat("Speed", &m_fSpeed, 0.01f);
+	GUI::DragFloat("Accle", &m_fAccel, 0.01f);
+	GUI::DragFloat("Decel", &m_fDecel, 0.01f);
+
+	string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
+	GUI::Text(AnimList.c_str());
+
 }
 
 #endif // _DEBUG

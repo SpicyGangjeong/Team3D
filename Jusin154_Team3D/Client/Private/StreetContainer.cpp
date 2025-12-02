@@ -16,24 +16,27 @@ void CStreetContainer::Priority_Update(_float fTimeDelta)
 {
     __super::Priority_Update(fTimeDelta);
 
-    for (auto& pCollisiton : m_ColiisonPartObjects)
+    for (auto& pCollisiton : m_ColiisonPartObjects){
         pCollisiton->Priority_Update(fTimeDelta);
+    }
 }
 
 void CStreetContainer::Update(_float fTimeDelta)
 {
     __super::Update(fTimeDelta);
 
-    for (auto& pCollisiton : m_ColiisonPartObjects)
+    for (auto& pCollisiton : m_ColiisonPartObjects){
         pCollisiton->Update(fTimeDelta);
+    }
 }
 
 void CStreetContainer::Late_Update(_float fTimeDelta)
 {
     __super::Late_Update(fTimeDelta);
 
-    for (auto& pCollisiton : m_ColiisonPartObjects)
+    for (auto& pCollisiton : m_ColiisonPartObjects){
         pCollisiton->Late_Update(fTimeDelta);
+    }
 }
 
 HRESULT CStreetContainer::Render()
@@ -109,8 +112,9 @@ void CStreetContainer::Free()
 {
     __super::Free();
 
-    for (auto& pCollision : m_ColiisonPartObjects)
+    for (auto& pCollision : m_ColiisonPartObjects){
         SAFE_RELEASE(pCollision);
+    }
 }
 
 #ifdef _DEBUG

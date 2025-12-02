@@ -23,8 +23,8 @@ HRESULT CSpell_Hover_Effect::Initialize(void* pArg)
 
 	Desc.fX = 0.f;
 	Desc.fY = 0.f;
-	Desc.fSizeX = 105.f;
-	Desc.fSizeY = 105.f;
+	Desc.fSizeX = 115.f;
+	Desc.fSizeY = 115.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -47,6 +47,7 @@ HRESULT CSpell_Hover_Effect::Initialize(void* pArg)
 	m_pVIBufferCom->Set_Cloned(true);
 	m_pVIBufferCom->Set_Pos(-185.f, 375.f, m_fOffSetX, m_fOffSetY, m_iCols);
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Slot_Hover"), [this](void* p) {this->Set_SkillType(*reinterpret_cast<_int*>(p)); });
 	return S_OK;
 }
 
@@ -89,7 +90,7 @@ void CSpell_Hover_Effect::Update(_float fTimeDelta)
 			m_fAlpha = 0.f;
 		}
 	}
-	Hover();
+	m_pVIBufferCom->Set_Hover_Index(m_iSpellType);
 	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
 }
@@ -151,22 +152,6 @@ void CSpell_Hover_Effect::SizeUpdate(_float fSizeX, _float fSizeY)
 	m_fSizeX = fSizeX;
 	m_fSizeY = fSizeY;
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
-}
-
-void CSpell_Hover_Effect::Hover()
-{
-	POINT ptMouse{};
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
-	_float2 fMouse;
-	fMouse.x = ptMouse.x - (g_iWinSizeX * 0.5f);
-	fMouse.y = -(ptMouse.y - (g_iWinSizeY * 0.5f));
-
-	fMouse.x -= m_pOwner->Get_WorldPostion().m128_f32[0];
-	fMouse.y -= m_pOwner->Get_WorldPostion().m128_f32[1];
-
-	m_pVIBufferCom->Set_Mouse_Hover(fMouse);
-
 }
 
 HRESULT CSpell_Hover_Effect::Bind_ShaderResources()

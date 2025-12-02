@@ -6,16 +6,22 @@
 #include "Camera_Debug.h"
 #include "InfoInstance.h"
 #include "GamePlay_Canvas.h"
+#include "Spell_Canvas.h"
 #include "Layer.h"
-#include "Player.h"
 #include "SkyBox.h"
 #include "Broom.h"
 #include "Dummy_PhysXWall.h"
 #include "Dummy_PhysXPlayable.h"
-#include "Goblin.h"
 #include "Terrain.h"
 #include "EffectPool.h"
 #include "InstancedProp.h"
+
+#pragma region ACTOR
+#include "Player.h"
+#include "Troll.h"
+#include "Goblin.h"
+#pragma endregion
+
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -38,7 +44,12 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	if (FAILED(Ready_Layer_UI(LAYER_UI))) {
 		return E_FAIL;
 	}
-	if (FAILED(Reday_Layer_EffectPool())) {	//플레이어보다 먼저 생성해야함!
+	//플레이어보다 먼저 생성해야함!
+	if (FAILED(Reday_Layer_EffectPool())) {	
+		return E_FAIL;
+	}
+	// 이것도 플레이어보다 먼저 생성해야함!
+	if (FAILED(Ready_Layer_Item(LAYER_ITEM))) {
 		return E_FAIL;
 	}
 	if (FAILED(Ready_Layer_Player(LAYER_PLAYER))) {
@@ -82,7 +93,46 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 
 HRESULT CLevel_GamePlay::Render()
 {
-	SetWindowText(g_hWnd, TEXT("게임플레이레벨입니다"));
+	_float fDeltaTimeSeconds = m_pGameInstance->Get_TimeDelta(TEXT("Timer_60"));
+
+	static _float fAccumulatedTimeSeconds = 0.0f;
+	static _uint  iFrameCountForFps = 0;
+	static _float fCurrentFps = 0.0f;
+	static _float fAverageFrameTimeMilliseconds = 0.0f;
+
+	fAccumulatedTimeSeconds += fDeltaTimeSeconds;
+	++iFrameCountForFps;
+
+	if (fAccumulatedTimeSeconds >= 1.0f)
+	{
+		if (fAccumulatedTimeSeconds > 0.0f)
+		{
+			fCurrentFps = static_cast<_float>(iFrameCountForFps) / fAccumulatedTimeSeconds;
+			if (fCurrentFps > 0.0f)
+			{
+				fAverageFrameTimeMilliseconds = 1000.0f / fCurrentFps;
+			}
+		}
+
+		fAccumulatedTimeSeconds = 0.0f;
+		iFrameCountForFps = 0;
+	}
+
+	_float fCurrentFrameTimeMilliseconds = fDeltaTimeSeconds * 1000.0f;
+
+	_tchar szWindowTitle[256] = {};
+
+	// 현재 프레임 시간 + 평균 FPS / 평균 프레임 타임(ms)
+	_stprintf_s(
+		szWindowTitle,
+		TEXT("게임플레이레벨입니다 | Frame: %.3f ms | Avg: %.3f ms | FPS: %.1f"),
+		fCurrentFrameTimeMilliseconds,
+		fAverageFrameTimeMilliseconds,
+		fCurrentFps
+	);
+
+	SetWindowText(g_hWnd, szWindowTitle);
+
 	return S_OK;
 }
 
@@ -110,9 +160,13 @@ HRESULT CLevel_GamePlay::Ready_Background()
 
 	/* Map Containters */
 	/* 테스트용 맵 */
+
 	CInfoInstance::GetInstance()->Load_MapObjects("ClientTest");
 	/* 전체 맵 */
-	// CInfoInstance::GetInstance()->Load_MapObjects("Map1124");
+	//CInfoInstance::GetInstance()->Load_MapObjects("Map1129");
+
+	/* 조명 오브젝트 */
+	CInfoInstance::GetInstance()->Load_LightElements("LightElement");
 
 	
 	CInstancedProp::INSTANCE_PROP_DESC Desc = {};
@@ -120,21 +174,26 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	/* InstanceProp Oak_Tree*/
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_OakTree_MedA";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/OakTree_MedA.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc))){
 		return E_FAIL;
+	}
 
 	/* BearBerry */
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_BearBerry_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/BearBerry_A.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc))){
 		return E_FAIL;
+	}
 
 	return S_OK;
 }
 
 HRESULT CLevel_GamePlay::Ready_Layer_UI(const _wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGamePlay_Canvas>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_UI))) {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGamePlay_Canvas>(g_iStaticLevel, g_iStaticLevel, LAYER_UI))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Canvas>(g_iStaticLevel, g_iStaticLevel, LAYER_UI))) {
 		return E_FAIL;
 	}
 
@@ -184,15 +243,19 @@ HRESULT CLevel_GamePlay::Ready_Markers()
 
 HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, strLayerTag,nullptr,nullptr,&m_pBroom)))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, m_pBroom))){
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))){
 		return E_FAIL;
 	}
 
+	return S_OK;
+}
 
+HRESULT CLevel_GamePlay::Ready_Layer_Item(const _wstring& strLayerTag)
+{
 
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, LAYER_ITEM, nullptr, nullptr))) {
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -223,7 +286,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 			return E_FAIL;
 		}
 	}
-
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -231,10 +296,10 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 HRESULT CLevel_GamePlay::Reday_Layer_EffectPool()
 {
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEffectPool>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_EffectPool")))) //플레이어보다 먼저 생성해야함!
+	//플레이어보다 먼저 생성해야함!
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEffectPool>(g_iStaticLevel, NEXT_LEVEL, LAYER_EFFECTPOOL))) {
 		return E_FAIL;
-
-
+	}
 	return S_OK;
 }
 

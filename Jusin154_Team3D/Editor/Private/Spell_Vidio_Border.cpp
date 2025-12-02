@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Spell_Vidio_Border.h"
 #include "GameInstance.h"
+#include "Spell_Anim.h"
 
 CSpell_Vidio_Border::CSpell_Vidio_Border(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
@@ -38,11 +39,15 @@ HRESULT CSpell_Vidio_Border::Initialize(void* pArg)
 	}
 
 	m_fTimeMult = 3.f;
-	m_fAlpha = 1.f;
-	m_fAlphaTime = 3.f;
+	m_fAlpha = 0.f;
+	m_fAlphaTime = 9.f;
 	m_fMoveSpeed = 5.f;
 	m_fLerpX = m_fX;
 	m_fLerpY = 45;
+	m_bStart = false;
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Slot_Hover"), [this](void* p) {this->Set_SkillType(*reinterpret_cast<_int*>(p)); });
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("FadeIn"), [this](void* p) {this->Set_FadeIn(); });
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("FadeOut"), [this](void* p) {this->Set_FadeOut(); });
 	return S_OK;
 }
 
@@ -77,16 +82,21 @@ void CSpell_Vidio_Border::Update(_float fTimeDelta)
 	if (m_bFadeOut == true)
 	{
 		if (m_fAlpha >= 0.f)
-			m_fAlpha -= fTimeDelta;
+			m_fAlpha -= fTimeDelta * m_fAlphaTime;
 
 		if (m_fAlpha <= 0.f)
 		{
 			m_bFadeOut = false;
+			m_bStart = false;
 			m_fAlpha = 0.f;
 		}
 	}
 
 	m_fTime += fTimeDelta * m_fTimeMult;
+
+	if (m_fAlpha >= 0.3f)
+		m_bStart = true;
+
 	__super::Update(fTimeDelta);
 
 }
@@ -105,21 +115,25 @@ void CSpell_Vidio_Border::Late_Update(_float fTimeDelta)
 
 HRESULT CSpell_Vidio_Border::Render()
 {
-	if (FAILED(Bind_ShaderResources()))
+	if (m_bStart == true)
 	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::ALPHABLEND))))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pVIBufferCom->Bind_Resources()))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pVIBufferCom->Render()))
-	{
-		return E_FAIL;
+		if (FAILED(Bind_ShaderResources()))
+		{
+			return E_FAIL;
+		}
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::ALPHABLEND))))
+		{
+			return E_FAIL;
+		}
+		if (FAILED(m_pVIBufferCom->Bind_Resources()))
+		{
+			return E_FAIL;
+		}
+		if (FAILED(m_pVIBufferCom->Render()))
+		{
+			return E_FAIL;
+		}
+
 	}
 
 	return S_OK;
@@ -185,7 +199,6 @@ HRESULT CSpell_Vidio_Border::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-
 	return S_OK;
 }
 

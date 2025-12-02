@@ -175,6 +175,36 @@ _vector CTransform::Go_Down(_float fTimeDelta)
 	return -vMomentum;
 }
 
+_vector CTransform::Go_LerpStraight(_float fSpeed, _float fTimeDelta)
+{
+	_vector		vPos = Get_State(STATE::POSITION);
+	_vector		vLook =Get_State(STATE::LOOK);
+	_vector		vMomentum = XMVector3Normalize(vLook) * fSpeed * fTimeDelta;
+	vPos += vMomentum;
+	Set_State(STATE::POSITION, vPos);
+	return +vMomentum;
+}
+
+_vector CTransform::Go_LerpUp(_float fSpeed, _float fTimeDelta)
+{
+	_vector		vPos = Get_State(STATE::POSITION);
+	_vector		vUp = Get_State(STATE::UP);
+	_vector		vMomentum = XMVector3Normalize(vUp) * fSpeed * fTimeDelta;
+	vPos += vMomentum;
+	Set_State(STATE::POSITION, vPos);
+	return +vMomentum;
+}
+
+_vector CTransform::Go_LerpDown(_float fSpeed, _float fTimeDelta)
+{
+	_vector		vPos = Get_State(STATE::POSITION);
+	_vector		vUp = Get_State(STATE::UP);
+	_vector		vMomentum = XMVector3Normalize(vUp) * fSpeed * fTimeDelta;
+	vPos -= vMomentum;
+	Set_State(STATE::POSITION, vPos);
+	return -vMomentum;
+}
+
 void CTransform::Translation(_float3& vTrans)
 {
 	Translation(XMLoadFloat3(&vTrans));
@@ -192,6 +222,10 @@ void CTransform::AccumulateMomentum(_fvector vMomentum)
 _vector CTransform::Get_CurrentMomentum() const
 {
 	return XMLoadFloat3(&m_vMomentum);
+}
+void CTransform::Set_CurrentMomentum(_fvector vMomentum)
+{
+	XMStoreFloat3(&m_vMomentum, vMomentum);
 }
 _vector CTransform::Get_EstimatedPositionByMomentum() const
 {
@@ -318,6 +352,28 @@ void CTransform::LookAt(_fvector vAt)
 	_float3 vScale = Get_Scale();
 
 	_vector vLook = vAt - Get_State(STATE::POSITION);
+	_vector vRight = XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook);
+	_vector vUp = XMVector3Cross(vLook, vRight);
+
+	Set_State(STATE::RIGHT, XMVector3Normalize(vRight) * vScale.x);
+	Set_State(STATE::UP, XMVector3Normalize(vUp) * vScale.y);
+	Set_State(STATE::LOOK, XMVector3Normalize(vLook) * vScale.z);
+}
+
+void CTransform::LookAt_Horizontal(_fvector vAt)
+{
+	_float3 vScale = Get_Scale();
+	_vector vPos = Get_State(STATE::POSITION);
+
+	_vector vLook = XMVectorSet(
+		XMVectorGetX(vAt) - XMVectorGetX(vPos),
+		0.f,
+		XMVectorGetZ(vAt) - XMVectorGetZ(vPos),
+		0.f
+	);
+
+	vLook = XMVector3Normalize(vLook);
+
 	_vector vRight = XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook);
 	_vector vUp = XMVector3Cross(vLook, vRight);
 

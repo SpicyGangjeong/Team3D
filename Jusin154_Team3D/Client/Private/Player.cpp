@@ -12,6 +12,7 @@
 #include "CamPosition_Shoulder.h"
 #include "CallBack_Playable_HitReport.h"
 #include "Monster.h"
+#include "Broom.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -59,10 +60,11 @@ HRESULT CPlayer::Initialize(void* pArg)
 	Load_KeyFrame();
 #endif // _DEBUG
 
-
-	m_pBroomModel = static_cast<CGameObject*>(pArg)->Get_Component<CModel>();
+	m_pBroom = m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_ITEM)->Get_Object<CBroom>();
+	m_pBroomModel = m_pBroom->Get_Component<CModel>();
+	m_pBroomTransform = m_pBroom->Get_Component<CTransform>();
+	SAFE_ADDREF(m_pBroom);
 	SAFE_ADDREF(m_pBroomModel);
-	m_pBroomTransform = static_cast<CGameObject*>(pArg)->Get_Component<CTransform>();
 	SAFE_ADDREF(m_pBroomTransform);
 
 	Add_FSM();
@@ -108,6 +110,7 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 	m_pTransformCom->RewindMomentum();
 
 	__super::Priority_Update(fTimeDelta);
+
 }
 
 void CPlayer::Update(_float fTimeDelta)
@@ -119,15 +122,19 @@ void CPlayer::Update(_float fTimeDelta)
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
 	Play_Event();
-
+	
 __super::Update(fTimeDelta);
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
 
+	
 
-
-	m_pCharacter_Controller->Move(fTimeDelta);
+	{ // 세트
+		m_pCallBack_HitReport->BeginFrame();
+		m_pCharacter_Controller->Move(fTimeDelta);
+		m_pCallBack_HitReport->Set_CurrentSlop();
+	}
 	TestKeyInput(fTimeDelta);
 }
 
@@ -198,7 +205,7 @@ void CPlayer::Render_CameraCoordinateSystem()
 	GUI::Text("S : %.2f, %.2f, %.2f", -m_vCameraLookDir.x, 0.f, -m_vCameraLookDir.z);
 	GUI::Text("D : %.2f, %.2f, %.2f", m_vCameraRightDir.x, 0.f, m_vCameraRightDir.z);
 	
-	_float  fButtonSize = 25.f;
+	_float  fButtonSize = 45.f;
 	GUI::Button("##0", { fButtonSize, fButtonSize }); GUI::SameLine();
 	GUI::Button(("W : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { m_vCameraLookDir.x , m_vCameraLookDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
 	GUI::Button("##2", { fButtonSize, fButtonSize });
@@ -255,6 +262,17 @@ HRESULT CPlayer::Ready_Components()
 		reinterpret_cast<CComponent**>(&m_pShaderCom)))) {
 		return E_FAIL;
 	}
+	LightDesc.eType = LIGHT::POINT;
+	LightDesc.fRange = 10.f;
+	LightDesc.iLevel = NEXT_LEVEL;
+	LightDesc.pPosition = m_pTransformCom->Get_StatePtr(STATE::POSITION);
+	LightDesc.vAmbient = CMyTools::ColorRGB_A_HEXtoFLOAT4(0xffffff, 1.f);
+	LightDesc.vDiffuse = CMyTools::ColorRGB_A_HEXtoFLOAT4(0xffffff, 1.f);
+	LightDesc.vSpecular = CMyTools::ColorRGB_A_HEXtoFLOAT4(0xffffff, 1.f);
+	if (FAILED(Add_Component<CLight>(g_iStaticLevel, &m_pLightCom, &LightDesc))) {
+		return E_FAIL;
+	}
+
 
 	{ // CCT
 		CCharacter_Controller::Character_Controller_DESC Desc{};
@@ -262,7 +280,7 @@ HRESULT CPlayer::Ready_Components()
 		Desc.iSubKind = ENUM_CLASS(PXOBJECT::PLAYER);
 		Desc.pTransform = m_pTransformCom;
 		Desc.eBodyType = ACTOR::CAPSULE;
-		Desc.fContactOffset = 0.17f;
+		Desc.fContactOffset = 0.01f;
 		Desc.fMaterial = { 0.5f, 0.5f, 0.6f };
 		Desc.bAutoStepping = { true };
 		Desc.fStepOffset = { 0.05f };
@@ -271,6 +289,7 @@ HRESULT CPlayer::Ready_Components()
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Playable_HitReport::Create();
 		Desc.pCallback_Behavior = m_pCallBack_Behavior = CCallBack_Playable_Behavior::Create();
 		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
+		Desc.fWalkableSlope = 45.f;
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), (CComponent**)&m_pCharacter_Controller, &Desc))) {
 			return E_FAIL;
 		}
@@ -350,7 +369,7 @@ void CPlayer::SetGravity()
 	eCollisionFlags;
 	if (	false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_DOWN) 
 		 &&	false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_SIDES)) {
-		if (false == m_pFSM->IsEnable(STATEANIM::JUMP)) { // 벽에 닿지 않았는데 점프 중이 아닐 땐 중력 on
+		if (false == m_pFSM->IsEnable(FSMSTATE::JUMP)) { // 벽에 닿지 않았는데 점프 중이 아닐 땐 중력 on
 			m_pCharacter_Controller->SetGravity(true);
 		}
 		else { // 점프 중일 땐 off
@@ -452,6 +471,7 @@ void CPlayer::Free()
 	}
 	SAFE_RELEASE(m_pCharacter_Controller);
 	SAFE_RELEASE(m_pRigidBody);
+	SAFE_RELEASE(m_pLightCom);
 	Safe_Delete(m_pCallBack_Behavior);
 	Safe_Delete(m_pCallBack_HitReport);
 	SAFE_RELEASE(m_pCamPosition_TopDown_FollowPart);
@@ -460,11 +480,13 @@ void CPlayer::Free()
 	SAFE_RELEASE(m_pEffectPool);
 	SAFE_RELEASE(m_pBroomModel);
 	SAFE_RELEASE(m_pBroomTransform);
+	SAFE_RELEASE(m_pBroom);
 }
 #ifdef _DEBUG
 
 void CPlayer::Describe_Entity()
 {
+	GUI::Begin("PLAYER_DESC");
 	m_pCharacter_Controller->Describe_Entity();
 	_float4 vMomentum = {};
 	XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());
@@ -497,11 +519,14 @@ void CPlayer::Describe_Entity()
 	GUI::Text(AnimList.c_str());
 
 	GUI::Text("AnimTrack %.2f", m_pModelCom->Get_CurrentTrackPosition());
+	GUI::Text("AnimRatio %.2f", m_pModelCom->Get_TrackProgressRatio(417));
 
 	GUI::Checkbox("Render", &m_bVisible);
 
 	GUI::Text("%d", m_iStateMask);
 
+	m_pLightCom->Describe_Entity();
+	GUI::End();
 }
 
 #endif // _DEBUG

@@ -22,6 +22,7 @@ public:
 	HRESULT Load_StreetContainer(tinyxml2::XMLElement* Container, class CMapContainer** ppContainerObject);
 	HRESULT Load_MapRenderObjects(tinyxml2::XMLElement* Container, class CMapContainer* pContainerObject);
 	HRESULT Load_MapCollisionObjects(tinyxml2::XMLElement* Container, class CMapContainer* pContainerObject);
+	HRESULT Load_LightElements(const _char* pFileName);
 
 private:
 	CGameInstance*			m_pGameInstance = { nullptr };
@@ -35,6 +36,10 @@ private:
 public:
 	static CMapInfo* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContex);
 	virtual void Free() override;
+#ifdef _DEBUG
+	virtual void Describe_Entity();
+#endif // _DEBUG
+
 };
 
 NS_END

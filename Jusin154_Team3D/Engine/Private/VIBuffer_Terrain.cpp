@@ -211,8 +211,9 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _char* pFilePath)
 	Safe_Delete_Array(pPixels);
 
 	m_pQuadTree = CQuadTree::Create(m_iNumVerticesX * m_iNumVerticesZ - m_iNumVerticesX, m_iNumVerticesX * m_iNumVerticesZ - 1, m_iNumVerticesX - 1, 0);
-	if (nullptr == m_pQuadTree)
+	if (nullptr == m_pQuadTree){
 		return E_FAIL;
+	}
 
 	m_pQuadTree->SetUp_Neighbors();
 
@@ -400,7 +401,7 @@ void CVIBuffer_Terrain::ConvertToHeightField(const _tchar* pStaticKey)
 			_uint iIndex = iRow * m_iNumVerticesX + iCol;
 			_uint iPhysXIndex = iCol * m_iNumVerticesZ + iRow;
 
-			_float fRealHeight = m_HeigthValues[iIndex];
+			_float fRealHeight = m_pVertexPositions[iIndex].y * 100.f /* 100배의 정밀도 1cm 단위. */;
 			PSX::PxI16 iClampHeight = (PSX::PxI16)(PSX::PxClamp(fRealHeight, -32767.f, 32767.f));
 
 			PSX::PxHeightFieldSample& pxSample = pxSamples[iPhysXIndex];

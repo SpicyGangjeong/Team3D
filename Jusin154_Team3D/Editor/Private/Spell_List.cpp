@@ -3,18 +3,18 @@
 #include "GameInstance.h"
 
 CSpell_List::CSpell_List(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-    :CElementObject(pDevice, pContext)
+	:CElementObject(pDevice, pContext)
 {
 }
 
 CSpell_List::CSpell_List(const CSpell_List& rhs)
-    :CElementObject(rhs)
+	:CElementObject(rhs)
 {
 }
 
 HRESULT CSpell_List::Initialize_Prototype()
 {
-    return S_OK;
+	return S_OK;
 }
 
 HRESULT CSpell_List::Initialize(void* pArg)
@@ -46,6 +46,8 @@ HRESULT CSpell_List::Initialize(void* pArg)
 	m_pVIBufferCom->Set_Cloned(true);
 	m_pVIBufferCom->Set_Pos(-185.f, 375.f, m_fOffSetX, m_fOffSetY, m_iCols);
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
+	m_fDelayTime = 0.5f;
+	m_iPerSpell_Slot = -1;
 	Color();
 	return S_OK;
 }
@@ -90,7 +92,7 @@ void CSpell_List::Update(_float fTimeDelta)
 		}
 	}
 	m_fTime += fTimeDelta * m_fTimeMult;
-	Hover();
+	Hover(fTimeDelta);
 	__super::Update(fTimeDelta);
 }
 
@@ -165,7 +167,7 @@ void CSpell_List::Color()
 	m_pVIBufferCom->Set_Index_Renge_Color(23, 25, _float4(24.f / 255.f, 190.f / 255.f, 255.f / 255.f, 1.f));
 }
 
-void CSpell_List::Hover()
+void CSpell_List::Hover(_float fTimeDelta)
 {
 	POINT ptMouse{};
 	GetCursorPos(&ptMouse);
@@ -178,7 +180,21 @@ void CSpell_List::Hover()
 	fMouse.x -= m_pOwner->Get_WorldPostion().m128_f32[0];
 	fMouse.y -= m_pOwner->Get_WorldPostion().m128_f32[1];
 
-	m_pVIBufferCom->Set_Mouse_Hover(fMouse);
+	m_iSpellType = m_pVIBufferCom->Set_Mouse_Hover(fMouse);
+
+	CUIObject::HOVER_INFO Info;
+	Info.iSlotID = 0;
+	if (m_iSpellType == -1)
+	{
+		Info.iHover_Index = -1;
+		static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Hover"), &Info);
+	}
+
+	else
+	{
+		Info.iHover_Index = m_iSpellType;
+		static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Hover"), &Info);
+	}
 
 }
 

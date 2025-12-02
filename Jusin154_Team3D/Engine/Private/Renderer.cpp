@@ -12,12 +12,12 @@ CRenderer::CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	SAFE_ADDREF(m_pDevice);
 	SAFE_ADDREF(m_pContext);
-	SAFE_ADDREF(m_pGameInstance); 
+	SAFE_ADDREF(m_pGameInstance);
 }
 
 HRESULT CRenderer::Add_RenderGroup(RENDER eRenderGroup, CGameObject* pRenderObject)
 {
-	if (nullptr == pRenderObject || pRenderObject->isDead()){
+	if (nullptr == pRenderObject || pRenderObject->isDead()) {
 		return E_FAIL;
 	}
 
@@ -78,7 +78,7 @@ void CRenderer::Render()
 	Describe_Entitiy();
 	m_pGameInstance->RenderTarget_Debuger();
 
-	if(m_pGameInstance->Key_Pressing(DIK_F10)){
+	if (m_pGameInstance->Key_Pressing(DIK_F10)) {
 		Render_Debug();
 	}
 #endif
@@ -232,7 +232,7 @@ void CRenderer::Render_Combined()
 	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Combined")))) {
 		return;
 	}
-	{ 
+	{
 		// Bind_Resorces
 
 		m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix);
@@ -321,7 +321,7 @@ void CRenderer::Render_EnvironmentPostProcess()
 	}
 
 	m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix);
-	m_pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix); 
+	m_pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix);
 	m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix);
 	m_pShader->Bind_Matrix("g_invMatView", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW_INV));
 	m_pShader->Bind_Matrix("g_invmatProj", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ_INV));
@@ -473,7 +473,7 @@ void CRenderer::Render_Blur()
 		if (nullptr != pRenderObject)
 			if (FAILED(pRenderObject->Render_Blur())) {
 				assert(false);
-			}  
+			}
 
 		SAFE_RELEASE(pRenderObject);
 	}
@@ -495,11 +495,11 @@ void CRenderer::Render_Blur()
 	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur"), m_pShader, "g_BlurTexture"))) {
 		return;
 	}
-	
+
 	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur_Weight"), m_pShader, "g_BlurWeightTexture"))) {
 		return;
 	}
-	
+
 	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::BLUR));
 
 	m_pVIBuffer->Bind_Resources();
@@ -534,11 +534,15 @@ void CRenderer::Render_Blend()
 
 void CRenderer::Render_Bloom()
 {
+#ifdef _DEBUG
+
 	GUI::Begin("PostProcessing_Bloom");
 	GUI::PushItemWidth(80);
 	GUI::DragFloat("g_fThreshold", &m_fThreshold, 0.01f, 0.02f, 100.f, "%.3f");
 	GUI::SliderInt("g_iEmbossingPass", &m_iBloomEmbossingPass, 0, 2, "%d");
 	GUI::End();
+
+#endif // _DEBUG
 
 	//{ // BackBuffer 
 	//	ID3D11Texture2D* pBackBuffer = nullptr;
@@ -615,6 +619,7 @@ void CRenderer::Render_Bloom()
 
 void CRenderer::Render_UI()
 {
+
 	m_RenderObjects[ENUM_CLASS(RENDER::UI)].sort([](CGameObject* pDest, CGameObject* pSrc)->_bool {
 		_float3 vDstPos = {};
 		_float3 vSrcPos = {};
@@ -623,6 +628,8 @@ void CRenderer::Render_UI()
 
 		return vDstPos.z > vSrcPos.z;
 		}); // z 소팅
+
+
 
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::UI)])
 	{
@@ -875,7 +882,7 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 
-		
+
 		if (FAILED(Ready_ShadowDepthStencilView(g_iMaxShadowWidth, g_iMaxShadowHeight))) {
 			return E_FAIL;
 		}
@@ -982,7 +989,7 @@ HRESULT CRenderer::Initialize()
 	}
 
 	m_pWeightBlendShader = (CShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, FX_WEIGHTBELND, nullptr, nullptr);
-	
+
 	if (nullptr == m_pWeightBlendShader) {
 		return E_FAIL;
 	}
@@ -1073,11 +1080,11 @@ void CRenderer::Describe_Entitiy()
 
 		GUI::DragFloat("Max Radius", &m_fDOF_ENV_AmountRadius, 0.1f, 0.0f, 10.0f, "%.2f");
 
-		if (m_fDOF_ENV_StartDistance < m_fDOF_ENV_FocusDistance){
+		if (m_fDOF_ENV_StartDistance < m_fDOF_ENV_FocusDistance) {
 			m_fDOF_ENV_StartDistance = m_fDOF_ENV_FocusDistance;
 		}
 
-		if (m_fDOF_ENV_MaxEnd < m_fDOF_ENV_StartDistance + 1.0f){
+		if (m_fDOF_ENV_MaxEnd < m_fDOF_ENV_StartDistance + 1.0f) {
 			m_fDOF_ENV_MaxEnd = m_fDOF_ENV_StartDistance + 1.0f;
 		}
 

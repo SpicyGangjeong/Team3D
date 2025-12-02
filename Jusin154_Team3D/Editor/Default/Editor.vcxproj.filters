@@ -435,6 +435,21 @@
     </Filter>
     <Filter Include="02.GameObjects\Layer_Effect\Effect\02.EditEffect\01.TestEffect">
       <UniqueIdentifier>{32718f84-d863-48d2-8611-90c40f2ba1c5}</UniqueIdentifier>
+	</Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_Anim">
+      <UniqueIdentifier>{4aa98871-8d80-4757-b616-e96f4e840857}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Spell_Data">
+      <UniqueIdentifier>{3949bd3b-1686-43e3-822c-d3eabe41653e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Current_Slot_Number">
+      <UniqueIdentifier>{2f8a3c68-c3d3-43cc-9649-16e0cfd168fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_Drag">
+      <UniqueIdentifier>{dcc220a9-4649-4f95-9205-9eee9af128ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_Anim">
+      <UniqueIdentifier>{4aa98871-8d80-4757-b616-e96f4e840857}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -852,6 +867,18 @@
     <ClInclude Include="..\public\MapElement_Light.h">
       <Filter>02.GameObjects\Env\03.MapElement\Light</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Spell_Anim.h">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Anim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Spell_Data.h">
+      <Filter>50.UI\Spell_Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Current_Slot_Number.h">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Current_Slot_Number</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Spell_Drag.h">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Drag</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -1266,6 +1293,18 @@
     </ClCompile>
     <ClCompile Include="..\private\MapElement_Light.cpp">
       <Filter>02.GameObjects\Env\03.MapElement\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Spell_Anim.cpp">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Anim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Spell_Data.cpp">
+      <Filter>50.UI\Spell_Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Current_Slot_Number.cpp">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Current_Slot_Number</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Spell_Drag.cpp">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Drag</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

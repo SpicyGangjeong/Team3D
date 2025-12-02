@@ -37,6 +37,7 @@ private:
 
 	_bool m_bSprintToggle = { false };
 	_bool m_bWalkToggle = { false };
+	_bool m_bHoverToggle = { true };
 
 	_float3 m_vCameraLookDir = { 0.f, 0.f, 1.f, };
 	_float3 m_vCameraRightDir = { 1.f, 0.f, 0.f };
@@ -49,9 +50,12 @@ private:
 	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
 	class	CCallBack_Playable_Behavior* m_pCallBack_Behavior = { nullptr };
 	class	CCallBack_Playable_HitReport* m_pCallBack_HitReport = { nullptr };
+	CLight* m_pLightCom = { nullptr };
+	LIGHT_DESC LightDesc = {};
 
 	class CModel* m_pBroomModel = { nullptr };
 	class CTransform* m_pBroomTransform = { nullptr };
+	class CBroom* m_pBroom = { nullptr };
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -96,6 +100,7 @@ private:
 	vector<PendingEvent> m_PendingEvents;
 
 
+	_float3 m_OffsetPos = {};
 	_float m_fAmount = { 1.f };
 	_float m_fInputTime = {};
 	_bool m_bRatio = { false };

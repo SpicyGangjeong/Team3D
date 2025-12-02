@@ -549,7 +549,7 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 			case STATEANIM::ACCIO:
 				pairAnimInfo = m_Animation[STATEANIM::ACCIO];
 
-				m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARD, this);
+				m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA, this);
 
 			
 				break;
@@ -557,7 +557,7 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 			{
 				pairAnimInfo = m_Animation[STATEANIM::DESCENDO];
 
-				m_pEffectPool->Use_Skill(SKILL_TYPE::DECENDO, this);
+				m_pEffectPool->Use_Skill(SKILL_TYPE::DESCENDO, this);
 			}
 				break;
 			default:
