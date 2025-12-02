@@ -18,18 +18,21 @@ public:
 
 private:
 	class CInfoInstance* m_pInfoInstance = { nullptr };
-	class CPlayer* m_pPlayerTemp = { nullptr };
+	class CBroom* m_pBroom = { nullptr };
 private:
 	virtual HRESULT Initialize() override;
 	HRESULT Initialize(void* pArg);
 	HRESULT Ready_Lights();
+	HRESULT Ready_Background();
 	HRESULT Ready_Markers();
 	HRESULT Ready_Layer_UI(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_Camera();
 	HRESULT Ready_Layer_Sound();
 	HRESULT Ready_Layer_Player(const _wstring& strLayerTag);
+	HRESULT Ready_Layer_Item(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_SkyBox(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_Monster();
+	HRESULT Reday_Layer_EffectPool();
 
 public:
 	static pair<CLevel*, function<void()>> Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID, void* pArg);

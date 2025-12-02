@@ -58,8 +58,9 @@ HRESULT CRenderTarget_Manager::Begin_MRT(const _wstring& strMultiRenderTargetKey
 
     list<CRenderTarget*>* pMRTList = Find_MRT(strMultiRenderTargetKey);
 
-    if (nullptr == pMRTList)
+    if (nullptr == pMRTList){
         return E_FAIL;
+    }
 
     _uint iNumRenderTargets = { 0 };
     ID3D11RenderTargetView* pRenderTargetViews[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT] = {};
@@ -73,6 +74,37 @@ HRESULT CRenderTarget_Manager::Begin_MRT(const _wstring& strMultiRenderTargetKey
     for (auto& pRenderTarget : *pMRTList)
     {
         pRenderTarget->Clear();
+        pRenderTargetViews[iNumRenderTargets++] = pRenderTarget->Get_RTV();
+    }
+    if (0 == iNumRenderTargets) {
+        return E_FAIL;
+    }
+
+    m_pContext->OMSetRenderTargets(iNumRenderTargets, pRenderTargetViews, (nullptr == pDSV) ? m_pOriginalDSV : pDSV);
+
+    return S_OK;
+}
+HRESULT CRenderTarget_Manager::Begin_MRT_NonClear(const _wstring& strMultiRenderTargetKey, ID3D11DepthStencilView* pDSV)
+{
+    m_pContext->OMGetRenderTargets(1, &m_pBackBufferRTV, &m_pOriginalDSV);
+
+    list<CRenderTarget*>* pMRTList = Find_MRT(strMultiRenderTargetKey);
+
+    if (nullptr == pMRTList) {
+        return E_FAIL;
+    }
+
+    _uint iNumRenderTargets = { 0 };
+    ID3D11RenderTargetView* pRenderTargetViews[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT] = {};
+
+    m_pContext->OMSetRenderTargets(0, nullptr, nullptr);
+
+    if (nullptr != pDSV) {
+        m_pContext->ClearDepthStencilView(pDSV, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
+    }
+
+    for (auto& pRenderTarget : *pMRTList)
+    {
         pRenderTargetViews[iNumRenderTargets++] = pRenderTarget->Get_RTV();
     }
     if (0 == iNumRenderTargets) {
@@ -289,6 +321,11 @@ HRESULT CRenderTarget_Manager::Refit_RenderTarget(CVIBuffer_Rect* pVIBuffer, CSh
     NewViewport.MinDepth = 0.f;
     NewViewport.MaxDepth = 1.f;
 
+    _float2 vResolution = { NewViewport.Width, NewViewport.Height };
+    if (FAILED(pShader->Bind_RawValue("g_vResolution", &vResolution, sizeof(_float2)))) {
+        assert(false);
+    }
+
     pOutput->Clear();
 
     { // Bind RTVs
@@ -354,6 +391,10 @@ HRESULT CRenderTarget_Manager::Refit_RenderTarget(CVIBuffer_Rect* pVIBuffer, CSh
     m_pContext->OMSetRenderTargets(1, &m_pBackBufferRTV, m_pOriginalDSV);
     m_pContext->RSSetViewports(iNumViewPorts, &OriginalViewport);
 
+    vResolution = { OriginalViewport.Width, OriginalViewport.Height };
+    if (FAILED(pShader->Bind_RawValue("g_vResolution", &vResolution, sizeof(_float2)))) {
+        assert(false);
+    }
     SAFE_RELEASE(m_pBackBufferRTV);
     SAFE_RELEASE(m_pOriginalDSV);
 
@@ -438,8 +479,9 @@ HRESULT CRenderTarget_Manager::Render_RenderTarget_Debug(CShader* pShader, CVIBu
 
     for (auto& pRenderTarget : m_RenderTargets)
     {
-        if (pRenderTarget.second->Render_Debug(pShader, pVIBuffer, fX, fY, (_float)m_iSizeX, (_float)m_iSizeY) == false)
+        if (pRenderTarget.second->Render_Debug(pShader, pVIBuffer, fX, fY, (_float)m_iSizeX, (_float)m_iSizeY) == false){
             continue;
+        }
 
         fX += m_iSizeX;
 
@@ -464,16 +506,39 @@ void CRenderTarget_Manager::RenderTarget_Debuger()
     GUI::Spacing();
 
     GUI::PushItemWidth(80);
+    if (GUI::Button("ToggleAll")) {
+        Toggle_RT_Debugger();
+    }
     GUI::DragInt("Target Size X" , &m_iSizeX);
     GUI::DragInt("Target Size Y", &m_iSizeY);
     GUI::PopItemWidth();
-
-    for (auto& pTarget : m_RenderTargets)
+    ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
+    GUI::BeginChild("RTDebugger", { 120.f, 200.f }, ImGuiChildFlags_None, window_flags);
+    for (auto& [key, pRenderTarget] : m_RenderTargets)
     {
-        pTarget.second->Describe_Entity(CMyTools::ToString(pTarget.first).c_str());
+        _string strKey = CMyTools::ToString(key);
+        _string strTargetName = "NOT_STARTED_WITH_Target_";
+
+        _string TargetPrefix = "Target_";
+        if (size_t pos = strKey.find(TargetPrefix); pos != string::npos)
+        {
+            strTargetName = strKey.substr(pos + TargetPrefix.length());
+        }
+
+        pRenderTarget->Describe_Entity(strTargetName.c_str());
     }
 
+    GUI::EndChild();
+
     GUI::End();
+}
+
+void CRenderTarget_Manager::Toggle_RT_Debugger()
+{
+    for (auto& [key, pRenderTarget] : m_RenderTargets)
+    {
+        pRenderTarget->Toggle_RT_Debug();
+    }
 }
 
 #endif // _DEBUG

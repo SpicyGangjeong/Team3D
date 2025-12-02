@@ -36,21 +36,16 @@ HRESULT CEffectObject::Render()
 	for (_uint i = 0; i < m_pInstance_ModelCom->Get_NumMeshes(); i++)
 	{
 
-	
-		if (FAILED(m_pGameInstance->Bind_DepthStencil(m_pShaderCom, "g_DepthStencilTexture")))
-			return E_FAIL;
 
 		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(m_EffectInfo.eShaderPass)))) {
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pInstance_ModelCom->Bind_CS_Output(5, 1)))
+		if (FAILED(m_pGameInstance->Bind_DepthStencil(m_pShaderCom, "g_DepthStencilTexture")))
 			return E_FAIL;
 
-
-
-
-
+		if (FAILED(m_pInstance_ModelCom->Bind_CS_Output(5, 1)))
+			return E_FAIL;
 
 		if (FAILED(m_pInstance_ModelCom->Render(i)))
 		{
@@ -77,14 +72,11 @@ HRESULT CEffectObject::Render_Blur()
 		return E_FAIL;
 	}
 
-	
-
-
 	SHADER_PASS_INSTANCE_MODEL BlurPass = {};
 
-	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NON_WORLD)
+	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NON_WORLD || m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::BLEND_NOWORLD)
 	{
-		BlurPass = SHADER_PASS_INSTANCE_MODEL::BLUR_NO_WORLD;
+		BlurPass = SHADER_PASS_INSTANCE_MODEL::NON_WORLD_BLUR;
 	}
 	else
 	{
@@ -111,12 +103,65 @@ HRESULT CEffectObject::Render_Blur()
 	}
 
 
+
+
+	return S_OK;
+}
+
+HRESULT CEffectObject::Render_Bloom()
+{
+	if (FAILED(Bind_ShaderResources()))
+	{
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fBloomStrength", &m_EffectInfo.fBloomStrength, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iBloomType", &m_EffectInfo.eBloomType, sizeof(_int)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isBloomDissolve", &m_EffectInfo.isBloomDissolve, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isBloomReverseDissolve", &m_EffectInfo.isBloomReverseDissolve, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	SHADER_PASS_INSTANCE_MODEL BloomPass = {};
+
+	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NON_WORLD || m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::BLEND_NOWORLD)
+	{
+		BloomPass = SHADER_PASS_INSTANCE_MODEL::BLOOM_NOWORLD;
+	}
+	else
+	{
+		BloomPass = SHADER_PASS_INSTANCE_MODEL::BLOOM;
+	}
+
+	for (_uint i = 0; i < m_pInstance_ModelCom->Get_NumMeshes(); i++)
+	{
+
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(BloomPass)))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pInstance_ModelCom->Render(i)))
+		{
+			return E_FAIL;
+		}
+
+	}
+
 	return S_OK;
 }
 
 
 
-HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
+HRESULT CEffectObject::Load(const _char* pFilePath, LEVEL eLevel)
 {
 	SAFE_RELEASE(m_pDiffuse_TextureCom);
 	SAFE_RELEASE(m_pNoise_TextureCom);
@@ -126,9 +171,10 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 
 	SAFE_RELEASE(m_pInstance_ModelCom);
 
-	if (m_pLightCom != nullptr)
+	if (m_pLightCom != nullptr){
 		SAFE_RELEASE(m_pLightCom);
-	
+	}
+
 	_string strPerfectFilePath = pFilePath;
 
 	strPerfectFilePath += ".bin";
@@ -170,7 +216,7 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 			return E_FAIL;
 		}
 	}
-		
+
 
 	if (m_EffectInfo.isDiffuse)
 	{
@@ -262,7 +308,7 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 			}
 		}
 
-	
+
 	}
 
 	if (m_EffectInfo.isDissolve)
@@ -295,7 +341,7 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 
 		}
 
-	
+
 	}
 
 	if (m_EffectInfo.isEmissive)
@@ -326,7 +372,7 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 			}
 		}
 
-	
+
 	}
 
 	if (m_EffectInfo.isDistortion)
@@ -397,7 +443,6 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 
 	return S_OK;
 }
-
 
 
 HRESULT CEffectObject::Bind_ShaderResources()
@@ -479,6 +524,21 @@ HRESULT CEffectObject::Bind_ShaderResources()
 	}
 
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDiffuseBlur", &m_EffectInfo.isDiffuseBlur, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isMaskBlur", &m_EffectInfo.isMaskBlur, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isBlurDissolve", &m_EffectInfo.isBlurDissolve, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isBlurReverseDissolve", &m_EffectInfo.isBlurReverseDissolve, sizeof(_bool)))) {
+		return E_FAIL;
+	}
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vColor", &m_EffectInfo.vColor, sizeof(_float4)))) {
 		return E_FAIL;
@@ -508,7 +568,7 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDiffuseDistortionUVGainAmount", &m_EffectInfo.vDiffuseDistortionUVGainAmount, sizeof(_float2)))) {
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDistortionTime", &m_EffectInfo.vDistortionTime, sizeof(_float2)))) {
 		return E_FAIL;
 	}
 
@@ -574,6 +634,11 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fBluringStrength", &m_EffectInfo.fBluringStrength, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+
 
 	if (m_pDiffuse_TextureCom != nullptr)
 	{
@@ -625,6 +690,9 @@ HRESULT CEffectObject::Bind_ShaderResources()
 
 
 	return S_OK;
+
+
+	return S_OK;
 }
 
 HRESULT CEffectObject::Ready_Components(void* pArg)
@@ -639,7 +707,7 @@ HRESULT CEffectObject::Ready_Components(void* pArg)
 	if (FAILED(__super::Ready_Components(&TransformDesc))) {
 		return E_FAIL;
 	}
-	 
+
 
 	//나중에 로드할 때 라이트를 값을 입력받아서 생성 하자
 	return S_OK;
@@ -677,8 +745,9 @@ void CEffectObject::Free()
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pInstance_ModelCom);
 
-	if(m_pLightCom != nullptr)
+	if (m_pLightCom != nullptr){
 		SAFE_RELEASE(m_pLightCom);
+	}
 }
 
 

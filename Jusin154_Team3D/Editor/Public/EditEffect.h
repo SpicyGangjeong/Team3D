@@ -41,6 +41,7 @@ private:
 	_float          m_fAccTime = {};
 	_int			m_iSign = { 1 };
 
+
 public:
 	static CEditEffect* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

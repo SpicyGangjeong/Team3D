@@ -24,7 +24,7 @@ HRESULT CHpBarBG::Initialize(void* pArg)
 	Desc.fX = 600.f;
 	Desc.fY = 180.f;
 	Desc.fSizeX = 144.f;
-	Desc.fSizeY = 24.f;
+	Desc.fSizeY = 50.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -37,15 +37,17 @@ HRESULT CHpBarBG::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	m_fTimeMult = 3.f;
+	m_fTimeMult = 5.f;
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 1.f;
 	m_vNine_Slice = _float4(27.f, 125.f, m_fSizeY * 0.5f, m_fSizeY * 0.5f);
-	m_fMaxHp = 20.f;
+	m_fMaxHp = 200.f;
 	m_fCurrentHp = m_fMaxHp;
 	m_fMoveSpeed = 5.f;
+	m_fHpBGSize = _float2(144.f, 24.f);
+	m_fHpBGPos = _float2(0.f, 13.f);
 	m_fHpBG = _float2(0, m_fSizeX);
-	SizeUpX(210.f);
+	SizeUpX(240.f);
 	return S_OK;
 }
 
@@ -87,7 +89,7 @@ void CHpBarBG::Update(_float fTimeDelta)
 			m_bFadeOut = false;
 			m_fAlpha = 0.f;
 		}
-	} 
+	}
 
 	if (m_fCurrentHp < 0.f)
 		m_fCurrentHp = 0.f;
@@ -97,12 +99,32 @@ void CHpBarBG::Update(_float fTimeDelta)
 
 	if (m_fTargetHp > m_fCurrentHp)
 		Heal(fTimeDelta);
-	else if(m_fTargetHp < m_fCurrentHp)
+	else if (m_fTargetHp < m_fCurrentHp)
 		Hit(fTimeDelta);
 	m_fHpBar = m_fCurrentHp / m_fMaxHp;
 
-	m_fTime += fTimeDelta * m_fTimeMult;
+	if (m_pGameInstance->Key_Down(DIK_3))
+	{
+		Lerp_PosX(100.f);
+	}
 
+	if (m_pGameInstance->Key_Down(DIK_4))
+	{
+		Lerp_PosX(-101.f);
+	}
+	if (m_fHpBar <= 0.3f)
+	{
+		m_fBlinkTime += fTimeDelta * m_fTimeMult;
+		if (m_fTime <= 1.f)
+		{
+			m_fTime += fTimeDelta * m_fTimeMult;
+		}
+	}
+	else
+	{
+		m_fBlinkTime = 0.f;
+		m_fTime = 0.f;
+	}
 	__super::Update(fTimeDelta);
 }
 
@@ -184,11 +206,19 @@ HRESULT CHpBarBG::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+	if (FAILED(m_pDiffuse_TextureCom2->Bind_ShaderResource(m_pShaderCom, "g_Texture2", 0)))
+	{
+		return E_FAIL;
+	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float))))
 	{
 		return E_FAIL;
 	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fTime", &m_fTime, sizeof(_float))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fBlinkTime", &m_fBlinkTime, sizeof(_float))))
 	{
 		return E_FAIL;
 	}
@@ -224,6 +254,14 @@ HRESULT CHpBarBG::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fImageSize", &m_fHpBGSize, sizeof(_float2))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_Pos", &m_fHpBGPos, sizeof(_float2))))
+	{
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
@@ -233,11 +271,15 @@ HRESULT CHpBarBG::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_HpBarBG"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_GlowBar"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_HUD_HealthMeterFill"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_HpBarBG"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_HUD_HealthMeterFill"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom2), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -280,6 +322,7 @@ void CHpBarBG::Free()
 
 	SAFE_RELEASE(m_pDiffuse_TextureCom);
 	SAFE_RELEASE(m_pDiffuse_TextureCom1);
+	SAFE_RELEASE(m_pDiffuse_TextureCom2);
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }

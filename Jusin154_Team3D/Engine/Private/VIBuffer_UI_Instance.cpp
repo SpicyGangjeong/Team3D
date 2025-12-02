@@ -114,6 +114,14 @@ HRESULT CVIBuffer_UI_Instance::Initialize_Prototype(const INSTANCE_DESC* pInstan
 	m_fPosition = new _float2[m_iNumInstance];
 	ZeroMemory(m_fPosition, sizeof(_float2) * m_iNumInstance);
 
+	for (_uint i = 0; i < m_iNumInstance; ++i)
+	{
+		m_pInstanceVertices[i].fSize = _float2(1.f, 1.f);             // 기본 크기
+		m_pInstanceVertices[i].fPos = _float2(0.f, 0.f);              // 기본 위치
+		m_pInstanceVertices[i].fUV = _float4(0.f, 0.f, 1.f, 1.f);  // 전체 텍스처 영역
+		m_pInstanceVertices[i].vColor = _float4(1.f, 1.f, 1.f, 1.f); // 기본 흰색
+		m_pInstanceVertices[i].bHover = 0;
+	}
 
 	m_InstanceInitialDesc.pSysMem = m_pInstanceVertices;
 
@@ -140,7 +148,6 @@ void CVIBuffer_UI_Instance::Set_Index_Position(_uint iIndex, _float fX, _float f
 
 	pVertices[iIndex].fPos.x = fX;
 	pVertices[iIndex].fPos.y = fY;
-
 	m_pContext->Unmap(m_pVBInstance, 0);
 }
 
@@ -171,7 +178,7 @@ void CVIBuffer_UI_Instance::Set_Pos(_float fX, _float fY, _float OffSetX, _float
 		_uint row = i / iCols;      // 세로 인덱스
 
 		pVertices[i].fPos.x = fX + col * OffSetX;
-		pVertices[i].fPos.y = fY + row * OffSetY;
+		pVertices[i].fPos.y = fY - row * OffSetY;
 	}
 
 	m_pContext->Unmap(m_pVBInstance, 0);
@@ -236,19 +243,67 @@ void CVIBuffer_UI_Instance::Set_ImageUV(UI_ATLAS_DESC* AtlasUV)
 
 	for (size_t i = 0; i < m_iNumInstance; i++)
 	{
-		if (AtlasUV == nullptr)
-		{
-			pVertices[i].fUVStart = _float2(0.f, 0.f);
-			pVertices[i].fUVStart = _float2(1.f, 1.f);
-		}
-		else
-		{
-			pVertices[i].fUVStart = AtlasUV[i].fUVStart;
-			pVertices[i].fUVEnd = AtlasUV[i].fUVEnd;
-		}
+		pVertices[i].fUV = AtlasUV[i].fUV;
 	}
 
 	m_pContext->Unmap(m_pVBInstance, 0);
+}
+
+void CVIBuffer_UI_Instance::Set_Index_Renge_Color(_uint StartIndex, _uint EndIndex, _float4 vColor)
+{
+	D3D11_MAPPED_SUBRESOURCE		SubResource{};
+
+	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+
+	VTX_INSTANCE_UI* pVertices = static_cast<VTX_INSTANCE_UI*>(SubResource.pData);
+
+	for (size_t i = StartIndex; i <= EndIndex; i++)
+	{
+		pVertices[i].vColor = vColor;
+	}
+
+	m_pContext->Unmap(m_pVBInstance, 0);
+}
+
+_int CVIBuffer_UI_Instance::Set_Mouse_Hover(_float2 fMousePos)
+{
+	D3D11_MAPPED_SUBRESOURCE		SubResource{};
+
+	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+
+	VTX_INSTANCE_UI* pVertices = static_cast<VTX_INSTANCE_UI*>(SubResource.pData);
+
+	_int hoveredIndex = -1;
+	for (_uint i = 0; i < m_iNumInstance; i++)
+	{
+		_float2 pos = pVertices[i].fPos;
+		_float2 size = pVertices[i].fSize;
+
+		RECT rcInstance{};
+		rcInstance.left = LONG(pos.x - size.x * 0.5f);
+		rcInstance.right = LONG(pos.x + size.x * 0.5f);
+		rcInstance.top = LONG(pos.y - size.y * 0.5f);
+		rcInstance.bottom = LONG(pos.y + size.y * 0.5f);
+
+		POINT pt{};
+		pt.x = LONG(fMousePos.x);
+		pt.y = LONG(fMousePos.y);
+
+		 if (PtInRect(&rcInstance, pt))
+        {
+            pVertices[i].bHover = 1.f;
+            hoveredIndex = i; 
+			break;
+        }
+        else
+        {
+            pVertices[i].bHover = 0.f;
+			hoveredIndex = -1;
+        }
+    }
+
+    m_pContext->Unmap(m_pVBInstance, 0);
+    return hoveredIndex;
 }
 
 CVIBuffer_UI_Instance* CVIBuffer_UI_Instance::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const INSTANCE_DESC* pInstanceDesc)

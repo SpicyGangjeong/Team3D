@@ -56,6 +56,19 @@ public:
 		_float		fBlurIntensity = {};
 		_int		iBlurWeight = {};
 
+		/* 블룸 */
+		_bool   isBloom = {};
+
+		_bool   isBloomDissolve = {};
+		_bool   isBloomReverseDissolve = {};
+
+		_float		fBloomStrength = {};
+
+		BLOOM_TYPE eBloomType = {};
+		_float2    vBloomTime = {};
+
+		_int	   iNumVertex = {};
+
 	}TRAIL_INFO;
 private:
 	CTrailObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -79,7 +92,7 @@ private:
 	virtual HRESULT Ready_Components(void* pArg) override;
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Blur() override;
-
+	virtual HRESULT Render_Bloom() override;
 
 public:
 	static CTrailObject* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -91,13 +104,13 @@ public:
 #endif // _DEBUG
 
 private:
-	CTexture*	m_pDiffuse_TextureCom = { nullptr };
-	CTexture*	m_pNoise_TextureCom = { nullptr };
-	CTexture*	m_pMasking_TextureCom = { nullptr };
-	CTexture*   m_pDistortion_TextureCom = { nullptr };
+	CTexture* m_pDiffuse_TextureCom = { nullptr };
+	CTexture* m_pNoise_TextureCom = { nullptr };
+	CTexture* m_pMasking_TextureCom = { nullptr };
+	CTexture* m_pDistortion_TextureCom = { nullptr };
 
-	CShader*	m_pShaderCom = { nullptr };
-	CTrail*		m_pTrailCom = { nullptr };
+	CShader* m_pShaderCom = { nullptr };
+	CTrail* m_pTrailCom = { nullptr };
 
 	_string		m_strTrailDiffuseName = {};
 	_string		m_strTrailNoiseName = {};

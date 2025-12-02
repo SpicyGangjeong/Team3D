@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Editor_Define.h"
 #include "GameObject.h"
@@ -27,6 +27,9 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+
+	
+
 protected:
 	_bool				m_bSelected = { false };
 	_uint				m_iMaxLodLevel = {};
@@ -43,7 +46,6 @@ protected:
 	_float3		m_vScale = {};
 #endif // _DEBUG
 
-
 protected:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -54,6 +56,8 @@ public:
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) PURE;
 	virtual void Free() override;
 	void Describe_Entity() override;
+	virtual HRESULT Save_XML(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* root);
+
 };
 
 NS_END

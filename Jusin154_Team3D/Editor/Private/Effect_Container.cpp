@@ -5,7 +5,7 @@
 #include "EditEffect.h"
 #include "TrailObject.h"
 #include "GameObject.h"
-
+#include "Dummy_PhysXEffectHitBox.h"
 
 #include <sstream>
 
@@ -23,6 +23,8 @@ CEffect_Container::CEffect_Container(const CEffect_Container& rhs)
 HRESULT CEffect_Container::Initialize_Prototype()
 {
 
+
+
 	return S_OK;
 
 }
@@ -34,6 +36,9 @@ HRESULT CEffect_Container::Initialize(void* pArg)
 
 	if (FAILED(Ready_Child()))
 		return E_FAIL;
+
+
+	m_bVisible = false;
 
 	return S_OK;
 }
@@ -157,6 +162,155 @@ HRESULT CEffect_Container::Load_Directory(const _char* pPath)
 	return S_OK;
 }
 
+HRESULT CEffect_Container::Load_Package(const _char* pPath)
+{
+
+	_string strPerfectFilePath = pPath;
+
+	strPerfectFilePath += ".bin";
+
+	HANDLE hFile = CreateFileW(
+		CMyTools::ToWstring(strPerfectFilePath).c_str(),               // 파일 이름
+		GENERIC_READ,              // 읽기 모드
+		FILE_SHARE_READ,           // 다른 프로세스도 읽기 가능
+		NULL,
+		OPEN_EXISTING,             // 기존 파일 열기
+		FILE_ATTRIBUTE_NORMAL,
+		NULL
+	);
+
+
+	if (hFile == INVALID_HANDLE_VALUE) {
+		MessageBox(NULL, L"오브젝트 읽기 실패", L"System Message", MB_OK);
+		return E_FAIL;
+	}
+
+	// 나중에 패키징할때 패스를 저장할거임
+
+
+	DWORD	dwByte(0);
+
+	_int iEffectCount = {};
+
+	if (!ReadFile(hFile, &iEffectCount, sizeof(_int), &dwByte, nullptr)) {
+		CloseHandle(hFile);
+		return E_FAIL;
+	}
+
+
+	for (_int i = 0; i < iEffectCount; i++)
+	{
+		size_t iComponentLength = {};
+		_char szName[MAX_PATH] = {};
+
+		if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+			CloseHandle(hFile);
+			return E_FAIL;
+		}
+
+		if (iComponentLength != 0)
+		{
+			if (!ReadFile(hFile, szName, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+				CloseHandle(hFile);
+				return E_FAIL;
+			}
+		}
+
+		_string strEffectPath = szName;
+		_string strExt = {};
+		_string strEffectName = {};
+
+		size_t iPos = strEffectPath.rfind('.');   // 뒤에서부터 '/' 검색
+
+		if (iPos != std::string::npos)
+		{
+			strExt += strEffectPath.substr(iPos + 1);
+			strEffectName = strEffectPath.substr(0, iPos);
+		}
+
+		size_t pos = strEffectName.rfind('\\');   // 뒤에서부터 '/' 검색
+
+		if (pos != std::string::npos)
+			strEffectName = strEffectName.substr(pos + 1);
+
+		if (!strcmp(strExt.c_str(), "trail"))
+		{
+			CTrailObject* pTrail = nullptr;
+
+			CPartObject::PARTOBJECT_DESC PartsDesc{};
+
+			PartsDesc.pParentTransform = m_pTransformCom;
+
+			if (FAILED(Add_PartObject<CTrailObject>(strEffectName, NEXT_LEVEL, &pTrail, &PartsDesc))) {
+				assert(false);
+				return E_FAIL;
+			}
+
+
+			/*이펙트 로드 로드*/
+			size_t iPos = {};
+
+			while ((iPos = strEffectPath.find(".trail")) != std::string::npos) {
+				strEffectPath.erase(iPos, 6);
+			};
+
+
+			if (FAILED(pTrail->Load_Trail(strEffectPath.c_str(), LEVEL::EFFECT)))
+			{
+				Safe_Release(pTrail);
+				continue;
+			}
+
+			Safe_Release(pTrail);
+
+			continue;
+		}
+
+
+		/////////////////////////////
+
+		CEditEffect* pEditEffect = nullptr;
+
+		CPartObject::PARTOBJECT_DESC PartsDesc{};
+
+		PartsDesc.pParentTransform = m_pTransformCom;
+
+		/*이펙트 껍데기 생성*/
+
+		if (FAILED(Add_PartObject<CEditEffect>(strEffectName, NEXT_LEVEL, &pEditEffect, &PartsDesc))) {
+			assert(false);
+			return E_FAIL;
+		}
+
+		/*이펙트 로드 로드*/
+		size_t iPosition = {};
+		_string strFilePath = strEffectPath;
+
+		while ((iPosition = strFilePath.find(".bin")) != std::string::npos) {
+			strFilePath.erase(iPosition, 4);
+		};
+
+
+		if (FAILED(pEditEffect->Load(strFilePath.c_str(), LEVEL::EFFECT)))
+		{
+			Safe_Release(pEditEffect);
+			continue;
+		}
+
+		Safe_Release(pEditEffect);
+	
+	}
+
+	CloseHandle(hFile);
+
+	return S_OK;
+}
+
+HRESULT CEffect_Container::Pre_Setting(CGameObject* pObject)
+{
+	return S_OK;
+}
+
 HRESULT CEffect_Container::Ready_Components(void* pArg)
 {
 	CTransform::TRANSFORM_DESC TransformDesc = {};
@@ -186,6 +340,21 @@ void CEffect_Container::Free()
 
 HRESULT CEffect_Container::Bind_ShaderResources()
 {
+	return S_OK;
+}
+
+HRESULT CEffect_Container::Reset_EffectParts()
+{
+	for (auto& iter : m_PartObjects)
+	{
+		CInstance_Model* pInstanceModel = iter.second->Get_Component<CInstance_Model>();
+			
+		if (pInstanceModel == nullptr)
+			continue;
+
+		pInstanceModel->Instane_Buffer_ReStruct();
+	}
+
 	return S_OK;
 }
 
@@ -220,6 +389,12 @@ void CEffect_Container::Update_Event(_float fTimeDelta)
 			for (auto& pPart : m_PartObjects)
 			{
 				pPart.second->Set_Visible(false);
+			}
+
+			if (m_pPhysHitBox != nullptr && m_pPhysHitBox->isDead() == false )
+			{
+				m_pPhysHitBox->Set_Dead();
+				SAFE_RELEASE(m_pPhysHitBox);
 			}
 		}
 	}

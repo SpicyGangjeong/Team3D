@@ -57,6 +57,19 @@ public:
 		_float		fBlurIntensity = {};
 		_int		iBlurWeight = {};
 
+		/* 블룸 */
+		_bool   isBloom = {};
+
+		_bool   isBloomDissolve = {};
+		_bool   isBloomReverseDissolve = {};
+
+		_float		fBloomStrength = {};
+
+		BLOOM_TYPE eBloomType = {};
+		_float2    vBloomTime = {};
+
+		_int	   iNumVertex = {};
+
 	}TRAIL_INFO;
 private:
 	CTrailObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -71,6 +84,7 @@ public:
 public:
 	void	     Set_Target(class CTransform* pTargetTransform);
 	void         Trail_Update(_fmatrix WorldMat, _float fTimeDelta);
+
 public:
 #ifdef _DEBUG
 	HRESULT Save_Trail(const _char* pPath);
@@ -83,7 +97,7 @@ private:
 	virtual HRESULT Ready_Components(void* pArg) override;
 	virtual HRESULT Render() override;
 	virtual HRESULT Render_Blur() override;
-
+	virtual HRESULT Render_Bloom() override;
 
 public:
 	static CTrailObject* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

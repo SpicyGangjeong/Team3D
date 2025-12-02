@@ -1,0 +1,799 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Land>
+    <Container Name="HW_Ollivanders">
+        <Position x="39.271946" y="3.7999978" z="70.609833"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="-0" y="-60" z="-0"/>
+        <MapContainerType type="0"/>
+        <BoundingBox_Min x="-7.0020647" y="-0.45976496" z="-1.5148951"/>
+        <BoundingBox_Max x="6.3698497" y="12.858675" z="14.645905"/>
+        <PartObject Lod_Level="1" Key_Index="4">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Railing_Post_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Railing_Post_A_Lod1</PrototypeTag>
+            <Position x="3.1659358" y="2.7724102" z="8.1556873"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Ollivanders_Ext_Chimney</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Ollivanders_Ext_Chimney_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Ollivanders_ext_Glass_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Ollivanders_ext_Glass_A_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Ollivanders_ext_Entrance</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Ollivanders_ext_Entrance_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Ollivanders_ext_Entrance_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Ollivanders_ext_Entrance_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Ollivanders_ext_Glass_B</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Ollivanders_ext_Glass_B_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Int_Decals</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Ollivanders_ext_Roof</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Ollivanders_ext_Roof_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Ollivanders_ext_Roof_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_QR</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_QR_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_QR_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_QR_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Ollivanders_Ext_Wall</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Ollivanders_Ext_Wall_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Ollivanders_Ext_Wall_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Railing_A</PrototypeTag>
+            <Position x="3.97" y="1.3305722" z="4.316278"/>
+            <Scale x="1.000001" y="1" z="1.0000008"/>
+            <Rotation x="-29.999989" y="-88.999985" z="-30.503815"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Ollivanders_ext_window</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Ollivanders_ext_window_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Ollivanders_ext_window_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Ollivanders_ext_window_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="1">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Railing_A</PrototypeTag>
+            <Position x="2.187" y="1.780828" z="3.3935549"/>
+            <Scale x="0.99999976" y="1" z="0.99999976"/>
+            <Rotation x="-0" y="-89.999954" z="-0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Ollivanders_ext_woodtrim</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Ollivanders_ext_woodtrim_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Ollivanders_ext_woodtrim_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Ollivanders_ext_woodtrim_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_KL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_KL_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_KL_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_KL_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Int_WallShelf_Add_On</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Int_WallShelf_Add_On_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Int_Trim</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Int_Trim_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Int_Trim_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_ext_Display_Window_Blocker</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_ext_Display_Window_Blocker_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Int_Floors</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Int_Counter</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Int_Counter_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Int_Counter_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Int_Counter_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_H</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_H_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_H_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_H_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Int_Walls</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Int_Walls_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="1">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Int_WallShelf_Add_On</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Int_WallShelf_Add_On_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Int_Window_Trim</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Int_Window_Trim_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Int_Window_Trim_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_AC</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_AC_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_AC_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_AC_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_Bay_Windows</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_Bay_Windows_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_Bay_Windows_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_Bay_Windows_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_DJ</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_DJ_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_DJ_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_DJ_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Railing_Post_C</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Railing_Post_C_Lod1</PrototypeTag>
+            <Position x="4.8200746" y="0.17362523" z="4.2910399"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_EG</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_EG_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_EG_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_EG_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="1">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Railing_Post_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Railing_Post_A_Lod1</PrototypeTag>
+            <Position x="3.1995964" y="1.0456585" z="3.398829"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_FG</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_FG_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_FG_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_FG_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_MN</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_MN_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_MN_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_MN_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_P</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_P_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_P_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_P_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_S</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_S_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WandBox_Set_S_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WallShelf_Int_kit</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WallShelf_Int_kit_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_WallShelf_Int_kit_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Railing_Post_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Railing_Post_A_Lod1</PrototypeTag>
+            <Position x="2.2452288" y="1.0465776" z="3.3882291"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Railing_Post_B</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Railing_Post_B_Lod1</PrototypeTag>
+            <Position x="3.9643099" y="0.58910578" z="4.3077192"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="1">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Railing_Post_C</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Railing_Post_C_Lod1</PrototypeTag>
+            <Position x="3.2574916" y="1.0472122" z="4.4113798"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="2">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Railing_Post_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Railing_Post_A_Lod1</PrototypeTag>
+            <Position x="3.191354" y="2.7701652" z="7.1424646"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="2">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Railing_Post_C</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Railing_Post_C_Lod1</PrototypeTag>
+            <Position x="3.2000535" y="1.4876422" z="5.1055498"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="3">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Railing_Post_C</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Railing_Post_C_Lod1</PrototypeTag>
+            <Position x="3.2166739" y="1.9456717" z="5.8440471"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="4">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Railing_Post_C</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Railing_Post_C_Lod1</PrototypeTag>
+            <Position x="3.1709545" y="2.3440838" z="6.4634056"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="3">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Railing_Post_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Railing_Post_A_Lod1</PrototypeTag>
+            <Position x="3.1441243" y="2.7745686" z="9.2249937"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="5">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Railing_Post_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Railing_Post_A_Lod1</PrototypeTag>
+            <Position x="2.2918162" y="2.7818768" z="9.1246271"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_EXT_APL_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_EXT_APL_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_EXT_PL_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_EXT_PL_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="0" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_EXT_Stairs_COL_Ramp</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="0" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_EXT_Stairs_COL_Steps</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+    </Container>
+    <Container Name="Street_Main">
+        <Position x="24" y="8" z="16"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <MapContainerType type="1"/>
+        <BoundingBox_Min x="-35.479698" y="-22.290039" z="7.2240992"/>
+        <BoundingBox_Max x="91.70047" y="12.14246" z="98.067856"/>
+        <PartObject Lod_Level="0" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_LowerHiStreet_Zonkos</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_Hogshead</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_A</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_B</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_A_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_B</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_B_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_C</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_C_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stairwalls_3Broomsticks</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_AA_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_AA_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_BB_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_BB_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_CC_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_CC_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_DD_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_DD_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_EE_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_EE_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_FF_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_FF_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_GG_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_GG_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_HH_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_HH_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_A_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_A_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_B_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_B_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_C_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_C_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_D_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_D_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_Streets_SideStreet_E_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_Streets_SideStreet_E_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_Streets_SideStreet_F_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_Streets_SideStreet_F_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+    </Container>
+    <Container Name="HW_Gatehouse">
+        <Position x="23.494474" y="0" z="2.9722724"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="7.0000072" z="0"/>
+        <MapContainerType type="0"/>
+        <BoundingBox_Min x="-10.33712" y="-13.23702" z="-19.093868"/>
+        <BoundingBox_Max x="8.3332806" y="10.47531" z="17.818052"/>
+        <PartObject Lod_Level="2" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Bridge</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Bridge_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Bridge_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Bridge_Decals</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Bridge_Decals_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Wood_Railing</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Wood_Railing_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Wood_Railing_Lod2</PrototypeTag>
+            <Position x="1.6040525" y="-0.92294264" z="10.897046"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Bridge_roof</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Bridge_roof_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Bridge_roof_Lod2</PrototypeTag>
+            <Position x="0.10000002" y="0.19999993" z="0.2"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Bridge_road</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Bridge_road_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Column_Corner_Trim_B</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Column_Corner_Trim_B_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Column_Corner_Trim_B_Lod2</PrototypeTag>
+            <Position x="-2.4947586" y="1.7705823" z="5.2131791"/>
+            <Scale x="0.99999976" y="1" z="0.99999976"/>
+            <Rotation x="0" y="89.999954" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Columns</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Columns_Lod1</PrototypeTag>
+            <Position x="0" y="0.60000002" z="1.3000002"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Wood_Trim_Front</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Wood_Trim_Front_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Wood_Trim_Front_Lod2</PrototypeTag>
+            <Position x="-0.75697184" y="1.1239487" z="4.7127409"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="3">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Column_Corner_Trim_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Column_Corner_Trim_A_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Column_Corner_Trim_A_Lod2</PrototypeTag>
+            <Position x="1.0687263" y="0.44986549" z="14.520308"/>
+            <Scale x="0.99999976" y="1" z="0.99999976"/>
+            <Rotation x="-0" y="-89.999954" z="-0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Stone_Cap_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Stone_Cap_A_Lod1</PrototypeTag>
+            <Position x="0.68760526" y="-1.7088637" z="-0.5406732"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Joist_Front</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Joist_Front_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Joist_Front_Lod2</PrototypeTag>
+            <Position x="-0.74999988" y="-2.2814457" z="5.7837505"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="1">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Wood_Railing</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Wood_Railing_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Wood_Railing_Lod2</PrototypeTag>
+            <Position x="-3.1980689" y="-0.99296212" z="10.822892"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="1">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Stone_Cap_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Stone_Cap_A_Lod1</PrototypeTag>
+            <Position x="-2.8658786" y="-0.36848336" z="4.6617513"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Sign</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Sign_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Sign_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Sign_Lod3</PrototypeTag>
+            <Position x="-0.64999998" y="2.0094547" z="4.9499764"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="2">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Joist_Front</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Joist_Front_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Joist_Front_Lod2</PrototypeTag>
+            <Position x="-0.9000001" y="-2.4999998" z="10.500006"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="1">
+            <PrototypeTag>Prototype_GameObject_SM_HM_BridgeColumnTop_A</PrototypeTag>
+            <Position x="-3.0260732" y="1.109503" z="5.6943593"/>
+            <Scale x="0.79999995" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="1">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Finial</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Finial_Lod1</PrototypeTag>
+            <Position x="-0.69517165" y="8.1437006" z="3.6432333"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="2">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Joist_Back</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Joist_Back_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Joist_Back_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Joist_Back_Lod3</PrototypeTag>
+            <Position x="-0.80000007" y="-1.5000001" z="15.199993"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="1">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Column_Corner_Trim_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Column_Corner_Trim_A_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Column_Corner_Trim_A_Lod2</PrototypeTag>
+            <Position x="1.1349503" y="1.0000001" z="5.2318525"/>
+            <Scale x="0.99999976" y="1" z="0.99999976"/>
+            <Rotation x="-0" y="-89.999954" z="-0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="2">
+            <PrototypeTag>Prototype_GameObject_SM_HM_BridgeColumnTop_A</PrototypeTag>
+            <Position x="1.5151486" y="0.69999981" z="6.2401352"/>
+            <Scale x="0.69999993" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="3">
+            <PrototypeTag>Prototype_GameObject_SM_HM_BridgeColumnTop_A</PrototypeTag>
+            <Position x="1.6332444" y="0.5059073" z="15.510214"/>
+            <Scale x="0.79999995" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="4">
+            <PrototypeTag>Prototype_GameObject_SM_HM_BridgeColumnTop_A</PrototypeTag>
+            <Position x="-3.1508179" y="0.8825115" z="15.664295"/>
+            <Scale x="0.69999993" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="5">
+            <PrototypeTag>Prototype_GameObject_SM_HM_BridgeColumnTop_A</PrototypeTag>
+            <Position x="-3.8174372" y="-4.8889818" z="-18.319517"/>
+            <Scale x="0.69999993" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="6">
+            <PrototypeTag>Prototype_GameObject_SM_HM_BridgeColumnTop_A</PrototypeTag>
+            <Position x="1.4468068" y="-4.3610516" z="-18.395279"/>
+            <Scale x="0.69999993" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="2">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Column_Corner_Trim_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Column_Corner_Trim_A_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Column_Corner_Trim_A_Lod2</PrototypeTag>
+            <Position x="-2.5639796" y="0.94023186" z="14.846637"/>
+            <Scale x="0.99999642" y="1" z="0.99999642"/>
+            <Rotation x="-0" y="-179.99995" z="-0"/>
+        </PartObject>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Bridge_COLLISION</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Bridge_COLLISION_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+    </Container>
+    <Container Name="Street_Plaza">
+        <Position x="108.25024" y="16.399971" z="131.35001"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <MapContainerType type="1"/>
+        <BoundingBox_Min x="-16.85453" y="-16.870581" z="-19.638439"/>
+        <BoundingBox_Max x="19.18985" y="14.93294" z="34.01255"/>
+        <PartObject Lod_Level="0" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_PlazaMain_A</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_PlazaMain_B</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_PlazaMain_C</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_Plaza_AA_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_Plaza_AA_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_Plaza_BB_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_Plaza_BB_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_Plaza_CC_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_Plaza_CC_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_Plaza_DD_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_Plaza_DD_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_Plaza_EE_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_Plaza_EE_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_Plaza_FF_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_Plaza_FF_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_Plaza_HH_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_Plaza_HH_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+    </Container>
+</Land>

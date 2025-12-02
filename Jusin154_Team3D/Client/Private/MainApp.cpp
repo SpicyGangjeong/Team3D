@@ -28,7 +28,7 @@ HRESULT CMainApp::Initialize()
 	EngineDesc.iWinSizeY = g_iWinSizeY;
 	EngineDesc.iStaticLevel = g_iStaticLevel;
 	EngineDesc.iNumLevels = ENUM_CLASS(LEVEL::END);
-	EngineDesc.iNumCollidableGroup = ENUM_CLASS(COLLIDABLEOBJECT::END);
+	EngineDesc.iNumCollidableGroup = ENUM_CLASS(COLLIDABLEOBJECT_KIND::END);
 
 	//ShowCursor(false);
 
@@ -62,7 +62,7 @@ void CMainApp::Update(_float fTimeDelta)
 	GUI::NewFrame();
 #ifdef _DEBUG
 	m_pGameInstance->Present_TimeCost();
-	GUI::DragFloat("fTimeMult", &g_fTimeMult, 0.01f, 0.f, 4.f);
+	GUI::SliderFloat("fTimeMult", &g_fTimeMult, 0.01f, 4.f);
 	m_pGameInstance->Update_Engine(fTimeDelta * g_fTimeMult);
 #endif // _DEBUG
 #ifndef _DEBUG
@@ -173,15 +173,14 @@ void CMainApp::Free()
 {
 	__super::Free();
 
-	m_pInfoInstance->Release_Information();
-	SAFE_RELEASE(m_pInfoInstance);
 
 	Release_IMGUI();
 
 	SAFE_RELEASE(m_pDevice);
 	SAFE_RELEASE(m_pContext);
-
+	m_pInfoInstance->Release_Information();
 	m_pGameInstance->Release_Engine();
 
+	SAFE_RELEASE(m_pInfoInstance);
 	SAFE_RELEASE(m_pGameInstance);
 }

@@ -2,6 +2,7 @@
 #include "Player.h"
 
 #include "GameInstance.h"
+#include "InfoInstance.h"
 #include "CamPosition_Socket.h"
 #include "Camera_Gaze.h"
 #include "CamPosition_Arm.h"
@@ -10,6 +11,8 @@
 #include "CallBack_Playable_Behavior.h"
 #include "CamPosition_Shoulder.h"
 #include "CallBack_Playable_HitReport.h"
+#include "Monster.h"
+#include "Broom.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -18,9 +21,11 @@
 #include "State_Land.h"
 #include "State_Move.h"
 #include "State_Combat.h"
+#include "State_Broom_Ride.h"
 #pragma endregion
 
-#include "Bombard.h"
+#include "Layer.h"
+#include "EffectPool.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUnit(pDevice, pContext)
@@ -28,7 +33,8 @@ CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CPlayer::CPlayer(const CPlayer& Prototype)
-	: CUnit(Prototype)
+	: CUnit(Prototype),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -54,6 +60,12 @@ HRESULT CPlayer::Initialize(void* pArg)
 	Load_KeyFrame();
 #endif // _DEBUG
 
+	m_pBroom = m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_ITEM)->Get_Object<CBroom>();
+	m_pBroomModel = m_pBroom->Get_Component<CModel>();
+	m_pBroomTransform = m_pBroom->Get_Component<CTransform>();
+	SAFE_ADDREF(m_pBroom);
+	SAFE_ADDREF(m_pBroomModel);
+	SAFE_ADDREF(m_pBroomTransform);
 
 	Add_FSM();
 
@@ -73,6 +85,12 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
 
+	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
+	SAFE_ADDREF(m_pEffectPool);
+
+	m_pInfoInstance->Regist_PlayerAlly(this);
+
+
 #ifdef _DEBUG
 	m_BasicEffect = make_unique<BasicEffect>(m_pDevice);
 	m_BasicEffect->SetVertexColorEnabled(true);
@@ -87,41 +105,50 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 void CPlayer::Priority_Update(_float fTimeDelta)
 {
+	ReLockOnTarget();
+	SetGravity();
 	m_pTransformCom->RewindMomentum();
 
 	__super::Priority_Update(fTimeDelta);
+
 }
 
 void CPlayer::Update(_float fTimeDelta)
 {
-#ifdef _DEBUG
 	Update_CameraCoordinateSystem();
-#endif // _DEBUG
 
 	m_pFSM->Update_State(fTimeDelta);
 
-
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
-
-	__super::Update(fTimeDelta);
+	Play_Event();
+	
+__super::Update(fTimeDelta);
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
 
+	
 
-
-	m_pCharacter_Controller->Move(fTimeDelta);
+	{ // 세트
+		m_pCallBack_HitReport->BeginFrame();
+		m_pCharacter_Controller->Move(fTimeDelta);
+		m_pCallBack_HitReport->Set_CurrentSlop();
+	}
 	TestKeyInput(fTimeDelta);
 }
 
 void CPlayer::Late_Update(_float fTimeDelta)
 {
-	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_Position());
+	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 
 	__super::Late_Update(fTimeDelta);
+
+	if (nullptr != m_pLockOnMonster && false == m_pLockOnMonster->isDead()) {
+		static_cast<CMonster*>(m_pLockOnMonster)->Set_DrawOutLine();
+	}
 }
 
 HRESULT CPlayer::Render()
@@ -165,30 +192,34 @@ HRESULT CPlayer::Render()
 
 void CPlayer::Render_CameraCoordinateSystem()
 {
-
-
 	m_Batch->Begin();
 
 	const _float fArrowLength = 2.0f;
 	_vector xmvLook = XMVector4Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
 	_float2 vLook = { XMVectorGetX(xmvLook), XMVectorGetZ(xmvLook) };
-
+	GUI::Begin("Player_CAM_COOORD");
+	GUI::Text("%d", m_pLockOnMonster);
 
 	GUI::Text("W : %.2f, %.2f, %.2f", m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z);
 	GUI::Text("A : %.2f, %.2f, %.2f", -m_vCameraRightDir.x, 0.f, -m_vCameraRightDir.z);
 	GUI::Text("S : %.2f, %.2f, %.2f", -m_vCameraLookDir.x, 0.f, -m_vCameraLookDir.z);
 	GUI::Text("D : %.2f, %.2f, %.2f", m_vCameraRightDir.x, 0.f, m_vCameraRightDir.z);
 	
-	GUI::Button("##0", { 100.f, 100.f }); GUI::SameLine();
-	GUI::Button(("W : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { m_vCameraLookDir.x , m_vCameraLookDir.z })))).c_str(), {100.f, 100.f}); GUI::SameLine();
-	GUI::Button("##2", {100.f, 100.f});
-	GUI::Button(("A : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { -m_vCameraRightDir.x , -m_vCameraRightDir.z })))).c_str(), { 100.f, 100.f }); GUI::SameLine();
-	GUI::Button("##4", { 100.f, 100.f }); GUI::SameLine();
-	GUI::Button(("D : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { m_vCameraRightDir.x , m_vCameraRightDir.z })))).c_str(), { 100.f, 100.f });
-	GUI::Button("##6", {100.f, 100.f}); GUI::SameLine();
-	GUI::Button(("S : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { -m_vCameraLookDir.x , -m_vCameraLookDir.z })))).c_str(), { 100.f, 100.f }); GUI::SameLine();
-	GUI::Button("##8", {100.f, 100.f});
-
+	_float  fButtonSize = 45.f;
+	GUI::Button("##0", { fButtonSize, fButtonSize }); GUI::SameLine();
+	GUI::Button(("W : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { m_vCameraLookDir.x , m_vCameraLookDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
+	GUI::Button("##2", { fButtonSize, fButtonSize });
+	GUI::Button(("A : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { -m_vCameraRightDir.x , -m_vCameraRightDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
+	GUI::Button("##4", { fButtonSize, fButtonSize }); GUI::SameLine();
+	GUI::Button(("D : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { m_vCameraRightDir.x , m_vCameraRightDir.z })))).c_str(), { fButtonSize, fButtonSize });
+	GUI::Button("##6", { fButtonSize, fButtonSize }); GUI::SameLine();
+	GUI::Button(("S : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { -m_vCameraLookDir.x , -m_vCameraLookDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
+	GUI::Button("##8", { fButtonSize, fButtonSize });
+	GUI::End();
+	//W CMyTools::Get_Direction2D(vLook, { m_vCameraLookDir.x ,		m_vCameraLookDir.z })
+	//A CMyTools::Get_Direction2D(vLook, { -m_vCameraRightDir.x , -	m_vCameraRightDir.z })
+	//S CMyTools::Get_Direction2D(vLook, { m_vCameraRightDir.x ,	m_vCameraRightDir.z })
+	//D CMyTools::Get_Direction2D(vLook, { -m_vCameraLookDir.x , -	m_vCameraLookDir.z })
 	m_Batch->DrawLine( // W
 		VertexPositionColor(fArrowLength * -XMLoadFloat3(&m_vCameraLookDir), DirectX::Colors::GhostWhite),
 		VertexPositionColor(fArrowLength * XMLoadFloat3(&m_vCameraLookDir), DirectX::Colors::Blue)
@@ -231,30 +262,43 @@ HRESULT CPlayer::Ready_Components()
 		reinterpret_cast<CComponent**>(&m_pShaderCom)))) {
 		return E_FAIL;
 	}
+	LightDesc.eType = LIGHT::POINT;
+	LightDesc.fRange = 10.f;
+	LightDesc.iLevel = NEXT_LEVEL;
+	LightDesc.pPosition = m_pTransformCom->Get_StatePtr(STATE::POSITION);
+	LightDesc.vAmbient = CMyTools::ColorRGB_A_HEXtoFLOAT4(0xffffff, 1.f);
+	LightDesc.vDiffuse = CMyTools::ColorRGB_A_HEXtoFLOAT4(0xffffff, 1.f);
+	LightDesc.vSpecular = CMyTools::ColorRGB_A_HEXtoFLOAT4(0xffffff, 1.f);
+	if (FAILED(Add_Component<CLight>(g_iStaticLevel, &m_pLightCom, &LightDesc))) {
+		return E_FAIL;
+	}
+
 
 	{ // CCT
 		CCharacter_Controller::Character_Controller_DESC Desc{};
 
-		Desc.iSubKind = ENUM_CLASS(COLLIDABLEOBJECT::PLAYER);
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::PLAYER);
 		Desc.pTransform = m_pTransformCom;
 		Desc.eBodyType = ACTOR::CAPSULE;
-		Desc.fContactOffset = 0.1f;
+		Desc.fContactOffset = 0.01f;
 		Desc.fMaterial = { 0.5f, 0.5f, 0.6f };
-		Desc.bAutoStepping = { false };
+		Desc.bAutoStepping = { true };
 		Desc.fStepOffset = { 0.05f };
 		Desc.fRadius = 0.5f;
 		Desc.fHeight = 1.0f;
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Playable_HitReport::Create();
 		Desc.pCallback_Behavior = m_pCallBack_Behavior = CCallBack_Playable_Behavior::Create();
 		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
+		Desc.fWalkableSlope = 45.f;
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), (CComponent**)&m_pCharacter_Controller, &Desc))) {
 			return E_FAIL;
 		}
+		m_pCharacter_Controller->SetGravity(false);
 	}
 
 	{ // DO
 		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
-		Desc.iSubKind = ENUM_CLASS(COLLIDABLEOBJECT::PLAYER);
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::PLAYER);
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}
@@ -279,11 +323,11 @@ HRESULT CPlayer::Ready_Parts()
 	{
 		CCamPosition_Shoulder::CAMERA_SHOULDER_DESC Desc;
 		Desc.pParentTransform = m_pTransformCom;
-		Desc.fMouseSensor = 0.5f;
+		Desc.fMouseSensor = 0.1f;
 		Desc.fShoulderDistance = 2.f;
 		Desc.fBackFrontRatio = 0.9f;
-		Desc.fCameraFocalLength = 10.f;
-		Desc.vInitialLook = { 1.f, 2.f, -1.f };
+		Desc.fCameraFocalLength = 13.4f;
+		Desc.vInitialLook = { 0.77f, 1.35f, -1.f };
 
 		if (FAILED(Add_PartObject<CCamPosition_Shoulder>("Cam_Shoulder_Part", g_iStaticLevel, &m_pCamPosition_ShoulderPart, &Desc))) {
 			return E_FAIL;
@@ -309,7 +353,33 @@ HRESULT CPlayer::Bind_ShaderResources()
 	}
 	return S_OK;
 }
-#ifdef _DEBUG
+void CPlayer::ReLockOnTarget()
+{
+	m_pLockOnMonster = m_pInfoInstance->Get_LockOnUnit();
+	if (nullptr != m_pLockOnMonster) {
+		if (true == m_pLockOnMonster->isDead()) {
+			m_pLockOnMonster = nullptr;
+		}
+	}
+}
+
+void CPlayer::SetGravity()
+{
+	PSX::PxControllerCollisionFlags eCollisionFlags = m_pCharacter_Controller->Get_CollisionFlags();
+	eCollisionFlags;
+	if (	false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_DOWN) 
+		 &&	false == eCollisionFlags.isSet(PSX::PxControllerCollisionFlag::Enum::eCOLLISION_SIDES)) {
+		if (false == m_pFSM->IsEnable(FSMSTATE::JUMP)) { // 벽에 닿지 않았는데 점프 중이 아닐 땐 중력 on
+			m_pCharacter_Controller->SetGravity(true);
+		}
+		else { // 점프 중일 땐 off
+			m_pCharacter_Controller->SetGravity(false);
+		}
+	}
+	else { // 벽에 닿는중일 땐 항상 중력 off
+		m_pCharacter_Controller->SetGravity(false);
+	}
+}
 
 void CPlayer::Update_CameraCoordinateSystem()
 {
@@ -317,8 +387,56 @@ void CPlayer::Update_CameraCoordinateSystem()
 	_vector xmvUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
 	XMStoreFloat3(&m_vCameraRightDir, XMVector3Normalize(XMVector3Cross(xmvUp, xmvCameraLook)));
 	XMStoreFloat3(&m_vCameraLookDir, xmvCameraLook);
+	m_pInfoInstance->Update_CameraCoordinateSystem(m_vCameraLookDir, m_vRimLightColor);
 }
-#endif // _DEBUG
+
+_matrix CPlayer::Get_WandPos()
+{
+	CModel* pWand = Get_PartObject<CWand>()->Get_Component<CModel>();
+
+	if (pWand == nullptr)
+		return _matrix();
+
+	_matrix BoneMatrix = XMLoadFloat4x4(pWand->Get_BoneMatrixPtr("root"));
+
+	BoneMatrix = BoneMatrix * m_pTransformCom->Get_XMWorldMatrix();
+
+	_float3 vOffset = _float3(0.f, -0.27f, -0.32f);
+
+	BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[0]) * vOffset.x;
+	BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[1]) * vOffset.y;
+	BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[2]) * vOffset.z;
+
+	return BoneMatrix;
+}
+
+void CPlayer::Play_Event()
+{
+	for (auto iter = m_PendingEvents.begin(); iter != m_PendingEvents.end(); )
+	{
+		_float ratio = m_pModelCom->Get_CurrentTrackProgressRatio();
+		_uint curAnim = m_pModelCom->Get_AnimIndex();
+
+		if (curAnim == iter->AnimIndex && ratio >= iter->fRatio)
+		{
+			iter->Callback();
+			iter = m_PendingEvents.erase(iter);
+		}
+		else
+		{
+			++iter;
+		}
+	}
+}
+
+void CPlayer::Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio)
+{
+	PendingEvent Desc;
+	Desc.AnimIndex = AnimIndex;
+	Desc.fRatio = fRatio;
+	Desc.Callback = Callback;
+	m_PendingEvents.push_back(Desc);
+}
 
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
@@ -348,6 +466,13 @@ void CPlayer::Free()
 {
 	__super::Free();
 
+
+	if (nullptr != m_pInfoInstance) {
+		CInfoInstance* pInfo = m_pInfoInstance;
+		m_pInfoInstance = nullptr;
+		pInfo->Deregist_PlayerAlly(this);
+	}
+
 	if (nullptr != m_pCallBack_Behavior) {
 		m_pCallBack_Behavior->Finalize();
 	}
@@ -356,16 +481,22 @@ void CPlayer::Free()
 	}
 	SAFE_RELEASE(m_pCharacter_Controller);
 	SAFE_RELEASE(m_pRigidBody);
+	SAFE_RELEASE(m_pLightCom);
 	Safe_Delete(m_pCallBack_Behavior);
 	Safe_Delete(m_pCallBack_HitReport);
 	SAFE_RELEASE(m_pCamPosition_TopDown_FollowPart);
 	SAFE_RELEASE(m_pCamPosition_TopDown_LookPart);
 	SAFE_RELEASE(m_pCamPosition_ShoulderPart);
+	SAFE_RELEASE(m_pEffectPool);
+	SAFE_RELEASE(m_pBroomModel);
+	SAFE_RELEASE(m_pBroomTransform);
+	SAFE_RELEASE(m_pBroom);
 }
 #ifdef _DEBUG
 
 void CPlayer::Describe_Entity()
 {
+	GUI::Begin("PLAYER_DESC");
 	m_pCharacter_Controller->Describe_Entity();
 	_float4 vMomentum = {};
 	XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());
@@ -397,8 +528,15 @@ void CPlayer::Describe_Entity()
 	string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
 	GUI::Text(AnimList.c_str());
 
+	GUI::Text("AnimTrack %.2f", m_pModelCom->Get_CurrentTrackPosition());
+	GUI::Text("AnimRatio %.2f", m_pModelCom->Get_TrackProgressRatio(417));
+
 	GUI::Checkbox("Render", &m_bVisible);
 
+	GUI::Text("%d", m_iStateMask);
+
+	m_pLightCom->Describe_Entity();
+	GUI::End();
 }
 
 #endif // _DEBUG

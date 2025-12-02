@@ -20,8 +20,7 @@
 #include "State_Combat.h"
 #pragma endregion
 
-#include "Bombard.h"
-#include "Decendo.h"
+#include "EffectPool.h"
 
 #pragma region States
 void CPlayer::TestKeyInput(_float fTimeDelta)
@@ -98,6 +97,15 @@ HRESULT CPlayer::InputSpell()
 	return E_FAIL;
 }
 
+HRESULT CPlayer::InputAimMove()
+{
+	if (m_pGameInstance->Mouse_Pressing(DIM_RBUTTON))
+	{
+		return S_OK;
+	}
+	return E_FAIL;
+}
+
 void CPlayer::Behavior_IdleEnter() {
 	m_pFSM->Enable_State(FSMSTATE::IDLE);
 	pair<_uint, _bool> pairAnimInfo = m_Animation[STATEANIM::IDLE];
@@ -143,6 +151,7 @@ HRESULT CPlayer::Behavior_IdleExitCheck()
 		}
 		else if (m_pGameInstance->Mouse_Up(DIM_LBUTTON)) {
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
+
 		}
 		else if (m_pGameInstance->Key_Down(DIK_V)) {
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
@@ -240,7 +249,7 @@ void CPlayer::Behavior_MoveEnter()
 		}
 	}
 
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, m_fAmount);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,m_fAmount);
 	m_fAmount = 1.f;
 }
 
@@ -423,14 +432,22 @@ void CPlayer::Behavior_CombatEnter()
 	if (m_pGameInstance->Key_Down(DIK_R)) {
 		m_pFSM->Enable_State(FSMSTATE::SKILL);
 		pairAnimInfo = m_Animation[STATEANIM::SKILL];
+
+		m_pEffectPool->Use_Skill(SKILL_TYPE::REVELIO, this);
 	}
 	else if (m_pGameInstance->Key_Down(DIK_Q)) {
 		m_pFSM->Enable_State(FSMSTATE::SKILL2);
 		pairAnimInfo = m_Animation[STATEANIM::SKILL2];
+
+		m_pEffectPool->Use_Skill(SKILL_TYPE::PROTEGO, this);
+
 	}
 	else if (m_pGameInstance->Mouse_Up(DIM_LBUTTON)) {
 		m_pFSM->Enable_State(FSMSTATE::LIGHT_ATTACK);
 		pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK];
+
+		m_pEffectPool->Use_Skill(SKILL_TYPE::JAP, this);
+
 	}
 	else if (SUCCEEDED(InputSpell())) {
 		m_pFSM->Enable_State(FSMSTATE::SPELL);
@@ -441,6 +458,10 @@ void CPlayer::Behavior_CombatEnter()
 			case STATEANIM::DEPULSO:
 				pairAnimInfo = m_Animation[STATEANIM::DEPULSO];
 				m_eSpell = STATEANIM::END;
+
+
+				m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO, this);
+
 				break;
 			case STATEANIM::DIFFINDO:
 				pairAnimInfo = m_Animation[STATEANIM::DIFFINDO];
@@ -528,10 +549,7 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 			case STATEANIM::ACCIO:
 				pairAnimInfo = m_Animation[STATEANIM::ACCIO];
 
-				if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBombard>(ENUM_CLASS(LEVEL::EFFECT), CURRENT_LEVEL, LAYER_HITBOX, nullptr, this))) {
-					assert(false);
-					return E_FAIL;
-				}
+				m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA, this);
 
 			
 				break;
@@ -539,10 +557,7 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 			{
 				pairAnimInfo = m_Animation[STATEANIM::DESCENDO];
 
-				if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDecendo>(ENUM_CLASS(LEVEL::EFFECT), CURRENT_LEVEL, LAYER_HITBOX, nullptr, this))) {
-					assert(false);
-					return E_FAIL;
-				}
+				m_pEffectPool->Use_Skill(SKILL_TYPE::DESCENDO, this);
 			}
 				break;
 			default:
@@ -651,17 +666,27 @@ void CPlayer::Add_FSM()
 void CPlayer::Set_Anim()
 {
 	m_Animation[STATEANIM::IDLE] = { 266,true };
+	m_Animation[STATEANIM::IDLE_AIM] = { 5,true };
 	m_Animation[STATEANIM::IDLE_TURN_L] = { 270,false };
 	m_Animation[STATEANIM::IDLE_TURN_R] = { 430,false };
 	m_Animation[STATEANIM::IDLE_TURN_BWD] = { 268,false };
 
 	m_Animation[STATEANIM::WALK_FWD] = { 625,true };
-	m_Animation[STATEANIM::WALK_BWD] = { 166,true };
+	m_Animation[STATEANIM::WALK_LEFT] = { 337,false };
+	m_Animation[STATEANIM::WALK_RIGHT] = { 504,false };
+	m_Animation[STATEANIM::WALK_BWD] = { 352,false };
+
 	m_Animation[STATEANIM::WALK_STOP] = { 344,false };
 
 	m_Animation[STATEANIM::JOG_FWD] = { 167,true };
-	m_Animation[STATEANIM::JOG_BWD] = { 154,false};
+	m_Animation[STATEANIM::JOG_LEFT] = { 164,false }; // Turn
+	m_Animation[STATEANIM::JOG_RIGHT] = { 185,false };// Turn
+	m_Animation[STATEANIM::JOG_BWD] = { 154,false }; // Turn
 	m_Animation[STATEANIM::JOG_STOP] = { 289,false };
+
+	m_Animation[STATEANIM::JOG_AIM_LEFT] = { 171,true };
+	m_Animation[STATEANIM::JOG_AIM_RIGHT] = { 175,true };
+	m_Animation[STATEANIM::JOG_AIM_BWD] = { 166,true };
 
 	m_Animation[STATEANIM::JUMP] = { 205,false };
 	m_Animation[STATEANIM::JUMP_JOG] = { 203,false };
@@ -671,21 +696,41 @@ void CPlayer::Set_Anim()
 
 	m_Animation[STATEANIM::LAND] = { 259,false };
 
-	m_Animation[STATEANIM::DODGE] = { 802,false };
-	m_Animation[STATEANIM::DODGE_BLINK] = { 799,true };
+	m_Animation[STATEANIM::DODGE] = { 878,false };
+	m_Animation[STATEANIM::DODGE_BLINK] = { 876,true };
 
 	m_Animation[STATEANIM::SKILL] = { 593,false };
-	m_Animation[STATEANIM::SKILL2] = { 915,false };
+	m_Animation[STATEANIM::SKILL2] = { 991,false };
 	m_Animation[STATEANIM::LIGHT_ATTACK] = { 413,false };
-	m_Animation[STATEANIM::SPELL] = { 696,false };
+	m_Animation[STATEANIM::SPELL] = { 772,false };
 	m_Animation[STATEANIM::MAPHELP] = { 122,false };
+	m_Animation[STATEANIM::POTION] = { 114,false }; // 114 포션 // 909 루모스
 	m_Animation[STATEANIM::ACCIO] = { 417,false };
-	m_Animation[STATEANIM::DESCENDO] = { 418,false };
-	m_Animation[STATEANIM::DEPULSO] = { 782,false };
-	m_Animation[STATEANIM::DIFFINDO] = { 786,false };
-	m_Animation[STATEANIM::LUMOS] = { 782,false };
+	m_Animation[STATEANIM::DESCENDO] = { 857,false };
+	m_Animation[STATEANIM::DEPULSO] = { 858,false };
+	m_Animation[STATEANIM::DIFFINDO] = { 862,false };
+	m_Animation[STATEANIM::LUMOS] = { 909,true };
+	m_Animation[STATEANIM::LUMOS_STOP] = { 912,false };
 	m_Animation[STATEANIM::DISILLUSION_ENTER] = { 585,false };
 	m_Animation[STATEANIM::DISILLUSION_EXIT] = { 586,false };
+	m_Animation[STATEANIM::ANCIENT_THROW] = { 919,false };
+
+
+	m_Animation[STATEANIM::HIT_L] = { 1124,false };
+	m_Animation[STATEANIM::HIT_R] = { 1125,false };
+
+	m_Animation[STATEANIM::BROOM_IDLE] = { 679,true };
+	m_Animation[STATEANIM::BROOM_FWD] = { 680,true };
+
+	m_Animation[STATEANIM::BROOM_MOUNT] = { 734,false };
+	m_Animation[STATEANIM::BROOM_MOUNT_END] = { 737,false };
+	m_Animation[STATEANIM::BROOM_HOVER_START] = { 699,false };
+	m_Animation[STATEANIM::BROOM_HOVER_IDLE] = { 703,true };
+
+
+	m_Animation[STATEANIM::JOG_AIM_STOP_L] = { 295,false };
+	m_Animation[STATEANIM::JOG_AIM_STOP_R] = { 456,false };
+	m_Animation[STATEANIM::JOG_AIM_STOP_BWD] = { 444,false };
 }
 #pragma endregion State
 

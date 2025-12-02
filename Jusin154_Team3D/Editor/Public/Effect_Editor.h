@@ -33,6 +33,7 @@ private:
 	HRESULT         Ready_Child();
 	HRESULT			Bind_ShaderResources() override;
 private:
+	HRESULT         Packaging(const _char* pDirectoryPath);
 	HRESULT			ReSaveFile(const _char* pDirectoryPath);
 	void			ReadMaterials(const char* pDirectoryName);
 	void            ReadMaterial(_wstring wstrFileName, const char* pFilePath);
@@ -52,6 +53,9 @@ private:
 	_string												 m_strSavePath = {};
 	_string												 m_strTrailSavePath = {};
 	_string												 m_strPackageSavePath = {};
+
+private:
+	class CEffectPool*									 m_pEffectPool = nullptr;
 
 public:
 	static CEffect_Editor* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -56,7 +56,7 @@ HRESULT CCamera::Bind_Matrices()
     if (true == m_bActive) {
         m_pGameInstance->Set_Transform(D3DTS::VIEW, XMMatrixInverse(nullptr, XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrixPtr())));
         m_pGameInstance->Set_Transform(D3DTS::PROJ, XMMatrixPerspectiveFovLH(m_fFovy, m_fAspect, m_fNear, m_fFar));
-        Ready_Shadow();
+        //Ready_Shadow();
     }
     return S_OK;
 }
@@ -166,6 +166,32 @@ HRESULT CCamera::Ready_Shadow()
         return E_FAIL;
     }
     return S_OK;
+}
+
+void CCamera::ZoomIn(_float fTimeDelta)
+{
+    if (m_fFovy > XMConvertToRadians(40.f))
+    {
+        m_fFovy -= (fTimeDelta * 1.2f);
+    }
+  
+}
+
+void CCamera::Set_Fov(_float fFovy, _float fTimeDelta,_bool& bZoomIn)
+{
+    if (fFovy > m_fFovy)
+    {
+        m_fFovy += (fTimeDelta * 0.6f);
+    }
+    else if(fFovy < m_fFovy)
+    {
+        m_fFovy -= (fTimeDelta * 0.6f);
+    }
+
+    if (fFovy == m_fFovy)
+    {
+        bZoomIn = false;
+    }
 }
 
 void CCamera::Free()

@@ -22,15 +22,20 @@ public:
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr) override;
 public:
 	HRESULT			Load_Directory(const _char* pPath);
+	HRESULT         Load_Package(const _char* pPath);
+	virtual	HRESULT	Pre_Setting(CGameObject* pObject);
 protected:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual HRESULT Ready_Components(void* pArg) override;
 	HRESULT         Ready_Child();
 	HRESULT			Bind_ShaderResources() override;
+	HRESULT			Reset_EffectParts(); 
 
 	void			Update_Event(_float fTimeDelta);
 
+protected:
+	class CDummy_PhysXEffectHitBox* m_pPhysHitBox = {};
 protected:
 	_wstring						m_wstrEffectName = {};
 

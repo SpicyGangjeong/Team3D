@@ -18,8 +18,12 @@ private:
 public:
 	virtual void Priority_Update(_float fTimeDelta) override;
 	virtual void Update(_float fTimeDelta) override;
+	void MoveHitBox(Engine::_float fTimeDelta);
 	virtual void Late_Update(_float fTimeDelta) override;
 
+
+public:
+	virtual	HRESULT	Pre_Setting(CGameObject* pObject) override;
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
@@ -29,8 +33,24 @@ private:
 	HRESULT			Bind_ShaderResources() override;
 	virtual void	OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr) override;
 private:
+	CInfoInstance*					  m_pInfoInstance = { nullptr };
 	_wstring						  m_wstrEffectName = {};
-	class CPhysXEffectHitBox*   m_pPhysHitBox = {};
+
+	class CPartObject*				  m_pProjectile = {};
+	class CPartObject*				  m_pProjectile_Side = {};
+
+	_float3 						  m_vRotateUp = {};
+	_float							  m_fAccTime = {};
+	_float							  m_fLerpAmount = {};
+	_float							  m_fTurnValue = {};
+
+	CUnit*							  m_pTargetUnit = { nullptr }; // 발사될 당시 대상
+	_float3							  m_vDirection = { 0.f, 0.f, 1.f };
+	_float4							  m_vStartPos = { 0.f, 0.f, 0.f, 1.f }; // 현재 발사 된 위치
+	_float4							  m_vTargetPos = { 0.f, 0.f, 10.f, 1.f }; // 현재 타게팅 된 위치
+	_float							  m_fAngularSpeed = XM_2PI / 0.3f;
+	_float							  m_fLinearSpeed = 1.f;
+	_bool							  m_bTrailPulseEnded = false;
 public:
 	static CNomalJap* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

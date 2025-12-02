@@ -10,15 +10,17 @@ namespace Client {
 
 
 #pragma region FX_NAME
-#define FX_ANIMMESH			TEXT("FX_ANIMMESH")
-#define FX_MESH				TEXT("FX_MESH")
-#define FX_POSTEX			TEXT("FX_POSTEX")
-#define FX_NORTEX			TEXT("FX_NORTEX")
-#define FX_CELL				TEXT("FX_CELL")
-#define FX_PARTICLE			TEXT("FX_PARTICLE")
-#define FX_INSTANCE_MODEL   TEXT("FX_INSTANCE_MODEL")
-#define FX_UIEDITOR			TEXT("FX_UIEDITOR")
-#define FX_UIINSTANCE		TEXT("FX_UIINSTANCE")
+#define FX_ANIMMESH				TEXT("FX_ANIMMESH")
+#define FX_MESH					TEXT("FX_MESH")
+#define FX_POSTEX				TEXT("FX_POSTEX")
+#define FX_NORTEX				TEXT("FX_NORTEX")
+#define FX_CELL					TEXT("FX_CELL")
+#define FX_PARTICLE				TEXT("FX_PARTICLE")
+#define FX_INSTANCE_MODEL		TEXT("FX_INSTANCE_MODEL")
+#define FX_INSTANCE_PROP_MODEL  TEXT("FX_INSTANCE_PROP_MODEL")
+#define FX_UIEDITOR				TEXT("FX_UIEDITOR")
+#define FX_UIINSTANCE			TEXT("FX_UIINSTANCE")
+#define FX_VTXPOS				TEXT("FX_VTXPOS")
 
 #pragma endregion
 #pragma region MACRO_PROTOTYPE
@@ -53,6 +55,8 @@ namespace Client {
 #define LAYER_DOT			TEXT("Layer_Dot")
 #define LAYER_CELL			TEXT("Layer_Cell")
 #define LAYER_TRIGGER		TEXT("Layer_Trigger")
+#define LAYER_ITEM			TEXT("Layer_Item")
+#define LAYER_EFFECTPOOL	TEXT("Layer_EffectPool")
 #define LAYER_LIGHT			TEXT("Layer_Light")
 
 #define LAYER_MAPOBJECTMANAGER		TEXT("Layer_MapObjectManager")

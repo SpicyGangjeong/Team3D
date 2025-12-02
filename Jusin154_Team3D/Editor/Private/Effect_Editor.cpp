@@ -4,6 +4,8 @@
 #include "GameInstance.h"
 #include "EditEffect.h"
 #include "TrailObject.h"
+#include "EffectPool.h"
+#include "Layer.h"
 
 
 #include <sstream>
@@ -55,6 +57,8 @@ HRESULT CEffect_Editor::Initialize(void* pArg)
 		return E_FAIL;
 
 
+	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
+	SAFE_ADDREF(m_pEffectPool);
 
 	return S_OK;
 }
@@ -125,6 +129,88 @@ HRESULT CEffect_Editor::Ready_Child()
 
 
 
+
+	return S_OK;
+}
+
+HRESULT CEffect_Editor::Packaging(const _char* pDirectoryPath)
+{
+	_uint iIndex = {};
+
+	_string strPerfectFilePath = "../Bin/Resources/Data/Effect/Package/";
+	_string strDirectoryPath = pDirectoryPath;
+
+	size_t pos = strDirectoryPath.rfind('/');   // 뒤에서부터 '/' 검색
+
+	if (pos != std::string::npos)
+		strPerfectFilePath += strDirectoryPath.substr(pos + 1);
+
+	strPerfectFilePath += ".bin";
+
+
+	HANDLE	hFile = CreateFile(CMyTools::ToWstring(strPerfectFilePath).c_str(),
+		GENERIC_WRITE,
+		FILE_SHARE_READ | FILE_SHARE_WRITE,
+		NULL, CREATE_ALWAYS,
+		FILE_ATTRIBUTE_NORMAL, NULL
+	);
+
+
+	if (hFile == INVALID_HANDLE_VALUE) {
+		MessageBox(NULL, L"패키징 실패", L"System Message", MB_OK);
+		return E_FAIL;
+	}
+	DWORD dwByte;
+	_int iFileCount = {};
+
+	for (auto& file : filesystem::directory_iterator(pDirectoryPath)) {
+			++iFileCount;
+	}
+
+	if (!WriteFile(hFile, &iFileCount, sizeof(_int), &dwByte, nullptr)) {
+		CloseHandle(hFile);
+		return E_FAIL;
+	}
+
+	for (const auto& file : filesystem::directory_iterator(pDirectoryPath))
+	{
+		if (file.is_directory())
+			continue;
+
+		string ext = file.path().extension().string();
+
+		if (!(strcmp(ext.c_str(), ".bin") ^ strcmp(ext.c_str(), ".trail")))
+			continue;
+
+		_char szFilePath[MAX_PATH] = {};
+
+		strcpy_s(szFilePath, MAX_PATH, file.path().string().c_str());
+
+		/////////////////////////////
+
+		_string strPath = szFilePath;
+
+	
+
+		size_t iComponentLength = strPath.length();
+		const _char* pFileComponentPath = strPath.c_str();
+
+		if (!WriteFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+			CloseHandle(hFile);
+			return E_FAIL;
+		}
+
+		if (iComponentLength != 0)
+		{
+			if (!WriteFile(hFile, pFileComponentPath, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+				CloseHandle(hFile);
+				return E_FAIL;
+			}
+		}
+
+	}
+
+	CloseHandle(hFile);
 
 	return S_OK;
 }
@@ -439,6 +525,7 @@ void CEffect_Editor::Free()
 
 	SAFE_RELEASE(m_pEditEffect);
 	SAFE_RELEASE(m_pTrailObject);
+	SAFE_RELEASE(m_pEffectPool);
 }
 
 void CEffect_Editor::Describe_Entity()
@@ -637,6 +724,35 @@ void CEffect_Editor::Describe_Entity()
 		}
 	}
 
+	GUI::SameLine();
+
+	if (GUI::Button("PACKAGE DIRECTORY"))
+	{
+		if (SUCCEEDED(Packaging(m_strPackageSavePath.c_str())))
+		{
+			MessageBox(NULL, L"패키징 성공", L"System Message", MB_OK);
+		}
+		else
+		{
+			MessageBox(NULL, L"패키징 실패", L"System Message", MB_OK);
+		}
+	}
+
+	GUI::SameLine();
+
+	if (GUI::Button("LOAD PACKAHE"))
+	{
+		if(SUCCEEDED(Load_Package(m_strPackageSavePath.c_str())))
+		{
+			MessageBox(NULL, L"로드 성공", L"System Message", MB_OK);
+		}
+		else
+		{
+			MessageBox(NULL, L"로드 실패", L"System Message", MB_OK);
+		}
+
+	}
+
 	GUI::InputTextMultiline("TRAIL FILE PATH", m_szTrailBuffer, sizeof(m_szTrailBuffer), ImVec2(250, 25));
 
 	m_strTrailSavePath = m_szTrailBuffer;
@@ -658,6 +774,11 @@ void CEffect_Editor::Describe_Entity()
 			m_pTrailObject->Load_Trail(m_strTrailSavePath.c_str(), LEVEL::EFFECT);
 		}
 	}
+
+
+
+
+	m_pEffectPool->Describe_Entity();
 
 	ImGui::End();
 

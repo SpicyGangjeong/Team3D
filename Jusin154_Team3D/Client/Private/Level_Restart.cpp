@@ -27,7 +27,7 @@ void CLevel_Restart::Update(_float fTimeDelta)
 		m_pGameInstance->Set_LevelToChange();
 	}
 
-	m_pInfoInstance->Update(fTimeDelta);
+	//m_pInfoInstance->Update(fTimeDelta);
 
 	if (true == m_pGameInstance->Check_LevelShouldChange()) {
 		if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, m_eNextLevel)))) {

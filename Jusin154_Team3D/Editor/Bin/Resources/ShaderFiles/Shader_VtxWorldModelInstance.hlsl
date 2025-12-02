@@ -99,7 +99,7 @@ PS_OUT PS_MAIN(PS_IN In)
     
     Out.vAlbedo = vMtrlDiffuse;
     Out.vNormal = float4(vNormal.xyz * 0.5f + 0.5f, 0.f);
-    Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.f, 0.0f);
+    Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, g_fUsingSurfaceParams, 0.0f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = g_SurfaceParamsTexture.Sample(DefaultSampler, In.vTexcoord);
     

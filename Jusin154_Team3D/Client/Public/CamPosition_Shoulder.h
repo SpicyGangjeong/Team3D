@@ -34,6 +34,7 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 	HRESULT Ready_Components(void* pArg);
 	HRESULT Ready_SubParts();
+	void Start_LerpShoulderPos();
 
 	_bool	m_bMovable = { true };
 	_float	m_fMouseSensor = { 0.5f };
@@ -46,8 +47,14 @@ private:
 	_float3 m_vShoulderStartRatio = { 1.f, 2.f, -1.f };
 	_float3 m_vShoulderOtherRatio = { 1.f, 2.f, -1.f };
 
-	_bool m_bLerp = { false };
-	_float2 m_vLerpTimer = { 0.f, 1.f };
+	_bool m_bShoulderLerp = { false };
+	_float2 m_vShoulderLerpTimer = { 0.f, 1.f };
+
+	_float2 m_vPosLerpTimer = { 0.f, 0.16f };
+	_float4 m_StartPos = { };
+	_float4 m_DestPos = { };
+
+	_bool m_bZoomIn = { false };
 
 
 	CCamPosition_Target* m_pTarget_LookPart = { nullptr };

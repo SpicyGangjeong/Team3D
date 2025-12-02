@@ -43,11 +43,6 @@ void CUnit::Late_Update(_float fTimeDelta)
 	__super::Late_Update(fTimeDelta);
 }
 
-HRESULT CUnit::Render()
-{
-	return S_OK;
-}
-
 #ifdef _DEBUG
 void CUnit::Load_KeyFrame()
 {
@@ -67,7 +62,9 @@ void CUnit::Load_KeyFrame()
 			Path = _string(szDir) + "KeyFrame.bin";
 
 			fopen_s(&fp, Path.c_str(), "rb");
-			if (!fp) return;
+			if (!fp) {
+				return;
+			}
 
 			_uint KeyFrameSize = 0;
 			fread(&KeyFrameSize, sizeof(_uint), 1, fp);
@@ -122,11 +119,6 @@ HRESULT CUnit::Ready_Components(void *pArg)
 		return E_FAIL;
 	}
 
-	return S_OK;
-}
-
-HRESULT CUnit::Bind_ShaderResources()
-{
 	return S_OK;
 }
 

@@ -51,34 +51,64 @@ HRESULT CGoblin::Initialize(void* pArg)
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
 
-	m_pCharacter_Controller->Set_Position(XMVectorSet(-10.f, 0.f, -10.f, 1.f));
+
+
+	m_pCharacter_Controller->Set_Position(XMVectorSet(m_pGameInstance->Random_Float(-20.f, 20.f), 0.f, m_pGameInstance->Random_Float(-20.f, 20.f), 1.f));
 
 	return S_OK;
 }
 
 void CGoblin::Priority_Update(_float fTimeDelta)
 {
-	m_pTransformCom->RewindMomentum();
+	__super::Priority_Update(fTimeDelta);
 }
 
 void CGoblin::Update(_float fTimeDelta)
 {
+	__super::Update(fTimeDelta);
+
 	m_pFSM->Update_State(fTimeDelta);
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
-	m_pCharacter_Controller->Move(fTimeDelta);
-	
+	GUI::Text("%d", m_pCharacter_Controller->IsActive());
+	GUI::Text("%f %f", m_vStunTimer.x, m_vStunTimer.y);
+	if (true == m_pCharacter_Controller->IsActive()) {
+		m_pCharacter_Controller->Move(fTimeDelta);
+		m_vStunTimer.x = 0.f;
+	}
+	else {
+		if (0.f == m_vStunTimer.x) {
+			PSX::PxExtendedVec3 pxControlllerPos = m_pCharacter_Controller->Get_Controller()->getPosition();
+			PSX::PxTransform pxTransform((_float)pxControlllerPos.x, (_float)pxControlllerPos.y + 100.f, (_float)pxControlllerPos.z);
+			m_pCharacter_Controller->Set_Position(XMLoadFloat3((_float3*)&pxTransform.p));
+			//m_pCharacter_Controller->Move(fTimeDelta);
+		}
+		m_vStunTimer.x += fTimeDelta;
+		m_pTransformCom->Set_WorldMatrix(m_pRigidBody->Get_Actor()->getGlobalPose());
+		if (m_vStunTimer.y < m_vStunTimer.x) {
+			m_pRigidBody->ConvertToCCT(*m_pCharacter_Controller);
+		}
+	}
+#ifdef _DEBUG
+	Describe_Entity();
+#endif // _DEBUG
+
 }
 
 void CGoblin::Late_Update(_float fTimeDelta)
 {
 	__super::Late_Update(fTimeDelta);
-	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_Position());
+	if (true == m_pCharacter_Controller->IsActive()) {
+		m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
+	}
+	else {
+		m_pTransformCom->Set_WorldMatrix(m_pRigidBody->Get_Actor()->getGlobalPose());
+	}
 
-	m_pTransformCom->LookAt(m_pPlayerTransform->Get_State(STATE::POSITION));
+	m_pTransformCom->LookAt_Horizontal(XMLoadFloat4(&m_vTargetPos));
 
-	m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
+	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 }
 
 HRESULT CGoblin::Render()
@@ -88,7 +118,10 @@ HRESULT CGoblin::Render()
 	}
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-
+	_uint iShaderPass = ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT);
+	if (true == m_bDrawOutLine) {
+		iShaderPass = ENUM_CLASS(SHADER_PASS_ANIM::OUTLINE_WRITE);
+	}
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
 		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
@@ -99,7 +132,7 @@ HRESULT CGoblin::Render()
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
+		if (FAILED(m_pShaderCom->Begin(iShaderPass))) {
 			return E_FAIL;
 		}
 
@@ -108,12 +141,41 @@ HRESULT CGoblin::Render()
 		}
 	}
 
+	if (m_bDrawOutLine) {
+		Render_OutLine();
+	}
+
 #ifdef _DEBUG
-	m_pCharacter_Controller->Render();
-	//m_pRigidBody->Render();
+	if (true == m_pCharacter_Controller->IsActive()) {
+		if (FAILED(m_pCharacter_Controller->Render())) {
+			return E_FAIL;
+		}
+	}
+	else {
+		if (FAILED(m_pRigidBody->Render())) {
+			return E_FAIL;
+		}
+	}
 #endif
 
 	return S_OK;
+}
+
+void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
+{
+	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
+	_vector vWorldPos = {};		// 접촉지점
+	_vector vWorldNomal = {};	// 접촉노말
+	_vector vHitDir = {};		// 시도한 move 방향
+	_float  fLength = {};		// 작용된 힘
+
+	m_pCharacter_Controller->ConvertToDO(*m_pRigidBody);
+	m_pRigidBody->Add_Force(vHitDir * fLength * 100.f, PSX::PxForceMode::eIMPULSE);
+
+}
+
+void CGoblin::OnHit(CGameObject* pOther, CGameObject* pCaller)
+{
 }
 
 HRESULT CGoblin::Ready_Components()
@@ -130,24 +192,26 @@ HRESULT CGoblin::Ready_Components()
 
 	/* Com_Model */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_strModelPrototypeTag,
-		reinterpret_cast<CComponent**>(&m_pModelCom))))
+		reinterpret_cast<CComponent**>(&m_pModelCom)))){
 		return E_FAIL;
+	}
 
 	{ // CCT
 		CCharacter_Controller::Character_Controller_DESC Desc{};
 
-		Desc.iSubKind = ENUM_CLASS(COLLIDABLEOBJECT::MONSTER);
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::GOBLIN_WARRIOR);
 		Desc.pTransform = m_pTransformCom;
 		Desc.eBodyType = ACTOR::CAPSULE;
 		Desc.fContactOffset = 0.1f;
 		Desc.fMaterial = { 0.5f, 0.5f, 0.6f };
 		Desc.bAutoStepping = { false };
 		Desc.fStepOffset = { 0.05f };
-		Desc.fRadius = 0.5f;
-		Desc.fHeight = 1.0f;
+		Desc.fRadius = 0.6f;
+		Desc.fHeight = 0.7f;
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Monster_HitReport::Create();
 		Desc.pCallback_Behavior = m_pCallBack_Behavior = CCallBack_Monster_Behavior::Create();
 		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
+		Desc.fWalkableSlope = 45.f;
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), (CComponent**)&m_pCharacter_Controller, &Desc))) {
 			return E_FAIL;
 		}
@@ -155,7 +219,7 @@ HRESULT CGoblin::Ready_Components()
 	m_pCharacter_Controller->Set_Position(m_pTransformCom->Get_State(STATE::POSITION));
 	{ // DO
 		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
-		Desc.iSubKind = ENUM_CLASS(COLLIDABLEOBJECT::MONSTER);
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::GOBLIN_WARRIOR);
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}
@@ -198,7 +262,7 @@ CGoblin* CGoblin::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 CGameObject* CGoblin::Clone(void* pArg, CGameObject* pOwner)
 {
 	CGoblin* pInstance = new CGoblin(*this);
-
+	
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
 		MSG_BOX("Failed to Cloned : CGoblin");
@@ -227,6 +291,9 @@ void CGoblin::Free()
 
 void CGoblin::Describe_Entity()
 {
+	_float4 vMomentum = {};
+	XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());
+	GUI::Text("GoblinMomentum %.2f %.2f %.2f %.2f ", vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);
 }
 
 #endif // _DEBUG

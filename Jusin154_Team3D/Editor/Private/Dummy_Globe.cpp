@@ -43,7 +43,7 @@ void CDummy_Globe::Update(_float fTimeDelta)
 void CDummy_Globe::Late_Update(_float fTimeDelta)
 {
 	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
-		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+		m_pGameInstance->Add_RenderGroup(RENDER::BLOOM, this);
 	}
 }
 
@@ -106,7 +106,6 @@ HRESULT CDummy_Globe::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ)))) {
 		return E_FAIL;
 	}
-
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 		return E_FAIL;
 	}

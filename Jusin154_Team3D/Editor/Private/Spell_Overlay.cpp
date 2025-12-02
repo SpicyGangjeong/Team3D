@@ -22,9 +22,9 @@ HRESULT CSpell_Overlay::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 380.f;
-	Desc.fY = 0.f;
-	Desc.fSizeX = 100.f;
-	Desc.fSizeY = 100.f;
+	Desc.fY = 30.f;
+	Desc.fSizeX = 105.f;
+	Desc.fSizeY = 105.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -44,11 +44,38 @@ HRESULT CSpell_Overlay::Initialize(void* pArg)
 	m_fAngle = XMConvertToRadians(-135.f);
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 1.f;
+	m_vUVScale.x = 1.f;
 	m_vUVScale.y = 1.f;
 	m_fCoolTime = 5.f;
 	m_fSortZ = 1.f;
-	m_iSkillType = ENUM_CLASS(SKILLTYPE::CONTROL);
+	m_iSpellType = ENUM_CLASS(SPELLTYPE::CONTROL);
+	Compute_UI(5);
 	return S_OK;
+}
+
+void CSpell_Overlay::Compute_UI(_uint SpellID)
+{
+	_float2 fImage_Size = { 1024.f, 1536.f };
+
+	_uint iCountX = 4;
+	_uint iCountY = 6;
+
+	_float iImageX = 256.f;
+	_float iImageY = 256.f;
+
+	_uint iframeX = SpellID % iCountX;
+	_uint iframeY = SpellID / iCountX;
+
+	_float2 UVStart;
+	UVStart.x = iframeX * iImageX / fImage_Size.x;
+	UVStart.y = iframeY * iImageY / fImage_Size.y;
+
+	_float2 UVEnd;
+	UVEnd.x = UVStart.x + (iImageX / fImage_Size.x);
+	UVEnd.y = UVStart.y + (iImageY / fImage_Size.y);
+
+	_float4 UV = _float4{UVStart.x, UVStart.y, UVEnd.x, UVEnd.y};
+	m_vUV = UV;
 }
 
 void CSpell_Overlay::Priority_Update(_float fTimeDelta)
@@ -127,7 +154,7 @@ HRESULT CSpell_Overlay::Render()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::SPELLTYPE))))
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::TYPE))))
 	{
 		return E_FAIL;
 	}
@@ -174,6 +201,10 @@ HRESULT CSpell_Overlay::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+	if (FAILED(m_pDiffuse_TextureCom3->Bind_ShaderResource(m_pShaderCom, "g_Texture3", 0)))
+	{
+		return E_FAIL;
+	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float))))
 	{
 		return E_FAIL;
@@ -194,7 +225,7 @@ HRESULT CSpell_Overlay::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_iSpellType", &m_iSkillType, sizeof(_float))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iSpellType", &m_iSpellType, sizeof(_int))))
 	{
 		return E_FAIL;
 	}
@@ -214,11 +245,19 @@ HRESULT CSpell_Overlay::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDeltaU", &m_vUVScale.x, sizeof(_float))))
+	{
+		return E_FAIL;
+	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDeltaV", &m_vUVScale.y, sizeof(_float))))
 	{
 		return E_FAIL;
 	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCoolTime", &m_fCoolTime, sizeof(_float))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fImageUV", &m_vUV, sizeof(_float4))))
 	{
 		return E_FAIL;
 	}
@@ -231,15 +270,19 @@ HRESULT CSpell_Overlay::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_spellmeter_Generic"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_ActionItemBack_4K"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_spellmeter_Accio_Overlay"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_spellmeter_Generic"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_MagicEffect1"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom2), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_Atlas_Spell"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom2), nullptr)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_tillingSmokes"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom3), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -284,6 +327,7 @@ void CSpell_Overlay::Free()
 	SAFE_RELEASE(m_pDiffuse_TextureCom);
 	SAFE_RELEASE(m_pDiffuse_TextureCom1);
 	SAFE_RELEASE(m_pDiffuse_TextureCom2);
+	SAFE_RELEASE(m_pDiffuse_TextureCom3);
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }

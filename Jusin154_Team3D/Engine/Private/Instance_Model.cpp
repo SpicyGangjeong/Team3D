@@ -117,6 +117,7 @@ HRESULT CInstance_Model::Initialize_Prototype(const _char* pModelFilePath, MODEL
 #endif
 
 #ifdef EDITOR_PROJECT
+
 HRESULT CInstance_Model::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex)
 {
 	_uint			iFlag = {};
@@ -172,7 +173,9 @@ HRESULT CInstance_Model::Ready_Meshes(MODEL eType, const aiScene* pAIScene, _fma
 #ifdef EDITOR_PROJECT
 _bool CInstance_Model::SaveAssimpModel(const _char* filename , const aiScene* pAIScene)
 {
-	if (!pAIScene) return false;
+	if (!pAIScene) {
+		return false;
+	}
 
 	_char szModel[MAX_PATH] = {};
 	_char szExt[MAX_PATH] = {};
@@ -266,7 +269,9 @@ _bool CInstance_Model::SaveAssimpModel(const _char* filename , const aiScene* pA
 
 	FILE* fp = nullptr;
 	fopen_s(&fp, savePath.c_str(), "wb");
-	if (!fp) return false;
+	if (!fp) {
+		return false;
+	}
 
 	fwrite(&modelData.MeshCount, sizeof(_uint), 1, fp);
 
@@ -348,7 +353,9 @@ bool CInstance_Model::LoadData(const _char* filename)
 {
 	FILE* fp = nullptr;
 	fopen_s(&fp, filename, "rb");
-	if (!fp) return false;
+	if (!fp) {
+		return false;
+	}
 
 	SaveModel NewModel = {};
 

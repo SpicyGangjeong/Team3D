@@ -43,6 +43,9 @@ private:
 	_uint					m_iTextureIndex = {};
 
 
+	_float3					m_vDRN = { (1.f / 16.f), (1.f / 16.f), (1.f / 16.f) };
+
+
 	class CAlphaMap*		m_pAlphaMap = { nullptr };
 	_uint					m_iMaskRange = {1};
 	_int					m_iColorIndex = {0};

@@ -1,9 +1,6 @@
 ﻿#include "pch.h"
 #include "Mission_Panel.h"
 #include "GameInstance.h"
-#include "Mission_KeyHold.h"
-#include "Mission_Key.h"
-#include "Active_Icon.h"
 #include "MissionBanner_Border.h"
 #include "MissionBanner_Key.h"
 
@@ -27,7 +24,7 @@ HRESULT CMission_Panel::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 	
 	Desc.fX = 380.f;
-	Desc.fY = 612.f;
+	Desc.fY = 580.f;
 	Desc.fSizeX = 750.f;
 	Desc.fSizeY = 410.f;
 
@@ -113,23 +110,6 @@ HRESULT CMission_Panel::Ready_Element(void* pArg)
 		return E_FAIL;
 	}
 	Add_Element(TEXT("MissionBanner_Key"), m_pMissionBanner_Key);
-
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMission_KeyHold>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMission_KeyHold**>(&m_pMission_KeyHold))))
-	{
-		return E_FAIL;
-	}
-	Add_Element(TEXT("Mission_KeyHold"), m_pMission_KeyHold);
-
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMission_Key>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMission_Key**>(&m_pMission_Key))))
-	{
-		return E_FAIL;
-	}
-	Add_Element(TEXT("Mission_Key"), m_pMission_Key);
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CActive_Icon>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CActive_Icon**>(&m_pActive_Icon))))
-	{
-		return E_FAIL;
-	}
-	Add_Element(TEXT("Active_Icon"), m_pActive_Icon);
 
 	return S_OK;
 }

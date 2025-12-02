@@ -40,6 +40,7 @@ private:
 	_wchar* Save_ModelName(const _char* Category);
 	void Load_KeyFrame(const _char* Name);
 	void Find_Anim();
+	void Save_KeyFrame();
 
 private:
 	vector<CGameObject*>	m_Objects;
@@ -55,6 +56,9 @@ private:
 	_wchar					m_wszPreLayer[MAX_PATH];
 	_char					m_DummyPath[MAX_PATH];
 	_char					m_FindAnimName[256] = {};
+	string					m_SelectedKey;
+	_int					m_iAnimIndex = {};
+
 	class CPlayer* m_Test = { nullptr };
 public:
 	static CLevel_ObjectViewer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID);

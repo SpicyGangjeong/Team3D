@@ -11,6 +11,21 @@ void CPlayerInfo::Update(_float fTimeDelta)
 {
 }
 
+void CPlayerInfo::Update_CameraCoordinateSystem(_float3& vLook, _float3& vRight)
+{
+	m_vCameraLookDir = vLook;
+	m_vCameraRightDir = vRight;
+}
+
+pair<_float3, _float3> CPlayerInfo::Get_CameraCoordinateSystem()
+{
+	return { m_vCameraLookDir, m_vCameraRightDir };
+}
+
+void CPlayerInfo::Change_Level()
+{
+}
+
 HRESULT CPlayerInfo::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContex)
 {
 	m_pGameInstance = CGameInstance::GetInstance();

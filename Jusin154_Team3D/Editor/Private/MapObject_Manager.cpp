@@ -10,6 +10,7 @@
 #include "BuildingContainer.h"
 #include "MapElement_Static.h"
 #include "MapElement_Interactable.h"
+#include "MapElement_Light.h"
 
 
 CMapObject_Manager::CMapObject_Manager(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -28,7 +29,7 @@ CMapObject_Manager::CMapObject_Manager(const CMapObject_Manager& rhs)
 
 HRESULT CMapObject_Manager::Initialize_Prototype(vector<_wstring>& ModelPrototypeTags, vector<filesystem::path>& ModelPrototypePaths)
 {
-	/*for (_uint i = 0 ; i < ModelPrototypeTags.size(); ++i)
+	for (_uint i = 0 ; i < ModelPrototypeTags.size(); ++i)
 	{
 		if (_wstring::npos != ModelPrototypeTags[i].find(L"Lod"))
 		{
@@ -41,7 +42,7 @@ HRESULT CMapObject_Manager::Initialize_Prototype(vector<_wstring>& ModelPrototyp
 
 		m_ModelPrototypeTags.push_back(ModelPrototypeTags[i]);
 		m_ModelPrototypePaths.push_back(ModelPrototypePaths[i]);
-	}*/
+	}
 
 	return S_OK;
 }
@@ -57,6 +58,11 @@ HRESULT CMapObject_Manager::Initialize(void* pArg)
 	m_iContainerObjectIndex = 99;
 	//m_pContainer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Building"))->Get_Object<CBuildingContainer>();
 
+	if (FAILED(Load_MapData("Map1129")))
+		return E_FAIL;
+	/*if (FAILED(Load_LightObject("LightElement")))
+		return E_FAIL;
+	*/
 	return S_OK;
 }
 
@@ -74,12 +80,13 @@ void CMapObject_Manager::Priority_Update(_float fTimeDelta)
 
 void CMapObject_Manager::Update(_float fTimeDelta)
 {
-	GUI::Begin("File");
-	const char* ModeNames[3] =
+	GUI::Begin("Map Manager");
+	const char* ModeNames[4] =
 	{
 		"CONTAINER",
 		"ELEMENT_STATIC",
-		"ELEMENT_INTERACT"
+		"ELEMENT_INTERACT",
+		"ELEMENT_LIGHT"
 	};
 	GUI::Combo("MODE", (_int*)(&m_eType), ModeNames, IM_ARRAYSIZE(ModeNames));
 	GUI::Checkbox("Model View", &m_bModelVisable);
@@ -105,6 +112,20 @@ void CMapObject_Manager::Update(_float fTimeDelta)
 			Save_ContainerData("ContainerTest", m_szSaveContainerName);
 		}
 	}
+	else if (ADD_TYPE::ELEMENT_LIGHT == m_eType)
+	{
+		GUI::InputInt("GlassIndex", &m_iGlassIndex);
+		m_iGlassIndex = min(1, m_iGlassIndex);
+		if (GUI::Button("Save_LightElements"))
+		{
+			Save_LightObject(m_szSaveContainerName);
+		}
+		if (GUI::Button("Load_LightElements"))
+		{
+			Load_LightObject(m_szSaveContainerName);
+		}
+	}
+
 	if (GUI::Button("Load_Container"))
 	{
 		Load_ContainerData("ContainerTest", m_szSaveContainerName);
@@ -258,6 +279,32 @@ HRESULT CMapObject_Manager::Save_MapData(const _char* pFileName)
 		Rotation->SetAttribute("z", vRotation.z);
 		container->InsertEndChild(Rotation);
 #pragma endregion
+
+#pragma region BOUNDING_BOX
+		tinyxml2::XMLElement* MapContainerType = doc.NewElement("MapContainerType");
+		if(pContainerObject->Is_OcclusionPassed())
+			MapContainerType->SetAttribute("type", 0); // Building
+		else
+			MapContainerType->SetAttribute("type", 1); // Road
+
+		container->InsertEndChild(MapContainerType);
+
+		_float3 vMinPosition = dynamic_cast<CBuildingContainer*>(pGamObject)->Get_BoundingBox_Min();
+		_float3 vMaxPosition = dynamic_cast<CBuildingContainer*>(pGamObject)->Get_BoundingBox_Max();
+
+		tinyxml2::XMLElement* BoundingBox_Min = doc.NewElement("BoundingBox_Min");
+		BoundingBox_Min->SetAttribute("x", vMinPosition.x);
+		BoundingBox_Min->SetAttribute("y", vMinPosition.y);
+		BoundingBox_Min->SetAttribute("z", vMinPosition.z);
+		container->InsertEndChild(BoundingBox_Min);
+
+		tinyxml2::XMLElement* BoundingBox_Max = doc.NewElement("BoundingBox_Max");
+		BoundingBox_Max->SetAttribute("x", vMaxPosition.x);
+		BoundingBox_Max->SetAttribute("y", vMaxPosition.y);
+		BoundingBox_Max->SetAttribute("z", vMaxPosition.z);
+		container->InsertEndChild(BoundingBox_Max);
+#pragma endregion
+
 
 #pragma region SAVE_PARTOBJECT
 
@@ -710,6 +757,8 @@ HRESULT CMapObject_Manager::Load_MapData(const _char* pFileName)
 		}
 #pragma endregion
 
+		pContainerObject->Set_BoundingBox();
+
 #pragma region ADD_COLLISION
 		for (auto* Collision = Container->FirstChildElement("Collision"); Collision; Collision = Collision->NextSiblingElement("Collision"))
 		{
@@ -1110,9 +1159,143 @@ HRESULT CMapObject_Manager::Load_ContainerToMapObject(const _char* pFileName, co
 
 	return S_OK;
 }
+
+HRESULT CMapObject_Manager::Save_LightObject(const _char* pFileName)
+{
+	CLayer* pLayer;
+
+	pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Element_Light"));
+
+	if (nullptr == pLayer)
+		return S_OK;
+
+	tinyxml2::XMLDocument doc;
+	string strPath = "../Bin/Resources/Data/Map/" + string(pFileName) + ".xml";
+
+	tinyxml2::XMLError loadResult = doc.LoadFile(strPath.c_str());
+
+	doc.Clear();
+	doc.InsertFirstChild(doc.NewDeclaration());
+
+	tinyxml2::XMLElement* root = doc.NewElement("MapLightObjects");
+	doc.InsertEndChild(root);
+
+	
+
+	if (nullptr != pLayer)
+	{
+		const list<CGameObject*>* pList = pLayer->Get_Objects();
+
+		for (auto pGamObject : *pList)
+		{
+			CMapElement* pElement = dynamic_cast<CMapElement*>(pGamObject);
+
+			if (nullptr == pElement)
+				return E_FAIL;
+
+			if (FAILED(pElement->Save_XML(doc, root)))
+				return E_FAIL;
+		}
 #pragma endregion
+	}
+
+	if (doc.SaveFile(strPath.c_str()) != tinyxml2::XML_SUCCESS) {
+		MSG_BOX("Failed to Save File");
+	}
+	else
+	{
+		MSG_BOX("Succeed to Save File");
+	}
+
+	return S_OK;
+}
+HRESULT CMapObject_Manager::Load_LightObject(const _char* pFileName)
+{
+	tinyxml2::XMLDocument xmlDoc;
+
+	string strPath = "../Bin/Resources/Data/Map/" + string(pFileName) + ".xml";
+
+	if ((tinyxml2::XML_SUCCESS != xmlDoc.LoadFile(strPath.c_str())))
+		return E_FAIL;
+
+	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("MapLightObjects");
+
+	if (nullptr == root)
+	{
+		MSG_BOX("Failed to Find root");
+		return S_OK;
+	}
+
+	for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
+	{
+		CMapElement_Light::MAPELEMENT_LIGHT_DESC Desc = {};
+
+		/* Model Prototypes */
+		Object->QueryUnsignedAttribute("Lod_Level", &Desc.iMaxLodLevel);
+
+		string strTag = {};
+		for (auto* PrototypeTag = Object->FirstChildElement("PrototypeTag"); PrototypeTag; PrototypeTag = PrototypeTag->NextSiblingElement("PrototypeTag"))
+		{
+			strTag = PrototypeTag->GetText();
+
+			Desc.ModelPrototypeTags.push_back(CMyTools::ToWstring(strTag));
+		}
+
+		/* Transform */
+		auto* Position = Object->FirstChildElement("Position");
+		Position->QueryFloatAttribute("x", &Desc.vPosition.x);
+		Position->QueryFloatAttribute("y", &Desc.vPosition.y);
+		Position->QueryFloatAttribute("z", &Desc.vPosition.z);
+
+		auto* Scale = Object->FirstChildElement("Scale");
+		Scale->QueryFloatAttribute("x", &Desc.vScale.x);
+		Scale->QueryFloatAttribute("y", &Desc.vScale.y);
+		Scale->QueryFloatAttribute("z", &Desc.vScale.z);
+
+		auto* Rotation = Object->FirstChildElement("Rotation");
+		Rotation->QueryFloatAttribute("x", &Desc.vRotation.x);
+		Rotation->QueryFloatAttribute("y", &Desc.vRotation.y);
+		Rotation->QueryFloatAttribute("z", &Desc.vRotation.z);
+
+		/* Light Desc */
+		auto* Diffuse = Object->FirstChildElement("Diffuse");
+		Diffuse->QueryFloatAttribute("x", &Desc.vDiffuse.x);
+		Diffuse->QueryFloatAttribute("y", &Desc.vDiffuse.y);
+		Diffuse->QueryFloatAttribute("z", &Desc.vDiffuse.z);
+
+		auto* Ambient = Object->FirstChildElement("Ambient");
+		Ambient->QueryFloatAttribute("x", &Desc.vAmbient.x);
+		Ambient->QueryFloatAttribute("y", &Desc.vAmbient.y);
+		Ambient->QueryFloatAttribute("z", &Desc.vAmbient.z);
+
+		auto* Specular = Object->FirstChildElement("Specular");
+		Specular->QueryFloatAttribute("x", &Desc.vSpecular.x);
+		Specular->QueryFloatAttribute("y", &Desc.vSpecular.y);
+		Specular->QueryFloatAttribute("z", &Desc.vSpecular.z);
+
+		auto* PosOffset = Object->FirstChildElement("PosOffset");
+		PosOffset->QueryFloatAttribute("x", &Desc.vPosOffset.x);
+		PosOffset->QueryFloatAttribute("y", &Desc.vPosOffset.y);
+		PosOffset->QueryFloatAttribute("z", &Desc.vPosOffset.z);
+
+		auto* Info = Object->FirstChildElement("Info");
+		Info->QueryUnsignedAttribute("GlassIndex", &Desc.iGlassMeshIndex);
+		Info->QueryFloatAttribute("BloomStrength", &Desc.fBloomStregth);
+		Info->QueryFloatAttribute("Range", &Desc.fRange);
+		_uint iPow = {};
+		Info->QueryUnsignedAttribute("Pow", &iPow);
+
+		Desc.isPow = 0 == iPow ? false : true;
+	
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Light>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Light"), &Desc)))
+			return E_FAIL;
+	}
+	
+	MSG_BOX("Successed to Load File");
 
 
+	return S_OK;
+}
 void CMapObject_Manager::Update_PrototypeList()
 {
 	GUI::Begin("Model Prototype List");
@@ -1128,23 +1311,10 @@ void CMapObject_Manager::Update_PrototypeList()
 
 		if (ImGui::Button(CMyTools::ToString(Tag).c_str()))
 		{
-			switch (m_eType)
-			{
-			case Editor::CMapObject_Manager::ADD_TYPE::CONTAINER:
+			if (ADD_TYPE::CONTAINER == m_eType)
 				Create_PartObject(Tag);
-				break;
-
-			case Editor::CMapObject_Manager::ADD_TYPE::ELEMENT_STATIC:
-				Create_Elemnt_Static(Tag);
-				break;
-
-			case Editor::CMapObject_Manager::ADD_TYPE::ELEMENT_INTERACT:
-				Create_Elemnt_Interact(Tag);
-				break;
-			default:
-				break;
-			}
-	
+			else
+				Create_Elemnt(Tag);
 		}
 	}
 	GUI::End();
@@ -1263,6 +1433,8 @@ void CMapObject_Manager::Update_ObjectList()
 			pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Element_Static"));
 		else if (ADD_TYPE::ELEMENT_INTERACT == m_eType)
 			pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Element_Interact"));
+		else if (ADD_TYPE::ELEMENT_LIGHT == m_eType)
+			pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Element_Light"));
 		
 		if (nullptr == pLayer)
 		{
@@ -1342,6 +1514,17 @@ void CMapObject_Manager::Update_ContainerObject()
 
 	_uint iIndex = {};
 
+	if (GUI::Button("Set Box"))
+	{
+		if (false == (*pList).empty())
+		{
+			for (auto& pObject : (*pList))
+			{
+				dynamic_cast<CBuildingContainer*>(pObject)->Set_BoundingBox();
+			}
+		}
+	}
+
 	if (false == (*pList).empty())
 	{
 		CGameObject* pSelectObject = { nullptr };
@@ -1401,13 +1584,12 @@ void CMapObject_Manager::Create_PartObject(_wstring& strPrototypeTag)
 	m_MapObjects.push_back(pMapObject);
 }
 
-void CMapObject_Manager::Create_Elemnt_Static(_wstring& strPrototypeTag)
+void CMapObject_Manager::Create_Elemnt(_wstring& strPrototypeTag)
 {
-	vector<_uint> LodModelIndices;
-
 	MAPOBJECT_LOD_DESC Desc = {};
-
+	CMapElement_Light::MAPELEMENT_LIGHT_DESC Light_Desc = {};
 	vector<_wstring> PrototypeTags;
+	vector<_uint> LodModelIndices;
 
 	Find_Lod_Prototype(strPrototypeTag, LodModelIndices);
 
@@ -1419,50 +1601,40 @@ void CMapObject_Manager::Create_Elemnt_Static(_wstring& strPrototypeTag)
 		PrototypeTags.push_back(strLodTag);
 	}
 
-	Desc.iMaxLodLevel = (_uint)LodModelIndices.size() - 1;
-	Desc.ModelPrototypeTags = PrototypeTags;
-	Desc.pParentTransform = m_pTransformCom;
-	Desc.vPosition = _float3(0.f, 0.f, 0.f);
-	Desc.vRotation = _float3(0.f, 0.f, 0.f);
-	Desc.vScale = _float3(1.f, 1.f, 1.f);
-	Desc.pModelPathIndices = &LodModelIndices;
+	Light_Desc.iMaxLodLevel = Desc.iMaxLodLevel = (_uint)LodModelIndices.size() - 1;
+	Light_Desc.ModelPrototypeTags = Desc.ModelPrototypeTags = PrototypeTags;
+	Light_Desc.pParentTransform = Desc.pParentTransform = m_pTransformCom;
+	Light_Desc.vPosition = Desc.vPosition = _float3(0.f, 0.f, 0.f);
+	Light_Desc.vRotation = Desc.vRotation = _float3(0.f, 0.f, 0.f);
+	Light_Desc.vScale = Desc.vScale = _float3(1.f, 1.f, 1.f);
+	Light_Desc.pModelPathIndices  =Desc.pModelPathIndices = &LodModelIndices;
 
-	CMapElement_Static* pMapObject = { nullptr };
-	const string strKey = CMyTools::ToString(strPrototypeTag);
-
-	m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Static>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Static"), &Desc);
-}
-
-void CMapObject_Manager::Create_Elemnt_Interact(_wstring& strPrototypeTag)
-{
-	vector<_uint> LodModelIndices;
-
-	MAPOBJECT_LOD_DESC Desc = {};
-
-	vector<_wstring> PrototypeTags;
-
-	Find_Lod_Prototype(strPrototypeTag, LodModelIndices);
-
-	PrototypeTags.push_back(strPrototypeTag);
-
-	for (_uint i = 0; i < LodModelIndices.size(); ++i)
+	if (ADD_TYPE::ELEMENT_STATIC == m_eType)
 	{
-		_wstring strLodTag = strPrototypeTag + L"_Lod" + to_wstring(i + 1);
-		PrototypeTags.push_back(strLodTag);
+		m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Static>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Static"), &Desc);
 	}
+	else if (ADD_TYPE::ELEMENT_INTERACT == m_eType)
+	{
+		m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Interactable>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Interact"), &Desc);
+	}
+	else if (ADD_TYPE::ELEMENT_LIGHT == m_eType)
+	{
+		Light_Desc.isPow = false;
+		Light_Desc.iGlassMeshIndex = m_iGlassIndex;
+		Light_Desc.fBloomStregth = 4.5f;
+		Light_Desc.fRange = 7.f;
+		Light_Desc.vDiffuse = _float4(1.f, 0.6f, 0.2f, 1.f);
+		Light_Desc.vAmbient = _float4(1.f, 0.64f, 0.2f, 1.f);
+		Light_Desc.vSpecular = _float4(0.f, 0.f, 0.f, 1.f);
+		Light_Desc.vPosOffset = _float4(0.f, 3.3f, 0.f, 1.f);
+		
+		CMapElement_Light* pElement = { nullptr };
 
-	Desc.iMaxLodLevel = (_uint)LodModelIndices.size() - 1;
-	Desc.ModelPrototypeTags = PrototypeTags;
-	Desc.pParentTransform = m_pTransformCom;
-	Desc.vPosition = _float3(0.f, 0.f, 0.f);
-	Desc.vRotation = _float3(0.f, 0.f, 0.f);
-	Desc.vScale = _float3(1.f, 1.f, 1.f);
-	Desc.pModelPathIndices = &LodModelIndices;
+		m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Light>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Light"), &Light_Desc, nullptr, &pElement);
 
-	CMapElement_Interactable* pMapObject = { nullptr };
-	const string strKey = CMyTools::ToString(strPrototypeTag);
-
-	m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Interactable>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Interact"), &Desc);
+		m_pSelectElemnt = pElement;
+	}
+	
 }
 
 _bool CMapObject_Manager::Find_Lod_Prototype(_wstring strPrototypeTag, vector<_uint>& LodModelIndices)
@@ -1526,6 +1698,11 @@ CGameObject* CMapObject_Manager::Clone(void* pArg, CGameObject* pOwner)
 void CMapObject_Manager::Free()
 {
 	__super::Free();
+
+	m_ModelPrototypeTags.clear();
+	m_PartObjectKeyCount.clear();
+	m_LODModelPrototypeTags.clear();
+	m_ModelPrototypePaths.clear();
 
 	for (auto& pObject : m_MapObjects)
 	{

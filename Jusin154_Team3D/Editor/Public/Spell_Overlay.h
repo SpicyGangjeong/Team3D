@@ -27,15 +27,20 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 
 private:
+	void Compute_UI(_uint SpellID);
+
+private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
 	CTexture* m_pDiffuse_TextureCom2 = { nullptr };
+	CTexture* m_pDiffuse_TextureCom3 = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
 	_int m_iImageFrameX{};
 	_int m_iImageFrameY{};
 	_float m_fFrame{};
+	_float4 m_vUV{};
 
 public:
 	static CSpell_Overlay* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

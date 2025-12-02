@@ -3,12 +3,12 @@
 #include "GameInstance.h"
 
 CMissionBanner_Key::CMissionBanner_Key(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-    :CElementObject(pDevice, pContext)
+	:CElementObject(pDevice, pContext)
 {
 }
 
 CMissionBanner_Key::CMissionBanner_Key(const CMissionBanner_Key& rhs)
-    :CElementObject(rhs)
+	:CElementObject(rhs)
 {
 }
 
@@ -37,10 +37,52 @@ HRESULT CMissionBanner_Key::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	m_fTimeMult = 3.f;
+	m_fTimeMult = 1.f;
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 3.f;
+	m_fPI = AI_MATH_TWO_PI_F;
+	Compute_UV();
+	Compute_Alphabat('V');
+	m_eType = QUESTYPE::MAIN;
 	return S_OK;
+}
+
+void CMissionBanner_Key::QuestType(QUESTYPE eType)
+{
+	m_eType = eType;
+}
+
+void CMissionBanner_Key::Compute_Alphabat(_tchar Alphabet)
+{
+	_uint Number = CMyTools::AlphabetToInt(Alphabet);
+
+	_float2 fImage_Size = { 320.f, 384.f };
+
+	_uint iXCount = 5;
+	_uint iYCount = 6;
+
+	_float frameWidth = 64.f;
+	_float frameHeight = 64.f;
+
+	_uint iframeX = Number % iXCount;
+	_uint iframeY = Number / iXCount;
+
+	_float2 UVStart;
+	UVStart.x = iframeX * frameWidth / fImage_Size.x;
+	UVStart.y = iframeY * frameHeight / fImage_Size.y;
+
+	_float2 UVEnd;
+	UVEnd.x = UVStart.x + (frameWidth / fImage_Size.x);
+	UVEnd.y = UVStart.y + (frameHeight / fImage_Size.y);
+
+	m_vUV = _float4(UVStart.x, UVStart.y, UVEnd.x, UVEnd.y);
+}
+
+void CMissionBanner_Key::Compute_UV()
+{
+	m_vKeyHold = _float4(-9.f, -9.f, 94.f, 94.f);
+	m_vKey = _float4(18.f, 18.5f, 40.f, 40.f);
+	m_vActive_Icon = _float4(80.f, 10.f, 36.f, 36.f);
 }
 
 void CMissionBanner_Key::Priority_Update(_float fTimeDelta)
@@ -83,7 +125,39 @@ void CMissionBanner_Key::Update(_float fTimeDelta)
 		}
 	}
 
-	m_fTime += fTimeDelta * m_fTimeMult;
+	if (m_bKeyHold == false)
+	{
+		if (m_pGameInstance->Key_Pressing(DIK_V))
+		{
+			m_fTime += fTimeDelta * (1.f / m_fTimeMult);
+		}
+		else
+		{
+			m_fTime = 0.f;
+			m_bKeyHold = false;
+		}
+	}
+
+	if (m_pGameInstance->Key_Up(DIK_V))
+	{
+		m_bKeyHold = false;
+	}
+
+	if (m_fTime >= 1.f)
+	{
+		m_fTime = 0.f;
+		m_bisHoldOn = !m_bisHoldOn;
+		m_bKeyHold = true;
+	}
+
+	if (m_bisHoldOn)
+	{
+		static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Mission_On"));
+	}
+	else
+	{
+		static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Mission_Off"));
+	}
 	__super::Update(fTimeDelta);
 }
 
@@ -94,7 +168,7 @@ void CMissionBanner_Key::Late_Update(_float fTimeDelta)
 		return;
 	}
 	if (m_bVisible) {
-			m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
+		m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
 		__super::Late_Update(fTimeDelta);
 	}
 }
@@ -104,7 +178,7 @@ HRESULT CMissionBanner_Key::Render()
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::ALPHABLEND)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::HOLD_ROTATION)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
@@ -140,11 +214,27 @@ HRESULT CMissionBanner_Key::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+	if (FAILED(m_pDiffuse_TextureCom1->Bind_ShaderResource(m_pShaderCom, "g_Texture1", 0)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pDiffuse_TextureCom2->Bind_ShaderResource(m_pShaderCom, "g_Texture2", 0)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pDiffuse_TextureCom3->Bind_ShaderResource(m_pShaderCom, "g_Texture3", 0)))
+	{
+		return E_FAIL;
+	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float))))
 	{
 		return E_FAIL;
 	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fTime", &m_fTime, sizeof(_float))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fPI", &m_fPI, sizeof(_float))))
 	{
 		return E_FAIL;
 	}
@@ -160,6 +250,30 @@ HRESULT CMissionBanner_Key::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCurrent_Size", &m_vScale, sizeof(_float2))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fImageSipos1", &m_vKeyHold, sizeof(_float4))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fImageSipos2", &m_vKey, sizeof(_float4))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fImageUV", &m_vUV, sizeof(_float4))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fImageSipos3", &m_vActive_Icon, sizeof(_float4))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iQuestType", &m_eType, sizeof(_uint))))
+	{
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
@@ -170,6 +284,18 @@ HRESULT CMissionBanner_Key::Ready_Components(void* pArg)
 		return E_FAIL;
 	}
 	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_MissionBanner_Key"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_Finishi_Rect"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_Atlas_Keyboard"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom2), nullptr)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("ActiveMission_Icon"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom3), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -211,6 +337,9 @@ void CMissionBanner_Key::Free()
 	__super::Free();
 
 	SAFE_RELEASE(m_pDiffuse_TextureCom);
+	SAFE_RELEASE(m_pDiffuse_TextureCom1);
+	SAFE_RELEASE(m_pDiffuse_TextureCom2);
+	SAFE_RELEASE(m_pDiffuse_TextureCom3);
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }

@@ -12,7 +12,7 @@ class ENGINE_DLL CGameInstance final : public CBase
 private:
 	CGameInstance();
 	virtual ~CGameInstance() = default;
-
+	mutex m_mtxLoadModelLock = {};
 public:
 	HRESULT Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11Device** ppDevice, ID3D11DeviceContext** ppContext);
 	void Update_Engine(_float fTimeDelta);
@@ -153,6 +153,7 @@ public:
 	HRESULT Add_RenderTarget(const _wstring& strRenderTargetKey, _uint iSizeX, _uint iSizeY, DXGI_FORMAT ePixelFormat, const _float4& vClearColor);
 	HRESULT Add_MRT(const _wstring& strMultiRenderTargetKey, const _wstring& strRenderTargetKey);
 	HRESULT Begin_MRT(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV = nullptr);
+	HRESULT Begin_MRT_NonClear(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV = nullptr);
 	HRESULT Begin_MRT_Include_BackBuffer(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV = nullptr);
 	HRESULT Begin_MRT_NO_DepthStencil(const _wstring& strMRTTag);
 	HRESULT End_MRT();
@@ -193,9 +194,12 @@ public:
 #pragma region PhysX_Manager
 	PSX::PxMaterial* Create_Material(_float3* vMatInfo);
 	void RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh);
+	void RegistHeight(const _tchar* pName, PSX::PxHeightFieldDesc& Desc);
 	PSX::PxRigidDynamic* Add_DynamicActor(CRigidBody_Dynamic& RigidBody);
 	PSX::PxRigidStatic* Add_StaticActor(CRigidBody_Static& RigidBody);
 	PSX::PxRevoluteJoint* Create_PxRevoluteJoint(PSX::PxRigidActor* pActorFrame, PSX::PxTransform& pxLocalWallFrame, PSX::PxRigidActor* pActorObject, PSX::PxTransform& pxLocalActorFrame);
+
+	_bool SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer);
 
 	PSX::PxController*	Add_CapsuleController(PSX::PxCapsuleControllerDesc& Desc);
 	PSX::PxController*	Add_BoxController(PSX::PxBoxControllerDesc& Desc);
@@ -209,6 +213,7 @@ public:
 	HRESULT SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
 #endif // EDITOR_PROJECT
 	HRESULT LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes); // 모델 불러왔던 경로에 그대로 있음
+	void Add_Editor_Plane(PhsXUserData& PlaneData);
 #pragma endregion
 #pragma region THREADHOLDER
 	template<class Function, class... Args>
@@ -220,6 +225,14 @@ public:
 		);
 	}
 #pragma endregion
+
+#pragma region FOG
+	void	Set_FogDensity(_float fFogDensity);
+	void	Set_FogColor(_float4& vFogColor);
+
+	HRESULT Bind_FogValue(class CShader* pShader);
+#pragma endregion
+
 
 public:
 	void Add_ModelToMap(const _char* filePath, CModel* pModel);
@@ -254,6 +267,8 @@ private:
 	class CPhysX_Manager*			m_pPhysX_Manager = { nullptr };
 	class CPicking*					m_pPicking = { nullptr };
 	class CThreadHolder*			m_pThreadHolder = { nullptr };
+	class CFog*						m_pFog = { nullptr };
+	
 
 #ifdef _DEBUG
 private:

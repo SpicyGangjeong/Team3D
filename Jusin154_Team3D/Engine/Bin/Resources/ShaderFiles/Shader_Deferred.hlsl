@@ -11,11 +11,22 @@ uint g_iMaxShadowWidth;
 uint g_iMaxShadowHeight;
 float2 g_vResolution;
 
+uint g_iBloomEmbossingPass;
+float g_fThreshold;
+float g_fDepthThreshold;
+float g_fFocusDistance;
+float g_fFarBlurStart;
+float g_fFarBlurEnd;
+float g_fDOFBlurMultiplier;
+
 Texture2D g_Texture;
 
 float g_fLightRange;
 float g_fSpotInnerAngle;
 float g_fSpotOuterAngle;
+
+bool  g_bUsePowerLightAttenuation;
+float g_fLightAttenuationPower;
 
 vector g_vLightDir;
 vector g_vLightPos;
@@ -38,11 +49,16 @@ Texture2D g_BlurWeightTexture;
 Texture2D g_BlurWeightXTexture;
 
 Texture2D g_SurfaceTexture;
+Texture2D g_OriginalTexture;
 
 
 vector g_vLightDiffuse;
 vector g_vLightAmbient;
 vector g_vLightSpecular;
+
+float g_fFogDensity;
+float g_fFogPow;
+vector g_vFogColor;
 
 struct VS_IN
 {
@@ -89,7 +105,8 @@ struct PS_IN
 
 struct PS_OUT_BACKBUFFER
 {
-    float4 vBackBuffer : SV_TARGET0;
+    float4 vBackBuffer  : SV_TARGET0;
+    float4 vEnvironment : SV_Target1;
 };
 
 PS_OUT_BACKBUFFER PS_MAIN_DEBUG(PS_IN In)
@@ -97,7 +114,7 @@ PS_OUT_BACKBUFFER PS_MAIN_DEBUG(PS_IN In)
     PS_OUT_BACKBUFFER Out;
     
     Out.vBackBuffer = g_Texture.Sample(DefaultSampler, In.vTexcoord);
-    
+    Out.vEnvironment = float4(0.f, 0.f, 0.f, 0.f);
     return Out;
 }
 
@@ -119,7 +136,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     
     float fViewZ = vDepth.y * g_fFar;
     
-    float4 vWorldPosition;
+    float4 vWorldPosition; // 월드 복원
     {
         vWorldPosition.x = uv.x * 2 - 1;
         vWorldPosition.y = uv.y * -2 + 1;
@@ -136,6 +153,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     float fOcclusion = 1.f;
     float fAttenuation = 1.f;
 
+    float fCameraDistance = length(g_vCamPosition.xyz - vWorldPosition.xyz);
     float3 vToView = normalize(g_vCamPosition.xyz - vWorldPosition.xyz); // 픽셀에서 카메라로
     float3 vToLight = normalize(-g_vLightDir.xyz); // 픽셀에서 라이트로
     
@@ -146,7 +164,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
         fMetallic = vMRO.r;
         fRoughness = vMRO.g;
         fOcclusion = vMRO.b;
-
+        
         vF0 = lerp(float3(0.04f, 0.04f, 0.04f), vAlbedo, fMetallic);
     }
     else if (true == AlmostEqual3(vDepth.b, AI_TEXTURE_TYPE_SPECULAR)) // Specular
@@ -154,9 +172,9 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
         fMetallic = 0.f;
         
         float3 vSRO = g_SurfaceTexture.Sample(DefaultSampler, uv).rgb;
-        vF0             = vSRO.rrr;
-        fRoughness      = vSRO.g;
-        fOcclusion      = vSRO.b;
+        vF0 = vSRO.rrr;
+        fRoughness = vSRO.g;
+        fOcclusion = vSRO.b;
     }
     else // basic Lighting(phong blinn) // if you were here, you miss some assets.
     {
@@ -166,14 +184,24 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
         return Out;
     }
     
-    float fDiffuseAOStrength = lerp(0.3f, 5.f, fOcclusion);
+    //float fDiffuseAOStrength = lerp(0.3f, 3.f, fOcclusion);
+    { // 수치조정 // 디렉셔널
+        float fMinRoughness = 0.05f;
+        fRoughness = max(fRoughness, fMinRoughness); // 러프니스 최소값 보장
+        fRoughness = saturate(saturate(fCameraDistance * 0.01f) * 0.1f + fRoughness); // 거리기반 러프니스 ( 대충 멀수록 반짝반짝한건 더 뭉개져서 표현 )
+        vF0 = min(vF0, 0.9f); // 메탈릭 상한선
+    }
+    
     
     PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
+    PBR_Out.vShade *= fOcclusion;
     
-    PBR_Out.vShade *= fDiffuseAOStrength;
+    float3 vAmbient = g_vLightAmbient.rgb * fOcclusion * fAttenuation;
+    float3 vFinalDiffuse = PBR_Out.vShade + vAmbient;
+    float3 vFinalSpecular = PBR_Out.vSpecular * g_vLightSpecular.rgb;
 
-    Out.vShade = float4(PBR_Out.vShade, 1.f);
-    Out.vSpecular = float4(PBR_Out.vSpecular, 1.f);
+    Out.vShade = float4(vFinalDiffuse, 1.f);
+    Out.vSpecular = float4(vFinalSpecular, 1.f);
     
     return Out;
 }
@@ -204,31 +232,46 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     float3 vF0 = float3(0.04f, 0.04f, 0.04f);
     float fMetallic = 0.f;
     float fRoughness = 0.5f;
-    
     float fOcclusion = 1.f;
     float fAttenuation = 1.f;
     
-    float3 vToView = normalize(g_vCamPosition.xyz - vWorldPosition.xyz); // 픽셀에서 카메라로
-    float3 vToLight = normalize(g_vLightPos.xyz - vWorldPosition.xyz); // 픽셀에서 라이트로
+    float3 vFinalLightPosition = g_vLightPos.xyz + g_vLightPosOffset.xyz;
     
+    float fCameraDistance   = length(g_vCamPosition.xyz     - vWorldPosition.xyz);
+    float fLightDistance    = length(vFinalLightPosition - vWorldPosition.xyz);
+    float3 vToView          = normalize(g_vCamPosition.xyz  - vWorldPosition.xyz); // 픽셀에서 카메라로
+    float3 vToLight         = normalize(vFinalLightPosition - vWorldPosition.xyz); // 픽셀에서 라이트로
+    
+    if (g_bUsePowerLightAttenuation)
     {
-        float fDistance = length(vToLight);
-        fAttenuation = saturate((g_fLightRange - fDistance) / g_fLightRange);
-        if (fAttenuation <= 0.f) { discard; }
+        fAttenuation = PowerAttenuation(g_fLightRange, fLightDistance, g_fLightAttenuationPower);
     }
-
+    else
+    {
+        fAttenuation = LinearAttenuation(g_fLightRange, fLightDistance);
+    }
+    
+    
+    if (fAttenuation <= 0.f)
+    {
+        Out.vShade = float4(0.f, 0.f, 0.f, 1.f);
+        Out.vSpecular = float4(0.f, 0.f, 0.f, 1.f);
+        return Out;
+    }
+    
     if (true == AlmostEqual3(vDepth.b, AI_TEXTURE_TYPE_METALNESS)) // Metallic
     {
         float3 vMRO = g_SurfaceTexture.Sample(DefaultSampler, uv).rgb;
         fMetallic = vMRO.r;
         fRoughness = vMRO.g;
         fOcclusion = vMRO.b;
-
+        
         vF0 = lerp(float3(0.04f, 0.04f, 0.04f), vAlbedo, fMetallic);
     }
     else if (true == AlmostEqual3(vDepth.b, AI_TEXTURE_TYPE_SPECULAR)) // Specular
     {
         fMetallic = 0.f;
+        
         float3 vSRO = g_SurfaceTexture.Sample(DefaultSampler, uv).rgb;
         vF0 = vSRO.rrr;
         fRoughness = vSRO.g;
@@ -242,10 +285,24 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
         return Out;
     }
     
+    //float fDiffuseAOStrength = lerp(0.3f, 3.f, fOcclusion);
+    { // 수치조정 // 점광원
+        float fMinRoughness = 0.05f;
+        fRoughness = max(fRoughness, fMinRoughness); // 러프니스 최소값 보장
+        fRoughness = saturate(saturate(fCameraDistance * 0.01f) * 0.1f + fRoughness); // 거리기반 러프니스 ( 대충 멀수록 반짝반짝한건 더 뭉개져서 표현 )
+        vF0 = min(vF0, 0.9f); // 메탈릭 상한선
+    }
+    
     PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
     
-    Out.vShade = float4(PBR_Out.vShade, 1.f);
-    Out.vSpecular = float4(PBR_Out.vSpecular, 1.f);
+    PBR_Out.vShade *= fOcclusion;
+
+    float3 vAmbient = g_vLightAmbient.rgb * fOcclusion * fAttenuation;
+    float3 vFinalDiffuse = PBR_Out.vShade + vAmbient;
+    float3 vFinalSpecular = PBR_Out.vSpecular * g_vLightSpecular.rgb;
+
+    Out.vShade = float4(vFinalDiffuse, 1.f);
+    Out.vSpecular = float4(vFinalSpecular, 1.f);
     
     return Out;
 }
@@ -262,7 +319,7 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
     
     float fViewZ = vDepth.y * g_fFar;
     
-    float4 vWorldPosition;
+    float4 vWorldPosition; // 월드 복원
     {
         vWorldPosition.x = uv.x * 2 - 1;
         vWorldPosition.y = uv.y * -2 + 1;
@@ -279,18 +336,43 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
     float fOcclusion = 1.f;
     float fAttenuation = 1.f;
     
+    float fCameraDistance = length(g_vCamPosition.xyz - vWorldPosition.xyz);
+    float fLightDistance = length(g_vLightPos.xyz - vWorldPosition.xyz);
     float3 vToView = normalize(g_vCamPosition.xyz - vWorldPosition.xyz); // 픽셀에서 카메라로
     float3 vToLight = normalize(g_vLightPos.xyz - vWorldPosition.xyz); // 픽셀에서 라이트로
+    float3 vLightToPixel = -vToLight;
     
+    
+    if (g_bUsePowerLightAttenuation)
     {
-        float fDistance = length(vToLight);
-        fAttenuation = saturate((g_fLightRange - fDistance) / g_fLightRange);
-        if (fAttenuation <= 0.f) { discard; }
+        fAttenuation = PowerAttenuation(g_fLightRange, fLightDistance, g_fLightAttenuationPower);
     }
-    float fCosAngle = dot(vToView, g_vLightDir.xyz);
-    if (fCosAngle < g_fSpotOuterAngle) { discard; }
+    else
+    {
+        fAttenuation = LinearAttenuation(g_fLightRange, fLightDistance);
+    }
+    
+    
+    if (fAttenuation <= 0.f)
+    {
+        Out.vShade = float4(0.f, 0.f, 0.f, 1.f);
+        Out.vSpecular = float4(0.f, 0.f, 0.f, 1.f);
+        return Out;
+    }
+    
+    // 각도 기반 감쇠
+    float3 vLightDir = normalize(g_vLightDir.xyz); 
+    float fCosAngle = dot(vLightDir, vLightToPixel);
+
+    if (fCosAngle < g_fSpotOuterAngle)
+    {
+        Out.vShade = float4(0.f, 0.f, 0.f, 1.f);
+        Out.vSpecular = float4(0.f, 0.f, 0.f, 1.f);
+        return Out;
+    }
     
     float fSpotAttenenuation = saturate((fCosAngle - g_fSpotInnerAngle) / (g_fSpotInnerAngle - g_fSpotOuterAngle));
+    fSpotAttenenuation *= fSpotAttenenuation;
     fAttenuation *= fSpotAttenenuation;
     
     if (true == AlmostEqual3(vDepth.b, AI_TEXTURE_TYPE_METALNESS)) // Metallic
@@ -299,12 +381,13 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
         fMetallic = vMRO.r;
         fRoughness = vMRO.g;
         fOcclusion = vMRO.b;
-
+        
         vF0 = lerp(float3(0.04f, 0.04f, 0.04f), vAlbedo, fMetallic);
     }
     else if (true == AlmostEqual3(vDepth.b, AI_TEXTURE_TYPE_SPECULAR)) // Specular
     {
         fMetallic = 0.f;
+        
         float3 vSRO = g_SurfaceTexture.Sample(DefaultSampler, uv).rgb;
         vF0 = vSRO.rrr;
         fRoughness = vSRO.g;
@@ -318,23 +401,36 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
         return Out;
     }
     
+    { // 수치조정 // 점광원
+        float fMinRoughness = 0.05f;
+        fRoughness = max(fRoughness, fMinRoughness); // 러프니스 최소값 보장
+        fRoughness = saturate(saturate(fCameraDistance * 0.01f) * 0.1f + fRoughness); // 거리기반 러프니스 ( 대충 멀수록 반짝반짝한건 더 뭉개져서 표현 )
+        vF0 = min(vF0, 0.9f); // 메탈릭 상한선
+    }
+    
     PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
     
-    Out.vShade = float4(PBR_Out.vShade, 1.f);
-    Out.vSpecular = float4(PBR_Out.vSpecular, 1.f);
+    PBR_Out.vShade *= fOcclusion;
+    
+    float3 vAmbient = g_vLightAmbient.rgb * fOcclusion * fAttenuation;
+    float3 vFinalDiffuse = PBR_Out.vShade + vAmbient;
+    float3 vFinalSpecular = PBR_Out.vSpecular * g_vLightSpecular.rgb;
+
+    Out.vShade = float4(vFinalDiffuse, 1.f);
+    Out.vSpecular = float4(vFinalSpecular, 1.f);
     
     return Out;
 }
 
-//float g_fWeights[32] =
-//{
-//    0.000400, 0.000700, 0.001200, 0.002000, 0.003200, 0.005000, 0.007500, 0.011000,
-//    0.015700, 0.021700, 0.029000, 0.037300, 0.046200, 0.055200, 0.063600, 0.070800,
-//    0.075900, 0.078500, 0.078500, 0.075900, 0.070800, 0.063600, 0.055200, 0.046200,
-//    0.037300, 0.029000, 0.021700, 0.015700, 0.011000, 0.007500, 0.005000, 0.003200
-//};
+float g_fWeights_32[32] =
+{
+    0.000477, 0.000888, 0.001585, 0.002720, 0.004485, 0.007105, 0.010814, 0.015813,
+    0.022216, 0.029988, 0.038893, 0.048463, 0.058021, 0.066740, 0.073759, 0.078320,
+    0.079902, 0.078320, 0.073759, 0.066740, 0.058021, 0.048463, 0.038893, 0.029988,
+    0.022216, 0.015813, 0.010814, 0.007105, 0.004485, 0.002720, 0.001585, 0.000888
+};
 
-float g_fWeights[128] =
+float g_fWeights_128[128] =
 {
     0.000209902, 0.000241594, 0.000277451, 0.000317919, 0.000363477, 0.000414637, 0.000471944, 0.000535974,
     0.000607333, 0.000686659, 0.000774615, 0.000871889, 0.00097919, 0.00109725, 0.00122679, 0.00136858,
@@ -412,79 +508,76 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     
     Out.vBackBuffer.rgb *= lerp(0.5f, 1.f, min(fVisibility_Dynamic, fVisibility_Static));
     
-    //float fShadowDepth = g_ShadowTexture.Sample(DefaultSampler, vTexcoord).x;
-    //float fPreShadowDepth = g_PreShadowTexture.Sample(DefaultSampler, vPreShadowTexcoord).x;
-    //bool IsShadow = { false };
-    //if (vPosition.z - 0.0005f > fShadowDepth)
-    //{
-    //    IsShadow = true;
-    //}
-    //if (vPreShadowPosition.z - 0.0005f > fPreShadowDepth)
-    //{
-    //    IsShadow = true;
-    //}
-    //if (true == IsShadow)
-    //{
-    //    Out.vBackBuffer *= 0.5f;
-    //}
     float4 vColor = 0.f;
     
-    
-    
-    int iBlurWeight = (int)(round(g_BlurWeightXTexture.Sample(ClampSampler, In.vTexcoord).r) * 128.f);
-    
-    int iBlurMin;
-    int iBlurMax;
-    
-    iBlurMin = -1 * (iBlurWeight / 2) + 1;
-    iBlurMax = iBlurWeight / 2;
-    
-    //  // 변수로 루프돌리려면 반드시 필요함
-    
-  
     for (int i = -63; i < 64; ++i)
     {
         vTexcoord.x = In.vTexcoord.x;
         vTexcoord.y = In.vTexcoord.y + (float) i / g_vResolution.y;
         
-        vColor += g_fWeights[i + 63] * g_BlurXTexture.Sample(ClampSampler, vTexcoord);
+        vColor += g_fWeights_128[i + 63] * g_BlurXTexture.Sample(ClampSampler, vTexcoord);
     }
     
     Out.vBackBuffer += vColor;
+    Out.vEnvironment = Out.vBackBuffer;
     
     return Out;
 }
 
-PS_OUT_BACKBUFFER PS_MAIN_REFIT(PS_IN In)
-{
-    PS_OUT_BACKBUFFER Out;
 
-    Out.vBackBuffer = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
+struct PS_OUT_FLT4_SINGLE
+{
+    vector vSingleTarget : SV_TARGET0;
+};
+
+
+PS_OUT_FLT4_SINGLE PS_MAIN_REFIT(PS_IN In)
+{
+    PS_OUT_FLT4_SINGLE Out;
+
+    Out.vSingleTarget = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
     
     return Out;
 }
 
-PS_OUT_BACKBUFFER PS_MAIN_EMBOSS(PS_IN In)
+PS_OUT_FLT4_SINGLE PS_MAIN_EMBOSS(PS_IN In)
 {
-    PS_OUT_BACKBUFFER Out;
+    PS_OUT_FLT4_SINGLE Out;
 
-    float3 vColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord).xyz;
+    vector vInput = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
+    //float fMask = g_BloomMaskTexture.Sample(PointSampler, In.vTexcoord).a;
+    float3 vColor = vInput.rgb;
+    uint iMask = (uint) round(vInput.a * 255.f); // int a = 1  -> // vBloom.a = (enum / 255);
     
-    // temp 이거 키면 겁나 빤짞빤짞 빛남 ㄷㄷ
-    //vColor *= 3.f;
-    // temp
+    switch (iMask)
+    {
+        case 0:
+            /* None */
+            vColor = float3(0.f, 0.f, 0.f);
+            break;
+        case 1:
+            /* Basic_Apply */
+            break;
+        case 2:
+            /* Multiply */
+            vColor *= 3;
+            break;
+        case 3:
+            break;
+    }
     
-    //float fIntensity = dot(vColor, float3(0.3333f, 0.3333f, 0.3333f)); // 대략적인 밝기
     float fIntensity = dot(vColor, float3(0.2126f, 0.7152f, 0.0722f)); // 대략적인 밝기 ( 인간적인 )
+    
     if (fIntensity <= 1e-4f)
     {
-        Out.vBackBuffer = 0;
+        Out.vSingleTarget = 0;
         return Out;
     }
-    float fBloomIntensity = GetBloomCurve(fIntensity);
+    
+    float fBloomIntensity = GetBloomCurve(fIntensity, g_fThreshold, g_iBloomEmbossingPass);
     
     float3 bloomColor = (vColor * fBloomIntensity) / fIntensity;
-    Out.vBackBuffer = float4(bloomColor, 1.f);
+    Out.vSingleTarget = float4(bloomColor, 1.f);
     
     return Out;
 }
@@ -495,30 +588,29 @@ struct PS_OUT_BLUR_X
     float4 vBlurWeight : SV_TARGET1;
 };
 
-PS_OUT_BACKBUFFER PS_MAIN_BLOOM_ACCUM(PS_IN In)
+PS_OUT_FLT4_SINGLE PS_MAIN_BLOOM_ACCUM(PS_IN In)
 {
-    PS_OUT_BACKBUFFER Out;
+    PS_OUT_FLT4_SINGLE Out;
     
     float3 vColorSrcA = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord).xyz;
     float3 vColorSrcB = g_BlurTexture.Sample(PointSampler, In.vTexcoord).xyz;
     
-    Out.vBackBuffer = float4(saturate(vColorSrcA + vColorSrcB), 1.f);
+    Out.vSingleTarget = float4(saturate(vColorSrcA + vColorSrcB), 1.f);
     
     return Out;
 }
 
-PS_OUT_BACKBUFFER PS_MAIN_BLOOM_FINISH(PS_IN In)
+PS_OUT_FLT4_SINGLE PS_MAIN_BLOOM_FINISH(PS_IN In)
 {
-    PS_OUT_BACKBUFFER Out;
+    PS_OUT_FLT4_SINGLE Out;
     
     vector vColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
     float3 vBloom = g_BlurTexture.Sample(PointSampler, In.vTexcoord).xyz;
-    Out.vBackBuffer = vColor;
-    Out.vBackBuffer += float4(vBloom, 1.f);
+    Out.vSingleTarget = vColor;
+    Out.vSingleTarget += float4(vBloom, 1.f);
     
     return Out;
 }
-
 
 PS_OUT_BLUR_X PS_MAIN_BLUR_X(PS_IN In)
 {
@@ -532,11 +624,177 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_X(PS_IN In)
         vTexcoord.x = In.vTexcoord.x + (float) i / g_vResolution.x;
         vTexcoord.y = In.vTexcoord.y;
         
-        vColor += g_fWeights[i + 63] * g_BlurTexture.Sample(ClampSampler, vTexcoord);
+        vColor += g_fWeights_128[i + 63] * g_BlurTexture.Sample(ClampSampler, vTexcoord);
     }
     
     Out.vBlurX = vColor;
     Out.vBlurWeight = 0.f;
+    
+    return Out;
+}
+
+PS_OUT_BLUR_X PS_MAIN_BLUR_X_ENV(PS_IN In)
+{
+    PS_OUT_BLUR_X Out;
+    
+    vector vDepthDesc;
+    float2 vTexcoord;
+    float fSampleViewZ;
+    float4 vColor = 0.f;
+    float fBlurAmount = 0.0f;
+    
+    float4 vCenter = g_DepthTexture.Sample(DefaultSampler, In.vTexcoord);
+    float4 vOriginal = g_BlurTexture.Sample(ClampSampler, In.vTexcoord);
+    float fCenterViewZ = vCenter.y * g_fFar;
+    
+    float fTerrain = (1.f / 255.f);
+    if (false == AlmostEqual3(vCenter.a, fTerrain))
+    { // 터레인셀이 아니면 스킵
+        Out.vBlurX = vOriginal;
+        Out.vBlurWeight = 0.0f;
+        return Out;
+    }
+    
+    if (fCenterViewZ > g_fFocusDistance)
+    { 
+        // 현재 셀이 초점거리보다 멀면 블러
+        // 블러되는 양은 (현재 셀의 거리가 얼마나 더 멀리 있냐) // END보다 멀면 최대치이므로 saturate
+        float fValue = saturate((fCenterViewZ - g_fFarBlurStart) / (g_fFarBlurEnd - g_fFarBlurStart));
+        fBlurAmount = fValue; // 0~1
+    }
+    
+    if (fBlurAmount <= FLT_EPSILON3)  {
+        // 최소치 이내면 블러 안함
+        Out.vBlurX = vOriginal;
+        Out.vBlurWeight = 0.0f;
+        return Out;
+    }
+    
+    float fAcc = 0.f;
+    for (int i = -16; i < 16; ++i)
+    {
+        vTexcoord.x = In.vTexcoord.x + ((float) i / g_vResolution.x) * fBlurAmount * g_fDOFBlurMultiplier;
+        vTexcoord.y = In.vTexcoord.y;
+        
+        vDepthDesc = g_DepthTexture.Sample(DefaultSampler, vTexcoord);
+        
+        if (false == AlmostEqual3(vDepthDesc.a, fTerrain))
+        { // 터레인셀이 아니면 스킵
+            continue;
+        }
+        fSampleViewZ = vDepthDesc.y * g_fFar;
+        if (abs(fCenterViewZ - fSampleViewZ) > g_fDepthThreshold)
+        { // 센터 위치와 z값이 너무 많이 차이나면 샘플링 스킵
+            continue;
+        }
+        
+        vColor += g_fWeights_32[i + 16] * g_BlurTexture.Sample(ClampSampler, vTexcoord);
+        fAcc += g_fWeights_32[i + 16];
+    }
+    
+    if (fAcc <= FLT_EPSILON3)
+    { // 블러 실패하면 원본값 씀
+        Out.vBlurX = vOriginal;
+        Out.vBlurWeight = 0.0f;
+        return Out;
+    }
+    else
+    {
+        vColor.xyz /= fAcc;
+    }
+    
+    Out.vBlurX = vColor;
+    Out.vBlurWeight = fAcc;
+    
+    return Out;
+}
+
+PS_OUT_BACKBUFFER PS_MAIN_POSTCOMBINED(PS_IN In)
+{
+    PS_OUT_BACKBUFFER Out;
+    
+    vector vDepthDesc;
+    float2 vTexcoord;
+    float fSampleViewZ;
+    float4 vColor = 0.f;
+    float fBlurAmount = 0.0f;
+    
+    float4 vOriginal = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    float4 vCenter = g_DepthTexture.Sample(DefaultSampler, In.vTexcoord);
+    float fCenterViewZ = vCenter.y * g_fFar;
+    
+    float fTerrain = (1.f / 255.f);
+    if (false == AlmostEqual3(vCenter.a, fTerrain))
+    { // 터레인셀이 아니면 스킵
+        Out.vBackBuffer = vOriginal;
+        Out.vEnvironment = 0.0f;
+        return Out;
+    }
+    
+    if (fCenterViewZ > g_fFocusDistance)
+    { 
+        // 현재 셀이 초점거리보다 멀면 블러
+        // 블러되는 양은 (현재 셀의 거리가 얼마나 더 멀리 있냐) // END보다 멀면 최대치이므로 saturate
+        float fValue = saturate((fCenterViewZ - g_fFarBlurStart) / (g_fFarBlurEnd - g_fFarBlurStart));
+        fBlurAmount = fValue; // 0~1
+    }
+    
+    if (fBlurAmount <= FLT_EPSILON3) 
+    {
+        // 최소치 이내면 블러 스킵
+        Out.vBackBuffer = vOriginal;
+        Out.vEnvironment = 0.0f;
+        return Out;
+    }
+    
+    float fAcc = 0.f;
+    for (int i = -16; i < 16; ++i)
+    {
+        vTexcoord.x = In.vTexcoord.x;
+        vTexcoord.y = In.vTexcoord.y + ((float) i / g_vResolution.y) * fBlurAmount * g_fDOFBlurMultiplier;
+        
+        vDepthDesc = g_DepthTexture.Sample(DefaultSampler, vTexcoord);
+        
+        if (false == AlmostEqual3(vDepthDesc.a, fTerrain))
+        { // 터레인셀이 아니면 스킵
+            continue;
+        }
+        fSampleViewZ = vDepthDesc.y * g_fFar;
+        if (abs(fCenterViewZ - fSampleViewZ) > g_fDepthThreshold)
+        { // 센터 위치와 z값이 너무 많이 차이나면 샘플링 스킵
+            continue;
+        }
+        
+        vColor += g_fWeights_32[i + 16] * g_BlurTexture.Sample(ClampSampler, vTexcoord);
+        fAcc += g_fWeights_32[i + 16];
+    }
+    if (fAcc <= FLT_EPSILON3)
+    { // 블러 실패하면 원본값 씀
+        Out.vBackBuffer = vOriginal;
+        Out.vEnvironment = 0.0f;
+        return Out;
+        return Out;
+    }
+    else
+    {
+        vColor.xyz /= fAcc;
+    }
+    
+    float fOriginalLumen = length(vOriginal.rgb);
+    float fBlurLumen = length(vColor.rgb);
+
+    float fLumenScale = 1.0f;
+    if (fBlurLumen > 1e-4f)
+    {
+        fLumenScale = fOriginalLumen / fBlurLumen;
+    }
+    float3 vBlurMatched = vColor.rgb * fLumenScale;
+
+    float fBlendAmount = saturate(fBlurAmount * g_fDOFBlurMultiplier);
+    float3 finalColor = lerp(vOriginal.rgb, vBlurMatched, fBlendAmount);
+    
+    Out.vBackBuffer = float4(vColor.xyz, vOriginal.a);
+    Out.vEnvironment = 0.f;
     
     return Out;
 }
@@ -553,11 +811,36 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_Y(PS_IN In)
         vTexcoord.x = In.vTexcoord.x;
         vTexcoord.y = In.vTexcoord.y + (float) i / g_vResolution.y;
         
-        vColor += g_fWeights[i + 63] * g_BlurTexture.Sample(ClampSampler, vTexcoord);
+        vColor += g_fWeights_128[i + 63] * g_BlurTexture.Sample(ClampSampler, vTexcoord);
     }
     
     Out.vBlurX = vColor;
     Out.vBlurWeight = 0.f;
+    
+    return Out;
+}
+
+PS_OUT_FLT4_SINGLE PS_MAIN_FOG(PS_IN In)
+{
+    PS_OUT_FLT4_SINGLE Out;
+    
+    vector vColor = g_OriginalTexture.Sample(DefaultSampler, In.vTexcoord);
+    vector vDepthDesc = g_DepthTexture.Sample(DefaultSampler, In.vTexcoord);
+    
+    vector vFinalColor;
+    float  fViewZ = vDepthDesc.y * g_fFar;
+    
+    float fRatio;
+    
+    fRatio = clamp(pow(exp(-(g_fFogDensity * fViewZ)), g_fFogPow), 0.f, 1.f);
+    
+    vFinalColor = lerp(g_vFogColor, vColor, max(fRatio, 0.2f));
+    vFinalColor.a = 1.f;
+    
+    if (1.f == vDepthDesc.y)
+        vFinalColor = float4(g_vFogColor);
+        
+    Out.vSingleTarget = vFinalColor;
     
     return Out;
 }
@@ -683,5 +966,33 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_CAPTURE();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_BLOOM_FINISH();
+    }
+    pass BlurX_ENV_Pass // 12
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_BLUR_X_ENV();
+    }
+    pass PostCombinedPass // 13
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default_Environment_SRead, 1);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_POSTCOMBINED();
+    }
+
+    pass FogPass // 14
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_FOG();
     }
 }

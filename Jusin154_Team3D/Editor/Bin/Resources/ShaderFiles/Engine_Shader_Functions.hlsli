@@ -45,6 +45,20 @@ float GetRimLight(float3 vCamPosition, float3 vPosition, float3 vNormal, float f
     return fRimLight;
 }
 
+float LinearAttenuation(float fLightRange, float fLightDistance)
+{
+    return saturate((fLightRange - fLightDistance) / fLightRange);
+}
+
+float PowerAttenuation(float fLightRange, float fLightDistance, float fPower)
+{
+    // 1 -> Linear, 
+    // ( 1 > fPower )-> 뾰족하게 감쇄
+    // ( 1 < fPower )-> 완만하게 감쇄
+    float fValue = saturate((fLightRange - fLightDistance) / fLightRange);
+    return pow(fValue, fPower);
+}
+
 float2 Get_MovedUV(float2 vOriginalUV, float fDeltaU, float fDeltaV, uint iIndexU, uint iIndexV)
 {
     float2 vDelta = float2(fDeltaU, fDeltaV);
@@ -145,6 +159,8 @@ PBR_LIGHT_OUT PBR_Lighting(
     if (NdotL <= 0 || NdotV <= 0)
     {
         return Out;
+        Out.vShade = 0;
+        Out.vSpecular = 0;
     }
     
     float fAlpha = max(fRoughness * fRoughness, 0.04f);
@@ -165,18 +181,30 @@ PBR_LIGHT_OUT PBR_Lighting(
     Out.vShade = (kD / PI) * (NdotL * fAttenuation) * vLightColor;
     
     Out.vSpecular = specularBRDF * vLightColor * fAttenuation * NdotL;
-    
+
     return Out;
 }
-float GetBloomCurve(float x)
+float GetBloomCurve(float x, float fThreshold, uint iMethod)
 {
     float fResult = x;
-    float fThreshold = 0.68f * 2.f;
+    // float fThreshold = 0.68f * 2.f;
     x *= 2.f;
     
-    fResult = x * 0.05f // 최소 기본값 보장
+    if (iMethod == 0)
+    {
+        fResult = x * 0.05f // 최소 기본값 보장
                 + max(0, x - fThreshold) // 밝기값 68 이하는 기본값으로하고 초과하면 그 값만큼 더해줌
                 * 0.5f; // 0~2로 정규화 되어있기 때문에 강조 값 보정해줌
+    }
+    else if (iMethod == 1)
+    {
+        fResult = x * x / 3.2f;
+    }
+    else if (iMethod == 2)
+    {
+        fResult = max(0, x - fThreshold);
+        fResult = pow(fResult, 3.f);
+    }
     
     return fResult * 0.5f;
 }

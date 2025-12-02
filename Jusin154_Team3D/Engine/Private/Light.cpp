@@ -52,9 +52,14 @@ HRESULT CLight::Initialize(void* pArg)
 
 	m_LightDesc = *pLightDesc;
 
-	m_pGameInstance->Add_Light(m_LightDesc.iLevel, this);
-
 	return S_OK;
+}
+
+void CLight::Set_Color(_float4& vDiffuse, _float4& vAmbient, _float4& vSpecular)
+{
+	memcpy(&m_LightDesc.vDiffuse, &vDiffuse, sizeof(_float4));
+	memcpy(&m_LightDesc.vAmbient, &vAmbient, sizeof(_float4));
+	memcpy(&m_LightDesc.vSpecular, &vSpecular, sizeof(_float4));
 }
 
 HRESULT CLight::Render(CShader* pShader, CVIBuffer* pVIBuffer) const
@@ -85,9 +90,18 @@ HRESULT CLight::Render(CShader* pShader, CVIBuffer* pVIBuffer) const
 		if (FAILED(pShader->Bind_RawValue("g_fSpotOuterAngle", &m_LightDesc.vSpotAngles.y, sizeof(_float)))) {
 			return E_FAIL;
 		}
+		if (FAILED(pShader->Bind_RawValue("g_bUsePowerLightAttenuation", &m_bUsePowerAttenuation, sizeof(_bool)))) {
+			return E_FAIL;
+		}
+		if (FAILED(pShader->Bind_RawValue("g_fLightAttenuationPower", &m_fLightAttenuationPower, sizeof(_float)))) {
+			return E_FAIL;
+		}
 		iPassIndex = ENUM_CLASS(SHADER_PASS_DEFERRED::SPOT);
 	}
 	else {
+		if (FAILED(pShader->Bind_RawValue("g_fLightRange", &m_LightDesc.fRange, sizeof(_float)))) {
+			return E_FAIL;
+		}
 		if (FAILED(pShader->Bind_RawValue("g_vLightPos", m_LightDesc.pPosition, sizeof(_float4)))) {
 			return E_FAIL;
 		}
@@ -95,6 +109,12 @@ HRESULT CLight::Render(CShader* pShader, CVIBuffer* pVIBuffer) const
 			return E_FAIL;
 		}
 		if (FAILED(pShader->Bind_RawValue("g_fLightRange", &m_LightDesc.fRange, sizeof(_float)))) {
+			return E_FAIL;
+		}
+		if (FAILED(pShader->Bind_RawValue("g_bUsePowerLightAttenuation", &m_bUsePowerAttenuation, sizeof(_bool)))) {
+			return E_FAIL;
+		}
+		if (FAILED(pShader->Bind_RawValue("g_fLightAttenuationPower", &m_fLightAttenuationPower, sizeof(_float)))) {
 			return E_FAIL;
 		}
 		iPassIndex = ENUM_CLASS(SHADER_PASS_DEFERRED::POINT);
@@ -173,6 +193,11 @@ void CLight::Describe_Entity()
 		GUI::DragFloat4("Specular", reinterpret_cast<float*>(&m_LightDesc.vSpecular), 0.01f, 0.f, 1.f);
 		GUI::DragFloat("Range", &m_LightDesc.fRange, 1.f, 0.f);
 		GUI::DragFloat2("SpotAngle", reinterpret_cast<float*>(&m_LightDesc.vSpotAngles));
+		GUI::Checkbox("UseLinearAtt", &m_bUsePowerAttenuation);
+		if (true == m_bUsePowerAttenuation) {
+			GUI::SameLine();
+			GUI::DragFloat("Power", &m_fLightAttenuationPower, 0.01f, 0.01f);
+		}
 
 		GUI::Spacing();
 		GUI::Spacing();

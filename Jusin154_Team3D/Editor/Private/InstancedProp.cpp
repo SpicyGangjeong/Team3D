@@ -160,12 +160,13 @@ void CInstancedProp::Load_InstancedProp(const _char* pFilePath)
 	FileIn.read(reinterpret_cast<char*>(&iNumWorldMatrix), sizeof(_uint));
 	m_WorldMatrices.reserve(iNumWorldMatrix);
 
-	for (_uint i = 0; i < iNumWorldMatrix; ++i)
-	{
-		_float4x4 WorldMatrix = {};
+	_float4x4 WorldMatrix = {};
+	FileIn.read(reinterpret_cast<char*>(&WorldMatrix), sizeof(_float4x4));
 
+	for (_uint i = 1; i < iNumWorldMatrix; ++i)
+	{
 		FileIn.read(reinterpret_cast<char*>(&WorldMatrix), sizeof(_float4x4));
-		
+
 		m_WorldMatrices.push_back(WorldMatrix);
 	}
 	FileIn.close();

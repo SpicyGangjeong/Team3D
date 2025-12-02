@@ -260,7 +260,9 @@ void CGraphic_Device::Free()
 		OutputDebugStringW(L"                                                                    D3D11 Live Object ref Count Checker END \r ");
 		OutputDebugStringW(L"----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- \r ");
 	}
-	if (d3dDebug != nullptr)            d3dDebug->Release();
+	if (d3dDebug != nullptr) {
+		d3dDebug->Release();
+	}
 #endif
 
 

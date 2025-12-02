@@ -2,13 +2,14 @@
 #include "Action_Panel.h"
 #include "GameInstance.h"
 #include "Spell_Slot.h"
-#include "Spell_Image.h"
 #include "Spell_Overlay.h"
 #include "Slot_Number.h"
 #include "HpBarBG.h"
 #include "Magic_Meter.h"
 #include "Magic_Icon.h"
 #include "Spell_UI.h"
+#include "Potion.h"
+#include "Magic_Item.h"
 
 CAction_Panel::CAction_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPanelObject(pDevice, pContext)
@@ -49,11 +50,7 @@ HRESULT CAction_Panel::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	m_fTimeMult = 3.f;
-	m_fAlpha = 1.f;
-	m_fAlphaTime = 3.f;
-	m_fOwnerAlpha = 1.f;
-	m_fCanvasAlpha = 1.f;
+
 	Magic_Meter_UV();
 	Magic_Meter_Visible(1, true);
 	Magic_Meter_Visible(5, true);
@@ -98,19 +95,6 @@ void CAction_Panel::Late_Update(_float fTimeDelta)
 
 HRESULT CAction_Panel::Render()
 {
-	if (FAILED(Bind_ShaderResources())) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::ALPHABLEND)))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pVIBufferCom->Render())) {
-		return E_FAIL;
-	}
-
 	return S_OK;
 }
 
@@ -192,38 +176,6 @@ void CAction_Panel::Matic_Meter_Move()
 
 HRESULT CAction_Panel::Bind_ShaderResources()
 {
-	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pDiffuse_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float))))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOwnerAlpha", &m_fOwnerAlpha, sizeof(_float))))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCanvasAlpha", &m_fCanvasAlpha, sizeof(_float))))
-	{
-		return E_FAIL;
-	}
 	return S_OK;
 }
 
@@ -252,13 +204,6 @@ HRESULT CAction_Panel::Ready_Element(void* pArg)
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Spell_Slot"), m_pSpell_Slot);
-
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Image>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Image**>(&m_pSpell_Image))))
-	{
-		return E_FAIL;
-	}
-	Add_Element(TEXT("Spell_Image"), m_pSpell_Image);
-
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Overlay>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Overlay**>(&m_pSpell_Overlay))))
 	{
 		return E_FAIL;
@@ -309,6 +254,16 @@ HRESULT CAction_Panel::Ready_Element(void* pArg)
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Spell_UI"), m_pSpell_UI);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPotion>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CPotion**>(&m_pPotion))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Potion"), m_pPotion);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMagic_Item>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CMagic_Item**>(&m_pMagic_Item))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Magic_Item"), m_pMagic_Item);
 	return S_OK;
 }
 

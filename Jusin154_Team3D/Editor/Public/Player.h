@@ -17,8 +17,8 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
-	_bool Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
-
+	_bool   Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
+	_matrix Get_WandPos();
 private:
 	_float m_fDirectionRadian = 0.f;
 
@@ -61,6 +61,7 @@ private:
 	HRESULT InputAction();
 	HRESULT InputMove();
 	HRESULT InputSpell();
+	HRESULT InputAimMove();
 
 	_float m_fAmount = { 1.f };
 
@@ -87,7 +88,8 @@ private:
 	void	Behavior_CombatEnter();
 	HRESULT Behavior_CombatExitCheck();
 	void	Behavior_CombatExit();
-
+private:
+	class CEffectPool* m_pEffectPool = nullptr;
 #pragma endregion
 };
 

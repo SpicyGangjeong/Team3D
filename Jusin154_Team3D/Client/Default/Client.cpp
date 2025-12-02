@@ -25,9 +25,17 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 {
 #ifdef _DEBUG
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    //_CrtSetBreakAlloc(45489776);
+    //_CrtSetBreakAlloc(1182);
+    //_CrtSetBreakAlloc(1183);
+    //_CrtSetBreakAlloc(1184);
+    //_CrtSetBreakAlloc(1185);
+    //_CrtSetBreakAlloc(1186);
+    //_CrtSetBreakAlloc(1187);
 #endif
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
+
 
     CMainApp* pMainApp = { nullptr };
 
@@ -41,12 +49,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_CLIENT));
-
-    MSG msg = {};
+    
+    MSG msg;
 
     pMainApp = CMainApp::Create();
-    if (nullptr == pMainApp)
+    if (nullptr == pMainApp){
         return FALSE;
+    }
 
     CGameInstance* pGameInstance = CGameInstance::GetInstance();
     SAFE_ADDREF(pGameInstance);
@@ -86,8 +95,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     {
         if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
         {
-            if (WM_QUIT == msg.message)
+            if (WM_QUIT == msg.message){
                 break;
+            }
             if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
             {
                 TranslateMessage(&msg);
@@ -106,13 +116,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 #endif // _DEBUG
 
             pGameInstance->Compute_TimeDelta(TEXT("Timer_60"));
+
 #ifdef _DEBUG
-            pMainApp->Update(0.0166f);
-#endif  // _DEBUG
+            pMainApp->Update(1.f / 60.f);
+#endif // _DEBUG
 #ifndef _DEBUG
             pMainApp->Update(pGameInstance->Get_TimeDelta(TEXT("Timer_60")));
-#endif // !_DEBUG
-
+#endif
             pMainApp->Render();
 
             fTimeAcc = 0.f;
@@ -163,7 +173,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
     RECT     rcWindow = { 0, 0, g_iWinSizeX, g_iWinSizeY };
 
-    AdjustWindowRect(&rcWindow, WS_OVERLAPPEDWINDOW, TRUE);
+    AdjustWindowRect(&rcWindow, WS_OVERLAPPEDWINDOW, FALSE);
 
     HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT, 0, rcWindow.right - rcWindow.left, rcWindow.bottom - rcWindow.top, nullptr, nullptr, hInstance, nullptr);
@@ -178,18 +188,20 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
     g_hWnd = hWnd;
 
-   return TRUE;
+    return TRUE;
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
+    if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam)) {
         return true;
+    }
     switch (message)
     {
     case WM_DESTROY:
         PostQuitMessage(0);
         break;
+
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }

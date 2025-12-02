@@ -19,19 +19,25 @@ private:
 	_float2 Get_Size() { return _float2((_float)m_iNumVerticesX, (_float)m_iNumVerticesZ); }
 
 public:
+#ifdef EDITOR_PROJECT
+	virtual HRESULT Initialize_Prototype(const _char* pFilePath);
+#endif // EDITOR_PROJECT
 	virtual HRESULT Initialize_Prototype(const _char* pFilePath, _uint iSizeX, _uint iSizeZ);
 	virtual HRESULT Initialize(void* pArg);
+	void ConvertToHeightField(const _tchar* pStaticKey);
 
 	_bool	Picking(_fmatrix WorldMatrix, _float3* pOut);
 	void	Culling(_fmatrix WorldMatrix);
 	void	FitY(_fmatrix WorldMatrix, _float fY);
-	void    Change_HeigthRatio(_float fRatio);
 
-#ifdef _DEBUG
+	HRESULT Load_HeightMap(const _char* pFilePath);
+
+#ifdef EDITOR_PROJECT
+	void    Change_HeigthRatio(_float fRatio);
 	void	Set_CullingRadius(_float fRaduis);
 	HRESULT Save_HeightMap(const _char* pFilePath);
-	HRESULT Load_HeightMap(const _char* pFilePath);
-#endif // _DEBUG
+#endif 
+
 
 
 private:
@@ -44,6 +50,9 @@ private:
 	class CQuadTree*	m_pQuadTree = { nullptr };
 
 public:
+#ifdef EDITOR_PROJECT
+	static CVIBuffer_Terrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pFilePath);
+#endif // EDITOR_PROJECT
 	static CVIBuffer_Terrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pFilePath, _uint iSizeX, _uint iSizeZ);
 	virtual CComponent* Clone(void* pArg, class CGameObject* pOwner = nullptr) override;
 	virtual void Free() override;

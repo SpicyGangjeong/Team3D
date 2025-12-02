@@ -96,7 +96,9 @@ void CLevel_ObjectViewer::Add_Parts()
 			_bool bDisabled = {};
 			if (m_HumanRoot)
 				bDisabled = (m_HumanRoot->Get_MainModel());
-			if (!bDisabled) GUI::BeginDisabled();
+			if (!bDisabled) {
+				GUI::BeginDisabled();
+			}
 			if (GUI::BeginTabItem("Head"))
 			{
 				Category_PartsModelList("Human/Head/Male", "Head");
@@ -113,7 +115,9 @@ void CLevel_ObjectViewer::Add_Parts()
 
 				GUI::EndTabItem();
 			}
-			if (!bDisabled) GUI::EndDisabled();
+			if (!bDisabled) {
+				GUI::EndDisabled();
+			}
 			GUI::EndTabBar();
 		}
 		GUI::EndTabItem();
@@ -133,7 +137,9 @@ void CLevel_ObjectViewer::Add_Parts()
 			_bool bDisabled = {};
 			if (m_HumanRoot)
 				bDisabled = (m_HumanRoot->Get_MainModel());
-			if (!bDisabled) GUI::BeginDisabled();
+			if (!bDisabled) {
+				GUI::BeginDisabled();
+			}
 			if (GUI::BeginTabItem("Head"))
 			{
 				Category_PartsModelList("Human/Head/FeMale", "Head");
@@ -150,7 +156,9 @@ void CLevel_ObjectViewer::Add_Parts()
 
 				GUI::EndTabItem();
 			}
-			if (!bDisabled) GUI::EndDisabled();
+			if (!bDisabled) {
+				GUI::EndDisabled();
+			}
 			GUI::EndTabBar();
 		}
 		GUI::EndTabItem();
@@ -377,6 +385,8 @@ void CLevel_ObjectViewer::Dummy_Object_Setting()
 
 		CModel* pModel = m_Objects[m_iObjectIndex]->Get_Component<CModel>();
 
+		if (pModel->Get_AnimSize() <= 0)
+			return;
 		GUI::Button(pModel->Get_AnimList(pModel->Get_AnimIndex()));
 
 		GUI::SameLine();
@@ -390,8 +400,12 @@ void CLevel_ObjectViewer::Dummy_Object_Setting()
 		_float AnimTrack = pModel->Get_CurrentTrackPosition();
 		if (GUI::DragFloat("AnimTrack", &AnimTrack))
 		{
-			pModel->Set_CurrentTrackPosition(AnimTrack);
+			if(AnimTrack>=0.f)
+				pModel->Set_CurrentTrackPosition(AnimTrack);
 		}
+
+		_float AnimRatio = pModel->Get_CurrentTrackProgressRatio();
+		GUI::DragFloat("AnimRatio", &AnimRatio);
 
 		_float AnimSpeed = pModel->Get_AnimSpeed();
 		GUI::DragFloat("AnimSpeed", &AnimSpeed, 0.1f);
@@ -423,44 +437,41 @@ void CLevel_ObjectViewer::Dummy_Object_Setting()
 				_float fKeyFrame = pModel->Get_CurrentTrackPosition();
 				m_KeyFrames.emplace(EventName, fKeyFrame);
 
-				_char szDir[MAX_PATH] = {};
-
-				_splitpath_s(m_DummyPath, nullptr, 0, szDir, MAX_PATH, nullptr, 0, nullptr, 0);
-
-				_string szFile = "KeyFrame.bin";
-				_string Path = szDir + szFile;
-
-				FILE* fp = nullptr;
-				fopen_s(&fp, Path.c_str(), "wb");
-				if (!fp) return;
-
-				_uint KeyFrameSize = (_uint)m_KeyFrames.size();
-
-				fwrite(&KeyFrameSize, sizeof(_uint), 1, fp);
-
-				for (auto& iter : m_KeyFrames)
-				{
-					_uint EventSize = (_uint)iter.first.size();
-					fwrite(&iter.second, sizeof(_float), 1, fp);
-					fwrite(&EventSize, sizeof(_uint), 1, fp);
-					fwrite(iter.first.c_str(), sizeof(_char), EventSize, fp);
-				}
-
-
-				fclose(fp);
+				Save_KeyFrame();
 
 				EventName[0] = '\0';
 			}
 		}
 
+
 		for (auto& iter : m_KeyFrames)
 		{
-			ImDrawList* draw = ImGui::GetForegroundDrawList();
-			ImVec2 center = ImGui::GetMainViewport()->GetCenter();
-			float scale = 50.f;
+			string keyName = iter.first;
 
-			GUI::DragFloat(iter.first.c_str(), &iter.second);
+			_bool isSelected = (m_SelectedKey == keyName);
+
+			if (ImGui::Selectable(keyName.c_str(), isSelected))
+			{
+				m_SelectedKey = keyName;
+			}
+
+			if (isSelected)
+			{
+				ImGui::Indent();
+
+				ImGui::DragFloat("KeyFrame", &iter.second, 0.01f);
+
+				if (ImGui::Button("Delete KeyFrame"))
+				{
+					m_KeyFrames.erase(keyName);
+					m_SelectedKey.clear();   
+					break;                     
+				}
+
+				ImGui::Unindent();
+			}
 		}
+
 
 		if (GUI::Button("Delete"))
 		{
@@ -527,7 +538,9 @@ void CLevel_ObjectViewer::Parts_Object_Setting()
 
 					FILE* fp = nullptr;
 					fopen_s(&fp, "../Bin/Resources/Models/Human/KeyFrame.bin", "wb");
-					if (!fp) return;
+					if (!fp) {
+						return;
+					}
 
 					_uint KeyFrameSize = (_uint)m_KeyFrames.size();
 
@@ -608,8 +621,9 @@ void CLevel_ObjectViewer::Load_KeyFrame(const _char* Name)
 	}
 
 	fopen_s(&fp, Path.c_str(), "rb");
-	if (!fp) return;
-
+	if (!fp) {
+		return;
+	}
 	_uint KeyFrameSize = 0;
 	fread(&KeyFrameSize, sizeof(_uint), 1, fp);
 
@@ -633,11 +647,29 @@ void CLevel_ObjectViewer::Load_KeyFrame(const _char* Name)
 
 void CLevel_ObjectViewer::Find_Anim()
 {
-	GUI::InputText("FindAnim", m_FindAnimName, sizeof(m_FindAnimName));
-
 	if (!m_Objects.empty())
 	{
 		CModel* pModel = m_Objects[m_iObjectIndex]->Get_Component<CModel>();
+		if (pModel->Get_AnimSize() <= 0)
+			return;
+		GUI::InputInt("FindAnimIndex", &m_iAnimIndex);
+
+
+
+		if (m_iAnimIndex <= pModel->Get_AnimSize())
+		{
+			if (GUI::Button(pModel->Get_AnimList(m_iAnimIndex)))
+			{
+				pModel->Set_AnimationIndex(m_iAnimIndex);
+				pModel->Set_CurrentTrackPosition(0.f);
+				pModel->Play_Animation(0.f);
+			}
+		}
+
+
+		GUI::InputText("FindAnim", m_FindAnimName, sizeof(m_FindAnimName));
+
+
 		for (_uint i = 0; i < pModel->Get_AnimSize(); i++)
 		{
 			if (strstr(pModel->Get_AnimList(i), m_FindAnimName))
@@ -651,6 +683,38 @@ void CLevel_ObjectViewer::Find_Anim()
 			}
 		}
 	}
+
+}
+
+void CLevel_ObjectViewer::Save_KeyFrame()
+{
+	_char szDir[MAX_PATH] = {};
+
+	_splitpath_s(m_DummyPath, nullptr, 0, szDir, MAX_PATH, nullptr, 0, nullptr, 0);
+
+	_string szFile = "KeyFrame.bin";
+	_string Path = szDir + szFile;
+
+	FILE* fp = nullptr;
+	fopen_s(&fp, Path.c_str(), "wb");
+	if (!fp) {
+		return;
+	}
+
+	_uint KeyFrameSize = (_uint)m_KeyFrames.size();
+
+	fwrite(&KeyFrameSize, sizeof(_uint), 1, fp);
+
+	for (auto& iter : m_KeyFrames)
+	{
+		_uint EventSize = (_uint)iter.first.size();
+		fwrite(&iter.second, sizeof(_float), 1, fp);
+		fwrite(&EventSize, sizeof(_uint), 1, fp);
+		fwrite(iter.first.c_str(), sizeof(_char), EventSize, fp);
+	}
+
+
+	fclose(fp);
 }
 
 
@@ -697,8 +761,8 @@ HRESULT CLevel_ObjectViewer::Ready_Layer_UI(const _wstring& strLayerTag)
 
 HRESULT CLevel_ObjectViewer::Ready_Layer_Dummy(const _wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, nullptr, nullptr, &m_Test)))
-		return E_FAIL;
+	/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, nullptr, nullptr, &m_Test)))
+		return E_FAIL;*/
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummySkyBox>(g_iStaticLevel, NEXT_LEVEL, LAYER_CUBE)))
 		return E_FAIL;
@@ -708,11 +772,11 @@ HRESULT CLevel_ObjectViewer::Ready_Layer_Dummy(const _wstring& strLayerTag)
 
 
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, m_Test)))
-		return E_FAIL;
-
-	/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
+	/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, m_Test)))
 		return E_FAIL;*/
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
+		return E_FAIL;
 
 	return S_OK;
 }
