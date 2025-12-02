@@ -50,7 +50,7 @@ HRESULT CNomalJap::Initialize(void* pArg)
 	SAFE_ADDREF(m_pProjectile);
 	SAFE_ADDREF(m_pProjectile_Side);
 
-	m_fDuration = 1.f;
+	m_fDuration = 1.7f;
 	assert(m_fDuration > 0.f);
 	return S_OK;
 }
@@ -182,6 +182,9 @@ HRESULT CNomalJap::Pre_Setting(CGameObject* pObject)
 	_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
 	XMStoreFloat3(&m_vDirection, vDirection);
 
+	//Get_PartObject<CEffectParts>("Circle_Particle_Red")->Set_Visible(true);
+	//Get_PartObject<CEffectParts>("Circle_Particle_Red")->Get_Component<CTransform>()->Set_WorldMatrix(m_pOwner->Get_Component<CTransform>()->Get_XMWorldMatrix());
+
 	_vector vQuaternion = XMQuaternionRotationAxis(vDirection, m_pGameInstance->Random_Float(0.f, XM_PIDIV2));
 	
 	{ /* 대상 위치 지정 */
@@ -287,6 +290,7 @@ void CNomalJap::OnCollision(CGameObject* pOther, void* pDesc)
 	SAFE_RELEASE(m_pTargetUnit);
 	m_pProjectile_Side->Set_Visible(false);
 	m_pProjectile->Set_Visible(false);
+	Get_PartObject<CEffectParts>("Circle_Particle_Red")->Set_Visible(false);
 
 	Get_PartObject<CTrailObject>()->Set_Visible(false);
 	Get_PartObject<CTrailObject>()->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));

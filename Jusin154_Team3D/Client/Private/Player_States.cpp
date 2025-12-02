@@ -55,6 +55,8 @@ void CPlayer::TestKeyInput(_float fTimeDelta)
 	if (m_pGameInstance->Key_Down(DIK_F7))
 	{
 		m_eSpell = STATEANIM::LUMOS;
+
+		m_pEffectPool->Use_Skill(SKILL_TYPE::LUMOS, Get_PartObject<CWand>());
 	}
 }
 
@@ -697,7 +699,10 @@ void CPlayer::Behavior_CombatEnter()
 	else if (m_pGameInstance->Mouse_Up(DIM_LBUTTON)) {
 		m_pFSM->Enable_State(FSMSTATE::LIGHT_ATTACK);
 		pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK];
+
 		Add_Event(pairAnimInfo.first, [this]() { m_pEffectPool->Use_Skill(SKILL_TYPE::JAP, Get_PartObject<CWand>());  }, 0.1f);
+
+		Add_Event(pairAnimInfo.first, [this]() { m_pEffectPool->Use_Skill(SKILL_TYPE::JAP_SIDE, Get_PartObject<CWand>());  }, 0.0f);
 	}
 	else if (SUCCEEDED(InputSpell())) {
 		m_pFSM->Enable_State(FSMSTATE::SPELL);
@@ -887,7 +892,7 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 			{
 				pairAnimInfo = m_Animation[STATEANIM::ACCIO];
 				Add_Event(pairAnimInfo.first,
-					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARD, this);m_eSpell = STATEANIM::END; },
+					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA, this);m_eSpell = STATEANIM::END; },
 					0.25f);
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 			}

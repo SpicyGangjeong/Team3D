@@ -106,7 +106,7 @@ void CMainLight::Update(_float fTimeDelta)
 		XMLoadFloat4(&m_Specular_Colors[ENUM_CLASS(m_eCurPhase)]),
 		XMLoadFloat4(&m_Specular_Colors[ENUM_CLASS(m_eNextPhase)]), fRatio));
 
-	m_pLightCom->Set_Color(m_vCurDiffuse, m_vAmbient, m_vSpecular);
+	//m_pLightCom->Set_Color(m_vCurDiffuse, m_vAmbient, m_vSpecular);
 
 	//m_pLightCom->Describe_Entity();
 }

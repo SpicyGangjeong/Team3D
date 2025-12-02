@@ -41,6 +41,8 @@ private:
 	_float          m_fAccTime = {};
 	_int			m_iSign = { 1 };
 
+	_bool		    m_isWandPos = {};
+
 
 public:
 	static CEditEffect* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

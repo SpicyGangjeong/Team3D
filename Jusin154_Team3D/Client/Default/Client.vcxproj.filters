@@ -257,7 +257,16 @@
       <Filter>04.Mechanic\State\Broom</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Revelio.h">
-      <Filter>02.GameObjects\Effect\Revelio</Filter>
+      <Filter>02.GameObjects\Effect\Effects\Revelio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\NomalJapSide.h">
+      <Filter>02.GameObjects\Effect\Effects\NomalJapSide</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Levioso.h">
+      <Filter>02.GameObjects\Effect\Effects\Levioso</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Lumos.h">
+      <Filter>02.GameObjects\Effect\Effects\Lumos</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -563,8 +572,17 @@
     <Filter Include="02.GameObjects\Environment\00.MapContainer\StreetContainer">
       <UniqueIdentifier>{e12a4228-0754-4217-b65d-7f962409f85c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Effect\Revelio">
+    <Filter Include="02.GameObjects\Effect\Effects\Revelio">
       <UniqueIdentifier>{19a2325e-1184-4ee0-92e1-657bf184418c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\NomalJapSide">
+      <UniqueIdentifier>{d260ec7e-150c-4a25-8e25-83eb141652bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Levioso">
+      <UniqueIdentifier>{b982d9d6-7561-43d4-b542-88483119047b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Lumos">
+      <UniqueIdentifier>{6bc9fd95-31bc-40f3-83cc-15ebb756b04a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -815,7 +833,16 @@
       <Filter>02.GameObjects\Environment\00.MapContainer\StreetContainer</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Revelio.cpp">
-      <Filter>02.GameObjects\Effect\Revelio</Filter>
+      <Filter>02.GameObjects\Effect\Effects\Revelio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\NomalJapSide.cpp">
+      <Filter>02.GameObjects\Effect\Effects\NomalJapSide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Levioso.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Levioso</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Lumos.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Lumos</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

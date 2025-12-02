@@ -81,6 +81,11 @@ void CEditEffect::Late_Update(_float fTimeDelta)
 	}
 
 
+	if (m_isWandPos == true)
+	{
+		m_pTransformCom->Set_WorldMatrix()
+	}
+
 	if (m_EffectInfo.isBloom == true)
 	{
 		m_pGameInstance->Add_RenderGroup(RENDER::BLOOM, this);
@@ -409,7 +414,7 @@ void CEditEffect::Describe_Entity()
 	const char* pLerp[] = { "Linear" , "EaseInQuad", "EaseOutQuad", "EaseInCubic" , "EaseOutCubic" , "EaseInOutSin" , "EaseInBack" , "Expo" , "Circle" };
 	const char* pRenderNames[] = { "PRIORITY" , "SHADOW", "NONBLEND", "DECAL", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" ,"BLOOM" , "UI", "OCCLUSION"};
 	const char* pEffectType[] = { "EFFECT" , "TRAIL" };
-	const char* pShaderPass[] = { "DEFAULT" , "NON_NOMALMAP" , "BLUR" , "WEIGHTBLEND" , "NON_WORLD" , "NON_WORLD_BLUR",  "BLEND", "BLEND_NOWORLD", "BLOOM" ,"BLOOM_NOWORLD" };
+	const char* pShaderPass[] = { "DEFAULT" , "NON_NOMALMAP" , "BLUR" , "WEIGHTBLEND" , "NON_WORLD" , "NON_WORLD_BLUR",  "BLEND", "BLEND_NOWORLD", "BLOOM" ,"BLOOM_NOWORLD" ,"BLUR_NO_EMMISVE", "BLUR_NO_WORLD_NO_EMISSIVE","WEIGHTBLEND_FOR_BLEND"};
 	const char* pBloomType[] = { "NONE" , "BASIC" , "MUILTY"};
 
 	_int iCurrentItem = static_cast<_int>(m_EffectInfo.eRenderOrder);
@@ -436,6 +441,8 @@ void CEditEffect::Describe_Entity()
 
 	GUI::Checkbox("Visible", &m_bVisible);
 	GUI::Checkbox("GO", &m_isGoStraight);
+	GUI::Checkbox("WAND POS", &m_isWandPos);
+	
 
 	m_pTransformCom->Describe_Entity();
 
@@ -466,6 +473,7 @@ void CEditEffect::Describe_Entity()
 		{
 
 			GUI::Checkbox("OnlyBlur", &m_EffectInfo.isOnlyBlur);
+			GUI::Checkbox("BlurNoEmissive", &m_EffectInfo.isBlurNoEmissive);
 
 			ImGui::PushItemWidth(80);
 			GUI::DragFloat("BlurIntensity", &m_EffectInfo.fBlurIntensity, 0.005f, 0.f, 1.f);
@@ -481,8 +489,7 @@ void CEditEffect::Describe_Entity()
 
 	if (GUI::TreeNode("TEX BLUR"))
 	{
-		GUI::Checkbox("DiffuseBlur", &m_EffectInfo.isDiffuseBlur);
-		GUI::Checkbox("MaskBlur", &m_EffectInfo.isMaskBlur);
+		GUI::Checkbox("TexBlur", &m_EffectInfo.isTexBlur);
 		GUI::Checkbox("BlurDissolve", &m_EffectInfo.isBlurDissolve);
 		GUI::Checkbox("BlurReverseDissolve", &m_EffectInfo.isBlurReverseDissolve);
 

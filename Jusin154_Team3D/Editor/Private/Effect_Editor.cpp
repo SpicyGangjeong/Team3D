@@ -25,7 +25,7 @@ CEffect_Editor::CEffect_Editor(const CEffect_Editor& rhs)
 HRESULT CEffect_Editor::Initialize_Prototype()
 {
 
-	ReadMaterials("../Bin/Resources/VFX/Particles/Magic/Glacius");
+	ReadMaterials("../Bin/Resources/VFX/Particles/Magic/Levioso");
 
 
 	for (auto iter : m_MatFiles)

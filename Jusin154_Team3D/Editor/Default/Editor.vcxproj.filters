@@ -82,9 +82,6 @@
     <Filter Include="02.GameObjects\Layer_Effect\Effect\00.EffectObject">
       <UniqueIdentifier>{8a5ffca8-725a-42ee-a3eb-3c79df09dec9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\01.TestEffect">
-      <UniqueIdentifier>{32718f84-d863-48d2-8611-90c40f2ba1c5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Layer_Effect\Effect\02.EditEffect">
       <UniqueIdentifier>{ba468252-bba3-46e4-bf61-e726a59060ad}</UniqueIdentifier>
     </Filter>
@@ -369,7 +366,7 @@
     </Filter>
     <Filter Include="02.GameObjects\Layer_Effect\Effect\10.Levioso">
       <UniqueIdentifier>{c87ea325-8242-4bc4-aec7-b102a5b1c847}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_List">
       <UniqueIdentifier>{8d15e456-f0d7-45b6-b725-7f1a8c0f6b0f}</UniqueIdentifier>
     </Filter>
@@ -435,6 +432,9 @@
     </Filter>
     <Filter Include="02.GameObjects\Env\03.MapElement\Light">
       <UniqueIdentifier>{99652c97-4011-4d1f-84fb-7e6aa9f6ec1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\02.EditEffect\01.TestEffect">
+      <UniqueIdentifier>{32718f84-d863-48d2-8611-90c40f2ba1c5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -514,7 +514,7 @@
       <Filter>02.GameObjects\Layer_Effect\Effect\00.EffectObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\TestEffect.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\01.TestEffect</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\02.EditEffect\01.TestEffect</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\EditEffect.h">
       <Filter>02.GameObjects\Layer_Effect\Effect\02.EditEffect</Filter>
@@ -812,7 +812,7 @@
     </ClInclude>
     <ClInclude Include="..\Public\Levioso.h">
       <Filter>02.GameObjects\Layer_Effect\Effect\10.Levioso</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\public\Spell_List.h">
       <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_List</Filter>
     </ClInclude>
@@ -911,7 +911,7 @@
       <Filter>02.GameObjects\Layer_Effect\Effect\00.EffectObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\TestEffect.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\01.TestEffect</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\02.EditEffect\01.TestEffect</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\EditEffect.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect\02.EditEffect</Filter>
@@ -1227,7 +1227,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\Levioso.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect\10.Levioso</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\private\Spell_List.cpp">
       <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_List</Filter>
     </ClCompile>

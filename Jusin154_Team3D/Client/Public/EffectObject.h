@@ -86,8 +86,9 @@ public:
 
 		SHADER_PASS_INSTANCE_MODEL eShaderPass = { SHADER_PASS_INSTANCE_MODEL::NON_NOMALMAP };
 
-		_bool   isDiffuseBlur = {};
-		_bool	isMaskBlur = {};
+		_bool   isBlurNoEmissive = {};
+
+		_bool	isTexBlur = {};
 		_bool   isBlurDissolve = {};
 		_bool   isBlurReverseDissolve = {};
 
@@ -102,7 +103,6 @@ public:
 		_float  fBloomStrength = {};
 
 		BLOOM_TYPE eBloomType = {};
-
 
 	}EFFECT_INFO;
 

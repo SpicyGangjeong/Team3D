@@ -9,6 +9,9 @@
 #include "Decendo.h"
 #include "Protego.h"
 #include "Revelio.h"
+#include "Levioso.h"
+#include "NomalJapSide.h"
+#include "Lumos.h"
 
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -124,7 +127,7 @@ HRESULT CEffectPool::Ready_Effect()
 	))) return E_FAIL;
 
 
-	if (FAILED(Create_Effect(SKILL_TYPE::BOMBARD, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::BOMBARDA, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
 
 		CBombard* pEffect = nullptr;
 
@@ -156,6 +159,35 @@ HRESULT CEffectPool::Ready_Effect()
 		CRevelio* pEffect = nullptr;
 
 		pEffect = m_pGameInstance->Clone_Prototype<CRevelio>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+
+	if (FAILED(Create_Effect(SKILL_TYPE::JAP_SIDE, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
+
+		CNomalJapSide* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CNomalJapSide>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::LEVIOSO, 10, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CLevioso* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CLevioso>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+
+	if (FAILED(Create_Effect(SKILL_TYPE::LUMOS, 10, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CLumos* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CLumos>(iPrototypeLevel, nullptr);
 
 		return pEffect; }
 	))) return E_FAIL;

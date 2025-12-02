@@ -110,6 +110,11 @@ _vector CWand::Get_WorldPostion()
 	return XMLoadFloat4((_float4*)&m_pWandTipMatrix.m[3][0]);
 }
 
+_matrix CWand::Get_WorldMatrix()
+{
+	return XMLoadFloat4x4(&m_pWandTipMatrix);
+}
+
 
 HRESULT CWand::Ready_Components()
 {

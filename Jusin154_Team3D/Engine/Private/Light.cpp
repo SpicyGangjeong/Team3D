@@ -52,8 +52,6 @@ HRESULT CLight::Initialize(void* pArg)
 
 	m_LightDesc = *pLightDesc;
 
-	m_pGameInstance->Add_Light(m_LightDesc.iLevel, this);
-
 	return S_OK;
 }
 

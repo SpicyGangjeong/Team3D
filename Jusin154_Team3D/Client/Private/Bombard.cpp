@@ -61,9 +61,7 @@ void CBombard::Update(_float fTimeDelta)
 
 	Update_Event(fTimeDelta);
 
-	_vector vOwnerLook = m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK);
-
-	m_pLight_Projectile->Get_Component<CTransform>()->Translation(vOwnerLook * 2.f);
+	m_pLight_Projectile->Get_Component<CTransform>()->Translation(m_vCameraLook * 2.f);
 }
 
 void CBombard::Late_Update(_float fTimeDelta)
@@ -94,8 +92,9 @@ HRESULT CBombard::Pre_Setting(CGameObject* pObject)
 
 
 	CPartObject* pShootPt = Get_PartObject<CEffectParts>("Bombard_Shoot_Pt");
-
 	CPartObject* pCircle0 = Get_PartObject<CEffectParts>("Bombard_Circle0");
+
+	m_vCameraLook = m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK);
 
 	pShootPt->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
 	m_pLight_Projectile->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());

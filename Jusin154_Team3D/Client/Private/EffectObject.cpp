@@ -74,13 +74,30 @@ HRESULT CEffectObject::Render_Blur()
 
 	SHADER_PASS_INSTANCE_MODEL BlurPass = {};
 
+
 	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NON_WORLD || m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::BLEND_NOWORLD)
 	{
-		BlurPass = SHADER_PASS_INSTANCE_MODEL::NON_WORLD_BLUR;
+		if (m_EffectInfo.isBlurNoEmissive == false)
+		{
+			BlurPass = SHADER_PASS_INSTANCE_MODEL::NON_WORLD_BLUR;
+		}
+		else
+		{
+			BlurPass = SHADER_PASS_INSTANCE_MODEL::BLUR_NO_WORLD_NO_EMISSIVE;
+		}
 	}
 	else
 	{
-		BlurPass = SHADER_PASS_INSTANCE_MODEL::BLUR;
+		if (m_EffectInfo.isBlurNoEmissive == false)
+		{
+			BlurPass = SHADER_PASS_INSTANCE_MODEL::BLUR;
+		}
+		else
+		{
+			BlurPass = SHADER_PASS_INSTANCE_MODEL::BLUR_NO_EMMISVE;
+		}
+
+
 	}
 
 	for (_uint i = 0; i < m_pInstance_ModelCom->Get_NumMeshes(); i++)
@@ -524,11 +541,11 @@ HRESULT CEffectObject::Bind_ShaderResources()
 	}
 
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDiffuseBlur", &m_EffectInfo.isDiffuseBlur, sizeof(_bool)))) {
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isBlurNoEmissive", &m_EffectInfo.isBlurNoEmissive, sizeof(_bool)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_isMaskBlur", &m_EffectInfo.isMaskBlur, sizeof(_bool)))) {
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isTexBlur", &m_EffectInfo.isTexBlur, sizeof(_bool)))) {
 		return E_FAIL;
 	}
 
@@ -685,11 +702,6 @@ HRESULT CEffectObject::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 		return E_FAIL;
 	}
-
-
-
-
-	return S_OK;
 
 
 	return S_OK;
