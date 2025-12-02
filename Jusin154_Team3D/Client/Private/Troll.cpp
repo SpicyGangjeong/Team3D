@@ -57,7 +57,7 @@ HRESULT CTroll::Initialize(void* pArg)
 
 
 
-	m_pCharacter_Controller->Set_Position(XMVectorSet(30.f, 10.f, 30.f, 1.f));
+	m_pCharacter_Controller->Set_Position(XMVectorSet(3.f, -5.f, -20.f, 1.f));
 
 	return S_OK;
 }

@@ -49,7 +49,9 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 			}
 		}
 	}
+
 	m_pThreadHolder = CThreadHolder::Create( 6 );
+
 	if (nullptr == m_pThreadHolder) {
 		return E_FAIL;
 	}
@@ -694,6 +696,10 @@ _bool CGameInstance::SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir,
 {
 	return m_pPhysX_Manager->SphereCast(fRadius, vStartPos, vDir, fDistance, flagHitsData, flagQuery, hitBuffer);
 }
+_bool CGameInstance::SphereCast(_float fRadius, _fvector vStartPos, _fvector vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
+{
+	return m_pPhysX_Manager->SphereCast(fRadius, vStartPos, vDir, fDistance, flagHitsData, flagQuery, hitBuffer);
+}
 PSX::PxController* CGameInstance::Add_CapsuleController(PSX::PxCapsuleControllerDesc& Desc)
 {
 	return m_pPhysX_Manager->Add_CapsuleController(Desc);
@@ -722,11 +728,11 @@ void CGameInstance::Release_Actor(PSX::PxActor& Actor)
 {
 	m_pPhysX_Manager->Detach_Actor(Actor);
 }
-#ifdef EDITOR_PROJECT
 HRESULT CGameInstance::ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix)
 {
 	return m_pPhysX_Manager->ConvertToTriMeshes(Meshes, pxTriMeshes, WorldMatrix);
 }
+#ifdef EDITOR_PROJECT
 HRESULT CGameInstance::SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes)
 {
 	return m_pPhysX_Manager->SaveTriMeshes(pPath, TriMeshes);

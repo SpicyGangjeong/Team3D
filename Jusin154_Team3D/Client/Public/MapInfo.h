@@ -36,6 +36,10 @@ private:
 public:
 	static CMapInfo* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContex);
 	virtual void Free() override;
+#ifdef _DEBUG
+	virtual void Describe_Entity();
+#endif // _DEBUG
+
 };
 
 NS_END

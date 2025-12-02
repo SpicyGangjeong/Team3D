@@ -88,6 +88,11 @@ void CEffectParts::Late_Update(_float fTimeDelta)
 
 }
 
+_vector CEffectParts::Get_WorldPostion()
+{
+	return m_pTransformCom->Get_State(STATE::POSITION);
+}
+
 
 
 HRESULT CEffectParts::Ready_Components(void* pArg)

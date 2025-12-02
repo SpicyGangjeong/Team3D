@@ -257,7 +257,16 @@
       <Filter>04.Mechanic\Skill\Skill_Data</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Revelio.h">
-      <Filter>02.GameObjects\Effect\Revelio</Filter>
+      <Filter>02.GameObjects\Effect\Effects\Revelio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\NomalJapSide.h">
+      <Filter>02.GameObjects\Effect\Effects\NomalJap\NomalJapSide</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Levioso.h">
+      <Filter>02.GameObjects\Effect\Effects\Levioso</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Lumos.h">
+      <Filter>02.GameObjects\Effect\Effects\Lumos</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Troll.h">
       <Filter>02.GameObjects\Monster\Troll</Filter>
@@ -265,6 +274,15 @@
     <ClInclude Include="..\Public\Troll_Weapon.h">
       <Filter>02.GameObjects\Item\Troll_Weapon</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\LeviosoSide.h">
+      <Filter>02.GameObjects\Effect\Effects\Levioso\LeviosoSide</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DecendoSide.h">
+      <Filter>02.GameObjects\Effect\Effects\Decendo\DecendoSide</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BombardSide.h">
+      <Filter>02.GameObjects\Effect\Effects\Bombard\BombardSide</Filter>
+	</ClInclude>
     <ClInclude Include="..\public\GamePlay_Canvas.h">
       <Filter>02.GameObjects\UI\GamePlay_Canvas</Filter>
     </ClInclude>
@@ -322,11 +340,8 @@
     <ClInclude Include="..\public\MapElement_Light.h">
       <Filter>02.GameObjects\Environment\03.MapElement\Light</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\MapElement.h">
-      <Filter>02.GameObjects\Environment\03.MapElement</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\MapElement_Light.h">
-      <Filter>02.GameObjects\Environment\03.MapElement\Light</Filter>
+    <ClInclude Include="..\public\UI_Manager.h">
+      <Filter>02.GameObjects\UI\UI_Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -629,8 +644,14 @@
     <Filter Include="02.GameObjects\Environment\00.MapContainer\StreetContainer">
       <UniqueIdentifier>{e12a4228-0754-4217-b65d-7f962409f85c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Effect\Revelio">
+    <Filter Include="02.GameObjects\Effect\Effects\Revelio">
       <UniqueIdentifier>{19a2325e-1184-4ee0-92e1-657bf184418c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Levioso">
+      <UniqueIdentifier>{b982d9d6-7561-43d4-b542-88483119047b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Lumos">
+      <UniqueIdentifier>{6bc9fd95-31bc-40f3-83cc-15ebb756b04a}</UniqueIdentifier>
     </Filter>
     <Filter Include="04.Mechanic\Skill">
       <UniqueIdentifier>{c5b61cb3-bc5f-4429-8715-b309dcf054b2}</UniqueIdentifier>
@@ -644,18 +665,25 @@
     <Filter Include="02.GameObjects\Environment\03.MapElement\Light">
       <UniqueIdentifier>{71f6a568-488d-4ec1-be79-8fcce6677e27}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Environment\03.MapElement">
-      <UniqueIdentifier>{f3f219aa-034f-4aa2-9f2e-d75d15bd1f4a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Environment\03.MapElement\Light">
-      <UniqueIdentifier>{71f6a568-488d-4ec1-be79-8fcce6677e27}</UniqueIdentifier>
-    </Filter>
+
     <Filter Include="02.GameObjects\Monster\Troll">
       <UniqueIdentifier>{a1b1f17d-ed4f-4b20-aa8e-c52e693683d4}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Item\Troll_Weapon">
       <UniqueIdentifier>{1d6c078d-dddd-493d-a6f0-f2cac2e4107e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\NomalJap\NomalJapSide">
+      <UniqueIdentifier>{d260ec7e-150c-4a25-8e25-83eb141652bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Levioso\LeviosoSide">
+      <UniqueIdentifier>{dc00cfd8-105f-419f-a4e4-109096258347}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Decendo\DecendoSide">
+      <UniqueIdentifier>{1cb823f5-a6fe-4bef-9292-b49480a42524}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Bombard\BombardSide">
+      <UniqueIdentifier>{b6076bdb-df15-498f-b951-6b2d0b777a0b}</UniqueIdentifier>
+	</Filter>
     <Filter Include="02.GameObjects\UI\Spell_Canvas">
       <UniqueIdentifier>{257a5a09-b15b-4fd2-9615-054a00cf4b25}</UniqueIdentifier>
     </Filter>
@@ -706,6 +734,9 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Header">
       <UniqueIdentifier>{00b37924-ab02-4287-b67e-80375a8d3268}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\UI_Manager">
+      <UniqueIdentifier>{9cc8fea6-837e-4f68-b116-134c9dc68a26}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -953,16 +984,19 @@
       <Filter>02.GameObjects\Environment\00.MapContainer\StreetContainer</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Revelio.cpp">
-      <Filter>02.GameObjects\Effect\Revelio</Filter>
+      <Filter>02.GameObjects\Effect\Effects\Revelio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\NomalJapSide.cpp">
+      <Filter>02.GameObjects\Effect\Effects\NomalJap\NomalJapSide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Levioso.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Levioso</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Lumos.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Lumos</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Skill_Data.cpp">
       <Filter>04.Mechanic\Skill\Skill_Data</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\MapElement.cpp">
-      <Filter>02.GameObjects\Environment\03.MapElement</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\MapElement_Light.cpp">
-      <Filter>02.GameObjects\Environment\03.MapElement\Light</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MapElement.cpp">
       <Filter>02.GameObjects\Environment\03.MapElement</Filter>
@@ -979,6 +1013,15 @@
     <ClCompile Include="..\Private\Troll_Weapon.cpp">
       <Filter>02.GameObjects\Item\Troll_Weapon</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\LeviosoSide.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Levioso\LeviosoSide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\DecendoSide.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Decendo\DecendoSide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BombardSide.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Bombard\BombardSide</Filter>
+	</ClCompile>
     <ClCompile Include="..\private\GamePlay_Canvas.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas</Filter>
     </ClCompile>
@@ -1029,6 +1072,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Current_Slot_Number.cpp">
       <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Current_Slot_Number</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UI_Manager.cpp">
+      <Filter>02.GameObjects\UI\UI_Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

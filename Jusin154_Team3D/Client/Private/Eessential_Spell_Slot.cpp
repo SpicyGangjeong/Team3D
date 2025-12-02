@@ -48,6 +48,7 @@ HRESULT CEessential_Spell_Slot::Initialize(void* pArg)
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
 	m_fDelayTime = 0.5f;
 	m_iPerSpell_Slot = -1;
+	m_bActive = true;
 	return S_OK;
 }
 

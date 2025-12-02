@@ -28,6 +28,8 @@
 
 #pragma region UI
 
+#include "UI_Manager.h"
+
 #include "GamePlay_Canvas.h"
 #include "Loading_Panel.h"
 #include "LoadingWidget.h"
@@ -85,11 +87,17 @@
 #include "NomalJap.h"
 #include "Protego.h"
 #include "Revelio.h"
+#include "NomalJapSide.h"
+#include "DecendoSide.h"
+#include "BombardSide.h"
+#include "LeviosoSide.h"
 
 #include "TrailObject.h"
 #include "Instance_Model.h"
 #include "Trail.h"
 #include "EffectPool.h"
+#include "Levioso.h"
+#include "Lumos.h"
 
 
 
@@ -918,6 +926,25 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 #pragma endregion
 
+#pragma region EFFECT
+
+	Asset_FileLoad("../Bin/Resources/Textures/Effect/Trails", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath) {
+
+		_string strFilePath = pFilePath;
+		_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
+
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), wstrFileName,
+			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
+			return E_FAIL;
+		}
+
+		return S_OK;
+
+
+		});
+
+
 
 	Asset_FileLoad("../Bin/Resources/Textures/Effect/Noises", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath) {
 
@@ -977,6 +1004,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return S_OK;
 
 		});
+
+#pragma endregion
 
 	m_strMessage = TEXT("셰이더를(을) 로딩 중 입니다.");
 
@@ -1216,6 +1245,30 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype<CRevelio>(NEXT_LEVEL, CRevelio::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CNomalJapSide>(NEXT_LEVEL, CNomalJapSide::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CLevioso>(NEXT_LEVEL, CLevioso::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CLumos>(NEXT_LEVEL, CLumos::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CLeviosoSide>(NEXT_LEVEL, CLeviosoSide::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CBombardSide>(NEXT_LEVEL, CBombardSide::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CDecendoSide>(NEXT_LEVEL, CDecendoSide::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CEffectPool>(g_iStaticLevel, CEffectPool::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
@@ -1576,6 +1629,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 
 	m_strMessage = TEXT("객체원형를(을) 로딩 중 입니다.");
+
+	/* For.Prototype_GameObject_UI_Manager*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CUI_Manager>(g_iStaticLevel, CUI_Manager::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 
 	/* For.Prototype_GameObject_GamePlay_Canvas*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CGamePlay_Canvas>(g_iStaticLevel, CGamePlay_Canvas::Create(m_pDevice, m_pContext)))) {
