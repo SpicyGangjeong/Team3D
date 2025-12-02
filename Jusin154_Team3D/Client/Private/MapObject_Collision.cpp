@@ -72,10 +72,57 @@ HRESULT CMapObject_Collision::Initialize(void* pArg)
 
 _wstring CMapObject_Collision::Get_PrototypeTag(_uint iLodIndex)
 {
-	if (m_iMaxLodLevel < iLodIndex)
+	if (m_iMaxLodLevel < iLodIndex){
 		return m_ModelPrototypeTags[0];
+	}
 
 	return m_ModelPrototypeTags[iLodIndex];
+}
+
+void CMapObject_Collision::ReadyForPhysX()
+{
+	if (true == m_bConverted) {
+		return;
+	}
+	m_bConverted = true;
+	
+	for (_uint iIndexLOD = 0; iIndexLOD < m_iMaxLodLevel + 1; ++iIndexLOD)
+	{
+		CModel* pModel = m_pModelComs[iIndexLOD];
+
+		if (FAILED(pModel->Ready_PhysXMeshes(XMLoadFloat4x4(&m_CombinedWorldMatrix)))) {
+			assert(false);
+		}
+	}
+}
+
+void CMapObject_Collision::ConvertToPhysX()
+{
+	if (true == m_bReadyToCreatePhysX) {
+		return;
+	}
+	m_bReadyToCreatePhysX = true;
+
+	m_RigidBodies.resize(m_iMaxLodLevel + 1);
+	for (_uint iIndexLOD = 0; iIndexLOD < m_iMaxLodLevel + 1; ++iIndexLOD)
+	{
+		CModel* pModel = m_pModelComs[iIndexLOD];
+
+		_uint iNumMeshes = pModel->Get_NumMeshes();
+		
+		for (_uint iIndex = 0; iIndex < iNumMeshes; ++iIndex)
+		{
+			_wstring wstrName = CMyTools::ToWstring(pModel->Get_MeshName(iIndex)) + to_wstring(iIndex);
+			CRigidBody_Static* pRigidBody = { nullptr };
+			CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc = {};
+			Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
+			Desc.pMeshName = wstrName.c_str();
+			if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, wstrName, (CComponent**)&pRigidBody, &Desc))) {
+				assert(false);
+			}
+			m_RigidBodies[iIndexLOD].push_back(pRigidBody);
+		}
+	}
 }
 
 HRESULT CMapObject_Collision::Ready_Components()
@@ -93,19 +140,6 @@ HRESULT CMapObject_Collision::Ready_Components()
 		}
 
 		m_pModelComs.push_back(pModel);
-
-	//	_uint iMeshes = pModel->Get_NumMeshes();
-	//	for (_uint iIndex = 0; iIndex < iMeshes; ++iIndex) {
-	//		_wstring wstrName = CMyTools::ToWstring(pModel->Get_MeshName(iIndex)) + to_wstring(iIndex);
-	//		CRigidBody_Static* pRigidBody = { nullptr };
-	//		CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc = {};
-	//		Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
-	//		Desc.pMeshName = wstrName.c_str();
-	//		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, wstrName, (CComponent**)&pRigidBody, &Desc))) {
-	//			return E_FAIL;
-	//		}
-	//		m_RigidBodies[iIndexLOD].push_back(pRigidBody);
-	//	}
 	}
 
 	/* Com_Shader */

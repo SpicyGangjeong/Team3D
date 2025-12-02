@@ -28,7 +28,7 @@ HRESULT CMesh::Bind_BoneMatrices(const vector<class CBone*>& Bones, CShader* pSh
 	if (0 == m_iNumBones) {
 		return S_OK;
 	}
-
+	
 	return pShader->Bind_Matrices(pConstantName, m_pBoneMatrices, m_iNumBones);
 }
 
@@ -205,9 +205,12 @@ HRESULT CMesh::Initialize_Prototype(MODEL eType, const CModel* pModel, SaveMesh*
 
 	D3D11_SUBRESOURCE_DATA	InitialIBData{};
 	InitialIBData.pSysMem = _SaveMesh->Indices.data();
+	m_pIndices = new _uint[m_iNumIndices];
+	memcpy_s(m_pIndices, sizeof(_uint) * m_iNumIndices, _SaveMesh->Indices.data(), sizeof(_uint) * m_iNumIndices);
 
-	if (FAILED(m_pDevice->CreateBuffer(&IBDesc, &InitialIBData, &m_pIB)))
+	if (FAILED(m_pDevice->CreateBuffer(&IBDesc, &InitialIBData, &m_pIB))){
 		return E_FAIL;
+	}
 
 #pragma endregion
 
@@ -386,20 +389,6 @@ HRESULT CMesh::Initialize(void* pArg)
 	return S_OK;
 }
 
-#ifdef EDITOR_PROJECT
-CMesh* CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, vector<class CBone*>& Bones, const aiMesh* pAIMesh, _fmatrix& PreTransformMatrix)
-{
-	CMesh* pInstance = new CMesh(pDevice, pContext);
-
-	if (FAILED(pInstance->Initialize_Prototype(eType, Bones, pAIMesh, PreTransformMatrix)))
-	{
-		MSG_BOX("Failed to Created : CMesh");
-		SAFE_RELEASE(pInstance);
-	}
-
-	return pInstance;
-}
-
 PSX::PxTriangleMesh* CMesh::ConvertToPxMesh(const PSX::PxCookingParams* pParam, PSX::PxPhysics* pPhysX, _matrix WorldMatrix)
 {
 	PSX::PxTriangleMeshDesc tMeshDesc = {};
@@ -409,7 +398,14 @@ PSX::PxTriangleMesh* CMesh::ConvertToPxMesh(const PSX::PxCookingParams* pParam, 
 		tMeshDesc.points.count = m_iNumVertices;
 		tMeshDesc.points.stride = sizeof(PSX::PxVec3);
 		Vertices.resize(m_iNumVertices);
-		memcpy(Vertices.data(), m_pVertexPositions, sizeof(PSX::PxVec3) * m_iNumVertices);
+		XMVector3TransformCoordStream(
+			reinterpret_cast<XMFLOAT3*>(Vertices.data()),     // dest
+			sizeof(PSX::PxVec3),
+			reinterpret_cast<const XMFLOAT3*>(m_pVertexPositions), // src
+			sizeof(PSX::PxVec3),
+			m_iNumVertices,
+			WorldMatrix
+		);
 		tMeshDesc.points.data = Vertices.data();
 	}
 	{
@@ -437,6 +433,19 @@ PSX::PxTriangleMesh* CMesh::ConvertToPxMesh(const PSX::PxCookingParams* pParam, 
 	}
 
 	return pTriangleMesh;
+}
+#ifdef EDITOR_PROJECT
+CMesh* CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, vector<class CBone*>& Bones, const aiMesh* pAIMesh, _fmatrix& PreTransformMatrix)
+{
+	CMesh* pInstance = new CMesh(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize_Prototype(eType, Bones, pAIMesh, PreTransformMatrix)))
+	{
+		MSG_BOX("Failed to Created : CMesh");
+		SAFE_RELEASE(pInstance);
+	}
+
+	return pInstance;
 }
 
 HRESULT CMesh::Ready_VertexBuffer_For_NonAnim(const aiMesh* pAIMesh, _fmatrix PreTransformMatrix)
