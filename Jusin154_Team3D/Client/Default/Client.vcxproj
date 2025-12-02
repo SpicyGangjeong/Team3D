@@ -168,6 +168,8 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Magic_Icon.h" />
     <ClInclude Include="..\Public\Magic_Item.h" />
     <ClInclude Include="..\Public\Magic_Meter.h" />
+    <ClInclude Include="..\public\MapElement.h" />
+    <ClInclude Include="..\public\MapElement_Light.h" />
     <ClInclude Include="..\Public\Potion.h" />
     <ClInclude Include="..\Public\Protego.h" />
     <ClInclude Include="..\Public\Bombard.h" />
@@ -275,6 +277,8 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Magic_Icon.cpp" />
     <ClCompile Include="..\Private\Magic_Item.cpp" />
     <ClCompile Include="..\Private\Magic_Meter.cpp" />
+    <ClCompile Include="..\private\MapElement.cpp" />
+    <ClCompile Include="..\private\MapElement_Light.cpp" />
     <ClCompile Include="..\Private\Potion.cpp" />
     <ClCompile Include="..\Private\Protego.cpp" />
     <ClCompile Include="..\Private\Bombard.cpp" />

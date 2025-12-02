@@ -57,8 +57,11 @@ HRESULT CLight_Main::Ready_Components()
 	LIGHT_DESC			LightDesc{};
 
 	LightDesc.eType = LIGHT::DIRECTIONAL;
-	LightDesc.vDiffuse = _float4(0.8f, 0.8f, 0.8f, 0.f);
+	/*LightDesc.vDiffuse = _float4(0.8f, 0.8f, 0.8f, 0.f);
 	LightDesc.vAmbient = _float4(0.6f, 0.6f, 0.6f, 0.f);
+	LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 0.f);*/
+	LightDesc.vDiffuse = _float4(0.3f, 0.3f, 0.1f, 0.f);
+	LightDesc.vAmbient = _float4(0.3f, 0.3f, 0.5f, 0.f);
 	LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 0.f);
 	LightDesc.pDirection = m_pTransformCom->Get_StatePtr(STATE::LOOK);
 	LightDesc.iLevel = NEXT_LEVEL;
@@ -69,6 +72,10 @@ HRESULT CLight_Main::Ready_Components()
 		return E_FAIL;
 	}
 	m_pGameInstance->Add_Light(NEXT_LEVEL, m_pLightCom);
+
+
+	_float4 vColor = _float4(0.1f, 0.1f, 0.15f, 0.5f);
+	m_pGameInstance->Set_FogColor(vColor);
 
 	return S_OK;
 }
