@@ -188,7 +188,7 @@ void CCamera::Set_Fov(_float fFovy, _float fTimeDelta,_bool& bZoomIn)
         m_fFovy -= (fTimeDelta * 0.6f);
     }
 
-    if (fabsf(fFovy - m_fFovy) <= FLT_EPSILON3)
+    if (fabsf(fFovy - m_fFovy) <= FLT_EPSILON3 * 10.f)
     {
         m_fFovy = fFovy;
         bZoomIn = false;

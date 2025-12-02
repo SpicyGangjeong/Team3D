@@ -123,7 +123,10 @@ void CUI_Manager::Free()
 
 	SAFE_RELEASE(m_pVIBufferCom);
 }
+#ifdef _DEBUG
 
 void CUI_Manager::Describe_Entity()
 {
 }
+
+#endif // _DEBUG
