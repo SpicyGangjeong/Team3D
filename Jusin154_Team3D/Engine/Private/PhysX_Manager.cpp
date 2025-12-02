@@ -171,11 +171,37 @@ _bool CPhysX_Manager::SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir
 	PSX::PxTransform startPose(startPos, startRot);
 
 	PSX::PxVec3 sweepDir(vDir.x, vDir.y, vDir.z);
+
 	sweepDir.normalize();
 
 	PSX::PxQueryFilterData filterData(flagQuery);
-
+	
 	return m_pScene->sweep(sphereGeom, startPose, sweepDir, fDistance, hitBuffer, flagHitsData, filterData);
+}
+
+_bool CPhysX_Manager::SphereCast(_float fRadius, _fvector _vStartPos, _fvector _vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
+{
+	_float3 vDir = {};
+	_float3 vStartPos = {};
+
+	XMStoreFloat3(&vDir, _vDir);
+	XMStoreFloat3(&vStartPos, _vStartPos);
+
+	PSX::PxSphereGeometry sphereGeom(fRadius);
+
+	PSX::PxVec3 startPos(vStartPos.x, vStartPos.y, vStartPos.z);
+	PSX::PxQuat startRot(PSX::PxIdentity);
+
+	PSX::PxTransform startPose(startPos, startRot);
+
+	PSX::PxVec3 sweepDir(vDir.x, vDir.y, vDir.z);
+
+	sweepDir.normalize();
+
+	PSX::PxQueryFilterData filterData(flagQuery);
+	_bool bHit = m_pScene->sweep(sphereGeom, startPose, sweepDir, fDistance, hitBuffer, flagHitsData, filterData);
+
+	return bHit;
 }
 
 void CPhysX_Manager::RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh) 

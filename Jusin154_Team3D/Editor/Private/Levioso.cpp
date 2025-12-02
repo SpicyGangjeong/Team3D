@@ -52,7 +52,7 @@ HRESULT CLevioso::Initialize(void* pArg)
 	m_fTurnSpeed = 10.f;
 	m_fRange = 1.f;
 
-	m_fDuration = 1.5f;
+	m_fDuration = 2.f;
 
 	return S_OK;
 }
@@ -86,7 +86,7 @@ void CLevioso::Update(_float fTimeDelta)
 
 
 	if (nullptr != m_pPhysHitBox) {
-		m_pPhysHitBox->Get_Component<CTransform>()->AccumulateMomentum(m_vOwnerLook * 0.25f);
+		m_pPhysHitBox->Get_Component<CTransform>()->AccumulateMomentum(m_vOwnerLook * 1.f);
 	}
 
 
@@ -132,7 +132,8 @@ HRESULT CLevioso::Pre_Setting(CGameObject* pObject)
 
 	m_fAccRotateTime = 0.f;
 
-
+	if (FAILED(Ready_Child()))
+		return E_FAIL;
 
 	CPlayer* pPlayer = static_cast<CPlayer*>(m_pOwner);
 
@@ -230,6 +231,20 @@ void CLevioso::OnCollision(CGameObject* pOther, void* pDesc)
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
 
+	for (auto& pPair : m_PartObjects)
+	{
+		pPair.second->Set_Visible(true);
+		pPair.second->Get_Component<CTransform>()->Set_State(STATE::POSITION, CollisionDesc->vWorldPos);
+	}
+
+	__super::m_fAccTime = 0.f;
+	m_fDuration = 3.f; //적중하면 지속시간 3초
+
+	//CEditEffect* pLevioso_Hit =  Get_PartObject<CEditEffect>("Levioso_Hit");
+	//CEditEffect* pLevioso_Bottom_Wind = Get_PartObject<CEditEffect>("Levioso_Bottom_Wind");
+	//CEditEffect* pLevioso_Rotate0 = Get_PartObject<CEditEffect>("Levioso_Rotate0");
+	//CEditEffect* pLevioso_Rotate1 = Get_PartObject<CEditEffect>("Levioso_Rotate1");
+	//CEditEffect* pLevioso_Tornado = Get_PartObject<CEditEffect>("Levioso_Tornado");
 
 	m_pLeviosoPJ_0->Set_Visible(false);
 	m_pLeviosoPJ_1->Set_Visible(false);
