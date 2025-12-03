@@ -166,6 +166,7 @@
     <ClInclude Include="..\Public\Action_Panel.h" />
     <ClInclude Include="..\public\AlphaMap.h" />
     <ClInclude Include="..\Public\Body.h" />
+    <ClInclude Include="..\Public\BombardSide.h" />
     <ClInclude Include="..\public\Current_Slot_Number.h" />
     <ClInclude Include="..\public\Current_Spell_Slot.h" />
     <ClInclude Include="..\Public\Decendo.h" />
@@ -182,6 +183,7 @@
     <ClInclude Include="..\Public\CamPosition_Shoulder.h" />
     <ClInclude Include="..\Public\CamPosition_Socket.h" />
     <ClInclude Include="..\Public\CamPosition_Target.h" />
+    <ClInclude Include="..\Public\DecendoSide.h" />
     <ClInclude Include="..\Public\DummyObject.h" />
     <ClInclude Include="..\public\DummySkyBox.h" />
     <ClInclude Include="..\Public\Dummy_Globe.h" />
@@ -214,13 +216,17 @@
     <ClInclude Include="..\public\Eessential_Spell_Slot.h" />
     <ClInclude Include="..\public\HpBarBG.h" />
     <ClInclude Include="..\Public\Bombard.h" />
+    <ClInclude Include="..\Public\InfoInstance.h" />
     <ClInclude Include="..\public\InstancedProp.h" />
+    <ClInclude Include="..\Public\LeviosoSide.h" />
     <ClInclude Include="..\public\Magic_Icon.h" />
     <ClInclude Include="..\public\Magic_Item.h" />
     <ClInclude Include="..\public\Magic_Meter.h" />
     <ClInclude Include="..\Public\EffectPool.h" />
     <ClInclude Include="..\public\MapElement_Light.h" />
+    <ClInclude Include="..\Public\MapInfo.h" />
     <ClInclude Include="..\Public\MissionBanner_Border.h" />
+    <ClInclude Include="..\Public\MonsterInfo.h" />
     <ClInclude Include="..\Public\NomalJap.h" />
     <ClInclude Include="..\Public\Effect_Container.h" />
     <ClInclude Include="..\public\GamePlay_Canvas.h" />
@@ -251,8 +257,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\Public\NomalJapSide.h" />
     <ClInclude Include="..\public\NoMountIcon.h" />
     <ClInclude Include="..\Public\Player.h" />
+    <ClInclude Include="..\Public\PlayerInfo.h" />
     <ClInclude Include="..\public\Potion.h" />
     <ClInclude Include="..\Public\Levioso.h" />
     <ClInclude Include="..\Public\Revelio.h" />
@@ -324,6 +332,7 @@
     <ClCompile Include="..\Private\Action_Panel.cpp" />
     <ClCompile Include="..\private\AlphaMap.cpp" />
     <ClCompile Include="..\Private\Body.cpp" />
+    <ClCompile Include="..\Private\BombardSide.cpp" />
     <ClCompile Include="..\private\Current_Slot_Number.cpp" />
     <ClCompile Include="..\private\Current_Spell_Slot.cpp" />
     <ClCompile Include="..\Private\Decendo.cpp" />
@@ -340,6 +349,7 @@
     <ClCompile Include="..\Private\CamPosition_Shoulder.cpp" />
     <ClCompile Include="..\Private\CamPosition_Socket.cpp" />
     <ClCompile Include="..\Private\CamPosition_Target.cpp" />
+    <ClCompile Include="..\Private\DecendoSide.cpp" />
     <ClCompile Include="..\Private\DummyObject.cpp" />
     <ClCompile Include="..\private\DummySkyBox.cpp" />
     <ClCompile Include="..\Private\Dummy_Globe.cpp" />
@@ -373,13 +383,17 @@
     <ClCompile Include="..\Private\Goblin_States.cpp" />
     <ClCompile Include="..\private\HpBarBG.cpp" />
     <ClCompile Include="..\Private\Bombard.cpp" />
+    <ClCompile Include="..\Private\InfoInstance.cpp" />
     <ClCompile Include="..\private\InstancedProp.cpp" />
+    <ClCompile Include="..\Private\LeviosoSide.cpp" />
     <ClCompile Include="..\private\Magic_Icon.cpp" />
     <ClCompile Include="..\private\Magic_Item.cpp" />
     <ClCompile Include="..\private\Magic_Meter.cpp" />
     <ClCompile Include="..\Private\EffectPool.cpp" />
     <ClCompile Include="..\private\MapElement_Light.cpp" />
+    <ClCompile Include="..\Private\MapInfo.cpp" />
     <ClCompile Include="..\Private\MissionBanner_Border.cpp" />
+    <ClCompile Include="..\Private\MonsterInfo.cpp" />
     <ClCompile Include="..\Private\NomalJap.cpp" />
     <ClCompile Include="..\Private\Effect_Container.cpp" />
     <ClCompile Include="..\private\GamePlay_Canvas.cpp" />
@@ -410,8 +424,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\Private\NomalJapSide.cpp" />
     <ClCompile Include="..\private\NoMountIcon.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
+    <ClCompile Include="..\Private\PlayerInfo.cpp" />
     <ClCompile Include="..\Private\Player_States.cpp" />
     <ClCompile Include="..\private\Potion.cpp" />
     <ClCompile Include="..\Private\Levioso.cpp" />

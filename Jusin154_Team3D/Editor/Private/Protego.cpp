@@ -45,19 +45,10 @@ HRESULT CProtego::Initialize(void* pArg)
 	m_wstrEffectName = L"Protego";
 
 
-	m_Events.emplace(1.3f, [&]() {
-
-		m_pSphere->Set_Dissolve(true);
-		m_pBottom->Set_Dissolve(true);
-		m_pCircle->Set_Dissolve(true);
-
-		});
-
-
 	m_fAmountSize = 0.1f;
 	m_fSpeed = 5.f;
 
-	m_fDuration = 2.5f;
+	m_fDuration = 3.f;
 
 	return S_OK;
 }
@@ -113,7 +104,7 @@ HRESULT CProtego::Pre_Setting(CGameObject* pObject)
 
 	m_pOwner = pObject;
 
-	Reset_EffectParts();
+	Reset_EditEffect();
 
 	m_fAccTime = 0.f;
 	__super::m_fAccTime = 0.f;
@@ -134,10 +125,6 @@ HRESULT CProtego::Pre_Setting(CGameObject* pObject)
 	m_pCircle->Get_Component<CTransform>()->Set_Scale(vSize);
 
 	m_fSizeAccTime = 0.f;
-
-	m_pSphere->Set_Dissolve(false);
-	m_pBottom->Set_Dissolve(false);
-	m_pCircle->Set_Dissolve(false);
 
 	m_bVisible = true;
 

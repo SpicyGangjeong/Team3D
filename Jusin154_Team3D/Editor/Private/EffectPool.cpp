@@ -11,6 +11,10 @@
 #include "Revelio.h"
 #include "Levioso.h"
 
+#include "BombardSide.h"
+#include "LeviosoSide.h"
+#include "DecendoSide.h"
+#include "NomalJapSide.h"
 
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -57,8 +61,6 @@ void CEffectPool::Priority_Update(_float fTimeDelta)
 			++iter;
 		}
 	}
-
-	(*m_EffectList[ENUM_CLASS(SKILL_TYPE::LEVIOSO)].begin())->Describe_Entity();
 
 }
 
@@ -116,13 +118,12 @@ HRESULT CEffectPool::Bind_ShaderResources()
 HRESULT CEffectPool::Ready_Effect()
 {
 
-	if(FAILED(Create_Effect(SKILL_TYPE::JAP, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
-
+	if (FAILED(Create_Effect(SKILL_TYPE::JAP, 10, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 		CNomalJap* pEffect = nullptr;
 
 		pEffect = m_pGameInstance->Clone_Prototype<CNomalJap>(iPrototypeLevel, nullptr);
 
-		return pEffect;}
+		return pEffect; }
 	))) return E_FAIL;
 
 
@@ -132,7 +133,7 @@ HRESULT CEffectPool::Ready_Effect()
 
 		pEffect = m_pGameInstance->Clone_Prototype<CBombard>(iPrototypeLevel, nullptr);
 
-		return pEffect;}
+		return pEffect; }
 	))) return E_FAIL;
 
 	if (FAILED(Create_Effect(SKILL_TYPE::DESCENDO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
@@ -141,9 +142,8 @@ HRESULT CEffectPool::Ready_Effect()
 
 		pEffect = m_pGameInstance->Clone_Prototype<CDecendo>(iPrototypeLevel, nullptr);
 
-		return pEffect;}
+		return pEffect; }
 	))) return E_FAIL;
-
 
 	if (FAILED(Create_Effect(SKILL_TYPE::PROTEGO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
 
@@ -153,7 +153,6 @@ HRESULT CEffectPool::Ready_Effect()
 
 		return pEffect; }
 	))) return E_FAIL;
-
 
 	if (FAILED(Create_Effect(SKILL_TYPE::REVELIO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
 
@@ -165,7 +164,16 @@ HRESULT CEffectPool::Ready_Effect()
 	))) return E_FAIL;
 
 
-	if (FAILED(Create_Effect(SKILL_TYPE::LEVIOSO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::JAP_SIDE, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
+
+		CNomalJapSide* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CNomalJapSide>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::LEVIOSO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
 		CLevioso* pEffect = nullptr;
 
@@ -175,22 +183,34 @@ HRESULT CEffectPool::Ready_Effect()
 	))) return E_FAIL;
 
 
+	if (FAILED(Create_Effect(SKILL_TYPE::BOMBARDA_SIDE, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
-	return S_OK;
-}
+		CBombardSide* pEffect = nullptr;
 
-HRESULT CEffectPool::Create_Effect(SKILL_TYPE eType, _uint iNumEffect, _uint iPrototypeLevel, _uint iCloneLevel, function<CEffect_Container* (_uint, _uint)> AddPrototypeEvent)
-{
-	for (_uint i = 0; i < iNumEffect; i++)
-	{
-		CEffect_Container* pEffect_Container = AddPrototypeEvent(iPrototypeLevel, iCloneLevel);
+		pEffect = m_pGameInstance->Clone_Prototype<CBombardSide>(iPrototypeLevel, nullptr);
 
-		if (pEffect_Container == nullptr)
-			return E_FAIL;
+		return pEffect; }
+	))) return E_FAIL;
 
-		m_EffectList[ENUM_CLASS(eType)].push_back(pEffect_Container);
+	if (FAILED(Create_Effect(SKILL_TYPE::LEVIOSO_SIDE, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
-	}
+		CLeviosoSide* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CLeviosoSide>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+
+	if (FAILED(Create_Effect(SKILL_TYPE::DESCENDO_SIDE, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CDecendoSide* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CDecendoSide>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
 
 	return S_OK;
 }
@@ -216,6 +236,24 @@ HRESULT CEffectPool::Use_Skill(SKILL_TYPE eType, CGameObject* pOwner)
 	return S_OK;
 }
 
+
+HRESULT CEffectPool::Create_Effect(SKILL_TYPE eType, _uint iNumEffect, _uint iPrototypeLevel, _uint iCloneLevel, function<CEffect_Container* (_uint, _uint)> AddPrototypeEvent)
+{
+	for (_uint i = 0; i < iNumEffect; i++)
+	{
+		CEffect_Container* pEffect_Container = AddPrototypeEvent(iPrototypeLevel, iCloneLevel);
+
+		if (pEffect_Container == nullptr) {
+			return E_FAIL;
+		}
+
+		m_EffectList[ENUM_CLASS(eType)].push_back(pEffect_Container);
+
+	}
+
+	return S_OK;
+
+}
 HRESULT CEffectPool::Reset_Pool()
 {
 	for (size_t i = 0; i < ENUM_CLASS(SKILL_TYPE::END); i++)

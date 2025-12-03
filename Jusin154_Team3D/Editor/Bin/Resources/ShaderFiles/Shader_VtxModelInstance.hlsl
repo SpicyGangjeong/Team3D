@@ -16,6 +16,7 @@ struct ParticleValue
     float2 vDistortionUVMoveTime;
     float2 vNoiseUVMoveTime;
     float2 vAniTime;
+    float2 vDissolveUVMoveTime;
     
     float2 vAniIndex;
     float  fGravity;
@@ -132,7 +133,10 @@ int     g_iBloomType;
 
 float g_fFar;
 
-
+float   g_fDissolveDelay;
+float   g_fReverseDissolveDelay;
+float2  g_vDissolveUVGainAmount;
+bool    g_isDissolveMove;
 
 struct VS_IN
 {
@@ -254,6 +258,7 @@ float4 DrawEffect(PS_IN In)
     float2 vMaskingTime = g_ParticleValue[In.iGPUIndex].vMaskingUVMoveTime;
     float2 vNoiseUVMoveTime = g_ParticleValue[In.iGPUIndex].vNoiseUVMoveTime;
     float2 vDistortionUVMoveTime = g_ParticleValue[In.iGPUIndex].vDistortionUVMoveTime;
+    float2 vDissolveUVMoveTime = g_ParticleValue[In.iGPUIndex].vDissolveUVMoveTime;
     float2 vDelay = g_ParticleValue[In.iGPUIndex].vDelay;
     
 
@@ -438,14 +443,49 @@ float4 DrawEffect(PS_IN In)
     
     
     if (g_isDissolve == true)
-    {
+    {        
+        float fTimeX = (In.vLifeTime.x - g_fDissolveDelay);
+        float fTimeY = (In.vLifeTime.y - g_fDissolveDelay);
+        float fTimeRatio = 0;
+        
+        if (g_fDissolveDelay <= FLT_EPSILON5)
+        {
+            fTimeRatio = In.vLifeTime.x / In.vLifeTime.y;
+        }
+        
+        if (fTimeX > 0 && fTimeY != 0)
+        {
+            fTimeRatio = saturate(fTimeX / fTimeY);
+        }
+      
+
         if (g_isNomalDissolve)
         {
-            vMtrlDiffuse.a *= (0.95f - In.vLifeTime.x / In.vLifeTime.y);
+            if (g_isReverseDissolve == false)
+            {
+                vMtrlDiffuse.a *= (0.95f - fTimeRatio);
+            }
+            else
+            {
+                vMtrlDiffuse.a *= In.vLifeTime.x / In.vLifeTime.y;
+
+            }    
+            
+            
+            if (vMtrlDiffuse.a <= FLT_EPSILON5)
+                discard;
         }
         else
         {
-            vMtrlDissolve = g_DissolveTexture.Sample(DefaultSampler, In.vTexcoord);
+        
+            float2 vDissolveUV = In.vTexcoord + SelectLerpUV(g_vDissolveUVGainAmount, (vDissolveUVMoveTime.x / vDissolveUVMoveTime.y), 0);
+            
+            if (g_isDissolveMove)
+                vMtrlDissolve = g_DissolveTexture.Sample(DefaultSampler, vDissolveUV);
+            else
+                vMtrlDissolve = g_DissolveTexture.Sample(DefaultSampler, In.vTexcoord);
+            
+            
         
             if (g_isReverseDissolve == true)
             {
@@ -454,7 +494,7 @@ float4 DrawEffect(PS_IN In)
             }
             else
             {
-                if (vMtrlDissolve.r < (In.vLifeTime.x / In.vLifeTime.y))
+                if (vMtrlDissolve.r < fTimeRatio)
                     discard;
             }
         }
