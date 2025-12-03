@@ -53,13 +53,7 @@ void CTerrain::Priority_Update(_float fTimeDelta)
 
 void CTerrain::Update(_float fTimeDelta)
 {
-
-#ifdef _DEBUG
-	if (m_pGameInstance->Key_Down(DIK_LSHIFT) )
-	{
-		m_bWasWireFrame = !m_bWasWireFrame;
-	}
-#endif // _DEBUG
+	Describe_Entity();
 }
 
 void CTerrain::Late_Update(_float fTimeDelta)
@@ -74,18 +68,6 @@ HRESULT CTerrain::Render()
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-#ifdef _DEBUG
-	static _int iValue1 = 16;
-	static _int iValue2 = 16;
-	static _int iValue3 = 16;
-	GUI::SliderInt("DSN1", (_int*)&iValue1, 1, 1024);
-	GUI::SliderInt("DSN2", (_int*)&iValue2, 1, 1024);
-	GUI::SliderInt("DSN3", (_int*)&iValue3, 1, 1024);
-	m_vDRN.x = 1.f / (_float)iValue1;
-	m_vDRN.y = 1.f / (_float)iValue2;
-	m_vDRN.z = 1.f / (_float)iValue3;
-#endif // _DEBUG
-
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDiffuseMultiplier", &m_vDRN.x, sizeof(_float)))) {
 		return E_FAIL;
 	}
@@ -95,31 +77,12 @@ HRESULT CTerrain::Render()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fNormalMultiplier", &m_vDRN.z, sizeof(_float)))) {
 		return E_FAIL;
 	}
-#ifdef _DEBUG
-	if (m_bWasWireFrame)
-	{
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NORTEX::ENV_TERRAIN_ANISO)))) {
-			return E_FAIL;
-		}
-	}
-	else
-	{
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NORTEX::DEFAULT)))) {
-			return E_FAIL;
-		}
-	}
-#endif // _DEBUG
-#ifndef _DEBUG
 	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NORTEX::ENV_TERRAIN_ANISO)))) {
 		return E_FAIL;
 	}
-#endif // !_DEBUG
-
-
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
 		return E_FAIL;
 	}
-
 	if (FAILED(m_pVIBufferCom->Render())) {
 		return E_FAIL;
 	}
@@ -245,6 +208,20 @@ void CTerrain::Free()
 #ifdef _DEBUG
 void CTerrain::Describe_Entity()
 {
-
+	GUI::Begin("Renderer");
+	GUI::PushItemWidth(80);
+	if (GUI::CollapsingHeader("PostProcessing_Bloom"))
+	{
+		static _int iTuningValue = 16;
+		GUI::DragInt("DSN1", (_int*)&iTuningValue, 1, 1024);
+		GUI::DragInt("DSN2", (_int*)&iTuningValue, 1, 1024);
+		GUI::DragInt("DSN3", (_int*)&iTuningValue, 1, 1024);
+		m_vDRN.x = 1.f / (_float)iTuningValue;
+		m_vDRN.y = 1.f / (_float)iTuningValue;
+		m_vDRN.z = 1.f / (_float)iTuningValue;
+		GUI::PopItemWidth();
+		GUI::EndChild();
+	}
+	GUI::End();
 }
 #endif // _DEBUG
