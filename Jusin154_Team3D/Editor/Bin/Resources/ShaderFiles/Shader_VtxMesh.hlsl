@@ -67,7 +67,7 @@ struct VS_OUT_BLUR
 struct VS_OUT_SHADOW
 {
     float4 vPosition : SV_POSITION;
-    float4 vProjPos : TEXCOORD0;
+    float fProjPos : TEXCOORD0;
 };
 
 
@@ -96,7 +96,7 @@ VS_OUT_SHADOW VS_MAIN_SHADOW(VS_IN In)
     matWVP = mul(matWV, g_ProjMatrix);
     
     Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
-    Out.vProjPos = Out.vPosition;
+    Out.fProjPos = Out.vPosition.z;
 
     return Out;
 }
@@ -288,12 +288,12 @@ PS_OUT PS_GLASS(PS_IN In)
 struct PS_IN_SHADOW
 {
     float4 vPosition : SV_POSITION;
-    float4 vProjPos : TEXCOORD0;
+    float fProjPos : TEXCOORD0;
 };
 
 struct PS_OUT_SHADOW
 {
-    float4 vShadowLightDepth : SV_TARGET0;
+    float fShadowLightDepth : SV_TARGET0;
 };
 
 struct PS_IN_BLUR
@@ -322,7 +322,7 @@ PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN_SHADOW In)
 {
     PS_OUT_SHADOW Out = (PS_OUT_SHADOW) 0;
     
-    Out.vShadowLightDepth.x = In.vProjPos.z;
+    Out.fShadowLightDepth = In.fProjPos;
     
     return Out;
 }

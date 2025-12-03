@@ -30,9 +30,13 @@ float ShadowVisibility_hwPCF(Texture2D ShadowMap, float4 vLightClip, float2 vSha
         for (int u = -1; u <= 1; ++u)
         {
             float2 vOffset = float2(u, v) * vTexel;
-            float fDepth = ShadowMap.Sample(DefaultSampler, uv + vOffset).x;
+            float fDepth = ShadowMap.Sample(BorderOneSampler, uv + vOffset);
             fVisibility += (fDepthCenter - bias > fDepth) ? 0.f : 1.f;
         }
+    }
+    if (abs(fVisibility - 9.f) < FLT_EPSILON3)
+    {
+        fVisibility = 9.f;
     }
     return fVisibility / 9.f;
 }

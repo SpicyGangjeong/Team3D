@@ -59,9 +59,9 @@ HRESULT CLight_Main::Ready_Components()
 	LIGHT_DESC			LightDesc{};
 
 	LightDesc.eType = LIGHT::DIRECTIONAL;
-	/*LightDesc.vDiffuse = _float4(0.8f, 0.8f, 0.8f, 0.f);
-	LightDesc.vAmbient = _float4(0.6f, 0.6f, 0.6f, 0.f);
-	LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 0.f);*/
+	//LightDesc.vDiffuse = _float4(0.8f, 0.8f, 0.8f, 0.f);
+	//LightDesc.vAmbient = _float4(0.6f, 0.6f, 0.6f, 0.f);
+	//LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 0.f);
 	LightDesc.vDiffuse = _float4(0.3f, 0.3f, 0.1f, 0.f);
 	LightDesc.vAmbient = _float4(0.3f, 0.3f, 0.5f, 0.f);
 	LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 0.f);
