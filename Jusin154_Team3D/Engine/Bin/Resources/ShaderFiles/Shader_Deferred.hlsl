@@ -19,7 +19,12 @@ float g_fFarBlurStart;
 float g_fFarBlurEnd;
 float g_fDOFBlurMultiplier;
 
-Texture2D g_Texture;
+Texture2D   g_Texture;
+Texture2D   g_SSAONoiseTexture;
+Texture2D   g_SSAOInputTexture;
+uint        g_iKernelSize;
+float       g_fSSAORadius;
+float2      g_vSSAOTextureSize;
 
 float g_fLightRange;
 float g_fSpotInnerAngle;
@@ -137,6 +142,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     float3 vAlbedo = g_DiffuseTexture.Sample(DefaultSampler, uv).rgb;
     float3 vNormal = normalize(g_NormalTexture.Sample(DefaultSampler, uv).xyz * 2.f - 1.f);
     float4 vDepth = g_DepthTexture.Sample(DefaultSampler, uv);
+    float fAmbientOcclusion = g_SSAOInputTexture.Sample(DefaultSampler, uv).r;
     
     float fViewZ = vDepth.y * g_fFar;
     
@@ -182,11 +188,12 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     }
     else // basic Lighting(phong blinn) // if you were here, you miss some assets.
     {
-        Out.vShade = g_vLightDiffuse * saturate(max(dot(normalize(g_vLightDir.xyz) * -1.f, vNormal), 0.f) + (g_vLightAmbient * g_vMtrlAmbient));
+        Out.vShade = g_vLightDiffuse * saturate(max(dot(normalize(g_vLightDir.xyz) * -1.f, vNormal), 0.f) + (fAmbientOcclusion * g_vLightAmbient * g_vMtrlAmbient));
         Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(max(dot(vToView * -1.f, vToLight), 0.f), 50.f);
     
         return Out;
     }
+    float fTotalOcclusion = saturate(fOcclusion * fAmbientOcclusion);
     
     { // 수치조정 // 디렉셔널
         float fMinRoughness = 0.05f;
@@ -197,9 +204,9 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     
     
     PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
-    PBR_Out.vShade *= fOcclusion;
+    PBR_Out.vShade *= fTotalOcclusion;
     
-    float3 vAmbient = g_vLightAmbient.rgb * fOcclusion * fAttenuation;
+    float3 vAmbient = g_vLightAmbient.rgb * fTotalOcclusion * fAttenuation;
     float3 vFinalDiffuse = PBR_Out.vShade + vAmbient;
     float3 vFinalSpecular = PBR_Out.vSpecular * g_vLightSpecular.rgb;
     
@@ -246,6 +253,7 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     float fLightDistance    = length(vFinalLightPosition - vWorldPosition.xyz);
     float3 vToView          = normalize(g_vCamPosition.xyz  - vWorldPosition.xyz); // 픽셀에서 카메라로
     float3 vToLight         = normalize(vFinalLightPosition - vWorldPosition.xyz); // 픽셀에서 라이트로
+    float fAmbientOcclusion = g_SSAOInputTexture.Sample(DefaultSampler, uv).r;
     
     if (g_bUsePowerLightAttenuation)
     {
@@ -284,11 +292,13 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     }
     else // basic Lighting(phong blinn) // if you were here, you miss some assets.
     {
-        Out.vShade = fAttenuation * (g_vLightDiffuse * saturate(max(dot(vToLight * -1.f, vNormal), 0.f) + (g_vLightAmbient * g_vMtrlAmbient)));
+        Out.vShade = fAttenuation * (g_vLightDiffuse * saturate(max(dot(vToLight * -1.f, vNormal), 0.f) + (fAmbientOcclusion * g_vLightAmbient * g_vMtrlAmbient)));
         Out.vSpecular = fAttenuation * ((g_vLightSpecular * g_vMtrlSpecular) * pow(max(dot(vToView * -1.f, vToLight), 0.f), 50.f));
     
         return Out;
     }
+    
+    float fTotalOcclusion = saturate(fOcclusion * fAmbientOcclusion);
     
     { // 수치조정 // 점광원
         float fMinRoughness = 0.05f;
@@ -299,9 +309,9 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     
     PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
     
-    PBR_Out.vShade *= fOcclusion;
+    PBR_Out.vShade *= fTotalOcclusion;
 
-    float3 vAmbient = g_vLightAmbient.rgb * fOcclusion * fAttenuation;
+    float3 vAmbient = g_vLightAmbient.rgb * fTotalOcclusion * fAttenuation;
     float3 vFinalDiffuse = PBR_Out.vShade + vAmbient;
     float3 vFinalSpecular = PBR_Out.vSpecular * g_vLightSpecular.rgb;
 
@@ -322,6 +332,7 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
     float3 vAlbedo = g_DiffuseTexture.Sample(DefaultSampler, uv).rgb;
     float3 vNormal = normalize(g_NormalTexture.Sample(DefaultSampler, uv).xyz * 2.f - 1.f);
     float4 vDepth = g_DepthTexture.Sample(DefaultSampler, uv);
+    float fAmbientOcclusion = g_SSAOInputTexture.Sample(DefaultSampler, uv).r;
     
     float fViewZ = vDepth.y * g_fFar;
     
@@ -401,11 +412,12 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
     }
     else // basic Lighting(phong blinn) // if you were here, you miss some assets.
     {
-        Out.vShade = fAttenuation * (g_vLightDiffuse * saturate(max(dot(vToLight * -1.f, vNormal), 0.f) + (g_vLightAmbient * g_vMtrlAmbient)));
+        Out.vShade = fAttenuation * (g_vLightDiffuse * saturate(max(dot(vToLight * -1.f, vNormal), 0.f) + (fAmbientOcclusion * g_vLightAmbient * g_vMtrlAmbient)));
         Out.vSpecular = fAttenuation * ((g_vLightSpecular * g_vMtrlSpecular) * pow(max(dot(vToView * -1.f, vToLight), 0.f), 50.f));
     
         return Out;
     }
+    float fTotalOcclusion = saturate(fOcclusion * fAmbientOcclusion);
     
     { // 수치조정 // 점광원
         float fMinRoughness = 0.05f;
@@ -416,9 +428,9 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
     
     PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
     
-    PBR_Out.vShade *= fOcclusion;
+    PBR_Out.vShade *= fTotalOcclusion;
     
-    float3 vAmbient = g_vLightAmbient.rgb * fOcclusion * fAttenuation;
+    float3 vAmbient = g_vLightAmbient.rgb * fTotalOcclusion * fAttenuation;
     float3 vFinalDiffuse = PBR_Out.vShade + vAmbient;
     float3 vFinalSpecular = PBR_Out.vSpecular * g_vLightSpecular.rgb;
     
@@ -464,10 +476,7 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     
     vector vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     
-    if (0.f == vDiffuse.a)
-    {
-        discard;
-    }
+    if (0.f == vDiffuse.a) { discard; }
     
     vector vShade = g_ShadeTexture.Sample(DefaultSampler, In.vTexcoord);
     
@@ -875,6 +884,8 @@ PS_OUT_BACKBUFFER PS_TONE_MAPPING(PS_IN In)
     vColor = pow(vColor, 2.2f);
     switch (g_iToneMappingType) {
         case 0:
+            vColor = pow(vColor, 1.f/2.2f);
+            vColor /= g_fToneMappingExposure;
             break;
         case 1:
             vColor = float4(ReinHard_ToneMapper(vColor.xyz), 1.f);
@@ -888,6 +899,94 @@ PS_OUT_BACKBUFFER PS_TONE_MAPPING(PS_IN In)
     
     Out.vBackBuffer = vColor;
     Out.vEnvironment = float4(0.f, 0.f, 0.f, 1.f);
+    return Out;
+}
+
+struct PS_OUT_SSAO_AMBIENT_OCCLUSION
+{
+    float fOcclusion : SV_TARGET0;
+};
+
+PS_OUT_SSAO_AMBIENT_OCCLUSION PS_SSAO_AMBIENT_OCCLUSION(PS_IN In)
+{
+    PS_OUT_SSAO_AMBIENT_OCCLUSION Out;
+    
+    vector vWorldPosition;
+    vector vDepthDesc = g_DepthTexture.Sample(DefaultSampler, In.vTexcoord);
+    float fViewZ = vDepthDesc.y * g_fFar;
+    
+    vWorldPosition.x = In.vTexcoord.x * 2.f - 1.f;
+    vWorldPosition.y = In.vTexcoord.y * -2.f + 1.f;
+    vWorldPosition.z = vDepthDesc.x;
+    vWorldPosition.w = 1.f;
+    
+    vWorldPosition = vWorldPosition * fViewZ;
+    
+    vector vViewPosition = vWorldPosition = mul(vWorldPosition, g_invmatProj);
+    vViewPosition /= vViewPosition.w;
+    
+    float2 vTexcoord = In.vTexcoord;
+    float3 vNormal = normalize(g_NormalTexture.Sample(DefaultSampler, vTexcoord).xyz * 2.f - 1.f);
+    vNormal = mul(vNormal, (float3x3)g_ViewMatrix);
+    float2 vNoiseScale = float2(g_vResolution / 4.f);
+    
+    float3 vNoise = g_SSAONoiseTexture.Sample(SsaoDataSampler, vTexcoord * vNoiseScale).xyz;
+    
+    float3 vTangent = normalize(vNoise - vNormal * dot(vNoise, vNormal));
+    float3 vBiNormal = cross(vNormal.xyz, vTangent.xyz);
+    float3x3 TBNMatrix = float3x3(vTangent.xyz, vBiNormal.xyz, vNormal.xyz);
+    
+    float fOcclusion = 0.f;
+    for (uint i = 0; i < g_iKernelSize; ++i)
+    {
+        float3 vSample = mul(SamplePos[i], TBNMatrix);
+        vSample = vViewPosition.xyz + vSample * g_fSSAORadius;
+        
+        float4 vOffset = float4(vSample, 1.f);
+        vOffset = mul(vOffset, g_ProjMatrix); // view -> clip
+        vOffset.xyz /= vOffset.w;
+        vOffset.xyz = vOffset.xyz * 0.5 + 0.5;
+        float fCenterViewZ = fViewZ;
+        
+        float fSampleViewDepth = g_DepthTexture.Sample(DefaultSampler, vOffset.xy).y * g_fFar;
+        
+        float fSamplePosViewZ = vSample.z;
+        const float fBias = 0.1f; 
+        float fIsOccluded = (fSampleViewDepth <= fCenterViewZ - fBias) ? 1.0f : 0.0f;
+
+        float fRangeCheck = smoothstep(0.f, 1.f, g_fSSAORadius / abs(vViewPosition.z - fSampleViewDepth));
+        fOcclusion += fIsOccluded * fRangeCheck;
+    }
+    fOcclusion = (1.f - (fOcclusion / g_iKernelSize));
+    Out.fOcclusion = fOcclusion;
+    
+    return Out;
+}
+
+struct PS_OUT_SSAO_BLUR
+{
+    float fBlur : SV_TARGET0;
+};
+
+PS_OUT_SSAO_BLUR PS_SSAO_BLUR(PS_IN In)
+{
+    PS_OUT_SSAO_BLUR Out;
+
+    float2 vTexelSize = 1.0f / g_vResolution;
+
+    float fResult = 0.0f;
+    for (int x = -2; x < 2; ++x)
+    {
+        for (int y = -2; y < 2; ++y)
+        {
+            float2 vOffset = float2((float) x, (float) y) * vTexelSize;
+            fResult += g_SSAOInputTexture.Sample(DefaultSampler, In.vTexcoord + vOffset).r;
+        }
+    }
+
+    fResult /= 16.f; // 16개 샘플 평균
+
+    Out.fBlur = fResult;
     return Out;
 }
 
@@ -1049,5 +1148,25 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_CAPTURE();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_TONE_MAPPING();
+    }
+
+    pass SSAO_AmbientOcclusion // 16
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_CAPTURE();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_SSAO_AMBIENT_OCCLUSION();
+    }
+
+    pass SSAO_Blur_X // 17
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_CAPTURE();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_SSAO_BLUR();
     }
 }

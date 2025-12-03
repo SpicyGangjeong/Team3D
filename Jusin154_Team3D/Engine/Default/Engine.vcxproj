@@ -614,6 +614,7 @@ call Update_Lib.bat
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
+    <None Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Buffers.hlsli" />
     <None Include="..\Public\Assimp\color4.inl" />
     <None Include="..\Public\Assimp\config.h.in" />
     <None Include="..\Public\Assimp\material.inl" />

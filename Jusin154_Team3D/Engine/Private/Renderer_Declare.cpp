@@ -74,6 +74,80 @@ HRESULT CRenderer::Ready_ShadowDepthStencilView(_uint iSizeX, _uint iSizeY)
 	return S_OK;
 }
 
+void CRenderer::Fill_Geometry(_uint iNumSample)
+{
+	uniform_real_distribution<_float> rand_Normal(0, 1.f);
+	uniform_real_distribution<_float> rand_Minus(-1.f, 1.f);
+	mt19937 m_Rng{ random_device{}() };
+
+	_float fScale;
+	_vector vPos;
+	for (_uint iIndexSample = 0; iIndexSample < iNumSample; ++iIndexSample) {
+		vPos = {
+			rand_Minus(m_Rng),
+			rand_Minus(m_Rng),
+			rand_Normal(m_Rng), 0.f
+		};
+		vPos = XMVector3Normalize(vPos) * rand_Normal(m_Rng);
+		fScale = ((_float)iIndexSample / (_float)iNumSample);
+		fScale = CMyTools::Lerp_f1D(0.1f, 1.f, fScale * fScale);
+		vPos *= fScale;
+		XMStoreFloat3(&m_tagSSAOGeometry.SamplePos[iIndexSample].vPos, vPos);
+	}
+
+	for (_uint iIndexDir = 0; iIndexDir < 16; ++iIndexDir) {
+		m_tagSSAOGeometryDirections.vDir[iIndexDir] = {
+			rand_Minus(m_Rng),
+			rand_Minus(m_Rng)
+		};
+	}
+	D3D11_TEXTURE2D_DESC texDesc = {};
+	texDesc.Width = 4;
+	texDesc.Height = 4;
+	texDesc.MipLevels = 1;
+	texDesc.ArraySize = 1;
+	texDesc.Format = DXGI_FORMAT_R32G32_FLOAT;
+	texDesc.SampleDesc.Count = 1;
+	texDesc.SampleDesc.Quality = 0;
+	texDesc.Usage = D3D11_USAGE_IMMUTABLE;
+	texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+
+	D3D11_SUBRESOURCE_DATA initData = {};
+	initData.pSysMem = &m_tagSSAOGeometryDirections;
+	initData.SysMemPitch = sizeof(_float2);
+
+	if (FAILED(m_pDevice->CreateTexture2D(&texDesc, &initData, &m_pSSAO_NoiseTexture))) {
+		assert(false);
+		return;
+	}
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+	srvDesc.Format = texDesc.Format;
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MostDetailedMip = 0;
+	srvDesc.Texture2D.MipLevels = 1;
+
+	m_pDevice->CreateShaderResourceView(m_pSSAO_NoiseTexture, &srvDesc, &m_pSSAO_NoiseSRV);
+
+
+	ID3D11Buffer* pGlobalStaticCB = nullptr;
+	{
+		D3D11_BUFFER_DESC desc = {};
+		desc.ByteWidth = sizeof(SSAO_GEOMETRY_HEMISPHERE);
+		desc.Usage = D3D11_USAGE_IMMUTABLE;
+		desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		desc.CPUAccessFlags = 0;
+
+		D3D11_SUBRESOURCE_DATA initData = {};
+		initData.pSysMem = &m_tagSSAOGeometry;
+		initData.SysMemPitch = sizeof(_float);
+
+		HRESULT hr = m_pDevice->CreateBuffer(&desc, &initData, &pGlobalStaticCB);
+
+		m_pContext->VSSetConstantBuffers(10, 1, &pGlobalStaticCB);
+		m_pContext->PSSetConstantBuffers(10, 1, &pGlobalStaticCB);
+	}
+}
 HRESULT CRenderer::Initialize()
 {
 	_uint		iNumViewports = { 1 };
@@ -152,19 +226,14 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 
-		/* Target_SSAO */
-		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_SSAO"), (_uint)Viewport.Width, (_uint)Viewport.Height,
-			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.f, 0.0f, 0.0f)))) {
+		/* Target_SSAO_AmbientOcclusion */
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_SSAO_AmbientOcclusion"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R32_FLOAT, _float4(0.f, 0.f, 0.0f, 0.0f)))) {
 			return E_FAIL;
 		}
-		/* Target_SSAO_BLUR_X */
-		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_SSAO_BLUR_X"), (_uint)Viewport.Width, (_uint)Viewport.Height,
-			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.f, 0.0f, 0.0f)))) {
-			return E_FAIL;
-		}
-		/* Target_SSAO_LIGHTING */
-		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_SSAO_LIGHTING"), (_uint)Viewport.Width, (_uint)Viewport.Height,
-			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.f, 0.0f, 0.0f)))) {
+		/* Target_SSAO_BLUR */
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_SSAO_BLUR"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R32_FLOAT, _float4(0.f, 0.f, 0.0f, 0.0f)))) {
 			return E_FAIL;
 		}
 
@@ -256,18 +325,13 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 		/* MRT_SSAO */
-		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_SSAO"), TEXT("Target_SSAO")))) {
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_SSAO_OCCLUSION"), TEXT("Target_SSAO_AmbientOcclusion")))) {
 			return E_FAIL;
 		}
 		/* MRT_SSAO_BLUR */
-		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_SSAO_BLUR"), TEXT("Target_SSAO_BLUR_X")))) {
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_SSAO_BLUR"), TEXT("Target_SSAO_BLUR")))) {
 			return E_FAIL;
 		}
-		/* MRT_SSAO_LIGHTING */
-		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_SSAO_LIGHTING"), TEXT("Target_SSAO_LIGHTING")))) {
-			return E_FAIL;
-		}
-
 		/* MRT_Combined */
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Combined"), TEXT("Target_Fog")))) {
 			return E_FAIL;
@@ -344,7 +408,6 @@ HRESULT CRenderer::Initialize()
 		return E_FAIL;
 	}
 
-
 	m_pLastColorShader = (CShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, FX_LASTCOLOR, nullptr, nullptr);
 
 	if (nullptr == m_pLastColorShader) {
@@ -365,6 +428,9 @@ HRESULT CRenderer::Initialize()
 	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixScaling(Viewport.Width, Viewport.Height, 1.f));
 	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixIdentity());
 	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(Viewport.Width, Viewport.Height, 0.f, 1.f));
+
+	Fill_Geometry(SSAO_SAMPLE_NUMBER);
+
 
 	return S_OK;
 }
