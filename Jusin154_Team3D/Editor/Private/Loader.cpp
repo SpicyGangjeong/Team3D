@@ -120,6 +120,12 @@
 #include "EffectPool.h"
 #include "Revelio.h"
 #include "Levioso.h"
+
+#include "BombardSide.h"
+#include "LeviosoSide.h"
+#include "DecendoSide.h"
+#include "NomalJapSide.h"
+
 #pragma endregion
 
 #pragma region PHYSX_HEADER
@@ -1278,6 +1284,19 @@ HRESULT CLoader::Loading_For_Effect()
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CLevioso>(ENUM_CLASS(LEVEL::EFFECT), CLevioso::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CNomalJapSide>(NEXT_LEVEL, CNomalJapSide::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CLeviosoSide>(NEXT_LEVEL, CLeviosoSide::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CBombardSide>(NEXT_LEVEL, CBombardSide::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CDecendoSide>(NEXT_LEVEL, CDecendoSide::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 
 
 	/* For.Prototype_GameObject_Wand */

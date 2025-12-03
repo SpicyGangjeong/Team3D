@@ -57,6 +57,24 @@ HRESULT CMapContainer::Render()
 	return S_OK;
 }
 
+void CMapContainer::ReadyForPhysX()
+{
+	//vector<class CPartObject*>::iterator iter = m_ColiisonPartObjects.begin();
+	//for (; iter != m_ColiisonPartObjects.end(); ++iter) {
+	//	CMapObject_Collision* pObject = static_cast<CMapObject_Collision*>(*iter);
+	//	pObject->ReadyForPhysX();
+	//}
+}
+
+void CMapContainer::ConvertToPhysX()
+{
+	//vector<class CPartObject*>::iterator iter = m_ColiisonPartObjects.begin();
+	//for (; iter != m_ColiisonPartObjects.end(); ++iter) {
+	//	CMapObject_Collision* pObject = static_cast<CMapObject_Collision*>(*iter);
+	//	pObject->ConvertToPhysX();
+	//}
+}
+
 HRESULT CMapContainer::Save_PartObjects(tinyxml2::XMLDocument& Doc, tinyxml2::XMLElement* Container)
 {
 	for (auto& piar : m_PartObjects)

@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 
 #include "Level_Loading.h"
+#include "InfoInstance.h"
 
 _float g_fTimeMult = 1.f;
 CMainApp::CMainApp()
@@ -86,6 +87,17 @@ HRESULT CMainApp::Start_Level(LEVEL eLevelID)
 	if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, eLevelID))))
 		return E_FAIL;
 
+	m_pInfoInstance = CInfoInstance::GetInstance();
+	if (nullptr == m_pInfoInstance) {
+		return E_FAIL;
+	}
+
+	SAFE_ADDREF(m_pInfoInstance);
+
+	if (FAILED(m_pInfoInstance->Initialize_Information(m_pDevice, m_pContext))) {
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 
@@ -157,7 +169,9 @@ void CMainApp::Free()
 	SAFE_RELEASE(m_pDevice);
 	SAFE_RELEASE(m_pContext);
 
+	m_pInfoInstance->Release_Information();
 	m_pGameInstance->Release_Engine();
+
 
 	SAFE_RELEASE(m_pGameInstance);
 }

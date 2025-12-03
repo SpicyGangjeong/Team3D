@@ -343,7 +343,7 @@ HRESULT CEffect_Container::Bind_ShaderResources()
 	return S_OK;
 }
 
-HRESULT CEffect_Container::Reset_EffectParts()
+HRESULT CEffect_Container::Reset_EditEffect()
 {
 	for (auto& iter : m_PartObjects)
 	{
@@ -389,12 +389,6 @@ void CEffect_Container::Update_Event(_float fTimeDelta)
 			for (auto& pPart : m_PartObjects)
 			{
 				pPart.second->Set_Visible(false);
-			}
-
-			if (m_pPhysHitBox != nullptr && m_pPhysHitBox->isDead() == false )
-			{
-				m_pPhysHitBox->Set_Dead();
-				SAFE_RELEASE(m_pPhysHitBox);
 			}
 		}
 	}

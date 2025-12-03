@@ -506,10 +506,7 @@ HRESULT CEffectObject::LoadPre(const _char* pFilePath, LEVEL eLevel)
 	}
 
 	memcpy(&m_EffectInfo, &PreEffectInfo, sizeof(PRE_EFFECT_INFO));
-
-
-
-
+	
 	m_EffectInfo.LightDesc.pPosition = m_pTransformCom->Get_StatePtr(STATE::POSITION);
 	m_EffectInfo.LightDesc.iLevel = ENUM_CLASS(eLevel);
 
@@ -904,6 +901,26 @@ HRESULT CEffectObject::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fBluringStrength", &m_EffectInfo.fBluringStrength, sizeof(_float)))) {
 		return E_FAIL;
 	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDissolveDelay", &m_EffectInfo.fDissolveDelay, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fReverseDissolveDelay", &m_EffectInfo.fReverseDissolveDelay, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDissolveUVGainAmount", &m_EffectInfo.vDissolveUVGainAmount, sizeof(_float2)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDissolveMove", &m_EffectInfo.isDissolveMove, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+
+
+
 
 
 
