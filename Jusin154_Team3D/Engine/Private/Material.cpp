@@ -514,7 +514,7 @@ HRESULT CMaterial::Initialize(const _char* pModelFilePath, const SaveMaterial& _
 {
 	for (size_t type = 0; type < 27; type++)
 	{
-		for (const auto& path : _SaveMaterial.Path[type])
+		if(!_SaveMaterial.Path[type].empty())
 		{
 			char szDrive[MAX_PATH] = {};
 			char szDir[MAX_PATH] = {};
@@ -522,7 +522,7 @@ HRESULT CMaterial::Initialize(const _char* pModelFilePath, const SaveMaterial& _
 
 			char szFullPath[MAX_PATH] = {};
 			//(szFullPath, szDrive);
-			strcpy_s(szFullPath, path.c_str());
+			strcpy_s(szFullPath, _SaveMaterial.Path[type].front().c_str());
 
 			_tchar szPerfectPath[MAX_PATH] = {};
 			MultiByteToWideChar(CP_ACP, 0, szFullPath, -1, szPerfectPath, MAX_PATH);
@@ -544,7 +544,7 @@ HRESULT CMaterial::Initialize(const _char* pModelFilePath, const SaveMaterial& _
 					hr = CreateWICTextureFromFile(m_pDevice, szPerfectPath, nullptr, &pSRV);
 			}
 
-			if (FAILED(hr)){
+			if (FAILED(hr)) {
 				return E_FAIL;
 			}
 			m_SRVs[type].push_back(pSRV);
