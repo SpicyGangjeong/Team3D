@@ -12,6 +12,13 @@ public:
 	{
 		const _tchar* pModelPrototypeTag;
 	}PARTS_OBJECT_DESC;
+
+	struct PendingEvent
+	{
+		_float fRatio = 0.f;
+		_uint AnimIndex = 0;
+		function<void()> Callback;
+	};
 protected:
 	CUnit(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CUnit(const CUnit& Prototype);
@@ -64,14 +71,19 @@ protected:
 
 	STATEANIM::ESTATE m_eSpell = { STATEANIM::END };
 
+	vector<PendingEvent> m_PendingEvents;
+
 private:
 	virtual void Add_FSM() {};
 	virtual void Set_FSM() {};
 	virtual void Set_Anim() {};
 
+
+
 protected:
 	HRESULT Ready_Components(void*pArg);
-
+	void Play_Event();
+	void Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio = 0.f);
 public:
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr)PURE;
 	virtual void Free() override;

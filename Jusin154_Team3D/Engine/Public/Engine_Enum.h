@@ -97,10 +97,10 @@ enum class PXOBJECT : _uint {
 	NOT_DEFINE = 000,
 #pragma endregion
 #pragma region PLAYER
-	PLAYER = 010,
+	PLAYER = 10,
 #pragma endregion
 #pragma region MONSTER
-	MONSTER = 030,
+	MONSTER = 30,
 	GOBLIN_WARRIOR,		// 031
 	GOBLIN_MAGICIAN,
 	GOBLIN_THEIF,
@@ -115,6 +115,13 @@ enum class PXOBJECT : _uint {
 	GOBLIN_SHIELD_BREAK_MELEE,
 	GOBLIN_SHIELD_BREAK_MAGIC,
 	GOBLIN_NORMAL_MAGIC,
+	TROLL_GROUND_STRIKE,
+
+	/*
+	* _int iKind;
+	*  if (iKind > 100 && iKind < 200){
+	*  dammage
+	*/
 
 #pragma endregion
 #pragma region ALLY_HITBOX

@@ -22,6 +22,8 @@ public:
 	_float Random_Normal();
 	_float Random_Float(_float fMin, _float fMax);
 	_int   Random_Int(_int iMin, _int iMax);
+	_int   Real_Random_Int(_int iMin, _int iMax);
+	_float Real_Random_Float(_float fMin, _float fMax);
 	void BillBoard(CTransform* pTransform);
 
 #pragma region GRAPHIC_DEVICE
@@ -273,6 +275,7 @@ private:
 
 #ifdef _DEBUG
 private:
+	mt19937 m_Rng{ random_device{}() };
 	_float							m_fTimer_PriorityUpdate = { 0.f };
 	_float							m_fTimer_Update = { 0.f };
 	_float							m_fTimer_LateUpdate = { 0.f };

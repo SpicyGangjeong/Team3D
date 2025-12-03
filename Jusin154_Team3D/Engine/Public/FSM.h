@@ -26,6 +26,10 @@ enum ESTATE : _u64Flag
 	BROOM_RIDE                  = 1ULL << 19,
 	MOUNT_B                     = 1ULL << 20,
     DISMOUNT                    = 1ULL << 21,
+    RUSH                        = 1ULL << 22,
+    THROW_ROCK                  = 1ULL << 23,
+    BACKHAND_SWING              = 1ULL << 24,
+    SWING                       = 1ULL << 25,
     END
 };
 NS_END

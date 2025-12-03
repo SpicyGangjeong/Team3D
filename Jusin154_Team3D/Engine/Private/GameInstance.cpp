@@ -174,6 +174,18 @@ _int CGameInstance::Random_Int(_int iMin, _int iMax)
 	return iMin + (_int)(Random_Normal() * (iMax - iMin));
 }
 
+_int CGameInstance::Real_Random_Int(_int iMin, _int iMax)
+{
+	uniform_int_distribution<_int> rand(iMin, iMax);
+	return rand(m_Rng);
+}
+
+_float CGameInstance::Real_Random_Float (_float iMin, _float iMax)
+{
+	uniform_real_distribution<_float> rand(iMin, iMax);
+	return rand(m_Rng);
+}
+
 void CGameInstance::BillBoard(CTransform* pTransform)
 {
 	_matrix ScaleMatrix = {};
