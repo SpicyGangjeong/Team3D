@@ -21,8 +21,8 @@ HRESULT CSpell_Header::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = 0.f;
-	Desc.fY = -20.f;
+	Desc.fX = 600.f;
+	Desc.fY = -385.f;
 	Desc.fSizeX = 512.f;
 	Desc.fSizeY = 64.f;
 
@@ -38,21 +38,32 @@ HRESULT CSpell_Header::Initialize(void* pArg)
 	}
 
 	m_fTimeMult = 3.f;
-	m_fAlpha = 1.f;
-	m_fAlphaTime = 3.f;
+	m_fAlpha = 0.f;
+	m_fAlphaTime = 5.f;
 	m_fMoveSpeed = 5.f;
 	m_fLerpX = m_fX;
 	m_fLerpY = 45;
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Slot_Hover"), [this](void* p) {this->Set_SkillType(*reinterpret_cast<_int*>(p)); });
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("FadeIn"), [this](void* p) {this->Set_FadeIn(); });
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("FadeOut"), [this](void* p) {this->Set_FadeOut(); });
 	return S_OK;
 }
 
 void CSpell_Header::Priority_Update(_float fTimeDelta)
 {
+	if (!__super::Chack_Visible())
+	{
+		return;
+	}
 	__super::Priority_Update(fTimeDelta);
 }
 
 void CSpell_Header::Update(_float fTimeDelta)
 {
+	if (!__super::Chack_Visible())
+	{
+		return;
+	}
 	if (m_bFadeIn == true)
 	{
 		if (m_fAlpha <= 1.f)
@@ -70,7 +81,7 @@ void CSpell_Header::Update(_float fTimeDelta)
 	if (m_bFadeOut == true)
 	{
 		if (m_fAlpha >= 0.f)
-			m_fAlpha -= fTimeDelta;
+			m_fAlpha -= fTimeDelta * m_fAlphaTime;;
 
 		if (m_fAlpha <= 0.f)
 		{
@@ -79,13 +90,23 @@ void CSpell_Header::Update(_float fTimeDelta)
 		}
 	}
 
+	if (m_iSpellType != -1)
+	{
+		m_iSkillType = static_cast<CUIObject*>(m_pOwner)->Get_Info(m_iSpellType).iSpell_Type;
+	}
+
 	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
 }
 
 void CSpell_Header::Late_Update(_float fTimeDelta)
 {
+	if (!__super::Chack_Visible())
+	{
+		return;
+	}
 	if (m_bVisible) {
+		m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
 		__super::Late_Update(fTimeDelta);
 	}
 }
@@ -111,11 +132,6 @@ HRESULT CSpell_Header::Render()
 _vector CSpell_Header::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
-}
-
-void CSpell_Header::MoveY(_float fY)
-{
-	m_fY += fY;
 }
 
 HRESULT CSpell_Header::Bind_ShaderResources()
@@ -156,7 +172,7 @@ HRESULT CSpell_Header::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_iSpellType", &m_iSpellType, sizeof(_int))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iSpellType", &m_iSkillType, sizeof(_int))))
 	{
 		return E_FAIL;
 	}

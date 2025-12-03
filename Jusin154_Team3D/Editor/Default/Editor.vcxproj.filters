@@ -82,9 +82,6 @@
     <Filter Include="02.GameObjects\Layer_Effect\Effect\00.EffectObject">
       <UniqueIdentifier>{8a5ffca8-725a-42ee-a3eb-3c79df09dec9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\01.TestEffect">
-      <UniqueIdentifier>{32718f84-d863-48d2-8611-90c40f2ba1c5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Layer_Effect\Effect\02.EditEffect">
       <UniqueIdentifier>{ba468252-bba3-46e4-bf61-e726a59060ad}</UniqueIdentifier>
     </Filter>
@@ -436,11 +433,47 @@
     <Filter Include="02.GameObjects\Env\03.MapElement\Light">
       <UniqueIdentifier>{99652c97-4011-4d1f-84fb-7e6aa9f6ec1a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\02.EditEffect\01.TestEffect">
+      <UniqueIdentifier>{32718f84-d863-48d2-8611-90c40f2ba1c5}</UniqueIdentifier>
+    </Filter>
     <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_Anim">
       <UniqueIdentifier>{4aa98871-8d80-4757-b616-e96f4e840857}</UniqueIdentifier>
     </Filter>
     <Filter Include="50.UI\Spell_Data">
       <UniqueIdentifier>{3949bd3b-1686-43e3-822c-d3eabe41653e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Current_Slot_Number">
+      <UniqueIdentifier>{2f8a3c68-c3d3-43cc-9649-16e0cfd168fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_Drag">
+      <UniqueIdentifier>{dcc220a9-4649-4f95-9205-9eee9af128ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_Anim">
+      <UniqueIdentifier>{4aa98871-8d80-4757-b616-e96f4e840857}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\05.NomalJap\NomalJapSide">
+      <UniqueIdentifier>{3fb9a340-293c-413e-ae32-e5986222f711}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\06.Bombard\BombardSide">
+      <UniqueIdentifier>{51b32cc0-bf57-444f-9a21-0ff756a94291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\07.Decendo\DecendoSide">
+      <UniqueIdentifier>{09f9fe15-1685-4aac-b3a1-ee98c3e76e3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\10.Levioso\LeviosoSide">
+      <UniqueIdentifier>{c70a2ce4-8664-45e0-b594-4f416829dab8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.InfoInstance">
+      <UniqueIdentifier>{c30da651-49ea-4d68-b65b-c363eaf820f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.InfoInstance\00.PlayerInfo">
+      <UniqueIdentifier>{c66672a6-3ecb-4301-94a4-da003ef9a567}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.InfoInstance\01.MonsterInfo">
+      <UniqueIdentifier>{0e7cf683-2a5e-4aa9-882d-a0d97ba96a8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.InfoInstance\02.MapInfo">
+      <UniqueIdentifier>{6b288e75-d33a-4a9d-9cb0-139d3671ad13}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -520,7 +553,7 @@
       <Filter>02.GameObjects\Layer_Effect\Effect\00.EffectObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\TestEffect.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\01.TestEffect</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\02.EditEffect\01.TestEffect</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\EditEffect.h">
       <Filter>02.GameObjects\Layer_Effect\Effect\02.EditEffect</Filter>
@@ -864,6 +897,36 @@
     <ClInclude Include="..\public\Spell_Data.h">
       <Filter>50.UI\Spell_Data</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Current_Slot_Number.h">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Current_Slot_Number</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Spell_Drag.h">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Drag</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\NomalJapSide.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\05.NomalJap\NomalJapSide</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BombardSide.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\06.Bombard\BombardSide</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DecendoSide.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\07.Decendo\DecendoSide</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LeviosoSide.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\10.Levioso\LeviosoSide</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\InfoInstance.h">
+      <Filter>04.InfoInstance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerInfo.h">
+      <Filter>04.InfoInstance\00.PlayerInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MonsterInfo.h">
+      <Filter>04.InfoInstance\01.MonsterInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MapInfo.h">
+      <Filter>04.InfoInstance\02.MapInfo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -923,7 +986,7 @@
       <Filter>02.GameObjects\Layer_Effect\Effect\00.EffectObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\TestEffect.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\01.TestEffect</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\02.EditEffect\01.TestEffect</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\EditEffect.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect\02.EditEffect</Filter>
@@ -1284,6 +1347,36 @@
     </ClCompile>
     <ClCompile Include="..\private\Spell_Data.cpp">
       <Filter>50.UI\Spell_Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Current_Slot_Number.cpp">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Current_Slot_Number</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Spell_Drag.cpp">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Drag</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\NomalJapSide.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\05.NomalJap\NomalJapSide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BombardSide.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\06.Bombard\BombardSide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\DecendoSide.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\07.Decendo\DecendoSide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LeviosoSide.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\10.Levioso\LeviosoSide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\InfoInstance.cpp">
+      <Filter>04.InfoInstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerInfo.cpp">
+      <Filter>04.InfoInstance\00.PlayerInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MonsterInfo.cpp">
+      <Filter>04.InfoInstance\01.MonsterInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MapInfo.cpp">
+      <Filter>04.InfoInstance\02.MapInfo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

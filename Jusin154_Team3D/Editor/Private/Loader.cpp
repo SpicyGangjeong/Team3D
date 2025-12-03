@@ -36,6 +36,8 @@
 
 #pragma region UI
 
+#include "Spell_Data.h"
+
 #include "GamePlay_Canvas.h"
 
 #include "Mission_Panel.h"
@@ -78,6 +80,7 @@
 #include "Spell_Header_Line.h"
 #include "Spell_Vidio_Border.h"
 #include "Spell_Anim.h"
+#include "Current_Slot_Number.h"
 
 #include "IMGUIUI.h"
 
@@ -117,6 +120,12 @@
 #include "EffectPool.h"
 #include "Revelio.h"
 #include "Levioso.h"
+
+#include "BombardSide.h"
+#include "LeviosoSide.h"
+#include "DecendoSide.h"
+#include "NomalJapSide.h"
+
 #pragma endregion
 
 #pragma region PHYSX_HEADER
@@ -813,6 +822,11 @@ HRESULT CLoader::Loading_For_UI()
 	m_strMessage = TEXT("Prototype Loading..");
 
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_Data>(g_iStaticLevel, CSpell_Data::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
 	if (FAILED(m_pGameInstance->Add_Prototype<CGamePlay_Canvas>(g_iStaticLevel, CGamePlay_Canvas::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
@@ -968,6 +982,10 @@ HRESULT CLoader::Loading_For_UI()
 	{
 		return E_FAIL;
 	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CCurrent_Slot_Number>(g_iStaticLevel, CCurrent_Slot_Number::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CIMGUIUI>(g_iStaticLevel, CIMGUIUI::Create(m_pDevice, m_pContext))))
 	{
@@ -1068,6 +1086,22 @@ HRESULT CLoader::Loading_For_Effect()
 
 		});
 
+	Asset_FileLoad("../Bin/Resources/Textures/Effect/Trails", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath) {
+
+		_string strFilePath = pFilePath;
+		_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
+
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::EFFECT), wstrFileName,
+			CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
+			return E_FAIL;
+		}
+
+		return S_OK;
+
+
+	});
+
 	Asset_FileLoad("../Bin/Resources/Textures/Effect/Flipbooks", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath) {
 
 		_string strFilePath = pFilePath;
@@ -1143,6 +1177,9 @@ HRESULT CLoader::Loading_For_Effect()
 		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Effect/DummyPlane/DummyPlane.fbx", XMMatrixIdentity()))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Wand_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Wand/Wand.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixIdentity()))))
+		return E_FAIL;
 
 	vector<future<pair<_wstring, CModel*>*>> futures = {};
 
@@ -1161,7 +1198,9 @@ HRESULT CLoader::Loading_For_Effect()
 		TEXT("Prototype_Component_Wand_Model")
 	));
 
+
 	for (auto& job : futures) {
+
 		pair<_wstring, CModel*>* pResult = job.get();
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, pResult->first, pResult->second))) {
 			assert(false);
@@ -1245,6 +1284,19 @@ HRESULT CLoader::Loading_For_Effect()
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CLevioso>(ENUM_CLASS(LEVEL::EFFECT), CLevioso::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CNomalJapSide>(NEXT_LEVEL, CNomalJapSide::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CLeviosoSide>(NEXT_LEVEL, CLeviosoSide::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CBombardSide>(NEXT_LEVEL, CBombardSide::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CDecendoSide>(NEXT_LEVEL, CDecendoSide::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 
 
 	/* For.Prototype_GameObject_Wand */
@@ -1916,6 +1968,16 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	futures.emplace_back(Deferred_ModelLoad(
 		MODEL::ANIM, "../Bin/Resources/Models/Object/Troll_Weapon/Troll_Weapon.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
 		TEXT("Prototype_Component_Troll_Weapon_Model")
+	));
+
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::NONANIM, "../Bin/Resources/Models/Object/Troll_Rock/Troll_Rock.bin",XMMatrixIdentity(),
+		TEXT("Prototype_Component_Troll_Rock_Model")
+	));
+
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::NONANIM, "../Bin/Resources/Models/Object/Troll_Rock/Troll_Rock_Big.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f)* XMMatrixIdentity(),
+		TEXT("Prototype_Component_Troll_Rock_Model")
 	));
 
 	futures.emplace_back(Deferred_ModelLoad(

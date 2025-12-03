@@ -50,7 +50,7 @@ HRESULT CNomalJap::Initialize(void* pArg)
 	SAFE_ADDREF(m_pProjectile);
 	SAFE_ADDREF(m_pProjectile_Side);
 
-	m_fDuration = 1.f;
+	m_fDuration = 1.7f;
 	assert(m_fDuration > 0.f);
 	return S_OK;
 }
@@ -58,10 +58,6 @@ HRESULT CNomalJap::Initialize(void* pArg)
 void CNomalJap::Priority_Update(_float fTimeDelta)
 {
 	__super::Priority_Update(fTimeDelta);
-
-	if (nullptr != m_pPhysHitBox) {
-		m_pPhysHitBox->Get_Component<CTransform>()->RewindMomentum();
-	}
 
 }
 
@@ -80,15 +76,24 @@ void CNomalJap::Update(_float fTimeDelta)
 
 	_vector vDirection = XMLoadFloat3(&m_vDirection);
 
+	//_vector vStartPos = Get_WorldPostion();
+	//_float3 vfStartPos = {};
+	//XMStoreFloat3(&vfStartPos, Get_WorldPostion());
 
 	// 선속도
 	m_pProjectile_Side->Get_Component<CTransform>()->Translation(vDirection * m_fLinearSpeed * fTimeDelta);
 	m_pProjectile->Get_Component<CTransform>()->Translation(vDirection * m_fLinearSpeed * fTimeDelta);
 
+	//_vector vEndPos = Get_WorldPostion();
 
-	if (nullptr != m_pPhysHitBox) {
-		m_pPhysHitBox->Get_Component<CTransform>()->AccumulateMomentum(vDirection * m_fLinearSpeed * fTimeDelta);
-	}
+	//_float3 vfEndPos = {};
+	//XMStoreFloat3(&vfEndPos, Get_WorldPostion());
+
+	//_float3 vDir = {};
+	//XMStoreFloat3(&vDir, vEndPos - vStartPos);
+
+	//m_pGameInstance->SphereCast(0.125f, vfStartPos, vDir, XMVectorGetX(XMVector3Length(vEndPos - vStartPos)),  )
+
 
 	if (false == m_bTrailPulseEnded && m_fAccTime > m_fDuration * 0.3f) {
 		m_bTrailPulseEnded = true;
@@ -104,11 +109,10 @@ void CNomalJap::Update(_float fTimeDelta)
 			SAFE_RELEASE(m_pTargetUnit);
 		}
 
-		MoveHitBox(fTimeDelta);
 		return;
 	}
 	if (true == m_bTrailPulseEnded) {
-		MoveHitBox(fTimeDelta);
+
 		return;
 	}
 	_vector vRotateUp = XMLoadFloat3(&m_vRotateUp);
@@ -117,24 +121,59 @@ void CNomalJap::Update(_float fTimeDelta)
 	// 각속도
 	m_pProjectile_Side->Get_Component<CTransform>()->Translation(vRotateUp * 0.6f * sinf(m_fAngularSpeed * m_fAccTime));
 	m_pProjectile->Get_Component<CTransform>()->Translation(vRotateUp * 0.6f * sinf(m_fAngularSpeed * m_fAccTime));
-
-	if (nullptr != m_pPhysHitBox) {
-		m_pPhysHitBox->Get_Component<CTransform>()->AccumulateMomentum(vRotateUp * 0.6f * sinf(m_fAngularSpeed * m_fAccTime));
-		MoveHitBox(fTimeDelta);
-	}
 }
 
-void CNomalJap::MoveHitBox(Engine::_float fTimeDelta)
-{
-	if (nullptr != m_pPhysHitBox) {
-		m_pPhysHitBox->Get_Component<CCharacter_Controller>()->Move(fTimeDelta);
-	}
-}
 
 void CNomalJap::Late_Update(_float fTimeDelta)
 {
-	if (m_bVisible == false)
+	if (m_bVisible == false){
 		return;
+	}
+	if (nullptr != m_pTargetUnit && false == m_pTargetUnit->isDead()) {
+		_vector vStartPos = m_pProjectile->Get_WorldPostion();
+
+		_vector vEndPos = m_pTargetUnit->Get_WorldPostion();
+
+		_vector vDir = { vEndPos - vStartPos };
+
+		_float fDistance = XMVectorGetX(XMVector3Length(vEndPos - vStartPos));
+
+		PSX::PxSweepBuffer pxBuffer = {};
+
+		_bool bHit = m_pGameInstance->SphereCast(0.1f, vStartPos, vDir, fDistance, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eDYNAMIC, pxBuffer);
+
+		if (bHit) {
+			const PSX::PxSweepHit& hit = pxBuffer.block;
+			PSX::PxRigidActor* pActor = hit.actor;
+			PSX::PxShape* pShape = hit.shape;
+
+			if (nullptr != pActor && nullptr != pActor->userData)
+			{
+				PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+
+				switch (pUserData->eKind)
+				{
+				case PHYSX_KIND::CCTActor:
+				{
+					switch (PXOBJECT(pUserData->iSubKind))
+					{
+					case PXOBJECT::MONSTER:
+					case PXOBJECT::GOBLIN_WARRIOR:
+						break;
+					case PXOBJECT::TROLL:
+					{
+						ON_COLLISION_INFO Desc;
+						pUserData->pOwner->OnCollision();
+					}
+						break;
+					}
+				}
+				}
+			}
+		}
+
+	}
+
 
 	Get_PartObject<CTrailObject>()->Trail_Update(m_pProjectile->Get_Component<CTransform>()->Get_XMWorldMatrix(), fTimeDelta);
 
@@ -182,6 +221,9 @@ HRESULT CNomalJap::Pre_Setting(CGameObject* pObject)
 	_vector vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
 	XMStoreFloat3(&m_vDirection, vDirection);
 
+	//Get_PartObject<CEffectParts>("Circle_Particle_Red")->Set_Visible(true);
+	//Get_PartObject<CEffectParts>("Circle_Particle_Red")->Get_Component<CTransform>()->Set_WorldMatrix(m_pOwner->Get_Component<CTransform>()->Get_XMWorldMatrix());
+
 	_vector vQuaternion = XMQuaternionRotationAxis(vDirection, m_pGameInstance->Random_Float(0.f, XM_PIDIV2));
 	
 	{ /* 대상 위치 지정 */
@@ -223,23 +265,7 @@ HRESULT CNomalJap::Ready_Components(void* pArg)
 
 HRESULT CNomalJap::Ready_Child()
 {
-	CPhysXEffectHitBox::PHYSXDUMMY_DESC Desc{};
 
-	m_pTransformCom->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
-
-	XMStoreFloat3(&Desc.vPos, m_pOwner->Get_WorldPostion() + XMVectorSet(0.f, 0.f, 1.f, 0.f));
-
-	Desc.vRotRPY = { 0.f, 0.f, 0.f };
-	Desc.iSubKind = ENUM_CLASS(PXOBJECT::SKILL_NORMALJAP);
-	Desc.vDeltaPos = _float3(0.f, 0.f, 0.f);
-	Desc.vLifeTime = { 0.f, 1.f };
-
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPhysXEffectHitBox>(g_iStaticLevel, CURRENT_LEVEL, LAYER_HITBOX, &Desc, this, &m_pPhysHitBox))) {
-		assert(false);
-		return E_FAIL;
-	}
-
-	SAFE_ADDREF(m_pPhysHitBox);
 	return S_OK;
 }
 
@@ -287,23 +313,16 @@ void CNomalJap::OnCollision(CGameObject* pOther, void* pDesc)
 	SAFE_RELEASE(m_pTargetUnit);
 	m_pProjectile_Side->Set_Visible(false);
 	m_pProjectile->Set_Visible(false);
+	Get_PartObject<CEffectParts>("Circle_Particle_Red")->Set_Visible(false);
 
 	Get_PartObject<CTrailObject>()->Set_Visible(false);
 	Get_PartObject<CTrailObject>()->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
 
-	if (nullptr != m_pPhysHitBox) {
-		m_pPhysHitBox->Set_Dead();
-		SAFE_RELEASE(m_pPhysHitBox);
-	}
 }
 
 void CNomalJap::Free()
 {
 	__super::Free();
-
-	if (m_pPhysHitBox != nullptr){
-		SAFE_RELEASE(m_pPhysHitBox);
-	}
 
 	SAFE_RELEASE(m_pTargetUnit);
 	Safe_Release(m_pProjectile);

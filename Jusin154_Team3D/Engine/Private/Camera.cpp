@@ -46,8 +46,6 @@ HRESULT CCamera::Initialize(void* pArg)
     m_bEnable_LookLerp = pDesc->bEnableLookLerp;
     m_vFollowLerpTime = pDesc->vFollowLerpTime;
 
-
-
     return S_OK;
 }
 
@@ -56,7 +54,7 @@ HRESULT CCamera::Bind_Matrices()
     if (true == m_bActive) {
         m_pGameInstance->Set_Transform(D3DTS::VIEW, XMMatrixInverse(nullptr, XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrixPtr())));
         m_pGameInstance->Set_Transform(D3DTS::PROJ, XMMatrixPerspectiveFovLH(m_fFovy, m_fAspect, m_fNear, m_fFar));
-        //Ready_Shadow();
+        Ready_Shadow();
     }
     return S_OK;
 }
@@ -154,13 +152,24 @@ HRESULT CCamera::Ready_Shadow()
 
     ShadowDesc.fFar = 200.f;
     ShadowDesc.fNear = 0.1f;
-    ShadowDesc.fWidth = 30.f;
-    ShadowDesc.fHeight = 30.f;
+    ShadowDesc.fWidth = 192.f;
+    ShadowDesc.fHeight = 168.f;
 
     XMStoreFloat4(&ShadowDesc.vAt, m_pLookTarget->Get_WorldPostion());
-
-    _matrix matRotation = XMMatrixRotationRollPitchYaw(XMConvertToRadians(vRollPichYaw.x), XMConvertToRadians(vRollPichYaw.y), XMConvertToRadians(vRollPichYaw.z));
+    _matrix matRotation = XMMatrixRotationRollPitchYaw(XMConvertToRadians(m_vRollPichYaw.x), XMConvertToRadians(m_vRollPichYaw.y), XMConvertToRadians(m_vRollPichYaw.z));
     XMStoreFloat4(&ShadowDesc.vEye, XMLoadFloat4(&ShadowDesc.vAt) - matRotation.r[2] * (ShadowDesc.fFar * 0.25f));
+
+#ifdef _DEBUG
+    GUI::Begin("Renderer");
+    if (GUI::CollapsingHeader("Near_Camera_ShadowDesc")) {
+        //GUI::SliderFloat3("RPY", (_float*)&m_vRollPichYaw, -360.f, 360.f);
+        GUI::DragFloat("Far", &ShadowDesc.fFar, 1.f, 20, 300.f);
+        GUI::DragFloat("width", &ShadowDesc.fWidth, 1.f, 20.f, 100.f, "%.1f");
+        GUI::DragFloat("height", &ShadowDesc.fHeight, 1.f, 20.f, 100.f, "%.1f");
+        GUI::Text("%f %f %f %f", ShadowDesc.vAt.x, ShadowDesc.vAt.y, ShadowDesc.vAt.z, ShadowDesc.vAt.w);
+    }
+    GUI::End();
+#endif // _DEBUG
 
     if (FAILED(m_pGameInstance->Ready_Shadow_Light(ShadowDesc))) {
         return E_FAIL;
@@ -182,14 +191,21 @@ void CCamera::Set_Fov(_float fFovy, _float fTimeDelta,_bool& bZoomIn)
     if (fFovy > m_fFovy)
     {
         m_fFovy += (fTimeDelta * 0.6f);
+        if (fFovy < m_fFovy) {
+            m_fFovy = fFovy;
+        }
     }
     else if(fFovy < m_fFovy)
     {
         m_fFovy -= (fTimeDelta * 0.6f);
+        if (fFovy > m_fFovy) {
+            m_fFovy = fFovy;
+        }
     }
 
-    if (fFovy == m_fFovy)
+    if (fabsf(fFovy - m_fFovy) <= FLT_EPSILON3)
     {
+        m_fFovy = fFovy;
         bZoomIn = false;
     }
 }

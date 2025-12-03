@@ -122,6 +122,34 @@ HRESULT CUnit::Ready_Components(void *pArg)
 	return S_OK;
 }
 
+void CUnit::Play_Event()
+{
+	for (auto iter = m_PendingEvents.begin(); iter != m_PendingEvents.end(); )
+	{
+		_float ratio = m_pModelCom->Get_CurrentTrackProgressRatio();
+		_uint curAnim = m_pModelCom->Get_AnimIndex();
+
+		if (curAnim == iter->AnimIndex && ratio >= iter->fRatio)
+		{
+			iter->Callback();
+			iter = m_PendingEvents.erase(iter);
+		}
+		else
+		{
+			++iter;
+		}
+	}
+}
+
+void CUnit::Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio)
+{
+	PendingEvent Desc;
+	Desc.AnimIndex = AnimIndex;
+	Desc.fRatio = fRatio;
+	Desc.Callback = Callback;
+	m_PendingEvents.push_back(Desc);
+}
+
 void CUnit::Free()
 {
 	__super::Free();

@@ -5,7 +5,6 @@
 #include "EditEffect.h"
 #include "Player.h"
 #include "TrailObject.h"
-#include "Dummy_PhysXEffectHitBox.h"
 
 
 CLevioso::CLevioso(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -52,7 +51,9 @@ HRESULT CLevioso::Initialize(void* pArg)
 	m_fTurnSpeed = 10.f;
 	m_fRange = 1.f;
 
-	m_fDuration = 1.5f;
+	m_fDuration = 2.f;
+
+
 
 	return S_OK;
 }
@@ -61,9 +62,8 @@ void CLevioso::Priority_Update(_float fTimeDelta)
 {
 	__super::Priority_Update(fTimeDelta);
 
-	if (nullptr != m_pPhysHitBox) {
-		m_pPhysHitBox->Get_Component<CTransform>()->RewindMomentum();
-	}
+	XMStoreFloat4(&m_vStartPos, m_pLeviosoPJ_0->Get_WorldPostion());
+
 }
 
 void CLevioso::Update(_float fTimeDelta)
@@ -74,8 +74,6 @@ void CLevioso::Update(_float fTimeDelta)
 	__super::Update(fTimeDelta);
 
 	Update_Event(fTimeDelta);
-	
-	
 
 	m_pLeviosoPJ_0->Get_Component<CTransform>()->Translation(m_vOwnerLook * 0.25f);
 	m_pLeviosoPJ_1->Get_Component<CTransform>()->Translation(m_vOwnerLook * 0.25f);
@@ -83,12 +81,11 @@ void CLevioso::Update(_float fTimeDelta)
 
 	m_pTrail_PT_0->Get_Component<CTransform>()->Translation(m_vOwnerLook * 0.25f);
 
-
-
-	if (nullptr != m_pPhysHitBox) {
-		m_pPhysHitBox->Get_Component<CTransform>()->AccumulateMomentum(m_vOwnerLook * 0.25f);
+	if (true == m_pGameInstance->SphereCast(0.125f, XMLoadFloat4(&m_vStartPos), m_vOwnerLook, XMVectorGetX(XMVector3Length(m_vOwnerLook * 1.f))
+		, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eSTATIC, hitBuffer))
+	{
+		OnCollision();
 	}
-
 
 	_matrix WorldMat = m_pTrail_PT_0->Get_Component<CTransform>()->Get_XMWorldMatrix();
 
@@ -110,7 +107,7 @@ void CLevioso::Late_Update(_float fTimeDelta)
 
 	//m_pLeviosoTrail->Get_Component<CTrail>()->Fixed_Trail(WandWorld);
 
-
+	XMStoreFloat4(&m_vEndPos, m_pLeviosoPJ_0->Get_WorldPostion());
 
 	__super::Late_Update(fTimeDelta);
 
@@ -125,14 +122,15 @@ HRESULT CLevioso::Pre_Setting(CGameObject* pObject)
 	m_pOwner = pObject;
 
 
-	Reset_EffectParts();
+	Reset_EditEffect();
 
-	__super::m_fAccTime = 0.f;
+	m_fAccTime = 0.f;
 	m_fPreAccTime = 0.f;
 
 	m_fAccRotateTime = 0.f;
 
-
+	if (FAILED(Ready_Child()))
+		return E_FAIL;
 
 	CPlayer* pPlayer = static_cast<CPlayer*>(m_pOwner);
 
@@ -144,13 +142,13 @@ HRESULT CLevioso::Pre_Setting(CGameObject* pObject)
 	m_pLeviosoPJ_0->Get_Component<CTransform>()->Set_WorldMatrix(m_pOwner->Get_Component<CTransform>()->Get_XMWorldMatrix());
 	m_pLeviosoPJ_1->Get_Component<CTransform>()->Set_WorldMatrix(m_pOwner->Get_Component<CTransform>()->Get_XMWorldMatrix());
 	m_pTrail_PT_0->Get_Component<CTransform>()->Set_WorldMatrix(m_pOwner->Get_Component<CTransform>()->Get_XMWorldMatrix());
-	
+
 	m_pLeviosoPJ_0->Get_Component<CTransform>()->Set_State(STATE::POSITION, WandPos);
 	m_pLeviosoPJ_1->Get_Component<CTransform>()->Set_State(STATE::POSITION, WandPos);
 	m_pTrail_PT_0->Get_Component<CTransform>()->Set_State(STATE::POSITION, WandPos);
 
 
-	m_pLeviosoPJ_0 ->Set_Visible(true);
+	m_pLeviosoPJ_0->Set_Visible(true);
 	m_pLeviosoPJ_1->Set_Visible(true);
 	m_pTrail_PT_0->Set_Visible(true);
 
@@ -175,24 +173,6 @@ HRESULT CLevioso::Ready_Components(void* pArg)
 
 HRESULT CLevioso::Ready_Child()
 {
-	CDummy_PhysXEffectHitBox::PHYSXDUMMY_DESC Desc{};
-
-	m_pTransformCom->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
-
-	XMStoreFloat3(&Desc.vPos, m_pOwner->Get_WorldPostion() + XMVectorSet(0.f, 0.f, 1.f, 0.f));
-
-
-	Desc.vRotRPY = { 0.f, 0.f, 0.f };
-	Desc.iSubKind = 70;
-	Desc.vDeltaPos = _float3(0.f, 0.f, 0.f);
-	Desc.vLifeTime = { 0.f, 1.5f };
-
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummy_PhysXEffectHitBox>(g_iStaticLevel, CURRENT_LEVEL, LAYER_HITBOX, &Desc, this, &m_pPhysHitBox))) {
-		assert(false);
-		return E_FAIL;
-	}
-
-	SAFE_ADDREF(m_pPhysHitBox);
 
 	return S_OK;
 }
@@ -226,27 +206,34 @@ CGameObject* CLevioso::Clone(void* pArg, CGameObject* pOwner)
 
 void CLevioso::OnCollision(CGameObject* pOther, void* pDesc)
 {
-	//CTransform* pOtherTransform = p
-	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
+	_vector vPos = XMVectorSet(hitBuffer.block.position.x, hitBuffer.block.position.y, hitBuffer.block.position.z, 1.f);
 
 
+	for (auto& pPair : m_PartObjects)
+	{
+		pPair.second->Set_Visible(true);
+		pPair.second->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
+	}
+
+	m_fAccTime = 0.f;
+	m_fDuration = 3.f; //적중하면 지속시간 3초
+
+	//CEditEffect* pLevioso_Hit =  Get_PartObject<CEditEffect>("Levioso_Hit");
+	//CEditEffect* pLevioso_Bottom_Wind = Get_PartObject<CEditEffect>("Levioso_Bottom_Wind");
+	//CEditEffect* pLevioso_Rotate0 = Get_PartObject<CEditEffect>("Levioso_Rotate0");
+	//CEditEffect* pLevioso_Rotate1 = Get_PartObject<CEditEffect>("Levioso_Rotate1");
+	//CEditEffect* pLevioso_Tornado = Get_PartObject<CEditEffect>("Levioso_Tornado");
 
 	m_pLeviosoPJ_0->Set_Visible(false);
 	m_pLeviosoPJ_1->Set_Visible(false);
 	m_pTrail_PT_0->Set_Visible(false);
 	m_pLeviosoTrail->Set_Visible(false);
-
-	m_pPhysHitBox->Set_Dead();
-	SAFE_RELEASE(m_pPhysHitBox);
-
 }
 
 void CLevioso::Free()
 {
 	__super::Free();
 
-	if(m_pPhysHitBox != nullptr)
-		SAFE_RELEASE(m_pPhysHitBox);
 
 	SAFE_RELEASE(m_pLeviosoPJ_0);
 	SAFE_RELEASE(m_pLeviosoPJ_1);

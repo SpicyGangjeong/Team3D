@@ -21,6 +21,7 @@
 #include "State_Land.h"
 #include "State_Move.h"
 #include "State_Combat.h"
+#include "State_Hit.h"
 #include "State_Broom_Ride.h"
 #pragma endregion
 
@@ -392,50 +393,12 @@ void CPlayer::Update_CameraCoordinateSystem()
 
 _matrix CPlayer::Get_WandPos()
 {
-	CModel* pWand = Get_PartObject<CWand>()->Get_Component<CModel>();
+	CWand* pWand = Get_PartObject<CWand>();
 
 	if (pWand == nullptr)
 		return _matrix();
 
-	_matrix BoneMatrix = XMLoadFloat4x4(pWand->Get_BoneMatrixPtr("root"));
-
-	BoneMatrix = BoneMatrix * m_pTransformCom->Get_XMWorldMatrix();
-
-	_float3 vOffset = _float3(0.f, -0.27f, -0.32f);
-
-	BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[0]) * vOffset.x;
-	BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[1]) * vOffset.y;
-	BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[2]) * vOffset.z;
-
-	return BoneMatrix;
-}
-
-void CPlayer::Play_Event()
-{
-	for (auto iter = m_PendingEvents.begin(); iter != m_PendingEvents.end(); )
-	{
-		_float ratio = m_pModelCom->Get_CurrentTrackProgressRatio();
-		_uint curAnim = m_pModelCom->Get_AnimIndex();
-
-		if (curAnim == iter->AnimIndex && ratio >= iter->fRatio)
-		{
-			iter->Callback();
-			iter = m_PendingEvents.erase(iter);
-		}
-		else
-		{
-			++iter;
-		}
-	}
-}
-
-void CPlayer::Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio)
-{
-	PendingEvent Desc;
-	Desc.AnimIndex = AnimIndex;
-	Desc.fRatio = fRatio;
-	Desc.Callback = Callback;
-	m_PendingEvents.push_back(Desc);
+	return pWand->Get_WorldMatrix();
 }
 
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -536,6 +499,8 @@ void CPlayer::Describe_Entity()
 	GUI::Text("%d", m_iStateMask);
 
 	m_pLightCom->Describe_Entity();
+
+	GUI::Text("HI Check %d",HI);
 	GUI::End();
 }
 

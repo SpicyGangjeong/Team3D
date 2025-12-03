@@ -208,11 +208,6 @@ void CEffect_Container::Update_Event(_float fTimeDelta)
 				pPart.second->Set_Visible(false);
 			}
 
-			if (m_pPhysHitBox != nullptr && m_pPhysHitBox->isDead() == false)
-			{
-				m_pPhysHitBox->Set_Dead();
-				SAFE_RELEASE(m_pPhysHitBox);
-			}
 		}
 	}
 

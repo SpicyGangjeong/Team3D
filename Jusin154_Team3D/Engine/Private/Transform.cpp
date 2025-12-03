@@ -360,6 +360,35 @@ void CTransform::LookAt(_fvector vAt)
 	Set_State(STATE::LOOK, XMVector3Normalize(vLook) * vScale.z);
 }
 
+void CTransform::LookAt_Lerp(_fvector vAt, _float fTimeDelta, _float fSpeed)
+{
+	_vector vPos = Get_State(STATE::POSITION);
+
+	_float3 vMyPos, vTarget;
+	XMStoreFloat3(&vMyPos, vPos);
+	XMStoreFloat3(&vTarget, vAt);
+
+	_float3 vDir = {
+		vTarget.x - vMyPos.x,
+		0.f,
+		vTarget.z - vMyPos.z
+	};
+
+	_vector vTargetLook = XMVector3Normalize(XMLoadFloat3(&vDir));
+	_vector vCurrentLook = Get_State(STATE::LOOK);
+
+	_vector vNewLook = XMVector3Normalize(
+		XMVectorLerp(vCurrentLook, vTargetLook, fTimeDelta * fSpeed)
+	);
+
+	_vector vRight = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vNewLook));
+	_vector vUp = XMVector3Normalize(XMVector3Cross(vNewLook, vRight));
+
+	Set_State(STATE::LOOK, vNewLook);
+	Set_State(STATE::RIGHT, vRight);
+	Set_State(STATE::UP, vUp);
+}
+
 void CTransform::LookAt_Horizontal(_fvector vAt)
 {
 	_float3 vScale = Get_Scale();

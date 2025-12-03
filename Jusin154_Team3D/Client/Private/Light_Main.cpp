@@ -38,7 +38,9 @@ void CLight_Main::Priority_Update(_float fTimeDelta)
 
 void CLight_Main::Update(_float fTimeDelta)
 {
-
+	GUI::Begin("Main_Light");
+	m_pLightCom->Describe_Entity();
+	GUI::End();
 }
 
 void CLight_Main::Late_Update(_float fTimeDelta)
@@ -57,9 +59,9 @@ HRESULT CLight_Main::Ready_Components()
 	LIGHT_DESC			LightDesc{};
 
 	LightDesc.eType = LIGHT::DIRECTIONAL;
-	/*LightDesc.vDiffuse = _float4(0.8f, 0.8f, 0.8f, 0.f);
-	LightDesc.vAmbient = _float4(0.6f, 0.6f, 0.6f, 0.f);
-	LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 0.f);*/
+	//LightDesc.vDiffuse = _float4(0.8f, 0.8f, 0.8f, 0.f);
+	//LightDesc.vAmbient = _float4(0.6f, 0.6f, 0.6f, 0.f);
+	//LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 0.f);
 	LightDesc.vDiffuse = _float4(0.3f, 0.3f, 0.1f, 0.f);
 	LightDesc.vAmbient = _float4(0.3f, 0.3f, 0.5f, 0.f);
 	LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 0.f);

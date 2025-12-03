@@ -123,13 +123,13 @@ _bool CModel::Play_Animation(_float fTimeDelta, CTransform* pTransform)
 
 _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 {
-	if (m_bLoopRestarted)
+	/*if (m_bLoopRestarted)
 	{
 		m_vPrevRootPos = { 0,0,0 };
 		m_bLoopRestarted = false;
-	}
+	}*/
 
-	ComputeAnimation(m_iCurrentAnimIndex);
+	//ComputeAnimation(m_iCurrentAnimIndex);
 
 	if (m_iPreAnimIndex >= 0 && m_iPreAnimIndex != m_iCurrentAnimIndex)
 	{
@@ -160,6 +160,19 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 		m_iPreAnimIndex = m_iCurrentAnimIndex;
 	}
 
+	
+	if (m_bIsFinishedAnim)
+	{
+		if (m_bIsLoop)
+		{
+			m_bLoopRestarted = true;
+			m_vPrevRootPos = { 0,0,0 };
+		}
+		else{
+			XMStoreFloat3(&m_vPrevRootPos, m_vector[2]);
+		}
+	}
+
 	if (m_bRatio) {
 		Update_RootBone(m_fAmount * m_fRatio);
 	}
@@ -170,17 +183,9 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 
 	if (m_bIsFinishedAnim)
 	{
-		if (m_bIsLoop)
-		{
-			m_bLoopRestarted = true;
-		}
-		else
-			XMStoreFloat3(&m_vPrevRootPos, m_vector[2]);
-
 		m_vPrevRootRot = { 0.f,0.f,0.f,0.f };
 		m_bInitialRootRotSaved = false;
 	}
-
 
 	for (auto& pBone : m_Bones)
 	{
@@ -198,8 +203,8 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 		m_bLoopRestarted = false;
 	}
 
-	ComputeAnimation(m_iCurrentAnimIndex);
-	ComputeAnimation_Second(m_iCurrSecondAnimIndex);
+	//ComputeAnimation(m_iCurrentAnimIndex);
+	//ComputeAnimation_Second(m_iCurrSecondAnimIndex);
 
 	if (m_iPreAnimIndex >= 0 && m_iPreAnimIndex != m_iCurrentAnimIndex)
 	{
@@ -234,8 +239,9 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 			{
 				m_fSecondRatio = 1.f;
 			}
-			else
+			else{
 				m_fSecondBlendTime = 0.f;
+			}
 		}
 	}
 	else
@@ -256,8 +262,9 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 			{
 				m_fSecondRatio = 1.f;
 			}
-			else
+			else{
 				m_fSecondBlendTime = 0.f;
+			}
 		}
 	}
 
@@ -275,8 +282,9 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 		{
 			m_bLoopRestarted = true;
 		}
-		else
+		else{
 			XMStoreFloat3(&m_vPrevRootPos, m_vector[2]);
+		}
 
 		m_vPrevRootRot = { 0.f,0.f,0.f,0.f };
 		m_bInitialRootRotSaved = false;
@@ -315,8 +323,8 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fAmount, _boo
 		m_bIsLoop = isLoop;
 		m_fAmount = fAmount;
 		m_bRatio = bRatio;
-
-
+		m_Animations[m_iCurrentAnimIndex]->Depart_Animation();
+		m_Animations[m_iCurrentAnimIndex]->ResetRootMotion();
 	}
 	else {
 		m_iCurrentAnimIndex = -1;
@@ -579,6 +587,19 @@ HRESULT CModel::Render_Indexed(_uint iMeshIndex, _uint IndexCount, _uint StartIn
 
 	return S_OK;
 }
+HRESULT CModel::Ready_PhysXMeshes(_fmatrix& PreTransformMatrix)
+{
+	m_iNumPhysXMeshes = m_iNumMeshes;
+
+	m_TriMeshes.reserve(m_iNumMeshes);
+
+	m_pGameInstance->ConvertToTriMeshes(m_Meshes, m_TriMeshes, PreTransformMatrix);
+
+	for (_uint i = 0; i < m_iNumMeshes; ++i) {
+		m_pGameInstance->RegistTriMesh((m_Meshes[i]->Get_Name() + to_string(i)).c_str(), m_TriMeshes[i]);
+	}
+	return S_OK;
+}
 #ifdef EDITOR_PROJECT
 
 HRESULT CModel::Ready_Meshes(MODEL eType, const aiScene* pAIScene, _fmatrix& PreTransformMatrix)
@@ -601,25 +622,8 @@ HRESULT CModel::Ready_Meshes(MODEL eType, const aiScene* pAIScene, _fmatrix& Pre
 	return S_OK;
 }
 
-HRESULT CModel::Ready_PhysXMeshes()
-{
-	m_iNumPhysXMeshes = m_iNumMeshes;
-
-	m_TriMeshes.reserve(m_iNumMeshes);
-
-	m_pGameInstance->ConvertToTriMeshes(m_Meshes, m_TriMeshes);
-
-	return S_OK;
-}
-
 HRESULT CModel::Save_PhysXTriMeshes(const _char* pModelFilePath)
 {
-	if (FAILED(Ready_PhysXMeshes())) {
-		return E_FAIL;
-	}
-	for (_uint i = 0; i < m_iNumMeshes; ++i) {
-		m_pGameInstance->RegistTriMesh((m_Meshes[i]->Get_Name() + to_string(i)).c_str(), m_TriMeshes[i]);
-	}
 	return m_pGameInstance->SaveTriMeshes(pModelFilePath, m_TriMeshes);
 }
 
@@ -1391,11 +1395,7 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 	if (FAILED(Ready_Animations(m_Bones))) {
 		return E_FAIL;
 	}
-//#ifdef 기무리
-//	if (MODEL::ENVIROMENT == eType) {
-//		Save_PhysXTriMeshes(pModelFilePath);
-//	}
-//#endif // _DEBUG
+
 	return S_OK;
 }
 
@@ -1720,7 +1720,7 @@ HRESULT CModel::Initialize(void* pArg)
 		InItialize_BoneIndex();
 		Initialize_BoneMasks();
 
-		Create_Temp();
+		/*Create_Temp();
 		m_Parent.resize(m_Bones.size());
 		for (size_t i = 0; i < (_uint)m_Bones.size(); i++)
 		{
@@ -1732,7 +1732,7 @@ HRESULT CModel::Initialize(void* pArg)
 
 		Create_Con();
 		Create_LocalPosVB();
-		Create_ParentVB();
+		Create_ParentVB();*/
 
 	}
 

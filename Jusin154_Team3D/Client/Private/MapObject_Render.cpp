@@ -75,6 +75,7 @@ void CMapObject_Render::Update(_float fTimeDelta)
 
 void CMapObject_Render::Late_Update(_float fTimeDelta)
 {
+	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW, this);
 	if (m_pGameInstance->isIn_WorldFrustum(XMLoadFloat4(&m_vExtentPosition), m_fRadius)) {
 
 		m_fCamDepth = XMVectorGetX(XMVector3LengthSq(XMLoadFloat4(m_pGameInstance->Get_CamPosition()) - XMLoadFloat4(&m_vExtentPosition)));
@@ -115,6 +116,39 @@ HRESULT CMapObject_Render::Render()
 		}
 
 		if (FAILED(m_pShaderCom->Begin(m_iShaderPass))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pModelComs[m_iLodIndex]->Render(i))) {
+			return E_FAIL;
+		}
+	}
+
+	return S_OK;
+}
+
+HRESULT CMapObject_Render::Render_Shadow()
+{
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ViewMatrix", D3DTS::VIEW))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ProjMatrix", D3DTS::PROJ))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", &m_pGameInstance->Get_ShadowDesc()->fFar, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	for (_uint i = 0; i < m_iNumMeshe; i++)
+	{
+		if (FAILED(m_pModelComs[0]->Bind_Material(i, m_pShaderCom))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::SHADOW)))) {
 			return E_FAIL;
 		}
 

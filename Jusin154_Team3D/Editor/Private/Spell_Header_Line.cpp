@@ -21,8 +21,8 @@ HRESULT CSpell_Header_Line::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = 0.f;
-	Desc.fY = 20.f;
+	Desc.fX = 600.f;
+	Desc.fY = -345.f;
 	Desc.fSizeX = 487.f;
 	Desc.fSizeY = 18.f;
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
@@ -37,19 +37,28 @@ HRESULT CSpell_Header_Line::Initialize(void* pArg)
 	}
 
 	m_fTimeMult = 3.f;
-	m_fAlpha = 1.f;
-	m_fAlphaTime = 3.f;
-	m_fMoveSpeed = 5.f;
+	m_fAlpha = 0.f;
+	m_fAlphaTime = 5.f;
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("FadeIn"), [this](void* p) {this->Set_FadeIn(); });
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("FadeOut"), [this](void* p) {this->Set_FadeOut(); });
 	return S_OK;
 }
 
 void CSpell_Header_Line::Priority_Update(_float fTimeDelta)
 {
+	if (!__super::Chack_Visible())
+	{
+		return;
+	}
 	__super::Priority_Update(fTimeDelta);
 }
 
 void CSpell_Header_Line::Update(_float fTimeDelta)
 {
+	if (!__super::Chack_Visible())
+	{
+		return;
+	}
 	if (m_bFadeIn == true)
 	{
 		if (m_fAlpha <= 1.f)
@@ -67,7 +76,7 @@ void CSpell_Header_Line::Update(_float fTimeDelta)
 	if (m_bFadeOut == true)
 	{
 		if (m_fAlpha >= 0.f)
-			m_fAlpha -= fTimeDelta;
+			m_fAlpha -= fTimeDelta * m_fAlphaTime;;
 
 		if (m_fAlpha <= 0.f)
 		{
@@ -75,14 +84,19 @@ void CSpell_Header_Line::Update(_float fTimeDelta)
 			m_fAlpha = 0.f;
 		}
 	}
-
+	
 	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
 }
 
 void CSpell_Header_Line::Late_Update(_float fTimeDelta)
 {
+	if (!__super::Chack_Visible())
+	{
+		return;
+	}
 	if (m_bVisible) {
+		m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
 		__super::Late_Update(fTimeDelta);
 	}
 }
@@ -108,11 +122,6 @@ HRESULT CSpell_Header_Line::Render()
 _vector CSpell_Header_Line::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
-}
-
-void CSpell_Header_Line::MoveY(_float fY)
-{
-	m_fY += fY;
 }
 
 HRESULT CSpell_Header_Line::Bind_ShaderResources()

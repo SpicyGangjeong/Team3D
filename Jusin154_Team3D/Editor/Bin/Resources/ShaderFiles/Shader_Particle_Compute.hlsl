@@ -25,6 +25,7 @@ struct ParticleValue
     float2 vDistortionUVMoveTime;
     float2 vNoiseUVMoveTime;
     float2 vAniTime;
+    float2 vDissolveUVMoveTime;
     
     float2 vAniIndex;
     float  fGravity;
@@ -321,8 +322,14 @@ void CS_MAIN(
     {
         particleValue.vDistortionUVMoveTime.x = 0.f;
     }
-        
     
+    particleValue.vDissolveUVMoveTime.x += fTimeDelta;
+    
+    if (particleValue.vDissolveUVMoveTime.x >= particleValue.vDissolveUVMoveTime.y)
+    {
+        particleValue.vDissolveUVMoveTime.x = 0.f;
+    }
+        
     //아웃풋 대입
     
     g_VBInstanceOutput[iIndex] = particle;

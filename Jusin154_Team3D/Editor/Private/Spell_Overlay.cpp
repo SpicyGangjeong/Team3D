@@ -47,7 +47,7 @@ HRESULT CSpell_Overlay::Initialize(void* pArg)
 	m_vUVScale.x = 1.f;
 	m_vUVScale.y = 1.f;
 	m_fCoolTime = 5.f;
-	m_fSortZ = 1.f;
+	m_fSortZ = 0.01f;
 	m_iSpellType = ENUM_CLASS(SPELLTYPE::CONTROL);
 	Compute_UI(5);
 	return S_OK;

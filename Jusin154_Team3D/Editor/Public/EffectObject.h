@@ -52,7 +52,6 @@ public:
 		_bool   isBlur = {};
 		_bool   isBillboard = {};
 	
-
 		_float4 vEmissive = { 0.f ,0.f ,0.f ,0.f };
 		_float  fDiffuseAlpha = { 1.f };
 		_float  fBlurIntensity = {};
@@ -86,24 +85,34 @@ public:
 
 		SHADER_PASS_INSTANCE_MODEL eShaderPass = { SHADER_PASS_INSTANCE_MODEL::NON_NOMALMAP };
 
-		_bool   isDiffuseBlur = {};
-		_bool	isMaskBlur = {};
-		_bool   isBlurDissolve = {};
-		_bool   isBlurReverseDissolve = {};
+		_bool       isBlurNoEmissive = {};
+		_bool	    isTexBlur = {};
+		_bool       isBlurDissolve = {};
+		_bool       isBlurReverseDissolve = {};
 
-		_float  fBluringStrength = {0.01f};
+		_float      fBluringStrength = {0.01f};
+
+		_bool       isBloom = {};
+		_bool       isBloomDissolve = {};
+		_bool       isBloomReverseDissolve = {};
+		_float      fBloomStrength = {};
+		BLOOM_TYPE  eBloomType = {};
 
 
-		_bool   isBloom = {};
+		_float		fDissolveDelay = {};
+		_float		fReverseDissolveDelay = {};
+		_float2		vDissolveUVGainAmount = {};
+		_bool		isDissolveMove = {};
 
-		_bool   isBloomDissolve = {};
-		_bool   isBloomReverseDissolve = {};
 
-		_float  fBloomStrength = {};
-		
-		BLOOM_TYPE eBloomType = {};
+		_float3		vPadding0 = {};
+		_float3		vPadding1 = {};
 
-		
+		_float		fPadding0 = {};
+		_float		fPadding1 = {};
+
+		_bool		isPadding0 = {};
+		_bool		isPadding1 = {};
 
 	}EFFECT_INFO;
 

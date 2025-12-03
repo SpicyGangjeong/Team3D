@@ -2,15 +2,16 @@
 #include "Troll.h"
 
 #include "Troll_Weapon.h"
+#include "Troll_Rock.h"
 #include "GameInstance.h"
 
 #pragma region STATE
 #include "State_Idle.h"
-#include "State_Dodge.h"
-#include "State_Jump.h"
-#include "State_Land.h"
 #include "State_Move.h"
 #include "State_Combat.h"
+#include "State_Hit.h"
+#include "Troll_State_Rush.h"
+#include "State_Throw.h"
 #pragma endregion
 
 CTroll::CTroll(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -57,7 +58,7 @@ HRESULT CTroll::Initialize(void* pArg)
 
 
 
-	m_pCharacter_Controller->Set_Position(XMVectorSet(30.f, 10.f, 30.f, 1.f));
+	m_pCharacter_Controller->Set_Position(XMVectorSet(3.f, 5.f, -20.f, 1.f));
 
 	return S_OK;
 }
@@ -74,6 +75,8 @@ void CTroll::Update(_float fTimeDelta)
 	m_pFSM->Update_State(fTimeDelta);
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
+
+	Play_Event();
 
 	if (true == m_pCharacter_Controller->IsActive()) {
 		m_pCharacter_Controller->Move(fTimeDelta);
@@ -97,6 +100,11 @@ void CTroll::Update(_float fTimeDelta)
 	Describe_Entity();
 #endif // _DEBUG
 
+
+	for (_uint i = 0; i < ENUM_CLASS(TROLL_SKILL::END); i++)
+		m_fSkillCoolTime[i] = max(0.f, m_fSkillCoolTime[i] - fTimeDelta);
+
+
 }
 
 void CTroll::Late_Update(_float fTimeDelta)
@@ -109,7 +117,10 @@ void CTroll::Late_Update(_float fTimeDelta)
 		m_pTransformCom->Set_WorldMatrix(m_pRigidBody->Get_Actor()->getGlobalPose());
 	}
 
-	m_pTransformCom->LookAt_Horizontal(XMLoadFloat4(&m_vTargetPos));
+	if (m_bLookAt) {
+		m_pTransformCom->LookAt_Lerp(XMLoadFloat4(&m_vTargetPos),fTimeDelta, 5.f);
+	}
+	
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 }
@@ -172,9 +183,9 @@ void CTroll::OnCollision(CGameObject* pOther, void* pDesc)
 	_vector vHitDir = {};		// 시도한 move 방향
 	_float  fLength = {};		// 작용된 힘
 
-	m_pCharacter_Controller->ConvertToDO(*m_pRigidBody);
-	m_pRigidBody->Add_Force(vHitDir * fLength * 100.f, PSX::PxForceMode::eIMPULSE);
-
+	//m_pCharacter_Controller->ConvertToDO(*m_pRigidBody);
+	//m_pRigidBody->Add_Force(vHitDir * fLength * 100.f, PSX::PxForceMode::eIMPULSE);
+	m_pFSM->Change_State(FSMSTATE::HIT);
 }
 
 void CTroll::OnHit(CGameObject* pOther, CGameObject* pCaller)
@@ -243,6 +254,18 @@ HRESULT CTroll::Ready_Parts()
 		return E_FAIL;
 	}
 
+	CTroll_Rock::TROLLROCK_DESC Troll_RockDesc{};
+
+	Troll_RockDesc.pParentTransform = m_pTransformCom;
+	Troll_RockDesc.pSocketMatrices = m_pModelCom->Get_BoneMatrixPtr("SKT_LeftHand");
+
+	if (FAILED(Add_PartObject<CTroll_Rock>("Troll_Rock", g_iStaticLevel, nullptr, &Troll_RockDesc)))
+	{
+		return E_FAIL;
+	}
+
+	Get_PartObject<CTroll_Rock>()->Set_Visible(false);
+	
 	return S_OK;
 }
 
@@ -313,9 +336,21 @@ void CTroll::Describe_Entity()
 	string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
 	GUI::Text(AnimList.c_str());
 
+	GUI::Text("AnimTrack %.2f", m_pModelCom->Get_CurrentTrackPosition());
+	GUI::Text("AnimRatio %.2f", m_pModelCom->Get_CurrentTrackProgressRatio());
+
 	_float4 vMomentum = {};
 	XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());
 	GUI::Text("%.2f %.2f %.2f %.2f ", vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);
+
+	_float3 Pos;
+	XMStoreFloat3(&Pos, Get_WorldPostion());
+
+	if (GUI::DragFloat3("Pos",(_float*)&Pos))
+	{
+		m_pCharacter_Controller->Set_Position(XMLoadFloat3(&Pos));
+	}
+
 
 	GUI::End();
 

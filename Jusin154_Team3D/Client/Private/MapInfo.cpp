@@ -8,6 +8,7 @@
 #include "MapObject_Render.h"
 #include "MapObject_Collision.h"
 #include "MapElement_Light.h"
+#include "Layer.h"
 
 CMapInfo::CMapInfo()
 {
@@ -15,6 +16,41 @@ CMapInfo::CMapInfo()
 
 void CMapInfo::Update(_float fTimeDelta)
 {
+#ifdef _DEBUG
+	Describe_Entity();
+#endif // _DEBUG
+
+	static _bool s_bConverted = { false };
+	static _bool s_bReadyToCreate = { false };
+
+	if (true != s_bConverted || true != s_bReadyToCreate) {
+		CLayer* pLayer = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_BACKGROUND);
+		if (nullptr == pLayer) {
+			return;
+		}
+		const list<CGameObject*>* pObjects = pLayer->Get_Objects();
+
+		if (false == s_bReadyToCreate) {
+				s_bReadyToCreate = true;
+				list<CGameObject*>::const_iterator iter = pObjects->begin();
+				for (; iter != pObjects->end(); ++iter) {
+					CMapContainer* pContainer = dynamic_cast<CMapContainer*>(*iter);
+					if (nullptr != pContainer) {
+						pContainer->ReadyForPhysX();
+					}
+			}
+		}
+		else if (false == s_bConverted) {
+				s_bConverted = true;
+				list<CGameObject*>::const_iterator iter = pObjects->begin();
+				for (; iter != pObjects->end(); ++iter) {
+					CMapContainer* pContainer = dynamic_cast<CMapContainer*>(*iter);
+					if (nullptr != pContainer) {
+						pContainer->ConvertToPhysX();
+					}
+				}
+		}
+	}
 }
 
 void CMapInfo::Change_Level()
@@ -214,8 +250,9 @@ HRESULT CMapInfo::Load_MapRenderObjects(tinyxml2::XMLElement* Container, CMapCon
 		Rotation->QueryFloatAttribute("y", &Desc.vRotation.y);
 		Rotation->QueryFloatAttribute("z", &Desc.vRotation.z);
 
-		if (FAILED(pContainerObject->Add_Part<CMapObject_Render>(strKey, g_iStaticLevel, nullptr, &Desc)))
+		if (FAILED(pContainerObject->Add_Part<CMapObject_Render>(strKey, g_iStaticLevel, nullptr, &Desc))){
 			return E_FAIL;
+		}
 #pragma endregion
 	}
 
@@ -263,7 +300,6 @@ HRESULT CMapInfo::Load_MapCollisionObjects(tinyxml2::XMLElement* Container, CMap
 
 		pContainerObject->Add_Collision<CMapObject_Collision>(g_iStaticLevel, &Desc);
 #pragma endregion
-
 	}
 #pragma endregion
 
@@ -351,8 +387,9 @@ HRESULT CMapInfo::Load_LightElements(const _char* pFileName)
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Light>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Light"), &Desc)))
 			return E_FAIL;
 	}
-
+#ifndef 기무리
 	MSG_BOX("Successed to Load File");
+#endif
 
 
 	return S_OK;
@@ -397,3 +434,49 @@ void CMapInfo::Free()
 	SAFE_RELEASE(m_pContext);
 
 }
+#ifdef _DEBUG
+
+void CMapInfo::Describe_Entity()
+{
+	CLayer* pLayer = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_BACKGROUND);
+	if (nullptr == pLayer) {
+		return;
+	}
+	static _bool s_bConverted = { false };
+	static _bool s_bReadyToCreate = { false };
+
+	const list<CGameObject*>* pObjects = pLayer->Get_Objects();
+
+	GUI::Begin("MapInfoDesc");
+	GUI::SetNextItemWidth(80.f);
+	GUI::BeginChild("CollisonPartObjects");
+	GUI::SetNextItemWidth(80.f);
+	if (false == s_bReadyToCreate) {
+		if (GUI::Button("Ready_StaticMeshesForPhyX_ALL")) {
+			s_bReadyToCreate = true;
+			list<CGameObject*>::const_iterator iter = pObjects->begin();
+			for (; iter != pObjects->end(); ++iter) {
+				CMapContainer* pContainer = dynamic_cast<CMapContainer*>(*iter);
+				if (nullptr != pContainer) {
+					pContainer->ReadyForPhysX();
+				}
+			}
+		}
+	}
+	else if (false == s_bConverted) {
+		if (GUI::Button("Convert_StaticMeshesForPhyX_ALL")) {
+			s_bConverted = true;
+			list<CGameObject*>::const_iterator iter = pObjects->begin();
+			for (; iter != pObjects->end(); ++iter) {
+				CMapContainer* pContainer = dynamic_cast<CMapContainer*>(*iter);
+				if (nullptr != pContainer) {
+					pContainer->ConvertToPhysX();
+				}
+			}
+		}
+	}
+	GUI::EndChild();
+	GUI::End();
+}
+
+#endif // _DEBUG

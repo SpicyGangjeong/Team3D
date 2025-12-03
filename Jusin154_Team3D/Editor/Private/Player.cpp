@@ -18,6 +18,7 @@
 #include "State_Land.h"
 #include "State_Move.h"
 #include "State_Combat.h"
+
 #pragma endregion
 
 #include "Bombard.h"
@@ -91,6 +92,8 @@ void CPlayer::Update(_float fTimeDelta)
 	m_pFSM->Update_State(fTimeDelta);
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
+
+	Play_Event();
 
 	__super::Update(fTimeDelta);
 	Describe_Entity();
@@ -234,24 +237,44 @@ HRESULT CPlayer::Ready_Parts()
 	return S_OK;
 }
 
+
+void CPlayer::Play_Event()
+{
+	for (auto iter = m_PendingEvents.begin(); iter != m_PendingEvents.end(); )
+	{
+		_float ratio = m_pModelCom->Get_CurrentTrackProgressRatio();
+		_uint curAnim = m_pModelCom->Get_AnimIndex();
+
+		if (curAnim == iter->AnimIndex && ratio >= iter->fRatio)
+		{
+			iter->Callback();
+			iter = m_PendingEvents.erase(iter);
+		}
+		else
+		{
+			++iter;
+		}
+	}
+}
+
+void CPlayer::Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio)
+{
+	PendingEvent Desc;
+	Desc.AnimIndex = AnimIndex;
+	Desc.fRatio = fRatio;
+	Desc.Callback = Callback;
+	m_PendingEvents.push_back(Desc);
+}
+
+
 _matrix CPlayer::Get_WandPos()
 {
-	CModel* pWand = Get_PartObject<CWand>()->Get_Component<CModel>();
+	CWand* pWand = Get_PartObject<CWand>();
 
 	if (pWand == nullptr)
 		return _matrix();
 
-	_matrix BoneMatrix = XMLoadFloat4x4(pWand->Get_BoneMatrixPtr("root"));
-
-	BoneMatrix = BoneMatrix * Get_PartObject<CWand>()->Get_Component<CTransform>()->Get_XMWorldMatrix();
-
-	_float3 vOffset = _float3(0.f, -0.27f, -0.32f);
-
-	BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[0]) * vOffset.x;
-	BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[1]) * vOffset.y;
-	BoneMatrix.r[3] += XMVector3Normalize(BoneMatrix.r[2]) * vOffset.z;
-
-	return BoneMatrix;
+	return pWand->Get_WorldMatrix();
 }
 
 HRESULT CPlayer::Bind_ShaderResources()

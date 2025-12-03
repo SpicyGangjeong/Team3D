@@ -17,6 +17,25 @@ typedef struct tagUIObjectDesc
 	_float fSizeX, fSizeY = {};
 }UIOBJECT_DESC;
 
+typedef struct tagSpellInfo
+{
+	_int			iSpell_ID{};
+	_wstring		pSpell_Name;
+	_wstring		pImage_Name;
+	_int			iSpell_Type{};
+	_int			iSkill_Type{};
+	_float			fSpell_CoolTime{};
+	_float			fDuration{};
+	_int			iAnimNum{};
+	_wstring		pSpellInfo;
+	_bool			bSpell_Lock = false;
+	_bool			bEquip_Spell = false;
+}SPELLINFO;
+typedef struct SlotHover
+{
+	_int iSlotID{};
+	_int iHover_Index{};
+}HOVER_INFO;
 protected:
 	CUIObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CUIObject(const CUIObject& rhs);
@@ -102,12 +121,18 @@ public:
 
 	virtual void Set_SkillType(_int eType);
 	virtual _int Get_SkillType();
+	virtual void Set_SpellType(_int eType);
+	virtual _int Get_SpellType();
 
 	virtual void Set_CoolTime(_float CoolTime);
 	virtual _float Get_CoolTime();
 
 	virtual void Add_Function(wstring Name, function<void(void*)> Evnet);
 	virtual void Function_Callback(wstring Name, void* pArg = nullptr);
+
+	virtual _bool Get_Hover();
+
+	virtual const SPELLINFO Get_Info(_int Index);
 protected:
 	_vector					m_fOrigin_Position_vector{};
 	_float2					m_fOrigin_Position{};
@@ -152,6 +177,7 @@ protected:
 	RECT					m_pRect{};
 
 	_int					m_iSpellType{};
+	_int					m_iSkillType{};
 	_float					m_fSortZ{};
 	_float					m_fMoveSpeed{};
 

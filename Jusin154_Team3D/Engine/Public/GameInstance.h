@@ -22,6 +22,8 @@ public:
 	_float Random_Normal();
 	_float Random_Float(_float fMin, _float fMax);
 	_int   Random_Int(_int iMin, _int iMax);
+	_int   Real_Random_Int(_int iMin, _int iMax);
+	_float Real_Random_Float(_float fMin, _float fMax);
 	void BillBoard(CTransform* pTransform);
 
 #pragma region GRAPHIC_DEVICE
@@ -97,6 +99,7 @@ public:
 
 #pragma region RENDERER
 	HRESULT Add_RenderGroup(RENDER eRenderGroup, class CGameObject* pRenderObject);
+	void Render_PreShadow();
 #pragma endregion
 
 #pragma region ASSET_MANAGER
@@ -200,6 +203,7 @@ public:
 	PSX::PxRevoluteJoint* Create_PxRevoluteJoint(PSX::PxRigidActor* pActorFrame, PSX::PxTransform& pxLocalWallFrame, PSX::PxRigidActor* pActorObject, PSX::PxTransform& pxLocalActorFrame);
 
 	_bool SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer);
+	_bool SphereCast(_float fRadius, _fvector vStartPos, _fvector vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer);
 
 	PSX::PxController*	Add_CapsuleController(PSX::PxCapsuleControllerDesc& Desc);
 	PSX::PxController*	Add_BoxController(PSX::PxBoxControllerDesc& Desc);
@@ -208,8 +212,8 @@ public:
 	void				Attach_Actor(PSX::PxActor& Actor);
 	void				Detach_Actor(PSX::PxActor& pActor);
 	void				Release_Actor(PSX::PxActor& Actor);
-#ifdef EDITOR_PROJECT
 	HRESULT ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix = XMMatrixIdentity());
+#ifdef EDITOR_PROJECT
 	HRESULT SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
 #endif // EDITOR_PROJECT
 	HRESULT LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes); // 모델 불러왔던 경로에 그대로 있음
@@ -272,6 +276,7 @@ private:
 
 #ifdef _DEBUG
 private:
+	mt19937 m_Rng{ random_device{}() };
 	_float							m_fTimer_PriorityUpdate = { 0.f };
 	_float							m_fTimer_Update = { 0.f };
 	_float							m_fTimer_LateUpdate = { 0.f };

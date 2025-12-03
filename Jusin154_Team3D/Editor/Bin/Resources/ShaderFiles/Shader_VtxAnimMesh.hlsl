@@ -287,14 +287,14 @@ struct PS_IN_SHADOW
 
 struct PS_OUT_SHADOW
 {
-    float4 vShadowLightDepth : SV_TARGET0;
+    float fShadowLightDepth : SV_TARGET0;
 };
 
 PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN_SHADOW In)
 {
     PS_OUT_SHADOW Out = (PS_OUT_SHADOW) 0;
     
-    Out.vShadowLightDepth.x = In.vProjPos.z;
+    Out.fShadowLightDepth = In.vProjPos.z;
     
     return Out;
 }

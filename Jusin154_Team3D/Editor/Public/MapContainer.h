@@ -29,6 +29,9 @@ public:
 	virtual _string& Get_Name() { return m_strName; }
 	virtual HRESULT Save_PartObjects(tinyxml2::XMLDocument& Doc, tinyxml2::XMLElement* Container);
 
+	void ReadyForPhysX();
+	void ConvertToPhysX();
+
 protected:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

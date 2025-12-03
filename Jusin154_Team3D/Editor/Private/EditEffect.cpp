@@ -3,6 +3,9 @@
 
 #include "GameInstance.h"
 #include "Effect_Editor.h"
+#include "Layer.h"
+#include "Player.h"
+#include "Wand.h"
 
 CEditEffect::CEditEffect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEffectObject{ pDevice, pContext }
@@ -80,6 +83,13 @@ void CEditEffect::Late_Update(_float fTimeDelta)
 		m_pTransformCom->Go_Straight(3 * fTimeDelta * m_iSign);
 	}
 
+
+	if (m_isWandPos == true)
+	{
+		_vector vWandPos = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_PLAYER)->Get_Object<CPlayer>()->Get_PartObject<CWand>()->Get_WorldPostion();
+
+		m_pTransformCom->Set_State(STATE::POSITION, vWandPos);
+	}
 
 	if (m_EffectInfo.isBloom == true)
 	{
@@ -409,7 +419,7 @@ void CEditEffect::Describe_Entity()
 	const char* pLerp[] = { "Linear" , "EaseInQuad", "EaseOutQuad", "EaseInCubic" , "EaseOutCubic" , "EaseInOutSin" , "EaseInBack" , "Expo" , "Circle" };
 	const char* pRenderNames[] = { "PRIORITY" , "SHADOW", "NONBLEND", "DECAL", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" ,"BLOOM" , "UI", "OCCLUSION"};
 	const char* pEffectType[] = { "EFFECT" , "TRAIL" };
-	const char* pShaderPass[] = { "DEFAULT" , "NON_NOMALMAP" , "BLUR" , "WEIGHTBLEND" , "NON_WORLD" , "NON_WORLD_BLUR",  "BLEND", "BLEND_NOWORLD", "BLOOM" ,"BLOOM_NOWORLD" };
+	const char* pShaderPass[] = { "DEFAULT" , "NON_NOMALMAP" , "BLUR" , "WEIGHTBLEND" , "NON_WORLD" , "NON_WORLD_BLUR",  "BLEND", "BLEND_NOWORLD", "BLOOM" ,"BLOOM_NOWORLD" ,"BLUR_NO_EMMISVE", "BLUR_NO_WORLD_NO_EMISSIVE","WEIGHTBLEND_FOR_BLEND"};
 	const char* pBloomType[] = { "NONE" , "BASIC" , "MUILTY"};
 
 	_int iCurrentItem = static_cast<_int>(m_EffectInfo.eRenderOrder);
@@ -436,6 +446,8 @@ void CEditEffect::Describe_Entity()
 
 	GUI::Checkbox("Visible", &m_bVisible);
 	GUI::Checkbox("GO", &m_isGoStraight);
+	GUI::Checkbox("WAND POS", &m_isWandPos);
+	
 
 	m_pTransformCom->Describe_Entity();
 
@@ -466,6 +478,7 @@ void CEditEffect::Describe_Entity()
 		{
 
 			GUI::Checkbox("OnlyBlur", &m_EffectInfo.isOnlyBlur);
+			GUI::Checkbox("BlurNoEmissive", &m_EffectInfo.isBlurNoEmissive);
 
 			ImGui::PushItemWidth(80);
 			GUI::DragFloat("BlurIntensity", &m_EffectInfo.fBlurIntensity, 0.005f, 0.f, 1.f);
@@ -481,8 +494,7 @@ void CEditEffect::Describe_Entity()
 
 	if (GUI::TreeNode("TEX BLUR"))
 	{
-		GUI::Checkbox("DiffuseBlur", &m_EffectInfo.isDiffuseBlur);
-		GUI::Checkbox("MaskBlur", &m_EffectInfo.isMaskBlur);
+		GUI::Checkbox("TexBlur", &m_EffectInfo.isTexBlur);
 		GUI::Checkbox("BlurDissolve", &m_EffectInfo.isBlurDissolve);
 		GUI::Checkbox("BlurReverseDissolve", &m_EffectInfo.isBlurReverseDissolve);
 
@@ -712,6 +724,13 @@ void CEditEffect::Describe_Entity()
 			{
 				GUI::Checkbox("Nomal Dissolve", &m_EffectInfo.isNomalDissolve);
 				GUI::Checkbox("Reverse Dissolve", &m_EffectInfo.isReverseDissolve);
+
+				GUI::Spacing();
+				GUI::Checkbox("DissolveMove", &m_EffectInfo.isDissolveMove);
+				GUI::DragFloat2("DissolveUVGainAmount", (_float*)&m_EffectInfo.vDissolveUVGainAmount, 0.01f);
+				GUI::DragFloat("DissolveDelay", &m_EffectInfo.fDissolveDelay, 0.005f);
+				GUI::DragFloat("ReverseDissolveDelay", &m_EffectInfo.fReverseDissolveDelay, 0.005f);
+
 
 				_string strName  = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISSOLVE_TEXTURE", (CComponent**)&m_pDissolve_TextureCom, nullptr, this);
 				
