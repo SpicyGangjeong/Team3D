@@ -60,6 +60,7 @@ HRESULT CSpell_Panel::Initialize(void* pArg)
 	m_iPendingSpell = -1;
 	m_fDelayTime = 1.f;
 	Add_Function(TEXT("Hover"), [this](void* p) {this->Slot_Chack(p); });
+	Add_Function(TEXT("Click"), [this](void* p) {this->Click_Slot(*reinterpret_cast<_bool*>(p)); });
 	return S_OK;
 }
 
@@ -156,7 +157,22 @@ void CSpell_Panel::Slot_Chack(void* pArg)
 	}
 
 	m_iSpellType = finalHover;
-	Function_Callback(TEXT("Slot_Hover"), &m_iSpellType);
+	if (m_bHover == false)
+	{
+		Function_Callback(TEXT("Slot_Hover"), &m_iSpellType);
+	}
+}
+
+void CSpell_Panel::Click_Slot(_bool bClick)
+{
+	if (bClick == true)
+	{
+		m_bHover = true;
+	}
+	else
+	{
+		m_bHover = false;
+	}
 }
 
 HRESULT CSpell_Panel::Bind_ShaderResources()

@@ -49,6 +49,7 @@ private:
 	_float2					m_UV{};
 
 	_int					m_iSpellType{};
+	_int					m_iSkillType{};
 
 	_vector					m_vLerpPosition{};
 	_float					m_fLerpX{};

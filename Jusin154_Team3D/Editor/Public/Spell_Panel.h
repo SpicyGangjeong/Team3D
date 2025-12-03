@@ -29,7 +29,7 @@ public:
 
 private:
 	void Slot_Chack(void* pArg);
-
+	void Click_Slot(_bool Click);
 
 private:
 	virtual HRESULT	Bind_ShaderResources() override;

@@ -184,7 +184,7 @@ protected:
 	_float4					m_vNine_Slice{};
 
 	_float					m_fTopY{};
-
+	_bool					m_bClick = { false };
 protected:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);

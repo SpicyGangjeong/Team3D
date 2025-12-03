@@ -154,6 +154,7 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		m_fMoveSpeed = static_cast<CElementObject*>(m_pElementObject)->Get_Speed();
 		m_fAngle = static_cast<CElementObject*>(m_pElementObject)->Get_Angle();
 		m_iSpellType = static_cast<CElementObject*>(m_pElementObject)->Get_SkillType();
+		m_iSkillType = static_cast<CElementObject*>(m_pElementObject)->Get_SpellType();
 		m_fCoolTime = static_cast<CElementObject*>(m_pElementObject)->Get_CoolTime();
 	}
 	GUI::Begin("Current_PanelObject_Info");
@@ -436,6 +437,7 @@ void CIMGUIUI::Update(_float fTimeDelta)
 			static_cast<CElementObject*>(m_pElementObject)->Set_Angle(m_fAngle);
 		}
 
+		GUI::Text("SpellType %d", m_iSkillType);
 		GUI::Text("SkillType %d", m_iSpellType);
 		if (GUI::Combo("SkillType", &m_iSpellType, SpellTypeNames, itemCount))
 		{

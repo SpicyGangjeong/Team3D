@@ -160,15 +160,15 @@ void CSpell_Anim::Set_FadeIn()
 
 HRESULT CSpell_Anim::Change_Image(_int SpellID)
 {
-	//_wstring pImageName = static_cast<CUIObject*>(m_pOwner)->Get_Info(SpellID).pImage_Name;
-	//m_iTotalFrames = static_cast<CUIObject*>(m_pOwner)->Get_Info(SpellID).iAnimNum;
-	//if (m_pDiffuse_TextureCom)
-	//{
-	//	Remove_Component<CTexture>();
-	//	SAFE_RELEASE(m_pDiffuse_TextureCom);
-	//}
-	//if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(LEVEL::UI), pImageName, reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom))))
-	//	return E_FAIL;
+	_wstring pImageName = static_cast<CUIObject*>(m_pOwner)->Get_Info(SpellID).pImage_Name;
+	m_iTotalFrames = static_cast<CUIObject*>(m_pOwner)->Get_Info(SpellID).iAnimNum;
+	if (m_pDiffuse_TextureCom)
+	{
+		Remove_Component<CTexture>();
+		SAFE_RELEASE(m_pDiffuse_TextureCom);
+	}
+	if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(LEVEL::UI), pImageName, reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom))))
+		return E_FAIL;
 
 	return S_OK;
 }

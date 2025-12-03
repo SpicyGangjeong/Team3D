@@ -159,13 +159,13 @@ void CSpell_List::SizeUpdate(_float fSizeX, _float fSizeY)
 
 void CSpell_List::Color()
 {
-	m_pVIBufferCom->Set_Index_Renge_Color(0, 3, _float4(255.f / 255.f, 255.f / 255.f, 0.f / 255.f, 1.f));
-	m_pVIBufferCom->Set_Index_Renge_Color(4, 7, _float4(150.f / 255.f, 120.f / 255.f, 240.f / 255.f, 1.f));
-	m_pVIBufferCom->Set_Index_Renge_Color(8, 12, _float4(190.f / 255.f, 46.f / 255.f, 34.f / 255.f, 1.f));
-	m_pVIBufferCom->Set_Index_Renge_Color(13, 16, _float4(24.f / 255.f, 190.f / 255.f, 255.f / 255.f, 1.f));
-	m_pVIBufferCom->Set_Index_Renge_Color(17, 19, _float4(200.f / 255.f, 220.f / 255.f, 150.f / 255.f, 1.f));
-	m_pVIBufferCom->Set_Index_Renge_Color(20, 22, _float4(50.f / 255.f, 150.f / 255.f, 110.f / 255.f, 1.f));
-	m_pVIBufferCom->Set_Index_Renge_Color(23, 25, _float4(24.f / 255.f, 190.f / 255.f, 255.f / 255.f, 1.f));
+	m_pVIBufferCom->Set_Index_Renge_Color(0, 3, 0.f);
+	m_pVIBufferCom->Set_Index_Renge_Color(4, 7, 1.f);
+	m_pVIBufferCom->Set_Index_Renge_Color(8, 12, 2.f);
+	m_pVIBufferCom->Set_Index_Renge_Color(13, 16, 3.f);
+	m_pVIBufferCom->Set_Index_Renge_Color(17, 19, 4.f);
+	m_pVIBufferCom->Set_Index_Renge_Color(20, 22, 5.f);
+	m_pVIBufferCom->Set_Index_Renge_Color(23, 25, 3.f);
 }
 
 void CSpell_List::Hover(_float fTimeDelta)

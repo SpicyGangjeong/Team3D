@@ -29,7 +29,8 @@ public:
 
 private:
 	void Color();
-	void Hover(_float fTimeDelta);
+	void Hover();
+	void Click_Slot(_bool bClick);
 
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
@@ -49,6 +50,7 @@ private:
 
 	_int m_iPerSpell_Slot{};
 	_float m_fHoverTime{};
+
 public:
 	static CSpell_List* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
