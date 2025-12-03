@@ -21,6 +21,7 @@
 #include "State_Land.h"
 #include "State_Move.h"
 #include "State_Combat.h"
+#include "State_Hit.h"
 #include "State_Broom_Ride.h"
 #pragma endregion
 
@@ -400,34 +401,6 @@ _matrix CPlayer::Get_WandPos()
 	return pWand->Get_WorldMatrix();
 }
 
-void CPlayer::Play_Event()
-{
-	for (auto iter = m_PendingEvents.begin(); iter != m_PendingEvents.end(); )
-	{
-		_float ratio = m_pModelCom->Get_CurrentTrackProgressRatio();
-		_uint curAnim = m_pModelCom->Get_AnimIndex();
-
-		if (curAnim == iter->AnimIndex && ratio >= iter->fRatio)
-		{
-			iter->Callback();
-			iter = m_PendingEvents.erase(iter);
-		}
-		else
-		{
-			++iter;
-		}
-	}
-}
-
-void CPlayer::Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio)
-{
-	PendingEvent Desc;
-	Desc.AnimIndex = AnimIndex;
-	Desc.fRatio = fRatio;
-	Desc.Callback = Callback;
-	m_PendingEvents.push_back(Desc);
-}
-
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CPlayer* pInstance = new CPlayer(pDevice, pContext);
@@ -526,6 +499,8 @@ void CPlayer::Describe_Entity()
 	GUI::Text("%d", m_iStateMask);
 
 	m_pLightCom->Describe_Entity();
+
+	GUI::Text("HI Check %d",HI);
 	GUI::End();
 }
 

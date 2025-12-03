@@ -128,6 +128,51 @@ void CNomalJap::Late_Update(_float fTimeDelta)
 	if (m_bVisible == false) {
 		return;
 	}
+	if (nullptr != m_pTargetUnit && false == m_pTargetUnit->isDead()) {
+		_vector vStartPos = m_pProjectile->Get_WorldPostion();
+
+		_vector vEndPos = m_pTargetUnit->Get_WorldPostion();
+
+		_vector vDir = { vEndPos - vStartPos };
+
+		_float fDistance = XMVectorGetX(XMVector3Length(vEndPos - vStartPos));
+
+		PSX::PxSweepBuffer pxBuffer = {};
+
+		_bool bHit = m_pGameInstance->SphereCast(0.1f, vStartPos, vDir, fDistance, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eDYNAMIC, pxBuffer);
+
+		if (bHit) {
+			const PSX::PxSweepHit& hit = pxBuffer.block;
+			PSX::PxRigidActor* pActor = hit.actor;
+			PSX::PxShape* pShape = hit.shape;
+
+			if (nullptr != pActor && nullptr != pActor->userData)
+			{
+				PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+
+				switch (pUserData->eKind)
+				{
+				case PHYSX_KIND::CCTActor:
+				{
+					switch (PXOBJECT(pUserData->iSubKind))
+					{
+					case PXOBJECT::MONSTER:
+					case PXOBJECT::GOBLIN_WARRIOR:
+						break;
+					case PXOBJECT::TROLL:
+					{
+						ON_COLLISION_INFO Desc;
+						pUserData->pOwner->OnCollision();
+					}
+						break;
+					}
+				}
+				}
+			}
+		}
+
+	}
+
 
 	Get_PartObject<CTrailObject>()->Trail_Update(m_pProjectile->Get_Component<CTransform>()->Get_XMWorldMatrix(), fTimeDelta);
 

@@ -460,6 +460,8 @@ void CVIBuffer_Model_Instance::Delete_Instance()
 	if (0 != m_iCurrentNumInstance)
 		m_iCurrentNumInstance--;
 
+	m_iNumInstance = m_iCurrentNumInstance;
+
 	return;
 }
 

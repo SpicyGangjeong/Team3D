@@ -194,7 +194,7 @@ _bool CCharacter_Controller::UpdateGroundByCast(_float fTimeDelta)
 
 	if (true == bHit) { // 쿼리해서 스태틱 중에 터레인 액터들이 맞으면 다시 갱신
 		const PSX::PxSweepHit& hit = pxBuffer.block;
-
+		
 		PSX::PxRigidActor* pActor = hit.actor;
 		PSX::PxShape* pShape = hit.shape;
 

@@ -24,24 +24,28 @@ HRESULT CTerrain::Initialize(void* pArg)
 {
 	TERRAIN_DESC* pDesc = static_cast<TERRAIN_DESC*>(pArg);
 
-	if (FAILED(__super::Initialize(pArg)))
+	if (FAILED(__super::Initialize(pArg))){
 		return E_FAIL;
+	}
 
-	if (FAILED(Ready_Components(pArg)))
+	if (FAILED(Ready_Components(pArg))){
 		return E_FAIL;
+	}
 
 	m_fUsingSurfaceParams = 15.f / 27.f;
 	//m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-194, 18.5f, -153.f, 1.f));
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pDesc->vPosition), 1.f));
 
 
-	CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc{};
-	Desc.pMeshName = TEXT("Hogsmeade_HeightMap");
-	Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
-	/* Com_RigidBody */
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_RigidBody_Static_Terrain_Hogsmeade"),
-		reinterpret_cast<CComponent**>(&m_pRigidBody), &Desc))) {
-		return E_FAIL;
+	{
+		CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc{};
+		Desc.pMeshName = TEXT("Hogsmeade_HeightMap");
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
+		/* Com_RigidBody */
+		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_RigidBody_Static_Terrain_Hogsmeade"),
+			reinterpret_cast<CComponent**>(&m_pRigidBody), &Desc))) {
+			return E_FAIL;
+		}
 	}
 
 	return S_OK;
@@ -53,19 +57,14 @@ void CTerrain::Priority_Update(_float fTimeDelta)
 
 void CTerrain::Update(_float fTimeDelta)
 {
-
-#ifdef _DEBUG
-	if (m_pGameInstance->Key_Down(DIK_LSHIFT) )
-	{
-		m_bWasWireFrame = !m_bWasWireFrame;
-	}
-#endif // _DEBUG
+	Describe_Entity();
 }
 
 void CTerrain::Late_Update(_float fTimeDelta)
 {
 	//if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW, this);
 	//}
 }
 
@@ -74,18 +73,6 @@ HRESULT CTerrain::Render()
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-#ifdef _DEBUG
-	static _int iValue1 = 16;
-	static _int iValue2 = 16;
-	static _int iValue3 = 16;
-	GUI::SliderInt("DSN1", (_int*)&iValue1, 1, 1024);
-	GUI::SliderInt("DSN2", (_int*)&iValue2, 1, 1024);
-	GUI::SliderInt("DSN3", (_int*)&iValue3, 1, 1024);
-	m_vDRN.x = 1.f / (_float)iValue1;
-	m_vDRN.y = 1.f / (_float)iValue2;
-	m_vDRN.z = 1.f / (_float)iValue3;
-#endif // _DEBUG
-
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDiffuseMultiplier", &m_vDRN.x, sizeof(_float)))) {
 		return E_FAIL;
 	}
@@ -95,31 +82,39 @@ HRESULT CTerrain::Render()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fNormalMultiplier", &m_vDRN.z, sizeof(_float)))) {
 		return E_FAIL;
 	}
-#ifdef _DEBUG
-	if (m_bWasWireFrame)
-	{
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NORTEX::ENV_TERRAIN_ANISO)))) {
-			return E_FAIL;
-		}
-	}
-	else
-	{
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NORTEX::DEFAULT)))) {
-			return E_FAIL;
-		}
-	}
-#endif // _DEBUG
-#ifndef _DEBUG
 	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NORTEX::ENV_TERRAIN_ANISO)))) {
 		return E_FAIL;
 	}
-#endif // !_DEBUG
-
-
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
 		return E_FAIL;
 	}
+	if (FAILED(m_pVIBufferCom->Render())) {
+		return E_FAIL;
+	}
 
+	return S_OK;
+}
+
+HRESULT CTerrain::Render_Shadow()
+{
+	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ViewMatrix", D3DTS::VIEW))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ProjMatrix", D3DTS::PROJ))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", &m_pGameInstance->Get_ShadowDesc()->fFar, sizeof(_float)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NORTEX::SHADOW)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
+		return E_FAIL;
+	}
 	if (FAILED(m_pVIBufferCom->Render())) {
 		return E_FAIL;
 	}
@@ -245,6 +240,19 @@ void CTerrain::Free()
 #ifdef _DEBUG
 void CTerrain::Describe_Entity()
 {
-
+	GUI::Begin("Renderer");
+	GUI::PushItemWidth(80);
+	if (GUI::CollapsingHeader("Terr"))
+	{
+		static _int iTuningValue = 16;
+		GUI::DragInt("DSN1", (_int*)&iTuningValue, 1, 1024);
+		GUI::DragInt("DSN2", (_int*)&iTuningValue, 1, 1024);
+		GUI::DragInt("DSN3", (_int*)&iTuningValue, 1, 1024);
+		m_vDRN.x = 1.f / (_float)iTuningValue;
+		m_vDRN.y = 1.f / (_float)iTuningValue;
+		m_vDRN.z = 1.f / (_float)iTuningValue;
+		GUI::PopItemWidth();
+	}
+	GUI::End();
 }
 #endif // _DEBUG

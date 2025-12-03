@@ -175,15 +175,15 @@ void CLight::Free()
 
 void CLight::Describe_Entity()
 {
-	if (ImGui::TreeNode("LIGHT_INFO"))
+	if (GUI::TreeNode("LIGHT_INFO"))
 	{
-		ImGui::Separator(); ImGui::Spacing();
+		GUI::Separator(); GUI::Spacing();
 
 		const char* pLightTypeNames[] = { "DIRECTIONAL", "POINT", "SPOT" };
 
 		int iCurrentItem = static_cast<int>(m_LightDesc.eType);
 
-		if (ImGui::Combo("LightType", &iCurrentItem, pLightTypeNames, ENUM_CLASS(LIGHT::END)))
+		if (GUI::Combo("LightType", &iCurrentItem, pLightTypeNames, ENUM_CLASS(LIGHT::END)))
 		{
 			m_LightDesc.eType = static_cast<LIGHT>(iCurrentItem);
 		}

@@ -30,7 +30,7 @@
         <Surface>SRO</Surface>
     </Mesh>
    </SM_BogMyrtle_A>
-    <SM_BogCotton_A_Master mesh="1">
+   <SM_BogCotton_A_Master mesh="1">
     <Mesh>
         <Material>T_BogCotton_D</Material>
         <Material>T_BogCotton_N</Material>
@@ -38,4 +38,102 @@
         <Surface>SRO</Surface>
     </Mesh>
    </SM_BogCotton_A_Master>
+   <SM_HM_OwlPost_Window_A mesh="3">
+    <Mesh>
+        <Material>T_Windows_A_D</Material>
+        <Material>T_Windows_A_N</Material>
+        <Material>T_Windows_A_SRO</Material>
+        <Surface>SRO</Surface>
+    </Mesh>
+    <Mesh>
+        <Material>T_HM_WoodTrimTile_Gray_D</Material>
+        <Material>T_HM_WoodTrimTile_Edgy_N</Material>
+        <Material>T_HM_WoodTrimTile_Edgy_SRO</Material>
+        <Surface>SRO</Surface>
+    </Mesh>
+    <Mesh>
+        <Material>T_HM_Potions_Windows_D</Material>
+        <Material>T_HM_Potions_Windows_N</Material>
+        <Material>T_HM_Potions_Windows_MRO</Material>
+        <Surface>MRO</Surface>
+    </Mesh>
+   </SM_HM_OwlPost_Window_A>
+   <SM_HM_WindowsStyleA_L_Rectangle_Double_A mesh="1">
+    <Mesh>
+        <Material>T_Windows_A_D</Material>
+        <Material>T_Windows_A_N</Material>
+        <Material>T_Windows_A_SRO</Material>
+        <Surface>SRO</Surface>
+    </Mesh>
+   </SM_HM_WindowsStyleA_L_Rectangle_Double_A>
+   <SM_HM_WindowsStyleC_Retangle_Double_A mesh="1">
+    <Mesh>
+        <Material>T_HM_WindowStyleC_D</Material>
+        <Material>T_HM_WindowStyleC_N</Material>
+        <Material>T_HM_WindowStyleC_SRO</Material>
+        <Surface>SRO</Surface>
+    </Mesh>
+   </SM_HM_WindowsStyleC_Retangle_Double_A>
+   <SM_HM_Quid_Window_A mesh="1">
+    <Mesh>
+        <Material>T_BLDG_QUID_Window_D</Material>
+        <Material>T_BLDG_QUID_Window_N</Material>
+        <Material>T_BLDG_QUID_Window_SRO</Material>
+        <Surface>SRO</Surface>
+    </Mesh>
+   </SM_HM_Quid_Window_A>
+   <SM_HM_Ollivanders_Box_Window mesh="1">
+    <Mesh>
+        <Material>T_CampA_WoodBeam_Trim_A_D</Material>
+        <Material>T_CampA_WoodBeam_Trim_A_N</Material>
+        <Material>T_CampA_WoodBeam_Trim_A_SRO</Material>
+        <Surface>SRO</Surface>
+    </Mesh>
+   </SM_HM_Ollivanders_Box_Window>
+   <SM_HM_WindowsStyleA_L_Square_Double_C mesh="1">
+    <Mesh>
+        <Material>T_Windows_A_D</Material>
+        <Material>T_Windows_A_D</Material>
+        <Material>T_Windows_A_D</Material>
+        <Surface>SRO</Surface>
+    </Mesh>
+   </SM_HM_WindowsStyleA_L_Square_Double_C>
+   <SM_HM_WindowsStyleC_L_Double_Single_A mesh="1">
+    <Mesh>
+        <Material>T_HM_WindowStyleC_D</Material>
+        <Material>T_HM_WindowStyleC_N</Material>
+        <Material>T_HM_WindowStyleC_SRO</Material>
+        <Surface>SRO</Surface>
+    </Mesh>
+   </SM_HM_WindowsStyleC_L_Double_Single_A>
+   <SM_HM_WindowsStyleC_Round_Double_A mesh="2">
+    <Mesh>
+        <Material>T_HM_WindowStyleC_D</Material>
+        <Material>T_HM_WindowStyleC_N</Material>
+        <Material>T_HM_WindowStyleC_SRO</Material>
+        <Surface>SRO</Surface>
+    </Mesh>
+    <Mesh>
+        <Material>T_HM_WoodTrimTile_Edgy_D</Material>
+        <Material>T_HM_WoodTrimTile_Edgy_N</Material>
+        <Material>T_HM_WoodTrimTile_Edgy_SRO</Material>
+        <Surface>SRO</Surface>
+    </Mesh>
+   </SM_HM_WindowsStyleC_Round_Double_A>
+    <SM_HM_Door1a mesh="1">
+    <Mesh>
+        <Material>T_HM_Door1a_D</Material>
+        <Material>T_HM_Door1a_N</Material>
+        <Material>T_HM_Door1a_MRO</Material>
+        <Surface>MRO</Surface>
+    </Mesh>
+   </SM_HM_Door1a>
+   <SM_HM_Door2b mesh="1">
+    <Mesh>
+        <Material>T_HM_Door2b_D</Material>
+        <Material>T_HM_Door2b_N</Material>
+        <Material>T_HM_Door2b_MRO</Material>
+        <Surface>MRO</Surface>
+    </Mesh>
+   </SM_HM_Door2b>
 </Instance>

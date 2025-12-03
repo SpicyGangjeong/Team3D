@@ -57,6 +57,7 @@ private:
 
 	void Add_WorldMatrix();
 	void Load_InstancedProp(const _char* pFilePath);
+	void Patch_Data(const _char* pFilePath);
 
 #ifdef _DEBUG
 	void Save_InstancedProp(const _char* pFilePath);

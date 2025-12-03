@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Base.h"
 
@@ -16,7 +16,7 @@ public:
 	const _float4x4* Get_ShadowMatricesPtr() { return m_TransformationMatrices; }
 	const SHADOW_LIGHT_DESC* Get_ShadowDesc() { return &m_Desc; }
 private:
-	_float4x4				m_TransformationMatrices[ENUM_CLASS(D3DTS::END)] = {};
+	_float4x4 m_TransformationMatrices[ENUM_CLASS(D3DTS::END)] = {};
 	SHADOW_LIGHT_DESC m_Desc = {};
 
 public:

@@ -311,32 +311,27 @@ void CMapObject_LOD::Describe_Entity()
 	if (nullptr == m_pGameInstance)
 		return;
 
-	GUI::Text(CMyTools::ToString(m_ModelPrototypeTags[m_iLodIndex]).c_str());
-	GUI::InputInt("Lod Level", (_int*)(&m_iLodIndex));
-	m_iLodIndex = max(0, m_iLodIndex);
-	m_iLodIndex = min(m_iMaxLodLevel, m_iLodIndex);
-	GUI::Text("----- Transfrom ----");
-	GUI::InputFloat("X##Position", &m_vPosition.x, 0.1f, 1.f);
-	GUI::InputFloat("Y##Position", &m_vPosition.y, 0.1f, 1.f);
-	GUI::InputFloat("Z##Position", &m_vPosition.z, 0.1f, 1.f);
+	_float3 vMove = {};
+
+	ImGui::Text("----- Transfrom ----");
+	ImGui::InputFloat("Right", &vMove.x, 0.05f, 0.1f);
+	ImGui::InputFloat("Up", &vMove.y, 0.05f, 0.1f);
+	ImGui::InputFloat("Look", &vMove.z, 0.05f, 0.1f);
+
+	m_pTransformCom->Move_Right(vMove.x);
+	m_pTransformCom->Move_Up(vMove.y);
+	m_pTransformCom->Move_Look(vMove.z);
+
+	XMStoreFloat3(&m_vPosition, m_pTransformCom->Get_State(STATE::POSITION));
 
 	if (m_pGameInstance->Mouse_Down(DIM_LBUTTON) && m_pGameInstance->Key_Pressing(DIK_LSHIFT))
-	{
-		CTerrain* pTerrain = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Terrain"))->Get_Object<CTerrain>();
-		if (nullptr != pTerrain)
-		{
-			pTerrain->Get_Component<CVIBuffer_Terrain>()->Picking(pTerrain->Get_Component<CTransform>()->Get_XMWorldMatrix(), &m_vPosition);
-		}
-
-	}
-	if (m_pGameInstance->Mouse_Down(DIM_LBUTTON) && m_pGameInstance->Key_Pressing(DIK_LCONTROL))
 	{
 		_float3 vPosition = {};
 		if (m_pGameInstance->isPicking(&vPosition))
 		{
 			memcpy(&m_vPosition, &vPosition, sizeof(_float3));
+			m_pTransformCom->Set_State(STATE::POSITION, XMLoadFloat3(&m_vPosition));
 		}
-
 	}
 
 	GUI::Text("----- Rotation ----");
