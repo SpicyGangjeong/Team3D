@@ -104,6 +104,7 @@ HRESULT CInfoInstance::Initialize_Information(ID3D11Device* pDevice, ID3D11Devic
 	//if (nullptr == m_pMapInfo) {
 	//	return E_FAIL;
 	//}
+
 	m_pPlayerInfo = CPlayerInfo::Create(pDevice, pContext);
 	if (nullptr == m_pPlayerInfo) {
 		return E_FAIL;
@@ -121,8 +122,6 @@ void CInfoInstance::Release_Information()
 {
 	DestroyInstance();
 
-
-	SAFE_RELEASE(m_pMapInfo);
 	SAFE_RELEASE(m_pPlayerInfo);
 	SAFE_RELEASE(m_pMonsterInfo);
 	SAFE_RELEASE(m_pDevice);

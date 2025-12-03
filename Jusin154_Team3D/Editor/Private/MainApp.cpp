@@ -91,7 +91,9 @@ HRESULT CMainApp::Start_Level(LEVEL eLevelID)
 	if (nullptr == m_pInfoInstance) {
 		return E_FAIL;
 	}
+
 	SAFE_ADDREF(m_pInfoInstance);
+
 	if (FAILED(m_pInfoInstance->Initialize_Information(m_pDevice, m_pContext))) {
 		return E_FAIL;
 	}
@@ -166,9 +168,10 @@ void CMainApp::Free()
 
 	SAFE_RELEASE(m_pDevice);
 	SAFE_RELEASE(m_pContext);
+
 	m_pInfoInstance->Release_Information();
 	m_pGameInstance->Release_Engine();
 
-	SAFE_RELEASE(m_pInfoInstance);
+
 	SAFE_RELEASE(m_pGameInstance);
 }
