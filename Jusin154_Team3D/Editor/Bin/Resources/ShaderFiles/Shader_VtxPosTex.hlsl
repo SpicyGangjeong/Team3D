@@ -386,6 +386,40 @@ PS_BLUR_OUT PS_TRAIL_BLOOM(PS_IN In)
     return Out;
 }
 
+PS_BLOOM_OUT PS_BLEND(PS_IN In)
+{
+    PS_BLOOM_OUT Out;
+    
+    vector vMtrlDiffuse;
+    
+    vMtrlDiffuse = Draw_Trail(In);
+    
+    vMtrlDiffuse.rgb += EmissiveDraw(In).rgb;
+
+    Out.vDiffuse = vMtrlDiffuse;
+    
+    return Out;
+}
+
+PS_BLOOM_OUT PS_WEIGHTED_FOR_BLEND(PS_IN In)
+{
+    PS_BLOOM_OUT Out;
+    
+    vector vMtrlDiffuse;
+    
+    vMtrlDiffuse = Draw_Trail(In);
+    
+    vMtrlDiffuse.rgb += EmissiveDraw(In).rgb;
+    
+        
+    float fWeight = clamp(pow(In.vProjPos.w, -2.5f), 1.0f, 1000.0f);
+    
+    Out.vDiffuse = vector(vMtrlDiffuse.rgb, vMtrlDiffuse.a) * fWeight;
+    
+    
+    return Out;
+}
+
 technique11 PosTexTechnique11
 {
     pass PosTexPass
@@ -436,6 +470,26 @@ technique11 PosTexTechnique11
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Trail();
+    }
+
+    pass TrailBlend
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_Effect, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_BLEND();
+    }
+
+    pass TrailWB_For_Blend
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_Effect, 0);
+        SetBlendState(BS_WB_Acc, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_WEIGHTED_FOR_BLEND();
     }
 
     pass TrailBlur

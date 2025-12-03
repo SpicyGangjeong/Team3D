@@ -108,16 +108,8 @@ void CProtego::Late_Update(_float fTimeDelta)
 
 HRESULT CProtego::Pre_Setting(CGameObject* pObject)
 {
-	if (pObject == nullptr)
+	if (FAILED(__super::Pre_Setting(pObject)))
 		return E_FAIL;
-
-	m_pOwner = pObject;
-
-	Reset_EffectParts();
-
-	m_fAccTime = 0.f;
-	__super::m_fAccTime = 0.f;
-	m_fPreAccTime = 0.f;
 
 
 	m_pSphere->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
@@ -138,9 +130,6 @@ HRESULT CProtego::Pre_Setting(CGameObject* pObject)
 	m_pSphere->Set_Dissolve(false);
 	m_pBottom->Set_Dissolve(false);
 	m_pCircle->Set_Dissolve(false);
-
-	m_bVisible = true;
-
 	return S_OK;
 }
 

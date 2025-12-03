@@ -82,16 +82,8 @@ void CLumos::Late_Update(_float fTimeDelta)
 
 HRESULT CLumos::Pre_Setting(CGameObject* pObject)
 {
-	if (pObject == nullptr)
+	if (FAILED(__super::Pre_Setting(pObject)))
 		return E_FAIL;
-
-	m_pOwner = pObject;
-
-	Reset_EffectParts();
-
-	m_fAccTime = 0.f;
-	__super::m_fAccTime = 0.f;
-	m_fPreAccTime = 0.f;
 
 	CWand* pWand = static_cast<CWand*>(m_pOwner);
 
@@ -100,8 +92,6 @@ HRESULT CLumos::Pre_Setting(CGameObject* pObject)
 
 	m_pLumos_Light->Set_Visible(true);
 	m_pLumos_Light->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
-
-	m_bVisible = true;
 
 	m_isLoop = true;
 

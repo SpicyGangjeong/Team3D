@@ -23,12 +23,8 @@ public:
 	pair<_float3, _float3> Get_CameraCoordinateSystem();
 private:
 	CGameInstance*			m_pGameInstance = { nullptr };
-	class C
 		
-		
-		
-		
-		*	m_pInfoInstance = { nullptr };
+	class CInfoInstance*	m_pInfoInstance = { nullptr };
 	ID3D11Device*			m_pDevice = { nullptr };
 	ID3D11DeviceContext*	m_pContext = { nullptr };
 
