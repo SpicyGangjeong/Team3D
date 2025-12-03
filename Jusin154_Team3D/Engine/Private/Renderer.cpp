@@ -1,7 +1,7 @@
 ﻿#include "pch.h"
-#include "Renderer.h"
 #include "GameInstance.h"
 #include "GameObject.h"
+#include "Renderer.h"
 #include "Transform.h"
 
 void CRenderer::Render()
@@ -29,7 +29,7 @@ void CRenderer::Render()
 	Render_WeightBlend();
 	Render_Bloom();
 	Render_LastColor();
-	Tone_Mapping();
+	Render_Tone_Mapping();
 	Render_UI();
 
 #ifdef _DEBUG
@@ -508,6 +508,15 @@ void CRenderer::Render_Blur()
 	}
 
 }
+void CRenderer::Render_SSAO()
+{
+}
+void CRenderer::Render_SSAO_BLUR()
+{
+}
+void CRenderer::Render_SSAO_Lighting()
+{
+}
 void CRenderer::Render_Blend()
 {
 	m_RenderObjects[ENUM_CLASS(RENDER::BLEND)].sort([](CGameObject* pSour, CGameObject* pDest)->_bool {
@@ -627,7 +636,7 @@ void CRenderer::Render_LastColor()
 	m_pVIBuffer->Render();
 }
 
-void CRenderer::Tone_Mapping()
+void CRenderer::Render_Tone_Mapping()
 {
 	{ // BackBuffer 
 		ID3D11Texture2D* pBackBuffer = nullptr;

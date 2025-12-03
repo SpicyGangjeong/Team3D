@@ -252,7 +252,6 @@ void CTerrain::Describe_Entity()
 		m_vDRN.y = 1.f / (_float)iTuningValue;
 		m_vDRN.z = 1.f / (_float)iTuningValue;
 		GUI::PopItemWidth();
-		GUI::EndChild();
 	}
 	GUI::End();
 }

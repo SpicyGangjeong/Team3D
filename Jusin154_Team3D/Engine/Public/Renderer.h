@@ -67,6 +67,9 @@ private:
 	void Render_NonBlend();
 	void Render_LightAcc();
 	void Render_Blur(); 
+	void Render_SSAO();
+	void Render_SSAO_BLUR();
+	void Render_SSAO_Lighting();
 	void Render_Combined();
 	void Render_EnvironmentPostProcess();
 	void Render_Fog();
@@ -76,7 +79,7 @@ private:
 	void Render_Blend();
 	void Render_Bloom();
 	void Render_LastColor();
-	void Tone_Mapping();
+	void Render_Tone_Mapping();
 	void Render_UI();
 
 
