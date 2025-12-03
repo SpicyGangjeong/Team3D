@@ -30,6 +30,7 @@ public:
 private:
 	void Slot_Chack(void* pArg);
 	void Click_Slot(_bool Click);
+	void Current_Slot_Chack(_int Index);
 
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
@@ -67,6 +68,10 @@ private:
 
 	_int m_iPendingSpell = -1;   
 	_float m_fHoverTimer = 0.f;  
+
+	_int	m_iCurrent_Slot_Index{};
+	_bool  m_bCurrentSlot_Hover = { false };
+
 public:
 	static CSpell_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

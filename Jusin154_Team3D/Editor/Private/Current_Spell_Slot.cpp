@@ -47,10 +47,11 @@ HRESULT CCurrent_Spell_Slot::Initialize(void* pArg)
 	m_pVIBufferCom->Set_Cloned(true);
 	m_pVIBufferCom->Set_Pos(-780.f, 340.f, m_fOffSetX, m_fOffSetY, m_iCols);
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
-	m_bGetSpell = false;
+	m_bChangeSlot = false;
+	m_iSpellType = -1;
+	m_iSkill_Index = -1;
 	Clear(-1);
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Slot_Hover"), [this](void* p) {this->Set_SkillType(*reinterpret_cast<_int*>(p)); });
-	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Click"), [this](void* p) {this->Click_Slot(*reinterpret_cast<_bool*>(p)); });
 	return S_OK;
 }
 
@@ -97,18 +98,29 @@ void CCurrent_Spell_Slot::Update(_float fTimeDelta)
 
 	Hover();
 
-	if (m_bClick == true && m_bHover == true)
+
+	if (m_pGameInstance->Mouse_Down(DIM_LBUTTON) && m_bClick == false)
 	{
-		m_bGetSpell = true;
+		m_bClick = true;
+		m_iSkill_Index = Chack_Slot(m_iSlot_Index);
+		static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Current_Hover"), &m_iSkill_Index);
 	}
 
-	if (m_bGetSpell == true)
+	if (m_pGameInstance->Mouse_Up(DIM_LBUTTON) && m_bHover == true)
 	{
-		if (m_bClick == false && m_iSkillType != -1)
+		if (m_iSpellType != -1)
 		{
-			Get_Skill(m_iSlot_Index);
-			m_bGetSpell = false;
+			Get_Skill(m_iSpellType, m_iSlot_Index);
 		}
+
+		if (m_iSkill_Index != -1)
+		{
+			Get_Skill(m_iSkill_Index, m_iSlot_Index);
+			m_iSkill_Index = -1;
+		}
+		m_bHover = false;
+		m_bClick = false;
+		m_iSkill_Index = -1;
 	}
 
 	__super::Update(fTimeDelta);
@@ -194,7 +206,7 @@ void CCurrent_Spell_Slot::Hover()
 	else
 	{
 		m_bHover = false;
-		m_bGetSpell = false;
+		m_bClick = false;
 	}
 }
 
@@ -210,24 +222,34 @@ void CCurrent_Spell_Slot::Click_Slot(_bool bClick)
 	}
 }
 
-void CCurrent_Spell_Slot::Get_Skill(_int Index)
+void CCurrent_Spell_Slot::Get_Skill(_int SpellIndex, _int SlotIndex)
 {
-	if (Index == -1)
+	if (SlotIndex == -1)
 		return;
 
-	if (m_iSpellType == -1)
+	if (SpellIndex == -1)
 		return;
 
+	_int iSlotx = 4;
+
+	_int x = SlotIndex % iSlotx;
+	_int y = SlotIndex / iSlotx;
+
+	m_iSpell[y][x] = SpellIndex;
+	m_pVIBufferCom->Set_Equip_Index(SlotIndex);
+	m_vUV.fUV = UV(SpellIndex);
+	m_pVIBufferCom->Set_Index_Color(SlotIndex, static_cast<_float>(static_cast<CUIObject*>(m_pOwner)->Get_Info(SpellIndex).iSpell_Type));
+	m_pVIBufferCom->Set_Index_ImageUV(SlotIndex, m_vUV);
+}
+
+_int CCurrent_Spell_Slot::Chack_Slot(_int Index) const
+{
 	_int iSlotx = 4;
 
 	_int x = Index % iSlotx;
 	_int y = Index / iSlotx;
 
-	m_iSpell[y][x] = m_iSpellType;
-	m_pVIBufferCom->Set_Equip_Index(Index);
-	m_vUV.fUV = UV(m_iSpellType);
-	m_pVIBufferCom->Set_Index_Color(Index, static_cast<_float>(static_cast<CUIObject*>(m_pOwner)->Get_Info(m_iSpellType).iSpell_Type));
-	m_pVIBufferCom->Set_Index_ImageUV(Index, m_vUV);
+	return m_iSpell[y][x];
 }
 
 void CCurrent_Spell_Slot::Clear(_int iValue)

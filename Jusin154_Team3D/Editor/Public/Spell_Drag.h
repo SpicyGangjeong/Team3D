@@ -30,6 +30,7 @@ private:
 	void Compute_UI(_uint SpellID);
 	virtual void Set_SpellType(_int SpellID) override;
 	_float2 Get_MousePos();
+	void Set_Current_Slot(_uint Index);
 
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
@@ -43,6 +44,9 @@ private:
 	_vector m_vMove_MousePos{};
 	_float4 m_vUV{};
 
+	_int	m_iCurrent_Slot_Index{};
+
+	_bool	m_bCurrent_Hover = { false };
 	_bool	m_bMove = { false };
 	_bool	m_bClick = { false };
 public:

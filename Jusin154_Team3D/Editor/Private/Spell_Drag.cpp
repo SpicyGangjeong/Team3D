@@ -46,7 +46,9 @@ HRESULT CSpell_Drag::Initialize(void* pArg)
 	Compute_UI(m_iSkillType);
 	m_bMove = false;
 	m_bClick = false;
+	m_iSpellType = -1;
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Slot_Hover"), [this](void* p) {this->Set_SpellType(*reinterpret_cast<_int*>(p)); });
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Current_Hover"), [this](void* p) {this->Set_Current_Slot(*reinterpret_cast<_int*>(p)); });
 	return S_OK;
 }
 
@@ -93,18 +95,8 @@ void CSpell_Drag::Update(_float fTimeDelta)
 
 	Get_MousePos();
 
-	if (m_iSpellType != -1 && m_iSpellType <= 26)
-	{
-		m_bHover = true;
-		Compute_UI(static_cast<CUIObject*>(m_pOwner)->Get_Info(m_iSpellType).iSkill_Type);
 
-	}
-	else
-	{
-		m_bHover = false;
-	}
-
-	if (m_bHover == true)
+	if (m_bHover == true || m_bCurrent_Hover == true)
 	{
 		if (m_pGameInstance->Mouse_Down(DIM_LBUTTON))
 		{
@@ -158,6 +150,7 @@ void CSpell_Drag::Update(_float fTimeDelta)
 	{
 		m_bHover = false;
 		m_bClick = false;
+		m_bCurrent_Hover = false;
 		m_bMove = false;
 		m_iSpellType = -1;
 	}
@@ -332,7 +325,14 @@ void CSpell_Drag::Compute_UI(_uint SpellID)
 
 void CSpell_Drag::Set_SpellType(_int SpellID)
 {
+	if (SpellID == -1 || SpellID >= 26)
+	{
+		m_bHover = false;
+		return;
+	}
 	m_iSpellType = SpellID;
+	m_bHover = true;
+	Compute_UI(static_cast<CUIObject*>(m_pOwner)->Get_Info(m_iSpellType).iSkill_Type);
 }
 
 _float2 CSpell_Drag::Get_MousePos()
@@ -346,6 +346,18 @@ _float2 CSpell_Drag::Get_MousePos()
 
 	m_vMove_MousePos = XMVectorSet(fMouse.x, fMouse.y, 0.f, 1.f);
 	return fMouse;
+}
+
+void CSpell_Drag::Set_Current_Slot(_uint Index)
+{
+	if (Index == -1)
+	{
+		m_bCurrent_Hover = false;
+		return;
+	}
+	m_iCurrent_Slot_Index = Index;
+	m_bCurrent_Hover = true;
+	Compute_UI(static_cast<CUIObject*>(m_pOwner)->Get_Info(m_iCurrent_Slot_Index).iSkill_Type);
 }
 
 CSpell_Drag* CSpell_Drag::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

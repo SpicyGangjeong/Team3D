@@ -475,6 +475,9 @@
     <Filter Include="04.InfoInstance\02.MapInfo">
       <UniqueIdentifier>{6b288e75-d33a-4a9d-9cb0-139d3671ad13}</UniqueIdentifier>
     </Filter>
+    <Filter Include="50.UI\UI_Manager">
+      <UniqueIdentifier>{fe7d5909-159c-4130-ae5e-e08e648b193c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -927,6 +930,7 @@
     <ClInclude Include="..\Public\MapInfo.h">
       <Filter>04.InfoInstance\02.MapInfo</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\UI_Manager.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -1378,6 +1382,7 @@
     <ClCompile Include="..\Private\MapInfo.cpp">
       <Filter>04.InfoInstance\02.MapInfo</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\UI_Manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Editor.rc">

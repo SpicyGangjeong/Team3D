@@ -34,8 +34,8 @@ private:
 	void ElementwstringTostring(vector<wstring>& panelNames);
 
 private:
+	CGameObject*			m_pUI_Manager			= { nullptr };
 	CGameObject*			m_pGamePlay_Canvas		= { nullptr };
-	CGameObject*			m_pSpell_Canvas			= { nullptr };
 	CGameObject*			m_pCurrent_Canvas		= { nullptr };
 	CGameObject*			m_pPanelObject			= { nullptr };
 	CGameObject*			m_pElementObject		= { nullptr };

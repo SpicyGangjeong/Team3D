@@ -26,7 +26,8 @@ public:
 private:
 	void Hover();
 	void Click_Slot(_bool bClick);
-	void Get_Skill(_int Index);
+	void Get_Skill(_int SpellIndex, _int SlotIndex);
+	_int Chack_Slot(_int Index) const;
 	void Clear(_int iValue);
 
 	_float4 UV(_int SpellID);
@@ -48,8 +49,10 @@ private:
 	_float	m_fOffSetY{};
 	_uint	m_iCols{};
 
-	_bool	m_bGetSpell = { false };
+	_bool	m_bChangeSlot = { false };
+
 	_int	m_iSlot_Index{};
+	_int	m_iSkill_Index{};
 	_int	m_iSpell[4][4]{};
 	CVIBuffer_UI_Instance::UI_ATLAS_DESC  m_vUV{};
 

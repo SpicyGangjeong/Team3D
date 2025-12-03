@@ -1,8 +1,8 @@
 ﻿#include "pch.h"
 #include "IMGUIUI.h"
 #include "UIObject.h"
-#include "GamePlay_Canvas.h"
-#include "Spell_Canvas.h"
+#include "UI_Manager.h"
+#include "CanvasObject.h"
 #include "PanelObject.h"
 #include "ElementObject.h"
 #include "Mouse_Cursor.h"
@@ -157,15 +157,15 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		m_iSkillType = static_cast<CElementObject*>(m_pElementObject)->Get_SpellType();
 		m_fCoolTime = static_cast<CElementObject*>(m_pElementObject)->Get_CoolTime();
 	}
-	GUI::Begin("Current_PanelObject_Info");
-	if (m_pCurrent_Canvas != nullptr)
+	GUI::Begin("Current_CanvasObject_Info");
+	if (m_pUI_Manager != nullptr)
 	{
 		if (GUI::Combo("Canvas", &iCanvasIndex, CanvasNames, 2))
 		{
-			if (iCanvasIndex == 0)
-				m_pCurrent_Canvas = m_pGamePlay_Canvas;
-			else
-				m_pCurrent_Canvas = m_pSpell_Canvas;
+			//if (iCanvasIndex == 0)
+			//	m_pCurrent_Canvas = m_pGamePlay_Canvas;
+			//else
+			//	m_pCurrent_Canvas = m_pSpell_Canvas;
 		}
 	}
 	if (m_pCurrent_Canvas != nullptr)
@@ -469,15 +469,12 @@ HRESULT CIMGUIUI::Bind_ShaderResources()
 
 HRESULT CIMGUIUI::Ready_Components(void* pArg)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGamePlay_Canvas>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CGamePlay_Canvas**>(&m_pGamePlay_Canvas))))
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CUI_Manager>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CUI_Manager**>(&m_pUI_Manager))))
 	{
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Canvas>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Canvas**>(&m_pSpell_Canvas))))
-	{
-		return E_FAIL;
-	}
 
 	return S_OK;
 }

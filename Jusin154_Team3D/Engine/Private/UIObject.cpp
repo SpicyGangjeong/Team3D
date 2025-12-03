@@ -93,12 +93,17 @@ void CUIObject::Priority_Update(_float fTimeDelta)
 
 void CUIObject::Update(_float fTimeDelta)
 {
-	m_vScale = _float3(m_fSizeX, m_fSizeY, 1.f);
-	m_pTransformCom->Set_Scale(m_vScale);
+	//m_vScale = _float3(m_fSizeX, m_fSizeY, 1.f);
+	//m_pTransformCom->Set_Scale(m_vScale);
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_fX - m_fWinSizeX * 0.5f, -m_fY + m_fWinSizeY * 0.5f, 0.f, 1.f));
+	//m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_fX - m_fWinSizeX * 0.5f, -m_fY + m_fWinSizeY * 0.5f, 0.f, 1.f));
 
-	m_fCurrent_Position = XMVectorSet(m_fX, m_fY, m_fSortZ, 1.f);
+	//m_fCurrent_Position = XMVectorSet(m_fX, m_fY, m_fSortZ, 1.f);
+
+	if (m_pGameInstance->Key_Down(DIK_T))
+	{
+		m_bVisible = !m_bVisible;
+	}
 
 }
 
@@ -291,6 +296,10 @@ void CUIObject::Set_V(_float V)
 _float2 CUIObject::Get_UV()
 {
 	return m_vUVScale;
+}
+
+void CUIObject::Add_Canvas(wstring Name, CGameObject* pCanvas)
+{
 }
 
 void CUIObject::Nine_Slice_Left(_float X)
