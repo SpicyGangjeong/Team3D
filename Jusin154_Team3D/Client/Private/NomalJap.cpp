@@ -5,7 +5,6 @@
 #include "InfoInstance.h"
 #include "GameInstance.h"
 #include "EffectParts.h"
-#include "PhysXEffectHitBox.h"
 #include "TrailObject.h"
 
 
@@ -39,7 +38,7 @@ HRESULT CNomalJap::Initialize(void* pArg)
 
 	m_wstrEffectName = L"Nomal_Jap";
 
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Jap"))){
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Jap"))) {
 		return E_FAIL;
 	}
 
@@ -70,7 +69,7 @@ void CNomalJap::Update(_float fTimeDelta)
 	__super::Update(fTimeDelta);
 
 	Update_Event(fTimeDelta);
-	if (m_fAccTime > m_fDuration) {
+	if (m_fAccMoveTime > m_fDuration) {
 		SAFE_RELEASE(m_pTargetUnit);
 	}
 
@@ -95,7 +94,7 @@ void CNomalJap::Update(_float fTimeDelta)
 	//m_pGameInstance->SphereCast(0.125f, vfStartPos, vDir, XMVectorGetX(XMVector3Length(vEndPos - vStartPos)),  )
 
 
-	if (false == m_bTrailPulseEnded && m_fAccTime > m_fDuration * 0.3f) {
+	if (false == m_bTrailPulseEnded && m_fAccMoveTime > m_fDuration * 0.3f) {
 		m_bTrailPulseEnded = true;
 
 		if (nullptr != m_pTargetUnit && false == m_pTargetUnit->isDead()) {
@@ -105,7 +104,7 @@ void CNomalJap::Update(_float fTimeDelta)
 			XMStoreFloat3(&m_vDirection, XMVector4Normalize(vTargetPos - vCurrentPos));
 
 			_float fDistance = XMVectorGetX(XMVector3Length(vTargetPos - vCurrentPos));
-			m_fLinearSpeed = fDistance / (m_fDuration - m_fAccTime) * 10 / 3;
+			m_fLinearSpeed = fDistance / (m_fDuration - m_fAccMoveTime) * 10 / 3;
 			SAFE_RELEASE(m_pTargetUnit);
 		}
 
@@ -116,17 +115,17 @@ void CNomalJap::Update(_float fTimeDelta)
 		return;
 	}
 	_vector vRotateUp = XMLoadFloat3(&m_vRotateUp);
-	m_fAccTime += fTimeDelta;
+	m_fAccMoveTime += fTimeDelta;
 
 	// 각속도
-	m_pProjectile_Side->Get_Component<CTransform>()->Translation(vRotateUp * 0.6f * sinf(m_fAngularSpeed * m_fAccTime));
-	m_pProjectile->Get_Component<CTransform>()->Translation(vRotateUp * 0.6f * sinf(m_fAngularSpeed * m_fAccTime));
+	m_pProjectile_Side->Get_Component<CTransform>()->Translation(vRotateUp * 0.6f * sinf(m_fAngularSpeed * m_fAccMoveTime));
+	m_pProjectile->Get_Component<CTransform>()->Translation(vRotateUp * 0.6f * sinf(m_fAngularSpeed * m_fAccMoveTime));
 }
 
 
 void CNomalJap::Late_Update(_float fTimeDelta)
 {
-	if (m_bVisible == false){
+	if (m_bVisible == false) {
 		return;
 	}
 	if (nullptr != m_pTargetUnit && false == m_pTargetUnit->isDead()) {
@@ -182,24 +181,11 @@ void CNomalJap::Late_Update(_float fTimeDelta)
 
 HRESULT CNomalJap::Pre_Setting(CGameObject* pObject)
 {
-	if (pObject == nullptr)
+	if (FAILED(__super::Pre_Setting(pObject)))
 		return E_FAIL;
 
-	/* 부모 할당 */
-	m_pOwner = pObject;
-
-	/* 피직스 생성*/
-	if (FAILED(Ready_Child())){
-		return E_FAIL;
-	}
-
-	/* 초기 셋팅 초기화 */
-	Reset_EffectParts();
-	m_fAccTime = 0.f;
-	__super::m_fAccTime = 0.f;
-	m_fPreAccTime = 0.f;
 	m_bTrailPulseEnded = false;
-
+	m_fAccMoveTime = 0.f;
 
 	/* 초기 객체 위치 초기화 */
 	_vector vStartPos = m_pOwner->Get_WorldPostion();
@@ -225,7 +211,7 @@ HRESULT CNomalJap::Pre_Setting(CGameObject* pObject)
 	//Get_PartObject<CEffectParts>("Circle_Particle_Red")->Get_Component<CTransform>()->Set_WorldMatrix(m_pOwner->Get_Component<CTransform>()->Get_XMWorldMatrix());
 
 	_vector vQuaternion = XMQuaternionRotationAxis(vDirection, m_pGameInstance->Random_Float(0.f, XM_PIDIV2));
-	
+
 	{ /* 대상 위치 지정 */
 		SAFE_RELEASE(m_pTargetUnit);
 		m_pTargetUnit = m_pInfoInstance->Get_LockOnUnit();
@@ -248,8 +234,6 @@ HRESULT CNomalJap::Pre_Setting(CGameObject* pObject)
 	}
 
 	XMStoreFloat3(&m_vRotateUp, XMVector3Normalize(XMVector3Rotate(vUp, vQuaternion)));
-
-	m_bVisible = true;
 
 	return S_OK;
 }
@@ -298,7 +282,11 @@ CGameObject* CNomalJap::Clone(void* pArg, CGameObject* pOwner)
 
 void CNomalJap::OnCollision(CGameObject* pOther, void* pDesc)
 {
-	//CTransform* pOtherTransform = p
+	if (m_isCollisionEnter == true)
+		return;
+
+	m_isCollisionEnter = true;
+
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
 	for (auto& pPair : m_PartObjects)

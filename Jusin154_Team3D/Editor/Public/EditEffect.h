@@ -40,6 +40,7 @@ private:
 	_bool			m_isGoStraight = {};
 	_float          m_fAccTime = {};
 	_int			m_iSign = { 1 };
+	_bool			_isLookAt = {};
 
 	_bool		    m_isWandPos = {};
 

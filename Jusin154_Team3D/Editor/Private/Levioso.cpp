@@ -5,6 +5,7 @@
 #include "EditEffect.h"
 #include "Player.h"
 #include "TrailObject.h"
+#include "Wand.h"
 
 
 CLevioso::CLevioso(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -37,12 +38,10 @@ HRESULT CLevioso::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_pLeviosoPJ_0 = Get_PartObject<CEditEffect>("Levioso_PJ0");
-	m_pLeviosoPJ_1 = Get_PartObject<CEditEffect>("Levioso_PJ1");
 	m_pLeviosoTrail = Get_PartObject<CTrailObject>("Levioso_Trail");
 	m_pTrail_PT_0 = Get_PartObject<CEditEffect>("Trail_PT0");
 
 	SAFE_ADDREF(m_pLeviosoPJ_0);
-	SAFE_ADDREF(m_pLeviosoPJ_1);
 	SAFE_ADDREF(m_pLeviosoTrail);
 	SAFE_ADDREF(m_pTrail_PT_0);
 
@@ -76,12 +75,11 @@ void CLevioso::Update(_float fTimeDelta)
 	Update_Event(fTimeDelta);
 
 	m_pLeviosoPJ_0->Get_Component<CTransform>()->Translation(m_vOwnerLook * 0.25f);
-	m_pLeviosoPJ_1->Get_Component<CTransform>()->Translation(m_vOwnerLook * 0.25f);
 
 
 	m_pTrail_PT_0->Get_Component<CTransform>()->Translation(m_vOwnerLook * 0.25f);
 
-	if (true == m_pGameInstance->SphereCast(0.125f, XMLoadFloat4(&m_vStartPos), m_vOwnerLook, XMVectorGetX(XMVector3Length(m_vOwnerLook * 1.f))
+	if (true == m_pGameInstance->SphereCast(0.0f, XMLoadFloat4(&m_vStartPos), m_vOwnerLook, XMVectorGetX(XMVector3Length(m_vOwnerLook * 1.f))
 		, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eSTATIC, hitBuffer))
 	{
 		OnCollision();
@@ -116,20 +114,8 @@ void CLevioso::Late_Update(_float fTimeDelta)
 
 HRESULT CLevioso::Pre_Setting(CGameObject* pObject)
 {
-	if (pObject == nullptr)
-		return E_FAIL;
 
-	m_pOwner = pObject;
-
-
-	Reset_EditEffect();
-
-	m_fAccTime = 0.f;
-	m_fPreAccTime = 0.f;
-
-	m_fAccRotateTime = 0.f;
-
-	if (FAILED(Ready_Child()))
+	if (FAILED(__super::Pre_Setting(pObject)))
 		return E_FAIL;
 
 	CPlayer* pPlayer = static_cast<CPlayer*>(m_pOwner);
@@ -139,25 +125,24 @@ HRESULT CLevioso::Pre_Setting(CGameObject* pObject)
 
 	_vector WandPos = pPlayer->Get_WandPos().r[3];
 
+	CEditEffect* pWandSmoke = Get_PartObject<CEditEffect>("Levioso_Wand0");
+
 	m_pLeviosoPJ_0->Get_Component<CTransform>()->Set_WorldMatrix(m_pOwner->Get_Component<CTransform>()->Get_XMWorldMatrix());
-	m_pLeviosoPJ_1->Get_Component<CTransform>()->Set_WorldMatrix(m_pOwner->Get_Component<CTransform>()->Get_XMWorldMatrix());
 	m_pTrail_PT_0->Get_Component<CTransform>()->Set_WorldMatrix(m_pOwner->Get_Component<CTransform>()->Get_XMWorldMatrix());
 
-	m_pLeviosoPJ_0->Get_Component<CTransform>()->Set_State(STATE::POSITION, WandPos);
-	m_pLeviosoPJ_1->Get_Component<CTransform>()->Set_State(STATE::POSITION, WandPos);
-	m_pTrail_PT_0->Get_Component<CTransform>()->Set_State(STATE::POSITION, WandPos);
 
+	m_pLeviosoPJ_0->Get_Component<CTransform>()->Set_State(STATE::POSITION, WandPos);
+	m_pTrail_PT_0->Get_Component<CTransform>()->Set_State(STATE::POSITION, WandPos);
+	pWandSmoke->Get_Component<CTransform>()->Set_State(STATE::POSITION, pPlayer->Get_PartObject<CWand>()->Get_WorldPostion());
 
 	m_pLeviosoPJ_0->Set_Visible(true);
-	m_pLeviosoPJ_1->Set_Visible(true);
 	m_pTrail_PT_0->Set_Visible(true);
+	pWandSmoke->Set_Visible(true);
 
 	m_pLeviosoTrail->Set_Visible(true);
 	m_pLeviosoTrail->Get_Component<CTrail>()->Reset_Trail();
 
 	m_vOwnerLook = XMVector3Normalize(m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK));
-
-	m_bVisible = true;
 
 	return S_OK;
 }
@@ -206,6 +191,11 @@ CGameObject* CLevioso::Clone(void* pArg, CGameObject* pOwner)
 
 void CLevioso::OnCollision(CGameObject* pOther, void* pDesc)
 {
+	if (m_isCollisionEnter == true)
+		return;
+
+	m_isCollisionEnter = true;
+
 	_vector vPos = XMVectorSet(hitBuffer.block.position.x, hitBuffer.block.position.y, hitBuffer.block.position.z, 1.f);
 
 
@@ -224,10 +214,10 @@ void CLevioso::OnCollision(CGameObject* pOther, void* pDesc)
 	//CEditEffect* pLevioso_Rotate1 = Get_PartObject<CEditEffect>("Levioso_Rotate1");
 	//CEditEffect* pLevioso_Tornado = Get_PartObject<CEditEffect>("Levioso_Tornado");
 
-	m_pLeviosoPJ_0->Set_Visible(false);
-	m_pLeviosoPJ_1->Set_Visible(false);
-	m_pTrail_PT_0->Set_Visible(false);
-	m_pLeviosoTrail->Set_Visible(false);
+	//m_pLeviosoPJ_0->Set_Visible(false);
+	//m_pLeviosoPJ_1->Set_Visible(false);
+	//m_pTrail_PT_0->Set_Visible(false);
+	//m_pLeviosoTrail->Set_Visible(false);
 }
 
 void CLevioso::Free()
@@ -236,7 +226,6 @@ void CLevioso::Free()
 
 
 	SAFE_RELEASE(m_pLeviosoPJ_0);
-	SAFE_RELEASE(m_pLeviosoPJ_1);
 	SAFE_RELEASE(m_pLeviosoTrail);
 	SAFE_RELEASE(m_pTrail_PT_0);
 }

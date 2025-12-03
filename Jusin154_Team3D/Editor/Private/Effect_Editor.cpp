@@ -74,21 +74,6 @@ void CEffect_Editor::Update(_float fTimeDelta)
 	Describe_Entity();
 	__super::Update(fTimeDelta);
 
-	if (m_pGameInstance->Key_Pressing(DIK_UP))
-		m_pTransformCom->Go_Straight(fTimeDelta);
-	if (m_pGameInstance->Key_Pressing(DIK_DOWN))
-		m_pTransformCom->Go_Backward(fTimeDelta);
-	if (m_pGameInstance->Key_Pressing(DIK_RIGHT))
-		m_pTransformCom->Go_Right(fTimeDelta);
-	if (m_pGameInstance->Key_Pressing(DIK_LEFT))
-		m_pTransformCom->Go_Left(fTimeDelta);
-
-	if (m_pGameInstance->Key_Pressing(DIK_Z))
-		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta);
-
-	/* 이펙트 컨테이너 업데이트 */
-	//Update_Event(fTimeDelta);
-
 	/* 트레일 업데이트 */
 
 	if (m_isWandPos == true)
@@ -107,6 +92,25 @@ void CEffect_Editor::Update(_float fTimeDelta)
 		if (m_pTrailObject != nullptr)
 			m_pTrailObject->Trail_Update(m_pTransformCom->Get_XMWorldMatrix(), fTimeDelta);
 	}
+
+
+	if (m_pGameInstance->Key_Pressing(DIK_UP))
+		m_pTransformCom->Go_Straight(fTimeDelta);
+	if (m_pGameInstance->Key_Pressing(DIK_DOWN))
+		m_pTransformCom->Go_Backward(fTimeDelta);
+	if (m_pGameInstance->Key_Pressing(DIK_RIGHT))
+		m_pTransformCom->Go_Right(fTimeDelta);
+	if (m_pGameInstance->Key_Pressing(DIK_LEFT))
+		m_pTransformCom->Go_Left(fTimeDelta);
+
+	if (m_pGameInstance->Key_Pressing(DIK_Z))
+		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta);
+
+	/* 이펙트 컨테이너 업데이트 */
+	//Update_Event(fTimeDelta);
+
+
+
 
 
 
