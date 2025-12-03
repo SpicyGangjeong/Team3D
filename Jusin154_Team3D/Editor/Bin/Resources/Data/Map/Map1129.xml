@@ -4882,4 +4882,85 @@
             <Rotation x="0" y="0" z="0"/>
         </Collision>
     </Container>
+    <Container Name="HM_Doors">
+    <Position x="0" y="0" z="0"/>
+    <Scale x="1" y="1" z="1"/>
+    <Rotation x="0" y="0" z="0"/>
+    <MapContainerType type="1"/>
+    <BoundingBox_Min x="-4.7134042" y="-0.049025059" z="-1.398217"/>
+    <BoundingBox_Max x="6.3309155" y="13.058901" z="9.4858494"/>
+    <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+        <PrototypeTag>Prototype_GameObject_SM_HM_Zonkos_Front_Door</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_HM_Zonkos_Front_Door_Lod1</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_HM_Zonkos_Front_Door_Lod2</PrototypeTag>
+        <Position x="41.663696" y="7.0730577" z="100.48561"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="15.000003" z="0"/>
+    </PartObject>
+    <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+        <PrototypeTag>Prototype_GameObject_SM_HM_Quidditch_Door_A</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_HM_Quidditch_Door_A_Lod1</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_HM_Quidditch_Door_A_Lod2</PrototypeTag>
+        <Position x="48.913731" y="3.8535721" z="64.313408"/>
+        <Scale x="0.99999988" y="1" z="0.99999988"/>
+        <Rotation x="0" y="99.999985" z="0"/>
+    </PartObject>
+    <PartObject Lod_Level="0" Key_Index="0" Render_Type="0">
+        <PrototypeTag>Prototype_GameObject_SM_HM_DB_GR_Door_A</PrototypeTag>
+        <Position x="133.73683" y="14.746075" z="112.0887"/>
+        <Scale x="1.1999999" y="1.4000001" z="0.99999988"/>
+        <Rotation x="0" y="99.999985" z="0"/>
+    </PartObject>
+    <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+        <PrototypeTag>Prototype_GameObject_SM_HM_Honeydukes_Front_Door</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_HM_Honeydukes_Front_Door_Lod1</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_HM_Honeydukes_Front_Door_Lod2</PrototypeTag>
+        <Position x="131.20894" y="16.3316" z="122.24038"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="80" z="0"/>
+    </PartObject>
+    <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+        <PrototypeTag>Prototype_GameObject_SM_HM_Honeydukes_DoorB</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_HM_Honeydukes_DoorB_Lod1</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_HM_Honeydukes_DoorB_Lod2</PrototypeTag>
+        <Position x="128.47737" y="16.183664" z="138.78999"/>
+        <Scale x="1.1" y="1.1" z="1"/>
+        <Rotation x="0" y="79.999992" z="0"/>
+    </PartObject>
+    <PartObject Lod_Level="2" Key_Index="1" Render_Type="0">
+        <PrototypeTag>Prototype_GameObject_SM_HM_Honeydukes_DoorB</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_HM_Honeydukes_DoorB_Lod1</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_HM_Honeydukes_DoorB_Lod2</PrototypeTag>
+        <Position x="131.47073" y="16.271976" z="133.02818"/>
+        <Scale x="1.1999999" y="1" z="0.99999988"/>
+        <Rotation x="0" y="89.999985" z="0"/>
+    </PartObject>
+    <PartObject Lod_Level="0" Key_Index="1" Render_Type="0">
+        <PrototypeTag>Prototype_GameObject_SM_HM_DB_GR_Door_A</PrototypeTag>
+        <Position x="106.87299" y="15.227801" z="115.30975"/>
+        <Scale x="1.0999995" y="1" z="0.99999952"/>
+        <Rotation x="-0" y="-179.99998" z="-0"/>
+    </PartObject>
+    <PartObject Lod_Level="1" Key_Index="1" Render_Type="0">
+        <PrototypeTag>Prototype_GameObject_SM_HM_DB_GR_Door_A_Frame</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_HM_DB_GR_Door_A_Frame_Lod1</PrototypeTag>
+        <Position x="89.315582" y="15.272012" z="130.85849"/>
+        <Scale x="0.99999988" y="1" z="0.99999988"/>
+        <Rotation x="-0" y="-99.999985" z="-0"/>
+    </PartObject>
+    <PartObject Lod_Level="0" Key_Index="2" Render_Type="0">
+        <PrototypeTag>Prototype_GameObject_SM_HM_DB_GR_Door_A</PrototypeTag>
+        <Position x="89.399864" y="15.278326" z="130.8558"/>
+        <Scale x="0.99999994" y="1" z="0.99999994"/>
+        <Rotation x="-0" y="-109.99998" z="-0"/>
+    </PartObject>
+    <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+        <PrototypeTag>Prototype_GameObject_SM_HM_TScrolls_Door</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_HM_TScrolls_Door_Lod1</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_HM_TScrolls_Door_Lod2</PrototypeTag>
+        <Position x="21.315018" y="0.84228206" z="31.657463"/>
+        <Scale x="0.99999994" y="1" z="0.99999994"/>
+        <Rotation x="0" y="109.99998" z="0"/>
+    </PartObject>
+</Container>
 </Land>

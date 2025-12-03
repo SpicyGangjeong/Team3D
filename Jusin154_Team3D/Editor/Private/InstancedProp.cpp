@@ -22,17 +22,19 @@ void CInstancedProp::Update(_float fTimeDelta)
 	{
 		if (m_pGameInstance->Mouse_Down(DIM_MBUTTON))
 		{
-			m_pVIBufferInstanceCom->Add_Instance(m_pTransformCom->Get_XMWorldMatrix());
 			_float4x4 WorldMatrix = {};
 			XMStoreFloat4x4(&WorldMatrix, m_pTransformCom->Get_XMWorldMatrix());
 			m_WorldMatrices.push_back(WorldMatrix);
+
+			m_pVIBufferInstanceCom->Add_Instance(m_pTransformCom->Get_XMWorldMatrix());
 			m_pVIBufferInstanceCom->Update_Instance();
-			m_vRotation.y = m_pGameInstance->Random_Float(0.f, 360.f);
+			//m_vRotation.y = m_pGameInstance->Random_Float(0.f, 360.f);
 
 			_float3 vPosition = {};
 			if (m_pGameInstance->isPicking(&vPosition))
 			{
 				memcpy(&m_vPosition, &vPosition, sizeof(_float3));
+				m_pTransformCom->Set_State(STATE::POSITION, XMLoadFloat4(&m_vPosition));
 			}
 		}
 #ifdef _DEBUG
@@ -93,6 +95,11 @@ HRESULT CInstancedProp::Initialize(void* pArg)
 
 	if(!m_bEditMode)
 		Load_InstancedProp(pDesc->strInstanceDataPath.c_str());
+	else
+	{
+		m_pVIBufferInstanceCom->Add_Instance(m_pTransformCom->Get_XMWorldMatrix());
+		m_pVIBufferInstanceCom->Update_Instance();
+	}
 
     return S_OK;
 }
@@ -145,6 +152,8 @@ void CInstancedProp::Add_WorldMatrix()
 
 void CInstancedProp::Load_InstancedProp(const _char* pFilePath)
 {
+	m_pVIBufferInstanceCom->Delete_Instance();
+
 	ifstream FileIn(pFilePath, ios::binary);
 
 	if (!FileIn.is_open())
@@ -161,9 +170,9 @@ void CInstancedProp::Load_InstancedProp(const _char* pFilePath)
 	m_WorldMatrices.reserve(iNumWorldMatrix);
 
 	_float4x4 WorldMatrix = {};
-	FileIn.read(reinterpret_cast<char*>(&WorldMatrix), sizeof(_float4x4));
+	//FileIn.read(reinterpret_cast<char*>(&WorldMatrix), sizeof(_float4x4));
 
-	for (_uint i = 1; i < iNumWorldMatrix; ++i)
+	for (_uint i = 0; i < iNumWorldMatrix; ++i)
 	{
 		FileIn.read(reinterpret_cast<char*>(&WorldMatrix), sizeof(_float4x4));
 
@@ -178,9 +187,68 @@ void CInstancedProp::Load_InstancedProp(const _char* pFilePath)
 	return;
 }
 
+void CInstancedProp::Patch_Data(const _char* pFilePath)
+{
+	vector<_float4x4>			TempWorldMatrices;
+
+	ifstream FileIn(pFilePath, ios::binary);
+
+	if (!FileIn.is_open())
+	{
+		MSG_BOX("Failed to Load InstancedProp File");
+		return;
+	}
+
+	_uint iNumWorldMatrix = 0;
+	_uint iNumAdd = 0;
+	FileIn.read(reinterpret_cast<char*>(&iNumWorldMatrix), sizeof(_uint));
+	
+	_float4x4 WorldMatrix = {};
+	for (_uint i = 0; i < iNumWorldMatrix; ++i)
+	{
+		FileIn.read(reinterpret_cast<char*>(&WorldMatrix), sizeof(_float4x4));
+		
+		if (0 == WorldMatrix._41 && 0 == WorldMatrix._42 &&  0 == WorldMatrix._43)
+			continue;
+		else
+		{
+			++iNumAdd;
+			TempWorldMatrices.push_back(WorldMatrix);
+		}
+		
+	}
+	FileIn.close();
+
+
+	/* Re */
+	ofstream FileOut(pFilePath, ios::binary);
+
+	if (!FileOut.is_open())
+	{
+		MSG_BOX("Failed to Save InstancedProp File");
+		return;
+	}
+	else
+		MSG_BOX("Successed to Save InstancedProp File");
+
+
+	FileOut.write(reinterpret_cast<const char*>(&iNumAdd), sizeof(_uint));
+
+	for (_uint i = 0; i < iNumAdd; ++i)
+	{
+		FileOut.write(reinterpret_cast<const char*>(&TempWorldMatrices[i]), sizeof(_float4x4));
+	}
+
+	FileOut.close();
+}
+
 #ifdef _DEBUG
 void CInstancedProp::Save_InstancedProp(const _char* pFilePath)
 {
+	_float4x4 WorldMatrix = {};
+	XMStoreFloat4x4(&WorldMatrix, m_pTransformCom->Get_XMWorldMatrix());
+	m_WorldMatrices.push_back(WorldMatrix);
+
 	ofstream FileOut(pFilePath, ios::binary);
 
 	if (!FileOut.is_open())
@@ -236,6 +304,8 @@ void CInstancedProp::Free()
 {
 	__super::Free();
 
+	m_WorldMatrices.clear();
+	
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferInstanceCom);
 }
@@ -246,10 +316,17 @@ void CInstancedProp::Describe_Entity()
 #ifdef _DEBUG
 	m_pVIBufferInstanceCom->Describe_Entity();
 #endif // _DEBUG
-	GUI::Text("----- Transfrom ----");
-	GUI::InputFloat("X##Position", &m_vPosition.x, 0.1f, 1.f);
-	GUI::InputFloat("Y##Position", &m_vPosition.y, 0.1f, 1.f);
-	GUI::InputFloat("Z##Position", &m_vPosition.z, 0.1f, 1.f);
+	_float3 vMove = {};
+
+	ImGui::Text("----- Transfrom ----");
+	ImGui::InputFloat("Right", &vMove.x, 0.05f, 0.1f);
+	ImGui::InputFloat("Up", &vMove.y, 0.05f, 0.1f);
+	ImGui::InputFloat("Look", &vMove.z, 0.05f, 0.1f);
+
+	m_pTransformCom->Move_Right(vMove.x);
+	m_pTransformCom->Move_Up(vMove.y);
+	m_pTransformCom->Move_Look(vMove.z);
+
 
 	if (m_pGameInstance->Mouse_Down(DIM_LBUTTON) && m_pGameInstance->Key_Pressing(DIK_LSHIFT))
 	{
@@ -257,13 +334,14 @@ void CInstancedProp::Describe_Entity()
 		if (m_pGameInstance->isPicking(&vPosition))
 		{
 			memcpy(&m_vPosition, &vPosition, sizeof(_float3));
+			m_pTransformCom->Set_State(STATE::POSITION, XMLoadFloat4(&m_vPosition));
 		}
 	}
-
+	
 	GUI::Text("----- Rotation ----");
-	GUI::InputFloat("X##Rotation", &m_vRotation.x, 10.f, 45.f);
-	GUI::InputFloat("Y##Rotation", &m_vRotation.y, 10.f, 45.f);
-	GUI::InputFloat("Z##Rotation", &m_vRotation.z, 10.f, 45.f);
+	GUI::InputFloat("X##Rotation", &m_vRotation.x, 5.f, 45.f);
+	GUI::InputFloat("Y##Rotation", &m_vRotation.y, 5.f, 45.f);
+	GUI::InputFloat("Z##Rotation", &m_vRotation.z, 5.f, 45.f);
 
 	GUI::Text("----- Scale ----");
 	GUI::InputFloat("X##Scale", &m_vScale.x, 0.1f, 1.f);
@@ -275,13 +353,17 @@ void CInstancedProp::Describe_Entity()
 	m_vScale.z = max(0.01f, m_vScale.z);
 
 	m_pTransformCom->Set_Scale(m_vScale);
-	m_pTransformCom->Set_State(STATE::POSITION, XMLoadFloat4(&m_vPosition));
+	//m_pTransformCom->Set_State(STATE::POSITION, XMLoadFloat4(&m_vPosition));
 	m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
 
 	m_pVIBufferInstanceCom->Fix_Instance(m_pTransformCom->Get_XMWorldMatrix());
 	if (GUI::Button("Delete", ImVec2(150.f, 30.f)))
 	{
-		m_pVIBufferInstanceCom->Delete_Instance();
+		if(0 != m_WorldMatrices.size())
+		{
+			m_pVIBufferInstanceCom->Delete_Instance();
+			m_WorldMatrices.pop_back();
+		}
 	}
 
 	GUI::InputText("File Name", m_szFileName, sizeof(m_szFileName));
@@ -295,7 +377,13 @@ void CInstancedProp::Describe_Entity()
 	{
 		Load_InstancedProp(("../Bin/Resources/Data/Map/Instance/" + string(m_szFileName) + ".bin").c_str());
 	}
-	
+	GUI::Spacing();
+	GUI::Spacing();
+	GUI::Spacing();
+	if(GUI::Button(" !!! Patch !!!"))
+	{
+		Patch_Data(("../Bin/Resources/Data/Map/Instance/" + string(m_szFileName) + ".bin").c_str());
+	}
 	GUI::End();
 }
 
