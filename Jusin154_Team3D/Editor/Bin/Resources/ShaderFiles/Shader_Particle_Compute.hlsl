@@ -24,8 +24,9 @@ struct ParticleValue
     float2 vDiffuseUVMoveTime;
     float2 vDistortionUVMoveTime;
     float2 vNoiseUVMoveTime;
-    float2 vAniTime;
     float2 vDissolveUVMoveTime;
+    float2 vAniTime;
+
     
     float2 vAniIndex;
     float  fGravity;
@@ -70,8 +71,8 @@ cbuffer g_ConstantBuffer : register(b0) // b0 << 이 숫자와 컨스턴트 쉐�
     bool isPadding2;
 
     float fTimeDelta;
-    float fPadding1; // 반드시 상수버퍼는 16바이트 배수로 만들어져야 한다.
-    float fPadding2;
+    float fSizeLerpOption; // 반드시 상수버퍼는 16바이트 배수로 만들어져야 한다.
+    float fMoveLerpOption;
     float fPadding3;
 }
 
@@ -165,11 +166,11 @@ void CS_MAIN(
         
         float3 vDir = normalize(particleValue.vPivot - particleValue.vOriginTranslation.xyz);
         
-        float fRatio = (1 - fTime * fTime);
+        float fDrag = particleValue.fDrag;
         
-        float fDrag = particleValue.fDrag * fRatio;
+        if (fSizeLerpOption != 0.f)
+            fDrag = SelectLerpUV(float2(particleValue.fSizeDrag, 0.f), fTime, fMoveLerpOption).x;
         
-
         if (particleValue.fDrag < FLT_EPSILON5)
             fDrag = 1;
         
@@ -244,14 +245,14 @@ void CS_MAIN(
         
         float fTime = (particle.vLifeTime.x / particle.vLifeTime.y);
         
-        float fRatio = 1 - (1 - fTime * fTime);
-        
         float fDrag = particleValue.fSizeDrag;
+        
+        if (fSizeLerpOption != 0.f)
+            fDrag = SelectLerpUV(float2(particleValue.fSizeDrag, 0.f), fTime, fSizeLerpOption).x;
         
         if (particleValue.fSizeDrag < FLT_EPSILON5)
             fDrag = 1;
-        
-        //fDrag *= fRatio;
+       
         
         CurLength += particleValue.vDeltaSize * fTimeDelta * fDrag;
         

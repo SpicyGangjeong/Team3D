@@ -175,6 +175,33 @@ _vector CTransform::Go_Down(_float fTimeDelta)
 	return -vMomentum;
 }
 
+void CTransform::Move_Look(_float fScala)
+{
+	_vector		vPos = Get_State(STATE::POSITION);
+	_vector		vLook = Get_State(STATE::LOOK);
+	_vector		vMomentum = XMVector3Normalize(vLook) * fScala;
+	vPos += vMomentum;
+	Set_State(STATE::POSITION, vPos);
+}
+
+void CTransform::Move_Up(_float fScala)
+{
+	_vector		vPos = Get_State(STATE::POSITION);
+	_vector		vUp = Get_State(STATE::UP);
+	_vector		vMomentum = XMVector3Normalize(vUp) * fScala;
+	vPos += vMomentum;
+	Set_State(STATE::POSITION, vPos);
+}
+
+void CTransform::Move_Right(_float fScala)
+{
+	_vector		vPos = Get_State(STATE::POSITION);
+	_vector		vRight = Get_State(STATE::RIGHT);
+	_vector		vMomentum = XMVector3Normalize(vRight) * fScala;
+	vPos += vMomentum;
+	Set_State(STATE::POSITION, vPos);
+}
+
 _vector CTransform::Go_LerpStraight(_float fSpeed, _float fTimeDelta)
 {
 	_vector		vPos = Get_State(STATE::POSITION);

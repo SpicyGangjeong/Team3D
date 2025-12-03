@@ -34,9 +34,9 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	if (FAILED(Ready_Lights())) {
 		return E_FAIL;
 	}
-	if (FAILED(Ready_Background())) {
-		return E_FAIL;
-	}
+	//if (FAILED(Ready_Background())) {
+	//	return E_FAIL;
+	//}
 	if (FAILED(Ready_Markers())) {
 		return E_FAIL;
 	}
@@ -51,10 +51,11 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	if (FAILED(Ready_Layer_Item(LAYER_ITEM))) {
 		return E_FAIL;
 	}
-	if (FAILED(Ready_Layer_Player(LAYER_PLAYER))) {
+
+	if (FAILED(Ready_Layer_SkyBox(TEXT("Layer_SkyBox")))) {
 		return E_FAIL;
 	}
-	if (FAILED(Ready_Layer_SkyBox(TEXT("Layer_SkyBox")))) {
+	if (FAILED(Ready_Layer_Player(LAYER_PLAYER))) {
 		return E_FAIL;
 	}
 	if (FAILED(Ready_Layer_Monster())) {
@@ -160,9 +161,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	/* Map Containters */
 	/* 테스트용 맵 */
 
-	//CInfoInstance::GetInstance()->Load_MapObjects("ClientTest");
+	CInfoInstance::GetInstance()->Load_MapObjects("ClientTest");
 	/* 전체 맵 */
-	CInfoInstance::GetInstance()->Load_MapObjects("Map1129");
+	//CInfoInstance::GetInstance()->Load_MapObjects("Map1129");
 
 	/* 조명 오브젝트 */
 	CInfoInstance::GetInstance()->Load_LightElements("LightElement");

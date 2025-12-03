@@ -655,6 +655,38 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDissolveDelay", &m_EffectInfo.fDissolveDelay, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fReverseDissolveDelay", &m_EffectInfo.fReverseDissolveDelay, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDissolveUVGainAmount", &m_EffectInfo.vDissolveUVGainAmount, sizeof(_float2)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDissolveMove", &m_EffectInfo.isDissolveMove, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDissolveMaskEdge", &m_EffectInfo.vDissolveValue.x, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDissolveSoftMask", &m_EffectInfo.vDissolveValue.y, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDissolveCutRatio", &m_EffectInfo.vDissolveValue.z, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+
+
+
+
 
 
 	if (m_pDiffuse_TextureCom != nullptr)
@@ -702,6 +734,8 @@ HRESULT CEffectObject::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 		return E_FAIL;
 	}
+
+
 
 
 	return S_OK;

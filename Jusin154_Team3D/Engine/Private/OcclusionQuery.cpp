@@ -7,60 +7,55 @@ COcclusionQuery::COcclusionQuery(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 }
 
 COcclusionQuery::COcclusionQuery(const COcclusionQuery& rhs)
-	:CComponent(rhs)
+	:CComponent(rhs), m_iCheckFrame{0}
 {
 }
 
 void COcclusionQuery::Begin_Query()
 {
-	m_pContext->Begin(m_pQuery[m_iCountFrame]);
+	if(0 == m_iCheckFrame)
+		m_pContext->Begin(m_pQuery[0]);
 }
 
 _bool COcclusionQuery::isDraw()
 {
-	static int sCheckFrame = 0;
 
 	bool bVisible = m_bPreFrameDraw;
 
-	if (++sCheckFrame >= 5)
+	if (++m_iCheckFrame >= 5)
 	{
-		sCheckFrame = 0;
-
-		UINT64 sampleCount = 0;
+		UINT64 iSampleCount = 0;
 		HRESULT hr = m_pContext->GetData(
-			m_pQuery[m_iGetFrameIndex],
-			&sampleCount,
+			m_pQuery[0],
+			&iSampleCount,
 			sizeof(UINT64),
 			D3D11_ASYNC_GETDATA_DONOTFLUSH
 		);
 
+		m_iCheckFrame = 0;
+
 		if (hr == S_OK)
 		{
-			bVisible = (sampleCount > 0);
+			bVisible = (iSampleCount > 0);
+			
 		}
-	}
-
-	if (bVisible)
-	{
-		m_iNumCullFrame = 0;
+		else
+			return m_bPreFrameDraw;
 	}
 	else
-	{
-		if (m_iNumCullFrame < 2)
-			++m_iNumCullFrame;
-	}
+		return m_bPreFrameDraw;
 
 	m_bPreFrameDraw = bVisible;
-	return (m_iNumCullFrame < 2);
+
+	return bVisible;
 }
 
 void COcclusionQuery::End_Query()
 {
-	m_pContext->End(m_pQuery[m_iCountFrame]);
+	if (0 == m_iCheckFrame)
+		m_pContext->End(m_pQuery[0]);
 	
-	m_iGetFrameIndex = (m_iCountFrame + 5 - 1) % 5;
-
-	m_iCountFrame = (m_iCountFrame + 1) % 5;
+	
 }
 
 HRESULT COcclusionQuery::Initialize_Prototype()

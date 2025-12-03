@@ -47,6 +47,9 @@ public:
 	_vector Go_Right(_float fTimeDelta);
 	_vector Go_Up(_float fTimeDelta);
 	_vector Go_Down(_float fTimeDelta);
+	void Move_Look(_float fScala);
+	void Move_Up(_float fScala);
+	void Move_Right(_float fScala);
 	///////////////////////////////////
 	_vector Go_LerpStraight(_float fSpeed, _float fTimeDelta);
 	_vector Go_LerpUp(_float fSpeed, _float fTimeDelta);

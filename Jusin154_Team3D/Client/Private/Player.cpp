@@ -107,7 +107,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 void CPlayer::Priority_Update(_float fTimeDelta)
 {
 	ReLockOnTarget();
-	SetGravity();
+	//SetGravity();
 	m_pTransformCom->RewindMomentum();
 
 	__super::Priority_Update(fTimeDelta);
