@@ -1971,6 +1971,16 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	));
 
 	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::NONANIM, "../Bin/Resources/Models/Object/Troll_Rock/Troll_Rock.bin",XMMatrixIdentity(),
+		TEXT("Prototype_Component_Troll_Rock_Model")
+	));
+
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::NONANIM, "../Bin/Resources/Models/Object/Troll_Rock/Troll_Rock_Big.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f)* XMMatrixIdentity(),
+		TEXT("Prototype_Component_Troll_Rock_Model")
+	));
+
+	futures.emplace_back(Deferred_ModelLoad(
 		MODEL::ANIM, "../Bin/Resources/Models/Human/Npc/Npc.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
 		TEXT("Prototype_Component_Npc_Model")
 	));

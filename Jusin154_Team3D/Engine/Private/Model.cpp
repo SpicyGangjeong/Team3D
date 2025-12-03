@@ -323,6 +323,8 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fAmount, _boo
 		m_bIsLoop = isLoop;
 		m_fAmount = fAmount;
 		m_bRatio = bRatio;
+		m_Animations[m_iCurrentAnimIndex]->Depart_Animation();
+		m_Animations[m_iCurrentAnimIndex]->ResetRootMotion();
 	}
 	else {
 		m_iCurrentAnimIndex = -1;

@@ -117,7 +117,7 @@ HRESULT CPhysXEffectHitBox::Ready_Components(void* pArg)
 			return E_FAIL;
 		}
 
-		m_pCharacter_Controller->SetGravity(pDesc->bGravity);
+		m_pCharacter_Controller->SetGravity(false);
 	}
 	m_pCharacter_Controller->Set_Position(m_pTransformCom->Get_State(STATE::POSITION));
 	/* Com_Shader */
