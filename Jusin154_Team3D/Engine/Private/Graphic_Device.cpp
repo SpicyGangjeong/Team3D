@@ -109,32 +109,22 @@ HRESULT CGraphic_Device::Ready_SwapChain(HWND hWnd, _uint iWinCX, _uint iWinCY)
 	IDXGIFactory* pFactory = nullptr;
 	pAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&pFactory);
 
-	/* 스왑체인을 생성한다. = 텍스쳐를 생성하는 행위 + 스왑하는 형태  */
 	DXGI_SWAP_CHAIN_DESC		SwapChain;
 	ZeroMemory(&SwapChain, sizeof(DXGI_SWAP_CHAIN_DESC));
 
-	/* 백버퍼 == 텍스쳐 */
-	/*텍스처(백버퍼 == ID3D11Texture2D)를 생성하는 행위*/
-	SwapChain.BufferDesc.Width = iWinCX;	/* 가로 픽셀 수 */
-	SwapChain.BufferDesc.Height = iWinCY;	/* 세로 픽셀 수 */
+	SwapChain.BufferDesc.Width = iWinCX;
+	SwapChain.BufferDesc.Height = iWinCY;
 
-	/* float4(1.f, 1.f, 1.f, 1.f) */
-	/* float4(1.f, 0.f, 0.f, 1.f) */
-	SwapChain.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; /* 만든 픽셀하나의 데이터 정보 : 32BIT픽셀생성하되 부호가 없는 정규화된 수를 저장할께 */
+	SwapChain.BufferDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
 	SwapChain.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 	SwapChain.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 
-	/* 스케치북에 사과를 그릴꺼야. */
-	/* RENDER_TARGET : 그림을 당하는 대상. 스케치북 */
 	SwapChain.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	SwapChain.BufferCount = 1;
 
-	/*스왑하는 형태 : 모니터 주사율에 따라 조절해도 됨. */
 	SwapChain.BufferDesc.RefreshRate.Numerator = 60;
 	SwapChain.BufferDesc.RefreshRate.Denominator = 1;
 
-	/* 멀티샘플링 : 안티얼라이징 (계단현상방지) */
-	/* 나중에 후처리 렌더링 : 멀티샘플링 지원(x) */
 	SwapChain.SampleDesc.Quality = 0;
 	SwapChain.SampleDesc.Count = 1;
 
@@ -142,7 +132,6 @@ HRESULT CGraphic_Device::Ready_SwapChain(HWND hWnd, _uint iWinCX, _uint iWinCY)
 	SwapChain.Windowed = static_cast<BOOL>(true);
 	SwapChain.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 
-	/* 백버퍼라는 텍스처(ID3D11Texture2D)를 생성했다. */
 	if (FAILED(pFactory->CreateSwapChain(m_pDevice, &SwapChain, &m_pSwapChain)))
 		return E_FAIL;
 

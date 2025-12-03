@@ -44,15 +44,19 @@ private:
 	SHADOW_LIGHT_DESC m_PreShadowDesc = {};
 	_float4x4 m_PreShadowMatrices[ENUM_CLASS(D3DTS::END)] = {};
 
-	_bool m_bPostProcessing_BLOOM = { true };
-	_bool m_bDOF_ENV = { true };
-	_int m_iBloomEmbossingPass = { 0 };
-	_float m_fThreshold = { 1.26f };
-	_float m_fDOF_ENV_CutThreshold = { 0.1350f };
-	_float m_fDOF_ENV_FocusDistance = { 31.1f };
-	_float m_fDOF_ENV_StartDistance = { 53.1f };
-	_float m_fDOF_ENV_MaxEnd = { 360.f };
-	_float m_fDOF_ENV_AmountRadius = { 1.f };
+
+	/* TunningParam  */
+	_int	m_iToneMappingType = { 2 };
+	_float	m_fExposure = { 0.7f };
+
+	_int	m_iBloomEmbossingPass = { 0 };
+	_float	m_fBloomThreshold = { 1.26f };
+
+	_float	m_fDOF_ENV_CutThreshold = { 0.1350f };
+	_float	m_fDOF_ENV_FocusDistance = { 31.1f };
+	_float	m_fDOF_ENV_StartDistance = { 53.1f };
+	_float	m_fDOF_ENV_MaxEnd = { 360.f };
+	_float	m_fDOF_ENV_AmountRadius = { 1.f };
 
 private:
 	void Render_Occlusion();
@@ -70,6 +74,7 @@ private:
 	void Render_Blend();
 	void Render_Bloom();
 	void Render_LastColor();
+	void Tone_Mapping();
 	void Render_UI();
 
 

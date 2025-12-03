@@ -12,7 +12,7 @@ uint g_iMaxShadowHeight;
 float2 g_vResolution;
 
 uint g_iBloomEmbossingPass;
-float g_fThreshold;
+float g_fBloomThreshold;
 float g_fDepthThreshold;
 float g_fFocusDistance;
 float g_fFarBlurStart;
@@ -25,6 +25,8 @@ float g_fLightRange;
 float g_fSpotInnerAngle;
 float g_fSpotOuterAngle;
 
+float g_fToneMappingExposure;
+uint g_iToneMappingType;
 bool  g_bUsePowerLightAttenuation;
 float g_fLightAttenuationPower;
 
@@ -127,6 +129,8 @@ struct PS_OUT_LIGHT
 PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 {
     PS_OUT_LIGHT Out;
+    Out.vShade = 0.f;
+    Out.vSpecular = 0.f;
     
     float2 uv = In.vTexcoord;
     
@@ -184,7 +188,6 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
         return Out;
     }
     
-    //float fDiffuseAOStrength = lerp(0.3f, 3.f, fOcclusion);
     { // 수치조정 // 디렉셔널
         float fMinRoughness = 0.05f;
         fRoughness = max(fRoughness, fMinRoughness); // 러프니스 최소값 보장
@@ -199,7 +202,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     float3 vAmbient = g_vLightAmbient.rgb * fOcclusion * fAttenuation;
     float3 vFinalDiffuse = PBR_Out.vShade + vAmbient;
     float3 vFinalSpecular = PBR_Out.vSpecular * g_vLightSpecular.rgb;
-
+    
     Out.vShade = float4(vFinalDiffuse, 1.f);
     Out.vSpecular = float4(vFinalSpecular, 1.f);
     
@@ -209,6 +212,8 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 {
     PS_OUT_LIGHT Out;
+    Out.vShade = 0.f;
+    Out.vSpecular = 0.f;
     
     float2 uv = In.vTexcoord;
     
@@ -285,7 +290,6 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
         return Out;
     }
     
-    //float fDiffuseAOStrength = lerp(0.3f, 3.f, fOcclusion);
     { // 수치조정 // 점광원
         float fMinRoughness = 0.05f;
         fRoughness = max(fRoughness, fMinRoughness); // 러프니스 최소값 보장
@@ -310,6 +314,8 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
 {
     PS_OUT_LIGHT Out;
+    Out.vShade = 0.f;
+    Out.vSpecular = 0.f;
     
     float2 uv = In.vTexcoord;
     
@@ -415,7 +421,7 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
     float3 vAmbient = g_vLightAmbient.rgb * fOcclusion * fAttenuation;
     float3 vFinalDiffuse = PBR_Out.vShade + vAmbient;
     float3 vFinalSpecular = PBR_Out.vSpecular * g_vLightSpecular.rgb;
-
+    
     Out.vShade = float4(vFinalDiffuse, 1.f);
     Out.vSpecular = float4(vFinalSpecular, 1.f);
     
@@ -515,7 +521,7 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
         vTexcoord.x = In.vTexcoord.x;
         vTexcoord.y = In.vTexcoord.y + (float) i / g_vResolution.y;
         
-        vColor += g_fWeights_128[i + 63] * g_BlurXTexture.Sample(ClampSampler, vTexcoord);
+        vColor += g_fWeights_128[i + 63] * g_BlurXTexture.Sample(BorderZeroSampler, vTexcoord);
     }
     
     Out.vBackBuffer += vColor;
@@ -535,7 +541,7 @@ PS_OUT_FLT4_SINGLE PS_MAIN_REFIT(PS_IN In)
 {
     PS_OUT_FLT4_SINGLE Out;
 
-    Out.vSingleTarget = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
+    Out.vSingleTarget = g_DiffuseTexture.Sample(BorderZeroSampler, In.vTexcoord);
     
     return Out;
 }
@@ -544,8 +550,8 @@ PS_OUT_FLT4_SINGLE PS_MAIN_EMBOSS(PS_IN In)
 {
     PS_OUT_FLT4_SINGLE Out;
 
-    vector vInput = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
-    //float fMask = g_BloomMaskTexture.Sample(PointSampler, In.vTexcoord).a;
+    vector vInput = g_DiffuseTexture.Sample(BorderZeroSampler, In.vTexcoord);
+    //float fMask = g_BloomMaskTexture.Sample(BorderZeroSampler, In.vTexcoord).a;
     float3 vColor = vInput.rgb;
     uint iMask = (uint) round(vInput.a * 255.f); // int a = 1  -> // vBloom.a = (enum / 255);
     
@@ -574,7 +580,7 @@ PS_OUT_FLT4_SINGLE PS_MAIN_EMBOSS(PS_IN In)
         return Out;
     }
     
-    float fBloomIntensity = GetBloomCurve(fIntensity, g_fThreshold, g_iBloomEmbossingPass);
+    float fBloomIntensity = GetBloomCurve(fIntensity, g_fBloomThreshold, g_iBloomEmbossingPass);
     
     float3 bloomColor = (vColor * fBloomIntensity) / fIntensity;
     Out.vSingleTarget = float4(bloomColor, 1.f);
@@ -593,7 +599,7 @@ PS_OUT_FLT4_SINGLE PS_MAIN_BLOOM_ACCUM(PS_IN In)
     PS_OUT_FLT4_SINGLE Out;
     
     float3 vColorSrcA = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord).xyz;
-    float3 vColorSrcB = g_BlurTexture.Sample(PointSampler, In.vTexcoord).xyz;
+    float3 vColorSrcB = g_BlurTexture.Sample(BorderZeroSampler, In.vTexcoord).xyz;
     
     Out.vSingleTarget = float4(saturate(vColorSrcA + vColorSrcB), 1.f);
     
@@ -605,7 +611,7 @@ PS_OUT_FLT4_SINGLE PS_MAIN_BLOOM_FINISH(PS_IN In)
     PS_OUT_FLT4_SINGLE Out;
     
     vector vColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
-    float3 vBloom = g_BlurTexture.Sample(PointSampler, In.vTexcoord).xyz;
+    float3 vBloom = g_BlurTexture.Sample(BorderZeroSampler, In.vTexcoord).xyz;
     Out.vSingleTarget = vColor;
     Out.vSingleTarget += float4(vBloom, 1.f);
     
@@ -624,7 +630,7 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_X(PS_IN In)
         vTexcoord.x = In.vTexcoord.x + (float) i / g_vResolution.x;
         vTexcoord.y = In.vTexcoord.y;
         
-        vColor += g_fWeights_128[i + 63] * g_BlurTexture.Sample(ClampSampler, vTexcoord);
+        vColor += g_fWeights_128[i + 63] * g_BlurTexture.Sample(BorderZeroSampler, vTexcoord);
     }
     
     Out.vBlurX = vColor;
@@ -644,7 +650,7 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_X_ENV(PS_IN In)
     float fBlurAmount = 0.0f;
     
     float4 vCenter = g_DepthTexture.Sample(DefaultSampler, In.vTexcoord);
-    float4 vOriginal = g_BlurTexture.Sample(ClampSampler, In.vTexcoord);
+    float4 vOriginal = g_BlurTexture.Sample(BorderZeroSampler, In.vTexcoord);
     float fCenterViewZ = vCenter.y * g_fFar;
     
     float fTerrain = (1.f / 255.f);
@@ -688,7 +694,7 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_X_ENV(PS_IN In)
             continue;
         }
         
-        vColor += g_fWeights_32[i + 16] * g_BlurTexture.Sample(ClampSampler, vTexcoord);
+        vColor += g_fWeights_32[i + 16] * g_BlurTexture.Sample(BorderZeroSampler, vTexcoord);
         fAcc += g_fWeights_32[i + 16];
     }
     
@@ -765,7 +771,7 @@ PS_OUT_BACKBUFFER PS_MAIN_POSTCOMBINED(PS_IN In)
             continue;
         }
         
-        vColor += g_fWeights_32[i + 16] * g_BlurTexture.Sample(ClampSampler, vTexcoord);
+        vColor += g_fWeights_32[i + 16] * g_BlurTexture.Sample(BorderZeroSampler, vTexcoord);
         fAcc += g_fWeights_32[i + 16];
     }
     if (fAcc <= FLT_EPSILON3)
@@ -793,7 +799,7 @@ PS_OUT_BACKBUFFER PS_MAIN_POSTCOMBINED(PS_IN In)
     float fBlendAmount = saturate(fBlurAmount * g_fDOFBlurMultiplier);
     float3 finalColor = lerp(vOriginal.rgb, vBlurMatched, fBlendAmount);
     
-    Out.vBackBuffer = float4(vColor.xyz, vOriginal.a);
+    Out.vBackBuffer = float4(finalColor.xyz, vOriginal.a);
     Out.vEnvironment = 0.f;
     
     return Out;
@@ -811,7 +817,7 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_Y(PS_IN In)
         vTexcoord.x = In.vTexcoord.x;
         vTexcoord.y = In.vTexcoord.y + (float) i / g_vResolution.y;
         
-        vColor += g_fWeights_128[i + 63] * g_BlurTexture.Sample(ClampSampler, vTexcoord);
+        vColor += g_fWeights_128[i + 63] * g_BlurTexture.Sample(BorderZeroSampler, vTexcoord);
     }
     
     Out.vBlurX = vColor;
@@ -837,14 +843,52 @@ PS_OUT_FLT4_SINGLE PS_MAIN_FOG(PS_IN In)
     vFinalColor = lerp(g_vFogColor, vColor, max(fRatio, 0.2f));
     vFinalColor.a = 1.f;
     
-    if (1.f == vDepthDesc.y)
+    if (1.f == vDepthDesc.y) {
         vFinalColor = float4(g_vFogColor);
-        
+    }
     Out.vSingleTarget = vFinalColor;
     
     return Out;
 }
 
+VS_OUT VS_TONE_MAPPING(VS_IN In)
+{
+    VS_OUT Out;
+  
+    matrix matWV, matWVP;
+    
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+    
+    Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    Out.vTexcoord = In.vTexcoord;
+
+    return Out;
+}
+
+PS_OUT_BACKBUFFER PS_TONE_MAPPING(PS_IN In)
+{
+    PS_OUT_BACKBUFFER Out;
+    vector vColor = g_OriginalTexture.Sample(DefaultSampler, In.vTexcoord);
+    vColor *= g_fToneMappingExposure; 
+    vColor = pow(vColor, 2.2f);
+    switch (g_iToneMappingType) {
+        case 0:
+            break;
+        case 1:
+            vColor = float4(ReinHard_ToneMapper(vColor.xyz), 1.f);
+            break;
+        case 2:
+            vColor = float4(Filmic_ToneMapper(vColor.xyz), 1.f);
+            break;
+        default:
+            break;
+    }
+    
+    Out.vBackBuffer = vColor;
+    Out.vEnvironment = float4(0.f, 0.f, 0.f, 1.f);
+    return Out;
+}
 
 technique11 DefaultTechnique
 {
@@ -994,5 +1038,15 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_FOG();
+    }
+
+    pass Tone_Mapping_Pass // 15
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_CAPTURE();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_TONE_MAPPING();
     }
 }
