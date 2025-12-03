@@ -76,7 +76,7 @@ protected:
 	CGameObject*	m_pLookTarget = { nullptr };
 
 	SHADOW_LIGHT_DESC		ShadowDesc{};
-	_float3 vRollPichYaw = { 45.f, 45.f, 0.f };
+	_float3 m_vRollPichYaw = { 35.2643897f, 45.f, 0.f };
 
 protected:
 	virtual HRESULT Initialize_Prototype() override;

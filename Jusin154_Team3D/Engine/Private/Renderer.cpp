@@ -42,6 +42,53 @@ void CRenderer::Render()
 #endif
 }
 
+void CRenderer::Render_PreShadow()
+{
+	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_PreShadow"), m_pPreShadowDSV))) {
+		return;
+	}
+
+	const _float4x4* pMatrices = m_pGameInstance->Get_ShadowMatricesPtr();
+	m_PreShadowDesc = *m_pGameInstance->Get_ShadowDesc();
+	for (int i = 0; i < ENUM_CLASS(D3DTS::END); ++i) {
+		m_PreShadowMatrices[i] = pMatrices[i];
+	}
+
+	D3D11_VIEWPORT			ViewPortOldDesc;
+	D3D11_VIEWPORT			ViewPortDesc;
+	_uint					iNumViewOldPort = { 1 };
+	ZeroMemory(&ViewPortOldDesc, sizeof(D3D11_VIEWPORT));
+	ZeroMemory(&ViewPortDesc, sizeof(D3D11_VIEWPORT));
+	{
+		ViewPortDesc.TopLeftX = 0;
+		ViewPortDesc.TopLeftY = 0;
+		ViewPortDesc.Width		= (_float)g_iMaxShadowWidth;
+		ViewPortDesc.Height		= (_float)g_iMaxShadowHeight;
+		ViewPortDesc.MinDepth = 0.f;
+		ViewPortDesc.MaxDepth = 1.f;
+	}
+	m_pContext->RSGetViewports(&iNumViewOldPort, &ViewPortOldDesc);
+	m_pContext->RSSetViewports(1, &ViewPortDesc);
+
+	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::PRESHADOW)])
+	{
+		if (nullptr != pRenderObject) {
+			if (FAILED(pRenderObject->Render_Shadow())) {
+				assert(false);
+			}
+		}
+		SAFE_RELEASE(pRenderObject);
+	}
+
+	m_RenderObjects[ENUM_CLASS(RENDER::PRESHADOW)].clear();
+
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
+	}
+
+	m_pContext->RSSetViewports(iNumViewOldPort, &ViewPortOldDesc);
+}
+
 void CRenderer::Render_Occlusion()
 {
 	m_RenderObjects[ENUM_CLASS(RENDER::OCCLUSION)].sort([](CGameObject* pSour, CGameObject* pDest)->_bool {
@@ -199,7 +246,6 @@ void CRenderer::Render_Combined()
 		m_pShader->Bind_Matrix("g_invMatView", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW_INV));
 		m_pShader->Bind_Matrix("g_invmatProj", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ_INV));
 
-
 		if (FAILED(m_pShader->Bind_RawValue("g_iMaxShadowWidth", &g_iMaxShadowWidth, sizeof(_uint)))) {
 			return;
 		}
@@ -209,13 +255,12 @@ void CRenderer::Render_Combined()
 		if (FAILED(m_pShader->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 			return;
 		}
-
-		//if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShader, "g_LightViewMatrix", D3DTS::VIEW))) {
-		//	return;
-		//}
-		//if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShader, "g_LightProjMatrix", D3DTS::PROJ))) {
-		//	return;
-		//}
+		if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShader, "g_LightViewMatrix", D3DTS::VIEW))) {
+			return;
+		}
+		if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShader, "g_LightProjMatrix", D3DTS::PROJ))) {
+			return;
+		}
 		if (FAILED(m_pShader->Bind_RawValue("g_fPreShadowFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 			return;
 		}
@@ -242,7 +287,7 @@ void CRenderer::Render_Combined()
 		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Depth"), m_pShader, "g_DepthTexture"))) {
 			return;
 		}
-		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Shadow"), m_pShader, "g_ShadowTexture"))) {
+		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Shadow_Near"), m_pShader, "g_ShadowNearTexture"))) {
 			return;
 		}
 		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_PreShadow"), m_pShader, "g_PreShadowTexture"))) {

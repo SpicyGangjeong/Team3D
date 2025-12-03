@@ -24,24 +24,28 @@ HRESULT CTerrain::Initialize(void* pArg)
 {
 	TERRAIN_DESC* pDesc = static_cast<TERRAIN_DESC*>(pArg);
 
-	if (FAILED(__super::Initialize(pArg)))
+	if (FAILED(__super::Initialize(pArg))){
 		return E_FAIL;
+	}
 
-	if (FAILED(Ready_Components(pArg)))
+	if (FAILED(Ready_Components(pArg))){
 		return E_FAIL;
+	}
 
 	m_fUsingSurfaceParams = 15.f / 27.f;
 	//m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-194, 18.5f, -153.f, 1.f));
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pDesc->vPosition), 1.f));
 
 
-	CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc{};
-	Desc.pMeshName = TEXT("Hogsmeade_HeightMap");
-	Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
-	/* Com_RigidBody */
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_RigidBody_Static_Terrain_Hogsmeade"),
-		reinterpret_cast<CComponent**>(&m_pRigidBody), &Desc))) {
-		return E_FAIL;
+	{
+		CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc{};
+		Desc.pMeshName = TEXT("Hogsmeade_HeightMap");
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
+		/* Com_RigidBody */
+		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_RigidBody_Static_Terrain_Hogsmeade"),
+			reinterpret_cast<CComponent**>(&m_pRigidBody), &Desc))) {
+			return E_FAIL;
+		}
 	}
 
 	return S_OK;
@@ -60,6 +64,7 @@ void CTerrain::Late_Update(_float fTimeDelta)
 {
 	//if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW, this);
 	//}
 }
 
@@ -78,6 +83,33 @@ HRESULT CTerrain::Render()
 		return E_FAIL;
 	}
 	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NORTEX::ENV_TERRAIN_ANISO)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pVIBufferCom->Render())) {
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+HRESULT CTerrain::Render_Shadow()
+{
+	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ViewMatrix", D3DTS::VIEW))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ProjMatrix", D3DTS::PROJ))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", &m_pGameInstance->Get_ShadowDesc()->fFar, sizeof(_float)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NORTEX::SHADOW)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
@@ -210,7 +242,7 @@ void CTerrain::Describe_Entity()
 {
 	GUI::Begin("Renderer");
 	GUI::PushItemWidth(80);
-	if (GUI::CollapsingHeader("PostProcessing_Bloom"))
+	if (GUI::CollapsingHeader("Terr"))
 	{
 		static _int iTuningValue = 16;
 		GUI::DragInt("DSN1", (_int*)&iTuningValue, 1, 1024);

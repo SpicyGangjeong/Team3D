@@ -97,6 +97,7 @@ public:
 
 #pragma region RENDERER
 	HRESULT Add_RenderGroup(RENDER eRenderGroup, class CGameObject* pRenderObject);
+	void Render_PreShadow();
 #pragma endregion
 
 #pragma region ASSET_MANAGER

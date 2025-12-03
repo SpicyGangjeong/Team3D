@@ -13,6 +13,7 @@ private:
 public:
 	void	Render();
 	HRESULT Add_RenderGroup(RENDER eRenderGroup, class CGameObject* pRenderObject);
+	void Render_PreShadow();
 
 #ifdef _DEBUG
 private:
@@ -40,6 +41,7 @@ private:
 	_float4x4					m_ProjMatrix = {};
 
 	ID3D11DepthStencilView* m_pShadowDSV = { nullptr };
+	ID3D11DepthStencilView* m_pPreShadowDSV = { nullptr };
 
 	SHADOW_LIGHT_DESC m_PreShadowDesc = {};
 	_float4x4 m_PreShadowMatrices[ENUM_CLASS(D3DTS::END)] = {};
