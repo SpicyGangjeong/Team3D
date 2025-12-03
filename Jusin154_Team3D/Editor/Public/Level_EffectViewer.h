@@ -24,8 +24,8 @@ private:
 	HRESULT Ready_Layer_Effect(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_PhysX(const _wstring& strLayerTag);
 
-	PhsXUserData m_PlaneData = {};
-
+	PhsXUserData		 m_PlaneData = {};
+	class CInfoInstance* m_pInfoInstance = { nullptr };
 public:
 	static CLevel_EffectViewer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID);
 	virtual void Free() override;

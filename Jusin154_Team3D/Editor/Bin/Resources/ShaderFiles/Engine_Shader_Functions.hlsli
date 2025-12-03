@@ -158,9 +158,9 @@ PBR_LIGHT_OUT PBR_Lighting(
     float NdotV = saturate(dot(vNormal, vToView));
     if (NdotL <= 0 || NdotV <= 0)
     {
-        return Out;
         Out.vShade = 0;
         Out.vSpecular = 0;
+        return Out;
     }
     
     float fAlpha = max(fRoughness * fRoughness, 0.04f);
@@ -283,7 +283,7 @@ float4x4 RotateAxis(float4 _vAxis , float fAngle)
         );
     }
     
-    float3 vAxis = normalize(_vAxis);
+    float3 vAxis = normalize(_vAxis).xyz;
     
     float fCos = cos(radians(fAngle));
     float fSin = sin(radians(fAngle));
@@ -343,7 +343,30 @@ float2 SelectLerpUV(float2 fAmount, float _fRatio, int iSelectOption)
     }
     
     return fAmount * fRatio;
-
 }
+
+float3 ReinHard_ToneMapper(float3 vColor)
+{
+    float k = 1.f;
+    vColor = (vColor / (vColor + k));
+    return pow(vColor, 1.f / 2.2f);
+}
+
+float3 Filmic_ToneMapper(float3 vColor)
+{
+    const float fA = 2.51f;
+    const float fB = 0.03f;
+    const float fC = 2.43f;
+    const float fD = 0.59f;
+    const float fE = 0.14f;
+
+    vColor = saturate(
+        vColor * (fA * vColor + fB)
+        / (vColor * (fC * vColor + fD) + fE)
+    );
+    
+    return pow(vColor, 1.f / 2.2f);
+}
+
 
 #endif // ENGINE_SHADER_FUNCTIONS_HLSLI

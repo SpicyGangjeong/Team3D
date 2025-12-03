@@ -15,11 +15,12 @@
 #include "Dummy_PhysXWall.h"
 #include "Player.h"
 #include "EffectPool.h"
+#include "InfoInstance.h"
 
 CLevel_EffectViewer::CLevel_EffectViewer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
 {
-
+	m_pInfoInstance = CInfoInstance::GetInstance();
 }
 
 HRESULT CLevel_EffectViewer::Initialize()
@@ -71,7 +72,7 @@ HRESULT CLevel_EffectViewer::Initialize()
 
 void CLevel_EffectViewer::Update(_float fTimeDelta)
 {
-
+	m_pInfoInstance->Update(fTimeDelta);
 }
 
 HRESULT CLevel_EffectViewer::Render()
@@ -188,5 +189,5 @@ void CLevel_EffectViewer::Free()
 {
 	__super::Free();
 
-
+	SAFE_RELEASE(m_pInfoInstance);
 }

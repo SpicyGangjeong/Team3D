@@ -725,6 +725,13 @@ void CEditEffect::Describe_Entity()
 				GUI::Checkbox("Nomal Dissolve", &m_EffectInfo.isNomalDissolve);
 				GUI::Checkbox("Reverse Dissolve", &m_EffectInfo.isReverseDissolve);
 
+				GUI::Spacing();
+				GUI::Checkbox("DissolveMove", &m_EffectInfo.isDissolveMove);
+				GUI::DragFloat2("DissolveUVGainAmount", (_float*)&m_EffectInfo.vDissolveUVGainAmount, 0.01f);
+				GUI::DragFloat("DissolveDelay", &m_EffectInfo.fDissolveDelay, 0.005f);
+				GUI::DragFloat("ReverseDissolveDelay", &m_EffectInfo.fReverseDissolveDelay, 0.005f);
+
+
 				_string strName  = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISSOLVE_TEXTURE", (CComponent**)&m_pDissolve_TextureCom, nullptr, this);
 				
 				if (strName != "") {

@@ -710,6 +710,7 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 				pParticleValues[i].vDiffuseUVMoveTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vDiffuseUVMoveTime.x, m_InstanceDesc.vDiffuseUVMoveTime.y));
 				pParticleValues[i].vDistortionUVMoveTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vDistortionUVMoveTime.x, m_InstanceDesc.vDistortionUVMoveTime.y));
 				pParticleValues[i].vNoiseUVMoveTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vNoiseUVMoveTime.x, m_InstanceDesc.vNoiseUVMoveTime.y));
+				pParticleValues[i].vDissolveUVMoveTime = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vNoiseUVMoveTime.x, m_InstanceDesc.vNoiseUVMoveTime.y));
 				pParticleValues[i].fSpeed = m_pGameInstance->Random_Float(m_InstanceDesc.vSpeed.x, m_InstanceDesc.vSpeed.y);
 				pParticleValues[i].fRotaionSpeed = m_pGameInstance->Random_Float(m_InstanceDesc.vRotationSpeed.x, m_InstanceDesc.vRotationSpeed.y);
 				pParticleValues[i].vAniIndex = _float2(0.f, m_InstanceDesc.vAniIndex.y);

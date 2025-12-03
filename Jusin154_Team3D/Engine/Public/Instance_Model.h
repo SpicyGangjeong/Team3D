@@ -55,8 +55,18 @@ public:
 		_float2     vSizeDrag = {};
 
 		_float2     vDelay = {};
-
 		_bool       isNoWorld = {};
+
+		_float2     vDissolveUVMoveTime = { 1.f , 1.f };
+
+		_float3		vPadding0 = {};
+		_float3		vPadding1 = {};
+
+		_float		fPadding0 = {};
+		_float		fPadding1 = {};
+
+		_bool		isPadding0 = {};
+		_bool		isPadding1 = {};
 	}INSTANCE_DESC;
 
 	typedef struct tagPreInstanceDesc
@@ -108,6 +118,7 @@ public:
 		_float2     vSizeDrag = {};
 
 		_float2     vDelay = {};
+		_bool       isNoWorld = {};
 
 	}PRE_INSTANCE_DESC;
 
@@ -153,6 +164,7 @@ public:
 		_float2	 vDiffuseUVMoveTime = {};
 		_float2  vDistortionUVMoveTime = {};
 		_float2  vNoiseUVMoveTime = {};
+		_float2  vDissolveUVMoveTime = {};
 		_float2	 vAniTime = {};
 
 		_float2	 vAniIndex = {};

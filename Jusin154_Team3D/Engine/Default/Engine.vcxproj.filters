@@ -292,7 +292,7 @@
     <Filter Include="02.Element\02.Component\11.Query">
       <UniqueIdentifier>{432b36d5-fdf6-456a-bc71-8bf793a42314}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\07. Fog">
+    <Filter Include="01.Utility\07.Fog">
       <UniqueIdentifier>{d566d9e6-6183-48dc-a196-25fd47a10c48}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -556,7 +556,10 @@
       <Filter>02.Element\02.Component\02.VIBuffer\Box</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Fog.cpp">
-      <Filter>01.Utility\07. Fog</Filter>
+      <Filter>01.Utility\07.Fog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Renderer_Declare.cpp">
+      <Filter>01.Utility\01.Renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -998,9 +1001,6 @@
     <ClInclude Include="..\Public\PipeLine.h">
       <Filter>01.Utility\02.PipeLine</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Renderer.h">
-      <Filter>01.Utility\01.Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Shader.h">
       <Filter>02.Element\02.Component\01.Shader</Filter>
     </ClInclude>
@@ -1188,7 +1188,10 @@
       <Filter>02.Element\02.Component\02.VIBuffer\Box</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Fog.h">
-      <Filter>01.Utility\07. Fog</Filter>
+      <Filter>01.Utility\07.Fog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Renderer.h">
+      <Filter>01.Utility\01.Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1239,41 +1242,41 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Particle_Compute.hlsl">
+      <Filter>99.Define\01.SHADER</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_WeightBlend.hlsl">
+      <Filter>99.Define\01.SHADER</Filter>
+    </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Cell.hlsl">
       <Filter>99.Define\01.SHADER</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Deferred.hlsl">
       <Filter>99.Define\01.SHADER</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Particle_Compute.hlsl">
-      <Filter>99.Define\01.SHADER</Filter>
-    </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_LastColor.hlsl">
       <Filter>99.Define\01.SHADER</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_WeightBlend.hlsl">
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Mesh_Compute.hlsl">
       <Filter>99.Define\01.SHADER</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Defines.hlsli">
-      <Filter>99.Define\01.SHADER\Inc</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Constants.hlsli">
       <Filter>99.Define\01.SHADER\Inc</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Structures.hlsli">
-      <Filter>99.Define\01.SHADER\Inc</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_States.hlsli">
-      <Filter>99.Define\01.SHADER\Inc</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Samplers.hlsli">
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Defines.hlsli">
       <Filter>99.Define\01.SHADER\Inc</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Functions.hlsli">
       <Filter>99.Define\01.SHADER\Inc</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Mesh_Compute.hlsl">
-      <Filter>99.Define\01.SHADER</Filter>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Samplers.hlsli">
+      <Filter>99.Define\01.SHADER\Inc</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_States.hlsli">
+      <Filter>99.Define\01.SHADER\Inc</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Structures.hlsli">
+      <Filter>99.Define\01.SHADER\Inc</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

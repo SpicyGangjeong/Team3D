@@ -30,12 +30,14 @@ protected:
 	virtual HRESULT Ready_Components(void* pArg) override;
 	HRESULT         Ready_Child();
 	HRESULT			Bind_ShaderResources() override;
-	HRESULT			Reset_EffectParts(); 
+	HRESULT			Reset_EditEffect(); 
 
 	void			Update_Event(_float fTimeDelta);
 
 protected:
-	class CDummy_PhysXEffectHitBox* m_pPhysHitBox = {};
+	_float4							m_vStartPos = {};
+	_float4							m_vEndPos = {};
+	PSX::PxSweepBuffer				hitBuffer = {};
 protected:
 	_wstring						m_wstrEffectName = {};
 
