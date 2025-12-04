@@ -27,6 +27,7 @@ protected:
 	_float3			m_vToTargetDir = { };
 	_float			m_fTargetDistance = { FLT_MAX };
 	_bool			m_bDrawOutLine = { false };
+	_bool			m_bLookAt = { true };
 
 protected:
 	virtual HRESULT Initialize_Prototype() override;

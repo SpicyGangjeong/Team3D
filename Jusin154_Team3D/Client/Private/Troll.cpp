@@ -331,29 +331,29 @@ void CTroll::Free()
 
 void CTroll::Describe_Entity()
 {
-	GUI::Begin("Troll");
+	//GUI::Begin("Troll");
 
-	GUI::Checkbox("LookAt", &m_bLookAt);
+	//GUI::Checkbox("LookAt", &m_bLookAt);
 
-	string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
-	GUI::Text(AnimList.c_str());
+	//string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
+	//GUI::Text(AnimList.c_str());
 
-	GUI::Text("AnimTrack %.2f", m_pModelCom->Get_CurrentTrackPosition());
-	GUI::Text("AnimRatio %.2f", m_pModelCom->Get_CurrentTrackProgressRatio());
+	//GUI::Text("AnimTrack %.2f", m_pModelCom->Get_CurrentTrackPosition());
+	//GUI::Text("AnimRatio %.2f", m_pModelCom->Get_CurrentTrackProgressRatio());
 
-	_float4 vMomentum = {};
-	XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());
-	GUI::Text("%.2f %.2f %.2f %.2f ", vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);
+	//_float4 vMomentum = {};
+	//XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());
+	//GUI::Text("%.2f %.2f %.2f %.2f ", vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);
 
-	_float3 Pos;
-	XMStoreFloat3(&Pos, Get_WorldPostion());
+	//_float3 Pos;
+	//XMStoreFloat3(&Pos, Get_WorldPostion());
 
-	if (GUI::DragFloat3("Pos",(_float*)&Pos))
-	{
-		m_pCharacter_Controller->Set_Position(XMLoadFloat3(&Pos));
-	}
+	//if (GUI::DragFloat3("Pos",(_float*)&Pos))
+	//{
+	//	m_pCharacter_Controller->Set_Position(XMLoadFloat3(&Pos));
+	//}
 
-	GUI::End();
+	//GUI::End();
 
 }
 

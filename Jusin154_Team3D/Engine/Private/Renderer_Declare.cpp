@@ -196,7 +196,7 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 		/* Target_Shadow_Near */
-		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Shadow_Near"), (_uint)g_iMaxShadowWidth, (_uint)g_iMaxShadowHeight,
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Shadow_Near"), (_uint)g_iMaxShadowWidth >> 2, (_uint)g_iMaxShadowHeight >> 2,
 			DXGI_FORMAT_R32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)))) {
 			return E_FAIL;
 		}

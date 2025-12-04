@@ -18,6 +18,7 @@
 #include "PhysX_Manager.h"
 #include "ThreadHolder.h"
 #include "Fog.h"
+#include "Resource_Manager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -105,6 +106,11 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 
 	m_pFog = CFog::Create();
 	if (nullptr == m_pFog) {
+		return E_FAIL;
+	}
+
+	m_pResource_Manager = CResource_Manager::Create(*ppDevice, 500);
+	if (nullptr == m_pResource_Manager) {
 		return E_FAIL;
 	}
 
@@ -783,6 +789,10 @@ HRESULT CGameInstance::Bind_FogValue(class CShader* pShader)
 {
 	return m_pFog->Bind_FogValue(pShader);
 }
+ID3D11ShaderResourceView* CGameInstance::Add_Resource(const _char* pFilePath)
+{
+	return m_pResource_Manager->Add_Texture(pFilePath);
+}
 #pragma endregion // FOG
 
 bool		CGameInstance::Key_Pressing(int _iKey)
@@ -910,6 +920,7 @@ void CGameInstance::Release_Engine()
 	SAFE_RELEASE(m_pLevel_Manager);
 	SAFE_RELEASE(m_pPrototype_Manager);
 	SAFE_RELEASE(m_pLight_Manager); // Light Manager�� m_pObject_Manager ���� ���� �ҷ����� 
+	SAFE_RELEASE(m_pResource_Manager);
 	SAFE_RELEASE(m_pGraphic_Device);
 }
 
