@@ -25,12 +25,6 @@ public:
 	virtual HRESULT Render() override;
 	virtual _vector Get_WorldPostion() override;
 
-//public:
-//	virtual const SPELLINFO Get_Info(_int Index) override;
-//
-//public:
-//	virtual void Set_SkillType(_int eType);
-
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;

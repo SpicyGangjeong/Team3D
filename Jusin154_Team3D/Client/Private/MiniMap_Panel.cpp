@@ -40,8 +40,8 @@ HRESULT CMiniMap_Panel::Initialize(void* pArg)
 	{
 		return E_FAIL;
 	}
-
-	m_bActive = true;
+	Visible(true);
+	ElementAllVisible(true);
 	return S_OK;
 }
 

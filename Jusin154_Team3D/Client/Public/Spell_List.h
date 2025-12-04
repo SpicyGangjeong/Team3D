@@ -31,7 +31,8 @@ public:
 
 private:
 	void Color();
-	void Hover(_float fTimeDelta);
+	void Hover();
+	void Click_Slot(_bool bClick);
 
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
