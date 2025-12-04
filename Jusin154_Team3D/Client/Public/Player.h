@@ -86,7 +86,9 @@ private:
 	virtual void Add_FSM();
 	virtual void Set_Anim();
 
-	_uint HI = 0;
+	function<void()> m_InputAction = nullptr;
+
+
 	_float3 m_OffsetPos = {};
 	_float m_fAmount = { 1.f };
 	_float m_fInputTime = {};
