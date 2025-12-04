@@ -10,6 +10,7 @@
 #include "State_Land.h"
 #include "State_Move.h"
 #include "State_Combat.h"
+#include "InfoInstance.h"
 #pragma endregion
 
 CGoblin::CGoblin(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -53,6 +54,8 @@ HRESULT CGoblin::Initialize(void* pArg)
 
 	m_pCharacter_Controller->Set_Position(XMVectorSet(-10.f, 0.f, -10.f, 1.f));
 
+	CInfoInstance::GetInstance()->Regist_ActiveMonster(this);
+
 	return S_OK;
 }
 
@@ -67,7 +70,7 @@ void CGoblin::Update(_float fTimeDelta)
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
-	m_pCharacter_Controller->Move(fTimeDelta);
+	//m_pCharacter_Controller->Move(fTimeDelta);
 	
 }
 
@@ -76,7 +79,7 @@ void CGoblin::Late_Update(_float fTimeDelta)
 	__super::Late_Update(fTimeDelta);
 	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_Position());
 
-	m_pTransformCom->LookAt(m_pPlayerTransform->Get_State(STATE::POSITION));
+	//m_pTransformCom->LookAt(m_pPlayerTransform->Get_State(STATE::POSITION));
 
 	m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
 }

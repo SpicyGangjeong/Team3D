@@ -21,7 +21,8 @@ private:
 public:
 	virtual void Priority_Update(_float fTimeDelta) override;
 	virtual void Update(_float fTimeDelta) override;
-	virtual void Late_Update(_float fTimeDelta) override;
+	virtual void Late_Update(_float fTimeDelta) override; 
+	virtual _vector Get_WorldPostion() override;
 
 public:
 	void	Reference_Mat_For_EditEffect();

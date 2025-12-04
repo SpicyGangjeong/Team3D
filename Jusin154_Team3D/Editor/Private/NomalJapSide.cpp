@@ -115,9 +115,9 @@ void CNomalJapSide::Late_Update(_float fTimeDelta)
 
 }
 
-HRESULT CNomalJapSide::Pre_Setting(CGameObject* pObject)
+HRESULT CNomalJapSide::Pre_Setting(CGameObject* pObject, void* pArg)
 {
-	if (FAILED(__super::Pre_Setting(pObject)))
+	if (FAILED(__super::Pre_Setting(pObject, nullptr)))
 		return E_FAIL;
 
 
