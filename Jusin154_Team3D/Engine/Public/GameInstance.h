@@ -237,6 +237,11 @@ public:
 	HRESULT Bind_FogValue(class CShader* pShader);
 #pragma endregion
 
+#pragma region RESOURCE_MANGER
+	public:
+		ID3D11ShaderResourceView* Add_Resource(const _char* pFilePath);
+#pragma endregion
+
 
 public:
 	void Add_ModelToMap(const _char* filePath, CModel* pModel);
@@ -272,6 +277,7 @@ private:
 	class CPicking*					m_pPicking = { nullptr };
 	class CThreadHolder*			m_pThreadHolder = { nullptr };
 	class CFog*						m_pFog = { nullptr };
+	class CResource_Manager*		m_pResource_Manager = { nullptr };
 	
 
 #ifdef _DEBUG
