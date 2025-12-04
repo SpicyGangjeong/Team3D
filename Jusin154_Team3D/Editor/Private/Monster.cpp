@@ -24,8 +24,8 @@ HRESULT CMonster::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_pPlayerTransform = static_cast<CPlayer*>(pArg)->Get_Component<CTransform>();
-	SAFE_ADDREF(m_pPlayerTransform);
+	//m_pPlayerTransform = static_cast<CPlayer*>(pArg)->Get_Component<CTransform>();
+	//SAFE_ADDREF(m_pPlayerTransform);
 
 	return S_OK;
 }
@@ -42,7 +42,7 @@ void CMonster::Update(_float fTimeDelta)
 
 void CMonster::Late_Update(_float fTimeDelta)
 {
-	m_fTargetDistance = m_pTransformCom->TargetDis(m_pPlayerTransform->Get_State(STATE::POSITION));
+	//m_fTargetDistance = m_pTransformCom->TargetDis(m_pPlayerTransform->Get_State(STATE::POSITION));
 }
 
 HRESULT CMonster::Render()

@@ -80,7 +80,7 @@ void CLevioso::Update(_float fTimeDelta)
 	m_pTrail_PT_0->Get_Component<CTransform>()->Translation(m_vOwnerLook * 0.25f);
 
 	if (true == m_pGameInstance->SphereCast(0.0f, XMLoadFloat4(&m_vStartPos), m_vOwnerLook, XMVectorGetX(XMVector3Length(m_vOwnerLook * 1.f))
-		, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eSTATIC, hitBuffer))
+		, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eSTATIC, m_Hitbuffer))
 	{
 		OnCollision();
 	}
@@ -112,10 +112,10 @@ void CLevioso::Late_Update(_float fTimeDelta)
 
 }
 
-HRESULT CLevioso::Pre_Setting(CGameObject* pObject)
+HRESULT CLevioso::Pre_Setting(CGameObject* pObject, void* pArg)
 {
 
-	if (FAILED(__super::Pre_Setting(pObject)))
+	if (FAILED(__super::Pre_Setting(pObject, nullptr)))
 		return E_FAIL;
 
 	CPlayer* pPlayer = static_cast<CPlayer*>(m_pOwner);
@@ -200,7 +200,7 @@ void CLevioso::OnCollision(CGameObject* pOther, void* pDesc)
 
 	m_isCollisionEnter = true;
 
-	_vector vPos = XMVectorSet(hitBuffer.block.position.x, hitBuffer.block.position.y, hitBuffer.block.position.z, 1.f);
+	_vector vPos = XMVectorSet(m_Hitbuffer.block.position.x, m_Hitbuffer.block.position.y, m_Hitbuffer.block.position.z, 1.f);
 
 
 	for (auto& pPair : m_PartObjects)

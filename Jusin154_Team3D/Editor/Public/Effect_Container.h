@@ -23,7 +23,7 @@ public:
 public:
 	HRESULT			Load_Directory(const _char* pPath);
 	HRESULT         Load_Package(const _char* pPath);
-	virtual	HRESULT	Pre_Setting(CGameObject* pObject);
+	virtual	HRESULT	Pre_Setting(CGameObject* pObject, void* pArg = nullptr);
 protected:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -33,11 +33,12 @@ protected:
 	HRESULT			Reset_EditEffect(); 
 
 	void			Update_Event(_float fTimeDelta);
+	_int            CollisionCheck();
 
 protected:
 	_float4							m_vStartPos = {};
 	_float4							m_vEndPos = {};
-	PSX::PxSweepBuffer				hitBuffer = {};
+	PSX::PxSweepBufferN<12>			m_Hitbuffer = {};
 protected:
 	_wstring						m_wstrEffectName = {};
 

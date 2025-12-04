@@ -110,6 +110,11 @@ void CEditEffect::Late_Update(_float fTimeDelta)
 
 }
 
+_vector CEditEffect::Get_WorldPostion()
+{
+	return m_pTransformCom->Get_State(STATE::POSITION);
+}
+
 void CEditEffect::Reference_Mat_For_EditEffect()
 {
 

@@ -219,10 +219,6 @@ public:
 public:
 	HRESULT Load(const _char* pFilePath, LEVEL eLevel);
 	HRESULT Load();
-	void	Set_Dissolve(_bool isDissolve)
-	{
-		m_EffectInfo.isDissolve = isDissolve;
-	}
 public:
 #ifdef _DEBUG
 		HRESULT LoadPre(const _char* pFilePath, LEVEL eLevel);

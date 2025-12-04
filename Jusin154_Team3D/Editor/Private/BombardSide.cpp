@@ -111,9 +111,9 @@ void CBombardSide::Late_Update(_float fTimeDelta)
 
 }
 
-HRESULT CBombardSide::Pre_Setting(CGameObject* pObject)
+HRESULT CBombardSide::Pre_Setting(CGameObject* pObject, void* pArg)
 {
-	if (FAILED(__super::Pre_Setting(pObject)))
+	if (FAILED(__super::Pre_Setting(pObject, nullptr)))
 		return E_FAIL;
 
 

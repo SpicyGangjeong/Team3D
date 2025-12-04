@@ -584,7 +584,7 @@ m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, m_ToleranceScal
 	m_pMaterials.push_back(m_pPhysics->createMaterial(0.5f, 0.5f, 0.6f));
 
 	PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
-	PlaneData.iSubKind = UINT_MAX;
+	PlaneData.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
 	PlaneData.pOwner = nullptr;
 	PlaneData.pBody = nullptr;
 

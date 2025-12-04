@@ -509,10 +509,15 @@ void CTrailObject::Describe_Entity()
 		m_pTrailCom->Describe_Entity();
 		m_pShaderCom->Describe_Entity();
 
-		if(GUI::InputInt("NumVertex", &m_TrailInfo.iNumVertex))
+		if (GUI::InputInt("NumVertex", &m_TrailInfo.iNumVertex))
 		{
-			m_pTrailCom->Reset_Trail();
+			
+		}
+
+		if(GUI::Button("Reset Trail"))
+		{
 			m_pTrailCom->ReStructVB(m_TrailInfo.iNumVertex);
+			m_pTrailCom->Reset_Trail();
 		}
 
 		GUI::Checkbox("Diffuse", &m_TrailInfo.isDiffuse);
