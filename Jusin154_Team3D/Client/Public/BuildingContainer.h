@@ -37,6 +37,7 @@ private:
 	CVIBuffer_Box*			m_pVIBufferCom = { nullptr };
 	COcclusionQuery*		m_pOcclusionQueryCom = { nullptr };
 
+	_float					m_fRadius = {};
 	_float3					m_vExtentWorldPosition = {};
 
 private:

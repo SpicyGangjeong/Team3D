@@ -536,15 +536,10 @@ HRESULT CMaterial::Initialize(const _char* pModelFilePath, const SaveMaterial& _
 			const char* ext = strrchr(szFullPath, '.');
 			if (ext)
 			{
-				if (strcmp(ext, ".dds") == 0)
-					hr = CreateDDSTextureFromFile(m_pDevice, szPerfectPath, nullptr, &pSRV);
-				else if (strcmp(ext, ".tga") == 0)
-					hr = S_OK;
-				else
-					hr = CreateWICTextureFromFile(m_pDevice, szPerfectPath, nullptr, &pSRV);
+				pSRV = m_pGameInstance->Add_Resource(szFullPath);
 			}
 
-			if (FAILED(hr)) {
+			if (nullptr == pSRV) {
 				return E_FAIL;
 			}
 			m_SRVs[type].push_back(pSRV);
