@@ -9,6 +9,14 @@ NS_BEGIN(Client)
 
 class CGoblin final : public CMonster
 {
+	enum class GOBLIN_SKILL
+	{
+		SWING,
+		SLAM,
+		THROW,
+		TP,
+		END
+	};
 private:
 	CGoblin(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CGoblin(const CGoblin& Prototype);
@@ -51,6 +59,9 @@ private:
 	virtual void Add_FSM();
 	virtual void Set_Anim();
 
+	_float m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = {};
+	_float m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = { 5.f,10.f,10.f };
+
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();
@@ -61,7 +72,7 @@ private:
 	void	Behavior_MoveExit();
 
 	void	Behavior_CombatEnter();
-	HRESULT Behavior_CombatExitCheck();
+	HRESULT Behavior_CombatExitCheck(_float fTimeDelta);
 	void	Behavior_CombatExit();
 
 };
