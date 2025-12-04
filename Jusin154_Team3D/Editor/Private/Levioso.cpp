@@ -126,6 +126,8 @@ HRESULT CLevioso::Pre_Setting(CGameObject* pObject)
 	_vector WandPos = pPlayer->Get_WandPos().r[3];
 
 	CEditEffect* pWandSmoke = Get_PartObject<CEditEffect>("Levioso_Wand0");
+	CEditEffect* pWandLight= Get_PartObject<CEditEffect>("Levioso_Wand_Light");
+	
 
 	m_pLeviosoPJ_0->Get_Component<CTransform>()->Set_WorldMatrix(m_pOwner->Get_Component<CTransform>()->Get_XMWorldMatrix());
 	m_pTrail_PT_0->Get_Component<CTransform>()->Set_WorldMatrix(m_pOwner->Get_Component<CTransform>()->Get_XMWorldMatrix());
@@ -134,10 +136,12 @@ HRESULT CLevioso::Pre_Setting(CGameObject* pObject)
 	m_pLeviosoPJ_0->Get_Component<CTransform>()->Set_State(STATE::POSITION, WandPos);
 	m_pTrail_PT_0->Get_Component<CTransform>()->Set_State(STATE::POSITION, WandPos);
 	pWandSmoke->Get_Component<CTransform>()->Set_State(STATE::POSITION, pPlayer->Get_PartObject<CWand>()->Get_WorldPostion());
+	pWandLight->Get_Component<CTransform>()->Set_State(STATE::POSITION, pPlayer->Get_PartObject<CWand>()->Get_WorldPostion());
 
 	m_pLeviosoPJ_0->Set_Visible(true);
 	m_pTrail_PT_0->Set_Visible(true);
 	pWandSmoke->Set_Visible(true);
+	pWandLight->Set_Visible(true);
 
 	m_pLeviosoTrail->Set_Visible(true);
 	m_pLeviosoTrail->Get_Component<CTrail>()->Reset_Trail();
@@ -208,6 +212,15 @@ void CLevioso::OnCollision(CGameObject* pOther, void* pDesc)
 	m_fAccTime = 0.f;
 	m_fDuration = 3.f; //적중하면 지속시간 3초
 
+	CPlayer* pPlayer = static_cast<CPlayer*>(m_pOwner);
+
+	if (pPlayer == nullptr)
+		return;
+
+	_vector WandPos = pPlayer->Get_WandPos().r[3];
+
+	CEditEffect* pWandLight = Get_PartObject<CEditEffect>("Levioso_Wand_Light");
+	pWandLight->Get_Component<CTransform>()->Set_State(STATE::POSITION, pPlayer->Get_PartObject<CWand>()->Get_WorldPostion());
 	//CEditEffect* pLevioso_Hit =  Get_PartObject<CEditEffect>("Levioso_Hit");
 	//CEditEffect* pLevioso_Bottom_Wind = Get_PartObject<CEditEffect>("Levioso_Bottom_Wind");
 	//CEditEffect* pLevioso_Rotate0 = Get_PartObject<CEditEffect>("Levioso_Rotate0");

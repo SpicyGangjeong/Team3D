@@ -137,8 +137,8 @@ void CTrail::Trail_Update(_float fDeltaTime, _fmatrix WorldMatrix)
 	memmove(m_PreLow, m_PreLow + 1, sizeof(VTXPOSTEX));
 	memmove(m_PreHigh, m_PreHigh + 1, sizeof(VTXPOSTEX));
 
-	m_PreLow[1] = vLow;
-	m_PreHigh[1] = vHigh;
+	XMStoreFloat3(&m_PreLow[1], vLow);
+	XMStoreFloat3(&m_PreHigh[1], vHigh);
 
 	if (m_iNumCount < 4)
 	{
@@ -151,11 +151,15 @@ void CTrail::Trail_Update(_float fDeltaTime, _fmatrix WorldMatrix)
 
 	//시작점 끝점 내점 두개를 이용하여 보간할 것임
 
+	_vector m_PreLowVector[2] = { XMLoadFloat3(&m_PreLow[0]) , XMLoadFloat3(&m_PreLow[1]) };
+	_vector m_PreHighVector[2] = { XMLoadFloat3(&m_PreHigh[0]) , XMLoadFloat3(&m_PreHigh[1]) };
+
 	for (size_t i = 0; i < 4; i++)
 	{
+
 		_float iRatio =  (_float)i / 3;
-		_vector vLerpLow = XMVectorCatmullRom(XMLoadFloat3(&m_pVertices[m_iNumCount - 2].vPosition), m_PreLow[0], m_PreLow[1], m_PreLow[1] + (m_PreLow[1] - m_PreLow[0]), iRatio); // LoW
-		_vector vLerpHigh = XMVectorCatmullRom(XMLoadFloat3(&m_pVertices[m_iNumCount - 1].vPosition), m_PreHigh[0], m_PreHigh[1], m_PreHigh[1] + (m_PreHigh[1] - m_PreHigh[0]), iRatio);
+		_vector vLerpLow = XMVectorCatmullRom(XMLoadFloat3(&m_pVertices[m_iNumCount - 2].vPosition), m_PreLowVector[0], m_PreLowVector[1], m_PreLowVector[1] + (m_PreLowVector[1] - m_PreLowVector[0]), iRatio); // LoW
+		_vector vLerpHigh = XMVectorCatmullRom(XMLoadFloat3(&m_pVertices[m_iNumCount - 1].vPosition), m_PreHighVector[0], m_PreHighVector[1], m_PreHighVector[1] + (m_PreHighVector[1] - m_PreHighVector[0]), iRatio);
 
 		XMStoreFloat3(&m_pVertices[m_iNumCount++].vPosition, vLerpLow);
 		XMStoreFloat3(&m_pVertices[m_iNumCount++].vPosition, vLerpHigh);
@@ -233,6 +237,9 @@ HRESULT CTrail::ReStructVB(_uint iNumVertices)
 	if (FAILED(Create_VB()))
 		return E_FAIL;
 
+	Safe_Delete_Array(m_pVertices);
+	m_pVertices = new VTXPOSTEX[m_iNumVertices];
+	
 	return S_OK;
 }
 

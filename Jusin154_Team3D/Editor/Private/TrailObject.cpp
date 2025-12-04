@@ -484,7 +484,7 @@ void CTrailObject::Free()
 void CTrailObject::Describe_Entity()
 {
 
-	const char* pRenderNames[] = { "PRIORITY" , "SHADOW", "NONBLEND", "DECAL", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" ,"BLOOM" , "UI", "OCCLUSION" };
+	const char* pRenderNames[] = { "PRIORITY" , "SHADOW", "NONBLEND", "DECAL", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" ,"BLOOM" , "UI", "OCCLUSION"  , "PRESHADOW" };
 	const char* pEffectType[] = { "EFFECT" , "TRAIL" };
 	const char* pShaderPass[] = { "DEFAULT" , "SCISSOR" , "UI" , "UVMOVE" , "TRAIL" , "TRAIL_BLEND" , "TRAILWB_FOR_BLEND" , "TRAIL_BLUR",  "TRAIL_BLOOM" };
 	const char* pBloomType[] = { "NONE" , "BASIC" , "MUILTY" };

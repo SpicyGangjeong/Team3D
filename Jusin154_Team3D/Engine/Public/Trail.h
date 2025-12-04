@@ -29,7 +29,6 @@ public:
 
 public:
 	void	Fixed_Trail(_fmatrix WorldMatrix);
-
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -48,8 +47,8 @@ private:
 	
 	_uint		m_iNumCount = {};
 
-	_vector	    m_PreHigh[2] = {};
-	_vector	    m_PreLow[2] = {};
+	_float3	    m_PreHigh[2] = {};
+	_float3	    m_PreLow[2] = {};
 
 	_vector     m_PreFixedHigh[3] = {};
 	_vector     m_PreFixedLow[3] = {};
