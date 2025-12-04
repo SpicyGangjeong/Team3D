@@ -82,7 +82,7 @@ public:
 
 
 private:
-	// 추가
+	// UI 연동 추가
 	void Get_Spell(_int SkillIndex);
 	_int Index{-1};
 
