@@ -1021,6 +1021,8 @@ HRESULT CLoader::Loading_For_Effect()
 			Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
 			Desc.eLockFlag = {};
 			Desc.vAutoDamping = { };
+			Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
+			Desc.vLocalTranslation = { 0.f, 0.f, 0.f };
 		}
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
 			return E_FAIL;
@@ -1039,6 +1041,8 @@ HRESULT CLoader::Loading_For_Effect()
 			Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
 			Desc.eLockFlag = {};
 			Desc.vAutoDamping = { 100.f, 100.f };
+			Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
+			Desc.vLocalTranslation = { 0.f, 0.f, 0.f };
 		}
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_HEAVY_WALL"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
 			return E_FAIL;
@@ -1365,6 +1369,8 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 			Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
 			Desc.eLockFlag = {};
 			Desc.vAutoDamping = { };
+			Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
+			Desc.vLocalTranslation = { 0.f, 0.f, 0.f };
 		}
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
 			return E_FAIL;
@@ -1384,6 +1390,8 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 			Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
 			Desc.eLockFlag = {};
 			Desc.vAutoDamping = { 100.f, 100.f };
+			Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
+			Desc.vLocalTranslation = { 0.f, 0.f, 0.f };
 		}
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_HEAVY_WALL"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
 			return E_FAIL;
@@ -1403,6 +1411,8 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 			Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
 			Desc.eLockFlag = { PSX::PxRigidDynamicLockFlag::eLOCK_ANGULAR_X | PSX::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z | PSX::PxRigidDynamicLockFlag::eLOCK_LINEAR_Y };
 			Desc.vAutoDamping = { 10.f, 10.f };
+			Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
+			Desc.vLocalTranslation = { 0.f, 0.f, 0.f };
 		}
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_PLATFORM"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
 			return E_FAIL;
@@ -1420,6 +1430,8 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 			Desc.vhalfGeometryInfo = { 3.5f, 1.5f, 0.25f };
 			Desc.fDensity = 10.f;
 			PSX::PxTransform pxPivotTransform = PSX::PxTransform(PSX::PxVec3(3.5f, 1.5f, 0.f));
+			Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
+			Desc.vLocalTranslation = { 0.f, 0.f, 0.f };
 
 			Desc.pxMassCenter = pxPivotTransform;
 			Desc.eLockFlag = {
@@ -1452,6 +1464,8 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 			Desc.pxMassCenter = pxPivotTransform;
 			Desc.eLockFlag = { };
 			Desc.vAutoDamping = { 10.f, 10.f };
+			Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
+			Desc.vLocalTranslation = { 0.f, 0.f, 0.f };
 		}
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_DOOR"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
 			return E_FAIL;
@@ -1859,6 +1873,8 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
 		Desc.eLockFlag = {};
 		Desc.vAutoDamping = { 100.f, 100.f };
+		Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
+		Desc.vLocalTranslation = { 0.f, 0.f, 0.f };
 	}
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_HEAVY_WALL"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
