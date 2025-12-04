@@ -42,8 +42,6 @@ private:
 	_float2 m_vStunTimer = { 0.f, 4.f };
 	_uint iIndex;
 
-	_bool m_bLookAt = { true };
-
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -65,10 +63,11 @@ private:
 	virtual void Set_Anim();
 
 	_float m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::END)] = {};
-	_float m_fMaxSkillCoolTime[ENUM_CLASS(TROLL_SKILL::END)] = { 20.f,15.f, 10.f, 5.f ,10.f};
+	_float m_fMaxSkillCoolTime[ENUM_CLASS(TROLL_SKILL::END)] = { 20.f,15.f, 7.f, 5.f ,10.f};
 
 
 	_float m_fRushTime = {};
+	_float m_fAttackDelay = {};
 
 
 	void	Behavior_IdleEnter();
@@ -76,7 +75,7 @@ private:
 	void	Behavior_IdleExit();
 
 	void	Behavior_MoveEnter();
-	HRESULT Behavior_MoveExitCheck();
+	HRESULT Behavior_MoveExitCheck(_float fTimeDelta);
 	void	Behavior_MoveExit();
 
 	void	Behavior_CombatEnter();
