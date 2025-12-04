@@ -257,17 +257,28 @@ void CRigidBody_Dynamic::Describe_Entity()
 	if (GUI::DragFloat3("##LocalPos", (_float*)&m_vLocalTranslation, 0.125f, -10.f, 10.f, "%.4f")) {
 		Move_LocalPos(m_vLocalRotQ, m_vLocalTranslation);
 	}
-	_vector forward = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), XMLoadFloat4(&m_vLocalRotQ));
-	_vector up = XMVector3Rotate(XMVectorSet(0, 1, 0, 0), XMLoadFloat4(&m_vLocalRotQ));
+	_vector q = XMLoadFloat4(&m_vLocalRotQ);
 
-	_float fYaw		= atan2f(XMVectorGetX(forward), XMVectorGetZ(forward));
-	_float fPitch	= asinf(-XMVectorGetY(forward));
-	_float fRoll	= atan2f(XMVectorGetY(up), XMVectorGetY(forward));
-	_float3 vRPY = { fPitch, fYaw, fRoll };
+	// 기본 방향벡터 (엔진 기준)
+	_vector forward = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), q);
+	_vector right = XMVector3Rotate(XMVectorSet(1, 0, 0, 0), q);
+	_vector up = XMVector3Rotate(XMVectorSet(0, 1, 0, 0), q);
 
-	GUI::Text("Rotation Roll Pitch Yaw"); GUI::SameLine();
-	if (GUI::DragFloat3("##LocalRotq", (_float*)&vRPY, XMConvertToRadians(0.5f), -XM_2PI, XM_2PI, "%.5f")) {
-		_vector vRotq = XMQuaternionRotationRollPitchYaw(vRPY.x, vRPY.y, vRPY.z);
+	// --- RPY 계산 ---
+	_float fYaw = atan2f(XMVectorGetX(forward), XMVectorGetZ(forward));
+	_float fPitch = asinf(-XMVectorGetY(forward));
+	_float fRoll = atan2f(XMVectorGetY(right), XMVectorGetY(up)); // 수정된 Roll 계산
+
+	_float3 vRPY = { fRoll, fPitch, fYaw }; // Roll-Pitch-Yaw 순서 정렬
+
+	// --- GUI 편집 ---
+	GUI::Text("Rotation (Roll Pitch Yaw)");
+	GUI::SameLine();
+	if (GUI::DragFloat3("##LocalRotq", (_float*)&vRPY,
+		XMConvertToRadians(0.5f), -XM_2PI, XM_2PI, "%.5f"))
+	{
+		// XMQuaternionRotationRollPitchYaw는 (Yaw→Pitch→Roll) 순서
+		_vector vRotq = XMQuaternionRotationRollPitchYaw(vRPY.z, vRPY.y, vRPY.x);
 		XMStoreFloat4(&m_vLocalRotQ, vRotq);
 		Move_LocalPos(m_vLocalRotQ, m_vLocalTranslation);
 	}
