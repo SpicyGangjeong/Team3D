@@ -18,6 +18,8 @@ float g_fFocusDistance;
 float g_fFarBlurStart;
 float g_fFarBlurEnd;
 float g_fDOFBlurMultiplier;
+float g_fSSAO_BIAS;
+bool g_bSSAO_INVERT;
 
 Texture2D   g_Texture;
 Texture2D   g_SSAONoiseTexture;
@@ -910,52 +912,60 @@ struct PS_OUT_SSAO_AMBIENT_OCCLUSION
 PS_OUT_SSAO_AMBIENT_OCCLUSION PS_SSAO_AMBIENT_OCCLUSION(PS_IN In)
 {
     PS_OUT_SSAO_AMBIENT_OCCLUSION Out;
+    float2 uv = In.vTexcoord;
     
-    vector vWorldPosition;
-    vector vDepthDesc = g_DepthTexture.Sample(DefaultSampler, In.vTexcoord);
-    float fViewZ = vDepthDesc.y * g_fFar;
+    float4 vDepthDesc       = g_DepthTexture.Sample(PointSampler, uv);
+    float fCenterViewSpaceZ = vDepthDesc.y * g_fFar; // n ~ f
     
-    vWorldPosition.x = In.vTexcoord.x * 2.f - 1.f;
-    vWorldPosition.y = In.vTexcoord.y * -2.f + 1.f;
-    vWorldPosition.z = vDepthDesc.x;
-    vWorldPosition.w = 1.f;
+    float4 vCenterViewPosition;
+    {
+        vCenterViewPosition.x = uv.x * 2    - 1;
+        vCenterViewPosition.y = uv.y * -2   + 1;
+        vCenterViewPosition.z = vDepthDesc.x;
+        vCenterViewPosition.w = 1.f;
+        vCenterViewPosition *= fCenterViewSpaceZ;
+        vCenterViewPosition = mul(vCenterViewPosition, g_invmatProj);
+    }
+    float3 vNormal = normalize(g_NormalTexture.Sample(PointSampler, uv).xyz * 2.f - 1.f);
+    float3 vCenterViewNormal = mul(vNormal, (float3x3) g_ViewMatrix);
+    float3 vCenterProjNormal = mul(vCenterViewNormal, (float3x3) g_ProjMatrix);
     
-    vWorldPosition = vWorldPosition * fViewZ;
+    float2 vNoiseScale = g_vResolution / 4.f;
+    float3 vNoise = g_SSAONoiseTexture.Sample(SsaoDataSampler, uv * vNoiseScale).xyz;
     
-    vector vViewPosition = vWorldPosition = mul(vWorldPosition, g_invmatProj);
-    vViewPosition /= vViewPosition.w;
-    
-    float2 vTexcoord = In.vTexcoord;
-    float3 vNormal = normalize(g_NormalTexture.Sample(DefaultSampler, vTexcoord).xyz * 2.f - 1.f);
-    vNormal = mul(vNormal, (float3x3)g_ViewMatrix);
-    float2 vNoiseScale = float2(g_vResolution / 4.f);
-    
-    float3 vNoise = g_SSAONoiseTexture.Sample(SsaoDataSampler, vTexcoord * vNoiseScale).xyz;
-    
-    float3 vTangent = normalize(vNoise - vNormal * dot(vNoise, vNormal));
-    float3 vBiNormal = cross(vNormal.xyz, vTangent.xyz);
-    float3x3 TBNMatrix = float3x3(vTangent.xyz, vBiNormal.xyz, vNormal.xyz);
+    float3 vTangent = normalize(vNoise - vCenterViewNormal * dot(vNoise, vCenterViewNormal));
+    float3 vBiNormal = cross(vCenterViewNormal, vTangent);
+    float3x3 toViewTBNMatrix = float3x3(vTangent, vBiNormal, vCenterViewNormal);
     
     float fOcclusion = 0.f;
     for (uint i = 0; i < g_iKernelSize; ++i)
     {
-        float3 vSample = mul(SamplePos[i], TBNMatrix);
-        vSample = vViewPosition.xyz + vSample * g_fSSAORadius;
+        float3 vViewSamplePosVec = mul(SamplePos[i], toViewTBNMatrix); // TANSPACE -> VIEW
+        float4 vViewSamplePos = vCenterViewPosition + float4(vViewSamplePosVec * g_fSSAORadius, 0.f);
+        float4 vNDCSampleOffset = mul(vViewSamplePos, g_ProjMatrix);
+        vNDCSampleOffset /= vNDCSampleOffset.w;
         
-        float4 vOffset = float4(vSample, 1.f);
-        vOffset = mul(vOffset, g_ProjMatrix); // view -> clip
-        vOffset.xyz /= vOffset.w;
-        vOffset.xyz = vOffset.xyz * 0.5 + 0.5;
-        float fCenterViewZ = fViewZ;
-        
-        float fSampleViewDepth = g_DepthTexture.Sample(DefaultSampler, vOffset.xy).y * g_fFar;
-        
-        float fSamplePosViewZ = vSample.z;
-        const float fBias = 0.1f; 
-        float fIsOccluded = (fSampleViewDepth <= fCenterViewZ - fBias) ? 1.0f : 0.0f;
+        float2 sampleUV = vNDCSampleOffset.xy * 0.5f + 0.5f; 
+        // 스크린 밖이면 스킵
+        if (sampleUV.x < 0 || sampleUV.x > 1 
+         || sampleUV.y < 0 || sampleUV.y > 1) {
+            continue;
+        }
 
-        float fRangeCheck = smoothstep(0.f, 1.f, g_fSSAORadius / abs(vViewPosition.z - fSampleViewDepth));
-        fOcclusion += fIsOccluded * fRangeCheck;
+        float fRecordedSampleViewPosDepth = g_DepthTexture.Sample(PointSampler, sampleUV).y * g_fFar;
+        float fIsOccluded = 1.f;
+        if (g_bSSAO_INVERT)
+        {
+            fIsOccluded = (fRecordedSampleViewPosDepth < vViewSamplePos.z - g_fSSAO_BIAS) ? 1.0f : 0.0f;
+        }
+        else
+        {
+            fIsOccluded = (fRecordedSampleViewPosDepth > vViewSamplePos.z - g_fSSAO_BIAS) ? 1.0f : 0.0f;
+        }
+
+        float fRangeCheck = smoothstep(0.f, 1.f, g_fSSAORadius / abs(vViewSamplePos.z - fRecordedSampleViewPosDepth));
+        fIsOccluded *= fRangeCheck;
+        fOcclusion += fIsOccluded;
     }
     fOcclusion = (1.f - (fOcclusion / g_iKernelSize));
     Out.fOcclusion = fOcclusion;

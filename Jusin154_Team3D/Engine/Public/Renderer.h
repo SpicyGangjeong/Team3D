@@ -44,6 +44,7 @@ private:
 	ID3D11DepthStencilView*		m_pPreShadowDSV = { nullptr };
 	ID3D11ShaderResourceView*	m_pSSAO_NoiseSRV = { nullptr };
 	ID3D11Texture2D*			m_pSSAO_NoiseTexture = { nullptr };
+	ID3D11Buffer*				m_pGlobalStaticCB = { nullptr };
 
 	SHADOW_LIGHT_DESC			m_PreShadowDesc = {};
 	_float4x4					m_PreShadowMatrices[ENUM_CLASS(D3DTS::END)] = {};

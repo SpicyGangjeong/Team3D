@@ -86,7 +86,7 @@ void CRenderer::Fill_Geometry(_uint iNumSample)
 		vPos = {
 			rand_Minus(m_Rng),
 			rand_Minus(m_Rng),
-			rand_Normal(m_Rng), 0.f
+			rand_Minus(m_Rng)
 		};
 		vPos = XMVector3Normalize(vPos) * rand_Normal(m_Rng);
 		fScale = ((_float)iIndexSample / (_float)iNumSample);
@@ -98,7 +98,9 @@ void CRenderer::Fill_Geometry(_uint iNumSample)
 	for (_uint iIndexDir = 0; iIndexDir < 16; ++iIndexDir) {
 		m_tagSSAOGeometryDirections.vDir[iIndexDir] = {
 			rand_Minus(m_Rng),
-			rand_Minus(m_Rng)
+			rand_Minus(m_Rng),
+			rand_Minus(m_Rng),
+			0.f
 		};
 	}
 	D3D11_TEXTURE2D_DESC texDesc = {};
@@ -106,7 +108,7 @@ void CRenderer::Fill_Geometry(_uint iNumSample)
 	texDesc.Height = 4;
 	texDesc.MipLevels = 1;
 	texDesc.ArraySize = 1;
-	texDesc.Format = DXGI_FORMAT_R32G32_FLOAT;
+	texDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	texDesc.SampleDesc.Count = 1;
 	texDesc.SampleDesc.Quality = 0;
 	texDesc.Usage = D3D11_USAGE_IMMUTABLE;
@@ -114,7 +116,7 @@ void CRenderer::Fill_Geometry(_uint iNumSample)
 
 	D3D11_SUBRESOURCE_DATA initData = {};
 	initData.pSysMem = &m_tagSSAOGeometryDirections;
-	initData.SysMemPitch = sizeof(_float2);
+	initData.SysMemPitch = sizeof(_float4);
 
 	if (FAILED(m_pDevice->CreateTexture2D(&texDesc, &initData, &m_pSSAO_NoiseTexture))) {
 		assert(false);
@@ -130,7 +132,6 @@ void CRenderer::Fill_Geometry(_uint iNumSample)
 	m_pDevice->CreateShaderResourceView(m_pSSAO_NoiseTexture, &srvDesc, &m_pSSAO_NoiseSRV);
 
 
-	ID3D11Buffer* pGlobalStaticCB = nullptr;
 	{
 		D3D11_BUFFER_DESC desc = {};
 		desc.ByteWidth = sizeof(SSAO_GEOMETRY_HEMISPHERE);
@@ -140,12 +141,12 @@ void CRenderer::Fill_Geometry(_uint iNumSample)
 
 		D3D11_SUBRESOURCE_DATA initData = {};
 		initData.pSysMem = &m_tagSSAOGeometry;
-		initData.SysMemPitch = sizeof(_float);
+		initData.SysMemPitch = sizeof(_float4);
 
-		HRESULT hr = m_pDevice->CreateBuffer(&desc, &initData, &pGlobalStaticCB);
+		HRESULT hr = m_pDevice->CreateBuffer(&desc, &initData, &m_pGlobalStaticCB);
 
-		m_pContext->VSSetConstantBuffers(10, 1, &pGlobalStaticCB);
-		m_pContext->PSSetConstantBuffers(10, 1, &pGlobalStaticCB);
+		m_pContext->VSSetConstantBuffers(10, 1, &m_pGlobalStaticCB);
+		m_pContext->PSSetConstantBuffers(10, 1, &m_pGlobalStaticCB);
 	}
 }
 HRESULT CRenderer::Initialize()

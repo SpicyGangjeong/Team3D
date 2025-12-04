@@ -447,7 +447,7 @@ typedef struct tagSSAO_Geometry_Hemisphere {
 }SSAO_GEOMETRY_HEMISPHERE;
 
 typedef struct tagSSAO_GeometryDirections_RANDOM_REAL {
-	_float2 vDir[16];
+	_float4 vDir[16];
 }SSAO_GEOMETRYDIRECTIONS_RANDOM_REAL;
 
 NS_END
