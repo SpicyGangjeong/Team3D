@@ -1,5 +1,7 @@
 ﻿#include "pch.h"
 #include "VIBuffer_Model_Instance.h"
+#include "GameInstance.h"
+
 #include "Mesh.h"
 #include "Bone.h"
 #include "Model.h"
@@ -268,11 +270,10 @@ HRESULT CVIBuffer_Model_Instance::Ready_Materials()
 		{
 			ID3D11ShaderResourceView* pSRV = { nullptr };
 
-			if (FAILED(CreateDDSTextureFromFile(m_pDevice, CMyTools::ToWstring(m_MeshMaterialPathes[i][j]).c_str(), nullptr, &pSRV)))
-			{
-				if (FAILED(CreateWICTextureFromFile(m_pDevice, CMyTools::ToWstring(m_MeshMaterialPathes[i][j]).c_str(), nullptr, &pSRV)))
-					return E_FAIL;
-			}
+			pSRV = m_pGameInstance->Add_Resource(m_MeshMaterialPathes[i][j].c_str());
+
+			if (nullptr == pSRV)
+				return E_FAIL;
 
 			SRVs.push_back(pSRV);
 		}
