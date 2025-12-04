@@ -29,6 +29,14 @@ namespace Client
 		,END
 	};
 	enum class BLOOM_TYPE { NONE, BASIC, MULTIPLY, END };
+
+	enum class KEYINPUT
+	{
+		INPUT_1, INPUT_2, INPUT_3, INPUT_4,
+		INPUT_T,
+		INPUT_TAB,
+		END
+	};
 }
 
 

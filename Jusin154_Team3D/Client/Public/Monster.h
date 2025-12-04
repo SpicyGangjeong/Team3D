@@ -18,6 +18,7 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render_OutLine() override;
 	virtual void Set_DrawOutLine();
+	_float4 Get_TargetPos() { return m_vTargetPos; }
 
 protected:
 	CInfoInstance*	m_pInfoInstance = { nullptr };

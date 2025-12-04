@@ -494,8 +494,16 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 							{
 								pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
 							}
-							else
-								pairAnimInfo = m_Animation[STATEANIM::JOG_LEFT];
+							else {
+								if (m_pModelCom->IsFinishedAnim() && iCurrentAnimIndex == m_Animation[STATEANIM::JOG_LEFT].first)
+								{
+									pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
+								}
+								else {
+									pairAnimInfo = m_Animation[STATEANIM::JOG_LEFT];
+								}
+
+							}
 						}
 
 						m_fAmount = 0.5f;
@@ -516,8 +524,16 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 							{
 								pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
 							}
-							else
-								pairAnimInfo = m_Animation[STATEANIM::JOG_RIGHT];
+							else {
+								if (m_pModelCom->IsFinishedAnim() && iCurrentAnimIndex == m_Animation[STATEANIM::JOG_RIGHT].first)
+								{
+									pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
+								}
+								else {
+									pairAnimInfo = m_Animation[STATEANIM::JOG_RIGHT];
+								}
+
+							}
 						}
 
 						m_fAmount = 0.5f;
@@ -531,7 +547,14 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 					}
 					else if (m_pFSM->IsEnable(FSMSTATE::JOG))
 					{
-						pairAnimInfo = m_Animation[STATEANIM::JOG_BWD];
+						if (m_pModelCom->IsFinishedAnim() && iCurrentAnimIndex == m_Animation[STATEANIM::JOG_BWD].first)
+						{
+							pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
+						}
+						else
+						{
+							pairAnimInfo = m_Animation[STATEANIM::JOG_BWD];
+						}
 					}
 					else if (m_pFSM->IsEnable(FSMSTATE::WALK))
 					{

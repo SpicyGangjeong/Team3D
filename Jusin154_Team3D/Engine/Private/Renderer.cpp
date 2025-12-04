@@ -91,6 +91,10 @@ void CRenderer::Render_PreShadow()
 
 void CRenderer::Render_Occlusion()
 {
+	if (FAILED(m_pGameInstance->Begin_MRT_NonClear(TEXT("MRT_Combined")))) {
+		return;
+	}
+
 	m_RenderObjects[ENUM_CLASS(RENDER::OCCLUSION)].sort([](CGameObject* pSour, CGameObject* pDest)->_bool {
 		return pSour->Get_Depth() < pDest->Get_Depth();
 		});
@@ -107,6 +111,10 @@ void CRenderer::Render_Occlusion()
 	}
 
 	m_RenderObjects[ENUM_CLASS(RENDER::OCCLUSION)].clear();
+
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
+	}
 }
 
 void CRenderer::Render_Priority()

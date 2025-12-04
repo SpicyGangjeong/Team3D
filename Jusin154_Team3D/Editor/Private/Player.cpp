@@ -74,8 +74,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
 
-	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
-	SAFE_ADDREF(m_pEffectPool);
+	//m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
+	//SAFE_ADDREF(m_pEffectPool);
 
 	return S_OK;
 }

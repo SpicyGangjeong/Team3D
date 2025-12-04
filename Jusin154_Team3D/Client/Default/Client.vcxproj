@@ -164,6 +164,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Current_Spell_Slot.h" />
     <ClInclude Include="..\Public\Eessential_Spell.h" />
     <ClInclude Include="..\Public\Eessential_Spell_Slot.h" />
+    <ClInclude Include="..\Public\Goblin_Dagger.h" />
     <ClInclude Include="..\Public\HpBarBG.h" />
     <ClInclude Include="..\Public\Levioso.h" />
     <ClInclude Include="..\Public\Magic_Icon.h" />
@@ -284,6 +285,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Current_Spell_Slot.cpp" />
     <ClCompile Include="..\Private\Eessential_Spell.cpp" />
     <ClCompile Include="..\Private\Eessential_Spell_Slot.cpp" />
+    <ClCompile Include="..\Private\Goblin_Dagger.cpp" />
     <ClCompile Include="..\Private\HpBarBG.cpp" />
     <ClCompile Include="..\Private\Levioso.cpp" />
     <ClCompile Include="..\Private\Magic_Icon.cpp" />

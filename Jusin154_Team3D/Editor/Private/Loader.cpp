@@ -1981,6 +1981,11 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	));
 
 	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::NONANIM, "../Bin/Resources/Models/Object/Goblin_Dagger/Dagger.fbx", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f)* XMMatrixIdentity(),
+		TEXT("Prototype_Component_Dagger_Model")
+	));
+
+	futures.emplace_back(Deferred_ModelLoad(
 		MODEL::ANIM, "../Bin/Resources/Models/Human/Npc/Npc.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
 		TEXT("Prototype_Component_Npc_Model")
 	));
@@ -2099,6 +2104,9 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	if (FAILED(m_pGameInstance->Add_Prototype<CBombard>(g_iStaticLevel, CBombard::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CEffectPool>(g_iStaticLevel, CEffectPool::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	m_strMessage = TEXT("Loading Success!");
 

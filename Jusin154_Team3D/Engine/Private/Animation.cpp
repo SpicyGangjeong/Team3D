@@ -42,7 +42,7 @@ _bool CAnimation::Update_TransformationMatrices(const vector<class CBone*>& Bone
 
 	if (m_fCurrentTrackPosition >= m_fDuration) {
 		if (false == bIsLoop) {
-			m_fCurrentTrackPosition = 0.f;
+			m_fCurrentTrackPosition = m_fDuration;
 			m_fTempTrack = 0.f;
 			return true;
 		}
