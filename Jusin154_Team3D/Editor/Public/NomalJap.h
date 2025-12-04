@@ -39,7 +39,7 @@ private:
 	class CPartObject* m_pProjectile_Side = {};
 
 	_float3 						  m_vRotateUp = {};
-	_float							  m_fAccTime = {};
+	_float							  m_fAccMoveTime = {};
 	_float							  m_fLerpAmount = {};
 	_float							  m_fTurnValue = {};
 

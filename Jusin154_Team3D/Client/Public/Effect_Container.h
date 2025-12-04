@@ -50,6 +50,7 @@ protected:
 	_float							m_fDuration = {};
 	_float							m_fDelay = {};
 	_bool							m_isDelayed = { false };
+	_bool							m_isCollisionEnter = { false };
 
 	map<_float, function<void()>>	m_Events = {};
 

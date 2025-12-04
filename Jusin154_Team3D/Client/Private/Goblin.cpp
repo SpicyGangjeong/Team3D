@@ -157,7 +157,6 @@ HRESULT CGoblin::Render()
 		}
 	}
 #endif
-
 	return S_OK;
 }
 

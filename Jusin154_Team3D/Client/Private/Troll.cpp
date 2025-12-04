@@ -333,6 +333,8 @@ void CTroll::Describe_Entity()
 {
 	GUI::Begin("Troll");
 
+	GUI::Checkbox("LookAt", &m_bLookAt);
+
 	string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
 	GUI::Text(AnimList.c_str());
 
@@ -350,7 +352,6 @@ void CTroll::Describe_Entity()
 	{
 		m_pCharacter_Controller->Set_Position(XMLoadFloat3(&Pos));
 	}
-
 
 	GUI::End();
 

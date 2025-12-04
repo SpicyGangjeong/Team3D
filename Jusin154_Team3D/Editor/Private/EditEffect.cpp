@@ -84,6 +84,7 @@ void CEditEffect::Late_Update(_float fTimeDelta)
 	}
 
 
+
 	if (m_isWandPos == true)
 	{
 		_vector vWandPos = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_PLAYER)->Get_Object<CPlayer>()->Get_PartObject<CWand>()->Get_WorldPostion();
@@ -432,6 +433,7 @@ void CEditEffect::Describe_Entity()
 		m_EffectInfo.eRenderOrder = static_cast<RENDER>(iCurrentItem);
 	}
 
+
 	if (ImGui::Combo("Effect Type", &iCurrentType, pEffectType, ENUM_CLASS(EFFECT_TYPE::END)))
 	{
 		m_EffectInfo.eEffectType = static_cast<EFFECT_TYPE>(iCurrentType);
@@ -441,7 +443,6 @@ void CEditEffect::Describe_Entity()
 	{
 		m_EffectInfo.eShaderPass = static_cast<SHADER_PASS_INSTANCE_MODEL>(iCurrentPass);
 	}
-
 
 
 	GUI::Checkbox("Visible", &m_bVisible);
@@ -725,13 +726,22 @@ void CEditEffect::Describe_Entity()
 				GUI::Checkbox("Nomal Dissolve", &m_EffectInfo.isNomalDissolve);
 				GUI::Checkbox("Reverse Dissolve", &m_EffectInfo.isReverseDissolve);
 
+				ImGui::PushItemWidth(80);
 				GUI::Spacing();
 				GUI::Checkbox("DissolveMove", &m_EffectInfo.isDissolveMove);
 				GUI::DragFloat2("DissolveUVGainAmount", (_float*)&m_EffectInfo.vDissolveUVGainAmount, 0.01f);
+
+				GUI::Spacing();
 				GUI::DragFloat("DissolveDelay", &m_EffectInfo.fDissolveDelay, 0.005f);
 				GUI::DragFloat("ReverseDissolveDelay", &m_EffectInfo.fReverseDissolveDelay, 0.005f);
 
+				GUI::Spacing();
 
+				GUI::DragFloat("DissolveMaskEdge", &m_EffectInfo.vDissolveValue.x, 0.005f);
+				GUI::DragFloat("DissolveSoftMask", &m_EffectInfo.vDissolveValue.y, 0.005f);
+				GUI::DragFloat("DissolveCutRatio", &m_EffectInfo.vDissolveValue.z, 0.005f);
+
+				ImGui::PopItemWidth();
 				_string strName  = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISSOLVE_TEXTURE", (CComponent**)&m_pDissolve_TextureCom, nullptr, this);
 				
 				if (strName != "") {

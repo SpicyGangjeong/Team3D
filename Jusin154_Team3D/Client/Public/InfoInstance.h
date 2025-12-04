@@ -13,7 +13,7 @@ NS_BEGIN(Client)
 
 class CInfoInstance final : public CBase
 {
-	DECLARE_SINGLETON(CInfoInstance)
+DECLARE_SINGLETON(CInfoInstance)
 private:
 	CInfoInstance();
 	virtual ~CInfoInstance() = default;
@@ -46,6 +46,7 @@ public:
 	HRESULT Load_SpellInfo(const _char* pFilePath);
 	SPELL_INFO Get_Spell_Info(_int Spell_Info);
 	void Change_Canvas();
+	void Key_Input(_uint Input);
 #pragma endregion
 private:
 	CGameInstance*				m_pGameInstance = { nullptr };
@@ -56,7 +57,7 @@ private:
 	class CMonsterInfo*			m_pMonsterInfo = { nullptr };
 	class CMapInfo*				m_pMapInfo = { nullptr };
 	class CSkill_Data*			m_pSkillInfo= { nullptr };
-
+	_uint						m_eInput = ENUM_CLASS(KEYINPUT::END);
 
 #ifdef _DEBUG
 	_string m_strLog = {};

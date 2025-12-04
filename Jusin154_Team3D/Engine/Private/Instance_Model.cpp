@@ -547,7 +547,8 @@ void CInstance_Model::Drop(_float fTimeDelta)
 		pDesc->isSizeLerp = m_InstanceDesc.isSizeLerp;
 		pDesc->isNoWorld = m_InstanceDesc.isNoWorld;
 		pDesc->WorldMatrix = *m_pOwner->Get_Component<CTransform>()->Get_WorldMatrixPtr();
-		
+		pDesc->fSizeLerpOption = m_InstanceDesc.fSizeLerpOption;
+		pDesc->fMoveLerpOption = m_InstanceDesc.fMoveLerpOption;
 
 		m_pContext->Unmap(m_pConstantBuffer, 0);
 	}
@@ -793,6 +794,8 @@ void CInstance_Model::Describe_Entity()
 {
 	if (ImGui::TreeNode("Model Option"))
 	{
+		const char* pLerp[] = { "Linear" , "EaseInQuad", "EaseOutQuad", "EaseInCubic" , "EaseOutCubic" , "EaseInOutSin" , "EaseInBack" , "Expo" , "Circle" };
+
 		ImGui::Separator(); ImGui::Spacing();
 		ImGui::PushItemWidth(120);
 
@@ -923,6 +926,7 @@ void CInstance_Model::Describe_Entity()
 		{
 			Instane_Buffer_ReStruct();
 		}
+
 		if (ImGui::DragFloat2("AniIndex", reinterpret_cast<_float*>(&m_InstanceDesc.vAniIndex)))
 		{
 			Instane_Buffer_ReStruct();
@@ -964,6 +968,14 @@ void CInstance_Model::Describe_Entity()
 			Instane_Buffer_ReStruct();
 		}
 
+		_int iMoveLerpOption = (_int)m_InstanceDesc.fMoveLerpOption;
+
+		if (ImGui::Combo("Move Lerp Option", &iMoveLerpOption, pLerp, 9))
+		{
+			Instane_Buffer_ReStruct();
+
+			m_InstanceDesc.fMoveLerpOption = (_float)iMoveLerpOption;
+		}
 
 		if (ImGui::DragFloat3("PivotMin", reinterpret_cast<_float*>(&m_InstanceDesc.vPivotMin)))
 		{
@@ -978,6 +990,16 @@ void CInstance_Model::Describe_Entity()
 		if (ImGui::DragFloat2("Drag", reinterpret_cast<_float*>(&m_InstanceDesc.vDrag)))
 		{
 			Instane_Buffer_ReStruct();
+		}
+
+
+		_int iSizeLerpOption = (_int)m_InstanceDesc.fSizeLerpOption;
+
+		if (ImGui::Combo("Size Lerp Option", &iSizeLerpOption, pLerp, 9))
+		{
+			Instane_Buffer_ReStruct();
+
+			m_InstanceDesc.fSizeLerpOption = (_float)iSizeLerpOption;
 		}
 
 		if (ImGui::DragFloat3("LerpSizeAmount", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaSize)))

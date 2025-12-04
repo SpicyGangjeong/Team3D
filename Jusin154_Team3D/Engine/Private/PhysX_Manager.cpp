@@ -163,20 +163,7 @@ PSX::PxMaterial* CPhysX_Manager::Create_Material(const _float3* vMatInfo)
 
 _bool CPhysX_Manager::SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
 {
-	PSX::PxSphereGeometry sphereGeom(fRadius);
-
-	PSX::PxVec3 startPos(vStartPos.x, vStartPos.y, vStartPos.z);
-	PSX::PxQuat startRot(PSX::PxIdentity);
-
-	PSX::PxTransform startPose(startPos, startRot);
-
-	PSX::PxVec3 sweepDir(vDir.x, vDir.y, vDir.z);
-
-	sweepDir.normalize();
-
-	PSX::PxQueryFilterData filterData(flagQuery);
-	
-	return m_pScene->sweep(sphereGeom, startPose, sweepDir, fDistance, hitBuffer, flagHitsData, filterData);
+	return SphereCast(fRadius, XMLoadFloat3(&vStartPos), XMLoadFloat3(&vDir), fDistance, flagHitsData, flagQuery, hitBuffer);
 }
 
 _bool CPhysX_Manager::SphereCast(_float fRadius, _fvector _vStartPos, _fvector _vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
@@ -199,6 +186,7 @@ _bool CPhysX_Manager::SphereCast(_float fRadius, _fvector _vStartPos, _fvector _
 	sweepDir.normalize();
 
 	PSX::PxQueryFilterData filterData(flagQuery);
+
 	_bool bHit = m_pScene->sweep(sphereGeom, startPose, sweepDir, fDistance, hitBuffer, flagHitsData, filterData);
 
 	return bHit;

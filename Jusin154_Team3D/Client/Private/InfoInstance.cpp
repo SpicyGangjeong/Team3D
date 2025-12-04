@@ -103,6 +103,11 @@ void CInfoInstance::Change_Canvas()
 {
 
 }
+void CInfoInstance::Key_Input(_uint Input)
+{
+	m_eInput = Input;
+}
+
 #pragma endregion
 LEVEL CInfoInstance::Get_RestartLevel()
 {

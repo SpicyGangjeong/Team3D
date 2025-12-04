@@ -35,7 +35,6 @@ private:
 	class CPlayer*	 m_pPlayer = {};
 
 	class CEditEffect*  m_pLeviosoPJ_0   = { nullptr };
-	class CEditEffect*  m_pLeviosoPJ_1   = { nullptr };
 	class CTrailObject* m_pLeviosoTrail  = { nullptr };
 	class CEditEffect*  m_pTrail_PT_0 = { nullptr };
 
