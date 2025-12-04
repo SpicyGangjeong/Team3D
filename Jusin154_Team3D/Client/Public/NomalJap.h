@@ -32,24 +32,25 @@ private:
 	HRESULT			Bind_ShaderResources() override;
 	virtual void	OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr) override;
 private:
-	CInfoInstance*					  m_pInfoInstance = { nullptr };
-	_wstring						  m_wstrEffectName = {};
+	CInfoInstance*						m_pInfoInstance = { nullptr };
+	_wstring							m_wstrEffectName = {};
 
-	class CPartObject*				  m_pProjectile = {};
-	class CPartObject*				  m_pProjectile_Side = {};
+	class CPartObject*					m_pProjectile = {};
+	class CPartObject*					m_pProjectile_Side = {};
 
-	_float3 						  m_vRotateUp = {};
-	_float							  m_fAccMoveTime = {};
-	_float							  m_fLerpAmount = {};
-	_float							  m_fTurnValue = {};
+	_float3 							m_vRotateUp = {};
+	_float								m_fAccMoveTime = {};
+	_float								m_fLerpAmount = {};
+	_float								m_fTurnValue = {};
 
-	CUnit*							  m_pTargetUnit = { nullptr }; // 발사될 당시 대상
-	_float3							  m_vDirection = { 0.f, 0.f, 1.f };
-	_float4							  m_vStartPos = { 0.f, 0.f, 0.f, 1.f }; // 현재 발사 된 위치
-	_float4							  m_vTargetPos = { 0.f, 0.f, 10.f, 1.f }; // 현재 타게팅 된 위치
-	_float							  m_fAngularSpeed = XM_2PI / 0.3f;
-	_float							  m_fLinearSpeed = 1.f;
-	_bool							  m_bTrailPulseEnded = false;
+	CUnit*								m_pTargetUnit = { nullptr }; // 발사될 당시 대상
+	_float3								m_vDirection = { 0.f, 0.f, 1.f };
+	_float4								m_vStartPos = { 0.f, 0.f, 0.f, 1.f }; // 현재 발사 된 위치
+	_float4								m_vTargetPos = { 0.f, 0.f, 10.f, 1.f }; // 현재 타게팅 된 위치
+	_float								m_fAngularSpeed = XM_2PI / 0.3f;
+	_float								m_fLinearSpeed = 1.f;
+	_bool								m_bTrailPulseEnded = false;
+	_float4								m_vSrcPos = {};
 public:
 	static CNomalJap* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

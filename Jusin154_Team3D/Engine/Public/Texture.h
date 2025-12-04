@@ -32,8 +32,12 @@ private:
 	HRESULT ParseTexturePathToSRVs(const _tchar* pTextureFolderPath);
 
 private:
-	vector<ID3D11ShaderResourceView*>				m_SRVs = { };
+	vector<ID3D11ShaderResourceView*>				m_SRVs = {};
+
+#ifdef EDITOR_PROJECT
 	_wstring										m_wstrPrototypeName = {};
+#endif // 
+
 public:
 	static CTexture* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TEXTURE_LOAD_TYPE eType, const _tchar* pTextureFilePath, _uint iNumTextures, _wstring wstrPrototypeName = L"");
 	virtual CComponent* Clone(void* pArg, class CGameObject* pOwner = nullptr) override;
