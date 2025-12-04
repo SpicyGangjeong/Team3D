@@ -47,7 +47,6 @@ void CTroll::Behavior_MoveEnter()
 		pairAnimInfo = m_Animation[STATEANIM::JOG_START];
 	}
 
-
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
 
@@ -111,6 +110,7 @@ void CTroll::Behavior_CombatEnter()
 	}
 	else
 	{
+		m_bLookAt = true;
 		_int RandIndex = m_pGameInstance->Real_Random_Int(0,3);
 		switch (RandIndex)
 		{
@@ -139,39 +139,45 @@ HRESULT CTroll::Behavior_CombatExitCheck(_float fTimeDelta)
 
 	if (m_pFSM->IsEnable(FSMSTATE::SKILL))
 	{
-		m_bLookAt = false;
 		m_pFSM->Disable_State(FSMSTATE::SKILL);
 		pairAnimInfo = m_Animation[STATEANIM::SKILL];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 		m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::SLAM)] = m_fMaxSkillCoolTime[ENUM_CLASS(TROLL_SKILL::SLAM)];
+		Add_Event(pairAnimInfo.first,
+			[this]() {m_bLookAt = false; },
+			0.2f);
 		return S_OK;
 	}
 
 	if (m_pFSM->IsEnable(FSMSTATE::SWING))
 	{
-		m_bLookAt = false;
 		m_pFSM->Disable_State(FSMSTATE::SWING);
 		pairAnimInfo = m_Animation[STATEANIM::SWING_FWD];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 		m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::SWING)] = m_fMaxSkillCoolTime[ENUM_CLASS(TROLL_SKILL::SWING)];
+		Add_Event(pairAnimInfo.first,
+			[this]() {m_bLookAt = false; },
+			0.2f);
 		return S_OK;
 	}
 
 	if (m_pFSM->IsEnable(FSMSTATE::BACKHAND_SWING))
 	{
-		m_bLookAt = false;
 		m_pFSM->Disable_State(FSMSTATE::BACKHAND_SWING);
 		pairAnimInfo = m_Animation[STATEANIM::BACKHAND_SWING_JOG];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 		m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::BACKHAND_SWING)] = m_fMaxSkillCoolTime[ENUM_CLASS(TROLL_SKILL::BACKHAND_SWING)];
+		Add_Event(pairAnimInfo.first,
+			[this]() {m_bLookAt = false; },
+			0.2f);
 		return S_OK;
 	}
 
-	
 	if (m_pModelCom->IsFinishedAnim())
 	{
 		m_bLookAt = true;
 		m_pFSM->Change_State(FSMSTATE::IDLE);
+		return E_FAIL;
 	}
 
 	return E_FAIL;
@@ -245,12 +251,11 @@ void CTroll::Behavior_ThrowEnter()
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::THROW_ROCK);
 	pairAnimInfo = m_Animation[STATEANIM::THROW_ROCK_START];
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 
 	Add_Event(pairAnimInfo.first,
 		[this](){Get_PartObject<CTroll_Rock>()->Set_Visible(true);},
-		0.9f);
-	
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+		0.95f);
 }
 
 HRESULT CTroll::Behavior_ThrowExitCheck(_float fTimeDelta)
@@ -277,6 +282,8 @@ HRESULT CTroll::Behavior_ThrowExitCheck(_float fTimeDelta)
 	if (m_pModelCom->IsFinishedAnim())
 	{
 		m_bLookAt = true;
+		Get_PartObject<CTroll_Rock>()->Set_Attach(true);
+		Get_PartObject<CTroll_Rock>()->Set_Visible(false);
 		m_pFSM->Change_State(FSMSTATE::IDLE);
 	}
 	return E_FAIL;

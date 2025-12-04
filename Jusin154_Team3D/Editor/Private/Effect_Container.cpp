@@ -308,6 +308,20 @@ HRESULT CEffect_Container::Load_Package(const _char* pPath)
 
 HRESULT CEffect_Container::Pre_Setting(CGameObject* pObject)
 {
+	if (pObject == nullptr)
+		return E_FAIL;
+
+	m_pOwner = pObject;
+
+
+	Reset_EditEffect();
+
+	m_fAccTime = 0.f;
+	m_fPreAccTime = 0.f;
+
+	m_bVisible = true;
+	m_isCollisionEnter = false;
+
 	return S_OK;
 }
 

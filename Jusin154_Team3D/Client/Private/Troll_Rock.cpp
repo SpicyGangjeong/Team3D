@@ -2,8 +2,7 @@
 #include "Troll_Rock.h"
 
 #include "GameInstance.h"
-#include "TrailObject.h"
-#include "EffectParts.h"
+#include "Troll.h"
 
 CTroll_Rock::CTroll_Rock(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPartObject(pDevice, pContext)
@@ -39,8 +38,8 @@ HRESULT CTroll_Rock::Initialize(void* pArg)
 
 void CTroll_Rock::Priority_Update(_float fTimeDelta)
 {
+	
 	m_pModelCom->Combined_BoneMatrix();
-
 	if (m_bAttach)
 	{
 		_matrix socketMatrix = {};
@@ -52,6 +51,8 @@ void CTroll_Rock::Priority_Update(_float fTimeDelta)
 		}
 
 		m_pTransformCom->Set_WorldMatrix(socketMatrix * XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr()));
+		_float4 vTargetPos = static_cast<CTroll*>(m_pOwner)->Get_TargetPos();
+		m_pTransformCom->LookAt(XMLoadFloat4(&vTargetPos));
 	}
 	else
 	{
@@ -59,7 +60,7 @@ void CTroll_Rock::Priority_Update(_float fTimeDelta)
 		m_pTransformCom->Set_WorldMatrix(world);
 		m_pTransformCom->Go_Straight(fTimeDelta);
 	}
-
+	
 
 #ifdef _DEBUG
 	Describe_Entity();
@@ -69,16 +70,11 @@ void CTroll_Rock::Priority_Update(_float fTimeDelta)
 
 void CTroll_Rock::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Up(DIK_U))
-	{
-		m_bAttach = false;
-	}
-
 }
 
 void CTroll_Rock::Late_Update(_float fTimeDelta)
 {
-	m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
+	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 }
 
 HRESULT CTroll_Rock::Render()
@@ -118,7 +114,7 @@ HRESULT CTroll_Rock::Ready_Components()
 
 	CTransform::TRANSFORM_DESC Desc = {};
 
-	Desc.fSpeedPerSec = 10.f;
+	Desc.fSpeedPerSec = 18.f;
 	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
 	Desc.fRadius = 10.f;
 
@@ -133,7 +129,7 @@ HRESULT CTroll_Rock::Ready_Components()
 	/* Com_Shader */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_MESH,
 		reinterpret_cast<CComponent**>(&m_pShaderCom))))
-		return E_FAIL;
+		return E_FAIL;                                                                                                                                                                     
 
 	return S_OK;
 }
@@ -197,16 +193,7 @@ void CTroll_Rock::Free()
 
 void CTroll_Rock::Describe_Entity()
 {
-	GUI::Begin("Rock");
-	GUI::Text("X %.2f,Y%.2f,Z%.2f", m_pTransformCom->Get_Scale().x, m_pTransformCom->Get_Scale().y, m_pTransformCom->Get_Scale().z);
 
-	static _float Scale = 1.f;
-	if (GUI::DragFloat("Scale", &Scale,0.01f))
-	{
-		_float3 vScale = { Scale,Scale ,Scale };
-		m_pTransformCom->Set_Scale(vScale);
-	}
-	GUI::End();
 }
 
 #endif // _DEBUG

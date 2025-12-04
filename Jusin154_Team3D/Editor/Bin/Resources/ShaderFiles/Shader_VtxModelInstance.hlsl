@@ -138,6 +138,10 @@ float   g_fReverseDissolveDelay;
 float2  g_vDissolveUVGainAmount;
 bool    g_isDissolveMove;
 
+float g_fDissolveMaskEdge;
+float g_fDissolveSoftMask;
+float g_fDissolveCutRatio;
+
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -253,7 +257,7 @@ float4 DrawEffect(PS_IN In)
     vector vMtrlDissolve;
     vector vMtrlDistortion;
     
-    float fAnimIndex = g_ParticleValue[In.iGPUIndex].vAniIndex.x;
+    float  fAnimIndex = g_ParticleValue[In.iGPUIndex].vAniIndex.x;
     float2 vDiffuseTime = g_ParticleValue[In.iGPUIndex].vDiffuseUVMoveTime;
     float2 vMaskingTime = g_ParticleValue[In.iGPUIndex].vMaskingUVMoveTime;
     float2 vNoiseUVMoveTime = g_ParticleValue[In.iGPUIndex].vNoiseUVMoveTime;
@@ -452,8 +456,7 @@ float4 DrawEffect(PS_IN In)
         {
             fTimeRatio = In.vLifeTime.x / In.vLifeTime.y;
         }
-        
-        if (fTimeX > 0 && fTimeY != 0)
+        else if (fTimeX > 0 && fTimeY != 0)
         {
             fTimeRatio = saturate(fTimeX / fTimeY);
         }
@@ -463,41 +466,61 @@ float4 DrawEffect(PS_IN In)
         {
             if (g_isReverseDissolve == false)
             {
-                vMtrlDiffuse.a *= (0.95f - fTimeRatio);
+                vMtrlDiffuse.a *= saturate((0.96f - fTimeRatio));
             }
             else
             {
                 vMtrlDiffuse.a *= In.vLifeTime.x / In.vLifeTime.y;
 
             }    
+           
+        }
+        
+        float2 vDissolveUV = In.vTexcoord + SelectLerpUV(g_vDissolveUVGainAmount, (vDissolveUVMoveTime.x / vDissolveUVMoveTime.y), 0);
             
-            
-            if (vMtrlDiffuse.a <= FLT_EPSILON5)
+        if (g_isDissolveMove)
+            vMtrlDissolve = g_DissolveTexture.Sample(DefaultSampler, vDissolveUV);
+        else
+            vMtrlDissolve = g_DissolveTexture.Sample(DefaultSampler, In.vTexcoord);
+         
+        /* */
+        float fSoftDissolve;
+    
+        if (g_fDissolveSoftMask > FLT_EPSILON5)
+            fSoftDissolve = saturate((vMtrlDissolve.r - g_fDissolveMaskEdge) * g_fDissolveSoftMask);
+        else
+            fSoftDissolve = vMtrlDissolve.r;
+        
+        vMtrlDissolve.r = fSoftDissolve;
+       
+        if (g_isReverseDissolve == true)
+        {
+            if (vMtrlDissolve.r >= (In.vLifeTime.x / In.vLifeTime.y))
                 discard;
         }
         else
         {
-        
-            float2 vDissolveUV = In.vTexcoord + SelectLerpUV(g_vDissolveUVGainAmount, (vDissolveUVMoveTime.x / vDissolveUVMoveTime.y), 0);
-            
-            if (g_isDissolveMove)
-                vMtrlDissolve = g_DissolveTexture.Sample(DefaultSampler, vDissolveUV);
-            else
-                vMtrlDissolve = g_DissolveTexture.Sample(DefaultSampler, In.vTexcoord);
-            
-            
-        
-            if (g_isReverseDissolve == true)
+            if (g_fDissolveCutRatio <= fTimeRatio) // 일정 수준 이상 넘어가지 못하도록 막기
             {
-                if (vMtrlDissolve.r >= (In.vLifeTime.x / In.vLifeTime.y))
-                    discard;
+                fTimeRatio = g_fDissolveCutRatio;
+
             }
-            else
-            {
-                if (vMtrlDissolve.r < fTimeRatio)
-                    discard;
-            }
+            
+            //if (vMtrlDissolve.r <= fTimeRatio + 0.1f)
+            //    discard;
+               
+          
+            fTimeRatio = 1 - pow(1 - fTimeRatio, 3);
+            
+            float fFade = smoothstep(fTimeRatio - 0.1f, fTimeRatio + 0.1f, vMtrlDissolve.r);
+            
+            vMtrlDiffuse.a *= fFade;
+
         }
+        
+        
+        if (vMtrlDiffuse.a <= FLT_EPSILON5)
+            discard;
     }
     
     return vMtrlDiffuse;
@@ -754,8 +777,11 @@ PS_BLOOM_OUT PS_BLOOM(PS_IN In)
 {
     PS_BLOOM_OUT Out;
 
-        
-    vector vMtrlDiffuse;
+
+    if (FLT_EPSILON5 >= (In.vLifeTime.x / In.vLifeTime.y))
+        discard;
+    
+    vector vMtrlDiffuse = vector(0.f, 0.f, 0.f, 0.f);
     
     vMtrlDiffuse = DrawEffect(In);
     
