@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Current_Spell_Slot.h"
 #include "GameInstance.h"
+#include "UI_Manager.h"
 
 CCurrent_Spell_Slot::CCurrent_Spell_Slot(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
@@ -99,28 +100,39 @@ void CCurrent_Spell_Slot::Update(_float fTimeDelta)
 	Hover();
 
 
-	if (m_pGameInstance->Mouse_Down(DIM_LBUTTON) && m_bClick == false)
+	if (m_bHover == true)
 	{
-		m_bClick = true;
-		m_iSkill_Index = Chack_Slot(m_iSlot_Index);
-		static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Current_Hover"), &m_iSkill_Index);
+		if (m_pGameInstance->Mouse_Down(DIM_LBUTTON) && m_bClick == false)
+		{
+			m_bClick = true;
+			m_iSkill_Index = Chack_Slot(m_iSlot_Index);
+			static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Current_Hover"), &m_iSkill_Index);
+		}
 	}
 
-	if (m_pGameInstance->Mouse_Up(DIM_LBUTTON) && m_bHover == true)
+	if (m_pGameInstance->Mouse_Up(DIM_LBUTTON))
 	{
-		if (m_iSpellType != -1)
+		if (m_bHover == true)
 		{
-			Get_Skill(m_iSpellType, m_iSlot_Index);
-		}
+			if (m_iSpellType != -1)
+			{
+				Get_Skill(m_iSpellType, m_iSlot_Index);
+			}
 
-		if (m_iSkill_Index != -1)
-		{
-			Get_Skill(m_iSkill_Index, m_iSlot_Index);
+			if (m_iSkill_Index != -1)
+			{
+				Get_Skill(m_iSkill_Index, m_iSlot_Index);
+				m_iSkill_Index = -1;
+			}
+			m_bHover = false;
+			m_bClick = false;
 			m_iSkill_Index = -1;
 		}
-		m_bHover = false;
-		m_bClick = false;
-		m_iSkill_Index = -1;
+		else
+		{
+			m_iSkill_Index = -1;
+			static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Current_Hover"), &m_iSkill_Index);
+		}
 	}
 
 	__super::Update(fTimeDelta);
@@ -240,6 +252,7 @@ void CCurrent_Spell_Slot::Get_Skill(_int SpellIndex, _int SlotIndex)
 	m_vUV.fUV = UV(SpellIndex);
 	m_pVIBufferCom->Set_Index_Color(SlotIndex, static_cast<_float>(static_cast<CUIObject*>(m_pOwner)->Get_Info(SpellIndex).iSpell_Type));
 	m_pVIBufferCom->Set_Index_ImageUV(SlotIndex, m_vUV);
+	m_pManager->Event_Callback(TEXT("Skill_Change"));
 }
 
 _int CCurrent_Spell_Slot::Chack_Slot(_int Index) const
@@ -360,7 +373,6 @@ HRESULT CCurrent_Spell_Slot::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-
 	return S_OK;
 }
 

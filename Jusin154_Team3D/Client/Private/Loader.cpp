@@ -30,10 +30,20 @@
 #pragma region UI
 
 #include "Skill_Data.h"
-
 #include "UI_Manager.h"
 
 #include "GamePlay_Canvas.h"
+
+#include "Mission_Panel.h"
+//#include "MissionBanner_Border.h"
+//#include "MissionBanner_Key.h"
+//#include "Mission_Icon.h"
+//#include "Mouse_Cursor.h"
+#include "MiniMap_TrimBorder.h"
+
+#include "MiniMap_Panel.h"
+#include "NoMountIcon.h"
+
 #include "Loading_Panel.h"
 #include "LoadingWidget.h"
 #include "LoadingWidget_Flame.h"
@@ -48,12 +58,6 @@
 #include "Magic_Icon.h"
 #include "Spell_UI.h"
 #include "Magic_Item.h"
-
-#include "MiniMap_Panel.h"
-#include "MiniMap_TrimBorder.h"
-#include "NoMountIcon.h"
-
-#include "Mission_Panel.h"
 
 #include "Spell_Canvas.h"
 #include "Spell_Panel.h"
@@ -71,6 +75,8 @@
 #include "Spell_Vidio_Border.h"
 #include "Spell_Anim.h"
 #include "Current_Slot_Number.h"
+#include "Spell_Drag.h"
+
 
 #pragma endregion
 
@@ -240,48 +246,48 @@ HRESULT CLoader::Loading_For_GamePlay()
 			));
 		}
 
-		//{ /* Ollivanders*/
-		//	jobMapModels.emplace_back(Deferred_FolderLoad(
-		//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Ollivanders/Meshes",
-		//		".bin", false
-		//	));
-		//	jobMapModels.emplace_back(Deferred_FolderLoad(
-		//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Ollivanders/Collision",
-		//		".bin", false
-		//	));
-		//}
+		{ /* Ollivanders*/
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Ollivanders/Meshes",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Ollivanders/Collision",
+				".bin", false
+			));
+		}
 
-		//{ /* Gatehouse*/
-		//	jobMapModels.emplace_back(Deferred_FolderLoad(
-		//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Gatehouse/Meshes",
-		//		".bin", false
-		//	));
-		//}
+		{ /* Gatehouse*/
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Gatehouse/Meshes",
+				".bin", false
+			));
+		}
 
-		//{ /* TScrolls */
-		//	jobMapModels.emplace_back(Deferred_FolderLoad(
-		//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_TScrolls/Meshes",
-		//		".bin", false
-		//	));
-		//	jobMapModels.emplace_back(Deferred_FolderLoad(
-		//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_TScrolls/Collisions",
-		//		".bin", false
-		//	));
-		//}
-		//{ /* 3BroomStick*/
-		//	jobMapModels.emplace_back(Deferred_FolderLoad(
-		//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_ThreeBroomsticks/Meshes",
-		//		".bin", false
-		//	));
-		//	jobMapModels.emplace_back(Deferred_FolderLoad(
-		//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_ThreeBroomsticks/Collision",
-		//		".bin", false
-		//	));
-		//	jobMapModels.emplace_back(Deferred_FolderLoad(
-		//		"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_ThreeBroomsticks/Meshes/3Broom_Kit",
-		//		".bin", false
-		//	));
-		//}
+		{ /* TScrolls */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_TScrolls/Meshes",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_TScrolls/Collisions",
+				".bin", false
+			));
+		}
+		{ /* 3BroomStick*/
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_ThreeBroomsticks/Meshes",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_ThreeBroomsticks/Collision",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_ThreeBroomsticks/Meshes/3Broom_Kit",
+				".bin", false
+			));
+		}
 
 
 		{ /* BLDG_QuidditchShop */
@@ -1805,6 +1811,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CCurrent_Slot_Number>(g_iStaticLevel, CCurrent_Slot_Number::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_Drag>(g_iStaticLevel, CSpell_Drag::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}

@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Spell_Drag.h"
 #include "GameInstance.h"
+#include "InfoInstance.h"
 
 CSpell_Drag::CSpell_Drag(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
@@ -8,7 +9,9 @@ CSpell_Drag::CSpell_Drag(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CSpell_Drag::CSpell_Drag(const CSpell_Drag& rhs)
-	:CElementObject(rhs)
+	:CElementObject(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
+
 {
 }
 
@@ -279,19 +282,19 @@ HRESULT CSpell_Drag::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_SpellType_Generic"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UI_T_SpellType_Generic"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_SelectedPresetBorder"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UI_T_SelectedPresetBorder"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_GoldLeaf"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom2), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UI_T_GoldLeaf"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom2), nullptr)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_Atlas_Widget_Spell"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom3), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_Atlas_Widget_Spell"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom3), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -338,7 +341,7 @@ void CSpell_Drag::Set_SpellType(_int SpellID)
 	}
 	m_iSpellType = SpellID;
 	m_bHover = true;
-	Compute_UI(static_cast<CUIObject*>(m_pOwner)->Get_Info(m_iSpellType).iSkill_Type);
+	Compute_UI(m_pInfoInstance->Get_Spell_Info(m_iSpellType).iSkill_Type);
 }
 
 _float2 CSpell_Drag::Get_MousePos()
@@ -364,7 +367,7 @@ void CSpell_Drag::Set_Current_Slot(_uint Index)
 	}
 	m_iCurrent_Slot_Index = Index;
 	m_bCurrent_Hover = true;
-	Compute_UI(static_cast<CUIObject*>(m_pOwner)->Get_Info(m_iCurrent_Slot_Index).iSkill_Type);
+	Compute_UI(m_pInfoInstance->Get_Spell_Info(m_iCurrent_Slot_Index).iSkill_Type);
 }
 
 CSpell_Drag* CSpell_Drag::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

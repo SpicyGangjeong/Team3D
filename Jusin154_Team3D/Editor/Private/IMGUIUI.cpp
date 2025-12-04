@@ -32,6 +32,38 @@ HRESULT CIMGUIUI::Initialize(void* pArg)
 	return S_OK;
 }
 
+void CIMGUIUI::CanvaswstringTostring(vector<wstring>& panelNames)
+{
+	m_iCanvasNamestring.clear();
+	m_iCanvaslName.clear();
+	m_iCanvasNamewstring.clear();
+
+	m_iCanvasNamewstring = panelNames;
+
+	for (auto& wname : panelNames)
+	{
+		// wstring -> UTF-8 string 변환
+		int size = WideCharToMultiByte(CP_UTF8, 0,
+			wname.c_str(), (int)wname.size(),
+			nullptr, 0, nullptr, nullptr);
+
+		std::string result(size, 0);
+
+		WideCharToMultiByte(CP_UTF8, 0,
+			wname.c_str(), (int)wname.size(),
+			&result[0], size, nullptr, nullptr);
+
+		// 변환된 string 저장
+		m_iCanvasNamestring.push_back(std::move(result));
+	}
+
+	// vector<const char*> 업데이트
+	for (auto& str : m_iCanvasNamestring)
+		m_iCanvaslName.push_back(str.c_str());
+
+	m_iCanvasCount = 999;
+}
+
 void CIMGUIUI::PanelwstringTostring(vector<std::wstring>& panelNames)
 {
 	m_iPanelNamestring.clear();
@@ -104,7 +136,6 @@ void CIMGUIUI::Update(_float fTimeDelta)
 {
 	static const char* SpellTypeNames[] = { "CONTROL","POWER", "DAMAGE","UTILITY", "TRANSFORM",  "CURSE",	"ESSENTIAL" };
 	int itemCount = sizeof(SpellTypeNames) / sizeof(const char*);
-	static const char* CanvasNames[] = { "GamePlay Canvas", "Spell Canvas" };
 	static int iCanvasIndex = 0;
 	if (m_pCurrent_Canvas != nullptr)
 	{
@@ -160,12 +191,14 @@ void CIMGUIUI::Update(_float fTimeDelta)
 	GUI::Begin("Current_CanvasObject_Info");
 	if (m_pUI_Manager != nullptr)
 	{
-		if (GUI::Combo("Canvas", &iCanvasIndex, CanvasNames, 2))
+		auto CanvasName = static_cast<CUI_Manager*>(m_pUI_Manager)->Canvas_Name();
+		if (CanvasName != m_iCanvasNamewstring)
 		{
-			//if (iCanvasIndex == 0)
-			//	m_pCurrent_Canvas = m_pGamePlay_Canvas;
-			//else
-			//	m_pCurrent_Canvas = m_pSpell_Canvas;
+			CanvaswstringTostring(CanvasName);
+		}
+		if (GUI::Combo("Canvas", &m_iCanvasCount, m_iCanvaslName.data(), static_cast<_int>(m_iCanvaslName.size())))
+		{
+			m_pCurrent_Canvas = static_cast<CUI_Manager*>(m_pUI_Manager)->Get_Canvas(m_iCanvasNamewstring[m_iCanvasCount]);
 		}
 	}
 	if (m_pCurrent_Canvas != nullptr)

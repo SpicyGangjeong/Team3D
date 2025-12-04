@@ -89,6 +89,7 @@ void CSpell_State::Update(_float fTimeDelta)
 			m_fAlpha = 0.f;
 		}
 	}
+
 	m_fTime += fTimeDelta * m_fTimeMult;
 	if (m_bClick == false)
 	{

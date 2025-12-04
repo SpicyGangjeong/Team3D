@@ -161,29 +161,29 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	/* Map Containters */
 	/* 테스트용 맵 */
 
-	//CInfoInstance::GetInstance()->Load_MapObjects("ClientTest");
-	///* 전체 맵 */
-	//CInfoInstance::GetInstance()->Load_MapObjects("Map1129");
+	CInfoInstance::GetInstance()->Load_MapObjects("ClientTest");
+	/* 전체 맵 */
+	CInfoInstance::GetInstance()->Load_MapObjects("Map1129");
 
-	///* 조명 오브젝트 */
-	//CInfoInstance::GetInstance()->Load_LightElements("LightElement");
+	/* 조명 오브젝트 */
+	CInfoInstance::GetInstance()->Load_LightElements("LightElement");
 
-	//
-	//CInstancedProp::INSTANCE_PROP_DESC Desc = {};
+	
+	CInstancedProp::INSTANCE_PROP_DESC Desc = {};
 
-	///* InstanceProp Oak_Tree*/
-	//Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_OakTree_MedA";
-	//Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/OakTree_MedA.bin";
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc))){
-	//	return E_FAIL;
-	//}
+	/* InstanceProp Oak_Tree*/
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_OakTree_MedA";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/OakTree_MedA.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc))){
+		return E_FAIL;
+	}
 
-	///* BearBerry */
-	//Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_BearBerry_A";
-	//Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/BearBerry_A.bin";
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc))){
-	//	return E_FAIL;
-	//}
+	/* BearBerry */
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_BearBerry_A";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/BearBerry_A.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc))){
+		return E_FAIL;
+	}
 
 	/* SM_HM_OwlPost_Window_A */
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_OwlPost_Window_A";

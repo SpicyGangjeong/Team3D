@@ -1,4 +1,5 @@
 ﻿#include "pch.h"
+#include "UI_Manager.h"
 #include "Spell_Canvas.h"
 #include "GameInstance.h"
 #include "Spell_Panel.h"
@@ -50,6 +51,7 @@ void CSpell_Canvas::Priority_Update(_float fTimeDelta)
 
 void CSpell_Canvas::Update(_float fTimeDelta)
 {
+
 	__super::Update(fTimeDelta);
 }
 

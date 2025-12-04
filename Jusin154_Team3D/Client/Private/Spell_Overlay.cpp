@@ -50,7 +50,6 @@ HRESULT CSpell_Overlay::Initialize(void* pArg)
 	m_fSortZ = 0.01f;
 	m_iSpellType = ENUM_CLASS(SPELLTYPE::CONTROL);
 	Compute_UI(5);
-	m_bActive = true;
 	return S_OK;
 }
 

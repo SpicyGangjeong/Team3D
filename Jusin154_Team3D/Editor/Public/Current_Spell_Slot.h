@@ -45,6 +45,8 @@ private:
 	CShader*				m_pShaderCom = { nullptr };
 	CVIBuffer_UI_Instance*	m_pVIBufferCom = { nullptr };
 
+	class CUI_Manager*  m_pManager = { nullptr };
+
 	_float	m_fOffSetX{};
 	_float	m_fOffSetY{};
 	_uint	m_iCols{};

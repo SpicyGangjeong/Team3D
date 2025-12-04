@@ -100,11 +100,6 @@ void CUIObject::Update(_float fTimeDelta)
 
 	//m_fCurrent_Position = XMVectorSet(m_fX, m_fY, m_fSortZ, 1.f);
 
-	if (m_pGameInstance->Key_Down(DIK_T))
-	{
-		m_bVisible = !m_bVisible;
-	}
-
 }
 
 void CUIObject::Late_Update(_float fTimeDelta)

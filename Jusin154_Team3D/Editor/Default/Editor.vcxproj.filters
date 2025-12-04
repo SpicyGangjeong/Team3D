@@ -930,7 +930,9 @@
     <ClInclude Include="..\Public\MapInfo.h">
       <Filter>04.InfoInstance\02.MapInfo</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\UI_Manager.h" />
+    <ClInclude Include="..\public\UI_Manager.h">
+      <Filter>50.UI\UI_Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -1382,7 +1384,9 @@
     <ClCompile Include="..\Private\MapInfo.cpp">
       <Filter>04.InfoInstance\02.MapInfo</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\UI_Manager.cpp" />
+    <ClCompile Include="..\private\UI_Manager.cpp">
+      <Filter>50.UI\UI_Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Editor.rc">

@@ -30,6 +30,7 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 
 private:
+	void CanvaswstringTostring(vector<wstring>& panelNames);
 	void PanelwstringTostring(vector<wstring>& panelNames);
 	void ElementwstringTostring(vector<wstring>& panelNames);
 
@@ -85,6 +86,11 @@ private:
 	vector<wstring>			m_iPanelNamewstring;
 	vector<string>			m_iPanelNamestring;
 	vector<const _char*>	m_iPanelName;
+
+	_int					m_iCanvasCount{};
+	vector<wstring>			m_iCanvasNamewstring;
+	vector<string>			m_iCanvasNamestring;
+	vector<const _char*>	m_iCanvaslName;
 
 	_bool					m_bCanvasVisible		= { false };
 	_bool					m_bPanelVisible			= { false };

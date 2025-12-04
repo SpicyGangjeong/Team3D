@@ -48,9 +48,11 @@ HRESULT CSpell_List::Initialize(void* pArg)
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
 	m_fDelayTime = 0.5f;
 	m_iPerSpell_Slot = -1;
+	m_bClick = false;
 	Color();
-	m_bActive = true;
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Click"), [this](void* p) {this->Click_Slot(*reinterpret_cast<_bool*>(p)); });
 	return S_OK;
+
 }
 
 void CSpell_List::Priority_Update(_float fTimeDelta)
@@ -93,7 +95,10 @@ void CSpell_List::Update(_float fTimeDelta)
 		}
 	}
 	m_fTime += fTimeDelta * m_fTimeMult;
-	Hover(fTimeDelta);
+	if (m_bClick == false)
+	{
+		Hover();
+	}
 	__super::Update(fTimeDelta);
 }
 
@@ -168,7 +173,7 @@ void CSpell_List::Color()
 	m_pVIBufferCom->Set_Index_Renge_Color(23, 25, 3.f);
 }
 
-void CSpell_List::Hover(_float fTimeDelta)
+void CSpell_List::Hover()
 {
 	POINT ptMouse{};
 	GetCursorPos(&ptMouse);
@@ -197,6 +202,18 @@ void CSpell_List::Hover(_float fTimeDelta)
 		static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Hover"), &Info);
 	}
 
+}
+
+void CSpell_List::Click_Slot(_bool bClick)
+{
+	if (bClick == true)
+	{
+		m_bClick = true;
+	}
+	else
+	{
+		m_bClick = false;
+	}
 }
 
 HRESULT CSpell_List::Bind_ShaderResources()

@@ -26,7 +26,62 @@ HRESULT CUI_Manager::Initialize(void* pArg)
 		return E_FAIL;
 	}
 	m_bCanvas_Change = false;
+	m_eType = Canvases::GAMEPLAYER_CANVAS;
 	return S_OK;
+}
+
+void CUI_Manager::Canvas_Change(Canvases eType)
+{
+		m_eType = eType;
+
+	switch (eType)
+	{
+	case Canvases::GAMEPLAYER_CANVAS:
+		static_cast<CCanvasObject*>(m_pGamePlay_Canves)->Visible(true);
+		static_cast<CCanvasObject*>(m_pSpell_Canvas)->Visible(false);
+
+		break;
+	case Canvases::SPELL_CANVAS:
+		static_cast<CCanvasObject*>(m_pSpell_Canvas)->Visible(true);
+		static_cast<CCanvasObject*>(m_pGamePlay_Canves)->Visible(false);
+
+		break;
+	default:
+		return;
+	}
+}
+
+void CUI_Manager::Clear_Canvas()
+{
+}
+
+CGameObject* CUI_Manager::Get_Canvas(const wstring& Name)
+{
+	return Find_Canvas(Name);
+}
+
+_int CUI_Manager::Canvas_Count()
+{
+	return m_iCanvas_Count;
+}
+
+const vector<wstring> CUI_Manager::Canvas_Name()
+{
+	return m_CanvasNames;
+}
+
+void CUI_Manager::Add_Manager_Event(_wstring Name, function<void(void*)> Event)
+{
+	m_Event_map.emplace(Name, Event);
+}
+
+void CUI_Manager::Event_Callback(_wstring Name, void* pArg)
+{
+	auto range = m_Event_map.equal_range(Name);
+	for (auto it = range.first; it != range.second; ++it)
+	{
+		it->second(pArg);
+	}
 }
 
 void CUI_Manager::Priority_Update(_float fTimeDelta)
@@ -37,19 +92,12 @@ void CUI_Manager::Update(_float fTimeDelta)
 {
 	if (m_pGameInstance->Key_Down(DIK_T))
 	{
-		m_bCanvas_Change = !m_bCanvas_Change;
+		if (m_eType == Canvases::GAMEPLAYER_CANVAS)
+			Canvas_Change(Canvases::SPELL_CANVAS);
+		else
+			Canvas_Change(Canvases::GAMEPLAYER_CANVAS);
 	}
 
-	if (m_bCanvas_Change == false)
-	{
-		static_cast<CCanvasObject*>(m_pGamePlay_Canves)->Visible(true);
-		static_cast<CCanvasObject*>(m_pSpell_Panel)->Visible(false);
-	}
-	else
-	{
-		static_cast<CCanvasObject*>(m_pSpell_Panel)->Visible(true);
-		static_cast<CCanvasObject*>(m_pGamePlay_Canves)->Visible(false);
-	}
 }
 
 void CUI_Manager::Late_Update(_float fTimeDelta)
@@ -80,15 +128,41 @@ HRESULT CUI_Manager::Ready_Components(void* pArg)
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGamePlay_Canvas>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CGamePlay_Canvas**>(&m_pGamePlay_Canves)))) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Canvas>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Canvas**>(&m_pSpell_Panel)))) {
+	Add_Canvas(TEXT("GamePlay_Canvas"), m_pGamePlay_Canves);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Canvas>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Canvas**>(&m_pSpell_Canvas)))) {
 		return E_FAIL;
 	}
+	Add_Canvas(TEXT("Spell_Canvas"), m_pSpell_Canvas);
 
 	return S_OK;
 }
 
-void CUI_Manager::Clear_Penel()
+void CUI_Manager::Add_Canvas(_wstring Name, CGameObject* pCanvas)
 {
+	if (pCanvas == nullptr)
+	{
+		return;
+	}
+
+	if (Find_Canvas(Name) != nullptr)
+	{
+		return;
+	}
+	m_Canvases.push_back(pCanvas);
+	m_CanvasNames.push_back(Name);
+	m_Canvas_map.emplace(Name, pCanvas);
+	m_iCanvas_Count++;
+}
+
+CGameObject* CUI_Manager::Find_Canvas(const _wstring& Name)
+{
+	auto iter = m_Canvas_map.find(Name);
+
+	if (iter == m_Canvas_map.end())
+		return nullptr;
+
+	return iter->second;
 }
 
 CUI_Manager* CUI_Manager::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

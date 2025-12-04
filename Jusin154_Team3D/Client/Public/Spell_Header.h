@@ -32,6 +32,8 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 
 private:
+	CInfoInstance* m_pInfoInstance = { nullptr };
+
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };

@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "GamePlay_Canvas.h"
 #include "GameInstance.h"
+#include "UI_Manager.h"
 #include "Mission_Panel.h"
 #include "MiniMap_Panel.h"
 #include "Loading_Panel.h"
@@ -50,6 +51,7 @@ HRESULT CGamePlay_Canvas::Initialize(void* pArg)
 
 void CGamePlay_Canvas::Priority_Update(_float fTimeDelta)
 {
+
 	__super::Priority_Update(fTimeDelta);
 }
 

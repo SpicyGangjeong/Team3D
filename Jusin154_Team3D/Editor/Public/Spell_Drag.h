@@ -49,6 +49,7 @@ private:
 	_bool	m_bCurrent_Hover = { false };
 	_bool	m_bMove = { false };
 	_bool	m_bClick = { false };
+	_bool	m_bFalse = { false };
 public:
 	static CSpell_Drag* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
