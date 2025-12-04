@@ -105,7 +105,10 @@ public:
 		_bool		isDissolveMove = {};
 
 
-		_float3		vPadding0 = {};
+
+		_float3		vDissolveValue = {};
+
+
 		_float3		vPadding1 = {};
 
 		_float		fPadding0 = {};

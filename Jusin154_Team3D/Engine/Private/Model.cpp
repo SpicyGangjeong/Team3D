@@ -160,6 +160,8 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 		m_iPreAnimIndex = m_iCurrentAnimIndex;
 	}
 
+
+
 	
 	if (m_bIsFinishedAnim)
 	{
@@ -283,7 +285,7 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 			m_bLoopRestarted = true;
 		}
 		else{
-			XMStoreFloat3(&m_vPrevRootPos, m_vector[2]);
+			//XMStoreFloat3(&m_vPrevRootPos, m_vector[2]);
 		}
 
 		m_vPrevRootRot = { 0.f,0.f,0.f,0.f };
@@ -323,6 +325,8 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fAmount, _boo
 		m_bIsLoop = isLoop;
 		m_fAmount = fAmount;
 		m_bRatio = bRatio;
+		m_Animations[m_iCurrentAnimIndex]->Depart_Animation();
+		m_Animations[m_iCurrentAnimIndex]->ResetRootMotion();
 	}
 	else {
 		m_iCurrentAnimIndex = -1;

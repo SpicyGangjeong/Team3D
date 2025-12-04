@@ -42,7 +42,7 @@ Texture2D g_DiffuseTexture;
 Texture2D g_ShadeTexture;
 Texture2D g_DepthTexture;
 Texture2D g_SpecularTexture;
-Texture2D g_ShadowTexture;
+Texture2D g_ShadowNearTexture;
 Texture2D g_PreShadowTexture;
 Texture2D g_BlurTexture;
 Texture2D g_BlurXTexture;
@@ -509,10 +509,11 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     vPreShadowTexcoord.y = (vPreShadowPosition.y / vPreShadowPosition.w) * -0.5f + 0.5f;
     
     /* 광원의 NDC에서 샘플링 */
-    float fVisibility_Dynamic = ShadowVisibility_hwPCF(g_ShadowTexture, vPosition, float2(g_iMaxShadowWidth, g_iMaxShadowHeight), 0.0005f);
+    float fVisibility_Dynamic_Near = ShadowVisibility_hwPCF(g_ShadowNearTexture, vPosition, float2(g_iMaxShadowWidth, g_iMaxShadowHeight), 0.0005f);
     float fVisibility_Static = ShadowVisibility_hwPCF(g_PreShadowTexture, vPreShadowPosition, float2(g_iMaxShadowWidth, g_iMaxShadowHeight), 0.0005f);
     
-    Out.vBackBuffer.rgb *= lerp(0.5f, 1.f, min(fVisibility_Dynamic, fVisibility_Static));
+    Out.vBackBuffer.rgb *= lerp(0.25f, 1.f, lerp(fVisibility_Dynamic_Near, fVisibility_Static, vDepthDesc.y));
+    
     
     float4 vColor = 0.f;
     

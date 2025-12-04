@@ -282,7 +282,7 @@
     </ClInclude>
     <ClInclude Include="..\Public\BombardSide.h">
       <Filter>02.GameObjects\Effect\Effects\Bombard\BombardSide</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\public\GamePlay_Canvas.h">
       <Filter>02.GameObjects\UI\GamePlay_Canvas</Filter>
     </ClInclude>
@@ -343,6 +343,19 @@
     <ClInclude Include="..\public\UI_Manager.h">
       <Filter>02.GameObjects\UI\UI_Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\State_Hit.h">
+      <Filter>04.Mechanic\State\Hit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll_State_Rush.h">
+      <Filter>04.Mechanic\State\Troll_Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Throw.h">
+      <Filter>04.Mechanic\State\State_Combat\State_Throw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll_Rock.h">
+      <Filter>02.GameObjects\Item\Troll_Rock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Goblin_Dagger.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -665,7 +678,6 @@
     <Filter Include="02.GameObjects\Environment\03.MapElement\Light">
       <UniqueIdentifier>{71f6a568-488d-4ec1-be79-8fcce6677e27}</UniqueIdentifier>
     </Filter>
-
     <Filter Include="02.GameObjects\Monster\Troll">
       <UniqueIdentifier>{a1b1f17d-ed4f-4b20-aa8e-c52e693683d4}</UniqueIdentifier>
     </Filter>
@@ -683,7 +695,7 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\Effects\Bombard\BombardSide">
       <UniqueIdentifier>{b6076bdb-df15-498f-b951-6b2d0b777a0b}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="02.GameObjects\UI\Spell_Canvas">
       <UniqueIdentifier>{257a5a09-b15b-4fd2-9615-054a00cf4b25}</UniqueIdentifier>
     </Filter>
@@ -737,6 +749,21 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\UI_Manager">
       <UniqueIdentifier>{9cc8fea6-837e-4f68-b116-134c9dc68a26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Hit">
+      <UniqueIdentifier>{5a7e32b1-6fa9-44e2-8d6e-b117c3454d5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Troll_Combat">
+      <UniqueIdentifier>{46e41554-f9a0-41c5-992c-f736ef1a333f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Throw">
+      <UniqueIdentifier>{039f471d-9623-4026-9493-5bb52c6a8cd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Item\Troll_Rock">
+      <UniqueIdentifier>{837ff377-2bcd-4a54-baf2-18b1be9d90a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Item\Goblin_Dagger">
+      <UniqueIdentifier>{7d6fe51e-3d6d-4fed-9e5d-27e257672e01}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1021,7 +1048,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\BombardSide.cpp">
       <Filter>02.GameObjects\Effect\Effects\Bombard\BombardSide</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\private\GamePlay_Canvas.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas</Filter>
     </ClCompile>
@@ -1076,6 +1103,19 @@
     <ClCompile Include="..\private\UI_Manager.cpp">
       <Filter>02.GameObjects\UI\UI_Manager</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\State_Hit.cpp">
+      <Filter>04.Mechanic\State\Hit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_State_Rush.cpp">
+      <Filter>04.Mechanic\State\Troll_Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Throw.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_Throw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_Rock.cpp">
+      <Filter>02.GameObjects\Item\Troll_Rock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Goblin_Dagger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">

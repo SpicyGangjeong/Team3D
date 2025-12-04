@@ -21,19 +21,9 @@ HRESULT CRenderer::Add_RenderGroup(RENDER eRenderGroup, CGameObject* pRenderObje
 		return E_FAIL;
 	}
 
-	_bool	bPossible = { false };
-	// 프러스텀컬링 예외 추가
-	if (RENDER::UI == eRenderGroup || RENDER::PRIORITY == eRenderGroup /* || RENDER::SHADOW == eRenderGroup*/ || RENDER::BLUR == eRenderGroup) {
-		bPossible = true;
-	}
-
-	bPossible = true;
-	if (true == bPossible) {
-		m_RenderObjects[ENUM_CLASS(eRenderGroup)].push_back(pRenderObject);
-		SAFE_ADDREF(pRenderObject);
-		return S_OK;
-	}
-	return E_FAIL;
+	m_RenderObjects[ENUM_CLASS(eRenderGroup)].push_back(pRenderObject);
+	SAFE_ADDREF(pRenderObject);
+	return S_OK;
 }
 
 #ifdef _DEBUG
@@ -72,8 +62,10 @@ HRESULT CRenderer::Ready_ShadowDepthStencilView(_uint iSizeX, _uint iSizeY)
 		return E_FAIL;
 	}
 
-
 	if (FAILED(m_pDevice->CreateDepthStencilView(pShadowDepthStencilTexture, nullptr, &m_pShadowDSV))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pDevice->CreateDepthStencilView(pShadowDepthStencilTexture, nullptr, &m_pPreShadowDSV))) {
 		return E_FAIL;
 	}
 
@@ -129,15 +121,14 @@ HRESULT CRenderer::Initialize()
 			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.f, 0.f, 0.f)))) {
 			return E_FAIL;
 		}
-		/* Target_Shadow */
-		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Shadow"), (_uint)g_iMaxShadowWidth, (_uint)g_iMaxShadowHeight,
-			DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)))) {
+		/* Target_Shadow_Near */
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Shadow_Near"), (_uint)g_iMaxShadowWidth, (_uint)g_iMaxShadowHeight,
+			DXGI_FORMAT_R32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)))) {
 			return E_FAIL;
 		}
-
-		/* Target_Shadow */
+		/* Target_PreShadow */
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_PreShadow"), (_uint)g_iMaxShadowWidth, (_uint)g_iMaxShadowHeight,
-			DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)))) {
+			DXGI_FORMAT_R32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)))) {
 			return E_FAIL;
 		}
 
@@ -146,21 +137,64 @@ HRESULT CRenderer::Initialize()
 			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
 			return E_FAIL;
 		}
-
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Blur_Weight"), (_uint)Viewport.Width, (_uint)Viewport.Height,
 			DXGI_FORMAT_R16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 1.0f)))) {
 			return E_FAIL;
 		}
-
 
 		/* Target_Blur_X */
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Blur_X"), (_uint)Viewport.Width, (_uint)Viewport.Height,
 			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
 			return E_FAIL;
 		}
-
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Blur_X_Weight"), (_uint)Viewport.Width, (_uint)Viewport.Height,
 			DXGI_FORMAT_R16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 1.0f)))) {
+			return E_FAIL;
+		}
+
+		/* Target_SSAO */
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_SSAO"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+		/* Target_SSAO_BLUR_X */
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_SSAO_BLUR_X"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+		/* Target_SSAO_LIGHTING */
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_SSAO_LIGHTING"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+
+		/* Target_AfterCombined */
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_AfterCombined"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+
+		/* Target_Color*/
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Color"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+
+		/*WB_COLOR*/
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_WB_Color"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+
+		/* WB_A*/
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_WB_Revealage"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+
+		/* Target_Fog */
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Fog"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.f, 0.f, 0.f)))) {
 			return E_FAIL;
 		}
 
@@ -198,38 +232,6 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 
-		/* Target_AfterCombined */
-		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_AfterCombined"), (_uint)Viewport.Width, (_uint)Viewport.Height,
-			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
-			return E_FAIL;
-		}
-
-		/* Target_Color*/
-		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Color"), (_uint)Viewport.Width, (_uint)Viewport.Height,
-			DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
-			return E_FAIL;
-		}
-
-
-		/*WB_COLOR*/
-		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_WB_Color"), (_uint)Viewport.Width, (_uint)Viewport.Height,
-			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
-			return E_FAIL;
-		}
-
-
-		/* WB_A*/
-		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_WB_Revealage"), (_uint)Viewport.Width, (_uint)Viewport.Height,
-			DXGI_FORMAT_R16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
-			return E_FAIL;
-		}
-
-		/* Target_Diffuse */
-		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Fog"), (_uint)Viewport.Width, (_uint)Viewport.Height,
-			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.f, 0.f, 0.f)))) {
-			return E_FAIL;
-		}
-
 
 		if (FAILED(Ready_ShadowDepthStencilView(g_iMaxShadowWidth, g_iMaxShadowHeight))) {
 			return E_FAIL;
@@ -253,6 +255,18 @@ HRESULT CRenderer::Initialize()
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Surface")))) {
 			return E_FAIL;
 		}
+		/* MRT_SSAO */
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_SSAO"), TEXT("Target_SSAO")))) {
+			return E_FAIL;
+		}
+		/* MRT_SSAO_BLUR */
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_SSAO_BLUR"), TEXT("Target_SSAO_BLUR_X")))) {
+			return E_FAIL;
+		}
+		/* MRT_SSAO_LIGHTING */
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_SSAO_LIGHTING"), TEXT("Target_SSAO_LIGHTING")))) {
+			return E_FAIL;
+		}
 
 		/* MRT_Combined */
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Combined"), TEXT("Target_Fog")))) {
@@ -271,7 +285,7 @@ HRESULT CRenderer::Initialize()
 		}
 
 		/* MRT_Shadow */
-		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Shadow"), TEXT("Target_Shadow")))) {
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Shadow"), TEXT("Target_Shadow_Near")))) {
 			return E_FAIL;
 		}
 		/* MRT_PreShadow */
@@ -387,6 +401,7 @@ void CRenderer::Free()
 		RenderObjects.clear();
 	}
 
+	SAFE_RELEASE(m_pPreShadowDSV);
 	SAFE_RELEASE(m_pShadowDSV);
 	SAFE_RELEASE(m_pShader);
 	SAFE_RELEASE(m_pLastColorShader);

@@ -3,7 +3,6 @@
 
 #include "GameInstance.h"
 #include "EffectParts.h"
-#include "PhysXEffectHitBox.h"
 #include "Wand.h"
 #include "Player.h"
 
@@ -83,26 +82,15 @@ void CBombard::Late_Update(_float fTimeDelta)
 		return;
 
 	__super::Late_Update(fTimeDelta);
-	
+
 	XMStoreFloat4(&m_vEndPos, m_pLight_Projectile->Get_WorldPostion());
 
 }
 
 HRESULT CBombard::Pre_Setting(CGameObject* pObject)
 {
-	if (pObject == nullptr)
+	if (FAILED(__super::Pre_Setting(pObject)))
 		return E_FAIL;
-
-	m_pOwner = pObject;
-
-	if (FAILED(Ready_Child()))
-		return E_FAIL;
-
-	Reset_EffectParts();
-
-	m_fAccTime = 0.f;
-	__super::m_fAccTime = 0.f;
-	m_fPreAccTime = 0.f;
 
 	CWand* pWand = static_cast<CPlayer*>(m_pOwner)->Get_PartObject<CWand>();
 
@@ -115,6 +103,7 @@ HRESULT CBombard::Pre_Setting(CGameObject* pObject)
 
 	m_vCameraLook = m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK);
 
+
 	pShootPt->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 	m_pLight_Projectile->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 	pCircle0->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
@@ -123,9 +112,6 @@ HRESULT CBombard::Pre_Setting(CGameObject* pObject)
 	pShootPt->Set_Visible(true);
 
 	m_pLight_Projectile->Set_Visible(true);
-
-
-	m_bVisible = true;
 
 
 	return S_OK;
@@ -174,7 +160,10 @@ CGameObject* CBombard::Clone(void* pArg, CGameObject* pOwner)
 
 void CBombard::OnCollision(CGameObject* pOther, void* pDesc)
 {
-	//CTransform* pOtherTransform = p
+	if (m_isCollisionEnter == true)
+		return;
+
+	m_isCollisionEnter = true;
 
 	_vector vPos = XMVectorSet(hitBuffer.block.position.x, hitBuffer.block.position.y, hitBuffer.block.position.z, 1.f);
 
@@ -185,13 +174,26 @@ void CBombard::OnCollision(CGameObject* pOther, void* pDesc)
 		pPair.second->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
 	}
 
+	CWand* pWand = static_cast<CPlayer*>(m_pOwner)->Get_PartObject<CWand>();
+
+	if (pWand == nullptr)
+		return;
+
+	CPartObject* pShootPt = Get_PartObject<CEffectParts>("Bombard_Shoot_Pt");
+	CPartObject* pCircle0 = Get_PartObject<CEffectParts>("Bombard_Circle0");
+
+	pShootPt->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
+	pCircle0->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
+
+
 	m_pLight_Projectile->Set_Visible(false);
-	Get_PartObject<CEffectParts>("Bombard_Shoot_Pt")->Set_Visible(false);
+
+	//Get_PartObject<CEffectParts>("Bombard_PT_0")->Get_Component<CTransform>()->LookAt(m_pOwner->Get_WorldPostion());
+	//Get_PartObject<CEffectParts>("Bombard_PT_1")->Get_Component<CTransform>()->LookAt(m_pOwner->Get_WorldPostion());
+	//Get_PartObject<CEffectParts>("Bombard_PT_2")->Get_Component<CTransform>()->LookAt(m_pOwner->Get_WorldPostion());
 
 	_vector vOwnerLook = m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK);
 	Get_PartObject<CEffectParts>("Bombard_Smoke")->Get_Component<CTransform>()->Translation(vOwnerLook);
-
-	Get_PartObject<CEffectParts>("Bombard_Circle0")->Set_Visible(false);
 
 }
 

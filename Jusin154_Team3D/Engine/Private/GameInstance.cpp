@@ -174,6 +174,18 @@ _int CGameInstance::Random_Int(_int iMin, _int iMax)
 	return iMin + (_int)(Random_Normal() * (iMax - iMin));
 }
 
+_int CGameInstance::Real_Random_Int(_int iMin, _int iMax)
+{
+	uniform_int_distribution<_int> rand(iMin, iMax);
+	return rand(m_Rng);
+}
+
+_float CGameInstance::Real_Random_Float (_float iMin, _float iMax)
+{
+	uniform_real_distribution<_float> rand(iMin, iMax);
+	return rand(m_Rng);
+}
+
 void CGameInstance::BillBoard(CTransform* pTransform)
 {
 	_matrix ScaleMatrix = {};
@@ -297,35 +309,38 @@ void CGameInstance::Present_TimeCost() const
 
 	GUI::PushItemWidth(80);
 	GUI::Begin("Previous_Frame_Timer");
+	if (GUI::CollapsingHeader("Detail"))
 	{
-		GUI::ProgressBar(m_fTimer_PriorityUpdate / fTotal, ImVec2(200.f, 0.f));
-		GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-		GUI::Text("Priority_Update %d", int(m_fTimer_PriorityUpdate / fTotal * 100.f));
-	}
-	{
-		GUI::ProgressBar(m_fTimer_Update / fTotal, ImVec2(200.f, 0.f));
-		GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-		GUI::Text("Update %d", int(m_fTimer_Update / fTotal * 100.f));
-	}
-	{
-		GUI::ProgressBar(m_fTimer_LateUpdate / fTotal, ImVec2(200.f, 0.f));
-		GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-		GUI::Text("Late_Update %d", int(m_fTimer_LateUpdate / fTotal * 100.f));
-	}
-	{
-		GUI::ProgressBar(m_fTimer_DrawCall / fTotal, ImVec2(200.f, 0.f));
-		GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-		GUI::Text("DrawCall %d", int(m_fTimer_DrawCall / fTotal * 100.f));
-	}
-	{
-		GUI::ProgressBar(m_fTimer_Present / fTotal, ImVec2(200.f, 0.f));
-		GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-		GUI::Text("Present %d", int(m_fTimer_Present / fTotal * 100.f));
-	}
-	{
-		GUI::ProgressBar(fTotal / m_fTimer_FrameCount, ImVec2(200.f, 0.f));
-		GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-		GUI::Text("Timer_Occupancy %d", int(m_fTimer_Present / fTotal * 100.f));
+		{
+			GUI::ProgressBar(m_fTimer_PriorityUpdate / fTotal, ImVec2(200.f, 0.f));
+			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+			GUI::Text("Priority_Update %d", int(m_fTimer_PriorityUpdate / fTotal * 100.f));
+		}
+		{
+			GUI::ProgressBar(m_fTimer_Update / fTotal, ImVec2(200.f, 0.f));
+			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+			GUI::Text("Update %d", int(m_fTimer_Update / fTotal * 100.f));
+		}
+		{
+			GUI::ProgressBar(m_fTimer_LateUpdate / fTotal, ImVec2(200.f, 0.f));
+			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+			GUI::Text("Late_Update %d", int(m_fTimer_LateUpdate / fTotal * 100.f));
+		}
+		{
+			GUI::ProgressBar(m_fTimer_DrawCall / fTotal, ImVec2(200.f, 0.f));
+			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+			GUI::Text("DrawCall %d", int(m_fTimer_DrawCall / fTotal * 100.f));
+		}
+		{
+			GUI::ProgressBar(m_fTimer_Present / fTotal, ImVec2(200.f, 0.f));
+			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+			GUI::Text("Present %d", int(m_fTimer_Present / fTotal * 100.f));
+		}
+		{
+			GUI::ProgressBar(fTotal / m_fTimer_FrameCount, ImVec2(200.f, 0.f));
+			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+			GUI::Text("Timer_Occupancy %d", int(m_fTimer_Present / fTotal * 100.f));
+		}
 	}
 	GUI::Text("GameInstance RefCNT : %d", m_iRefCnt.load());
 	static float values[60] = {};
@@ -432,6 +447,11 @@ void CGameInstance::Clear_Objects_With_Layers(_uint iLevelIndex)
 HRESULT CGameInstance::Add_RenderGroup(RENDER eRenderGroup, CGameObject* pRenderObject)
 {	
 	return m_pRenderer->Add_RenderGroup(eRenderGroup, pRenderObject);
+}
+
+void CGameInstance::Render_PreShadow()
+{
+	return m_pRenderer->Render_PreShadow();
 }
 
 void CGameInstance::Set_Transform(D3DTS eState, _fmatrix TransformStateMatrix)

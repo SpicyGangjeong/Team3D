@@ -172,11 +172,11 @@ void CTrail::Trail_Update(_float fDeltaTime, _fmatrix WorldMatrix)
 	if (m_isFixedTrail == true)
 	{
 		//만약 고정된 트레일을 켰다면 가장 마지막 부분을 항상 내 위치로 고정함
-		_vector vFixedLow = XMVector3TransformCoord(XMLoadFloat3(&m_TrailDesc.vLow), m_FixedMat);
-		_vector vFixedHigh = XMVector3TransformCoord(XMLoadFloat3(&m_TrailDesc.vHigh), m_FixedMat);
+		//_vector vFixedLow = XMVector3TransformCoord(XMLoadFloat3(&m_TrailDesc.vLow), m_FixedMat);
+		//_vector vFixedHigh = XMVector3TransformCoord(XMLoadFloat3(&m_TrailDesc.vHigh), m_FixedMat);
 
-		XMStoreFloat3(&m_pVertices[0].vPosition, vFixedLow);
-		XMStoreFloat3(&m_pVertices[1].vPosition, vFixedHigh);
+		//XMStoreFloat3(&m_pVertices[0].vPosition, vFixedLow);
+		//XMStoreFloat3(&m_pVertices[1].vPosition, vFixedHigh);
 
 	}
 #ifdef _DEBUG

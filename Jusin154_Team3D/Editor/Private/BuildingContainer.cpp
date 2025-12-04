@@ -66,10 +66,15 @@ void CBuildingContainer::Late_Update(_float fTimeDelta)
 
     if (m_bOcclusionPassed)
     {
-        if (m_pOcclusionQueryCom->isDraw())
-            __super::Late_Update(fTimeDelta);
+        if(m_fCamDepth > 80.f)
+        {
+            if (m_pOcclusionQueryCom->isDraw())
+                __super::Late_Update(fTimeDelta);
 
-       m_pGameInstance->Add_RenderGroup(RENDER::OCCLUSION, this);
+            m_pGameInstance->Add_RenderGroup(RENDER::OCCLUSION, this);
+        }
+        else
+            __super::Late_Update(fTimeDelta);
     }
     else
     {

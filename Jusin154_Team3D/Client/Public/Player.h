@@ -7,14 +7,6 @@ NS_BEGIN(Client)
 
 class CPlayer final : public CUnit
 {
-public:
-	struct PendingEvent
-	{
-		_float fRatio = 0.f;
-		_uint AnimIndex = 0;
-		function<void()> Callback;
-	};
-
 private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CPlayer(const CPlayer& Prototype);
@@ -94,10 +86,7 @@ private:
 	virtual void Add_FSM();
 	virtual void Set_Anim();
 
-	void Play_Event();
-	void Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio = 0.f);
-
-	vector<PendingEvent> m_PendingEvents;
+	function<void()> m_InputAction = nullptr;
 
 
 	_float3 m_OffsetPos = {};

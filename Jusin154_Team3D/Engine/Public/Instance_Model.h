@@ -62,8 +62,8 @@ public:
 		_float3		vPadding0 = {};
 		_float3		vPadding1 = {};
 
-		_float		fPadding0 = {};
-		_float		fPadding1 = {};
+		_float		fSizeLerpOption = {};
+		_float		fMoveLerpOption = {};
 
 		_bool		isPadding0 = {};
 		_bool		isPadding1 = {};
@@ -143,8 +143,8 @@ public:
 		_int     isPadding2 = {};
 
 		_float   fTimeDelta = {};
-		_float	 fPadding2 = {};
-		_float   fPadding3 = {};
+		_float	 fSizeLerpOption = {};
+		_float   fMoveLerpOption = {};
 		_float   fPadding4 = {};
 
 

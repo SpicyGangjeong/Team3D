@@ -21,6 +21,7 @@
 #include "State_Land.h"
 #include "State_Move.h"
 #include "State_Combat.h"
+#include "State_Hit.h"
 #include "State_Broom_Ride.h"
 #pragma endregion
 
@@ -91,6 +92,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pInfoInstance->Regist_PlayerAlly(this);
 
 
+	m_pCharacter_Controller->Set_Position(XMVectorSet(-34.f, 5, -11.4f, 1.f));
+
 #ifdef _DEBUG
 	m_BasicEffect = make_unique<BasicEffect>(m_pDevice);
 	m_BasicEffect->SetVertexColorEnabled(true);
@@ -127,8 +130,6 @@ __super::Update(fTimeDelta);
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
-
-	
 
 	{ // 세트
 		m_pCallBack_HitReport->BeginFrame();
@@ -400,34 +401,6 @@ _matrix CPlayer::Get_WandPos()
 	return pWand->Get_WorldMatrix();
 }
 
-void CPlayer::Play_Event()
-{
-	for (auto iter = m_PendingEvents.begin(); iter != m_PendingEvents.end(); )
-	{
-		_float ratio = m_pModelCom->Get_CurrentTrackProgressRatio();
-		_uint curAnim = m_pModelCom->Get_AnimIndex();
-
-		if (curAnim == iter->AnimIndex && ratio >= iter->fRatio)
-		{
-			iter->Callback();
-			iter = m_PendingEvents.erase(iter);
-		}
-		else
-		{
-			++iter;
-		}
-	}
-}
-
-void CPlayer::Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio)
-{
-	PendingEvent Desc;
-	Desc.AnimIndex = AnimIndex;
-	Desc.fRatio = fRatio;
-	Desc.Callback = Callback;
-	m_PendingEvents.push_back(Desc);
-}
-
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CPlayer* pInstance = new CPlayer(pDevice, pContext);
@@ -525,7 +498,35 @@ void CPlayer::Describe_Entity()
 
 	GUI::Text("%d", m_iStateMask);
 
+
+	_vector xmvInputDir = XMVectorZero();
+
+	_vector xmvCamLook = XMVector4Normalize(XMVectorSet(m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z, 0.f));
+	_vector xmvCamRight = XMVector4Normalize(XMVectorSet(m_vCameraRightDir.x, 0.f, m_vCameraRightDir.z, 0.f));
+
+	if (m_pGameInstance->Key_Pressing(DIK_W))
+		xmvInputDir += xmvCamLook;
+	if (m_pGameInstance->Key_Pressing(DIK_S))
+		xmvInputDir -= xmvCamLook;
+	if (m_pGameInstance->Key_Pressing(DIK_A))
+		xmvInputDir -= xmvCamRight;
+	if (m_pGameInstance->Key_Pressing(DIK_D))
+		xmvInputDir += xmvCamRight;
+
+	xmvInputDir = XMVector3Normalize(xmvInputDir);
+
+	_float2 vInputDir = { XMVectorGetX(xmvInputDir),XMVectorGetZ(xmvInputDir) };
+	_vector xmvCurLook = XMVector4Normalize(
+		XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
+	_float2 vCurLook = { XMVectorGetX(xmvCurLook),XMVectorGetZ(xmvCurLook) };
+
+	_float vDir = CMyTools::Get_Direction2D(vCurLook, vInputDir);
+	_float degree = XMConvertToDegrees(vDir);
+
+	GUI::Text("Angle %.2f", degree);
+
 	m_pLightCom->Describe_Entity();
+
 	GUI::End();
 }
 

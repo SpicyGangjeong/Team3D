@@ -30,9 +30,13 @@ float ShadowVisibility_hwPCF(Texture2D ShadowMap, float4 vLightClip, float2 vSha
         for (int u = -1; u <= 1; ++u)
         {
             float2 vOffset = float2(u, v) * vTexel;
-            float fDepth = ShadowMap.Sample(DefaultSampler, uv + vOffset).x;
+            float fDepth = ShadowMap.Sample(BorderOneSampler, uv + vOffset);
             fVisibility += (fDepthCenter - bias > fDepth) ? 0.f : 1.f;
         }
+    }
+    if (abs(fVisibility - 9.f) < FLT_EPSILON3)
+    {
+        fVisibility = 9.f;
     }
     return fVisibility / 9.f;
 }
@@ -320,13 +324,13 @@ float2 SelectLerpUV(float2 fAmount, float _fRatio, int iSelectOption)
             fRatio = fRatio * fRatio; // EaseInQuad 후반에 속도 증가
             break;
         case 2:
-            fRatio = 1 - (1 - fRatio * fRatio); // EaseOutQuad 초반에 속도 증가
+            fRatio = 1 - pow(1 - fRatio, 2); // EaseOutQuad 초반에 속도 증가
             break;
         case 3:
             fRatio = fRatio * fRatio * fRatio; // EaseInCubic  더 강하게 후반 속도 증가
             break;
         case 4:
-            fRatio = 1 - (1 - fRatio * fRatio * fRatio); // EaseOutCubic 더 강하게 초반 속도 증가
+            fRatio = 1 - pow(1 - fRatio, 3); // EaseOutCubic 더 강하게 초반 속도 증가
             break;
         case 5:
             fRatio = 0.5f * (1 - cos(PI * fRatio)); // EaseInOutSin 사인 곡선 

@@ -51,10 +51,11 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	if (FAILED(Ready_Layer_Item(LAYER_ITEM))) {
 		return E_FAIL;
 	}
-	if (FAILED(Ready_Layer_Player(LAYER_PLAYER))) {
+
+	if (FAILED(Ready_Layer_SkyBox(TEXT("Layer_SkyBox")))) {
 		return E_FAIL;
 	}
-	if (FAILED(Ready_Layer_SkyBox(TEXT("Layer_SkyBox")))) {
+	if (FAILED(Ready_Layer_Player(LAYER_PLAYER))) {
 		return E_FAIL;
 	}
 	if (FAILED(Ready_Layer_Monster())) {

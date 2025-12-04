@@ -918,6 +918,18 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDissolveMaskEdge", &m_EffectInfo.vDissolveValue.x, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDissolveSoftMask", &m_EffectInfo.vDissolveValue.y, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDissolveCutRatio", &m_EffectInfo.vDissolveValue.z, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
 
 
 

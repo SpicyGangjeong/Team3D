@@ -90,16 +90,8 @@ void CLeviosoSide::Late_Update(_float fTimeDelta)
 
 HRESULT CLeviosoSide::Pre_Setting(CGameObject* pObject)
 {
-	if (pObject == nullptr)
+	if (FAILED(__super::Pre_Setting(pObject)))
 		return E_FAIL;
-
-	m_pOwner = pObject;
-
-	Reset_EditEffect();
-
-	m_fAccTime = 0.f;
-	__super::m_fAccTime = 0.f;
-	m_fPreAccTime = 0.f;
 
 
 	CWand* pWand = static_cast<CWand*>(m_pOwner);
@@ -117,9 +109,6 @@ HRESULT CLeviosoSide::Pre_Setting(CGameObject* pObject)
 	/*_vector pPos = pPlayer->Get_WandPos().r[3];*/
 
 	m_pWandLight->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
-
-
-	m_bVisible = true;
 
 	return S_OK;
 }
