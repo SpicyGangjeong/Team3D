@@ -92,9 +92,9 @@ void CRevelio::Late_Update(_float fTimeDelta)
 
 }
 
-HRESULT CRevelio::Pre_Setting(CGameObject* pObject)
+HRESULT CRevelio::Pre_Setting(CGameObject* pObject, void* pArg)
 {
-	if (FAILED(__super::Pre_Setting(pObject)))
+	if (FAILED(__super::Pre_Setting(pObject, nullptr)))
 		return E_FAIL;
 
 	CPlayer* pPlayer = static_cast<CPlayer*>(m_pOwner);
