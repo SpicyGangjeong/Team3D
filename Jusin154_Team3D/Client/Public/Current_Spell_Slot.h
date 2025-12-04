@@ -13,6 +13,12 @@ NS_BEGIN(Client)
 
 class CCurrent_Spell_Slot final : public CElementObject
 {
+	typedef struct Get_Skill_Info
+	{
+		_int iSlotIndexX{};
+		_int iSlotIndexY{};
+		_int iSpellIndex{};
+	}GETSKILLINFO;
 private:
 	CCurrent_Spell_Slot(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CCurrent_Spell_Slot(const CCurrent_Spell_Slot& rhs);
@@ -65,7 +71,7 @@ private:
 	_int	m_iSkill_Index{};
 	_int	m_iSpell[4][4]{};
 	CVIBuffer_UI_Instance::UI_ATLAS_DESC  m_vUV{};
-
+	GETSKILLINFO m_GetSkillInfo = {};
 public:
 	static CCurrent_Spell_Slot* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

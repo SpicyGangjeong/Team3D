@@ -103,6 +103,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_Batch = make_unique<PrimitiveBatch<VertexPositionColor>>(m_pContext);
 #endif // _DEBUG
 
+	// 추가
+	m_pInfoInstance->Add_Event(TEXT("JAP"), [this](void* p) {this->Get_Spell(*reinterpret_cast<_int*>(p)); });
+
 	return S_OK;
 }
 

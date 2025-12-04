@@ -35,8 +35,8 @@ namespace Client
 
 	enum class KEYINPUT
 	{
-		INPUT_1, INPUT_2, INPUT_3, INPUT_4,
-		INPUT_T,
+		INPUT_1 = 1, INPUT_2, INPUT_3, INPUT_4,
+		INPUT_T, INPUT_G,
 		INPUT_TAB,
 		END
 	};

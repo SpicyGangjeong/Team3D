@@ -252,7 +252,7 @@ void CCurrent_Spell_Slot::Get_Skill(_int SpellIndex, _int SlotIndex)
 	m_vUV.fUV = UV(SpellIndex);
 	m_pVIBufferCom->Set_Index_Color(SlotIndex, static_cast<_float>(static_cast<CUIObject*>(m_pOwner)->Get_Info(SpellIndex).iSpell_Type));
 	m_pVIBufferCom->Set_Index_ImageUV(SlotIndex, m_vUV);
-	m_pManager->Event_Callback(TEXT("Skill_Change"));
+	//m_pManager->Event_Callback(TEXT("Skill_Change"));
 }
 
 _int CCurrent_Spell_Slot::Chack_Slot(_int Index) const
