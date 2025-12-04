@@ -94,6 +94,9 @@ void CGoblin::Update(_float fTimeDelta)
 	Describe_Entity();
 #endif // _DEBUG
 
+	for (_uint i = 0; i < ENUM_CLASS(GOBLIN_SKILL::END); i++)
+		m_fSkillCoolTime[i] = max(0.f, m_fSkillCoolTime[i] - fTimeDelta);
+
 }
 
 void CGoblin::Late_Update(_float fTimeDelta)
@@ -290,9 +293,33 @@ void CGoblin::Free()
 
 void CGoblin::Describe_Entity()
 {
+	GUI::Begin("Goblin");
+
+	GUI::Checkbox("LookAt", &m_bLookAt);
+
+	string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
+	GUI::Text(AnimList.c_str());
+
+	GUI::Text("AnimTrack %.2f", m_pModelCom->Get_CurrentTrackPosition());
+	GUI::Text("AnimRatio %.2f", m_pModelCom->Get_CurrentTrackProgressRatio());
+
 	_float4 vMomentum = {};
 	XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());
-	GUI::Text("GoblinMomentum %.2f %.2f %.2f %.2f ", vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);
+	GUI::Text("%.2f %.2f %.2f %.2f ", vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);
+
+	_float3 Pos;
+	XMStoreFloat3(&Pos, Get_WorldPostion());
+
+	if (GUI::DragFloat3("Pos", (_float*)&Pos))
+	{
+		m_pCharacter_Controller->Set_Position(XMLoadFloat3(&Pos));
+	}
+
+
+	GUI::TextColored(ImVec4(1.f, 0.f, 0.f, 1.f), "Distance %.2f", m_fTargetDistance);
+
+
+	GUI::End();
 }
 
 #endif // _DEBUG
