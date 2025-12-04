@@ -48,7 +48,48 @@ HRESULT CRigidBody_Dynamic::Render()
 	}
 	return S_OK;
 }
+#endif 
+void CRigidBody_Dynamic::Set_HalfGeometryInfo(_float3 vhalfGeometryInfo)
+{
+	m_vhalfGeometryInfo = vhalfGeometryInfo;
+	PSX::PxShape* pShape = { nullptr };
+	m_pRigidBody->getShapes(&pShape, m_pRigidBody->getNbShapes());
+
+	switch (m_eActorType)
+	{
+	case ACTOR::BOX:
+	{
+		PSX::PxBoxGeometry Geometry((const PSX::PxBoxGeometry&)pShape->getGeometry());
+		Geometry.halfExtents = { vhalfGeometryInfo.x, vhalfGeometryInfo.y, vhalfGeometryInfo.z };
+		pShape->setGeometry(Geometry);
+	} break;
+	case ACTOR::CAPSULE:
+	{
+		PSX::PxCapsuleGeometry Geometry((const PSX::PxCapsuleGeometry&)pShape->getGeometry());
+		Geometry.halfHeight = { vhalfGeometryInfo.y };
+		Geometry.radius = { vhalfGeometryInfo.x };
+		pShape->setGeometry(Geometry);
+	} break;
+	case ACTOR::SPHERE:
+	{
+		PSX::PxSphereGeometry Geometry((const PSX::PxSphereGeometry&)pShape->getGeometry());
+		Geometry.radius = { vhalfGeometryInfo.x };
+		pShape->setGeometry(Geometry);
+	} break;
+	default:
+		break;
+	}
+#ifdef _DEBUG
+	if (nullptr != m_pMainShape) {
+		m_pMainShape.release();
+	}
+	if (nullptr != m_pSubShape) {
+		m_pSubShape.release();
+	}
+	Add_DebugShape();
 #endif // _DEBUG
+}
+// _DEBUG
 void CRigidBody_Dynamic::Add_Force(_fvector vForce, PSX::PxForceMode::Enum eType)
 {
 	PSX::PxVec3 vPxForce = {};
@@ -121,6 +162,7 @@ HRESULT CRigidBody_Dynamic::Initialize(void* pArg)
 	m_pRigidBody->setRigidDynamicLockFlags(m_eLockFlag);
 	m_pRigidBody->setLinearDamping(m_vDamping.x);
 	m_pRigidBody->setAngularDamping(m_vDamping.y);
+
 	//m_pRigidBody->joint;
 	//PSX::PxRevol
 
@@ -184,5 +226,11 @@ void CRigidBody_Dynamic::Free()
 
 void CRigidBody_Dynamic::Describe_Entity()
 {
+	GUI::BeginChild(("Child ID: " + to_string((size_t)(this))).c_str());
+	GUI::Text("ReSize"); GUI::SameLine(); 
+	if (GUI::DragFloat3("##Size", (_float*)&m_vhalfGeometryInfo, 0.01f, 0.01f, 10.f, "%.3f")) {
+		Set_HalfGeometryInfo(m_vhalfGeometryInfo);
+	}
+	GUI::EndChild();
 }
 #endif // _DEBUG
