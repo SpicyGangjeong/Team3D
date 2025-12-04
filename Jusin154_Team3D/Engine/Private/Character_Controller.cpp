@@ -300,8 +300,6 @@ HRESULT CCharacter_Controller::Initialize_Prototype()
 
 HRESULT CCharacter_Controller::Initialize(void* pArg)
 {
-	m_bGravity = false;
-
 	Character_Controller_DESC* pDesc = static_cast<Character_Controller_DESC*>(pArg);
 	{ // Character_Controller_DESC
 		m_eBodyType = pDesc->eBodyType;
