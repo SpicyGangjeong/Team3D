@@ -51,7 +51,6 @@ HRESULT CSpell_Anim::Initialize(void* pArg)
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Slot_Hover"), [this](void* p) {this->Set_SkillType(*reinterpret_cast<_int*>(p)); });
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("FadeIn"), [this](void* p) {this->Set_FadeIn(); });
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("FadeOut"), [this](void* p) {this->Set_FadeOut(); });
-	m_bActive = true;
 	return S_OK;
 }
 
@@ -183,6 +182,8 @@ void CSpell_Anim::Set_SkillType(_int eType)
 		m_iCurrentFrame = 0;
 		Change_Image(eType);
 	}
+	else if (eType == -1)
+		m_iPerSpell = eType;
 }
 
 HRESULT CSpell_Anim::Bind_ShaderResources()
@@ -228,7 +229,7 @@ HRESULT CSpell_Anim::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Arresto_Momentum"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Accio"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}

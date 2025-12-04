@@ -49,7 +49,6 @@ HRESULT CLoadingWidget_Flame::Initialize(void* pArg)
 	m_iImageFrameX = 3;		// 이미지의 x 갯수
 	m_iImageFrameY = 3;		// 이미지의 y 갯수
 
-	m_bActive = true;
 	// 이 친구는 FadeIn을 해주면 알아서 한번 깜빡이고 들어감
 	// 조절을 할꺼면 나중에 제대로 확인을 한 다음에 할 예정
 	Set_FadeIn();

@@ -1,7 +1,6 @@
 ﻿#include "pch.h"
 #include "Spell_Vidio_Border.h"
 #include "GameInstance.h"
-#include "Spell_Anim.h"
 
 CSpell_Vidio_Border::CSpell_Vidio_Border(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)

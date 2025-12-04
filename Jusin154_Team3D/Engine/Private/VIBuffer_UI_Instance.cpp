@@ -119,8 +119,9 @@ HRESULT CVIBuffer_UI_Instance::Initialize_Prototype(const INSTANCE_DESC* pInstan
 		m_pInstanceVertices[i].fSize = _float2(1.f, 1.f);             // 기본 크기
 		m_pInstanceVertices[i].fPos = _float2(0.f, 0.f);              // 기본 위치
 		m_pInstanceVertices[i].fUV = _float4(0.f, 0.f, 1.f, 1.f);  // 전체 텍스처 영역
-		m_pInstanceVertices[i].vColor = _float4(1.f, 1.f, 1.f, 1.f); // 기본 흰색
+		m_pInstanceVertices[i].vColor = 0; // 기본 흰색
 		m_pInstanceVertices[i].bHover = 0;
+		m_pInstanceVertices[i].bSpell = 0;
 	}
 
 	m_InstanceInitialDesc.pSysMem = m_pInstanceVertices;
@@ -249,7 +250,20 @@ void CVIBuffer_UI_Instance::Set_ImageUV(UI_ATLAS_DESC* AtlasUV)
 	m_pContext->Unmap(m_pVBInstance, 0);
 }
 
-void CVIBuffer_UI_Instance::Set_Index_Renge_Color(_uint StartIndex, _uint EndIndex, _float4 vColor)
+void CVIBuffer_UI_Instance::Set_Index_ImageUV(_int Index, UI_ATLAS_DESC AtlasUV)
+{
+	D3D11_MAPPED_SUBRESOURCE		SubResource{};
+
+	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+
+	VTX_INSTANCE_UI* pVertices = static_cast<VTX_INSTANCE_UI*>(SubResource.pData);
+
+	pVertices[Index].fUV = AtlasUV.fUV;
+
+	m_pContext->Unmap(m_pVBInstance, 0);
+}
+
+void CVIBuffer_UI_Instance::Set_Index_Renge_Color(_uint StartIndex, _uint EndIndex, _float Color)
 {
 	D3D11_MAPPED_SUBRESOURCE		SubResource{};
 
@@ -259,8 +273,21 @@ void CVIBuffer_UI_Instance::Set_Index_Renge_Color(_uint StartIndex, _uint EndInd
 
 	for (size_t i = StartIndex; i <= EndIndex; i++)
 	{
-		pVertices[i].vColor = vColor;
+		pVertices[i].vColor = Color;
 	}
+
+	m_pContext->Unmap(m_pVBInstance, 0);
+}
+
+void CVIBuffer_UI_Instance::Set_Index_Color(_int Index, _float vColor)
+{
+	D3D11_MAPPED_SUBRESOURCE		SubResource{};
+
+	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+
+	VTX_INSTANCE_UI* pVertices = static_cast<VTX_INSTANCE_UI*>(SubResource.pData);
+
+	pVertices[Index].vColor = vColor;
 
 	m_pContext->Unmap(m_pVBInstance, 0);
 }
@@ -326,6 +353,19 @@ void CVIBuffer_UI_Instance::Set_Hover_Index(_uint iIndex)
 		else
 			pVertices[i].bHover = 0.f;
 	}
+
+	m_pContext->Unmap(m_pVBInstance, 0);
+}
+
+void CVIBuffer_UI_Instance::Set_Equip_Index(_uint iIndex)
+{
+	D3D11_MAPPED_SUBRESOURCE		SubResource{};
+
+	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+
+	VTX_INSTANCE_UI* pVertices = static_cast<VTX_INSTANCE_UI*>(SubResource.pData);
+
+	pVertices[iIndex].bSpell = 1.f;
 
 	m_pContext->Unmap(m_pVBInstance, 0);
 }
