@@ -88,6 +88,10 @@ HRESULT CInfoInstance::Load_LightElements(const _char* pFilePath)
 {
 	return m_pMapInfo->Load_LightElements(pFilePath);
 }
+HRESULT CInfoInstance::Load_InteractableElements(const _char* pFileName)
+{
+	return m_pMapInfo->Load_InteractableElements(pFileName);
+}
 #pragma endregion
 
 #pragma region SPELL_INFO

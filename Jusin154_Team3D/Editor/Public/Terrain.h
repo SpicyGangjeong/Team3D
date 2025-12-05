@@ -6,6 +6,7 @@
 NS_BEGIN(Engine)
 class CShader;
 class CVIBuffer_Terrain;
+class CRigidBody_Static;
 class CTexture;
 NS_END
 
@@ -33,6 +34,10 @@ private:
 	CTexture*				m_pNormalTextureCom = { nullptr };
 	CTexture*				m_pMROTextureCom = { nullptr };
 	CTexture*				m_pMaskTextureCom = { nullptr };
+
+	CRigidBody_Static*		m_pRigidBody = { nullptr };
+
+	_bool					m_bUsePsx = { false };
 
 	_float					m_fUsingSurfaceParams = {};
 	_float					m_fHeightRatio = {1.f};
