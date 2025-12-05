@@ -461,7 +461,7 @@ PSX::PxController* CPhysX_Manager::Add_BoxController(PSX::PxBoxControllerDesc& D
 	PSX::PxController* pController = { nullptr };
 
 	pController = m_pCCTManager->createController(Desc);
-	
+
 	return pController;
 }
 
@@ -500,12 +500,10 @@ HRESULT CPhysX_Manager::Initialize()
 		return E_FAIL;
 	}
 #ifdef _DEBUG
-
 	if (FAILED(Connect_DebugServer())) {
 		//ASSERT_NURI(false);
 		//ASSERT_JINWOO(false);
 	}
-
 #endif // _DEBUG
 
 	{ // 씬 세팅

@@ -17,6 +17,8 @@ void CRenderer::Render()
 	Render_Priority();
 	Render_Shadow();
 	Render_NonBlend();
+	Render_SSAO();
+	Render_SSAO_BLUR();
 	Render_LightAcc();
 	Render_Blur();
 	Render_Combined();
@@ -35,10 +37,20 @@ void CRenderer::Render()
 #ifdef _DEBUG
 	Describe_Entitiy();
 	m_pGameInstance->RenderTarget_Debuger();
+	static _bool m_bToggleDebug = false;
 
 	if (m_pGameInstance->Key_Pressing(DIK_F10)) {
 		Render_Debug();
 	}
+	else {
+		GUI::Begin("RenderTarget Debuger");
+		GUI::Checkbox("DebugToggle", &m_bToggleDebug);
+		if (m_bToggleDebug) {
+			Render_Debug();
+		}
+		GUI::End();
+	}
+	
 #endif
 }
 
@@ -227,7 +239,9 @@ void CRenderer::Render_LightAcc()
 	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Surface"), m_pShader, "g_SurfaceTexture"))) {
 		return;
 	}
-
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_SSAO_BLUR"), m_pShader, "g_SSAOInputTexture"))) {
+		return;
+	}
 
 	m_pVIBuffer->Bind_Resources();
 
@@ -518,12 +532,149 @@ void CRenderer::Render_Blur()
 }
 void CRenderer::Render_SSAO()
 {
+#ifdef _DEBUG
+	static _bool bSSAO = { true };
+	static _uint iKernelSize = SSAO_SAMPLE_NUMBER;
+	static _float fSSAORadius = 0.8f;
+	static _float fSSAO_BIAS = 0.1f * fSSAORadius;
+	static _bool bInverted = { false };
+	GUI::Begin("Renderer");
+	GUI::Checkbox("bSSAO ", &bSSAO);
+	if (true == bSSAO) {
+		GUI::SameLine();
+		if (GUI::CollapsingHeader("SSAO")) {
+			GUI::DragFloat("fSSAORadius ", &fSSAORadius, 0.0001f, -3.f, 3.f, "%.5f");
+			GUI::DragFloat("fSSAO_BIAS", &fSSAO_BIAS, 0.0001f, -2.f, 2.f, "%.5f");
+			GUI::Checkbox("Inverted", &bInverted);
+		}
+	}
+	else {
+		GUI::End();
+		return;
+	}
+	GUI::End();
+#endif // _DEBUG
+	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_SSAO_OCCLUSION")))) {
+		return;
+	}
+	{
+		_uint iNumViewPort = { 1 };
+		D3D11_VIEWPORT vp = {};
+		m_pContext->RSGetViewports(&iNumViewPort, &vp);
+		_float2 vResolution = { vp.Width, vp.Height };
+		if (FAILED(m_pShader->Bind_RawValue("g_vResolution", &vResolution, sizeof(_float2)))) {
+			assert(false);
+		}
+
+		// Bind_Resorces
+		if (FAILED(m_pShader->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))){
+			assert(false);
+			return ;
+		}
+		if (FAILED(m_pShader->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ)))){
+			assert(false);
+			return ;
+		}
+		if (FAILED(m_pShader->Bind_Matrix("g_invMatView", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW_INV) ))){
+			assert(false);
+			return ;
+		}
+		if (FAILED(m_pShader->Bind_Matrix("g_invmatProj", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ_INV)))){
+			assert(false);
+			return ;
+		}
+		if (FAILED(m_pShader->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float4)))){
+			assert(false);
+			return ;
+		}
+		if (FAILED(m_pShader->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))){
+			assert(false);
+			return ;
+		}
+
+		if (FAILED(m_pShader->Bind_RawValue("g_iKernelSize", &iKernelSize, sizeof(_uint)))){
+			assert(false);
+			return ;
+		}
+		if (FAILED(m_pShader->Bind_RawValue("g_fSSAORadius", &fSSAORadius, sizeof(_float)))){
+			assert(false);
+			return ;
+		}
+
+		if (FAILED(m_pShader->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
+			assert(false);
+			return;
+		}
+
+		if (FAILED(m_pShader->Bind_RawValue("g_fSSAO_BIAS", &fSSAO_BIAS, sizeof(_float)))) {
+			assert(false);
+			return;
+		}
+
+		if (FAILED(m_pShader->Bind_RawValue("g_bSSAO_INVERT", &bInverted, sizeof(_bool)))) {
+			assert(false);
+			return;
+		}
+		m_pContext->VSSetConstantBuffers(10, 1, &m_pGlobalStaticCB);
+		m_pContext->PSSetConstantBuffers(10, 1, &m_pGlobalStaticCB);
+	}
+	{
+		// Bind_Targets
+		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Depth"), m_pShader, "g_DepthTexture"))) {
+			assert(false);
+			return;
+		}
+		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Normal"), m_pShader, "g_NormalTexture"))) {
+			assert(false);
+			return;
+		}
+		if (FAILED(m_pShader->Bind_SRV("g_SSAONoiseTexture", m_pSSAO_NoiseSRV))) {
+			assert(false);
+			return;
+		}
+	}
+
+	if (FAILED(m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::SSAO_OCCLUSION)))){
+		assert(false);
+		return ;
+	}
+	if (FAILED(m_pVIBuffer->Bind_Resources())){
+		assert(false);
+		return ;
+	}
+	if (FAILED(m_pVIBuffer->Render())){
+		assert(false);
+		return ;
+	}
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
+	}
 }
 void CRenderer::Render_SSAO_BLUR()
 {
-}
-void CRenderer::Render_SSAO_Lighting()
-{
+	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_SSAO_BLUR")))) {
+		return;
+	}
+	{
+		// Bind_Resorces
+		m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix);
+		m_pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix);
+		m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix);
+		if (FAILED(m_pShader->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
+			return;
+		}
+		// Bind_Targets
+		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_SSAO_AmbientOcclusion"), m_pShader, "g_SSAOInputTexture"))) {
+			return;
+		}
+	}
+	m_pShader->Begin(ENUM_CLASS(SHADER_PASS_DEFERRED::SSAO_BLUR));
+
+	m_pVIBuffer->Bind_Resources();
+	m_pVIBuffer->Render();
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
+	}
 }
 void CRenderer::Render_Blend()
 {
