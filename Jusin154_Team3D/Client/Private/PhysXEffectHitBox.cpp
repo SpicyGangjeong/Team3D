@@ -103,8 +103,8 @@ HRESULT CPhysXEffectHitBox::Ready_Components(void* pArg)
 		Desc.iSubKind = pDesc->iSubKind;
 		Desc.pTransform = m_pTransformCom;
 		Desc.eBodyType = ACTOR::BOX;
-		Desc.fContactOffset = 0.1f;
-		Desc.fMaterial = { 0.5f, 0.5f, 0.6f };
+		Desc.fContactOffset = 0.3f;
+		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
 		Desc.bAutoStepping = { false };
 		Desc.fStepOffset = { 0.05f };
 		Desc.fRadius = 0.5f;

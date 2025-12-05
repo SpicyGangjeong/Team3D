@@ -240,8 +240,8 @@ HRESULT CTroll::Ready_Components()
 		Desc.iSubKind = ENUM_CLASS(PXOBJECT::TROLL);
 		Desc.pTransform = m_pTransformCom;
 		Desc.eBodyType = ACTOR::CAPSULE;
-		Desc.fContactOffset = 0.1f;
-		Desc.fMaterial = { 0.5f, 0.5f, 0.6f };
+		Desc.fContactOffset = 0.3f;
+		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
 		Desc.bAutoStepping = { false };
 		Desc.fStepOffset = { 0.05f };
 		Desc.fRadius = 1.2f;
@@ -249,6 +249,7 @@ HRESULT CTroll::Ready_Components()
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Monster_HitReport::Create();
 		Desc.pCallback_Behavior = m_pCallBack_Behavior = CCallBack_Monster_Behavior::Create();
 		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
+		Desc.fWalkableSlope = 45.f;
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), (CComponent**)&m_pCharacter_Controller, &Desc))) {
 			return E_FAIL;
 		}

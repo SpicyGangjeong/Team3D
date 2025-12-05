@@ -1851,8 +1851,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Desc.ePxRigidBodyFlags = {};
 			Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
 			Desc.ePxMaterialTypes = PXMATERIAL::DEFAULT;
-			Desc.vMatInfo = _float3(0.5f, 0.5f, 0.6f);
 			Desc.fContactOffset = 0.f;
+			Desc.vMatInfo = { 1.2f, 1.0f, 0.0f };
 		}
 		CRigidBody_Static* pRigid = CRigidBody_Static::Create(m_pDevice, m_pContext, Desc);
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_RigidBody_Static_Terrain_Hogsmeade"), pRigid))) {

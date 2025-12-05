@@ -178,6 +178,7 @@ public:
 	HRESULT Bind_Camera(_uint iLevel, const _wstring& strCameraKey, _bool bIgnorePriority);
 	HRESULT IsBinded_Camera(const _wstring& strCameraKey);
 	_vector Get_CameraLook();
+	_float	Get_CameraFov();
 	const _float* Get_CurrentCameraFar();
 	void Force_CamPosition(_fvector vPos);
 #pragma endregion
@@ -204,6 +205,8 @@ public:
 
 	_bool SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer);
 	_bool SphereCast(_float fRadius, _fvector vStartPos, _fvector vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer);
+	_bool RayCast(_float3 _vStartPos, _float3 _vDir, _float fDistance, PSX::PxRaycastHit* pRayHitArray, _uint iMaxHitCapacity, _uint& iOutHitCount);
+	_bool RayCast(_fvector _vStartPos, _fvector _vDir, _float fDistance, PSX::PxRaycastHit* pRayHitArray, _uint iMaxHitCapacity, _uint& iOutHitCount);
 
 	PSX::PxController*	Add_CapsuleController(PSX::PxCapsuleControllerDesc& Desc);
 	PSX::PxController*	Add_BoxController(PSX::PxBoxControllerDesc& Desc);
