@@ -3,7 +3,7 @@
 
 cbuffer GLOBAL_SSAO_DATA : register(b10)
 {
-    float3 SamplePos[64];
+    float4 SamplePos[64];
 };
 
 #endif // ENGINE_SHADER_BUFFERS_HLSLI

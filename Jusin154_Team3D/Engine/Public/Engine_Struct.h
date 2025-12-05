@@ -442,6 +442,7 @@ typedef struct tagBoneDesc
 
 typedef struct tagSSAO_SamplePos {
 	_float3 vPos = {  }; // xy(-1, 1) z(0, 1)
+	_float fPad = {};
 }SSAO_SAMPLE;
 
 typedef struct tagSSAO_Geometry_Hemisphere {

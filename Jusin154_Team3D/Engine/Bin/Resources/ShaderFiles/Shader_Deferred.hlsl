@@ -141,9 +141,9 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     
     float2 uv = In.vTexcoord;
     
-    float3 vAlbedo = g_DiffuseTexture.Sample(DefaultSampler, uv).rgb;
-    float3 vNormal = normalize(g_NormalTexture.Sample(DefaultSampler, uv).xyz * 2.f - 1.f);
-    float4 vDepth = g_DepthTexture.Sample(DefaultSampler, uv);
+    float3 vAlbedo          = g_DiffuseTexture.Sample(DefaultSampler, uv).rgb;
+    float3 vNormal          = normalize(g_NormalTexture.Sample(DefaultSampler, uv).xyz * 2.f - 1.f);
+    float4 vDepth           = g_DepthTexture.Sample(DefaultSampler, uv);
     float fAmbientOcclusion = g_SSAOInputTexture.Sample(DefaultSampler, uv).r;
     
     float fViewZ = vDepth.y * g_fFar;
@@ -571,7 +571,6 @@ PS_OUT_FLT4_SINGLE PS_MAIN_EMBOSS(PS_IN In)
     {
         case 0:
             /* None */
-            vColor = float3(0.f, 0.f, 0.f);
             break;
         case 1:
             /* Basic_Apply */
@@ -919,16 +918,16 @@ PS_OUT_SSAO_AMBIENT_OCCLUSION PS_SSAO_AMBIENT_OCCLUSION(PS_IN In)
     
     float4 vCenterViewPosition;
     {
-        vCenterViewPosition.x = uv.x * 2    - 1;
-        vCenterViewPosition.y = uv.y * -2   + 1;
+        vCenterViewPosition.x = uv.x * 2.f - 1.f;
+        vCenterViewPosition.y = uv.y * -2.f + 1.f;
         vCenterViewPosition.z = vDepthDesc.x;
         vCenterViewPosition.w = 1.f;
         vCenterViewPosition *= fCenterViewSpaceZ;
         vCenterViewPosition = mul(vCenterViewPosition, g_invmatProj);
+        vCenterViewPosition /= vCenterViewPosition.w;
     }
     float3 vNormal = normalize(g_NormalTexture.Sample(PointSampler, uv).xyz * 2.f - 1.f);
-    float3 vCenterViewNormal = mul(vNormal, (float3x3) g_ViewMatrix);
-    float3 vCenterProjNormal = mul(vCenterViewNormal, (float3x3) g_ProjMatrix);
+    float3 vCenterViewNormal = mul(vNormal, (float3x3)g_ViewMatrix);
     
     float2 vNoiseScale = g_vResolution / 4.f;
     float3 vNoise = g_SSAONoiseTexture.Sample(SsaoDataSampler, uv * vNoiseScale).xyz;
@@ -943,25 +942,19 @@ PS_OUT_SSAO_AMBIENT_OCCLUSION PS_SSAO_AMBIENT_OCCLUSION(PS_IN In)
         float3 vViewSamplePosVec = mul(SamplePos[i], toViewTBNMatrix); // TANSPACE -> VIEW
         float4 vViewSamplePos = vCenterViewPosition + float4(vViewSamplePosVec * g_fSSAORadius, 0.f);
         float4 vNDCSampleOffset = mul(vViewSamplePos, g_ProjMatrix);
-        vNDCSampleOffset /= vNDCSampleOffset.w;
+               vNDCSampleOffset /= vNDCSampleOffset.w;
         
-        float2 sampleUV = vNDCSampleOffset.xy * 0.5f + 0.5f; 
-        // 스크린 밖이면 스킵
+        float2 sampleUV;
+        sampleUV.x = vNDCSampleOffset.x * 0.5f + 0.5f;
+        sampleUV.y = vNDCSampleOffset.y * -0.5f + 0.5f;
+
         if (sampleUV.x < 0 || sampleUV.x > 1 
          || sampleUV.y < 0 || sampleUV.y > 1) {
             continue;
         }
 
         float fRecordedSampleViewPosDepth = g_DepthTexture.Sample(PointSampler, sampleUV).y * g_fFar;
-        float fIsOccluded = 1.f;
-        if (g_bSSAO_INVERT)
-        {
-            fIsOccluded = (fRecordedSampleViewPosDepth < vViewSamplePos.z - g_fSSAO_BIAS) ? 1.0f : 0.0f;
-        }
-        else
-        {
-            fIsOccluded = (fRecordedSampleViewPosDepth > vViewSamplePos.z - g_fSSAO_BIAS) ? 1.0f : 0.0f;
-        }
+        float fIsOccluded = (fRecordedSampleViewPosDepth < vViewSamplePos.z - g_fSSAO_BIAS) ? 1.0f : 0.0f;
 
         float fRangeCheck = smoothstep(0.f, 1.f, g_fSSAORadius / abs(vViewSamplePos.z - fRecordedSampleViewPosDepth));
         fIsOccluded *= fRangeCheck;

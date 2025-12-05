@@ -37,10 +37,20 @@ void CRenderer::Render()
 #ifdef _DEBUG
 	Describe_Entitiy();
 	m_pGameInstance->RenderTarget_Debuger();
+	static _bool m_bToggleDebug = false;
 
 	if (m_pGameInstance->Key_Pressing(DIK_F10)) {
 		Render_Debug();
 	}
+	else {
+		GUI::Begin("RenderTarget Debuger");
+		GUI::Checkbox("DebugToggle", &m_bToggleDebug);
+		if (m_bToggleDebug) {
+			Render_Debug();
+		}
+		GUI::End();
+	}
+	
 #endif
 }
 
@@ -525,16 +535,16 @@ void CRenderer::Render_SSAO()
 #ifdef _DEBUG
 	static _bool bSSAO = { true };
 	static _uint iKernelSize = SSAO_SAMPLE_NUMBER;
-	static _float fSSAORadius = 1.5f;
-	static _float fSSAO_BIAS = 0.1f;
+	static _float fSSAORadius = 0.8f;
+	static _float fSSAO_BIAS = 0.1f * fSSAORadius;
 	static _bool bInverted = { false };
 	GUI::Begin("Renderer");
 	GUI::Checkbox("bSSAO ", &bSSAO);
 	if (true == bSSAO) {
 		GUI::SameLine();
 		if (GUI::CollapsingHeader("SSAO")) {
-			GUI::DragFloat("fSSAORadius ", &fSSAORadius, 0.001f, 0.f, 3.f, "%.3f");
-			GUI::DragFloat("fSSAO_BIAS", &fSSAO_BIAS, 0.001f, 0.f, 2.f, "%.3f");
+			GUI::DragFloat("fSSAORadius ", &fSSAORadius, 0.0001f, -3.f, 3.f, "%.5f");
+			GUI::DragFloat("fSSAO_BIAS", &fSSAO_BIAS, 0.0001f, -2.f, 2.f, "%.5f");
 			GUI::Checkbox("Inverted", &bInverted);
 		}
 	}
@@ -557,19 +567,15 @@ void CRenderer::Render_SSAO()
 		}
 
 		// Bind_Resorces
-		if (FAILED(m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix))){
+		if (FAILED(m_pShader->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))){
 			assert(false);
 			return ;
 		}
-		if (FAILED(m_pShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix))){
+		if (FAILED(m_pShader->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ)))){
 			assert(false);
 			return ;
 		}
-		if (FAILED(m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix))){
-			assert(false);
-			return ;
-		}
-		if (FAILED(m_pShader->Bind_Matrix("g_invMatView", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW_INV)))){
+		if (FAILED(m_pShader->Bind_Matrix("g_invMatView", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW_INV) ))){
 			assert(false);
 			return ;
 		}
@@ -609,8 +615,8 @@ void CRenderer::Render_SSAO()
 			assert(false);
 			return;
 		}
-		//m_pContext->VSSetConstantBuffers(10, 1, &m_pGlobalStaticCB);
-		//m_pContext->PSSetConstantBuffers(10, 1, &m_pGlobalStaticCB);
+		m_pContext->VSSetConstantBuffers(10, 1, &m_pGlobalStaticCB);
+		m_pContext->PSSetConstantBuffers(10, 1, &m_pGlobalStaticCB);
 	}
 	{
 		// Bind_Targets

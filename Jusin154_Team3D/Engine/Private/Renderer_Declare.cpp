@@ -76,7 +76,7 @@ HRESULT CRenderer::Ready_ShadowDepthStencilView(_uint iSizeX, _uint iSizeY)
 
 void CRenderer::Fill_Geometry(_uint iNumSample)
 {
-	uniform_real_distribution<_float> rand_Normal(0, 1.f);
+	uniform_real_distribution<_float> rand_Normal(0.f, 1.f);
 	uniform_real_distribution<_float> rand_Minus(-1.f, 1.f);
 	mt19937 m_Rng{ random_device{}() };
 
@@ -86,11 +86,11 @@ void CRenderer::Fill_Geometry(_uint iNumSample)
 		vPos = {
 			rand_Minus(m_Rng),
 			rand_Minus(m_Rng),
-			rand_Minus(m_Rng)
+			rand_Normal(m_Rng)
 		};
 		vPos = XMVector3Normalize(vPos) * rand_Normal(m_Rng);
 		fScale = ((_float)iIndexSample / (_float)iNumSample);
-		fScale = CMyTools::Lerp_f1D(0.1f, 1.f, fScale * fScale);
+		fScale = CMyTools::Lerp_f1D(0.f, 1.f, fScale * fScale);
 		vPos *= fScale;
 		XMStoreFloat3(&m_tagSSAOGeometry.SamplePos[iIndexSample].vPos, vPos);
 	}
@@ -99,7 +99,7 @@ void CRenderer::Fill_Geometry(_uint iNumSample)
 		m_tagSSAOGeometryDirections.vDir[iIndexDir] = {
 			rand_Minus(m_Rng),
 			rand_Minus(m_Rng),
-			rand_Minus(m_Rng),
+			0.f,
 			0.f
 		};
 	}
@@ -113,10 +113,10 @@ void CRenderer::Fill_Geometry(_uint iNumSample)
 	texDesc.SampleDesc.Quality = 0;
 	texDesc.Usage = D3D11_USAGE_IMMUTABLE;
 	texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-
+		
 	D3D11_SUBRESOURCE_DATA initData = {};
-	initData.pSysMem = &m_tagSSAOGeometryDirections;
-	initData.SysMemPitch = sizeof(_float4);
+	initData.pSysMem = &m_tagSSAOGeometryDirections; 
+	initData.SysMemPitch = sizeof(_float4) * texDesc.Width; // 16 * 4 = 64
 
 	if (FAILED(m_pDevice->CreateTexture2D(&texDesc, &initData, &m_pSSAO_NoiseTexture))) {
 		assert(false);
@@ -131,7 +131,6 @@ void CRenderer::Fill_Geometry(_uint iNumSample)
 
 	m_pDevice->CreateShaderResourceView(m_pSSAO_NoiseTexture, &srvDesc, &m_pSSAO_NoiseSRV);
 
-
 	{
 		D3D11_BUFFER_DESC desc = {};
 		desc.ByteWidth = sizeof(SSAO_GEOMETRY_HEMISPHERE);
@@ -141,7 +140,7 @@ void CRenderer::Fill_Geometry(_uint iNumSample)
 
 		D3D11_SUBRESOURCE_DATA initData = {};
 		initData.pSysMem = &m_tagSSAOGeometry;
-		initData.SysMemPitch = sizeof(_float4);
+		initData.SysMemPitch = 0;
 
 		HRESULT hr = m_pDevice->CreateBuffer(&desc, &initData, &m_pGlobalStaticCB);
 
@@ -229,12 +228,12 @@ HRESULT CRenderer::Initialize()
 
 		/* Target_SSAO_AmbientOcclusion */
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_SSAO_AmbientOcclusion"), (_uint)Viewport.Width, (_uint)Viewport.Height,
-			DXGI_FORMAT_R32_FLOAT, _float4(0.f, 0.f, 0.0f, 0.0f)))) {
+			DXGI_FORMAT_R32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)))) {
 			return E_FAIL;
 		}
 		/* Target_SSAO_BLUR */
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_SSAO_BLUR"), (_uint)Viewport.Width, (_uint)Viewport.Height,
-			DXGI_FORMAT_R32_FLOAT, _float4(0.f, 0.f, 0.0f, 0.0f)))) {
+			DXGI_FORMAT_R32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)))) {
 			return E_FAIL;
 		}
 
@@ -432,7 +431,6 @@ HRESULT CRenderer::Initialize()
 
 	Fill_Geometry(SSAO_SAMPLE_NUMBER);
 
-
 	return S_OK;
 }
 CRenderer* CRenderer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -468,6 +466,9 @@ void CRenderer::Free()
 		RenderObjects.clear();
 	}
 
+	SAFE_RELEASE(m_pGlobalStaticCB);
+	SAFE_RELEASE(m_pSSAO_NoiseTexture);
+	SAFE_RELEASE(m_pSSAO_NoiseSRV);
 	SAFE_RELEASE(m_pPreShadowDSV);
 	SAFE_RELEASE(m_pShadowDSV);
 	SAFE_RELEASE(m_pShader);
