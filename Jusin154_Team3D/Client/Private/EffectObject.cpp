@@ -125,6 +125,25 @@ HRESULT CEffectObject::Render_Blur()
 	return S_OK;
 }
 
+void CEffectObject::Disable_Light()
+{
+
+	if (m_pLightCom == nullptr)
+		return;
+
+	m_pGameInstance->Delete_Light(CURRENT_LEVEL, m_pLightCom);
+
+}
+
+void CEffectObject::Add_Light()
+{
+	if (m_pLightCom == nullptr)
+		return;
+
+	m_pGameInstance->Add_Light(CURRENT_LEVEL, m_pLightCom);
+}
+
+
 HRESULT CEffectObject::Render_Bloom()
 {
 	if (FAILED(Bind_ShaderResources()))

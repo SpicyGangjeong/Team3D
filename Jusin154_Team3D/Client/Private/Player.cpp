@@ -105,7 +105,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	// UI 연동 추가
 	m_pInfoInstance->Add_Event(TEXT("JAP"), [this](void* p) {this->Get_Spell(*reinterpret_cast<_int*>(p)); });
-
+	m_pInfoInstance->Add_Event(TEXT("Canvas_Change"), [this](void* p) {this->Get_UIState(*reinterpret_cast<_int*>(p)); });
 	return S_OK;
 }
 
@@ -123,7 +123,10 @@ void CPlayer::Update(_float fTimeDelta)
 {
 	Update_CameraCoordinateSystem();
 
+	
 	m_pFSM->Update_State(fTimeDelta);
+	
+
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
@@ -190,6 +193,13 @@ HRESULT CPlayer::Render()
 #endif
 
 	return S_OK;
+}
+void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
+{
+	m_pFSM->Change_State(FSMSTATE::HIT);
+}
+void CPlayer::OnHit(CGameObject* pOther, CGameObject* pCaller)
+{
 }
 #ifdef _DEBUG
 

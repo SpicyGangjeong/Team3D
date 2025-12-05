@@ -40,12 +40,9 @@ void CLight_Main::Update(_float fTimeDelta)
 {
 #ifdef _DEBUG
 	GUI::Begin("Main_Light");
-#ifdef _DEBUG
 	m_pLightCom->Describe_Entity();
-#endif // _DEBUG
 	GUI::End();
 #endif // _DEBUG
-	
 }
 
 void CLight_Main::Late_Update(_float fTimeDelta)

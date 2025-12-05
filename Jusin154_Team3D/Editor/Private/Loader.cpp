@@ -39,13 +39,15 @@
 #include "Spell_Data.h"
 #include "UI_Manager.h"
 
+#include "Mouse_Cursor.h"
+#include "CameraLockOn.h"
+
 #include "GamePlay_Canvas.h"
 
 #include "Mission_Panel.h"
 #include "MissionBanner_Border.h"
 #include "MissionBanner_Key.h"
 #include "Mission_Icon.h"
-#include "Mouse_Cursor.h"
 #include "MiniMap_TrimBorder.h"
 
 #include "MiniMap_Panel.h"
@@ -350,11 +352,6 @@ HRESULT CLoader::Loading_For_UI()
 
 		});
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Cursor"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Cursor/UI_T_CursorRings.dds"), 0)))) {
-		return E_FAIL;
-	}
-
 	Asset_FileLoad("../Bin/Resources/Textures/Mission", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
 		{
 
@@ -500,7 +497,7 @@ HRESULT CLoader::Loading_For_UI()
 
 		});
 
-	Asset_FileLoad("../Bin/Resources/Textures/GadgetWheel", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
+	Asset_FileLoad("../Bin/Resources/Textures/Cursor", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
 		{
 
 			_string strFilePath = pFilePath;
@@ -515,6 +512,7 @@ HRESULT CLoader::Loading_For_UI()
 			return S_OK;
 
 		});
+
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Item"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("../Bin/Resources/Textures/GadgetWheel/Item%d.png"), 8)))) {
 		return E_FAIL;
@@ -839,12 +837,17 @@ HRESULT CLoader::Loading_For_UI()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CGamePlay_Canvas>(g_iStaticLevel, CGamePlay_Canvas::Create(m_pDevice, m_pContext))))
+	if (FAILED(m_pGameInstance->Add_Prototype<CMouse_Cursor>(g_iStaticLevel, CMouse_Cursor::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_Prototype<CMouse_Cursor>(g_iStaticLevel, CMouse_Cursor::Create(m_pDevice, m_pContext))))
+	if (FAILED(m_pGameInstance->Add_Prototype<CCameraLockOn>(g_iStaticLevel, CCameraLockOn::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CGamePlay_Canvas>(g_iStaticLevel, CGamePlay_Canvas::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}

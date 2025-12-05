@@ -62,6 +62,9 @@ private:
 	_float	m_fDOF_ENV_MaxEnd = { 360.f };
 	_float	m_fDOF_ENV_AmountRadius = { 1.f };
 
+	_float	m_fSSAO_Radius = { 1.812f };
+	_float	m_fSSAO_BIAS = { 0.042f };
+
 	SSAO_GEOMETRY_HEMISPHERE m_tagSSAOGeometry = {};
 	SSAO_GEOMETRYDIRECTIONS_RANDOM_REAL m_tagSSAOGeometryDirections = {};
 private:

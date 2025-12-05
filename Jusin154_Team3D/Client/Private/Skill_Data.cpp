@@ -3,14 +3,17 @@
 #include "GameObject.h"
 #include "UIObject.h"
 #include "tinyxml2.h"
+#include "InfoInstance.h"
 
 CSkill_Data::CSkill_Data()
+	:m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
 HRESULT CSkill_Data::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContex)
 {
-
+	m_bNoCool = false;
+	m_pInfoInstance->Add_Event(TEXT("NoCooL"), [this](void* p) {this->NoCool(*reinterpret_cast<_bool*>(p)); });
 	return S_OK;
 }
 
@@ -27,8 +30,11 @@ _int CSkill_Data::Update_Spell(_int SpellID)
 	if (SpellInfo[SpellID].bUse_Skill == false)
 		return -1;
 
-	SpellInfo[SpellID].bUse_Skill = false;
-	m_iSpell_CoolTime[SpellID] = 0.f;
+	if (m_bNoCool == false)
+	{
+		SpellInfo[SpellID].bUse_Skill = false;
+		m_iSpell_CoolTime[SpellID] = 0.f;
+	}
 
 	return SpellInfo[SpellID].iSkill_Type;
 }
@@ -110,6 +116,11 @@ HRESULT CSkill_Data::Load_SpellInfo(const _char* pFilePath)
 	}
 
 	return S_OK;
+}
+
+void CSkill_Data::NoCool(_bool bNoCool)
+{
+	m_bNoCool = bNoCool;
 }
 
 CSkill_Data* CSkill_Data::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

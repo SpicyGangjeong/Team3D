@@ -27,7 +27,27 @@ public:
 
 public:
 	const LIGHT_DESC* Get_LightDesc() { return &m_LightDesc; }
-	void Set_Color(_float4& vDiffuse, _float4& vAmbient, _float4& vSpecular);
+	void Set_Color(_float4& vDiffuse, _float4& vAmbient, _float4& vSpecular);	
+
+	void Reset_AmbientRatio()
+	{
+		m_fAmbientRatio = 1.f;
+		m_fAccLightTime = 0.f;
+
+	}
+	void Update_AmbientRatio(_float fTimeDelta , _float fTime) { 
+
+		if (fTime <= 0)
+			return;
+
+		m_fAccLightTime += fTimeDelta;
+
+		if (m_fAccLightTime >= fTime)
+			return;
+
+		m_fAmbientRatio = 1 - (m_fAccLightTime / fTime);
+	}
+
 public:
 	HRESULT			  Render(class CShader* pShader, class CVIBuffer* pVIBuffer) const;
 
@@ -35,6 +55,10 @@ private:
 	LIGHT_DESC	m_LightDesc = {};
 	_bool		m_bUsePowerAttenuation = { true };
 	_float		m_fLightAttenuationPower = { 3.30f };
+
+	_float      m_fAmbientRatio = { 1.f };
+	_float      m_fAccLightTime = { 0.f };
+
 	// 1 -> Linear, 
 	// ( 1 > fPower )-> 뾰족하게 감쇄
 	// ( 1 < fPower )-> 완만하게 감쇄
