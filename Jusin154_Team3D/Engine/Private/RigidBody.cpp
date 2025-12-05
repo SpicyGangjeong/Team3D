@@ -14,7 +14,9 @@ CRigidBody::CRigidBody(const CRigidBody& rhs) :
 	m_ePxRigidBodyFlags(rhs.m_ePxRigidBodyFlags),
 	m_ePxShapeFlags(rhs.m_ePxShapeFlags),
 	m_eMatType(rhs.m_eMatType),
-	m_fContactOffset(rhs.m_fContactOffset)
+	m_fContactOffset(rhs.m_fContactOffset),
+	m_vLocalRotQ(rhs.m_vLocalRotQ),
+	m_vLocalTranslation(rhs.m_vLocalTranslation)
 {
 }
 

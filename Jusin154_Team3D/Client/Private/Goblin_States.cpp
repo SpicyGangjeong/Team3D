@@ -29,7 +29,7 @@ void CGoblin::Behavior_IdleEnter()
 
 HRESULT CGoblin::Behavior_IdleExitCheck()
 {
-	if (m_fTargetDistance <= 20.f && m_fTargetDistance != 0.f)
+	if (m_fTargetDistance <= 20.f /*&& m_fTargetDistance != 0.f*/)
 		m_pFSM->Change_State(FSMSTATE::MOVE);
 
 	return E_FAIL;
@@ -243,7 +243,24 @@ void CGoblin::Behavior_HitEnter()
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::HIT);
 
-	pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_FWD];
+	switch (m_eHitSpell)
+	{
+	case STATEANIM::KNOCKDOWN_FWD:
+		pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_FWD];
+		break;
+	case STATEANIM::TUMBLE2:
+		pairAnimInfo = m_Animation[STATEANIM::TUMBLE2];
+		break;
+	case STATEANIM::HIT_LEVIOSO:
+	{
+		pairAnimInfo = m_Animation[STATEANIM::HIT_LEVIOSO];
+		break;
+	}
+	default:
+		pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_FWD];
+		break;
+	}
+
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
 
@@ -254,21 +271,28 @@ HRESULT CGoblin::Behavior_HitExitCheck(_float fTimeDelta)
 
 	if (iCurrAnimIndex == m_Animation[STATEANIM::KNOCKDOWN_FWD].first)
 	{
-		if (m_pModelCom->Get_CurrentTrackProgressRatio()>=0.5f)
+		if (m_pModelCom->Get_CurrentTrackProgressRatio() >= 0.5f)
 		{
 			pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_FWD_SPLT];
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 10.f);
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f);
 		}
 	}
 
-	if (iCurrAnimIndex == m_Animation[STATEANIM::KNOCKDOWN_FWD_SPLT].first)
+	if (iCurrAnimIndex == m_Animation[STATEANIM::HIT_LEVIOSO].first)
 	{
-		if (m_pModelCom->IsFinishedAnim())
+		if (m_pModelCom->Get_CurrentTrackProgressRatio() >= 0.31f)
 		{
-			m_bLookAt = true;
-			m_pFSM->Change_State(FSMSTATE::IDLE);
-			return E_FAIL;
+			pairAnimInfo = m_Animation[STATEANIM::LAND];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f);
 		}
+	}
+
+	
+	if (m_pModelCom->IsFinishedAnim())
+	{
+		m_bLookAt = true;
+		m_pFSM->Change_State(FSMSTATE::IDLE);
+		return E_FAIL;
 	}
 	return E_FAIL;
 }
@@ -390,7 +414,7 @@ void CGoblin::Set_Anim()
 	m_Animation[STATEANIM::SPRINT] = { 90, true };
 
 	m_Animation[STATEANIM::SKILL] = { 85,false }; // 나이프 던지기
-	m_Animation[STATEANIM::BLINK] = { 234,false }; // 텔레포트
+	m_Animation[STATEANIM::BLINK] = { 426,false }; // 텔레포트
 	m_Animation[STATEANIM::SWING_FWD] = { 100,false }; // 도끼 스윙 444
 
 	m_Animation[STATEANIM::HIT_FWD] = { 353, false };
@@ -421,8 +445,11 @@ void CGoblin::Set_Anim()
 	m_Animation[STATEANIM::KNOCKBACK] = { 377, true };
 	m_Animation[STATEANIM::KNOCKBACK2] = { 378, true };
 	m_Animation[STATEANIM::TUMBLE] = { 379, true };
-	m_Animation[STATEANIM::TUMBLE2] = { 380, false };// 원래 true 였음
+	m_Animation[STATEANIM::TUMBLE2] = { 380, true };// 원래 true 였음
 	m_Animation[STATEANIM::PETRIFICUSED_START] = { 383, false };
+
+	m_Animation[STATEANIM::LAND] = { 376, false };
+	m_Animation[STATEANIM::HIT_LEVIOSO] = { 381, false };
 
 	m_Animation[STATEANIM::DEAD_BWD] = { 317, false };
 	m_Animation[STATEANIM::DEAD_BWD2] = { 318, false };
@@ -433,7 +460,7 @@ void CGoblin::Set_Anim()
 	m_Animation[STATEANIM::DEAD_R] = { 323, false };
 	m_Animation[STATEANIM::DEAD_R2] = { 324, false };
 
-	//Tp 234
+	//Tp 426
 
 
 
@@ -456,5 +483,8 @@ void CGoblin::Set_Anim()
 	// 텀블링 히트 380
 	// 디센도 찍기전 띄우기 371
 	// 디센도 찍기 372
+
+	// 레비오소 피격 381
+	// 착지 376
 
 }

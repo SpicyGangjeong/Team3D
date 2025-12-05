@@ -3686,4 +3686,220 @@
             <Rotation x="0" y="109.99998" z="0"/>
         </PartObject>
     </Container>
+    <Container Name="HM_HIGHTSTREET_1">
+        <Position x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_C</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_C_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_C_Lod2</PrototypeTag>
+            <Position x="43.060459" y="4.4474273" z="86.324295"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="-1.9999999"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_C</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_C_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_C_Lod2</PrototypeTag>
+            <Position x="43.16312" y="5.1212273" z="87.537697"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="-3.0000002"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="2" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_C</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_C_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_C_Lod2</PrototypeTag>
+            <Position x="43.246662" y="5.8459349" z="88.465637"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="-3.0000002"/>
+        </PartObject>
+        <Collision Lod_Level="0" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_01_A_COL</PrototypeTag>
+            <Position x="43.272125" y="4.5027952" z="86.833504"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="-1.9999999"/>
+        </Collision>
+        <Collision Lod_Level="0" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_01_A_COL</PrototypeTag>
+            <Position x="43.313957" y="5.0392594" z="87.718208"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="-3.0000002"/>
+        </Collision>
+        <Collision Lod_Level="0" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_01_A_COL</PrototypeTag>
+            <Position x="43.331394" y="5.6026211" z="88.623962"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="-3.0000002"/>
+        </Collision>
+        <Collision Lod_Level="0" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_01_A_COL</PrototypeTag>
+            <Position x="43.442574" y="5.9601059" z="89.690971"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="-3.0000002"/>
+        </Collision>
+    </Container>
+    <Container Name="HM_PlazzaStep_1">
+        <Position x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <PartObject Lod_Level="3" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_PlazaSteps_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_PlazaSteps_A_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_PlazaSteps_A_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_PlazaSteps_A_Lod3</PrototypeTag>
+            <Position x="108.98026" y="12.006719" z="98.133469"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="-2.6680425e-08" y="120" z="0.50003815"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_PlazaSteps_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_PlazaSteps_A_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_PlazaSteps_A_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_PlazaSteps_A_Lod3</PrototypeTag>
+            <Position x="94.653152" y="7.0902638" z="87.852188"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="2" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_PlazaSteps_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_PlazaSteps_A_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_PlazaSteps_A_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_PlazaSteps_A_Lod3</PrototypeTag>
+            <Position x="94.30027" y="8.9721889" z="94.704437"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="3" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_PlazaSteps_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_PlazaSteps_A_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_PlazaSteps_A_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_PlazaSteps_A_Lod3</PrototypeTag>
+            <Position x="111.71465" y="14.805841" z="104.53838"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="15.000003" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="4" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_PlazaSteps_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_PlazaSteps_A_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_PlazaSteps_A_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_PlazaSteps_A_Lod3</PrototypeTag>
+            <Position x="111.50461" y="13.667078" z="102.27715"/>
+            <Scale x="0.99999994" y="1" z="0.99999994"/>
+            <Rotation x="0" y="18.000004" z="0"/>
+        </PartObject>
+        <Collision Lod_Level="0" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_PlazaSteps_A_Small_COL</PrototypeTag>
+            <Position x="109.02284" y="12.009924" z="98.142662"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="-2.6680425e-08" y="120" z="0.50003815"/>
+        </Collision>
+        <Collision Lod_Level="0" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_PlazaSteps_A_Small_COL</PrototypeTag>
+            <Position x="94.647194" y="7.0425816" z="87.874741"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="0" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_PlazaSteps_A_Small_COL</PrototypeTag>
+            <Position x="94.29937" y="8.9283915" z="94.739632"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="0" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_PlazaSteps_A_Small_COL</PrototypeTag>
+            <Position x="111.70499" y="14.759014" z="104.55251"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="15.000003" z="0"/>
+        </Collision>
+        <Collision Lod_Level="0" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_PlazaSteps_A_Small_COL</PrototypeTag>
+            <Position x="111.49685" y="13.618633" z="102.31825"/>
+            <Scale x="0.99999994" y="1" z="0.99999994"/>
+            <Rotation x="0" y="18.000004" z="0"/>
+        </Collision>
+    </Container>
+    <Container Name="HM_HighStreet_2">
+        <Position x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <PartObject Lod_Level="3" Key_Index="2" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_A_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_A_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_A_Lod3</PrototypeTag>
+            <Position x="54.502098" y="7.9298048" z="102.99089"/>
+            <Scale x="0.99999994" y="0.99999994" z="1"/>
+            <Rotation x="5" y="49.999996" z="-3.8342409"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="3" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_A_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_A_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_A_Lod3</PrototypeTag>
+            <Position x="56.1898" y="8.8552332" z="104.5234"/>
+            <Scale x="0.99999994" y="0.99999994" z="1"/>
+            <Rotation x="5" y="49.999996" z="-3.8342409"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="4" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_A_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_A_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_A_Lod3</PrototypeTag>
+            <Position x="53.122005" y="6.8031578" z="101.34745"/>
+            <Scale x="0.99999994" y="1" z="0.99999994"/>
+            <Rotation x="0" y="50" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="5" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_A_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_A_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_A_Lod3</PrototypeTag>
+            <Position x="58.088501" y="9.7055407" z="106.00336"/>
+            <Scale x="0.99999994" y="0.99999994" z="1"/>
+            <Rotation x="5" y="49.999996" z="-3.8342409"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="6" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_A_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_A_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_A_Lod3</PrototypeTag>
+            <Position x="59.941898" y="10.550675" z="107.57169"/>
+            <Scale x="0.99999994" y="0.99999994" z="1"/>
+            <Rotation x="5" y="49.999996" z="-3.8342409"/>
+        </PartObject>
+        <PartObject Lod_Level="3" Key_Index="7" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_A</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_A_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_A_Lod2</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Stone_Steps_High_Street_A_Lod3</PrototypeTag>
+            <Position x="60.668945" y="10.918675" z="108.6668"/>
+            <Scale x="0.99999994" y="1" z="0.99999994"/>
+            <Rotation x="0" y="50" z="0"/>
+        </PartObject>
+        <Collision Lod_Level="0" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_High_Street_Stairs_A_COL</PrototypeTag>
+            <Position x="54.589691" y="8.3145065" z="103.22376"/>
+            <Scale x="0.99999994" y="0.99999994" z="1.0000001"/>
+            <Rotation x="10.000001" y="50.000008" z="-7.6926308"/>
+        </Collision>
+        <Collision Lod_Level="0" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_High_Street_Stairs_B_COL</PrototypeTag>
+            <Position x="53.374268" y="6.9218588" z="100.79335"/>
+            <Scale x="0.99999994" y="1" z="0.99999994"/>
+            <Rotation x="0" y="50" z="0"/>
+        </Collision>
+        <Collision Lod_Level="0" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_High_Street_Stairs_A_COL</PrototypeTag>
+            <Position x="57.332142" y="9.6449766" z="105.63279"/>
+            <Scale x="0.99999994" y="0.99999994" z="0.99999988"/>
+            <Rotation x="10.000001" y="50.000008" z="-7.6926308"/>
+        </Collision>
+        <Collision Lod_Level="0" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_High_Street_Stairs_B_COL</PrototypeTag>
+            <Position x="60.616646" y="11.076958" z="107.7627"/>
+            <Scale x="0.99999994" y="0.99999994" z="1"/>
+            <Rotation x="9.999999" y="48" z="-7.4653044"/>
+        </Collision>
+    </Container>
 </Land>

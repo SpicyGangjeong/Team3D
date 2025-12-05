@@ -483,6 +483,16 @@ HRESULT CLoader::Loading_For_GamePlay()
 				".bin", false
 			));
 		}
+		{/* Step and Stair */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Meshes/GroundSurfaces",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Collision/GroundSurfaces",
+				".bin", false
+			));
+		}
 	}
 
 #pragma endregion
@@ -1175,7 +1185,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 		Desc.fDensity = 1.f;
 		Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
 		Desc.eLockFlag = {};
-		Desc.vAutoDamping = { 1.f, 1.f };
+		Desc.vAutoDamping = { 100.f, 100.f };
+		Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
+		Desc.vLocalTranslation = { 0.f, 0.f, 0.f };
 	}
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_HEAVY_WALL"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {

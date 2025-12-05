@@ -58,7 +58,10 @@ HRESULT CMapObject_Manager::Initialize(void* pArg)
 	m_iContainerObjectIndex = 99;
 	//m_pContainer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Building"))->Get_Object<CBuildingContainer>();
 
-	if (FAILED(Load_MapData("Map1129")))
+	if (FAILED(Load_MapData("Map1205")))
+		return E_FAIL;
+
+	if (FAILED(Load_LightObject("LightElement")))
 		return E_FAIL;
 	/*if (FAILED(Load_LightObject("LightElement")))
 		return E_FAIL;
@@ -409,7 +412,7 @@ HRESULT CMapObject_Manager::Save_MapData(const _char* pFileName)
 				prototype->SetText(CMyTools::ToString(pElement->Get_PrototypeTag(i)).c_str());
 				object->InsertEndChild(prototype);
 			}
-#pragma endregion
+#pragma endregion // PROTOTYPETAG
 
 #pragma region TRANSFORM
 			_float3 vPosition = {};
@@ -440,11 +443,11 @@ HRESULT CMapObject_Manager::Save_MapData(const _char* pFileName)
 			Rotation->SetAttribute("y", vRotation.y);
 			Rotation->SetAttribute("z", vRotation.z);
 			object->InsertEndChild(Rotation);
-#pragma endregion
+#pragma endregion // TRANSFORM
 
 		}
 	}
-#pragma endregion
+#pragma endregion // ELEMENT_INTERACTABEL
 
 
 	// ?ú?å
@@ -1184,8 +1187,6 @@ HRESULT CMapObject_Manager::Save_LightObject(const _char* pFileName)
 	tinyxml2::XMLElement* root = doc.NewElement("MapLightObjects");
 	doc.InsertEndChild(root);
 
-	
-
 	if (nullptr != pLayer)
 	{
 		const list<CGameObject*>* pList = pLayer->Get_Objects();
@@ -1200,7 +1201,6 @@ HRESULT CMapObject_Manager::Save_LightObject(const _char* pFileName)
 			if (FAILED(pElement->Save_XML(doc, root)))
 				return E_FAIL;
 		}
-#pragma endregion
 	}
 
 	if (doc.SaveFile(strPath.c_str()) != tinyxml2::XML_SUCCESS) {
@@ -1299,6 +1299,101 @@ HRESULT CMapObject_Manager::Load_LightObject(const _char* pFileName)
 #ifndef 기무리
 	MSG_BOX("Successed to Load File");
 #endif
+
+	return S_OK;
+}
+HRESULT CMapObject_Manager::Save_InteractObject(const _char* pFileName)
+{
+	CLayer* pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Element_Interactable"));
+
+	if (nullptr != pLayer)
+		return S_OK;
+
+	tinyxml2::XMLDocument doc;
+	string strPath = "../Bin/Resources/Data/Map/" + string(pFileName) + ".xml";
+
+	tinyxml2::XMLError loadResult = doc.LoadFile(strPath.c_str());
+
+	doc.Clear();
+	doc.InsertFirstChild(doc.NewDeclaration());
+
+	tinyxml2::XMLElement* Element_Interactable = doc.NewElement("Element_Interactable");
+	doc.InsertEndChild(Element_Interactable);
+
+#pragma region ELEMENT_INTERACTABEL
+
+	if (nullptr != pLayer)
+	{
+		const list<CGameObject*>* pList = pLayer->Get_Objects();
+
+		for (auto pGamObject : *pList)
+		{
+			CMapElement* pElement = dynamic_cast<CMapElement*>(pGamObject);
+
+			if (nullptr == pElement)
+				return E_FAIL;
+
+			if (FAILED(pElement->Save_XML(doc, Element_Interactable)))
+				return E_FAIL;
+		}
+	}
+#pragma endregion // ELEMENT_INTERACTABEL
+
+	return S_OK;
+}
+HRESULT CMapObject_Manager::Load_InteractObject(const _char* pFileName)
+{
+	tinyxml2::XMLDocument xmlDoc;
+
+	string strPath = "../Bin/Resources/Data/Map/" + string(pFileName) + ".xml";
+
+	if ((tinyxml2::XML_SUCCESS != xmlDoc.LoadFile(strPath.c_str())))
+		return E_FAIL;
+
+	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("MapLightObjects");
+
+	if (nullptr == root)
+	{
+		MSG_BOX("Failed to Find root");
+		return S_OK;
+	}
+
+	for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
+	{
+		CMapElement_Interactable::ELEMENT_INTERACTABLE_DESC Desc = {};
+		
+		/* Model Prototypes */
+		Object->QueryUnsignedAttribute("Lod_Level", &Desc.iMaxLodLevel);
+		Object->QueryUnsignedAttribute("Lod_Level", &Desc.iInteractableID);
+
+		string strTag = {};
+		for (auto* PrototypeTag = Object->FirstChildElement("PrototypeTag"); PrototypeTag; PrototypeTag = PrototypeTag->NextSiblingElement("PrototypeTag"))
+		{
+			strTag = PrototypeTag->GetText();
+
+			Desc.ModelPrototypeTags.push_back(CMyTools::ToWstring(strTag));
+		}
+
+		/* Transform */
+		auto* Position = Object->FirstChildElement("Position");
+		Position->QueryFloatAttribute("x", &Desc.vPosition.x);
+		Position->QueryFloatAttribute("y", &Desc.vPosition.y);
+		Position->QueryFloatAttribute("z", &Desc.vPosition.z);
+
+		auto* Scale = Object->FirstChildElement("Scale");
+		Scale->QueryFloatAttribute("x", &Desc.vScale.x);
+		Scale->QueryFloatAttribute("y", &Desc.vScale.y);
+		Scale->QueryFloatAttribute("z", &Desc.vScale.z);
+
+		auto* Rotation = Object->FirstChildElement("Rotation");
+		Rotation->QueryFloatAttribute("x", &Desc.vRotation.x);
+		Rotation->QueryFloatAttribute("y", &Desc.vRotation.y);
+		Rotation->QueryFloatAttribute("z", &Desc.vRotation.z);
+
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Interactable>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Interactable"), &Desc)))
+			return E_FAIL;
+	}
+	MSG_BOX("Successed to Create Interactalbe Element");
 
 	return S_OK;
 }
@@ -1594,6 +1689,7 @@ void CMapObject_Manager::Create_Elemnt(_wstring& strPrototypeTag)
 {
 	MAPOBJECT_LOD_DESC Desc = {};
 	CMapElement_Light::MAPELEMENT_LIGHT_DESC Light_Desc = {};
+	CMapElement_Interactable::ELEMENT_INTERACTABLE_DESC Interactable_Desc = {};
 	vector<_wstring> PrototypeTags;
 	vector<_uint> LodModelIndices;
 
@@ -1607,13 +1703,13 @@ void CMapObject_Manager::Create_Elemnt(_wstring& strPrototypeTag)
 		PrototypeTags.push_back(strLodTag);
 	}
 
-	Light_Desc.iMaxLodLevel = Desc.iMaxLodLevel = (_uint)LodModelIndices.size() - 1;
-	Light_Desc.ModelPrototypeTags = Desc.ModelPrototypeTags = PrototypeTags;
-	Light_Desc.pParentTransform = Desc.pParentTransform = m_pTransformCom;
-	Light_Desc.vPosition = Desc.vPosition = _float3(0.f, 0.f, 0.f);
-	Light_Desc.vRotation = Desc.vRotation = _float3(0.f, 0.f, 0.f);
-	Light_Desc.vScale = Desc.vScale = _float3(1.f, 1.f, 1.f);
-	Light_Desc.pModelPathIndices  =Desc.pModelPathIndices = &LodModelIndices;
+	Interactable_Desc.iMaxLodLevel = Light_Desc.iMaxLodLevel = Desc.iMaxLodLevel = (_uint)LodModelIndices.size() - 1;
+	Interactable_Desc.ModelPrototypeTags = Light_Desc.ModelPrototypeTags = Desc.ModelPrototypeTags = PrototypeTags;
+	Interactable_Desc.pParentTransform = Light_Desc.pParentTransform = Desc.pParentTransform = m_pTransformCom;
+	Interactable_Desc.vPosition = Light_Desc.vPosition = Desc.vPosition = _float3(0.f, 0.f, 0.f);
+	Interactable_Desc.vRotation = Light_Desc.vRotation = Desc.vRotation = _float3(0.f, 0.f, 0.f);
+	Interactable_Desc.vScale = Light_Desc.vScale = Desc.vScale = _float3(1.f, 1.f, 1.f);
+	Interactable_Desc.pModelPathIndices = Light_Desc.pModelPathIndices  =Desc.pModelPathIndices = &LodModelIndices;
 
 	if (ADD_TYPE::ELEMENT_STATIC == m_eType)
 	{
@@ -1621,6 +1717,8 @@ void CMapObject_Manager::Create_Elemnt(_wstring& strPrototypeTag)
 	}
 	else if (ADD_TYPE::ELEMENT_INTERACT == m_eType)
 	{
+		Interactable_Desc.iInteractableID = 0;
+
 		m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Interactable>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Interact"), &Desc);
 	}
 	else if (ADD_TYPE::ELEMENT_LIGHT == m_eType)

@@ -12,21 +12,24 @@ private:
 
 public:
 	HRESULT Bind_SRV(class CShader* pShader);
-	SaveMaterial Get_SaveMaterial() { return m_SaveMaterial; }
+	
 private:
-	class CGameInstance* m_pGameInstance = { nullptr };
-	ID3D11Device* m_pDevice = { nullptr };
-	ID3D11DeviceContext* m_pContext = { nullptr };
+	class CGameInstance*		m_pGameInstance = { nullptr };
+	ID3D11Device*				m_pDevice = { nullptr };
+	ID3D11DeviceContext*		m_pContext = { nullptr };
 
 	vector<ID3D11ShaderResourceView*>		m_SRVs[AI_TEXTURE_TYPE_MAX];
-	SaveMaterial							m_SaveMaterial;
+	
 
 #ifdef EDITOR_PROJECT
 public:
+	SaveMaterial Get_SaveMaterial() { return m_SaveMaterial; }
+
 	static CMaterial* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, const aiMaterial* pAIMaterial);
 	static CMaterial* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pMaterialFilePath, const _char* pTextureFilePath);
 private:
-	vector<string>	m_strPath[AI_TEXTURE_TYPE_MAX];
+	SaveMaterial							m_SaveMaterial;
+
 	HRESULT Initialize(const _char* pModelFilePath, const aiMaterial* pAIMaterial);
 	HRESULT Initialize(const _char* pMaterialFilePath, const _char* pTextureFilePath);
 	HRESULT Read_MaterialFile(const _char* pMaterialFilePath, const _char* pTextureFolderPath);

@@ -933,6 +933,9 @@
     <ClInclude Include="..\public\UI_Manager.h">
       <Filter>50.UI\UI_Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\CameraLockOn.h">
+      <Filter>50.UI\Mouse_Cursor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -1386,6 +1389,9 @@
     </ClCompile>
     <ClCompile Include="..\private\UI_Manager.cpp">
       <Filter>50.UI\UI_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\CameraLockOn.cpp">
+      <Filter>50.UI\Mouse_Cursor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
