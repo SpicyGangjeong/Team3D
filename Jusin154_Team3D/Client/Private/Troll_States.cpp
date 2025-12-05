@@ -339,6 +339,7 @@ void CTroll::Behavior_SwingEnter()
 	m_pFSM->Enable_State(FSMSTATE::SWING);
 	pairAnimInfo = m_Animation[STATEANIM::SWING_FWD];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+	m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::SWING)] = m_fMaxSkillCoolTime[ENUM_CLASS(TROLL_SKILL::SWING)];
 	Add_Event(pairAnimInfo.first,
 		[this]() {m_bLookAt = false; },
 		0.2f);

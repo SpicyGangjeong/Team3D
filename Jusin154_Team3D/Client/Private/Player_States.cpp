@@ -159,7 +159,7 @@ void CPlayer::Behavior_IdleEnter() {
 	
 	m_bSprintToggle = false;
 	m_bWalkToggle = false;
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.f,true);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,0.5f,true);
 }
 
 // S_OK -> 현 상태 유지
