@@ -160,14 +160,13 @@ void CRenderer::Render_Shadow()
 	{
 		ViewPortDesc.TopLeftX = 0;
 		ViewPortDesc.TopLeftY = 0;
-		ViewPortDesc.Width = (_float)g_iMaxShadowWidth;
+		ViewPortDesc.Width = (_float)(g_iMaxShadowWidth);
 		ViewPortDesc.Height = (_float)g_iMaxShadowHeight;
 		ViewPortDesc.MinDepth = 0.f;
 		ViewPortDesc.MaxDepth = 1.f;
 	}
 	m_pContext->RSGetViewports(&iNumViewOldPort, &ViewPortOldDesc);
 	m_pContext->RSSetViewports(1, &ViewPortDesc);
-
 
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::SHADOW)])
 	{
@@ -532,28 +531,8 @@ void CRenderer::Render_Blur()
 }
 void CRenderer::Render_SSAO()
 {
-#ifdef _DEBUG
-	static _bool bSSAO = { true };
-	static _uint iKernelSize = SSAO_SAMPLE_NUMBER;
-	static _float fSSAORadius = 0.8f;
-	static _float fSSAO_BIAS = 0.1f * fSSAORadius;
-	static _bool bInverted = { false };
-	GUI::Begin("Renderer");
-	GUI::Checkbox("bSSAO ", &bSSAO);
-	if (true == bSSAO) {
-		GUI::SameLine();
-		if (GUI::CollapsingHeader("SSAO")) {
-			GUI::DragFloat("fSSAORadius ", &fSSAORadius, 0.0001f, -3.f, 3.f, "%.5f");
-			GUI::DragFloat("fSSAO_BIAS", &fSSAO_BIAS, 0.0001f, -2.f, 2.f, "%.5f");
-			GUI::Checkbox("Inverted", &bInverted);
-		}
-	}
-	else {
-		GUI::End();
-		return;
-	}
-	GUI::End();
-#endif // _DEBUG
+	_uint iKernelSize = SSAO_SAMPLE_NUMBER;
+
 	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_SSAO_OCCLUSION")))) {
 		return;
 	}
@@ -587,36 +566,23 @@ void CRenderer::Render_SSAO()
 			assert(false);
 			return ;
 		}
-		if (FAILED(m_pShader->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))){
-			assert(false);
-			return ;
-		}
-
 		if (FAILED(m_pShader->Bind_RawValue("g_iKernelSize", &iKernelSize, sizeof(_uint)))){
 			assert(false);
 			return ;
 		}
-		if (FAILED(m_pShader->Bind_RawValue("g_fSSAORadius", &fSSAORadius, sizeof(_float)))){
+		if (FAILED(m_pShader->Bind_RawValue("g_fSSAORadius", &m_fSSAO_Radius, sizeof(_float)))){
 			assert(false);
 			return ;
 		}
-
 		if (FAILED(m_pShader->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 			assert(false);
 			return;
 		}
 
-		if (FAILED(m_pShader->Bind_RawValue("g_fSSAO_BIAS", &fSSAO_BIAS, sizeof(_float)))) {
+		if (FAILED(m_pShader->Bind_RawValue("g_fSSAO_BIAS", &m_fSSAO_BIAS, sizeof(_float)))) {
 			assert(false);
 			return;
 		}
-
-		if (FAILED(m_pShader->Bind_RawValue("g_bSSAO_INVERT", &bInverted, sizeof(_bool)))) {
-			assert(false);
-			return;
-		}
-		m_pContext->VSSetConstantBuffers(10, 1, &m_pGlobalStaticCB);
-		m_pContext->PSSetConstantBuffers(10, 1, &m_pGlobalStaticCB);
 	}
 	{
 		// Bind_Targets
