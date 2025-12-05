@@ -23,7 +23,7 @@ HRESULT CMapElement_Interactable::Initialize_Prototype()
 
 HRESULT CMapElement_Interactable::Initialize(void* pArg)
 {
-	MAPOBJECT_LOD_DESC* pDesc = static_cast<MAPOBJECT_LOD_DESC*>(pArg);
+	ELEMENT_INTERACTABLE_DESC* pDesc = static_cast<ELEMENT_INTERACTABLE_DESC*>(pArg);
 
 	m_iMaxLodLevel = pDesc->iMaxLodLevel;
 
@@ -52,6 +52,9 @@ HRESULT CMapElement_Interactable::Initialize(void* pArg)
 
 	m_vBoxSize = _float3(1.f, 1.f, 1.f);
 	m_pActor = static_cast<PSX::PxRigidDynamic*>(m_pRigidBody->Get_Actor());
+	
+	static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Set_HalfGeometryInfo(pDesc->vBoxSize);
+	static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Move_LocalPos(_float4(0.f, 0.f, 0.f, 0.f), pDesc->vBoxLocalPosition);
 
 	return S_OK;
 }
@@ -260,8 +263,6 @@ void CMapElement_Interactable::Describe_Entity()
 			m_pActor->setMass(m_fMass);
 		
 		m_pRigidBody->Describe_Entity();
-		
-		
 	}
 
 
@@ -278,11 +279,11 @@ void CMapElement_Interactable::Describe_Entity()
 	GUI::InputFloat("Up", &vMove.y, 0.05f, 0.1f);
 	GUI::InputFloat("Look", &vMove.z, 0.05f, 0.1f);
 
-	//m_pTransformCom->Move_Right(vMove.x);
-	//m_pTransformCom->Move_Up(vMove.y);
-	//m_pTransformCom->Move_Look(vMove.z);
+	m_pTransformCom->Move_Right(vMove.x);
+	m_pTransformCom->Move_Up(vMove.y);
+	m_pTransformCom->Move_Look(vMove.z);
 
-	//XMStoreFloat3(&m_vPosition, m_pTransformCom->Get_State(STATE::POSITION));
+	XMStoreFloat3(&m_vPosition, m_pTransformCom->Get_State(STATE::POSITION));
 
 	if (m_pGameInstance->Mouse_Down(DIM_LBUTTON) && m_pGameInstance->Key_Pressing(DIK_LSHIFT))
 	{
@@ -290,7 +291,7 @@ void CMapElement_Interactable::Describe_Entity()
 		if (m_pGameInstance->isPicking(&vPosition))
 		{
 			memcpy(&m_vPosition, &vPosition, sizeof(_float3));
-			m_pTransformCom->Set_State(STATE::POSITION, XMLoadFloat3(&m_vPosition));
+			m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
 		}
 	}
 
@@ -298,6 +299,8 @@ void CMapElement_Interactable::Describe_Entity()
 	GUI::InputFloat("X##Rotation", &m_vRotation.x, 1.f, 15.f);
 	GUI::InputFloat("Y##Rotation", &m_vRotation.y, 1.f, 15.f);
 	GUI::InputFloat("Z##Rotation", &m_vRotation.z, 1.f, 15.f);
+
+	m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
 
 	GUI::Text("----- Scale ----");
 	GUI::InputFloat("X##Scale", &m_vScale.x, 0.05f, 0.1f);
@@ -360,8 +363,22 @@ HRESULT CMapElement_Interactable::Save_XML(tinyxml2::XMLDocument& doc, tinyxml2:
 	Rotation->SetAttribute("y", vRotation.y);
 	Rotation->SetAttribute("z", vRotation.z);
 	object->InsertEndChild(Rotation);
-#pragma endregion
 
+	_float3 vHalfGeometryInfo = static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Get_HalfGeometryInfo();
+	tinyxml2::XMLElement* HalfGeometryInfo = doc.NewElement("HalfGeometryInfo");
+	HalfGeometryInfo->SetAttribute("x", vHalfGeometryInfo.x);
+	HalfGeometryInfo->SetAttribute("y", vHalfGeometryInfo.y);
+	HalfGeometryInfo->SetAttribute("z", vHalfGeometryInfo.z);
+	object->InsertEndChild(HalfGeometryInfo);
+
+	_float3 vLocalTranslation = static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Get_LocalTranslation();
+	tinyxml2::XMLElement* LocalTranslation = doc.NewElement("LocalTranslation");
+	LocalTranslation->SetAttribute("x", vLocalTranslation.x);
+	LocalTranslation->SetAttribute("y", vLocalTranslation.y);
+	LocalTranslation->SetAttribute("z", vLocalTranslation.z);
+	object->InsertEndChild(LocalTranslation);
+	
+#pragma endregion
 
 	return S_OK;
 }

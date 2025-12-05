@@ -367,6 +367,9 @@
     <ClInclude Include="..\Public\Goblin_Dagger.h">
       <Filter>02.GameObjects\Item\Goblin_Dagger</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\MapElement_Interactable.h">
+      <Filter>02.GameObjects\Environment\03.MapElement\Interactable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -782,6 +785,9 @@
     <Filter Include="01.Levels\01.Logo\02.GamePlay">
       <UniqueIdentifier>{7e641382-9dfa-4da7-a8c8-a3ee06360e7a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Environment\03.MapElement\Interactable">
+      <UniqueIdentifier>{17eaf081-6fbf-4965-b04d-10749e6032c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1142,6 +1148,10 @@
       <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Drag</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MapContainer.cpp" />
+    <ClCompile Include="..\private\MapContainer.cpp" />
+    <ClCompile Include="..\private\MapElement_Interactable.cpp">
+      <Filter>02.GameObjects\Environment\03.MapElement\Interactable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">

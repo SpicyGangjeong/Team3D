@@ -63,6 +63,19 @@ HRESULT CMapObject_Manager::Initialize(void* pArg)
 
 	if (FAILED(Load_LightObject("LightElement")))
 		return E_FAIL;
+	
+	if (FAILED(Load_InteractObject("E_INTER_Barrel")))
+		return E_FAIL;
+	if (FAILED(Load_InteractObject("E_INTER_PostPackage_B")))
+		return E_FAIL;
+	if (FAILED(Load_InteractObject("E_INTER_PostPackage_F")))
+		return E_FAIL;
+	if (FAILED(Load_InteractObject("E_INTER_TeaShopTable")))
+		return E_FAIL;
+	if (FAILED(Load_InteractObject("E_INTER_TeaShopChair")))
+		return E_FAIL;
+
+
 	/*if (FAILED(Load_LightObject("LightElement")))
 		return E_FAIL;
 	*/
@@ -126,6 +139,17 @@ void CMapObject_Manager::Update(_float fTimeDelta)
 		if (GUI::Button("Load_LightElements"))
 		{
 			Load_LightObject(m_szSaveContainerName);
+		}
+	}
+	else if (ADD_TYPE::ELEMENT_INTERACT == m_eType)
+	{
+		if (GUI::Button("Save_InteractElements"))
+		{
+			Save_InteractObject(m_szSaveContainerName);
+		}
+		if (GUI::Button("Load_InteractElements"))
+		{
+			Load_InteractObject(m_szSaveContainerName);
 		}
 	}
 
@@ -848,7 +872,7 @@ HRESULT CMapObject_Manager::Load_MapData(const _char* pFileName)
 		if(MAPOBJECT_TYPE::ELEMENT_STATIC  == eType)
 			m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Static>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Static"), &Desc);
 		else if(MAPOBJECT_TYPE::ELEMENT_INTERACT == eType)
-			m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Interactable>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Interact"), &Desc);
+			m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Interactable>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Interactable"), &Desc);
 	}
 
 	return S_OK;
@@ -1306,7 +1330,7 @@ HRESULT CMapObject_Manager::Save_InteractObject(const _char* pFileName)
 {
 	CLayer* pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Element_Interactable"));
 
-	if (nullptr != pLayer)
+	if (nullptr == pLayer)
 		return S_OK;
 
 	tinyxml2::XMLDocument doc;
@@ -1339,6 +1363,11 @@ HRESULT CMapObject_Manager::Save_InteractObject(const _char* pFileName)
 	}
 #pragma endregion // ELEMENT_INTERACTABEL
 
+	if (doc.SaveFile(strPath.c_str()) != tinyxml2::XML_SUCCESS) {
+		MSG_BOX("Failed to Save File");
+	}
+
+
 	return S_OK;
 }
 HRESULT CMapObject_Manager::Load_InteractObject(const _char* pFileName)
@@ -1350,7 +1379,7 @@ HRESULT CMapObject_Manager::Load_InteractObject(const _char* pFileName)
 	if ((tinyxml2::XML_SUCCESS != xmlDoc.LoadFile(strPath.c_str())))
 		return E_FAIL;
 
-	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("MapLightObjects");
+	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("Element_Interactable");
 
 	if (nullptr == root)
 	{
@@ -1365,7 +1394,7 @@ HRESULT CMapObject_Manager::Load_InteractObject(const _char* pFileName)
 		/* Model Prototypes */
 		Object->QueryUnsignedAttribute("Lod_Level", &Desc.iMaxLodLevel);
 		Object->QueryUnsignedAttribute("Lod_Level", &Desc.iInteractableID);
-
+		
 		string strTag = {};
 		for (auto* PrototypeTag = Object->FirstChildElement("PrototypeTag"); PrototypeTag; PrototypeTag = PrototypeTag->NextSiblingElement("PrototypeTag"))
 		{
@@ -1390,10 +1419,20 @@ HRESULT CMapObject_Manager::Load_InteractObject(const _char* pFileName)
 		Rotation->QueryFloatAttribute("y", &Desc.vRotation.y);
 		Rotation->QueryFloatAttribute("z", &Desc.vRotation.z);
 
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Interactable>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Interactable"), &Desc)))
+		auto* HalfGeometryInfo = Object->FirstChildElement("HalfGeometryInfo");
+		HalfGeometryInfo->QueryFloatAttribute("x", &Desc.vBoxSize.x);
+		HalfGeometryInfo->QueryFloatAttribute("y", &Desc.vBoxSize.y);
+		HalfGeometryInfo->QueryFloatAttribute("z", &Desc.vBoxSize.z);
+
+		auto* LocalTranslation = Object->FirstChildElement("LocalTranslation");
+		LocalTranslation->QueryFloatAttribute("x", &Desc.vBoxLocalPosition.x);
+		LocalTranslation->QueryFloatAttribute("y", &Desc.vBoxLocalPosition.y);
+		LocalTranslation->QueryFloatAttribute("z", &Desc.vBoxLocalPosition.z);
+
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Interactable>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Interactable_Test"), &Desc)))
 			return E_FAIL;
 	}
-	MSG_BOX("Successed to Create Interactalbe Element");
+	//MSG_BOX("Successed to Create Interactalbe Element");
 
 	return S_OK;
 }
@@ -1533,7 +1572,7 @@ void CMapObject_Manager::Update_ObjectList()
 		if (ADD_TYPE::ELEMENT_STATIC == m_eType)
 			pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Element_Static"));
 		else if (ADD_TYPE::ELEMENT_INTERACT == m_eType)
-			pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Element_Interact"));
+			pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Element_Interactable"));
 		else if (ADD_TYPE::ELEMENT_LIGHT == m_eType)
 			pLayer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Element_Light"));
 		
@@ -1717,9 +1756,12 @@ void CMapObject_Manager::Create_Elemnt(_wstring& strPrototypeTag)
 	}
 	else if (ADD_TYPE::ELEMENT_INTERACT == m_eType)
 	{
-		Interactable_Desc.iInteractableID = 0;
+		Interactable_Desc.iInteractableID = 1; 
+		Interactable_Desc.vBoxSize = _float3(0.3f, 0.33f, 0.27f);
+		Interactable_Desc.vBoxLocalPosition = _float3(-0.01f, 0.455f, 0.f);
+		
 
-		m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Interactable>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Interact"), &Desc);
+		m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Interactable>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Interactable"), &Interactable_Desc);
 	}
 	else if (ADD_TYPE::ELEMENT_LIGHT == m_eType)
 	{
