@@ -227,33 +227,6 @@ HRESULT CEffect_Container::Pre_Setting(CGameObject* pObject, void* pArg)
 	return S_OK;
 }
 
-
-void CEffect_Container::Add_Chlid_Light()
-{
-	for (auto& pParts : m_PartObjects)
-	{
-		CEffectParts* pEffect = static_cast<CEffectParts*>(pParts.second);
-
-		if (pEffect == nullptr)
-			continue;
-
-		pEffect->Add_Light();
-	}
-}
-
-void CEffect_Container::Delete_Chlid_Light()
-{
-	for (auto& pParts : m_PartObjects)
-	{
-		CEffectParts* pEffect = static_cast<CEffectParts*>(pParts.second);
-
-		if (pEffect == nullptr)
-			continue;
-
-		pEffect->Disable_Light();
-	}
-}
-
 HRESULT CEffect_Container::Ready_Components(void* pArg)
 {
 	CTransform::TRANSFORM_DESC TransformDesc = {};

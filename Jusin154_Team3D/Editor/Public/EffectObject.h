@@ -112,9 +112,10 @@ public:
 		_float3		vPadding1 = {};
 
 		_float		fPadding0 = {};
-		_float		fPadding1 = {};
 
-		_bool		isPadding0 = {};
+		_float		isLightTime = { 0.f };
+		_bool		isLightDissolve = {};
+
 		_bool		isPadding1 = {};
 
 	}EFFECT_INFO;
@@ -215,7 +216,7 @@ public:
 		_float		fPadding0 = {};
 		_float		fPadding1 = {};
 
-		_bool		isPadding0 = {};
+		_bool		isLightDissolve = {};
 		_bool		isPadding1 = {};
 	}PRE_EFFECT_INFO;
 
@@ -232,8 +233,6 @@ public:
 	virtual HRESULT Render_Blur() override;
 	virtual HRESULT Render_Bloom() override;
 public:
-	void    Disable_Light();
-	void    Add_Light();
 	HRESULT Load(const _char* pFilePath, LEVEL eLevel);
 	HRESULT Load();
 public:

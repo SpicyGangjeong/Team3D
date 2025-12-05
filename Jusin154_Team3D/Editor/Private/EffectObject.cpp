@@ -177,23 +177,6 @@ HRESULT CEffectObject::Render_Bloom()
 }
 
 
-void CEffectObject::Disable_Light()
-{
-
-	if (m_pLightCom == nullptr)
-		return;
-
-	m_pGameInstance->Delete_Light(CURRENT_LEVEL, m_pLightCom);
-
-}
-
-void CEffectObject::Add_Light()
-{
-	if (m_pLightCom == nullptr)
-		return;
-
-	m_pGameInstance->Add_Light(CURRENT_LEVEL, m_pLightCom);
-}
 
 
 
