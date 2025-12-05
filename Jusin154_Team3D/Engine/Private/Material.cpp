@@ -307,6 +307,9 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 	else if (!strcmp(FileType.c_str(), "E")){
 		eTexture = aiTextureType::aiTextureType_EMISSIVE;
 	}
+	else if (!strcmp(FileType.c_str(), "SRXO")) {
+		eTexture = aiTextureType::aiTextureType_SPECULAR;
+	}
 	else
 	{
 #ifndef 기무리
