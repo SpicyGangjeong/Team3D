@@ -104,6 +104,8 @@ public:
 		_float2		vDissolveUVGainAmount = {};
 		_bool		isDissolveMove = {};
 
+
+
 		_float3		vDissolveValue = {};
 
 
@@ -114,7 +116,6 @@ public:
 
 		_bool		isPadding0 = {};
 		_bool		isPadding1 = {};
-
 	}EFFECT_INFO;
 
 

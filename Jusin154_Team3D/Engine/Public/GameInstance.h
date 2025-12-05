@@ -279,10 +279,9 @@ private:
 	class CFog*						m_pFog = { nullptr };
 	class CResource_Manager*		m_pResource_Manager = { nullptr };
 	
-
+	mt19937 m_Rng{ random_device{}() };
 #ifdef _DEBUG
 private:
-	mt19937 m_Rng{ random_device{}() };
 	_float							m_fTimer_PriorityUpdate = { 0.f };
 	_float							m_fTimer_Update = { 0.f };
 	_float							m_fTimer_LateUpdate = { 0.f };

@@ -152,7 +152,7 @@ void CTrail::Trail_Update(_float fDeltaTime, _fmatrix WorldMatrix)
 	XMStoreFloat3(&m_PreLow[3], vLow);
 	XMStoreFloat3(&m_PreHigh[3], vHigh);
 
-	if (m_iNumCount < 16)
+	if (m_iNumCount < 12)
 	{
 		XMStoreFloat3(&m_pVertices[m_iNumCount++].vPosition, vLow);
 		XMStoreFloat3(&m_pVertices[m_iNumCount++].vPosition, vHigh); 
@@ -166,10 +166,10 @@ void CTrail::Trail_Update(_float fDeltaTime, _fmatrix WorldMatrix)
 	_vector m_PreLowVector[4] = { XMLoadFloat3(&m_PreLow[0]) , XMLoadFloat3(&m_PreLow[1]) ,  XMLoadFloat3(&m_PreLow[2]),  XMLoadFloat3(&m_PreLow[3]) };
 	_vector m_PreHighVector[4] = { XMLoadFloat3(&m_PreHigh[0]) , XMLoadFloat3(&m_PreHigh[1]),XMLoadFloat3(&m_PreHigh[2]) , XMLoadFloat3(&m_PreHigh[3]) };
 
-	for (size_t i = 0; i < 13; i++)
+	for (size_t i = 0; i < 9; i++)
 	{
 
-		_float iRatio =  (_float)i / 12;
+		_float iRatio =  (_float)i / 8;
 		_vector vLerpLow = XMVectorCatmullRom(m_PreLowVector[0], m_PreLowVector[1], m_PreLowVector[2], m_PreLowVector[3], iRatio); // LoW
 		_vector vLerpHigh = XMVectorCatmullRom(m_PreHighVector[0], m_PreHighVector[1], m_PreHighVector[2], m_PreHighVector[3], iRatio);
 

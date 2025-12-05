@@ -113,7 +113,7 @@ HRESULT CGoblin_Dagger::Ready_Components()
 
 	CTransform::TRANSFORM_DESC Desc = {};
 
-	Desc.fSpeedPerSec = 18.f;
+	Desc.fSpeedPerSec = 25.f;
 	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
 	Desc.fRadius = 10.f;
 

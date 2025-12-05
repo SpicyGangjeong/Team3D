@@ -63,11 +63,14 @@ private:
 	virtual void Set_Anim();
 
 	_float m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::END)] = {};
-	_float m_fMaxSkillCoolTime[ENUM_CLASS(TROLL_SKILL::END)] = { 20.f,15.f, 7.f, 5.f ,10.f};
+	_float m_fMaxSkillCoolTime[ENUM_CLASS(TROLL_SKILL::END)] = { 20.f,15.f, 10.f, 15.f ,15.f};
 
 
 	_float m_fRushTime = {};
 	_float m_fAttackDelay = {};
+
+	_float m_fDegree = {};
+	_float m_fCross = {};
 
 
 	void	Behavior_IdleEnter();
@@ -89,6 +92,10 @@ private:
 	void	Behavior_ThrowEnter();
 	HRESULT Behavior_ThrowExitCheck(_float fTimeDelta);
 	void	Behavior_ThrowExit();
+
+	void	Behavior_SwingEnter();
+	HRESULT Behavior_SwingExitCheck(_float fTimeDelta);
+	void	Behavior_SwingExit();
 
 	void	Behavior_HitEnter();
 	HRESULT Behavior_HitExitCheck();

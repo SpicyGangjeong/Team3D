@@ -998,7 +998,7 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 			{
 				pairAnimInfo = m_Animation[STATEANIM::DESCENDO];
 				Add_Event(pairAnimInfo.first,
-					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::DESCENDO, this); },
+					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::DESCENDO, Get_PartObject<CWand>()); },
 					0.1f);
 
 				m_eSpell = STATEANIM::END;

@@ -20,7 +20,10 @@ private:
 	ID3D11ShaderResourceView* Load_SRV(const _char* pFilePath);
 
 private:
+#ifdef _DEBUG
 	_uint							m_iCount = {};
+#endif // DEBUG
+
 	ID3D11Device*					m_pDevice = { nullptr };
 
 	unordered_map<_wstring, ID3D11ShaderResourceView*>	m_Resources;

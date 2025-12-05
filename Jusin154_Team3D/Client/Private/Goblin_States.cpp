@@ -3,6 +3,7 @@
 
 #include "GameInstance.h"
 #include "Player.h"
+#include "Goblin_Dagger.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -11,6 +12,10 @@
 #include "State_Land.h"
 #include "State_Move.h"
 #include "State_Combat.h"
+#include "State_Swing.h"
+#include "State_Throw.h"
+#include "State_Blink.h"
+#include "State_Hit.h"
 #pragma endregion
 
 
@@ -24,7 +29,7 @@ void CGoblin::Behavior_IdleEnter()
 
 HRESULT CGoblin::Behavior_IdleExitCheck()
 {
-	if (m_fTargetDistance <= 20.f)
+	if (m_fTargetDistance <= 20.f /*&& m_fTargetDistance != 0.f*/)
 		m_pFSM->Change_State(FSMSTATE::MOVE);
 
 	return E_FAIL;
@@ -41,7 +46,7 @@ void CGoblin::Behavior_MoveEnter()
 	m_pFSM->Enable_State(FSMSTATE::MOVE);
 
 	m_pFSM->Enable_State(FSMSTATE::JOG);
-	pairAnimInfo = m_Animation[STATEANIM::JOG_START];
+	pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 	
 }
@@ -50,20 +55,10 @@ HRESULT CGoblin::Behavior_MoveExitCheck()
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
-	if (iCurrAnimIndex == m_Animation[STATEANIM::JOG_START].first)
-	{
-		if (m_pModelCom->IsFinishedAnim())
-		{
-			pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
-		}
-	}
-
 	if (iCurrAnimIndex == m_Animation[STATEANIM::JOG_FWD].first) {
-		if (m_fTargetDistance <= 10.f && m_fTargetDistance != 0.f)
+		if (m_fTargetDistance <= 15.f && m_fTargetDistance != 0.f)
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
 	}
-
 
 	return E_FAIL;
 }
@@ -79,92 +74,39 @@ void CGoblin::Behavior_CombatEnter()
 	m_pFSM->Enable_State(FSMSTATE::COMBAT);
 
 	m_bLookAt = true;
-	if (m_fTargetDistance <= 3.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SLAM)] <= 0.f)
+	if (m_fTargetDistance <= 7.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SWING)] <= 0.f)
 	{
-		m_pFSM->Enable_State(FSMSTATE::SLAM);
-		pairAnimInfo = m_Animation[STATEANIM::SLAM];
-		m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SLAM)] = m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SLAM)];
+		m_pFSM->Change_State(FSMSTATE::SWING);
 	}
-	else if (m_fTargetDistance <= 5.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SWING)] <= 0.f)
+	else if (m_fTargetDistance >= 7.f && m_fTargetDistance <= 12.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::THROW)] <= 0.f)
 	{
-		m_pFSM->Enable_State(FSMSTATE::SWING);
-		pairAnimInfo = m_Animation[STATEANIM::SWING_FWD];
-		m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SWING)] = m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SWING)];
+		m_pFSM->Change_State(FSMSTATE::SKILL);
 	}
-	else if (m_fTargetDistance >= 5.f && m_fTargetDistance <= 10.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::THROW)] <= 0.f)
+	else if (m_fTargetDistance <= 15.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::TP)] <= 0.f)
 	{
-		m_pFSM->Enable_State(FSMSTATE::SKILL);
-		pairAnimInfo = m_Animation[STATEANIM::SKILL];
-		m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::THROW)] = m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::THROW)];
+		m_pFSM->Change_State(FSMSTATE::BLINK);
 	}
 	else {
 		pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 	}
-
-
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
 
 HRESULT CGoblin::Behavior_CombatExitCheck(_float fTimeDelta)
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	m_bLookAt = true;
 
-	if (m_pFSM->IsEnable(FSMSTATE::SLAM))
+	if (m_fTargetDistance > 25.f && m_fTargetDistance != 0.f)
+		m_pFSM->Change_State(FSMSTATE::MOVE);
+
+	else if (m_fTargetDistance > 30.f && m_fTargetDistance != 0.f)
+		m_pFSM->Change_State(FSMSTATE::MOVE);
+	else
 	{
-		m_pFSM->Disable_State(FSMSTATE::SLAM);
-		pairAnimInfo = m_Animation[STATEANIM::SLAM];
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
-		m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SLAM)] = m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SLAM)];
-		Add_Event(pairAnimInfo.first,
-			[this]() {m_bLookAt = false; },
-			0.2f);
-		return S_OK;
-	}
-
-	if (m_pFSM->IsEnable(FSMSTATE::SWING))
-	{
-
-		_float fDesiredRange = 1.5f;
-		_float dist = m_fTargetDistance;
-
-		if (dist > fDesiredRange)
-		{
-			_vector vPos = Get_WorldPostion();
-			_vector vDistance = XMLoadFloat4(&m_vTargetPos) - vPos;
-			vDistance = XMVector4Normalize(vDistance);
-			_float step = min(dist - fDesiredRange, 1.5f);
-
-			m_pTransformCom->AccumulateMomentum(vDistance * step * fTimeDelta);
-		}
-
-		m_pFSM->Disable_State(FSMSTATE::SWING);
-		pairAnimInfo = m_Animation[STATEANIM::SWING_FWD];
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
-		m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SWING)] = m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SWING)];
-		Add_Event(pairAnimInfo.first,
-			[this]() {m_bLookAt = false; },
-			0.2f);
-		return S_OK;
-	}
-
-	if (m_pFSM->IsEnable(FSMSTATE::SKILL))
-	{
-		m_pFSM->Disable_State(FSMSTATE::SKILL);
-		pairAnimInfo = m_Animation[STATEANIM::SKILL];
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
-		m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::THROW)] = m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::THROW)];
-		Add_Event(pairAnimInfo.first,
-			[this]() {m_bLookAt = false; },
-			0.2f);
-		return S_OK;
-	}
-
-	if (m_pModelCom->IsFinishedAnim())
-	{
-		m_bLookAt = true;
-		m_pFSM->Change_State(FSMSTATE::IDLE);
-		return E_FAIL;
+		m_pFSM->Disable_State(FSMSTATE::COMBAT);
+		m_pFSM->Change_State(FSMSTATE::COMBAT);
 	}
 
 	return E_FAIL;
@@ -172,7 +114,192 @@ HRESULT CGoblin::Behavior_CombatExitCheck(_float fTimeDelta)
 
 void CGoblin::Behavior_CombatExit()
 {
-	m_pFSM->Disable_State(FSMSTATE::COMBAT | FSMSTATE::SLAM | FSMSTATE::SKILL | FSMSTATE::SWING);
+	m_pFSM->Disable_State(FSMSTATE::COMBAT);
+}
+
+void CGoblin::Behavior_SwingEnter()
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+	m_pFSM->Enable_State(FSMSTATE::SWING);
+	pairAnimInfo = m_Animation[STATEANIM::SWING_FWD];
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+	m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SWING)] = m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SWING)];
+	Add_Event(pairAnimInfo.first,
+		[this]() {m_bStep = false; },
+		0.2f);
+}
+
+HRESULT CGoblin::Behavior_SwingExitCheck(_float fTimeDelta)
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+	if (m_pFSM->IsEnable(FSMSTATE::SWING) && m_bStep)
+	{
+		_float fDesiredRange = 0.5f;
+		_float dist = m_fTargetDistance;
+
+		if (dist > fDesiredRange)
+		{
+			_vector vPos = Get_WorldPostion();
+			_vector vDistance = XMLoadFloat4(&m_vTargetPos) - vPos;
+			vDistance = XMVector4Normalize(vDistance);
+			_float step = dist - fDesiredRange;
+
+			m_pTransformCom->AccumulateMomentum(vDistance * step *fTimeDelta*1.5f);
+		}
+	}
+
+	if (m_pModelCom->IsFinishedAnim())
+	{
+		m_bLookAt = true;
+		m_bStep = true;
+		m_pFSM->Change_State(FSMSTATE::COMBAT);
+		return E_FAIL;
+	}
+
+	return E_FAIL;
+}
+
+void CGoblin::Behavior_SwingExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::SWING);
+}
+
+void CGoblin::Behavior_ThrowEnter()
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+	m_pFSM->Enable_State(FSMSTATE::SKILL);
+	pairAnimInfo = m_Animation[STATEANIM::SKILL];
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+	m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::THROW)] = m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::THROW)];
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			Get_PartObject<CGoblin_Dagger>()->Set_Visible(true);
+			Get_PartObject<CGoblin_Dagger>()->Set_Attach(false); },
+		0.3f);
+}
+
+HRESULT CGoblin::Behavior_ThrowExitCheck(_float fTimeDelta)
+{
+	if (m_pModelCom->IsFinishedAnim())
+	{
+		m_bLookAt = true;
+		m_bStep = true;
+		m_pFSM->Change_State(FSMSTATE::COMBAT);
+		return E_FAIL;
+	}
+
+	return E_FAIL;
+}
+
+void CGoblin::Behavior_ThrowExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::SKILL);
+	Get_PartObject<CGoblin_Dagger>()->Set_Attach(true);
+	Get_PartObject<CGoblin_Dagger>()->Set_Visible(false);
+}
+
+void CGoblin::Behavior_BlinkEnter()
+{
+	m_bVisible = false;
+	pair<_uint, _bool> pairAnimInfo = {};
+	m_pFSM->Enable_State(FSMSTATE::BLINK);
+	m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::TP)] = m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::TP)];
+	_float3 vRandomPos = _float3(m_pGameInstance->Real_Random_Float(-1.5f, 1.5f), 1.f, m_pGameInstance->Real_Random_Float(-1.5f, 1.5f));
+	_vector vRandPos = XMLoadFloat3(&vRandomPos);
+	m_pCharacter_Controller->Set_Position(XMLoadFloat4(&m_vTargetPos) + vRandPos);
+}
+
+HRESULT CGoblin::Behavior_BlinkExitCheck(_float fTimeDelta)
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	m_fTpTime += fTimeDelta;
+	if (m_fTpTime >= 2.f)
+	{
+		m_bVisible = true;
+		m_fTpTime = 0.f;
+		pairAnimInfo = m_Animation[STATEANIM::BLINK];
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+	}
+
+	if (m_pModelCom->IsFinishedAnim() && iCurrAnimIndex == m_Animation[STATEANIM::BLINK].first)
+	{
+		m_bLookAt = true;
+		m_pFSM->Change_State(FSMSTATE::COMBAT);
+		return E_FAIL;
+	}
+
+	return E_FAIL;
+}
+
+void CGoblin::Behavior_BlinkExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::BLINK);
+}
+
+void CGoblin::Behavior_HitEnter()
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+	m_pFSM->Enable_State(FSMSTATE::HIT);
+
+	switch (m_eHitSpell)
+	{
+	case STATEANIM::KNOCKDOWN_FWD:
+		pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_FWD];
+		break;
+	case STATEANIM::TUMBLE2:
+		pairAnimInfo = m_Animation[STATEANIM::TUMBLE2];
+		break;
+	case STATEANIM::HIT_LEVIOSO:
+	{
+		pairAnimInfo = m_Animation[STATEANIM::HIT_LEVIOSO];
+		break;
+	}
+	default:
+		pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_FWD];
+		break;
+	}
+
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+}
+
+HRESULT CGoblin::Behavior_HitExitCheck(_float fTimeDelta)
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+
+	if (iCurrAnimIndex == m_Animation[STATEANIM::KNOCKDOWN_FWD].first)
+	{
+		if (m_pModelCom->Get_CurrentTrackProgressRatio() >= 0.5f)
+		{
+			pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_FWD_SPLT];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f);
+		}
+	}
+
+	if (iCurrAnimIndex == m_Animation[STATEANIM::HIT_LEVIOSO].first)
+	{
+		if (m_pModelCom->Get_CurrentTrackProgressRatio() >= 0.31f)
+		{
+			pairAnimInfo = m_Animation[STATEANIM::LAND];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f);
+		}
+	}
+
+	
+	if (m_pModelCom->IsFinishedAnim())
+	{
+		m_bLookAt = true;
+		m_pFSM->Change_State(FSMSTATE::IDLE);
+		return E_FAIL;
+	}
+	return E_FAIL;
+}
+
+void CGoblin::Behavior_HitExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::HIT);
 }
 
 
@@ -211,10 +338,58 @@ void CGoblin::Add_FSM()
 		Desc.funcLateUpdate = nullptr;
 		m_States.emplace(FSMSTATE::COMBAT, CState_Combat::Create(&Desc));
 	}
+
+	{
+		CState_Swing::STATE_SWING_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_SwingEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_SwingExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_SwingExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::SWING, CState_Swing::Create(&Desc));
+	}
+
+	{
+		CState_Throw::STATE_THROW_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_ThrowEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_ThrowExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_ThrowExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::SKILL, CState_Throw::Create(&Desc));
+	}
+
+	{
+		CState_Blink::STATE_BLINK_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_BlinkEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_BlinkExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_BlinkExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::BLINK, CState_Blink::Create(&Desc));
+	}
 #pragma endregion
 #pragma region Behavior_Combat_Focus
 
 #pragma endregion
+
+#pragma region Hit
+	{
+		CState_Hit::STATE_HIT_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_HitEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_HitExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_HitExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::HIT, CState_Hit::Create(&Desc));
+	}
+
+#pragma endregion
+
 
 }
 
@@ -238,9 +413,9 @@ void CGoblin::Set_Anim()
 	m_Animation[STATEANIM::DODGE_RIGHT] = { 126, false };
 	m_Animation[STATEANIM::SPRINT] = { 90, true };
 
-	m_Animation[STATEANIM::SLAM] = { 439,false }; // 도끼 찍기
 	m_Animation[STATEANIM::SKILL] = { 85,false }; // 나이프 던지기
-	m_Animation[STATEANIM::SWING_FWD] = { 444,false }; // 도끼 스윙
+	m_Animation[STATEANIM::BLINK] = { 426,false }; // 텔레포트
+	m_Animation[STATEANIM::SWING_FWD] = { 100,false }; // 도끼 스윙 444
 
 	m_Animation[STATEANIM::HIT_FWD] = { 353, false };
 	m_Animation[STATEANIM::HIT_BWD] = { 352, false };
@@ -270,8 +445,11 @@ void CGoblin::Set_Anim()
 	m_Animation[STATEANIM::KNOCKBACK] = { 377, true };
 	m_Animation[STATEANIM::KNOCKBACK2] = { 378, true };
 	m_Animation[STATEANIM::TUMBLE] = { 379, true };
-	m_Animation[STATEANIM::TUMBLE2] = { 380, true };
+	m_Animation[STATEANIM::TUMBLE2] = { 380, true };// 원래 true 였음
 	m_Animation[STATEANIM::PETRIFICUSED_START] = { 383, false };
+
+	m_Animation[STATEANIM::LAND] = { 376, false };
+	m_Animation[STATEANIM::HIT_LEVIOSO] = { 381, false };
 
 	m_Animation[STATEANIM::DEAD_BWD] = { 317, false };
 	m_Animation[STATEANIM::DEAD_BWD2] = { 318, false };
@@ -281,6 +459,8 @@ void CGoblin::Set_Anim()
 	m_Animation[STATEANIM::DEAD_L2] = { 322, false };
 	m_Animation[STATEANIM::DEAD_R] = { 323, false };
 	m_Animation[STATEANIM::DEAD_R2] = { 324, false };
+
+	//Tp 426
 
 
 
@@ -299,5 +479,12 @@ void CGoblin::Set_Anim()
 	// 도끼 공격 후 76
 	// 도끼 찍기 439
 	// 
+
+	// 텀블링 히트 380
+	// 디센도 찍기전 띄우기 371
+	// 디센도 찍기 372
+
+	// 레비오소 피격 381
+	// 착지 376
 
 }

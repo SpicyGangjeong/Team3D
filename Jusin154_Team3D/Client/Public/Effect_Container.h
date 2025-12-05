@@ -22,9 +22,9 @@ public:
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr) override;
 public:
 	HRESULT			Load_Directory(const _char* pPath);
-	virtual	HRESULT	Pre_Setting(CGameObject* pObject);
+	virtual	HRESULT	Pre_Setting(CGameObject* pObject, void* pArg = nullptr);
 	HRESULT         Load_Package(const _char* pPath);
-
+	_uint Get_SkillType() const { return m_iSkillType; }
 public:
 
 protected:
@@ -36,10 +36,12 @@ protected:
 
 	void			Update_Event(_float fTimeDelta);
 	HRESULT			Reset_EffectParts();
+	_int            CollisionCheck();
+
 protected:
-	_float4			    m_vStartPos = {};
-	_float4			    m_vEndPos = {};
-	PSX::PxSweepBuffer  hitBuffer = {};
+	_float4							m_vStartPos = {};
+	_float4							m_vEndPos = {};
+	PSX::PxSweepBufferN<12>			m_Hitbuffer = {};
 protected:
 	_wstring						m_wstrEffectName = {};
 
@@ -53,6 +55,8 @@ protected:
 	_bool							m_isCollisionEnter = { false };
 
 	map<_float, function<void()>>	m_Events = {};
+	_uint							m_iSkillType = ENUM_CLASS(SKILL_TYPE::END);
+	_bool							m_bHasDamage = { false };
 
 public:
 	virtual void Free() override;

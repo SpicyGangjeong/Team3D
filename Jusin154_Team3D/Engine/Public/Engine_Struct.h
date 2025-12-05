@@ -440,5 +440,17 @@ typedef struct tagBoneDesc
 	_float4x4 Combined;
 }BONE_DESC;
 
+typedef struct tagSSAO_SamplePos {
+	_float3 vPos = {  }; // xy(-1, 1) z(0, 1)
+	_float fPad = {};
+}SSAO_SAMPLE;
+
+typedef struct tagSSAO_Geometry_Hemisphere {
+	SSAO_SAMPLE SamplePos[SSAO_SAMPLE_NUMBER];
+}SSAO_GEOMETRY_HEMISPHERE;
+
+typedef struct tagSSAO_GeometryDirections_RANDOM_REAL {
+	_float4 vDir[16];
+}SSAO_GEOMETRYDIRECTIONS_RANDOM_REAL;
 
 NS_END

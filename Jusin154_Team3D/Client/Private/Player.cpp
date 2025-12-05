@@ -139,7 +139,6 @@ __super::Update(fTimeDelta);
 		m_pCharacter_Controller->Move(fTimeDelta);
 		m_pCallBack_HitReport->Set_CurrentSlop();
 	}
-	TestKeyInput(fTimeDelta);
 }
 
 void CPlayer::Late_Update(_float fTimeDelta)

@@ -83,7 +83,7 @@ HRESULT CMaterial::Initialize(const _char* pModelFilePath, const aiMaterial* pAI
 			if (FAILED(hr)) {
 				return E_FAIL;
 			}
-			m_strPath[i].push_back(szSaveDir);
+			//m_strPath[i].push_back(szSaveDir);
 			m_SRVs[i].push_back(pSRV);
 		}
 	}
@@ -307,6 +307,9 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 	else if (!strcmp(FileType.c_str(), "E")){
 		eTexture = aiTextureType::aiTextureType_EMISSIVE;
 	}
+	else if (!strcmp(FileType.c_str(), "SRXO")) {
+		eTexture = aiTextureType::aiTextureType_SPECULAR;
+	}
 	else
 	{
 #ifndef 기무리
@@ -349,32 +352,6 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 	{
 		strTexturePath = CMyTools::ToString(szTextureFilePath);
 	}
-
-	//_string strPrefix = "C:";
-	//_string strSearchString = "MeshTable";
-	//_string strResultPath = {};
-
-	//size_t mapRePos = strTexturePath.find(strSearchString);
-
-	//if (mapRePos != std::string::npos) 
-	//{
-	//	size_t startPos = mapRePos + strSearchString.length();
-
-	//	// 'MapRe' 뒤에 오는 경로 건너뛰기
-	//	if (startPos < strTexturePath.length() &&
-	//		(strTexturePath[startPos] == '\\' || strTexturePath[startPos] == '/')) {
-	//		startPos++;
-	//	}
-
-	//	// 'MapRe' 이후의 나머지 경로를 추출
-	//	strResultPath = strTexturePath;//.substr(startPos);
-	//}
-	//else
-	//{
-	//	MSG_BOX("FAILED to Find Path");
-	//}
-
-	//replace(strResultPath.begin(), strResultPath.end(), '\\', '/');
 
 	m_SaveMaterial.Path[ENUM_CLASS(eTexture)].push_back(strTexturePath);
 	m_SRVs[ENUM_CLASS(eTexture)].push_back(pSRV);

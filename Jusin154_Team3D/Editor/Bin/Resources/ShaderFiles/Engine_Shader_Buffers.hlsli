@@ -1,0 +1,9 @@
+#ifndef ENGINE_SHADER_BUFFERS_HLSLI
+#define ENGINE_SHADER_BUFFERS_HLSLI
+
+cbuffer GLOBAL_SSAO_DATA : register(b10)
+{
+    float4 SamplePos[64];
+};
+
+#endif // ENGINE_SHADER_BUFFERS_HLSLI

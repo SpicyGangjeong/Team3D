@@ -40,12 +40,14 @@ private:
 	_float4x4					m_ViewMatrix = {};
 	_float4x4					m_ProjMatrix = {};
 
-	ID3D11DepthStencilView* m_pShadowDSV = { nullptr };
-	ID3D11DepthStencilView* m_pPreShadowDSV = { nullptr };
+	ID3D11DepthStencilView*		m_pShadowDSV = { nullptr };
+	ID3D11DepthStencilView*		m_pPreShadowDSV = { nullptr };
+	ID3D11ShaderResourceView*	m_pSSAO_NoiseSRV = { nullptr };
+	ID3D11Texture2D*			m_pSSAO_NoiseTexture = { nullptr };
+	ID3D11Buffer*				m_pGlobalStaticCB = { nullptr };
 
-	SHADOW_LIGHT_DESC m_PreShadowDesc = {};
-	_float4x4 m_PreShadowMatrices[ENUM_CLASS(D3DTS::END)] = {};
-
+	SHADOW_LIGHT_DESC			m_PreShadowDesc = {};
+	_float4x4					m_PreShadowMatrices[ENUM_CLASS(D3DTS::END)] = {};
 
 	/* TunningParam  */
 	_int	m_iToneMappingType = { 2 };
@@ -60,16 +62,17 @@ private:
 	_float	m_fDOF_ENV_MaxEnd = { 360.f };
 	_float	m_fDOF_ENV_AmountRadius = { 1.f };
 
+	SSAO_GEOMETRY_HEMISPHERE m_tagSSAOGeometry = {};
+	SSAO_GEOMETRYDIRECTIONS_RANDOM_REAL m_tagSSAOGeometryDirections = {};
 private:
 	void Render_Occlusion();
 	void Render_Priority();
 	void Render_Shadow();
 	void Render_NonBlend();
-	void Render_LightAcc();
 	void Render_Blur(); 
 	void Render_SSAO();
 	void Render_SSAO_BLUR();
-	void Render_SSAO_Lighting();
+	void Render_LightAcc();
 	void Render_Combined();
 	void Render_EnvironmentPostProcess();
 	void Render_Fog();
@@ -89,6 +92,7 @@ private:
 #endif
 
 private:
+	void  Fill_Geometry(_uint iNumSample);
 	HRESULT Ready_ShadowDepthStencilView(_uint iSizeX, _uint iSizeY);
 
 private:

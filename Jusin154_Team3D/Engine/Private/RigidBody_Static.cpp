@@ -20,6 +20,8 @@ HRESULT CRigidBody_Static::Initialize_Prototype(RIGIDBODY_STATIC_PROTOTYPEDESC& 
     m_ePxShapeFlags = Desc.ePxShapeFlags;
     m_eMatType = Desc.ePxMaterialTypes;
     m_fContactOffset = Desc.fContactOffset;
+    m_vLocalRotQ = Desc.vLocalRotQ;
+    m_vLocalTranslation = Desc.vLocalTranslation;
 
     return S_OK;
 }

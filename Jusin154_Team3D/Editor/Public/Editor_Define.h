@@ -45,6 +45,8 @@ namespace Editor
 	};
 
 	enum class BLOOM_TYPE { NONE , BASIC , MULTIPLY , END};
+
+	enum class ELEMENT_INTERACTABLE_ID {BARREL, END};
 }
 
 using namespace Editor;

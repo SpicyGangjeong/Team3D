@@ -16,6 +16,7 @@
 #include "SkyBox.h"
 #include "Troll_Weapon.h"
 #include "Troll_Rock.h"
+#include "Goblin_Dagger.h"
 #include "Wand.h"
 
 #pragma region ACTOR
@@ -479,6 +480,16 @@ HRESULT CLoader::Loading_For_GamePlay()
 		{/* Doors */
 			jobMapModels.emplace_back(Deferred_FolderLoad(
 				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Meshes/Doors",
+				".bin", false
+			));
+		}
+		{/* Step and Stair */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Meshes/GroundSurfaces",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Collision/GroundSurfaces",
 				".bin", false
 			));
 		}
@@ -1170,11 +1181,13 @@ HRESULT CLoader::Loading_For_GamePlay()
 		Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 		Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
 		Desc.fContactOffset = { 0.05f };
-		Desc.vhalfGeometryInfo = { 1.f, 1.f, 1.f };
+		Desc.vhalfGeometryInfo = { 0.5f, 0.5f, 0.5f };
 		Desc.fDensity = 1.f;
 		Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
 		Desc.eLockFlag = {};
 		Desc.vAutoDamping = { 100.f, 100.f };
+		Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
+		Desc.vLocalTranslation = { 0.f, 0.f, 0.f };
 	}
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_HEAVY_WALL"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
@@ -1226,7 +1239,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Dagger_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Object/Goblin_Dagger/Goblin_Dagger.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Object/Goblin_Dagger/Goblin_Dagger.bin", XMMatrixScaling(0.0002f, 0.0002f, 0.0002f) * XMMatrixRotationX(XMConvertToRadians(90.f)) * XMMatrixIdentity()))))
 		return E_FAIL;
 
 
@@ -2016,6 +2029,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_GameObject_Troll_Rock */
 	if (FAILED(m_pGameInstance->Add_Prototype<CTroll_Rock>(g_iStaticLevel, CTroll_Rock::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Goblin_Dagger */
+	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Dagger>(g_iStaticLevel, CGoblin_Dagger::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Broom */

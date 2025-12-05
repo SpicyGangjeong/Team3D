@@ -1,12 +1,19 @@
-#pragma once
+癤�#pragma once
 
 #include "Editor_Define.h"
 #include "MapElement.h"
 
 NS_BEGIN(Editor)
 
-class CMapElement_Interactable : public CMapElement
+class CMapElement_Interactable final : public CMapElement
 {
+public:
+	typedef struct tagElement_Interactable_Desc : MAPOBJECT_LOD_DESC
+	{
+		_uint iInteractableID = {};
+		_uint iSubKind = {};
+	}ELEMENT_INTERACTABLE_DESC;
+
 private:
 	CMapElement_Interactable(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CMapElement_Interactable(const CMapElement_Interactable& rhs);
@@ -19,7 +26,19 @@ public:
 	virtual HRESULT Render() override;
 
 private:
-	_uint		m_iSaveIndex = {}; // 원래 위치 받아올때 필요한 인덱스
+	ELEMENT_INTERACTABLE_ID			m_eInteractableID = { ELEMENT_INTERACTABLE_ID::END};
+
+	CRigidBody*						m_pRigidBody = { nullptr };
+	PSX::PxRigidDynamic*			m_pActor = { nullptr };
+
+#ifdef _DEBUG
+	_bool m_bUseSelectColor = { true };
+
+	_float m_fPower = {};
+	_float m_fMass = {};
+	_float3 m_vBoxSize = {};
+#endif // _DEBUG
+
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
@@ -32,6 +51,7 @@ public:
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 	void Describe_Entity() override;
+	virtual HRESULT Save_XML(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* root)override;
 };
 
 NS_END

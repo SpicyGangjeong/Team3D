@@ -48,7 +48,67 @@ HRESULT CRigidBody_Dynamic::Render()
 	}
 	return S_OK;
 }
+#endif 
+void CRigidBody_Dynamic::Set_HalfGeometryInfo(_float3 vhalfGeometryInfo)
+{
+	m_vhalfGeometryInfo = vhalfGeometryInfo;
+	PSX::PxShape* pShape = { nullptr };
+	m_pRigidBody->getShapes(&pShape, m_pRigidBody->getNbShapes());
+
+	switch (m_eActorType)
+	{
+	case ACTOR::BOX:
+	{
+		PSX::PxBoxGeometry Geometry((const PSX::PxBoxGeometry&)pShape->getGeometry());
+		Geometry.halfExtents = { vhalfGeometryInfo.x, vhalfGeometryInfo.y, vhalfGeometryInfo.z };
+		if (false == Geometry.isValid()) {
+			assert(false);
+		}
+		pShape->setGeometry(Geometry);
+	} break;
+	case ACTOR::CAPSULE:
+	{
+		PSX::PxCapsuleGeometry Geometry((const PSX::PxCapsuleGeometry&)pShape->getGeometry());
+		Geometry.halfHeight = { vhalfGeometryInfo.y };
+		Geometry.radius = { vhalfGeometryInfo.x };
+		if (false == Geometry.isValid()) {
+			assert(false);
+		}
+		pShape->setGeometry(Geometry);
+	} break;
+	case ACTOR::SPHERE:
+	{
+		PSX::PxSphereGeometry Geometry((const PSX::PxSphereGeometry&)pShape->getGeometry());
+		Geometry.radius = { vhalfGeometryInfo.x };
+		if (false == Geometry.isValid()) {
+			assert(false);
+		}
+		pShape->setGeometry(Geometry);
+	} break;
+	default:
+		break;
+	}
+#ifdef _DEBUG
+	if (nullptr != m_pMainShape) {
+		m_pMainShape.release();
+		m_pMainShape = nullptr;
+	}
+	if (nullptr != m_pSubShape) {
+		m_pSubShape.release();
+		m_pSubShape = nullptr;
+	}
+	Add_DebugShape();
 #endif // _DEBUG
+}
+void CRigidBody_Dynamic::Move_LocalPos(_float4 vNewRotQ, _float3 vNewTranslation)
+{
+	m_vLocalRotQ = vNewRotQ;
+	m_vLocalTranslation = vNewTranslation;
+	PSX::PxShape* pShape = { nullptr };
+	m_pRigidBody->getShapes(&pShape, m_pRigidBody->getNbShapes());
+	pShape->setLocalPose(PSX::PxTransform(vNewTranslation.x, vNewTranslation.y, vNewTranslation.z, PSX::PxQuat(vNewRotQ.x, vNewRotQ.y, vNewRotQ.z, vNewRotQ.w)));
+}
+// _DEBUG
 void CRigidBody_Dynamic::Add_Force(_fvector vForce, PSX::PxForceMode::Enum eType)
 {
 	PSX::PxVec3 vPxForce = {};
@@ -83,6 +143,35 @@ HRESULT CRigidBody_Dynamic::ConvertToCCT(CCharacter_Controller& CCTOriginal)
 	return E_FAIL;
 }
 
+_float3 CRigidBody_Dynamic::Get_FootPosition()
+{
+	PSX::PxTransform pxTransform = m_pRigidBody->getGlobalPose();
+	switch (m_eActorType)
+	{
+	case Engine::ACTOR::BOX:
+		pxTransform.p.y -= m_vhalfGeometryInfo.y;
+		break;
+	case Engine::ACTOR::CAPSULE:
+		pxTransform.p.y -= m_vhalfGeometryInfo.y * 0.5f + m_vhalfGeometryInfo.x;
+		break;
+	case Engine::ACTOR::SPHERE:
+		pxTransform.p.y -= m_vhalfGeometryInfo.x;
+		break;
+	default:
+		break;
+	}
+	_float3 vOut = { pxTransform.p.x , pxTransform.p.y , pxTransform.p.z };
+	return vOut;
+}
+
+PSX::PxTransform CRigidBody_Dynamic::Get_FootPositionPxTransform()
+{
+	PSX::PxTransform pxTransform = m_pRigidBody->getGlobalPose();
+	_float3 vFootPos = Get_FootPosition();
+	pxTransform.p = { vFootPos.x, vFootPos.y, vFootPos.z };
+	return pxTransform;
+}
+
 HRESULT CRigidBody_Dynamic::Initialize_Prototype(RIGIDBODY_PROTOTYPE_DYNAMIC_DESC& Desc)
 {
 	m_eActorType		= Desc.eType;
@@ -96,6 +185,8 @@ HRESULT CRigidBody_Dynamic::Initialize_Prototype(RIGIDBODY_PROTOTYPE_DYNAMIC_DES
 	m_eLockFlag			= Desc.eLockFlag;
 	m_PxMassCenter		= Desc.pxMassCenter;
 	m_vDamping			= Desc.vAutoDamping;
+	m_vLocalRotQ = Desc.vLocalRotQ;
+	m_vLocalTranslation = Desc.vLocalTranslation;
 
 	return S_OK;
 }
@@ -121,6 +212,8 @@ HRESULT CRigidBody_Dynamic::Initialize(void* pArg)
 	m_pRigidBody->setRigidDynamicLockFlags(m_eLockFlag);
 	m_pRigidBody->setLinearDamping(m_vDamping.x);
 	m_pRigidBody->setAngularDamping(m_vDamping.y);
+
+	Move_LocalPos(m_vLocalRotQ, m_vLocalTranslation);
 	//m_pRigidBody->joint;
 	//PSX::PxRevol
 
@@ -184,5 +277,40 @@ void CRigidBody_Dynamic::Free()
 
 void CRigidBody_Dynamic::Describe_Entity()
 {
+	GUI::BeginChild(("Child ID: " + to_string((size_t)(this))).c_str());
+	GUI::Text("ReSize"); GUI::SameLine(); 
+	if (GUI::DragFloat3("##Size", (_float*)&m_vhalfGeometryInfo, 0.01f, 0.01f, 10.f, "%.3f")) {
+		Set_HalfGeometryInfo(m_vhalfGeometryInfo);
+	}
+	GUI::Text("Translation"); GUI::SameLine();
+	if (GUI::DragFloat3("##LocalPos", (_float*)&m_vLocalTranslation, 0.125f, -10.f, 10.f, "%.4f")) {
+		Move_LocalPos(m_vLocalRotQ, m_vLocalTranslation);
+	}
+	_vector q = XMLoadFloat4(&m_vLocalRotQ);
+
+	// 기본 방향벡터 (엔진 기준)
+	_vector forward = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), q);
+	_vector right = XMVector3Rotate(XMVectorSet(1, 0, 0, 0), q);
+	_vector up = XMVector3Rotate(XMVectorSet(0, 1, 0, 0), q);
+
+	// --- RPY 계산 ---
+	_float fYaw = atan2f(XMVectorGetX(forward), XMVectorGetZ(forward));
+	_float fPitch = asinf(-XMVectorGetY(forward));
+	_float fRoll = atan2f(XMVectorGetY(right), XMVectorGetY(up)); // 수정된 Roll 계산
+
+	_float3 vRPY = { fRoll, fPitch, fYaw }; // Roll-Pitch-Yaw 순서 정렬
+
+	// --- GUI 편집 ---
+	GUI::Text("Rotation (Roll Pitch Yaw)");
+	GUI::SameLine();
+	if (GUI::DragFloat3("##LocalRotq", (_float*)&vRPY,
+		XMConvertToRadians(0.5f), -XM_2PI, XM_2PI, "%.5f"))
+	{
+		// XMQuaternionRotationRollPitchYaw는 (Yaw→Pitch→Roll) 순서
+		_vector vRotq = XMQuaternionRotationRollPitchYaw(vRPY.z, vRPY.y, vRPY.x);
+		XMStoreFloat4(&m_vLocalRotQ, vRotq);
+		Move_LocalPos(m_vLocalRotQ, m_vLocalTranslation);
+	}
+	GUI::EndChild();
 }
 #endif // _DEBUG
