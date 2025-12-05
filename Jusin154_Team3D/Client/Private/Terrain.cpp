@@ -57,7 +57,11 @@ void CTerrain::Priority_Update(_float fTimeDelta)
 
 void CTerrain::Update(_float fTimeDelta)
 {
+#ifdef _DEBUG
 	Describe_Entity();
+#endif // _DEBUG
+
+
 }
 
 void CTerrain::Late_Update(_float fTimeDelta)

@@ -33,9 +33,9 @@ private:
 
 private:
 	vector<ID3D11ShaderResourceView*>				m_SRVs = {};
-
-#ifdef EDITOR_PROJECT
 	_wstring										m_wstrPrototypeName = {};
+#ifdef EDITOR_PROJECT
+
 #endif // 
 
 public:

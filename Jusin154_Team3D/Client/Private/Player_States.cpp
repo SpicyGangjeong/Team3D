@@ -41,33 +41,31 @@ void CPlayer::TestKeyInput(_float fTimeDelta)
 {
 	if (m_pGameInstance->Key_Down(DIK_F1))
 	{
-		m_eSpell = STATEANIM::ACCIO;
+		m_eSpell = ENUM_CLASS(SKILL_TYPE::BOMBARDA);
 	}
 	if (m_pGameInstance->Key_Down(DIK_F2))
 	{
-		m_eSpell = STATEANIM::DESCENDO;
+		m_eSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
 	}
 	if (m_pGameInstance->Key_Down(DIK_F3))
 	{
-		m_eSpell = STATEANIM::DEPULSO;
+		m_eSpell = ENUM_CLASS(SKILL_TYPE::LEVIOSO);
 	}
 	if (m_pGameInstance->Key_Down(DIK_F4))
 	{
-		m_eSpell = STATEANIM::DIFFINDO;
+		m_eSpell = ENUM_CLASS(SKILL_TYPE::DIFFINDO);
 	}
 	if (m_pGameInstance->Key_Down(DIK_F5))
 	{
-		m_eSpell = STATEANIM::DISILLUSION_ENTER;
+		m_eSpell = ENUM_CLASS(SKILL_TYPE::DISILLUSIONMENT);
 	}
 	if (m_pGameInstance->Key_Down(DIK_F6))
 	{
-		m_eSpell = STATEANIM::DISILLUSION_EXIT;
+		m_eSpell = ENUM_CLASS(SKILL_TYPE::LUMOS);
 	}
 	if (m_pGameInstance->Key_Down(DIK_F7))
 	{
-		m_eSpell = STATEANIM::LUMOS;
-
-		m_pEffectPool->Use_Skill(SKILL_TYPE::LUMOS, Get_PartObject<CWand>());
+		m_eSpell = ENUM_CLASS(SKILL_TYPE::ACCIO);
 	}
 }
 
@@ -330,7 +328,6 @@ void CPlayer::Behavior_MoveEnter()
 		}
 		else
 		{
-
 			m_pFSM->Enable_State(FSMSTATE::JOG);
 			m_bSprintToggle = false;
 			m_bWalkToggle = false;
@@ -752,7 +749,7 @@ void CPlayer::Behavior_CombatEnter()
 	if (m_pModelCom->Get_SecondAnimIndex() == m_Animation[STATEANIM::LUMOS].first)
 	{
 		m_pModelCom->Set_Second_AnimationIndex(-1, ENUM_CLASS(BLEND_BONE::SHOULDER_R));
-		m_eSpell = STATEANIM::END;
+		m_eSpell = ENUM_CLASS(SKILL_TYPE::END);
 	}
 	if (m_pGameInstance->Key_Down(DIK_R)) {
 		m_pFSM->Enable_State(FSMSTATE::SKILL);
@@ -769,67 +766,47 @@ void CPlayer::Behavior_CombatEnter()
 	else if (m_pGameInstance->Mouse_Up(DIM_LBUTTON)) {
 		m_pFSM->Enable_State(FSMSTATE::LIGHT_ATTACK);
 		pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK];
-
 		Add_Event(pairAnimInfo.first, [this]() { m_pEffectPool->Use_Skill(SKILL_TYPE::JAP, Get_PartObject<CWand>());  }, 0.1f);
-
 		Add_Event(pairAnimInfo.first, [this]() { m_pEffectPool->Use_Skill(SKILL_TYPE::JAP_SIDE, Get_PartObject<CWand>());  }, 0.0f);
 	}
 	else if (SUCCEEDED(InputSpell())) {
 		m_pFSM->Enable_State(FSMSTATE::SPELL);
-		if (m_eSpell != STATEANIM::END)
+		if (m_eSpell != ENUM_CLASS(SKILL_TYPE::END))
 		{
+			pairAnimInfo = m_Animation[STATEANIM::SPELL];
 			switch (m_eSpell)
 			{
-			case STATEANIM::ACCIO:
-
-				pairAnimInfo = m_Animation[STATEANIM::SPELL];
-
+			case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
 				Add_Event(pairAnimInfo.first,
-					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA_SIDE, Get_PartObject<CWand>()); },
+					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA, this); },
+					0.2f);
+				Add_Event(pairAnimInfo.first,
+					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA_SIDE, Get_PartObject<CWand>());},
 					0.f);
 				break;
-
-			case STATEANIM::DESCENDO:
-
-				pairAnimInfo = m_Animation[STATEANIM::SPELL];
-
+			case ENUM_CLASS(SKILL_TYPE::DESCENDO):
+				Add_Event(pairAnimInfo.first,
+					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::DESCENDO, this); },
+					0.2f);
 				Add_Event(pairAnimInfo.first,
 					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::DESCENDO_SIDE, Get_PartObject<CWand>()); },
 					0.f);
-
-				Add_Event(pairAnimInfo.first,
-					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::DESCENDO, this); },
-					0.4f);
-
 				break;
-			case STATEANIM::DEPULSO:
-				pairAnimInfo = m_Animation[STATEANIM::DEPULSO];
-
-
+			case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
 				Add_Event(pairAnimInfo.first,
 					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO, this); },
 					0.2f);
-				
 				Add_Event(pairAnimInfo.first,
 					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO_SIDE, Get_PartObject<CWand>()); },
 					0.f);
-
-				m_eSpell = STATEANIM::END;
-
 				break;
-			case STATEANIM::DIFFINDO:
+			case ENUM_CLASS(SKILL_TYPE::DIFFINDO):
 				pairAnimInfo = m_Animation[STATEANIM::DIFFINDO];
-				m_eSpell = STATEANIM::END;
 				break;
-			case STATEANIM::DISILLUSION_ENTER:
+			case ENUM_CLASS(SKILL_TYPE::DISILLUSIONMENT):
 				pairAnimInfo = m_Animation[STATEANIM::DISILLUSION_ENTER];
-				m_eSpell = STATEANIM::END;
 				break;
-			case STATEANIM::DISILLUSION_EXIT:
-				pairAnimInfo = m_Animation[STATEANIM::DISILLUSION_EXIT];
-				m_eSpell = STATEANIM::END;
-				break;
-			case STATEANIM::LUMOS:
+			case ENUM_CLASS(SKILL_TYPE::LUMOS):
 				if (m_pModelCom->Get_SecondAnimIndex() != m_Animation[STATEANIM::LUMOS].first)
 				{
 					if (SUCCEEDED(InputMove()))
@@ -847,6 +824,9 @@ void CPlayer::Behavior_CombatEnter()
 					else {
 						pairAnimInfo = m_Animation[STATEANIM::IDLE];
 					}
+					Add_Event(pairAnimInfo.first,
+						[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LUMOS, Get_PartObject<CWand>()); },
+						0.f);
 					m_pModelCom->Set_Second_AnimationIndex(m_Animation[STATEANIM::LUMOS].first, ENUM_CLASS(BLEND_BONE::SHOULDER_R), true);
 				}
 				else
@@ -997,42 +977,24 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 
 	if (m_pFSM->IsEnable(FSMSTATE::SPELL) && IsCurrentKeyFrame("Combat"))
 	{
-		if (m_eSpell != STATEANIM::END)
+		if (m_eSpell != ENUM_CLASS(SKILL_TYPE::END))
 		{
 			switch (m_eSpell)
 			{
-			case STATEANIM::ACCIO:
-			{
+			case ENUM_CLASS(SKILL_TYPE::ACCIO):
 				pairAnimInfo = m_Animation[STATEANIM::ACCIO];
-				Add_Event(pairAnimInfo.first,
-					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA, this);},
-					0.15f);
-
-				m_eSpell = STATEANIM::END;
-
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-			}
 				break;
-			case STATEANIM::DESCENDO:
-			{
+			case ENUM_CLASS(SKILL_TYPE::DESCENDO):
 				pairAnimInfo = m_Animation[STATEANIM::DESCENDO];
-				m_eSpell = STATEANIM::END;
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-			}
 				break;
-
-			case STATEANIM::DEPULSO:
-			{
-				pairAnimInfo = m_Animation[STATEANIM::DEPULSO];
-
-
-				m_eSpell = STATEANIM::END;
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-			}
-			break;
 			default:
+				m_eSpell = ENUM_CLASS(SKILL_TYPE::END);
+				return S_OK;
 				break;
 			}
+
+			m_eSpell = ENUM_CLASS(SKILL_TYPE::END);
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		}
 	}
 

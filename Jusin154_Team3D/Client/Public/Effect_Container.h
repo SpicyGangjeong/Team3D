@@ -24,7 +24,7 @@ public:
 	HRESULT			Load_Directory(const _char* pPath);
 	virtual	HRESULT	Pre_Setting(CGameObject* pObject);
 	HRESULT         Load_Package(const _char* pPath);
-
+	_uint Get_SkillType() const { return m_iSkillType; }
 public:
 
 protected:
@@ -53,6 +53,8 @@ protected:
 	_bool							m_isCollisionEnter = { false };
 
 	map<_float, function<void()>>	m_Events = {};
+	_uint							m_iSkillType = ENUM_CLASS(SKILL_TYPE::END);
+	_bool							m_bHasDamage = { false };
 
 public:
 	virtual void Free() override;

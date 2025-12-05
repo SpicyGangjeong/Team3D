@@ -2,6 +2,8 @@
 #include "Goblin.h"
 
 #include "GameInstance.h"
+#include "Goblin_Dagger.h"
+#include "Effect_Container.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -11,6 +13,7 @@
 #include "State_Move.h"
 #include "State_Combat.h"
 #pragma endregion
+
 
 CGoblin::CGoblin(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMonster(pDevice, pContext)
@@ -33,6 +36,9 @@ HRESULT CGoblin::Initialize(void* pArg)
 		return E_FAIL;
 
 	if (FAILED(Ready_Components()))
+		return E_FAIL;
+
+	if (FAILED(Ready_Parts()))
 		return E_FAIL;
 
 	Add_FSM();
@@ -70,6 +76,8 @@ void CGoblin::Update(_float fTimeDelta)
 	m_pFSM->Update_State(fTimeDelta);
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
+
+	Play_Event();
 
 	GUI::Text("%d", m_pCharacter_Controller->IsActive());
 	GUI::Text("%f %f", m_vStunTimer.x, m_vStunTimer.y);
@@ -116,6 +124,9 @@ void CGoblin::Late_Update(_float fTimeDelta)
 
 HRESULT CGoblin::Render()
 {
+
+	if (!m_bVisible)
+		return S_OK;
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
@@ -174,6 +185,21 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 	m_pCharacter_Controller->ConvertToDO(*m_pRigidBody);
 	m_pRigidBody->Add_Force(vHitDir * fLength * 100.f, PSX::PxForceMode::eIMPULSE);
 
+	_uint iSkillType = dynamic_cast<CEffect_Container*>(pOther)->Get_SkillType();
+	switch (iSkillType)
+	{
+	case ENUM_CLASS(SKILL_TYPE::DESCENDO):
+		m_eHitSpell = STATEANIM::KNOCKDOWN_FWD;
+		break;
+	case ENUM_CLASS(SKILL_TYPE::FLIPENDO):
+		m_eHitSpell = STATEANIM::TUMBLE2;
+		break;
+	default:
+		m_eHitSpell = STATEANIM::KNOCKDOWN_FWD;
+		break;
+	}
+	m_pFSM->Change_State(FSMSTATE::HIT);
+
 }
 
 void CGoblin::OnHit(CGameObject* pOther, CGameObject* pCaller)
@@ -227,6 +253,24 @@ HRESULT CGoblin::Ready_Components()
 		}
 		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor());
 	}
+
+	return S_OK;
+}
+
+HRESULT CGoblin::Ready_Parts()
+{
+	CGoblin_Dagger::GOBLINDAGGER_DESC Goblin_DaggerDesc{};
+
+	Goblin_DaggerDesc.pParentTransform = m_pTransformCom;
+	Goblin_DaggerDesc.pSocketMatrices = m_pModelCom->Get_BoneMatrixPtr("LeftHand");
+
+	if (FAILED(Add_PartObject<CGoblin_Dagger>("Goblin_Dagger", g_iStaticLevel, nullptr, &Goblin_DaggerDesc)))
+	{
+		return E_FAIL;
+	}
+
+
+	Get_PartObject<CGoblin_Dagger>()->Set_Visible(false);
 
 	return S_OK;
 }

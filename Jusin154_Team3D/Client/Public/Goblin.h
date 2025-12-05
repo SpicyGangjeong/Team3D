@@ -12,7 +12,6 @@ class CGoblin final : public CMonster
 	enum class GOBLIN_SKILL
 	{
 		SWING,
-		SLAM,
 		THROW,
 		TP,
 		END
@@ -44,6 +43,7 @@ private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	HRESULT Ready_Components();
+	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
 
 public:
@@ -60,7 +60,10 @@ private:
 	virtual void Set_Anim();
 
 	_float m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = {};
-	_float m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = { 5.f,10.f,10.f };
+	_float m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = { 5.f,2.f,15.f };
+
+	_bool m_bStep = { false };
+	_float m_fTpTime = {};
 
 
 	void	Behavior_IdleEnter();
@@ -75,6 +78,22 @@ private:
 	HRESULT Behavior_CombatExitCheck(_float fTimeDelta);
 	void	Behavior_CombatExit();
 
+
+	void	Behavior_SwingEnter();
+	HRESULT Behavior_SwingExitCheck(_float fTimeDelta);
+	void	Behavior_SwingExit();
+
+	void	Behavior_ThrowEnter();
+	HRESULT Behavior_ThrowExitCheck(_float fTimeDelta);
+	void	Behavior_ThrowExit();
+
+	void	Behavior_BlinkEnter();
+	HRESULT Behavior_BlinkExitCheck(_float fTimeDelta);
+	void	Behavior_BlinkExit();
+
+	void	Behavior_HitEnter();
+	HRESULT Behavior_HitExitCheck(_float fTimeDelta);
+	void	Behavior_HitExit();
 };
 
 NS_END

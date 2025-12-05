@@ -38,7 +38,6 @@ HRESULT CTroll_Rock::Initialize(void* pArg)
 
 void CTroll_Rock::Priority_Update(_float fTimeDelta)
 {
-	
 	m_pModelCom->Combined_BoneMatrix();
 	if (m_bAttach)
 	{
@@ -58,6 +57,8 @@ void CTroll_Rock::Priority_Update(_float fTimeDelta)
 	{
 		_matrix world = XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrixPtr());
 		m_pTransformCom->Set_WorldMatrix(world);
+
+		m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::LOOK), fTimeDelta * 20.f);
 		m_pTransformCom->Go_Straight(fTimeDelta);
 	}
 	
