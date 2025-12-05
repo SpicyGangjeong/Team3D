@@ -29,7 +29,6 @@ public:
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;
-	//virtual HRESULT	Ready_Panel(void* pArg) override;
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
@@ -51,6 +50,7 @@ private:
 
 	CGameObject* m_pGamePlay_Canves = { nullptr };
 	CGameObject* m_pSpell_Canvas = { nullptr };
+	CGameObject* m_pLoding_Canvas= { nullptr };
 	CGameObject* m_pMouse_Cursor = { nullptr };
 	CGameObject* m_pCamera_LockOn = { nullptr };
 	_bool			m_bCanvas_Change = { false };

@@ -367,6 +367,18 @@
     <ClInclude Include="..\Public\Goblin_Dagger.h">
       <Filter>02.GameObjects\Item\Goblin_Dagger</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CameraLockOn.h">
+      <Filter>02.GameObjects\UI\Mouse_Cursor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mouse_Cursor.h">
+      <Filter>02.GameObjects\UI\Mouse_Cursor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Loding_Panel.h">
+      <Filter>02.GameObjects\UI\Loding_Canvas\Loding_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Loding_Canvas.h">
+      <Filter>02.GameObjects\UI\Loding_Canvas</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -782,6 +794,15 @@
     <Filter Include="01.Levels\01.Logo\02.GamePlay">
       <UniqueIdentifier>{7e641382-9dfa-4da7-a8c8-a3ee06360e7a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\Mouse_Cursor">
+      <UniqueIdentifier>{b8c7e12b-da04-4d49-bc61-104649975d0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Loding_Canvas">
+      <UniqueIdentifier>{d068e67f-b59a-4456-b11c-1aa3aa1f1389}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Loding_Canvas\Loding_Panel">
+      <UniqueIdentifier>{b4b5d9a6-152d-43fc-b746-49a3666d31a4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1141,7 +1162,21 @@
     <ClCompile Include="..\Private\Spell_Drag.cpp">
       <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Drag</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\MapContainer.cpp" />
+    <ClCompile Include="..\Private\Mouse_Cursor.cpp">
+      <Filter>02.GameObjects\UI\Mouse_Cursor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CameraLockOn.cpp">
+      <Filter>02.GameObjects\UI\Mouse_Cursor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapContainer.cpp">
+      <Filter>02.GameObjects\Environment\00.MapContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Loding_Canvas.cpp">
+      <Filter>02.GameObjects\UI\Loding_Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Loding_Panel.cpp">
+      <Filter>02.GameObjects\UI\Loding_Canvas\Loding_Panel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">

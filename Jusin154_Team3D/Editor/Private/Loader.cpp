@@ -42,6 +42,9 @@
 #include "Mouse_Cursor.h"
 #include "CameraLockOn.h"
 
+#include "Loding_Canvas.h"
+#include "Loding_Panel.h"
+
 #include "GamePlay_Canvas.h"
 
 #include "Mission_Panel.h"
@@ -513,6 +516,16 @@ HRESULT CLoader::Loading_For_UI()
 
 		});
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Screen_BG"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/LoadingScreen/UI_T_Loding_Screen_BG.png"), 0)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("LoadingScreen"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("../Bin/Resources/Textures/LoadingScreen/UI_T_LoadingScreen_%d.png"), 2)))) {
+		return E_FAIL;
+	}
+
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Item"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("../Bin/Resources/Textures/GadgetWheel/Item%d.png"), 8)))) {
 		return E_FAIL;
@@ -843,6 +856,15 @@ HRESULT CLoader::Loading_For_UI()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CCameraLockOn>(g_iStaticLevel, CCameraLockOn::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CLoding_Canvas>(g_iStaticLevel, CLoding_Canvas::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CLoding_Panel>(g_iStaticLevel, CLoding_Panel::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}

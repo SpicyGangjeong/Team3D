@@ -59,7 +59,7 @@ void CMainApp::Update(_float fTimeDelta)
 
 HRESULT CMainApp::Render()
 {
-	_float4			vClearColor = _float4(0.f, 0.f, 1.f, 1.f);
+	_float4			vClearColor = _float4(0.f, 0.f, 0.f, 1.f);
 
 	m_pGameInstance->Render_Begin(&vClearColor);
 

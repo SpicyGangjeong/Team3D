@@ -220,6 +220,8 @@
     <ClInclude Include="..\Public\InfoInstance.h" />
     <ClInclude Include="..\public\InstancedProp.h" />
     <ClInclude Include="..\Public\LeviosoSide.h" />
+    <ClInclude Include="..\public\Loding_Canvas.h" />
+    <ClInclude Include="..\public\Loding_Panel.h" />
     <ClInclude Include="..\public\Magic_Icon.h" />
     <ClInclude Include="..\public\Magic_Item.h" />
     <ClInclude Include="..\public\Magic_Meter.h" />
@@ -389,6 +391,8 @@
     <ClCompile Include="..\Private\InfoInstance.cpp" />
     <ClCompile Include="..\private\InstancedProp.cpp" />
     <ClCompile Include="..\Private\LeviosoSide.cpp" />
+    <ClCompile Include="..\private\Loding_Canvas.cpp" />
+    <ClCompile Include="..\private\Loding_Panel.cpp" />
     <ClCompile Include="..\private\Magic_Icon.cpp" />
     <ClCompile Include="..\private\Magic_Item.cpp" />
     <ClCompile Include="..\private\Magic_Meter.cpp" />

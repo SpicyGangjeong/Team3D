@@ -160,6 +160,7 @@ call Update_Resources.bat
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Action_Panel.h" />
+    <ClInclude Include="..\Public\CameraLockOn.h" />
     <ClInclude Include="..\Public\Current_Slot_Number.h" />
     <ClInclude Include="..\Public\Current_Spell_Slot.h" />
     <ClInclude Include="..\Public\Eessential_Spell.h" />
@@ -167,6 +168,8 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Goblin_Dagger.h" />
     <ClInclude Include="..\Public\HpBarBG.h" />
     <ClInclude Include="..\Public\Levioso.h" />
+    <ClInclude Include="..\Public\Loding_Canvas.h" />
+    <ClInclude Include="..\Public\Loding_Panel.h" />
     <ClInclude Include="..\Public\Magic_Icon.h" />
     <ClInclude Include="..\Public\Magic_Item.h" />
     <ClInclude Include="..\Public\Magic_Meter.h" />
@@ -175,6 +178,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\LeviosoSide.h" />
     <ClInclude Include="..\public\MapElement.h" />
     <ClInclude Include="..\public\MapElement_Light.h" />
+    <ClInclude Include="..\Public\Mouse_Cursor.h" />
     <ClInclude Include="..\Public\Potion.h" />
     <ClInclude Include="..\Public\NomalJapSide.h" />
     <ClInclude Include="..\Public\Lumos.h" />
@@ -284,6 +288,7 @@ call Update_Resources.bat
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Action_Panel.cpp" />
+    <ClCompile Include="..\Private\CameraLockOn.cpp" />
     <ClCompile Include="..\Private\Current_Slot_Number.cpp" />
     <ClCompile Include="..\Private\Current_Spell_Slot.cpp" />
     <ClCompile Include="..\Private\Eessential_Spell.cpp" />
@@ -291,6 +296,8 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Goblin_Dagger.cpp" />
     <ClCompile Include="..\Private\HpBarBG.cpp" />
     <ClCompile Include="..\Private\Levioso.cpp" />
+    <ClCompile Include="..\Private\Loding_Canvas.cpp" />
+    <ClCompile Include="..\Private\Loding_Panel.cpp" />
     <ClCompile Include="..\Private\Magic_Icon.cpp" />
     <ClCompile Include="..\Private\Magic_Item.cpp" />
     <ClCompile Include="..\Private\Magic_Meter.cpp" />
@@ -299,6 +306,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\LeviosoSide.cpp" />
     <ClCompile Include="..\private\MapElement.cpp" />
     <ClCompile Include="..\private\MapElement_Light.cpp" />
+    <ClCompile Include="..\Private\Mouse_Cursor.cpp" />
     <ClCompile Include="..\Private\Potion.cpp" />
     <ClCompile Include="..\Private\NomalJapSide.cpp" />
     <ClCompile Include="..\Private\Lumos.cpp" />

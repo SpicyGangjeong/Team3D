@@ -104,9 +104,6 @@ PS_OUT PS_MAIN(PS_IN In)
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     float4 Color = g_Texture.Sample(DefaultSampler, In.vTexcoord);
     
-    if (Color.a <= 0.1f)
-        discard;
-    
     Color.a *= Alpha;
     Out.vColor = Color;
     return Out;
@@ -1232,6 +1229,27 @@ PS_OUT PS_Camera_LockOn(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_Loding_Screen(PS_IN In)
+{
+    PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+
+    float4 Color = float4(1.f, 1.f, 1.f, 1.f);
+    
+    float4 tex1 = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    Color = tex1;
+    
+    float4 tex2 = g_Texture1.Sample(DefaultSampler, In.vTexcoord);
+    
+    Color = lerp(Color, tex2, tex2.a);
+    
+    Color.a *= Alpha;
+    
+    Out.vColor = Color;
+    
+    return Out;
+}
+
 technique11 PosTexTechnique11
 {
     pass Default
@@ -1480,6 +1498,16 @@ technique11 PosTexTechnique11
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Camera_LockOn();
+    }
+
+    pass Loding_Screen
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Loding_Screen();
     }
 
 }

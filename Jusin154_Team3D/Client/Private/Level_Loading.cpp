@@ -12,7 +12,6 @@
 CLevel_Loading::CLevel_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
 {
-
 }
 
 HRESULT CLevel_Loading::Initialize(LEVEL eNextLevelID)
@@ -118,6 +117,7 @@ void CLevel_Loading::Capture_TerrainPreShadow(SHADOW_LIGHT_DESC& ShadowDesc)
 
 HRESULT CLevel_Loading::Ready_Layer_BackGround(const _wstring& strLayerTag)
 {
+
 	return S_OK;
 }
 

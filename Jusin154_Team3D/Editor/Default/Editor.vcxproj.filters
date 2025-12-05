@@ -478,6 +478,12 @@
     <Filter Include="50.UI\UI_Manager">
       <UniqueIdentifier>{fe7d5909-159c-4130-ae5e-e08e648b193c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="50.UI\Loding_Canvas">
+      <UniqueIdentifier>{ebad2fd8-622f-4c17-9ba3-b0c4bd366c05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Loding_Canvas\Loding_Panel">
+      <UniqueIdentifier>{944a2f28-34bc-4559-b179-85b920086b30}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -936,6 +942,12 @@
     <ClInclude Include="..\public\CameraLockOn.h">
       <Filter>50.UI\Mouse_Cursor</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Loding_Canvas.h">
+      <Filter>50.UI\Loding_Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Loding_Panel.h">
+      <Filter>50.UI\Loding_Canvas\Loding_Panel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -1392,6 +1404,12 @@
     </ClCompile>
     <ClCompile Include="..\private\CameraLockOn.cpp">
       <Filter>50.UI\Mouse_Cursor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Loding_Canvas.cpp">
+      <Filter>50.UI\Loding_Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Loding_Panel.cpp">
+      <Filter>50.UI\Loding_Canvas\Loding_Panel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

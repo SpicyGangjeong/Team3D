@@ -1,11 +1,11 @@
-﻿#include "UI_Manager.h"
-#include "pch.h"
+﻿#include "pch.h"
 #include "UI_Manager.h"
 #include "GameInstance.h"
 #include "GamePlay_Canvas.h"
 #include "Spell_Canvas.h"
 #include "Mouse_Cursor.h"
 #include "CameraLockOn.h"
+#include "Loding_Canvas.h"
 
 CUI_Manager::CUI_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CUIObject(pDevice, pContext)
@@ -138,6 +138,11 @@ HRESULT CUI_Manager::Ready_Components(void* pArg)
 		return E_FAIL;
 	}
 	Add_Canvas(TEXT("Spell_Canvas"), m_pSpell_Canvas);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLoding_Canvas>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CLoding_Canvas**>(&m_pLoding_Canvas)))) {
+		return E_FAIL;
+	}
+	Add_Canvas(TEXT("Loding_Canvas"), m_pLoding_Canvas);
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMouse_Cursor>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CMouse_Cursor**>(&m_pMouse_Cursor)))) {
 		return E_FAIL;
