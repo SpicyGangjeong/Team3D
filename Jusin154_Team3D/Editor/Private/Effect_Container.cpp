@@ -322,7 +322,36 @@ HRESULT CEffect_Container::Pre_Setting(CGameObject* pObject, void* pArg)
 	m_bVisible = true;
 	m_isCollisionEnter = false;
 
+	//Add_Chlid_Light();
+
+
 	return S_OK;
+}
+
+void CEffect_Container::Add_Chlid_Light()
+{
+	for (auto& pParts : m_PartObjects)
+	{
+		CEditEffect* pEffect = static_cast<CEditEffect*>(pParts.second);
+
+		if (pEffect == nullptr)
+			continue;
+
+		pEffect->Add_Light();
+	}
+}
+
+void CEffect_Container::Delete_Chlid_Light()
+{
+	for (auto& pParts : m_PartObjects)
+	{
+		CEditEffect* pEffect = static_cast<CEditEffect*>(pParts.second);
+
+		if (pEffect == nullptr)
+			continue;
+
+		pEffect->Disable_Light();
+	}
 }
 
 HRESULT CEffect_Container::Ready_Components(void* pArg)
@@ -404,7 +433,10 @@ void CEffect_Container::Update_Event(_float fTimeDelta)
 			{
 				pPart.second->Set_Visible(false);
 			}
+
 		}
+
+		//Delete_Chlid_Light();
 	}
 
 

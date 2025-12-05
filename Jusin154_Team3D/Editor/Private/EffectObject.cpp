@@ -177,6 +177,25 @@ HRESULT CEffectObject::Render_Bloom()
 }
 
 
+void CEffectObject::Disable_Light()
+{
+
+	if (m_pLightCom == nullptr)
+		return;
+
+	m_pGameInstance->Delete_Light(CURRENT_LEVEL, m_pLightCom);
+
+}
+
+void CEffectObject::Add_Light()
+{
+	if (m_pLightCom == nullptr)
+		return;
+
+	m_pGameInstance->Add_Light(CURRENT_LEVEL, m_pLightCom);
+}
+
+
 
 HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 {
@@ -226,6 +245,7 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 	m_EffectInfo.LightDesc.pPosition = m_pTransformCom->Get_StatePtr(STATE::POSITION);
 	m_EffectInfo.LightDesc.iLevel = ENUM_CLASS(eLevel);
 
+
 	if (m_EffectInfo.LightDesc.eType != LIGHT::DIRECTIONAL) // 0이 아닐때만 생성
 	{
 		if (FAILED(Add_Component<CLight>(g_iStaticLevel, &m_pLightCom, &m_EffectInfo.LightDesc)))
@@ -233,6 +253,8 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 			CloseHandle(hFile);
 			return E_FAIL;
 		}
+
+
 	}
 		
 
@@ -505,10 +527,10 @@ HRESULT CEffectObject::LoadPre(const _char* pFilePath, LEVEL eLevel)
 		return E_FAIL;
 	}
 
-	memcpy(&m_EffectInfo, &PreEffectInfo, sizeof(PRE_EFFECT_INFO));
-	
 	m_EffectInfo.LightDesc.pPosition = m_pTransformCom->Get_StatePtr(STATE::POSITION);
 	m_EffectInfo.LightDesc.iLevel = ENUM_CLASS(eLevel);
+
+	ZeroMemory(&m_EffectInfo.LightDesc, sizeof(LIGHT_DESC));
 
 	if (m_EffectInfo.LightDesc.eType != LIGHT::DIRECTIONAL) // 0이 아닐때만 생성
 	{

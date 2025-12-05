@@ -26,6 +26,8 @@ public:
 	HRESULT         Load_Package(const _char* pPath);
 	_uint Get_SkillType() const { return m_iSkillType; }
 public:
+	void			Add_Chlid_Light();
+	void			Delete_Chlid_Light();
 
 protected:
 	virtual HRESULT Initialize_Prototype() override;

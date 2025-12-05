@@ -127,7 +127,7 @@ public:
 		_float2 vMaskingUVGainAmount = {};
 		_float2 vNoiseUVGainAmount = {};
 
-		_float2 vDiffuseDistortionUVGainAmount = {};
+		_float2 vDistortionTime = {};
 		_float2 vMaskDistortionUVGainAmount = {};
 
 		_float2 vUVCutting = { 1.f ,1.f };
@@ -159,13 +159,17 @@ public:
 		_float  fDiffuseAlpha = { 1.f };
 		_float  fBlurIntensity = {};
 		_float  fNoiseDistortionIntensity = {};
-		_float  fEmissiveStrength = {};
+		_float  fEmissiveStrength = { 0.f };
 
 		LIGHT_DESC	LightDesc = {};
 		RENDER		eRenderOrder = { RENDER::EFFECT };
+
 		_bool   isReverseDissolve = {};
+
 		EFFECT_TYPE eEffectType = { EFFECT_TYPE::EFFECT };
+
 		_bool   isEmissiveDissolve = { false };
+
 		_bool   isMaskClampSample = { false };
 		_bool   isNoiseColor = { false };
 		_bool   isNoiseAlpha = { false };
@@ -184,24 +188,35 @@ public:
 
 		SHADER_PASS_INSTANCE_MODEL eShaderPass = { SHADER_PASS_INSTANCE_MODEL::NON_NOMALMAP };
 
-		_bool   isDiffuseBlur = {};
-		_bool	isMaskBlur = {};
-		_bool   isBlurDissolve = {};
-		_bool   isBlurReverseDissolve = {};
+		_bool       isBlurNoEmissive = {};
+		_bool	    isTexBlur = {};
+		_bool       isBlurDissolve = {};
+		_bool       isBlurReverseDissolve = {};
 
-		_float  fBluringStrength = { 0.01f };
+		_float      fBluringStrength = { 0.01f };
 
-
-		_bool   isBloom = {};
-
-		_bool   isBloomDissolve = {};
-		_bool   isBloomReverseDissolve = {};
-
-		_float  fBloomStrength = {};
-
-		BLOOM_TYPE eBloomType = {};
+		_bool       isBloom = {};
+		_bool       isBloomDissolve = {};
+		_bool       isBloomReverseDissolve = {};
+		_float      fBloomStrength = {};
+		BLOOM_TYPE  eBloomType = {};
 
 
+		_float		fDissolveDelay = {};
+		_float		fReverseDissolveDelay = {};
+		_float2		vDissolveUVGainAmount = {};
+		_bool		isDissolveMove = {};
+
+		_float3		vDissolveValue = {};
+
+
+		_float3		vPadding1 = {};
+
+		_float		fPadding0 = {};
+		_float		fPadding1 = {};
+
+		_bool		isPadding0 = {};
+		_bool		isPadding1 = {};
 	}PRE_EFFECT_INFO;
 
 protected:
@@ -217,6 +232,8 @@ public:
 	virtual HRESULT Render_Blur() override;
 	virtual HRESULT Render_Bloom() override;
 public:
+	void    Disable_Light();
+	void    Add_Light();
 	HRESULT Load(const _char* pFilePath, LEVEL eLevel);
 	HRESULT Load();
 public:
