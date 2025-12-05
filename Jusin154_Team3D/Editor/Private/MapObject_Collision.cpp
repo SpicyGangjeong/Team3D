@@ -42,7 +42,7 @@ void CMapObject_Collision::Late_Update(_float fTimeDelta)
 #endif 
 
 	XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_XMWorldMatrix() * m_pParentTransformCom->Get_XMWorldMatrix());
-	if (m_pGameInstance->Key_Pressing(DIK_V)){
+	if (m_bVisible){
 		if (m_pGameInstance->isIn_WorldFrustum(XMLoadFloat4(reinterpret_cast<_float4*>(m_CombinedWorldMatrix.m[3])), m_pTransformCom->Get_Radius())) {
 			m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 		}
@@ -96,7 +96,7 @@ HRESULT CMapObject_Collision::Initialize_Prototype()
 HRESULT CMapObject_Collision::Initialize(void* pArg)
 {
 	m_iMaxLodLevel = 0;
-
+	m_bVisible = true;
 	MAPOBJECT_LOD_DESC* pDesc = static_cast<MAPOBJECT_LOD_DESC*>(pArg);
 
 	m_iMaxLodLevel = pDesc->iMaxLodLevel;
@@ -115,6 +115,7 @@ HRESULT CMapObject_Collision::Initialize(void* pArg)
 
 #ifdef _DEBUG
 	m_bSelected = false;
+	m_bVisible = false;
 	m_vPosition = pDesc->vPosition;
 	m_vScale = pDesc->vScale;
 	m_vRotation = pDesc->vRotation;
@@ -233,20 +234,28 @@ void CMapObject_Collision::Describe_Entity()
 
 	//ImGui::Text(CMyTools::ToString(m_strModelPrototypeTag).c_str());
 	GUI::Checkbox("Visible", &m_bVisible);
+	_float3 vMove = {};
+
 	ImGui::Text("----- Transfrom ----");
-	ImGui::InputFloat("X##Position", &m_vPosition.x, 0.1f, 1.f);
-	ImGui::InputFloat("Y##Position", &m_vPosition.y, 0.1f, 1.f);
-	ImGui::InputFloat("Z##Position", &m_vPosition.z, 0.1f, 1.f);
+	ImGui::InputFloat("Right", &vMove.x, 0.05f, 0.1f);
+	ImGui::InputFloat("Up", &vMove.y, 0.05f, 0.1f);
+	ImGui::InputFloat("Look", &vMove.z, 0.05f, 0.1f);
+
+	m_pTransformCom->Move_Right(vMove.x);
+	m_pTransformCom->Move_Up(vMove.y);
+	m_pTransformCom->Move_Look(vMove.z);
+
+	XMStoreFloat3(&m_vPosition, m_pTransformCom->Get_State(STATE::POSITION));
 
 	if (m_pGameInstance->Mouse_Down(DIM_LBUTTON) && m_pGameInstance->Key_Pressing(DIK_LSHIFT))
 	{
-		CTerrain* pTerrain = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Terrain"))->Get_Object<CTerrain>();
-		if (nullptr != pTerrain)
+		_float3 vPosition = {};
+		if (m_pGameInstance->isPicking(&vPosition))
 		{
-			pTerrain->Get_Component<CVIBuffer_Terrain>()->Picking(pTerrain->Get_Component<CTransform>()->Get_XMWorldMatrix(), &m_vPosition);
+			memcpy(&m_vPosition, &vPosition, sizeof(_float3));
+			m_pTransformCom->Set_State(STATE::POSITION, XMLoadFloat3(&m_vPosition));
 		}
 	}
-
 	ImGui::Text("----- Rotation ----");
 	ImGui::InputFloat("X##Rotation", &m_vRotation.x, 10.f, 45.f);
 	ImGui::InputFloat("Y##Rotation", &m_vRotation.y, 10.f, 45.f);

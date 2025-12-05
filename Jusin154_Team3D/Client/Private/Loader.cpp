@@ -483,6 +483,16 @@ HRESULT CLoader::Loading_For_GamePlay()
 				".bin", false
 			));
 		}
+		{/* Step and Stair */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Meshes/GroundSurfaces",
+				".bin", false
+			));
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Collision/GroundSurfaces",
+				".bin", false
+			));
+		}
 	}
 
 #pragma endregion

@@ -2316,7 +2316,7 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 	///* BLDG_TeaShop */
 	/*if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_TeaShop\\Meshes",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 		return E_FAIL;
 	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_TeaShop\\Collision",
 		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
@@ -2433,10 +2433,21 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 	/* Doors */
 	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Doors",
-		".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 		return E_FAIL;
 
+	/* Barrel */
+	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Objects\\Meshes",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
 
+	/* Step */
+	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\GroundSurfaces",
+		".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Collision\\GroundSurfaces",
+		".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
 
 #pragma endregion
 
@@ -2773,6 +2784,23 @@ vector<vector<FOLDER_LOAD*>*> Contents(iLoadCount);
 
 	m_strMessage = TEXT("객체원형를(을) 로딩 중 입니다.");
 
+	CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
+	{
+		Desc.eType = ACTOR::BOX;
+		Desc.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
+		Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+		Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
+		Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
+		Desc.fContactOffset = { 0.05f };
+		Desc.vhalfGeometryInfo = { 0.5f, 0.5f, 0.5f };
+		Desc.fDensity = 10.f;
+		Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
+		Desc.eLockFlag = {};
+		Desc.vAutoDamping = { };
+	}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
+		return E_FAIL;
+	}
 
 	/* For.Prototype_Component_Collider */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Collider"),

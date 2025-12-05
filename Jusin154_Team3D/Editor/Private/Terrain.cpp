@@ -86,9 +86,9 @@ void CTerrain::Priority_Update(_float fTimeDelta)
 #pragma endregion
 
 #pragma region HEIGHT MAP
-	//HRESULT hr = {};
-	//if(GUI::Button("Save HeightMap"))
-	//	hr = m_pVIBufferCom->Save_HeightMap("Hogsmeade_HeightMap.bin");
+	HRESULT hr = {};
+	if(GUI::Button("Save HeightMap"))
+		hr = m_pVIBufferCom->Save_HeightMap("Hogsmeade_HeightMap2.bin");
 	//if(GUI::Button("Load HeightMap"))
 	//	hr = m_pVIBufferCom->Load_HeightMap("Hogsmeade_HeightMap.bin");
 #pragma endregion
