@@ -571,21 +571,22 @@ PS_OUT_FLT4_SINGLE PS_MAIN_EMBOSS(PS_IN In)
     {
         case 0:
             /* None */
+            vColor = (0.f, 0.f, 0.f);
             break;
         case 1:
             /* Basic_Apply */
             break;
         case 2:
             /* Multiply */
-            vColor *= 3;
+            vColor *= 3.f;
             break;
         case 3:
             break;
     }
     
-    float fIntensity = dot(vColor, float3(0.2126f, 0.7152f, 0.0722f)); // 대략적인 밝기 ( 인간적인 )
+    float fIntensity = dot(vColor, float3(0.2126f, 0.7152f, 0.0722f)); // 대략적인 밝기 
     
-    if (fIntensity <= 1e-4f)
+    if (fIntensity <= FLT_EPSILON5)
     {
         Out.vSingleTarget = 0;
         return Out;
@@ -939,7 +940,7 @@ PS_OUT_SSAO_AMBIENT_OCCLUSION PS_SSAO_AMBIENT_OCCLUSION(PS_IN In)
     float fOcclusion = 0.f;
     for (uint i = 0; i < g_iKernelSize; ++i)
     {
-        float3 vViewSamplePosVec = mul(SamplePos[i], toViewTBNMatrix); // TANSPACE -> VIEW
+        float3 vViewSamplePosVec = mul(SamplePos[i].xyz, toViewTBNMatrix); // TANSPACE -> VIEW
         float4 vViewSamplePos = vCenterViewPosition + float4(vViewSamplePosVec * g_fSSAORadius, 0.f);
         float4 vNDCSampleOffset = mul(vViewSamplePos, g_ProjMatrix);
                vNDCSampleOffset /= vNDCSampleOffset.w;

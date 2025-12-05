@@ -726,7 +726,7 @@ void CRenderer::Render_Bloom()
 		return;
 	}
 
-	m_pShader->Bind_RawValue("m_fBloomThresholdy", &m_fBloomThreshold, sizeof(_float));
+	m_pShader->Bind_RawValue("g_fBloomThreshold", &m_fBloomThreshold, sizeof(_float));
 	m_pShader->Bind_RawValue("g_iBloomEmbossingPass", &m_iBloomEmbossingPass, sizeof(_int));
 
 	m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_Input"), TEXT("Target_Bloom_2x2"), SHADER_PASS_DEFERRED::EMBOSSING); // 2
