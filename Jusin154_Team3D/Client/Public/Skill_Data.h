@@ -21,16 +21,19 @@ private:
 public:
 	void Update(_float fTimeDelta);
 	void Change_Level();
-
+	_float Get_CoolTime(_int SpellID);
 
 public:
 	HRESULT Load_SpellInfo(const _char* pFilePath);
 
 public:
 	const SPELL_INFO& Get_Info(_uint SpellID) const;
+	_int Update_Spell(_int SpellID);
 
 private:
-	SPELL_INFO SpellInfo[34] = {};
+	_int		m_iSpell_Count{};
+	SPELL_INFO  SpellInfo[34] = {};
+	_float		m_iSpell_CoolTime[34] = {};
 
 private:
 	HRESULT Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContex);

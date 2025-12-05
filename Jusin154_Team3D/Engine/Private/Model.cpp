@@ -180,7 +180,7 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 	}
 	else
 	{
-		Update_RootBone();
+		Update_RootBone(m_fAmount);
 	}
 
 	if (m_bIsFinishedAnim)
@@ -275,7 +275,7 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 	}
 	else
 	{
-		Update_RootBone();
+		Update_RootBone(m_fAmount);
 	}
 
 	if (m_bIsFinishedAnim)

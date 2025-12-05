@@ -62,6 +62,8 @@ void CEffectPool::Priority_Update(_float fTimeDelta)
 		}
 	}
 
+	(*m_EffectList[ENUM_CLASS(SKILL_TYPE::DESCENDO)].begin())->Describe_Entity();
+
 }
 
 void CEffectPool::Update(_float fTimeDelta)
@@ -215,7 +217,7 @@ HRESULT CEffectPool::Ready_Effect()
 	return S_OK;
 }
 
-HRESULT CEffectPool::Use_Skill(SKILL_TYPE eType, CGameObject* pOwner)
+HRESULT CEffectPool::Use_Skill(SKILL_TYPE eType, CGameObject* pOwner, void* pArg)
 {
 	if (pOwner == nullptr)
 		return S_OK;
@@ -225,7 +227,7 @@ HRESULT CEffectPool::Use_Skill(SKILL_TYPE eType, CGameObject* pOwner)
 		if (pSkill->Get_Visible() == true)
 			continue;
 
-		pSkill->Pre_Setting(pOwner);
+		pSkill->Pre_Setting(pOwner, pArg);
 
 		m_ActiveEffectList.push_back(pSkill);
 		Safe_AddRef(pSkill);

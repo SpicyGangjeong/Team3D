@@ -461,7 +461,7 @@ PSX::PxController* CPhysX_Manager::Add_BoxController(PSX::PxBoxControllerDesc& D
 	PSX::PxController* pController = { nullptr };
 
 	pController = m_pCCTManager->createController(Desc);
-	
+
 	return pController;
 }
 
@@ -500,12 +500,10 @@ HRESULT CPhysX_Manager::Initialize()
 		return E_FAIL;
 	}
 #ifdef _DEBUG
-
 	if (FAILED(Connect_DebugServer())) {
 		//ASSERT_NURI(false);
 		//ASSERT_JINWOO(false);
 	}
-
 #endif // _DEBUG
 
 	{ // 씬 세팅
@@ -584,7 +582,7 @@ m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, m_ToleranceScal
 	m_pMaterials.push_back(m_pPhysics->createMaterial(0.5f, 0.5f, 0.6f));
 
 	PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
-	PlaneData.iSubKind = UINT_MAX;
+	PlaneData.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
 	PlaneData.pOwner = nullptr;
 	PlaneData.pBody = nullptr;
 

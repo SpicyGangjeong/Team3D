@@ -16,6 +16,7 @@
 #include "SkyBox.h"
 #include "Troll_Weapon.h"
 #include "Troll_Rock.h"
+#include "Goblin_Dagger.h"
 #include "Wand.h"
 
 #pragma region ACTOR
@@ -29,9 +30,21 @@
 
 #pragma region UI
 
+#include "Skill_Data.h"
 #include "UI_Manager.h"
 
 #include "GamePlay_Canvas.h"
+
+#include "Mission_Panel.h"
+//#include "MissionBanner_Border.h"
+//#include "MissionBanner_Key.h"
+//#include "Mission_Icon.h"
+//#include "Mouse_Cursor.h"
+#include "MiniMap_TrimBorder.h"
+
+#include "MiniMap_Panel.h"
+#include "NoMountIcon.h"
+
 #include "Loading_Panel.h"
 #include "LoadingWidget.h"
 #include "LoadingWidget_Flame.h"
@@ -46,12 +59,6 @@
 #include "Magic_Icon.h"
 #include "Spell_UI.h"
 #include "Magic_Item.h"
-
-#include "MiniMap_Panel.h"
-#include "MiniMap_TrimBorder.h"
-#include "NoMountIcon.h"
-
-#include "Mission_Panel.h"
 
 #include "Spell_Canvas.h"
 #include "Spell_Panel.h"
@@ -69,6 +76,8 @@
 #include "Spell_Vidio_Border.h"
 #include "Spell_Anim.h"
 #include "Current_Slot_Number.h"
+#include "Spell_Drag.h"
+
 
 #pragma endregion
 
@@ -1162,7 +1171,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 		Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
 		Desc.fContactOffset = { 0.05f };
-		Desc.vhalfGeometryInfo = { 1.f, 1.f, 1.f };
+		Desc.vhalfGeometryInfo = { 0.5f, 0.5f, 0.5f };
 		Desc.fDensity = 1.f;
 		Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
 		Desc.eLockFlag = {};
@@ -1220,7 +1229,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Dagger_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Object/Goblin_Dagger/Goblin_Dagger.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Object/Goblin_Dagger/Goblin_Dagger.bin", XMMatrixScaling(0.0002f, 0.0002f, 0.0002f) * XMMatrixRotationX(XMConvertToRadians(90.f)) * XMMatrixIdentity()))))
 		return E_FAIL;
 
 
@@ -1653,6 +1662,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	/* For.Prototype_GameObject_UI_Manager*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CSkill_Data>(g_iStaticLevel, CSkill_Data::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
 	/* For.Prototype_GameObject_GamePlay_Canvas*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CGamePlay_Canvas>(g_iStaticLevel, CGamePlay_Canvas::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
@@ -1800,6 +1814,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CCurrent_Slot_Number>(g_iStaticLevel, CCurrent_Slot_Number::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_Drag>(g_iStaticLevel, CSpell_Drag::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
@@ -2001,6 +2019,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_GameObject_Troll_Rock */
 	if (FAILED(m_pGameInstance->Add_Prototype<CTroll_Rock>(g_iStaticLevel, CTroll_Rock::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Goblin_Dagger */
+	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Dagger>(g_iStaticLevel, CGoblin_Dagger::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Broom */

@@ -2,6 +2,8 @@
 #include "Goblin.h"
 
 #include "GameInstance.h"
+#include "Goblin_Dagger.h"
+#include "Effect_Container.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -11,6 +13,7 @@
 #include "State_Move.h"
 #include "State_Combat.h"
 #pragma endregion
+
 
 CGoblin::CGoblin(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMonster(pDevice, pContext)
@@ -35,6 +38,9 @@ HRESULT CGoblin::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
+	if (FAILED(Ready_Parts()))
+		return E_FAIL;
+
 	Add_FSM();
 
 	Set_Anim();
@@ -53,7 +59,7 @@ HRESULT CGoblin::Initialize(void* pArg)
 
 
 
-	m_pCharacter_Controller->Set_Position(XMVectorSet(m_pGameInstance->Random_Float(-20.f, 20.f), 0.f, m_pGameInstance->Random_Float(-20.f, 20.f), 1.f));
+	m_pCharacter_Controller->Set_Position(XMVectorSet(m_pGameInstance->Real_Random_Float(-20.f, 20.f), 0.f, m_pGameInstance->Real_Random_Float(-20.f, 20.f), 1.f));
 
 	return S_OK;
 }
@@ -70,6 +76,8 @@ void CGoblin::Update(_float fTimeDelta)
 	m_pFSM->Update_State(fTimeDelta);
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
+
+	Play_Event();
 
 	GUI::Text("%d", m_pCharacter_Controller->IsActive());
 	GUI::Text("%f %f", m_vStunTimer.x, m_vStunTimer.y);
@@ -94,6 +102,9 @@ void CGoblin::Update(_float fTimeDelta)
 	Describe_Entity();
 #endif // _DEBUG
 
+	for (_uint i = 0; i < ENUM_CLASS(GOBLIN_SKILL::END); i++)
+		m_fSkillCoolTime[i] = max(0.f, m_fSkillCoolTime[i] - fTimeDelta);
+
 }
 
 void CGoblin::Late_Update(_float fTimeDelta)
@@ -103,7 +114,7 @@ void CGoblin::Late_Update(_float fTimeDelta)
 		m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
 	}
 	else {
-		m_pTransformCom->Set_WorldMatrix(m_pRigidBody->Get_Actor()->getGlobalPose());
+		m_pTransformCom->Set_WorldMatrix(m_pRigidBody->Get_FootPositionPxTransform());
 	}
 
 	m_pTransformCom->LookAt_Horizontal(XMLoadFloat4(&m_vTargetPos));
@@ -113,6 +124,9 @@ void CGoblin::Late_Update(_float fTimeDelta)
 
 HRESULT CGoblin::Render()
 {
+
+	if (!m_bVisible)
+		return S_OK;
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
@@ -169,7 +183,30 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 	_float  fLength = {};		// 작용된 힘
 
 	m_pCharacter_Controller->ConvertToDO(*m_pRigidBody);
-	m_pRigidBody->Add_Force(vHitDir * fLength * 100.f, PSX::PxForceMode::eIMPULSE);
+	m_pRigidBody->Add_Force(vHitDir * fLength * 10000.f, PSX::PxForceMode::eFORCE);
+
+	//m_pCharacter_Controller->ConvertToDO(*m_pRigidBody);
+	//m_pRigidBody->Add_Force(vHitDir * fLength * 100.f, PSX::PxForceMode::eIMPULSE);
+	_uint iSkillType = dynamic_cast<CEffect_Container*>(pOther)->Get_SkillType();
+	switch (iSkillType)
+	{
+	case ENUM_CLASS(SKILL_TYPE::DESCENDO):
+		m_eHitSpell = STATEANIM::KNOCKDOWN_FWD;
+		break;
+	case ENUM_CLASS(SKILL_TYPE::FLIPENDO):
+		m_eHitSpell = STATEANIM::TUMBLE2;
+		break;
+	case ENUM_CLASS(SKILL_TYPE::JAP):
+		m_eHitSpell = STATEANIM::HIT_LEVIOSO;
+		break;
+	case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
+		m_eHitSpell = STATEANIM::HIT_LEVIOSO;
+		break;
+	default:
+		m_eHitSpell = STATEANIM::KNOCKDOWN_FWD;
+		break;
+	}
+	m_pFSM->Change_State(FSMSTATE::HIT);
 
 }
 
@@ -224,6 +261,24 @@ HRESULT CGoblin::Ready_Components()
 		}
 		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor());
 	}
+
+	return S_OK;
+}
+
+HRESULT CGoblin::Ready_Parts()
+{
+	CGoblin_Dagger::GOBLINDAGGER_DESC Goblin_DaggerDesc{};
+
+	Goblin_DaggerDesc.pParentTransform = m_pTransformCom;
+	Goblin_DaggerDesc.pSocketMatrices = m_pModelCom->Get_BoneMatrixPtr("LeftHand");
+
+	if (FAILED(Add_PartObject<CGoblin_Dagger>("Goblin_Dagger", g_iStaticLevel, nullptr, &Goblin_DaggerDesc)))
+	{
+		return E_FAIL;
+	}
+
+
+	Get_PartObject<CGoblin_Dagger>()->Set_Visible(false);
 
 	return S_OK;
 }
@@ -290,9 +345,33 @@ void CGoblin::Free()
 
 void CGoblin::Describe_Entity()
 {
+	GUI::Begin("Goblin");
+
+	GUI::Checkbox("LookAt", &m_bLookAt);
+
+	string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
+	GUI::Text(AnimList.c_str());
+
+	GUI::Text("AnimTrack %.2f", m_pModelCom->Get_CurrentTrackPosition());
+	GUI::Text("AnimRatio %.2f", m_pModelCom->Get_CurrentTrackProgressRatio());
+
 	_float4 vMomentum = {};
 	XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());
-	GUI::Text("GoblinMomentum %.2f %.2f %.2f %.2f ", vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);
+	GUI::Text("%.2f %.2f %.2f %.2f ", vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);
+
+	_float3 Pos;
+	XMStoreFloat3(&Pos, Get_WorldPostion());
+
+	if (GUI::DragFloat3("Pos", (_float*)&Pos))
+	{
+		m_pCharacter_Controller->Set_Position(XMLoadFloat3(&Pos));
+	}
+
+
+	GUI::TextColored(ImVec4(1.f, 0.f, 0.f, 1.f), "Distance %.2f", m_fTargetDistance);
+
+
+	GUI::End();
 }
 
 #endif // _DEBUG

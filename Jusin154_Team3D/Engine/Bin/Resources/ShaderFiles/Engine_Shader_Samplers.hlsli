@@ -50,6 +50,13 @@ sampler BorderOneSampler = sampler_state
     BorderColor = float4(1.f, 1.f, 1.f, 1.f);
 };
 
+sampler SsaoDataSampler = sampler_state
+{
+    Filter = MIN_MAG_MIP_POINT;
+    AddressU = wrap;
+    AddressV = wrap;
+};
+
 sampler PointSampler = sampler_state
 {
     Filter = MIN_MAG_MIP_POINT;

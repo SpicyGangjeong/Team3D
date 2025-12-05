@@ -322,6 +322,7 @@
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\public\Mouse_Cursor.h" />
     <ClInclude Include="..\Public\RootModelPart.h" />
+    <ClInclude Include="..\public\UI_Manager.h" />
     <ClInclude Include="..\Public\Wand.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="framework.h" />
@@ -491,6 +492,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\Private\RootModelPart.cpp" />
+    <ClCompile Include="..\private\UI_Manager.cpp" />
     <ClCompile Include="..\Private\Wand.cpp" />
     <ClCompile Include="Editor.cpp" />
   </ItemGroup>

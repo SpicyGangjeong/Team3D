@@ -21,7 +21,7 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 
 public:
-	virtual	HRESULT	Pre_Setting(CGameObject* pObject) override;
+	virtual	HRESULT	Pre_Setting(CGameObject* pObject, void* pArg = nullptr) override;
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
@@ -32,15 +32,24 @@ private:
 	virtual void	OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr) override;
 private:
 	_wstring						  m_wstrEffectName = {};
+	class  CInfoInstance*			  m_pInfoInstance = { nullptr };
 
 	class CPartObject*				  m_pProjectile = {};
 	class CPartObject*				  m_pProjectile_Blur = {};
 
-	_vector							  m_vRotateUp = {};
-	_float							  m_fAccTime = {};
+
+	_float4							  m_vStartPos = { 0.f, 0.f, 0.f, 1.f }; // 현재 발사 된 위치
+	_float4							  m_vTargetPos = { 0.f, 0.f, 10.f, 1.f }; // 현재 타게팅 된 위치
+	_float							  m_fLinearSpeed = 22.f;
+	_float3							  m_vCameraLook = {};
+
+	_float3							  m_vRotateUp = {};
+	_float							  m_fRotateAccTime = {};
 	_float							  m_fLerpAmount = {};
 	_float							  m_fTurnValue = {};
-	_vector							  m_vCameraLook = {};
+
+	_float							  m_fAngularSpeed = {};
+	_float							  m_fTimeRate = {};
 
 
 public:

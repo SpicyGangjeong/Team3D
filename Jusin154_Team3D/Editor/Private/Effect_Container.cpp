@@ -306,7 +306,7 @@ HRESULT CEffect_Container::Load_Package(const _char* pPath)
 	return S_OK;
 }
 
-HRESULT CEffect_Container::Pre_Setting(CGameObject* pObject)
+HRESULT CEffect_Container::Pre_Setting(CGameObject* pObject, void* pArg)
 {
 	if (pObject == nullptr)
 		return E_FAIL;
@@ -416,5 +416,63 @@ void CEffect_Container::Update_Event(_float fTimeDelta)
 		}
 	}
 	
+
+}
+
+_int CEffect_Container::CollisionCheck()
+{
+	_bool bIsCollide = { false };
+
+	// 건드린 친구들 순서대로 다 가져옴 ( 정렬은 안되어있음 )
+	for (PSX::PxU32 i = 0; i < m_Hitbuffer.nbTouches; ++i)
+	{
+		const PSX::PxSweepHit& Hit = m_Hitbuffer.touches[i];
+		/* 기타 로직 */
+
+		PSX::PxRigidActor* pActor = Hit.actor;
+		PSX::PxShape* pShape = Hit.shape;
+
+		if (nullptr != pActor && nullptr != pActor->userData) {
+
+			PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+
+			if (pUserData->iSubKind >= UINT_MAX - 1) {
+				continue;
+			}
+
+			switch (PXOBJECT(pUserData->eKind))
+			{
+			case PXOBJECT::PLAYER:
+				continue;
+			case PXOBJECT::MONSTER:
+			case PXOBJECT::GOBLIN_WARRIOR:
+			case PXOBJECT::TROLL:
+			case PXOBJECT::WALL:
+
+			{
+				return i;
+			}
+			break;
+			default:
+				break;
+			}
+
+			switch (pUserData->eKind)
+			{
+			case PHYSX_KIND::BODY_STATIC:
+			case PHYSX_KIND::BODY_DYNAMIC:
+			{
+				return i;
+			}
+			break;
+			case PHYSX_KIND::CCTActor:
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	return -1;
 
 }

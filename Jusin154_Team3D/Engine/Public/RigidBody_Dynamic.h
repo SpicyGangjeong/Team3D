@@ -46,6 +46,8 @@ public:
 	_bool					IsActive() const { return m_bActive; }
 	void					SetActive(_bool bCondition) { m_bActive = bCondition; }
 
+	_float3					Get_FootPosition();
+	PSX::PxTransform		Get_FootPositionPxTransform();
 private:
 	PSX::PxRigidDynamic*	m_pRigidBody = { nullptr };		// 실제 시뮬레이션을 도는 본체
 	PSX::PxRigidDynamicLockFlags m_eLockFlag = { };

@@ -88,7 +88,7 @@ void CLeviosoSide::Late_Update(_float fTimeDelta)
 
 }
 
-HRESULT CLeviosoSide::Pre_Setting(CGameObject* pObject)
+HRESULT CLeviosoSide::Pre_Setting(CGameObject* pObject, void* pArg)
 {
 	if (FAILED(__super::Pre_Setting(pObject)))
 		return E_FAIL;

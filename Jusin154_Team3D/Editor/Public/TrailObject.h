@@ -68,7 +68,7 @@ public:
 		BLOOM_TYPE  eBloomType = {};
 		_float2     vBloomTime = {};
 
-		_int	    iNumVertex = {};
+		_int	    iNumVertex = { 256 };
 
 
 		RENDER		eRenderOrder = { RENDER::EFFECT };

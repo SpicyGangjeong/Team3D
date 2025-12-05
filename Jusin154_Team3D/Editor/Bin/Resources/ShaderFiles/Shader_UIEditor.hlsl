@@ -1167,24 +1167,20 @@ PS_OUT PS_Spell_Drag(PS_IN In)
 
     float4 Color = float4(1.f, 1.f, 1.f, 1.f);
     float4 tex1 = g_Texture.Sample(DefaultSampler, In.vTexcoord);
-    float4 tex2 = g_Texture1.Sample(DefaultSampler, In.vTexcoord);
-    float4 tex2Color = g_Texture3.Sample(DefaultSampler, In.vTexcoord);
+    float tex2 = g_Texture1.Sample(DefaultSampler, In.vTexcoord).r;
+    float4 tex2Color = g_Texture2.Sample(DefaultSampler, In.vTexcoord);
     
-    Color = tex1;
-    tex2.rgb = tex2Color;
+    tex2Color.a = tex2;
+    Color = lerp(tex1, tex2Color, tex2Color.a);
     
-    Color = lerp(Color, tex2, tex2.a);
-    
-    float2 Imagetexpos1 = g_fImageUV.xy / g_fCurrent_Size;
-    float2 Imagetexsize1 = g_fImageUV.zw / g_fCurrent_Size;
-    float2 Imagelocal = (In.vTexcoord - Imagetexpos1) / Imagetexsize1;
-    bool inside1 = all(Imagelocal >= 0.0f && Imagelocal <= 1.0f);
-    float4 tex3 = g_Texture2.Sample(DefaultSampler, In.vTexcoord);
+    float2 atlasUV = g_fImageUV.xy + In.vTexcoord * (g_fImageUV.zw - g_fImageUV.xy);
+    //float2 center = (g_fImageUV.xy + g_fImageUV.zw) * 0.5f;
+    //float2 uv = atlasUV - center;
+    //uv *= 0.7f;
+    //uv += center;
+    float4 tex3 = g_Texture3.Sample(ClampSampler, atlasUV);
 
-    if (inside1)
-    {
-        Color = lerp(Color, tex3, tex3.a);
-    }
+    Color = lerp(Color, tex3, tex3.a);
  
     Color.a *= Alpha;
     

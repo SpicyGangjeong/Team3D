@@ -97,9 +97,9 @@ void CProtego::Late_Update(_float fTimeDelta)
 
 }
 
-HRESULT CProtego::Pre_Setting(CGameObject* pObject)
+HRESULT CProtego::Pre_Setting(CGameObject* pObject, void* pArg)
 {
-	if (FAILED(__super::Pre_Setting(pObject)))
+	if (FAILED(__super::Pre_Setting(pObject, nullptr)))
 		return E_FAIL;
 
 	m_pSphere->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());

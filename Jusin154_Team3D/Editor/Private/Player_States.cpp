@@ -187,7 +187,7 @@ HRESULT CPlayer::Behavior_IdleExitCheck(_float fTimeDelta)
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
 		}
 		else if (m_pGameInstance->Key_Down(DIK_B)) {
-			m_pFSM->Change_State(FSMSTATE::BROOM_RIDE);
+			//m_pFSM->Change_State(FSMSTATE::BROOM_RIDE);
 		}
 		return E_FAIL;
 	}
@@ -743,7 +743,7 @@ void CPlayer::Behavior_CombatEnter()
 		m_pFSM->Enable_State(FSMSTATE::LIGHT_ATTACK);
 		pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK];
 
-		Add_Event(pairAnimInfo.first, [this]() { m_pEffectPool->Use_Skill(SKILL_TYPE::JAP, Get_PartObject<CWand>());  }, 0.1f);
+		Add_Event(pairAnimInfo.first, [this]() {_uint iIndex = 0; m_pEffectPool->Use_Skill(SKILL_TYPE::JAP, Get_PartObject<CWand>() , &iIndex);  }, 0.1f);
 
 		Add_Event(pairAnimInfo.first, [this]() { m_pEffectPool->Use_Skill(SKILL_TYPE::JAP_SIDE, Get_PartObject<CWand>());  }, 0.0f);
 	}
@@ -915,8 +915,11 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 					pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK];
 					pairAnimInfo.first = iIndex + 1;
 					m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
 					Add_Event(pairAnimInfo.first,
-						[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::JAP, this); },
+						[this]() {
+							_uint iIndex = m_pModelCom->Get_AnimIndex() - m_Animation[STATEANIM::LIGHT_ATTACK].first;
+							m_pEffectPool->Use_Skill(SKILL_TYPE::JAP, Get_PartObject<CWand>() , &iIndex);},
 						0.1f);
 				}
 			}
@@ -995,7 +998,7 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 			{
 				pairAnimInfo = m_Animation[STATEANIM::DESCENDO];
 				Add_Event(pairAnimInfo.first,
-					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::DESCENDO, this); },
+					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::DESCENDO, Get_PartObject<CWand>()); },
 					0.1f);
 
 				m_eSpell = STATEANIM::END;

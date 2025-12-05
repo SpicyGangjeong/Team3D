@@ -68,6 +68,7 @@ void CCanvasObject::Update(_float fTimeDelta)
 			m_fAlpha = 0.f;
 		}
 	}
+	__super::Update(fTimeDelta);
 }
 
 void CCanvasObject::Late_Update(_float fTimeDelta)

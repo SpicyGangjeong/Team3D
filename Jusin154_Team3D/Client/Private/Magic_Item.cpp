@@ -47,7 +47,6 @@ HRESULT CMagic_Item::Initialize(void* pArg)
 	m_iArratCount = 2;
 	Compute_UV(0);
 	Compute_Image();
-	m_bActive = true;
 	return S_OK;
 }
 

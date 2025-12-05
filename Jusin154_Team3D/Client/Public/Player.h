@@ -82,7 +82,9 @@ public:
 
 
 private:
-	void TestKeyInput(_float fTimeDelta);
+	// UI 연동 추가
+	void Get_Spell(_int SkillIndex);
+
 	virtual void Add_FSM();
 	virtual void Set_Anim();
 

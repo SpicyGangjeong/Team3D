@@ -30,6 +30,8 @@ enum ESTATE : _u64Flag
     THROW_ROCK                  = 1ULL << 23,
     BACKHAND_SWING              = 1ULL << 24,
     SWING                       = 1ULL << 25,
+    SLAM                        = 1ULL << 26,
+    BLINK                       = 1ULL << 27,
     END
 };
 NS_END

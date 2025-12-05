@@ -28,6 +28,9 @@ public:
 	virtual void SizeUpdate(_float fSizeX, _float fSizeY) override;
 
 private:
+	void Click_Slot(_bool bClick);
+
+private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;
 	virtual HRESULT Initialize_Prototype() override;

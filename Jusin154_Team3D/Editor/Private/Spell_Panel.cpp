@@ -16,6 +16,7 @@
 #include "Spell_Header_Line.h"
 #include "Spell_Data.h"
 #include "Spell_Anim.h"
+#include "Spell_Drag.h"
 
 CSpell_Panel::CSpell_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPanelObject(pDevice, pContext)
@@ -54,11 +55,16 @@ HRESULT CSpell_Panel::Initialize(void* pArg)
 		return E_FAIL;
 	}
 	m_fCanvasAlpha = 1.f;
-	m_fSortZ = 0.04f;
+	m_fSortZ = 0.05f;
 	m_iSpellType = -1;
 	m_iPendingSpell = -1;
 	m_fDelayTime = 1.f;
+	m_bCurrentSlot_Hover = false;
 	Add_Function(TEXT("Hover"), [this](void* p) {this->Slot_Chack(p); });
+	Add_Function(TEXT("Click"), [this](void* p) {this->Click_Slot(*reinterpret_cast<_bool*>(p)); });
+	Add_Function(TEXT("Current_Slot_Click"), [this](void* p) {this->Current_Slot_Chack(*reinterpret_cast<_int*>(p)); });
+	Visible(true);
+	ElementAllVisible(true);
 	return S_OK;
 }
 
@@ -88,9 +94,9 @@ void CSpell_Panel::Update(_float fTimeDelta)
 		Function_Callback(TEXT("FadeOut"));
 	}
 
-	if (m_fHoverTimer >= m_fDelayTime && m_iPendingSpell != m_iSpellType)
+	if (m_fHoverTimer >= m_fDelayTime)
 	{
-		m_iPendingSpell = m_iSpellType;
+		
 		Function_Callback(TEXT("FadeIn"));
 	}
 
@@ -155,7 +161,27 @@ void CSpell_Panel::Slot_Chack(void* pArg)
 	}
 
 	m_iSpellType = finalHover;
-	Function_Callback(TEXT("Slot_Hover"), &m_iSpellType);
+	if (m_bHover == false)
+	{
+		Function_Callback(TEXT("Slot_Hover"), &m_iSpellType);
+	}
+}
+
+void CSpell_Panel::Click_Slot(_bool bClick)
+{
+	if (bClick == true)
+	{
+		m_bHover = true;
+	}
+	else
+	{
+		m_bHover = false;
+	}
+}
+
+void CSpell_Panel::Current_Slot_Chack(_int Index)
+{
+	m_iCurrent_Slot_Index = Index;
 }
 
 HRESULT CSpell_Panel::Bind_ShaderResources()
@@ -298,6 +324,12 @@ HRESULT CSpell_Panel::Ready_Element(void* pArg)
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Spell_Anim"), m_pSpell_Anim);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Drag>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Drag**>(&m_pCSpell_Drag))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Spell_Drag"), m_pCSpell_Drag);
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Data>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, m_Info, nullptr, reinterpret_cast<CSpell_Data**>(&m_pSpell_Data))))
 	{

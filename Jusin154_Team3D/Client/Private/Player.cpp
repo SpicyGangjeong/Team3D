@@ -103,6 +103,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_Batch = make_unique<PrimitiveBatch<VertexPositionColor>>(m_pContext);
 #endif // _DEBUG
 
+	// UI 연동 추가
+	m_pInfoInstance->Add_Event(TEXT("JAP"), [this](void* p) {this->Get_Spell(*reinterpret_cast<_int*>(p)); });
+
 	return S_OK;
 }
 
@@ -136,7 +139,6 @@ __super::Update(fTimeDelta);
 		m_pCharacter_Controller->Move(fTimeDelta);
 		m_pCallBack_HitReport->Set_CurrentSlop();
 	}
-	TestKeyInput(fTimeDelta);
 }
 
 void CPlayer::Late_Update(_float fTimeDelta)

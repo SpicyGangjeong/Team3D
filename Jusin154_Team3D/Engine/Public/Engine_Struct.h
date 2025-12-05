@@ -201,8 +201,9 @@ typedef struct tagVertexInstance_UI
 	_float2 fSize = {};
 	_float2 fPos = {};
 	_float4 fUV = _float4(0.f, 0.f, 1.f, 1.f);
-	_float4 vColor = _float4(1.f, 1.f, 1.f, 1.f);
+	_float  vColor = 0;
 	_float  bHover = 0;
+	_float  bSpell = 0;
 }VTX_INSTANCE_UI;
 
 typedef struct tagVertexBlock
@@ -362,7 +363,7 @@ typedef struct tagVertexModelInstanceModelDesc
 
 typedef struct tagVertexInstance_UIDesc
 {
-	static constexpr unsigned int iNumElements = { 7 };
+	static constexpr unsigned int iNumElements = { 8 };
 	static constexpr D3D11_INPUT_ELEMENT_DESC		Elements[] = {
 	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
 	{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
@@ -370,8 +371,9 @@ typedef struct tagVertexInstance_UIDesc
 	{ "TEXCOORD", 1, DXGI_FORMAT_R32G32_FLOAT, 1, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 	{ "TEXCOORD", 2, DXGI_FORMAT_R32G32_FLOAT, 1, 8, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 	{ "TEXCOORD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-	{ "TEXCOORD", 4, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-	{ "TEXCOORD", 5, DXGI_FORMAT_R32_FLOAT, 1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1 }
+	{ "TEXCOORD", 4, DXGI_FORMAT_R32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+	{ "TEXCOORD", 5, DXGI_FORMAT_R32_FLOAT, 1, 36, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+	{ "TEXCOORD", 6, DXGI_FORMAT_R32_FLOAT, 1, 40, D3D11_INPUT_PER_INSTANCE_DATA, 1 }
 	};
 
 }VTX_POSTEX_INSTANCE_UI;
@@ -438,5 +440,17 @@ typedef struct tagBoneDesc
 	_float4x4 Combined;
 }BONE_DESC;
 
+typedef struct tagSSAO_SamplePos {
+	_float3 vPos = {  }; // xy(-1, 1) z(0, 1)
+	_float fPad = {};
+}SSAO_SAMPLE;
+
+typedef struct tagSSAO_Geometry_Hemisphere {
+	SSAO_SAMPLE SamplePos[SSAO_SAMPLE_NUMBER];
+}SSAO_GEOMETRY_HEMISPHERE;
+
+typedef struct tagSSAO_GeometryDirections_RANDOM_REAL {
+	_float4 vDir[16];
+}SSAO_GEOMETRYDIRECTIONS_RANDOM_REAL;
 
 NS_END

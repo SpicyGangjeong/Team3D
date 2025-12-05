@@ -40,9 +40,46 @@ HRESULT CTrail::Initialize(void* pArg)
 	if (FAILED(Create_VB()))
 		return E_FAIL;
 
-#pragma endregion
+	if (FAILED(Create_IB()))
+		return E_FAIL;
+		
+	return S_OK;
+}
 
-#pragma region IDX_BUFFER
+HRESULT CTrail::Create_VB()
+{
+
+	if (m_pVB != nullptr)
+		SAFE_RELEASE(m_pVB);
+
+	D3D11_BUFFER_DESC VBDesc{};
+	VBDesc.ByteWidth = m_iVertexStride * m_iNumVertices;
+	VBDesc.Usage = D3D11_USAGE_DYNAMIC;
+	VBDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	VBDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	VBDesc.MiscFlags = 0;
+	VBDesc.StructureByteStride = m_iVertexStride;
+
+	VTXPOSTEX* pVertices = new VTXPOSTEX[m_iNumVertices]{};
+
+	D3D11_SUBRESOURCE_DATA InitialVBDate{};
+	InitialVBDate.pSysMem = pVertices;
+
+	if (FAILED(m_pDevice->CreateBuffer(&VBDesc, &InitialVBDate, &m_pVB))) {
+		return E_FAIL;
+	}
+
+	Safe_Delete_Array(pVertices);
+
+	return S_OK;
+}
+
+HRESULT CTrail::Create_IB()
+{
+	if (m_pIB != nullptr)
+		SAFE_RELEASE(m_pIB);
+
+	m_iNumIndices = (m_iNumVertices / 2 - 1) * 6;
 
 	D3D11_BUFFER_DESC IBDesc{};
 	IBDesc.ByteWidth = m_iIndexStride * m_iNumIndices;
@@ -85,35 +122,6 @@ HRESULT CTrail::Initialize(void* pArg)
 	}
 
 	Safe_Delete_Array(pIndices);
-#pragma endregion
-
-	return S_OK;
-}
-
-HRESULT CTrail::Create_VB()
-{
-
-	if (m_pVB != nullptr)
-		SAFE_RELEASE(m_pVB);
-
-#pragma region VTX_BUFFER
-	D3D11_BUFFER_DESC VBDesc{};
-	VBDesc.ByteWidth = m_iVertexStride * m_iNumVertices;
-	VBDesc.Usage = D3D11_USAGE_DYNAMIC;
-	VBDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	VBDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	VBDesc.MiscFlags = 0;
-	VBDesc.StructureByteStride = m_iVertexStride;
-
-	VTXPOSTEX* pVertices = new VTXPOSTEX[m_iNumVertices]{};
-
-	D3D11_SUBRESOURCE_DATA InitialVBDate{};
-	InitialVBDate.pSysMem = pVertices;
-
-	if (FAILED(m_pDevice->CreateBuffer(&VBDesc, &InitialVBDate, &m_pVB))) {
-		return E_FAIL;
-	}
-	Safe_Delete_Array(pVertices);
 
 	return S_OK;
 }
@@ -134,13 +142,17 @@ void CTrail::Trail_Update(_float fDeltaTime, _fmatrix WorldMatrix)
 
 
 	//한칸씩 밀기
-	memmove(m_PreLow, m_PreLow + 1, sizeof(VTXPOSTEX));
-	memmove(m_PreHigh, m_PreHigh + 1, sizeof(VTXPOSTEX));
+	for (_uint i = 0; i < 3; i++)
+	{
+		m_PreLow[i] = m_PreLow[i + 1];
+		m_PreHigh[i] = m_PreHigh[i + 1];
+	}
 
-	m_PreLow[1] = vLow;
-	m_PreHigh[1] = vHigh;
 
-	if (m_iNumCount < 4)
+	XMStoreFloat3(&m_PreLow[3], vLow);
+	XMStoreFloat3(&m_PreHigh[3], vHigh);
+
+	if (m_iNumCount < 12)
 	{
 		XMStoreFloat3(&m_pVertices[m_iNumCount++].vPosition, vLow);
 		XMStoreFloat3(&m_pVertices[m_iNumCount++].vPosition, vHigh); 
@@ -151,11 +163,15 @@ void CTrail::Trail_Update(_float fDeltaTime, _fmatrix WorldMatrix)
 
 	//시작점 끝점 내점 두개를 이용하여 보간할 것임
 
-	for (size_t i = 0; i < 4; i++)
+	_vector m_PreLowVector[4] = { XMLoadFloat3(&m_PreLow[0]) , XMLoadFloat3(&m_PreLow[1]) ,  XMLoadFloat3(&m_PreLow[2]),  XMLoadFloat3(&m_PreLow[3]) };
+	_vector m_PreHighVector[4] = { XMLoadFloat3(&m_PreHigh[0]) , XMLoadFloat3(&m_PreHigh[1]),XMLoadFloat3(&m_PreHigh[2]) , XMLoadFloat3(&m_PreHigh[3]) };
+
+	for (size_t i = 0; i < 9; i++)
 	{
-		_float iRatio =  (_float)i / 3;
-		_vector vLerpLow = XMVectorCatmullRom(XMLoadFloat3(&m_pVertices[m_iNumCount - 2].vPosition), m_PreLow[0], m_PreLow[1], m_PreLow[1] + (m_PreLow[1] - m_PreLow[0]), iRatio); // LoW
-		_vector vLerpHigh = XMVectorCatmullRom(XMLoadFloat3(&m_pVertices[m_iNumCount - 1].vPosition), m_PreHigh[0], m_PreHigh[1], m_PreHigh[1] + (m_PreHigh[1] - m_PreHigh[0]), iRatio);
+
+		_float iRatio =  (_float)i / 8;
+		_vector vLerpLow = XMVectorCatmullRom(m_PreLowVector[0], m_PreLowVector[1], m_PreLowVector[2], m_PreLowVector[3], iRatio); // LoW
+		_vector vLerpHigh = XMVectorCatmullRom(m_PreHighVector[0], m_PreHighVector[1], m_PreHighVector[2], m_PreHighVector[3], iRatio);
 
 		XMStoreFloat3(&m_pVertices[m_iNumCount++].vPosition, vLerpLow);
 		XMStoreFloat3(&m_pVertices[m_iNumCount++].vPosition, vLerpHigh);
@@ -233,6 +249,13 @@ HRESULT CTrail::ReStructVB(_uint iNumVertices)
 	if (FAILED(Create_VB()))
 		return E_FAIL;
 
+	if (FAILED(Create_IB()))
+		return E_FAIL;
+
+	Safe_Delete_Array(m_pVertices);
+
+	m_pVertices = new VTXPOSTEX[m_iNumVertices]{};
+	
 	return S_OK;
 }
 

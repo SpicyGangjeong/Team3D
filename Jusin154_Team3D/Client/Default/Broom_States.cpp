@@ -58,8 +58,8 @@ HRESULT CBroom::InputKeyUpMove()
 HRESULT CBroom::InputSpell()
 {
 	if (
-		m_pGameInstance->Key_Down(DIK_1)
-		|| m_pGameInstance->Key_Down(DIK_2)
+/*		m_pGameInstance->Key_Down(DIK_1)
+		||*/ m_pGameInstance->Key_Down(DIK_2)
 		|| m_pGameInstance->Key_Down(DIK_3)
 			|| m_pGameInstance->Key_Down(DIK_4)
 			)
