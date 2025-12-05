@@ -80,21 +80,7 @@ void CRenderer::Fill_Geometry(_uint iNumSample)
 	uniform_real_distribution<_float> rand_Minus(-1.f, 1.f);
 	mt19937 m_Rng{ random_device{}() };
 
-	_float fScale;
-	_vector vPos;
-	for (_uint iIndexSample = 0; iIndexSample < iNumSample; ++iIndexSample) {
-		vPos = {
-			rand_Minus(m_Rng),
-			rand_Minus(m_Rng),
-			rand_Normal(m_Rng)
-		};
-		vPos = XMVector3Normalize(vPos) * rand_Normal(m_Rng);
-		fScale = ((_float)iIndexSample / (_float)iNumSample);
-		fScale = CMyTools::Lerp_f1D(0.f, 1.f, fScale * fScale);
-		vPos *= fScale;
-		XMStoreFloat3(&m_tagSSAOGeometry.SamplePos[iIndexSample].vPos, vPos);
-	}
-
+#pragma region Direction
 	for (_uint iIndexDir = 0; iIndexDir < 16; ++iIndexDir) {
 		m_tagSSAOGeometryDirections.vDir[iIndexDir] = {
 			rand_Minus(m_Rng),
@@ -130,22 +116,26 @@ void CRenderer::Fill_Geometry(_uint iNumSample)
 	srvDesc.Texture2D.MipLevels = 1;
 
 	m_pDevice->CreateShaderResourceView(m_pSSAO_NoiseTexture, &srvDesc, &m_pSSAO_NoiseSRV);
+#pragma endregion
 
-	{
-		D3D11_BUFFER_DESC desc = {};
-		desc.ByteWidth = sizeof(SSAO_GEOMETRY_HEMISPHERE);
-		desc.Usage = D3D11_USAGE_IMMUTABLE;
-		desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		desc.CPUAccessFlags = 0;
+	_float fScale;
+	_vector vPos;
+	for (_uint iIndexSample = 0; iIndexSample < iNumSample; ++iIndexSample) {
+		vPos = {
+			rand_Minus(m_Rng),
+			rand_Minus(m_Rng),
+			rand_Normal(m_Rng)
+		};
+		vPos = XMVector3Normalize(vPos) * rand_Normal(m_Rng);
+		fScale = ((_float)iIndexSample / (_float)iNumSample);
+		fScale = CMyTools::Lerp_f1D(0.f, 1.f, fScale * fScale);
+		vPos *= fScale; 
 
-		D3D11_SUBRESOURCE_DATA initData = {};
-		initData.pSysMem = &m_tagSSAOGeometry;
-		initData.SysMemPitch = 0;
-
-		HRESULT hr = m_pDevice->CreateBuffer(&desc, &initData, &m_pGlobalStaticCB);
-
-		m_pContext->VSSetConstantBuffers(10, 1, &m_pGlobalStaticCB);
-		m_pContext->PSSetConstantBuffers(10, 1, &m_pGlobalStaticCB);
+		XMStoreFloat3(&m_tagSSAOGeometry.SamplePos[iIndexSample], vPos);
+	}
+	if (FAILED(m_pShader->Bind_RawValue("g_SamplePos", &m_tagSSAOGeometry.SamplePos, sizeof(SSAO_GEOMETRY_HEMISPHERE)))) {
+		assert(false);
+		return;
 	}
 }
 HRESULT CRenderer::Initialize()
@@ -196,7 +186,7 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 		/* Target_Shadow_Near */
-		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Shadow_Near"), (_uint)g_iMaxShadowWidth >> 2, (_uint)g_iMaxShadowHeight >> 2,
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Shadow_Near"), (_uint)g_iMaxShadowWidth, (_uint)g_iMaxShadowHeight,
 			DXGI_FORMAT_R32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)))) {
 			return E_FAIL;
 		}
@@ -526,6 +516,12 @@ void CRenderer::Describe_Entitiy()
 		GUI::BeginChild("TONE_MAP", ImVec2(0, 0), true);
 		GUI::SliderInt("m_iToneMappingType", &m_iToneMappingType, 0, 2, "%d");
 		GUI::SliderFloat("m_fExposure", &m_fExposure, 0.5f, 2.f, "%.3f");
+		GUI::EndChild();
+	}
+	if (GUI::CollapsingHeader("SSAO")) {
+		GUI::BeginChild("SSAO_Setting", ImVec2(0, 0), true);
+		GUI::DragFloat("fSSAORadius ", &m_fSSAO_Radius, 0.001f, -3.f, 3.f, "%.5f");
+		GUI::DragFloat("fSSAO_BIAS", &m_fSSAO_BIAS, 0.001f, -2.f, 2.f, "%.5f");
 		GUI::EndChild();
 	}
 	GUI::End();

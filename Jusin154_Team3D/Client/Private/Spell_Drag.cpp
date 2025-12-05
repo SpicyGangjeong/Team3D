@@ -407,7 +407,10 @@ void CSpell_Drag::Free()
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }
+#ifdef _DEBUG
 
 void CSpell_Drag::Describe_Entity()
 {
 }
+
+#endif // _DEBUG
