@@ -36,72 +36,95 @@ void CPlayer::Get_Spell(_int SkillIndex)
 	m_eSpell = SkillIndex;
 }
 
+void CPlayer::Get_UIState(_int UIState)
+{
+	m_eUIState = UIState;
+}
+
 HRESULT CPlayer::InputAction()
 {
-	if (
-		m_pGameInstance->Key_Down(DIK_SPACE)
-		|| m_pGameInstance->Key_Down(DIK_LCONTROL)
-		|| m_pGameInstance->Key_Down(DIK_E)
-		|| m_pGameInstance->Key_Down(DIK_R)
-		|| m_pGameInstance->Key_Down(DIK_Q)
-		|| m_pGameInstance->Mouse_Up(DIM_LBUTTON)
-		|| m_pGameInstance->Key_Down(DIK_LSHIFT)
-		|| m_pGameInstance->Key_Down(DIK_C)
-		|| m_pGameInstance->Key_Down(DIK_V)
-		|| m_pGameInstance->Key_Down(DIK_Z)
-		|| m_pGameInstance->Key_Down(DIK_G)
-		|| m_pGameInstance->Key_Down(DIK_B)
-		|| m_pGameInstance->Key_Down(DIK_T)
-		|| m_pGameInstance->Key_Down(DIK_TAB)
-		)
-	{
-		if (m_pGameInstance->Key_Down(DIK_T)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_T));
-		if (m_pGameInstance->Key_Down(DIK_TAB)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_TAB));
+	if ((m_eUIState != ENUM_CLASS(UI_STATE::SPELL))) {
+		if (
+			m_pGameInstance->Key_Down(DIK_SPACE)
+			|| m_pGameInstance->Key_Down(DIK_LCONTROL)
+			|| m_pGameInstance->Key_Down(DIK_E)
+			|| m_pGameInstance->Key_Down(DIK_R)
+			|| m_pGameInstance->Key_Down(DIK_Q)
+			|| m_pGameInstance->Mouse_Up(DIM_LBUTTON)
+			|| m_pGameInstance->Key_Down(DIK_LSHIFT)
+			|| m_pGameInstance->Key_Down(DIK_C)
+			|| m_pGameInstance->Key_Down(DIK_V)
+			|| m_pGameInstance->Key_Down(DIK_Z)
+			|| m_pGameInstance->Key_Down(DIK_G)
+			|| m_pGameInstance->Key_Down(DIK_B)
+			|| m_pGameInstance->Key_Down(DIK_T)
+			|| m_pGameInstance->Key_Down(DIK_TAB)
+			)
+		{
+			if (m_pGameInstance->Key_Down(DIK_T)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_T));
+			if (m_pGameInstance->Key_Down(DIK_TAB)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_TAB));
 
-		return S_OK;
+			return S_OK;
+		}
 	}
+	else {
+		if(m_pGameInstance->Key_Down(DIK_T))
+		{
+			if (m_pGameInstance->Key_Down(DIK_T)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_T));
+			return S_OK;
+		}
+	}
+	
 	return E_FAIL;
 }
 
 HRESULT CPlayer::InputMove()
 {
-	if (m_pGameInstance->Key_Pressing(DIK_W)
-		|| m_pGameInstance->Key_Pressing(DIK_A)
-		|| m_pGameInstance->Key_Pressing(DIK_S)
-		|| m_pGameInstance->Key_Pressing(DIK_D))
-	{
-		return S_OK;
+	if ((m_eUIState != ENUM_CLASS(UI_STATE::SPELL))) {
+
+		if (m_pGameInstance->Key_Pressing(DIK_W)
+			|| m_pGameInstance->Key_Pressing(DIK_A)
+			|| m_pGameInstance->Key_Pressing(DIK_S)
+			|| m_pGameInstance->Key_Pressing(DIK_D))
+		{
+
+			return S_OK;
+		}
 	}
 	return E_FAIL;
 }
 
 HRESULT CPlayer::InputKeyUpMove()
 {
-	if (m_pGameInstance->Key_Up(DIK_W)
-		|| m_pGameInstance->Key_Up(DIK_A)
-		|| m_pGameInstance->Key_Up(DIK_S)
-		|| m_pGameInstance->Key_Up(DIK_D))
-	{
-		return S_OK;
+	if ((m_eUIState != ENUM_CLASS(UI_STATE::SPELL))) {
+		if (m_pGameInstance->Key_Up(DIK_W)
+			|| m_pGameInstance->Key_Up(DIK_A)
+			|| m_pGameInstance->Key_Up(DIK_S)
+			|| m_pGameInstance->Key_Up(DIK_D))
+		{
+			return S_OK;
+		}
 	}
 	return E_FAIL;
 }
 
 HRESULT CPlayer::InputSpell()
 {
-	if (
-		m_pGameInstance->Key_Down(DIK_1)
-		|| m_pGameInstance->Key_Down(DIK_2)
-		|| m_pGameInstance->Key_Down(DIK_3)
-		|| m_pGameInstance->Key_Down(DIK_4)
-		)
-	{
-		if (m_pGameInstance->Key_Down(DIK_1)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_1));
-		if (m_pGameInstance->Key_Down(DIK_2)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_2));
-		if (m_pGameInstance->Key_Down(DIK_3)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_3));
-		if (m_pGameInstance->Key_Down(DIK_4)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_4));
+	if ((m_eUIState != ENUM_CLASS(UI_STATE::SPELL))) {
+		if (
+			m_pGameInstance->Key_Down(DIK_1)
+			|| m_pGameInstance->Key_Down(DIK_2)
+			|| m_pGameInstance->Key_Down(DIK_3)
+			|| m_pGameInstance->Key_Down(DIK_4)
+			)
+		{
+			if (m_pGameInstance->Key_Down(DIK_1)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_1));
+			if (m_pGameInstance->Key_Down(DIK_2)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_2));
+			if (m_pGameInstance->Key_Down(DIK_3)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_3));
+			if (m_pGameInstance->Key_Down(DIK_4)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_4));
 
-		return S_OK;
+			return S_OK;
+		}
 	}
 	return E_FAIL;
 }
@@ -136,7 +159,7 @@ void CPlayer::Behavior_IdleEnter() {
 	
 	m_bSprintToggle = false;
 	m_bWalkToggle = false;
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.f,true);
 }
 
 // S_OK -> 현 상태 유지
@@ -1002,7 +1025,7 @@ void CPlayer::Behavior_HitEnter()
 {
 	m_pFSM->Enable_State(FSMSTATE::HIT);
 	pair<_uint, _bool> pairAnimInfo;
-	_int RandIndex = m_pGameInstance->Real_Random_Int(0, 1);
+	_int RandIndex = m_pGameInstance->Real_Random_Int(0, 2);
 	switch (RandIndex)
 	{
 	case 0:
@@ -1010,6 +1033,9 @@ void CPlayer::Behavior_HitEnter()
 		break;
 	case 1:
 		pairAnimInfo = m_Animation[STATEANIM::HIT_L];
+		break;
+	case 2:
+		pairAnimInfo = m_Animation[STATEANIM::KNOCKBACK];
 		break;
 	default:
 		break;
@@ -1238,10 +1264,12 @@ void CPlayer::Add_FSM()
 		Desc.funcExitEvent = [this]() { Behavior_MoveExit(); };
 		Desc.funcPriorityUpdate = [this](_float fTimeDelta) {
 			{
-				if (!m_pFSM->IsEnable(FSMSTATE::STOP))
-				{
-					_float3	fMove = m_pGameInstance->Get_MouseMove();
-					m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::UP), fTimeDelta * fMove.x * 0.05f);
+				if ((m_eUIState != ENUM_CLASS(UI_STATE::SPELL))) {
+					if (!m_pFSM->IsEnable(FSMSTATE::STOP))
+					{
+						_float3	fMove = m_pGameInstance->Get_MouseMove();
+						m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::UP), fTimeDelta * fMove.x * 0.05f);
+					}
 				}
 			}
 	};
@@ -1374,7 +1402,7 @@ void CPlayer::Add_FSM()
 
 void CPlayer::Set_Anim()
 {
-	m_Animation[STATEANIM::IDLE] = { 266,true };
+	m_Animation[STATEANIM::IDLE] = { 893,true }; //266
 	m_Animation[STATEANIM::IDLE_AIM] = { 5,true };
 	m_Animation[STATEANIM::IDLE_TURN_L] = { 270,false };
 	m_Animation[STATEANIM::IDLE_TURN_R] = { 430,false };
@@ -1391,7 +1419,7 @@ void CPlayer::Set_Anim()
 	m_Animation[STATEANIM::JOG_LEFT] = { 164,false }; // Turn
 	m_Animation[STATEANIM::JOG_RIGHT] = { 185,false };// Turn
 	m_Animation[STATEANIM::JOG_BWD] = { 154,false }; // Turn
-	m_Animation[STATEANIM::JOG_STOP] = { 289,false }; 
+	m_Animation[STATEANIM::JOG_STOP] = { 446,false }; 
 
 	m_Animation[STATEANIM::JOG_AIM_LEFT] = { 171,true };
 	m_Animation[STATEANIM::JOG_AIM_RIGHT] = { 175,true };
@@ -1427,8 +1455,9 @@ void CPlayer::Set_Anim()
 	m_Animation[STATEANIM::SPELL_FAIL] = { 906,false };
 
 
-	m_Animation[STATEANIM::HIT_L] = { 1124,false };
-	m_Animation[STATEANIM::HIT_R] = { 1125,false };
+	m_Animation[STATEANIM::HIT_L] = { 1200,false };
+	m_Animation[STATEANIM::HIT_R] = { 1201,false };
+	m_Animation[STATEANIM::KNOCKBACK] = { 1078,false };
 
 	m_Animation[STATEANIM::BROOM_IDLE] = { 710,true }; 
 	m_Animation[STATEANIM::BROOM_FWD] = { 711,true };

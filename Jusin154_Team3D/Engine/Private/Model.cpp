@@ -159,9 +159,6 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 
 		m_iPreAnimIndex = m_iCurrentAnimIndex;
 	}
-
-
-
 	
 	if (m_bIsFinishedAnim)
 	{
