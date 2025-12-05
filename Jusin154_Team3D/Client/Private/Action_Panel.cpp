@@ -10,6 +10,7 @@
 #include "Spell_UI.h"
 #include "Potion.h"
 #include "Magic_Item.h"
+#include "InfoInstance.h"
 
 CAction_Panel::CAction_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPanelObject(pDevice, pContext)
@@ -17,7 +18,8 @@ CAction_Panel::CAction_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 }
 
 CAction_Panel::CAction_Panel(const CAction_Panel& rhs)
-	:CPanelObject(rhs)
+	:CPanelObject(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -56,6 +58,8 @@ HRESULT CAction_Panel::Initialize(void* pArg)
 	Magic_Meter_Visible(5, true);
 	Visible(true);
 	ElementAllVisible(true);
+	m_pInfoInstance->Add_Event(TEXT("Spell"), [this](void* p) {this->Use_Spell(*reinterpret_cast<_int*>(p)); });
+	m_pInfoInstance->Add_Event(TEXT("GetSpell"), [this](void* p) {this->Spell_Setting(p); });
 	return S_OK;
 }
 
@@ -176,6 +180,50 @@ void CAction_Panel::Matic_Meter_Move()
 
 }
 
+void CAction_Panel::Use_Spell(_int Index)
+{
+	switch (Index)
+	{
+	case 1:
+		static_cast<CSpell_Overlay*>(m_pSpell_Overlay1)->Use_Spell();
+		break;
+	case 2:
+		static_cast<CSpell_Overlay*>(m_pSpell_Overlay2)->Use_Spell();
+		break;
+	case 3:
+		static_cast<CSpell_Overlay*>(m_pSpell_Overlay3)->Use_Spell();
+		break;
+	case 4:
+		static_cast<CSpell_Overlay*>(m_pSpell_Overlay4)->Use_Spell();
+		break;
+	default:
+		break;
+	}
+}
+
+void CAction_Panel::Spell_Setting(void* pArg)
+{
+	GETSKILLINFO Info = *static_cast<GETSKILLINFO*>(pArg);
+
+	switch (Info.iSlotIndexX + 1)
+	{
+	case 1:
+		static_cast<CSpell_Overlay*>(m_pSpell_Overlay1)->Spell_Setting(Info.iSlotIndexY, Info.iSpellIndex);
+		break;
+	case 2:
+		static_cast<CSpell_Overlay*>(m_pSpell_Overlay2)->Spell_Setting(Info.iSlotIndexY, Info.iSpellIndex);
+		break;
+	case 3:
+		static_cast<CSpell_Overlay*>(m_pSpell_Overlay3)->Spell_Setting(Info.iSlotIndexY, Info.iSpellIndex);
+		break;
+	case 4:
+		static_cast<CSpell_Overlay*>(m_pSpell_Overlay4)->Spell_Setting(Info.iSlotIndexY, Info.iSpellIndex);
+		break;
+	default:
+		break;
+	}
+}
+
 HRESULT CAction_Panel::Bind_ShaderResources()
 {
 	return S_OK;
@@ -193,11 +241,29 @@ HRESULT CAction_Panel::Ready_Element(void* pArg)
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Spell_Slot"), m_pSpell_Slot);
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Overlay>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Overlay**>(&m_pSpell_Overlay))))
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Overlay>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Overlay**>(&m_pSpell_Overlay1))))
 	{
 		return E_FAIL;
 	}
-	Add_Element(TEXT("Spell_Overlay"), m_pSpell_Overlay);
+	Add_Element(TEXT("Spell_Overlay1"), m_pSpell_Overlay1);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Overlay>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Overlay**>(&m_pSpell_Overlay2))))
+	{
+		return E_FAIL;
+	}
+	static_cast<CUIObject*>(m_pSpell_Overlay2)->MoveX(481.f);
+	Add_Element(TEXT("Spell_Overlay2"), m_pSpell_Overlay2);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Overlay>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Overlay**>(&m_pSpell_Overlay3))))
+	{
+		return E_FAIL;
+	}
+	static_cast<CUIObject*>(m_pSpell_Overlay3)->MoveX(582.f);
+	Add_Element(TEXT("Spell_Overlay3"), m_pSpell_Overlay3);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Overlay>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Overlay**>(&m_pSpell_Overlay4))))
+	{
+		return E_FAIL;
+	}
+	static_cast<CUIObject*>(m_pSpell_Overlay4)->MoveX(683.f);
+	Add_Element(TEXT("Spell_Overlay4"), m_pSpell_Overlay4);
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSlot_Number>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSlot_Number**>(&m_pSlot_Number))))
 	{
 		return E_FAIL;

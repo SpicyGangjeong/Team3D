@@ -29,5 +29,6 @@ namespace Client
 		_wstring		pSpellInfo;
 		_bool			bSpell_Lock = false;
 		_bool			bEquip_Spell = false;
+		_bool			bUse_Skill = false;
 	}SPELL_INFO;
 };

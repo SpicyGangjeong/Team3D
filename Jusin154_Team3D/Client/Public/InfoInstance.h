@@ -45,8 +45,13 @@ public:
 #pragma region Spell_INFO
 	HRESULT Load_SpellInfo(const _char* pFilePath);
 	SPELL_INFO Get_Spell_Info(_int Spell_Info);
+	_int Update_Spell(_int SpellIndex);
+	_float Get_CoolTime(_int SpellID);
 	void Change_Canvas();
-	void Key_Input(_uint Input);
+	void Key_Input(_uint Input); // 플레이어 키 입력
+
+	void Add_Event(_wstring EventName, function<void(void*)> Event);
+	void Event_CallBack(_wstring EventName, void* pArg = nullptr);
 #pragma endregion
 private:
 	CGameInstance*				m_pGameInstance = { nullptr };
@@ -58,7 +63,10 @@ private:
 	class CMapInfo*				m_pMapInfo = { nullptr };
 	class CSkill_Data*			m_pSkillInfo= { nullptr };
 	_uint						m_eInput = ENUM_CLASS(KEYINPUT::END);
+	_int						m_eSpell = ENUM_CLASS(SKILL_TYPE::END);
 
+	// 임시로 이벤트 1개 만들어 둠
+	multimap<_wstring, function<void(void*)>> UI_Event;
 #ifdef _DEBUG
 	_string m_strLog = {};
 #endif // _DEBUG

@@ -246,11 +246,16 @@ void CCurrent_Spell_Slot::Get_Skill(_int SpellIndex, _int SlotIndex)
 	_int x = SlotIndex % iSlotx;
 	_int y = SlotIndex / iSlotx;
 
+	m_GetSkillInfo.iSlotIndexX = x;
+	m_GetSkillInfo.iSlotIndexY = y;
+	m_GetSkillInfo.iSpellIndex = SpellIndex;
+
 	m_iSpell[y][x] = SpellIndex;
 	m_pVIBufferCom->Set_Equip_Index(SlotIndex);
 	m_vUV.fUV = UV(SpellIndex);
 	m_pVIBufferCom->Set_Index_Color(SlotIndex, static_cast<_float>(m_pInfoInstance->Get_Spell_Info(SpellIndex).iSpell_Type));
 	m_pVIBufferCom->Set_Index_ImageUV(SlotIndex, m_vUV);
+	m_pInfoInstance->Event_CallBack(TEXT("GetSpell"), &m_GetSkillInfo);
 }
 
 _int CCurrent_Spell_Slot::Chack_Slot(_int Index) const
