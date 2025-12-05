@@ -510,7 +510,7 @@ float4 DrawEffect(PS_IN In)
             //    discard;
                
           
-            fTimeRatio = 1 - pow(1 - fTimeRatio, 3);
+            //fTimeRatio = 1 - pow(1 - fTimeRatio, 3);
             
             float fFade = smoothstep(fTimeRatio - 0.1f, fTimeRatio + 0.1f, vMtrlDissolve.r);
             
