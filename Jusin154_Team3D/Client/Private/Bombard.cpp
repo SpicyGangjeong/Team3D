@@ -67,13 +67,6 @@ void CBombard::Update(_float fTimeDelta)
 	pPJTransform->Translation(m_vCameraLook * 2.f);
 
 
-
-	if (true == m_pGameInstance->SphereCast(0.125f, XMLoadFloat4(&m_vStartPos), m_vCameraLook, XMVectorGetX(XMVector3Length(m_vCameraLook * 2.f))
-		, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eSTATIC, hitBuffer))
-	{
-		OnCollision();
-	}
-
 }
 
 void CBombard::Late_Update(_float fTimeDelta)
@@ -85,11 +78,19 @@ void CBombard::Late_Update(_float fTimeDelta)
 
 	XMStoreFloat4(&m_vEndPos, m_pLight_Projectile->Get_WorldPostion());
 
+	_vector vDir = XMLoadFloat4(&m_vEndPos) - XMLoadFloat4(&m_vStartPos);
+
+	if (true == m_pGameInstance->SphereCast(0.125, XMLoadFloat4(&m_vStartPos), XMVector3Normalize(vDir), XMVectorGetX(XMVector3Length(vDir))
+		, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eDYNAMIC | PSX::PxQueryFlag::eSTATIC, m_Hitbuffer))
+	{
+		OnCollision();
+	}
+
 }
 
-HRESULT CBombard::Pre_Setting(CGameObject* pObject)
+HRESULT CBombard::Pre_Setting(CGameObject* pObject, void* pArg)
 {
-	if (FAILED(__super::Pre_Setting(pObject)))
+	if (FAILED(__super::Pre_Setting(pObject, nullptr)))
 		return E_FAIL;
 
 	CWand* pWand = static_cast<CPlayer*>(m_pOwner)->Get_PartObject<CWand>();
@@ -112,6 +113,8 @@ HRESULT CBombard::Pre_Setting(CGameObject* pObject)
 	pShootPt->Set_Visible(true);
 
 	m_pLight_Projectile->Set_Visible(true);
+
+	// 건드린 친구들 순서대로 다 가져옴 ( 정렬은 안되어있음 )
 
 
 	return S_OK;
@@ -160,12 +163,17 @@ CGameObject* CBombard::Clone(void* pArg, CGameObject* pOwner)
 
 void CBombard::OnCollision(CGameObject* pOther, void* pDesc)
 {
+	_int iIndex = CollisionCheck();
+
+	if (iIndex < 0)
+		return;
+
 	if (m_isCollisionEnter == true)
 		return;
 
 	m_isCollisionEnter = true;
 
-	_vector vPos = XMVectorSet(hitBuffer.block.position.x, hitBuffer.block.position.y, hitBuffer.block.position.z, 1.f);
+	_vector vPos = XMVectorSet(m_Hitbuffer.touches[iIndex].position.x, m_Hitbuffer.touches[iIndex].position.y, m_Hitbuffer.touches[iIndex].position.z, 1.f);
 
 
 	for (auto& pPair : m_PartObjects)

@@ -62,7 +62,7 @@ void CEffectPool::Priority_Update(_float fTimeDelta)
 		}
 	}
 
-	(*m_EffectList[ENUM_CLASS(SKILL_TYPE::JAP)].begin())->Describe_Entity();
+	(*m_EffectList[ENUM_CLASS(SKILL_TYPE::DESCENDO)].begin())->Describe_Entity();
 
 }
 
