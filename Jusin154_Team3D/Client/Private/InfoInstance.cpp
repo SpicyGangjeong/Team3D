@@ -121,8 +121,14 @@ void CInfoInstance::Key_Input(_uint Input)
 	switch (m_eInput)
 	{
 	case ENUM_CLASS(KEYINPUT::INPUT_1):
+		Event_CallBack(TEXT("Spell"), &m_eInput);
+		break;
 	case ENUM_CLASS(KEYINPUT::INPUT_2):
+		Event_CallBack(TEXT("Spell"), &m_eInput);
+		break;
 	case ENUM_CLASS(KEYINPUT::INPUT_3):
+		Event_CallBack(TEXT("Spell"), &m_eInput);
+		break;
 	case ENUM_CLASS(KEYINPUT::INPUT_4):
 		Event_CallBack(TEXT("Spell"), &m_eInput);
 		break;

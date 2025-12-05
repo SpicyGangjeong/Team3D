@@ -167,6 +167,7 @@
     <ClInclude Include="..\public\AlphaMap.h" />
     <ClInclude Include="..\Public\Body.h" />
     <ClInclude Include="..\Public\BombardSide.h" />
+    <ClInclude Include="..\public\CameraLockOn.h" />
     <ClInclude Include="..\public\Current_Slot_Number.h" />
     <ClInclude Include="..\public\Current_Spell_Slot.h" />
     <ClInclude Include="..\Public\Decendo.h" />
@@ -334,6 +335,7 @@
     <ClCompile Include="..\private\AlphaMap.cpp" />
     <ClCompile Include="..\Private\Body.cpp" />
     <ClCompile Include="..\Private\BombardSide.cpp" />
+    <ClCompile Include="..\private\CameraLockOn.cpp" />
     <ClCompile Include="..\private\Current_Slot_Number.cpp" />
     <ClCompile Include="..\private\Current_Spell_Slot.cpp" />
     <ClCompile Include="..\Private\Decendo.cpp" />

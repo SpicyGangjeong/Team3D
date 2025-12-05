@@ -58,6 +58,7 @@ Texture2D g_Texture5;
 Texture2D g_DiffuseTexture;
 Texture2D g_MaskingTexture;
 
+int g_iLockOn;
 
 struct VS_IN
 {
@@ -1189,6 +1190,27 @@ PS_OUT PS_Spell_Drag(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_Camera_LockOn(PS_IN In)
+{
+    PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+
+    float4 Color = float4(1.f, 1.f, 1.f, 1.f);
+    
+    float4 tex1 = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    float tex1Alpha = g_Texture1.Sample(DefaultSampler, In.vTexcoord).r;
+
+    tex1.a *= tex1Alpha;
+    
+    Color = tex1;
+ 
+    Color.a *= Alpha;
+    
+    Out.vColor = Color;
+    
+    return Out;
+}
+
 technique11 PosTexTechnique11
 {
     pass Default
@@ -1427,6 +1449,16 @@ technique11 PosTexTechnique11
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Spell_Drag();
+    }
+
+    pass Camera_LockOn
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Camera_LockOn();
     }
 
 }
