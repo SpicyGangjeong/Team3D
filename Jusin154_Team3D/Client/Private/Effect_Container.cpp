@@ -295,7 +295,7 @@ _int CEffect_Container::CollisionCheck()
 				continue;
 			}
 
-			switch (PXOBJECT(pUserData->eKind))
+			switch (PXOBJECT(pUserData->iSubKind))
 			{
 			case PXOBJECT::PLAYER:
 				continue;

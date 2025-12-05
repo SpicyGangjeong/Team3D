@@ -57,9 +57,7 @@ HRESULT CGoblin::Initialize(void* pArg)
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
 
-
-
-	m_pCharacter_Controller->Set_Position(XMVectorSet(m_pGameInstance->Real_Random_Float(-20.f, 20.f), 0.f, m_pGameInstance->Real_Random_Float(-20.f, 20.f), 1.f));
+	m_pCharacter_Controller->Set_Position(XMVectorSet(m_pGameInstance->Random_Float(-20.f, 20.f), 0.f, m_pGameInstance->Random_Float(-20.f, 20.f), 1.f));
 
 	return S_OK;
 }
@@ -182,8 +180,8 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 	_vector vHitDir = {};		// 시도한 move 방향
 	_float  fLength = {};		// 작용된 힘
 
-	m_pCharacter_Controller->ConvertToDO(*m_pRigidBody);
-	m_pRigidBody->Add_Force(vHitDir * fLength * 10000.f, PSX::PxForceMode::eFORCE);
+	//m_pCharacter_Controller->ConvertToDO(*m_pRigidBody);
+	//m_pRigidBody->Add_Force(vHitDir * fLength * 10000.f, PSX::PxForceMode::eFORCE);
 
 	//m_pCharacter_Controller->ConvertToDO(*m_pRigidBody);
 	//m_pRigidBody->Add_Force(vHitDir * fLength * 100.f, PSX::PxForceMode::eIMPULSE);
@@ -206,7 +204,8 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 		m_eHitSpell = STATEANIM::KNOCKDOWN_FWD;
 		break;
 	}
-	m_pFSM->Change_State(FSMSTATE::HIT);
+	if (!m_pFSM->IsEnable(FSMSTATE::BLINK))
+		m_pFSM->Change_State(FSMSTATE::HIT);
 
 }
 

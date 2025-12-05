@@ -17,6 +17,9 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
+	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
+
 #ifdef _DEBUG
 	void Render_CameraCoordinateSystem();
 #endif // _DEBUG
@@ -84,12 +87,13 @@ public:
 private:
 	// UI 연동 추가
 	void Get_Spell(_int SkillIndex);
+	void Get_UIState(_int UIState);
 
 	virtual void Add_FSM();
 	virtual void Set_Anim();
 
 	function<void()> m_InputAction = nullptr;
-
+	_int m_eUIState = { };
 
 	_float3 m_OffsetPos = {};
 	_float m_fAmount = { 1.f };

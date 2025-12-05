@@ -29,7 +29,7 @@ void CGoblin::Behavior_IdleEnter()
 
 HRESULT CGoblin::Behavior_IdleExitCheck()
 {
-	if (m_fTargetDistance <= 20.f /*&& m_fTargetDistance != 0.f*/)
+	if (m_fTargetDistance <= 20.f && m_fTargetDistance != 0.f)
 		m_pFSM->Change_State(FSMSTATE::MOVE);
 
 	return E_FAIL;
@@ -134,7 +134,7 @@ HRESULT CGoblin::Behavior_SwingExitCheck(_float fTimeDelta)
 	pair<_uint, _bool> pairAnimInfo = {};
 	if (m_pFSM->IsEnable(FSMSTATE::SWING) && m_bStep)
 	{
-		_float fDesiredRange = 0.5f;
+		_float fDesiredRange = 1.f;
 		_float dist = m_fTargetDistance;
 
 		if (dist > fDesiredRange)
@@ -205,9 +205,23 @@ void CGoblin::Behavior_BlinkEnter()
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::BLINK);
 	m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::TP)] = m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::TP)];
-	_float3 vRandomPos = _float3(m_pGameInstance->Real_Random_Float(-1.5f, 1.5f), 1.f, m_pGameInstance->Real_Random_Float(-1.5f, 1.5f));
-	_vector vRandPos = XMLoadFloat3(&vRandomPos);
-	m_pCharacter_Controller->Set_Position(XMLoadFloat4(&m_vTargetPos) + vRandPos);
+	_vector vPlayerPos = XMLoadFloat4(&m_vTargetPos);
+	_vector vPlayerLook = m_pTarget->Get_Component<CTransform>()->Get_State(STATE::LOOK);
+	vPlayerLook = XMVectorSetY(vPlayerLook, 0.f);
+	vPlayerLook = XMVector3Normalize(vPlayerLook);
+
+	_float randAngleDeg = m_pGameInstance->Real_Random_Float(-60.f, 60.f);
+	_float randAngleRad = XMConvertToRadians(randAngleDeg);
+
+	_matrix rot = XMMatrixRotationY(randAngleRad);
+	_vector offsetDir = XMVector3TransformNormal(vPlayerLook, rot);
+
+	_float randDist = m_pGameInstance->Real_Random_Float(1.0f, 1.5f);
+
+	_vector vFinalPos = vPlayerPos + offsetDir * randDist;
+
+	m_pCharacter_Controller->Set_Position(vFinalPos);
+
 }
 
 HRESULT CGoblin::Behavior_BlinkExitCheck(_float fTimeDelta)
@@ -215,7 +229,7 @@ HRESULT CGoblin::Behavior_BlinkExitCheck(_float fTimeDelta)
 	pair<_uint, _bool> pairAnimInfo = {};
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 	m_fTpTime += fTimeDelta;
-	if (m_fTpTime >= 2.f)
+	if (m_fTpTime >= 1.5f)
 	{
 		m_bVisible = true;
 		m_fTpTime = 0.f;
@@ -226,6 +240,7 @@ HRESULT CGoblin::Behavior_BlinkExitCheck(_float fTimeDelta)
 	if (m_pModelCom->IsFinishedAnim() && iCurrAnimIndex == m_Animation[STATEANIM::BLINK].first)
 	{
 		m_bLookAt = true;
+		m_fTpTime = 0.f;
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
 		return E_FAIL;
 	}
@@ -280,8 +295,23 @@ HRESULT CGoblin::Behavior_HitExitCheck(_float fTimeDelta)
 
 	if (iCurrAnimIndex == m_Animation[STATEANIM::HIT_LEVIOSO].first)
 	{
+		_vector vDir = m_pTransformCom->Get_State(STATE::UP);
+		vDir = XMVector4Normalize(vDir);
+		_vector vPos = m_pCharacter_Controller->Get_Position();
+		m_fAirTime += fTimeDelta;
+		_vector Force = vDir * fTimeDelta;
+		if (m_fAirTime < 1.3f) {
+			m_pCharacter_Controller->Set_Position(vPos + Force);
+		}
+		else {
+			m_pCharacter_Controller->Set_Position(vPos);
+		}
+		m_pCharacter_Controller->SetGravity(false);
+
 		if (m_pModelCom->Get_CurrentTrackProgressRatio() >= 0.31f)
 		{
+			m_fAirTime = 0.f;
+			m_pCharacter_Controller->SetGravity(true);
 			pairAnimInfo = m_Animation[STATEANIM::LAND];
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f);
 		}

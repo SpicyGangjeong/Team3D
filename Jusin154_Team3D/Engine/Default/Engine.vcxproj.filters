@@ -1246,9 +1246,6 @@
     <None Include="..\Public\fMod\fmod_errors.cs">
       <Filter>99.Define\99.THIRDPARTY\FMOD</Filter>
     </None>
-    <None Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Buffers.hlsli">
-      <Filter>99.Define\01.SHADER\Inc</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Particle_Compute.hlsl">

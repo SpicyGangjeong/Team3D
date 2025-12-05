@@ -1,10 +1,10 @@
 #include "Engine_Shader_Defines.hlsli"
-
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 matrix g_invMatView, g_invmatProj;
 matrix g_LightViewMatrix, g_LightProjMatrix;
 matrix g_PreShadowLightViewMatrix, g_PreShadowLightProjMatrix;
 
+float4 g_SamplePos[64];
 float g_fFar;
 float g_fPreShadowFar;
 uint g_iMaxShadowWidth;
@@ -19,7 +19,6 @@ float g_fFarBlurStart;
 float g_fFarBlurEnd;
 float g_fDOFBlurMultiplier;
 float g_fSSAO_BIAS;
-bool g_bSSAO_INVERT;
 
 Texture2D   g_Texture;
 Texture2D   g_SSAONoiseTexture;
@@ -69,12 +68,52 @@ float g_fFogDensity;
 float g_fFogPow;
 vector g_vFogColor;
 
+float g_fWeights_32[32] =
+{
+    0.000477, 0.000888, 0.001585, 0.002720, 0.004485, 0.007105, 0.010814, 0.015813,
+    0.022216, 0.029988, 0.038893, 0.048463, 0.058021, 0.066740, 0.073759, 0.078320,
+    0.079902, 0.078320, 0.073759, 0.066740, 0.058021, 0.048463, 0.038893, 0.029988,
+    0.022216, 0.015813, 0.010814, 0.007105, 0.004485, 0.002720, 0.001585, 0.000888
+};
+
+float g_fWeights_64[64] =
+{
+    0.0004, 0.0014, 0.0033, 0.0053, 0.0053, 0.0033, 0.0014, 0.0004,
+    0.0014, 0.0045, 0.0105, 0.0171, 0.0171, 0.0105, 0.0045, 0.0014,
+    0.0033, 0.0105, 0.0245, 0.0400, 0.0400, 0.0245, 0.0105, 0.0033,
+    0.0053, 0.0171, 0.0400, 0.0654, 0.0654, 0.0400, 0.0171, 0.0053,
+    0.0053, 0.0171, 0.0400, 0.0654, 0.0654, 0.0400, 0.0171, 0.0053,
+    0.0033, 0.0105, 0.0245, 0.0400, 0.0400, 0.0245, 0.0105, 0.0033,
+    0.0014, 0.0045, 0.0105, 0.0171, 0.0171, 0.0105, 0.0045, 0.0014,
+    0.0004, 0.0014, 0.0033, 0.0053, 0.0053, 0.0033, 0.0014, 0.0004
+};
+
+
+float g_fWeights_128[128] =
+{
+    0.000209902, 0.000241594, 0.000277451, 0.000317919, 0.000363477, 0.000414637, 0.000471944, 0.000535974,
+    0.000607333, 0.000686659, 0.000774615, 0.000871889, 0.00097919, 0.00109725, 0.00122679, 0.00136858,
+    0.00152334, 0.00169183, 0.00187477, 0.00207285, 0.00228675, 0.0025171, 0.00276448, 0.0030294,
+    0.00331231, 0.00361356, 0.00393342, 0.00427205, 0.00462949, 0.00500564, 0.0054003, 0.00581308,
+    0.00624346, 0.00669075, 0.00715411, 0.0076325, 0.00812472, 0.0086294, 0.009145, 0.0096698,
+    0.0102019, 0.0107393, 0.0112798, 0.0118211, 0.0123608, 0.0128962, 0.0134249, 0.0139441,
+    0.0144511, 0.0149431, 0.0154174, 0.0158713, 0.0163021, 0.0167073, 0.0170844, 0.0174311,
+    0.0177452, 0.0180246, 0.0182676, 0.0184726, 0.0186383, 0.0187635, 0.0188474, 0.0188895,
+
+    0.0188895, 0.0188474, 0.0187635, 0.0186383, 0.0184726, 0.0182676, 0.0180246, 0.0177452,
+    0.0174311, 0.0170844, 0.0167073, 0.0163021, 0.0158713, 0.0154174, 0.0149431, 0.0144511,
+    0.0139441, 0.0134249, 0.0128962, 0.0123608, 0.0118211, 0.0112798, 0.0107393, 0.0102019,
+    0.0096698, 0.009145, 0.0086294, 0.00812472, 0.0076325, 0.00715411, 0.00669076, 0.00624346,
+    0.00581308, 0.0054003, 0.00500564, 0.00462948, 0.00427205, 0.00393342, 0.00361356, 0.00331231,
+    0.0030294, 0.00276448, 0.0025171, 0.00228675, 0.00207285, 0.00187477, 0.00169183, 0.00152334,
+    0.00136858, 0.00122679, 0.00109725, 0.000979191, 0.000871889, 0.000774615, 0.000686658, 0.000607333,
+    0.000535973, 0.000471944, 0.000414637, 0.000363477, 0.000317919, 0.000277451, 0.000241594, 0.000209902
+};
 struct VS_IN
 {
     float3 vPosition : POSITION;
     float2 vTexcoord : TEXCOORD0;
 };
-
 struct VS_OUT
 {
     float4 vPosition : SV_POSITION;
@@ -105,34 +144,52 @@ VS_OUT VS_CAPTURE(VS_IN In)
 
     return Out;
 }
+VS_OUT VS_TONE_MAPPING(VS_IN In)
+{
+    VS_OUT Out;
+  
+    matrix matWV, matWVP;
+    
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+    
+    Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    Out.vTexcoord = In.vTexcoord;
 
+    return Out;
+}
 struct PS_IN
 {
     float4 vPosition : SV_POSITION;
     float2 vTexcoord : TEXCOORD0;
 };
-
 struct PS_OUT_BACKBUFFER
 {
     float4 vBackBuffer  : SV_TARGET0;
     float4 vEnvironment : SV_Target1;
 };
-
-PS_OUT_BACKBUFFER PS_MAIN_DEBUG(PS_IN In)
-{
-    PS_OUT_BACKBUFFER Out;
-    
-    Out.vBackBuffer = g_Texture.Sample(DefaultSampler, In.vTexcoord);
-    Out.vEnvironment = float4(0.f, 0.f, 0.f, 0.f);
-    return Out;
-}
-
 struct PS_OUT_LIGHT
 {
     vector vShade : SV_TARGET0;
     vector vSpecular : SV_TARGET1;
 };
-
+struct PS_OUT_FLT4_SINGLE
+{
+    vector vSingleTarget : SV_TARGET0;
+};
+struct PS_OUT_BLUR_X
+{
+    float4 vBlurX : SV_TARGET0;
+    float4 vBlurWeight : SV_TARGET1;
+};
+struct PS_OUT_SSAO_AMBIENT_OCCLUSION
+{
+    float fOcclusion : SV_TARGET0;
+};
+struct PS_OUT_SSAO_BLUR
+{
+    float fBlur : SV_TARGET0;
+};
 PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 {
     PS_OUT_LIGHT Out;
@@ -217,7 +274,6 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     
     return Out;
 }
-
 PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 {
     PS_OUT_LIGHT Out;
@@ -322,7 +378,6 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     
     return Out;
 }
-
 PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
 {
     PS_OUT_LIGHT Out;
@@ -441,46 +496,19 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
     
     return Out;
 }
-
-float g_fWeights_32[32] =
+PS_OUT_BACKBUFFER PS_MAIN_DEBUG(PS_IN In)
 {
-    0.000477, 0.000888, 0.001585, 0.002720, 0.004485, 0.007105, 0.010814, 0.015813,
-    0.022216, 0.029988, 0.038893, 0.048463, 0.058021, 0.066740, 0.073759, 0.078320,
-    0.079902, 0.078320, 0.073759, 0.066740, 0.058021, 0.048463, 0.038893, 0.029988,
-    0.022216, 0.015813, 0.010814, 0.007105, 0.004485, 0.002720, 0.001585, 0.000888
+    PS_OUT_BACKBUFFER Out;
+    
+    Out.vBackBuffer = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    Out.vEnvironment = float4(0.f, 0.f, 0.f, 0.f);
+    return Out;
+
 };
 
-float g_fWeights_64[64] =
-{
-    0.0004, 0.0014, 0.0033, 0.0053, 0.0053, 0.0033, 0.0014, 0.0004, 
-    0.0014, 0.0045, 0.0105, 0.0171, 0.0171, 0.0105, 0.0045, 0.0014, 
-    0.0033, 0.0105, 0.0245, 0.0400, 0.0400, 0.0245, 0.0105, 0.0033, 
-    0.0053, 0.0171, 0.0400, 0.0654, 0.0654, 0.0400, 0.0171, 0.0053,
-    0.0053, 0.0171, 0.0400, 0.0654, 0.0654, 0.0400, 0.0171, 0.0053, 
-    0.0033, 0.0105, 0.0245, 0.0400, 0.0400, 0.0245, 0.0105, 0.0033, 
-    0.0014, 0.0045, 0.0105, 0.0171, 0.0171, 0.0105, 0.0045, 0.0014, 
-    0.0004, 0.0014, 0.0033, 0.0053, 0.0053, 0.0033, 0.0014, 0.0004 };
 
-float g_fWeights_128[128] =
-{
-    0.000209902, 0.000241594, 0.000277451, 0.000317919, 0.000363477, 0.000414637, 0.000471944, 0.000535974,
-    0.000607333, 0.000686659, 0.000774615, 0.000871889, 0.00097919, 0.00109725, 0.00122679, 0.00136858,
-    0.00152334, 0.00169183, 0.00187477, 0.00207285, 0.00228675, 0.0025171, 0.00276448, 0.0030294,
-    0.00331231, 0.00361356, 0.00393342, 0.00427205, 0.00462949, 0.00500564, 0.0054003, 0.00581308,
-    0.00624346, 0.00669075, 0.00715411, 0.0076325, 0.00812472, 0.0086294, 0.009145, 0.0096698,
-    0.0102019, 0.0107393, 0.0112798, 0.0118211, 0.0123608, 0.0128962, 0.0134249, 0.0139441,
-    0.0144511, 0.0149431, 0.0154174, 0.0158713, 0.0163021, 0.0167073, 0.0170844, 0.0174311,
-    0.0177452, 0.0180246, 0.0182676, 0.0184726, 0.0186383, 0.0187635, 0.0188474, 0.0188895,
 
-    0.0188895, 0.0188474, 0.0187635, 0.0186383, 0.0184726, 0.0182676, 0.0180246, 0.0177452,
-    0.0174311, 0.0170844, 0.0167073, 0.0163021, 0.0158713, 0.0154174, 0.0149431, 0.0144511,
-    0.0139441, 0.0134249, 0.0128962, 0.0123608, 0.0118211, 0.0112798, 0.0107393, 0.0102019,
-    0.0096698, 0.009145, 0.0086294, 0.00812472, 0.0076325, 0.00715411, 0.00669076, 0.00624346,
-    0.00581308, 0.0054003, 0.00500564, 0.00462948, 0.00427205, 0.00393342, 0.00361356, 0.00331231,
-    0.0030294, 0.00276448, 0.0025171, 0.00228675, 0.00207285, 0.00187477, 0.00169183, 0.00152334,
-    0.00136858, 0.00122679, 0.00109725, 0.000979191, 0.000871889, 0.000774615, 0.000686658, 0.000607333,
-    0.000535973, 0.000471944, 0.000414637, 0.000363477, 0.000317919, 0.000277451, 0.000241594, 0.000209902
-};
+
 
 
 PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
@@ -552,14 +580,6 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     
     return Out;
 }
-
-
-struct PS_OUT_FLT4_SINGLE
-{
-    vector vSingleTarget : SV_TARGET0;
-};
-
-
 PS_OUT_FLT4_SINGLE PS_MAIN_REFIT(PS_IN In)
 {
     PS_OUT_FLT4_SINGLE Out;
@@ -568,7 +588,6 @@ PS_OUT_FLT4_SINGLE PS_MAIN_REFIT(PS_IN In)
     
     return Out;
 }
-
 PS_OUT_FLT4_SINGLE PS_MAIN_EMBOSS(PS_IN In)
 {
     PS_OUT_FLT4_SINGLE Out;
@@ -610,13 +629,6 @@ PS_OUT_FLT4_SINGLE PS_MAIN_EMBOSS(PS_IN In)
     
     return Out;
 }
-
-struct PS_OUT_BLUR_X
-{
-    float4 vBlurX : SV_TARGET0;
-    float4 vBlurWeight : SV_TARGET1;
-};
-
 PS_OUT_FLT4_SINGLE PS_MAIN_BLOOM_ACCUM(PS_IN In)
 {
     PS_OUT_FLT4_SINGLE Out;
@@ -628,7 +640,6 @@ PS_OUT_FLT4_SINGLE PS_MAIN_BLOOM_ACCUM(PS_IN In)
     
     return Out;
 }
-
 PS_OUT_FLT4_SINGLE PS_MAIN_BLOOM_FINISH(PS_IN In)
 {
     PS_OUT_FLT4_SINGLE Out;
@@ -640,7 +651,6 @@ PS_OUT_FLT4_SINGLE PS_MAIN_BLOOM_FINISH(PS_IN In)
     
     return Out;
 }
-
 PS_OUT_BLUR_X PS_MAIN_BLUR_X(PS_IN In)
 {
     PS_OUT_BLUR_X Out;
@@ -661,7 +671,6 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_X(PS_IN In)
     
     return Out;
 }
-
 PS_OUT_BLUR_X PS_MAIN_BLUR_X_ENV(PS_IN In)
 {
     PS_OUT_BLUR_X Out;
@@ -737,7 +746,6 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_X_ENV(PS_IN In)
     
     return Out;
 }
-
 PS_OUT_BACKBUFFER PS_MAIN_POSTCOMBINED(PS_IN In)
 {
     PS_OUT_BACKBUFFER Out;
@@ -827,7 +835,6 @@ PS_OUT_BACKBUFFER PS_MAIN_POSTCOMBINED(PS_IN In)
     
     return Out;
 }
-
 PS_OUT_BLUR_X PS_MAIN_BLUR_Y(PS_IN In)
 {
     PS_OUT_BLUR_X Out;
@@ -848,7 +855,6 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_Y(PS_IN In)
     
     return Out;
 }
-
 PS_OUT_FLT4_SINGLE PS_MAIN_FOG(PS_IN In)
 {
     PS_OUT_FLT4_SINGLE Out;
@@ -873,22 +879,6 @@ PS_OUT_FLT4_SINGLE PS_MAIN_FOG(PS_IN In)
     
     return Out;
 }
-
-VS_OUT VS_TONE_MAPPING(VS_IN In)
-{
-    VS_OUT Out;
-  
-    matrix matWV, matWVP;
-    
-    matWV = mul(g_WorldMatrix, g_ViewMatrix);
-    matWVP = mul(matWV, g_ProjMatrix);
-    
-    Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
-    Out.vTexcoord = In.vTexcoord;
-
-    return Out;
-}
-
 PS_OUT_BACKBUFFER PS_TONE_MAPPING(PS_IN In)
 {
     PS_OUT_BACKBUFFER Out;
@@ -914,12 +904,6 @@ PS_OUT_BACKBUFFER PS_TONE_MAPPING(PS_IN In)
     Out.vEnvironment = float4(0.f, 0.f, 0.f, 1.f);
     return Out;
 }
-
-struct PS_OUT_SSAO_AMBIENT_OCCLUSION
-{
-    float fOcclusion : SV_TARGET0;
-};
-
 PS_OUT_SSAO_AMBIENT_OCCLUSION PS_SSAO_AMBIENT_OCCLUSION(PS_IN In)
 {
     PS_OUT_SSAO_AMBIENT_OCCLUSION Out;
@@ -951,7 +935,7 @@ PS_OUT_SSAO_AMBIENT_OCCLUSION PS_SSAO_AMBIENT_OCCLUSION(PS_IN In)
     float fOcclusion = 0.f;
     for (uint i = 0; i < g_iKernelSize; ++i)
     {
-        float3 vViewSamplePosVec = mul(SamplePos[i].xyz, toViewTBNMatrix); // TANSPACE -> VIEW
+        float3 vViewSamplePosVec = mul(g_SamplePos[i].xyz, toViewTBNMatrix); // TANSPACE -> VIEW
         float4 vViewSamplePos = vCenterViewPosition + float4(vViewSamplePosVec * g_fSSAORadius, 0.f);
         float4 vNDCSampleOffset = mul(vViewSamplePos, g_ProjMatrix);
                vNDCSampleOffset /= vNDCSampleOffset.w;
@@ -960,7 +944,7 @@ PS_OUT_SSAO_AMBIENT_OCCLUSION PS_SSAO_AMBIENT_OCCLUSION(PS_IN In)
         sampleUV.x = vNDCSampleOffset.x * 0.5f + 0.5f;
         sampleUV.y = vNDCSampleOffset.y * -0.5f + 0.5f;
 
-        if (sampleUV.x < 0 || sampleUV.x > 1 
+        if (sampleUV.x < 0 || sampleUV.x > 1
          || sampleUV.y < 0 || sampleUV.y > 1) {
             continue;
         }
@@ -977,12 +961,6 @@ PS_OUT_SSAO_AMBIENT_OCCLUSION PS_SSAO_AMBIENT_OCCLUSION(PS_IN In)
     
     return Out;
 }
-
-struct PS_OUT_SSAO_BLUR
-{
-    float fBlur : SV_TARGET0;
-};
-
 PS_OUT_SSAO_BLUR PS_SSAO_BLUR(PS_IN In)
 {
     PS_OUT_SSAO_BLUR Out;
@@ -1004,7 +982,6 @@ PS_OUT_SSAO_BLUR PS_SSAO_BLUR(PS_IN In)
     Out.fBlur = fResult;
     return Out;
 }
-
 technique11 DefaultTechnique
 {
     pass DebugPass // 0

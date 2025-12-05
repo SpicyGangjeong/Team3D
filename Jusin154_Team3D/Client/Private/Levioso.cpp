@@ -33,6 +33,8 @@ HRESULT CLevioso::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
+	m_iSkillType = ENUM_CLASS(SKILL_TYPE::LEVIOSO);
+
 
 	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Levioso")))
 		return E_FAIL;
@@ -99,7 +101,7 @@ void CLevioso::Late_Update(_float fTimeDelta)
 	if (true == m_pGameInstance->SphereCast(0.125, XMLoadFloat4(&m_vStartPos), XMVector3Normalize(vDir), XMVectorGetX(XMVector3Length(vDir))
 		, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eDYNAMIC | PSX::PxQueryFlag::eSTATIC, m_Hitbuffer))
 	{
-		OnCollision();
+		OnCollision(this);
 	}
 
 	__super::Late_Update(fTimeDelta);
