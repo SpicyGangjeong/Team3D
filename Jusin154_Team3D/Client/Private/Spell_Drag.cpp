@@ -409,6 +409,7 @@ void CSpell_Drag::Free()
 }
 #ifdef _DEBUG
 
+#ifdef _DEBUG
 void CSpell_Drag::Describe_Entity()
 {
 }

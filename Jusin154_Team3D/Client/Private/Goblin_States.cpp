@@ -29,7 +29,7 @@ void CGoblin::Behavior_IdleEnter()
 
 HRESULT CGoblin::Behavior_IdleExitCheck()
 {
-	if (m_fTargetDistance <= 20.f /*&& m_fTargetDistance != 0.f*/)
+	if (m_fTargetDistance <= 20.f && m_fTargetDistance != 0.f)
 		m_pFSM->Change_State(FSMSTATE::MOVE);
 
 	return E_FAIL;
@@ -134,7 +134,7 @@ HRESULT CGoblin::Behavior_SwingExitCheck(_float fTimeDelta)
 	pair<_uint, _bool> pairAnimInfo = {};
 	if (m_pFSM->IsEnable(FSMSTATE::SWING) && m_bStep)
 	{
-		_float fDesiredRange = 0.5f;
+		_float fDesiredRange = 1.f;
 		_float dist = m_fTargetDistance;
 
 		if (dist > fDesiredRange)
