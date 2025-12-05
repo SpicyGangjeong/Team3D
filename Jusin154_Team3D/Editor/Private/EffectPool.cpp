@@ -129,89 +129,89 @@ HRESULT CEffectPool::Ready_Effect()
 	))) return E_FAIL;
 
 
-	//if (FAILED(Create_Effect(SKILL_TYPE::BOMBARDA, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::BOMBARDA, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
 
-	//	CBombard* pEffect = nullptr;
+		CBombard* pEffect = nullptr;
 
-	//	pEffect = m_pGameInstance->Clone_Prototype<CBombard>(iPrototypeLevel, nullptr);
+		pEffect = m_pGameInstance->Clone_Prototype<CBombard>(iPrototypeLevel, nullptr);
 
-	//	return pEffect; }
-	//))) return E_FAIL;
+		return pEffect; }
+	))) return E_FAIL;
 
-	//if (FAILED(Create_Effect(SKILL_TYPE::DESCENDO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::DESCENDO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
 
-	//	CDecendo* pEffect = nullptr;
+		CDecendo* pEffect = nullptr;
 
-	//	pEffect = m_pGameInstance->Clone_Prototype<CDecendo>(iPrototypeLevel, nullptr);
+		pEffect = m_pGameInstance->Clone_Prototype<CDecendo>(iPrototypeLevel, nullptr);
 
-	//	return pEffect; }
-	//))) return E_FAIL;
+		return pEffect; }
+	))) return E_FAIL;
 
-	//if (FAILED(Create_Effect(SKILL_TYPE::PROTEGO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::PROTEGO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
 
-	//	CProtego* pEffect = nullptr;
+		CProtego* pEffect = nullptr;
 
-	//	pEffect = m_pGameInstance->Clone_Prototype<CProtego>(iPrototypeLevel, nullptr);
+		pEffect = m_pGameInstance->Clone_Prototype<CProtego>(iPrototypeLevel, nullptr);
 
-	//	return pEffect; }
-	//))) return E_FAIL;
+		return pEffect; }
+	))) return E_FAIL;
 
-	//if (FAILED(Create_Effect(SKILL_TYPE::REVELIO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::REVELIO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
 
-	//	CRevelio* pEffect = nullptr;
+		CRevelio* pEffect = nullptr;
 
-	//	pEffect = m_pGameInstance->Clone_Prototype<CRevelio>(iPrototypeLevel, nullptr);
+		pEffect = m_pGameInstance->Clone_Prototype<CRevelio>(iPrototypeLevel, nullptr);
 
-	//	return pEffect; }
-	//))) return E_FAIL;
-
-
-	//if (FAILED(Create_Effect(SKILL_TYPE::JAP_SIDE, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
-
-	//	CNomalJapSide* pEffect = nullptr;
-
-	//	pEffect = m_pGameInstance->Clone_Prototype<CNomalJapSide>(iPrototypeLevel, nullptr);
-
-	//	return pEffect; }
-	//))) return E_FAIL;
-
-	//if (FAILED(Create_Effect(SKILL_TYPE::LEVIOSO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
-
-	//	CLevioso* pEffect = nullptr;
-
-	//	pEffect = m_pGameInstance->Clone_Prototype<CLevioso>(iPrototypeLevel, nullptr);
-
-	//	return pEffect; }
-	//))) return E_FAIL;
+		return pEffect; }
+	))) return E_FAIL;
 
 
-	//if (FAILED(Create_Effect(SKILL_TYPE::BOMBARDA_SIDE, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::JAP_SIDE, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
 
-	//	CBombardSide* pEffect = nullptr;
+		CNomalJapSide* pEffect = nullptr;
 
-	//	pEffect = m_pGameInstance->Clone_Prototype<CBombardSide>(iPrototypeLevel, nullptr);
+		pEffect = m_pGameInstance->Clone_Prototype<CNomalJapSide>(iPrototypeLevel, nullptr);
 
-	//	return pEffect; }
-	//))) return E_FAIL;
+		return pEffect; }
+	))) return E_FAIL;
 
-	//if (FAILED(Create_Effect(SKILL_TYPE::LEVIOSO_SIDE, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::LEVIOSO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
-	//	CLeviosoSide* pEffect = nullptr;
+		CLevioso* pEffect = nullptr;
 
-	//	pEffect = m_pGameInstance->Clone_Prototype<CLeviosoSide>(iPrototypeLevel, nullptr);
+		pEffect = m_pGameInstance->Clone_Prototype<CLevioso>(iPrototypeLevel, nullptr);
 
-	//	return pEffect; }
-	//))) return E_FAIL;
+		return pEffect; }
+	))) return E_FAIL;
 
 
-	//if (FAILED(Create_Effect(SKILL_TYPE::DESCENDO_SIDE, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::BOMBARDA_SIDE, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
-	//	CDecendoSide* pEffect = nullptr;
+		CBombardSide* pEffect = nullptr;
 
-	//	pEffect = m_pGameInstance->Clone_Prototype<CDecendoSide>(iPrototypeLevel, nullptr);
+		pEffect = m_pGameInstance->Clone_Prototype<CBombardSide>(iPrototypeLevel, nullptr);
 
-	//	return pEffect; }
-	//))) return E_FAIL;
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::LEVIOSO_SIDE, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CLeviosoSide* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CLeviosoSide>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+
+	if (FAILED(Create_Effect(SKILL_TYPE::DESCENDO_SIDE, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CDecendoSide* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CDecendoSide>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
 
 
 	return S_OK;
