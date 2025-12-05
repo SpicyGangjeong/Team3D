@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Spell_Header.h"
 #include "GameInstance.h"
+#include "InfoInstance.h"
 
 CSpell_Header::CSpell_Header(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
@@ -8,7 +9,8 @@ CSpell_Header::CSpell_Header(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 }
 
 CSpell_Header::CSpell_Header(const CSpell_Header& rhs)
-	:CElementObject(rhs)
+	:CElementObject(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -46,7 +48,6 @@ HRESULT CSpell_Header::Initialize(void* pArg)
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Slot_Hover"), [this](void* p) {this->Set_SkillType(*reinterpret_cast<_int*>(p)); });
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("FadeIn"), [this](void* p) {this->Set_FadeIn(); });
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("FadeOut"), [this](void* p) {this->Set_FadeOut(); });
-	m_bActive = true;
 	return S_OK;
 }
 
@@ -93,7 +94,7 @@ void CSpell_Header::Update(_float fTimeDelta)
 
 	if (m_iSpellType != -1)
 	{
-		m_iSkillType = static_cast<CUIObject*>(m_pOwner)->Get_Info(m_iSpellType).iSpell_Type;
+		m_iSkillType = m_pInfoInstance->Get_Spell_Info(m_iSpellType).iSpell_Type;
 	}
 
 	m_fTime += fTimeDelta * m_fTimeMult;

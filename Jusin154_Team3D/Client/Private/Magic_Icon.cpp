@@ -40,7 +40,6 @@ HRESULT CMagic_Icon::Initialize(void* pArg)
 	m_fTimeMult = 3.f;
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 3.f;
-	m_bActive = true;
 	return S_OK;
 }
 

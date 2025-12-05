@@ -101,7 +101,7 @@ enum class PXOBJECT : _uint {
 #pragma endregion
 #pragma region MONSTER
 	MONSTER = 30,
-	GOBLIN_WARRIOR,		// 031
+	GOBLIN_WARRIOR,		// 31
 	GOBLIN_MAGICIAN,
 	GOBLIN_THEIF,
 	TROLL,

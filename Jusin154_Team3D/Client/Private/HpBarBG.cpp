@@ -48,7 +48,6 @@ HRESULT CHpBarBG::Initialize(void* pArg)
 	m_fHpBGPos = _float2(0.f, 13.f);
 	m_fHpBG = _float2(0, m_fSizeX);
 	SizeUpX(240.f);
-	m_bActive = true;
 	return S_OK;
 }
 

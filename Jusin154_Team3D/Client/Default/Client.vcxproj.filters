@@ -356,6 +356,9 @@
       <Filter>02.GameObjects\Item\Troll_Rock</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Goblin_Dagger.h" />
+    <ClInclude Include="..\Public\Spell_Drag.h">
+      <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Drag</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1116,6 +1119,9 @@
       <Filter>02.GameObjects\Item\Troll_Rock</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Goblin_Dagger.cpp" />
+    <ClCompile Include="..\Private\Spell_Drag.cpp">
+      <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Drag</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">

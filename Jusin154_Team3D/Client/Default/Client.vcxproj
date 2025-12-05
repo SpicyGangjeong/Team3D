@@ -242,6 +242,7 @@ call Update_Resources.bat
     <ClInclude Include="..\public\Skill_Data.h" />
     <ClInclude Include="..\Public\Spell_Anim.h" />
     <ClInclude Include="..\Public\Spell_Canvas.h" />
+    <ClInclude Include="..\Public\Spell_Drag.h" />
     <ClInclude Include="..\Public\Spell_Header.h" />
     <ClInclude Include="..\Public\Spell_Header_Line.h" />
     <ClInclude Include="..\Public\Spell_Hover.h" />
@@ -365,6 +366,7 @@ call Update_Resources.bat
     <ClCompile Include="..\private\Skill_Data.cpp" />
     <ClCompile Include="..\Private\Spell_Anim.cpp" />
     <ClCompile Include="..\Private\Spell_Canvas.cpp" />
+    <ClCompile Include="..\Private\Spell_Drag.cpp" />
     <ClCompile Include="..\Private\Spell_Header.cpp" />
     <ClCompile Include="..\Private\Spell_Header_Line.cpp" />
     <ClCompile Include="..\Private\Spell_Hover.cpp" />

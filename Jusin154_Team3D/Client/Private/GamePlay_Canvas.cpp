@@ -44,8 +44,7 @@ HRESULT CGamePlay_Canvas::Initialize(void* pArg)
 	{
 		return E_FAIL;
 	}
-	m_bVisible = true;
-	m_bActive = true;
+	Visible(true);
 	return S_OK;
 }
 

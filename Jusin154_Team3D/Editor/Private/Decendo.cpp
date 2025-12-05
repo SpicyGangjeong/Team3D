@@ -46,7 +46,7 @@ HRESULT CDecendo::Initialize(void* pArg)
 	SAFE_ADDREF(m_pProjectile_Blur);
 	SAFE_ADDREF(m_pProjectile);
 
-	m_fDuration = 2.5f;
+	m_fDuration = 3.5f;
 
 	return S_OK;
 }
@@ -71,18 +71,18 @@ void CDecendo::Update(_float fTimeDelta)
 	m_pProjectile->Get_Component<CTransform>()->Translation(m_vCameraLook * 0.5f);
 
 
-	if (m_fAccTime > XM_2PI)
+	if (m_fRotateAccTime > XM_2PI)
 		return;
 
-	m_fAccTime += fTimeDelta * 7.5f;
+	m_fRotateAccTime += fTimeDelta * 7.5f;
 
-	m_pProjectile_Blur->Get_Component<CTransform>()->Translation(m_vRotateUp * 0.2f * sinf(m_fAccTime));
-	m_pProjectile->Get_Component<CTransform>()->Translation(m_vRotateUp * 0.2f * sinf(m_fAccTime));
+	m_pProjectile_Blur->Get_Component<CTransform>()->Translation(m_vRotateUp * 0.2f * sinf(m_fRotateAccTime));
+	m_pProjectile->Get_Component<CTransform>()->Translation(m_vRotateUp * 0.2f * sinf(m_fRotateAccTime));
 
 
 	//TODO : 다시 위치 잡기 
-	if (true == m_pGameInstance->SphereCast(0.125f, XMLoadFloat4(&m_vStartPos), m_vCameraLook, XMVectorGetX(XMVector3Length(m_vCameraLook * 0.5f))
-		, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eSTATIC, hitBuffer))
+	if (true == m_pGameInstance->SphereCast(0.0625, XMLoadFloat4(&m_vStartPos), m_vCameraLook, XMVectorGetX(XMVector3Length(m_vCameraLook * 2.f))
+		, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eDYNAMIC | PSX::PxQueryFlag::eSTATIC, m_Hitbuffer))
 	{
 		OnCollision();
 	}
@@ -101,9 +101,9 @@ void CDecendo::Late_Update(_float fTimeDelta)
 	__super::Late_Update(fTimeDelta);
 }
 
-HRESULT CDecendo::Pre_Setting(CGameObject* pObject)
+HRESULT CDecendo::Pre_Setting(CGameObject* pObject, void* pArg)
 {
-	if (FAILED(__super::Pre_Setting(pObject)))
+	if (FAILED(__super::Pre_Setting(pObject, nullptr)))
 		return E_FAIL;
 
 
@@ -149,6 +149,7 @@ HRESULT CDecendo::Pre_Setting(CGameObject* pObject)
 	m_vRotateUp = XMVector3Rotate(vUp, vQuaternion);
 	m_vRotateUp = XMVector3Normalize(m_vRotateUp);
 
+	m_fRotateAccTime = 0.f;
 
 	return S_OK;
 }
@@ -197,14 +198,19 @@ CGameObject* CDecendo::Clone(void* pArg, CGameObject* pOwner)
 void CDecendo::OnCollision(CGameObject* pOther, void* pDesc)
 {
 
+	_int iIndex = CollisionCheck();
+
+	if (iIndex < 0)
+		return;
+
 	if (m_isCollisionEnter == true)
 		return;
 
 	m_isCollisionEnter = true;
 
-	_vector vPos = XMVectorSet(hitBuffer.block.position.x, hitBuffer.block.position.y, hitBuffer.block.position.z, 1.f);
+	_vector vPos = XMVectorSet(m_Hitbuffer.touches[iIndex].position.x, m_Hitbuffer.touches[iIndex].position.y, m_Hitbuffer.touches[iIndex].position.z, 1.f);
 
-
+	
 	for (auto& pPair : m_PartObjects)
 	{
 		pPair.second->Set_Visible(true);

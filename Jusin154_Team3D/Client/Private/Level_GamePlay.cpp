@@ -44,7 +44,7 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 		return E_FAIL;
 	}
 	//플레이어보다 먼저 생성해야함!
-	if (FAILED(Reday_Layer_EffectPool())) {	
+	if (FAILED(Reday_Layer_EffectPool())) {
 		return E_FAIL;
 	}
 	// 이것도 플레이어보다 먼저 생성해야함!
@@ -138,7 +138,7 @@ HRESULT CLevel_GamePlay::Render()
 
 HRESULT CLevel_GamePlay::Ready_Lights()
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLight_Main>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT))){
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLight_Main>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT))) {
 		return E_FAIL;
 	}
 
@@ -161,7 +161,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	/* Map Containters */
 	/* 테스트용 맵 */
 
-	//CInfoInstance::GetInstance()->Load_MapObjects("ClientTest");
+	CInfoInstance::GetInstance()->Load_MapObjects("ClientTest");
 	/* 전체 맵 */
 	CInfoInstance::GetInstance()->Load_MapObjects("Map1129");
 
@@ -250,6 +250,8 @@ HRESULT CLevel_GamePlay::Ready_Background()
 
 HRESULT CLevel_GamePlay::Ready_Layer_UI(const _wstring& strLayerTag)
 {
+	CInfoInstance::GetInstance()->Load_SpellInfo("../Bin/Resources/Data/UI/Spell/SpellInfo.xml");
+
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CUI_Manager>(g_iStaticLevel, g_iStaticLevel, LAYER_UI))) {
 		return E_FAIL;
 	}
@@ -274,7 +276,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 	Camera_Desc.pLookTarget = { nullptr };
 
 	CCamera_Debug* pCamera = { nullptr };
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCamera_Debug>(g_iStaticLevel, NEXT_LEVEL, LAYER_CAMERA, &Camera_Desc, nullptr, &pCamera))){
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCamera_Debug>(g_iStaticLevel, NEXT_LEVEL, LAYER_CAMERA, &Camera_Desc, nullptr, &pCamera))) {
 		return E_FAIL;
 	}
 
@@ -300,7 +302,7 @@ HRESULT CLevel_GamePlay::Ready_Markers()
 
 HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))){
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
 		return E_FAIL;
 	}
 
@@ -319,7 +321,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Item(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_SkyBox(const _wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSkyBox>(g_iStaticLevel, NEXT_LEVEL, LAYER_SKYBOX))){
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSkyBox>(g_iStaticLevel, NEXT_LEVEL, LAYER_SKYBOX))) {
 		return E_FAIL;
 	}
 
@@ -339,7 +341,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 {
 	for (_uint i = 0; i < 2; ++i)
 	{
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER,&i))) {
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER, &i))) {
 			return E_FAIL;
 		}
 	}

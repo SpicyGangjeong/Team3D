@@ -23,7 +23,7 @@ public:
 	virtual void Set_FadeIn() override;
 
 private:
-	void Change_Image(_int SpellID);
+	HRESULT Change_Image(_int SpellID);
 	virtual void Set_SkillType(_int eType) override;
 
 private:

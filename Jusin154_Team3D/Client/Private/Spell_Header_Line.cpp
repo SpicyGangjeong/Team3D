@@ -41,7 +41,6 @@ HRESULT CSpell_Header_Line::Initialize(void* pArg)
 	m_fAlphaTime = 5.f;
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("FadeIn"), [this](void* p) {this->Set_FadeIn(); });
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("FadeOut"), [this](void* p) {this->Set_FadeOut(); });
-	m_bActive = true;
 	return S_OK;
 }
 

@@ -85,6 +85,7 @@ public:
 	virtual void Set_V(_float V);
 	virtual _float2 Get_UV();
 
+	virtual void Add_Canvas(wstring Name, class CGameObject* pCanvas);
 
 	virtual void Nine_Slice_Left(_float X);
 	virtual void Nine_Slice_Right(_float Y);
@@ -184,7 +185,7 @@ protected:
 	_float4					m_vNine_Slice{};
 
 	_float					m_fTopY{};
-
+	_bool					m_bClick = { false };
 protected:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
