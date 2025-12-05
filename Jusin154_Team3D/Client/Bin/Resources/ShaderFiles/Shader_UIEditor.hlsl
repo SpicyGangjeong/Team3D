@@ -58,7 +58,7 @@ Texture2D g_Texture5;
 Texture2D g_DiffuseTexture;
 Texture2D g_MaskingTexture;
 
-int g_iLockOn;
+int g_iHover;
 
 struct VS_IN
 {
@@ -345,7 +345,7 @@ PS_OUT PS_Spell_Anim(PS_IN In)
 {
     PS_OUT Out;
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
-    float4 Color = float4(1.f,1.f,1.f,1.f);
+    float4 Color = float4(1.f, 1.f, 1.f, 1.f);
     
     float4 tex1 = g_Texture.Sample(DefaultSampler, In.vTexcoord);
     
@@ -1060,7 +1060,7 @@ PS_OUT PS_Spell_Header(PS_IN In)
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     float4 Color = float4(1.f, 1.f, 1.f, 1.f);
     
-    float3 BGColor= float3(1.f, 1.f, 1.f);
+    float3 BGColor = float3(1.f, 1.f, 1.f);
     
     switch (g_iSpellType)
     {
@@ -1197,13 +1197,34 @@ PS_OUT PS_Camera_LockOn(PS_IN In)
 
     float4 Color = float4(1.f, 1.f, 1.f, 1.f);
     
-    float4 tex1 = g_Texture.Sample(DefaultSampler, In.vTexcoord);
-    float tex1Alpha = g_Texture1.Sample(DefaultSampler, In.vTexcoord).r;
-
-    tex1.a *= tex1Alpha;
+    float2 center = float2(0.5, 0.5);
+    float2 uv = In.vTexcoord - center;
+    float angle = -g_fTime;
+    float s = sin(angle);
+    float c = cos(angle);
+    float2 maskuv = float2(uv.x * c - uv.y * s, uv.x * s + uv.y * c) + center;
     
-    Color = tex1;
- 
+    float tex1 = g_Texture.Sample(ClampSampler, maskuv).r;
+    
+    Color.a = tex1 * 0.3f;
+    
+    if (g_iHover != 0)
+    {
+        float4 tex2 = g_Texture1.Sample(ClampSampler, maskuv);
+
+        Color.rgb += (tex2.rgb * tex2.a) * 2.f;
+    }
+    
+    float2 UpUV = In.vTexcoord;
+    UpUV.y += g_fTime;
+    
+    float4 tex3 = g_Texture2.Sample(DefaultSampler, UpUV);
+    float tex4 = g_Texture1.Sample(ClampSampler, In.vTexcoord).r;
+    
+    tex3.a *= tex4;
+    
+    Color = lerp(Color, tex3, tex3.a);
+    
     Color.a *= Alpha;
     
     Out.vColor = Color;

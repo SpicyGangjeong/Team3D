@@ -133,6 +133,16 @@ void CInfoInstance::Key_Input(_uint Input)
 		Event_CallBack(TEXT("Spell"), &m_eInput);
 		break;
 	case ENUM_CLASS(KEYINPUT::INPUT_T):
+		if (m_eUI_State == UI_STATE::GAMEPLAYER)
+		{
+			m_eUI_State = UI_STATE::SPELL;
+			Event_CallBack(TEXT("Canvas_Change"), &m_eUI_State);
+		}
+		else if (m_eUI_State == UI_STATE::SPELL)
+		{
+			m_eUI_State = UI_STATE::GAMEPLAYER;
+			Event_CallBack(TEXT("Canvas_Change"), &m_eUI_State);
+		}
 		break;
 	case ENUM_CLASS(KEYINPUT::INPUT_G):
 
@@ -144,6 +154,11 @@ void CInfoInstance::Key_Input(_uint Input)
 	default:
 		break;
 	}
+}
+
+void CInfoInstance::Set_UISTATE(UI_STATE eState)
+{
+	m_eUI_State = eState;
 }
 
 void CInfoInstance::Add_Event(_wstring EventName, function<void(void*)> Event)

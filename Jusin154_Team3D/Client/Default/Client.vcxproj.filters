@@ -35,7 +35,7 @@
       <Filter>01.Levels\01.Logo</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_GamePlay.h">
-      <Filter>01.Levels\02.GamePlay</Filter>
+      <Filter>01.Levels\01.Logo\02.GamePlay</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\InfoInstance.h">
       <Filter>03.InfoInstance</Filter>
@@ -397,9 +397,6 @@
     </Filter>
     <Filter Include="01.Levels\00.Loading\Loader">
       <UniqueIdentifier>{37d70d8d-655c-498b-82a6-afd3d1726cd8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Levels\02.GamePlay">
-      <UniqueIdentifier>{7e641382-9dfa-4da7-a8c8-a3ee06360e7a}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects">
       <UniqueIdentifier>{27434478-691e-42a8-83c7-ecd1a60f46ce}</UniqueIdentifier>
@@ -782,6 +779,9 @@
     <Filter Include="04.Mechanic\State\State_Combat\State_Blink">
       <UniqueIdentifier>{27251db2-19f2-4492-a3a4-32c11526f413}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\01.Logo\02.GamePlay">
+      <UniqueIdentifier>{7e641382-9dfa-4da7-a8c8-a3ee06360e7a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -803,7 +803,7 @@
       <Filter>01.Levels\01.Logo</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_GamePlay.cpp">
-      <Filter>01.Levels\02.GamePlay</Filter>
+      <Filter>01.Levels\01.Logo\02.GamePlay</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\InfoInstance.cpp">
       <Filter>03.InfoInstance</Filter>
@@ -1141,6 +1141,7 @@
     <ClCompile Include="..\Private\Spell_Drag.cpp">
       <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Drag</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\MapContainer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
