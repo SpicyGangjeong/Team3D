@@ -16,7 +16,8 @@ protected: // MORE INFO ON ENGINE_ENUM
 		PXMATERIAL				ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 		_float3					vMatInfo = { 0.5f, 0.5f, 0.6f }; // 피직스 객체의 속성 등
 		_float					fContactOffset = { 0.05f }; // 접촉 유격 오프셋
-
+		_float4					vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
+		_float3					vLocalTranslation = { 0.f, 0.f, 0.f };
 	}RIGIDBODY_PROTOTYPEDESC;
 
 	typedef struct tagRigidBody_Desc
@@ -44,6 +45,8 @@ protected:
 	PSX::PxShapeFlags		m_ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
 	PXMATERIAL				m_eMatType = { PXMATERIAL::END };
 	_float					m_fContactOffset = { 0.05f };
+	_float4					m_vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
+	_float3					m_vLocalTranslation = { 0.f, 0.f, 0.f };
 
 	CTransform*				m_pTransform = { nullptr };
 	PhsXUserData			m_tagData = {};

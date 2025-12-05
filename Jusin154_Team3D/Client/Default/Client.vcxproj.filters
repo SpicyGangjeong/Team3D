@@ -937,9 +937,6 @@
     <ClCompile Include="..\Private\Monster.cpp">
       <Filter>02.GameObjects\Monster</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\MapContainer.cpp">
-      <Filter>02.GameObjects\Environment\00.MapContainer</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\BuildingContainer.cpp">
       <Filter>02.GameObjects\Environment\00.MapContainer\BuildingContainer</Filter>
     </ClCompile>
