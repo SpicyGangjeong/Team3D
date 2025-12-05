@@ -29,6 +29,7 @@ private:
 
 public:
 #ifdef _DEBUG
+	_float3 Get_LocalTranslation() {return m_vLocalTranslation;	}
 	virtual HRESULT Render()override;
 #endif // _DEBUG
 

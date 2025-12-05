@@ -24,6 +24,7 @@ public:
 	HRESULT			Load_Directory(const _char* pPath);
 	HRESULT         Load_Package(const _char* pPath);
 	virtual	HRESULT	Pre_Setting(CGameObject* pObject, void* pArg = nullptr);
+	void			Reset_Light();
 protected:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

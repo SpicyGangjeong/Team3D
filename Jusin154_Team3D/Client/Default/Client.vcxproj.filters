@@ -379,6 +379,9 @@
     <ClInclude Include="..\Public\Loding_Canvas.h">
       <Filter>02.GameObjects\UI\Loding_Canvas</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\MapElement_Interactable.h">
+      <Filter>02.GameObjects\Environment\03.MapElement\Interactable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -803,6 +806,9 @@
     <Filter Include="02.GameObjects\UI\Loding_Canvas\Loding_Panel">
       <UniqueIdentifier>{b4b5d9a6-152d-43fc-b746-49a3666d31a4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Environment\03.MapElement\Interactable">
+      <UniqueIdentifier>{17eaf081-6fbf-4965-b04d-10749e6032c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1176,6 +1182,10 @@
     </ClCompile>
     <ClCompile Include="..\Private\Loding_Panel.cpp">
       <Filter>02.GameObjects\UI\Loding_Canvas\Loding_Panel</Filter>
+    </ClCompile>
+
+    <ClCompile Include="..\private\MapElement_Interactable.cpp">
+      <Filter>02.GameObjects\Environment\03.MapElement\Interactable</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

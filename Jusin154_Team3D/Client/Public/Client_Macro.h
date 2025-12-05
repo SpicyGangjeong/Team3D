@@ -58,6 +58,7 @@ namespace Client {
 #define LAYER_ITEM			TEXT("Layer_Item")
 #define LAYER_EFFECTPOOL	TEXT("Layer_EffectPool")
 #define LAYER_LIGHT			TEXT("Layer_Light")
+#define LAYER_INTERACTABLE	TEXT("Layer_Interactable")
 
 #define LAYER_MAPOBJECTMANAGER		TEXT("Layer_MapObjectManager")
 

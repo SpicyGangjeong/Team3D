@@ -41,6 +41,7 @@ namespace Client
 		INPUT_TAB,
 		END
 	};
+	enum class ELEMENT_INTERACTABLE_ID { BARREL, BOX, TABLE, END };
 }
 
 

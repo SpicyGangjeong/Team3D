@@ -20,7 +20,7 @@ CRigidBody_Dynamic::CRigidBody_Dynamic(const CRigidBody_Dynamic& rhs) :
 #ifdef _DEBUG
 HRESULT CRigidBody_Dynamic::Render()
 {
-	_matrix  WorldMatrix = m_pTransform->Get_XMWorldMatrix();
+	_matrix  WorldMatrix = XMMatrixTranslation(m_vLocalTranslation.x, m_vLocalTranslation.y, m_vLocalTranslation.z) * m_pTransform->Get_XMWorldMatrix();
 	_matrix ViewMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW);
 	_matrix ProjMatrix = m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ);
 	_vector vColor = CMyTools::ColorRGB_A_HEXtoVECTOR(0x2fc48000, 1.f);
@@ -90,11 +90,11 @@ void CRigidBody_Dynamic::Set_HalfGeometryInfo(_float3 vhalfGeometryInfo)
 	}
 #ifdef _DEBUG
 	if (nullptr != m_pMainShape) {
-		m_pMainShape.release();
+		m_pMainShape.reset();
 		m_pMainShape = nullptr;
 	}
 	if (nullptr != m_pSubShape) {
-		m_pSubShape.release();
+		m_pSubShape.reset();
 		m_pSubShape = nullptr;
 	}
 	Add_DebugShape();
@@ -107,6 +107,7 @@ void CRigidBody_Dynamic::Move_LocalPos(_float4 vNewRotQ, _float3 vNewTranslation
 	PSX::PxShape* pShape = { nullptr };
 	m_pRigidBody->getShapes(&pShape, m_pRigidBody->getNbShapes());
 	pShape->setLocalPose(PSX::PxTransform(vNewTranslation.x, vNewTranslation.y, vNewTranslation.z, PSX::PxQuat(vNewRotQ.x, vNewRotQ.y, vNewRotQ.z, vNewRotQ.w)));
+	Add_DebugShape();
 }
 // _DEBUG
 void CRigidBody_Dynamic::Add_Force(_fvector vForce, PSX::PxForceMode::Enum eType)
@@ -223,6 +224,9 @@ HRESULT CRigidBody_Dynamic::Initialize(void* pArg)
 #ifdef _DEBUG
 HRESULT CRigidBody_Dynamic::Add_DebugShape()
 {
+	if(nullptr != m_pMainShape)
+		m_pMainShape.reset();
+
 	switch (m_eActorType)
 	{
 	case ACTOR::BOX:
@@ -280,6 +284,9 @@ void CRigidBody_Dynamic::Describe_Entity()
 	GUI::BeginChild(("Child ID: " + to_string((size_t)(this))).c_str());
 	GUI::Text("ReSize"); GUI::SameLine(); 
 	if (GUI::DragFloat3("##Size", (_float*)&m_vhalfGeometryInfo, 0.01f, 0.01f, 10.f, "%.3f")) {
+		m_vhalfGeometryInfo.x = max(0.01f, m_vhalfGeometryInfo.x);
+		m_vhalfGeometryInfo.y = max(0.01f, m_vhalfGeometryInfo.y);
+		m_vhalfGeometryInfo.z = max(0.01f, m_vhalfGeometryInfo.z);
 		Set_HalfGeometryInfo(m_vhalfGeometryInfo);
 	}
 	GUI::Text("Translation"); GUI::SameLine();

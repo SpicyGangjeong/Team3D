@@ -2461,17 +2461,32 @@ HRESULT CLoader::Loading_For_MapViewer()
 		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 		return E_FAIL;
 
+	/* Step */
+	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\GroundSurfaces",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Collision\\GroundSurfaces",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+
 	/* Barrel */
 	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Objects\\Meshes",
 		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 		return E_FAIL;
 
-	/* Step */
-	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\GroundSurfaces",
-		".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+	/* Box */
+	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\MiscProps",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 		return E_FAIL;
-	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Collision\\GroundSurfaces",
-		".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+
+	/* TeaShop Table */
+	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Tables",
+		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+
+	/* TeaShop Chair*/
+	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Chairs",
+		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
 		return E_FAIL;
 
 #pragma endregion
@@ -2832,10 +2847,32 @@ vector<vector<FOLDER_LOAD*>*> Contents(iLoadCount);
 		CCollider::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	/* For.Prototype_Component_VIBuffer_Terrain */
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Terrain"),
-		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, "../Bin/Resources/Data/Map/T_LandscapeStreamingProxy_0_LOD1_D.png"))))
-		return E_FAIL;
+	///* For.Prototype_Component_VIBuffer_Terrain */
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Terrain"),
+	//	CVIBuffer_Terrain::Create(m_pDevice, m_pContext, "../Bin/Resources/Data/Map/T_LandscapeStreamingProxy_0_LOD1_D.png"))))
+	//	return E_FAIL;
+
+	{
+		CVIBuffer_Terrain* pTerrain = CVIBuffer_Terrain::Create(m_pDevice, m_pContext, "Hogsmeade_HeightMap.bin", 512, 512);
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Terrain"), pTerrain))) {
+			return E_FAIL;
+		}
+		pTerrain->ConvertToHeightField(TEXT("Hogsmeade_HeightMap"));
+
+		CRigidBody_Static::RIGIDBODY_STATIC_PROTOTYPEDESC Desc{}; // 터레인 리지드 지형 추가
+		{
+			Desc.eType = ACTOR::HEIGHTFIELD;
+			Desc.ePxRigidBodyFlags = {};
+			Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+			Desc.ePxMaterialTypes = PXMATERIAL::DEFAULT;
+			Desc.vMatInfo = _float3(0.5f, 0.5f, 0.6f);
+			Desc.fContactOffset = 0.f;
+		}
+		CRigidBody_Static* pRigid = CRigidBody_Static::Create(m_pDevice, m_pContext, Desc);
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_RigidBody_Static_Terrain_Hogsmeade"), pRigid))) {
+			return E_FAIL;
+		}
+	}
 
 
 	CVIBuffer_Model_Instance::INSTANCE_DESC InstanceDesc = {};

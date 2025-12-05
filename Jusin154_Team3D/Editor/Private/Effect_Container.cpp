@@ -315,6 +315,7 @@ HRESULT CEffect_Container::Pre_Setting(CGameObject* pObject, void* pArg)
 
 
 	Reset_EditEffect();
+	Reset_Light();
 
 	m_fAccTime = 0.f;
 	m_fPreAccTime = 0.f;
@@ -324,6 +325,21 @@ HRESULT CEffect_Container::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	return S_OK;
 }
+
+void CEffect_Container::Reset_Light()
+{
+	for (auto& iter : m_PartObjects)
+	{
+		CLight* pLight = iter.second->Get_Component<CLight>();
+
+		if (pLight == nullptr)
+			continue;
+
+		pLight->Reset_AmbientRatio();
+	}
+
+}
+
 
 HRESULT CEffect_Container::Ready_Components(void* pArg)
 {
@@ -399,11 +415,12 @@ void CEffect_Container::Update_Event(_float fTimeDelta)
 		else
 		{
 			m_bVisible = false;
-			
+
 			for (auto& pPart : m_PartObjects)
 			{
 				pPart.second->Set_Visible(false);
 			}
+
 		}
 	}
 

@@ -141,6 +141,7 @@ public:
 #pragma endregion
 #pragma region LIGHT_MANAGER
 	void			  Add_Light(_uint _iCurrentLevel, class CLight* _pLight);
+	void			  Add_Light_Group(_uint _iCurrentLevel, class CLight* _pLight);
 	void			  Delete_Light(_uint _iCurrentLevel, class CLight* _pLight);
 	const LIGHT_DESC* Get_Light_Info(_uint _iCurrentLevel, _uint _iLightIndex);
 	HRESULT			  Render_Lights(_uint _iCurrentLevel, class CShader* pShader, class CVIBuffer* pVIBuffer);

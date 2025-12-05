@@ -177,6 +177,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\BombardSide.h" />
     <ClInclude Include="..\Public\LeviosoSide.h" />
     <ClInclude Include="..\public\MapElement.h" />
+    <ClInclude Include="..\public\MapElement_Interactable.h" />
     <ClInclude Include="..\public\MapElement_Light.h" />
     <ClInclude Include="..\Public\Mouse_Cursor.h" />
     <ClInclude Include="..\Public\Potion.h" />
@@ -305,6 +306,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\BombardSide.cpp" />
     <ClCompile Include="..\Private\LeviosoSide.cpp" />
     <ClCompile Include="..\private\MapElement.cpp" />
+    <ClCompile Include="..\private\MapElement_Interactable.cpp" />
     <ClCompile Include="..\private\MapElement_Light.cpp" />
     <ClCompile Include="..\Private\Mouse_Cursor.cpp" />
     <ClCompile Include="..\Private\Potion.cpp" />
