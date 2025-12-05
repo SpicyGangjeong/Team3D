@@ -45,13 +45,7 @@ HRESULT CProtego::Initialize(void* pArg)
 	m_wstrEffectName = L"Protego";
 
 
-	m_Events.emplace(1.3f, [&]() {
 
-		m_pSphere->Set_Dissolve(true);
-		m_pBottom->Set_Dissolve(true);
-		m_pCircle->Set_Dissolve(true);
-
-		});
 
 
 	m_fAmountSize = 0.1f;
@@ -127,9 +121,6 @@ HRESULT CProtego::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	m_fSizeAccTime = 0.f;
 
-	m_pSphere->Set_Dissolve(false);
-	m_pBottom->Set_Dissolve(false);
-	m_pCircle->Set_Dissolve(false);
 	return S_OK;
 }
 

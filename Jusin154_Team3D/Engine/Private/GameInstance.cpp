@@ -510,6 +510,11 @@ void CGameInstance::Add_Light(_uint _iCurrentLevel, CLight* _pLight)
 	m_pLight_Manager->Add_Light(_iCurrentLevel, _pLight);
 }
 
+void CGameInstance::Add_Light_Group(_uint _iCurrentLevel, CLight* _pLight)
+{
+	m_pLight_Manager->Add_Light_Group(_iCurrentLevel, _pLight);
+}
+
 void CGameInstance::Delete_Light(_uint _iCurrentLevel, CLight* _pLight)
 {
 	m_pLight_Manager->Delete_Light(_iCurrentLevel, _pLight);

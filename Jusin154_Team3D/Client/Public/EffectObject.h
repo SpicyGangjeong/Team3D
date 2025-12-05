@@ -134,10 +134,8 @@ public:
 public:
 	HRESULT Load(const _char* pFilePath, LEVEL eLevel);
 
-	void	Set_Dissolve(_bool isDissolve)
-	{
-		m_EffectInfo.isDissolve = isDissolve;
-	}	
+	void    Disable_Light();
+	void    Add_Light();
 protected:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT Ready_Components(void* pArg) override;
