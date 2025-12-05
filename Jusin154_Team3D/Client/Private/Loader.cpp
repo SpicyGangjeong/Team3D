@@ -1171,11 +1171,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 		Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 		Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
 		Desc.fContactOffset = { 0.05f };
-		Desc.vhalfGeometryInfo = { 1.f, 1.f, 1.f };
+		Desc.vhalfGeometryInfo = { 0.5f, 0.5f, 0.5f };
 		Desc.fDensity = 1.f;
 		Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
 		Desc.eLockFlag = {};
-		Desc.vAutoDamping = { 100.f, 100.f };
+		Desc.vAutoDamping = { 1.f, 1.f };
 	}
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_HEAVY_WALL"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {

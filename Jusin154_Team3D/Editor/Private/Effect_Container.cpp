@@ -433,28 +433,36 @@ _int CEffect_Container::CollisionCheck()
 		PSX::PxShape* pShape = Hit.shape;
 
 		if (nullptr != pActor && nullptr != pActor->userData) {
-			
-			PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
-			
-			if (pUserData->iSubKind == ENUM_CLASS(PXOBJECT::WALL)) {
-				bIsCollide = true;
-			}
 
+			PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
 
 			if (pUserData->iSubKind >= UINT_MAX - 1) {
 				continue;
 			}
 
-			if (bIsCollide == true)
+			switch (PXOBJECT(pUserData->eKind))
+			{
+			case PXOBJECT::PLAYER:
+				continue;
+			case PXOBJECT::MONSTER:
+			case PXOBJECT::GOBLIN_WARRIOR:
+			case PXOBJECT::TROLL:
+			case PXOBJECT::WALL:
+
+			{
 				return i;
+			}
+			break;
+			default:
+				break;
+			}
 
 			switch (pUserData->eKind)
 			{
 			case PHYSX_KIND::BODY_STATIC:
 			case PHYSX_KIND::BODY_DYNAMIC:
 			{
-				if (bIsCollide == true)
-					return i;
+				return i;
 			}
 			break;
 			case PHYSX_KIND::CCTActor:

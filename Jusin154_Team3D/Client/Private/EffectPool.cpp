@@ -63,6 +63,8 @@ void CEffectPool::Priority_Update(_float fTimeDelta)
 			(*iter)->Priority_Update(fTimeDelta);
 			++iter;
 		}
+
+
 	}
 }
 
@@ -128,6 +130,7 @@ HRESULT CEffectPool::Ready_Effect()
 		return pEffect;}
 	))) return E_FAIL;
 
+#ifndef 기무리
 
 	if (FAILED(Create_Effect(SKILL_TYPE::BOMBARDA, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
 
@@ -135,7 +138,7 @@ HRESULT CEffectPool::Ready_Effect()
 
 		pEffect = m_pGameInstance->Clone_Prototype<CBombard>(iPrototypeLevel, nullptr);
 
-		return pEffect;}
+		return pEffect; }
 	))) return E_FAIL;
 
 	if (FAILED(Create_Effect(SKILL_TYPE::DESCENDO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
@@ -144,7 +147,7 @@ HRESULT CEffectPool::Ready_Effect()
 
 		pEffect = m_pGameInstance->Clone_Prototype<CDecendo>(iPrototypeLevel, nullptr);
 
-		return pEffect;}
+		return pEffect; }
 	))) return E_FAIL;
 
 	if (FAILED(Create_Effect(SKILL_TYPE::PROTEGO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
@@ -223,6 +226,8 @@ HRESULT CEffectPool::Ready_Effect()
 		return pEffect; }
 	))) return E_FAIL;
 
+#endif // 기무리
+
 
 
 	return S_OK;
@@ -245,7 +250,7 @@ HRESULT CEffectPool::Create_Effect(SKILL_TYPE eType, _uint iNumEffect, _uint iPr
 	return S_OK;
 }
 
-HRESULT CEffectPool::Use_Skill(SKILL_TYPE eType, CGameObject* pOwner)
+HRESULT CEffectPool::Use_Skill(SKILL_TYPE eType, CGameObject* pOwner, void* pArg)
 {
 	if (pOwner == nullptr)
 		return S_OK;
@@ -255,7 +260,7 @@ HRESULT CEffectPool::Use_Skill(SKILL_TYPE eType, CGameObject* pOwner)
 		if (pSkill->Get_Visible() == true)
 			continue;
 
-		pSkill->Pre_Setting(pOwner);
+		pSkill->Pre_Setting(pOwner, pArg);
 
 		m_ActiveEffectList.push_back(pSkill);
 		Safe_AddRef(pSkill);

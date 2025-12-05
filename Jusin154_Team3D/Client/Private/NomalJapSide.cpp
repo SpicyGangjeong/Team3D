@@ -48,7 +48,26 @@ HRESULT CNomalJapSide::Initialize(void* pArg)
 	SAFE_ADDREF(m_pWandTrail);
 	SAFE_ADDREF(m_pWandParticle);
 
-	m_fDuration = 1.f;
+	m_Events.emplace(0.6f, [&]() {
+
+		// 파티클 제어
+		m_isParticleEnd = true;
+		m_pWandParticle->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(0.f, -500.f, 0.f, 1.f));
+
+
+		// 트레일 제어
+		CWand* pWand = static_cast<CWand*>(m_pOwner);
+
+		if (pWand == nullptr)
+			return;
+
+		m_isTrailEnd = true;
+
+		XMStoreFloat4x4(&m_TrailStopMat, pWand->Get_WorldMatrix());
+
+		});
+
+	m_fDuration = 2.f;
 
 	return S_OK;
 }
@@ -76,8 +95,13 @@ void CNomalJapSide::Update(_float fTimeDelta)
 
 	m_pWandLight->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 
-	m_pWandTrail->Get_Component<CTrail>()->Trail_Update(fTimeDelta, pWand->Get_WorldMatrix());
-	m_pWandParticle->Get_Component<CTransform>()->Set_WorldMatrix(pWand->Get_WorldMatrix());
+	// 파티클생성이 막히면 실행되지 않음
+	if (m_isParticleEnd == false)
+		m_pWandParticle->Get_Component<CTransform>()->Set_WorldMatrix(pWand->Get_WorldMatrix());
+
+	// 트레일이 종료되면 위치를 고정함
+	_matrix TrailMat = m_isTrailEnd ? XMLoadFloat4x4(&m_TrailStopMat) : pWand->Get_WorldMatrix();
+	m_pWandTrail->Trail_Update(TrailMat, fTimeDelta);
 
 }
 
@@ -91,9 +115,9 @@ void CNomalJapSide::Late_Update(_float fTimeDelta)
 
 }
 
-HRESULT CNomalJapSide::Pre_Setting(CGameObject* pObject)
+HRESULT CNomalJapSide::Pre_Setting(CGameObject* pObject, void* pArg)
 {
-	if (FAILED(__super::Pre_Setting(pObject)))
+	if (FAILED(__super::Pre_Setting(pObject, nullptr)))
 		return E_FAIL;
 
 
@@ -103,11 +127,13 @@ HRESULT CNomalJapSide::Pre_Setting(CGameObject* pObject)
 		return E_FAIL;
 
 	m_pWandParticle->Set_Visible(true);
+	m_isParticleEnd = false; // 파티클이 일정시간이 되면 나오지 않게 하려고
 
 	m_pWandLight->Set_Visible(true);
 
 	/*트레일 초기화 */
 	m_pWandTrail->Set_Visible(true);
+	m_isTrailEnd = false;
 	m_pWandTrail->Get_Component<CTrail>()->Reset_Trail();
 
 	/*_vector pPos = pPlayer->Get_WandPos().r[3];*/
