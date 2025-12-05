@@ -21,7 +21,7 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 
 public:
-	virtual	HRESULT	Pre_Setting(CGameObject* pObject) override;
+	virtual	HRESULT	Pre_Setting(CGameObject* pObject, void* pArg = nullptr) override;
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
@@ -32,6 +32,10 @@ private:
 	virtual void	OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr) override;
 private:
 	_wstring			m_wstrEffectName = {};
+
+	_bool				m_isParticleEnd = {};
+	_bool				m_isTrailEnd = {};
+	_float4x4			m_TrailStopMat = {};
 
 	class CEffectParts* m_pWandLight = { nullptr };
 	class CTrailObject* m_pWandTrail = { nullptr };

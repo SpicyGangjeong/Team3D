@@ -25,7 +25,7 @@ _int CSkill_Data::Update_Spell(_int SpellID)
 		return ENUM_CLASS(SKILL_TYPE::END);
 
 	if (SpellInfo[SpellID].bUse_Skill == false)
-		return ENUM_CLASS(SKILL_TYPE::END);
+		return -1;
 
 	SpellInfo[SpellID].bUse_Skill = false;
 	m_iSpell_CoolTime[SpellID] = 0.f;

@@ -63,6 +63,8 @@ void CEffectPool::Priority_Update(_float fTimeDelta)
 			(*iter)->Priority_Update(fTimeDelta);
 			++iter;
 		}
+
+
 	}
 }
 
@@ -248,7 +250,7 @@ HRESULT CEffectPool::Create_Effect(SKILL_TYPE eType, _uint iNumEffect, _uint iPr
 	return S_OK;
 }
 
-HRESULT CEffectPool::Use_Skill(SKILL_TYPE eType, CGameObject* pOwner)
+HRESULT CEffectPool::Use_Skill(SKILL_TYPE eType, CGameObject* pOwner, void* pArg)
 {
 	if (pOwner == nullptr)
 		return S_OK;
@@ -258,7 +260,7 @@ HRESULT CEffectPool::Use_Skill(SKILL_TYPE eType, CGameObject* pOwner)
 		if (pSkill->Get_Visible() == true)
 			continue;
 
-		pSkill->Pre_Setting(pOwner);
+		pSkill->Pre_Setting(pOwner, pArg);
 
 		m_ActiveEffectList.push_back(pSkill);
 		Safe_AddRef(pSkill);

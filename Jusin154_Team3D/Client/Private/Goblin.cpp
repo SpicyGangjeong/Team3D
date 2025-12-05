@@ -59,7 +59,7 @@ HRESULT CGoblin::Initialize(void* pArg)
 
 
 
-	m_pCharacter_Controller->Set_Position(XMVectorSet(m_pGameInstance->Random_Float(-20.f, 20.f), 0.f, m_pGameInstance->Random_Float(-20.f, 20.f), 1.f));
+	m_pCharacter_Controller->Set_Position(XMVectorSet(m_pGameInstance->Real_Random_Float(-20.f, 20.f), 0.f, m_pGameInstance->Real_Random_Float(-20.f, 20.f), 1.f));
 
 	return S_OK;
 }
@@ -114,7 +114,7 @@ void CGoblin::Late_Update(_float fTimeDelta)
 		m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
 	}
 	else {
-		m_pTransformCom->Set_WorldMatrix(m_pRigidBody->Get_Actor()->getGlobalPose());
+		m_pTransformCom->Set_WorldMatrix(m_pRigidBody->Get_FootPositionPxTransform());
 	}
 
 	m_pTransformCom->LookAt_Horizontal(XMLoadFloat4(&m_vTargetPos));
@@ -183,8 +183,10 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 	_float  fLength = {};		// 작용된 힘
 
 	m_pCharacter_Controller->ConvertToDO(*m_pRigidBody);
-	m_pRigidBody->Add_Force(vHitDir * fLength * 100.f, PSX::PxForceMode::eIMPULSE);
+	m_pRigidBody->Add_Force(vHitDir * fLength * 10000.f, PSX::PxForceMode::eFORCE);
 
+	//m_pCharacter_Controller->ConvertToDO(*m_pRigidBody);
+	//m_pRigidBody->Add_Force(vHitDir * fLength * 100.f, PSX::PxForceMode::eIMPULSE);
 	_uint iSkillType = dynamic_cast<CEffect_Container*>(pOther)->Get_SkillType();
 	switch (iSkillType)
 	{
@@ -193,6 +195,12 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 		break;
 	case ENUM_CLASS(SKILL_TYPE::FLIPENDO):
 		m_eHitSpell = STATEANIM::TUMBLE2;
+		break;
+	case ENUM_CLASS(SKILL_TYPE::JAP):
+		m_eHitSpell = STATEANIM::HIT_LEVIOSO;
+		break;
+	case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
+		m_eHitSpell = STATEANIM::HIT_LEVIOSO;
 		break;
 	default:
 		m_eHitSpell = STATEANIM::KNOCKDOWN_FWD;

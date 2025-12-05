@@ -80,7 +80,7 @@ void CLumos::Late_Update(_float fTimeDelta)
 
 }
 
-HRESULT CLumos::Pre_Setting(CGameObject* pObject)
+HRESULT CLumos::Pre_Setting(CGameObject* pObject, void* pArg)
 {
 	if (FAILED(__super::Pre_Setting(pObject)))
 		return E_FAIL;

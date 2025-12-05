@@ -102,13 +102,7 @@ void CNomalJap::Update(_float fTimeDelta)
 	m_pProjectile_Side->Get_Component<CTransform>()->Translation(XMLoadFloat3(&m_vRotateRight) * sinf(m_fAccZigZagTime) * m_fZigZagAmount);
 	m_pProjectile->Get_Component<CTransform>()->Translation(XMLoadFloat3(&m_vRotateRight) * sinf(m_fAccZigZagTime) * m_fZigZagAmount);
 
-	_vector vDir = XMLoadFloat4(&m_vEndPos) -  XMLoadFloat4(&m_vStartPos);
 
-	if (true == m_pGameInstance->SphereCast(0.125, XMLoadFloat4(&m_vStartPos), XMVector3Normalize(vDir), XMVectorGetX(XMVector3Length(vDir))
-		, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eDYNAMIC | PSX::PxQueryFlag::eSTATIC, m_Hitbuffer))
-	{
-		OnCollision();
-	}
 }
 
 
@@ -123,6 +117,13 @@ void CNomalJap::Late_Update(_float fTimeDelta)
 
 	XMStoreFloat4(&m_vEndPos, m_pProjectile->Get_WorldPostion());
 
+	_vector vDir = XMLoadFloat4(&m_vEndPos) - XMLoadFloat4(&m_vStartPos);
+
+	if (true == m_pGameInstance->SphereCast(0.125, XMLoadFloat4(&m_vStartPos), XMVector3Normalize(vDir), XMVectorGetX(XMVector3Length(vDir))
+		, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eDYNAMIC | PSX::PxQueryFlag::eSTATIC, m_Hitbuffer))
+	{
+		OnCollision();
+	}
 
 	__super::Late_Update(fTimeDelta);
 }

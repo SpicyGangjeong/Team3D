@@ -49,7 +49,7 @@ public:
 	_float Get_CoolTime(_int SpellID);
 	void Change_Canvas();
 	void Key_Input(_uint Input); // 플레이어 키 입력
-
+	void Set_UISTATE(UI_STATE eState);
 	void Add_Event(_wstring EventName, function<void(void*)> Event);
 	void Event_CallBack(_wstring EventName, void* pArg = nullptr);
 #pragma endregion
@@ -64,6 +64,8 @@ private:
 	class CSkill_Data*			m_pSkillInfo= { nullptr };
 	_uint						m_eInput = ENUM_CLASS(KEYINPUT::END);
 	_int						m_eSpell = ENUM_CLASS(SKILL_TYPE::END);
+
+	UI_STATE					m_eUI_State;
 
 	// 임시로 이벤트 1개 만들어 둠
 	multimap<_wstring, function<void(void*)>> UI_Event;
