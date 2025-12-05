@@ -18,7 +18,9 @@ public:
 	vector<ID3D11ShaderResourceView*>* Get_Texture() { return &m_SRVs; }
 	ID3D11ShaderResourceView* Get_SRV(_uint iTextureIndex);
 	_uint Get_Size();
+#ifdef EDITOR_PROJECT
 	_bool Compare_GroupName(_wstring wstrGroupName);
+#endif // 
 
 #ifdef _DEBUG
 	void  HoverName();

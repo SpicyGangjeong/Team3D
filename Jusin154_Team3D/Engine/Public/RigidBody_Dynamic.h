@@ -34,6 +34,8 @@ public:
 
 	virtual PSX::PxRigidDynamic* Get_Actor()		override { return m_pRigidBody; };
 	_float3					Get_HalfGeometryInfo()	const { return m_vhalfGeometryInfo; }
+	void					Set_HalfGeometryInfo(_float3 vhalfGeometryInfo);
+	void					Move_LocalPos(_float4 vNewRotQ, _float3 vNewTranslation);
 	_float					Get_Density()			const { return m_fDensity; }
 
 	virtual void			Add_Force(_fvector vForce, PSX::PxForceMode::Enum eType = PSX::PxForceMode::Enum::eFORCE); // 속도 + 방향

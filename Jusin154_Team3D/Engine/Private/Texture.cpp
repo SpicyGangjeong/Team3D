@@ -40,11 +40,13 @@ _uint CTexture::Get_Size()
 {
 	return (_uint)m_SRVs.size();
 }
-
+#ifdef EDITOR_PROJECT
 _bool CTexture::Compare_GroupName(_wstring wstrGroupName)
 {
 	return m_wstrPrototypeName == wstrGroupName;
 }
+#endif // EDITOR_PROJECT
+
 
 #ifdef _DEBUG
 void CTexture::HoverName()
@@ -78,8 +80,10 @@ HRESULT CTexture::Initialize_Prototype(TEXTURE_LOAD_TYPE eType, const _tchar* pT
 	default:
 		break;
 	}
-
+#ifdef EDITOR_PROJECT
 	m_wstrPrototypeName = wstrPrototypeName;
+#endif // EDITOR_PROJECT
+
 
 	return S_OK;
 }
