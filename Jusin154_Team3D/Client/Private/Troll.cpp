@@ -4,6 +4,7 @@
 #include "Troll_Weapon.h"
 #include "Troll_Rock.h"
 #include "GameInstance.h"
+#include "Effect_Container.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -122,6 +123,18 @@ void CTroll::Late_Update(_float fTimeDelta)
 	}
 	
 
+	_vector vDir = XMLoadFloat4(&m_vTargetPos) - Get_WorldPostion();
+	vDir = XMVector4Normalize(vDir);
+	_vector vLook = XMVector3Normalize(
+		XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
+	float dot = XMVectorGetX(XMVector3Dot(vLook, vDir));
+	dot = max(-1.f, min(1.f, dot)); 
+
+	float angle = acosf(dot);       
+	m_fDegree = XMConvertToDegrees(angle);
+
+	m_fCross = XMVectorGetY(XMVector3Cross(vLook, vDir));    
+
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 }
 
@@ -183,8 +196,19 @@ void CTroll::OnCollision(CGameObject* pOther, void* pDesc)
 	_vector vHitDir = {};		// 시도한 move 방향
 	_float  fLength = {};		// 작용된 힘
 
-	//m_pCharacter_Controller->ConvertToDO(*m_pRigidBody);
-	//m_pRigidBody->Add_Force(vHitDir * fLength * 100.f, PSX::PxForceMode::eIMPULSE);
+	_uint iSkillType = dynamic_cast<CEffect_Container*>(pOther)->Get_SkillType();
+	switch (iSkillType)
+	{
+	case ENUM_CLASS(SKILL_TYPE::DESCENDO):
+		m_eHitSpell = STATEANIM::KNOCKDOWN_FWD;
+		break;
+	case ENUM_CLASS(SKILL_TYPE::FLIPENDO):
+		m_eHitSpell = STATEANIM::TUMBLE2;
+		break;
+	default:
+		m_eHitSpell = STATEANIM::KNOCKDOWN_FWD;
+		break;
+	}
 	m_pFSM->Change_State(FSMSTATE::HIT);
 }
 
@@ -331,29 +355,29 @@ void CTroll::Free()
 
 void CTroll::Describe_Entity()
 {
-	//GUI::Begin("Troll");
+	GUI::Begin("Troll");
 
-	//GUI::Checkbox("LookAt", &m_bLookAt);
+	GUI::Checkbox("LookAt", &m_bLookAt);
 
-	//string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
-	//GUI::Text(AnimList.c_str());
+	string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
+	GUI::Text(AnimList.c_str());
 
-	//GUI::Text("AnimTrack %.2f", m_pModelCom->Get_CurrentTrackPosition());
-	//GUI::Text("AnimRatio %.2f", m_pModelCom->Get_CurrentTrackProgressRatio());
+	GUI::Text("AnimTrack %.2f", m_pModelCom->Get_CurrentTrackPosition());
+	GUI::Text("AnimRatio %.2f", m_pModelCom->Get_CurrentTrackProgressRatio());
 
-	//_float4 vMomentum = {};
-	//XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());
-	//GUI::Text("%.2f %.2f %.2f %.2f ", vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);
+	_float4 vMomentum = {};
+	XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());
+	GUI::Text("%.2f %.2f %.2f %.2f ", vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);
 
-	//_float3 Pos;
-	//XMStoreFloat3(&Pos, Get_WorldPostion());
+	_float3 Pos;
+	XMStoreFloat3(&Pos, Get_WorldPostion());
 
-	//if (GUI::DragFloat3("Pos",(_float*)&Pos))
-	//{
-	//	m_pCharacter_Controller->Set_Position(XMLoadFloat3(&Pos));
-	//}
+	if (GUI::DragFloat3("Pos",(_float*)&Pos))
+	{
+		m_pCharacter_Controller->Set_Position(XMLoadFloat3(&Pos));
+	}
 
-	//GUI::End();
+	GUI::End();
 
 }
 

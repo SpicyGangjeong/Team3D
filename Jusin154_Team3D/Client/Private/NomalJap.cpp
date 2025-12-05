@@ -35,6 +35,7 @@ HRESULT CNomalJap::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
+	m_iSkillType = ENUM_CLASS(SKILL_TYPE::JAP);
 
 	m_wstrEffectName = L"Nomal_Jap";
 
@@ -193,7 +194,7 @@ void CNomalJap::Late_Update(_float fTimeDelta)
 				case PXOBJECT::TROLL:
 				{
 					ON_COLLISION_INFO Desc;
-					pUserData->pOwner->OnCollision();
+					pUserData->pOwner->OnCollision(this);
 					GUI::Text("HitHitHitHitHitHitHitHitHitHitHitHitHitHitHitHitHitHitHitHitHitHitHitHitHitHitHitHitHitHitHitHitHitHitHitHitHitHitHitHitHitHitHitHitHitHitHit");
 				} break;
 				case PXOBJECT::PLAYER:

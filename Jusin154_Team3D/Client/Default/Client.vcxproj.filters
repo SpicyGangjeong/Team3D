@@ -355,9 +355,17 @@
     <ClInclude Include="..\Public\Troll_Rock.h">
       <Filter>02.GameObjects\Item\Troll_Rock</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Goblin_Dagger.h" />
     <ClInclude Include="..\Public\Spell_Drag.h">
       <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Drag</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Swing.h">
+      <Filter>04.Mechanic\State\State_Combat\State_Swing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Blink.h">
+      <Filter>04.Mechanic\State\State_Combat\State_Blink</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Goblin_Dagger.h">
+      <Filter>02.GameObjects\Item\Goblin_Dagger</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -768,6 +776,12 @@
     <Filter Include="02.GameObjects\Item\Goblin_Dagger">
       <UniqueIdentifier>{7d6fe51e-3d6d-4fed-9e5d-27e257672e01}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Swing">
+      <UniqueIdentifier>{f109c973-c532-4549-9680-d0d6495b0fa8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Blink">
+      <UniqueIdentifier>{27251db2-19f2-4492-a3a4-32c11526f413}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1118,7 +1132,15 @@
     <ClCompile Include="..\Private\Troll_Rock.cpp">
       <Filter>02.GameObjects\Item\Troll_Rock</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Goblin_Dagger.cpp" />
+    <ClCompile Include="..\Private\State_Swing.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_Swing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Blink.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_Blink</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Goblin_Dagger.cpp">
+      <Filter>02.GameObjects\Item\Goblin_Dagger</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\Spell_Drag.cpp">
       <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Drag</Filter>
     </ClCompile>

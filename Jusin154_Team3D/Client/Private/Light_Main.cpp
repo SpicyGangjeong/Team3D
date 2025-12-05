@@ -39,7 +39,9 @@ void CLight_Main::Priority_Update(_float fTimeDelta)
 void CLight_Main::Update(_float fTimeDelta)
 {
 	GUI::Begin("Main_Light");
+#ifdef _DEBUG
 	m_pLightCom->Describe_Entity();
+#endif // _DEBUG
 	GUI::End();
 }
 
