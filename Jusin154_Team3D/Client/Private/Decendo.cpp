@@ -40,6 +40,7 @@ HRESULT CDecendo::Initialize(void* pArg)
 	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Decendo")))
 		return E_FAIL;
 
+	m_iSkillType = ENUM_CLASS(SKILL_TYPE::DESCENDO);
 
 	m_wstrEffectName = L"Decendo";
 
@@ -95,6 +96,50 @@ void CDecendo::Late_Update(_float fTimeDelta)
 		return;
 
 	Get_PartObject<CTrailObject>()->Trail_Update(m_pProjectile->Get_Component<CTransform>()->Get_XMWorldMatrix(), fTimeDelta);
+
+	_vector vStartPos = m_pProjectile->Get_WorldPostion();
+
+	_vector vEndPos = XMLoadFloat4(&m_vTargetPos);
+
+	_vector vDir2 = { vEndPos - vStartPos };
+
+	_float fDistance = XMVectorGetX(XMVector3Length(vEndPos - vStartPos));
+
+	PSX::PxSweepBuffer pxBuffer = {};
+
+	_bool bHit = m_pGameInstance->SphereCast(0.2f, vStartPos, vDir2, fDistance, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eDYNAMIC, pxBuffer);
+
+	if (bHit) {
+		const PSX::PxSweepHit& hit = pxBuffer.block;
+		PSX::PxRigidActor* pActor = hit.actor;
+		PSX::PxShape* pShape = hit.shape;
+
+		if (nullptr != pActor && nullptr != pActor->userData)
+		{
+			PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+
+			switch (pUserData->eKind)
+			{
+			case PHYSX_KIND::CCTActor:
+			{
+				switch (PXOBJECT(pUserData->iSubKind))
+				{
+				case PXOBJECT::MONSTER:
+				case PXOBJECT::GOBLIN_WARRIOR:
+				{
+					pUserData->pOwner->OnCollision(this);
+				}
+				break;
+				case PXOBJECT::TROLL:
+				{
+					pUserData->pOwner->OnCollision(this);
+				}
+				break;
+				}
+			}
+			}
+		}
+	}
 
 	XMStoreFloat4(&m_vEndPos, m_pProjectile->Get_WorldPostion());
 
