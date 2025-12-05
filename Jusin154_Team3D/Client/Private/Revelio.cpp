@@ -92,7 +92,7 @@ void CRevelio::Late_Update(_float fTimeDelta)
 
 }
 
-HRESULT CRevelio::Pre_Setting(CGameObject* pObject)
+HRESULT CRevelio::Pre_Setting(CGameObject* pObject, void* pArg)
 {
 	if (FAILED(__super::Pre_Setting(pObject)))
 		return E_FAIL;
