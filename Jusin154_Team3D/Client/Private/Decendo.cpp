@@ -126,7 +126,8 @@ HRESULT CDecendo::Pre_Setting(CGameObject* pObject, void* pArg)
 	pCircle0->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 	pWandLight->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 
-
+	pCircle0->Set_Visible(true);
+	pWandLight->Set_Visible(true);
 
 	/* 초기 위치 저장  */
 	_vector vStartPos = m_pOwner->Get_WorldPostion();
@@ -278,6 +279,9 @@ void CDecendo::OnCollision(CGameObject* pOther, void* pDesc)
 
 	pCircle0->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 	pWandLight->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
+
+	pCircle0->Set_Visible(false);
+	pWandLight->Set_Visible(false);
 
 	_vector vPlayerPos = m_pOwner->Get_Component<CTransform>()->Get_State(STATE::POSITION);
 
