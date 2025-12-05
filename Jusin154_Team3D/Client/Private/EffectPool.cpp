@@ -130,6 +130,7 @@ HRESULT CEffectPool::Ready_Effect()
 		return pEffect;}
 	))) return E_FAIL;
 
+#ifndef 기무리
 
 	if (FAILED(Create_Effect(SKILL_TYPE::BOMBARDA, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
 
@@ -137,7 +138,7 @@ HRESULT CEffectPool::Ready_Effect()
 
 		pEffect = m_pGameInstance->Clone_Prototype<CBombard>(iPrototypeLevel, nullptr);
 
-		return pEffect;}
+		return pEffect; }
 	))) return E_FAIL;
 
 	if (FAILED(Create_Effect(SKILL_TYPE::DESCENDO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
@@ -146,7 +147,7 @@ HRESULT CEffectPool::Ready_Effect()
 
 		pEffect = m_pGameInstance->Clone_Prototype<CDecendo>(iPrototypeLevel, nullptr);
 
-		return pEffect;}
+		return pEffect; }
 	))) return E_FAIL;
 
 	if (FAILED(Create_Effect(SKILL_TYPE::PROTEGO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
@@ -224,6 +225,8 @@ HRESULT CEffectPool::Ready_Effect()
 
 		return pEffect; }
 	))) return E_FAIL;
+
+#endif // 기무리
 
 
 

@@ -82,13 +82,13 @@ VS_OUT VS_MAIN(VS_IN In)
     matWV = mul(g_WorldMatrix, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
     
-    Out.vPosition = mul(vPosition, matWVP);
-    Out.vNormal = normalize(mul(vNormal, g_WorldMatrix)).xyz;
-    Out.vBinormal = normalize(mul(vBinormal, g_WorldMatrix)).xyz;
-    Out.vTangent = normalize(mul(vTangent, g_WorldMatrix)).xyz;
-    Out.vTexcoord = In.vTexcoord;
-    Out.vWorldPos = mul(vPosition, g_WorldMatrix);
-    Out.vProjPos = Out.vPosition;
+    Out.vPosition   = mul(vPosition, matWVP);
+    Out.vNormal     = normalize(mul(vNormal, g_WorldMatrix)).xyz;
+    Out.vBinormal   = normalize(mul(vBinormal, g_WorldMatrix)).xyz;
+    Out.vTangent    = normalize(mul(vTangent, g_WorldMatrix)).xyz;
+    Out.vTexcoord   = In.vTexcoord;
+    Out.vWorldPos   = mul(vPosition, g_WorldMatrix);
+    Out.vProjPos    = Out.vPosition;
     return Out;
 }
 
