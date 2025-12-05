@@ -69,8 +69,8 @@ protected:
 	unordered_map<size_t, CState*> m_States = { };
 	size_t m_iStateMask = { 0 };
 
-	_uint m_eSpell = { };
-	_uint m_eHitSpell = {};
+	_int m_eSpell = { };
+	_int m_eHitSpell = {};
 
 	vector<PendingEvent> m_PendingEvents;
 

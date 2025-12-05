@@ -33,40 +33,7 @@
 // UI 연동 추가
 void CPlayer::Get_Spell(_int SkillIndex)
 {
-	if (SkillIndex == ENUM_CLASS(SKILL_TYPE::DIFFINDO))
-		Index = SkillIndex;
-}
-
-void CPlayer::TestKeyInput(_float fTimeDelta)
-{
-	if (m_pGameInstance->Key_Down(DIK_F1))
-	{
-		m_eSpell = ENUM_CLASS(SKILL_TYPE::BOMBARDA);
-	}
-	if (m_pGameInstance->Key_Down(DIK_F2))
-	{
-		m_eSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
-	}
-	if (m_pGameInstance->Key_Down(DIK_F3))
-	{
-		m_eSpell = ENUM_CLASS(SKILL_TYPE::LEVIOSO);
-	}
-	if (m_pGameInstance->Key_Down(DIK_F4))
-	{
-		m_eSpell = ENUM_CLASS(SKILL_TYPE::DIFFINDO);
-	}
-	if (m_pGameInstance->Key_Down(DIK_F5))
-	{
-		m_eSpell = ENUM_CLASS(SKILL_TYPE::DISILLUSIONMENT);
-	}
-	if (m_pGameInstance->Key_Down(DIK_F6))
-	{
-		m_eSpell = ENUM_CLASS(SKILL_TYPE::LUMOS);
-	}
-	if (m_pGameInstance->Key_Down(DIK_F7))
-	{
-		m_eSpell = ENUM_CLASS(SKILL_TYPE::ACCIO);
-	}
+	m_eSpell = SkillIndex;
 }
 
 HRESULT CPlayer::InputAction()
@@ -739,13 +706,6 @@ void CPlayer::Behavior_CombatEnter()
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::COMBAT);
 
-	// UI 연동 추가
-	if (Index == ENUM_CLASS(SKILL_TYPE::DIFFINDO))
-	{
-		Add_Event(pairAnimInfo.first, [this]() { m_pEffectPool->Use_Skill(SKILL_TYPE::DIFFINDO, Get_PartObject<CWand>());  }, 0.1f);
-		Index = -1;
-	}
-
 	if (m_pModelCom->Get_SecondAnimIndex() == m_Animation[STATEANIM::LUMOS].first)
 	{
 		m_pModelCom->Set_Second_AnimationIndex(-1, ENUM_CLASS(BLEND_BONE::SHOULDER_R));
@@ -853,13 +813,13 @@ void CPlayer::Behavior_CombatEnter()
 				}
 				break;
 			default:
-				pairAnimInfo = m_Animation[STATEANIM::SPELL];
+				pairAnimInfo = m_Animation[STATEANIM::SPELL_FAIL];
 				break;
 			}
 		}
 		else
 		{
-			pairAnimInfo = m_Animation[STATEANIM::SPELL];
+			pairAnimInfo = m_Animation[STATEANIM::SPELL_FAIL];
 		}
 	}
 	else if (m_pGameInstance->Key_Down(DIK_V)) {
@@ -926,7 +886,7 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 						[this]() {
 							_uint iIndex = m_pModelCom->Get_AnimIndex() - m_Animation[STATEANIM::LIGHT_ATTACK].first;
 							m_pEffectPool->Use_Skill(SKILL_TYPE::JAP, Get_PartObject<CWand>(), &iIndex); },
-						0.1f);
+						0.05f);
 
 					Add_Event(pairAnimInfo.first, [this]() { m_pEffectPool->Use_Skill(SKILL_TYPE::JAP_SIDE, Get_PartObject<CWand>());  }, 0.0f);
 				}
@@ -1278,11 +1238,11 @@ void CPlayer::Add_FSM()
 		Desc.funcExitEvent = [this]() { Behavior_MoveExit(); };
 		Desc.funcPriorityUpdate = [this](_float fTimeDelta) {
 			{
-				/*if (!m_pFSM->IsEnable(FSMSTATE::STOP))
+				if (!m_pFSM->IsEnable(FSMSTATE::STOP))
 				{
 					_float3	fMove = m_pGameInstance->Get_MouseMove();
 					m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::UP), fTimeDelta * fMove.x * 0.05f);
-				}*/
+				}
 			}
 	};
 
@@ -1464,6 +1424,8 @@ void CPlayer::Set_Anim()
 	m_Animation[STATEANIM::DISILLUSION_EXIT] = { 586,false };
 	m_Animation[STATEANIM::ANCIENT_THROW] = { 919,false };
 
+	m_Animation[STATEANIM::SPELL_FAIL] = { 906,false };
+
 
 	m_Animation[STATEANIM::HIT_L] = { 1124,false };
 	m_Animation[STATEANIM::HIT_R] = { 1125,false };
@@ -1505,6 +1467,8 @@ void CPlayer::Set_Anim()
 	// 호버 우 702
 
 	//738 착지
+
+	//906 마법 실패
 
 }
 
