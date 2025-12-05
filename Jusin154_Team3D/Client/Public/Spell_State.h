@@ -30,7 +30,7 @@ public:
 	virtual void SizeUpdate(_float fSizeX, _float fSizeY) override;
 
 private:
-	void Hover();
+	void Click_Slot(_bool bClick);
 
 private:
 	virtual HRESULT	Bind_ShaderResources() override;

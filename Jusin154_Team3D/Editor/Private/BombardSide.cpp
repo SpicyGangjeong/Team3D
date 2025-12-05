@@ -48,7 +48,7 @@ HRESULT CBombardSide::Initialize(void* pArg)
 	SAFE_ADDREF(m_pWandTrail);
 	SAFE_ADDREF(m_pWandParticle);
 
-	m_fDuration = 2.f;
+	m_fDuration = 2.5f;
 
 	m_Events.emplace(0.6f, [&](){
 		m_isParticleEnd = true;
@@ -111,9 +111,9 @@ void CBombardSide::Late_Update(_float fTimeDelta)
 
 }
 
-HRESULT CBombardSide::Pre_Setting(CGameObject* pObject)
+HRESULT CBombardSide::Pre_Setting(CGameObject* pObject, void* pArg)
 {
-	if (FAILED(__super::Pre_Setting(pObject)))
+	if (FAILED(__super::Pre_Setting(pObject, nullptr)))
 		return E_FAIL;
 
 

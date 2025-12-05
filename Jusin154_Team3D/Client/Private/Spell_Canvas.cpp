@@ -39,6 +39,7 @@ HRESULT CSpell_Canvas::Initialize(void* pArg)
 	{
 		return E_FAIL;
 	}
+	Visible(false);
 	return S_OK;
 }
 

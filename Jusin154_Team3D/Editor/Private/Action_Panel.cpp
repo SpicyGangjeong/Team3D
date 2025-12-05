@@ -54,6 +54,8 @@ HRESULT CAction_Panel::Initialize(void* pArg)
 	Magic_Meter_UV();
 	Magic_Meter_Visible(1, true);
 	Magic_Meter_Visible(5, true);
+	Visible(true);
+	ElementAllVisible(true);
 	return S_OK;
 }
 
@@ -86,7 +88,7 @@ void CAction_Panel::Late_Update(_float fTimeDelta)
 	}
 
 	if (m_bVisible) {
-		//m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
+		
 
 	}
 	__super::Late_Update(fTimeDelta);
@@ -208,7 +210,7 @@ HRESULT CAction_Panel::Ready_Element(void* pArg)
 	{
 		return E_FAIL;
 	}
-	Add_Element(TEXT("Spell_Overlay"), m_pSpell_Overlay);
+	Add_Element(TEXT("Spell_Overlay1"), m_pSpell_Overlay);
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSlot_Number>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSlot_Number**>(&m_pSlot_Number))))
 	{
 		return E_FAIL;

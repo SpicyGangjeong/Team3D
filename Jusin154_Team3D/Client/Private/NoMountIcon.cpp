@@ -40,8 +40,6 @@ HRESULT CNoMountIcon::Initialize(void* pArg)
 	m_fTimeMult = 3.f;
 	m_fAlpha = 0.7f;
 	m_fAlphaTime = 3.f;
-
-	m_bActive = true;
 	return S_OK;
 }
 

@@ -47,7 +47,6 @@ HRESULT CSpell_Hover::Initialize(void* pArg)
 	m_pVIBufferCom->Set_Pos(-185.f, 375.f, m_fOffSetX, m_fOffSetY, m_iCols);
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Slot_Hover"), [this](void* p) {this->Set_SkillType(*reinterpret_cast<_int*>(p)); });
-	m_bActive = true;
 	return S_OK;
 }
 
@@ -91,7 +90,10 @@ void CSpell_Hover::Update(_float fTimeDelta)
 		}
 	}
 
-	m_pVIBufferCom->Set_Hover_Index(m_iSpellType);
+	if (m_bClick == false)
+	{
+		m_pVIBufferCom->Set_Hover_Index(m_iSpellType);
+	}
 
 	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
@@ -154,6 +156,18 @@ void CSpell_Hover::SizeUpdate(_float fSizeX, _float fSizeY)
 	m_fSizeX = fSizeX;
 	m_fSizeY = fSizeY;
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
+}
+
+void CSpell_Hover::Click_Slot(_bool bClick)
+{
+	if (bClick == true)
+	{
+		m_bClick = true;
+	}
+	else
+	{
+		m_bClick = false;
+	}
 }
 
 HRESULT CSpell_Hover::Bind_ShaderResources()

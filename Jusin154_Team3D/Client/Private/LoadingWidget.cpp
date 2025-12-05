@@ -47,7 +47,7 @@ HRESULT CLoadingWidget::Initialize(void* pArg)
 	m_iImageFrameX = 6; // 이미지의 x 갯수
 	m_iImageFrameY = 6; // 이미지의 y 갯수
 
-	//m_bActive = true;
+	m_bActive = false;
 	return S_OK;
 }
 

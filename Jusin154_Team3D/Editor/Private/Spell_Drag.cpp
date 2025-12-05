@@ -21,8 +21,8 @@ HRESULT CSpell_Drag::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = 380.f;
-	Desc.fY = 30.f;
+	Desc.fX = 0.f;
+	Desc.fY = 0.f;
 	Desc.fSizeX = 105.f;
 	Desc.fSizeY = 105.f;
 
@@ -40,9 +40,16 @@ HRESULT CSpell_Drag::Initialize(void* pArg)
 	m_fTimeMult = 3.f;
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 1.f;
+	m_fDelayTime = 0.2f;
+	m_fSortZ = 0.f;
 	m_iSkillType = ENUM_CLASS(SKILL_TYPE::ARRESTO_MOMENTUM);
 	Compute_UI(m_iSkillType);
+	m_bMove = false;
+	m_bClick = false;
+	m_iSpellType = -1;
+	m_iCurrent_Slot_Index = -1;
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Slot_Hover"), [this](void* p) {this->Set_SpellType(*reinterpret_cast<_int*>(p)); });
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Current_Hover"), [this](void* p) {this->Set_Current_Slot(*reinterpret_cast<_int*>(p)); });
 	return S_OK;
 }
 
@@ -85,8 +92,76 @@ void CSpell_Drag::Update(_float fTimeDelta)
 			m_fAlpha = 0.f;
 		}
 	}
-
 	m_fTime += fTimeDelta * m_fTimeMult;
+
+	if (m_pGameInstance->Mouse_Down(DIM_LBUTTON))
+	{
+		if (m_iSpellType == -1 && m_iCurrent_Slot_Index == -1)
+		{
+			m_bFalse = true;
+			return;
+		}
+
+		m_vStart_MousePos = XMVectorSet(0.f, 0.f, 0.f, 0.f);
+
+		POINT m_pPt{};
+		GetCursorPos(&m_pPt);
+		ScreenToClient(g_hWnd, &m_pPt);
+		_float2 fMouse{};
+		fMouse.x = m_pPt.x - (g_iWinSizeX * 0.5f);
+		fMouse.y = m_pPt.y - (g_iWinSizeY * 0.5f);
+
+		m_vStart_MousePos = XMVectorSet(fMouse.x, fMouse.y, 0.f, 1.f);
+		m_bFalse = false;
+	}
+
+	if (m_bFalse == false && (m_bHover == true || m_bCurrent_Hover == true))
+	{
+		if (m_pGameInstance->Mouse_Pressing(DIM_LBUTTON))
+		{
+			POINT pt{};
+			GetCursorPos(&pt);
+			ScreenToClient(g_hWnd, &pt);
+
+			float moveX = pt.x - (g_iWinSizeX * 0.5f);
+			float moveY = pt.y - (g_iWinSizeY * 0.5f);
+
+			m_vMove_MousePos = XMVectorSet(moveX, moveY, 0.f, 1.f);
+
+			_vector Dir = m_vMove_MousePos - m_vStart_MousePos;
+			_float fLength2 = XMVectorGetX(XMVector2Dot(Dir, Dir));
+
+			if (fLength2 >= 50.f)
+			{
+				m_bMove = true;
+			}
+			m_bClick = true;
+
+		}
+	}
+	else
+	{
+		m_iSpellType = -1;
+	}
+
+	if (m_bMove == true)
+	{
+		MoveX(Get_MousePos().x);
+		MoveY(Get_MousePos().y);
+	}
+
+
+	if (m_pGameInstance->Mouse_Up(DIM_LBUTTON) && m_bClick == true)
+	{
+		m_bHover = false;
+		m_bClick = false;
+		m_bCurrent_Hover = false;
+		m_bMove = false;
+		m_iSpellType = -1;
+	}
+
+	static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Click"), &m_bClick);
+
 	__super::Update(fTimeDelta);
 
 }
@@ -98,7 +173,10 @@ void CSpell_Drag::Late_Update(_float fTimeDelta)
 		return;
 	}
 	if (m_bVisible) {
-		m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
+		if (m_bMove == true)
+		{
+			m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
+		}
 	}
 	__super::Late_Update(fTimeDelta);
 }
@@ -188,7 +266,7 @@ HRESULT CSpell_Drag::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCurrent_Size", &m_vScale, sizeof(_float4))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCurrent_Size", &m_vScale, sizeof(_float2))))
 	{
 		return E_FAIL;
 	}
@@ -213,7 +291,7 @@ HRESULT CSpell_Drag::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_Atlas_Spell"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom3), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_Atlas_Widget_Spell"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom3), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -227,10 +305,10 @@ HRESULT CSpell_Drag::Ready_Components(void* pArg)
 
 void CSpell_Drag::Compute_UI(_uint SpellID)
 {
-	_float2 fImage_Size = { 1024.f, 1536.f };
+	_float2 fImage_Size = { 1024.f, 1792.f };
 
 	_uint iCountX = 4;
-	_uint iCountY = 6;
+	_uint iCountY = 7;
 
 	_float iImageX = 256.f;
 	_float iImageY = 256.f;
@@ -252,12 +330,41 @@ void CSpell_Drag::Compute_UI(_uint SpellID)
 
 void CSpell_Drag::Set_SpellType(_int SpellID)
 {
-	m_iSkillType = SpellID;
-	if (m_iSkillType != -1)
+	if (SpellID == -1 || SpellID >= 26)
 	{
-		m_iSkillType = static_cast<CUIObject*>(m_pOwner)->Get_Info(SpellID).iSkill_Type;
-		Compute_UI(m_iSkillType);
+		m_iSkillType = -1;
+		m_bHover = false;
+		return;
 	}
+	m_iSpellType = SpellID;
+	m_bHover = true;
+	Compute_UI(static_cast<CUIObject*>(m_pOwner)->Get_Info(m_iSpellType).iSkill_Type);
+}
+
+_float2 CSpell_Drag::Get_MousePos()
+{
+	POINT m_pPt{};
+	GetCursorPos(&m_pPt);
+	ScreenToClient(g_hWnd, &m_pPt);
+	_float2 fMouse{};
+	fMouse.x = m_pPt.x - (g_iWinSizeX * 0.5f);
+	fMouse.y = m_pPt.y - (g_iWinSizeY * 0.5f);
+
+	m_vMove_MousePos = XMVectorSet(fMouse.x, fMouse.y, 0.f, 1.f);
+	return fMouse;
+}
+
+void CSpell_Drag::Set_Current_Slot(_uint Index)
+{
+	if (Index == -1)
+	{
+		m_iCurrent_Slot_Index = -1;
+		m_bCurrent_Hover = false;
+		return;
+	}
+	m_iCurrent_Slot_Index = Index;
+	m_bCurrent_Hover = true;
+	Compute_UI(static_cast<CUIObject*>(m_pOwner)->Get_Info(m_iCurrent_Slot_Index).iSkill_Type);
 }
 
 CSpell_Drag* CSpell_Drag::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

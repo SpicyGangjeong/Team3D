@@ -29,11 +29,11 @@ public:
 
 public:
 	void	Fixed_Trail(_fmatrix WorldMatrix);
-
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	HRESULT			Create_VB();
+	HRESULT			Create_IB();
 
 public:
 	static CTrail* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -48,8 +48,8 @@ private:
 	
 	_uint		m_iNumCount = {};
 
-	_vector	    m_PreHigh[2] = {};
-	_vector	    m_PreLow[2] = {};
+	_float3	    m_PreHigh[4] = {};
+	_float3	    m_PreLow[4] = {};
 
 	_vector     m_PreFixedHigh[3] = {};
 	_vector     m_PreFixedLow[3] = {};

@@ -99,13 +99,59 @@ SPELL_INFO CInfoInstance::Get_Spell_Info(_int Spell_Info)
 {
 	return m_pSkillInfo->Get_Info(Spell_Info);
 }
+
+_int CInfoInstance::Update_Spell(_int SpellIndex)
+{
+	return m_pSkillInfo->Update_Spell(SpellIndex);
+}
+
+_float CInfoInstance::Get_CoolTime(_int SpellID)
+{
+	return m_pSkillInfo->Get_CoolTime(SpellID);
+}
 void CInfoInstance::Change_Canvas()
 {
 
 }
+
 void CInfoInstance::Key_Input(_uint Input)
 {
 	m_eInput = Input;
+
+	switch (m_eInput)
+	{
+	case ENUM_CLASS(KEYINPUT::INPUT_1):
+	case ENUM_CLASS(KEYINPUT::INPUT_2):
+	case ENUM_CLASS(KEYINPUT::INPUT_3):
+	case ENUM_CLASS(KEYINPUT::INPUT_4):
+		Event_CallBack(TEXT("Spell"), &m_eInput);
+		break;
+	case ENUM_CLASS(KEYINPUT::INPUT_T):
+		break;
+	case ENUM_CLASS(KEYINPUT::INPUT_G):
+
+		break;
+	case ENUM_CLASS(KEYINPUT::INPUT_TAB):
+
+		break;
+
+	default:
+		break;
+	}
+}
+
+void CInfoInstance::Add_Event(_wstring EventName, function<void(void*)> Event)
+{
+	UI_Event.emplace(EventName, Event);
+}
+
+void CInfoInstance::Event_CallBack(_wstring EventName, void* pArg)
+{
+	auto range = UI_Event.equal_range(EventName);
+	for (auto it = range.first; it != range.second; ++it)
+	{
+		it->second(pArg);
+	}
 }
 
 #pragma endregion

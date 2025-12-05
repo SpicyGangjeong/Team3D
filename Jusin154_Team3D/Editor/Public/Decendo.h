@@ -21,7 +21,7 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 
 public:
-	virtual	HRESULT	Pre_Setting(CGameObject* pObject) override;
+	virtual	HRESULT	Pre_Setting(CGameObject* pObject, void* pArg = nullptr) override;
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
@@ -37,7 +37,7 @@ private:
 	class CPartObject*				  m_pProjectile_Blur = {};
 
 	_vector							  m_vRotateUp = {};
-	_float							  m_fAccTime = {};
+	_float							  m_fRotateAccTime = {};
 	_float							  m_fLerpAmount = {};
 	_float							  m_fTurnValue = {};
 	_vector							  m_vCameraLook = {};

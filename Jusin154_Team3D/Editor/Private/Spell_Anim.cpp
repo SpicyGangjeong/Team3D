@@ -41,7 +41,7 @@ HRESULT CSpell_Anim::Initialize(void* pArg)
 	m_fAlpha = 0.f;
 	m_fAlphaTime = 9.f;
 	m_fSortZ = 0.01f;
-	m_iTotalFrames = 120;
+	m_iTotalFrames = 151;
 	m_fFrameTime = 0.1f;
 	m_iCurrentFrame = 0;
 	m_bAnim_Start = false;
@@ -158,7 +158,7 @@ void CSpell_Anim::Set_FadeIn()
 	m_bAnim_Start = true;
 }
 
-void CSpell_Anim::Change_Image(_int SpellID)
+HRESULT CSpell_Anim::Change_Image(_int SpellID)
 {
 	_wstring pImageName = static_cast<CUIObject*>(m_pOwner)->Get_Info(SpellID).pImage_Name;
 	m_iTotalFrames = static_cast<CUIObject*>(m_pOwner)->Get_Info(SpellID).iAnimNum;
@@ -168,7 +168,9 @@ void CSpell_Anim::Change_Image(_int SpellID)
 		SAFE_RELEASE(m_pDiffuse_TextureCom);
 	}
 	if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(LEVEL::UI), pImageName, reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom))))
-		return;
+		return E_FAIL;
+
+	return S_OK;
 }
 
 void CSpell_Anim::Set_SkillType(_int eType)
@@ -179,6 +181,8 @@ void CSpell_Anim::Set_SkillType(_int eType)
 		m_iCurrentFrame = 0;
 		Change_Image(eType);
 	}
+	else if (eType == -1)
+		m_iPerSpell = eType;
 }
 
 HRESULT CSpell_Anim::Bind_ShaderResources()
@@ -224,7 +228,7 @@ HRESULT CSpell_Anim::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Arresto_Momentum"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Accio"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}

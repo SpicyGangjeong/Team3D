@@ -43,7 +43,6 @@ HRESULT CMagic_Meter::Initialize(void* pArg)
 	m_fAlphaTime = 1.f;
 	m_fMaxGauge = 20.f;
 	m_fCurrentGauge = 10.f;
-	Visible(false);
 	return S_OK;
 }
 

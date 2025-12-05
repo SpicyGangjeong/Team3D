@@ -484,7 +484,7 @@ void CTrailObject::Free()
 void CTrailObject::Describe_Entity()
 {
 
-	const char* pRenderNames[] = { "PRIORITY" , "SHADOW", "NONBLEND", "DECAL", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" ,"BLOOM" , "UI", "OCCLUSION" };
+	const char* pRenderNames[] = { "PRIORITY" , "SHADOW", "NONBLEND", "DECAL", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" ,"BLOOM" , "UI", "OCCLUSION"  , "PRESHADOW" };
 	const char* pEffectType[] = { "EFFECT" , "TRAIL" };
 	const char* pShaderPass[] = { "DEFAULT" , "SCISSOR" , "UI" , "UVMOVE" , "TRAIL" , "TRAIL_BLEND" , "TRAILWB_FOR_BLEND" , "TRAIL_BLUR",  "TRAIL_BLOOM" };
 	const char* pBloomType[] = { "NONE" , "BASIC" , "MUILTY" };
@@ -509,10 +509,15 @@ void CTrailObject::Describe_Entity()
 		m_pTrailCom->Describe_Entity();
 		m_pShaderCom->Describe_Entity();
 
-		if(GUI::InputInt("NumVertex", &m_TrailInfo.iNumVertex))
+		if (GUI::InputInt("NumVertex", &m_TrailInfo.iNumVertex))
 		{
-			m_pTrailCom->Reset_Trail();
+			
+		}
+
+		if(GUI::Button("Reset Trail"))
+		{
 			m_pTrailCom->ReStructVB(m_TrailInfo.iNumVertex);
+			m_pTrailCom->Reset_Trail();
 		}
 
 		GUI::Checkbox("Diffuse", &m_TrailInfo.isDiffuse);

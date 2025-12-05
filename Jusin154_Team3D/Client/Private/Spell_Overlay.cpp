@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Spell_Overlay.h"
 #include "GameInstance.h"
+#include "InfoInstance.h"
 
 CSpell_Overlay::CSpell_Overlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
@@ -8,7 +9,8 @@ CSpell_Overlay::CSpell_Overlay(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 }
 
 CSpell_Overlay::CSpell_Overlay(const CSpell_Overlay& rhs)
-	:CElementObject(rhs)
+	:CElementObject(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -48,15 +50,16 @@ HRESULT CSpell_Overlay::Initialize(void* pArg)
 	m_vUVScale.y = 1.f;
 	m_fCoolTime = 5.f;
 	m_fSortZ = 0.01f;
-	m_iSpellType = ENUM_CLASS(SPELLTYPE::CONTROL);
-	Compute_UI(5);
-	m_bActive = true;
+	m_iSlotCount = 4;
+	m_iCurrent_Slot = 0;
+	Array_Clear(-1);
+	Bool_Array_Clear(false);
 	return S_OK;
 }
 
-void CSpell_Overlay::Compute_UI(_uint SpellID)
+_float4 CSpell_Overlay::Compute_UI(_uint SpellID)
 {
-	_float2 fImage_Size = { 1024.f, 1536.f};
+	_float2 fImage_Size = { 1024.f, 1792.f };
 
 	_uint iCountX = 4;
 	_uint iCountY = 6;
@@ -75,8 +78,76 @@ void CSpell_Overlay::Compute_UI(_uint SpellID)
 	UVEnd.x = UVStart.x + (iImageX / fImage_Size.x);
 	UVEnd.y = UVStart.y + (iImageY / fImage_Size.y);
 
-	_float4 UV = _float4{UVStart.x, UVStart.y, UVEnd.x, UVEnd.y};
-	m_vUV = UV;
+	_float4 UV = _float4{ UVStart.x, UVStart.y, UVEnd.x, UVEnd.y };
+	return UV;
+}
+
+void CSpell_Overlay::Array_Clear(_int Value)
+{
+	for (_int i = 0; i < m_iSlotCount; ++i)
+	{
+		m_Spells[i] = Value;
+	}
+	for (_int i = 0; i < m_iSlotCount; ++i)
+	{
+		m_iSpellType[i] = Value;
+	}
+	for (_int i = 0; i < m_iSlotCount; ++i)
+	{
+		m_vUV[i] = _float4(_float(Value), _float(Value), _float(Value), _float(Value));
+	}
+}
+
+void CSpell_Overlay::Bool_Array_Clear(_bool Bool)
+{
+	for (_int i = 0; i < m_iSlotCount; ++i)
+	{
+		m_bEquipped[i] = Bool;
+	}
+	for (_int i = 0; i < m_iSlotCount; ++i)
+	{
+		m_bSpellUsed[i] = Bool;
+	}
+}
+
+void CSpell_Overlay::Spell_Setting(_int SlotIndex, _int SpellIndex)
+{
+	if (SlotIndex < 0 || SlotIndex > m_iSlotCount)
+	{
+		return;
+	}
+
+	m_Spells[SlotIndex] = SpellIndex;
+	m_bEquipped[SlotIndex] = true;
+	m_bSpellUsed[SlotIndex] = m_pInfoInstance->Get_Spell_Info(SpellIndex).bUse_Skill;
+	m_vUV[SlotIndex] = Compute_UI(SpellIndex);
+	m_iSpellType[SlotIndex] = m_pInfoInstance->Get_Spell_Info(SpellIndex).iSpell_Type;
+}
+
+void CSpell_Overlay::Use_Spell()
+{
+	if (m_bEquipped[m_iCurrent_Slot] == true && m_bSpellUsed[m_iCurrent_Slot] == true)
+	{
+		m_pInfoInstance->Update_Spell(m_Spells[m_iCurrent_Slot]);
+		m_pInfoInstance->Event_CallBack(TEXT("JAP"), &m_Spells[m_iCurrent_Slot]);
+	}
+}
+
+
+void CSpell_Overlay::Set_SpellSlot(_int Index)
+{
+	if (Index < 0)
+	{
+		m_iCurrent_Slot = m_iSlotCount - 1;
+	}
+	else if (Index >= m_iSlotCount)
+	{
+		m_iCurrent_Slot = 0;
+	}
+	else
+	{
+		m_iCurrent_Slot = Index;
+	}
 }
 
 void CSpell_Overlay::Priority_Update(_float fTimeDelta)
@@ -119,18 +190,17 @@ void CSpell_Overlay::Update(_float fTimeDelta)
 		}
 	}
 
-	if (m_vUVScale.y >= 1.f)
+	for (_int i = 0; i < m_iSlotCount; ++i)
 	{
-		if (m_pGameInstance->Key_Down(DIK_1))
+		if (m_bEquipped[i] == true)
 		{
-			m_vUVScale.y = 0.f;
+			m_bSpellUsed[i] = m_pInfoInstance->Get_Spell_Info(m_Spells[i]).bUse_Skill;
+			m_fCoolTime = m_pInfoInstance->Get_CoolTime(m_Spells[m_iCurrent_Slot]);
 		}
 	}
 
-	if (m_vUVScale.y <= 1)
-	{
-		m_vUVScale.y += fTimeDelta * (1.f / m_fCoolTime);
-	}
+
+	m_vUVScale.y = m_fCoolTime;
 
 	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
@@ -144,7 +214,10 @@ void CSpell_Overlay::Late_Update(_float fTimeDelta)
 		return;
 	}
 	if (m_bVisible) {
+		if (m_bEquipped[m_iCurrent_Slot] == true)
+		{
 			m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
+		}
 	}
 	__super::Late_Update(fTimeDelta);
 }
@@ -226,7 +299,7 @@ HRESULT CSpell_Overlay::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_iSpellType", &m_iSpellType, sizeof(_int))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iSpellType", &m_iSpellType[m_iCurrent_Slot], sizeof(_int))))
 	{
 		return E_FAIL;
 	}
@@ -258,7 +331,7 @@ HRESULT CSpell_Overlay::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fImageUV", &m_vUV, sizeof(_float4))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fImageUV", &m_vUV[m_iCurrent_Slot], sizeof(_float4))))
 	{
 		return E_FAIL;
 	}

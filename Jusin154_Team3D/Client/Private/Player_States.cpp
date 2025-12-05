@@ -30,6 +30,13 @@
 
 #pragma region States
 
+// UI 연동 추가
+void CPlayer::Get_Spell(_int SkillIndex)
+{
+	if (SkillIndex == ENUM_CLASS(SKILL_TYPE::DIFFINDO))
+		Index = SkillIndex;
+}
+
 void CPlayer::TestKeyInput(_float fTimeDelta)
 {
 	if (m_pGameInstance->Key_Down(DIK_F1))
@@ -734,6 +741,13 @@ void CPlayer::Behavior_CombatEnter()
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::COMBAT);
+
+	// UI 연동 추가
+	if (Index == ENUM_CLASS(SKILL_TYPE::DIFFINDO))
+	{
+		Add_Event(pairAnimInfo.first, [this]() { m_pEffectPool->Use_Skill(SKILL_TYPE::DIFFINDO, Get_PartObject<CWand>());  }, 0.1f);
+		Index = -1;
+	}
 
 	if (m_pModelCom->Get_SecondAnimIndex() == m_Animation[STATEANIM::LUMOS].first)
 	{

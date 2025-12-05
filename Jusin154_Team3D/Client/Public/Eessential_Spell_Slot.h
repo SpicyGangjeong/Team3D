@@ -31,7 +31,7 @@ public:
 
 
 private:
-	void Hover(_float fTimeDelta);
+	void Hover();
 
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
