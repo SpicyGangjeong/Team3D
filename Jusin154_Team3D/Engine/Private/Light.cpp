@@ -138,6 +138,9 @@ HRESULT CLight::Render(CShader* pShader, CVIBuffer* pVIBuffer) const
 		return E_FAIL;
 	}
 
+	if (FAILED(pShader->Bind_RawValue("g_fLightIntensity", &m_fLightIntensity, sizeof(_float)))) {
+		return E_FAIL;
+	}
 	if (FAILED(pShader->Begin(iPassIndex))) {
 		return E_FAIL;
 	}
