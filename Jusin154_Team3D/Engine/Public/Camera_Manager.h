@@ -17,6 +17,7 @@ public:
 	HRESULT Bind_Camera(_uint iLevel, const _wstring& wstrCameraKey, _bool bIgnorePriority);
 	HRESULT IsBinded_Camera(const _wstring& wstrCameraKey);
 	_vector Get_CameraLook();
+	_float	Get_CameraFov();
 
 
 	void Force_CamPosition(_fvector vPos);

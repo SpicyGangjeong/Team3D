@@ -26,11 +26,13 @@ public:
 	SaveMaterial Get_SaveMaterial() { return m_SaveMaterial; }
 
 	static CMaterial* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, const aiMaterial* pAIMaterial);
+	static CMaterial* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, const aiMaterial* pAIMaterial);
 	static CMaterial* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pMaterialFilePath, const _char* pTextureFilePath);
 private:
 	SaveMaterial							m_SaveMaterial;
 
 	HRESULT Initialize(const _char* pModelFilePath, const aiMaterial* pAIMaterial);
+	HRESULT Initialize(const _char* pModelFilePath, MODEL eType, const aiMaterial* pAIMaterial);
 	HRESULT Initialize(const _char* pMaterialFilePath, const _char* pTextureFilePath);
 	HRESULT Read_MaterialFile(const _char* pMaterialFilePath, const _char* pTextureFolderPath);
 	HRESULT Add_Texture(const _char* pTextureFolderPath, string& FileType);

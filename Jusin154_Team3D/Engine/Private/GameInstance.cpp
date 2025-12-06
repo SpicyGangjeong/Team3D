@@ -510,6 +510,11 @@ void CGameInstance::Add_Light(_uint _iCurrentLevel, CLight* _pLight)
 	m_pLight_Manager->Add_Light(_iCurrentLevel, _pLight);
 }
 
+void CGameInstance::Add_Light_Group(_uint _iCurrentLevel, CLight* _pLight)
+{
+	m_pLight_Manager->Add_Light_Group(_iCurrentLevel, _pLight);
+}
+
 void CGameInstance::Delete_Light(_uint _iCurrentLevel, CLight* _pLight)
 {
 	m_pLight_Manager->Delete_Light(_iCurrentLevel, _pLight);
@@ -635,6 +640,10 @@ _vector CGameInstance::Get_CameraLook()
 {
 	return m_pCamera_Manager->Get_CameraLook();
 }
+_float CGameInstance::Get_CameraFov()
+{
+	return m_pCamera_Manager->Get_CameraFov();
+}
 const _float* CGameInstance::Get_CurrentCameraFar()
 {
 	return m_pCamera_Manager->Get_CurrentCameraFar();
@@ -730,6 +739,14 @@ _bool CGameInstance::SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir,
 _bool CGameInstance::SphereCast(_float fRadius, _fvector vStartPos, _fvector vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
 {
 	return m_pPhysX_Manager->SphereCast(fRadius, vStartPos, vDir, fDistance, flagHitsData, flagQuery, hitBuffer);
+}
+_bool CGameInstance::RayCast(_float3 _vStartPos, _float3 _vDir, _float fDistance, PSX::PxRaycastHit* pRayHitArray, _uint iMaxHitCapacity, _uint& iOutHitCount)
+{
+	return m_pPhysX_Manager->RayCast(_vStartPos, _vDir, fDistance, pRayHitArray, iMaxHitCapacity, iOutHitCount);
+}
+_bool CGameInstance::RayCast(_fvector _vStartPos, _fvector _vDir, _float fDistance, PSX::PxRaycastHit* pRayHitArray, _uint iMaxHitCapacity, _uint& iOutHitCount)
+{
+	return m_pPhysX_Manager->RayCast(_vStartPos, _vDir, fDistance, pRayHitArray, iMaxHitCapacity, iOutHitCount);
 }
 PSX::PxController* CGameInstance::Add_CapsuleController(PSX::PxCapsuleControllerDesc& Desc)
 {

@@ -3902,4 +3902,73 @@
             <Rotation x="9.999999" y="48" z="-7.4653044"/>
         </Collision>
     </Container>
+    <Container Name="E_INTER_Barrel">
+        <Position x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo_Lod2</PrototypeTag>
+            <Position x="49.594646" y="4.296145" z="88.307922"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="1" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo_Lod2</PrototypeTag>
+            <Position x="48.834179" y="4.3268456" z="88.832092"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="2" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo_Lod2</PrototypeTag>
+            <Position x="48.689041" y="4.3344998" z="87.929108"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="3" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo_Lod2</PrototypeTag>
+            <Position x="55.531239" y="4.3071084" z="79.951347"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="4" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo_Lod2</PrototypeTag>
+            <Position x="56.308533" y="4.8597279" z="78.474571"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="5" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo_Lod2</PrototypeTag>
+            <Position x="130.90434" y="15.971315" z="128.14977"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="6" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo_Lod2</PrototypeTag>
+            <Position x="130.68071" y="16.224852" z="129.22983"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="7" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo_Lod2</PrototypeTag>
+            <Position x="130.09045" y="16.596691" z="135.05501"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+    </Container>
 </Land>

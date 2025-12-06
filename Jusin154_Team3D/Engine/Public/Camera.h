@@ -46,6 +46,7 @@ public:
 	HRESULT Ready_Shadow();
 	void ZoomIn(_float fTimeDelta);
 	void Set_Fov(_float fFovy,_float fTimeDelta, _bool& bZoomIn);
+	_float Get_Fov();
 
 protected:
 	_float			m_fFovy = {};

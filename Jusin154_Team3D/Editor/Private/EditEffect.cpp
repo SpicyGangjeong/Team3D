@@ -69,18 +69,12 @@ void CEditEffect::Late_Update(_float fTimeDelta)
 		m_pGameInstance->BillBoard(m_pTransformCom);
 
 
-
-	if (m_isGoStraight == true)
+	if (m_EffectInfo.isLightDissolve == true)
 	{
-		m_fAccTime += fTimeDelta;
-
-		if (m_fAccTime > 1.f)
+		if (m_pLightCom != nullptr)
 		{
-			m_fAccTime = 0.f;
-			m_iSign *= -1;
+			m_pLightCom->Update_AmbientRatio(fTimeDelta , m_EffectInfo.isLightTime);
 		}
-
-		m_pTransformCom->Go_Straight(3 * fTimeDelta * m_iSign);
 	}
 
 
@@ -105,6 +99,10 @@ void CEditEffect::Late_Update(_float fTimeDelta)
 
 	if (m_EffectInfo.isOnlyBlur == true)
 		return;
+
+
+	if (m_pLightCom != nullptr)
+		m_pGameInstance->Add_Light_Group(CURRENT_LEVEL , m_pLightCom);
 
 	m_pGameInstance->Add_RenderGroup(m_EffectInfo.eRenderOrder, this);
 
@@ -452,7 +450,6 @@ void CEditEffect::Describe_Entity()
 
 
 	GUI::Checkbox("Visible", &m_bVisible);
-	GUI::Checkbox("GO", &m_isGoStraight);
 	GUI::Checkbox("WAND POS", &m_isWandPos);
 	
 
@@ -593,12 +590,26 @@ void CEditEffect::Describe_Entity()
 			{
 				GUI::TreePop();
 				return;
-			}
+			}	
+
 		}
 
 		if (m_pLightCom != nullptr)
 		{
 			m_pLightCom->Describe_Entity();
+
+			GUI::Checkbox("Light Dissolve", &m_EffectInfo.isLightDissolve);
+			GUI::InputFloat("Light Time", &m_EffectInfo.isLightTime);
+
+			if (GUI::Button("ADD_LIGHT_MANAGER"))
+			{
+				m_pGameInstance->Add_Light(CURRENT_LEVEL, m_pLightCom);
+			}
+
+			if (GUI::Button("Reset_Dissolve"))
+			{
+				m_pLightCom->Reset_AmbientRatio();
+			}
 		}
 
 		GUI::TreePop();
@@ -852,21 +863,6 @@ void CEditEffect::Describe_Entity()
 
 			GUI::TreePop();
 		}
-
-		//ImGui::Begin("Simple Plot");
-
-
-		//ImGui::PlotLines("Value", m_ValueVector.data(), (int)m_ValueVector.size(), 0, nullptr, FLT_MAX, FLT_MAX, ImVec2(0, 100));
-
-		//GUI::InputFloat("InputValue", &m_fInputValue);
-
-		//if (GUI::Button("AddValue"))
-		//{
-		//	m_ValueVector.push_back(m_fInputValue);
-		//}
-
-		//ImGui::End();
-
 	}
 
 

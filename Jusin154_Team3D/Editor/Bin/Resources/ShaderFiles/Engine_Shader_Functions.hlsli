@@ -151,11 +151,12 @@ float3 Fresnel_Schlick(float cosTheta, float3 F0)
 PBR_LIGHT_OUT PBR_Lighting(
     float3 vNormal, float3 vToView, float3 vToLight,
     float3 vAlbedo, float fMetallic, float fRoughness,
-    float3 vLightColor, float fAttenuation, float3 vFO
+    float3 vLightColor, float fLightIntensity, float fAttenuation, float3 vFO
 ) {
     PBR_LIGHT_OUT Out;
     Out.vShade = 0;
     Out.vSpecular = 0;
+    float3 vLighting = vLightColor * fLightIntensity;
     
     float3 vHalfVector = normalize(vToView + vToLight);
     float NdotL = saturate(dot(vNormal, vToLight));
@@ -181,10 +182,11 @@ PBR_LIGHT_OUT PBR_Lighting(
     float3 kS = F;
     float3 kD = (1.f - kS) * (1.f -fMetallic);
     
-    //Out.vShade = float(1.f, 1.f, 1. 1.f);
-    Out.vShade = (kD / PI) * (NdotL * fAttenuation) * vLightColor;
+    float3 vDiffuseBRDF = (kD * vAlbedo) / PI;
     
-    Out.vSpecular = specularBRDF * vLightColor * fAttenuation * NdotL;
+    Out.vShade = vDiffuseBRDF * vLighting * NdotL * fAttenuation;
+    
+    Out.vSpecular = specularBRDF * vLighting * NdotL * fAttenuation;
 
     return Out;
 }

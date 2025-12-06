@@ -40,8 +40,26 @@ HRESULT CTerrain::Initialize(void* pArg)
 
 	m_pAlphaMap->Load_ToFile("Hogsmeade_AlphaMap.bin");
 
-	if (FAILED(m_pVIBufferCom->Load_HeightMap("Hogsmeade_HeightMap.bin")))
-		return E_FAIL;
+
+	// Psx 적용할지 안할지
+	m_bUsePsx = true;
+
+	if(!m_bUsePsx)
+	{
+		if (FAILED(m_pVIBufferCom->Load_HeightMap("Hogsmeade_HeightMap.bin")))
+			return E_FAIL;
+	}
+	else
+	{
+		CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc{};
+		Desc.pMeshName = TEXT("Hogsmeade_HeightMap");
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
+		/* Com_RigidBody */
+		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_RigidBody_Static_Terrain_Hogsmeade"),
+			reinterpret_cast<CComponent**>(&m_pRigidBody), &Desc))) {
+			return E_FAIL;
+		}
+	}
 
 	return S_OK;
 }
@@ -273,6 +291,7 @@ void CTerrain::Free()
 {
 	__super::Free();
 
+	SAFE_RELEASE(m_pRigidBody);
 	SAFE_RELEASE(m_pAlphaMap);
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);

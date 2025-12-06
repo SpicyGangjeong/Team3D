@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Element_Interactable>
+    <Object Type="2" ID="1" Lod_Level="0">
+        <PrototypeTag>Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo</PrototypeTag>
+        <Position x="129.81247" y="16.543718" z="134.28247"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <HalfGeometryInfo x="0.30000001" y="0.37" z="0.30000001"/>
+        <LocalTranslation x="0" y="0.5" z="0"/>
+    </Object>
+    <Object Type="2" ID="1" Lod_Level="0">
+        <PrototypeTag>Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo</PrototypeTag>
+        <Position x="130.88289" y="15.983612" z="128.08716"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <HalfGeometryInfo x="0.30000001" y="0.37" z="0.30000001"/>
+        <LocalTranslation x="0" y="0.5" z="0"/>
+    </Object>
+    <Object Type="2" ID="1" Lod_Level="0">
+        <PrototypeTag>Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo</PrototypeTag>
+        <Position x="130.11172" y="16.369488" z="133.53946"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <HalfGeometryInfo x="0.30000001" y="0.37" z="0.30000001"/>
+        <LocalTranslation x="0" y="0.5" z="0"/>
+    </Object>
+    <Object Type="2" ID="1" Lod_Level="0">
+        <PrototypeTag>Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo</PrototypeTag>
+        <Position x="55.396034" y="4.3083305" z="79.496262"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <HalfGeometryInfo x="0.30000001" y="0.37" z="0.30000001"/>
+        <LocalTranslation x="0" y="0.5" z="0"/>
+    </Object>
+    <Object Type="2" ID="1" Lod_Level="0">
+        <PrototypeTag>Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo</PrototypeTag>
+        <Position x="56.6394" y="4.2921305" z="79.00148"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <HalfGeometryInfo x="0.30000001" y="0.37" z="0.30000001"/>
+        <LocalTranslation x="0" y="0.5" z="0"/>
+    </Object>
+</Element_Interactable>

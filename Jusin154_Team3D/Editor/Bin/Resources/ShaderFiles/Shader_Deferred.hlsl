@@ -28,6 +28,7 @@ float       g_fSSAORadius;
 float2      g_vSSAOTextureSize;
 
 float g_fLightRange;
+float g_fLightIntensity;
 float g_fSpotInnerAngle;
 float g_fSpotOuterAngle;
 
@@ -75,6 +76,19 @@ float g_fWeights_32[32] =
     0.079902, 0.078320, 0.073759, 0.066740, 0.058021, 0.048463, 0.038893, 0.029988,
     0.022216, 0.015813, 0.010814, 0.007105, 0.004485, 0.002720, 0.001585, 0.000888
 };
+
+float g_fWeights_64[64] =
+{
+    0.0004, 0.0014, 0.0033, 0.0053, 0.0053, 0.0033, 0.0014, 0.0004,
+    0.0014, 0.0045, 0.0105, 0.0171, 0.0171, 0.0105, 0.0045, 0.0014,
+    0.0033, 0.0105, 0.0245, 0.0400, 0.0400, 0.0245, 0.0105, 0.0033,
+    0.0053, 0.0171, 0.0400, 0.0654, 0.0654, 0.0400, 0.0171, 0.0053,
+    0.0053, 0.0171, 0.0400, 0.0654, 0.0654, 0.0400, 0.0171, 0.0053,
+    0.0033, 0.0105, 0.0245, 0.0400, 0.0400, 0.0245, 0.0105, 0.0033,
+    0.0014, 0.0045, 0.0105, 0.0171, 0.0171, 0.0105, 0.0045, 0.0014,
+    0.0004, 0.0014, 0.0033, 0.0053, 0.0053, 0.0033, 0.0014, 0.0004
+};
+
 
 float g_fWeights_128[128] =
 {
@@ -249,7 +263,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     }
     
     
-    PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
+    PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, g_fLightIntensity, fAttenuation, vF0);
     PBR_Out.vShade *= fTotalOcclusion;
     
     float3 vAmbient = g_vLightAmbient.rgb * fTotalOcclusion * fAttenuation;
@@ -352,7 +366,7 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
         vF0 = min(vF0, 0.9f); // 메탈릭 상한선
     }
     
-    PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
+    PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, g_fLightIntensity, fAttenuation, vF0);
     
     PBR_Out.vShade *= fTotalOcclusion;
 
@@ -470,7 +484,7 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
         vF0 = min(vF0, 0.9f); // 메탈릭 상한선
     }
     
-    PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
+    PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, g_fLightIntensity, fAttenuation, vF0);
     
     PBR_Out.vShade *= fTotalOcclusion;
     
@@ -490,7 +504,14 @@ PS_OUT_BACKBUFFER PS_MAIN_DEBUG(PS_IN In)
     Out.vBackBuffer = g_Texture.Sample(DefaultSampler, In.vTexcoord);
     Out.vEnvironment = float4(0.f, 0.f, 0.f, 0.f);
     return Out;
-}
+
+};
+
+
+
+
+
+
 PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
 {
     PS_OUT_BACKBUFFER Out;
@@ -638,12 +659,12 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_X(PS_IN In)
     float2 vTexcoord;
     float4 vColor = 0.f;
     
-    for (int i = -63; i < 64; ++i)
+    for (int i = -31; i < 32; ++i)
     {
         vTexcoord.x = In.vTexcoord.x + (float) i / g_vResolution.x;
         vTexcoord.y = In.vTexcoord.y;
         
-        vColor += g_fWeights_128[i + 63] * g_BlurTexture.Sample(ClampSampler, vTexcoord);
+        vColor += g_fWeights_64[i + 31] * g_BlurTexture.Sample(ClampSampler, vTexcoord);
     }
     
     Out.vBlurX = vColor;
@@ -822,12 +843,12 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_Y(PS_IN In)
     float2 vTexcoord;
     float4 vColor = 0.f;
     
-    for (int i = -63; i < 64; ++i)
+    for (int i = -31; i < 32; ++i)
     {
         vTexcoord.x = In.vTexcoord.x;
         vTexcoord.y = In.vTexcoord.y + (float) i / g_vResolution.y;
         
-        vColor += g_fWeights_128[i + 63] * g_BlurTexture.Sample(ClampSampler, vTexcoord);
+        vColor += g_fWeights_64[i + 31] * g_BlurTexture.Sample(ClampSampler, vTexcoord);
     }
     
     Out.vBlurX = vColor;

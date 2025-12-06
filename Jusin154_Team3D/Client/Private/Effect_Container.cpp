@@ -58,8 +58,23 @@ void CEffect_Container::Late_Update(_float fTimeDelta)
 	__super::Late_Update(fTimeDelta);
 }
 
+
 void CEffect_Container::OnCollision(CGameObject* pOther, void* pDesc)
 {
+}
+
+void CEffect_Container::Reset_Light()
+{
+	for (auto& iter : m_PartObjects)
+	{
+		CLight* pLight = iter.second->Get_Component<CLight>();
+
+		if (pLight == nullptr)
+			continue;
+
+		pLight->Reset_AmbientRatio();
+	}
+
 }
 
 HRESULT CEffect_Container::Load_Package(const _char* pPath)
@@ -215,6 +230,7 @@ HRESULT CEffect_Container::Pre_Setting(CGameObject* pObject, void* pArg)
 
 
 	Reset_EffectParts();
+	Reset_Light();
 
 	m_fAccTime = 0.f;
 	m_fPreAccTime = 0.f;
@@ -364,6 +380,7 @@ void CEffect_Container::Update_Event(_float fTimeDelta)
 				pPart.second->Set_Visible(false);
 			}
 		}
+
 	}
 
 

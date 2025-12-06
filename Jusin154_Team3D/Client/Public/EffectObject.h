@@ -112,9 +112,10 @@ public:
 		_float3		vPadding1 = {};
 
 		_float		fPadding0 = {};
-		_float		fPadding1 = {};
 
-		_bool		isPadding0 = {};
+		_float		isLightTime = { 0.f };
+		_bool		isLightDissolve = {};
+
 		_bool		isPadding1 = {};
 	}EFFECT_INFO;
 
@@ -134,10 +135,8 @@ public:
 public:
 	HRESULT Load(const _char* pFilePath, LEVEL eLevel);
 
-	void	Set_Dissolve(_bool isDissolve)
-	{
-		m_EffectInfo.isDissolve = isDissolve;
-	}	
+	void    Disable_Light();
+	void    Add_Light();
 protected:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT Ready_Components(void* pArg) override;
