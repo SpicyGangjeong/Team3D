@@ -46,6 +46,7 @@ public:
 	void Set_LightCombo(_uint LightCombo) { m_iLightCombo = LightCombo; }
 	_float Get_KeyFrame(_string FrameName);
 	_bool IsCurrentKeyFrame(_string FrameName);
+	virtual _vector Get_LockOnPos() { return Get_WorldPostion(); }
 
 	virtual void Reset_Sprint() {};
 	virtual void Reset_Walk() {};

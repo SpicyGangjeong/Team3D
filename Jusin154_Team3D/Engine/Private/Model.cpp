@@ -105,11 +105,13 @@ HRESULT CModel::Bind_BoneMatrices(_uint iMeshIndex, CShader* pShader, const _cha
 
 _bool CModel::Play_Animation(_float fTimeDelta, CTransform* pTransform)
 {
-	if (!m_bPlayAnim)
+	if (!m_bPlayAnim){
 		return false;
+	}
 
-	if (m_iCurrentAnimIndex < 0 || m_iCurrentAnimIndex >= (_int)m_iNumAnimations)
+	if (m_iCurrentAnimIndex < 0 || m_iCurrentAnimIndex >= (_int)m_iNumAnimations){
 		return false;
+	}
 
 	if (m_iCurrSecondAnimIndex >= 0) {
 		Play_Dual_Anim(fTimeDelta, pTransform);
@@ -1095,7 +1097,7 @@ HRESULT CModel::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fma
 	_uint			iFlag = {};
 	iFlag = aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast;
 
-	if (MODEL::NONANIM == eType || MODEL::ENVIROMENT == eType) {
+	if (MODEL::NONANIM == eType || MODEL::PBR_NONANIM == eType || MODEL::ENVIROMENT == eType) {
 		iFlag |= aiProcess_PreTransformVertices;
 	}
 	m_iRootBoneIndex = iRootBoneIndex;
@@ -1123,7 +1125,7 @@ HRESULT CModel::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fma
 			return E_FAIL;
 		}
 	}
-	else if (MODEL::INDEPENDENT == eType) {
+	else if (MODEL::PBR_NONANIM == eType || MODEL::PBR_ANIM == eType) {
 		if (FAILED(Ready_Materials_Independent(eType, m_pAIScene, pModelFilePath))) {
 			return E_FAIL;
 		}
@@ -1732,7 +1734,7 @@ HRESULT CModel::Initialize(void* pArg)
 	SAFE_ADDREF(m_pTransform);
 
 
-	if (m_eType == MODEL::ANIM)
+	if (m_eType == MODEL::ANIM || m_eType == MODEL::PBR_ANIM)
 	{
 		Initialize_RootBone();
 		InItialize_BoneIndex();
