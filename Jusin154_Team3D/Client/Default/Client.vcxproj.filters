@@ -346,9 +346,6 @@
     <ClInclude Include="..\Public\State_Hit.h">
       <Filter>04.Mechanic\State\Hit</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Troll_State_Rush.h">
-      <Filter>04.Mechanic\State\Troll_Combat</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\State_Throw.h">
       <Filter>04.Mechanic\State\State_Combat\State_Throw</Filter>
     </ClInclude>
@@ -378,6 +375,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\State_IdleBreak.h">
       <Filter>04.Mechanic\State\Movement\IdleBreak</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll_State_Rush.h">
+      <Filter>04.Mechanic\State\Troll_Combat\Troll_State_Rush</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_LightAttack.h">
+      <Filter>04.Mechanic\State\State_Combat\State_LightAttack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Spell.h">
+      <Filter>04.Mechanic\State\State_Combat\State_Spell</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -806,6 +812,15 @@
     <Filter Include="04.Mechanic\State\Movement\IdleBreak">
       <UniqueIdentifier>{a7f11f50-5740-4670-ad9e-d21640b2cca7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_LightAttack">
+      <UniqueIdentifier>{12ff4f09-ec6c-4b98-966a-0d84c9ad253c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Troll_Combat\Troll_State_Rush">
+      <UniqueIdentifier>{7bb8a04a-00a0-4864-9781-8069d84806ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Spell">
+      <UniqueIdentifier>{e68261eb-a581-4bf5-b48d-b47cc81f7406}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1144,9 +1159,6 @@
     <ClCompile Include="..\Private\State_Hit.cpp">
       <Filter>04.Mechanic\State\Hit</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Troll_State_Rush.cpp">
-      <Filter>04.Mechanic\State\Troll_Combat</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\State_Throw.cpp">
       <Filter>04.Mechanic\State\State_Combat\State_Throw</Filter>
     </ClCompile>
@@ -1181,6 +1193,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\State_IdleBreak.cpp">
       <Filter>04.Mechanic\State\Movement\IdleBreak</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_State_Rush.cpp">
+      <Filter>04.Mechanic\State\Troll_Combat\Troll_State_Rush</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_LightAttack.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_LightAttack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Spell.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_Spell</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

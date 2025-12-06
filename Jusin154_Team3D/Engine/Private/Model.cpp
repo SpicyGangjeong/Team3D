@@ -267,6 +267,18 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 		}
 	}
 
+	if (m_bIsFinishedAnim)
+	{
+		if (m_bIsLoop)
+		{
+			m_bLoopRestarted = true;
+			m_vPrevRootPos = { 0,0,0 };
+		}
+		else {
+			XMStoreFloat3(&m_vPrevRootPos, m_vector[2]);
+		}
+	}
+
 	if (m_bRatio) {
 		Update_RootBone(m_fAmount * m_fRatio);
 	}
@@ -277,14 +289,6 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 
 	if (m_bIsFinishedAnim)
 	{
-		if (m_bIsLoop)
-		{
-			m_bLoopRestarted = true;
-		}
-		else{
-			//XMStoreFloat3(&m_vPrevRootPos, m_vector[2]);
-		}
-
 		m_vPrevRootRot = { 0.f,0.f,0.f,0.f };
 		m_bInitialRootRotSaved = false;
 	}
