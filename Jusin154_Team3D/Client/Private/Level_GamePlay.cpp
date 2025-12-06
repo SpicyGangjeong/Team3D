@@ -161,95 +161,95 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	/* Map Containters */
 	/* 테스트용 맵 */
 
-	CInfoInstance::GetInstance()->Load_MapObjects("ClientTest");
+	//CInfoInstance::GetInstance()->Load_MapObjects("ClientTest");
 	/* 전체 맵 */
-	CInfoInstance::GetInstance()->Load_MapObjects("Hogsmeade_MapContainer_Data");
+	//CInfoInstance::GetInstance()->Load_MapObjects("Hogsmeade_MapContainer_Data");
 
 	/* 조명 오브젝트 */
-	CInfoInstance::GetInstance()->Load_LightElements("LightElement");
+	//CInfoInstance::GetInstance()->Load_LightElements("LightElement");
 
-	/* 상호작용 오브젝트 */
-	CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_Barrel");
-	CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_PostPackage_B");
-	CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_PostPackage_F");
-	CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_TeaShopTable");
-	CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_TeaShopChair");
+	///* 상호작용 오브젝트 */
+	//CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_Barrel");
+	//CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_PostPackage_B");
+	//CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_PostPackage_F");
+	//CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_TeaShopTable");
+	//CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_TeaShopChair");
 
-	CInstancedProp::INSTANCE_PROP_DESC Desc = {};
+	//CInstancedProp::INSTANCE_PROP_DESC Desc = {};
 
-	/* InstanceProp Oak_Tree*/
-	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_OakTree_MedA";
-	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/OakTree_MedA.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc))){
-		return E_FAIL;
-	}
+	///* InstanceProp Oak_Tree*/
+	//Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_OakTree_MedA";
+	//Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/OakTree_MedA.bin";
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc))){
+	//	return E_FAIL;
+	//}
 
-	/* BearBerry */
-	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_BearBerry_A";
-	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/BearBerry_A.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc))){
-		return E_FAIL;
-	}
+	///* BearBerry */
+	//Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_BearBerry_A";
+	//Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/BearBerry_A.bin";
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc))){
+	//	return E_FAIL;
+	//}
 
-	/* SM_HM_OwlPost_Window_A */
-	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_OwlPost_Window_A";
-	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/OwlPost_Window.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
-		return E_FAIL;
+	///* SM_HM_OwlPost_Window_A */
+	//Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_OwlPost_Window_A";
+	//Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/OwlPost_Window.bin";
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	//	return E_FAIL;
 
-	///* WA_Rectangle_Double_A */
-	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WA_Rectangle_Double_A";
-	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Rectangle_Double_A.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
-		return E_FAIL;
+	/////* WA_Rectangle_Double_A */
+	//Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WA_Rectangle_Double_A";
+	//Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Rectangle_Double_A.bin";
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	//	return E_FAIL;
 
-	///* WC_Retangle_Double_A */
-	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WC_Retangle_Double_A";
-	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WC_Retangle_Double_A.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
-		return E_FAIL;
+	/////* WC_Retangle_Double_A */
+	//Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WC_Retangle_Double_A";
+	//Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WC_Retangle_Double_A.bin";
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	//	return E_FAIL;
 
-	///* WA_Square_Double_C */
-	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WA_Square_Double_C";
-	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WA_Square_Double_C.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
-		return E_FAIL;
+	/////* WA_Square_Double_C */
+	//Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WA_Square_Double_C";
+	//Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WA_Square_Double_C.bin";
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	//	return E_FAIL;
 
-	/* Quid_Window_A */
-	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Quid_Window_A";
-	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Quid_Window_A.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
-		return E_FAIL;
+	///* Quid_Window_A */
+	//Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Quid_Window_A";
+	//Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Quid_Window_A.bin";
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	//	return E_FAIL;
 
-	/* Ollivanders_Box_Window */
-	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Ollivanders_Box_Window";
-	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Ollivanders_Box.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
-		return E_FAIL;
+	///* Ollivanders_Box_Window */
+	//Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Ollivanders_Box_Window";
+	//Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Ollivanders_Box.bin";
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	//	return E_FAIL;
 
-	/* WC_L_DoubleS_A */
-	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WC_L_DoubleS_A";
-	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WC_L_DoubleS_A.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
-		return E_FAIL;
+	///* WC_L_DoubleS_A */
+	//Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WC_L_DoubleS_A";
+	//Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WC_L_DoubleS_A.bin";
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	//	return E_FAIL;
 
-	/* WC_Round_Double_A */
-	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WC_Round_Double_A";
-	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WC_Round_Double_A.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
-		return E_FAIL;
+	///* WC_Round_Double_A */
+	//Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WC_Round_Double_A";
+	//Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WC_Round_Double_A.bin";
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	//	return E_FAIL;
 
-	/* SM_HM_Door1a */
-	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door1a";
-	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Door1a.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
-		return E_FAIL;
+	///* SM_HM_Door1a */
+	//Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door1a";
+	//Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Door1a.bin";
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	//	return E_FAIL;
 
-	/* SM_HM_Door1a */
-	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door2b";
-	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Door2b.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
-		return E_FAIL;
+	///* SM_HM_Door1a */
+	//Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door2b";
+	//Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Door2b.bin";
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+	//	return E_FAIL;
 
 	return S_OK;
 }

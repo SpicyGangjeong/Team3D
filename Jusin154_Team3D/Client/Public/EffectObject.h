@@ -112,9 +112,10 @@ public:
 		_float3		vPadding1 = {};
 
 		_float		fPadding0 = {};
-		_float		fPadding1 = {};
 
-		_bool		isPadding0 = {};
+		_float		isLightTime = { 0.f };
+		_bool		isLightDissolve = {};
+
 		_bool		isPadding1 = {};
 	}EFFECT_INFO;
 

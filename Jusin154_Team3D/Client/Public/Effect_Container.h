@@ -25,7 +25,7 @@ public:
 	virtual	HRESULT	Pre_Setting(CGameObject* pObject, void* pArg = nullptr);
 	HRESULT         Load_Package(const _char* pPath);
 	_uint Get_SkillType() const { return m_iSkillType; }
-
+	void			Reset_Light();
 
 protected:
 	virtual HRESULT Initialize_Prototype() override;

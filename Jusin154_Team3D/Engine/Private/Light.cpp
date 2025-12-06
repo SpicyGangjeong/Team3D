@@ -198,7 +198,7 @@ void CLight::Describe_Entity()
 
 	 
 
-		GUI::DragFloat4("Diffuse", reinterpret_cast<float*>(&m_LightDesc.vDiffuse) , 0.01f , 0.f ,1.f);
+		GUI::ColorEdit4("Diffuse", (_float*)&m_LightDesc.vDiffuse);
 		GUI::DragFloat4("Ambient", reinterpret_cast<float*>(&m_LightDesc.vAmbient), 0.01f, 0.f, 1.f);
 		GUI::DragFloat4("Specular", reinterpret_cast<float*>(&m_LightDesc.vSpecular), 0.01f, 0.f, 1.f);
 		GUI::DragFloat("Range", &m_LightDesc.fRange, 1.f, 0.f);

@@ -42,10 +42,10 @@ public:
 
 		m_fAccLightTime += fTimeDelta;
 
-		if (m_fAccLightTime >= fTime)
-			return;
-
 		m_fAmbientRatio = 1 - (m_fAccLightTime / fTime);
+
+		if (m_fAmbientRatio <= 0)
+			m_fAmbientRatio = 0;
 	}
 
 public:
