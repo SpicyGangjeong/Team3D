@@ -355,6 +355,9 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 	else if (!strcmp(FileType.c_str(), "SRXO")) {
 		eTexture = aiTextureType::aiTextureType_SPECULAR;
 	}
+	else if (!strcmp(FileType.c_str(), "A")) {
+		eTexture = aiTextureType::aiTextureType_AMBIENT;
+	}
 	else
 	{
 #ifndef 기무리

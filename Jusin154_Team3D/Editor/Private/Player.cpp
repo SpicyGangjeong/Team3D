@@ -373,12 +373,22 @@ void CPlayer::SetGravity()
 }
 
 void CPlayer::Update_CameraCoordinateSystem()
+
 {
 	_vector xmvCameraLook = XMVector3Normalize(XMVectorSetY(m_pGameInstance->Get_CameraLook(), 0.f));
 	_vector xmvUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
 	XMStoreFloat3(&m_vCameraRightDir, XMVector3Normalize(XMVector3Cross(xmvUp, xmvCameraLook)));
 	XMStoreFloat3(&m_vCameraLookDir, xmvCameraLook);
 	m_pInfoInstance->Update_CameraCoordinateSystem(m_vCameraLookDir, m_vRimLightColor);
+}
+void CPlayer::Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio, _bool bLoop)
+{
+	PendingEvent Desc;
+	Desc.AnimIndex = AnimIndex;
+	Desc.fRatio = fRatio;
+	Desc.Callback = Callback;
+	Desc.bLoop = bLoop;
+	m_PendingEvents.push_back(Desc);
 }
 
 _matrix CPlayer::Get_WandPos()

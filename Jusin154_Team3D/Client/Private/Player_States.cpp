@@ -925,6 +925,37 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 					pairAnimInfo = m_Animation[STATEANIM::SPELL];
 					pairAnimInfo.first = iIndex + 1;
 					m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
+					if (m_eSpell != ENUM_CLASS(SKILL_TYPE::END))
+					{
+						switch (m_eSpell)
+						{
+						case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
+							Add_Event(pairAnimInfo.first,
+								[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA, this); },
+								0.2f);
+							Add_Event(pairAnimInfo.first,
+								[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::BOMBARDA_SIDE, Get_PartObject<CWand>()); },
+								0.f);
+							break;
+						case ENUM_CLASS(SKILL_TYPE::DESCENDO):
+							Add_Event(pairAnimInfo.first,
+								[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::DESCENDO, Get_PartObject<CWand>()); },
+								0.2f);
+							Add_Event(pairAnimInfo.first,
+								[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::DESCENDO_SIDE, Get_PartObject<CWand>()); },
+								0.f);
+							break;
+						case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
+							Add_Event(pairAnimInfo.first,
+								[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO, this); },
+								0.2f);
+							Add_Event(pairAnimInfo.first,
+								[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO_SIDE, Get_PartObject<CWand>()); },
+								0.f);
+							break;
+						}
+					}
 				}
 			}
 		}

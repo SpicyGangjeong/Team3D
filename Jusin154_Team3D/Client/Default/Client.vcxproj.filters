@@ -370,6 +370,15 @@
     <ClInclude Include="..\public\MapElement_Interactable.h">
       <Filter>02.GameObjects\Environment\03.MapElement\Interactable</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\State_Slam.h">
+      <Filter>04.Mechanic\State\State_Combat\State_Slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll_State_BackHand_Swing.h">
+      <Filter>04.Mechanic\State\Troll_Combat\Troll_State_BackHand_Swing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_IdleBreak.h">
+      <Filter>04.Mechanic\State\Movement\IdleBreak</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -788,6 +797,15 @@
     <Filter Include="02.GameObjects\Environment\03.MapElement\Interactable">
       <UniqueIdentifier>{17eaf081-6fbf-4965-b04d-10749e6032c6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Slam">
+      <UniqueIdentifier>{75479637-e795-4656-a4ef-3772d8a6d007}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Troll_Combat\Troll_State_BackHand_Swing">
+      <UniqueIdentifier>{27d5a2b8-98db-4dbf-9916-0806cfa97c9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Movement\IdleBreak">
+      <UniqueIdentifier>{a7f11f50-5740-4670-ad9e-d21640b2cca7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1151,6 +1169,18 @@
     <ClCompile Include="..\private\MapContainer.cpp" />
     <ClCompile Include="..\private\MapElement_Interactable.cpp">
       <Filter>02.GameObjects\Environment\03.MapElement\Interactable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Slam.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_Slam</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapContainer.cpp">
+      <Filter>02.GameObjects\Environment\00.MapContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_State_BackHand_Swing.cpp">
+      <Filter>04.Mechanic\State\Troll_Combat\Troll_State_BackHand_Swing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_IdleBreak.cpp">
+      <Filter>04.Mechanic\State\Movement\IdleBreak</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
