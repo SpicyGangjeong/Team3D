@@ -44,7 +44,7 @@ private:
 	CGameObject* m_pCurrent_Spell_Slot = { nullptr };
 
 	_int	m_iImageNum{};
-
+	_float4 m_vImageposSi{};
 public:
 	static CLoding_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

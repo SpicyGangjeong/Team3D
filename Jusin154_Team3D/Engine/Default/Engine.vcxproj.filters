@@ -217,9 +217,6 @@
     <Filter Include="02.Element\02.Component\07.RigidBody\00.Static">
       <UniqueIdentifier>{fda41884-634b-4dd4-8bd2-f6f7ad68ab1f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Element\02.Component\09.Light">
-      <UniqueIdentifier>{7c82051e-19af-4284-8156-16f504db30b6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03.Management\03.Light_Manager">
       <UniqueIdentifier>{8727e975-e9e2-4b59-9a52-27ad3ad79f2f}</UniqueIdentifier>
     </Filter>
@@ -294,6 +291,9 @@
     </Filter>
     <Filter Include="03.Management\02.Resource_Manager">
       <UniqueIdentifier>{685d2cc6-b29a-4018-b72f-d66a2807463d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\09.Light">
+      <UniqueIdentifier>{7c82051e-19af-4284-8156-16f504db30b6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

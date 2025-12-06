@@ -109,6 +109,74 @@ PS_OUT PS_MAIN(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_Logo(PS_IN In)
+{
+    PS_OUT Out;
+    float Alpha = g_fAlpha;
+    float4 Color = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    
+    float4 Dissolve = g_MaskingTexture.Sample(DefaultSampler, In.vTexcoord);
+    
+    if (g_fTime >= Dissolve.r)
+        discard;
+    
+    if (g_fTime != 0.f)
+    {
+        Color.a *= Dissolve.a;
+    }
+    
+    Color.a *= Alpha;
+    Out.vColor = Color;
+    return Out;
+}
+
+PS_OUT PS_Logo_Text(PS_IN In)
+{
+    PS_OUT Out;
+    float Alpha = g_fAlpha;
+    float4 Color = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    
+    Color.rgb = (Color.rgb - 0.5f) * 1.2f + 0.5f;
+
+    Color.rgb = pow(Color.rgb, 1.25f);
+
+    float luminance = dot(Color.rgb, float3(0.299f, 0.587f, 0.114f));
+    float light = smoothstep(0.7f, 0.92f, luminance);
+    Color.rgb *= (1.0f - light * 0.1f);
+
+    Color.rgb = lerp(Color.rgb, Color.rgb * Color.rgb, 0.12f);
+
+    Color.rgb *= 0.7f;
+
+    Color.rgb = saturate(Color.rgb);
+
+    
+    Color.a *= Alpha;
+    Out.vColor = Color;
+    return Out;
+}
+
+PS_OUT PS_Logo_Glow(PS_IN In)
+{
+    PS_OUT Out;
+    float Alpha = g_fAlpha;
+    float4 Color = float4(1.f, 1.f, 1.f, 1.f);
+    
+    float tex1 = g_Texture.Sample(DefaultSampler, In.vTexcoord).r;
+    float4 tex2 = g_Texture1.Sample(DefaultSampler, In.vTexcoord);
+    float3 Blue = float3(14.f, 180.f, 252.f) / 255.f;
+    
+    Color.a *= tex1;
+    tex2.rgb *= Color.a * 5.f * Alpha;
+    Color.rgb *= Blue;
+    
+    Color = lerp(Color, tex2, tex2.a);
+    
+    Color.a *= Alpha;
+    Out.vColor = Color;
+    return Out;
+}
+
 PS_OUT PS_AlphaBlend(PS_IN In)
 {
     PS_OUT Out;
@@ -131,6 +199,8 @@ PS_OUT PS_Clamp(PS_IN In)
     
     float4 Color = g_Texture.Sample(DefaultSampler, In.vTexcoord);
 
+    Color.rgb = saturate(Color.rgb * g_fTime);
+    
     Color.a *= Alpha;
     Out.vColor = Color;
     
@@ -1237,11 +1307,21 @@ PS_OUT PS_Loding_Screen(PS_IN In)
     float4 Color = float4(1.f, 1.f, 1.f, 1.f);
     
     float4 tex1 = g_Texture.Sample(DefaultSampler, In.vTexcoord);
-    Color = tex1;
-    
     float4 tex2 = g_Texture1.Sample(DefaultSampler, In.vTexcoord);
-    
+    Color = tex1;
     Color = lerp(Color, tex2, tex2.a);
+    
+    //float2 Imagetexpos1 = g_fImageSipos1.xy / g_fCurrent_Size;
+    //float2 Imagetexsize1 = g_fImageSipos1.zw / g_fCurrent_Size;
+    //float2 Imagelocal = (In.vTexcoord - Imagetexpos1) / Imagetexsize1;
+    //bool inside1 = all(Imagelocal >= 0.0f && Imagelocal <= 1.0f);
+    //if (inside1)
+    //{
+    //    float2 uv = saturate(Imagelocal);
+    //    float4 tex2 = g_Texture1.Sample(DefaultSampler, uv);
+        
+    //    Color = lerp(Color, tex2, tex2.a);
+    //}
     
     Color.a *= Alpha;
     
@@ -1260,6 +1340,36 @@ technique11 PosTexTechnique11
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
+    }
+
+    pass Logo
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_UIBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Logo();
+    }
+
+    pass Logo_Text
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_UIBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Logo_Text();
+    }
+
+    pass Logo_Glow
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Logo_Glow();
     }
 
     pass AlphaBlend

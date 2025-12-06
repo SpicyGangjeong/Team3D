@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "CameraLockOn.h"
 #include "GameInstance.h"
+#include "InfoInstance.h"
 
 CCameraLockOn::CCameraLockOn(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CUIObject(pDevice, pContext)
@@ -8,7 +9,8 @@ CCameraLockOn::CCameraLockOn(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 }
 
 CCameraLockOn::CCameraLockOn(const CCameraLockOn& rhs)
-	:CUIObject(rhs)
+	:CUIObject(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -38,6 +40,7 @@ HRESULT CCameraLockOn::Initialize(void* pArg)
 	}
 	m_fTimeMult = 0.5f;
 	Set_Visible(false);
+	m_pInfoInstance->Add_Event(TEXT("MouseTogggle"), [this](void* p) {this->Set_Visible(*reinterpret_cast<_bool*>(p)); });
 	return S_OK;
 }
 
@@ -47,12 +50,12 @@ void CCameraLockOn::Priority_Update(_float fTimeDelta)
 
 void CCameraLockOn::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->Mouse_Pressing(DIM_RBUTTON))
+	/*if (m_pGameInstance->Mouse_Pressing(DIM_RBUTTON))
 	{
 		m_bHover = true;
 	}
 	else
-		m_bHover = false;
+		m_bHover = false;*/
 
 	m_fTime += fTimeDelta * m_fTimeMult;
 }

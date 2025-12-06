@@ -6,7 +6,6 @@
 #include "InfoInstance.h"
 #include "Mouse_Cursor.h"
 #include "CameraLockOn.h"
-#include "Loding_Canvas.h"
 #include "Skill_Data.h"
 
 CUI_Manager::CUI_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -32,7 +31,9 @@ HRESULT CUI_Manager::Initialize(void* pArg)
 		return E_FAIL;
 	}
 	m_bCanvas_Change = false;
-	m_eType = UI_STATE::LODING;
+	m_eType = UI_STATE::GAMEPLAYER;
+	m_pGameInstance->Toggle_MouseCenter();
+	//ShowCursor(false);
 	m_pInfoInstance->Set_UISTATE(m_eType);
 	m_pInfoInstance->Add_Event(TEXT("Canvas_Change"), [this](void* p) {this->Canvas_Change(*reinterpret_cast<UI_STATE*>(p)); });
 	return S_OK;
@@ -44,17 +45,9 @@ void CUI_Manager::Canvas_Change(UI_STATE eType)
 
 	switch (eType)
 	{
-	case UI_STATE::LODING:
-		m_pMouse_Cursor->Set_Visible(false);
-		m_pCamera_LockOn->Set_Visible(false);
-		static_cast<CCanvasObject*>(m_pLoding_Canvas)->Visible(true);
-		static_cast<CCanvasObject*>(m_pGamePlay_Canves)->Visible(false);
-		static_cast<CCanvasObject*>(m_pSpell_Canvas)->Visible(false);
-
 	case UI_STATE::GAMEPLAYER:
 		m_pMouse_Cursor->Set_Visible(false);
 		m_pCamera_LockOn->Set_Visible(false);
-		static_cast<CCanvasObject*>(m_pLoding_Canvas)->Visible(false);
 		static_cast<CCanvasObject*>(m_pGamePlay_Canves)->Visible(true);
 		static_cast<CCanvasObject*>(m_pSpell_Canvas)->Visible(false);
 		break;
@@ -62,9 +55,8 @@ void CUI_Manager::Canvas_Change(UI_STATE eType)
 	case UI_STATE::SPELL:
 		m_pMouse_Cursor->Set_Visible(true);
 		m_pCamera_LockOn->Set_Visible(false);
-		static_cast<CCanvasObject*>(m_pLoding_Canvas)->Visible(false);
-		static_cast<CCanvasObject*>(m_pGamePlay_Canves)->Visible(false);
 		static_cast<CCanvasObject*>(m_pSpell_Canvas)->Visible(true);
+		static_cast<CCanvasObject*>(m_pGamePlay_Canves)->Visible(false);
 		break;
 
 	case UI_STATE::POTION:
@@ -76,6 +68,7 @@ void CUI_Manager::Canvas_Change(UI_STATE eType)
 	default:
 		return;
 	}
+	m_pGameInstance->Toggle_MouseCenter();
 }
 
 void CUI_Manager::Clear_Canvas()
@@ -146,11 +139,6 @@ HRESULT CUI_Manager::Ready_Components(void* pArg)
 		return E_FAIL;
 	}
 	Add_Canvas(TEXT("Spell_Canvas"), m_pSpell_Canvas);
-
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLoding_Canvas>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CLoding_Canvas**>(&m_pLoding_Canvas)))) {
-		return E_FAIL;
-	}
-	Add_Canvas(TEXT("Loding_Canvas"), m_pLoding_Canvas);
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMouse_Cursor>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CMouse_Cursor**>(&m_pMouse_Cursor)))) {
 		return E_FAIL;

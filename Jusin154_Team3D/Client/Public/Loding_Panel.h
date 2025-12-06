@@ -1,15 +1,17 @@
 ﻿#pragma once
 
 #include "Client_Define.h"
-#include "PanelObject.h"
+#include "UIObject.h"
 
 NS_BEGIN(Engine)
-class CGameObject;
+class CTexture;
+class CShader;
+class CVIBuffer_Rect;
 NS_END
 
 NS_BEGIN(Client)
 
-class CLoding_Panel final : public CPanelObject
+class CLoding_Panel final : public CUIObject
 {
 
 private:
@@ -28,7 +30,6 @@ public:
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;
-	virtual HRESULT Ready_Element(void* pArg) override;
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
@@ -44,16 +45,12 @@ private:
 	CGameObject* m_pCurrent_Spell_Slot = { nullptr };
 
 	_int	m_iImageNum{};
-
+	_float4 m_vImageposSi{};
 public:
 	static CLoding_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
-#ifdef _DEBUG
 	void Describe_Entity() override;
-
-#endif // _DEBUG
-
 };
 
 NS_END

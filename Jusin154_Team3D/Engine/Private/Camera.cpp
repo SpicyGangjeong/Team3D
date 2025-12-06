@@ -210,6 +210,11 @@ void CCamera::Set_Fov(_float fFovy, _float fTimeDelta,_bool& bZoomIn)
     }
 }
 
+_float CCamera::Get_Fov()
+{
+    return m_fFovy;
+}
+
 void CCamera::Free()
 {
     __super::Free();

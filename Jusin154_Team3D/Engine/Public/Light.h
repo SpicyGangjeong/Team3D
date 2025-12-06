@@ -24,6 +24,8 @@ public:
 	void Set_PowerLightAtt(_bool bValue) { m_bUsePowerAttenuation = bValue; }
 	_float Get_AttPower() { return m_fLightAttenuationPower; }
 	void Set_AttPower(_float fValue) { m_fLightAttenuationPower = fValue; }
+	void Set_LightIntensity(_float fValue) { m_fLightIntensity = fValue; }
+	_float Get_LightIntensity() { return m_fLightIntensity; }
 
 public:
 	const LIGHT_DESC* Get_LightDesc() { return &m_LightDesc; }
@@ -42,10 +44,10 @@ public:
 
 		m_fAccLightTime += fTimeDelta;
 
-		if (m_fAccLightTime >= fTime)
-			return;
-
 		m_fAmbientRatio = 1 - (m_fAccLightTime / fTime);
+
+		if (m_fAmbientRatio <= 0)
+			m_fAmbientRatio = 0;
 	}
 
 public:
@@ -58,6 +60,7 @@ private:
 
 	_float      m_fAmbientRatio = { 1.f };
 	_float      m_fAccLightTime = { 0.f };
+	_float      m_fLightIntensity = { 4.f };
 
 	// 1 -> Linear, 
 	// ( 1 > fPower )-> 뾰족하게 감쇄

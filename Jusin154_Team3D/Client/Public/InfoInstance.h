@@ -50,6 +50,7 @@ public:
 	_float Get_CoolTime(_int SpellID);
 	void Change_Canvas();
 	void Key_Input(_uint Input); // 플레이어 키 입력
+	void Mouse_Input(_uint Input); // 플레이어 키 입력
 	void Set_UISTATE(UI_STATE eState);
 	void Add_Event(_wstring EventName, function<void(void*)> Event);
 	void Event_CallBack(_wstring EventName, void* pArg = nullptr);

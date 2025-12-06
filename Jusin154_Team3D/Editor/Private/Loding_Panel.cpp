@@ -39,8 +39,12 @@ HRESULT CLoding_Panel::Initialize(void* pArg)
 		return E_FAIL;
 	}
 	m_fCanvasAlpha = 1.f;
-	m_fSortZ = 0.05f;
+	m_fOwnerAlpha = 1.f;
+	m_fAlpha = 1.f;
+	m_fSortZ = 0.f;
 	m_iImageNum = 0;
+	//m_vImageposSi = _float4(0.f, 0.f, 1792.f, 1024.f);
+	
 	return S_OK;
 }
 void CLoding_Panel::Set_Image(_int Index)
@@ -49,33 +53,15 @@ void CLoding_Panel::Set_Image(_int Index)
 }
 void CLoding_Panel::Priority_Update(_float fTimeDelta)
 {
-	if (!__super::Chack_Visible())
-	{
-		return;
-	}
-	__super::Priority_Update(fTimeDelta);
 }
 
 void CLoding_Panel::Update(_float fTimeDelta)
 {
-	if (!__super::Chack_Visible())
-	{
-		return;
-	}
-
-	__super::Update(fTimeDelta);
 }
 
 void CLoding_Panel::Late_Update(_float fTimeDelta)
 {
-	if (!__super::Chack_Visible())
-	{
-		return;
-	}
-	if (m_bVisible) {
-		m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
-		__super::Late_Update(fTimeDelta);
-	}
+	m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
 }
 
 HRESULT CLoding_Panel::Render()
@@ -139,6 +125,14 @@ HRESULT CLoding_Panel::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+	//if (FAILED(m_pShaderCom->Bind_RawValue("g_fImageSipos1", &m_vImageposSi, sizeof(_float4))))
+	//{
+	//	return E_FAIL;
+	//}
+	//if (FAILED(m_pShaderCom->Bind_RawValue("g_fCurrent_Size", &m_vScale, sizeof(_float2))))
+	//{
+	//	return E_FAIL;
+	//}
 	return S_OK;
 }
 
@@ -148,11 +142,11 @@ HRESULT CLoding_Panel::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Screen_BG"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Screen_BG"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("LoadingScreen"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("LoadingScreen"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
 	{
 		return E_FAIL;
 	}

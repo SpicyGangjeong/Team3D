@@ -90,6 +90,51 @@ HRESULT CMaterial::Initialize(const _char* pModelFilePath, const aiMaterial* pAI
 
 	return S_OK;
 }
+HRESULT CMaterial::Initialize(const _char* pModelFilePath, MODEL eType, const aiMaterial* pAIMaterial)
+{
+	ID3D11ShaderResourceView* pSRV = { nullptr };
+
+	filesystem::path xmlFilePath = pModelFilePath;
+	xmlFilePath.replace_extension(".xml");
+
+	tinyxml2::XMLDocument xmldoc;
+	if ((tinyxml2::XML_SUCCESS != xmldoc.LoadFile(xmlFilePath.string().c_str()))) {
+		return E_FAIL;
+	}
+	{
+		tinyxml2::XMLNode* pNode = xmldoc.FirstChildElement("Material");
+		if (pNode == nullptr){
+			return E_FAIL;
+		}
+		tinyxml2::XMLElement* pRoot = pNode->FirstChildElement("Material");
+		if (nullptr == pRoot) {
+			return E_FAIL;
+		}
+		_int iIndex = 0;
+		for (tinyxml2::XMLElement* pElement = pRoot->FirstChildElement("Container"); pElement; pElement = pElement->NextSiblingElement("Container"), ++iIndex)
+		{
+			const _char* pFileName = pElement->Attribute("Filename");
+			const _char* pExtention = pElement->Attribute("Extension");
+
+			if (nullptr == pFileName || '\0' == pFileName[0]
+				|| nullptr == pExtention || '\0' == pExtention[0]) {
+				continue;
+			}
+			else {
+				xmlFilePath.replace_filename(pFileName);
+				xmlFilePath.replace_extension(pExtention);
+			}
+			pSRV = m_pGameInstance->Add_Resource(xmlFilePath.string().c_str());
+			if (nullptr == pSRV) {
+				return E_FAIL;
+			}
+			m_SRVs[iIndex].push_back(pSRV);
+			m_SaveMaterial.Path[iIndex].push_back(xmlFilePath.string());
+		}
+	}
+
+	return S_OK;
+}
 HRESULT CMaterial::Initialize(const _char* pMaterialFilePath, const _char* pTextureFilePath)
 {
 	_char szTextureFilePath[MAX_PATH] = {};
@@ -310,6 +355,9 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 	else if (!strcmp(FileType.c_str(), "SRXO")) {
 		eTexture = aiTextureType::aiTextureType_SPECULAR;
 	}
+	else if (!strcmp(FileType.c_str(), "A")) {
+		eTexture = aiTextureType::aiTextureType_AMBIENT;
+	}
 	else
 	{
 #ifndef 기무리
@@ -371,6 +419,19 @@ CMaterial* CMaterial::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 	return pInstance;
 }
 
+CMaterial* CMaterial::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, const aiMaterial* pAIMaterial)
+{
+	CMaterial* pInstance = new CMaterial(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize(pModelFilePath, eType, pAIMaterial)))
+	{
+		MSG_BOX("Failed to Created : CMaterial");
+		SAFE_RELEASE(pInstance);
+	}
+
+	return pInstance;
+}
+
 CMaterial* CMaterial::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pMaterialFilePath, const _char* pTextureFilePath)
 {
 	CMaterial* pInstance = new CMaterial(pDevice, pContext);
@@ -417,8 +478,7 @@ HRESULT CMaterial::Bind_SRV(CShader* pShader)
 			_float fUsingSurfaceParams = ((_float)iTextureType / (_float)AI_TEXTURE_TYPE_MAX);
 			pConstantName = "g_SurfaceParamsTexture";
 			pShader->Bind_RawValue("g_fUsingSurfaceParams", &fUsingSurfaceParams, sizeof(_float));
-		}
-			break;
+		} break;
 		case aiTextureType_AMBIENT:
 			break;
 		case aiTextureType_EMISSIVE:
@@ -449,8 +509,7 @@ HRESULT CMaterial::Bind_SRV(CShader* pShader)
 			_float fUsingSurfaceParams = ((_float)iTextureType / (_float)AI_TEXTURE_TYPE_MAX);
 			pConstantName = "g_SurfaceParamsTexture";
 			pShader->Bind_RawValue("g_fUsingSurfaceParams", &fUsingSurfaceParams, sizeof(_float));
-		}
-			break;
+		} break;
 		case aiTextureType_DIFFUSE_ROUGHNESS:
 			break;
 		case aiTextureType_AMBIENT_OCCLUSION:

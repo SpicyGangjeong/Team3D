@@ -28,6 +28,7 @@ float       g_fSSAORadius;
 float2      g_vSSAOTextureSize;
 
 float g_fLightRange;
+float g_fLightIntensity;
 float g_fSpotInnerAngle;
 float g_fSpotOuterAngle;
 
@@ -262,7 +263,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     }
     
     
-    PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
+    PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, g_fLightIntensity, fAttenuation, vF0);
     PBR_Out.vShade *= fTotalOcclusion;
     
     float3 vAmbient = g_vLightAmbient.rgb * fTotalOcclusion * fAttenuation;
@@ -365,7 +366,7 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
         vF0 = min(vF0, 0.9f); // 메탈릭 상한선
     }
     
-    PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
+    PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, g_fLightIntensity, fAttenuation, vF0);
     
     PBR_Out.vShade *= fTotalOcclusion;
 
@@ -483,7 +484,7 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
         vF0 = min(vF0, 0.9f); // 메탈릭 상한선
     }
     
-    PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
+    PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, g_fLightIntensity, fAttenuation, vF0);
     
     PBR_Out.vShade *= fTotalOcclusion;
     

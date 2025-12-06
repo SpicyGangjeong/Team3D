@@ -2,7 +2,7 @@
 #include "Loding_Canvas.h"
 #include "GameInstance.h"
 #include "UI_Manager.h"
-#include "Loding_Panel.h"
+
 
 CLoding_Canvas::CLoding_Canvas(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CCanvasObject(pDevice, pContext)
@@ -88,12 +88,6 @@ HRESULT CLoding_Canvas::Ready_Components(void* pArg)
 
 HRESULT CLoding_Canvas::Ready_Panel(void* pArg)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLoding_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CLoding_Panel**>(&m_pLoding_Panel))))
-	{
-		return E_FAIL;
-	}
-	Add_Panel(TEXT("Loding_Panel"), m_pLoding_Panel);
-
 	return S_OK;
 }
 

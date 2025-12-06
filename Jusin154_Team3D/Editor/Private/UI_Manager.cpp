@@ -120,15 +120,15 @@ _vector CUI_Manager::Get_WorldPostion()
 
 HRESULT CUI_Manager::Bind_ShaderResources()
 {
-	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom))) {
-		return E_FAIL;
-	}
-
 	return S_OK;
 }
 
 HRESULT CUI_Manager::Ready_Components(void* pArg)
 {
+	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom))) {
+		return E_FAIL;
+	}
+
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGamePlay_Canvas>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CGamePlay_Canvas**>(&m_pGamePlay_Canves)))) {
 		return E_FAIL;
 	}
@@ -138,11 +138,6 @@ HRESULT CUI_Manager::Ready_Components(void* pArg)
 		return E_FAIL;
 	}
 	Add_Canvas(TEXT("Spell_Canvas"), m_pSpell_Canvas);
-
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLoding_Canvas>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CLoding_Canvas**>(&m_pLoding_Canvas)))) {
-		return E_FAIL;
-	}
-	Add_Canvas(TEXT("Loding_Canvas"), m_pLoding_Canvas);
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMouse_Cursor>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CMouse_Cursor**>(&m_pMouse_Cursor)))) {
 		return E_FAIL;

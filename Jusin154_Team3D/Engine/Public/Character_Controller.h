@@ -80,7 +80,7 @@ private:
 	CTransform*				m_pTransform = { nullptr };	
 	_bool					m_bAutoStepping = { false };
 	_float					m_fGravity = { 0.450f };
-	_float					m_fWalkableSlopeDegree = { 22.f }; // cosf각도, 오르막 경사각 제한. ( 추가설정 필요함 )
+	_float					m_fWalkableSlopeDegree = { 45.f }; // cosf각도, 오르막 경사각 제한. ( 추가설정 필요함 )
 	_float					m_fCurrentSlopeDegree = { 0.f };
 	_int					m_iIsOnGround = { 0 };
 	_float4					m_vAccHeight = { 0.f, 0.16f, 0.f, 0.01f };
