@@ -605,6 +605,10 @@ HRESULT CGameInstance::Finish_RenderTarget(CVIBuffer_Rect* pVIBuffer, CShader* p
 {
 	return m_pRenderTarget_Manager->Finish_RenderTarget(pVIBuffer, pShader, wstrRenderTargetOriginal, wstrRenderTargetBloomed, ePass);
 }
+HRESULT CGameInstance::Bind_CS_RenderTarget(_uint iIndex, const _wstring& strTargetTag)
+{
+	return m_pRenderTarget_Manager->Bind_CS_RenderTarget(iIndex, strTargetTag);
+}
 #ifdef _DEBUG
 void CGameInstance::RenderTarget_Debuger()
 {

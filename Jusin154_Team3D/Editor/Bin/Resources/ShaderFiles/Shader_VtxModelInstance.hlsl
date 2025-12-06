@@ -31,10 +31,13 @@ struct ParticleValue
     float  fSizeDrag;
     float3 vDeltaSize;
     float2 vDelay;
+    
+    float4 vPrePos;
 };
 
 
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+matrix g_ProjMatrixInv, g_ViewMatrixInv;
 
 Texture2D g_DiffuseTexture : register(t0);
 
@@ -49,7 +52,7 @@ StructuredBuffer<ParticleValue> g_ParticleValue : register(t5);
 Texture2D g_EmissiveTexture : register(t6);
 Texture2D g_DepthStencilTexture : register(t7);
 Texture2D g_DistortionTexture : register(t8);
-
+Texture2D g_DepthTexture : register(t9);
 
 
 float4 g_vCamPosition;
@@ -228,6 +231,71 @@ VS_OUT VS_NOWORLD(VS_IN In, uint iGPUIndex : SV_InstanceID)
     return Out;
 }
 
+VS_OUT VS_DEPTH_STOP(VS_IN In, uint iGPUIndex : SV_InstanceID)
+{
+    VS_OUT Out = (VS_OUT) 0;
+
+    matrix matW, matWV, matWVP;
+    
+   
+    row_major matrix TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, In.vTranslation);
+    
+    matW = mul(TransformMatrix, g_WorldMatrix);
+    matWV = mul(matW, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+
+
+    vector vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    
+    /* 내 뎁스와 비교하여 만약 내가 가려지는 상황 이였다면 이동하지 않음*/
+    float2 vTexcoord;
+    
+    vTexcoord.x = vPosition.x / vPosition.w * 0.5f + 0.5f;
+    vTexcoord.y = vPosition.y / vPosition.w * -0.5f + 0.5f;
+    
+    float4 vDepthDesc = g_DepthTexture.SampleLevel(DefaultSampler, vTexcoord , 0); // VS에서 샘플함수 못씀
+    
+    float fOldViewZ = vDepthDesc.y * g_fFar;
+    
+    if (vPosition.w <= fOldViewZ) // 내가 가려지는 상태
+    {
+            
+        float4 vWorldPosition; // 월드 복원
+        
+        {
+            
+            vWorldPosition.x = vTexcoord.x * 2 - 1;
+            vWorldPosition.y = vTexcoord.y * -2 + 1;
+            vWorldPosition.z = vDepthDesc.x;
+            vWorldPosition.w = 1.f;
+            vWorldPosition *= fOldViewZ;
+            vWorldPosition = mul(vWorldPosition, g_ProjMatrixInv);
+            vWorldPosition = mul(vWorldPosition, g_ViewMatrixInv);
+            
+        }
+        
+        TransformMatrix = float4x4(In.vRight, In.vUp, In.vLook, vWorldPosition);
+    
+        matW = mul(TransformMatrix, g_WorldMatrix);
+        matWV = mul(matW, g_ViewMatrix);
+        matWVP = mul(matWV, g_ProjMatrix);
+        
+        vPosition = mul(vector(In.vPosition, 1.f), matWVP); 
+    }
+    
+    
+    Out.vPosition = vPosition;
+    Out.vNormal = normalize(mul(vector(In.vNormal, 0.f), matW));
+    Out.vTangent = normalize(mul(vector(In.vTangent, 0.f), matW)).xyz;
+    Out.vBinormal = normalize(mul(vector(In.vBinormal, 0.f), matW)).xyz;
+    Out.vTexcoord = In.vTexcoord;
+    Out.vLifeTime = In.vLifeTime;
+    Out.vWorldPos = mul(vector(In.vPosition, 1.f), matW);
+    Out.iGPUIndex = iGPUIndex;
+    Out.vProjPos = vPosition;
+    
+    return Out;
+}
 
 struct PS_IN
 {
@@ -523,6 +591,21 @@ float4 DrawEffect(PS_IN In)
             discard;
     }
     
+    /* 소프트 이펙트 */
+    
+    float2 vTexcoord;
+    
+    vTexcoord.x = In.vProjPos.x / In.vProjPos.w * 0.5f + 0.5f;
+    vTexcoord.y = In.vProjPos.y / In.vProjPos.w * -0.5f + 0.5f;
+    
+    float4 vDepthDesc = g_DepthTexture.Sample(DefaultSampler, vTexcoord);
+    
+    float fOldViewZ = vDepthDesc.y * g_fFar;
+    
+    float fDistance = fOldViewZ - In.vProjPos.w;
+    
+    vMtrlDiffuse.a = vMtrlDiffuse.a * saturate(fDistance);
+    
     return vMtrlDiffuse;
 }
 
@@ -611,22 +694,10 @@ PS_OUT PS_MAIN(PS_IN In)
     PS_OUT Out;
     vector vMtrlDiffuse;
 
-    vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    vMtrlDiffuse = DrawEffect(In);
     
-    vector vMtrlNormal = g_NormalTexture.Sample(DefaultSampler, In.vTexcoord);
-    
-    float3x3 NormalMap_WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal.xyz);
-    
-    float3 vNormal = mul(vMtrlNormal.xyz * 2.f - 1.f, NormalMap_WorldMatrix);
+    vMtrlDiffuse.rgb += EmissiveDraw(In).rgb;
 
-    
-    //Out.vNormal = float4(vNormal.xyz * 0.5f + 0.5f, 0.f);
-    //Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 0.0f, 0.0f);
-    
-    if (vMtrlDiffuse.a < 0.3f)
-        discard;
-    
-    Out.vDiffuse.a = saturate(In.vLifeTime.y - In.vLifeTime.x);
     Out.vDiffuse = vMtrlDiffuse;
     
     return Out;
@@ -729,15 +800,15 @@ PS_BLUR_OUT PS_BLUR_NOEMISSIVE(PS_IN In)
     
     //// 색깔 추가할 처리 (이미시브)
     
-    vMtrlDiffuse.a = 1.f;
+    vMtrlDiffuse.a *= 5.f;
     
-    if (g_isDissolve == true)
-    {
-        if (g_isNomalDissolve)
-        {
-            vMtrlDiffuse.a *= (0.95f - In.vLifeTime.x / In.vLifeTime.y);
-        }
-    }
+    //if (g_isDissolve == true)
+    //{
+    //    if (g_isNomalDissolve)
+    //    {
+    //        vMtrlDiffuse.a *= (0.95f - In.vLifeTime.x / In.vLifeTime.y);
+    //    }
+    //}
    
     Out.vDiffuse = vector(vMtrlDiffuse.rgb * g_fBlurIntensity , vMtrlDiffuse.a); 
     Out.vBlurWeight = g_iBlurWeight / 128.f;
@@ -753,21 +824,24 @@ PS_BLUR_OUT PS_BLUR(PS_IN In)
     
     vMtrlDiffuse = DrawEffect(In);
     
+    vMtrlDiffuse.a *= 5.f;
+    
     //// 색깔 추가할 처리 (이미시브)
    
-    vMtrlDiffuse.rgb += EmissiveDraw(In).rgb;
+    //vMtrlDiffuse.rgb += EmissiveDraw(In).rgb;
     
-    vMtrlDiffuse.a = 1.f;
+    //vMtrlDiffuse.a = 1.f;
     
-    if (g_isDissolve == true)
-    {
-        if (g_isNomalDissolve)
-        {
-            vMtrlDiffuse.a *= (0.95f - In.vLifeTime.x / In.vLifeTime.y);
-        }
-    }
+    //if (g_isDissolve == true)
+    //{
+    //    if (g_isNomalDissolve)
+    //    {
+    //        vMtrlDiffuse.a *= (0.95f - In.vLifeTime.x / In.vLifeTime.y);
+    //    }
+    //}
    
     Out.vDiffuse = vector(vMtrlDiffuse.rgb * g_fBlurIntensity, vMtrlDiffuse.a);
+    
     Out.vBlurWeight = g_iBlurWeight / 128.f;
     
     return Out;
@@ -843,13 +917,14 @@ PS_BLOOM_OUT PS_WEIGHTED_FOR_BLEND(PS_IN In)
     return Out;
 }
 
+
 technique11 DefaultTechnique
 {
     pass Model
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
@@ -976,6 +1051,27 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_WEIGHTED_FOR_BLEND();
     }
+
+    pass DEPTH_STOP
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_DEPTH_STOP();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN();
+    }
+
+
+    //pass PARTICLE_DEPTH_STOP
+    //{
+    //    SetRasterizerState(RS_Nocull);
+    //    SetDepthStencilState(DSS_Effect, 0);
+    //    SetBlendState(BS_WB_Acc, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+    //    VertexShader = compile vs_5_0 VS_MAIN();
+    //    GeometryShader = NULL;
+    //    PixelShader = compile ps_5_0 PS_PARTICLE_STOP();
+    //}
 
 }
 

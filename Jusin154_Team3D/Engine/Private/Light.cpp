@@ -126,19 +126,19 @@ HRESULT CLight::Render(CShader* pShader, CVIBuffer* pVIBuffer) const
 
 	/* 라이트를 서서히 감쇄시키기 위한 감쇄값 */
 	
-	_float4 vAmbient = _float4(m_LightDesc.vAmbient.x * m_fAmbientRatio,
-		m_LightDesc.vAmbient.y * m_fAmbientRatio,
-		m_LightDesc.vAmbient.z * m_fAmbientRatio,
-		m_LightDesc.vAmbient.w * m_fAmbientRatio);
 
-	if (FAILED(pShader->Bind_RawValue("g_vLightAmbient", &vAmbient, sizeof(_float4)))) {
+
+
+	if (FAILED(pShader->Bind_RawValue("g_vLightAmbient", &m_LightDesc.vAmbient, sizeof(_float4)))) {
 		return E_FAIL;
 	}
 	if (FAILED(pShader->Bind_RawValue("g_vLightSpecular", &m_LightDesc.vSpecular, sizeof(_float4)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(pShader->Bind_RawValue("g_fLightIntensity", &m_fLightIntensity, sizeof(_float)))) {
+	_float fLightIntensity = m_fIntensityRatio * m_fLightIntensity;
+
+	if (FAILED(pShader->Bind_RawValue("g_fLightIntensity", &fLightIntensity, sizeof(_float)))) {
 		return E_FAIL;
 	}
 	if (FAILED(pShader->Begin(iPassIndex))) {

@@ -73,7 +73,7 @@ void CEditEffect::Late_Update(_float fTimeDelta)
 	{
 		if (m_pLightCom != nullptr)
 		{
-			m_pLightCom->Update_AmbientRatio(fTimeDelta , m_EffectInfo.isLightTime);
+			m_pLightCom->Update_IntensityRatio(fTimeDelta , m_EffectInfo.isLightTime , m_EffectInfo.fLightDeley);
 		}
 	}
 
@@ -424,7 +424,7 @@ void CEditEffect::Describe_Entity()
 	const char* pLerp[] = { "Linear" , "EaseInQuad", "EaseOutQuad", "EaseInCubic" , "EaseOutCubic" , "EaseInOutSin" , "EaseInBack" , "Expo" , "Circle" };
 	const char* pRenderNames[] = { "PRIORITY" , "SHADOW", "NONBLEND", "DECAL", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" ,"BLOOM" , "UI", "OCCLUSION" , "PRESHADOW"};
 	const char* pEffectType[] = { "EFFECT" , "TRAIL" };
-	const char* pShaderPass[] = { "DEFAULT" , "NON_NOMALMAP" , "BLUR" , "WEIGHTBLEND" , "NON_WORLD" , "NON_WORLD_BLUR",  "BLEND", "BLEND_NOWORLD", "BLOOM" ,"BLOOM_NOWORLD" ,"BLUR_NO_EMMISVE", "BLUR_NO_WORLD_NO_EMISSIVE","WEIGHTBLEND_FOR_BLEND"};
+	const char* pShaderPass[] = { "DEFAULT" , "NON_NOMALMAP" , "BLUR" , "WEIGHTBLEND" , "NON_WORLD" , "NON_WORLD_BLUR",  "BLEND", "BLEND_NOWORLD", "BLOOM" ,"BLOOM_NOWORLD" ,"BLUR_NO_EMMISVE", "BLUR_NO_WORLD_NO_EMISSIVE","WEIGHTBLEND_FOR_BLEND" , "DEPTH_STOP" };
 	const char* pBloomType[] = { "NONE" , "BASIC" , "MUILTY"};
 
 	_int iCurrentItem = static_cast<_int>(m_EffectInfo.eRenderOrder);
@@ -600,6 +600,13 @@ void CEditEffect::Describe_Entity()
 
 			GUI::Checkbox("Light Dissolve", &m_EffectInfo.isLightDissolve);
 			GUI::InputFloat("Light Time", &m_EffectInfo.isLightTime);
+			GUI::InputFloat("Light Delay", &m_EffectInfo.fLightDeley);
+			
+			if (GUI::InputFloat("Light Intensity", &m_EffectInfo.fLightIntensity))
+			{
+
+				m_pLightCom->Set_LightIntensity(m_EffectInfo.fLightIntensity);
+			}
 
 			if (GUI::Button("ADD_LIGHT_MANAGER"))
 			{
@@ -608,7 +615,7 @@ void CEditEffect::Describe_Entity()
 
 			if (GUI::Button("Reset_Dissolve"))
 			{
-				m_pLightCom->Reset_AmbientRatio();
+				m_pLightCom->Reset_IntensityRatio();
 			}
 		}
 

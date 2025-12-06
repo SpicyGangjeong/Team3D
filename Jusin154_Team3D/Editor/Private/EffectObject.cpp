@@ -48,6 +48,9 @@ HRESULT CEffectObject::Render()
 		if (FAILED(m_pInstance_ModelCom->Bind_CS_Output(5, 1)))
 			return E_FAIL;
 
+		if (FAILED(m_pInstance_ModelCom->Bind_OutPut_SRV_VS(5, 1)))
+			return E_FAIL;
+
 		if (FAILED(m_pInstance_ModelCom->Render(i)))
 		{
 			return E_FAIL;
@@ -237,8 +240,10 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 			return E_FAIL;
 		}
 
-
+		m_pLightCom->Set_LightIntensity(m_EffectInfo.fLightIntensity);
 	}
+
+
 		
 
 	if (m_EffectInfo.isDiffuse)
@@ -720,6 +725,10 @@ HRESULT CEffectObject::Bind_ShaderResources()
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture"))) {
+		return E_FAIL;
+	}
+
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))) {
 		return E_FAIL;
 	}
@@ -727,6 +736,13 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrixInv", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW_INV)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrixInv", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ_INV)))) {
+		return E_FAIL;
+
+	}
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDiffuse", &m_EffectInfo.isDiffuse, sizeof(_bool)))) {
 		return E_FAIL;

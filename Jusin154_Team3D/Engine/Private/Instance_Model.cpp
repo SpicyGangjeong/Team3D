@@ -567,6 +567,8 @@ void CInstance_Model::Drop(_float fTimeDelta)
 	vector<D3D11_MAPPED_SUBRESOURCE> OutSubResources = {};
 	D3D11_MAPPED_SUBRESOURCE VBInstanceResource = {};
 
+	m_pGameInstance->Bind_CS_RenderTarget(2, L"Target_Depth");
+
 	OutSubResources = m_pComputeShader->Dispatch(0, 0, _float3((_float)iGroupCountX, 1.f, 1.f), CSBuffers, m_pConstantBuffer);
 
 	if (SUCCEEDED(m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_DISCARD, 0, &VBInstanceResource)))
@@ -745,7 +747,17 @@ HRESULT CInstance_Model::Bind_CS_Output(_uint Index, _uint iBufferIndex)
 	return S_OK;
 }
 
- 
+HRESULT CInstance_Model::Bind_OutPut_SRV_VS(_uint Index, _uint iBufferIndex)
+{
+	if (m_pComputeShader == nullptr)
+		return E_FAIL;
+
+	m_pComputeShader->Bind_OutPut_SRV_VS(Index, iBufferIndex);
+
+	return S_OK;
+
+}
+
 CInstance_Model* CInstance_Model::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex)
 {
 	CInstance_Model* pInstance = new CInstance_Model(pDevice, pContext);

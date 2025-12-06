@@ -41,12 +41,14 @@ struct ParticleValue
     float  fSizeDrag;
     float3 vDeltaSize;
     float2 vDelay;
-
+    float4 vPrePos;
 };
 
 
 StructuredBuffer<Particle> g_ParticleBufferInput : register(t0);
 StructuredBuffer<ParticleValue> g_ParticleValueBufferInput : register(t1);
+
+Texture2D g_DepthTexture : register(t2);
 
 RWStructuredBuffer<Particle> g_VBInstanceOutput : register(u0);
 RWStructuredBuffer<ParticleValue> g_ParticleValueOutput : register(u1);
@@ -92,8 +94,7 @@ void CS_MAIN(
     
     if (particleValue.vDelay.x < particleValue.vDelay.y)
     {
-      
-        
+     
         g_VBInstanceOutput[iIndex] = particle;
         g_ParticleValueOutput[iIndex] = particleValue;
         
@@ -119,6 +120,9 @@ void CS_MAIN(
     // 라이프타임 움직임
     particle.vLifeTime.x += fTimeDelta;
     
+    // 내 이전 위치정보를 저장해둔다
+    particleValue.vPrePos = particle.vTranslation;
+    
     if (particle.vLifeTime.x >= particle.vLifeTime.y)
     {
         if (isLoop == false)
@@ -143,7 +147,6 @@ void CS_MAIN(
         return ;
     }
   
-   
     if (isMoveForward)
     {
         float fTime = (particle.vLifeTime.x / particle.vLifeTime.y);

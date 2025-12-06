@@ -181,6 +181,7 @@ public:
 		_float3   vDeltaSize = {};
 
 		_float2   vDelay = {};
+		_float4   vPrePos = {};
 
 	}CS_PARTICLE_VALUE_DESC;
 
@@ -203,6 +204,7 @@ public:
 	void			Instane_Buffer_ReStruct();
 	_uint			Get_NumMeshes() const { return m_iNumMeshes; }
 	HRESULT			Bind_CS_Output(_uint Index, _uint iBufferIndex);
+	HRESULT         Bind_OutPut_SRV_VS(_uint Index, _uint iBufferIndex);
 	INSTANCE_DESC	Get_EffectValue() { return m_InstanceDesc; }
 	HRESULT			Load_InstanceModel(HANDLE hFile);
 private:

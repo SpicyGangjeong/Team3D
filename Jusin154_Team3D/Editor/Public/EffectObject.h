@@ -104,15 +104,13 @@ public:
 		_float2		vDissolveUVGainAmount = {};
 		_bool		isDissolveMove = {};
 
-
-
 		_float3		vDissolveValue = {};
 
 
-		_float3		vPadding1 = {};
+		_float2		vPadding1 = {};
 
-		_float		fPadding0 = {};
-
+		_float      fLightDeley = {};
+		_float		fLightIntensity = {};
 		_float		isLightTime = { 0.f };
 		_bool		isLightDissolve = {};
 
