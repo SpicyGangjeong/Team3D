@@ -214,6 +214,8 @@ HRESULT CEffect_Container::Pre_Setting(CGameObject* pObject, void* pArg)
 	m_pOwner = pObject;
 
 
+	//Add_Chlid_Light();
+
 	Reset_EffectParts();
 
 	m_fAccTime = 0.f;
@@ -364,6 +366,8 @@ void CEffect_Container::Update_Event(_float fTimeDelta)
 				pPart.second->Set_Visible(false);
 			}
 		}
+
+		//Delete_Chlid_Light();
 	}
 
 

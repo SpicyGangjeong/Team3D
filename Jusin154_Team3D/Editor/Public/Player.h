@@ -7,14 +7,6 @@ NS_BEGIN(Editor)
 
 class CPlayer final : public CUnit
 {
-public:
-	struct PendingEvent
-	{
-		_float fRatio = 0.f;
-		_uint AnimIndex = 0;
-		function<void()> Callback;
-	};
-
 private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CPlayer(const CPlayer& Prototype);
@@ -31,6 +23,7 @@ public:
 	_bool   Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
 	_matrix Get_WandPos();
 private:
+	class CInfoInstance* m_pInfoInstance = { nullptr };
 	CUnit* m_pLockOnMonster = { nullptr };
 	_float m_fDirectionRadian = 0.f;
 
@@ -89,14 +82,16 @@ public:
 
 
 private:
+	// UI 연동 추가
+	void Get_Spell(_int SkillIndex);
+	_int Index{ -1 };
+
 	void TestKeyInput(_float fTimeDelta);
 	virtual void Add_FSM();
 	virtual void Set_Anim();
 
-	void Play_Event();
-	void Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio = 0.f);
+	function<void()> m_InputAction = nullptr;
 
-	vector<PendingEvent> m_PendingEvents;
 
 	_float3 m_OffsetPos = {};
 	_float m_fAmount = { 1.f };

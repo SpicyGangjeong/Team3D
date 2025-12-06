@@ -12,6 +12,8 @@ public:
 	{
 		_uint iInteractableID = {};
 		_uint iSubKind = {};
+		_float3 vBoxLocalPosition;
+		_float3 vBoxSize;
 	}ELEMENT_INTERACTABLE_DESC;
 
 private:

@@ -168,7 +168,13 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	/* 조명 오브젝트 */
 	CInfoInstance::GetInstance()->Load_LightElements("LightElement");
 
-	
+	/* 상호작용 오브젝트 */
+	CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_Barrel");
+	CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_PostPackage_B");
+	CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_PostPackage_F");
+	CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_TeaShopTable");
+	CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_TeaShopChair");
+
 	CInstancedProp::INSTANCE_PROP_DESC Desc = {};
 
 	/* InstanceProp Oak_Tree*/

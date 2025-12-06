@@ -23,6 +23,7 @@ public:
 	HRESULT Load_MapRenderObjects(tinyxml2::XMLElement* Container, class CMapContainer* pContainerObject);
 	HRESULT Load_MapCollisionObjects(tinyxml2::XMLElement* Container, class CMapContainer* pContainerObject);
 	HRESULT Load_LightElements(const _char* pFileName);
+	HRESULT Load_InteractableElements(const _char* pFileName);
 
 private:
 	CGameInstance*			m_pGameInstance = { nullptr };
