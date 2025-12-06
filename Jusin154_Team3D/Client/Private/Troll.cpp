@@ -119,7 +119,7 @@ void CTroll::Late_Update(_float fTimeDelta)
 	}
 
 	if (m_bLookAt) {
-		m_pTransformCom->LookAt_Lerp(XMLoadFloat4(&m_vTargetPos),fTimeDelta, 5.f);
+		m_pTransformCom->LookAt_Lerp(XMLoadFloat4(&m_vTargetPos),fTimeDelta, 3.f);
 	}
 	
 
@@ -377,6 +377,8 @@ void CTroll::Describe_Entity()
 	{
 		m_pCharacter_Controller->Set_Position(XMLoadFloat3(&Pos));
 	}
+	GUI::TextColored(ImVec4(1.f, 0.f, 0.f, 1.f), "Degree %.2f", m_fDegree);
+	GUI::TextColored(ImVec4(1.f, 0.f, 0.f, 1.f), "Distance %.2f", m_fTargetDistance);
 
 	GUI::End();
 

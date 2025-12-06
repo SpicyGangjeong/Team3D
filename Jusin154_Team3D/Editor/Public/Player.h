@@ -7,6 +7,15 @@ NS_BEGIN(Editor)
 
 class CPlayer final : public CUnit
 {
+public:
+	struct PendingEvent
+	{
+		_float fRatio = 0.f;
+		_uint AnimIndex = 0;
+		function<void()> Callback;
+		_bool bLoop = false;
+	};
+
 private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CPlayer(const CPlayer& Prototype);
@@ -91,6 +100,8 @@ private:
 	virtual void Set_Anim();
 
 	function<void()> m_InputAction = nullptr;
+	void Play_Event();
+	void Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio = 0.f, _bool bLoop = false);
 
 
 	_float3 m_OffsetPos = {};

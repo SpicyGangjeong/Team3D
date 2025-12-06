@@ -1874,8 +1874,8 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 
 	m_strMessage = TEXT("Model Loading..");
 
-	/*if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_NPC"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, "C:/MeshTable\\Game\\RiggedObjects\\Characters\\Human\\Body\\Generic_M\\SK_GenericDarkWizard_14.fbx", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixIdentity())))) {
+	/*if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_SK_GenericDarkWizard_14_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM_LOCAL, "C:/MeshTable\\Game\\RiggedObjects\\Characters\\Human\\Body\\Generic_M\\SK_GenericDarkWizard_14.fbx", XMMatrixIdentity())))) {
 		return E_FAIL;
 	}*/
 
@@ -1995,6 +1995,7 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		MODEL::ANIM, "../Bin/Resources/Models/Monster/Troll/Troll.bin", XMMatrixIdentity(),
 		TEXT("Prototype_Component_Troll_Model")
 	));
+
 	futures.emplace_back(Deferred_ModelLoad(
 		MODEL::ANIM, "../Bin/Resources/Models/Monster/Dragon/Dragon.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
 		TEXT("Prototype_Component_Dragon_Model")

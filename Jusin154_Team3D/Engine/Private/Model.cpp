@@ -733,6 +733,75 @@ HRESULT CModel::Ready_Materials_FromFile(const aiScene* pAIScene, const _char* p
 	return S_OK;
 }
 
+HRESULT CModel::Ready_Materials_FromFile_Anim(const aiScene* pAIScene, const _char* pModelFilePath)
+{
+	m_iNumMaterials = pAIScene->mNumMaterials;
+	m_Materials.reserve(m_iNumMaterials);
+
+	_char szDrive[MAX_PATH] = {};
+	_char szDir[MAX_PATH] = {};
+	_char szFileName[MAX_PATH] = {};
+	_char szMeshFilePath[MAX_PATH] = {};
+	vector<_string> MaterialFilePathes;
+	string strFolderPath = pModelFilePath;
+
+	size_t iFolderPos = strFolderPath.find("MeshTable");
+
+	strFolderPath = strFolderPath.substr(0, iFolderPos) + "MeshTable/";
+
+	_splitpath_s(pModelFilePath, szDrive, MAX_PATH, szDir, MAX_PATH, szFileName, MAX_PATH, nullptr, 0);
+
+	strcpy_s(szMeshFilePath, szDrive);
+	strcat_s(szMeshFilePath, szDir);
+	strcat_s(szMeshFilePath, szFileName);
+	strcat_s(szMeshFilePath, ".props.txt");
+
+	ifstream file(szMeshFilePath);
+
+	if (!file.is_open())
+	{
+		return S_OK;
+	}
+
+	string strText = {};
+	_uint iNumParameter = {};
+
+	getline(file, strText);
+	getline(file, strText);
+
+	for (_uint i = 0; i < m_iNumMaterials; ++i)
+	{
+		getline(file, strText);
+
+		_int iBeginIndex = (_int)strText.find_first_of("/");
+		_int iEndIndex = (_int)strText.find('.');
+		if (-1 == iBeginIndex || -1 == iEndIndex) {
+
+			MSG_BOX("Fail Path _ NotExist");
+			return E_FAIL;
+		}
+		if ((_int)strText.size() < iEndIndex - iBeginIndex)
+		{
+			MSG_BOX("Fail Path");
+			return E_FAIL;
+		}
+
+		string	strPath = strFolderPath + strText.substr(iBeginIndex + 1, iEndIndex - iBeginIndex - 1);
+		MaterialFilePathes.push_back(strPath);
+	}
+
+	for (size_t i = 0; i < m_iNumMaterials; ++i) {
+		CMaterial* pMaterial = CMaterial::Create(m_pDevice, m_pContext, MaterialFilePathes[i].c_str(), strFolderPath.c_str());
+		if (nullptr == pMaterial) {
+			return E_FAIL;
+		}
+		m_Materials.push_back(pMaterial);
+	}
+	m_Materials.shrink_to_fit();
+
+	return S_OK;
+}
+
 HRESULT CModel::Ready_Materials_Independent(MODEL eType, const aiScene* pAIScene, const _char* pModelFilePath)
 {
 	m_iNumMaterials = pAIScene->mNumMaterials;
@@ -1120,6 +1189,12 @@ HRESULT CModel::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fma
 	if (MODEL::ENVIROMENT == eType)
 	{
 		if (FAILED(Ready_Materials_FromFile(m_pAIScene, pModelFilePath))) {
+			return E_FAIL;
+		}
+	}
+	else if (MODEL::ANIM_LOCAL == eType)
+	{
+		if (FAILED(Ready_Materials_FromFile_Anim(m_pAIScene, pModelFilePath))) {
 			return E_FAIL;
 		}
 	}
@@ -1732,7 +1807,7 @@ HRESULT CModel::Initialize(void* pArg)
 	SAFE_ADDREF(m_pTransform);
 
 
-	if (m_eType == MODEL::ANIM)
+	if (m_eType == MODEL::ANIM || m_eType == MODEL::ANIM_LOCAL)
 	{
 		Initialize_RootBone();
 		InItialize_BoneIndex();
