@@ -733,6 +733,21 @@ HRESULT CModel::Ready_Materials_FromFile(const aiScene* pAIScene, const _char* p
 	return S_OK;
 }
 
+HRESULT CModel::Ready_Materials_Independent(MODEL eType, const aiScene* pAIScene, const _char* pModelFilePath)
+{
+	m_iNumMaterials = pAIScene->mNumMaterials;
+	m_Materials.reserve(m_iNumMaterials);
+	for (size_t i = 0; i < m_iNumMaterials; ++i) {
+		CMaterial* pMaterial = CMaterial::Create(m_pDevice, m_pContext, eType, pModelFilePath, pAIScene->mMaterials[i]);
+		if (nullptr == pMaterial) {
+			return E_FAIL;
+		}
+		m_Materials.push_back(pMaterial);
+	}
+	m_Materials.shrink_to_fit();
+	return S_OK;
+}
+
 HRESULT CModel::Ready_Animations(const aiScene* pAIScene)
 {
 	m_iNumAnimations = pAIScene->mNumAnimations;
@@ -1086,8 +1101,9 @@ HRESULT CModel::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fma
 	m_iRootBoneIndex = iRootBoneIndex;
 
 	m_pAIScene = m_Importer.ReadFile(pModelFilePath, iFlag);
-	if (nullptr == m_pAIScene)
+	if (nullptr == m_pAIScene){
 		return E_FAIL;
+	}
 
 
 #pragma region Bone
@@ -1107,8 +1123,11 @@ HRESULT CModel::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fma
 			return E_FAIL;
 		}
 	}
-	else
-	{
+	else if (MODEL::INDEPENDENT == eType) {
+		if (FAILED(Ready_Materials_Independent(eType, m_pAIScene, pModelFilePath))) {
+			return E_FAIL;
+		}
+	} else {
 		if (FAILED(Ready_Materials(m_pAIScene, pModelFilePath))) {
 			return E_FAIL;
 		}
