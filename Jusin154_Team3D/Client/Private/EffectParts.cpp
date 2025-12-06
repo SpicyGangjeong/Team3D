@@ -65,6 +65,14 @@ void CEffectParts::Late_Update(_float fTimeDelta)
 	m_pInstance_ModelCom->Drop(fTimeDelta);
 
 
+	if (m_EffectInfo.isLightDissolve == true)
+	{
+		if (m_pLightCom != nullptr)
+		{
+			m_pLightCom->Update_AmbientRatio(fTimeDelta, m_EffectInfo.isLightTime);
+		}
+	}
+
 	if (m_EffectInfo.isBillboard)
 		m_pGameInstance->BillBoard(m_pTransformCom);
 
@@ -82,6 +90,9 @@ void CEffectParts::Late_Update(_float fTimeDelta)
 
 	if (m_EffectInfo.isOnlyBlur == true)
 		return;
+
+	if (m_pLightCom != nullptr)
+		m_pGameInstance->Add_Light_Group(CURRENT_LEVEL, m_pLightCom);
 
 	m_pGameInstance->Add_RenderGroup(m_EffectInfo.eRenderOrder, this);
 
