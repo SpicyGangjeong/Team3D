@@ -381,15 +381,7 @@ void CPlayer::Update_CameraCoordinateSystem()
 	XMStoreFloat3(&m_vCameraLookDir, xmvCameraLook);
 	m_pInfoInstance->Update_CameraCoordinateSystem(m_vCameraLookDir, m_vRimLightColor);
 }
-void CPlayer::Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio, _bool bLoop)
-{
-	PendingEvent Desc;
-	Desc.AnimIndex = AnimIndex;
-	Desc.fRatio = fRatio;
-	Desc.Callback = Callback;
-	Desc.bLoop = bLoop;
-	m_PendingEvents.push_back(Desc);
-}
+
 
 _matrix CPlayer::Get_WandPos()
 {

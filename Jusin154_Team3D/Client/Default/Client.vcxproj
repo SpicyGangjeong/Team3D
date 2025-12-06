@@ -266,9 +266,11 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\State_IdleBreak.h" />
     <ClInclude Include="..\Public\State_Jump.h" />
     <ClInclude Include="..\Public\State_Land.h" />
+    <ClInclude Include="..\Public\State_LightAttack.h" />
     <ClInclude Include="..\Public\State_Move.h" />
     <ClInclude Include="..\Public\State_Root.h" />
     <ClInclude Include="..\Public\State_Slam.h" />
+    <ClInclude Include="..\Public\State_Spell.h" />
     <ClInclude Include="..\Public\State_Swing.h" />
     <ClInclude Include="..\Public\State_Throw.h" />
     <ClInclude Include="..\public\StreetContainer.h" />
@@ -396,9 +398,11 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\State_IdleBreak.cpp" />
     <ClCompile Include="..\Private\State_Jump.cpp" />
     <ClCompile Include="..\Private\State_Land.cpp" />
+    <ClCompile Include="..\Private\State_LightAttack.cpp" />
     <ClCompile Include="..\Private\State_Move.cpp" />
     <ClCompile Include="..\Private\State_Root.cpp" />
     <ClCompile Include="..\Private\State_Slam.cpp" />
+    <ClCompile Include="..\Private\State_Spell.cpp" />
     <ClCompile Include="..\Private\State_Swing.cpp" />
     <ClCompile Include="..\Private\State_Throw.cpp" />
     <ClCompile Include="..\private\StreetContainer.cpp" />
