@@ -118,7 +118,7 @@ HRESULT CUnit::Ready_Components(void *pArg)
 	if (FAILED(Add_Component<CFSM>(g_iStaticLevel, &m_pFSM))){
 		return E_FAIL;
 	}
-
+	 
 	return S_OK;
 }
 
@@ -129,24 +129,36 @@ void CUnit::Play_Event()
 		_float ratio = m_pModelCom->Get_CurrentTrackProgressRatio();
 		_uint curAnim = m_pModelCom->Get_AnimIndex();
 
-		if (curAnim == iter->AnimIndex && ratio >= iter->fRatio)
+		if (curAnim == iter->AnimIndex)
 		{
-			iter->Callback();
-			iter = m_PendingEvents.erase(iter);
+			if (!iter->bExecuted && ratio >= iter->fRatio)
+			{
+				iter->Callback();
+				iter->bExecuted = true;
+
+				if (!iter->bKeep)
+				{
+					iter = m_PendingEvents.erase(iter);
+					continue;
+				}
+			}
 		}
 		else
 		{
-			++iter;
+			iter->bExecuted = false;
 		}
+
+		++iter;
 	}
 }
 
-void CUnit::Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio)
+void CUnit::Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio,_bool bKeep)
 {
 	PendingEvent Desc;
 	Desc.AnimIndex = AnimIndex;
 	Desc.fRatio = fRatio;
 	Desc.Callback = Callback;
+	Desc.bKeep = bKeep;
 	m_PendingEvents.push_back(Desc);
 }
 

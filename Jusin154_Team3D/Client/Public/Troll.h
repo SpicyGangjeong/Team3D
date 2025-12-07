@@ -73,10 +73,13 @@ private:
 	_float m_fDegree = {};
 	_float m_fCross = {};
 
-
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();
 	void	Behavior_IdleExit();
+
+	void	Behavior_IdleBreakEnter();
+	HRESULT Behavior_IdleBreakExitCheck();
+	void	Behavior_IdleBreakExit();
 
 	void	Behavior_MoveEnter();
 	HRESULT Behavior_MoveExitCheck(_float fTimeDelta);
@@ -97,6 +100,14 @@ private:
 	void	Behavior_SwingEnter();
 	HRESULT Behavior_SwingExitCheck(_float fTimeDelta);
 	void	Behavior_SwingExit();
+
+	void	Behavior_SlamEnter();
+	HRESULT Behavior_SlamExitCheck(_float fTimeDelta);
+	void	Behavior_SlamExit();
+
+	void	Behavior_BackHandSwingEnter();
+	HRESULT Behavior_BackHandSwingExitCheck(_float fTimeDelta);
+	void	Behavior_BackHandSwingExit();
 
 	void	Behavior_HitEnter();
 	HRESULT Behavior_HitExitCheck();

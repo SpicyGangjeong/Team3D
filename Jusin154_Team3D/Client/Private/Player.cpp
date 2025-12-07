@@ -122,11 +122,8 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 void CPlayer::Update(_float fTimeDelta)
 {
 	Update_CameraCoordinateSystem();
-
 	
 	m_pFSM->Update_State(fTimeDelta);
-	
-
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 

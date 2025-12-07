@@ -263,10 +263,14 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\State_Dodge.h" />
     <ClInclude Include="..\Public\State_Hit.h" />
     <ClInclude Include="..\Public\State_Idle.h" />
+    <ClInclude Include="..\Public\State_IdleBreak.h" />
     <ClInclude Include="..\Public\State_Jump.h" />
     <ClInclude Include="..\Public\State_Land.h" />
+    <ClInclude Include="..\Public\State_LightAttack.h" />
     <ClInclude Include="..\Public\State_Move.h" />
     <ClInclude Include="..\Public\State_Root.h" />
+    <ClInclude Include="..\Public\State_Slam.h" />
+    <ClInclude Include="..\Public\State_Spell.h" />
     <ClInclude Include="..\Public\State_Swing.h" />
     <ClInclude Include="..\Public\State_Throw.h" />
     <ClInclude Include="..\public\StreetContainer.h" />
@@ -274,6 +278,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\TrailObject.h" />
     <ClInclude Include="..\Public\Troll.h" />
     <ClInclude Include="..\Public\Troll_Rock.h" />
+    <ClInclude Include="..\Public\Troll_State_BackHand_Swing.h" />
     <ClInclude Include="..\Public\Troll_State_Rush.h" />
     <ClInclude Include="..\Public\Troll_Weapon.h" />
     <ClInclude Include="..\public\UI_Manager.h" />
@@ -390,10 +395,14 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\State_Dodge.cpp" />
     <ClCompile Include="..\Private\State_Hit.cpp" />
     <ClCompile Include="..\Private\State_Idle.cpp" />
+    <ClCompile Include="..\Private\State_IdleBreak.cpp" />
     <ClCompile Include="..\Private\State_Jump.cpp" />
     <ClCompile Include="..\Private\State_Land.cpp" />
+    <ClCompile Include="..\Private\State_LightAttack.cpp" />
     <ClCompile Include="..\Private\State_Move.cpp" />
     <ClCompile Include="..\Private\State_Root.cpp" />
+    <ClCompile Include="..\Private\State_Slam.cpp" />
+    <ClCompile Include="..\Private\State_Spell.cpp" />
     <ClCompile Include="..\Private\State_Swing.cpp" />
     <ClCompile Include="..\Private\State_Throw.cpp" />
     <ClCompile Include="..\private\StreetContainer.cpp" />
@@ -402,6 +411,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Troll.cpp" />
     <ClCompile Include="..\Private\Troll_Rock.cpp" />
     <ClCompile Include="..\Private\Troll_States.cpp" />
+    <ClCompile Include="..\Private\Troll_State_BackHand_Swing.cpp" />
     <ClCompile Include="..\Private\Troll_State_Rush.cpp" />
     <ClCompile Include="..\Private\Troll_Weapon.cpp" />
     <ClCompile Include="..\private\UI_Manager.cpp" />
