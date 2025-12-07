@@ -60,7 +60,7 @@ PSX::PxControllerBehaviorFlags CCallBack_Monster_Behavior::getBehaviorFlags(cons
 PSX::PxControllerBehaviorFlags CCallBack_Monster_Behavior::getBehaviorFlags(const PSX::PxController& controller)
 {
 	// CCT끼리 부딪힐 때를 굳이 안 쓰면 0 리턴
-	return PSX::PxControllerBehaviorFlags(0);
+	return PSX::PxControllerBehaviorFlag::eCCT_SLIDE;
 }
 
 PSX::PxControllerBehaviorFlags CCallBack_Monster_Behavior::getBehaviorFlags(const PSX::PxObstacle& obstacle)

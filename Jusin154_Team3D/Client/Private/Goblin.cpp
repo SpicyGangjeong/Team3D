@@ -189,17 +189,9 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 		return;
 	}
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
-	_vector vWorldPos = {};		// 접촉지점
-	_vector vWorldNomal = {};	// 접촉노말
-	_vector vHitDir = {};		// 시도한 move 방향
-	_float  fLength = {};		// 작용된 힘
 
-	//m_pCharacter_Controller->ConvertToDO(*m_pRigidBody);
-	//m_pRigidBody->Add_Force(vHitDir * fLength * 10000.f, PSX::PxForceMode::eFORCE);
-
-	//m_pCharacter_Controller->ConvertToDO(*m_pRigidBody);
-	//m_pRigidBody->Add_Force(vHitDir * fLength * 100.f, PSX::PxForceMode::eIMPULSE);
 	_uint iSkillType = dynamic_cast<CEffect_Container*>(pOther)->Get_SkillType();
+	m_fHitRadius = CMyTools::Get_Direction2D(m_pTransformCom->Get_State(STATE::LOOK), XMLoadFloat4(&CollisionDesc->vHitDir));
 	switch (iSkillType)
 	{
 	case ENUM_CLASS(SKILL_TYPE::DESCENDO):
@@ -211,6 +203,7 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 	case ENUM_CLASS(SKILL_TYPE::JAP):
 		m_eHitSpell = STATEANIM::HIT_LEVIOSO;
 		if (true == Get_Damage(60.f)) {
+			m_pFSM->Change_State(FSMSTATE::DEAD);
 			return;
 		}
 		break;

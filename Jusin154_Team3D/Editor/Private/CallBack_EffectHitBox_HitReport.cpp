@@ -45,8 +45,7 @@ void CCallBack_EffectHitBox_HitReport::onShapeHit(const PSX::PxControllerShapeHi
 
 				/* OnCollision 함수에 넘길 값 */
 
-
-				CollisionDesc.vWorldPos = XMVectorSet( (_float)vWorldPos.x, (_float)vWorldPos.y, (_float)vWorldPos.z, 1.f);
+				CollisionDesc.vWorldPos = { (_float)vWorldPos.x, (_float)vWorldPos.y, (_float)vWorldPos.z, 1.f };
 				memcpy(&CollisionDesc.vWorldNomal, &vWorldNormal, sizeof(_float3));
 				memcpy(&CollisionDesc.vHitDir, &vDir, sizeof(_float3));
 				CollisionDesc.fLength = fLength;

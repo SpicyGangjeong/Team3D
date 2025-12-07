@@ -268,6 +268,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\State_Blink.h" />
     <ClInclude Include="..\Public\State_Broom_Ride.h" />
     <ClInclude Include="..\Public\State_Combat.h" />
+    <ClInclude Include="..\Public\State_Dead.h" />
     <ClInclude Include="..\Public\State_Dodge.h" />
     <ClInclude Include="..\Public\State_Hit.h" />
     <ClInclude Include="..\Public\State_Idle.h" />
@@ -408,6 +409,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\State_Blink.cpp" />
     <ClCompile Include="..\Private\State_Broom_Ride.cpp" />
     <ClCompile Include="..\Private\State_Combat.cpp" />
+    <ClCompile Include="..\Private\State_Dead.cpp" />
     <ClCompile Include="..\Private\State_Dodge.cpp" />
     <ClCompile Include="..\Private\State_Hit.cpp" />
     <ClCompile Include="..\Private\State_Idle.cpp" />

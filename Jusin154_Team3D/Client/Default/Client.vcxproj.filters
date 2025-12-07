@@ -409,6 +409,9 @@
     <ClInclude Include="..\Public\Logo_Text.h">
       <Filter>02.GameObjects\UI\Screen\Logo\Logo_Text</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\State_Dead.h">
+      <Filter>04.Mechanic\State\State_Combat\Dead</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -866,6 +869,9 @@
     <Filter Include="02.GameObjects\UI\Screen\Logo\Logo_Text">
       <UniqueIdentifier>{c584798b-d7aa-4cb0-b6e8-c2aff73757ce}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\Dead">
+      <UniqueIdentifier>{81add99f-7450-4730-8d3f-bf1de06b2b8d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1272,6 +1278,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Logo_Text.cpp">
       <Filter>02.GameObjects\UI\Screen\Logo\Logo_Text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Dead.cpp">
+      <Filter>04.Mechanic\State\State_Combat\Dead</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

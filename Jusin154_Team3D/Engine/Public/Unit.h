@@ -76,6 +76,7 @@ protected:
 
 	_int m_eSpell = { };
 	_int m_eHitSpell = {};
+	_float m_fHitRadius = {};
 
 	vector<PendingEvent> m_PendingEvents;
 

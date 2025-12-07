@@ -140,12 +140,18 @@ void CNomalJap::SweepTarget()
 
 	PSX::PxSweepBuffer pxBuffer = {};
 
-	_bool bHit = m_pGameInstance->SphereCast(0.2f, vStartPos, vDir, fDistance, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eDYNAMIC, pxBuffer);
+	_bool bHit = m_pGameInstance->SphereCast(0.002f, vStartPos, vDir, fDistance, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eDYNAMIC, pxBuffer);
 
 	if (bHit) {
 		const PSX::PxSweepHit& hit = pxBuffer.block;
 		PSX::PxRigidActor* pActor = hit.actor;
 		PSX::PxShape* pShape = hit.shape;
+		ON_COLLISION_INFO tagCollInfo = {};
+		memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &hit.position, sizeof(hit.position));
+		memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &hit.normal, sizeof(hit.normal));
+		XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
+		tagCollInfo.fLength = fDistance;
+
 
 		if (nullptr != pActor && nullptr != pActor->userData)
 		{
@@ -158,15 +164,16 @@ void CNomalJap::SweepTarget()
 				switch (PXOBJECT(pUserData->iSubKind))
 				{
 				case PXOBJECT::MONSTER:
+					break;
 				case PXOBJECT::GOBLIN_WARRIOR:
 				{
-					pUserData->pOwner->OnCollision(this);
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
 					m_bHit = true;
 				}
 				break;
 				case PXOBJECT::TROLL:
 				{
-					pUserData->pOwner->OnCollision(this);
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
 					m_bHit = true;
 				}
 				break;

@@ -121,11 +121,12 @@ void CMonster::Set_DrawOutLine()
 
 _bool CMonster::Get_Damage(_float fDamage)
 {
-	_bool bDead = m_pStat->Get_Damage(fDamage);
-	if (true == bDead) {
-		m_bDead = true;
-	}
-	return m_bDead;
+	return  m_pStat->Get_Damage(fDamage);
+}
+
+_float2 CMonster::Get_Hp()
+{
+	return { m_pStat->Get_Stat(ENUM_CLASS(STAT::HP)), m_pStat->Get_Stat(ENUM_CLASS(STAT::MAXHP)) };
 }
 
 HRESULT CMonster::Ready_Components(void*pArg)

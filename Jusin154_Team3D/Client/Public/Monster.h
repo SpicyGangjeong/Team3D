@@ -20,6 +20,7 @@ public:
 	virtual void Set_DrawOutLine();
 	_float4 Get_TargetPos() { return m_vTargetPos; }
 	virtual _bool Get_Damage(_float fDamage);
+	virtual _float2 Get_Hp();
 
 protected:
 	CInfoInstance*	m_pInfoInstance = { nullptr };
