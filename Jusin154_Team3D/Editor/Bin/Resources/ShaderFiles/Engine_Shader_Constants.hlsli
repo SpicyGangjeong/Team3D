@@ -40,8 +40,8 @@ static const float AI_TEXTURE_TYPE_MAYA_SPECULAR            = 23.f / 27.f;
 static const float AI_TEXTURE_TYPE_MAYA_SPECULAR_COLOR      = 24.f / 27.f;
 static const float AI_TEXTURE_TYPE_MAYA_SPECULAR_ROUGHNESS  = 25.f / 27.f;
 static const float AI_TEXTURE_TYPE_ANISOTROPY               = 26.f / 27.f;
-static const float AI_TEXTURE_TYPE_GLTF_METALLIC_ROUGHNESS  = 27.f / 27.f;
-
+static const uint  AI_TEXTURE_TYPE_GLTF_METALLIC_ROUGHNESS  = 1;
+static const uint  AI_TEXTURE_TYPE_MAX = AI_TEXTURE_TYPE_GLTF_METALLIC_ROUGHNESS;
 
 
 #endif // ENGINE_SHADER_CONSTANTS_HLSLI

@@ -100,8 +100,6 @@ private:
 	virtual void Set_Anim();
 
 	function<void()> m_InputAction = nullptr;
-	void Play_Event();
-	void Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio = 0.f, _bool bLoop = false);
 
 
 	_float3 m_OffsetPos = {};

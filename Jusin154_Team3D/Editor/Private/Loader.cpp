@@ -36,11 +36,18 @@
 
 #pragma region UI
 
+#include "Logo.h"
+#include "Logo_Text.h"
+#include "Logo_Glow.h"
+
 #include "Spell_Data.h"
 #include "UI_Manager.h"
 
 #include "Mouse_Cursor.h"
 #include "CameraLockOn.h"
+
+#include "Loding_Canvas.h"
+#include "Loding_Panel.h"
 
 #include "GamePlay_Canvas.h"
 
@@ -251,6 +258,22 @@ HRESULT CLoader::Loading_For_Logo()
 		return E_FAIL;
 	}
 
+	Asset_FileLoad("../Bin/Resources/Textures/Logo", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
+		{
+
+			_string strFilePath = pFilePath;
+			_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
+
+
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::LOGO), wstrFileName,
+				CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
+				return E_FAIL;
+			}
+
+			return S_OK;
+
+		});
+
 	m_strMessage = TEXT("Model Loading..");
 
 
@@ -303,6 +326,18 @@ HRESULT CLoader::Loading_For_Logo()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CMainLight>(g_iStaticLevel, CMainLight::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CLogo>(g_iStaticLevel, CLogo::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CLogo_Text>(g_iStaticLevel, CLogo_Text::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CLogo_Glow>(g_iStaticLevel, CLogo_Glow::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
@@ -812,12 +847,6 @@ HRESULT CLoader::Loading_For_UI()
 
 	m_strMessage = TEXT("Shader Loading..");
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_UIEDITOR,
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_UIEditor.hlsl"),
-			VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)))) {
-		return E_FAIL;
-	}
-
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_UIINSTANCE,
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_UI_Instance.hlsl"),
 			VTX_POSTEX_INSTANCE_UI::Elements, VTX_POSTEX_INSTANCE_UI::iNumElements)))) {
@@ -843,6 +872,11 @@ HRESULT CLoader::Loading_For_UI()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CCameraLockOn>(g_iStaticLevel, CCameraLockOn::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CLoding_Canvas>(g_iStaticLevel, CLoding_Canvas::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
@@ -1638,7 +1672,7 @@ HRESULT CLoader::Loading_For_Bloom()
 #pragma region HAIR
 
 	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::INDEPENDENT, "../Bin/Resources/Models/Monster/SubTroll/troll.fbx", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll.fbx", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
 		TEXT("Prototype_Component_SubTroll_Model")
 	));
 

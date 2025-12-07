@@ -122,6 +122,7 @@ HRESULT CEffectPool::Bind_ShaderResources()
 
 HRESULT CEffectPool::Ready_Effect()
 {
+#ifndef 기무리
 	if(FAILED(Create_Effect(SKILL_TYPE::JAP, 10, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 		CNomalJap* pEffect = nullptr;
 
@@ -130,7 +131,6 @@ HRESULT CEffectPool::Ready_Effect()
 		return pEffect;}
 	))) return E_FAIL;
 
-#ifndef 기무리
 
 	if (FAILED(Create_Effect(SKILL_TYPE::BOMBARDA, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel)-> CEffect_Container* {
 

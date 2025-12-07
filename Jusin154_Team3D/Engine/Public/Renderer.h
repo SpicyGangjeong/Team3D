@@ -87,6 +87,7 @@ private:
 	void Render_LastColor();
 	void Render_Tone_Mapping();
 	void Render_UI();
+	void Render_UI_Overley();
 
 
 #ifdef _DEBUG
