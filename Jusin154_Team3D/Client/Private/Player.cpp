@@ -501,6 +501,7 @@ void CPlayer::Free()
 	SAFE_RELEASE(m_pCharacter_Controller);
 	SAFE_RELEASE(m_pRigidBody);
 	SAFE_RELEASE(m_pLightCom);
+	SAFE_RELEASE(m_pStat);
 	Safe_Delete(m_pCallBack_Behavior);
 	Safe_Delete(m_pCallBack_HitReport);
 	SAFE_RELEASE(m_pCamPosition_TopDown_FollowPart);

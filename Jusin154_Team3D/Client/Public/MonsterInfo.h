@@ -42,6 +42,7 @@ private:
 	HRESULT Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContex);
 	HRESULT	Refresh_LockOnMonsters();
 	HRESULT	Refresh_PlayerAllies();
+	HRESULT Refresh_ActiveMonsters();
 
 
 public:

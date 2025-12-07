@@ -255,7 +255,7 @@ HRESULT CGoblin::Ready_Components()
 		Desc.iSubKind = ENUM_CLASS(PXOBJECT::GOBLIN_WARRIOR);
 		Desc.pTransform = m_pTransformCom;
 		Desc.eBodyType = ACTOR::CAPSULE;
-		Desc.fContactOffset = 0.3f;
+		Desc.fContactOffset = 0.001f;
 		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
 		Desc.bAutoStepping = { false };
 		Desc.fStepOffset = { 0.05f };

@@ -47,7 +47,7 @@ HRESULT CInfoInstance::Regist_PlayerAlly(CUnit* pUnit)
 
 HRESULT CInfoInstance::Deregist_PlayerAlly(CUnit* pUnit)
 {
-	if (nullptr == s_pInstance) {
+	if (nullptr == s_pInstance || nullptr == m_pMonsterInfo) {
 		return S_OK; // 게임 종료 된 상태
 	}
 	return m_pMonsterInfo->Deregist_PlayerAlly(pUnit);
@@ -60,7 +60,7 @@ HRESULT CInfoInstance::Regist_ActiveMonster(CMonster* pUnit)
 
 HRESULT CInfoInstance::Deregist_ActiveMonster(CMonster* pUnit)
 {
-	if (nullptr == s_pInstance) {
+	if (nullptr == s_pInstance || nullptr == m_pMonsterInfo) {
 		return S_OK; // 게임 종료 된 상태
 	}
 	return m_pMonsterInfo->Deregist_ActiveMonster(pUnit);

@@ -21,8 +21,18 @@ ID3D11ShaderResourceView* CResource_Manager::Add_Texture(const _char* pFilePath)
 		auto iter = m_Resources.find(wstrKeyOriginal);
 		if (iter != m_Resources.end())
 		{
+#ifdef _DEBUG
+			lock_guard<mutex> statisticsLock(m_mtxStatistics);
+			m_mapCacheHit[wstrKeyOriginal]++;
+#endif // _DEBUG
 			SAFE_ADDREF(iter->second);
 			return iter->second;
+		}
+		else {
+#ifdef _DEBUG
+			lock_guard<mutex> statisticsLock(m_mtxStatistics);
+			m_mapCacheMiss[wstrKeyOriginal]++;
+#endif // _DEBUG
 		}
 		// sharedLock 소멸
 	} // 브레이스 해제 금지
@@ -125,3 +135,80 @@ void CResource_Manager::Free()
 	}
 	m_Resources.clear();
 }
+
+
+#ifdef _DEBUG
+
+void CResource_Manager::Describe_Entity()
+{
+	static vector<pair<_wstring, _uint>> vecHit = {};
+	static vector<pair<_wstring, _uint>> vecMiss = {};
+	GUI::Begin("ResourceManager");
+	if (GUI::Button("Refresh")) {
+		vecHit.clear();
+		vecMiss.clear();
+		for (auto& element : m_mapCacheHit){
+			vecHit.emplace_back(element);
+		}
+		for (auto& element : m_mapCacheMiss){
+			vecMiss.emplace_back(element);
+		}
+		sort(vecHit.begin(), vecHit.end(),
+			[](const pair<_wstring, _uint>& leftPair,
+				const pair<_wstring, _uint>& rightPair)
+			{
+				return leftPair.second > rightPair.second;
+			});
+
+		sort(vecMiss.begin(), vecMiss.end(),
+			[](const pair<_wstring, _uint>& leftPair,
+				const pair<_wstring, _uint>& rightPair)
+			{
+				return leftPair.second > rightPair.second;
+			});
+	}
+	if (GUI::CollapsingHeader("Statistics")) {
+		_uint iTotalHitCount = 0;
+		_uint iTotalMissCount = 0;
+
+		for (const auto& element : m_mapCacheHit) {
+			iTotalHitCount += element.second;
+		}
+		for (const auto& element : m_mapCacheMiss) {
+			iTotalMissCount += element.second;
+		}
+		_uint iTotalRequestCount = iTotalHitCount + iTotalMissCount;
+
+		_float fHitRatePercent = 0.0f;
+		if (iTotalRequestCount > 0) {
+			fHitRatePercent = (_float)iTotalHitCount * 100.0f / (_float)iTotalRequestCount;
+		}
+
+		GUI::Text("Total Requests: %u", iTotalRequestCount);
+		GUI::Text("Hit: %u  Miss: %u  HitRate: %.2f%%", iTotalHitCount, iTotalMissCount, fHitRatePercent);
+
+	}
+	if (GUI::CollapsingHeader("CacheHit")) {
+		GUI::Text("%d", vecHit.size());
+		GUI::BeginChild("CacheHit", { 300, 300 });
+		GUI::GetScrollY();
+		for (auto& element : vecHit) {
+			GUI::Text("%d", element.second); GUI::SameLine();
+			GUI::Text(CMyTools::ToString(element.first).c_str());
+		}
+		GUI::EndChild();
+	}
+	if (GUI::CollapsingHeader("CacheMiss")) {
+		GUI::Text("%d", vecMiss.size());
+		GUI::BeginChild("CacheMiss", { 300, 300 });
+		GUI::GetScrollY();
+		for (auto& element : vecMiss) {
+			GUI::Text("%d", element.second); GUI::SameLine();
+			GUI::Text(CMyTools::ToString(element.first).c_str());
+		}
+		GUI::EndChild();
+	}
+	GUI::End();
+}
+
+#endif // _DEBUG

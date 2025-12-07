@@ -93,5 +93,5 @@ HRESULT CCallBack_Monster_Behavior::Finalize()
 
 CCallBack_Monster_Behavior* CCallBack_Monster_Behavior::Create()
 {
-	return new CCallBack_Monster_Behavior();;
+	return new CCallBack_Monster_Behavior();
 }

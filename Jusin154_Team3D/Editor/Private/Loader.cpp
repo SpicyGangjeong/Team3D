@@ -1566,7 +1566,7 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 					Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
 					Desc.ePxMaterialTypes = PXMATERIAL::DEFAULT;
 					Desc.vMatInfo = _float3(0.5f, 0.5f, 0.6f);
-					Desc.fContactOffset = 0.f;
+					Desc.fContactOffset = 0.001f;
 				}
 				if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, CMyTools::ToWstring(strDestName).c_str(), CRigidBody_Static::Create(m_pDevice, m_pContext, Desc)))) {
 					return E_FAIL;
@@ -1773,7 +1773,7 @@ HRESULT CLoader::MapFolderLoad(const _char* pDirectoryPath, const _char* pFileEx
 				Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
 				Desc.ePxMaterialTypes = PXMATERIAL::DEFAULT;
 				Desc.vMatInfo = _float3(0.5f, 0.5f, 0.6f);
-				Desc.fContactOffset = 0.f;
+				Desc.fContactOffset = 0.001f;
 			}
 			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, CMyTools::ToWstring(strDestName).c_str(), CRigidBody_Static::Create(m_pDevice, m_pContext, Desc)))) {
 				return E_FAIL;
@@ -1826,7 +1826,7 @@ void APIENTRY Deferred_FolderLoad_Main(ID3D11Device* pDevice, ID3D11DeviceContex
 					Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
 					Desc.ePxMaterialTypes = PXMATERIAL::DEFAULT;
 					Desc.vMatInfo = _float3(0.5f, 0.5f, 0.6f);
-					Desc.fContactOffset = 0.f;
+					Desc.fContactOffset = 0.001f;
 				}
 				pContents->pRigidBodyTags.emplace_back(CMyTools::ToWstring(pModel->Get_MeshName(i) + to_string(i)).c_str());
 				pContents->LoadedRigidBody.emplace_back(CRigidBody_Static::Create(pDevice, pContext, Desc));
@@ -2833,7 +2833,7 @@ vector<vector<FOLDER_LOAD*>*> Contents(iLoadCount);
 			Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
 			Desc.ePxMaterialTypes = PXMATERIAL::DEFAULT;
 			Desc.vMatInfo = _float3(0.5f, 0.5f, 0.6f);
-			Desc.fContactOffset = 0.f;
+			Desc.fContactOffset = 0.001f;
 		}
 		CRigidBody_Static* pRigid = CRigidBody_Static::Create(m_pDevice, m_pContext, Desc);
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_RigidBody_Static_Terrain_Hogsmeade"), pRigid))) {

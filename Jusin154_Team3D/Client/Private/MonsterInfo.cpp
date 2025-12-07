@@ -12,8 +12,8 @@ void CMonsterInfo::Update(_float fTimeDelta)
 {
 	Refresh_PlayerAllies();
 	Refresh_LockOnMonsters();
+	Refresh_ActiveMonsters();
 }
-
 void CMonsterInfo::Change_Level()
 {
 	SAFE_RELEASE(m_pLockOnMonster);
@@ -148,6 +148,22 @@ HRESULT CMonsterInfo::Refresh_LockOnMonsters()
 	}
 	return S_OK;
 }
+
+HRESULT CMonsterInfo::Refresh_ActiveMonsters()
+{
+	list<CMonster*>::iterator iter = m_ActiveMonsters.begin();
+	for (; iter != m_ActiveMonsters.end();) {
+		if (true == (*iter)->isDead()) {
+			SAFE_RELEASE(*iter);
+			iter = m_ActiveMonsters.erase(iter);
+		}
+		else {
+			++iter;
+		}
+	}
+	return S_OK;
+}
+
 
 HRESULT CMonsterInfo::Refresh_PlayerAllies()
 {
