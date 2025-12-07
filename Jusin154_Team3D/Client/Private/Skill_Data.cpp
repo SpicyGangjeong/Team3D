@@ -57,6 +57,14 @@ void CSkill_Data::Update(_float fTimeDelta)
 		}
 	}
 
+	if (m_bNoCool == true)
+	{
+		for (_int i = 0; i < 34; ++i)
+		{
+			m_iSpell_CoolTime[i] = 1.f;
+		}
+	}
+
 }
 
 void CSkill_Data::Change_Level()

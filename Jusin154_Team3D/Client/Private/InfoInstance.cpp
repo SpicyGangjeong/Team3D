@@ -19,6 +19,7 @@ void CInfoInstance::Update(_float fTimeDelta)
 	m_pMonsterInfo->Update(fTimeDelta);
 	m_pMapInfo->Update(fTimeDelta);
 	m_pSkillInfo->Update(fTimeDelta);
+
 }
 
 void CInfoInstance::Change_Level()
@@ -158,6 +159,25 @@ void CInfoInstance::Key_Input(_uint Input)
 	default:
 		break;
 	}
+}
+
+void CInfoInstance::Mouse_Input(_uint Input)
+{
+	m_eInput = Input;
+
+	switch (m_eInput)
+	{
+	case ENUM_CLASS(KEYINPUT::INPUT_1):
+		Event_CallBack(TEXT("Spell"), &m_eInput);
+		break;
+	case ENUM_CLASS(KEYINPUT::INPUT_2):
+		Event_CallBack(TEXT("Spell"), &m_eInput);
+		break;
+	default:
+		break;
+	}
+
+
 }
 
 void CInfoInstance::Set_UISTATE(UI_STATE eState)
