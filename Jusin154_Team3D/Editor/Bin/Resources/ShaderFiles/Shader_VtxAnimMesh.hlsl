@@ -351,7 +351,7 @@ PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
     (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
-    0, // 서페이스 파라미터
+    AI_TEXTURE_TYPE_METALNESS, // 서페이스 파라미터
     1.f);
     
     return Out;
