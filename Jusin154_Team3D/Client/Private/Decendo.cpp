@@ -201,7 +201,7 @@ HRESULT CDecendo::Pre_Setting(CGameObject* pObject, void* pArg)
 		CUnit* pTargetUnit = m_pInfoInstance->Get_LockOnUnit();
 		if (nullptr != pTargetUnit) {
 
-			XMStoreFloat4(&m_vTargetPos, pTargetUnit->Get_WorldPostion());
+			XMStoreFloat4(&m_vTargetPos, pTargetUnit->Get_LockOnPos());
 
 			XMStoreFloat3(&m_vCameraLook, XMVector3Normalize(XMLoadFloat4(&m_vTargetPos) - XMLoadFloat4(&m_vStartPos)));
 		}

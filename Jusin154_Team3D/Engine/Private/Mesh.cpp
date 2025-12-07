@@ -72,10 +72,25 @@ HRESULT CMesh::Initialize_Prototype(MODEL eType, vector<class CBone*>& Bones, co
 
 #pragma region VERTEX_BUFFER
 
-	HRESULT hr = (eType == MODEL::NONANIM) ?
-		Ready_VertexBuffer_For_NonAnim(pAIMesh, PreTransformMatrix) :
-		Ready_VertexBuffer_For_Anim(Bones, pAIMesh);
-
+	HRESULT hr = {};
+	switch (eType)
+	{
+	case Engine::MODEL::NONANIM:
+	case Engine::MODEL::PBR_NONANIM:
+		hr = Ready_VertexBuffer_For_NonAnim(pAIMesh, PreTransformMatrix);
+		break;
+	case Engine::MODEL::ANIM:
+	case Engine::MODEL::PBR_ANIM:
+		hr = Ready_VertexBuffer_For_Anim(Bones, pAIMesh);
+		break;
+	case Engine::MODEL::ENVIROMENT:
+		break;
+	default:
+		break;
+	}
+	if (FAILED(hr)) {
+		return E_FAIL;
+	}
 #pragma endregion
 
 #pragma region INDEX_BUFFER
@@ -183,13 +198,25 @@ HRESULT CMesh::Initialize_Prototype(MODEL eType, const CModel* pModel, SaveMesh*
 	}
 
 #pragma region VERTEX_BUFFER
-
-	HRESULT hr = MODEL::NONANIM == eType ?
-		Ready_VertexBuffer_For_NonAnim(_SaveMesh, PreTransformMatrix) :
-		Ready_VertexBuffer_For_Anim(pModel, _SaveMesh);
-
-	if (FAILED(hr))
+	HRESULT hr = {};
+	switch (eType)
+	{
+	case Engine::MODEL::NONANIM:
+	case Engine::MODEL::PBR_NONANIM:
+		hr = Ready_VertexBuffer_For_NonAnim(_SaveMesh, PreTransformMatrix);
+		break;
+	case Engine::MODEL::ANIM:
+	case Engine::MODEL::PBR_ANIM:
+		hr = Ready_VertexBuffer_For_Anim(pModel, _SaveMesh);
+		break;
+	case Engine::MODEL::ENVIROMENT:
+		break;
+	default:
+		break;
+	}
+	if (FAILED(hr)){
 		return E_FAIL;
+	}
 
 #pragma endregion
 

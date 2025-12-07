@@ -188,6 +188,17 @@ HRESULT CTroll::Render()
 	return S_OK;
 }
 
+_vector CTroll::Get_LockOnPos()
+{
+	if (nullptr != m_pCharacter_Controller && true == m_pCharacter_Controller->IsActive()) {
+		return m_pCharacter_Controller->Get_Position();
+	}
+	else if (nullptr != m_pRigidBody) {
+		return m_pRigidBody->Get_Position();
+	}
+	return Get_WorldPostion();
+}
+
 void CTroll::OnCollision(CGameObject* pOther, void* pDesc)
 {
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);

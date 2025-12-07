@@ -1672,7 +1672,7 @@ HRESULT CLoader::Loading_For_Bloom()
 #pragma region HAIR
 
 	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::INDEPENDENT, "../Bin/Resources/Models/Monster/SubTroll/troll.fbx", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll.fbx", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
 		TEXT("Prototype_Component_SubTroll_Model")
 	));
 

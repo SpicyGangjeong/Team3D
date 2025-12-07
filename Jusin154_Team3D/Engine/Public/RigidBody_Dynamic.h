@@ -47,6 +47,7 @@ public:
 	_bool					IsActive() const { return m_bActive; }
 	void					SetActive(_bool bCondition) { m_bActive = bCondition; }
 
+	_vector					Get_Position();
 	_float3					Get_FootPosition();
 	PSX::PxTransform		Get_FootPositionPxTransform();
 private:

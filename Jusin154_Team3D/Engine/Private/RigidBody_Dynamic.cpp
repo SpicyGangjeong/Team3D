@@ -144,6 +144,13 @@ HRESULT CRigidBody_Dynamic::ConvertToCCT(CCharacter_Controller& CCTOriginal)
 	return E_FAIL;
 }
 
+_vector CRigidBody_Dynamic::Get_Position()
+{
+	PSX::PxVec3 pxPos = m_pRigidBody->getGlobalPose().p;
+	_vector vPos = { pxPos.x, pxPos.y, pxPos.z };
+	return vPos;
+}
+
 _float3 CRigidBody_Dynamic::Get_FootPosition()
 {
 	PSX::PxTransform pxTransform = m_pRigidBody->getGlobalPose();
