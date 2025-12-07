@@ -364,6 +364,12 @@
     <ClInclude Include="..\Public\Goblin_Dagger.h">
       <Filter>02.GameObjects\Item\Goblin_Dagger</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CameraLockOn.h">
+      <Filter>02.GameObjects\UI\Mouse_Cursor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mouse_Cursor.h">
+      <Filter>02.GameObjects\UI\Mouse_Cursor</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\MapElement_Interactable.h">
       <Filter>02.GameObjects\Environment\03.MapElement\Interactable</Filter>
     </ClInclude>
@@ -384,6 +390,24 @@
     </ClInclude>
     <ClInclude Include="..\Public\State_Spell.h">
       <Filter>04.Mechanic\State\State_Combat\State_Spell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Loding_Panel.h">
+      <Filter>02.GameObjects\UI\Screen\Loding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Logo.h">
+      <Filter>02.GameObjects\UI\Screen\Logo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Intro_BG.h">
+      <Filter>02.GameObjects\UI\Screen\Intro</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Intro_Image.h">
+      <Filter>02.GameObjects\UI\Screen\Intro</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Logo_Glow.h">
+      <Filter>02.GameObjects\UI\Screen\Logo\Logo_Glow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Logo_Text.h">
+      <Filter>02.GameObjects\UI\Screen\Logo\Logo_Text</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -785,6 +809,12 @@
     <Filter Include="04.Mechanic\State\State_Combat\State_Blink">
       <UniqueIdentifier>{27251db2-19f2-4492-a3a4-32c11526f413}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\01.Logo\02.GamePlay">
+      <UniqueIdentifier>{7e641382-9dfa-4da7-a8c8-a3ee06360e7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Mouse_Cursor">
+      <UniqueIdentifier>{b8c7e12b-da04-4d49-bc61-104649975d0b}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\Environment\03.MapElement\Interactable">
       <UniqueIdentifier>{17eaf081-6fbf-4965-b04d-10749e6032c6}</UniqueIdentifier>
     </Filter>
@@ -817,6 +847,24 @@
     </Filter>
     <Filter Include="02.GameObjects\NPC\Hostile\Monster\Troll">
       <UniqueIdentifier>{a1b1f17d-ed4f-4b20-aa8e-c52e693683d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Screen">
+      <UniqueIdentifier>{c02bfd67-091b-4636-a45f-34a3603ffbd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Screen\Logo">
+      <UniqueIdentifier>{dce1a273-ec4f-43a4-9b02-b83f4d739f19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Screen\Loding">
+      <UniqueIdentifier>{19f4cc79-0dbd-445f-a4d8-46a6dca6bd4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Screen\Intro">
+      <UniqueIdentifier>{37839010-4706-4629-90a2-d96bc50ea7e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Screen\Logo\Logo_Glow">
+      <UniqueIdentifier>{11342a1a-99f4-4df5-9202-48623c76eb4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Screen\Logo\Logo_Text">
+      <UniqueIdentifier>{c584798b-d7aa-4cb0-b6e8-c2aff73757ce}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1174,8 +1222,15 @@
     <ClCompile Include="..\Private\Spell_Drag.cpp">
       <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Drag</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\MapContainer.cpp" />
-    <ClCompile Include="..\private\MapContainer.cpp" />
+    <ClCompile Include="..\Private\Mouse_Cursor.cpp">
+      <Filter>02.GameObjects\UI\Mouse_Cursor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CameraLockOn.cpp">
+      <Filter>02.GameObjects\UI\Mouse_Cursor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapContainer.cpp">
+      <Filter>02.GameObjects\Environment\00.MapContainer</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\MapElement_Interactable.cpp">
       <Filter>02.GameObjects\Environment\03.MapElement\Interactable</Filter>
     </ClCompile>
@@ -1199,6 +1254,24 @@
     </ClCompile>
     <ClCompile Include="..\Private\State_Spell.cpp">
       <Filter>04.Mechanic\State\State_Combat\State_Spell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Loding_Panel.cpp">
+      <Filter>02.GameObjects\UI\Screen\Loding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Logo.cpp">
+      <Filter>02.GameObjects\UI\Screen\Logo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Intro_BG.cpp">
+      <Filter>02.GameObjects\UI\Screen\Intro</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Intro_Image.cpp">
+      <Filter>02.GameObjects\UI\Screen\Intro</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Logo_Glow.cpp">
+      <Filter>02.GameObjects\UI\Screen\Logo\Logo_Glow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Logo_Text.cpp">
+      <Filter>02.GameObjects\UI\Screen\Logo\Logo_Text</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

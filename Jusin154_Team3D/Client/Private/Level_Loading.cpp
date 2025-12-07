@@ -9,10 +9,13 @@
 #include "Level_Restart.h"
 #include "Level_Field.h"
 
+#include "Intro_Image.h"
+#include "Intro_BG.h"
+#include "Loding_Panel.h"
+
 CLevel_Loading::CLevel_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
 {
-
 }
 
 HRESULT CLevel_Loading::Initialize(LEVEL eNextLevelID)
@@ -30,14 +33,37 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevelID)
 	if (FAILED(Ready_Layer_BackGround(LAYER_UI))) {
 		return E_FAIL;
 	}
+	m_bNextLevel = false;
+	m_fTimeDelta = 1.2f;
 	return S_OK;
 }
 
 void CLevel_Loading::Update(_float fTimeDelta)
 {
-	if (true == m_pLoader->isFinished() 
-		//&& m_pGameInstance->Key_Down(DIK_RETURN)
-		)
+	if (true == m_pLoader->isFinished() &&
+		m_pGameInstance->Key_Down(DIK_F1))
+	{
+		if (m_eNextLevelID != LEVEL::LOGO)
+			m_bNextLevel = true;
+		else
+		{
+			static_cast<CUIObject*>(m_pIntro_Image)->Set_Hover(true);
+			m_bDelay = true;
+		}
+
+	}
+
+	if (m_bDelay == true)
+	{
+		m_fTimeDelta -= fTimeDelta;
+		if (m_fTimeDelta <= 0.f)
+		{
+			m_bNextLevel = true;
+		}
+	}
+
+
+	if (m_bNextLevel == true)
 	{
 		pair<CLevel*, function<void()>> pairLevel = { nullptr, nullptr };
 
@@ -118,6 +144,23 @@ void CLevel_Loading::Capture_TerrainPreShadow(SHADOW_LIGHT_DESC& ShadowDesc)
 
 HRESULT CLevel_Loading::Ready_Layer_BackGround(const _wstring& strLayerTag)
 {
+	if (m_eNextLevelID == LEVEL::LOGO)
+	{
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CIntro_BG>(g_iStaticLevel, ENUM_CLASS(LEVEL::LOADING), strLayerTag))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CIntro_Image>(g_iStaticLevel, ENUM_CLASS(LEVEL::LOADING), strLayerTag, nullptr, nullptr, reinterpret_cast<CIntro_Image**>(&m_pIntro_Image)))) {
+			return E_FAIL;
+		}
+	}
+
+	else
+	{
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLoding_Panel>(g_iStaticLevel, ENUM_CLASS(LEVEL::LOADING), strLayerTag))) {
+			return E_FAIL;
+		}
+	}
+
 	return S_OK;
 }
 

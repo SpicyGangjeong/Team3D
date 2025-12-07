@@ -104,7 +104,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 #endif // _DEBUG
 
 	// UI 연동 추가
-	m_pInfoInstance->Add_Event(TEXT("JAP"), [this](void* p) {this->Get_Spell(*reinterpret_cast<_int*>(p)); });
+	m_pInfoInstance->Add_Event(TEXT("UseSpell"), [this](void* p) {this->Get_Spell(*reinterpret_cast<_int*>(p)); });
 	m_pInfoInstance->Add_Event(TEXT("Canvas_Change"), [this](void* p) {this->Get_UIState(*reinterpret_cast<_int*>(p)); });
 	return S_OK;
 }

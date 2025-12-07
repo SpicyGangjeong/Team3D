@@ -33,6 +33,15 @@
 #include "Skill_Data.h"
 #include "UI_Manager.h"
 
+#include "Logo.h"
+#include "Logo_Text.h"
+#include "Logo_Glow.h"
+
+#include "Mouse_Cursor.h"
+#include "CameraLockOn.h"
+
+#include "Loding_Panel.h"
+
 #include "GamePlay_Canvas.h"
 
 #include "Mission_Panel.h"
@@ -206,6 +215,27 @@ HRESULT CLoader::Loading_For_Logo()
 {
 	m_strMessage = TEXT("텍스쳐를(을) 로딩 중 입니다.");
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Dororong"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/DororongDoro.png"), 0)))) {
+		return E_FAIL;
+	}
+
+	Asset_FileLoad("../Bin/Resources/Textures/Logo", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
+		{
+
+			_string strFilePath = pFilePath;
+			_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
+
+
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
+				CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
+				return E_FAIL;
+			}
+
+			return S_OK;
+
+		});
+
 	m_strMessage = TEXT("사운드를(을) 로딩 중 입니다.");
 
 	m_strMessage = TEXT("모델를(을) 로딩 중 입니다.");
@@ -219,6 +249,18 @@ HRESULT CLoader::Loading_For_Logo()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CLight_Main>(g_iStaticLevel, CLight_Main::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CLogo>(g_iStaticLevel, CLogo::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CLogo_Text>(g_iStaticLevel, CLogo_Text::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CLogo_Glow>(g_iStaticLevel, CLogo_Glow::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
@@ -553,11 +595,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 		});
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Cursor"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Cursor/UI_T_CursorRings.dds"), 0)))) {
-		return E_FAIL;
-	}
-
 	Asset_FileLoad("../Bin/Resources/Textures/Mission", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
 		{
 
@@ -606,6 +643,15 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Screen_BG"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/LoadingScreen/UI_T_Loding_Screen_BG.png"), 0)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("LoadingScreen"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("../Bin/Resources/Textures/LoadingScreen/UI_T_LoadingScreen_%d.png"), 2)))) {
+		return E_FAIL;
+	}
 
 	Asset_FileLoad("../Bin/Resources/Textures/MiniMap", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
 		{
@@ -718,6 +764,23 @@ HRESULT CLoader::Loading_For_GamePlay()
 			return S_OK;
 
 		});
+
+	Asset_FileLoad("../Bin/Resources/Textures/Cursor", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
+		{
+
+			_string strFilePath = pFilePath;
+			_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
+
+
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
+				CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
+				return E_FAIL;
+			}
+
+			return S_OK;
+
+		});
+
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Item"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("../Bin/Resources/Textures/GadgetWheel/Item%d.png"), 8)))) {
 		return E_FAIL;
@@ -1380,7 +1443,19 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
-	/* For.Prototype_GameObject_UI_Manager*/
+	/* For.Prototype_GameObject_Mouse_Cursor*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CMouse_Cursor>(g_iStaticLevel, CMouse_Cursor::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_CameraLockOn*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CCameraLockOn>(g_iStaticLevel, CCameraLockOn::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_Skill_Data*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CSkill_Data>(g_iStaticLevel, CSkill_Data::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
@@ -1471,70 +1546,87 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	/* For.Prototype_GameObject_Spell_Canvas*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_Canvas>(g_iStaticLevel, CSpell_Canvas::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
+	/* For.Prototype_GameObject_Spell_Panel*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_Panel>(g_iStaticLevel, CSpell_Panel::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
+	/* For.Prototype_GameObject_Current_Spell_Slot*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CCurrent_Spell_Slot>(g_iStaticLevel, CCurrent_Spell_Slot::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
+	/* For.Prototype_GameObject_Spell_List*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_List>(g_iStaticLevel, CSpell_List::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
+	/* For.Prototype_GameObject_Eessential_Spell_Slot*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CEessential_Spell_Slot>(g_iStaticLevel, CEessential_Spell_Slot::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
+	/* For.Prototype_GameObject_Eessential_Spell*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CEessential_Spell>(g_iStaticLevel, CEessential_Spell::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
+	/* For.Prototype_GameObject_Spell_List_Image*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_List_Image>(g_iStaticLevel, CSpell_List_Image::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
+	/* For.Prototype_GameObject_Spell_State*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_State>(g_iStaticLevel, CSpell_State::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
+	/* For.Prototype_GameObject_Spell_Hover*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_Hover>(g_iStaticLevel, CSpell_Hover::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
+	/* For.Prototype_GameObject_Spell_Hover_Effect*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_Hover_Effect>(g_iStaticLevel, CSpell_Hover_Effect::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
+	/* For.Prototype_GameObject_Spell_Preview*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_Preview>(g_iStaticLevel, CSpell_Preview::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
+	/* For.Prototype_GameObject_Spell_Header*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_Header>(g_iStaticLevel, CSpell_Header::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
+	/* For.Prototype_GameObject_Spell_Header_Line*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_Header_Line>(g_iStaticLevel, CSpell_Header_Line::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
+	/* For.Prototype_GameObject_Spell_Vidio_Border*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_Vidio_Border>(g_iStaticLevel, CSpell_Vidio_Border::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
+	/* For.Prototype_GameObject_Spell_Anim*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_Anim>(g_iStaticLevel, CSpell_Anim::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
+	/* For.Prototype_GameObject_Current_Slot_Number*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CCurrent_Slot_Number>(g_iStaticLevel, CCurrent_Slot_Number::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
+	/* For.Prototype_GameObject_Spell_Drag*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_Drag>(g_iStaticLevel, CSpell_Drag::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
