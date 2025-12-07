@@ -106,7 +106,9 @@ HRESULT CSkill_Data::Load_SpellInfo(const _char* pFilePath)
 		SpellInfo[id].pSpell_Name = CMyTools::ToWstring(pSpell->Attribute("Spell_Name"));
 		SpellInfo[id].pImage_Name = CMyTools::ToWstring(pSpell->Attribute("Image_Name"));
 		pSpell->QueryIntAttribute("Spell_Type", &SpellInfo[id].iSpell_Type);
+		SpellInfo[id].pType_Name = CMyTools::ToWstring(pSpell->Attribute("Type_Name"));
 		pSpell->QueryIntAttribute("Skill_Type", &SpellInfo[id].iSkill_Type);
+		pSpell->QueryFloatAttribute("Spell_Damage", &SpellInfo[id].fSpell_Damage);
 		pSpell->QueryFloatAttribute("Spell_Cooltime", &SpellInfo[id].fSpell_CoolTime);
 		pSpell->QueryFloatAttribute("Duration", &SpellInfo[id].fDuration);
 		pSpell->QueryIntAttribute("AnimNum", &SpellInfo[id].iAnimNum);

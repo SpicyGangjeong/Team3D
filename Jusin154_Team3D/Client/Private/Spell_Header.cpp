@@ -26,7 +26,7 @@ HRESULT CSpell_Header::Initialize(void* pArg)
 	Desc.fX = 600.f;
 	Desc.fY = -385.f;
 	Desc.fSizeX = 512.f;
-	Desc.fSizeY = 64.f;
+	Desc.fSizeY = 80.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -48,6 +48,10 @@ HRESULT CSpell_Header::Initialize(void* pArg)
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Slot_Hover"), [this](void* p) {this->Set_SkillType(*reinterpret_cast<_int*>(p)); });
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("FadeIn"), [this](void* p) {this->Set_FadeIn(); });
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("FadeOut"), [this](void* p) {this->Set_FadeOut(); });
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("FadeOut"), [this](void* p) {this->Set_FadeOut(); });
+	m_fFontX = 920.f;
+	m_fFontY = 510.f;
+	m_fType = _float2(935.f, 550.f);
 	return S_OK;
 }
 
@@ -76,6 +80,7 @@ void CSpell_Header::Update(_float fTimeDelta)
 		if (m_fAlpha >= 1.f)
 		{
 			m_bFadeIn = false;
+			m_bHover = true;
 			m_fAlpha = 1.f;
 		}
 	}
@@ -83,7 +88,10 @@ void CSpell_Header::Update(_float fTimeDelta)
 	if (m_bFadeOut == true)
 	{
 		if (m_fAlpha >= 0.f)
-			m_fAlpha -= fTimeDelta * m_fAlphaTime;;
+		{
+			m_fAlpha -= fTimeDelta * m_fAlphaTime;
+			m_bHover = false;
+		}
 
 		if (m_fAlpha <= 0.f)
 		{
@@ -95,6 +103,8 @@ void CSpell_Header::Update(_float fTimeDelta)
 	if (m_iSpellType != -1)
 	{
 		m_iSkillType = m_pInfoInstance->Get_Spell_Info(m_iSpellType).iSpell_Type;
+		m_pSpell_Name =m_pInfoInstance->Get_Spell_Info(m_iSpellType).pSpell_Name;
+		m_fSpell_Type =m_pInfoInstance->Get_Spell_Info(m_iSpellType).pType_Name;
 	}
 
 	m_fTime += fTimeDelta * m_fTimeMult;
@@ -126,6 +136,13 @@ HRESULT CSpell_Header::Render()
 	}
 	if (FAILED(m_pVIBufferCom->Render())) {
 		return E_FAIL;
+	}
+
+	if (m_bHover == true)
+	{
+		m_fFontOffSet = (m_pGameInstance->FontSizeX(TEXT("Font_size20"), m_pSpell_Name.c_str()) - 53.f) * 0.5f;
+		m_pGameInstance->Render_Text(TEXT("Font_size20"), m_pSpell_Name.c_str(), _float2((m_fFontX + m_fX) - m_fFontOffSet, m_fFontY + m_fY), XMVectorSet(215.f / 255.f, 185.f / 255.f, 95.f / 255.f, 1.f));
+		m_pGameInstance->Render_Text(TEXT("Font_size13"), m_fSpell_Type.c_str(), _float2(m_fType.x + m_fX, m_fType.y + m_fY));
 	}
 
 	return S_OK;

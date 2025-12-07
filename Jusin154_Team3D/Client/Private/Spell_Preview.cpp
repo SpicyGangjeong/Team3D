@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Spell_Preview.h"
 #include "GameInstance.h"
+#include "InfoInstance.h"
 
 
 CSpell_Preview::CSpell_Preview(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -9,7 +10,8 @@ CSpell_Preview::CSpell_Preview(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 }
 
 CSpell_Preview::CSpell_Preview(const CSpell_Preview& rhs)
-	:CElementObject(rhs)
+	:CElementObject(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -44,11 +46,14 @@ HRESULT CSpell_Preview::Initialize(void* pArg)
 	m_vNine_Slice = _float4(50.f, 75.f, 30.f, 96.f);
 	m_fTopY = m_fY - m_vScale.y * 0.5f;
 	SizeUpX(512.f);
-	SizeUpY(270.f);
+	SizeUpY(280.f);
 	m_iSpellType = ENUM_CLASS(SPELLTYPE::CONTROL);
 	m_fSortZ = 0.02f;
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Slot_Hover"), [this](void* p) {this->Set_SkillType(*reinterpret_cast<_int*>(p)); });
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("FadeIn"), [this](void* p) {this->Set_FadeIn(); });
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("FadeOut"), [this](void* p) {this->Set_FadeOut(); });
+	m_fFontX = 740.f;
+	m_fFontY = 500.f;
 	return S_OK;
 }
 
@@ -76,6 +81,7 @@ void CSpell_Preview::Update(_float fTimeDelta)
 		if (m_fAlpha >= 1.f)
 		{
 			m_bFadeIn = false;
+			m_bHover = true;
 			m_fAlpha = 1.f;
 		}
 	}
@@ -83,7 +89,10 @@ void CSpell_Preview::Update(_float fTimeDelta)
 	if (m_bFadeOut == true)
 	{
 		if (m_fAlpha >= 0.f)
-			m_fAlpha -= fTimeDelta * m_fAlphaTime;;
+		{
+			m_fAlpha -= fTimeDelta * m_fAlphaTime;
+			m_bHover = false;
+		}
 
 		if (m_fAlpha <= 0.f)
 		{
@@ -91,6 +100,12 @@ void CSpell_Preview::Update(_float fTimeDelta)
 			m_fAlpha = 0.f;
 		}
 	}
+
+	if (m_iSpellType != -1)
+	{
+		m_pSpell_Info = m_pInfoInstance->Get_Spell_Info(m_iSpellType).pSpellInfo;
+	}
+
 	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
 }
@@ -120,6 +135,11 @@ HRESULT CSpell_Preview::Render()
 	}
 	if (FAILED(m_pVIBufferCom->Render())) {
 		return E_FAIL;
+	}
+
+	if (m_bHover == true)
+	{
+		m_pGameInstance->Render_Text(TEXT("Font_size14"), m_pSpell_Info.c_str(), _float2(m_fFontX + m_fX, m_fFontY + m_fY));
 	}
 	return S_OK;
 }

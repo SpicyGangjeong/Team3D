@@ -295,6 +295,12 @@
     <Filter Include="02.Element\02.Component\09.Light">
       <UniqueIdentifier>{7c82051e-19af-4284-8156-16f504db30b6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.Management\04. Font_Manager">
+      <UniqueIdentifier>{bba1e91b-87a8-4a7b-8e4e-b42d2041d8eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\01.GameObject\01. Font">
+      <UniqueIdentifier>{7eab7292-025e-40d7-aa71-73e7a3c71ea7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -563,6 +569,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Resource_Manager.cpp">
       <Filter>03.Management\02.Resource_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Font_Manager.cpp">
+      <Filter>03.Management\04. Font_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Font.cpp">
+      <Filter>02.Element\01.GameObject\01. Font</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1198,6 +1210,12 @@
     </ClInclude>
     <ClInclude Include="..\public\Resource_Manager.h">
       <Filter>03.Management\02.Resource_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Font_Manager.h">
+      <Filter>03.Management\04. Font_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Font.h">
+      <Filter>02.Element\01.GameObject\01. Font</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

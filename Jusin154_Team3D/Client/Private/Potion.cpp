@@ -42,6 +42,8 @@ HRESULT CPotion::Initialize(void* pArg)
 	m_fAlphaTime = 1.f;
 	m_vImageSlotPos = _float2(45.f, 45.f);
 	m_vImageSize = _float2(32.f, 32.f);
+	m_iPotionIndex = 0;
+	m_iPerPotionIndex = -1;
 	return S_OK;
 }
 
@@ -91,6 +93,12 @@ void CPotion::Update(_float fTimeDelta)
 		m_fTime = -1.f;
 	}
 
+	if (m_iPerPotionIndex != m_iPotionIndex)
+	{
+		m_strPotion = to_wstring(m_iPotionIndex);
+		m_fFontOffSet = (m_pGameInstance->FontSizeX(TEXT("UI_size15"), m_strPotion.c_str()) - 13.f) * 0.5f;
+		m_iPerPotionIndex = m_iPotionIndex;
+	}
 
 	m_fTime += fTimeDelta * m_fTimeMult;
 
@@ -123,6 +131,7 @@ HRESULT CPotion::Render()
 	if (FAILED(m_pVIBufferCom->Render())) {
 		return E_FAIL;
 	}
+	m_pGameInstance->Render_Text(TEXT("UI_size15"), m_strPotion.c_str(), _float2((m_fFontX + m_fX) - m_fFontOffSet, m_fFontY + m_fY), XMVectorSet(208.f / 255.f, 177.f / 255.f, 52.f / 255.f, 1.f));
 
 	return S_OK;
 }

@@ -51,7 +51,9 @@ HRESULT CSpell_Data::Initialize(void* pArg)
 		pInfo[id].pSpell_Name = CMyTools::ToWstring(pSpell->Attribute("Spell_Name"));
 		pInfo[id].pImage_Name = CMyTools::ToWstring(pSpell->Attribute("Image_Name"));
 		pSpell->QueryIntAttribute("Spell_Type", &pInfo[id].iSpell_Type);
+		pInfo[id].pType_Name = CMyTools::ToWstring(pSpell->Attribute("Type_Name"));
 		pSpell->QueryIntAttribute("Skill_Type", &pInfo[id].iSkill_Type);
+		pSpell->QueryFloatAttribute("Spell_Damage", &pInfo[id].fSpell_Damage);
 		pSpell->QueryFloatAttribute("Spell_Cooltime", &pInfo[id].fSpell_CoolTime);
 		pSpell->QueryFloatAttribute("Duration", &pInfo[id].fDuration);
 		pSpell->QueryIntAttribute("AnimNum", &pInfo[id].iAnimNum);

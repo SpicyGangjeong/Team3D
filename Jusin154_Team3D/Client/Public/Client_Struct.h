@@ -22,7 +22,9 @@ namespace Client
 		_wstring		pSpell_Name;
 		_wstring		pImage_Name;
 		_int			iSpell_Type{};
+		_wstring		pType_Name;
 		_int			iSkill_Type{};
+		_float			fSpell_Damage{};
 		_float			fSpell_CoolTime{};
 		_float			fDuration{};
 		_int			iAnimNum{};

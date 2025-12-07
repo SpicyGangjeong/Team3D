@@ -30,6 +30,11 @@ private:
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
+	_wstring m_pSpell_Name;
+	_wstring m_fSpell_Type;
+
+	_float2 m_fType{};
+
 	_int m_iSkillType{};
 public:
 	static CSpell_Header* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

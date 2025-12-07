@@ -586,7 +586,7 @@ PS_OUT PS_SpellAnim(PS_IN In)
     switch (g_iSpellType)
     {
         case 0:
-            BGColor = float3(255.f, 255.f, 0.f) / 255.f;
+            BGColor = float3(220.f, 165.f, 70.f) / 255.f;
             break;
         case 1:
             BGColor = float3(150.f, 120.f, 240.f) / 255.f;
@@ -1132,7 +1132,7 @@ PS_OUT PS_Spell_Header(PS_IN In)
     switch (g_iSpellType)
     {
         case 0:
-            BGColor = float3(255.f, 255.f, 0.f) / 255.f;
+            BGColor = float3(220.f, 165.f, 70.f) / 255.f;
             break;
         case 1:
             BGColor = float3(150.f, 120.f, 240.f) / 255.f;
@@ -1155,11 +1155,12 @@ PS_OUT PS_Spell_Header(PS_IN In)
     }
     
     float4 tex1 = g_Texture.Sample(DefaultSampler, In.vTexcoord);
-    Color = tex1;
- 
+    Color.rgb = tex1.rgb * 0.8f;
+    Color.a = tex1.a;
+    
     Color.rgb *= BGColor;
     
-    Color.a *= Alpha;
+    Color.a *= Alpha * 0.5f;
     
     Out.vColor = Color;
     

@@ -19,7 +19,7 @@
 #include "VIBuffer_Box.h"
 #include "Trail.h"
 #include "OcclusionQuery.h"
-
+#include "Font.h"
 
 NS_BEGIN(Engine)
 class CGameInstance;

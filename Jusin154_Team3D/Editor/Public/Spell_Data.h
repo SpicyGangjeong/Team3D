@@ -18,7 +18,9 @@ public:
 		_string		pSpell_Name;
 		_string		pImage_Name;
 		_int		iSpell_Type{};
+		_string		pType_Name{};
 		_int		iSkill_Type{};
+		_float		fSpell_Damage{};
 		_float		fSpell_CoolTime{};
 		_float		fDuration{};
 		_int		iAnimNum{};

@@ -83,6 +83,27 @@ void CMainApp::Compute_FrameCount()
 
 HRESULT CMainApp::Ready_Default_Setting()
 {
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("Font_size13"), TEXT("../Bin/Resources/Fonts/Font_size13.spritefont"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("Font_size14"), TEXT("../Bin/Resources/Fonts/Font_size14.spritefont"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("Font_size15"), TEXT("../Bin/Resources/Fonts/Font_size15.spritefont"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("Font_size20"), TEXT("../Bin/Resources/Fonts/Font_size20.spritefont"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("Font_size21"), TEXT("../Bin/Resources/Fonts/Font_size21.spritefont"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("Font_size30"), TEXT("../Bin/Resources/Fonts/Font_size30.spritefont"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("UI_size15"), TEXT("../Bin/Resources/Fonts/UI_size15.spritefont"))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
