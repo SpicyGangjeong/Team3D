@@ -4,27 +4,55 @@
 CResource_Manager::CResource_Manager(ID3D11Device* pDevice)
 	:m_pDevice{ pDevice }
 { 
-	SAFE_ADDREF(pDevice);
+	SAFE_ADDREF(m_pDevice);
 }
 
 ID3D11ShaderResourceView* CResource_Manager::Add_Texture(const _char* pFilePath)
 {
-	lock_guard<mutex> lock(m_mtxTexture);
+	if (pFilePath == nullptr || pFilePath[0] == '\0'){
+		return nullptr;
+	}
+	filesystem::path pathFile = pFilePath;
+	const _wstring wstrKeyOriginal = pathFile.filename().wstring();
+	
+	{ // 브레이스 해제 금지
+		shared_lock<shared_mutex> sharedLock(m_smtxTexture);
 
-    ID3D11ShaderResourceView* pSRV = Find_SRV(pFilePath);
-
-	if (nullptr == pSRV)
-	{
-		pSRV = Load_SRV(pFilePath);
-
-		if (nullptr == pSRV)
+		auto iter = m_Resources.find(wstrKeyOriginal);
+		if (iter != m_Resources.end())
 		{
-			return nullptr;
+			SAFE_ADDREF(iter->second);
+			return iter->second;
 		}
+		// sharedLock 소멸
+	} // 브레이스 해제 금지
+
+	ID3D11ShaderResourceView* pSRV = Load_SRV(pathFile);
+
+	if (pSRV == nullptr){
+		return nullptr;
 	}
 
-	SAFE_ADDREF(pSRV);
+	{ // 브레이스 해제 금지
+		unique_lock<shared_mutex> uniqueLock(m_smtxTexture);
 
+		auto iter = m_Resources.find(wstrKeyOriginal);
+		if (iter != m_Resources.end())
+		{
+			SAFE_RELEASE(pSRV); // 여기까지 왔는데 end가 아니다? -> 다른 스레드가 넣음 -> 이 srv는 이미 로드됨. -> 삭제해야 됨
+
+			SAFE_ADDREF(iter->second);
+			return iter->second; // sharedLock 소멸
+		}
+
+		m_Resources.emplace(wstrKeyOriginal, pSRV);
+		// sharedLock 소멸
+	} // 브레이스 해제 금지
+
+#ifdef _DEBUG
+	++m_iCount;
+#endif // _DEBUG
+	SAFE_ADDREF(pSRV);
     return pSRV;
 }
 
@@ -35,62 +63,37 @@ HRESULT CResource_Manager::Initialize(_uint iResourceCount)
     return S_OK;
 }
 
-ID3D11ShaderResourceView* CResource_Manager::Find_SRV(const _char* pFilePath)
-{
-	_char		szFileName[MAX_PATH] = {};
-	_splitpath_s(pFilePath, nullptr, 0, nullptr, 0, szFileName, MAX_PATH, nullptr, 0);
-
-    auto iter = m_Resources.find(CMyTools::ToWstring(szFileName));
-
-    if (iter == m_Resources.end())
-        return nullptr;
-
-    return iter->second;
-}
-
-ID3D11ShaderResourceView* CResource_Manager::Load_SRV(const _char* pFilePath)
+ID3D11ShaderResourceView* CResource_Manager::Load_SRV(const filesystem::path& pathFile)
 {
 	ID3D11ShaderResourceView* pSRV = nullptr;
 
-	_char		szTextureFileName[MAX_PATH] = {};
-	_char		szTextureFilePath[MAX_PATH] = {};
-	_char		szDrive[MAX_PATH] = {};
-	_char		szDir[MAX_PATH] = {};
-	_char		szFileName[MAX_PATH] = {};
-	_char		szEXT[MAX_PATH] = {};
-	_splitpath_s(pFilePath, szDrive, MAX_PATH, szDir, MAX_PATH, szFileName, MAX_PATH, szEXT, MAX_PATH);
-	strcpy_s(szTextureFileName, szDrive);
-	strcat_s(szTextureFileName, szDir);
-	strcat_s(szTextureFileName, szFileName);
+	const filesystem::path pathExtensionOriginal = pathFile.extension();
 
-	strcat_s(szTextureFilePath, szTextureFileName);
-	strcat_s(szTextureFilePath, ".dds");
+	filesystem::path pathDDSFile = pathFile;
+	pathDDSFile.replace_extension(L".dds");
 
-	HRESULT			hr = {};
+	HRESULT hr = CreateDDSTextureFromFile(
+		m_pDevice,
+		pathDDSFile.wstring().c_str(),
+		nullptr,
+		&pSRV
+	);
 
-	hr = CreateDDSTextureFromFile(m_pDevice, CMyTools::ToWstring(szTextureFilePath).c_str(), nullptr, &pSRV); // 일단 dds로 시도하고
 	if (FAILED(hr)) {
-		memset(szTextureFilePath, 0, sizeof(_char) * MAX_PATH); // 실패하면 원래 확장자로 다시 시도
-		strcat_s(szTextureFilePath, szTextureFileName);
-		strcat_s(szTextureFilePath, szEXT);
+		filesystem::path pathFileOriginal = pathFile;
+		pathFileOriginal.replace_extension(pathExtensionOriginal);
 
-		if (false == strcmp(".tga", szEXT)) {
-			assert(false); // trying to Load TGA
-			hr = S_OK;
-		}
-		else {
-			hr = CreateWICTextureFromFile(m_pDevice, CMyTools::ToWstring(szTextureFilePath).c_str(), nullptr, &pSRV);
+		hr = CreateWICTextureFromFile(
+			m_pDevice,
+			pathFileOriginal.wstring().c_str(),
+			nullptr,
+			&pSRV
+		);
+
+		if (FAILED(hr)){
+			return nullptr;
 		}
 	}
-
-	if (E_FAIL == hr)
-		return nullptr;
-
-	m_Resources.emplace(CMyTools::ToWstring(szFileName), pSRV);
-#ifdef _DEBUG
-	++m_iCount;
-#endif // _DEBUG
-
 	return pSRV;
 }
 
