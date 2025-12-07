@@ -38,6 +38,8 @@ private:
 
 	_wstring m_pSpell_Info;
 
+	_float	m_fOriginPerviewSize{};
+	_float	m_fPreviewOffSet{};
 	_float4 m_vHeaderBack{};
 
 public:

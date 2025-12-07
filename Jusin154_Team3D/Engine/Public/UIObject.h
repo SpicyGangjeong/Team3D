@@ -32,6 +32,9 @@ typedef struct tagSpellInfo
 	_wstring		pSpellInfo;
 	_bool			bSpell_Lock = false;
 	_bool			bEquip_Spell = false;
+	_bool			bUse_Skill = false;
+	_float			fPreview{};
+	_float			fVidio{};
 }SPELLINFO;
 typedef struct SlotHover
 {

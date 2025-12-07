@@ -45,6 +45,7 @@ HRESULT CPotion::Initialize(void* pArg)
 	m_fFontX = 1163.f;
 	m_fFontY = 860.f;
 	m_iPotionIndex = 0;
+	m_iPerPotionIndex = -1;
 	return S_OK;
 }
 
@@ -103,10 +104,12 @@ void CPotion::Update(_float fTimeDelta)
 		m_iPotionIndex++;
 	}
 
-	m_strPotion = to_wstring(m_iPotionIndex);
-
-	m_fFontOffSet = (m_pGameInstance->FontSizeX(TEXT("UI_size15"), m_strPotion.c_str()) - 13.f) * 0.5f;
-
+	if (m_iPerPotionIndex != m_iPotionIndex)
+	{
+		m_strPotion = to_wstring(m_iPotionIndex);
+		m_fFontOffSet = (m_pGameInstance->FontSizeX(TEXT("UI_size15"), m_strPotion.c_str()) - 13.f) * 0.5f;
+		m_iPerPotionIndex = m_iPotionIndex;
+	}
 
 	m_fTime += fTimeDelta * m_fTimeMult;
 

@@ -11,6 +11,8 @@
 #include "Cell.h"
 #include "Model.h"
 #include "Instance_Model.h"
+#include "Stat.h"
+#include "StatEvent.h"
 #include "Character_Controller.h"
 #include "Light.h"
 #include "FSM.h"

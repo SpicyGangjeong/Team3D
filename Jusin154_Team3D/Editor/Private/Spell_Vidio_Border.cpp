@@ -44,6 +44,7 @@ HRESULT CSpell_Vidio_Border::Initialize(void* pArg)
 	m_fLerpX = m_fX;
 	m_fLerpY = 45;
 	m_bStart = false;
+	m_fPreviewOffSet = 0;
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Slot_Hover"), [this](void* p) {this->Set_SkillType(*reinterpret_cast<_int*>(p)); });
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("FadeIn"), [this](void* p) {this->Set_FadeIn(); });
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("FadeOut"), [this](void* p) {this->Set_FadeOut(); });
@@ -95,6 +96,11 @@ void CSpell_Vidio_Border::Update(_float fTimeDelta)
 
 	if (m_fAlpha >= 0.3f)
 		m_bStart = true;
+
+	if (m_iSpellType != -1)
+	{
+		m_fY = m_fOrigin_Position.y + static_cast<CUIObject*>(m_pOwner)->Get_Info(m_iSpellType).fVidio;
+	}
 
 	__super::Update(fTimeDelta);
 

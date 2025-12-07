@@ -24,9 +24,9 @@ typedef struct tagModelDesc {
 
 typedef struct tagKeyFrame
 {
-	XMFLOAT3		vScale = {};
-	XMFLOAT4		vRotation = {};
-	XMFLOAT3		vTranslation = {};
+	_float3		vScale = {};
+	_float4		vRotation = {};
+	_float3		vTranslation = {};
 	_float			fTrackPosition = {};
 
 }KEYFRAME;
@@ -43,8 +43,8 @@ typedef struct tagLightDesc
 	_float4				vAmbient = {};
 	_float4				vSpecular = {};
 
-	const XMFLOAT4* pDirection = nullptr;
-	const XMFLOAT4* pPosition = nullptr;
+	const _float4* pDirection = nullptr;
+	const _float4* pPosition = nullptr;
 
 	_float4				vPosOffset = {};
 
@@ -62,18 +62,18 @@ typedef struct tagShadowLight
 
 struct SaveVertex
 {
-	XMFLOAT3 Pos;
-	XMFLOAT3 Normal;
-	XMFLOAT3 Tan;
-	XMFLOAT3 BiNoraml;
-	XMFLOAT2 UV;
+	_float3 Pos;
+	_float3 Normal;
+	_float3 Tan;
+	_float3 BiNoraml;
+	_float2 UV;
 
 	bool bHasNormal;
 	bool bHasTan;
 	bool bHasUV;
 
 	XMUINT4 BlendIndex;
-	XMFLOAT4 BlendWeight;
+	_float4 BlendWeight;
 };
 
 struct SaveBoneWeight
@@ -129,13 +129,13 @@ struct SaveMaterial
 struct SaveKeyFrameVec
 {
 	float Time;
-	XMFLOAT3 Value;
+	_float3 Value;
 };
 
 struct SaveKeyFrameRotation
 {
 	float Time;
-	XMFLOAT4 Value;
+	_float4 Value;
 };
 
 struct SaveChannel
@@ -396,9 +396,9 @@ typedef struct tagPhsXUserData {
 
 typedef struct tagOnCollsionInfo
 {
-	_vector vWorldPos = {};		// 접촉지점
-	_vector vWorldNomal = {};	// 접촉노말
-	_vector vHitDir = {};		// 시도한 move 방향
+	_float4 vWorldPos = {};		// 접촉지점
+	_float4 vWorldNomal = {};	// 접촉노말
+	_float4 vHitDir = {};		// 시도한 move 방향
 	_float  fLength = {};		// 작용된 힘
 
 }ON_COLLISION_INFO;

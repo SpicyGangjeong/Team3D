@@ -272,8 +272,9 @@ HRESULT CVIBuffer_Model_Instance::Ready_Materials()
 
 			pSRV = m_pGameInstance->Add_Resource(m_MeshMaterialPathes[i][j].c_str());
 
-			if (nullptr == pSRV)
+			if (nullptr == pSRV){
 				return E_FAIL;
+			}
 
 			SRVs.push_back(pSRV);
 		}

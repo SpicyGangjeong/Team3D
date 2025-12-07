@@ -27,6 +27,7 @@ public:
 		_string		pSpellInfo;
 		_bool		bSpell_Lock = false;
 		_bool		bEquip_Spell = false;
+		_float		fPreview{};
 	}SPELLINFO;
 private:
 	CSpell_Data(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

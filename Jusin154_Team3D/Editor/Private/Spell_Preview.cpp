@@ -43,8 +43,10 @@ HRESULT CSpell_Preview::Initialize(void* pArg)
 	m_fAlphaTime = 5.f;
 	m_vNine_Slice = _float4(50.f, 75.f, 30.f, 96.f);
 	m_fTopY = m_fY - m_vScale.y * 0.5f;
+	m_fPreviewOffSet = 0.f;
+	m_fOriginPerviewSize = 280.f;
 	SizeUpX(512.f);
-	SizeUpY(280.f);
+	SizeUpY(m_fOriginPerviewSize);
 	m_iSpellType = ENUM_CLASS(SPELLTYPE::CONTROL);
 	m_fSortZ = 0.02f;
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Slot_Hover"), [this](void* p) {this->Set_SkillType(*reinterpret_cast<_int*>(p)); });
@@ -103,7 +105,11 @@ void CSpell_Preview::Update(_float fTimeDelta)
 	if (m_iSpellType != -1)
 	{
 		m_pSpell_Info = static_cast<CUIObject*>(m_pOwner)->Get_Info(m_iSpellType).pSpellInfo;
+		m_fPreviewOffSet = static_cast<CUIObject*>(m_pOwner)->Get_Info(m_iSpellType).fPreview;
+		SizeUpY(m_fOriginPerviewSize + m_fPreviewOffSet);
 	}
+
+
 
 	__super::Update(fTimeDelta);
 }
@@ -137,7 +143,7 @@ HRESULT CSpell_Preview::Render()
 
 	if (m_bHover == true)
 	{
-		m_pGameInstance->Render_Text(TEXT("Font_size14"), m_pSpell_Info.c_str(), _float2(m_fFontX+ m_fX, m_fFontY + m_fY));
+		m_pGameInstance->Render_Text(TEXT("Font_size14"), m_pSpell_Info.c_str(), _float2(m_fFontX + m_fX, (m_fFontY + m_fY) - m_fPreviewOffSet * 0.5f));
 	}
 	return S_OK;
 }

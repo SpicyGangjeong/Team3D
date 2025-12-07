@@ -32,5 +32,7 @@ namespace Client
 		_bool			bSpell_Lock = false;
 		_bool			bEquip_Spell = false;
 		_bool			bUse_Skill = false;
+		_float			fPreview{};
+		_float			fVidio{};
 	}SPELL_INFO;
 };

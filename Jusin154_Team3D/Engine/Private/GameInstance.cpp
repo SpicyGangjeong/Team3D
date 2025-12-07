@@ -134,6 +134,7 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 	m_pMouse_Manager->Update();
 	//m_pSound_Manager->Update();
 #ifdef _DEBUG
+	m_pResource_Manager->Describe_Entity();
 	m_pFog->Update_Fog();
 #endif // _DEBUG
 	m_pPicking->Update();

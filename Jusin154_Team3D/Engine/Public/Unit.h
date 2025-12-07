@@ -50,6 +50,7 @@ public:
 	_float Get_KeyFrame(_string FrameName);
 	_bool IsCurrentKeyFrame(_string FrameName);
 	virtual _vector Get_LockOnPos() { return Get_WorldPostion(); }
+	virtual _bool Get_Damage(_float fDamage) { return false; }
 
 	virtual void Reset_Sprint() {};
 	virtual void Reset_Walk() {};
@@ -60,7 +61,6 @@ protected:
 	CModel*			m_pModelCom = { nullptr };
 	CFSM*			m_pFSM = { nullptr };
 	_wstring		m_strModelPrototypeTag;
-	_float2			m_vHP = { 230.f, 350.f };
 	_bool			m_bRimLight = { true };
 	_float			m_fRimLightPower = { 3.2f };
 	_float			m_fRimLightStrength = { 3.04f };
@@ -76,6 +76,7 @@ protected:
 
 	_int m_eSpell = { };
 	_int m_eHitSpell = {};
+	_float m_fHitRadius = {};
 
 	vector<PendingEvent> m_PendingEvents;
 

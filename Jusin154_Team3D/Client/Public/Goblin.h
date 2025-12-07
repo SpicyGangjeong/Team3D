@@ -67,7 +67,6 @@ private:
 	_float m_fTpTime = {};
 	_float m_fAirTime = {};
 
-
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();
 	void	Behavior_IdleExit();
@@ -96,6 +95,10 @@ private:
 	void	Behavior_HitEnter();
 	HRESULT Behavior_HitExitCheck(_float fTimeDelta);
 	void	Behavior_HitExit();
+	
+	void	Behavior_DeadEnter();
+	HRESULT Behavior_DeadExitCheck(_float fTimeDelta);
+	void	Behavior_DeadExit();
 };
 
 NS_END

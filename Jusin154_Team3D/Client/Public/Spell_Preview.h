@@ -45,6 +45,8 @@ private:
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
 	_wstring m_pSpell_Info;
+	_float	m_fOriginOffSet{};
+	_float	m_fPreviewOffSet{};
 
 	_float4 m_vHeaderBack{};
 

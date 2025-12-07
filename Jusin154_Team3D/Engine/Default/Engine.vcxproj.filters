@@ -301,6 +301,12 @@
     <Filter Include="02.Element\01.GameObject\01. Font">
       <UniqueIdentifier>{7eab7292-025e-40d7-aa71-73e7a3c71ea7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Element\02.Component\12.Stat">
+      <UniqueIdentifier>{ea9648d8-6a9a-41d2-8b8f-ea6937017372}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\12.Stat\Event">
+      <UniqueIdentifier>{b31a93a4-8bba-4e94-8008-bbb9b458a55e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -575,6 +581,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Font.cpp">
       <Filter>02.Element\01.GameObject\01. Font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Stat.cpp">
+      <Filter>02.Element\02.Component\12.Stat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\StatEvent.cpp">
+      <Filter>02.Element\02.Component\12.Stat\Event</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1216,6 +1228,12 @@
     </ClInclude>
     <ClInclude Include="..\public\Font.h">
       <Filter>02.Element\01.GameObject\01. Font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Stat.h">
+      <Filter>02.Element\02.Component\12.Stat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\StatEvent.h">
+      <Filter>02.Element\02.Component\12.Stat\Event</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

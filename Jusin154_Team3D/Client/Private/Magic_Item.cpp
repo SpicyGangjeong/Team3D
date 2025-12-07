@@ -47,6 +47,8 @@ HRESULT CMagic_Item::Initialize(void* pArg)
 	m_iArratCount = 2;
 	Compute_UV(0);
 	Compute_Image();
+	m_fFontX = 1171.f;
+	m_fFontY = 870.f;
 	m_iPotionIndex = 0;
 	m_iPerPotionIndex = -1;
 	return S_OK;

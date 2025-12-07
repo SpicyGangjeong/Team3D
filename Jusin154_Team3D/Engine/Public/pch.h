@@ -58,6 +58,7 @@ using namespace DirectX;
 #include <future>
 #include <condition_variable>
 #include <mutex>
+#include <shared_mutex>
 
 
 using namespace std;

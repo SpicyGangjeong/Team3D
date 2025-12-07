@@ -42,6 +42,8 @@ HRESULT CPotion::Initialize(void* pArg)
 	m_fAlphaTime = 1.f;
 	m_vImageSlotPos = _float2(45.f, 45.f);
 	m_vImageSize = _float2(32.f, 32.f);
+	m_fFontX = 1163.f;
+	m_fFontY = 860.f;
 	m_iPotionIndex = 0;
 	m_iPerPotionIndex = -1;
 	return S_OK;
