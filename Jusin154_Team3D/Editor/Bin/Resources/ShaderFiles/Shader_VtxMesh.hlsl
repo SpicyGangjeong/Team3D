@@ -234,16 +234,16 @@ PS_OUT PS_MAIN(PS_IN In)
 
     float4 vMtrlDiffuse = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
     float4 vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
-    if (AlmostEqual7(g_bBinded_Texture[AI_TEXTURE_TYPE_TRANSMISSION], true))
-    {
-        float4 vTransmission = g_TransmissionTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
-        vMtrlDiffuse *= vTransmission;
-    }
-    if (AlmostEqual7(g_bBinded_Texture[AI_TEXTURE_TYPE_EMISSIVE], true))
-    {
-        float4 vEmissive = g_EmissiveTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
-        vMtrlDiffuse += vEmissive;
-    }
+    //if (AlmostEqual7(g_bBinded_Texture[AI_TEXTURE_TYPE_TRANSMISSION], true))
+    //{
+    //    float4 vTransmission = g_TransmissionTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    //    vMtrlDiffuse *= vTransmission;
+    //}
+    //if (AlmostEqual7(g_bBinded_Texture[AI_TEXTURE_TYPE_EMISSIVE], true))
+    //{
+    //    float4 vEmissive = g_EmissiveTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    //    vMtrlDiffuse += vEmissive;
+    //}
     if (vMtrlDiffuse.a < 0.2f)
     {
         discard;

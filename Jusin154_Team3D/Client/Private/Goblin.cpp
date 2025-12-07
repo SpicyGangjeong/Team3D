@@ -185,6 +185,9 @@ _vector CGoblin::Get_LockOnPos()
 
 void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 {
+	if (true == m_bDead) {
+		return;
+	}
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 	_vector vWorldPos = {};		// 접촉지점
 	_vector vWorldNomal = {};	// 접촉노말
@@ -207,6 +210,9 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 		break;
 	case ENUM_CLASS(SKILL_TYPE::JAP):
 		m_eHitSpell = STATEANIM::HIT_LEVIOSO;
+		if (true == Get_Damage(60.f)) {
+			return;
+		}
 		break;
 	case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
 		m_eHitSpell = STATEANIM::HIT_LEVIOSO;
@@ -215,8 +221,9 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 		m_eHitSpell = STATEANIM::KNOCKDOWN_FWD;
 		break;
 	}
-	if (!m_pFSM->IsEnable(FSMSTATE::BLINK))
+	if (!m_pFSM->IsEnable(FSMSTATE::BLINK)){
 		m_pFSM->Change_State(FSMSTATE::HIT);
+	}
 
 }
 
@@ -272,6 +279,9 @@ HRESULT CGoblin::Ready_Components()
 		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor());
 	}
 
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_GOBLIN"), (CComponent**)&m_pStat))) {
+		return E_FAIL;
+	}
 	return S_OK;
 }
 

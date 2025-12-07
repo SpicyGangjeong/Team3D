@@ -1705,6 +1705,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 #pragma endregion
+#pragma region STAT PROTOTYPE
+	if (FAILED(Stat_FileLoad("../Bin/Resources/Data/Stat/Stat.xml"))) {
+		return E_FAIL;
+	}
+#pragma endregion
 
 
 	/* For.Prototype_Component_FSM */
@@ -1861,6 +1866,34 @@ HRESULT CLoader::Asset_FileLoad(const _char* pDirectoryPath, const _tchar* pPreN
 
 		AddPrototypeEvent(wstrFileName, szFilePath);
 
+	}
+
+	return S_OK;
+}
+
+HRESULT CLoader::Stat_FileLoad(const _char* pDirectoryPath)
+{
+	filesystem::path pathStatFile = pDirectoryPath;
+
+	tinyxml2::XMLDocument doc;
+	tinyxml2::XMLError Error = doc.LoadFile(pathStatFile.string().c_str());
+	if (Error != tinyxml2::XML_SUCCESS) {
+		return E_FAIL;
+	}
+
+	tinyxml2::XMLElement* pStatInfo = doc.FirstChildElement("StatInfo");
+	if (!pStatInfo) {
+		return E_FAIL;
+	}
+
+	_uint iNumChild = pStatInfo->ChildElementCount();
+	tinyxml2::XMLNode* pChild = pStatInfo->FirstChildElement();
+	for (_uint i = 0; i < iNumChild; ++i) {
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, CMyTools::ToWstring(pChild->Value()),
+			CStat::Create(m_pDevice, m_pContext, pChild)))) {
+			return E_FAIL;
+		}
+		pChild = pChild->NextSiblingElement();
 	}
 
 	return S_OK;

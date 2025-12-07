@@ -119,6 +119,15 @@ void CMonster::Set_DrawOutLine()
 	m_bDrawOutLine = true;
 }
 
+_bool CMonster::Get_Damage(_float fDamage)
+{
+	_bool bDead = m_pStat->Get_Damage(fDamage);
+	if (true == bDead) {
+		m_bDead = true;
+	}
+	return m_bDead;
+}
+
 HRESULT CMonster::Ready_Components(void*pArg)
 {
 	__super::Ready_Components(pArg);
@@ -149,6 +158,7 @@ void CMonster::Free()
 {
 	__super::Free();
 
+	SAFE_RELEASE(m_pStat);
 	SAFE_RELEASE(m_pTarget);
 	if (nullptr != m_pInfoInstance){
 		CInfoInstance* pInfo = m_pInfoInstance;  

@@ -158,10 +158,10 @@
       <Filter>02.GameObjects\Cameras\Camera_Gaze</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Goblin.h">
-      <Filter>02.GameObjects\Monster\Goblin</Filter>
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Monster.h">
-      <Filter>02.GameObjects\Monster</Filter>
+      <Filter>02.GameObjects\NPC\Hostile\Monster</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MapContainer.h">
       <Filter>02.GameObjects\Environment\00.MapContainer</Filter>
@@ -269,7 +269,7 @@
       <Filter>02.GameObjects\Effect\Effects\Lumos</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Troll.h">
-      <Filter>02.GameObjects\Monster\Troll</Filter>
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Troll</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Troll_Weapon.h">
       <Filter>02.GameObjects\Item\Troll_Weapon</Filter>
@@ -467,9 +467,6 @@
     <Filter Include="02.GameObjects\Environment\Plane">
       <UniqueIdentifier>{603938cc-e4fe-44d8-890b-784174a86161}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\NPC\Hostile\Monster">
-      <UniqueIdentifier>{b72a9bb0-1b21-416b-bd0c-ba943cd7cc9d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Environment\Prop">
       <UniqueIdentifier>{2814c935-13d9-4b9a-94ba-c9e470219a18}</UniqueIdentifier>
     </Filter>
@@ -611,12 +608,6 @@
     <Filter Include="02.GameObjects\Item\Wand">
       <UniqueIdentifier>{b719d948-fce3-4144-9d2c-edcab4cfceaf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Monster">
-      <UniqueIdentifier>{d371e373-e343-4e0b-9a0c-34eae167c1cd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Monster\Goblin">
-      <UniqueIdentifier>{1ff3d6f1-f31d-47b7-84b7-d23efe98d7d2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Environment\00.MapContainer">
       <UniqueIdentifier>{e2d84a8f-46c9-4689-bd91-cc45343d2b10}</UniqueIdentifier>
     </Filter>
@@ -703,9 +694,6 @@
     </Filter>
     <Filter Include="02.GameObjects\Environment\03.MapElement\Light">
       <UniqueIdentifier>{71f6a568-488d-4ec1-be79-8fcce6677e27}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Monster\Troll">
-      <UniqueIdentifier>{a1b1f17d-ed4f-4b20-aa8e-c52e693683d4}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Item\Troll_Weapon">
       <UniqueIdentifier>{1d6c078d-dddd-493d-a6f0-f2cac2e4107e}</UniqueIdentifier>
@@ -820,6 +808,15 @@
     </Filter>
     <Filter Include="01.Levels\02.GamePlay">
       <UniqueIdentifier>{7e641382-9dfa-4da7-a8c8-a3ee06360e7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\NPC\Hostile\Monster">
+      <UniqueIdentifier>{d371e373-e343-4e0b-9a0c-34eae167c1cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\NPC\Hostile\Monster\Goblin">
+      <UniqueIdentifier>{1ff3d6f1-f31d-47b7-84b7-d23efe98d7d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\NPC\Hostile\Monster\Troll">
+      <UniqueIdentifier>{a1b1f17d-ed4f-4b20-aa8e-c52e693683d4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -968,13 +965,13 @@
       <Filter>02.GameObjects\Cameras\Camera_Gaze</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Goblin.cpp">
-      <Filter>02.GameObjects\Monster\Goblin</Filter>
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Goblin_States.cpp">
-      <Filter>02.GameObjects\Monster\Goblin</Filter>
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Monster.cpp">
-      <Filter>02.GameObjects\Monster</Filter>
+      <Filter>02.GameObjects\NPC\Hostile\Monster</Filter>
     </ClCompile>
     <ClCompile Include="..\private\BuildingContainer.cpp">
       <Filter>02.GameObjects\Environment\00.MapContainer\BuildingContainer</Filter>
@@ -1085,10 +1082,10 @@
       <Filter>02.GameObjects\Environment\03.MapElement\Light</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Troll.cpp">
-      <Filter>02.GameObjects\Monster\Troll</Filter>
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Troll</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Troll_States.cpp">
-      <Filter>02.GameObjects\Monster\Troll</Filter>
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Troll</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Troll_Weapon.cpp">
       <Filter>02.GameObjects\Item\Troll_Weapon</Filter>

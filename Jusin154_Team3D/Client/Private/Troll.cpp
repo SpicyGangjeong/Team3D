@@ -275,6 +275,9 @@ HRESULT CTroll::Ready_Components()
 		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor());
 	}
 
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_TROLL"), (CComponent**)&m_pStat))) {
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
