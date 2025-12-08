@@ -95,21 +95,6 @@ void CEnemy_HpBar::Update(_float fTimeDelta)
 		}
 	}
 
-	if (m_fCurrentHp < 0.f)
-		m_fCurrentHp = 0.f;
-	if (m_fDamage <= 0.f)
-		m_fDamage = 0.f;
-	m_fTargetHp = m_fMaxHp - m_fDamage;
-
-	if (m_fTargetHp < m_fCurrentHp)
-		Hit(fTimeDelta);
-	m_fHpBar = m_fCurrentHp / m_fMaxHp;
-
-	if (m_fHpBar <= 0.f)
-	{
-		m_bAnimation = true;
-	}
-
 	if (m_pGameInstance->Key_Down(DIK_3))
 	{
 		Lerp_PosX(101.f);
@@ -129,6 +114,21 @@ void CEnemy_HpBar::Update(_float fTimeDelta)
 		m_bHover = true;
 		m_fTime = 0.f;
 		SizeUpdate(m_fLerpX, m_fLerpY);
+	}
+
+	if (m_fCurrentHp < 0.f)
+		m_fCurrentHp = 0.f;
+	if (m_fDamage <= 0.f)
+		m_fDamage = 0.f;
+	m_fTargetHp = m_fMaxHp - m_fDamage;
+
+	if (m_fTargetHp < m_fCurrentHp)
+		Hit(fTimeDelta);
+	m_fHpBar = m_fCurrentHp / m_fMaxHp;
+
+	if (m_fHpBar <= 0.f)
+	{
+		m_bAnimation = true;
 	}
 	if (m_bAnimation == true)
 	{

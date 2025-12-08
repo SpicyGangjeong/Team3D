@@ -11,7 +11,7 @@ CCamera_Debug::CCamera_Debug(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 }
 
 CCamera_Debug::CCamera_Debug(const CCamera_Debug& rhs)
-	: CCamera(rhs),
+	: CCamera(rhs)
 {
 }
 

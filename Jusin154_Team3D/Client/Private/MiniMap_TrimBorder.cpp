@@ -85,7 +85,7 @@ void CMiniMap_TrimBorder::Update(_float fTimeDelta)
 		}
 	}
 	m_fAngle = m_pInfoInstance->Get_Camera_Angle();
-	CMyTools::
+	//CMyTools::
 	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
 }
