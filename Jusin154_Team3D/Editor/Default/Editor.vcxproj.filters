@@ -511,6 +511,12 @@
     <Filter Include="50.UI\Logo\Logo_Glow">
       <UniqueIdentifier>{d8a5038f-4f2c-4226-85ba-9202f11f822d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Env\07.Unified">
+      <UniqueIdentifier>{4b6ac1df-5642-42f1-a492-5c2ca2433559}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Env\03.MapElement\Lake">
+      <UniqueIdentifier>{df91c194-9910-489b-a9bb-724e1c1f4440}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -993,6 +999,12 @@
     <ClInclude Include="..\public\Logo_Glow.h">
       <Filter>50.UI\Logo\Logo_Glow</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Unified.h">
+      <Filter>02.GameObjects\Env\07.Unified</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapElement_Lake.h">
+      <Filter>02.GameObjects\Env\03.MapElement\Lake</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -1473,6 +1485,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Logo_Glow.cpp">
       <Filter>50.UI\Logo\Logo_Glow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Unified.cpp">
+      <Filter>02.GameObjects\Env\07.Unified</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapElement_Lake.cpp">
+      <Filter>02.GameObjects\Env\03.MapElement\Lake</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

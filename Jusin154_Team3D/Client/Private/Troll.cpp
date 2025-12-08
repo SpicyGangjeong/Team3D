@@ -316,7 +316,7 @@ HRESULT CTroll::Ready_Parts()
 
  
 
-	if (FAILED(Add_PartObject<CEffectParts>("Troll_Particle", g_iStaticLevel, &m_pTroll_Particle, &PartsDesc)))
+	/*if (FAILED(Add_PartObject<CEffectParts>("Troll_Particle", g_iStaticLevel, &m_pTroll_Particle, &PartsDesc)))
 	{
 		return E_FAIL;
 	}
@@ -350,7 +350,7 @@ HRESULT CTroll::Ready_Parts()
 
 	m_pLeft_Smoke->Load("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Smoke", static_cast<LEVEL>(NEXT_LEVEL));
 	m_pLeft_Smoke->FollowParants(m_pModelCom->Get_BoneMatrixPtr("LeftArm"));
-
+*/
 #pragma endregion
 	return S_OK;
 }

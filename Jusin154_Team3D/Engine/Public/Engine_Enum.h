@@ -17,6 +17,7 @@ enum class TEXTURE_LOAD_TYPE {
     SINGLE,  // original/diffuseddd.png
     INCREMENTAL, // original/diffuse[%d].png
     PATH, // original/
+	CUBE,
     END 
 };
 enum class PXMATERIAL {

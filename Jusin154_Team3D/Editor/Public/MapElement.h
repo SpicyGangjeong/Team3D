@@ -27,9 +27,6 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
-
-	
-
 protected:
 	_bool				m_bSelected = { false };
 	_uint				m_iMaxLodLevel = {};
