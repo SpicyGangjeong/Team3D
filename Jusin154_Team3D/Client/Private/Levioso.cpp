@@ -101,6 +101,12 @@ void CLevioso::Late_Update(_float fTimeDelta)
 		OnCollision(this);
 	}
 
+	if (false == m_bHit) {
+		_vector vStartPos = XMLoadFloat4(&m_vStartPos);
+		_vector vEndPos = XMLoadFloat4(&m_vEndPos);
+		SweepTarget(vStartPos, vEndPos, 0.2f);
+	}
+
 	__super::Late_Update(fTimeDelta);
 
 

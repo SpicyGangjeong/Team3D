@@ -975,9 +975,6 @@
     <ClInclude Include="..\public\CameraLockOn.h">
       <Filter>50.UI\Mouse_Cursor</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Troll_Attack.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Troll_Attack</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Loding_Canvas.h">
       <Filter>50.UI\Loding_Canvas</Filter>
     </ClInclude>
@@ -1461,9 +1458,6 @@
     </ClCompile>
     <ClCompile Include="..\private\CameraLockOn.cpp">
       <Filter>50.UI\Mouse_Cursor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Troll_Attack.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Troll_Attack</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Loding_Canvas.cpp">
       <Filter>50.UI\Loding_Canvas</Filter>
