@@ -26,13 +26,19 @@ float2 g_vClipBoxSize;
 float2 g_vClipBoxLTPos;
 
 Texture2D g_DiffuseTexture;
+Texture2D g_NormalTexture;
+Texture2D g_DAOTexture;
+Texture2D g_THVTexture;
+Texture2D g_SurfaceParamsTexture;
+Texture2D g_TransmissionTexture;
+Texture2D g_EmissiveTexture;
+
+bool g_bBinded_Texture[AI_TEXTURE_TYPE_MAX * 27];
+
 Texture2D g_MaskingTexture;
 Texture2D g_ClippingTexture;
 Texture2D g_DisolveTexture;
-Texture2D g_NormalTexture;
 Texture2D g_GlowTexture;
-Texture2D g_SurfaceParamsTexture;
-Texture2D g_EmissiveTexture;
 Texture2D g_GlassTexture;
 
 float g_fBloomStrength;
@@ -226,10 +232,24 @@ PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out;
 
-    vector vMtrlDiffuse = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
-    vector vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
-    if (vMtrlDiffuse.a < 0.2f) { discard; }
-    
+    float4 vMtrlDiffuse = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    float4 vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    //if (AlmostEqual7(g_bBinded_Texture[AI_TEXTURE_TYPE_TRANSMISSION], true))
+    //{
+    //    float4 vTransmission = g_TransmissionTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    //    vMtrlDiffuse *= vTransmission;
+    //}
+    //if (AlmostEqual7(g_bBinded_Texture[AI_TEXTURE_TYPE_EMISSIVE], true))
+    //{
+    //    float4 vEmissive = g_EmissiveTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    //    vMtrlDiffuse += vEmissive;
+    //}
+    if (vMtrlDiffuse.a < 0.2f)
+    {
+        discard;
+    }
+
+
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, AnisoTropy_BLUR_Sampler, In.vTexcoord);
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
     
@@ -237,10 +257,15 @@ PS_OUT PS_MAIN(PS_IN In)
     
     Out.vAlbedo = vMtrlDiffuse;
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
+    float fSurfaceParam = g_fUsingSurfaceParams;
+    if (true == AlmostEqual7(g_fUsingSurfaceParams, 0.f))
+    {
+        fSurfaceParam = 0;
+    }
     Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
-    (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
-    g_fUsingSurfaceParams,  // 서페이스 파라미터
-    1.f);
+        (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
+        fSurfaceParam, // 서페이스 파라미터
+        1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = vSurface;
     

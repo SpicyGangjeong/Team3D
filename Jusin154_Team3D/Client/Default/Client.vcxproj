@@ -160,13 +160,20 @@ call Update_Resources.bat
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Action_Panel.h" />
+    <ClInclude Include="..\Public\CameraLockOn.h" />
     <ClInclude Include="..\Public\Current_Slot_Number.h" />
     <ClInclude Include="..\Public\Current_Spell_Slot.h" />
     <ClInclude Include="..\Public\Eessential_Spell.h" />
     <ClInclude Include="..\Public\Eessential_Spell_Slot.h" />
     <ClInclude Include="..\Public\Goblin_Dagger.h" />
     <ClInclude Include="..\Public\HpBarBG.h" />
+    <ClInclude Include="..\Public\Intro_BG.h" />
+    <ClInclude Include="..\Public\Intro_Image.h" />
     <ClInclude Include="..\Public\Levioso.h" />
+    <ClInclude Include="..\Public\Loding_Panel.h" />
+    <ClInclude Include="..\Public\Logo.h" />
+    <ClInclude Include="..\Public\Logo_Glow.h" />
+    <ClInclude Include="..\Public\Logo_Text.h" />
     <ClInclude Include="..\Public\Magic_Icon.h" />
     <ClInclude Include="..\Public\Magic_Item.h" />
     <ClInclude Include="..\Public\Magic_Meter.h" />
@@ -176,6 +183,7 @@ call Update_Resources.bat
     <ClInclude Include="..\public\MapElement.h" />
     <ClInclude Include="..\public\MapElement_Interactable.h" />
     <ClInclude Include="..\public\MapElement_Light.h" />
+    <ClInclude Include="..\Public\Mouse_Cursor.h" />
     <ClInclude Include="..\Public\Potion.h" />
     <ClInclude Include="..\Public\NomalJapSide.h" />
     <ClInclude Include="..\Public\Lumos.h" />
@@ -260,15 +268,18 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\State_Blink.h" />
     <ClInclude Include="..\Public\State_Broom_Ride.h" />
     <ClInclude Include="..\Public\State_Combat.h" />
+    <ClInclude Include="..\Public\State_Dead.h" />
     <ClInclude Include="..\Public\State_Dodge.h" />
     <ClInclude Include="..\Public\State_Hit.h" />
     <ClInclude Include="..\Public\State_Idle.h" />
     <ClInclude Include="..\Public\State_IdleBreak.h" />
     <ClInclude Include="..\Public\State_Jump.h" />
     <ClInclude Include="..\Public\State_Land.h" />
+    <ClInclude Include="..\Public\State_LightAttack.h" />
     <ClInclude Include="..\Public\State_Move.h" />
     <ClInclude Include="..\Public\State_Root.h" />
     <ClInclude Include="..\Public\State_Slam.h" />
+    <ClInclude Include="..\Public\State_Spell.h" />
     <ClInclude Include="..\Public\State_Swing.h" />
     <ClInclude Include="..\Public\State_Throw.h" />
     <ClInclude Include="..\public\StreetContainer.h" />
@@ -288,13 +299,20 @@ call Update_Resources.bat
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Action_Panel.cpp" />
+    <ClCompile Include="..\Private\CameraLockOn.cpp" />
     <ClCompile Include="..\Private\Current_Slot_Number.cpp" />
     <ClCompile Include="..\Private\Current_Spell_Slot.cpp" />
     <ClCompile Include="..\Private\Eessential_Spell.cpp" />
     <ClCompile Include="..\Private\Eessential_Spell_Slot.cpp" />
     <ClCompile Include="..\Private\Goblin_Dagger.cpp" />
     <ClCompile Include="..\Private\HpBarBG.cpp" />
+    <ClCompile Include="..\Private\Intro_BG.cpp" />
+    <ClCompile Include="..\Private\Intro_Image.cpp" />
     <ClCompile Include="..\Private\Levioso.cpp" />
+    <ClCompile Include="..\Private\Loding_Panel.cpp" />
+    <ClCompile Include="..\Private\Logo.cpp" />
+    <ClCompile Include="..\Private\Logo_Glow.cpp" />
+    <ClCompile Include="..\Private\Logo_Text.cpp" />
     <ClCompile Include="..\Private\Magic_Icon.cpp" />
     <ClCompile Include="..\Private\Magic_Item.cpp" />
     <ClCompile Include="..\Private\Magic_Meter.cpp" />
@@ -304,6 +322,7 @@ call Update_Resources.bat
     <ClCompile Include="..\private\MapElement.cpp" />
     <ClCompile Include="..\private\MapElement_Interactable.cpp" />
     <ClCompile Include="..\private\MapElement_Light.cpp" />
+    <ClCompile Include="..\Private\Mouse_Cursor.cpp" />
     <ClCompile Include="..\Private\Potion.cpp" />
     <ClCompile Include="..\Private\NomalJapSide.cpp" />
     <ClCompile Include="..\Private\Lumos.cpp" />
@@ -390,15 +409,18 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\State_Blink.cpp" />
     <ClCompile Include="..\Private\State_Broom_Ride.cpp" />
     <ClCompile Include="..\Private\State_Combat.cpp" />
+    <ClCompile Include="..\Private\State_Dead.cpp" />
     <ClCompile Include="..\Private\State_Dodge.cpp" />
     <ClCompile Include="..\Private\State_Hit.cpp" />
     <ClCompile Include="..\Private\State_Idle.cpp" />
     <ClCompile Include="..\Private\State_IdleBreak.cpp" />
     <ClCompile Include="..\Private\State_Jump.cpp" />
     <ClCompile Include="..\Private\State_Land.cpp" />
+    <ClCompile Include="..\Private\State_LightAttack.cpp" />
     <ClCompile Include="..\Private\State_Move.cpp" />
     <ClCompile Include="..\Private\State_Root.cpp" />
     <ClCompile Include="..\Private\State_Slam.cpp" />
+    <ClCompile Include="..\Private\State_Spell.cpp" />
     <ClCompile Include="..\Private\State_Swing.cpp" />
     <ClCompile Include="..\Private\State_Throw.cpp" />
     <ClCompile Include="..\private\StreetContainer.cpp" />

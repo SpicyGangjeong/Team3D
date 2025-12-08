@@ -126,10 +126,18 @@ void CSpell_Overlay::Spell_Setting(_int SlotIndex, _int SpellIndex)
 
 void CSpell_Overlay::Use_Spell()
 {
-	if (m_bEquipped[m_iCurrent_Slot] == true && m_bSpellUsed[m_iCurrent_Slot] == true)
+	if (m_bEquipped[m_iCurrent_Slot] == true)
 	{
 		m_pInfoInstance->Update_Spell(m_Spells[m_iCurrent_Slot]);
-		m_pInfoInstance->Event_CallBack(TEXT("JAP"), &m_Spells[m_iCurrent_Slot]);
+		if (m_bSpellUsed[m_iCurrent_Slot] == true)
+		{
+			m_pInfoInstance->Event_CallBack(TEXT("UseSpell"), &m_Spells[m_iCurrent_Slot]);
+		}
+		else
+		{
+			_int Spell = -1;
+			m_pInfoInstance->Event_CallBack(TEXT("UseSpell"), &Spell);
+		}
 	}
 }
 
@@ -201,6 +209,16 @@ void CSpell_Overlay::Update(_float fTimeDelta)
 		}
 	}
 
+	if (m_pGameInstance->Key_Down(DIK_N))
+	{
+		Nocool = true;
+		m_pInfoInstance->Event_CallBack(TEXT("NoCooL"), &Nocool);
+	}
+	if (m_pGameInstance->Key_Down(DIK_M))
+	{
+		Nocool = false;
+		m_pInfoInstance->Event_CallBack(TEXT("NoCooL"), &Nocool);
+	}
 
 	if (m_pGameInstance->Key_Down(DIK_N))
 	{

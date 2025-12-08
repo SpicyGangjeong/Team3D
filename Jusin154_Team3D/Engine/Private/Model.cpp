@@ -105,11 +105,13 @@ HRESULT CModel::Bind_BoneMatrices(_uint iMeshIndex, CShader* pShader, const _cha
 
 _bool CModel::Play_Animation(_float fTimeDelta, CTransform* pTransform)
 {
-	if (!m_bPlayAnim)
+	if (!m_bPlayAnim){
 		return false;
+	}
 
-	if (m_iCurrentAnimIndex < 0 || m_iCurrentAnimIndex >= (_int)m_iNumAnimations)
+	if (m_iCurrentAnimIndex < 0 || m_iCurrentAnimIndex >= (_int)m_iNumAnimations){
 		return false;
+	}
 
 	if (m_iCurrSecondAnimIndex >= 0) {
 		Play_Dual_Anim(fTimeDelta, pTransform);
@@ -267,6 +269,18 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 		}
 	}
 
+	if (m_bIsFinishedAnim)
+	{
+		if (m_bIsLoop)
+		{
+			m_bLoopRestarted = true;
+			m_vPrevRootPos = { 0,0,0 };
+		}
+		else {
+			XMStoreFloat3(&m_vPrevRootPos, m_vector[2]);
+		}
+	}
+
 	if (m_bRatio) {
 		Update_RootBone(m_fAmount * m_fRatio);
 	}
@@ -277,14 +291,6 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 
 	if (m_bIsFinishedAnim)
 	{
-		if (m_bIsLoop)
-		{
-			m_bLoopRestarted = true;
-		}
-		else{
-			//XMStoreFloat3(&m_vPrevRootPos, m_vector[2]);
-		}
-
 		m_vPrevRootRot = { 0.f,0.f,0.f,0.f };
 		m_bInitialRootRotSaved = false;
 	}
@@ -1164,7 +1170,7 @@ HRESULT CModel::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fma
 	_uint			iFlag = {};
 	iFlag = aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast;
 
-	if (MODEL::NONANIM == eType || MODEL::ENVIROMENT == eType) {
+	if (MODEL::NONANIM == eType || MODEL::PBR_NONANIM == eType || MODEL::ENVIROMENT == eType) {
 		iFlag |= aiProcess_PreTransformVertices;
 	}
 	m_iRootBoneIndex = iRootBoneIndex;
@@ -1198,7 +1204,7 @@ HRESULT CModel::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fma
 			return E_FAIL;
 		}
 	}
-	else if (MODEL::INDEPENDENT == eType) {
+	else if (MODEL::PBR_NONANIM == eType || MODEL::PBR_ANIM == eType) {
 		if (FAILED(Ready_Materials_Independent(eType, m_pAIScene, pModelFilePath))) {
 			return E_FAIL;
 		}
@@ -1807,7 +1813,7 @@ HRESULT CModel::Initialize(void* pArg)
 	SAFE_ADDREF(m_pTransform);
 
 
-	if (m_eType == MODEL::ANIM || m_eType == MODEL::ANIM_LOCAL)
+	if (m_eType == MODEL::ANIM || m_eType == MODEL::PBR_ANIM || m_eType == MODEL::ANIM_LOCAL)
 	{
 		Initialize_RootBone();
 		InItialize_BoneIndex();

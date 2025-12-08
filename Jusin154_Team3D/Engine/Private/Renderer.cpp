@@ -33,6 +33,7 @@ void CRenderer::Render()
 	Render_LastColor();
 	Render_Tone_Mapping();
 	Render_UI();
+	Render_UI_Overley();
 
 #ifdef _DEBUG
 	Describe_Entitiy();
@@ -744,6 +745,22 @@ void CRenderer::Render_UI()
 	}
 
 	m_RenderObjects[ENUM_CLASS(RENDER::UI)].clear();
+}
+
+void CRenderer::Render_UI_Overley()
+{
+	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::UI_OVERLAY)])
+	{
+		if (nullptr != pRenderObject) {
+			if (FAILED(pRenderObject->Render())) {
+				assert(false);
+			}
+		}
+		SAFE_RELEASE(pRenderObject);
+	}
+
+	m_RenderObjects[ENUM_CLASS(RENDER::UI_OVERLAY)].clear();
+	
 }
 
 void CRenderer::Render_LastColor()

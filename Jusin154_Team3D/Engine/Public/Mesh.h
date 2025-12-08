@@ -15,6 +15,7 @@ public:
 	_uint Get_MaterialIndex() const {
 		return m_iMaterialIndex;
 	}
+	void SeT_MaterialIndex(_uint iMaterialIndex) { m_iMaterialIndex = iMaterialIndex; }
 
 	const _char* Get_Name() const { return m_strName.c_str(); }
 	HRESULT Bind_BoneMatrices(const vector<class CBone*>& Bones, class CShader* pShader, const _char* pConstantName);

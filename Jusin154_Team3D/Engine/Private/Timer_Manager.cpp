@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Timer_Manager.h"
 
 #include "Timer.h"
@@ -51,7 +51,7 @@ CTimer* CTimer_Manager::Find_Timer(const _wstring& strTimerTag)
 
 	if (iter == m_Timers.end())
 		return nullptr;
-
+	
 	return iter->second;
 }
 

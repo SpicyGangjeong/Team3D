@@ -101,6 +101,7 @@ private:
 
 	function<void()> m_InputAction = nullptr;
 
+
 	_float3 m_OffsetPos = {};
 	_float m_fAmount = { 1.f };
 	_float m_fInputTime = {};

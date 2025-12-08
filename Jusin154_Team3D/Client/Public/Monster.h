@@ -19,10 +19,13 @@ public:
 	virtual HRESULT Render_OutLine() override;
 	virtual void Set_DrawOutLine();
 	_float4 Get_TargetPos() { return m_vTargetPos; }
+	virtual _bool Get_Damage(_float fDamage);
+	virtual _float2 Get_Hp();
 
 protected:
 	CInfoInstance*	m_pInfoInstance = { nullptr };
 	CUnit*			m_pTarget = { nullptr };
+	CStat*			m_pStat = { nullptr };
 	_float4			m_vTargetPos = { };
 	_float3			m_vToTargetDir = { };
 	_float			m_fTargetDistance = { FLT_MAX };

@@ -123,7 +123,7 @@ HRESULT CInstance_Model::Assimp_Model_Load(const _char* pModelFilePath, MODEL eT
 	_uint			iFlag = {};
 	iFlag = aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast;
 
-	if (MODEL::NONANIM == eType || MODEL::ENVIROMENT == eType) {
+	if (MODEL::NONANIM == eType || MODEL::PBR_NONANIM == eType || MODEL::ENVIROMENT == eType) {
 		iFlag |= aiProcess_PreTransformVertices;
 	}
 	m_iRootBoneIndex = iRootBoneIndex;

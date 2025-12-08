@@ -104,7 +104,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 #endif // _DEBUG
 
 	// UI 연동 추가
-	m_pInfoInstance->Add_Event(TEXT("JAP"), [this](void* p) {this->Get_Spell(*reinterpret_cast<_int*>(p)); });
+	m_pInfoInstance->Add_Event(TEXT("UseSpell"), [this](void* p) {this->Get_Spell(*reinterpret_cast<_int*>(p)); });
 	m_pInfoInstance->Add_Event(TEXT("Canvas_Change"), [this](void* p) {this->Get_UIState(*reinterpret_cast<_int*>(p)); });
 	return S_OK;
 }
@@ -150,8 +150,13 @@ void CPlayer::Late_Update(_float fTimeDelta)
 
 	__super::Late_Update(fTimeDelta);
 
-	if (nullptr != m_pLockOnMonster && false == m_pLockOnMonster->isDead()) {
-		static_cast<CMonster*>(m_pLockOnMonster)->Set_DrawOutLine();
+	if (nullptr != m_pLockOnMonster) {
+		if (false == m_pLockOnMonster->isDead()) {
+			static_cast<CMonster*>(m_pLockOnMonster)->Set_DrawOutLine();
+		}
+		else {
+			m_pLockOnMonster = nullptr;
+		}
 	}
 }
 
@@ -318,6 +323,10 @@ HRESULT CPlayer::Ready_Components()
 	LightDesc.vDiffuse = CMyTools::ColorRGB_A_HEXtoFLOAT4(0xffffff, 1.f);
 	LightDesc.vSpecular = CMyTools::ColorRGB_A_HEXtoFLOAT4(0xffffff, 1.f);
 	if (FAILED(Add_Component<CLight>(g_iStaticLevel, &m_pLightCom, &LightDesc))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_PLAYER"), (CComponent**)&m_pStat))) {
 		return E_FAIL;
 	}
 
@@ -492,6 +501,7 @@ void CPlayer::Free()
 	SAFE_RELEASE(m_pCharacter_Controller);
 	SAFE_RELEASE(m_pRigidBody);
 	SAFE_RELEASE(m_pLightCom);
+	SAFE_RELEASE(m_pStat);
 	Safe_Delete(m_pCallBack_Behavior);
 	Safe_Delete(m_pCallBack_HitReport);
 	SAFE_RELEASE(m_pCamPosition_TopDown_FollowPart);

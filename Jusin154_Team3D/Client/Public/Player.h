@@ -52,6 +52,7 @@ private:
 	class CModel* m_pBroomModel = { nullptr };
 	class CTransform* m_pBroomTransform = { nullptr };
 	class CBroom* m_pBroom = { nullptr };
+	CStat* m_pStat = { nullptr };
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -130,6 +131,14 @@ private:
 	void	Behavior_CombatEnter();
 	HRESULT Behavior_CombatExitCheck();
 	void	Behavior_CombatExit();
+
+	void	Behavior_LightAttackEnter();
+	HRESULT Behavior_LightAttackExitCheck();
+	void	Behavior_LightAttackExit();
+
+	void	Behavior_SpellEnter();
+	HRESULT Behavior_SpellExitCheck();
+	void	Behavior_SpellExit();
 
 	void	Behavior_HitEnter();
 	HRESULT Behavior_HitExitCheck();

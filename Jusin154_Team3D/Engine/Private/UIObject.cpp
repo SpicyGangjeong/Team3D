@@ -487,6 +487,11 @@ void CUIObject::Function_Callback(wstring Name, void* pArg)
 {
 }
 
+void CUIObject::Set_Hover(_bool Hover)
+{
+	m_bHover = Hover;
+}
+
 _bool CUIObject::Get_Hover()
 {
 	return m_bHover;

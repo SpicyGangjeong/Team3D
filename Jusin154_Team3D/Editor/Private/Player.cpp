@@ -382,6 +382,7 @@ void CPlayer::Update_CameraCoordinateSystem()
 	m_pInfoInstance->Update_CameraCoordinateSystem(m_vCameraLookDir, m_vRimLightColor);
 }
 
+
 _matrix CPlayer::Get_WandPos()
 {
 	CWand* pWand = Get_PartObject<CWand>();
