@@ -498,6 +498,7 @@ HRESULT CMaterial::Bind_SRV(CShader* pShader)
 				}
 			} break;
 			case aiTextureType_AMBIENT:
+				pConstantName = "g_AmbientTexture";
 				break;
 			case aiTextureType_EMISSIVE:
 				pConstantName = "g_EmissiveTexture";
@@ -534,6 +535,7 @@ HRESULT CMaterial::Bind_SRV(CShader* pShader)
 			case aiTextureType_DIFFUSE_ROUGHNESS:
 				break;
 			case aiTextureType_AMBIENT_OCCLUSION:
+				pConstantName = "g_AmbientOcclusionTexture";
 				break;
 			case aiTextureType_UNKNOWN:
 				break;
@@ -568,7 +570,7 @@ HRESULT CMaterial::Bind_SRV(CShader* pShader)
 		}
 		if (true == bBinded[iTextureType]) {
 			if (FAILED(pShader->Bind_SRV(pConstantName, m_SRVs[iTextureType][0]))) {
-				return S_OK;
+				return E_FAIL;
 			}
 		}
 	}

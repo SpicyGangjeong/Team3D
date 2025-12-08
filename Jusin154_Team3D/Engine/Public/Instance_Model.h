@@ -59,14 +59,29 @@ public:
 
 		_float2     vDissolveUVMoveTime = { 1.f , 1.f };
 
-		_float3		vPadding0 = {};
+		_float2		vDropAttenuation = { 1.f , 1.f };
+
+		_float		fPadding0 = {};
 		_float3		vPadding1 = {};
 
 		_float		fSizeLerpOption = {};
 		_float		fMoveLerpOption = {};
 
+		_bool		isDetphCompareStop = {};
 		_bool		isPadding0 = {};
+
+		_float4     vPadding2 = {};
+		_float4     vPadding3 = {};
+		_float4     vPadding4 = {};
+		_float4     vPadding5 = {};
+		_float4     vPadding6 = {};
+
 		_bool		isPadding1 = {};
+		_bool		isPadding2 = {};
+		_bool		isPadding3 = {};
+		_bool		isPadding4 = {};
+		_bool		isPadding5 = {};
+
 	}INSTANCE_DESC;
 
 	typedef struct tagPreInstanceDesc
@@ -100,11 +115,11 @@ public:
 		_float3     vSinMinAmount = { 0.f , 0.f , 0.f };
 		_float3     vSinMaxAmount = { 0.f , 0.f , 0.f };
 
-		_bool		isTurn = {};
+		_bool		isTurn;
 		_float3     vDeltaAngleMin = {};
 		_float3     vDeltaAngleMax = {};
 
-		_bool       isAxisTurn = {};
+		_bool       isAxisTurn;
 		_float3     vDeltaAxisAngleMin = {};
 		_float3     vDeltaAxisAngleMax = {};
 
@@ -119,6 +134,19 @@ public:
 
 		_float2     vDelay = {};
 		_bool       isNoWorld = {};
+
+		_float2     vDissolveUVMoveTime = { 1.f , 1.f };
+
+		_float2		vDropAttenuation = { 1.f , 1.f };
+
+		_float		fPadding0 = {};
+		_float3		vPadding1 = {};
+
+		_float		fSizeLerpOption = {};
+		_float		fMoveLerpOption = {};
+
+		_bool		isDetphCompareStop = {};
+		_bool		isPadding0 = {};
 
 	}PRE_INSTANCE_DESC;
 
@@ -138,15 +166,21 @@ public:
 
 
 		_int	 isNoWorld = {};
-		_int     isPadding0 = {};
+		_int     isDetphCompareStop = {};
 		_int     isPadding1 = {};
 		_int     isPadding2 = {};
 
 		_float   fTimeDelta = {};
 		_float	 fSizeLerpOption = {};
 		_float   fMoveLerpOption = {};
-		_float   fPadding4 = {};
+		_float   fFar = {};
 
+		_float4x4  ViewMatrix = {};
+		_float4x4  ProjMatrix = {};
+
+		_float2 vScreenSize;
+		_float  fPadding0;
+		_float  fPadding1;
 
 	}CS_PARTICLE_DESC;
 
@@ -182,6 +216,10 @@ public:
 
 		_float2   vDelay = {};
 
+		_bool	  isCompareStop = {};
+		_float    fCollisionTime = {};
+		_float    fDropAttenuation = {};
+
 	}CS_PARTICLE_VALUE_DESC;
 
 public:
@@ -203,6 +241,7 @@ public:
 	void			Instane_Buffer_ReStruct();
 	_uint			Get_NumMeshes() const { return m_iNumMeshes; }
 	HRESULT			Bind_CS_Output(_uint Index, _uint iBufferIndex);
+	HRESULT         Bind_OutPut_SRV_VS(_uint Index, _uint iBufferIndex);
 	INSTANCE_DESC	Get_EffectValue() { return m_InstanceDesc; }
 	HRESULT			Load_InstanceModel(HANDLE hFile);
 private:

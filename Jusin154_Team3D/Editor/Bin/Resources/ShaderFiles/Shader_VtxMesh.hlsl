@@ -32,6 +32,8 @@ Texture2D g_THVTexture;
 Texture2D g_SurfaceParamsTexture;
 Texture2D g_TransmissionTexture;
 Texture2D g_EmissiveTexture;
+Texture2D g_AmbientTexture;
+Texture2D g_AmbientOcclusionTexture;
 
 bool g_bBinded_Texture[AI_TEXTURE_TYPE_MAX * 27];
 

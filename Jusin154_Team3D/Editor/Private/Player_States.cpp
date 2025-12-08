@@ -198,9 +198,6 @@ HRESULT CPlayer::Behavior_IdleExitCheck(_float fTimeDelta)
 		else if (m_pGameInstance->Key_Down(DIK_G)) {
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
 		}
-		else if (m_pGameInstance->Key_Down(DIK_B)) {
-			m_pFSM->Change_State(FSMSTATE::BROOM_RIDE);
-		}
 		return E_FAIL;
 	}
 
