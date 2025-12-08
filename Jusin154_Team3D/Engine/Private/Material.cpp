@@ -575,6 +575,9 @@ HRESULT CMaterial::Bind_SRV(CShader* pShader)
 			}
 		}
 		if (true == bBinded[iTextureType]) {
+			if (0 == strcmp(pConstantName, "")) { // 미사용 SRV
+				return S_OK;
+			}
 			if (FAILED(pShader->Bind_SRV(pConstantName, m_SRVs[iTextureType][0]))) {
 				return E_FAIL;
 			}
