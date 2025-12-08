@@ -301,7 +301,7 @@ void CS_MAIN(
     
         float fOldViewZ = vDepthDesc.y * fFar;
     
-        if (vProjPos.w >= fOldViewZ)
+        if (vProjPos.w >= fOldViewZ && particle.vLifeTime.x >= 0.3f)
         {
             if (particleValue.isCompareStop == false)
             {
