@@ -72,8 +72,6 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	Set_Anim();
 
-	m_eSpell = STATEANIM::DESCENDO;
-
 	{
 		CFSM::FSM_DESC FSMDesc{};
 		FSMDesc.pStates = &m_States;

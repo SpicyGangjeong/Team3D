@@ -396,6 +396,9 @@ void CGoblin::Free()
 
 	SAFE_RELEASE(m_pCharacter_Controller);
 	SAFE_RELEASE(m_pRigidBody);
+	SAFE_RELEASE(m_pSmoke);
+	SAFE_RELEASE(m_pGoblin_Particle);
+	SAFE_RELEASE(m_pGoblin_Particle2);
 	Safe_Delete(m_pCallBack_Behavior);
 	Safe_Delete(m_pCallBack_HitReport);
 }
