@@ -44,17 +44,6 @@ HRESULT CWand::Initialize(void* pArg)
 
 void CWand::Priority_Update(_float fTimeDelta)
 {
-	_matrix socketMatrix = {};
-
-	socketMatrix = XMLoadFloat4x4(m_pSocketMatrices);
-
-	for (int i = 0; i < 3; ++i) {
-		socketMatrix.r[i] = XMVector3Normalize(socketMatrix.r[i]);
-	}
-
-	m_pTransformCom->Set_WorldMatrix(socketMatrix * XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr()));
-	XMStoreFloat4x4(&m_pWandTipMatrix, XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("Effect")) * m_pTransformCom->Get_XMWorldMatrix());
-
 #ifdef _DEBUG
 	Describe_Entity();
 
@@ -69,7 +58,17 @@ void CWand::Update(_float fTimeDelta)
 
 void CWand::Late_Update(_float fTimeDelta)
 {
-	m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
+	_matrix socketMatrix = {};
+
+	socketMatrix = XMLoadFloat4x4(m_pSocketMatrices);
+
+	for (int i = 0; i < 3; ++i) {
+		socketMatrix.r[i] = XMVector3Normalize(socketMatrix.r[i]);
+	}
+
+	m_pTransformCom->Set_WorldMatrix(socketMatrix * XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr()));
+	XMStoreFloat4x4(&m_pWandTipMatrix, XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("Effect")) * m_pTransformCom->Get_XMWorldMatrix());
+	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 }
 
 HRESULT CWand::Render()

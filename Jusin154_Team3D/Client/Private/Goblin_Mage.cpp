@@ -1,9 +1,12 @@
 ﻿#include "pch.h"
-#include "Goblin.h"
+#include "Goblin_Mage.h"
 
+#include "Layer.h"
+#include "EffectPool.h"
 #include "GameInstance.h"
 #include "Goblin_Dagger.h"
 #include "Effect_Container.h"
+#include "Wand.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -15,22 +18,22 @@
 #pragma endregion
 
 
-CGoblin::CGoblin(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CGoblin_Mage::CGoblin_Mage(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMonster(pDevice, pContext)
 {
 }
 
-CGoblin::CGoblin(const CGoblin& Prototype)
+CGoblin_Mage::CGoblin_Mage(const CGoblin_Mage& Prototype)
 	: CMonster(Prototype)
 {
 }
 
-HRESULT CGoblin::Initialize_Prototype()
+HRESULT CGoblin_Mage::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CGoblin::Initialize(void* pArg)
+HRESULT CGoblin_Mage::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -57,17 +60,20 @@ HRESULT CGoblin::Initialize(void* pArg)
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
 
-	m_pCharacter_Controller->Set_Position(XMVectorSet(-40.f, 5.f, -20.f, 1.f));
+	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
+	SAFE_ADDREF(m_pEffectPool);
+
+	m_pCharacter_Controller->Set_Position(XMVectorSet(m_pGameInstance->Random_Float(-20.f, 20.f), 0.f, m_pGameInstance->Random_Float(-20.f, 20.f), 1.f));
 
 	return S_OK;
 }
 
-void CGoblin::Priority_Update(_float fTimeDelta)
+void CGoblin_Mage::Priority_Update(_float fTimeDelta)
 {
 	__super::Priority_Update(fTimeDelta);
 }
 
-void CGoblin::Update(_float fTimeDelta)
+void CGoblin_Mage::Update(_float fTimeDelta)
 {
 	__super::Update(fTimeDelta);
 
@@ -107,7 +113,7 @@ void CGoblin::Update(_float fTimeDelta)
 
 }
 
-void CGoblin::Late_Update(_float fTimeDelta)
+void CGoblin_Mage::Late_Update(_float fTimeDelta)
 {
 	__super::Late_Update(fTimeDelta);
 	if (true == m_pCharacter_Controller->IsActive()) {
@@ -123,7 +129,7 @@ void CGoblin::Late_Update(_float fTimeDelta)
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 }
 
-HRESULT CGoblin::Render()
+HRESULT CGoblin_Mage::Render()
 {
 
 	if (!m_bVisible)
@@ -175,26 +181,15 @@ HRESULT CGoblin::Render()
 	return S_OK;
 }
 
-_vector CGoblin::Get_LockOnPos()
+void CGoblin_Mage::OnCollision(CGameObject* pOther, void* pDesc)
 {
-	if (nullptr != m_pCharacter_Controller && true == m_pCharacter_Controller->IsActive()) {
-		return m_pCharacter_Controller->Get_Position();
-	}
-	else if (nullptr != m_pRigidBody) {
-		return m_pRigidBody->Get_Position();
-	}
-	return Get_WorldPostion();
-}
-
-void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
-{
-	if (true == m_bDead) {
-		return;
-	}
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
+	_vector vWorldPos = {};		// 접촉지점
+	_vector vWorldNomal = {};	// 접촉노말
+	_vector vHitDir = {};		// 시도한 move 방향
+	_float  fLength = {};		// 작용된 힘
 
 	_uint iSkillType = dynamic_cast<CEffect_Container*>(pOther)->Get_SkillType();
-	m_fHitRadius = CMyTools::Get_Direction2D(m_pTransformCom->Get_State(STATE::LOOK), XMLoadFloat4(&CollisionDesc->vHitDir));
 	switch (iSkillType)
 	{
 	case ENUM_CLASS(SKILL_TYPE::DESCENDO):
@@ -205,10 +200,6 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 		break;
 	case ENUM_CLASS(SKILL_TYPE::JAP):
 		m_eHitSpell = STATEANIM::HIT_LEVIOSO;
-		if (true == Get_Damage(60.f)) {
-			m_pFSM->Change_State(FSMSTATE::DEAD);
-			return;
-		}
 		break;
 	case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
 		m_eHitSpell = STATEANIM::HIT_LEVIOSO;
@@ -217,17 +208,16 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 		m_eHitSpell = STATEANIM::KNOCKDOWN_FWD;
 		break;
 	}
-	if (!m_pFSM->IsEnable(FSMSTATE::BLINK)){
+	if (!m_pFSM->IsEnable(FSMSTATE::BLINK))
 		m_pFSM->Change_State(FSMSTATE::HIT);
-	}
 
 }
 
-void CGoblin::OnHit(CGameObject* pOther, CGameObject* pCaller)
+void CGoblin_Mage::OnHit(CGameObject* pOther, CGameObject* pCaller)
 {
 }
 
-HRESULT CGoblin::Ready_Components()
+HRESULT CGoblin_Mage::Ready_Components()
 {
 	CTransform::TRANSFORM_DESC Desc = {};
 
@@ -237,21 +227,21 @@ HRESULT CGoblin::Ready_Components()
 
 	__super::Ready_Components(&Desc);
 
-	m_strModelPrototypeTag = TEXT("Prototype_Component_Goblin_Model");
+	m_strModelPrototypeTag = TEXT("Prototype_Component_Goblin_Mage_Model");
 
 	/* Com_Model */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_strModelPrototypeTag,
-		reinterpret_cast<CComponent**>(&m_pModelCom)))){
+		reinterpret_cast<CComponent**>(&m_pModelCom)))) {
 		return E_FAIL;
 	}
 
 	{ // CCT
 		CCharacter_Controller::Character_Controller_DESC Desc{};
 
-		Desc.iSubKind = ENUM_CLASS(PXOBJECT::GOBLIN_WARRIOR);
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::GOBLIN_MAGICIAN);
 		Desc.pTransform = m_pTransformCom;
 		Desc.eBodyType = ACTOR::CAPSULE;
-		Desc.fContactOffset = 0.001f;
+		Desc.fContactOffset = 0.3f;
 		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
 		Desc.bAutoStepping = { false };
 		Desc.fStepOffset = { 0.05f };
@@ -268,38 +258,25 @@ HRESULT CGoblin::Ready_Components()
 	m_pCharacter_Controller->Set_Position(m_pTransformCom->Get_State(STATE::POSITION));
 	{ // DO
 		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
-		Desc.iSubKind = ENUM_CLASS(PXOBJECT::GOBLIN_WARRIOR);
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::GOBLIN_MAGICIAN);
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
 			return E_FAIL;
 		}
 		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor());
 	}
-
 	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_GOBLIN"), (CComponent**)&m_pStat))) {
 		return E_FAIL;
 	}
+
 	return S_OK;
 }
 
-HRESULT CGoblin::Ready_Parts()
+HRESULT CGoblin_Mage::Ready_Parts()
 {
-	CGoblin_Dagger::GOBLINDAGGER_DESC Goblin_DaggerDesc{};
-
-	Goblin_DaggerDesc.pParentTransform = m_pTransformCom;
-	Goblin_DaggerDesc.pSocketMatrices = m_pModelCom->Get_BoneMatrixPtr("LeftHand");
-
-	if (FAILED(Add_PartObject<CGoblin_Dagger>("Goblin_Dagger", g_iStaticLevel, nullptr, &Goblin_DaggerDesc)))
-	{
-		return E_FAIL;
-	}
-
-
-	Get_PartObject<CGoblin_Dagger>()->Set_Visible(false);
-
 	return S_OK;
 }
 
-HRESULT CGoblin::Bind_ShaderResources()
+HRESULT CGoblin_Mage::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
 		return E_FAIL;
@@ -317,31 +294,31 @@ HRESULT CGoblin::Bind_ShaderResources()
 	return S_OK;
 }
 
-CGoblin* CGoblin::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CGoblin_Mage* CGoblin_Mage::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CGoblin* pInstance = new CGoblin(pDevice, pContext);
+	CGoblin_Mage* pInstance = new CGoblin_Mage(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CGoblin");
+		MSG_BOX("Failed to Created : CGoblin_Mage");
 		SAFE_RELEASE(pInstance);
 	}
 	return pInstance;
 }
 
-CGameObject* CGoblin::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CGoblin_Mage::Clone(void* pArg, CGameObject* pOwner)
 {
-	CGoblin* pInstance = new CGoblin(*this);
-	
+	CGoblin_Mage* pInstance = new CGoblin_Mage(*this);
+
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CGoblin");
+		MSG_BOX("Failed to Cloned : CGoblin_Mage");
 		SAFE_RELEASE(pInstance);
 	}
 	return pInstance;
 }
 
-void CGoblin::Free()
+void CGoblin_Mage::Free()
 {
 	__super::Free();
 
@@ -354,12 +331,13 @@ void CGoblin::Free()
 
 	SAFE_RELEASE(m_pCharacter_Controller);
 	SAFE_RELEASE(m_pRigidBody);
+	SAFE_RELEASE(m_pEffectPool);
 	Safe_Delete(m_pCallBack_Behavior);
 	Safe_Delete(m_pCallBack_HitReport);
 }
 #ifdef _DEBUG
 
-void CGoblin::Describe_Entity()
+void CGoblin_Mage::Describe_Entity()
 {
 	GUI::Begin("Goblin");
 

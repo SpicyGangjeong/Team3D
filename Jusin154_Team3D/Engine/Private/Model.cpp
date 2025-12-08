@@ -146,7 +146,6 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 
 		m_bIsFinishedAnim = pCurAnim->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, true, m_iBoneMask, m_vector);
 
-
 		pCurAnim->InterpAnim(pPreAnim, m_Bones, m_fRatio);
 
 		if (m_fRatio >= 1.f)
@@ -310,31 +309,41 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 
 void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fAmount, _bool bRatio)
 {
-	if (m_iCurrentAnimIndex == iIndex) {
+	if (m_iCurrentAnimIndex == iIndex)
 		return;
-	}
+
 	if (iIndex >= 0 && iIndex < m_iNumAnimations)
 	{
 		m_vPrevRootPos = { 0.f, 0.f, 0.f };
 		m_vPrevRootRot = { 0.f,0.f,0.f,0.f };
 		m_bInitialRootRotSaved = false;
 		m_bInitialRootPos = false;
+
 		if (m_iCurrentAnimIndex != -1)
 		{
+			m_iPreAnimIndex = m_iCurrentAnimIndex;
+
 			m_Animations[m_iCurrentAnimIndex]->Depart_Animation();
 			m_Animations[m_iCurrentAnimIndex]->ResetRootMotion();
 		}
+
+		m_fBlendTime = 0.f;
+		m_fRatio = 0.f;
+
 		m_iCurrentAnimIndex = iIndex;
 		m_bIsLoop = isLoop;
 		m_fAmount = fAmount;
 		m_bRatio = bRatio;
+
 		m_Animations[m_iCurrentAnimIndex]->Depart_Animation();
 		m_Animations[m_iCurrentAnimIndex]->ResetRootMotion();
 	}
-	else {
+	else
+	{
 		m_iCurrentAnimIndex = -1;
 	}
 }
+
 
 void CModel::Set_Second_AnimationIndex(_uint iIndex, _uint BoneIndex, _bool isLoop)
 {
@@ -435,7 +444,7 @@ void CModel::Update_RootBone(_float Amount)
 	{
 		_float4x4 Root = m_Bones[m_iRootBoneIndex]->Get_TransformationMatrix();
 		_matrix local = XMLoadFloat4x4(&Root);
-
+	
 		_matrix pre = XMLoadFloat4x4(&m_PreTransformMatrix);
 
 		_float4 curRotF4;
@@ -1170,7 +1179,7 @@ HRESULT CModel::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fma
 	_uint			iFlag = {};
 	iFlag = aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast;
 
-	if (MODEL::NONANIM == eType || MODEL::PBR_NONANIM == eType || MODEL::ENVIROMENT == eType) {
+	if (MODEL::NONANIM == eType || MODEL::PBR_NONANIM == eType || MODEL::ENVIROMENT == eType || MODEL::NONANIM_LOCAL == eType) {
 		iFlag |= aiProcess_PreTransformVertices;
 	}
 	m_iRootBoneIndex = iRootBoneIndex;
@@ -1198,7 +1207,7 @@ HRESULT CModel::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fma
 			return E_FAIL;
 		}
 	}
-	else if (MODEL::ANIM_LOCAL == eType)
+	else if (MODEL::ANIM_LOCAL == eType || MODEL::NONANIM_LOCAL == eType)
 	{
 		if (FAILED(Ready_Materials_FromFile_Anim(m_pAIScene, pModelFilePath))) {
 			return E_FAIL;

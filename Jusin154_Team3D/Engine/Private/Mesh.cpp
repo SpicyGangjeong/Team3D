@@ -78,11 +78,13 @@ HRESULT CMesh::Initialize_Prototype(MODEL eType, vector<class CBone*>& Bones, co
 	case Engine::MODEL::NONANIM:
 	case Engine::MODEL::PBR_NONANIM:
 	case Engine::MODEL::ENVIROMENT:
+	case Engine::MODEL::NONANIM_LOCAL:
 		hr = Ready_VertexBuffer_For_NonAnim(pAIMesh, PreTransformMatrix);
 		break;
 
 	case Engine::MODEL::ANIM:
 	case Engine::MODEL::PBR_ANIM:
+	case Engine::MODEL::ANIM_LOCAL:
 		hr = Ready_VertexBuffer_For_Anim(Bones, pAIMesh);
 		break;
 
