@@ -51,22 +51,23 @@ HRESULT CTerrain::Initialize(void* pArg)
 	// Psx 적용할지 안할지
 	m_bUsePsx = true;
 
+#ifdef 진우
 	//if(!m_bUsePsx)
 	//{
 	//	if (FAILED(m_pVIBufferCom->Load_HeightMap("Hogsmeade_HeightMap.bin")))
-	//		return E_FAIL;
 	//}
 	//else
-	//{
-	//	CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc{};
-	//	Desc.pMeshName = TEXT("Hogsmeade_HeightMap");
-	//	Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
-	//	/* Com_RigidBody */
-	//	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_RigidBody_Static_Terrain_Hogsmeade"),
-	//		reinterpret_cast<CComponent**>(&m_pRigidBody), &Desc))) {
-	//		return E_FAIL;
-	//	}
-	//}
+	{
+		CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc{};
+		Desc.pMeshName = TEXT("Hogsmeade_HeightMap");
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
+		/* Com_RigidBody */
+		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_RigidBody_Static_Terrain_Hogsmeade"),
+			reinterpret_cast<CComponent**>(&m_pRigidBody), &Desc))) {
+			return E_FAIL;
+		}
+	}
+#endif
 
 	return S_OK;
 }

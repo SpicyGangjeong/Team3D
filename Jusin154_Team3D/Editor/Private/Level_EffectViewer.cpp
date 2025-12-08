@@ -18,6 +18,7 @@
 #include "InfoInstance.h"
 #include "Goblin.h"
 #include "Terrain.h"
+#include "Troll.h"
 
 CLevel_EffectViewer::CLevel_EffectViewer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -45,7 +46,16 @@ HRESULT CLevel_EffectViewer::Initialize()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Terrain"))))
+	CTerrain::TERRAIN_DESC Desc = {};
+	/* Hogsmeade */
+
+	Desc.isEdit = false;
+	Desc.iAlphaSizeX = 2048;
+	Desc.iAlphaSizeY = 2048;
+	Desc.vPosition = _float3(-194, 18.5f, -153.f);
+	Desc.strBufferTag = TEXT("Prototype_Component_VIBuffer_Terrain_Hogsmeade");
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Terrain"), &Desc)))
 		return E_FAIL;
 
 
@@ -70,14 +80,17 @@ HRESULT CLevel_EffectViewer::Initialize()
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Monster"))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Monster"))))
+		return E_FAIL;
+
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDummySkyBox>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Sky")))){
 		return E_FAIL;
 	}
 
-	ZeroMemory(&m_PlaneData, sizeof(m_PlaneData));
-	m_PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
-	m_PlaneData.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
-	m_pGameInstance->Add_Editor_Plane(m_PlaneData);
+	//ZeroMemory(&m_PlaneData, sizeof(m_PlaneData));
+	//m_PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
+	//m_PlaneData.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
+	//m_pGameInstance->Add_Editor_Plane(m_PlaneData);
 
 	return S_OK;
 }
