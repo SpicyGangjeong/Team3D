@@ -2029,11 +2029,6 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 
 	m_strMessage = TEXT("Model Loading..");
 
-	/*if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_SK_GenericDarkWizard_14_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM_LOCAL, "C:/MeshTable\\Game\\RiggedObjects\\Characters\\Human\\Body\\Generic_M\\SK_GenericDarkWizard_14.fbx", XMMatrixIdentity())))) {
-		return E_FAIL;
-	}*/
-
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_SK_WPN_Troll_Club07_Model"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM_LOCAL, "C:/MeshTable\\Game\\RiggedObjects\\Props\\Weapons\\Troll\\SK_WPN_Troll_Club07.fbx", XMMatrixIdentity())))) {
@@ -2163,6 +2158,14 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		TEXT("Prototype_Component_GoblinMage_Model")
 	));
 
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::ANIM, "../Bin/Resources/Models/Monster/GoblinSpector/SK_GOB_M_Specter_Master.bin", XMMatrixRotationY(XMConvertToRadians(180.f))* XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_SK_GOB_M_Specter_Master_Model")
+	//));
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_GoblinSpector_Anim_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Monster/GoblinSpector/GoblinSpector_Anim.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
+		return E_FAIL;
 
 	futures.emplace_back(Deferred_ModelLoad(
 		MODEL::ANIM, "../Bin/Resources/Models/Monster/TombProtector/TombProtector.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),

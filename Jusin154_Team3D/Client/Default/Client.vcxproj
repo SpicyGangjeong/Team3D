@@ -170,6 +170,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Enemy_Panel.h" />
     <ClInclude Include="..\Public\Goblin_Dagger.h" />
     <ClInclude Include="..\Public\Goblin_Mage.h" />
+    <ClInclude Include="..\Public\Goblin_Spector.h" />
     <ClInclude Include="..\Public\HpBarBG.h" />
     <ClInclude Include="..\Public\Intro_BG.h" />
     <ClInclude Include="..\Public\Intro_Image.h" />
@@ -316,6 +317,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Goblin_Dagger.cpp" />
     <ClCompile Include="..\Private\Goblin_Mage.cpp" />
     <ClCompile Include="..\Private\Goblin_Mage_States.cpp" />
+    <ClCompile Include="..\Private\Goblin_Spector.cpp" />
     <ClCompile Include="..\Private\HpBarBG.cpp" />
     <ClCompile Include="..\Private\Intro_BG.cpp" />
     <ClCompile Include="..\Private\Intro_Image.cpp" />

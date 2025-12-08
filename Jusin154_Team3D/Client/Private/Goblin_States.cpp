@@ -31,7 +31,7 @@ void CGoblin::Behavior_IdleEnter()
 
 HRESULT CGoblin::Behavior_IdleExitCheck()
 {
-	if (m_fTargetDistance <= 20.f && m_fTargetDistance != 0.f)
+	if (m_fTargetDistance <= 20.f && m_fTargetDistance >=1.f)
 	{
 		m_vOriginPos = m_pTransformCom->Get_State(STATE::POSITION);
 		m_pFSM->Change_State(FSMSTATE::MOVE);
@@ -63,7 +63,7 @@ HRESULT CGoblin::Behavior_MoveExitCheck()
 	pair<_uint, _bool> pairAnimInfo = {};
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 
-	if (m_fTargetDistance <= 15.f && m_fTargetDistance != 0.f)
+	if (m_fTargetDistance <= 15.f && m_fTargetDistance >=1.f)
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
 
 	return E_FAIL;
@@ -96,11 +96,9 @@ HRESULT CGoblin::Behavior_CombatExitCheck(_float fTimeDelta)
 		return E_FAIL;
 	}
 
-	if (m_fTargetDistance <= 7.f)
+	if (m_fTargetDistance <= 7.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SWING)] <= 0.f)
 	{
-		if (m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SWING)] <= 0.f) {
-			m_pFSM->Change_State(FSMSTATE::SWING);
-		}
+		m_pFSM->Change_State(FSMSTATE::SWING);
 	}
 	else if (m_fTargetDistance >= 7.f && m_fTargetDistance <= 12.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::THROW)] <= 0.f)
 	{
@@ -387,6 +385,7 @@ void CGoblin::Behavior_HitExit()
 
 void CGoblin::Behavior_DeadEnter()
 {
+	m_bLookAt = false;
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::DEAD);
 
