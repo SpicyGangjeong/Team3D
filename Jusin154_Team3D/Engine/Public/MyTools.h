@@ -202,13 +202,23 @@ public:
 	
 	// 2D 평면에 사상된 방향을 교정해서 리턴
 	// float -> Radian값
-	// -, + 
+	// - 시계방향
+	// + 반시계방향
 	inline static _float Get_Direction2D(_float2 vOrigianlDir, _float2 vInputDir) {
 		_vector vOriginal	= XMVector2Normalize(XMLoadFloat2(&vOrigianlDir));
 		_vector vInput		= XMVector2Normalize(XMLoadFloat2(&vInputDir));
 		
 		_float fDiffAngle	= XMVectorGetX(XMVector2AngleBetweenNormals(vOriginal, vInput));
 		_float fCross		= XMVectorGetZ(XMVector2Cross(vOriginal, vInput));
+
+		return fDiffAngle * (fCross < 0 ? -1.f : 1.f);
+	}
+	inline static _float Get_Direction2D(_vector vOriginalDir, _vector vInputDir) {
+		_vector vOriginal = XMVector2Normalize(XMVectorSet(XMVectorGetX(vOriginalDir), XMVectorGetZ(vOriginalDir), 0.f, 0.f));
+		_vector vInput = XMVector2Normalize(XMVectorSet(XMVectorGetX(vInputDir), XMVectorGetZ(vInputDir), 0.f, 0.f));
+
+		_float fDiffAngle = XMVectorGetX(XMVector2AngleBetweenNormals(vOriginal, vInput));
+		_float fCross = XMVectorGetZ(XMVector2Cross(vOriginal, vInput));
 
 		return fDiffAngle * (fCross < 0 ? -1.f : 1.f);
 	}

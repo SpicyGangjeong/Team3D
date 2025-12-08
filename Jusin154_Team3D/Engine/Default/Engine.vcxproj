@@ -300,7 +300,9 @@ call Update_Lib.bat
     <ClCompile Include="..\Private\Shader.cpp" />
     <ClCompile Include="..\Private\Shadow.cpp" />
     <ClCompile Include="..\Private\SoundSrc.cpp" />
+    <ClCompile Include="..\Private\Stat.cpp" />
     <ClCompile Include="..\Private\State.cpp" />
+    <ClCompile Include="..\Private\StatEvent.cpp" />
     <ClCompile Include="..\Private\Texture.cpp" />
     <ClCompile Include="..\Private\ThreadHolder.cpp" />
     <ClCompile Include="..\Private\Timer.cpp" />
@@ -550,7 +552,9 @@ call Update_Lib.bat
     <ClInclude Include="..\Public\Shader.h" />
     <ClInclude Include="..\Public\Shadow.h" />
     <ClInclude Include="..\Public\SoundSrc.h" />
+    <ClInclude Include="..\Public\Stat.h" />
     <ClInclude Include="..\Public\State.h" />
+    <ClInclude Include="..\Public\StatEvent.h" />
     <ClInclude Include="..\Public\stb_image.h" />
     <ClInclude Include="..\Public\Texture.h" />
     <ClInclude Include="..\Public\ThreadHolder.h" />

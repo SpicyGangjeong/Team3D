@@ -119,26 +119,39 @@ void CNomalJap::Update(_float fTimeDelta)
 
 void CNomalJap::Late_Update(_float fTimeDelta)
 {
-	if (m_bVisible == false) {
+	if (false == m_bVisible) {
 		return;
 	}
+	if (false == m_bHit) {
+		SweepTarget();
+	}
+	Get_PartObject<CTrailObject>()->Trail_Update(m_pProjectile->Get_Component<CTransform>()->Get_XMWorldMatrix(), fTimeDelta);
 
+	__super::Late_Update(fTimeDelta);
+}
+
+void CNomalJap::SweepTarget()
+{
 	_vector vStartPos = m_pProjectile->Get_WorldPostion();
-
 	_vector vEndPos = XMLoadFloat4(&m_vTargetPos);
-
 	_vector vDir = { vEndPos - vStartPos };
 
 	_float fDistance = XMVectorGetX(XMVector3Length(vEndPos - vStartPos));
 
 	PSX::PxSweepBuffer pxBuffer = {};
 
-	_bool bHit = m_pGameInstance->SphereCast(0.2f, vStartPos, vDir, fDistance, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eDYNAMIC, pxBuffer);
+	_bool bHit = m_pGameInstance->SphereCast(0.002f, vStartPos, vDir, fDistance, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eDYNAMIC, pxBuffer);
 
 	if (bHit) {
 		const PSX::PxSweepHit& hit = pxBuffer.block;
 		PSX::PxRigidActor* pActor = hit.actor;
 		PSX::PxShape* pShape = hit.shape;
+		ON_COLLISION_INFO tagCollInfo = {};
+		memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &hit.position, sizeof(hit.position));
+		memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &hit.normal, sizeof(hit.normal));
+		XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
+		tagCollInfo.fLength = fDistance;
+
 
 		if (nullptr != pActor && nullptr != pActor->userData)
 		{
@@ -151,14 +164,17 @@ void CNomalJap::Late_Update(_float fTimeDelta)
 				switch (PXOBJECT(pUserData->iSubKind))
 				{
 				case PXOBJECT::MONSTER:
+					break;
 				case PXOBJECT::GOBLIN_WARRIOR:
 				{
-					pUserData->pOwner->OnCollision(this);
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					m_bHit = true;
 				}
-					break;
+				break;
 				case PXOBJECT::TROLL:
 				{
-					pUserData->pOwner->OnCollision(this);
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					m_bHit = true;
 				}
 				break;
 				}
@@ -166,11 +182,6 @@ void CNomalJap::Late_Update(_float fTimeDelta)
 			}
 		}
 	}
-
-	Get_PartObject<CTrailObject>()->Trail_Update(m_pProjectile->Get_Component<CTransform>()->Get_XMWorldMatrix(), fTimeDelta);
-
-
-	__super::Late_Update(fTimeDelta);
 }
 
 HRESULT CNomalJap::Pre_Setting(CGameObject* pObject, void* pArg)
@@ -186,7 +197,6 @@ HRESULT CNomalJap::Pre_Setting(CGameObject* pObject, void* pArg)
 	XMStoreFloat4(&m_vStartPos, vStartPos);
 
 	/* 초기 객체 위치 초기화 */
-
 	m_pProjectile->Get_Component<CTransform>()->Set_State(STATE::POSITION, vStartPos);
 	m_pProjectile_Side->Get_Component<CTransform>()->Set_State(STATE::POSITION, vStartPos);
 
@@ -213,7 +223,7 @@ HRESULT CNomalJap::Pre_Setting(CGameObject* pObject, void* pArg)
 
 
 	{ /* 대상 위치 지정 */
-
+		m_bHit = false;
 		CUnit* pTargetUnit = m_pInfoInstance->Get_LockOnUnit();
 		if (nullptr != pTargetUnit) {
 			XMStoreFloat4(&m_vTargetPos, pTargetUnit->Get_LockOnPos());
@@ -222,8 +232,6 @@ HRESULT CNomalJap::Pre_Setting(CGameObject* pObject, void* pArg)
 				XMStoreFloat4(&m_vTargetPos, vStartPos + vDirection * m_fLinearSpeed * 0.5f);
 			}
 			XMStoreFloat3(&m_vCameraLook, XMVector3Normalize(XMLoadFloat4(&m_vTargetPos) - XMLoadFloat4(&m_vStartPos)));
-
-			
 		}
 		else {
 			// 타겟이 없다면 현재위치 -> 카메라 룩벡터 * duration간 예상 이동거리 를 대상으로 지정
@@ -314,11 +322,13 @@ void CNomalJap::OnCollision(CGameObject* pOther, void* pDesc)
 {
 	int iIndex = CollisionCheck();
 
-	if (iIndex < 0)
+	if (iIndex < 0){
 		return;
+	}
 
-	if (m_isCollisionEnter == true)
+	if (m_isCollisionEnter == true){
 		return;
+	}
 
 	m_isCollisionEnter = true;
 

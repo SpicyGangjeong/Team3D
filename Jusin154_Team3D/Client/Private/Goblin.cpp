@@ -185,18 +185,13 @@ _vector CGoblin::Get_LockOnPos()
 
 void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 {
+	if (true == m_bDead) {
+		return;
+	}
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
-	_vector vWorldPos = {};		// 접촉지점
-	_vector vWorldNomal = {};	// 접촉노말
-	_vector vHitDir = {};		// 시도한 move 방향
-	_float  fLength = {};		// 작용된 힘
 
-	//m_pCharacter_Controller->ConvertToDO(*m_pRigidBody);
-	//m_pRigidBody->Add_Force(vHitDir * fLength * 10000.f, PSX::PxForceMode::eFORCE);
-
-	//m_pCharacter_Controller->ConvertToDO(*m_pRigidBody);
-	//m_pRigidBody->Add_Force(vHitDir * fLength * 100.f, PSX::PxForceMode::eIMPULSE);
 	_uint iSkillType = dynamic_cast<CEffect_Container*>(pOther)->Get_SkillType();
+	m_fHitRadius = CMyTools::Get_Direction2D(m_pTransformCom->Get_State(STATE::LOOK), XMLoadFloat4(&CollisionDesc->vHitDir));
 	switch (iSkillType)
 	{
 	case ENUM_CLASS(SKILL_TYPE::DESCENDO):
@@ -207,6 +202,10 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 		break;
 	case ENUM_CLASS(SKILL_TYPE::JAP):
 		m_eHitSpell = STATEANIM::HIT_LEVIOSO;
+		if (true == Get_Damage(60.f)) {
+			m_pFSM->Change_State(FSMSTATE::DEAD);
+			return;
+		}
 		break;
 	case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
 		m_eHitSpell = STATEANIM::HIT_LEVIOSO;
@@ -215,8 +214,9 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 		m_eHitSpell = STATEANIM::KNOCKDOWN_FWD;
 		break;
 	}
-	if (!m_pFSM->IsEnable(FSMSTATE::BLINK))
+	if (!m_pFSM->IsEnable(FSMSTATE::BLINK)){
 		m_pFSM->Change_State(FSMSTATE::HIT);
+	}
 
 }
 
@@ -248,7 +248,7 @@ HRESULT CGoblin::Ready_Components()
 		Desc.iSubKind = ENUM_CLASS(PXOBJECT::GOBLIN_WARRIOR);
 		Desc.pTransform = m_pTransformCom;
 		Desc.eBodyType = ACTOR::CAPSULE;
-		Desc.fContactOffset = 0.3f;
+		Desc.fContactOffset = 0.001f;
 		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
 		Desc.bAutoStepping = { false };
 		Desc.fStepOffset = { 0.05f };
@@ -272,6 +272,9 @@ HRESULT CGoblin::Ready_Components()
 		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor());
 	}
 
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_GOBLIN"), (CComponent**)&m_pStat))) {
+		return E_FAIL;
+	}
 	return S_OK;
 }
 

@@ -40,11 +40,9 @@ HRESULT CLevioso::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_pLeviosoPJ_0 = Get_PartObject<CEffectParts>("Levioso_PJ0");
-	m_pLeviosoTrail = Get_PartObject<CTrailObject>("Levioso_Trail");
 	m_pTrail_PT_0 = Get_PartObject<CEffectParts>("Trail_PT0");
 
 	SAFE_ADDREF(m_pLeviosoPJ_0);
-	SAFE_ADDREF(m_pLeviosoTrail);
 	SAFE_ADDREF(m_pTrail_PT_0);
 
 	m_wstrEffectName = L"Levioso";
@@ -85,7 +83,6 @@ void CLevioso::Update(_float fTimeDelta)
 
 	_matrix WorldMat = m_pTrail_PT_0->Get_Component<CTransform>()->Get_XMWorldMatrix();
 
-	m_pLeviosoTrail->Trail_Update(WorldMat, fTimeDelta);
 
 }
 
@@ -140,8 +137,6 @@ HRESULT CLevioso::Pre_Setting(CGameObject* pObject, void* pArg)
 	pWandSmoke->Set_Visible(true);
 	pWandLight->Set_Visible(true);
 
-	m_pLeviosoTrail->Set_Visible(true);
-	m_pLeviosoTrail->Get_Component<CTrail>()->Reset_Trail();
 
 	m_vOwnerLook = XMVector3Normalize(m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK));
 
@@ -240,9 +235,7 @@ void CLevioso::Free()
 {
 	__super::Free();
 
-
 	SAFE_RELEASE(m_pLeviosoPJ_0);
-	SAFE_RELEASE(m_pLeviosoTrail);
 	SAFE_RELEASE(m_pTrail_PT_0);
 }
 #ifdef _DEBUG

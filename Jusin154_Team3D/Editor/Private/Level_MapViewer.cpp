@@ -12,6 +12,8 @@
 #include "Land.h"
 #include "InstancedProp.h"
 #include "Player.h"
+#include "Unified.h"
+#include "MapElement_Lake.h"
 
 CLevel_MapViewer::CLevel_MapViewer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -47,11 +49,15 @@ HRESULT CLevel_MapViewer::Initialize()
 		return E_FAIL;
 	}
 
-	if (FAILED(Ready_Layer_InstanceProp(TEXT("Layer_InstanceProp")))) {
+	/*if (FAILED(Ready_Layer_InstanceProp(TEXT("Layer_InstanceProp")))) {
 		return E_FAIL;
 	}
 
 	if (FAILED(Ready_Layer_BuildingContainer(TEXT("Layer_Building")))) {
+		return E_FAIL;
+	}*/
+
+	if (FAILED(Ready_Layer_Unified(TEXT("Layer_Unified")))) {
 		return E_FAIL;
 	}
 
@@ -76,7 +82,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_Camera(const _wstring& strLayerTag)
 	CCamera_Debug::CAMERA_DEBUG_DESC            Camera_Desc{};
 	Camera_Desc.fFovy = XMConvertToRadians(60.0f);
 	Camera_Desc.fNear = 0.1f;
-	Camera_Desc.fFar = 200.f;
+	Camera_Desc.fFar = 600.f;
 	Camera_Desc.vEye = _float3(0.f, 10.f, -10.f);
 	Camera_Desc.vAt = _float3(0.f, 0.f, 0.f);
 	Camera_Desc.fSpeedPerSec = 5.f;
@@ -111,7 +117,55 @@ HRESULT CLevel_MapViewer::Ready_Layer_Background(const _wstring& strLayerTag)
 
 HRESULT CLevel_MapViewer::Ready_Layer_Terrain(const _wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
+	CTerrain::TERRAIN_DESC Desc = {};
+	/* Hogsmeade */
+
+	Desc.isEdit = false;
+	Desc.iAlphaSizeX = 2048;
+	Desc.iAlphaSizeY = 2048;
+	Desc.vPosition = _float3(-194, 18.5f, -153.f);
+	Desc.strBufferTag = TEXT("Prototype_Component_VIBuffer_Terrain_Hogsmeade");
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
+		return E_FAIL;
+
+	/* Hogwart */
+	Desc.isEdit = false;
+	Desc.iAlphaSizeX = 2048;
+	Desc.iAlphaSizeY = 2560;
+	Desc.vPosition = _float3(-451.f, 18.5f, -791.f);
+	Desc.strBufferTag = TEXT("Prototype_Component_VIBuffer_Terrain_Hogwart");
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
+		return E_FAIL;
+
+	/* North_Hogwart */
+	Desc.isEdit = false;
+	Desc.iAlphaSizeX = 1536;
+	Desc.iAlphaSizeY = 1024;
+	Desc.vPosition = _float3(-577.f, 18.5f, -153.f);
+	Desc.strBufferTag = TEXT("Prototype_Component_VIBuffer_Terrain_North_Hogwart");
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
+		return E_FAIL;
+
+	/* South_Hogwart */
+	Desc.isEdit = true;
+	Desc.iAlphaSizeX = 2048;
+	Desc.iAlphaSizeY = 1, 536;
+	Desc.vPosition = _float3(61.f, 18.5f, -535.f);
+	Desc.strBufferTag = TEXT("Prototype_Component_VIBuffer_Terrain_South_Hogwart");
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
+		return E_FAIL;
+
+	CMapElement_Lake::MAPOBJECT_LAKE_DESC Lake_Desc = {};
+
+	vector<_wstring>		ModelPrototypeTags;
+	ModelPrototypeTags.push_back(TEXT("Prototype_Component_Hogwart_Lake"));
+	Lake_Desc.iMaxLodLevel = 0;
+	Lake_Desc.iRenderType = 4;
+	Lake_Desc.vPosition = _float3(-144.f, -61.9f, -115.f);
+	Lake_Desc.vRotation = _float3(0.f, 0.f, 0.f);
+	Lake_Desc.vScale = _float3(3.f, 3.f, 3.f);
+	Lake_Desc.ModelPrototypeTags = ModelPrototypeTags;
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Lake>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Lake_Desc)))
 		return E_FAIL;
 
 	return S_OK;
@@ -216,12 +270,18 @@ HRESULT CLevel_MapViewer::Ready_Layer_BuildingContainer(const _wstring& strLayer
 	return S_OK;
 }
 
+HRESULT CLevel_MapViewer::Ready_Layer_Unified(const _wstring& strLayerTag)
+{
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CUnified>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 HRESULT CLevel_MapViewer::Ready_Layer_MapObjectManager(const _wstring& strLayerTag)
 {
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapObject_Manager>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
 		return E_FAIL;
-
-	
 
 	return S_OK;
 }

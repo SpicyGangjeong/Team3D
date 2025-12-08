@@ -12,8 +12,8 @@ void CMonsterInfo::Update(_float fTimeDelta)
 {
 	Refresh_PlayerAllies();
 	Refresh_LockOnMonsters();
+	Refresh_ActiveMonsters();
 }
-
 void CMonsterInfo::Change_Level()
 {
 	SAFE_RELEASE(m_pLockOnMonster);
@@ -124,7 +124,11 @@ HRESULT CMonsterInfo::Refresh_LockOnMonsters()
 		for (list<CMonster*>::iterator iter = m_ActiveMonsters.begin(); iter != m_ActiveMonsters.end(); ++iter) {
 
 			// (카메라의 룩)과 (카메라 -> 몬스터 방향 벡터)를 내적해서 가장 큰 크기가 나온 몬스타가 락온 대상
-			vMonsterPos = (*iter)->Get_WorldPostion();
+			CMonster* pMonster = (*iter);
+			if (pMonster->Get_Hp().x <= 0) {
+				continue;
+			}
+			vMonsterPos = pMonster->Get_WorldPostion();
 			vToMonsterDir = vMonsterPos - vCameraPos;
 			_float fDotResult = CMyTools::DirectionCompare(vCameraLook, vToMonsterDir);
 			if (fDotResult <= cosf(fFovy)) {
@@ -132,13 +136,13 @@ HRESULT CMonsterInfo::Refresh_LockOnMonsters()
 			}
 
 			if (nullptr == m_pLockOnMonster) {
-				m_pLockOnMonster = (*iter);
+				m_pLockOnMonster = pMonster;
 				fMaxDot = fDotResult;
 				continue;
 			}
 
 			if (fMaxDot < fDotResult) {
-				m_pLockOnMonster = (*iter);
+				m_pLockOnMonster = pMonster;
 				fMaxDot = fDotResult;
 			}
 		}
@@ -148,6 +152,22 @@ HRESULT CMonsterInfo::Refresh_LockOnMonsters()
 	}
 	return S_OK;
 }
+
+HRESULT CMonsterInfo::Refresh_ActiveMonsters()
+{
+	list<CMonster*>::iterator iter = m_ActiveMonsters.begin();
+	for (; iter != m_ActiveMonsters.end();) {
+		if (true == (*iter)->isDead()) {
+			SAFE_RELEASE(*iter);
+			iter = m_ActiveMonsters.erase(iter);
+		}
+		else {
+			++iter;
+		}
+	}
+	return S_OK;
+}
+
 
 HRESULT CMonsterInfo::Refresh_PlayerAllies()
 {

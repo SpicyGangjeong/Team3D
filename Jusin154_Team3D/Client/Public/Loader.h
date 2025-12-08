@@ -40,8 +40,11 @@ private:
 
 private:
 	HRESULT Asset_FileLoad(const _char* pDirectoryPath, const _tchar* pPreName, function<HRESULT(_wstring, const _char*)> AddPrototypeEvent);
+	HRESULT Stat_FileLoad(const _char* pDirectoryPath);
 	future<vector<FOLDER_LOAD*>*> Deferred_FolderLoad(const _char* pDirectoryPath, const _char* pFileExt, _bool bUseTag);
 	future<pair<_wstring, CModel*>*> Deferred_ModelLoad(MODEL eType, const _char* pDirectoryPath, _fmatrix PreTransform, const _tchar* pPrototypeTag);
+	void Ready_MapModels(vector<future<vector<FOLDER_LOAD*>*>>& jobMapModels);
+
 public:
 	static CLoader* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevelID);
 	virtual void Free() override;

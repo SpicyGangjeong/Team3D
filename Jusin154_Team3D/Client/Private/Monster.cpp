@@ -119,6 +119,16 @@ void CMonster::Set_DrawOutLine()
 	m_bDrawOutLine = true;
 }
 
+_bool CMonster::Get_Damage(_float fDamage)
+{
+	return  m_pStat->Get_Damage(fDamage);
+}
+
+_float2 CMonster::Get_Hp()
+{
+	return { m_pStat->Get_Stat(ENUM_CLASS(STAT::HP)), m_pStat->Get_Stat(ENUM_CLASS(STAT::MAXHP)) };
+}
+
 HRESULT CMonster::Ready_Components(void*pArg)
 {
 	__super::Ready_Components(pArg);
@@ -149,6 +159,7 @@ void CMonster::Free()
 {
 	__super::Free();
 
+	SAFE_RELEASE(m_pStat);
 	SAFE_RELEASE(m_pTarget);
 	if (nullptr != m_pInfoInstance){
 		CInfoInstance* pInfo = m_pInfoInstance;  

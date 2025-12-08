@@ -24,8 +24,7 @@ void CQuadTree::Set_CullingRadius(_float fRadius)
 void CQuadTree::Culling(CGameInstance* pGameInstance, const _float3* pVertexPositions, _uint* pIndices, _uint* pNumIndices)
 {
 	/* 해당 노드에서 그릴건지 확인 */
-	if (nullptr == m_pChildren[CORNER_LT] ||
-		true == isDraw(pGameInstance, pVertexPositions))
+	if (nullptr == m_pChildren[CORNER_LT] || true == isDraw(pGameInstance, pVertexPositions))
 	{
 		_bool		isDraw[NEIGHBOR_END] = { true, true, true, true };
 

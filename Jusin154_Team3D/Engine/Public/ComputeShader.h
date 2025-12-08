@@ -16,6 +16,7 @@ public:
 public:
 	vector<D3D11_MAPPED_SUBRESOURCE> Dispatch(_uint iSRVIndex, _uint iUAVIndex, _float3 vGroupCount, ID3D11Buffer** ppBuffers, ID3D11Buffer* pConstantBuffer = nullptr);
 	void    Bind_OutPut_SRV(_uint iIndex, _uint iBufferIndex);
+	void    Bind_OutPut_SRV_VS(_uint iIndex, _uint iBufferIndex);
 	ID3D11ComputeShader* Get_Compute() { return m_pComputeShader; }
 	ID3D11UnorderedAccessView* GetOutputUAV(_uint iIndex) const;
 	vector<D3D11_MAPPED_SUBRESOURCE> ReadBackOutputs();

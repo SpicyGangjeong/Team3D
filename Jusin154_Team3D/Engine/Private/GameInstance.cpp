@@ -119,6 +119,9 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 		return E_FAIL;
 	}
 
+
+	m_vViewPortSize = _float2((_float)EngineDesc.iWinSizeX, (_float)EngineDesc.iWinSizeY);
+
 	return S_OK;
 }
 
@@ -128,6 +131,7 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 	m_pMouse_Manager->Update();
 	//m_pSound_Manager->Update();
 #ifdef _DEBUG
+	m_pResource_Manager->Describe_Entity();
 	m_pFog->Update_Fog();
 #endif // _DEBUG
 	m_pPicking->Update();
@@ -195,6 +199,11 @@ _float CGameInstance::Real_Random_Float (_float iMin, _float iMax)
 {
 	uniform_real_distribution<_float> rand(iMin, iMax);
 	return rand(m_Rng);
+}
+
+_float2 CGameInstance::Get_ViewPortSize()
+{
+	return m_vViewPortSize;
 }
 
 void CGameInstance::BillBoard(CTransform* pTransform)
@@ -604,6 +613,10 @@ HRESULT CGameInstance::Refit_RenderTarget(CVIBuffer_Rect* pVIBuffer, CShader* pS
 HRESULT CGameInstance::Finish_RenderTarget(CVIBuffer_Rect* pVIBuffer, CShader* pShader, const _wstring& wstrRenderTargetOriginal, const _wstring& wstrRenderTargetBloomed, SHADER_PASS_DEFERRED ePass)
 {
 	return m_pRenderTarget_Manager->Finish_RenderTarget(pVIBuffer, pShader, wstrRenderTargetOriginal, wstrRenderTargetBloomed, ePass);
+}
+HRESULT CGameInstance::Bind_CS_RenderTarget(_uint iIndex, const _wstring& strTargetTag)
+{
+	return m_pRenderTarget_Manager->Bind_CS_RenderTarget(iIndex, strTargetTag);
 }
 #ifdef _DEBUG
 void CGameInstance::RenderTarget_Debuger()

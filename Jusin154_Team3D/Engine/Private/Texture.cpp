@@ -77,6 +77,11 @@ HRESULT CTexture::Initialize_Prototype(TEXTURE_LOAD_TYPE eType, const _tchar* pT
 			return E_FAIL;
 		}
 		break;
+	case Engine::TEXTURE_LOAD_TYPE::CUBE:
+		if (FAILED(ParseTexturePathToSRVs(pTextureFilePath))) {
+			return E_FAIL;
+		}
+		break;
 	default:
 		break;
 	}
@@ -97,8 +102,9 @@ HRESULT CTexture::Load_SRV(const _char* szPath, ID3D11ShaderResourceView** ppSRV
 {
 	ID3D11ShaderResourceView* pSRV = m_pGameInstance->Add_Resource(szPath);
 
-	if (nullptr == pSRV)
+	if (nullptr == pSRV){
 		return E_FAIL;
+	}
 
 	*ppSRV = pSRV;
 
@@ -170,6 +176,11 @@ HRESULT CTexture::ParseTexturePathToSRVs(const _tchar* pTextureFolderPath)
 		}
 		m_SRVs.push_back(pSRV);
 	}
+
+	return S_OK;
+}
+HRESULT CTexture::Load_CubeSRV(const _char* szPath, ID3D11ShaderResourceView** ppSRV)
+{
 
 	return S_OK;
 }

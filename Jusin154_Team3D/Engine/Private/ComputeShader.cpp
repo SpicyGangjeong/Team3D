@@ -116,6 +116,13 @@ void CComputeShader::Bind_OutPut_SRV(_uint iIndex, _uint iBufferIndex)
 
 }
 
+void CComputeShader::Bind_OutPut_SRV_VS(_uint iIndex, _uint iBufferIndex)
+{
+	m_pContext->VSSetShaderResources(iIndex, // 시작슬롯 번호
+		1,  // 버퍼 개수
+		&m_pOutputSRV[iBufferIndex]); // 버퍼 시작 주
+}
+
 ID3D11UnorderedAccessView* CComputeShader::GetOutputUAV(_uint iIndex) const
 {
 	return m_pOutputUAV[iIndex];
@@ -146,6 +153,8 @@ vector<D3D11_MAPPED_SUBRESOURCE> CComputeShader::ReadBackOutputs()
 	return StagingSubResources;
 	
 }
+
+
 
 void CComputeShader::Reset()
 {
