@@ -34,6 +34,8 @@ private:
 	virtual HRESULT Ready_Components(void* pArg) override;
 
 private:
+	_char			m_szBuffer[MAX_PATH] = {};
+	_string         m_strBoneName = {};
 	_int			m_iSelectTextureNum = {};
 	vector<_float>	m_ValueVector = {};
 	_float			m_fInputValue = {};

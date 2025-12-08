@@ -118,8 +118,23 @@ void CLayer::Describe_Entity()
 		GUI::PushID(iter);
 		if (GUI::SmallButton((to_string(iIndex) + " : " + typeid(*iter).name()).c_str())) {
 			m_pGameInstance->Force_CamPosition(iter->Get_WorldPostion() - XMVectorSet(0.f, -1.f, 1.f, 0.f) * 10.f);
+
+			/* 클릭시 타겟으로 설정함 */
+			m_pTargetObject = iter;
+
 		} iIndex++;
 		GUI::PopID();
+	}
+
+	/* 클릭한 객체의 컴포넌트 디스크립션을 부른다.*/
+	if (m_pTargetObject != nullptr)
+	{
+		if(GUI::TreeNode(typeid(*m_pTargetObject).name()))
+		{
+			m_pTargetObject->Describe_Entity();
+
+			GUI::TreePop();
+		}
 	}
 }
 
