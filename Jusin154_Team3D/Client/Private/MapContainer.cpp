@@ -62,6 +62,18 @@ HRESULT CMapContainer::Render()
 	return S_OK;
 }
 
+HRESULT CMapContainer::Render_Shadow()
+{
+	unordered_map<_string, CPartObject*>::iterator iter =	m_PartObjects.begin();
+	for (; iter != m_PartObjects.end(); ++iter) {
+		CPartObject* pObject = (*iter).second;
+		if (FAILED(pObject->Render_Shadow())) {
+			return E_FAIL;
+		}
+	}
+	return S_OK;
+}
+
 void CMapContainer::ReadyForPhysX()
 {
 	vector<class CPartObject*>::iterator iter = m_ColiisonPartObjects.begin();

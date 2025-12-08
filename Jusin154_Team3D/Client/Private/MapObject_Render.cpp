@@ -75,7 +75,6 @@ void CMapObject_Render::Update(_float fTimeDelta)
 
 void CMapObject_Render::Late_Update(_float fTimeDelta)
 {
-	//m_pGameInstance->Add_RenderGroup(RENDER::SHADOW, this);
 	if (m_pGameInstance->isIn_WorldFrustum(XMLoadFloat4(&m_vExtentPosition), m_fRadius)) {
 
 		m_fCamDepth = XMVectorGetX(XMVector3LengthSq(XMLoadFloat4(m_pGameInstance->Get_CamPosition()) - XMLoadFloat4(&m_vExtentPosition)));
@@ -142,7 +141,9 @@ HRESULT CMapObject_Render::Render_Shadow()
 		return E_FAIL;
 	}
 
-	for (_uint i = 0; i < m_iNumMeshe; i++)
+	_uint iMeshes = m_pModelComs[0]->Get_NumMeshes();
+
+	for (_uint i = 0; i < iMeshes; i++)
 	{
 		if (FAILED(m_pModelComs[0]->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
