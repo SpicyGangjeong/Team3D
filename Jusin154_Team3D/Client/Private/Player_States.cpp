@@ -500,7 +500,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 						{
 							pairAnimInfo = m_Animation[STATEANIM::JOG_AIM_LEFT];
 						}
-						else if (m_pFSM->IsEnable(FSMSTATE::JOG))
+						else if (m_pFSM->IsEnable(FSMSTATE::JOG) && !m_pFSM->IsEnable(FSMSTATE::SPRINT))
 						{
 							if (degree > 35.f && degree < 55.f)
 							{
@@ -532,7 +532,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 						{
 							pairAnimInfo = m_Animation[STATEANIM::JOG_AIM_RIGHT];
 						}
-						else if (m_pFSM->IsEnable(FSMSTATE::JOG))
+						else if (m_pFSM->IsEnable(FSMSTATE::JOG) && !m_pFSM->IsEnable(FSMSTATE::SPRINT))
 						{
 							if (degree < -35.f && degree > -55.f)
 							{
@@ -565,7 +565,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 					{
 						pairAnimInfo = m_Animation[STATEANIM::JOG_AIM_BWD];
 					}
-					else if (m_pFSM->IsEnable(FSMSTATE::JOG))
+					else if (m_pFSM->IsEnable(FSMSTATE::JOG) && !m_pFSM->IsEnable(FSMSTATE::SPRINT))
 					{
 						if (m_pModelCom->IsFinishedAnim() && iCurrentAnimIndex == m_Animation[STATEANIM::JOG_BWD].first)
 						{
