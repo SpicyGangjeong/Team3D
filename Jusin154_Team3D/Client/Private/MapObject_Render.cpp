@@ -161,6 +161,52 @@ HRESULT CMapObject_Render::Render_Shadow()
 	return S_OK;
 }
 
+void CMapObject_Render::ReadyForPhysX()
+{
+	if (true == m_bConverted) {
+		return;
+	}
+	m_bConverted = true;
+
+	for (_uint iIndexLOD = 0; iIndexLOD < m_iMaxLodLevel + 1; ++iIndexLOD)
+	{
+		CModel* pModel = m_pModelComs[iIndexLOD];
+
+		if (FAILED(pModel->Ready_PhysXMeshes(XMLoadFloat4x4(&m_CombinedWorldMatrix)))) {
+			assert(false);
+		}
+	}
+}
+
+void CMapObject_Render::ConvertToPhysX()
+{
+	if (true == m_bReadyToCreatePhysX) {
+		return;
+	}
+	m_bReadyToCreatePhysX = true;
+
+	m_RigidBodies.resize(m_iMaxLodLevel + 1);
+	for (_uint iIndexLOD = 0; iIndexLOD < m_iMaxLodLevel + 1; ++iIndexLOD)
+	{
+		CModel* pModel = m_pModelComs[iIndexLOD];
+
+		_uint iNumMeshes = pModel->Get_NumMeshes();
+
+		for (_uint iIndex = 0; iIndex < iNumMeshes; ++iIndex)
+		{
+			_wstring wstrName = CMyTools::ToWstring(pModel->Get_MeshName(iIndex)) + to_wstring(iIndex);
+			CRigidBody_Static* pRigidBody = { nullptr };
+			CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc = {};
+			Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
+			Desc.pMeshName = wstrName.c_str();
+			if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, wstrName, (CComponent**)&pRigidBody, &Desc))) {
+				assert(false);
+			}
+			m_RigidBodies[iIndexLOD].push_back(pRigidBody);
+		}
+	}
+}
+
 _wstring CMapObject_Render::Get_PrototypeTag(_uint iLodIndex)
 {
 	if (m_iMaxLodLevel < iLodIndex)
@@ -260,6 +306,12 @@ void CMapObject_Render::Free()
 	__super::Free();
 
 	SAFE_RELEASE(m_pShaderCom);
+
+	for (_uint i = 0; i < m_RigidBodies.size(); ++i) {
+		for (_uint j = 0; j < m_RigidBodies[i].size(); ++j) {
+			SAFE_RELEASE(m_RigidBodies[i][j]);
+		}
+	} m_RigidBodies.clear();
 
 	for (auto& pModel : m_pModelComs)
 		SAFE_RELEASE(pModel);

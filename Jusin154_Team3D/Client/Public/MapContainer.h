@@ -43,7 +43,7 @@ public:
 		if (nullptr == pPartObject) {
 			return E_FAIL;
 		}
-
+		m_bHasCollisionMesh = true;
 		m_ColiisonPartObjects.push_back(pPartObject);
 
 		return S_OK;
@@ -55,8 +55,8 @@ protected:
 	virtual HRESULT	Ready_Components(void* pArg) override;
 
 protected:
-	_uint		m_iMaxLodLevel = {};
-
+	_uint								m_iMaxLodLevel = {};
+	_bool								m_bHasCollisionMesh = { false };
 	vector<class CPartObject*>			m_ColiisonPartObjects = {};
 
 public:
