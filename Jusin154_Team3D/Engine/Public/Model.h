@@ -93,6 +93,8 @@ public:
 	HRESULT Save_PhysXTriMeshes(const _char* pModelFilePath);
 	HRESULT Ready_Materials(const aiScene* pAIScene, const _char* pModelFilePath);
 	HRESULT Ready_Materials_FromFile(const aiScene* pAIScene, const _char* pModelFilePath);
+	HRESULT Ready_Materials_Independent(MODEL eType, const aiScene* pAIScene, const _char* pModelFilePath);
+	HRESULT Ready_Materials_FromFile_Anim(const aiScene* pAIScene, const _char* pModelFilePath);
 	HRESULT Ready_Animations(const aiScene* pAIScene);
 	HRESULT Ready_Bones(const aiNode* pAINode, _int iParentIndex);
 	// 바이너리

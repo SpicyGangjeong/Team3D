@@ -18,6 +18,8 @@ public:
 		_float fRatio = 0.f;
 		_uint AnimIndex = 0;
 		function<void()> Callback;
+		_bool bKeep = { false };
+		_bool bExecuted = { false };
 	};
 protected:
 	CUnit(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -31,6 +33,7 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	_wstring& Get_PrototypeTag() { return m_strModelPrototypeTag; }
+
 #ifdef _DEBUG
 	void Load_KeyFrame();
 #endif // _DEBUG
@@ -46,6 +49,8 @@ public:
 	void Set_LightCombo(_uint LightCombo) { m_iLightCombo = LightCombo; }
 	_float Get_KeyFrame(_string FrameName);
 	_bool IsCurrentKeyFrame(_string FrameName);
+	virtual _vector Get_LockOnPos() { return Get_WorldPostion(); }
+	virtual _bool Get_Damage(_float fDamage) { return false; }
 
 	virtual void Reset_Sprint() {};
 	virtual void Reset_Walk() {};
@@ -71,6 +76,7 @@ protected:
 
 	_int m_eSpell = { };
 	_int m_eHitSpell = {};
+	_float m_fHitRadius = {};
 
 	vector<PendingEvent> m_PendingEvents;
 
@@ -84,7 +90,7 @@ private:
 protected:
 	HRESULT Ready_Components(void*pArg);
 	void Play_Event();
-	void Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio = 0.f);
+	void Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio = 0.f, _bool bKeep = false);
 public:
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr)PURE;
 	virtual void Free() override;

@@ -131,6 +131,7 @@ public:
 	virtual void Add_Function(wstring Name, function<void(void*)> Evnet);
 	virtual void Function_Callback(wstring Name, void* pArg = nullptr);
 
+	virtual void Set_Hover(_bool Hover);
 	virtual _bool Get_Hover();
 
 	virtual const SPELLINFO Get_Info(_int Index);

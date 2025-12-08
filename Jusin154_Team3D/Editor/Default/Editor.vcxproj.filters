@@ -478,6 +478,30 @@
     <Filter Include="50.UI\UI_Manager">
       <UniqueIdentifier>{fe7d5909-159c-4130-ae5e-e08e648b193c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="50.UI\Loding_Canvas">
+      <UniqueIdentifier>{ebad2fd8-622f-4c17-9ba3-b0c4bd366c05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Loding_Canvas\Loding_Panel">
+      <UniqueIdentifier>{944a2f28-34bc-4559-b179-85b920086b30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Logo">
+      <UniqueIdentifier>{abef48e8-ddeb-4498-9ad1-7ca552bd8aea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Intro">
+      <UniqueIdentifier>{809eacd9-d230-47c9-bfb1-da988a8b8835}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Intro\Intro_Image">
+      <UniqueIdentifier>{e18b00d7-5fe8-4309-8c47-94872d2c82e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Intro\Intro_BG">
+      <UniqueIdentifier>{c77981f0-39b1-485f-b13f-aca6cc7c40e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Logo\Logo_Text">
+      <UniqueIdentifier>{a4aecce8-41be-4c75-ab77-d91ce949770c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Logo\Logo_Glow">
+      <UniqueIdentifier>{d8a5038f-4f2c-4226-85ba-9202f11f822d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -936,6 +960,27 @@
     <ClInclude Include="..\public\CameraLockOn.h">
       <Filter>50.UI\Mouse_Cursor</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Loding_Canvas.h">
+      <Filter>50.UI\Loding_Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Loding_Panel.h">
+      <Filter>50.UI\Loding_Canvas\Loding_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Intro_Image.h">
+      <Filter>50.UI\Intro\Intro_Image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Logo.h">
+      <Filter>50.UI\Logo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Intro_BG.h">
+      <Filter>50.UI\Intro\Intro_BG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Logo_Text.h">
+      <Filter>50.UI\Logo\Logo_Text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Logo_Glow.h">
+      <Filter>50.UI\Logo\Logo_Glow</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor.ico">
@@ -1392,6 +1437,27 @@
     </ClCompile>
     <ClCompile Include="..\private\CameraLockOn.cpp">
       <Filter>50.UI\Mouse_Cursor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Loding_Canvas.cpp">
+      <Filter>50.UI\Loding_Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Loding_Panel.cpp">
+      <Filter>50.UI\Loding_Canvas\Loding_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Logo.cpp">
+      <Filter>50.UI\Logo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Intro_Image.cpp">
+      <Filter>50.UI\Intro\Intro_Image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Intro_BG.cpp">
+      <Filter>50.UI\Intro\Intro_BG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Logo_Text.cpp">
+      <Filter>50.UI\Logo\Logo_Text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Logo_Glow.cpp">
+      <Filter>50.UI\Logo\Logo_Glow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

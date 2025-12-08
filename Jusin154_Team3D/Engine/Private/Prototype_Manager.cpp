@@ -98,7 +98,6 @@ HRESULT CPrototype_Manager::Ready_StaticComponents()
 	if (FAILED(Add_Prototype(g_iStaticLevel, CLight::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
-
 	return S_OK;
 }
 

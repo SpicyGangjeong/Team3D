@@ -1,11 +1,11 @@
-﻿#include "UI_Manager.h"
-#include "pch.h"
+﻿#include "pch.h"
 #include "UI_Manager.h"
 #include "GameInstance.h"
 #include "GamePlay_Canvas.h"
 #include "Spell_Canvas.h"
 #include "Mouse_Cursor.h"
 #include "CameraLockOn.h"
+#include "Loding_Canvas.h"
 
 CUI_Manager::CUI_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CUIObject(pDevice, pContext)
@@ -120,15 +120,15 @@ _vector CUI_Manager::Get_WorldPostion()
 
 HRESULT CUI_Manager::Bind_ShaderResources()
 {
-	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom))) {
-		return E_FAIL;
-	}
-
 	return S_OK;
 }
 
 HRESULT CUI_Manager::Ready_Components(void* pArg)
 {
+	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom))) {
+		return E_FAIL;
+	}
+
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGamePlay_Canvas>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CGamePlay_Canvas**>(&m_pGamePlay_Canves)))) {
 		return E_FAIL;
 	}

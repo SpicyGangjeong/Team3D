@@ -71,6 +71,11 @@ _vector CCamera_Manager::Get_CameraLook()
     return m_pCurrentMainCamera->Get_Component<CTransform>()->Get_State(STATE::LOOK);
 }
 
+_float CCamera_Manager::Get_CameraFov()
+{
+    return m_pCurrentMainCamera->Get_Fov();
+}
+
 void CCamera_Manager::Force_CamPosition(_fvector vPos)
 {
     if (nullptr == m_pCurrentMainCamera)

@@ -97,8 +97,9 @@ HRESULT CTexture::Load_SRV(const _char* szPath, ID3D11ShaderResourceView** ppSRV
 {
 	ID3D11ShaderResourceView* pSRV = m_pGameInstance->Add_Resource(szPath);
 
-	if (nullptr == pSRV)
+	if (nullptr == pSRV){
 		return E_FAIL;
+	}
 
 	*ppSRV = pSRV;
 

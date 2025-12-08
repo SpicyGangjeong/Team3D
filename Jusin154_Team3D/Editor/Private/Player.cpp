@@ -373,6 +373,7 @@ void CPlayer::SetGravity()
 }
 
 void CPlayer::Update_CameraCoordinateSystem()
+
 {
 	_vector xmvCameraLook = XMVector3Normalize(XMVectorSetY(m_pGameInstance->Get_CameraLook(), 0.f));
 	_vector xmvUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
@@ -380,6 +381,7 @@ void CPlayer::Update_CameraCoordinateSystem()
 	XMStoreFloat3(&m_vCameraLookDir, xmvCameraLook);
 	m_pInfoInstance->Update_CameraCoordinateSystem(m_vCameraLookDir, m_vRimLightColor);
 }
+
 
 _matrix CPlayer::Get_WandPos()
 {

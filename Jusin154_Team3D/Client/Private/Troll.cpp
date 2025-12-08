@@ -119,7 +119,7 @@ void CTroll::Late_Update(_float fTimeDelta)
 	}
 
 	if (m_bLookAt) {
-		m_pTransformCom->LookAt_Lerp(XMLoadFloat4(&m_vTargetPos),fTimeDelta, 5.f);
+		m_pTransformCom->LookAt_Lerp(XMLoadFloat4(&m_vTargetPos),fTimeDelta, 3.f);
 	}
 	
 
@@ -188,6 +188,17 @@ HRESULT CTroll::Render()
 	return S_OK;
 }
 
+_vector CTroll::Get_LockOnPos()
+{
+	if (nullptr != m_pCharacter_Controller && true == m_pCharacter_Controller->IsActive()) {
+		return m_pCharacter_Controller->Get_Position();
+	}
+	else if (nullptr != m_pRigidBody) {
+		return m_pRigidBody->Get_Position();
+	}
+	return Get_WorldPostion();
+}
+
 void CTroll::OnCollision(CGameObject* pOther, void* pDesc)
 {
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
@@ -240,8 +251,8 @@ HRESULT CTroll::Ready_Components()
 		Desc.iSubKind = ENUM_CLASS(PXOBJECT::TROLL);
 		Desc.pTransform = m_pTransformCom;
 		Desc.eBodyType = ACTOR::CAPSULE;
-		Desc.fContactOffset = 0.1f;
-		Desc.fMaterial = { 0.5f, 0.5f, 0.6f };
+		Desc.fContactOffset = 0.3f;
+		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
 		Desc.bAutoStepping = { false };
 		Desc.fStepOffset = { 0.05f };
 		Desc.fRadius = 1.2f;
@@ -249,6 +260,7 @@ HRESULT CTroll::Ready_Components()
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Monster_HitReport::Create();
 		Desc.pCallback_Behavior = m_pCallBack_Behavior = CCallBack_Monster_Behavior::Create();
 		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
+		Desc.fWalkableSlope = 45.f;
 		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), (CComponent**)&m_pCharacter_Controller, &Desc))) {
 			return E_FAIL;
 		}
@@ -263,6 +275,9 @@ HRESULT CTroll::Ready_Components()
 		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor());
 	}
 
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_TROLL"), (CComponent**)&m_pStat))) {
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
@@ -376,6 +391,8 @@ void CTroll::Describe_Entity()
 	{
 		m_pCharacter_Controller->Set_Position(XMLoadFloat3(&Pos));
 	}
+	GUI::TextColored(ImVec4(1.f, 0.f, 0.f, 1.f), "Degree %.2f", m_fDegree);
+	GUI::TextColored(ImVec4(1.f, 0.f, 0.f, 1.f), "Distance %.2f", m_fTargetDistance);
 
 	GUI::End();
 

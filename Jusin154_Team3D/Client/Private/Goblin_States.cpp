@@ -16,6 +16,7 @@
 #include "State_Throw.h"
 #include "State_Blink.h"
 #include "State_Hit.h"
+#include "State_Dead.h"
 #pragma endregion
 
 
@@ -55,6 +56,7 @@ HRESULT CGoblin::Behavior_MoveExitCheck()
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+
 	if (iCurrAnimIndex == m_Animation[STATEANIM::JOG_FWD].first) {
 		if (m_fTargetDistance <= 15.f && m_fTargetDistance != 0.f)
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
@@ -94,15 +96,12 @@ void CGoblin::Behavior_CombatEnter()
 
 HRESULT CGoblin::Behavior_CombatExitCheck(_float fTimeDelta)
 {
-	pair<_uint, _bool> pairAnimInfo = {};
-	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 	m_bLookAt = true;
 
-	if (m_fTargetDistance > 25.f && m_fTargetDistance != 0.f)
+	if (m_fTargetDistance > 20.f && m_fTargetDistance != 0.f)
 		m_pFSM->Change_State(FSMSTATE::MOVE);
-
-	else if (m_fTargetDistance > 30.f && m_fTargetDistance != 0.f)
-		m_pFSM->Change_State(FSMSTATE::MOVE);
+	else if (m_fTargetDistance > 25.f && m_fTargetDistance != 0.f)
+		m_pFSM->Change_State(FSMSTATE::IDLE);
 	else
 	{
 		m_pFSM->Disable_State(FSMSTATE::COMBAT);
@@ -121,17 +120,25 @@ void CGoblin::Behavior_SwingEnter()
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::SWING);
+
 	pairAnimInfo = m_Animation[STATEANIM::SWING_FWD];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 	m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SWING)] = m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SWING)];
+
 	Add_Event(pairAnimInfo.first,
 		[this]() {m_bStep = false; },
 		0.2f);
+	Add_Event(pairAnimInfo.first,
+		[&]() {
+			pairAnimInfo = m_Animation[STATEANIM::ATTACK_END];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true); },
+		0.4f);
 }
 
 HRESULT CGoblin::Behavior_SwingExitCheck(_float fTimeDelta)
 {
 	pair<_uint, _bool> pairAnimInfo = {};
+	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 	if (m_pFSM->IsEnable(FSMSTATE::SWING) && m_bStep)
 	{
 		_float fDesiredRange = 1.f;
@@ -147,7 +154,6 @@ HRESULT CGoblin::Behavior_SwingExitCheck(_float fTimeDelta)
 			m_pTransformCom->AccumulateMomentum(vDistance * step *fTimeDelta*1.5f);
 		}
 	}
-
 	if (m_pModelCom->IsFinishedAnim())
 	{
 		m_bLookAt = true;
@@ -168,6 +174,7 @@ void CGoblin::Behavior_ThrowEnter()
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::SKILL);
+
 	pairAnimInfo = m_Animation[STATEANIM::SKILL];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 	m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::THROW)] = m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::THROW)];
@@ -332,6 +339,60 @@ void CGoblin::Behavior_HitExit()
 	m_pFSM->Disable_State(FSMSTATE::HIT);
 }
 
+void CGoblin::Behavior_DeadEnter()
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+	m_pFSM->Enable_State(FSMSTATE::DEAD);
+
+	_bool bStrongerKnockDown = { false };
+	
+	switch (m_eHitSpell)
+	{
+	case STATEANIM::KNOCKDOWN_FWD:
+		bStrongerKnockDown = true;
+		break;
+	case STATEANIM::TUMBLE2:
+		bStrongerKnockDown = true;
+		break;
+	default:
+		break;
+	}
+
+	_float fabsRadius = fabsf(m_fHitRadius);
+	_uint iState = { UINT_MAX };
+
+	if (fabsRadius > 135.f) {
+		iState = STATEANIM::DEAD_BWD;
+	}
+	else if (fabsRadius < 45.f) {
+		iState = STATEANIM::DEAD_FWD;
+	}
+	else {
+		if (m_fHitRadius < 0.f) {
+			iState = STATEANIM::DEAD_R;
+		}
+		else {
+			iState = STATEANIM::DEAD_L;
+		}
+	}
+	pairAnimInfo = m_Animation[iState + bStrongerKnockDown];
+
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+}
+
+HRESULT CGoblin::Behavior_DeadExitCheck(_float fTimeDelta)
+{
+	if (true == m_pModelCom->IsFinishedAnim()) {
+		return E_FAIL;
+	}
+	return S_OK;
+}
+
+void CGoblin::Behavior_DeadExit()
+{
+	m_bDead = true;
+}
+
 
 void CGoblin::Add_FSM()
 {
@@ -368,7 +429,6 @@ void CGoblin::Add_FSM()
 		Desc.funcLateUpdate = nullptr;
 		m_States.emplace(FSMSTATE::COMBAT, CState_Combat::Create(&Desc));
 	}
-
 	{
 		CState_Swing::STATE_SWING_DESC Desc{};
 		Desc.pOwner = this;
@@ -379,7 +439,6 @@ void CGoblin::Add_FSM()
 		Desc.funcLateUpdate = nullptr;
 		m_States.emplace(FSMSTATE::SWING, CState_Swing::Create(&Desc));
 	}
-
 	{
 		CState_Throw::STATE_THROW_DESC Desc{};
 		Desc.pOwner = this;
@@ -390,7 +449,6 @@ void CGoblin::Add_FSM()
 		Desc.funcLateUpdate = nullptr;
 		m_States.emplace(FSMSTATE::SKILL, CState_Throw::Create(&Desc));
 	}
-
 	{
 		CState_Blink::STATE_BLINK_DESC Desc{};
 		Desc.pOwner = this;
@@ -403,7 +461,14 @@ void CGoblin::Add_FSM()
 	}
 #pragma endregion
 #pragma region Behavior_Combat_Focus
-
+	{
+		CState_Dead::STATE_DEAD_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_DeadEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_DeadExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_DeadExit(); };
+		m_States.emplace(FSMSTATE::DEAD, CState_Dead::Create(&Desc));
+	}
 #pragma endregion
 
 #pragma region Hit
@@ -446,6 +511,7 @@ void CGoblin::Set_Anim()
 	m_Animation[STATEANIM::SKILL] = { 85,false }; // 나이프 던지기
 	m_Animation[STATEANIM::BLINK] = { 426,false }; // 텔레포트
 	m_Animation[STATEANIM::SWING_FWD] = { 100,false }; // 도끼 스윙 444
+	m_Animation[STATEANIM::ATTACK_END] = { 76,false };
 
 	m_Animation[STATEANIM::HIT_FWD] = { 353, false };
 	m_Animation[STATEANIM::HIT_BWD] = { 352, false };
@@ -491,7 +557,7 @@ void CGoblin::Set_Anim()
 	m_Animation[STATEANIM::DEAD_R2] = { 324, false };
 
 	//Tp 426
-
+	// 76 공격끝
 
 
 
@@ -516,5 +582,6 @@ void CGoblin::Set_Anim()
 
 	// 레비오소 피격 381
 	// 착지 376
+	//
 
 }

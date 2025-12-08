@@ -35,7 +35,7 @@
       <Filter>01.Levels\01.Logo</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_GamePlay.h">
-      <Filter>01.Levels\01.Logo\02.GamePlay</Filter>
+      <Filter>01.Levels\02.GamePlay</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\InfoInstance.h">
       <Filter>03.InfoInstance</Filter>
@@ -158,10 +158,10 @@
       <Filter>02.GameObjects\Cameras\Camera_Gaze</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Goblin.h">
-      <Filter>02.GameObjects\Monster\Goblin</Filter>
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Monster.h">
-      <Filter>02.GameObjects\Monster</Filter>
+      <Filter>02.GameObjects\NPC\Hostile\Monster</Filter>
     </ClInclude>
     <ClInclude Include="..\public\MapContainer.h">
       <Filter>02.GameObjects\Environment\00.MapContainer</Filter>
@@ -269,7 +269,7 @@
       <Filter>02.GameObjects\Effect\Effects\Lumos</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Troll.h">
-      <Filter>02.GameObjects\Monster\Troll</Filter>
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Troll</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Troll_Weapon.h">
       <Filter>02.GameObjects\Item\Troll_Weapon</Filter>
@@ -346,9 +346,6 @@
     <ClInclude Include="..\Public\State_Hit.h">
       <Filter>04.Mechanic\State\Hit</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Troll_State_Rush.h">
-      <Filter>04.Mechanic\State\Troll_Combat</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\State_Throw.h">
       <Filter>04.Mechanic\State\State_Combat\State_Throw</Filter>
     </ClInclude>
@@ -367,8 +364,53 @@
     <ClInclude Include="..\Public\Goblin_Dagger.h">
       <Filter>02.GameObjects\Item\Goblin_Dagger</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CameraLockOn.h">
+      <Filter>02.GameObjects\UI\Mouse_Cursor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mouse_Cursor.h">
+      <Filter>02.GameObjects\UI\Mouse_Cursor</Filter>
+    </ClInclude>
     <ClInclude Include="..\public\MapElement_Interactable.h">
       <Filter>02.GameObjects\Environment\03.MapElement\Interactable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Slam.h">
+      <Filter>04.Mechanic\State\State_Combat\State_Slam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll_State_BackHand_Swing.h">
+      <Filter>04.Mechanic\State\Troll_Combat\Troll_State_BackHand_Swing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_IdleBreak.h">
+      <Filter>04.Mechanic\State\Movement\IdleBreak</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll_State_Rush.h">
+      <Filter>04.Mechanic\State\Troll_Combat\Troll_State_Rush</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_LightAttack.h">
+      <Filter>04.Mechanic\State\State_Combat\State_LightAttack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Spell.h">
+      <Filter>04.Mechanic\State\State_Combat\State_Spell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Loding_Panel.h">
+      <Filter>02.GameObjects\UI\Screen\Loding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Logo.h">
+      <Filter>02.GameObjects\UI\Screen\Logo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Intro_BG.h">
+      <Filter>02.GameObjects\UI\Screen\Intro</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Intro_Image.h">
+      <Filter>02.GameObjects\UI\Screen\Intro</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Logo_Glow.h">
+      <Filter>02.GameObjects\UI\Screen\Logo\Logo_Glow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Logo_Text.h">
+      <Filter>02.GameObjects\UI\Screen\Logo\Logo_Text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Dead.h">
+      <Filter>04.Mechanic\State\State_Combat\Dead</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -451,9 +493,6 @@
     </Filter>
     <Filter Include="02.GameObjects\Environment\Plane">
       <UniqueIdentifier>{603938cc-e4fe-44d8-890b-784174a86161}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\NPC\Hostile\Monster">
-      <UniqueIdentifier>{b72a9bb0-1b21-416b-bd0c-ba943cd7cc9d}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Environment\Prop">
       <UniqueIdentifier>{2814c935-13d9-4b9a-94ba-c9e470219a18}</UniqueIdentifier>
@@ -596,12 +635,6 @@
     <Filter Include="02.GameObjects\Item\Wand">
       <UniqueIdentifier>{b719d948-fce3-4144-9d2c-edcab4cfceaf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Monster">
-      <UniqueIdentifier>{d371e373-e343-4e0b-9a0c-34eae167c1cd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Monster\Goblin">
-      <UniqueIdentifier>{1ff3d6f1-f31d-47b7-84b7-d23efe98d7d2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Environment\00.MapContainer">
       <UniqueIdentifier>{e2d84a8f-46c9-4689-bd91-cc45343d2b10}</UniqueIdentifier>
     </Filter>
@@ -688,9 +721,6 @@
     </Filter>
     <Filter Include="02.GameObjects\Environment\03.MapElement\Light">
       <UniqueIdentifier>{71f6a568-488d-4ec1-be79-8fcce6677e27}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Monster\Troll">
-      <UniqueIdentifier>{a1b1f17d-ed4f-4b20-aa8e-c52e693683d4}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Item\Troll_Weapon">
       <UniqueIdentifier>{1d6c078d-dddd-493d-a6f0-f2cac2e4107e}</UniqueIdentifier>
@@ -785,8 +815,62 @@
     <Filter Include="01.Levels\01.Logo\02.GamePlay">
       <UniqueIdentifier>{7e641382-9dfa-4da7-a8c8-a3ee06360e7a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\Mouse_Cursor">
+      <UniqueIdentifier>{b8c7e12b-da04-4d49-bc61-104649975d0b}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\Environment\03.MapElement\Interactable">
       <UniqueIdentifier>{17eaf081-6fbf-4965-b04d-10749e6032c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Slam">
+      <UniqueIdentifier>{75479637-e795-4656-a4ef-3772d8a6d007}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Troll_Combat\Troll_State_BackHand_Swing">
+      <UniqueIdentifier>{27d5a2b8-98db-4dbf-9916-0806cfa97c9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Movement\IdleBreak">
+      <UniqueIdentifier>{a7f11f50-5740-4670-ad9e-d21640b2cca7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_LightAttack">
+      <UniqueIdentifier>{12ff4f09-ec6c-4b98-966a-0d84c9ad253c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Troll_Combat\Troll_State_Rush">
+      <UniqueIdentifier>{7bb8a04a-00a0-4864-9781-8069d84806ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Spell">
+      <UniqueIdentifier>{e68261eb-a581-4bf5-b48d-b47cc81f7406}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.GamePlay">
+      <UniqueIdentifier>{7e641382-9dfa-4da7-a8c8-a3ee06360e7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\NPC\Hostile\Monster">
+      <UniqueIdentifier>{d371e373-e343-4e0b-9a0c-34eae167c1cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\NPC\Hostile\Monster\Goblin">
+      <UniqueIdentifier>{1ff3d6f1-f31d-47b7-84b7-d23efe98d7d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\NPC\Hostile\Monster\Troll">
+      <UniqueIdentifier>{a1b1f17d-ed4f-4b20-aa8e-c52e693683d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Screen">
+      <UniqueIdentifier>{c02bfd67-091b-4636-a45f-34a3603ffbd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Screen\Logo">
+      <UniqueIdentifier>{dce1a273-ec4f-43a4-9b02-b83f4d739f19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Screen\Loding">
+      <UniqueIdentifier>{19f4cc79-0dbd-445f-a4d8-46a6dca6bd4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Screen\Intro">
+      <UniqueIdentifier>{37839010-4706-4629-90a2-d96bc50ea7e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Screen\Logo\Logo_Glow">
+      <UniqueIdentifier>{11342a1a-99f4-4df5-9202-48623c76eb4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Screen\Logo\Logo_Text">
+      <UniqueIdentifier>{c584798b-d7aa-4cb0-b6e8-c2aff73757ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\Dead">
+      <UniqueIdentifier>{81add99f-7450-4730-8d3f-bf1de06b2b8d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -809,7 +893,7 @@
       <Filter>01.Levels\01.Logo</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_GamePlay.cpp">
-      <Filter>01.Levels\01.Logo\02.GamePlay</Filter>
+      <Filter>01.Levels\02.GamePlay</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\InfoInstance.cpp">
       <Filter>03.InfoInstance</Filter>
@@ -935,13 +1019,13 @@
       <Filter>02.GameObjects\Cameras\Camera_Gaze</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Goblin.cpp">
-      <Filter>02.GameObjects\Monster\Goblin</Filter>
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Goblin_States.cpp">
-      <Filter>02.GameObjects\Monster\Goblin</Filter>
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Monster.cpp">
-      <Filter>02.GameObjects\Monster</Filter>
+      <Filter>02.GameObjects\NPC\Hostile\Monster</Filter>
     </ClCompile>
     <ClCompile Include="..\private\BuildingContainer.cpp">
       <Filter>02.GameObjects\Environment\00.MapContainer\BuildingContainer</Filter>
@@ -1052,10 +1136,10 @@
       <Filter>02.GameObjects\Environment\03.MapElement\Light</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Troll.cpp">
-      <Filter>02.GameObjects\Monster\Troll</Filter>
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Troll</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Troll_States.cpp">
-      <Filter>02.GameObjects\Monster\Troll</Filter>
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Troll</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Troll_Weapon.cpp">
       <Filter>02.GameObjects\Item\Troll_Weapon</Filter>
@@ -1126,9 +1210,6 @@
     <ClCompile Include="..\Private\State_Hit.cpp">
       <Filter>04.Mechanic\State\Hit</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Troll_State_Rush.cpp">
-      <Filter>04.Mechanic\State\Troll_Combat</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\State_Throw.cpp">
       <Filter>04.Mechanic\State\State_Combat\State_Throw</Filter>
     </ClCompile>
@@ -1147,10 +1228,59 @@
     <ClCompile Include="..\Private\Spell_Drag.cpp">
       <Filter>02.GameObjects\UI\Spell_Canvas\Spell_Panel\Spell_Drag</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\MapContainer.cpp" />
-    <ClCompile Include="..\private\MapContainer.cpp" />
+    <ClCompile Include="..\Private\Mouse_Cursor.cpp">
+      <Filter>02.GameObjects\UI\Mouse_Cursor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CameraLockOn.cpp">
+      <Filter>02.GameObjects\UI\Mouse_Cursor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapContainer.cpp">
+      <Filter>02.GameObjects\Environment\00.MapContainer</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\MapElement_Interactable.cpp">
       <Filter>02.GameObjects\Environment\03.MapElement\Interactable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Slam.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_Slam</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapContainer.cpp">
+      <Filter>02.GameObjects\Environment\00.MapContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_State_BackHand_Swing.cpp">
+      <Filter>04.Mechanic\State\Troll_Combat\Troll_State_BackHand_Swing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_IdleBreak.cpp">
+      <Filter>04.Mechanic\State\Movement\IdleBreak</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_State_Rush.cpp">
+      <Filter>04.Mechanic\State\Troll_Combat\Troll_State_Rush</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_LightAttack.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_LightAttack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Spell.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_Spell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Loding_Panel.cpp">
+      <Filter>02.GameObjects\UI\Screen\Loding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Logo.cpp">
+      <Filter>02.GameObjects\UI\Screen\Logo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Intro_BG.cpp">
+      <Filter>02.GameObjects\UI\Screen\Intro</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Intro_Image.cpp">
+      <Filter>02.GameObjects\UI\Screen\Intro</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Logo_Glow.cpp">
+      <Filter>02.GameObjects\UI\Screen\Logo\Logo_Glow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Logo_Text.cpp">
+      <Filter>02.GameObjects\UI\Screen\Logo\Logo_Text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Dead.cpp">
+      <Filter>04.Mechanic\State\State_Combat\Dead</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

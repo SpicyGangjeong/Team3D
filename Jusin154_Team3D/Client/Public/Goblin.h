@@ -26,6 +26,7 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+	virtual _vector Get_LockOnPos() override;
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
 
@@ -66,7 +67,6 @@ private:
 	_float m_fTpTime = {};
 	_float m_fAirTime = {};
 
-
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();
 	void	Behavior_IdleExit();
@@ -95,6 +95,10 @@ private:
 	void	Behavior_HitEnter();
 	HRESULT Behavior_HitExitCheck(_float fTimeDelta);
 	void	Behavior_HitExit();
+	
+	void	Behavior_DeadEnter();
+	HRESULT Behavior_DeadExitCheck(_float fTimeDelta);
+	void	Behavior_DeadExit();
 };
 
 NS_END

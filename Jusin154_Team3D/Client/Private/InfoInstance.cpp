@@ -19,6 +19,7 @@ void CInfoInstance::Update(_float fTimeDelta)
 	m_pMonsterInfo->Update(fTimeDelta);
 	m_pMapInfo->Update(fTimeDelta);
 	m_pSkillInfo->Update(fTimeDelta);
+
 }
 
 void CInfoInstance::Change_Level()
@@ -47,7 +48,7 @@ HRESULT CInfoInstance::Regist_PlayerAlly(CUnit* pUnit)
 
 HRESULT CInfoInstance::Deregist_PlayerAlly(CUnit* pUnit)
 {
-	if (nullptr == m_pMonsterInfo) {
+	if (nullptr == s_pInstance || nullptr == m_pMonsterInfo) {
 		return S_OK; // 게임 종료 된 상태
 	}
 	return m_pMonsterInfo->Deregist_PlayerAlly(pUnit);
@@ -60,7 +61,7 @@ HRESULT CInfoInstance::Regist_ActiveMonster(CMonster* pUnit)
 
 HRESULT CInfoInstance::Deregist_ActiveMonster(CMonster* pUnit)
 {
-	if (nullptr == m_pMonsterInfo) {
+	if (nullptr == s_pInstance || nullptr == m_pMonsterInfo) {
 		return S_OK; // 게임 종료 된 상태
 	}
 	return m_pMonsterInfo->Deregist_ActiveMonster(pUnit);
@@ -158,6 +159,25 @@ void CInfoInstance::Key_Input(_uint Input)
 	default:
 		break;
 	}
+}
+
+void CInfoInstance::Mouse_Input(_uint Input)
+{
+	m_eInput = Input;
+
+	switch (m_eInput)
+	{
+	case ENUM_CLASS(KEYINPUT::INPUT_1):
+		Event_CallBack(TEXT("Spell"), &m_eInput);
+		break;
+	case ENUM_CLASS(KEYINPUT::INPUT_2):
+		Event_CallBack(TEXT("Spell"), &m_eInput);
+		break;
+	default:
+		break;
+	}
+
+
 }
 
 void CInfoInstance::Set_UISTATE(UI_STATE eState)

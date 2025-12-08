@@ -111,10 +111,10 @@ void CCallBack_Monster_HitReport::onControllerHit(const PSX::PxControllersHit& h
 void CCallBack_Monster_HitReport::onObstacleHit(const PSX::PxControllerObstacleHit& hit)
 {
 	PSX::PxController* pController = hit.controller;
-	PSX::PxExtendedVec3		vWorldPos = hit.worldPos;		// 접촉지점
-	PSX::PxVec3				vWorldNormal = hit.worldNormal;	// 접촉노말
-	PSX::PxVec3				vDir = hit.dir;			// 시도한 move 방향
-	_float					fLength = hit.length;		// 시도한 move 길이
+	PSX::PxExtendedVec3		vWorldPos = hit.worldPos;			// 접촉지점
+	PSX::PxVec3				vWorldNormal = hit.worldNormal;		// 접촉노말
+	PSX::PxVec3				vDir = hit.dir;						// 시도한 move 방향
+	_float					fLength = hit.length;				// 시도한 move 길이
 
 	const void* pOtherController = hit.userData;		// 장애물
 

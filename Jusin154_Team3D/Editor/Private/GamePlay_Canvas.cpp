@@ -51,7 +51,6 @@ HRESULT CGamePlay_Canvas::Initialize(void* pArg)
 
 void CGamePlay_Canvas::Priority_Update(_float fTimeDelta)
 {
-
 	__super::Priority_Update(fTimeDelta);
 }
 

@@ -192,6 +192,48 @@ _bool CPhysX_Manager::SphereCast(_float fRadius, _fvector _vStartPos, _fvector _
 	return bHit;
 }
 
+_bool CPhysX_Manager::RayCast(_float3 _vStartPos, _float3 _vDir, _float fDistance, PSX::PxRaycastHit* pRayHitArray, _uint iMaxHitCapacity, _uint& iOutHitCount)
+{
+	return RayCast(XMLoadFloat3(&_vStartPos), XMLoadFloat3(&_vDir), fDistance, pRayHitArray, iMaxHitCapacity, iOutHitCount);
+}
+
+bool CPhysX_Manager::RayCast(_fvector _vStartPos, _fvector _vDir, _float fDistance, PSX::PxRaycastHit* pRayHitArray, _uint iMaxHitCapacity, _uint& iOutHitCount )
+{
+	iOutHitCount = 0;
+
+	if (pRayHitArray == nullptr || iMaxHitCapacity == 0) {
+		return false;
+	}
+
+	_float3 vDir = {};
+	_float3 vStartPos = {};
+
+	XMStoreFloat3(&vDir, _vDir);
+	XMStoreFloat3(&vStartPos, _vStartPos);
+
+	PSX::PxVec3 startPos(vStartPos.x, vStartPos.y, vStartPos.z);
+	PSX::PxVec3 sweepDir(vDir.x, vDir.y, vDir.z);
+
+	sweepDir.normalize();
+
+	PSX::PxRaycastBuffer raycastBuffer(pRayHitArray, iMaxHitCapacity);
+
+	const PSX::PxHitFlags hitFlags = PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL;
+
+	PSX::PxQueryFilterData queryFilterData;
+	queryFilterData.flags = PSX::PxQueryFlag::eSTATIC | PSX::PxQueryFlag::eDYNAMIC;
+
+	const _bool bHit = m_pScene->raycast(startPos, sweepDir, fDistance, raycastBuffer, hitFlags, queryFilterData );
+
+	if (bHit == false) {
+		return false;
+	}
+
+	iOutHitCount = raycastBuffer.getNbAnyHits(); // block + touches 합
+	return bHit;
+}
+
+
 void CPhysX_Manager::RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh) 
 {
 	m_TriangleMeshes.emplace(CMyTools::ToWstring(pName), pPxTriMesh);

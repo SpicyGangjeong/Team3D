@@ -43,7 +43,7 @@ void CCallBack_EffectHitBox_HitReport::onShapeHit(const PSX::PxControllerShapeHi
 			case PXOBJECT::WALL:
 
 				/* OnCollision 함수에 넘길 값 */
-				CollisionDesc.vWorldPos = XMVectorSet( (_float)vWorldPos.x, (_float)vWorldPos.y, (_float)vWorldPos.z, 1.f);
+				CollisionDesc.vWorldPos = { (_float)vWorldPos.x, (_float)vWorldPos.y, (_float)vWorldPos.z, 1.f };
 				memcpy(&CollisionDesc.vWorldNomal, &vWorldNormal, sizeof(_float3));
 				memcpy(&CollisionDesc.vHitDir, &vDir, sizeof(_float3));
 				CollisionDesc.fLength = fLength;
@@ -53,13 +53,13 @@ void CCallBack_EffectHitBox_HitReport::onShapeHit(const PSX::PxControllerShapeHi
 			case PXOBJECT::GOBLIN_WARRIOR:
 
 				/* OnCollision 함수에 넘길 값 */
-				CollisionDesc.vWorldPos = XMVectorSet( (_float)vWorldPos.x, (_float)vWorldPos.y, (_float)vWorldPos.z, 1.f);
+				CollisionDesc.vWorldPos = { (_float)vWorldPos.x, (_float)vWorldPos.y, (_float)vWorldPos.z, 1.f };
 				memcpy(&CollisionDesc.vWorldNomal, &vWorldNormal, sizeof(_float3));
 				memcpy(&CollisionDesc.vHitDir, &vDir, sizeof(_float3));
 				CollisionDesc.fLength = fLength;
 
 				pOwnerActorData->pOwner->Get_Owner()->OnCollision(pTargetActorData->pOwner , &CollisionDesc);
-				static_cast<CRigidBody_Dynamic*>(pTargetActorData->pBody)->Add_Force(CollisionDesc.vHitDir * fLength * 100.f, PSX::PxForceMode::eIMPULSE);
+				static_cast<CRigidBody_Dynamic*>(pTargetActorData->pBody)->Add_Force(XMLoadFloat4(&CollisionDesc.vHitDir) * fLength * 100.f, PSX::PxForceMode::eIMPULSE);
 				break;
 			default:
 			{
@@ -112,7 +112,7 @@ void CCallBack_EffectHitBox_HitReport::onControllerHit(const PSX::PxControllersH
 			case PXOBJECT::GOBLIN_WARRIOR:
 
 				/* OnCollision 함수에 넘길 값 */
-				CollisionDesc.vWorldPos = XMVectorSet((_float)vWorldPos.x, (_float)vWorldPos.y, (_float)vWorldPos.z, 1.f);
+				CollisionDesc.vWorldPos = { (_float)vWorldPos.x, (_float)vWorldPos.y, (_float)vWorldPos.z, 1.f };
 				memcpy(&CollisionDesc.vWorldNomal, &vWorldNormal, sizeof(_float3));
 				memcpy(&CollisionDesc.vHitDir, &vDir, sizeof(_float3));
 				CollisionDesc.fLength = fLength;

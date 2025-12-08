@@ -21,15 +21,16 @@ public:
 
 private:
 	LEVEL			m_eNextLevelID = { LEVEL::END };
-	class CLoader*	m_pLoader = { nullptr };
+	class CLoader* m_pLoader = { nullptr };
 
+	_float m_fTimeDelta{};
+	_bool m_bDelay = { false };
+	_bool m_bNextLevel = { false };
+	class CGameObject* m_pIntro_Image = { nullptr };
 private:
 	virtual HRESULT Initialize(LEVEL eNextLevelID);
 	HRESULT Initialize() override;
 	HRESULT Ready_Layer_BackGround(const _wstring& strLayerTag);
-
-
-
 public:
 	static CLevel_Loading* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID, LEVEL eNextLevelID);
 	virtual void Free() override;

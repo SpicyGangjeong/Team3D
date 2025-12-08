@@ -72,10 +72,25 @@ HRESULT CMesh::Initialize_Prototype(MODEL eType, vector<class CBone*>& Bones, co
 
 #pragma region VERTEX_BUFFER
 
-	HRESULT hr = (eType == MODEL::NONANIM) ?
-		Ready_VertexBuffer_For_NonAnim(pAIMesh, PreTransformMatrix) :
-		Ready_VertexBuffer_For_Anim(Bones, pAIMesh);
-
+	HRESULT hr = {};
+	switch (eType)
+	{
+	case Engine::MODEL::NONANIM:
+	case Engine::MODEL::PBR_NONANIM:
+		hr = Ready_VertexBuffer_For_NonAnim(pAIMesh, PreTransformMatrix);
+		break;
+	case Engine::MODEL::ANIM:
+	case Engine::MODEL::PBR_ANIM:
+		hr = Ready_VertexBuffer_For_Anim(Bones, pAIMesh);
+		break;
+	case Engine::MODEL::ENVIROMENT:
+		break;
+	default:
+		break;
+	}
+	if (FAILED(hr)) {
+		return E_FAIL;
+	}
 #pragma endregion
 
 #pragma region INDEX_BUFFER
@@ -170,7 +185,7 @@ HRESULT CMesh::Initialize_Prototype(MODEL eType, const CModel* pModel, SaveMesh*
 	m_Vertices.clear();
 	m_Vertices.reserve(_SaveMesh->Vertices.size());
 
-	XMMATRIX matPre = PreTransformMatrix;
+	_matrix matPre = PreTransformMatrix;
 
 	for (size_t i = 0; i < _SaveMesh->Vertices.size(); ++i)
 	{
@@ -183,13 +198,30 @@ HRESULT CMesh::Initialize_Prototype(MODEL eType, const CModel* pModel, SaveMesh*
 	}
 
 #pragma region VERTEX_BUFFER
-
-	HRESULT hr = MODEL::NONANIM == eType ?
-		Ready_VertexBuffer_For_NonAnim(_SaveMesh, PreTransformMatrix) :
-		Ready_VertexBuffer_For_Anim(pModel, _SaveMesh);
-
-	if (FAILED(hr))
+	HRESULT hr = {};
+	switch (eType)
+	{
+	case Engine::MODEL::NONANIM:
+	case Engine::MODEL::PBR_NONANIM:
+		hr = Ready_VertexBuffer_For_NonAnim(_SaveMesh, PreTransformMatrix);
+		break;
+	case Engine::MODEL::ANIM:
+	case Engine::MODEL::PBR_ANIM:
+		hr = Ready_VertexBuffer_For_Anim(pModel, _SaveMesh);
+		break;
+	case Engine::MODEL::ENVIROMENT:
+		m_pVertexPositions = new _float3[m_iNumVertices];
+		for (size_t i = 0; i < m_iNumVertices; ++i)
+		{
+			memcpy_s(m_pVertexPositions, sizeof(_float3) * m_iNumVertices, m_Vertices.data(), sizeof(_float3) * m_iNumVertices);
+		}
+		break;
+	default:
+		break;
+	}
+	if (FAILED(hr)){
 		return E_FAIL;
+	}
 
 #pragma endregion
 
@@ -239,6 +271,7 @@ HRESULT CMesh::Ready_VertexBuffer_For_NonAnim(SaveMesh* SaveMesh, _fmatrix PreTr
 	for (_uint i = 0; i < m_iNumVertices; ++i)
 	{
 		memcpy(&pVertices[i].vPosition, &SaveMesh->Vertices[i].Pos, sizeof(_float3));
+		memcpy(&m_pVertexPositions[i], &SaveMesh->Vertices[i].Pos, sizeof(_float3));
 		XMStoreFloat3(&pVertices[i].vPosition,
 			XMVector3TransformCoord(XMLoadFloat3(&pVertices[i].vPosition), PreTransformMatrix));
 
@@ -399,9 +432,9 @@ PSX::PxTriangleMesh* CMesh::ConvertToPxMesh(const PSX::PxCookingParams* pParam, 
 		tMeshDesc.points.stride = sizeof(PSX::PxVec3);
 		Vertices.resize(m_iNumVertices);
 		XMVector3TransformCoordStream(
-			reinterpret_cast<XMFLOAT3*>(Vertices.data()),     // dest
+			reinterpret_cast<_float3*>(Vertices.data()),     // dest
 			sizeof(PSX::PxVec3),
-			reinterpret_cast<const XMFLOAT3*>(m_pVertexPositions), // src
+			reinterpret_cast<const _float3*>(m_pVertexPositions), // src
 			sizeof(PSX::PxVec3),
 			m_iNumVertices,
 			WorldMatrix

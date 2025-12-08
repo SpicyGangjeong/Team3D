@@ -28,6 +28,7 @@ float       g_fSSAORadius;
 float2      g_vSSAOTextureSize;
 
 float g_fLightRange;
+float g_fLightIntensity;
 float g_fSpotInnerAngle;
 float g_fSpotOuterAngle;
 
@@ -245,6 +246,15 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
         fRoughness = vSRO.g;
         fOcclusion = vSRO.b;
     }
+    else if (true == AlmostEqual3(vDepth.b, AI_TEXTURE_TYPE_ANISOTROPY))
+    {
+        fMetallic = 0.f;
+        
+        float4 vSRXO = g_SurfaceTexture.Sample(DefaultSampler, uv);
+        vF0 = vSRXO.rrr;
+        fRoughness = vSRXO.g;
+        fOcclusion = vSRXO.a;
+    }
     else // basic Lighting(phong blinn) // if you were here, you miss some assets.
     {
         Out.vShade = g_vLightDiffuse * saturate(max(dot(normalize(g_vLightDir.xyz) * -1.f, vNormal), 0.f) + (fAmbientOcclusion * g_vLightAmbient * g_vMtrlAmbient));
@@ -262,7 +272,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     }
     
     
-    PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
+    PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, g_fLightIntensity, fAttenuation, vF0);
     PBR_Out.vShade *= fTotalOcclusion;
     
     float3 vAmbient = g_vLightAmbient.rgb * fTotalOcclusion * fAttenuation;
@@ -365,7 +375,7 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
         vF0 = min(vF0, 0.9f); // 메탈릭 상한선
     }
     
-    PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
+    PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, g_fLightIntensity, fAttenuation, vF0);
     
     PBR_Out.vShade *= fTotalOcclusion;
 
@@ -483,7 +493,7 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
         vF0 = min(vF0, 0.9f); // 메탈릭 상한선
     }
     
-    PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
+    PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, g_fLightIntensity, fAttenuation, vF0);
     
     PBR_Out.vShade *= fTotalOcclusion;
     
@@ -911,7 +921,12 @@ PS_OUT_SSAO_AMBIENT_OCCLUSION PS_SSAO_AMBIENT_OCCLUSION(PS_IN In)
     
     float4 vDepthDesc       = g_DepthTexture.Sample(PointSampler, uv);
     float fCenterViewSpaceZ = vDepthDesc.y * g_fFar; // n ~ f
-    
+    float fRatio = lerp(0.f, 1.f, (g_fFar - fCenterViewSpaceZ) / g_fFar);
+    if (fRatio <= 0.f)
+    {
+        Out.fOcclusion = 1.f;
+        return Out;
+    }
     float4 vCenterViewPosition;
     {
         vCenterViewPosition.x = uv.x * 2.f - 1.f;
@@ -956,8 +971,8 @@ PS_OUT_SSAO_AMBIENT_OCCLUSION PS_SSAO_AMBIENT_OCCLUSION(PS_IN In)
         fIsOccluded *= fRangeCheck;
         fOcclusion += fIsOccluded;
     }
-    fOcclusion = (1.f - (fOcclusion / g_iKernelSize));
-    Out.fOcclusion = fOcclusion;
+    fOcclusion = (1.f - (fOcclusion / g_iKernelSize) * fRatio);
+    Out.fOcclusion = fOcclusion ;
     
     return Out;
 }

@@ -135,6 +135,11 @@
     <FxCompile>
       <ShaderModel>5.0</ShaderModel>
     </FxCompile>
+    <PostBuildEvent>
+      <Command>cd /d "$(SolutionDir)"
+call Update_Shaders.bat
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -161,6 +166,11 @@
       <Command>
       </Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>cd /d "$(SolutionDir)"
+call Update_Shaders.bat
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Action_Panel.h" />
@@ -219,7 +229,14 @@
     <ClInclude Include="..\Public\Bombard.h" />
     <ClInclude Include="..\Public\InfoInstance.h" />
     <ClInclude Include="..\public\InstancedProp.h" />
+    <ClInclude Include="..\public\Intro_BG.h" />
+    <ClInclude Include="..\public\Intro_Image.h" />
     <ClInclude Include="..\Public\LeviosoSide.h" />
+    <ClInclude Include="..\public\Loding_Canvas.h" />
+    <ClInclude Include="..\public\Loding_Panel.h" />
+    <ClInclude Include="..\public\Logo.h" />
+    <ClInclude Include="..\public\Logo_Glow.h" />
+    <ClInclude Include="..\public\Logo_Text.h" />
     <ClInclude Include="..\public\Magic_Icon.h" />
     <ClInclude Include="..\public\Magic_Item.h" />
     <ClInclude Include="..\public\Magic_Meter.h" />
@@ -388,7 +405,14 @@
     <ClCompile Include="..\Private\Bombard.cpp" />
     <ClCompile Include="..\Private\InfoInstance.cpp" />
     <ClCompile Include="..\private\InstancedProp.cpp" />
+    <ClCompile Include="..\private\Intro_BG.cpp" />
+    <ClCompile Include="..\private\Intro_Image.cpp" />
     <ClCompile Include="..\Private\LeviosoSide.cpp" />
+    <ClCompile Include="..\private\Loding_Canvas.cpp" />
+    <ClCompile Include="..\private\Loding_Panel.cpp" />
+    <ClCompile Include="..\private\Logo.cpp" />
+    <ClCompile Include="..\private\Logo_Glow.cpp" />
+    <ClCompile Include="..\private\Logo_Text.cpp" />
     <ClCompile Include="..\private\Magic_Icon.cpp" />
     <ClCompile Include="..\private\Magic_Item.cpp" />
     <ClCompile Include="..\private\Magic_Meter.cpp" />
