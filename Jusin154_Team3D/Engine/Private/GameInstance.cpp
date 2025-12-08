@@ -867,9 +867,9 @@ _bool CGameInstance::Mouse_Up(int _iKey)
 }
 _bool CGameInstance::Mouse_Down(int _iKey)
 {
-	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+	//if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
 		return m_pKey_Manager->Mouse_Down(_iKey);
-	}
+	//}
 	return false;
 }
 _bool CGameInstance::Mouse_StartMove()

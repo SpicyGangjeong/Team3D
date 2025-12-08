@@ -1740,6 +1740,7 @@ HRESULT CLoader::Loading_For_Bloom()
 		TEXT("Prototype_Component_SubTroll_Model")
 	));
 
+
 #pragma endregion
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Desc_Box"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Box/Box.bin", XMMatrixScaling(10.f, 10.f, 10.f) * XMMatrixIdentity())))) {
@@ -1977,6 +1978,12 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		return E_FAIL;
 	}*/
 
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_SK_WPN_Troll_Club07_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM_LOCAL, "C:/MeshTable\\Game\\RiggedObjects\\Props\\Weapons\\Troll\\SK_WPN_Troll_Club07.fbx", XMMatrixIdentity())))) {
+		return E_FAIL;
+	}
+
 	// Heavy Wall
 	CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
 	{
@@ -2006,6 +2013,16 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		return E_FAIL;
 	}
 	vector<future<pair<_wstring, CModel*>*>> futures = {};
+
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll.bin", XMMatrixIdentity(),
+		TEXT("Prototype_Component_troll_Model")
+	));
+
+	//futures.emplace_back(Deferred_ModelLoad(
+	//	MODEL::ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll_Anim.fbx", XMMatrixIdentity(),
+	//	TEXT("Prototype_Component_troll_Model")
+	//));
 
 #pragma region BODY
 
@@ -2086,6 +2103,12 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	));
 
 	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Monster/Goblin_Mage/GoblinMage.bin", XMMatrixRotationY(XMConvertToRadians(180.f))* XMMatrixIdentity(),
+		TEXT("Prototype_Component_GoblinMage_Model")
+	));
+
+
+	futures.emplace_back(Deferred_ModelLoad(
 		MODEL::ANIM, "../Bin/Resources/Models/Monster/TombProtector/TombProtector.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
 		TEXT("Prototype_Component_TombProtector_Model")
 	));
@@ -2100,6 +2123,11 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	));
 
 #pragma endregion
+
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll_Anim.fbx", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f)* XMMatrixIdentity(),
+		TEXT("Prototype_Component_SubTroll_Model")
+	));
 
 	futures.emplace_back(Deferred_ModelLoad(
 		MODEL::ANIM, "../Bin/Resources/Models/Object/Troll_Weapon/Troll_Weapon.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),

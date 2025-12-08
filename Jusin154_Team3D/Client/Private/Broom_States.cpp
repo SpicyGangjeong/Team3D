@@ -220,59 +220,95 @@ HRESULT CBroom::Behavior_MoveExitCheck(_float fTimeDelta)
 		}
 		else {
 			pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_STOP_B];
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 		}
 
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 	}
-	else
-	{
-		if (bFwd)
-		{
-			m_fTargetSpeed = m_fFlyMaxSpeed;
-			m_fSpeed += (m_fTargetSpeed - m_fSpeed) * fTimeDelta * m_fAccel;
-			pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_B];
-			Camera_InterpTurn(fTimeDelta);
-		}
-		else if (bLft)
-		{
-			m_fTargetSpeed = m_fTurnMaxSpeed;
-			m_fSpeed += (m_fTargetSpeed - m_fSpeed) * fTimeDelta * m_fTurnDecel;
-			pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_LEFT_B];
-			m_pTransformCom->Turn(-m_pTransformCom->Get_State(STATE::UP), fTimeDelta*0.1f);
-		}
-		else if (bRht)
-		{
-			m_fTargetSpeed = m_fTurnMaxSpeed;
-			m_fSpeed += (m_fTargetSpeed - m_fSpeed) * fTimeDelta * m_fTurnDecel;
-			pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_RIGHT_B];
-			m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::UP), fTimeDelta* 0.1f);
-		}
-		else if (bDown)
-		{
-			pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_DOWN_B];
-			m_fTargetSpeed = m_fTurnMaxSpeed;
-			m_fTurnSpeed += (m_fTargetSpeed - m_fTurnSpeed) * fTimeDelta * m_fAccel;
-
-			m_pTransformCom->Go_LerpDown(m_fTurnSpeed, fTimeDelta);
-		}
-		else if (bUp)
-		{
-			pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_UP_B];
-			m_fTargetSpeed = m_fTurnMaxSpeed;
-			m_fTurnSpeed += (m_fTargetSpeed - m_fTurnSpeed) * fTimeDelta * m_fAccel;
-
-			m_pTransformCom->Go_LerpUp(m_fTurnSpeed, fTimeDelta);
-		}
-		else {
-			m_fTargetSpeed = m_fFlyMaxSpeed;
-			m_fSpeed += (m_fTargetSpeed - m_fSpeed) * fTimeDelta * m_fAccel;
-			pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_B];
-		}
+	else{
 		
+		m_fTargetSpeed = m_fFlyMaxSpeed;
+		m_fSpeed += (m_fTargetSpeed - m_fSpeed) * fTimeDelta * m_fAccel;
 		m_pTransformCom->Go_LerpStraight(m_fSpeed, fTimeDelta);
 
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+		if (SUCCEEDED(InputAction()) || SUCCEEDED(InputMove()))
+		{
+			_float3 vInput = { 0.f, 0.f, 0.f };
+
+			if (bFwd)  vInput.z += 1.f;
+			if (bLft)  vInput.x -= 1.f;
+			if (bRht)  vInput.x += 1.f;
+			if (bUp)   vInput.y += 1.f;
+			if (bDown) vInput.y -= 1.f;
+
+			_bool bHasInput = !(vInput.x == 0 && vInput.y == 0 && vInput.z == 0);
+			_vector vDir = XMVector3Normalize(XMLoadFloat3(&vInput));
+
+			if (bUp || bDown)
+			{
+				m_fTargetSpeed = m_fTurnMaxSpeed;
+				m_fTurnSpeed += (m_fTurnMaxSpeed - m_fTurnSpeed) * fTimeDelta * m_fAccel;
+
+				if (bUp)
+				{
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_UP_B];
+					m_pTransformCom->Go_LerpUp(m_fTurnSpeed, fTimeDelta);
+					m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+				}
+				else
+				{
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_DOWN_B];
+					m_pTransformCom->Go_LerpDown(m_fTurnSpeed, fTimeDelta);
+					m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+
+				}
+			}
+
+
+			if (vInput.x < 0.f)
+			{
+				m_pTransformCom->Turn(-m_pTransformCom->Get_State(STATE::UP), fTimeDelta * 0.1f);
+			}
+			else if (vInput.x > 0.f)
+			{
+				m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::UP), fTimeDelta * 0.1f);
+			}
+
+			_float ax = fabsf(vInput.x);
+			_float ay = fabsf(vInput.y);
+			_float az = fabsf(vInput.z);
+
+			if (ay > ax && ay > az)
+			{
+				if (vInput.y > 0)
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_UP_B];
+				else
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_DOWN_B];
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+			}
+			else if (az >= ax)
+			{
+				if (vInput.z > 0)
+				{
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_B];
+					m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+					Camera_InterpTurn(fTimeDelta);
+				}
+			}
+			else
+			{
+				if (vInput.x < 0)
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_LEFT_B];
+				else
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_RIGHT_B];
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+			}
+		}
+		else {
+			pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_B];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+		}
+
+		
 	}
 
 	if (m_bHoverToggle && !SUCCEEDED(InputMove()) && !SUCCEEDED(InputAction()))

@@ -203,9 +203,24 @@ void CBroom::Describe_Entity()
 
 	string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
 	GUI::Text(AnimList.c_str());
+	GUI::Text("AnimIndex %d", m_pModelCom->Get_AnimIndex());
 
 	GUI::Text("AnimTrack %.2f", m_pModelCom->Get_CurrentTrackPosition());
 	GUI::Text("AnimRatio %.2f", m_pModelCom->Get_CurrentTrackProgressRatio());
+	_float3 Pos;
+	XMStoreFloat3(&Pos, Get_WorldPostion());
+
+	float Pos3[3] = { Pos.x, Pos.y, Pos.z };
+	GUI::DragFloat3("Pos", Pos3);
+
+
+	_float RotR, RotU, RotL;
+	RotR = XMVectorGetX(m_pTransformCom->Get_State(STATE::RIGHT));
+	RotU = XMVectorGetY(m_pTransformCom->Get_State(STATE::UP));
+	RotL = XMVectorGetZ(m_pTransformCom->Get_State(STATE::LOOK));
+
+	float Rot3[3] = { RotR, RotU,RotL };
+	GUI::DragFloat3("Rot", Rot3);
 
 }
 
