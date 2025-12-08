@@ -249,6 +249,7 @@ public:
 public:
 	HRESULT Load(const _char* pFilePath, LEVEL eLevel);
 	HRESULT Load();
+	void    FollowParants(const _float4x4* pParantsMat);
 public:
 #ifdef _DEBUG
 		HRESULT LoadPre(const _char* pFilePath, LEVEL eLevel);
@@ -274,7 +275,7 @@ protected:
 
 	CInstance_Model* m_pInstance_ModelCom = { nullptr };
 
-
+	const _float4x4* m_pPerentMatrix = { nullptr };
 protected:
 	EFFECT_INFO m_EffectInfo = {};
 	_string		m_strDiffuseName = {};
