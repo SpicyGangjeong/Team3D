@@ -33,7 +33,8 @@ enum ESTATE : _u64Flag
     SWING                       = 1ULL << 26,
     SLAM                        = 1ULL << 27,
     BLINK                       = 1ULL << 28,
-    DEAD                        = 1ULL << 29,
+    SHUFFLE                     = 1ULL << 29,
+    DEAD                        = 1ULL << 30,
     END
 };
 NS_END

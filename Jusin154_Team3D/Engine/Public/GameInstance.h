@@ -24,6 +24,7 @@ public:
 	_int   Random_Int(_int iMin, _int iMax);
 	_int   Real_Random_Int(_int iMin, _int iMax);
 	_float Real_Random_Float(_float fMin, _float fMax);
+	_float2 Get_ViewPortSize();
 	void BillBoard(CTransform* pTransform);
 
 #pragma region GRAPHIC_DEVICE
@@ -167,6 +168,7 @@ public:
 	HRESULT Accumulate_RenderTarget(class CVIBuffer_Rect* pVIBuffer, class CShader* pShader, const _wstring& wstrRenderTarget_SrcA, const _wstring& wstrRenderTarget_SrcB, const _wstring& wstrRenderTarget_Target, SHADER_PASS_DEFERRED ePass);
 	HRESULT Refit_RenderTarget(class CVIBuffer_Rect* pVIBuffer, class CShader* pShader, const _wstring& wstrRenderTargetInput, const _wstring& wstrRenderTargetOutput, SHADER_PASS_DEFERRED ePass);
 	HRESULT Finish_RenderTarget(class CVIBuffer_Rect* pVIBuffer, class CShader* pShader, const _wstring& wstrRenderTargetOriginal, const _wstring& wstrRenderTargetBloomed, SHADER_PASS_DEFERRED ePass);
+	HRESULT Bind_CS_RenderTarget(_uint iIndex, const _wstring& strTargetTag);
 #ifdef _DEBUG
 	void    RenderTarget_Debuger();
 	HRESULT Render_RenderTarget_Debug(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
@@ -303,7 +305,9 @@ private:
 	_float							m_fTimer_Present = { 0.f };
 	_float							m_fTimer_FrameCount = { 0.f };
 
-	vector<const _char*>			m_FilePaths = {};
+	_float2							m_vViewPortSize = {};
+
+	vector<const _char*>			    m_FilePaths = {};
 	map<const _char*, CModel*>			m_ModelMap;
 
 #endif // _DEBUG

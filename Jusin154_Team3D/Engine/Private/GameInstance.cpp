@@ -125,6 +125,9 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 		return E_FAIL;
 	}
 
+
+	m_vViewPortSize = _float2((_float)EngineDesc.iWinSizeX, (_float)EngineDesc.iWinSizeY);
+
 	return S_OK;
 }
 
@@ -202,6 +205,11 @@ _float CGameInstance::Real_Random_Float (_float iMin, _float iMax)
 {
 	uniform_real_distribution<_float> rand(iMin, iMax);
 	return rand(m_Rng);
+}
+
+_float2 CGameInstance::Get_ViewPortSize()
+{
+	return m_vViewPortSize;
 }
 
 void CGameInstance::BillBoard(CTransform* pTransform)
@@ -612,6 +620,10 @@ HRESULT CGameInstance::Finish_RenderTarget(CVIBuffer_Rect* pVIBuffer, CShader* p
 {
 	return m_pRenderTarget_Manager->Finish_RenderTarget(pVIBuffer, pShader, wstrRenderTargetOriginal, wstrRenderTargetBloomed, ePass);
 }
+HRESULT CGameInstance::Bind_CS_RenderTarget(_uint iIndex, const _wstring& strTargetTag)
+{
+	return m_pRenderTarget_Manager->Bind_CS_RenderTarget(iIndex, strTargetTag);
+}
 #ifdef _DEBUG
 void CGameInstance::RenderTarget_Debuger()
 {
@@ -864,9 +876,9 @@ _bool CGameInstance::Mouse_Up(int _iKey)
 }
 _bool CGameInstance::Mouse_Down(int _iKey)
 {
-	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+	//if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
 		return m_pKey_Manager->Mouse_Down(_iKey);
-	}
+	//}
 	return false;
 }
 _bool CGameInstance::Mouse_StartMove()

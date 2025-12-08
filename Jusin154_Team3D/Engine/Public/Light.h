@@ -31,23 +31,31 @@ public:
 	const LIGHT_DESC* Get_LightDesc() { return &m_LightDesc; }
 	void Set_Color(_float4& vDiffuse, _float4& vAmbient, _float4& vSpecular);	
 
-	void Reset_AmbientRatio()
+	void Reset_IntensityRatio()
 	{
-		m_fAmbientRatio = 1.f;
+		m_fIntensityRatio = 1.f;
 		m_fAccLightTime = 0.f;
-
+		m_fAccDelayTime = 0.f;
 	}
-	void Update_AmbientRatio(_float fTimeDelta , _float fTime) { 
+	void Update_IntensityRatio(_float fTimeDelta , _float fTime , _float fTimeDelay = 0) {
 
 		if (fTime <= 0)
 			return;
 
+		m_fAccDelayTime += fTimeDelta;
+
+		if (m_fAccDelayTime <= fTimeDelay)
+		{
+			m_fIntensityRatio = 0;
+			return;
+		}
+
 		m_fAccLightTime += fTimeDelta;
 
-		m_fAmbientRatio = 1 - (m_fAccLightTime / fTime);
+		m_fIntensityRatio = 1 - (m_fAccLightTime / fTime);
 
-		if (m_fAmbientRatio <= 0)
-			m_fAmbientRatio = 0;
+		if (m_fIntensityRatio <= 0)
+			m_fIntensityRatio = 0;
 	}
 
 public:
@@ -58,8 +66,10 @@ private:
 	_bool		m_bUsePowerAttenuation = { true };
 	_float		m_fLightAttenuationPower = { 3.30f };
 
-	_float      m_fAmbientRatio = { 1.f };
+	_float      m_fIntensityRatio = { 1.f };
 	_float      m_fAccLightTime = { 0.f };
+	_float      m_fAccDelayTime = { 0.f };
+
 	_float      m_fLightIntensity = { 4.f };
 
 	// 1 -> Linear, 

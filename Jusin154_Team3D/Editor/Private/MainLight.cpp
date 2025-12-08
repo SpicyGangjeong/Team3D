@@ -136,6 +136,12 @@ HRESULT CMainLight::Ready_Components()
 	LightDesc.pDirection = m_pTransformCom->Get_StatePtr(STATE::LOOK);
 	LightDesc.iLevel = NEXT_LEVEL;
 
+#ifdef gimch
+	LightDesc.vDiffuse = _float4(0.8f, 0.8f, 0.8f, 0.f);
+	LightDesc.vAmbient = _float4(0.6f, 0.6f, 0.6f, 0.f);
+#endif // gimch
+
+
 	/* Com_Light*/
 	if (FAILED(Add_Component<CLight>(g_iStaticLevel, &m_pLightCom, &LightDesc)))
 	{

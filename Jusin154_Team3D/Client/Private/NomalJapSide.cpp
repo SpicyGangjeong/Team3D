@@ -42,11 +42,13 @@ HRESULT CNomalJapSide::Initialize(void* pArg)
 
 	m_pWandParticle = Get_PartObject<CEffectParts>("WandParticle1");
 	m_pWandLight = Get_PartObject<CEffectParts>("Wand_Red_Long");
+	m_pWandLight_R = Get_PartObject<CEffectParts>("Wand_Light_R");
 	m_pWandTrail = Get_PartObject<CTrailObject>();
 
 	SAFE_ADDREF(m_pWandLight);
 	SAFE_ADDREF(m_pWandTrail);
 	SAFE_ADDREF(m_pWandParticle);
+	SAFE_ADDREF(m_pWandLight_R);
 
 	m_Events.emplace(0.6f, [&]() {
 
@@ -64,6 +66,7 @@ HRESULT CNomalJapSide::Initialize(void* pArg)
 		m_isTrailEnd = true;
 
 		XMStoreFloat4x4(&m_TrailStopMat, pWand->Get_WorldMatrix());
+		m_pWandLight_R->Set_Visible(false);
 
 		});
 
@@ -94,6 +97,7 @@ void CNomalJapSide::Update(_float fTimeDelta)
 		return;
 
 	m_pWandLight->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
+	m_pWandLight_R->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 
 	// 파티클생성이 막히면 실행되지 않음
 	if (m_isParticleEnd == false)
@@ -130,6 +134,7 @@ HRESULT CNomalJapSide::Pre_Setting(CGameObject* pObject, void* pArg)
 	m_isParticleEnd = false; // 파티클이 일정시간이 되면 나오지 않게 하려고
 
 	m_pWandLight->Set_Visible(true);
+	m_pWandLight_R->Set_Visible(true);
 
 	/*트레일 초기화 */
 	m_pWandTrail->Set_Visible(true);
@@ -139,7 +144,7 @@ HRESULT CNomalJapSide::Pre_Setting(CGameObject* pObject, void* pArg)
 	/*_vector pPos = pPlayer->Get_WandPos().r[3];*/
 
 	m_pWandLight->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
-
+	m_pWandLight_R->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 	return S_OK;
 }
 
@@ -198,6 +203,8 @@ void CNomalJapSide::Free()
 	Safe_Release(m_pWandLight);
 	Safe_Release(m_pWandTrail);
 	Safe_Release(m_pWandParticle);
+	Safe_Release(m_pWandLight_R);
+	
 }
 #ifdef _DEBUG
 

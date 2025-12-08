@@ -169,6 +169,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Enemy_Info.h" />
     <ClInclude Include="..\Public\Enemy_Panel.h" />
     <ClInclude Include="..\Public\Goblin_Dagger.h" />
+    <ClInclude Include="..\Public\Goblin_Mage.h" />
     <ClInclude Include="..\Public\HpBarBG.h" />
     <ClInclude Include="..\Public\Intro_BG.h" />
     <ClInclude Include="..\Public\Intro_Image.h" />
@@ -281,6 +282,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\State_LightAttack.h" />
     <ClInclude Include="..\Public\State_Move.h" />
     <ClInclude Include="..\Public\State_Root.h" />
+    <ClInclude Include="..\Public\State_Shuffle.h" />
     <ClInclude Include="..\Public\State_Slam.h" />
     <ClInclude Include="..\Public\State_Spell.h" />
     <ClInclude Include="..\Public\State_Swing.h" />
@@ -302,6 +304,7 @@ call Update_Resources.bat
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Action_Panel.cpp" />
+    <ClCompile Include="..\Private\Broom_States.cpp" />
     <ClCompile Include="..\Private\CameraLockOn.cpp" />
     <ClCompile Include="..\Private\Current_Slot_Number.cpp" />
     <ClCompile Include="..\Private\Current_Spell_Slot.cpp" />
@@ -311,6 +314,8 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Enemy_Info.cpp" />
     <ClCompile Include="..\Private\Enemy_Panel.cpp" />
     <ClCompile Include="..\Private\Goblin_Dagger.cpp" />
+    <ClCompile Include="..\Private\Goblin_Mage.cpp" />
+    <ClCompile Include="..\Private\Goblin_Mage_States.cpp" />
     <ClCompile Include="..\Private\HpBarBG.cpp" />
     <ClCompile Include="..\Private\Intro_BG.cpp" />
     <ClCompile Include="..\Private\Intro_Image.cpp" />
@@ -425,6 +430,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\State_LightAttack.cpp" />
     <ClCompile Include="..\Private\State_Move.cpp" />
     <ClCompile Include="..\Private\State_Root.cpp" />
+    <ClCompile Include="..\Private\State_Shuffle.cpp" />
     <ClCompile Include="..\Private\State_Slam.cpp" />
     <ClCompile Include="..\Private\State_Spell.cpp" />
     <ClCompile Include="..\Private\State_Swing.cpp" />
@@ -440,7 +446,6 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Troll_Weapon.cpp" />
     <ClCompile Include="..\private\UI_Manager.cpp" />
     <ClCompile Include="..\Private\Wand.cpp" />
-    <ClCompile Include="Broom_States.cpp" />
     <ClCompile Include="Client.cpp" />
   </ItemGroup>
   <ItemGroup>

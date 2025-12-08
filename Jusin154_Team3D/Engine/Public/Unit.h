@@ -43,10 +43,6 @@ public:
 #pragma region STATE
 	pair<_uint, _bool> Get_AnimInfo(_uint iIndex) { return m_Animation[iIndex]; }
 	virtual _bool Check(FSMSTATE::ESTATE state) { return false; }
-
-	void Reset_LightCombo() { m_iLightCombo = 0; }
-	_uint Next_LightCombo() { return ++m_iLightCombo; }
-	void Set_LightCombo(_uint LightCombo) { m_iLightCombo = LightCombo; }
 	_float Get_KeyFrame(_string FrameName);
 	_bool IsCurrentKeyFrame(_string FrameName);
 	virtual _vector Get_LockOnPos() { return Get_WorldPostion(); }
@@ -65,7 +61,6 @@ protected:
 	_float			m_fRimLightPower = { 3.2f };
 	_float			m_fRimLightStrength = { 3.04f };
 	_float3			m_vRimLightColor = { 69.f / 255.f, 5.f / 255.f, 10.f / 255.f };
-	_uint			m_iLightCombo = { 0 };
 
 	map<_string, _float> m_KeyFrames;
 
