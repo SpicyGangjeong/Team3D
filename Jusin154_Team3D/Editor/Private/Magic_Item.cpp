@@ -47,6 +47,10 @@ HRESULT CMagic_Item::Initialize(void* pArg)
 	m_iArratCount = 2;
 	Compute_UV(0);
 	Compute_Image();
+	m_fFontX = 1171.f;
+	m_fFontY = 870.f;
+	m_iPotionIndex = 0;
+	m_iPerPotionIndex = -1;
 	return S_OK;
 }
 
@@ -137,6 +141,13 @@ void CMagic_Item::Update(_float fTimeDelta)
 		m_vUVScale.y += fTimeDelta * (1.f / m_fCoolTime);
 	}
 
+	if (m_iPerPotionIndex != m_iPotionIndex)
+	{
+		m_strPotion = to_wstring(m_iPotionIndex);
+		m_fFontOffSet = (m_pGameInstance->FontSizeX(TEXT("UI_size15"), m_strPotion.c_str()) - 13.f) * 0.5f;
+		m_iPerPotionIndex = m_iPotionIndex;
+	}
+
 	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
 }
@@ -172,6 +183,9 @@ HRESULT CMagic_Item::Render()
 	{
 		return E_FAIL;
 	}
+
+
+	m_pGameInstance->Render_Text(TEXT("UI_size15"), m_strPotion.c_str(), _float2((m_fFontX + m_fX) - m_fFontOffSet, m_fFontY + m_fY), XMVectorSet((208.f / 255.f) * m_fAlpha, (177.f / 255.f) * m_fAlpha, (52.f / 255.f)* m_fAlpha, m_fAlpha));
 
 	return S_OK;
 }

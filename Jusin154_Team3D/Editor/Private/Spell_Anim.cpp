@@ -104,6 +104,11 @@ void CSpell_Anim::Update(_float fTimeDelta)
 			m_iCurrentFrame = 0;
 	}
 
+	if (m_iPerSpell != -1)
+	{
+		m_fY = m_fOrigin_Position.y + static_cast<CUIObject*>(m_pOwner)->Get_Info(m_iPerSpell).fVidio;
+	}
+
 	__super::Update(fTimeDelta);
 }
 

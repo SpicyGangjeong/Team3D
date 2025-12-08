@@ -42,6 +42,7 @@ public:
 	void Add_Manager_Event(_wstring Name, function<void(void*)> Event);
 	void Event_Callback(_wstring Name, void* pArg = nullptr);
 private:
+	bool SaveXML(const _string& filePath);
 	void Add_Canvas(_wstring Name, class CGameObject* pCanvas);
 	CGameObject* Find_Canvas(const _wstring& Name);
 

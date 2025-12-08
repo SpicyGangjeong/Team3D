@@ -35,6 +35,8 @@ private:
 	_int	m_iPerIndex{};
 	_bool	m_bStart = { false };
 
+	_float	m_fPreviewOffSet{};
+
 public:
 	static CSpell_Vidio_Border* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

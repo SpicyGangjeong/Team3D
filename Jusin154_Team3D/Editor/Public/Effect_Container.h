@@ -25,6 +25,7 @@ public:
 	HRESULT         Load_Package(const _char* pPath);
 	virtual	HRESULT	Pre_Setting(CGameObject* pObject, void* pArg = nullptr);
 	void			Reset_Light();
+	_uint			Get_SkillType() const { return m_iSkillType; }
 protected:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -37,6 +38,8 @@ protected:
 	_int            CollisionCheck();
 
 protected:
+
+	_uint							m_iSkillType = ENUM_CLASS(SKILL_TYPE::END);
 	_float4							m_vStartPos = {};
 	_float4							m_vEndPos = {};
 	PSX::PxSweepBufferN<12>			m_Hitbuffer = {};

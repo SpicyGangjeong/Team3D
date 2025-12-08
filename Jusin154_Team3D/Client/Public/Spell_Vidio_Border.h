@@ -39,6 +39,7 @@ private:
 
 	_float	m_fStertTimer{};
 	_int	m_iPerIndex{};
+
 	_bool	m_bStart = { false };
 
 public:

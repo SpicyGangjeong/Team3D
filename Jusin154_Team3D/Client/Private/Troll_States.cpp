@@ -180,34 +180,6 @@ void CTroll::Behavior_CombatEnter()
 	m_pFSM->Enable_State(FSMSTATE::COMBAT);
 
 	m_bLookAt = true;
-	
-	if (m_fTargetDistance <= 6.f)
-	{
-		if (m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::SLAM)] <= 0.f) {
-			m_pFSM->Change_State(FSMSTATE::SLAM);
-		}
-
-		if (m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::BACKHAND_SWING)] <= 0.f) {
-			m_pFSM->Change_State(FSMSTATE::BACKHAND_SWING);
-		}
-
-		if (m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::SWING)] <= 0.f) {
-			m_pFSM->Change_State(FSMSTATE::SWING);
-		}
-	}
-	else if (m_fTargetDistance <= 15.f && m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::THROWROCK)] <= 0.f)
-	{
-		m_pFSM->Change_State(FSMSTATE::THROW_ROCK);
-	}
-	else  if (m_fTargetDistance <= 18.f && m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::RUSH)] <= 0.f)
-	{
-		m_pFSM->Change_State(FSMSTATE::RUSH);
-	}
-	else
-	{
-		m_pFSM->Change_State(FSMSTATE::IDLEBREAK);
-	}
-
 }
 
 HRESULT CTroll::Behavior_CombatExitCheck(_float fTimeDelta)
