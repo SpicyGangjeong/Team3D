@@ -83,12 +83,10 @@ void CTroll::Behavior_MoveEnter()
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::MOVE);
 
-	if (m_pFSM->IsEnable_Previous(FSMSTATE::IDLE))
-	{
-		m_pFSM->Enable_State(FSMSTATE::JOG);
-		pairAnimInfo = m_Animation[STATEANIM::JOG_START];
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-	}
+	m_pFSM->Enable_State(FSMSTATE::JOG);
+	pairAnimInfo = m_Animation[STATEANIM::JOG_START];
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
 }
 
 HRESULT CTroll::Behavior_MoveExitCheck(_float fTimeDelta)
@@ -181,34 +179,6 @@ void CTroll::Behavior_CombatEnter()
 	m_pFSM->Enable_State(FSMSTATE::COMBAT);
 
 	m_bLookAt = true;
-	
-	if (m_fTargetDistance <= 6.f)
-	{
-		if (m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::SLAM)] <= 0.f) {
-			m_pFSM->Change_State(FSMSTATE::SLAM);
-		}
-
-		if (m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::BACKHAND_SWING)] <= 0.f) {
-			m_pFSM->Change_State(FSMSTATE::BACKHAND_SWING);
-		}
-
-		if (m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::SWING)] <= 0.f) {
-			m_pFSM->Change_State(FSMSTATE::SWING);
-		}
-	}
-	else if (m_fTargetDistance <= 15.f && m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::THROWROCK)] <= 0.f)
-	{
-		m_pFSM->Change_State(FSMSTATE::THROW_ROCK);
-	}
-	else  if (m_fTargetDistance <= 18.f && m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::RUSH)] <= 0.f)
-	{
-		m_pFSM->Change_State(FSMSTATE::RUSH);
-	}
-	else
-	{
-		m_pFSM->Change_State(FSMSTATE::IDLEBREAK);
-	}
-
 }
 
 HRESULT CTroll::Behavior_CombatExitCheck(_float fTimeDelta)
