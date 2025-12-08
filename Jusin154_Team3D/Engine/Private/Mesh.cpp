@@ -77,14 +77,15 @@ HRESULT CMesh::Initialize_Prototype(MODEL eType, vector<class CBone*>& Bones, co
 	{
 	case Engine::MODEL::NONANIM:
 	case Engine::MODEL::PBR_NONANIM:
+	case Engine::MODEL::ENVIROMENT:
 		hr = Ready_VertexBuffer_For_NonAnim(pAIMesh, PreTransformMatrix);
 		break;
+
 	case Engine::MODEL::ANIM:
 	case Engine::MODEL::PBR_ANIM:
 		hr = Ready_VertexBuffer_For_Anim(Bones, pAIMesh);
 		break;
-	case Engine::MODEL::ENVIROMENT:
-		break;
+
 	default:
 		break;
 	}
@@ -203,19 +204,15 @@ HRESULT CMesh::Initialize_Prototype(MODEL eType, const CModel* pModel, SaveMesh*
 	{
 	case Engine::MODEL::NONANIM:
 	case Engine::MODEL::PBR_NONANIM:
+	case Engine::MODEL::ENVIROMENT:
 		hr = Ready_VertexBuffer_For_NonAnim(_SaveMesh, PreTransformMatrix);
 		break;
+
 	case Engine::MODEL::ANIM:
 	case Engine::MODEL::PBR_ANIM:
 		hr = Ready_VertexBuffer_For_Anim(pModel, _SaveMesh);
 		break;
-	case Engine::MODEL::ENVIROMENT:
-		m_pVertexPositions = new _float3[m_iNumVertices];
-		for (size_t i = 0; i < m_iNumVertices; ++i)
-		{
-			memcpy_s(m_pVertexPositions, sizeof(_float3) * m_iNumVertices, m_Vertices.data(), sizeof(_float3) * m_iNumVertices);
-		}
-		break;
+
 	default:
 		break;
 	}

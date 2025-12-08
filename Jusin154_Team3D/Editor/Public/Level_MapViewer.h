@@ -23,6 +23,7 @@ private:
 	HRESULT Ready_Layer_Terrain(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_InstanceProp(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_BuildingContainer(const _wstring& strLayerTag);
+	HRESULT Ready_Layer_Unified(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_MapObjectManager(const _wstring& strLayerTag);
 
 

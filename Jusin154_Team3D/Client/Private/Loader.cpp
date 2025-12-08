@@ -1438,6 +1438,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	m_strMessage = TEXT("객체원형를(을) 로딩 중 입니다.");
 
+#pragma region UI 
 	/* For.Prototype_GameObject_UI_Manager*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CUI_Manager>(g_iStaticLevel, CUI_Manager::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
@@ -1631,6 +1632,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 	{
 		return E_FAIL;
 	}
+
+#pragma endregion
+
 
 	/* For.Prototype_GameObject_SkyBox */
 	if (FAILED(m_pGameInstance->Add_Prototype<CSkyBox>(g_iStaticLevel, CSkyBox::Create(m_pDevice, m_pContext))))
@@ -1863,28 +1867,28 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 
 #pragma region RECEIVE_THREAD
-	//{ // MapModels
-	//	_uint iIndex = 0;
-	//	for (auto& JobMapModels : jobMapModels)
-	//	{
-	//		vector<FOLDER_LOAD*>* pOut = JobMapModels.get();
-	//		for (_uint i = 0; i < pOut->size(); ++i) {
-	//			FOLDER_LOAD* pContents = (*pOut)[i];
-	//			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, pContents->pModelTag, pContents->pLoadedModel))) {
-	//				return E_FAIL;
-	//			}
+	{ // MapModels
+		_uint iIndex = 0;
+		for (auto& JobMapModels : jobMapModels)
+		{
+			vector<FOLDER_LOAD*>* pOut = JobMapModels.get();
+			for (_uint i = 0; i < pOut->size(); ++i) {
+				FOLDER_LOAD* pContents = (*pOut)[i];
+				if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, pContents->pModelTag, pContents->pLoadedModel))) {
+					return E_FAIL;
+				}
 
-	//			for (_uint j = 0; j < pContents->pRigidBodyTags.size(); ++j) {
-	//				if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, pContents->pRigidBodyTags[j], pContents->LoadedRigidBody[j]))) {
-	//					return E_FAIL;
-	//				}
-	//			}
-	//			Safe_Delete(pContents);
-	//		}
-	//		iIndex++;
-	//		Safe_Delete(pOut);
-	//	}
-	//}
+				for (_uint j = 0; j < pContents->pRigidBodyTags.size(); ++j) {
+					if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, pContents->pRigidBodyTags[j], pContents->LoadedRigidBody[j]))) {
+						return E_FAIL;
+					}
+				}
+				Safe_Delete(pContents);
+			}
+			iIndex++;
+			Safe_Delete(pOut);
+		}
+	}
 #pragma endregion
 	m_strMessage = TEXT("정보를 불러오는 중입니다.");
 

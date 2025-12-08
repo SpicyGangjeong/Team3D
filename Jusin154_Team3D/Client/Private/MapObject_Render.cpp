@@ -75,7 +75,7 @@ void CMapObject_Render::Update(_float fTimeDelta)
 
 void CMapObject_Render::Late_Update(_float fTimeDelta)
 {
-	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW, this);
+	//m_pGameInstance->Add_RenderGroup(RENDER::SHADOW, this);
 	if (m_pGameInstance->isIn_WorldFrustum(XMLoadFloat4(&m_vExtentPosition), m_fRadius)) {
 
 		m_fCamDepth = XMVectorGetX(XMVector3LengthSq(XMLoadFloat4(m_pGameInstance->Get_CamPosition()) - XMLoadFloat4(&m_vExtentPosition)));

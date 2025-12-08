@@ -252,12 +252,12 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
 		return E_FAIL;
 
-	//	/* SM_HM_Door1a */
-	//	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door2b";
-	//	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Door2b.bin";
-	//	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
-	//		return E_FAIL;
-	//}
+		/* SM_HM_Door1a */
+		Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door2b";
+		Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Door2b.bin";
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+			return E_FAIL;
+	}
 	return S_OK;
 }
 

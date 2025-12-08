@@ -80,7 +80,7 @@ HRESULT CMapInfo::Load_MapObjects(const _char* pFileName)
 	{
 		const _char* pName = {};
 		_uint iMapContainerType = {};
-		//Container->QueryUnsignedAttribute("MapContainerType", &iMapContainerType);
+		Container->QueryUnsignedAttribute("MapContainerType", &iMapContainerType);
 
 		Container->FirstChildElement("MapContainerType")->QueryUnsignedAttribute("type", &iMapContainerType);
 
