@@ -37,6 +37,7 @@ protected:
 	void			Update_Event(_float fTimeDelta);
 	HRESULT			Reset_EffectParts();
 	_int            CollisionCheck();
+	void			SweepTarget(_vector StartPos, _vector EndPos, _float fRadius);
 
 protected:
 	_float4							m_vStartPos = {};
@@ -44,7 +45,7 @@ protected:
 	PSX::PxSweepBufferN<12>			m_Hitbuffer = {};
 protected:
 	_wstring						m_wstrEffectName = {};
-
+	_bool							m_bHit = { false };
 	_bool							m_isLoop = {};
 
 	_float							m_fAccTime = {};

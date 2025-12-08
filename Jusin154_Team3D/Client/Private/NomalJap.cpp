@@ -123,65 +123,13 @@ void CNomalJap::Late_Update(_float fTimeDelta)
 		return;
 	}
 	if (false == m_bHit) {
-		SweepTarget();
+		_vector vStartPos = XMLoadFloat4(&m_vStartPos);
+		_vector vEndPos = m_pProjectile->Get_WorldPostion();
+		SweepTarget(vStartPos,vEndPos, 0.002f);
 	}
 	Get_PartObject<CTrailObject>()->Trail_Update(m_pProjectile->Get_Component<CTransform>()->Get_XMWorldMatrix(), fTimeDelta);
 
 	__super::Late_Update(fTimeDelta);
-}
-
-void CNomalJap::SweepTarget()
-{
-	_vector vStartPos = m_pProjectile->Get_WorldPostion();
-	_vector vEndPos = XMLoadFloat4(&m_vTargetPos);
-	_vector vDir = { vEndPos - vStartPos };
-
-	_float fDistance = XMVectorGetX(XMVector3Length(vEndPos - vStartPos));
-
-	PSX::PxSweepBuffer pxBuffer = {};
-
-	_bool bHit = m_pGameInstance->SphereCast(0.002f, vStartPos, vDir, fDistance, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eDYNAMIC, pxBuffer);
-
-	if (bHit) {
-		const PSX::PxSweepHit& hit = pxBuffer.block;
-		PSX::PxRigidActor* pActor = hit.actor;
-		PSX::PxShape* pShape = hit.shape;
-		ON_COLLISION_INFO tagCollInfo = {};
-		memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &hit.position, sizeof(hit.position));
-		memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &hit.normal, sizeof(hit.normal));
-		XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
-		tagCollInfo.fLength = fDistance;
-
-
-		if (nullptr != pActor && nullptr != pActor->userData)
-		{
-			PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
-
-			switch (pUserData->eKind)
-			{
-			case PHYSX_KIND::CCTActor:
-			{
-				switch (PXOBJECT(pUserData->iSubKind))
-				{
-				case PXOBJECT::MONSTER:
-					break;
-				case PXOBJECT::GOBLIN_WARRIOR:
-				{
-					pUserData->pOwner->OnCollision(this, &tagCollInfo);
-					m_bHit = true;
-				}
-				break;
-				case PXOBJECT::TROLL:
-				{
-					pUserData->pOwner->OnCollision(this, &tagCollInfo);
-					m_bHit = true;
-				}
-				break;
-				}
-			}
-			}
-		}
-	}
 }
 
 HRESULT CNomalJap::Pre_Setting(CGameObject* pObject, void* pArg)

@@ -30,7 +30,6 @@ private:
 	HRESULT         Ready_Child();
 	HRESULT			Bind_ShaderResources() override;
 	virtual void	OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr) override;
-	void SweepTarget();
 private:
 	class  CInfoInstance* m_pInfoInstance = { nullptr };
 	_wstring						  m_wstrEffectName = {};
@@ -57,7 +56,6 @@ private:
 	_float							  m_fAngularSpeed = {};
 	_float							  m_fLinearSpeed = 35.f;
 	_float							  m_fTimeRate = {};
-	_bool							  m_bHit = { false };
 
 	/*좌우 무빙 관련 변수들*/
 	_float3 						  m_vRotateRight = {};

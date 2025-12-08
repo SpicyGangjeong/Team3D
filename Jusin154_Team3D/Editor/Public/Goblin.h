@@ -29,10 +29,15 @@ private:
 	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
 	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
 
+	class CEditEffect* m_pRight_Smoke = { nullptr };
+	class CEditEffect* m_pLeft_Smoke = { nullptr };
+	class CEditEffect* m_pTroll_Particle = { nullptr };
+	class CEditEffect* m_pTroll_Particle2 = { nullptr };
+
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
-
+	HRESULT Ready_Parts();
 public:
 	static CGoblin* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr) override;
