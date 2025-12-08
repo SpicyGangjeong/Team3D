@@ -161,7 +161,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	/* Map Containters */
 	/* 테스트용 맵 */
 
-	CInfoInstance::GetInstance()->Load_MapObjects("ClientTest");
+	//CInfoInstance::GetInstance()->Load_MapObjects("ClientTest");
 	///* 전체 맵 */
 	//{
 	//	CInfoInstance::GetInstance()->Load_MapObjects("Hogsmeade_MapContainer_Data");
