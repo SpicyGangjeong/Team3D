@@ -428,6 +428,9 @@
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Warrior</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Goblin.h" />
+    <ClInclude Include="..\Public\Goblin_Spector.h">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Spector</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -903,6 +906,9 @@
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Enemy_Info">
       <UniqueIdentifier>{3246055a-734f-45e2-ab2f-437ec2ccf061}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Spector">
+      <UniqueIdentifier>{234b3dd8-4ec9-4e81-ac7f-4eacb8f53780}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1333,6 +1339,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Goblin.cpp" />
     <ClCompile Include="..\Private\Goblin_States.cpp" />
+    <ClCompile Include="..\Private\Goblin_Spector.cpp">
+      <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Spector</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
