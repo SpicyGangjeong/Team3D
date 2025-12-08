@@ -313,6 +313,9 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 	else if (!strcmp(FileType.c_str(), "Diff")){
 		eTexture = aiTextureType::aiTextureType_DIFFUSE;
 	}
+	else if (!strcmp(FileType.c_str(), "Diffuse")){
+		eTexture = aiTextureType::aiTextureType_DIFFUSE;
+	}
 	else if (!strcmp(FileType.c_str(), "d")){
 		eTexture = aiTextureType::aiTextureType_DIFFUSE;
 	}
@@ -323,6 +326,9 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 		eTexture = aiTextureType::aiTextureType_NORMALS;
 	}
 	else if (!strcmp(FileType.c_str(), "normal")){
+		eTexture = aiTextureType::aiTextureType_NORMALS;
+	}
+	else if (!strcmp(FileType.c_str(), "Normal")){
 		eTexture = aiTextureType::aiTextureType_NORMALS;
 	}
 	else if (!strcmp(FileType.c_str(), "Norm")){
@@ -498,6 +504,7 @@ HRESULT CMaterial::Bind_SRV(CShader* pShader)
 				}
 			} break;
 			case aiTextureType_AMBIENT:
+				pConstantName = "g_AmbientTexture";
 				break;
 			case aiTextureType_EMISSIVE:
 				pConstantName = "g_EmissiveTexture";
@@ -534,6 +541,7 @@ HRESULT CMaterial::Bind_SRV(CShader* pShader)
 			case aiTextureType_DIFFUSE_ROUGHNESS:
 				break;
 			case aiTextureType_AMBIENT_OCCLUSION:
+				pConstantName = "g_AmbientOcclusionTexture";
 				break;
 			case aiTextureType_UNKNOWN:
 				break;
@@ -567,8 +575,11 @@ HRESULT CMaterial::Bind_SRV(CShader* pShader)
 			}
 		}
 		if (true == bBinded[iTextureType]) {
-			if (FAILED(pShader->Bind_SRV(pConstantName, m_SRVs[iTextureType][0]))) {
+			if (0 == strcmp(pConstantName, "")) { // 미사용 SRV
 				return S_OK;
+			}
+			if (FAILED(pShader->Bind_SRV(pConstantName, m_SRVs[iTextureType][0]))) {
+				return E_FAIL;
 			}
 		}
 	}

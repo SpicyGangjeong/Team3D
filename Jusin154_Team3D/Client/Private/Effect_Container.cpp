@@ -315,12 +315,13 @@ _int CEffect_Container::CollisionCheck()
 				continue;
 			case PXOBJECT::MONSTER:
 			case PXOBJECT::GOBLIN_WARRIOR:
+			case PXOBJECT::GOBLIN_MAGICIAN:
 			case PXOBJECT::TROLL:
-			case PXOBJECT::WALL:
-
 			{
-				return i;
+				pUserData->pOwner->OnCollision(this);
 			}
+			break;
+			case PXOBJECT::WALL:
 				break;
 			default:
 				break;

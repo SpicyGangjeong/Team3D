@@ -20,7 +20,6 @@ public:
 	virtual HRESULT Render_Shadow() override;
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
-
 #ifdef _DEBUG
 	void Render_CameraCoordinateSystem();
 #endif // _DEBUG
@@ -84,8 +83,6 @@ public:
 	virtual void Reset_Sprint() { m_bSprintToggle = false; }
 	virtual void Reset_Walk() { m_bWalkToggle = false; }
 
-
-
 private:
 	// UI 연동 추가
 	void Get_Spell(_int SkillIndex);
@@ -94,13 +91,18 @@ private:
 	virtual void Add_FSM();
 	virtual void Set_Anim();
 
-	function<void()> m_InputAction = nullptr;
-	_int m_eUIState = { };
+	void	Reset_LightCombo() { m_iLightCombo = 0; }
+	_uint	Next_LightCombo() { return ++m_iLightCombo; }
+	void	Set_LightCombo(_uint LightCombo) { m_iLightCombo = LightCombo; }
 
-	_float3 m_OffsetPos = {};
-	_float m_fAmount = { 1.f };
-	_float m_fInputTime = {};
-	_bool m_bRatio = { false };
+	function<void()> m_InputAction = nullptr;
+	_int			m_eUIState = { };
+	_uint			m_iLightCombo = { 0 };
+
+	_float3			m_OffsetPos = {};
+	_float			m_fAmount = { 1.f };
+	_float			m_fInputTime = {};
+	_bool			m_bRatio = { false };
 
 	HRESULT InputAction();
 	HRESULT InputMove();

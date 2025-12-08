@@ -32,6 +32,8 @@ Texture2D g_THVTexture;
 Texture2D g_SurfaceParamsTexture;
 Texture2D g_TransmissionTexture;
 Texture2D g_EmissiveTexture;
+Texture2D g_AmbientTexture;
+Texture2D g_AmbientOcclusionTexture;
 
 bool g_bBinded_Texture[AI_TEXTURE_TYPE_MAX * 27];
 
@@ -41,8 +43,25 @@ Texture2D g_DisolveTexture;
 Texture2D g_GlowTexture;
 Texture2D g_GlassTexture;
 
+TextureCube g_CubeTexture;
+Texture2D g_NormalLargeTexture;
+Texture2D g_NormalSubTexture;
+
+float g_fNormalValue1;
+float g_fNormalValue2;
+float g_fNormalValue3;
+
+float g_fUVSpeed1;
+float g_fUVSpeed2;
+float g_fUVSpeed3;
+
 float g_fBloomStrength;
 float g_fGlassRatio;
+
+float g_fRefractionStrength;
+float g_fRefractionPow;
+float4 g_vDiffuseColor;
+float4 g_vSurfaceColor;
 
 struct VS_IN
 {
@@ -310,6 +329,8 @@ PS_OUT PS_GLASS(PS_IN In)
     return Out;
 }
 
+
+
 struct PS_IN_SHADOW
 {
     float4 vPosition : SV_POSITION;
@@ -495,6 +516,47 @@ PS_OUT_CAPTUREDMODEL PS_CAPTUREDMODEL(PS_IN_CAPTUREDMODEL In)
     Out.vColor.a = saturate(1 - g_LifeRatio) * 0.5f;
     return Out;
 }
+
+PS_OUT PS_LAKE(PS_IN In)
+{
+    PS_OUT Out;
+
+    float2 vUV = float2(In.vTexcoord.x, In.vTexcoord.y + g_fTime * g_fUVSpeed1) * g_fNormalValue1;
+    float2 vUVLarge = float2(In.vTexcoord.x, In.vTexcoord.y - g_fTime * g_fUVSpeed2) * g_fNormalValue2;
+    float2 vUVSub = float2(In.vTexcoord.x - g_fTime * g_fUVSpeed3, In.vTexcoord.y - g_fTime * g_fUVSpeed3) * g_fNormalValue3;
+    
+    float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, AnisoTropy_BLUR_Sampler, vUV);
+    float3 vNormalLarge = DecodeNormalFromRG(g_NormalLargeTexture, AnisoTropy_BLUR_Sampler, vUVLarge);
+    float3 vNormalSub = DecodeNormalFromRG(g_NormalSubTexture, AnisoTropy_BLUR_Sampler, vUVSub);
+    
+    vector vMtrlDiffuse = g_vDiffuseColor;
+    vector vSurface = g_vSurfaceColor;
+    
+    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
+    
+    float3 vNormal = normalize(mul(normalize(vNormalDecoded + vNormalLarge + vNormalSub), WorldMatrix));
+    
+    float3 vReflaction = reflect(normalize(In.vWorldPos.xyz - g_vCamPosition.xyz), vNormal);
+    
+    float fReflactionValue = dot(vReflaction, float3(0.f, 1.f, 0.f));
+    
+    vMtrlDiffuse = g_CubeTexture.Sample(DefaultSampler, vReflaction);
+
+    
+    float fFresnelScala = g_fRefractionStrength + (1.f - g_fRefractionStrength) * pow(1.f - dot(normalize(g_vCamPosition.xyz - In.vWorldPos.xyz), vNormal), g_fRefractionPow);
+    
+    Out.vAlbedo = float4(vMtrlDiffuse.xyz, 1.f) * fFresnelScala + g_vDiffuseColor * (1.f - fFresnelScala);
+    Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
+    (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
+    2.f / 27.f, // 서페이스 파라미터
+    1.f);
+    Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
+    Out.vSurface = vSurface;
+    
+    return Out;
+}
+
 technique11 MeshTechnique11
 {
     pass MeshPass // 0
@@ -651,5 +713,15 @@ technique11 MeshTechnique11
         VertexShader = compile vs_5_0 VS_BLOOM();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_BLOOM();
+    }
+
+    pass WaterPass // 16
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_LAKE();
     }
 }
