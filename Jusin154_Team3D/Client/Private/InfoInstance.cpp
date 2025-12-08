@@ -199,17 +199,6 @@ void CInfoInstance::Event_CallBack(_wstring EventName, void* pArg)
 	}
 }
 
-void CInfoInstance::Set_Camera_Angle(_float Angle)
-{
-	m_fCameraAngle = Angle;
-}
-
-_float CInfoInstance::Get_Camera_Angle()
-{
-	return m_fCameraAngle;
-}
-
-
 #pragma endregion
 LEVEL CInfoInstance::Get_RestartLevel()
 {

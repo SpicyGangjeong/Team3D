@@ -54,8 +54,6 @@ public:
 	void Set_UISTATE(UI_STATE eState);
 	void Add_Event(_wstring EventName, function<void(void*)> Event);
 	void Event_CallBack(_wstring EventName, void* pArg = nullptr);
-	void Set_Camera_Angle(_float Angle);
-	_float Get_Camera_Angle();
 #pragma endregion
 private:
 	CGameInstance*				m_pGameInstance = { nullptr };
@@ -71,7 +69,6 @@ private:
 
 	UI_STATE					m_eUI_State;
 
-	_float						m_fCameraAngle{};
 	// 임시로 이벤트 1개 만들어 둠
 	multimap<_wstring, function<void(void*)>> UI_Event;
 #ifdef _DEBUG

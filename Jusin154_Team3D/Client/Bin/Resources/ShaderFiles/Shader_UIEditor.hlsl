@@ -23,6 +23,7 @@ float g_fAlpha;
 float g_fOwnerAlpha;
 float g_fCanvasAlpha;
 float g_fAngle;
+float g_fMapAngle;
 float g_fCoolTime;
 float g_fHp;
 
@@ -507,11 +508,11 @@ PS_OUT PS_Rotation(PS_IN In)
     float2 center = float2(0.5f, 0.5f);
     float2 uv = In.vTexcoord - center;
     float2 Rotation = In.vTexcoord;
-    Rotation.x = uv.x * cos(g_fAngle) - uv.y * sin(g_fAngle);
-    Rotation.y = uv.x * sin(g_fAngle) + uv.y * cos(g_fAngle);
+    Rotation.x = uv.x * cos(g_fMapAngle) - uv.y * sin(g_fMapAngle);
+    Rotation.y = uv.x * sin(g_fMapAngle) + uv.y * cos(g_fMapAngle);
     Rotation += center;
             
-    float4 tex1 = g_Texture.Sample(DefaultSampler , Rotation);
+    float4 tex1 = g_Texture.Sample(ClampSampler , Rotation);
     
     color = tex1;
     

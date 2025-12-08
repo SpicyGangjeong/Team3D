@@ -84,8 +84,7 @@ void CMiniMap_TrimBorder::Update(_float fTimeDelta)
 			m_fAlpha = 0.f;
 		}
 	}
-	m_fAngle = m_pInfoInstance->Get_Camera_Angle();
-	//CMyTools::
+	m_fAngle = -atan2(m_pInfoInstance->Get_CameraCoordinateSystem().first.x, m_pInfoInstance->Get_CameraCoordinateSystem().first.z);
 	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
 }
@@ -163,7 +162,7 @@ HRESULT CMiniMap_TrimBorder::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fAngle", &m_fAngle, sizeof(_float))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fMapAngle", &m_fAngle, sizeof(_float))))
 	{
 		return E_FAIL;
 	}
