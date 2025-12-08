@@ -41,7 +41,11 @@ HRESULT CLoding_Panel::Initialize(void* pArg)
 	m_fSortZ = 0.f;
 	m_iImageNum = 0;
 	//m_vImageposSi = _float4(0.f, 0.f, 1792.f, 1024.f);
-	
+#ifdef _DEBUG
+	INHYUK = true;
+	human = 0;
+#endif // DEBUG
+
 	return S_OK;
 }
 void CLoding_Panel::Set_Image(_int Index)
@@ -54,6 +58,58 @@ void CLoding_Panel::Priority_Update(_float fTimeDelta)
 
 void CLoding_Panel::Update(_float fTimeDelta)
 {
+#ifdef _DEBUG
+	if (m_pGameInstance->Key_Down(DIK_M))
+	{
+		human++;
+		if (human > 4) // 4보다 크면 0으로
+			human = 0;
+	}
+	if (m_pGameInstance->Key_Down(DIK_N))
+	{
+		human--;
+		if (human < 0) // 0보다 작으면 4로
+			human = 4;
+	}
+	switch (human)
+	{
+	case 0:
+		INHYUK = true;
+		JINHO = false;
+		HYUNBIN = false;
+		NURI = false;
+		JINWOO = false;
+		break;
+	case 1:
+		INHYUK = false;
+		JINHO = true;
+		HYUNBIN = false;
+		NURI = false;
+		JINWOO = false;
+		break;
+	case 2:
+		INHYUK = false;
+		JINHO = false;
+		HYUNBIN = true;
+		NURI = false;
+		JINWOO = false;
+		break;
+	case 3:
+		INHYUK = false;
+		JINHO = false;
+		HYUNBIN = false;
+		NURI = true;
+		JINWOO = false;
+		break;
+	case 4:
+		INHYUK = false;
+		JINHO = false;
+		HYUNBIN = false;
+		NURI = false;
+		JINWOO = true;
+		break;
+	}
+#endif // DEBUG
 }
 
 void CLoding_Panel::Late_Update(_float fTimeDelta)
@@ -75,6 +131,20 @@ HRESULT CLoding_Panel::Render()
 	if (FAILED(m_pVIBufferCom->Render())) {
 		return E_FAIL;
 	}
+#ifdef _DEBUG
+	m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("<- N M->."), _float2(100.f, 750.f));
+
+	if (INHYUK == true)
+		m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("알고 계셨나요?\nUI의 생일은 28일 이랍니다."), _float2(100.f, 800.f));
+	if (JINHO == true)
+		m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("알고 계셨나요?\n우리팀 맵툴은 최강 입니다."), _float2(100.f, 800.f));
+	if (HYUNBIN == true)
+		m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("알고 계셨나요?\n이제 막 범인에서 벗어 났습니다."), _float2(100.f, 800.f));
+	if (NURI == true)
+		m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("알고 계셨나요?\n이제 막 슬슬 범인 입니다."), _float2(100.f, 800.f));
+	if (JINWOO == true)
+		m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("알고 계셨나요?\n그는 그림자의 군주입니다."), _float2(100.f, 800.f));
+#endif // DEBUG
 
 	return S_OK;
 }

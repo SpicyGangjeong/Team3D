@@ -20,7 +20,7 @@ public:
 private:
 	SHADOW_LIGHT_DESC	m_ShadowDesc = {};
 	LEVEL				m_eNextLevelID = { LEVEL::END };
-	class CLoader*		m_pLoader = { nullptr };
+	class CLoader* m_pLoader = { nullptr };
 
 	_float m_fTimeDelta{};
 	_bool m_bDelay = { false };

@@ -72,6 +72,7 @@ HRESULT CLogo::Render()
 	if (FAILED(m_pVIBufferCom->Render())) {
 		return E_FAIL;
 	}
+	m_pGameInstance->Render_Text(TEXT("Font_size13"), TEXT("Font_Test"), _float2(0.f, 0.f));
 	return S_OK;
 }
 
