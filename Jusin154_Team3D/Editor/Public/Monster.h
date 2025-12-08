@@ -24,8 +24,8 @@ public:
 
 protected:
 	class CInfoInstance* m_pInfoInstance = { nullptr };
-	CUnit* m_pTarget = { nullptr };
-	CStat* m_pStat = { nullptr };
+	CUnit*			m_pTarget = { nullptr };
+	CStat*			m_pStat = { nullptr };
 	_float4			m_vTargetPos = { };
 	_float3			m_vToTargetDir = { };
 	_float			m_fTargetDistance = { FLT_MAX };
@@ -42,8 +42,7 @@ public:
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr)PURE;
 	virtual void Free() override;
 #ifdef _DEBUG
-	virtual void Describe_Entity() override;
-
+	virtual void Describe_Entity();
 #endif // _DEBUG
 
 };

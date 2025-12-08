@@ -35,6 +35,9 @@ struct ParticleValue
     bool  isCompareStop;
     float fCollisionTime;
     float fDropAttenuation;
+    
+    float3 vVelocity;
+
 };
 
 
