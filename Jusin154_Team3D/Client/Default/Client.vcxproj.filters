@@ -421,15 +421,13 @@
     <ClInclude Include="..\Public\State_Shuffle.h">
       <Filter>04.Mechanic\State\Movement\Shuffle</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Goblin.h">
-      <Filter>02.GameObjects\Monster\Goblin\Goblin_Warrior</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Goblin_Mage.h">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Mage</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Goblin.h">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Warrior</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Goblin.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -829,9 +827,6 @@
     </Filter>
     <Filter Include="04.Mechanic\State\State_Combat\State_Blink">
       <UniqueIdentifier>{27251db2-19f2-4492-a3a4-32c11526f413}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Levels\01.Logo\02.GamePlay">
-      <UniqueIdentifier>{7e641382-9dfa-4da7-a8c8-a3ee06360e7a}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\UI\Mouse_Cursor">
       <UniqueIdentifier>{b8c7e12b-da04-4d49-bc61-104649975d0b}</UniqueIdentifier>
@@ -1309,12 +1304,6 @@
     <ClCompile Include="..\Private\State_Shuffle.cpp">
       <Filter>04.Mechanic\State\Movement\Shuffle</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Goblin.cpp">
-      <Filter>02.GameObjects\Monster\Goblin\Goblin_Warrior</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Goblin_States.cpp">
-      <Filter>02.GameObjects\Monster\Goblin\Goblin_Warrior</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Broom_States.cpp">
       <Filter>02.GameObjects\Item\Broom</Filter>
     </ClCompile>
@@ -1342,6 +1331,8 @@
     <ClCompile Include="..\Private\Enemy_Panel.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Goblin.cpp" />
+    <ClCompile Include="..\Private\Goblin_States.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
