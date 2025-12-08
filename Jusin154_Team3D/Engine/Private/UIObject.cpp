@@ -502,6 +502,21 @@ const CUIObject::SPELLINFO CUIObject::Get_Info(_int Index)
 	return SPELLINFO();
 }
 
+void CUIObject::Set_FontX(_float fFontX)
+{
+	m_fFontX = fFontX;
+}
+
+void CUIObject::Set_FontY(_float fFontY)
+{
+	m_fFontY = fFontY;
+}
+
+_float2 CUIObject::Get_Font()
+{
+	return _float2(m_fFontX, m_fFontY);
+}
+
 void CUIObject::Free()
 {
 	__super::Free();

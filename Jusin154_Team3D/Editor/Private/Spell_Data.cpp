@@ -51,16 +51,22 @@ HRESULT CSpell_Data::Initialize(void* pArg)
 		pInfo[id].pSpell_Name = CMyTools::ToWstring(pSpell->Attribute("Spell_Name"));
 		pInfo[id].pImage_Name = CMyTools::ToWstring(pSpell->Attribute("Image_Name"));
 		pSpell->QueryIntAttribute("Spell_Type", &pInfo[id].iSpell_Type);
+		pInfo[id].pType_Name = CMyTools::ToWstring(pSpell->Attribute("Type_Name"));
 		pSpell->QueryIntAttribute("Skill_Type", &pInfo[id].iSkill_Type);
+		pSpell->QueryFloatAttribute("Spell_Damage", &pInfo[id].fSpell_Damage);
 		pSpell->QueryFloatAttribute("Spell_Cooltime", &pInfo[id].fSpell_CoolTime);
 		pSpell->QueryFloatAttribute("Duration", &pInfo[id].fDuration);
 		pSpell->QueryIntAttribute("AnimNum", &pInfo[id].iAnimNum);
 		pInfo[id].pSpellInfo = CMyTools::ToWstring(pSpell->Attribute("SpellInfo"));
-		int lock = 0, equip = 0;
+		_int lock = 0, equip = 0, use = 0;
 		pSpell->QueryIntAttribute("Spell_Lock", &lock);
 		pSpell->QueryIntAttribute("Equip_Spell", &equip);
+		pSpell->QueryIntAttribute("Use_Skill", &use);
 		pInfo[id].bSpell_Lock = lock != 0;
 		pInfo[id].bEquip_Spell = equip != 0;
+		pInfo[id].bUse_Skill = use != 0;
+		pSpell->QueryFloatAttribute("Preview", &pInfo[id].fPreview);
+		pSpell->QueryFloatAttribute("Vidio", &pInfo[id].fVidio);
 
 		pSpell = pSpell->NextSiblingElement("Spell");
 	}

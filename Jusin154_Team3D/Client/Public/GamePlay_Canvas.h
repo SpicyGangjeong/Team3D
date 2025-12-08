@@ -39,6 +39,7 @@ private:
 	CGameObject* m_pMinimap_Panel = { nullptr };
 	CGameObject* m_pLoading_Panel = { nullptr };
 	CGameObject* m_pAction_Panel = { nullptr };
+	CGameObject* m_pEnemy_Panel = { nullptr };
 
 public:
 	static CGamePlay_Canvas* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

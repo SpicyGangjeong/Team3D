@@ -30,7 +30,6 @@ HRESULT CProtego::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-
 	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Protego")))
 		return E_FAIL;
 

@@ -3,6 +3,8 @@
 #include "GameInstance.h"
 #include "InfoInstance.h"
 #include "Monster.h"
+#include "Layer.h"
+#include "Player.h"
 
 CMonsterInfo::CMonsterInfo()
 {
@@ -118,7 +120,19 @@ HRESULT CMonsterInfo::Refresh_LockOnMonsters()
 
 	_vector vMonsterPos;
 	_vector vToMonsterDir;
-	_float fFovy = max(m_pGameInstance->Get_CameraFov() -  XMConvertToRadians(30.f), XMConvertToRadians(20.f));
+	_bool Aim = false;
+	_float fFovy = 0.f;
+	if (m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::GAMEPLAY), LAYER_PLAYER) != nullptr)
+	{
+		Aim = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::GAMEPLAY), LAYER_PLAYER)->Get_Object<CPlayer>()->Get_Aim();
+	}
+	if (Aim)
+	{
+		fFovy = max(m_pGameInstance->Get_CameraFov() - XMConvertToRadians(50.f), XMConvertToRadians(5.f));
+	}
+	else {
+		fFovy = max(m_pGameInstance->Get_CameraFov() - XMConvertToRadians(30.f), XMConvertToRadians(20.f));
+	}
 
 	{ // 뷰프러스텀 순회해서 가장 중앙에 근접한 몬스터 찾기
 		for (list<CMonster*>::iterator iter = m_ActiveMonsters.begin(); iter != m_ActiveMonsters.end(); ++iter) {

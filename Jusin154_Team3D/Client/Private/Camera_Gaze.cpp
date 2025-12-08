@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "Camera_Gaze.h"
+#include "InfoInstance.h"
 
 CCamera_Gaze::CCamera_Gaze(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCamera(pDevice, pContext)
@@ -7,7 +8,8 @@ CCamera_Gaze::CCamera_Gaze(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CCamera_Gaze::CCamera_Gaze(const CCamera_Gaze& rhs)
-	: CCamera(rhs)
+	: CCamera(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 

@@ -20,6 +20,7 @@
 #include "Troll.h"
 #include "Goblin.h"
 #include "Goblin_Mage.h"
+#include "Goblin_Spector.h"
 #pragma endregion
 
 
@@ -382,6 +383,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 		}
 	}
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Mage>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Spector>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {

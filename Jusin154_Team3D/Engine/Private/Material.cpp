@@ -322,6 +322,9 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 	else if (!strcmp(FileType.c_str(), "basecolor")) {
 		eTexture = aiTextureType::aiTextureType_DIFFUSE;
 	}
+	else if (!strcmp(FileType.c_str(), "DefaultDiffuse")) {
+		eTexture = aiTextureType::aiTextureType_DIFFUSE;
+	}
 	else if (!strcmp(FileType.c_str(), "N")){
 		eTexture = aiTextureType::aiTextureType_NORMALS;
 	}
@@ -377,6 +380,12 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 	}
 	else if (!strcmp(FileType.c_str(), "A")) {
 		eTexture = aiTextureType::aiTextureType_AMBIENT;
+	}
+	else if (!strcmp(FileType.c_str(), "AO")) {
+		eTexture = aiTextureType::aiTextureType_AMBIENT_OCCLUSION;
+	}
+	else if (!strcmp(FileType.c_str(), "R")) {
+		eTexture = aiTextureType::aiTextureType_DIFFUSE_ROUGHNESS;
 	}
 	else
 	{
