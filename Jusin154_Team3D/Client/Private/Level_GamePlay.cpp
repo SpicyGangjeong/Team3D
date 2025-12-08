@@ -162,8 +162,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	/* 테스트용 맵 */
 
 	//CInfoInstance::GetInstance()->Load_MapObjects("ClientTest");
-	/* 전체 맵 */
-	CInfoInstance::GetInstance()->Load_MapObjects("Hogsmeade_MapContainer_Data");
+	///* 전체 맵 */
+	//{
+	//	CInfoInstance::GetInstance()->Load_MapObjects("Hogsmeade_MapContainer_Data");
 
 	/* 조명 오브젝트 */
 	CInfoInstance::GetInstance()->Load_LightElements("LightElement");
