@@ -241,6 +241,7 @@ call Update_Shaders.bat
     <ClInclude Include="..\public\Magic_Item.h" />
     <ClInclude Include="..\public\Magic_Meter.h" />
     <ClInclude Include="..\Public\EffectPool.h" />
+    <ClInclude Include="..\public\MapElement_Lake.h" />
     <ClInclude Include="..\public\MapElement_Light.h" />
     <ClInclude Include="..\Public\MapInfo.h" />
     <ClInclude Include="..\Public\MissionBanner_Border.h" />
@@ -341,6 +342,7 @@ call Update_Shaders.bat
     <ClInclude Include="..\public\Mouse_Cursor.h" />
     <ClInclude Include="..\Public\RootModelPart.h" />
     <ClInclude Include="..\public\UI_Manager.h" />
+    <ClInclude Include="..\public\Unified.h" />
     <ClInclude Include="..\Public\Wand.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="framework.h" />
@@ -417,6 +419,7 @@ call Update_Shaders.bat
     <ClCompile Include="..\private\Magic_Item.cpp" />
     <ClCompile Include="..\private\Magic_Meter.cpp" />
     <ClCompile Include="..\Private\EffectPool.cpp" />
+    <ClCompile Include="..\private\MapElement_Lake.cpp" />
     <ClCompile Include="..\private\MapElement_Light.cpp" />
     <ClCompile Include="..\Private\MapInfo.cpp" />
     <ClCompile Include="..\Private\MissionBanner_Border.cpp" />
@@ -519,6 +522,7 @@ call Update_Shaders.bat
     </ClCompile>
     <ClCompile Include="..\Private\RootModelPart.cpp" />
     <ClCompile Include="..\private\UI_Manager.cpp" />
+    <ClCompile Include="..\private\Unified.cpp" />
     <ClCompile Include="..\Private\Wand.cpp" />
     <ClCompile Include="Editor.cpp" />
   </ItemGroup>

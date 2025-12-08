@@ -237,8 +237,10 @@ HRESULT CEffectObject::Load(const _char* pFilePath , LEVEL eLevel)
 			return E_FAIL;
 		}
 
-
+		m_pLightCom->Set_LightIntensity(m_EffectInfo.fLightIntensity);
 	}
+
+
 		
 
 	if (m_EffectInfo.isDiffuse)
@@ -506,14 +508,13 @@ HRESULT CEffectObject::LoadPre(const _char* pFilePath, LEVEL eLevel)
 
 	PRE_EFFECT_INFO PreEffectInfo = {};
 
-	if (!ReadFile(hFile, &PreEffectInfo, sizeof(PRE_EFFECT_INFO), &dwByte, nullptr)) {
+	if (!ReadFile(hFile, &m_EffectInfo, sizeof(PRE_EFFECT_INFO), &dwByte, nullptr)) {
 		return E_FAIL;
 	}
 
 	m_EffectInfo.LightDesc.pPosition = m_pTransformCom->Get_StatePtr(STATE::POSITION);
 	m_EffectInfo.LightDesc.iLevel = ENUM_CLASS(eLevel);
 
-	ZeroMemory(&m_EffectInfo.LightDesc, sizeof(LIGHT_DESC));
 
 	if (m_EffectInfo.LightDesc.eType != LIGHT::DIRECTIONAL) // 0이 아닐때만 생성
 	{
@@ -714,11 +715,40 @@ HRESULT CEffectObject::LoadPre(const _char* pFilePath, LEVEL eLevel)
 }
 #endif // _DEBUG
 
+void CEffectObject::FollowParants(const _float4x4* pParantsMat)
+{
+	if (pParantsMat == nullptr)
+		return;
+
+
+	m_pPerentMatrix = pParantsMat;
+	m_bVisible = true;
+}
+
+
 HRESULT CEffectObject::Bind_ShaderResources()
 {
 
+	if (m_pPerentMatrix != nullptr)
+	{
+
+		_matrix socketMatrix = XMLoadFloat4x4(m_pPerentMatrix);
+
+		for (int i = 0; i < 3; ++i) {
+			socketMatrix.r[i] = XMVector3Normalize(socketMatrix.r[i]);
+		}
+		socketMatrix = socketMatrix * m_pParentTransformCom->Get_XMWorldMatrix();
+
+		m_pTransformCom->Set_State(STATE::POSITION, socketMatrix.r[3]);
+	}
+
+
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture"))) {
+		return E_FAIL;
+	}
 
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))) {
 		return E_FAIL;
@@ -727,6 +757,13 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrixInv", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW_INV)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrixInv", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ_INV)))) {
+		return E_FAIL;
+
+	}
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDiffuse", &m_EffectInfo.isDiffuse, sizeof(_bool)))) {
 		return E_FAIL;
@@ -936,6 +973,13 @@ HRESULT CEffectObject::Bind_ShaderResources()
 	}
 
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDissolveColor", &m_EffectInfo.vDissolveColor, sizeof(_float4)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDissolveColorCut", &m_EffectInfo.vDissolveColorCut, sizeof(_float2)))) {
+		return E_FAIL;
+	}
 
 
 

@@ -19,6 +19,7 @@
 #include "Player.h"
 #include "Troll.h"
 #include "Goblin.h"
+#include "Goblin_Mage.h"
 #pragma endregion
 
 
@@ -158,12 +159,38 @@ HRESULT CLevel_GamePlay::Ready_Background()
 		return E_FAIL;
 	}
 
-	/* Map Containters */
-	/* 테스트용 맵 */
+	// ---------------------------------
+	// >> M A P Configuration <<
+	// 맵 로드할지 안할지 bool 설정
+	// ---------------------------------
+	_bool isReady_Background = { false };
 
-	//CInfoInstance::GetInstance()->Load_MapObjects("ClientTest");
-	/* 전체 맵 */
+#ifdef gimch
+	isReady_Background = false;
+#endif // gimch
+#ifdef bin
+	isReady_Background = false;
+#endif // 
+#ifdef 진우
+	isReady_Background = false;
+#endif // 
+#ifdef 기무리
+	isReady_Background = false;
+#endif // 
+#ifdef 인혁
+	isReady_Background = false;
+#endif // 
+
+	
+	/* Map Containters */
+	if(false == isReady_Background)
 	{
+		/* 테스트용 맵 */
+		CInfoInstance::GetInstance()->Load_MapObjects("ClientTest");
+	}
+	else
+	{
+		///* 전체 맵 */
 		CInfoInstance::GetInstance()->Load_MapObjects("Hogsmeade_MapContainer_Data");
 
 		/* 조명 오브젝트 */
@@ -251,7 +278,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 		Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Door2b.bin";
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
 			return E_FAIL;
+
 	}
+	
 	return S_OK;
 }
 
@@ -351,6 +380,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 			return E_FAIL;
 		}
+	}
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Mage>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
+		return E_FAIL;
 	}
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 		return E_FAIL;

@@ -73,7 +73,7 @@ void CEditEffect::Late_Update(_float fTimeDelta)
 	{
 		if (m_pLightCom != nullptr)
 		{
-			m_pLightCom->Update_AmbientRatio(fTimeDelta , m_EffectInfo.isLightTime);
+			m_pLightCom->Update_IntensityRatio(fTimeDelta , m_EffectInfo.isLightTime , m_EffectInfo.fLightDeley);
 		}
 	}
 
@@ -420,17 +420,32 @@ void CEditEffect::Describe_Entity()
 {
 	//여기서 모델, 텍스쳐, 선택할 수 있도록 함
 
-
 	const char* pLerp[] = { "Linear" , "EaseInQuad", "EaseOutQuad", "EaseInCubic" , "EaseOutCubic" , "EaseInOutSin" , "EaseInBack" , "Expo" , "Circle" };
 	const char* pRenderNames[] = { "PRIORITY" , "SHADOW", "NONBLEND", "DECAL", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" ,"BLOOM" , "UI", "OCCLUSION" , "PRESHADOW"};
 	const char* pEffectType[] = { "EFFECT" , "TRAIL" };
-	const char* pShaderPass[] = { "DEFAULT" , "NON_NOMALMAP" , "BLUR" , "WEIGHTBLEND" , "NON_WORLD" , "NON_WORLD_BLUR",  "BLEND", "BLEND_NOWORLD", "BLOOM" ,"BLOOM_NOWORLD" ,"BLUR_NO_EMMISVE", "BLUR_NO_WORLD_NO_EMISSIVE","WEIGHTBLEND_FOR_BLEND"};
+	const char* pShaderPass[] = { "DEFAULT" , "NON_NOMALMAP" , "BLUR" , "WEIGHTBLEND" , "NON_WORLD" , "NON_WORLD_BLUR",  "BLEND", "BLEND_NOWORLD", "BLOOM" ,"BLOOM_NOWORLD" ,"BLUR_NO_EMMISVE", "BLUR_NO_WORLD_NO_EMISSIVE","WEIGHTBLEND_FOR_BLEND" , "DEPTH_STOP" };
 	const char* pBloomType[] = { "NONE" , "BASIC" , "MUILTY"};
 
 	_int iCurrentItem = static_cast<_int>(m_EffectInfo.eRenderOrder);
 	_int iCurrentType = static_cast<_int>(m_EffectInfo.eEffectType);
 	_int iCurrentBloomType = static_cast<_int>(m_EffectInfo.eBloomType);
 	_int iCurrentPass = static_cast<_int>(m_EffectInfo.eShaderPass);
+
+
+	GUI::InputTextMultiline("BONE NAME", m_szBuffer, sizeof(m_szBuffer), ImVec2(250, 25));
+
+	m_strBoneName = m_szBuffer;
+
+	if(GUI::Button("Stick Bone"))
+	{
+		CModel* pModel = m_pOwner->Get_Component<CModel>();
+
+		if (pModel != nullptr)
+		{
+			FollowParants(pModel->Get_BoneMatrixPtr(m_strBoneName.c_str()));
+		}
+		
+	}
 
 	if (ImGui::Combo("Render Order", &iCurrentItem, pRenderNames, ENUM_CLASS(RENDER::END)))
 	{
@@ -600,6 +615,13 @@ void CEditEffect::Describe_Entity()
 
 			GUI::Checkbox("Light Dissolve", &m_EffectInfo.isLightDissolve);
 			GUI::InputFloat("Light Time", &m_EffectInfo.isLightTime);
+			GUI::InputFloat("Light Delay", &m_EffectInfo.fLightDeley);
+			
+			if (GUI::InputFloat("Light Intensity", &m_EffectInfo.fLightIntensity))
+			{
+
+				m_pLightCom->Set_LightIntensity(m_EffectInfo.fLightIntensity);
+			}
 
 			if (GUI::Button("ADD_LIGHT_MANAGER"))
 			{
@@ -608,7 +630,7 @@ void CEditEffect::Describe_Entity()
 
 			if (GUI::Button("Reset_Dissolve"))
 			{
-				m_pLightCom->Reset_AmbientRatio();
+				m_pLightCom->Reset_IntensityRatio();
 			}
 		}
 
@@ -758,7 +780,14 @@ void CEditEffect::Describe_Entity()
 				GUI::DragFloat("DissolveSoftMask", &m_EffectInfo.vDissolveValue.y, 0.005f);
 				GUI::DragFloat("DissolveCutRatio", &m_EffectInfo.vDissolveValue.z, 0.005f);
 
+				GUI::Spacing();
+
+		
+				GUI::DragFloat2("DissolveColorCut", (_float*)& m_EffectInfo.vDissolveColorCut, 0.005f);
+				
 				ImGui::PopItemWidth();
+
+				GUI::ColorEdit4("DissolveColor", (_float*)&m_EffectInfo.vDissolveColor);
 				_string strName  = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISSOLVE_TEXTURE", (CComponent**)&m_pDissolve_TextureCom, nullptr, this);
 				
 				if (strName != "") {

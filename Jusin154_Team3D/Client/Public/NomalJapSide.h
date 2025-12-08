@@ -37,6 +37,7 @@ private:
 	_bool				m_isTrailEnd = {};
 	_float4x4			m_TrailStopMat = {};
 
+	class CEffectParts* m_pWandLight_R = { nullptr };
 	class CEffectParts* m_pWandLight = { nullptr };
 	class CTrailObject* m_pWandTrail = { nullptr };
 	class CEffectParts* m_pWandParticle = { nullptr };

@@ -411,11 +411,6 @@ HRESULT CInstance_Model::Change_NumInstance()
 		return E_FAIL;
 
 
-
-
-
-
-
 	return S_OK;
 }
 
@@ -546,9 +541,18 @@ void CInstance_Model::Drop(_float fTimeDelta)
 		pDesc->isPivotMove = m_InstanceDesc.isPivotMove;
 		pDesc->isSizeLerp = m_InstanceDesc.isSizeLerp;
 		pDesc->isNoWorld = m_InstanceDesc.isNoWorld;
+		pDesc->isDetphCompareStop = m_InstanceDesc.isDetphCompareStop;
+
 		pDesc->WorldMatrix = *m_pOwner->Get_Component<CTransform>()->Get_WorldMatrixPtr();
 		pDesc->fSizeLerpOption = m_InstanceDesc.fSizeLerpOption;
 		pDesc->fMoveLerpOption = m_InstanceDesc.fMoveLerpOption;
+
+		pDesc->ViewMatrix = *m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW);
+		pDesc->ProjMatrix = *m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ);
+		pDesc->fFar = *m_pGameInstance->Get_CurrentCameraFar();
+		pDesc->vScreenSize = m_pGameInstance->Get_ViewPortSize();
+	
+
 
 		m_pContext->Unmap(m_pConstantBuffer, 0);
 	}
@@ -566,6 +570,8 @@ void CInstance_Model::Drop(_float fTimeDelta)
 
 	vector<D3D11_MAPPED_SUBRESOURCE> OutSubResources = {};
 	D3D11_MAPPED_SUBRESOURCE VBInstanceResource = {};
+
+	m_pGameInstance->Bind_CS_RenderTarget(2, L"Target_Depth");
 
 	OutSubResources = m_pComputeShader->Dispatch(0, 0, _float3((_float)iGroupCountX, 1.f, 1.f), CSBuffers, m_pConstantBuffer);
 
@@ -719,6 +725,8 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 				pParticleValues[i].fDrag = m_pGameInstance->Random_Float(m_InstanceDesc.vDrag.x, m_InstanceDesc.vDrag.y);
 				pParticleValues[i].fSizeDrag = m_pGameInstance->Random_Float(m_InstanceDesc.vSizeDrag.x, m_InstanceDesc.vSizeDrag.y);
 				pParticleValues[i].vDelay = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vDelay.x, m_InstanceDesc.vDelay.y));
+				pParticleValues[i].isCompareStop = false;
+				pParticleValues[i].fDropAttenuation = m_pGameInstance->Random_Float(m_InstanceDesc.vDropAttenuation.x, m_InstanceDesc.vDropAttenuation.y);
 				
 				memcpy(&pParticleValues[i].vOriginRight, SRMatrix.m[0], sizeof(_float4));
 				memcpy(&pParticleValues[i].vOriginUp, SRMatrix.m[1], sizeof(_float4));
@@ -745,7 +753,17 @@ HRESULT CInstance_Model::Bind_CS_Output(_uint Index, _uint iBufferIndex)
 	return S_OK;
 }
 
- 
+HRESULT CInstance_Model::Bind_OutPut_SRV_VS(_uint Index, _uint iBufferIndex)
+{
+	if (m_pComputeShader == nullptr)
+		return E_FAIL;
+
+	m_pComputeShader->Bind_OutPut_SRV_VS(Index, iBufferIndex);
+
+	return S_OK;
+
+}
+
 CInstance_Model* CInstance_Model::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex)
 {
 	CInstance_Model* pInstance = new CInstance_Model(pDevice, pContext);
@@ -849,6 +867,10 @@ void CInstance_Model::Describe_Entity()
 			Instane_Buffer_ReStruct();
 		}
 
+		if (GUI::Checkbox("DetphCompareStop", &m_InstanceDesc.isDetphCompareStop))
+		{
+			Instane_Buffer_ReStruct();
+		}
 
 		if (ImGui::DragFloat3("SizeMin", reinterpret_cast<_float*>(&m_InstanceDesc.vSizeMin)))
 		{
@@ -1012,6 +1034,13 @@ void CInstance_Model::Describe_Entity()
 			Instane_Buffer_ReStruct();
 		}
 
+
+		if (ImGui::DragFloat2("DropAttenuation", reinterpret_cast<_float*>(&m_InstanceDesc.vDropAttenuation)))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
+		
 
 		ImGui::PopItemWidth();
 		ImGui::TreePop();

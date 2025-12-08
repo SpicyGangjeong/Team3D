@@ -40,6 +40,11 @@ private:
 	_float2 m_vStunTimer = { 0.f, 4.f };
 	_uint iIndex;
 
+
+	class CEffectParts* m_pSmoke = { nullptr };
+	class CEffectParts* m_pGoblin_Particle = { nullptr };
+	class CEffectParts* m_pGoblin_Particle2 = { nullptr };
+
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -66,6 +71,8 @@ private:
 	_bool m_bStep = { false };
 	_float m_fTpTime = {};
 	_float m_fAirTime = {};
+	_vector m_vOriginPos = {};
+	_float m_fLength = {};
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();
@@ -91,6 +98,10 @@ private:
 	void	Behavior_BlinkEnter();
 	HRESULT Behavior_BlinkExitCheck(_float fTimeDelta);
 	void	Behavior_BlinkExit();
+
+	void	Behavior_ShuffleEnter();
+	HRESULT Behavior_ShuffleExitCheck(_float fTimeDelta);
+	void	Behavior_ShuffleExit();
 
 	void	Behavior_HitEnter();
 	HRESULT Behavior_HitExitCheck(_float fTimeDelta);

@@ -32,6 +32,7 @@ private:
 	HRESULT Load_SRV(const _char* szPath, ID3D11ShaderResourceView** ppSRV);
 	HRESULT ParseTextureIncrementalToSRVs(_uint iNumTextures, const _tchar* pTextureFilePath);
 	HRESULT ParseTexturePathToSRVs(const _tchar* pTextureFolderPath);
+	HRESULT Load_CubeSRV(const _char* szPath, ID3D11ShaderResourceView** ppSRV);
 
 private:
 	vector<ID3D11ShaderResourceView*>				m_SRVs = {};

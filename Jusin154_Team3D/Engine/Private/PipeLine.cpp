@@ -94,6 +94,11 @@ HRESULT CPipeLine::Initialize()
 	m_vOriginalPoints[6] = _float4(1.f,		-1.f,	1.f, 1.f); // RB
 	m_vOriginalPoints[7] = _float4(-1.f,	-1.f,	1.f, 1.f); // LB
 
+	for (_uint i = ENUM_CLASS(D3DTS::VIEW); i < ENUM_CLASS(D3DTS::END); ++i)
+	{
+		XMStoreFloat4x4(&m_TransformStateMatrices[i], XMMatrixIdentity());
+	}
+
 	return S_OK;
 }
 

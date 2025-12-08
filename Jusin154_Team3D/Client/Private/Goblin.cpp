@@ -14,6 +14,8 @@
 #include "State_Combat.h"
 #pragma endregion
 
+#include "EffectParts.h"
+
 
 CGoblin::CGoblin(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMonster(pDevice, pContext)
@@ -57,7 +59,7 @@ HRESULT CGoblin::Initialize(void* pArg)
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
 
-	m_pCharacter_Controller->Set_Position(XMVectorSet(m_pGameInstance->Random_Float(-20.f, 20.f), 0.f, m_pGameInstance->Random_Float(-20.f, 20.f), 1.f));
+	m_pCharacter_Controller->Set_Position(XMVectorSet(-40.f, 5.f, -20.f, 1.f));
 
 	return S_OK;
 }
@@ -103,6 +105,8 @@ void CGoblin::Update(_float fTimeDelta)
 	for (_uint i = 0; i < ENUM_CLASS(GOBLIN_SKILL::END); i++)
 		m_fSkillCoolTime[i] = max(0.f, m_fSkillCoolTime[i] - fTimeDelta);
 
+
+
 }
 
 void CGoblin::Late_Update(_float fTimeDelta)
@@ -114,6 +118,7 @@ void CGoblin::Late_Update(_float fTimeDelta)
 	else {
 		m_pTransformCom->Set_WorldMatrix(m_pRigidBody->Get_FootPositionPxTransform());
 	}
+
 
 	m_pTransformCom->LookAt_Horizontal(XMLoadFloat4(&m_vTargetPos));
 
@@ -293,6 +298,46 @@ HRESULT CGoblin::Ready_Parts()
 
 	Get_PartObject<CGoblin_Dagger>()->Set_Visible(false);
 
+#pragma region EFFECT
+	/* EFFECT */
+
+	CPartObject::PARTOBJECT_DESC PartsDesc{};
+
+	PartsDesc.pParentTransform = m_pTransformCom;
+
+
+
+	if (FAILED(Add_PartObject<CEffectParts>("Goblin_Particle",g_iStaticLevel, &m_pGoblin_Particle, &PartsDesc)))
+	{
+		return E_FAIL;
+	}
+
+	m_pGoblin_Particle->Load("../Bin/Resources/Data/Effect/Goblin/GoblinSide/Goblin_Particle", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pGoblin_Particle->FollowParants(m_pModelCom->Get_BoneMatrixPtr("RightShoulder"));
+
+
+
+	if (FAILED(Add_PartObject<CEffectParts>("Goblin_Particle2", g_iStaticLevel, &m_pGoblin_Particle2, &PartsDesc)))
+	{
+		return E_FAIL;
+	}
+
+	m_pGoblin_Particle2->Load("../Bin/Resources/Data/Effect/Goblin/GoblinSide/Goblin_Particle2", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pGoblin_Particle2->FollowParants(m_pModelCom->Get_BoneMatrixPtr("RightShoulder"));
+
+
+	if (FAILED(Add_PartObject<CEffectParts>("Goblin_Smoke", g_iStaticLevel, &m_pSmoke, &PartsDesc)))
+	{
+		return E_FAIL;
+	}
+
+	m_pSmoke->Load("../Bin/Resources/Data/Effect/Goblin/GoblinSide/Goblin_Smoke", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pSmoke->FollowParants(m_pModelCom->Get_BoneMatrixPtr("Spine2"));
+
+
+#pragma endregion
+	return S_OK;
+
 	return S_OK;
 }
 
@@ -351,6 +396,9 @@ void CGoblin::Free()
 
 	SAFE_RELEASE(m_pCharacter_Controller);
 	SAFE_RELEASE(m_pRigidBody);
+	SAFE_RELEASE(m_pSmoke);
+	SAFE_RELEASE(m_pGoblin_Particle);
+	SAFE_RELEASE(m_pGoblin_Particle2);
 	Safe_Delete(m_pCallBack_Behavior);
 	Safe_Delete(m_pCallBack_HitReport);
 }
@@ -380,6 +428,14 @@ void CGoblin::Describe_Entity()
 		m_pCharacter_Controller->Set_Position(XMLoadFloat3(&Pos));
 	}
 
+	XMFLOAT3 f3;
+	XMStoreFloat3(&f3, m_vOriginPos);
+
+	GUI::Text("Origin: %.2f, %.2f, %.2f", f3.x, f3.y, f3.z);
+
+	m_fLength = XMVectorGetX(XMVector2Length(m_pTransformCom->Get_State(STATE::POSITION) - m_vOriginPos));
+
+	GUI::Text("Length %.2f", m_fLength);
 
 	GUI::TextColored(ImVec4(1.f, 0.f, 0.f, 1.f), "Distance %.2f", m_fTargetDistance);
 

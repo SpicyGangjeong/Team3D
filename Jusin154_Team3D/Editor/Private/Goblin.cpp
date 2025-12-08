@@ -2,6 +2,7 @@
 #include "Goblin.h"
 
 #include "GameInstance.h"
+#include "EditEffect.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -36,6 +37,9 @@ HRESULT CGoblin::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
+	if (FAILED(Ready_Parts()))
+		return E_FAIL;
+
 	Add_FSM();
 
 	Set_Anim();
@@ -61,11 +65,15 @@ HRESULT CGoblin::Initialize(void* pArg)
 
 void CGoblin::Priority_Update(_float fTimeDelta)
 {
+	__super::Priority_Update(fTimeDelta);
+
 	m_pTransformCom->RewindMomentum();
 }
 
 void CGoblin::Update(_float fTimeDelta)
 {
+	__super::Update(fTimeDelta);
+
 	m_pFSM->Update_State(fTimeDelta);
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
@@ -169,6 +177,50 @@ HRESULT CGoblin::Ready_Components()
 	return S_OK;
 }
 
+HRESULT CGoblin::Ready_Parts()
+{
+#pragma region EFFECT
+	/* EFFECT */
+
+	CPartObject::PARTOBJECT_DESC PartsDesc{};
+
+	PartsDesc.pParentTransform = m_pTransformCom;
+
+
+
+	if (FAILED(Add_PartObject<CEditEffect>("Goblin_Particle", ENUM_CLASS(LEVEL::EFFECT), &m_pTroll_Particle, &PartsDesc)))
+	{
+		return E_FAIL;
+	}
+
+	m_pTroll_Particle->Load("../Bin/Resources/Data/Effect/Goblin/GoblinSide/Goblin_Particle", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pTroll_Particle->FollowParants(m_pModelCom->Get_BoneMatrixPtr("RightShoulder"));
+
+
+
+	if (FAILED(Add_PartObject<CEditEffect>("Goblin_Particle2", ENUM_CLASS(LEVEL::EFFECT), &m_pTroll_Particle2, &PartsDesc)))
+	{
+		return E_FAIL;
+	}
+
+	m_pTroll_Particle2->Load("../Bin/Resources/Data/Effect/Goblin/GoblinSide/Goblin_Particle2", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pTroll_Particle2->FollowParants(m_pModelCom->Get_BoneMatrixPtr("RightShoulder"));
+
+
+	if (FAILED(Add_PartObject<CEditEffect>("Goblin_Smoke", ENUM_CLASS(LEVEL::EFFECT), &m_pRight_Smoke, &PartsDesc)))
+	{
+		return E_FAIL;
+	}
+
+	m_pRight_Smoke->Load("../Bin/Resources/Data/Effect/Goblin/GoblinSide/Goblin_Smoke", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pRight_Smoke->FollowParants(m_pModelCom->Get_BoneMatrixPtr("Spine2"));
+
+
+#pragma endregion
+	return S_OK;
+}
+
+
 HRESULT CGoblin::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
@@ -226,8 +278,37 @@ void CGoblin::Free()
 	SAFE_RELEASE(m_pRigidBody);
 	Safe_Delete(m_pCallBack_Behavior);
 	Safe_Delete(m_pCallBack_HitReport);
+
+	SAFE_RELEASE(m_pTroll_Particle);
+	SAFE_RELEASE(m_pTroll_Particle2);
+	SAFE_RELEASE(m_pRight_Smoke);
+	SAFE_RELEASE(m_pLeft_Smoke);
 }
 
 void CGoblin::Describe_Entity()
 {
+	for (auto& pComponent : m_Components)
+	{
+		if (GUI::TreeNode(typeid(*pComponent).name()))
+		{
+			pComponent->Describe_Entity();
+
+			GUI::TreePop();
+		}
+	}
+
+	_uint iIndex = {};
+
+	for (auto& pParts : m_PartObjects)
+	{
+		_string strName = to_string(iIndex++) + " : " + typeid(*pParts.second).name();
+
+		if (GUI::TreeNode(strName.c_str()))
+		{
+			pParts.second->Describe_Entity();
+
+			GUI::TreePop();
+		}
+	}
+
 }

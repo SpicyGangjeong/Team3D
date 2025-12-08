@@ -428,6 +428,8 @@ void CRenderer::Render_Effect()
 		return;
 	}
 
+
+
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::EFFECT)])
 	{
 		if (nullptr != pRenderObject)
@@ -648,6 +650,7 @@ void CRenderer::Render_Blend()
 	m_RenderObjects[ENUM_CLASS(RENDER::BLEND)].sort([](CGameObject* pSour, CGameObject* pDest)->_bool {
 		return pSour->Get_Depth() > pDest->Get_Depth();
 		});
+
 
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::BLEND)])
 	{

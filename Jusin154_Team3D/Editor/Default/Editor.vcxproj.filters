@@ -253,9 +253,6 @@
     <Filter Include="02.GameObjects\Layer_Effect\Effect\04.Effect_Container">
       <UniqueIdentifier>{a193f87a-e222-4dd8-9766-cb32bb368ccb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\05.NomalJap">
-      <UniqueIdentifier>{8882358e-c8eb-4222-a87e-01d902533b8f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Broom">
       <UniqueIdentifier>{a9862861-6eaa-4e04-b7f6-217a32db7db4}</UniqueIdentifier>
     </Filter>
@@ -289,17 +286,11 @@
     <Filter Include="02.GameObjects\Wand">
       <UniqueIdentifier>{92110a48-81d0-4e98-be06-05dd078d0488}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\06.Bombard">
-      <UniqueIdentifier>{c81350c7-0edb-4e51-babf-09bf627414f1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\HpBarBG">
       <UniqueIdentifier>{7e8b7123-11fb-4946-99fe-3265932d0536}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Env\05.AlphaMap">
       <UniqueIdentifier>{54eef1b7-a5ee-444f-9577-44ffc8c3d8bc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\07.Decendo">
-      <UniqueIdentifier>{a94e6a94-cc46-4c16-8518-5032bfdbd235}</UniqueIdentifier>
     </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\Spell_Slot_Preview">
       <UniqueIdentifier>{b4e1da25-c952-4ff4-92fd-7f1501d8c005}</UniqueIdentifier>
@@ -346,9 +337,6 @@
     <Filter Include="02.GameObjects\Layer_Effect\EffectPool">
       <UniqueIdentifier>{c0589f6e-ed9c-4e76-8df2-4f95ce3c7b9a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\08.Protego">
-      <UniqueIdentifier>{8bb21e5b-933f-4930-8d49-1093e0c3ea77}</UniqueIdentifier>
-    </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Border">
       <UniqueIdentifier>{a54567fa-e528-4c98-a605-289d7d300029}</UniqueIdentifier>
     </Filter>
@@ -360,12 +348,6 @@
     </Filter>
     <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Current_Spell_Slot">
       <UniqueIdentifier>{c7b1ffc6-548f-464c-8f19-8b6ff5913b06}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\09.Revelio">
-      <UniqueIdentifier>{03dca491-c8d3-4204-b450-b6089287aa3d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\10.Levioso">
-      <UniqueIdentifier>{c87ea325-8242-4bc4-aec7-b102a5b1c847}</UniqueIdentifier>
     </Filter>
     <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_List">
       <UniqueIdentifier>{8d15e456-f0d7-45b6-b725-7f1a8c0f6b0f}</UniqueIdentifier>
@@ -451,18 +433,6 @@
     <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_Anim">
       <UniqueIdentifier>{4aa98871-8d80-4757-b616-e96f4e840857}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\05.NomalJap\NomalJapSide">
-      <UniqueIdentifier>{3fb9a340-293c-413e-ae32-e5986222f711}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\06.Bombard\BombardSide">
-      <UniqueIdentifier>{51b32cc0-bf57-444f-9a21-0ff756a94291}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\07.Decendo\DecendoSide">
-      <UniqueIdentifier>{09f9fe15-1685-4aac-b3a1-ee98c3e76e3b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\10.Levioso\LeviosoSide">
-      <UniqueIdentifier>{c70a2ce4-8664-45e0-b594-4f416829dab8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="04.InfoInstance">
       <UniqueIdentifier>{c30da651-49ea-4d68-b65b-c363eaf820f2}</UniqueIdentifier>
     </Filter>
@@ -477,6 +447,45 @@
     </Filter>
     <Filter Include="50.UI\UI_Manager">
       <UniqueIdentifier>{fe7d5909-159c-4130-ae5e-e08e648b193c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect">
+      <UniqueIdentifier>{44155272-ee23-4fbf-ae47-e89f62f34975}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic">
+      <UniqueIdentifier>{db7324ea-732a-4cac-948e-f99f0544027c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\05.NomalJap">
+      <UniqueIdentifier>{8882358e-c8eb-4222-a87e-01d902533b8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\05.NomalJap\NomalJapSide">
+      <UniqueIdentifier>{3fb9a340-293c-413e-ae32-e5986222f711}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\06.Bombard">
+      <UniqueIdentifier>{c81350c7-0edb-4e51-babf-09bf627414f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\06.Bombard\BombardSide">
+      <UniqueIdentifier>{51b32cc0-bf57-444f-9a21-0ff756a94291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\07.Decendo">
+      <UniqueIdentifier>{a94e6a94-cc46-4c16-8518-5032bfdbd235}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\07.Decendo\DecendoSide">
+      <UniqueIdentifier>{09f9fe15-1685-4aac-b3a1-ee98c3e76e3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\08.Protego">
+      <UniqueIdentifier>{8bb21e5b-933f-4930-8d49-1093e0c3ea77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\09.Revelio">
+      <UniqueIdentifier>{03dca491-c8d3-4204-b450-b6089287aa3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\10.Levioso">
+      <UniqueIdentifier>{c87ea325-8242-4bc4-aec7-b102a5b1c847}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\10.Levioso\LeviosoSide">
+      <UniqueIdentifier>{c70a2ce4-8664-45e0-b594-4f416829dab8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\Troll_Attack">
+      <UniqueIdentifier>{3a12f2c2-0472-41b7-99ce-2c2f17f26e92}</UniqueIdentifier>
     </Filter>
     <Filter Include="50.UI\Loding_Canvas">
       <UniqueIdentifier>{ebad2fd8-622f-4c17-9ba3-b0c4bd366c05}</UniqueIdentifier>
@@ -501,6 +510,12 @@
     </Filter>
     <Filter Include="50.UI\Logo\Logo_Glow">
       <UniqueIdentifier>{d8a5038f-4f2c-4226-85ba-9202f11f822d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Env\07.Unified">
+      <UniqueIdentifier>{4b6ac1df-5642-42f1-a492-5c2ca2433559}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Env\03.MapElement\Lake">
+      <UniqueIdentifier>{df91c194-9910-489b-a9bb-724e1c1f4440}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -769,7 +784,7 @@
       <Filter>02.GameObjects\Layer_Effect\Effect\04.Effect_Container</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\NomalJap.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\05.NomalJap</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\05.NomalJap</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Broom.h">
       <Filter>02.GameObjects\Broom</Filter>
@@ -802,7 +817,7 @@
       <Filter>02.GameObjects\Wand</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Bombard.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\06.Bombard</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\06.Bombard</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\State_Root.h">
       <Filter>80.State</Filter>
@@ -814,7 +829,7 @@
       <Filter>02.GameObjects\Env\05.AlphaMap</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Decendo.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\07.Decendo</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\07.Decendo</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Camera_Debug.h">
       <Filter>02.GameObjects\Camera\Debug</Filter>
@@ -859,7 +874,7 @@
       <Filter>02.GameObjects\Layer_Effect\EffectPool</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Protego.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\08.Protego</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\08.Protego</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\MissionBanner_Border.h">
       <Filter>50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Border</Filter>
@@ -874,10 +889,10 @@
       <Filter>50.UI\Spell_Canvas\Spell_Panel\Current_Spell_Slot</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Revelio.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\09.Revelio</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\09.Revelio</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Levioso.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\10.Levioso</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\10.Levioso</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Spell_List.h">
       <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_List</Filter>
@@ -931,16 +946,16 @@
       <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Drag</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\NomalJapSide.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\05.NomalJap\NomalJapSide</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\05.NomalJap\NomalJapSide</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\BombardSide.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\06.Bombard\BombardSide</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\06.Bombard\BombardSide</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\DecendoSide.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\07.Decendo\DecendoSide</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\07.Decendo\DecendoSide</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\LeviosoSide.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\10.Levioso\LeviosoSide</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\10.Levioso\LeviosoSide</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\InfoInstance.h">
       <Filter>04.InfoInstance</Filter>
@@ -980,6 +995,12 @@
     </ClInclude>
     <ClInclude Include="..\public\Logo_Glow.h">
       <Filter>50.UI\Logo\Logo_Glow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Unified.h">
+      <Filter>02.GameObjects\Env\07.Unified</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapElement_Lake.h">
+      <Filter>02.GameObjects\Env\03.MapElement\Lake</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1241,7 +1262,7 @@
       <Filter>02.GameObjects\Layer_Effect\Effect\04.Effect_Container</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\NomalJap.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\05.NomalJap</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\05.NomalJap</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Broom.cpp">
       <Filter>02.GameObjects\Broom</Filter>
@@ -1280,13 +1301,13 @@
       <Filter>02.GameObjects\Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Bombard.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\06.Bombard</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\06.Bombard</Filter>
     </ClCompile>
     <ClCompile Include="..\private\AlphaMap.cpp">
       <Filter>02.GameObjects\Env\05.AlphaMap</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Decendo.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\07.Decendo</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\07.Decendo</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Spell_Slot_Preview.cpp">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel\Spell_Slot_Preview</Filter>
@@ -1337,7 +1358,7 @@
       <Filter>02.GameObjects\Layer_Effect\EffectPool</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Protego.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\08.Protego</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\08.Protego</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\MissionBanner_Border.cpp">
       <Filter>50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Border</Filter>
@@ -1352,10 +1373,10 @@
       <Filter>50.UI\Spell_Canvas\Spell_Panel\Current_Spell_Slot</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Revelio.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\09.Revelio</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\09.Revelio</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Levioso.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\10.Levioso</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\10.Levioso</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Spell_List.cpp">
       <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_List</Filter>
@@ -1409,16 +1430,16 @@
       <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Drag</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\NomalJapSide.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\05.NomalJap\NomalJapSide</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\05.NomalJap\NomalJapSide</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\BombardSide.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\06.Bombard\BombardSide</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\06.Bombard\BombardSide</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\DecendoSide.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\07.Decendo\DecendoSide</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\07.Decendo\DecendoSide</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\LeviosoSide.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\10.Levioso\LeviosoSide</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\10.Levioso\LeviosoSide</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\InfoInstance.cpp">
       <Filter>04.InfoInstance</Filter>
@@ -1458,6 +1479,12 @@
     </ClCompile>
     <ClCompile Include="..\private\Logo_Glow.cpp">
       <Filter>50.UI\Logo\Logo_Glow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Unified.cpp">
+      <Filter>02.GameObjects\Env\07.Unified</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapElement_Lake.cpp">
+      <Filter>02.GameObjects\Env\03.MapElement\Lake</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -43,6 +43,11 @@ private:
 	_float2 m_vStunTimer = { 0.f, 4.f };
 	_uint iIndex;
 
+	class CEffectParts* m_pRight_Smoke = { nullptr };
+	class CEffectParts* m_pLeft_Smoke = { nullptr };
+	class CEffectParts* m_pTroll_Particle = { nullptr };
+	class CEffectParts* m_pTroll_Particle2 = { nullptr };
+
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

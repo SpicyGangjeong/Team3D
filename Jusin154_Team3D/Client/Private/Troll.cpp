@@ -5,6 +5,7 @@
 #include "Troll_Rock.h"
 #include "GameInstance.h"
 #include "Effect_Container.h"
+#include "EffectParts.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -173,16 +174,16 @@ HRESULT CTroll::Render()
 	}
 
 #ifdef _DEBUG
-	if (true == m_pCharacter_Controller->IsActive()) {
-		if (FAILED(m_pCharacter_Controller->Render())) {
-			return E_FAIL;
-		}
-	}
-	else {
-		if (FAILED(m_pRigidBody->Render())) {
-			return E_FAIL;
-		}
-	}
+	//if (true == m_pCharacter_Controller->IsActive()) {
+	//	if (FAILED(m_pCharacter_Controller->Render())) {
+	//		return E_FAIL;
+	//	}
+	//}
+	//else {
+	//	if (FAILED(m_pRigidBody->Render())) {
+	//		return E_FAIL;
+	//	}
+	//}
 #endif
 
 	return S_OK;
@@ -304,7 +305,53 @@ HRESULT CTroll::Ready_Parts()
 	}
 
 	Get_PartObject<CTroll_Rock>()->Set_Visible(false);
-	
+
+
+#pragma region EFFECT
+	/* EFFECT */
+
+	CPartObject::PARTOBJECT_DESC PartsDesc{};
+
+	PartsDesc.pParentTransform = m_pTransformCom;
+
+ 
+
+	if (FAILED(Add_PartObject<CEffectParts>("Troll_Particle", g_iStaticLevel, &m_pTroll_Particle, &PartsDesc)))
+	{
+		return E_FAIL;
+	}
+
+	m_pTroll_Particle->Load("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Particle", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pTroll_Particle->FollowParants(m_pModelCom->Get_BoneMatrixPtr("HeadEnd"));
+
+
+
+	if (FAILED(Add_PartObject<CEffectParts>("Troll_Particle2", g_iStaticLevel, &m_pTroll_Particle2, &PartsDesc)))
+	{
+		return E_FAIL;
+	}
+
+	m_pTroll_Particle2->Load("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Particle2", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pTroll_Particle2->FollowParants(m_pModelCom->Get_BoneMatrixPtr("HeadEnd"));
+
+
+	if (FAILED(Add_PartObject<CEffectParts>("Troll_Right_Smoke", g_iStaticLevel, &m_pRight_Smoke, &PartsDesc)))
+	{
+		return E_FAIL;
+	}
+
+	m_pRight_Smoke->Load("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Smoke", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pRight_Smoke->FollowParants(m_pModelCom->Get_BoneMatrixPtr("RightArm"));
+
+	if (FAILED(Add_PartObject<CEffectParts>("Troll_Left_Smoke", g_iStaticLevel, &m_pLeft_Smoke, &PartsDesc)))
+	{
+		return E_FAIL;
+	}
+
+	m_pLeft_Smoke->Load("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Smoke", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pLeft_Smoke->FollowParants(m_pModelCom->Get_BoneMatrixPtr("LeftArm"));
+
+#pragma endregion
 	return S_OK;
 }
 
@@ -365,6 +412,11 @@ void CTroll::Free()
 	SAFE_RELEASE(m_pRigidBody);
 	Safe_Delete(m_pCallBack_Behavior);
 	Safe_Delete(m_pCallBack_HitReport);
+
+	SAFE_RELEASE(m_pTroll_Particle);
+	SAFE_RELEASE(m_pTroll_Particle2);
+	SAFE_RELEASE(m_pRight_Smoke);
+	SAFE_RELEASE(m_pLeft_Smoke);
 }
 #ifdef _DEBUG
 

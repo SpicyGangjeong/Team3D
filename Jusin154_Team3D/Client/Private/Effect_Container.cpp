@@ -72,7 +72,7 @@ void CEffect_Container::Reset_Light()
 		if (pLight == nullptr)
 			continue;
 
-		pLight->Reset_AmbientRatio();
+		pLight->Reset_IntensityRatio();
 	}
 
 }
@@ -315,13 +315,13 @@ _int CEffect_Container::CollisionCheck()
 				continue;
 			case PXOBJECT::MONSTER:
 			case PXOBJECT::GOBLIN_WARRIOR:
+			case PXOBJECT::GOBLIN_MAGICIAN:
 			case PXOBJECT::TROLL:
 			case PXOBJECT::WALL:
-
 			{
 				return i;
 			}
-				break;
+			break;
 			default:
 				break;
 			}
@@ -345,6 +345,66 @@ _int CEffect_Container::CollisionCheck()
 
 	return -1;
 
+}
+
+void CEffect_Container::SweepTarget(_vector StartPos, _vector EndPos, _float fRadius)
+{
+	_vector vStartPos = StartPos;
+	_vector vEndPos = EndPos;
+	_vector vDir = { vEndPos - vStartPos };
+
+	_float fDistance = XMVectorGetX(XMVector3Length(vEndPos - vStartPos));
+
+	PSX::PxSweepBuffer pxBuffer = {};
+
+	_bool bHit = m_pGameInstance->SphereCast(fRadius, vStartPos, vDir, fDistance, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eDYNAMIC, pxBuffer);
+
+	if (bHit) {
+		const PSX::PxSweepHit& hit = pxBuffer.block;
+		PSX::PxRigidActor* pActor = hit.actor;
+		PSX::PxShape* pShape = hit.shape;
+		ON_COLLISION_INFO tagCollInfo = {};
+		memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &hit.position, sizeof(hit.position));
+		memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &hit.normal, sizeof(hit.normal));
+		XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
+		tagCollInfo.fLength = fDistance;
+
+
+		if (nullptr != pActor && nullptr != pActor->userData)
+		{
+			PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+
+			switch (pUserData->eKind)
+			{
+			case PHYSX_KIND::CCTActor:
+			{
+				switch (PXOBJECT(pUserData->iSubKind))
+				{
+				case PXOBJECT::MONSTER:
+					break;
+				case PXOBJECT::GOBLIN_WARRIOR:
+				{
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					m_bHit = true;
+				}
+				break;
+				case PXOBJECT::GOBLIN_MAGICIAN:
+				{
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					m_bHit = true;
+				}
+				break;
+				case PXOBJECT::TROLL:
+				{
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					m_bHit = true;
+				}
+				break;
+				}
+			}
+			}
+		}
+	}
 }
 
 void CEffect_Container::Update_Event(_float fTimeDelta)
