@@ -700,6 +700,14 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 
 				pParticleValues[i].vPivot = vPivot;
 
+				_float3			vVelocity = _float3(
+					m_pGameInstance->Random_Float(m_InstanceDesc.vVelocityMin.x, m_InstanceDesc.vVelocityMax.x),
+					m_pGameInstance->Random_Float(m_InstanceDesc.vVelocityMin.y, m_InstanceDesc.vVelocityMax.y),
+					m_pGameInstance->Random_Float(m_InstanceDesc.vVelocityMin.z, m_InstanceDesc.vVelocityMax.z)
+				);				
+
+				pParticleValues[i].vVelocity = vVelocity;
+
 				_float3			vSizeLerp = _float3(
 					m_InstanceDesc.vDeltaSize.x,
 					m_InstanceDesc.vDeltaSize.y,
@@ -725,9 +733,12 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 				pParticleValues[i].fDrag = m_pGameInstance->Random_Float(m_InstanceDesc.vDrag.x, m_InstanceDesc.vDrag.y);
 				pParticleValues[i].fSizeDrag = m_pGameInstance->Random_Float(m_InstanceDesc.vSizeDrag.x, m_InstanceDesc.vSizeDrag.y);
 				pParticleValues[i].vDelay = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vDelay.x, m_InstanceDesc.vDelay.y));
-				pParticleValues[i].isCompareStop = false;
 				pParticleValues[i].fDropAttenuation = m_pGameInstance->Random_Float(m_InstanceDesc.vDropAttenuation.x, m_InstanceDesc.vDropAttenuation.y);
 				
+				pParticleValues[i].fCollisionTime = 0.f;
+				pParticleValues[i].isCompareStop = false;
+				m_InstanceDesc.isDetphCompareStop = true;
+
 				memcpy(&pParticleValues[i].vOriginRight, SRMatrix.m[0], sizeof(_float4));
 				memcpy(&pParticleValues[i].vOriginUp, SRMatrix.m[1], sizeof(_float4));
 				memcpy(&pParticleValues[i].vOriginLook, SRMatrix.m[2], sizeof(_float4));
@@ -965,6 +976,16 @@ void CInstance_Model::Describe_Entity()
 		}
 
 		if (ImGui::DragFloat3("SinWaveMax", reinterpret_cast<_float*>(&m_InstanceDesc.vSinMaxAmount)))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
+		if (ImGui::DragFloat3("VelocityMin", reinterpret_cast<_float*>(&m_InstanceDesc.vVelocityMin)))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
+		if (ImGui::DragFloat3("VelocityMax", reinterpret_cast<_float*>(&m_InstanceDesc.vVelocityMax)))
 		{
 			Instane_Buffer_ReStruct();
 		}

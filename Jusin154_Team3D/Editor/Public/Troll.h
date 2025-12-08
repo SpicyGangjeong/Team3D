@@ -48,6 +48,12 @@ private:
 	class CEditEffect* m_pTroll_Particle = { nullptr };
 	class CEditEffect* m_pTroll_Particle2 = { nullptr };
 
+	class CTrailObject* m_pLeftTrail = {};
+	class CTrailObject* m_pRightTrail = {};
+
+	const _float4x4* m_pLeftHand_BoneMat = { nullptr };
+	const _float4x4* m_pRightHand_BoneMat = { nullptr };
+
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
