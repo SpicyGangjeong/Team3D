@@ -791,6 +791,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 	{
 		return E_FAIL;
 	}
+
+
 //#pragma region UI_ANI
 //	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Altering_Spell"),
 //		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Altering_Spell\\Altering_Spell%d.png"), 349))))
@@ -1660,83 +1662,83 @@ HRESULT CLoader::Loading_For_GamePlay()
 		}
 	}
 
-
-#pragma region MAP_INSTANCE
-	/* For.Prototype_Component_VIBuffer_Model_Instancel_SM_OakTree_MedA */
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_SM_OakTree_MedA"),
-		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Models/InstanceProp/SM_OakTree_MedA.bin",
-			"../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
-		return E_FAIL;
-
-	/* For.Prototype_Component_VIBuffer_Model_Instancel_SM_BearBerry_A */
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_SM_BearBerry_A"),
-		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Models/InstanceProp/SM_BearBerry_A.bin",
-			"../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
-		return E_FAIL;
-
-	/* For.Prototype_Component_VIBuffer_Model_Instancel_SM_HM_OwlPost_Window_A*/
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_SM_HM_OwlPost_Window_A"),
-		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Models/InstanceProp/SM_HM_OwlPost_Window_A.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
-		return E_FAIL;
-
-	/* For.Prototype_Component_VIBuffer_Model_Instancel_WA_Rectangle_Double_A*/
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_WA_Rectangle_Double_A"),
-		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Models/InstanceProp/SM_HM_WindowsStyleA_L_Rectangle_Double_A.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
-		return E_FAIL;
-
-	/* For.Prototype_Component_VIBuffer_Model_Instancel_WC_Retangle_Double_A*/
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_WC_Retangle_Double_A"),
-		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Models/InstanceProp/SM_HM_WindowsStyleC_Retangle_Double_A.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
-		return E_FAIL;
-
-	/* For.Prototype_Component_VIBuffer_Model_Instancel_WA_Square_Double_C*/
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_WA_Square_Double_C"),
-		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Models/InstanceProp/SM_HM_WindowsStyleA_L_Square_Double_C.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
-		return E_FAIL;
-
-	/* For.Prototype_Component_VIBuffer_Model_Instancel_Quid_Window_A*/
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_Quid_Window_A"),
-		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Models/InstanceProp/SM_HM_Quid_Window_A.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
-		return E_FAIL;
-
-	/* For.Prototype_Component_VIBuffer_Model_Instancel_Ollivanders_Box_Window*/
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_Ollivanders_Box_Window"),
-		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Models/InstanceProp/SM_HM_Ollivanders_Box_Window.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
-		return E_FAIL;
-
-	/* For.Prototype_Component_VIBuffer_Model_Instancel_WC_L_DoubleS_A*/
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_WC_L_DoubleS_A"),
-		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Models/InstanceProp/SM_HM_WindowsStyleC_L_Double_Single_A.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
-		return E_FAIL;
-
-	/* For.Prototype_Component_VIBuffer_Model_Instancel_WC_Round_Double_A*/
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_WC_Round_Double_A"),
-		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Models/InstanceProp/SM_HM_WindowsStyleC_Round_Double_A.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
-		return E_FAIL;
-
-	/* For.Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door1a*/
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door1a"),
-		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Models/InstanceProp/SM_HM_Door1a.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
-		return E_FAIL;
-
-	/* For.Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door2b*/
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door2b"),
-		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
-			"../Bin/Resources/Models/InstanceProp/SM_HM_Door2b.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
-		return E_FAIL;
-#pragma endregion
-
+//
+//#pragma region MAP_INSTANCE
+//	/* For.Prototype_Component_VIBuffer_Model_Instancel_SM_OakTree_MedA */
+//	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_SM_OakTree_MedA"),
+//		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+//			"../Bin/Resources/Models/InstanceProp/SM_OakTree_MedA.bin",
+//			"../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+//		return E_FAIL;
+//
+//	/* For.Prototype_Component_VIBuffer_Model_Instancel_SM_BearBerry_A */
+//	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_SM_BearBerry_A"),
+//		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+//			"../Bin/Resources/Models/InstanceProp/SM_BearBerry_A.bin",
+//			"../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+//		return E_FAIL;
+//
+//	/* For.Prototype_Component_VIBuffer_Model_Instancel_SM_HM_OwlPost_Window_A*/
+//	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_SM_HM_OwlPost_Window_A"),
+//		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+//			"../Bin/Resources/Models/InstanceProp/SM_HM_OwlPost_Window_A.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+//		return E_FAIL;
+//
+//	/* For.Prototype_Component_VIBuffer_Model_Instancel_WA_Rectangle_Double_A*/
+//	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_WA_Rectangle_Double_A"),
+//		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+//			"../Bin/Resources/Models/InstanceProp/SM_HM_WindowsStyleA_L_Rectangle_Double_A.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+//		return E_FAIL;
+//
+//	/* For.Prototype_Component_VIBuffer_Model_Instancel_WC_Retangle_Double_A*/
+//	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_WC_Retangle_Double_A"),
+//		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+//			"../Bin/Resources/Models/InstanceProp/SM_HM_WindowsStyleC_Retangle_Double_A.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+//		return E_FAIL;
+//
+//	/* For.Prototype_Component_VIBuffer_Model_Instancel_WA_Square_Double_C*/
+//	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_WA_Square_Double_C"),
+//		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+//			"../Bin/Resources/Models/InstanceProp/SM_HM_WindowsStyleA_L_Square_Double_C.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+//		return E_FAIL;
+//
+//	/* For.Prototype_Component_VIBuffer_Model_Instancel_Quid_Window_A*/
+//	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_Quid_Window_A"),
+//		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+//			"../Bin/Resources/Models/InstanceProp/SM_HM_Quid_Window_A.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+//		return E_FAIL;
+//
+//	/* For.Prototype_Component_VIBuffer_Model_Instancel_Ollivanders_Box_Window*/
+//	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_Ollivanders_Box_Window"),
+//		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+//			"../Bin/Resources/Models/InstanceProp/SM_HM_Ollivanders_Box_Window.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+//		return E_FAIL;
+//
+//	/* For.Prototype_Component_VIBuffer_Model_Instancel_WC_L_DoubleS_A*/
+//	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_WC_L_DoubleS_A"),
+//		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+//			"../Bin/Resources/Models/InstanceProp/SM_HM_WindowsStyleC_L_Double_Single_A.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+//		return E_FAIL;
+//
+//	/* For.Prototype_Component_VIBuffer_Model_Instancel_WC_Round_Double_A*/
+//	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_WC_Round_Double_A"),
+//		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+//			"../Bin/Resources/Models/InstanceProp/SM_HM_WindowsStyleC_Round_Double_A.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+//		return E_FAIL;
+//
+//	/* For.Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door1a*/
+//	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door1a"),
+//		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+//			"../Bin/Resources/Models/InstanceProp/SM_HM_Door1a.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+//		return E_FAIL;
+//
+//	/* For.Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door2b*/
+//	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door2b"),
+//		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+//			"../Bin/Resources/Models/InstanceProp/SM_HM_Door2b.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+//		return E_FAIL;
+//#pragma endregion
+//
 
 	/* For.Prototype_Component_VIBuffer_Box */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Box"),

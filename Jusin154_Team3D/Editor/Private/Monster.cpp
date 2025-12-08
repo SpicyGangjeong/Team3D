@@ -32,16 +32,17 @@ HRESULT CMonster::Initialize(void* pArg)
 
 void CMonster::Priority_Update(_float fTimeDelta)
 {
-
+	__super::Priority_Update(fTimeDelta);
 }
 
 void CMonster::Update(_float fTimeDelta)
 {
-
+	__super::Update(fTimeDelta);
 }
 
 void CMonster::Late_Update(_float fTimeDelta)
 {
+	__super::Late_Update(fTimeDelta);
 	//m_fTargetDistance = m_pTransformCom->TargetDis(m_pPlayerTransform->Get_State(STATE::POSITION));
 }
 

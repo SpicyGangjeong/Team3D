@@ -36,6 +36,11 @@ public:
 private:
 	class CGameInstance* m_pGameInstance = { nullptr };
 	list<class CGameObject*> m_ObjectList;
+
+#ifdef _DEBUG
+private:
+	class CGameObject* m_pTargetObject = { nullptr };
+#endif
 private:
 	HRESULT Initialize();
 

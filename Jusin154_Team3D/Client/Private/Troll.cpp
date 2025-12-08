@@ -174,16 +174,16 @@ HRESULT CTroll::Render()
 	}
 
 #ifdef _DEBUG
-	if (true == m_pCharacter_Controller->IsActive()) {
-		if (FAILED(m_pCharacter_Controller->Render())) {
-			return E_FAIL;
-		}
-	}
-	else {
-		if (FAILED(m_pRigidBody->Render())) {
-			return E_FAIL;
-		}
-	}
+	//if (true == m_pCharacter_Controller->IsActive()) {
+	//	if (FAILED(m_pCharacter_Controller->Render())) {
+	//		return E_FAIL;
+	//	}
+	//}
+	//else {
+	//	if (FAILED(m_pRigidBody->Render())) {
+	//		return E_FAIL;
+	//	}
+	//}
 #endif
 
 	return S_OK;
