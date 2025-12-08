@@ -133,7 +133,7 @@ HRESULT CPotion::Render()
 	if (FAILED(m_pVIBufferCom->Render())) {
 		return E_FAIL;
 	}
-	m_pGameInstance->Render_Text(TEXT("UI_size15"), m_strPotion.c_str(), _float2((m_fFontX + m_fX) - m_fFontOffSet, m_fFontY + m_fY), XMVectorSet(208.f / 255.f, 177.f / 255.f, 52.f / 255.f, 1.f));
+	m_pGameInstance->Render_Text(TEXT("UI_size15"), m_strPotion.c_str(), _float2((m_fFontX + m_fX) - m_fFontOffSet, m_fFontY + m_fY), XMVectorSet((208.f / 255.f) * m_fAlpha, (177.f / 255.f) * m_fAlpha, (52.f / 255.f) * m_fAlpha, m_fAlpha));
 
 	return S_OK;
 }

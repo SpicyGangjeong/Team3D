@@ -69,6 +69,10 @@
 #include "Spell_UI.h"
 #include "Magic_Item.h"
 
+#include "Enemy_Panel.h"
+#include "Enemy_HpBar.h"
+#include "Enemy_Info.h"
+
 #include "Spell_Canvas.h"
 #include "Spell_Panel.h"
 #include "Current_Spell_Slot.h"
@@ -1542,6 +1546,19 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 	/* For.Prototype_GameObject_NoMountIcon*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CNoMountIcon>(g_iStaticLevel, CNoMountIcon::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	
+	/* For.Prototype_GameObject_NoMountIcon*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CEnemy_Panel>(g_iStaticLevel, CEnemy_Panel::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_NoMountIcon*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CEnemy_HpBar>(g_iStaticLevel, CEnemy_HpBar::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_NoMountIcon*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CEnemy_Info>(g_iStaticLevel, CEnemy_Info::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 

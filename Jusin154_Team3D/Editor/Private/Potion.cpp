@@ -95,14 +95,6 @@ void CPotion::Update(_float fTimeDelta)
 		m_fTime = -1.f;
 	}
 
-	if (m_pGameInstance->Key_Down(DIK_K))
-	{
-		m_iPotionIndex--;
-	}
-	if (m_pGameInstance->Key_Down(DIK_L))
-	{
-		m_iPotionIndex++;
-	}
 
 	if (m_iPerPotionIndex != m_iPotionIndex)
 	{
@@ -143,7 +135,7 @@ HRESULT CPotion::Render()
 		return E_FAIL;
 	}
 
-	m_pGameInstance->Render_Text(TEXT("UI_size15"), m_strPotion.c_str(), _float2((m_fFontX + m_fX) - m_fFontOffSet, m_fFontY + m_fY), XMVectorSet(208.f / 255.f, 177.f / 255.f, 52.f / 255.f, 1.f));
+	m_pGameInstance->Render_Text(TEXT("UI_size15"), m_strPotion.c_str(), _float2((m_fFontX + m_fX) - m_fFontOffSet, m_fFontY + m_fY), XMVectorSet((208.f / 255.f) * m_fAlpha, (177.f / 255.f) * m_fAlpha, (52.f / 255.f)* m_fAlpha, m_fAlpha));
 
 	return S_OK;
 }

@@ -54,6 +54,7 @@ HRESULT CSpell_Preview::Initialize(void* pArg)
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("FadeOut"), [this](void* p) {this->Set_FadeOut(); });
 	m_fFontX = 740.f;
 	m_fFontY = 500.f;
+	m_iPerSpellIndex = -1;
 	return S_OK;
 }
 
@@ -102,14 +103,13 @@ void CSpell_Preview::Update(_float fTimeDelta)
 	}
 	m_fTime += fTimeDelta * m_fTimeMult;
 
-	if (m_iSpellType != -1)
+	if (m_iSpellType != -1 && m_iPerSpellIndex != m_iSpellType)
 	{
 		m_pSpell_Info = static_cast<CUIObject*>(m_pOwner)->Get_Info(m_iSpellType).pSpellInfo;
 		m_fPreviewOffSet = static_cast<CUIObject*>(m_pOwner)->Get_Info(m_iSpellType).fPreview;
 		SizeUpY(m_fOriginPerviewSize + m_fPreviewOffSet);
+		m_iPerSpellIndex = m_iSpellType;
 	}
-
-
 
 	__super::Update(fTimeDelta);
 }
@@ -141,10 +141,7 @@ HRESULT CSpell_Preview::Render()
 		return E_FAIL;
 	}
 
-	if (m_bHover == true)
-	{
-		m_pGameInstance->Render_Text(TEXT("Font_size14"), m_pSpell_Info.c_str(), _float2(m_fFontX + m_fX, (m_fFontY + m_fY) - m_fPreviewOffSet * 0.5f));
-	}
+	m_pGameInstance->Render_Text(TEXT("Font_size14"), m_pSpell_Info.c_str(), _float2(m_fFontX + m_fX, (m_fFontY + m_fY) - m_fPreviewOffSet * 0.5f), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
 	return S_OK;
 }
 

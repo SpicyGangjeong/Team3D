@@ -52,6 +52,7 @@ HRESULT CSpell_Header::Initialize(void* pArg)
 	m_fFontX = 920.f;
 	m_fFontY = 510.f;
 	m_fType = _float2(935.f, 550.f);
+	m_iPerSpellIndex = -1;
 	return S_OK;
 }
 
@@ -100,11 +101,12 @@ void CSpell_Header::Update(_float fTimeDelta)
 		}
 	}
 
-	if (m_iSpellType != -1)
+	if (m_iSpellType != -1 && m_iPerSpellIndex != m_iSpellType)
 	{
-		m_iSkillType = m_pInfoInstance->Get_Spell_Info(m_iSpellType).iSpell_Type;
-		m_pSpell_Name =m_pInfoInstance->Get_Spell_Info(m_iSpellType).pSpell_Name;
-		m_fSpell_Type =m_pInfoInstance->Get_Spell_Info(m_iSpellType).pType_Name;
+		m_iSkillType = static_cast<CUIObject*>(m_pOwner)->Get_Info(m_iSpellType).iSpell_Type;
+		m_pSpell_Name = static_cast<CUIObject*>(m_pOwner)->Get_Info(m_iSpellType).pSpell_Name;
+		m_fSpell_Type = static_cast<CUIObject*>(m_pOwner)->Get_Info(m_iSpellType).pType_Name;
+		m_iPerSpellIndex = m_iSpellType;
 	}
 
 	m_fTime += fTimeDelta * m_fTimeMult;
@@ -138,12 +140,10 @@ HRESULT CSpell_Header::Render()
 		return E_FAIL;
 	}
 
-	if (m_bHover == true)
-	{
-		m_fFontOffSet = (m_pGameInstance->FontSizeX(TEXT("Font_size20"), m_pSpell_Name.c_str()) - 53.f) * 0.5f;
-		m_pGameInstance->Render_Text(TEXT("Font_size20"), m_pSpell_Name.c_str(), _float2((m_fFontX + m_fX) - m_fFontOffSet, m_fFontY + m_fY), XMVectorSet(215.f / 255.f, 185.f / 255.f, 95.f / 255.f, 1.f));
-		m_pGameInstance->Render_Text(TEXT("Font_size13"), m_fSpell_Type.c_str(), _float2(m_fType.x + m_fX, m_fType.y + m_fY));
-	}
+
+	m_fFontOffSet = (m_pGameInstance->FontSizeX(TEXT("Font_size20"), m_pSpell_Name.c_str()) - 53.f) * 0.5f;
+	m_pGameInstance->Render_Text(TEXT("Font_size20"), m_pSpell_Name.c_str(), _float2((m_fFontX + m_fX) - m_fFontOffSet, m_fFontY + m_fY), XMVectorSet((215.f / 255.f) * m_fAlpha, (185.f / 255.f) * m_fAlpha, (95.f / 255.f) * m_fAlpha, m_fAlpha));
+	m_pGameInstance->Render_Text(TEXT("Font_size13"), m_fSpell_Type.c_str(), _float2(m_fType.x + m_fX, m_fType.y + m_fY), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
 
 	return S_OK;
 }

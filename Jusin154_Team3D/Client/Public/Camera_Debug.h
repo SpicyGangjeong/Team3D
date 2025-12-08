@@ -29,6 +29,7 @@ private:
 	_float m_fMouseSensor = {};
 	_float4x4 m_matInitial = {};
 
+
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

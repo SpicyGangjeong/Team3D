@@ -46,6 +46,16 @@ private:
 
 	_int	m_iImageNum{};
 	_float4 m_vImageposSi{};
+
+#ifdef _DEBUG
+	_bool INHYUK = { false };
+	_bool JINHO = { false };
+	_bool HYUNBIN = { false };
+	_bool NURI = { false };
+	_bool JINWOO = { false };
+	_int human{};
+#endif
+
 public:
 	static CLoding_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

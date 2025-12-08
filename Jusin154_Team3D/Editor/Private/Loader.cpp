@@ -51,6 +51,10 @@
 
 #include "GamePlay_Canvas.h"
 
+#include "Enemy_Panel.h"
+#include "Enemy_HpBar.h"
+#include "Enemy_Info.h"
+
 #include "Mission_Panel.h"
 #include "MissionBanner_Border.h"
 #include "MissionBanner_Key.h"
@@ -882,6 +886,19 @@ HRESULT CLoader::Loading_For_UI()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CGamePlay_Canvas>(g_iStaticLevel, CGamePlay_Canvas::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CEnemy_Panel>(g_iStaticLevel, CEnemy_Panel::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CEnemy_HpBar>(g_iStaticLevel, CEnemy_HpBar::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CEnemy_Info>(g_iStaticLevel, CEnemy_Info::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}

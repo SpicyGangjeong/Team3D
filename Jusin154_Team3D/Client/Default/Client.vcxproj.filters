@@ -412,6 +412,15 @@
     <ClInclude Include="..\Public\State_Dead.h">
       <Filter>04.Mechanic\State\State_Combat\Dead</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Enemy_Panel.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Enemy_HpBar.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Enemy_HpBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Enemy_Info.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Enemy_Info</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -872,6 +881,15 @@
     <Filter Include="04.Mechanic\State\State_Combat\Dead">
       <UniqueIdentifier>{81add99f-7450-4730-8d3f-bf1de06b2b8d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel">
+      <UniqueIdentifier>{2d99db17-8cc6-437a-84d6-dd21ee434c38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Enemy_HpBar">
+      <UniqueIdentifier>{f28022fe-79c4-4623-af96-916e8828fedc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Enemy_Info">
+      <UniqueIdentifier>{3246055a-734f-45e2-ab2f-437ec2ccf061}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1281,6 +1299,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\State_Dead.cpp">
       <Filter>04.Mechanic\State\State_Combat\Dead</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Enemy_HpBar.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Enemy_HpBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Enemy_Info.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Enemy_Info</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Enemy_Panel.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

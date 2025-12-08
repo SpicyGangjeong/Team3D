@@ -4,19 +4,18 @@
 #include "ElementObject.h"
 
 NS_BEGIN(Engine)
-class CTexture;
-class CShader;
-class CVIBuffer_Rect;
+class CGameObject;
 NS_END
 
 NS_BEGIN(Client)
 
-class CSpell_Header final : public CElementObject
+
+class CEnemy_Info final : public CElementObject
 {
 private:
-	CSpell_Header(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CSpell_Header(const CSpell_Header& rhs);
-	virtual ~CSpell_Header() = default;
+	CEnemy_Info(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CEnemy_Info(const CEnemy_Info& rhs);
+	virtual ~CEnemy_Info() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -31,21 +30,22 @@ private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
-private:
-	CInfoInstance* m_pInfoInstance = { nullptr };
+public:
+	void Set_Info(_int Level, _wstring Name);
 
+private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
-	_wstring m_pSpell_Name;
-	_wstring m_fSpell_Type;
+	_float2 m_fFontPos{};
+	_float  m_fFont2OffSet{};
+	_wstring m_pEnemy_Name;
+	_wstring m_pLevel;
+	_bool	m_bAnimation = {false};
 
-	_float2 m_fType{};
-
-	_int m_iPerSpellIndex{};
 public:
-	static CSpell_Header* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CEnemy_Info* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 #ifdef _DEBUG
