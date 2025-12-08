@@ -25,12 +25,18 @@ private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
+
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
-	_int m_iSkillType{};
+	_wstring m_pSpell_Name;
+	_wstring m_fSpell_Type;
+
+	_float2 m_fType{};
+
+	_int m_iPerSpellIndex{};
 public:
 	static CSpell_Header* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

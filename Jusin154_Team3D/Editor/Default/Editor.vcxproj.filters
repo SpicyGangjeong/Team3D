@@ -508,6 +508,15 @@
     <Filter Include="50.UI\Logo\Logo_Glow">
       <UniqueIdentifier>{d8a5038f-4f2c-4226-85ba-9202f11f822d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Enemy_Panel">
+      <UniqueIdentifier>{ea790bf9-9ca6-4c51-820b-ed2c70f86104}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_HpBar">
+      <UniqueIdentifier>{33ba73e0-b4a1-4ebf-9b99-8856c7e1078c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_Info">
+      <UniqueIdentifier>{e30ca8e3-8c89-4a08-b413-169ff1d5ff22}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\Env\07.Unified">
       <UniqueIdentifier>{4b6ac1df-5642-42f1-a492-5c2ca2433559}</UniqueIdentifier>
     </Filter>
@@ -1064,6 +1073,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\Goblin_Protego.h">
       <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Goblin_Protego</Filter>
+	</ClInclude>
+    <ClInclude Include="..\public\Enemy_Panel.h">
+      <Filter>50.UI\GamePlay_Canvas\Enemy_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Enemy_HpBar.h">
+      <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_HpBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Enemy_Info.h">
+      <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_Info</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1545,6 +1563,15 @@
     </ClCompile>
     <ClCompile Include="..\private\Logo_Glow.cpp">
       <Filter>50.UI\Logo\Logo_Glow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Enemy_Panel.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Enemy_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Enemy_HpBar.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_HpBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Enemy_Info.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_Info</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Unified.cpp">
       <Filter>02.GameObjects\Env\07.Unified</Filter>

@@ -30,7 +30,7 @@ void CLevel_Logo::Update(_float fTimeDelta)
 	m_pGameInstance->Set_LevelToChange();
 #endif // 기무리
 
-	if (m_pGameInstance->Key_Up(DIK_F1))
+	if (m_pGameInstance->Key_Down(DIK_F1))
 	{
 		m_pGameInstance->Set_LevelToChange();
 	}

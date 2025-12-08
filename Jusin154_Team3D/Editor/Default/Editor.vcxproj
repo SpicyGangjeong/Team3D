@@ -232,6 +232,9 @@ call Update_Shaders.bat
     <ClInclude Include="..\Public\Dummy_PhysXWall.h" />
     <ClInclude Include="..\Public\Dummy_Plane.h" />
     <ClInclude Include="..\Public\Dummy_PhysXPlayable.h" />
+    <ClInclude Include="..\public\Enemy_HpBar.h" />
+    <ClInclude Include="..\public\Enemy_Info.h" />
+    <ClInclude Include="..\public\Enemy_Panel.h" />
     <ClInclude Include="..\public\GameTime.h" />
     <ClInclude Include="..\public\Eessential_Spell.h" />
     <ClInclude Include="..\public\Eessential_Spell_Slot.h" />
@@ -423,6 +426,9 @@ call Update_Shaders.bat
     <ClCompile Include="..\Private\Dummy_PhysXWall.cpp" />
     <ClCompile Include="..\Private\Dummy_Plane.cpp" />
     <ClCompile Include="..\Private\Dummy_PhysXPlayable.cpp" />
+    <ClCompile Include="..\private\Enemy_HpBar.cpp" />
+    <ClCompile Include="..\private\Enemy_Info.cpp" />
+    <ClCompile Include="..\private\Enemy_Panel.cpp" />
     <ClCompile Include="..\private\GameTime.cpp" />
     <ClCompile Include="..\private\Eessential_Spell.cpp" />
     <ClCompile Include="..\private\Eessential_Spell_Slot.cpp" />

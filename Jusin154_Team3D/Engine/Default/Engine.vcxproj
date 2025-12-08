@@ -208,6 +208,8 @@ call Update_Lib.bat
     <ClCompile Include="..\Private\ContainerObject.cpp" />
     <ClCompile Include="..\Private\DebugDraw.cpp" />
     <ClCompile Include="..\private\Fog.cpp" />
+    <ClCompile Include="..\private\Font.cpp" />
+    <ClCompile Include="..\private\Font_Manager.cpp" />
     <ClCompile Include="..\private\QuadTree.cpp" />
     <ClCompile Include="..\private\OcclusionQuery.cpp" />
     <ClCompile Include="..\Private\Renderer_Declare.cpp" />
@@ -428,6 +430,8 @@ call Update_Lib.bat
     <ClInclude Include="..\Public\Bounding_OBB.h" />
     <ClInclude Include="..\Public\Bounding_Sphere.h" />
     <ClInclude Include="..\public\Fog.h" />
+    <ClInclude Include="..\public\Font.h" />
+    <ClInclude Include="..\public\Font_Manager.h" />
     <ClInclude Include="..\public\FSM.h" />
     <ClInclude Include="..\public\QuadTree.h" />
     <ClInclude Include="..\public\OcclusionQuery.h" />

@@ -18,13 +18,16 @@ public:
 		_string		pSpell_Name;
 		_string		pImage_Name;
 		_int		iSpell_Type{};
+		_string		pType_Name{};
 		_int		iSkill_Type{};
+		_float		fSpell_Damage{};
 		_float		fSpell_CoolTime{};
 		_float		fDuration{};
 		_int		iAnimNum{};
 		_string		pSpellInfo;
 		_bool		bSpell_Lock = false;
 		_bool		bEquip_Spell = false;
+		_float		fPreview{};
 	}SPELLINFO;
 private:
 	CSpell_Data(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
