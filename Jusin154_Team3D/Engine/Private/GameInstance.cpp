@@ -119,6 +119,9 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 		return E_FAIL;
 	}
 
+
+	m_vViewPortSize = _float2((_float)EngineDesc.iWinSizeX, (_float)EngineDesc.iWinSizeY);
+
 	return S_OK;
 }
 
@@ -196,6 +199,11 @@ _float CGameInstance::Real_Random_Float (_float iMin, _float iMax)
 {
 	uniform_real_distribution<_float> rand(iMin, iMax);
 	return rand(m_Rng);
+}
+
+_float2 CGameInstance::Get_ViewPortSize()
+{
+	return m_vViewPortSize;
 }
 
 void CGameInstance::BillBoard(CTransform* pTransform)

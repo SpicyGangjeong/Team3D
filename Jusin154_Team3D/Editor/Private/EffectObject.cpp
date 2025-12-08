@@ -48,9 +48,6 @@ HRESULT CEffectObject::Render()
 		if (FAILED(m_pInstance_ModelCom->Bind_CS_Output(5, 1)))
 			return E_FAIL;
 
-		if (FAILED(m_pInstance_ModelCom->Bind_OutPut_SRV_VS(5, 1)))
-			return E_FAIL;
-
 		if (FAILED(m_pInstance_ModelCom->Render(i)))
 		{
 			return E_FAIL;
@@ -511,14 +508,13 @@ HRESULT CEffectObject::LoadPre(const _char* pFilePath, LEVEL eLevel)
 
 	PRE_EFFECT_INFO PreEffectInfo = {};
 
-	if (!ReadFile(hFile, &PreEffectInfo, sizeof(PRE_EFFECT_INFO), &dwByte, nullptr)) {
+	if (!ReadFile(hFile, &m_EffectInfo, sizeof(PRE_EFFECT_INFO), &dwByte, nullptr)) {
 		return E_FAIL;
 	}
 
 	m_EffectInfo.LightDesc.pPosition = m_pTransformCom->Get_StatePtr(STATE::POSITION);
 	m_EffectInfo.LightDesc.iLevel = ENUM_CLASS(eLevel);
 
-	ZeroMemory(&m_EffectInfo.LightDesc, sizeof(LIGHT_DESC));
 
 	if (m_EffectInfo.LightDesc.eType != LIGHT::DIRECTIONAL) // 0이 아닐때만 생성
 	{
@@ -952,6 +948,13 @@ HRESULT CEffectObject::Bind_ShaderResources()
 	}
 
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDissolveColor", &m_EffectInfo.vDissolveColor, sizeof(_float4)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDissolveColorCut", &m_EffectInfo.vDissolveColorCut, sizeof(_float2)))) {
+		return E_FAIL;
+	}
 
 
 

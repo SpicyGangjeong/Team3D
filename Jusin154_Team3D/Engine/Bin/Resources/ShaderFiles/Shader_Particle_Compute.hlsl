@@ -1,4 +1,5 @@
 #include "Engine_Shader_Functions.hlsli"
+#include "Engine_Shader_Defines.hlsli"
 
 struct Particle
 {
@@ -41,7 +42,10 @@ struct ParticleValue
     float  fSizeDrag;
     float3 vDeltaSize;
     float2 vDelay;
-    float4 vPrePos;
+    
+    bool  isCompareStop;
+    float fCollisionTime;
+    float fDropAttenuation;
 };
 
 
@@ -68,14 +72,23 @@ cbuffer g_ConstantBuffer : register(b0) // b0 << 이 숫자와 컨스턴트 쉐�
     bool isSizeMove;
     
     bool isNoWorld;
-    bool isPadding0;
+    bool isDetphCompareStop;
     bool isPadding1;
     bool isPadding2;
 
     float fTimeDelta;
     float fSizeLerpOption; // 반드시 상수버퍼는 16바이트 배수로 만들어져야 한다.
     float fMoveLerpOption;
-    float fPadding3;
+    float fFar;
+    
+    row_major matrix ViewMatrix;
+    row_major matrix ProjMatrix;
+    
+    float2 vScreenSize;
+    float fPadding0;
+    float fPadding1;
+
+    
 }
 
 //내가 몇개의 스레드를 사용할 것인지 지정하는데
@@ -86,10 +99,15 @@ void CS_MAIN(
 {
     int iIndex = DispatchThreadID.x; // 배열 인덱스 
     
+
+    
     Particle particle = g_ParticleBufferInput[iIndex];
     
     ParticleValue particleValue = g_ParticleValueBufferInput[iIndex];
     
+    
+    float fGravity = particleValue.fGravity;
+    float fOnlyDropY = 0.f;
     particleValue.vDelay.x += fTimeDelta;
     
     if (particleValue.vDelay.x < particleValue.vDelay.y)
@@ -120,8 +138,9 @@ void CS_MAIN(
     // 라이프타임 움직임
     particle.vLifeTime.x += fTimeDelta;
     
-    // 내 이전 위치정보를 저장해둔다
-    particleValue.vPrePos = particle.vTranslation;
+    
+    /* 내 z가 가려지는 상황이었다면 연산하지않음*/
+    
     
     if (particle.vLifeTime.x >= particle.vLifeTime.y)
     {
@@ -138,15 +157,38 @@ void CS_MAIN(
         particle.vLifeTime.x = 0.f;
         particleValue.vAniIndex.x = 0.f;
         particleValue.vDelay.x = 0.f;
-        
-
+        particleValue.isCompareStop = false;
+        particleValue.fCollisionTime = 0.f;
         
         g_VBInstanceOutput[iIndex] = particle;
         g_ParticleValueOutput[iIndex] = particleValue;
         
         return ;
     }
-  
+    
+      
+    if (isDrop == true)
+    {
+        if (particleValue.isCompareStop == true) // 지면에 부딪혔을 때
+        {
+            // 내 현재 시간의 비례
+            // 0.0 ~ 3 
+            
+            // 2초에 부딧혓으면 
+            // 2 - 2 / 3 - 2
+            // 0 ~ 1 cos(0) * - 1
+            
+            float fRatio = saturate((particle.vLifeTime.x - particleValue.fCollisionTime) / (particle.vLifeTime.y - particleValue.fCollisionTime));
+            
+            fGravity *= (2.f * fRatio - 1.f) / particleValue.fDropAttenuation;
+        }
+        
+        particle.vTranslation.y -= 0.5f * particle.vLifeTime.x * fGravity;
+        fOnlyDropY = particle.vTranslation.y;
+    }
+    
+    
+   
     if (isMoveForward)
     {
         float fTime = (particle.vLifeTime.x / particle.vLifeTime.y);
@@ -182,12 +224,7 @@ void CS_MAIN(
         particle.vTranslation += vVelocity * fTimeDelta * fDrag;
         
     }
-   
-    if (isDrop == true)
-    {
-        particle.vTranslation.y -= 0.5f * particle.vLifeTime.x * particleValue.fGravity;
-    }
-    
+ 
     /*  사인 웨이브 */
     if(isSinWave == true)
     {
@@ -235,6 +272,51 @@ void CS_MAIN(
         particle.vLook = CurRotatemat[2].xyzw;
 
 
+    }
+    
+    if (isDetphCompareStop)
+    {
+        float2 vTexcoord;
+    
+        float4x4 matW, matWV, matWVP;
+    
+        row_major float4x4 TransformMatrix = float4x4(particle.vRight, particle.vUp, particle.vLook, particle.vTranslation);
+    
+        matW = mul(TransformMatrix, WorldMatrix);
+        matWV = mul(matW, ViewMatrix);
+        matWVP = mul(matWV, ProjMatrix);
+    
+        float4 vProjPos = mul(WorldMatrix[3], matWVP);
+    
+        vTexcoord.x = vProjPos.x / vProjPos.w * 0.5f + 0.5f;
+        vTexcoord.y = vProjPos.y / vProjPos.w * -0.5f + 0.5f;
+   
+        uint2 vPixelUV;
+    
+    /* 스크린 좌표로 변환 */
+        vPixelUV.x = vTexcoord.x * vScreenSize.x;
+        vPixelUV.y = vTexcoord.y * vScreenSize.y;
+    
+        float4 vDepthDesc = g_DepthTexture.Load(int3(vPixelUV, 0));
+    
+        float fOldViewZ = vDepthDesc.y * fFar;
+    
+        if (vProjPos.w >= fOldViewZ)
+        {
+            if (particleValue.isCompareStop == false)
+            {
+                particleValue.isCompareStop = true; // 내가 지면에 사라지는 순간
+                particleValue.fCollisionTime = particle.vLifeTime.x;
+               
+            }
+        }
+        
+        if (particleValue.isCompareStop == true) // 지면에 부딪혔을 때
+        {
+            particle.vTranslation.y = fOnlyDropY; // 지면에 부딪혓을때 이제 y연산은 오직 drop으로만 수행함
+        }
+        
+        
     }
     
     if (isSizeMove == true)

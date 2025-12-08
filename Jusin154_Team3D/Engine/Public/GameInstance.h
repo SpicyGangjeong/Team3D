@@ -24,6 +24,7 @@ public:
 	_int   Random_Int(_int iMin, _int iMax);
 	_int   Real_Random_Int(_int iMin, _int iMax);
 	_float Real_Random_Float(_float fMin, _float fMax);
+	_float2 Get_ViewPortSize();
 	void BillBoard(CTransform* pTransform);
 
 #pragma region GRAPHIC_DEVICE
@@ -294,7 +295,9 @@ private:
 	_float							m_fTimer_Present = { 0.f };
 	_float							m_fTimer_FrameCount = { 0.f };
 
-	vector<const _char*>			m_FilePaths = {};
+	_float2							m_vViewPortSize = {};
+
+	vector<const _char*>			    m_FilePaths = {};
 	map<const _char*, CModel*>			m_ModelMap;
 
 #endif // _DEBUG

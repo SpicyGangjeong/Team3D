@@ -765,7 +765,14 @@ void CEditEffect::Describe_Entity()
 				GUI::DragFloat("DissolveSoftMask", &m_EffectInfo.vDissolveValue.y, 0.005f);
 				GUI::DragFloat("DissolveCutRatio", &m_EffectInfo.vDissolveValue.z, 0.005f);
 
+				GUI::Spacing();
+
+		
+				GUI::DragFloat2("DissolveColorCut", (_float*)& m_EffectInfo.vDissolveColorCut, 0.005f);
+				
 				ImGui::PopItemWidth();
+
+				GUI::ColorEdit4("DissolveColor", (_float*)&m_EffectInfo.vDissolveColor);
 				_string strName  = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISSOLVE_TEXTURE", (CComponent**)&m_pDissolve_TextureCom, nullptr, this);
 				
 				if (strName != "") {

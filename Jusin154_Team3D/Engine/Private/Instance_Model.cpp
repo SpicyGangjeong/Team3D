@@ -411,11 +411,6 @@ HRESULT CInstance_Model::Change_NumInstance()
 		return E_FAIL;
 
 
-
-
-
-
-
 	return S_OK;
 }
 
@@ -546,9 +541,18 @@ void CInstance_Model::Drop(_float fTimeDelta)
 		pDesc->isPivotMove = m_InstanceDesc.isPivotMove;
 		pDesc->isSizeLerp = m_InstanceDesc.isSizeLerp;
 		pDesc->isNoWorld = m_InstanceDesc.isNoWorld;
+		pDesc->isDetphCompareStop = m_InstanceDesc.isDetphCompareStop;
+
 		pDesc->WorldMatrix = *m_pOwner->Get_Component<CTransform>()->Get_WorldMatrixPtr();
 		pDesc->fSizeLerpOption = m_InstanceDesc.fSizeLerpOption;
 		pDesc->fMoveLerpOption = m_InstanceDesc.fMoveLerpOption;
+
+		pDesc->ViewMatrix = *m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW);
+		pDesc->ProjMatrix = *m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ);
+		pDesc->fFar = *m_pGameInstance->Get_CurrentCameraFar();
+		pDesc->vScreenSize = m_pGameInstance->Get_ViewPortSize();
+	
+
 
 		m_pContext->Unmap(m_pConstantBuffer, 0);
 	}
@@ -721,6 +725,8 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 				pParticleValues[i].fDrag = m_pGameInstance->Random_Float(m_InstanceDesc.vDrag.x, m_InstanceDesc.vDrag.y);
 				pParticleValues[i].fSizeDrag = m_pGameInstance->Random_Float(m_InstanceDesc.vSizeDrag.x, m_InstanceDesc.vSizeDrag.y);
 				pParticleValues[i].vDelay = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vDelay.x, m_InstanceDesc.vDelay.y));
+				pParticleValues[i].isCompareStop = false;
+				pParticleValues[i].fDropAttenuation = m_pGameInstance->Random_Float(m_InstanceDesc.vDropAttenuation.x, m_InstanceDesc.vDropAttenuation.y);
 				
 				memcpy(&pParticleValues[i].vOriginRight, SRMatrix.m[0], sizeof(_float4));
 				memcpy(&pParticleValues[i].vOriginUp, SRMatrix.m[1], sizeof(_float4));
@@ -861,6 +867,10 @@ void CInstance_Model::Describe_Entity()
 			Instane_Buffer_ReStruct();
 		}
 
+		if (GUI::Checkbox("DetphCompareStop", &m_InstanceDesc.isDetphCompareStop))
+		{
+			Instane_Buffer_ReStruct();
+		}
 
 		if (ImGui::DragFloat3("SizeMin", reinterpret_cast<_float*>(&m_InstanceDesc.vSizeMin)))
 		{
@@ -1024,6 +1034,13 @@ void CInstance_Model::Describe_Entity()
 			Instane_Buffer_ReStruct();
 		}
 
+
+		if (ImGui::DragFloat2("DropAttenuation", reinterpret_cast<_float*>(&m_InstanceDesc.vDropAttenuation)))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
+		
 
 		ImGui::PopItemWidth();
 		ImGui::TreePop();

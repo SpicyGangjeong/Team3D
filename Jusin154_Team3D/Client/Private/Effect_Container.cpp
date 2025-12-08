@@ -72,7 +72,7 @@ void CEffect_Container::Reset_Light()
 		if (pLight == nullptr)
 			continue;
 
-		pLight->Reset_AmbientRatio();
+		pLight->Reset_IntensityRatio();
 	}
 
 }
