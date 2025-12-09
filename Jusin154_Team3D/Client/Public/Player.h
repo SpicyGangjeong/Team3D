@@ -20,6 +20,7 @@ public:
 	virtual HRESULT Render_Shadow() override;
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
+	_bool Get_Aim() { return m_bAim; }
 #ifdef _DEBUG
 	void Render_CameraCoordinateSystem();
 #endif // _DEBUG
@@ -103,6 +104,7 @@ private:
 	_float			m_fAmount = { 1.f };
 	_float			m_fInputTime = {};
 	_bool			m_bRatio = { false };
+	_bool			m_bAim = { false };
 
 	HRESULT InputAction();
 	HRESULT InputMove();

@@ -43,9 +43,12 @@ struct ParticleValue
     float3 vDeltaSize;
     float2 vDelay;
     
+        
     bool  isCompareStop;
     float fCollisionTime;
     float fDropAttenuation;
+    
+    float3 vVelocity;
 };
 
 
@@ -108,6 +111,8 @@ void CS_MAIN(
     
     float fGravity = particleValue.fGravity;
     float fOnlyDropY = 0.f;
+    float fRatio = particle.vLifeTime.x / particle.vLifeTime.y;
+    
     particleValue.vDelay.x += fTimeDelta;
     
     if (particleValue.vDelay.x < particleValue.vDelay.y)
@@ -144,8 +149,14 @@ void CS_MAIN(
     
     if (particle.vLifeTime.x >= particle.vLifeTime.y)
     {
+        particleValue.isCompareStop = false;
+        particleValue.fCollisionTime = 0.f;
+        
         if (isLoop == false)
         {
+            g_VBInstanceOutput[iIndex] = particle;
+            g_ParticleValueOutput[iIndex] = particleValue;
+            
             return ;
         }
         //초기화
@@ -157,8 +168,7 @@ void CS_MAIN(
         particle.vLifeTime.x = 0.f;
         particleValue.vAniIndex.x = 0.f;
         particleValue.vDelay.x = 0.f;
-        particleValue.isCompareStop = false;
-        particleValue.fCollisionTime = 0.f;
+
         
         g_VBInstanceOutput[iIndex] = particle;
         g_ParticleValueOutput[iIndex] = particleValue;
@@ -168,17 +178,11 @@ void CS_MAIN(
     
       
     if (isDrop == true)
-    {
+    {        
         if (particleValue.isCompareStop == true) // 지면에 부딪혔을 때
         {
-            // 내 현재 시간의 비례
-            // 0.0 ~ 3 
             
-            // 2초에 부딧혓으면 
-            // 2 - 2 / 3 - 2
-            // 0 ~ 1 cos(0) * - 1
-            
-            float fRatio = saturate((particle.vLifeTime.x - particleValue.fCollisionTime) / (particle.vLifeTime.y - particleValue.fCollisionTime));
+            fRatio = saturate((particle.vLifeTime.x - particleValue.fCollisionTime) / (particle.vLifeTime.y - particleValue.fCollisionTime));
             
             fGravity *= (2.f * fRatio - 1.f) / particleValue.fDropAttenuation;
         }
@@ -187,8 +191,7 @@ void CS_MAIN(
         fOnlyDropY = particle.vTranslation.y;
     }
     
-    
-   
+
     if (isMoveForward)
     {
         float fTime = (particle.vLifeTime.x / particle.vLifeTime.y);
@@ -274,7 +277,7 @@ void CS_MAIN(
 
     }
     
-    if (isDetphCompareStop)
+    if (isDetphCompareStop == true)
     {
         float2 vTexcoord;
     
@@ -301,7 +304,7 @@ void CS_MAIN(
     
         float fOldViewZ = vDepthDesc.y * fFar;
     
-        if (vProjPos.w >= fOldViewZ)
+        if (vProjPos.w >= fOldViewZ && particle.vLifeTime.x >= 0.2f)
         {
             if (particleValue.isCompareStop == false)
             {
@@ -318,6 +321,10 @@ void CS_MAIN(
         
         
     }
+    
+     /*가속력*/
+    if (length(particleValue.vVelocity) > FLT_EPSILON5)
+        particle.vTranslation.xyz += fRatio * particleValue.vVelocity;
     
     if (isSizeMove == true)
     {

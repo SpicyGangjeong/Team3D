@@ -137,6 +137,7 @@ HRESULT CPlayer::InputAim()
 	if (m_pGameInstance->Mouse_Pressing(DIM_RBUTTON) ||
 		m_pGameInstance->Mouse_Pressing(DIM_LBUTTON))
 	{
+		if (m_pGameInstance->Mouse_Pressing(DIM_RBUTTON)) {m_bAim  = true;}
 		return S_OK;
 	}
 	return E_FAIL;
@@ -910,7 +911,7 @@ void CPlayer::Behavior_LightAttackEnter()
 HRESULT CPlayer::Behavior_LightAttackExitCheck()
 {
 	pair<_uint, _bool> pairAnimInfo;
-
+	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
 	if (m_pGameInstance->Mouse_Up(DIM_LBUTTON))
 	{
 		_uint iCurr = m_pModelCom->Get_AnimIndex();
@@ -918,13 +919,11 @@ HRESULT CPlayer::Behavior_LightAttackExitCheck()
 
 		if (iCurr >= iStart && iCurr < iStart + 3)
 		{
-			_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
-
 			_uint iNext = iCurr + 1;
 			pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK];
 			pairAnimInfo.first = iNext;
 
-			if (fRatio >= 0.1f)
+			if (fRatio >= 0.2f)
 			{
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 
@@ -943,7 +942,7 @@ HRESULT CPlayer::Behavior_LightAttackExitCheck()
 		}
 	}
 
-	if (SUCCEEDED(InputMove()) && IsCurrentKeyFrame("Combat")) {
+	if (SUCCEEDED(InputMove()) && fRatio >= 0.3f) {
 		m_pFSM->Change_State(FSMSTATE::MOVE);
 		return E_FAIL;
 	}
@@ -1068,6 +1067,7 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 {
 	pair<_uint, _bool> pairAnimInfo;
 	_uint iIndex = m_pModelCom->Get_AnimIndex();
+	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
 
 	if (SUCCEEDED(InputSpell()))
 	{
@@ -1076,9 +1076,7 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 
 		if (iCurr >= iStart && iCurr < iStart + 3)
 		{
-			_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
-
-			if (fRatio >= 0.1f)
+			if (fRatio >= 0.2f)
 			{
 				_uint iNext = iCurr + 1;
 				pairAnimInfo = m_Animation[STATEANIM::SPELL];
@@ -1120,7 +1118,7 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 		}
 	}
 
-	if (m_pFSM->IsEnable(FSMSTATE::SPELL) && IsCurrentKeyFrame("Combat"))
+	if (m_pFSM->IsEnable(FSMSTATE::SPELL) && fRatio >= 0.3f)
 	{
 		if (m_eSpell != ENUM_CLASS(SKILL_TYPE::END))
 		{

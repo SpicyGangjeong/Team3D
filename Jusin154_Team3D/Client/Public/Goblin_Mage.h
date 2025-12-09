@@ -13,6 +13,7 @@ class CGoblin_Mage final : public CMonster
 	{
 		SPELL,
 		LIGHTATTACK,
+		TP,
 		END
 	};
 private:
@@ -59,13 +60,14 @@ private:
 	virtual void Set_Anim();
 
 	_float m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = {};
-	_float m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = { 20.f,20.f, };
+	_float m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = { 20.f,20.f,20.f };
 
 	_bool m_bStep = { false };
 	_float m_fTpTime = {};
 	_float m_fAirTime = {};
 	_vector m_vOriginPos = {};
 	_float m_fLength = {};
+	_bool m_bShield = { false };
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();
@@ -86,6 +88,10 @@ private:
 	void	Behavior_LightAttackEnter();
 	HRESULT Behavior_LightAttackExitCheck(_float fTimeDelta);
 	void	Behavior_LightAttackExit();
+
+	void	Behavior_BlinkEnter();
+	HRESULT Behavior_BlinkExitCheck(_float fTimeDelta);
+	void	Behavior_BlinkExit();
 
 	void	Behavior_HitEnter();
 	HRESULT Behavior_HitExitCheck(_float fTimeDelta);

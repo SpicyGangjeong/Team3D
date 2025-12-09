@@ -176,6 +176,16 @@ call Update_Shaders.bat
     <ClInclude Include="..\Public\Action_Panel.h" />
     <ClInclude Include="..\public\AlphaMap.h" />
     <ClInclude Include="..\Public\Body.h" />
+    <ClInclude Include="..\Public\Goblin_Protego.h" />
+    <ClInclude Include="..\Public\State_Hit.h" />
+    <ClInclude Include="..\Public\State_IdleBreak.h" />
+    <ClInclude Include="..\Public\State_Slam.h" />
+    <ClInclude Include="..\Public\State_Swing.h" />
+    <ClInclude Include="..\Public\State_Throw.h" />
+    <ClInclude Include="..\Public\Troll.h" />
+    <ClInclude Include="..\Public\Troll_Rush_Hit.h" />
+    <ClInclude Include="..\Public\Troll_Nomal_Smoke.h" />
+    <ClInclude Include="..\Public\TrollSwing.h" />
     <ClInclude Include="..\Public\BombardSide.h" />
     <ClInclude Include="..\public\CameraLockOn.h" />
     <ClInclude Include="..\public\Current_Slot_Number.h" />
@@ -344,6 +354,10 @@ call Update_Shaders.bat
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\public\Mouse_Cursor.h" />
     <ClInclude Include="..\Public\RootModelPart.h" />
+    <ClInclude Include="..\Public\Troll_Rock.h" />
+    <ClInclude Include="..\Public\Troll_State_BackHand_Swing.h" />
+    <ClInclude Include="..\Public\Troll_State_Rush.h" />
+    <ClInclude Include="..\Public\Troll_Weapon.h" />
     <ClInclude Include="..\public\UI_Manager.h" />
     <ClInclude Include="..\public\Unified.h" />
     <ClInclude Include="..\Public\Wand.h" />
@@ -356,6 +370,16 @@ call Update_Shaders.bat
     <ClCompile Include="..\Private\Action_Panel.cpp" />
     <ClCompile Include="..\private\AlphaMap.cpp" />
     <ClCompile Include="..\Private\Body.cpp" />
+    <ClCompile Include="..\Private\Goblin_Protego.cpp" />
+    <ClCompile Include="..\Private\State_Hit.cpp" />
+    <ClCompile Include="..\Private\State_IdleBreak.cpp" />
+    <ClCompile Include="..\Private\State_Slam.cpp" />
+    <ClCompile Include="..\Private\State_Swing.cpp" />
+    <ClCompile Include="..\Private\State_Throw.cpp" />
+    <ClCompile Include="..\Private\Troll.cpp" />
+    <ClCompile Include="..\Private\Troll_Rush_Hit.cpp" />
+    <ClCompile Include="..\Private\Troll_Nomal_Smoke.cpp" />
+    <ClCompile Include="..\Private\TrollSwing.cpp" />
     <ClCompile Include="..\Private\BombardSide.cpp" />
     <ClCompile Include="..\private\CameraLockOn.cpp" />
     <ClCompile Include="..\private\Current_Slot_Number.cpp" />
@@ -527,6 +551,11 @@ call Update_Shaders.bat
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\Private\RootModelPart.cpp" />
+    <ClCompile Include="..\Private\Troll_Rock.cpp" />
+    <ClCompile Include="..\Private\Troll_States.cpp" />
+    <ClCompile Include="..\Private\Troll_State_BackHand_Swing.cpp" />
+    <ClCompile Include="..\Private\Troll_State_Rush.cpp" />
+    <ClCompile Include="..\Private\Troll_Weapon.cpp" />
     <ClCompile Include="..\private\UI_Manager.cpp" />
     <ClCompile Include="..\private\Unified.cpp" />
     <ClCompile Include="..\Private\Wand.cpp" />

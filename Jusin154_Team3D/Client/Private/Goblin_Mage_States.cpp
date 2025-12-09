@@ -11,6 +11,7 @@
 #include "State_Combat.h"
 #include "State_Spell.h"
 #include "State_LightAttack.h"
+#include "State_Blink.h"
 #include "State_Hit.h"
 #pragma endregion
 
@@ -93,7 +94,12 @@ HRESULT CGoblin_Mage::Behavior_CombatExitCheck(_float fTimeDelta)
 		return E_FAIL;
 	}
 
-	if (m_fTargetDistance <= 15.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SPELL)] <= 0.f)
+
+	if (m_fTargetDistance <= 7.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::TP)] <= 0.f)
+	{
+		m_pFSM->Change_State(FSMSTATE::BLINK);
+	}
+	else if (m_fTargetDistance <= 15.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SPELL)] <= 0.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::SPELL);
 	}
@@ -175,6 +181,67 @@ HRESULT CGoblin_Mage::Behavior_LightAttackExitCheck(_float fTimeDelta)
 void CGoblin_Mage::Behavior_LightAttackExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::LIGHT_ATTACK);
+}
+
+void CGoblin_Mage::Behavior_BlinkEnter()
+{
+
+	pair<_uint, _bool> pairAnimInfo = {};
+	m_pFSM->Enable_State(FSMSTATE::BLINK);
+
+	pairAnimInfo = m_Animation[STATEANIM::BLINK_START];
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			m_bVisible = false;
+			m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::TP)] = m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::TP)];
+			_vector vPos = Get_WorldPostion();
+			_vector vLook =m_pTransformCom->Get_State(STATE::LOOK);
+			vLook = XMVectorSetY(vLook, 0.f);
+			vLook = XMVector3Normalize(vLook);
+
+			_float randAngleDeg = m_pGameInstance->Real_Random_Float(-60.f, 60.f);
+			_float randAngleRad = XMConvertToRadians(randAngleDeg);
+
+			_matrix rot = XMMatrixRotationY(randAngleRad);
+			_vector offsetDir = XMVector3TransformNormal(vLook, rot);
+
+			_float randDist = m_pGameInstance->Real_Random_Float(-5.f, -3.f);
+
+			_vector vFinalPos = vPos + offsetDir * randDist;
+
+			m_pCharacter_Controller->Set_Position(vFinalPos); }
+	, 0.99f);
+}
+
+HRESULT CGoblin_Mage::Behavior_BlinkExitCheck(_float fTimeDelta)
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	m_fTpTime += fTimeDelta;
+	if (m_fTpTime >= 1.5f)
+	{
+		m_bVisible = true;
+		m_fTpTime = 0.f;
+		pairAnimInfo = m_Animation[STATEANIM::BLINK];
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+	}
+
+	if (m_pModelCom->IsFinishedAnim() && iCurrAnimIndex == m_Animation[STATEANIM::BLINK].first)
+	{
+		m_bLookAt = true;
+		m_fTpTime = 0.f;
+		m_pFSM->Change_State(FSMSTATE::COMBAT);
+		return E_FAIL;
+	}
+
+	return E_FAIL;
+}
+
+void CGoblin_Mage::Behavior_BlinkExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::BLINK);
 }
 
 void CGoblin_Mage::Behavior_HitEnter()
@@ -315,6 +382,17 @@ void CGoblin_Mage::Add_FSM()
 		m_States.emplace(FSMSTATE::LIGHT_ATTACK, CState_LightAttack::Create(&Desc));
 	}
 
+	{
+		CState_Blink::STATE_BLINK_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_BlinkEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_BlinkExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_BlinkExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::BLINK, CState_Blink::Create(&Desc));
+	}
+
 #pragma endregion
 #pragma region Behavior_Combat_Focus
 
@@ -363,6 +441,7 @@ void CGoblin_Mage::Set_Anim()
 	m_Animation[STATEANIM::SPRINT] = { 90, true };
 
 	m_Animation[STATEANIM::SKILL] = { 85,false }; // 나이프 던지기
+	m_Animation[STATEANIM::BLINK_START] = { 428,false };
 	m_Animation[STATEANIM::BLINK] = { 426,false }; // 텔레포트
 	m_Animation[STATEANIM::SWING_FWD] = { 100,false }; // 도끼 스윙 444
 	m_Animation[STATEANIM::ATTACK_END] = { 76,false };

@@ -83,6 +83,7 @@ HRESULT CDummy_PhysXEffectHitBox::Ready_Components(void* pArg)
 	if (FAILED(__super::Ready_Components(pArg))) {
 		return E_FAIL;
 	}
+
 	PHYSXDUMMY_DESC* pDesc = static_cast<PHYSXDUMMY_DESC*>(pArg);
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pDesc->vPos), 1.f));
 	m_pTransformCom->Rotation(pDesc->vRotRPY.x, pDesc->vRotRPY.y, pDesc->vRotRPY.z);

@@ -16,6 +16,10 @@
 #include "DecendoSide.h"
 #include "NomalJapSide.h"
 
+#include "Troll_Rush_Hit.h"
+#include "Troll_Nomal_Smoke.h"
+#include "TrollSwing.h"
+
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
 {
@@ -40,9 +44,11 @@ HRESULT CEffectPool::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	if (FAILED(Ready_Effect()))
-		return E_FAIL;
+	//if (FAILED(Ready_Effect()))
+	//	return E_FAIL;
 
+	if (FAILED(Ready_MonsterEffect()))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -212,6 +218,40 @@ HRESULT CEffectPool::Ready_Effect()
 		return pEffect; }
 	))) return E_FAIL;
 
+
+	return S_OK;
+}
+
+HRESULT CEffectPool::Ready_MonsterEffect()
+{
+
+
+	if (FAILED(Create_Effect(SKILL_TYPE::TROLL_ATTACK, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CTrollSwing* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CTrollSwing>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::TROLL_NOMAL_SMOKE, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CTroll_Nomal_Smoke* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CTroll_Nomal_Smoke>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::TROLL_RUSH_HIT, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CTroll_Rush_Hit* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CTroll_Rush_Hit>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
 
 	return S_OK;
 }
