@@ -375,4 +375,21 @@ float3 Filmic_ToneMapper(float3 vColor)
 }
 
 
+float4 ApplyDissolve(Texture2D DisolveTexture, float fDisolveRatio, float fDisolveAmount, float fDisolveEdgeWidth, float4 vDisolveEdgeColor,  float4 vMtrlDiffuse, float2 vTexcoord)
+{
+    float4 vDisolve = DisolveTexture.Sample(DefaultSampler, vTexcoord);
+    float fDisolveValue = vDisolve.r;
+    
+    float fDisolveThreshold = saturate(fDisolveRatio + fDisolveAmount);
+
+    clip(fDisolveValue - fDisolveThreshold); // 진짜 잘려나감
+    
+    float edgeWidth = max(fDisolveEdgeWidth, FLT_EPSILON5); // 불타는 라인
+    float edgeFactor = smoothstep(fDisolveThreshold, fDisolveThreshold + edgeWidth, fDisolveValue);
+
+    vMtrlDiffuse.rgb = lerp(vDisolveEdgeColor.rgb, vMtrlDiffuse.rgb, edgeFactor);
+
+    return vMtrlDiffuse;
+}
+
 #endif // ENGINE_SHADER_FUNCTIONS_HLSLI

@@ -5,10 +5,19 @@
 #include "CallBack_Monster_Behavior.h"
 #include "CallBack_Monster_HitReport.h"
 
+NS_BEGIN(Engine)
+class CTransform;
+NS_END
+
 NS_BEGIN(Client)
 
 class CGoblin_Spector final : public CMonster
 {
+public:
+	typedef struct tagSpector
+	{
+		CTransform* pParentTransform = { nullptr };
+	}GOBLIN_SPECTOR_DESC;
 private:
 	CGoblin_Spector(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CGoblin_Spector(const CGoblin_Spector& Prototype);
@@ -19,19 +28,18 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
-	virtual _vector Get_LockOnPos() override;
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
 
 
 private:
-	CCallBack_Monster_Behavior* m_pCallBack_Behavior = { nullptr };
-	CCallBack_Monster_HitReport* m_pCallBack_HitReport = { nullptr };
-
-	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
-	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
-	_float2 m_vStunTimer = { 0.f, 4.f };
+	class CGoblin* m_pGoblin = { nullptr };
+	CTransform* m_pParentTransformCom = { nullptr };
 	_uint iIndex;
+	_float3 m_Offset = {};
+	_float3 m_vOriginScale = {};
+	_float3 m_vScale = { 1.f, 1.f, 1.f };
+
 
 
 	class CEffectParts* m_pSmoke = { nullptr };
@@ -53,6 +61,13 @@ public:
 	virtual void Describe_Entity() override;
 
 #endif // _DEBUG
+
+
+	_bool m_bStep = { false };
+	_float m_fTpTime = {};
+	_float m_fAirTime = {};
+	_vector m_vOriginPos = {};
+	_float m_fLength = {};
 
 };
 

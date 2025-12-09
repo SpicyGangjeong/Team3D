@@ -35,9 +35,9 @@ public:
 private:
     CInfoInstance* m_pInfoInstance = { nullptr };
 
-    _int        m_iSpell_Count{};
-    SPELL_INFO  SpellInfo[34] = {};
-    _float        m_iSpell_CoolTime[34] = {};
+    _int            m_iSpell_Count{};
+    SPELL_INFO      SpellInfo[34] = {};
+    _float          m_iSpell_CoolTime[34] = {};
 
     _bool        m_bNoCool = { false };
 

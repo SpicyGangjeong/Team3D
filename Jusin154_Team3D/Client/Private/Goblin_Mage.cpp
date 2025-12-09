@@ -4,6 +4,7 @@
 #include "Layer.h"
 #include "EffectPool.h"
 #include "GameInstance.h"
+#include "InfoInstance.h"
 #include "Goblin_Dagger.h"
 #include "Effect_Container.h"
 #include "Wand.h"
@@ -89,7 +90,7 @@ void CGoblin_Mage::Update(_float fTimeDelta)
 		m_pCharacter_Controller->Move(fTimeDelta);
 		m_vStunTimer.x = 0.f;
 	}
-	else {
+	else if (true == m_pRigidBody->IsActive()) {
 		if (0.f == m_vStunTimer.x) {
 			PSX::PxExtendedVec3 pxControlllerPos = m_pCharacter_Controller->Get_Controller()->getPosition();
 			PSX::PxTransform pxTransform((_float)pxControlllerPos.x, (_float)pxControlllerPos.y + 100.f, (_float)pxControlllerPos.z);
@@ -106,10 +107,9 @@ void CGoblin_Mage::Update(_float fTimeDelta)
 	Describe_Entity();
 #endif // _DEBUG
 
-	for (_uint i = 0; i < ENUM_CLASS(GOBLIN_SKILL::END); i++)
+	for (_uint i = 0; i < ENUM_CLASS(GOBLIN_SKILL::END); i++){
 		m_fSkillCoolTime[i] = max(0.f, m_fSkillCoolTime[i] - fTimeDelta);
-
-
+	}
 
 }
 
@@ -119,14 +119,17 @@ void CGoblin_Mage::Late_Update(_float fTimeDelta)
 	if (true == m_pCharacter_Controller->IsActive()) {
 		m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
 	}
-	else {
+	else if (true == m_pRigidBody->IsActive()) {
 		m_pTransformCom->Set_WorldMatrix(m_pRigidBody->Get_FootPositionPxTransform());
 	}
-
+	if (true == m_bLookAt) {
+		m_pTransformCom->LookAt_Horizontal(XMLoadFloat4(&m_vTargetPos));
+	}
 
 	m_pTransformCom->LookAt_Horizontal(XMLoadFloat4(&m_vTargetPos));
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW, this);
 }
 
 HRESULT CGoblin_Mage::Render()
@@ -172,22 +175,58 @@ HRESULT CGoblin_Mage::Render()
 			return E_FAIL;
 		}
 	}
-	else {
+	else if (true == m_pRigidBody->IsActive()) {
 		if (FAILED(m_pRigidBody->Render())) {
 			return E_FAIL;
 		}
 	}
 #endif
+
+
+	if (0.f < m_fDeadRatio) {
+		_bool bDisolve = false;
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool)))) {
+			return E_FAIL;
+		}
+	}
+	return S_OK;
+}
+
+HRESULT CGoblin_Mage::Render_Shadow()
+{
+	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ViewMatrix", D3DTS::VIEW))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ProjMatrix", D3DTS::PROJ))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", &m_pGameInstance->Get_ShadowDesc()->fFar, sizeof(_float)))) {
+		return E_FAIL;
+	}
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+	for (_uint i = 0; i < iNumMeshes; i++)
+	{
+		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::SHADOW)))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pModelCom->Render(i))) {
+			return E_FAIL;
+		}
+	}
+
 	return S_OK;
 }
 
 void CGoblin_Mage::OnCollision(CGameObject* pOther, void* pDesc)
 {
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
-	_vector vWorldPos = {};		// 접촉지점
-	_vector vWorldNomal = {};	// 접촉노말
-	_vector vHitDir = {};		// 시도한 move 방향
-	_float  fLength = {};		// 작용된 힘
 
 	_uint iSkillType = dynamic_cast<CEffect_Container*>(pOther)->Get_SkillType();
 	switch (iSkillType)
@@ -199,8 +238,16 @@ void CGoblin_Mage::OnCollision(CGameObject* pOther, void* pDesc)
 		m_eHitSpell = STATEANIM::TUMBLE2;
 		break;
 	case ENUM_CLASS(SKILL_TYPE::JAP):
+	{
 		m_eHitSpell = STATEANIM::HIT_LEVIOSO;
-		break;
+		_float fSkillRatio = m_pInfoInstance->Get_Spell_Info(ENUM_CLASS(SKILL_TYPE::JAP)).fSpell_Damage;
+		_float fCoefficient = CollisionDesc->pObject->Get_Component<CStat>()->Get_Stat(ENUM_CLASS(STAT::MAGIC));
+		if (true == Get_Damage(fSkillRatio * fCoefficient)) {
+			m_pFSM->Change_State(FSMSTATE::DEAD);
+			return;
+		}
+	}
+	break;
 	case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
 		m_eHitSpell = STATEANIM::HIT_LEVIOSO;
 		break;
@@ -208,9 +255,9 @@ void CGoblin_Mage::OnCollision(CGameObject* pOther, void* pDesc)
 		m_eHitSpell = STATEANIM::KNOCKDOWN_FWD;
 		break;
 	}
-	if (!m_pFSM->IsEnable(FSMSTATE::BLINK))
+	if (!m_pFSM->IsEnable(FSMSTATE::BLINK)){
 		m_pFSM->Change_State(FSMSTATE::HIT);
-
+	}
 }
 
 void CGoblin_Mage::OnHit(CGameObject* pOther, CGameObject* pCaller)

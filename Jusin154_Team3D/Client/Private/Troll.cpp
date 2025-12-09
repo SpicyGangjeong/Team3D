@@ -4,6 +4,7 @@
 #include "Troll_Weapon.h"
 #include "Troll_Rock.h"
 #include "GameInstance.h"
+#include "InfoInstance.h"
 #include "Effect_Container.h"
 #include "EffectParts.h"
 #include "EffectPool.h"
@@ -94,7 +95,7 @@ void CTroll::Update(_float fTimeDelta)
 		m_pCharacter_Controller->Move(fTimeDelta);
 		m_vStunTimer.x = 0.f;
 	}
-	else {
+	else if (true == m_pRigidBody->IsActive()) {
 		if (0.f == m_vStunTimer.x) {
 			PSX::PxExtendedVec3 pxControlllerPos = m_pCharacter_Controller->Get_Controller()->getPosition();
 			PSX::PxTransform pxTransform((_float)pxControlllerPos.x, (_float)pxControlllerPos.y + 100.f, (_float)pxControlllerPos.z);
@@ -107,7 +108,6 @@ void CTroll::Update(_float fTimeDelta)
 			m_pRigidBody->ConvertToCCT(*m_pCharacter_Controller);
 		}
 	}
-
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
@@ -115,6 +115,8 @@ void CTroll::Update(_float fTimeDelta)
 
 	for (_uint i = 0; i < ENUM_CLASS(TROLL_SKILL::END); i++)
 		m_fSkillCoolTime[i] = max(0.f, m_fSkillCoolTime[i] - fTimeDelta);
+
+	
 
 
 #pragma region TRAIL_UPDATE
@@ -174,6 +176,7 @@ void CTroll::Late_Update(_float fTimeDelta)
 	m_fCross = XMVectorGetY(XMVector3Cross(vLook, vDir));
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW, this);
 }
 
 HRESULT CTroll::Render()
@@ -226,6 +229,38 @@ HRESULT CTroll::Render()
 	return S_OK;
 }
 
+HRESULT CTroll::Render_Shadow()
+{
+	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ViewMatrix", D3DTS::VIEW))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ProjMatrix", D3DTS::PROJ))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", &m_pGameInstance->Get_ShadowDesc()->fFar, sizeof(_float)))) {
+		return E_FAIL;
+	}
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+	for (_uint i = 0; i < iNumMeshes; i++)
+	{
+		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::SHADOW)))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pModelCom->Render(i))) {
+			return E_FAIL;
+		}
+	}
+
+	return S_OK;
+}
+
 _vector CTroll::Get_LockOnPos()
 {
 	if (nullptr != m_pCharacter_Controller && true == m_pCharacter_Controller->IsActive()) {
@@ -240,10 +275,6 @@ _vector CTroll::Get_LockOnPos()
 void CTroll::OnCollision(CGameObject* pOther, void* pDesc)
 {
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
-	_vector vWorldPos = {};		// 접촉지점
-	_vector vWorldNomal = {};	// 접촉노말
-	_vector vHitDir = {};		// 시도한 move 방향
-	_float  fLength = {};		// 작용된 힘
 
 	_uint iSkillType = dynamic_cast<CEffect_Container*>(pOther)->Get_SkillType();
 	switch (iSkillType)

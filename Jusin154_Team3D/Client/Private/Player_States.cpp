@@ -518,6 +518,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 								}
 								else {
 									pairAnimInfo = m_Animation[STATEANIM::JOG_LEFT];
+									m_fAnimSpeed = 1.2f;
 								}
 							}
 						}
@@ -525,7 +526,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 							pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
 						}
 
-						m_fAmount = 0.5f;
+						m_fAmount = 0.3f;
 						m_bRatio = true;
 					}
 					else {
@@ -550,6 +551,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 								}
 								else {
 									pairAnimInfo = m_Animation[STATEANIM::JOG_RIGHT];
+									m_fAnimSpeed = 1.2f;
 								}
 							}
 						}
@@ -557,7 +559,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 							pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
 						}
 
-						m_fAmount = 0.5f;
+						m_fAmount = 0.3f;
 						m_bRatio = true;
 					}
 				}
@@ -575,6 +577,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 						else
 						{
 							pairAnimInfo = m_Animation[STATEANIM::JOG_BWD];
+							m_fAnimSpeed = 1.2f;
 						}
 
 					}
@@ -586,12 +589,13 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 						pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
 					}
 
-					m_fAmount = 0.5f;
+					m_fAmount = 0.3f;
 					m_bRatio = true;
 				}
 
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, m_fAmount, m_bRatio);
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, m_fAmount, m_bRatio, m_fAnimSpeed);
 				m_fAmount = 1.f;
+				m_fAnimSpeed = 1.f;
 			}
 		}
 
@@ -607,11 +611,13 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 			m_pFSM->Enable_State(FSMSTATE::STOP);
 			if (m_pFSM->IsEnable(FSMSTATE::WALK)) {
 				m_bWalkToggle = false;
+				m_pFSM->Disable_State(FSMSTATE::WALK);
 				pairAnimInfo = m_Animation[STATEANIM::WALK_STOP];
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 			}
 			else if (m_pFSM->IsEnable(FSMSTATE::SPRINT)) {
 				m_bSprintToggle = false;
+				m_pFSM->Disable_State(FSMSTATE::SPRINT);
 				pairAnimInfo = m_Animation[STATEANIM::JOG_STOP];
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 			}

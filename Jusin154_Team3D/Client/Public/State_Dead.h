@@ -8,7 +8,8 @@ class CState_Dead final : public CState_Root
 {
 public:
     typedef struct tagLand : public CState_Root::STATE_ROOT_DESC {
-
+        _float2 vDeadTimer = { 0.f, 2.f };
+        function<void(_float)> funcLateUpdate = { nullptr };
     }STATE_DEAD_DESC;
 private:
     CState_Dead();
@@ -21,7 +22,8 @@ public:
 
 private:
     HRESULT Initialize(STATE_DEAD_DESC* pDesc);
-
+    _float2     m_vDeadTimer = { 0.f, 2.f };
+    function<void(_float)> m_funcLateUpdate = { nullptr };
 public:
     static CState_Dead* Create(STATE_DEAD_DESC* pDesc);
     virtual void Free() override;

@@ -176,7 +176,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Background = false;
 #endif // 
 #ifdef 기무리
-	isReady_Background = false;
+	isReady_Background = true;
 #endif // 
 #ifdef 인혁
 	isReady_Background = false;
@@ -376,7 +376,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_SkyBox(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 {
-	for (_uint i = 0; i < 1; ++i)
+	for (_uint i = 0; i < 5; ++i)
 	{
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 			return E_FAIL;
@@ -385,9 +385,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Mage>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Spector>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
-		return E_FAIL;
-	}
+
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 		return E_FAIL;
 	}

@@ -5,6 +5,7 @@ matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 bool g_bRimLight;
 bool g_bUseNormalMap;
+bool g_bDisolve;
 
 float g_fFar;
 float g_LifeRatio;
@@ -16,6 +17,11 @@ float3 g_vOutLineColor;
 float g_fOutLineScale;
 float g_fOutLineThickness;
 float g_fOutLinePower;
+float g_fDisolveRatio;
+float g_fDisolveAmount;
+float g_fDisolveEdgeWidth;
+
+vector g_vDisolveEdgeColor;
 vector g_vCamPosition;
 
 Texture2D g_DiffuseTexture;
@@ -27,6 +33,9 @@ Texture2D g_TransmissionTexture;
 Texture2D g_EmissiveTexture;
 Texture2D g_AmbientTexture;
 Texture2D g_AmbientOcclusionTexture;
+Texture2D g_UnknownTexture;
+Texture2D g_DeadDisolveTexture;
+Texture2D g_DeadDisolveBurnTexture;
 
 
 bool g_bBinded_Texture[AI_TEXTURE_TYPE_MAX * 27];
@@ -257,6 +266,11 @@ PS_OUT PS_MAIN(PS_IN In)
     
     float4 vMtrlDiffuse = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
     float4 vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vMtrlDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vMtrlDiffuse, In.vTexcoord);
+    }
     //if (AlmostEqual7(g_bBinded_Texture[AI_TEXTURE_TYPE_TRANSMISSION], true))
     //{
     //    float4 vTransmission = g_TransmissionTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
@@ -472,19 +486,13 @@ PS_OUT PS_SPECTOR_MAIN(PS_IN In)
     
     float4 vMtrlDiffuse = g_EmissiveTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
     float4 vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
-    //if (AlmostEqual7(g_bBinded_Texture[AI_TEXTURE_TYPE_TRANSMISSION], true))
-    //{
-    //    float4 vTransmission = g_TransmissionTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
-    //    vMtrlDiffuse *= vTransmission;
-    //}
-    //if (AlmostEqual7(g_bBinded_Texture[AI_TEXTURE_TYPE_EMISSIVE], true))
-    //{
-    //    float4 vEmissive = g_EmissiveTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
-    //    vMtrlDiffuse += vEmissive;
-    //}
     if (vMtrlDiffuse.a < 0.2f)
     {
         discard;
+    }
+    if (vMtrlDiffuse.r > 0.3f)
+    {
+        vMtrlDiffuse.rgb *= float3(2.f, 1.f, 1.f);
     }
     
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, AnisoTropy_BLUR_Sampler, In.vTexcoord);

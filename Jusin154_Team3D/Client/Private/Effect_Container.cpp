@@ -368,6 +368,7 @@ void CEffect_Container::SweepTarget(_vector StartPos, _vector EndPos, _float fRa
 		memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &hit.normal, sizeof(hit.normal));
 		XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
 		tagCollInfo.fLength = fDistance;
+		tagCollInfo.pObject = m_pOwner->Get_Owner();
 
 
 		if (nullptr != pActor && nullptr != pActor->userData)

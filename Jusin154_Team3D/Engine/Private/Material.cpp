@@ -553,6 +553,7 @@ HRESULT CMaterial::Bind_SRV(CShader* pShader)
 				pConstantName = "g_AmbientOcclusionTexture";
 				break;
 			case aiTextureType_UNKNOWN:
+				pConstantName = "g_UnknownTexture";
 				break;
 			case aiTextureType_SHEEN:
 				break;

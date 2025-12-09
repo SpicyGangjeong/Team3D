@@ -122,7 +122,7 @@ _bool CStat::Get_Damage(_float fDamage)
 {
     _bool bResultDead = { false };
     _float fCurHp = Get_Stat(ENUM_CLASS(STAT::HP)) - fDamage;
-    if (fCurHp < 0) { fCurHp = 0; bResultDead = true; }
+    if (fCurHp <= 0) { fCurHp = 0; bResultDead = true; }
     Set_Stat(ENUM_CLASS(STAT::HP), fCurHp);
     return bResultDead;
 }
