@@ -201,11 +201,17 @@ void CInfoInstance::Event_CallBack(_wstring EventName, void* pArg)
 
 HRESULT CInfoInstance::Regist_ActiveInteractive(CMapElement_Interactable* pInteractive)
 {
+	if (nullptr == s_pInstance || nullptr == m_pInteractiveInfo) {
+		return S_OK; // 게임 종료 된 상태
+	}
 	return m_pInteractiveInfo->Regist_ActiveInteractive(pInteractive);
 }
 
 HRESULT CInfoInstance::Deregist_ActiveInteractive(CMapElement_Interactable* pInteractive)
 {
+	if (nullptr == s_pInstance || nullptr == m_pInteractiveInfo) {
+		return S_OK; // 게임 종료 된 상태
+	}
 	return m_pInteractiveInfo->Deregist_ActiveInteractive(pInteractive);
 }
 
@@ -258,6 +264,7 @@ void CInfoInstance::Release_Information()
 	SAFE_RELEASE(m_pPlayerInfo);
 	SAFE_RELEASE(m_pMonsterInfo);
 	SAFE_RELEASE(m_pSkillInfo);
+	SAFE_RELEASE(m_pInteractiveInfo);
 	SAFE_RELEASE(m_pDevice);
 	SAFE_RELEASE(m_pContext);
 	SAFE_RELEASE(m_pGameInstance);
