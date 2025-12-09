@@ -7,7 +7,7 @@
 #include "InfoInstance.h"
 #include "Goblin_Dagger.h"
 #include "Effect_Container.h"
-#include "Wand.h"
+#include "EffectParts.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -122,11 +122,10 @@ void CGoblin_Mage::Late_Update(_float fTimeDelta)
 	else if (true == m_pRigidBody->IsActive()) {
 		m_pTransformCom->Set_WorldMatrix(m_pRigidBody->Get_FootPositionPxTransform());
 	}
+
 	if (true == m_bLookAt) {
 		m_pTransformCom->LookAt_Horizontal(XMLoadFloat4(&m_vTargetPos));
 	}
-
-	m_pTransformCom->LookAt_Horizontal(XMLoadFloat4(&m_vTargetPos));
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW, this);
@@ -331,6 +330,18 @@ HRESULT CGoblin_Mage::Ready_Components()
 
 HRESULT CGoblin_Mage::Ready_Parts()
 {
+	CPartObject::PARTOBJECT_DESC PartsDesc{};
+
+	PartsDesc.pParentTransform = m_pTransformCom;
+
+	if (FAILED(Add_PartObject<CEffectParts>("Goblin_Orb", g_iStaticLevel, &m_pGoblin_Orb, &PartsDesc)))
+	{
+		return E_FAIL;
+	}
+
+	m_pGoblin_Orb->Load("../Bin/Resources/Data/Effect/GoblinMage/Orb_P", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pGoblin_Orb->FollowParents(m_pModelCom->Get_BoneMatrixPtr("RightHand"));
+
 	return S_OK;
 }
 
@@ -392,6 +403,7 @@ void CGoblin_Mage::Free()
 	SAFE_RELEASE(m_pEffectPool);
 	Safe_Delete(m_pCallBack_Behavior);
 	Safe_Delete(m_pCallBack_HitReport);
+	SAFE_RELEASE(m_pGoblin_Orb);
 }
 #ifdef _DEBUG
 

@@ -36,6 +36,7 @@ enum ESTATE : _u64Flag
     SHUFFLE                     = 1ULL << 29,
     DEAD                        = 1ULL << 30,
     STUN                        = 1ULL << 31,
+    SUSTAIN                     = 1ULL << 32,
     END
 };
 NS_END
