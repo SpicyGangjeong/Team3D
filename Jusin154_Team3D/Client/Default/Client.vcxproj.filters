@@ -434,8 +434,11 @@
     <ClInclude Include="..\Public\CallBack_Playable_HitReport.h">
       <Filter>02.GameObjects\PhysX\CallBack\HitReport\Player</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CallBack_Troll_Behavior.h">
+    <ClInclude Include="..\Public\CallBack_Troll_HitReport.h">
       <Filter>02.GameObjects\PhysX\CallBack\HitReport\Monster\Troll</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\InteractiveInfo.h">
+      <Filter>03.InfoInstance\03.InteractiveInfo</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Land.h">
       <Filter>02.GameObjects\Environment\04.Land</Filter>
@@ -998,6 +1001,9 @@
     <Filter Include="02.GameObjects\Effect\Effects\WandEnd">
       <UniqueIdentifier>{14ad0431-680b-4c8b-93d7-601aee5ce435}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.InfoInstance\03.InteractiveInfo">
+      <UniqueIdentifier>{1d1dc743-5cf2-4b8f-a80e-16b16437c7aa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1453,7 +1459,7 @@
     <ClCompile Include="..\Private\CallBack_Playable_HitReport.cpp">
       <Filter>02.GameObjects\PhysX\CallBack\HitReport\Player</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\CallBack_Troll_Behavior.cpp">
+    <ClCompile Include="..\Private\CallBack_Troll_HitReport.cpp">
       <Filter>02.GameObjects\PhysX\CallBack\HitReport\Monster\Troll</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Land.cpp">
@@ -1467,6 +1473,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Goblin_BattleAxe.cpp">
       <Filter>02.GameObjects\Item\Goblin_Axe</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\InteractiveInfo.cpp">
+      <Filter>03.InfoInstance\03.InteractiveInfo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

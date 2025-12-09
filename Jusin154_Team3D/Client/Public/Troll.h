@@ -3,7 +3,7 @@
 #include "Client_Define.h"
 #include "Monster.h"
 #include "CallBack_Monster_Behavior.h"
-#include "CallBack_Monster_HitReport.h"
+#include "CallBack_Troll_HitReport.h"
 
 NS_BEGIN(Client)
 
@@ -38,7 +38,7 @@ private:
 
 private:
 	CCallBack_Monster_Behavior* m_pCallBack_Behavior = { nullptr };
-	CCallBack_Monster_HitReport* m_pCallBack_HitReport = { nullptr };
+	CCallBack_Troll_HitReport* m_pCallBack_HitReport = { nullptr };
 
 	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
 	CRigidBody_Dynamic* m_pRigidBody = { nullptr };

@@ -2,6 +2,7 @@
 NS_BEGIN(Engine)
 	class CModel;
 	class CRigidBody_Static;
+	class CUnit;
 NS_END
 
 namespace Client
@@ -35,4 +36,9 @@ namespace Client
 		_float			fPreview{};
 		_float			fVidio{};
 	}SPELL_INFO;
+
+	typedef struct tagLockOnInfo {
+		CUnit*					pUnit = { nullptr };
+		class CMapElement_Interactable*	pInteractive = { nullptr };
+	}LOCKON_INFO;
 };

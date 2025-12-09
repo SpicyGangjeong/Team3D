@@ -1,19 +1,19 @@
 ﻿#include "pch.h"
-#include "CallBack_Troll_Behavior.h"
+#include "CallBack_Troll_HitReport.h"
 #include "GameInstance.h"
 #include "Character_Controller.h"
 #include "RigidBody_Dynamic.h"
 #include "GameObject.h"
 
-CCallBack_Troll_Behavior::CCallBack_Troll_Behavior()
+CCallBack_Troll_HitReport::CCallBack_Troll_HitReport()
 {
 }
 
-CCallBack_Troll_Behavior::~CCallBack_Troll_Behavior()
+CCallBack_Troll_HitReport::~CCallBack_Troll_HitReport()
 {
 }
 
-void CCallBack_Troll_Behavior::onShapeHit(const PSX::PxControllerShapeHit& hit)
+void CCallBack_Troll_HitReport::onShapeHit(const PSX::PxControllerShapeHit& hit)
 {
 	PSX::PxController* pController = hit.controller;
 	PSX::PxExtendedVec3		vWorldPos = hit.worldPos;		// 접촉지점
@@ -38,17 +38,19 @@ void CCallBack_Troll_Behavior::onShapeHit(const PSX::PxControllerShapeHit& hit)
 			switch ((PXOBJECT)pTargetActorData->iSubKind)
 			{
 			case PXOBJECT::TERRAIN:
-				//class CGameObject* pOwner = m_pController->Get_Owner();
-				//_vector vLook = pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK);
-				//_float fDot = XMVectorGetX(XMVector3Dot(XMLoadFloat3((_float3*)&vDir), vLook));
-				//if (fDot > cosf(XM_PIDIV4)) {
-				//	CModel* pModel = pOwner->Get_Component<CModel>();
-				//	_uint iAnimIndex = pModel->Get_AnimIndex();
-				//	if (STATEANIM::RUSH_LOOP == iAnimIndex) {
-				//		CFSM* pFSM = pOwner->Get_Component<CFSM>();
-				//		pFSM->Change_State(FSMSTATE::STOP);
-				//	}
-				//}
+			{
+				class CGameObject* pOwner = m_pController->Get_Owner();
+				_vector vLook = pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK);
+				_float fDot = XMVectorGetX(XMVector3Dot(XMLoadFloat3((_float3*)&vDir), vLook));
+				if (fDot > cosf(XM_PIDIV4)) {
+					CModel* pModel = pOwner->Get_Component<CModel>();
+					_uint iAnimIndex = pModel->Get_AnimIndex();
+					if (STATEANIM::RUSH_LOOP == iAnimIndex) {
+						CFSM* pFSM = pOwner->Get_Component<CFSM>();
+						//pFSM->Change_State( FSMSTATE::stun);
+					}
+				}
+			}
 				break;
 			default:
 				break;
@@ -80,7 +82,7 @@ void CCallBack_Troll_Behavior::onShapeHit(const PSX::PxControllerShapeHit& hit)
 	}
 }
 
-void CCallBack_Troll_Behavior::onControllerHit(const PSX::PxControllersHit& hit)
+void CCallBack_Troll_HitReport::onControllerHit(const PSX::PxControllersHit& hit)
 {
 	PSX::PxController* pController = hit.controller;
 	PSX::PxExtendedVec3		vWorldPos = hit.worldPos;		// 접촉지점
@@ -127,7 +129,7 @@ void CCallBack_Troll_Behavior::onControllerHit(const PSX::PxControllersHit& hit)
 	}
 }
 
-void CCallBack_Troll_Behavior::onObstacleHit(const PSX::PxControllerObstacleHit& hit)
+void CCallBack_Troll_HitReport::onObstacleHit(const PSX::PxControllerObstacleHit& hit)
 {
 	PSX::PxController* pController = hit.controller;
 	PSX::PxExtendedVec3		vWorldPos = hit.worldPos;			// 접촉지점
@@ -144,7 +146,7 @@ void CCallBack_Troll_Behavior::onObstacleHit(const PSX::PxControllerObstacleHit&
 	//}
 }
 
-HRESULT CCallBack_Troll_Behavior::Initialize(CCharacter_Controller* pController, CRigidBody_Dynamic* pPartDynamicObject)
+HRESULT CCallBack_Troll_HitReport::Initialize(CCharacter_Controller* pController, CRigidBody_Dynamic* pPartDynamicObject)
 {
 	m_pController = pController;
 	m_pPartDynamicBody = pPartDynamicObject;
@@ -155,7 +157,7 @@ HRESULT CCallBack_Troll_Behavior::Initialize(CCharacter_Controller* pController,
 	return S_OK;
 }
 
-HRESULT CCallBack_Troll_Behavior::Finalize()
+HRESULT CCallBack_Troll_HitReport::Finalize()
 {
 	SAFE_RELEASE(m_pGameInstance);
 	SAFE_RELEASE(m_pPartDynamicBody);
@@ -163,7 +165,7 @@ HRESULT CCallBack_Troll_Behavior::Finalize()
 	return S_OK;
 }
 
-CCallBack_Troll_Behavior* CCallBack_Troll_Behavior::Create()
+CCallBack_Troll_HitReport* CCallBack_Troll_HitReport::Create()
 {
-	return new CCallBack_Troll_Behavior();
+	return new CCallBack_Troll_HitReport();
 }

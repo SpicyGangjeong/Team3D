@@ -4,6 +4,7 @@
 #include "MapInfo.h"
 #include "MonsterInfo.h"
 #include "PlayerInfo.h"
+#include "InteractiveInfo.h"
 #include "Skill_Data.h"
 
 IMPLEMENT_SINGLETON(CInfoInstance)
@@ -19,7 +20,7 @@ void CInfoInstance::Update(_float fTimeDelta)
 	m_pMonsterInfo->Update(fTimeDelta);
 	m_pMapInfo->Update(fTimeDelta);
 	m_pSkillInfo->Update(fTimeDelta);
-
+	m_pInteractiveInfo->Update(fTimeDelta);
 }
 
 void CInfoInstance::Change_Level()
@@ -28,6 +29,7 @@ void CInfoInstance::Change_Level()
 	m_pMonsterInfo->Change_Level();
 	m_pMapInfo->Change_Level();
 	m_pSkillInfo->Change_Level();
+	m_pInteractiveInfo->Change_Level();
 }
 
 void CInfoInstance::Update_CameraCoordinateSystem(_float3& vLook, _float3& vRight)
@@ -67,12 +69,10 @@ HRESULT CInfoInstance::Deregist_ActiveMonster(CMonster* pUnit)
 	return m_pMonsterInfo->Deregist_ActiveMonster(pUnit);
 }
 
-CUnit* CInfoInstance::Get_LockOnUnit()
+void CInfoInstance::Get_LockOnInfo(LOCKON_INFO& Info)
 {
-	CUnit* pUnit = { nullptr };
-	pUnit = m_pMonsterInfo->Get_LockOnUnit();
-	// pUnit = m_pInfo->Get_LockOnUnit();
-	return pUnit;
+	Info.pUnit = m_pMonsterInfo->Get_LockOnUnit();
+	Info.pInteractive = m_pInteractiveInfo->Get_LockOnUnit();
 }
 
 pair<CUnit*, CTransform*> CInfoInstance::Get_NearestPlayerAlly(_fvector vPos)
@@ -199,6 +199,22 @@ void CInfoInstance::Event_CallBack(_wstring EventName, void* pArg)
 	}
 }
 
+HRESULT CInfoInstance::Regist_ActiveInteractive(CMapElement_Interactable* pInteractive)
+{
+	if (nullptr == s_pInstance || nullptr == m_pInteractiveInfo) {
+		return S_OK; // 게임 종료 된 상태
+	}
+	return m_pInteractiveInfo->Regist_ActiveInteractive(pInteractive);
+}
+
+HRESULT CInfoInstance::Deregist_ActiveInteractive(CMapElement_Interactable* pInteractive)
+{
+	if (nullptr == s_pInstance || nullptr == m_pInteractiveInfo) {
+		return S_OK; // 게임 종료 된 상태
+	}
+	return m_pInteractiveInfo->Deregist_ActiveInteractive(pInteractive);
+}
+
 #pragma endregion
 LEVEL CInfoInstance::Get_RestartLevel()
 {
@@ -230,6 +246,10 @@ HRESULT CInfoInstance::Initialize_Information(ID3D11Device* pDevice, ID3D11Devic
 	if (nullptr == m_pSkillInfo) {
 		return E_FAIL;
 	}
+	m_pInteractiveInfo = CInteractiveInfo::Create(pDevice, pContext);
+	if (nullptr == m_pInteractiveInfo) {
+		return E_FAIL;
+	}
 
 
 	return S_OK;
@@ -244,6 +264,7 @@ void CInfoInstance::Release_Information()
 	SAFE_RELEASE(m_pPlayerInfo);
 	SAFE_RELEASE(m_pMonsterInfo);
 	SAFE_RELEASE(m_pSkillInfo);
+	SAFE_RELEASE(m_pInteractiveInfo);
 	SAFE_RELEASE(m_pDevice);
 	SAFE_RELEASE(m_pContext);
 	SAFE_RELEASE(m_pGameInstance);

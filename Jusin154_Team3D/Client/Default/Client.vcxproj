@@ -160,7 +160,7 @@ call Update_Resources.bat
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Action_Panel.h" />
-    <ClInclude Include="..\Public\CallBack_Troll_Behavior.h" />
+    <ClInclude Include="..\Public\CallBack_Troll_HitReport.h" />
     <ClInclude Include="..\Public\CameraLockOn.h" />
     <ClInclude Include="..\Public\Current_Slot_Number.h" />
     <ClInclude Include="..\Public\Current_Spell_Slot.h" />
@@ -175,6 +175,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Goblin_Protego.h" />
     <ClInclude Include="..\Public\Goblin_Spector.h" />
     <ClInclude Include="..\Public\HpBarBG.h" />
+    <ClInclude Include="..\Public\InteractiveInfo.h" />
     <ClInclude Include="..\Public\Intro_BG.h" />
     <ClInclude Include="..\Public\Intro_Image.h" />
     <ClInclude Include="..\public\Land.h" />
@@ -316,7 +317,7 @@ call Update_Resources.bat
   <ItemGroup>
     <ClCompile Include="..\Private\Action_Panel.cpp" />
     <ClCompile Include="..\Private\Broom_States.cpp" />
-    <ClCompile Include="..\Private\CallBack_Troll_Behavior.cpp" />
+    <ClCompile Include="..\Private\CallBack_Troll_HitReport.cpp" />
     <ClCompile Include="..\Private\CameraLockOn.cpp" />
     <ClCompile Include="..\Private\Current_Slot_Number.cpp" />
     <ClCompile Include="..\Private\Current_Spell_Slot.cpp" />
@@ -332,6 +333,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Goblin_Protego.cpp" />
     <ClCompile Include="..\Private\Goblin_Spector.cpp" />
     <ClCompile Include="..\Private\HpBarBG.cpp" />
+    <ClCompile Include="..\Private\InteractiveInfo.cpp" />
     <ClCompile Include="..\Private\Intro_BG.cpp" />
     <ClCompile Include="..\Private\Intro_Image.cpp" />
     <ClCompile Include="..\private\Land.cpp" />

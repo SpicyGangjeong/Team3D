@@ -67,7 +67,7 @@ CUnit* CInfoInstance::Get_LockOnUnit()
 {
 	CUnit* pUnit = { nullptr };
 	pUnit = m_pMonsterInfo->Get_LockOnUnit();
-	// pUnit = m_pInfo->Get_LockOnUnit();
+	// pUnit = m_pInfo->Get_LockOnInfo();
 	return pUnit;
 }
 
