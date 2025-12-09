@@ -35,7 +35,7 @@ public:
 	HRESULT Regist_ActiveMonster(class CMonster* pUnit);
 	HRESULT Deregist_ActiveMonster(class CMonster* pUnit);
 
-	class CUnit* Get_LockOnUnit();
+	void Get_LockOnInfo(LOCKON_INFO& Info);
 	pair<CUnit*, CTransform*> Get_NearestPlayerAlly(_fvector vPos);
 #pragma endregion
 #pragma region MAP_INFO
@@ -55,6 +55,10 @@ public:
 	void Add_Event(_wstring EventName, function<void(void*)> Event);
 	void Event_CallBack(_wstring EventName, void* pArg = nullptr);
 #pragma endregion
+#pragma region Interactive_INFO
+	HRESULT Regist_ActiveInteractive(class CMapElement_Interactable* pInteractive);
+	HRESULT Deregist_ActiveInteractive(class CMapElement_Interactable* pInteractive);
+#pragma endregion
 private:
 	CGameInstance*				m_pGameInstance = { nullptr };
 	ID3D11Device*				m_pDevice = { nullptr };
@@ -63,7 +67,8 @@ private:
 	class CPlayerInfo*			m_pPlayerInfo = { nullptr };
 	class CMonsterInfo*			m_pMonsterInfo = { nullptr };
 	class CMapInfo*				m_pMapInfo = { nullptr };
-	class CSkill_Data*			m_pSkillInfo= { nullptr };
+	class CSkill_Data*			m_pSkillInfo = { nullptr };
+	class CInteractiveInfo*		m_pInteractiveInfo =  { nullptr };
 	_uint						m_eInput = ENUM_CLASS(KEYINPUT::END);
 	_int						m_eSpell = ENUM_CLASS(SKILL_TYPE::END);
 

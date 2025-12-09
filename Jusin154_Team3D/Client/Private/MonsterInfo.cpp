@@ -122,9 +122,9 @@ HRESULT CMonsterInfo::Refresh_LockOnMonsters()
 	_vector vToMonsterDir;
 	_bool Aim = false;
 	_float fFovy = 0.f;
-	if (m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::GAMEPLAY), LAYER_PLAYER) != nullptr)
+	if (m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_PLAYER) != nullptr)
 	{
-		Aim = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::GAMEPLAY), LAYER_PLAYER)->Get_Object<CPlayer>()->Get_Aim();
+		Aim = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_PLAYER)->Get_Object<CPlayer>()->Get_Aim();
 	}
 	if (Aim)
 	{
@@ -142,7 +142,7 @@ HRESULT CMonsterInfo::Refresh_LockOnMonsters()
 			if (pMonster->Get_Hp().x <= 0) {
 				continue;
 			}
-			vMonsterPos = pMonster->Get_WorldPostion();
+			vMonsterPos = pMonster->Get_LockOnPos();
 			vToMonsterDir = vMonsterPos - vCameraPos;
 			_float fDotResult = CMyTools::DirectionCompare(vCameraLook, vToMonsterDir);
 			if (fDotResult <= cosf(fFovy)) {

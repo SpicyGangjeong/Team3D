@@ -5,7 +5,7 @@
 
 NS_BEGIN(Client)
 
-class CCallBack_Troll_Behavior final : public PSX::PxUserControllerHitReport
+class CCallBack_Troll_HitReport final : public PSX::PxUserControllerHitReport
 {
 	// 구현 예시 
 	// CCT는 RigidBody의 PxSimulationEventCallback에 안걸리고, 이 전용 콜백에서 처리되는 구조임
@@ -14,9 +14,9 @@ class CCallBack_Troll_Behavior final : public PSX::PxUserControllerHitReport
 	// PxControllerBehaviorCallback		= "부딪힌 것에 대해 어떤 행동 정책을 쓸지 물어봄(질의)"
 	// PxSimulationEventCallback		= "씬 전체에 대한 글로벌 콜백(일반 물리 이벤트)" 
 private:
-	CCallBack_Troll_Behavior();
+	CCallBack_Troll_HitReport();
 public:
-	~CCallBack_Troll_Behavior();
+	~CCallBack_Troll_HitReport();
 
 public:
 	// PxUserControllerHitReport을(를) 통해 상속됨
@@ -37,6 +37,6 @@ private:
 	CGameInstance* m_pGameInstance = { nullptr };
 
 public:
-	static CCallBack_Troll_Behavior* Create();
+	static CCallBack_Troll_HitReport* Create();
 };
 NS_END

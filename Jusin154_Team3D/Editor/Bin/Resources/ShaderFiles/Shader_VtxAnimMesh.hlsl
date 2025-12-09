@@ -13,7 +13,7 @@ float g_fRimStrength;
 float g_fRimPower;
 float3 g_vRimColor;
 float4 g_TestColor;
-float3 g_vOutLineColor;
+float4 g_vOutLineColor;
 float g_fOutLineScale;
 float g_fOutLineThickness;
 float g_fOutLinePower;

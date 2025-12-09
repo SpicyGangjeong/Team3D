@@ -266,10 +266,12 @@ HRESULT CTroll::Behavior_RushExitCheck(_float fTimeDelta)
 	}
 	if (iCurrAnimIndex == m_Animation[STATEANIM::RUSH_END].first)
 	{
-		if (m_fCross > 0)
+		if (m_fCross > 0){
 			pairAnimInfo = m_Animation[STATEANIM::IDLE_COMBAT_TURN_BWD_L];
-		else
+		}
+		else{
 			pairAnimInfo = m_Animation[STATEANIM::IDLE_COMBAT_TURN_BWD_R];
+		}
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 
 		Add_Event(pairAnimInfo.first,

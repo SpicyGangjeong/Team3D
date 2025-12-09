@@ -287,7 +287,7 @@ HRESULT CTroll::Ready_Components()
 		Desc.fStepOffset = { 0.05f };
 		Desc.fRadius = 1.2f;
 		Desc.fHeight = 1.5f;
-		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Monster_HitReport::Create();
+		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Troll_HitReport::Create();
 		Desc.pCallback_Behavior = m_pCallBack_Behavior = CCallBack_Monster_Behavior::Create();
 		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
 		Desc.fWalkableSlope = 45.f;
