@@ -105,6 +105,7 @@ private:
 	_float			m_fInputTime = {};
 	_bool			m_bRatio = { false };
 	_bool			m_bAim = { false };
+	_float			m_fAnimSpeed = {};
 
 	HRESULT InputAction();
 	HRESULT InputMove();
