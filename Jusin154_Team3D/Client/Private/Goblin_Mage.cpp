@@ -146,6 +146,9 @@ HRESULT CGoblin_Mage::Render()
 	if (true == m_bDrawOutLine) {
 		iShaderPass = ENUM_CLASS(SHADER_PASS_ANIM::OUTLINE_WRITE);
 	}
+	if (FAILED(Render_DeadDisolve())) {
+		return E_FAIL;
+	}
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
 		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {

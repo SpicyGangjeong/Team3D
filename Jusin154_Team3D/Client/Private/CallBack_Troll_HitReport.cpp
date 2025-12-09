@@ -43,7 +43,6 @@ void CCallBack_Troll_HitReport::onShapeHit(const PSX::PxControllerShapeHit& hit)
 				class CUnit* pOwner = (CUnit*)m_pController->Get_Owner();
 				_vector vLook = pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK);
 				_float fDot = XMVectorGetX(XMVector3Dot(XMLoadFloat3((_float3*)&vDir), vLook));
-				GUI::Text("DOTDOTResult %f", fDot);
 				if (fDot > cosf(XM_PIDIV4)) {
 					CModel* pModel = pOwner->Get_Component<CModel>();
 					_uint iAnimIndex = pModel->Get_AnimIndex();

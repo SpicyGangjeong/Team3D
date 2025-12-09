@@ -562,9 +562,8 @@ HRESULT CPhysX_Manager::Initialize()
 		m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, m_ToleranceScale, true, m_pPvd);
 #endif // _DEBUG
 #ifndef _DEBUG
-m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, m_ToleranceScale, true);
+		m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, m_ToleranceScale, true);
 #endif // _DEBUG
-
 
 		m_pCookingParam = new PSX::PxCookingParams(m_pPhysics->getTolerancesScale());
 		m_pCookingParam->meshPreprocessParams |= PSX::PxMeshPreprocessingFlag::eWELD_VERTICES;

@@ -3,9 +3,9 @@
 
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
-bool g_bUVTargetDiffuse;
-bool g_bAdditiveDisolve;
-bool g_bDisolve;
+int g_bUVTargetDiffuse;
+int g_bAdditiveDisolve;
+int g_bDisolve;
 
 float g_LifeRatio;
 float g_fFar;
@@ -38,7 +38,7 @@ Texture2D g_AmbientOcclusionTexture;
 Texture2D g_UnknownTexture;
 Texture2D g_NoiseTexture;
 
-bool g_bBinded_Texture[AI_TEXTURE_TYPE_MAX * 27];
+int g_iBinded_Texture[AI_TEXTURE_TYPE_MAX];
 
 Texture2D g_MaskingTexture;
 Texture2D g_ClippingTexture;
@@ -258,16 +258,16 @@ PS_OUT PS_MAIN(PS_IN In)
 
     float4 vMtrlDiffuse = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
     float4 vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
-    //if (AlmostEqual7(g_bBinded_Texture[AI_TEXTURE_TYPE_TRANSMISSION], true))
-    //{
-    //    float4 vTransmission = g_TransmissionTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
-    //    vMtrlDiffuse *= vTransmission;
-    //}
-    //if (AlmostEqual7(g_bBinded_Texture[AI_TEXTURE_TYPE_EMISSIVE], true))
-    //{
-    //    float4 vEmissive = g_EmissiveTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
-    //    vMtrlDiffuse += vEmissive;
-    //}
+    if (g_iBinded_Texture[AI_TEXTURE_TYPE_TRANSMISSION] != 0)
+    {
+        float4 vTransmission = g_TransmissionTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+        vMtrlDiffuse *= vTransmission;
+    }
+    if (g_iBinded_Texture[AI_TEXTURE_TYPE_EMISSIVE] != 0)
+    {
+        float4 vEmissive = g_EmissiveTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+        vMtrlDiffuse += vEmissive;
+    }
     if (vMtrlDiffuse.a < 0.2f)
     {
         discard;

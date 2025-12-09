@@ -362,12 +362,12 @@ HRESULT CPlayer::Ready_Components()
 		Desc.iSubKind = ENUM_CLASS(PXOBJECT::PLAYER);
 		Desc.pTransform = m_pTransformCom;
 		Desc.eBodyType = ACTOR::CAPSULE;
-		Desc.fContactOffset = 0.3f;
+		Desc.fContactOffset = 0.001f;
 		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
-		Desc.bAutoStepping = { true };
+		Desc.bAutoStepping = { false };
 		Desc.fStepOffset = { 0.05f };
 		Desc.fRadius = 0.5f;
-		Desc.fHeight = 1.0f;
+		Desc.fHeight = 0.6f;
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Playable_HitReport::Create();
 		Desc.pCallback_Behavior = m_pCallBack_Behavior = CCallBack_Playable_Behavior::Create();
 		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;

@@ -385,8 +385,6 @@ void CGoblin_Mage::Behavior_DeadExit()
 	m_bDead = true;
 }
 
-
-
 void CGoblin_Mage::Add_FSM()
 {
 #pragma region Behavior_Movement_NotFocus
