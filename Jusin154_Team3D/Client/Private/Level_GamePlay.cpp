@@ -14,6 +14,9 @@
 #include "Terrain.h"
 #include "EffectPool.h"
 #include "InstancedProp.h"
+#include "Land.h"
+#include "Unified.h"
+#include "MapElement_Lake.h"
 
 #pragma region ACTOR
 #include "Player.h"
@@ -149,17 +152,91 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 
 HRESULT CLevel_GamePlay::Ready_Background()
 {
-	/* Terrain */
 	CTerrain::TERRAIN_DESC Terrain_Desc = {};
+	/* Hogsmeade Terrain */
 	Terrain_Desc.vPosition = _float3(-194, 18.5f, -153.f);
+	Terrain_Desc.strVIBufferTag = TEXT("Prototype_Component_VIBuffer_Terrain_Hogsmeade");
 	Terrain_Desc.strDiffuseTextureTag = TEXT("Terrain_Diffuse");
 	Terrain_Desc.strNormalTextureTag = TEXT("Terrain_Normal");
 	Terrain_Desc.strMROTextureTag = TEXT("Terrain_MRO");
-	Terrain_Desc.strAlphaMapTextureTag = TEXT("HogsmeadeAlphaMap");
+	Terrain_Desc.strAlphaMapTextureTag = TEXT("Hogsmeade_AlphaMap");
+	Terrain_Desc.strRigidBody_MeshName = TEXT("Hogsmeade_HeightMap");
+	Terrain_Desc.strRigidBody_ComponentTag = TEXT("Prototype_Component_RigidBody_Static_Terrain_Hogsmeade");
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_BACKGROUND, &Terrain_Desc))) {
+		return E_FAIL;
+	}
+	/* Hogwart Terrain */
+	Terrain_Desc.vPosition = _float3(-451.f, 18.5f, -791.f);
+	Terrain_Desc.strVIBufferTag = TEXT("Prototype_Component_VIBuffer_Terrain_Hogwart");
+	Terrain_Desc.strDiffuseTextureTag = TEXT("Terrain_Diffuse");
+	Terrain_Desc.strNormalTextureTag = TEXT("Terrain_Normal");
+	Terrain_Desc.strMROTextureTag = TEXT("Terrain_MRO");
+	Terrain_Desc.strAlphaMapTextureTag = TEXT("Hogwart_AlphaMap");
+	Terrain_Desc.strRigidBody_MeshName = TEXT("Hogwart_HeightMap");
+	Terrain_Desc.strRigidBody_ComponentTag = TEXT("Prototype_Component_RigidBody_Static_Terrain_Hogwart");
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_BACKGROUND, &Terrain_Desc))) {
 		return E_FAIL;
 	}
 
+	CLand::LAND_DESC Land_Desc = {};
+
+	/* South_Hogwart_Land */
+	Land_Desc.vPosition = _float3(290.5f, 59.5f, -347.f);
+	Land_Desc.vScale = _float3(1.f, 1.25f, 1.f);
+	Land_Desc.strModelComTag = L"Prototype_Component_South_Hogwart_Land_LOD1";
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc)))
+		return E_FAIL;
+
+	/* North_Hogwart_Land */
+	Land_Desc.vPosition = _float3(-370.f, -37.5f, -21.4f);
+	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
+	Land_Desc.strModelComTag = L"Prototype_Component_North_Hogwart_Land_LOD1";
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc)))
+		return E_FAIL;
+
+	/* North_Hogwart2_Land */
+	Land_Desc.vPosition = _float3(-378.f, -17.5f, 285.6f);
+	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
+	Land_Desc.strModelComTag = L"Prototype_Component_North_Hogwart2_Land_LOD1";
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc)))
+		return E_FAIL;
+
+	/* West_Hogwart_Land */
+	Land_Desc.vPosition = _float3(-653.f, 20.f, -327.4f);
+	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
+	Land_Desc.strModelComTag = L"Prototype_Component_West_Hogwart_Land_LOD1";
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc)))
+		return E_FAIL;
+
+	/* East_Hogsmeade_Land */
+	Land_Desc.vPosition = _float3(436.f, 55.f, 60.3f);
+	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
+	Land_Desc.strModelComTag = L"Prototype_Component_East_Hogsmeade_Land_LOD1";
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc)))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CUnified>(g_iStaticLevel, NEXT_LEVEL, LAYER_UNIFIED)))
+		return E_FAIL;
+
+
+
+	CMapElement_Lake::MAPOBJECT_LAKE_DESC Lake_Desc = {};
+
+	vector<_wstring>		ModelPrototypeTags;
+	ModelPrototypeTags.push_back(TEXT("Prototype_Component_Hogwart_Lake"));
+	Lake_Desc.iMaxLodLevel = 0;
+	Lake_Desc.iRenderType = 4;
+	Lake_Desc.vPosition = _float3(-144.f, -61.9f, -115.f);
+	Lake_Desc.vRotation = _float3(0.f, 0.f, 0.f);
+	Lake_Desc.vScale = _float3(3.f, 3.f, 3.f);
+	Lake_Desc.ModelPrototypeTags = ModelPrototypeTags;
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Lake>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Lake_Desc)))
+		return E_FAIL;
 	// ---------------------------------
 	// >> M A P Configuration <<
 	// 맵 로드할지 안할지 bool 설정
@@ -301,7 +378,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 	CCamera_Debug::CAMERA_DEBUG_DESC            Camera_Desc{};
 	Camera_Desc.fFovy = XMConvertToRadians(60.0f);
 	Camera_Desc.fNear = 0.1f;
-	Camera_Desc.fFar = 200.f;
+	Camera_Desc.fFar = 500.f;
 	Camera_Desc.vEye = _float3(0.f, 10.f, -10.f);
 	Camera_Desc.vAt = _float3(0.f, 0.f, 0.f);
 	Camera_Desc.fSpeedPerSec = 5.f;

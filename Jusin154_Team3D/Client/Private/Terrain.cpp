@@ -33,16 +33,14 @@ HRESULT CTerrain::Initialize(void* pArg)
 	}
 
 	m_fUsingSurfaceParams = 15.f / 27.f;
-	//m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-194, 18.5f, -153.f, 1.f));
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pDesc->vPosition), 1.f));
-
 
 	{
 		CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc{};
-		Desc.pMeshName = TEXT("Hogsmeade_HeightMap");
+		Desc.pMeshName = pDesc->strRigidBody_MeshName.c_str();
 		Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
 		/* Com_RigidBody */
-		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_RigidBody_Static_Terrain_Hogsmeade"),
+		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, pDesc->strRigidBody_ComponentTag,
 			reinterpret_cast<CComponent**>(&m_pRigidBody), &Desc))) {
 			return E_FAIL;
 		}
@@ -58,7 +56,7 @@ void CTerrain::Priority_Update(_float fTimeDelta)
 void CTerrain::Update(_float fTimeDelta)
 {
 #ifdef _DEBUG
-	Describe_Entity();
+	//Describe_Entity();
 #endif // DEBUG
 }
 
@@ -130,7 +128,7 @@ HRESULT CTerrain::Ready_Components(void* pArg)
 	TERRAIN_DESC* pDesc = static_cast<TERRAIN_DESC*>(pArg);
 
 	/* Com_VIBuffer */
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Terrain"),
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, pDesc->strVIBufferTag,
 		reinterpret_cast<CComponent**>(&m_pVIBufferCom)))){
 		return E_FAIL;
 	}

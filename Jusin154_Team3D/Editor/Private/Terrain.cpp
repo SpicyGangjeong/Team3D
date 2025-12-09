@@ -313,11 +313,11 @@ void CTerrain::Describe_Entity()
 	GUI::DragFloat("Value", &m_fMaskValue, 0.01f, -1.0f, 1.f);
 	if (GUI::Button("Save", ImVec2(100.f, 30.f)))
 	{
-		//m_pAlphaMap->Save_ToFile("Hogwart_AlphaMap.bin");
+		m_pAlphaMap->Save_ToFile("Hogwart_AlphaMap.bin");
 	}
 	if (GUI::Button("Load", ImVec2(100.f, 30.f)))
 	{
-		//m_pAlphaMap->Load_ToFile("Hogwart_AlphaMap.bin");
+		m_pAlphaMap->Load_ToFile("Hogwart_AlphaMap.bin");
 	}
 
 
@@ -344,9 +344,9 @@ void CTerrain::Describe_Entity()
 #pragma region HEIGHT MAP
 	HRESULT hr = {};
 	if(GUI::Button("Save HeightMap"))
-		hr = m_pVIBufferCom->Save_HeightMap("Hogwart.bin");
+		hr = m_pVIBufferCom->Save_HeightMap("Hogwart_Height.bin");
 	if(GUI::Button("Load HeightMap"))
-		hr = m_pVIBufferCom->Load_HeightMap("Hogwart.bin");
+		hr = m_pVIBufferCom->Load_HeightMap("Hogwart_Height.bin");
 #pragma endregion
 
 	_float4 vPos = {};
