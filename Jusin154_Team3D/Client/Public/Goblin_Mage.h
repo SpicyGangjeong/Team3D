@@ -13,6 +13,7 @@ class CGoblin_Mage final : public CMonster
 	{
 		SPELL,
 		LIGHTATTACK,
+		SUSTAIN,
 		TP,
 		END
 	};
@@ -38,9 +39,12 @@ private:
 
 	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
 	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
+
 	_float2 m_vStunTimer = { 0.f, 4.f };
 	_uint iIndex;
 
+
+	class CEffectParts* m_pGoblin_Orb = { nullptr };
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -62,7 +66,7 @@ private:
 	virtual void Set_Anim();
 
 	_float m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = {};
-	_float m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = { 20.f,20.f,20.f };
+	_float m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = { 30.f,5.f,30.f,20.f };
 
 	_bool m_bStep = { false };
 	_float m_fTpTime = {};
@@ -74,6 +78,10 @@ private:
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();
 	void	Behavior_IdleExit();
+
+	void	Behavior_IdleBreakEnter();
+	HRESULT Behavior_IdleBreakExitCheck();
+	void	Behavior_IdleBreakExit();
 
 	void	Behavior_MoveEnter();
 	HRESULT Behavior_MoveExitCheck();
@@ -90,6 +98,10 @@ private:
 	void	Behavior_LightAttackEnter();
 	HRESULT Behavior_LightAttackExitCheck(_float fTimeDelta);
 	void	Behavior_LightAttackExit();
+
+	void	Behavior_SustainEnter();
+	HRESULT Behavior_SustainExitCheck(_float fTimeDelta);
+	void	Behavior_SustainExit();
 
 	void	Behavior_BlinkEnter();
 	HRESULT Behavior_BlinkExitCheck(_float fTimeDelta);

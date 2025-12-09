@@ -390,7 +390,7 @@ HRESULT CTroll::Ready_Parts()
 	}
 
 	m_pTroll_Particle->Load("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Particle", static_cast<LEVEL>(NEXT_LEVEL));
-	m_pTroll_Particle->FollowParants(m_pModelCom->Get_BoneMatrixPtr("HeadEnd"));
+	m_pTroll_Particle->FollowParents(m_pModelCom->Get_BoneMatrixPtr("HeadEnd"));
 
 
 
@@ -400,7 +400,7 @@ HRESULT CTroll::Ready_Parts()
 	}
 
 	m_pTroll_Particle2->Load("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Particle2", static_cast<LEVEL>(NEXT_LEVEL));
-	m_pTroll_Particle2->FollowParants(m_pModelCom->Get_BoneMatrixPtr("HeadEnd"));
+	m_pTroll_Particle2->FollowParents(m_pModelCom->Get_BoneMatrixPtr("HeadEnd"));
 
 
 	if (FAILED(Add_PartObject<CEffectParts>("Troll_Right_Smoke", g_iStaticLevel, &m_pRight_Smoke, &PartsDesc)))
@@ -409,7 +409,7 @@ HRESULT CTroll::Ready_Parts()
 	}
 
 	m_pRight_Smoke->Load("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Smoke", static_cast<LEVEL>(NEXT_LEVEL));
-	m_pRight_Smoke->FollowParants(m_pModelCom->Get_BoneMatrixPtr("RightArm"));
+	m_pRight_Smoke->FollowParents(m_pModelCom->Get_BoneMatrixPtr("RightArm"));
 
 	if (FAILED(Add_PartObject<CEffectParts>("Troll_Left_Smoke", g_iStaticLevel, &m_pLeft_Smoke, &PartsDesc)))
 	{
@@ -417,13 +417,12 @@ HRESULT CTroll::Ready_Parts()
 	}
 
 	m_pLeft_Smoke->Load("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Smoke", static_cast<LEVEL>(NEXT_LEVEL));
-	m_pLeft_Smoke->FollowParants(m_pModelCom->Get_BoneMatrixPtr("LeftArm"));
+	m_pLeft_Smoke->FollowParents(m_pModelCom->Get_BoneMatrixPtr("LeftArm"));
 
 
 	if (FAILED(Add_PartObject<CTrailObject>("Left_Trail", g_iStaticLevel, &m_pLeftTrail, &PartsDesc))) {
 		return E_FAIL;
 	}
-	;
 
 	m_pLeftTrail->Load_Trail("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Trail", static_cast<LEVEL>(NEXT_LEVEL));
 	m_pLeftTrail->Set_Visible(false);
