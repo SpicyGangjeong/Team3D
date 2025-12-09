@@ -1238,28 +1238,7 @@ HRESULT CModel::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fma
 
 #endif // EDITOR_PROJECT
 
-HRESULT CModel::Create_CS()
-{
-	_uint CS1_InputStrides[] = {
-		sizeof(KEYFRAME_DESC),
-		sizeof(CHANNEL_DESC),
-	};
 
-	_uint CS1_OutputStrides[] = {
-		sizeof(LOCALPOS_DESC),
-		sizeof(LOCALPOS_DESC),
-	};
-
-
-	m_pComputeShader = CComputeShader::Create(m_pDevice, m_pContext, L"../Bin/Resources/ShaderFiles/Shader_Mesh_Compute.hlsl",
-		"CS_LocalSRT", (_uint)m_Bones.size(), 0, 2, nullptr, CS1_OutputStrides
-	);
-
-	if (!m_pComputeShader)
-		return E_FAIL;
-
-	return S_OK;
-}
 
 void CModel::Create_Temp()
 {
@@ -1288,85 +1267,7 @@ void CModel::Create_LocalPosVB()
 }
 
 
-void CModel::Create_Con()
-{
-	D3D11_BUFFER_DESC cbDesc = {};
-	cbDesc.Usage = D3D11_USAGE_DYNAMIC;
-	cbDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	cbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	cbDesc.ByteWidth = sizeof(ANIMSTATE_DESC);
 
-	if (FAILED(m_pDevice->CreateBuffer(&cbDesc, nullptr, &m_pConstantBuffer)))
-		return;
-}
-
-
-void CModel::UpdateAnimationCS(_uint AnimIndex)
-{
-	D3D11_MAPPED_SUBRESOURCE sub{};
-	if (SUCCEEDED(m_pContext->Map(m_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &sub)))
-	{
-		ANIMSTATE_DESC* pDesc = (ANIMSTATE_DESC*)sub.pData;
-
-		CAnimation* pAnim = m_Animations[AnimIndex];
-		pDesc->CurrentTime = pAnim->Get_CurrentTrackPosition();
-		pDesc->Duration = pAnim->Get_Duration();
-		pDesc->Speed = pAnim->Get_AnimSpeed();
-		pDesc->BoneCount = (_uint)m_Bones.size();
-		pDesc->PreTransformMatrix = m_PreTransformMatrix;
-		m_pContext->Unmap(m_pConstantBuffer, 0);
-	}
-}
-
-void CModel::ComputeAnimation(_uint AnimIndex)
-{
-	UpdateAnimationCS(AnimIndex);
-
-	_uint iGroupCountX = ((_uint)m_Bones.size() + 255) / 256;
-
-	CAnimation* pAnim = m_Animations[AnimIndex];
-	ID3D11ShaderResourceView* srvs[2] = {
-		pAnim->Get_KeyFrameSrv(),
-		pAnim->Get_ChannelSrv(),
-	};
-
-	m_pContext->CSSetShader(m_pComputeShader->Get_Compute(), nullptr, 0);
-	m_pContext->CSSetConstantBuffers(0, 1, &m_pConstantBuffer);
-	m_pContext->CSSetShaderResources(0, 2, srvs);
-
-	ID3D11UnorderedAccessView* uavs[1] = { m_pComputeShader->GetOutputUAV(0) };
-	m_pContext->CSSetUnorderedAccessViews(0, 1, uavs, nullptr);
-
-	m_pContext->Dispatch(iGroupCountX, 1, 1);
-
-	auto outSubs = m_pComputeShader->ReadBackOutputs();
-	m_pLocalPos[0] = static_cast<LOCALPOS_DESC*>(outSubs[0].pData);
-}
-
-void CModel::ComputeAnimation_Second(_uint AnimIndex)
-{
-	UpdateAnimationCS(AnimIndex);
-
-	_uint iGroupCountX = ((_uint)m_Bones.size() + 255) / 256;
-
-	CAnimation* pAnim = m_Animations[AnimIndex];
-	ID3D11ShaderResourceView* srvs[2] = {
-		pAnim->Get_KeyFrameSrv(),
-		pAnim->Get_ChannelSrv(),
-	};
-
-	m_pContext->CSSetShader(m_pComputeShader->Get_Compute(), nullptr, 0);
-	m_pContext->CSSetConstantBuffers(0, 1, &m_pConstantBuffer);
-	m_pContext->CSSetShaderResources(0, 2, srvs);
-
-	ID3D11UnorderedAccessView* uavs[1] = { m_pComputeShader->GetOutputUAV(1) };
-	m_pContext->CSSetUnorderedAccessViews(0, 1, uavs, nullptr);
-
-	m_pContext->Dispatch(iGroupCountX, 1, 1);
-
-	auto outSubs = m_pComputeShader->ReadBackOutputs();
-	m_pLocalPos[1] = static_cast<LOCALPOS_DESC*>(outSubs[1].pData);
-}
 
 void CModel::InItialize_BoneIndex()
 {

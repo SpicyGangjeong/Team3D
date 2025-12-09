@@ -121,28 +121,28 @@ void CTroll::Update(_float fTimeDelta)
 
 #pragma region TRAIL_UPDATE
 
-	_matrix WorldMat = m_pTransformCom->Get_XMWorldMatrix();
+	//_matrix WorldMat = m_pTransformCom->Get_XMWorldMatrix();
 
-	_matrix LeftHandMatrix = {};
-	_matrix RightHandMatrix = {};
-	_matrix WeaponMatrix = {};
+	//_matrix LeftHandMatrix = {};
+	//_matrix RightHandMatrix = {};
+	//_matrix WeaponMatrix = {};
 
-	LeftHandMatrix = XMLoadFloat4x4(m_pLeftHand_BoneMat);
-	RightHandMatrix = XMLoadFloat4x4(m_pRightHand_BoneMat);
-	WeaponMatrix = XMLoadFloat4x4(m_pWeapon_BoneMat);
+	//LeftHandMatrix = XMLoadFloat4x4(m_pLeftHand_BoneMat);
+	//RightHandMatrix = XMLoadFloat4x4(m_pRightHand_BoneMat);
+	//WeaponMatrix = XMLoadFloat4x4(m_pWeapon_BoneMat);
 
 
-	for (int i = 0; i < 3; ++i) {
-		LeftHandMatrix.r[i] = XMVector3Normalize(LeftHandMatrix.r[i]);
-		RightHandMatrix.r[i] = XMVector3Normalize(RightHandMatrix.r[i]);
-		WeaponMatrix.r[i] = XMVector3Normalize(WeaponMatrix.r[i]);
-	}
+	//for (int i = 0; i < 3; ++i) {
+	//	LeftHandMatrix.r[i] = XMVector3Normalize(LeftHandMatrix.r[i]);
+	//	RightHandMatrix.r[i] = XMVector3Normalize(RightHandMatrix.r[i]);
+	//	WeaponMatrix.r[i] = XMVector3Normalize(WeaponMatrix.r[i]);
+	//}
 
-	_matrix WeaponSoket = WeaponMatrix * Get_PartObject<CTroll_Weapon>()->Get_Component<CTransform>()->Get_XMWorldMatrix();
+	//_matrix WeaponSoket = WeaponMatrix * Get_PartObject<CTroll_Weapon>()->Get_Component<CTransform>()->Get_XMWorldMatrix();
 
-	m_pLeftTrail->Trail_Update(LeftHandMatrix * WorldMat, fTimeDelta);
-	m_pRightTrail->Trail_Update(RightHandMatrix * WorldMat, fTimeDelta);
-	m_pWeaponTrail->Trail_Update(WeaponSoket, fTimeDelta);
+	//m_pLeftTrail->Trail_Update(LeftHandMatrix * WorldMat, fTimeDelta);
+	//m_pRightTrail->Trail_Update(RightHandMatrix * WorldMat, fTimeDelta);
+	//m_pWeaponTrail->Trail_Update(WeaponSoket, fTimeDelta);
 
 #pragma endregion
 
