@@ -160,6 +160,7 @@ call Update_Resources.bat
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Action_Panel.h" />
+    <ClInclude Include="..\Public\CallBack_Troll_Behavior.h" />
     <ClInclude Include="..\Public\CameraLockOn.h" />
     <ClInclude Include="..\Public\Current_Slot_Number.h" />
     <ClInclude Include="..\Public\Current_Spell_Slot.h" />
@@ -307,6 +308,7 @@ call Update_Resources.bat
   <ItemGroup>
     <ClCompile Include="..\Private\Action_Panel.cpp" />
     <ClCompile Include="..\Private\Broom_States.cpp" />
+    <ClCompile Include="..\Private\CallBack_Troll_Behavior.cpp" />
     <ClCompile Include="..\Private\CameraLockOn.cpp" />
     <ClCompile Include="..\Private\Current_Slot_Number.cpp" />
     <ClCompile Include="..\Private\Current_Spell_Slot.cpp" />

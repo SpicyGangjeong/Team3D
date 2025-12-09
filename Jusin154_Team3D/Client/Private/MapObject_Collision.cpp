@@ -90,8 +90,22 @@ void CMapObject_Collision::ReadyForPhysX()
 	{
 		CModel* pModel = m_pModelComs[iIndexLOD];
 
-		if (FAILED(pModel->Ready_PhysXMeshes(XMLoadFloat4x4(&m_CombinedWorldMatrix)))) {
-			assert(false);
+		_matrix parentMatrix = m_pParentTransformCom->Get_XMWorldMatrix();
+		_matrix idenMatrix = XMMatrixIdentity();
+		_bool bSkip = { false };
+		for (_int i = 0; i < 4; ++i) {
+			if (false == XMVector4NearEqual(idenMatrix.r[i], parentMatrix.r[i], XMVectorReplicate(FLT_EPSILON5))) {
+				if (FAILED(pModel->Ready_PhysXMeshes(XMLoadFloat4x4(&m_CombinedWorldMatrix)))) {
+					assert(false);
+				}
+				bSkip = true;
+				break;
+			}
+		}
+		if (false == bSkip) {
+			if (FAILED(pModel->Ready_PhysXMeshes(m_pParentTransformCom->Get_XMWorldMatrix()))) {
+				assert(false);
+			}
 		}
 	}
 }

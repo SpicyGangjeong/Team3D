@@ -254,7 +254,6 @@ HRESULT CTroll::Behavior_RushExitCheck(_float fTimeDelta)
 		}
 		else {
 			m_fRushTime += fTimeDelta;
-
 			if (m_fRushTime >= 1.5f)
 			{
 				m_fRushTime = 0.f;

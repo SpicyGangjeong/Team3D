@@ -138,6 +138,8 @@ public:
 	void Transform_Frustum_ToLocalSpace(_fmatrix WorldMatrixInverse);
 	_bool isIn_WorldFrustum(_fvector vWorldPos, _float fRadius);
 	_bool isIn_LocalFrustum(_fvector vLocalPos, _float fRadius);
+	HRESULT Bind_GlobalSRV(class CShader* pShader, const _tchar* wszKeyGlobalSRV, const _char* pConstantName);
+	HRESULT Load_GlobalSRV(const _tchar* wszKeyGlobalSRV, filesystem::path pathSRVFolder);
 
 #pragma endregion
 #pragma region LIGHT_MANAGER

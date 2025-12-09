@@ -85,24 +85,6 @@
     <ClInclude Include="..\Public\Dummy_PhysXPlayable.h">
       <Filter>02.GameObjects\PhysX</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CallBack_EffectHitBox_Behavior.h">
-      <Filter>02.GameObjects\PhysX\CallBack\Behavior</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\CallBack_Monster_Behavior.h">
-      <Filter>02.GameObjects\PhysX\CallBack\Behavior</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\CallBack_Playable_Behavior.h">
-      <Filter>02.GameObjects\PhysX\CallBack\Behavior</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\CallBack_Playable_HitReport.h">
-      <Filter>02.GameObjects\PhysX\CallBack\HitReport</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\CallBack_EffectHitBox_HitReport.h">
-      <Filter>02.GameObjects\PhysX\CallBack\HitReport</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\CallBack_Monster_HitReport.h">
-      <Filter>02.GameObjects\PhysX\CallBack\HitReport</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\State_Root.h">
       <Filter>04.Mechanic\State</Filter>
     </ClInclude>
@@ -433,6 +415,26 @@
     </ClInclude>
     <ClInclude Include="..\Public\Goblin_BattleAxe.h">
       <Filter>02.GameObjects\Item\Goblin_BattleAxe</Filter>
+    <ClInclude Include="..\Public\CallBack_Playable_Behavior.h">
+      <Filter>02.GameObjects\PhysX\CallBack\Behavior\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CallBack_EffectHitBox_Behavior.h">
+      <Filter>02.GameObjects\PhysX\CallBack\Behavior\Hitbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CallBack_Monster_Behavior.h">
+      <Filter>02.GameObjects\PhysX\CallBack\Behavior\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CallBack_EffectHitBox_HitReport.h">
+      <Filter>02.GameObjects\PhysX\CallBack\HitReport\Hitbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CallBack_Monster_HitReport.h">
+      <Filter>02.GameObjects\PhysX\CallBack\HitReport\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CallBack_Playable_HitReport.h">
+      <Filter>02.GameObjects\PhysX\CallBack\HitReport\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CallBack_Troll_Behavior.h">
+      <Filter>02.GameObjects\PhysX\CallBack\HitReport\Monster\Troll</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -914,6 +916,26 @@
     </Filter>
     <Filter Include="02.GameObjects\Item\Goblin_BattleAxe">
       <UniqueIdentifier>{c770aac9-12b1-45f0-a64f-fc7819921e86}</UniqueIdentifier>
+    <Filter Include="02.GameObjects\PhysX\CallBack\Behavior\Player">
+      <UniqueIdentifier>{3f4bde42-c5a0-4c7a-8dde-23e0725534c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\PhysX\CallBack\Behavior\Hitbox">
+      <UniqueIdentifier>{085dcbe3-d24e-4f08-b1b5-562f8ea2ad88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\PhysX\CallBack\Behavior\Monster">
+      <UniqueIdentifier>{dde4f316-300a-44e2-b0ed-6b215434f672}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\PhysX\CallBack\HitReport\Hitbox">
+      <UniqueIdentifier>{e8092e33-cd57-4c35-81e4-971d12dbfc3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\PhysX\CallBack\HitReport\Monster">
+      <UniqueIdentifier>{df2cce1e-7ac5-404d-922a-7f60ca0be9a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\PhysX\CallBack\HitReport\Player">
+      <UniqueIdentifier>{a79cbab1-6a8a-4d88-8102-bc3462a4ffb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\PhysX\CallBack\HitReport\Monster\Troll">
+      <UniqueIdentifier>{e12337a6-7563-4615-a8d2-a2e2e1ba1ca8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -985,24 +1007,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Dummy_PhysXPlayable.cpp">
       <Filter>02.GameObjects\PhysX</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\CallBack_Monster_Behavior.cpp">
-      <Filter>02.GameObjects\PhysX\CallBack\Behavior</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\CallBack_Playable_Behavior.cpp">
-      <Filter>02.GameObjects\PhysX\CallBack\Behavior</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\CallBack_EffectHitBox_Behavior.cpp">
-      <Filter>02.GameObjects\PhysX\CallBack\Behavior</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\CallBack_EffectHitBox_HitReport.cpp">
-      <Filter>02.GameObjects\PhysX\CallBack\HitReport</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\CallBack_Monster_HitReport.cpp">
-      <Filter>02.GameObjects\PhysX\CallBack\HitReport</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\CallBack_Playable_HitReport.cpp">
-      <Filter>02.GameObjects\PhysX\CallBack\HitReport</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\State_Root.cpp">
       <Filter>04.Mechanic\State</Filter>
@@ -1350,6 +1354,26 @@
     </ClCompile>
     <ClCompile Include="..\Private\Goblin_BattleAxe.cpp">
       <Filter>02.GameObjects\Item\Goblin_BattleAxe</Filter>
+    <ClCompile Include="..\Private\CallBack_Playable_Behavior.cpp">
+      <Filter>02.GameObjects\PhysX\CallBack\Behavior\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CallBack_EffectHitBox_Behavior.cpp">
+      <Filter>02.GameObjects\PhysX\CallBack\Behavior\Hitbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CallBack_Monster_Behavior.cpp">
+      <Filter>02.GameObjects\PhysX\CallBack\Behavior\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CallBack_EffectHitBox_HitReport.cpp">
+      <Filter>02.GameObjects\PhysX\CallBack\HitReport\Hitbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CallBack_Monster_HitReport.cpp">
+      <Filter>02.GameObjects\PhysX\CallBack\HitReport\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CallBack_Playable_HitReport.cpp">
+      <Filter>02.GameObjects\PhysX\CallBack\HitReport\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CallBack_Troll_Behavior.cpp">
+      <Filter>02.GameObjects\PhysX\CallBack\HitReport\Monster\Troll</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
