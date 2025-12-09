@@ -114,6 +114,7 @@ void CNomalJap::Update(_float fTimeDelta)
 	{
 		OnCollision(this);
 	}
+
 }
 
 

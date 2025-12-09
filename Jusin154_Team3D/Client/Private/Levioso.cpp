@@ -94,7 +94,7 @@ void CLevioso::Late_Update(_float fTimeDelta)
 
 	_vector vDir = XMLoadFloat4(&m_vEndPos) - XMLoadFloat4(&m_vStartPos);
 
-	if (true == m_pGameInstance->SphereCast(0.125, XMLoadFloat4(&m_vStartPos), XMVector3Normalize(vDir), XMVectorGetX(XMVector3Length(vDir))
+	if (true == m_pGameInstance->SphereCast(0.25f, XMLoadFloat4(&m_vStartPos), XMVector3Normalize(vDir), XMVectorGetX(XMVector3Length(vDir))
 		, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eDYNAMIC | PSX::PxQueryFlag::eSTATIC, m_Hitbuffer))
 	{
 		OnCollision(this);
@@ -161,6 +161,8 @@ HRESULT CLevioso::Pre_Setting(CGameObject* pObject, void* pArg)
 		}
 
 	}
+
+
 
 	_vector vDir = XMVector3Normalize(XMLoadFloat3(&m_vCameraLook));
 	
@@ -251,6 +253,11 @@ void CLevioso::OnCollision(CGameObject* pOther, void* pDesc)
 	CEffectParts* pWandLight = Get_PartObject<CEffectParts>("Levioso_Wand_Light");
 	pWandLight->Get_Component<CTransform>()->Set_State(STATE::POSITION, pPlayer->Get_PartObject<CWand>()->Get_WorldPostion());
 
+	/* 바람과 파티클은 풋포지션 */
+
+	m_pOwner->Get_Component<CCharacter_Controller>()->Get_FootPosition();
+
+	//Get_PartObject<CEffectParts>("Levioso_Tornado")
 	//CEffectParts* pLevioso_Hit =  Get_PartObject<CEffectParts>("Levioso_Hit");
 	//CEffectParts* pLevioso_Bottom_Wind = Get_PartObject<CEffectParts>("Levioso_Bottom_Wind");
 	//CEffectParts* pLevioso_Rotate0 = Get_PartObject<CEffectParts>("Levioso_Rotate0");
