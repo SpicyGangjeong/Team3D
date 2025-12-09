@@ -8,12 +8,12 @@ NS_END
 
 NS_BEGIN(Client)
 
-class CBombard final : public CEffect_Container
+class CGoblin_Protego final : public CEffect_Container
 {
 private:
-	CBombard(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CBombard(const CBombard& rhs);
-	virtual ~CBombard() = default;
+	CGoblin_Protego(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CGoblin_Protego(const CGoblin_Protego& rhs);
+	virtual ~CGoblin_Protego() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta) override;
@@ -30,19 +30,19 @@ private:
 	HRESULT         Ready_Child();
 	HRESULT			Bind_ShaderResources() override;
 	virtual void	OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr) override;
-
 private:
-	class  CInfoInstance*			  m_pInfoInstance = { nullptr };
-private:
-	_wstring						  m_wstrEffectName = {};
-	class CEffectParts*				  m_pLight_Projectile = {};
+	_wstring	 m_wstrEffectName = {};
 
-	_float4							  m_vStartPos = { 0.f, 0.f, 0.f, 1.f }; // 현재 발사 된 위치
-	_float4							  m_vTargetPos = { 0.f, 0.f, 10.f, 1.f }; // 현재 타게팅 된 위치
-	_float							  m_fLinearSpeed = 2.f;
-	_float3							  m_vCameraLook = {};
+	class CEffectParts* m_pSphere = { nullptr };
+	class CEffectParts* m_pBottom = { nullptr };
+	class CEffectParts* m_pCircle = { nullptr };
+
+	_float		 m_fSizeAccTime = {};
+	_float       m_fAmountSize = {};
+	_float       m_fSpeed = {};
+
 public:
-	static CBombard* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CGoblin_Protego* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;
 	CGameObject* Clone(void* pArg, CGameObject* pOwner) override;
 #ifdef _DEBUG

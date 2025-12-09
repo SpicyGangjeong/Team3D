@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "Troll_Rock.h"
 #include "EffectPool.h"
+#include "TrailObject.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -356,7 +357,13 @@ HRESULT CTroll::Behavior_ThrowExitCheck(_float fTimeDelta)
 					[this]() {Get_PartObject<CTroll_Rock>()->Set_Attach(false); },
 					0.25f);
 
+				Add_Event(pairAnimInfo.first,
+					[this]() {Troll_Trail_Visible(false);},
+					0.6f);
+
 				Add_Event(pairAnimInfo.first, [this]() {
+
+					Troll_Trail_Visible(true);
 
 					_matrix HandMat = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("SKT_LeftHand")) * m_pTransformCom->Get_XMWorldMatrix();
 
@@ -397,6 +404,17 @@ void CTroll::Behavior_SwingEnter()
 	Add_Event(pairAnimInfo.first,
 		[this]() {m_bLookAt = false; },
 		0.2f);
+
+
+	Troll_Trail_Visible(true);
+	m_pWeaponTrail->Set_Visible(true);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			Troll_Trail_Visible(false); 
+			m_pWeaponTrail->Set_Visible(false);
+		},
+		0.6f);
 }
 
 HRESULT CTroll::Behavior_SwingExitCheck(_float fTimeDelta)
@@ -430,6 +448,18 @@ void CTroll::Behavior_SlamEnter()
 	m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::SLAM)] =
 		m_fMaxSkillCoolTime[ENUM_CLASS(TROLL_SKILL::SLAM)];
 
+
+	Troll_Trail_Visible(true);
+	m_pWeaponTrail->Set_Visible(true);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			Troll_Trail_Visible(false);
+			m_pWeaponTrail->Set_Visible(false);
+		},
+		0.7f);
+
+
 	Add_Event(m_Animation[STATEANIM::SLAM].first,
 		[this]() { m_bLookAt = false; },
 		0.2f);
@@ -437,6 +467,7 @@ void CTroll::Behavior_SlamEnter()
 	Add_Event(m_Animation[STATEANIM::SLAM].first, [this]() {
 		m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_ATTACK, this);
 		} , 0.3f);
+
 }
 
 HRESULT CTroll::Behavior_SlamExitCheck(_float fTimeDelta)
@@ -469,6 +500,16 @@ void CTroll::Behavior_BackHandSwingEnter()
 	Add_Event(m_Animation[STATEANIM::BACKHAND_SWING_JOG].first,
 		[this]() { m_bLookAt = false; },
 		0.2f);
+
+	Troll_Trail_Visible(true);
+	m_pWeaponTrail->Set_Visible(true);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			Troll_Trail_Visible(false); 
+			m_pWeaponTrail->Set_Visible(false);
+		},
+		0.9f);
 }
 
 HRESULT CTroll::Behavior_BackHandSwingExitCheck(_float fTimeDelta)

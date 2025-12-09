@@ -105,7 +105,6 @@ void CS_MAIN(
 
     
     Particle particle = g_ParticleBufferInput[iIndex];
-    
     ParticleValue particleValue = g_ParticleValueBufferInput[iIndex];
     
     
@@ -190,7 +189,7 @@ void CS_MAIN(
         particle.vTranslation.y -= 0.5f * particle.vLifeTime.x * fGravity;
         fOnlyDropY = particle.vTranslation.y;
     }
-    
+     
 
     if (isMoveForward)
     {
@@ -304,7 +303,7 @@ void CS_MAIN(
     
         float fOldViewZ = vDepthDesc.y * fFar;
     
-        if (vProjPos.w >= fOldViewZ && particle.vLifeTime.x >= 0.2f)
+        if (vProjPos.w >= fOldViewZ && particle.vLifeTime.x >= 0.3f)
         {
             if (particleValue.isCompareStop == false)
             {

@@ -6,6 +6,9 @@
 #include "GameInstance.h"
 #include "Effect_Container.h"
 #include "EffectParts.h"
+#include "EffectPool.h"
+#include "Layer.h"
+#include "TrailObject.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -62,6 +65,13 @@ HRESULT CTroll::Initialize(void* pArg)
 
 	m_pCharacter_Controller->Set_Position(XMVectorSet(3.f, 5.f, -20.f, 1.f));
 
+	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
+	SAFE_ADDREF(m_pEffectPool);
+
+	m_pLeftHand_BoneMat = m_pModelCom->Get_BoneMatrixPtr("LeftHand");
+	m_pRightHand_BoneMat = m_pModelCom->Get_BoneMatrixPtr("RightHand");
+	m_pWeapon_BoneMat = Get_PartObject<CTroll_Weapon>()->Get_Component<CModel>()->Get_BoneMatrixPtr("Bone");
+
 	return S_OK;
 }
 
@@ -107,6 +117,33 @@ void CTroll::Update(_float fTimeDelta)
 		m_fSkillCoolTime[i] = max(0.f, m_fSkillCoolTime[i] - fTimeDelta);
 
 
+#pragma region TRAIL_UPDATE
+
+	_matrix WorldMat = m_pTransformCom->Get_XMWorldMatrix();
+
+	_matrix LeftHandMatrix = {};
+	_matrix RightHandMatrix = {};
+	_matrix WeaponMatrix = {};
+
+	LeftHandMatrix = XMLoadFloat4x4(m_pLeftHand_BoneMat);
+	RightHandMatrix = XMLoadFloat4x4(m_pRightHand_BoneMat);
+	WeaponMatrix = XMLoadFloat4x4(m_pWeapon_BoneMat);
+
+
+	for (int i = 0; i < 3; ++i) {
+		LeftHandMatrix.r[i] = XMVector3Normalize(LeftHandMatrix.r[i]);
+		RightHandMatrix.r[i] = XMVector3Normalize(RightHandMatrix.r[i]);
+		WeaponMatrix.r[i] = XMVector3Normalize(WeaponMatrix.r[i]);
+	}
+
+	_matrix WeaponSoket = WeaponMatrix * Get_PartObject<CTroll_Weapon>()->Get_Component<CTransform>()->Get_XMWorldMatrix();
+
+	m_pLeftTrail->Trail_Update(LeftHandMatrix * WorldMat, fTimeDelta);
+	m_pRightTrail->Trail_Update(RightHandMatrix * WorldMat, fTimeDelta);
+	m_pWeaponTrail->Trail_Update(WeaponSoket, fTimeDelta);
+
+#pragma endregion
+
 }
 
 void CTroll::Late_Update(_float fTimeDelta)
@@ -120,21 +157,21 @@ void CTroll::Late_Update(_float fTimeDelta)
 	}
 
 	if (m_bLookAt) {
-		m_pTransformCom->LookAt_Lerp(XMLoadFloat4(&m_vTargetPos),fTimeDelta, 3.f);
+		m_pTransformCom->LookAt_Lerp(XMLoadFloat4(&m_vTargetPos), fTimeDelta, 3.f);
 	}
-	
+
 
 	_vector vDir = XMLoadFloat4(&m_vTargetPos) - Get_WorldPostion();
 	vDir = XMVector4Normalize(vDir);
 	_vector vLook = XMVector3Normalize(
 		XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
 	float dot = XMVectorGetX(XMVector3Dot(vLook, vDir));
-	dot = max(-1.f, min(1.f, dot)); 
+	dot = max(-1.f, min(1.f, dot));
 
-	float angle = acosf(dot);       
+	float angle = acosf(dot);
 	m_fDegree = XMConvertToDegrees(angle);
 
-	m_fCross = XMVectorGetY(XMVector3Cross(vLook, vDir));    
+	m_fCross = XMVectorGetY(XMVector3Cross(vLook, vDir));
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 }
@@ -279,6 +316,7 @@ HRESULT CTroll::Ready_Components()
 	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_TROLL"), (CComponent**)&m_pStat))) {
 		return E_FAIL;
 	}
+
 	return S_OK;
 }
 
@@ -314,7 +352,7 @@ HRESULT CTroll::Ready_Parts()
 
 	PartsDesc.pParentTransform = m_pTransformCom;
 
- 
+
 
 	if (FAILED(Add_PartObject<CEffectParts>("Troll_Particle", g_iStaticLevel, &m_pTroll_Particle, &PartsDesc)))
 	{
@@ -351,6 +389,30 @@ HRESULT CTroll::Ready_Parts()
 	m_pLeft_Smoke->Load("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Smoke", static_cast<LEVEL>(NEXT_LEVEL));
 	m_pLeft_Smoke->FollowParants(m_pModelCom->Get_BoneMatrixPtr("LeftArm"));
 
+
+	if (FAILED(Add_PartObject<CTrailObject>("Left_Trail", g_iStaticLevel, &m_pLeftTrail, &PartsDesc))) {
+		return E_FAIL;
+	}
+	;
+
+	m_pLeftTrail->Load_Trail("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Trail", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pLeftTrail->Set_Visible(false);
+
+	if (FAILED(Add_PartObject<CTrailObject>("Right_Trail", g_iStaticLevel, &m_pRightTrail, &PartsDesc))) {
+		return E_FAIL;
+	}
+
+	m_pRightTrail->Load_Trail("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Trail", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pRightTrail->Set_Visible(false);
+
+	if (FAILED(Add_PartObject<CTrailObject>("Weapon_Trail", g_iStaticLevel, &m_pWeaponTrail, &PartsDesc))) {
+		return E_FAIL;
+	}
+
+	m_pWeaponTrail->Load_Trail("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Swing_Trail", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pWeaponTrail->Set_Visible(false);
+
+
 #pragma endregion
 	return S_OK;
 }
@@ -371,6 +433,15 @@ HRESULT CTroll::Bind_ShaderResources()
 		return E_FAIL;
 	}
 	return S_OK;
+}
+
+void CTroll::Troll_Trail_Visible(_bool isTrailVisible)
+{
+	m_pLeftTrail->Set_Visible(isTrailVisible);
+	m_pRightTrail->Set_Visible(isTrailVisible);
+
+	m_pLeftTrail->Get_Component<CTrail>()->Reset_Trail();
+	m_pRightTrail->Get_Component<CTrail>()->Reset_Trail();
 }
 
 CTroll* CTroll::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -417,36 +488,17 @@ void CTroll::Free()
 	SAFE_RELEASE(m_pTroll_Particle2);
 	SAFE_RELEASE(m_pRight_Smoke);
 	SAFE_RELEASE(m_pLeft_Smoke);
+	SAFE_RELEASE(m_pEffectPool);
+	SAFE_RELEASE(m_pLeftTrail);
+	SAFE_RELEASE(m_pRightTrail);
+	SAFE_RELEASE(m_pWeaponTrail);
 }
 #ifdef _DEBUG
 
 void CTroll::Describe_Entity()
 {
-	GUI::Begin("Troll");
+	__super::Describe_Entity();
 
-	GUI::Checkbox("LookAt", &m_bLookAt);
-
-	string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
-	GUI::Text(AnimList.c_str());
-
-	GUI::Text("AnimTrack %.2f", m_pModelCom->Get_CurrentTrackPosition());
-	GUI::Text("AnimRatio %.2f", m_pModelCom->Get_CurrentTrackProgressRatio());
-
-	_float4 vMomentum = {};
-	XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());
-	GUI::Text("%.2f %.2f %.2f %.2f ", vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);
-
-	_float3 Pos;
-	XMStoreFloat3(&Pos, Get_WorldPostion());
-
-	if (GUI::DragFloat3("Pos",(_float*)&Pos))
-	{
-		m_pCharacter_Controller->Set_Position(XMLoadFloat3(&Pos));
-	}
-	GUI::TextColored(ImVec4(1.f, 0.f, 0.f, 1.f), "Degree %.2f", m_fDegree);
-	GUI::TextColored(ImVec4(1.f, 0.f, 0.f, 1.f), "Distance %.2f", m_fTargetDistance);
-
-	GUI::End();
 
 }
 

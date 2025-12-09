@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "TrailObject.h"
 #include "Wand.h"
+#include "InfoInstance.h"
 
 
 CLevioso::CLevioso(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -14,7 +15,8 @@ CLevioso::CLevioso(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CLevioso::CLevioso(const CLevioso& rhs)
-	: CEffect_Container(rhs)
+	: CEffect_Container(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -74,11 +76,8 @@ void CLevioso::Update(_float fTimeDelta)
 
 	Update_Event(fTimeDelta);
 
-	m_pLeviosoPJ_0->Get_Component<CTransform>()->Translation(m_vOwnerLook * 0.25f);
-
-
-	m_pTrail_PT_0->Get_Component<CTransform>()->Translation(m_vOwnerLook * 0.25f);
-
+	m_pLeviosoPJ_0->Get_Component<CTransform>()->Translation(XMLoadFloat3(&m_vCameraLook) * m_fLinearSpeed);
+	m_pTrail_PT_0->Get_Component<CTransform>()->Translation(XMLoadFloat3(&m_vCameraLook) * m_fLinearSpeed);
 
 
 	_matrix WorldMat = m_pTrail_PT_0->Get_Component<CTransform>()->Get_XMWorldMatrix();
@@ -108,8 +107,6 @@ void CLevioso::Late_Update(_float fTimeDelta)
 	}
 
 	__super::Late_Update(fTimeDelta);
-
-
 }
 
 HRESULT CLevioso::Pre_Setting(CGameObject* pObject, void* pArg)
@@ -145,6 +142,28 @@ HRESULT CLevioso::Pre_Setting(CGameObject* pObject, void* pArg)
 
 
 	m_vOwnerLook = XMVector3Normalize(m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK));
+
+	_vector vDirection = m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK);
+	XMStoreFloat3(&m_vCameraLook, vDirection);
+
+	_vector vStartPos = WandPos;
+	XMStoreFloat4(&m_vStartPos, vStartPos);
+
+	{ /* 대상 위치 지정 */
+
+		CUnit* pTargetUnit = m_pInfoInstance->Get_LockOnUnit();
+		if (nullptr != pTargetUnit) {
+
+			XMStoreFloat4(&m_vTargetPos, pTargetUnit->Get_LockOnPos());
+
+			XMStoreFloat3(&m_vCameraLook, XMVector3Normalize(XMLoadFloat4(&m_vTargetPos) - XMLoadFloat4(&m_vStartPos)));
+		}
+		else {
+			// 타겟이 없다면 현재위치 -> 카메라 룩벡터 * duration간 예상 이동거리 를 대상으로 지정
+			XMStoreFloat4(&m_vTargetPos, vStartPos + vDirection * m_fLinearSpeed * 0.5f);
+		}
+
+	}
 
 	return S_OK;
 }

@@ -146,6 +146,7 @@
 #include "TrollSwing.h"
 #include "Troll_Nomal_Smoke.h"
 #include "Troll_Rush_Hit.h"
+#include "Goblin_Protego.h"
 
 #include "Troll.h"
 #include "Troll_Rock.h"
@@ -1480,6 +1481,9 @@ HRESULT CLoader::Loading_For_Effect()
 		return E_FAIL;
 	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CTroll_Rush_Hit>(NEXT_LEVEL, CTroll_Rush_Hit::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Protego>(NEXT_LEVEL, CGoblin_Protego::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 

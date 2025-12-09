@@ -32,7 +32,8 @@ public:
 	virtual _vector Get_LockOnPos() override;
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
-
+private:
+	void    Troll_Trail_Visible(_bool isTrailVisible);
 
 private:
 	CCallBack_Monster_Behavior* m_pCallBack_Behavior = { nullptr };
@@ -47,6 +48,16 @@ private:
 	class CEffectParts* m_pLeft_Smoke = { nullptr };
 	class CEffectParts* m_pTroll_Particle = { nullptr };
 	class CEffectParts* m_pTroll_Particle2 = { nullptr };
+
+	class CTrailObject* m_pLeftTrail = { nullptr };
+	class CTrailObject* m_pRightTrail = { nullptr };
+	class CTrailObject* m_pWeaponTrail = { nullptr };
+
+	const _float4x4* m_pLeftHand_BoneMat = { nullptr };
+	const _float4x4* m_pRightHand_BoneMat = { nullptr };
+	const _float4x4* m_pWeapon_BoneMat = { nullptr };
+private:
+	class CEffectPool* m_pEffectPool = nullptr;
 
 private:
 	virtual HRESULT Initialize_Prototype() override;

@@ -5,6 +5,7 @@
 #include "EffectParts.h"
 #include "Wand.h"
 #include "Player.h"
+#include "InfoInstance.h"
 
 CBombard::CBombard(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEffect_Container{ pDevice, pContext }
@@ -12,7 +13,8 @@ CBombard::CBombard(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CBombard::CBombard(const CBombard& rhs)
-	: CEffect_Container(rhs)
+	: CEffect_Container(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -66,7 +68,7 @@ void CBombard::Update(_float fTimeDelta)
 
 	CTransform* pPJTransform = m_pLight_Projectile->Get_Component<CTransform>();
 
-	pPJTransform->Translation(m_vCameraLook * 2.f);
+	pPJTransform->Translation( XMLoadFloat3(&m_vCameraLook) * m_fLinearSpeed);
 
 
 }
@@ -110,8 +112,6 @@ HRESULT CBombard::Pre_Setting(CGameObject* pObject, void* pArg)
 	CPartObject* pShootPt = Get_PartObject<CEffectParts>("Bombard_Shoot_Pt");
 	CPartObject* pCircle0 = Get_PartObject<CEffectParts>("Bombard_Circle0");
 
-	m_vCameraLook = m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK);
-
 
 	pShootPt->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 	m_pLight_Projectile->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
@@ -122,7 +122,26 @@ HRESULT CBombard::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	m_pLight_Projectile->Set_Visible(true);
 
-	// 건드린 친구들 순서대로 다 가져옴 ( 정렬은 안되어있음 )
+	_vector vDirection = m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK);
+	XMStoreFloat3(&m_vCameraLook, vDirection);
+
+	_vector vStartPos = pWand->Get_WorldPostion();
+	XMStoreFloat4(&m_vStartPos, vStartPos);
+
+	{ /* 대상 위치 지정 */
+
+		CUnit* pTargetUnit = m_pInfoInstance->Get_LockOnUnit();
+		if (nullptr != pTargetUnit) {
+
+			XMStoreFloat4(&m_vTargetPos, pTargetUnit->Get_LockOnPos());
+
+			XMStoreFloat3(&m_vCameraLook, XMVector3Normalize(XMLoadFloat4(&m_vTargetPos) - XMLoadFloat4(&m_vStartPos)));
+		}
+		else {
+			// 타겟이 없다면 현재위치 -> 카메라 룩벡터 * duration간 예상 이동거리 를 대상으로 지정
+			XMStoreFloat4(&m_vTargetPos, vStartPos + vDirection * m_fLinearSpeed * 0.5f);
+		}
+	}
 
 
 	return S_OK;
