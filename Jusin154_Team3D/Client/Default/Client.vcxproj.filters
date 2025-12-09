@@ -413,6 +413,8 @@
     <ClInclude Include="..\Public\Goblin.h">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Warrior</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Goblin_BattleAxe.h">
+      <Filter>02.GameObjects\Item\Goblin_BattleAxe</Filter>
     <ClInclude Include="..\Public\CallBack_Playable_Behavior.h">
       <Filter>02.GameObjects\PhysX\CallBack\Behavior\Player</Filter>
     </ClInclude>
@@ -912,6 +914,8 @@
     <Filter Include="02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Spector">
       <UniqueIdentifier>{234b3dd8-4ec9-4e81-ac7f-4eacb8f53780}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Item\Goblin_BattleAxe">
+      <UniqueIdentifier>{c770aac9-12b1-45f0-a64f-fc7819921e86}</UniqueIdentifier>
     <Filter Include="02.GameObjects\PhysX\CallBack\Behavior\Player">
       <UniqueIdentifier>{3f4bde42-c5a0-4c7a-8dde-23e0725534c9}</UniqueIdentifier>
     </Filter>
@@ -1348,6 +1352,8 @@
     <ClCompile Include="..\Private\Goblin.cpp">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Warrior</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Goblin_BattleAxe.cpp">
+      <Filter>02.GameObjects\Item\Goblin_BattleAxe</Filter>
     <ClCompile Include="..\Private\CallBack_Playable_Behavior.cpp">
       <Filter>02.GameObjects\PhysX\CallBack\Behavior\Player</Filter>
     </ClCompile>

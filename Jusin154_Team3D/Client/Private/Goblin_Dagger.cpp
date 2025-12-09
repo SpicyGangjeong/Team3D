@@ -38,7 +38,7 @@ HRESULT CGoblin_Dagger::Initialize(void* pArg)
 
 void CGoblin_Dagger::Priority_Update(_float fTimeDelta)
 {
-	m_pModelCom->Combined_BoneMatrix();
+	//m_pModelCom->Combined_BoneMatrix();
 	if (m_bAttach)
 	{
 		_matrix socketMatrix = {};

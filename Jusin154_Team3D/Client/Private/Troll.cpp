@@ -106,6 +106,8 @@ void CTroll::Update(_float fTimeDelta)
 	for (_uint i = 0; i < ENUM_CLASS(TROLL_SKILL::END); i++)
 		m_fSkillCoolTime[i] = max(0.f, m_fSkillCoolTime[i] - fTimeDelta);
 
+	
+
 
 }
 
