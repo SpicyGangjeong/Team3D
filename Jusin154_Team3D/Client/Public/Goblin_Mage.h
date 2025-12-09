@@ -98,6 +98,9 @@ private:
 	HRESULT Behavior_HitExitCheck(_float fTimeDelta);
 	void	Behavior_HitExit();
 
+	void	Behavior_DeadEnter();
+	HRESULT Behavior_DeadExitCheck(_float fTimeDelta);
+	void	Behavior_DeadExit();
 private:
 	class CEffectPool* m_pEffectPool = nullptr;
 };

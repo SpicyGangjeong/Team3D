@@ -13,6 +13,7 @@ protected:
 
 public:
 	virtual HRESULT Render() { return S_OK; }
+	virtual class CGameObject* Get_Owner() { return m_pOwner; }
 
 protected:
 	ID3D11Device*			m_pDevice = { nullptr };

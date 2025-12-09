@@ -572,7 +572,7 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     float fVisibility_Dynamic_Near = ShadowVisibility_hwPCF(g_ShadowNearTexture, vPosition, float2(g_iMaxShadowWidth, g_iMaxShadowHeight), 0.005f);
     float fVisibility_Static = ShadowVisibility_hwPCF(g_PreShadowTexture, vPreShadowPosition, float2(g_iMaxShadowWidth, g_iMaxShadowHeight), 0.005f);
     
-    Out.vBackBuffer.rgb *= lerp(0.f, 1.f, lerp(fVisibility_Dynamic_Near, fVisibility_Static, vDepthDesc.y));
+    Out.vBackBuffer.rgb *= lerp(0.25f, 1.f, lerp(fVisibility_Dynamic_Near, fVisibility_Static, vDepthDesc.y));
     
     
     float4 vColor = 0.f;

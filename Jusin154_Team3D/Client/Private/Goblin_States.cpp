@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 #include "Goblin.h"
-
+#include "InfoInstance.h"
 #include "GameInstance.h"
 #include "Player.h"
 #include "Goblin_Dagger.h"
@@ -388,6 +388,11 @@ void CGoblin::Behavior_DeadEnter()
 	m_bLookAt = false;
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::DEAD);
+	PSX::PxExtendedVec3 pxControlllerPos = m_pCharacter_Controller->Get_Controller()->getPosition();
+	PSX::PxTransform pxTransform((_float)pxControlllerPos.x, (_float)pxControlllerPos.y + 100.f, (_float)pxControlllerPos.z);
+	m_pCharacter_Controller->Set_Position(XMLoadFloat3((_float3*)&pxTransform.p));
+	m_pRigidBody->SetActive(false);
+	m_pCharacter_Controller->SetActive(false);
 
 	_bool bStrongerKnockDown = { false };
 	
@@ -407,17 +412,17 @@ void CGoblin::Behavior_DeadEnter()
 	_uint iState = { UINT_MAX };
 
 	if (fabsRadius > 135.f) {
-		iState = STATEANIM::DEAD_BWD;
+		iState = STATEANIM::DEAD_FWD;
 	}
 	else if (fabsRadius < 45.f) {
-		iState = STATEANIM::DEAD_FWD;
+		iState = STATEANIM::DEAD_BWD;
 	}
 	else {
 		if (m_fHitRadius < 0.f) {
-			iState = STATEANIM::DEAD_R;
+			iState = STATEANIM::DEAD_L;
 		}
 		else {
-			iState = STATEANIM::DEAD_L;
+			iState = STATEANIM::DEAD_R;
 		}
 	}
 	pairAnimInfo = m_Animation[iState + bStrongerKnockDown];
@@ -427,8 +432,8 @@ void CGoblin::Behavior_DeadEnter()
 
 HRESULT CGoblin::Behavior_DeadExitCheck(_float fTimeDelta)
 {
-	if (true == m_pModelCom->IsFinishedAnim()) {
-		return E_FAIL;
+	if ( FLT_EPSILON > m_pModelCom->Get_CurrentTrackProgressRatio()) {
+		return E_PENDING;
 	}
 	return S_OK;
 }
@@ -523,6 +528,14 @@ void CGoblin::Add_FSM()
 		Desc.funcEnterEvent = [this]() { Behavior_DeadEnter(); };
 		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_DeadExitCheck(fTimedelta); };
 		Desc.funcExitEvent = [this]() { Behavior_DeadExit(); };
+		Desc.funcLateUpdate = [this](_float fDeadRatio) { 
+			m_fDeadRatio = fDeadRatio;
+		if (m_fDeadRatio > 1.f) {
+			m_bDead = true;
+		}
+		};
+		Desc.vDeadTimer.x = FLT_EPSILON5;
+		Desc.vDeadTimer.y = 2.f;
 		m_States.emplace(FSMSTATE::DEAD, CState_Dead::Create(&Desc));
 	}
 #pragma endregion

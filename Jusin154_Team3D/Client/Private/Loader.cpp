@@ -818,8 +818,12 @@ HRESULT CLoader::Loading_For_GamePlay()
 	{
 		return E_FAIL;
 	}
-
-
+#pragma region Global_SRV
+	{
+		m_pGameInstance->Load_GlobalSRV(TEXT("GLOBAL_DISOLVE_NOISE_05"), "../Bin/Resources/Textures/Effect/Noises/VFX_T_Noise05_D.png");
+		m_pGameInstance->Load_GlobalSRV(TEXT("GLOBAL_DISOLVE_BURN_VERTICAL"), "../Bin/Resources/Textures/Effect/Diffuse/drp_fire_Line_Vertical.png");
+	}
+#pragma endregion
 //#pragma region UI_ANI
 //	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Altering_Spell"),
 //		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Altering_Spell\\Altering_Spell%d.png"), 349))))

@@ -4,6 +4,7 @@
 #include "Troll_Weapon.h"
 #include "Troll_Rock.h"
 #include "GameInstance.h"
+#include "InfoInstance.h"
 #include "Effect_Container.h"
 #include "EffectParts.h"
 
@@ -84,7 +85,7 @@ void CTroll::Update(_float fTimeDelta)
 		m_pCharacter_Controller->Move(fTimeDelta);
 		m_vStunTimer.x = 0.f;
 	}
-	else {
+	else if (true == m_pRigidBody->IsActive()) {
 		if (0.f == m_vStunTimer.x) {
 			PSX::PxExtendedVec3 pxControlllerPos = m_pCharacter_Controller->Get_Controller()->getPosition();
 			PSX::PxTransform pxTransform((_float)pxControlllerPos.x, (_float)pxControlllerPos.y + 100.f, (_float)pxControlllerPos.z);
@@ -97,7 +98,6 @@ void CTroll::Update(_float fTimeDelta)
 			m_pRigidBody->ConvertToCCT(*m_pCharacter_Controller);
 		}
 	}
-
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
@@ -236,10 +236,6 @@ _vector CTroll::Get_LockOnPos()
 void CTroll::OnCollision(CGameObject* pOther, void* pDesc)
 {
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
-	_vector vWorldPos = {};		// 접촉지점
-	_vector vWorldNomal = {};	// 접촉노말
-	_vector vHitDir = {};		// 시도한 move 방향
-	_float  fLength = {};		// 작용된 힘
 
 	_uint iSkillType = dynamic_cast<CEffect_Container*>(pOther)->Get_SkillType();
 	switch (iSkillType)

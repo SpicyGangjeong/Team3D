@@ -5,6 +5,7 @@ matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 bool g_bUVTargetDiffuse;
 bool g_bAdditiveDisolve;
+bool g_bDisolve;
 
 float g_LifeRatio;
 float g_fFar;
@@ -47,6 +48,7 @@ Texture2D g_GlassTexture;
 TextureCube g_CubeTexture;
 Texture2D g_NormalLargeTexture;
 Texture2D g_NormalSubTexture;
+Texture2D g_DeadDisolveTexture;
 
 float g_fNormalValue1;
 float g_fNormalValue2;

@@ -2,6 +2,9 @@
 #include "Goblin.h"
 
 #include "GameInstance.h"
+#include "InfoInstance.h"
+#include "Layer.h"
+#include "Player.h"
 #include "Goblin_Dagger.h"
 #include "Effect_Container.h"
 
@@ -45,23 +48,23 @@ HRESULT CGoblin::Initialize(void* pArg)
 
 	Add_FSM();
 
-	Set_Anim();
+Set_Anim();
 
-	{
-		CFSM::FSM_DESC FSMDesc{};
-		FSMDesc.pStates = &m_States;
-		FSMDesc.pStateMask = &m_iStateMask;
+{
+	CFSM::FSM_DESC FSMDesc{};
+	FSMDesc.pStates = &m_States;
+	FSMDesc.pStateMask = &m_iStateMask;
 
-		m_pFSM->Bind_States(FSMDesc);
-		m_pFSM->Change_State(FSMSTATE::IDLE);
-	}
+	m_pFSM->Bind_States(FSMDesc);
+	m_pFSM->Change_State(FSMSTATE::IDLE);
+}
 
-	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
-	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
+m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
+m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
 
-	m_pCharacter_Controller->Set_Position(XMVectorSet(-40.f, 5.f, -20.f, 1.f));
+m_pCharacter_Controller->Set_Position(XMVectorSet(-40.f, 5.f, -20.f, 1.f));
 
-	return S_OK;
+return S_OK;
 }
 
 void CGoblin::Priority_Update(_float fTimeDelta)
@@ -85,7 +88,7 @@ void CGoblin::Update(_float fTimeDelta)
 		m_pCharacter_Controller->Move(fTimeDelta);
 		m_vStunTimer.x = 0.f;
 	}
-	else {
+	else if (true == m_pRigidBody->IsActive()) {
 		if (0.f == m_vStunTimer.x) {
 			PSX::PxExtendedVec3 pxControlllerPos = m_pCharacter_Controller->Get_Controller()->getPosition();
 			PSX::PxTransform pxTransform((_float)pxControlllerPos.x, (_float)pxControlllerPos.y + 100.f, (_float)pxControlllerPos.z);
@@ -115,12 +118,12 @@ void CGoblin::Late_Update(_float fTimeDelta)
 	if (true == m_pCharacter_Controller->IsActive()) {
 		m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
 	}
-	else {
+	else if (true == m_pRigidBody->IsActive()) {
 		m_pTransformCom->Set_WorldMatrix(m_pRigidBody->Get_FootPositionPxTransform());
 	}
-
-
-	m_pTransformCom->LookAt_Horizontal(XMLoadFloat4(&m_vTargetPos));
+	if (true == m_bLookAt) {
+		m_pTransformCom->LookAt_Horizontal(XMLoadFloat4(&m_vTargetPos));
+	}
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW, this);
@@ -138,6 +141,9 @@ HRESULT CGoblin::Render()
 	_uint iShaderPass = ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT);
 	if (true == m_bDrawOutLine) {
 		iShaderPass = ENUM_CLASS(SHADER_PASS_ANIM::OUTLINE_WRITE);
+	}
+	if (FAILED(Render_DeadDisolve())) {
+		return E_FAIL;
 	}
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
@@ -168,12 +174,20 @@ HRESULT CGoblin::Render()
 			return E_FAIL;
 		}
 	}
-	else {
+	else if (true == m_pRigidBody->IsActive()){
 		if (FAILED(m_pRigidBody->Render())) {
 			return E_FAIL;
 		}
 	}
 #endif
+
+
+	if (0.f < m_fDeadRatio) {
+		_bool bDisolve = false;
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool)))) {
+			return E_FAIL;
+		}
+	}
 	return S_OK;
 }
 
@@ -238,11 +252,15 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 		m_eHitSpell = STATEANIM::TUMBLE2;
 		break;
 	case ENUM_CLASS(SKILL_TYPE::JAP):
+	{
 		m_eHitSpell = STATEANIM::HIT_LEVIOSO;
-		if (true == Get_Damage(60.f)) {
+		_float fSkillRatio = m_pInfoInstance->Get_Spell_Info(ENUM_CLASS(SKILL_TYPE::JAP)).fSpell_Damage;
+		_float fCoefficient = CollisionDesc->pObject->Get_Component<CStat>()->Get_Stat(ENUM_CLASS(STAT::MAGIC));
+		if (true == Get_Damage(fSkillRatio * fCoefficient)) {
 			m_pFSM->Change_State(FSMSTATE::DEAD);
 			return;
 		}
+	}
 		break;
 	case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
 		m_eHitSpell = STATEANIM::HIT_LEVIOSO;
@@ -336,8 +354,6 @@ HRESULT CGoblin::Ready_Parts()
 	CPartObject::PARTOBJECT_DESC PartsDesc{};
 
 	PartsDesc.pParentTransform = m_pTransformCom;
-
-
 
 	if (FAILED(Add_PartObject<CEffectParts>("Goblin_Particle",g_iStaticLevel, &m_pGoblin_Particle, &PartsDesc)))
 	{
