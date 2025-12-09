@@ -210,6 +210,7 @@ void CUI_Manager::Free()
 {
 	__super::Free();
 
+	m_Event_map.clear();
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 #ifdef _DEBUG

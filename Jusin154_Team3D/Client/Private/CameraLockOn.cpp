@@ -41,6 +41,7 @@ HRESULT CCameraLockOn::Initialize(void* pArg)
 	m_fTimeMult = 0.5f;
 	Set_Visible(false);
 	m_pInfoInstance->Add_Event(TEXT("MouseTogggle"), [this](void* p) {this->Set_Visible(*reinterpret_cast<_bool*>(p)); });
+	m_pInfoInstance->Add_Event(TEXT("CameraLockOn"), [this](void* p) {this->Visible(*reinterpret_cast<_bool*>(p)); });
 	return S_OK;
 }
 
@@ -50,14 +51,11 @@ void CCameraLockOn::Priority_Update(_float fTimeDelta)
 
 void CCameraLockOn::Update(_float fTimeDelta)
 {
-	/*if (m_pGameInstance->Mouse_Pressing(DIM_RBUTTON))
+	if (m_bVisible)
 	{
-		m_bHover = true;
+		m_fTime += fTimeDelta * m_fTimeMult;
+		Update_Target();
 	}
-	else
-		m_bHover = false;*/
-
-	m_fTime += fTimeDelta * m_fTimeMult;
 }
 
 void CCameraLockOn::Late_Update(_float fTimeDelta)
@@ -154,6 +152,30 @@ HRESULT CCameraLockOn::Ready_Components(void* pArg)
 	}
 
 	return S_OK;
+}
+
+void CCameraLockOn::Visible(_bool Visible)
+{
+	if (m_pInfoInstance->Get_UISTATE() == UI_STATE::GAMEPLAYER)
+	{
+		m_bVisible = Visible;
+	}
+	else
+	{
+		m_bVisible = false;
+	}
+}
+
+void CCameraLockOn::Update_Target()
+{
+	if (m_pInfoInstance->Get_TargetMonster() == nullptr)
+	{
+		m_bHover = false;
+	}
+	else
+	{
+		m_bHover = true;
+	}
 }
 
 CCameraLockOn* CCameraLockOn::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

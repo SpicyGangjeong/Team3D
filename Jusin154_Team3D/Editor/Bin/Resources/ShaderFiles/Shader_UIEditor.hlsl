@@ -1270,7 +1270,7 @@ PS_OUT PS_Camera_LockOn(PS_IN In)
     
     Color.a = tex1 * 0.3f;
     
-    if (g_iHover != 0)
+    if (g_iHover == 0)
     {
         float4 tex2 = g_Texture1.Sample(ClampSampler, maskuv);
 

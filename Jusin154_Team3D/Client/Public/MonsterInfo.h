@@ -28,6 +28,7 @@ public:
 	CUnit* Get_LockOnUnit();
 	pair<CUnit*, CTransform*> Get_NearestPlayerAlly(_fvector vPos);
 
+	CMonster* Get_TargetMonster();
 private:
 	CGameInstance*			m_pGameInstance = { nullptr };
 	class CInfoInstance*	m_pInfoInstance = { nullptr };

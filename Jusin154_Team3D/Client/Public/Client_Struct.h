@@ -37,8 +37,20 @@ namespace Client
 		_float			fVidio{};
 	}SPELL_INFO;
 
-	typedef struct tagLockOnInfo {
-		CUnit*					pUnit = { nullptr };
-		class CMapElement_Interactable*	pInteractive = { nullptr };
-	}LOCKON_INFO;
+	typedef struct tagUnitInfo
+	{
+		_wstring		pUnit_Name;
+		_float			fCurrentHp{};
+		_float			fMaxHp{};
+		_float			fTargetHp{};
+		_float			fMelee{};
+		_float			fMagic{};
+		_float			fDefense{};
+		_float			fSpeed{};
+		_float			fAgility{};
+		_int			iLevel{};
+		_float			fExprince{};
+		_float			fMaxExprience{};
+		_int			iGold{};
+	}UNITINFO;
 };

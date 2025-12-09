@@ -1,6 +1,8 @@
 ﻿#include "pch.h"
 #include "Enemy_Info.h"
 #include "GameInstance.h"
+#include "InfoInstance.h"
+#include "Monster.h"
 
 CEnemy_Info::CEnemy_Info(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
@@ -8,7 +10,8 @@ CEnemy_Info::CEnemy_Info(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CEnemy_Info::CEnemy_Info(const CEnemy_Info& rhs)
-	:CElementObject(rhs)
+	:CElementObject(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -104,6 +107,8 @@ void CEnemy_Info::Update(_float fTimeDelta)
 		Set_FadeOut();
 	}
 
+	Update_Target();
+
 	__super::Update(fTimeDelta);
 }
 
@@ -136,13 +141,12 @@ HRESULT CEnemy_Info::Render()
 			return E_FAIL;
 		}
 
-		m_fFontOffSet = (m_pGameInstance->FontSizeX(TEXT("Font_size20"), m_pEnemy_Name.c_str()) - 29.f) * 0.5f;
-		m_fFont2OffSet = (m_pGameInstance->FontSizeX(TEXT("UI_size15"), m_pLevel.c_str()) - 13.f) * 0.5f;
 
-		m_pGameInstance->Render_Text(TEXT("Font_size20"), m_pEnemy_Name.c_str(), _float2(m_fFontPos.x + m_fX - m_fFontOffSet, m_fFontPos.y + m_fY), XMVectorSet(1.f* m_fAlpha,1.f* m_fAlpha,1.f* m_fAlpha, m_fAlpha));
-		m_pGameInstance->Render_Text(TEXT("UI_size15"), m_pLevel.c_str(), _float2(m_fFontX + m_fX - m_fFont2OffSet, m_fFontY + m_fY), XMVectorSet(0.f, (120.f / 255.f)* m_fAlpha, 0.f, m_fAlpha));
+
+		m_pGameInstance->Render_Text(TEXT("Font_size20"), m_pEnemy_Name.c_str(), _float2(m_fFontPos.x + m_fX - m_fFontOffSet, m_fFontPos.y + m_fY), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
+		m_pGameInstance->Render_Text(TEXT("UI_size15"), m_pLevel.c_str(), _float2(m_fFontX + m_fX - m_fFont2OffSet, m_fFontY + m_fY), XMVectorSet(0.f, (120.f / 255.f) * m_fAlpha, 0.f, m_fAlpha));
 	}
-	
+
 	return S_OK;
 }
 
@@ -209,14 +213,17 @@ HRESULT CEnemy_Info::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-void CEnemy_Info::Set_Info(_int Level, _wstring Name)
+void CEnemy_Info::Update_Target()
 {
-	if (m_bAnimation == true)
+	if (m_pInfoInstance->Get_TargetMonster() == nullptr)
 	{
+		Set_FadeOut();
 		return;
 	}
-	m_pLevel = to_wstring(Level);
-	m_pEnemy_Name = Name;
+	m_pLevel = to_wstring(m_pInfoInstance->Get_TargetMonster()->Get_Stat()->Get_Stat().iLevel);
+	m_pEnemy_Name = m_pInfoInstance->Get_TargetMonster()->Get_Stat()->Get_Stat().pUnit_Name;
+	m_fFontOffSet = (m_pGameInstance->FontSizeX(TEXT("Font_size20"), m_pEnemy_Name.c_str()) - 29.f) * 0.5f;
+	m_fFont2OffSet = (m_pGameInstance->FontSizeX(TEXT("UI_size15"), m_pLevel.c_str()) - 13.f) * 0.5f;
 	Set_FadeIn();
 }
 

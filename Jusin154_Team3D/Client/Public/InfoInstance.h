@@ -7,6 +7,7 @@ NS_BEGIN(Engine)
 class CGameInstance;
 class CTransform;
 class CUnit;
+class CState;
 NS_END
 
 NS_BEGIN(Client)
@@ -37,6 +38,7 @@ public:
 
 	void Get_LockOnInfo(LOCKON_INFO& Info);
 	pair<CUnit*, CTransform*> Get_NearestPlayerAlly(_fvector vPos);
+	CMonster* Get_TargetMonster();
 #pragma endregion
 #pragma region MAP_INFO
 	HRESULT Load_MapObjects(const _char* pFilePath);
@@ -52,6 +54,7 @@ public:
 	void Key_Input(_uint Input); // 플레이어 키 입력
 	void Mouse_Input(_uint Input); // 플레이어 키 입력
 	void Set_UISTATE(UI_STATE eState);
+	UI_STATE Get_UISTATE();
 	void Add_Event(_wstring EventName, function<void(void*)> Event);
 	void Event_CallBack(_wstring EventName, void* pArg = nullptr);
 #pragma endregion
