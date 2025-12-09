@@ -121,8 +121,8 @@ void CAlphaMap::Load_ToFile(const _char* pFilePath)
 
 	m_pContext->Unmap(m_pTexture2D, 0);
 
-	//if (FAILED(SaveDDSTextureToFile(m_pContext, m_pTexture2D, L"../Bin/Resources/Data/Map/Hogsmeade_AlphaMap.dds")))
-	//	return;
+	if (FAILED(SaveDDSTextureToFile(m_pContext, m_pTexture2D, L"../Bin/Resources/Data/Map/Hogwart_AlphaMap.dds")))
+		return;
 }
 
 HRESULT CAlphaMap::Initialize(_uint iSizeX, _uint iSizeY)
