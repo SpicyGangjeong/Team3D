@@ -12,10 +12,10 @@ float g_fFar;
 float g_fTime;
 float g_fDeltaU;
 float g_fDeltaV;
-float3 g_vOutLineColor;
+float4 g_vOutLineColor;
 float g_fOutLineScale;
-float g_fOutLinePower;
 float g_fOutLineThickness;
+float g_fOutLinePower;
 vector g_vCamPosition;
 uint g_iIndexU;
 uint g_iIndexV;
@@ -178,7 +178,7 @@ VS_OUT_OUTLINE VS_MAIN_OUTLINE(VS_IN In)
     VS_OUT_OUTLINE Out;
     
     vector vPosition = vector(In.vPosition, 1.f);
-    vector vNormal = vector(In.vNormal, 1.f);
+    vector vNormal = vector(In.vNormal, 0.f);
     vPosition.xyz += (vNormal.xyz * g_fOutLineThickness).xyz;
 
 
@@ -489,15 +489,13 @@ PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
 
     float fNdotV = saturate(dot(vNormal, vToView));
     float fRim = saturate((1.0f - fNdotV) * g_fOutLineScale);
-    
-    
     fRim = pow(fRim, g_fOutLinePower);
-
+    
     Out.vOutLine = float4(g_vOutLineColor.rgb, fRim);
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
     (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
-    0, // 서페이스 파라미터
+    AI_TEXTURE_TYPE_METALNESS, // 서페이스 파라미터
     1.f);
     
     return Out;

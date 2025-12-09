@@ -172,9 +172,9 @@ HRESULT CNomalJap::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	{ /* 대상 위치 지정 */
 		m_bHit = false;
-		CUnit* pTargetUnit = m_pInfoInstance->Get_LockOnUnit();
-		if (nullptr != pTargetUnit) {
-			XMStoreFloat4(&m_vTargetPos, pTargetUnit->Get_LockOnPos());
+		m_pInfoInstance->Get_LockOnInfo(m_Info);
+		if (nullptr != m_Info.pUnit) {
+			XMStoreFloat4(&m_vTargetPos, m_Info.pUnit->Get_LockOnPos());
 
 			if (XMVectorGetX(XMVector3Length(XMLoadFloat4(&m_vTargetPos) - XMLoadFloat4(&m_vStartPos))) >= 35.f) { //거리가 일정 이상이라면 그냥 정면으로 발사
 				XMStoreFloat4(&m_vTargetPos, vStartPos + vDirection * m_fLinearSpeed * 0.5f);

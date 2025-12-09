@@ -7,6 +7,7 @@
 #include "Loding_Panel.h"
 #include "Intro_Image.h"
 #include "Intro_BG.h"
+#include "LoadingWidget.h"
 
 
 NS_BEGIN(Engine)
@@ -153,6 +154,11 @@ HRESULT CMainApp::Ready_Prototypes()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("LoadingWidget"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Loading/LoadingWidget.png"), 0)))) {
+		return E_FAIL;
+	}
+
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_UIEDITOR,
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_UIEditor.hlsl"),
 			VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)))) {
@@ -179,6 +185,10 @@ HRESULT CMainApp::Ready_Prototypes()
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CLoding_Panel>(g_iStaticLevel, CLoding_Panel::Create(m_pDevice, m_pContext))))
 	{
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CLoadingWidget>(g_iStaticLevel, CLoadingWidget::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
