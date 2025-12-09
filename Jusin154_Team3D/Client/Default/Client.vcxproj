@@ -160,6 +160,7 @@ call Update_Resources.bat
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Action_Panel.h" />
+    <ClInclude Include="..\Public\CallBack_Troll_Behavior.h" />
     <ClInclude Include="..\Public\CameraLockOn.h" />
     <ClInclude Include="..\Public\Current_Slot_Number.h" />
     <ClInclude Include="..\Public\Current_Spell_Slot.h" />
@@ -168,6 +169,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Enemy_HpBar.h" />
     <ClInclude Include="..\Public\Enemy_Info.h" />
     <ClInclude Include="..\Public\Enemy_Panel.h" />
+    <ClInclude Include="..\Public\Goblin_BattleAxe.h" />
     <ClInclude Include="..\Public\Goblin_Dagger.h" />
     <ClInclude Include="..\Public\Goblin_Mage.h" />
     <ClInclude Include="..\Public\Goblin_Spector.h" />
@@ -306,6 +308,7 @@ call Update_Resources.bat
   <ItemGroup>
     <ClCompile Include="..\Private\Action_Panel.cpp" />
     <ClCompile Include="..\Private\Broom_States.cpp" />
+    <ClCompile Include="..\Private\CallBack_Troll_Behavior.cpp" />
     <ClCompile Include="..\Private\CameraLockOn.cpp" />
     <ClCompile Include="..\Private\Current_Slot_Number.cpp" />
     <ClCompile Include="..\Private\Current_Spell_Slot.cpp" />
@@ -314,6 +317,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Enemy_HpBar.cpp" />
     <ClCompile Include="..\Private\Enemy_Info.cpp" />
     <ClCompile Include="..\Private\Enemy_Panel.cpp" />
+    <ClCompile Include="..\Private\Goblin_BattleAxe.cpp" />
     <ClCompile Include="..\Private\Goblin_Dagger.cpp" />
     <ClCompile Include="..\Private\Goblin_Mage.cpp" />
     <ClCompile Include="..\Private\Goblin_Mage_States.cpp" />

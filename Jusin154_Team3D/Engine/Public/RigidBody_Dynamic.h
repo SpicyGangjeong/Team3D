@@ -44,6 +44,7 @@ public:
 	void					Set_Kinematic(_bool bKinematic);
 
 	HRESULT					ConvertToCCT(class CCharacter_Controller& CCTOriginal);
+	void					Detach_Actor();
 	_bool					IsActive() const { return m_bActive; }
 	void					SetActive(_bool bCondition) { m_bActive = bCondition; }
 
