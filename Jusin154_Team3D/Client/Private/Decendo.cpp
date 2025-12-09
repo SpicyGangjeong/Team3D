@@ -158,6 +158,8 @@ HRESULT CDecendo::Pre_Setting(CGameObject* pObject, void* pArg)
 
 	XMStoreFloat3(&m_vCameraLook, vDirection);
 
+
+
 	{ /* 대상 위치 지정 */
 
 		CUnit* pTargetUnit = m_pInfoInstance->Get_LockOnUnit();

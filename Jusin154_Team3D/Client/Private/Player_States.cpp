@@ -1064,6 +1064,7 @@ void CPlayer::Behavior_SpellEnter()
 				[this]() {	m_pEffectPool->Use_Skill(SKILL_TYPE::WAND_END, Get_PartObject<CWand>()); },
 				0.2f);
 
+
 			break;
 		}
 	}
@@ -1074,6 +1075,7 @@ void CPlayer::Behavior_SpellEnter()
 		Add_Event(pairAnimInfo.first,
 			[this]() {	m_pEffectPool->Use_Skill(SKILL_TYPE::WAND_END, Get_PartObject<CWand>()); },
 			0.2f);
+
 
 	}
 
