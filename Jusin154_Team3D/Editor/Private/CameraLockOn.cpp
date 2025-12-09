@@ -47,7 +47,7 @@ void CCameraLockOn::Priority_Update(_float fTimeDelta)
 
 void CCameraLockOn::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->Mouse_Pressing(DIM_MBUTTON))
+	if (m_pGameInstance->Mouse_Pressing(DIM_RBUTTON))
 	{
 		m_bHover = true;
 	}

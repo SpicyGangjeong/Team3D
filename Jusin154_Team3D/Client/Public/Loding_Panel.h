@@ -43,6 +43,8 @@ private:
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
 	CGameObject* m_pCurrent_Spell_Slot = { nullptr };
+	CGameObject* m_pLoadingWidget = { nullptr };
+
 
 	_int	m_iImageNum{};
 	_float4 m_vImageposSi{};

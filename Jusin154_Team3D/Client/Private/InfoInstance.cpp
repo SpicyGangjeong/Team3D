@@ -4,6 +4,7 @@
 #include "MapInfo.h"
 #include "MonsterInfo.h"
 #include "PlayerInfo.h"
+#include "InteractiveInfo.h"
 #include "Skill_Data.h"
 
 IMPLEMENT_SINGLETON(CInfoInstance)
@@ -19,7 +20,7 @@ void CInfoInstance::Update(_float fTimeDelta)
 	m_pMonsterInfo->Update(fTimeDelta);
 	m_pMapInfo->Update(fTimeDelta);
 	m_pSkillInfo->Update(fTimeDelta);
-
+	m_pInteractiveInfo->Update(fTimeDelta);
 }
 
 void CInfoInstance::Change_Level()
@@ -28,6 +29,7 @@ void CInfoInstance::Change_Level()
 	m_pMonsterInfo->Change_Level();
 	m_pMapInfo->Change_Level();
 	m_pSkillInfo->Change_Level();
+	m_pInteractiveInfo->Change_Level();
 }
 
 void CInfoInstance::Update_CameraCoordinateSystem(_float3& vLook, _float3& vRight)
@@ -67,18 +69,22 @@ HRESULT CInfoInstance::Deregist_ActiveMonster(CMonster* pUnit)
 	return m_pMonsterInfo->Deregist_ActiveMonster(pUnit);
 }
 
-CUnit* CInfoInstance::Get_LockOnUnit()
+void CInfoInstance::Get_LockOnInfo(LOCKON_INFO& Info)
 {
-	CUnit* pUnit = { nullptr };
-	pUnit = m_pMonsterInfo->Get_LockOnUnit();
-	// pUnit = m_pInfo->Get_LockOnUnit();
-	return pUnit;
+	Info.pUnit = m_pMonsterInfo->Get_LockOnUnit();
+	Info.pInteractive = m_pInteractiveInfo->Get_LockOnUnit();
 }
 
 pair<CUnit*, CTransform*> CInfoInstance::Get_NearestPlayerAlly(_fvector vPos)
 {
 	return m_pMonsterInfo->Get_NearestPlayerAlly(vPos);
 }
+
+CMonster* CInfoInstance::Get_TargetMonster()
+{
+	return m_pMonsterInfo->Get_TargetMonster();
+}
+
 #pragma endregion
 #pragma region MAP_INFO
 HRESULT CInfoInstance::Load_MapObjects(const _char* pFilePath)
@@ -164,14 +170,16 @@ void CInfoInstance::Key_Input(_uint Input)
 void CInfoInstance::Mouse_Input(_uint Input)
 {
 	m_eInput = Input;
-
+	_bool bHover = false;
 	switch (m_eInput)
 	{
-	case ENUM_CLASS(KEYINPUT::INPUT_1):
-		Event_CallBack(TEXT("Spell"), &m_eInput);
+	case ENUM_CLASS(KEYINPUT::DIM_RBUTTON_UP):
+		bHover = false;
+		Event_CallBack(TEXT("CameraLockOn"), &bHover);
 		break;
-	case ENUM_CLASS(KEYINPUT::INPUT_2):
-		Event_CallBack(TEXT("Spell"), &m_eInput);
+	case ENUM_CLASS(KEYINPUT::DIM_RBUTTON_DOWN):
+		bHover = true;
+		Event_CallBack(TEXT("CameraLockOn"), &bHover);
 		break;
 	default:
 		break;
@@ -183,6 +191,11 @@ void CInfoInstance::Mouse_Input(_uint Input)
 void CInfoInstance::Set_UISTATE(UI_STATE eState)
 {
 	m_eUI_State = eState;
+}
+
+UI_STATE CInfoInstance::Get_UISTATE()
+{
+	return m_eUI_State;
 }
 
 void CInfoInstance::Add_Event(_wstring EventName, function<void(void*)> Event)
@@ -197,6 +210,22 @@ void CInfoInstance::Event_CallBack(_wstring EventName, void* pArg)
 	{
 		it->second(pArg);
 	}
+}
+
+HRESULT CInfoInstance::Regist_ActiveInteractive(CMapElement_Interactable* pInteractive)
+{
+	if (nullptr == s_pInstance || nullptr == m_pInteractiveInfo) {
+		return S_OK; // 게임 종료 된 상태
+	}
+	return m_pInteractiveInfo->Regist_ActiveInteractive(pInteractive);
+}
+
+HRESULT CInfoInstance::Deregist_ActiveInteractive(CMapElement_Interactable* pInteractive)
+{
+	if (nullptr == s_pInstance || nullptr == m_pInteractiveInfo) {
+		return S_OK; // 게임 종료 된 상태
+	}
+	return m_pInteractiveInfo->Deregist_ActiveInteractive(pInteractive);
 }
 
 #pragma endregion
@@ -230,6 +259,10 @@ HRESULT CInfoInstance::Initialize_Information(ID3D11Device* pDevice, ID3D11Devic
 	if (nullptr == m_pSkillInfo) {
 		return E_FAIL;
 	}
+	m_pInteractiveInfo = CInteractiveInfo::Create(pDevice, pContext);
+	if (nullptr == m_pInteractiveInfo) {
+		return E_FAIL;
+	}
 
 
 	return S_OK;
@@ -237,13 +270,15 @@ HRESULT CInfoInstance::Initialize_Information(ID3D11Device* pDevice, ID3D11Devic
 
 void CInfoInstance::Release_Information()
 {
-	DestroyInstance();
+	UI_Event.clear();
 
+	DestroyInstance();
 
 	SAFE_RELEASE(m_pMapInfo);
 	SAFE_RELEASE(m_pPlayerInfo);
 	SAFE_RELEASE(m_pMonsterInfo);
 	SAFE_RELEASE(m_pSkillInfo);
+	SAFE_RELEASE(m_pInteractiveInfo);
 	SAFE_RELEASE(m_pDevice);
 	SAFE_RELEASE(m_pContext);
 	SAFE_RELEASE(m_pGameInstance);
@@ -252,5 +287,6 @@ void CInfoInstance::Release_Information()
 void CInfoInstance::Free()
 {
 	__super::Free();
+	UI_Event.clear();
 
 }

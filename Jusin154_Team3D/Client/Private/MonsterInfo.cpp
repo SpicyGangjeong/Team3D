@@ -111,6 +111,11 @@ pair<CUnit*, CTransform*> CMonsterInfo::Get_NearestPlayerAlly(_fvector vPos)
 	return { pNearestPlayerAlly, pNearestPlayerAllyTransform };
 }
 
+CMonster* CMonsterInfo::Get_TargetMonster()
+{
+	return m_pLockOnMonster;
+}
+
 HRESULT CMonsterInfo::Refresh_LockOnMonsters()
 {
 	SAFE_RELEASE(m_pLockOnMonster);
@@ -122,9 +127,9 @@ HRESULT CMonsterInfo::Refresh_LockOnMonsters()
 	_vector vToMonsterDir;
 	_bool Aim = false;
 	_float fFovy = 0.f;
-	if (m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::GAMEPLAY), LAYER_PLAYER) != nullptr)
+	if (m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_PLAYER) != nullptr)
 	{
-		Aim = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::GAMEPLAY), LAYER_PLAYER)->Get_Object<CPlayer>()->Get_Aim();
+		Aim = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_PLAYER)->Get_Object<CPlayer>()->Get_Aim();
 	}
 	if (Aim)
 	{
@@ -135,14 +140,15 @@ HRESULT CMonsterInfo::Refresh_LockOnMonsters()
 	}
 
 	{ // 뷰프러스텀 순회해서 가장 중앙에 근접한 몬스터 찾기
-		for (list<CMonster*>::iterator iter = m_ActiveMonsters.begin(); iter != m_ActiveMonsters.end(); ++iter) {
+		for (list<CMonster*>::iterator iter = m_ActiveMonsters.begin(); iter != m_ActiveMonsters.end(); ++iter)
+		{
 
 			// (카메라의 룩)과 (카메라 -> 몬스터 방향 벡터)를 내적해서 가장 큰 크기가 나온 몬스타가 락온 대상
 			CMonster* pMonster = (*iter);
 			if (pMonster->Get_Hp().x <= 0) {
 				continue;
 			}
-			vMonsterPos = pMonster->Get_WorldPostion();
+			vMonsterPos = pMonster->Get_LockOnPos();
 			vToMonsterDir = vMonsterPos - vCameraPos;
 			_float fDotResult = CMyTools::DirectionCompare(vCameraLook, vToMonsterDir);
 			if (fDotResult <= cosf(fFovy)) {
@@ -159,7 +165,10 @@ HRESULT CMonsterInfo::Refresh_LockOnMonsters()
 				m_pLockOnMonster = pMonster;
 				fMaxDot = fDotResult;
 			}
+
+			
 		}
+
 	}
 	if (nullptr != m_pLockOnMonster) {
 		SAFE_ADDREF(m_pLockOnMonster);

@@ -13,6 +13,7 @@
 #include "CallBack_Playable_HitReport.h"
 #include "Monster.h"
 #include "Broom.h"
+#include "MapElement_Interactable.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -138,10 +139,10 @@ __super::Update(fTimeDelta);
 		m_pCallBack_HitReport->Set_CurrentSlop();
 	}
 	if (m_pGameInstance->Mouse_Down(DIM_RBUTTON))
-		m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_DOWN));
+		m_pInfoInstance->Mouse_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_DOWN));
 	if (m_pGameInstance->Mouse_Up(DIM_RBUTTON))
 	{
-		m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_UP));
+		m_pInfoInstance->Mouse_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_UP));
 		m_bAim = false; 
 	}
 
@@ -157,13 +158,16 @@ void CPlayer::Late_Update(_float fTimeDelta)
 
 	__super::Late_Update(fTimeDelta);
 
-	if (nullptr != m_pLockOnMonster) {
-		if (false == m_pLockOnMonster->isDead()) {
-			static_cast<CMonster*>(m_pLockOnMonster)->Set_DrawOutLine();
+	if (nullptr != m_LockOnInfo.pUnit) {
+		if (false == m_LockOnInfo.pUnit->isDead()) {
+			static_cast<CMonster*>(m_LockOnInfo.pUnit)->Set_DrawOutLine();
 		}
 		else {
-			m_pLockOnMonster = nullptr;
+			m_LockOnInfo.pUnit = nullptr;
 		}
+	}
+	if (nullptr != m_LockOnInfo.pInteractive) {
+		static_cast<CMapElement_Interactable*>(m_LockOnInfo.pInteractive)->Set_DrawOutLine();
 	}
 	////////////////////////////////////////////////////////////////////////////
 	_vector look = XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK));
@@ -272,7 +276,7 @@ void CPlayer::Render_CameraCoordinateSystem()
 	_vector xmvLook = XMVector4Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
 	_float2 vLook = { XMVectorGetX(xmvLook), XMVectorGetZ(xmvLook) };
 	GUI::Begin("Player_CAM_COOORD");
-	GUI::Text("%d", m_pLockOnMonster);
+	GUI::Text("%d", m_LockOnInfo.pUnit);
 
 	GUI::Text("W : %.2f, %.2f, %.2f", m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z);
 	GUI::Text("A : %.2f, %.2f, %.2f", -m_vCameraRightDir.x, 0.f, -m_vCameraRightDir.z);
@@ -433,12 +437,13 @@ HRESULT CPlayer::Bind_ShaderResources()
 }
 void CPlayer::ReLockOnTarget()
 {
-	m_pLockOnMonster = m_pInfoInstance->Get_LockOnUnit();
-	if (nullptr != m_pLockOnMonster) {
-		if (true == m_pLockOnMonster->isDead()) {
-			m_pLockOnMonster = nullptr;
+	m_pInfoInstance->Get_LockOnInfo(m_LockOnInfo);
+	if (nullptr != m_LockOnInfo.pUnit) {
+		if (true == m_LockOnInfo.pUnit->isDead()) {
+			m_LockOnInfo.pUnit = nullptr;
 		}
 	}
+	//m_pLockOnMonster->Get_State
 }
 
 void CPlayer::SetGravity()

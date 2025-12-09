@@ -24,7 +24,7 @@ public:
 	HRESULT			Load_Directory(const _char* pPath);
 	virtual	HRESULT	Pre_Setting(CGameObject* pObject, void* pArg = nullptr);
 	HRESULT         Load_Package(const _char* pPath);
-	_uint Get_SkillType() const { return m_iSkillType; }
+	_uint			Get_SkillType() const { return m_iSkillType; }
 	void			Reset_Light();
 
 protected:
@@ -58,7 +58,7 @@ protected:
 	map<_float, function<void()>>	m_Events = {};
 	_uint							m_iSkillType = ENUM_CLASS(SKILL_TYPE::END);
 	_bool							m_bHasDamage = { false };
-
+	LOCKON_INFO						m_Info = {};
 public:
 	virtual void Free() override;
 };

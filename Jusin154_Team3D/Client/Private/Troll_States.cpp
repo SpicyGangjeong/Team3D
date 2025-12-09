@@ -12,6 +12,7 @@
 #include "State_IdleBreak.h"
 #include "State_Move.h"
 #include "State_Combat.h"
+#include "Troll_State_Stun.h"
 #include "Troll_State_Rush.h"
 #include "Troll_State_BackHand_Swing.h"
 #include "State_Throw.h"
@@ -100,8 +101,9 @@ void CTroll::Behavior_IdleBreakEnter()
 
 HRESULT CTroll::Behavior_IdleBreakExitCheck()
 {
-	if (m_pModelCom->IsFinishedAnim())
+	if (m_pModelCom->IsFinishedAnim()){
 		m_pFSM->Change_State(FSMSTATE::MOVE);
+	}
 
 	return E_FAIL;
 }
@@ -303,10 +305,12 @@ HRESULT CTroll::Behavior_RushExitCheck(_float fTimeDelta)
 	{
 		if (m_fDegree >= 90.f)
 		{
-			if (m_fCross > 0)
+			if (m_fCross > 0){
 				pairAnimInfo = m_Animation[STATEANIM::IDLE_COMBAT_TURN_BWD_L];
-			else
+			}
+			else{
 				pairAnimInfo = m_Animation[STATEANIM::IDLE_COMBAT_TURN_BWD_R];
+			}
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 
 			Add_Event(pairAnimInfo.first,
@@ -538,6 +542,34 @@ void CTroll::Behavior_BackHandSwingExit()
 	m_pFSM->Disable_State(FSMSTATE::BACKHAND_SWING);
 }
 
+void CTroll::Behavior_StunEnter()
+{
+	m_pFSM->Enable_State(FSMSTATE::STUN);
+	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	pair<_uint, _bool> pairAnimInfo;
+
+	m_bLookAt = false;
+	if (iCurrAnimIndex == m_Animation[STATEANIM::RUSH_LOOP].first)
+	{
+		pairAnimInfo = m_Animation[STATEANIM::STUN];
+	}
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+}
+
+HRESULT CTroll::Behavior_StunExitCheck(_float fTimeDelta)
+{
+	if (true == m_pModelCom->IsFinishedAnim()) {
+		m_pFSM->Change_State(FSMSTATE::IDLEBREAK);
+		return E_FAIL;
+	}
+	return S_OK;
+}
+
+void CTroll::Behavior_StunExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::STUN);
+}
+
 void CTroll::Behavior_HitEnter()
 {
 	m_pFSM->Enable_State(FSMSTATE::HIT);
@@ -694,6 +726,18 @@ void CTroll::Add_FSM()
 		Desc.funcPriorityUpdate = nullptr;
 		Desc.funcLateUpdate = nullptr;
 		m_States.emplace(FSMSTATE::BACKHAND_SWING, CTroll_State_BackHand_Swing::Create(&Desc));
+	}
+#pragma endregion
+#pragma region Behavior_Combat_Focus
+	{
+		CTroll_State_Stun::TROLL_STATE_STUN Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_StunEnter(); };
+		Desc.funcExitCheck = [this](_float fTimeDelta) { return Behavior_StunExitCheck(fTimeDelta); };
+		Desc.funcExitEvent = [this]() { Behavior_StunExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::STUN, CTroll_State_Stun::Create(&Desc));
 	}
 #pragma endregion
 

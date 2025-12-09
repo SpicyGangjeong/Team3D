@@ -305,6 +305,9 @@ private:
 	_float							m_fTimer_LateUpdate = { 0.f };
 	_float							m_fTimer_DrawCall = { 0.f };
 	_float							m_fTimer_Present = { 0.f };
+	_float							m_fTimer_Picking = { 0.f };
+	_float							m_fTimer_PhysX = { 0.f };
+	_float							m_fTimer_Level = { 0.f };
 	_float							m_fTimer_FrameCount = { 0.f };
 
 	_float2							m_vViewPortSize = {};

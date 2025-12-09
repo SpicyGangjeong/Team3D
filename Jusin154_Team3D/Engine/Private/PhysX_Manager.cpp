@@ -389,6 +389,9 @@ void CPhysX_Manager::Update_Kinematic()
 
 void CPhysX_Manager::Update(_float fTimeDelta)
 {
+#ifdef _DEBUG
+	m_pGameInstance->Compute_TimeDelta(TEXT("Timer_PhysX"));
+#endif // _DEBUG
 	if (nullptr == m_pScene) {
 		return;
 	}
@@ -403,6 +406,9 @@ void CPhysX_Manager::Update(_float fTimeDelta)
 		 Update_Dynamic_ActiveActors();
 		//Update_Dynamic_AllActors();
 	}
+#ifdef _DEBUG
+	m_pGameInstance->Compute_TimeDelta(TEXT("Timer_PhysX"));
+#endif // _DEBUG
 }
 void CPhysX_Manager::Update_Dynamic_ActiveActors()
 {

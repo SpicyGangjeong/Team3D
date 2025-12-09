@@ -26,12 +26,21 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+	_vector				Get_LockOnPos();
+	virtual void		Set_DrawOutLine();
+	virtual HRESULT		Render_OutLine() override;
 
 private:
 	ELEMENT_INTERACTABLE_ID			m_eInteractableID = { ELEMENT_INTERACTABLE_ID::END };
+	class CInfoInstance*			m_pInfoInstance = { nullptr };
 
-	class CRigidBody* m_pRigidBody = { nullptr };
-	PSX::PxRigidDynamic* m_pActor = { nullptr };
+	class CRigidBody_Dynamic*		m_pRigidBody = { nullptr };
+	PSX::PxRigidDynamic*			m_pActor = { nullptr };
+	_bool							m_bDrawOutLine = { false };
+	_float4							m_vOutLineColor = CMyTools::ColorRGBA_HEXtoFLOAT4(0xfefefe00);
+	_float							m_fOutLineThickness = { 5.f };
+	_float							m_fOutLineScale = { 1.f };
+	_float							m_fOutLinePower = { 1.f };
 
 
 private:

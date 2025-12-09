@@ -58,7 +58,6 @@
 #include "NoMountIcon.h"
 
 #include "Loading_Panel.h"
-#include "LoadingWidget.h"
 #include "LoadingWidget_Flame.h"
 
 #include "Action_Panel.h"
@@ -1369,8 +1368,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 		Desc.vhalfGeometryInfo = { 0.5f, 0.5f, 0.5f };
 		Desc.fDensity = 1.f;
 		Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
-		Desc.eLockFlag = {};
-		Desc.vAutoDamping = { 100.f, 100.f };
+		Desc.eLockFlag = {};  
+		Desc.vAutoDamping = { 1.f, 1.f };
 		Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
 		Desc.vLocalTranslation = { 0.f, 0.f, 0.f };
 	}
@@ -1386,7 +1385,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
-	Desc.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
+	//Desc.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX_KIN"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
 		return E_FAIL;
 	}
@@ -1646,10 +1645,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_GameObject_Loading_Panel*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CLoading_Panel>(g_iStaticLevel, CLoading_Panel::Create(m_pDevice, m_pContext)))) {
-		return E_FAIL;
-	}
-	/* For.Prototype_GameObject_LoadingWidget*/
-	if (FAILED(m_pGameInstance->Add_Prototype<CLoadingWidget>(g_iStaticLevel, CLoadingWidget::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 	/* For.Prototype_GameObject_LoadingWidget_Flame*/
