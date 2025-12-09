@@ -126,9 +126,6 @@ HRESULT CLevioso::Pre_Setting(CGameObject* pObject, void* pArg)
 	CEffectParts* pWandLight = Get_PartObject<CEffectParts>("Levioso_Wand_Light");
 
 
-	m_pLeviosoPJ_0->Get_Component<CTransform>()->Set_WorldMatrix(m_pOwner->Get_Component<CTransform>()->Get_XMWorldMatrix());
-	m_pTrail_PT_0->Get_Component<CTransform>()->Set_WorldMatrix(m_pOwner->Get_Component<CTransform>()->Get_XMWorldMatrix());
-
 
 	m_pLeviosoPJ_0->Get_Component<CTransform>()->Set_State(STATE::POSITION, WandPos);
 	m_pTrail_PT_0->Get_Component<CTransform>()->Set_State(STATE::POSITION, WandPos);
@@ -164,6 +161,16 @@ HRESULT CLevioso::Pre_Setting(CGameObject* pObject, void* pArg)
 		}
 
 	}
+
+	_vector vDir = XMVector3Normalize(XMLoadFloat3(&m_vCameraLook));
+	
+	_vector vRight = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vDir));
+
+	_vector vUp = XMVector3Normalize(XMVector3Cross(vRight, vDir));
+
+	_matrix ProjMat = _matrix(vRight, vUp, vDir, vStartPos);
+
+	m_pLeviosoPJ_0->Get_Component<CTransform>()->Set_WorldMatrix(ProjMat);
 
 	return S_OK;
 }
