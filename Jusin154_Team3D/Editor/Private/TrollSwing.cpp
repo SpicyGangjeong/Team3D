@@ -39,7 +39,7 @@ HRESULT CTrollSwing::Initialize(void* pArg)
 	m_wstrEffectName = L"TrollSwing";
 
 
-	m_fDuration = 1.5f;
+	m_fDuration = 3.2f;
 
 	return S_OK;
 }
@@ -85,8 +85,8 @@ HRESULT CTrollSwing::Pre_Setting(CGameObject* pObject, void* pArg)
 	CEditEffect* pRockPT = Get_PartObject<CEditEffect>("Rock_PT_25");
 	CEditEffect* pSmoke = Get_PartObject<CEditEffect>("Smoke");
 
-	pRockPT->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
-	pSmoke->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
+	pRockPT->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos + XMVectorSet(0.f, 0.5f, 0.f, 0.f));
+	pSmoke->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos + XMVectorSet(0.f, 0.2f, 0.f, 0.f));
 
 
 	pRockPT->Set_Visible(true);

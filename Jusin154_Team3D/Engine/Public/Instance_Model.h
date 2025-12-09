@@ -70,8 +70,10 @@ public:
 		_bool		isDetphCompareStop = {};
 		_bool		isPadding0 = {};
 
-		_float4     vPadding2 = {};
-		_float4     vPadding3 = {};
+		_float3     vVelocityMin = {};
+		_float3     vVelocityMax = {};
+
+		_float2     vPadding3 = {};
 		_float4     vPadding4 = {};
 		_float4     vPadding5 = {};
 		_float4     vPadding6 = {};
@@ -219,6 +221,7 @@ public:
 		_bool	  isCompareStop = {};
 		_float    fCollisionTime = {};
 		_float    fDropAttenuation = {};
+		_float3   vVelocity = {};
 
 	}CS_PARTICLE_VALUE_DESC;
 
