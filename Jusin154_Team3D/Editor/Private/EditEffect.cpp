@@ -420,9 +420,8 @@ void CEditEffect::Describe_Entity()
 {
 	//여기서 모델, 텍스쳐, 선택할 수 있도록 함
 
-
 	const char* pLerp[] = { "Linear" , "EaseInQuad", "EaseOutQuad", "EaseInCubic" , "EaseOutCubic" , "EaseInOutSin" , "EaseInBack" , "Expo" , "Circle" };
-	const char* pRenderNames[] = { "PRIORITY" , "SHADOW", "NONBLEND", "DECAL", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" ,"BLOOM" , "UI", "OCCLUSION" , "PRESHADOW"};
+	const char* pRenderNames[] = { "PRIORITY" , "SHADOW", "NONBLEND", "DECAL", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" ,"BLOOM" , "UI", "OCCLUSION" , "PRESHADOW", "UI_OVERLAY"};
 	const char* pEffectType[] = { "EFFECT" , "TRAIL" };
 	const char* pShaderPass[] = { "DEFAULT" , "NON_NOMALMAP" , "BLUR" , "WEIGHTBLEND" , "NON_WORLD" , "NON_WORLD_BLUR",  "BLEND", "BLEND_NOWORLD", "BLOOM" ,"BLOOM_NOWORLD" ,"BLUR_NO_EMMISVE", "BLUR_NO_WORLD_NO_EMISSIVE","WEIGHTBLEND_FOR_BLEND" , "DEPTH_STOP" };
 	const char* pBloomType[] = { "NONE" , "BASIC" , "MUILTY"};
@@ -431,6 +430,22 @@ void CEditEffect::Describe_Entity()
 	_int iCurrentType = static_cast<_int>(m_EffectInfo.eEffectType);
 	_int iCurrentBloomType = static_cast<_int>(m_EffectInfo.eBloomType);
 	_int iCurrentPass = static_cast<_int>(m_EffectInfo.eShaderPass);
+
+
+	GUI::InputTextMultiline("BONE NAME", m_szBuffer, sizeof(m_szBuffer), ImVec2(250, 25));
+
+	m_strBoneName = m_szBuffer;
+
+	if(GUI::Button("Stick Bone"))
+	{
+		CModel* pModel = m_pOwner->Get_Component<CModel>();
+
+		if (pModel != nullptr)
+		{
+			FollowParants(pModel->Get_BoneMatrixPtr(m_strBoneName.c_str()));
+		}
+		
+	}
 
 	if (ImGui::Combo("Render Order", &iCurrentItem, pRenderNames, ENUM_CLASS(RENDER::END)))
 	{

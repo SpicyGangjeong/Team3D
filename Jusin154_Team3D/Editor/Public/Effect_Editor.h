@@ -32,6 +32,7 @@ private:
 	virtual HRESULT Ready_Components(void* pArg) override;
 	HRESULT         Ready_Child();
 	HRESULT			Bind_ShaderResources() override;
+
 private:
 	HRESULT         Packaging(const _char* pDirectoryPath);
 	HRESULT			ReSaveFile(const _char* pDirectoryPath);

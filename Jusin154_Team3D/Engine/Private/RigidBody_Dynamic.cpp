@@ -137,11 +137,16 @@ HRESULT CRigidBody_Dynamic::ConvertToCCT(CCharacter_Controller& CCTOriginal)
 	m_pRigidBody->setAngularVelocity(PSX::PxZERO()); // DO 객체 이동 제거
 	m_pRigidBody->setLinearVelocity(PSX::PxZERO());
 
-	m_pGameInstance->Detach_Actor(*m_pRigidBody); // 현재 액터 비활성화
-	m_bActive = false;
+	Detach_Actor();
 	CCTOriginal.SetActive(true);
 
 	return E_FAIL;
+}
+
+void CRigidBody_Dynamic::Detach_Actor()
+{
+	m_pGameInstance->Detach_Actor(*m_pRigidBody); // 현재 액터 비활성화
+	m_bActive = false;
 }
 
 _vector CRigidBody_Dynamic::Get_Position()

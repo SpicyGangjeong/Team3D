@@ -72,8 +72,6 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	Set_Anim();
 
-	m_eSpell = STATEANIM::DESCENDO;
-
 	{
 		CFSM::FSM_DESC FSMDesc{};
 		FSMDesc.pStates = &m_States;
@@ -139,6 +137,15 @@ __super::Update(fTimeDelta);
 		m_pCharacter_Controller->Move(fTimeDelta);
 		m_pCallBack_HitReport->Set_CurrentSlop();
 	}
+	if (m_pGameInstance->Mouse_Down(DIM_RBUTTON))
+		m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_DOWN));
+	if (m_pGameInstance->Mouse_Up(DIM_RBUTTON))
+	{
+		m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_UP));
+		m_bAim = false; 
+	}
+
+
 }
 
 void CPlayer::Late_Update(_float fTimeDelta)
@@ -158,6 +165,20 @@ void CPlayer::Late_Update(_float fTimeDelta)
 			m_pLockOnMonster = nullptr;
 		}
 	}
+	////////////////////////////////////////////////////////////////////////////
+	_vector look = XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK));
+
+	_vector worldUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+
+	_vector right = XMVector3Normalize(XMVector3Cross(worldUp, look));
+	_vector up = XMVector3Normalize(XMVector3Cross(look, right));
+
+	m_pTransformCom->Set_State(STATE::RIGHT, right);
+	m_pTransformCom->Set_State(STATE::UP, up);
+	m_pTransformCom->Set_State(STATE::LOOK, look);
+	////////////////////////////////////////////////////////////////////////////
+	
+
 }
 
 HRESULT CPlayer::Render()
@@ -549,7 +570,8 @@ void CPlayer::Describe_Entity()
 	GUI::Text(AnimList.c_str());
 
 	GUI::Text("AnimTrack %.2f", m_pModelCom->Get_CurrentTrackPosition());
-	GUI::Text("AnimRatio %.2f", m_pModelCom->Get_TrackProgressRatio(417));
+	GUI::Text("AnimRatio %.2f", m_pModelCom->Get_CurrentTrackProgressRatio());
+	GUI::Text("AnimSpeed %.2f", m_pModelCom->Get_AnimSpeed());
 
 	GUI::Checkbox("Render", &m_bVisible);
 

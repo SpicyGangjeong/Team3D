@@ -40,15 +40,17 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevelID)
 
 void CLevel_Loading::Update(_float fTimeDelta)
 {
-	if (true == m_pLoader->isFinished() &&
-		m_pGameInstance->Key_Down(DIK_F1))
+	if (true == m_pLoader->isFinished())
 	{
 		if (m_eNextLevelID != LEVEL::LOGO)
 			m_bNextLevel = true;
 		else
 		{
-			static_cast<CUIObject*>(m_pIntro_Image)->Set_Hover(true);
-			m_bDelay = true;
+			if (m_pGameInstance->Key_Down(DIK_F1))
+			{
+				static_cast<CUIObject*>(m_pIntro_Image)->Set_Hover(true);
+				m_bDelay = true;
+			}
 		}
 
 	}

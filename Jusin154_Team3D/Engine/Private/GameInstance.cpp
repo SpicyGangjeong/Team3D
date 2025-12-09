@@ -19,6 +19,7 @@
 #include "ThreadHolder.h"
 #include "Fog.h"
 #include "Resource_Manager.h"
+#include "Font_Manager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -116,6 +117,11 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 
 	m_pResource_Manager = CResource_Manager::Create(*ppDevice, 1000);
 	if (nullptr == m_pResource_Manager) {
+		return E_FAIL;
+	}
+
+	m_pFont_Manager = CFont_Manager::Create(*ppDevice, *ppContext);
+	if (nullptr == m_pFont_Manager) {
 		return E_FAIL;
 	}
 
@@ -514,6 +520,16 @@ _bool CGameInstance::isIn_LocalFrustum(_fvector vLocalPos, _float fRadius)
 	return m_pPipeLine->isIn_LocalFrustum(vLocalPos, fRadius);
 }
 
+HRESULT CGameInstance::Bind_GlobalSRV(CShader* pShader, const _tchar* wszKeyGlobalSRV, const _char* pConstantName)
+{
+	return m_pPipeLine->Bind_GlobalSRV(pShader, wszKeyGlobalSRV, pConstantName);
+}
+
+HRESULT CGameInstance::Load_GlobalSRV(const _tchar* wszKeyGlobalSRV, filesystem::path pathSRVFolder)
+{
+	return m_pPipeLine->Load_GlobalSRV(wszKeyGlobalSRV, pathSRVFolder);
+}
+
 void CGameInstance::Add_Light(_uint _iCurrentLevel, CLight* _pLight)
 {
 	m_pLight_Manager->Add_Light(_iCurrentLevel, _pLight);
@@ -828,7 +844,10 @@ ID3D11ShaderResourceView* CGameInstance::Add_Resource(const _char* pFilePath)
 {
 	return m_pResource_Manager->Add_Texture(pFilePath);
 }
+
 #pragma endregion // FOG
+
+#pragma region INPUT
 
 bool		CGameInstance::Key_Pressing(int _iKey)
 {
@@ -867,9 +886,9 @@ _bool CGameInstance::Mouse_Up(int _iKey)
 }
 _bool CGameInstance::Mouse_Down(int _iKey)
 {
-	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+	//if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
 		return m_pKey_Manager->Mouse_Down(_iKey);
-	}
+	//}
 	return false;
 }
 _bool CGameInstance::Mouse_StartMove()
@@ -933,12 +952,44 @@ _bool	CGameInstance::Toggle_MouseCenter()
 	return m_pMouse_Manager->Toggle_MouseCenter();
 }
 
+#pragma endregion // INPUT
+
+#pragma region FONT_MANAGER
+
+HRESULT CGameInstance::Add_Font(const _wstring& strFontTag, const _tchar* pFontFilePath)
+{
+	return m_pFont_Manager->Add_Font(strFontTag, pFontFilePath);
+}
+
+HRESULT CGameInstance::Render_Text(const _wstring& strFontTag, const _tchar* pText, const _float2& vPosition, _fvector vColor, _float vScale)
+{
+	return m_pFont_Manager->Render(strFontTag, pText, vPosition, vColor, vScale);
+}
+
+HRESULT CGameInstance::Render_Rotation_Text(const _wstring& strFontTag, const _tchar* pText, const _float2& vPosition, _fvector vColor, _float Rotation, _float vScale)
+{
+	return m_pFont_Manager->Render_Rotate(strFontTag, pText, vPosition, vColor, Rotation, vScale);
+}
+
+HRESULT CGameInstance::Perspective_Render_Text(_matrix View, _matrix Proj, const _wstring& strFontTag, const _tchar* pText, const _fvector& vPosition, _fvector vColor, _float vScale)
+{
+	return m_pFont_Manager->Perspective_Render(View, Proj, strFontTag, pText, vPosition, vColor, vScale);
+}
+
+_float CGameInstance::FontSizeX(const _wstring& strFontTag, const _tchar* pText)
+{
+	return m_pFont_Manager->FontSizeX(strFontTag, pText);
+}
+
+#pragma endregion
+
 void CGameInstance::Release_Engine()
 {
 	SAFE_RELEASE(m_pThreadHolder);
 
 	DestroyInstance();
 
+	SAFE_RELEASE(m_pFont_Manager);
 	SAFE_RELEASE(m_pFog);
 	SAFE_RELEASE(m_pPicking);
 	SAFE_RELEASE(m_pCollider_Manager);

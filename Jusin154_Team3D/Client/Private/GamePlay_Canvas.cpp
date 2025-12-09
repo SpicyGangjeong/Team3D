@@ -5,6 +5,7 @@
 #include "MiniMap_Panel.h"
 #include "Loading_Panel.h"
 #include "Action_Panel.h"
+#include "Enemy_Panel.h"
 //#include "Mouse_Cursor.h"
 
 CGamePlay_Canvas::CGamePlay_Canvas(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -110,6 +111,12 @@ HRESULT CGamePlay_Canvas::Ready_Panel(void* pArg)
 		return E_FAIL;
 	}
 	Add_Panel(TEXT("ActionPanel"), m_pAction_Panel);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEnemy_Panel>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CEnemy_Panel**>(&m_pEnemy_Panel))))
+	{
+		return E_FAIL;
+	}
+	Add_Panel(TEXT("Enemy_Panel"), m_pEnemy_Panel);
 
 
 	return S_OK;

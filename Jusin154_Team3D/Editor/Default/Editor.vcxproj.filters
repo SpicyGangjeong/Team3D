@@ -484,9 +484,6 @@
     <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\10.Levioso\LeviosoSide">
       <UniqueIdentifier>{c70a2ce4-8664-45e0-b594-4f416829dab8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\Troll_Attack">
-      <UniqueIdentifier>{3a12f2c2-0472-41b7-99ce-2c2f17f26e92}</UniqueIdentifier>
-    </Filter>
     <Filter Include="50.UI\Loding_Canvas">
       <UniqueIdentifier>{ebad2fd8-622f-4c17-9ba3-b0c4bd366c05}</UniqueIdentifier>
     </Filter>
@@ -511,11 +508,44 @@
     <Filter Include="50.UI\Logo\Logo_Glow">
       <UniqueIdentifier>{d8a5038f-4f2c-4226-85ba-9202f11f822d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Enemy_Panel">
+      <UniqueIdentifier>{ea790bf9-9ca6-4c51-820b-ed2c70f86104}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_HpBar">
+      <UniqueIdentifier>{33ba73e0-b4a1-4ebf-9b99-8856c7e1078c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_Info">
+      <UniqueIdentifier>{e30ca8e3-8c89-4a08-b413-169ff1d5ff22}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\Env\07.Unified">
       <UniqueIdentifier>{4b6ac1df-5642-42f1-a492-5c2ca2433559}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Env\03.MapElement\Lake">
       <UniqueIdentifier>{df91c194-9910-489b-a9bb-724e1c1f4440}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\Troll">
+      <UniqueIdentifier>{2e89850b-eb23-46a7-9c3b-9c2965aa0b76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\Troll\Troll_State">
+      <UniqueIdentifier>{ed83440e-f038-4fe2-b005-4ba4093e8462}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\Troll\Rock">
+      <UniqueIdentifier>{d5debb7c-5bea-456a-8c70-f44b5fc9e51e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\Troll\Weapon">
+      <UniqueIdentifier>{5d93fa49-8e72-4182-a4ad-c4aef00000b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\Troll_Nomal_Smoke">
+      <UniqueIdentifier>{0df28480-a5ca-4895-b8f4-2bac1a7454ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\Troll_Rush_Hit">
+      <UniqueIdentifier>{7363a82f-1bdf-4107-b824-a5326a7d2075}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\Goblin_Protego">
+      <UniqueIdentifier>{4556b8c9-e689-435e-8775-48d0c45a942f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\TrollSwing">
+      <UniqueIdentifier>{3a12f2c2-0472-41b7-99ce-2c2f17f26e92}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -975,8 +1005,8 @@
     <ClInclude Include="..\public\CameraLockOn.h">
       <Filter>50.UI\Mouse_Cursor</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Troll_Attack.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Troll_Attack</Filter>
+    <ClInclude Include="..\Public\TrollSwing.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\TrollSwing</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Loding_Canvas.h">
       <Filter>50.UI\Loding_Canvas</Filter>
@@ -1004,6 +1034,54 @@
     </ClInclude>
     <ClInclude Include="..\public\MapElement_Lake.h">
       <Filter>02.GameObjects\Env\03.MapElement\Lake</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll.h">
+      <Filter>02.GameObjects\Monster\Troll</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll_State_BackHand_Swing.h">
+      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll_State_Rush.h">
+      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll_Rock.h">
+      <Filter>02.GameObjects\Monster\Troll\Rock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll_Weapon.h">
+      <Filter>02.GameObjects\Monster\Troll\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_IdleBreak.h">
+      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Hit.h">
+      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Slam.h">
+      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Throw.h">
+      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Swing.h">
+      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll_Nomal_Smoke.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Troll_Nomal_Smoke</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll_Rush_Hit.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Troll_Rush_Hit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Goblin_Protego.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Goblin_Protego</Filter>
+	</ClInclude>
+    <ClInclude Include="..\public\Enemy_Panel.h">
+      <Filter>50.UI\GamePlay_Canvas\Enemy_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Enemy_HpBar.h">
+      <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_HpBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Enemy_Info.h">
+      <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_Info</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1462,8 +1540,8 @@
     <ClCompile Include="..\private\CameraLockOn.cpp">
       <Filter>50.UI\Mouse_Cursor</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Troll_Attack.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Troll_Attack</Filter>
+    <ClCompile Include="..\Private\TrollSwing.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\TrollSwing</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Loding_Canvas.cpp">
       <Filter>50.UI\Loding_Canvas</Filter>
@@ -1486,11 +1564,62 @@
     <ClCompile Include="..\private\Logo_Glow.cpp">
       <Filter>50.UI\Logo\Logo_Glow</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Enemy_Panel.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Enemy_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Enemy_HpBar.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_HpBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Enemy_Info.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_Info</Filter>
+    </ClCompile>
     <ClCompile Include="..\private\Unified.cpp">
       <Filter>02.GameObjects\Env\07.Unified</Filter>
     </ClCompile>
     <ClCompile Include="..\private\MapElement_Lake.cpp">
       <Filter>02.GameObjects\Env\03.MapElement\Lake</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll.cpp">
+      <Filter>02.GameObjects\Monster\Troll</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_State_BackHand_Swing.cpp">
+      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_State_Rush.cpp">
+      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_States.cpp">
+      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_Rock.cpp">
+      <Filter>02.GameObjects\Monster\Troll\Rock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_Weapon.cpp">
+      <Filter>02.GameObjects\Monster\Troll\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Hit.cpp">
+      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Throw.cpp">
+      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_IdleBreak.cpp">
+      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Slam.cpp">
+      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Swing.cpp">
+      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_Nomal_Smoke.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Troll_Nomal_Smoke</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_Rush_Hit.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Troll_Rush_Hit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Goblin_Protego.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Goblin_Protego</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

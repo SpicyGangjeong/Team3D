@@ -6,6 +6,7 @@
 #include "Mouse_Cursor.h"
 #include "CameraLockOn.h"
 #include "Loding_Canvas.h"
+#include "tinyxml2.h"
 
 CUI_Manager::CUI_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CUIObject(pDevice, pContext)
@@ -102,6 +103,11 @@ void CUI_Manager::Update(_float fTimeDelta)
 			Canvas_Change(Canvases::GAMEPLAYER_CANVAS);
 	}
 
+	if (m_pGameInstance->Key_Down(DIK_SLASH))
+	{
+		SaveXML("../Bin/Resources/Data/UI/Data.xml");
+	}
+
 }
 
 void CUI_Manager::Late_Update(_float fTimeDelta)
@@ -142,14 +148,37 @@ HRESULT CUI_Manager::Ready_Components(void* pArg)
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMouse_Cursor>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CMouse_Cursor**>(&m_pMouse_Cursor)))) {
 		return E_FAIL;
 	}
-	Add_Canvas(TEXT("Mouse_Cursor"), m_pMouse_Cursor);
+	//Add_Canvas(TEXT("Mouse_Cursor"), m_pMouse_Cursor);
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCameraLockOn>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CCameraLockOn**>(&m_pCamera_LockOn)))) {
 		return E_FAIL;
 	}
-	Add_Canvas(TEXT("Camera_LockOn"), m_pCamera_LockOn);
+	//Add_Canvas(TEXT("Camera_LockOn"), m_pCamera_LockOn);
 
 	return S_OK;
+}
+
+bool CUI_Manager::SaveXML(const _string& filePath)
+{
+	tinyxml2::XMLDocument doc;
+
+	// 루트 생성
+	tinyxml2::XMLElement* root = doc.NewElement("Emart");
+	doc.InsertEndChild(root);
+
+	// 1층 요소 생성, ID만 먼저 넣음
+	tinyxml2::XMLElement* floor1 = doc.NewElement("Floor");
+	floor1->SetAttribute("ID", 0);  // 나중에 사용할 수 있는 ID
+	root->InsertEndChild(floor1);
+
+	// 나중에 다른 속성이나 텍스트 추가 가능
+	floor1->SetAttribute("level", 1);  // 층 정보 추가
+	floor1->SetText("마트, 푸드코트, 의류매장");  // 텍스트 정보 추가
+
+	// 저장
+	doc.SaveFile("Emart.xml");
+
+	return doc.SaveFile(filePath.c_str()) == tinyxml2::XML_SUCCESS;
 }
 
 void CUI_Manager::Add_Canvas(_wstring Name, CGameObject* pCanvas)

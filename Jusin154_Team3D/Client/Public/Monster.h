@@ -16,6 +16,7 @@ public:
 	virtual void Priority_Update(_float fTimeDelta) override;
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
+	virtual HRESULT Render_DeadDisolve();
 	virtual HRESULT Render_OutLine() override;
 	virtual void Set_DrawOutLine();
 	_float4 Get_TargetPos() { return m_vTargetPos; }
@@ -29,6 +30,7 @@ protected:
 	_float4			m_vTargetPos = { };
 	_float3			m_vToTargetDir = { };
 	_float			m_fTargetDistance = { FLT_MAX };
+	_float			m_fDeadRatio = { 0.f };
 	_bool			m_bDrawOutLine = { false };
 	_bool			m_bLookAt = { true };
 

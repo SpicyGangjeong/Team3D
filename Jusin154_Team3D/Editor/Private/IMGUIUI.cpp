@@ -187,6 +187,7 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		m_iSpellType = static_cast<CElementObject*>(m_pElementObject)->Get_SkillType();
 		m_iSkillType = static_cast<CElementObject*>(m_pElementObject)->Get_SpellType();
 		m_fCoolTime = static_cast<CElementObject*>(m_pElementObject)->Get_CoolTime();
+		m_fFontPos = static_cast<CElementObject*>(m_pElementObject)->Get_Font();
 	}
 	GUI::Begin("Current_CanvasObject_Info");
 	if (m_pUI_Manager != nullptr)
@@ -481,6 +482,17 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		if (GUI::SliderFloat("CoolTime", &m_fCoolTime, 1.f, 90.f))
 		{
 			static_cast<CElementObject*>(m_pElementObject)->Set_CoolTime(m_fCoolTime);
+		}
+
+		GUI::Text("FontPosX %.1f", m_fFontPos.x);
+		GUI::Text("FontPosY %.1f", m_fFontPos.y);
+		if (GUI::SliderFloat("FontX", &m_fFontX, -1920.f, 1920.f))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->Set_FontX(m_fFontX);
+		}
+		if (GUI::SliderFloat("FontY", &m_fFontY, -1080.f, 1080.f))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->Set_FontY(m_fFontY);
 		}
 	}
 	GUI::End();

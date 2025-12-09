@@ -138,6 +138,8 @@ public:
 	void Transform_Frustum_ToLocalSpace(_fmatrix WorldMatrixInverse);
 	_bool isIn_WorldFrustum(_fvector vWorldPos, _float fRadius);
 	_bool isIn_LocalFrustum(_fvector vLocalPos, _float fRadius);
+	HRESULT Bind_GlobalSRV(class CShader* pShader, const _tchar* wszKeyGlobalSRV, const _char* pConstantName);
+	HRESULT Load_GlobalSRV(const _tchar* wszKeyGlobalSRV, filesystem::path pathSRVFolder);
 
 #pragma endregion
 #pragma region LIGHT_MANAGER
@@ -248,6 +250,15 @@ public:
 		ID3D11ShaderResourceView* Add_Resource(const _char* pFilePath);
 #pragma endregion
 
+#pragma region FONT_MANAGER
+	public:
+		HRESULT Add_Font(const _wstring& strFontTag, const _tchar* pFontFilePath);
+		HRESULT Render_Text(const _wstring& strFontTag, const _tchar* pText, const _float2& vPosition, _fvector vColor = XMVectorSet(1.f, 1.f, 1.f, 1.f), _float vScale = 1.f);
+		HRESULT Render_Rotation_Text(const _wstring& strFontTag, const _tchar* pText, const _float2& vPosition, _fvector vColor = XMVectorSet(1.f, 1.f, 1.f, 1.f), _float Rotation = 0.f, _float vScale = 1.f);
+		HRESULT Perspective_Render_Text(_matrix View, _matrix Proj, const _wstring& strFontTag, const _tchar* pText, const _fvector& vPosition, _fvector vColor = XMVectorSet(1.f, 1.f, 1.f, 1.f), _float vScale = 1.f);
+		_float FontSizeX(const _wstring& strFontTag, const _tchar* pText);
+#pragma endregion
+
 
 public:
 	void Add_ModelToMap(const _char* filePath, CModel* pModel);
@@ -284,7 +295,8 @@ private:
 	class CThreadHolder*			m_pThreadHolder = { nullptr };
 	class CFog*						m_pFog = { nullptr };
 	class CResource_Manager*		m_pResource_Manager = { nullptr };
-	
+	class CFont_Manager*			m_pFont_Manager = { nullptr };
+
 	mt19937 m_Rng{ random_device{}() };
 #ifdef _DEBUG
 private:

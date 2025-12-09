@@ -239,7 +239,7 @@ PS_OUT PS_Color_Image(PS_IN In)
     switch (In.vBaseColor)
     {
         case 0:
-            BGColor = float3(255.f, 255.f, 0.f) / 255.f;
+            BGColor = float3(220.f, 165.f, 70.f) / 255.f;
             break;
         case 1:
             BGColor = float3(150.f, 120.f, 240.f) / 255.f;

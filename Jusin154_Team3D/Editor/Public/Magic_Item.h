@@ -46,6 +46,10 @@ private:
 	_float2 m_vImagePos1 = {};
 	_float2 m_vImageSize2 = {};
 	_float2 m_vImagePos2 = {};
+
+	_int	m_iPotionIndex{};
+	_int	m_iPerPotionIndex{};
+	_wstring m_strPotion;
 public:
 	static CMagic_Item* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
