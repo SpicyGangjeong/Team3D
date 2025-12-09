@@ -199,7 +199,7 @@ HRESULT CCamPosition_Shoulder::Ready_SubParts()
 	CCamera_Gaze::CAMERA_GAZE_DESC CameraDesc{};
 	CameraDesc.fFovy = XMConvertToRadians(60.0f);
 	CameraDesc.fNear = 0.1f;
-	CameraDesc.fFar = 300.f;
+	CameraDesc.fFar = 500.f;
 	CameraDesc.fSpeedPerSec = 5.f;
 	CameraDesc.fRotationPerSec = XMConvertToRadians(90.f);
 	CameraDesc.pFollowTarget = m_pTarget_FollowPart;

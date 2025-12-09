@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "Player.h"
 #include "Goblin_Dagger.h"
+#include "EffectParts.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -102,14 +103,14 @@ HRESULT CGoblin::Behavior_MoveExitCheck(_float fTimeDelta)
 		}
 		m_fMoveTime += fTimeDelta;
 
-		if (m_fMoveTime >= 2.5f)
+		if (m_fMoveTime >= 2.f)
 		{
 			m_bFirstMove = false;
 			m_fMoveTime = 0.f;
 		}
 	}
 
-	if (m_fTargetDistance <= 15.f && m_fTargetDistance >= 6.f && m_fTargetDistance !=0.f)
+	if (m_fTargetDistance <= 15.f && m_fTargetDistance >= 3.f && m_fTargetDistance !=0.f)
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
 
 	return E_FAIL;
@@ -283,6 +284,7 @@ void CGoblin::Behavior_BlinkEnter()
 			_float randDist = m_pGameInstance->Real_Random_Float(5.f, 5.5f);
 
 			_vector vFinalPos = vPlayerPos + offsetDir * randDist;
+			vFinalPos = XMVectorSetY(vFinalPos, XMVectorGetY(vPlayerPos) + 1.f);
 
 			m_pCharacter_Controller->Set_Position(vFinalPos); }
 	, 0.99f);
@@ -479,6 +481,9 @@ void CGoblin::Behavior_DeadEnter()
 	}
 	pairAnimInfo = m_Animation[iState + bStrongerKnockDown];
 
+	Get_PartObject<CEffectParts>("Goblin_Particle")->Set_Visible(false);
+	Get_PartObject<CEffectParts>("Goblin_Particle2")->Set_Visible(false);
+	Get_PartObject<CEffectParts>("Goblin_Smoke")->Set_Visible(false);
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
 

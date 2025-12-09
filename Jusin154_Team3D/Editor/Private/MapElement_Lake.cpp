@@ -50,8 +50,8 @@ HRESULT CMapElement_Lake::Initialize(void* pArg)
 	m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
 #endif // _DEBUG
 
-	m_vRefractionColor = _float4(0.29f, 0.375f, 0.4f, 1.f);
-	m_vSurfaceColor = _float4(0.f, 1.f, 1.f, 1.f);
+	m_vRefractionColor = _float4(1.f, 1.f, 1.f, 1.f);
+	m_vSurfaceColor = _float4(1.f, 1.f, 1.f, 1.f);
 
 	return S_OK;
 }
@@ -66,7 +66,7 @@ void CMapElement_Lake::Priority_Update(_float fTimeDelta)
 void CMapElement_Lake::Update(_float fTimeDelta)
 {
 	m_fTimeAcc += fTimeDelta * m_fUVValue;
-	//Describe_Entity();
+	Describe_Entity();
 }
 
 void CMapElement_Lake::Late_Update(_float fTimeDelta)
@@ -144,6 +144,10 @@ HRESULT CMapElement_Lake::Ready_Components(void* pArg)
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Lake_Cube_D"),
 		reinterpret_cast<CComponent**>(&m_pCubeMapTextureCom))))
 		return E_FAIL;
+	/* Com_Texture */
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Lake_Refraction"),
+		reinterpret_cast<CComponent**>(&m_pRefractionTextureCom))))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -194,6 +198,9 @@ HRESULT CMapElement_Lake::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fRefractionPow", &m_fRefractionPow, sizeof(_float)))) {
 		return E_FAIL;
 	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fSpecularIntensity", &m_fSpecularIntensity, sizeof(_float)))) {
+		return E_FAIL;
+	}
 
 
 
@@ -206,6 +213,9 @@ HRESULT CMapElement_Lake::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vSurfaceColor", &m_vSurfaceColor, sizeof(_float4)))) {
 		return E_FAIL;
 	}
+	if (FAILED(m_pShaderCom->Bind_SRV("g_DiffuseTexture", m_pRefractionTextureCom->Get_SRV(0)))) {
+		return E_FAIL;
+	}
 	if (FAILED(m_pShaderCom->Bind_SRV("g_NormalTexture", m_pNormalTextureCom->Get_SRV(0)))) {
 		return E_FAIL;
 	}
@@ -213,6 +223,9 @@ HRESULT CMapElement_Lake::Bind_ShaderResources()
 		return E_FAIL;
 	}
 	if (FAILED(m_pShaderCom->Bind_SRV("g_NormalSubTexture", m_pNormalSubTextureCom->Get_SRV(0)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_SRV("g_NoiseTexture", m_pNoiseTextureCom->Get_SRV(0)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pCubeMapTextureCom->Bind_ShaderResource(m_pShaderCom, "g_CubeTexture", 0))) {
@@ -253,6 +266,7 @@ void CMapElement_Lake::Free()
 {
 	__super::Free();
 
+	SAFE_RELEASE(m_pRefractionTextureCom);
 	SAFE_RELEASE(m_pCubeMapTextureCom);
 	SAFE_RELEASE(m_pNormalTextureCom);
 	SAFE_RELEASE(m_pNormalLargeTextureCom);
@@ -281,6 +295,8 @@ void CMapElement_Lake::Describe_Entity()
 	GUI::InputFloat("UV_Speed1", (&m_fUVSpeed1));
 	GUI::InputFloat("UV_Speed2", (&m_fUVSpeed2));
 	GUI::InputFloat("UV_Speed3", (&m_fUVSpeed3));
+
+	GUI::InputFloat("m_fSpecularIntensity", (&m_fSpecularIntensity));
 
 	GUI::InputFloat("m_fRefractionStrength", (&m_fRefractionStrength));
 	GUI::InputFloat("m_fRefractionPow", (&m_fRefractionPow));

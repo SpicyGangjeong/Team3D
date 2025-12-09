@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+﻿        #include "pch.h"
 #include "Material.h"
 #include "GameInstance.h"
 #include "Shader.h"
@@ -350,6 +350,9 @@ HRESULT CMaterial::Add_Texture(const _char* pTextureFolderPath, string& FileType
 		eTexture = aiTextureType::aiTextureType_METALNESS;
 	}
 	else if (!strcmp(FileType.c_str(), "MROA")){
+		eTexture = aiTextureType::aiTextureType_METALNESS;
+	}
+	else if (!strcmp(FileType.c_str(), "MRS")){
 		eTexture = aiTextureType::aiTextureType_METALNESS;
 	}
 	else if (!strcmp(FileType.c_str(), "SRO")){

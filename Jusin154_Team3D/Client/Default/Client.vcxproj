@@ -176,6 +176,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\HpBarBG.h" />
     <ClInclude Include="..\Public\Intro_BG.h" />
     <ClInclude Include="..\Public\Intro_Image.h" />
+    <ClInclude Include="..\public\Land.h" />
     <ClInclude Include="..\Public\Levioso.h" />
     <ClInclude Include="..\Public\Loding_Panel.h" />
     <ClInclude Include="..\Public\Logo.h" />
@@ -189,6 +190,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\LeviosoSide.h" />
     <ClInclude Include="..\public\MapElement.h" />
     <ClInclude Include="..\public\MapElement_Interactable.h" />
+    <ClInclude Include="..\public\MapElement_Lake.h" />
     <ClInclude Include="..\public\MapElement_Light.h" />
     <ClInclude Include="..\Public\Mouse_Cursor.h" />
     <ClInclude Include="..\Public\Potion.h" />
@@ -299,6 +301,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Troll_State_Rush.h" />
     <ClInclude Include="..\Public\Troll_Weapon.h" />
     <ClInclude Include="..\public\UI_Manager.h" />
+    <ClInclude Include="..\public\Unified.h" />
     <ClInclude Include="..\Public\Wand.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
@@ -325,6 +328,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\HpBarBG.cpp" />
     <ClCompile Include="..\Private\Intro_BG.cpp" />
     <ClCompile Include="..\Private\Intro_Image.cpp" />
+    <ClCompile Include="..\private\Land.cpp" />
     <ClCompile Include="..\Private\Levioso.cpp" />
     <ClCompile Include="..\Private\Loding_Panel.cpp" />
     <ClCompile Include="..\Private\Logo.cpp" />
@@ -338,6 +342,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\LeviosoSide.cpp" />
     <ClCompile Include="..\private\MapElement.cpp" />
     <ClCompile Include="..\private\MapElement_Interactable.cpp" />
+    <ClCompile Include="..\private\MapElement_Lake.cpp" />
     <ClCompile Include="..\private\MapElement_Light.cpp" />
     <ClCompile Include="..\Private\Mouse_Cursor.cpp" />
     <ClCompile Include="..\Private\Potion.cpp" />
@@ -451,6 +456,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Troll_State_Rush.cpp" />
     <ClCompile Include="..\Private\Troll_Weapon.cpp" />
     <ClCompile Include="..\private\UI_Manager.cpp" />
+    <ClCompile Include="..\private\Unified.cpp" />
     <ClCompile Include="..\Private\Wand.cpp" />
     <ClCompile Include="Client.cpp" />
   </ItemGroup>
