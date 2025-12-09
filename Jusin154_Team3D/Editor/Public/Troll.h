@@ -48,11 +48,13 @@ private:
 	class CEditEffect* m_pTroll_Particle = { nullptr };
 	class CEditEffect* m_pTroll_Particle2 = { nullptr };
 
-	class CTrailObject* m_pLeftTrail = {};
-	class CTrailObject* m_pRightTrail = {};
+	class CTrailObject* m_pLeftTrail = { nullptr  };
+	class CTrailObject* m_pRightTrail = { nullptr  };
+	class CTrailObject* m_pWeaponTrail = { nullptr  };
 
 	const _float4x4* m_pLeftHand_BoneMat = { nullptr };
 	const _float4x4* m_pRightHand_BoneMat = { nullptr };
+	const _float4x4* m_pWeapon_BoneMat = { nullptr };
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
@@ -60,6 +62,9 @@ private:
 	HRESULT Ready_Components();
 	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
+
+private:
+	void    Troll_Trail_Visible(_bool isTrailVisible);
 
 public:
 	static CTroll* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

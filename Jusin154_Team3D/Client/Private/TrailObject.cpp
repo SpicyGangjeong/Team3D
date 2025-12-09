@@ -250,6 +250,9 @@ HRESULT CTrailObject::Ready_Components(void* pArg)
 
 void CTrailObject::Trail_Update(_fmatrix WorldMat, _float fTimeDelta)
 {
+	if (m_bVisible == false)
+		return;
+
 	m_pTrailCom->Trail_Update(fTimeDelta, WorldMat);
 }
 
