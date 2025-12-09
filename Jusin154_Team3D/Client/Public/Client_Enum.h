@@ -42,7 +42,7 @@ namespace Client
 		DIM_RBUTTON_UP, DIM_RBUTTON_DOWN,
 		END
 	};
-	enum class MOUSEINPUT { LBUTTON, RBUTTON };
+
 	enum class ELEMENT_INTERACTABLE_ID { BARREL, BOX, TABLE, END };
 }
 

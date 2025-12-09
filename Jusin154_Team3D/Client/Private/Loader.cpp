@@ -58,7 +58,6 @@
 #include "NoMountIcon.h"
 
 #include "Loading_Panel.h"
-#include "LoadingWidget.h"
 #include "LoadingWidget_Flame.h"
 
 #include "Action_Panel.h"
@@ -1564,10 +1563,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_GameObject_Loading_Panel*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CLoading_Panel>(g_iStaticLevel, CLoading_Panel::Create(m_pDevice, m_pContext)))) {
-		return E_FAIL;
-	}
-	/* For.Prototype_GameObject_LoadingWidget*/
-	if (FAILED(m_pGameInstance->Add_Prototype<CLoadingWidget>(g_iStaticLevel, CLoadingWidget::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 	/* For.Prototype_GameObject_LoadingWidget_Flame*/

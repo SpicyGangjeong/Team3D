@@ -79,6 +79,12 @@ pair<CUnit*, CTransform*> CInfoInstance::Get_NearestPlayerAlly(_fvector vPos)
 {
 	return m_pMonsterInfo->Get_NearestPlayerAlly(vPos);
 }
+
+CMonster* CInfoInstance::Get_TargetMonster()
+{
+	return m_pMonsterInfo->Get_TargetMonster();
+}
+
 #pragma endregion
 #pragma region MAP_INFO
 HRESULT CInfoInstance::Load_MapObjects(const _char* pFilePath)
@@ -164,14 +170,16 @@ void CInfoInstance::Key_Input(_uint Input)
 void CInfoInstance::Mouse_Input(_uint Input)
 {
 	m_eInput = Input;
-
+	_bool bHover = false;
 	switch (m_eInput)
 	{
-	case ENUM_CLASS(KEYINPUT::INPUT_1):
-		Event_CallBack(TEXT("Spell"), &m_eInput);
+	case ENUM_CLASS(KEYINPUT::DIM_RBUTTON_UP):
+		bHover = false;
+		Event_CallBack(TEXT("CameraLockOn"), &bHover);
 		break;
-	case ENUM_CLASS(KEYINPUT::INPUT_2):
-		Event_CallBack(TEXT("Spell"), &m_eInput);
+	case ENUM_CLASS(KEYINPUT::DIM_RBUTTON_DOWN):
+		bHover = true;
+		Event_CallBack(TEXT("CameraLockOn"), &bHover);
 		break;
 	default:
 		break;
@@ -183,6 +191,11 @@ void CInfoInstance::Mouse_Input(_uint Input)
 void CInfoInstance::Set_UISTATE(UI_STATE eState)
 {
 	m_eUI_State = eState;
+}
+
+UI_STATE CInfoInstance::Get_UISTATE()
+{
+	return m_eUI_State;
 }
 
 void CInfoInstance::Add_Event(_wstring EventName, function<void(void*)> Event)
@@ -237,8 +250,9 @@ HRESULT CInfoInstance::Initialize_Information(ID3D11Device* pDevice, ID3D11Devic
 
 void CInfoInstance::Release_Information()
 {
-	DestroyInstance();
+	UI_Event.clear();
 
+	DestroyInstance();
 
 	SAFE_RELEASE(m_pMapInfo);
 	SAFE_RELEASE(m_pPlayerInfo);
@@ -252,5 +266,6 @@ void CInfoInstance::Release_Information()
 void CInfoInstance::Free()
 {
 	__super::Free();
+	UI_Event.clear();
 
 }

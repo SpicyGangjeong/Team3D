@@ -39,7 +39,7 @@ HRESULT CSpell_Data::Initialize(void* pArg)
 	while (pSpell)
 	{
 		int id = 0;
-		pSpell->QueryIntAttribute("Spell_ID", &id);
+		pSpell->QueryIntAttribute("Spell_ID", &id);/*
 
 		if (id < 0 || id > 34)
 		{
@@ -68,7 +68,7 @@ HRESULT CSpell_Data::Initialize(void* pArg)
 		pSpell->QueryFloatAttribute("Preview", &pInfo[id].fPreview);
 		pSpell->QueryFloatAttribute("Vidio", &pInfo[id].fVidio);
 
-		pSpell = pSpell->NextSiblingElement("Spell");
+		pSpell = pSpell->NextSiblingElement("Spell");*/
 	}
 
 	//pInfo = SpellInfo;
