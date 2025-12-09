@@ -392,7 +392,7 @@ HRESULT CGoblin::Ready_Parts()
 
 
 #pragma endregion
-	return S_OK;
+
 
 	return S_OK;
 }

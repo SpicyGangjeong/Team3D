@@ -31,7 +31,7 @@ protected:
 	_float			m_fTargetDistance = { FLT_MAX };
 	_bool			m_bDrawOutLine = { false };
 	_bool			m_bLookAt = { true };
-
+	_float			m_fDeadRatio = { 0.f };
 protected:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

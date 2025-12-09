@@ -63,7 +63,7 @@ HRESULT CInstance_Model::Initialize_Prototype(const _char* pModelFilePath, MODEL
 			return E_FAIL;
 		}
 
-		SaveAssimpModel(Temp , m_pAIScene);
+		SaveAssimpModel(Temp, m_pAIScene);
 		return S_OK;
 	}
 #pragma region Mesh
@@ -171,7 +171,7 @@ HRESULT CInstance_Model::Ready_Meshes(MODEL eType, const aiScene* pAIScene, _fma
 #endif
 
 #ifdef EDITOR_PROJECT
-_bool CInstance_Model::SaveAssimpModel(const _char* filename , const aiScene* pAIScene)
+_bool CInstance_Model::SaveAssimpModel(const _char* filename, const aiScene* pAIScene)
 {
 	if (!pAIScene) {
 		return false;
@@ -416,7 +416,7 @@ HRESULT CInstance_Model::Change_NumInstance()
 
 HRESULT CInstance_Model::Create_Instance_Buffer()
 {
-	
+
 
 	m_iNumInstance = m_InstanceDesc.iNumInstance;
 
@@ -517,7 +517,7 @@ HRESULT CInstance_Model::Initialize(void* pArg)
 	//시작 시에 인스턴트 버퍼를 구성 해줌
 	Instane_Buffer_ReStruct();
 
-	if(FAILED(Create_CS()))
+	if (FAILED(Create_CS()))
 		return E_FAIL;
 
 	return S_OK;
@@ -551,7 +551,7 @@ void CInstance_Model::Drop(_float fTimeDelta)
 		pDesc->ProjMatrix = *m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ);
 		pDesc->fFar = *m_pGameInstance->Get_CurrentCameraFar();
 		pDesc->vScreenSize = m_pGameInstance->Get_ViewPortSize();
-	
+
 
 
 		m_pContext->Unmap(m_pConstantBuffer, 0);
@@ -574,27 +574,6 @@ void CInstance_Model::Drop(_float fTimeDelta)
 	m_pGameInstance->Bind_CS_RenderTarget(2, L"Target_Depth");
 
 	OutSubResources = m_pComputeShader->Dispatch(0, 0, _float3((_float)iGroupCountX, 1.f, 1.f), CSBuffers, m_pConstantBuffer);
-
-	if (SUCCEEDED(m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_DISCARD, 0, &VBInstanceResource)))
-	{
-
-		memcpy(VBInstanceResource.pData, OutSubResources[0].pData, m_iInstanceStride * m_InstanceDesc.iNumInstance); // 아웃풋 버퍼에 들어온 값들을 전부 복사한다.
-
-		m_pContext->Unmap(m_pVBInstance, 0);
-	}
-
-	D3D11_MAPPED_SUBRESOURCE ParticleValueResource = {};
-
-	if (SUCCEEDED(m_pContext->Map(m_pParticleValueBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &ParticleValueResource)))
-	{
-		CS_PARTICLE_VALUE_DESC* pValueDesc = static_cast<CS_PARTICLE_VALUE_DESC*>(OutSubResources[1].pData);
-
-		memcpy(ParticleValueResource.pData, OutSubResources[1].pData, sizeof(CS_PARTICLE_VALUE_DESC) * m_InstanceDesc.iNumInstance); // 아웃풋 버퍼에 들어온 값들을 전부 복사한다.
-
-
-		m_pContext->Unmap(m_pParticleValueBuffer, 0);
-	}
-
 
 }
 
@@ -704,7 +683,7 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 					m_pGameInstance->Random_Float(m_InstanceDesc.vVelocityMin.x, m_InstanceDesc.vVelocityMax.x),
 					m_pGameInstance->Random_Float(m_InstanceDesc.vVelocityMin.y, m_InstanceDesc.vVelocityMax.y),
 					m_pGameInstance->Random_Float(m_InstanceDesc.vVelocityMin.z, m_InstanceDesc.vVelocityMax.z)
-				);				
+				);
 
 				pParticleValues[i].vVelocity = vVelocity;
 
@@ -734,7 +713,7 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 				pParticleValues[i].fSizeDrag = m_pGameInstance->Random_Float(m_InstanceDesc.vSizeDrag.x, m_InstanceDesc.vSizeDrag.y);
 				pParticleValues[i].vDelay = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vDelay.x, m_InstanceDesc.vDelay.y));
 				pParticleValues[i].fDropAttenuation = m_pGameInstance->Random_Float(m_InstanceDesc.vDropAttenuation.x, m_InstanceDesc.vDropAttenuation.y);
-				
+
 				pParticleValues[i].fCollisionTime = 0.f;
 				pParticleValues[i].isCompareStop = false;
 
@@ -814,7 +793,7 @@ void CInstance_Model::Free()
 	SAFE_RELEASE(m_pComputeShader);
 	SAFE_RELEASE(m_pConstantBuffer);
 	SAFE_RELEASE(m_pParticleValueBuffer);
-;
+	;
 }
 #ifdef _DEBUG
 
@@ -846,7 +825,7 @@ void CInstance_Model::Describe_Entity()
 		{
 			Instane_Buffer_ReStruct();
 		}
-		
+
 		if (GUI::Checkbox("Sin Wave", &m_InstanceDesc.isSinWave))
 		{
 			Instane_Buffer_ReStruct();
@@ -1060,7 +1039,7 @@ void CInstance_Model::Describe_Entity()
 			Instane_Buffer_ReStruct();
 		}
 
-		
+
 
 		ImGui::PopItemWidth();
 		ImGui::TreePop();
