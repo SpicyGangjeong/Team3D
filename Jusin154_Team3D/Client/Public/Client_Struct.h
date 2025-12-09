@@ -53,4 +53,8 @@ namespace Client
 		_float			fMaxExprience{};
 		_int			iGold{};
 	}UNITINFO;
+	typedef struct tagLockOnInfo {
+		CUnit* pUnit = { nullptr };
+		class CMapElement_Interactable* pInteractive = { nullptr };
+	}LOCKON_INFO;
 };
