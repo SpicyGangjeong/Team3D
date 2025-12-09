@@ -4,14 +4,17 @@
 #include "GameInstance.h"
 #include "EffectPool.h"
 #include "Player.h"
+#include "EffectParts.h"
 
 #pragma region STATE
 #include "State_Idle.h"
+#include "State_IdleBreak.h"
 #include "State_Dead.h"
 #include "State_Move.h"
 #include "State_Combat.h"
 #include "State_Spell.h"
 #include "State_LightAttack.h"
+#include "State_Sustain.h"
 #include "State_Blink.h"
 #include "State_Hit.h"
 #pragma endregion
@@ -42,17 +45,47 @@ void CGoblin_Mage::Behavior_IdleExit()
 	m_pFSM->Disable_State(FSMSTATE::IDLE);
 }
 
+void CGoblin_Mage::Behavior_IdleBreakEnter()
+{
+	m_pFSM->Enable_State(FSMSTATE::IDLEBREAK);
+	pair<_uint, _bool> pairAnimInfo;
+	m_bLookAt = true;
+	_int RandIndex = m_pGameInstance->Real_Random_Int(0, 2);
+	switch (RandIndex)
+	{
+	case 0:
+		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK1];
+		break;
+	case 1:
+		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK2];
+		break;
+	case 2:
+		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK3];
+		break;
+	}
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+}
+
+HRESULT CGoblin_Mage::Behavior_IdleBreakExitCheck()
+{
+	if (m_pModelCom->IsFinishedAnim()) {
+		m_pFSM->Change_State(FSMSTATE::MOVE);
+	}
+
+	return E_FAIL;
+}
+
+void CGoblin_Mage::Behavior_IdleBreakExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::IDLEBREAK);
+}
+
 void CGoblin_Mage::Behavior_MoveEnter()
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::MOVE);
 
 	m_pFSM->Enable_State(FSMSTATE::JOG);
-
-	pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
-
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-
 }
 
 HRESULT CGoblin_Mage::Behavior_MoveExitCheck()
@@ -60,8 +93,13 @@ HRESULT CGoblin_Mage::Behavior_MoveExitCheck()
 	pair<_uint, _bool> pairAnimInfo = {};
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 
-	if (m_fTargetDistance <= 15.f && m_fTargetDistance != 0.f)
+	if (m_fTargetDistance <= 15.f && m_fTargetDistance != 0.f) {
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
+	}
+	else {
+		pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+	}
 
 	return E_FAIL;
 }
@@ -84,12 +122,12 @@ HRESULT CGoblin_Mage::Behavior_CombatExitCheck(_float fTimeDelta)
 {
 	m_bLookAt = true;
 
-	if (m_fTargetDistance > 25.f && m_fTargetDistance != 0.f)
+	if (m_fTargetDistance > 30.f && m_fTargetDistance != 0.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::IDLE);
 		return E_FAIL;
 	}
-	else if (m_fTargetDistance > 20.f && m_fTargetDistance != 0.f)
+	else if (m_fTargetDistance > 25.f && m_fTargetDistance != 0.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::MOVE);
 		return E_FAIL;
@@ -100,16 +138,16 @@ HRESULT CGoblin_Mage::Behavior_CombatExitCheck(_float fTimeDelta)
 	{
 		m_pFSM->Change_State(FSMSTATE::BLINK);
 	}
+	else if (m_fTargetDistance <= 12.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::LIGHTATTACK)] <= 0.f)
+	{
+		m_pFSM->Change_State(FSMSTATE::LIGHT_ATTACK);
+	}
 	else if (m_fTargetDistance <= 15.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SPELL)] <= 0.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::SPELL);
 	}
-	else if (m_fTargetDistance <= 15.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::LIGHTATTACK)] <= 0.f)
-	{
-		m_pFSM->Change_State(FSMSTATE::LIGHT_ATTACK);
-	}
 	else {
-		m_pFSM->Change_State(FSMSTATE::MOVE);
+		m_pFSM->Change_State(FSMSTATE::IDLEBREAK);
 	}
 
 	return E_FAIL;
@@ -125,7 +163,8 @@ void CGoblin_Mage::Behavior_SpellEnter()
 	pair<_uint, _bool> pairAnimInfo = {};
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 	pairAnimInfo = m_Animation[STATEANIM::SPELL_CHARGE];
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.3f);
+	m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SPELL)] = m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SPELL)];
 }
 
 HRESULT CGoblin_Mage::Behavior_SpellExitCheck(_float fTimeDelta)
@@ -137,8 +176,7 @@ HRESULT CGoblin_Mage::Behavior_SpellExitCheck(_float fTimeDelta)
 		if (m_pModelCom->IsFinishedAnim())
 		{
 			pairAnimInfo = m_Animation[STATEANIM::SPELL];
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-			m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SPELL)] = m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SPELL)];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.3f);
 		}
 		return S_OK;
 	}
@@ -184,6 +222,31 @@ void CGoblin_Mage::Behavior_LightAttackExit()
 	m_pFSM->Disable_State(FSMSTATE::LIGHT_ATTACK);
 }
 
+void CGoblin_Mage::Behavior_SustainEnter()
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	pairAnimInfo = m_Animation[STATEANIM::SUSTAIN_START];
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+	m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SUSTAIN)] = m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SUSTAIN)];
+}
+
+HRESULT CGoblin_Mage::Behavior_SustainExitCheck(_float fTimeDelta)
+{
+	if (m_pModelCom->IsFinishedAnim())
+	{
+		m_bLookAt = true;
+		m_pFSM->Change_State(FSMSTATE::COMBAT);
+		return E_FAIL;
+	}
+	return E_FAIL;
+}
+
+void CGoblin_Mage::Behavior_SustainExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::SUSTAIN);
+}
+
 void CGoblin_Mage::Behavior_BlinkEnter()
 {
 
@@ -196,6 +259,7 @@ void CGoblin_Mage::Behavior_BlinkEnter()
 	Add_Event(pairAnimInfo.first,
 		[this]() {
 			m_bVisible = false;
+			m_pGoblin_Orb->Set_Visible(false);
 			m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::TP)] = m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::TP)];
 			_vector vPos = Get_WorldPostion();
 			_vector vLook =m_pTransformCom->Get_State(STATE::LOOK);
@@ -225,6 +289,7 @@ HRESULT CGoblin_Mage::Behavior_BlinkExitCheck(_float fTimeDelta)
 	if (m_fTpTime >= 1.5f)
 	{
 		m_bVisible = true;
+		m_pGoblin_Orb->Set_Visible(true);
 		m_fTpTime = 0.f;
 		pairAnimInfo = m_Animation[STATEANIM::BLINK];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
@@ -398,6 +463,18 @@ void CGoblin_Mage::Add_FSM()
 		Desc.funcLateUpdate = nullptr;
 		m_States.emplace(FSMSTATE::IDLE, CState_Idle::Create(&Desc));
 	}
+
+	{
+		CState_IdleBreak::STATE_IDLEBREAK_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_IdleBreakEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_IdleBreakExitCheck(); };
+		Desc.funcExitEvent = [this]() { Behavior_IdleBreakExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::IDLEBREAK, CState_IdleBreak::Create(&Desc));
+	}
+
 	{
 		CState_Move::STATE_MOVE_DESC Desc{};
 		Desc.pOwner = this;
@@ -444,6 +521,17 @@ void CGoblin_Mage::Add_FSM()
 	}
 
 	{
+		CState_Sustain::STATE_SUSTAIN_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_SustainEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_SustainExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_SustainExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::SUSTAIN, CState_Sustain::Create(&Desc));
+	}
+
+	{
 		CState_Blink::STATE_BLINK_DESC Desc{};
 		Desc.pOwner = this;
 		Desc.funcEnterEvent = [this]() { Behavior_BlinkEnter(); };
@@ -487,8 +575,6 @@ void CGoblin_Mage::Add_FSM()
 	}
 
 #pragma endregion
-
-
 }
 
 void CGoblin_Mage::Set_Anim()
@@ -497,6 +583,10 @@ void CGoblin_Mage::Set_Anim()
 	m_Animation[STATEANIM::IDLE_TURN_BWD] = { 24, false };
 	m_Animation[STATEANIM::IDLE_TURN_L] = { 26, false };
 	m_Animation[STATEANIM::IDLE_TURN_R] = { 30, false };
+
+	m_Animation[STATEANIM::IDLE_BREAK1] = { 137, false };
+	m_Animation[STATEANIM::IDLE_BREAK2] = { 138, false };
+	m_Animation[STATEANIM::IDLE_BREAK3] = { 139, false };
 
 	m_Animation[STATEANIM::WALK_FWD] = { 45,true };
 	m_Animation[STATEANIM::WALK_START] = { 57,false };
@@ -516,16 +606,17 @@ void CGoblin_Mage::Set_Anim()
 	m_Animation[STATEANIM::DODGE_RIGHT] = { 126, false };
 	m_Animation[STATEANIM::SPRINT] = { 90, true };
 
-	m_Animation[STATEANIM::SKILL] = { 85,false }; // 나이프 던지기
 	m_Animation[STATEANIM::BLINK_START] = { 428,false };
 	m_Animation[STATEANIM::BLINK] = { 426,false }; // 텔레포트
-	m_Animation[STATEANIM::SWING_FWD] = { 100,false }; // 도끼 스윙 444
-	m_Animation[STATEANIM::ATTACK_END] = { 76,false };
 
 
 	m_Animation[STATEANIM::SPELL_CHARGE] = { 437,false };
 	m_Animation[STATEANIM::SPELL] = { 435,false };
-	m_Animation[STATEANIM::LIGHT_ATTACK] = { 443,false };
+	m_Animation[STATEANIM::LIGHT_ATTACK] = { 456,false }; // 평타 번개쏘기
+
+	m_Animation[STATEANIM::SUSTAIN_START] = { 453,false };
+	m_Animation[STATEANIM::SUSTAIN_LOOP] = { 454,true };
+	m_Animation[STATEANIM::SUSTAIN_END] = { 455,false };
 
 	m_Animation[STATEANIM::HIT_FWD] = { 353, false };
 	m_Animation[STATEANIM::HIT_BWD] = { 352, false };
@@ -582,4 +673,12 @@ void CGoblin_Mage::Set_Anim()
 
 
 	// idle break 137
+
+
+	// 453 레이저빔 End
+	// 454 레이저빔 Loop
+	// 455 레이저빔 start
+
+	//137 139
+
 }

@@ -243,10 +243,11 @@ public:
 	HRESULT			Render(_uint iMeshIndx);
 	void			Instane_Buffer_ReStruct();
 	_uint			Get_NumMeshes() const { return m_iNumMeshes; }
-	HRESULT			Bind_CS_Output(_uint Index, _uint iBufferIndex);
+	//HRESULT			Bind_Value_Buffer(class CShader* pShader, const _char* pConstantName);
 	HRESULT         Bind_OutPut_SRV_VS(_uint Index, _uint iBufferIndex);
 	INSTANCE_DESC	Get_EffectValue() { return m_InstanceDesc; }
 	HRESULT			Load_InstanceModel(HANDLE hFile);
+	HRESULT         Bind_CS_Output(_uint Index, _uint iBufferIndex);
 private:
 		bool LoadData(const _char* filename);
 
@@ -263,6 +264,7 @@ private:
 	HRESULT			Create_Instance_Buffer();
 	HRESULT         Create_SubResource_Buffer();
 	HRESULT			Create_CS();
+
 
 private:
 #ifdef EDITOR_PROJECT
@@ -293,6 +295,8 @@ private:
 	ID3D11Buffer*			m_pConstantBuffer = { nullptr }; // 컴퓨트 쉐이드 전용 상수버퍼
 	ID3D11Buffer*			m_pParticleValueBuffer = { nullptr }; // 컴퓨트 쉐이드 두번째 버퍼 (스피드, 로테이션)
 
+	ID3D11ShaderResourceView*	m_pVBInstance_Srv = { nullptr };
+	ID3D11ShaderResourceView*   m_pParticleValue_Srv = { nullptr };
 public:
 	//인스턴싱으로 바꾸기
 	static CInstance_Model* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex);

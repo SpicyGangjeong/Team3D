@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "Player.h"
 #include "Goblin_Dagger.h"
+#include "Goblin_Spector.h"
 #include "EffectParts.h"
 
 #pragma region STATE
@@ -52,6 +53,11 @@ void CGoblin::Behavior_MoveEnter()
 	m_pFSM->Enable_State(FSMSTATE::MOVE);
 	m_bLookAt = true;
 	m_pFSM->Enable_State(FSMSTATE::JOG);
+
+	if (!m_pFSM->IsEnable_Previous(FSMSTATE::COMBAT))
+	{
+		m_bFirstMove = false;
+	}
 }
 
 HRESULT CGoblin::Behavior_MoveExitCheck(_float fTimeDelta)
@@ -110,7 +116,7 @@ HRESULT CGoblin::Behavior_MoveExitCheck(_float fTimeDelta)
 		}
 	}
 
-	if (m_fTargetDistance <= 15.f && m_fTargetDistance >= 3.f && m_fTargetDistance !=0.f)
+	if (m_fTargetDistance <= 15.f && m_fTargetDistance >= 5.f && m_fTargetDistance !=0.f)
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
 
 	return E_FAIL;
@@ -182,13 +188,14 @@ void CGoblin::Behavior_SwingEnter()
 		0.2f);
 
 	Add_Event(pairAnimInfo.first,
-		[this]() {m_bSwing = true; },
+		[this]() {
+			m_pGoblinSpector->Set_Visible(true);},
 		0.05f);
 
 	Add_Event(pairAnimInfo.first,
 		[&]() {	m_bLookAt = true;
 				m_bStep = true;
-				m_bSwing = false;
+				m_pGoblinSpector->Set_Visible(false);
 				m_pFSM->Change_State(FSMSTATE::SHUFFLE); },
 		0.45f);
 }
@@ -340,15 +347,17 @@ void CGoblin::Behavior_ShuffleEnter()
 		break;
 	}
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
-
-	Add_Event(pairAnimInfo.first,
-		[this]() {
-			m_pFSM->Change_State(FSMSTATE::COMBAT); },
-		0.3f);
 }
 
 HRESULT CGoblin::Behavior_ShuffleExitCheck(_float fTimeDelta)
 {
+	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
+
+	if (fRatio >= 0.3f)
+	{
+		m_pFSM->Change_State(FSMSTATE::COMBAT);
+	}
+
 	return E_FAIL;
 }
 
@@ -481,9 +490,9 @@ void CGoblin::Behavior_DeadEnter()
 	}
 	pairAnimInfo = m_Animation[iState + bStrongerKnockDown];
 
-	Get_PartObject<CEffectParts>("Goblin_Particle")->Set_Visible(false);
-	Get_PartObject<CEffectParts>("Goblin_Particle2")->Set_Visible(false);
-	Get_PartObject<CEffectParts>("Goblin_Smoke")->Set_Visible(false);
+	//Get_PartObject<CEffectParts>("Goblin_Particle")->Set_Visible(false);
+	//Get_PartObject<CEffectParts>("Goblin_Particle2")->Set_Visible(false);
+	//Get_PartObject<CEffectParts>("Goblin_Smoke")->Set_Visible(false);
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
 

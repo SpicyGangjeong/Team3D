@@ -240,6 +240,7 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 	if (true == m_bDead) {
 		return;
 	}
+	m_pGoblinSpector->Set_Visible(false);
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
 	_uint iSkillType = dynamic_cast<CEffect_Container*>(pOther)->Get_SkillType();
@@ -352,7 +353,7 @@ HRESULT CGoblin::Ready_Parts()
 
 	Goblin_SpectorDesc.pParentTransform = m_pTransformCom;
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Spector>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER, &Goblin_SpectorDesc,this))) {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Spector>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER, &Goblin_SpectorDesc,this, &m_pGoblinSpector))) {
 		return E_FAIL;
 	}
 
@@ -369,7 +370,7 @@ HRESULT CGoblin::Ready_Parts()
 	}
 
 	m_pGoblin_Particle->Load("../Bin/Resources/Data/Effect/Goblin/GoblinSide/Goblin_Particle", static_cast<LEVEL>(NEXT_LEVEL));
-	m_pGoblin_Particle->FollowParants(m_pModelCom->Get_BoneMatrixPtr("RightShoulder"));
+	m_pGoblin_Particle->FollowParents(m_pModelCom->Get_BoneMatrixPtr("RightShoulder"));
 
 
 
@@ -379,7 +380,7 @@ HRESULT CGoblin::Ready_Parts()
 	}
 
 	m_pGoblin_Particle2->Load("../Bin/Resources/Data/Effect/Goblin/GoblinSide/Goblin_Particle2", static_cast<LEVEL>(NEXT_LEVEL));
-	m_pGoblin_Particle2->FollowParants(m_pModelCom->Get_BoneMatrixPtr("RightShoulder"));
+	m_pGoblin_Particle2->FollowParents(m_pModelCom->Get_BoneMatrixPtr("RightShoulder"));
 
 
 	if (FAILED(Add_PartObject<CEffectParts>("Goblin_Smoke", g_iStaticLevel, &m_pSmoke, &PartsDesc)))
@@ -388,11 +389,11 @@ HRESULT CGoblin::Ready_Parts()
 	}
 
 	m_pSmoke->Load("../Bin/Resources/Data/Effect/Goblin/GoblinSide/Goblin_Smoke", static_cast<LEVEL>(NEXT_LEVEL));
-	m_pSmoke->FollowParants(m_pModelCom->Get_BoneMatrixPtr("Spine2"));
+	m_pSmoke->FollowParents(m_pModelCom->Get_BoneMatrixPtr("Spine2"));
 
 
 #pragma endregion
-	return S_OK;
+
 
 	return S_OK;
 }

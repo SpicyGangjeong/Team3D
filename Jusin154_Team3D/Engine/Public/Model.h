@@ -182,11 +182,8 @@ private:
 
 private:
 	HRESULT			Create_ParentVB();
-	HRESULT			Create_CS();
 	void			Create_Temp();
 	void			Create_LocalPosVB();
-	void			Create_Con();
-	void			UpdateAnimationCS(_uint AnimIndex);
 
 	_uint					m_iNumBuffer = {};
 
