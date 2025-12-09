@@ -59,7 +59,7 @@ HRESULT CGoblin::Behavior_MoveExitCheck(_float fTimeDelta)
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 
 
-	if (m_fTargetDistance >= 7.f)
+	if (m_fTargetDistance >= 6.f)
 	{
 		pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
@@ -68,7 +68,7 @@ HRESULT CGoblin::Behavior_MoveExitCheck(_float fTimeDelta)
 		if (!m_bFirstMove)
 		{
 			_uint Rand = m_pGameInstance->Real_Random_Int(0, 3);
-			
+
 			switch (Rand)
 			{
 			case  0:
@@ -79,7 +79,7 @@ HRESULT CGoblin::Behavior_MoveExitCheck(_float fTimeDelta)
 				break;
 			case  2:
 				if (iCurrAnimIndex == m_Animation[STATEANIM::JOG_90_R].first) {
-					pairAnimInfo = m_Animation[STATEANIM::JOG_112_L];
+					pairAnimInfo = m_Animation[STATEANIM::JOG_112_R];
 				}
 				else {
 					pairAnimInfo = m_Animation[STATEANIM::JOG_90_L];
@@ -87,30 +87,29 @@ HRESULT CGoblin::Behavior_MoveExitCheck(_float fTimeDelta)
 				break;
 			case  3:
 				if (iCurrAnimIndex == m_Animation[STATEANIM::JOG_90_L].first) {
-					pairAnimInfo = m_Animation[STATEANIM::JOG_112_R];
+					pairAnimInfo = m_Animation[STATEANIM::JOG_112_L];
 				}
 				else {
 					pairAnimInfo = m_Animation[STATEANIM::JOG_90_R];
 				}
 				break;
-			}				
-
+			}
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 0.5f, true);
 
-			m_bFirstMove = true;   
-			m_fMoveTime = 0.f;     
-			return S_OK;           
+			m_bFirstMove = true;
+			m_fMoveTime = 0.f;
+			return S_OK;
 		}
 		m_fMoveTime += fTimeDelta;
 
-		if (m_fMoveTime >= 1.5f)
+		if (m_fMoveTime >= 2.5f)
 		{
 			m_bFirstMove = false;
 			m_fMoveTime = 0.f;
 		}
 	}
 
-	if (m_fTargetDistance <= 15.f && m_fTargetDistance >= 3.f && m_fTargetDistance !=0.f)
+	if (m_fTargetDistance <= 15.f && m_fTargetDistance >= 6.f && m_fTargetDistance !=0.f)
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
 
 	return E_FAIL;
@@ -143,7 +142,7 @@ HRESULT CGoblin::Behavior_CombatExitCheck(_float fTimeDelta)
 		return E_FAIL;
 	}
 
-	if (m_fTargetDistance <= 5.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SWING)] <= 0.f)
+	if (m_fTargetDistance <= 6.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SWING)] <= 0.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::SWING);
 	}
@@ -343,7 +342,7 @@ void CGoblin::Behavior_ShuffleEnter()
 	Add_Event(pairAnimInfo.first,
 		[this]() {
 			m_pFSM->Change_State(FSMSTATE::COMBAT); },
-		0.25f);
+		0.3f);
 }
 
 HRESULT CGoblin::Behavior_ShuffleExitCheck(_float fTimeDelta)

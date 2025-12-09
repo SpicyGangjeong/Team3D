@@ -128,7 +128,6 @@ void CGoblin::Late_Update(_float fTimeDelta)
 
 HRESULT CGoblin::Render()
 {
-
 	if (!m_bVisible)
 		return S_OK;
 	if (FAILED(Bind_ShaderResources())) {
