@@ -449,9 +449,6 @@
     <ClInclude Include="..\public\MapElement_Lake.h">
       <Filter>02.GameObjects\Environment\03.MapElement\Lake</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Goblin_BattleAxe.h">
-      <Filter>02.GameObjects\Item\Goblin_Axe</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Goblin.h">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Warrior</Filter>
     </ClInclude>
@@ -470,6 +467,12 @@
     <ClInclude Include="..\Public\Goblin_BattleAxe.h" />
     <ClInclude Include="..\Public\WandEnd.h">
       <Filter>02.GameObjects\Effect\Effects\WandEnd</Filter>
+    </ClInclude>
+    <ClInclude Include="CDamageFont.h">
+      <Filter>04.Mechanic\Damage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Goblin_BattleAxe.h">
+      <Filter>02.GameObjects\Item\Goblin_Axe</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -985,7 +988,6 @@
     <Filter Include="02.GameObjects\PhysX\CallBack\HitReport\Monster\Troll">
       <UniqueIdentifier>{e12337a6-7563-4615-a8d2-a2e2e1ba1ca8}</UniqueIdentifier>
     </Filter>
-
     <Filter Include="02.GameObjects\Environment\04.Land">
       <UniqueIdentifier>{ec267143-0bc1-4765-b8dc-6cccc50385d7}</UniqueIdentifier>
     </Filter>
@@ -1003,6 +1005,9 @@
     </Filter>
     <Filter Include="03.InfoInstance\03.InteractiveInfo">
       <UniqueIdentifier>{1d1dc743-5cf2-4b8f-a80e-16b16437c7aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\Damage">
+      <UniqueIdentifier>{36962dce-8c99-4c54-9189-2a49785a211e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1432,6 +1437,9 @@
     <ClCompile Include="..\Private\Goblin_BattleAxe.cpp" />
     <ClCompile Include="..\Private\WandEnd.cpp">
       <Filter>02.GameObjects\Effect\Effects\WandEnd</Filter>
+    </ClCompile>
+    <ClCompile Include="CDamageFont.cpp">
+      <Filter>04.Mechanic\Damage</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

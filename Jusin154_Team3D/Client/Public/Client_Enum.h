@@ -37,10 +37,12 @@ namespace Client
 
 	enum class BLOOM_TYPE { NONE, BASIC, MULTIPLY, END };
 
+	enum class DAMAGE_TYPE { NOMAL, CRITICLA };
+
 	enum class KEYINPUT
 	{
 		INPUT_1 = 1, INPUT_2, INPUT_3, INPUT_4,
-		INPUT_T, INPUT_G,
+		INPUT_T, INPUT_G, INPUT_X,
 		INPUT_TAB,
 		DIM_RBUTTON_UP, DIM_RBUTTON_DOWN,
 		END

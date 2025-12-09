@@ -110,7 +110,6 @@ void CGoblin::Update(_float fTimeDelta)
 		m_fSkillCoolTime[i] = max(0.f, m_fSkillCoolTime[i] - fTimeDelta);
 
 
-
 }
 
 void CGoblin::Late_Update(_float fTimeDelta)
@@ -240,6 +239,7 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 	if (true == m_bDead) {
 		return;
 	}
+	m_pInfoInstance->Event_CallBack(TEXT("Magic_Meter_Update"));
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
 	_uint iSkillType = dynamic_cast<CEffect_Container*>(pOther)->Get_SkillType();
@@ -257,7 +257,7 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 		m_eHitSpell = STATEANIM::HIT_LEVIOSO;
 		_float fSkillRatio = m_pInfoInstance->Get_Spell_Info(ENUM_CLASS(SKILL_TYPE::JAP)).fSpell_Damage;
 		_float fCoefficient = CollisionDesc->pObject->Get_Component<CStat>()->Get_Stat().fMagic;
-		if (true == Get_Damage(fSkillRatio * fCoefficient * 0.2f)) {
+		if (true == Get_Damage(fSkillRatio * fCoefficient * 0.0f)) {
 			m_pFSM->Change_State(FSMSTATE::DEAD);
 			return;
 		}

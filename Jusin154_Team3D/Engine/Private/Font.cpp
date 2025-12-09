@@ -44,7 +44,7 @@ HRESULT CFont::Render_Rotate(const _tchar* pText, const _float2& vPosition, _fve
 HRESULT CFont::Perspective_Render(_matrix View, _matrix Proj, const _tchar* pText, const _fvector& vPosition, _fvector vColor, _float vScale)
 {
     // 월드 좌표 -> 화면 좌표 변환
-    XMVECTOR projected = XMVector3Project(vPosition, 0.0f, 0.0f, 1280.f, 720.f, 0.0f, 1.0f, Proj, View, XMMatrixIdentity());
+    XMVECTOR projected = XMVector3Project(vPosition, 0.0f, 0.0f, 1920.f, 1080.f, 0.0f, 1.0f, Proj, View, XMMatrixIdentity());
 
     // 화면 좌표 XY만 사용
     XMFLOAT2 screenPos;

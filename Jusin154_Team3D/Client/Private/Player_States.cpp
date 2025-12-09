@@ -56,6 +56,7 @@ HRESULT CPlayer::InputAction()
 			|| m_pGameInstance->Key_Down(DIK_LSHIFT)
 			|| m_pGameInstance->Key_Down(DIK_C)
 			|| m_pGameInstance->Key_Down(DIK_V)
+			|| m_pGameInstance->Key_Down(DIK_X)
 			|| m_pGameInstance->Key_Down(DIK_Z)
 			|| m_pGameInstance->Key_Down(DIK_G)
 			|| m_pGameInstance->Key_Down(DIK_B)
@@ -65,7 +66,7 @@ HRESULT CPlayer::InputAction()
 		{
 			if (m_pGameInstance->Key_Down(DIK_T)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_T));
 			if (m_pGameInstance->Key_Down(DIK_TAB)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_TAB));
-
+			if (m_pGameInstance->Key_Down(DIK_X)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_X));
 			return S_OK;
 		}
 	}

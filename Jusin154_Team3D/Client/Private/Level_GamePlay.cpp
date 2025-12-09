@@ -256,7 +256,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Background = true;
 #endif // 
 #ifdef 인혁
-	isReady_Background = false;
+	isReady_Background = true;
 #endif // 
 
 	
