@@ -33,6 +33,10 @@ protected:
 	_float			m_fDeadRatio = { 0.f };
 	_bool			m_bDrawOutLine = { false };
 	_bool			m_bLookAt = { true };
+	_float4			m_vOutLineColor = CMyTools::ColorRGBA_HEXtoFLOAT4(0xfefefe00);
+	_float			m_fOutLineThickness = { 5.f };
+	_float			m_fOutLineScale = { 1.f };
+	_float			m_fOutLinePower = { 1.f };
 
 protected:
 	virtual HRESULT Initialize_Prototype() override;

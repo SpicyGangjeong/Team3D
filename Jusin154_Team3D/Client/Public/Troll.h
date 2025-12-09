@@ -3,7 +3,7 @@
 #include "Client_Define.h"
 #include "Monster.h"
 #include "CallBack_Monster_Behavior.h"
-#include "CallBack_Monster_HitReport.h"
+#include "CallBack_Troll_HitReport.h"
 
 NS_BEGIN(Client)
 
@@ -33,11 +33,12 @@ public:
 	virtual _vector Get_LockOnPos() override;
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
-
+private:
+	void    Troll_Trail_Visible(_bool isTrailVisible);
 
 private:
 	CCallBack_Monster_Behavior* m_pCallBack_Behavior = { nullptr };
-	CCallBack_Monster_HitReport* m_pCallBack_HitReport = { nullptr };
+	CCallBack_Troll_HitReport* m_pCallBack_HitReport = { nullptr };
 
 	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
 	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
@@ -48,6 +49,16 @@ private:
 	class CEffectParts* m_pLeft_Smoke = { nullptr };
 	class CEffectParts* m_pTroll_Particle = { nullptr };
 	class CEffectParts* m_pTroll_Particle2 = { nullptr };
+
+	class CTrailObject* m_pLeftTrail = { nullptr };
+	class CTrailObject* m_pRightTrail = { nullptr };
+	class CTrailObject* m_pWeaponTrail = { nullptr };
+
+	const _float4x4* m_pLeftHand_BoneMat = { nullptr };
+	const _float4x4* m_pRightHand_BoneMat = { nullptr };
+	const _float4x4* m_pWeapon_BoneMat = { nullptr };
+private:
+	class CEffectPool* m_pEffectPool = nullptr;
 
 private:
 	virtual HRESULT Initialize_Prototype() override;

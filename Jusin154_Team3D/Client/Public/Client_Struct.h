@@ -2,6 +2,7 @@
 NS_BEGIN(Engine)
 	class CModel;
 	class CRigidBody_Static;
+	class CUnit;
 NS_END
 
 namespace Client

@@ -30,6 +30,9 @@ private:
 	HRESULT         Ready_Child();
 	HRESULT			Bind_ShaderResources() override;
 	virtual void	OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr) override;
+
+private:
+	class  CInfoInstance* m_pInfoInstance = { nullptr };
 private:
 	_wstring	     m_wstrEffectName = {};
 	class CPlayer*	 m_pPlayer = {};
@@ -42,6 +45,11 @@ private:
 	_float				m_fAccRotateTime = {};
 	_float				m_fTurnSpeed = {};
 	_float				m_fRange = {};
+
+	_float4				m_vStartPos = { 0.f, 0.f, 0.f, 1.f }; // 현재 발사 된 위치
+	_float4				m_vTargetPos = { 0.f, 0.f, 10.f, 1.f }; // 현재 타게팅 된 위치
+	_float				m_fLinearSpeed = 0.25f;
+	_float3				m_vCameraLook = {};
 public:
 	static CLevioso* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;
