@@ -211,6 +211,7 @@ void CGoblin_Mage::Behavior_BlinkEnter()
 			_float randDist = m_pGameInstance->Real_Random_Float(-5.f, -3.f);
 
 			_vector vFinalPos = vPos + offsetDir * randDist;
+			vFinalPos = XMVectorSetY(vFinalPos, XMVectorGetY(vPos) + 1.f);
 
 			m_pCharacter_Controller->Set_Position(vFinalPos); }
 	, 0.99f);
