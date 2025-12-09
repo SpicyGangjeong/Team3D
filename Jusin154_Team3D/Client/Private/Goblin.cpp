@@ -3,6 +3,7 @@
 
 #include "GameInstance.h"
 #include "Goblin_Dagger.h"
+#include "Goblin_Spector.h"
 #include "Effect_Container.h"
 
 #pragma region STATE
@@ -294,9 +295,16 @@ HRESULT CGoblin::Ready_Parts()
 	{
 		return E_FAIL;
 	}
-
-
 	Get_PartObject<CGoblin_Dagger>()->Set_Visible(false);
+
+
+	CGoblin_Spector::GOBLIN_SPECTOR_DESC Goblin_SpectorDesc{};
+
+	Goblin_SpectorDesc.pParentTransform = m_pTransformCom;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Spector>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER, &Goblin_SpectorDesc,this))) {
+		return E_FAIL;
+	}
 
 #pragma region EFFECT
 	/* EFFECT */
