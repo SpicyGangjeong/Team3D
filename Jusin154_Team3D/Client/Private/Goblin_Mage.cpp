@@ -311,7 +311,7 @@ HRESULT CGoblin_Mage::Ready_Components()
 		}
 		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor());
 	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_GOBLIN"), (CComponent**)&m_pStat))) {
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_GOBLIN_WIZARD"), (CComponent**)&m_pStat))) {
 		return E_FAIL;
 	}
 
