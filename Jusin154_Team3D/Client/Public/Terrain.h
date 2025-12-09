@@ -17,10 +17,13 @@ public:
 	typedef struct TerrainDesc
 	{
 		_float3		vPosition;
+		_wstring	strVIBufferTag;
 		_wstring	strDiffuseTextureTag;
 		_wstring	strNormalTextureTag;
 		_wstring	strMROTextureTag;
 		_wstring	strAlphaMapTextureTag;
+		_wstring    strRigidBody_MeshName;
+		_wstring    strRigidBody_ComponentTag;
 	}TERRAIN_DESC;
 private:
 	CTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
