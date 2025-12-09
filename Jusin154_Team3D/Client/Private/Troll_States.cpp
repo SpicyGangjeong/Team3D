@@ -266,17 +266,20 @@ HRESULT CTroll::Behavior_RushExitCheck(_float fTimeDelta)
 	}
 	if (iCurrAnimIndex == m_Animation[STATEANIM::RUSH_END].first)
 	{
-		if (m_fCross > 0){
-			pairAnimInfo = m_Animation[STATEANIM::IDLE_COMBAT_TURN_BWD_L];
-		}
-		else{
-			pairAnimInfo = m_Animation[STATEANIM::IDLE_COMBAT_TURN_BWD_R];
-		}
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		if (m_fDegree >= 90.f)
+		{
+			if (m_fCross > 0){
+				pairAnimInfo = m_Animation[STATEANIM::IDLE_COMBAT_TURN_BWD_L];
+			}
+			else{
+				pairAnimInfo = m_Animation[STATEANIM::IDLE_COMBAT_TURN_BWD_R];
+			}
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 
-		Add_Event(pairAnimInfo.first,
-			[this]() {m_bLookAt = true; },
-			0.3f);
+			Add_Event(pairAnimInfo.first,
+				[this]() {m_bLookAt = true; },
+				0.3f);
+		}
 	}
 
 	if (m_pModelCom->IsFinishedAnim())
@@ -347,8 +350,8 @@ void CTroll::Behavior_SwingEnter()
 	m_pFSM->Enable_State(FSMSTATE::SWING);
 
 	pairAnimInfo = m_Animation[STATEANIM::SWING_FWD];
-
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
 	m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::SWING)] =
 		m_fMaxSkillCoolTime[ENUM_CLASS(TROLL_SKILL::SWING)];
 
@@ -383,8 +386,8 @@ void CTroll::Behavior_SlamEnter()
 	m_pFSM->Enable_State(FSMSTATE::SLAM);
 
 	pairAnimInfo = m_Animation[STATEANIM::SLAM];
-
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
 	m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::SLAM)] =
 		m_fMaxSkillCoolTime[ENUM_CLASS(TROLL_SKILL::SLAM)];
 
@@ -415,8 +418,10 @@ void CTroll::Behavior_BackHandSwingEnter()
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::BACKHAND_SWING);
+
 	pairAnimInfo = m_Animation[STATEANIM::BACKHAND_SWING_JOG];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
 	m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::BACKHAND_SWING)] =
 		m_fMaxSkillCoolTime[ENUM_CLASS(TROLL_SKILL::BACKHAND_SWING)];
 
@@ -623,10 +628,10 @@ void CTroll::Set_Anim()
 	m_Animation[STATEANIM::IDLE] = { 16,true };
 	m_Animation[STATEANIM::IDLE_COMBAT_TURN_BWD_R] = { 7,false };
 	m_Animation[STATEANIM::IDLE_COMBAT_TURN_BWD_L] = { 8,false };
-	m_Animation[STATEANIM::IDLE_BREAK1] = { 11,false };
-	m_Animation[STATEANIM::IDLE_BREAK2] = { 141,false };
-	m_Animation[STATEANIM::IDLE_BREAK3] = { 14,false };
-	m_Animation[STATEANIM::IDLE_BREAK4] = { 143,false };
+	m_Animation[STATEANIM::IDLE_BREAK1] = { 11,false }; // 땅2번구르기
+	m_Animation[STATEANIM::IDLE_BREAK2] = { 141,false }; // 방망이
+	m_Animation[STATEANIM::IDLE_BREAK3] = { 14,false }; // 땅구르기
+	m_Animation[STATEANIM::IDLE_BREAK4] = { 143,false }; // 소리지르기
 
 	m_Animation[STATEANIM::WALK_FWD] = { 22,true };
 

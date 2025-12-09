@@ -307,7 +307,7 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 	return m_bIsFinishedAnim;
 }
 
-void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fAmount, _bool bRatio)
+void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fAmount, _bool bRatio, _float fAnimSpeed)
 {
 	if (m_iCurrentAnimIndex == iIndex)
 		return;
@@ -324,7 +324,7 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fAmount, _boo
 			m_iPreAnimIndex = m_iCurrentAnimIndex;
 
 			m_Animations[m_iCurrentAnimIndex]->Depart_Animation();
-			m_Animations[m_iCurrentAnimIndex]->ResetRootMotion();
+			m_Animations[m_iCurrentAnimIndex]->Set_AnimSpeed(1.f);
 		}
 
 		m_fBlendTime = 0.f;
@@ -336,7 +336,7 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fAmount, _boo
 		m_bRatio = bRatio;
 
 		m_Animations[m_iCurrentAnimIndex]->Depart_Animation();
-		m_Animations[m_iCurrentAnimIndex]->ResetRootMotion();
+		m_Animations[m_iCurrentAnimIndex]->Set_AnimSpeed(fAnimSpeed);
 	}
 	else
 	{

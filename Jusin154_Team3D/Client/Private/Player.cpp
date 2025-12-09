@@ -575,6 +575,7 @@ void CPlayer::Describe_Entity()
 
 	GUI::Text("AnimTrack %.2f", m_pModelCom->Get_CurrentTrackPosition());
 	GUI::Text("AnimRatio %.2f", m_pModelCom->Get_CurrentTrackProgressRatio());
+	GUI::Text("AnimSpeed %.2f", m_pModelCom->Get_AnimSpeed());
 
 	GUI::Checkbox("Render", &m_bVisible);
 

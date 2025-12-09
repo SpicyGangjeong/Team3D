@@ -1342,7 +1342,7 @@ HRESULT CLoader::Loading_For_Effect()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Troll_Weapon_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Object/SubTroll_Weapon/SK_WPN_Troll_Club07.fbx", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Object/SubTroll_Weapon/SK_WPN_Troll_Club07.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Troll_Rock_Big_Model"),
@@ -2030,8 +2030,8 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	m_strMessage = TEXT("Model Loading..");
 
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_SK_WPN_Troll_Club07_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM_LOCAL, "C:/MeshTable\\Game\\RiggedObjects\\Props\\Weapons\\Troll\\SK_WPN_Troll_Club07.fbx", XMMatrixIdentity())))) {
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VFX_SM_Rock_01_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM_LOCAL, "C:/MeshTable\\Game\\VFX\\Meshes\\Static\\VFX_SM_Rock_01.fbx", XMMatrixIdentity())))) {
 		return E_FAIL;
 	}
 
@@ -2439,6 +2439,11 @@ HRESULT CLoader::Loading_For_MapViewer()
 		return E_FAIL;
 	}
 
+	/* Lake_Cube_D */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Lake_Refraction"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Models/Lake/T_MudSmallRocks_A_D.dds"), 0)))) {
+		return E_FAIL;
+	}
 
 	m_strMessage = TEXT("모델를(을) 로딩 중 입니다.");
 
@@ -2447,9 +2452,35 @@ HRESULT CLoader::Loading_For_MapViewer()
 		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/SkyBox/SkyBox.fbx", XMMatrixIdentity()))))
 		return E_FAIL;
 
+#pragma region MAP_LANDS
 	/* For.Prototype_Component_Hogsmead_Land */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Hogsmead_Land"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Land/Hogsmead_Land.fbx", XMMatrixIdentity()))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_South_Hogwart_Land_LOD1 */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_South_Hogwart_Land_LOD1"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_BCLOD/SM_LandscapeStreamingProxy_0_LOD1.fbx"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_North_Hogwart_Land_LOD1 */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_North_Hogwart_Land_LOD1"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_AVLOD/SM_LandscapeStreamingProxy_0_LOD1.fbx"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_North_Hogwart2_Land_LOD1 */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_North_Hogwart2_Land_LOD1"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_AULOD/SM_LandscapeStreamingProxy_0_LOD1.fbx"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_West_Hogwart_Land_LOD1 */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_West_Hogwart_Land_LOD1"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_AZLOD/SM_LandscapeStreamingProxy_0_LOD1.fbx"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_East_Hogwart_Land_LOD1 */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_East_Hogsmeade_Land_LOD1"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_AYLOD/SM_LandscapeStreamingProxy_0_LOD1.fbx"))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Hogwart_Lake */
@@ -2461,6 +2492,10 @@ HRESULT CLoader::Loading_For_MapViewer()
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Hogwart_LakeSurFace"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Lake/SM_Lake_A_Collision_Shallow.fbx", XMMatrixIdentity()))))
 		return E_FAIL;
+
+#pragma endregion
+
+	
 
 	vector<_wstring> ModelPrototypeTags = {};
 	vector<filesystem::path> ModelPrototypePath = {};

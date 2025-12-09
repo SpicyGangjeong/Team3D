@@ -406,7 +406,6 @@
     <ClInclude Include="..\Public\Goblin_Mage.h">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Mage</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Goblin.h" />
     <ClInclude Include="..\Public\Goblin_Spector.h">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Spector</Filter>
     </ClInclude>
@@ -436,6 +435,18 @@
     </ClInclude>
     <ClInclude Include="..\Public\InteractiveInfo.h">
       <Filter>03.InfoInstance\03.InteractiveInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Land.h">
+      <Filter>02.GameObjects\Environment\04.Land</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Unified.h">
+      <Filter>02.GameObjects\Environment\05.Unified</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapElement_Lake.h">
+      <Filter>02.GameObjects\Environment\03.MapElement\Lake</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Goblin_BattleAxe.h">
+      <Filter>02.GameObjects\Item\Goblin_Axe</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -936,6 +947,18 @@
     <Filter Include="02.GameObjects\PhysX\CallBack\HitReport\Monster\Troll">
       <UniqueIdentifier>{e12337a6-7563-4615-a8d2-a2e2e1ba1ca8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Environment\04.Land">
+      <UniqueIdentifier>{ec267143-0bc1-4765-b8dc-6cccc50385d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\05.Unified">
+      <UniqueIdentifier>{c268eda1-0e52-4659-8c82-a88b074d9860}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\03.MapElement\Lake">
+      <UniqueIdentifier>{a357d495-f74d-4aec-919e-0f6bac3e0e7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Item\Goblin_Axe">
+      <UniqueIdentifier>{e666a8b4-c92e-48ee-b63b-40d852b27b06}</UniqueIdentifier>
+    </Filter>
     <Filter Include="03.InfoInstance\03.InteractiveInfo">
       <UniqueIdentifier>{1d1dc743-5cf2-4b8f-a80e-16b16437c7aa}</UniqueIdentifier>
     </Filter>
@@ -1343,8 +1366,6 @@
     <ClCompile Include="..\Private\Enemy_Panel.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Goblin.cpp" />
-    <ClCompile Include="..\Private\Goblin_States.cpp" />
     <ClCompile Include="..\Private\Goblin_Spector.cpp">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Spector</Filter>
     </ClCompile>
@@ -1374,6 +1395,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\CallBack_Troll_HitReport.cpp">
       <Filter>02.GameObjects\PhysX\CallBack\HitReport\Monster\Troll</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Land.cpp">
+      <Filter>02.GameObjects\Environment\04.Land</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Unified.cpp">
+      <Filter>02.GameObjects\Environment\05.Unified</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapElement_Lake.cpp">
+      <Filter>02.GameObjects\Environment\03.MapElement\Lake</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Goblin_BattleAxe.cpp">
+      <Filter>02.GameObjects\Item\Goblin_Axe</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\InteractiveInfo.cpp">
       <Filter>03.InfoInstance\03.InteractiveInfo</Filter>
