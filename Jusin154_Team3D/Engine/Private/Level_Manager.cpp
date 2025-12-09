@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Level_Manager.h"
 #include "GameInstance.h"
 
@@ -52,11 +52,18 @@ _uint CLevel_Manager::Get_NextLevelID()
 
 void CLevel_Manager::Update(_float fTimeDelta)
 {
+#ifdef _DEBUG
+	m_pGameInstance->Compute_TimeDelta(TEXT("Timer_Level"));
+#endif // _DEBUG
 	if (nullptr == m_pCurrentLevel){
 		return;
 	}
 
 	m_pCurrentLevel->Update(fTimeDelta);
+
+#ifdef _DEBUG
+	m_pGameInstance->Compute_TimeDelta(TEXT("Timer_Level"));
+#endif // _DEBUG
 }
 
 HRESULT CLevel_Manager::Render()
