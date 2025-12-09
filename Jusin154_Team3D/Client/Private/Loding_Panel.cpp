@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Loding_Panel.h"
 #include "GameInstance.h"
+#include "LoadingWidget.h"
 
 CLoding_Panel::CLoding_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CUIObject(pDevice, pContext)
@@ -38,8 +39,10 @@ HRESULT CLoding_Panel::Initialize(void* pArg)
 	m_fCanvasAlpha = 1.f;
 	m_fOwnerAlpha = 1.f;
 	m_fAlpha = 1.f;
-	m_fSortZ = 0.f;
 	m_iImageNum = 0;
+	m_fSortZ = 0.1f;
+	Visible(true);
+	m_bActive = true;
 	//m_vImageposSi = _float4(0.f, 0.f, 1792.f, 1024.f);
 #ifdef _DEBUG
 	INHYUK = true;
@@ -110,6 +113,7 @@ void CLoding_Panel::Update(_float fTimeDelta)
 		break;
 	}
 #endif // DEBUG
+	__super::Update(fTimeDelta);
 }
 
 void CLoding_Panel::Late_Update(_float fTimeDelta)
@@ -218,6 +222,11 @@ HRESULT CLoding_Panel::Ready_Components(void* pArg)
 		return E_FAIL;
 	}
 	if (FAILED(Add_Asset_Component(g_iStaticLevel, FX_UIEDITOR, (CComponent**)&m_pShaderCom, nullptr)))
+	{
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLoadingWidget>(g_iStaticLevel, ENUM_CLASS(LEVEL::LOADING), LAYER_UI, nullptr, this, reinterpret_cast<CLoadingWidget**>(&m_pLoadingWidget))))
 	{
 		return E_FAIL;
 	}

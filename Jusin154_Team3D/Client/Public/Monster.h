@@ -22,7 +22,7 @@ public:
 	_float4 Get_TargetPos() { return m_vTargetPos; }
 	virtual _bool Get_Damage(_float fDamage);
 	virtual _float2 Get_Hp();
-
+	virtual CStat* Get_Stat();
 protected:
 	CInfoInstance*	m_pInfoInstance = { nullptr };
 	CUnit*			m_pTarget = { nullptr };

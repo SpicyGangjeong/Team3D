@@ -139,10 +139,10 @@ __super::Update(fTimeDelta);
 		m_pCallBack_HitReport->Set_CurrentSlop();
 	}
 	if (m_pGameInstance->Mouse_Down(DIM_RBUTTON))
-		m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_DOWN));
+		m_pInfoInstance->Mouse_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_DOWN));
 	if (m_pGameInstance->Mouse_Up(DIM_RBUTTON))
 	{
-		m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_UP));
+		m_pInfoInstance->Mouse_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_UP));
 		m_bAim = false; 
 	}
 
@@ -443,6 +443,7 @@ void CPlayer::ReLockOnTarget()
 			m_LockOnInfo.pUnit = nullptr;
 		}
 	}
+	//m_pLockOnMonster->Get_State
 }
 
 void CPlayer::SetGravity()

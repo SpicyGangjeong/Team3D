@@ -241,7 +241,7 @@ void CGoblin_Mage::OnCollision(CGameObject* pOther, void* pDesc)
 	{
 		m_eHitSpell = STATEANIM::HIT_LEVIOSO;
 		_float fSkillRatio = m_pInfoInstance->Get_Spell_Info(ENUM_CLASS(SKILL_TYPE::JAP)).fSpell_Damage;
-		_float fCoefficient = CollisionDesc->pObject->Get_Component<CStat>()->Get_Stat(ENUM_CLASS(STAT::MAGIC));
+		_float fCoefficient = CollisionDesc->pObject->Get_Component<CStat>()->Get_Stat().fMagic;
 		if (true == Get_Damage(fSkillRatio * fCoefficient)) {
 			m_pFSM->Change_State(FSMSTATE::DEAD);
 			return;
@@ -311,7 +311,7 @@ HRESULT CGoblin_Mage::Ready_Components()
 		}
 		m_pGameInstance->Detach_Actor(*m_pRigidBody->Get_Actor());
 	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_GOBLIN"), (CComponent**)&m_pStat))) {
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_GOBLIN_WIZARD"), (CComponent**)&m_pStat))) {
 		return E_FAIL;
 	}
 

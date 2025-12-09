@@ -31,19 +31,20 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 
 public:
-	void Set_Info(_int Level, _wstring Name);
+	void Update_Target();
 
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
+	CInfoInstance* m_pInfoInstance = { nullptr };
 
 	_float2 m_fFontPos{};
 	_float  m_fFont2OffSet{};
 	_wstring m_pEnemy_Name;
 	_wstring m_pLevel;
 	_bool	m_bAnimation = {false};
-
+	_bool	m_bTarget = { false };
 public:
 	static CEnemy_Info* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

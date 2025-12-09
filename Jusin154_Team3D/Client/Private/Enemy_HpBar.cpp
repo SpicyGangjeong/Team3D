@@ -1,6 +1,8 @@
 ﻿#include "pch.h"
 #include "Enemy_HpBar.h"
 #include "GameInstance.h"
+#include "InfoInstance.h"
+#include "Monster.h"
 
 CEnemy_HpBar::CEnemy_HpBar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
@@ -8,7 +10,8 @@ CEnemy_HpBar::CEnemy_HpBar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CEnemy_HpBar::CEnemy_HpBar(const CEnemy_HpBar& rhs)
-	:CElementObject(rhs)
+	:CElementObject(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -41,8 +44,9 @@ HRESULT CEnemy_HpBar::Initialize(void* pArg)
 	m_fAlpha = 0.f;
 	m_fAlphaTime = 10.f;
 	m_vNine_Slice = _float4(15.f, 100.f, 5.f, 15.f);
-	m_fMaxHp = 200.f;
-	m_fCurrentHp = m_fMaxHp;
+	m_fMaxHp = 0.f;
+	m_fCurrentHp = 0.f;
+	m_fTargetHp = 0.f;
 	SizeUpX(360.f);
 	m_fMoveSpeed = 5.f;
 	m_bAnimation = false;
@@ -95,41 +99,18 @@ void CEnemy_HpBar::Update(_float fTimeDelta)
 		}
 	}
 
-	if (m_fCurrentHp < 0.f)
-		m_fCurrentHp = 0.f;
-	if (m_fDamage <= 0.f)
-		m_fDamage = 0.f;
-	m_fTargetHp = m_fMaxHp - m_fDamage;
+	Update_Target();
 
 	if (m_fTargetHp < m_fCurrentHp)
 		Hit(fTimeDelta);
+
 	m_fHpBar = m_fCurrentHp / m_fMaxHp;
 
-	if (m_fHpBar <= 0.f)
+	if (m_fCurrentHp <= 0.f)
 	{
 		m_bAnimation = true;
 	}
 
-	if (m_pGameInstance->Key_Down(DIK_3))
-	{
-		Lerp_PosX(101.f);
-	}
-
-	if (m_pGameInstance->Key_Down(DIK_K))
-	{
-		Set_FadeIn();
-	}
-	if (m_pGameInstance->Key_Down(DIK_L))
-	{
-		Set_FadeOut();
-	}
-	if (m_pGameInstance->Key_Down(DIK_J))
-	{
-		m_bAnimation = true;
-		m_bHover = true;
-		m_fTime = 0.f;
-		SizeUpdate(m_fLerpX, m_fLerpY);
-	}
 	if (m_bAnimation == true)
 	{
 		m_fTime += fTimeDelta * m_fTimeMult;
@@ -139,12 +120,11 @@ void CEnemy_HpBar::Update(_float fTimeDelta)
 	}
 	if (m_fTime >= 0.9f)
 	{
+		SizeUpdate(m_fLerpX, m_fLerpY);
 		m_bAnimation = false;
 		m_bHover = false;
 		m_fTime = 0.f;
-		SizeUpdate(m_fLerpX, m_fLerpY);
 	}
-
 	__super::Update(fTimeDelta);
 }
 
@@ -177,7 +157,7 @@ HRESULT CEnemy_HpBar::Render()
 			return E_FAIL;
 		}
 	}
-	
+
 	return S_OK;
 }
 
@@ -202,14 +182,16 @@ void CEnemy_HpBar::SizeUpX(_float SizeX)
 	m_fLerpX = SizeX;
 }
 
-void CEnemy_HpBar::Set_Enemt_Info(void* pArg)
+void CEnemy_HpBar::Update_Target()
 {
-	if(m_bAnimation == true)
+	if (m_pInfoInstance->Get_TargetMonster() == nullptr)
 	{
+		Set_FadeOut();
 		return;
 	}
-	//m_fMaxHp
-	//m_fCurrentHp
+	m_fMaxHp = m_pInfoInstance->Get_TargetMonster()->Get_Stat()->Get_Stat().fMaxHp;
+	m_fCurrentHp = m_pInfoInstance->Get_TargetMonster()->Get_Stat()->Get_Stat().fCurrentHp;
+	m_fTargetHp = m_pInfoInstance->Get_TargetMonster()->Get_Stat()->Get_Stat().fTargetHp;
 	Set_FadeIn();
 }
 
@@ -279,7 +261,7 @@ HRESULT CEnemy_HpBar::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	
+
 	return S_OK;
 }
 
