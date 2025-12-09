@@ -547,6 +547,18 @@
     <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\TrollSwing">
       <UniqueIdentifier>{3a12f2c2-0472-41b7-99ce-2c2f17f26e92}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Monster\Goblin\Item">
+      <UniqueIdentifier>{0fdb9c5b-7edd-4915-8fce-a8e78c9e1e9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\State">
+      <UniqueIdentifier>{0952e2b6-0430-42db-942f-75cb70310240}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\Goblin\State">
+      <UniqueIdentifier>{f4f76745-6de8-4670-bd96-a4a4beb39415}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.InfoInstance\03.Skill_Info">
+      <UniqueIdentifier>{7ba1f85d-a9c4-4002-b425-43796bec6869}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -1073,7 +1085,7 @@
     </ClInclude>
     <ClInclude Include="..\Public\Goblin_Protego.h">
       <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Goblin_Protego</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\public\Enemy_Panel.h">
       <Filter>50.UI\GamePlay_Canvas\Enemy_Panel</Filter>
     </ClInclude>
@@ -1082,6 +1094,27 @@
     </ClInclude>
     <ClInclude Include="..\public\Enemy_Info.h">
       <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_Info</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Goblin_Dagger.h">
+      <Filter>02.GameObjects\Monster\Goblin\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Goblin_Spector.h">
+      <Filter>02.GameObjects\Monster\Goblin\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Blink.h">
+      <Filter>02.GameObjects\Monster\Goblin\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Dead.h">
+      <Filter>02.GameObjects\Monster\Goblin\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Shuffle.h">
+      <Filter>02.GameObjects\Monster\Goblin\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Goblin_BattleAxe.h">
+      <Filter>02.GameObjects\Monster\Goblin\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Skill_Data.h">
+      <Filter>04.InfoInstance\03.Skill_Info</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1620,6 +1653,27 @@
     </ClCompile>
     <ClCompile Include="..\Private\Goblin_Protego.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Goblin_Protego</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Goblin_Dagger.cpp">
+      <Filter>02.GameObjects\Monster\Goblin\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Goblin_Spector.cpp">
+      <Filter>02.GameObjects\Monster\Goblin\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Blink.cpp">
+      <Filter>02.GameObjects\Monster\Goblin\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Dead.cpp">
+      <Filter>02.GameObjects\Monster\Goblin\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Shuffle.cpp">
+      <Filter>02.GameObjects\Monster\Goblin\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Goblin_BattleAxe.cpp">
+      <Filter>02.GameObjects\Monster\Goblin\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Skill_Data.cpp">
+      <Filter>04.InfoInstance\03.Skill_Info</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

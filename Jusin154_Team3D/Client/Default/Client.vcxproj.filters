@@ -470,6 +470,18 @@
     <ClInclude Include="..\Public\Goblin_BattleAxe.h" />
     <ClInclude Include="..\Public\WandEnd.h">
       <Filter>02.GameObjects\Effect\Effects\WandEnd</Filter>
+	</ClInclude>
+    <ClInclude Include="..\public\Land.h">
+      <Filter>02.GameObjects\Environment\04.Land</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Unified.h">
+      <Filter>02.GameObjects\Environment\05.Unified</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapElement_Lake.h">
+      <Filter>02.GameObjects\Environment\03.MapElement\Lake</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Goblin_BattleAxe.h">
+      <Filter>02.GameObjects\Item\Goblin_Axe</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Troll_State_Stun.h">
       <Filter>04.Mechanic\State\Troll_Combat\Troll_State_Stun</Filter>
@@ -985,6 +997,9 @@
     <Filter Include="02.GameObjects\PhysX\CallBack\HitReport\Monster\Troll">
       <UniqueIdentifier>{e12337a6-7563-4615-a8d2-a2e2e1ba1ca8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\WandEnd">
+      <UniqueIdentifier>{14ad0431-680b-4c8b-93d7-601aee5ce435}</UniqueIdentifier>
+	</Filter>
     <Filter Include="02.GameObjects\Environment\04.Land">
       <UniqueIdentifier>{ec267143-0bc1-4765-b8dc-6cccc50385d7}</UniqueIdentifier>
     </Filter>

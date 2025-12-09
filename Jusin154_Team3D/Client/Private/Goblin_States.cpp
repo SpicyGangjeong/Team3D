@@ -481,9 +481,9 @@ void CGoblin::Behavior_DeadEnter()
 	}
 	pairAnimInfo = m_Animation[iState + bStrongerKnockDown];
 
-	Get_PartObject<CEffectParts>("Goblin_Particle")->Set_Visible(false);
-	Get_PartObject<CEffectParts>("Goblin_Particle2")->Set_Visible(false);
-	Get_PartObject<CEffectParts>("Goblin_Smoke")->Set_Visible(false);
+	//Get_PartObject<CEffectParts>("Goblin_Particle")->Set_Visible(false);
+	//Get_PartObject<CEffectParts>("Goblin_Particle2")->Set_Visible(false);
+	//Get_PartObject<CEffectParts>("Goblin_Smoke")->Set_Visible(false);
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
 

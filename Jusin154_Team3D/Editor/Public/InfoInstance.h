@@ -39,22 +39,25 @@ public:
 	pair<CUnit*, CTransform*> Get_NearestPlayerAlly(_fvector vPos);
 #pragma endregion
 #pragma region MAP_INFO
-	//HRESULT Load_MapObjects(const _char* pFilePath);
-	//HRESULT Load_LightElements(const _char* pFilePath);
 #pragma endregion
 #pragma region Spell_INFO
 	HRESULT Load_SpellInfo(const _char* pFilePath);
+	SPELL_INFO Get_Spell_Info(_int Spell_Info);
+	_int Update_Spell(_int SpellIndex);
+	_float Get_CoolTime(_int SpellID);
+	void Change_Canvas();
+
 #pragma endregion
-
-
 private:
-	CGameInstance*				m_pGameInstance = { nullptr };
-	ID3D11Device*				m_pDevice = { nullptr };
-	ID3D11DeviceContext*		m_pContext = { nullptr };
+	CGameInstance* m_pGameInstance = { nullptr };
+	ID3D11Device* m_pDevice = { nullptr };
+	ID3D11DeviceContext* m_pContext = { nullptr };
 
-	class CPlayerInfo*			m_pPlayerInfo = { nullptr };
-	class CMonsterInfo*			m_pMonsterInfo = { nullptr };
-	class CMapInfo*				m_pMapInfo = { nullptr };
+	class CPlayerInfo* m_pPlayerInfo = { nullptr };
+	class CMonsterInfo* m_pMonsterInfo = { nullptr };
+	class CMapInfo* m_pMapInfo = { nullptr };
+	class CSkill_Data* m_pSkillInfo = { nullptr };
+	_int						m_eSpell = ENUM_CLASS(SKILL_TYPE::END);
 
 #ifdef _DEBUG
 	_string m_strLog = {};
