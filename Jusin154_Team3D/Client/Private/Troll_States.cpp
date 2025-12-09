@@ -12,6 +12,7 @@
 #include "State_IdleBreak.h"
 #include "State_Move.h"
 #include "State_Combat.h"
+#include "Troll_State_Stun.h"
 #include "Troll_State_Rush.h"
 #include "Troll_State_BackHand_Swing.h"
 #include "State_Throw.h"
@@ -100,8 +101,9 @@ void CTroll::Behavior_IdleBreakEnter()
 
 HRESULT CTroll::Behavior_IdleBreakExitCheck()
 {
-	if (m_pModelCom->IsFinishedAnim())
+	if (m_pModelCom->IsFinishedAnim()){
 		m_pFSM->Change_State(FSMSTATE::MOVE);
+	}
 
 	return E_FAIL;
 }
@@ -540,6 +542,41 @@ void CTroll::Behavior_BackHandSwingExit()
 	m_pFSM->Disable_State(FSMSTATE::BACKHAND_SWING);
 }
 
+void CTroll::Behavior_StunEnter()
+{
+	m_pFSM->Enable_State(FSMSTATE::STUN);
+	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	pair<_uint, _bool> pairAnimInfo;
+
+	m_bLookAt = false;
+	if (iCurrAnimIndex == m_Animation[STATEANIM::RUSH_LOOP].first)
+	{
+		pairAnimInfo = m_Animation[STATEANIM::STUN];
+	}
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() { m_bLookAt = true;
+		},
+		0.6f);
+}
+
+HRESULT CTroll::Behavior_StunExitCheck(_float fTimeDelta)
+{
+	pair<_uint, _bool> pairAnimInfo;
+	if (true == m_pModelCom->IsFinishedAnim()) {
+		
+		m_pFSM->Change_State(FSMSTATE::IDLEBREAK);
+		return E_FAIL;
+	}
+	return S_OK;
+}
+
+void CTroll::Behavior_StunExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::STUN);
+}
+
 void CTroll::Behavior_HitEnter()
 {
 	m_pFSM->Enable_State(FSMSTATE::HIT);
@@ -698,6 +735,18 @@ void CTroll::Add_FSM()
 		m_States.emplace(FSMSTATE::BACKHAND_SWING, CTroll_State_BackHand_Swing::Create(&Desc));
 	}
 #pragma endregion
+#pragma region Behavior_Combat_Focus
+	{
+		CTroll_State_Stun::TROLL_STATE_STUN Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_StunEnter(); };
+		Desc.funcExitCheck = [this](_float fTimeDelta) { return Behavior_StunExitCheck(fTimeDelta); };
+		Desc.funcExitEvent = [this]() { Behavior_StunExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::STUN, CTroll_State_Stun::Create(&Desc));
+	}
+#pragma endregion
 
 #pragma region Behavior_Hit
 	{
@@ -720,6 +769,8 @@ void CTroll::Set_Anim()
 	m_Animation[STATEANIM::IDLE] = { 16,true };
 	m_Animation[STATEANIM::IDLE_COMBAT_TURN_BWD_R] = { 7,false };
 	m_Animation[STATEANIM::IDLE_COMBAT_TURN_BWD_L] = { 8,false };
+	m_Animation[STATEANIM::IDLE_COMBAT_TURN_90_L] = { 9,false };
+	m_Animation[STATEANIM::IDLE_COMBAT_TURN_90_R] = { 10,false };
 	m_Animation[STATEANIM::IDLE_BREAK1] = { 11,false }; // 땅2번구르기
 	m_Animation[STATEANIM::IDLE_BREAK2] = { 141,false }; // 방망이
 	m_Animation[STATEANIM::IDLE_BREAK3] = { 14,false }; // 땅구르기
@@ -748,7 +799,7 @@ void CTroll::Set_Anim()
 
 	m_Animation[STATEANIM::BACKHAND_SWING_JOG] = { 89,false };
 
-	m_Animation[STATEANIM::SWING_FWD] = { 87,false };
+	m_Animation[STATEANIM::SWING_FWD] = { 91,false };
 
 	m_Animation[STATEANIM::HIT_BWD] = { 167, false }; // 
 	m_Animation[STATEANIM::HIT_BWD2] = { 168, false }; //

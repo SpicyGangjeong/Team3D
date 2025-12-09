@@ -320,6 +320,9 @@ void CGameInstance::Compute_FrameCount()
 	m_fTimer_LateUpdate = Get_TimeDelta(TEXT("Timer_LateUpdate"));
 	m_fTimer_DrawCall = Get_TimeDelta(TEXT("Timer_DrawCall"));
 	m_fTimer_Present = Get_TimeDelta(TEXT("Timer_Present"));
+	m_fTimer_Picking = Get_TimeDelta(TEXT("Timer_Picking"));
+	m_fTimer_PhysX = Get_TimeDelta(TEXT("Timer_PhysX"));
+	m_fTimer_Level = Get_TimeDelta(TEXT("Timer_Level"));
 	m_fTimer_FrameCount = Get_TimeDelta(TEXT("Timer_FrameCount"));
 #endif // _DEBUG
 }
@@ -331,7 +334,10 @@ void CGameInstance::Present_TimeCost() const
 		+ m_fTimer_Update
 		+ m_fTimer_LateUpdate
 		+ m_fTimer_DrawCall
-		+ m_fTimer_Present;
+		+ m_fTimer_Present
+		+ m_fTimer_Picking
+		+ m_fTimer_PhysX
+		+ m_fTimer_Level;
 
 	GUI::PushItemWidth(80);
 	GUI::Begin("Previous_Frame_Timer");
@@ -351,6 +357,21 @@ void CGameInstance::Present_TimeCost() const
 			GUI::ProgressBar(m_fTimer_LateUpdate / fTotal, ImVec2(200.f, 0.f));
 			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
 			GUI::Text("Late_Update %d", int(m_fTimer_LateUpdate / fTotal * 100.f));
+		}
+		{
+			GUI::ProgressBar(m_fTimer_Picking / fTotal, ImVec2(200.f, 0.f));
+			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+			GUI::Text("Picking %d", int(m_fTimer_Picking / fTotal * 100.f));
+		}
+		{
+			GUI::ProgressBar(m_fTimer_PhysX / fTotal, ImVec2(200.f, 0.f));
+			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+			GUI::Text("PhysX %d", int(m_fTimer_PhysX / fTotal * 100.f));
+		}
+		{
+			GUI::ProgressBar(m_fTimer_Level / fTotal, ImVec2(200.f, 0.f));
+			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+			GUI::Text("Level %d", int(m_fTimer_Level / fTotal * 100.f));
 		}
 		{
 			GUI::ProgressBar(m_fTimer_DrawCall / fTotal, ImVec2(200.f, 0.f));

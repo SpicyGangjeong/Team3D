@@ -149,7 +149,7 @@ public:
 
 	void    Disable_Light();
 	void    Add_Light();
-	void    FollowParants(const _float4x4* pParantsMat);
+	void    FollowParents(const _float4x4* pParentsMat);
 protected:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT Ready_Components(void* pArg) override;
@@ -169,7 +169,7 @@ protected:
 
 	CInstance_Model* m_pInstance_ModelCom = { nullptr };
 
-	const _float4x4* m_pPerentMatrix = { nullptr };
+	const _float4x4* m_pParentMatrix = { nullptr };
 
 protected:
 	EFFECT_INFO m_EffectInfo = {};

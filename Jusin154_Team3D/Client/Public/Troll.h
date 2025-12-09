@@ -126,6 +126,10 @@ private:
 	HRESULT Behavior_BackHandSwingExitCheck(_float fTimeDelta);
 	void	Behavior_BackHandSwingExit();
 
+	void	Behavior_StunEnter();
+	HRESULT Behavior_StunExitCheck(_float fTimeDelta);
+	void	Behavior_StunExit();
+
 	void	Behavior_HitEnter();
 	HRESULT Behavior_HitExitCheck();
 	void	Behavior_HitExit();

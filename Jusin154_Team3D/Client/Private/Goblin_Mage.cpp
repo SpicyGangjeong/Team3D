@@ -7,7 +7,7 @@
 #include "InfoInstance.h"
 #include "Goblin_Dagger.h"
 #include "Effect_Container.h"
-#include "Wand.h"
+#include "EffectParts.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -122,11 +122,10 @@ void CGoblin_Mage::Late_Update(_float fTimeDelta)
 	else if (true == m_pRigidBody->IsActive()) {
 		m_pTransformCom->Set_WorldMatrix(m_pRigidBody->Get_FootPositionPxTransform());
 	}
+
 	if (true == m_bLookAt) {
 		m_pTransformCom->LookAt_Horizontal(XMLoadFloat4(&m_vTargetPos));
 	}
-
-	m_pTransformCom->LookAt_Horizontal(XMLoadFloat4(&m_vTargetPos));
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW, this);
@@ -224,6 +223,17 @@ HRESULT CGoblin_Mage::Render_Shadow()
 	return S_OK;
 }
 
+_vector CGoblin_Mage::Get_LockOnPos()
+{
+	if (nullptr != m_pCharacter_Controller && true == m_pCharacter_Controller->IsActive()) {
+		return m_pCharacter_Controller->Get_Position();
+	}
+	else if (nullptr != m_pRigidBody) {
+		return m_pRigidBody->Get_Position();
+	}
+	return Get_WorldPostion();
+}
+
 void CGoblin_Mage::OnCollision(CGameObject* pOther, void* pDesc)
 {
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
@@ -288,7 +298,7 @@ HRESULT CGoblin_Mage::Ready_Components()
 		Desc.iSubKind = ENUM_CLASS(PXOBJECT::GOBLIN_MAGICIAN);
 		Desc.pTransform = m_pTransformCom;
 		Desc.eBodyType = ACTOR::CAPSULE;
-		Desc.fContactOffset = 0.3f;
+		Desc.fContactOffset = 0.001f;
 		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
 		Desc.bAutoStepping = { false };
 		Desc.fStepOffset = { 0.05f };
@@ -320,6 +330,18 @@ HRESULT CGoblin_Mage::Ready_Components()
 
 HRESULT CGoblin_Mage::Ready_Parts()
 {
+	CPartObject::PARTOBJECT_DESC PartsDesc{};
+
+	PartsDesc.pParentTransform = m_pTransformCom;
+
+	if (FAILED(Add_PartObject<CEffectParts>("Goblin_Orb", g_iStaticLevel, &m_pGoblin_Orb, &PartsDesc)))
+	{
+		return E_FAIL;
+	}
+
+	m_pGoblin_Orb->Load("../Bin/Resources/Data/Effect/GoblinMage/Orb_P", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pGoblin_Orb->FollowParents(m_pModelCom->Get_BoneMatrixPtr("RightHand"));
+
 	return S_OK;
 }
 
@@ -381,6 +403,7 @@ void CGoblin_Mage::Free()
 	SAFE_RELEASE(m_pEffectPool);
 	Safe_Delete(m_pCallBack_Behavior);
 	Safe_Delete(m_pCallBack_HitReport);
+	SAFE_RELEASE(m_pGoblin_Orb);
 }
 #ifdef _DEBUG
 

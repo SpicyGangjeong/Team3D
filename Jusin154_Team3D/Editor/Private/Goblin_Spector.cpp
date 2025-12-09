@@ -6,7 +6,7 @@
 #include "Effect_Container.h"
 #include "Goblin_BattleAxe.h"
 
-#include "EffectParts.h"
+#include "EditEffect.h"
 
 
 CGoblin_Spector::CGoblin_Spector(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -42,8 +42,6 @@ HRESULT CGoblin_Spector::Initialize(void* pArg)
 
 	m_vOriginScale = m_pTransformCom->Get_Scale();
 
-	m_bVisible = false;
-
 	return S_OK;
 }
 
@@ -63,7 +61,7 @@ void CGoblin_Spector::Update(_float fTimeDelta)
 
 	m_pTransformCom->Set_WorldMatrix(Offset * XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr()));
 
-	if (m_bVisible)
+	if (m_pGoblin->Get_Swing())
 	{
 		if (m_vScale.x <= 2.f)
 		{
@@ -84,6 +82,9 @@ void CGoblin_Spector::Update(_float fTimeDelta)
 		m_pModelCom->Set_AnimationIndex(5);
 	}
 
+
+	Play_Event();
+
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
@@ -99,7 +100,7 @@ void CGoblin_Spector::Late_Update(_float fTimeDelta)
 
 HRESULT CGoblin_Spector::Render()
 {
-	if (!m_bVisible)
+	if (!m_bVisible || !m_pGoblin->Get_Swing())
 		return S_OK;
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
@@ -156,9 +157,9 @@ HRESULT CGoblin_Spector::Ready_Components()
 		return E_FAIL;
 	}
 
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_GOBLIN"), (CComponent**)&m_pStat))) {
-		return E_FAIL;
-	}
+	//if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_GOBLIN"), (CComponent**)&m_pStat))) {
+	//	return E_FAIL;
+	//}
 	return S_OK;
 }
 

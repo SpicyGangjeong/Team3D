@@ -35,6 +35,8 @@ enum ESTATE : _u64Flag
     BLINK                       = 1ULL << 28,
     SHUFFLE                     = 1ULL << 29,
     DEAD                        = 1ULL << 30,
+    STUN                        = 1ULL << 31,
+    SUSTAIN                     = 1ULL << 32,
     END
 };
 NS_END

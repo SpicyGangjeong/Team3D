@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "Character_Controller.h"
 #include "RigidBody_Dynamic.h"
+#include "Unit.h"
 #include "GameObject.h"
 
 CCallBack_Troll_HitReport::CCallBack_Troll_HitReport()
@@ -39,15 +40,16 @@ void CCallBack_Troll_HitReport::onShapeHit(const PSX::PxControllerShapeHit& hit)
 			{
 			case PXOBJECT::TERRAIN:
 			{
-				class CGameObject* pOwner = m_pController->Get_Owner();
+				class CUnit* pOwner = (CUnit*)m_pController->Get_Owner();
 				_vector vLook = pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK);
 				_float fDot = XMVectorGetX(XMVector3Dot(XMLoadFloat3((_float3*)&vDir), vLook));
+				GUI::Text("DOTDOTResult %f", fDot);
 				if (fDot > cosf(XM_PIDIV4)) {
 					CModel* pModel = pOwner->Get_Component<CModel>();
 					_uint iAnimIndex = pModel->Get_AnimIndex();
-					if (STATEANIM::RUSH_LOOP == iAnimIndex) {
+					if (pOwner->Get_AnimInfo(STATEANIM::RUSH_LOOP).first == iAnimIndex) {
 						CFSM* pFSM = pOwner->Get_Component<CFSM>();
-						//pFSM->Change_State( FSMSTATE::stun);
+						pFSM->Change_State(FSMSTATE::STUN);
 					}
 				}
 			}
