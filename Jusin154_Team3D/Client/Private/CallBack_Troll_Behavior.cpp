@@ -38,17 +38,17 @@ void CCallBack_Troll_Behavior::onShapeHit(const PSX::PxControllerShapeHit& hit)
 			switch ((PXOBJECT)pTargetActorData->iSubKind)
 			{
 			case PXOBJECT::TERRAIN:
-				class CGameObject* pOwner = m_pController->Get_Owner();
-				_vector vLook = pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK);
-				_float fDot = XMVectorGetX(XMVector3Dot(XMLoadFloat3((_float3*)&vDir), vLook));
-				if (fDot > cosf(XM_PIDIV4)) {
-					CModel* pModel = pOwner->Get_Component<CModel>();
-					_uint iAnimIndex = pModel->Get_AnimIndex();
-					if (STATEANIM::RUSH_LOOP == iAnimIndex) {
-						CFSM* pFSM = pOwner->Get_Component<CFSM>();
-						pFSM->Change_State(FSMSTATE::STOP);
-					}
-				}
+				//class CGameObject* pOwner = m_pController->Get_Owner();
+				//_vector vLook = pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK);
+				//_float fDot = XMVectorGetX(XMVector3Dot(XMLoadFloat3((_float3*)&vDir), vLook));
+				//if (fDot > cosf(XM_PIDIV4)) {
+				//	CModel* pModel = pOwner->Get_Component<CModel>();
+				//	_uint iAnimIndex = pModel->Get_AnimIndex();
+				//	if (STATEANIM::RUSH_LOOP == iAnimIndex) {
+				//		CFSM* pFSM = pOwner->Get_Component<CFSM>();
+				//		pFSM->Change_State(FSMSTATE::STOP);
+				//	}
+				//}
 				break;
 			default:
 				break;
