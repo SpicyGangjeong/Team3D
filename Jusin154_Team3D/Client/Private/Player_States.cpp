@@ -1057,13 +1057,24 @@ void CPlayer::Behavior_SpellEnter()
 			}
 			break;
 		default:
+
 			pairAnimInfo = m_Animation[STATEANIM::SPELL_FAIL];
+
+			Add_Event(pairAnimInfo.first,
+				[this]() {	m_pEffectPool->Use_Skill(SKILL_TYPE::WAND_END, Get_PartObject<CWand>()); },
+				0.3f);
+
 			break;
 		}
 	}
 	else
 	{
 		pairAnimInfo = m_Animation[STATEANIM::SPELL_FAIL];
+
+		Add_Event(pairAnimInfo.first,
+			[this]() {	m_pEffectPool->Use_Skill(SKILL_TYPE::WAND_END, Get_PartObject<CWand>()); },
+			0.3f);
+
 	}
 
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);

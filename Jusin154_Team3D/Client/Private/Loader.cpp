@@ -129,6 +129,8 @@
 #include "TrollSwing.h"
 #include "Troll_Nomal_Smoke.h"
 #include "Troll_Rush_Hit.h"
+
+#include "WandEnd.h"
 #include "Goblin_Protego.h"
 
 
@@ -1459,6 +1461,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Protego>(NEXT_LEVEL, CGoblin_Protego::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CWandEnd>(NEXT_LEVEL, CWandEnd::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 

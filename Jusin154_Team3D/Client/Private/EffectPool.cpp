@@ -17,11 +17,12 @@
 
 #include "NomalJapSide.h"
 #include "Lumos.h"
-
+#include "WandEnd.h"
 
 #include "Troll_Rush_Hit.h"
 #include "Troll_Nomal_Smoke.h"
 #include "TrollSwing.h"
+#include "Goblin_Protego.h"
 
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -248,6 +249,16 @@ HRESULT CEffectPool::Ready_Effect()
 		return pEffect; }
 	))) return E_FAIL;
 
+
+	if (FAILED(Create_Effect(SKILL_TYPE::WAND_END, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CWandEnd* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CWandEnd>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
 #endif // !기무리
 
 	return S_OK;
@@ -284,6 +295,15 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 		return pEffect; }
 	))) return E_FAIL;
 
+
+	if (FAILED(Create_Effect(SKILL_TYPE::GOBLIN_PROTEGO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CGoblin_Protego* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CGoblin_Protego>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
 	return S_OK;
 }
 

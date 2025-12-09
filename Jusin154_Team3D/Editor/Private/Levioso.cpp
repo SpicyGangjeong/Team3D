@@ -129,15 +129,15 @@ HRESULT CLevioso::Pre_Setting(CGameObject* pObject, void* pArg)
 	CEditEffect* pWandSmoke = Get_PartObject<CEditEffect>("Levioso_Wand0");
 	CEditEffect* pWandLight = Get_PartObject<CEditEffect>("Levioso_Wand_Light");
 
-
-
 	m_pLeviosoPJ_0->Get_Component<CTransform>()->Set_State(STATE::POSITION, WandPos);
 	m_pTrail_PT_0->Get_Component<CTransform>()->Set_State(STATE::POSITION, WandPos);
+
 	pWandSmoke->Get_Component<CTransform>()->Set_State(STATE::POSITION, pPlayer->Get_PartObject<CWand>()->Get_WorldPostion());
 	pWandLight->Get_Component<CTransform>()->Set_State(STATE::POSITION, pPlayer->Get_PartObject<CWand>()->Get_WorldPostion());
 
 	m_pLeviosoPJ_0->Set_Visible(true);
 	m_pTrail_PT_0->Set_Visible(true);
+
 	pWandSmoke->Set_Visible(true);
 	pWandLight->Set_Visible(true);
 
