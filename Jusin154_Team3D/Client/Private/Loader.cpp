@@ -149,6 +149,9 @@
 #include "InstancedProp.h"
 #include "MapElement_Light.h"
 #include "MapElement_Interactable.h"
+#include "MapElement_Lake.h"
+#include "Land.h"
+#include "Unified.h"
 
 #pragma endregion
 
@@ -295,8 +298,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 #ifdef gimch
 	isLoad_Background = false;
 #endif // gimch
-#ifdef bin
-	isLoad_Background = false;
+#ifdef Bin
+	isLoad_Background = true;
 #endif // 
 #ifdef 진우
 	isLoad_Background = false;
@@ -336,6 +339,12 @@ HRESULT CLoader::Loading_For_GamePlay()
 		{ /* Gatehouse*/
 			jobMapModels.emplace_back(Deferred_FolderLoad(
 				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/BLDG_Gatehouse/Meshes",
+				".bin", false
+			));
+		}
+		{	/* Hogwart LOD */
+			jobMapModels.emplace_back(Deferred_FolderLoad(
+				"../Bin/Resources/Models/MapMesh/Game/Environment/Hogwarts/HogwartsLOD/",
 				".bin", false
 			));
 		}
@@ -1032,7 +1041,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 //		return E_FAIL;
 //	}
 //
-//#pragma endregion
+#pragma endregion
 
 #pragma region TERRAIN_TEXTURE
 	/* Terrain_Diffuse */
@@ -1050,9 +1059,14 @@ HRESULT CLoader::Loading_For_GamePlay()
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("../Bin/Resources/Textures/Terrain/Terrain_MRO_%d.dds"), 4)))) {
 		return E_FAIL;
 	}
-	/* Terrain_AlphaMap */
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("HogsmeadeAlphaMap"),
+	/* HogsmeadeAlphaMap */
+	if(FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Hogsmeade_AlphaMap"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Terrain/Hogsmeade_AlphaMap.dds"), 0)))) {
+		return E_FAIL;
+	}
+	/* HogwartAlphaMap */
+	if(FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Hogwart_AlphaMap"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Terrain/Hogwart_AlphaMap.dds"), 0)))) {
 		return E_FAIL;
 	}
 
@@ -1077,6 +1091,51 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 #pragma endregion
+
+#pragma region LAKE_TEXTURE
+	/* For.Prototype_Component_Water_Noise_D */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("T_Noises_D"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE,
+			TEXT("../Bin/Resources/Models/Lake/T_Noises_D.dds"), 0)))) {
+		return E_FAIL;
+	}
+	/* For.Prototype_Component_T_Water_Normal_Large_N */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("T_Water_Normal_Large_N"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE,
+			TEXT("../Bin/Resources/Models/Lake/T_Water_Normal_Large_N.dds"), 0)))) {
+		return E_FAIL;
+	}
+	/* For.Prototype_Component_T_Water_Normal_Subtle_N */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("T_Water_Normal_Subtle_N"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE,
+			TEXT("../Bin/Resources/Models/Lake/T_Water_Normal_Subtle_N.dds"), 0)))) {
+		return E_FAIL;
+	}
+	/* For.Prototype_Component_T_Caustics_D */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("T_Caustics_D"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE,
+			TEXT("../Bin/Resources/Models/Lake/T_Caustics_D.dds"), 0)))) {
+		return E_FAIL;
+	}
+	/* For.Prototype_Component_T_Water_N */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("T_Water_N"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE,
+			TEXT("../Bin/Resources/Models/Lake/T_Water_N.dds"), 0)))) {
+		return E_FAIL;
+	}
+	/* Lake_Cube_D */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Lake_Cube_D"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Models/Lake/SkyCube.dds"), 0)))) {
+		return E_FAIL;
+	}
+
+	/* Lake_Cube_D */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Lake_Refraction"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Models/Lake/T_MudSmallRocks_A_D.dds"), 0)))) {
+		return E_FAIL;
+	}
+#pragma endregion
+
 
 #pragma region EFFECT
 
@@ -1377,7 +1436,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Troll_Rock_Big_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Object/Troll_Rock/Troll_Rock_Big.bin", XMMatrixScaling(0.00004f, 0.00004f, 0.00004f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Object/Troll_Rock/VFX_SM_Rock_01.bin",  XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Dagger_Model"),
@@ -1722,10 +1781,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 #pragma region MAP PROTOTYPE
-	/* For.Prototype_Component_VIBuffer_Terrain */
+	/* For.Prototype_Component_VIBuffer_Terrain_Hogsmeade */
 	{
 		CVIBuffer_Terrain* pTerrain = CVIBuffer_Terrain::Create(m_pDevice, m_pContext, "Hogsmeade_HeightMap.bin", 512, 512);
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Terrain"), pTerrain))) {
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Terrain_Hogsmeade"), pTerrain))) {
 			return E_FAIL;
 		}
 		pTerrain->ConvertToHeightField(TEXT("Hogsmeade_HeightMap"));
@@ -1744,7 +1803,28 @@ HRESULT CLoader::Loading_For_GamePlay()
 			return E_FAIL;
 		}
 	}
+	/* For.Prototype_Component_VIBuffer_Terrain_Hogwart */
+	{
+		CVIBuffer_Terrain* pTerrain = CVIBuffer_Terrain::Create(m_pDevice, m_pContext, "Hogwart_HeightMap.bin", 512, 640);
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Terrain_Hogwart"), pTerrain))) {
+			return E_FAIL;
+		}
+		pTerrain->ConvertToHeightField(TEXT("Hogwart_HeightMap"));
 
+		CRigidBody_Static::RIGIDBODY_STATIC_PROTOTYPEDESC Desc{}; // 터레인 리지드 지형 추가
+		{
+			Desc.eType = ACTOR::HEIGHTFIELD;
+			Desc.ePxRigidBodyFlags = {};
+			Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+			Desc.ePxMaterialTypes = PXMATERIAL::DEFAULT;
+			Desc.fContactOffset = 0.001f;
+			Desc.vMatInfo = { 1.2f, 1.0f, 0.0f };
+		}
+		CRigidBody_Static* pRigid = CRigidBody_Static::Create(m_pDevice, m_pContext, Desc);
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_RigidBody_Static_Terrain_Hogwart"), pRigid))) {
+			return E_FAIL;
+		}
+	}
 
 #pragma region MAP_INSTANCE
 	/* For.Prototype_Component_VIBuffer_Model_Instancel_SM_OakTree_MedA */
@@ -1822,6 +1902,40 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 #pragma endregion
 
+	/* For.Prototype_Component_South_Hogwart_Land_LOD1 */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_South_Hogwart_Land_LOD1"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_BCLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_North_Hogwart_Land_LOD1 */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_North_Hogwart_Land_LOD1"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_AVLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_North_Hogwart2_Land_LOD1 */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_North_Hogwart2_Land_LOD1"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_AULOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_West_Hogwart_Land_LOD1 */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_West_Hogwart_Land_LOD1"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_AZLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_East_Hogwart_Land_LOD1 */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_East_Hogsmeade_Land_LOD1"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_AYLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Hogwart_Lake */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Hogwart_Lake"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Lake/SM_Lake_A_Collision_Deep.bin", XMMatrixIdentity()))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Hogwart_LakeSurFace */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Hogwart_LakeSurFace"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Lake/SM_Lake_A_Collision_Shallow.bin", XMMatrixIdentity()))))
+		return E_FAIL;
 
 	/* For.Prototype_Component_VIBuffer_Box */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Box"),
@@ -1863,6 +1977,19 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_GameObject_MapElement_Interactable */
 	if (FAILED(m_pGameInstance->Add_Prototype<CMapElement_Interactable>(g_iStaticLevel, CMapElement_Interactable::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Unified */
+	if (FAILED(m_pGameInstance->Add_Prototype<CMapElement_Lake>(g_iStaticLevel, CMapElement_Lake::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Land */
+	if (FAILED(m_pGameInstance->Add_Prototype<CLand>(g_iStaticLevel, CLand::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_Unified */
+	if (FAILED(m_pGameInstance->Add_Prototype<CUnified>(g_iStaticLevel, CUnified::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 #pragma endregion // MAP PROTOTYPE
