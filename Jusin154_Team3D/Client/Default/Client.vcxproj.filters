@@ -412,9 +412,6 @@
     <ClInclude Include="..\Public\Goblin.h">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Warrior</Filter>
     </ClInclude>
-	  <ClInclude Include="..\Public\Goblin_BattleAxe.h">
-      <Filter>02.GameObjects\Item\Goblin_BattleAxe</Filter>
-	  </ClInclude>
     <ClInclude Include="..\Public\CallBack_Playable_Behavior.h">
       <Filter>02.GameObjects\PhysX\CallBack\Behavior\Player</Filter>
     </ClInclude>
@@ -444,6 +441,9 @@
     </ClInclude>
     <ClInclude Include="..\public\MapElement_Lake.h">
       <Filter>02.GameObjects\Environment\03.MapElement\Lake</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Goblin_BattleAxe.h">
+      <Filter>02.GameObjects\Item\Goblin_Axe</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -953,8 +953,11 @@
     <Filter Include="02.GameObjects\Environment\03.MapElement\Lake">
       <UniqueIdentifier>{a357d495-f74d-4aec-919e-0f6bac3e0e7b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Item\Goblin_Axe">
+      <UniqueIdentifier>{e666a8b4-c92e-48ee-b63b-40d852b27b06}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
-	<ItemGroup>
+  <ItemGroup>
     <ClCompile Include="Client.cpp">
       <Filter>99.Define\00.DEFAULT</Filter>
     </ClCompile>
@@ -1366,9 +1369,6 @@
     <ClCompile Include="..\Private\Goblin.cpp">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Warrior</Filter>
     </ClCompile>
-	<ClCompile Include="..\Private\Goblin_BattleAxe.cpp">
-      <Filter>02.GameObjects\Item\Goblin_BattleAxe</Filter>
-	</ClCompile>
     <ClCompile Include="..\Private\CallBack_Playable_Behavior.cpp">
       <Filter>02.GameObjects\PhysX\CallBack\Behavior\Player</Filter>
     </ClCompile>
@@ -1399,11 +1399,13 @@
     <ClCompile Include="..\private\MapElement_Lake.cpp">
       <Filter>02.GameObjects\Environment\03.MapElement\Lake</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Goblin_BattleAxe.cpp">
+      <Filter>02.GameObjects\Item\Goblin_Axe</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
       <Filter>99.Define\00.DEFAULT</Filter>
     </ResourceCompile>
   </ItemGroup>
-	</Project>
-	
+</Project>

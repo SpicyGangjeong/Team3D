@@ -176,45 +176,6 @@ HRESULT CGoblin_Spector::Ready_Parts()
 		return E_FAIL;
 	}
 
-
-#pragma region EFFECT
-	/* EFFECT */
-
-	CPartObject::PARTOBJECT_DESC PartsDesc{};
-
-	PartsDesc.pParentTransform = m_pTransformCom;
-
-
-
-	if (FAILED(Add_PartObject<CEffectParts>("Goblin_Particle", g_iStaticLevel, &m_pGoblin_Particle, &PartsDesc)))
-	{
-		return E_FAIL;
-	}
-
-	m_pGoblin_Particle->Load("../Bin/Resources/Data/Effect/Goblin/GoblinSide/Goblin_Particle", static_cast<LEVEL>(NEXT_LEVEL));
-	m_pGoblin_Particle->FollowParants(m_pModelCom->Get_BoneMatrixPtr("RightShoulder"));
-
-
-
-	if (FAILED(Add_PartObject<CEffectParts>("Goblin_Particle2", g_iStaticLevel, &m_pGoblin_Particle2, &PartsDesc)))
-	{
-		return E_FAIL;
-	}
-
-	m_pGoblin_Particle2->Load("../Bin/Resources/Data/Effect/Goblin/GoblinSide/Goblin_Particle2", static_cast<LEVEL>(NEXT_LEVEL));
-	m_pGoblin_Particle2->FollowParants(m_pModelCom->Get_BoneMatrixPtr("RightShoulder"));
-
-
-	if (FAILED(Add_PartObject<CEffectParts>("Goblin_Smoke", g_iStaticLevel, &m_pSmoke, &PartsDesc)))
-	{
-		return E_FAIL;
-	}
-
-	m_pSmoke->Load("../Bin/Resources/Data/Effect/Goblin/GoblinSide/Goblin_Smoke", static_cast<LEVEL>(NEXT_LEVEL));
-	m_pSmoke->FollowParants(m_pModelCom->Get_BoneMatrixPtr("Spine2"));
-
-
-#pragma endregion
 	return S_OK;
 }
 

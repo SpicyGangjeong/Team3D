@@ -58,7 +58,7 @@ void CTroll_Rock::Priority_Update(_float fTimeDelta)
 		_matrix world = XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrixPtr());
 		m_pTransformCom->Set_WorldMatrix(world);
 
-		m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::LOOK), fTimeDelta * 20.f);
+		m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::LOOK), fTimeDelta * 50.f);
 		m_pTransformCom->Go_Straight(fTimeDelta);
 	}
 	
