@@ -4,6 +4,7 @@
 #include "MapInfo.h"
 #include "MonsterInfo.h"
 #include "PlayerInfo.h"
+#include "Skill_Data.h"
 
 IMPLEMENT_SINGLETON(CInfoInstance)
 
@@ -16,14 +17,17 @@ void CInfoInstance::Update(_float fTimeDelta)
 {
 	m_pPlayerInfo->Update(fTimeDelta);
 	m_pMonsterInfo->Update(fTimeDelta);
-	//m_pMapInfo->Update(fTimeDelta);
+	m_pMapInfo->Update(fTimeDelta);
+	m_pSkillInfo->Update(fTimeDelta);
+
 }
 
 void CInfoInstance::Change_Level()
 {
 	m_pPlayerInfo->Change_Level();
 	m_pMonsterInfo->Change_Level();
-	//m_pMapInfo->Change_Level();
+	m_pMapInfo->Change_Level();
+	m_pSkillInfo->Change_Level();
 }
 
 void CInfoInstance::Update_CameraCoordinateSystem(_float3& vLook, _float3& vRight)
@@ -44,7 +48,7 @@ HRESULT CInfoInstance::Regist_PlayerAlly(CUnit* pUnit)
 
 HRESULT CInfoInstance::Deregist_PlayerAlly(CUnit* pUnit)
 {
-	if (nullptr == m_pMonsterInfo) {
+	if (nullptr == s_pInstance || nullptr == m_pMonsterInfo) {
 		return S_OK; // 게임 종료 된 상태
 	}
 	return m_pMonsterInfo->Deregist_PlayerAlly(pUnit);
@@ -57,7 +61,7 @@ HRESULT CInfoInstance::Regist_ActiveMonster(CMonster* pUnit)
 
 HRESULT CInfoInstance::Deregist_ActiveMonster(CMonster* pUnit)
 {
-	if (nullptr == m_pMonsterInfo) {
+	if (nullptr == s_pInstance || nullptr == m_pMonsterInfo) {
 		return S_OK; // 게임 종료 된 상태
 	}
 	return m_pMonsterInfo->Deregist_ActiveMonster(pUnit);
@@ -67,7 +71,7 @@ CUnit* CInfoInstance::Get_LockOnUnit()
 {
 	CUnit* pUnit = { nullptr };
 	pUnit = m_pMonsterInfo->Get_LockOnUnit();
-	// pUnit = m_pInfo->Get_LockOnUnit();
+	// pUnit = m_pInfo->Get_LockOnInfo();
 	return pUnit;
 }
 
@@ -77,14 +81,33 @@ pair<CUnit*, CTransform*> CInfoInstance::Get_NearestPlayerAlly(_fvector vPos)
 }
 #pragma endregion
 #pragma region MAP_INFO
-//HRESULT CInfoInstance::Load_MapObjects(const _char* pFilePath)
-//{
-//	return m_pMapInfo->Load_MapObjects(pFilePath);
-//}
-//HRESULT CInfoInstance::Load_LightElements(const _char* pFilePath)
-//{
-//	return m_pMapInfo->Load_LightElements(pFilePath);
-//}
+
+#pragma endregion
+
+#pragma region SPELL_INFO
+HRESULT CInfoInstance::Load_SpellInfo(const _char* pFilePath)
+{
+	return m_pSkillInfo->Load_SpellInfo(pFilePath);
+}
+SPELL_INFO CInfoInstance::Get_Spell_Info(_int Spell_Info)
+{
+	return m_pSkillInfo->Get_Info(Spell_Info);
+}
+
+_int CInfoInstance::Update_Spell(_int SpellIndex)
+{
+	return m_pSkillInfo->Update_Spell(SpellIndex);
+}
+
+_float CInfoInstance::Get_CoolTime(_int SpellID)
+{
+	return m_pSkillInfo->Get_CoolTime(SpellID);
+}
+void CInfoInstance::Change_Canvas()
+{
+
+}
+
 #pragma endregion
 LEVEL CInfoInstance::Get_RestartLevel()
 {
@@ -100,17 +123,20 @@ HRESULT CInfoInstance::Initialize_Information(ID3D11Device* pDevice, ID3D11Devic
 	SAFE_ADDREF(m_pDevice);
 	SAFE_ADDREF(m_pContext);
 
-	//m_pMapInfo = CMapInfo::Create(pDevice, pContext);
-	//if (nullptr == m_pMapInfo) {
-	//	return E_FAIL;
-	//}
-
+	m_pMapInfo = CMapInfo::Create(pDevice, pContext);
+	if (nullptr == m_pMapInfo) {
+		return E_FAIL;
+	}
 	m_pPlayerInfo = CPlayerInfo::Create(pDevice, pContext);
 	if (nullptr == m_pPlayerInfo) {
 		return E_FAIL;
 	}
 	m_pMonsterInfo = CMonsterInfo::Create(pDevice, pContext);
 	if (nullptr == m_pMonsterInfo) {
+		return E_FAIL;
+	}
+	m_pSkillInfo = CSkill_Data::Create(pDevice, pContext);
+	if (nullptr == m_pSkillInfo) {
 		return E_FAIL;
 	}
 
@@ -122,8 +148,11 @@ void CInfoInstance::Release_Information()
 {
 	DestroyInstance();
 
+
+	SAFE_RELEASE(m_pMapInfo);
 	SAFE_RELEASE(m_pPlayerInfo);
 	SAFE_RELEASE(m_pMonsterInfo);
+	SAFE_RELEASE(m_pSkillInfo);
 	SAFE_RELEASE(m_pDevice);
 	SAFE_RELEASE(m_pContext);
 	SAFE_RELEASE(m_pGameInstance);

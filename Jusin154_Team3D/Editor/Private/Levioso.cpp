@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "TrailObject.h"
 #include "Wand.h"
+#include "InfoInstance.h"
 
 
 CLevioso::CLevioso(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -14,7 +15,8 @@ CLevioso::CLevioso(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CLevioso::CLevioso(const CLevioso& rhs)
-	: CEffect_Container(rhs)
+	: CEffect_Container(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -74,10 +76,9 @@ void CLevioso::Update(_float fTimeDelta)
 
 	Update_Event(fTimeDelta);
 
-	m_pLeviosoPJ_0->Get_Component<CTransform>()->Translation(m_vOwnerLook * 0.25f);
+	m_pLeviosoPJ_0->Get_Component<CTransform>()->Translation(XMLoadFloat3(&m_vCameraLook) * m_fLinearSpeed);
+	m_pTrail_PT_0->Get_Component<CTransform>()->Translation(XMLoadFloat3(&m_vCameraLook) * m_fLinearSpeed);
 
-
-	m_pTrail_PT_0->Get_Component<CTransform>()->Translation(m_vOwnerLook * 0.25f);
 
 	if (true == m_pGameInstance->SphereCast(0.0f, XMLoadFloat4(&m_vStartPos), m_vOwnerLook, XMVectorGetX(XMVector3Length(m_vOwnerLook * 1.f))
 		, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eSTATIC, m_Hitbuffer))
@@ -126,27 +127,54 @@ HRESULT CLevioso::Pre_Setting(CGameObject* pObject, void* pArg)
 	_vector WandPos = pPlayer->Get_WandPos().r[3];
 
 	CEditEffect* pWandSmoke = Get_PartObject<CEditEffect>("Levioso_Wand0");
-	CEditEffect* pWandLight= Get_PartObject<CEditEffect>("Levioso_Wand_Light");
-	
-
-	m_pLeviosoPJ_0->Get_Component<CTransform>()->Set_WorldMatrix(m_pOwner->Get_Component<CTransform>()->Get_XMWorldMatrix());
-	m_pTrail_PT_0->Get_Component<CTransform>()->Set_WorldMatrix(m_pOwner->Get_Component<CTransform>()->Get_XMWorldMatrix());
-
+	CEditEffect* pWandLight = Get_PartObject<CEditEffect>("Levioso_Wand_Light");
 
 	m_pLeviosoPJ_0->Get_Component<CTransform>()->Set_State(STATE::POSITION, WandPos);
 	m_pTrail_PT_0->Get_Component<CTransform>()->Set_State(STATE::POSITION, WandPos);
+
 	pWandSmoke->Get_Component<CTransform>()->Set_State(STATE::POSITION, pPlayer->Get_PartObject<CWand>()->Get_WorldPostion());
 	pWandLight->Get_Component<CTransform>()->Set_State(STATE::POSITION, pPlayer->Get_PartObject<CWand>()->Get_WorldPostion());
 
 	m_pLeviosoPJ_0->Set_Visible(true);
 	m_pTrail_PT_0->Set_Visible(true);
+
 	pWandSmoke->Set_Visible(true);
 	pWandLight->Set_Visible(true);
 
-	m_pLeviosoTrail->Set_Visible(true);
-	m_pLeviosoTrail->Get_Component<CTrail>()->Reset_Trail();
 
 	m_vOwnerLook = XMVector3Normalize(m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK));
+
+	_vector vDirection = m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK);
+	XMStoreFloat3(&m_vCameraLook, vDirection);
+
+	_vector vStartPos = WandPos;
+	XMStoreFloat4(&m_vStartPos, vStartPos);
+
+	{ /* 대상 위치 지정 */
+
+		CUnit* pTargetUnit = m_pInfoInstance->Get_LockOnUnit();
+		if (nullptr != pTargetUnit) {
+
+			XMStoreFloat4(&m_vTargetPos, pTargetUnit->Get_LockOnPos());
+
+			XMStoreFloat3(&m_vCameraLook, XMVector3Normalize(XMLoadFloat4(&m_vTargetPos) - XMLoadFloat4(&m_vStartPos)));
+		}
+		else {
+			// 타겟이 없다면 현재위치 -> 카메라 룩벡터 * duration간 예상 이동거리 를 대상으로 지정
+			XMStoreFloat4(&m_vTargetPos, vStartPos + vDirection * m_fLinearSpeed * 0.5f);
+		}
+
+	}
+
+	_vector vDir = XMVector3Normalize(XMLoadFloat3(&m_vCameraLook));
+
+	_vector vRight = XMVector3Normalize(XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vDir));
+
+	_vector vUp = XMVector3Normalize(XMVector3Cross(vRight, vDir));
+
+	_matrix ProjMat = _matrix(vRight, vUp, vDir, vStartPos);
+
+	m_pLeviosoPJ_0->Get_Component<CTransform>()->Set_WorldMatrix(ProjMat);
 
 	return S_OK;
 }

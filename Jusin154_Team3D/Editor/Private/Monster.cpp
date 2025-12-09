@@ -126,7 +126,7 @@ _bool CMonster::Get_Damage(_float fDamage)
 
 _float2 CMonster::Get_Hp()
 {
-	return { m_pStat->Get_Stat(ENUM_CLASS(STAT::HP)), m_pStat->Get_Stat(ENUM_CLASS(STAT::MAXHP)) };
+	return { m_pStat->Get_Stat().fCurrentHp, m_pStat->Get_Stat().fMaxHp};
 }
 
 HRESULT CMonster::Ready_Components(void* pArg)

@@ -58,7 +58,6 @@
 #include "NoMountIcon.h"
 
 #include "Loading_Panel.h"
-#include "LoadingWidget.h"
 #include "LoadingWidget_Flame.h"
 
 #include "Action_Panel.h"
@@ -124,6 +123,14 @@
 #include "EffectPool.h"
 #include "Levioso.h"
 #include "Lumos.h"
+
+
+#include "TrollSwing.h"
+#include "Troll_Nomal_Smoke.h"
+#include "Troll_Rush_Hit.h"
+
+#include "WandEnd.h"
+#include "Goblin_Protego.h"
 
 
 
@@ -290,8 +297,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 #ifdef gimch
 	isLoad_Background = false;
 #endif // gimch
-#ifdef bin
-	isLoad_Background = false;
+#ifdef Bin
+	isLoad_Background = true;
 #endif // 
 #ifdef 진우
 	isLoad_Background = false;
@@ -1361,8 +1368,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 		Desc.vhalfGeometryInfo = { 0.5f, 0.5f, 0.5f };
 		Desc.fDensity = 1.f;
 		Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
-		Desc.eLockFlag = {};
-		Desc.vAutoDamping = { 100.f, 100.f };
+		Desc.eLockFlag = {};  
+		Desc.vAutoDamping = { 1.f, 1.f };
 		Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
 		Desc.vLocalTranslation = { 0.f, 0.f, 0.f };
 	}
@@ -1378,7 +1385,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
-	Desc.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
+	//Desc.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX_KIN"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
 		return E_FAIL;
 	}
@@ -1428,7 +1435,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Troll_Rock_Big_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Object/Troll_Rock/Troll_Rock_Big.bin", XMMatrixScaling(0.00004f, 0.00004f, 0.00004f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Object/Troll_Rock/VFX_SM_Rock_01.bin",  XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Dagger_Model"),
@@ -1502,7 +1509,22 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CTrollSwing>(NEXT_LEVEL, CTrollSwing::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CTroll_Nomal_Smoke>(NEXT_LEVEL, CTroll_Nomal_Smoke::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CTroll_Rush_Hit>(NEXT_LEVEL, CTroll_Rush_Hit::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Protego>(NEXT_LEVEL, CGoblin_Protego::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CWandEnd>(NEXT_LEVEL, CWandEnd::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CEffectPool>(g_iStaticLevel, CEffectPool::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
@@ -1623,10 +1645,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_GameObject_Loading_Panel*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CLoading_Panel>(g_iStaticLevel, CLoading_Panel::Create(m_pDevice, m_pContext)))) {
-		return E_FAIL;
-	}
-	/* For.Prototype_GameObject_LoadingWidget*/
-	if (FAILED(m_pGameInstance->Add_Prototype<CLoadingWidget>(g_iStaticLevel, CLoadingWidget::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 	/* For.Prototype_GameObject_LoadingWidget_Flame*/

@@ -509,6 +509,8 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		socketMatrix = socketMatrix * m_pParentTransformCom->Get_XMWorldMatrix();
 
 		m_pTransformCom->Set_State(STATE::POSITION, socketMatrix.r[3]);
+
+
 	}
 
 

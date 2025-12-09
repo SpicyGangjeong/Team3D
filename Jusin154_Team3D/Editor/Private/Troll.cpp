@@ -70,6 +70,7 @@ HRESULT CTroll::Initialize(void* pArg)
 
 	m_pLeftHand_BoneMat = m_pModelCom->Get_BoneMatrixPtr("LeftHand");
 	m_pRightHand_BoneMat = m_pModelCom->Get_BoneMatrixPtr("RightHand");
+	m_pWeapon_BoneMat = Get_PartObject<CTroll_Weapon>()->Get_Component<CModel>()->Get_BoneMatrixPtr("Bone");
 
 	return S_OK;
 }
@@ -122,18 +123,24 @@ void CTroll::Update(_float fTimeDelta)
 
 	_matrix LeftHandMatrix = {};
 	_matrix RightHandMatrix = {};
+	_matrix WeaponMatrix = {};
 
 	LeftHandMatrix = XMLoadFloat4x4(m_pLeftHand_BoneMat);
 	RightHandMatrix = XMLoadFloat4x4(m_pRightHand_BoneMat);
+	WeaponMatrix = XMLoadFloat4x4(m_pWeapon_BoneMat);
+	
 
 	for (int i = 0; i < 3; ++i) {
 		LeftHandMatrix.r[i] = XMVector3Normalize(LeftHandMatrix.r[i]);
 		RightHandMatrix.r[i] = XMVector3Normalize(RightHandMatrix.r[i]);
+		WeaponMatrix.r[i] = XMVector3Normalize(WeaponMatrix.r[i]);
 	}
 
+	_matrix WeaponSoket = WeaponMatrix * Get_PartObject<CTroll_Weapon>()->Get_Component<CTransform>()->Get_XMWorldMatrix();
 
 	m_pLeftTrail->Trail_Update(LeftHandMatrix  * WorldMat, fTimeDelta);
 	m_pRightTrail->Trail_Update(RightHandMatrix * WorldMat, fTimeDelta);
+	m_pWeaponTrail->Trail_Update(WeaponSoket, fTimeDelta);
 
 #pragma endregion
 
@@ -389,13 +396,23 @@ HRESULT CTroll::Ready_Parts()
 	;
 
 	m_pLeftTrail->Load_Trail("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Trail", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pLeftTrail->Set_Visible(false);
 
 	if (FAILED(Add_PartObject<CTrailObject>("Right_Trail", NEXT_LEVEL, &m_pRightTrail, &PartsDesc))) {
 		return E_FAIL;
 	}
 	 
 	m_pRightTrail->Load_Trail("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Trail", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pRightTrail->Set_Visible(false);
 
+	if (FAILED(Add_PartObject<CTrailObject>("Weapon_Trail", NEXT_LEVEL, &m_pWeaponTrail, &PartsDesc))) {
+		return E_FAIL;
+	}
+
+	m_pWeaponTrail->Load_Trail("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Swing_Trail", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pWeaponTrail->Set_Visible(false);
+
+	
 #pragma endregion
 	return S_OK;
 }
@@ -416,6 +433,12 @@ HRESULT CTroll::Bind_ShaderResources()
 		return E_FAIL;
 	}
 	return S_OK;
+}
+
+void CTroll::Troll_Trail_Visible(_bool isTrailVisible)
+{
+	m_pLeftTrail->Set_Visible(isTrailVisible);
+	m_pRightTrail->Set_Visible(isTrailVisible);
 }
 
 CTroll* CTroll::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -465,12 +488,22 @@ void CTroll::Free()
 	SAFE_RELEASE(m_pEffectPool);	
 	SAFE_RELEASE(m_pLeftTrail);
 	SAFE_RELEASE(m_pRightTrail);
+	SAFE_RELEASE(m_pWeaponTrail);
 }
 #ifdef _DEBUG
 
 void CTroll::Describe_Entity()
 {
 	__super::Describe_Entity();
+
+	_float4x4 socketMat = *m_pModelCom->Get_BoneMatrixPtr("HeadEnd");
+
+	_string strSocket = "Socket " + to_string(socketMat._41) + to_string(socketMat._42) + to_string(socketMat._43);
+
+	GUI::Text(strSocket.c_str());
+
+
+	m_pTransformCom->Describe_Entity();
 }
 
 #endif // _DEBUG

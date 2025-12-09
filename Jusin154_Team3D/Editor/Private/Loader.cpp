@@ -146,10 +146,14 @@
 #include "TrollSwing.h"
 #include "Troll_Nomal_Smoke.h"
 #include "Troll_Rush_Hit.h"
+#include "Goblin_Protego.h"
 
 #include "Troll.h"
 #include "Troll_Rock.h"
 #include "Troll_Weapon.h"
+#include "Goblin_Dagger.h"
+#include "Goblin_BattleAxe.h"
+#include "Goblin_Spector.h"
 #pragma endregion
 
 #pragma region PHYSX_HEADER
@@ -1302,6 +1306,18 @@ HRESULT CLoader::Loading_For_Effect()
 		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Wand/Wand.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixIdentity()))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Dagger_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Goblin_Dagger/SK_WPN_GOB_SmallSword.bin", XMMatrixIdentity()))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_BattleAxe_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Goblin_BattleAxe/SK_WPN_GOB_BattleAxe01.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Goblin_Spector_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Monster/GoblinSpector/GoblinSpector.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
+		return E_FAIL;
+
 	vector<future<pair<_wstring, CModel*>*>> futures = {};
 
 	futures.emplace_back(Deferred_ModelLoad(
@@ -1342,7 +1358,7 @@ HRESULT CLoader::Loading_For_Effect()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Troll_Weapon_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Object/SubTroll_Weapon/SK_WPN_Troll_Club07.fbx", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Object/SubTroll_Weapon/SK_WPN_Troll_Club07.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Troll_Rock_Big_Model"),
@@ -1482,6 +1498,22 @@ HRESULT CLoader::Loading_For_Effect()
 	if (FAILED(m_pGameInstance->Add_Prototype<CTroll_Rush_Hit>(NEXT_LEVEL, CTroll_Rush_Hit::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Protego>(NEXT_LEVEL, CGoblin_Protego::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Dagger>(g_iStaticLevel, CGoblin_Dagger::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_BattleAxe>(g_iStaticLevel, CGoblin_BattleAxe::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Spector>(g_iStaticLevel, CGoblin_Spector::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
 
 	/* For.Prototype_GameObject_Wand */
 	if (FAILED(m_pGameInstance->Add_Prototype<CWand>(g_iStaticLevel, CWand::Create(m_pDevice, m_pContext))))
@@ -2030,8 +2062,8 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	m_strMessage = TEXT("Model Loading..");
 
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_SK_WPN_GOB_SmallSword_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM_LOCAL, "C:/MeshTable\\Game\\RiggedObjects\\Props\\Weapons\\Goblins\\SK_WPN_GOB_SmallSword.fbx", XMMatrixIdentity())))) {
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VFX_SM_Rock_01_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM_LOCAL, "C:/MeshTable\\Game\\VFX\\Meshes\\Static\\VFX_SM_Rock_01.fbx", XMMatrixIdentity())))) {
 		return E_FAIL;
 	}
 

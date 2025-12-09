@@ -160,7 +160,7 @@ call Update_Resources.bat
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Action_Panel.h" />
-    <ClInclude Include="..\Public\CallBack_Troll_Behavior.h" />
+    <ClInclude Include="..\Public\CallBack_Troll_HitReport.h" />
     <ClInclude Include="..\Public\CameraLockOn.h" />
     <ClInclude Include="..\Public\Current_Slot_Number.h" />
     <ClInclude Include="..\Public\Current_Spell_Slot.h" />
@@ -172,8 +172,10 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Goblin_BattleAxe.h" />
     <ClInclude Include="..\Public\Goblin_Dagger.h" />
     <ClInclude Include="..\Public\Goblin_Mage.h" />
+    <ClInclude Include="..\Public\Goblin_Protego.h" />
     <ClInclude Include="..\Public\Goblin_Spector.h" />
     <ClInclude Include="..\Public\HpBarBG.h" />
+    <ClInclude Include="..\Public\InteractiveInfo.h" />
     <ClInclude Include="..\Public\Intro_BG.h" />
     <ClInclude Include="..\Public\Intro_Image.h" />
     <ClInclude Include="..\public\Land.h" />
@@ -182,6 +184,8 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Logo.h" />
     <ClInclude Include="..\Public\Logo_Glow.h" />
     <ClInclude Include="..\Public\Logo_Text.h" />
+    <ClInclude Include="..\Public\Troll_State_Stun.h" />
+    <ClInclude Include="..\Public\WandEnd.h" />
     <ClInclude Include="..\Public\Magic_Icon.h" />
     <ClInclude Include="..\Public\Magic_Item.h" />
     <ClInclude Include="..\Public\Magic_Meter.h" />
@@ -296,7 +300,10 @@ call Update_Resources.bat
     <ClInclude Include="..\public\Terrain.h" />
     <ClInclude Include="..\Public\TrailObject.h" />
     <ClInclude Include="..\Public\Troll.h" />
+    <ClInclude Include="..\Public\TrollSwing.h" />
+    <ClInclude Include="..\Public\Troll_Nomal_Smoke.h" />
     <ClInclude Include="..\Public\Troll_Rock.h" />
+    <ClInclude Include="..\Public\Troll_Rush_Hit.h" />
     <ClInclude Include="..\Public\Troll_State_BackHand_Swing.h" />
     <ClInclude Include="..\Public\Troll_State_Rush.h" />
     <ClInclude Include="..\Public\Troll_Weapon.h" />
@@ -311,7 +318,7 @@ call Update_Resources.bat
   <ItemGroup>
     <ClCompile Include="..\Private\Action_Panel.cpp" />
     <ClCompile Include="..\Private\Broom_States.cpp" />
-    <ClCompile Include="..\Private\CallBack_Troll_Behavior.cpp" />
+    <ClCompile Include="..\Private\CallBack_Troll_HitReport.cpp" />
     <ClCompile Include="..\Private\CameraLockOn.cpp" />
     <ClCompile Include="..\Private\Current_Slot_Number.cpp" />
     <ClCompile Include="..\Private\Current_Spell_Slot.cpp" />
@@ -324,8 +331,10 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Goblin_Dagger.cpp" />
     <ClCompile Include="..\Private\Goblin_Mage.cpp" />
     <ClCompile Include="..\Private\Goblin_Mage_States.cpp" />
+    <ClCompile Include="..\Private\Goblin_Protego.cpp" />
     <ClCompile Include="..\Private\Goblin_Spector.cpp" />
     <ClCompile Include="..\Private\HpBarBG.cpp" />
+    <ClCompile Include="..\Private\InteractiveInfo.cpp" />
     <ClCompile Include="..\Private\Intro_BG.cpp" />
     <ClCompile Include="..\Private\Intro_Image.cpp" />
     <ClCompile Include="..\private\Land.cpp" />
@@ -334,6 +343,8 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Logo.cpp" />
     <ClCompile Include="..\Private\Logo_Glow.cpp" />
     <ClCompile Include="..\Private\Logo_Text.cpp" />
+    <ClCompile Include="..\Private\Troll_State_Stun.cpp" />
+    <ClCompile Include="..\Private\WandEnd.cpp" />
     <ClCompile Include="..\Private\Magic_Icon.cpp" />
     <ClCompile Include="..\Private\Magic_Item.cpp" />
     <ClCompile Include="..\Private\Magic_Meter.cpp" />
@@ -450,7 +461,10 @@ call Update_Resources.bat
     <ClCompile Include="..\private\Terrain.cpp" />
     <ClCompile Include="..\Private\TrailObject.cpp" />
     <ClCompile Include="..\Private\Troll.cpp" />
+    <ClCompile Include="..\Private\TrollSwing.cpp" />
+    <ClCompile Include="..\Private\Troll_Nomal_Smoke.cpp" />
     <ClCompile Include="..\Private\Troll_Rock.cpp" />
+    <ClCompile Include="..\Private\Troll_Rush_Hit.cpp" />
     <ClCompile Include="..\Private\Troll_States.cpp" />
     <ClCompile Include="..\Private\Troll_State_BackHand_Swing.cpp" />
     <ClCompile Include="..\Private\Troll_State_Rush.cpp" />

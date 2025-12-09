@@ -32,7 +32,7 @@ void CCamera_Debug::Update(_float fTimeDelta)
 	if (m_pGameInstance->Key_Up(DIK_GRAVE)) {
 		m_bMovable = !m_bMovable;
 	}
-	if (m_pGameInstance->Mouse_Down(DIM_RBUTTON)) {
+	if (m_pGameInstance->Mouse_Down(DIM_MBUTTON)) {
 		m_pGameInstance->Toggle_MouseCenter();
 	}
 	if (m_bMovable) {
