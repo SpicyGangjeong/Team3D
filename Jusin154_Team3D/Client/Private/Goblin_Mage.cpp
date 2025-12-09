@@ -224,6 +224,17 @@ HRESULT CGoblin_Mage::Render_Shadow()
 	return S_OK;
 }
 
+_vector CGoblin_Mage::Get_LockOnPos()
+{
+	if (nullptr != m_pCharacter_Controller && true == m_pCharacter_Controller->IsActive()) {
+		return m_pCharacter_Controller->Get_Position();
+	}
+	else if (nullptr != m_pRigidBody) {
+		return m_pRigidBody->Get_Position();
+	}
+	return Get_WorldPostion();
+}
+
 void CGoblin_Mage::OnCollision(CGameObject* pOther, void* pDesc)
 {
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
@@ -288,7 +299,7 @@ HRESULT CGoblin_Mage::Ready_Components()
 		Desc.iSubKind = ENUM_CLASS(PXOBJECT::GOBLIN_MAGICIAN);
 		Desc.pTransform = m_pTransformCom;
 		Desc.eBodyType = ACTOR::CAPSULE;
-		Desc.fContactOffset = 0.3f;
+		Desc.fContactOffset = 0.001f;
 		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
 		Desc.bAutoStepping = { false };
 		Desc.fStepOffset = { 0.05f };

@@ -64,7 +64,7 @@ HRESULT CTroll::Initialize(void* pArg)
 
 
 
-	m_pCharacter_Controller->Set_Position(XMVectorSet(3.f, 5.f, -20.f, 1.f));
+	m_pCharacter_Controller->Set_Position(XMVectorSet(110.f, 24.f, 135.f, 1.f));
 
 	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
 	SAFE_ADDREF(m_pEffectPool);
@@ -145,7 +145,6 @@ void CTroll::Update(_float fTimeDelta)
 	m_pWeaponTrail->Trail_Update(WeaponSoket, fTimeDelta);
 
 #pragma endregion
-
 }
 
 void CTroll::Late_Update(_float fTimeDelta)
@@ -320,7 +319,7 @@ HRESULT CTroll::Ready_Components()
 		Desc.iSubKind = ENUM_CLASS(PXOBJECT::TROLL);
 		Desc.pTransform = m_pTransformCom;
 		Desc.eBodyType = ACTOR::CAPSULE;
-		Desc.fContactOffset = 0.3f;
+		Desc.fContactOffset = 0.001f;
 		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
 		Desc.bAutoStepping = { false };
 		Desc.fStepOffset = { 0.05f };

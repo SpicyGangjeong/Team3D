@@ -389,7 +389,7 @@
       <Filter>02.GameObjects\UI\Screen\Logo\Logo_Text</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\State_Dead.h">
-      <Filter>04.Mechanic\State\State_Combat\Dead</Filter>
+      <Filter>04.Mechanic\State\State_Combat\State_Dead</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Enemy_Panel.h">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel</Filter>
@@ -470,6 +470,9 @@
     <ClInclude Include="..\Public\Goblin_BattleAxe.h" />
     <ClInclude Include="..\Public\WandEnd.h">
       <Filter>02.GameObjects\Effect\Effects\WandEnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll_State_Stun.h">
+      <Filter>04.Mechanic\State\Troll_Combat\Troll_State_Stun</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -928,9 +931,6 @@
     <Filter Include="04.Mechanic\State\Movement\Shuffle">
       <UniqueIdentifier>{0ed6a11e-5d22-4b9f-a39c-f2319c27caf4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Mechanic\State\State_Combat\Dead">
-      <UniqueIdentifier>{81add99f-7450-4730-8d3f-bf1de06b2b8d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Mage">
       <UniqueIdentifier>{5973b96c-42c3-4cda-9627-f741e12124cd}</UniqueIdentifier>
     </Filter>
@@ -985,7 +985,6 @@
     <Filter Include="02.GameObjects\PhysX\CallBack\HitReport\Monster\Troll">
       <UniqueIdentifier>{e12337a6-7563-4615-a8d2-a2e2e1ba1ca8}</UniqueIdentifier>
     </Filter>
-
     <Filter Include="02.GameObjects\Environment\04.Land">
       <UniqueIdentifier>{ec267143-0bc1-4765-b8dc-6cccc50385d7}</UniqueIdentifier>
     </Filter>
@@ -1003,6 +1002,12 @@
     </Filter>
     <Filter Include="03.InfoInstance\03.InteractiveInfo">
       <UniqueIdentifier>{1d1dc743-5cf2-4b8f-a80e-16b16437c7aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Dead">
+      <UniqueIdentifier>{81add99f-7450-4730-8d3f-bf1de06b2b8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Troll_Combat\Troll_State_Stun">
+      <UniqueIdentifier>{2e2a53dc-9ea6-427f-88b3-d8857193d432}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1391,7 +1396,7 @@
       <Filter>02.GameObjects\Item\Broom</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\State_Dead.cpp">
-      <Filter>04.Mechanic\State\State_Combat\Dead</Filter>
+      <Filter>04.Mechanic\State\State_Combat\State_Dead</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Goblin_Mage.cpp">
       <Filter>02.GameObjects\NPC\Hostile\Monster\Goblin\Goblin_Mage</Filter>
@@ -1432,6 +1437,9 @@
     <ClCompile Include="..\Private\Goblin_BattleAxe.cpp" />
     <ClCompile Include="..\Private\WandEnd.cpp">
       <Filter>02.GameObjects\Effect\Effects\WandEnd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_State_Stun.cpp">
+      <Filter>04.Mechanic\State\Troll_Combat\Troll_State_Stun</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
