@@ -49,16 +49,48 @@ void CTroll::Behavior_IdleBreakEnter()
 	_int RandIndex = m_pGameInstance->Real_Random_Int(0, 3);
 	switch (RandIndex)
 	{
-	case 0:
+	case 0: //땅 두번구르기 왼발 오른발
 		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK1];
+
+		Add_Event(pairAnimInfo.first, [this]() {
+
+			_matrix HandMat = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("IK_LeftFoot")) * m_pTransformCom->Get_XMWorldMatrix();
+
+			_float4 vPosition = {};
+			XMStoreFloat4(&vPosition, HandMat.r[3]);
+
+			m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_NOMAL_SMOKE, this, &vPosition);
+			}, 0.3f);
+
+		Add_Event(pairAnimInfo.first, [this]() {
+
+			_matrix HandMat = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("IK_RightFoot")) * m_pTransformCom->Get_XMWorldMatrix();
+
+			_float4 vPosition = {};
+			XMStoreFloat4(&vPosition, HandMat.r[3]);
+
+			m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_NOMAL_SMOKE, this, &vPosition);
+			}, 0.7f);
+
 		break;
-	case 1:
+	case 1:// 방망이
 		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK2];
 		break;
-	case 2:
+	case 2: // 발구르기
 		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK3];
+
+		Add_Event(pairAnimInfo.first, [this]() {
+
+			_matrix HandMat = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("IK_RightFoot")) * m_pTransformCom->Get_XMWorldMatrix();
+
+			_float4 vPosition = {};
+			XMStoreFloat4(&vPosition, HandMat.r[3]);
+
+			m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_NOMAL_SMOKE, this, &vPosition);
+			}, 0.2f);
+
 		break;
-	case 3:
+	case 3: //소리지르기
 		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK4];
 		break;
 	}
@@ -404,7 +436,7 @@ void CTroll::Behavior_SlamEnter()
 
 	Add_Event(m_Animation[STATEANIM::SLAM].first, [this]() {
 		m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_ATTACK, this);
-		} , 0.6f);
+		} , 0.3f);
 }
 
 HRESULT CTroll::Behavior_SlamExitCheck(_float fTimeDelta)

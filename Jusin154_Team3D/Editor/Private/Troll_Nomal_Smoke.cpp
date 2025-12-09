@@ -39,7 +39,7 @@ HRESULT CTroll_Nomal_Smoke::Initialize(void* pArg)
 	m_wstrEffectName = L"Troll_Nomal_Smoke";
 
 
-	m_fDuration = 1.f;
+	m_fDuration = 2.5f;
 
 	return S_OK;
 }
@@ -84,8 +84,9 @@ HRESULT CTroll_Nomal_Smoke::Pre_Setting(CGameObject* pObject, void* pArg)
 	CEditEffect* pRockPT = Get_PartObject<CEditEffect>("Rock_PT_15"); 
 	CEditEffect* pSmoke = Get_PartObject<CEditEffect>("NomalSmoke");
 
-	pRockPT->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&vPos));
-	pSmoke->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&vPos));
+
+	pRockPT->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&vPos) + XMVectorSet(0.f , 0.2f ,0.f, 0.f) );
+	pSmoke->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&vPos) + XMVectorSet(0.f, 0.2f, 0.f, 0.f));
 
 	pRockPT->Set_Visible(true);
 	pSmoke->Set_Visible(true);
