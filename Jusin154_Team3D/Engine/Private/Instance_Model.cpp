@@ -737,7 +737,6 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 				
 				pParticleValues[i].fCollisionTime = 0.f;
 				pParticleValues[i].isCompareStop = false;
-				m_InstanceDesc.isDetphCompareStop = true;
 
 				memcpy(&pParticleValues[i].vOriginRight, SRMatrix.m[0], sizeof(_float4));
 				memcpy(&pParticleValues[i].vOriginUp, SRMatrix.m[1], sizeof(_float4));

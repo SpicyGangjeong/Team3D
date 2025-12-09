@@ -24,6 +24,8 @@ public:
 	virtual	HRESULT	Pre_Setting(CGameObject* pObject, void* pArg = nullptr) override;
 
 private:
+	class  CInfoInstance* m_pInfoInstance = { nullptr };
+private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual HRESULT Ready_Components(void* pArg) override;
@@ -42,6 +44,11 @@ private:
 	_float				m_fAccRotateTime = {};
 	_float				m_fTurnSpeed = {};
 	_float				m_fRange = {};
+
+	_float4				m_vStartPos = { 0.f, 0.f, 0.f, 1.f }; // 현재 발사 된 위치
+	_float4				m_vTargetPos = { 0.f, 0.f, 10.f, 1.f }; // 현재 타게팅 된 위치
+	_float				m_fLinearSpeed = 0.25f;
+	_float3				m_vCameraLook = {};
 public:
 	static CLevioso* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

@@ -109,6 +109,9 @@ void CTrailObject::Set_Target(CTransform* pTargetTransform)
 
 void CTrailObject::Trail_Update(_fmatrix WorldMat, _float fTimeDelta)
 {
+	if (m_bVisible == false)
+		return;
+
 	m_pTrailCom->Trail_Update(fTimeDelta, WorldMat);
 }
 
