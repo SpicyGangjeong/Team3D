@@ -37,6 +37,11 @@ namespace Client
 		_float			fVidio{};
 	}SPELL_INFO;
 
+	typedef struct tagLockOnInfo {
+		CUnit* pUnit = { nullptr };
+		class CMapElement_Interactable* pInteractive = { nullptr };
+	}LOCKON_INFO;
+
 	typedef struct tagUnitInfo
 	{
 		_wstring		pUnit_Name;
