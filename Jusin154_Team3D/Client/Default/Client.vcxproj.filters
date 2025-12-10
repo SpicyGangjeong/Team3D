@@ -490,13 +490,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\Goblin_Attack.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Goblin_Attack</Filter>
-	</ClInclude>
-
+    </ClInclude>
     <ClInclude Include="..\Public\Goblin_BattleAxe.h">
       <Filter>02.GameObjects\Item\Goblin_Axe</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Damage_Font.h">
       <Filter>04.Mechanic\Damage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Boss_HpBar.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Boss_HpBar</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1041,9 +1043,12 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Goblin_Attack">
       <UniqueIdentifier>{967d1741-2780-40b7-b55e-9fd58e931ef7}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="04.Mechanic\Damage">
       <UniqueIdentifier>{36962dce-8c99-4c54-9189-2a49785a211e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Boss_HpBar">
+      <UniqueIdentifier>{b49a3671-96d0-47b8-833f-28190d549b0f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1482,10 +1487,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Goblin_Attack.cpp">
       <Filter>02.GameObjects\Effect\MonsterEffect\Goblin_Attack</Filter>
-	</ClCompile>
-
+    </ClCompile>
     <ClCompile Include="..\Private\Damage_Font.cpp">
       <Filter>04.Mechanic\Damage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Boss_HpBar.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Boss_HpBar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

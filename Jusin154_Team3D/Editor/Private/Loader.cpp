@@ -54,6 +54,7 @@
 #include "Enemy_Panel.h"
 #include "Enemy_HpBar.h"
 #include "Enemy_Info.h"
+#include "Boss_HpBer.h"
 
 #include "Mission_Panel.h"
 #include "MissionBanner_Border.h"
@@ -912,6 +913,10 @@ HRESULT CLoader::Loading_For_UI()
 		return E_FAIL;
 	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CEnemy_Info>(g_iStaticLevel, CEnemy_Info::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CBoss_HpBar>(g_iStaticLevel, CBoss_HpBar::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}

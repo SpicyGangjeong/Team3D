@@ -559,6 +559,9 @@
     <Filter Include="04.InfoInstance\03.Skill_Info">
       <UniqueIdentifier>{7ba1f85d-a9c4-4002-b425-43796bec6869}</UniqueIdentifier>
     </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Enemy_Panel\Boss_HpBar">
+      <UniqueIdentifier>{49575102-9b08-494e-bf3f-bdc98774913e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -1115,6 +1118,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Skill_Data.h">
       <Filter>04.InfoInstance\03.Skill_Info</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Boss_HpBer.h">
+      <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Boss_HpBar</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1674,6 +1680,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Skill_Data.cpp">
       <Filter>04.InfoInstance\03.Skill_Info</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boss_HpBer.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Boss_HpBar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
