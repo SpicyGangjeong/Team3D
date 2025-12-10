@@ -130,7 +130,7 @@ private:
 	void	Behavior_LandExit();
 
 	void	Behavior_DodgeEnter();
-	HRESULT Behavior_DodgeExitCheck();
+	HRESULT Behavior_DodgeExitCheck(_float fTimeDelta);
 	void	Behavior_DodgeExit();
 
 	void	Behavior_CombatEnter();

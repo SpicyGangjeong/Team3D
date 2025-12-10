@@ -42,6 +42,8 @@ HRESULT CGoblin_Spector::Initialize(void* pArg)
 
 	m_vOriginScale = m_pTransformCom->Get_Scale();
 
+	m_bVisible = false;
+
 	return S_OK;
 }
 
@@ -61,7 +63,7 @@ void CGoblin_Spector::Update(_float fTimeDelta)
 
 	m_pTransformCom->Set_WorldMatrix(Offset * XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr()));
 
-	if (m_pGoblin->Get_Swing())
+	if (m_bVisible)
 	{
 		if (m_vScale.x <= 2.f)
 		{
@@ -82,9 +84,6 @@ void CGoblin_Spector::Update(_float fTimeDelta)
 		m_pModelCom->Set_AnimationIndex(5);
 	}
 
-
-	Play_Event();
-
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
@@ -100,7 +99,7 @@ void CGoblin_Spector::Late_Update(_float fTimeDelta)
 
 HRESULT CGoblin_Spector::Render()
 {
-	if (!m_bVisible || !m_pGoblin->Get_Swing())
+	if (!m_bVisible)
 		return S_OK;
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;

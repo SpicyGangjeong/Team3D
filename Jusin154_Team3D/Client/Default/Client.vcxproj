@@ -185,6 +185,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Logo_Glow.h" />
     <ClInclude Include="..\Public\Logo_Text.h" />
     <ClInclude Include="..\Public\Troll_State_Stun.h" />
+    <ClInclude Include="..\Public\State_Sustain.h" />
     <ClInclude Include="..\Public\WandEnd.h" />
     <ClInclude Include="..\Public\Magic_Icon.h" />
     <ClInclude Include="..\Public\Magic_Item.h" />
@@ -343,6 +344,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Logo.cpp" />
     <ClCompile Include="..\Private\Logo_Glow.cpp" />
     <ClCompile Include="..\Private\Logo_Text.cpp" />
+    <ClCompile Include="..\Private\State_Sustain.cpp" />
     <ClCompile Include="..\Private\Troll_State_Stun.cpp" />
     <ClCompile Include="..\Private\WandEnd.cpp" />
     <ClCompile Include="..\Private\Magic_Icon.cpp" />

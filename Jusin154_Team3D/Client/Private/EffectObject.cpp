@@ -143,13 +143,13 @@ void CEffectObject::Add_Light()
 	m_pGameInstance->Add_Light(CURRENT_LEVEL, m_pLightCom);
 }
 
-void CEffectObject::FollowParants(const _float4x4* pParantsMat)
+void CEffectObject::FollowParents(const _float4x4* pParentsMat)
 {
-	if (pParantsMat == nullptr)
+	if (pParentsMat == nullptr)
 		return;
 
 
-	m_pPerentMatrix = pParantsMat;
+	m_pParentMatrix = pParentsMat;
 	m_bVisible = true;
 }
 
@@ -498,10 +498,10 @@ HRESULT CEffectObject::Load(const _char* pFilePath, LEVEL eLevel)
 
 HRESULT CEffectObject::Bind_ShaderResources()
 {
-	if (m_pPerentMatrix != nullptr)
+	if (m_pParentMatrix != nullptr)
 	{
 
-		_matrix socketMatrix = XMLoadFloat4x4(m_pPerentMatrix);
+		_matrix socketMatrix = XMLoadFloat4x4(m_pParentMatrix);
 
 		for (int i = 0; i < 3; ++i) {
 			socketMatrix.r[i] = XMVector3Normalize(socketMatrix.r[i]);
