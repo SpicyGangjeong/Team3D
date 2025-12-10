@@ -41,8 +41,8 @@ HRESULT CMagic_Meter::Initialize(void* pArg)
 	m_fAlpha = 1.f;
 	m_fTimeMult = 3.f;
 	m_fAlphaTime = 1.f;
-	m_fMaxGauge = 20.f;
-	m_fCurrentGauge = 10.f;
+	m_fMaxGauge = 15.f;
+	m_fCurrentGauge = 15.f;
 	return S_OK;
 }
 
@@ -85,8 +85,9 @@ void CMagic_Meter::Update(_float fTimeDelta)
 			m_fAlpha = 0.f;
 		}
 	}
-	if (m_fCurrentGauge< 0.f)
+	if (m_fCurrentGauge < 0.f)
 		m_fCurrentGauge = 0.f;
+
 	//if (m_fDamage <= 0.f)
 	//	m_fDamage = 0.f;
 	//m_fTargetHp = m_fMaxHp - m_fDamage;
@@ -142,6 +143,40 @@ _vector CMagic_Meter::Get_WorldPostion()
 void CMagic_Meter::Meter_Index(_uint Number)
 {
 	m_iImageCount = Number;
+}
+
+_float CMagic_Meter::Charge_Meter()
+{
+	_float NewCurrentGauge{};
+	m_fCurrentGauge++;
+
+	if (m_fMaxGauge < m_fCurrentGauge)
+	{
+		NewCurrentGauge = m_fCurrentGauge - m_fMaxGauge;
+		m_fCurrentGauge = m_fMaxGauge;
+	}
+
+	return NewCurrentGauge;
+}
+
+_float CMagic_Meter::Get_Meter()
+{
+	return m_fCurrentGauge;
+}
+
+_float CMagic_Meter::Use_Meter(_float Meter)
+{
+	if (Meter >= m_fCurrentGauge)
+	{
+		Meter -= m_fCurrentGauge;
+		m_fCurrentGauge = 0.f;
+		return Meter;
+	}
+	else
+	{
+		m_fCurrentGauge -= Meter;
+		return 0;
+	}
 }
 
 HRESULT CMagic_Meter::Bind_ShaderResources()

@@ -75,7 +75,7 @@ void CAction_Panel::Update(_float fTimeDelta)
 		return;
 	}
 
-	Matic_Meter_Move();
+	Magic_Meter_Move();
 
 	__super::Update(fTimeDelta);
 }
@@ -149,7 +149,7 @@ void CAction_Panel::Magic_Meter_UV()
 	}
 }
 
-void CAction_Panel::Matic_Meter_Move()
+void CAction_Panel::Magic_Meter_Move()
 {
 
 	static_cast<CMagic_Meter*>(m_pMagic_Meter1)->Move(m_vMagic_MeterUV[0].x, m_vMagic_MeterUV[0].y);

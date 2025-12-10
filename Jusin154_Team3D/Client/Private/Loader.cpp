@@ -307,7 +307,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_Background = true;
 #endif // 
 #ifdef 인혁
-	isLoad_Background = false;
+	isLoad_Background = true;
 #endif // 
 
 #pragma region MAP_MODELS

@@ -58,4 +58,11 @@ namespace Client
 		_float			fMaxExprience{};
 		_int			iGold{};
 	}UNITINFO;
+
+	typedef struct tagDamageInfo
+	{
+		_vector		vTarget_Pos{};
+		_float		fDamage{};
+		DAMAGE_TYPE eType;
+	}DAMAGE_INFO;
 };
