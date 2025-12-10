@@ -340,6 +340,7 @@ HRESULT CGoblin_Mage::Ready_Parts()
 	}
 
 	m_pGoblin_Orb->Load("../Bin/Resources/Data/Effect/GoblinMage/Orb_P", static_cast<LEVEL>(NEXT_LEVEL));
+
 	m_pGoblin_Orb->FollowParents(m_pModelCom->Get_BoneMatrixPtr("RightHand"));
 
 	return S_OK;

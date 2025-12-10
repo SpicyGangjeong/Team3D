@@ -50,7 +50,7 @@ void CGoblin_Mage::Behavior_IdleBreakEnter()
 	m_pFSM->Enable_State(FSMSTATE::IDLEBREAK);
 	pair<_uint, _bool> pairAnimInfo;
 	m_bLookAt = true;
-	_int RandIndex = m_pGameInstance->Real_Random_Int(0, 2);
+	_int RandIndex = m_pGameInstance->Real_Random_Int(0, 6);
 	switch (RandIndex)
 	{
 	case 0:
@@ -61,6 +61,18 @@ void CGoblin_Mage::Behavior_IdleBreakEnter()
 		break;
 	case 2:
 		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK3];
+		break;
+	case 3:
+		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK4];
+		break;
+	case 4:
+		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK5];
+		break;
+	case 5:
+		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK6];
+		break;
+	case 6:
+		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK7];
 		break;
 	}
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
@@ -589,6 +601,10 @@ void CGoblin_Mage::Set_Anim()
 	m_Animation[STATEANIM::IDLE_BREAK1] = { 137, false };
 	m_Animation[STATEANIM::IDLE_BREAK2] = { 138, false };
 	m_Animation[STATEANIM::IDLE_BREAK3] = { 139, false };
+	m_Animation[STATEANIM::IDLE_BREAK4] = { 37, false };
+	m_Animation[STATEANIM::IDLE_BREAK5] = { 38, false };
+	m_Animation[STATEANIM::IDLE_BREAK6] = { 39, false };
+	m_Animation[STATEANIM::IDLE_BREAK7] = { 41, false };
 
 	m_Animation[STATEANIM::WALK_FWD] = { 45,true };
 	m_Animation[STATEANIM::WALK_START] = { 57,false };

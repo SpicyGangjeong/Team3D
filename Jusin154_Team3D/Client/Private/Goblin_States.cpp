@@ -9,6 +9,7 @@
 
 #pragma region STATE
 #include "State_Idle.h"
+#include "State_IdleBreak.h"
 #include "State_Dodge.h"
 #include "State_Jump.h"
 #include "State_Land.h"
@@ -45,6 +46,53 @@ HRESULT CGoblin::Behavior_IdleExitCheck()
 void CGoblin::Behavior_IdleExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::IDLE);
+}
+
+void CGoblin::Behavior_IdleBreakEnter()
+{
+	m_pFSM->Enable_State(FSMSTATE::IDLEBREAK);
+	pair<_uint, _bool> pairAnimInfo;
+	m_bLookAt = true;
+	_int RandIndex = m_pGameInstance->Real_Random_Int(0, 6);
+	switch (RandIndex)
+	{
+	case 0:
+		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK1];
+		break;
+	case 1:
+		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK2];
+		break;
+	case 2:
+		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK3];
+		break;
+	case 3:
+		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK4];
+		break;
+	case 4:
+		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK5];
+		break;
+	case 5:
+		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK6];
+		break;
+	case 6:
+		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK7];
+		break;
+	}
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+}
+
+HRESULT CGoblin::Behavior_IdleBreakExitCheck()
+{
+	if (m_pModelCom->IsFinishedAnim()) {
+		m_pFSM->Change_State(FSMSTATE::MOVE);
+	}
+
+	return E_FAIL;
+}
+
+void CGoblin::Behavior_IdleBreakExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::IDLEBREAK);
 }
 
 void CGoblin::Behavior_MoveEnter()
@@ -523,6 +571,18 @@ void CGoblin::Add_FSM()
 		Desc.funcLateUpdate = nullptr;
 		m_States.emplace(FSMSTATE::IDLE, CState_Idle::Create(&Desc));
 	}
+
+	{
+		CState_IdleBreak::STATE_IDLEBREAK_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_IdleBreakEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_IdleBreakExitCheck(); };
+		Desc.funcExitEvent = [this]() { Behavior_IdleBreakExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::IDLEBREAK, CState_IdleBreak::Create(&Desc));
+	}
+
 	{
 		CState_Move::STATE_MOVE_DESC Desc{};
 		Desc.pOwner = this;
@@ -629,6 +689,14 @@ void CGoblin::Set_Anim()
 	m_Animation[STATEANIM::IDLE_TURN_BWD] = { 24, false };
 	m_Animation[STATEANIM::IDLE_TURN_L] = { 26, false };
 	m_Animation[STATEANIM::IDLE_TURN_R] = { 30, false };
+
+	m_Animation[STATEANIM::IDLE_BREAK1] = { 137, false };
+	m_Animation[STATEANIM::IDLE_BREAK2] = { 138, false };
+	m_Animation[STATEANIM::IDLE_BREAK3] = { 139, false };
+	m_Animation[STATEANIM::IDLE_BREAK4] = { 37, false };
+	m_Animation[STATEANIM::IDLE_BREAK5] = { 38, false };
+	m_Animation[STATEANIM::IDLE_BREAK6] = { 39, false };
+	m_Animation[STATEANIM::IDLE_BREAK7] = { 41, false };
 
 	m_Animation[STATEANIM::WALK_FWD] = { 45,true };
 	m_Animation[STATEANIM::WALK_START] = { 57,false };

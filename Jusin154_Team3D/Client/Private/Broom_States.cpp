@@ -130,6 +130,7 @@ void CBroom::Behavior_MoveEnter()
 {
 	if (!m_bRide)
 		return;
+
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::MOVE);
 	if (m_pFSM->IsEnable_Previous(FSMSTATE::IDLE)) {
@@ -172,6 +173,7 @@ HRESULT CBroom::Behavior_MoveExitCheck(_float fTimeDelta)
 {
 	if (!m_bRide)
 		return E_FAIL;
+
 	pair<_uint, _bool> pairAnimInfo = {};
 	_uint iCurrentAnimIndex = m_pModelCom->Get_AnimIndex();
 	_bool bFwd = m_pGameInstance->Key_Pressing(DIK_W);
@@ -199,10 +201,14 @@ HRESULT CBroom::Behavior_MoveExitCheck(_float fTimeDelta)
 		else if (bLft)
 		{
 			pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_LEFT_B];
+			Camera_InterpTurn(fTimeDelta);
+
 		}
 		else if (bRht)
 		{
 			pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_RIGHT_B];
+			Camera_InterpTurn(fTimeDelta);
+
 		}
 		else if (bDown)
 		{
@@ -364,6 +370,7 @@ void CBroom::Camera_InterpTurn(_float fTimeDelta)
 
 	if (m_pGameInstance->Key_Pressing(DIK_W))
 		xmvInput += vCameraLook;
+
 
 	xmvInput = XMVector3Normalize(xmvInput);
 
