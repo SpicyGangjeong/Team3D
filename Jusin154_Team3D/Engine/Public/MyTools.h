@@ -268,6 +268,24 @@ public:
 		}
 	}
 
+	inline static void SortHitsByDistance(vector<PSX::PxRaycastHit>& hits)
+	{
+		sort(hits.begin(), hits.end(),
+			[](const PSX::PxRaycastHit& hitLeft, const PSX::PxRaycastHit& hitRight)
+			{
+				return hitLeft.distance < hitRight.distance;
+			});
+	}
+
+	inline static void SortHitsByDistance(vector<PSX::PxSweepHit>& hits)
+	{
+		sort(hits.begin(), hits.end(),
+			[](const PSX::PxSweepHit& hitLeft, const PSX::PxSweepHit& hitRight)
+			{
+				return hitLeft.distance < hitRight.distance;
+			});
+	}
+
 
 	inline static _uint AlphabetToInt(_tchar Alphabet)
 	{

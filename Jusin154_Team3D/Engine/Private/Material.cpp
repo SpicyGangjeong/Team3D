@@ -478,13 +478,29 @@ CMaterial* CMaterial::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 }
 #endif
 
+HRESULT CMaterial::UnbindAllMaterialTextures(CShader* shader)
+{
+	if (shader == nullptr) {
+		return E_FAIL;
+	}
+
+	if (FAILED(shader->Bind_SRV("g_DiffuseTexture", nullptr))) { return E_FAIL; }
+	if (FAILED(shader->Bind_SRV("g_NormalTexture", nullptr))) { return E_FAIL; }
+	if (FAILED(shader->Bind_SRV("g_AmbientTexture", nullptr))) { return E_FAIL; }
+	if (FAILED(shader->Bind_SRV("g_EmissiveTexture", nullptr))) { return E_FAIL; }
+	if (FAILED(shader->Bind_SRV("g_AmbientOcclusionTexture", nullptr))) { return E_FAIL; }
+	if (FAILED(shader->Bind_SRV("g_TransmissionTexture", nullptr))) { return E_FAIL; }
+	if (FAILED(shader->Bind_SRV("g_SurfaceParamsTexture", nullptr))) { return E_FAIL; }
+	if (FAILED(shader->Bind_SRV("g_UnknownTexture", nullptr))) { return E_FAIL; }
+
+	return S_OK;
+}
+
 HRESULT CMaterial::Bind_SRV(CShader* pShader)
 {
-	//if (m_SRVs[iType].empty()) {
-	//	//assert(false);
-	//	return S_OK;
-	//}
-
+	if (FAILED(UnbindAllMaterialTextures(pShader))) {
+		return E_FAIL;
+	}
 	_float fZero = 0.f;
 	if (FAILED(pShader->Bind_RawValue("g_fUsingSurfaceParams", &fZero, sizeof(_float)))) {
 		return E_FAIL;
@@ -492,115 +508,119 @@ HRESULT CMaterial::Bind_SRV(CShader* pShader)
 	if (FAILED(pShader->Bind_SRV("g_SurfaceParamsTexture", nullptr))) {
 		return E_FAIL;
 	}
-	_bool bBinded[AI_TEXTURE_TYPE_MAX] = {};
+	_int iBinded[AI_TEXTURE_TYPE_MAX] = {};
+	memset(iBinded, 0, sizeof(iBinded));
+
 	for (_uint iTextureType = 0; iTextureType < AI_TEXTURE_TYPE_MAX; ++iTextureType) {
-		const _char* pConstantName = "";
-		bBinded[iTextureType] = true;
+		const _char* pConstantName = nullptr;
 		if (m_SRVs[iTextureType].empty()) {
-			bBinded[iTextureType] = false;
+			continue;
 		}
-		else {
-			switch (aiTextureType(iTextureType))
-			{
-			case aiTextureType_NONE:
-				break;
-			case aiTextureType_DIFFUSE:
-				pConstantName = "g_DiffuseTexture";
-				break;
-			case aiTextureType_SPECULAR:
-			{
-				_float fUsingSurfaceParams = ((_float)iTextureType / (_float)AI_TEXTURE_TYPE_MAX);
-				pConstantName = "g_SurfaceParamsTexture";
-				if (!m_SRVs[iTextureType].empty()) {
-					pShader->Bind_RawValue("g_fUsingSurfaceParams", &fUsingSurfaceParams, sizeof(_float));
+		iBinded[iTextureType] = 1;
+
+		switch (aiTextureType(iTextureType))
+		{
+		case aiTextureType_NONE:
+			break;
+		case aiTextureType_DIFFUSE:
+			pConstantName = "g_DiffuseTexture";
+			break;
+		case aiTextureType_SPECULAR:
+		{
+			_float fUsingSurfaceParams = ((_float)iTextureType / (_float)AI_TEXTURE_TYPE_MAX);
+			pConstantName = "g_SurfaceParamsTexture";
+			if (!m_SRVs[iTextureType].empty()) {
+				if (FAILED(pShader->Bind_RawValue("g_fUsingSurfaceParams", &fUsingSurfaceParams, sizeof(_float)))) {
+					return E_FAIL;
 				}
-			} break;
-			case aiTextureType_AMBIENT:
-				pConstantName = "g_AmbientTexture";
-				break;
-			case aiTextureType_EMISSIVE:
-				pConstantName = "g_EmissiveTexture";
-				break;
-			case aiTextureType_HEIGHT:
-				break;
-			case aiTextureType_NORMALS:
-				pConstantName = "g_NormalTexture";
-				break;
-			case aiTextureType_SHININESS:
-				break;
-			case aiTextureType_OPACITY:
-				break;
-			case aiTextureType_DISPLACEMENT:
-				break;
-			case aiTextureType_LIGHTMAP:
-				break;
-			case aiTextureType_REFLECTION:
-				break;
-			case aiTextureType_BASE_COLOR:
-				break;
-			case aiTextureType_NORMAL_CAMERA:
-				break;
-			case aiTextureType_EMISSION_COLOR:
-				break;
-			case aiTextureType_METALNESS:
-			{
-				_float fUsingSurfaceParams = ((_float)iTextureType / (_float)AI_TEXTURE_TYPE_MAX);
-				pConstantName = "g_SurfaceParamsTexture";
-				if (!m_SRVs[iTextureType].empty()) {
-					pShader->Bind_RawValue("g_fUsingSurfaceParams", &fUsingSurfaceParams, sizeof(_float));
-				}
-			} break;
-			case aiTextureType_DIFFUSE_ROUGHNESS:
-				break;
-			case aiTextureType_AMBIENT_OCCLUSION:
-				pConstantName = "g_AmbientOcclusionTexture";
-				break;
-			case aiTextureType_UNKNOWN:
-				pConstantName = "g_UnknownTexture";
-				break;
-			case aiTextureType_SHEEN:
-				break;
-			case aiTextureType_CLEARCOAT:
-				break;
-			case aiTextureType_TRANSMISSION:
-				pConstantName = "g_TransmissionTexture";
-				break;
-			case aiTextureType_MAYA_BASE:
-				break;
-			case aiTextureType_MAYA_SPECULAR:
-				break;
-			case aiTextureType_MAYA_SPECULAR_COLOR:
-				break;
-			case aiTextureType_MAYA_SPECULAR_ROUGHNESS:
-				break;
-			case aiTextureType_ANISOTROPY:
-			{
-				_float fUsingSurfaceParams = ((_float)iTextureType / (_float)AI_TEXTURE_TYPE_MAX);
-				pConstantName = "g_SurfaceParamsTexture";
-				if (!m_SRVs[iTextureType].empty()) {
-					pShader->Bind_RawValue("g_fUsingSurfaceParams", &fUsingSurfaceParams, sizeof(_float));
-				}
-			} break;
-			case _aiTextureType_Force32Bit:
-				break;
-			default:
-				break;
 			}
+		} break;
+		case aiTextureType_AMBIENT:
+			pConstantName = "g_AmbientTexture";
+			break;
+		case aiTextureType_EMISSIVE:
+			pConstantName = "g_EmissiveTexture";
+			break;
+		case aiTextureType_HEIGHT:
+			break;
+		case aiTextureType_NORMALS:
+			pConstantName = "g_NormalTexture";
+			break;
+		case aiTextureType_SHININESS:
+			break;
+		case aiTextureType_OPACITY:
+			break;
+		case aiTextureType_DISPLACEMENT:
+			break;
+		case aiTextureType_LIGHTMAP:
+			break;
+		case aiTextureType_REFLECTION:
+			break;
+		case aiTextureType_BASE_COLOR:
+			break;
+		case aiTextureType_NORMAL_CAMERA:
+			break;
+		case aiTextureType_EMISSION_COLOR:
+			break;
+		case aiTextureType_METALNESS:
+		{
+			_float fUsingSurfaceParams = ((_float)iTextureType / (_float)AI_TEXTURE_TYPE_MAX);
+			pConstantName = "g_SurfaceParamsTexture";
+			if (!m_SRVs[iTextureType].empty()) {
+				if (FAILED(pShader->Bind_RawValue("g_fUsingSurfaceParams", &fUsingSurfaceParams, sizeof(_float)))) {
+					return E_FAIL;
+				}
+			}
+		} break;
+		case aiTextureType_DIFFUSE_ROUGHNESS:
+			break;
+		case aiTextureType_AMBIENT_OCCLUSION:
+			pConstantName = "g_AmbientOcclusionTexture";
+			break;
+		case aiTextureType_UNKNOWN:
+			pConstantName = "g_UnknownTexture";
+			break;
+		case aiTextureType_SHEEN:
+			break;
+		case aiTextureType_CLEARCOAT:
+			break;
+		case aiTextureType_TRANSMISSION:
+			pConstantName = "g_TransmissionTexture";
+			break;
+		case aiTextureType_MAYA_BASE:
+			break;
+		case aiTextureType_MAYA_SPECULAR:
+			break;
+		case aiTextureType_MAYA_SPECULAR_COLOR:
+			break;
+		case aiTextureType_MAYA_SPECULAR_ROUGHNESS:
+			break;
+		case aiTextureType_ANISOTROPY:
+		{
+			_float fUsingSurfaceParams = ((_float)iTextureType / (_float)AI_TEXTURE_TYPE_MAX);
+			pConstantName = "g_SurfaceParamsTexture";
+			if (!m_SRVs[iTextureType].empty()) {
+				if (FAILED(pShader->Bind_RawValue("g_fUsingSurfaceParams", &fUsingSurfaceParams, sizeof(_float)))) {
+					return E_FAIL;
+				}
+			}
+		} break;
+		default:
+			break;
 		}
-		if (true == bBinded[iTextureType]) {
-			if (0 == strcmp(pConstantName, "")) { // 미사용 SRV
-				return S_OK;
-			}
-			if (FAILED(pShader->Bind_SRV(pConstantName, m_SRVs[iTextureType][0]))) {
-				return E_FAIL;
-			}
+
+		if (nullptr == pConstantName) { // 미사용 SRV
+			iBinded[iTextureType] = 0;
+			continue;
+		}
+		if (FAILED(pShader->Bind_SRV(pConstantName, m_SRVs[iTextureType][0]))) {
+			return E_FAIL;
 		}
 	}
-	if (FAILED(pShader->Bind_RawValue("g_bBinded_Texture", &bBinded, sizeof(bBinded)))) {
+	
+	if (FAILED(pShader->Bind_IntArray("g_iBinded_Texture", &iBinded[0], AI_TEXTURE_TYPE_MAX))) {
 		return E_FAIL;
 	}
-
-
 	return S_OK;
 }
 

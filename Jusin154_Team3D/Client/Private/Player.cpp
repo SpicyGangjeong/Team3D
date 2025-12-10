@@ -121,6 +121,7 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 void CPlayer::Update(_float fTimeDelta)
 {
 	Update_CameraCoordinateSystem();
+	UpdateGrapInteractive(fTimeDelta);
 	
 	m_pFSM->Update_State(fTimeDelta);
 
@@ -138,15 +139,25 @@ __super::Update(fTimeDelta);
 		m_pCharacter_Controller->Move(fTimeDelta);
 		m_pCallBack_HitReport->Set_CurrentSlop();
 	}
-	if (m_pGameInstance->Mouse_Down(DIM_RBUTTON))
+	if (m_pGameInstance->Mouse_Down(DIM_RBUTTON)){
 		m_pInfoInstance->Mouse_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_DOWN));
+	}
 	if (m_pGameInstance->Mouse_Up(DIM_RBUTTON))
 	{
 		m_pInfoInstance->Mouse_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_UP));
 		m_bAim = false; 
 	}
+}
 
-
+void CPlayer::UpdateGrapInteractive(Engine::_float fTimeDelta)
+{
+	if (nullptr != m_pGrapInteractive) {
+		m_vGrapInteratableLerp.x += fTimeDelta;
+		m_pGrapInteractive->GrapToPlayer(m_pTransformCom->Get_State(STATE::POSITION) + m_pCamPosition_ShoulderPart->Get_ShoulderLocalPos(), m_vGrapInteratableLerp.x);
+		if (m_vGrapInteratableLerp.x > m_vGrapInteratableLerp.y) {
+			m_vGrapInteratableLerp.x -= m_vGrapInteratableLerp.y;
+		}
+	}
 }
 
 void CPlayer::Late_Update(_float fTimeDelta)
@@ -362,12 +373,12 @@ HRESULT CPlayer::Ready_Components()
 		Desc.iSubKind = ENUM_CLASS(PXOBJECT::PLAYER);
 		Desc.pTransform = m_pTransformCom;
 		Desc.eBodyType = ACTOR::CAPSULE;
-		Desc.fContactOffset = 0.3f;
+		Desc.fContactOffset = 0.001f;
 		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
-		Desc.bAutoStepping = { true };
-		Desc.fStepOffset = { 0.05f };
+		Desc.bAutoStepping = { false };
+		Desc.fStepOffset = { 0.001f };
 		Desc.fRadius = 0.5f;
-		Desc.fHeight = 1.0f;
+		Desc.fHeight = 0.6f;
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Playable_HitReport::Create();
 		Desc.pCallback_Behavior = m_pCallBack_Behavior = CCallBack_Playable_Behavior::Create();
 		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
@@ -512,6 +523,7 @@ void CPlayer::Free()
 	__super::Free();
 
 
+	SAFE_RELEASE(m_pGrapInteractive);
 	if (nullptr != m_pInfoInstance) {
 		CInfoInstance* pInfo = m_pInfoInstance;
 		m_pInfoInstance = nullptr;
