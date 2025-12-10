@@ -153,7 +153,7 @@ void CPlayer::UpdateGrapInteractive(Engine::_float fTimeDelta)
 {
 	if (nullptr != m_pGrapInteractive) {
 		m_vGrapInteratableLerp.x += fTimeDelta;
-		m_pGrapInteractive->GrapToPlayer(m_pTransformCom->Get_State(STATE::POSITION) + m_pCamPosition_ShoulderPart->Get_ShoulderLocalPos(), m_vGrapInteratableLerp.x);
+		m_pGrapInteractive->GrapToPlayer(m_pTransformCom->Get_State(STATE::POSITION) + m_pCamPosition_ShoulderPart->Get_ShoulderGlobalPos(), m_vGrapInteratableLerp.x);
 		if (m_vGrapInteratableLerp.x > m_vGrapInteratableLerp.y) {
 			m_vGrapInteratableLerp.x -= m_vGrapInteratableLerp.y;
 		}
@@ -417,12 +417,6 @@ HRESULT CPlayer::Ready_Parts()
 	{
 		CCamPosition_Shoulder::CAMERA_SHOULDER_DESC Desc;
 		Desc.pParentTransform = m_pTransformCom;
-		Desc.fMouseSensor = 0.1f;
-		Desc.fShoulderDistance = 2.f;
-		Desc.fBackFrontRatio = 0.9f;
-		Desc.fCameraFocalLength = 13.4f;
-		Desc.vInitialLook = { 0.77f, 1.35f, -1.f };
-
 		if (FAILED(Add_PartObject<CCamPosition_Shoulder>("Cam_Shoulder_Part", g_iStaticLevel, &m_pCamPosition_ShoulderPart, &Desc))) {
 			return E_FAIL;
 		}

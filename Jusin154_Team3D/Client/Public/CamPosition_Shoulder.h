@@ -10,11 +10,6 @@ class CCamPosition_Shoulder final : public CCamPosition
 public:
 	typedef struct tagCameraShoulder_Desc : public CCamPosition::CAMERAPOSITION_DESC
 	{
-		_float		fMouseSensor = { 0.5f };
-		_float		fShoulderDistance = { 2.f };
-		_float		fBackFrontRatio = { 0.9f };
-		_float		fCameraFocalLength = { 10.f };
-		_float3		vInitialLook = { 1.f, 2.f, -1.f };
 	}CAMERA_SHOULDER_DESC;
 private:
 	CCamPosition_Shoulder(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -27,7 +22,7 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	virtual _vector Get_WorldPostion() override;
-	_vector Get_ShoulderLocalPos();
+	_vector Get_ShoulderGlobalPos();
 	
 
 private:
@@ -35,35 +30,44 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 	HRESULT Ready_Components(void* pArg);
 	HRESULT Ready_SubParts();
-	void Start_LerpShoulderPos();
-	_float Calc_CamPosRatio();
+	_vector Calc_LookTargetPos();
+	_vector Calc_FollowTargetPos(_vector vLookTargetWorldPos);
 
-	_bool	m_bMovable = { true };
-	_float	m_fMouseSensor = { 0.5f };
-	_float	m_fShoulderDistance = { 2.f };
-	_float	m_fCameraFocalLength = { 10.f };
-	_float3	m_vBackFrontRatio = { 0.9f, 0.9f, 0.9f }; // 시작위치, 대상위치, 원래위치
-	_float2	m_vAccDegreeXY = {};
-	_float3 m_vShoulderPosRatio = { 1.f, 2.f, -1.f };
+	_float		m_fMouseSensor = { 0.1f };
+	_float		m_fCameraFowardDistance = { 3.45f };
+	_float		m_fCameraBarrelLength = { 10.f };
+	_float2		m_vFocalRatio = { 0.f, 0.467f };
+	_float		m_fHeadHeight = { 1.61f };
+	_float		m_fFollowTargetIncludedAngleDegree = { 20.f };
+	_float		m_fDefaultCameraBackToFrontRatio = { 0.61f };
+	_float2		m_vAccRotDegrees = { 0.f, 0.f };
+	_float3		m_vShoulderLocalPos = { 1.f, 2.f, 2.f };
 
-	_float3 m_vShoulderStartRatio = { 1.f, 2.f, -1.f };
-	_float3 m_vShoulderOtherRatio = { 1.f, 2.f, -1.f };
+#pragma region Lerp
+	_bool m_bShoulderLerp = false;
+	_bool m_bRightShoulderActive = true;
+	_float2 m_vShoulderLerpTimer = { 0.f, 0.30f };
 
-	_bool m_bShoulderLerp = { false };
-	_float2 m_vShoulderLerpTimer = { 0.f, 1.f };
+	// Lerp 각도
+	_float2 m_vShoulderLerpDegree = { };
+	_float2 m_vShoulderLerpIncludedAngleDegree = { -20.f, 20.f };
 
-	_float2 m_vPosLerpTimer = { 0.f, BASIC_LERP_TIMER };
-	_float4 m_StartPos = { };
-	_float4 m_DestPos = { };
+	_float m_fFocalRatioTargetValue = 0.f;
+	_float m_fFocalRatioLerpSpeed = 6.f;
+	_float m_fFocalRatioMin = 0.05f;
+#pragma endregion
+
 	PSX::PxSweepBuffer m_BufferHit = {};
 
 	_bool m_bZoomIn = { false };
-	_bool m_bLerp = {};
+	_bool m_bMovable = { true };
 
-
-	CCamPosition_Target* m_pTarget_LookPart = { nullptr };
-	CCamPosition_Target* m_pTarget_FollowPart = { nullptr };
-	class CCamera_Gaze* m_pBinded_Camera = { nullptr };
+	const _float4*			m_pParentPos = { nullptr };
+	CTransform*				m_pLookTransform = { nullptr };
+	CTransform*				m_pFollowTransform = { nullptr };
+	CCamPosition_Target*	m_pTarget_LookPart = { nullptr };
+	CCamPosition_Target*	m_pTarget_FollowPart = { nullptr };
+	class CCamera_Gaze*		m_pBinded_Camera = { nullptr };
 
 public:
 	static CCamPosition_Shoulder* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
