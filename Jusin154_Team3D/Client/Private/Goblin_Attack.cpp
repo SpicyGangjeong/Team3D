@@ -5,6 +5,7 @@
 #include "EffectParts.h"
 #include "Wand.h"
 #include "Player.h"
+#include "Goblin_BattleAxe.h"
 
 CGoblin_Attack::CGoblin_Attack(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEffect_Container{ pDevice, pContext }
@@ -36,8 +37,10 @@ HRESULT CGoblin_Attack::Initialize(void* pArg)
 		return E_FAIL;
 
 
-	m_wstrEffectName = L"TrollSwing";
+	m_wstrEffectName = L"GoblinAttack";
 
+	m_pPT1 = Get_PartObject<CEffectParts>("Goblin_Particle");
+	m_pPT2 = Get_PartObject<CEffectParts>("Goblin_Particle2");
 
 	m_fDuration = 2.f;
 
@@ -60,6 +63,13 @@ void CGoblin_Attack::Update(_float fTimeDelta)
 	Update_Event(fTimeDelta);
 
 
+	CGoblin_BattleAxe* pAxe = static_cast<CGoblin_BattleAxe*>(m_pOwner);
+
+	_float4x4 AxeMat = pAxe->Get_AxeMatrix();
+
+	m_pPT1->Get_Component<CTransform>()->Set_WorldMatrix(XMLoadFloat4x4(&AxeMat));
+	m_pPT2->Get_Component<CTransform>()->Set_WorldMatrix(XMLoadFloat4x4(&AxeMat));
+
 
 }
 
@@ -77,10 +87,13 @@ HRESULT CGoblin_Attack::Pre_Setting(CGameObject* pObject, void* pArg)
 {
 	if (FAILED(__super::Pre_Setting(pObject, nullptr)))
 		return E_FAIL;
+	
+	CGoblin_BattleAxe* pAxe = static_cast<CGoblin_BattleAxe*>(m_pOwner);
+	
+	_float4x4 AxeMat = pAxe->Get_AxeMatrix();
 
-	m_pPT1 = Get_PartObject<CEffectParts>("Goblin_Particle");
-	m_pPT2 = Get_PartObject<CEffectParts>("Goblin_Particle2");
-
+	 m_pPT1->Get_Component<CTransform>()->Set_WorldMatrix(XMLoadFloat4x4(&AxeMat));
+	 m_pPT2->Get_Component<CTransform>()->Set_WorldMatrix(XMLoadFloat4x4(&AxeMat));
 
 	m_pPT1->Set_Visible(true);
 	m_pPT2->Set_Visible(true);
