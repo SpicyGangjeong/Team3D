@@ -335,7 +335,7 @@ void CRenderer::Render_Combined()
 
 void CRenderer::Render_EnvironmentPostProcess()
 {
-	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Blur_X")))) {
+	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_ENV_Blur_X")))) {
 		return;
 	}
 
@@ -385,7 +385,7 @@ void CRenderer::Render_EnvironmentPostProcess()
 	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Depth"), m_pShader, "g_DepthTexture"))) {
 		return;
 	}
-	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Blur_X"), m_pShader, "g_BlurTexture"))) {
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_ENV_Blur_X"), m_pShader, "g_BlurTexture"))) {
 		return;
 	}
 	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_AfterCombined"), m_pShader, "g_DiffuseTexture"))) {
