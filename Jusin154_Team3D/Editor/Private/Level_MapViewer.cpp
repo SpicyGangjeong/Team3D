@@ -231,7 +231,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_InstanceProp(const _wstring& strLayerTag)
 	/* Oak_Tree */
 	Desc.bEditMode = false;
 	Desc.isShake = true;
-	Desc.vRadius = _float2(0.015f, 0.04f);
+	Desc.vRadius = _float2(0.015f, 0.03f);
 	Desc.vSpeed = _float2(0.3f, 1.f);
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_OakTree_MedA";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/OakTree_MedA.bin";
@@ -330,11 +330,51 @@ HRESULT CLevel_MapViewer::Ready_Layer_InstanceProp(const _wstring& strLayerTag)
 
 	/* OakTree_TallA */
 	Desc.bEditMode = false;
-	Desc.isShake = true;
-	Desc.vRadius = _float2(0.f, 0.01f);
-	Desc.vSpeed = _float2(0.01f, 0.1f);
+	Desc.isShake = false;
+	Desc.vRadius = _float2(0.01f, 0.01f);
+	Desc.vSpeed = _float2(0.01f, 0.021f);
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_OakTree_TallA";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/OakTree_TallA.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
+		return E_FAIL;
+
+	/* Shrub_B */
+	Desc.bEditMode = false;
+	Desc.isShake = true;
+	Desc.vRadius = _float2(0.015f, 0.04f);
+	Desc.vSpeed = _float2(0.3f, 1.f);
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Shrub_B";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Shrub_B.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
+		return E_FAIL;
+
+	/* BogMyrtle_A */
+	Desc.bEditMode = false;
+	Desc.isShake = true;
+	Desc.vRadius = _float2(0.015f, 0.04f);
+	Desc.vSpeed = _float2(0.3f, 1.f);
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_BogMyrtle_A";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/BogMyrtle_A.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
+		return E_FAIL;
+
+	/* Dogwood_B */
+	Desc.bEditMode = false;
+	Desc.isShake = true;
+	Desc.vRadius = _float2(0.015f, 0.02f);
+	Desc.vSpeed = _float2(0.3f, 1.f);
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Dogwood_B";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Dogwood_B.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
+		return E_FAIL;
+
+	/* ScotsPine_LargeA */
+	Desc.bEditMode = false;
+	Desc.isShake = false;
+	Desc.vRadius = _float2(0.015f, 0.02f);
+	Desc.vSpeed = _float2(0.3f, 1.f);
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_ScotsPine_LargeA";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/ScotsPine_LargeA.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
 		return E_FAIL;
 

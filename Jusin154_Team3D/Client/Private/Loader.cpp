@@ -1903,6 +1903,30 @@ HRESULT CLoader::Loading_For_GamePlay()
 		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
 			"../Bin/Resources/Models/InstanceProp/SM_OakTree_TallA.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
 		return E_FAIL;
+
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_Shrub_B*/
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_Shrub_B"),
+		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_GenericShrub_B.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_BogMyrtle_A*/
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_BogMyrtle_A"),
+		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_BogMyrtle_A.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_Dogwood_B*/
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_Dogwood_B"),
+		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_Dogwood_B.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_ScotsPine_LargeA*/
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_ScotsPine_LargeA"),
+		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_ScotsPine_LargeA_Master.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+		return E_FAIL;
 #pragma endregion
 
 	/* For.Prototype_Component_South_Hogwart_Land_LOD1 */
