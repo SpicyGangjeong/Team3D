@@ -32,6 +32,9 @@ public:
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
 
 
+public:
+	void    Spector_Trail_Visible(_bool isTrailVisible);
+
 private:
 	class CGoblin* m_pGoblin = { nullptr };
 	CTransform* m_pParentTransformCom = { nullptr };
@@ -41,11 +44,11 @@ private:
 	_float3 m_vScale = { 1.f, 1.f, 1.f };
 
 
+	class CTrailObject* m_pLeft_Trail = { nullptr };
+	class CTrailObject* m_pRight_Trail = { nullptr };
 
-	class CEditEffect* m_pSmoke = { nullptr };
-	class CEditEffect* m_pGoblin_Particle = { nullptr };
-	class CEditEffect* m_pGoblin_Particle2 = { nullptr };
-
+	const _float4x4* m_pLeftHand_BoneMat = { nullptr };
+	const _float4x4* m_pRightHand_BoneMat = { nullptr };
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

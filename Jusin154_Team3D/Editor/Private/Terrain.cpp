@@ -83,7 +83,7 @@ void CTerrain::Update(_float fTimeDelta)
 
 	//m_pVIBufferCom->Culling(m_pTransformCom->Get_XMWorldMatrix());
 	
-	if(m_pGameInstance->Key_Down(DIK_LSHIFT) && m_pGameInstance->Key_Down(DIK_W))
+	if(m_pGameInstance->Key_Down(DIK_LCONTROL) && m_pGameInstance->Key_Down(DIK_W))
 	{
 		m_bWasWireFrame = !m_bWasWireFrame;
 	}

@@ -7,6 +7,7 @@
 #include "Goblin_BattleAxe.h"
 
 #include "EffectParts.h"
+#include "TrailObject.h"
 
 
 CGoblin_Spector::CGoblin_Spector(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -41,6 +42,13 @@ HRESULT CGoblin_Spector::Initialize(void* pArg)
 	SAFE_ADDREF(m_pGoblin);
 
 	m_vOriginScale = m_pTransformCom->Get_Scale();
+
+	m_pLeftHand_BoneMat = m_pModelCom->Get_BoneMatrixPtr("SKT_LeftHand");
+	m_pRightHand_BoneMat = m_pModelCom->Get_BoneMatrixPtr("SKT_RightHand");
+
+	m_pModelCom->Set_AnimationIndex(5);
+	m_pModelCom->Play_Animation(0, m_pTransformCom);
+
 
 	m_bVisible = false;
 
@@ -84,9 +92,45 @@ void CGoblin_Spector::Update(_float fTimeDelta)
 		m_pModelCom->Set_AnimationIndex(5);
 	}
 
+	if (m_bDisolve) {
+		Get_PartObject<CGoblin_BattleAxe>()->Set_Disolve(true);
+		m_fDisolveTime += fTimeDelta;
+		if (m_fDisolveTime >= 1.f)
+		{
+			m_fDisolveTime = 0.f;
+			m_bDisolve = false;
+			m_bVisible = false;
+		}
+	}
+
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
+
+#pragma region TRAIL_UPDATE
+
+	_matrix WorldMat = m_pTransformCom->Get_XMWorldMatrix();
+
+	_matrix LeftHandMatrix = {};
+	_matrix RightHandMatrix = {};
+	_matrix WeaponMatrix = {};
+
+	LeftHandMatrix = XMLoadFloat4x4(m_pLeftHand_BoneMat);
+	RightHandMatrix = XMLoadFloat4x4(m_pRightHand_BoneMat);
+
+
+	for (int i = 0; i < 3; ++i) {
+		LeftHandMatrix.r[i] = XMVector3Normalize(LeftHandMatrix.r[i]);
+		RightHandMatrix.r[i] = XMVector3Normalize(RightHandMatrix.r[i]);
+		WeaponMatrix.r[i] = XMVector3Normalize(WeaponMatrix.r[i]);
+	}
+
+	_matrix WeaponSoket = WeaponMatrix * Get_Component<CTransform>()->Get_XMWorldMatrix();
+
+	m_pLeft_Trail->Trail_Update(LeftHandMatrix * WorldMat, fTimeDelta);
+	m_pRight_Trail->Trail_Update(RightHandMatrix * WorldMat, fTimeDelta);
+
+#pragma endregion
 
 }
 
@@ -107,6 +151,11 @@ HRESULT CGoblin_Spector::Render()
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 	_uint iShaderPass = ENUM_CLASS(SHADER_PASS_ANIM::SPECTOR);
+
+	if (FAILED(Render_Disolve())) {
+		return E_FAIL;
+	}
+	
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
 		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
@@ -124,6 +173,13 @@ HRESULT CGoblin_Spector::Render()
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
 		}
+	}
+
+	{
+		_bool bDisolve = false;
+		_float zero = 0.f;
+		m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool));
+		m_pShaderCom->Bind_RawValue("g_fDisolveRatio", &zero, sizeof(_float));
 	}
 
 	return S_OK;
@@ -159,7 +215,36 @@ HRESULT CGoblin_Spector::Ready_Components()
 	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_GOBLIN"), (CComponent**)&m_pStat))) {
 		return E_FAIL;
 	}
+
+	CPartObject::PARTOBJECT_DESC PartsDesc{};
+
+	PartsDesc.pParentTransform = m_pTransformCom;
+
+	if (FAILED(Add_PartObject<CTrailObject>("Left_Trail", g_iStaticLevel, &m_pLeft_Trail, &PartsDesc))) {
+		return E_FAIL;
+	}
+
+	m_pLeft_Trail->Load_Trail("../Bin/Resources/Data/Effect/Goblin/GoblinSide/Goblin_Trail_R", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pLeft_Trail->Set_Visible(false);
+
+	if (FAILED(Add_PartObject<CTrailObject>("Right_Trail", g_iStaticLevel, &m_pRight_Trail, &PartsDesc))) {
+		return E_FAIL;
+	}
+
+	m_pRight_Trail->Load_Trail("../Bin/Resources/Data/Effect/Goblin/GoblinSide/Goblin_Trail_R", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pRight_Trail->Set_Visible(false);
+
+
 	return S_OK;
+}
+
+void CGoblin_Spector::Spector_Trail_Visible(_bool isTrailVisible)
+{
+	m_pLeft_Trail->Set_Visible(isTrailVisible);
+	m_pRight_Trail->Set_Visible(isTrailVisible);
+
+	m_pLeft_Trail->Get_Component<CTrail>()->Reset_Trail();
+	m_pRight_Trail->Get_Component<CTrail>()->Reset_Trail();
 }
 
 HRESULT CGoblin_Spector::Ready_Parts()
@@ -196,6 +281,36 @@ HRESULT CGoblin_Spector::Bind_ShaderResources()
 	return S_OK;
 }
 
+HRESULT CGoblin_Spector::Render_Disolve()
+{
+	if (FLT_EPSILON3 * 10 < m_fDisolveTime)
+	{
+		_bool bDisolve = true;
+		_float fDisolveAmount = 0.1f;
+		_float fDisolveEdgeWidth = 0.1f;
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_fDisolveRatio", &m_fDisolveTime, sizeof(_float)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_fDisolveAmount", &fDisolveAmount, sizeof(_float)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_fDisolveEdgeWidth", &fDisolveEdgeWidth, sizeof(_float)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Bind_GlobalSRV(m_pShaderCom, TEXT("GLOBAL_DISOLVE_NOISE_05"), "g_DeadDisolveTexture"))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Bind_GlobalSRV(m_pShaderCom, TEXT("GLOBAL_DISOLVE_BURN_VERTICAL"), "g_DeadDisolveBurnTexture"))) {
+			return E_FAIL;
+		}
+	}
+	
+	return S_OK;
+}
+
 CGoblin_Spector* CGoblin_Spector::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CGoblin_Spector* pInstance = new CGoblin_Spector(pDevice, pContext);
@@ -224,10 +339,10 @@ void CGoblin_Spector::Free()
 {
 	__super::Free();
 
-	SAFE_RELEASE(m_pSmoke);
-	SAFE_RELEASE(m_pGoblin_Particle);
-	SAFE_RELEASE(m_pGoblin_Particle2);
+
 	SAFE_RELEASE(m_pGoblin);
+	SAFE_RELEASE(m_pLeft_Trail);
+	SAFE_RELEASE(m_pRight_Trail);
 }
 #ifdef _DEBUG
 

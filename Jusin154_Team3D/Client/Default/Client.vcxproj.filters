@@ -488,6 +488,9 @@
     <ClInclude Include="..\Public\State_Sustain.h">
       <Filter>04.Mechanic\State\State_Combat\State_Sustain</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Goblin_Attack.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Goblin_Attack</Filter>
+	</ClInclude>
     <ClInclude Include="CDamageFont.h">
       <Filter>04.Mechanic\Damage</Filter>
     </ClInclude>
@@ -1035,6 +1038,9 @@
     <Filter Include="04.Mechanic\State\Troll_Combat\Troll_State_Stun">
       <UniqueIdentifier>{2e2a53dc-9ea6-427f-88b3-d8857193d432}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Goblin_Attack">
+      <UniqueIdentifier>{967d1741-2780-40b7-b55e-9fd58e931ef7}</UniqueIdentifier>
+	</Filter>
     <Filter Include="04.Mechanic\Damage">
       <UniqueIdentifier>{36962dce-8c99-4c54-9189-2a49785a211e}</UniqueIdentifier>
     </Filter>
@@ -1473,6 +1479,9 @@
     <ClCompile Include="..\Private\State_Sustain.cpp">
       <Filter>04.Mechanic\State\State_Combat\State_Sustain</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Goblin_Attack.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Goblin_Attack</Filter>
+	</ClCompile>
     <ClCompile Include="CDamageFont.cpp">
       <Filter>04.Mechanic\Damage</Filter>
     </ClCompile>

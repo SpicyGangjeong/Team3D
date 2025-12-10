@@ -61,7 +61,7 @@ void CEffectParts::Late_Update(_float fTimeDelta)
 		return;
 
 
-	m_pInstance_ModelCom->Drop(fTimeDelta);
+	m_pInstance_ModelCom->Compute_CS(fTimeDelta);
 
 
 	if (m_EffectInfo.isBillboard)

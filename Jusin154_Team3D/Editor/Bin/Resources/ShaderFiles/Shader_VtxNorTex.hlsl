@@ -117,9 +117,9 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vAlbedo = vMtrlDiffuse;
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
-    (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
-    g_fUsingSurfaceParams, // 서페이스 파라미터
-    1.f);
+        (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
+        g_fUsingSurfaceParams, // 서페이스 파라미터
+        1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = vSurface;
     
@@ -175,9 +175,9 @@ PS_OUT PS_MAIN_TERRAIN_ANISO(PS_IN In)
     Out.vAlbedo = vMtrlDiffuse;
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
-    (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
-    g_fUsingSurfaceParams, // 서페이스 파라미터
-    (1.f / 255.f)); // 지형은 1
+        (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
+        g_fUsingSurfaceParams, // 서페이스 파라미터
+        (1.f / 255.f)); // 지형은 1
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = vSurface;
     

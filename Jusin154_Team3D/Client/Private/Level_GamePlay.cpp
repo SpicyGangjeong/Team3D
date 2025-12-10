@@ -222,7 +222,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CUnified>(g_iStaticLevel, NEXT_LEVEL, LAYER_UNIFIED)))
 		return E_FAIL;
-
+	 
 
 
 	CMapElement_Lake::MAPOBJECT_LAKE_DESC Lake_Desc = {};
@@ -244,10 +244,10 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	_bool isReady_Background = { false };
 
 #ifdef gimch
-	isReady_Background = false;
+	isReady_Background = true;
 #endif // gimch
 #ifdef Bin
-	isReady_Background = true;
+	isReady_Background = false;
 #endif // 
 #ifdef 진우
 	isReady_Background = false;
@@ -281,84 +281,116 @@ HRESULT CLevel_GamePlay::Ready_Background()
 		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_TeaShopTable");
 		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_TeaShopChair");
 
-		CInstancedProp::INSTANCE_PROP_DESC Desc = {};
-
-		/* InstanceProp Oak_Tree*/
-		Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_OakTree_MedA";
-		Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/OakTree_MedA.bin";
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc))) {
+		if (FAILED(Ready_IntstanceProp()))
 			return E_FAIL;
-		}
-
-		/* BearBerry */
-		Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_BearBerry_A";
-		Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/BearBerry_A.bin";
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc))) {
-			return E_FAIL;
-		}
-
-		/* SM_HM_OwlPost_Window_A */
-		Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_OwlPost_Window_A";
-		Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/OwlPost_Window.bin";
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
-			return E_FAIL;
-
-		///* WA_Rectangle_Double_A */
-		Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WA_Rectangle_Double_A";
-		Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Rectangle_Double_A.bin";
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
-			return E_FAIL;
-
-		///* WC_Retangle_Double_A */
-		Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WC_Retangle_Double_A";
-		Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WC_Retangle_Double_A.bin";
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
-			return E_FAIL;
-
-		///* WA_Square_Double_C */
-		Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WA_Square_Double_C";
-		Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WA_Square_Double_C.bin";
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
-			return E_FAIL;
-
-		/* Quid_Window_A */
-		Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Quid_Window_A";
-		Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Quid_Window_A.bin";
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
-			return E_FAIL;
-
-		/* Ollivanders_Box_Window */
-		Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Ollivanders_Box_Window";
-		Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Ollivanders_Box.bin";
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
-			return E_FAIL;
-
-		/* WC_L_DoubleS_A */
-		Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WC_L_DoubleS_A";
-		Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WC_L_DoubleS_A.bin";
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
-			return E_FAIL;
-
-		/* WC_Round_Double_A */
-		Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WC_Round_Double_A";
-		Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WC_Round_Double_A.bin";
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
-			return E_FAIL;
-
-		/* SM_HM_Door1a */
-		Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door1a";
-		Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Door1a.bin";
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
-			return E_FAIL;
-
-		/* SM_HM_Door1a */
-		Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door2b";
-		Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Door2b.bin";
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
-			return E_FAIL;
-
 	}
 	
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_IntstanceProp()
+{
+	CInstancedProp::INSTANCE_PROP_DESC Desc = {};
+
+	/* InstanceProp Oak_Tree*/
+	Desc.isShake = true;
+	Desc.vRadius = _float2(0.015f, 0.04f);
+	Desc.vSpeed = _float2(0.3f, 1.f);
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_OakTree_MedA";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/OakTree_MedA.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc))) {
+		return E_FAIL;
+	}
+
+	/* BearBerry */
+	Desc.isShake = true;
+	Desc.vRadius = _float2(0.015f, 0.02f);
+	Desc.vSpeed = _float2(0.6f, 1.f);
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_BearBerry_A";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/BearBerry_A.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc))) {
+		return E_FAIL;
+	}
+
+	/* SM_HM_OwlPost_Window_A */
+	Desc.isShake = false;
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_OwlPost_Window_A";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/OwlPost_Window.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	///* WA_Rectangle_Double_A */
+	Desc.isShake = false;
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WA_Rectangle_Double_A";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Rectangle_Double_A.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	///* WC_Retangle_Double_A */
+	Desc.isShake = false;
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WC_Retangle_Double_A";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WC_Retangle_Double_A.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	///* WA_Square_Double_C */
+	Desc.isShake = false;
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WA_Square_Double_C";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WA_Square_Double_C.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	/* Quid_Window_A */
+	Desc.isShake = false;
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Quid_Window_A";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Quid_Window_A.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	/* Ollivanders_Box_Window */
+	Desc.isShake = false;
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Ollivanders_Box_Window";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Ollivanders_Box.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	/* WC_L_DoubleS_A */
+	Desc.isShake = false;
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WC_L_DoubleS_A";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WC_L_DoubleS_A.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	/* WC_Round_Double_A */
+	Desc.isShake = false;
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WC_Round_Double_A";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WC_Round_Double_A.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	/* SM_HM_Door1a */
+	Desc.isShake = false;
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door1a";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Door1a.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	/* SM_HM_Door2b */
+	Desc.isShake = false;
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door2b";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Door2b.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	/* OakTree_TallA */
+	Desc.isShake = true;
+	Desc.vRadius = _float2(0.f, 0.01f);
+	Desc.vSpeed = _float2(0.01f, 0.1f);
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_OakTree_TallA";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/OakTree_TallA.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
