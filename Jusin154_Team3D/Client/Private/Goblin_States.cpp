@@ -39,6 +39,10 @@ HRESULT CGoblin::Behavior_IdleExitCheck()
 		m_vOriginPos = m_pTransformCom->Get_State(STATE::POSITION);
 		m_pFSM->Change_State(FSMSTATE::MOVE);
 	}
+	else if (m_fTargetDistance >= 25.f)
+	{
+		m_pFSM->Change_State(FSMSTATE::IDLEBREAK);
+	}
 
 	return E_FAIL;
 }
@@ -84,7 +88,7 @@ void CGoblin::Behavior_IdleBreakEnter()
 HRESULT CGoblin::Behavior_IdleBreakExitCheck()
 {
 	if (m_pModelCom->IsFinishedAnim()) {
-		m_pFSM->Change_State(FSMSTATE::MOVE);
+		m_pFSM->Change_State(FSMSTATE::IDLE);
 	}
 
 	return E_FAIL;

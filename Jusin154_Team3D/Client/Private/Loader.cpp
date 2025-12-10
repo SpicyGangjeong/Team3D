@@ -298,7 +298,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_Background = true;
 #endif // gimch
 #ifdef Bin
-	isLoad_Background = false;
+	isLoad_Background = true;
 #endif // 
 #ifdef 진우
 	isLoad_Background = false;
