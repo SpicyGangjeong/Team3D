@@ -154,6 +154,7 @@ float4 g_vDissolveColor;
 float2 g_vDissolveColorCut;
 
 float4 g_vNoiseColor;
+float g_fEmissiveColorCut;
 
 struct VS_IN
 {
@@ -483,7 +484,7 @@ float4 DrawEffect(PS_IN In)
         float2 vDissolveUV = In.vTexcoord + SelectLerpUV(g_vDissolveUVGainAmount, (vDissolveUVMoveTime.x / vDissolveUVMoveTime.y), 0);
             
         if (g_isDissolveMove)
-            vMtrlDissolve = g_DissolveTexture.Sample(DefaultSampler, vDissolveUV);
+            vMtrlDissolve = g_DissolveTexture.Sample(DefaultSampler, vDissolveUV );
         else
             vMtrlDissolve = g_DissolveTexture.Sample(DefaultSampler, In.vTexcoord);
          
@@ -552,12 +553,21 @@ float4 DrawEffect(PS_IN In)
     return vMtrlDiffuse;
 }
 
-float4 EmissiveDraw(PS_IN In)
+float4 EmissiveDraw(PS_IN In , float4 Diffuse)
 {
     float4 vEmissiveMtrl = vector(0.f, 0.f, 0.f, 0.f);
     float2 CenteredUV = In.vTexcoord - 0.5f;
     float  fEmissive = 0.f;
     float  fEmissiveStrength = g_fEmissiveStrength;
+    
+    if (g_fEmissiveColorCut >= FLT_EPSILON5)
+    {
+        if (g_fEmissiveColorCut > length(Diffuse.rgb))
+        {
+            return vEmissiveMtrl;
+        }
+
+    }
     
     if (g_fRadius >= FLT_EPSILON5)
     {
@@ -639,7 +649,7 @@ PS_OUT PS_MAIN(PS_IN In)
 
     vMtrlDiffuse = DrawEffect(In);
     
-    vMtrlDiffuse.rgb += EmissiveDraw(In).rgb;
+    vMtrlDiffuse.rgb += EmissiveDraw(In, vMtrlDiffuse).rgb;
 
     Out.vDiffuse = vMtrlDiffuse;
     
@@ -663,7 +673,7 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     if (fDepthStencilValue <= In.vProjPos.z / In.vProjPos.w + fbias)
         discard;
     
-    vMtrlDiffuse.rgb += EmissiveDraw(In).rgb;
+    vMtrlDiffuse.rgb += EmissiveDraw(In, vMtrlDiffuse).rgb;
     
     Out = BlendedWeight(vMtrlDiffuse, In.vProjPos.w);
     
@@ -744,7 +754,8 @@ PS_BLUR_OUT PS_BLUR_NOEMISSIVE(PS_IN In)
     //// 색깔 추가할 처리 (이미시브)
     
     vMtrlDiffuse.a *= 5.f;
-    
+   
+    vMtrlDiffuse.a = saturate(vMtrlDiffuse.a);
     //if (g_isDissolve == true)
     //{
     //    if (g_isNomalDissolve)
@@ -768,6 +779,8 @@ PS_BLUR_OUT PS_BLUR(PS_IN In)
     vMtrlDiffuse = DrawEffect(In);
     
     vMtrlDiffuse.a *= 5.f;
+    
+    vMtrlDiffuse.a = saturate(vMtrlDiffuse.a);
     
     //// 색깔 추가할 처리 (이미시브)
    
@@ -805,7 +818,7 @@ PS_BLOOM_OUT PS_BLOOM(PS_IN In)
     
     //// 색깔 추가할 처리 (이미시브)
    
-    vMtrlDiffuse.rgb += EmissiveDraw(In).rgb;
+    vMtrlDiffuse.rgb += EmissiveDraw(In, vMtrlDiffuse).rgb;
     
     float fBloomStrength = g_fBloomStrength; 
     
@@ -837,7 +850,7 @@ PS_BLOOM_OUT PS_BLEND(PS_IN In)
     
     vMtrlDiffuse = DrawEffect(In);
     
-    vMtrlDiffuse.rgb += EmissiveDraw(In).rgb;
+    vMtrlDiffuse.rgb += EmissiveDraw(In, vMtrlDiffuse).rgb;
 
     Out.vDiffuse = vMtrlDiffuse;
     
@@ -852,7 +865,7 @@ PS_BLOOM_OUT PS_WEIGHTED_FOR_BLEND(PS_IN In)
     
     vMtrlDiffuse = DrawEffect(In);
     
-    vMtrlDiffuse.rgb += EmissiveDraw(In).rgb;
+    vMtrlDiffuse.rgb += EmissiveDraw(In, vMtrlDiffuse).rgb;
     
     Out.vDiffuse = BlendedWeight(vMtrlDiffuse, In.vProjPos.w).vDiffuse;
     
