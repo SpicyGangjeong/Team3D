@@ -161,7 +161,7 @@ _bool CPhysX_Manager::SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir
 	return SphereCast(fRadius, XMLoadFloat3(&vStartPos), XMLoadFloat3(&vDir), fDistance, flagHitsData, flagQuery, hitBuffer);
 }
 
-_bool CPhysX_Manager::SphereCast(_float fRadius, _fvector _vStartPos, _fvector _vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
+_bool CPhysX_Manager::SphereCast(_float fRadius, _fvector _vStartPos, _gvector _vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
 {
 	_float3 vDir = {};
 	_float3 vStartPos = {};
@@ -192,7 +192,7 @@ _bool CPhysX_Manager::RayCast(_float3 _vStartPos, _float3 _vDir, _float fDistanc
 	return RayCast(XMLoadFloat3(&_vStartPos), XMLoadFloat3(&_vDir), fDistance, pRayHitArray, iMaxHitCapacity, iOutHitCount);
 }
 
-bool CPhysX_Manager::RayCast(_fvector _vStartPos, _fvector _vDir, _float fDistance, PSX::PxRaycastHit* pRayHitArray, _uint iMaxHitCapacity, _uint& iOutHitCount )
+bool CPhysX_Manager::RayCast(_fvector _vStartPos, _gvector _vDir, _float fDistance, PSX::PxRaycastHit* pRayHitArray, _uint iMaxHitCapacity, _uint& iOutHitCount )
 {
 	iOutHitCount = 0;
 

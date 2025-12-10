@@ -786,7 +786,7 @@ _bool CGameInstance::SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir,
 {
 	return m_pPhysX_Manager->SphereCast(fRadius, vStartPos, vDir, fDistance, flagHitsData, flagQuery, hitBuffer);
 }
-_bool CGameInstance::SphereCast(_float fRadius, _fvector vStartPos, _fvector vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
+_bool CGameInstance::SphereCast(_float fRadius, _fvector vStartPos, _gvector vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
 {
 	return m_pPhysX_Manager->SphereCast(fRadius, vStartPos, vDir, fDistance, flagHitsData, flagQuery, hitBuffer);
 }
@@ -794,7 +794,7 @@ _bool CGameInstance::RayCast(_float3 _vStartPos, _float3 _vDir, _float fDistance
 {
 	return m_pPhysX_Manager->RayCast(_vStartPos, _vDir, fDistance, pRayHitArray, iMaxHitCapacity, iOutHitCount);
 }
-_bool CGameInstance::RayCast(_fvector _vStartPos, _fvector _vDir, _float fDistance, PSX::PxRaycastHit* pRayHitArray, _uint iMaxHitCapacity, _uint& iOutHitCount)
+_bool CGameInstance::RayCast(_fvector _vStartPos, _gvector _vDir, _float fDistance, PSX::PxRaycastHit* pRayHitArray, _uint iMaxHitCapacity, _uint& iOutHitCount)
 {
 	return m_pPhysX_Manager->RayCast(_vStartPos, _vDir, fDistance, pRayHitArray, iMaxHitCapacity, iOutHitCount);
 }

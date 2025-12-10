@@ -209,9 +209,9 @@ public:
 	PSX::PxRevoluteJoint* Create_PxRevoluteJoint(PSX::PxRigidActor* pActorFrame, PSX::PxTransform& pxLocalWallFrame, PSX::PxRigidActor* pActorObject, PSX::PxTransform& pxLocalActorFrame);
 
 	_bool SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer);
-	_bool SphereCast(_float fRadius, _fvector vStartPos, _fvector vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer);
+	_bool SphereCast(_float fRadius, _fvector vStartPos, _gvector vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer);
 	_bool RayCast(_float3 _vStartPos, _float3 _vDir, _float fDistance, PSX::PxRaycastHit* pRayHitArray, _uint iMaxHitCapacity, _uint& iOutHitCount);
-	_bool RayCast(_fvector _vStartPos, _fvector _vDir, _float fDistance, PSX::PxRaycastHit* pRayHitArray, _uint iMaxHitCapacity, _uint& iOutHitCount);
+	_bool RayCast(_fvector _vStartPos, _gvector _vDir, _float fDistance, PSX::PxRaycastHit* pRayHitArray, _uint iMaxHitCapacity, _uint& iOutHitCount);
 
 	PSX::PxController*	Add_CapsuleController(PSX::PxCapsuleControllerDesc& Desc);
 	PSX::PxController*	Add_BoxController(PSX::PxBoxControllerDesc& Desc);
