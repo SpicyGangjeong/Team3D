@@ -89,7 +89,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	SAFE_ADDREF(m_pEffectPool);
 
 	m_pInfoInstance->Regist_PlayerAlly(this);
-
+	m_pInfoInstance->Set_Damage(m_pStat->Get_Stat().fDamage);
 
 	m_pCharacter_Controller->Set_Position(XMVectorSet(-34.f, 5, -11.4f, 1.f));
 
@@ -364,6 +364,7 @@ HRESULT CPlayer::Ready_Components()
 
 	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_PLAYER"), (CComponent**)&m_pStat))) {
 		return E_FAIL;
+
 	}
 
 

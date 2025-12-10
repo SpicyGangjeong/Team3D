@@ -29,6 +29,8 @@ public:
 #pragma region PLAYER_INFO
 	void Update_CameraCoordinateSystem(_float3& vLook, _float3& vRight);
 	pair<_float3, _float3> Get_CameraCoordinateSystem();
+	_float Player_Damage();
+	void Set_Damage(_float fDamage);
 #pragma endregion
 #pragma region MONSTER_INFO
 	HRESULT Regist_PlayerAlly(CUnit* pUnit);
@@ -38,7 +40,7 @@ public:
 
 	void Get_LockOnInfo(LOCKON_INFO& Info);
 	pair<CUnit*, CTransform*> Get_NearestPlayerAlly(_fvector vPos);
-	CMonster* Get_TargetMonster();
+	class CMonster* Get_TargetMonster();
 #pragma endregion
 #pragma region MAP_INFO
 	HRESULT Load_MapObjects(const _char* pFilePath);
@@ -55,6 +57,7 @@ public:
 	void Mouse_Input(_uint Input); // 플레이어 키 입력
 	void Set_UISTATE(UI_STATE eState);
 	UI_STATE Get_UISTATE();
+	_float Get_Spell_Damage(_int Index);
 	void Add_Event(_wstring EventName, function<void(void*)> Event);
 	void Event_CallBack(_wstring EventName, void* pArg = nullptr);
 #pragma endregion
@@ -72,9 +75,11 @@ private:
 	class CMapInfo*				m_pMapInfo = { nullptr };
 	class CSkill_Data*			m_pSkillInfo = { nullptr };
 	class CInteractiveInfo*		m_pInteractiveInfo =  { nullptr };
+	class CDamage_Font*			m_pDamage_Font =  { nullptr };
 	_uint						m_eInput = ENUM_CLASS(KEYINPUT::END);
 	_int						m_eSpell = ENUM_CLASS(SKILL_TYPE::END);
 
+	_float						m_fDamage{};
 	UI_STATE					m_eUI_State;
 
 	// 임시로 이벤트 1개 만들어 둠

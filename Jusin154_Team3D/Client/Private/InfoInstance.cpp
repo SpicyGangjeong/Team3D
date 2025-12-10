@@ -6,6 +6,8 @@
 #include "PlayerInfo.h"
 #include "InteractiveInfo.h"
 #include "Skill_Data.h"
+#include "Damage_Font.h"
+#include "Player.h"
 
 IMPLEMENT_SINGLETON(CInfoInstance)
 
@@ -21,7 +23,7 @@ void CInfoInstance::Update(_float fTimeDelta)
 	m_pMapInfo->Update(fTimeDelta);
 	m_pSkillInfo->Update(fTimeDelta);
 	m_pInteractiveInfo->Update(fTimeDelta);
-}
+}	
 
 void CInfoInstance::Change_Level()
 {
@@ -40,6 +42,18 @@ void CInfoInstance::Update_CameraCoordinateSystem(_float3& vLook, _float3& vRigh
 pair<_float3, _float3> CInfoInstance::Get_CameraCoordinateSystem()
 {
 	return m_pPlayerInfo->Get_CameraCoordinateSystem();
+}
+
+_float CInfoInstance::Player_Damage()
+{
+	return m_fDamage;
+}
+
+void CInfoInstance::Set_Damage(_float fDamage)
+{
+	m_fDamage = fDamage;
+	if (m_pSkillInfo != nullptr)
+		m_pSkillInfo->Update_Damage(fDamage);
 }
 
 #pragma region MONSTER_INFO
@@ -201,6 +215,11 @@ UI_STATE CInfoInstance::Get_UISTATE()
 	return m_eUI_State;
 }
 
+_float CInfoInstance::Get_Spell_Damage(_int Index)
+{
+	return m_pSkillInfo->Get_Spell_Damage(Index);
+}
+
 void CInfoInstance::Add_Event(_wstring EventName, function<void(void*)> Event)
 {
 	UI_Event.emplace(EventName, Event);
@@ -266,7 +285,6 @@ HRESULT CInfoInstance::Initialize_Information(ID3D11Device* pDevice, ID3D11Devic
 	if (nullptr == m_pInteractiveInfo) {
 		return E_FAIL;
 	}
-
 
 	return S_OK;
 }
