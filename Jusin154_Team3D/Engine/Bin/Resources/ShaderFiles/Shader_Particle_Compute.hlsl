@@ -76,7 +76,7 @@ cbuffer g_ConstantBuffer : register(b0) // b0 << 이 숫자와 컨스턴트 쉐�
     
     bool isNoWorld;
     bool isDetphCompareStop;
-    bool isPadding1;
+    bool isRandomAniIndex;
     bool isPadding2;
 
     float fTimeDelta;
@@ -164,10 +164,13 @@ void CS_MAIN(
         particle.vLook = particleValue.vOriginLook;
         particle.vTranslation = particleValue.vOriginTranslation;
         
+        
         particle.vLifeTime.x = 0.f;
-        particleValue.vAniIndex.x = 0.f;
+        
         particleValue.vDelay.x = 0.f;
 
+        if (isRandomAniIndex == false)
+            particleValue.vAniIndex.x = 0.f;
         
         g_VBInstanceOutput[iIndex] = particle;
         g_ParticleValueOutput[iIndex] = particleValue;
@@ -365,21 +368,25 @@ void CS_MAIN(
        
     //애니메이션 속도 , 인덱스
     
-    particleValue.vAniTime.x += fTimeDelta;
-    
-    if (particleValue.vAniTime.x >= particleValue.vAniTime.y)
+    if (isRandomAniIndex == false)
     {
-        particleValue.vAniTime.x = 0.f;
-        
-        particleValue.vAniIndex.x += 1.f;
-        
-        if (particleValue.vAniIndex.x > particleValue.vAniIndex.y) // 애니메이션에 끝에 다다랐다면
+        particleValue.vAniTime.x += fTimeDelta;
+    
+        if (particleValue.vAniTime.x >= particleValue.vAniTime.y)
         {
-            particleValue.vAniIndex.x = 0.f; // 인덱스 초기화
+            particleValue.vAniTime.x = 0.f;
+        
+            particleValue.vAniIndex.x += 1.f;
+        
+            if (particleValue.vAniIndex.x > particleValue.vAniIndex.y) // 애니메이션에 끝에 다다랐다면
+            {
+                particleValue.vAniIndex.x = 0.f; // 인덱스 초기화
+
+            }
 
         }
-
     }
+
     
     //마스킹 UV 움직임 시간 
 

@@ -62,7 +62,7 @@ void CEditEffect::Late_Update(_float fTimeDelta)
 		return;
 
 
-	m_pInstance_ModelCom->Drop(fTimeDelta);
+	m_pInstance_ModelCom->Compute_CS(fTimeDelta);
 
 
 	if (m_EffectInfo.isBillboard)
@@ -864,6 +864,8 @@ void CEditEffect::Describe_Entity()
 			GUI::Checkbox("NoiseAlpha", &m_EffectInfo.isNoiseAlpha);
 			GUI::Checkbox("NoiseMove", &m_EffectInfo.isNoiseUVMove);
 
+
+			GUI::ColorEdit4("NoiseColor", (_float*)&m_EffectInfo.vNoiseColor);
 			ImGui::PushItemWidth(80);
 			GUI::DragFloat2("NoiseUVGainAmount", (_float*)&m_EffectInfo.vNoiseUVGainAmount, 0.01f);
 			ImGui::PopItemWidth();
