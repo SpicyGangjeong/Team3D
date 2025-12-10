@@ -39,6 +39,10 @@ HRESULT CGoblin::Behavior_IdleExitCheck()
 		m_vOriginPos = m_pTransformCom->Get_State(STATE::POSITION);
 		m_pFSM->Change_State(FSMSTATE::MOVE);
 	}
+	else if (m_fTargetDistance >= 25.f)
+	{
+		m_pFSM->Change_State(FSMSTATE::IDLEBREAK);
+	}
 
 	return E_FAIL;
 }
@@ -84,7 +88,7 @@ void CGoblin::Behavior_IdleBreakEnter()
 HRESULT CGoblin::Behavior_IdleBreakExitCheck()
 {
 	if (m_pModelCom->IsFinishedAnim()) {
-		m_pFSM->Change_State(FSMSTATE::MOVE);
+		m_pFSM->Change_State(FSMSTATE::IDLE);
 	}
 
 	return E_FAIL;
@@ -237,7 +241,9 @@ void CGoblin::Behavior_SwingEnter()
 
 	Add_Event(pairAnimInfo.first,
 		[this]() {
-			m_pGoblinSpector->Set_Visible(true);},
+			m_pGoblinSpector->Set_Visible(true);
+			m_pGoblinSpector->Spector_Trail_Visible(true);
+		},
 		0.05f);
 
 	Add_Event(pairAnimInfo.first,
@@ -248,6 +254,9 @@ void CGoblin::Behavior_SwingEnter()
 	Add_Event(pairAnimInfo.first,
 		[&]() {	m_bLookAt = true;
 				m_bStep = true;
+				m_pGoblinSpector->Set_Visible(false);
+				m_pGoblinSpector->Spector_Trail_Visible(false);
+
 				m_pFSM->Change_State(FSMSTATE::SHUFFLE); },
 		0.45f);
 }

@@ -46,7 +46,7 @@ public:
 	_float Get_KeyFrame(_string FrameName);
 	_bool IsCurrentKeyFrame(_string FrameName);
 	virtual _vector Get_LockOnPos() { return Get_WorldPostion(); }
-	virtual _bool Get_Damage(_float fDamage) { return false; }
+	virtual pair<_float, _float> Get_Damage(_float fDamage) { return { 0.f, 0.f }; };
 
 	virtual void Reset_Sprint() {};
 	virtual void Reset_Walk() {};

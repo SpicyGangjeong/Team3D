@@ -63,6 +63,6 @@ namespace Client
 	{
 		_vector		vTarget_Pos{};
 		_float		fDamage{};
-		DAMAGE_TYPE eType;
+		DAMAGE_TYPE eType = DAMAGE_TYPE::NOMAL;
 	}DAMAGE_INFO;
 };

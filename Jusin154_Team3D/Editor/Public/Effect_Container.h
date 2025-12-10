@@ -36,13 +36,14 @@ protected:
 
 	void			Update_Event(_float fTimeDelta);
 	_int            CollisionCheck();
-
+	ON_COLLISION_INFO	SweepTarget(_vector StartPos, _vector EndPos, _float fRadius, _bool isTerrainCollision = false);
 protected:
 
 	_uint							m_iSkillType = ENUM_CLASS(SKILL_TYPE::END);
 	_float4							m_vStartPos = {};
 	_float4							m_vEndPos = {};
 	PSX::PxSweepBufferN<12>			m_Hitbuffer = {};
+	_bool							m_bHit = { false };
 protected:
 	_wstring						m_wstrEffectName = {};
 
@@ -56,7 +57,7 @@ protected:
 	_bool							m_isCollisionEnter = { false };
 
 	map<_float, function<void()>>	m_Events = {};
-
+	LOCKON_INFO						m_Info = {};
 public:
 	virtual void Free() override;
 };

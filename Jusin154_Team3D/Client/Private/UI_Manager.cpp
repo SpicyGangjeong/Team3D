@@ -6,7 +6,7 @@
 #include "InfoInstance.h"
 #include "Mouse_Cursor.h"
 #include "CameraLockOn.h"
-#include "Skill_Data.h"
+#include "Damage_Font.h"
 
 CUI_Manager::CUI_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CUIObject(pDevice, pContext)
@@ -149,6 +149,11 @@ HRESULT CUI_Manager::Ready_Components(void* pArg)
 		return E_FAIL;
 	}
 	Add_Canvas(TEXT("Camera_LockOn"), m_pCamera_LockOn);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CDamage_Font>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CDamage_Font**>(&m_pDamage_Font)))) {
+		return E_FAIL;
+	}
+	Add_Canvas(TEXT("Camera_LockOn"), m_pDamage_Font);
 
 	return S_OK;
 }

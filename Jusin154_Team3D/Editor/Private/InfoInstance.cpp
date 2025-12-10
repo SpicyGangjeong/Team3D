@@ -30,6 +30,11 @@ void CInfoInstance::Change_Level()
 	m_pSkillInfo->Change_Level();
 }
 
+void CInfoInstance::Get_LockOnInfo(LOCKON_INFO& Info)
+{
+	Info.pUnit = m_pMonsterInfo->Get_LockOnUnit();
+}
+
 void CInfoInstance::Update_CameraCoordinateSystem(_float3& vLook, _float3& vRight)
 {
 	m_pPlayerInfo->Update_CameraCoordinateSystem(vLook, vRight);

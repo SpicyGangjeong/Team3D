@@ -35,6 +35,7 @@ public:
 	HRESULT Regist_ActiveMonster(class CMonster* pUnit);
 	HRESULT Deregist_ActiveMonster(class CMonster* pUnit);
 
+	void Get_LockOnInfo(LOCKON_INFO& Info);
 	class CUnit* Get_LockOnUnit();
 	pair<CUnit*, CTransform*> Get_NearestPlayerAlly(_fvector vPos);
 #pragma endregion

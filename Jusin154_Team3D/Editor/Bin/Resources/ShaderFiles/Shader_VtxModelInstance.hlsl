@@ -153,6 +153,8 @@ float g_fDissolveCutRatio;
 float4 g_vDissolveColor;
 float2 g_vDissolveColorCut;
 
+float4 g_vNoiseColor;
+
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -341,7 +343,13 @@ float4 DrawEffect(PS_IN In)
             vMtrlDiffuse.a = saturate(vMtrlDiffuse.a * vMtrlNoise.r);
         
         if (g_isNoiseColor)
+        {
             vMtrlDiffuse.rgb *= vMtrlNoise.rgb;
+        }
+        
+        if (length(g_vNoiseColor) > FLT_EPSILON5)
+            vMtrlDiffuse.rgb *= g_vNoiseColor;
+
 
     }
     

@@ -36,6 +36,10 @@ HRESULT CGoblin_Mage::Behavior_IdleExitCheck()
 		m_pEffectPool->Use_Skill(SKILL_TYPE::GOBLIN_PROTEGO, this);
 		m_pFSM->Change_State(FSMSTATE::MOVE);
 	}
+	else if (m_fTargetDistance >= 25.f)
+	{
+		m_pFSM->Change_State(FSMSTATE::IDLEBREAK);
+	}
 
 	return E_FAIL;
 }
@@ -81,7 +85,7 @@ void CGoblin_Mage::Behavior_IdleBreakEnter()
 HRESULT CGoblin_Mage::Behavior_IdleBreakExitCheck()
 {
 	if (m_pModelCom->IsFinishedAnim()) {
-		m_pFSM->Change_State(FSMSTATE::MOVE);
+		m_pFSM->Change_State(FSMSTATE::IDLE);
 	}
 
 	return E_FAIL;

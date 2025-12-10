@@ -160,7 +160,7 @@ private:
 
 
 	void Player_InterpTurn(_float fTimeDelta);
-
+	void Throwing_Interactive();
 #pragma endregion
 
 private:

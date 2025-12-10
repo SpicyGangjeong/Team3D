@@ -43,6 +43,8 @@ private:
 	_float2 m_vStunTimer = { 0.f, 4.f };
 	_uint iIndex;
 
+	DAMAGE_INFO m_DamageInfo;
+
 
 	class CEffectParts* m_pGoblin_Orb = { nullptr };
 private:

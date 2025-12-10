@@ -164,6 +164,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\CameraLockOn.h" />
     <ClInclude Include="..\Public\Current_Slot_Number.h" />
     <ClInclude Include="..\Public\Current_Spell_Slot.h" />
+    <ClInclude Include="..\Public\Damage_Font.h" />
     <ClInclude Include="..\Public\Eessential_Spell.h" />
     <ClInclude Include="..\Public\Eessential_Spell_Slot.h" />
     <ClInclude Include="..\Public\Enemy_HpBar.h" />
@@ -184,6 +185,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Logo.h" />
     <ClInclude Include="..\Public\Logo_Glow.h" />
     <ClInclude Include="..\Public\Logo_Text.h" />
+    <ClInclude Include="..\Public\Goblin_Attack.h" />
     <ClInclude Include="..\Public\Troll_State_Stun.h" />
     <ClInclude Include="..\Public\State_Sustain.h" />
     <ClInclude Include="..\Public\WandEnd.h" />
@@ -311,7 +313,6 @@ call Update_Resources.bat
     <ClInclude Include="..\public\UI_Manager.h" />
     <ClInclude Include="..\public\Unified.h" />
     <ClInclude Include="..\Public\Wand.h" />
-    <ClInclude Include="CDamageFont.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -324,6 +325,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\CameraLockOn.cpp" />
     <ClCompile Include="..\Private\Current_Slot_Number.cpp" />
     <ClCompile Include="..\Private\Current_Spell_Slot.cpp" />
+    <ClCompile Include="..\Private\Damage_Font.cpp" />
     <ClCompile Include="..\Private\Eessential_Spell.cpp" />
     <ClCompile Include="..\Private\Eessential_Spell_Slot.cpp" />
     <ClCompile Include="..\Private\Enemy_HpBar.cpp" />
@@ -346,6 +348,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Logo_Glow.cpp" />
     <ClCompile Include="..\Private\Logo_Text.cpp" />
     <ClCompile Include="..\Private\State_Sustain.cpp" />
+    <ClCompile Include="..\Private\Goblin_Attack.cpp" />
     <ClCompile Include="..\Private\Troll_State_Stun.cpp" />
     <ClCompile Include="..\Private\WandEnd.cpp" />
     <ClCompile Include="..\Private\Magic_Icon.cpp" />
@@ -475,7 +478,6 @@ call Update_Resources.bat
     <ClCompile Include="..\private\UI_Manager.cpp" />
     <ClCompile Include="..\private\Unified.cpp" />
     <ClCompile Include="..\Private\Wand.cpp" />
-    <ClCompile Include="CDamageFont.cpp" />
     <ClCompile Include="Client.cpp" />
   </ItemGroup>
   <ItemGroup>

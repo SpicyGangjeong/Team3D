@@ -120,7 +120,7 @@ public:
 		_float2     vDissolveColorCut = {};
 
 		_float3     vPadding1 = {};
-		_float4     vPadding2 = {};
+		_float4     vNoiseColor = {};
 		_float4     vPadding3 = {};
 		_float4     vPadding4 = {};
 		_float4     vPadding5 = {};

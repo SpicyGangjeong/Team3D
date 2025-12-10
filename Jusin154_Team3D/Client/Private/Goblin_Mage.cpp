@@ -239,6 +239,7 @@ _vector CGoblin_Mage::Get_LockOnPos()
 
 void CGoblin_Mage::OnCollision(CGameObject* pOther, void* pDesc)
 {
+
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
 	_uint iSkillType = dynamic_cast<CEffect_Container*>(pOther)->Get_SkillType();
@@ -254,11 +255,11 @@ void CGoblin_Mage::OnCollision(CGameObject* pOther, void* pDesc)
 	{
 		m_eHitSpell = STATEANIM::HIT_LEVIOSO;
 		_float fSkillRatio = m_pInfoInstance->Get_Spell_Info(ENUM_CLASS(SKILL_TYPE::JAP)).fSpell_Damage;
-		_float fCoefficient = CollisionDesc->pObject->Get_Component<CStat>()->Get_Stat().fMagic;
-		if (true == Get_Damage(fSkillRatio * fCoefficient)) {
+		_float fCoefficient = CollisionDesc->pObject->Get_Component<CStat>()->Get_Stat().fDamage;
+		/*if (true == Get_Damage(fSkillRatio * fCoefficient)) {
 			m_pFSM->Change_State(FSMSTATE::DEAD);
 			return;
-		}
+		}*/
 	}
 	break;
 	case ENUM_CLASS(SKILL_TYPE::LEVIOSO):

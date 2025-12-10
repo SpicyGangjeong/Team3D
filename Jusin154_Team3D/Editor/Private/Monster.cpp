@@ -119,7 +119,7 @@ void CMonster::Set_DrawOutLine()
 	m_bDrawOutLine = true;
 }
 
-_bool CMonster::Get_Damage(_float fDamage)
+pair<_float, _float> CMonster::Get_Damage(_float fDamage)
 {
 	return  m_pStat->Get_Damage(fDamage);
 }

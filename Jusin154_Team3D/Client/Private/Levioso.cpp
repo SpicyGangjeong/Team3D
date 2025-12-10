@@ -44,6 +44,12 @@ HRESULT CLevioso::Initialize(void* pArg)
 	m_pLeviosoPJ_0 = Get_PartObject<CEffectParts>("Levioso_PJ0");
 	m_pTrail_PT_0 = Get_PartObject<CEffectParts>("Trail_PT0");
 
+	m_pLevioso_Rotate0 = Get_PartObject<CEffectParts>("Levioso_Rotate0");
+	m_pLevioso_Rotate1 = Get_PartObject<CEffectParts>("Levioso_Rotate1");
+
+	SAFE_ADDREF(m_pLevioso_Rotate0);
+	SAFE_ADDREF(m_pLevioso_Rotate1);
+
 	SAFE_ADDREF(m_pLeviosoPJ_0);
 	SAFE_ADDREF(m_pTrail_PT_0);
 
@@ -82,6 +88,13 @@ void CLevioso::Update(_float fTimeDelta)
 
 	_matrix WorldMat = m_pTrail_PT_0->Get_Component<CTransform>()->Get_XMWorldMatrix();
 
+	if (m_bHit == true && m_pEnemyTransform != nullptr)
+	{
+		_vector vPos = m_pEnemyTransform->Get_State(STATE::POSITION);
+
+		m_pLevioso_Rotate0->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
+		m_pLevioso_Rotate1->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
+	}
 
 }
 
@@ -94,16 +107,18 @@ void CLevioso::Late_Update(_float fTimeDelta)
 
 	_vector vDir = XMLoadFloat4(&m_vEndPos) - XMLoadFloat4(&m_vStartPos);
 
-	if (true == m_pGameInstance->SphereCast(0.125, XMLoadFloat4(&m_vStartPos), XMVector3Normalize(vDir), XMVectorGetX(XMVector3Length(vDir))
+	if (true == m_pGameInstance->SphereCast(0.25f, XMLoadFloat4(&m_vStartPos), XMVector3Normalize(vDir), XMVectorGetX(XMVector3Length(vDir))
 		, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eDYNAMIC | PSX::PxQueryFlag::eSTATIC, m_Hitbuffer))
 	{
-		OnCollision(this);
+	
 	}
 
 	if (false == m_bHit) {
 		_vector vStartPos = XMLoadFloat4(&m_vStartPos);
 		_vector vEndPos = XMLoadFloat4(&m_vEndPos);
-		SweepTarget(vStartPos, vEndPos, 0.2f);
+		ON_COLLISION_INFO CollisionInfo = SweepTarget(vStartPos, vEndPos, 0.002f);
+
+		OnCollision(this , &CollisionInfo);
 	}
 
 	__super::Late_Update(fTimeDelta);
@@ -125,15 +140,13 @@ HRESULT CLevioso::Pre_Setting(CGameObject* pObject, void* pArg)
 	CEffectParts* pWandSmoke = Get_PartObject<CEffectParts>("Levioso_Wand0");
 	CEffectParts* pWandLight = Get_PartObject<CEffectParts>("Levioso_Wand_Light");
 
-
-
 	m_pLeviosoPJ_0->Get_Component<CTransform>()->Set_State(STATE::POSITION, WandPos);
 	m_pTrail_PT_0->Get_Component<CTransform>()->Set_State(STATE::POSITION, WandPos);
 	pWandSmoke->Get_Component<CTransform>()->Set_State(STATE::POSITION, pPlayer->Get_PartObject<CWand>()->Get_WorldPostion());
 	pWandLight->Get_Component<CTransform>()->Set_State(STATE::POSITION, pPlayer->Get_PartObject<CWand>()->Get_WorldPostion());
 
 	m_pLeviosoPJ_0->Set_Visible(true);
-	m_pTrail_PT_0->Set_Visible(true);
+ 	m_pTrail_PT_0->Set_Visible(true);
 	pWandSmoke->Set_Visible(true);
 	pWandLight->Set_Visible(true);
 
@@ -149,6 +162,7 @@ HRESULT CLevioso::Pre_Setting(CGameObject* pObject, void* pArg)
 	{ /* 대상 위치 지정 */
 
 		m_pInfoInstance->Get_LockOnInfo(m_Info);
+
 		if (nullptr != m_Info.pUnit) {
 
 			XMStoreFloat4(&m_vTargetPos, m_Info.pUnit->Get_LockOnPos());
@@ -219,17 +233,12 @@ CGameObject* CLevioso::Clone(void* pArg, CGameObject* pOwner)
 
 void CLevioso::OnCollision(CGameObject* pOther, void* pDesc)
 {
-	_int iIndex = CollisionCheck();
-
-	if (iIndex < 0)
+	if (m_bHit == false)
 		return;
 
-	if (m_isCollisionEnter == true)
-		return;
+	ON_COLLISION_INFO CollisionDesc = *static_cast<ON_COLLISION_INFO*>(pDesc);
 
-	m_isCollisionEnter = true;
-
-	_vector vPos = XMVectorSet(m_Hitbuffer.touches[iIndex].position.x, m_Hitbuffer.touches[iIndex].position.y, m_Hitbuffer.touches[iIndex].position.z, 1.f);
+	_vector vPos = XMLoadFloat4(&CollisionDesc.vWorldPos);
 
 
 	for (auto& pPair : m_PartObjects)
@@ -239,27 +248,38 @@ void CLevioso::OnCollision(CGameObject* pOther, void* pDesc)
 	}
 
 	m_fAccTime = 0.f;
-	m_fDuration = 3.f; //적중하면 지속시간 3초
+	m_fDuration = 3.5f; //적중하면 지속시간 3초
 
-	CPlayer* pPlayer = static_cast<CPlayer*>(m_pOwner);
 
-	if (pPlayer == nullptr)
-		return;
+	/* 바람과 파티클은 풋포지션 */
+	CCharacter_Controller* pHitCCT = CollisionDesc.pObject->Get_Component<CCharacter_Controller>();
 
-	_vector WandPos = pPlayer->Get_WandPos().r[3];
+	if (pHitCCT != nullptr)
+	{
+		_vector vFootPos =  pHitCCT->Get_FootPosition();
 
-	CEffectParts* pWandLight = Get_PartObject<CEffectParts>("Levioso_Wand_Light");
-	pWandLight->Get_Component<CTransform>()->Set_State(STATE::POSITION, pPlayer->Get_PartObject<CWand>()->Get_WorldPostion());
+		CEffectParts* pLevioso_Tornado = Get_PartObject<CEffectParts>("Levioso_Tornado");
+		CEffectParts* pLevioso_Bottom_Wind = Get_PartObject<CEffectParts>("Levioso_Bottom_Wind");
+		CEffectParts* pLevioso_Bottom_PT = Get_PartObject<CEffectParts>("Levioso_Bottom_PT");
 
+		m_pEnemyTransform = CollisionDesc.pObject->Get_Component<CTransform>();
+
+		pLevioso_Tornado->Get_Component<CTransform>()->Set_State(STATE::POSITION, vFootPos);
+		pLevioso_Bottom_Wind->Get_Component<CTransform>()->Set_State(STATE::POSITION, vFootPos);
+		pLevioso_Bottom_PT->Get_Component<CTransform>()->Set_State(STATE::POSITION, vFootPos);
+
+	}
+
+
+
+	//Get_PartObject<CEffectParts>("Levioso_Tornado")
 	//CEffectParts* pLevioso_Hit =  Get_PartObject<CEffectParts>("Levioso_Hit");
 	//CEffectParts* pLevioso_Bottom_Wind = Get_PartObject<CEffectParts>("Levioso_Bottom_Wind");
-	//CEffectParts* pLevioso_Rotate0 = Get_PartObject<CEffectParts>("Levioso_Rotate0");
-	//CEffectParts* pLevioso_Rotate1 = Get_PartObject<CEffectParts>("Levioso_Rotate1");
-	//CEffectParts* pLevioso_Tornado = Get_PartObject<CEffectParts>("Levioso_Tornado");
 
-	//m_pLeviosoPJ_0->Set_Visible(false);
-	//m_pLeviosoPJ_1->Set_Visible(false);
-	//m_pTrail_PT_0->Set_Visible(false);
+
+
+	m_pLeviosoPJ_0->Set_Visible(false);
+	m_pTrail_PT_0->Set_Visible(false);
 	//m_pLeviosoTrail->Set_Visible(false);
 }
 
@@ -269,6 +289,9 @@ void CLevioso::Free()
 
 	SAFE_RELEASE(m_pLeviosoPJ_0);
 	SAFE_RELEASE(m_pTrail_PT_0);
+
+	SAFE_RELEASE(m_pLevioso_Rotate0);
+	SAFE_RELEASE(m_pLevioso_Rotate1);
 }
 #ifdef _DEBUG
 

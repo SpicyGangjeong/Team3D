@@ -34,10 +34,11 @@ protected:
 	HRESULT         Ready_Child();
 	HRESULT			Bind_ShaderResources() override;
 
-	void			Update_Event(_float fTimeDelta);
-	HRESULT			Reset_EffectParts();
-	_int            CollisionCheck();
-	void			SweepTarget(_vector StartPos, _vector EndPos, _float fRadius);
+	void				Update_Event(_float fTimeDelta);
+	HRESULT				Reset_EffectParts();
+	_int				CollisionCheck();
+	ON_COLLISION_INFO	SweepTarget(_vector StartPos, _vector EndPos, _float fRadius, _bool isTerrainCollision = false);
+
 
 protected:
 	_float4							m_vStartPos = {};

@@ -30,7 +30,10 @@ public:
 	virtual HRESULT Render() override;
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
-	void Set_Disolve(_bool bDisolve) { m_bDisolve = bDisolve; }
+
+public:
+	void    Spector_Trail_Visible(_bool isTrailVisible);
+	void	Set_Disolve(_bool bDisolve) { m_bDisolve = bDisolve; }
 
 
 private:
@@ -44,10 +47,11 @@ private:
 	_float m_fDisolveTime = {0.f};
 
 
+	class CTrailObject* m_pLeft_Trail = { nullptr };
+	class CTrailObject* m_pRight_Trail = { nullptr };
 
-	class CEffectParts* m_pSmoke = { nullptr };
-	class CEffectParts* m_pGoblin_Particle = { nullptr };
-	class CEffectParts* m_pGoblin_Particle2 = { nullptr };
+	const _float4x4* m_pLeftHand_BoneMat = { nullptr };
+	const _float4x4* m_pRightHand_BoneMat = { nullptr };
 
 private:
 	virtual HRESULT Initialize_Prototype() override;

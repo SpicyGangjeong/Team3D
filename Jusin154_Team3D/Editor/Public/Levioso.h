@@ -24,21 +24,27 @@ public:
 	virtual	HRESULT	Pre_Setting(CGameObject* pObject, void* pArg = nullptr) override;
 
 private:
-	class  CInfoInstance* m_pInfoInstance = { nullptr };
-private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual HRESULT Ready_Components(void* pArg) override;
 	HRESULT         Ready_Child();
 	HRESULT			Bind_ShaderResources() override;
 	virtual void	OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr) override;
+
+private:
+	class  CInfoInstance* m_pInfoInstance = { nullptr };
 private:
 	_wstring	     m_wstrEffectName = {};
-	class CPlayer*	 m_pPlayer = {};
+	class CPlayer* m_pPlayer = {};
 
-	class CEditEffect*  m_pLeviosoPJ_0   = { nullptr };
-	class CTrailObject* m_pLeviosoTrail  = { nullptr };
-	class CEditEffect*  m_pTrail_PT_0 = { nullptr };
+	class CEditEffect* m_pLeviosoPJ_0 = { nullptr };
+	class CEditEffect* m_pLeviosoPJ_1 = { nullptr };
+	class CEditEffect* m_pTrail_PT_0 = { nullptr };
+
+	class CEditEffect* m_pLevioso_Rotate0 = { nullptr };
+	class CEditEffect* m_pLevioso_Rotate1 = { nullptr };
+
+	class CTransform* m_pEnemyTransform = { nullptr };
 
 	_vector				m_vOwnerLook = {};
 	_float				m_fAccRotateTime = {};

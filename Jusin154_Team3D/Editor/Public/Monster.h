@@ -19,7 +19,7 @@ public:
 	virtual HRESULT Render_OutLine() override;
 	virtual void Set_DrawOutLine();
 	_float4 Get_TargetPos() { return m_vTargetPos; }
-	virtual _bool Get_Damage(_float fDamage);
+	pair<_float, _float> Get_Damage(_float fDamage);
 	virtual _float2 Get_Hp();
 
 protected:
