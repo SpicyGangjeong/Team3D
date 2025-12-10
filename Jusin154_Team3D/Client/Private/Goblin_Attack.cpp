@@ -37,7 +37,7 @@ HRESULT CGoblin_Attack::Initialize(void* pArg)
 		return E_FAIL;
 
 
-	m_wstrEffectName = L"TrollSwing";
+	m_wstrEffectName = L"GoblinAttack";
 
 	m_pPT1 = Get_PartObject<CEffectParts>("Goblin_Particle");
 	m_pPT2 = Get_PartObject<CEffectParts>("Goblin_Particle2");

@@ -553,6 +553,8 @@ void CEditEffect::Describe_Entity()
 		GUI::DragFloat("CoreBoost", &m_EffectInfo.fCoreBoost, 0.005f);
 		GUI::DragFloat("SoftStrength", &m_EffectInfo.fSoftStrength, 0.005f);
 		GUI::DragFloat("SoftenExp", &m_EffectInfo.fSoftenExp, 0.005f);
+		GUI::DragFloat("EmissiveColorCut", &m_EffectInfo.fEmissiveColorCut, 0.005f);
+
 		ImGui::PopItemWidth();
 
 		GUI::ColorEdit4("Emissive", (_float*)&m_EffectInfo.vEmissive);
@@ -562,6 +564,7 @@ void CEditEffect::Describe_Entity()
 		GUI::Checkbox("EmissiveTex", &m_EffectInfo.isEmissive);
 		GUI::Checkbox("EmissiveDissolve", &m_EffectInfo.isEmissiveDissolve);
 		GUI::Checkbox("EmissiveDissolveReverse", &m_EffectInfo.isEmissiveDissolveReverse);
+
 
 		if (m_EffectInfo.isEmissive)
 		{
