@@ -7,6 +7,9 @@
 #include "Goblin_Spector.h"
 #include "EffectParts.h"
 
+#include "EffectPool.h"
+#include "Goblin_BattleAxe.h"
+
 #pragma region STATE
 #include "State_Idle.h"
 #include "State_IdleBreak.h"
@@ -239,6 +242,8 @@ void CGoblin::Behavior_SwingEnter()
 		[this]() {
 			m_pGoblinSpector->Set_Visible(true);
 			m_pGoblinSpector->Spector_Trail_Visible(true);
+
+			m_pEffectPool->Use_Skill(SKILL_TYPE::GOBLIN_ATTACK, m_pGoblinSpector->Get_PartObject<CGoblin_BattleAxe>());
 		},
 		0.05f);
 
