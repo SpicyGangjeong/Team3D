@@ -21,11 +21,9 @@ HRESULT CStat::Initialize_Prototype(tinyxml2::XMLNode* pChild)
 	pElement->QueryFloatAttribute("HP", &m_UnitInfo.fCurrentHp);
 	pElement->QueryFloatAttribute("MAXHP", &m_UnitInfo.fMaxHp);
 	pElement->QueryFloatAttribute("TARGETHP", &m_UnitInfo.fTargetHp);
-	pElement->QueryFloatAttribute("MELEE", &m_UnitInfo.fMelee);
-	pElement->QueryFloatAttribute("MAGIC", &m_UnitInfo.fMagic);
+	pElement->QueryFloatAttribute("DAMAGE", &m_UnitInfo.fDamage);
 	pElement->QueryFloatAttribute("DEFENSE", &m_UnitInfo.fDefense);
 	pElement->QueryFloatAttribute("SPEED", &m_UnitInfo.fSpeed);
-	pElement->QueryFloatAttribute("AGILITY", &m_UnitInfo.fAgility);
 	pElement->QueryIntAttribute("LEVEL", &m_UnitInfo.iLevel);
 	pElement->QueryFloatAttribute("EXPERIENCE", &m_UnitInfo.fExprince);
 	pElement->QueryFloatAttribute("MAX_EXPERIENCE", &m_UnitInfo.fMaxExprience);
@@ -78,6 +76,12 @@ void CStat::Describe_Entity()
 
 #endif // _DEBUG
 
+_float CStat::Compute_Damage(_float Damage)
+{
+	float coeff = powf(100.0f / (100.0f + m_UnitInfo.fDefense), 1.0f);
+	return floor(Damage * coeff);
+}
+
 CStat::UNITINFO CStat::Get_Stat()
 {
 	return m_UnitInfo;
@@ -98,34 +102,27 @@ void CStat::Set_Stat(_int _iStatIndex, _float _iAmount)
 		m_UnitInfo.fTargetHp = _iAmount;
 		break;
 	case 4:
-		m_UnitInfo.fMelee = _iAmount;
+		m_UnitInfo.fDamage = _iAmount;
 		break;
 	case 5:
-		m_UnitInfo.fMagic = _iAmount;
-		break;
-	case 6:
 		m_UnitInfo.fDefense = _iAmount;
 		break;
-	case 7:
+	case 6:
 		m_UnitInfo.fSpeed = _iAmount;
 		break;
-	case 8:
-		m_UnitInfo.fAgility = _iAmount;
-		break;
-	case 9:
+	case 7:
 		m_UnitInfo.iLevel = static_cast<_int>(_iAmount);
 		break;
-	case 10:
+	case 8:
 		m_UnitInfo.fExprince = _iAmount;
 		break;
-	case 11:
+	case 9:
 		m_UnitInfo.fMaxExprience = _iAmount;
 		break;
-	case 12:
+	case 10:
 		m_UnitInfo.iGold = static_cast<_int>(_iAmount);
 		break;
 	default:
-		return;
 		break;
 	}
 }
@@ -135,43 +132,36 @@ void CStat::Add_Stat(_int _iStatIndex, _float _iAmount)
 	switch (_iStatIndex)
 	{
 	case 1:
-		m_UnitInfo.fCurrentHp = _iAmount;
+		m_UnitInfo.fCurrentHp += _iAmount;
 		break;
 	case 2:
-		m_UnitInfo.fMaxHp = _iAmount;
+		m_UnitInfo.fMaxHp += _iAmount;
 		break;
 	case 3:
-		m_UnitInfo.fTargetHp = _iAmount;
+		m_UnitInfo.fTargetHp += _iAmount;
 		break;
 	case 4:
-		m_UnitInfo.fMelee = _iAmount;
+		m_UnitInfo.fDamage += _iAmount;
 		break;
 	case 5:
-		m_UnitInfo.fMagic = _iAmount;
+		m_UnitInfo.fDefense += _iAmount;
 		break;
 	case 6:
-		m_UnitInfo.fDefense = _iAmount;
+		m_UnitInfo.fSpeed += _iAmount;
 		break;
 	case 7:
-		m_UnitInfo.fSpeed = _iAmount;
+		m_UnitInfo.iLevel += static_cast<_int>(_iAmount);
 		break;
 	case 8:
-		m_UnitInfo.fAgility = _iAmount;
+		m_UnitInfo.fExprince += _iAmount;
 		break;
 	case 9:
-		m_UnitInfo.iLevel = static_cast<_int>(_iAmount);
+		m_UnitInfo.fMaxExprience += _iAmount;
 		break;
 	case 10:
-		m_UnitInfo.fExprince = _iAmount;
-		break;
-	case 11:
-		m_UnitInfo.fMaxExprience = _iAmount;
-		break;
-	case 12:
-		m_UnitInfo.iGold = static_cast<_int>(_iAmount);
+		m_UnitInfo.iGold += static_cast<_int>(_iAmount);
 		break;
 	default:
-		return;
 		break;
 	}
 }
@@ -189,13 +179,13 @@ void CStat::Add_Hp(_float iAmount)
 	}
 }
 
-_bool CStat::Get_Damage(_float fDamage)
+pair<_float, _float> CStat::Get_Damage(_float fDamage)
 {
-	_bool bResultDead = { false };
-	_float fCurHp = Get_Stat().fCurrentHp - fDamage;
-	Set_Stat(ENUM_CLASS(STAT::TARGETHP), fDamage);
-	if (fCurHp <= 0) { fCurHp = 0; bResultDead = true; }
+	_float FinalDamage = Compute_Damage(fDamage);
+	_float fCurHp = Get_Stat().fCurrentHp - FinalDamage;
+	Add_Stat(ENUM_CLASS(STAT::TARGETHP), -FinalDamage);
+	if (fCurHp <= 0) { fCurHp = 0;}
 	Set_Stat(ENUM_CLASS(STAT::CURRENTHP), fCurHp);
-	return bResultDead;
-	return false;
+	return { FinalDamage, fCurHp };
+
 }

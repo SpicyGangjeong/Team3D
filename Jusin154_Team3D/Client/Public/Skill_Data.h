@@ -31,13 +31,16 @@ public:
 public:
     const SPELL_INFO& Get_Info(_uint SpellID) const;
     _int Update_Spell(_int SpellID);
+    _float Get_Spell_Damage(_int SpellDamage);
+    void Update_Damage(_float Damage);
 
 private:
     CInfoInstance* m_pInfoInstance = { nullptr };
 
     _int            m_iSpell_Count{};
     SPELL_INFO      SpellInfo[34] = {};
-    _float          m_iSpell_CoolTime[34] = {};
+    _float          m_fSpell_CoolTime[34] = {};
+    _float          m_fSpell_Damage[34] = {};
 
     _bool        m_bNoCool = { false };
 

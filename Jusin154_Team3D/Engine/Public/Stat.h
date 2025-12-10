@@ -12,11 +12,9 @@ class ENGINE_DLL CStat final : public CComponent
 		_float			fCurrentHp{};
 		_float			fMaxHp{};
 		_float			fTargetHp{};
-		_float			fMelee{};
-		_float			fMagic{};
+		_float			fDamage{};
 		_float			fDefense{};
 		_float			fSpeed{};
-		_float			fAgility{};
 		_int			iLevel{};
 		_float			fExprince{};
 		_float			fMaxExprience{};
@@ -39,13 +37,16 @@ public:
 	void Describe_Entity() override;
 #endif // _DEBUG
 
+private:
+	_float Compute_Damage(_float Damage);
+
 public:
 	UNITINFO Get_Stat();
 	void Set_Stat(_int _iStatIndex, _float _iAmount);
 	void Add_Stat(_int _iStatIndex, _float _iAmount);
 
 	void Add_Hp(_float iAmount);
-	_bool Get_Damage(_float fDamage);
+	pair<_float, _float> Get_Damage(_float fDamage);
 
 private:
 	UNITINFO m_UnitInfo;

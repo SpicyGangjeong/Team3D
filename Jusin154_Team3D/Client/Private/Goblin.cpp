@@ -244,11 +244,14 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 	if (true == m_bDead) {
 		return;
 	}
+	_vector Head = (XMLoadFloat4x4(Get_HeadMatrix()) * m_pTransformCom->Get_XMWorldMatrix()).r[3];
+	m_DamageInfo.vTarget_Pos = XMVectorSet(Head.m128_f32[0], Head.m128_f32[1], Head.m128_f32[2], 1.f);
 	m_pGoblinSpector->Set_Visible(false);
-	m_pInfoInstance->Event_CallBack(TEXT("Magic_Meter_Update"));
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
 	_uint iSkillType = dynamic_cast<CEffect_Container*>(pOther)->Get_SkillType();
+	auto damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
+
 	m_fHitRadius = CMyTools::Get_Direction2D(m_pTransformCom->Get_State(STATE::LOOK), XMLoadFloat4(&CollisionDesc->vHitDir));
 
 	switch (iSkillType)
@@ -261,10 +264,11 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 		break;
 	case ENUM_CLASS(SKILL_TYPE::JAP):
 	{
+		m_eHitSpell = STATEANIM::HIT_LEVIOSO;
 
-		_float fSkillRatio = m_pInfoInstance->Get_Spell_Info(ENUM_CLASS(SKILL_TYPE::JAP)).fSpell_Damage;
-
-		if (true == Get_Damage(fSkillRatio)) {
+		m_DamageInfo.fDamage = damagePair.first;
+		m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
+		if (0 == damagePair.second) {
 			m_pFSM->Change_State(FSMSTATE::DEAD);
 			return;
 		}

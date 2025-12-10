@@ -41,6 +41,8 @@ private:
 	_uint iIndex;
 private:
 	class CEffectPool* m_pEffectPool = nullptr;
+	DAMAGE_INFO m_DamageInfo;
+
 
 	class CEffectParts* m_pSmoke = { nullptr };
 	class CEffectParts* m_pGoblin_Particle = { nullptr };
