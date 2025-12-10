@@ -41,6 +41,11 @@ private:
 	class CEffectParts*  m_pLeviosoPJ_1   = { nullptr };
 	class CEffectParts*  m_pTrail_PT_0 = { nullptr };
 
+	class CEffectParts* m_pLevioso_Rotate0 = { nullptr };
+	class CEffectParts* m_pLevioso_Rotate1 = { nullptr };
+
+	class CTransform*    m_pEnemyTransform = { nullptr };
+
 	_vector				m_vOwnerLook = {};
 	_float				m_fAccRotateTime = {};
 	_float				m_fTurnSpeed = {};

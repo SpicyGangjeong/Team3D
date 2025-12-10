@@ -237,7 +237,9 @@ void CGoblin::Behavior_SwingEnter()
 
 	Add_Event(pairAnimInfo.first,
 		[this]() {
-			m_pGoblinSpector->Set_Visible(true);},
+			m_pGoblinSpector->Set_Visible(true);
+			m_pGoblinSpector->Spector_Trail_Visible(true);
+		},
 		0.05f);
 
 	Add_Event(pairAnimInfo.first,
@@ -248,6 +250,9 @@ void CGoblin::Behavior_SwingEnter()
 	Add_Event(pairAnimInfo.first,
 		[&]() {	m_bLookAt = true;
 				m_bStep = true;
+				m_pGoblinSpector->Set_Visible(false);
+				m_pGoblinSpector->Spector_Trail_Visible(false);
+
 				m_pFSM->Change_State(FSMSTATE::SHUFFLE); },
 		0.45f);
 }

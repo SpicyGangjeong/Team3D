@@ -78,7 +78,7 @@ public:
 		_float4     vPadding5 = {};
 		_float4     vPadding6 = {};
 
-		_bool		isPadding1 = {};
+		_bool		isRandomAniIndex = {};
 		_bool		isPadding2 = {};
 		_bool		isPadding3 = {};
 		_bool		isPadding4 = {};
@@ -148,7 +148,7 @@ public:
 		_float		fMoveLerpOption = {};
 
 		_bool		isDetphCompareStop = {};
-		_bool		isPadding0 = {};
+		_bool		isRandomAniIndex = {};
 
 	}PRE_INSTANCE_DESC;
 
@@ -169,7 +169,7 @@ public:
 
 		_int	 isNoWorld = {};
 		_int     isDetphCompareStop = {};
-		_int     isPadding1 = {};
+		_int     isRandomAniIndex = {};
 		_int     isPadding2 = {};
 
 		_float   fTimeDelta = {};
@@ -238,7 +238,7 @@ public:
 #endif	
 
 	virtual HRESULT Initialize(void* pArg) override;
-	void			Drop(_float fTimeDelta);
+	void			Compute_CS(_float fTimeDelta);
 public:
 	HRESULT			Render(_uint iMeshIndx);
 	void			Instane_Buffer_ReStruct();

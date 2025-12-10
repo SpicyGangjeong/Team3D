@@ -7,6 +7,7 @@
 #include "Goblin_BattleAxe.h"
 
 #include "EffectParts.h"
+#include "TrailObject.h"
 
 
 CGoblin_Spector::CGoblin_Spector(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -42,8 +43,12 @@ HRESULT CGoblin_Spector::Initialize(void* pArg)
 
 	m_vOriginScale = m_pTransformCom->Get_Scale();
 
+	m_pLeftHand_BoneMat = m_pModelCom->Get_BoneMatrixPtr("SKT_LeftHand");
+	m_pRightHand_BoneMat = m_pModelCom->Get_BoneMatrixPtr("SKT_RightHand");
+
 	m_pModelCom->Set_AnimationIndex(5);
 	m_pModelCom->Play_Animation(0, m_pTransformCom);
+
 
 	m_bVisible = false;
 
@@ -101,6 +106,31 @@ void CGoblin_Spector::Update(_float fTimeDelta)
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
+
+#pragma region TRAIL_UPDATE
+
+	_matrix WorldMat = m_pTransformCom->Get_XMWorldMatrix();
+
+	_matrix LeftHandMatrix = {};
+	_matrix RightHandMatrix = {};
+	_matrix WeaponMatrix = {};
+
+	LeftHandMatrix = XMLoadFloat4x4(m_pLeftHand_BoneMat);
+	RightHandMatrix = XMLoadFloat4x4(m_pRightHand_BoneMat);
+
+
+	for (int i = 0; i < 3; ++i) {
+		LeftHandMatrix.r[i] = XMVector3Normalize(LeftHandMatrix.r[i]);
+		RightHandMatrix.r[i] = XMVector3Normalize(RightHandMatrix.r[i]);
+		WeaponMatrix.r[i] = XMVector3Normalize(WeaponMatrix.r[i]);
+	}
+
+	_matrix WeaponSoket = WeaponMatrix * Get_Component<CTransform>()->Get_XMWorldMatrix();
+
+	m_pLeft_Trail->Trail_Update(LeftHandMatrix * WorldMat, fTimeDelta);
+	m_pRight_Trail->Trail_Update(RightHandMatrix * WorldMat, fTimeDelta);
+
+#pragma endregion
 
 }
 
@@ -185,7 +215,36 @@ HRESULT CGoblin_Spector::Ready_Components()
 	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_GOBLIN"), (CComponent**)&m_pStat))) {
 		return E_FAIL;
 	}
+
+	CPartObject::PARTOBJECT_DESC PartsDesc{};
+
+	PartsDesc.pParentTransform = m_pTransformCom;
+
+	if (FAILED(Add_PartObject<CTrailObject>("Left_Trail", g_iStaticLevel, &m_pLeft_Trail, &PartsDesc))) {
+		return E_FAIL;
+	}
+
+	m_pLeft_Trail->Load_Trail("../Bin/Resources/Data/Effect/Goblin/GoblinSide/Goblin_Trail_R", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pLeft_Trail->Set_Visible(false);
+
+	if (FAILED(Add_PartObject<CTrailObject>("Right_Trail", g_iStaticLevel, &m_pRight_Trail, &PartsDesc))) {
+		return E_FAIL;
+	}
+
+	m_pRight_Trail->Load_Trail("../Bin/Resources/Data/Effect/Goblin/GoblinSide/Goblin_Trail_R", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pRight_Trail->Set_Visible(false);
+
+
 	return S_OK;
+}
+
+void CGoblin_Spector::Spector_Trail_Visible(_bool isTrailVisible)
+{
+	m_pLeft_Trail->Set_Visible(isTrailVisible);
+	m_pRight_Trail->Set_Visible(isTrailVisible);
+
+	m_pLeft_Trail->Get_Component<CTrail>()->Reset_Trail();
+	m_pRight_Trail->Get_Component<CTrail>()->Reset_Trail();
 }
 
 HRESULT CGoblin_Spector::Ready_Parts()
@@ -280,10 +339,10 @@ void CGoblin_Spector::Free()
 {
 	__super::Free();
 
-	SAFE_RELEASE(m_pSmoke);
-	SAFE_RELEASE(m_pGoblin_Particle);
-	SAFE_RELEASE(m_pGoblin_Particle2);
+
 	SAFE_RELEASE(m_pGoblin);
+	SAFE_RELEASE(m_pLeft_Trail);
+	SAFE_RELEASE(m_pRight_Trail);
 }
 #ifdef _DEBUG
 

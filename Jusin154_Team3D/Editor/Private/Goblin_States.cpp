@@ -191,6 +191,8 @@ void CGoblin::Behavior_SwingEnter()
 	m_bSwing = false;
 	m_pFSM->Change_State(FSMSTATE::SHUFFLE); },
 		0.45f);
+
+	
 }
 
 HRESULT CGoblin::Behavior_SwingExitCheck(_float fTimeDelta)
