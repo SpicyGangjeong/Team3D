@@ -103,7 +103,7 @@ void CLevioso::Late_Update(_float fTimeDelta)
 	if (false == m_bHit) {
 		_vector vStartPos = XMLoadFloat4(&m_vStartPos);
 		_vector vEndPos = XMLoadFloat4(&m_vEndPos);
-		SweepTarget(vStartPos, vEndPos, 0.2f);
+		SweepTarget(vStartPos, vEndPos, 0.002f);
 	}
 
 	__super::Late_Update(fTimeDelta);
