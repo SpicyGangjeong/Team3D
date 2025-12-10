@@ -33,8 +33,9 @@
 
 #pragma region UI
 
-#include "Skill_Data.h"
 #include "UI_Manager.h"
+
+#include "Damage_Font.h"
 
 #include "Logo.h"
 #include "Logo_Text.h"
@@ -1583,11 +1584,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
-	/* For.Prototype_GameObject_Skill_Data*/
-	if (FAILED(m_pGameInstance->Add_Prototype<CSkill_Data>(g_iStaticLevel, CSkill_Data::Create(m_pDevice, m_pContext)))) {
-		return E_FAIL;
-	}
-
 	/* For.Prototype_GameObject_GamePlay_Canvas*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CGamePlay_Canvas>(g_iStaticLevel, CGamePlay_Canvas::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
@@ -1765,6 +1761,12 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 	/* For.Prototype_GameObject_Spell_Drag*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_Drag>(g_iStaticLevel, CSpell_Drag::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_Damage_Font*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CDamage_Font>(g_iStaticLevel, CDamage_Font::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}

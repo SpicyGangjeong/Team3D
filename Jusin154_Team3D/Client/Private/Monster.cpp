@@ -144,7 +144,7 @@ void CMonster::Set_DrawOutLine()
 	m_bDrawOutLine = true;
 }
 
-_bool CMonster::Get_Damage(_float fDamage)
+pair<_float, _float> CMonster::Get_Damage(_float fDamage)
 {
 	return  m_pStat->Get_Damage(fDamage);
 }
@@ -159,9 +159,9 @@ CStat* CMonster::Get_Stat()
 	return m_pStat;
 }
 
-_matrix CMonster::Get_HeadMatrix()
+const _float4x4* CMonster::Get_HeadMatrix()
 {
-	return m_pModelCom->Get_BoneMatrix("Head");
+	return m_pModelCom->Get_BoneMatrixPtr("Head");
 }
 
 HRESULT CMonster::Ready_Components(void*pArg)

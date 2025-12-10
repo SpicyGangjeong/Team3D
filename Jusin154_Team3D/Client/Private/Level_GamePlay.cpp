@@ -396,8 +396,6 @@ HRESULT CLevel_GamePlay::Ready_IntstanceProp()
 
 HRESULT CLevel_GamePlay::Ready_Layer_UI(const _wstring& strLayerTag)
 {
-	CInfoInstance::GetInstance()->Load_SpellInfo("../Bin/Resources/Data/UI/Spell/SpellInfo.xml");
-
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CUI_Manager>(g_iStaticLevel, g_iStaticLevel, LAYER_UI))) {
 		return E_FAIL;
 	}

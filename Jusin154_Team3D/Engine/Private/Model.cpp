@@ -533,6 +533,20 @@ _matrix CModel::Get_BoneMatrix(const _char* pBoneName) const
 	return 	(*iter)->Get_CombinedTransformationMatrix();
 }
 
+_matrix CModel::Get_BoneLocalMatrix(const _char* pBoneName) const
+{
+	vector<CBone*>::const_iterator    iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone)->_bool
+		{
+			if (true == pBone->Compare_Name(pBoneName))
+				return true;
+
+			return false;
+		});
+
+	_float4x4 LocalTransform = (*iter)->Get_TransformationMatrix();
+	return      XMLoadFloat4x4(&LocalTransform);
+}
+
 const _char* CModel::Get_MeshName(_uint iIndex)
 {
 	return m_Meshes[iIndex]->Get_Name();

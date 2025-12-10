@@ -11,20 +11,20 @@ NS_END
 
 NS_BEGIN(Client)
 
-class CDamageFont final : public CGameObject
+class CDamage_Font final : public CGameObject
 {
 	typedef struct tagDamageFontInfo
 	{
 		_vector		vTarget_Pos{};
 		_wstring	pDamage;
-		_float		fTime = 1.f;
+		_float		fTime = 2.f;
 		_float		fAlpha = 1.f;
 		_vector		vColor{};
 	}DAMAGE_FONT_INFO;
 private:
-	CDamageFont(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CDamageFont(const CDamageFont& rhs);
-	virtual ~CDamageFont() = default;
+	CDamage_Font(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CDamage_Font(const CDamage_Font& rhs);
+	virtual ~CDamage_Font() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -40,15 +40,17 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 
 private:
-	void Add_Damage(DAMAGE_INFO pInfo);
+	void Add_Damage(void* pArg);
 
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
 
 	vector<DAMAGE_FONT_INFO> m_DamageInfos;
 
+	_vector m_vWhite_Color{};
+
 public:
-	static CDamageFont* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CDamage_Font* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 #ifdef _DEBUG

@@ -63,7 +63,7 @@ HRESULT CAction_Panel::Initialize(void* pArg)
 	static_cast<CMagic_Meter*>(m_pLastMagic_Meter)->Visible(true);
 	m_pInfoInstance->Add_Event(TEXT("Spell"), [this](void* p) {this->Use_Spell(*reinterpret_cast<_int*>(p)); });
 	m_pInfoInstance->Add_Event(TEXT("GetSpell"), [this](void* p) {this->Spell_Setting(p); });
-	m_pInfoInstance->Add_Event(TEXT("Magic_Meter_Update"), [this](void* p) {this->Magic_Meter_Update(); });
+	m_pInfoInstance->Add_Event(TEXT("Monster_Hit"), [this](void* p) {this->Magic_Meter_Update(); });
 	m_pInfoInstance->Add_Event(TEXT("Ancient_Magic_Throw"), [this](void* p) {this->Ancient_Magic_Throw(); });
 	return S_OK;
 }
