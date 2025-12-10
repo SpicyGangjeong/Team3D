@@ -43,9 +43,12 @@ HRESULT CGoblin_Spector::Initialize(void* pArg)
 
 	m_vOriginScale = m_pTransformCom->Get_Scale();
 
-
 	m_pLeftHand_BoneMat = m_pModelCom->Get_BoneMatrixPtr("SKT_LeftHand");
 	m_pRightHand_BoneMat = m_pModelCom->Get_BoneMatrixPtr("SKT_RightHand");
+
+	m_pModelCom->Set_AnimationIndex(5);
+	m_pModelCom->Play_Animation(0, m_pTransformCom);
+
 
 	m_bVisible = false;
 
@@ -87,6 +90,17 @@ void CGoblin_Spector::Update(_float fTimeDelta)
 		m_vScale = { 1.f,1.f,1.f };
 		m_pTransformCom->Set_Scale(m_vOriginScale);
 		m_pModelCom->Set_AnimationIndex(5);
+	}
+
+	if (m_bDisolve) {
+		Get_PartObject<CGoblin_BattleAxe>()->Set_Disolve(true);
+		m_fDisolveTime += fTimeDelta;
+		if (m_fDisolveTime >= 1.f)
+		{
+			m_fDisolveTime = 0.f;
+			m_bDisolve = false;
+			m_bVisible = false;
+		}
 	}
 
 #ifdef _DEBUG
@@ -137,6 +151,11 @@ HRESULT CGoblin_Spector::Render()
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 	_uint iShaderPass = ENUM_CLASS(SHADER_PASS_ANIM::SPECTOR);
+
+	if (FAILED(Render_Disolve())) {
+		return E_FAIL;
+	}
+	
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
 		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
@@ -154,6 +173,13 @@ HRESULT CGoblin_Spector::Render()
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
 		}
+	}
+
+	{
+		_bool bDisolve = false;
+		_float zero = 0.f;
+		m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool));
+		m_pShaderCom->Bind_RawValue("g_fDisolveRatio", &zero, sizeof(_float));
 	}
 
 	return S_OK;
@@ -252,6 +278,36 @@ HRESULT CGoblin_Spector::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 		return E_FAIL;
 	}
+	return S_OK;
+}
+
+HRESULT CGoblin_Spector::Render_Disolve()
+{
+	if (FLT_EPSILON3 * 10 < m_fDisolveTime)
+	{
+		_bool bDisolve = true;
+		_float fDisolveAmount = 0.1f;
+		_float fDisolveEdgeWidth = 0.1f;
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_fDisolveRatio", &m_fDisolveTime, sizeof(_float)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_fDisolveAmount", &fDisolveAmount, sizeof(_float)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_fDisolveEdgeWidth", &fDisolveEdgeWidth, sizeof(_float)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Bind_GlobalSRV(m_pShaderCom, TEXT("GLOBAL_DISOLVE_NOISE_05"), "g_DeadDisolveTexture"))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Bind_GlobalSRV(m_pShaderCom, TEXT("GLOBAL_DISOLVE_BURN_VERTICAL"), "g_DeadDisolveBurnTexture"))) {
+			return E_FAIL;
+		}
+	}
+	
 	return S_OK;
 }
 

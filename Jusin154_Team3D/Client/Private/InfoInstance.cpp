@@ -155,6 +155,9 @@ void CInfoInstance::Key_Input(_uint Input)
 			Event_CallBack(TEXT("Canvas_Change"), &m_eUI_State);
 		}
 		break;
+	case ENUM_CLASS(KEYINPUT::INPUT_X):
+		Event_CallBack(TEXT("Ancient_Magic_Throw"));
+		break;
 	case ENUM_CLASS(KEYINPUT::INPUT_G):
 
 		break;

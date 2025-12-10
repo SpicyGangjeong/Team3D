@@ -110,7 +110,6 @@ void CGoblin::Update(_float fTimeDelta)
 		m_fSkillCoolTime[i] = max(0.f, m_fSkillCoolTime[i] - fTimeDelta);
 
 
-
 }
 
 void CGoblin::Late_Update(_float fTimeDelta)
@@ -134,6 +133,7 @@ HRESULT CGoblin::Render()
 {
 	if (!m_bVisible)
 		return S_OK;
+
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
@@ -241,6 +241,7 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 		return;
 	}
 	m_pGoblinSpector->Set_Visible(false);
+	m_pInfoInstance->Event_CallBack(TEXT("Magic_Meter_Update"));
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
 	_uint iSkillType = dynamic_cast<CEffect_Container*>(pOther)->Get_SkillType();

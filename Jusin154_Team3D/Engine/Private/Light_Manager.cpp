@@ -49,7 +49,7 @@ void CLight_Manager::Delete_Light(_uint _iCurrentLevel, CLight* _pLight)
             SAFE_RELEASE(_pLight);
 
             iter = m_Lights[_iCurrentLevel].erase(iter);
-        
+            return;
         }
         else
         {

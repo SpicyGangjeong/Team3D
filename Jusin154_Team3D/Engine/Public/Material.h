@@ -11,6 +11,8 @@ private:
 	virtual ~CMaterial() = default;
 
 public:
+
+	HRESULT UnbindAllMaterialTextures(class CShader* shader);
 	HRESULT Bind_SRV(class CShader* pShader);
 	
 private:

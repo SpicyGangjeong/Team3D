@@ -312,6 +312,7 @@ call Update_Resources.bat
     <ClInclude Include="..\public\UI_Manager.h" />
     <ClInclude Include="..\public\Unified.h" />
     <ClInclude Include="..\Public\Wand.h" />
+    <ClInclude Include="CDamageFont.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -476,6 +477,7 @@ call Update_Resources.bat
     <ClCompile Include="..\private\UI_Manager.cpp" />
     <ClCompile Include="..\private\Unified.cpp" />
     <ClCompile Include="..\Private\Wand.cpp" />
+    <ClCompile Include="CDamageFont.cpp" />
     <ClCompile Include="Client.cpp" />
   </ItemGroup>
   <ItemGroup>

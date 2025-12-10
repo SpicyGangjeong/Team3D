@@ -111,6 +111,23 @@ HRESULT CShader::Bind_SRVs(const _char* pConstantName, ID3D11ShaderResourceView*
 	return pSRVariable->SetResourceArray(ppSRV, 0, iNumSRVs);
 }
 
+HRESULT CShader::Bind_IntArray(const _char* pConstantName, const int* pData, _uint elementCount)
+{
+	if (m_pEffect == nullptr || pConstantName == nullptr || pData == nullptr || elementCount == 0) {
+		return E_FAIL;
+	}
+
+	ID3DX11EffectScalarVariable* effectScalarVariable =
+		m_pEffect->GetVariableByName(pConstantName)->AsScalar();
+
+	if (effectScalarVariable == nullptr || effectScalarVariable->IsValid() == false) {
+		return E_FAIL;
+	}
+
+	return effectScalarVariable->SetIntArray(pData, 0, elementCount);
+}
+
+
 HRESULT CShader::CreateShader(const _tchar* pShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)
 {
 

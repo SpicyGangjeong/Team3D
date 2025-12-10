@@ -26,9 +26,11 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+	virtual void		GrapToPlayer(_fvector vPos, _float fRatio);
 	_vector				Get_LockOnPos();
 	virtual void		Set_DrawOutLine();
 	virtual HRESULT		Render_OutLine() override;
+	void				Set_KinematicFlag(_bool bFlag);
 
 private:
 	ELEMENT_INTERACTABLE_ID			m_eInteractableID = { ELEMENT_INTERACTABLE_ID::END };

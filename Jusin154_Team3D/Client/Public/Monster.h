@@ -23,6 +23,7 @@ public:
 	virtual _bool Get_Damage(_float fDamage);
 	virtual _float2 Get_Hp();
 	virtual CStat* Get_Stat();
+	_matrix Get_HeadMatrix();
 protected:
 	CInfoInstance*	m_pInfoInstance = { nullptr };
 	CUnit*			m_pTarget = { nullptr };

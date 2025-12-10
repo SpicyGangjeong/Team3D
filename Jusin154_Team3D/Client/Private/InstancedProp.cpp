@@ -22,6 +22,9 @@ void CInstancedProp::Update(_float fTimeDelta)
 
 void CInstancedProp::Late_Update(_float fTimeDelta)
 {
+	if (m_isShake)
+		m_pVIBufferInstanceCom->Shake(fTimeDelta);
+
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 }
 
@@ -86,6 +89,7 @@ HRESULT CInstancedProp::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
+
 	m_iNumMesh = m_pVIBufferInstanceCom->Get_NumMesh();
 
 	return S_OK;
@@ -106,6 +110,10 @@ HRESULT CInstancedProp::Ready_Components(void* pArg)
 	/* Laod Instance Data */
 	if(FAILED(Load_InstancedProp(pDesc->strInstanceDataPath.c_str())))
 		return E_FAIL;
+
+	m_isShake = pDesc->isShake;
+	if (m_isShake)
+		m_pVIBufferInstanceCom->Set_Shake_Value(pDesc->vRadius, pDesc->vSpeed);
 
 	/* Com_Shader */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_INSTANCE_PROP_MODEL,

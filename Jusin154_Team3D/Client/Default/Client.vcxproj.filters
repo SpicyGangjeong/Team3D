@@ -490,6 +490,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Goblin_Attack.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Goblin_Attack</Filter>
+	</ClInclude>
+    <ClInclude Include="CDamageFont.h">
+      <Filter>04.Mechanic\Damage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Goblin_BattleAxe.h">
+      <Filter>02.GameObjects\Item\Goblin_Axe</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1034,6 +1040,9 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Goblin_Attack">
       <UniqueIdentifier>{967d1741-2780-40b7-b55e-9fd58e931ef7}</UniqueIdentifier>
+	</Filter>
+    <Filter Include="04.Mechanic\Damage">
+      <UniqueIdentifier>{36962dce-8c99-4c54-9189-2a49785a211e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1472,6 +1481,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Goblin_Attack.cpp">
       <Filter>02.GameObjects\Effect\MonsterEffect\Goblin_Attack</Filter>
+	</ClCompile>
+    <ClCompile Include="CDamageFont.cpp">
+      <Filter>04.Mechanic\Damage</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

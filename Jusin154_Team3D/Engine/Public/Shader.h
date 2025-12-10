@@ -22,7 +22,7 @@ public:
 
 	HRESULT Bind_SRV(const _char* pConstantName, ID3D11ShaderResourceView* pSRV);
 	HRESULT Bind_SRVs(const _char* pConstantName, ID3D11ShaderResourceView** ppSRV, _uint iNumSRVs);
-
+	HRESULT Bind_IntArray(const _char* pConstantName, const _int* pData, _uint elementCount);
 
 private:
 	HRESULT CreateShader(const _tchar* pShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements);

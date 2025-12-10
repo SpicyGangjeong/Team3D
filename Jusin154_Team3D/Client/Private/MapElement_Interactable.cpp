@@ -115,6 +115,12 @@ HRESULT CMapElement_Interactable::Render()
 	return S_OK;
 }
 
+void CMapElement_Interactable::GrapToPlayer(_fvector vPos, _float fRatio)
+{
+	_vector vCurrentPosition = m_pTransformCom->Get_State(STATE::POSITION);
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorLerp(vCurrentPosition, vPos, fRatio));
+}
+
 HRESULT CMapElement_Interactable::Ready_Components(void* pArg)
 {
 	if (FAILED(__super::Ready_Components(pArg))) {
@@ -225,6 +231,11 @@ HRESULT CMapElement_Interactable::Render_OutLine()
 		}
 	}
 	return S_OK;
+}
+
+void CMapElement_Interactable::Set_KinematicFlag(_bool bFlag)
+{
+	m_pRigidBody->Set_Kinematic(bFlag);
 }
 
 CMapElement_Interactable* CMapElement_Interactable::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
