@@ -12,6 +12,8 @@ CSkill_Data::CSkill_Data()
 
 HRESULT CSkill_Data::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContex)
 {
+	Load_SpellInfo("../Bin/Resources/Data/UI/Spell/SpellInfo.xml");
+
 	m_bNoCool = false;
 	m_pInfoInstance->Add_Event(TEXT("NoCooL"), [this](void* p) {this->NoCool(*reinterpret_cast<_bool*>(p)); });
 	return S_OK;
@@ -33,10 +35,23 @@ _int CSkill_Data::Update_Spell(_int SpellID)
 	if (m_bNoCool == false)
 	{
 		SpellInfo[SpellID].bUse_Skill = false;
-		m_iSpell_CoolTime[SpellID] = 0.f;
+		m_fSpell_CoolTime[SpellID] = 0.f;
 	}
 
 	return SpellInfo[SpellID].iSkill_Type;
+}
+
+_float CSkill_Data::Get_Spell_Damage(_int SpellDamage)
+{
+	return m_fSpell_Damage[SpellDamage];
+}
+
+void CSkill_Data::Update_Damage(_float Damage)
+{
+	for (_int i = 0; i < m_iSpell_Count; ++i)
+	{
+		m_fSpell_Damage[i] = SpellInfo->fSpell_Damage + Damage;
+	}
 }
 
 void CSkill_Data::Update(_float fTimeDelta)
@@ -45,9 +60,9 @@ void CSkill_Data::Update(_float fTimeDelta)
 	{
 		if (SpellInfo[i].bUse_Skill == false)
 		{
-			if (m_iSpell_CoolTime[i] <= 1.f)
+			if (m_fSpell_CoolTime[i] <= 1.f)
 			{
-				m_iSpell_CoolTime[i] += fTimeDelta * (1.f / SpellInfo[i].fSpell_CoolTime);
+				m_fSpell_CoolTime[i] += fTimeDelta * (1.f / SpellInfo[i].fSpell_CoolTime);
 			}
 			else
 			{
@@ -61,7 +76,7 @@ void CSkill_Data::Update(_float fTimeDelta)
 	{
 		for (_int i = 0; i < 34; ++i)
 		{
-			m_iSpell_CoolTime[i] = 1.f;
+			m_fSpell_CoolTime[i] = 1.f;
 		}
 	}
 
@@ -76,7 +91,7 @@ _float CSkill_Data::Get_CoolTime(_int SpellID)
 	if (SpellID < 0 || SpellID > m_iSpell_Count)
 		return 0.f;
 
-	return m_iSpell_CoolTime[SpellID];
+	return m_fSpell_CoolTime[SpellID];
 }
 
 HRESULT CSkill_Data::Load_SpellInfo(const _char* pFilePath)
@@ -120,7 +135,8 @@ HRESULT CSkill_Data::Load_SpellInfo(const _char* pFilePath)
 			pSpell->QueryFloatAttribute("Vidio", &SpellInfo[id].fVidio);
 
 			m_iSpell_Count++;
-			m_iSpell_CoolTime[id] = 1.2f;
+			m_fSpell_CoolTime[id] = 1.2f;
+			m_fSpell_Damage[id] = SpellInfo[id].fSpell_Damage;
 		}
 
 		// 항상 다음 Spell로 이동
