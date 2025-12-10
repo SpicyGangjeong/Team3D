@@ -100,10 +100,12 @@ void CDecendo::Late_Update(_float fTimeDelta)
 
 	_vector vDir = XMLoadFloat4(&m_vEndPos) - XMLoadFloat4(&m_vStartPos);
 
-	if (true == m_pGameInstance->SphereCast(0.125, XMLoadFloat4(&m_vStartPos), XMVector3Normalize(vDir), XMVectorGetX(XMVector3Length(vDir))
-		, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eDYNAMIC | PSX::PxQueryFlag::eSTATIC, m_Hitbuffer))
-	{
-		OnCollision();
+	if (false == m_bHit) {
+		_vector vStartPos = XMLoadFloat4(&m_vStartPos);
+		_vector vEndPos = XMLoadFloat4(&m_vEndPos);
+		ON_COLLISION_INFO CollisionInfo = SweepTarget(vStartPos, vEndPos, 0.002f);
+
+		OnCollision(this, &CollisionInfo);
 	}
 
 	__super::Late_Update(fTimeDelta);
@@ -243,17 +245,12 @@ CGameObject* CDecendo::Clone(void* pArg, CGameObject* pOwner)
 void CDecendo::OnCollision(CGameObject* pOther, void* pDesc)
 {
 
-	_int iIndex = CollisionCheck();
-
-	if (iIndex < 0)
+	if (m_bHit == false)
 		return;
 
-	if (m_isCollisionEnter == true)
-		return;
+	ON_COLLISION_INFO CollisionDesc = *static_cast<ON_COLLISION_INFO*>(pDesc);
 
-	m_isCollisionEnter = true;
-
-	_vector vPos = XMVectorSet(m_Hitbuffer.touches[iIndex].position.x, m_Hitbuffer.touches[iIndex].position.y, m_Hitbuffer.touches[iIndex].position.z, 1.f);
+	_vector vPos = XMLoadFloat4(&CollisionDesc.vWorldPos);
 
 
 	for (auto& pPair : m_PartObjects)
@@ -261,7 +258,6 @@ void CDecendo::OnCollision(CGameObject* pOther, void* pDesc)
 		pPair.second->Set_Visible(true);
 		pPair.second->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
 	}
-
 
 
 	m_pProjectile_Blur->Set_Visible(false);

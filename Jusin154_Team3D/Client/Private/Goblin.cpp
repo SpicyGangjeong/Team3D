@@ -246,6 +246,7 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 
 	_uint iSkillType = dynamic_cast<CEffect_Container*>(pOther)->Get_SkillType();
 	m_fHitRadius = CMyTools::Get_Direction2D(m_pTransformCom->Get_State(STATE::LOOK), XMLoadFloat4(&CollisionDesc->vHitDir));
+
 	switch (iSkillType)
 	{
 	case ENUM_CLASS(SKILL_TYPE::DESCENDO):
@@ -256,13 +257,14 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 		break;
 	case ENUM_CLASS(SKILL_TYPE::JAP):
 	{
-		m_eHitSpell = STATEANIM::HIT_LEVIOSO;
+
 		_float fSkillRatio = m_pInfoInstance->Get_Spell_Info(ENUM_CLASS(SKILL_TYPE::JAP)).fSpell_Damage;
-		_float fCoefficient = CollisionDesc->pObject->Get_Component<CStat>()->Get_Stat().fMagic;
-		if (true == Get_Damage(fSkillRatio * fCoefficient * 0.0f)) {
+
+		if (true == Get_Damage(fSkillRatio)) {
 			m_pFSM->Change_State(FSMSTATE::DEAD);
 			return;
 		}
+
 	}
 		break;
 	case ENUM_CLASS(SKILL_TYPE::LEVIOSO):

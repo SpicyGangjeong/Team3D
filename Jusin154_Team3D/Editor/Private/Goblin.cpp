@@ -247,8 +247,8 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 	{
 		m_eHitSpell = STATEANIM::HIT_LEVIOSO;
 		_float fSkillRatio = m_pInfoInstance->Get_Spell_Info(ENUM_CLASS(SKILL_TYPE::JAP)).fSpell_Damage;
-		_float fCoefficient = CollisionDesc->pObject->Get_Component<CStat>()->Get_Stat().fMagic;
-		if (true == Get_Damage(fSkillRatio * fCoefficient)) {
+
+		if (true == Get_Damage(fSkillRatio )) {
 			m_pFSM->Change_State(FSMSTATE::DEAD);
 			return;
 		}

@@ -523,7 +523,7 @@ HRESULT CInstance_Model::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CInstance_Model::Drop(_float fTimeDelta)
+void CInstance_Model::Compute_CS(_float fTimeDelta)
 {
 	D3D11_MAPPED_SUBRESOURCE ConstantSubResource = {};
 
@@ -542,6 +542,7 @@ void CInstance_Model::Drop(_float fTimeDelta)
 		pDesc->isSizeLerp = m_InstanceDesc.isSizeLerp;
 		pDesc->isNoWorld = m_InstanceDesc.isNoWorld;
 		pDesc->isDetphCompareStop = m_InstanceDesc.isDetphCompareStop;
+		pDesc->isRandomAniIndex = m_InstanceDesc.isRandomAniIndex;
 
 		pDesc->WorldMatrix = *m_pOwner->Get_Component<CTransform>()->Get_WorldMatrixPtr();
 		pDesc->fSizeLerpOption = m_InstanceDesc.fSizeLerpOption;
@@ -721,6 +722,11 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 				memcpy(&pParticleValues[i].vOriginUp, SRMatrix.m[1], sizeof(_float4));
 				memcpy(&pParticleValues[i].vOriginLook, SRMatrix.m[2], sizeof(_float4));
 				memcpy(&pParticleValues[i].vOriginTranslation, &pVertices[i].vTranslation, sizeof(_float4));
+
+				if (m_InstanceDesc.isRandomAniIndex == true)
+				{
+					pParticleValues[i].vAniIndex = _float2((_float)m_pGameInstance->Random_Int(0, (_int)m_InstanceDesc.vAniIndex.y) , m_InstanceDesc.vAniIndex.y);
+				}
 			}
 
 			m_pContext->Unmap(m_pParticleValueBuffer, 0);
@@ -852,6 +858,11 @@ void CInstance_Model::Describe_Entity()
 		}
 
 		if (GUI::Checkbox("NoWorld", &m_InstanceDesc.isNoWorld))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
+		if (GUI::Checkbox("RandomIndex", &m_InstanceDesc.isRandomAniIndex))
 		{
 			Instane_Buffer_ReStruct();
 		}

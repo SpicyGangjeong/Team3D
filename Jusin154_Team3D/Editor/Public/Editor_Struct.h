@@ -1,9 +1,11 @@
 ﻿#pragma once
 NS_BEGIN(Engine)
-class CTransform;
 class CModel;
 class CRigidBody_Static;
+class CUnit;
+class CTransform;
 NS_END
+
 
 NS_BEGIN(Editor)
 
@@ -59,4 +61,10 @@ typedef struct tagSpellInfo
 	_float			fPreview{};
 	_float			fVidio{};
 }SPELL_INFO;
+
+typedef struct tagLockOnInfo {
+	CUnit* pUnit = { nullptr };
+	class CMapElement_Interactable* pInteractive = { nullptr };
+}LOCKON_INFO;
+
 NS_END
