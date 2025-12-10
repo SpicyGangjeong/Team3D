@@ -17,6 +17,9 @@ public:
 	typedef struct tagInstancedPropDesc
 	{
 		_bool		bEditMode{};
+		_bool		isShake;
+		_float2		vRadius;
+		_float2		vSpeed;
 		_wstring 	strPrototypeTag;
 		string 		strInstanceDataPath;
 	}INSTANCE_PROP_DESC;
@@ -33,6 +36,7 @@ public:
 
 private:
 	_bool						m_bEditMode = {};
+	_bool						m_isShake = {};
 	CVIBuffer_Model_Instance*	m_pVIBufferInstanceCom = { nullptr };
 	CShader*					m_pShaderCom = { nullptr };
 
@@ -45,7 +49,6 @@ private:
 	_float3						m_vScale = {};
 #ifdef _DEBUG
 	_char						m_szFileName[MAX_PATH] = {};
-
 #endif // _DEBUG
 
 
