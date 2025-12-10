@@ -58,27 +58,23 @@ HRESULT CMapObject_Manager::Initialize(void* pArg)
 	m_iContainerObjectIndex = 99;
 	//m_pContainer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Building"))->Get_Object<CBuildingContainer>();
 
-	/*if (FAILED(Load_MapData("Map1205")))
+	if (FAILED(Load_MapData("Map1205")))
 		return E_FAIL;
-
-	if (FAILED(Load_LightObject("LightElement")))
-		return E_FAIL;
-	
-	if (FAILED(Load_InteractObject("E_INTER_Barrel")))
-		return E_FAIL;
-	if (FAILED(Load_InteractObject("E_INTER_PostPackage_B")))
-		return E_FAIL;
-	if (FAILED(Load_InteractObject("E_INTER_PostPackage_F")))
-		return E_FAIL;
-	if (FAILED(Load_InteractObject("E_INTER_TeaShopTable")))
-		return E_FAIL;
-	if (FAILED(Load_InteractObject("E_INTER_TeaShopChair")))
-		return E_FAIL;*/
-
 
 	/*if (FAILED(Load_LightObject("LightElement")))
-		return E_FAIL;
-	*/
+		return E_FAIL;*/
+	//
+	//if (FAILED(Load_InteractObject("E_INTER_Barrel")))
+	//	return E_FAIL;
+	//if (FAILED(Load_InteractObject("E_INTER_PostPackage_B")))
+	//	return E_FAIL;
+	//if (FAILED(Load_InteractObject("E_INTER_PostPackage_F")))
+	//	return E_FAIL;
+	//if (FAILED(Load_InteractObject("E_INTER_TeaShopTable")))
+	//	return E_FAIL;
+	//if (FAILED(Load_InteractObject("E_INTER_TeaShopChair")))
+	//	return E_FAIL;
+	
 	return S_OK;
 }
 

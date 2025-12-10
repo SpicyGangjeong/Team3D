@@ -66,16 +66,12 @@ void CMapElement_Lake::Priority_Update(_float fTimeDelta)
 void CMapElement_Lake::Update(_float fTimeDelta)
 {
 	m_fTimeAcc += fTimeDelta * m_fUVValue;
-	Describe_Entity();
+	//Describe_Entity();
 }
 
 void CMapElement_Lake::Late_Update(_float fTimeDelta)
 {
 #ifdef _DEBUG
-
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
-	m_pTransformCom->Set_Scale(m_vScale);
-	m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
 	
 #endif 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
