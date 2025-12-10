@@ -247,7 +247,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Background = true;
 #endif // gimch
 #ifdef Bin
-	isReady_Background = false;
+	isReady_Background = true;
 #endif // 
 #ifdef 진우
 	isReady_Background = false;

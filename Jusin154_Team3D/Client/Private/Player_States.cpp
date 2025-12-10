@@ -814,7 +814,7 @@ void CPlayer::Behavior_CombatEnter()
 		if (nullptr != m_pGrapInteractive) {
 			m_pFSM->Enable_State(FSMSTATE::ANCIENT_THROW);
 			pairAnimInfo = m_Animation[STATEANIM::ANCIENT_THROW];
-		} 
+		}
 		else if (nullptr != m_LockOnInfo.pInteractive) {
 			m_pGrapInteractive = m_LockOnInfo.pInteractive;
 			SAFE_ADDREF(m_pGrapInteractive);
@@ -822,6 +822,21 @@ void CPlayer::Behavior_CombatEnter()
 			m_vGrapInteratableLerp.x = 0.f;
 			return;
 		}
+
+		Add_Event(pairAnimInfo.first,
+			[this]() {			_vector vDir = {};
+		_float vDistance = 45.f;
+		CRigidBody_Dynamic* pBody = m_pGrapInteractive->Get_Component<CRigidBody_Dynamic>();
+		if (nullptr != m_LockOnInfo.pUnit) {
+			vDir = XMVector3Normalize(m_LockOnInfo.pUnit->Get_LockOnPos() - m_pGrapInteractive->Get_LockOnPos());
+		}
+		else {
+			vDir = m_pTransformCom->Get_State(STATE::LOOK);
+		}
+		m_pGrapInteractive->Set_KinematicFlag(false);
+		pBody->Add_Force(vDir * vDistance, PSX::PxForceMode::eIMPULSE);
+		SAFE_RELEASE(m_pGrapInteractive); },
+			0.2f);
 	}
 	else if (m_pGameInstance->Key_Down(DIK_G)) {
 		m_pFSM->Enable_State(FSMSTATE::POTION);
@@ -874,6 +889,21 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 			m_pFSM->Enable_State(FSMSTATE::ANCIENT_THROW);
 			pairAnimInfo = m_Animation[STATEANIM::ANCIENT_THROW];
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
+			Add_Event(pairAnimInfo.first,
+				[this]() {			_vector vDir = {};
+			_float vDistance = 45.f;
+			CRigidBody_Dynamic* pBody = m_pGrapInteractive->Get_Component<CRigidBody_Dynamic>();
+			if (nullptr != m_LockOnInfo.pUnit) {
+				vDir = XMVector3Normalize(m_LockOnInfo.pUnit->Get_LockOnPos() - m_pGrapInteractive->Get_LockOnPos());
+			}
+			else {
+				vDir = m_pTransformCom->Get_State(STATE::LOOK);
+			}
+			m_pGrapInteractive->Set_KinematicFlag(false);
+			pBody->Add_Force(vDir * vDistance, PSX::PxForceMode::eIMPULSE);
+			SAFE_RELEASE(m_pGrapInteractive); },
+				0.2f);
 		}
 		else if (m_pGameInstance->Key_Down(DIK_G)) {
 			m_pFSM->Enable_State(FSMSTATE::POTION);
@@ -904,18 +934,6 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 	{
 		if (SUCCEEDED(InputMove()) && IsCurrentKeyFrame("Throw")) {
 			m_pFSM->Change_State(FSMSTATE::MOVE);
-			_vector vDir = {};
-			_float vDistance = 45.f;
-			CRigidBody_Dynamic* pBody = m_pGrapInteractive->Get_Component<CRigidBody_Dynamic>();
-			if (nullptr != m_LockOnInfo.pUnit) {
-				vDir = XMVector3Normalize(m_LockOnInfo.pUnit->Get_LockOnPos() - m_pGrapInteractive->Get_LockOnPos());
-			}
-			else {
-				vDir = m_pTransformCom->Get_State(STATE::LOOK);
-			}
-			m_pGrapInteractive->Set_KinematicFlag(false);  
-			pBody->Add_Force(vDir * vDistance, PSX::PxForceMode::eIMPULSE);
-			SAFE_RELEASE(m_pGrapInteractive);
 			return E_FAIL;
 		}
 	}
