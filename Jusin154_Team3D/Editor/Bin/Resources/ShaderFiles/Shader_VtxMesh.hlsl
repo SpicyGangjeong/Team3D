@@ -26,6 +26,9 @@ float g_fUsingSurfaceParams;
 float2 g_vClipBoxSize;
 float2 g_vClipBoxLTPos;
 
+float g_fDisolveAmount;
+float g_fDisolveEdgeWidth;
+
 Texture2D g_DiffuseTexture;
 Texture2D g_NormalTexture;
 Texture2D g_DAOTexture;
@@ -621,6 +624,47 @@ PS_OUT PS_NONMRO(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_SPECTOR_WEAPON_MAIN(PS_IN In)
+{
+    PS_OUT Out;
+
+    float4 vMtrlDiffuse = g_EmissiveTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    float4 vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DisolveTexture.Sample(DefaultSampler, In.vTexcoord);
+        vMtrlDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vMtrlDiffuse, In.vTexcoord);
+    }
+    
+    if (vMtrlDiffuse.a < 0.2f)
+    {
+        discard;
+    }
+
+
+    float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
+    
+    float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
+    
+    Out.vAlbedo = vMtrlDiffuse;
+    Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
+    float fSurfaceParam = g_fUsingSurfaceParams;
+    if (true == AlmostEqual7(g_fUsingSurfaceParams, 0.f))
+    {
+        fSurfaceParam = 0;
+    }
+    Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
+        (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
+        fSurfaceParam, // 서페이스 파라미터
+        1.f);
+    Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
+    Out.vSurface = vSurface;
+    
+    return Out;
+}
+
 technique11 MeshTechnique11
 {
     pass MeshPass // 0
@@ -807,5 +851,15 @@ technique11 MeshTechnique11
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_NONMRO();
+    }
+
+    pass SpectorWeaponPass // 19
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_SPECTOR_WEAPON_MAIN();
     }
 }
