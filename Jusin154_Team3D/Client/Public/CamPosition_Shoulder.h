@@ -27,7 +27,8 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	virtual _vector Get_WorldPostion() override;
-
+	_vector Get_ShoulderLocalPos();
+	
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
@@ -35,12 +36,13 @@ private:
 	HRESULT Ready_Components(void* pArg);
 	HRESULT Ready_SubParts();
 	void Start_LerpShoulderPos();
+	_float Calc_CamPosRatio();
 
 	_bool	m_bMovable = { true };
 	_float	m_fMouseSensor = { 0.5f };
 	_float	m_fShoulderDistance = { 2.f };
 	_float	m_fCameraFocalLength = { 10.f };
-	_float	m_fBackFrontRatio = { 0.9f };
+	_float3	m_vBackFrontRatio = { 0.9f, 0.9f, 0.9f }; // 시작위치, 대상위치, 원래위치
 	_float2	m_vAccDegreeXY = {};
 	_float3 m_vShoulderPosRatio = { 1.f, 2.f, -1.f };
 
@@ -50,9 +52,10 @@ private:
 	_bool m_bShoulderLerp = { false };
 	_float2 m_vShoulderLerpTimer = { 0.f, 1.f };
 
-	_float2 m_vPosLerpTimer = { 0.f, 0.16f };
+	_float2 m_vPosLerpTimer = { 0.f, BASIC_LERP_TIMER };
 	_float4 m_StartPos = { };
 	_float4 m_DestPos = { };
+	PSX::PxSweepBuffer m_BufferHit = {};
 
 	_bool m_bZoomIn = { false };
 	_bool m_bLerp = {};

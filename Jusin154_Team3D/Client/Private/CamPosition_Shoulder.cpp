@@ -35,7 +35,7 @@ HRESULT CCamPosition_Shoulder::Initialize(void* pArg)
 		m_fShoulderDistance = pDesc->fShoulderDistance;
 		m_vAccDegreeXY = { 0.f, 0.f };
 		m_fCameraFocalLength = pDesc->fCameraFocalLength;
-		m_fBackFrontRatio = pDesc->fBackFrontRatio;
+		m_vBackFrontRatio.x = m_vBackFrontRatio.y = m_vBackFrontRatio.z = pDesc->fBackFrontRatio;
 
 		m_vShoulderOtherRatio = m_vShoulderPosRatio = m_vShoulderStartRatio = pDesc->vInitialLook;
 		m_vShoulderStartRatio.x *= -1.f;
@@ -47,12 +47,13 @@ HRESULT CCamPosition_Shoulder::Initialize(void* pArg)
 		_vector vCameraLook = XMVectorSet(0.f, 0.f, 1.f, 0.f);
 		_vector vRotCameraq = XMQuaternionRotationRollPitchYaw(XMConvertToRadians(m_vAccDegreeXY.x), XMConvertToRadians(m_vAccDegreeXY.y), 0.f);
 		vCameraLook = XMVector3Normalize(XMVector3Rotate(vCameraLook, vRotCameraq));
+		m_pTransformCom->Set_State(STATE::LOOK, vCameraLook);
 
 		CTransform* pLookTransform = m_pTarget_LookPart->Get_Component<CTransform>();
 		CTransform* pFollowTransform = m_pTarget_FollowPart->Get_Component<CTransform>();
 
-		pLookTransform->Set_State(STATE::POSITION, vShoulderPos + vCameraLook * (m_fCameraFocalLength * m_fBackFrontRatio));
-		pFollowTransform->Set_State(STATE::POSITION, vShoulderPos - vCameraLook * (m_fCameraFocalLength * (1 - m_fBackFrontRatio)));
+		pLookTransform->Set_State(STATE::POSITION, vShoulderPos + vCameraLook * (m_fCameraFocalLength * m_vBackFrontRatio.z));
+		pFollowTransform->Set_State(STATE::POSITION, vShoulderPos - vCameraLook * (m_fCameraFocalLength * (1 - m_vBackFrontRatio.z)));
 	}
 
 	return S_OK;
@@ -66,6 +67,7 @@ void CCamPosition_Shoulder::Priority_Update(_float fTimeDelta)
 
 	if (m_pGameInstance->Key_Up(DIK_PGDN))
 	{
+		Start_LerpShoulderPos();
 		m_bLerp = !m_bLerp;
 	}
 	if (true == m_bMovable) {
@@ -86,12 +88,15 @@ void CCamPosition_Shoulder::Priority_Update(_float fTimeDelta)
 
 		_vector vRotCameraq = XMQuaternionRotationRollPitchYaw(XMConvertToRadians(m_vAccDegreeXY.x), XMConvertToRadians(m_vAccDegreeXY.y), 0.f);
 		_vector vCameraLook = XMVector3Normalize(XMVector3Rotate(XMVectorSet(0.f, 0.f, 1.f, 0.f), vRotCameraq));
+		m_pTransformCom->Set_State(STATE::LOOK, vCameraLook);
 
 		CTransform* pLookTransform = m_pTarget_LookPart->Get_Component<CTransform>();
 		CTransform* pFollowTransform = m_pTarget_FollowPart->Get_Component<CTransform>();
 
-		pLookTransform->Set_State(STATE::POSITION, vShoulderPos + vCameraLook * (m_fCameraFocalLength * m_fBackFrontRatio));
-		pFollowTransform->Set_State(STATE::POSITION, vShoulderPos - vCameraLook * (m_fCameraFocalLength * (1 - m_fBackFrontRatio)));
+		_float fCamPosRatio = Calc_CamPosRatio();
+
+		pLookTransform->Set_State(STATE::POSITION, vShoulderPos + vCameraLook * (m_fCameraFocalLength * fCamPosRatio));
+		pFollowTransform->Set_State(STATE::POSITION, vShoulderPos - vCameraLook * (m_fCameraFocalLength * (1 - fCamPosRatio)));
 	}
 	else
 	{
@@ -104,12 +109,15 @@ void CCamPosition_Shoulder::Priority_Update(_float fTimeDelta)
 		_vector vCameraLook = XMVectorSet(0.f, 0.f, 1.f, 0.f);
 		_vector vRotCameraq = XMQuaternionRotationRollPitchYaw(XMConvertToRadians(m_vAccDegreeXY.x), XMConvertToRadians(m_vAccDegreeXY.y), 0.f);
 		vCameraLook = XMVector3Normalize(XMVector3Rotate(vCameraLook, vRotCameraq));
+		m_pTransformCom->Set_State(STATE::LOOK, vCameraLook);
 
 		CTransform* pLookTransform = m_pTarget_LookPart->Get_Component<CTransform>();
 		CTransform* pFollowTransform = m_pTarget_FollowPart->Get_Component<CTransform>();
 
-		pLookTransform->Set_State(STATE::POSITION, vShoulderPos + vCameraLook * (m_fCameraFocalLength * m_fBackFrontRatio));
-		pFollowTransform->Set_State(STATE::POSITION, vShoulderPos - vCameraLook * (m_fCameraFocalLength * (1 - m_fBackFrontRatio)));
+		_float fCamPosRatio = Calc_CamPosRatio();
+
+		pLookTransform->Set_State(STATE::POSITION, vShoulderPos + vCameraLook * (m_fCameraFocalLength * fCamPosRatio));
+		pFollowTransform->Set_State(STATE::POSITION, vShoulderPos - vCameraLook * (m_fCameraFocalLength * (1 - fCamPosRatio)));
 	}
 	
 }
@@ -210,8 +218,8 @@ HRESULT CCamPosition_Shoulder::Ready_SubParts()
 	CameraDesc.bEnableFollowLerp = false;
 	CameraDesc.bEnableLookLerp = false;
 	CameraDesc.vTransitionTime = { 0.f, 1.f };
-	CameraDesc.vFollowLerpTime = { 0.f, 0.16f };
-	CameraDesc.vLookLerpTime = { 0.f, 0.16f };
+	CameraDesc.vFollowLerpTime = { 0.f, BASIC_LERP_TIMER };
+	CameraDesc.vLookLerpTime = { 0.f, BASIC_LERP_TIMER };
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCamera_Gaze>(g_iStaticLevel, NEXT_LEVEL, LAYER_CAMERA, &CameraDesc, nullptr, &m_pBinded_Camera)))
 	{
@@ -231,6 +239,50 @@ void CCamPosition_Shoulder::Start_LerpShoulderPos()
 	vLook = XMVector3Normalize(XMVector3Rotate(vLook, vRotq));
 
 	XMStoreFloat4(&m_DestPos, m_pParentTransformCom->Get_State(STATE::POSITION) + XMVector3Normalize(vLook) * m_fShoulderDistance);
+}
+_float CCamPosition_Shoulder::Calc_CamPosRatio()
+{
+	_vector vPos = m_pTransformCom->Get_State(STATE::POSITION);
+	_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
+	
+	m_BufferHit = {};
+	_bool bHit = { false };
+	_float fBestCamDistance = m_fCameraFocalLength * (1 - m_vBackFrontRatio.z);
+	_float fBestCamRatio = m_vBackFrontRatio.z;
+	bHit = m_pGameInstance->SphereCast(0.35f, vPos, -vLook, fBestCamDistance, PSX::PxHitFlag::eDEFAULT, PSX::PxQueryFlag::eSTATIC | PSX::PxQueryFlag::eDYNAMIC, m_BufferHit);
+	if (true == bHit) {
+		vector<PSX::PxSweepHit> vecHits = {};
+		_uint iHitCount = {};
+		{ // HitSort
+			vecHits.reserve(m_BufferHit.getNbTouches() + (m_BufferHit.hasBlock) ? 1 : 0);
+			iHitCount = m_BufferHit.getNbTouches();
+			auto* pTouch = m_BufferHit.getTouches();
+			for (_uint i = 0; i < iHitCount; ++i) {
+				vecHits.emplace_back(pTouch[i]);
+			}
+			if (true == m_BufferHit.hasBlock) {
+				vecHits.emplace_back(m_BufferHit.block);
+				iHitCount += 1;
+			}
+			CMyTools::SortHitsByDistance(vecHits);
+		}
+		for (_uint i = 0; i < iHitCount; ++i) { // TODO: 럴프 할 수 있을까 
+			if (vecHits[i].distance < fBestCamDistance) {
+				fBestCamDistance = vecHits[i].distance;
+				fBestCamRatio = (1 - (1 - m_vBackFrontRatio.z) * (fBestCamDistance / m_fCameraFocalLength));
+				break;
+			}
+		}
+	}
+
+	return fBestCamRatio;
+}
+_vector CCamPosition_Shoulder::Get_ShoulderLocalPos()
+{
+	_vector vLook = XMVector3Normalize(3.f * (XMVectorSetZ(XMLoadFloat3(&m_vShoulderPosRatio), 0.f)));
+	_vector vRotq = XMQuaternionRotationRollPitchYaw(0.f, XMConvertToRadians(m_vAccDegreeXY.y), 0.f);
+	vLook = XMVector3Normalize(XMVector3Rotate(vLook, vRotq));
+	return vLook * m_fShoulderDistance;
 }
 CCamPosition_Shoulder* CCamPosition_Shoulder::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
@@ -272,7 +324,7 @@ void CCamPosition_Shoulder::Describe_Entity()
 
 	GUI::Text("fMouseSensor : %.1f", m_fMouseSensor);
 	GUI::SliderFloat("ShoulderDistance", &m_fShoulderDistance, 0.f, 10.f, "%.1f");
-	GUI::SliderFloat("BackFrontRatio", &m_fBackFrontRatio, 0.01f, 0.99f, "%.2f");
+	GUI::Text("BackFrontRatio %.1f, %.1f, %.1f", &m_vBackFrontRatio.x, &m_vBackFrontRatio.y, &m_vBackFrontRatio.z);
 	GUI::Text("Pitch Yaw : %f %f", m_vAccDegreeXY.x, m_vAccDegreeXY.y);
 	GUI::SliderFloat3("ShoulderPosRatio", (_float*)&m_vShoulderPosRatio, -2.f, 2.f, "%.1f");
 	GUI::End();
