@@ -238,6 +238,8 @@ HRESULT CEffect_Container::Pre_Setting(CGameObject* pObject, void* pArg)
 	m_bVisible = true;
 	m_isCollisionEnter = false;
 
+	m_bHit = false;
+
 	return S_OK;
 }
 

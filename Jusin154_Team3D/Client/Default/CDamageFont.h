@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "Client_Define.h"
-#include "ElementObject.h"
+#include "GameObject.h"
 
 NS_BEGIN(Engine)
 class CTexture;
@@ -11,12 +11,20 @@ NS_END
 
 NS_BEGIN(Client)
 
-class CMagic_Meter final : public CElementObject
+class CDamageFont final : public CGameObject
 {
+	typedef struct tagDamageFontInfo
+	{
+		_vector		vTarget_Pos{};
+		_wstring	pDamage;
+		_float		fTime = 1.f;
+		_float		fAlpha = 1.f;
+		_vector		vColor{};
+	}DAMAGE_FONT_INFO;
 private:
-	CMagic_Meter(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CMagic_Meter(const CMagic_Meter& rhs);
-	virtual ~CMagic_Meter() = default;
+	CDamageFont(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CDamageFont(const CDamageFont& rhs);
+	virtual ~CDamageFont() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -25,12 +33,6 @@ public:
 	virtual HRESULT Render() override;
 	virtual _vector Get_WorldPostion() override;
 
-public:
-	void Meter_Index(_uint Number);
-	_float Charge_Meter();
-	_float Get_Meter();
-	_float Use_Meter(_float Meter);
-
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;
@@ -38,24 +40,21 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 
 private:
-	CTexture* m_pDiffuse_TextureCom = { nullptr };
-	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
-	CShader* m_pShaderCom = { nullptr };
-	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
+	void Add_Damage(DAMAGE_INFO pInfo);
 
-	_uint	m_iImageCount{};
-	_float4 m_vGaugeUV{};
-	_float m_fMaxGauge{};
-	_float m_fCurrentGauge{};
-	_float m_fGaugeBar{};
-	_float m_fTargetGauge{};
+private:
+	CInfoInstance* m_pInfoInstance = { nullptr };
+
+	vector<DAMAGE_FONT_INFO> m_DamageInfos;
+
 public:
-	static CMagic_Meter* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CDamageFont* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 #ifdef _DEBUG
 	void Describe_Entity() override;
 #endif // _DEBUG
+
 };
 
-NS_END
+NS_END;

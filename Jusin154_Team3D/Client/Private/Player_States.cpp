@@ -56,6 +56,7 @@ HRESULT CPlayer::InputAction()
 			|| m_pGameInstance->Key_Down(DIK_LSHIFT)
 			|| m_pGameInstance->Key_Down(DIK_C)
 			|| m_pGameInstance->Key_Down(DIK_V)
+			|| m_pGameInstance->Key_Down(DIK_X)
 			|| m_pGameInstance->Key_Down(DIK_Z)
 			|| m_pGameInstance->Key_Down(DIK_G)
 			|| m_pGameInstance->Key_Down(DIK_B)
@@ -65,7 +66,7 @@ HRESULT CPlayer::InputAction()
 		{
 			if (m_pGameInstance->Key_Down(DIK_T)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_T));
 			if (m_pGameInstance->Key_Down(DIK_TAB)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_TAB));
-
+			if (m_pGameInstance->Key_Down(DIK_X)) m_pInfoInstance->Key_Input(ENUM_CLASS(KEYINPUT::INPUT_X));
 			return S_OK;
 		}
 	}
@@ -500,7 +501,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 						{
 							pairAnimInfo = m_Animation[STATEANIM::JOG_AIM_LEFT];
 						}
-						else if (m_pFSM->IsEnable(FSMSTATE::JOG) && !m_pFSM->IsEnable(FSMSTATE::SPRINT))
+						/*else if (m_pFSM->IsEnable(FSMSTATE::JOG) && !m_pFSM->IsEnable(FSMSTATE::SPRINT))
 						{
 							if (degree > 35.f && degree < 55.f)
 							{
@@ -525,12 +526,12 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 									m_fAnimSpeed = 1.2f;
 								}
 							}
-						}
+						}*/
 						else {
 							pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
 						}
 
-						m_fAmount = 0.3f;
+						m_fAmount = 1.f;
 						m_bRatio = true;
 					}
 					else {
@@ -538,7 +539,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 						{
 							pairAnimInfo = m_Animation[STATEANIM::JOG_AIM_RIGHT];
 						}
-						else if (m_pFSM->IsEnable(FSMSTATE::JOG) && !m_pFSM->IsEnable(FSMSTATE::SPRINT))
+						/*else if (m_pFSM->IsEnable(FSMSTATE::JOG) && !m_pFSM->IsEnable(FSMSTATE::SPRINT))
 						{
 							if (degree < -35.f && degree > -55.f)
 							{
@@ -563,12 +564,12 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 									m_fAnimSpeed = 1.2f;
 								}
 							}
-						}
+						}*/
 						else {
 							pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
 						}
 
-						m_fAmount = 0.3f;
+						m_fAmount = 1.f;
 						m_bRatio = true;
 					}
 				}
@@ -577,7 +578,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 					{
 						pairAnimInfo = m_Animation[STATEANIM::JOG_AIM_BWD];
 					}
-					else if (m_pFSM->IsEnable(FSMSTATE::JOG) && !m_pFSM->IsEnable(FSMSTATE::SPRINT))
+					/*else if (m_pFSM->IsEnable(FSMSTATE::JOG) && !m_pFSM->IsEnable(FSMSTATE::SPRINT))
 					{
 						if (m_pModelCom->IsFinishedAnim() && iCurrentAnimIndex == m_Animation[STATEANIM::JOG_BWD].first)
 						{
@@ -593,7 +594,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 					else if (m_pFSM->IsEnable(FSMSTATE::WALK))
 					{
 						pairAnimInfo = m_Animation[STATEANIM::WALK_BWD];
-					}
+					*/
 					else {
 						pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
 					}
@@ -602,7 +603,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 					m_bRatio = true;
 				}
 
-				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, m_fAmount, m_bRatio, m_fAnimSpeed);
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, m_fAmount, true, m_fAnimSpeed);
 				m_fAmount = 1.f;
 				m_fAnimSpeed = 1.f;
 			}
@@ -747,8 +748,8 @@ HRESULT CPlayer::Behavior_DodgeExitCheck(_float fTimeDelta)
 		return E_FAIL;
 	}
 
-	if (SUCCEEDED(InputMove()) && fRatio >= 0.3f) {
-		m_pTransformCom->AccumulateMomentum(m_pTransformCom->Get_State(STATE::LOOK)*fTimeDelta);
+	if (SUCCEEDED(InputMove()) && fRatio >= 0.32f) {
+		m_pTransformCom->AccumulateMomentum(m_pTransformCom->Get_State(STATE::LOOK)*fTimeDelta*1.3f);
 		m_pFSM->Change_State(FSMSTATE::MOVE);
 		return E_FAIL;
 	}
