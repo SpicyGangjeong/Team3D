@@ -773,7 +773,7 @@ void CGameInstance::RegistHeight(const _tchar* pName, PSX::PxHeightFieldDesc& De
 PSX::PxRigidDynamic* CGameInstance::Add_DynamicActor(CRigidBody_Dynamic& RigidBody)
 {
 	return m_pPhysX_Manager->Add_DynamicActor(RigidBody);
-}
+	}
 PSX::PxRigidStatic* CGameInstance::Add_StaticActor(CRigidBody_Static& RigidBody)
 {
 	return m_pPhysX_Manager->Add_StaticActor(RigidBody);

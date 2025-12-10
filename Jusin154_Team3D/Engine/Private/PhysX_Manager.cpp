@@ -56,13 +56,8 @@ PSX::PxRigidDynamic* CPhysX_Manager::Add_DynamicActor(CRigidBody_Dynamic& RigidB
 	PSX::PxRigidBodyFlags pxRigidFlags = RigidBody.Get_RigidBodyFlags();
 	pActorDynamic->setRigidBodyFlags(pxRigidFlags);
 
-	if (pxRigidFlags.isSet(PSX::PxRigidBodyFlag::eKINEMATIC)) {
 
-	}
-	else {
-		PSX::PxRigidBodyExt::updateMassAndInertia(*pActorDynamic, (PSX::PxReal)RigidBody.Get_Density());
-	}
-
+	PSX::PxRigidBodyExt::updateMassAndInertia(*pActorDynamic, (PSX::PxReal)RigidBody.Get_Density());
 	m_pRestBodies.insert(pActorDynamic);
 	Attach_Actor(*pActorDynamic);
 

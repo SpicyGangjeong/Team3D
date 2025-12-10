@@ -66,6 +66,7 @@ void CCamPosition_Shoulder::Priority_Update(_float fTimeDelta)
 
 	if (m_pGameInstance->Key_Up(DIK_PGDN))
 	{
+		Start_LerpShoulderPos();
 		m_bLerp = !m_bLerp;
 	}
 	if (true == m_bMovable) {
@@ -210,8 +211,8 @@ HRESULT CCamPosition_Shoulder::Ready_SubParts()
 	CameraDesc.bEnableFollowLerp = false;
 	CameraDesc.bEnableLookLerp = false;
 	CameraDesc.vTransitionTime = { 0.f, 1.f };
-	CameraDesc.vFollowLerpTime = { 0.f, 0.16f };
-	CameraDesc.vLookLerpTime = { 0.f, 0.16f };
+	CameraDesc.vFollowLerpTime = { 0.f, BASIC_LERP_TIMER };
+	CameraDesc.vLookLerpTime = { 0.f, BASIC_LERP_TIMER };
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCamera_Gaze>(g_iStaticLevel, NEXT_LEVEL, LAYER_CAMERA, &CameraDesc, nullptr, &m_pBinded_Camera)))
 	{
@@ -231,6 +232,13 @@ void CCamPosition_Shoulder::Start_LerpShoulderPos()
 	vLook = XMVector3Normalize(XMVector3Rotate(vLook, vRotq));
 
 	XMStoreFloat4(&m_DestPos, m_pParentTransformCom->Get_State(STATE::POSITION) + XMVector3Normalize(vLook) * m_fShoulderDistance);
+}
+_vector CCamPosition_Shoulder::Get_ShoulderLocalPos()
+{
+	_vector vLook = XMVector3Normalize(3.f * (XMVectorSetZ(XMLoadFloat3(&m_vShoulderPosRatio), 0.f)));
+	_vector vRotq = XMQuaternionRotationRollPitchYaw(0.f, XMConvertToRadians(m_vAccDegreeXY.y), 0.f);
+	vLook = XMVector3Normalize(XMVector3Rotate(vLook, vRotq));
+	return vLook * m_fShoulderDistance;
 }
 CCamPosition_Shoulder* CCamPosition_Shoulder::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

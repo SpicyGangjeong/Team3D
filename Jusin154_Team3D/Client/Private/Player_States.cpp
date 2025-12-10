@@ -9,6 +9,7 @@
 #include "CamPosition_Arm.h"
 #include "Wand.h"
 #include "Character_Controller.h"
+#include "MapElement_Interactable.h"
 #include "CallBack_Playable_Behavior.h"
 #include "CamPosition_Shoulder.h"
 #include "CallBack_Playable_HitReport.h"
@@ -204,6 +205,9 @@ HRESULT CPlayer::Behavior_IdleExitCheck(_float fTimeDelta)
 		}
 		else if (m_pGameInstance->Key_Down(DIK_T)) {
 			m_pInfoInstance->Change_Canvas();
+		}
+		else if (m_pGameInstance->Key_Down(DIK_Z)) {
+			m_pFSM->Change_State(FSMSTATE::COMBAT);
 		}
 		return E_FAIL;
 	}
@@ -796,8 +800,17 @@ void CPlayer::Behavior_CombatEnter()
 		pairAnimInfo = m_Animation[STATEANIM::MAPHELP];
 	}
 	else if (m_pGameInstance->Key_Down(DIK_Z)) {
-		m_pFSM->Enable_State(FSMSTATE::ANCIENT_THROW);
-		pairAnimInfo = m_Animation[STATEANIM::ANCIENT_THROW];
+		if (nullptr != m_pGrapInteractive) {
+			m_pFSM->Enable_State(FSMSTATE::ANCIENT_THROW);
+			pairAnimInfo = m_Animation[STATEANIM::ANCIENT_THROW];
+		} 
+		else if (nullptr != m_LockOnInfo.pInteractive) {
+			m_pGrapInteractive = m_LockOnInfo.pInteractive;
+			SAFE_ADDREF(m_pGrapInteractive);
+			m_pGrapInteractive->Set_KinematicFlag(true);
+			m_vGrapInteratableLerp.x = 0.f;
+			return;
+		}
 	}
 	else if (m_pGameInstance->Key_Down(DIK_G)) {
 		m_pFSM->Enable_State(FSMSTATE::POTION);
@@ -880,6 +893,18 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 	{
 		if (SUCCEEDED(InputMove()) && IsCurrentKeyFrame("Throw")) {
 			m_pFSM->Change_State(FSMSTATE::MOVE);
+			_vector vDir = {};
+			_float vDistance = 45.f;
+			CRigidBody_Dynamic* pBody = m_pGrapInteractive->Get_Component<CRigidBody_Dynamic>();
+			if (nullptr != m_LockOnInfo.pUnit) {
+				vDir = XMVector3Normalize(m_LockOnInfo.pUnit->Get_LockOnPos() - m_pGrapInteractive->Get_LockOnPos());
+			}
+			else {
+				vDir = m_pTransformCom->Get_State(STATE::LOOK);
+			}
+			m_pGrapInteractive->Set_KinematicFlag(false);  
+			pBody->Add_Force(vDir * vDistance, PSX::PxForceMode::eIMPULSE);
+			SAFE_RELEASE(m_pGrapInteractive);
 			return E_FAIL;
 		}
 	}
@@ -958,6 +983,9 @@ HRESULT CPlayer::Behavior_LightAttackExitCheck()
 					0.0f);
 			}
 		}
+	}
+	else if (m_pGameInstance->Key_Down(DIK_Z)) {
+		m_pFSM->Change_State(FSMSTATE::COMBAT);
 	}
 
 	if (SUCCEEDED(InputMove()) && fRatio >= 0.3f) {
@@ -1157,6 +1185,9 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 				}
 			}
 		}
+	}
+	else if (m_pGameInstance->Key_Down(DIK_Z)) {
+		m_pFSM->Change_State(FSMSTATE::COMBAT);
 	}
 
 	if (m_pFSM->IsEnable(FSMSTATE::SPELL) && fRatio >= 0.3f)

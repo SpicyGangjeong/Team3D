@@ -121,6 +121,7 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 void CPlayer::Update(_float fTimeDelta)
 {
 	Update_CameraCoordinateSystem();
+	UpdateGrapInteractive(fTimeDelta);
 	
 	m_pFSM->Update_State(fTimeDelta);
 
@@ -138,15 +139,25 @@ __super::Update(fTimeDelta);
 		m_pCharacter_Controller->Move(fTimeDelta);
 		m_pCallBack_HitReport->Set_CurrentSlop();
 	}
-	if (m_pGameInstance->Mouse_Down(DIM_RBUTTON))
+	if (m_pGameInstance->Mouse_Down(DIM_RBUTTON)){
 		m_pInfoInstance->Mouse_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_DOWN));
+	}
 	if (m_pGameInstance->Mouse_Up(DIM_RBUTTON))
 	{
 		m_pInfoInstance->Mouse_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_UP));
 		m_bAim = false; 
 	}
+}
 
-
+void CPlayer::UpdateGrapInteractive(Engine::_float fTimeDelta)
+{
+	if (nullptr != m_pGrapInteractive) {
+		m_vGrapInteratableLerp.x += fTimeDelta;
+		m_pGrapInteractive->GrapToPlayer(m_pTransformCom->Get_State(STATE::POSITION) + m_pCamPosition_ShoulderPart->Get_ShoulderLocalPos(), m_vGrapInteratableLerp.x);
+		if (m_vGrapInteratableLerp.x > m_vGrapInteratableLerp.y) {
+			m_vGrapInteratableLerp.x -= m_vGrapInteratableLerp.y;
+		}
+	}
 }
 
 void CPlayer::Late_Update(_float fTimeDelta)
@@ -512,6 +523,7 @@ void CPlayer::Free()
 	__super::Free();
 
 
+	SAFE_RELEASE(m_pGrapInteractive);
 	if (nullptr != m_pInfoInstance) {
 		CInfoInstance* pInfo = m_pInfoInstance;
 		m_pInfoInstance = nullptr;

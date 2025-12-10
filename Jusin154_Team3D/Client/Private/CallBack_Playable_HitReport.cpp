@@ -71,7 +71,7 @@ void CCallBack_Playable_HitReport::onShapeHit(const PSX::PxControllerShapeHit& h
 				PSX::PxVec3 vCompressedDir = vDir;
 				vCompressedDir.y += -vDir.y * 2.f + 1.f;
 				vCompressedDir.normalize();
-				pDynamic->addForce(vCompressedDir * fLength* 100.f, PSX::PxForceMode::eFORCE);
+				pDynamic->addForce(vCompressedDir * fLength* 1000.f, PSX::PxForceMode::eFORCE);
 			}
 				break;
 			default:

@@ -27,6 +27,7 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	virtual _vector Get_WorldPostion() override;
+	_vector Get_ShoulderLocalPos();
 
 
 private:
@@ -50,7 +51,7 @@ private:
 	_bool m_bShoulderLerp = { false };
 	_float2 m_vShoulderLerpTimer = { 0.f, 1.f };
 
-	_float2 m_vPosLerpTimer = { 0.f, 0.16f };
+	_float2 m_vPosLerpTimer = { 0.f, BASIC_LERP_TIMER };
 	_float4 m_StartPos = { };
 	_float4 m_DestPos = { };
 
