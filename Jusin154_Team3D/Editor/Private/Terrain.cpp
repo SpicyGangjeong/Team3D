@@ -45,9 +45,12 @@ HRESULT CTerrain::Initialize(void* pArg)
 	//m_pVIBufferCom->Set_CullingRadius(0.04f);
 
 	if(!m_isEdit)
+	{
 		m_pAlphaMap->Load_ToFile("Hogsmeade_AlphaMap.bin");
 
-
+		if (FAILED(m_pVIBufferCom->Load_HeightMap("Hogsmeade_HeightMap.bin")))
+			return E_FAIL;
+	}
 	// Psx 적용할지 안할지
 	m_bUsePsx = true;
 
