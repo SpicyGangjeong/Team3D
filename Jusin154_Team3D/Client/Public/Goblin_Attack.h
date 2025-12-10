@@ -32,8 +32,8 @@ private:
 	virtual void	OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr) override;
 private:
 	_wstring						  m_wstrEffectName = {};
-	CEffectParts*					  m_pPT1 = { nullptr };
-	CEffectParts*					  m_pPT2 = { nullptr };
+	class CEffectParts*					  m_pPT1 = { nullptr };
+	class CEffectParts*					  m_pPT2 = { nullptr };
 public:
 	static CGoblin_Attack* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

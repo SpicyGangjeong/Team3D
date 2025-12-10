@@ -39,9 +39,9 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	if (FAILED(Ready_Lights())) {
 		return E_FAIL;
 	}
-	//if (FAILED(Ready_Background())) {
-	//	return E_FAIL;
-	//}
+	if (FAILED(Ready_Background())) {
+		return E_FAIL;
+	}
 	if (FAILED(Ready_Markers())) {
 		return E_FAIL;
 	}

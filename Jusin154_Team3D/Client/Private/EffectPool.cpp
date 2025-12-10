@@ -50,9 +50,9 @@ HRESULT CEffectPool::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	//if (FAILED(Ready_Effect())) {
-	//	return E_FAIL;
-	//}
+	if (FAILED(Ready_Effect())) {
+		return E_FAIL;
+	}
 
 	if (FAILED(Ready_MonsterEffect())) {
 		return E_FAIL;
