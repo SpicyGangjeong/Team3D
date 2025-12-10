@@ -42,6 +42,9 @@ HRESULT CGoblin_Spector::Initialize(void* pArg)
 
 	m_vOriginScale = m_pTransformCom->Get_Scale();
 
+	m_pModelCom->Set_AnimationIndex(5);
+	m_pModelCom->Play_Animation(0, m_pTransformCom);
+
 	m_bVisible = false;
 
 	return S_OK;

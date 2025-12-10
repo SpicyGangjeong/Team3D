@@ -159,9 +159,9 @@ CStat* CMonster::Get_Stat()
 	return m_pStat;
 }
 
-const _float4x4* CMonster::Get_HeadMatrix()
+_matrix CMonster::Get_HeadMatrix()
 {
-	return m_pModelCom->Get_BoneMatrixPtr("Head");
+	return m_pModelCom->Get_BoneMatrix("Head");
 }
 
 HRESULT CMonster::Ready_Components(void*pArg)
