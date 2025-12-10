@@ -52,13 +52,13 @@ HRESULT CLevel_MapViewer::Initialize()
 		return E_FAIL;
 	}
 
-	/*if (FAILED(Ready_Layer_InstanceProp(TEXT("Layer_InstanceProp")))) {
+	if (FAILED(Ready_Layer_InstanceProp(TEXT("Layer_InstanceProp")))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(Ready_Layer_BuildingContainer(TEXT("Layer_Building")))) {
-		return E_FAIL;
-	}*/
+	//if (FAILED(Ready_Layer_BuildingContainer(TEXT("Layer_Building")))) {
+	//	return E_FAIL;
+	//}
 
 	if (FAILED(Ready_Layer_Unified(TEXT("Layer_Unified")))) {
 		return E_FAIL;
@@ -120,16 +120,16 @@ HRESULT CLevel_MapViewer::Ready_Layer_Terrain(const _wstring& strLayerTag)
 	CTerrain::TERRAIN_DESC Desc = {};
 
 	/* Hogsmeade */
-	//Desc.isEdit = false;
-	//Desc.iAlphaSizeX = 2048;
-	//Desc.iAlphaSizeY = 2048;
-	//Desc.vPosition = _float3(-194, 18.5f, -153.f);
-	//Desc.strBufferTag = TEXT("Prototype_Component_VIBuffer_Terrain_Hogsmeade");
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
-	//	return E_FAIL;
+	Desc.isEdit = false;
+	Desc.iAlphaSizeX = 2048;
+	Desc.iAlphaSizeY = 2048;
+	Desc.vPosition = _float3(-194, 18.5f, -153.f);
+	Desc.strBufferTag = TEXT("Prototype_Component_VIBuffer_Terrain_Hogsmeade");
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
+		return E_FAIL;
 
 	/* Hogwart */
-	Desc.isEdit = true;
+	Desc.isEdit = false;
 	Desc.iAlphaSizeX = 2048;
 	Desc.iAlphaSizeY = 2560;
 	Desc.vPosition = _float3(-451.f, 18.5f, -791.f);
@@ -227,16 +227,22 @@ HRESULT CLevel_MapViewer::Ready_Layer_Land(const _wstring& strLayerTag)
 HRESULT CLevel_MapViewer::Ready_Layer_InstanceProp(const _wstring& strLayerTag)
 {
 	CInstancedProp::INSTANCE_PROP_DESC Desc = {};
-	Desc.bEditMode = false;
-	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_OakTree_MedA";
-	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/OakTree_MedA.bin";
 
 	/* Oak_Tree */
+	Desc.bEditMode = false;
+	Desc.isShake = true;
+	Desc.vRadius = _float2(0.015f, 0.04f);
+	Desc.vSpeed = _float2(0.3f, 1.f);
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_OakTree_MedA";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/OakTree_MedA.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
 		return E_FAIL;
 
 	/* BearBerry */
 	Desc.bEditMode = false;
+	Desc.isShake = true;
+	Desc.vRadius = _float2(0.015f, 0.02f);
+	Desc.vSpeed = _float2(0.6f, 1.f);
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_BearBerry_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/BearBerry_A.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
@@ -244,6 +250,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_InstanceProp(const _wstring& strLayerTag)
 
 	/* SM_HM_OwlPost_Window_A */
 	Desc.bEditMode = false;
+	Desc.isShake = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_OwlPost_Window_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/OwlPost_Window.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
@@ -251,6 +258,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_InstanceProp(const _wstring& strLayerTag)
 
 	///* WA_Rectangle_Double_A */
 	Desc.bEditMode = false;
+	Desc.isShake = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WA_Rectangle_Double_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Rectangle_Double_A.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
@@ -258,6 +266,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_InstanceProp(const _wstring& strLayerTag)
 
 	///* WC_Retangle_Double_A */
 	Desc.bEditMode = false;
+	Desc.isShake = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WC_Retangle_Double_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WC_Retangle_Double_A.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
@@ -265,6 +274,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_InstanceProp(const _wstring& strLayerTag)
 
 	///* WA_Square_Double_C */
 	Desc.bEditMode = false;
+	Desc.isShake = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WA_Square_Double_C";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WA_Square_Double_C.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
@@ -272,6 +282,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_InstanceProp(const _wstring& strLayerTag)
 
 	/* Quid_Window_A */
 	Desc.bEditMode = false;
+	Desc.isShake = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Quid_Window_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Quid_Window_A.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
@@ -279,6 +290,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_InstanceProp(const _wstring& strLayerTag)
 
 	/* Ollivanders_Box_Window */
 	Desc.bEditMode = false;
+	Desc.isShake = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Ollivanders_Box_Window";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Ollivanders_Box.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
@@ -286,6 +298,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_InstanceProp(const _wstring& strLayerTag)
 
 	/* WC_L_DoubleS_A */
 	Desc.bEditMode = false;
+	Desc.isShake = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WC_L_DoubleS_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WC_L_DoubleS_A.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
@@ -293,6 +306,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_InstanceProp(const _wstring& strLayerTag)
 
 	/* WC_Round_Double_A */
 	Desc.bEditMode = false;
+	Desc.isShake = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WC_Round_Double_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WC_Round_Double_A.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
@@ -300,6 +314,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_InstanceProp(const _wstring& strLayerTag)
 
 	/* SM_HM_Door1a */
 	Desc.bEditMode = false;
+	Desc.isShake = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door1a";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Door1a.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
@@ -307,8 +322,19 @@ HRESULT CLevel_MapViewer::Ready_Layer_InstanceProp(const _wstring& strLayerTag)
 
 	/* SM_HM_Door1a */
 	Desc.bEditMode = false;
+	Desc.isShake = false;
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door2b";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Door2b.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
+		return E_FAIL;
+
+	/* OakTree_TallA */
+	Desc.bEditMode = false;
+	Desc.isShake = true;
+	Desc.vRadius = _float2(0.f, 0.01f);
+	Desc.vSpeed = _float2(0.01f, 0.1f);
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_OakTree_TallA";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/OakTree_TallA.bin";
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
 		return E_FAIL;
 

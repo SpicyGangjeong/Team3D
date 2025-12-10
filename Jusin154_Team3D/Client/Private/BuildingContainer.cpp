@@ -40,9 +40,8 @@ void CBuildingContainer::Late_Update(_float fTimeDelta)
             if (m_pOcclusionQueryCom->isDraw())
                 __super::Late_Update(fTimeDelta);
         }
-        else{
+        else
             __super::Late_Update(fTimeDelta);
-        }
 
         m_pGameInstance->Add_RenderGroup(RENDER::OCCLUSION, this);
 
@@ -50,6 +49,9 @@ void CBuildingContainer::Late_Update(_float fTimeDelta)
             pCollisiton->Late_Update(fTimeDelta);
         }
     }
+    else
+        m_pOcclusionQueryCom->Set_PreFrameDraw();
+
 }
 
 HRESULT CBuildingContainer::Render()

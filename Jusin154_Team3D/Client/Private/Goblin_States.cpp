@@ -241,9 +241,13 @@ void CGoblin::Behavior_SwingEnter()
 		0.05f);
 
 	Add_Event(pairAnimInfo.first,
+		[this]() {
+			m_pGoblinSpector->Set_Disolve(true); },
+			0.28f);
+
+	Add_Event(pairAnimInfo.first,
 		[&]() {	m_bLookAt = true;
 				m_bStep = true;
-				m_pGoblinSpector->Set_Visible(false);
 				m_pFSM->Change_State(FSMSTATE::SHUFFLE); },
 		0.45f);
 }

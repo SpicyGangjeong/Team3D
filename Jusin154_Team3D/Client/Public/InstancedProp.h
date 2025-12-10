@@ -16,8 +16,11 @@ class CInstancedProp final : public CGameObject
 public:
 	typedef struct tagInstancedPropDesc
 	{
-		_wstring 			strPrototypeTag;
-		_string 			strInstanceDataPath;
+		_bool			isShake;
+		_float2			vRadius;
+		_float2			vSpeed;
+		_wstring 		strPrototypeTag;
+		_string 		strInstanceDataPath;
 	}INSTANCE_PROP_DESC;
 private:
 	CInstancedProp(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -32,7 +35,9 @@ public:
 	virtual HRESULT Render_Shadow()override;
 
 private:
+	_bool						m_isShake = {};
 	_uint						m_iNumMesh = {};
+
 	CVIBuffer_Model_Instance*	m_pVIBufferInstanceCom = { nullptr };
 	CShader*					m_pShaderCom = { nullptr };
 

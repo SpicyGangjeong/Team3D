@@ -14,6 +14,7 @@ CInstancedProp::CInstancedProp(const CInstancedProp& rhs)
 
 void CInstancedProp::Priority_Update(_float fTimeDelta)
 {
+	
 }
 
 void CInstancedProp::Update(_float fTimeDelta)
@@ -28,7 +29,9 @@ void CInstancedProp::Update(_float fTimeDelta)
 
 			m_pVIBufferInstanceCom->Add_Instance(m_pTransformCom->Get_XMWorldMatrix());
 			m_pVIBufferInstanceCom->Update_Instance();
-			//m_vRotation.y = m_pGameInstance->Random_Float(0.f, 360.f);
+
+			m_vRotation.y = m_pGameInstance->Random_Float(0.f, 360.f);
+			m_vScale.y = m_pGameInstance->Random_Float(0.8f, 1.2f);
 
 			_float3 vPosition = {};
 			if (m_pGameInstance->isPicking(&vPosition))
@@ -45,6 +48,11 @@ void CInstancedProp::Update(_float fTimeDelta)
 
 void CInstancedProp::Late_Update(_float fTimeDelta)
 {
+	if(true == m_isShake)
+	{
+		m_pVIBufferInstanceCom->Shake(fTimeDelta);
+	}
+
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 }
 
@@ -82,14 +90,19 @@ HRESULT CInstancedProp::Initialize(void* pArg)
         return E_FAIL;
 
 	m_bEditMode = pDesc->bEditMode;
+	m_isShake = pDesc->isShake;
 	m_strPrototypeTag = pDesc->strPrototypeTag;
 
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
+	if(m_isShake)
+		m_pVIBufferInstanceCom->Set_Shake_Value(pDesc->vRadius, pDesc->vSpeed);
+
 	m_vPosition = _float4(0.f, 0.f, 0.f, 1.f);
 	m_vRotation = _float3(0.f, 0.f, 0.f);
 	m_vScale = _float3(1.f, 1.f, 1.f);
+
 
 	XMStoreFloat4x4(&m_WorldMatrixIdentity, XMMatrixIdentity());
 
@@ -113,6 +126,8 @@ HRESULT CInstancedProp::Ready_Components(void* pArg)
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_strPrototypeTag,
 		reinterpret_cast<CComponent**>(&m_pVIBufferInstanceCom))))
 		return E_FAIL;
+
+
 
 	/* Com_Shader */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_INSTANCE_PROP_MODEL,
@@ -354,7 +369,7 @@ void CInstancedProp::Describe_Entity()
 
 	m_pTransformCom->Set_Scale(m_vScale);
 	//m_pTransformCom->Set_State(STATE::POSITION, XMLoadFloat4(&m_vPosition));
-	m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
+	//m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
 
 	m_pVIBufferInstanceCom->Fix_Instance(m_pTransformCom->Get_XMWorldMatrix());
 	if (GUI::Button("Delete", ImVec2(150.f, 30.f)))

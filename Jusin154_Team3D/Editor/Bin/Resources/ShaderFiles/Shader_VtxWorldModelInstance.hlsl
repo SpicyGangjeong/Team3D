@@ -87,7 +87,7 @@ PS_OUT PS_MAIN(PS_IN In)
     
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     
-    if (vMtrlDiffuse.a < 0.1f)
+    if (vMtrlDiffuse.a < 0.4f)
         discard;
     
     vector vMtrlNormal = g_NormalTexture.Sample(DefaultSampler, In.vTexcoord);
@@ -101,7 +101,7 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vNormal = float4(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, g_fUsingSurfaceParams, 0.0f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
-    Out.vSurface = g_SurfaceParamsTexture.Sample(DefaultSampler, In.vTexcoord);
+    Out.vSurface = float4(g_SurfaceParamsTexture.Sample(DefaultSampler, In.vTexcoord).xy, 1.f, 1.f);
     
     return Out;
 }

@@ -18,6 +18,12 @@ void COcclusionQuery::Begin_Query()
 
 _bool COcclusionQuery::isDraw()
 {
+	if (false == m_bCurFrameDraw)
+	{
+		m_bPreFrameDraw = m_bCurFrameDraw = true;
+		return true;
+	}
+
 	bool bVisible = m_bPreFrameDraw;
 
 	_uint iIndex = (m_iCheckFrame + 3) % 5;
@@ -71,8 +77,8 @@ HRESULT COcclusionQuery::Initialize(void* pArg)
 			return E_FAIL;
 		}
 	}
-
-	m_bPreFrameDraw = m_bThisFrameDraw = true;
+	m_bCurFrameDraw = false;
+	m_bPreFrameDraw = true;
 	m_iNumCullFrame = 0;
 
 	return S_OK;

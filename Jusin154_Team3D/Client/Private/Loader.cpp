@@ -295,10 +295,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	_bool isLoad_Background = { false };
 
 #ifdef gimch
-	isLoad_Background = false;
+	isLoad_Background = true;
 #endif // gimch
 #ifdef Bin
-	isLoad_Background = true;
+	isLoad_Background = false;
 #endif // 
 #ifdef 진우
 	isLoad_Background = false;
@@ -1894,6 +1894,12 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door2b"),
 		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
 			"../Bin/Resources/Models/InstanceProp/SM_HM_Door2b.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_VIBuffer_Model_Instancel_OakTree_TallA*/
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Model_Instancel_OakTree_TallA"),
+		CVIBuffer_Model_Instance::Create(m_pDevice, m_pContext,
+			"../Bin/Resources/Models/InstanceProp/SM_OakTree_TallA.bin", "../Bin/Resources/Data/Map/Instance/InstanceMaterial.xml"))))
 		return E_FAIL;
 #pragma endregion
 

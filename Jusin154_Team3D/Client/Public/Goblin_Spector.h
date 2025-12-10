@@ -30,6 +30,7 @@ public:
 	virtual HRESULT Render() override;
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
+	void Set_Disolve(_bool bDisolve) { m_bDisolve = bDisolve; }
 
 
 private:
@@ -39,6 +40,8 @@ private:
 	_float3 m_Offset = {};
 	_float3 m_vOriginScale = {};
 	_float3 m_vScale = { 1.f, 1.f, 1.f };
+	_bool m_bDisolve = { false };
+	_float m_fDisolveTime = {0.f};
 
 
 
@@ -52,6 +55,7 @@ private:
 	HRESULT Ready_Components();
 	HRESULT Ready_Parts();
 	HRESULT Bind_ShaderResources();
+	virtual HRESULT Render_Disolve();
 
 public:
 	static CGoblin_Spector* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
