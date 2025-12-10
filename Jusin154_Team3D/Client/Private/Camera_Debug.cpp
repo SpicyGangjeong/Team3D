@@ -60,7 +60,7 @@ void CCamera_Debug::Update(_float fTimeDelta)
 			Set_InitialPos();
 		}
 		if (m_pGameInstance->Key_Pressing(DIK_LCONTROL)) {
-			if (m_pGameInstance->Key_Up(DIK_SCROLL)) {
+			if (m_pGameInstance->Key_Up(DIK_MINUS)) {
 				CLayer* pLayer = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_PLAYER);
 				if (nullptr != pLayer) {
 					CPlayer* pPlayer = pLayer->Get_Object<CPlayer>();

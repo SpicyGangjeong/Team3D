@@ -13,7 +13,8 @@ CRigidBody_Dynamic::CRigidBody_Dynamic(const CRigidBody_Dynamic& rhs) :
     m_vhalfGeometryInfo(rhs.m_vhalfGeometryInfo),
 	m_PxMassCenter(rhs.m_PxMassCenter),
 	m_eLockFlag(rhs.m_eLockFlag),
-	m_vDamping(rhs.m_vDamping)
+	m_vDamping(rhs.m_vDamping),
+	m_fDensity(rhs.m_fDensity)
 {
 }
 
@@ -225,7 +226,6 @@ HRESULT CRigidBody_Dynamic::Initialize(void* pArg)
 	m_pRigidBody->setRigidDynamicLockFlags(m_eLockFlag);
 	m_pRigidBody->setLinearDamping(m_vDamping.x);
 	m_pRigidBody->setAngularDamping(m_vDamping.y);
-
 	Move_LocalPos(m_vLocalRotQ, m_vLocalTranslation);
 	//m_pRigidBody->joint;
 	//PSX::PxRevol

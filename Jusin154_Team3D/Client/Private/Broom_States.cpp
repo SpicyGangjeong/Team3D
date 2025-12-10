@@ -130,6 +130,7 @@ void CBroom::Behavior_MoveEnter()
 {
 	if (!m_bRide)
 		return;
+
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::MOVE);
 	if (m_pFSM->IsEnable_Previous(FSMSTATE::IDLE)) {
@@ -157,8 +158,7 @@ void CBroom::Behavior_MoveEnter()
 			{
 				pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_UP_B];
 			}
-
-			if (m_pGameInstance->Key_Up(DIK_LSHIFT))
+			else if (m_pGameInstance->Key_Down(DIK_LSHIFT))
 			{
 				pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_B];
 			}
@@ -172,6 +172,7 @@ HRESULT CBroom::Behavior_MoveExitCheck(_float fTimeDelta)
 {
 	if (!m_bRide)
 		return E_FAIL;
+
 	pair<_uint, _bool> pairAnimInfo = {};
 	_uint iCurrentAnimIndex = m_pModelCom->Get_AnimIndex();
 	_bool bFwd = m_pGameInstance->Key_Pressing(DIK_W);
@@ -203,6 +204,7 @@ HRESULT CBroom::Behavior_MoveExitCheck(_float fTimeDelta)
 		else if (bRht)
 		{
 			pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_RIGHT_B];
+
 		}
 		else if (bDown)
 		{
@@ -225,7 +227,6 @@ HRESULT CBroom::Behavior_MoveExitCheck(_float fTimeDelta)
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 	}
 	else{
-		
 		m_fTargetSpeed = m_fFlyMaxSpeed;
 		m_fSpeed += (m_fTargetSpeed - m_fSpeed) * fTimeDelta * m_fAccel;
 		m_pTransformCom->Go_LerpStraight(m_fSpeed, fTimeDelta);
@@ -250,19 +251,15 @@ HRESULT CBroom::Behavior_MoveExitCheck(_float fTimeDelta)
 
 				if (bUp)
 				{
-					pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_UP_B];
 					m_pTransformCom->Go_LerpUp(m_fTurnSpeed, fTimeDelta);
-					m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+					m_fVerticalSpeed = +m_fTurnSpeed;
 				}
 				else
 				{
-					pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_DOWN_B];
 					m_pTransformCom->Go_LerpDown(m_fTurnSpeed, fTimeDelta);
-					m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
-
+					m_fVerticalSpeed = -m_fTurnSpeed;
 				}
 			}
-
 
 			if (vInput.x < 0.f)
 			{
@@ -285,30 +282,54 @@ HRESULT CBroom::Behavior_MoveExitCheck(_float fTimeDelta)
 					pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_DOWN_B];
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 			}
-			else if (az >= ax)
+			else if (ax >= az)
 			{
-				if (vInput.z > 0)
+				if (ay >= ax)
 				{
-					pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_B];
-					m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
-					Camera_InterpTurn(fTimeDelta);
+					if (vInput.y > 0)
+						pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_UP_B];
+					else
+						pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_DOWN_B];
 				}
+				else {
+					if (vInput.x < 0)
+						pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_LEFT_B];
+					else if (vInput.x > 0)
+						pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_RIGHT_B];
+					else {
+						Camera_InterpTurn(fTimeDelta);
+						pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_B];
+					}
+				}
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 			}
 			else
 			{
-				if (vInput.x < 0)
-					pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_LEFT_B];
-				else
-					pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_RIGHT_B];
+				if (vInput.y > 0)
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_UP_B];
+				else if (vInput.y < 0)
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_DOWN_B];
+				else {
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_B];
+				}
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 			}
 		}
 		else {
+
+			m_fVerticalSpeed += (0.f - m_fVerticalSpeed) * fTimeDelta * m_fDecel;
+
+			if (fabs(m_fVerticalSpeed) > 0.001f)
+			{
+				if (m_fVerticalSpeed > 0.f)
+					m_pTransformCom->Go_LerpUp(m_fVerticalSpeed, fTimeDelta);
+				else
+					m_pTransformCom->Go_LerpDown(-m_fVerticalSpeed, fTimeDelta);
+			}
+
 			pairAnimInfo = m_Animation[STATEANIM::BROOM_FLY_B];
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 		}
-
-		
 	}
 
 	if (m_bHoverToggle && !SUCCEEDED(InputMove()) && !SUCCEEDED(InputAction()))
@@ -318,7 +339,7 @@ HRESULT CBroom::Behavior_MoveExitCheck(_float fTimeDelta)
 		m_fSpeed += (m_fTargetSpeed - m_fSpeed) * fTimeDelta * m_fDecel;
 
 		m_pTransformCom->Go_LerpStraight(m_fSpeed, fTimeDelta);
-		
+
 		pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_STOP_B];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 		if (m_pModelCom->IsFinishedAnim() && iCurrentAnimIndex == m_Animation[STATEANIM::BROOM_HOVER_STOP_B].first)
@@ -383,11 +404,11 @@ void CBroom::Camera_InterpTurn(_float fTimeDelta)
 
 	if (angleDiff > Offset)
 	{
-		m_pTransformCom->Turn(-m_pTransformCom->Get_State(STATE::UP), fTimeDelta*0.3f);
+		m_pTransformCom->Turn(-m_pTransformCom->Get_State(STATE::UP), fTimeDelta*0.1f);
 	}
 	else if (angleDiff < -Offset)
 	{
-		m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::UP), fTimeDelta * 0.3f);
+		m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::UP), fTimeDelta * 0.1f);
 	}
 }
 
@@ -403,18 +424,24 @@ void CBroom::Add_FSM()
 		Desc.funcPriorityUpdate = nullptr;
 		Desc.funcLateUpdate = nullptr;
 		m_States.emplace(FSMSTATE::IDLE, CState_Idle::Create(&Desc));
-			}
+	}
 
-		{
-			CState_Move::STATE_MOVE_DESC Desc{};
-			Desc.pOwner = this;
-			Desc.funcEnterEvent = [this]() { Behavior_MoveEnter(); };
-			Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_MoveExitCheck(fTimedelta); };
-			Desc.funcExitEvent = [this]() { Behavior_MoveExit(); };
-			Desc.funcPriorityUpdate = nullptr;
-			Desc.funcLateUpdate = nullptr;
-			m_States.emplace(FSMSTATE::MOVE, CState_Move::Create(&Desc));
-		}
+	{
+		CState_Move::STATE_MOVE_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_MoveEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_MoveExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_MoveExit(); };
+		Desc.funcPriorityUpdate = [this](_float fTimeDelta) {
+			if (m_bHoverToggle)
+			{
+				_float3	fMove = m_pGameInstance->Get_MouseMove();
+				m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::UP), fTimeDelta * fMove.x * 0.02f);
+			}
+			};
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::MOVE, CState_Move::Create(&Desc));
+	}
 #pragma endregion
 }
 

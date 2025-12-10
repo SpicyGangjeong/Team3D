@@ -228,7 +228,8 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     float3 vToLight = normalize(-g_vLightDir.xyz); // 픽셀에서 라이트로
     
     
-    if (true == AlmostEqual3(vDepth.b, AI_TEXTURE_TYPE_METALNESS)) // Metallic
+    
+    if (true == AlmostEqual3(vDepth.b * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_METALNESS)) // Metallic
     {
         float3 vMRO = g_SurfaceTexture.Sample(DefaultSampler, uv).rgb;
         fMetallic = vMRO.r;
@@ -237,7 +238,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
         
         vF0 = lerp(float3(0.04f, 0.04f, 0.04f), vAlbedo, fMetallic);
     }
-    else if (true == AlmostEqual3(vDepth.b, AI_TEXTURE_TYPE_SPECULAR)) // Specular
+    else if (true == AlmostEqual3(vDepth.b * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_SPECULAR)) // Specular
     {
         fMetallic = 0.f;
         
@@ -246,7 +247,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
         fRoughness = vSRO.g;
         fOcclusion = vSRO.b;
     }
-    else if (true == AlmostEqual3(vDepth.b, AI_TEXTURE_TYPE_ANISOTROPY))
+    else if (true == AlmostEqual3(vDepth.b * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_ANISOTROPY))
     {
         fMetallic = 0.f;
         
@@ -340,7 +341,7 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
         return Out;
     }
     
-    if (true == AlmostEqual3(vDepth.b, AI_TEXTURE_TYPE_METALNESS)) // Metallic
+    if (true == AlmostEqual3(vDepth.b * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_METALNESS)) // Metallic
     {
         float3 vMRO = g_SurfaceTexture.Sample(DefaultSampler, uv).rgb;
         fMetallic = vMRO.r;
@@ -349,7 +350,7 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
         
         vF0 = lerp(float3(0.04f, 0.04f, 0.04f), vAlbedo, fMetallic);
     }
-    else if (true == AlmostEqual3(vDepth.b, AI_TEXTURE_TYPE_SPECULAR)) // Specular
+    else if (true == AlmostEqual3(vDepth.b * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_SPECULAR)) // Specular
     {
         fMetallic = 0.f;
         
@@ -357,6 +358,15 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
         vF0 = vSRO.rrr;
         fRoughness = vSRO.g;
         fOcclusion = vSRO.b;
+    }
+    else if (true == AlmostEqual3(vDepth.b * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_ANISOTROPY))
+    {
+        fMetallic = 0.f;
+        
+        float4 vSRXO = g_SurfaceTexture.Sample(DefaultSampler, uv);
+        vF0 = vSRXO.rrr;
+        fRoughness = vSRXO.g;
+        fOcclusion = vSRXO.a;
     }
     else // basic Lighting(phong blinn) // if you were here, you miss some assets.
     {
@@ -459,7 +469,7 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
     fSpotAttenenuation *= fSpotAttenenuation;
     fAttenuation *= fSpotAttenenuation;
     
-    if (true == AlmostEqual3(vDepth.b, AI_TEXTURE_TYPE_METALNESS)) // Metallic
+    if (true == AlmostEqual3(vDepth.b * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_METALNESS)) // Metallic
     {
         float3 vMRO = g_SurfaceTexture.Sample(DefaultSampler, uv).rgb;
         fMetallic = vMRO.r;
@@ -468,7 +478,7 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
         
         vF0 = lerp(float3(0.04f, 0.04f, 0.04f), vAlbedo, fMetallic);
     }
-    else if (true == AlmostEqual3(vDepth.b, AI_TEXTURE_TYPE_SPECULAR)) // Specular
+    else if (true == AlmostEqual3(vDepth.b * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_SPECULAR)) // Specular
     {
         fMetallic = 0.f;
         
@@ -476,6 +486,15 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
         vF0 = vSRO.rrr;
         fRoughness = vSRO.g;
         fOcclusion = vSRO.b;
+    }
+    else if (true == AlmostEqual3(vDepth.b * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_ANISOTROPY))
+    {
+        fMetallic = 0.f;
+        
+        float4 vSRXO = g_SurfaceTexture.Sample(DefaultSampler, uv);
+        vF0 = vSRXO.rrr;
+        fRoughness = vSRXO.g;
+        fOcclusion = vSRXO.a;
     }
     else // basic Lighting(phong blinn) // if you were here, you miss some assets.
     {

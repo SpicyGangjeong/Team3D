@@ -3,9 +3,9 @@
 
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
-bool g_bRimLight;
-bool g_bUseNormalMap;
-bool g_bDisolve;
+int g_bRimLight;
+int g_bUseNormalMap;
+int g_bDisolve;
 
 float g_fFar;
 float g_LifeRatio;
@@ -21,8 +21,8 @@ float g_fDisolveRatio;
 float g_fDisolveAmount;
 float g_fDisolveEdgeWidth;
 
-vector g_vDisolveEdgeColor;
-vector g_vCamPosition;
+float4 g_vDisolveEdgeColor;
+float4 g_vCamPosition;
 
 Texture2D g_DiffuseTexture;
 Texture2D g_NormalTexture;
@@ -38,7 +38,7 @@ Texture2D g_DeadDisolveTexture;
 Texture2D g_DeadDisolveBurnTexture;
 
 
-bool g_bBinded_Texture[AI_TEXTURE_TYPE_MAX * 27];
+int g_iBinded_Texture[27];
 
 float3 g_RootColor;
 float3 g_TipColor;
@@ -271,16 +271,16 @@ PS_OUT PS_MAIN(PS_IN In)
         float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
         vMtrlDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vMtrlDiffuse, In.vTexcoord);
     }
-    //if (AlmostEqual7(g_bBinded_Texture[AI_TEXTURE_TYPE_TRANSMISSION], true))
-    //{
-    //    float4 vTransmission = g_TransmissionTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
-    //    vMtrlDiffuse *= vTransmission;
-    //}
-    //if (AlmostEqual7(g_bBinded_Texture[AI_TEXTURE_TYPE_EMISSIVE], true))
-    //{
-    //    float4 vEmissive = g_EmissiveTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
-    //    vMtrlDiffuse += vEmissive;
-    //}
+    if (g_iBinded_Texture[21] != 0)
+    {
+        float4 vTransmission = g_TransmissionTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+        vMtrlDiffuse.a *= vTransmission.r;
+    }
+    if (g_iBinded_Texture[4] != 0)
+    {
+        float4 vEmissive = g_EmissiveTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+        vMtrlDiffuse += vEmissive;
+    }
     if (vMtrlDiffuse.a < 0.2f) { discard; }
     
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, AnisoTropy_BLUR_Sampler, In.vTexcoord);
@@ -367,7 +367,7 @@ PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
     (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
-    AI_TEXTURE_TYPE_METALNESS, // 서페이스 파라미터
+    (float) AI_TEXTURE_TYPE_METALNESS / (float) AI_TEXTURE_TYPE_MAX, // 서페이스 파라미터
     1.f);
     
     return Out;
@@ -486,6 +486,11 @@ PS_OUT PS_SPECTOR_MAIN(PS_IN In)
     
     float4 vMtrlDiffuse = g_EmissiveTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
     float4 vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vMtrlDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vMtrlDiffuse, In.vTexcoord);
+    }
     if (vMtrlDiffuse.a < 0.2f)
     {
         discard;

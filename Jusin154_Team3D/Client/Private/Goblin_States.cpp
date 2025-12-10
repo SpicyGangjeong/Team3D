@@ -4,10 +4,12 @@
 #include "GameInstance.h"
 #include "Player.h"
 #include "Goblin_Dagger.h"
+#include "Goblin_Spector.h"
 #include "EffectParts.h"
 
 #pragma region STATE
 #include "State_Idle.h"
+#include "State_IdleBreak.h"
 #include "State_Dodge.h"
 #include "State_Jump.h"
 #include "State_Land.h"
@@ -46,12 +48,64 @@ void CGoblin::Behavior_IdleExit()
 	m_pFSM->Disable_State(FSMSTATE::IDLE);
 }
 
+void CGoblin::Behavior_IdleBreakEnter()
+{
+	m_pFSM->Enable_State(FSMSTATE::IDLEBREAK);
+	pair<_uint, _bool> pairAnimInfo;
+	m_bLookAt = true;
+	_int RandIndex = m_pGameInstance->Real_Random_Int(0, 6);
+	switch (RandIndex)
+	{
+	case 0:
+		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK1];
+		break;
+	case 1:
+		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK2];
+		break;
+	case 2:
+		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK3];
+		break;
+	case 3:
+		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK4];
+		break;
+	case 4:
+		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK5];
+		break;
+	case 5:
+		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK6];
+		break;
+	case 6:
+		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK7];
+		break;
+	}
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+}
+
+HRESULT CGoblin::Behavior_IdleBreakExitCheck()
+{
+	if (m_pModelCom->IsFinishedAnim()) {
+		m_pFSM->Change_State(FSMSTATE::MOVE);
+	}
+
+	return E_FAIL;
+}
+
+void CGoblin::Behavior_IdleBreakExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::IDLEBREAK);
+}
+
 void CGoblin::Behavior_MoveEnter()
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::MOVE);
 	m_bLookAt = true;
 	m_pFSM->Enable_State(FSMSTATE::JOG);
+
+	if (!m_pFSM->IsEnable_Previous(FSMSTATE::COMBAT))
+	{
+		m_bFirstMove = false;
+	}
 }
 
 HRESULT CGoblin::Behavior_MoveExitCheck(_float fTimeDelta)
@@ -110,7 +164,7 @@ HRESULT CGoblin::Behavior_MoveExitCheck(_float fTimeDelta)
 		}
 	}
 
-	if (m_fTargetDistance <= 15.f && m_fTargetDistance >= 3.f && m_fTargetDistance !=0.f)
+	if (m_fTargetDistance <= 15.f && m_fTargetDistance >= 5.f && m_fTargetDistance !=0.f)
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
 
 	return E_FAIL;
@@ -182,13 +236,18 @@ void CGoblin::Behavior_SwingEnter()
 		0.2f);
 
 	Add_Event(pairAnimInfo.first,
-		[this]() {m_bSwing = true; },
+		[this]() {
+			m_pGoblinSpector->Set_Visible(true);},
 		0.05f);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			m_pGoblinSpector->Set_Disolve(true); },
+			0.28f);
 
 	Add_Event(pairAnimInfo.first,
 		[&]() {	m_bLookAt = true;
 				m_bStep = true;
-				m_bSwing = false;
 				m_pFSM->Change_State(FSMSTATE::SHUFFLE); },
 		0.45f);
 }
@@ -340,15 +399,17 @@ void CGoblin::Behavior_ShuffleEnter()
 		break;
 	}
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
-
-	Add_Event(pairAnimInfo.first,
-		[this]() {
-			m_pFSM->Change_State(FSMSTATE::COMBAT); },
-		0.3f);
 }
 
 HRESULT CGoblin::Behavior_ShuffleExitCheck(_float fTimeDelta)
 {
+	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
+
+	if (fRatio >= 0.3f)
+	{
+		m_pFSM->Change_State(FSMSTATE::COMBAT);
+	}
+
 	return E_FAIL;
 }
 
@@ -514,6 +575,18 @@ void CGoblin::Add_FSM()
 		Desc.funcLateUpdate = nullptr;
 		m_States.emplace(FSMSTATE::IDLE, CState_Idle::Create(&Desc));
 	}
+
+	{
+		CState_IdleBreak::STATE_IDLEBREAK_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_IdleBreakEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_IdleBreakExitCheck(); };
+		Desc.funcExitEvent = [this]() { Behavior_IdleBreakExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::IDLEBREAK, CState_IdleBreak::Create(&Desc));
+	}
+
 	{
 		CState_Move::STATE_MOVE_DESC Desc{};
 		Desc.pOwner = this;
@@ -620,6 +693,14 @@ void CGoblin::Set_Anim()
 	m_Animation[STATEANIM::IDLE_TURN_BWD] = { 24, false };
 	m_Animation[STATEANIM::IDLE_TURN_L] = { 26, false };
 	m_Animation[STATEANIM::IDLE_TURN_R] = { 30, false };
+
+	m_Animation[STATEANIM::IDLE_BREAK1] = { 137, false };
+	m_Animation[STATEANIM::IDLE_BREAK2] = { 138, false };
+	m_Animation[STATEANIM::IDLE_BREAK3] = { 139, false };
+	m_Animation[STATEANIM::IDLE_BREAK4] = { 37, false };
+	m_Animation[STATEANIM::IDLE_BREAK5] = { 38, false };
+	m_Animation[STATEANIM::IDLE_BREAK6] = { 39, false };
+	m_Animation[STATEANIM::IDLE_BREAK7] = { 41, false };
 
 	m_Animation[STATEANIM::WALK_FWD] = { 45,true };
 	m_Animation[STATEANIM::WALK_START] = { 57,false };

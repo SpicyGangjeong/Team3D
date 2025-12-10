@@ -26,9 +26,11 @@ public:
 #endif // _DEBUG
 	_bool   Set_Sprint(_bool bSprint) { m_bSprintToggle = bSprint; }
 	_matrix Get_WandPos();
+	void UpdateGrapInteractive(Engine::_float fTimeDelta);
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
 	LOCKON_INFO m_LockOnInfo = {};
+	class CMapElement_Interactable* m_pGrapInteractive = { nullptr };
 	_float m_fDirectionRadian = 0.f;
 
 	_bool m_bSprintToggle = { false };
@@ -37,6 +39,7 @@ private:
 
 	_float3 m_vCameraLookDir = { 0.f, 0.f, 1.f, };
 	_float3 m_vCameraRightDir = { 1.f, 0.f, 0.f };
+	_float2 m_vGrapInteratableLerp = { 0.f, BASIC_LERP_TIMER };
 
 	class CCamPosition_Socket* m_pCamPosition_TopDown_LookPart = { nullptr };
 	class CCamPosition_Arm* m_pCamPosition_TopDown_FollowPart = { nullptr };
@@ -106,12 +109,14 @@ private:
 	_bool			m_bRatio = { false };
 	_bool			m_bAim = { false };
 	_float			m_fAnimSpeed = {};
+	_bool m_bOnce = {  };
 
 	HRESULT InputAction();
 	HRESULT InputMove();
 	HRESULT InputKeyUpMove();
 	HRESULT InputSpell();
 	HRESULT InputAim();
+	HRESULT InputBroom();
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck(_float fTimeDelta);
@@ -130,7 +135,7 @@ private:
 	void	Behavior_LandExit();
 
 	void	Behavior_DodgeEnter();
-	HRESULT Behavior_DodgeExitCheck();
+	HRESULT Behavior_DodgeExitCheck(_float fTimeDelta);
 	void	Behavior_DodgeExit();
 
 	void	Behavior_CombatEnter();
@@ -150,7 +155,7 @@ private:
 	void	Behavior_HitExit();
 
 	void	Behavior_Broom_RideEnter();
-	HRESULT Behavior_Broom_RideExitCheck();
+	HRESULT Behavior_Broom_RideExitCheck(_float fTimeDelta);
 	void	Behavior_Broom_RideExit();
 
 

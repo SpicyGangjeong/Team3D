@@ -30,7 +30,6 @@ public:
 	virtual _vector Get_LockOnPos() override;
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
-	_bool Get_Swing() { return m_bSwing; }
 
 private:
 	CCallBack_Monster_Behavior* m_pCallBack_Behavior = { nullptr };
@@ -45,7 +44,7 @@ private:
 	class CEffectParts* m_pSmoke = { nullptr };
 	class CEffectParts* m_pGoblin_Particle = { nullptr };
 	class CEffectParts* m_pGoblin_Particle2 = { nullptr };
-
+	class CGoblin_Spector* m_pGoblinSpector = { nullptr };
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -67,20 +66,23 @@ private:
 	virtual void Set_Anim();
 
 	_float m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = {};
-	_float m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = { 6.f,2.f,15.f };
+	_float m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = { 5.f,2.f,15.f };
 
 	_bool	m_bStep = { false };
 	_float	m_fTpTime = {};
 	_float	m_fAirTime = {};
 	_vector m_vOriginPos = {};
 	_float	m_fLength = {};
-	_bool	m_bSwing = { false };
 	_float	m_fMoveTime = {};
 	_bool	m_bFirstMove = {};
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();
 	void	Behavior_IdleExit();
+
+	void	Behavior_IdleBreakEnter();
+	HRESULT Behavior_IdleBreakExitCheck();
+	void	Behavior_IdleBreakExit();
 
 	void	Behavior_MoveEnter();
 	HRESULT Behavior_MoveExitCheck(_float fTimeDelta);
