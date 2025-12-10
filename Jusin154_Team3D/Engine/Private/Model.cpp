@@ -516,6 +516,21 @@ const _float4x4* CModel::Get_BoneMatrixPtr(const _char* pBoneName) const
 
 
 	return (*iter)->Get_CombinedTransformationMatrixPtr();
+
+}
+
+_matrix CModel::Get_BoneMatrix(const _char* pBoneName) const
+{
+	vector<CBone*>::const_iterator	iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone)->_bool
+		{
+			if (true == pBone->Compare_Name(pBoneName))
+				return true;
+
+			return false;
+		});
+
+
+	return 	(*iter)->Get_CombinedTransformationMatrix();
 }
 
 const _char* CModel::Get_MeshName(_uint iIndex)
