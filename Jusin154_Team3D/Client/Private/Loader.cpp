@@ -132,6 +132,7 @@
 
 #include "WandEnd.h"
 #include "Goblin_Protego.h"
+#include "Goblin_Attack.h"
 
 
 
@@ -1520,6 +1521,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Protego>(NEXT_LEVEL, CGoblin_Protego::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Attack>(NEXT_LEVEL, CGoblin_Attack::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 

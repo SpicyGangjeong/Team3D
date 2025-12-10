@@ -26,6 +26,7 @@ public:
 	virtual HRESULT Render() override;
 	HRESULT Render_Disolve();
 	void Set_Disolve(_bool bDisolve) { m_bDisolve = bDisolve; }
+	const _float4x4 Get_AxeMatrix() { return m_vAxeMat; };
 public:
 
 private:
@@ -35,6 +36,7 @@ private:
 	_bool m_bDisolve = { false };
 	_float m_fDisolveTime = { 0.f };
 
+	_float4x4 m_vAxeMat= {};
 
 private:
 	HRESULT Ready_Components();

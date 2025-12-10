@@ -23,6 +23,7 @@
 #include "Troll_Nomal_Smoke.h"
 #include "TrollSwing.h"
 #include "Goblin_Protego.h"
+#include "Goblin_Attack.h"
 
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -303,6 +304,16 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 		pEffect = m_pGameInstance->Clone_Prototype<CGoblin_Protego>(iPrototypeLevel, nullptr);
 
 		return pEffect; }
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::GOBLIN_ATTACK, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CGoblin_Attack* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CGoblin_Attack>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+
 	))) return E_FAIL;
 	return S_OK;
 }
