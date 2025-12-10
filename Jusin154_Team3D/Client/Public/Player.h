@@ -109,12 +109,14 @@ private:
 	_bool			m_bRatio = { false };
 	_bool			m_bAim = { false };
 	_float			m_fAnimSpeed = {};
+	_bool m_bOnce = {  };
 
 	HRESULT InputAction();
 	HRESULT InputMove();
 	HRESULT InputKeyUpMove();
 	HRESULT InputSpell();
 	HRESULT InputAim();
+	HRESULT InputBroom();
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck(_float fTimeDelta);
@@ -153,7 +155,7 @@ private:
 	void	Behavior_HitExit();
 
 	void	Behavior_Broom_RideEnter();
-	HRESULT Behavior_Broom_RideExitCheck();
+	HRESULT Behavior_Broom_RideExitCheck(_float fTimeDelta);
 	void	Behavior_Broom_RideExit();
 
 

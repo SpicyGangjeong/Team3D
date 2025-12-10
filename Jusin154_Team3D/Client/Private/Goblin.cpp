@@ -133,6 +133,7 @@ HRESULT CGoblin::Render()
 {
 	if (!m_bVisible)
 		return S_OK;
+
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}

@@ -486,6 +486,11 @@ PS_OUT PS_SPECTOR_MAIN(PS_IN In)
     
     float4 vMtrlDiffuse = g_EmissiveTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
     float4 vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vMtrlDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vMtrlDiffuse, In.vTexcoord);
+    }
     if (vMtrlDiffuse.a < 0.2f)
     {
         discard;

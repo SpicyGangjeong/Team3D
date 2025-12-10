@@ -39,6 +39,11 @@ private:
 	_float m_fDecel = 1.f;
 	_float m_fTurnDecel = 0.3f;
 
+
+	_float m_fVerticalSpeed = 0.f;
+
+
+
 	_float3 m_vCameraLookDir = { 0.f, 0.f, 1.f, };
 	_float3 m_vCameraRightDir = { 1.f, 0.f, 0.f };
 private:
