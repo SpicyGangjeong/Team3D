@@ -80,6 +80,10 @@ private:
 	HRESULT Behavior_IdleExitCheck();
 	void	Behavior_IdleExit();
 
+	void	Behavior_IdleBreakEnter();
+	HRESULT Behavior_IdleBreakExitCheck();
+	void	Behavior_IdleBreakExit();
+
 	void	Behavior_MoveEnter();
 	HRESULT Behavior_MoveExitCheck(_float fTimeDelta);
 	void	Behavior_MoveExit();
