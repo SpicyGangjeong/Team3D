@@ -5,6 +5,21 @@ NS_BEGIN(Engine)
 
 class ENGINE_DLL CVIBuffer_Model_Instance final : public CVIBuffer_Instance
 {
+public:
+	typedef struct tagCS_Model_Instacne_Desc
+	{
+		_float fSpeed;
+		_float fMaxRadian;
+	}CS_MODEL_INSTANCE_DESC;
+
+	typedef struct tagCS_Model_Instacne_Constant_Desc
+	{
+		_float fTimeDelta;
+		_float fPading1;
+		_float fPading2;
+		_float fPading3;
+	}CS_MODEL_INSTANCE_CONSTANT_DESC;
+
 private:
 	CVIBuffer_Model_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CVIBuffer_Model_Instance(const CVIBuffer_Model_Instance& rhs);
@@ -17,8 +32,12 @@ public:
 	virtual HRESULT Initialize_Prototype(const _char* pModelFilePath, const _char* pMatrialPath);
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual HRESULT Render(_uint iMeshIndex);
+	void Shake(_float fTimeDelta);
+	HRESULT Set_Shake_Value(_float2 vRadius, _float2 vSpeed);
 
+	HRESULT Bind_OutPut_SRV_VS(_uint iIndex, _uint iBufferIndex);
 	HRESULT Bind_Matrial(class CShader* pShader, _uint iMeshIndex);
+
 	HRESULT Load_WorldData(vector<_float4x4>& WorldMatrices);
 private:
 	_uint										m_iNumBuffer = {};
@@ -26,6 +45,12 @@ private:
 	
 	_uint										m_iCurrentNumInstance = {};
 	_uint										m_iMaxNumInstance = {};
+
+	_float										m_fTimeAcc = {};
+	class CComputeShader*						m_pComputeShader = { nullptr };
+
+	ID3D11Buffer*								m_pConstantBuffer = { nullptr };
+	ID3D11Buffer*								m_pParticleValueBuffer = { nullptr };
 
 	INSTANCE_DESC								m_InstanceDesc = {};
 
@@ -41,6 +66,9 @@ private:
 	HRESULT         Load_ModelData(const _char* pModelFilePath);
 	HRESULT			Load_Material(const _char* pModelFilePath, const _char* pMatrialPath);
 	HRESULT			Ready_Materials();
+	HRESULT			Create_ComputeShader();
+	HRESULT			Create_ConstantBuffer();
+	HRESULT			Create_Instance_Value_Buffer();
 
 #ifdef EDITOR_PROJECT
 public:

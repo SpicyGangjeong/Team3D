@@ -108,7 +108,7 @@ HRESULT CMapObject_Render::Render()
 		return E_FAIL;
 	}
 
-	for (_uint i = 0; i < m_iNumMeshe; i++)
+	for (_uint i = 0; i < m_iNumMeshe; ++i)
 	{
 		if (FAILED(m_pModelComs[0]->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;

@@ -136,4 +136,18 @@
         <Surface>MRO</Surface>
     </Mesh>
    </SM_HM_Door2b>
+   <SM_OakTree_TallA mesh="2">
+    <Mesh>
+        <Material>T_Oak_Leaves02_D</Material>
+        <Material>T_Oak_Leaves02_N</Material>
+        <Material>T_Oak_Leaves02_SRO</Material>
+        <Surface>SRO</Surface>
+    </Mesh>
+    <Mesh>
+        <Material>T_BogTree_Oak_BarkA_D</Material>
+        <Material>T_BogTree_Oak_BarkA_N</Material>
+        <Material>T_BogTree_Oak_BarkA_SROH</Material>
+        <Surface>SRO</Surface>
+    </Mesh>
+   </SM_OakTree_TallA>
 </Instance>
