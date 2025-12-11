@@ -162,6 +162,24 @@ void CUnit::Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio,
 	m_PendingEvents.push_back(Desc);
 }
 
+void CUnit::Check_HitAngle(_vector ProjectileDir)
+{
+	_vector vProjectileDir = ProjectileDir;
+
+	_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
+
+	vLook = XMVector3Normalize(vLook);
+	vProjectileDir = XMVector3Normalize(vProjectileDir);
+
+	_float fDot = XMVectorGetX(XMVector3Dot(vLook, vProjectileDir));
+	fDot = clamp(fDot, -1.0f, 1.0f);
+
+	_float fAngleRad = acosf(fDot);
+	m_fHitDegree = XMConvertToDegrees(fAngleRad);
+	_vector vCross = XMVector3Cross(vLook, vProjectileDir);
+	m_fHitCross = XMVectorGetY(vCross);
+}
+
 void CUnit::Free()
 {
 	__super::Free();

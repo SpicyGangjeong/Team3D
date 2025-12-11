@@ -2205,8 +2205,8 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		TEXT("Prototype_Component_TombProtector_Model")
 	));
 	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/SubTroll/Troll.fbx", XMMatrixIdentity(),
-		TEXT("Prototype_Component_Troll_Model")
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll.bin", XMMatrixIdentity(),
+		TEXT("Prototype_Component_troll_Model")
 	));
 
 	futures.emplace_back(Deferred_ModelLoad(
@@ -2215,11 +2215,6 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	));
 
 #pragma endregion
-
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll_Anim.fbx", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f)* XMMatrixIdentity(),
-		TEXT("Prototype_Component_SubTroll_Model")
-	));
 
 	futures.emplace_back(Deferred_ModelLoad(
 		MODEL::ANIM, "../Bin/Resources/Models/Object/Troll_Weapon/Troll_Weapon.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),

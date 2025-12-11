@@ -71,7 +71,7 @@ private:
 	class CEffectPool* m_pEffectPool = { nullptr };
 
 	_float m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = {};
-	_float m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = { 30.f,5.f,30.f,20.f };
+	_float m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = { 20.f,5.f,30.f,15.f };
 
 	_bool m_bStep = { false };
 	_float m_fTpTime = {};

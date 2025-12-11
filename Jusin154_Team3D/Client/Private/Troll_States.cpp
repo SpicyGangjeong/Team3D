@@ -469,6 +469,7 @@ void CTroll::SwingHit(_bool& bPlayerHit)
 					pStat->Get_Damage(20.f);
 					Damage = 7.f;
 					bPlayerHit = true;
+					pUserData->pOwner->OnCollision(this);
 				} break;
 				case PXOBJECT::ALLY_HITBOX:
 					break;
@@ -834,6 +835,7 @@ void CTroll::SlamHit(_bool& bPlayerHit)
 					CStat* pStat = pUserData->pCharacter->Get_Owner()->Get_Component<CStat>();
 					pStat->Get_Damage(20.f);
 					bPlayerHit = true;
+					pUserData->pOwner->OnCollision(this);
 				} break;
 				case PXOBJECT::ALLY_HITBOX:
 					break;
@@ -939,6 +941,8 @@ void CTroll::Set_Anim()
 	m_Animation[STATEANIM::HIT_BWD] = { 167, false }; // 
 	m_Animation[STATEANIM::HIT_BWD2] = { 168, false }; //
 	m_Animation[STATEANIM::HIT_BWD3] = { 169, false }; // 
+
+	m_Animation[STATEANIM::HIT_FWD] = { 170,false };
 
 	m_Animation[STATEANIM::HIT_FACE] = { 156, false }; // 
 	m_Animation[STATEANIM::HIT_FACE_END] = { 157, false }; // 

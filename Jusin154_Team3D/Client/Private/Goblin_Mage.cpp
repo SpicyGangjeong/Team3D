@@ -246,39 +246,48 @@ _vector CGoblin_Mage::Get_LockOnPos()
 
 void CGoblin_Mage::OnCollision(CGameObject* pOther, void* pDesc)
 {
-
+	if (true == m_bDead) {
+		return;
+	}
+	_vector Head = (XMLoadFloat4x4(Get_HeadMatrix()) * m_pTransformCom->Get_XMWorldMatrix()).r[3];
+	m_DamageInfo.vTarget_Pos = XMVectorSet(Head.m128_f32[0], Head.m128_f32[1], Head.m128_f32[2], 1.f);
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
+	Check_HitAngle(XMLoadFloat4(&CollisionDesc->vHitDir));
+
 	_uint iSkillType = dynamic_cast<CEffect_Container*>(pOther)->Get_SkillType();
+	auto damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
+
+	m_fHitRadius = CMyTools::Get_Direction2D(m_pTransformCom->Get_State(STATE::LOOK), XMLoadFloat4(&CollisionDesc->vHitDir));
+
 	switch (iSkillType)
 	{
 	case ENUM_CLASS(SKILL_TYPE::DESCENDO):
-		m_eHitSpell = STATEANIM::KNOCKDOWN_FWD;
+		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
 		break;
 	case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
-		m_eHitSpell = STATEANIM::KNOCKDOWN_BWD;
+		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::BOMBARDA);
 		break;
 	case ENUM_CLASS(SKILL_TYPE::JAP):
 	{
-		m_eHitSpell = STATEANIM::HIT_BWD;
-		//_float fSkillRatio = m_pInfoInstance->Get_Spell_Info(ENUM_CLASS(SKILL_TYPE::JAP)).fSpell_Damage;
-		//_float fCoefficient = CollisionDesc->pObject->Get_Component<CStat>()->Get_Stat().fDamage;
-		//if (true == Get_Damage(fSkillRatio * fCoefficient)) {
-		//	m_pFSM->Change_State(FSMSTATE::DEAD);
-		//	return;
-		//}
+		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
+		m_DamageInfo.fDamage = damagePair.first;
+		m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
+		if (0 == damagePair.second) {
+			m_pFSM->Change_State(FSMSTATE::DEAD);
+			return;
+		}
 	}
 	break;
 	case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
-		m_eHitSpell = STATEANIM::HIT_LEVIOSO;
-		break;
-	default:
-		m_eHitSpell = STATEANIM::KNOCKDOWN_FWD;
+		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::LEVIOSO);
 		break;
 	}
-	if (!m_pFSM->IsEnable(FSMSTATE::BLINK)){
+
+	if (!m_pFSM->IsEnable(FSMSTATE::BLINK)) {
 		m_pFSM->Change_State(FSMSTATE::HIT);
 	}
+
 }
 
 void CGoblin_Mage::OnHit(CGameObject* pOther, CGameObject* pCaller)
