@@ -195,6 +195,8 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\StunEffect.h" />
     <ClInclude Include="..\Public\State_Broom_Dismount.h" />
 	<ClInclude Include="..\Public\State_Broom_Ride_Move.h" />
+    <ClInclude Include="..\Public\State_Broom_Fly.h" />
+    <ClInclude Include="..\Public\State_Broom_Hover.h" />
     <ClInclude Include="..\Public\Troll_State_Stun.h" />
     <ClInclude Include="..\Public\State_Sustain.h" />
     <ClInclude Include="..\Public\WandEnd.h" />
@@ -360,6 +362,8 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Logo_Glow.cpp" />
     <ClCompile Include="..\Private\Logo_Text.cpp" />
     <ClCompile Include="..\Private\State_Broom_Dismount.cpp" />
+    <ClCompile Include="..\Private\State_Broom_Fly.cpp" />
+    <ClCompile Include="..\Private\State_Broom_Hover.cpp" />
     <ClCompile Include="..\Private\State_Broom_Ride_Move.cpp" />
     <ClCompile Include="..\Private\State_Sustain.cpp" />
     <ClCompile Include="..\Private\Goblin_Attack.cpp" />
