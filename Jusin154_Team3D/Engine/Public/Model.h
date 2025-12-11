@@ -32,19 +32,19 @@ public:
 	virtual HRESULT Render_Indexed(_uint iMeshIndex, _uint IndexCount, _uint StartIndexLocation, _uint BaseVertexLocation);
 #pragma endregion 
 #pragma region Animation
-	_bool	Play_Animation(_float fTimeDelta, class CTransform* pTransform = nullptr); // 애니메이션에 델타타임을 넣어줌
-	_bool	Play_Anim(_float fTimeDelta, CTransform* pTransform);
-	_bool	Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform);
-	void	Set_AnimationIndex(_uint iIndex, _bool isLoop = true, _float fAmount = 1.f, _bool bRatio = false,_float fAnimSpeed = 1.f);
-	void	Set_Second_AnimationIndex(_uint iIndex, _uint BoneIndex, _bool isLoop = false);
-	_bool	IsFinishedAnim() const { return m_bIsFinishedAnim; }
-	_bool	IsFinishedSecondAnim() const { return m_bIsSecondFinishedAnim; }
-	_bool	IsLoopAnim() const { return m_bIsLoop; }
-	void	Set_CurrentTrackPosition(_float TrackPosition);
-	const _char* Get_AnimList(_uint iIndex);
-	_float Get_CurrentTrackPosition();
-	_float Get_CurrentTrackProgressRatio();
-	_float Get_TrackProgressRatio(_uint iIndex);
+	_bool			Play_Animation(_float fTimeDelta, class CTransform* pTransform = nullptr); // 애니메이션에 델타타임을 넣어줌
+	_bool			Play_Anim(_float fTimeDelta, CTransform* pTransform);
+	_bool			Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform);
+	void			Set_AnimationIndex(_uint iIndex, _bool isLoop = true, _float fAmount = 1.f, _bool bRatio = false,_float fAnimSpeed = 1.f);
+	void			Set_Second_AnimationIndex(_uint iIndex, _uint BoneIndex, _bool isLoop = false);
+	_bool			IsFinishedAnim() const { return m_bIsFinishedAnim; }
+	_bool			IsFinishedSecondAnim() const { return m_bIsSecondFinishedAnim; }
+	_bool			IsLoopAnim() const { return m_bIsLoop; }
+	void			Set_CurrentTrackPosition(_float TrackPosition);
+	const _char*	Get_AnimList(_uint iIndex);
+	_float			Get_CurrentTrackPosition();
+	_float			Get_CurrentTrackProgressRatio();
+	_float			Get_TrackProgressRatio(_uint iIndex);
 
 	size_t Get_AnimSize() { return m_Animations.size(); }
 	void Set_PlayAnim(_bool bPlayAnim) { m_bPlayAnim = bPlayAnim; }
@@ -59,26 +59,25 @@ public:
 	void Set_BlendDuration(_float Duration) { m_fBlendDuration = Duration; }
 #pragma endregion
 #pragma region Mesh
-	const _char* Get_MeshName(_uint iIndex);
-	_uint	Get_NumMeshes() const { return m_iNumMeshes; }
-	void Update_RootBone(_float Amount = 1.f);
-	void Initialize_RootBone();
+	const _char*	Get_MeshName(_uint iIndex);
+	_uint			Get_NumMeshes() const { return m_iNumMeshes; }
+	void			Update_RootBone(_float Amount = 1.f);
+	void			Initialize_RootBone();
 #pragma endregion
 #pragma region Bone
 	HRESULT					Bind_BoneMatrices(_uint iMeshIndex, class CShader* pShader, const _char* pConstantName);
-	const _float4x4* Get_BoneMatrixPtr(const _char* pBoneName) const;
-	_matrix Get_BoneMatrix(const _char* pBoneName) const;
-	_matrix Get_BoneLocalMatrix(const _char* pBoneName) const;
+	const _float4x4*		Get_BoneMatrixPtr(const _char* pBoneName) const;
+	_matrix					Get_BoneMatrix(const _char* pBoneName) const;
+	_matrix					Get_BoneLocalMatrix(const _char* pBoneName) const;
 	static _int				Get_BoneIndex(const _char* pBoneName, vector<class CBone*> Bones);	// 본의 벡터와 이름을 넘겨주면 인덱스를 넘겨줌 ( n 순회 )
 	_int					Get_BoneIndex(const _char* pBoneName) const;
 	_matrix					Get_BoneMatrix(_uint iBoneIndex);
 	void					Combined_BoneMatrix();
 
-
 #pragma endregion
 #pragma region Material
-	HRESULT Bind_Material(_uint iMeshIndex, class CShader* pShader);
-
+	HRESULT					Bind_Material(_uint iMeshIndex, class CShader* pShader);
+	HRESULT					Begin(_uint iMeshIndex, class CShader* pShader);
 #pragma endregion
 
 	void			ComputeAnimation(_uint AnimIndex);
@@ -208,6 +207,7 @@ private:
 	void LoadAdditionalAnimations(const char* ModelFilePath);
 	bool LoadData(const _char* filename);
 	void LoadAnim(const _char* fileName);
+	void ParseMaterialXml(const _char* filePath);
 	//
 	virtual HRESULT Initialize(void* pArg) override;
 

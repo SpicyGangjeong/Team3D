@@ -24,6 +24,7 @@
 #include "Goblin.h"
 #include "Goblin_Mage.h"
 #include "Goblin_Spector.h"
+#include "NPC_Ollivander.h"
 #pragma endregion
 
 
@@ -475,6 +476,9 @@ HRESULT CLevel_GamePlay::Ready_Markers()
 HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 {
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPC_Ollivander>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
 		return E_FAIL;
 	}
 

@@ -1,5 +1,5 @@
 <Material>
-    <MI_Troll_ArmoredTroll_Body>
+	<MI_Troll_ArmoredTroll_Body	ShaderIndex = "0">
         <aiTextureType_NONE                    Index="0" Filename="" Extension=""/>
         <aiTextureType_DIFFUSE                 Index="1" Filename="T_Troll_ArmoredTroll_Body_D" Extension=".png"/>
         <aiTextureType_SPECULAR                Index="2" Filename="" Extension=""/>
@@ -28,7 +28,7 @@
         <aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
         <aiTextureType_ANISOTROPY              Index="26" Filename="T_Troll_ArmoredTroll_Body_SRXO" Extension=".dds"/>
     </MI_Troll_ArmoredTroll_Body>
-    <MI_Troll_Heads_Eye>
+	<MI_Troll_Heads_Eye	ShaderIndex = "0">
         <aiTextureType_NONE                    Index="0" Filename="" Extension=""/>
         <aiTextureType_DIFFUSE                 Index="1" Filename="T_Troll_Mountain01_Eye_D" Extension=".dds"/>
         <aiTextureType_SPECULAR                Index="2" Filename="" Extension=""/>
@@ -57,7 +57,7 @@
         <aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
         <aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
     </MI_Troll_Heads_Eye>
-    <MI_Troll_Heads_Teeth>
+	<MI_Troll_Heads_Teeth	ShaderIndex = "0">
         <aiTextureType_NONE                    Index="0" Filename="" Extension=""/>
         <aiTextureType_DIFFUSE                 Index="1" Filename="T_Troll_Teeth_D" Extension=".dds"/>
         <aiTextureType_SPECULAR                Index="2" Filename="" Extension=""/>
@@ -86,7 +86,7 @@
         <aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
         <aiTextureType_ANISOTROPY              Index="26" Filename="T_Troll_Teeth_SRXO" Extension=".dds"/>
     </MI_Troll_Heads_Teeth>
-    <MI_Troll_ArmoredTroll_Head>
+	<MI_Troll_ArmoredTroll_Head	ShaderIndex = "0">
         <aiTextureType_NONE                    Index="0" Filename="" Extension=""/>
         <aiTextureType_DIFFUSE                 Index="1" Filename="T_Troll_Mountain01_Head_D" Extension=".png"/>
         <aiTextureType_SPECULAR                Index="2" Filename="" Extension=""/>
@@ -115,7 +115,7 @@
         <aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
         <aiTextureType_ANISOTROPY              Index="26" Filename="T_Troll_Mountain01_Head_SRXO" Extension=".dds"/>
     </MI_Troll_ArmoredTroll_Head>
-    <MI_Troll_ArmoredTroll_Metal>
+	<MI_Troll_ArmoredTroll_Metal	ShaderIndex = "0">
         <aiTextureType_NONE                    Index="0" Filename="" Extension=""/>
         <aiTextureType_DIFFUSE                 Index="1" Filename="T_Troll_ArmoredTroll_Metal_D" Extension=".dds"/>
         <aiTextureType_SPECULAR                Index="2" Filename="" Extension=""/>
@@ -144,7 +144,7 @@
         <aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
         <aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
     </MI_Troll_ArmoredTroll_Metal>
-    <MI_Troll_ArmoredTroll_Leather>
+	<MI_Troll_ArmoredTroll_Leather	ShaderIndex = "0">
         <aiTextureType_NONE                    Index="0" Filename="" Extension=""/>
         <aiTextureType_DIFFUSE                 Index="1" Filename="T_Troll_ArmoredTroll_Leather_D" Extension=".dds"/>
         <aiTextureType_SPECULAR                Index="2" Filename="" Extension=""/>
@@ -173,7 +173,7 @@
         <aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
         <aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
     </MI_Troll_ArmoredTroll_Leather>
-    <MI_ClothSim>
+	<MI_ClothSim	ShaderIndex = "0">
         <aiTextureType_NONE                    Index="0" Filename="" Extension=""/>
         <aiTextureType_DIFFUSE                 Index="1" Filename="T_Troll_ArmoredTroll_Leather_D" Extension=".dds"/>
         <aiTextureType_SPECULAR                Index="2" Filename="T_Cav_Spid_ThickWeb_N" Extension=".dds"/>
