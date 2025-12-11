@@ -142,6 +142,8 @@
 
 #include "StunEffect.h"
 #include "Box_Splesh.h"
+#include "Chair_Splesh.h"
+#include "Barral_Splesh.h"
 
 #pragma endregion
 
@@ -1551,6 +1553,14 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CBox_Splesh>(NEXT_LEVEL, CBox_Splesh::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CBarral_Splesh>(NEXT_LEVEL, CBarral_Splesh::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CChair_Splesh>(NEXT_LEVEL, CChair_Splesh::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 

@@ -525,7 +525,13 @@
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Boss_HpBar</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Box_Splesh.h">
-      <Filter>02.GameObjects\Effect\PropsEffect</Filter>
+      <Filter>02.GameObjects\Effect\PropsEffect\Box</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Chair_Splesh.h">
+      <Filter>02.GameObjects\Effect\PropsEffect\Chair</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Barral_Splesh.h">
+      <Filter>02.GameObjects\Effect\PropsEffect\Barral</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1113,6 +1119,15 @@
     <Filter Include="02.GameObjects\Effect\PropsEffect">
       <UniqueIdentifier>{215b093d-648c-4cca-a69b-f4005b34ee06}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\PropsEffect\Box">
+      <UniqueIdentifier>{b3c9f1a4-afb1-45ba-8d8b-034267607976}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\PropsEffect\Barral">
+      <UniqueIdentifier>{c2841516-9f72-4c72-aa50-652b4ff33b5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\PropsEffect\Chair">
+      <UniqueIdentifier>{3103c6e1-60cb-438b-a3eb-844b919ccd43}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1582,7 +1597,13 @@
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Boss_HpBar</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Box_Splesh.cpp">
-      <Filter>02.GameObjects\Effect\PropsEffect</Filter>
+      <Filter>02.GameObjects\Effect\PropsEffect\Box</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Barral_Splesh.cpp">
+      <Filter>02.GameObjects\Effect\PropsEffect\Barral</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Chair_Splesh.cpp">
+      <Filter>02.GameObjects\Effect\PropsEffect\Chair</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -160,6 +160,8 @@ call Update_Resources.bat
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Action_Panel.h" />
+    <ClInclude Include="..\Public\Barral_Splesh.h" />
+    <ClInclude Include="..\Public\Chair_Splesh.h" />
     <ClInclude Include="..\Public\Broom_State_Fly.h" />
     <ClInclude Include="..\Public\Broom_State_Hover.h" />
     <ClInclude Include="..\Public\Boss_HpBar.h" />
@@ -331,6 +333,8 @@ call Update_Resources.bat
   <ItemGroup>
     <ClCompile Include="..\Private\Action_Panel.cpp" />
     <ClCompile Include="..\Private\Boss_HpBar.cpp" />
+    <ClCompile Include="..\Private\Barral_Splesh.cpp" />
+    <ClCompile Include="..\Private\Chair_Splesh.cpp" />
     <ClCompile Include="..\Private\Broom_States.cpp" />
     <ClCompile Include="..\Private\Broom_State_Fly.cpp" />
     <ClCompile Include="..\Private\Broom_State_Hover.cpp" />

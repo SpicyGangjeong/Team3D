@@ -34,6 +34,25 @@ HRESULT CMapElement_Interactable::Initialize(void* pArg)
 		//m_ModelPathIndices.push_back((*pDesc->pModelPathIndices)[i]);
 	}
 
+	if (m_ModelPrototypeTags[0] == L"Prototype_GameObject_SM_Prop_Barrel_Breakable_B_Oppungo")
+	{
+		m_eInteractableID = ELEMENT_INTERACTABLE_ID::BARREL;
+	}
+
+	else if (m_ModelPrototypeTags[0] == L"Prototype_GameObject_SM_HM_OwlPost_Package_B")
+	{
+		m_eInteractableID = ELEMENT_INTERACTABLE_ID::BOX;
+	}
+	else if (m_ModelPrototypeTags[0] == L"Prototype_GameObject_SM_HM_TeaShop_Table_B")
+	{
+		m_eInteractableID = ELEMENT_INTERACTABLE_ID::TABLE;
+	}
+	else if (m_ModelPrototypeTags[0] == L"Prototype_GameObject_SM_HM_TeaShop_Chair_B")
+	{
+		m_eInteractableID = ELEMENT_INTERACTABLE_ID::TABLE;
+	}
+
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -60,6 +79,7 @@ HRESULT CMapElement_Interactable::Initialize(void* pArg)
 	//static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Set_Kinematic(false);
 
 	m_pInfoInstance->Regist_ActiveInteractive(this);
+
 
 	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
 	SAFE_ADDREF(m_pEffectPool);
@@ -158,7 +178,26 @@ void CMapElement_Interactable::OnCollision(CGameObject* pOther, void* pDesc)
 
 	_vector vPos = XMLoadFloat4(&CollisionDesc.vWorldPos);
 
-	m_pEffectPool->Use_Skill(SKILL_TYPE::BOX_SPLESH, this);
+	switch (m_eInteractableID)
+	{
+	case Client::ELEMENT_INTERACTABLE_ID::BARREL:
+
+		m_pEffectPool->Use_Skill(SKILL_TYPE::BARRAL_SPLASH, this);
+		break;
+	case Client::ELEMENT_INTERACTABLE_ID::BOX:
+
+		m_pEffectPool->Use_Skill(SKILL_TYPE::BOX_SPLESH, this);
+		break;
+	case Client::ELEMENT_INTERACTABLE_ID::TABLE:
+		m_pEffectPool->Use_Skill(SKILL_TYPE::CHAIL_SPLESH, this);
+		break;
+	case Client::ELEMENT_INTERACTABLE_ID::END:
+		break;
+	default:
+		break;
+	}
+
+
 	
 	Set_Dead();
 }
@@ -385,7 +424,7 @@ ON_COLLISION_INFO CMapElement_Interactable::CollisionCheck(_fvector StartPos, _f
 				{
 				case PXOBJECT::TERRAIN:
 				{
-
+					/* TODO, 터레인 안됨 */
 					m_bHit = true;
 					break;
 				}

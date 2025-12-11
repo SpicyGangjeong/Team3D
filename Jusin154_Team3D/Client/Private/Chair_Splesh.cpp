@@ -1,29 +1,29 @@
 ﻿#include "pch.h"
-#include "Box_Splesh.h"
+#include "Chair_Splesh.h"
 
 #include "GameInstance.h"
 #include "EffectParts.h"
 #include "Wand.h"
 #include "Player.h"
 
-CBox_Splesh::CBox_Splesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CChair_Splesh::CChair_Splesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEffect_Container{ pDevice, pContext }
 {
 }
 
-CBox_Splesh::CBox_Splesh(const CBox_Splesh& rhs)
+CChair_Splesh::CChair_Splesh(const CChair_Splesh& rhs)
 	: CEffect_Container(rhs)
 {
 }
 
-HRESULT CBox_Splesh::Initialize_Prototype()
+HRESULT CChair_Splesh::Initialize_Prototype()
 {
 
 	return S_OK;
 
 }
 
-HRESULT CBox_Splesh::Initialize(void* pArg)
+HRESULT CChair_Splesh::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -32,11 +32,11 @@ HRESULT CBox_Splesh::Initialize(void* pArg)
 		return E_FAIL;
 
 
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Box")))
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Chair")))
 		return E_FAIL;
 
 
-	m_wstrEffectName = L"Box_Splesh";
+	m_wstrEffectName = L"Chair_Splesh";
 
 
 	m_fDuration = 5.f;
@@ -44,13 +44,13 @@ HRESULT CBox_Splesh::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CBox_Splesh::Priority_Update(_float fTimeDelta)
+void CChair_Splesh::Priority_Update(_float fTimeDelta)
 {
 	__super::Priority_Update(fTimeDelta);
 
 }
 
-void CBox_Splesh::Update(_float fTimeDelta)
+void CChair_Splesh::Update(_float fTimeDelta)
 {
 	if (m_bVisible == false)
 		return;
@@ -62,7 +62,7 @@ void CBox_Splesh::Update(_float fTimeDelta)
 
 }
 
-void CBox_Splesh::Late_Update(_float fTimeDelta)
+void CChair_Splesh::Late_Update(_float fTimeDelta)
 {
 	if (m_bVisible == false)
 		return;
@@ -72,32 +72,36 @@ void CBox_Splesh::Late_Update(_float fTimeDelta)
 
 }
 
-HRESULT CBox_Splesh::Pre_Setting(CGameObject* pObject, void* pArg)
+HRESULT CChair_Splesh::Pre_Setting(CGameObject* pObject, void* pArg)
 {
 
 	if (FAILED(__super::Pre_Setting(pObject, nullptr)))
 		return E_FAIL;
 
-	CEffectParts* pPaper = Get_PartObject<CEffectParts>("Paper");
+	CEffectParts* pHit = Get_PartObject<CEffectParts>("Hit");
 	CEffectParts* pSmoke = Get_PartObject<CEffectParts>("Smoke");
-
+	CEffectParts* pWood_PT0 = Get_PartObject<CEffectParts>("Wood_PT0");
+	CEffectParts* pWood_PT1 = Get_PartObject<CEffectParts>("Wood_PT1");
 
 	
 	_vector vPos = m_pOwner->Get_WorldPostion();
 
-	pPaper->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
+	pWood_PT0->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
+	pWood_PT1->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
+	pHit->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
 	pSmoke->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
 
 
-	pPaper->Set_Visible(true);
+	pWood_PT0->Set_Visible(true);
+	pWood_PT1->Set_Visible(true);
+	pHit->Set_Visible(true);
 	pSmoke->Set_Visible(true);
-
 
 
 	return S_OK;
 }
 
-HRESULT CBox_Splesh::Ready_Components(void* pArg)
+HRESULT CChair_Splesh::Ready_Components(void* pArg)
 {
 	if (FAILED(__super::Ready_Components(pArg))) {
 		return E_FAIL;
@@ -106,14 +110,14 @@ HRESULT CBox_Splesh::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-HRESULT CBox_Splesh::Ready_Child()
+HRESULT CChair_Splesh::Ready_Child()
 {
 	return S_OK;
 }
 
-CBox_Splesh* CBox_Splesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CChair_Splesh* CChair_Splesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CBox_Splesh* pInstance = new CBox_Splesh(pDevice, pContext);
+	CChair_Splesh* pInstance = new CChair_Splesh(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
@@ -125,9 +129,9 @@ CBox_Splesh* CBox_Splesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 }
 
 
-CGameObject* CBox_Splesh::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CChair_Splesh::Clone(void* pArg, CGameObject* pOwner)
 {
-	CBox_Splesh* pInstance = new CBox_Splesh(*this);
+	CChair_Splesh* pInstance = new CChair_Splesh(*this);
 	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
@@ -138,7 +142,7 @@ CGameObject* CBox_Splesh::Clone(void* pArg, CGameObject* pOwner)
 	return pInstance;
 }
 
-void CBox_Splesh::OnCollision(CGameObject* pOther, void* pDesc)
+void CChair_Splesh::OnCollision(CGameObject* pOther, void* pDesc)
 {
 	_int iIndex = CollisionCheck();
 
@@ -162,19 +166,19 @@ void CBox_Splesh::OnCollision(CGameObject* pOther, void* pDesc)
 
 }
 
-void CBox_Splesh::Free()
+void CChair_Splesh::Free()
 {
 	__super::Free();
 
 }
 #ifdef _DEBUG
-void CBox_Splesh::Describe_Entity()
+void CChair_Splesh::Describe_Entity()
 {
 
 }
 #endif
 
-HRESULT CBox_Splesh::Bind_ShaderResources()
+HRESULT CChair_Splesh::Bind_ShaderResources()
 {
 	return S_OK;
 }
