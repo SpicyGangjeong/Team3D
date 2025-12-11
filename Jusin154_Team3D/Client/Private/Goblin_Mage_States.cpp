@@ -55,7 +55,7 @@ void CGoblin_Mage::Behavior_IdleBreakEnter()
 {
 	m_pFSM->Enable_State(FSMSTATE::IDLEBREAK);
 	pair<_uint, _bool> pairAnimInfo;
-	m_bLookAt = false;
+	m_bLookAt = true;
 	_int RandIndex = m_pGameInstance->Real_Random_Int(0, 6);
 	switch (RandIndex)
 	{
@@ -160,7 +160,7 @@ HRESULT CGoblin_Mage::Behavior_CombatExitCheck(_float fTimeDelta)
 	{
 		m_pFSM->Change_State(FSMSTATE::SPELL);
 	}
-	else if (m_fTargetDistance <= 12.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::LIGHTATTACK)] <= 0.f)
+	else if (m_fTargetDistance <= 15.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::LIGHTATTACK)] <= 0.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::LIGHT_ATTACK);
 	}
@@ -234,7 +234,7 @@ void CGoblin_Mage::Behavior_LightAttackEnter()
 	pair<_uint, _bool> pairAnimInfo = {};
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 	pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK];
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.f,true,1.3f);
 	m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::LIGHTATTACK)] = m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::LIGHTATTACK)];
 
 

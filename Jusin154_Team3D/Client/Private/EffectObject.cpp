@@ -143,13 +143,26 @@ void CEffectObject::Add_Light()
 	m_pGameInstance->Add_Light(CURRENT_LEVEL, m_pLightCom);
 }
 
-void CEffectObject::FollowParents(const _float4x4* pParentsMat)
+void CEffectObject::FollowParents(const _float4x4* pParentsMat,const _float4x4* pOffsetMat)
 {
 	if (pParentsMat == nullptr)
 		return;
 
+	if (pOffsetMat)
+	{
+		_matrix parent = XMLoadFloat4x4(pParentsMat);
+		_matrix offset = XMLoadFloat4x4(pOffsetMat);
 
-	m_pParentMatrix = pParentsMat;
+		_matrix final = offset * parent;
+
+		XMStoreFloat4x4(&m_FinalParentMatrix, final);
+
+		m_pParentMatrix = &m_FinalParentMatrix;
+	}
+	else {
+		m_pParentMatrix = pParentsMat;
+	}
+
 	m_bVisible = true;
 }
 

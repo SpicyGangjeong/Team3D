@@ -24,6 +24,7 @@
 #include "State_Combat.h"
 #include "State_LightAttack.h"
 #include "State_Spell.h"
+#include "State_Shield.h"
 #include "State_Hit.h"
 #include "State_Broom_Ride.h"
 #include "State_Broom_Ride_Move.h"
@@ -202,7 +203,7 @@ HRESULT CPlayer::Behavior_IdleExitCheck(_float fTimeDelta)
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
 		}
 		else if (m_pGameInstance->Key_Down(DIK_Q)) {
-			m_pFSM->Change_State(FSMSTATE::COMBAT);
+			m_pFSM->Change_State(FSMSTATE::SHIELD);
 		}
 		else if (SUCCEEDED(InputSpell())) {
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
@@ -214,7 +215,6 @@ HRESULT CPlayer::Behavior_IdleExitCheck(_float fTimeDelta)
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
 		}
 		else if (m_pGameInstance->Key_Down(DIK_G)) {
-			m_pFSM->Enable_State(FSMSTATE::POTION);
 			m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_NECK_L), m_Animation[STATEANIM::POTION].first, m_Animation[STATEANIM::POTION].second);
 		}
 		else if (m_pGameInstance->Key_Down(DIK_B)) {
@@ -393,7 +393,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
 		}
 		else if (m_pGameInstance->Key_Down(DIK_Q)) {
-			m_pFSM->Change_State(FSMSTATE::COMBAT);
+			m_pFSM->Change_State(FSMSTATE::SHIELD);
 		}
 		else if (m_pGameInstance->Mouse_Up(DIM_LBUTTON)) {
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
@@ -408,7 +408,6 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
 		}
 		else if (m_pGameInstance->Key_Down(DIK_G)) {
-			m_pFSM->Enable_State(FSMSTATE::POTION);
 			m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_NECK_L), m_Animation[STATEANIM::POTION].first, m_Animation[STATEANIM::POTION].second);
 		}
 
@@ -810,11 +809,8 @@ void CPlayer::Behavior_CombatEnter()
 		m_pEffectPool->Use_Skill(SKILL_TYPE::REVELIO, this);
 	}
 	else if (m_pGameInstance->Key_Down(DIK_Q)) {
-		m_pFSM->Enable_State(FSMSTATE::SKILL2);
-		pairAnimInfo = m_Animation[STATEANIM::SKILL2];
-		Add_Event(pairAnimInfo.first,
-			[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::PROTEGO, this); },
-			0.4f);
+
+		m_pFSM->Change_State(FSMSTATE::SHIELD);
 	}
 	else if (m_pGameInstance->Mouse_Up(DIM_LBUTTON)) {
 		m_pFSM->Change_State(FSMSTATE::LIGHT_ATTACK);
@@ -864,9 +860,7 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 		}
 		else if (m_pGameInstance->Key_Down(DIK_Q))
 		{
-			m_pFSM->Enable_State(FSMSTATE::SKILL2);
-			pairAnimInfo = m_Animation[STATEANIM::SKILL2];
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+			m_pFSM->Change_State(FSMSTATE::SHIELD);
 		}
 		else if (m_pGameInstance->Key_Down(DIK_V))
 		{
@@ -898,29 +892,6 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 				m_vGrapInteratableLerp.x = 0.f;
 			}
 		}
-		/*else if (m_pGameInstance->Key_Down(DIK_G)) {
-			m_pFSM->Enable_State(FSMSTATE::POTION);
-			if (SUCCEEDED(InputMove()))
-			{
-				if (m_bSprintToggle)
-				{
-					pairAnimInfo = m_Animation[STATEANIM::SPRINT];
-				}
-				else if (m_bWalkToggle)
-				{
-					pairAnimInfo = m_Animation[STATEANIM::WALK_FWD];
-				}
-				else {
-					pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
-				}
-
-			}
-			else {
-				pairAnimInfo = m_Animation[STATEANIM::IDLE];
-			}
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-			m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_NECK_L),m_Animation[STATEANIM::POTION].first, m_Animation[STATEANIM::POTION].second);
-		}*/
 	}
 
 	if (m_pFSM->IsEnable(FSMSTATE::ANCIENT_THROW))
@@ -957,7 +928,7 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 void CPlayer::Behavior_CombatExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::COMBAT | FSMSTATE::SKILL |
-		FSMSTATE::SKILL2 | FSMSTATE::MAPHELP | FSMSTATE::ANCIENT_THROW | FSMSTATE::POTION);
+		 FSMSTATE::MAPHELP | FSMSTATE::ANCIENT_THROW);
 }
 
 void CPlayer::Behavior_LightAttackEnter()
@@ -1371,6 +1342,38 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 void CPlayer::Behavior_SpellExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::SPELL);
+}
+
+void CPlayer::Behavior_ShieldEnter()
+{
+	pair<_uint, _bool> pairAnimInfo;
+
+	m_pFSM->Enable_State(FSMSTATE::SHIELD);
+	pairAnimInfo = m_Animation[STATEANIM::SKILL2];
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::PROTEGO, this); },
+		0.4f);
+}
+
+HRESULT CPlayer::Behavior_ShieldExitCheck()
+{
+	if (m_pModelCom->IsFinishedAnim()) {
+		if (SUCCEEDED(InputMove()))
+		{
+			m_pFSM->Change_State(FSMSTATE::MOVE);
+		}
+		else {
+			m_pFSM->Change_State(FSMSTATE::IDLE);
+		}
+	}
+	return E_FAIL;
+}
+
+void CPlayer::Behavior_ShieldExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::SHIELD);
 }
 
 void CPlayer::Behavior_HitEnter()
@@ -2063,6 +2066,17 @@ void CPlayer::Add_FSM()
 		Desc.funcPriorityUpdate = nullptr;
 		Desc.funcLateUpdate = nullptr;
 		m_States.emplace(FSMSTATE::SPELL, CState_Spell::Create(&Desc));
+	}
+
+	{
+		CState_Shield::STATE_SHIELD_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_ShieldEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_ShieldExitCheck(); };
+		Desc.funcExitEvent = [this]() { Behavior_ShieldExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::SHIELD, CState_Shield::Create(&Desc));
 	}
 #pragma endregion
 #pragma region Behavior_Combat_Focus
