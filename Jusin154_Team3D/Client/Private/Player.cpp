@@ -180,6 +180,11 @@ void CPlayer::Late_Update(_float fTimeDelta)
 	if (nullptr != m_LockOnInfo.pInteractive) {
 		static_cast<CMapElement_Interactable*>(m_LockOnInfo.pInteractive)->Set_DrawOutLine();
 	}
+
+	if (m_bLookAt && m_LockOnInfo.pUnit)
+	{
+		m_pTransformCom->LookAt_Lerp(m_LockOnInfo.pUnit->Get_WorldPostion(), fTimeDelta, 5.f);
+	}
 	////////////////////////////////////////////////////////////////////////////
 	_vector look = XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK));
 

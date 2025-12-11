@@ -160,6 +160,8 @@ call Update_Resources.bat
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Action_Panel.h" />
+    <ClInclude Include="..\Public\Broom_State_Fly.h" />
+    <ClInclude Include="..\Public\Broom_State_Hover.h" />
     <ClInclude Include="..\Public\CallBack_Troll_HitReport.h" />
     <ClInclude Include="..\Public\CameraLockOn.h" />
     <ClInclude Include="..\Public\Current_Slot_Number.h" />
@@ -186,6 +188,8 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Logo_Glow.h" />
     <ClInclude Include="..\Public\Logo_Text.h" />
     <ClInclude Include="..\Public\Goblin_Attack.h" />
+    <ClInclude Include="..\Public\State_Broom_Dismount.h" />
+    <ClInclude Include="..\Public\State_Broom_Ride_Move.h" />
     <ClInclude Include="..\Public\Troll_State_Stun.h" />
     <ClInclude Include="..\Public\State_Sustain.h" />
     <ClInclude Include="..\Public\WandEnd.h" />
@@ -321,6 +325,8 @@ call Update_Resources.bat
   <ItemGroup>
     <ClCompile Include="..\Private\Action_Panel.cpp" />
     <ClCompile Include="..\Private\Broom_States.cpp" />
+    <ClCompile Include="..\Private\Broom_State_Fly.cpp" />
+    <ClCompile Include="..\Private\Broom_State_Hover.cpp" />
     <ClCompile Include="..\Private\CallBack_Troll_HitReport.cpp" />
     <ClCompile Include="..\Private\CameraLockOn.cpp" />
     <ClCompile Include="..\Private\Current_Slot_Number.cpp" />
@@ -347,6 +353,8 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Logo.cpp" />
     <ClCompile Include="..\Private\Logo_Glow.cpp" />
     <ClCompile Include="..\Private\Logo_Text.cpp" />
+    <ClCompile Include="..\Private\State_Broom_Dismount.cpp" />
+    <ClCompile Include="..\Private\State_Broom_Ride_Move.cpp" />
     <ClCompile Include="..\Private\State_Sustain.cpp" />
     <ClCompile Include="..\Private\Goblin_Attack.cpp" />
     <ClCompile Include="..\Private\Troll_State_Stun.cpp" />
