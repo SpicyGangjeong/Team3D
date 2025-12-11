@@ -300,6 +300,7 @@ void CInfoInstance::Release_Information()
 
 	DestroyInstance();
 
+
 	SAFE_RELEASE(m_pMapInfo);
 	SAFE_RELEASE(m_pPlayerInfo);
 	SAFE_RELEASE(m_pMonsterInfo);

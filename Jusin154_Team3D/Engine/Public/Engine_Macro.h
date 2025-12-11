@@ -145,8 +145,7 @@ constexpr unsigned int g_iMaxShadowHeight		= 9216;
 			unsigned int iRefCnt = {};							\
 			if(nullptr != s_pInstance)	{						\
 				iRefCnt = s_pInstance->Release();				\
-				if(0 == iRefCnt)								\
-					s_pInstance = nullptr;						\
+				s_pInstance = nullptr;							\
 			}													\
 			return iRefCnt;										\
 		}
