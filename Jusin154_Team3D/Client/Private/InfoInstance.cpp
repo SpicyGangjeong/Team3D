@@ -61,14 +61,6 @@ void CInfoInstance::Set_Damage(_float fDamage)
 		m_pSkillInfo->Update_Damage(fDamage);
 }
 
-CPlater* CInfoInstance::Get_PlayerInfo()
-{
-	//return m_pPlayerInfo->Get_CameraCoordinateSystem();
-	return nullptr;
-}
-
-
-
 #pragma region MONSTER_INFO
 HRESULT CInfoInstance::Regist_PlayerAlly(CUnit* pUnit)
 {
@@ -113,6 +105,7 @@ CMonster* CInfoInstance::Get_TargetMonster()
 }
 
 #pragma endregion
+
 #pragma region MAP_INFO
 HRESULT CInfoInstance::Load_MapObjects(const _char* pFilePath)
 {
@@ -190,7 +183,7 @@ void CInfoInstance::Key_Input(_uint Input)
 		Event_CallBack(TEXT("Ancient_Magic_Throw"));
 		break;
 	case ENUM_CLASS(KEYINPUT::INPUT_G):
-
+		Event_CallBack(TEXT("Use_Potion"));
 		break;
 	case ENUM_CLASS(KEYINPUT::INPUT_TAB):
 

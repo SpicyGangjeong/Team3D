@@ -32,14 +32,15 @@ HRESULT CEnemy_Detection::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	m_fOrigin_Size = _float3(150.f, 150.f, 1.f);
+	m_fOrigin_Size = _float3(1.f, 1.f, 1.f);
 	m_fSize.x = m_fOrigin_Size.x;
 	m_fSize.y = m_fOrigin_Size.y;
-	m_pTransformCom->Set_Scale(m_fOrigin_Size);
-
+	_float3 scals = _float3(1.f, 1.f, 1.f);
+	m_pTransformCom->Set_Scale(scals);
+	m_fSize.z = 1.f;
 	m_fAlpha = 1.f;
 	m_bStep1 = true;
-	m_vImageposi = _float4(37.5f, 37.5f, 75.f, 75.f);
+	m_vImageposi = _float4(0.3f, 0.3f, 0.4f, 0.4f);
 
 	return S_OK;
 }
@@ -47,17 +48,22 @@ HRESULT CEnemy_Detection::Initialize(void* pArg)
 void CEnemy_Detection::Priority_Update(_float fTimeDelta)
 {
 
-	XMFLOAT4X4 Head = *static_cast<CMonster*>(m_pOwner)->Get_HeadMatrix();
-	
-	XMVECTOR HeadPos = XMVectorSet(static_cast<CMonster*>(m_pOwner)->Get_WorldPostion().m128_f32[0], static_cast<CMonster*>(m_pOwner)->Get_WorldPostion().m128_f32[1], static_cast<CMonster*>(m_pOwner)->Get_WorldPostion().m128_f32[2], 1.f);
+	XMVECTOR MonsterPos = static_cast<CMonster*>(m_pOwner)->Get_WorldPostion();
+
+	_float fOffsetY = 3.0f; // 적절한 Y 오프셋 값 (몬스터 머리 위로 올리기 위함)
+
+	XMVECTOR HeadPos = XMVectorAdd(MonsterPos, XMVectorSet(0.f, fOffsetY, 0.f, 0.f));
 
 	m_vPosition = HeadPos;
+	m_fSize = _float3(2.f, 2.f, 2.f);
+	m_vImageposi = _float4(0.5f, 0.5f, 1.f, 1.f);
+
 	m_pTransformCom->Set_State(STATE::POSITION, m_vPosition);
 }
 
 void CEnemy_Detection::Update(_float fTimeDelta)
 {
-	if (m_fActive == true)
+	if (m_bActive == true)
 	{
 		m_fTime += fTimeDelta;
 
@@ -86,13 +92,13 @@ void CEnemy_Detection::Update(_float fTimeDelta)
 			}
 		}
 	}
-	else if (m_fActive == false)
+	else if (m_bActive == false)
 	{
 		m_fTime = 0.f;
 		m_bStep1 = true;
 		m_bStep2 = false;
 		m_bStep3 = false;
-		m_fSizeUp = false;
+		m_bSizeUp = false;
 		m_fAlpha = 1.f;
 		SizeUpX(m_fOrigin_Size.x);
 		SizeUpY(m_fOrigin_Size.y);
@@ -102,19 +108,19 @@ void CEnemy_Detection::Update(_float fTimeDelta)
 
 	if (m_bStep3 == true)
 	{
-		if (m_fSizeUp == false)
+		if (m_bSizeUp == false)
 		{
-			SizeUpX(m_fSize.x + 10.f);
-			SizeUpY(m_fSize.y + 10.f);
-			m_vImageposi.z += 10.f;
-			m_vImageposi.w += 10.f;
-			m_fSizeUp = true;
+			SizeUpX(m_fSize.x + 1.f);
+			SizeUpY(m_fSize.y + 1.f);
+			m_vImageposi.z += 0.4f;
+			m_vImageposi.w += 0.4f;
+			m_bSizeUp = true;
 		}
 	}
 
 	if (m_fSize.x != m_fOrigin_Size.x)
 	{
-		SizeUpdate(-fTimeDelta * 10.f);
+		SizeUpdate(-fTimeDelta);
 		m_vImageposi.z -= fTimeDelta;
 		m_vImageposi.w -= fTimeDelta;
 	}
@@ -122,8 +128,6 @@ void CEnemy_Detection::Update(_float fTimeDelta)
 	if (m_fAlpha <= 0.f)
 		m_fAlpha = 0.f;
 
-	_float3 Size = _float3(100.f,100.f, 1.f);
-	m_pTransformCom->Set_Scale(Size);
 }
 
 void CEnemy_Detection::Late_Update(_float fTimeDelta)
@@ -174,9 +178,19 @@ void CEnemy_Detection::SizeUpdate(_float fSizeX)
 	{
 		m_fSize.x = m_fOrigin_Size.x;
 		m_fSize.y = m_fOrigin_Size.y;
-		m_vImageposi.z = 75.f;
-		m_vImageposi.w = 75.f;
+		m_vImageposi.z = 1.f;
+		m_vImageposi.w = 1.f;
 	}
+}
+
+void CEnemy_Detection::Set_Active(_bool bAtcive)
+{
+	m_bActive = bAtcive;
+}
+
+_bool CEnemy_Detection::Get_Step()
+{
+	return m_bStep3;
 }
 
 HRESULT CEnemy_Detection::Ready_Components()
@@ -224,7 +238,7 @@ HRESULT CEnemy_Detection::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldMatrixPtr()))) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_CamaraPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_CamaraPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float3))))
 	{
 		return E_FAIL;
 	}
@@ -290,7 +304,6 @@ HRESULT CEnemy_Detection::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	return S_OK;
 	return S_OK;
 }
 
