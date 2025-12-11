@@ -136,7 +136,7 @@ HRESULT CLoding_Panel::Render()
 		return E_FAIL;
 	}
 #ifdef _DEBUG
-	m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("<- N M->."), _float2(100.f, 750.f));
+	m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("<- N M ->."), _float2(100.f, 750.f));
 
 	if (INHYUK == true)
 		m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("알고 계셨나요?\nUI의 생일은 28일 이랍니다."), _float2(100.f, 800.f));
