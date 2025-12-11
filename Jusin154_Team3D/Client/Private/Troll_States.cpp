@@ -415,7 +415,6 @@ void CTroll::Behavior_SwingEnter()
 		[this]() {m_bLookAt = false; },
 		0.2f);
 
-
 	Troll_Trail_Visible(true);
 	m_pWeaponTrail->Set_Visible(true);
 	m_pWeaponTrail->Get_Component<CTrail>()->Reset_Trail();

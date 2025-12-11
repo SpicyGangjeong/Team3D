@@ -524,6 +524,12 @@
     <ClInclude Include="..\Public\Boss_HpBar.h">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Boss_HpBar</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\State_Broom_Hover.h">
+      <Filter>04.Mechanic\State\Broom_Player\State_Broom_Hover</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Broom_Fly.h">
+      <Filter>04.Mechanic\State\Broom_Player\State_Broom_Fly</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1107,6 +1113,12 @@
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Boss_HpBar">
       <UniqueIdentifier>{b49a3671-96d0-47b8-833f-28190d549b0f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Mechanic\State\Broom_Player\State_Broom_Hover">
+      <UniqueIdentifier>{24f6903f-8f6b-46ff-a387-ecb44d673887}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Broom_Player\State_Broom_Fly">
+      <UniqueIdentifier>{f24321bb-6750-4baa-b19a-bf5a3c2a8909}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1574,6 +1586,12 @@
           </ClCompile>
     <ClCompile Include="..\Private\Boss_HpBar.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Boss_HpBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Broom_Hover.cpp">
+      <Filter>04.Mechanic\State\Broom_Player\State_Broom_Hover</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Broom_Fly.cpp">
+      <Filter>04.Mechanic\State\Broom_Player\State_Broom_Fly</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

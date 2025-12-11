@@ -21,6 +21,7 @@ public:
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
 	_bool Get_Aim() { return m_bAim; }
+	void Set_SpellHit(_bool bHit) { m_bSpellHit = bHit; }
 #ifdef _DEBUG
 	void Render_CameraCoordinateSystem();
 #endif // _DEBUG
@@ -115,6 +116,12 @@ private:
 	_float			m_fAnimSpeed = {};
 	_bool			m_bOnce = {  };
 	_bool			m_bLookAt = {false};
+	_bool			m_bSpellHit = {};
+	_float3			m_BroomScale = { 0.f, 0.f, 0.f };
+	_float3			m_TargetScale = { 1.f, 1.f, 1.f };
+	_float			m_fScaleSmoothSpeed = 2.5f;
+
+
 
 	HRESULT InputAction();
 	HRESULT InputMove();
@@ -167,12 +174,21 @@ private:
 	HRESULT Behavior_Broom_Ride_MoveExitCheck(_float fTimeDelta);
 	void	Behavior_Broom_Ride_MoveExit();
 
+	void	Behavior_Broom_HoverEnter();
+	HRESULT Behavior_Broom_HoverExitCheck(_float fTimeDelta);
+	void	Behavior_Broom_HoverExit();
+						   
+	void	Behavior_Broom_FlyEnter();
+	HRESULT Behavior_Broom_FlyExitCheck(_float fTimeDelta);
+	void	Behavior_Broom_FlyExit();
+
 	void	Behavior_Broom_DismountEnter();
 	HRESULT Behavior_Broom_DismountExitCheck(_float fTimeDelta);
 	void	Behavior_Broom_DismountExit();
 
 	void Player_InterpTurn(_float fTimeDelta);
 	void Throwing_Interactive();
+	void Attach_Broom();
 #pragma endregion
 
 private:

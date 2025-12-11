@@ -57,6 +57,14 @@ void CBroom::Update(_float fTimeDelta)
 {
 	Update_CameraCoordinateSystem();
 
+	if (!m_bRide)
+	{
+		m_bHoverToggle = true;
+		m_fSpeed = 0.f;
+
+		m_pFSM->Change_State(FSMSTATE::IDLE);
+	}
+
 	m_pFSM->Update_State(fTimeDelta);
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
