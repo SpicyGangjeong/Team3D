@@ -37,7 +37,8 @@ struct ParticleValue
     float fDropAttenuation;
     
     float3 vVelocity;
-
+    float  fAcceleration;
+    
 };
 
 

@@ -53,6 +53,8 @@ HRESULT CProtego::Initialize(void* pArg)
 
 	m_fDuration = 2.5f;
 
+	m_isLoop = true;
+
 	return S_OK;
 }
 

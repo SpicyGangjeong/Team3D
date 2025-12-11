@@ -73,15 +73,16 @@ public:
 		_float3     vVelocityMin = {};
 		_float3     vVelocityMax = {};
 
-		_float2     vPadding3 = {};
+		_float2      vAcceleration = {};
+
 		_float4     vPadding4 = {};
 		_float4     vPadding5 = {};
 		_float4     vPadding6 = {};
 
 		_bool		isRandomAniIndex = {};
-		_bool		isPadding2 = {};
-		_bool		isPadding3 = {};
-		_bool		isPadding4 = {};
+		_bool		isMoveUp = {};
+		_bool		isMoveRight = {};
+		_bool		isExcludePos = {};
 		_bool		isPadding5 = {};
 
 	}INSTANCE_DESC;
@@ -170,6 +171,11 @@ public:
 		_int	 isNoWorld = {};
 		_int     isDetphCompareStop = {};
 		_int     isRandomAniIndex = {};
+		_int	 isMoveRight = {};
+
+		_int     isMoveUp = {};
+		_int     isExcludePos = {};
+		_int     isPadding1 = {};
 		_int     isPadding2 = {};
 
 		_float   fTimeDelta = {};
@@ -222,6 +228,7 @@ public:
 		_float    fCollisionTime = {};
 		_float    fDropAttenuation = {};
 		_float3   vVelocity = {};
+		_float    fAcceleration = {};
 
 	}CS_PARTICLE_VALUE_DESC;
 

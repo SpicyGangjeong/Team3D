@@ -593,6 +593,12 @@ void CTroll::Behavior_StunEnter()
 	if (iCurrAnimIndex == m_Animation[STATEANIM::RUSH_LOOP].first)
 	{
 		pairAnimInfo = m_Animation[STATEANIM::STUN];
+
+		_string strBoneName = "HeadEnd";
+
+		m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_RUSH_HIT, this);
+		m_pEffectPool->Use_Skill(SKILL_TYPE::STUN, this, &strBoneName);
+
 	}
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 
@@ -600,6 +606,9 @@ void CTroll::Behavior_StunEnter()
 		[this]() { m_bLookAt = true;
 		},
 		0.6f);
+
+
+
 }
 
 HRESULT CTroll::Behavior_StunExitCheck(_float fTimeDelta)

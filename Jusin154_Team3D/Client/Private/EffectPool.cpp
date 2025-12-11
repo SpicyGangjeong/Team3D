@@ -24,6 +24,10 @@
 #include "TrollSwing.h"
 #include "Goblin_Protego.h"
 #include "Goblin_Attack.h"
+#include "Mage_Down_Attack.h"
+#include "Mage_Nomal_Attack.h"
+#include "MageSide.h"
+#include "StunEffect.h"
 
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -315,6 +319,51 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 		return pEffect; }
 
 	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::GOBLIN_MAGE_ATTACK, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CMage_Nomal_Attack* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CMage_Nomal_Attack>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::GOBLIN_MAGE_DOWN, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CMage_Down_Attack* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CMage_Down_Attack>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+
+
+	))) return E_FAIL;
+
+	if (FAILED(Create_Effect(SKILL_TYPE::GOBLIN_MAGE_SIDE, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CMageSide* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CMageSide>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+
+	))) return E_FAIL;
+
+
+	if (FAILED(Create_Effect(SKILL_TYPE::STUN, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CStunEffect* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CStunEffect>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+
+	))) return E_FAIL;
+
+
+
 	return S_OK;
 }
 

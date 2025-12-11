@@ -39,7 +39,7 @@ HRESULT CTroll_Nomal_Smoke::Initialize(void* pArg)
 	m_wstrEffectName = L"Troll_Nomal_Smoke";
 
 
-	m_fDuration = 2.5f;
+	m_fDuration = 3.5f;
 
 	return S_OK;
 }

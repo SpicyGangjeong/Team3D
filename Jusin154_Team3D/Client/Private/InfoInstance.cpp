@@ -56,6 +56,7 @@ void CInfoInstance::Set_Damage(_float fDamage)
 		m_pSkillInfo->Update_Damage(fDamage);
 }
 
+
 #pragma region MONSTER_INFO
 HRESULT CInfoInstance::Regist_PlayerAlly(CUnit* pUnit)
 {

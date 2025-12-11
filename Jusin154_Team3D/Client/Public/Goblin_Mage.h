@@ -67,6 +67,8 @@ public:
 private:
 	virtual void Add_FSM();
 	virtual void Set_Anim();
+private:
+	class CEffectPool* m_pEffectPool = { nullptr };
 
 	_float m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = {};
 	_float m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = { 30.f,5.f,30.f,20.f };
@@ -117,8 +119,7 @@ private:
 	void	Behavior_DeadEnter();
 	HRESULT Behavior_DeadExitCheck(_float fTimeDelta);
 	void	Behavior_DeadExit();
-private:
-	class CEffectPool* m_pEffectPool = nullptr;
+
 };
 
 NS_END

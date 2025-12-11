@@ -44,8 +44,8 @@ HRESULT CEffectPool::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	//if (FAILED(Ready_Effect()))
-	//	return E_FAIL;
+	if (FAILED(Ready_Effect()))
+		return E_FAIL;
 
 	//if (FAILED(Ready_MonsterEffect()))
 	//	return E_FAIL;
