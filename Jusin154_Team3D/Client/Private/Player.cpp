@@ -588,8 +588,8 @@ void CPlayer::Describe_Entity()
 	GUI::Checkbox("Render", &m_bVisible);
 
 	GUI::Text("%d", m_iStateMask);
-
-
+	GUI::Text("HP : %f, %f", m_pStat->Get_Stat().fCurrentHp, m_pStat->Get_Stat().fMaxHp);
+	GUI::SameLine(); if (GUI::Button("FULL")) { m_pStat->Set_Stat(ENUM_CLASS(STAT::CURRENTHP), m_pStat->Get_Stat().fMaxHp); }
 	_vector xmvInputDir = XMVectorZero();
 
 	_vector xmvCamLook = XMVector4Normalize(XMVectorSet(m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z, 0.f));

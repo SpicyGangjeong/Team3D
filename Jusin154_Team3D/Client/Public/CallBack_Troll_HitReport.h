@@ -3,6 +3,9 @@
 #include "Client_Define.h"
 #include "GameObject.h"
 
+NS_BEGIN(Engine)
+class CFSM;
+NS_END
 NS_BEGIN(Client)
 
 class CCallBack_Troll_HitReport final : public PSX::PxUserControllerHitReport
@@ -29,11 +32,12 @@ public:
 	virtual void onObstacleHit(const PSX::PxControllerObstacleHit& hit) override; // 사용자 정의 장애물과 부딪힌 경우
 
 public:
-	HRESULT Initialize(CCharacter_Controller* pController, CRigidBody_Dynamic* pPartDynamicObject);
+	HRESULT Initialize(CCharacter_Controller* pController, CRigidBody_Dynamic* pPartDynamicObject, _bool* bCollisionPlayer);
 	HRESULT Finalize();
 private:
 	CCharacter_Controller* m_pController = { nullptr };
 	CRigidBody_Dynamic* m_pPartDynamicBody = { nullptr };
+	_bool* m_pCollisionPlayer = { nullptr };
 	CGameInstance* m_pGameInstance = { nullptr };
 
 public:
