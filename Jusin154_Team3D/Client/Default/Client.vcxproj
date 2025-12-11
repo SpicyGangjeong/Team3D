@@ -193,6 +193,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Mage_Nomal_Attack.h" />
     <ClInclude Include="..\Public\MageSide.h" />
     <ClInclude Include="..\Public\Mage_Down_Attack.h" />
+    <ClInclude Include="..\Public\State_Shield.h" />
     <ClInclude Include="..\Public\StunEffect.h" />
     <ClInclude Include="..\Public\State_Broom_Dismount.h" />
     <ClInclude Include="..\Public\State_Broom_Fly.h" />
@@ -369,6 +370,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\State_Broom_Hover.cpp" />
     <ClCompile Include="..\Private\State_Broom_Ride_Move.cpp" />
     <ClCompile Include="..\private\MiniMap_Camera.cpp" />
+    <ClCompile Include="..\Private\State_Shield.cpp" />
     <ClCompile Include="..\Private\State_Sustain.cpp" />
     <ClCompile Include="..\Private\Goblin_Attack.cpp" />
     <ClCompile Include="..\Private\Mage_Nomal_Attack.cpp" />

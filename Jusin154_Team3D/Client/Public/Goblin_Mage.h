@@ -48,6 +48,10 @@ private:
 
 	class CEffectParts* m_pGoblin_Orb = { nullptr };
 	class CGoblin_Spector* m_pGoblinSpector = { nullptr };
+
+	_float m_fHoverTime = 0.1f;
+	_float m_fHoverHeight = 0.1f; 
+	_float m_fHoverSpeed = 5.f;
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
