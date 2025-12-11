@@ -34,6 +34,11 @@ HRESULT CGoblin_BattleAxe::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
+#ifdef _DEBUG
+	m_pGripShape = (GeometricPrimitive::CreateSphere(m_pContext, 0.3f, 10, false, false));
+	m_pSubShape = (GeometricPrimitive::CreateSphere(m_pContext, 0.6f, 10, false, false));
+#endif // _DEBUG
+
 	return S_OK;
 }
 
@@ -49,11 +54,9 @@ void CGoblin_BattleAxe::Priority_Update(_float fTimeDelta)
 	}
 
 	m_pTransformCom->Set_WorldMatrix(socketMatrix * XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr()));
-
-
+	XMStoreFloat4x4(&m_vAxeMat, XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("Bone")) * m_pTransformCom->Get_XMWorldMatrix());
 #ifdef _DEBUG
 	Describe_Entity();
-
 #endif // _DEBUG
 }
 
@@ -68,16 +71,6 @@ void CGoblin_BattleAxe::Update(_float fTimeDelta)
 			m_bVisible = false;
 		}
 	}
-
-	_matrix AxeMat = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("Bone"));
-
-
-	for (int i = 0; i < 3; ++i) {
-		AxeMat.r[i] = XMVector3Normalize(AxeMat.r[i]);
-	}
-
-	XMStoreFloat4x4(&m_vAxeMat, AxeMat * m_pTransformCom->Get_XMWorldMatrix());
-
 }
 
 void CGoblin_BattleAxe::Late_Update(_float fTimeDelta)
@@ -126,6 +119,10 @@ HRESULT CGoblin_BattleAxe::Render()
 		m_pShaderCom->Bind_RawValue("g_fDisolveRatio", &zero, sizeof(_float));
 	}
 
+#ifdef _DEBUG
+	m_pGripShape->Draw(m_pTransformCom->Get_XMWorldMatrix(), m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW), m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ), DirectX::Colors::Green, nullptr, true);
+	m_pSubShape->Draw(XMLoadFloat4x4(&m_vAxeMat), m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW), m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ), DirectX::Colors::Purple, nullptr, true);
+#endif // _DEBUG
 	return S_OK;
 }
 
