@@ -108,12 +108,6 @@ void CEffect_Editor::Update(_float fTimeDelta)
 
 	/* 이펙트 컨테이너 업데이트 */
 	//Update_Event(fTimeDelta);
-
-
-
-
-
-
 }
 
 void CEffect_Editor::Late_Update(_float fTimeDelta)

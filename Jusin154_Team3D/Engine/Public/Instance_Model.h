@@ -83,7 +83,7 @@ public:
 		_bool		isMoveUp = {};
 		_bool		isMoveRight = {};
 		_bool		isExcludePos = {};
-		_bool		isPadding5 = {};
+		_bool		isStop_Move_For_Depth_Compare = {};
 
 	}INSTANCE_DESC;
 
@@ -108,7 +108,7 @@ public:
 		_float2		vDiffuseUVMoveTime = { 1.f, 1.f };
 		_float2     vDistortionUVMoveTime = { 1.f , 1.f };
 		_float2		vNoiseUVMoveTime = { 1.f ,1.f };
-		_float2		vAniTime = { 1.f , 1.f };
+		_float2		vAniTime = { 0.01f , 0.01f };
 		_float2	    vAniIndex = {};
 
 		_bool		isMoveForward = {};
@@ -175,7 +175,7 @@ public:
 
 		_int     isMoveUp = {};
 		_int     isExcludePos = {};
-		_int     isPadding1 = {};
+		_int     isStop_Move_For_Depth_Compare = {};
 		_int     isPadding2 = {};
 
 		_float   fTimeDelta = {};
@@ -229,6 +229,8 @@ public:
 		_float    fDropAttenuation = {};
 		_float3   vVelocity = {};
 		_float    fAcceleration = {};
+
+		_bool     isStop = {};
 
 	}CS_PARTICLE_VALUE_DESC;
 

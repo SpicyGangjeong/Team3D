@@ -141,6 +141,7 @@
 #include "MageSide.h"
 
 #include "StunEffect.h"
+#include "Box_Splesh.h"
 
 #pragma endregion
 
@@ -309,7 +310,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_Background = true;
 #endif // 
 #ifdef 진우
-	isLoad_Background = false;
+	isLoad_Background = true;
 #endif // 
 #ifdef 기무리
 	isLoad_Background = true;
@@ -1549,6 +1550,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CBox_Splesh>(NEXT_LEVEL, CBox_Splesh::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CWandEnd>(NEXT_LEVEL, CWandEnd::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
@@ -1560,6 +1564,17 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 
 	m_strMessage = TEXT("Model Loading..");
+
+
+	Asset_FileLoad("../Bin/Resources/Models/Effect/Box", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(NEXT_LEVEL, wstrFileName,
+			CInstance_Model::Create(m_pDevice, m_pContext, pFilePath, MODEL::NONANIM, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixIdentity(), 0))))
+			return E_FAIL;
+
+		return S_OK;
+
+		});
 
 	Asset_FileLoad("../Bin/Resources/Models/Effect/ParticleMesh", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
 

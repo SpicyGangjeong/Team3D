@@ -192,9 +192,10 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Mage_Nomal_Attack.h" />
     <ClInclude Include="..\Public\MageSide.h" />
     <ClInclude Include="..\Public\Mage_Down_Attack.h" />
+    <ClInclude Include="..\Public\Box_Splesh.h" />
     <ClInclude Include="..\Public\StunEffect.h" />
     <ClInclude Include="..\Public\State_Broom_Dismount.h" />
-	<ClInclude Include="..\Public\State_Broom_Ride_Move.h" />
+    <ClInclude Include="..\Public\State_Broom_Ride_Move.h" />
     <ClInclude Include="..\Public\Troll_State_Stun.h" />
     <ClInclude Include="..\Public\State_Sustain.h" />
     <ClInclude Include="..\Public\WandEnd.h" />
@@ -366,6 +367,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Mage_Nomal_Attack.cpp" />
     <ClCompile Include="..\Private\MageSide.cpp" />
     <ClCompile Include="..\Private\Mage_Down_Attack.cpp" />
+    <ClCompile Include="..\Private\Box_Splesh.cpp" />
     <ClCompile Include="..\Private\StunEffect.cpp" />
     <ClCompile Include="..\Private\Troll_State_Stun.cpp" />
     <ClCompile Include="..\Private\WandEnd.cpp" />

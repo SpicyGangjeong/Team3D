@@ -31,6 +31,9 @@ namespace Client
 		JAP, REVELIO, PROTEGO, STUPEFY,											// 검은색
 		ANCIENT_MAGIC_THROW, ANCIENT_MAGIC, ALOHOMORA, PETRIFICUS_TOTALUS,
 
+		/* PROPS*/
+
+		BOX_SPLESH, 
 		/*상태 이펙트*/
 
 		STUN,

@@ -3,6 +3,8 @@
 
 #include "InfoInstance.h"
 #include "GameInstance.h"
+#include "EffectPool.h"
+#include "Layer.h"
 
 CMapElement_Interactable::CMapElement_Interactable(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMapElement{ pDevice, pContext }
@@ -59,19 +61,42 @@ HRESULT CMapElement_Interactable::Initialize(void* pArg)
 
 	m_pInfoInstance->Regist_ActiveInteractive(this);
 
+	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
+	SAFE_ADDREF(m_pEffectPool);
+
 	return S_OK;
 }
 
 void CMapElement_Interactable::Priority_Update(_float fTimeDelta)
 {
+	_float fRadius = m_pModelComs[0]->Get_Radius();
+
+	XMStoreFloat4(&m_vStartPos, Get_WorldPostion() + XMVectorSet(0.f , fRadius , 0.f , 0.f ));
+
 }
 
 void CMapElement_Interactable::Update(_float fTimeDelta)
 {
+
 }
 
 void CMapElement_Interactable::Late_Update(_float fTimeDelta)
 {
+
+	if (m_isGraped == true)
+	{
+		 _float fRadius = m_pModelComs[0]->Get_Radius();
+
+		if (false == m_bHit) {
+			_vector vStartPos = XMLoadFloat4(&m_vStartPos);
+			_vector vEndPos = Get_WorldPostion() + XMVectorSet(0.f, fRadius, 0.f, 0.f);
+			ON_COLLISION_INFO CollisionInfo = CollisionCheck(vStartPos, vEndPos, 1.f);
+
+			if (m_bHit == true)
+				OnCollision(this, &CollisionInfo);
+		}
+	}
+
 	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pModelComs[0]->Get_Radius())) {
 		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 	}
@@ -119,7 +144,26 @@ void CMapElement_Interactable::GrapToPlayer(_fvector vPos, _float fRatio)
 {
 	_vector vCurrentPosition = m_pTransformCom->Get_State(STATE::POSITION);
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorLerp(vCurrentPosition, vPos, fRatio));
+
+	m_isGraped = true;
+
 }
+
+void CMapElement_Interactable::OnCollision(CGameObject* pOther, void* pDesc)
+{
+	if (m_bHit == false)
+		return;
+
+	ON_COLLISION_INFO CollisionDesc = *static_cast<ON_COLLISION_INFO*>(pDesc);
+
+	_vector vPos = XMLoadFloat4(&CollisionDesc.vWorldPos);
+
+	m_pEffectPool->Use_Skill(SKILL_TYPE::BOX_SPLESH, this);
+	
+	Set_Dead();
+}
+
+
 
 HRESULT CMapElement_Interactable::Ready_Components(void* pArg)
 {
@@ -241,6 +285,121 @@ void CMapElement_Interactable::Set_KinematicFlag(_bool bFlag)
 	m_pRigidBody->Set_Kinematic(bFlag);
 }
 
+ON_COLLISION_INFO CMapElement_Interactable::CollisionCheck(_fvector StartPos, _fvector EndPos, _float fRadius)
+{
+
+	_vector vStartPos = StartPos;
+	_vector vEndPos = EndPos;
+	_vector vDir = { vEndPos - vStartPos };
+
+	_float fDistance = XMVectorGetX(XMVector3Length(vEndPos - vStartPos));
+
+	PSX::PxSweepBuffer pxBuffer = {};
+
+	_bool bHit = m_pGameInstance->SphereCast(fRadius, vStartPos, vDir, fDistance, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eDYNAMIC, pxBuffer);
+
+	const PSX::PxSweepHit& hit = pxBuffer.block;
+	PSX::PxRigidActor* pActor = hit.actor;
+	PSX::PxShape* pShape = hit.shape;
+	ON_COLLISION_INFO tagCollInfo = {};
+
+	tagCollInfo.vWorldPos.w = 1.f;
+
+	if (bHit) {
+
+		memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &hit.position, sizeof(hit.position));
+
+		memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &hit.normal, sizeof(hit.normal));
+		XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
+		tagCollInfo.fLength = fDistance;
+
+
+		if (nullptr != pActor && nullptr != pActor->userData)
+		{
+			PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+			tagCollInfo.pObject = pUserData->pOwner;
+
+			switch (pUserData->eKind)
+			{
+			case PHYSX_KIND::CCTActor:
+			{
+				switch (PXOBJECT(pUserData->iSubKind))
+				{
+				case PXOBJECT::MONSTER:
+					break;
+				case PXOBJECT::GOBLIN_WARRIOR:
+				{
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					m_bHit = true;
+				}
+				break;
+				case PXOBJECT::GOBLIN_MAGICIAN:
+				{
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					m_bHit = true;
+				}
+				break;
+				case PXOBJECT::TROLL:
+				{
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					m_bHit = true;
+				}
+				break;
+				}
+			}
+			}
+		}
+
+
+	}
+
+	if (bHit == false)
+	{
+		memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &hit.position, sizeof(hit.position));
+		memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &hit.normal, sizeof(hit.normal));
+		XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
+		tagCollInfo.fLength = fDistance;
+		tagCollInfo.pObject = this;
+
+		bHit = m_pGameInstance->SphereCast(fRadius, vStartPos, vDir, fDistance, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eSTATIC, pxBuffer);
+
+		const PSX::PxSweepHit& hit = pxBuffer.block;
+		PSX::PxRigidActor* pActor = hit.actor;
+		PSX::PxShape* pShape = hit.shape;
+
+		tagCollInfo.vWorldPos.w = 1.f;
+
+		if (bHit)
+		{
+			memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &hit.position, sizeof(hit.position));
+			memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &hit.normal, sizeof(hit.normal));
+			XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
+			tagCollInfo.fLength = fDistance;
+
+			if (nullptr != pActor && nullptr != pActor->userData)
+			{
+				PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+				tagCollInfo.pObject = pUserData->pOwner;
+
+				switch (PXOBJECT(pUserData->iSubKind))
+				{
+				case PXOBJECT::TERRAIN:
+				{
+
+					m_bHit = true;
+					break;
+				}
+				}
+
+			}
+		}
+
+
+	}
+
+	return tagCollInfo;
+}
+
 CMapElement_Interactable* CMapElement_Interactable::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CMapElement_Interactable* pInstance = new CMapElement_Interactable(pDevice, pContext);
@@ -276,6 +435,7 @@ void CMapElement_Interactable::Free()
 
 	SAFE_RELEASE(m_pRigidBody);
 	SAFE_RELEASE(m_pShaderCom);
+	SAFE_RELEASE(m_pEffectPool);
 
 	if (nullptr != m_pInfoInstance) {
 		CInfoInstance* pInfo = m_pInfoInstance;
@@ -285,6 +445,8 @@ void CMapElement_Interactable::Free()
 	for (auto& pModel : m_pModelComs){
 		SAFE_RELEASE(pModel);
 	}
+
+
 }
 
 #ifdef _DEBUG

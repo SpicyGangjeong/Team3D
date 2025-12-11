@@ -546,7 +546,7 @@ void CInstance_Model::Compute_CS(_float fTimeDelta)
 		pDesc->isDetphCompareStop = m_InstanceDesc.isDetphCompareStop;
 		pDesc->isRandomAniIndex = m_InstanceDesc.isRandomAniIndex;
 		pDesc->isExcludePos = m_InstanceDesc.isExcludePos;
-		
+		pDesc->isStop_Move_For_Depth_Compare = m_InstanceDesc.isStop_Move_For_Depth_Compare;
 
 		pDesc->WorldMatrix = *m_pOwner->Get_Component<CTransform>()->Get_WorldMatrixPtr();
 		pDesc->fSizeLerpOption = m_InstanceDesc.fSizeLerpOption;
@@ -722,7 +722,7 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 
 				pParticleValues[i].fCollisionTime = 0.f;
 				pParticleValues[i].isCompareStop = false;
-	
+				pParticleValues[i].isStop = false;
 
 				memcpy(&pParticleValues[i].vOriginRight, SRMatrix.m[0], sizeof(_float4));
 				memcpy(&pParticleValues[i].vOriginUp, SRMatrix.m[1], sizeof(_float4));
@@ -828,58 +828,6 @@ void CInstance_Model::Describe_Entity()
 			Instane_Buffer_ReStruct();
 		}
 
-		if (GUI::Checkbox("Drop", &m_InstanceDesc.isDrop))
-		{
-			Instane_Buffer_ReStruct();
-		}
-
-		if (GUI::Checkbox("Forward Move", &m_InstanceDesc.isMoveForward))
-		{
-			Instane_Buffer_ReStruct();
-		}
-
-		if (GUI::Checkbox("Up Move", &m_InstanceDesc.isMoveUp))
-		{
-			Instane_Buffer_ReStruct();
-		}
-
-		if (GUI::Checkbox("Right Move", &m_InstanceDesc.isMoveRight))
-		{
-			Instane_Buffer_ReStruct();
-		}
-
-
-		if (GUI::Checkbox("Sin Wave", &m_InstanceDesc.isSinWave))
-		{
-			Instane_Buffer_ReStruct();
-		}
-
-		if (GUI::Checkbox("Turn", &m_InstanceDesc.isTurn))
-		{
-			Instane_Buffer_ReStruct();
-		}
-
-		if (GUI::Checkbox("AxisTurn", &m_InstanceDesc.isAxisTurn))
-		{
-			Instane_Buffer_ReStruct();
-		}
-
-
-		if (GUI::Checkbox("ExcludePos From PibotMove", &m_InstanceDesc.isExcludePos))
-		{
-			Instane_Buffer_ReStruct();
-		}
-		
-		if (GUI::Checkbox("PivotMove", &m_InstanceDesc.isPivotMove))
-		{
-			Instane_Buffer_ReStruct();
-		}
-
-		if (GUI::Checkbox("SizeLerp", &m_InstanceDesc.isSizeLerp))
-		{
-			Instane_Buffer_ReStruct();
-		}
-
 		if (GUI::Checkbox("NoWorld", &m_InstanceDesc.isNoWorld))
 		{
 			Instane_Buffer_ReStruct();
@@ -890,193 +838,333 @@ void CInstance_Model::Describe_Entity()
 			Instane_Buffer_ReStruct();
 		}
 
-		if (GUI::Checkbox("DetphCompareStop", &m_InstanceDesc.isDetphCompareStop))
-		{
-			Instane_Buffer_ReStruct();
-		}
-
-		if (ImGui::DragFloat3("SizeMin", reinterpret_cast<_float*>(&m_InstanceDesc.vSizeMin)))
-		{
-			Instane_Buffer_ReStruct();
-		}
-
-		if (ImGui::DragFloat3("SizeMax", reinterpret_cast<_float*>(&m_InstanceDesc.vSizeMax)))
-		{
-			Instane_Buffer_ReStruct();
-		}
 
 
-		if (ImGui::DragFloat3("Center", reinterpret_cast<_float*>(&m_InstanceDesc.vCenter)))
+		if (GUI::TreeNode("Transform"))
 		{
-			Instane_Buffer_ReStruct();
-		}
 
-		if (ImGui::DragFloat3("Range", reinterpret_cast<_float*>(&m_InstanceDesc.vRange)))
-		{
-			Instane_Buffer_ReStruct();
-		}
+			if (ImGui::DragFloat3("Center", reinterpret_cast<_float*>(&m_InstanceDesc.vCenter)))
+			{
+				Instane_Buffer_ReStruct();
+			}
 
-		if (ImGui::DragFloat2("Speed", reinterpret_cast<_float*>(&m_InstanceDesc.vSpeed)))
-		{
-			Instane_Buffer_ReStruct();
-		}
+			if (ImGui::DragFloat3("Range", reinterpret_cast<_float*>(&m_InstanceDesc.vRange)))
+			{
+				Instane_Buffer_ReStruct();
+			}
 
-		if (ImGui::DragFloat2("RotationSpeed", reinterpret_cast<_float*>(&m_InstanceDesc.vRotationSpeed)))
-		{
-			Instane_Buffer_ReStruct();
-		}
+			if (ImGui::DragFloat3("SizeMin", reinterpret_cast<_float*>(&m_InstanceDesc.vSizeMin)))
+			{
+				Instane_Buffer_ReStruct();
+			}
 
-		if (ImGui::DragFloat3("RotationMin", reinterpret_cast<_float*>(&m_InstanceDesc.vRotationAngleMin)))
-		{
-			Instane_Buffer_ReStruct();
-		}
+			if (ImGui::DragFloat3("SizeMax", reinterpret_cast<_float*>(&m_InstanceDesc.vSizeMax)))
+			{
+				Instane_Buffer_ReStruct();
+			}
 
-		if (ImGui::DragFloat3("RotationMax", reinterpret_cast<_float*>(&m_InstanceDesc.vRotationAngleMax)))
-		{
-			Instane_Buffer_ReStruct();
-		}
+			if (ImGui::DragFloat3("RotationMin", reinterpret_cast<_float*>(&m_InstanceDesc.vRotationAngleMin)))
+			{
+				Instane_Buffer_ReStruct();
+			}
 
-		if (ImGui::DragFloat2("LifeTime", reinterpret_cast<_float*>(&m_InstanceDesc.vLifeTime)))
-		{
-			Instane_Buffer_ReStruct();
-		}
+			if (ImGui::DragFloat3("RotationMax", reinterpret_cast<_float*>(&m_InstanceDesc.vRotationAngleMax)))
+			{
+				Instane_Buffer_ReStruct();
+			}
 
-		if (ImGui::DragFloat2("Delay", reinterpret_cast<_float*>(&m_InstanceDesc.vDelay)))
-		{
-			Instane_Buffer_ReStruct();
-		}
-
-		if (ImGui::DragFloat2("DiffuseUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vDiffuseUVMoveTime)))
-		{
-			Instane_Buffer_ReStruct();
-		}
-
-		if (ImGui::DragFloat2("MaskingUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vMaskingUVMoveTime)))
-		{
-			Instane_Buffer_ReStruct();
+			GUI::TreePop();
 		}
 
 
-		if (ImGui::DragFloat2("DistortionUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vDistortionUVMoveTime)))
+		if (GUI::TreeNode("Move"))
 		{
-			Instane_Buffer_ReStruct();
-		}
+			_int iMoveLerpOption = (_int)m_InstanceDesc.fMoveLerpOption;
 
-		if (ImGui::DragFloat2("NoiseUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vNoiseUVMoveTime)))
-		{
-			Instane_Buffer_ReStruct();
-		}
+			if (ImGui::Combo("Move Lerp Option", &iMoveLerpOption, pLerp, 9))
+			{
+				Instane_Buffer_ReStruct();
 
-		if (ImGui::DragFloat2("AniTime", reinterpret_cast<_float*>(&m_InstanceDesc.vAniTime)))
-		{
-			Instane_Buffer_ReStruct();
-		}
+				m_InstanceDesc.fMoveLerpOption = (_float)iMoveLerpOption;
+			}
 
-		if (ImGui::DragFloat2("AniIndex", reinterpret_cast<_float*>(&m_InstanceDesc.vAniIndex)))
-		{
-			Instane_Buffer_ReStruct();
-		}
+			if (ImGui::DragFloat2("Speed", reinterpret_cast<_float*>(&m_InstanceDesc.vSpeed)))
+			{
+				Instane_Buffer_ReStruct();
+			}
 
-		if (ImGui::DragFloat2("Gravity", reinterpret_cast<_float*>(&m_InstanceDesc.vGravity)))
-		{
-			Instane_Buffer_ReStruct();
-		}
+			if (ImGui::DragFloat2("Drag", reinterpret_cast<_float*>(&m_InstanceDesc.vDrag)))
+			{
+				Instane_Buffer_ReStruct();
+			}
 
-		if (ImGui::DragFloat3("SinWaveMin", reinterpret_cast<_float*>(&m_InstanceDesc.vSinMinAmount)))
-		{
-			Instane_Buffer_ReStruct();
-		}
+			if (ImGui::DragFloat2("Acceleration", reinterpret_cast<_float*>(&m_InstanceDesc.vAcceleration)))
+			{
+				Instane_Buffer_ReStruct();
+			}
 
-		if (ImGui::DragFloat3("SinWaveMax", reinterpret_cast<_float*>(&m_InstanceDesc.vSinMaxAmount)))
-		{
-			Instane_Buffer_ReStruct();
-		}
+			if (ImGui::DragFloat3("VelocityMin", reinterpret_cast<_float*>(&m_InstanceDesc.vVelocityMin)))
+			{
+				Instane_Buffer_ReStruct();
+			}
 
-		if (ImGui::DragFloat3("VelocityMin", reinterpret_cast<_float*>(&m_InstanceDesc.vVelocityMin)))
-		{
-			Instane_Buffer_ReStruct();
-		}
-
-		if (ImGui::DragFloat3("VelocityMax", reinterpret_cast<_float*>(&m_InstanceDesc.vVelocityMax)))
-		{
-			Instane_Buffer_ReStruct();
-		}
-
-		if (ImGui::DragFloat3("DeltaAngleMin", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaAngleMin)))
-		{
-			Instane_Buffer_ReStruct();
-		}
-
-		if (ImGui::DragFloat3("DeltaAngleMax", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaAngleMax)))
-		{
-			Instane_Buffer_ReStruct();
-		}
+			if (ImGui::DragFloat3("VelocityMax", reinterpret_cast<_float*>(&m_InstanceDesc.vVelocityMax)))
+			{
+				Instane_Buffer_ReStruct();
+			}
 
 
-		if (ImGui::DragFloat3("DeltaAxisAngleMin", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaAxisAngleMin)))
-		{
-			Instane_Buffer_ReStruct();
-		}
-
-		if (ImGui::DragFloat3("DeltaAxisAngleMax", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaAxisAngleMax)))
-		{
-			Instane_Buffer_ReStruct();
-		}
-
-		_int iMoveLerpOption = (_int)m_InstanceDesc.fMoveLerpOption;
-
-		if (ImGui::Combo("Move Lerp Option", &iMoveLerpOption, pLerp, 9))
-		{
-			Instane_Buffer_ReStruct();
-
-			m_InstanceDesc.fMoveLerpOption = (_float)iMoveLerpOption;
-		}
-
-		if (ImGui::DragFloat3("PivotMin", reinterpret_cast<_float*>(&m_InstanceDesc.vPivotMin)))
-		{
-			Instane_Buffer_ReStruct();
-		}
-
-		if (ImGui::DragFloat3("PivotMax", reinterpret_cast<_float*>(&m_InstanceDesc.vPivotMax)))
-		{
-			Instane_Buffer_ReStruct();
-		}
-
-		if (ImGui::DragFloat2("Drag", reinterpret_cast<_float*>(&m_InstanceDesc.vDrag)))
-		{
-			Instane_Buffer_ReStruct();
-		}
+			if (GUI::TreeNode("Dir Move"))
+			{
 
 
-		_int iSizeLerpOption = (_int)m_InstanceDesc.fSizeLerpOption;
+				if (GUI::Checkbox("Forward Move", &m_InstanceDesc.isMoveForward))
+				{
+					Instane_Buffer_ReStruct();
+				}
 
-		if (ImGui::Combo("Size Lerp Option", &iSizeLerpOption, pLerp, 9))
-		{
-			Instane_Buffer_ReStruct();
+				if (GUI::Checkbox("Up Move", &m_InstanceDesc.isMoveUp))
+				{
+					Instane_Buffer_ReStruct();
+				}
 
-			m_InstanceDesc.fSizeLerpOption = (_float)iSizeLerpOption;
-		}
+				if (GUI::Checkbox("Right Move", &m_InstanceDesc.isMoveRight))
+				{
+					Instane_Buffer_ReStruct();
+				}
 
-		if (ImGui::DragFloat3("LerpSizeAmount", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaSize)))
-		{
-			Instane_Buffer_ReStruct();
-		}
+				GUI::TreePop();
+			}
 
-		if (ImGui::DragFloat2("Size Drag", reinterpret_cast<_float*>(&m_InstanceDesc.vSizeDrag)))
-		{
-			Instane_Buffer_ReStruct();
+			if (GUI::TreeNode("Pivot Move"))
+			{
+
+				if (GUI::Checkbox("PivotMove", &m_InstanceDesc.isPivotMove))
+				{
+					Instane_Buffer_ReStruct();
+				}
+
+				if (ImGui::DragFloat3("PivotMin", reinterpret_cast<_float*>(&m_InstanceDesc.vPivotMin)))
+				{
+					Instane_Buffer_ReStruct();
+				}
+
+				if (ImGui::DragFloat3("PivotMax", reinterpret_cast<_float*>(&m_InstanceDesc.vPivotMax)))
+				{
+					Instane_Buffer_ReStruct();
+				}
+
+
+				GUI::TreePop();
+			}
+
+			if (GUI::TreeNode("Drop Move"))
+			{
+				if (GUI::Checkbox("Drop", &m_InstanceDesc.isDrop))
+				{
+					Instane_Buffer_ReStruct();
+				}
+
+				if (ImGui::DragFloat2("Gravity", reinterpret_cast<_float*>(&m_InstanceDesc.vGravity)))
+				{
+					Instane_Buffer_ReStruct();
+				}
+
+				if (ImGui::DragFloat2("DropAttenuation", reinterpret_cast<_float*>(&m_InstanceDesc.vDropAttenuation)))
+				{
+					Instane_Buffer_ReStruct();
+				}
+
+				GUI::TreePop();
+			}
+			GUI::TreePop();
 		}
 
 
-		if (ImGui::DragFloat2("DropAttenuation", reinterpret_cast<_float*>(&m_InstanceDesc.vDropAttenuation)))
+		if (GUI::TreeNode("Rotate"))
 		{
-			Instane_Buffer_ReStruct();
+
+			if (ImGui::DragFloat2("RotationSpeed", reinterpret_cast<_float*>(&m_InstanceDesc.vRotationSpeed)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+			if (GUI::TreeNode("Nomal Turn"))
+			{
+				if (GUI::Checkbox("Turn", &m_InstanceDesc.isTurn))
+				{
+					Instane_Buffer_ReStruct();
+				}
+
+				if (ImGui::DragFloat3("DeltaAngleMin", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaAngleMin)))
+				{
+					Instane_Buffer_ReStruct();
+				}
+
+				if (ImGui::DragFloat3("DeltaAngleMax", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaAngleMax)))
+				{
+					Instane_Buffer_ReStruct();
+				}
+
+				GUI::TreePop();
+			}
+
+
+			if (GUI::TreeNode("Axis Turn"))
+			{
+
+				if (GUI::Checkbox("AxisTurn", &m_InstanceDesc.isAxisTurn))
+				{
+					Instane_Buffer_ReStruct();
+				}
+
+
+				if (GUI::Checkbox("ExcludePos From PibotMove", &m_InstanceDesc.isExcludePos))
+				{
+					Instane_Buffer_ReStruct();
+				}
+
+
+
+
+				if (ImGui::DragFloat3("DeltaAxisAngleMin", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaAxisAngleMin)))
+				{
+					Instane_Buffer_ReStruct();
+				}
+
+				if (ImGui::DragFloat3("DeltaAxisAngleMax", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaAxisAngleMax)))
+				{
+					Instane_Buffer_ReStruct();
+				}
+
+
+				GUI::TreePop();
+			}
+
+			if (GUI::TreeNode("Sin Turn"))
+			{
+
+
+				if (GUI::Checkbox("Sin Wave", &m_InstanceDesc.isSinWave))
+				{
+					Instane_Buffer_ReStruct();
+				}
+
+				if (ImGui::DragFloat3("SinWaveMin", reinterpret_cast<_float*>(&m_InstanceDesc.vSinMinAmount)))
+				{
+					Instane_Buffer_ReStruct();
+				}
+
+				if (ImGui::DragFloat3("SinWaveMax", reinterpret_cast<_float*>(&m_InstanceDesc.vSinMaxAmount)))
+				{
+					Instane_Buffer_ReStruct();
+				}
+
+
+				GUI::TreePop();
+			}
+
+			GUI::TreePop();
 		}
 
-		if (ImGui::DragFloat2("Acceleration", reinterpret_cast<_float*>(&m_InstanceDesc.vAcceleration)))
+
+		if (GUI::TreeNode("Size"))
 		{
-			Instane_Buffer_ReStruct();
+
+			if (GUI::Checkbox("SizeLerp", &m_InstanceDesc.isSizeLerp))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+			_int iSizeLerpOption = (_int)m_InstanceDesc.fSizeLerpOption;
+
+			if (ImGui::Combo("Size Lerp Option", &iSizeLerpOption, pLerp, 9))
+			{
+				Instane_Buffer_ReStruct();
+
+				m_InstanceDesc.fSizeLerpOption = (_float)iSizeLerpOption;
+			}
+
+			if (ImGui::DragFloat3("LerpSizeAmount", reinterpret_cast<_float*>(&m_InstanceDesc.vDeltaSize)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+			if (ImGui::DragFloat2("Size Drag", reinterpret_cast<_float*>(&m_InstanceDesc.vSizeDrag)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+
+			GUI::TreePop();
 		}
+
+
+		if (GUI::TreeNode("Time"))
+		{
+			if (ImGui::DragFloat2("LifeTime", reinterpret_cast<_float*>(&m_InstanceDesc.vLifeTime)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+			if (ImGui::DragFloat2("Delay", reinterpret_cast<_float*>(&m_InstanceDesc.vDelay)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+			if (ImGui::DragFloat2("DiffuseUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vDiffuseUVMoveTime)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+			if (ImGui::DragFloat2("MaskingUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vMaskingUVMoveTime)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+
+			if (ImGui::DragFloat2("DistortionUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vDistortionUVMoveTime)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+			if (ImGui::DragFloat2("NoiseUVMoveTime", reinterpret_cast<_float*>(&m_InstanceDesc.vNoiseUVMoveTime)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+			if (ImGui::DragFloat2("AniTime", reinterpret_cast<_float*>(&m_InstanceDesc.vAniTime)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+			if (ImGui::DragFloat2("AniIndex", reinterpret_cast<_float*>(&m_InstanceDesc.vAniIndex)))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+			GUI::TreePop();
+		}
+
+		if (GUI::TreeNode("Depth Compare"))
+		{
+			if (GUI::Checkbox("DetphCompareStop", &m_InstanceDesc.isDetphCompareStop))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+
+			if (GUI::Checkbox("Stop_Move_For_Depth_Compare", &m_InstanceDesc.isStop_Move_For_Depth_Compare))
+			{
+				Instane_Buffer_ReStruct();
+			}
+
+			GUI::TreePop();
+		}
+		
+
+	
+
 
 
 		ImGui::PopItemWidth();

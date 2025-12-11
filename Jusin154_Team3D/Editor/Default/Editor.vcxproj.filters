@@ -562,6 +562,9 @@
     <Filter Include="50.UI\GamePlay_Canvas\Enemy_Panel\Boss_HpBar">
       <UniqueIdentifier>{49575102-9b08-494e-bf3f-bdc98774913e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\State_Effect">
+      <UniqueIdentifier>{d276d751-77aa-423e-9499-c63875e36266}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -1121,6 +1124,9 @@
     </ClInclude>
     <ClInclude Include="..\public\Boss_HpBer.h">
       <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Boss_HpBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\StunEffect.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\State_Effect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1683,6 +1689,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Boss_HpBer.cpp">
       <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Boss_HpBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\StunEffect.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\State_Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -508,7 +508,7 @@
     </ClInclude>
     <ClInclude Include="..\Public\StunEffect.h">
       <Filter>02.GameObjects\Effect\State_Effect\Stun</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\State_Broom_Ride_Move.h">
       <Filter>04.Mechanic\State\Broom_Player\State_Broom_Ride_Move</Filter>
     </ClInclude>
@@ -520,9 +520,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Broom_State_Fly.h">
       <Filter>04.Mechanic\State\Broom\Fly</Filter>
-          </ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\Boss_HpBar.h">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Boss_HpBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Box_Splesh.h">
+      <Filter>02.GameObjects\Effect\PropsEffect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1085,7 +1088,7 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\State_Effect\Stun">
       <UniqueIdentifier>{c9370e36-317e-45e7-a8c7-98a623864824}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="04.Mechanic\State\Broom_Player">
       <UniqueIdentifier>{48b905c1-b91e-44ca-a61b-86633826768b}</UniqueIdentifier>
     </Filter>
@@ -1103,9 +1106,12 @@
     </Filter>
     <Filter Include="04.Mechanic\State\Broom\Fly">
       <UniqueIdentifier>{537c9208-b8e7-4e3b-a818-27335e3f0469}</UniqueIdentifier>
-          </Filter>
+    </Filter>
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Boss_HpBar">
       <UniqueIdentifier>{b49a3671-96d0-47b8-833f-28190d549b0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\PropsEffect">
+      <UniqueIdentifier>{215b093d-648c-4cca-a69b-f4005b34ee06}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1559,7 +1565,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\StunEffect.cpp">
       <Filter>02.GameObjects\Effect\State_Effect\Stun</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\Private\State_Broom_Ride_Move.cpp">
       <Filter>04.Mechanic\State\Broom_Player\State_Broom_Ride_Move</Filter>
     </ClCompile>
@@ -1571,9 +1577,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Broom_State_Fly.cpp">
       <Filter>04.Mechanic\State\Broom\Fly</Filter>
-          </ClCompile>
+    </ClCompile>
     <ClCompile Include="..\Private\Boss_HpBar.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Boss_HpBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Box_Splesh.cpp">
+      <Filter>02.GameObjects\Effect\PropsEffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

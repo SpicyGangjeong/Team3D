@@ -2,7 +2,7 @@
 #include "StunEffect.h"
 
 #include "GameInstance.h"
-#include "EffectParts.h"
+#include "EditEffect.h"
 #include "Wand.h"
 #include "Player.h"
 
@@ -41,7 +41,7 @@ HRESULT CStunEffect::Initialize(void* pArg)
 
 	m_fDuration = 3.f;
 	
-	m_pStunEffect = Get_PartObject<CEffectParts>("StunEffect");
+	m_pStunEffect = Get_PartObject<CEditEffect>("StunEffect");
 	SAFE_ADDREF(m_pStunEffect);
 
 
@@ -78,9 +78,9 @@ void CStunEffect::Update(_float fTimeDelta)
 		BoneMat.r[i] = XMVector3Normalize(BoneMat.r[i]);
 	}
 
-	BoneMat *= m_pOwner->Get_Component<CTransform>()->Get_XMWorldMatrix();
+	m_pStunEffect->Get_Component<CTransform>()->Set_WorldMatrix(BoneMat * m_pOwner->Get_Component<CTransform>()->Get_XMWorldMatrix());
 
-	m_pStunEffect->Get_Component<CTransform>()->Set_State(STATE::POSITION, BoneMat.r[3]);
+	//m_pStunEffect->Get_Component<CTransform>()->Rotation(XMVectorSet(0.f, 0.f, XMConvertToRadians(180.f), 0.f));
 
 }
 
@@ -109,11 +109,10 @@ HRESULT CStunEffect::Pre_Setting(CGameObject* pObject, void* pArg)
 	for (int i = 0; i < 3; ++i) {
 		BoneMat.r[i] = XMVector3Normalize(BoneMat.r[i]);
 	}
-	BoneMat *= m_pOwner->Get_Component<CTransform>()->Get_XMWorldMatrix();
 
-	m_pStunEffect->Get_Component<CTransform>()->Set_State(STATE::POSITION, BoneMat.r[3]);
+	m_pStunEffect->Get_Component<CTransform>()->Set_WorldMatrix(BoneMat * m_pOwner->Get_Component<CTransform>()->Get_XMWorldMatrix());
 
-
+	m_pStunEffect->Get_Component<CTransform>()->Rotation(XMVectorSet(0.f, 0.f , 90.f, 0.f));
 
 	m_pStunEffect->Set_Visible(true);
 
