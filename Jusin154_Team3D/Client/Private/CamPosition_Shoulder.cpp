@@ -33,6 +33,9 @@ HRESULT CCamPosition_Shoulder::Initialize(void* pArg)
 		m_pLookTransform = m_pTarget_LookPart->Get_Component<CTransform>();
 		m_pFollowTransform = m_pTarget_FollowPart->Get_Component<CTransform>();
 		m_pParentPos = m_pParentTransformCom->Get_StatePtr(STATE::POSITION);
+		m_vDampingStartPosition = *m_pParentPos;
+		m_vDampingDestPosition = *m_pParentPos;
+		m_vDampingLerpTimer.x = m_vDampingLerpTimer.y;
 		m_vFocalRatio.x = m_vFocalRatio.y;
 		m_fFocalRatioTargetValue = m_vFocalRatio.y;
 
@@ -48,6 +51,21 @@ void CCamPosition_Shoulder::Priority_Update(_float fTimeDelta)
 {
 	if (FAILED(m_pGameInstance->IsBinded_Camera(CAMERA_SHOULDER))) {
 		return;
+	}
+	{
+		if (false == m_bDampingParentPos) {
+			m_vDampingLerpTimer.x = 0.f;
+			m_vDampingStartPosition = *m_pParentPos;
+			m_vDampingDestPosition = *m_pParentPos;
+		}
+		else {
+			m_vDampingLerpTimer.x += fTimeDelta;
+			if (m_vDampingLerpTimer.x >= m_vDampingLerpTimer.y) {
+				XMStoreFloat4(&m_vDampingStartPosition, Calc_DampingParentPos());
+				m_vDampingLerpTimer.x = max(m_vDampingLerpTimer.x - m_vDampingLerpTimer.y, 0.f);
+				m_vDampingDestPosition = *m_pParentPos;
+			}
+		}
 	}
 	if (true == m_bMovable) {
 		m_vAccRotDegrees.y += m_pGameInstance->Get_MouseMove().x * m_fMouseSensor;
@@ -81,7 +99,9 @@ void CCamPosition_Shoulder::Update(_float fTimeDelta)
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
-
+	if (m_pGameInstance->Key_Up(DIK_PGDN)) {
+		m_bDampingParentPos = !m_bDampingParentPos;
+	}
 	if (m_pGameInstance->Key_Up(DIK_GRAVE)) {
 		m_bMovable = !m_bMovable;
 	}
@@ -147,13 +167,13 @@ _vector CCamPosition_Shoulder::Get_WorldPostion()
 
 _vector CCamPosition_Shoulder::Calc_LookTargetPos()
 {
-	_vector vParentPos = XMLoadFloat4(m_pParentPos);
+	_vector vDestPos = Calc_DampingParentPos();
 
 	_vector vFoward = { 0.f, 0.f, 1.f, 0.f };
 	_vector vRotCameraq = XMQuaternionRotationRollPitchYaw(XMConvertToRadians(m_vAccRotDegrees.x), XMConvertToRadians(m_vAccRotDegrees.y), 0.f);
 	vFoward = XMVector3Normalize(XMVector3Rotate(vFoward, vRotCameraq));
 
-	_vector vHeadPos = vParentPos + XMVectorSet(0.f, m_fHeadHeight, 0.f, 0.f);
+	_vector vHeadPos = vDestPos + XMVectorSet(0.f, m_fHeadHeight, 0.f, 0.f);
 	_vector vFowardPos = vHeadPos + vFoward * m_fCameraFowardDistance;
 
 	return XMVectorLerp(vHeadPos, vFowardPos, m_vFocalRatio.x);
@@ -163,8 +183,8 @@ _vector CCamPosition_Shoulder::Calc_FollowTargetPos(_vector vLookTargetWorldPos)
 	_float fBestFollowTargetDistance = m_fCameraBarrelLength * (1.f - m_fDefaultCameraBackToFrontRatio);
 
 	_vector fRotQ = XMQuaternionRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-m_fFollowTargetIncludedAngleDegree));
-	_vector vParentPos = XMLoadFloat4(m_pParentPos);
-	_vector vHeadPos = vParentPos + XMVectorSet(0.f, m_fHeadHeight, 0.f, 0.f);
+	_vector vDestPos = Calc_DampingParentPos();
+	_vector vHeadPos = vDestPos + XMVectorSet(0.f, m_fHeadHeight, 0.f, 0.f);
 	_vector vDir = XMVector3Normalize(vHeadPos - vLookTargetWorldPos);
 	vDir = XMVector3Rotate(vDir, fRotQ);
 
@@ -227,6 +247,10 @@ _vector CCamPosition_Shoulder::Calc_FollowTargetPos(_vector vLookTargetWorldPos)
 	m_fFocalRatioTargetValue = fBestFocalRatio;
 
 	return vLookTargetWorldPos + vDir * fFinalTargetDistance;
+}
+_vector CCamPosition_Shoulder::Calc_DampingParentPos()
+{
+	return XMVectorLerp(XMLoadFloat4(&m_vDampingStartPosition), XMLoadFloat4(&m_vDampingDestPosition), m_vDampingLerpTimer.x / m_vDampingLerpTimer.y);
 }
 _vector CCamPosition_Shoulder::Get_ShoulderGlobalPos()
 {
