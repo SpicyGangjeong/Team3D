@@ -412,6 +412,15 @@ HRESULT CTroll::Ready_Parts()
 	m_pWeaponTrail->Load_Trail("../Bin/Resources/Data/Effect/Troll/TrollSide/Troll_Swing_Trail", static_cast<LEVEL>(NEXT_LEVEL));
 	m_pWeaponTrail->Set_Visible(false);
 
+
+	if (FAILED(Add_PartObject<CEditEffect>("Stun", NEXT_LEVEL, &m_pStunEffect, &PartsDesc)))
+	{
+		return E_FAIL;
+	}
+
+	m_pStunEffect->Load("../Bin/Resources/Data/Effect/Stun/StunEffect", static_cast<LEVEL>(NEXT_LEVEL));
+	m_pStunEffect->FollowParants(m_pModelCom->Get_BoneMatrixPtr("HeadEnd"));
+	
 	
 #pragma endregion
 	return S_OK;
@@ -489,6 +498,7 @@ void CTroll::Free()
 	SAFE_RELEASE(m_pLeftTrail);
 	SAFE_RELEASE(m_pRightTrail);
 	SAFE_RELEASE(m_pWeaponTrail);
+	SAFE_RELEASE(m_pStunEffect);
 }
 #ifdef _DEBUG
 
@@ -501,6 +511,23 @@ void CTroll::Describe_Entity()
 	_string strSocket = "Socket " + to_string(socketMat._41) + to_string(socketMat._42) + to_string(socketMat._43);
 
 	GUI::Text(strSocket.c_str());
+
+	_uint iindex = {};
+
+	for (auto& pChild : m_PartObjects)
+	{
+		_string strName = to_string(iindex++) + pChild.first;
+
+		if(GUI::TreeNode(strName.c_str()))
+		{
+
+			pChild.second->Describe_Entity();
+
+			GUI::TreePop();
+		}
+
+
+	}
 
 
 	m_pTransformCom->Describe_Entity();
