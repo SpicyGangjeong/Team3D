@@ -21,6 +21,8 @@ private:
 public:
 	~CCallBack_Troll_HitReport();
 
+	void BeginFrame();
+
 public:
 	// PxUserControllerHitReport을(를) 통해 상속됨
 	// 충돌알림!!
@@ -31,15 +33,24 @@ public:
 
 	virtual void onObstacleHit(const PSX::PxControllerObstacleHit& hit) override; // 사용자 정의 장애물과 부딪힌 경우
 
+	void Set_CurrentSlop();
+
 public:
 	HRESULT Initialize(CCharacter_Controller* pController, CRigidBody_Dynamic* pPartDynamicObject, _bool* bCollisionPlayer);
 	HRESULT Finalize();
+	_bool IsOnGround();
+	_vector Get_GroundVector();
 private:
 	CCharacter_Controller* m_pController = { nullptr };
 	CRigidBody_Dynamic* m_pPartDynamicBody = { nullptr };
-	_bool* m_pCollisionPlayer = { nullptr };
 	CGameInstance* m_pGameInstance = { nullptr };
 
+	_float3		m_vClimbNormal = { 0.f, 1.f, 0.f };
+	_float		m_fBestNormal = { 0.f };
+	_bool		m_bGroundHit = { false };
+
+
+	_bool*		m_pCollisionPlayer = { nullptr };
 public:
 	static CCallBack_Troll_HitReport* Create();
 };

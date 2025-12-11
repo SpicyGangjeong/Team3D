@@ -76,21 +76,24 @@ void CGoblin_Mage::Priority_Update(_float fTimeDelta)
 
 void CGoblin_Mage::Update(_float fTimeDelta)
 {
-	__super::Update(fTimeDelta);
-
 	m_pFSM->Update_State(fTimeDelta);
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
+	__super::Update(fTimeDelta);
+
 	Play_Event();
 #ifdef _DEBUG
-
 	GUI::Text("%d", m_pCharacter_Controller->IsActive());
 	GUI::Text("%f %f", m_vStunTimer.x, m_vStunTimer.y);
 #endif // _DEBUG
 
 	if (true == m_pCharacter_Controller->IsActive()) {
-		m_pCharacter_Controller->Move(fTimeDelta);
+		{ // 세트
+			m_pCallBack_HitReport->BeginFrame();
+			m_pCharacter_Controller->Move(fTimeDelta);
+			m_pCallBack_HitReport->Set_CurrentSlop();
+		}
 		m_vStunTimer.x = 0.f;
 	}
 	else if (true == m_pRigidBody->IsActive()) {
