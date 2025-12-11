@@ -14,7 +14,19 @@ class CMapElement_Lake final : public CMapElement
 public:
 	typedef struct tagMapObejct_Lake_Desc : public MAPELEMENT_DESC
 	{
-		vector<_wstring>		SurfaceModelPrototypeTags;
+		_float					fRadius;
+		_float					fTimeSpeed;
+		_float					fRefractionStrength;
+		_float					fRefractionPow;
+		_float					fUVValue1;
+		_float					fUVValue2;
+		_float					fUVValue3;
+		_float2					vUVSpeed;
+		_float2					vLargeUVSpeed;
+		_float2					vSubUVSpeed3;
+		_float4					vRefractionColor;
+		_float4					vSurfaceColor;
+		vector<_wstring>		ShallowModelPrototypeTags;
 	}MAPOBJECT_LAKE_DESC;
 
 private:
@@ -37,23 +49,25 @@ private:
 	CTexture*		m_pCubeMapTextureCom = { nullptr };
 	CTexture*		m_pRefractionTextureCom = { nullptr };
 
+	_float			m_fRadius = {};
+
 	_float			m_fRefractionStrength = { 0.18f };
 	_float			m_fRefractionPow = { 10.f };
 	_float          m_fTimeAcc = {};
-	_float          m_fUVValue = { 0.01f };
+	_float          m_fTimeSpeed = { 0.01f };
+
 	_float          m_fUVValue1 = { 30.f };
 	_float          m_fUVValue2 = { 20.f };
 	_float          m_fUVValue3 = { 10.f };
 
-	_float          m_fSpecularIntensity = { 0.6f };
-
-	_float          m_fUVSpeed1 = { -0.1f };
-	_float          m_fUVSpeed2 = { 0.05f };
-	_float          m_fUVSpeed3 = { 0.01f };
+	_float2         m_vUVSpeed = {};
+	_float2         m_vLargeUVSpeed = {};
+	_float2         m_vSubUVSpeed3 = {};
 
 	_float4			m_vRefractionColor = {};
 	_float4			m_vSurfaceColor = {};
 
+	vector<CModel*> m_pShallowModels = {};
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

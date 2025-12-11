@@ -182,6 +182,9 @@ void CIntro_Image::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
+#ifdef _DEBUG
 void CIntro_Image::Describe_Entity()
 {
 }
+
+#endif // _DEBUG

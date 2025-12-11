@@ -103,6 +103,10 @@ void CEnemy_Info::Update(_float fTimeDelta)
 	{
 		Set_FadeOut();
 	}
+	if (m_pGameInstance->Key_Down(DIK_J))
+	{
+		Set_Font_Move(!m_bBoss);
+	}
 
 	__super::Update(fTimeDelta);
 }
@@ -218,6 +222,23 @@ void CEnemy_Info::Set_Info(_int Level, _wstring Name)
 	m_pLevel = to_wstring(Level);
 	m_pEnemy_Name = Name;
 	Set_FadeIn();
+}
+
+void CEnemy_Info::Set_Font_Move(_bool Boss)
+{
+	m_bBoss = Boss;
+	if (m_bBoss == true)
+	{
+		MoveX(-315.f);
+		MoveY(50.f);
+		m_fFontPos = _float2(1250, 0.f);
+	}
+	else
+	{
+		MoveX(-180.f);
+		MoveY(40.f);
+		m_fFontPos = _float2(1115.f, 0.f);
+	}
 }
 
 CEnemy_Info* CEnemy_Info::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

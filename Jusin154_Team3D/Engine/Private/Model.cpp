@@ -327,8 +327,8 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fAmount, _boo
 			m_Animations[m_iCurrentAnimIndex]->Set_AnimSpeed(1.f);
 		}
 
-		//m_fBlendTime = 0.f;
-		//m_fRatio = 0.f;
+		m_fBlendTime = 0.f;
+		m_fRatio = 0.f;
 
 		m_iCurrentAnimIndex = iIndex;
 		m_bIsLoop = isLoop;
@@ -1162,7 +1162,7 @@ _bool CModel::SaveAssimpModel(const _char* filename)
 		}
 	}
 
-	if (MODEL::ENVIROMENT == m_eType)
+	if (MODEL::ENVIRONMENT == m_eType)
 	{
 		fwrite(&m_fRadius, sizeof(_float), 1, fp);
 		fwrite(&m_vRadiusOffset, sizeof(_float3), 1, fp);
@@ -1208,7 +1208,7 @@ HRESULT CModel::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fma
 	_uint			iFlag = {};
 	iFlag = aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast;
 
-	if (MODEL::NONANIM == eType || MODEL::PBR_NONANIM == eType || MODEL::ENVIROMENT == eType || MODEL::NONANIM_LOCAL == eType) {
+	if (MODEL::NONANIM == eType || MODEL::PBR_NONANIM == eType || MODEL::ENVIRONMENT == eType || MODEL::NONANIM_LOCAL == eType) {
 		iFlag |= aiProcess_PreTransformVertices;
 	}
 	m_iRootBoneIndex = iRootBoneIndex;
@@ -1230,7 +1230,7 @@ HRESULT CModel::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fma
 	}
 #pragma endregion
 #pragma region Material
-	if (MODEL::ENVIROMENT == eType)
+	if (MODEL::ENVIRONMENT == eType)
 	{
 		if (FAILED(Ready_Materials_FromFile(m_pAIScene, pModelFilePath))) {
 			return E_FAIL;
@@ -1627,7 +1627,7 @@ _bool CModel::LoadData(const _char* filename)
 		NewModel.Materials.push_back(pMAt);
 	}
 
-	if (MODEL::ENVIROMENT == m_eType)
+	if (MODEL::ENVIRONMENT == m_eType)
 	{
 		fread(&m_fRadius, sizeof(_float), 1, fp);
 		fread(&m_vRadiusOffset, sizeof(_float3), 1, fp);

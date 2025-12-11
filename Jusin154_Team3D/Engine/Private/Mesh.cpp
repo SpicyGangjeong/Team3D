@@ -77,7 +77,7 @@ HRESULT CMesh::Initialize_Prototype(MODEL eType, vector<class CBone*>& Bones, co
 	{
 	case Engine::MODEL::NONANIM:
 	case Engine::MODEL::PBR_NONANIM:
-	case Engine::MODEL::ENVIROMENT:
+	case Engine::MODEL::ENVIRONMENT:
 	case Engine::MODEL::NONANIM_LOCAL:
 		hr = Ready_VertexBuffer_For_NonAnim(pAIMesh, PreTransformMatrix);
 		break;
@@ -206,7 +206,7 @@ HRESULT CMesh::Initialize_Prototype(MODEL eType, const CModel* pModel, SaveMesh*
 	{
 	case Engine::MODEL::NONANIM:
 	case Engine::MODEL::PBR_NONANIM:
-	case Engine::MODEL::ENVIROMENT:
+	case Engine::MODEL::ENVIRONMENT:
 		hr = Ready_VertexBuffer_For_NonAnim(_SaveMesh, PreTransformMatrix);
 		break;
 

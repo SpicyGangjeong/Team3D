@@ -21,10 +21,10 @@ public:
 			_float2 vTransitionTime = { 0.f, 1.f };
 
 			_bool bEnableLookLerp = { false };
-			_float2 vLookLerpTime = { 0.f, BASIC_LERP_TIMER };
+			_float2 vLookLerpTime = { 0.f, TIMER_SHORT_LERP };
 
 			_bool bEnableFollowLerp = { false };
-			_float2 vFollowLerpTime = { 0.f, BASIC_LERP_TIMER };
+			_float2 vFollowLerpTime = { 0.f, TIMER_SHORT_LERP };
 	}CAMERA_DESC;
 
 protected:
@@ -55,10 +55,10 @@ protected:
 	_float			m_fFar = {};
 
 	_float2			m_vTransitionTime	= { 0.f, 1.f };
-	_float2			m_vLookLerpTime		= { 0.f, BASIC_LERP_TIMER };
+	_float2			m_vLookLerpTime		= { 0.f, TIMER_SHORT_LERP };
 	_float3			m_vLookPos_Src = { 0.f, 0.f, 1.f };
 	_float3			m_vLookPos_Dest = { 0.f, 0.f, 1.f };
-	_float2			m_vFollowLerpTime	= { 0.f, BASIC_LERP_TIMER };
+	_float2			m_vFollowLerpTime	= { 0.f, TIMER_SHORT_LERP };
 	_float3			m_vFollowPos_Src = { 0.f, 0.f, 0.f };
 	_float3			m_vFollowPos_Dest = { 0.f, 0.f, 0.f };
 	_uint			m_iPriority = { UINT_MAX };

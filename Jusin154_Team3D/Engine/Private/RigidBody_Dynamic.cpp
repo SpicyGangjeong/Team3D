@@ -108,7 +108,10 @@ void CRigidBody_Dynamic::Move_LocalPos(_float4 vNewRotQ, _float3 vNewTranslation
 	PSX::PxShape* pShape = { nullptr };
 	m_pRigidBody->getShapes(&pShape, m_pRigidBody->getNbShapes());
 	pShape->setLocalPose(PSX::PxTransform(vNewTranslation.x, vNewTranslation.y, vNewTranslation.z, PSX::PxQuat(vNewRotQ.x, vNewRotQ.y, vNewRotQ.z, vNewRotQ.w)));
+#ifdef _DEBUG
 	Add_DebugShape();
+#endif // _DEBUG
+
 }
 // _DEBUG
 void CRigidBody_Dynamic::Add_Force(_fvector vForce, PSX::PxForceMode::Enum eType)

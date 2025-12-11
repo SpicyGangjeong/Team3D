@@ -32,10 +32,15 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 
 private:
+	void Update_Target();
+
+private:
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
+	CInfoInstance* m_pInfoInstance = { nullptr };
 	CGameObject* m_pEnemy_HpBar = { nullptr };
 	CGameObject* m_pEnemy_Info = { nullptr };
+	CGameObject* m_pBoss_HpBar = { nullptr };
 
 public:
 	static CEnemy_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

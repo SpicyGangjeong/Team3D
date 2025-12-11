@@ -61,6 +61,7 @@ void CBroom::Update(_float fTimeDelta)
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
+
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
@@ -160,6 +161,7 @@ void CBroom::Update_CameraCoordinateSystem()
 	XMStoreFloat3(&m_vCameraLookDir, xmvCameraLook);
 	m_pInfoInstance->Update_CameraCoordinateSystem(m_vCameraLookDir, m_vRimLightColor);
 }
+
 
 CBroom* CBroom::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

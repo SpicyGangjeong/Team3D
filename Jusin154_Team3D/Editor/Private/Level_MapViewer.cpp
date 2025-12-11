@@ -124,6 +124,8 @@ HRESULT CLevel_MapViewer::Ready_Layer_Terrain(const _wstring& strLayerTag)
 	Desc.iAlphaSizeX = 2048;
 	Desc.iAlphaSizeY = 2048;
 	Desc.vPosition = _float3(-194, 18.5f, -153.f);
+	Desc.strAlphaMapTag = "Hogsmeade_AlphaMap.bin";
+	Desc.strHeightMapTag = "Hogsmeade_HeightMap.bin";
 	Desc.strBufferTag = TEXT("Prototype_Component_VIBuffer_Terrain_Hogsmeade");
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
 		return E_FAIL;
@@ -132,6 +134,8 @@ HRESULT CLevel_MapViewer::Ready_Layer_Terrain(const _wstring& strLayerTag)
 	Desc.isEdit = false;
 	Desc.iAlphaSizeX = 2048;
 	Desc.iAlphaSizeY = 2560;
+	Desc.strAlphaMapTag = "Hogwart_AlphaMap.bin";
+	Desc.strHeightMapTag = "Hogwart_HeightMap.bin";
 	Desc.vPosition = _float3(-451.f, 18.5f, -791.f);
 	Desc.strBufferTag = TEXT("Prototype_Component_VIBuffer_Terrain_Hogwart");
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Desc)))
@@ -157,16 +161,31 @@ HRESULT CLevel_MapViewer::Ready_Layer_Terrain(const _wstring& strLayerTag)
 
 	CMapElement_Lake::MAPOBJECT_LAKE_DESC Lake_Desc = {};
 
-	vector<_wstring>		ModelPrototypeTags;
+	/*vector<_wstring>		ModelPrototypeTags;
+	vector<_wstring>		ShallowModelPrototypeTags;
 	ModelPrototypeTags.push_back(TEXT("Prototype_Component_Hogwart_Lake"));
+	ShallowModelPrototypeTags.push_back(TEXT("Prototype_Component_Hogwart_LakeSurFace"));
+	Lake_Desc.bEdit = true;
 	Lake_Desc.iMaxLodLevel = 0;
 	Lake_Desc.iRenderType = 4;
 	Lake_Desc.vPosition = _float3(-144.f, -61.9f, -115.f);
 	Lake_Desc.vRotation = _float3(0.f, 0.f, 0.f);
-	Lake_Desc.vScale = _float3(3.f, 3.f, 3.f);
+	Lake_Desc.vScale = _float3(1.f, 1.f, 1.f);
+	Lake_Desc.fTimeSpeed = _float(0.02f);
+	Lake_Desc.fRefractionStrength = _float();
+	Lake_Desc.fRefractionPow = _float();
+	Lake_Desc.fUVValue1 = _float();
+	Lake_Desc.fUVValue2 = _float();
+	Lake_Desc.fUVValue3 = _float();
+	Lake_Desc.vUVSpeed = _float2();
+	Lake_Desc.vLargeUVSpeed = _float2();
+	Lake_Desc.vSubUVSpeed3 = _float2();
+	Lake_Desc.vRefractionColor = _float4();
+	Lake_Desc.vSurfaceColor = _float4();
 	Lake_Desc.ModelPrototypeTags = ModelPrototypeTags;
+	Lake_Desc.ShallowModelPrototypeTags = ShallowModelPrototypeTags;
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Lake>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Lake_Desc)))
-		return E_FAIL;
+		return E_FAIL;*/
 
 
 	return S_OK;

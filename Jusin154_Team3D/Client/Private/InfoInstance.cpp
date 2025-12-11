@@ -114,6 +114,10 @@ HRESULT CInfoInstance::Load_InteractableElements(const _char* pFileName)
 {
 	return m_pMapInfo->Load_InteractableElements(pFileName);
 }
+HRESULT CInfoInstance::Load_WaterElemet(const _char* pFileName)
+{
+	return m_pMapInfo->Load_WaterElemet(pFileName);
+}
 #pragma endregion
 
 #pragma region SPELL_INFO

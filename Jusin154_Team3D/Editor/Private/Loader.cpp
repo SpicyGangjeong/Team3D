@@ -54,6 +54,7 @@
 #include "Enemy_Panel.h"
 #include "Enemy_HpBar.h"
 #include "Enemy_Info.h"
+#include "Boss_HpBer.h"
 
 #include "Mission_Panel.h"
 #include "MissionBanner_Border.h"
@@ -915,6 +916,10 @@ HRESULT CLoader::Loading_For_UI()
 	{
 		return E_FAIL;
 	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CBoss_HpBar>(g_iStaticLevel, CBoss_HpBar::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CLoading_Panel>(g_iStaticLevel, CLoading_Panel::Create(m_pDevice, m_pContext))))
 	{
@@ -1149,11 +1154,6 @@ HRESULT CLoader::Loading_For_Effect()
 		return E_FAIL;
 	}
 
-	/* Terrain_Mask */
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Terrain_Mask"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Data/Map/T_OL_GrassBlend_Mask_D.dds"), 0)))) {
-		return E_FAIL;
-	}
 	/* Terrain_Diffuse */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Terrain_Diffuse"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("../Bin/Resources/Textures/Terrain/Terrain_D_%d.dds"), 4)))) {
@@ -1936,7 +1936,7 @@ HRESULT CLoader::MapFolderLoad(const _char* pDirectoryPath, const _char* pFileEx
 
 		_wstring strFileName = L"Prototype_GameObject_" + file.path().stem().wstring();
 
-		CModel* pModel = CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, szFilePath);
+		CModel* pModel = CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, szFilePath);
 
 		/*For Prototype_Component_Model_*/
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, strFileName, pModel)))
@@ -1991,7 +1991,7 @@ void APIENTRY Deferred_FolderLoad_Main(ID3D11Device* pDevice, ID3D11DeviceContex
 
 			_wstring wstrFileName = L"Prototype_GameObject_" + file.path().stem().wstring();
 
-			CModel* pModel = CModel::Create(pDevice, pContext, MODEL::ENVIROMENT, szFilePath);
+			CModel* pModel = CModel::Create(pDevice, pContext, MODEL::ENVIRONMENT, szFilePath);
 
 			_uint iNumMesh = pModel->Get_NumMeshes();
 
@@ -2061,11 +2061,6 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 
 	m_strMessage = TEXT("Model Loading..");
 
-
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VFX_SM_Rock_01_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM_LOCAL, "C:/MeshTable\\Game\\RiggedObjects\\Props\\Weapons\\Goblins\\SK_WPN_GOB_BattleAxe01.fbx", XMMatrixIdentity())))) {
-		return E_FAIL;
-	}
 	// Heavy Wall
 	CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
 	{
@@ -2096,10 +2091,6 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	}
 	vector<future<pair<_wstring, CModel*>*>> futures = {};
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_troll_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity())))) {
-		return E_FAIL;
-	}
 
 #pragma region BODY
 
@@ -2184,11 +2175,6 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		TEXT("Prototype_Component_GoblinMage_Model")
 	));
 
-	//futures.emplace_back(Deferred_ModelLoad(
-	//	MODEL::ANIM, "../Bin/Resources/Models/Monster/GoblinSpector/SK_GOB_M_Specter_Master.bin", XMMatrixRotationY(XMConvertToRadians(180.f))* XMMatrixIdentity(),
-	//	TEXT("Prototype_Component_SK_GOB_M_Specter_Master_Model")
-	//));
-
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_GoblinSpector_Anim_Model"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Monster/GoblinSpector/GoblinSpector_Anim.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
 		return E_FAIL;
@@ -2198,7 +2184,7 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		TEXT("Prototype_Component_TombProtector_Model")
 	));
 	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "../Bin/Resources/Models/Monster/Troll/Troll.bin", XMMatrixIdentity(),
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/SubTroll/Troll.fbx", XMMatrixIdentity(),
 		TEXT("Prototype_Component_Troll_Model")
 	));
 
@@ -2230,14 +2216,9 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	));
 
 	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::NONANIM, "../Bin/Resources/Models/Object/Goblin_Dagger/Goblin_Dagger.fbx", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f)* XMMatrixIdentity(),
+		MODEL::NONANIM, "../Bin/Resources/Models/Object/Goblin_Dagger/Goblin_Dagger.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f)* XMMatrixIdentity(),
 		TEXT("Prototype_Component_Dagger_Model")
 	));
-
-	/*futures.emplace_back(Deferred_ModelLoad(
-		MODEL::ENVIROMENT, "C:\\Users\\Bin\\Desktop\\Hogwart\\Game\\RiggedObjects\\Characters\\Human\\Body\\Generic_M\\SK_GenericDarkWizard_14.fbx", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
-		TEXT("Prototype_Component_Npc_Model")
-	));*/
 
 	futures.emplace_back(Deferred_ModelLoad(
 		MODEL::ANIM, "../Bin/Resources/Models/Human/Npc/Npc.bin", XMMatrixRotationY(XMConvertToRadians(180.f))* XMMatrixIdentity(),
@@ -2249,7 +2230,7 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		TEXT("Prototype_Component_Wand_Model")
 	));
 	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "../Bin/Resources/Models/Object/Broom/Broom.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Object/Broom/Broom.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity(),
 		TEXT("Prototype_Component_Broom_Model")
 	));
 	futures.emplace_back(Deferred_ModelLoad(
@@ -2382,11 +2363,6 @@ HRESULT CLoader::Loading_For_MapViewer()
 		return E_FAIL;
 	}
 
-	/* Terrain_Mask */
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Terrain_Mask"),
-		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Data/Map/T_OL_GrassBlend_Mask_D.dds"), 0)))) {
-		return E_FAIL;
-	}
 	/* Terrain_Diffuse */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Terrain_Diffuse"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("../Bin/Resources/Textures/Terrain/Terrain_D_%d.dds"), 4)))) {
@@ -2475,7 +2451,7 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 	/* For.Prototype_Component_SkyboxModel */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_SkyboxModel"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/SkyBox/SkyBox.fbx", XMMatrixIdentity()))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/SkyBox/SM_SkyCard.fbx", XMMatrixIdentity()))))
 		return E_FAIL;
 
 #pragma region MAP_LANDS
@@ -2486,27 +2462,27 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 	/* For.Prototype_Component_South_Hogwart_Land_LOD1 */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_South_Hogwart_Land_LOD1"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_BCLOD/SM_LandscapeStreamingProxy_0_LOD1.fbx"))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_BCLOD/SM_LandscapeStreamingProxy_0_LOD1.fbx"))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_North_Hogwart_Land_LOD1 */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_North_Hogwart_Land_LOD1"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_AVLOD/SM_LandscapeStreamingProxy_0_LOD1.fbx"))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_AVLOD/SM_LandscapeStreamingProxy_0_LOD1.fbx"))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_North_Hogwart2_Land_LOD1 */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_North_Hogwart2_Land_LOD1"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_AULOD/SM_LandscapeStreamingProxy_0_LOD1.fbx"))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_AULOD/SM_LandscapeStreamingProxy_0_LOD1.fbx"))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_West_Hogwart_Land_LOD1 */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_West_Hogwart_Land_LOD1"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_AZLOD/SM_LandscapeStreamingProxy_0_LOD1.fbx"))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_AZLOD/SM_LandscapeStreamingProxy_0_LOD1.fbx"))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_East_Hogwart_Land_LOD1 */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_East_Hogsmeade_Land_LOD1"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_AYLOD/SM_LandscapeStreamingProxy_0_LOD1.fbx"))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "C:/MeshTable/Game/Levels/Overland/HOG/HN_AYLOD/SM_LandscapeStreamingProxy_0_LOD1.fbx"))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Hogwart_Lake */
@@ -2519,6 +2495,14 @@ HRESULT CLoader::Loading_For_MapViewer()
 		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Lake/SM_Lake_A_Collision_Shallow.fbx", XMMatrixIdentity()))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Hogsmead_NorthLake */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Hogsmead_NorthLake"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/River/NorthLake/HDA_SM_LakeA_Collision_Deep.fbx", XMMatrixIdentity()))))
+		return E_FAIL;
+	/* For.Prototype_Component_Hogsmead_NorthLakeShallow */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Hogsmead_NorthLakeShallow"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/River/NorthLake/HDA_SM_LakeA_Collision_Shallow.fbx", XMMatrixIdentity()))))
+		return E_FAIL;
 #pragma endregion
 
 	
@@ -2557,7 +2541,7 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 	///* Ollivanders*/
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Ollivanders\\Meshes",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Ollivanders\\Collision",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
@@ -2642,7 +2626,7 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 	///* Hengist_Tree */
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Vegetation\\Hengist_Tree",
-	//	".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Collision\\Vegetation",
 	//	".bin", true, ModelPrototypeTags, ModelPrototypePath)))
@@ -2665,16 +2649,16 @@ HRESULT CLoader::Loading_For_MapViewer()
 	//	return E_FAIL;
 
 	///* GEN C*/
-	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_C\\Meshes",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
-	//	return E_FAIL;
+	/*if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_C\\Meshes",
+		".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;*/
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_C\\Collision",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* GEN E*/
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_E\\Meshes",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_GEN_E\\Collision",
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
@@ -3118,11 +3102,6 @@ if(isLoad_Map)
 		CCollider::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	///* For.Prototype_Component_VIBuffer_Terrain */
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Terrain"),
-	//	CVIBuffer_Terrain::Create(m_pDevice, m_pContext, "../Bin/Resources/Data/Map/T_LandscapeStreamingProxy_0_LOD1_D.png"))))
-	//	return E_FAIL;
-
 	{
 		CVIBuffer_Terrain* pTerrain = CVIBuffer_Terrain::Create(m_pDevice, m_pContext, "Hogsmeade_HeightMap.bin", 512, 512);
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Terrain_Hogsmeade"), pTerrain))) {
@@ -3146,20 +3125,20 @@ if(isLoad_Map)
 	}
 
 
-	CVIBuffer_Terrain* pTerrain = CVIBuffer_Terrain::Create(m_pDevice, m_pContext, "../Bin/Resources/Data/Map/Hogwart_Height.png");
+	CVIBuffer_Terrain* pTerrain = CVIBuffer_Terrain::Create(m_pDevice, m_pContext, "../Bin/Resources/Data/Map/Terrain/Hogwart_Height.png");
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Terrain_Hogwart"), pTerrain))) {
 		return E_FAIL;
 	}
 
-	pTerrain = CVIBuffer_Terrain::Create(m_pDevice, m_pContext, "../Bin/Resources/Data/Map/North_Hogwart_Height.png");
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Terrain_North_Hogwart"), pTerrain))) {
-		return E_FAIL;
-	}
+	//pTerrain = CVIBuffer_Terrain::Create(m_pDevice, m_pContext, "../Bin/Resources/Data/Map/Terrain/North_Hogwart_Height.png");
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Terrain_North_Hogwart"), pTerrain))) {
+	//	return E_FAIL;
+	//}
 
-	pTerrain = CVIBuffer_Terrain::Create(m_pDevice, m_pContext, "../Bin/Resources/Data/Map/South_Hogwart_Height.png");
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Terrain_South_Hogwart"), pTerrain))) {
-		return E_FAIL;
-	}
+	//pTerrain = CVIBuffer_Terrain::Create(m_pDevice, m_pContext, "../Bin/Resources/Data/Map/Terrain/South_Hogwart_Height.png");
+	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_VIBuffer_Terrain_South_Hogwart"), pTerrain))) {
+	//	return E_FAIL;
+	//}
 
 #pragma region INSTANCE_MODEL
 	CVIBuffer_Model_Instance::INSTANCE_DESC InstanceDesc = {};

@@ -215,7 +215,7 @@ _vector CTransform::Go_LerpStraight(_float fSpeed, _float fTimeDelta)
 _vector CTransform::Go_LerpUp(_float fSpeed, _float fTimeDelta)
 {
 	_vector		vPos = Get_State(STATE::POSITION);
-	_vector		vUp = Get_State(STATE::UP);
+	_vector		vUp = XMVectorSet(0.f,1.f,0.f,0.f);
 	_vector		vMomentum = XMVector3Normalize(vUp) * fSpeed * fTimeDelta;
 	vPos += vMomentum;
 	Set_State(STATE::POSITION, vPos);
@@ -225,7 +225,7 @@ _vector CTransform::Go_LerpUp(_float fSpeed, _float fTimeDelta)
 _vector CTransform::Go_LerpDown(_float fSpeed, _float fTimeDelta)
 {
 	_vector		vPos = Get_State(STATE::POSITION);
-	_vector		vUp = Get_State(STATE::UP);
+	_vector		vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
 	_vector		vMomentum = XMVector3Normalize(vUp) * fSpeed * fTimeDelta;
 	vPos -= vMomentum;
 	Set_State(STATE::POSITION, vPos);

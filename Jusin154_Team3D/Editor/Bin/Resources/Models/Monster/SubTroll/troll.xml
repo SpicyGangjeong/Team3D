@@ -176,7 +176,7 @@
     <MI_ClothSim>
         <aiTextureType_NONE                    Index="0" Filename="" Extension=""/>
         <aiTextureType_DIFFUSE                 Index="1" Filename="T_Troll_ArmoredTroll_Leather_D" Extension=".dds"/>
-        <aiTextureType_SPECULAR                Index="2" Filename="T_Cav_Spid_ThickWeb_N" Extension=".dds"/>
+        <aiTextureType_SPECULAR                Index="2" Filename="T_Troll_ArmoredTroll_Body_SRXO" Extension=".dds"/>
         <aiTextureType_AMBIENT                 Index="3" Filename="" Extension=""/>
         <aiTextureType_EMISSIVE                Index="4" Filename="VFX_T_SkinBurn_Emiss_BPF_D" Extension=".dds"/>
         <aiTextureType_HEIGHT                  Index="5" Filename="" Extension=""/>

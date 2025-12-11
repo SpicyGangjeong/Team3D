@@ -32,6 +32,7 @@ private:
 
 public:
 	void Update_Target();
+	void Set_Font_Move(_bool Boss);
 
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
@@ -45,6 +46,8 @@ private:
 	_wstring m_pLevel;
 	_bool	m_bAnimation = {false};
 	_bool	m_bTarget = { false };
+	_bool   m_bBoss = { false };
+
 public:
 	static CEnemy_Info* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

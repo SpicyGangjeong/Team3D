@@ -6,6 +6,7 @@
 #include "GameInstance.h"
 #include "InfoInstance.h"
 #include "Effect_Container.h"
+#include "CallBack_Troll_HitReport.h"
 #include "EffectParts.h"
 #include "EffectPool.h"
 #include "Layer.h"
@@ -58,9 +59,8 @@ HRESULT CTroll::Initialize(void* pArg)
 		m_pFSM->Bind_States(FSMDesc);
 		m_pFSM->Change_State(FSMSTATE::IDLE);
 	}
-
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
-	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
+	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody, &m_bCollisionPlayer);
 
 
 
@@ -78,21 +78,27 @@ HRESULT CTroll::Initialize(void* pArg)
 
 void CTroll::Priority_Update(_float fTimeDelta)
 {
+	m_vStartHammerPos = *m_pHammerPos;
+	m_vStartGripPos = *m_pHammerGripPos;
 	__super::Priority_Update(fTimeDelta);
 }
 
 void CTroll::Update(_float fTimeDelta)
 {
-	__super::Update(fTimeDelta);
-
 	m_pFSM->Update_State(fTimeDelta);
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
+	__super::Update(fTimeDelta);
+
 	Play_Event();
 
 	if (true == m_pCharacter_Controller->IsActive()) {
-		m_pCharacter_Controller->Move(fTimeDelta);
+		{ // 세트
+			m_pCallBack_HitReport->BeginFrame();
+			m_pCharacter_Controller->Move(fTimeDelta);
+			m_pCallBack_HitReport->Set_CurrentSlop();
+		}
 		m_vStunTimer.x = 0.f;
 	}
 	else if (true == m_pRigidBody->IsActive()) {
@@ -352,28 +358,33 @@ HRESULT CTroll::Ready_Components()
 
 HRESULT CTroll::Ready_Parts()
 {
-	CTroll_Weapon::TROLLWEAPON_DESC Troll_WeaponDesc{};
-
-	Troll_WeaponDesc.pParentTransform = m_pTransformCom;
-	Troll_WeaponDesc.pSocketMatrices = m_pModelCom->Get_BoneMatrixPtr("SKT_RightHand");
-
-	if (FAILED(Add_PartObject<CTroll_Weapon>("Troll_Weapon", g_iStaticLevel, nullptr, &Troll_WeaponDesc)))
 	{
-		return E_FAIL;
+		CTroll_Weapon::TROLLWEAPON_DESC Troll_WeaponDesc{};
+
+		Troll_WeaponDesc.pParentTransform = m_pTransformCom;
+		Troll_WeaponDesc.pSocketMatrices = m_pModelCom->Get_BoneMatrixPtr("SKT_RightHand");
+
+		if (FAILED(Add_PartObject<CTroll_Weapon>("Troll_Weapon", g_iStaticLevel, nullptr, &Troll_WeaponDesc)))
+		{
+			return E_FAIL;
+		}
+		m_pHammerPos = Get_PartObject<CTroll_Weapon>()->Get_HammerPosition();
+		m_pHammerGripPos = Get_PartObject<CTroll_Weapon>()->Get_Component<CTransform>()->Get_StatePtr(STATE::POSITION);
 	}
 
-	CTroll_Rock::TROLLROCK_DESC Troll_RockDesc{};
-
-	Troll_RockDesc.pParentTransform = m_pTransformCom;
-	Troll_RockDesc.pSocketMatrices = m_pModelCom->Get_BoneMatrixPtr("SKT_LeftHand");
-
-	if (FAILED(Add_PartObject<CTroll_Rock>("Troll_Rock", g_iStaticLevel, nullptr, &Troll_RockDesc)))
 	{
-		return E_FAIL;
+		CTroll_Rock::TROLLROCK_DESC Troll_RockDesc{};
+
+		Troll_RockDesc.pParentTransform = m_pTransformCom;
+		Troll_RockDesc.pSocketMatrices = m_pModelCom->Get_BoneMatrixPtr("SKT_LeftHand");
+
+		if (FAILED(Add_PartObject<CTroll_Rock>("Troll_Rock", g_iStaticLevel, nullptr, &Troll_RockDesc)))
+		{
+			return E_FAIL;
+		}
+
+		Get_PartObject<CTroll_Rock>()->Set_Visible(false);
 	}
-
-	Get_PartObject<CTroll_Rock>()->Set_Visible(false);
-
 
 #pragma region EFFECT
 	/* EFFECT */

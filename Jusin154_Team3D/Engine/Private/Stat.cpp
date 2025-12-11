@@ -28,7 +28,9 @@ HRESULT CStat::Initialize_Prototype(tinyxml2::XMLNode* pChild)
 	pElement->QueryFloatAttribute("EXPERIENCE", &m_UnitInfo.fExprince);
 	pElement->QueryFloatAttribute("MAX_EXPERIENCE", &m_UnitInfo.fMaxExprience);
 	pElement->QueryIntAttribute("GOLD", &m_UnitInfo.iGold);
-
+	_int Boss = 0;
+	pElement->QueryIntAttribute("BOSS", &Boss);
+	m_UnitInfo.bBoss = (Boss != 0);
 	return S_OK;
 }
 

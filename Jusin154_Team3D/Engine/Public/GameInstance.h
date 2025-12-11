@@ -298,6 +298,7 @@ private:
 	class CFont_Manager*			m_pFont_Manager = { nullptr };
 
 	mt19937 m_Rng{ random_device{}() };
+	_float2							m_vViewPortSize = {};
 #ifdef _DEBUG
 private:
 	_float							m_fTimer_PriorityUpdate = { 0.f };
@@ -310,7 +311,6 @@ private:
 	_float							m_fTimer_Level = { 0.f };
 	_float							m_fTimer_FrameCount = { 0.f };
 
-	_float2							m_vViewPortSize = {};
 
 	vector<const _char*>			    m_FilePaths = {};
 	map<const _char*, CModel*>			m_ModelMap;

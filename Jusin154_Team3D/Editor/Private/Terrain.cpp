@@ -46,9 +46,9 @@ HRESULT CTerrain::Initialize(void* pArg)
 
 	if(!m_isEdit)
 	{
-		m_pAlphaMap->Load_ToFile("Hogsmeade_AlphaMap.bin");
+		m_pAlphaMap->Load_ToFile(pDesc->strAlphaMapTag.c_str());
 
-		if (FAILED(m_pVIBufferCom->Load_HeightMap("Hogsmeade_HeightMap.bin")))
+		if (FAILED(m_pVIBufferCom->Load_HeightMap(pDesc->strHeightMapTag.c_str())))
 			return E_FAIL;
 	}
 	// Psx 적용할지 안할지
@@ -155,11 +155,6 @@ HRESULT CTerrain::Ready_Components(void* pArg)
 	}
 	/* Com_Texture */
 	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Terrain_MRO"), reinterpret_cast<CComponent**>(&m_pMROTextureCom), nullptr))) {
-		return E_FAIL;
-	}
-
-	/* Com_Texture */
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Terrain_Mask"), reinterpret_cast<CComponent**>(&m_pMaskTextureCom), nullptr))) {
 		return E_FAIL;
 	}
 
@@ -301,7 +296,6 @@ void CTerrain::Free()
 	SAFE_RELEASE(m_pDiffuseTextureCom);
 	SAFE_RELEASE(m_pNormalTextureCom);
 	SAFE_RELEASE(m_pMROTextureCom);
-	SAFE_RELEASE(m_pMaskTextureCom);
 }
 
 void CTerrain::Describe_Entity()

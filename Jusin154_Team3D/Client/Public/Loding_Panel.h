@@ -62,7 +62,11 @@ public:
 	static CLoding_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
+#ifdef _DEBUG
 	void Describe_Entity() override;
+
+#endif // _DEBUG
+
 };
 
 NS_END

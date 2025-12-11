@@ -21,10 +21,11 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
-	virtual _vector Get_WorldPostion() override;
-	_vector Get_ShoulderGlobalPos();
-	
 
+	virtual _vector Get_WorldPostion() override;
+	_vector			Get_ShoulderGlobalPos();
+	void			Set_CameraShake(_float fXShock, _float fYShock);
+	
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -32,7 +33,9 @@ private:
 	HRESULT Ready_SubParts();
 	_vector Calc_LookTargetPos();
 	_vector Calc_FollowTargetPos(_vector vLookTargetWorldPos);
+	_vector Calc_DampingParentPos();
 
+#pragma region Base
 	_float		m_fMouseSensor = { 0.1f };
 	_float		m_fCameraFowardDistance = { 3.45f };
 	_float		m_fCameraBarrelLength = { 10.f };
@@ -41,21 +44,29 @@ private:
 	_float		m_fFollowTargetIncludedAngleDegree = { 20.f };
 	_float		m_fDefaultCameraBackToFrontRatio = { 0.61f };
 	_float2		m_vAccRotDegrees = { 0.f, 0.f };
+	_float2		m_vAccRealDegrees = { 0.f, 0.f };
 	_float3		m_vShoulderLocalPos = { 1.f, 2.f, 2.f };
-
+#pragma endregion
 #pragma region Lerp
-	_bool m_bShoulderLerp = false;
-	_bool m_bRightShoulderActive = true;
+	_bool m_bDampingParentPos = { true };
+	_bool m_bShoulderLerp = { false };
+	_bool m_bRightShoulderActive = { true };
 	_float2 m_vShoulderLerpTimer = { 0.f, 0.30f };
+	_float2 m_vDampingLerpTimer = { 0.f, 0.10f };
 
-	// Lerp 각도
 	_float2 m_vShoulderLerpDegree = { };
 	_float2 m_vShoulderLerpIncludedAngleDegree = { -20.f, 20.f };
+	_float4 m_vDampingStartPosition = { };
+	_float4 m_vDampingDestPosition = { };
 
 	_float m_fFocalRatioTargetValue = 0.f;
 	_float m_fFocalRatioLerpSpeed = 6.f;
 	_float m_fFocalRatioMin = 0.05f;
+
+	_float2 m_vMoveLerpPositions = { };
+	_float2 m_vMoveLerpTimer = { 0.f, TIMER_SHORT_LERP };
 #pragma endregion
+	_float2 m_vCameraShakeTimer = { 0.f, 0.3f };
 
 	PSX::PxSweepBuffer m_BufferHit = {};
 

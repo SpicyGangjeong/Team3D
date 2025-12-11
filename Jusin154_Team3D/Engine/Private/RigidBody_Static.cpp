@@ -39,6 +39,7 @@ HRESULT CRigidBody_Static::Initialize(void* pArg)
     m_tagData.pBody = this;
     m_pRigidBody = m_pGameInstance->Add_StaticActor(*this);
     m_pRigidBody->userData = &m_tagData;
+    m_pRigidBody->setName(CMyTools::ToString(m_wstrMeshName).c_str());
 
     return S_OK;
 }

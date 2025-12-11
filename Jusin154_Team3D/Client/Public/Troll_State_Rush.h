@@ -8,8 +8,7 @@ class CTroll_State_Rush final : public CState_Root
 {
 public:
     typedef struct tagTrollRush : public CState_Root::STATE_ROOT_DESC {
-        function<void(_float fTimeDelta)> funcPriorityUpdate = { nullptr };
-        function<void(_float fTimeDelta)> funcLateUpdate = { nullptr };
+        _bool* pCollisionPlayer = { nullptr };
     }TROLL_STATE_RUSH_DESC;
 public:
     CTroll_State_Rush();
@@ -21,8 +20,7 @@ public:
     virtual void Exit();
 
 private:
-    function<void(_float fTimeDelta)> m_funcPriorityUpdate = { nullptr };
-    function<void(_float fTimeDelta)> m_funcLateUpdate = { nullptr };
+    _bool* m_pRushPlayerHit = { nullptr };
 
 private:
     HRESULT Initialize(TROLL_STATE_RUSH_DESC* pDesc);

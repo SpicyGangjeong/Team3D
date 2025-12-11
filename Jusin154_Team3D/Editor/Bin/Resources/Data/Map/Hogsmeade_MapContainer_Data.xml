@@ -2107,14 +2107,6 @@
             <Rotation x="0" y="0" z="0"/>
         </PartObject>
         <PartObject Lod_Level="2" Key_Index="0">
-            <PrototypeTag>Prototype_GameObject_SM_HM_GEN_B_ext_chimney_Trim</PrototypeTag>
-            <PrototypeTag>Prototype_GameObject_SM_HM_GEN_B_ext_chimney_Trim_Lod1</PrototypeTag>
-            <PrototypeTag>Prototype_GameObject_SM_HM_GEN_B_ext_chimney_Trim_Lod2</PrototypeTag>
-            <Position x="0" y="0" z="0"/>
-            <Scale x="1" y="1" z="1"/>
-            <Rotation x="0" y="0" z="0"/>
-        </PartObject>
-        <PartObject Lod_Level="2" Key_Index="0">
             <PrototypeTag>Prototype_GameObject_SM_HM_GEN_B_ext_windows_Glass_A</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_GEN_B_ext_windows_Glass_A_Lod1</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_GEN_B_ext_windows_Glass_A_Lod2</PrototypeTag>
@@ -3693,14 +3685,6 @@
             <Rotation x="0" y="0" z="0"/>
         </PartObject>
         <PartObject Lod_Level="2" Key_Index="0">
-            <PrototypeTag>Prototype_GameObject_SM_HM_GEN_B_ext_chimney_Trim</PrototypeTag>
-            <PrototypeTag>Prototype_GameObject_SM_HM_GEN_B_ext_chimney_Trim_Lod1</PrototypeTag>
-            <PrototypeTag>Prototype_GameObject_SM_HM_GEN_B_ext_chimney_Trim_Lod2</PrototypeTag>
-            <Position x="0" y="0" z="0"/>
-            <Scale x="1" y="1" z="1"/>
-            <Rotation x="0" y="0" z="0"/>
-        </PartObject>
-        <PartObject Lod_Level="2" Key_Index="0">
             <PrototypeTag>Prototype_GameObject_SM_HM_GEN_B_ext_windows_Glass_A</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_GEN_B_ext_windows_Glass_A_Lod1</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_GEN_B_ext_windows_Glass_A_Lod2</PrototypeTag>
@@ -3796,14 +3780,6 @@
             <PrototypeTag>Prototype_GameObject_SM_HM_GEN_B_ext_trim</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_GEN_B_ext_trim_Lod1</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_GEN_B_ext_trim_Lod2</PrototypeTag>
-            <Position x="0" y="0" z="0"/>
-            <Scale x="1" y="1" z="1"/>
-            <Rotation x="0" y="0" z="0"/>
-        </PartObject>
-        <PartObject Lod_Level="2" Key_Index="0">
-            <PrototypeTag>Prototype_GameObject_SM_HM_GEN_B_ext_chimney_Trim</PrototypeTag>
-            <PrototypeTag>Prototype_GameObject_SM_HM_GEN_B_ext_chimney_Trim_Lod1</PrototypeTag>
-            <PrototypeTag>Prototype_GameObject_SM_HM_GEN_B_ext_chimney_Trim_Lod2</PrototypeTag>
             <Position x="0" y="0" z="0"/>
             <Scale x="1" y="1" z="1"/>
             <Rotation x="0" y="0" z="0"/>
@@ -4801,14 +4777,6 @@
             <PrototypeTag>Prototype_GameObject_SM_HM_GEN_B_ext_trim</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_GEN_B_ext_trim_Lod1</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_GEN_B_ext_trim_Lod2</PrototypeTag>
-            <Position x="0" y="0" z="0"/>
-            <Scale x="1" y="1" z="1"/>
-            <Rotation x="0" y="0" z="0"/>
-        </PartObject>
-        <PartObject Lod_Level="2" Key_Index="0">
-            <PrototypeTag>Prototype_GameObject_SM_HM_GEN_B_ext_chimney_Trim</PrototypeTag>
-            <PrototypeTag>Prototype_GameObject_SM_HM_GEN_B_ext_chimney_Trim_Lod1</PrototypeTag>
-            <PrototypeTag>Prototype_GameObject_SM_HM_GEN_B_ext_chimney_Trim_Lod2</PrototypeTag>
             <Position x="0" y="0" z="0"/>
             <Scale x="1" y="1" z="1"/>
             <Rotation x="0" y="0" z="0"/>
