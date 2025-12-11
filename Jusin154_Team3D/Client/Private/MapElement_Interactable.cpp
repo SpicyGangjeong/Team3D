@@ -185,11 +185,14 @@ HRESULT CMapElement_Interactable::Render_OutLine()
 		return E_FAIL;
 	}
 
+#ifdef _DEBUG
 	GUI::SetNextItemWidth(80.f);
 	GUI::ColorPicker3("vOutLineColor", (_float*)&m_vOutLineColor);
 	GUI::SliderFloat("Thickness", &m_fOutLineThickness, 0.1f, 2.f, "%.1f");
 	GUI::SliderFloat("Scale", &m_fOutLineScale, 0.1f, 2.f, "%.1f");
 	GUI::SliderFloat("Power", &m_fOutLinePower, 0.1f, 2.f, "%.1f");
+#endif // _DEBUG
+
 	Compute_Depth();
 	_float fRatio = (m_fCamDepth / *m_pGameInstance->Get_CurrentCameraFar());
 	m_fOutLineThickness = CMyTools::Lerp_f1D(0.07f, 0.15f, fRatio);

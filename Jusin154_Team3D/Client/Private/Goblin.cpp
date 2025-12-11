@@ -86,9 +86,12 @@ void CGoblin::Update(_float fTimeDelta)
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
 	Play_Event();
+#ifdef _DEBUG
 
 	GUI::Text("%d", m_pCharacter_Controller->IsActive());
 	GUI::Text("%f %f", m_vStunTimer.x, m_vStunTimer.y);
+#endif // _DEBUG
+
 	if (true == m_pCharacter_Controller->IsActive()) {
 		m_pCharacter_Controller->Move(fTimeDelta);
 		m_vStunTimer.x = 0.f;

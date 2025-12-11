@@ -1724,8 +1724,10 @@ void CPlayer::Add_FSM()
 			_matrix BoneNoScale = XMMatrixRotationQuaternion(Rot) * XMMatrixTranslationFromVector(Trans);
 
 			m_OffsetPos = { 0.f, 1.4f, 0.f };
-
+#ifdef _DEBUG
 			GUI::DragFloat3("BroomOffset", (_float*)&m_OffsetPos, 0.01f);
+#endif // _DEBUG
+
 			_matrix Offset = XMMatrixTranslation(m_OffsetPos.x,
 				m_OffsetPos.y, m_OffsetPos.z);
 
