@@ -42,6 +42,13 @@ private:
 
 	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
 	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
+	PSX::PxSweepBufferN<12> m_SweepBufferHammer = {};
+	PSX::PxSweepBufferN<12> m_SweepBufferGrip = {};
+	const _float4* m_pHammerPos = { nullptr };
+	const _float4* m_pHammerGripPos = { nullptr };
+	_bool m_bCollisionPlayer = { false };
+	_float4 m_vStartHammerPos = { };
+	_float4 m_vStartGripPos = { };
 	_float2 m_vStunTimer = { 0.f, 4.f };
 	_uint iIndex;
 
@@ -78,7 +85,9 @@ public:
 
 private:
 	virtual void Add_FSM();
+	void SlamHit(Engine::_bool& bHit, Engine::_float4* m_pStartPos, bool& retFlag);
 	virtual void Set_Anim();
+	void CheckHammerHits(_uint& iHitCount, vector<PSX::PxSweepHit>& pxHits);
 
 	_float m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::END)] = {};
 	_float m_fMaxSkillCoolTime[ENUM_CLASS(TROLL_SKILL::END)] = { 20.f,20.f, 20.f, 20.f ,20.f };
@@ -117,10 +126,12 @@ private:
 	void	Behavior_SwingEnter();
 	HRESULT Behavior_SwingExitCheck(_float fTimeDelta);
 	void	Behavior_SwingExit();
+	void	SwingHit(_bool& bPlayerHit);
 
 	void	Behavior_SlamEnter();
 	HRESULT Behavior_SlamExitCheck(_float fTimeDelta);
 	void	Behavior_SlamExit();
+	void	SlamHit(_bool& bPlayerHit);
 
 	void	Behavior_BackHandSwingEnter();
 	HRESULT Behavior_BackHandSwingExitCheck(_float fTimeDelta);

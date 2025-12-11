@@ -687,12 +687,12 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_X(PS_IN In)
     float2 vTexcoord;
     float4 vColor = 0.f;
     
-    for (int i = -31; i < 32; ++i)
+    for (int i = -15; i < 16; ++i)
     {
         vTexcoord.x = In.vTexcoord.x + (float) i / g_vResolution.x;
         vTexcoord.y = In.vTexcoord.y;
         
-        vColor += g_fWeights_64[i + 31] * g_BlurTexture.Sample(ClampSampler, vTexcoord);
+        vColor += g_fWeights_32[i + 15] * g_BlurTexture.Sample(ClampSampler, vTexcoord);
     }
     
     Out.vBlurX = vColor;
@@ -871,12 +871,12 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_Y(PS_IN In)
     float2 vTexcoord;
     float4 vColor = 0.f;
     
-    for (int i = -31; i < 32; ++i)
+    for (int i = -15; i < 16; ++i)
     {
         vTexcoord.x = In.vTexcoord.x;
         vTexcoord.y = In.vTexcoord.y + (float) i / g_vResolution.y;
         
-        vColor += g_fWeights_64[i + 31] * g_BlurTexture.Sample(ClampSampler, vTexcoord);
+        vColor += g_fWeights_32[i + 16] * g_BlurTexture.Sample(ClampSampler, vTexcoord);
     }
     
     Out.vBlurX = vColor;

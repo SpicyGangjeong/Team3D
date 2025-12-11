@@ -266,6 +266,9 @@ PS_OUT PS_MAIN(PS_IN In)
     
     float4 vMtrlDiffuse = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
     float4 vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    //if (vMtrlDiffuse.a < 0.3f){
+    //    discard;
+    //}
     if (true == g_bDisolve)
     {
         float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);

@@ -50,6 +50,7 @@ void CGoblin_BattleAxe::Priority_Update(_float fTimeDelta)
 
 	m_pTransformCom->Set_WorldMatrix(socketMatrix * XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr()));
 
+
 #ifdef _DEBUG
 	Describe_Entity();
 
@@ -67,6 +68,16 @@ void CGoblin_BattleAxe::Update(_float fTimeDelta)
 			m_bVisible = false;
 		}
 	}
+
+	_matrix AxeMat = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("Bone"));
+
+
+	for (int i = 0; i < 3; ++i) {
+		AxeMat.r[i] = XMVector3Normalize(AxeMat.r[i]);
+	}
+
+	XMStoreFloat4x4(&m_vAxeMat, AxeMat * m_pTransformCom->Get_XMWorldMatrix());
+
 }
 
 void CGoblin_BattleAxe::Late_Update(_float fTimeDelta)

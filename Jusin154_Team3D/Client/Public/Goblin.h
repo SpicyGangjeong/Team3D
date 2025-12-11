@@ -39,8 +39,10 @@ private:
 	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
 	_float2 m_vStunTimer = { 0.f, 4.f };
 	_uint iIndex;
-
+private:
+	class CEffectPool* m_pEffectPool = nullptr;
 	DAMAGE_INFO m_DamageInfo;
+
 
 	class CEffectParts* m_pSmoke = { nullptr };
 	class CEffectParts* m_pGoblin_Particle = { nullptr };

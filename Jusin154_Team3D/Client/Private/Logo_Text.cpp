@@ -186,7 +186,10 @@ void CLogo_Text::Free()
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }
+#ifdef _DEBUG
 
 void CLogo_Text::Describe_Entity()
 {
 }
+
+#endif // _DEBUG

@@ -173,7 +173,10 @@ void CLogo::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
+#ifdef _DEBUG
 void CLogo::Describe_Entity()
 {
 }
+
+#endif // _DEBUG
 

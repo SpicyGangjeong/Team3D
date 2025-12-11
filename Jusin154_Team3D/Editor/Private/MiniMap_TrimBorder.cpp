@@ -83,6 +83,7 @@ void CMiniMap_TrimBorder::Update(_float fTimeDelta)
 		}
 	}
 
+//	m_fAngle = ;
 	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
 }
@@ -104,7 +105,7 @@ HRESULT CMiniMap_TrimBorder::Render()
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::ALPHABLEND)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::ROTATION)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
@@ -160,7 +161,10 @@ HRESULT CMiniMap_TrimBorder::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fMapAngle", &m_fAngle, sizeof(_float))))
+	{
+		return E_FAIL;
+	}
 	return S_OK;
 }
 

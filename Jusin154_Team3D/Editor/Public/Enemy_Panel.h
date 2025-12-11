@@ -35,6 +35,7 @@ private:
 
 	CGameObject* m_pEnemy_HpBar = { nullptr };
 	CGameObject* m_pEnemy_Info = { nullptr };
+	CGameObject* m_pBoss_HpBar= { nullptr };
 
 public:
 	static CEnemy_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

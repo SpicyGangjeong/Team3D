@@ -26,9 +26,9 @@ HRESULT CLevel_Logo::Initialize()
 
 void CLevel_Logo::Update(_float fTimeDelta)
 {
-#ifdef 기무리
-	m_pGameInstance->Set_LevelToChange();
-#endif // 기무리
+//#ifdef 기무리
+//	m_pGameInstance->Set_LevelToChange();
+//#endif // 기무리
 
 	if (m_pGameInstance->Key_Down(DIK_F1))
 	{

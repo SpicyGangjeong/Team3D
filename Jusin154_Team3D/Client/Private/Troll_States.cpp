@@ -1,9 +1,11 @@
 ﻿#include "pch.h"
 #include "Troll.h"
 
+#include "InfoInstance.h"
 #include "GameInstance.h"
 #include "Player.h"
 #include "Troll_Rock.h"
+#include "Layer.h"
 #include "EffectPool.h"
 #include "TrailObject.h"
 
@@ -438,12 +440,51 @@ HRESULT CTroll::Behavior_SwingExitCheck(_float fTimeDelta)
 		return E_FAIL;
 	}
 
-	return E_FAIL;
+	return S_OK;
 }
 
 void CTroll::Behavior_SwingExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::SWING);
+}
+
+void CTroll::SwingHit(_bool& bPlayerHit)
+{
+	vector<PSX::PxSweepHit> pxHits;
+	_uint iHitCount = 0;
+	CheckHammerHits(iHitCount, pxHits);
+	{
+		for (_uint i = 0; i < pxHits.size(); ++i) {
+			PSX::PxActor* pxHitActor = pxHits[i].actor;
+			if (nullptr != pxHitActor && nullptr != pxHitActor->userData) {
+				PhsXUserData* pUserData = (PhsXUserData*)pxHitActor->userData;
+				switch (PXOBJECT(pUserData->iSubKind))
+				{
+				case PXOBJECT::PLAYER:
+				{
+					if (true == bPlayerHit) {
+						continue;
+					}
+					CStat* pStat = pUserData->pCharacter->Get_Owner()->Get_Component<CStat>();
+					pStat->Get_Damage(7.f);
+					bPlayerHit = true;
+				} break;
+				case PXOBJECT::ALLY_HITBOX:
+					break;
+				case PXOBJECT::ENVIRIONMENT:
+					break;
+				case PXOBJECT::TERRAIN:
+					break;
+				case PXOBJECT::BOX:
+					break;
+				case PXOBJECT::NPC:
+					break;
+				default:
+					break;
+				}
+			}
+		}
+	}
 }
 
 void CTroll::Behavior_SlamEnter()
@@ -489,7 +530,7 @@ HRESULT CTroll::Behavior_SlamExitCheck(_float fTimeDelta)
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
 		return E_FAIL;
 	}
-	return E_FAIL;
+	return S_OK;
 }
 
 void CTroll::Behavior_SlamExit()
@@ -686,8 +727,7 @@ void CTroll::Add_FSM()
 		Desc.funcEnterEvent = [this]() { Behavior_RushEnter(); };
 		Desc.funcExitCheck = [this](_float fTimeDelta) { return Behavior_RushExitCheck(fTimeDelta); };
 		Desc.funcExitEvent = [this]() { Behavior_RushExit(); };
-		Desc.funcPriorityUpdate = nullptr;
-		Desc.funcLateUpdate = nullptr;
+		Desc.pCollisionPlayer = &m_bCollisionPlayer;
 		m_States.emplace(FSMSTATE::RUSH, CTroll_State_Rush::Create(&Desc));
 	}
 
@@ -709,7 +749,7 @@ void CTroll::Add_FSM()
 		Desc.funcExitCheck = [this](_float fTimeDelta) { return Behavior_SwingExitCheck(fTimeDelta); };
 		Desc.funcExitEvent = [this]() { Behavior_SwingExit(); };
 		Desc.funcPriorityUpdate = nullptr;
-		Desc.funcLateUpdate = nullptr;
+		Desc.funcLateUpdate = [this](_float fTimeDelta, _bool& bHit) {  SwingHit(bHit); };
 		m_States.emplace(FSMSTATE::SWING, CState_Swing::Create(&Desc));
 	}
 
@@ -720,7 +760,7 @@ void CTroll::Add_FSM()
 		Desc.funcExitCheck = [this](_float fTimeDelta) { return Behavior_SlamExitCheck(fTimeDelta); };
 		Desc.funcExitEvent = [this]() { Behavior_SlamExit(); };
 		Desc.funcPriorityUpdate = nullptr;
-		Desc.funcLateUpdate = nullptr;
+		Desc.funcLateUpdate = [this](_float fTimeDelta, _bool& bHit) {  SlamHit(bHit); };
 		m_States.emplace(FSMSTATE::SLAM, CState_Slam::Create(&Desc));
 	}
 
@@ -762,6 +802,91 @@ void CTroll::Add_FSM()
 
 #pragma endregion
 
+}
+
+void CTroll::SlamHit(_bool& bPlayerHit)
+{
+	vector<PSX::PxSweepHit> pxHits;
+	_uint iHitCount = 0;
+	CheckHammerHits(iHitCount, pxHits);
+	{
+		for (_uint i = 0; i < pxHits.size(); ++i) {
+			PSX::PxActor* pxHitActor = pxHits[i].actor;
+			if (nullptr != pxHitActor && nullptr != pxHitActor->userData) {
+				PhsXUserData* pUserData = (PhsXUserData*)pxHitActor->userData;
+				switch (PXOBJECT(pUserData->iSubKind))
+				{
+				case PXOBJECT::PLAYER:
+				{
+					if (true == bPlayerHit) {
+						continue;
+					}
+					CStat* pStat = pUserData->pCharacter->Get_Owner()->Get_Component<CStat>();
+					pStat->Get_Damage(10.f);
+					bPlayerHit = true;
+				} break;
+				case PXOBJECT::ALLY_HITBOX:
+					break;
+				case PXOBJECT::ENVIRIONMENT:
+					break;
+				case PXOBJECT::TERRAIN:
+					break;
+				case PXOBJECT::BOX:
+					break;
+				case PXOBJECT::NPC:
+					break;
+				default:
+					break;
+				}
+			}
+		}
+	}
+}
+
+void CTroll::CheckHammerHits(_uint& iHitCount, vector<PSX::PxSweepHit>& pxHits)
+{
+	{
+		_vector vStartPos = XMLoadFloat4(&m_vStartHammerPos);
+		_vector vEndPos = XMLoadFloat4(m_pHammerPos);
+		_vector vDir = vEndPos - vStartPos;
+		_float fDistance = XMVectorGetX(XMVector4Length(vDir));
+		vDir = XMVector4Normalize(vDir);
+
+		_bool bCollision = false;
+		m_SweepBufferHammer = {};
+		bCollision = m_pGameInstance->SphereCast(1.2f, vStartPos, vDir, fDistance, PSX::PxHitFlag::eDEFAULT, PSX::PxQueryFlag::eDYNAMIC, m_SweepBufferHammer);
+		if (true == bCollision) {
+			iHitCount += m_SweepBufferHammer.getNbTouches() + m_SweepBufferHammer.hasBlock;
+			auto touches = m_SweepBufferHammer.getTouches();
+			for (_uint i = 0; i < m_SweepBufferHammer.nbTouches; ++i) {
+				pxHits.push_back(m_SweepBufferHammer.touches[i]);
+			}
+			if (true == m_SweepBufferHammer.hasBlock) {
+				pxHits.push_back(m_SweepBufferHammer.block);
+			}
+		}
+	}
+	{
+		_vector vStartPos = XMLoadFloat4(&m_vStartGripPos);
+		_vector vEndPos = XMLoadFloat4(m_pHammerGripPos);
+		_vector vDir = vEndPos - vStartPos;
+		_float fDistance = XMVectorGetX(XMVector4Length(vDir));
+		vDir = XMVector4Normalize(vDir);
+
+		_bool bCollision = false;
+		m_SweepBufferGrip = {};
+		bCollision = m_pGameInstance->SphereCast(1.2f, vStartPos, vDir, fDistance, PSX::PxHitFlag::eDEFAULT, PSX::PxQueryFlag::eDYNAMIC, m_SweepBufferGrip);
+		if (true == bCollision) {
+			iHitCount += m_SweepBufferGrip.getNbTouches() + m_SweepBufferGrip.hasBlock;
+			auto touches = m_SweepBufferGrip.getTouches();
+			for (_uint i = 0; i < m_SweepBufferGrip.nbTouches; ++i) {
+				pxHits.push_back(m_SweepBufferGrip.touches[i]);
+			}
+			if (true == m_SweepBufferGrip.hasBlock) {
+				pxHits.push_back(m_SweepBufferGrip.block);
+			}
+		}
+	}
 }
 
 void CTroll::Set_Anim()

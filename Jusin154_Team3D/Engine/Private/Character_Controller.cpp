@@ -350,6 +350,8 @@ HRESULT CCharacter_Controller::Initialize(void* pArg)
 		break;
 	}
 	
+	m_pController->setStepOffset(pDesc->fStepOffset);
+
 	if (nullptr == m_pController) {
 		assert(false);
 		return E_FAIL;

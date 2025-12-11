@@ -14,6 +14,14 @@ CCallBack_Troll_HitReport::~CCallBack_Troll_HitReport()
 {
 }
 
+void CCallBack_Troll_HitReport::BeginFrame()
+{
+	// 매 프레임 초기화
+	m_vClimbNormal = { 0.f, 1.f, 0.f };
+	m_bGroundHit = { false };
+	m_fBestNormal = { 0.f };
+}
+
 void CCallBack_Troll_HitReport::onShapeHit(const PSX::PxControllerShapeHit& hit)
 {
 	PSX::PxController* pController = hit.controller;
@@ -51,6 +59,14 @@ void CCallBack_Troll_HitReport::onShapeHit(const PSX::PxControllerShapeHit& hit)
 						pFSM->Change_State(FSMSTATE::STUN);
 					}
 				}
+				if (vWorldNormal.y > 0) {
+					_float fDotValue = vWorldNormal.dot({ 0.f, 1.f, 0.f });
+					if (m_fBestNormal < fDotValue) {
+						m_bGroundHit = true;
+						m_fBestNormal = fDotValue;
+						m_vClimbNormal = { vWorldNormal.x, vWorldNormal.y, vWorldNormal.z };
+					}
+				}
 			}
 				break;
 			default:
@@ -60,12 +76,18 @@ void CCallBack_Troll_HitReport::onShapeHit(const PSX::PxControllerShapeHit& hit)
 			break;
 		case PHYSX_KIND::BODY_DYNAMIC:
 		{
-			switch (pTargetActorData->iSubKind)
+			switch (PXOBJECT(pTargetActorData->iSubKind))
 			{
-			case 0:
-				m_pController->ConvertToDO(*m_pPartDynamicBody);
-				m_pPartDynamicBody->Add_Force(XMVectorSet(vDir.x, vDir.y, vDir.z, 0.f) * fLength * 100.f, PSX::PxForceMode::eIMPULSE);
+			case PXOBJECT::END:
 				break;
+			case PXOBJECT::BOX:
+			{
+				PSX::PxRigidDynamic* pDynamic = static_cast<PSX::PxRigidDynamic*>(pActor);
+				//pDynamic->setRigidBodyFlag(PSX::PxRigidBodyFlag::eKINEMATIC, false);
+				PSX::PxVec3 vCompressedDir = -vWorldNormal;
+				vCompressedDir.normalize();
+				pDynamic->addForce(vCompressedDir * fLength * 1000.f, PSX::PxForceMode::eFORCE);
+			}break;
 			default:
 			{
 			}
@@ -113,11 +135,22 @@ void CCallBack_Troll_HitReport::onControllerHit(const PSX::PxControllersHit& hit
 			switch (pTargetActorData->iSubKind)
 			{
 			case ENUM_CLASS(PXOBJECT::PLAYER):
+			{
+				class CUnit* pOwner = (CUnit*)m_pController->Get_Owner();
+				CModel* pModel = pOwner->Get_Component<CModel>();
+				_uint iAnimIndex = pModel->Get_AnimIndex();
+				if (pOwner->Get_AnimInfo(STATEANIM::RUSH_LOOP).first == iAnimIndex) {
+					if (false == *m_pCollisionPlayer) {
+						*m_pCollisionPlayer = true;
+						pTargetActorData->pCharacter->Get_Owner()->Get_Component<CStat>()->Get_Damage(30.f);
+					}
+				}
+			}
 				break;
 			default:
 			{
 				PSX::PxRigidDynamic* pDynamic = static_cast<PSX::PxRigidDynamic*>(pActor);
-				pDynamic->addForce(vDir * fLength * 100000.f, PSX::PxForceMode::eIMPULSE);
+				pDynamic->addForce(vDir * fLength * 100.f, PSX::PxForceMode::eIMPULSE);
 			}
 			break;
 			}
@@ -147,11 +180,26 @@ void CCallBack_Troll_HitReport::onObstacleHit(const PSX::PxControllerObstacleHit
 	//}
 }
 
-HRESULT CCallBack_Troll_HitReport::Initialize(CCharacter_Controller* pController, CRigidBody_Dynamic* pPartDynamicObject)
+void CCallBack_Troll_HitReport::Set_CurrentSlop()
+{
+	m_pController->Rewind_Grounded();
+	if (m_bGroundHit)
+	{
+		m_pController->Set_OnGroundFlag(m_bGroundHit);
+		float fDot = clamp(m_fBestNormal, -1.0f, 1.0f);
+		float fAngleRad = acosf(fDot);
+		float fAngleDeg = XMConvertToDegrees(fAngleRad);
+
+		m_pController->Set_CurrentSlope(fAngleDeg);
+	}
+}
+
+HRESULT CCallBack_Troll_HitReport::Initialize(CCharacter_Controller* pController, CRigidBody_Dynamic* pPartDynamicObject, _bool* pCollisionPlayer)
 {
 	m_pController = pController;
 	m_pPartDynamicBody = pPartDynamicObject;
 	m_pGameInstance = CGameInstance::GetInstance();
+	m_pCollisionPlayer = pCollisionPlayer;
 	SAFE_ADDREF(m_pController);
 	SAFE_ADDREF(m_pPartDynamicBody);
 	SAFE_ADDREF(m_pGameInstance);
@@ -164,6 +212,16 @@ HRESULT CCallBack_Troll_HitReport::Finalize()
 	SAFE_RELEASE(m_pPartDynamicBody);
 	SAFE_RELEASE(m_pController);
 	return S_OK;
+}
+
+_bool CCallBack_Troll_HitReport::IsOnGround()
+{
+	return m_bGroundHit;
+}
+
+_vector CCallBack_Troll_HitReport::Get_GroundVector()
+{
+	return XMLoadFloat3(&m_vClimbNormal);
 }
 
 CCallBack_Troll_HitReport* CCallBack_Troll_HitReport::Create()

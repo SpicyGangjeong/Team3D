@@ -153,7 +153,7 @@ void CPlayer::UpdateGrapInteractive(Engine::_float fTimeDelta)
 {
 	if (nullptr != m_pGrapInteractive) {
 		m_vGrapInteratableLerp.x += fTimeDelta;
-		m_pGrapInteractive->GrapToPlayer(m_pTransformCom->Get_State(STATE::POSITION) + m_pCamPosition_ShoulderPart->Get_ShoulderLocalPos(), m_vGrapInteratableLerp.x);
+		m_pGrapInteractive->GrapToPlayer(m_pTransformCom->Get_State(STATE::POSITION) + m_pCamPosition_ShoulderPart->Get_ShoulderGlobalPos(), m_vGrapInteratableLerp.x);
 		if (m_vGrapInteratableLerp.x > m_vGrapInteratableLerp.y) {
 			m_vGrapInteratableLerp.x -= m_vGrapInteratableLerp.y;
 		}
@@ -179,6 +179,11 @@ void CPlayer::Late_Update(_float fTimeDelta)
 	}
 	if (nullptr != m_LockOnInfo.pInteractive) {
 		static_cast<CMapElement_Interactable*>(m_LockOnInfo.pInteractive)->Set_DrawOutLine();
+	}
+
+	if (m_bLookAt && m_LockOnInfo.pUnit)
+	{
+		m_pTransformCom->LookAt_Lerp(m_LockOnInfo.pUnit->Get_WorldPostion(), fTimeDelta, 5.f);
 	}
 	////////////////////////////////////////////////////////////////////////////
 	_vector look = XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK));
@@ -417,12 +422,6 @@ HRESULT CPlayer::Ready_Parts()
 	{
 		CCamPosition_Shoulder::CAMERA_SHOULDER_DESC Desc;
 		Desc.pParentTransform = m_pTransformCom;
-		Desc.fMouseSensor = 0.1f;
-		Desc.fShoulderDistance = 2.f;
-		Desc.fBackFrontRatio = 0.9f;
-		Desc.fCameraFocalLength = 13.4f;
-		Desc.vInitialLook = { 0.77f, 1.35f, -1.f };
-
 		if (FAILED(Add_PartObject<CCamPosition_Shoulder>("Cam_Shoulder_Part", g_iStaticLevel, &m_pCamPosition_ShoulderPart, &Desc))) {
 			return E_FAIL;
 		}
@@ -594,8 +593,8 @@ void CPlayer::Describe_Entity()
 	GUI::Checkbox("Render", &m_bVisible);
 
 	GUI::Text("%d", m_iStateMask);
-
-
+	GUI::Text("HP : %f, %f", m_pStat->Get_Stat().fCurrentHp, m_pStat->Get_Stat().fMaxHp);
+	GUI::SameLine(); if (GUI::Button("FULL")) { m_pStat->Set_Stat(ENUM_CLASS(STAT::CURRENTHP), m_pStat->Get_Stat().fMaxHp); }
 	_vector xmvInputDir = XMVectorZero();
 
 	_vector xmvCamLook = XMVector4Normalize(XMVectorSet(m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z, 0.f));

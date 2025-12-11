@@ -985,8 +985,11 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fEmissiveColorCut", &m_EffectInfo.fEmissiveColorCut, sizeof(_float)))) {
+		return E_FAIL;
+	}
 	
-
+	
 
 
 	if (m_pDiffuse_TextureCom != nullptr)

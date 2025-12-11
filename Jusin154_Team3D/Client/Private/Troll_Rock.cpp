@@ -60,8 +60,10 @@ void CTroll_Rock::Priority_Update(_float fTimeDelta)
 
 		m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::LOOK), fTimeDelta * 50.f);
 		m_pTransformCom->Go_Straight(fTimeDelta);
+
 	}
-	
+	XMStoreFloat4(&m_vStartPos, m_pTransformCom->Get_State(STATE::POSITION));
+
 
 #ifdef _DEBUG
 	Describe_Entity();
@@ -75,7 +77,67 @@ void CTroll_Rock::Update(_float fTimeDelta)
 
 void CTroll_Rock::Late_Update(_float fTimeDelta)
 {
-	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+	if (true == m_bVisible) {
+		RockHit();
+		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+	}
+}
+
+void CTroll_Rock::RockHit()
+{
+	_vector vStartPos = XMLoadFloat4(&m_vStartPos);
+	_vector vEndPos = m_pTransformCom->Get_State(STATE::POSITION);
+	_vector vDir = vEndPos - vStartPos;
+	_float fLength = XMVectorGetX(XMVector4Length(vDir));
+	vDir = XMVector4Normalize(vDir);
+	m_SweepBuffer = {};
+	_bool bHit = m_pGameInstance->SphereCast(0.5f, vStartPos, vDir, fLength, PSX::PxHitFlag::eDEFAULT, PSX::PxQueryFlag::eDYNAMIC, m_SweepBuffer);
+	if (true == bHit) {
+		vector<PSX::PxSweepHit*> Hits;
+		_uint iHitCount = m_SweepBuffer.nbTouches;
+		if (true == m_SweepBuffer.hasBlock) {
+			iHitCount += 1;
+			Hits.reserve(iHitCount);
+			Hits.emplace_back(&m_SweepBuffer.block);
+		}
+		else {
+			Hits.reserve(iHitCount);
+		}
+		for (_uint i = 0; i < m_SweepBuffer.nbTouches; ++i) {
+			Hits.emplace_back(&m_SweepBuffer.touches[i]);
+		}
+
+		for (_uint i = 0; i < Hits.size(); ++i) {
+			PSX::PxSweepHit* pHit = Hits[i];
+			PSX::PxActor* pActor = pHit->actor;
+			if (nullptr != pActor && nullptr != pActor->userData) {
+				PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+				switch (PXOBJECT(pUserData->iSubKind))
+				{
+				case Engine::PXOBJECT::PLAYER:
+				{
+					if (false == m_bVisible) {
+						break;
+					}
+					m_bVisible = false;
+					CStat* pStat = pUserData->pCharacter->Get_Owner()->Get_Component<CStat>();
+					pStat->Get_Damage(10.f);
+				}
+				break;
+				case Engine::PXOBJECT::ALLY_HITBOX:
+					break;
+				default:
+					break;
+				}
+			}
+		}
+	}
+}
+
+void CTroll_Rock::Set_Attach(_bool Attach)
+{
+	m_bAttach = Attach;
+	m_bVisible = true;
 }
 
 HRESULT CTroll_Rock::Render()

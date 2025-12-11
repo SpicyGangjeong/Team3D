@@ -8,6 +8,7 @@
 #include "Goblin_Dagger.h"
 #include "Goblin_Spector.h"
 #include "Effect_Container.h"
+#include "EffectPool.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -65,6 +66,9 @@ m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
 
 m_pCharacter_Controller->Set_Position(XMVectorSet(-40.f, 5.f, -20.f, 1.f));
 
+m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
+SAFE_ADDREF(m_pEffectPool);
+
 return S_OK;
 }
 
@@ -75,18 +79,24 @@ void CGoblin::Priority_Update(_float fTimeDelta)
 
 void CGoblin::Update(_float fTimeDelta)
 {
-	__super::Update(fTimeDelta);
-
 	m_pFSM->Update_State(fTimeDelta);
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
-	Play_Event();
+	__super::Update(fTimeDelta);
 
+	Play_Event();
+#ifdef _DEBUG
 	GUI::Text("%d", m_pCharacter_Controller->IsActive());
 	GUI::Text("%f %f", m_vStunTimer.x, m_vStunTimer.y);
+#endif // _DEBUG
+
 	if (true == m_pCharacter_Controller->IsActive()) {
-		m_pCharacter_Controller->Move(fTimeDelta);
+		{ // 세트
+			m_pCallBack_HitReport->BeginFrame();
+			m_pCharacter_Controller->Move(fTimeDelta);
+			m_pCallBack_HitReport->Set_CurrentSlop();
+		}
 		m_vStunTimer.x = 0.f;
 	}
 	else if (true == m_pRigidBody->IsActive()) {
@@ -255,12 +265,12 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 	case ENUM_CLASS(SKILL_TYPE::DESCENDO):
 		m_eHitSpell = STATEANIM::KNOCKDOWN_FWD;
 		break;
-	case ENUM_CLASS(SKILL_TYPE::FLIPENDO):
-		m_eHitSpell = STATEANIM::TUMBLE2;
+	case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
+		m_eHitSpell = STATEANIM::KNOCKDOWN_BWD;
 		break;
 	case ENUM_CLASS(SKILL_TYPE::JAP):
 	{
-		m_eHitSpell = STATEANIM::HIT_LEVIOSO;
+		m_eHitSpell = STATEANIM::HIT_BWD;
 
 		m_DamageInfo.fDamage = damagePair.first;
 		m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
@@ -315,7 +325,7 @@ HRESULT CGoblin::Ready_Components()
 		Desc.fContactOffset = 0.001f;
 		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
 		Desc.bAutoStepping = { false };
-		Desc.fStepOffset = { 0.05f };
+		Desc.fStepOffset = { 0.001f };
 		Desc.fRadius = 0.6f;
 		Desc.fHeight = 0.7f;
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Monster_HitReport::Create();
@@ -463,6 +473,7 @@ void CGoblin::Free()
 	SAFE_RELEASE(m_pSmoke);
 	SAFE_RELEASE(m_pGoblin_Particle);
 	SAFE_RELEASE(m_pGoblin_Particle2);
+	SAFE_RELEASE(m_pEffectPool);
 	Safe_Delete(m_pCallBack_Behavior);
 	Safe_Delete(m_pCallBack_HitReport);
 }

@@ -3,6 +3,9 @@
 #include "GameInstance.h"
 #include "Enemy_HpBar.h"
 #include "Enemy_Info.h"
+#include "Boss_HpBar.h"
+#include "InfoInstance.h"
+#include "Monster.h"
 
 CEnemy_Panel::CEnemy_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     :CPanelObject(pDevice, pContext)
@@ -10,7 +13,8 @@ CEnemy_Panel::CEnemy_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CEnemy_Panel::CEnemy_Panel(const CEnemy_Panel& rhs)
-    :CPanelObject(rhs)
+    :CPanelObject(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -49,6 +53,31 @@ HRESULT CEnemy_Panel::Initialize(void* pArg)
 	return S_OK;
 }
 
+void CEnemy_Panel::Update_Target()
+{
+	if (m_pInfoInstance->Get_TargetMonster() == nullptr)
+	{
+		static_cast<CUIObject*>(m_pBoss_HpBar)->Set_FadeOut();
+		static_cast<CUIObject*>(m_pEnemy_HpBar)->Set_FadeOut();
+		static_cast<CUIObject*>(m_pEnemy_Info)->Set_FadeOut();
+		return;
+	}
+	if (m_pInfoInstance->Get_TargetMonster()->Get_Stat()->Get_Stat().bBoss == true)
+	{
+		static_cast<CBoss_HpBar*>(m_pBoss_HpBar)->Update_Target();
+		static_cast<CEnemy_HpBar*>(m_pEnemy_Info)->Set_FadeOut();
+		static_cast<CEnemy_Info*>(m_pEnemy_Info)->Update_Target();
+		static_cast<CEnemy_Info*>(m_pEnemy_Info)->Set_Font_Move(true);
+	}
+	else
+	{
+		static_cast<CBoss_HpBar*>(m_pBoss_HpBar)->Set_FadeOut();
+		static_cast<CEnemy_HpBar*>(m_pEnemy_HpBar)->Update_Target();
+		static_cast<CEnemy_Info*>(m_pEnemy_Info)->Update_Target();
+		static_cast<CEnemy_Info*>(m_pEnemy_Info)->Set_Font_Move(false);
+	}
+}
+
 void CEnemy_Panel::Priority_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
@@ -64,7 +93,7 @@ void CEnemy_Panel::Update(_float fTimeDelta)
 	{
 		return;
 	}
-
+	Update_Target();
 	__super::Update(fTimeDelta);
 }
 
@@ -119,6 +148,12 @@ HRESULT CEnemy_Panel::Ready_Element(void* pArg)
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Enemy_Info"), m_pEnemy_Info);
+	
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBoss_HpBar>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CBoss_HpBar**>(&m_pBoss_HpBar))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Boss_Bar"), m_pBoss_HpBar);
 	
 	return S_OK;
 }
