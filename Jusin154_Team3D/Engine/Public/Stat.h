@@ -19,6 +19,7 @@ class ENGINE_DLL CStat final : public CComponent
 		_float			fExprince{};
 		_float			fMaxExprience{};
 		_int			iGold{};
+		_bool			bBoss = false;
 	}UNITINFO;
 private:
 	CStat(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

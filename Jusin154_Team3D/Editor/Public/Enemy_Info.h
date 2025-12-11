@@ -27,7 +27,7 @@ private:
 
 public:
 	void Set_Info(_int Level, _wstring Name);
-
+	void Set_Font_Move(_bool Boss);
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
@@ -38,7 +38,7 @@ private:
 	_wstring m_pEnemy_Name;
 	_wstring m_pLevel;
 	_bool	m_bAnimation = {false};
-
+	_bool   m_bBoss = { false };
 public:
 	static CEnemy_Info* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

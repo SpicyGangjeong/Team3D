@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "Enemy_HpBar.h"
 #include "Enemy_Info.h"
+#include "Boss_HpBer.h"
 
 CEnemy_Panel::CEnemy_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     :CPanelObject(pDevice, pContext)
@@ -119,6 +120,12 @@ HRESULT CEnemy_Panel::Ready_Element(void* pArg)
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Enemy_Info"), m_pEnemy_Info);
+	
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBoss_HpBar>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CBoss_HpBar**>(&m_pBoss_HpBar))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Boss_HpBer"), m_pBoss_HpBar);
 	
 	return S_OK;
 }

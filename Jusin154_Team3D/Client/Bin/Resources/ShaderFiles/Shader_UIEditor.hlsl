@@ -512,7 +512,7 @@ PS_OUT PS_Rotation(PS_IN In)
     Rotation.y = uv.x * sin(g_fMapAngle) + uv.y * cos(g_fMapAngle);
     Rotation += center;
             
-    float4 tex1 = g_Texture.Sample(ClampSampler , Rotation);
+    float4 tex1 = g_Texture.Sample(ClampSampler, Rotation);
     
     color = tex1;
     
@@ -1393,7 +1393,7 @@ PS_OUT PS_Enemy_HpBer(PS_IN In)
     if (Color.a <= 0.f)
         discard;
 
-    if(g_iHover != 0)
+    if (g_iHover != 0)
     {
         float4 tex3 = g_Texture2.Sample(DefaultSampler, In.vTexcoord);
         
@@ -1405,6 +1405,78 @@ PS_OUT PS_Enemy_HpBer(PS_IN In)
             Color.rgb = float3(1.f, 0.f, 0.f);
         }
     }
+    
+    Color.a *= Alpha;
+    Out.vColor = Color;
+    return Out;
+}
+
+PS_OUT PS_Boss_HpBer(PS_IN In)
+{
+    PS_OUT Out;
+
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+    float4 Color = float4(1.f, 1.f, 1.f, 1.f);
+    float4 Color1 = float4(1.f, 1.f, 1.f, 1.f);
+    float2 uv = In.vTexcoord;
+    float2 CurrentPixelPosition = uv * g_fCurrent_Size;
+    float OriginLeft = g_fNine_Slice.x;
+    float OriginRight = g_fNine_Slice.y;
+    float OriginTop = g_fNine_Slice.z;
+    float OriginBottom = g_fNine_Slice.w;
+    
+    float CurrentLeft = OriginLeft;
+    float CurrentRight = g_fCurrent_Size.x - (g_fOrigin_Size.x - OriginRight);
+    float CurrentTop = OriginTop;
+    float CurrentBottom = g_fCurrent_Size.y - (g_fOrigin_Size.y - OriginBottom);
+    
+    float2 Finaluv = In.vTexcoord;
+
+    if (CurrentPixelPosition.x < CurrentLeft)
+    {
+        Finaluv.x = CurrentPixelPosition.x / g_fOrigin_Size.x;
+    }
+    else if (CurrentPixelPosition.x > CurrentRight)
+    {
+        float dist = CurrentPixelPosition.x - CurrentRight;
+        Finaluv.x = (OriginRight + dist) / g_fOrigin_Size.x;
+    }
+    else
+    {
+        float scale = (CurrentPixelPosition.x - CurrentLeft) / (CurrentRight - CurrentLeft);
+        Finaluv.x = (OriginLeft / g_fOrigin_Size.x) + scale * ((OriginRight - OriginLeft) / g_fOrigin_Size.x);
+    }
+    
+    if (CurrentPixelPosition.y < CurrentTop)
+    {
+        Finaluv.y = CurrentPixelPosition.y / g_fOrigin_Size.y;
+    }
+    else if (CurrentPixelPosition.y > CurrentBottom)
+    {
+        float dist = CurrentPixelPosition.y - CurrentBottom;
+        Finaluv.y = (OriginBottom + dist) / g_fOrigin_Size.y;
+    }
+    else
+    {
+        float scale = (CurrentPixelPosition.y - CurrentTop) / (CurrentBottom - CurrentTop);
+        Finaluv.y = (OriginTop / g_fOrigin_Size.y) + scale * ((OriginBottom - OriginTop) / g_fOrigin_Size.y);
+    }
+    
+    float4 tex1 = g_Texture.Sample(DefaultSampler, Finaluv);
+    float4 tex2 = g_Texture1.Sample(DefaultSampler, Finaluv);
+    
+    Color = tex1;
+    
+    tex2.rgb *= float3(1.f, 0.f, 0.f);
+    
+    if (In.vTexcoord.x >= g_fHp)
+    {
+        tex2.rgb = float3(0.f, 0.f, 0.f);
+    }
+    
+    if (all(Color.rgb >= (float3(55.f, 55.f, 55.f) / 255.f)))
+        Color = tex2;
+    
     
     Color.a *= Alpha;
     Out.vColor = Color;
@@ -1709,6 +1781,16 @@ technique11 PosTexTechnique11
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Enemy_HpBer();
+    }
+
+    pass Boss_HpBer
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Boss_HpBer();
     }
 
 }

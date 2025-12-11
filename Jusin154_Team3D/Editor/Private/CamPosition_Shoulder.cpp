@@ -170,8 +170,8 @@ HRESULT CCamPosition_Shoulder::Ready_SubParts()
 	CameraDesc.bEnableFollowLerp = true;
 	CameraDesc.bEnableLookLerp = true;
 	CameraDesc.vTransitionTime = { 0.f, 1.f };
-	CameraDesc.vFollowLerpTime = { 0.f, BASIC_LERP_TIMER };
-	CameraDesc.vLookLerpTime = { 0.f, BASIC_LERP_TIMER };
+	CameraDesc.vFollowLerpTime = { 0.f, TIMER_SHORT_LERP };
+	CameraDesc.vLookLerpTime = { 0.f, TIMER_SHORT_LERP };
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCamera_Gaze>(g_iStaticLevel, NEXT_LEVEL, LAYER_CAMERA, &CameraDesc, nullptr, &m_pBinded_Camera)))
 	{

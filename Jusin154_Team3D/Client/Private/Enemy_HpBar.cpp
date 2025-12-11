@@ -99,7 +99,6 @@ void CEnemy_HpBar::Update(_float fTimeDelta)
 		}
 	}
 
-	Update_Target();
 
 	if (m_fTargetHp < m_fCurrentHp)
 		Hit(fTimeDelta);
@@ -184,11 +183,6 @@ void CEnemy_HpBar::SizeUpX(_float SizeX)
 
 void CEnemy_HpBar::Update_Target()
 {
-	if (m_pInfoInstance->Get_TargetMonster() == nullptr)
-	{
-		Set_FadeOut();
-		return;
-	}
 	m_fMaxHp = m_pInfoInstance->Get_TargetMonster()->Get_Stat()->Get_Stat().fMaxHp;
 	m_fCurrentHp = m_pInfoInstance->Get_TargetMonster()->Get_Stat()->Get_Stat().fCurrentHp;
 	m_fTargetHp = m_pInfoInstance->Get_TargetMonster()->Get_Stat()->Get_Stat().fTargetHp;

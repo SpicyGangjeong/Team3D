@@ -40,6 +40,7 @@ Texture2D g_AmbientTexture;
 Texture2D g_AmbientOcclusionTexture;
 Texture2D g_UnknownTexture;
 Texture2D g_NoiseTexture;
+Texture2D g_CausticsTexture;
 
 int g_iBinded_Texture[AI_TEXTURE_TYPE_MAX];
 
@@ -58,9 +59,9 @@ float g_fNormalValue1;
 float g_fNormalValue2;
 float g_fNormalValue3;
 
-float g_fUVSpeed1;
-float g_fUVSpeed2;
-float g_fUVSpeed3;
+float2 g_vUVSpeed1;
+float2 g_vUVSpeed2;
+float2 g_vUVSpeed3;
 
 float g_fBloomStrength;
 float g_fGlassRatio;
@@ -261,6 +262,10 @@ PS_OUT PS_MAIN(PS_IN In)
 
     float4 vMtrlDiffuse = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
     float4 vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    //if (vMtrlDiffuse.a < 0.3f)
+    //{
+    //    discard;
+    //}
     if (g_iBinded_Texture[AI_TEXTURE_TYPE_TRANSMISSION] != 0)
     {
         float4 vTransmission = g_TransmissionTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
@@ -337,7 +342,32 @@ PS_OUT PS_GLASS(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_GLASS_CUBE(PS_IN In)
+{
+    PS_OUT Out;
 
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    vector vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    float3 vNormalMap = DecodeNormalFromRG(g_NormalTexture, AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    
+    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
+    
+    float3 vNormal = normalize(mul(normalize(vNormalMap), WorldMatrix));
+    
+    float3 vReflaction = reflect(normalize(In.vWorldPos.xyz - g_vCamPosition.xyz), vNormal);
+    
+    float4 vReflactionDiffuse = g_CubeTexture.Sample(DefaultSampler, vReflaction);
+    
+    float fFresnelScala = 0.02f + (1.f - 0.02f) * pow(1.f - max(0.f, dot(normalize(g_vCamPosition.xyz - In.vWorldPos.xyz), vNormal)), 5.f);
+    
+    Out.vAlbedo = float4(vMtrlDiffuse.xyz, 1.f) * fFresnelScala + vReflactionDiffuse  * (1.f - fFresnelScala);
+    Out.vColor = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vNormal = float4(In.vNormal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 15.f / 27.f, 1.f);
+    Out.vSurface = vSurface;
+    
+    return Out;
+}
 
 struct PS_IN_SHADOW
 {
@@ -527,30 +557,36 @@ PS_OUT PS_LAKE(PS_IN In)
 {
     PS_OUT Out;
 
-    float4 vMtrlReflaction = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord * 30.f);
+    float2 vUV = float2(In.vTexcoord.x + cos(g_fTime * g_vUVSpeed1.x), In.vTexcoord.y + cos(g_fTime * g_vUVSpeed1.y)) * g_fNormalValue1;
+    float2 vUVLarge = float2(In.vTexcoord.x + cos(g_fTime * g_vUVSpeed2.x), In.vTexcoord.y + cos(g_fTime * g_vUVSpeed2.y)) * g_fNormalValue2;
+    float2 vUVSub = float2(In.vTexcoord.x + cos(g_fTime * g_vUVSpeed3.x), In.vTexcoord.y + cos(g_fTime * g_vUVSpeed3.y)) * g_fNormalValue3;
     
-    float2 vUV = float2(In.vTexcoord.x, In.vTexcoord.y + sin(g_fTime * g_fUVSpeed1)) * g_fNormalValue1;
-    float2 vUVLarge = float2(In.vTexcoord.x, In.vTexcoord.y - (g_fTime * g_fUVSpeed2)) * g_fNormalValue2;
-    float2 vUVSub = float2(In.vTexcoord.x - g_fTime * g_fUVSpeed3, In.vTexcoord.y - g_fTime * g_fUVSpeed3) * g_fNormalValue3;
+    float4 vMtrlDiffuse = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord * 30.f);
+    float3 vNoise = (g_NoiseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord + g_fTime * 0.1f).rgb - 0.5f) * 0.3f;
+    float4 vCaustics = g_CausticsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord * 30.f + vNoise.g);
     
-    float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, AnisoTropy_BLUR_Sampler, vUV);
-    float3 vNormalLarge = DecodeNormalFromRG(g_NormalLargeTexture, AnisoTropy_BLUR_Sampler, vUVLarge);
-    float3 vNormalSub = DecodeNormalFromRG(g_NormalSubTexture, AnisoTropy_BLUR_Sampler, vUVSub);
+    float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, AnisoTropy_BLUR_Sampler, vUV + vNoise.g);
+    float3 vNormalLarge = DecodeNormalFromRG(g_NormalLargeTexture, AnisoTropy_BLUR_Sampler, vUVLarge + vNoise.r);
+    float3 vNormalSub = DecodeNormalFromRG(g_NormalSubTexture, AnisoTropy_BLUR_Sampler, vUVSub + vNoise.b);
     
-    vector vDiffuse = g_vDiffuseColor;
+    vMtrlDiffuse = (vMtrlDiffuse + vCaustics * 0.3f) * g_vDiffuseColor;
+    
     vector vSurface = g_vSurfaceColor;
     
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
+    float3 vNormal = normalize(mul(float3(normalize(vNormalDecoded * 0.5f + vNormalLarge * 0.2f + vNormalSub * 0.3f).xy, 1.f), WorldMatrix));
     
-    float3 vNormal = normalize(mul(normalize(vNormalDecoded + vNormalLarge + vNormalSub), WorldMatrix));
     
-    float3 vReflaction = reflect(normalize(In.vWorldPos.xyz - g_vCamPosition.xyz), vNormal);
+    float3 vViewDir = normalize(g_vCamPosition.xyz - In.vWorldPos.xyz);
     
-    float4 vMtrlDiffuse = g_CubeTexture.Sample(DefaultSampler, vReflaction);
+    float3 vReflaction = reflect(-1.f * vViewDir, vNormal);
     
-    float fFresnelScala = g_fRefractionStrength + (1.f - g_fRefractionStrength) * pow(1.f - max(0.f, dot(normalize(g_vCamPosition.xyz - In.vWorldPos.xyz), vNormal)), g_fRefractionPow);
+    float4 vCubeDiffuse = g_CubeTexture.Sample(AnisoTropy_BLUR_Sampler, vReflaction);
     
-    Out.vAlbedo = float4(vMtrlDiffuse.xyz, 1.f) * fFresnelScala * g_fSpecularIntensity + vMtrlReflaction * g_vDiffuseColor * (1.f - fFresnelScala);
+    float fFresnelScala = g_fRefractionStrength + (1.f - g_fRefractionStrength) * pow(1.f - saturate(dot(vViewDir, vNormal)), g_fRefractionPow);
+    fFresnelScala = saturate(fFresnelScala * 0.7f);
+
+    Out.vAlbedo = lerp(vMtrlDiffuse, vCubeDiffuse, fFresnelScala);
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
     (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
@@ -861,5 +897,15 @@ technique11 MeshTechnique11
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_SPECTOR_WEAPON_MAIN();
+    }
+
+    pass GlassCubePass // 20
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_GLASS_CUBE();
     }
 }

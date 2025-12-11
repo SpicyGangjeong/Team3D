@@ -162,6 +162,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Action_Panel.h" />
     <ClInclude Include="..\Public\Broom_State_Fly.h" />
     <ClInclude Include="..\Public\Broom_State_Hover.h" />
+    <ClInclude Include="..\Public\Boss_HpBar.h" />
     <ClInclude Include="..\Public\CallBack_Troll_HitReport.h" />
     <ClInclude Include="..\Public\CameraLockOn.h" />
     <ClInclude Include="..\Public\Current_Slot_Number.h" />
@@ -324,6 +325,7 @@ call Update_Resources.bat
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Action_Panel.cpp" />
+    <ClCompile Include="..\Private\Boss_HpBar.cpp" />
     <ClCompile Include="..\Private\Broom_States.cpp" />
     <ClCompile Include="..\Private\Broom_State_Fly.cpp" />
     <ClCompile Include="..\Private\Broom_State_Hover.cpp" />

@@ -75,6 +75,7 @@
 #include "Enemy_Panel.h"
 #include "Enemy_HpBar.h"
 #include "Enemy_Info.h"
+#include "Boss_HpBar.h"
 
 #include "Spell_Canvas.h"
 #include "Spell_Panel.h"
@@ -1358,7 +1359,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 
-	// Heavy Wall
 	CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
 	{
 		Desc.eType = ACTOR::BOX;
@@ -1429,7 +1429,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Broom_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Broom/Broom.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Object/Broom/Broom.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Troll_Weapon_Model"),
@@ -1681,6 +1681,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 	/* For.Prototype_GameObject_NoMountIcon*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CEnemy_Info>(g_iStaticLevel, CEnemy_Info::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_NoMountIcon*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CBoss_HpBar>(g_iStaticLevel, CBoss_HpBar::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
@@ -1936,27 +1940,27 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_Component_South_Hogwart_Land_LOD1 */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_South_Hogwart_Land_LOD1"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_BCLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_BCLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_North_Hogwart_Land_LOD1 */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_North_Hogwart_Land_LOD1"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_AVLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_AVLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_North_Hogwart2_Land_LOD1 */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_North_Hogwart2_Land_LOD1"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_AULOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_AULOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_West_Hogwart_Land_LOD1 */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_West_Hogwart_Land_LOD1"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_AZLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_AZLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_East_Hogwart_Land_LOD1 */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_East_Hogsmeade_Land_LOD1"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_AYLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, "../Bin/Resources/Models/MapMesh/Game/Levels/Overland/HOG/HN_AYLOD/SM_LandscapeStreamingProxy_0_LOD1.bin"))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Hogwart_Lake */
@@ -1967,6 +1971,16 @@ HRESULT CLoader::Loading_For_GamePlay()
 	/* For.Prototype_Component_Hogwart_LakeSurFace */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Hogwart_LakeSurFace"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Lake/SM_Lake_A_Collision_Shallow.bin", XMMatrixIdentity()))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Hogsmead_NorthLake */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Hogsmead_NorthLake"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/River/NorthLake/HDA_SM_LakeA_Collision_Deep.bin", XMMatrixIdentity()))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Hogsmead_NorthLakeShallow */
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_Hogsmead_NorthLakeShallow"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/River/NorthLake/HDA_SM_LakeA_Collision_Shallow.bin", XMMatrixIdentity()))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_VIBuffer_Box */
@@ -2272,7 +2286,7 @@ vector<FOLDER_LOAD*>* APIENTRY Deferred_FolderLoad_Main(ID3D11Device* pDevice, I
 
 			_wstring wstrFileName = L"Prototype_GameObject_" + file.path().stem().wstring();
 
-			CModel* pModel = CModel::Create(pDevice, pContext, MODEL::ENVIROMENT, szFilePath);
+			CModel* pModel = CModel::Create(pDevice, pContext, MODEL::ENVIRONMENT, szFilePath);
 
 			_uint iNumMesh = pModel->Get_NumMeshes();
 
