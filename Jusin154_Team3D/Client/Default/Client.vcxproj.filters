@@ -512,6 +512,12 @@
     <ClInclude Include="..\Public\Boss_HpBar.h">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Boss_HpBar</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\MiniMap_Camera.h">
+      <Filter>02.GameObjects\Cameras\MiniMap_Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Enemy_Detection.h">
+      <Filter>02.GameObjects\UI\Enemy_Detection</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1077,6 +1083,12 @@
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Boss_HpBar">
       <UniqueIdentifier>{b49a3671-96d0-47b8-833f-28190d549b0f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Cameras\MiniMap_Camera">
+      <UniqueIdentifier>{dbf4ff12-e5eb-439a-aa02-e5a424453b08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Enemy_Detection">
+      <UniqueIdentifier>{34a4beb9-ccb9-4847-ae45-af4e7dc25d94}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1532,6 +1544,12 @@
           </ClCompile>
     <ClCompile Include="..\Private\Boss_HpBar.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Boss_HpBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MiniMap_Camera.cpp">
+      <Filter>02.GameObjects\Cameras\MiniMap_Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Enemy_Detection.cpp">
+      <Filter>02.GameObjects\UI\Enemy_Detection</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

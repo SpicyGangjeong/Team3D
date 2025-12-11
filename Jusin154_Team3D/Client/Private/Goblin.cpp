@@ -50,26 +50,26 @@ HRESULT CGoblin::Initialize(void* pArg)
 
 	Add_FSM();
 
-Set_Anim();
+	Set_Anim();
 
-{
-	CFSM::FSM_DESC FSMDesc{};
-	FSMDesc.pStates = &m_States;
-	FSMDesc.pStateMask = &m_iStateMask;
+	{
+		CFSM::FSM_DESC FSMDesc{};
+		FSMDesc.pStates = &m_States;
+		FSMDesc.pStateMask = &m_iStateMask;
 
-	m_pFSM->Bind_States(FSMDesc);
-	m_pFSM->Change_State(FSMSTATE::IDLE);
-}
+		m_pFSM->Bind_States(FSMDesc);
+		m_pFSM->Change_State(FSMSTATE::IDLE);
+	}
 
-m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
-m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
+	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
+	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
 
-m_pCharacter_Controller->Set_Position(XMVectorSet(-40.f, 5.f, -20.f, 1.f));
+	m_pCharacter_Controller->Set_Position(XMVectorSet(-40.f, 5.f, -20.f, 1.f));
 
-m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
-SAFE_ADDREF(m_pEffectPool);
+	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
+	SAFE_ADDREF(m_pEffectPool);
 
-return S_OK;
+	return S_OK;
 }
 
 void CGoblin::Priority_Update(_float fTimeDelta)
@@ -182,7 +182,7 @@ HRESULT CGoblin::Render()
 			return E_FAIL;
 		}
 	}
-	else if (true == m_pRigidBody->IsActive()){
+	else if (true == m_pRigidBody->IsActive()) {
 		if (FAILED(m_pRigidBody->Render())) {
 			return E_FAIL;
 		}
@@ -277,7 +277,7 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 		}
 
 	}
-		break;
+	break;
 	case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
 		m_eHitSpell = STATEANIM::HIT_LEVIOSO;
 		break;
@@ -285,7 +285,7 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 		m_eHitSpell = STATEANIM::KNOCKDOWN_FWD;
 		break;
 	}
-	if (!m_pFSM->IsEnable(FSMSTATE::BLINK)){
+	if (!m_pFSM->IsEnable(FSMSTATE::BLINK)) {
 		m_pFSM->Change_State(FSMSTATE::HIT);
 	}
 
@@ -309,7 +309,7 @@ HRESULT CGoblin::Ready_Components()
 
 	/* Com_Model */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_strModelPrototypeTag,
-		reinterpret_cast<CComponent**>(&m_pModelCom)))){
+		reinterpret_cast<CComponent**>(&m_pModelCom)))) {
 		return E_FAIL;
 	}
 
@@ -367,7 +367,7 @@ HRESULT CGoblin::Ready_Parts()
 
 	Goblin_SpectorDesc.pParentTransform = m_pTransformCom;
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Spector>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER, &Goblin_SpectorDesc,this, &m_pGoblinSpector))) {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Spector>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER, &Goblin_SpectorDesc, this, &m_pGoblinSpector))) {
 		return E_FAIL;
 	}
 
@@ -378,7 +378,7 @@ HRESULT CGoblin::Ready_Parts()
 
 	PartsDesc.pParentTransform = m_pTransformCom;
 
-	if (FAILED(Add_PartObject<CEffectParts>("Goblin_Particle",g_iStaticLevel, &m_pGoblin_Particle, &PartsDesc)))
+	if (FAILED(Add_PartObject<CEffectParts>("Goblin_Particle", g_iStaticLevel, &m_pGoblin_Particle, &PartsDesc)))
 	{
 		return E_FAIL;
 	}
@@ -408,6 +408,10 @@ HRESULT CGoblin::Ready_Parts()
 
 #pragma endregion
 
+	if (FAILED(Add_PartObject<CEnemy_Detection>("Enemy_Detection", g_iStaticLevel, &m_pDetection, &PartsDesc)))
+	{
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -445,7 +449,7 @@ CGoblin* CGoblin::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 CGameObject* CGoblin::Clone(void* pArg, CGameObject* pOwner)
 {
 	CGoblin* pInstance = new CGoblin(*this);
-	
+
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
 		MSG_BOX("Failed to Cloned : CGoblin");
@@ -470,6 +474,7 @@ void CGoblin::Free()
 	SAFE_RELEASE(m_pSmoke);
 	SAFE_RELEASE(m_pGoblin_Particle);
 	SAFE_RELEASE(m_pGoblin_Particle2);
+	SAFE_RELEASE(m_pDetection);
 	SAFE_RELEASE(m_pEffectPool);
 	Safe_Delete(m_pCallBack_Behavior);
 	Safe_Delete(m_pCallBack_HitReport);

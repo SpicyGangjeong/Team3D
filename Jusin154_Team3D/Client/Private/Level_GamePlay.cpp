@@ -241,7 +241,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	// >> M A P Configuration <<
 	// 맵 로드할지 안할지 bool 설정
 	// ---------------------------------
-	_bool isReady_Background = { false };
+	_bool isReady_Background = { true };
 
 #ifdef gimch
 	isReady_Background = true;

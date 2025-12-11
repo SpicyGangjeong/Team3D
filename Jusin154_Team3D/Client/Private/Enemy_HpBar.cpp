@@ -44,9 +44,9 @@ HRESULT CEnemy_HpBar::Initialize(void* pArg)
 	m_fAlpha = 0.f;
 	m_fAlphaTime = 10.f;
 	m_vNine_Slice = _float4(15.f, 100.f, 5.f, 15.f);
-	m_fMaxHp = 0.f;
-	m_fCurrentHp = 0.f;
-	m_fTargetHp = 0.f;
+	m_fMaxHp = -1.f;
+	m_fCurrentHp = -1.f;
+	m_fTargetHp = -1.f;
 	SizeUpX(360.f);
 	m_fMoveSpeed = 5.f;
 	m_bAnimation = false;

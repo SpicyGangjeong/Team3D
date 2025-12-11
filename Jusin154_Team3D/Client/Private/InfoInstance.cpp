@@ -34,6 +34,11 @@ void CInfoInstance::Change_Level()
 	m_pInteractiveInfo->Change_Level();
 }
 
+CStat* CInfoInstance::Get_PlayerStatPtr()
+{
+	return m_pPlayerInfo->Get_PlayerStatPtr();
+}
+
 void CInfoInstance::Update_CameraCoordinateSystem(_float3& vLook, _float3& vRight)
 {
 	m_pPlayerInfo->Update_CameraCoordinateSystem(vLook, vRight);
@@ -55,6 +60,14 @@ void CInfoInstance::Set_Damage(_float fDamage)
 	if (m_pSkillInfo != nullptr)
 		m_pSkillInfo->Update_Damage(fDamage);
 }
+
+CPlater* CInfoInstance::Get_PlayerInfo()
+{
+	//return m_pPlayerInfo->Get_CameraCoordinateSystem();
+	return nullptr;
+}
+
+
 
 #pragma region MONSTER_INFO
 HRESULT CInfoInstance::Regist_PlayerAlly(CUnit* pUnit)
@@ -269,9 +282,17 @@ HRESULT CInfoInstance::Initialize_Information(ID3D11Device* pDevice, ID3D11Devic
 	if (nullptr == m_pMapInfo) {
 		return E_FAIL;
 	}
-	m_pPlayerInfo = CPlayerInfo::Create(pDevice, pContext);
-	if (nullptr == m_pPlayerInfo) {
-		return E_FAIL;
+
+	{ // 순서 고정
+#pragma region STAT PROTOTYPE
+		if (FAILED(Stat_FileLoad("../Bin/Resources/Data/Stat/Stat.xml"))) {
+			return E_FAIL;
+		}
+#pragma endregion
+		m_pPlayerInfo = CPlayerInfo::Create(pDevice, pContext);
+		if (nullptr == m_pPlayerInfo) {
+			return E_FAIL;
+		}
 	}
 	m_pMonsterInfo = CMonsterInfo::Create(pDevice, pContext);
 	if (nullptr == m_pMonsterInfo) {
@@ -289,6 +310,33 @@ HRESULT CInfoInstance::Initialize_Information(ID3D11Device* pDevice, ID3D11Devic
 	return S_OK;
 }
 
+HRESULT CInfoInstance::Stat_FileLoad(const _char* pDirectoryPath)
+{
+	filesystem::path pathStatFile = pDirectoryPath;
+
+	tinyxml2::XMLDocument doc;
+	tinyxml2::XMLError Error = doc.LoadFile(pathStatFile.string().c_str());
+	if (Error != tinyxml2::XML_SUCCESS) {
+		return E_FAIL;
+	}
+
+	tinyxml2::XMLElement* pStatInfo = doc.FirstChildElement("StatInfo");
+	if (!pStatInfo) {
+		return E_FAIL;
+	}
+
+	_uint iNumChild = pStatInfo->ChildElementCount();
+	tinyxml2::XMLNode* pChild = pStatInfo->FirstChildElement();
+	for (_uint i = 0; i < iNumChild; ++i) {
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, CMyTools::ToWstring(pChild->Value()),
+			CStat::Create(m_pDevice, m_pContext, pChild)))) {
+			return E_FAIL;
+		}
+		pChild = pChild->NextSiblingElement();
+	}
+
+	return S_OK;
+}
 void CInfoInstance::Release_Information()
 {
 	UI_Event.clear();
