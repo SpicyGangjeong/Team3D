@@ -206,6 +206,21 @@ void CMonster::Free()
 
 void CMonster::Describe_Entity()
 {
+	if (ImGui::TreeNode("ANIM STATE")) {
+
+		for (auto& pState : m_States)
+		{
+			if (ImGui::Button(to_string(pState.first).c_str()))
+			{
+				m_pFSM->Change_State(pState.first);
+			}
+
+		}
+
+		GUI::Text(to_string(m_pModelCom->Get_CurrentTrackProgressRatio()).c_str());
+
+		ImGui::TreePop();
+	}
 }
 
 #endif // _DEBUG

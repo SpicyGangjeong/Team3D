@@ -92,9 +92,7 @@ void CTrailObject::Late_Update(_float fTimeDelta)
 	if (m_TrailInfo.isOnlyBlur == true)
 		return;
 
-	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
-		m_pGameInstance->Add_RenderGroup(m_TrailInfo.eRenderOrder, this);
-	}
+	m_pGameInstance->Add_RenderGroup(m_TrailInfo.eRenderOrder, this);
 
 }
 
