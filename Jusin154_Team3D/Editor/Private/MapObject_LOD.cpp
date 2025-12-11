@@ -40,7 +40,7 @@ HRESULT CMapObject_LOD::Initialize(void* pArg)
 	}
 	
 	if (_wstring::npos != m_ModelPrototypeTags.front().find(L"Glass"))
-		m_iShaderPass = 12;
+		m_iShaderPass = 20; //ENUM_CLASS(SHADER_PASS_MESH::GLASS_CUBE);
 	else
 		m_iShaderPass = ENUM_CLASS(SHADER_PASS_MESH::DEFAULT);
 
@@ -156,6 +156,18 @@ HRESULT CMapObject_LOD::Render()
 			return E_FAIL;
 		}
 	
+
+		if (20 == m_iShaderPass)
+		{
+			
+			if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float4)))) {
+				return E_FAIL;
+			}
+
+			if (FAILED(m_pShaderCom->Bind_SRV("g_CubeTexture", m_pDefaultGlassTextureCom->Get_SRV(0))))
+				return E_FAIL;
+		}
+
 		if (m_bSelected)
 		{
 			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::MAPTOOL)))) {
@@ -241,6 +253,11 @@ HRESULT CMapObject_LOD::Ready_Components()
 		reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
+	/* Com_Texture */
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Lake_Cube_D"),
+		reinterpret_cast<CComponent**>(&m_pDefaultGlassTextureCom))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -294,6 +311,7 @@ void CMapObject_LOD::Free()
 {
 	__super::Free();
 
+	SAFE_RELEASE(m_pDefaultGlassTextureCom);
 	SAFE_RELEASE(m_pShaderCom);
 
 	for(auto& pModel : m_pModelComs)

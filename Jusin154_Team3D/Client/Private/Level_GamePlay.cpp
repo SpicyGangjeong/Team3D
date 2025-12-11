@@ -223,20 +223,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CUnified>(g_iStaticLevel, NEXT_LEVEL, LAYER_UNIFIED)))
 		return E_FAIL;
 	 
-
-
-	CMapElement_Lake::MAPOBJECT_LAKE_DESC Lake_Desc = {};
-
-	vector<_wstring>		ModelPrototypeTags;
-	ModelPrototypeTags.push_back(TEXT("Prototype_Component_Hogwart_Lake"));
-	Lake_Desc.iMaxLodLevel = 0;
-	Lake_Desc.iRenderType = 4;
-	Lake_Desc.vPosition = _float3(-144.f, -61.9f, -115.f);
-	Lake_Desc.vRotation = _float3(0.f, 0.f, 0.f);
-	Lake_Desc.vScale = _float3(3.f, 3.f, 3.f);
-	Lake_Desc.ModelPrototypeTags = ModelPrototypeTags;
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Lake>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Lake_Desc)))
-		return E_FAIL;
+	
 	// ---------------------------------
 	// >> M A P Configuration <<
 	// 맵 로드할지 안할지 bool 설정
@@ -268,8 +255,12 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	}
 	else
 	{
-		///* 전체 맵 */
+		/* 전체 맵 */
 		CInfoInstance::GetInstance()->Load_MapObjects("Hogsmeade_MapContainer_Data");
+
+		/* 물 오브젝트 */
+		if (FAILED(CInfoInstance::GetInstance()->Load_WaterElemet("Element_Water_Info")))
+			return E_FAIL;
 
 		/* 조명 오브젝트 */
 		CInfoInstance::GetInstance()->Load_LightElements("LightElement");
@@ -520,12 +511,13 @@ HRESULT CLevel_GamePlay::Ready_Layer_SkyBox(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 {
-	for (_uint i = 0; i < 1; ++i)
+	for (_uint i = 0; i < 0; ++i)
 	{
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 			return E_FAIL;
 		}
 	}
+
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Mage>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 		return E_FAIL;
 	}

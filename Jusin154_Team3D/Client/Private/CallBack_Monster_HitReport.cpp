@@ -13,6 +13,14 @@ CCallBack_Monster_HitReport::~CCallBack_Monster_HitReport()
 {
 }
 
+void CCallBack_Monster_HitReport::BeginFrame()
+{
+	// 매 프레임 초기화
+	m_vClimbNormal = { 0.f, 1.f, 0.f };
+	m_bGroundHit = { false };
+	m_fBestNormal = { 0.f };
+}
+
 void CCallBack_Monster_HitReport::onShapeHit(const PSX::PxControllerShapeHit& hit)
 {
 	PSX::PxController*		pController = hit.controller;
@@ -34,7 +42,23 @@ void CCallBack_Monster_HitReport::onShapeHit(const PSX::PxControllerShapeHit& hi
 		switch (pTargetActorData->eKind)
 		{
 		case PHYSX_KIND::BODY_STATIC:
-			// action
+			switch (PXOBJECT(pTargetActorData->iSubKind))
+			{
+			case PXOBJECT::TERRAIN:
+			case PXOBJECT::FLOOR:
+			case PXOBJECT::ROAD:
+				if (vWorldNormal.y > 0) {
+					_float fDotValue = vWorldNormal.dot({ 0.f, 1.f, 0.f });
+					if (m_fBestNormal < fDotValue) {
+						m_bGroundHit = true;
+						m_fBestNormal = fDotValue;
+						m_vClimbNormal = { vWorldNormal.x, vWorldNormal.y, vWorldNormal.z };
+					}
+				}
+				break;
+			default:
+				break;
+			}
 			break;
 		case PHYSX_KIND::BODY_DYNAMIC:
 		{
@@ -131,6 +155,20 @@ void CCallBack_Monster_HitReport::onObstacleHit(const PSX::PxControllerObstacleH
 	//}
 }
 
+void CCallBack_Monster_HitReport::Set_CurrentSlop()
+{
+	m_pController->Rewind_Grounded();
+	if (m_bGroundHit)
+	{
+		m_pController->Set_OnGroundFlag(m_bGroundHit);
+		float fDot = clamp(m_fBestNormal, -1.0f, 1.0f);
+		float fAngleRad = acosf(fDot);
+		float fAngleDeg = XMConvertToDegrees(fAngleRad);
+
+		m_pController->Set_CurrentSlope(fAngleDeg);
+	}
+}
+
 HRESULT CCallBack_Monster_HitReport::Initialize(CCharacter_Controller* pController, CRigidBody_Dynamic* pPartDynamicObject)
 {
 	m_pController = pController;
@@ -148,6 +186,16 @@ HRESULT CCallBack_Monster_HitReport::Finalize()
 	SAFE_RELEASE(m_pPartDynamicBody);
 	SAFE_RELEASE(m_pController);
 	return S_OK;
+}
+
+_bool CCallBack_Monster_HitReport::IsOnGround()
+{
+	return m_bGroundHit;
+}
+
+_vector CCallBack_Monster_HitReport::Get_GroundVector()
+{
+	return XMLoadFloat3(&m_vClimbNormal);
 }
 
 CCallBack_Monster_HitReport* CCallBack_Monster_HitReport::Create()

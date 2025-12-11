@@ -85,16 +85,20 @@ void CTroll::Priority_Update(_float fTimeDelta)
 
 void CTroll::Update(_float fTimeDelta)
 {
-	__super::Update(fTimeDelta);
-
 	m_pFSM->Update_State(fTimeDelta);
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
+	__super::Update(fTimeDelta);
+
 	Play_Event();
 
 	if (true == m_pCharacter_Controller->IsActive()) {
-		m_pCharacter_Controller->Move(fTimeDelta);
+		{ // 세트
+			m_pCallBack_HitReport->BeginFrame();
+			m_pCharacter_Controller->Move(fTimeDelta);
+			m_pCallBack_HitReport->Set_CurrentSlop();
+		}
 		m_vStunTimer.x = 0.f;
 	}
 	else if (true == m_pRigidBody->IsActive()) {
@@ -535,7 +539,14 @@ void CTroll::Describe_Entity()
 {
 	__super::Describe_Entity();
 
+	_float4x4 socketMat = *m_pModelCom->Get_BoneMatrixPtr("HeadEnd");
 
+	_string strSocket = "Socket " + to_string(socketMat._41) + to_string(socketMat._42) + to_string(socketMat._43);
+
+	GUI::Text(strSocket.c_str());
+
+
+	m_pTransformCom->Describe_Entity();
 }
 
 #endif // _DEBUG

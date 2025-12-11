@@ -22,6 +22,8 @@ public:
 		_uint		iAlphaSizeY;
 		_float3		vPosition;
 		_wstring	strBufferTag;
+		_string		strHeightMapTag;
+		_string		strAlphaMapTag;
 	}TERRAIN_DESC;
 
 private:
@@ -43,7 +45,6 @@ private:
 	CTexture*				m_pDiffuseTextureCom = { nullptr };
 	CTexture*				m_pNormalTextureCom = { nullptr };
 	CTexture*				m_pMROTextureCom = { nullptr };
-	CTexture*				m_pMaskTextureCom = { nullptr };
 
 	CRigidBody_Static*		m_pRigidBody = { nullptr };
 

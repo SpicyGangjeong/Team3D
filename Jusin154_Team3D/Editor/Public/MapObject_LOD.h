@@ -39,6 +39,9 @@ private:
 
 	_uint					m_iLodIndex = {};
 	_uint					m_iShaderPass = {};
+	_float					m_fGlassRatio = {0.5f};
+
+	CTexture*				m_pDefaultGlassTextureCom = { nullptr };
 
 	vector<_wstring>		m_ModelPrototypeTags;
 	vector<_uint>			m_ModelPathIndices = { };

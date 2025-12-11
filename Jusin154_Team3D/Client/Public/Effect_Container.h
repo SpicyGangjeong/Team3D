@@ -38,7 +38,7 @@ protected:
 	HRESULT				Reset_EffectParts();
 	_int				CollisionCheck();
 	ON_COLLISION_INFO	SweepTarget(_vector StartPos, _vector EndPos, _float fRadius, _bool isTerrainCollision = false);
-
+	ON_COLLISION_INFO	MonsterSweepTarget(_vector StartPos, _vector EndPos, _float fRadius, _bool isTerrainCollision = false);
 
 protected:
 	_float4							m_vStartPos = {};
