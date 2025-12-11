@@ -42,9 +42,24 @@ HRESULT CMapElement_Lake::Initialize(void* pArg)
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pDesc->vPosition), 1.f));
 	m_pTransformCom->Set_Scale(pDesc->vScale);
 	m_pTransformCom->Rotation(XMConvertToRadians(pDesc->vRotation.x), XMConvertToRadians(pDesc->vRotation.y), XMConvertToRadians(pDesc->vRotation.z));
-	m_vRefractionColor = _float4(1.f, 1.f, 1.f, 1.f);
-	m_vSurfaceColor = _float4(1.f, 1.f, 1.f, 1.f);
-	m_fUVValue =  0.01f;
+	
+	m_fRadius = pDesc->fRadius;
+	m_fTimeSpeed = pDesc->fTimeSpeed;
+
+	m_fRefractionStrength = pDesc->fRefractionStrength;
+	m_fRefractionPow = pDesc->fRefractionPow;
+
+	m_fUVValue1 = pDesc->fUVValue1;
+	m_fUVValue2 = pDesc->fUVValue2;
+	m_fUVValue3 = pDesc->fUVValue3;
+
+	m_vUVSpeed = pDesc->vUVSpeed;
+	m_vLargeUVSpeed = pDesc->vLargeUVSpeed;
+	m_vSubUVSpeed3 = pDesc->vSubUVSpeed3;
+
+	memcpy(&m_vRefractionColor, &pDesc->vRefractionColor, sizeof(_float4));
+	memcpy(&m_vSurfaceColor, &pDesc->vSurfaceColor, sizeof(_float4));
+
 	return S_OK;
 }
 
@@ -54,13 +69,17 @@ void CMapElement_Lake::Priority_Update(_float fTimeDelta)
 
 void CMapElement_Lake::Update(_float fTimeDelta)
 {
-	m_fTimeAcc += fTimeDelta * m_fUVValue;
+	m_fTimeAcc += fTimeDelta * m_fTimeSpeed;
+
+	if (3600.f <= m_fTimeAcc)
+		m_fTimeAcc = 0.f;
 	//Describe_Entity();
 }
 
 void CMapElement_Lake::Late_Update(_float fTimeDelta)
 {
-	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+	if(m_pGameInstance->isIn_WorldFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_fRadius))
+		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 }
 
 HRESULT CMapElement_Lake::Render()
@@ -85,6 +104,8 @@ HRESULT CMapElement_Lake::Ready_Components(void* pArg)
 		return E_FAIL;
 	}
 
+	MAPOBJECT_LAKE_DESC* pDesc = static_cast<MAPOBJECT_LAKE_DESC*>(pArg);
+
 	for (_uint i = 0; i < m_iMaxLodLevel + 1; ++i)
 	{
 		CModel* pModel = { nullptr };
@@ -95,6 +116,13 @@ HRESULT CMapElement_Lake::Ready_Components(void* pArg)
 			return E_FAIL;
 
 		m_pModelComs.push_back(pModel);
+
+		/* Com_Model */
+		if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, pDesc->ShallowModelPrototypeTags[i],
+			reinterpret_cast<CComponent**>(&pModel))))
+			return E_FAIL;
+
+		m_pShallowModels.push_back(pModel);
 	}
 
 	/* Com_Shader */
@@ -150,7 +178,6 @@ HRESULT CMapElement_Lake::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
-
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fTime", &m_fTimeAcc, sizeof(_float)))) {
 		return E_FAIL;
 	}
@@ -164,13 +191,13 @@ HRESULT CMapElement_Lake::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fUVSpeed1", &m_fUVSpeed1, sizeof(_float)))) {
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vUVSpeed1", &m_vUVSpeed, sizeof(_float2)))) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fUVSpeed2", &m_fUVSpeed2, sizeof(_float)))) {
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vUVSpeed2", &m_vLargeUVSpeed, sizeof(_float2)))) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fUVSpeed3", &m_fUVSpeed3, sizeof(_float)))) {
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vUVSpeed3", &m_vSubUVSpeed3, sizeof(_float2)))) {
 		return E_FAIL;
 	}
 
@@ -180,10 +207,6 @@ HRESULT CMapElement_Lake::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fRefractionPow", &m_fRefractionPow, sizeof(_float)))) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fSpecularIntensity", &m_fSpecularIntensity, sizeof(_float)))) {
-		return E_FAIL;
-	}
-
 
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float3)))) {
@@ -204,15 +227,17 @@ HRESULT CMapElement_Lake::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_SRV("g_NormalLargeTexture", m_pNormalLargeTextureCom->Get_SRV(0)))) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_SRV("g_NormalSubTexture", m_pNormalSubTextureCom->Get_SRV(0)))) {
+	if (FAILED(m_pShaderCom->Bind_SRV("g_CausticsTexture", m_pCausticsTextureCom->Get_SRV(0)))) {
 		return E_FAIL;
 	}
+
 	if (FAILED(m_pShaderCom->Bind_SRV("g_NoiseTexture", m_pNoiseTextureCom->Get_SRV(0)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pCubeMapTextureCom->Bind_ShaderResource(m_pShaderCom, "g_CubeTexture", 0))) {
 		return E_FAIL;
 	}
+
 
 
 	return S_OK;
@@ -256,7 +281,10 @@ void CMapElement_Lake::Free()
 	SAFE_RELEASE(m_pCausticsTextureCom);
 	SAFE_RELEASE(m_pNoiseTextureCom);
 	SAFE_RELEASE(m_pShaderCom);
+
 	for (auto& pModel : m_pModelComs)
+		SAFE_RELEASE(pModel);
+	for (auto& pModel : m_pShallowModels)
 		SAFE_RELEASE(pModel);
 }
 
