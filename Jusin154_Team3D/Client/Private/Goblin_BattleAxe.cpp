@@ -50,6 +50,7 @@ void CGoblin_BattleAxe::Priority_Update(_float fTimeDelta)
 
 	m_pTransformCom->Set_WorldMatrix(socketMatrix * XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr()));
 
+
 #ifdef _DEBUG
 	Describe_Entity();
 

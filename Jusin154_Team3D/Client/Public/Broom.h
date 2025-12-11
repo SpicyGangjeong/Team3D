@@ -83,6 +83,13 @@ public:
 	HRESULT Behavior_MoveExitCheck(_float fTimeDelta);
 	void	Behavior_MoveExit();
 
+	void	Behavior_Broom_HoverEnter();
+	HRESULT Behavior_Broom_HoverExitCheck(_float fTimeDelta);
+	void	Behavior_Broom_HoverExit();
+
+	void	Behavior_Broom_FlyEnter();
+	HRESULT Behavior_Broom_FlyExitCheck(_float fTimeDelta);
+	void	Behavior_Broom_FlyExit();
 #pragma endregion
 
 

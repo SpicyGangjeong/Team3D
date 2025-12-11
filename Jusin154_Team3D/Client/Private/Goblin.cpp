@@ -262,12 +262,12 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 	case ENUM_CLASS(SKILL_TYPE::DESCENDO):
 		m_eHitSpell = STATEANIM::KNOCKDOWN_FWD;
 		break;
-	case ENUM_CLASS(SKILL_TYPE::FLIPENDO):
-		m_eHitSpell = STATEANIM::TUMBLE2;
+	case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
+		m_eHitSpell = STATEANIM::KNOCKDOWN_BWD;
 		break;
 	case ENUM_CLASS(SKILL_TYPE::JAP):
 	{
-		m_eHitSpell = STATEANIM::HIT_LEVIOSO;
+		m_eHitSpell = STATEANIM::HIT_BWD;
 
 		m_DamageInfo.fDamage = damagePair.first;
 		m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);

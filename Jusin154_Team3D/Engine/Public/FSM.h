@@ -37,6 +37,10 @@ enum ESTATE : _u64Flag
     DEAD                        = 1ULL << 30,
     STUN                        = 1ULL << 31,
     SUSTAIN                     = 1ULL << 32,
+    BROOM_RIDE_MOVE             = 1ULL << 33,
+    BROOM_DISMOUNT              = 1ULL << 34,
+    HOVER                       = 1ULL << 35,
+    FLY                         = 1ULL << 36,
     END
 };
 NS_END
