@@ -23,12 +23,20 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 public:
+	virtual _vector Get_WorldPostion() override;
+	_matrix			Get_WorldMatrix();
+	virtual const _float4* Get_HammerPosition();
 
 private:
 	const _float4x4* m_pSocketMatrices = {  };
-	_float4x4 m_pHammerMatrix = { };
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
+	_float4x4				m_HammerMatrix = { };
+	_float3					m_Offset = {};
+#ifdef _DEBUG
+	unique_ptr<GeometricPrimitive> m_pGripShape = { nullptr };
+	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };
+#endif // _DEBUG
 
 private:
 	virtual HRESULT Initialize_Prototype() override;

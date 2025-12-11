@@ -10,6 +10,7 @@ CState_Slam::CState_Slam()
 
 void CState_Slam::Enter()
 {
+    m_bPlayerHit = false;
     __super::Enter();
 }
 
@@ -22,13 +23,14 @@ HRESULT CState_Slam::Update(_float fTimeDelta)
         return E_FAIL;
     }
     if (nullptr != m_funcLateUpdate) {
-        m_funcLateUpdate(fTimeDelta);
+        m_funcLateUpdate(fTimeDelta, m_bPlayerHit);
     }
     return S_OK;
 }
 
 void CState_Slam::Exit()
 {
+    m_bPlayerHit = false;
     __super::Exit();
 }
 
