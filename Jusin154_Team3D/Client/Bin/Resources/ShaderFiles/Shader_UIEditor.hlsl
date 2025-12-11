@@ -4,7 +4,7 @@
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 Texture2D g_DepthTexture;
 
-float4 g_CamaraPosition;
+float3 g_CamaraPosition;
 
 int g_iImageCountX;
 int g_iImageCountY;
@@ -1506,30 +1506,28 @@ VS_OUT3D VS_MAIN3D(VS_IN3D In)
 {
     VS_OUT3D Out;
     
-    float3 CamaeraPos = float3(g_CamaraPosition.x, 1.f, g_CamaraPosition.z);
-    float3 UIPos = float3(g_WorldMatrix._41, g_WorldMatrix._42, g_WorldMatrix._43);
+    matrix matViewProj = mul(g_ViewMatrix, g_ProjMatrix);
     
-    float3 CameraDir = normalize(CamaeraPos - UIPos);
-    
-    float angle = atan2(CameraDir.x, CameraDir.z);
-    float cosA = cos(angle);
-    float sinA = sin(angle);
-    
-    
-    float3 rotation = float3(0.f, 0.f, 0.f);
+    float2 Offset = In.vTexcoord - 0.5f;
+    float3 worldCenter = float3(g_WorldMatrix._41, g_WorldMatrix._42, g_WorldMatrix._43);
 
-    rotation.x = In.vPosition.x * cosA - In.vPosition.z * sinA;
-    rotation.y = In.vPosition.y;
-    rotation.z = In.vPosition.x * sinA + In.vPosition.z * cosA;
     
-    float3 worldPos = rotation + UIPos;
+    float3 vLook = normalize(g_CamaraPosition - worldCenter);
     
-    matrix matWVP = mul(g_ViewMatrix, g_ProjMatrix);
-    float4 clipPos = mul(float4(worldPos, 1.0f), matWVP);
+    vLook.y = 0.f;
+    vLook = normalize(vLook);
+    
+    float3 upDir = float3(0.f, 1.f, 0.f);
 
-    Out.vPosition = clipPos;
-    Out.vTexcoord = In.vTexcoord;
-    
+    float3 rightDir = normalize(cross(vLook, upDir));
+        
+    float3 dirRight = rightDir * g_fCurrent_Size.x * Offset.x;
+    float3 dirUp = upDir * g_fCurrent_Size.y * Offset.y;
+
+    float3 vertexPos = worldCenter + dirRight + dirUp;
+
+    Out.vPosition = mul(float4(vertexPos, 1.f), matViewProj);
+    Out.vTexcoord = 1.f - In.vTexcoord;
     return Out;
 }
 

@@ -29,6 +29,7 @@ public:
 
 private:
 	void Click_Slot(_bool bClick);
+	void Spell_Setting();
 
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
@@ -44,6 +45,8 @@ private:
 	_float m_fOffSetX{};
 	_float m_fOffSetY{};
 	_uint  m_iCols{};
+
+	_bool m_bLock[26] = {};
 
 public:
 	static CSpell_State* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
