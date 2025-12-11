@@ -541,8 +541,12 @@ void CInstance_Model::Compute_CS(_float fTimeDelta)
 		pDesc->isPivotMove = m_InstanceDesc.isPivotMove;
 		pDesc->isSizeLerp = m_InstanceDesc.isSizeLerp;
 		pDesc->isNoWorld = m_InstanceDesc.isNoWorld;
+		pDesc->isMoveUp = m_InstanceDesc.isMoveUp;
+		pDesc->isMoveRight = m_InstanceDesc.isMoveRight;
 		pDesc->isDetphCompareStop = m_InstanceDesc.isDetphCompareStop;
 		pDesc->isRandomAniIndex = m_InstanceDesc.isRandomAniIndex;
+		pDesc->isExcludePos = m_InstanceDesc.isExcludePos;
+		
 
 		pDesc->WorldMatrix = *m_pOwner->Get_Component<CTransform>()->Get_WorldMatrixPtr();
 		pDesc->fSizeLerpOption = m_InstanceDesc.fSizeLerpOption;
@@ -714,9 +718,11 @@ void CInstance_Model::Instane_Buffer_ReStruct()
 				pParticleValues[i].fSizeDrag = m_pGameInstance->Random_Float(m_InstanceDesc.vSizeDrag.x, m_InstanceDesc.vSizeDrag.y);
 				pParticleValues[i].vDelay = _float2(0.0f, m_pGameInstance->Random_Float(m_InstanceDesc.vDelay.x, m_InstanceDesc.vDelay.y));
 				pParticleValues[i].fDropAttenuation = m_pGameInstance->Random_Float(m_InstanceDesc.vDropAttenuation.x, m_InstanceDesc.vDropAttenuation.y);
+				pParticleValues[i].fAcceleration = _float(m_pGameInstance->Random_Float(m_InstanceDesc.vAcceleration.x, m_InstanceDesc.vAcceleration.y));
 
 				pParticleValues[i].fCollisionTime = 0.f;
 				pParticleValues[i].isCompareStop = false;
+	
 
 				memcpy(&pParticleValues[i].vOriginRight, SRMatrix.m[0], sizeof(_float4));
 				memcpy(&pParticleValues[i].vOriginUp, SRMatrix.m[1], sizeof(_float4));
@@ -832,6 +838,17 @@ void CInstance_Model::Describe_Entity()
 			Instane_Buffer_ReStruct();
 		}
 
+		if (GUI::Checkbox("Up Move", &m_InstanceDesc.isMoveUp))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
+		if (GUI::Checkbox("Right Move", &m_InstanceDesc.isMoveRight))
+		{
+			Instane_Buffer_ReStruct();
+		}
+
+
 		if (GUI::Checkbox("Sin Wave", &m_InstanceDesc.isSinWave))
 		{
 			Instane_Buffer_ReStruct();
@@ -847,6 +864,12 @@ void CInstance_Model::Describe_Entity()
 			Instane_Buffer_ReStruct();
 		}
 
+
+		if (GUI::Checkbox("ExcludePos From PibotMove", &m_InstanceDesc.isExcludePos))
+		{
+			Instane_Buffer_ReStruct();
+		}
+		
 		if (GUI::Checkbox("PivotMove", &m_InstanceDesc.isPivotMove))
 		{
 			Instane_Buffer_ReStruct();
@@ -1050,6 +1073,10 @@ void CInstance_Model::Describe_Entity()
 			Instane_Buffer_ReStruct();
 		}
 
+		if (ImGui::DragFloat2("Acceleration", reinterpret_cast<_float*>(&m_InstanceDesc.vAcceleration)))
+		{
+			Instane_Buffer_ReStruct();
+		}
 
 
 		ImGui::PopItemWidth();

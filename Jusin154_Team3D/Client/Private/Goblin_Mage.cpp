@@ -66,6 +66,7 @@ HRESULT CGoblin_Mage::Initialize(void* pArg)
 
 	m_pCharacter_Controller->Set_Position(XMVectorSet(-50.f, 5.f, -10.f, 1.f));
 
+
 	return S_OK;
 }
 
@@ -172,16 +173,16 @@ HRESULT CGoblin_Mage::Render()
 	}
 
 #ifdef _DEBUG
-	if (true == m_pCharacter_Controller->IsActive()) {
-		if (FAILED(m_pCharacter_Controller->Render())) {
-			return E_FAIL;
-		}
-	}
-	else if (true == m_pRigidBody->IsActive()) {
-		if (FAILED(m_pRigidBody->Render())) {
-			return E_FAIL;
-		}
-	}
+	//if (true == m_pCharacter_Controller->IsActive()) {
+	//	if (FAILED(m_pCharacter_Controller->Render())) {
+	//		return E_FAIL;
+	//	}
+	//}
+	//else if (true == m_pRigidBody->IsActive()) {
+	//	if (FAILED(m_pRigidBody->Render())) {
+	//		return E_FAIL;
+	//	}
+	//}
 #endif
 
 

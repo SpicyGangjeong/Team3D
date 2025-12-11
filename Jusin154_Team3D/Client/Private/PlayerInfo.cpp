@@ -2,6 +2,7 @@
 #include "PlayerInfo.h"
 #include "GameInstance.h"
 #include "InfoInstance.h"
+#include "Player.h"
 
 CPlayerInfo::CPlayerInfo()
 {

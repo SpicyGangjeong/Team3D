@@ -39,7 +39,7 @@ HRESULT CTroll_Rush_Hit::Initialize(void* pArg)
 	m_wstrEffectName = L"Troll_Nomal_Smoke";
 
 
-	m_fDuration = 2.f;
+	m_fDuration = 3.f;
 
 	return S_OK;
 }
@@ -86,6 +86,7 @@ HRESULT CTroll_Rush_Hit::Pre_Setting(CGameObject* pObject, void* pArg)
 	pSmoke->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&vPos));
 
 	pSmoke->Set_Visible(true);
+
 	return S_OK;
 }
 

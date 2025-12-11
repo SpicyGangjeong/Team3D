@@ -181,6 +181,15 @@ void CGoblin_Mage::Behavior_SpellEnter()
 	pairAnimInfo = m_Animation[STATEANIM::SPELL_CHARGE];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.3f);
 	m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SPELL)] = m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SPELL)];
+
+	Add_Event(pairAnimInfo.first, [this]() {
+
+		m_pEffectPool->Use_Skill(SKILL_TYPE::GOBLIN_MAGE_SIDE, this);
+
+		}, 0.1f);
+
+
+
 }
 
 HRESULT CGoblin_Mage::Behavior_SpellExitCheck(_float fTimeDelta)
@@ -193,6 +202,12 @@ HRESULT CGoblin_Mage::Behavior_SpellExitCheck(_float fTimeDelta)
 		{
 			pairAnimInfo = m_Animation[STATEANIM::SPELL];
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, false, 1.3f);
+
+			Add_Event(pairAnimInfo.first, [this]() {
+
+				m_pEffectPool->Use_Skill(SKILL_TYPE::GOBLIN_MAGE_DOWN, this);
+
+				}, 0.1f);
 		}
 		return S_OK;
 	}
@@ -219,6 +234,20 @@ void CGoblin_Mage::Behavior_LightAttackEnter()
 	pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 	m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::LIGHTATTACK)] = m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::LIGHTATTACK)];
+
+
+
+	Add_Event(pairAnimInfo.first, [this]() {
+
+		m_pEffectPool->Use_Skill(SKILL_TYPE::GOBLIN_MAGE_SIDE, this);
+
+		}, 0.1f);
+
+	Add_Event(pairAnimInfo.first, [this]() {
+
+		m_pEffectPool->Use_Skill(SKILL_TYPE::GOBLIN_MAGE_ATTACK, this);
+
+		}, 0.4f);
 }
 
 HRESULT CGoblin_Mage::Behavior_LightAttackExitCheck(_float fTimeDelta)

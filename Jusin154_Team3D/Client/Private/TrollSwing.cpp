@@ -39,7 +39,7 @@ HRESULT CTrollSwing::Initialize(void* pArg)
 	m_wstrEffectName = L"TrollSwing";
 
 
-	m_fDuration = 3.2f;
+	m_fDuration = 4.2f;
 
 	return S_OK;
 }

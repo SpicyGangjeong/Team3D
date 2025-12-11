@@ -126,6 +126,7 @@
 #include "Lumos.h"
 
 
+
 #include "TrollSwing.h"
 #include "Troll_Nomal_Smoke.h"
 #include "Troll_Rush_Hit.h"
@@ -134,7 +135,11 @@
 #include "Goblin_Protego.h"
 #include "Goblin_Attack.h"
 
+#include "Mage_Down_Attack.h"
+#include "Mage_Nomal_Attack.h"
+#include "MageSide.h"
 
+#include "StunEffect.h"
 
 #pragma endregion
 
@@ -1527,6 +1532,23 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Attack>(NEXT_LEVEL, CGoblin_Attack::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CMage_Down_Attack>(NEXT_LEVEL, CMage_Down_Attack::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CMage_Nomal_Attack>(NEXT_LEVEL, CMage_Nomal_Attack::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CMageSide>(NEXT_LEVEL, CMageSide::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CStunEffect>(NEXT_LEVEL, CStunEffect::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CWandEnd>(NEXT_LEVEL, CWandEnd::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
