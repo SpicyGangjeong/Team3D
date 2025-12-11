@@ -1358,7 +1358,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 
-	// Heavy Wall
 	CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
 	{
 		Desc.eType = ACTOR::BOX;

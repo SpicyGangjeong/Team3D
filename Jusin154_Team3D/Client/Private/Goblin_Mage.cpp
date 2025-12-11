@@ -308,7 +308,7 @@ HRESULT CGoblin_Mage::Ready_Components()
 		Desc.fContactOffset = 0.001f;
 		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
 		Desc.bAutoStepping = { false };
-		Desc.fStepOffset = { 0.05f };
+		Desc.fStepOffset = { 0.001f };
 		Desc.fRadius = 0.6f;
 		Desc.fHeight = 0.7f;
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Monster_HitReport::Create();

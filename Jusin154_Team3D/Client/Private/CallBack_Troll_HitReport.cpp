@@ -60,12 +60,18 @@ void CCallBack_Troll_HitReport::onShapeHit(const PSX::PxControllerShapeHit& hit)
 			break;
 		case PHYSX_KIND::BODY_DYNAMIC:
 		{
-			switch (pTargetActorData->iSubKind)
+			switch (PXOBJECT(pTargetActorData->iSubKind))
 			{
-			case 0:
-				m_pController->ConvertToDO(*m_pPartDynamicBody);
-				m_pPartDynamicBody->Add_Force(XMVectorSet(vDir.x, vDir.y, vDir.z, 0.f) * fLength * 100.f, PSX::PxForceMode::eIMPULSE);
+			case PXOBJECT::END:
 				break;
+			case PXOBJECT::BOX:
+			{
+				PSX::PxRigidDynamic* pDynamic = static_cast<PSX::PxRigidDynamic*>(pActor);
+				//pDynamic->setRigidBodyFlag(PSX::PxRigidBodyFlag::eKINEMATIC, false);
+				PSX::PxVec3 vCompressedDir = -vWorldNormal;
+				vCompressedDir.normalize();
+				pDynamic->addForce(vCompressedDir * fLength * 1000.f, PSX::PxForceMode::eFORCE);
+			}break;
 			default:
 			{
 			}
