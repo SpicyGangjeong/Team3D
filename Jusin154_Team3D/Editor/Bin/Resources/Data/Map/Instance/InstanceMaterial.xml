@@ -150,4 +150,64 @@
         <Surface>SRO</Surface>
     </Mesh>
    </SM_OakTree_TallA>
+   <SM_Reeds_A_Master mesh="1">
+    <Mesh>
+        <Material>T_Reeds_D</Material>
+        <Material>T_Reeds_N</Material>
+        <Material>T_Reeds_SRO</Material>
+        <Surface>SRO</Surface>
+    </Mesh>
+   </SM_Reeds_A_Master>
+   <SM_Reeds_B_Master mesh="1">
+    <Mesh>
+        <Material>T_Reeds_D</Material>
+        <Material>T_Reeds_N</Material>
+        <Material>T_Reeds_SRO</Material>
+        <Surface>SRO</Surface>
+    </Mesh>
+   </SM_Reeds_B_Master>
+   <SM_GenericShrub_B mesh="1">
+    <Mesh>
+        <Material>T_BogMyrtle_Leaves_D</Material>
+        <Material>T_BogMyrtle_Leaves_N</Material>
+        <Material>T_BogMyrtle_Leaves_SRO</Material>
+        <Surface>SRO</Surface>
+    </Mesh>
+   </SM_GenericShrub_B>
+    <SM_BogMyrtle_A mesh="1">
+    <Mesh>
+        <Material>T_BogMyrtle_Leaves_D</Material>
+        <Material>T_BogMyrtle_Leaves_N</Material>
+        <Material>T_BogMyrtle_Leaves_SRO</Material>
+        <Surface>SRO</Surface>
+    </Mesh>
+   </SM_BogMyrtle_A>
+    <SM_Dogwood_B mesh="2">
+    <Mesh>
+        <Material>T_Dogwood_Leaves_02_D</Material>
+        <Material>T_Dogwood_Leaves_02_N</Material>
+        <Material>T_Dogwood_Leaves_02_SRO</Material>
+        <Surface>SRO</Surface>
+    </Mesh>
+    <Mesh>
+        <Material>T_Dogwood_Bark_D</Material>
+        <Material>T_Dogwood_Bark_N</Material>
+        <Material>T_Dogwood_Bark_SRO</Material>
+        <Surface>SRO</Surface>
+    </Mesh>
+   </SM_Dogwood_B>
+   <SM_ScotsPine_LargeA_Master mesh="2">
+    <Mesh>
+        <Material>T_ScotsPine_Branch_D</Material>
+        <Material>T_ScotsPine_Branch_D</Material>
+        <Material>T_ScotsPine_Branch_D</Material>
+        <Surface>SRO</Surface>
+    </Mesh>
+    <Mesh>
+        <Material>T_ScotsPine_Bark_A_D</Material>
+        <Material>T_ScotsPine_Bark_A_N</Material>
+        <Material>T_ScotsPine_Bark_A_SRO</Material>
+        <Surface>SRO</Surface>
+    </Mesh>
+   </SM_ScotsPine_LargeA_Master>
 </Instance>

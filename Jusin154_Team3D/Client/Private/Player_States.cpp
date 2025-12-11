@@ -822,20 +822,8 @@ void CPlayer::Behavior_CombatEnter()
 			m_vGrapInteratableLerp.x = 0.f;
 			return;
 		}
-
 		Add_Event(pairAnimInfo.first,
-			[this]() {			_vector vDir = {};
-		_float vDistance = 45.f;
-		CRigidBody_Dynamic* pBody = m_pGrapInteractive->Get_Component<CRigidBody_Dynamic>();
-		if (nullptr != m_LockOnInfo.pUnit) {
-			vDir = XMVector3Normalize(m_LockOnInfo.pUnit->Get_LockOnPos() - m_pGrapInteractive->Get_LockOnPos());
-		}
-		else {
-			vDir = m_pTransformCom->Get_State(STATE::LOOK);
-		}
-		m_pGrapInteractive->Set_KinematicFlag(false);
-		pBody->Add_Force(vDir * vDistance, PSX::PxForceMode::eIMPULSE);
-		SAFE_RELEASE(m_pGrapInteractive); },
+			[this]() { Throwing_Interactive(); },
 			0.2f);
 	}
 	else if (m_pGameInstance->Key_Down(DIK_G)) {
@@ -886,24 +874,20 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		}
 		else if (m_pGameInstance->Key_Down(DIK_Z)) {
-			m_pFSM->Enable_State(FSMSTATE::ANCIENT_THROW);
-			pairAnimInfo = m_Animation[STATEANIM::ANCIENT_THROW];
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-
-			Add_Event(pairAnimInfo.first,
-				[this]() {			_vector vDir = {};
-			_float vDistance = 45.f;
-			CRigidBody_Dynamic* pBody = m_pGrapInteractive->Get_Component<CRigidBody_Dynamic>();
-			if (nullptr != m_LockOnInfo.pUnit) {
-				vDir = XMVector3Normalize(m_LockOnInfo.pUnit->Get_LockOnPos() - m_pGrapInteractive->Get_LockOnPos());
+			if (nullptr != m_pGrapInteractive) {
+				m_pFSM->Enable_State(FSMSTATE::ANCIENT_THROW);
+				pairAnimInfo = m_Animation[STATEANIM::ANCIENT_THROW];
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+				Add_Event(pairAnimInfo.first,
+					[this]() { Throwing_Interactive(); },
+					0.2f);
 			}
-			else {
-				vDir = m_pTransformCom->Get_State(STATE::LOOK);
+			else if (nullptr != m_LockOnInfo.pInteractive) {
+				m_pGrapInteractive = m_LockOnInfo.pInteractive;
+				SAFE_ADDREF(m_pGrapInteractive);
+				m_pGrapInteractive->Set_KinematicFlag(true);
+				m_vGrapInteratableLerp.x = 0.f;
 			}
-			m_pGrapInteractive->Set_KinematicFlag(false);
-			pBody->Add_Force(vDir * vDistance, PSX::PxForceMode::eIMPULSE);
-			SAFE_RELEASE(m_pGrapInteractive); },
-				0.2f);
 		}
 		else if (m_pGameInstance->Key_Down(DIK_G)) {
 			m_pFSM->Enable_State(FSMSTATE::POTION);
@@ -1534,6 +1518,23 @@ void CPlayer::Player_InterpTurn(_float fTimeDelta)
 	}
 }
 
+void CPlayer::Throwing_Interactive()
+{
+	if (nullptr == m_pGrapInteractive) {
+		return;
+	} _vector vDir = {}; _float vDistance = 45.f;
+	CRigidBody_Dynamic* pBody = m_pGrapInteractive->Get_Component<CRigidBody_Dynamic>();
+	if (nullptr != m_LockOnInfo.pUnit) {
+		vDir = XMVector3Normalize(m_LockOnInfo.pUnit->Get_LockOnPos() - m_pGrapInteractive->Get_LockOnPos());
+	}
+	else {
+		vDir = m_pTransformCom->Get_State(STATE::LOOK);
+	}
+	m_pGrapInteractive->Set_KinematicFlag(false);
+	pBody->Add_Force(vDir * vDistance, PSX::PxForceMode::eIMPULSE);
+	SAFE_RELEASE(m_pGrapInteractive);
+}
+
 void CPlayer::Add_FSM()
 {
 #pragma region Behavior_Movement_NotFocus
@@ -1723,8 +1724,10 @@ void CPlayer::Add_FSM()
 			_matrix BoneNoScale = XMMatrixRotationQuaternion(Rot) * XMMatrixTranslationFromVector(Trans);
 
 			m_OffsetPos = { 0.f, 1.4f, 0.f };
-
+#ifdef _DEBUG
 			GUI::DragFloat3("BroomOffset", (_float*)&m_OffsetPos, 0.01f);
+#endif // _DEBUG
+
 			_matrix Offset = XMMatrixTranslation(m_OffsetPos.x,
 				m_OffsetPos.y, m_OffsetPos.z);
 

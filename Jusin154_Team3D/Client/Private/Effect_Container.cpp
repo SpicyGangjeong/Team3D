@@ -364,7 +364,7 @@ ON_COLLISION_INFO CEffect_Container::SweepTarget(_vector StartPos, _vector EndPo
 	const PSX::PxSweepHit& hit = pxBuffer.block;
 	PSX::PxRigidActor* pActor = hit.actor;
 	PSX::PxShape* pShape = hit.shape;
-    	ON_COLLISION_INFO tagCollInfo = {};
+    ON_COLLISION_INFO tagCollInfo = {};
 
 	tagCollInfo.vWorldPos.w = 1.f;
 
@@ -413,35 +413,51 @@ ON_COLLISION_INFO CEffect_Container::SweepTarget(_vector StartPos, _vector EndPo
 			}
 		}
 
-		if (isTerrainCollision == true && bHit == false)
+		
+	}
+
+	if (isTerrainCollision == true && bHit == false)
+	{
+		memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &hit.position, sizeof(hit.position));
+		memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &hit.normal, sizeof(hit.normal));
+		XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
+		tagCollInfo.fLength = fDistance;
+		tagCollInfo.pObject = m_pOwner->Get_Owner();
+
+		bHit = m_pGameInstance->SphereCast(fRadius, vStartPos, vDir, fDistance, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eSTATIC, pxBuffer);
+
+		const PSX::PxSweepHit& hit = pxBuffer.block;
+		PSX::PxRigidActor* pActor = hit.actor;
+		PSX::PxShape* pShape = hit.shape;
+
+		tagCollInfo.vWorldPos.w = 1.f;
+
+		if (bHit)
 		{
 			memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &hit.position, sizeof(hit.position));
 			memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &hit.normal, sizeof(hit.normal));
 			XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
 			tagCollInfo.fLength = fDistance;
-			tagCollInfo.pObject = m_pOwner->Get_Owner();
 
-			bHit = m_pGameInstance->SphereCast(fRadius, vStartPos, vDir, fDistance, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eSTATIC, pxBuffer);
-
-			PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
-			tagCollInfo.pObject = pUserData->pOwner;
-
-			switch (pUserData->eKind)
+			if (nullptr != pActor && nullptr != pActor->userData)
 			{
-			case PHYSX_KIND::CCTActor:
-			{
+				PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+				tagCollInfo.pObject = pUserData->pOwner;
+
 				switch (PXOBJECT(pUserData->iSubKind))
 				{
 				case PXOBJECT::TERRAIN:
 				{
 
-					bHit = true;
+					m_bHit = true;
 					break;
 				}
 				}
-			}
+
 			}
 		}
+		
+
 	}
 
 	return tagCollInfo;

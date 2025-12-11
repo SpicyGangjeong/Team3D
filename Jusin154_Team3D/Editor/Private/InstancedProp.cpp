@@ -30,7 +30,7 @@ void CInstancedProp::Update(_float fTimeDelta)
 			m_pVIBufferInstanceCom->Add_Instance(m_pTransformCom->Get_XMWorldMatrix());
 			m_pVIBufferInstanceCom->Update_Instance();
 
-			m_vRotation.y = m_pGameInstance->Random_Float(0.f, 360.f);
+			m_vRotation.y = m_pGameInstance->Real_Random_Float(-360.f, 360.f);
 			m_vScale.y = m_pGameInstance->Random_Float(0.8f, 1.2f);
 
 			_float3 vPosition = {};
@@ -369,7 +369,7 @@ void CInstancedProp::Describe_Entity()
 
 	m_pTransformCom->Set_Scale(m_vScale);
 	//m_pTransformCom->Set_State(STATE::POSITION, XMLoadFloat4(&m_vPosition));
-	//m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
+	m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
 
 	m_pVIBufferInstanceCom->Fix_Instance(m_pTransformCom->Get_XMWorldMatrix());
 	if (GUI::Button("Delete", ImVec2(150.f, 30.f)))

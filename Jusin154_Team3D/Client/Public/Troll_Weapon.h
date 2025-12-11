@@ -18,8 +18,6 @@ private:
 	virtual ~CTroll_Weapon() = default;
 
 public:
-	virtual HRESULT Initialize_Prototype() override;
-	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Priority_Update(_float fTimeDelta) override;
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
@@ -28,10 +26,13 @@ public:
 
 private:
 	const _float4x4* m_pSocketMatrices = {  };
+	_float4x4 m_pHammerMatrix = { };
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
 
 private:
+	virtual HRESULT Initialize_Prototype() override;
+	virtual HRESULT Initialize(void* pArg) override;
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
 

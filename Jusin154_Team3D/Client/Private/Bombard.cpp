@@ -88,7 +88,7 @@ void CBombard::Late_Update(_float fTimeDelta)
 	if (false == m_bHit) {
 		_vector vStartPos = XMLoadFloat4(&m_vStartPos);
 		_vector vEndPos = XMLoadFloat4(&m_vEndPos);
-		ON_COLLISION_INFO CollisionInfo = SweepTarget(vStartPos, vEndPos, 0.002f);
+		ON_COLLISION_INFO CollisionInfo = SweepTarget(vStartPos, vEndPos, 0.002f , true);
 
 		OnCollision(this, &CollisionInfo);
 	}

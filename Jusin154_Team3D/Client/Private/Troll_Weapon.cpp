@@ -34,6 +34,7 @@ HRESULT CTroll_Weapon::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
+
 	return S_OK;
 }
 
@@ -49,6 +50,7 @@ void CTroll_Weapon::Priority_Update(_float fTimeDelta)
 	}
 
 	m_pTransformCom->Set_WorldMatrix(socketMatrix * XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr()));
+
 
 #ifdef _DEBUG
 	Describe_Entity();
@@ -69,8 +71,9 @@ void CTroll_Weapon::Late_Update(_float fTimeDelta)
 
 HRESULT CTroll_Weapon::Render()
 {
-	if (!m_pModelCom)
+	if (!m_pModelCom){
 		return S_OK;
+	}
 
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
@@ -103,13 +106,15 @@ HRESULT CTroll_Weapon::Ready_Components()
 
 	/* Com_Model */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Component_Troll_Weapon_Model"),
-		reinterpret_cast<CComponent**>(&m_pModelCom))))
+		reinterpret_cast<CComponent**>(&m_pModelCom)))){
 		return E_FAIL;
+	}
 
 	/* Com_Shader */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_MESH,
-		reinterpret_cast<CComponent**>(&m_pShaderCom))))
+		reinterpret_cast<CComponent**>(&m_pShaderCom)))){
 		return E_FAIL;
+	}
 
 	return S_OK;
 }

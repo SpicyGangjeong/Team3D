@@ -171,7 +171,10 @@ void CIntro_BG::Free()
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }
+#ifdef _DEBUG
 
 void CIntro_BG::Describe_Entity()
 {
 }
+
+#endif // _DEBUG
