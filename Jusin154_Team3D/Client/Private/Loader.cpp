@@ -75,6 +75,7 @@
 #include "Enemy_Panel.h"
 #include "Enemy_HpBar.h"
 #include "Enemy_Info.h"
+#include "Boss_HpBar.h"
 
 #include "Spell_Canvas.h"
 #include "Spell_Panel.h"
@@ -1680,6 +1681,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 	/* For.Prototype_GameObject_NoMountIcon*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CEnemy_Info>(g_iStaticLevel, CEnemy_Info::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_NoMountIcon*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CBoss_HpBar>(g_iStaticLevel, CBoss_HpBar::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 

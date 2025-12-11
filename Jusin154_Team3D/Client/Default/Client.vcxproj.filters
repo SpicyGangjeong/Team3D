@@ -508,6 +508,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Broom_State_Fly.h">
       <Filter>04.Mechanic\State\Broom\Fly</Filter>
+          </ClInclude>
+    <ClInclude Include="..\Public\Boss_HpBar.h">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Boss_HpBar</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1070,6 +1073,9 @@
     </Filter>
     <Filter Include="04.Mechanic\State\Broom\Fly">
       <UniqueIdentifier>{537c9208-b8e7-4e3b-a818-27335e3f0469}</UniqueIdentifier>
+          </Filter>
+    <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Boss_HpBar">
+      <UniqueIdentifier>{b49a3671-96d0-47b8-833f-28190d549b0f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1523,6 +1529,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Broom_State_Fly.cpp">
       <Filter>04.Mechanic\State\Broom\Fly</Filter>
+          </ClCompile>
+    <ClCompile Include="..\Private\Boss_HpBar.cpp">
+      <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Boss_HpBar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

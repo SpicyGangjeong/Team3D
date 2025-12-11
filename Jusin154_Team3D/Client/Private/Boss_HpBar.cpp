@@ -1,33 +1,33 @@
 ﻿#include "pch.h"
-#include "Enemy_HpBar.h"
+#include "Boss_HpBar.h"
 #include "GameInstance.h"
 #include "InfoInstance.h"
 #include "Monster.h"
 
-CEnemy_HpBar::CEnemy_HpBar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CBoss_HpBar::CBoss_HpBar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
 {
 }
 
-CEnemy_HpBar::CEnemy_HpBar(const CEnemy_HpBar& rhs)
+CBoss_HpBar::CBoss_HpBar(const CBoss_HpBar& rhs)
 	:CElementObject(rhs),
 	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
-HRESULT CEnemy_HpBar::Initialize_Prototype()
+HRESULT CBoss_HpBar::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CEnemy_HpBar::Initialize(void* pArg)
+HRESULT CBoss_HpBar::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 0.f;
 	Desc.fY = 40.f;
-	Desc.fSizeX = 128.f;
-	Desc.fSizeY = 20.f;
+	Desc.fSizeX = 218.f;
+	Desc.fSizeY = 82.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -43,18 +43,20 @@ HRESULT CEnemy_HpBar::Initialize(void* pArg)
 	m_fTimeMult = 3.f;
 	m_fAlpha = 0.f;
 	m_fAlphaTime = 10.f;
-	m_vNine_Slice = _float4(15.f, 100.f, 5.f, 15.f);
-	m_fMaxHp = 0.f;
-	m_fCurrentHp = 0.f;
-	m_fTargetHp = 0.f;
-	SizeUpX(360.f);
+	m_vNine_Slice = _float4(60.f, 155.f, 5.f, 82.f);
+	m_fMaxHp = 200.f;
+	m_fCurrentHp = m_fMaxHp;
+	m_fDamage = 0.f;
+	SizeUpX(750.f);
+	SizeUpY(100.f);
 	m_fMoveSpeed = 5.f;
 	m_bAnimation = false;
 	m_fLerpY = m_fSizeY;
+	m_fSortZ = 0.01f;
 	return S_OK;
 }
 
-void CEnemy_HpBar::Priority_Update(_float fTimeDelta)
+void CBoss_HpBar::Priority_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -63,7 +65,7 @@ void CEnemy_HpBar::Priority_Update(_float fTimeDelta)
 	__super::Priority_Update(fTimeDelta);
 }
 
-void CEnemy_HpBar::Update(_float fTimeDelta)
+void CBoss_HpBar::Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -99,17 +101,20 @@ void CEnemy_HpBar::Update(_float fTimeDelta)
 		}
 	}
 
+	if (m_fCurrentHp < 0.f)
+		m_fCurrentHp = 0.f;
+	if (m_fDamage <= 0.f)
+		m_fDamage = 0.f;
+	m_fTargetHp = m_fMaxHp - m_fDamage;
 
 	if (m_fTargetHp < m_fCurrentHp)
 		Hit(fTimeDelta);
-
 	m_fHpBar = m_fCurrentHp / m_fMaxHp;
 
-	if (m_fCurrentHp <= 0.f)
+	if (m_fHpBar <= 0.f)
 	{
 		m_bAnimation = true;
 	}
-
 	if (m_bAnimation == true)
 	{
 		m_fTime += fTimeDelta * m_fTimeMult;
@@ -119,15 +124,16 @@ void CEnemy_HpBar::Update(_float fTimeDelta)
 	}
 	if (m_fTime >= 0.9f)
 	{
-		SizeUpdate(m_fLerpX, m_fLerpY);
 		m_bAnimation = false;
 		m_bHover = false;
 		m_fTime = 0.f;
+		SizeUpdate(m_fLerpX, m_fLerpY);
 	}
+
 	__super::Update(fTimeDelta);
 }
 
-void CEnemy_HpBar::Late_Update(_float fTimeDelta)
+void CBoss_HpBar::Late_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -139,14 +145,14 @@ void CEnemy_HpBar::Late_Update(_float fTimeDelta)
 	}
 }
 
-HRESULT CEnemy_HpBar::Render()
+HRESULT CBoss_HpBar::Render()
 {
 	if (m_bHover == true)
 	{
 		if (FAILED(Bind_ShaderResources())) {
 			return E_FAIL;
 		}
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::ENEMY_HPBAR)))) {
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::BOSS_HPBAR)))) {
 			return E_FAIL;
 		}
 		if (FAILED(m_pVIBufferCom->Bind_Resources())) {
@@ -160,28 +166,17 @@ HRESULT CEnemy_HpBar::Render()
 	return S_OK;
 }
 
-_vector CEnemy_HpBar::Get_WorldPostion()
+_vector CBoss_HpBar::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
 }
 
-void CEnemy_HpBar::Lerp_PosX(_float X)
-{
-	m_fDamage += X;
-}
-
-void CEnemy_HpBar::Hit(_float fTimeDelta)
+void CBoss_HpBar::Hit(_float fTimeDelta)
 {
 	m_fCurrentHp = CMyTools::Lerp_f1D(m_fCurrentHp, m_fTargetHp, fTimeDelta * m_fMoveSpeed);
 }
 
-void CEnemy_HpBar::SizeUpX(_float SizeX)
-{
-	m_fSizeX = SizeX;
-	m_fLerpX = SizeX;
-}
-
-void CEnemy_HpBar::Update_Target()
+void CBoss_HpBar::Update_Target()
 {
 	m_fMaxHp = m_pInfoInstance->Get_TargetMonster()->Get_Stat()->Get_Stat().fMaxHp;
 	m_fCurrentHp = m_pInfoInstance->Get_TargetMonster()->Get_Stat()->Get_Stat().fCurrentHp;
@@ -189,7 +184,7 @@ void CEnemy_HpBar::Update_Target()
 	Set_FadeIn();
 }
 
-HRESULT CEnemy_HpBar::Bind_ShaderResources()
+HRESULT CBoss_HpBar::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 	{
@@ -208,10 +203,6 @@ HRESULT CEnemy_HpBar::Bind_ShaderResources()
 		return E_FAIL;
 	}
 	if (FAILED(m_pDiffuse_TextureCom1->Bind_ShaderResource(m_pShaderCom, "g_Texture1", 0)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(m_pDiffuse_TextureCom2->Bind_ShaderResource(m_pShaderCom, "g_Texture2", 0)))
 	{
 		return E_FAIL;
 	}
@@ -259,21 +250,17 @@ HRESULT CEnemy_HpBar::Bind_ShaderResources()
 	return S_OK;
 }
 
-HRESULT CEnemy_HpBar::Ready_Components(void* pArg)
+HRESULT CBoss_HpBar::Ready_Components(void* pArg)
 {
 	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UI_T_Monster_HpBar"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UI_T_Boss_HpBar"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UI_T_HUD_Monster_HealthMeterFill"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
-	{
-		return E_FAIL;
-	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_VFX_T_FlameNoise_E"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom2), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UI_T_HUD_Boss_HealthMeterFill"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -284,33 +271,33 @@ HRESULT CEnemy_HpBar::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-CEnemy_HpBar* CEnemy_HpBar::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CBoss_HpBar* CBoss_HpBar::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CEnemy_HpBar* pInstance = new CEnemy_HpBar(pDevice, pContext);
+	CBoss_HpBar* pInstance = new CBoss_HpBar(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CEnemy_HpBar");
+		MSG_BOX("Failed to Created : CBoss_HpBar");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CEnemy_HpBar::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CBoss_HpBar::Clone(void* pArg, CGameObject* pOwner)
 {
-	CEnemy_HpBar* pInstance = new CEnemy_HpBar(*this);
+	CBoss_HpBar* pInstance = new CBoss_HpBar(*this);
 	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CSpell_Image");
+		MSG_BOX("Failed to Cloned : CBoss_HpBar");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CEnemy_HpBar::Free()
+void CBoss_HpBar::Free()
 {
 	__super::Free();
 
@@ -322,7 +309,7 @@ void CEnemy_HpBar::Free()
 }
 
 #ifdef _DEBUG
-void CEnemy_HpBar::Describe_Entity()
+void CBoss_HpBar::Describe_Entity()
 {
 }
 #endif // _DEBUG

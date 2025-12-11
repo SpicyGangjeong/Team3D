@@ -98,17 +98,6 @@ void CEnemy_Info::Update(_float fTimeDelta)
 		}
 	}
 
-	if (m_pGameInstance->Key_Down(DIK_K))
-	{
-		Set_FadeIn();
-	}
-	if (m_pGameInstance->Key_Down(DIK_L))
-	{
-		Set_FadeOut();
-	}
-
-	Update_Target();
-
 	__super::Update(fTimeDelta);
 }
 
@@ -215,16 +204,29 @@ HRESULT CEnemy_Info::Ready_Components(void* pArg)
 
 void CEnemy_Info::Update_Target()
 {
-	if (m_pInfoInstance->Get_TargetMonster() == nullptr)
-	{
-		Set_FadeOut();
-		return;
-	}
+	Set_Font_Move(m_pInfoInstance->Get_TargetMonster()->Get_Stat()->Get_Stat().bBoss);
 	m_pLevel = to_wstring(m_pInfoInstance->Get_TargetMonster()->Get_Stat()->Get_Stat().iLevel);
 	m_pEnemy_Name = m_pInfoInstance->Get_TargetMonster()->Get_Stat()->Get_Stat().pUnit_Name;
 	m_fFontOffSet = (m_pGameInstance->FontSizeX(TEXT("Font_size20"), m_pEnemy_Name.c_str()) - 29.f) * 0.5f;
 	m_fFont2OffSet = (m_pGameInstance->FontSizeX(TEXT("UI_size15"), m_pLevel.c_str()) - 13.f) * 0.5f;
 	Set_FadeIn();
+}
+
+void CEnemy_Info::Set_Font_Move(_bool Boss)
+{
+	m_bBoss = Boss;
+	if (m_bBoss == true)
+	{
+		MoveX(-315.f);
+		MoveY(50.f);
+		m_fFontPos = _float2(1250, 0.f);
+	}
+	else
+	{
+		MoveX(-180.f);
+		MoveY(40.f);
+		m_fFontPos = _float2(1115.f, 0.f);
+	}
 }
 
 CEnemy_Info* CEnemy_Info::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

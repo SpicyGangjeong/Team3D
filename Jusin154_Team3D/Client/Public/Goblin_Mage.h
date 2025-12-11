@@ -47,6 +47,7 @@ private:
 
 
 	class CEffectParts* m_pGoblin_Orb = { nullptr };
+	class CGoblin_Spector* m_pGoblinSpector = { nullptr };
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
