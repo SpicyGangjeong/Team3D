@@ -1,20 +1,19 @@
 ﻿#include "pch.h"
-#include "State_Swing.h"
+#include "Broom_State_Fly.h"
 #include "Unit.h"
 
 
-CState_Swing::CState_Swing()
+CBroom_State_Fly::CBroom_State_Fly()
     :CState_Root()
 {
 }
 
-void CState_Swing::Enter()
+void CBroom_State_Fly::Enter()
 {
-    m_bPlayerHit = false;
     __super::Enter();
 }
 
-HRESULT CState_Swing::Update(_float fTimeDelta)
+HRESULT CBroom_State_Fly::Update(_float fTimeDelta)
 {
     if (nullptr != m_funcPriorityUpdate) {
         m_funcPriorityUpdate(fTimeDelta);
@@ -23,18 +22,17 @@ HRESULT CState_Swing::Update(_float fTimeDelta)
         return E_FAIL;
     }
     if (nullptr != m_funcLateUpdate) {
-        m_funcLateUpdate(fTimeDelta, m_bPlayerHit);
+        m_funcLateUpdate(fTimeDelta);
     }
     return S_OK;
 }
 
-void CState_Swing::Exit()
+void CBroom_State_Fly::Exit()
 {
-    m_bPlayerHit = false;
     __super::Exit();
 }
 
-HRESULT CState_Swing::Initialize(STATE_SWING_DESC* pDesc)
+HRESULT CBroom_State_Fly::Initialize(STATE_FLY_DESC* pDesc)
 {
     if (FAILED(__super::Initialize(pDesc))) {
         return E_FAIL;
@@ -47,20 +45,20 @@ HRESULT CState_Swing::Initialize(STATE_SWING_DESC* pDesc)
     return S_OK;
 }
 
-CState_Swing* CState_Swing::Create(STATE_SWING_DESC* pDesc)
+CBroom_State_Fly* CBroom_State_Fly::Create(STATE_FLY_DESC* pDesc)
 {
-    CState_Swing* pInstance = new CState_Swing;
+    CBroom_State_Fly* pInstance = new CBroom_State_Fly;
     if (FAILED(pInstance->Initialize(pDesc))) {
         SAFE_RELEASE(pInstance);
     }
     return pInstance;
 }
 
-void CState_Swing::Free()
+void CBroom_State_Fly::Free()
 {
     __super::Free();
 }
 
-void CState_Swing::Describe_Entity()
+void CBroom_State_Fly::Describe_Entity()
 {
 }

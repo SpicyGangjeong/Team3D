@@ -86,9 +86,12 @@ void CGoblin::Update(_float fTimeDelta)
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
 	Play_Event();
+#ifdef _DEBUG
 
 	GUI::Text("%d", m_pCharacter_Controller->IsActive());
 	GUI::Text("%f %f", m_vStunTimer.x, m_vStunTimer.y);
+#endif // _DEBUG
+
 	if (true == m_pCharacter_Controller->IsActive()) {
 		m_pCharacter_Controller->Move(fTimeDelta);
 		m_vStunTimer.x = 0.f;
@@ -259,12 +262,12 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 	case ENUM_CLASS(SKILL_TYPE::DESCENDO):
 		m_eHitSpell = STATEANIM::KNOCKDOWN_FWD;
 		break;
-	case ENUM_CLASS(SKILL_TYPE::FLIPENDO):
-		m_eHitSpell = STATEANIM::TUMBLE2;
+	case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
+		m_eHitSpell = STATEANIM::KNOCKDOWN_BWD;
 		break;
 	case ENUM_CLASS(SKILL_TYPE::JAP):
 	{
-		m_eHitSpell = STATEANIM::HIT_LEVIOSO;
+		m_eHitSpell = STATEANIM::HIT_BWD;
 
 		m_DamageInfo.fDamage = damagePair.first;
 		m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
@@ -319,7 +322,7 @@ HRESULT CGoblin::Ready_Components()
 		Desc.fContactOffset = 0.001f;
 		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
 		Desc.bAutoStepping = { false };
-		Desc.fStepOffset = { 0.05f };
+		Desc.fStepOffset = { 0.001f };
 		Desc.fRadius = 0.6f;
 		Desc.fHeight = 0.7f;
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Monster_HitReport::Create();

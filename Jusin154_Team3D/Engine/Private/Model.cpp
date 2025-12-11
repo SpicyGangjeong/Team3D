@@ -327,8 +327,8 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fAmount, _boo
 			m_Animations[m_iCurrentAnimIndex]->Set_AnimSpeed(1.f);
 		}
 
-		//m_fBlendTime = 0.f;
-		//m_fRatio = 0.f;
+		m_fBlendTime = 0.f;
+		m_fRatio = 0.f;
 
 		m_iCurrentAnimIndex = iIndex;
 		m_bIsLoop = isLoop;

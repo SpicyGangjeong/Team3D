@@ -18,22 +18,26 @@ private:
 	virtual ~CTroll_Rock() = default;
 
 public:
-	virtual HRESULT Initialize_Prototype() override;
-	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Priority_Update(_float fTimeDelta) override;
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
-	void Set_Attach(_bool Attach) { m_bAttach = Attach; }
+	void RockHit();
+	void Set_Attach(_bool Attach);
 public:
 
 private:
 	const _float4x4* m_pSocketMatrices = {  };
+	_bool m_bVisible = { false };
+	_float4 m_vStartPos = {};
+	PSX::PxSweepBufferN<12> m_SweepBuffer = {};
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
 	_bool m_bAttach = { true };
 
 private:
+	virtual HRESULT Initialize_Prototype() override;
+	virtual HRESULT Initialize(void* pArg) override;
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
 

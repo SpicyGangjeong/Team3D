@@ -196,6 +196,9 @@ void CLogo_Glow::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
+#ifdef _DEBUG
 void CLogo_Glow::Describe_Entity()
 {
 }
+
+#endif // _DEBUG

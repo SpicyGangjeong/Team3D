@@ -1,20 +1,19 @@
 ﻿#include "pch.h"
-#include "State_Swing.h"
+#include "State_Broom_Dismount.h"
 #include "Unit.h"
 
 
-CState_Swing::CState_Swing()
+CState_Broom_Dismount::CState_Broom_Dismount()
     :CState_Root()
 {
 }
 
-void CState_Swing::Enter()
+void CState_Broom_Dismount::Enter()
 {
-    m_bPlayerHit = false;
     __super::Enter();
 }
 
-HRESULT CState_Swing::Update(_float fTimeDelta)
+HRESULT CState_Broom_Dismount::Update(_float fTimeDelta)
 {
     if (nullptr != m_funcPriorityUpdate) {
         m_funcPriorityUpdate(fTimeDelta);
@@ -23,18 +22,17 @@ HRESULT CState_Swing::Update(_float fTimeDelta)
         return E_FAIL;
     }
     if (nullptr != m_funcLateUpdate) {
-        m_funcLateUpdate(fTimeDelta, m_bPlayerHit);
+        m_funcLateUpdate(fTimeDelta);
     }
     return S_OK;
 }
 
-void CState_Swing::Exit()
+void CState_Broom_Dismount::Exit()
 {
-    m_bPlayerHit = false;
     __super::Exit();
 }
 
-HRESULT CState_Swing::Initialize(STATE_SWING_DESC* pDesc)
+HRESULT CState_Broom_Dismount::Initialize(STATE_BROOM_DISMOUNT_DESC* pDesc)
 {
     if (FAILED(__super::Initialize(pDesc))) {
         return E_FAIL;
@@ -47,20 +45,20 @@ HRESULT CState_Swing::Initialize(STATE_SWING_DESC* pDesc)
     return S_OK;
 }
 
-CState_Swing* CState_Swing::Create(STATE_SWING_DESC* pDesc)
+CState_Broom_Dismount* CState_Broom_Dismount::Create(STATE_BROOM_DISMOUNT_DESC* pDesc)
 {
-    CState_Swing* pInstance = new CState_Swing;
+    CState_Broom_Dismount* pInstance = new CState_Broom_Dismount;
     if (FAILED(pInstance->Initialize(pDesc))) {
         SAFE_RELEASE(pInstance);
     }
     return pInstance;
 }
 
-void CState_Swing::Free()
+void CState_Broom_Dismount::Free()
 {
     __super::Free();
 }
 
-void CState_Swing::Describe_Entity()
+void CState_Broom_Dismount::Describe_Entity()
 {
 }

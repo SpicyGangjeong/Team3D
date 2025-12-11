@@ -35,7 +35,6 @@ private:
 
 	_bool m_bSprintToggle = { false };
 	_bool m_bWalkToggle = { false };
-	_bool m_bHoverToggle = { true };
 
 	_float3 m_vCameraLookDir = { 0.f, 0.f, 1.f, };
 	_float3 m_vCameraRightDir = { 1.f, 0.f, 0.f };
@@ -109,7 +108,8 @@ private:
 	_bool			m_bRatio = { false };
 	_bool			m_bAim = { false };
 	_float			m_fAnimSpeed = {};
-	_bool m_bOnce = {  };
+	_bool			m_bOnce = {  };
+	_bool			m_bLookAt = {false};
 
 	HRESULT InputAction();
 	HRESULT InputMove();
@@ -143,7 +143,7 @@ private:
 	void	Behavior_CombatExit();
 
 	void	Behavior_LightAttackEnter();
-	HRESULT Behavior_LightAttackExitCheck();
+	HRESULT Behavior_LightAttackExitCheck(_float fTimeDelta);
 	void	Behavior_LightAttackExit();
 
 	void	Behavior_SpellEnter();
@@ -158,6 +158,13 @@ private:
 	HRESULT Behavior_Broom_RideExitCheck(_float fTimeDelta);
 	void	Behavior_Broom_RideExit();
 
+	void	Behavior_Broom_Ride_MoveEnter();
+	HRESULT Behavior_Broom_Ride_MoveExitCheck(_float fTimeDelta);
+	void	Behavior_Broom_Ride_MoveExit();
+
+	void	Behavior_Broom_DismountEnter();
+	HRESULT Behavior_Broom_DismountExitCheck(_float fTimeDelta);
+	void	Behavior_Broom_DismountExit();
 
 	void Player_InterpTurn(_float fTimeDelta);
 	void Throwing_Interactive();

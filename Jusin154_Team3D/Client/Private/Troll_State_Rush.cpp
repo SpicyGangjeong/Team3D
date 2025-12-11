@@ -10,25 +10,21 @@ CTroll_State_Rush::CTroll_State_Rush()
 
 void CTroll_State_Rush::Enter()
 {
+	*m_pRushPlayerHit = false;
 	__super::Enter();
 }
 
 HRESULT CTroll_State_Rush::Update(_float fTimeDelta)
 {
-	if (nullptr != m_funcPriorityUpdate) {
-		m_funcPriorityUpdate(fTimeDelta);
-	}
 	if (E_FAIL == (__super::Update(fTimeDelta))) {
 		return E_FAIL;
-	}
-	if (nullptr != m_funcLateUpdate) {
-		m_funcLateUpdate(fTimeDelta);
 	}
 	return S_OK;
 }
 
 void CTroll_State_Rush::Exit()
 {
+	*m_pRushPlayerHit = false;
 	__super::Exit();
 }
 
@@ -37,8 +33,7 @@ HRESULT CTroll_State_Rush::Initialize(TROLL_STATE_RUSH_DESC* pDesc)
 	if (FAILED(__super::Initialize(pDesc))) {
 		return E_FAIL;
 	}
-	m_funcPriorityUpdate = pDesc->funcPriorityUpdate;
-	m_funcLateUpdate = pDesc->funcLateUpdate;
+	m_pRushPlayerHit = pDesc->pCollisionPlayer;
 	m_pModel = m_pOwner->Get_Component<CModel>();
 	m_pFSM = m_pOwner->Get_Component<CFSM>();
 

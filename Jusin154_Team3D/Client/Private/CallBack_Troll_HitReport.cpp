@@ -60,12 +60,18 @@ void CCallBack_Troll_HitReport::onShapeHit(const PSX::PxControllerShapeHit& hit)
 			break;
 		case PHYSX_KIND::BODY_DYNAMIC:
 		{
-			switch (pTargetActorData->iSubKind)
+			switch (PXOBJECT(pTargetActorData->iSubKind))
 			{
-			case 0:
-				m_pController->ConvertToDO(*m_pPartDynamicBody);
-				m_pPartDynamicBody->Add_Force(XMVectorSet(vDir.x, vDir.y, vDir.z, 0.f) * fLength * 100.f, PSX::PxForceMode::eIMPULSE);
+			case PXOBJECT::END:
 				break;
+			case PXOBJECT::BOX:
+			{
+				PSX::PxRigidDynamic* pDynamic = static_cast<PSX::PxRigidDynamic*>(pActor);
+				//pDynamic->setRigidBodyFlag(PSX::PxRigidBodyFlag::eKINEMATIC, false);
+				PSX::PxVec3 vCompressedDir = -vWorldNormal;
+				vCompressedDir.normalize();
+				pDynamic->addForce(vCompressedDir * fLength * 1000.f, PSX::PxForceMode::eFORCE);
+			}break;
 			default:
 			{
 			}
@@ -113,11 +119,22 @@ void CCallBack_Troll_HitReport::onControllerHit(const PSX::PxControllersHit& hit
 			switch (pTargetActorData->iSubKind)
 			{
 			case ENUM_CLASS(PXOBJECT::PLAYER):
+			{
+				class CUnit* pOwner = (CUnit*)m_pController->Get_Owner();
+				CModel* pModel = pOwner->Get_Component<CModel>();
+				_uint iAnimIndex = pModel->Get_AnimIndex();
+				if (pOwner->Get_AnimInfo(STATEANIM::RUSH_LOOP).first == iAnimIndex) {
+					if (false == *m_pCollisionPlayer) {
+						*m_pCollisionPlayer = true;
+						pTargetActorData->pCharacter->Get_Owner()->Get_Component<CStat>()->Get_Damage(30.f);
+					}
+				}
+			}
 				break;
 			default:
 			{
 				PSX::PxRigidDynamic* pDynamic = static_cast<PSX::PxRigidDynamic*>(pActor);
-				pDynamic->addForce(vDir * fLength * 100000.f, PSX::PxForceMode::eIMPULSE);
+				pDynamic->addForce(vDir * fLength * 100.f, PSX::PxForceMode::eIMPULSE);
 			}
 			break;
 			}
@@ -147,11 +164,12 @@ void CCallBack_Troll_HitReport::onObstacleHit(const PSX::PxControllerObstacleHit
 	//}
 }
 
-HRESULT CCallBack_Troll_HitReport::Initialize(CCharacter_Controller* pController, CRigidBody_Dynamic* pPartDynamicObject)
+HRESULT CCallBack_Troll_HitReport::Initialize(CCharacter_Controller* pController, CRigidBody_Dynamic* pPartDynamicObject, _bool* pCollisionPlayer)
 {
 	m_pController = pController;
 	m_pPartDynamicBody = pPartDynamicObject;
 	m_pGameInstance = CGameInstance::GetInstance();
+	m_pCollisionPlayer = pCollisionPlayer;
 	SAFE_ADDREF(m_pController);
 	SAFE_ADDREF(m_pPartDynamicBody);
 	SAFE_ADDREF(m_pGameInstance);

@@ -230,7 +230,7 @@
       <Filter>02.GameObjects\Environment\00.MapContainer\StreetContainer</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\State_Broom_Ride.h">
-      <Filter>04.Mechanic\State\Broom</Filter>
+      <Filter>04.Mechanic\State\Broom_Player</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Skill_Data.h">
       <Filter>04.Mechanic\Skill\Skill_Data</Filter>
@@ -497,6 +497,18 @@
     <ClInclude Include="..\Public\Damage_Font.h">
       <Filter>04.Mechanic\Damage</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\State_Broom_Ride_Move.h">
+      <Filter>04.Mechanic\State\Broom_Player\State_Broom_Ride_Move</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Broom_Dismount.h">
+      <Filter>04.Mechanic\State\Broom_Player\State_Broom_Dismount</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Broom_State_Hover.h">
+      <Filter>04.Mechanic\State\Broom\Hover</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Broom_State_Fly.h">
+      <Filter>04.Mechanic\State\Broom\Fly</Filter>
+          </ClInclude>
     <ClInclude Include="..\Public\Boss_HpBar.h">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Boss_HpBar</Filter>
     </ClInclude>
@@ -783,9 +795,6 @@
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Spell_UI">
       <UniqueIdentifier>{9914341c-f246-4fdb-b28c-de7a6d2d149b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Mechanic\State\Broom">
-      <UniqueIdentifier>{48b905c1-b91e-44ca-a61b-86633826768b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Environment\00.MapContainer\StreetContainer">
       <UniqueIdentifier>{e12a4228-0754-4217-b65d-7f962409f85c}</UniqueIdentifier>
     </Filter>
@@ -1047,6 +1056,24 @@
     <Filter Include="04.Mechanic\Damage">
       <UniqueIdentifier>{36962dce-8c99-4c54-9189-2a49785a211e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Mechanic\State\Broom_Player">
+      <UniqueIdentifier>{48b905c1-b91e-44ca-a61b-86633826768b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Broom_Player\State_Broom_Ride_Move">
+      <UniqueIdentifier>{d6be355f-c860-4323-9967-583265749698}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Broom_Player\State_Broom_Dismount">
+      <UniqueIdentifier>{51b299f6-ebb0-4f58-9620-5e1dc24a2e60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Broom">
+      <UniqueIdentifier>{ca81f80e-701f-4988-ac3b-3ea2e6812a66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Broom\Hover">
+      <UniqueIdentifier>{75764f4a-7eef-4daf-bd8c-d07aef1c59cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Broom\Fly">
+      <UniqueIdentifier>{537c9208-b8e7-4e3b-a818-27335e3f0469}</UniqueIdentifier>
+          </Filter>
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Boss_HpBar">
       <UniqueIdentifier>{b49a3671-96d0-47b8-833f-28190d549b0f}</UniqueIdentifier>
     </Filter>
@@ -1260,7 +1287,7 @@
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Action_Panel\Potion</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\State_Broom_Ride.cpp">
-      <Filter>04.Mechanic\State\Broom</Filter>
+      <Filter>04.Mechanic\State\Broom_Player</Filter>
     </ClCompile>
     <ClCompile Include="..\private\StreetContainer.cpp">
       <Filter>02.GameObjects\Environment\00.MapContainer\StreetContainer</Filter>
@@ -1491,6 +1518,18 @@
     <ClCompile Include="..\Private\Damage_Font.cpp">
       <Filter>04.Mechanic\Damage</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\State_Broom_Ride_Move.cpp">
+      <Filter>04.Mechanic\State\Broom_Player\State_Broom_Ride_Move</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Broom_Dismount.cpp">
+      <Filter>04.Mechanic\State\Broom_Player\State_Broom_Dismount</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Broom_State_Hover.cpp">
+      <Filter>04.Mechanic\State\Broom\Hover</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Broom_State_Fly.cpp">
+      <Filter>04.Mechanic\State\Broom\Fly</Filter>
+          </ClCompile>
     <ClCompile Include="..\Private\Boss_HpBar.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Boss_HpBar</Filter>
     </ClCompile>
