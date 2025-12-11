@@ -326,14 +326,14 @@ void CPlayer::Behavior_MoveEnter()
 		if (true == m_bSprintToggle) {
 			m_pFSM->Enable_State(FSMSTATE::SPRINT);
 			m_bWalkToggle = false;
-			
 			pairAnimInfo = m_Animation[STATEANIM::SPRINT];
+			m_bRatio = false;
 		}
 		else if (true == m_bWalkToggle) {
 			m_pFSM->Enable_State(FSMSTATE::WALK);
 			m_bSprintToggle = false;
-		
 			pairAnimInfo = m_Animation[STATEANIM::WALK_FWD];
+			m_bRatio = false;
 		}
 		else
 		{
@@ -767,7 +767,7 @@ HRESULT CPlayer::Behavior_DodgeExitCheck(_float fTimeDelta)
 		return E_FAIL;
 	}
 
-	if (SUCCEEDED(InputMove()) && fRatio >= 0.32f) {
+	if (SUCCEEDED(InputMove()) && fRatio >= 0.3f) {
 		m_pFSM->Change_State(FSMSTATE::MOVE);
 		return E_FAIL;
 	}
@@ -1470,12 +1470,7 @@ HRESULT CPlayer::Behavior_Broom_Ride_MoveExitCheck(_float fTimeDelta)
 	_bool bDown = m_pGameInstance->Key_Pressing(DIK_LCONTROL);
 	_bool bUp = m_pGameInstance->Key_Pressing(DIK_SPACE);
 
-	if (m_pGameInstance->Key_Down(DIK_LSHIFT))
-	{
-		m_bHoverToggle = !m_bHoverToggle;
-	}
-
-	if (m_bHoverToggle)
+	if (m_pBroom->Get_Hover())
 	{
 		if (m_pGameInstance->Key_Pressing(DIK_W))
 		{
@@ -1493,6 +1488,7 @@ HRESULT CPlayer::Behavior_Broom_Ride_MoveExitCheck(_float fTimeDelta)
 		{
 			pairAnimInfo = Get_AnimInfo(STATEANIM::BROOM_HOVER_IDLE);
 		}
+
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 	}
 	else
