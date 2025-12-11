@@ -31,6 +31,8 @@ public:
 
 private:
 	void Click_Slot(_bool bClick);
+	void Spell_Setting();
+	void Spell_UnLock(_int iSpellIndex);
 
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
@@ -43,9 +45,14 @@ private:
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_UI_Instance* m_pVIBufferCom = { nullptr };
 
+	CInfoInstance* m_pInfoInstance = { nullptr };
+
 	_float m_fOffSetX{};
 	_float m_fOffSetY{};
 	_uint  m_iCols{};
+
+	_bool m_bLock[26] = {};
+
 
 public:
 	static CSpell_State* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -31,6 +31,9 @@ private:
 	void SizeUpY(_float fY);
 	void SizeUpdate(_float fSize);
 
+public:
+	void Set_Active(_bool bAtcive);
+	_bool Get_Step();
 private:
 	const _float4x4* m_pSocketMatrices = {  };
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
@@ -50,12 +53,13 @@ private:
 	_bool m_bStep2 = { false };
 	_bool m_bStep3 = { false };
 
-	_bool m_fActive = { false };
-	_bool m_fSizeUp = { false };
+	_bool m_bActive = { false };
+	_bool m_bSizeUp = { false };
+	_bool m_bAtteckTrigger = { false };
 
 	_float3 m_fOrigin_Size{};
 
-	_float2 m_fSize;
+	_float3 m_fSize{};
 
 	_float m_fAlpha{};
 	_float m_fTime{};

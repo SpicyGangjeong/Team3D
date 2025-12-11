@@ -33,6 +33,7 @@ public:
     _int Update_Spell(_int SpellID);
     _float Get_Spell_Damage(_int SpellDamage);
     void Update_Damage(_float Damage);
+    void Spell_UnLock(_int SpellID);
 
 private:
     CInfoInstance* m_pInfoInstance = { nullptr };

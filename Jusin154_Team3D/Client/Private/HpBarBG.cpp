@@ -172,7 +172,7 @@ void CHpBarBG::Lerp_PosX(_float X)
 
 void CHpBarBG::Heal(_float fTimeDelta)
 {
-	m_fCurrentHp = CMyTools::Lerp_f1D(m_fTargetHp, m_fCurrentHp, fTimeDelta * m_fMoveSpeed);
+	m_fCurrentHp = CMyTools::Lerp_f1D(m_fCurrentHp, m_fTargetHp, fTimeDelta * m_fMoveSpeed);
 }
 
 void CHpBarBG::Hit(_float fTimeDelta)

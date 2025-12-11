@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Spell_Vidio_Border.h"
 #include "GameInstance.h"
+#include "InfoInstance.h"
 
 CSpell_Vidio_Border::CSpell_Vidio_Border(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
@@ -8,7 +9,8 @@ CSpell_Vidio_Border::CSpell_Vidio_Border(ID3D11Device* pDevice, ID3D11DeviceCont
 }
 
 CSpell_Vidio_Border::CSpell_Vidio_Border(const CSpell_Vidio_Border& rhs)
-	:CElementObject(rhs)
+	:CElementObject(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -89,6 +91,14 @@ void CSpell_Vidio_Border::Update(_float fTimeDelta)
 			m_bFadeOut = false;
 			m_bStart = false;
 			m_fAlpha = 0.f;
+		}
+	}
+
+	if (m_bFadeOut == false)
+	{
+		if (m_iSpellType != -1)
+		{
+			m_fY = m_fOrigin_Position.y + m_pInfoInstance->Get_Spell_Info(m_iSpellType).fVidio;
 		}
 	}
 

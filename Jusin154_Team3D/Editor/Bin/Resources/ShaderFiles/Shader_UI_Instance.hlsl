@@ -412,6 +412,30 @@ PS_OUT PS_Spell_Slot(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_Spell_Lock(PS_IN In)
+{
+    PS_OUT Out;
+
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+   
+    float4 color = g_Texture.Sample(ClampSampler, In.vTexcoord);
+    
+    if(In.bSpell == 0)
+    {
+        if (color.a <= 0.4f)
+            discard;
+    }
+        
+    else
+        discard;
+    
+    color.a *= Alpha;
+
+    Out.vColor = color;
+    
+    return Out;
+}
+
 technique11 PosTexTechnique11
 {
     pass Default
@@ -533,5 +557,16 @@ technique11 PosTexTechnique11
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Spell_Slot();
+    }
+
+    pass Spell_Lock
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Spell_Lock();
     }
 }

@@ -64,7 +64,7 @@ HRESULT CGoblin::Initialize(void* pArg)
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
 
-	m_pCharacter_Controller->Set_Position(XMVectorSet(-40.f, 5.f, -20.f, 1.f));
+	m_pCharacter_Controller->Set_Position(XMVectorSet(-60.f, 5.f, -40.f, 1.f));
 
 	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
 	SAFE_ADDREF(m_pEffectPool);
@@ -119,6 +119,8 @@ void CGoblin::Update(_float fTimeDelta)
 	for (_uint i = 0; i < ENUM_CLASS(GOBLIN_SKILL::END); i++)
 		m_fSkillCoolTime[i] = max(0.f, m_fSkillCoolTime[i] - fTimeDelta);
 
+
+	m_pDetection->Set_Active(m_bDetection);
 
 }
 
@@ -295,6 +297,11 @@ void CGoblin::OnHit(CGameObject* pOther, CGameObject* pCaller)
 {
 }
 
+void CGoblin::Set_Detection(_bool bDetection)
+{
+	m_bDetection = bDetection;
+}
+
 HRESULT CGoblin::Ready_Components()
 {
 	CTransform::TRANSFORM_DESC Desc = {};
@@ -408,8 +415,8 @@ HRESULT CGoblin::Ready_Parts()
 
 #pragma endregion
 
-	if (FAILED(Add_PartObject<CEnemy_Detection>("Enemy_Detection", g_iStaticLevel, &m_pDetection, &PartsDesc)))
-	{
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEnemy_Detection>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER, &PartsDesc, this, &m_pDetection))) {
 		return E_FAIL;
 	}
 

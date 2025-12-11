@@ -33,7 +33,6 @@ public:
 	pair<_float3, _float3> Get_CameraCoordinateSystem();
 	_float Player_Damage();
 	void Set_Damage(_float fDamage);
-	class CPlater* Get_PlayerInfo();
 #pragma endregion
 #pragma region MONSTER_INFO
 	HRESULT Regist_PlayerAlly(CUnit* pUnit);
