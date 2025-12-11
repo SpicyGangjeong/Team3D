@@ -118,6 +118,7 @@ void CGoblin_Mage::Update(_float fTimeDelta)
 		m_fSkillCoolTime[i] = max(0.f, m_fSkillCoolTime[i] - fTimeDelta);
 	}
 
+
 }
 
 void CGoblin_Mage::Late_Update(_float fTimeDelta)
@@ -131,8 +132,24 @@ void CGoblin_Mage::Late_Update(_float fTimeDelta)
 	}
 
 	if (true == m_bLookAt) {
-		m_pTransformCom->LookAt_Horizontal(XMLoadFloat4(&m_vTargetPos));
+		m_pTransformCom->LookAt_Lerp(XMLoadFloat4(&m_vTargetPos),fTimeDelta,3.f);
 	}
+
+	m_fHoverTime += fTimeDelta;
+
+	_float hoverY = sinf(m_fHoverTime * m_fHoverSpeed) * m_fHoverHeight;
+	_matrix HoverMat = XMMatrixTranslation(0.f, hoverY, 0.f);
+
+	_matrix socketMatrix = m_pModelCom->Get_BoneMatrix("LeftArm");
+
+	for (int i = 0; i < 3; ++i)
+		socketMatrix.r[i] = XMVector3Normalize(socketMatrix.r[i]);
+
+	_matrix OffsetMat = XMMatrixTranslation(-0.55f, 0.5f, 0.5f);
+
+	_matrix World = socketMatrix * OffsetMat * m_pTransformCom->Get_XMWorldMatrix() * HoverMat;
+
+	m_pGoblin_Orb->Get_Component<CTransform>()->Set_WorldMatrix(World);
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW, this);
@@ -360,8 +377,7 @@ HRESULT CGoblin_Mage::Ready_Parts()
 	}
 
 	m_pGoblin_Orb->Load("../Bin/Resources/Data/Effect/GoblinMage/Orb_P", static_cast<LEVEL>(NEXT_LEVEL));
-
-	m_pGoblin_Orb->FollowParents(m_pModelCom->Get_BoneMatrixPtr("RightHand"));
+	Get_PartObject<CEffectParts>()->Set_Visible(true);
 
 	return S_OK;
 }
@@ -425,6 +441,7 @@ void CGoblin_Mage::Free()
 	Safe_Delete(m_pCallBack_Behavior);
 	Safe_Delete(m_pCallBack_HitReport);
 	SAFE_RELEASE(m_pGoblin_Orb);
+
 }
 #ifdef _DEBUG
 

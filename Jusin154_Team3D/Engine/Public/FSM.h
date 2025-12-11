@@ -21,7 +21,7 @@ enum ESTATE : _u64Flag
     SKILL2                      = 1ULL << 14,
 	ANCIENT_THROW               = 1ULL << 15,        
     MAPHELP                     = 1ULL << 16,
-	POTION                      = 1ULL << 17,
+    SHIELD                      = 1ULL << 17,
     STOP                        = 1ULL << 18,
 	HIT                         = 1ULL << 19,
 	BROOM_RIDE                  = 1ULL << 20,

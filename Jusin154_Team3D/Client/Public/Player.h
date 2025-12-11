@@ -162,6 +162,10 @@ private:
 	HRESULT Behavior_SpellExitCheck();
 	void	Behavior_SpellExit();
 
+	void	Behavior_ShieldEnter();
+	HRESULT Behavior_ShieldExitCheck();
+	void	Behavior_ShieldExit();
+
 	void	Behavior_HitEnter();
 	HRESULT Behavior_HitExitCheck();
 	void	Behavior_HitExit();
