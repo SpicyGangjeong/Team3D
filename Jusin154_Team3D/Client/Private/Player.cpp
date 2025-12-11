@@ -297,6 +297,14 @@ HRESULT CPlayer::Render_Shadow()
 }
 void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 {
+	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
+	if (CollisionDesc) {
+		Check_HitAngle(XMLoadFloat4(&CollisionDesc->vHitDir));
+	}
+	else {
+		m_fHitDegree = -1.f;
+	}
+
 	m_pFSM->Change_State(FSMSTATE::HIT);
 }
 void CPlayer::OnHit(CGameObject* pOther, CGameObject* pCaller)

@@ -213,7 +213,8 @@ HRESULT CPlayer::Behavior_IdleExitCheck(_float fTimeDelta)
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
 		}
 		else if (m_pGameInstance->Key_Down(DIK_G)) {
-			m_pFSM->Change_State(FSMSTATE::COMBAT);
+			m_pFSM->Enable_State(FSMSTATE::POTION);
+			m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_NECK_L), m_Animation[STATEANIM::POTION].first, m_Animation[STATEANIM::POTION].second);
 		}
 		else if (m_pGameInstance->Key_Down(DIK_B)) {
 			m_pFSM->Change_State(FSMSTATE::BROOM_RIDE);
@@ -406,8 +407,10 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
 		}
 		else if (m_pGameInstance->Key_Down(DIK_G)) {
-			m_pFSM->Change_State(FSMSTATE::COMBAT);
+			m_pFSM->Enable_State(FSMSTATE::POTION);
+			m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_NECK_L), m_Animation[STATEANIM::POTION].first, m_Animation[STATEANIM::POTION].second);
 		}
+
 		else if (m_pGameInstance->Key_Down(DIK_B)) {
 			m_pFSM->Change_State(FSMSTATE::BROOM_RIDE);
 		}
@@ -488,24 +491,27 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 		_bool bSkipAngleCheck = { false };
 
 		if (m_pFSM->IsEnable(FSMSTATE::JOG | FSMSTATE::WALK| FSMSTATE::SPRINT)) {
-			if (iCurrentAnimIndex != m_Animation[STATEANIM::JOG_FWD].first &&
+	/*		if (iCurrentAnimIndex != m_Animation[STATEANIM::JOG_FWD].first &&
 				iCurrentAnimIndex != m_Animation[STATEANIM::WALK_FWD].first&&
-				iCurrentAnimIndex != m_Animation[STATEANIM::SPRINT].first) {
+				iCurrentAnimIndex != m_Animation[STATEANIM::SPRINT].first&&
+				iCurrentAnimIndex != m_Animation[STATEANIM::JOG_AIM_LEFT].first&&
+				iCurrentAnimIndex != m_Animation[STATEANIM::JOG_AIM_RIGHT].first&&
+				iCurrentAnimIndex != m_Animation[STATEANIM::JOG_AIM_BWD].first) {
 				bSkipAngleCheck = true;
-
+*/
 				if (m_pModelCom->IsFinishedAnim() || m_pFSM->IsEnable(FSMSTATE::STOP) || SUCCEEDED(InputAim())) {
 					m_pFSM->Disable_State(FSMSTATE::STOP);
 					bSkipAngleCheck = false;
 				}
-			}
+			//}
 			if (!bSkipAngleCheck) {
 				_float absDir = fabsf(vDir);
-				if (absDir < XMConvertToRadians(85.f)) {
+				if (absDir < XMConvertToRadians(80.f)) {
 					if (m_bWalkToggle)
 					{
 						pairAnimInfo = m_Animation[STATEANIM::WALK_FWD];
 					}
-					else if ( m_bSprintToggle)
+					else if (m_bSprintToggle)
 					{
 						pairAnimInfo = m_Animation[STATEANIM::SPRINT];
 					}
@@ -794,7 +800,7 @@ void CPlayer::Behavior_CombatEnter()
 
 	if (m_pModelCom->Get_SecondAnimIndex() == m_Animation[STATEANIM::LUMOS].first)
 	{
-		m_pModelCom->Set_Second_AnimationIndex(-1, ENUM_CLASS(BLEND_BONE::SHOULDER_R));
+		m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R) ,-1) ;
 		m_eSpell = ENUM_CLASS(SKILL_TYPE::END);
 	}
 	if (m_pGameInstance->Key_Down(DIK_R)) {
@@ -842,29 +848,6 @@ void CPlayer::Behavior_CombatEnter()
 			[this]() { Throwing_Interactive(); },
 			0.2f);
 	}
-	else if (m_pGameInstance->Key_Down(DIK_G)) {
-		m_pFSM->Enable_State(FSMSTATE::POTION);
-		if (SUCCEEDED(InputMove()))
-		{
-			if (m_bSprintToggle)
-			{
-				pairAnimInfo = m_Animation[STATEANIM::SPRINT];
-			}
-			else if (m_bWalkToggle)
-			{
-				pairAnimInfo = m_Animation[STATEANIM::WALK_FWD];
-			}
-			else {
-				pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
-			}
-		}
-		else {
-			pairAnimInfo = m_Animation[STATEANIM::IDLE];
-		}
-
-		m_pModelCom->Set_Second_AnimationIndex(m_Animation[STATEANIM::POTION].first, ENUM_CLASS(BLEND_BONE::SHOULDER_NECK_L));
-	}
-
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
 
@@ -914,7 +897,7 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 				m_vGrapInteratableLerp.x = 0.f;
 			}
 		}
-		else if (m_pGameInstance->Key_Down(DIK_G)) {
+		/*else if (m_pGameInstance->Key_Down(DIK_G)) {
 			m_pFSM->Enable_State(FSMSTATE::POTION);
 			if (SUCCEEDED(InputMove()))
 			{
@@ -935,8 +918,8 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 				pairAnimInfo = m_Animation[STATEANIM::IDLE];
 			}
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-			m_pModelCom->Set_Second_AnimationIndex(m_Animation[STATEANIM::POTION].first, ENUM_CLASS(BLEND_BONE::SHOULDER_NECK_L));
-		}
+			m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_NECK_L),m_Animation[STATEANIM::POTION].first, m_Animation[STATEANIM::POTION].second);
+		}*/
 	}
 
 	if (m_pFSM->IsEnable(FSMSTATE::ANCIENT_THROW))
@@ -1215,7 +1198,7 @@ void CPlayer::Behavior_SpellEnter()
 				Add_Event(pairAnimInfo.first,
 					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LUMOS, Get_PartObject<CWand>()); },
 					0.f);
-				m_pModelCom->Set_Second_AnimationIndex(m_Animation[STATEANIM::LUMOS].first, ENUM_CLASS(BLEND_BONE::SHOULDER_R), true);
+				m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R),m_Animation[STATEANIM::LUMOS].first, m_Animation[STATEANIM::LUMOS].second);
 			}
 			else
 			{
@@ -1234,7 +1217,7 @@ void CPlayer::Behavior_SpellEnter()
 				else {
 					pairAnimInfo = m_Animation[STATEANIM::IDLE];
 				}
-				m_pModelCom->Set_Second_AnimationIndex(m_Animation[STATEANIM::LUMOS_STOP].first, ENUM_CLASS(BLEND_BONE::SHOULDER_R));
+				m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R),m_Animation[STATEANIM::LUMOS_STOP].first, m_Animation[STATEANIM::LUMOS_STOP].second);
 				m_eSpell = STATEANIM::END;
 			}
 			break;
@@ -1407,6 +1390,23 @@ void CPlayer::Behavior_HitEnter()
 		break;
 	default:
 		break;
+	}
+
+	if (m_fHitDegree >= 90.f)
+	{
+		pairAnimInfo = m_Animation[STATEANIM::FLINCH_BWD];
+	}
+	else if (m_fHitDegree >= 45.f) {
+
+		if (m_fHitCross > 0.f) {
+			pairAnimInfo = m_Animation[STATEANIM::FLINCH_LEFT];
+		}
+		else {
+			pairAnimInfo = m_Animation[STATEANIM::FLINCH_RIGHT];
+		}
+	}
+	else  if(m_fHitDegree>=0.f){
+		pairAnimInfo = m_Animation[STATEANIM::FLINCH_FWD];
 	}
 
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
@@ -2259,6 +2259,10 @@ void CPlayer::Set_Anim()
 
 	m_Animation[STATEANIM::HIT_L] = { 1200,false };
 	m_Animation[STATEANIM::HIT_R] = { 1201,false };
+	m_Animation[STATEANIM::FLINCH_BWD] = { 1060,false };
+	m_Animation[STATEANIM::FLINCH_FWD] = { 1061,false };
+	m_Animation[STATEANIM::FLINCH_LEFT] = { 1062,false };
+	m_Animation[STATEANIM::FLINCH_RIGHT] = { 1063,false };
 	m_Animation[STATEANIM::KNOCKBACK] = { 1078,false };
 
 	m_Animation[STATEANIM::BROOM_IDLE] = { 710,true };
