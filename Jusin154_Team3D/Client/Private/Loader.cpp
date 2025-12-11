@@ -76,6 +76,7 @@
 #include "Enemy_HpBar.h"
 #include "Enemy_Info.h"
 #include "Boss_HpBar.h"
+#include "Enemy_Detection.h"
 
 #include "Spell_Canvas.h"
 #include "Spell_Panel.h"
@@ -300,7 +301,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 {
 	m_strMessage = TEXT("텍스쳐를(을) 로딩 중 입니다.");
 
-	_bool isLoad_Background = { false };
+	_bool isLoad_Background = { true };
 
 #ifdef gimch
 	isLoad_Background = true;
@@ -664,6 +665,22 @@ HRESULT CLoader::Loading_For_GamePlay()
 		});
 
 	Asset_FileLoad("../Bin/Resources/Textures/SpellWidget", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
+		{
+
+			_string strFilePath = pFilePath;
+			_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
+
+
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
+				CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
+				return E_FAIL;
+			}
+
+			return S_OK;
+
+		});
+
+	Asset_FileLoad("../Bin/Resources/Textures/Enemy", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
 		{
 
 			_string strFilePath = pFilePath;
@@ -1709,6 +1726,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype<CBoss_HpBar>(g_iStaticLevel, CBoss_HpBar::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
+	/* For.Prototype_GameObject_Enemy_Detection*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CEnemy_Detection>(g_iStaticLevel, CEnemy_Detection::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 
 	/* For.Prototype_GameObject_Spell_Canvas*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_Canvas>(g_iStaticLevel, CSpell_Canvas::Create(m_pDevice, m_pContext))))
@@ -2085,11 +2106,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 #pragma endregion
-#pragma region STAT PROTOTYPE
-	if (FAILED(Stat_FileLoad("../Bin/Resources/Data/Stat/Stat.xml"))) {
-		return E_FAIL;
-	}
-#pragma endregion
 
 
 	/* For.Prototype_Component_FSM */
@@ -2255,33 +2271,6 @@ HRESULT CLoader::Asset_FileLoad(const _char* pDirectoryPath, const _tchar* pPreN
 	return S_OK;
 }
 
-HRESULT CLoader::Stat_FileLoad(const _char* pDirectoryPath)
-{
-	filesystem::path pathStatFile = pDirectoryPath;
-
-	tinyxml2::XMLDocument doc;
-	tinyxml2::XMLError Error = doc.LoadFile(pathStatFile.string().c_str());
-	if (Error != tinyxml2::XML_SUCCESS) {
-		return E_FAIL;
-	}
-
-	tinyxml2::XMLElement* pStatInfo = doc.FirstChildElement("StatInfo");
-	if (!pStatInfo) {
-		return E_FAIL;
-	}
-
-	_uint iNumChild = pStatInfo->ChildElementCount();
-	tinyxml2::XMLNode* pChild = pStatInfo->FirstChildElement();
-	for (_uint i = 0; i < iNumChild; ++i) {
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, CMyTools::ToWstring(pChild->Value()),
-			CStat::Create(m_pDevice, m_pContext, pChild)))) {
-			return E_FAIL;
-		}
-		pChild = pChild->NextSiblingElement();
-	}
-
-	return S_OK;
-}
 
 vector<FOLDER_LOAD*>* APIENTRY Deferred_FolderLoad_Main(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pDirectoryPath, const _char* pFileExt, _bool bUseTag)
 {
