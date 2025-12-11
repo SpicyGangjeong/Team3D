@@ -18,8 +18,6 @@ private:
 	virtual ~CGoblin_BattleAxe() = default;
 
 public:
-	virtual HRESULT Initialize_Prototype() override;
-	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Priority_Update(_float fTimeDelta) override;
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
@@ -27,7 +25,6 @@ public:
 	HRESULT Render_Disolve();
 	void Set_Disolve(_bool bDisolve) { m_bDisolve = bDisolve; }
 	const _float4x4 Get_AxeMatrix() { return m_vAxeMat; };
-public:
 
 private:
 	const _float4x4* m_pSocketMatrices = {  };
@@ -38,7 +35,13 @@ private:
 
 	_float4x4 m_vAxeMat= {};
 
+#ifdef _DEBUG
+	unique_ptr<GeometricPrimitive> m_pGripShape = { nullptr };
+	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };
+#endif // _DEBUG
 private:
+	virtual HRESULT Initialize_Prototype() override;
+	virtual HRESULT Initialize(void* pArg) override;
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
 

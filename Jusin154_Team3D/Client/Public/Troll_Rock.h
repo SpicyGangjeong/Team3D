@@ -28,7 +28,6 @@ public:
 
 private:
 	const _float4x4* m_pSocketMatrices = {  };
-	_bool m_bVisible = { false };
 	_float4 m_vStartPos = {};
 	PSX::PxSweepBufferN<12> m_SweepBuffer = {};
 	CShader* m_pShaderCom = { nullptr };

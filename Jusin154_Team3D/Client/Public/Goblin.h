@@ -4,6 +4,7 @@
 #include "Monster.h"
 #include "CallBack_Monster_Behavior.h"
 #include "CallBack_Monster_HitReport.h"
+#include "Enemy_Detection.h"
 
 NS_BEGIN(Client)
 
@@ -31,9 +32,11 @@ public:
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
 
+	void Set_Detection(_bool bDetection);
 private:
 	CCallBack_Monster_Behavior* m_pCallBack_Behavior = { nullptr };
 	CCallBack_Monster_HitReport* m_pCallBack_HitReport = { nullptr };
+	CEnemy_Detection* m_pDetection = { nullptr };
 
 	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
 	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
@@ -43,6 +46,7 @@ private:
 	class CEffectPool* m_pEffectPool = nullptr;
 	DAMAGE_INFO m_DamageInfo;
 
+	_bool m_bDetection = { false };
 
 	class CEffectParts* m_pSmoke = { nullptr };
 	class CEffectParts* m_pGoblin_Particle = { nullptr };

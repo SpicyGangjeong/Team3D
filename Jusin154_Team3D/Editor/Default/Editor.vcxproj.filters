@@ -564,6 +564,9 @@
     </Filter>
     <Filter Include="02.GameObjects\Layer_Effect\Effect\State_Effect">
       <UniqueIdentifier>{d276d751-77aa-423e-9499-c63875e36266}</UniqueIdentifier>
+	</Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_Detection">
+      <UniqueIdentifier>{81c6b163-6c8b-47ac-a4b6-e86088ce709f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1127,6 +1130,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\StunEffect.h">
       <Filter>02.GameObjects\Layer_Effect\Effect\State_Effect</Filter>
+	</ClInclude>
+    <ClInclude Include="..\public\Enemy_Detection.h">
+      <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_Detection</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1692,6 +1698,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\StunEffect.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect\State_Effect</Filter>
+	</ClCompile>
+    <ClCompile Include="..\Private\Enemy_Detection.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_Detection</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

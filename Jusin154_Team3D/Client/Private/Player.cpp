@@ -297,6 +297,14 @@ HRESULT CPlayer::Render_Shadow()
 }
 void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 {
+	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
+	if (CollisionDesc) {
+		Check_HitAngle(XMLoadFloat4(&CollisionDesc->vHitDir));
+	}
+	else {
+		m_fHitDegree = -1.f;
+	}
+
 	m_pFSM->Change_State(FSMSTATE::HIT);
 }
 void CPlayer::OnHit(CGameObject* pOther, CGameObject* pCaller)
@@ -387,11 +395,10 @@ HRESULT CPlayer::Ready_Components()
 		return E_FAIL;
 	}
 
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_PLAYER"), (CComponent**)&m_pStat))) {
-		return E_FAIL;
-
-	}
-
+	m_pStat = m_pInfoInstance->Get_PlayerStatPtr();
+	m_Components.push_back(m_pStat);
+	SAFE_ADDREF(m_pStat);
+	SAFE_ADDREF(m_pStat);
 
 	{ // CCT
 		CCharacter_Controller::Character_Controller_DESC Desc{};

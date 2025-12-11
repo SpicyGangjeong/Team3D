@@ -33,9 +33,13 @@ private:
 	CModel* m_pModelCom = { nullptr };
 	_bool m_bAttach = { true };
 
+	_float4 m_vStartPos = {};
+	PSX::PxSweepBufferN<12> m_SweepBuffer = {};
+
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
+	void Dagger_Hit();
 
 public:
 	static CGoblin_Dagger* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -47,6 +47,7 @@ HRESULT CSpell_State::Initialize(void* pArg)
 	m_pVIBufferCom->Set_Pos(-185.f, 375.f, m_fOffSetX, m_fOffSetY, m_iCols);
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Slot_Hover"), [this](void* p) {this->Set_SkillType(*reinterpret_cast<_int*>(p)); });
+	Spell_Setting();
 	return S_OK;
 }
 
@@ -91,9 +92,14 @@ void CSpell_State::Update(_float fTimeDelta)
 	}
 
 	m_fTime += fTimeDelta * m_fTimeMult;
-	if (m_bClick == false)
+
+	if (m_iSpellType != -1)
 	{
-		m_pVIBufferCom->Set_Hover_Index(m_iSpellType);
+		if (m_pGameInstance->Mouse_Down(DIM_RBUTTON))
+		{
+			m_pVIBufferCom->Set_Equip_Index(m_iSpellType);
+			m_bLock[m_iSpellType] = true;
+		}
 	}
 
 	__super::Update(fTimeDelta);
@@ -118,7 +124,7 @@ HRESULT CSpell_State::Render()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIINTANCE::ALPHABLEND))))
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIINTANCE::SPELL_LOCK))))
 	{
 		return E_FAIL;
 	}
@@ -167,6 +173,14 @@ void CSpell_State::Click_Slot(_bool bClick)
 	else
 	{
 		m_bClick = false;
+	}
+}
+
+void CSpell_State::Spell_Setting()
+{
+	for (_int i = 0; i < 26; ++i)
+	{
+		m_bLock[i] = static_cast<CUIObject*>(m_pOwner)->Get_Info(i).bSpell_Lock;
 	}
 }
 

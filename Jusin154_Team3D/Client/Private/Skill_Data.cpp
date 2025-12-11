@@ -16,6 +16,9 @@ HRESULT CSkill_Data::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pCon
 
 	m_bNoCool = false;
 	m_pInfoInstance->Add_Event(TEXT("NoCooL"), [this](void* p) {this->NoCool(*reinterpret_cast<_bool*>(p)); });
+	Spell_UnLock(2);
+	Spell_UnLock(6);
+	Spell_UnLock(11);
 	return S_OK;
 }
 
@@ -52,6 +55,15 @@ void CSkill_Data::Update_Damage(_float Damage)
 	{
 		m_fSpell_Damage[i] = SpellInfo->fSpell_Damage + Damage;
 	}
+}
+
+void CSkill_Data::Spell_UnLock(_int SpellID)
+{
+	if (SpellInfo[SpellID].bSpell_Lock == true)
+		return;
+
+	SpellInfo[SpellID].bSpell_Lock = true;
+	m_pInfoInstance->Event_CallBack(TEXT("Spell_UnLock"), &SpellInfo[SpellID].bSpell_Lock);
 }
 
 void CSkill_Data::Update(_float fTimeDelta)

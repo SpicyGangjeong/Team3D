@@ -18,7 +18,6 @@ HRESULT CBroom::InputAction()
 		m_pGameInstance->Key_Pressing(DIK_SPACE)
 		|| m_pGameInstance->Key_Pressing(DIK_LCONTROL)
 		|| m_pGameInstance->Key_Pressing(DIK_E)
-		|| m_pGameInstance->Key_Pressing(DIK_R)
 		|| m_pGameInstance->Key_Pressing(DIK_Q)
 		|| m_pGameInstance->Key_Down(DIK_LSHIFT)
 		|| m_pGameInstance->Key_Pressing(DIK_C)
@@ -26,6 +25,7 @@ HRESULT CBroom::InputAction()
 		|| m_pGameInstance->Key_Pressing(DIK_Z)
 		|| m_pGameInstance->Key_Pressing(DIK_G)
 		|| m_pGameInstance->Key_Pressing(DIK_B)
+		|| m_pGameInstance->Key_Pressing(DIK_N)
 		)
 	{
 		return S_OK;
@@ -138,14 +138,6 @@ HRESULT CBroom::Behavior_MoveExitCheck(_float fTimeDelta)
 	pair<_uint, _bool> pairAnimInfo = {};
 	_uint iCurrentAnimIndex = m_pModelCom->Get_AnimIndex();
 
-	if (!m_bRide)
-	{
-		m_bHoverToggle = true;
-
-		m_pFSM->Change_State(FSMSTATE::IDLE);
-		return E_FAIL;
-	}
-
 	if (SUCCEEDED(InputMove()) || SUCCEEDED(InputAction()))
 	{
 		if (m_pGameInstance->Key_Pressing(DIK_W))
@@ -165,6 +157,10 @@ HRESULT CBroom::Behavior_MoveExitCheck(_float fTimeDelta)
 			m_pFSM->Change_State(FSMSTATE::HOVER);
 		}
 		else if (m_pGameInstance->Key_Pressing(DIK_SPACE))
+		{
+			m_pFSM->Change_State(FSMSTATE::HOVER);
+		}
+		else if (m_pGameInstance->Key_Pressing(DIK_N))
 		{
 			m_pFSM->Change_State(FSMSTATE::HOVER);
 		}
@@ -197,7 +193,7 @@ HRESULT CBroom::Behavior_Broom_HoverExitCheck(_float fTimeDelta)
 	_bool bFwd = m_pGameInstance->Key_Pressing(DIK_W);
 	_bool bLft = m_pGameInstance->Key_Pressing(DIK_A);
 	_bool bRht = m_pGameInstance->Key_Pressing(DIK_D);
-	_bool bDown = m_pGameInstance->Key_Pressing(DIK_LCONTROL);
+	_bool bDown = m_pGameInstance->Key_Pressing(DIK_LCONTROL) || m_pGameInstance->Key_Pressing(DIK_N);
 	_bool bUp = m_pGameInstance->Key_Pressing(DIK_SPACE);
 
 	if (m_bHoverToggle)
@@ -354,7 +350,7 @@ HRESULT CBroom::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 	_bool bFwd = m_pGameInstance->Key_Pressing(DIK_W);
 	_bool bLft = m_pGameInstance->Key_Pressing(DIK_A);
 	_bool bRht = m_pGameInstance->Key_Pressing(DIK_D);
-	_bool bDown = m_pGameInstance->Key_Pressing(DIK_LCONTROL);
+	_bool bDown = m_pGameInstance->Key_Pressing(DIK_LCONTROL) || m_pGameInstance->Key_Pressing(DIK_N);
 	_bool bUp = m_pGameInstance->Key_Pressing(DIK_SPACE);
 	_bool bShift = m_pGameInstance->Key_Down(DIK_LSHIFT);
 
@@ -413,24 +409,24 @@ HRESULT CBroom::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 			_bool bHasInput = !(vInput.x == 0 && vInput.y == 0 && vInput.z == 0);
 			_vector vDir = XMVector3Normalize(XMLoadFloat3(&vInput));
 
-			if (vInput.z >= 0.f)
-			{
-				Camera_InterpTurn(fTimeDelta * 0.2f);
-			}
-
-
 			if (vInput.x < 0.f)
 			{
-				if (vInput.z < 0.f)
+				if (vInput.z <= 0.f)
 				{
-					Camera_InterpTurn(fTimeDelta * 0.3f);
+					Camera_InterpTurn(fTimeDelta * 0.4f);
+				}
+				else {
+					Camera_InterpTurn(fTimeDelta * 0.2f);
 				}
 			}
 			else if (vInput.x > 0.f)
 			{
-				if (vInput.z < 0.f)
+				if (vInput.z <= 0.f)
 				{
-					Camera_InterpTurn(fTimeDelta * 0.3f);
+					Camera_InterpTurn(fTimeDelta * 0.4f);
+				}
+				else {
+					Camera_InterpTurn(fTimeDelta * 0.2f);
 				}
 			}
 
@@ -529,9 +525,6 @@ void CBroom::Behavior_Broom_FlyExit()
 void CBroom::Camera_InterpTurn(_float fTimeDelta)
 {
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
-
-	//if (iCurrAnimIndex != m_Animation[STATEANIM::BROOM_FLY_B].first)
-	//	return;
 
 	_vector xmvCurLook = XMVector4Normalize(
 		XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
@@ -658,7 +651,7 @@ void CBroom::Set_Anim()
 	m_Animation[STATEANIM::BROOM_FLY_DOWN_B] = { 13,true };
 	m_Animation[STATEANIM::BROOM_FLY_LEFT_B] = { 15,true };
 	m_Animation[STATEANIM::BROOM_FLY_RIGHT_B] = { 16,true };
-	m_Animation[STATEANIM::BROOM_FLY_UP_B] = { 17,true };
+	m_Animation[STATEANIM::BROOM_FLY_UP_B] = { 17,true }; 
 	//Mount 29
 	//호버 스탑 6
 	//호버 제자리 24

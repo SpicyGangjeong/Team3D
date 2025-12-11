@@ -172,6 +172,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Damage_Font.h" />
     <ClInclude Include="..\Public\Eessential_Spell.h" />
     <ClInclude Include="..\Public\Eessential_Spell_Slot.h" />
+    <ClInclude Include="..\public\Enemy_Detection.h" />
     <ClInclude Include="..\Public\Enemy_HpBar.h" />
     <ClInclude Include="..\Public\Enemy_Info.h" />
     <ClInclude Include="..\Public\Enemy_Panel.h" />
@@ -198,6 +199,13 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\StunEffect.h" />
     <ClInclude Include="..\Public\State_Broom_Dismount.h" />
     <ClInclude Include="..\Public\State_Broom_Ride_Move.h" />
+    <ClInclude Include="..\Public\State_Shield.h" />
+    <ClInclude Include="..\Public\StunEffect.h" />
+    <ClInclude Include="..\Public\State_Broom_Dismount.h" />
+    <ClInclude Include="..\Public\State_Broom_Fly.h" />
+    <ClInclude Include="..\Public\State_Broom_Hover.h" />
+    <ClInclude Include="..\Public\State_Broom_Ride_Move.h" />
+    <ClInclude Include="..\public\MiniMap_Camera.h" />
     <ClInclude Include="..\Public\Troll_State_Stun.h" />
     <ClInclude Include="..\Public\State_Sustain.h" />
     <ClInclude Include="..\Public\WandEnd.h" />
@@ -345,6 +353,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Damage_Font.cpp" />
     <ClCompile Include="..\Private\Eessential_Spell.cpp" />
     <ClCompile Include="..\Private\Eessential_Spell_Slot.cpp" />
+    <ClCompile Include="..\private\Enemy_Detection.cpp" />
     <ClCompile Include="..\Private\Enemy_HpBar.cpp" />
     <ClCompile Include="..\Private\Enemy_Info.cpp" />
     <ClCompile Include="..\Private\Enemy_Panel.cpp" />
@@ -365,7 +374,11 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Logo_Glow.cpp" />
     <ClCompile Include="..\Private\Logo_Text.cpp" />
     <ClCompile Include="..\Private\State_Broom_Dismount.cpp" />
+    <ClCompile Include="..\Private\State_Broom_Fly.cpp" />
+    <ClCompile Include="..\Private\State_Broom_Hover.cpp" />
     <ClCompile Include="..\Private\State_Broom_Ride_Move.cpp" />
+    <ClCompile Include="..\private\MiniMap_Camera.cpp" />
+    <ClCompile Include="..\Private\State_Shield.cpp" />
     <ClCompile Include="..\Private\State_Sustain.cpp" />
     <ClCompile Include="..\Private\Goblin_Attack.cpp" />
     <ClCompile Include="..\Private\Mage_Nomal_Attack.cpp" />

@@ -291,13 +291,19 @@ void CTroll::OnCollision(CGameObject* pOther, void* pDesc)
 		switch (iSkillType)
 		{
 		case ENUM_CLASS(SKILL_TYPE::DESCENDO):
-			m_eHitSpell = STATEANIM::KNOCKDOWN_FWD;
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
 			break;
 		case ENUM_CLASS(SKILL_TYPE::FLIPENDO):
-			m_eHitSpell = STATEANIM::TUMBLE2;
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::FLIPENDO);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::JAP):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
 			break;
 		default:
-			m_eHitSpell = STATEANIM::KNOCKDOWN_FWD;
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::END);
 			break;
 		}
 	}

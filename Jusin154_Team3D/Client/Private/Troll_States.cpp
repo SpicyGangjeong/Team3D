@@ -415,7 +415,6 @@ void CTroll::Behavior_SwingEnter()
 		[this]() {m_bLookAt = false; },
 		0.2f);
 
-
 	Troll_Trail_Visible(true);
 	m_pWeaponTrail->Set_Visible(true);
 	m_pWeaponTrail->Get_Component<CTrail>()->Reset_Trail();
@@ -452,6 +451,7 @@ void CTroll::SwingHit(_bool& bPlayerHit)
 {
 	vector<PSX::PxSweepHit> pxHits;
 	_uint iHitCount = 0;
+	_float Damage = 0.f;
 	CheckHammerHits(iHitCount, pxHits);
 	{
 		for (_uint i = 0; i < pxHits.size(); ++i) {
@@ -466,8 +466,10 @@ void CTroll::SwingHit(_bool& bPlayerHit)
 						continue;
 					}
 					CStat* pStat = pUserData->pCharacter->Get_Owner()->Get_Component<CStat>();
-					pStat->Get_Damage(7.f);
+					pStat->Get_Damage(20.f);
+					Damage = 7.f;
 					bPlayerHit = true;
+					pUserData->pOwner->OnCollision(this);
 				} break;
 				case PXOBJECT::ALLY_HITBOX:
 					break;
@@ -831,8 +833,9 @@ void CTroll::SlamHit(_bool& bPlayerHit)
 						continue;
 					}
 					CStat* pStat = pUserData->pCharacter->Get_Owner()->Get_Component<CStat>();
-					pStat->Get_Damage(10.f);
+					pStat->Get_Damage(20.f);
 					bPlayerHit = true;
+					pUserData->pOwner->OnCollision(this);
 				} break;
 				case PXOBJECT::ALLY_HITBOX:
 					break;
@@ -938,6 +941,8 @@ void CTroll::Set_Anim()
 	m_Animation[STATEANIM::HIT_BWD] = { 167, false }; // 
 	m_Animation[STATEANIM::HIT_BWD2] = { 168, false }; //
 	m_Animation[STATEANIM::HIT_BWD3] = { 169, false }; // 
+
+	m_Animation[STATEANIM::HIT_FWD] = { 170,false };
 
 	m_Animation[STATEANIM::HIT_FACE] = { 156, false }; // 
 	m_Animation[STATEANIM::HIT_FACE_END] = { 157, false }; // 

@@ -858,26 +858,7 @@ void CPlayer::Behavior_CombatEnter()
 		pairAnimInfo = m_Animation[STATEANIM::ANCIENT_THROW];
 	}
 	else if (m_pGameInstance->Key_Down(DIK_G)) {
-		m_pFSM->Enable_State(FSMSTATE::POTION);
-		if (SUCCEEDED(InputMove()))
-		{
-			if (m_bSprintToggle)
-			{
-				pairAnimInfo = m_Animation[STATEANIM::SPRINT];
-			}
-			else if (m_bWalkToggle)
-			{
-				pairAnimInfo = m_Animation[STATEANIM::WALK_FWD];
-			}
-			else {
-				pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
-			}
-		}
-		else {
-			pairAnimInfo = m_Animation[STATEANIM::IDLE];
-		}
 
-		m_pModelCom->Set_Second_AnimationIndex(m_Animation[STATEANIM::POTION].first, ENUM_CLASS(BLEND_BONE::SHOULDER_NECK_L));
 	}
 
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
@@ -944,27 +925,7 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		}
 		else if (m_pGameInstance->Key_Down(DIK_G)) {
-			m_pFSM->Enable_State(FSMSTATE::POTION);
-			if (SUCCEEDED(InputMove()))
-			{
-				if (m_bSprintToggle)
-				{
-					pairAnimInfo = m_Animation[STATEANIM::SPRINT];
-				}
-				else if (m_bWalkToggle)
-				{
-					pairAnimInfo = m_Animation[STATEANIM::WALK_FWD];
-				}
-				else {
-					pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
-				}
-
-			}
-			else {
-				pairAnimInfo = m_Animation[STATEANIM::IDLE];
-			}
-			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
-			m_pModelCom->Set_Second_AnimationIndex(m_Animation[STATEANIM::POTION].first, ENUM_CLASS(BLEND_BONE::SHOULDER_NECK_L));
+		
 		}
 	}
 
@@ -1022,7 +983,7 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 void CPlayer::Behavior_CombatExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::COMBAT | FSMSTATE::LIGHT_ATTACK | FSMSTATE::SPELL | FSMSTATE::SKILL |
-		FSMSTATE::SKILL2 | FSMSTATE::MAPHELP | FSMSTATE::ANCIENT_THROW | FSMSTATE::POTION);
+		FSMSTATE::MAPHELP | FSMSTATE::ANCIENT_THROW);
 }
 
 void CPlayer::Behavior_HitEnter()

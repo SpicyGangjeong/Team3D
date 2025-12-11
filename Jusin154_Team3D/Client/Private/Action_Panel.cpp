@@ -65,6 +65,7 @@ HRESULT CAction_Panel::Initialize(void* pArg)
 	m_pInfoInstance->Add_Event(TEXT("GetSpell"), [this](void* p) {this->Spell_Setting(p); });
 	m_pInfoInstance->Add_Event(TEXT("Monster_Hit"), [this](void* p) {this->Magic_Meter_Update(); });
 	m_pInfoInstance->Add_Event(TEXT("Ancient_Magic_Throw"), [this](void* p) {this->Ancient_Magic_Throw(); });
+	m_pInfoInstance->Add_Event(TEXT("Use_Potion"), [this](void* p) {this->Use_Potion(); });
 	return S_OK;
 }
 
@@ -265,6 +266,18 @@ void CAction_Panel::Spell_Setting(void* pArg)
 	default:
 		break;
 	}
+}
+
+void CAction_Panel::Use_Potion()
+{
+	if (m_pInfoInstance->Get_PlayerStatPtr()->Get_Stat().fCurrentHp >= m_pInfoInstance->Get_PlayerStatPtr()->Get_Stat().fMaxHp)
+		return;
+
+	_float Heal = static_cast<CPotion*>(m_pPotion)->Use_Potion();
+	if (Heal == -1)
+		return;
+
+	m_pInfoInstance->Get_PlayerStatPtr()->Add_Hp(Heal);
 }
 
 HRESULT CAction_Panel::Bind_ShaderResources()

@@ -3,18 +3,14 @@
 #include "Editor_Define.h"
 #include "ElementObject.h"
 
-NS_BEGIN(Engine)
-class CGameObject;
-NS_END
-
 NS_BEGIN(Editor)
 
-class CSpell_State final : public CElementObject
+class CEnemy_Detection final : public CElementObject
 {
 private:
-	CSpell_State(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CSpell_State(const CSpell_State& rhs);
-	virtual ~CSpell_State() = default;
+	CEnemy_Detection(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CEnemy_Detection(const CEnemy_Detection& rhs);
+	virtual ~CEnemy_Detection() = default;
 
 public:
 	virtual void Priority_Update(_float fTimeDelta);
@@ -23,13 +19,6 @@ public:
 	virtual HRESULT Render() override;
 	virtual _vector Get_WorldPostion() override;
 
-	virtual void SizeUpX(_float fSizeX) override;
-	virtual void SizeUpY(_float fSizeY) override;
-	virtual void SizeUpdate(_float fSizeX, _float fSizeY) override;
-
-private:
-	void Click_Slot(_bool bClick);
-	void Spell_Setting();
 
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
@@ -38,18 +27,25 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 
 private:
+	void SizeUpdate(_float fSizeX);
+
+private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
+	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
+	CTexture* m_pDiffuse_TextureCom2 = { nullptr };
+	CTexture* m_pDiffuse_TextureCom3 = { nullptr };
+	CTexture* m_pDiffuse_TextureCom4 = { nullptr };
+	CTexture* m_pDiffuse_TextureCom5 = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
-	CVIBuffer_UI_Instance* m_pVIBufferCom = { nullptr };
+	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
-	_float m_fOffSetX{};
-	_float m_fOffSetY{};
-	_uint  m_iCols{};
+	_float4 m_vImageposi{};
 
-	_bool m_bLock[26] = {};
-
+	_bool m_bStep1 = { false };
+	_bool m_bStep2 = { false };
+	_bool m_bStep3 = { false };
 public:
-	static CSpell_State* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CEnemy_Detection* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
 	void Describe_Entity() override;
