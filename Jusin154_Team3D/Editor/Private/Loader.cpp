@@ -2241,6 +2241,10 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		MODEL::NONANIM, "../Bin/Resources/Models/Box/Box.bin", XMMatrixIdentity(),
 		TEXT("Desc_Box")
 	));
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/GerboldOllivander/GerboldOlivander.fbx", XMMatrixIdentity(),
+		TEXT("Prototype_Component_GerboldOlivander")
+	));
 
 
 	for (auto& job : futures) {
