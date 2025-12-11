@@ -36,7 +36,7 @@ public:
 	_bool	Play_Anim(_float fTimeDelta, CTransform* pTransform);
 	_bool	Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform);
 	void	Set_AnimationIndex(_uint iIndex, _bool isLoop = true, _float fAmount = 1.f, _bool bRatio = false,_float fAnimSpeed = 1.f);
-	void	Set_Second_AnimationIndex(_uint iIndex, _uint BoneIndex, _bool isLoop = false);
+	void	Set_Second_AnimationIndex(_uint BoneIndex,_uint iIndex, _bool isLoop = false);
 	_bool	IsFinishedAnim() const { return m_bIsFinishedAnim; }
 	_bool	IsFinishedSecondAnim() const { return m_bIsSecondFinishedAnim; }
 	_bool	IsLoopAnim() const { return m_bIsLoop; }
@@ -132,9 +132,10 @@ private:
 	_float						m_fBlendDuration = { 0.3f };
 
 	_float3						m_vRadiusOffset = {};			// 컬링용 Radius Offset
-	_float m_fSecondBlendTime = {};
-	_float m_fSecondBlendDuration = { 0.3f };
-	_float m_fSecondRatio = {};
+	_float						m_fSecondBlendTime = {};
+	_float						m_fSecondBlendDuration = { 0.3f };
+	_float						m_fSecondRatio = {};
+	_bool						m_bSecondStopBlend = {};
 
 	vector<class CAnimation*>	m_Animations;						// 애니메이션의 벡터, 
 
