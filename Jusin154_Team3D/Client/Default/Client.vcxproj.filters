@@ -497,6 +497,18 @@
     <ClInclude Include="..\Public\Damage_Font.h">
       <Filter>04.Mechanic\Damage</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Mage_Down_Attack.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Goblin_Mage\Mage_Down_Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MageSide.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Goblin_Mage\MageSide</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mage_Nomal_Attack.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Goblin_Mage\Mage_Nomal_Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\StunEffect.h">
+      <Filter>02.GameObjects\Effect\State_Effect\Stun</Filter>
+	</ClInclude>
     <ClInclude Include="..\Public\State_Broom_Ride_Move.h">
       <Filter>04.Mechanic\State\Broom_Player\State_Broom_Ride_Move</Filter>
     </ClInclude>
@@ -511,6 +523,18 @@
           </ClInclude>
     <ClInclude Include="..\Public\Boss_HpBar.h">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Boss_HpBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Broom_Hover.h">
+      <Filter>04.Mechanic\State\Broom_Player\State_Broom_Hover</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Broom_Fly.h">
+      <Filter>04.Mechanic\State\Broom_Player\State_Broom_Fly</Filter>
+          </ClInclude>
+    <ClInclude Include="..\public\MiniMap_Camera.h">
+      <Filter>02.GameObjects\Cameras\MiniMap_Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Enemy_Detection.h">
+      <Filter>02.GameObjects\UI\Enemy_Detection</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1056,6 +1080,24 @@
     <Filter Include="04.Mechanic\Damage">
       <UniqueIdentifier>{36962dce-8c99-4c54-9189-2a49785a211e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Goblin_Mage">
+      <UniqueIdentifier>{13977e62-6b05-41de-9919-20a06cd336e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Goblin_Mage\MageSide">
+      <UniqueIdentifier>{bb1ae3a9-b8e7-49bf-83b4-811b627d0818}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Goblin_Mage\Mage_Nomal_Attack">
+      <UniqueIdentifier>{743a4a75-9482-4c8e-9c55-cab0daffffe9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Goblin_Mage\Mage_Down_Attack">
+      <UniqueIdentifier>{920aabfe-6033-4a5c-b562-35b20bd2e0a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\State_Effect">
+      <UniqueIdentifier>{5af878d0-07f2-4626-95bb-fd86abc64914}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\State_Effect\Stun">
+      <UniqueIdentifier>{c9370e36-317e-45e7-a8c7-98a623864824}</UniqueIdentifier>
+	</Filter>
     <Filter Include="04.Mechanic\State\Broom_Player">
       <UniqueIdentifier>{48b905c1-b91e-44ca-a61b-86633826768b}</UniqueIdentifier>
     </Filter>
@@ -1076,6 +1118,18 @@
           </Filter>
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Boss_HpBar">
       <UniqueIdentifier>{b49a3671-96d0-47b8-833f-28190d549b0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Broom_Player\State_Broom_Hover">
+      <UniqueIdentifier>{24f6903f-8f6b-46ff-a387-ecb44d673887}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Broom_Player\State_Broom_Fly">
+      <UniqueIdentifier>{f24321bb-6750-4baa-b19a-bf5a3c2a8909}</UniqueIdentifier>
+          </Filter>
+    <Filter Include="02.GameObjects\Cameras\MiniMap_Camera">
+      <UniqueIdentifier>{dbf4ff12-e5eb-439a-aa02-e5a424453b08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Enemy_Detection">
+      <UniqueIdentifier>{34a4beb9-ccb9-4847-ae45-af4e7dc25d94}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1518,6 +1572,18 @@
     <ClCompile Include="..\Private\Damage_Font.cpp">
       <Filter>04.Mechanic\Damage</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Mage_Down_Attack.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Goblin_Mage\Mage_Down_Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MageSide.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Goblin_Mage\MageSide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mage_Nomal_Attack.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Goblin_Mage\Mage_Nomal_Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\StunEffect.cpp">
+      <Filter>02.GameObjects\Effect\State_Effect\Stun</Filter>
+	</ClCompile>
     <ClCompile Include="..\Private\State_Broom_Ride_Move.cpp">
       <Filter>04.Mechanic\State\Broom_Player\State_Broom_Ride_Move</Filter>
     </ClCompile>
@@ -1532,6 +1598,18 @@
           </ClCompile>
     <ClCompile Include="..\Private\Boss_HpBar.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Boss_HpBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Broom_Hover.cpp">
+      <Filter>04.Mechanic\State\Broom_Player\State_Broom_Hover</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Broom_Fly.cpp">
+      <Filter>04.Mechanic\State\Broom_Player\State_Broom_Fly</Filter>
+          </ClCompile>
+    <ClCompile Include="..\private\MiniMap_Camera.cpp">
+      <Filter>02.GameObjects\Cameras\MiniMap_Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Enemy_Detection.cpp">
+      <Filter>02.GameObjects\UI\Enemy_Detection</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

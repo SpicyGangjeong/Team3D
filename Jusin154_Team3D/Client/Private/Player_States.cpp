@@ -27,6 +27,8 @@
 #include "State_Hit.h"
 #include "State_Broom_Ride.h"
 #include "State_Broom_Ride_Move.h"
+#include "State_Broom_Hover.h"
+#include "State_Broom_Fly.h"
 #include "State_Broom_Dismount.h"
 #pragma endregion
 
@@ -713,11 +715,17 @@ void CPlayer::Behavior_JumpEnter()
 HRESULT CPlayer::Behavior_JumpExitCheck()
 {
 	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
-	if (fRatio>=0.7f) {
+
+	if (m_pGameInstance->Key_Down(DIK_B))
+	{
+		m_pFSM->Change_State(FSMSTATE::BROOM_RIDE);
+	}
+
+	if (fRatio>=0.6f) {
 		m_pFSM->Change_State(FSMSTATE::LAND);
 		return E_FAIL;
 	}
-	return S_OK;
+	return E_FAIL;
 }
 
 void CPlayer::Behavior_JumpExit()
@@ -1331,7 +1339,7 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
 	}
 
-	if (m_pFSM->IsEnable(FSMSTATE::SPELL) && fRatio >= 0.3f)
+	if (m_bSpellHit)
 	{
 		if (m_eSpell != ENUM_CLASS(SKILL_TYPE::END))
 		{
@@ -1349,12 +1357,13 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 				break;
 			}
 
+			m_bSpellHit = false;
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 		}
 	}
 
 
-	if (SUCCEEDED(InputMove()) && fRatio>=0.3f) {
+	if (SUCCEEDED(InputMove()) && fRatio >= 0.3f) {
 		m_pFSM->Change_State(FSMSTATE::MOVE);
 		m_bLookAt = false;
 		return E_FAIL;
@@ -1445,6 +1454,14 @@ HRESULT CPlayer::Behavior_Broom_RideExitCheck(_float fTimeDelta)
 		m_pFSM->Change_State(FSMSTATE::BROOM_RIDE_MOVE);
 	}
 
+	if (m_pGameInstance->Key_Pressing(DIK_N))
+	{
+		auto flags = m_pCharacter_Controller->Get_CollisionFlags();
+		if (flags & PSX::PxControllerCollisionFlag::eCOLLISION_DOWN)
+		{
+			m_pFSM->Change_State(FSMSTATE::BROOM_DISMOUNT);
+		}
+	}
 	
 	return E_FAIL;
 }
@@ -1461,6 +1478,29 @@ void CPlayer::Behavior_Broom_Ride_MoveEnter()
 
 HRESULT CPlayer::Behavior_Broom_Ride_MoveExitCheck(_float fTimeDelta)
 {
+	if (m_pBroom->Get_Hover())
+	{
+		m_pFSM->Change_State(FSMSTATE::HOVER);
+	}
+	else {
+		m_pFSM->Change_State(FSMSTATE::FLY);
+	}
+	
+	return E_FAIL;
+}
+
+void CPlayer::Behavior_Broom_Ride_MoveExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::BROOM_RIDE_MOVE);
+}
+
+void CPlayer::Behavior_Broom_HoverEnter()
+{
+	m_pFSM->Enable_State(FSMSTATE::HOVER);
+}
+
+HRESULT CPlayer::Behavior_Broom_HoverExitCheck(_float fTimeDelta)
+{
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 	pair<_uint, _bool> pairAnimInfo;
 
@@ -1470,28 +1510,140 @@ HRESULT CPlayer::Behavior_Broom_Ride_MoveExitCheck(_float fTimeDelta)
 	_bool bDown = m_pGameInstance->Key_Pressing(DIK_LCONTROL);
 	_bool bUp = m_pGameInstance->Key_Pressing(DIK_SPACE);
 
-	if (m_pBroom->Get_Hover())
+	if (m_pBroom->Get_Hover() && iCurrAnimIndex != m_Animation[STATEANIM::BROOM_HOVER_REVELIO].first)
 	{
-		if (m_pGameInstance->Key_Pressing(DIK_W))
+		if (SUCCEEDED(InputBroom()) || SUCCEEDED(InputMove()))
 		{
-			pairAnimInfo = Get_AnimInfo(STATEANIM::BROOM_HOVER_FWD);
+			_float3 vInput = { 0.f, 0.f, 0.f };
+
+			if (bFwd)  vInput.z += 1.f;
+			if (bLft)  vInput.x -= 1.f;
+			if (bRht)  vInput.x += 1.f;
+			if (bUp)   vInput.y += 1.f;
+			if (bDown) vInput.y -= 1.f;
+
+			_bool bHasInput = !(vInput.x == 0 && vInput.y == 0 && vInput.z == 0);
+			_vector vDir = XMVector3Normalize(XMLoadFloat3(&vInput));
+
+			if (bUp || bDown)
+			{
+				if (bUp)
+				{
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_IDLE];
+				}
+				else
+				{
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_IDLE];
+				}
+			}
+
+			_float ax = fabsf(vInput.x);
+			_float ay = fabsf(vInput.y);
+			_float az = fabsf(vInput.z);
+
+			if (ay > ax && ay > az)
+			{
+				if (vInput.y > 0)
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_IDLE];
+				else
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_IDLE];
+			}
+			else if (ax >= az)
+			{
+				if (ay >= ax)
+				{
+					if (vInput.y > 0)
+						pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_IDLE];
+					else
+						pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_IDLE];
+				}
+				else {
+					if (vInput.x < 0)
+						pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_LEFT];
+					else if (vInput.x > 0)
+						pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_RIGHT];
+					else {
+						pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_FWD];
+					}
+				}
+			}
+			else
+			{
+				if (vInput.y > 0)
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_IDLE];
+				else if (vInput.y < 0)
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_IDLE];
+				else {
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_FWD];
+				}
+			}
 		}
-		else if (m_pGameInstance->Key_Pressing(DIK_A))
-		{
-			pairAnimInfo = Get_AnimInfo(STATEANIM::BROOM_HOVER_LEFT);
+		else {
+			pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_IDLE];
 		}
-		else if (m_pGameInstance->Key_Pressing(DIK_D))
+
+		if (m_pGameInstance->Key_Down(DIK_R))
 		{
-			pairAnimInfo = Get_AnimInfo(STATEANIM::BROOM_HOVER_RIGHT);
-		}
-		else
-		{
-			pairAnimInfo = Get_AnimInfo(STATEANIM::BROOM_HOVER_IDLE);
+			pairAnimInfo = Get_AnimInfo(STATEANIM::BROOM_HOVER_REVELIO);
+			Add_Event(pairAnimInfo.first,
+				[this]() {
+					m_pEffectPool->Use_Skill(SKILL_TYPE::REVELIO, this);
+				}, 0.2f);
 		}
 
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 	}
-	else
+
+
+
+	if (iCurrAnimIndex == m_Animation[STATEANIM::BROOM_HOVER_REVELIO].first)
+	{
+		if (m_pModelCom->IsFinishedAnim())
+		{
+			pairAnimInfo = m_Animation[STATEANIM::BROOM_HOVER_FWD];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		}
+	}
+
+	if (m_pGameInstance->Key_Pressing(DIK_N))
+	{
+		auto flags = m_pCharacter_Controller->Get_CollisionFlags();
+		if (flags & PSX::PxControllerCollisionFlag::eCOLLISION_DOWN)
+		{
+			m_pFSM->Change_State(FSMSTATE::BROOM_DISMOUNT);
+		}
+	}
+
+	if (!m_pBroom->Get_Hover())
+	{
+		m_pFSM->Change_State(FSMSTATE::BROOM_RIDE_MOVE);
+	}
+
+	return E_FAIL;
+}
+
+void CPlayer::Behavior_Broom_HoverExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::HOVER);
+}
+
+void CPlayer::Behavior_Broom_FlyEnter()
+{
+	m_pFSM->Enable_State(FSMSTATE::FLY);
+}
+
+HRESULT CPlayer::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
+{
+	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	pair<_uint, _bool> pairAnimInfo;
+
+	_bool bFwd = m_pGameInstance->Key_Pressing(DIK_W);
+	_bool bLft = m_pGameInstance->Key_Pressing(DIK_A);
+	_bool bRht = m_pGameInstance->Key_Pressing(DIK_D);
+	_bool bDown = m_pGameInstance->Key_Pressing(DIK_LCONTROL);
+	_bool bUp = m_pGameInstance->Key_Pressing(DIK_SPACE);
+
+	if (!m_pBroom->Get_Hover() && iCurrAnimIndex != m_Animation[STATEANIM::BROOM_REVELIO].first)
 	{
 		if (SUCCEEDED(InputBroom()) || SUCCEEDED(InputMove()))
 		{
@@ -1560,31 +1712,50 @@ HRESULT CPlayer::Behavior_Broom_Ride_MoveExitCheck(_float fTimeDelta)
 			}
 		}
 		else {
-			pairAnimInfo = m_Animation[STATEANIM::BROOM_FWD];
+			pairAnimInfo = Get_AnimInfo(STATEANIM::BROOM_FWD);
 		}
 
-		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		if (m_pGameInstance->Key_Down(DIK_R))
+		{
+			pairAnimInfo = Get_AnimInfo(STATEANIM::BROOM_REVELIO);
+			Add_Event(pairAnimInfo.first,
+				[this]() {
+					m_pEffectPool->Use_Skill(SKILL_TYPE::REVELIO, this);
+				}, 0.2f);
+		}
+
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 	}
 
+	if (iCurrAnimIndex == m_Animation[STATEANIM::BROOM_REVELIO].first)
+	{
+		if (m_pModelCom->IsFinishedAnim())
+		{
+			pairAnimInfo = m_Animation[STATEANIM::BROOM_FWD];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		}
+	}
 
-	if (m_pGameInstance->Key_Pressing(DIK_N)) {
+	if (m_pGameInstance->Key_Pressing(DIK_N))
+	{
 		auto flags = m_pCharacter_Controller->Get_CollisionFlags();
 		if (flags & PSX::PxControllerCollisionFlag::eCOLLISION_DOWN)
 		{
 			m_pFSM->Change_State(FSMSTATE::BROOM_DISMOUNT);
 		}
-		else {
-			m_pBroomTransform->Go_Down(fTimeDelta);
-		}
 	}
 
-	
+	if (m_pBroom->Get_Hover())
+	{
+		m_pFSM->Change_State(FSMSTATE::BROOM_RIDE_MOVE);
+	}
+
 	return E_FAIL;
 }
 
-void CPlayer::Behavior_Broom_Ride_MoveExit()
+void CPlayer::Behavior_Broom_FlyExit()
 {
-	m_pFSM->Disable_State(FSMSTATE::BROOM_RIDE_MOVE);
+	m_pFSM->Disable_State(FSMSTATE::FLY);
 }
 
 void CPlayer::Behavior_Broom_DismountEnter()
@@ -1594,7 +1765,17 @@ void CPlayer::Behavior_Broom_DismountEnter()
 	pairAnimInfo = Get_AnimInfo(STATEANIM::BROOM_DISMOUNT);
 	m_pFSM->Enable_State(FSMSTATE::BROOM_DISMOUNT);
 	m_pBroom->Set_Ride(false);
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+	_vector look = XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK));
+
+	_vector worldUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+
+	_vector right = XMVector3Normalize(XMVector3Cross(worldUp, look));
+	_vector up = XMVector3Normalize(XMVector3Cross(look, right));
+
+	m_pTransformCom->Set_State(STATE::RIGHT, right);
+	m_pTransformCom->Set_State(STATE::UP, up);
+	m_pTransformCom->Set_State(STATE::LOOK, look);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.f,false,1.3f);
 }
 
 HRESULT CPlayer::Behavior_Broom_DismountExitCheck(_float fTimeDelta)
@@ -1603,17 +1784,15 @@ HRESULT CPlayer::Behavior_Broom_DismountExitCheck(_float fTimeDelta)
 	pair<_uint, _bool> pairAnimInfo;
 	if (iCurrAnimIndex == m_Animation[STATEANIM::BROOM_DISMOUNT].first)
 	{
+		m_BroomScale.x -= (m_TargetScale.x - m_BroomScale.x) * fTimeDelta * m_fScaleSmoothSpeed;
+		m_BroomScale.y -= (m_TargetScale.y - m_BroomScale.y) * fTimeDelta * m_fScaleSmoothSpeed;
+		m_BroomScale.z -= (m_TargetScale.z - m_BroomScale.z) * fTimeDelta * m_fScaleSmoothSpeed;
+		if (m_BroomScale.x >= 0.1f)
+		{
+			m_pBroomTransform->Set_Scale(m_BroomScale);
+		}
 		if (m_pModelCom->IsFinishedAnim()) {
-			_vector look = XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK));
-
-			_vector worldUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
-
-			_vector right = XMVector3Normalize(XMVector3Cross(worldUp, look));
-			_vector up = XMVector3Normalize(XMVector3Cross(look, right));
-
-			m_pTransformCom->Set_State(STATE::RIGHT, right);
-			m_pTransformCom->Set_State(STATE::UP, up);
-			m_pTransformCom->Set_State(STATE::LOOK, look);
+			m_BroomScale = { 0.f,0.f,0.f };
 			if (SUCCEEDED(InputMove()))
 			{
 				m_pFSM->Change_State(FSMSTATE::MOVE);
@@ -1624,7 +1803,6 @@ HRESULT CPlayer::Behavior_Broom_DismountExitCheck(_float fTimeDelta)
 
 			return E_FAIL;
 		}
-		
 	}
 
 	return E_FAIL;
@@ -1715,6 +1893,32 @@ void CPlayer::Throwing_Interactive()
 	m_pGrapInteractive->Set_KinematicFlag(false);
 	pBody->Add_Force(vDir * vDistance, PSX::PxForceMode::eIMPULSE);
 	SAFE_RELEASE(m_pGrapInteractive);
+}
+
+void CPlayer::Attach_Broom()
+{
+	_matrix BroomWorld = XMLoadFloat4x4(m_pBroomTransform->Get_WorldMatrixPtr());
+	_matrix BoneLocal = XMLoadFloat4x4(m_pBroomModel->Get_BoneMatrixPtr("broomSocket"));
+
+	_vector Scale, Rot, Trans;
+
+	XMMatrixDecompose(&Scale, &Rot, &Trans, BoneLocal);
+
+	_matrix BoneNoScale = XMMatrixRotationQuaternion(Rot) * XMMatrixTranslationFromVector(Trans);
+
+	m_OffsetPos = { 0.f,0.9f,0.f };
+
+	_matrix Offset = XMMatrixTranslation(m_OffsetPos.x,
+		m_OffsetPos.y, m_OffsetPos.z);
+
+	_matrix SocketWorld = BoneNoScale * Offset * BroomWorld;
+
+	_matrix FixRot = XMMatrixRotationY(XMConvertToRadians(180.f));
+
+	_matrix FinalWorld = FixRot * SocketWorld;
+
+	m_pTransformCom->Set_WorldMatrix(FinalWorld);
+	m_pCharacter_Controller->Set_Position(FinalWorld.r[3]);
 }
 
 void CPlayer::Add_FSM()
@@ -1887,13 +2091,21 @@ void CPlayer::Add_FSM()
 		Desc.funcExitEvent = [this]() { Behavior_Broom_RideExit(); };
 		Desc.funcPriorityUpdate = [this](_float fTimeDelta) {
 			_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
-
 			if (!m_bOnce) {
 				m_pBroomTransform->Set_WorldMatrix(m_pTransformCom->Get_XMWorldMatrix());
-				m_pBroomTransform->Set_State(STATE::POSITION, m_pBroomTransform->Get_State(STATE::POSITION)+XMVectorSet(0.f, 2.5f, 0.f, 0.f));
+				m_pBroomTransform->Set_State(STATE::POSITION, m_pBroomTransform->Get_State(STATE::POSITION) + XMVectorSet(0.f,2.f,0.f,0.f));
+				_float3 vScale = { 0.3f,0.3f,0.3f };
+				m_pBroomTransform->Set_Scale(vScale);
 				m_bOnce = true;
 			}
 
+			m_BroomScale.x += (m_TargetScale.x - m_BroomScale.x) * fTimeDelta * m_fScaleSmoothSpeed;
+			m_BroomScale.y += (m_TargetScale.y - m_BroomScale.y) * fTimeDelta * m_fScaleSmoothSpeed;
+			m_BroomScale.z += (m_TargetScale.z - m_BroomScale.z) * fTimeDelta * m_fScaleSmoothSpeed;
+			if (m_BroomScale.x <= 1.f)
+			{
+				m_pBroomTransform->Set_Scale(m_BroomScale);
+			}
 			_matrix BroomWorld = XMLoadFloat4x4(m_pBroomTransform->Get_WorldMatrixPtr());
 			_matrix BoneLocal = XMLoadFloat4x4(m_pBroomModel->Get_BoneMatrixPtr("broomSocket"));
 
@@ -1903,7 +2115,7 @@ void CPlayer::Add_FSM()
 
 			_matrix BoneNoScale = XMMatrixRotationQuaternion(Rot) * XMMatrixTranslationFromVector(Trans);
 
-			m_OffsetPos = { 0.f, 0.9f, 0.f };
+			m_OffsetPos = { 0.f,0.9f,0.f };
 
 			_matrix Offset = XMMatrixTranslation(m_OffsetPos.x,
 				m_OffsetPos.y, m_OffsetPos.z);
@@ -1914,18 +2126,9 @@ void CPlayer::Add_FSM()
 
 			_matrix FinalWorld = FixRot * SocketWorld;
 
-			_vector SourS, SourR, SourT;
-			_vector DestS, DestR, DestT;
-			XMMatrixDecompose(&SourS, &SourR, &SourT, FinalWorld);
-			XMMatrixDecompose(&DestS, &DestR, &DestT, m_pTransformCom->Get_XMWorldMatrix());
+			m_pTransformCom->Set_WorldMatrix(FinalWorld);
+			m_pCharacter_Controller->Set_Position(FinalWorld.r[3]);
 
-			_vector finalR = XMQuaternionSlerp(SourR, DestR, fTimeDelta);
-			_vector finalT = XMVectorLerp(SourT, DestT, fTimeDelta);
-
-			_matrix finalMat = XMMatrixAffineTransformation(DestS, XMVectorZero(), finalR, finalT);
-
-			m_pTransformCom->Set_WorldMatrix(finalMat);
-			m_pCharacter_Controller->Set_Position(finalMat.r[3]);
 			};
 		Desc.funcLateUpdate = nullptr;
 		m_States.emplace(FSMSTATE::BROOM_RIDE, CState_Broom_Ride::Create(&Desc));
@@ -1939,41 +2142,38 @@ void CPlayer::Add_FSM()
 		Desc.funcExitEvent = [this]() { Behavior_Broom_Ride_MoveExit(); };
 		Desc.funcPriorityUpdate = [this](_float fTimeDelta) {
 			_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
-
-			_matrix BroomWorld = XMLoadFloat4x4(m_pBroomTransform->Get_WorldMatrixPtr());
-			_matrix BoneLocal = XMLoadFloat4x4(m_pBroomModel->Get_BoneMatrixPtr("broomSocket"));
-
-			_vector Scale, Rot, Trans;
-
-			XMMatrixDecompose(&Scale, &Rot, &Trans, BoneLocal);
-
-			_matrix BoneNoScale = XMMatrixRotationQuaternion(Rot) * XMMatrixTranslationFromVector(Trans);
-
-			m_OffsetPos = { 0.f, 0.9f, 0.f };
-			_matrix Offset = XMMatrixTranslation(m_OffsetPos.x,
-				m_OffsetPos.y, m_OffsetPos.z);
-
-			_matrix SocketWorld = BoneNoScale * Offset * BroomWorld;
-
-			_matrix FixRot = XMMatrixRotationY(XMConvertToRadians(180.f));
-
-			_matrix FinalWorld = FixRot * SocketWorld;
-
-			_vector SourS, SourR, SourT;
-			_vector DestS, DestR, DestT;
-			XMMatrixDecompose(&SourS, &SourR, &SourT, FinalWorld);
-			XMMatrixDecompose(&DestS, &DestR, &DestT, m_pTransformCom->Get_XMWorldMatrix());
-
-			_vector finalR = XMQuaternionSlerp(SourR, DestR, fTimeDelta);
-			_vector finalT = XMVectorLerp(SourT, DestT, fTimeDelta);
-
-			_matrix finalMat = XMMatrixAffineTransformation(DestS, XMVectorZero(), finalR, finalT);
-
-			m_pTransformCom->Set_WorldMatrix(finalMat);
-			m_pCharacter_Controller->Set_Position(finalMat.r[3]);
+			Attach_Broom();
 			};
 		Desc.funcLateUpdate = nullptr;
 		m_States.emplace(FSMSTATE::BROOM_RIDE_MOVE, CState_Broom_Ride_Move::Create(&Desc));
+	}
+
+	{
+		CState_Broom_Hover::STATE_BROOM_HOVER_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_Broom_HoverEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_Broom_HoverExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_Broom_HoverExit(); };
+		Desc.funcPriorityUpdate = [this](_float fTimeDelta) {
+			_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+			Attach_Broom();
+			};
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::HOVER, CState_Broom_Hover::Create(&Desc));
+	}
+
+	{
+		CState_Broom_Fly::STATE_BROOM_FLY_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_Broom_FlyEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_Broom_FlyExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_Broom_FlyExit(); };
+		Desc.funcPriorityUpdate = [this](_float fTimeDelta) {
+			_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+			Attach_Broom();
+			};
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::FLY, CState_Broom_Fly::Create(&Desc));
 	}
 
 	{
@@ -2067,6 +2267,7 @@ void CPlayer::Set_Anim()
 	m_Animation[STATEANIM::BROOM_RIGHT] = { 714,true };
 	m_Animation[STATEANIM::BROOM_DOWN] = { 712,true };
 	m_Animation[STATEANIM::BROOM_UP] = { 715,true };
+	m_Animation[STATEANIM::BROOM_REVELIO] = { 678,false };
 
 	m_Animation[STATEANIM::BROOM_MOUNT] = { 734,false };
 	m_Animation[STATEANIM::BROOM_MOUNT_END] = { 737,false };
@@ -2078,6 +2279,7 @@ void CPlayer::Set_Anim()
 	m_Animation[STATEANIM::BROOM_HOVER_FWD] = { 700,true };
 	m_Animation[STATEANIM::BROOM_HOVER_LEFT] = { 701,true };
 	m_Animation[STATEANIM::BROOM_HOVER_RIGHT] = { 702,true };
+	m_Animation[STATEANIM::BROOM_HOVER_REVELIO] = { 721,false };
 
 
 	m_Animation[STATEANIM::JOG_AIM_STOP_L] = { 295,false };

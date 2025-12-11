@@ -39,7 +39,7 @@ HRESULT CTroll_Rush_Hit::Initialize(void* pArg)
 	m_wstrEffectName = L"Troll_Nomal_Smoke";
 
 
-	m_fDuration = 2.f;
+	m_fDuration = 3.5f;
 
 	return S_OK;
 }
@@ -79,13 +79,21 @@ HRESULT CTroll_Rush_Hit::Pre_Setting(CGameObject* pObject, void* pArg)
 		return E_FAIL;
 
 
-	_float4 vPos = *static_cast<_float4*>(pArg); // 위치 넘기기
+	_vector vPos =  m_pOwner->Get_Component<CCharacter_Controller>()->Get_Position();
 
 	CEffectParts* pSmoke = Get_PartObject<CEffectParts>("HitSmoke");
+	CEffectParts* pRock_PT_35 = Get_PartObject<CEffectParts>("Rock_PT_35");
 
-	pSmoke->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&vPos));
+	_vector vLook = m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK);
+
+	vPos += vLook * 2.f;
+
+	pSmoke->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
+	pRock_PT_35->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
 
 	pSmoke->Set_Visible(true);
+	pRock_PT_35->Set_Visible(true);
+
 	return S_OK;
 }
 

@@ -415,7 +415,6 @@ void CTroll::Behavior_SwingEnter()
 		[this]() {m_bLookAt = false; },
 		0.2f);
 
-
 	Troll_Trail_Visible(true);
 	m_pWeaponTrail->Set_Visible(true);
 	m_pWeaponTrail->Get_Component<CTrail>()->Reset_Trail();
@@ -452,6 +451,7 @@ void CTroll::SwingHit(_bool& bPlayerHit)
 {
 	vector<PSX::PxSweepHit> pxHits;
 	_uint iHitCount = 0;
+	_float Damage = 0.f;
 	CheckHammerHits(iHitCount, pxHits);
 	{
 		for (_uint i = 0; i < pxHits.size(); ++i) {
@@ -466,7 +466,8 @@ void CTroll::SwingHit(_bool& bPlayerHit)
 						continue;
 					}
 					CStat* pStat = pUserData->pCharacter->Get_Owner()->Get_Component<CStat>();
-					pStat->Get_Damage(7.f);
+					pStat->Get_Damage(20.f);
+					Damage = 7.f;
 					bPlayerHit = true;
 				} break;
 				case PXOBJECT::ALLY_HITBOX:
@@ -593,6 +594,12 @@ void CTroll::Behavior_StunEnter()
 	if (iCurrAnimIndex == m_Animation[STATEANIM::RUSH_LOOP].first)
 	{
 		pairAnimInfo = m_Animation[STATEANIM::STUN];
+
+		_string strBoneName = "HeadEnd";
+
+		m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_RUSH_HIT, this);
+		m_pEffectPool->Use_Skill(SKILL_TYPE::STUN, this, &strBoneName);
+
 	}
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 
@@ -600,6 +607,9 @@ void CTroll::Behavior_StunEnter()
 		[this]() { m_bLookAt = true;
 		},
 		0.6f);
+
+
+
 }
 
 HRESULT CTroll::Behavior_StunExitCheck(_float fTimeDelta)
@@ -822,7 +832,7 @@ void CTroll::SlamHit(_bool& bPlayerHit)
 						continue;
 					}
 					CStat* pStat = pUserData->pCharacter->Get_Owner()->Get_Component<CStat>();
-					pStat->Get_Damage(10.f);
+					pStat->Get_Damage(20.f);
 					bPlayerHit = true;
 				} break;
 				case PXOBJECT::ALLY_HITBOX:

@@ -562,6 +562,9 @@
     <Filter Include="50.UI\GamePlay_Canvas\Enemy_Panel\Boss_HpBar">
       <UniqueIdentifier>{49575102-9b08-494e-bf3f-bdc98774913e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_Detection">
+      <UniqueIdentifier>{81c6b163-6c8b-47ac-a4b6-e86088ce709f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -1121,6 +1124,9 @@
     </ClInclude>
     <ClInclude Include="..\public\Boss_HpBer.h">
       <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Boss_HpBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Enemy_Detection.h">
+      <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_Detection</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1683,6 +1689,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Boss_HpBer.cpp">
       <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Boss_HpBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Enemy_Detection.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_Detection</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

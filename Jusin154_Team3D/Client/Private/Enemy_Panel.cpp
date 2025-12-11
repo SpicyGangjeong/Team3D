@@ -65,7 +65,7 @@ void CEnemy_Panel::Update_Target()
 	if (m_pInfoInstance->Get_TargetMonster()->Get_Stat()->Get_Stat().bBoss == true)
 	{
 		static_cast<CBoss_HpBar*>(m_pBoss_HpBar)->Update_Target();
-		static_cast<CEnemy_HpBar*>(m_pEnemy_Info)->Set_FadeOut();
+		static_cast<CEnemy_HpBar*>(m_pEnemy_HpBar)->Set_FadeOut();
 		static_cast<CEnemy_Info*>(m_pEnemy_Info)->Update_Target();
 		static_cast<CEnemy_Info*>(m_pEnemy_Info)->Set_Font_Move(true);
 	}

@@ -8,6 +8,7 @@ class CGameInstance;
 class CTransform;
 class CUnit;
 class CState;
+class CStat;
 NS_END
 
 NS_BEGIN(Client)
@@ -27,10 +28,12 @@ public:
 	void Change_Level();
 
 #pragma region PLAYER_INFO
+	CStat* Get_PlayerStatPtr();
 	void Update_CameraCoordinateSystem(_float3& vLook, _float3& vRight);
 	pair<_float3, _float3> Get_CameraCoordinateSystem();
 	_float Player_Damage();
 	void Set_Damage(_float fDamage);
+	class CPlater* Get_PlayerInfo();
 #pragma endregion
 #pragma region MONSTER_INFO
 	HRESULT Regist_PlayerAlly(CUnit* pUnit);
@@ -88,6 +91,9 @@ private:
 #ifdef _DEBUG
 	_string m_strLog = {};
 #endif // _DEBUG
+
+private:
+	HRESULT Stat_FileLoad(const _char* pDirectoryPath);
 
 public:
 	virtual void Free() override;

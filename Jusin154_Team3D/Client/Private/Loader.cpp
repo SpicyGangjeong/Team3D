@@ -76,6 +76,7 @@
 #include "Enemy_HpBar.h"
 #include "Enemy_Info.h"
 #include "Boss_HpBar.h"
+#include "Enemy_Detection.h"
 
 #include "Spell_Canvas.h"
 #include "Spell_Panel.h"
@@ -127,6 +128,7 @@
 #include "Lumos.h"
 
 
+
 #include "TrollSwing.h"
 #include "Troll_Nomal_Smoke.h"
 #include "Troll_Rush_Hit.h"
@@ -135,7 +137,11 @@
 #include "Goblin_Protego.h"
 #include "Goblin_Attack.h"
 
+#include "Mage_Down_Attack.h"
+#include "Mage_Nomal_Attack.h"
+#include "MageSide.h"
 
+#include "StunEffect.h"
 
 #pragma endregion
 
@@ -295,7 +301,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 {
 	m_strMessage = TEXT("텍스쳐를(을) 로딩 중 입니다.");
 
-	_bool isLoad_Background = { false };
+	_bool isLoad_Background = { true };
 
 #ifdef gimch
 	isLoad_Background = true;
@@ -674,6 +680,22 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 		});
 
+	Asset_FileLoad("../Bin/Resources/Textures/Enemy", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
+		{
+
+			_string strFilePath = pFilePath;
+			_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
+
+
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
+				CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
+				return E_FAIL;
+			}
+
+			return S_OK;
+
+		});
+
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Mission_Icon"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("../Bin/Resources/Textures/Mission/Mission_Icon_%d.png"), 2)))) {
 		return E_FAIL;
@@ -845,203 +867,203 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 #pragma endregion
 #pragma region UI_ANI
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Altering_Spell"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Altering_Spell\\Altering_Spell%d.png"), 349))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Altering_Spell"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Altering_Spell\\Altering_Spell%d.png"), 349))))
+	{
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Alohomora"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Alohomora\\Alohomora%d.png"), 394))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Alohomora"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Alohomora\\Alohomora%d.png"), 394))))
+	{
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Ancient_Magic"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Ancient_Magic\\Ancient_Magic%d.png"), 152))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Ancient_Magic"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Ancient_Magic\\Ancient_Magic%d.png"), 152))))
+	{
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Ancient_Magic_Throw"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Ancient_Magic_Throw\\Ancient_Magic_Throw%d.png"), 89))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Ancient_Magic_Throw"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Ancient_Magic_Throw\\Ancient_Magic_Throw%d.png"), 89))))
+	{
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Arresto_Momentum"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Arresto_Momentum\\Arresto_Momentum%d.png"), 120))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Arresto_Momentum"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Arresto_Momentum\\Arresto_Momentum%d.png"), 120))))
+	{
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Avada_Kedavra"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Avada_Kedavra\\Avada_Kedavra%d.png"), 208))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Avada_Kedavra"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Avada_Kedavra\\Avada_Kedavra%d.png"), 208))))
+	{
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Basic_Cast"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Basic_Cast\\Basic_Cast%d.png"), 308))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Basic_Cast"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Basic_Cast\\Basic_Cast%d.png"), 308))))
+	{
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Beast_Feed"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Beast_Feed\\Beast_Feed%d.png"), 378))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Beast_Feed"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Beast_Feed\\Beast_Feed%d.png"), 378))))
+	{
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Beast_Petting_Brush"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Beast_Petting_Brush\\Beast_Petting_Brush%d.png"), 327))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Beast_Petting_Brush"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Beast_Petting_Brush\\Beast_Petting_Brush%d.png"), 327))))
+	{
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Bombarda"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Bombarda\\Bombarda%d.png"), 262))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Bombarda"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Bombarda\\Bombarda%d.png"), 262))))
+	{
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Confringo"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Confringo\\Confringo%d.png"), 157))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Confringo"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Confringo\\Confringo%d.png"), 157))))
+	{
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Conjuring_Spell"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Conjuring_Spell\\Conjuring_Spell%d.png"), 115))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Conjuring_Spell"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Conjuring_Spell\\Conjuring_Spell%d.png"), 115))))
+	{
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Descendo"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Descendo\\Descendo%d.png"), 155))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Descendo"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Descendo\\Descendo%d.png"), 155))))
+	{
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Depulso"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Depulso\\Depulso%d.png"), 152))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Depulso"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Depulso\\Depulso%d.png"), 152))))
+	{
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Diffindo"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Diffindo\\Diffindo%d.png"), 150))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Diffindo"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Diffindo\\Diffindo%d.png"), 150))))
+	{
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Disillusionment"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Disillusionment\\Disillusionment%d.png"), 260))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Disillusionment"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Disillusionment\\Disillusionment%d.png"), 260))))
+	{
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Evanesco"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Evanesco\\Evanesco%d.png"), 136))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Evanesco"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Evanesco\\Evanesco%d.png"), 136))))
+	{
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Expelliarmus"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Expelliarmus\\Expelliarmus%d.png"), 146))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Expelliarmus"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Expelliarmus\\Expelliarmus%d.png"), 146))))
+	{
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Flipendo"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Flipendo\\Flipendo%d.png"), 188))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Flipendo"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Flipendo\\Flipendo%d.png"), 188))))
+	{
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Glacius"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Glacius\\Glacius%d.png"), 156))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Glacius"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Glacius\\Glacius%d.png"), 156))))
+	{
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Imperio"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Imperio\\Imperio%d.png"), 462))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Imperio"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Imperio\\Imperio%d.png"), 462))))
+	{
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Incendio"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Incendio\\Incendio%d.png"), 213))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Incendio"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Incendio\\Incendio%d.png"), 213))))
+	{
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Levioso"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Levioso\\Levioso%d.png"), 180))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Levioso"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Levioso\\Levioso%d.png"), 180))))
+	{
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Lumos"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Lumos\\Lumos%d.png"), 365))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Lumos"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Lumos\\Lumos%d.png"), 365))))
+	{
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Nab_Sack"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Nab_Sack\\Nab_Sack%d.png"), 235))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Nab_Sack"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Nab_Sack\\Nab_Sack%d.png"), 235))))
+	{
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Petrificus_Totalus"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Petrificus_Totalus\\Petrificus_Totalus%d.png"), 275))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Petrificus_Totalus"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Petrificus_Totalus\\Petrificus_Totalus%d.png"), 275))))
+	{
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Protego"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Protego\\Protego%d.png"), 285))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Protego"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Protego\\Protego%d.png"), 285))))
+	{
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Reparo"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Reparo\\Reparo%d.png"), 385))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Reparo"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Reparo\\Reparo%d.png"), 385))))
+	{
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Revelio"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Revelio\\Revelio%d.png"), 227))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Revelio"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Revelio\\Revelio%d.png"), 227))))
+	{
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Stupefy"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Stupefy\\Stupefy%d.png"), 222))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Stupefy"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Stupefy\\Stupefy%d.png"), 222))))
+	{
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Transformation"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Transformation\\Transformation%d.png"), 146))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Transformation"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Transformation\\Transformation%d.png"), 146))))
+	{
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Wingardium_Leviosa"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Wingardium_Leviosa\\Wingardium_Leviosa%d.png"), 273))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Wingardium_Leviosa"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Wingardium_Leviosa\\Wingardium_Leviosa%d.png"), 273))))
+	{
+		return E_FAIL;
+	}
 
-	//if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Crucio"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Crucio\\Crucio%d.png"), 216))))
-	//{
-	//	return E_FAIL;
-	//}
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Crucio"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Crucio\\Crucio%d.png"), 216))))
+	{
+		return E_FAIL;
+	}
 
 #pragma endregion
 
@@ -1433,7 +1455,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Troll_Weapon_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Object/SubTroll_Weapon/SK_WPN_Troll_Club07.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixIdentity()))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::PBR_ANIM, "../Bin/Resources/Models/Object/SubTroll_Weapon/SK_WPN_Troll_Club07.bin", XMMatrixRotationY(XMConvertToRadians(180.f)) * XMMatrixIdentity()))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Troll_Rock_Big_Model"),
@@ -1527,6 +1549,23 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Attack>(NEXT_LEVEL, CGoblin_Attack::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CMage_Down_Attack>(NEXT_LEVEL, CMage_Down_Attack::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CMage_Nomal_Attack>(NEXT_LEVEL, CMage_Nomal_Attack::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CMageSide>(NEXT_LEVEL, CMageSide::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CStunEffect>(NEXT_LEVEL, CStunEffect::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CWandEnd>(NEXT_LEVEL, CWandEnd::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
@@ -1685,6 +1724,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 	/* For.Prototype_GameObject_NoMountIcon*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CBoss_HpBar>(g_iStaticLevel, CBoss_HpBar::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_Enemy_Detection*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CEnemy_Detection>(g_iStaticLevel, CEnemy_Detection::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 
@@ -2063,11 +2106,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 #pragma endregion
-#pragma region STAT PROTOTYPE
-	if (FAILED(Stat_FileLoad("../Bin/Resources/Data/Stat/Stat.xml"))) {
-		return E_FAIL;
-	}
-#pragma endregion
 
 
 	/* For.Prototype_Component_FSM */
@@ -2233,33 +2271,6 @@ HRESULT CLoader::Asset_FileLoad(const _char* pDirectoryPath, const _tchar* pPreN
 	return S_OK;
 }
 
-HRESULT CLoader::Stat_FileLoad(const _char* pDirectoryPath)
-{
-	filesystem::path pathStatFile = pDirectoryPath;
-
-	tinyxml2::XMLDocument doc;
-	tinyxml2::XMLError Error = doc.LoadFile(pathStatFile.string().c_str());
-	if (Error != tinyxml2::XML_SUCCESS) {
-		return E_FAIL;
-	}
-
-	tinyxml2::XMLElement* pStatInfo = doc.FirstChildElement("StatInfo");
-	if (!pStatInfo) {
-		return E_FAIL;
-	}
-
-	_uint iNumChild = pStatInfo->ChildElementCount();
-	tinyxml2::XMLNode* pChild = pStatInfo->FirstChildElement();
-	for (_uint i = 0; i < iNumChild; ++i) {
-		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, CMyTools::ToWstring(pChild->Value()),
-			CStat::Create(m_pDevice, m_pContext, pChild)))) {
-			return E_FAIL;
-		}
-		pChild = pChild->NextSiblingElement();
-	}
-
-	return S_OK;
-}
 
 vector<FOLDER_LOAD*>* APIENTRY Deferred_FolderLoad_Main(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pDirectoryPath, const _char* pFileExt, _bool bUseTag)
 {

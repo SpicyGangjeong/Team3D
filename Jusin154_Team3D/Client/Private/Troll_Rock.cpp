@@ -256,7 +256,9 @@ void CTroll_Rock::Free()
 
 void CTroll_Rock::Describe_Entity()
 {
-
+	GUI::Begin("TrollRock");
+	GUI::Checkbox("Visible", &m_bVisible);
+	GUI::End();
 }
 
 #endif // _DEBUG
