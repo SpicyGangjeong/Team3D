@@ -387,11 +387,10 @@ HRESULT CPlayer::Ready_Components()
 		return E_FAIL;
 	}
 
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_PLAYER"), (CComponent**)&m_pStat))) {
-		return E_FAIL;
-
-	}
-
+	m_pStat = m_pInfoInstance->Get_PlayerStatPtr();
+	m_Components.push_back(m_pStat);
+	SAFE_ADDREF(m_pStat);
+	SAFE_ADDREF(m_pStat);
 
 	{ // CCT
 		CCharacter_Controller::Character_Controller_DESC Desc{};

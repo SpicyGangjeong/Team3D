@@ -8,6 +8,11 @@ CPlayerInfo::CPlayerInfo()
 {
 }
 
+CStat* CPlayerInfo::Get_PlayerStatPtr()
+{
+	return m_pStat;
+}
+
 void CPlayerInfo::Update(_float fTimeDelta)
 {
 }
@@ -33,13 +38,16 @@ HRESULT CPlayerInfo::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pCon
 	m_pInfoInstance = CInfoInstance::GetInstance();
 	m_pDevice = pDevice;
 	m_pContext = pContex;
-
+	
 	SAFE_ADDREF(m_pGameInstance);
 	SAFE_ADDREF(m_pInfoInstance);
 	SAFE_ADDREF(m_pDevice);
 	SAFE_ADDREF(m_pContext);
 
-
+	m_pStat = (CStat*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, TEXT("STAT_PLAYER"), nullptr, nullptr);
+	if (nullptr == m_pStat) {
+		return E_FAIL;
+	}
 	return S_OK;
 }
 
@@ -62,5 +70,5 @@ void CPlayerInfo::Free()
 	SAFE_RELEASE(m_pInfoInstance);
 	SAFE_RELEASE(m_pDevice);
 	SAFE_RELEASE(m_pContext);
-
+	SAFE_RELEASE(m_pStat);
 }
