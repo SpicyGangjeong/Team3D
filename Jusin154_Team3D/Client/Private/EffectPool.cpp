@@ -70,7 +70,7 @@ HRESULT CEffectPool::Initialize(void* pArg)
 #endif // 
 #ifdef 진우
 	m_isActiveEffectCreate = true;
-	m_isActiveMonsterEffectCreate = false;
+	m_isActiveMonsterEffectCreate = true;
 #endif // 
 #ifdef 기무리
 	m_isActiveEffectCreate = false;
@@ -184,7 +184,7 @@ HRESULT CEffectPool::Ready_Effect()
 
 	
 #ifndef 기무리
-	/*if (FAILED(Create_Effect(SKILL_TYPE::JAP, 10, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+	if (FAILED(Create_Effect(SKILL_TYPE::JAP, 10, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 		CNomalJap* pEffect = nullptr;
 
 		pEffect = m_pGameInstance->Clone_Prototype<CNomalJap>(iPrototypeLevel, nullptr);
@@ -294,7 +294,7 @@ HRESULT CEffectPool::Ready_Effect()
 		pEffect = m_pGameInstance->Clone_Prototype<CWandEnd>(iPrototypeLevel, nullptr);
 
 		return pEffect; }
-	))) return E_FAIL;*/
+	))) return E_FAIL;
 
 
 	if (FAILED(Create_Effect(SKILL_TYPE::BOX_SPLESH, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
