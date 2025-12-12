@@ -1,29 +1,29 @@
 ﻿#include "pch.h"
-#include "MapElement_Interactable.h"
+#include "MapElement_Chest.h"
 
 #include "GameInstance.h"
 #include "Terrain.h"
 #include "Layer.h"
-#include "VIBuffer_Terrain.h"
+#include "MapElement_Chest_Lid.h"
 
-CMapElement_Interactable::CMapElement_Interactable(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CMapElement_Chest::CMapElement_Chest(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMapElement{ pDevice, pContext }
 {
 }
 
-CMapElement_Interactable::CMapElement_Interactable(const CMapElement_Interactable& rhs)
+CMapElement_Chest::CMapElement_Chest(const CMapElement_Chest& rhs)
 	: CMapElement(rhs)
 {
 }
 
-HRESULT CMapElement_Interactable::Initialize_Prototype()
+HRESULT CMapElement_Chest::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CMapElement_Interactable::Initialize(void* pArg)
+HRESULT CMapElement_Chest::Initialize(void* pArg)
 {
-	ELEMENT_INTERACTABLE_DESC* pDesc = static_cast<ELEMENT_INTERACTABLE_DESC*>(pArg);
+	ELEMENT_CHEST_DESC* pDesc = static_cast<ELEMENT_CHEST_DESC*>(pArg);
 
 	m_iMaxLodLevel = pDesc->iMaxLodLevel;
 
@@ -39,6 +39,11 @@ HRESULT CMapElement_Interactable::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
+	if (FAILED(Ready_Lid(pDesc)))
+		return E_FAIL;
+
+	m_eCurState = m_ePreState = CHEST_STATE::IDLE;
+
 #ifdef _DEBUG
 	m_bSelected = false;
 	m_vPosition = pDesc->vPosition;
@@ -52,39 +57,63 @@ HRESULT CMapElement_Interactable::Initialize(void* pArg)
 
 	m_vBoxSize = _float3(1.f, 1.f, 1.f);
 	m_pActor = static_cast<PSX::PxRigidDynamic*>(m_pRigidBody->Get_Actor());
-	
+
 	static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Set_HalfGeometryInfo(pDesc->vBoxSize);
 	static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Move_LocalPos(_float4(0.f, 0.f, 0.f, 0.f), pDesc->vBoxLocalPosition);
 
 	return S_OK;
 }
 
-void CMapElement_Interactable::Priority_Update(_float fTimeDelta)
+void CMapElement_Chest::Priority_Update(_float fTimeDelta)
 {
 #ifdef _DEBUG
 	m_bSelected = false;
 #endif    
+
+	m_pLid->Priority_Update(fTimeDelta);
 }
 
-void CMapElement_Interactable::Update(_float fTimeDelta)
+void CMapElement_Chest::Update(_float fTimeDelta)
 {
-	if (m_bSelected)
+	switch (m_eCurState)
 	{
-		m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
-		m_pTransformCom->Set_Scale(m_vScale);
-		m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
+	case Editor::CMapElement_Chest::CHEST_STATE::IDLE:
+		break;
+
+	case Editor::CMapElement_Chest::CHEST_STATE::FOUND:
+		break;
+
+	case Editor::CMapElement_Chest::CHEST_STATE::OPENED:
+		break;
+
+	default:
+		break;
 	}
+
+	Chage_State();
+
+	m_pLid->Update(fTimeDelta);
 }
 
-void CMapElement_Interactable::Late_Update(_float fTimeDelta)
+void CMapElement_Chest::Late_Update(_float fTimeDelta)
 {
+#ifdef _DEBUG
+	Describe_Entity();
+	m_pLid->Describe_Entity();
+#endif 
 
 	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pModelComs[0]->Get_Radius())) {
-		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+
+		if(CMapElement_Chest::CHEST_STATE::FOUND ==  m_eCurState)
+			m_pGameInstance->Add_RenderGroup(RENDER::NONLIGHT, this);
+		else
+			m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+
+		m_pLid->Late_Update(fTimeDelta);
 	}
 }
 
-HRESULT CMapElement_Interactable::Render()
+HRESULT CMapElement_Chest::Render()
 {
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
@@ -96,19 +125,10 @@ HRESULT CMapElement_Interactable::Render()
 		if (FAILED(m_pModelComs[0]->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
-		if (m_bSelected && m_bUseSelectColor)
-		{
-			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::MAPTOOL)))) {
-				return E_FAIL;
-			}
-		}
-		else
-		{
-			if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::DEFAULT)))) {
-				return E_FAIL;
-			}
-		}
 
+		if (FAILED(m_pShaderCom->Begin(m_iShaderPass_Index))) {
+			return E_FAIL;
+		}
 
 		if (FAILED(m_pModelComs[m_iLodIndex]->Render(i))) {
 			return E_FAIL;
@@ -121,10 +141,13 @@ HRESULT CMapElement_Interactable::Render()
 	}
 #endif // _DEBUG
 
+	if (FAILED(m_pLid->Render(m_iShaderPass_Index)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
-HRESULT CMapElement_Interactable::Ready_Components(void* pArg)
+HRESULT CMapElement_Chest::Ready_Components(void* pArg)
 {
 	if (FAILED(__super::Ready_Components(pArg))) {
 		return E_FAIL;
@@ -147,8 +170,13 @@ HRESULT CMapElement_Interactable::Ready_Components(void* pArg)
 		reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 
+	/* Com_Texture */
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, TEXT("Levioso_Noise"),
+		reinterpret_cast<CComponent**>(&m_pNoiseTextureCom))))
+		return E_FAIL;
 
-	ELEMENT_INTERACTABLE_DESC* pPhysXDummyDesc = static_cast<ELEMENT_INTERACTABLE_DESC*>(pArg);
+
+	ELEMENT_CHEST_DESC* pPhysXDummyDesc = static_cast<ELEMENT_CHEST_DESC*>(pArg);
 
 	// RIGID_BODY
 	CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
@@ -161,7 +189,7 @@ HRESULT CMapElement_Interactable::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-HRESULT CMapElement_Interactable::Bind_ShaderResources()
+HRESULT CMapElement_Chest::Bind_ShaderResources()
 {
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldMatrixPtr()))) {
 		return E_FAIL;
@@ -177,50 +205,93 @@ HRESULT CMapElement_Interactable::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pShaderCom->Bind_SRV("g_NoiseTexture", m_pNoiseTextureCom->Get_SRV(0)))) {
+		return E_FAIL;
+	}
+	
 	return S_OK;
 }
 
-CMapElement_Interactable* CMapElement_Interactable::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+HRESULT CMapElement_Chest::Ready_Lid(ELEMENT_CHEST_DESC* pArg)
 {
-	CMapElement_Interactable* pInstance = new CMapElement_Interactable(pDevice, pContext);
+	m_pLid = m_pGameInstance->Clone_Prototype<CMapElement_Chest_Lid>(g_iStaticLevel, pArg, this);
+
+	if (nullptr == m_pLid)
+		return E_FAIL;
+
+	return S_OK;
+}
+
+void CMapElement_Chest::Chage_State()
+{
+	if (m_ePreState != m_eCurState)
+	{
+		switch (m_eCurState)
+		{
+		case Editor::CMapElement_Chest::CHEST_STATE::IDLE:
+			m_iShaderPass_Index = ENUM_CLASS(SHADER_PASS_MESH::DEFAULT);
+			break;
+
+		case Editor::CMapElement_Chest::CHEST_STATE::FOUND:
+			m_iShaderPass_Index = 21; //ENUM_CLASS(SHADER_PASS_MESH::DEFAULT);
+			break;
+
+		case Editor::CMapElement_Chest::CHEST_STATE::OPENED:
+			m_iShaderPass_Index = ENUM_CLASS(SHADER_PASS_MESH::DEFAULT);
+			break;
+
+		default:
+			break;
+		}
+		m_ePreState = m_eCurState;
+	}
+}
+
+CMapElement_Chest* CMapElement_Chest::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+{
+	CMapElement_Chest* pInstance = new CMapElement_Chest(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CMapElement_Interactable");
+		MSG_BOX("Failed to Created : CMapElement_Chest");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CMapElement_Interactable::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CMapElement_Chest::Clone(void* pArg, CGameObject* pOwner)
 {
-	CMapElement_Interactable* pInstance = new CMapElement_Interactable(*this);
+	CMapElement_Chest* pInstance = new CMapElement_Chest(*this);
 	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CMapElement_Interactable");
+		MSG_BOX("Failed to Cloned : CMapElement_Chest");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CMapElement_Interactable::Free()
+void CMapElement_Chest::Free()
 {
 	if (nullptr != m_pRigidBody) {
 		m_pGameInstance->Release_Actor(*m_pRigidBody->Get_Actor());
 	}
 	__super::Free();
 
+	if (m_bCloned)
+		SAFE_RELEASE(m_pLid);
+
 	SAFE_RELEASE(m_pRigidBody);
+	SAFE_RELEASE(m_pNoiseTextureCom);
 	SAFE_RELEASE(m_pShaderCom);
 
 	for (auto& pModel : m_pModelComs)
 		SAFE_RELEASE(pModel);
 }
 
-void CMapElement_Interactable::Describe_Entity()
+void CMapElement_Chest::Describe_Entity()
 {
 	if (m_bDead)
 		return;
@@ -235,9 +306,9 @@ void CMapElement_Interactable::Describe_Entity()
 
 		if (GUI::Button("Move Test"))
 		{
-			
+
 			m_pActor = static_cast<PSX::PxRigidDynamic*>(m_pRigidBody->Get_Actor());
-			if(nullptr != m_pActor)
+			if (nullptr != m_pActor)
 			{
 				m_pActor->wakeUp();
 				m_pActor->addForce(vDir * m_fPower * 100000.f, PSX::PxForceMode::eFORCE);
@@ -255,10 +326,10 @@ void CMapElement_Interactable::Describe_Entity()
 			if (nullptr != m_pActor)
 				m_pActor->setRigidBodyFlag(PSX::PxRigidBodyFlag::eKINEMATIC, true);
 		}
-			
-		if(GUI::InputFloat("Mass", &m_fMass))
+
+		if (GUI::InputFloat("Mass", &m_fMass))
 			m_pActor->setMass(m_fMass);
-		
+
 		m_pRigidBody->Describe_Entity();
 	}
 
@@ -308,13 +379,28 @@ void CMapElement_Interactable::Describe_Entity()
 	m_vScale.y = max(0.01f, m_vScale.y);
 	m_vScale.z = max(0.01f, m_vScale.z);
 
+	if (GUI::Button("IDLE"))
+	{
+		m_eCurState = CHEST_STATE::IDLE;
+	}
+	if (GUI::Button("FOUND"))
+	{
+		m_eCurState = CHEST_STATE::FOUND;
+	}
+	if (GUI::Button("OPENED"))
+	{
+		m_eCurState = CHEST_STATE::OPENED;
+	}
+
 	if (GUI::Button("Delete"))
 		m_bDead = true;
 
-	m_bSelected = true;
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
+	m_pTransformCom->Set_Scale(m_vScale);
+	m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
 }
 
-HRESULT CMapElement_Interactable::Save_XML(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* root)
+HRESULT CMapElement_Chest::Save_XML(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* root)
 {
 	tinyxml2::XMLElement* object = doc.NewElement("Object");
 	object->SetAttribute("Type", ENUM_CLASS(MAPOBJECT_TYPE::ELEMENT_INTERACT));
@@ -374,7 +460,8 @@ HRESULT CMapElement_Interactable::Save_XML(tinyxml2::XMLDocument& doc, tinyxml2:
 	LocalTranslation->SetAttribute("y", vLocalTranslation.y);
 	LocalTranslation->SetAttribute("z", vLocalTranslation.z);
 	object->InsertEndChild(LocalTranslation);
-	
+
+
 #pragma endregion
 
 	return S_OK;

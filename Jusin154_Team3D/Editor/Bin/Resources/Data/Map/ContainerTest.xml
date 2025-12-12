@@ -3971,4 +3971,64 @@
             <Rotation x="0" y="0" z="0"/>
         </PartObject>
     </Container>
+    <Container Name="SideStreet_D">
+        <Position x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_D</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_D_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_D_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0" Render_Type="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_D_Wall</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_D_Wall_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Streets_SideStreet_D_Wall_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_Streets_SideStreet_G_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_Streets_SideStreet_G_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HW_Streets_SideStreet_G_Wall_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HW_Streets_SideStreet_G_Wall_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+    </Container>
+    <Container Name="Ollivender_Int_Col">
+        <Position x="0" y="0" z="0"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="0" z="0"/>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_INT_APL_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_INT_APL_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="0" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_INT_Floors_COL</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_INT_PL_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_INT_PL_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+    </Container>
 </Land>

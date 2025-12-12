@@ -18,6 +18,7 @@ CGameObject::CGameObject(const CGameObject& rhs)
 	, m_pContext(rhs.m_pContext)
 	, m_pGameInstance(rhs.m_pGameInstance)
 	, m_bDead(rhs.m_bDead)
+	, m_bCloned(true)
 {
 	SAFE_ADDREF(m_pGameInstance);
 	SAFE_ADDREF(m_pDevice);

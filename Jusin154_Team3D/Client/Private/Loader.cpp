@@ -162,6 +162,7 @@
 #include "MapElement_Light.h"
 #include "MapElement_Interactable.h"
 #include "MapElement_Lake.h"
+#include "MapElement_Door.h"
 #include "Land.h"
 #include "Unified.h"
 
@@ -2108,6 +2109,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_GameObject_MapElement_Interactable */
 	if (FAILED(m_pGameInstance->Add_Prototype<CMapElement_Interactable>(g_iStaticLevel, CMapElement_Interactable::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_MapElement_Door */
+	if (FAILED(m_pGameInstance->Add_Prototype<CMapElement_Door>(g_iStaticLevel, CMapElement_Door::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Unified */

@@ -115,6 +115,7 @@
 #include "MapElement_Interactable.h"
 #include "MapElement_Static.h"
 #include "MapElement_Light.h"
+#include "MapElement_Door.h"
 #include "Land.h"
 #include "Collider.h"
 #include "VIBuffer_Model_Instance.h"
@@ -122,6 +123,8 @@
 #include "InstancedProp.h"
 #include "Unified.h"
 #include "MapElement_Lake.h"
+#include "MapElement_Chest.h"
+#include "MapElement_Chest_Lid.h"
 #pragma endregion
 
 
@@ -2422,6 +2425,11 @@ HRESULT CLoader::Loading_For_MapViewer()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Levioso_Noise"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Effect/Noises/VFX_T_NoiseCaustics02_Color_D.png"), 0)))) {
+		return E_FAIL;
+	}
+
 	/* For.Prototype_Component_LightPost_Emissive */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("LightPost_Emissive"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE,
@@ -2489,7 +2497,7 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 	/* For.Prototype_Component_SkyboxModel */
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_SkyboxModel"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/SkyBox/SM_SkyCard.fbx", XMMatrixIdentity()))))
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/SkyBox/SkyBox.bin", XMMatrixIdentity()))))
 		return E_FAIL;
 
 #pragma region MAP_LANDS
@@ -2552,10 +2560,10 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 	///* Terrain*/
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Collision\\Terrain",
-	//	".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Terrain",
-	//	".bin", true, ModelPrototypeTags, ModelPrototypePath)))
+	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* TScrolls*/
@@ -2582,7 +2590,7 @@ HRESULT CLoader::Loading_For_MapViewer()
 	//	".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 	//if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\BLDG_Ollivanders\\Collision",
-	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+	//	".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
 	///* Gatehouse*/
@@ -2734,6 +2742,11 @@ HRESULT CLoader::Loading_For_MapViewer()
 	//	".bin", false, ModelPrototypeTags, ModelPrototypePath)))
 	//	return E_FAIL;
 
+	/* Fences */
+	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\fences",
+		".fbx", true, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+
 	/* Light */
 	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\LightPosts",
 		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
@@ -2741,7 +2754,7 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 	/* Doors */
 	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogsmeade\\Common\\Meshes\\Doors",
-		".bin", false, ModelPrototypeTags, ModelPrototypePath)))
+		".bin", true, ModelPrototypeTags, ModelPrototypePath)))
 		return E_FAIL;
 
 	/* Step */
@@ -2774,6 +2787,12 @@ HRESULT CLoader::Loading_For_MapViewer()
 
 	/* Hogwart LOD */
 	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Hogwarts\\HogwartsLOD",
+		".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
+		return E_FAIL;
+
+	/* Object Interactables */
+	/* Chest */
+	if (FAILED(MapFolderLoad("C:\\MeshTable\\Game\\Environment\\Objects\\Interactables",
 		".fbx", false, ModelPrototypeTags, ModelPrototypePath)))
 		return E_FAIL;
 
@@ -3326,6 +3345,18 @@ if(isLoad_Map)
 
 	/* For.Prototype_GameObject_MapElement_Interactable */
 	if (FAILED(m_pGameInstance->Add_Prototype<CMapElement_Interactable>(g_iStaticLevel, CMapElement_Interactable::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_MapElement_Door */
+	if (FAILED(m_pGameInstance->Add_Prototype<CMapElement_Door>(g_iStaticLevel, CMapElement_Door::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_MapElement_Chest */
+	if (FAILED(m_pGameInstance->Add_Prototype<CMapElement_Chest>(g_iStaticLevel, CMapElement_Chest::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_MapElement_Chest_Lid */
+	if (FAILED(m_pGameInstance->Add_Prototype<CMapElement_Chest_Lid>(g_iStaticLevel, CMapElement_Chest_Lid::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_MapElement_Static */
