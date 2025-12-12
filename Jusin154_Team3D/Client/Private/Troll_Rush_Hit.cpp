@@ -5,6 +5,7 @@
 #include "EffectParts.h"
 #include "Wand.h"
 #include "Player.h"
+#include "InfoInstance.h"
 
 CTroll_Rush_Hit::CTroll_Rush_Hit(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEffect_Container{ pDevice, pContext }
@@ -12,8 +13,10 @@ CTroll_Rush_Hit::CTroll_Rush_Hit(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 }
 
 CTroll_Rush_Hit::CTroll_Rush_Hit(const CTroll_Rush_Hit& rhs)
-	: CEffect_Container(rhs)
+	: CEffect_Container(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
+	SAFE_ADDREF(m_pInfoInstance);
 }
 
 HRESULT CTroll_Rush_Hit::Initialize_Prototype()
@@ -39,7 +42,7 @@ HRESULT CTroll_Rush_Hit::Initialize(void* pArg)
 	m_wstrEffectName = L"Troll_Nomal_Smoke";
 
 
-	m_fDuration = 2.f;
+	m_fDuration = 3.5f;
 
 	return S_OK;
 }
@@ -79,13 +82,34 @@ HRESULT CTroll_Rush_Hit::Pre_Setting(CGameObject* pObject, void* pArg)
 		return E_FAIL;
 
 
-	_float4 vPos = *static_cast<_float4*>(pArg); // 위치 넘기기
+	_vector vPos =  m_pOwner->Get_Component<CCharacter_Controller>()->Get_Position();
 
 	CEffectParts* pSmoke = Get_PartObject<CEffectParts>("HitSmoke");
+	CEffectParts* pRock_PT_35 = Get_PartObject<CEffectParts>("Rock_PT_35");
 
-	pSmoke->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMLoadFloat4(&vPos));
+	_vector vLook = m_pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK);
+
+	vPos += vLook * 2.f;
+
+	pSmoke->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
+	pRock_PT_35->Get_Component<CTransform>()->Set_State(STATE::POSITION, vPos);
 
 	pSmoke->Set_Visible(true);
+	pRock_PT_35->Set_Visible(true);
+
+
+	CPlayer* pPlayer = static_cast<CPlayer*>(m_pInfoInstance->Get_NearestPlayerAlly(m_pOwner->Get_WorldPostion()).first);
+
+
+	if (pPlayer == nullptr)
+		return E_FAIL;
+
+	_float fDistance = XMVectorGetX(XMVector4Length(pPlayer->Get_WorldPostion() - Get_WorldPostion()));
+
+	_float fShakeValue = clamp(40.f / fDistance, 3.f, 9.f);
+
+	pPlayer->Start_CameraShake(0.8f, fShakeValue);
+
 	return S_OK;
 }
 
@@ -158,6 +182,7 @@ void CTroll_Rush_Hit::Free()
 {
 	__super::Free();
 
+	SAFE_RELEASE(m_pInfoInstance);
 }
 #ifdef _DEBUG
 void CTroll_Rush_Hit::Describe_Entity()

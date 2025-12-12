@@ -55,6 +55,7 @@
 #include "Enemy_HpBar.h"
 #include "Enemy_Info.h"
 #include "Boss_HpBer.h"
+#include "Enemy_Detection.h"
 
 #include "Mission_Panel.h"
 #include "MissionBanner_Border.h"
@@ -155,6 +156,7 @@
 #include "Goblin_Dagger.h"
 #include "Goblin_BattleAxe.h"
 #include "Goblin_Spector.h"
+#include "StunEffect.h"
 #pragma endregion
 
 #pragma region PHYSX_HEADER
@@ -566,6 +568,22 @@ HRESULT CLoader::Loading_For_UI()
 
 		});
 
+	Asset_FileLoad("../Bin/Resources/Textures/Enemy", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
+		{
+
+			_string strFilePath = pFilePath;
+			_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
+
+
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), wstrFileName,
+				CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
+				return E_FAIL;
+			}
+
+			return S_OK;
+
+		});
+
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Item"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("../Bin/Resources/Textures/GadgetWheel/Item%d.png"), 8)))) {
 		return E_FAIL;
@@ -920,6 +938,10 @@ HRESULT CLoader::Loading_For_UI()
 	{
 		return E_FAIL;
 	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CEnemy_Detection>(g_iStaticLevel, CEnemy_Detection::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CLoading_Panel>(g_iStaticLevel, CLoading_Panel::Create(m_pDevice, m_pContext))))
 	{
@@ -1253,6 +1275,16 @@ HRESULT CLoader::Loading_For_Effect()
 		return E_FAIL;
 
 
+	Asset_FileLoad("../Bin/Resources/Models/Effect/Box", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::EFFECT), wstrFileName,
+			CInstance_Model::Create(m_pDevice, m_pContext, pFilePath, MODEL::NONANIM, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixIdentity(), 0))))
+			return E_FAIL;
+
+		return S_OK;
+
+		});
+
 	Asset_FileLoad("../Bin/Resources/Models/Effect/Rock", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
 
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::EFFECT), wstrFileName,
@@ -1451,6 +1483,9 @@ HRESULT CLoader::Loading_For_Effect()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CTroll_Weapon>(g_iStaticLevel, CTroll_Weapon::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CStunEffect>(g_iStaticLevel, CStunEffect::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	
@@ -1729,7 +1764,7 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 
 		_wstring strFileName = L"Prototype_GameObject_" + file.path().stem().wstring();
 
-		CModel* pModel = CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, szFilePath);
+		CModel* pModel = CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, szFilePath);
 
 		/*For Prototype_Component_Model_*/
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, strFileName, pModel))) {
@@ -1824,7 +1859,7 @@ HRESULT CLoader::Loading_For_Bloom()
 #pragma region HAIR
 
 	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll.fbx", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
 		TEXT("Prototype_Component_SubTroll_Model")
 	));
 
@@ -2184,8 +2219,8 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		TEXT("Prototype_Component_TombProtector_Model")
 	));
 	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/SubTroll/Troll.fbx", XMMatrixIdentity(),
-		TEXT("Prototype_Component_Troll_Model")
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll.bin", XMMatrixIdentity(),
+		TEXT("Prototype_Component_troll_Model")
 	));
 
 	futures.emplace_back(Deferred_ModelLoad(
@@ -2194,11 +2229,6 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	));
 
 #pragma endregion
-
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll_Anim.fbx", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f)* XMMatrixIdentity(),
-		TEXT("Prototype_Component_SubTroll_Model")
-	));
 
 	futures.emplace_back(Deferred_ModelLoad(
 		MODEL::ANIM, "../Bin/Resources/Models/Object/Troll_Weapon/Troll_Weapon.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
@@ -2240,6 +2270,14 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	futures.emplace_back(Deferred_ModelLoad(
 		MODEL::NONANIM, "../Bin/Resources/Models/Box/Box.bin", XMMatrixIdentity(),
 		TEXT("Desc_Box")
+	));
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/GerboldOllivander/GerboldOlivander.bin", XMMatrixIdentity(),
+		TEXT("Prototype_Component_GerboldOlivander_Model")
+	));
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Human/Npc/GerboldOllivander/GerboldOlivander_Anim.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_GerboldOlivander_Anim_Model")
 	));
 
 

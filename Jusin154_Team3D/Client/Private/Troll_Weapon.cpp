@@ -99,7 +99,8 @@ HRESULT CTroll_Weapon::Render()
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
+
+		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
 
@@ -142,7 +143,7 @@ HRESULT CTroll_Weapon::Ready_Components()
 	}
 
 	/* Com_Shader */
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_MESH,
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_NPC_PBR_ANIM,
 		reinterpret_cast<CComponent**>(&m_pShaderCom)))){
 		return E_FAIL;
 	}

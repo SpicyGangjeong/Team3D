@@ -6,6 +6,7 @@
 NS_BEGIN(Engine)
 class CGameInstance;
 class CTransform;
+class CStat;
 NS_END
 
 NS_BEGIN(Client)
@@ -16,6 +17,7 @@ private:
 	CPlayerInfo();
 	~CPlayerInfo() = default;
 public:
+	CStat* Get_PlayerStatPtr();
 	void Update(_float fTimeDelta);
 	void Change_Level();
 
@@ -28,7 +30,8 @@ private:
 	ID3D11DeviceContext*	m_pContext = { nullptr };
 
 private:
-	CTransform* m_pTransform = { nullptr };
+	CTransform*		m_pTransform = { nullptr };
+	CStat*			m_pStat = { nullptr };
 	_float3 m_vCameraLookDir = { 0.f, 0.f, 1.f, };
 	_float3 m_vCameraRightDir = { 1.f, 0.f, 0.f };
 

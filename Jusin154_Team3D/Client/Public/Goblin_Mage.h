@@ -48,6 +48,10 @@ private:
 
 	class CEffectParts* m_pGoblin_Orb = { nullptr };
 	class CGoblin_Spector* m_pGoblinSpector = { nullptr };
+
+	_float m_fHoverTime = 0.1f;
+	_float m_fHoverHeight = 0.1f; 
+	_float m_fHoverSpeed = 5.f;
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -67,9 +71,11 @@ public:
 private:
 	virtual void Add_FSM();
 	virtual void Set_Anim();
+private:
+	class CEffectPool* m_pEffectPool = { nullptr };
 
 	_float m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = {};
-	_float m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = { 30.f,5.f,30.f,20.f };
+	_float m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = { 20.f,5.f,30.f,15.f };
 
 	_bool m_bStep = { false };
 	_float m_fTpTime = {};
@@ -117,8 +123,7 @@ private:
 	void	Behavior_DeadEnter();
 	HRESULT Behavior_DeadExitCheck(_float fTimeDelta);
 	void	Behavior_DeadExit();
-private:
-	class CEffectPool* m_pEffectPool = nullptr;
+
 };
 
 NS_END

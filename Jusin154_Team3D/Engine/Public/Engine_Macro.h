@@ -90,7 +90,7 @@
 
 
 #define			SSAO_SAMPLE_NUMBER			64
-#define			BASIC_LERP_TIMER			0.16f
+#define			TIMER_SHORT_LERP			0.16f
 
 constexpr unsigned int g_iMaxShadowWidth		= 16384;
 constexpr unsigned int g_iMaxShadowHeight		= 9216;
@@ -145,8 +145,7 @@ constexpr unsigned int g_iMaxShadowHeight		= 9216;
 			unsigned int iRefCnt = {};							\
 			if(nullptr != s_pInstance)	{						\
 				iRefCnt = s_pInstance->Release();				\
-				if(0 == iRefCnt)								\
-					s_pInstance = nullptr;						\
+				s_pInstance = nullptr;							\
 			}													\
 			return iRefCnt;										\
 		}

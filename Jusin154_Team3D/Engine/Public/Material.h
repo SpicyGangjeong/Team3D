@@ -13,7 +13,11 @@ private:
 public:
 
 	HRESULT UnbindAllMaterialTextures(class CShader* shader);
-	HRESULT Bind_SRV(class CShader* pShader);
+	HRESULT Bind_SRV(class CShader* pShader, MODEL eType = MODEL::END);
+	_int Get_UsingPass() { return m_iUsingPass; }
+	void Set_UsingPass(_int iPass) { m_iUsingPass = iPass; }
+	_int Get_OutLinePass() { return m_iOutLinePass; }
+	void Set_OutLinePass(_int iPass) { m_iOutLinePass = iPass; }
 	
 private:
 	class CGameInstance*		m_pGameInstance = { nullptr };
@@ -21,7 +25,8 @@ private:
 	ID3D11DeviceContext*		m_pContext = { nullptr };
 
 	vector<ID3D11ShaderResourceView*>		m_SRVs[AI_TEXTURE_TYPE_MAX];
-	
+	_int		m_iUsingPass = { -1 };
+	_int		m_iOutLinePass = { -1 };
 
 #ifdef EDITOR_PROJECT
 public:

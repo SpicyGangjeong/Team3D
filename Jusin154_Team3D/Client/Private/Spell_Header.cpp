@@ -48,7 +48,6 @@ HRESULT CSpell_Header::Initialize(void* pArg)
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Slot_Hover"), [this](void* p) {this->Set_SkillType(*reinterpret_cast<_int*>(p)); });
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("FadeIn"), [this](void* p) {this->Set_FadeIn(); });
 	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("FadeOut"), [this](void* p) {this->Set_FadeOut(); });
-	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("FadeOut"), [this](void* p) {this->Set_FadeOut(); });
 	m_fFontX = 920.f;
 	m_fFontY = 510.f;
 	m_fType = _float2(935.f, 550.f);
@@ -101,12 +100,15 @@ void CSpell_Header::Update(_float fTimeDelta)
 		}
 	}
 
-	if (m_iSpellType != -1 && m_iPerSpellIndex != m_iSpellType)
+	if (m_bFadeOut == false)
 	{
-		m_iSkillType = static_cast<CUIObject*>(m_pOwner)->Get_Info(m_iSpellType).iSpell_Type;
-		m_pSpell_Name = static_cast<CUIObject*>(m_pOwner)->Get_Info(m_iSpellType).pSpell_Name;
-		m_fSpell_Type = static_cast<CUIObject*>(m_pOwner)->Get_Info(m_iSpellType).pType_Name;
-		m_iPerSpellIndex = m_iSpellType;
+		if (m_iSpellType != -1 && m_iPerSpellIndex != m_iSpellType)
+		{
+			m_iSkillType = m_pInfoInstance->Get_Spell_Info(m_iSpellType).iSpell_Type;
+			m_pSpell_Name = m_pInfoInstance->Get_Spell_Info(m_iSpellType).pSpell_Name;
+			m_fSpell_Type = m_pInfoInstance->Get_Spell_Info(m_iSpellType).pType_Name;
+			m_iPerSpellIndex = m_iSpellType;
+		}
 	}
 
 	m_fTime += fTimeDelta * m_fTimeMult;

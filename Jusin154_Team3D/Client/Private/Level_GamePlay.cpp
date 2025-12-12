@@ -24,6 +24,7 @@
 #include "Goblin.h"
 #include "Goblin_Mage.h"
 #include "Goblin_Spector.h"
+#include "NPC_Ollivander.h"
 #pragma endregion
 
 
@@ -39,6 +40,12 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	if (FAILED(Ready_Lights())) {
 		return E_FAIL;
 	}
+
+	//플레이어 , 맵 보다 먼저 생성해야함 !
+	if (FAILED(Reday_Layer_EffectPool())) {
+		return E_FAIL;
+	}
+
 	if (FAILED(Ready_Background())) {
 		return E_FAIL;
 	}
@@ -48,10 +55,7 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	if (FAILED(Ready_Layer_UI(LAYER_UI))) {
 		return E_FAIL;
 	}
-	//플레이어보다 먼저 생성해야함!
-	if (FAILED(Reday_Layer_EffectPool())) {
-		return E_FAIL;
-	}
+
 	// 이것도 플레이어보다 먼저 생성해야함!
 	if (FAILED(Ready_Layer_Item(LAYER_ITEM))) {
 		return E_FAIL;
@@ -228,16 +232,16 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	// >> M A P Configuration <<
 	// 맵 로드할지 안할지 bool 설정
 	// ---------------------------------
-	_bool isReady_Background = { false };
+	_bool isReady_Background = { true };
 
 #ifdef gimch
 	isReady_Background = true;
 #endif // gimch
 #ifdef Bin
-	isReady_Background = true;
+	isReady_Background = false;
 #endif // 
 #ifdef 진우
-	isReady_Background = false;
+	isReady_Background = true;
 #endif // 
 #ifdef 기무리
 	isReady_Background = true;
@@ -256,14 +260,14 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	else
 	{
 		/* 전체 맵 */
-		CInfoInstance::GetInstance()->Load_MapObjects("Hogsmeade_MapContainer_Data");
+		//CInfoInstance::GetInstance()->Load_MapObjects("Hogsmeade_MapContainer_Data");
 
 		/* 물 오브젝트 */
 		if (FAILED(CInfoInstance::GetInstance()->Load_WaterElemet("Element_Water_Info")))
 			return E_FAIL;
 
 		/* 조명 오브젝트 */
-		CInfoInstance::GetInstance()->Load_LightElements("LightElement");
+		/*CInfoInstance::GetInstance()->Load_LightElements("LightElement");*/
 
 		/* 상호작용 오브젝트 */
 		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_Barrel");
@@ -477,6 +481,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
 		return E_FAIL;
 	}
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPC_Ollivander>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -517,6 +524,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 			return E_FAIL;
 		}
 	}
+
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Mage>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 		return E_FAIL;
 	}

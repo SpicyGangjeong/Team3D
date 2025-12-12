@@ -171,7 +171,6 @@ void CMonster::Free()
 
 void CMonster::Describe_Entity()
 {
-	_bool isToggle = { true };
 
 	if (ImGui::TreeNode("ANIM STATE")) {
 

@@ -38,6 +38,7 @@ private:
 
 	void Use_Spell(_int Index);
 	void Spell_Setting(void* pArg);
+	void Use_Potion();
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;

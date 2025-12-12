@@ -120,7 +120,7 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 
 void CPlayer::Update(_float fTimeDelta)
 {
-	Update_CameraCoordinateSystem();
+	Update_CameraCoordinateSystem(fTimeDelta);
 	UpdateGrapInteractive(fTimeDelta);
 	
 	m_pFSM->Update_State(fTimeDelta);
@@ -149,13 +149,33 @@ __super::Update(fTimeDelta);
 	}
 }
 
-void CPlayer::UpdateGrapInteractive(Engine::_float fTimeDelta)
+void CPlayer::UpdateGrapInteractive(_float fTimeDelta)
 {
 	if (nullptr != m_pGrapInteractive) {
 		m_vGrapInteratableLerp.x += fTimeDelta;
 		m_pGrapInteractive->GrapToPlayer(m_pTransformCom->Get_State(STATE::POSITION) + m_pCamPosition_ShoulderPart->Get_ShoulderGlobalPos(), m_vGrapInteratableLerp.x);
 		if (m_vGrapInteratableLerp.x > m_vGrapInteratableLerp.y) {
 			m_vGrapInteratableLerp.x -= m_vGrapInteratableLerp.y;
+		}
+	}
+}
+
+void CPlayer::Update_CameraShake(_float fTimeDelta)
+{
+	if (true == m_bCameraShake) {
+		m_vCameraShakeTimer.x += fTimeDelta;
+		if (m_vCameraShakeTimer.x > m_vCameraShakeTimer.y) {
+			m_vCameraShakeTimer.x = 0.f;
+			m_pCamPosition_ShoulderPart->Set_CameraShake(0.f, 0.f);
+			m_bCameraShake = false;
+		}
+		else {
+			_float fIntense = { 1.f - m_vCameraShakeTimer.x / m_vCameraShakeTimer.y };
+			fIntense *= fIntense;
+			m_pCamPosition_ShoulderPart->Set_CameraShake(
+				fIntense * m_pGameInstance->Real_Random_Float(-m_fCameraShakeIntense, m_fCameraShakeIntense),
+				fIntense * m_pGameInstance->Real_Random_Float(-m_fCameraShakeIntense, m_fCameraShakeIntense)
+			);
 		}
 	}
 }
@@ -277,12 +297,28 @@ HRESULT CPlayer::Render_Shadow()
 }
 void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 {
+	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
+	if (CollisionDesc) {
+		Check_HitAngle(XMLoadFloat4(&CollisionDesc->vHitDir));
+	}
+	else {
+		m_fHitDegree = -1.f;
+	}
+
 	m_pFSM->Change_State(FSMSTATE::HIT);
 }
 void CPlayer::OnHit(CGameObject* pOther, CGameObject* pCaller)
 {
 }
 #ifdef _DEBUG
+
+void CPlayer::Start_CameraShake(_float fTime, _float fIntense)
+{
+	m_vCameraShakeTimer.x = 0.f;
+	m_vCameraShakeTimer.y = fTime;
+	m_fCameraShakeIntense = fIntense;
+	m_bCameraShake = true;
+}
 
 void CPlayer::Render_CameraCoordinateSystem()
 {
@@ -367,11 +403,10 @@ HRESULT CPlayer::Ready_Components()
 		return E_FAIL;
 	}
 
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_PLAYER"), (CComponent**)&m_pStat))) {
-		return E_FAIL;
-
-	}
-
+	m_pStat = m_pInfoInstance->Get_PlayerStatPtr();
+	m_Components.push_back(m_pStat);
+	SAFE_ADDREF(m_pStat);
+	SAFE_ADDREF(m_pStat);
 
 	{ // CCT
 		CCharacter_Controller::Character_Controller_DESC Desc{};
@@ -475,13 +510,14 @@ void CPlayer::SetGravity()
 	}
 }
 
-void CPlayer::Update_CameraCoordinateSystem()
+void CPlayer::Update_CameraCoordinateSystem(_float fTimeDelta)
 {
 	_vector xmvCameraLook = XMVector3Normalize(XMVectorSetY(m_pGameInstance->Get_CameraLook(), 0.f));
 	_vector xmvUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
 	XMStoreFloat3(&m_vCameraRightDir, XMVector3Normalize(XMVector3Cross(xmvUp, xmvCameraLook)));
 	XMStoreFloat3(&m_vCameraLookDir, xmvCameraLook);
 	m_pInfoInstance->Update_CameraCoordinateSystem(m_vCameraLookDir, m_vRimLightColor);
+	Update_CameraShake(fTimeDelta);
 }
 
 _matrix CPlayer::Get_WandPos()
@@ -595,6 +631,16 @@ void CPlayer::Describe_Entity()
 	GUI::Text("%d", m_iStateMask);
 	GUI::Text("HP : %f, %f", m_pStat->Get_Stat().fCurrentHp, m_pStat->Get_Stat().fMaxHp);
 	GUI::SameLine(); if (GUI::Button("FULL")) { m_pStat->Set_Stat(ENUM_CLASS(STAT::CURRENTHP), m_pStat->Get_Stat().fMaxHp); }
+#pragma region CAMERA_SHAKE
+	if (false == m_bCameraShake && GUI::Button("Shake")) {
+		m_bCameraShake = true;
+	}
+	if (GUI::SliderFloat("m_fCameraShakeTime", &m_fCameraShakeTime, 0.125f,  0.f, "%.3f")) {
+		m_vCameraShakeTimer.y = m_fCameraShakeTime;
+	}
+	GUI::SliderFloat("m_fCameraShakeIntense", &m_fCameraShakeIntense, 5.f, 20.f, "%.1f");
+#pragma endregion
+
 	_vector xmvInputDir = XMVectorZero();
 
 	_vector xmvCamLook = XMVector4Normalize(XMVectorSet(m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z, 0.f));

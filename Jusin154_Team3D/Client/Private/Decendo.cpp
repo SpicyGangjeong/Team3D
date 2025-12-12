@@ -251,6 +251,7 @@ void CDecendo::OnCollision(CGameObject* pOther, void* pDesc)
 
 	if (m_bHit == false)
 		return;
+	dynamic_cast<CPlayer*>(m_pOwner->Get_Owner())->Set_SpellHit(true);
 
 	ON_COLLISION_INFO CollisionDesc = *static_cast<ON_COLLISION_INFO*>(pDesc);
 

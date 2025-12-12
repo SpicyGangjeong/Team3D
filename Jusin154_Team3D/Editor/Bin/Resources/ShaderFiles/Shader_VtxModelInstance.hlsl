@@ -15,29 +15,33 @@ struct ParticleValue
     float2 vDiffuseUVMoveTime;
     float2 vDistortionUVMoveTime;
     float2 vNoiseUVMoveTime;
-    float2 vAniTime;
     float2 vDissolveUVMoveTime;
+    float2 vAniTime;
+
     
     float2 vAniIndex;
-    float  fGravity;
+    float fGravity;
     
     float3 vSinAmount;
     float3 vDeltaAngle;
     float3 vDeltaAxisAngle;
     
-    float  fDrag;
+    float fDrag;
     float3 vPivot;
     
-    float  fSizeDrag;
+    float fSizeDrag;
     float3 vDeltaSize;
     float2 vDelay;
     
-    bool  isCompareStop;
+        
+    bool isCompareStop;
     float fCollisionTime;
     float fDropAttenuation;
     
     float3 vVelocity;
-
+    float fAcceleration;
+    
+    bool isStop;
 };
 
 

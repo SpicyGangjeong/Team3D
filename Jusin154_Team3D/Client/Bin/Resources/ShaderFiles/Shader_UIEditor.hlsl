@@ -4,6 +4,8 @@
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 Texture2D g_DepthTexture;
 
+float3 g_CamaraPosition;
+
 int g_iImageCountX;
 int g_iImageCountY;
 
@@ -56,10 +58,15 @@ Texture2D g_Texture2;
 Texture2D g_Texture3;
 Texture2D g_Texture4;
 Texture2D g_Texture5;
+Texture2D g_Texture6;
 Texture2D g_DiffuseTexture;
 Texture2D g_MaskingTexture;
 
 int g_iHover;
+
+int g_iStep1 = 0;
+int g_iStep2 = 0;
+int g_iStep3 = 0;
 
 struct VS_IN
 {
@@ -1483,6 +1490,156 @@ PS_OUT PS_Boss_HpBer(PS_IN In)
     return Out;
 }
 
+struct VS_IN3D
+{
+    float3 vPosition : POSITION;
+    float2 vTexcoord : TEXCOORD0;
+};
+
+struct VS_OUT3D
+{
+    float4 vPosition : SV_Position;
+    float2 vTexcoord : TEXCOORD0;
+};
+
+VS_OUT3D VS_MAIN3D(VS_IN3D In)
+{
+    VS_OUT3D Out;
+    
+    matrix matViewProj = mul(g_ViewMatrix, g_ProjMatrix);
+    
+    float2 Offset = In.vTexcoord - 0.5f;
+    float3 worldCenter = float3(g_WorldMatrix._41, g_WorldMatrix._42, g_WorldMatrix._43);
+
+    
+    float3 vLook = normalize(g_CamaraPosition - worldCenter);
+    
+    vLook.y = 0.f;
+    vLook = normalize(vLook);
+    
+    float3 upDir = float3(0.f, 1.f, 0.f);
+
+    float3 rightDir = normalize(cross(vLook, upDir));
+        
+    float3 dirRight = rightDir * g_fCurrent_Size.x * Offset.x;
+    float3 dirUp = upDir * g_fCurrent_Size.y * Offset.y;
+
+    float3 vertexPos = worldCenter + dirRight + dirUp;
+
+    Out.vPosition = mul(float4(vertexPos, 1.f), matViewProj);
+    Out.vTexcoord = 1.f - In.vTexcoord;
+    return Out;
+}
+
+
+PS_OUT PS_Enemy_Detection(PS_IN In)
+{
+    PS_OUT Out;
+
+    float4 Color = float4(1.f, 1.f, 1.f, 0.f * g_fAlpha);
+    
+    if (g_iStep1 != 0)
+    {
+        float2 Imagetexpos1 = g_fImageSipos1.xy / g_fCurrent_Size;
+        float2 Imagetexsize1 = g_fImageSipos1.zw / g_fCurrent_Size;
+        float2 Imagelocal = (In.vTexcoord - Imagetexpos1) / Imagetexsize1;
+        bool inside1 = all(Imagelocal >= 0.0f && Imagelocal <= 1.0f);
+        if (inside1)
+        {
+            float4 tex3 = g_Texture1.Sample(ClampSampler, Imagelocal);
+        
+            float2 Imagetexpos2 = g_fImageSipos1.xy / g_fCurrent_Size;
+            float2 Imagetexsize2 = g_fImageSipos1.zw / g_fCurrent_Size;
+            float2 Imagelocal2 = (In.vTexcoord - Imagetexpos2) / Imagetexsize2;
+            
+            Color = lerp(Color, tex3, tex3.a);
+            
+            float4 tex4 = g_Texture2.Sample(ClampSampler, Imagelocal2);
+            float4 tex5 = g_Texture3.Sample(ClampSampler, Imagelocal2);
+            
+            float4 Color1 = tex4;
+            
+            Color1 = lerp(tex4, tex5, tex5.a);
+            
+            Imagelocal2.y = 1.f - Imagelocal2.y;
+            
+            if (Imagelocal2.y >= g_fTime)
+            {
+                Color1.a = 0.f;
+            }
+            
+            Color = lerp(Color, Color1, Color1.a);
+            
+            Color.a *= g_fAlpha;
+            Out.vColor = Color;
+    
+            return Out;
+        }
+    }
+    if (g_iStep2 != 0)
+    {
+        float2 Imagetexpos1 = g_fImageSipos1.xy / g_fCurrent_Size;
+        float2 Imagetexsize1 = g_fImageSipos1.zw / g_fCurrent_Size;
+        float2 Imagelocal = (In.vTexcoord - Imagetexpos1) / Imagetexsize1;
+        bool inside1 = all(Imagelocal >= 0.0f && Imagelocal <= 1.0f);
+        if (inside1)
+        {
+            float4 tex3 = g_Texture1.Sample(ClampSampler, Imagelocal);
+        
+            float2 Imagetexpos2 = g_fImageSipos1.xy / g_fCurrent_Size;
+            float2 Imagetexsize2 = g_fImageSipos1.zw / g_fCurrent_Size;
+            float2 Imagelocal2 = (In.vTexcoord - Imagetexpos2) / Imagetexsize2;
+            
+            float4 tex4 = g_Texture2.Sample(ClampSampler, Imagelocal2);
+            float4 tex6 = g_Texture4.Sample(ClampSampler, Imagelocal2);
+            Color = lerp(Color, tex3, tex3.a);
+            float4 Color1 = tex4;
+            Color1 = lerp(tex4, tex6, tex6);
+            Color1.rgb *= float3(1.f, 1.f, 0.f);
+            Imagelocal2.y = 1.f - Imagelocal2.y;
+            if (Imagelocal2.y >= g_fTime)
+            {
+                Color1.a = 0.f;
+            }
+            Color = lerp(Color, Color1, Color1.a);
+            
+            Color.a *= g_fAlpha;
+            
+            Out.vColor = Color;
+    
+            return Out;
+        }
+    }
+    if (g_iStep3 != 0)
+    {
+        float4 tex1 = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+        Color = tex1;
+        Color.rgb *= float3(1.f, 0.f, 0.f);
+        
+        float2 Imagetexpos1 = g_fImageSipos1.xy / g_fCurrent_Size;
+        float2 Imagetexsize1 = g_fImageSipos1.zw / g_fCurrent_Size;
+        float2 Imagelocal = (In.vTexcoord - Imagetexpos1) / Imagetexsize1;
+        bool inside1 = all(Imagelocal >= 0.0f && Imagelocal <= 1.0f);
+        if (inside1)
+        {
+            float4 tex7 = g_Texture5.Sample(ClampSampler, Imagelocal);
+
+            Color = lerp(Color, tex7, tex7.a);
+            
+            Color.a *= g_fAlpha;
+            Out.vColor = Color;
+    
+            return Out;
+        }
+       
+    }
+
+    Color.a *= g_fAlpha;
+    Out.vColor = Color;
+    
+    return Out;
+}
+
 technique11 PosTexTechnique11
 {
     pass Default
@@ -1791,6 +1948,16 @@ technique11 PosTexTechnique11
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Boss_HpBer();
+    }
+
+    pass PS_Enemy_Detection
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN3D();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Enemy_Detection();
     }
 
 }

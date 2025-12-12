@@ -29,6 +29,7 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+	virtual HRESULT Render_OutLine() override;
 	virtual HRESULT Render_Shadow() override;
 	virtual _vector Get_LockOnPos() override;
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
@@ -51,6 +52,7 @@ private:
 	_float4 m_vStartGripPos = { };
 	_float2 m_vStunTimer = { 0.f, 4.f };
 	_uint iIndex;
+	DAMAGE_INFO m_DamageInfo;
 
 	class CEffectParts* m_pRight_Smoke = { nullptr };
 	class CEffectParts* m_pLeft_Smoke = { nullptr };
@@ -91,7 +93,6 @@ private:
 
 	_float m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::END)] = {};
 	_float m_fMaxSkillCoolTime[ENUM_CLASS(TROLL_SKILL::END)] = { 20.f,20.f, 20.f, 20.f ,20.f };
-
 
 	_float m_fRushTime = {};
 	_float m_fAttackDelay = {};
@@ -145,6 +146,9 @@ private:
 	HRESULT Behavior_HitExitCheck();
 	void	Behavior_HitExit();
 
+	void	Behavior_DeadEnter();
+	HRESULT Behavior_DeadExitCheck(_float fTimeDelta);
+	void	Behavior_DeadExit();
 };
 
 NS_END

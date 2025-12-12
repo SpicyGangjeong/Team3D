@@ -21,10 +21,11 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
-	virtual _vector Get_WorldPostion() override;
-	_vector Get_ShoulderGlobalPos();
-	
 
+	virtual _vector Get_WorldPostion() override;
+	_vector			Get_ShoulderGlobalPos();
+	void			Set_CameraShake(_float fXShock, _float fYShock);
+	
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -43,6 +44,7 @@ private:
 	_float		m_fFollowTargetIncludedAngleDegree = { 20.f };
 	_float		m_fDefaultCameraBackToFrontRatio = { 0.61f };
 	_float2		m_vAccRotDegrees = { 0.f, 0.f };
+	_float2		m_vAccRealDegrees = { 0.f, 0.f };
 	_float3		m_vShoulderLocalPos = { 1.f, 2.f, 2.f };
 #pragma endregion
 #pragma region Lerp
@@ -62,8 +64,9 @@ private:
 	_float m_fFocalRatioMin = 0.05f;
 
 	_float2 m_vMoveLerpPositions = { };
-	_float2 m_vMoveLerpTimer = { 0.f, BASIC_LERP_TIMER };
+	_float2 m_vMoveLerpTimer = { 0.f, TIMER_SHORT_LERP };
 #pragma endregion
+	_float2 m_vCameraShakeTimer = { 0.f, 0.3f };
 
 	PSX::PxSweepBuffer m_BufferHit = {};
 

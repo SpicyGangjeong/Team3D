@@ -21,6 +21,7 @@ namespace Editor {
 #define FX_UIEDITOR				TEXT("FX_UIEDITOR")
 #define FX_UIINSTANCE			TEXT("FX_UIINSTANCE")
 #define FX_VTXPOS				TEXT("FX_VTXPOS")
+#define FX_NPC_PBR_ANIM			TEXT("FX_NPC_PBR_ANIM")
 
 #pragma endregion
 #pragma region MACRO_PROTOTYPE

@@ -92,7 +92,28 @@ HRESULT CModel::Bind_Material(_uint iMeshIndex, CShader* pShader)
 	if (iMaterialIndex >= m_iNumMaterials) {
 		return E_FAIL;
 	}
-	return m_Materials[iMaterialIndex]->Bind_SRV(pShader);
+	return m_Materials[iMaterialIndex]->Bind_SRV(pShader, m_eType);
+}
+
+HRESULT CModel::Begin(_uint iMeshIndex, CShader* pShader, _bool OutLine)
+{
+	if (iMeshIndex >= m_iNumMeshes) {
+		return E_FAIL;
+	}
+
+	_uint		iMaterialIndex = m_Meshes[iMeshIndex]->Get_MaterialIndex();
+
+	if (iMaterialIndex >= m_iNumMaterials) {
+		return E_FAIL;
+	}
+	HRESULT hr = { E_FAIL };
+	if (false == OutLine) {
+		hr = pShader->Begin(m_Materials[iMaterialIndex]->Get_UsingPass());
+	}
+	else {
+		hr = pShader->Begin(m_Materials[iMaterialIndex]->Get_OutLinePass());
+	}
+	return hr;
 }
 
 HRESULT CModel::Bind_BoneMatrices(_uint iMeshIndex, CShader* pShader, const _char* pConstantName)
@@ -197,11 +218,11 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 
 _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 {
-	if (m_bLoopRestarted)
+	/*if (m_bLoopRestarted)
 	{
 		m_vPrevRootPos = { 0,0,0 };
 		m_bLoopRestarted = false;
-	}
+	}*/
 
 	//ComputeAnimation(m_iCurrentAnimIndex);
 	//ComputeAnimation_Second(m_iCurrSecondAnimIndex);
@@ -239,16 +260,20 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 			{
 				m_fSecondRatio = 1.f;
 			}
-			else{
-				m_fSecondBlendTime = 0.f;
-			}
 		}
 	}
 	else
 	{
-		m_fSecondBlendTime += fTimeDelta;
-		m_fSecondRatio = (m_fSecondBlendTime / m_fSecondBlendDuration);
-		if (m_fSecondRatio > 1.f) m_fSecondRatio = 1.f;
+		if (!m_bSecondStopBlend && m_iCurrSecondAnimIndex != -1)
+		{
+			m_fSecondBlendTime += fTimeDelta;
+
+			if (m_fSecondBlendTime > m_fSecondBlendDuration)
+				m_fSecondBlendTime = m_fSecondBlendDuration;
+
+			m_fSecondRatio = m_fSecondBlendTime / m_fSecondBlendDuration;
+		}
+
 
 		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, true, m_iBoneMask, m_vector);
 
@@ -261,9 +286,6 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 			if (m_bIsSecondLoop)
 			{
 				m_fSecondRatio = 1.f;
-			}
-			else{
-				m_fSecondBlendTime = 0.f;
 			}
 		}
 	}
@@ -294,10 +316,29 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 		m_bInitialRootRotSaved = false;
 	}
 
-	if (!m_bIsSecondLoop && m_bIsSecondFinishedAnim)
+	if (m_bIsSecondFinishedAnim && !m_bIsSecondLoop)
 	{
-		m_iCurrSecondAnimIndex = -1;
+		m_bSecondStopBlend = true;
 	}
+
+	if (m_bSecondStopBlend)
+	{
+		m_fSecondBlendTime -= fTimeDelta;
+
+		if (m_fSecondBlendTime < 0.f)
+			m_fSecondBlendTime = 0.f;
+
+		m_fSecondRatio = m_fSecondBlendTime / m_fSecondBlendDuration;
+
+		if (m_fSecondRatio <= 0.f)
+		{
+			m_fSecondRatio = 0.f;
+			m_bSecondStopBlend = false;
+			m_iCurrSecondAnimIndex = -1;
+		}
+	}
+
+
 
 	for (auto& pBone : m_Bones)
 	{
@@ -345,22 +386,37 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fAmount, _boo
 }
 
 
-void CModel::Set_Second_AnimationIndex(_uint iIndex, _uint BoneIndex, _bool isLoop)
+void CModel::Set_Second_AnimationIndex(_uint BoneIndex, _uint iIndex, _bool isLoop)
 {
-	if (m_iCurrSecondAnimIndex == iIndex) {
-		return;
-	}
 	if (iIndex >= 0 && iIndex < m_iNumAnimations)
 	{
+		if (m_iCurrSecondAnimIndex != -1)
+		{
+			m_Animations[m_iCurrSecondAnimIndex]->Depart_Animation();
+		}
+
 		m_iCurrSecondAnimIndex = iIndex;
 		m_bIsSecondLoop = isLoop;
 		m_iBoneMask = m_BoneMask[BoneIndex];
+
 		m_fSecondBlendTime = 0.f;
+		m_fSecondRatio = 0.f;
+		m_bIsSecondFinishedAnim = false;
+
+		m_Animations[m_iCurrSecondAnimIndex]->Depart_Animation();
 	}
-	else {
+	else
+	{
+		if (m_iCurrSecondAnimIndex != -1)
+			m_Animations[m_iCurrSecondAnimIndex]->Depart_Animation();
+
 		m_iCurrSecondAnimIndex = -1;
+		m_bIsSecondFinishedAnim = false;
+		m_fSecondBlendTime = 0.f;
+		m_fSecondRatio = 0.f;
 	}
 }
+
 
 void CModel::Update_RootBone(_float Amount)
 {
@@ -1429,7 +1485,9 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 	if (FAILED(Ready_Materials(pModelFilePath))) {
 		return E_FAIL;
 	}
-
+	if (MODEL::PBR_ANIM == m_eType || MODEL::PBR_NONANIM == m_eType) {
+		ParseMaterialXml(pModelFilePath);
+	}
 	if (FAILED(Ready_Animations(m_Bones))) {
 		return E_FAIL;
 	}
@@ -1463,6 +1521,9 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 
 	if (FAILED(Ready_Materials(pModelFilePath))) {
 		return E_FAIL;
+	}
+	if (MODEL::PBR_ANIM == m_eType || MODEL::PBR_NONANIM == m_eType) {
+		ParseMaterialXml(pModelFilePath);
 	}
 
 	if (FAILED(Ready_Animations(m_Bones))) {
@@ -1502,6 +1563,48 @@ void CModel::LoadAdditionalAnimations(const char* ModelFilePath)
 	}
 }
 
+void CModel::ParseMaterialXml(const _char* pFilePath)
+{
+	filesystem::path xmlFilePath = pFilePath;
+	xmlFilePath.replace_extension(".xml");
+
+	tinyxml2::XMLDocument xmlDoc;
+	if (xmlDoc.LoadFile(xmlFilePath.string().c_str()) != tinyxml2::XML_SUCCESS){
+		return;
+	}
+
+	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("Material");
+	if (root == nullptr){
+		return;
+	}
+
+	_int iVisitIndex = 0;
+	
+	for (tinyxml2::XMLElement* pElement = root->FirstChildElement();
+		pElement != nullptr;
+		pElement = pElement->NextSiblingElement(), ++iVisitIndex)
+	{
+		_int iOrderIndex = iVisitIndex;
+		{
+			const _char* szShaderIndex = pElement->Attribute("ShaderIndex");
+			_int iShaderIndex = -1;
+			if (szShaderIndex != nullptr) {
+				iShaderIndex = atoi(szShaderIndex);
+			}
+			m_Materials[iOrderIndex]->Set_UsingPass(iShaderIndex);
+		}
+
+		{
+			const _char* szShaderIndex = pElement->Attribute("OutLineWrite");
+			_int iShaderIndex = -1;
+			if (szShaderIndex != nullptr) {
+				iShaderIndex = atoi(szShaderIndex);
+			}
+			m_Materials[iOrderIndex]->Set_OutLinePass(iShaderIndex);
+		}
+
+	}
+}
 
 _bool CModel::LoadData(const _char* filename)
 {
@@ -1913,6 +2016,13 @@ void CModel::Free()
 void CModel::Describe_Entity()
 {
 	GUI::Begin("Model_Desc");
+	if (GUI::CollapsingHeader("ModelAnimations")) {
+		for (_uint i = 0; i < m_iNumAnimations; ++i) {
+			if (GUI::Button(m_Animations[i]->Get_Name().c_str())) {
+				Set_AnimationIndex(i, false);
+			}
+		}
+	}
 	if (GUI::Button("SaveAnimIndexWithName")) {
 		_wstring wstrPath = TEXT("../Bin/AnimIndex.txt");
 		HANDLE	hFile = CreateFile(wstrPath.c_str(),

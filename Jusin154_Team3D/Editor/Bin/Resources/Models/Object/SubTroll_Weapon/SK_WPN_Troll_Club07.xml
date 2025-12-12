@@ -1,5 +1,5 @@
 <Material>
-	<M_WPN_Troll_Club07.003>
+	<M_WPN_Troll_Club07.003	ShaderIndex = "12" OutLineWrite="12">
         <aiTextureType_NONE                    Index="0" Filename="" Extension=""/>
         <aiTextureType_DIFFUSE                 Index="1" Filename="T_WPN_Troll_Club07_D" Extension=".dds"/>
         <aiTextureType_SPECULAR                Index="2" Filename="" Extension=""/>
@@ -21,7 +21,7 @@
         <aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
         <aiTextureType_SHEEN                   Index="19" Filename="" Extension=""/>
         <aiTextureType_CLEARCOAT               Index="20" Filename="" Extension=""/>
-        <aiTextureType_TRANSMISSION            Index="21" Filename="T_Troll_ArmoredTroll_Body_Corruption_A" Extension=".dds"/>
+        <aiTextureType_TRANSMISSION            Index="21" Filename="" Extension=""/>
         <aiTextureType_MAYA_BASE               Index="22" Filename="" Extension=""/>
         <aiTextureType_MAYA_SPECULAR           Index="23" Filename="" Extension=""/>
         <aiTextureType_MAYA_SPECULAR_COLOR     Index="24" Filename="" Extension=""/>
