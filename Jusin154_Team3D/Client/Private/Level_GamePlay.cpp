@@ -277,6 +277,10 @@ HRESULT CLevel_GamePlay::Ready_Background()
 		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_TeaShopTable");
 		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_TeaShopChair");
 
+		/* Doors */
+		CInfoInstance::GetInstance()->Load_DoorElemet("Element_Door_Info");
+		
+
 		if (FAILED(Ready_IntstanceProp()))
 			return E_FAIL;
 	}

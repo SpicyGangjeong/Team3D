@@ -182,6 +182,9 @@ call Update_Shaders.bat
     <ClInclude Include="..\Public\Goblin_Dagger.h" />
     <ClInclude Include="..\Public\Goblin_Protego.h" />
     <ClInclude Include="..\Public\Goblin_Spector.h" />
+    <ClInclude Include="..\public\MapElement_Chest.h" />
+    <ClInclude Include="..\public\MapElement_Door.h" />
+    <ClInclude Include="..\public\MapElement_Chest_Lid.h" />
     <ClInclude Include="..\Public\Skill_Data.h" />
     <ClInclude Include="..\Public\State_Blink.h" />
     <ClInclude Include="..\Public\State_Dead.h" />
@@ -386,6 +389,9 @@ call Update_Shaders.bat
     <ClCompile Include="..\Private\Goblin_Dagger.cpp" />
     <ClCompile Include="..\Private\Goblin_Protego.cpp" />
     <ClCompile Include="..\Private\Goblin_Spector.cpp" />
+    <ClCompile Include="..\private\MapElement_Chest.cpp" />
+    <ClCompile Include="..\private\MapElement_Door.cpp" />
+    <ClCompile Include="..\private\MapElement_Chest_Lid.cpp" />
     <ClCompile Include="..\Private\Skill_Data.cpp" />
     <ClCompile Include="..\Private\State_Blink.cpp" />
     <ClCompile Include="..\Private\State_Dead.cpp" />

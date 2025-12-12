@@ -198,6 +198,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\NPC_Ollivander.h" />
     <ClInclude Include="..\Public\Box_Splesh.h" />
     <ClInclude Include="..\Public\StunEffect.h" />
+    <ClInclude Include="..\public\MapElement_Door.h" />
     <ClInclude Include="..\Public\State_Broom_Dismount.h" />
     <ClInclude Include="..\Public\State_Shield.h" />
     <ClInclude Include="..\Public\State_Broom_Fly.h" />
@@ -372,6 +373,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Logo_Glow.cpp" />
     <ClCompile Include="..\Private\Logo_Text.cpp" />
     <ClCompile Include="..\Private\NPC_Ollivander.cpp" />
+    <ClCompile Include="..\private\MapElement_Door.cpp" />
     <ClCompile Include="..\Private\State_Broom_Dismount.cpp" />
     <ClCompile Include="..\Private\State_Broom_Fly.cpp" />
     <ClCompile Include="..\Private\State_Broom_Hover.cpp" />
