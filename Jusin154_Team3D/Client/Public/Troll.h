@@ -29,6 +29,7 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+	virtual HRESULT Render_OutLine() override;
 	virtual HRESULT Render_Shadow() override;
 	virtual _vector Get_LockOnPos() override;
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
@@ -92,7 +93,6 @@ private:
 
 	_float m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::END)] = {};
 	_float m_fMaxSkillCoolTime[ENUM_CLASS(TROLL_SKILL::END)] = { 20.f,20.f, 20.f, 20.f ,20.f };
-
 
 	_float m_fRushTime = {};
 	_float m_fAttackDelay = {};

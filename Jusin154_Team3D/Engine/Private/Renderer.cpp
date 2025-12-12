@@ -14,6 +14,7 @@ void CRenderer::Render()
 	if (FAILED(m_pShader->Bind_RawValue("g_vResolution", &vResolution, sizeof(_float2)))) {
 		assert(false);
 	}
+
 	Render_Priority();
 	Render_Shadow();
 	Render_NonBlend();

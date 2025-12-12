@@ -496,7 +496,7 @@ HRESULT CMaterial::UnbindAllMaterialTextures(CShader* shader)
 	return S_OK;
 }
 
-HRESULT CMaterial::Bind_SRV(CShader* pShader)
+HRESULT CMaterial::Bind_SRV(CShader* pShader, MODEL eType)
 {
 	if (FAILED(UnbindAllMaterialTextures(pShader))) {
 		return E_FAIL;
@@ -527,11 +527,16 @@ HRESULT CMaterial::Bind_SRV(CShader* pShader)
 			break;
 		case aiTextureType_SPECULAR:
 		{
-			_float fUsingSurfaceParams = ((_float)iTextureType / (_float)AI_TEXTURE_TYPE_MAX);
-			pConstantName = "g_SurfaceParamsTexture";
-			if (!m_SRVs[iTextureType].empty()) {
-				if (FAILED(pShader->Bind_RawValue("g_fUsingSurfaceParams", &fUsingSurfaceParams, sizeof(_float)))) {
-					return E_FAIL;
+			if (MODEL::PBR_ANIM == eType || MODEL::PBR_NONANIM == eType) {
+				pConstantName = "g_SpecularTexture";
+			}
+			else {
+				pConstantName = "g_SurfaceParamsTexture";
+				if (!m_SRVs[iTextureType].empty()) {
+					_float fUsingSurfaceParams = ((_float)iTextureType / (_float)AI_TEXTURE_TYPE_MAX);
+					if (FAILED(pShader->Bind_RawValue("g_fUsingSurfaceParams", &fUsingSurfaceParams, sizeof(_float)))) {
+						return E_FAIL;
+					}
 				}
 			}
 		} break;
@@ -542,37 +547,52 @@ HRESULT CMaterial::Bind_SRV(CShader* pShader)
 			pConstantName = "g_EmissiveTexture";
 			break;
 		case aiTextureType_HEIGHT:
+			pConstantName = "g_HeightTexture";
 			break;
 		case aiTextureType_NORMALS:
 			pConstantName = "g_NormalTexture";
 			break;
 		case aiTextureType_SHININESS:
+			pConstantName = "g_ShininessTexture";
 			break;
 		case aiTextureType_OPACITY:
+			pConstantName = "g_OpacityTexture";
 			break;
 		case aiTextureType_DISPLACEMENT:
+			pConstantName = "g_DisplacementTexture";
 			break;
 		case aiTextureType_LIGHTMAP:
+			pConstantName = "g_LightMapTexture";
 			break;
 		case aiTextureType_REFLECTION:
+			pConstantName = "g_ReflectionTexture";
 			break;
 		case aiTextureType_BASE_COLOR:
+			pConstantName = "g_BaseColorTexture";
 			break;
 		case aiTextureType_NORMAL_CAMERA:
+			pConstantName = "g_NormalCameraTexture";
 			break;
 		case aiTextureType_EMISSION_COLOR:
+			pConstantName = "g_EmissionColorTexture";
 			break;
 		case aiTextureType_METALNESS:
 		{
-			_float fUsingSurfaceParams = ((_float)iTextureType / (_float)AI_TEXTURE_TYPE_MAX);
-			pConstantName = "g_SurfaceParamsTexture";
-			if (!m_SRVs[iTextureType].empty()) {
-				if (FAILED(pShader->Bind_RawValue("g_fUsingSurfaceParams", &fUsingSurfaceParams, sizeof(_float)))) {
-					return E_FAIL;
+			if (MODEL::PBR_ANIM == eType || MODEL::PBR_NONANIM == eType) {
+				pConstantName = "g_MetalnessTexture";
+			}
+			else {
+				pConstantName = "g_SurfaceParamsTexture";
+				if (!m_SRVs[iTextureType].empty()) {
+					_float fUsingSurfaceParams = ((_float)iTextureType / (_float)AI_TEXTURE_TYPE_MAX);
+					if (FAILED(pShader->Bind_RawValue("g_fUsingSurfaceParams", &fUsingSurfaceParams, sizeof(_float)))) {
+						return E_FAIL;
+					}
 				}
 			}
 		} break;
 		case aiTextureType_DIFFUSE_ROUGHNESS:
+			pConstantName = "g_Diffuse_RoughnessTexture";
 			break;
 		case aiTextureType_AMBIENT_OCCLUSION:
 			pConstantName = "g_AmbientOcclusionTexture";
@@ -581,27 +601,38 @@ HRESULT CMaterial::Bind_SRV(CShader* pShader)
 			pConstantName = "g_UnknownTexture";
 			break;
 		case aiTextureType_SHEEN:
+			pConstantName = "g_SheenTexture";
 			break;
 		case aiTextureType_CLEARCOAT:
+			pConstantName = "g_ClearcoadTexture";
 			break;
 		case aiTextureType_TRANSMISSION:
 			pConstantName = "g_TransmissionTexture";
 			break;
 		case aiTextureType_MAYA_BASE:
+			pConstantName = "g_Maya_BaseTexture";
 			break;
 		case aiTextureType_MAYA_SPECULAR:
+			pConstantName = "g_Maya_SpecularTexture";
 			break;
 		case aiTextureType_MAYA_SPECULAR_COLOR:
+			pConstantName = "g_Maya_Specular_ColorTexture";
 			break;
 		case aiTextureType_MAYA_SPECULAR_ROUGHNESS:
+			pConstantName = "g_Maya_Specular_RoughnessTexture";
 			break;
 		case aiTextureType_ANISOTROPY:
 		{
-			_float fUsingSurfaceParams = ((_float)iTextureType / (_float)AI_TEXTURE_TYPE_MAX);
-			pConstantName = "g_SurfaceParamsTexture";
-			if (!m_SRVs[iTextureType].empty()) {
-				if (FAILED(pShader->Bind_RawValue("g_fUsingSurfaceParams", &fUsingSurfaceParams, sizeof(_float)))) {
-					return E_FAIL;
+			if (MODEL::PBR_ANIM == eType || MODEL::PBR_NONANIM == eType) {
+				pConstantName = "g_AnisotropyTexture";
+			}
+			else {
+				pConstantName = "g_SurfaceParamsTexture";
+				if (!m_SRVs[iTextureType].empty()) {
+					_float fUsingSurfaceParams = ((_float)iTextureType / (_float)AI_TEXTURE_TYPE_MAX);
+					if (FAILED(pShader->Bind_RawValue("g_fUsingSurfaceParams", &fUsingSurfaceParams, sizeof(_float)))) {
+						return E_FAIL;
+					}
 				}
 			}
 		} break;

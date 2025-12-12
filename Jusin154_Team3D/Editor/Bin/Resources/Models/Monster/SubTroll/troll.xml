@@ -1,5 +1,5 @@
 <Material>
-    <MI_Troll_ArmoredTroll_Body>
+	<MI_Troll_ArmoredTroll_Body	ShaderIndex = "6" OutLineWrite="16" >
         <aiTextureType_NONE                    Index="0" Filename="" Extension=""/>
         <aiTextureType_DIFFUSE                 Index="1" Filename="T_Troll_ArmoredTroll_Body_D" Extension=".png"/>
         <aiTextureType_SPECULAR                Index="2" Filename="" Extension=""/>
@@ -17,7 +17,7 @@
         <aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
         <aiTextureType_METALNESS               Index="15" Filename="" Extension=""/>
         <aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
-        <aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="T_Troll_ArmoredTroll_Body_Corruption_A" Extension=".dds"/>
+        <aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
         <aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
         <aiTextureType_SHEEN                   Index="19" Filename="" Extension=""/>
         <aiTextureType_CLEARCOAT               Index="20" Filename="" Extension=""/>
@@ -28,12 +28,12 @@
         <aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
         <aiTextureType_ANISOTROPY              Index="26" Filename="T_Troll_ArmoredTroll_Body_SRXO" Extension=".dds"/>
     </MI_Troll_ArmoredTroll_Body>
-    <MI_Troll_Heads_Eye>
+	<MI_Troll_Heads_Eye	ShaderIndex = "2" OutLineWrite="15">
         <aiTextureType_NONE                    Index="0" Filename="" Extension=""/>
         <aiTextureType_DIFFUSE                 Index="1" Filename="T_Troll_Mountain01_Eye_D" Extension=".dds"/>
         <aiTextureType_SPECULAR                Index="2" Filename="" Extension=""/>
         <aiTextureType_AMBIENT                 Index="3" Filename="" Extension=""/>
-        <aiTextureType_EMISSIVE                Index="4" Filename="T_Eye_IrisTint_MSK" Extension=".dds"/>
+        <aiTextureType_EMISSIVE                Index="4" Filename="" Extension=""/>
         <aiTextureType_HEIGHT                  Index="5" Filename="" Extension=""/>
         <aiTextureType_NORMALS                 Index="6" Filename="BaseFlattenNormalMap" Extension=".png"/>
         <aiTextureType_SHININESS               Index="7" Filename="" Extension=""/>
@@ -57,7 +57,7 @@
         <aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
         <aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
     </MI_Troll_Heads_Eye>
-    <MI_Troll_Heads_Teeth>
+	<MI_Troll_Heads_Teeth	ShaderIndex = "1" OutLineWrite="14">
         <aiTextureType_NONE                    Index="0" Filename="" Extension=""/>
         <aiTextureType_DIFFUSE                 Index="1" Filename="T_Troll_Teeth_D" Extension=".dds"/>
         <aiTextureType_SPECULAR                Index="2" Filename="" Extension=""/>
@@ -86,7 +86,7 @@
         <aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
         <aiTextureType_ANISOTROPY              Index="26" Filename="T_Troll_Teeth_SRXO" Extension=".dds"/>
     </MI_Troll_Heads_Teeth>
-    <MI_Troll_ArmoredTroll_Head>
+	<MI_Troll_ArmoredTroll_Head	ShaderIndex = "6" OutLineWrite="16">
         <aiTextureType_NONE                    Index="0" Filename="" Extension=""/>
         <aiTextureType_DIFFUSE                 Index="1" Filename="T_Troll_Mountain01_Head_D" Extension=".png"/>
         <aiTextureType_SPECULAR                Index="2" Filename="" Extension=""/>
@@ -104,7 +104,7 @@
         <aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
         <aiTextureType_METALNESS               Index="15" Filename="" Extension=""/>
         <aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
-        <aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="T_Troll_ArmoredTroll_Head_Corruption_A" Extension=".dds"/>
+        <aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
         <aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
         <aiTextureType_SHEEN                   Index="19" Filename="" Extension=""/>
         <aiTextureType_CLEARCOAT               Index="20" Filename="" Extension=""/>
@@ -115,7 +115,7 @@
         <aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
         <aiTextureType_ANISOTROPY              Index="26" Filename="T_Troll_Mountain01_Head_SRXO" Extension=".dds"/>
     </MI_Troll_ArmoredTroll_Head>
-    <MI_Troll_ArmoredTroll_Metal>
+	<MI_Troll_ArmoredTroll_Metal	ShaderIndex = "10" OutLineWrite="18">
         <aiTextureType_NONE                    Index="0" Filename="" Extension=""/>
         <aiTextureType_DIFFUSE                 Index="1" Filename="T_Troll_ArmoredTroll_Metal_D" Extension=".dds"/>
         <aiTextureType_SPECULAR                Index="2" Filename="" Extension=""/>
@@ -144,7 +144,7 @@
         <aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
         <aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
     </MI_Troll_ArmoredTroll_Metal>
-    <MI_Troll_ArmoredTroll_Leather>
+	<MI_Troll_ArmoredTroll_Leather	ShaderIndex = "8" OutLineWrite="17">
         <aiTextureType_NONE                    Index="0" Filename="" Extension=""/>
         <aiTextureType_DIFFUSE                 Index="1" Filename="T_Troll_ArmoredTroll_Leather_D" Extension=".dds"/>
         <aiTextureType_SPECULAR                Index="2" Filename="" Extension=""/>
@@ -162,7 +162,7 @@
         <aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
         <aiTextureType_METALNESS               Index="15" Filename="T_Troll_ArmoredTroll_Leather_MRO" Extension=".dds"/>
         <aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
-        <aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="T_Troll_ArmoredTroll_Leather_Corruption_A" Extension=".dds"/>
+        <aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
         <aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
         <aiTextureType_SHEEN                   Index="19" Filename="" Extension=""/>
         <aiTextureType_CLEARCOAT               Index="20" Filename="" Extension=""/>
@@ -173,10 +173,10 @@
         <aiTextureType_MAYA_SPECULAR_ROUGHNESS Index="25" Filename="" Extension=""/>
         <aiTextureType_ANISOTROPY              Index="26" Filename="" Extension=""/>
     </MI_Troll_ArmoredTroll_Leather>
-    <MI_ClothSim>
+	<MI_ClothSim	ShaderIndex = "11" OutLineWrite="19">
         <aiTextureType_NONE                    Index="0" Filename="" Extension=""/>
         <aiTextureType_DIFFUSE                 Index="1" Filename="T_Troll_ArmoredTroll_Leather_D" Extension=".dds"/>
-        <aiTextureType_SPECULAR                Index="2" Filename="T_Troll_ArmoredTroll_Body_SRXO" Extension=".dds"/>
+        <aiTextureType_SPECULAR                Index="2" Filename="T_Cav_Spid_ThickWeb_N" Extension=".dds"/>
         <aiTextureType_AMBIENT                 Index="3" Filename="" Extension=""/>
         <aiTextureType_EMISSIVE                Index="4" Filename="VFX_T_SkinBurn_Emiss_BPF_D" Extension=".dds"/>
         <aiTextureType_HEIGHT                  Index="5" Filename="" Extension=""/>
@@ -191,7 +191,7 @@
         <aiTextureType_EMISSION_COLOR          Index="14" Filename="" Extension=""/>
         <aiTextureType_METALNESS               Index="15" Filename="" Extension=""/>
         <aiTextureType_DIFFUSE_ROUGHNESS       Index="16" Filename="" Extension=""/>
-        <aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="VFX_T_SkinBurn_Alpha_D" Extension=".dds"/>
+        <aiTextureType_AMBIENT_OCCLUSION       Index="17" Filename="" Extension=""/>
         <aiTextureType_UNKNOWN                 Index="18" Filename="" Extension=""/>
         <aiTextureType_SHEEN                   Index="19" Filename="" Extension=""/>
         <aiTextureType_CLEARCOAT               Index="20" Filename="" Extension=""/>

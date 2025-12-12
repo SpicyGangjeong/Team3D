@@ -133,6 +133,9 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 
 void CGameInstance::Update_Engine(_float fTimeDelta)
 {
+	
+	_float fExcuteTimeDelta =  Update_SlowMotion(fTimeDelta);
+
 	m_pKey_Manager->Update();
 	m_pMouse_Manager->Update();
 	//m_pSound_Manager->Update();
@@ -142,17 +145,17 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 #endif // _DEBUG
 	m_pPicking->Update();
 
-	m_pObject_Manager->Priority_Update(fTimeDelta);
+	m_pObject_Manager->Priority_Update(fExcuteTimeDelta);
 
 	m_pPipeLine->Update();
 
-	m_pObject_Manager->Update(fTimeDelta);
+	m_pObject_Manager->Update(fExcuteTimeDelta);
 
-	m_pPhysX_Manager->Update(fTimeDelta);
+	m_pPhysX_Manager->Update(fExcuteTimeDelta);
 
-	m_pObject_Manager->Late_Update(fTimeDelta);
+	m_pObject_Manager->Late_Update(fExcuteTimeDelta);
 
-	m_pLevel_Manager->Update(fTimeDelta);
+	m_pLevel_Manager->Update(fExcuteTimeDelta);
 	m_pObject_Manager->Clear_DeadObj();
 
 	//m_pObstacle_Manager->Refresh_Region();
@@ -238,8 +241,19 @@ void CGameInstance::BillBoard(CTransform* pTransform)
 
 }
 
+
 #ifdef EDITOR_PROJECT
 
+
+void CGameInstance::SlowMotion(_float fSlowIntense, _float fTime)
+{
+	if (fTime <= 0 || fSlowIntense <= 0)
+		return;
+
+	m_isSlowMotion = true;
+	m_vSlowTime = _float2(0.f, fTime);
+	m_fSlowIntense = fSlowIntense;
+}
 
 void CGameInstance::Save_ModelFilePath(const _char* FilePath)
 {
@@ -267,6 +281,28 @@ size_t CGameInstance::BinaryModelFilePathCount()
 size_t CGameInstance::ModelFilePathCount()
 {
 	return m_FilePaths.size();
+}
+
+_float CGameInstance::Update_SlowMotion(_float fTimeDelta)
+{
+	_float fExcuteTimeDelta = {};
+
+	if (m_isSlowMotion == false)
+		return fTimeDelta;
+
+	m_vSlowTime.x += fTimeDelta;
+
+	if (m_vSlowTime.x >= m_vSlowTime.y) // 시간을 넘겼다면
+	{
+		m_isSlowMotion = false;
+		m_vSlowTime.x = 0.f;
+	}
+	else
+	{
+		fExcuteTimeDelta = m_fSlowIntense * fTimeDelta;
+	}
+
+	return fExcuteTimeDelta;
 }
 
 #endif // EDITOR_PROJECT

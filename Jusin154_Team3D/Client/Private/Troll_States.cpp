@@ -504,6 +504,7 @@ void CTroll::Behavior_SlamEnter()
 
 	Troll_Trail_Visible(true);
 	m_pWeaponTrail->Set_Visible(true);
+	m_pWeaponTrail->Get_Component<CTrail>()->Reset_Trail();
 
 	Add_Event(pairAnimInfo.first,
 		[this]() {
@@ -846,6 +847,10 @@ void CTroll::Add_FSM()
 		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_DeadExitCheck(fTimedelta); };
 		Desc.funcExitEvent = [this]() { Behavior_DeadExit(); };
 		Desc.funcLateUpdate = [this](_float fDeadRatio) {
+			m_fDeadRatio = fDeadRatio;
+			if (m_fDeadRatio > 1.f) {
+				m_bDead = true;
+			}
 			};
 		Desc.vDeadTimer.x = FLT_EPSILON5;
 		Desc.vDeadTimer.y = 2.f;
