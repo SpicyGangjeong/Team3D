@@ -386,6 +386,8 @@ void CTroll::OnCollision(CGameObject* pOther, void* pDesc)
 		return;
 	}
 	m_pFSM->Change_State(FSMSTATE::HIT);
+
+
 }
 
 void CTroll::OnHit(CGameObject* pOther, CGameObject* pCaller)

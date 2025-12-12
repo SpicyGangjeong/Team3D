@@ -22,6 +22,10 @@ CMage_Nomal_Attack::CMage_Nomal_Attack(const CMage_Nomal_Attack& rhs)
 HRESULT CMage_Nomal_Attack::Initialize_Prototype()
 {
 
+
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/MonsterPackage/GoblinMage/NomalAttack")))
+		return E_FAIL;
+
 	return S_OK;
 
 }
@@ -34,8 +38,7 @@ HRESULT CMage_Nomal_Attack::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/MonsterPackage/GoblinMage/NomalAttack")))
+	if (FAILED(Create_Effect()))
 		return E_FAIL;
 
 
