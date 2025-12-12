@@ -811,7 +811,7 @@ void CTroll::Add_FSM()
 		Desc.funcExitCheck = [this](_float fTimeDelta) { return Behavior_BackHandSwingExitCheck(fTimeDelta); };
 		Desc.funcExitEvent = [this]() { Behavior_BackHandSwingExit(); };
 		Desc.funcPriorityUpdate = nullptr;
-		Desc.funcLateUpdate = nullptr;
+		Desc.funcLateUpdate = [this](_float fTimeDelta, _bool& bHit) {  SwingHit(bHit); };
 		m_States.emplace(FSMSTATE::BACKHAND_SWING, CTroll_State_BackHand_Swing::Create(&Desc));
 	}
 #pragma endregion

@@ -121,8 +121,7 @@ private:
 	_float3			m_BroomScale = { 0.f, 0.f, 0.f };
 	_float3			m_TargetScale = { 1.f, 1.f, 1.f };
 	_float			m_fScaleSmoothSpeed = 2.5f;
-
-
+	_bool			m_bLumos = {};
 
 	HRESULT InputAction();
 	HRESULT InputMove();

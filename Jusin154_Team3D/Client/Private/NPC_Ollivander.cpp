@@ -26,6 +26,8 @@ void CNPC_Ollivander::Update(_float fTimeDelta)
 {
 	m_pFSM->Update_State(fTimeDelta);
 
+	m_pModelCom->Set_AnimationIndex(0);
+
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 	__super::Update(fTimeDelta);
 #ifdef _DEBUG
