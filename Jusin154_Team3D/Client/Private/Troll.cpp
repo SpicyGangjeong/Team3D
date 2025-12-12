@@ -11,6 +11,7 @@
 #include "EffectPool.h"
 #include "Layer.h"
 #include "TrailObject.h"
+#include "MapElement_Interactable.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -281,25 +282,39 @@ void CTroll::OnCollision(CGameObject* pOther, void* pDesc)
 {
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
-	_uint iSkillType = dynamic_cast<CEffect_Container*>(pOther)->Get_SkillType();
-	switch (iSkillType)
+	CEffect_Container* pEffect = dynamic_cast<CEffect_Container*>(pOther);
+
+	if (pEffect != nullptr)
 	{
-	case ENUM_CLASS(SKILL_TYPE::DESCENDO):
-		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
-		break;
-	case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
-		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
-		break;
-	case ENUM_CLASS(SKILL_TYPE::FLIPENDO):
-		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::FLIPENDO);
-		break;
-	case ENUM_CLASS(SKILL_TYPE::JAP):
-		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
-		break;
-	default:
-		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::END);
-		break;
+		_uint iSkillType = dynamic_cast<CEffect_Container*>(pOther)->Get_SkillType();
+
+		switch (iSkillType)
+		{
+		case ENUM_CLASS(SKILL_TYPE::DESCENDO):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::FLIPENDO):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::FLIPENDO);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::JAP):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
+			break;
+		default:
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::END);
+			break;
+		}
 	}
+		
+	CMapElement_Interactable* pProps = dynamic_cast<CMapElement_Interactable*>(pOther);
+
+	if (pProps != nullptr)
+	{
+		m_eHitSpell = STATEANIM::KNOCKDOWN_FWD;
+	}
+
 	m_pFSM->Change_State(FSMSTATE::HIT);
 }
 

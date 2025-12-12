@@ -46,10 +46,12 @@ struct ParticleValue
         
     bool  isCompareStop;
     float fCollisionTime;
-    float fDropAttenuation;
+    float fDropAttenuation; 
     
     float3 vVelocity;
     float  fAcceleration;
+    
+    bool   isStop;
 };
 
 
@@ -82,7 +84,7 @@ cbuffer g_ConstantBuffer : register(b0) // b0 << 이 숫자와 컨스턴트 쉐�
     
     bool isMoveUp;
     bool isExcludePos;
-    bool isPadding1;
+    bool isStopMove_For_Depth_Compare;
     bool isPadding2;
 
     float fTimeDelta;
@@ -107,8 +109,6 @@ void CS_MAIN(
   uint3 DispatchThreadID : SV_DispatchThreadID)
 {
     int iIndex = DispatchThreadID.x; // 배열 인덱스 
-    
-
     
     Particle particle = g_ParticleBufferInput[iIndex];
     ParticleValue particleValue = g_ParticleValueBufferInput[iIndex];
@@ -152,7 +152,7 @@ void CS_MAIN(
     /* 내 z가 가려지는 상황이었다면 연산하지않음*/
     
     
-    if (particle.vLifeTime.x >= particle.vLifeTime.y)
+    if (particle.vLifeTime.x >= particle.vLifeTime.y || particleValue.isStop == true)
     {
 
         particleValue.isCompareStop = false;
@@ -165,6 +165,7 @@ void CS_MAIN(
             
             return ;
         }
+        
        //초기화
         particle.vRight = particleValue.vOriginRight;
         particle.vUp = particleValue.vOriginUp;
@@ -173,6 +174,7 @@ void CS_MAIN(
         
         particle.vLifeTime.x = 0.f;
         particleValue.vDelay.x = 0.f;
+        particleValue.isStop = false;
 
         if (isRandomAniIndex == false)
             particleValue.vAniIndex.x = 0.f;
@@ -307,10 +309,15 @@ void CS_MAIN(
     
     if (isTurn == true)
     {
+        float fRotationSpeed = 1.f;
+        
+        if (particleValue.fRotaionSpeed > FLT_EPSILON5)
+            fRotationSpeed = particleValue.fRotaionSpeed;
+        
         /* ROTATE */
-        float4x4 RotateXMat = RotateX(particleValue.vDeltaAngle.x * fTimeDelta);
-        float4x4 RotateYMat = RotateY(particleValue.vDeltaAngle.y * fTimeDelta);
-        float4x4 RotateZMat = RotateZ(particleValue.vDeltaAngle.z * fTimeDelta);
+        float4x4 RotateXMat = RotateX(particleValue.vDeltaAngle.x * fTimeDelta * fRotationSpeed);
+        float4x4 RotateYMat = RotateY(particleValue.vDeltaAngle.y * fTimeDelta * fRotationSpeed);
+        float4x4 RotateZMat = RotateZ(particleValue.vDeltaAngle.z * fTimeDelta * fRotationSpeed);
        
         
         float4x4 CombinedRotMat = mul(RotateZMat, mul(RotateYMat, RotateXMat));
@@ -329,9 +336,14 @@ void CS_MAIN(
     
     if (isAxisTurn)
     {
-        float4x4 RotateAxisRightMat = RotateAxis(particle.vRight, particleValue.vDeltaAxisAngle.x * fTimeDelta);
-        float4x4 RotateAxisUpMat = RotateAxis(particle.vUp, particleValue.vDeltaAxisAngle.y * fTimeDelta);
-        float4x4 RotateAxisLookMat = RotateAxis(particle.vLook, particleValue.vDeltaAxisAngle.z * fTimeDelta);
+        float fRotationSpeed = 1.f;
+        
+        if (particleValue.fRotaionSpeed > FLT_EPSILON5)
+            fRotationSpeed = particleValue.fRotaionSpeed;
+        
+        float4x4 RotateAxisRightMat = RotateAxis(particle.vRight, particleValue.vDeltaAxisAngle.x * fRotationSpeed * fTimeDelta);
+        float4x4 RotateAxisUpMat = RotateAxis(particle.vUp, particleValue.vDeltaAxisAngle.y * fRotationSpeed * fTimeDelta);
+        float4x4 RotateAxisLookMat = RotateAxis(particle.vLook, particleValue.vDeltaAxisAngle.z * fRotationSpeed * fTimeDelta);
         
          
         float4x4 CombinedRotMat = mul(RotateAxisLookMat, mul(RotateAxisUpMat, RotateAxisRightMat));
@@ -382,14 +394,21 @@ void CS_MAIN(
                 particleValue.isCompareStop = true; // 내가 지면에 사라지는 순간
                 particleValue.fCollisionTime = particle.vLifeTime.x;
                
+                if (isStopMove_For_Depth_Compare == true)
+                {
+                    particleValue.isStop = true;
+                    particle.vTranslation.y += 0.2f;
+
+                }
+
+                
             }
         }
         
-        if (particleValue.isCompareStop == true) // 지면에 부딪혔을 때
+        if (particleValue.isCompareStop == true && isStopMove_For_Depth_Compare == false) // 지면에 부딪혔을 때
         {
             particle.vTranslation.y = fOnlyDropY; // 지면에 부딪혓을때 이제 y연산은 오직 drop으로만 수행함
         }
-        
         
     }
     

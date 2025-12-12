@@ -28,6 +28,9 @@
 #include "Mage_Nomal_Attack.h"
 #include "MageSide.h"
 #include "StunEffect.h"
+#include "Box_Splesh.h"
+#include "Chair_Splesh.h"
+#include "Barral_Splesh.h"
 
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -55,12 +58,41 @@ HRESULT CEffectPool::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
-	if (FAILED(Ready_Effect())) {
-		return E_FAIL;
+#ifdef _DEBUG
+
+#ifdef gimch
+	m_isActiveEffectCreate = false;
+	m_isActiveMonsterEffectCreate = false;
+#endif // gimch
+#ifdef Bin
+	m_isActiveEffectCreate = false;
+	m_isActiveMonsterEffectCreate = false;
+#endif // 
+#ifdef 진우
+	m_isActiveEffectCreate = true;
+	m_isActiveMonsterEffectCreate = true;
+#endif // 
+#ifdef 기무리
+	m_isActiveEffectCreate = false;
+	m_isActiveMonsterEffectCreate = false;
+#endif // 
+#ifdef 인혁
+	m_isActiveEffectCreate = false;
+	m_isActiveMonsterEffectCreate = false;
+#endif // 
+
+#endif
+
+	if (m_isActiveEffectCreate)
+	{
+		if (FAILED(Ready_Effect()))
+			return E_FAIL;
 	}
 
-	if (FAILED(Ready_MonsterEffect())) {
-		return E_FAIL;
+	if (m_isActiveMonsterEffectCreate)
+	{
+		if (FAILED(Ready_MonsterEffect()))
+			return E_FAIL;
 	}
 	
 
@@ -260,6 +292,36 @@ HRESULT CEffectPool::Ready_Effect()
 		CWandEnd* pEffect = nullptr;
 
 		pEffect = m_pGameInstance->Clone_Prototype<CWandEnd>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+
+	if (FAILED(Create_Effect(SKILL_TYPE::BOX_SPLESH, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CBox_Splesh* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CBox_Splesh>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+
+	if (FAILED(Create_Effect(SKILL_TYPE::CHAIL_SPLESH, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CChair_Splesh* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CChair_Splesh>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+
+	if (FAILED(Create_Effect(SKILL_TYPE::BARRAL_SPLASH, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CBarral_Splesh* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CBarral_Splesh>(iPrototypeLevel, nullptr);
 
 		return pEffect; }
 	))) return E_FAIL;

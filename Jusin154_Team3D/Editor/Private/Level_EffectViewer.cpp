@@ -53,6 +53,8 @@ HRESULT CLevel_EffectViewer::Initialize()
 	Desc.iAlphaSizeX = 2048;
 	Desc.iAlphaSizeY = 2048;
 	Desc.vPosition = _float3(-194, 18.5f, -153.f);
+	Desc.strAlphaMapTag = "Hogsmeade_AlphaMap.bin";
+	Desc.strHeightMapTag = "Hogsmeade_HeightMap.bin";
 	Desc.strBufferTag = TEXT("Prototype_Component_VIBuffer_Terrain_Hogsmeade");
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Terrain"), &Desc)))
