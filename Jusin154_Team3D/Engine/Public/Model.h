@@ -77,7 +77,7 @@ public:
 #pragma endregion
 #pragma region Material
 	HRESULT					Bind_Material(_uint iMeshIndex, class CShader* pShader);
-	HRESULT					Begin(_uint iMeshIndex, class CShader* pShader);
+	HRESULT					Begin(_uint iMeshIndex, class CShader* pShader, _bool OutLine = false);
 #pragma endregion
 
 	void			ComputeAnimation(_uint AnimIndex);

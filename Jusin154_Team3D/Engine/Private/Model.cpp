@@ -95,7 +95,7 @@ HRESULT CModel::Bind_Material(_uint iMeshIndex, CShader* pShader)
 	return m_Materials[iMaterialIndex]->Bind_SRV(pShader, m_eType);
 }
 
-HRESULT CModel::Begin(_uint iMeshIndex, CShader* pShader)
+HRESULT CModel::Begin(_uint iMeshIndex, CShader* pShader, _bool OutLine)
 {
 	if (iMeshIndex >= m_iNumMeshes) {
 		return E_FAIL;
@@ -106,7 +106,14 @@ HRESULT CModel::Begin(_uint iMeshIndex, CShader* pShader)
 	if (iMaterialIndex >= m_iNumMaterials) {
 		return E_FAIL;
 	}
-	return pShader->Begin(m_Materials[iMaterialIndex]->Get_UsingPass());
+	HRESULT hr = { E_FAIL };
+	if (false == OutLine) {
+		hr = pShader->Begin(m_Materials[iMaterialIndex]->Get_UsingPass());
+	}
+	else {
+		hr = pShader->Begin(m_Materials[iMaterialIndex]->Get_OutLinePass());
+	}
+	return hr;
 }
 
 HRESULT CModel::Bind_BoneMatrices(_uint iMeshIndex, CShader* pShader, const _char* pConstantName)
@@ -1543,14 +1550,24 @@ void CModel::ParseMaterialXml(const _char* pFilePath)
 		pElement = pElement->NextSiblingElement(), ++iVisitIndex)
 	{
 		_int iOrderIndex = iVisitIndex;
-
-		const _char* szShaderIndex = pElement->Attribute("ShaderIndex");
-		_int iShaderIndex = -1;
-		if (szShaderIndex != nullptr) {
-			iShaderIndex = atoi(szShaderIndex);
+		{
+			const _char* szShaderIndex = pElement->Attribute("ShaderIndex");
+			_int iShaderIndex = -1;
+			if (szShaderIndex != nullptr) {
+				iShaderIndex = atoi(szShaderIndex);
+			}
+			m_Materials[iOrderIndex]->Set_UsingPass(iShaderIndex);
 		}
 
-		m_Materials[iOrderIndex]->Set_UsingPass(iShaderIndex);
+		{
+			const _char* szShaderIndex = pElement->Attribute("OutLineWrite");
+			_int iShaderIndex = -1;
+			if (szShaderIndex != nullptr) {
+				iShaderIndex = atoi(szShaderIndex);
+			}
+			m_Materials[iOrderIndex]->Set_OutLinePass(iShaderIndex);
+		}
+
 	}
 }
 
