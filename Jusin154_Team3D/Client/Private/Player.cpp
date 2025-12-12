@@ -7,6 +7,7 @@
 #include "Camera_Gaze.h"
 #include "CamPosition_Arm.h"
 #include "Wand.h"
+#include "Item_Potion.h"
 #include "Character_Controller.h"
 #include "CallBack_Playable_Behavior.h"
 #include "CamPosition_Shoulder.h"
@@ -462,6 +463,18 @@ HRESULT CPlayer::Ready_Parts()
 	{
 		return E_FAIL;
 	}
+
+	CItem_Potion::POTION_DESC PotionDesc{};
+
+	PotionDesc.pParentTransform = m_pTransformCom;
+	PotionDesc.pSocketMatrices = m_pModelCom->Get_BoneMatrixPtr("SKT_LeftHand");
+
+	if (FAILED(Add_PartObject<CItem_Potion>("Potion", g_iStaticLevel, nullptr, &PotionDesc)))
+	{
+		return E_FAIL;
+	}
+
+	Get_PartObject<CItem_Potion>()->Set_Visible(false);
 
 	{
 		CCamPosition_Shoulder::CAMERA_SHOULDER_DESC Desc;
