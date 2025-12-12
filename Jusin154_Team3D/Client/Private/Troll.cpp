@@ -427,7 +427,7 @@ HRESULT CTroll::Ready_Components()
 		Desc.fContactOffset = 0.001f;
 		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
 		Desc.bAutoStepping = { false };
-		Desc.fStepOffset = { 0.001f };
+		Desc.fStepOffset = { 0.02f };
 		Desc.fRadius = 1.2f;
 		Desc.fHeight = 1.5f;
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Troll_HitReport::Create();
