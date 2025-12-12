@@ -364,6 +364,26 @@
             <Scale x="1" y="1" z="1"/>
             <Rotation x="0" y="0" z="0"/>
         </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_INT_APL_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_INT_APL_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="0" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_INT_Floors_COL</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
+        <Collision Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_INT_PL_COL</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_INT_PL_COL_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </Collision>
     </Container>
     <Container Name="HM_TScrolls_Ext">
         <Position x="21.095903" y="0.80000007" z="31.144279"/>

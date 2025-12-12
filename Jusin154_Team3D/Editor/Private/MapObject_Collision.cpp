@@ -43,9 +43,8 @@ void CMapObject_Collision::Late_Update(_float fTimeDelta)
 
 	XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_XMWorldMatrix() * m_pParentTransformCom->Get_XMWorldMatrix());
 	if (m_bVisible){
-		if (m_pGameInstance->isIn_WorldFrustum(XMLoadFloat4(reinterpret_cast<_float4*>(m_CombinedWorldMatrix.m[3])), m_pTransformCom->Get_Radius())) {
-			m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-		}
+		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+		
 	}
 	
 }

@@ -107,6 +107,7 @@ protected:
 	_float	m_fCamDepth = { FLT_MAX };
 	_bool	m_bDead = { false };
 	_bool   m_bVisible = { true };
+	_bool   m_bCloned = { false };
 protected:
 	virtual HRESULT		Bind_ShaderResources()PURE;
 	virtual HRESULT		Ready_Components(void* pArg);
