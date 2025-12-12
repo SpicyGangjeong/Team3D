@@ -14,6 +14,8 @@
 #include "Player.h"
 #include "Unified.h"
 #include "MapElement_Lake.h"
+#include "MapElement_Door.h"
+#include "MapElement_Chest.h"
 
 CLevel_MapViewer::CLevel_MapViewer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -48,6 +50,7 @@ HRESULT CLevel_MapViewer::Initialize()
 	if (FAILED(Ready_Layer_Terrain(TEXT("Layer_Terrain")))) {
 		return E_FAIL;
 	}
+
 	if (FAILED(Ready_Layer_Land(TEXT("Layer_Land")))) {
 		return E_FAIL;
 	}
@@ -61,6 +64,14 @@ HRESULT CLevel_MapViewer::Initialize()
 	//}
 
 	if (FAILED(Ready_Layer_Unified(TEXT("Layer_Unified")))) {
+		return E_FAIL;
+	}
+
+	//if (FAILED(Ready_Layer_Door(TEXT("Layer_Door")))) {
+	//	return E_FAIL;
+	//}
+
+	if (FAILED(Ready_Layer_Chest(TEXT("Layer_Chest")))) {
 		return E_FAIL;
 	}
 
@@ -413,6 +424,64 @@ HRESULT CLevel_MapViewer::Ready_Layer_Unified(const _wstring& strLayerTag)
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CUnified>(g_iStaticLevel, NEXT_LEVEL, strLayerTag)))
 		return E_FAIL;
 
+	return S_OK;
+}
+
+HRESULT CLevel_MapViewer::Ready_Layer_Door(const _wstring& strLayerTag)
+{
+	vector<_wstring> ModelPrototypeTags;
+
+	ModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_HM_Ollivanders_Front_Door"));
+	ModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_HM_Ollivanders_Front_Door_Lod1"));
+	ModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_HM_Ollivanders_Front_Door_Lod2"));
+
+	CMapElement_Door::ELEMENT_DOOR_DESC Door_Desc = {};
+	Door_Desc.isEdit = true;
+	Door_Desc.iSubKind = {};
+	Door_Desc.vBoxLocalPosition = {};
+	Door_Desc.vBoxSize = {};
+	Door_Desc.iMaxLodLevel = 2;
+	Door_Desc.ModelPrototypeTags = ModelPrototypeTags;
+	Door_Desc.vPosition = _float3(0.f, 0.f, 0.f);
+	Door_Desc.vRotation = _float3(0.f, 0.f, 0.f);
+	Door_Desc.vScale = _float3(1.f, 1.f, 1.f);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Door>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Door_Desc)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CLevel_MapViewer::Ready_Layer_Chest(const _wstring& strLayerTag)
+{
+	vector<_wstring> ModelPrototypeTags = {};
+	vector<_wstring> ModelPrototypeTagsLid = {};
+
+	ModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_Chest_RewardContainer_C"));
+	ModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_Chest_RewardContainer_C_Lod1"));
+	ModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_Chest_RewardContainer_C_Lod2"));
+	ModelPrototypeTags.push_back(TEXT("Prototype_GameObject_SM_Chest_RewardContainer_C_Lod3"));
+
+	ModelPrototypeTagsLid.push_back(TEXT("Prototype_GameObject_SM_Chest_RewardContainer_C_Lid"));
+	ModelPrototypeTagsLid.push_back(TEXT("Prototype_GameObject_SM_Chest_RewardContainer_C_Lid_Lod1"));
+	ModelPrototypeTagsLid.push_back(TEXT("Prototype_GameObject_SM_Chest_RewardContainer_C_Lid_Lod2"));
+
+
+	CMapElement_Chest::ELEMENT_CHEST_DESC Chest_Desc = {};
+	Chest_Desc.iMaxLodLevel = 3;
+	Chest_Desc.iSubKind = ENUM_CLASS(PXOBJECT::BOX);
+	Chest_Desc.ModelPrototypeTags = ModelPrototypeTags;
+	Chest_Desc.vPosition = _float3(0.f, 0.f, 0.f);
+	Chest_Desc.vRotation = _float3(0.f, 0.f, 0.f);
+	Chest_Desc.vScale = _float3(1.f, 1.f, 1.f);
+	Chest_Desc.vBoxSize = _float3(0.3f, 0.25f, 0.27f);
+	Chest_Desc.vBoxLocalPosition = _float3(-0.01f, 0.3f, -0.25f);
+
+	Chest_Desc.iMaxLodLevel_Lid = 2;
+	Chest_Desc.ModelPrototypeTags_Lid= ModelPrototypeTagsLid;
+	Chest_Desc.vLid_Offset = _float3(0.f, 0.3f, 0.f);
+	
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Chest>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Chest_Desc)))
+		return E_FAIL;
 	return S_OK;
 }
 

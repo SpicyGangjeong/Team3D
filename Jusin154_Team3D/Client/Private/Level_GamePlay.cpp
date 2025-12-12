@@ -260,14 +260,14 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	else
 	{
 		/* 전체 맵 */
-		//CInfoInstance::GetInstance()->Load_MapObjects("Hogsmeade_MapContainer_Data");
+		CInfoInstance::GetInstance()->Load_MapObjects("Hogsmeade_MapContainer_Data");
 
 		/* 물 오브젝트 */
 		if (FAILED(CInfoInstance::GetInstance()->Load_WaterElemet("Element_Water_Info")))
 			return E_FAIL;
 
 		/* 조명 오브젝트 */
-		/*CInfoInstance::GetInstance()->Load_LightElements("LightElement");*/
+		/*CInfoInstance::GetInstance()->Load_LightElements("LightElement"); */
 
 		/* 상호작용 오브젝트 */
 		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_Barrel");
@@ -275,6 +275,10 @@ HRESULT CLevel_GamePlay::Ready_Background()
 		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_PostPackage_F");
 		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_TeaShopTable");
 		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_TeaShopChair");
+
+		/* Doors */
+		CInfoInstance::GetInstance()->Load_DoorElemet("Element_Door_Info");
+		
 
 		if (FAILED(Ready_IntstanceProp()))
 			return E_FAIL;

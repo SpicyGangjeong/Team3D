@@ -25,6 +25,7 @@ public:
 	HRESULT Load_LightElements(const _char* pFileName);
 	HRESULT Load_InteractableElements(const _char* pFileName);
 	HRESULT Load_WaterElemet(const _char* pFileName);
+	HRESULT Load_DoorElemet(const _char* pFileName);
 
 private:
 	CGameInstance*			m_pGameInstance = { nullptr };

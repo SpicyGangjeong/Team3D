@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Doors>
+    <Object Lod_Level="2">
+        <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Front_Door</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Front_Door_Lod1</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Front_Door_Lod2</PrototypeTag>
+        <Position x="39.67815" y="3.8" z="71.067245"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="0" y="116.99998" z="0"/>
+    </Object>
+</Doors>
