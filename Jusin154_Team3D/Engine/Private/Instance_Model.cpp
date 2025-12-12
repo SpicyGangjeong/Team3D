@@ -336,6 +336,16 @@ HRESULT CInstance_Model::Save_InstanceModel(HANDLE hFile)
 
 #endif
 
+HRESULT CInstance_Model::Load_InstanceModel(INSTANCE_DESC InstanceDesc)
+{
+
+	m_InstanceDesc = InstanceDesc;
+
+	Change_NumInstance();
+
+	return S_OK;
+}
+
 HRESULT CInstance_Model::Load_InstanceModel(HANDLE hFile)
 {
 	DWORD dwByte = {};

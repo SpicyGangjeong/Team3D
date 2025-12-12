@@ -18,6 +18,9 @@ CProtego::CProtego(const CProtego& rhs)
 HRESULT CProtego::Initialize_Prototype()
 {
 
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Protego")))
+		return E_FAIL;
+
 	return S_OK;
 
 }
@@ -30,8 +33,7 @@ HRESULT CProtego::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Protego")))
+	if (FAILED(Create_Effect()))
 		return E_FAIL;
 
 	m_pSphere = Get_PartObject<CEffectParts>("ProtegoSphere");

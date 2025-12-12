@@ -340,26 +340,43 @@ void CTroll::OnCollision(CGameObject* pOther, void* pDesc)
 	_vector Head = (XMLoadFloat4x4(Get_HeadMatrix()) * m_pTransformCom->Get_XMWorldMatrix()).r[3];
 	m_DamageInfo.vTarget_Pos = XMVectorSet(Head.m128_f32[0], Head.m128_f32[1], Head.m128_f32[2], 1.f);
 
-	_uint iSkillType = dynamic_cast<CEffect_Container*>(pOther)->Get_SkillType();
-	auto damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
-	switch (iSkillType)
+	CEffect_Container* pEffect_Container = dynamic_cast<CEffect_Container*>(pOther);
+
+	pair<_float, _float> damagePair = {};
+
+	if (pEffect_Container != nullptr)
 	{
-	case ENUM_CLASS(SKILL_TYPE::DESCENDO):
-		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
-		break;
-	case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
-		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
-		break;
-	case ENUM_CLASS(SKILL_TYPE::FLIPENDO):
-		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::FLIPENDO);
-		break;
-	case ENUM_CLASS(SKILL_TYPE::JAP):
-		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
-		break;
-	default:
-		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::END);
-		break;
+		_uint iSkillType = pEffect_Container->Get_SkillType();
+		damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
+
+		switch (iSkillType)
+		{
+		case ENUM_CLASS(SKILL_TYPE::DESCENDO):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::FLIPENDO):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::FLIPENDO);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::JAP):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
+			break;
+		default:
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::END);
+			break;
+		}
 	}
+	
+
+	CMapElement_Interactable* pProps = dynamic_cast<CMapElement_Interactable*>(pOther);
+
+	if (pProps != nullptr)
+	{
+		m_eHitSpell = STATEANIM::KNOCKDOWN_FWD;
+	}
+
 	m_DamageInfo.fDamage = damagePair.first;
 	m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
 	if (0 == damagePair.second) {
@@ -367,6 +384,8 @@ void CTroll::OnCollision(CGameObject* pOther, void* pDesc)
 		return;
 	}
 	m_pFSM->Change_State(FSMSTATE::HIT);
+
+
 }
 
 void CTroll::OnHit(CGameObject* pOther, CGameObject* pCaller)

@@ -22,6 +22,9 @@ CDecendoSide::CDecendoSide(const CDecendoSide& rhs)
 HRESULT CDecendoSide::Initialize_Prototype()
 {
 
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/DecendoSide")))
+		return E_FAIL;
+
 	return S_OK;
 
 }
@@ -34,8 +37,7 @@ HRESULT CDecendoSide::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/DecendoSide")))
+	if (FAILED(Create_Effect()))
 		return E_FAIL;
 
 	m_wstrEffectName = L"DecendoSide";

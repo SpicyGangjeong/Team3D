@@ -23,8 +23,10 @@ CLevioso::CLevioso(const CLevioso& rhs)
 HRESULT CLevioso::Initialize_Prototype()
 {
 
-	return S_OK;
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Levioso")))
+		return E_FAIL;
 
+	return S_OK;
 }
 
 HRESULT CLevioso::Initialize(void* pArg)
@@ -35,11 +37,10 @@ HRESULT CLevioso::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	m_iSkillType = ENUM_CLASS(SKILL_TYPE::LEVIOSO);
-
-
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Levioso")))
+	if (FAILED(Create_Effect()))
 		return E_FAIL;
+
+	m_iSkillType = ENUM_CLASS(SKILL_TYPE::LEVIOSO);
 
 	m_pLeviosoPJ_0 = Get_PartObject<CEffectParts>("Levioso_PJ0");
 	m_pTrail_PT_0 = Get_PartObject<CEffectParts>("Trail_PT0");

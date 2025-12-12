@@ -19,6 +19,9 @@ CRevelio::CRevelio(const CRevelio& rhs)
 HRESULT CRevelio::Initialize_Prototype()
 {
 
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Revelio")))
+		return E_FAIL;
+
 	return S_OK;
 
 }
@@ -31,9 +34,9 @@ HRESULT CRevelio::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Revelio")))
+	if (FAILED(Create_Effect()))
 		return E_FAIL;
+
 
 	m_pRevelioPT_Y = Get_PartObject<CEffectParts>("WandPT_Y");
 	m_pRevelioPT_B = Get_PartObject<CEffectParts>("WandPT_B");

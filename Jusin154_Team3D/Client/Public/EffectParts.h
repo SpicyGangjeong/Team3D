@@ -3,6 +3,7 @@
 #include "Client_Define.h"
 #include "EffectObject.h"
 
+
 NS_BEGIN(Engine)
 class CModel;
 class CShader;

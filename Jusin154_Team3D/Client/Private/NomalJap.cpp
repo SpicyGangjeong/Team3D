@@ -22,6 +22,9 @@ CNomalJap::CNomalJap(const CNomalJap& rhs)
 
 HRESULT CNomalJap::Initialize_Prototype()
 {
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Jap"))) {
+		return E_FAIL;
+	}
 
 	return S_OK;
 
@@ -35,14 +38,14 @@ HRESULT CNomalJap::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
+	if (FAILED(Create_Effect()))
+		return E_FAIL;
+
 	m_iSkillType = ENUM_CLASS(SKILL_TYPE::JAP);
 
 
 	m_wstrEffectName = L"Nomal_Jap";
 
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Jap"))) {
-		return E_FAIL;
-	}
 
 
 	m_pProjectile_Side = Get_PartObject<CEffectParts>("JapProjSide");

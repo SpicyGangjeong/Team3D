@@ -272,6 +272,12 @@ HRESULT CTrail::Save_Trail(HANDLE hFile)
 }
 #endif
 
+HRESULT CTrail::Load_Trail(TRAIL_DESC TrailDesc)
+{
+	m_TrailDesc = TrailDesc;
+	return S_OK;
+}
+
 HRESULT CTrail::Load_Trail(HANDLE hFile)
 {
 	DWORD	dwByte(0);
