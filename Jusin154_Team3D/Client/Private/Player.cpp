@@ -312,6 +312,14 @@ void CPlayer::OnHit(CGameObject* pOther, CGameObject* pCaller)
 }
 #ifdef _DEBUG
 
+void CPlayer::Start_CameraShake(_float fTime, _float fIntense)
+{
+	m_vCameraShakeTimer.x = 0.f;
+	m_vCameraShakeTimer.y = fTime;
+	m_fCameraShakeIntense = fIntense;
+	m_bCameraShake = true;
+}
+
 void CPlayer::Render_CameraCoordinateSystem()
 {
 	m_Batch->Begin();
@@ -627,7 +635,7 @@ void CPlayer::Describe_Entity()
 	if (false == m_bCameraShake && GUI::Button("Shake")) {
 		m_bCameraShake = true;
 	}
-	if (GUI::SliderFloat("m_fCameraShakeTime", &m_fCameraShakeTime, 0.125f,  5.f, "%.3f")) {
+	if (GUI::SliderFloat("m_fCameraShakeTime", &m_fCameraShakeTime, 0.125f,  0.f, "%.3f")) {
 		m_vCameraShakeTimer.y = m_fCameraShakeTime;
 	}
 	GUI::SliderFloat("m_fCameraShakeIntense", &m_fCameraShakeIntense, 5.f, 20.f, "%.1f");
