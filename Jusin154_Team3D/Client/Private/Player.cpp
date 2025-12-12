@@ -92,6 +92,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pInfoInstance->Set_Damage(m_pStat->Get_Stat().fDamage);
 
 	m_pCharacter_Controller->Set_Position(XMVectorSet(-34.f, 5, -11.4f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-34.f, 5, -11.4f, 1.f));
 
 #ifdef _DEBUG
 	m_BasicEffect = make_unique<BasicEffect>(m_pDevice);

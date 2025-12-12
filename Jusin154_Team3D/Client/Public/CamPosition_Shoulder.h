@@ -48,11 +48,13 @@ private:
 	_float3		m_vShoulderLocalPos = { 1.f, 2.f, 2.f };
 #pragma endregion
 #pragma region Lerp
+	_bool m_bStartGame = { true };
 	_bool m_bDampingParentPos = { true };
 	_bool m_bShoulderLerp = { false };
 	_bool m_bRightShoulderActive = { true };
 	_float2 m_vShoulderLerpTimer = { 0.f, 0.30f };
 	_float2 m_vDampingLerpTimer = { 0.f, 0.10f };
+	_float2 m_vStartLerpTimer = { 0.f, 0.30f };
 
 	_float2 m_vShoulderLerpDegree = { };
 	_float2 m_vShoulderLerpIncludedAngleDegree = { -20.f, 20.f };
