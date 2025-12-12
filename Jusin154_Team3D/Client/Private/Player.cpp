@@ -147,6 +147,14 @@ __super::Update(fTimeDelta);
 		m_pInfoInstance->Mouse_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_UP));
 		m_bAim = false; 
 	}
+
+	if (m_pGameInstance->Key_Down(DIK_1)) {
+		if (m_pModelCom->Get_SecondAnimIndex() == m_Animation[STATEANIM::LUMOS].first)
+		{
+			m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R), m_Animation[STATEANIM::LUMOS_STOP].first, m_Animation[STATEANIM::LUMOS_STOP].second);
+		}
+	}
+
 }
 
 void CPlayer::UpdateGrapInteractive(_float fTimeDelta)
@@ -310,7 +318,6 @@ void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 void CPlayer::OnHit(CGameObject* pOther, CGameObject* pCaller)
 {
 }
-#ifdef _DEBUG
 
 void CPlayer::Start_CameraShake(_float fTime, _float fIntense)
 {
@@ -319,6 +326,7 @@ void CPlayer::Start_CameraShake(_float fTime, _float fIntense)
 	m_fCameraShakeIntense = fIntense;
 	m_bCameraShake = true;
 }
+#ifdef _DEBUG
 
 void CPlayer::Render_CameraCoordinateSystem()
 {

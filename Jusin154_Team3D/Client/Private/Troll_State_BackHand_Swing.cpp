@@ -10,6 +10,7 @@ CTroll_State_BackHand_Swing::CTroll_State_BackHand_Swing()
 
 void CTroll_State_BackHand_Swing::Enter()
 {
+	m_bPlayerHit = false;
 	__super::Enter();
 }
 
@@ -22,13 +23,14 @@ HRESULT CTroll_State_BackHand_Swing::Update(_float fTimeDelta)
 		return E_FAIL;
 	}
 	if (nullptr != m_funcLateUpdate) {
-		m_funcLateUpdate(fTimeDelta);
+		m_funcLateUpdate(fTimeDelta, m_bPlayerHit);
 	}
 	return S_OK;
 }
 
 void CTroll_State_BackHand_Swing::Exit()
 {
+	m_bPlayerHit = false;
 	__super::Exit();
 }
 
