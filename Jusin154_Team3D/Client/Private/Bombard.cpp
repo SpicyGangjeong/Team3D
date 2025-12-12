@@ -21,6 +21,9 @@ CBombard::CBombard(const CBombard& rhs)
 HRESULT CBombard::Initialize_Prototype()
 {
 
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Bombard")))
+		return E_FAIL;
+
 	return S_OK;
 
 }
@@ -32,13 +35,11 @@ HRESULT CBombard::Initialize(void* pArg)
 
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
-
-	m_iSkillType = ENUM_CLASS(SKILL_TYPE::BOMBARDA);
-
-
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Bombard")))
+	
+	if (FAILED(Create_Effect()))
 		return E_FAIL;
 
+	m_iSkillType = ENUM_CLASS(SKILL_TYPE::BOMBARDA);
 
 	m_wstrEffectName = L"Bombard";
 

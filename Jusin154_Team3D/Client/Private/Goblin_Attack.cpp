@@ -20,6 +20,9 @@ CGoblin_Attack::CGoblin_Attack(const CGoblin_Attack& rhs)
 HRESULT CGoblin_Attack::Initialize_Prototype()
 {
 
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/MonsterPackage/GoblinAttack")))
+		return E_FAIL;
+
 	return S_OK;
 
 }
@@ -32,9 +35,9 @@ HRESULT CGoblin_Attack::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/MonsterPackage/GoblinAttack")))
+	if (FAILED(Create_Effect()))
 		return E_FAIL;
+
 
 
 	m_wstrEffectName = L"GoblinAttack";

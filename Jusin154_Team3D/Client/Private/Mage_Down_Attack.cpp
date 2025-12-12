@@ -22,6 +22,9 @@ CMage_Down_Attack::CMage_Down_Attack(const CMage_Down_Attack& rhs)
 HRESULT CMage_Down_Attack::Initialize_Prototype()
 {
 
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/MonsterPackage/GoblinMage/DownAttack")))
+		return E_FAIL;
+
 	return S_OK;
 
 }
@@ -34,10 +37,8 @@ HRESULT CMage_Down_Attack::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/MonsterPackage/GoblinMage/DownAttack")))
+	if (FAILED(Create_Effect()))
 		return E_FAIL;
-
 
 	m_wstrEffectName = L"DownAttack";
 

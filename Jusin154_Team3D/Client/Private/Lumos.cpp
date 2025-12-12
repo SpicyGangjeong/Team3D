@@ -17,9 +17,11 @@ CLumos::CLumos(const CLumos& rhs)
 
 HRESULT CLumos::Initialize_Prototype()
 {
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Lumos")))
+		return E_FAIL;
+
 
 	return S_OK;
-
 }
 
 HRESULT CLumos::Initialize(void* pArg)
@@ -30,8 +32,7 @@ HRESULT CLumos::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Lumos")))
+	if (FAILED(Create_Effect()))
 		return E_FAIL;
 
 	m_wstrEffectName = L"Lumos";
@@ -67,6 +68,12 @@ void CLumos::Update(_float fTimeDelta)
 	__super::Update(fTimeDelta);
 
 	Update_Event(fTimeDelta);
+
+	if (910!= m_pOwner->Get_Owner()->Get_Component<CModel>()->Get_SecondAnimIndex())
+	{
+		_int iIndex = m_pOwner->Get_Owner()->Get_Component<CModel>()->Get_SecondAnimIndex();
+		m_bVisible = false;
+	}
 }
 
 void CLumos::Late_Update(_float fTimeDelta)

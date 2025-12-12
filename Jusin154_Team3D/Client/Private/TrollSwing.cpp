@@ -22,6 +22,9 @@ CTrollSwing::CTrollSwing(const CTrollSwing& rhs)
 HRESULT CTrollSwing::Initialize_Prototype()
 {
 
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/MonsterPackage/TrollSwing")))
+		return E_FAIL;
+
 	return S_OK;
 
 }
@@ -34,8 +37,7 @@ HRESULT CTrollSwing::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/MonsterPackage/TrollSwing")))
+	if (FAILED(Create_Effect()))
 		return E_FAIL;
 
 
