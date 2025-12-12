@@ -882,8 +882,18 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 					[this]() { m_bLookAt = true; },
 					0.1f);
 				Add_Event(pairAnimInfo.first,
-					[this]() { Throwing_Interactive(); },
+					[this]() { 
+						Throwing_Interactive(); 	
+					},
 					0.2f);
+
+				Add_Event(pairAnimInfo.first,
+					[this]() {
+						m_pGameInstance->SlowMotion(0.1f, 0.35f);
+					},
+					0.1f);
+
+
 			}
 			else if (nullptr != m_LockOnInfo.pInteractive) {
 				m_pGrapInteractive = m_LockOnInfo.pInteractive;

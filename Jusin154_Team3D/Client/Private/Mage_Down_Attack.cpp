@@ -5,6 +5,7 @@
 #include "EffectParts.h"
 #include "Wand.h"
 #include "Player.h"
+#include "InfoInstance.h"
 
 CMage_Down_Attack::CMage_Down_Attack(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEffect_Container{ pDevice, pContext }
@@ -12,8 +13,10 @@ CMage_Down_Attack::CMage_Down_Attack(ID3D11Device* pDevice, ID3D11DeviceContext*
 }
 
 CMage_Down_Attack::CMage_Down_Attack(const CMage_Down_Attack& rhs)
-	: CEffect_Container(rhs)
+	: CEffect_Container(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
+	SAFE_ADDREF(m_pInfoInstance);
 }
 
 HRESULT CMage_Down_Attack::Initialize_Prototype()
@@ -100,6 +103,18 @@ HRESULT CMage_Down_Attack::Pre_Setting(CGameObject* pObject, void* pArg)
 	pRound_PT->Set_Visible(true);
 
 
+	CPlayer* pPlayer = static_cast<CPlayer*>(m_pInfoInstance->Get_NearestPlayerAlly(m_pOwner->Get_WorldPostion()).first);
+
+
+	if (pPlayer == nullptr)
+		return E_FAIL;
+
+	_float fDistance = XMVectorGetX(XMVector4Length(pPlayer->Get_WorldPostion() - Get_WorldPostion()));
+
+	_float fShakeValue = clamp(30.f / fDistance, 1.f, 5.f);
+
+	pPlayer->Start_CameraShake(0.6f, fShakeValue);
+
 	return S_OK;
 }
 
@@ -152,7 +167,7 @@ void CMage_Down_Attack::OnCollision(CGameObject* pOther, void* pDesc)
 void CMage_Down_Attack::Free()
 {
 	__super::Free();
-
+	SAFE_RELEASE(m_pInfoInstance);
 }
 #ifdef _DEBUG
 void CMage_Down_Attack::Describe_Entity()
