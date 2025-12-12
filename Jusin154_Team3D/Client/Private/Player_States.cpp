@@ -848,6 +848,12 @@ void CPlayer::Behavior_CombatEnter()
 		Add_Event(pairAnimInfo.first,
 			[this]() { Throwing_Interactive(); },
 			0.2f);
+
+		Add_Event(pairAnimInfo.first,
+			[this]() {
+				m_pGameInstance->SlowMotion(0.1f, 0.35f);
+			},
+			0.1f);
 	}
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
