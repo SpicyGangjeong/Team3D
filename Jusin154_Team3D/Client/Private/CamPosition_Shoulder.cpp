@@ -41,9 +41,9 @@ HRESULT CCamPosition_Shoulder::Initialize(void* pArg)
 
 		_vector vLookTargetPos = Calc_LookTargetPos();
 		m_pLookTransform->Set_State(STATE::POSITION, vLookTargetPos);
-		m_pFollowTransform->Set_State(STATE::POSITION, Calc_FollowTargetPos(vLookTargetPos));
+		m_pFollowTransform->Set_State(STATE::POSITION, Calc_FollowTargetPos(vLookTargetPos) + XMVectorSet(0.f, 0.f, 1.f, 0.f));
 	}
-	m_bDampingParentPos = false;
+	m_bDampingParentPos = true;
 
 	return S_OK;
 }
@@ -195,8 +195,19 @@ _vector CCamPosition_Shoulder::Calc_FollowTargetPos(_vector vLookTargetWorldPos)
 	_vector fRotQ = XMQuaternionRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-m_fFollowTargetIncludedAngleDegree));
 	_vector vDestPos = Calc_DampingParentPos();
 	_vector vHeadPos = vDestPos + XMVectorSet(0.f, m_fHeadHeight, 0.f, 0.f);
-	_vector vDir = XMVector3Normalize(vHeadPos - vLookTargetWorldPos);
-	vDir = XMVector3Rotate(vDir, fRotQ);
+	_vector vDir = vHeadPos - vLookTargetWorldPos;
+	_float fLengthSQ = XMVectorGetX(XMVector3LengthSq(vDir));
+
+	if (fLengthSQ < FLT_EPSILON)
+	{
+		vDir = XMVectorSet(0.f, 0.f, 1.f, 0.f);
+		vDir = XMVector3Rotate(vDir, fRotQ);
+	}
+	else
+	{
+		vDir = XMVector3Normalize(vDir);
+		vDir = XMVector3Rotate(vDir, fRotQ);
+	}
 
 	m_BufferHit = {};
 	_bool bHit = m_pGameInstance->SphereCast( 0.25f, vLookTargetWorldPos, vDir, fBestFollowTargetDistance,
@@ -260,7 +271,11 @@ _vector CCamPosition_Shoulder::Calc_FollowTargetPos(_vector vLookTargetWorldPos)
 }
 _vector CCamPosition_Shoulder::Calc_DampingParentPos()
 {
-	return XMVectorLerp(XMLoadFloat4(&m_vDampingStartPosition), XMLoadFloat4(&m_vDampingDestPosition), m_vDampingLerpTimer.x / m_vDampingLerpTimer.y);
+	_float duration = max(m_vDampingLerpTimer.y, FLT_EPSILON);
+	_float fTime = m_vDampingLerpTimer.x / duration;
+	fTime = CMyTools::Saturate(fTime); // 0~1
+
+	return XMVectorLerp(XMLoadFloat4(&m_vDampingStartPosition), XMLoadFloat4(&m_vDampingDestPosition), fTime);
 }
 void CCamPosition_Shoulder::Set_CameraShake(_float fXShock, _float fYShock)
 {
