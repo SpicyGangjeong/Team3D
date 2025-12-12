@@ -44,6 +44,10 @@ HRESULT CGoblin_BattleAxe::Initialize(void* pArg)
 
 void CGoblin_BattleAxe::Priority_Update(_float fTimeDelta)
 {
+	if (m_bVisible) {
+		XMStoreFloat4(&m_vStartAxePos, Get_WorldPostion());
+		XMStoreFloat4(&m_vStartGripPos, Get_WorldPostion());
+	}
 	m_pModelCom->Combined_BoneMatrix();
 	_matrix socketMatrix = {};
 
@@ -75,7 +79,13 @@ void CGoblin_BattleAxe::Update(_float fTimeDelta)
 
 void CGoblin_BattleAxe::Late_Update(_float fTimeDelta)
 {
-	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+	if (m_bVisible) {
+		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+		SwingHit(m_bPlayerHit);
+	}
+	else {
+		m_bPlayerHit = false;
+	}
 }
 
 HRESULT CGoblin_BattleAxe::Render()
@@ -83,8 +93,10 @@ HRESULT CGoblin_BattleAxe::Render()
 	if (!m_pModelCom)
 		return S_OK;
 
-	if (!m_bVisible)
+	if (!m_bVisible) {
+
 		return S_OK;
+	}
 
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
@@ -191,6 +203,93 @@ HRESULT CGoblin_BattleAxe::Bind_ShaderResources()
 	}
 
 	return S_OK;
+}
+
+void CGoblin_BattleAxe::CheckAxeHits(_uint& iHitCount, vector<PSX::PxSweepHit>& pxHits)
+{
+	{
+		_vector vStartPos = XMLoadFloat4(&m_vStartAxePos);
+		_vector vEndPos = XMVectorSet(m_vAxeMat._41, m_vAxeMat._42, m_vAxeMat._43,1.f);
+		_vector vDir = vEndPos - vStartPos;
+		_float fDistance = XMVectorGetX(XMVector4Length(vDir));
+		vDir = XMVector4Normalize(vDir);
+
+		_bool bCollision = false;
+		m_SweepBufferAxe = {};
+		bCollision = m_pGameInstance->SphereCast(1.2f, vStartPos, vDir, fDistance, PSX::PxHitFlag::eDEFAULT, PSX::PxQueryFlag::eDYNAMIC, m_SweepBufferAxe);
+		if (true == bCollision) {
+			iHitCount += m_SweepBufferAxe.getNbTouches() + m_SweepBufferAxe.hasBlock;
+			auto touches = m_SweepBufferAxe.getTouches();
+			for (_uint i = 0; i < m_SweepBufferAxe.nbTouches; ++i) {
+				pxHits.push_back(m_SweepBufferAxe.touches[i]);
+			}
+			if (true == m_SweepBufferAxe.hasBlock) {
+				pxHits.push_back(m_SweepBufferAxe.block);
+			}
+		}
+	}
+	{
+		_vector vStartPos = XMLoadFloat4(&m_vStartGripPos);
+		_vector vEndPos = m_pTransformCom->Get_State(STATE::POSITION);
+		_vector vDir = vEndPos - vStartPos;
+		_float fDistance = XMVectorGetX(XMVector4Length(vDir));
+		vDir = XMVector4Normalize(vDir);
+
+		_bool bCollision = false;
+		m_SweepBufferGrip = {};
+		bCollision = m_pGameInstance->SphereCast(1.2f, vStartPos, vDir, fDistance, PSX::PxHitFlag::eDEFAULT, PSX::PxQueryFlag::eDYNAMIC, m_SweepBufferGrip);
+		if (true == bCollision) {
+			iHitCount += m_SweepBufferGrip.getNbTouches() + m_SweepBufferGrip.hasBlock;
+			auto touches = m_SweepBufferGrip.getTouches();
+			for (_uint i = 0; i < m_SweepBufferGrip.nbTouches; ++i) {
+				pxHits.push_back(m_SweepBufferGrip.touches[i]);
+			}
+			if (true == m_SweepBufferGrip.hasBlock) {
+				pxHits.push_back(m_SweepBufferGrip.block);
+			}
+		}
+	}
+}
+
+
+void CGoblin_BattleAxe::SwingHit(_bool& bPlayerHit)
+{
+	vector<PSX::PxSweepHit> pxHits;
+	_uint iHitCount = 0;
+	CheckAxeHits(iHitCount, pxHits);
+	{
+		for (_uint i = 0; i < pxHits.size(); ++i) {
+			PSX::PxActor* pxHitActor = pxHits[i].actor;
+			if (nullptr != pxHitActor && nullptr != pxHitActor->userData) {
+				PhsXUserData* pUserData = (PhsXUserData*)pxHitActor->userData;
+				switch (PXOBJECT(pUserData->iSubKind))
+				{
+				case PXOBJECT::PLAYER:
+				{
+					if (true == bPlayerHit) {
+						continue;
+					}
+					CStat* pStat = pUserData->pCharacter->Get_Owner()->Get_Component<CStat>();
+					pStat->Get_Damage(20.f);
+					bPlayerHit = true;
+					pUserData->pOwner->OnCollision(this);
+				} break;
+				case PXOBJECT::ALLY_HITBOX:
+					break;
+				case PXOBJECT::ENVIRIONMENT:
+					break;
+				case PXOBJECT::TERRAIN:
+					break;
+				case PXOBJECT::BOX:
+					break;
+				case PXOBJECT::NPC:
+					break;
+				default:
+					break;
+				}
+			}
+		}
+	}
 }
 
 

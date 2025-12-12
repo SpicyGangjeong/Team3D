@@ -989,7 +989,7 @@ void CPlayer::Behavior_LightAttackEnter()
 
 	Add_Event(pairAnimInfo.first,
 		[this]() {_uint iIndex = 0; m_pEffectPool->Use_Skill(SKILL_TYPE::JAP, Get_PartObject<CWand>(), &iIndex);  },
-		0.1f);
+		0.07f);
 
 	Add_Event(pairAnimInfo.first,
 		[this]() { m_pEffectPool->Use_Skill(SKILL_TYPE::JAP_SIDE, Get_PartObject<CWand>());  },
@@ -1016,7 +1016,13 @@ HRESULT CPlayer::Behavior_LightAttackExitCheck(_float fTimeDelta)
 			_uint iNext = iCurr + 1;
 			pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK];
 			pairAnimInfo.first = iNext;
-
+			_float fAttackRatio;
+			if (pairAnimInfo.first - m_Animation[STATEANIM::LIGHT_ATTACK].first == 3) {
+				fAttackRatio = 0.12f;
+			}
+			else {
+				fAttackRatio = 0.07f;
+			}
 
 			Add_Event(pairAnimInfo.first,
 				[this]() {m_bLookAt = true;
@@ -1032,7 +1038,7 @@ HRESULT CPlayer::Behavior_LightAttackExitCheck(_float fTimeDelta)
 						_uint comboIndex = m_pModelCom->Get_AnimIndex() - m_Animation[STATEANIM::LIGHT_ATTACK].first;
 						m_pEffectPool->Use_Skill(SKILL_TYPE::JAP, Get_PartObject<CWand>(), &comboIndex);
 					},
-					0.05f);
+					fAttackRatio);
 
 				Add_Event(iNext,
 					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::JAP_SIDE,Get_PartObject<CWand>());
@@ -1831,7 +1837,7 @@ void CPlayer::Behavior_Broom_DismountEnter()
 	m_pTransformCom->Set_State(STATE::RIGHT, right);
 	m_pTransformCom->Set_State(STATE::UP, up);
 	m_pTransformCom->Set_State(STATE::LOOK, look);
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.f,false,1.3f);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.f,false,1.6f);
 }
 
 HRESULT CPlayer::Behavior_Broom_DismountExitCheck(_float fTimeDelta)
@@ -2310,7 +2316,7 @@ void CPlayer::Set_Anim()
 	m_Animation[STATEANIM::SPELL_90_L] = { 826,false };
 
 	m_Animation[STATEANIM::MAPHELP] = { 122,false };
-	m_Animation[STATEANIM::POTION] = { 114,false }; // 114 포션 // 909 루모스
+	m_Animation[STATEANIM::POTION] = { 115,false }; // 114 포션 // 909 루모스
 	m_Animation[STATEANIM::ACCIO] = { 417,false };
 	m_Animation[STATEANIM::DESCENDO] = { 857,false };
 	m_Animation[STATEANIM::DEPULSO] = { 858,false };

@@ -238,7 +238,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Background = true;
 #endif // gimch
 #ifdef Bin
-	isReady_Background = false;
+	isReady_Background = true;
 #endif // 
 #ifdef 진우
 	isReady_Background = true;
@@ -267,7 +267,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 			return E_FAIL;
 
 		/* 조명 오브젝트 */
-		/*CInfoInstance::GetInstance()->Load_LightElements("LightElement"); */
+		CInfoInstance::GetInstance()->Load_LightElements("LightElement");
 
 		/* 상호작용 오브젝트 */
 		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_Barrel");
