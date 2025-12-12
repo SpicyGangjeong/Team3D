@@ -48,7 +48,11 @@ public:
 	static CMage_Nomal_Attack* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;
 	CGameObject* Clone(void* pArg, CGameObject* pOwner) override;
+#ifdef _DEBUG
 	void Describe_Entity() override;
+#endif // DEBUG
+
+
 };
 
 NS_END
