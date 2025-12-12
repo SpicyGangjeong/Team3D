@@ -204,6 +204,15 @@ void CMage_Nomal_Attack::OnCollision(CGameObject* pOther, void* pDesc)
 	m_pProj_PT1->Set_Visible(false);
 	m_pProj_PT2->Set_Visible(false);
 
+
+	CPlayer* pPlayer = static_cast<CPlayer*>(m_pInfoInstance->Get_NearestPlayerAlly(m_pOwner->Get_WorldPostion()).first);
+
+
+	if (pPlayer == nullptr)
+		return;
+
+	pPlayer->Start_CameraShake(0.3f, 2.f);
+
 }
 
 void CMage_Nomal_Attack::Free()

@@ -33,6 +33,8 @@ private:
 private:
 	_wstring						  m_wstrEffectName = {};
 
+private:
+	class  CInfoInstance*			  m_pInfoInstance = { nullptr };
 
 public:
 	static CMage_Down_Attack* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

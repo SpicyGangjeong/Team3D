@@ -5,6 +5,7 @@
 #include "EffectParts.h"
 #include "Wand.h"
 #include "Player.h"
+#include "InfoInstance.h"
 
 CTroll_Rush_Hit::CTroll_Rush_Hit(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEffect_Container{ pDevice, pContext }
@@ -12,8 +13,10 @@ CTroll_Rush_Hit::CTroll_Rush_Hit(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 }
 
 CTroll_Rush_Hit::CTroll_Rush_Hit(const CTroll_Rush_Hit& rhs)
-	: CEffect_Container(rhs)
+	: CEffect_Container(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
+	SAFE_ADDREF(m_pInfoInstance);
 }
 
 HRESULT CTroll_Rush_Hit::Initialize_Prototype()
@@ -94,6 +97,19 @@ HRESULT CTroll_Rush_Hit::Pre_Setting(CGameObject* pObject, void* pArg)
 	pSmoke->Set_Visible(true);
 	pRock_PT_35->Set_Visible(true);
 
+
+	CPlayer* pPlayer = static_cast<CPlayer*>(m_pInfoInstance->Get_NearestPlayerAlly(m_pOwner->Get_WorldPostion()).first);
+
+
+	if (pPlayer == nullptr)
+		return E_FAIL;
+
+	_float fDistance = XMVectorGetX(XMVector4Length(pPlayer->Get_WorldPostion() - Get_WorldPostion()));
+
+	_float fShakeValue = clamp(40.f / fDistance, 3.f, 9.f);
+
+	pPlayer->Start_CameraShake(0.8f, fShakeValue);
+
 	return S_OK;
 }
 
@@ -166,6 +182,7 @@ void CTroll_Rush_Hit::Free()
 {
 	__super::Free();
 
+	SAFE_RELEASE(m_pInfoInstance);
 }
 #ifdef _DEBUG
 void CTroll_Rush_Hit::Describe_Entity()

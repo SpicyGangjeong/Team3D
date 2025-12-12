@@ -504,6 +504,7 @@ void CTroll::Behavior_SlamEnter()
 
 	Troll_Trail_Visible(true);
 	m_pWeaponTrail->Set_Visible(true);
+	m_pWeaponTrail->Get_Component<CTrail>()->Reset_Trail();
 
 	Add_Event(pairAnimInfo.first,
 		[this]() {
