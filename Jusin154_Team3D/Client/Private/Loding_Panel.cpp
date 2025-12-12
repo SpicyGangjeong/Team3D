@@ -61,7 +61,6 @@ void CLoding_Panel::Priority_Update(_float fTimeDelta)
 
 void CLoding_Panel::Update(_float fTimeDelta)
 {
-#ifdef _DEBUG
 	if (m_pGameInstance->Key_Down(DIK_M))
 	{
 		human++;
@@ -112,7 +111,6 @@ void CLoding_Panel::Update(_float fTimeDelta)
 		JINWOO = true;
 		break;
 	}
-#endif // DEBUG
 	__super::Update(fTimeDelta);
 }
 
@@ -139,15 +137,15 @@ HRESULT CLoding_Panel::Render()
 	m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("<- N M ->."), _float2(100.f, 750.f));
 
 	if (INHYUK == true)
-		m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("알고 계셨나요?\nUI의 생일은 28일 이랍니다."), _float2(100.f, 800.f));
+		m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("알고 계셨나요?\nF9를 눌러 브레이크포인트를 설정할 수 있습니다."), _float2(100.f, 800.f));
 	if (JINHO == true)
-		m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("알고 계셨나요?\n우리팀 맵툴은 최강 입니다."), _float2(100.f, 800.f));
+		m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("알고 계셨나요?\nF12를 눌러 정의로 바로 이동할 수 있습니다!."), _float2(100.f, 800.f));
 	if (HYUNBIN == true)
-		m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("알고 계셨나요?\n이제 막 범인에서 벗어 났습니다."), _float2(100.f, 800.f));
+		m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("알고 계셨나요?\n디버깅 중에도 핫 리로드로 코드를 수정할 수 있습니다."), _float2(100.f, 800.f));
 	if (NURI == true)
-		m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("알고 계셨나요?\n이제 막 슬슬 범인 입니다."), _float2(100.f, 800.f));
+		m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("알고 계셨나요?\nCtrl + R, R로 변수 또는 함수 이름을 프로젝트 전체에서 일괄 변경할 수 있습니다."), _float2(100.f, 800.f));
 	if (JINWOO == true)
-		m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("알고 계셨나요?\n그는 그림자의 군주입니다."), _float2(100.f, 800.f));
+		m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("알고 계셨나요?\n디버깅 중 변수에 마우스를 올리면 현재 값을 확인할 수 있습니다."), _float2(100.f, 800.f));
 #endif // DEBUG
 
 	return S_OK;
