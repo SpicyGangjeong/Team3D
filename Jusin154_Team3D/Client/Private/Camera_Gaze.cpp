@@ -127,6 +127,8 @@ HRESULT CCamera_Gaze::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg))) {
 		return E_FAIL;
 	}
+	m_pTransformCom->Set_State(STATE::POSITION, m_pFollowTarget->Get_WorldPostion());
+	m_pTransformCom->LookAt(m_pLookTarget->Get_WorldPostion());
 
 	return S_OK;
 }

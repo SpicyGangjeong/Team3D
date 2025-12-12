@@ -43,6 +43,7 @@ HRESULT CCamPosition_Shoulder::Initialize(void* pArg)
 		m_pLookTransform->Set_State(STATE::POSITION, vLookTargetPos);
 		m_pFollowTransform->Set_State(STATE::POSITION, Calc_FollowTargetPos(vLookTargetPos));
 	}
+	m_bDampingParentPos = false;
 
 	return S_OK;
 }
@@ -152,6 +153,15 @@ void CCamPosition_Shoulder::Late_Update(_float fTimeDelta)
 		} else {
 			m_fFollowTargetIncludedAngleDegree = CMyTools::Lerp_f1D(m_vShoulderLerpDegree.x, m_vShoulderLerpDegree.y, fLerpRatio);
 		}
+	}
+	if (true == m_bStartGame) {
+		m_vStartLerpTimer.x += fTimeDelta;
+		if (m_vStartLerpTimer.x >= m_vStartLerpTimer.y) {
+			m_vStartLerpTimer.x = 0.f;
+			m_bDampingParentPos = true;
+			m_bStartGame = false;
+		}
+		m_pGameInstance->Add_RenderGroup(RENDER::UI_OVERLAY, this);
 	}
 }
 
@@ -297,9 +307,11 @@ HRESULT CCamPosition_Shoulder::Ready_SubParts()
 		CCamPosition_Target::CAMERAPOSITION_TARGET_DESC Desc{};
 		Desc.pParentTransform = m_pTransformCom;
 		m_pTarget_LookPart = m_pGameInstance->Clone_Prototype< CCamPosition_Target>(g_iStaticLevel, &Desc);
+		m_pTarget_LookPart->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(-34.f, 5, -10.4f, 1.f));
 		m_pTarget_FollowPart = m_pGameInstance->Clone_Prototype< CCamPosition_Target>(g_iStaticLevel, &Desc);
+		m_pTarget_FollowPart->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(-34.f, 5, -11.4f, 1.f));
 	}
-
+	
 	CCamera_Gaze::CAMERA_GAZE_DESC CameraDesc{};
 	CameraDesc.fFovy = XMConvertToRadians(60.0f);
 	CameraDesc.fNear = 0.1f;
@@ -321,8 +333,11 @@ HRESULT CCamPosition_Shoulder::Ready_SubParts()
 	{
 		return E_FAIL;
 	}
+	
 	m_pGameInstance->Add_Camera(g_iStaticLevel, m_pBinded_Camera, CAMERA_SHOULDER);
-
+	if (FAILED(m_pGameInstance->Bind_Camera(g_iStaticLevel, CAMERA_SHOULDER, true))) {
+		return E_FAIL;
+	}
 
 	return S_OK;
 }

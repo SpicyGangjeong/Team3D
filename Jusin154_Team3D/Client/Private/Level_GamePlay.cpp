@@ -260,14 +260,15 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	else
 	{
 		/* 전체 맵 */
-		//CInfoInstance::GetInstance()->Load_MapObjects("Hogsmeade_MapContainer_Data");
+		CInfoInstance::GetInstance()->Load_MapObjects("Hogsmeade_MapContainer_Data");
 
 		/* 물 오브젝트 */
-		if (FAILED(CInfoInstance::GetInstance()->Load_WaterElemet("Element_Water_Info")))
+		if (FAILED(CInfoInstance::GetInstance()->Load_WaterElemet("Element_Water_Info"))){
 			return E_FAIL;
+		}
 
 		/* 조명 오브젝트 */
-		/*CInfoInstance::GetInstance()->Load_LightElements("LightElement");*/
+		CInfoInstance::GetInstance()->Load_LightElements("LightElement");
 
 		/* 상호작용 오브젝트 */
 		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_Barrel");
@@ -437,6 +438,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 {
+#ifdef _DEBUG
 	CCamera_Debug::CAMERA_DEBUG_DESC            Camera_Desc{};
 	Camera_Desc.fFovy = XMConvertToRadians(60.0f);
 	Camera_Desc.fNear = 0.1f;
@@ -461,6 +463,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 		return E_FAIL;
 	}
 
+#endif // _DEBUG
+
+	if (FAILED(m_pGameInstance->Bind_Camera(g_iStaticLevel, CAMERA_SHOULDER, true))) {
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
