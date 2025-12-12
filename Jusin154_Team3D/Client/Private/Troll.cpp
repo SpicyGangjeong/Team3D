@@ -280,41 +280,42 @@ _vector CTroll::Get_LockOnPos()
 
 void CTroll::OnCollision(CGameObject* pOther, void* pDesc)
 {
+	if (true == m_bDead) {
+		return;
+	}
+
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
-	CEffect_Container* pEffect = dynamic_cast<CEffect_Container*>(pOther);
 
-	if (pEffect != nullptr)
+	_vector Head = (XMLoadFloat4x4(Get_HeadMatrix()) * m_pTransformCom->Get_XMWorldMatrix()).r[3];
+	m_DamageInfo.vTarget_Pos = XMVectorSet(Head.m128_f32[0], Head.m128_f32[1], Head.m128_f32[2], 1.f);
+
+	_uint iSkillType = dynamic_cast<CEffect_Container*>(pOther)->Get_SkillType();
+	auto damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
+	switch (iSkillType)
 	{
-		_uint iSkillType = dynamic_cast<CEffect_Container*>(pOther)->Get_SkillType();
-
-		switch (iSkillType)
-		{
-		case ENUM_CLASS(SKILL_TYPE::DESCENDO):
-			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
-			break;
-		case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
-			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
-			break;
-		case ENUM_CLASS(SKILL_TYPE::FLIPENDO):
-			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::FLIPENDO);
-			break;
-		case ENUM_CLASS(SKILL_TYPE::JAP):
-			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
-			break;
-		default:
-			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::END);
-			break;
-		}
+	case ENUM_CLASS(SKILL_TYPE::DESCENDO):
+		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
+		break;
+	case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
+		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
+		break;
+	case ENUM_CLASS(SKILL_TYPE::FLIPENDO):
+		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::FLIPENDO);
+		break;
+	case ENUM_CLASS(SKILL_TYPE::JAP):
+		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
+		break;
+	default:
+		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::END);
+		break;
 	}
-		
-	CMapElement_Interactable* pProps = dynamic_cast<CMapElement_Interactable*>(pOther);
-
-	if (pProps != nullptr)
-	{
-		m_eHitSpell = STATEANIM::KNOCKDOWN_FWD;
+	m_DamageInfo.fDamage = damagePair.first;
+	m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
+	if (0 == damagePair.second) {
+		m_pFSM->Change_State(FSMSTATE::DEAD);
+		return;
 	}
-
 	m_pFSM->Change_State(FSMSTATE::HIT);
 }
 
