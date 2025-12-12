@@ -29,18 +29,38 @@ float2 g_vClipBoxLTPos;
 float g_fDisolveAmount;
 float g_fDisolveEdgeWidth;
 
-Texture2D g_DiffuseTexture;
-Texture2D g_NormalTexture;
 Texture2D g_DAOTexture;
 Texture2D g_THVTexture;
 Texture2D g_SurfaceParamsTexture;
-Texture2D g_TransmissionTexture;
-Texture2D g_EmissiveTexture;
-Texture2D g_AmbientTexture;
-Texture2D g_AmbientOcclusionTexture;
-Texture2D g_UnknownTexture;
 Texture2D g_NoiseTexture;
 Texture2D g_CausticsTexture;
+
+Texture2D g_DiffuseTexture;
+Texture2D g_SpecularTexture;
+Texture2D g_AmbientTexture;
+Texture2D g_EmissiveTexture;
+Texture2D g_HeightTexture;
+Texture2D g_NormalTexture;
+Texture2D g_ShininessTexture;
+Texture2D g_OpacityTexture;
+Texture2D g_DisplacementTexture;
+Texture2D g_LightMapTexture;
+Texture2D g_ReflectionTexture;
+Texture2D g_BaseColorTexture;
+Texture2D g_NormalCameraTexture;
+Texture2D g_EmissionColorTexture;
+Texture2D g_MetalnessTexture;
+Texture2D g_Diffuse_RoughnessTexture;
+Texture2D g_AmbientOcclusionTexture;
+Texture2D g_UnknownTexture;
+Texture2D g_SheenTexture;
+Texture2D g_ClearcoadTexture;
+Texture2D g_TransmissionTexture;
+Texture2D g_Maya_BaseTexture;
+Texture2D g_Maya_SpecularTexture;
+Texture2D g_Maya_Specular_ColorTexture;
+Texture2D g_Maya_Specular_RoughnessTexture;
+Texture2D g_AnisotropyTexture;
 
 int g_iBinded_Texture[AI_TEXTURE_TYPE_MAX];
 

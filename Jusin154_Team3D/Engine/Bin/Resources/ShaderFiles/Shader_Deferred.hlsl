@@ -229,7 +229,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     
     
     
-    if (true == AlmostEqual3(vDepth.b * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_METALNESS)) // Metallic
+    if (true == AlmostEqual3(vDepth.b * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_METALNESS)) // Metallic Roughness Occ
     {
         float3 vMRO = g_SurfaceTexture.Sample(DefaultSampler, uv).rgb;
         fMetallic = vMRO.r;
@@ -238,7 +238,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
         
         vF0 = lerp(float3(0.04f, 0.04f, 0.04f), vAlbedo, fMetallic);
     }
-    else if (true == AlmostEqual3(vDepth.b * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_SPECULAR)) // Specular
+    else if (true == AlmostEqual3(vDepth.b * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_SPECULAR)) // Specular Roughness Occ
     {
         fMetallic = 0.f;
         

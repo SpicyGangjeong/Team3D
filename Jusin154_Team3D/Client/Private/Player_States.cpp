@@ -1200,7 +1200,6 @@ void CPlayer::Behavior_SpellEnter()
 					pairAnimInfo = m_Animation[STATEANIM::IDLE];
 				}
 				m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R),m_Animation[STATEANIM::LUMOS_STOP].first, m_Animation[STATEANIM::LUMOS_STOP].second);
-				m_eSpell = STATEANIM::END;
 			}
 			break;
 		default:
@@ -1253,7 +1252,7 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 
-				if (m_eSpell != ENUM_CLASS(SKILL_TYPE::END)&& m_eSpell != -1)
+				if (m_eSpell != ENUM_CLASS(SKILL_TYPE::END) && m_eSpell != -1)
 				{
 					_float fRatio = 0.2f;
 					if (iNext - iStart == 2) {
@@ -1290,6 +1289,49 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 						Add_Event(pairAnimInfo.first,
 							[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO_SIDE, Get_PartObject<CWand>()); },
 							0.f);
+						break;
+					case ENUM_CLASS(SKILL_TYPE::LUMOS):
+						if (m_pModelCom->Get_SecondAnimIndex() != m_Animation[STATEANIM::LUMOS].first)
+						{
+							if (SUCCEEDED(InputMove()))
+							{
+								if (m_bSprintToggle) {
+									pairAnimInfo = m_Animation[STATEANIM::SPRINT];
+								}
+								else if (m_bWalkToggle) {
+									pairAnimInfo = m_Animation[STATEANIM::WALK_FWD];
+								}
+								else {
+									pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
+								}
+							}
+							else {
+								pairAnimInfo = m_Animation[STATEANIM::IDLE];
+							}
+							Add_Event(pairAnimInfo.first,
+								[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LUMOS, Get_PartObject<CWand>()); },
+								0.f);
+							m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R), m_Animation[STATEANIM::LUMOS].first, m_Animation[STATEANIM::LUMOS].second);
+						}
+						else
+						{
+							if (SUCCEEDED(InputMove()))
+							{
+								if (m_bSprintToggle) {
+									pairAnimInfo = m_Animation[STATEANIM::SPRINT];
+								}
+								else if (m_bWalkToggle) {
+									pairAnimInfo = m_Animation[STATEANIM::WALK_FWD];
+								}
+								else {
+									pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
+								}
+							}
+							else {
+								pairAnimInfo = m_Animation[STATEANIM::IDLE];
+							}
+							m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R), m_Animation[STATEANIM::LUMOS_STOP].first, m_Animation[STATEANIM::LUMOS_STOP].second);
+						}
 						break;
 					}
 				}

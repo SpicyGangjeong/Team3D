@@ -195,6 +195,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Mage_Nomal_Attack.h" />
     <ClInclude Include="..\Public\MageSide.h" />
     <ClInclude Include="..\Public\Mage_Down_Attack.h" />
+    <ClInclude Include="..\Public\NPC_Ollivander.h" />
     <ClInclude Include="..\Public\Box_Splesh.h" />
     <ClInclude Include="..\Public\StunEffect.h" />
     <ClInclude Include="..\Public\State_Broom_Dismount.h" />
@@ -370,6 +371,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Logo.cpp" />
     <ClCompile Include="..\Private\Logo_Glow.cpp" />
     <ClCompile Include="..\Private\Logo_Text.cpp" />
+    <ClCompile Include="..\Private\NPC_Ollivander.cpp" />
     <ClCompile Include="..\Private\State_Broom_Dismount.cpp" />
     <ClCompile Include="..\Private\State_Broom_Fly.cpp" />
     <ClCompile Include="..\Private\State_Broom_Hover.cpp" />

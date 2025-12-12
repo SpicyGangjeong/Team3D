@@ -1764,7 +1764,7 @@ HRESULT CLoader::Loading_For_PhysXLevel()
 
 		_wstring strFileName = L"Prototype_GameObject_" + file.path().stem().wstring();
 
-		CModel* pModel = CModel::Create(m_pDevice, m_pContext, MODEL::ENVIROMENT, szFilePath);
+		CModel* pModel = CModel::Create(m_pDevice, m_pContext, MODEL::ENVIRONMENT, szFilePath);
 
 		/*For Prototype_Component_Model_*/
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, strFileName, pModel))) {
@@ -1859,7 +1859,7 @@ HRESULT CLoader::Loading_For_Bloom()
 #pragma region HAIR
 
 	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll.fbx", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
 		TEXT("Prototype_Component_SubTroll_Model")
 	));
 
@@ -2270,6 +2270,14 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	futures.emplace_back(Deferred_ModelLoad(
 		MODEL::NONANIM, "../Bin/Resources/Models/Box/Box.bin", XMMatrixIdentity(),
 		TEXT("Desc_Box")
+	));
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Human/Npc/GerboldOllivander/GerboldOlivander.bin", XMMatrixIdentity(),
+		TEXT("Prototype_Component_GerboldOlivander_Model")
+	));
+	futures.emplace_back(Deferred_ModelLoad(
+		MODEL::ANIM, "../Bin/Resources/Models/Human/Npc/GerboldOllivander/GerboldOlivander_Anim.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),
+		TEXT("Prototype_Component_GerboldOlivander_Anim_Model")
 	));
 
 

@@ -21,6 +21,7 @@
 #include "State_Swing.h"
 #include "State_Slam.h"
 #include "State_Hit.h"
+#include "State_Dead.h"
 #pragma endregion
 
 
@@ -609,9 +610,6 @@ void CTroll::Behavior_StunEnter()
 		[this]() { m_bLookAt = true;
 		},
 		0.6f);
-
-
-
 }
 
 HRESULT CTroll::Behavior_StunExitCheck(_float fTimeDelta)
@@ -684,6 +682,36 @@ HRESULT CTroll::Behavior_HitExitCheck()
 void CTroll::Behavior_HitExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::HIT);
+}
+
+void CTroll::Behavior_DeadEnter()
+{
+	m_bLookAt = false;
+	m_pFSM->Enable_State(FSMSTATE::DEAD);
+	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	pair<_uint, _bool> pairAnimInfo;
+
+	pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_BWD];
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
+	PSX::PxExtendedVec3 pxControlllerPos = m_pCharacter_Controller->Get_Controller()->getPosition();
+	PSX::PxTransform pxTransform((_float)pxControlllerPos.x, (_float)pxControlllerPos.y + 100.f, (_float)pxControlllerPos.z);
+	m_pCharacter_Controller->Set_Position(XMLoadFloat3((_float3*)&pxTransform.p));
+	m_pRigidBody->SetActive(false);
+	m_pCharacter_Controller->SetActive(false);
+}
+
+HRESULT CTroll::Behavior_DeadExitCheck(_float fTimeDelta)
+{
+	if (m_pModelCom->IsFinishedAnim()) {
+		m_bDead = true;
+	}
+	return S_OK;
+}
+
+void CTroll::Behavior_DeadExit()
+{
+	m_bDead = true;
 }
 
 
@@ -810,6 +838,23 @@ void CTroll::Add_FSM()
 		Desc.funcPriorityUpdate = nullptr;
 		Desc.funcLateUpdate = nullptr;
 		m_States.emplace(FSMSTATE::HIT, CState_Hit::Create(&Desc));
+	}
+
+	{
+		CState_Dead::STATE_DEAD_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_DeadEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_DeadExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_DeadExit(); };
+		Desc.funcLateUpdate = [this](_float fDeadRatio) {
+			m_fDeadRatio = fDeadRatio;
+			if (m_fDeadRatio > 1.f) {
+				m_bDead = true;
+			}
+			};
+		Desc.vDeadTimer.x = FLT_EPSILON5;
+		Desc.vDeadTimer.y = 2.f;
+		m_States.emplace(FSMSTATE::DEAD, CState_Dead::Create(&Desc));
 	}
 
 #pragma endregion

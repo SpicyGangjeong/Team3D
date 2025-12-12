@@ -545,6 +545,9 @@
     <ClInclude Include="..\public\Enemy_Detection.h">
       <Filter>02.GameObjects\UI\Enemy_Detection</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\NPC_Ollivander.h">
+      <Filter>02.GameObjects\NPC\Ally\Shopper</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\State_Shield.h">
       <Filter>04.Mechanic\State\State_Combat\State_Shield</Filter>
     </ClInclude>
@@ -1158,6 +1161,9 @@
     <Filter Include="04.Mechanic\State\State_Combat\State_Shield">
       <UniqueIdentifier>{fd4a0869-2491-4fec-9df9-3aedbac96171}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\NPC\Ally\Shopper">
+      <UniqueIdentifier>{02cb243a-f63e-4e55-9d55-b47e31a4c13e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1649,6 +1655,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\State_Shield.cpp">
       <Filter>04.Mechanic\State\State_Combat\State_Shield</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\NPC_Ollivander.cpp">
+      <Filter>02.GameObjects\NPC\Ally\Shopper</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
