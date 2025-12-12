@@ -123,6 +123,10 @@ HRESULT CInfoInstance::Load_WaterElemet(const _char* pFileName)
 {
 	return m_pMapInfo->Load_WaterElemet(pFileName);
 }
+HRESULT CInfoInstance::Load_DoorElemet(const _char* pFileName)
+{
+	return m_pMapInfo->Load_DoorElemet(pFileName);
+}
 #pragma endregion
 
 #pragma region SPELL_INFO
@@ -339,6 +343,7 @@ void CInfoInstance::Release_Information()
 	UI_Event.clear();
 
 	DestroyInstance();
+
 
 	SAFE_RELEASE(m_pMapInfo);
 	SAFE_RELEASE(m_pPlayerInfo);

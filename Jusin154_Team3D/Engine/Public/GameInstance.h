@@ -26,6 +26,7 @@ public:
 	_float Real_Random_Float(_float fMin, _float fMax);
 	_float2 Get_ViewPortSize();
 	void BillBoard(CTransform* pTransform);
+	void SlowMotion(_float fSlowIntense, _float fTime);
 
 #pragma region GRAPHIC_DEVICE
 public:
@@ -276,6 +277,9 @@ public:
 #endif
 
 private:
+	_float Update_SlowMotion(_float fTimeDelta);
+
+private:
 	class CGraphic_Device*			m_pGraphic_Device = { nullptr };
 	class CTimer_Manager*			m_pTimer_Manager = { nullptr };
 	class CLevel_Manager*			m_pLevel_Manager = { nullptr };
@@ -299,6 +303,11 @@ private:
 
 	mt19937 m_Rng{ random_device{}() };
 	_float2							m_vViewPortSize = {};
+
+private:
+	_bool							m_isSlowMotion = {};
+	_float2							m_vSlowTime = {};
+	_float							m_fSlowIntense = {};
 #ifdef _DEBUG
 private:
 	_float							m_fTimer_PriorityUpdate = { 0.f };

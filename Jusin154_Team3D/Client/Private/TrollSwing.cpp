@@ -5,6 +5,7 @@
 #include "EffectParts.h"
 #include "Wand.h"
 #include "Player.h"
+#include "InfoInstance.h"
 
 CTrollSwing::CTrollSwing(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEffect_Container{ pDevice, pContext }
@@ -12,8 +13,10 @@ CTrollSwing::CTrollSwing(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CTrollSwing::CTrollSwing(const CTrollSwing& rhs)
-	: CEffect_Container(rhs)
+	: CEffect_Container(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
+	SAFE_ADDREF(m_pInfoInstance);
 }
 
 HRESULT CTrollSwing::Initialize_Prototype()
@@ -92,6 +95,18 @@ HRESULT CTrollSwing::Pre_Setting(CGameObject* pObject, void* pArg)
 	pRockPT->Set_Visible(true);
 	pSmoke->Set_Visible(true);
 
+	CPlayer* pPlayer = static_cast<CPlayer*>(m_pInfoInstance->Get_NearestPlayerAlly(m_pOwner->Get_WorldPostion()).first);
+
+
+	if (pPlayer == nullptr)
+		return E_FAIL;
+
+	_float fDistance = XMVectorGetX(XMVector4Length(pPlayer->Get_WorldPostion() - Get_WorldPostion()));
+
+	_float fShakeValue = clamp(50.f / fDistance, 3.f, 10.f);
+
+	pPlayer->Start_CameraShake(1.2f, fShakeValue);
+
 	return S_OK;
 }
 
@@ -164,6 +179,7 @@ void CTrollSwing::Free()
 {
 	__super::Free();
 
+	SAFE_RELEASE(m_pInfoInstance);
 }
 #ifdef _DEBUG
 void CTrollSwing::Describe_Entity()

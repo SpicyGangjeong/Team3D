@@ -35,6 +35,9 @@ private:
 	HRESULT Bind_ShaderResources();
 	HRESULT Ready_Effect();
 	HRESULT Ready_MonsterEffect();
+private:
+	_bool m_isActiveEffectCreate = { true };
+	_bool m_isActiveMonsterEffectCreate = { true };
 public:
 	static CEffectPool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr) override;

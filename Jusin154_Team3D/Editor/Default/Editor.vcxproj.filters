@@ -562,8 +562,20 @@
     <Filter Include="50.UI\GamePlay_Canvas\Enemy_Panel\Boss_HpBar">
       <UniqueIdentifier>{49575102-9b08-494e-bf3f-bdc98774913e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\State_Effect">
+      <UniqueIdentifier>{d276d751-77aa-423e-9499-c63875e36266}</UniqueIdentifier>
+	</Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_Detection">
       <UniqueIdentifier>{81c6b163-6c8b-47ac-a4b6-e86088ce709f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Env\03.MapElement\Door">
+      <UniqueIdentifier>{6cb94611-9a4c-4b22-897c-6a2ff662c59a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Env\03.MapElement\Chest">
+      <UniqueIdentifier>{18ff4d8b-a5fd-4c67-a864-5340e31391a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Env\03.MapElement\Chest\Lid">
+      <UniqueIdentifier>{a1e789e1-dce1-4069-8c61-b9f9c89f795d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1125,8 +1137,20 @@
     <ClInclude Include="..\public\Boss_HpBer.h">
       <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Boss_HpBar</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\StunEffect.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\State_Effect</Filter>
+	</ClInclude>
     <ClInclude Include="..\public\Enemy_Detection.h">
       <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_Detection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapElement_Door.h">
+      <Filter>02.GameObjects\Env\03.MapElement\Door</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapElement_Chest.h">
+      <Filter>02.GameObjects\Env\03.MapElement\Chest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapElement_Chest_Lid.h">
+      <Filter>02.GameObjects\Env\03.MapElement\Chest\Lid</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1690,8 +1714,20 @@
     <ClCompile Include="..\private\Boss_HpBer.cpp">
       <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Boss_HpBar</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\StunEffect.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\State_Effect</Filter>
+	</ClCompile>
     <ClCompile Include="..\Private\Enemy_Detection.cpp">
       <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_Detection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapElement_Door.cpp">
+      <Filter>02.GameObjects\Env\03.MapElement\Door</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapElement_Chest.cpp">
+      <Filter>02.GameObjects\Env\03.MapElement\Chest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapElement_Chest_Lid.cpp">
+      <Filter>02.GameObjects\Env\03.MapElement\Chest\Lid</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1728,6 +1764,9 @@
       <Filter>99.Define\SHADER</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxPos.hlsl">
+      <Filter>99.Define\SHADER</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_NPC_PBR_Anim.hlsl">
       <Filter>99.Define\SHADER</Filter>
     </FxCompile>
   </ItemGroup>

@@ -1,5 +1,5 @@
 <Material>
-	<MI_FlyingClassBroom_01>
+	<MI_FlyingClassBroom_01	ShaderIndex = "10" OutLineWrite="10">
         <aiTextureType_NONE                    Index="0" Filename="" Extension=""/>
         <aiTextureType_DIFFUSE                 Index="1" Filename="T_FlightClassBroom_01_D" Extension=".png"/>
         <aiTextureType_SPECULAR                Index="2" Filename="" Extension=""/>

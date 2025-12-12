@@ -22,6 +22,7 @@ public:
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
 	_bool Get_Aim() { return m_bAim; }
 	void Set_SpellHit(_bool bHit) { m_bSpellHit = bHit; }
+	void Start_CameraShake(_float fTime, _float fIntense);
 #ifdef _DEBUG
 	void Render_CameraCoordinateSystem();
 #endif // _DEBUG
@@ -120,8 +121,7 @@ private:
 	_float3			m_BroomScale = { 0.f, 0.f, 0.f };
 	_float3			m_TargetScale = { 1.f, 1.f, 1.f };
 	_float			m_fScaleSmoothSpeed = 2.5f;
-
-
+	_bool			m_bLumos = {};
 
 	HRESULT InputAction();
 	HRESULT InputMove();

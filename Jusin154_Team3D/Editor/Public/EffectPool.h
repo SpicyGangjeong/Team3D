@@ -34,6 +34,9 @@ public:
 private:
 	list<class CEffect_Container*> m_EffectList[ENUM_CLASS(SKILL_TYPE::END)] = {};
 	list<class CEffect_Container*> m_ActiveEffectList = {};
+
+	_bool m_isActiveEffectCreate = {};
+	_bool m_isActiveMonsterEffectCreate = {};
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();

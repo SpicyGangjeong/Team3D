@@ -78,9 +78,6 @@ void CMapElement_Interactable::Update(_float fTimeDelta)
 
 void CMapElement_Interactable::Late_Update(_float fTimeDelta)
 {
-#ifdef _DEBUG
-	
-#endif 
 
 	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pModelComs[0]->Get_Radius())) {
 		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);

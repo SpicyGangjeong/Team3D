@@ -160,6 +160,8 @@ call Update_Resources.bat
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Action_Panel.h" />
+    <ClInclude Include="..\Public\Barral_Splesh.h" />
+    <ClInclude Include="..\Public\Chair_Splesh.h" />
     <ClInclude Include="..\Public\Broom_State_Fly.h" />
     <ClInclude Include="..\Public\Broom_State_Hover.h" />
     <ClInclude Include="..\Public\Boss_HpBar.h" />
@@ -193,9 +195,12 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Mage_Nomal_Attack.h" />
     <ClInclude Include="..\Public\MageSide.h" />
     <ClInclude Include="..\Public\Mage_Down_Attack.h" />
-    <ClInclude Include="..\Public\State_Shield.h" />
+    <ClInclude Include="..\Public\NPC_Ollivander.h" />
+    <ClInclude Include="..\Public\Box_Splesh.h" />
     <ClInclude Include="..\Public\StunEffect.h" />
+    <ClInclude Include="..\public\MapElement_Door.h" />
     <ClInclude Include="..\Public\State_Broom_Dismount.h" />
+    <ClInclude Include="..\Public\State_Shield.h" />
     <ClInclude Include="..\Public\State_Broom_Fly.h" />
     <ClInclude Include="..\Public\State_Broom_Hover.h" />
     <ClInclude Include="..\Public\State_Broom_Ride_Move.h" />
@@ -335,6 +340,8 @@ call Update_Resources.bat
   <ItemGroup>
     <ClCompile Include="..\Private\Action_Panel.cpp" />
     <ClCompile Include="..\Private\Boss_HpBar.cpp" />
+    <ClCompile Include="..\Private\Barral_Splesh.cpp" />
+    <ClCompile Include="..\Private\Chair_Splesh.cpp" />
     <ClCompile Include="..\Private\Broom_States.cpp" />
     <ClCompile Include="..\Private\Broom_State_Fly.cpp" />
     <ClCompile Include="..\Private\Broom_State_Hover.cpp" />
@@ -365,6 +372,8 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Logo.cpp" />
     <ClCompile Include="..\Private\Logo_Glow.cpp" />
     <ClCompile Include="..\Private\Logo_Text.cpp" />
+    <ClCompile Include="..\Private\NPC_Ollivander.cpp" />
+    <ClCompile Include="..\private\MapElement_Door.cpp" />
     <ClCompile Include="..\Private\State_Broom_Dismount.cpp" />
     <ClCompile Include="..\Private\State_Broom_Fly.cpp" />
     <ClCompile Include="..\Private\State_Broom_Hover.cpp" />
@@ -376,6 +385,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Mage_Nomal_Attack.cpp" />
     <ClCompile Include="..\Private\MageSide.cpp" />
     <ClCompile Include="..\Private\Mage_Down_Attack.cpp" />
+    <ClCompile Include="..\Private\Box_Splesh.cpp" />
     <ClCompile Include="..\Private\StunEffect.cpp" />
     <ClCompile Include="..\Private\Troll_State_Stun.cpp" />
     <ClCompile Include="..\Private\WandEnd.cpp" />

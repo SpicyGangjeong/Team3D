@@ -78,9 +78,9 @@ void CStunEffect::Update(_float fTimeDelta)
 		BoneMat.r[i] = XMVector3Normalize(BoneMat.r[i]);
 	}
 
-	m_pStunEffect->Get_Component<CTransform>()->Set_WorldMatrix(BoneMat * m_pOwner->Get_Component<CTransform>()->Get_XMWorldMatrix());
+	BoneMat *= m_pOwner->Get_Component<CTransform>()->Get_XMWorldMatrix();
 
-	m_pStunEffect->Get_Component<CTransform>()->Rotation(XMVectorSet(0.f, 0.f, XMConvertToRadians(180.f), 0.f));
+	m_pStunEffect->Get_Component<CTransform>()->Set_State(STATE::POSITION, BoneMat.r[3]);
 
 }
 
@@ -109,10 +109,11 @@ HRESULT CStunEffect::Pre_Setting(CGameObject* pObject, void* pArg)
 	for (int i = 0; i < 3; ++i) {
 		BoneMat.r[i] = XMVector3Normalize(BoneMat.r[i]);
 	}
+	BoneMat *= m_pOwner->Get_Component<CTransform>()->Get_XMWorldMatrix();
 
-	m_pStunEffect->Get_Component<CTransform>()->Set_WorldMatrix(BoneMat * m_pOwner->Get_Component<CTransform>()->Get_XMWorldMatrix());
+	m_pStunEffect->Get_Component<CTransform>()->Set_State(STATE::POSITION, BoneMat.r[3]);
 
-	m_pStunEffect->Get_Component<CTransform>()->Rotation(XMVectorSet(0.f, 0.f , 90.f, 0.f));
+
 
 	m_pStunEffect->Set_Visible(true);
 

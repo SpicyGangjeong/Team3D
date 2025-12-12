@@ -882,8 +882,18 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 					[this]() { m_bLookAt = true; },
 					0.1f);
 				Add_Event(pairAnimInfo.first,
-					[this]() { Throwing_Interactive(); },
+					[this]() { 
+						Throwing_Interactive(); 	
+					},
 					0.2f);
+
+				Add_Event(pairAnimInfo.first,
+					[this]() {
+						m_pGameInstance->SlowMotion(0.1f, 0.35f);
+					},
+					0.1f);
+
+
 			}
 			else if (nullptr != m_LockOnInfo.pInteractive) {
 				m_pGrapInteractive = m_LockOnInfo.pInteractive;
@@ -979,7 +989,7 @@ void CPlayer::Behavior_LightAttackEnter()
 
 	Add_Event(pairAnimInfo.first,
 		[this]() {_uint iIndex = 0; m_pEffectPool->Use_Skill(SKILL_TYPE::JAP, Get_PartObject<CWand>(), &iIndex);  },
-		0.1f);
+		0.07f);
 
 	Add_Event(pairAnimInfo.first,
 		[this]() { m_pEffectPool->Use_Skill(SKILL_TYPE::JAP_SIDE, Get_PartObject<CWand>());  },
@@ -1006,7 +1016,13 @@ HRESULT CPlayer::Behavior_LightAttackExitCheck(_float fTimeDelta)
 			_uint iNext = iCurr + 1;
 			pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK];
 			pairAnimInfo.first = iNext;
-
+			_float fAttackRatio;
+			if (pairAnimInfo.first - m_Animation[STATEANIM::LIGHT_ATTACK].first == 3) {
+				fAttackRatio = 0.12f;
+			}
+			else {
+				fAttackRatio = 0.07f;
+			}
 
 			Add_Event(pairAnimInfo.first,
 				[this]() {m_bLookAt = true;
@@ -1022,7 +1038,7 @@ HRESULT CPlayer::Behavior_LightAttackExitCheck(_float fTimeDelta)
 						_uint comboIndex = m_pModelCom->Get_AnimIndex() - m_Animation[STATEANIM::LIGHT_ATTACK].first;
 						m_pEffectPool->Use_Skill(SKILL_TYPE::JAP, Get_PartObject<CWand>(), &comboIndex);
 					},
-					0.05f);
+					fAttackRatio);
 
 				Add_Event(iNext,
 					[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::JAP_SIDE,Get_PartObject<CWand>());
@@ -1190,7 +1206,6 @@ void CPlayer::Behavior_SpellEnter()
 					pairAnimInfo = m_Animation[STATEANIM::IDLE];
 				}
 				m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R),m_Animation[STATEANIM::LUMOS_STOP].first, m_Animation[STATEANIM::LUMOS_STOP].second);
-				m_eSpell = STATEANIM::END;
 			}
 			break;
 		default:
@@ -1243,7 +1258,7 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 
 				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 
-				if (m_eSpell != ENUM_CLASS(SKILL_TYPE::END)&& m_eSpell != -1)
+				if (m_eSpell != ENUM_CLASS(SKILL_TYPE::END) && m_eSpell != -1)
 				{
 					_float fRatio = 0.2f;
 					if (iNext - iStart == 2) {
@@ -1280,6 +1295,49 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 						Add_Event(pairAnimInfo.first,
 							[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO_SIDE, Get_PartObject<CWand>()); },
 							0.f);
+						break;
+					case ENUM_CLASS(SKILL_TYPE::LUMOS):
+						if (m_pModelCom->Get_SecondAnimIndex() != m_Animation[STATEANIM::LUMOS].first)
+						{
+							if (SUCCEEDED(InputMove()))
+							{
+								if (m_bSprintToggle) {
+									pairAnimInfo = m_Animation[STATEANIM::SPRINT];
+								}
+								else if (m_bWalkToggle) {
+									pairAnimInfo = m_Animation[STATEANIM::WALK_FWD];
+								}
+								else {
+									pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
+								}
+							}
+							else {
+								pairAnimInfo = m_Animation[STATEANIM::IDLE];
+							}
+							Add_Event(pairAnimInfo.first,
+								[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LUMOS, Get_PartObject<CWand>()); },
+								0.f);
+							m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R), m_Animation[STATEANIM::LUMOS].first, m_Animation[STATEANIM::LUMOS].second);
+						}
+						else
+						{
+							if (SUCCEEDED(InputMove()))
+							{
+								if (m_bSprintToggle) {
+									pairAnimInfo = m_Animation[STATEANIM::SPRINT];
+								}
+								else if (m_bWalkToggle) {
+									pairAnimInfo = m_Animation[STATEANIM::WALK_FWD];
+								}
+								else {
+									pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
+								}
+							}
+							else {
+								pairAnimInfo = m_Animation[STATEANIM::IDLE];
+							}
+							m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R), m_Animation[STATEANIM::LUMOS_STOP].first, m_Animation[STATEANIM::LUMOS_STOP].second);
+						}
 						break;
 					}
 				}
@@ -1779,7 +1837,7 @@ void CPlayer::Behavior_Broom_DismountEnter()
 	m_pTransformCom->Set_State(STATE::RIGHT, right);
 	m_pTransformCom->Set_State(STATE::UP, up);
 	m_pTransformCom->Set_State(STATE::LOOK, look);
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.f,false,1.3f);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.f,false,1.6f);
 }
 
 HRESULT CPlayer::Behavior_Broom_DismountExitCheck(_float fTimeDelta)
@@ -2258,7 +2316,7 @@ void CPlayer::Set_Anim()
 	m_Animation[STATEANIM::SPELL_90_L] = { 826,false };
 
 	m_Animation[STATEANIM::MAPHELP] = { 122,false };
-	m_Animation[STATEANIM::POTION] = { 114,false }; // 114 포션 // 909 루모스
+	m_Animation[STATEANIM::POTION] = { 115,false }; // 114 포션 // 909 루모스
 	m_Animation[STATEANIM::ACCIO] = { 417,false };
 	m_Animation[STATEANIM::DESCENDO] = { 857,false };
 	m_Animation[STATEANIM::DEPULSO] = { 858,false };

@@ -182,6 +182,9 @@ call Update_Shaders.bat
     <ClInclude Include="..\Public\Goblin_Dagger.h" />
     <ClInclude Include="..\Public\Goblin_Protego.h" />
     <ClInclude Include="..\Public\Goblin_Spector.h" />
+    <ClInclude Include="..\public\MapElement_Chest.h" />
+    <ClInclude Include="..\public\MapElement_Door.h" />
+    <ClInclude Include="..\public\MapElement_Chest_Lid.h" />
     <ClInclude Include="..\Public\Skill_Data.h" />
     <ClInclude Include="..\Public\State_Blink.h" />
     <ClInclude Include="..\Public\State_Dead.h" />
@@ -191,6 +194,7 @@ call Update_Shaders.bat
     <ClInclude Include="..\Public\State_Slam.h" />
     <ClInclude Include="..\Public\State_Swing.h" />
     <ClInclude Include="..\Public\State_Throw.h" />
+    <ClInclude Include="..\Public\StunEffect.h" />
     <ClInclude Include="..\Public\Troll.h" />
     <ClInclude Include="..\Public\Troll_Rush_Hit.h" />
     <ClInclude Include="..\Public\Troll_Nomal_Smoke.h" />
@@ -385,6 +389,9 @@ call Update_Shaders.bat
     <ClCompile Include="..\Private\Goblin_Dagger.cpp" />
     <ClCompile Include="..\Private\Goblin_Protego.cpp" />
     <ClCompile Include="..\Private\Goblin_Spector.cpp" />
+    <ClCompile Include="..\private\MapElement_Chest.cpp" />
+    <ClCompile Include="..\private\MapElement_Door.cpp" />
+    <ClCompile Include="..\private\MapElement_Chest_Lid.cpp" />
     <ClCompile Include="..\Private\Skill_Data.cpp" />
     <ClCompile Include="..\Private\State_Blink.cpp" />
     <ClCompile Include="..\Private\State_Dead.cpp" />
@@ -394,6 +401,7 @@ call Update_Shaders.bat
     <ClCompile Include="..\Private\State_Slam.cpp" />
     <ClCompile Include="..\Private\State_Swing.cpp" />
     <ClCompile Include="..\Private\State_Throw.cpp" />
+    <ClCompile Include="..\Private\StunEffect.cpp" />
     <ClCompile Include="..\Private\Troll.cpp" />
     <ClCompile Include="..\Private\Troll_Rush_Hit.cpp" />
     <ClCompile Include="..\Private\Troll_Nomal_Smoke.cpp" />
@@ -587,6 +595,10 @@ call Update_Shaders.bat
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_NPC_PBR_Anim.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_UIEditor.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>

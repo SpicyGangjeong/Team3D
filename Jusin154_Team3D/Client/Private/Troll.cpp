@@ -11,6 +11,7 @@
 #include "EffectPool.h"
 #include "Layer.h"
 #include "TrailObject.h"
+#include "MapElement_Interactable.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -159,11 +160,11 @@ void CTroll::Late_Update(_float fTimeDelta)
 	if (true == m_pCharacter_Controller->IsActive()) {
 		m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
 	}
-	else {
+	else if (true == m_pRigidBody->IsActive()) {
 		m_pTransformCom->Set_WorldMatrix(m_pRigidBody->Get_Actor()->getGlobalPose());
 	}
 
-	if (m_bLookAt) {
+	if (true == m_bLookAt) {
 		m_pTransformCom->LookAt_Lerp(XMLoadFloat4(&m_vTargetPos), fTimeDelta, 3.f);
 	}
 
@@ -181,7 +182,7 @@ void CTroll::Late_Update(_float fTimeDelta)
 	m_fCross = XMVectorGetY(XMVector3Cross(vLook, vDir));
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW, this);
+//	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW, this);
 }
 
 HRESULT CTroll::Render()
@@ -191,10 +192,6 @@ HRESULT CTroll::Render()
 	}
 
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
-	_uint iShaderPass = ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT);
-	if (true == m_bDrawOutLine) {
-		iShaderPass = ENUM_CLASS(SHADER_PASS_ANIM::OUTLINE_WRITE);
-	}
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
 		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
@@ -205,7 +202,7 @@ HRESULT CTroll::Render()
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pShaderCom->Begin(iShaderPass))) {
+		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom, m_bDrawOutLine))) {
 			return E_FAIL;
 		}
 
@@ -214,7 +211,7 @@ HRESULT CTroll::Render()
 		}
 	}
 
-	if (m_bDrawOutLine) {
+	if (true == m_bDrawOutLine) {
 		Render_OutLine();
 	}
 
@@ -231,6 +228,60 @@ HRESULT CTroll::Render()
 	//}
 #endif
 
+	return S_OK;
+}
+
+HRESULT CTroll::Render_OutLine()
+{
+	m_bDrawOutLine = false;
+	if (FAILED(Bind_ShaderResources())) {
+		return E_FAIL;
+	}
+
+	Compute_Depth();
+	_float fRatio = (m_fCamDepth / *m_pGameInstance->Get_CurrentCameraFar());
+	m_fOutLineThickness = CMyTools::Lerp_f1D(2.f, 6.f, fRatio);
+	if (m_fOutLineThickness > 6.f) {
+		m_fOutLineThickness = 6.f;
+	}
+	else if (m_fOutLineThickness < 2.f) {
+		m_fOutLineThickness = 2.f;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vOutLineColor", &m_vOutLineColor, sizeof(_float3)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOutLineThickness", &m_fOutLineThickness, sizeof(_float)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOutLineScale", &m_fOutLineScale, sizeof(_float)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOutLinePower", &m_fOutLinePower, sizeof(_float)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float4)))) {
+		return E_FAIL;
+	}
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (_uint i = 0; i < iNumMeshes; i++)
+	{
+		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_NPC_PBR_ANIM::OUTLINE_READ)))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pModelCom->Render(i))) {
+			return E_FAIL;
+		}
+	}
 	return S_OK;
 }
 
@@ -254,10 +305,10 @@ HRESULT CTroll::Render_Shadow()
 		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
 			return E_FAIL;
 		}
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::SHADOW)))) {
+
+		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
-
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
 		}
@@ -279,26 +330,57 @@ _vector CTroll::Get_LockOnPos()
 
 void CTroll::OnCollision(CGameObject* pOther, void* pDesc)
 {
+	if (true == m_bDead) {
+		return;
+	}
+
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
-	_uint iSkillType = dynamic_cast<CEffect_Container*>(pOther)->Get_SkillType();
-	switch (iSkillType)
+
+	_vector Head = (XMLoadFloat4x4(Get_HeadMatrix()), m_pTransformCom->Get_XMWorldMatrix()).r[3];
+	m_DamageInfo.vTarget_Pos = XMVectorSet(Head.m128_f32[0], Head.m128_f32[1], Head.m128_f32[2], 1.f);
+
+	CEffect_Container* pEffect_Container = dynamic_cast<CEffect_Container*>(pOther);
+
+	pair<_float, _float> damagePair = {};
+
+	if (pEffect_Container != nullptr)
 	{
-	case ENUM_CLASS(SKILL_TYPE::DESCENDO):
-		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
-		break;
-	case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
-		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
-		break;
-	case ENUM_CLASS(SKILL_TYPE::FLIPENDO):
-		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::FLIPENDO);
-		break;
-	case ENUM_CLASS(SKILL_TYPE::JAP):
-		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
-		break;
-	default:
-		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::END);
-		break;
+		_uint iSkillType = pEffect_Container->Get_SkillType();
+		damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
+
+		switch (iSkillType)
+		{
+		case ENUM_CLASS(SKILL_TYPE::DESCENDO):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::FLIPENDO):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::FLIPENDO);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::JAP):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
+			break;
+		default:
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::END);
+			break;
+		}
+	}
+
+	CMapElement_Interactable* pProps = dynamic_cast<CMapElement_Interactable*>(pOther);
+
+	if (pProps != nullptr)
+	{
+		m_eHitSpell = STATEANIM::KNOCKDOWN_FWD;
+	}
+
+	m_DamageInfo.fDamage = damagePair.first;
+	m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
+	if (0 == damagePair.second) {
+		m_pFSM->Change_State(FSMSTATE::DEAD);
+		return;
 	}
 	m_pFSM->Change_State(FSMSTATE::HIT);
 }
@@ -315,7 +397,18 @@ HRESULT CTroll::Ready_Components()
 	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
 	Desc.fRadius = 10.f;
 
-	__super::Ready_Components(&Desc);
+
+	if (FAILED(Add_Component<CTransform>(g_iStaticLevel, &m_pTransformCom, &Desc))) {
+		return E_FAIL;
+	}
+	if (FAILED(Add_Component<CFSM>(g_iStaticLevel, &m_pFSM))) {
+		return E_FAIL;
+	}
+	/* Com_Shader */
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_NPC_PBR_ANIM,
+		reinterpret_cast<CComponent**>(&m_pShaderCom)))) {
+		return E_FAIL;
+	}
 
 	m_strModelPrototypeTag = TEXT("Prototype_Component_Troll_Model");
 

@@ -147,6 +147,14 @@ __super::Update(fTimeDelta);
 		m_pInfoInstance->Mouse_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_UP));
 		m_bAim = false; 
 	}
+
+	if (m_pGameInstance->Key_Down(DIK_1)) {
+		if (m_pModelCom->Get_SecondAnimIndex() == m_Animation[STATEANIM::LUMOS].first)
+		{
+			m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R), m_Animation[STATEANIM::LUMOS_STOP].first, m_Animation[STATEANIM::LUMOS_STOP].second);
+		}
+	}
+
 }
 
 void CPlayer::UpdateGrapInteractive(_float fTimeDelta)
@@ -309,6 +317,14 @@ void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 }
 void CPlayer::OnHit(CGameObject* pOther, CGameObject* pCaller)
 {
+}
+
+void CPlayer::Start_CameraShake(_float fTime, _float fIntense)
+{
+	m_vCameraShakeTimer.x = 0.f;
+	m_vCameraShakeTimer.y = fTime;
+	m_fCameraShakeIntense = fIntense;
+	m_bCameraShake = true;
 }
 #ifdef _DEBUG
 
@@ -627,7 +643,7 @@ void CPlayer::Describe_Entity()
 	if (false == m_bCameraShake && GUI::Button("Shake")) {
 		m_bCameraShake = true;
 	}
-	if (GUI::SliderFloat("m_fCameraShakeTime", &m_fCameraShakeTime, 0.125f,  5.f, "%.3f")) {
+	if (GUI::SliderFloat("m_fCameraShakeTime", &m_fCameraShakeTime, 0.125f,  0.f, "%.3f")) {
 		m_vCameraShakeTimer.y = m_fCameraShakeTime;
 	}
 	GUI::SliderFloat("m_fCameraShakeIntense", &m_fCameraShakeIntense, 5.f, 20.f, "%.1f");

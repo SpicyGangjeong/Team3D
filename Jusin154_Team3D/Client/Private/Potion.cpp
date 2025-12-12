@@ -46,7 +46,7 @@ HRESULT CPotion::Initialize(void* pArg)
 	m_vImageSize = _float2(32.f, 32.f);
 	m_fFontX = 1163.f;
 	m_fFontY = 860.f;
-	m_iPotionIndex = 1;
+	m_iPotionIndex = 10;
 	m_iPerPotionIndex = -1;
 	m_iPotion_Level = 1;
 	return S_OK;
@@ -102,7 +102,6 @@ void CPotion::Update(_float fTimeDelta)
 			m_fAlpha = 0.f;
 		}
 	}
-	m_iPotionIndex = 10;
 
 	if (m_iPerPotionIndex != m_iPotionIndex)
 	{

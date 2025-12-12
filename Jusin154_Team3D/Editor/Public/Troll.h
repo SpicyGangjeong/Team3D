@@ -48,6 +48,8 @@ private:
 	class CEditEffect* m_pTroll_Particle = { nullptr };
 	class CEditEffect* m_pTroll_Particle2 = { nullptr };
 
+	class CEditEffect* m_pStunEffect = { nullptr };
+
 	class CTrailObject* m_pLeftTrail = { nullptr  };
 	class CTrailObject* m_pRightTrail = { nullptr  };
 	class CTrailObject* m_pWeaponTrail = { nullptr  };

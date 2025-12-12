@@ -24,6 +24,7 @@
 #include "Goblin.h"
 #include "Goblin_Mage.h"
 #include "Goblin_Spector.h"
+#include "NPC_Ollivander.h"
 #pragma endregion
 
 
@@ -39,6 +40,12 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	if (FAILED(Ready_Lights())) {
 		return E_FAIL;
 	}
+
+	//플레이어 , 맵 보다 먼저 생성해야함 !
+	if (FAILED(Reday_Layer_EffectPool())) {
+		return E_FAIL;
+	}
+
 	if (FAILED(Ready_Background())) {
 		return E_FAIL;
 	}
@@ -48,10 +55,7 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	if (FAILED(Ready_Layer_UI(LAYER_UI))) {
 		return E_FAIL;
 	}
-	//플레이어보다 먼저 생성해야함!
-	if (FAILED(Reday_Layer_EffectPool())) {
-		return E_FAIL;
-	}
+
 	// 이것도 플레이어보다 먼저 생성해야함!
 	if (FAILED(Ready_Layer_Item(LAYER_ITEM))) {
 		return E_FAIL;
@@ -234,10 +238,10 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Background = true;
 #endif // gimch
 #ifdef Bin
-	isReady_Background = false;
+	isReady_Background = true;
 #endif // 
 #ifdef 진우
-	isReady_Background = false;
+	isReady_Background = true;
 #endif // 
 #ifdef 기무리
 	isReady_Background = true;
@@ -271,6 +275,10 @@ HRESULT CLevel_GamePlay::Ready_Background()
 		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_PostPackage_F");
 		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_TeaShopTable");
 		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_TeaShopChair");
+
+		/* Doors */
+		CInfoInstance::GetInstance()->Load_DoorElemet("Element_Door_Info");
+		
 
 		if (FAILED(Ready_IntstanceProp()))
 			return E_FAIL;
@@ -475,6 +483,9 @@ HRESULT CLevel_GamePlay::Ready_Markers()
 HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 {
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPC_Ollivander>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
 		return E_FAIL;
 	}
 
