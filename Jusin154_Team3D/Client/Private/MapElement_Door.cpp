@@ -2,6 +2,7 @@
 #include "MapElement_Door.h"
 
 #include "GameInstance.h"
+#include "RigidBody_Dynamic.h"
 #include "Terrain.h"
 #include "Layer.h"
 #include "VIBuffer_Terrain.h"
@@ -43,17 +44,39 @@ HRESULT CMapElement_Door::Initialize(void* pArg)
 	m_pTransformCom->Set_Scale(pDesc->vScale);
 	m_pTransformCom->Rotation(XMConvertToRadians(pDesc->vRotation.x), XMConvertToRadians(pDesc->vRotation.y), XMConvertToRadians(pDesc->vRotation.z));
 
-	//m_vBoxSize = _float3(1.f, 1.f, 1.f);
-	//m_pActor = static_cast<PSX::PxRigidDynamic*>(m_pRigidBody->Get_Actor());
+	XMStoreFloat4((_float4*)&m_pxStartQuat, m_pTransformCom->Get_QuarternionVector());
+	XMStoreFloat4x4(&m_InitialMatrix, m_pTransformCom->Get_XMWorldMatrix());
 
-	//static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Set_HalfGeometryInfo(pDesc->vBoxSize);
-	//static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Move_LocalPos(_float4(0.f, 0.f, 0.f, 0.f), pDesc->vBoxLocalPosition);
+	m_vRadianYAngle.y = pDesc->vRotation.z;
+	m_vRadianYAngle.x = m_vRadianYAngle.y + XMConvertToRadians(-70.f);
+	m_vRadianYAngle.z = m_vRadianYAngle.y + XMConvertToRadians(70.f);
+
+	{ // RIGID_BODY
+		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::DOOR);
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_DOOR"), (CComponent**)&m_pRigidBody, &Desc))) {
+			return E_FAIL;
+		}
+	}
+	m_pActor = (PSX::PxRigidDynamic*)m_pRigidBody->Get_Actor();
 
 	return S_OK;
 }
 
 void CMapElement_Door::Priority_Update(_float fTimeDelta)
 {
+	if (m_pActor->getRigidBodyFlags() & PSX::PxRigidBodyFlag::eKINEMATIC) {
+		m_vKinematicTimer.x += fTimeDelta;
+		if (m_vKinematicTimer.x < m_vKinematicTimer.z) {
+			// 행렬없이 럴프 버전
+			_float fTime = max(0.f, ((m_vKinematicTimer.x - m_vKinematicTimer.y) / (m_vKinematicTimer.z - m_vKinematicTimer.y)));
+			Lerp_Matrix(fTime);
+			//Lerp_NonMatrix(fTime);
+		}
+		else {
+			m_pActor->setRigidBodyFlag(PSX::PxRigidBodyFlag::eKINEMATIC, false);
+		}
+	}
 }
 
 void CMapElement_Door::Update(_float fTimeDelta)
@@ -63,6 +86,45 @@ void CMapElement_Door::Update(_float fTimeDelta)
 void CMapElement_Door::Late_Update(_float fTimeDelta)
 {
 
+	_vector vRPY = m_pTransformCom->Get_RollPitchYawVector();
+	if (!(m_pActor->getRigidBodyFlags() & PSX::PxRigidBodyFlag::eKINEMATIC)) {
+		_float fPitch = XMVectorGetX(vRPY);
+		_float fYaw = XMVectorGetY(vRPY);
+		_float fRoll = XMVectorGetZ(vRPY);
+
+		_float fClampedYaw = ClampRadian(fYaw);
+		if (fClampedYaw != fYaw) {
+			_vector vNewQuat = XMQuaternionRotationRollPitchYaw(fPitch, fClampedYaw, fRoll);
+
+			PSX::PxTransform actorPose = m_pActor->getGlobalPose();
+			PSX::PxTransform massLocalPose = m_pActor->getCMassLocalPose();
+
+			PSX::PxVec3 vpxMassLocal = massLocalPose.p;
+			PSX::PxVec3 vpxMassWorld = actorPose.transform(vpxMassLocal);
+
+			_vector vMassLocal = XMVectorSet(vpxMassLocal.x, vpxMassLocal.y, vpxMassLocal.z, 0.f);
+			_vector vMassWorld = XMVectorSet(vpxMassWorld.x, vpxMassWorld.y, vpxMassWorld.z, 1.f);
+
+			_float3 vScale = m_pTransformCom->Get_Scale();
+			_matrix ScaleMatrix = XMMatrixScalingFromVector(XMLoadFloat3(&vScale));
+			_matrix RotationMatrix = XMMatrixRotationQuaternion(vNewQuat);
+
+			_matrix TranslationLocal = XMMatrixTranslationFromVector(-vMassLocal);
+			_matrix TranslationWorld = XMMatrixTranslationFromVector(vMassWorld);
+
+			// 최종 월드 행렬
+			_matrix world = TranslationLocal // 피벗중심으로 좌표계를 이동시킴
+				* (ScaleMatrix * RotationMatrix * TranslationWorld); // 그 후 SRT 적용
+
+			m_pTransformCom->Set_WorldMatrix(world);
+			m_pActor->setGlobalPose(XMWorldToPx_NoScale(world));
+
+			m_pActor->setAngularVelocity(PSX::PxVec3(0));
+			m_pActor->setLinearVelocity(PSX::PxVec3(0));
+			m_pActor->setRigidBodyFlag(PSX::PxRigidBodyFlag::eKINEMATIC, true);
+			m_vKinematicTimer.x = 0.f;
+		}
+	}
 	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pModelComs[0]->Get_Radius())) {
 		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 	}
@@ -125,14 +187,6 @@ HRESULT CMapElement_Door::Ready_Components(void* pArg)
 
 	ELEMENT_DOOR_DESC* pPhysXDummyDesc = static_cast<ELEMENT_DOOR_DESC*>(pArg);
 
-	//// RIGID_BODY
-	//CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
-	//Desc.iSubKind = ENUM_CLASS(PXOBJECT::BOX);//pPhysXDummyDesc->iSubKind;
-	//if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
-	//	return E_FAIL;
-	//}
-
-
 	return S_OK;
 }
 
@@ -153,6 +207,67 @@ HRESULT CMapElement_Door::Bind_ShaderResources()
 	}
 
 	return S_OK;
+}
+
+void CMapElement_Door::Lerp_Matrix(_float fTime)
+{
+	{
+		_float4x4 OutMatrix = {};
+		_float4x4 CurrentMatrix = {};
+		XMStoreFloat4x4(&CurrentMatrix, m_pTransformCom->Get_XMWorldMatrix());
+		CMyTools::MatrixLerp(&CurrentMatrix, &m_InitialMatrix, OutMatrix, fTime);
+		m_pTransformCom->Set_WorldMatrix(OutMatrix);
+	}
+}
+
+void CMapElement_Door::Lerp_NonMatrix(_float fTime)
+{
+	{
+		_vector vCurrQ = m_pTransformCom->Get_QuarternionVector();
+		_vector vInitialQ = XMLoadFloat4((_float4*)&m_pxStartQuat);
+		_vector vLerpQuat = XMVector4Normalize(XMVectorLerp(vCurrQ, vInitialQ, fTime));
+
+		PSX::PxTransform actorPose = m_pActor->getGlobalPose();
+		PSX::PxTransform massLocalPose = m_pActor->getCMassLocalPose();
+
+		PSX::PxVec3 vpxMassLocal = massLocalPose.p;
+		PSX::PxVec3 vpxMassWorld = actorPose.transform(vpxMassLocal);
+
+		_vector vMassLocal = XMVectorSet(vpxMassLocal.x, vpxMassLocal.y, vpxMassLocal.z, 0.f);
+		_vector vMassWorld = XMVectorSet(vpxMassWorld.x, vpxMassWorld.y, vpxMassWorld.z, 1.f);
+
+
+		_float3 vScale = m_pTransformCom->Get_Scale();
+		_matrix ScaleMatrix = XMMatrixScalingFromVector(XMLoadFloat3(&vScale));
+		_matrix RotationMatrix = XMMatrixRotationQuaternion(vLerpQuat);
+
+		_matrix TranslationLocal = XMMatrixTranslationFromVector(-vMassLocal);
+		_matrix TranslationWorld = XMMatrixTranslationFromVector(vMassWorld);
+
+		// 최종 월드 행렬
+		_matrix world = TranslationLocal // 피벗중심으로 좌표계를 이동시킴
+			* (ScaleMatrix * RotationMatrix * TranslationWorld); // 그 후 SRT 적용
+
+		m_pTransformCom->Set_WorldMatrix(world);
+	}
+}
+
+_float CMapElement_Door::ClampRadian(_float fNewRadian)
+{
+	// [x, z] 사이로 잘라주는 단순한 클램프
+	_float minYaw = m_vRadianYAngle.x;
+	_float maxYaw = m_vRadianYAngle.z;
+
+	// 라디안 노멀라이즈 ([-pi, pi] 같은 범위로)
+	fNewRadian = CMyTools::NormalizeRadian(fNewRadian);
+
+	if (fNewRadian < minYaw) {
+		fNewRadian = minYaw;
+	}
+	else if (fNewRadian > maxYaw) {
+		fNewRadian = maxYaw;
+	}
+	return fNewRadian;
 }
 
 CMapElement_Door* CMapElement_Door::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -188,7 +303,7 @@ void CMapElement_Door::Free()
 	}
 	__super::Free();
 
-	//SAFE_RELEASE(m_pRigidBody);
+	SAFE_RELEASE(m_pRigidBody);
 	SAFE_RELEASE(m_pShaderCom);
 
 	for (auto& pModel : m_pModelComs)
