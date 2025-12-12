@@ -93,7 +93,6 @@ void CMiniMap_Camera::Free()
 {
 	__super::Free();
 }
-#ifdef _DEBUG
 
 #ifdef _DEBUG
 void CMiniMap_Camera::Describe_Entity()

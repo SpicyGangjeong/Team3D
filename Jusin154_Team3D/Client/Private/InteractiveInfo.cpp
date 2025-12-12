@@ -61,7 +61,7 @@ HRESULT CInteractiveInfo::Refresh_LockOnTarget()
 	_vector vCameraPos = m_pGameInstance->Get_CamXMPosition();
 	_float fMaxDot = { 0.f };
 
-	_vector vMonsterPos;
+	_vector vInteractablePos;
 	_vector vToMonsterDir;
 	_bool bAim = false;
 	_float fFovy = 0.f;
@@ -83,8 +83,11 @@ HRESULT CInteractiveInfo::Refresh_LockOnTarget()
 			// (카메라의 룩)과 (카메라 -> 몬스터 방향 벡터)를 내적해서 가장 큰 크기가 나온 몬스타가 락온 대상
 			CMapElement_Interactable* pInteractive = (*iter);
 
-			vMonsterPos = pInteractive->Get_LockOnPos();
-			vToMonsterDir = vMonsterPos - vCameraPos;
+			vInteractablePos = pInteractive->Get_LockOnPos();
+			vToMonsterDir = vInteractablePos - vCameraPos;
+			if (150.f <= XMVectorGetX(XMVector4Length(vToMonsterDir))) {
+				continue;
+			}
 			_float fDotResult = CMyTools::DirectionCompare(vCameraLook, vToMonsterDir);
 			if (fDotResult <= cosf(fFovy)) {
 				continue;

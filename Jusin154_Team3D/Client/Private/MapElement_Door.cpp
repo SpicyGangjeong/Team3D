@@ -43,11 +43,11 @@ HRESULT CMapElement_Door::Initialize(void* pArg)
 	m_pTransformCom->Set_Scale(pDesc->vScale);
 	m_pTransformCom->Rotation(XMConvertToRadians(pDesc->vRotation.x), XMConvertToRadians(pDesc->vRotation.y), XMConvertToRadians(pDesc->vRotation.z));
 
-	m_vBoxSize = _float3(1.f, 1.f, 1.f);/*
-	m_pActor = static_cast<PSX::PxRigidDynamic*>(m_pRigidBody->Get_Actor());
+	//m_vBoxSize = _float3(1.f, 1.f, 1.f);
+	//m_pActor = static_cast<PSX::PxRigidDynamic*>(m_pRigidBody->Get_Actor());
 
-	static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Set_HalfGeometryInfo(pDesc->vBoxSize);
-	static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Move_LocalPos(_float4(0.f, 0.f, 0.f, 0.f), pDesc->vBoxLocalPosition);*/
+	//static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Set_HalfGeometryInfo(pDesc->vBoxSize);
+	//static_cast<CRigidBody_Dynamic*>(m_pRigidBody)->Move_LocalPos(_float4(0.f, 0.f, 0.f, 0.f), pDesc->vBoxLocalPosition);
 
 	return S_OK;
 }

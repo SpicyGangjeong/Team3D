@@ -142,7 +142,6 @@ HRESULT CMonsterInfo::Refresh_LockOnMonsters()
 	{ // 뷰프러스텀 순회해서 가장 중앙에 근접한 몬스터 찾기
 		for (list<CMonster*>::iterator iter = m_ActiveMonsters.begin(); iter != m_ActiveMonsters.end(); ++iter)
 		{
-
 			// (카메라의 룩)과 (카메라 -> 몬스터 방향 벡터)를 내적해서 가장 큰 크기가 나온 몬스타가 락온 대상
 			CMonster* pMonster = (*iter);
 			if (pMonster->Get_Hp().x <= 0) {
@@ -150,6 +149,9 @@ HRESULT CMonsterInfo::Refresh_LockOnMonsters()
 			}
 			vMonsterPos = pMonster->Get_LockOnPos();
 			vToMonsterDir = vMonsterPos - vCameraPos;
+			if (150.f <= XMVectorGetX(XMVector4Length(vToMonsterDir))) {
+				continue;
+			}
 			_float fDotResult = CMyTools::DirectionCompare(vCameraLook, vToMonsterDir);
 			if (fDotResult <= cosf(fFovy)) {
 				continue;
