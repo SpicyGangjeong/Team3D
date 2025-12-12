@@ -18,6 +18,8 @@ CBarral_Splesh::CBarral_Splesh(const CBarral_Splesh& rhs)
 
 HRESULT CBarral_Splesh::Initialize_Prototype()
 {
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Barral")))
+		return E_FAIL;
 
 	return S_OK;
 
@@ -31,10 +33,8 @@ HRESULT CBarral_Splesh::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Barral")))
+	if (FAILED(Create_Effect()))
 		return E_FAIL;
-
 
 	m_wstrEffectName = L"Barral_Splesh";
 

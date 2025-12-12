@@ -123,7 +123,7 @@ void CTroll::Update(_float fTimeDelta)
 	for (_uint i = 0; i < ENUM_CLASS(TROLL_SKILL::END); i++)
 		m_fSkillCoolTime[i] = max(0.f, m_fSkillCoolTime[i] - fTimeDelta);
 
-	
+
 
 
 #pragma region TRAIL_UPDATE
@@ -182,7 +182,7 @@ void CTroll::Late_Update(_float fTimeDelta)
 	m_fCross = XMVectorGetY(XMVector3Cross(vLook, vDir));
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-//	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW, this);
+	//	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW, this);
 }
 
 HRESULT CTroll::Render()
@@ -337,8 +337,7 @@ void CTroll::OnCollision(CGameObject* pOther, void* pDesc)
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
 
-	_vector Head = (XMLoadFloat4x4(Get_HeadMatrix()), m_pTransformCom->Get_XMWorldMatrix()).r[3];
-	m_DamageInfo.vTarget_Pos = XMVectorSet(Head.m128_f32[0], Head.m128_f32[1], Head.m128_f32[2], 1.f);
+	m_DamageInfo.vTarget_Pos = m_pCharacter_Controller->Get_HeadPosition();
 
 	CEffect_Container* pEffect_Container = dynamic_cast<CEffect_Container*>(pOther);
 
@@ -368,6 +367,10 @@ void CTroll::OnCollision(CGameObject* pOther, void* pDesc)
 			break;
 		}
 	}
+	else
+	{
+		damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC_THROW)));
+	}
 
 	CMapElement_Interactable* pProps = dynamic_cast<CMapElement_Interactable*>(pOther);
 
@@ -383,6 +386,8 @@ void CTroll::OnCollision(CGameObject* pOther, void* pDesc)
 		return;
 	}
 	m_pFSM->Change_State(FSMSTATE::HIT);
+
+
 }
 
 void CTroll::OnHit(CGameObject* pOther, CGameObject* pCaller)

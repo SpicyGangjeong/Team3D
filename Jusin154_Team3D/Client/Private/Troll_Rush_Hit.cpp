@@ -22,6 +22,9 @@ CTroll_Rush_Hit::CTroll_Rush_Hit(const CTroll_Rush_Hit& rhs)
 HRESULT CTroll_Rush_Hit::Initialize_Prototype()
 {
 
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/MonsterPackage/TrollRush")))
+		return E_FAIL;
+
 	return S_OK;
 
 }
@@ -34,10 +37,8 @@ HRESULT CTroll_Rush_Hit::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/MonsterPackage/TrollRush")))
+	if (FAILED(Create_Effect()))
 		return E_FAIL;
-
 
 	m_wstrEffectName = L"Troll_Nomal_Smoke";
 

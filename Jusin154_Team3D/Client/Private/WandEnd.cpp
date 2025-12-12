@@ -17,6 +17,8 @@ CWandEnd::CWandEnd(const CWandEnd& rhs)
 
 HRESULT CWandEnd::Initialize_Prototype()
 {
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/WandEnd")))
+		return E_FAIL;
 
 	return S_OK;
 
@@ -30,9 +32,9 @@ HRESULT CWandEnd::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/WandEnd")))
+	if (FAILED(Create_Effect()))
 		return E_FAIL;
+
 
 	m_wstrEffectName = L"Lumos";
 

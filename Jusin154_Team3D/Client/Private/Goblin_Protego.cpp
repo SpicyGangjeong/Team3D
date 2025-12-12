@@ -17,6 +17,8 @@ CGoblin_Protego::CGoblin_Protego(const CGoblin_Protego& rhs)
 
 HRESULT CGoblin_Protego::Initialize_Prototype()
 {
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/MonsterPackage/GoblinProtego")))
+		return E_FAIL;
 
 	return S_OK;
 
@@ -30,7 +32,7 @@ HRESULT CGoblin_Protego::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/MonsterPackage/GoblinProtego")))
+	if (FAILED(Create_Effect()))
 		return E_FAIL;
 
 	m_pSphere = Get_PartObject<CEffectParts>("ProtegoSphere");

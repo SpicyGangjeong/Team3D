@@ -19,6 +19,9 @@ CTroll_Nomal_Smoke::CTroll_Nomal_Smoke(const CTroll_Nomal_Smoke& rhs)
 HRESULT CTroll_Nomal_Smoke::Initialize_Prototype()
 {
 
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/MonsterPackage/TrollNomalSmoke")))
+		return E_FAIL;
+
 	return S_OK;
 
 }
@@ -31,8 +34,7 @@ HRESULT CTroll_Nomal_Smoke::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/MonsterPackage/TrollNomalSmoke")))
+	if (FAILED(Create_Effect()))
 		return E_FAIL;
 
 

@@ -19,6 +19,9 @@ CBox_Splesh::CBox_Splesh(const CBox_Splesh& rhs)
 HRESULT CBox_Splesh::Initialize_Prototype()
 {
 
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Box")))
+		return E_FAIL;
+
 	return S_OK;
 
 }
@@ -31,8 +34,7 @@ HRESULT CBox_Splesh::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Box")))
+	if (FAILED(Create_Effect()))
 		return E_FAIL;
 
 
