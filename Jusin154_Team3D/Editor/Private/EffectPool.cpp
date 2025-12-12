@@ -19,6 +19,7 @@
 #include "Troll_Rush_Hit.h"
 #include "Troll_Nomal_Smoke.h"
 #include "TrollSwing.h"
+#include "StunEffect.h"
 
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -44,11 +45,38 @@ HRESULT CEffectPool::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	if (FAILED(Ready_Effect()))
-		return E_FAIL;
+#ifdef gimch
+	m_isActiveEffectCreate = false;
+	m_isActiveMonsterEffectCreate = false;
+#endif // gimch
+#ifdef Bin
+	m_isActiveEffectCreate = false;
+	m_isActiveMonsterEffectCreate = false;
+#endif // 
+#ifdef 진우
+	m_isActiveEffectCreate = false;
+	m_isActiveMonsterEffectCreate = false;
+#endif // 
+#ifdef 기무리
+	m_isActiveEffectCreate = false;
+	m_isActiveMonsterEffectCreate = false;
+#endif // 
+#ifdef 인혁
+	m_isActiveEffectCreate = false;
+	m_isActiveMonsterEffectCreate = false;
+#endif // 
 
-	//if (FAILED(Ready_MonsterEffect()))
-	//	return E_FAIL;
+	if (m_isActiveEffectCreate)
+	{
+		if (FAILED(Ready_Effect()))
+			return E_FAIL;
+	}
+
+	if (m_isActiveMonsterEffectCreate)
+	{
+		if (FAILED(Ready_MonsterEffect()))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -253,6 +281,16 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 		return pEffect; }
 	))) return E_FAIL;
 
+
+	if (FAILED(Create_Effect(SKILL_TYPE::STUN, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CStunEffect* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CStunEffect>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
 	return S_OK;
 }
 
@@ -377,6 +415,7 @@ void CEffectPool::Free()
 
 void CEffectPool::Describe_Entity()
 {
+
 	if(GUI::Button("Reset Pool"))
 	{
 		Reset_Pool();

@@ -75,6 +75,9 @@ protected:
 
 	vector<PendingEvent> m_PendingEvents;
 
+	_float m_fHitDegree = {};
+	_float m_fHitCross = {};
+
 private:
 	virtual void Add_FSM() {};
 	virtual void Set_FSM() {};
@@ -86,6 +89,7 @@ protected:
 	HRESULT Ready_Components(void*pArg);
 	void Play_Event();
 	void Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio = 0.f, _bool bKeep = false);
+	void Check_HitAngle(_vector ProjectileDir);
 public:
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr)PURE;
 	virtual void Free() override;

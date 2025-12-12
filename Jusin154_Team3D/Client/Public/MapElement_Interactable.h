@@ -27,10 +27,13 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	virtual void		GrapToPlayer(_fvector vPos, _float fRatio);
+	virtual void		OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr) override;
+	ON_COLLISION_INFO	CollisionCheck(_fvector StartPos, _fvector EndPos, _float fRadius);
 	_vector				Get_LockOnPos();
 	virtual void		Set_DrawOutLine();
 	virtual HRESULT		Render_OutLine() override;
 	void				Set_KinematicFlag(_bool bFlag);
+
 
 private:
 	ELEMENT_INTERACTABLE_ID			m_eInteractableID = { ELEMENT_INTERACTABLE_ID::END };
@@ -44,7 +47,11 @@ private:
 	_float							m_fOutLineScale = { 1.f };
 	_float							m_fOutLinePower = { 1.f };
 
-
+	/* 충돌을 위한 변수*/
+	_bool							m_isGraped = { false };
+	_bool                           m_bHit = { false };
+	_float4							m_vStartPos = { 0.f, 0.f, 0.f, 1.f };
+	class CEffectPool*				m_pEffectPool = { nullptr };
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

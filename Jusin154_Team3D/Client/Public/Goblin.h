@@ -32,6 +32,7 @@ public:
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
 
+	void Set_Detection(_bool bDetection);
 private:
 	CCallBack_Monster_Behavior* m_pCallBack_Behavior = { nullptr };
 	CCallBack_Monster_HitReport* m_pCallBack_HitReport = { nullptr };
@@ -45,6 +46,7 @@ private:
 	class CEffectPool* m_pEffectPool = nullptr;
 	DAMAGE_INFO m_DamageInfo;
 
+	_bool m_bDetection = { false };
 
 	class CEffectParts* m_pSmoke = { nullptr };
 	class CEffectParts* m_pGoblin_Particle = { nullptr };

@@ -88,23 +88,30 @@ void CSpell_Anim::Update(_float fTimeDelta)
 		m_bAnim_Start = false;
 	}
 
-
-	if (m_bAnim_Start == true)
+	if (m_bFadeOut == false)
 	{
-		m_fTime += fTimeDelta * m_fTimeMult;
-	}
-	else
-	{
-		m_iCurrentFrame = 0;
-	}
-
-	if (m_fTime >= m_fFrameTime)
-	{
-		m_iCurrentFrame++;
-		m_fTime -= m_fFrameTime;
-
-		if (m_iCurrentFrame >= m_iTotalFrames)
+		if (m_bAnim_Start == true)
+		{
+			m_fTime += fTimeDelta * m_fTimeMult;
+		}
+		else
+		{
 			m_iCurrentFrame = 0;
+		}
+
+		if (m_fTime >= m_fFrameTime)
+		{
+			m_iCurrentFrame++;
+			m_fTime -= m_fFrameTime;
+
+			if (m_iCurrentFrame >= m_iTotalFrames)
+				m_iCurrentFrame = 0;
+		}
+	}
+
+	if (m_iPerSpell != -1)
+	{
+		m_fY = m_fOrigin_Position.y + m_pInfoInstance->Get_Spell_Info(m_iPerSpell).fVidio;
 	}
 
 	__super::Update(fTimeDelta);

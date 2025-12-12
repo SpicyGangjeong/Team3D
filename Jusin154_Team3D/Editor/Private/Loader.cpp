@@ -156,6 +156,7 @@
 #include "Goblin_Dagger.h"
 #include "Goblin_BattleAxe.h"
 #include "Goblin_Spector.h"
+#include "StunEffect.h"
 #pragma endregion
 
 #pragma region PHYSX_HEADER
@@ -1274,6 +1275,16 @@ HRESULT CLoader::Loading_For_Effect()
 		return E_FAIL;
 
 
+	Asset_FileLoad("../Bin/Resources/Models/Effect/Box", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::EFFECT), wstrFileName,
+			CInstance_Model::Create(m_pDevice, m_pContext, pFilePath, MODEL::NONANIM, XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixIdentity(), 0))))
+			return E_FAIL;
+
+		return S_OK;
+
+		});
+
 	Asset_FileLoad("../Bin/Resources/Models/Effect/Rock", L"Prototype_Instance_Model_", [&](_wstring wstrFileName, const _char* pFilePath) {
 
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::EFFECT), wstrFileName,
@@ -1472,6 +1483,9 @@ HRESULT CLoader::Loading_For_Effect()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CTroll_Weapon>(g_iStaticLevel, CTroll_Weapon::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CStunEffect>(g_iStaticLevel, CStunEffect::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	
@@ -2205,8 +2219,8 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 		TEXT("Prototype_Component_TombProtector_Model")
 	));
 	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/SubTroll/Troll.fbx", XMMatrixIdentity(),
-		TEXT("Prototype_Component_Troll_Model")
+		MODEL::PBR_ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll.bin", XMMatrixIdentity(),
+		TEXT("Prototype_Component_troll_Model")
 	));
 
 	futures.emplace_back(Deferred_ModelLoad(
@@ -2215,11 +2229,6 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	));
 
 #pragma endregion
-
-	futures.emplace_back(Deferred_ModelLoad(
-		MODEL::ANIM, "../Bin/Resources/Models/Monster/SubTroll/troll_Anim.fbx", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f)* XMMatrixIdentity(),
-		TEXT("Prototype_Component_SubTroll_Model")
-	));
 
 	futures.emplace_back(Deferred_ModelLoad(
 		MODEL::ANIM, "../Bin/Resources/Models/Object/Troll_Weapon/Troll_Weapon.bin", XMMatrixScaling(0.0001f, 0.0001f, 0.0001f) * XMMatrixIdentity(),

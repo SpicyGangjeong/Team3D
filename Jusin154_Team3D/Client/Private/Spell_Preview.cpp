@@ -104,12 +104,15 @@ void CSpell_Preview::Update(_float fTimeDelta)
 		}
 	}
 
-	if (m_iSpellType != -1 && m_iPerSpellIndex != m_iSpellType)
+	if (m_bFadeOut == false)
 	{
-		m_pSpell_Info = static_cast<CUIObject*>(m_pOwner)->Get_Info(m_iSpellType).pSpellInfo;
-		m_fPreviewOffSet = static_cast<CUIObject*>(m_pOwner)->Get_Info(m_iSpellType).fPreview;
-		SizeUpY(m_fOriginPerviewSize + m_fPreviewOffSet);
-		m_iPerSpellIndex = m_iSpellType;
+		if (m_iSpellType != -1)
+		{
+			m_pSpell_Info = m_pInfoInstance->Get_Spell_Info(m_iSpellType).pSpellInfo;
+			m_fPreviewOffSet = m_pInfoInstance->Get_Spell_Info(m_iSpellType).fPreview;
+			SizeUpY(m_fOriginPerviewSize + m_fPreviewOffSet);
+			m_iPerSpellIndex = m_iSpellType;
+		}
 	}
 
 	m_fTime += fTimeDelta * m_fTimeMult;

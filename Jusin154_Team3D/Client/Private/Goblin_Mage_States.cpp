@@ -30,10 +30,12 @@ void CGoblin_Mage::Behavior_IdleEnter()
 
 HRESULT CGoblin_Mage::Behavior_IdleExitCheck()
 {
+	m_bLookAt = false;
 	if (m_fTargetDistance <= 20.f && m_fTargetDistance != 0.f)
 	{
 		m_vOriginPos = m_pTransformCom->Get_State(STATE::POSITION);
 		m_pEffectPool->Use_Skill(SKILL_TYPE::GOBLIN_PROTEGO, this);
+		m_bLookAt = true;
 		m_pFSM->Change_State(FSMSTATE::MOVE);
 	}
 	else if (m_fTargetDistance >= 25.f)
@@ -154,13 +156,13 @@ HRESULT CGoblin_Mage::Behavior_CombatExitCheck(_float fTimeDelta)
 	{
 		m_pFSM->Change_State(FSMSTATE::BLINK);
 	}
-	else if (m_fTargetDistance <= 12.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::LIGHTATTACK)] <= 0.f)
-	{
-		m_pFSM->Change_State(FSMSTATE::LIGHT_ATTACK);
-	}
-	else if (m_fTargetDistance <= 15.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SPELL)] <= 0.f)
+	else if (m_fTargetDistance <= 10.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::SPELL)] <= 0.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::SPELL);
+	}
+	else if (m_fTargetDistance <= 15.f && m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::LIGHTATTACK)] <= 0.f)
+	{
+		m_pFSM->Change_State(FSMSTATE::LIGHT_ATTACK);
 	}
 	else {
 		m_pFSM->Change_State(FSMSTATE::IDLEBREAK);
@@ -232,7 +234,7 @@ void CGoblin_Mage::Behavior_LightAttackEnter()
 	pair<_uint, _bool> pairAnimInfo = {};
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
 	pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK];
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.f,true,1.3f);
 	m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::LIGHTATTACK)] = m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::LIGHTATTACK)];
 
 
@@ -361,21 +363,55 @@ void CGoblin_Mage::Behavior_HitEnter()
 	pair<_uint, _bool> pairAnimInfo = {};
 	m_pFSM->Enable_State(FSMSTATE::HIT);
 
+	m_bLookAt = false;
+
 	switch (m_eHitSpell)
 	{
-	case STATEANIM::KNOCKDOWN_FWD:
+	case ENUM_CLASS(SKILL_TYPE::DESCENDO):
 		pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_FWD];
 		break;
-	case STATEANIM::TUMBLE2:
-		pairAnimInfo = m_Animation[STATEANIM::TUMBLE2];
+	case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
+		pairAnimInfo = m_Animation[STATEANIM::STUMBLE_BWD_R];
 		break;
-	case STATEANIM::HIT_LEVIOSO:
+	case ENUM_CLASS(SKILL_TYPE::JAP):
 	{
-		pairAnimInfo = m_Animation[STATEANIM::HIT_LEVIOSO];
-		break;
+		if (m_fHitDegree >= 90.f)
+		{
+			_int iRandIndex = m_pGameInstance->Real_Random_Int(0, 5);
+			switch (iRandIndex)
+			{
+			case 0:
+				pairAnimInfo = m_Animation[STATEANIM::HIT_BWD];
+				break;
+			case 1:
+				pairAnimInfo = m_Animation[STATEANIM::HIT_BWD2];
+				break;
+			case 2:
+				pairAnimInfo = m_Animation[STATEANIM::HIT_BWD3];
+				break;
+			case 3:
+				pairAnimInfo = m_Animation[STATEANIM::HIT_BWD4];
+				break;
+			default:
+				break;
+			}
+		}
+		else if (m_fHitDegree >= 45.f) {
+
+			if (m_fHitCross > 0.f) {
+				pairAnimInfo = m_Animation[STATEANIM::HIT_L];
+			}
+			else {
+				pairAnimInfo = m_Animation[STATEANIM::HIT_R];
+			}
+		}
+		else{
+			pairAnimInfo = m_Animation[STATEANIM::HIT_FWD];
+		}
 	}
-	default:
-		pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_FWD];
+	break;
+	case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
+		pairAnimInfo = m_Animation[STATEANIM::HIT_LEVIOSO];
 		break;
 	}
 
@@ -700,6 +736,10 @@ void CGoblin_Mage::Set_Anim()
 
 	m_Animation[STATEANIM::LAND] = { 376, false };
 	m_Animation[STATEANIM::HIT_LEVIOSO] = { 381, false };
+
+	m_Animation[STATEANIM::STUMBLE_BWD_L] = { 394, false };
+	m_Animation[STATEANIM::STUMBLE_BWD_R] = { 395, false };
+	m_Animation[STATEANIM::STUMBLE_FWD] = { 396, false };
 
 	m_Animation[STATEANIM::DEAD_BWD] = { 317, false };
 	m_Animation[STATEANIM::DEAD_BWD2] = { 318, false };

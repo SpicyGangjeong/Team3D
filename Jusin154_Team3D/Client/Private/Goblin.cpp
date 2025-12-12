@@ -64,7 +64,7 @@ HRESULT CGoblin::Initialize(void* pArg)
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
 
-	m_pCharacter_Controller->Set_Position(XMVectorSet(-40.f, 5.f, -20.f, 1.f));
+	m_pCharacter_Controller->Set_Position(XMVectorSet(-60.f, 5.f, -40.f, 1.f));
 
 	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
 	SAFE_ADDREF(m_pEffectPool);
@@ -119,6 +119,8 @@ void CGoblin::Update(_float fTimeDelta)
 	for (_uint i = 0; i < ENUM_CLASS(GOBLIN_SKILL::END); i++)
 		m_fSkillCoolTime[i] = max(0.f, m_fSkillCoolTime[i] - fTimeDelta);
 
+
+	m_pDetection->Set_Active(m_bDetection);
 
 }
 
@@ -255,6 +257,8 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 	m_pGoblinSpector->Set_Visible(false);
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
+	Check_HitAngle(XMLoadFloat4(&CollisionDesc->vHitDir));
+
 	_uint iSkillType = dynamic_cast<CEffect_Container*>(pOther)->Get_SkillType();
 	auto damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
 
@@ -263,29 +267,24 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 	switch (iSkillType)
 	{
 	case ENUM_CLASS(SKILL_TYPE::DESCENDO):
-		m_eHitSpell = STATEANIM::KNOCKDOWN_FWD;
+		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
 		break;
 	case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
-		m_eHitSpell = STATEANIM::KNOCKDOWN_BWD;
+		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::BOMBARDA);
 		break;
 	case ENUM_CLASS(SKILL_TYPE::JAP):
 	{
-		m_eHitSpell = STATEANIM::HIT_BWD;
-
+		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
 		m_DamageInfo.fDamage = damagePair.first;
 		m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
 		if (0 == damagePair.second) {
 			m_pFSM->Change_State(FSMSTATE::DEAD);
 			return;
 		}
-
 	}
 	break;
 	case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
-		m_eHitSpell = STATEANIM::HIT_LEVIOSO;
-		break;
-	default:
-		m_eHitSpell = STATEANIM::KNOCKDOWN_FWD;
+		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::LEVIOSO);
 		break;
 	}
 	if (!m_pFSM->IsEnable(FSMSTATE::BLINK)) {
@@ -296,6 +295,11 @@ void CGoblin::OnCollision(CGameObject* pOther, void* pDesc)
 
 void CGoblin::OnHit(CGameObject* pOther, CGameObject* pCaller)
 {
+}
+
+void CGoblin::Set_Detection(_bool bDetection)
+{
+	m_bDetection = bDetection;
 }
 
 HRESULT CGoblin::Ready_Components()
@@ -411,8 +415,8 @@ HRESULT CGoblin::Ready_Parts()
 
 #pragma endregion
 
-	if (FAILED(Add_PartObject<CEnemy_Detection>("Enemy_Detection", g_iStaticLevel, &m_pDetection, &PartsDesc)))
-	{
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CEnemy_Detection>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER, &PartsDesc, this, &m_pDetection))) {
 		return E_FAIL;
 	}
 

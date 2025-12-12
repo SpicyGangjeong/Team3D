@@ -524,6 +524,15 @@
     <ClInclude Include="..\Public\Boss_HpBar.h">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Boss_HpBar</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Box_Splesh.h">
+      <Filter>02.GameObjects\Effect\PropsEffect\Box</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Chair_Splesh.h">
+      <Filter>02.GameObjects\Effect\PropsEffect\Chair</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Barral_Splesh.h">
+      <Filter>02.GameObjects\Effect\PropsEffect\Barral</Filter>
+	</ClInclude>
     <ClInclude Include="..\Public\State_Broom_Hover.h">
       <Filter>04.Mechanic\State\Broom_Player\State_Broom_Hover</Filter>
     </ClInclude>
@@ -538,6 +547,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\NPC_Ollivander.h">
       <Filter>02.GameObjects\NPC\Ally\Shopper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Shield.h">
+      <Filter>04.Mechanic\State\State_Combat\State_Shield</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1122,6 +1134,18 @@
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Boss_HpBar">
       <UniqueIdentifier>{b49a3671-96d0-47b8-833f-28190d549b0f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\PropsEffect">
+      <UniqueIdentifier>{215b093d-648c-4cca-a69b-f4005b34ee06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\PropsEffect\Box">
+      <UniqueIdentifier>{b3c9f1a4-afb1-45ba-8d8b-034267607976}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\PropsEffect\Barral">
+      <UniqueIdentifier>{c2841516-9f72-4c72-aa50-652b4ff33b5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\PropsEffect\Chair">
+      <UniqueIdentifier>{3103c6e1-60cb-438b-a3eb-844b919ccd43}</UniqueIdentifier>
+	</Filter>
     <Filter Include="04.Mechanic\State\Broom_Player\State_Broom_Hover">
       <UniqueIdentifier>{24f6903f-8f6b-46ff-a387-ecb44d673887}</UniqueIdentifier>
     </Filter>
@@ -1133,6 +1157,9 @@
     </Filter>
     <Filter Include="02.GameObjects\UI\Enemy_Detection">
       <UniqueIdentifier>{34a4beb9-ccb9-4847-ae45-af4e7dc25d94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\State_Combat\State_Shield">
+      <UniqueIdentifier>{fd4a0869-2491-4fec-9df9-3aedbac96171}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\NPC\Ally\Shopper">
       <UniqueIdentifier>{02cb243a-f63e-4e55-9d55-b47e31a4c13e}</UniqueIdentifier>
@@ -1605,6 +1632,15 @@
     <ClCompile Include="..\Private\Boss_HpBar.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Boss_HpBar</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Box_Splesh.cpp">
+      <Filter>02.GameObjects\Effect\PropsEffect\Box</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Barral_Splesh.cpp">
+      <Filter>02.GameObjects\Effect\PropsEffect\Barral</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Chair_Splesh.cpp">
+      <Filter>02.GameObjects\Effect\PropsEffect\Chair</Filter>
+	</ClCompile>
     <ClCompile Include="..\Private\State_Broom_Hover.cpp">
       <Filter>04.Mechanic\State\Broom_Player\State_Broom_Hover</Filter>
     </ClCompile>
@@ -1616,6 +1652,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Enemy_Detection.cpp">
       <Filter>02.GameObjects\UI\Enemy_Detection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Shield.cpp">
+      <Filter>04.Mechanic\State\State_Combat\State_Shield</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\NPC_Ollivander.cpp">
       <Filter>02.GameObjects\NPC\Ally\Shopper</Filter>

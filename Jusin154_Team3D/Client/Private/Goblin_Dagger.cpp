@@ -38,7 +38,7 @@ HRESULT CGoblin_Dagger::Initialize(void* pArg)
 
 void CGoblin_Dagger::Priority_Update(_float fTimeDelta)
 {
-	//m_pModelCom->Combined_BoneMatrix();
+	XMStoreFloat4(&m_vStartPos, m_pTransformCom->Get_State(STATE::POSITION));
 	if (m_bAttach)
 	{
 		_matrix socketMatrix = {};
@@ -73,6 +73,7 @@ void CGoblin_Dagger::Update(_float fTimeDelta)
 
 void CGoblin_Dagger::Late_Update(_float fTimeDelta)
 {
+	Dagger_Hit();
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 }
 
@@ -151,6 +152,73 @@ HRESULT CGoblin_Dagger::Bind_ShaderResources()
 	}
 
 	return S_OK;
+}
+
+void CGoblin_Dagger::Dagger_Hit()
+{
+	_vector vStartPos = XMLoadFloat4(&m_vStartPos);
+	_vector vEndPos = m_pTransformCom->Get_State(STATE::POSITION);
+	_vector vDir = vEndPos - vStartPos;
+	_float fLength = XMVectorGetX(XMVector4Length(vDir));
+	vDir = XMVector4Normalize(vDir);
+	m_SweepBuffer = {};
+	_bool bHit = m_pGameInstance->SphereCast(0.5f, vStartPos, vDir, fLength, PSX::PxHitFlag::eDEFAULT, PSX::PxQueryFlag::eDYNAMIC, m_SweepBuffer);
+	if (true == bHit) {
+		vector<PSX::PxSweepHit*> Hits;
+		_uint iHitCount = m_SweepBuffer.nbTouches;
+		if (true == m_SweepBuffer.hasBlock) {
+			iHitCount += 1;
+			Hits.reserve(iHitCount);
+			Hits.emplace_back(&m_SweepBuffer.block);
+		}
+		else {
+			Hits.reserve(iHitCount);
+		}
+		for (_uint i = 0; i < m_SweepBuffer.nbTouches; ++i) {
+			Hits.emplace_back(&m_SweepBuffer.touches[i]);
+		}
+
+		for (_uint i = 0; i < Hits.size(); ++i) {
+			PSX::PxSweepHit* pHit = Hits[i];
+			PSX::PxActor* pActor = pHit->actor;
+			if (nullptr != pActor && nullptr != pActor->userData) {
+				const PSX::PxSweepHit& hit = m_SweepBuffer.block;
+				PSX::PxShape* pShape = hit.shape;
+				ON_COLLISION_INFO tagCollInfo = {};
+
+				tagCollInfo.vWorldPos.w = 1.f;
+
+				memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &hit.position, sizeof(hit.position));
+
+				memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &hit.normal, sizeof(hit.normal));
+				XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
+				tagCollInfo.fLength = fLength;
+				
+				PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+				tagCollInfo.pObject = pUserData->pOwner;
+				switch (PXOBJECT(pUserData->iSubKind))
+				{
+				case Engine::PXOBJECT::PLAYER:
+				{
+					if (false == m_bVisible) {
+						break;
+					}
+					m_bVisible = false;
+					CStat* pStat = pUserData->pCharacter->Get_Owner()->Get_Component<CStat>();
+					pStat->Get_Damage(10.f);
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+				}
+				break;
+				case Engine::PXOBJECT::ALLY_HITBOX:
+					break;
+				default:
+					break;
+				}
+				
+				
+			}
+		}
+	}
 }
 
 

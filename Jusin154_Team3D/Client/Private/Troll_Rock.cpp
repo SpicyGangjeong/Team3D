@@ -38,6 +38,7 @@ HRESULT CTroll_Rock::Initialize(void* pArg)
 
 void CTroll_Rock::Priority_Update(_float fTimeDelta)
 {
+	XMStoreFloat4(&m_vStartPos, m_pTransformCom->Get_State(STATE::POSITION));
 	m_pModelCom->Combined_BoneMatrix();
 	if (m_bAttach)
 	{
@@ -62,7 +63,6 @@ void CTroll_Rock::Priority_Update(_float fTimeDelta)
 		m_pTransformCom->Go_Straight(fTimeDelta);
 
 	}
-	XMStoreFloat4(&m_vStartPos, m_pTransformCom->Get_State(STATE::POSITION));
 
 
 #ifdef _DEBUG
@@ -111,7 +111,19 @@ void CTroll_Rock::RockHit()
 			PSX::PxSweepHit* pHit = Hits[i];
 			PSX::PxActor* pActor = pHit->actor;
 			if (nullptr != pActor && nullptr != pActor->userData) {
+				const PSX::PxSweepHit& hit = m_SweepBuffer.block;
+				PSX::PxShape* pShape = hit.shape;
+				ON_COLLISION_INFO tagCollInfo = {};
+
+				tagCollInfo.vWorldPos.w = 1.f;
+
+				memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &hit.position, sizeof(hit.position));
+
+				memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &hit.normal, sizeof(hit.normal));
+				XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
+				tagCollInfo.fLength = fLength;
 				PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+				tagCollInfo.pObject = pUserData->pOwner;
 				switch (PXOBJECT(pUserData->iSubKind))
 				{
 				case Engine::PXOBJECT::PLAYER:
@@ -122,6 +134,7 @@ void CTroll_Rock::RockHit()
 					m_bVisible = false;
 					CStat* pStat = pUserData->pCharacter->Get_Owner()->Get_Component<CStat>();
 					pStat->Get_Damage(10.f);
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
 				}
 				break;
 				case Engine::PXOBJECT::ALLY_HITBOX:
