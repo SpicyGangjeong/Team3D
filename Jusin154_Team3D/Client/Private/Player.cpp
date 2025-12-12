@@ -7,6 +7,7 @@
 #include "Camera_Gaze.h"
 #include "CamPosition_Arm.h"
 #include "Wand.h"
+#include "Item_Potion.h"
 #include "Character_Controller.h"
 #include "CallBack_Playable_Behavior.h"
 #include "CamPosition_Shoulder.h"
@@ -92,6 +93,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pInfoInstance->Set_Damage(m_pStat->Get_Stat().fDamage);
 
 	m_pCharacter_Controller->Set_Position(XMVectorSet(-34.f, 5, -11.4f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-34.f, 5, -11.4f, 1.f));
 
 #ifdef _DEBUG
 	m_BasicEffect = make_unique<BasicEffect>(m_pDevice);
@@ -147,6 +149,14 @@ __super::Update(fTimeDelta);
 		m_pInfoInstance->Mouse_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_UP));
 		m_bAim = false; 
 	}
+
+	if (m_pGameInstance->Key_Down(DIK_1)) {
+		if (m_pModelCom->Get_SecondAnimIndex() == m_Animation[STATEANIM::LUMOS].first)
+		{
+			m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R), m_Animation[STATEANIM::LUMOS_STOP].first, m_Animation[STATEANIM::LUMOS_STOP].second);
+		}
+	}
+
 }
 
 void CPlayer::UpdateGrapInteractive(_float fTimeDelta)
@@ -310,7 +320,6 @@ void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 void CPlayer::OnHit(CGameObject* pOther, CGameObject* pCaller)
 {
 }
-#ifdef _DEBUG
 
 void CPlayer::Start_CameraShake(_float fTime, _float fIntense)
 {
@@ -319,6 +328,7 @@ void CPlayer::Start_CameraShake(_float fTime, _float fIntense)
 	m_fCameraShakeIntense = fIntense;
 	m_bCameraShake = true;
 }
+#ifdef _DEBUG
 
 void CPlayer::Render_CameraCoordinateSystem()
 {
@@ -453,6 +463,18 @@ HRESULT CPlayer::Ready_Parts()
 	{
 		return E_FAIL;
 	}
+
+	CItem_Potion::POTION_DESC PotionDesc{};
+
+	PotionDesc.pParentTransform = m_pTransformCom;
+	PotionDesc.pSocketMatrices = m_pModelCom->Get_BoneMatrixPtr("SKT_LeftHand");
+
+	if (FAILED(Add_PartObject<CItem_Potion>("Potion", g_iStaticLevel, nullptr, &PotionDesc)))
+	{
+		return E_FAIL;
+	}
+
+	Get_PartObject<CItem_Potion>()->Set_Visible(false);
 
 	{
 		CCamPosition_Shoulder::CAMERA_SHOULDER_DESC Desc;

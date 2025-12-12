@@ -10,6 +10,7 @@
 #include "MapElement_Light.h"
 #include "MapElement_Interactable.h"
 #include "MapElement_Lake.h"
+#include "MapElement_Door.h"
 #include "Layer.h"
 
 CMapInfo::CMapInfo()
@@ -567,6 +568,71 @@ HRESULT CMapInfo::Load_WaterElemet(const _char* pFileName)
 		SurfaceColor->QueryFloatAttribute("w", &Desc.vSurfaceColor.w);
 
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Lake>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Lake"), &Desc)))
+			return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+HRESULT CMapInfo::Load_DoorElemet(const _char* pFileName)
+{
+	tinyxml2::XMLDocument xmlDoc;
+
+	string strPath = "../Bin/Resources/Data/Map/Door/" + string(pFileName) + ".xml";
+
+	if ((tinyxml2::XML_SUCCESS != xmlDoc.LoadFile(strPath.c_str())))
+		return E_FAIL;
+
+	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("Doors");
+
+	if (nullptr == root)
+	{
+		MSG_BOX("Failed to Find root");
+		return S_OK;
+	}
+
+	for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
+	{
+		CMapElement_Door::ELEMENT_DOOR_DESC Desc = {};
+
+		/* Model Prototypes */
+		Object->QueryUnsignedAttribute("Lod_Level", &Desc.iMaxLodLevel);
+
+		string strTag = {};
+		for (auto* PrototypeTag = Object->FirstChildElement("PrototypeTag"); PrototypeTag; PrototypeTag = PrototypeTag->NextSiblingElement("PrototypeTag"))
+		{
+			strTag = PrototypeTag->GetText();
+
+			Desc.ModelPrototypeTags.push_back(CMyTools::ToWstring(strTag));
+		}
+
+		/* Transform */
+		auto* Position = Object->FirstChildElement("Position");
+		Position->QueryFloatAttribute("x", &Desc.vPosition.x);
+		Position->QueryFloatAttribute("y", &Desc.vPosition.y);
+		Position->QueryFloatAttribute("z", &Desc.vPosition.z);
+
+		auto* Scale = Object->FirstChildElement("Scale");
+		Scale->QueryFloatAttribute("x", &Desc.vScale.x);
+		Scale->QueryFloatAttribute("y", &Desc.vScale.y);
+		Scale->QueryFloatAttribute("z", &Desc.vScale.z);
+
+		auto* Rotation = Object->FirstChildElement("Rotation");
+		Rotation->QueryFloatAttribute("x", &Desc.vRotation.x);
+		Rotation->QueryFloatAttribute("y", &Desc.vRotation.y);
+		Rotation->QueryFloatAttribute("z", &Desc.vRotation.z);
+
+		//auto* HalfGeometryInfo = Object->FirstChildElement("HalfGeometryInfo");
+		//HalfGeometryInfo->QueryFloatAttribute("x", &Desc.vBoxSize.x);
+		//HalfGeometryInfo->QueryFloatAttribute("y", &Desc.vBoxSize.y);
+		//HalfGeometryInfo->QueryFloatAttribute("z", &Desc.vBoxSize.z);
+
+		//auto* LocalTranslation = Object->FirstChildElement("LocalTranslation");
+		//LocalTranslation->QueryFloatAttribute("x", &Desc.vBoxLocalPosition.x);
+		//LocalTranslation->QueryFloatAttribute("y", &Desc.vBoxLocalPosition.y);
+		//LocalTranslation->QueryFloatAttribute("z", &Desc.vBoxLocalPosition.z);
+
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Door>(g_iStaticLevel, NEXT_LEVEL, LAYER_DOOR, &Desc)))
 			return E_FAIL;
 	}
 

@@ -171,19 +171,6 @@ HRESULT CEffectPool::Bind_ShaderResources()
 
 HRESULT CEffectPool::Ready_Effect()
 {
-#ifdef 기무리
-	if (FAILED(Create_Effect(SKILL_TYPE::JAP, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
-		CNomalJap* pEffect = nullptr;
-
-		pEffect = m_pGameInstance->Clone_Prototype<CNomalJap>(iPrototypeLevel, nullptr);
-
-		return pEffect; }
-	))) return E_FAIL;
-
-#endif // 기무리
-
-	
-#ifndef 기무리
 	if (FAILED(Create_Effect(SKILL_TYPE::JAP, 10, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 		CNomalJap* pEffect = nullptr;
 
@@ -325,8 +312,6 @@ HRESULT CEffectPool::Ready_Effect()
 
 		return pEffect; }
 	))) return E_FAIL;
-
-#endif // !기무리
 
 	return S_OK;
 }

@@ -532,7 +532,7 @@
     </ClInclude>
     <ClInclude Include="..\Public\Barral_Splesh.h">
       <Filter>02.GameObjects\Effect\PropsEffect\Barral</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\State_Broom_Hover.h">
       <Filter>04.Mechanic\State\Broom_Player\State_Broom_Hover</Filter>
     </ClInclude>
@@ -550,6 +550,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\State_Shield.h">
       <Filter>04.Mechanic\State\State_Combat\State_Shield</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapElement_Door.h">
+      <Filter>02.GameObjects\Environment\03.MapElement\Door</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Item_Potion.h">
+      <Filter>02.GameObjects\Item\Potion</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1145,7 +1151,7 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\PropsEffect\Chair">
       <UniqueIdentifier>{3103c6e1-60cb-438b-a3eb-844b919ccd43}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="04.Mechanic\State\Broom_Player\State_Broom_Hover">
       <UniqueIdentifier>{24f6903f-8f6b-46ff-a387-ecb44d673887}</UniqueIdentifier>
     </Filter>
@@ -1163,6 +1169,12 @@
     </Filter>
     <Filter Include="02.GameObjects\NPC\Ally\Shopper">
       <UniqueIdentifier>{02cb243a-f63e-4e55-9d55-b47e31a4c13e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\03.MapElement\Door">
+      <UniqueIdentifier>{b09f9ada-6cf4-41a4-ad28-f00855509825}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Item\Potion">
+      <UniqueIdentifier>{ace6c64f-901a-424e-99da-53f281413d77}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1640,7 +1652,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\Chair_Splesh.cpp">
       <Filter>02.GameObjects\Effect\PropsEffect\Chair</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\Private\State_Broom_Hover.cpp">
       <Filter>04.Mechanic\State\Broom_Player\State_Broom_Hover</Filter>
     </ClCompile>
@@ -1658,6 +1670,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\NPC_Ollivander.cpp">
       <Filter>02.GameObjects\NPC\Ally\Shopper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapElement_Door.cpp">
+      <Filter>02.GameObjects\Environment\03.MapElement\Door</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Item_Potion.cpp">
+      <Filter>02.GameObjects\Item\Potion</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

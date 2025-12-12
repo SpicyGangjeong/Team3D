@@ -241,10 +241,6 @@ void CGameInstance::BillBoard(CTransform* pTransform)
 
 }
 
-
-#ifdef EDITOR_PROJECT
-
-
 void CGameInstance::SlowMotion(_float fSlowIntense, _float fTime)
 {
 	if (fTime <= 0 || fSlowIntense <= 0)
@@ -254,6 +250,30 @@ void CGameInstance::SlowMotion(_float fSlowIntense, _float fTime)
 	m_vSlowTime = _float2(0.f, fTime);
 	m_fSlowIntense = fSlowIntense;
 }
+
+_float CGameInstance::Update_SlowMotion(_float fTimeDelta)
+{
+	_float fExcuteTimeDelta = {};
+
+	if (m_isSlowMotion == false)
+		return fTimeDelta;
+
+	m_vSlowTime.x += fTimeDelta;
+
+	if (m_vSlowTime.x >= m_vSlowTime.y) // 시간을 넘겼다면
+	{
+		m_isSlowMotion = false;
+		m_vSlowTime.x = 0.f;
+	}
+	else
+	{
+		fExcuteTimeDelta = m_fSlowIntense * fTimeDelta;
+	}
+
+	return fExcuteTimeDelta;
+}
+
+#ifdef EDITOR_PROJECT
 
 void CGameInstance::Save_ModelFilePath(const _char* FilePath)
 {
@@ -281,28 +301,6 @@ size_t CGameInstance::BinaryModelFilePathCount()
 size_t CGameInstance::ModelFilePathCount()
 {
 	return m_FilePaths.size();
-}
-
-_float CGameInstance::Update_SlowMotion(_float fTimeDelta)
-{
-	_float fExcuteTimeDelta = {};
-
-	if (m_isSlowMotion == false)
-		return fTimeDelta;
-
-	m_vSlowTime.x += fTimeDelta;
-
-	if (m_vSlowTime.x >= m_vSlowTime.y) // 시간을 넘겼다면
-	{
-		m_isSlowMotion = false;
-		m_vSlowTime.x = 0.f;
-	}
-	else
-	{
-		fExcuteTimeDelta = m_fSlowIntense * fTimeDelta;
-	}
-
-	return fExcuteTimeDelta;
 }
 
 #endif // EDITOR_PROJECT

@@ -17,7 +17,13 @@ CCamera_Debug::CCamera_Debug(const CCamera_Debug& rhs)
 
 void CCamera_Debug::Priority_Update(_float fTimeDelta)
 {
+#ifndef 기무리
+#ifdef _DEBUG
 	m_pGameInstance->Bind_Camera(g_iStaticLevel, CAMERA_DEBUG, false);
+#endif // _DEBUG
+#endif // !기무리
+
+
 }
 
 void CCamera_Debug::Update(_float fTimeDelta)

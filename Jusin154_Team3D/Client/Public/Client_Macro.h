@@ -61,6 +61,7 @@ namespace Client {
 #define LAYER_LIGHT			TEXT("Layer_Light")
 #define LAYER_INTERACTABLE	TEXT("Layer_Interactable")
 #define LAYER_UNIFIED		TEXT("Layer_Unified")
+#define LAYER_DOOR			TEXT("Layer_Door")
 
 #define LAYER_MAPOBJECTMANAGER		TEXT("Layer_MapObjectManager")
 

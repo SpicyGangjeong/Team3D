@@ -579,7 +579,7 @@ HRESULT CTroll::Behavior_BackHandSwingExitCheck(_float fTimeDelta)
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
 		return E_FAIL;
 	}
-	return E_FAIL;
+	return S_OK;
 }
 
 void CTroll::Behavior_BackHandSwingExit()
@@ -811,7 +811,7 @@ void CTroll::Add_FSM()
 		Desc.funcExitCheck = [this](_float fTimeDelta) { return Behavior_BackHandSwingExitCheck(fTimeDelta); };
 		Desc.funcExitEvent = [this]() { Behavior_BackHandSwingExit(); };
 		Desc.funcPriorityUpdate = nullptr;
-		Desc.funcLateUpdate = nullptr;
+		Desc.funcLateUpdate = [this](_float fTimeDelta, _bool& bHit) {  SwingHit(bHit); };
 		m_States.emplace(FSMSTATE::BACKHAND_SWING, CTroll_State_BackHand_Swing::Create(&Desc));
 	}
 #pragma endregion
@@ -912,7 +912,7 @@ void CTroll::CheckHammerHits(_uint& iHitCount, vector<PSX::PxSweepHit>& pxHits)
 
 		_bool bCollision = false;
 		m_SweepBufferHammer = {};
-		bCollision = m_pGameInstance->SphereCast(1.2f, vStartPos, vDir, fDistance, PSX::PxHitFlag::eDEFAULT, PSX::PxQueryFlag::eDYNAMIC, m_SweepBufferHammer);
+		bCollision = m_pGameInstance->SphereCast(1.5f, vStartPos, vDir, fDistance, PSX::PxHitFlag::eDEFAULT, PSX::PxQueryFlag::eDYNAMIC, m_SweepBufferHammer);
 		if (true == bCollision) {
 			iHitCount += m_SweepBufferHammer.getNbTouches() + m_SweepBufferHammer.hasBlock;
 			auto touches = m_SweepBufferHammer.getTouches();
@@ -933,7 +933,7 @@ void CTroll::CheckHammerHits(_uint& iHitCount, vector<PSX::PxSweepHit>& pxHits)
 
 		_bool bCollision = false;
 		m_SweepBufferGrip = {};
-		bCollision = m_pGameInstance->SphereCast(1.2f, vStartPos, vDir, fDistance, PSX::PxHitFlag::eDEFAULT, PSX::PxQueryFlag::eDYNAMIC, m_SweepBufferGrip);
+		bCollision = m_pGameInstance->SphereCast(1.5f, vStartPos, vDir, fDistance, PSX::PxHitFlag::eDEFAULT, PSX::PxQueryFlag::eDYNAMIC, m_SweepBufferGrip);
 		if (true == bCollision) {
 			iHitCount += m_SweepBufferGrip.getNbTouches() + m_SweepBufferGrip.hasBlock;
 			auto touches = m_SweepBufferGrip.getTouches();
