@@ -50,6 +50,7 @@ public:
 
 	_vector					Get_Position();
 	_float3					Get_FootPosition();
+	_float3					Get_HeadPosition();
 	PSX::PxTransform		Get_FootPositionPxTransform();
 private:
 	PSX::PxRigidDynamic*	m_pRigidBody = { nullptr };		// 실제 시뮬레이션을 도는 본체

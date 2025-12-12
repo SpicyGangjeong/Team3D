@@ -181,6 +181,27 @@ _float3 CRigidBody_Dynamic::Get_FootPosition()
 	return vOut;
 }
 
+_float3 CRigidBody_Dynamic::Get_HeadPosition()
+{
+	PSX::PxTransform pxTransform = m_pRigidBody->getGlobalPose();
+	switch (m_eActorType)
+	{
+	case Engine::ACTOR::BOX:
+		pxTransform.p.y += m_vhalfGeometryInfo.y;
+		break;
+	case Engine::ACTOR::CAPSULE:
+		pxTransform.p.y += m_vhalfGeometryInfo.y * 0.5f + m_vhalfGeometryInfo.x;
+		break;
+	case Engine::ACTOR::SPHERE:
+		pxTransform.p.y += m_vhalfGeometryInfo.x;
+		break;
+	default:
+		break;
+	}
+	_float3 vOut = { pxTransform.p.x , pxTransform.p.y , pxTransform.p.z };
+	return vOut;
+}
+
 PSX::PxTransform CRigidBody_Dynamic::Get_FootPositionPxTransform()
 {
 	PSX::PxTransform pxTransform = m_pRigidBody->getGlobalPose();
