@@ -65,8 +65,8 @@ HRESULT CEffectPool::Initialize(void* pArg)
 	m_isActiveMonsterEffectCreate = false;
 #endif // gimch
 #ifdef Bin
-	m_isActiveEffectCreate = false;
-	m_isActiveMonsterEffectCreate = false;
+	m_isActiveEffectCreate = true;
+	m_isActiveMonsterEffectCreate = true;
 #endif // 
 #ifdef 진우
 	m_isActiveEffectCreate = true;

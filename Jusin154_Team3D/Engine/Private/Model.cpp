@@ -295,7 +295,7 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 		m_bInitialRootRotSaved = false;
 	}
 
-	if (m_bIsSecondFinishedAnim)
+	if (m_bIsSecondFinishedAnim && !m_bIsSecondLoop)
 	{
 		m_bSecondStopBlend = true;
 	}
@@ -386,7 +386,6 @@ void CModel::Set_Second_AnimationIndex(_uint BoneIndex, _uint iIndex, _bool isLo
 	}
 	else
 	{
-		// 세컨드 애니 끄기
 		if (m_iCurrSecondAnimIndex != -1)
 			m_Animations[m_iCurrSecondAnimIndex]->Depart_Animation();
 

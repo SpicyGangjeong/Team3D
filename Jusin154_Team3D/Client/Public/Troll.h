@@ -51,6 +51,7 @@ private:
 	_float4 m_vStartGripPos = { };
 	_float2 m_vStunTimer = { 0.f, 4.f };
 	_uint iIndex;
+	DAMAGE_INFO m_DamageInfo;
 
 	class CEffectParts* m_pRight_Smoke = { nullptr };
 	class CEffectParts* m_pLeft_Smoke = { nullptr };
@@ -145,6 +146,9 @@ private:
 	HRESULT Behavior_HitExitCheck();
 	void	Behavior_HitExit();
 
+	void	Behavior_DeadEnter();
+	HRESULT Behavior_DeadExitCheck(_float fTimeDelta);
+	void	Behavior_DeadExit();
 };
 
 NS_END
