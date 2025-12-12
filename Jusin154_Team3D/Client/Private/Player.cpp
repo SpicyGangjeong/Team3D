@@ -427,7 +427,7 @@ HRESULT CPlayer::Ready_Components()
 		Desc.fContactOffset = 0.001f;
 		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
 		Desc.bAutoStepping = { false };
-		Desc.fStepOffset = { 0.001f };
+		Desc.fStepOffset = { 0.015f };
 		Desc.fRadius = 0.5f;
 		Desc.fHeight = 0.6f;
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Playable_HitReport::Create();
