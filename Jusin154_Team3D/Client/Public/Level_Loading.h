@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Client_Define.h"
 #include "Level.h"
@@ -15,10 +15,17 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 	virtual _uint	Get_NextLevelID() override { return ENUM_CLASS(m_eNextLevelID); };
+	virtual void Capture_TerrainPreShadow(SHADOW_LIGHT_DESC& ShadowDesc);
 
 private:
-	LEVEL			m_eNextLevelID = { LEVEL::END };
-	class CLoader*	m_pLoader = { nullptr };
+	SHADOW_LIGHT_DESC	m_ShadowDesc = {};
+	LEVEL				m_eNextLevelID = { LEVEL::END };
+	class CLoader* m_pLoader = { nullptr };
+
+	_float m_fTimeDelta{};
+	_bool m_bDelay = { false };
+	_bool m_bNextLevel = { false };
+	class CGameObject* m_pIntro_Image = { nullptr };
 private:
 	virtual HRESULT Initialize(LEVEL eNextLevelID);
 	HRESULT Initialize() override;

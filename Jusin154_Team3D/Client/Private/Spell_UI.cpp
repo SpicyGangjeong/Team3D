@@ -45,7 +45,6 @@ HRESULT CSpell_UI::Initialize(void* pArg)
 	//m_vImageUV[2] = Image_UV(1);
 	//m_vImageUV[3] = Alphabet_UV('T');
 	Set_ImagePos();
-	m_bActive = true;
 	return S_OK;
 }
 

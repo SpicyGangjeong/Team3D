@@ -20,8 +20,7 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
                      _In_ LPWSTR    lpCmdLine,
-                     _In_ int       nCmdShow)
-{
+                     _In_ int       nCmdShow){
 #ifdef _DEBUG
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     //_CrtSetBreakAlloc(1181);
@@ -79,6 +78,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return E_FAIL;
     }
     if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Present")))) {
+        return E_FAIL;
+    }
+    if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Picking")))) {
+        return E_FAIL;
+    }
+    if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_PhysX")))) {
+        return E_FAIL;
+    }
+    if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Level")))) {
         return E_FAIL;
     }
     if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_FrameCount")))) {

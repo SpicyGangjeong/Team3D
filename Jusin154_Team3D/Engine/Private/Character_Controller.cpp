@@ -141,7 +141,7 @@ _float3 CCharacter_Controller::Get_Volume()
 }
 
 HRESULT CCharacter_Controller::ConvertToDO(CRigidBody_Dynamic& BodyOriginal)
-{	
+{
 	PSX::PxRigidDynamic* pDOActor = BodyOriginal.Get_Actor();
 	PSX::PxRigidDynamic* pCCTActor = m_pController->getActor();
 
@@ -150,7 +150,7 @@ HRESULT CCharacter_Controller::ConvertToDO(CRigidBody_Dynamic& BodyOriginal)
 
 	m_pGameInstance->Attach_Actor(*pDOActor); // DO 액터 활성화
 
-	PSX::PxTransform pxTransform = pCCTActor->getGlobalPose(); 
+	PSX::PxTransform pxTransform = pCCTActor->getGlobalPose();
 	pDOActor->setGlobalPose(pxTransform);
 
 	return S_OK;
@@ -177,75 +177,71 @@ void CCharacter_Controller::Rewind_Grounded()
 		m_iIsOnGround = 0;
 	}
 }
-
 _bool CCharacter_Controller::UpdateGroundByCast(_float fTimeDelta)
 {
-	_vector vFoot = Get_FootPosition();
-	_float3 fFoot;
-	XMStoreFloat3(&fFoot, vFoot);
-	fFoot.y += 0.0625f;
+	_vector vCharacterPos = Get_Position();
 
-	PSX::PxSweepBuffer pxBuffer = {};
+	PSX::PxSweepBuffer sweepHitBuffer = {};
+	_float3 vVolume = Get_Volume();
 
-	m_pController->getFootPosition();
-	_bool bHit = { false };
+	_float fVolumeRadius = vVolume.x;
+	_float fCastingDistance = vVolume.y * 2.f;
 
-	bHit = m_pGameInstance->SphereCast(0.0625f, fFoot, { 0.f, -1.f, 0.f }, 0.0625f, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eSTATIC, pxBuffer);
+	_vector vDownVector = { 0.f, -1.f, 0.f, 0.f };
+	_vector vUpVector = { 0.f, 1.f, 0.f, 0.f };
 
-	if (true == bHit) { // 쿼리해서 스태틱 중에 터레인 액터들이 맞으면 다시 갱신
-		const PSX::PxSweepHit& hit = pxBuffer.block;
+	_bool bHit =
+		m_pGameInstance->SphereCast( fVolumeRadius, vCharacterPos, vDownVector, fCastingDistance, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eSTATIC, sweepHitBuffer );
 
-		PSX::PxRigidActor* pActor = hit.actor;
-		PSX::PxShape* pShape = hit.shape;
+	if (bHit == false) {
+		return false;
+	}
 
-		if (nullptr != pActor && nullptr != pActor->userData)
-		{
-			PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+	_float fMaximumSlopeRadan = XMConvertToRadians(m_fWalkableSlopeDegree);
+	_float fMinCosSlope = cosf(fMaximumSlopeRadan);
 
-			switch (pUserData->eKind)
-			{
-			case PHYSX_KIND::BODY_STATIC:
-			{
-				switch (PXOBJECT(pUserData->iSubKind))
-				{
-				case PXOBJECT::TERRAIN:
-				case PXOBJECT::FLOOR:
-				case PXOBJECT::ROAD:
-				{ // 임계값 이상이면 지면에 서서히 붙임
-					m_iIsOnGround = iCoyote_Counter;
+	_vector vFootPos = Get_FootPosition();
 
+	auto& sweepHit = sweepHitBuffer.block;
 
-					//_float fYHitPos = hit.position.y;
-					//_float fYFoot = (_float)m_pController->getFootPosition().y;
-					//_float fDiff = (fYHitPos - fYFoot);
-					//if (fDiff > m_vAccHeight.w) {
-					//	_vector vMomentum = m_pTransform->Get_CurrentMomentum();
-					//	_float fYCurrentMomentum = XMVectorGetY(vMomentum);
-					//	fYCurrentMomentum = fDiff * 0.3f;
-					//	m_pTransform->Set_CurrentMomentum(XMVectorSetY(vMomentum, fYCurrentMomentum));
-					//}
-					//else {
-					//	m_iIsOnGround = iCoyote_Counter;
-					//}
-				}
-					break;
-				default:
-					break;
-				}
-			} break;
-			case PHYSX_KIND::BODY_DYNAMIC:
-				break;
-			case PHYSX_KIND::CCTActor:
-			case PHYSX_KIND::OBSTACLEActor:
-				break;
-			default:
-				break;
-			}
+	PSX::PxRigidActor* hitActor = sweepHit.actor;
+
+	PhsXUserData* hitUserData = static_cast<PhsXUserData*>(hitActor->userData);
+
+	switch (PXOBJECT(hitUserData->iSubKind))
+	{
+	case PXOBJECT::TERRAIN:
+	case PXOBJECT::FLOOR:
+	case PXOBJECT::ROAD:
+	{
+		_vector vSurfaceNormal = XMVector3Normalize({ sweepHit.normal.x, sweepHit.normal.y, sweepHit.normal.z, 0.f });
+
+		_float fDotUp = XMVectorGetX(XMVector3Dot(vSurfaceNormal, vUpVector));
+
+		if (fDotUp < fMinCosSlope) {
+			break;
 		}
+
+		_vector vHitPos = { sweepHit.position.x, sweepHit.position.y, sweepHit.position.z, 0.f };
+		_vector vFootToHitPos = vFootPos - vHitPos;
+
+		_float fDistanceFromGround = XMVectorGetX(XMVector3Dot(vFootToHitPos, vSurfaceNormal));
+		_float fDotUpNormal = (fabsf(fDotUp) < FLT_EPSILON) ? FLT_EPSILON: fDotUp;
+		_float fCurrentMomentumY = (-fDistanceFromGround / fDotUpNormal) * 0.3f;
+		_vector vCurrentMomentum = m_pTransform->Get_CurrentMomentum();
+
+		m_pTransform->Set_CurrentMomentum( XMVectorSetY(vCurrentMomentum, fCurrentMomentumY) );
+		m_iIsOnGround = iCoyote_Counter;
+	}
+	break;
+	default:
+		break;
 	}
 
 	return bHit;
 }
+
+
 
 void CCharacter_Controller::Move(_float fTimeDelta)
 {
@@ -261,14 +257,13 @@ void CCharacter_Controller::Move(_float fTimeDelta)
 			UpdateGroundByCast(fTimeDelta); // 바닥에 플레이어 붙이게 함
 		}
 		else if (m_fCurrentSlopeDegree > m_fWalkableSlopeDegree) {        // 너무 가파른 경사: 중력
-			//m_pTransform->AccumulateMomentum(XMVectorSet(0.f, -GRAVITY * fTimeDelta, 0.f, 0.f));
+			m_pTransform->AccumulateMomentum(XMVectorSet(0.f, -GRAVITY * fTimeDelta, 0.f, 0.f));
 		}
 		else {
 			// 아니면 안함
 		}
 	}
 	XMStoreFloat3((_float3*)&pxVecMomentum, m_pTransform->Get_CurrentMomentum());
-	
 	m_eBeforeCollisionFlags = m_pController->move(pxVecMomentum, fMinimumDistant, fTimeDelta, pxFilter, pPxObstacles);
 }
 
@@ -355,6 +350,8 @@ HRESULT CCharacter_Controller::Initialize(void* pArg)
 		break;
 	}
 	
+	m_pController->setStepOffset(pDesc->fStepOffset);
+
 	if (nullptr == m_pController) {
 		assert(false);
 		return E_FAIL;
@@ -443,7 +440,7 @@ void CCharacter_Controller::Describe_Entity()
 	_float3 vVolume = Get_Volume();
 	_float fStepOffset = m_pController->getStepOffset();
 
-	GUI::Text("eBodyType $d", (_uint)m_eBodyType); GUIHelpMarker("Body: only box and capsule available");
+	GUI::Text("eBodyType $d", (_uint)m_eBodyType); GUIHelpMarker("Body: only box and capsule available"); 
 
 	if (GUI::SliderFloat3("UpDirection", (_float*)&vUpDirection, -1.f, 1.f)) {
 		m_pController->setUpDirection(vUpDirection.getNormalized());

@@ -88,8 +88,12 @@
 // GRAVITY 음수 박으면 피직스 로드 실패함
 #define			GRAVITY						9.81f
 
-constexpr unsigned int g_iMaxShadowWidth = 16384;
-constexpr unsigned int g_iMaxShadowHeight = 9216;
+
+#define			SSAO_SAMPLE_NUMBER			64
+#define			TIMER_SHORT_LERP			0.16f
+
+constexpr unsigned int g_iMaxShadowWidth		= 16384;
+constexpr unsigned int g_iMaxShadowHeight		= 9216;
 
 #ifndef AI_TEXTURE_TYPE_MAX
 #define AI_TEXTURE_TYPE_MAX 27
@@ -141,8 +145,7 @@ constexpr unsigned int g_iMaxShadowHeight = 9216;
 			unsigned int iRefCnt = {};							\
 			if(nullptr != s_pInstance)	{						\
 				iRefCnt = s_pInstance->Release();				\
-				if(0 == iRefCnt)								\
-					s_pInstance = nullptr;						\
+				s_pInstance = nullptr;							\
 			}													\
 			return iRefCnt;										\
 		}

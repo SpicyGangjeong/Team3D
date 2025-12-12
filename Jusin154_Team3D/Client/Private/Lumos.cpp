@@ -49,6 +49,14 @@ void CLumos::Priority_Update(_float fTimeDelta)
 {
 	__super::Priority_Update(fTimeDelta);
 
+
+	CWand* pWand = static_cast<CWand*>(m_pOwner);
+
+	if (pWand == nullptr)
+		return;
+
+	m_pLumos_Light->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
+
 }
 
 void CLumos::Update(_float fTimeDelta)
@@ -59,15 +67,6 @@ void CLumos::Update(_float fTimeDelta)
 	__super::Update(fTimeDelta);
 
 	Update_Event(fTimeDelta);
-
-
-	CWand* pWand = static_cast<CWand*>(m_pOwner);
-
-	if (pWand == nullptr)
-		return;
-
-	m_pLumos_Light->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
-
 }
 
 void CLumos::Late_Update(_float fTimeDelta)
@@ -80,18 +79,10 @@ void CLumos::Late_Update(_float fTimeDelta)
 
 }
 
-HRESULT CLumos::Pre_Setting(CGameObject* pObject)
+HRESULT CLumos::Pre_Setting(CGameObject* pObject, void* pArg)
 {
-	if (pObject == nullptr)
+	if (FAILED(__super::Pre_Setting(pObject)))
 		return E_FAIL;
-
-	m_pOwner = pObject;
-
-	Reset_EffectParts();
-
-	m_fAccTime = 0.f;
-	__super::m_fAccTime = 0.f;
-	m_fPreAccTime = 0.f;
 
 	CWand* pWand = static_cast<CWand*>(m_pOwner);
 
@@ -100,8 +91,6 @@ HRESULT CLumos::Pre_Setting(CGameObject* pObject)
 
 	m_pLumos_Light->Set_Visible(true);
 	m_pLumos_Light->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
-
-	m_bVisible = true;
 
 	m_isLoop = true;
 

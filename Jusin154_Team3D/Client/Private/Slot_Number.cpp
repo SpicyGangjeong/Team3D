@@ -47,7 +47,6 @@ HRESULT CSlot_Number::Initialize(void* pArg)
 	m_pVIBufferCom->Set_Pos(350.f, 10.f, m_fOffSetX, m_fOffSetY, m_iCols);
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
 	m_pVIBufferCom->Set_ImageUV(pUVDesc);
-	m_bActive = true;
 	return S_OK;
 }
 
@@ -102,7 +101,7 @@ void CSlot_Number::Late_Update(_float fTimeDelta)
 	}
 	if (m_bVisible)
 	{
-			m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
+		m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
 	}
 	__super::Late_Update(fTimeDelta);
 }
@@ -113,7 +112,7 @@ HRESULT CSlot_Number::Render()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::ALPHABLEND))))
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIINTANCE::UVALPHABLEND))))
 	{
 		return E_FAIL;
 	}

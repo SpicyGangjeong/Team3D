@@ -5,8 +5,7 @@
 #include "Light_Main.h"
 #include "Camera_Debug.h"
 #include "InfoInstance.h"
-#include "GamePlay_Canvas.h"
-#include "Spell_Canvas.h"
+#include "UI_Manager.h"
 #include "Layer.h"
 #include "SkyBox.h"
 #include "Broom.h"
@@ -15,11 +14,17 @@
 #include "Terrain.h"
 #include "EffectPool.h"
 #include "InstancedProp.h"
+#include "Land.h"
+#include "Unified.h"
+#include "MapElement_Lake.h"
 
 #pragma region ACTOR
 #include "Player.h"
 #include "Troll.h"
 #include "Goblin.h"
+#include "Goblin_Mage.h"
+#include "Goblin_Spector.h"
+#include "NPC_Ollivander.h"
 #pragma endregion
 
 
@@ -35,6 +40,12 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	if (FAILED(Ready_Lights())) {
 		return E_FAIL;
 	}
+
+	//플레이어 , 맵 보다 먼저 생성해야함 !
+	if (FAILED(Reday_Layer_EffectPool())) {
+		return E_FAIL;
+	}
+
 	if (FAILED(Ready_Background())) {
 		return E_FAIL;
 	}
@@ -44,18 +55,16 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	if (FAILED(Ready_Layer_UI(LAYER_UI))) {
 		return E_FAIL;
 	}
-	//플레이어보다 먼저 생성해야함!
-	if (FAILED(Reday_Layer_EffectPool())) {	
-		return E_FAIL;
-	}
+
 	// 이것도 플레이어보다 먼저 생성해야함!
 	if (FAILED(Ready_Layer_Item(LAYER_ITEM))) {
 		return E_FAIL;
 	}
-	if (FAILED(Ready_Layer_Player(LAYER_PLAYER))) {
+
+	if (FAILED(Ready_Layer_SkyBox(TEXT("Layer_SkyBox")))) {
 		return E_FAIL;
 	}
-	if (FAILED(Ready_Layer_SkyBox(TEXT("Layer_SkyBox")))) {
+	if (FAILED(Ready_Layer_Player(LAYER_PLAYER))) {
 		return E_FAIL;
 	}
 	if (FAILED(Ready_Layer_Monster())) {
@@ -138,7 +147,7 @@ HRESULT CLevel_GamePlay::Render()
 
 HRESULT CLevel_GamePlay::Ready_Lights()
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLight_Main>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT))){
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLight_Main>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_LIGHT))) {
 		return E_FAIL;
 	}
 
@@ -147,53 +156,284 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 
 HRESULT CLevel_GamePlay::Ready_Background()
 {
-	/* Terrain */
 	CTerrain::TERRAIN_DESC Terrain_Desc = {};
+	/* Hogsmeade Terrain */
 	Terrain_Desc.vPosition = _float3(-194, 18.5f, -153.f);
+	Terrain_Desc.strVIBufferTag = TEXT("Prototype_Component_VIBuffer_Terrain_Hogsmeade");
 	Terrain_Desc.strDiffuseTextureTag = TEXT("Terrain_Diffuse");
 	Terrain_Desc.strNormalTextureTag = TEXT("Terrain_Normal");
 	Terrain_Desc.strMROTextureTag = TEXT("Terrain_MRO");
-	Terrain_Desc.strAlphaMapTextureTag = TEXT("HogsmeadeAlphaMap");
+	Terrain_Desc.strAlphaMapTextureTag = TEXT("Hogsmeade_AlphaMap");
+	Terrain_Desc.strRigidBody_MeshName = TEXT("Hogsmeade_HeightMap");
+	Terrain_Desc.strRigidBody_ComponentTag = TEXT("Prototype_Component_RigidBody_Static_Terrain_Hogsmeade");
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_BACKGROUND, &Terrain_Desc))) {
+		return E_FAIL;
+	}
+	/* Hogwart Terrain */
+	Terrain_Desc.vPosition = _float3(-451.f, 18.5f, -791.f);
+	Terrain_Desc.strVIBufferTag = TEXT("Prototype_Component_VIBuffer_Terrain_Hogwart");
+	Terrain_Desc.strDiffuseTextureTag = TEXT("Terrain_Diffuse");
+	Terrain_Desc.strNormalTextureTag = TEXT("Terrain_Normal");
+	Terrain_Desc.strMROTextureTag = TEXT("Terrain_MRO");
+	Terrain_Desc.strAlphaMapTextureTag = TEXT("Hogwart_AlphaMap");
+	Terrain_Desc.strRigidBody_MeshName = TEXT("Hogwart_HeightMap");
+	Terrain_Desc.strRigidBody_ComponentTag = TEXT("Prototype_Component_RigidBody_Static_Terrain_Hogwart");
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTerrain>(ENUM_CLASS(LEVEL::STATIC), NEXT_LEVEL, LAYER_BACKGROUND, &Terrain_Desc))) {
 		return E_FAIL;
 	}
 
-	/* Map Containters */
-	/* 테스트용 맵 */
+	CLand::LAND_DESC Land_Desc = {};
 
-	//CInfoInstance::GetInstance()->Load_MapObjects("ClientTest");
-	/* 전체 맵 */
-	CInfoInstance::GetInstance()->Load_MapObjects("Map1129");
+	/* South_Hogwart_Land */
+	Land_Desc.vPosition = _float3(290.5f, 59.5f, -347.f);
+	Land_Desc.vScale = _float3(1.f, 1.25f, 1.f);
+	Land_Desc.strModelComTag = L"Prototype_Component_South_Hogwart_Land_LOD1";
 
-	/* 조명 오브젝트 */
-	CInfoInstance::GetInstance()->Load_LightElements("LightElement");
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc)))
+		return E_FAIL;
+
+	/* North_Hogwart_Land */
+	Land_Desc.vPosition = _float3(-370.f, -37.5f, -21.4f);
+	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
+	Land_Desc.strModelComTag = L"Prototype_Component_North_Hogwart_Land_LOD1";
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc)))
+		return E_FAIL;
+
+	/* North_Hogwart2_Land */
+	Land_Desc.vPosition = _float3(-378.f, -17.5f, 285.6f);
+	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
+	Land_Desc.strModelComTag = L"Prototype_Component_North_Hogwart2_Land_LOD1";
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc)))
+		return E_FAIL;
+
+	/* West_Hogwart_Land */
+	Land_Desc.vPosition = _float3(-653.f, 20.f, -327.4f);
+	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
+	Land_Desc.strModelComTag = L"Prototype_Component_West_Hogwart_Land_LOD1";
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc)))
+		return E_FAIL;
+
+	/* East_Hogsmeade_Land */
+	Land_Desc.vPosition = _float3(436.f, 55.f, 60.3f);
+	Land_Desc.vScale = _float3(1.f, 1.2f, 1.f);
+	Land_Desc.strModelComTag = L"Prototype_Component_East_Hogsmeade_Land_LOD1";
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLand>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Land_Desc)))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CUnified>(g_iStaticLevel, NEXT_LEVEL, LAYER_UNIFIED)))
+		return E_FAIL;
+	 
+	
+	// ---------------------------------
+	// >> M A P Configuration <<
+	// 맵 로드할지 안할지 bool 설정
+	// ---------------------------------
+	_bool isReady_Background = { true };
+
+#ifdef gimch
+	isReady_Background = true;
+#endif // gimch
+#ifdef Bin
+	isReady_Background = true;
+#endif // 
+#ifdef 진우
+	isReady_Background = true;
+#endif // 
+#ifdef 기무리
+	isReady_Background = true;
+#endif // 
+#ifdef 인혁
+	isReady_Background = true;
+#endif // 
 
 	
+	/* Map Containters */
+	if(false == isReady_Background)
+	{
+		/* 테스트용 맵 */
+		CInfoInstance::GetInstance()->Load_MapObjects("ClientTest");
+	}
+	else
+	{
+		/* 전체 맵 */
+		CInfoInstance::GetInstance()->Load_MapObjects("Hogsmeade_MapContainer_Data");
+
+		/* 물 오브젝트 */
+		if (FAILED(CInfoInstance::GetInstance()->Load_WaterElemet("Element_Water_Info"))){
+			return E_FAIL;
+		}
+
+		/* 조명 오브젝트 */
+		CInfoInstance::GetInstance()->Load_LightElements("LightElement");
+
+		/* 상호작용 오브젝트 */
+		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_Barrel");
+		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_PostPackage_B");
+		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_PostPackage_F");
+		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_TeaShopTable");
+		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_TeaShopChair");
+
+		/* Doors */
+		CInfoInstance::GetInstance()->Load_DoorElemet("Element_Door_Info");
+		
+
+		if (FAILED(Ready_IntstanceProp()))
+			return E_FAIL;
+	}
+	
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_IntstanceProp()
+{
 	CInstancedProp::INSTANCE_PROP_DESC Desc = {};
 
 	/* InstanceProp Oak_Tree*/
+	Desc.isShake = true;
+	Desc.vRadius = _float2(0.015f, 0.04f);
+	Desc.vSpeed = _float2(0.3f, 1.f);
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_OakTree_MedA";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/OakTree_MedA.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc))){
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc))) {
 		return E_FAIL;
 	}
 
 	/* BearBerry */
+	Desc.isShake = true;
+	Desc.vRadius = _float2(0.015f, 0.02f);
+	Desc.vSpeed = _float2(0.6f, 1.f);
 	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_BearBerry_A";
 	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/BearBerry_A.bin";
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc))){
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc))) {
 		return E_FAIL;
 	}
+
+	/* SM_HM_OwlPost_Window_A */
+	Desc.isShake = false;
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_OwlPost_Window_A";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/OwlPost_Window.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	///* WA_Rectangle_Double_A */
+	Desc.isShake = false;
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WA_Rectangle_Double_A";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Rectangle_Double_A.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	///* WC_Retangle_Double_A */
+	Desc.isShake = false;
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WC_Retangle_Double_A";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WC_Retangle_Double_A.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	///* WA_Square_Double_C */
+	Desc.isShake = false;
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WA_Square_Double_C";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WA_Square_Double_C.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	/* Quid_Window_A */
+	Desc.isShake = false;
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Quid_Window_A";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Quid_Window_A.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	/* Ollivanders_Box_Window */
+	Desc.isShake = false;
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Ollivanders_Box_Window";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Ollivanders_Box.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	/* WC_L_DoubleS_A */
+	Desc.isShake = false;
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WC_L_DoubleS_A";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WC_L_DoubleS_A.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	/* WC_Round_Double_A */
+	Desc.isShake = false;
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_WC_Round_Double_A";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/WC_Round_Double_A.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	/* SM_HM_Door1a */
+	Desc.isShake = false;
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door1a";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Door1a.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	/* SM_HM_Door2b */
+	Desc.isShake = false;
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_SM_HM_Door2b";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Door2b.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	/* OakTree_TallA */
+	Desc.isShake = false;
+	Desc.vRadius = _float2(0.015f, 0.016f);
+	Desc.vSpeed = _float2(0.01f, 0.1f);
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_OakTree_TallA";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/OakTree_TallA.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	/* Shrub_B */
+	Desc.isShake = true;
+	Desc.vRadius = _float2(0.015f, 0.04f);
+	Desc.vSpeed = _float2(0.3f, 1.f);
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Shrub_B";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Shrub_B.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	/* BogMyrtle_A */
+	Desc.isShake = true;
+	Desc.vRadius = _float2(0.015f, 0.04f);
+	Desc.vSpeed = _float2(0.3f, 1.f);
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_BogMyrtle_A";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/BogMyrtle_A.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	/* Dogwood_B */
+	Desc.isShake = true;
+	Desc.vRadius = _float2(0.015f, 0.02f);
+	Desc.vSpeed = _float2(0.3f, 1.f);
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_Dogwood_B";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/Dogwood_B.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
+	/* ScotsPine_LargeA */
+	Desc.isShake = false;
+	Desc.vRadius = _float2(0.015f, 0.02f);
+	Desc.vSpeed = _float2(0.3f, 1.f);
+	Desc.strPrototypeTag = L"Prototype_Component_VIBuffer_Model_Instancel_ScotsPine_LargeA";
+	Desc.strInstanceDataPath = "../Bin/Resources/Data/Map/Instance/ScotsPine_LargeA.bin";
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CInstancedProp>(g_iStaticLevel, NEXT_LEVEL, LAYER_BACKGROUND, &Desc)))
+		return E_FAIL;
+
 
 	return S_OK;
 }
 
 HRESULT CLevel_GamePlay::Ready_Layer_UI(const _wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGamePlay_Canvas>(g_iStaticLevel, g_iStaticLevel, LAYER_UI))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Canvas>(g_iStaticLevel, g_iStaticLevel, LAYER_UI))) {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CUI_Manager>(g_iStaticLevel, g_iStaticLevel, LAYER_UI))) {
 		return E_FAIL;
 	}
 
@@ -202,10 +442,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 {
+#ifdef _DEBUG
 	CCamera_Debug::CAMERA_DEBUG_DESC            Camera_Desc{};
 	Camera_Desc.fFovy = XMConvertToRadians(60.0f);
 	Camera_Desc.fNear = 0.1f;
-	Camera_Desc.fFar = 200.f;
+	Camera_Desc.fFar = 500.f;
 	Camera_Desc.vEye = _float3(0.f, 10.f, -10.f);
 	Camera_Desc.vAt = _float3(0.f, 0.f, 0.f);
 	Camera_Desc.fSpeedPerSec = 5.f;
@@ -217,7 +458,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 	Camera_Desc.pLookTarget = { nullptr };
 
 	CCamera_Debug* pCamera = { nullptr };
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCamera_Debug>(g_iStaticLevel, NEXT_LEVEL, LAYER_CAMERA, &Camera_Desc, nullptr, &pCamera))){
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCamera_Debug>(g_iStaticLevel, NEXT_LEVEL, LAYER_CAMERA, &Camera_Desc, nullptr, &pCamera))) {
 		return E_FAIL;
 	}
 
@@ -226,6 +467,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 		return E_FAIL;
 	}
 
+#endif // _DEBUG
+
+	if (FAILED(m_pGameInstance->Bind_Camera(g_iStaticLevel, CAMERA_SHOULDER, true))) {
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -243,7 +489,10 @@ HRESULT CLevel_GamePlay::Ready_Markers()
 
 HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))){
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CNPC_Ollivander>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
 		return E_FAIL;
 	}
 
@@ -262,7 +511,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Item(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_SkyBox(const _wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSkyBox>(g_iStaticLevel, NEXT_LEVEL, LAYER_SKYBOX))){
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSkyBox>(g_iStaticLevel, NEXT_LEVEL, LAYER_SKYBOX))) {
 		return E_FAIL;
 	}
 
@@ -280,12 +529,17 @@ HRESULT CLevel_GamePlay::Ready_Layer_SkyBox(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 {
-	for (_uint i = 0; i < 2; ++i)
+	for (_uint i = 0; i < 1; ++i)
 	{
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER,&i))) {
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 			return E_FAIL;
 		}
 	}
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Mage>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
+		return E_FAIL;
+	}
+
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 		return E_FAIL;
 	}

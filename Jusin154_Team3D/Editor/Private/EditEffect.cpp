@@ -62,26 +62,21 @@ void CEditEffect::Late_Update(_float fTimeDelta)
 		return;
 
 
-	m_pInstance_ModelCom->Drop(fTimeDelta);
+	m_pInstance_ModelCom->Compute_CS(fTimeDelta);
 
 
 	if (m_EffectInfo.isBillboard)
 		m_pGameInstance->BillBoard(m_pTransformCom);
 
 
-
-	if (m_isGoStraight == true)
+	if (m_EffectInfo.isLightDissolve == true)
 	{
-		m_fAccTime += fTimeDelta;
-
-		if (m_fAccTime > 1.f)
+		if (m_pLightCom != nullptr)
 		{
-			m_fAccTime = 0.f;
-			m_iSign *= -1;
+			m_pLightCom->Update_IntensityRatio(fTimeDelta , m_EffectInfo.isLightTime , m_EffectInfo.fLightDeley);
 		}
-
-		m_pTransformCom->Go_Straight(3 * fTimeDelta * m_iSign);
 	}
+
 
 
 	if (m_isWandPos == true)
@@ -105,8 +100,17 @@ void CEditEffect::Late_Update(_float fTimeDelta)
 	if (m_EffectInfo.isOnlyBlur == true)
 		return;
 
+
+	if (m_pLightCom != nullptr)
+		m_pGameInstance->Add_Light_Group(CURRENT_LEVEL , m_pLightCom);
+
 	m_pGameInstance->Add_RenderGroup(m_EffectInfo.eRenderOrder, this);
 
+}
+
+_vector CEditEffect::Get_WorldPostion()
+{
+	return m_pTransformCom->Get_State(STATE::POSITION);
 }
 
 void CEditEffect::Reference_Mat_For_EditEffect()
@@ -417,9 +421,9 @@ void CEditEffect::Describe_Entity()
 	//여기서 모델, 텍스쳐, 선택할 수 있도록 함
 
 	const char* pLerp[] = { "Linear" , "EaseInQuad", "EaseOutQuad", "EaseInCubic" , "EaseOutCubic" , "EaseInOutSin" , "EaseInBack" , "Expo" , "Circle" };
-	const char* pRenderNames[] = { "PRIORITY" , "SHADOW", "NONBLEND", "DECAL", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" ,"BLOOM" , "UI", "OCCLUSION"};
+	const char* pRenderNames[] = { "PRIORITY" , "SHADOW", "NONBLEND", "DECAL", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" ,"BLOOM" , "UI", "OCCLUSION" , "PRESHADOW", "UI_OVERLAY"};
 	const char* pEffectType[] = { "EFFECT" , "TRAIL" };
-	const char* pShaderPass[] = { "DEFAULT" , "NON_NOMALMAP" , "BLUR" , "WEIGHTBLEND" , "NON_WORLD" , "NON_WORLD_BLUR",  "BLEND", "BLEND_NOWORLD", "BLOOM" ,"BLOOM_NOWORLD" ,"BLUR_NO_EMMISVE", "BLUR_NO_WORLD_NO_EMISSIVE","WEIGHTBLEND_FOR_BLEND"};
+	const char* pShaderPass[] = { "DEFAULT" , "NON_NOMALMAP" , "BLUR" , "WEIGHTBLEND" , "NON_WORLD" , "NON_WORLD_BLUR",  "BLEND", "BLEND_NOWORLD", "BLOOM" ,"BLOOM_NOWORLD" ,"BLUR_NO_EMMISVE", "BLUR_NO_WORLD_NO_EMISSIVE","WEIGHTBLEND_FOR_BLEND" , "DEPTH_STOP" };
 	const char* pBloomType[] = { "NONE" , "BASIC" , "MUILTY"};
 
 	_int iCurrentItem = static_cast<_int>(m_EffectInfo.eRenderOrder);
@@ -427,10 +431,27 @@ void CEditEffect::Describe_Entity()
 	_int iCurrentBloomType = static_cast<_int>(m_EffectInfo.eBloomType);
 	_int iCurrentPass = static_cast<_int>(m_EffectInfo.eShaderPass);
 
+
+	GUI::InputTextMultiline("BONE NAME", m_szBuffer, sizeof(m_szBuffer), ImVec2(250, 25));
+
+	m_strBoneName = m_szBuffer;
+
+	if(GUI::Button("Stick Bone"))
+	{
+		CModel* pModel = m_pOwner->Get_Component<CModel>();
+
+		if (pModel != nullptr)
+		{
+			FollowParants(pModel->Get_BoneMatrixPtr(m_strBoneName.c_str()));
+		}
+		
+	}
+
 	if (ImGui::Combo("Render Order", &iCurrentItem, pRenderNames, ENUM_CLASS(RENDER::END)))
 	{
 		m_EffectInfo.eRenderOrder = static_cast<RENDER>(iCurrentItem);
 	}
+
 
 	if (ImGui::Combo("Effect Type", &iCurrentType, pEffectType, ENUM_CLASS(EFFECT_TYPE::END)))
 	{
@@ -443,9 +464,7 @@ void CEditEffect::Describe_Entity()
 	}
 
 
-
 	GUI::Checkbox("Visible", &m_bVisible);
-	GUI::Checkbox("GO", &m_isGoStraight);
 	GUI::Checkbox("WAND POS", &m_isWandPos);
 	
 
@@ -534,6 +553,8 @@ void CEditEffect::Describe_Entity()
 		GUI::DragFloat("CoreBoost", &m_EffectInfo.fCoreBoost, 0.005f);
 		GUI::DragFloat("SoftStrength", &m_EffectInfo.fSoftStrength, 0.005f);
 		GUI::DragFloat("SoftenExp", &m_EffectInfo.fSoftenExp, 0.005f);
+		GUI::DragFloat("EmissiveColorCut", &m_EffectInfo.fEmissiveColorCut, 0.005f);
+
 		ImGui::PopItemWidth();
 
 		GUI::ColorEdit4("Emissive", (_float*)&m_EffectInfo.vEmissive);
@@ -543,6 +564,7 @@ void CEditEffect::Describe_Entity()
 		GUI::Checkbox("EmissiveTex", &m_EffectInfo.isEmissive);
 		GUI::Checkbox("EmissiveDissolve", &m_EffectInfo.isEmissiveDissolve);
 		GUI::Checkbox("EmissiveDissolveReverse", &m_EffectInfo.isEmissiveDissolveReverse);
+
 
 		if (m_EffectInfo.isEmissive)
 		{
@@ -586,12 +608,33 @@ void CEditEffect::Describe_Entity()
 			{
 				GUI::TreePop();
 				return;
-			}
+			}	
+
 		}
 
 		if (m_pLightCom != nullptr)
 		{
 			m_pLightCom->Describe_Entity();
+
+			GUI::Checkbox("Light Dissolve", &m_EffectInfo.isLightDissolve);
+			GUI::InputFloat("Light Time", &m_EffectInfo.isLightTime);
+			GUI::InputFloat("Light Delay", &m_EffectInfo.fLightDeley);
+			
+			if (GUI::InputFloat("Light Intensity", &m_EffectInfo.fLightIntensity))
+			{
+
+				m_pLightCom->Set_LightIntensity(m_EffectInfo.fLightIntensity);
+			}
+
+			if (GUI::Button("ADD_LIGHT_MANAGER"))
+			{
+				m_pGameInstance->Add_Light(CURRENT_LEVEL, m_pLightCom);
+			}
+
+			if (GUI::Button("Reset_Dissolve"))
+			{
+				m_pLightCom->Reset_IntensityRatio();
+			}
 		}
 
 		GUI::TreePop();
@@ -725,6 +768,29 @@ void CEditEffect::Describe_Entity()
 				GUI::Checkbox("Nomal Dissolve", &m_EffectInfo.isNomalDissolve);
 				GUI::Checkbox("Reverse Dissolve", &m_EffectInfo.isReverseDissolve);
 
+				ImGui::PushItemWidth(80);
+				GUI::Spacing();
+				GUI::Checkbox("DissolveMove", &m_EffectInfo.isDissolveMove);
+				GUI::DragFloat2("DissolveUVGainAmount", (_float*)&m_EffectInfo.vDissolveUVGainAmount, 0.01f);
+
+				GUI::Spacing();
+				GUI::DragFloat("DissolveDelay", &m_EffectInfo.fDissolveDelay, 0.005f);
+				GUI::DragFloat("ReverseDissolveDelay", &m_EffectInfo.fReverseDissolveDelay, 0.005f);
+
+				GUI::Spacing();
+
+				GUI::DragFloat("DissolveMaskEdge", &m_EffectInfo.vDissolveValue.x, 0.005f);
+				GUI::DragFloat("DissolveSoftMask", &m_EffectInfo.vDissolveValue.y, 0.005f);
+				GUI::DragFloat("DissolveCutRatio", &m_EffectInfo.vDissolveValue.z, 0.005f);
+
+				GUI::Spacing();
+
+		
+				GUI::DragFloat2("DissolveColorCut", (_float*)& m_EffectInfo.vDissolveColorCut, 0.005f);
+				
+				ImGui::PopItemWidth();
+
+				GUI::ColorEdit4("DissolveColor", (_float*)&m_EffectInfo.vDissolveColor);
 				_string strName  = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DISSOLVE_TEXTURE", (CComponent**)&m_pDissolve_TextureCom, nullptr, this);
 				
 				if (strName != "") {
@@ -801,6 +867,8 @@ void CEditEffect::Describe_Entity()
 			GUI::Checkbox("NoiseAlpha", &m_EffectInfo.isNoiseAlpha);
 			GUI::Checkbox("NoiseMove", &m_EffectInfo.isNoiseUVMove);
 
+
+			GUI::ColorEdit4("NoiseColor", (_float*)&m_EffectInfo.vNoiseColor);
 			ImGui::PushItemWidth(80);
 			GUI::DragFloat2("NoiseUVGainAmount", (_float*)&m_EffectInfo.vNoiseUVGainAmount, 0.01f);
 			ImGui::PopItemWidth();
@@ -829,21 +897,6 @@ void CEditEffect::Describe_Entity()
 
 			GUI::TreePop();
 		}
-
-		//ImGui::Begin("Simple Plot");
-
-
-		//ImGui::PlotLines("Value", m_ValueVector.data(), (int)m_ValueVector.size(), 0, nullptr, FLT_MAX, FLT_MAX, ImVec2(0, 100));
-
-		//GUI::InputFloat("InputValue", &m_fInputValue);
-
-		//if (GUI::Button("AddValue"))
-		//{
-		//	m_ValueVector.push_back(m_fInputValue);
-		//}
-
-		//ImGui::End();
-
 	}
 
 

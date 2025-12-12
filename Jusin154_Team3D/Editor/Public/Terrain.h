@@ -6,6 +6,7 @@
 NS_BEGIN(Engine)
 class CShader;
 class CVIBuffer_Terrain;
+class CRigidBody_Static;
 class CTexture;
 NS_END
 
@@ -13,6 +14,18 @@ NS_BEGIN(Editor)
 
 class CTerrain final : public CGameObject
 {
+public:
+	typedef struct tagTerrainDesc
+	{
+		_bool		isEdit;
+		_uint		iAlphaSizeX;
+		_uint		iAlphaSizeY;
+		_float3		vPosition;
+		_wstring	strBufferTag;
+		_string		strHeightMapTag;
+		_string		strAlphaMapTag;
+	}TERRAIN_DESC;
+
 private:
 	CTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CTerrain(const CTerrain& Prototype);
@@ -32,7 +45,11 @@ private:
 	CTexture*				m_pDiffuseTextureCom = { nullptr };
 	CTexture*				m_pNormalTextureCom = { nullptr };
 	CTexture*				m_pMROTextureCom = { nullptr };
-	CTexture*				m_pMaskTextureCom = { nullptr };
+
+	CRigidBody_Static*		m_pRigidBody = { nullptr };
+
+	_bool					m_bUsePsx = { false };
+	_bool					m_isEdit = {};
 
 	_float					m_fUsingSurfaceParams = {};
 	_float					m_fHeightRatio = {1.f};
@@ -55,9 +72,10 @@ private:
 	_bool					m_bWasWireFrame = { false };
 
 private:
-	HRESULT Ready_Components();
+	HRESULT Ready_Components(void* pArg);
 	HRESULT Bind_ShaderResources();
-	HRESULT Ready_AlphaMap();
+	HRESULT Bind_ShaderResources_Edit();
+	HRESULT Ready_AlphaMap(TERRAIN_DESC* pDesc);
 
 public:
 	static CTerrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

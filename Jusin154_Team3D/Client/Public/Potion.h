@@ -31,6 +31,9 @@ private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
+public:
+	_float Use_Potion();
+
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
@@ -42,6 +45,14 @@ private:
 
 	_float2 m_vImageSlotPos{};
 	_float2 m_vImageSize{};
+
+	CInfoInstance* m_pInfoInstance = { nullptr };
+
+	_int	m_iPotionIndex{};
+	_int	m_iPerPotionIndex{};
+	_wstring m_strPotion;
+	_int	m_iPotion_Level{};
+
 public:
 	static CPotion* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

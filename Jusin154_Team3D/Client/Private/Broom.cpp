@@ -43,7 +43,6 @@ HRESULT CBroom::Initialize(void* pArg)
 		m_pFSM->Change_State(FSMSTATE::IDLE);
 	}
 
-
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 10.f, 0.f, 1.f));
 
 	return S_OK;
@@ -58,9 +57,18 @@ void CBroom::Update(_float fTimeDelta)
 {
 	Update_CameraCoordinateSystem();
 
+	if (!m_bRide)
+	{
+		m_bHoverToggle = true;
+		m_fSpeed = 0.f;
+
+		m_pFSM->Change_State(FSMSTATE::IDLE);
+	}
+
 	m_pFSM->Update_State(fTimeDelta);
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
+
 
 #ifdef _DEBUG
 	Describe_Entity();
@@ -94,10 +102,9 @@ HRESULT CBroom::Render()
 		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
+		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
-
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
@@ -124,7 +131,7 @@ HRESULT CBroom::Ready_Components()
 	}
 
 	/* Com_Shader */
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_ANIMMESH,
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_NPC_PBR_ANIM,
 		reinterpret_cast<CComponent**>(&m_pShaderCom)))) {
 		return E_FAIL;
 	}
@@ -161,6 +168,7 @@ void CBroom::Update_CameraCoordinateSystem()
 	XMStoreFloat3(&m_vCameraLookDir, xmvCameraLook);
 	m_pInfoInstance->Update_CameraCoordinateSystem(m_vCameraLookDir, m_vRimLightColor);
 }
+
 
 CBroom* CBroom::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
@@ -204,6 +212,24 @@ void CBroom::Describe_Entity()
 
 	string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
 	GUI::Text(AnimList.c_str());
+	GUI::Text("AnimIndex %d", m_pModelCom->Get_AnimIndex());
+
+	GUI::Text("AnimTrack %.2f", m_pModelCom->Get_CurrentTrackPosition());
+	GUI::Text("AnimRatio %.2f", m_pModelCom->Get_CurrentTrackProgressRatio());
+	_float3 Pos;
+	XMStoreFloat3(&Pos, Get_WorldPostion());
+
+	float Pos3[3] = { Pos.x, Pos.y, Pos.z };
+	GUI::DragFloat3("Pos", Pos3);
+
+
+	_float RotR, RotU, RotL;
+	RotR = XMVectorGetX(m_pTransformCom->Get_State(STATE::RIGHT));
+	RotU = XMVectorGetY(m_pTransformCom->Get_State(STATE::UP));
+	RotL = XMVectorGetZ(m_pTransformCom->Get_State(STATE::LOOK));
+
+	float Rot3[3] = { RotR, RotU,RotL };
+	GUI::DragFloat3("Rot", Rot3);
 
 }
 

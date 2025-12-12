@@ -23,13 +23,18 @@ typedef struct tagSpellInfo
 	_wstring		pSpell_Name;
 	_wstring		pImage_Name;
 	_int			iSpell_Type{};
+	_wstring		pType_Name;
 	_int			iSkill_Type{};
+	_float			fSpell_Damage{};
 	_float			fSpell_CoolTime{};
 	_float			fDuration{};
 	_int			iAnimNum{};
 	_wstring		pSpellInfo;
 	_bool			bSpell_Lock = false;
 	_bool			bEquip_Spell = false;
+	_bool			bUse_Skill = false;
+	_float			fPreview{};
+	_float			fVidio{};
 }SPELLINFO;
 typedef struct SlotHover
 {
@@ -85,6 +90,7 @@ public:
 	virtual void Set_V(_float V);
 	virtual _float2 Get_UV();
 
+	virtual void Add_Canvas(wstring Name, class CGameObject* pCanvas);
 
 	virtual void Nine_Slice_Left(_float X);
 	virtual void Nine_Slice_Right(_float Y);
@@ -130,9 +136,14 @@ public:
 	virtual void Add_Function(wstring Name, function<void(void*)> Evnet);
 	virtual void Function_Callback(wstring Name, void* pArg = nullptr);
 
+	virtual void Set_Hover(_bool Hover);
 	virtual _bool Get_Hover();
 
 	virtual const SPELLINFO Get_Info(_int Index);
+
+	virtual void Set_FontX(_float fFontX);
+	virtual void Set_FontY(_float fFontY);
+	virtual _float2 Get_Font();
 protected:
 	_vector					m_fOrigin_Position_vector{};
 	_float2					m_fOrigin_Position{};
@@ -184,7 +195,11 @@ protected:
 	_float4					m_vNine_Slice{};
 
 	_float					m_fTopY{};
+	_bool					m_bClick = { false };
 
+	_float					m_fFontX{};
+	_float					m_fFontY{};
+	_float					m_fFontOffSet{};
 protected:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);

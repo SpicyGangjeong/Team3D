@@ -13,6 +13,7 @@ private:
 public:
 	void	Render();
 	HRESULT Add_RenderGroup(RENDER eRenderGroup, class CGameObject* pRenderObject);
+	void Render_PreShadow();
 
 #ifdef _DEBUG
 private:
@@ -39,28 +40,42 @@ private:
 	_float4x4					m_ViewMatrix = {};
 	_float4x4					m_ProjMatrix = {};
 
-	ID3D11DepthStencilView* m_pShadowDSV = { nullptr };
+	ID3D11DepthStencilView*		m_pShadowDSV = { nullptr };
+	ID3D11DepthStencilView*		m_pPreShadowDSV = { nullptr };
+	ID3D11ShaderResourceView*	m_pSSAO_NoiseSRV = { nullptr };
+	ID3D11Texture2D*			m_pSSAO_NoiseTexture = { nullptr };
+	ID3D11Buffer*				m_pGlobalStaticCB = { nullptr };
 
-	SHADOW_LIGHT_DESC m_PreShadowDesc = {};
-	_float4x4 m_PreShadowMatrices[ENUM_CLASS(D3DTS::END)] = {};
+	SHADOW_LIGHT_DESC			m_PreShadowDesc = {};
+	_float4x4					m_PreShadowMatrices[ENUM_CLASS(D3DTS::END)] = {};
 
-	_bool m_bPostProcessing_BLOOM = { true };
-	_bool m_bDOF_ENV = { true };
-	_int m_iBloomEmbossingPass = { 0 };
-	_float m_fThreshold = { 1.26f };
-	_float m_fDOF_ENV_CutThreshold = { 0.1350f };
-	_float m_fDOF_ENV_FocusDistance = { 31.1f };
-	_float m_fDOF_ENV_StartDistance = { 53.1f };
-	_float m_fDOF_ENV_MaxEnd = { 360.f };
-	_float m_fDOF_ENV_AmountRadius = { 1.f };
+	/* TunningParam  */
+	_int	m_iToneMappingType = { 2 };
+	_float	m_fExposure = { 0.7f };
 
+	_int	m_iBloomEmbossingPass = { 0 };
+	_float	m_fBloomThreshold = { 1.26f };
+
+	_float	m_fDOF_ENV_CutThreshold = { 0.1350f };
+	_float	m_fDOF_ENV_FocusDistance = { 31.1f };
+	_float	m_fDOF_ENV_StartDistance = { 53.1f };
+	_float	m_fDOF_ENV_MaxEnd = { 360.f };
+	_float	m_fDOF_ENV_AmountRadius = { 1.f };
+
+	_float	m_fSSAO_Radius = { 0.812f };
+	_float	m_fSSAO_BIAS = { 0.042f };
+
+	SSAO_GEOMETRY_HEMISPHERE m_tagSSAOGeometry = {};
+	SSAO_GEOMETRYDIRECTIONS_RANDOM_REAL m_tagSSAOGeometryDirections = {};
 private:
 	void Render_Occlusion();
 	void Render_Priority();
 	void Render_Shadow();
 	void Render_NonBlend();
-	void Render_LightAcc();
 	void Render_Blur(); 
+	void Render_SSAO();
+	void Render_SSAO_BLUR();
+	void Render_LightAcc();
 	void Render_Combined();
 	void Render_EnvironmentPostProcess();
 	void Render_Fog();
@@ -70,7 +85,9 @@ private:
 	void Render_Blend();
 	void Render_Bloom();
 	void Render_LastColor();
+	void Render_Tone_Mapping();
 	void Render_UI();
+	void Render_UI_Overley();
 
 
 #ifdef _DEBUG
@@ -79,6 +96,7 @@ private:
 #endif
 
 private:
+	void  Fill_Geometry(_uint iNumSample);
 	HRESULT Ready_ShadowDepthStencilView(_uint iSizeX, _uint iSizeY);
 
 private:

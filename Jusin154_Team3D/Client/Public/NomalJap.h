@@ -20,9 +20,8 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 
-
 public:
-	virtual	HRESULT	Pre_Setting(CGameObject* pObject) override;
+	virtual	HRESULT	Pre_Setting(CGameObject* pObject , void* pArg = nullptr) override;
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
@@ -32,24 +31,38 @@ private:
 	HRESULT			Bind_ShaderResources() override;
 	virtual void	OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr) override;
 private:
-	CInfoInstance*					  m_pInfoInstance = { nullptr };
+	class  CInfoInstance* m_pInfoInstance = { nullptr };
 	_wstring						  m_wstrEffectName = {};
 
-	class CPartObject*				  m_pProjectile = {};
-	class CPartObject*				  m_pProjectile_Side = {};
+	_float4							  m_vJapData[4] = { _float4(65.f , 330.f , 35.f , 20.f)
+													 , _float4(55.f , 100.f , 55.f , 200.f)
+													 , _float4(55.f , 0.f , 0.f , 0.f)
+													 , _float4(65.f , 250.f , 35.f , 60.f) };
+
+	class CPartObject* m_pProjectile = {};
+	class CPartObject* m_pProjectile_Side = {};
 
 	_float3 						  m_vRotateUp = {};
-	_float							  m_fAccTime = {};
-	_float							  m_fLerpAmount = {};
+	_float							  m_fAccMoveTime = {};
+	_float							  m_fAccRotateTime = {};
+	_float							  m_fRotateAmount = { 0.2f };
 	_float							  m_fTurnValue = {};
+	_float							  m_fAngle = { XMConvertToRadians(285.f) };
+	_float3							  m_vCameraLook = {};
 
-	CUnit*							  m_pTargetUnit = { nullptr }; // 발사될 당시 대상
 	_float3							  m_vDirection = { 0.f, 0.f, 1.f };
 	_float4							  m_vStartPos = { 0.f, 0.f, 0.f, 1.f }; // 현재 발사 된 위치
 	_float4							  m_vTargetPos = { 0.f, 0.f, 10.f, 1.f }; // 현재 타게팅 된 위치
-	_float							  m_fAngularSpeed = XM_2PI / 0.3f;
-	_float							  m_fLinearSpeed = 1.f;
-	_bool							  m_bTrailPulseEnded = false;
+	_float							  m_fAngularSpeed = {};
+	_float							  m_fLinearSpeed = 35.f;
+	_float							  m_fTimeRate = {};
+
+	/*좌우 무빙 관련 변수들*/
+	_float3 						  m_vRotateRight = {};
+	_float							  m_fZigZagAngle = { XMConvertToRadians(60.f) };
+	_float							  m_fAccZigZagTime = {};
+	_float							  m_fZigZagSpeed = { 25.f };
+	_float							  m_fZigZagAmount = { 0.1f };
 public:
 	static CNomalJap* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

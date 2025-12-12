@@ -28,6 +28,7 @@ HRESULT CTrailObject::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
+
 	return S_OK;
 }
 
@@ -42,14 +43,19 @@ void CTrailObject::Update(_float fTimeDelta)
 	if (m_bVisible == false)
 		return;
 
-	if (m_TrailInfo.vDistortionTime.y == 0)
-		return;
 
-	m_TrailInfo.vDistortionTime.x += fTimeDelta;
 
-	if (m_TrailInfo.vDistortionTime.x > m_TrailInfo.vDistortionTime.y)
+
+
+	/* 디졸브 타임*/
+	if (m_TrailInfo.vDistortionTime.y != 0)
 	{
-		m_TrailInfo.vDistortionTime.x = 0.f;
+		m_TrailInfo.vDistortionTime.x += fTimeDelta;
+
+		if (m_TrailInfo.vDistortionTime.x > m_TrailInfo.vDistortionTime.y)
+		{
+			m_TrailInfo.vDistortionTime.x = 0.f;
+		}
 	}
 
 	/* 블룸 타임*/
@@ -63,18 +69,20 @@ void CTrailObject::Update(_float fTimeDelta)
 			m_TrailInfo.vBloomTime.x = 0.f;
 		}
 	}
+
 }
 
 void CTrailObject::Late_Update(_float fTimeDelta)
 {
-
 	if (m_bVisible == false)
 		return;
+
 
 	if (m_TrailInfo.isBloom == true)
 	{
 		m_pGameInstance->Add_RenderGroup(RENDER::BLOOM, this);
 	}
+
 
 	if (m_TrailInfo.isBlur == true)
 	{
@@ -84,39 +92,8 @@ void CTrailObject::Late_Update(_float fTimeDelta)
 	if (m_TrailInfo.isOnlyBlur == true)
 		return;
 
-	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
-		m_pGameInstance->Add_RenderGroup(RENDER::EFFECT, this);
-	}
+	m_pGameInstance->Add_RenderGroup(m_TrailInfo.eRenderOrder, this);
 
-}
-
-HRESULT CTrailObject::Ready_Components(void* pArg)
-{
-
-	if (FAILED(__super::Ready_Components(nullptr))) {
-		return E_FAIL;
-	}
-
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, FX_POSTEX, (CComponent**)&m_pShaderCom, nullptr)))
-	{
-		return E_FAIL;
-	}
-
-	CTrail::TRAIL_DESC pTrailDesc;
-
-	pTrailDesc.vHigh = _float3(0.f, 1.f, 0.f);
-	pTrailDesc.vLow = _float3(0.f, -1.f, 0.f);
-
-	if (FAILED(Add_Component<CTrail>(g_iStaticLevel, &m_pTrailCom, &pTrailDesc))) {
-		return E_FAIL;
-	}
-
-	return S_OK;
-}
-
-void CTrailObject::Trail_Update(_fmatrix WorldMat , _float fTimeDelta)
-{
-	m_pTrailCom->Trail_Update(fTimeDelta, WorldMat);
 }
 
 HRESULT CTrailObject::Load_Trail(const _char* pPath, LEVEL eLevel)
@@ -243,15 +220,47 @@ HRESULT CTrailObject::Load_Trail(const _char* pPath, LEVEL eLevel)
 	CloseHandle(hFile);
 
 	return S_OK;
-
 }
+
+HRESULT CTrailObject::Ready_Components(void* pArg)
+{
+
+	if (FAILED(__super::Ready_Components(nullptr))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, FX_POSTEX, (CComponent**)&m_pShaderCom, nullptr)))
+	{
+		return E_FAIL;
+	}
+
+	CTrail::TRAIL_DESC pTrailDesc;
+
+	pTrailDesc.vHigh = _float3(0.f, 1.f, 0.f);
+	pTrailDesc.vLow = _float3(0.f, -1.f, 0.f);
+	
+	if (FAILED(Add_Component<CTrail>(g_iStaticLevel, &m_pTrailCom, &pTrailDesc))) {
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+void CTrailObject::Trail_Update(_fmatrix WorldMat, _float fTimeDelta)
+{
+	if (m_bVisible == false)
+		return;
+
+	m_pTrailCom->Trail_Update(fTimeDelta, WorldMat);
+}
+
 
 HRESULT CTrailObject::Render()
 {
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_POSTEX::TRAIL))))
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(m_TrailInfo.eShaderPass))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Bind_DepthStencil(m_pShaderCom, "g_DepthStencilTexture")))
@@ -260,12 +269,12 @@ HRESULT CTrailObject::Render()
 	if (FAILED(m_pTrailCom->Render()))
 		return E_FAIL;
 
-
 	return S_OK;
 }
 
 HRESULT CTrailObject::Render_Blur()
 {
+
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
@@ -288,6 +297,44 @@ HRESULT CTrailObject::Render_Blur()
 
 	return S_OK;
 }
+
+HRESULT CTrailObject::Render_Bloom()
+{
+	if (FAILED(Bind_ShaderResources()))
+	{
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fBloomStrength", &m_TrailInfo.fBloomStrength, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iBloomType", &m_TrailInfo.eBloomType, sizeof(_int)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isBloomDissolve", &m_TrailInfo.isBloomDissolve, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isBloomReverseDissolve", &m_TrailInfo.isBloomReverseDissolve, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vBloomTime", &m_TrailInfo.vBloomTime, sizeof(_float2)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_POSTEX::TRAIL_BLOOM))))
+		return E_FAIL;
+
+
+
+	if (FAILED(m_pTrailCom->Render()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 
 
 
@@ -328,52 +375,6 @@ void CTrailObject::Free()
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pTrailCom);
 }
-#ifdef _DEBUG
-
-void CTrailObject::Describe_Entity()
-{
-
-}
-#endif // _DEBUG
-
-HRESULT CTrailObject::Render_Bloom()
-{
-	if (FAILED(Bind_ShaderResources()))
-	{
-		return E_FAIL;
-	}
-
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fBloomStrength", &m_TrailInfo.fBloomStrength, sizeof(_float)))) {
-		return E_FAIL;
-	}
-
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_iBloomType", &m_TrailInfo.eBloomType, sizeof(_int)))) {
-		return E_FAIL;
-	}
-
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_isBloomDissolve", &m_TrailInfo.isBloomDissolve, sizeof(_bool)))) {
-		return E_FAIL;
-	}
-
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_isBloomReverseDissolve", &m_TrailInfo.isBloomReverseDissolve, sizeof(_bool)))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vBloomTime", &m_TrailInfo.vBloomTime, sizeof(_float2)))) {
-		return E_FAIL;
-	}
-
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_POSTEX::TRAIL_BLOOM))))
-		return E_FAIL;
-
-
-
-	if (FAILED(m_pTrailCom->Render()))
-		return E_FAIL;
-
-	return S_OK;
-}
-
-
 
 HRESULT CTrailObject::Bind_ShaderResources()
 {
@@ -516,3 +517,10 @@ HRESULT CTrailObject::Bind_ShaderResources()
 
 	return S_OK;
 }
+
+#ifdef _DEBUG
+void CTrailObject::Describe_Entity()
+{
+
+}
+#endif

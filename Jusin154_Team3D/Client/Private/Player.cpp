@@ -13,6 +13,7 @@
 #include "CallBack_Playable_HitReport.h"
 #include "Monster.h"
 #include "Broom.h"
+#include "MapElement_Interactable.h"
 
 #pragma region STATE
 #include "State_Idle.h"
@@ -21,6 +22,7 @@
 #include "State_Land.h"
 #include "State_Move.h"
 #include "State_Combat.h"
+#include "State_Hit.h"
 #include "State_Broom_Ride.h"
 #pragma endregion
 
@@ -71,8 +73,6 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	Set_Anim();
 
-	m_eSpell = STATEANIM::DESCENDO;
-
 	{
 		CFSM::FSM_DESC FSMDesc{};
 		FSMDesc.pStates = &m_States;
@@ -89,7 +89,10 @@ HRESULT CPlayer::Initialize(void* pArg)
 	SAFE_ADDREF(m_pEffectPool);
 
 	m_pInfoInstance->Regist_PlayerAlly(this);
+	m_pInfoInstance->Set_Damage(m_pStat->Get_Stat().fDamage);
 
+	m_pCharacter_Controller->Set_Position(XMVectorSet(-34.f, 5, -11.4f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-34.f, 5, -11.4f, 1.f));
 
 #ifdef _DEBUG
 	m_BasicEffect = make_unique<BasicEffect>(m_pDevice);
@@ -100,6 +103,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_Batch = make_unique<PrimitiveBatch<VertexPositionColor>>(m_pContext);
 #endif // _DEBUG
 
+	// UI 연동 추가
+	m_pInfoInstance->Add_Event(TEXT("UseSpell"), [this](void* p) {this->Get_Spell(*reinterpret_cast<_int*>(p)); });
+	m_pInfoInstance->Add_Event(TEXT("Canvas_Change"), [this](void* p) {this->Get_UIState(*reinterpret_cast<_int*>(p)); });
 	return S_OK;
 }
 
@@ -115,8 +121,9 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 
 void CPlayer::Update(_float fTimeDelta)
 {
-	Update_CameraCoordinateSystem();
-
+	Update_CameraCoordinateSystem(fTimeDelta);
+	UpdateGrapInteractive(fTimeDelta);
+	
 	m_pFSM->Update_State(fTimeDelta);
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
@@ -128,14 +135,58 @@ __super::Update(fTimeDelta);
 	Describe_Entity();
 #endif // _DEBUG
 
-	
-
 	{ // 세트
 		m_pCallBack_HitReport->BeginFrame();
 		m_pCharacter_Controller->Move(fTimeDelta);
 		m_pCallBack_HitReport->Set_CurrentSlop();
 	}
-	TestKeyInput(fTimeDelta);
+	if (m_pGameInstance->Mouse_Down(DIM_RBUTTON)){
+		m_pInfoInstance->Mouse_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_DOWN));
+	}
+	if (m_pGameInstance->Mouse_Up(DIM_RBUTTON))
+	{
+		m_pInfoInstance->Mouse_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_UP));
+		m_bAim = false; 
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_1)) {
+		if (m_pModelCom->Get_SecondAnimIndex() == m_Animation[STATEANIM::LUMOS].first)
+		{
+			m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R), m_Animation[STATEANIM::LUMOS_STOP].first, m_Animation[STATEANIM::LUMOS_STOP].second);
+		}
+	}
+
+}
+
+void CPlayer::UpdateGrapInteractive(_float fTimeDelta)
+{
+	if (nullptr != m_pGrapInteractive) {
+		m_vGrapInteratableLerp.x += fTimeDelta;
+		m_pGrapInteractive->GrapToPlayer(m_pTransformCom->Get_State(STATE::POSITION) + m_pCamPosition_ShoulderPart->Get_ShoulderGlobalPos(), m_vGrapInteratableLerp.x);
+		if (m_vGrapInteratableLerp.x > m_vGrapInteratableLerp.y) {
+			m_vGrapInteratableLerp.x -= m_vGrapInteratableLerp.y;
+		}
+	}
+}
+
+void CPlayer::Update_CameraShake(_float fTimeDelta)
+{
+	if (true == m_bCameraShake) {
+		m_vCameraShakeTimer.x += fTimeDelta;
+		if (m_vCameraShakeTimer.x > m_vCameraShakeTimer.y) {
+			m_vCameraShakeTimer.x = 0.f;
+			m_pCamPosition_ShoulderPart->Set_CameraShake(0.f, 0.f);
+			m_bCameraShake = false;
+		}
+		else {
+			_float fIntense = { 1.f - m_vCameraShakeTimer.x / m_vCameraShakeTimer.y };
+			fIntense *= fIntense;
+			m_pCamPosition_ShoulderPart->Set_CameraShake(
+				fIntense * m_pGameInstance->Real_Random_Float(-m_fCameraShakeIntense, m_fCameraShakeIntense),
+				fIntense * m_pGameInstance->Real_Random_Float(-m_fCameraShakeIntense, m_fCameraShakeIntense)
+			);
+		}
+	}
 }
 
 void CPlayer::Late_Update(_float fTimeDelta)
@@ -143,12 +194,40 @@ void CPlayer::Late_Update(_float fTimeDelta)
 	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW, this);
 
 	__super::Late_Update(fTimeDelta);
 
-	if (nullptr != m_pLockOnMonster && false == m_pLockOnMonster->isDead()) {
-		static_cast<CMonster*>(m_pLockOnMonster)->Set_DrawOutLine();
+	if (nullptr != m_LockOnInfo.pUnit) {
+		if (false == m_LockOnInfo.pUnit->isDead()) {
+			static_cast<CMonster*>(m_LockOnInfo.pUnit)->Set_DrawOutLine();
+		}
+		else {
+			m_LockOnInfo.pUnit = nullptr;
+		}
 	}
+	if (nullptr != m_LockOnInfo.pInteractive) {
+		static_cast<CMapElement_Interactable*>(m_LockOnInfo.pInteractive)->Set_DrawOutLine();
+	}
+
+	if (m_bLookAt && m_LockOnInfo.pUnit)
+	{
+		m_pTransformCom->LookAt_Lerp(m_LockOnInfo.pUnit->Get_WorldPostion(), fTimeDelta, 5.f);
+	}
+	////////////////////////////////////////////////////////////////////////////
+	_vector look = XMVector3Normalize(m_pTransformCom->Get_State(STATE::LOOK));
+
+	_vector worldUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+
+	_vector right = XMVector3Normalize(XMVector3Cross(worldUp, look));
+	_vector up = XMVector3Normalize(XMVector3Cross(look, right));
+
+	m_pTransformCom->Set_State(STATE::RIGHT, right);
+	m_pTransformCom->Set_State(STATE::UP, up);
+	m_pTransformCom->Set_State(STATE::LOOK, look);
+	////////////////////////////////////////////////////////////////////////////
+	
+
 }
 
 HRESULT CPlayer::Render()
@@ -188,6 +267,66 @@ HRESULT CPlayer::Render()
 
 	return S_OK;
 }
+HRESULT CPlayer::Render_Shadow()
+{
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldMatrixPtr()))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ViewMatrix", D3DTS::VIEW))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ProjMatrix", D3DTS::PROJ))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", &m_pGameInstance->Get_ShadowDesc()->fFar, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
+
+	for (_uint i = 0; i < iNumMeshes; i++)
+	{
+		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pModelCom->Render(i))) {
+			return E_FAIL;
+		}
+	}
+
+	return S_OK;
+}
+void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
+{
+	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
+	if (CollisionDesc) {
+		Check_HitAngle(XMLoadFloat4(&CollisionDesc->vHitDir));
+	}
+	else {
+		m_fHitDegree = -1.f;
+	}
+
+	m_pFSM->Change_State(FSMSTATE::HIT);
+}
+void CPlayer::OnHit(CGameObject* pOther, CGameObject* pCaller)
+{
+}
+
+void CPlayer::Start_CameraShake(_float fTime, _float fIntense)
+{
+	m_vCameraShakeTimer.x = 0.f;
+	m_vCameraShakeTimer.y = fTime;
+	m_fCameraShakeIntense = fIntense;
+	m_bCameraShake = true;
+}
 #ifdef _DEBUG
 
 void CPlayer::Render_CameraCoordinateSystem()
@@ -198,7 +337,7 @@ void CPlayer::Render_CameraCoordinateSystem()
 	_vector xmvLook = XMVector4Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
 	_float2 vLook = { XMVectorGetX(xmvLook), XMVectorGetZ(xmvLook) };
 	GUI::Begin("Player_CAM_COOORD");
-	GUI::Text("%d", m_pLockOnMonster);
+	GUI::Text("%d", m_LockOnInfo.pUnit);
 
 	GUI::Text("W : %.2f, %.2f, %.2f", m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z);
 	GUI::Text("A : %.2f, %.2f, %.2f", -m_vCameraRightDir.x, 0.f, -m_vCameraRightDir.z);
@@ -273,6 +412,10 @@ HRESULT CPlayer::Ready_Components()
 		return E_FAIL;
 	}
 
+	m_pStat = m_pInfoInstance->Get_PlayerStatPtr();
+	m_Components.push_back(m_pStat);
+	SAFE_ADDREF(m_pStat);
+	SAFE_ADDREF(m_pStat);
 
 	{ // CCT
 		CCharacter_Controller::Character_Controller_DESC Desc{};
@@ -280,12 +423,12 @@ HRESULT CPlayer::Ready_Components()
 		Desc.iSubKind = ENUM_CLASS(PXOBJECT::PLAYER);
 		Desc.pTransform = m_pTransformCom;
 		Desc.eBodyType = ACTOR::CAPSULE;
-		Desc.fContactOffset = 0.01f;
-		Desc.fMaterial = { 0.5f, 0.5f, 0.6f };
-		Desc.bAutoStepping = { true };
-		Desc.fStepOffset = { 0.05f };
+		Desc.fContactOffset = 0.001f;
+		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
+		Desc.bAutoStepping = { false };
+		Desc.fStepOffset = { 0.001f };
 		Desc.fRadius = 0.5f;
-		Desc.fHeight = 1.0f;
+		Desc.fHeight = 0.6f;
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Playable_HitReport::Create();
 		Desc.pCallback_Behavior = m_pCallBack_Behavior = CCallBack_Playable_Behavior::Create();
 		Desc.eClimbingMode = PSX::PxCapsuleClimbingMode::eEASY;
@@ -323,12 +466,6 @@ HRESULT CPlayer::Ready_Parts()
 	{
 		CCamPosition_Shoulder::CAMERA_SHOULDER_DESC Desc;
 		Desc.pParentTransform = m_pTransformCom;
-		Desc.fMouseSensor = 0.1f;
-		Desc.fShoulderDistance = 2.f;
-		Desc.fBackFrontRatio = 0.9f;
-		Desc.fCameraFocalLength = 13.4f;
-		Desc.vInitialLook = { 0.77f, 1.35f, -1.f };
-
 		if (FAILED(Add_PartObject<CCamPosition_Shoulder>("Cam_Shoulder_Part", g_iStaticLevel, &m_pCamPosition_ShoulderPart, &Desc))) {
 			return E_FAIL;
 		}
@@ -355,12 +492,13 @@ HRESULT CPlayer::Bind_ShaderResources()
 }
 void CPlayer::ReLockOnTarget()
 {
-	m_pLockOnMonster = m_pInfoInstance->Get_LockOnUnit();
-	if (nullptr != m_pLockOnMonster) {
-		if (true == m_pLockOnMonster->isDead()) {
-			m_pLockOnMonster = nullptr;
+	m_pInfoInstance->Get_LockOnInfo(m_LockOnInfo);
+	if (nullptr != m_LockOnInfo.pUnit) {
+		if (true == m_LockOnInfo.pUnit->isDead()) {
+			m_LockOnInfo.pUnit = nullptr;
 		}
 	}
+	//m_pLockOnMonster->Get_State
 }
 
 void CPlayer::SetGravity()
@@ -381,13 +519,14 @@ void CPlayer::SetGravity()
 	}
 }
 
-void CPlayer::Update_CameraCoordinateSystem()
+void CPlayer::Update_CameraCoordinateSystem(_float fTimeDelta)
 {
 	_vector xmvCameraLook = XMVector3Normalize(XMVectorSetY(m_pGameInstance->Get_CameraLook(), 0.f));
 	_vector xmvUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
 	XMStoreFloat3(&m_vCameraRightDir, XMVector3Normalize(XMVector3Cross(xmvUp, xmvCameraLook)));
 	XMStoreFloat3(&m_vCameraLookDir, xmvCameraLook);
 	m_pInfoInstance->Update_CameraCoordinateSystem(m_vCameraLookDir, m_vRimLightColor);
+	Update_CameraShake(fTimeDelta);
 }
 
 _matrix CPlayer::Get_WandPos()
@@ -398,34 +537,6 @@ _matrix CPlayer::Get_WandPos()
 		return _matrix();
 
 	return pWand->Get_WorldMatrix();
-}
-
-void CPlayer::Play_Event()
-{
-	for (auto iter = m_PendingEvents.begin(); iter != m_PendingEvents.end(); )
-	{
-		_float ratio = m_pModelCom->Get_CurrentTrackProgressRatio();
-		_uint curAnim = m_pModelCom->Get_AnimIndex();
-
-		if (curAnim == iter->AnimIndex && ratio >= iter->fRatio)
-		{
-			iter->Callback();
-			iter = m_PendingEvents.erase(iter);
-		}
-		else
-		{
-			++iter;
-		}
-	}
-}
-
-void CPlayer::Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio)
-{
-	PendingEvent Desc;
-	Desc.AnimIndex = AnimIndex;
-	Desc.fRatio = fRatio;
-	Desc.Callback = Callback;
-	m_PendingEvents.push_back(Desc);
 }
 
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -457,6 +568,7 @@ void CPlayer::Free()
 	__super::Free();
 
 
+	SAFE_RELEASE(m_pGrapInteractive);
 	if (nullptr != m_pInfoInstance) {
 		CInfoInstance* pInfo = m_pInfoInstance;
 		m_pInfoInstance = nullptr;
@@ -472,6 +584,7 @@ void CPlayer::Free()
 	SAFE_RELEASE(m_pCharacter_Controller);
 	SAFE_RELEASE(m_pRigidBody);
 	SAFE_RELEASE(m_pLightCom);
+	SAFE_RELEASE(m_pStat);
 	Safe_Delete(m_pCallBack_Behavior);
 	Safe_Delete(m_pCallBack_HitReport);
 	SAFE_RELEASE(m_pCamPosition_TopDown_FollowPart);
@@ -519,13 +632,52 @@ void CPlayer::Describe_Entity()
 	GUI::Text(AnimList.c_str());
 
 	GUI::Text("AnimTrack %.2f", m_pModelCom->Get_CurrentTrackPosition());
-	GUI::Text("AnimRatio %.2f", m_pModelCom->Get_TrackProgressRatio(417));
+	GUI::Text("AnimRatio %.2f", m_pModelCom->Get_CurrentTrackProgressRatio());
+	GUI::Text("AnimSpeed %.2f", m_pModelCom->Get_AnimSpeed());
 
 	GUI::Checkbox("Render", &m_bVisible);
 
 	GUI::Text("%d", m_iStateMask);
+	GUI::Text("HP : %f, %f", m_pStat->Get_Stat().fCurrentHp, m_pStat->Get_Stat().fMaxHp);
+	GUI::SameLine(); if (GUI::Button("FULL")) { m_pStat->Set_Stat(ENUM_CLASS(STAT::CURRENTHP), m_pStat->Get_Stat().fMaxHp); }
+#pragma region CAMERA_SHAKE
+	if (false == m_bCameraShake && GUI::Button("Shake")) {
+		m_bCameraShake = true;
+	}
+	if (GUI::SliderFloat("m_fCameraShakeTime", &m_fCameraShakeTime, 0.125f,  0.f, "%.3f")) {
+		m_vCameraShakeTimer.y = m_fCameraShakeTime;
+	}
+	GUI::SliderFloat("m_fCameraShakeIntense", &m_fCameraShakeIntense, 5.f, 20.f, "%.1f");
+#pragma endregion
+
+	_vector xmvInputDir = XMVectorZero();
+
+	_vector xmvCamLook = XMVector4Normalize(XMVectorSet(m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z, 0.f));
+	_vector xmvCamRight = XMVector4Normalize(XMVectorSet(m_vCameraRightDir.x, 0.f, m_vCameraRightDir.z, 0.f));
+
+	if (m_pGameInstance->Key_Pressing(DIK_W))
+		xmvInputDir += xmvCamLook;
+	if (m_pGameInstance->Key_Pressing(DIK_S))
+		xmvInputDir -= xmvCamLook;
+	if (m_pGameInstance->Key_Pressing(DIK_A))
+		xmvInputDir -= xmvCamRight;
+	if (m_pGameInstance->Key_Pressing(DIK_D))
+		xmvInputDir += xmvCamRight;
+
+	xmvInputDir = XMVector3Normalize(xmvInputDir);
+
+	_float2 vInputDir = { XMVectorGetX(xmvInputDir),XMVectorGetZ(xmvInputDir) };
+	_vector xmvCurLook = XMVector4Normalize(
+		XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
+	_float2 vCurLook = { XMVectorGetX(xmvCurLook),XMVectorGetZ(xmvCurLook) };
+
+	_float vDir = CMyTools::Get_Direction2D(vCurLook, vInputDir);
+	_float degree = XMConvertToDegrees(vDir);
+
+	GUI::Text("Angle %.2f", degree);
 
 	m_pLightCom->Describe_Entity();
+
 	GUI::End();
 }
 

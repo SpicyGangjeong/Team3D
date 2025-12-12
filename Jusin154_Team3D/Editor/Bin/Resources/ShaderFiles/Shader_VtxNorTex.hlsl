@@ -117,9 +117,9 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vAlbedo = vMtrlDiffuse;
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
-    (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
-    g_fUsingSurfaceParams, // 서페이스 파라미터
-    1.f);
+        (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
+        g_fUsingSurfaceParams, // 서페이스 파라미터
+        1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = vSurface;
     
@@ -175,15 +175,51 @@ PS_OUT PS_MAIN_TERRAIN_ANISO(PS_IN In)
     Out.vAlbedo = vMtrlDiffuse;
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
-    (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
-    g_fUsingSurfaceParams, // 서페이스 파라미터
-    (1.f / 255.f)); // 지형은 1
+        (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
+        g_fUsingSurfaceParams, // 서페이스 파라미터
+        (1.f / 255.f)); // 지형은 1
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = vSurface;
     
     return Out;
 }
 
+struct VS_OUT_SHADOW
+{
+    float4 vPosition : SV_POSITION;
+    float fProjPos : TEXCOORD0;
+};
+VS_OUT_SHADOW VS_MAIN_SHADOW(VS_IN In)
+{
+    VS_OUT_SHADOW Out;
+    
+    matrix matWV, matWVP;
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+    
+    Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    Out.fProjPos = Out.vPosition.z;
+
+    return Out;
+}
+struct PS_IN_SHADOW
+{
+    float4 vPosition : SV_POSITION;
+    float fProjPos : TEXCOORD0;
+};
+struct PS_OUT_SHADOW
+{
+    float fShadowLightDepth : SV_TARGET0;
+};
+
+PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN_SHADOW In)
+{
+    PS_OUT_SHADOW Out = (PS_OUT_SHADOW) 0;
+    
+    Out.fShadowLightDepth = In.fProjPos;
+    
+    return Out;
+}
 technique11 NorTexTechnique11
 {
     pass NorTexPass // 0
@@ -212,5 +248,14 @@ technique11 NorTexTechnique11
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_TERRAIN_ANISO();
+    }
+    pass ShadowPass // 3
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN_SHADOW();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_SHADOW();
     }
 }

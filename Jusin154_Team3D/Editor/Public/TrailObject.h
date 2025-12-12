@@ -58,17 +58,33 @@ public:
 		_int		iBlurWeight = {};
 
 		/* 블룸 */
-		_bool   isBloom = {};
+		_bool       isBloom = {};
 
-		_bool   isBloomDissolve = {};
-		_bool   isBloomReverseDissolve = {};
+		_bool       isBloomDissolve = {};
+		_bool       isBloomReverseDissolve = {};
 
 		_float		fBloomStrength = {};
 
-		BLOOM_TYPE eBloomType = {};
-		_float2    vBloomTime = {};
+		BLOOM_TYPE  eBloomType = {};
+		_float2     vBloomTime = {};
 
-		_int	   iNumVertex = {};
+		_int	    iNumVertex = { 256 };
+
+
+		RENDER		eRenderOrder = { RENDER::EFFECT };
+		SHADER_PASS_POSTEX eShaderPass = { SHADER_PASS_POSTEX::TRAIL };
+
+		_float3 vPadding0 = {};
+		_float3 vPadding1 = {};
+		_float3 vPadding2 = {};
+
+		_float  fPadding0 = {};
+		_float  fPadding1 = {};
+		_float  fPadding2 = {};
+			    
+		_bool   isPadding0 = {};
+		_bool   isPadding1 = {};
+		_bool   isPadding2 = {};
 
 	}TRAIL_INFO;
 private:

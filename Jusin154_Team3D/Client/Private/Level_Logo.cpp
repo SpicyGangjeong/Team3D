@@ -5,6 +5,9 @@
 #include "Level_Loading.h"
 #include "InfoInstance.h"
 
+#include "Logo.h"
+#include "Logo_Text.h"
+#include "Logo_Glow.h"
 
 CLevel_Logo::CLevel_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -23,7 +26,11 @@ HRESULT CLevel_Logo::Initialize()
 
 void CLevel_Logo::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Up(DIK_F1))
+//#ifdef 기무리
+//	m_pGameInstance->Set_LevelToChange();
+//#endif // 기무리
+
+	if (m_pGameInstance->Key_Down(DIK_F1))
 	{
 		m_pGameInstance->Set_LevelToChange();
 	}
@@ -84,6 +91,16 @@ HRESULT CLevel_Logo::Render()
 
 HRESULT CLevel_Logo::Ready_Layer_UI(const _wstring& strLayerTag)
 {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLogo>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLogo_Text>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLogo_Glow>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 

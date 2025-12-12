@@ -56,13 +56,8 @@ PSX::PxRigidDynamic* CPhysX_Manager::Add_DynamicActor(CRigidBody_Dynamic& RigidB
 	PSX::PxRigidBodyFlags pxRigidFlags = RigidBody.Get_RigidBodyFlags();
 	pActorDynamic->setRigidBodyFlags(pxRigidFlags);
 
-	if (pxRigidFlags.isSet(PSX::PxRigidBodyFlag::eKINEMATIC)) {
 
-	}
-	else {
-		PSX::PxRigidBodyExt::updateMassAndInertia(*pActorDynamic, (PSX::PxReal)RigidBody.Get_Density());
-	}
-
+	PSX::PxRigidBodyExt::updateMassAndInertia(*pActorDynamic, (PSX::PxReal)RigidBody.Get_Density());
 	m_pRestBodies.insert(pActorDynamic);
 	Attach_Actor(*pActorDynamic);
 
@@ -163,23 +158,10 @@ PSX::PxMaterial* CPhysX_Manager::Create_Material(const _float3* vMatInfo)
 
 _bool CPhysX_Manager::SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
 {
-	PSX::PxSphereGeometry sphereGeom(fRadius);
-
-	PSX::PxVec3 startPos(vStartPos.x, vStartPos.y, vStartPos.z);
-	PSX::PxQuat startRot(PSX::PxIdentity);
-
-	PSX::PxTransform startPose(startPos, startRot);
-
-	PSX::PxVec3 sweepDir(vDir.x, vDir.y, vDir.z);
-
-	sweepDir.normalize();
-
-	PSX::PxQueryFilterData filterData(flagQuery);
-	
-	return m_pScene->sweep(sphereGeom, startPose, sweepDir, fDistance, hitBuffer, flagHitsData, filterData);
+	return SphereCast(fRadius, XMLoadFloat3(&vStartPos), XMLoadFloat3(&vDir), fDistance, flagHitsData, flagQuery, hitBuffer);
 }
 
-_bool CPhysX_Manager::SphereCast(_float fRadius, _fvector _vStartPos, _fvector _vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
+_bool CPhysX_Manager::SphereCast(_float fRadius, _fvector _vStartPos, _gvector _vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
 {
 	_float3 vDir = {};
 	_float3 vStartPos = {};
@@ -199,10 +181,53 @@ _bool CPhysX_Manager::SphereCast(_float fRadius, _fvector _vStartPos, _fvector _
 	sweepDir.normalize();
 
 	PSX::PxQueryFilterData filterData(flagQuery);
+
 	_bool bHit = m_pScene->sweep(sphereGeom, startPose, sweepDir, fDistance, hitBuffer, flagHitsData, filterData);
 
 	return bHit;
 }
+
+_bool CPhysX_Manager::RayCast(_float3 _vStartPos, _float3 _vDir, _float fDistance, PSX::PxRaycastHit* pRayHitArray, _uint iMaxHitCapacity, _uint& iOutHitCount)
+{
+	return RayCast(XMLoadFloat3(&_vStartPos), XMLoadFloat3(&_vDir), fDistance, pRayHitArray, iMaxHitCapacity, iOutHitCount);
+}
+
+bool CPhysX_Manager::RayCast(_fvector _vStartPos, _gvector _vDir, _float fDistance, PSX::PxRaycastHit* pRayHitArray, _uint iMaxHitCapacity, _uint& iOutHitCount )
+{
+	iOutHitCount = 0;
+
+	if (pRayHitArray == nullptr || iMaxHitCapacity == 0) {
+		return false;
+	}
+
+	_float3 vDir = {};
+	_float3 vStartPos = {};
+
+	XMStoreFloat3(&vDir, _vDir);
+	XMStoreFloat3(&vStartPos, _vStartPos);
+
+	PSX::PxVec3 startPos(vStartPos.x, vStartPos.y, vStartPos.z);
+	PSX::PxVec3 sweepDir(vDir.x, vDir.y, vDir.z);
+
+	sweepDir.normalize();
+
+	PSX::PxRaycastBuffer raycastBuffer(pRayHitArray, iMaxHitCapacity);
+
+	const PSX::PxHitFlags hitFlags = PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL;
+
+	PSX::PxQueryFilterData queryFilterData;
+	queryFilterData.flags = PSX::PxQueryFlag::eSTATIC | PSX::PxQueryFlag::eDYNAMIC;
+
+	const _bool bHit = m_pScene->raycast(startPos, sweepDir, fDistance, raycastBuffer, hitFlags, queryFilterData );
+
+	if (bHit == false) {
+		return false;
+	}
+
+	iOutHitCount = raycastBuffer.getNbAnyHits(); // block + touches 합
+	return bHit;
+}
+
 
 void CPhysX_Manager::RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh) 
 {
@@ -359,6 +384,9 @@ void CPhysX_Manager::Update_Kinematic()
 
 void CPhysX_Manager::Update(_float fTimeDelta)
 {
+#ifdef _DEBUG
+	m_pGameInstance->Compute_TimeDelta(TEXT("Timer_PhysX"));
+#endif // _DEBUG
 	if (nullptr == m_pScene) {
 		return;
 	}
@@ -373,6 +401,9 @@ void CPhysX_Manager::Update(_float fTimeDelta)
 		 Update_Dynamic_ActiveActors();
 		//Update_Dynamic_AllActors();
 	}
+#ifdef _DEBUG
+	m_pGameInstance->Compute_TimeDelta(TEXT("Timer_PhysX"));
+#endif // _DEBUG
 }
 void CPhysX_Manager::Update_Dynamic_ActiveActors()
 {
@@ -473,7 +504,7 @@ PSX::PxController* CPhysX_Manager::Add_BoxController(PSX::PxBoxControllerDesc& D
 	PSX::PxController* pController = { nullptr };
 
 	pController = m_pCCTManager->createController(Desc);
-	
+
 	return pController;
 }
 
@@ -512,12 +543,10 @@ HRESULT CPhysX_Manager::Initialize()
 		return E_FAIL;
 	}
 #ifdef _DEBUG
-
 	if (FAILED(Connect_DebugServer())) {
 		//ASSERT_NURI(false);
 		//ASSERT_JINWOO(false);
 	}
-
 #endif // _DEBUG
 
 	{ // 씬 세팅
@@ -528,9 +557,8 @@ HRESULT CPhysX_Manager::Initialize()
 		m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, m_ToleranceScale, true, m_pPvd);
 #endif // _DEBUG
 #ifndef _DEBUG
-m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, m_ToleranceScale, true);
+		m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, m_ToleranceScale, true);
 #endif // _DEBUG
-
 
 		m_pCookingParam = new PSX::PxCookingParams(m_pPhysics->getTolerancesScale());
 		m_pCookingParam->meshPreprocessParams |= PSX::PxMeshPreprocessingFlag::eWELD_VERTICES;
@@ -596,7 +624,7 @@ m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, m_ToleranceScal
 	m_pMaterials.push_back(m_pPhysics->createMaterial(0.5f, 0.5f, 0.6f));
 
 	PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
-	PlaneData.iSubKind = UINT_MAX;
+	PlaneData.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
 	PlaneData.pOwner = nullptr;
 	PlaneData.pBody = nullptr;
 

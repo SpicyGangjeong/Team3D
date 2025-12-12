@@ -70,7 +70,7 @@ void CAlphaMap::Update(_float3& vPosition, _uint iColorIndex, _float fValue, _ui
 
 void CAlphaMap::Save_ToFile(const _char* pFilePath)
 {
-	string strFilePath = "../Bin/Resources/Data/Map/" + string(pFilePath);
+	string strFilePath = "../Bin/Resources/Data/Map/Terrain/" + string(pFilePath);
 
 	ofstream  out(strFilePath, ios::binary);
 
@@ -93,7 +93,7 @@ void CAlphaMap::Save_ToFile(const _char* pFilePath)
 
 void CAlphaMap::Load_ToFile(const _char* pFilePath)
 {
-	string strFilePath = "../Bin/Resources/Data/Map/" + string(pFilePath);
+	string strFilePath = "../Bin/Resources/Data/Map/Terrain/" + string(pFilePath);
 
 	ifstream in(strFilePath, ios::binary);
 
@@ -121,7 +121,7 @@ void CAlphaMap::Load_ToFile(const _char* pFilePath)
 
 	m_pContext->Unmap(m_pTexture2D, 0);
 
-	//if (FAILED(SaveDDSTextureToFile(m_pContext, m_pTexture2D, L"../Bin/Resources/Data/Map/Hogsmeade_AlphaMap.dds")))
+	//if (FAILED(SaveDDSTextureToFile(m_pContext, m_pTexture2D, L"../Bin/Resources/Data/Map/Terrain/Hogwart_AlphaMap.dds")))
 	//	return;
 }
 

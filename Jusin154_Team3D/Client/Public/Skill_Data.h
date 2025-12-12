@@ -1,65 +1,57 @@
 ﻿#pragma once
 
 #include "Client_Define.h"
-#include "GameObject.h"
+#include "Base.h"
 
 NS_BEGIN(Engine)
 class CGameInstance;
+class CUIObject;
 NS_END
 
 NS_BEGIN(Client)
 
-class CSkill_Data final : public CGameObject
+class CSkill_Data final : public CBase
 {
 public:
-	typedef struct tagSpellInfo
-	{
-		_int		iSpell_ID{};
-		_string		pSpell_Name;
-		_string		pImage_Name;
-		_int		iSpell_Type{};
-		_int		iSkill_Type{};
-		_float		fSpell_CoolTime{};
-		_float		fDuration{};
-		_int		iAnimNum{};
-		_string		pSpellInfo;
-		_bool		bSpell_Lock = false;
-		_bool		bEquip_Spell = false;
-	}SPELLINFO;
-private:
-	CSkill_Data(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CSkill_Data(const CSkill_Data& rhs);
-	virtual ~CSkill_Data() = default;
-
-public:
-	virtual void Priority_Update(_float fTimeDelta);
-	virtual void Update(_float fTimeDelta);
-	virtual void Late_Update(_float fTimeDelta);
-	virtual HRESULT Render() override;
-	virtual _vector Get_WorldPostion() override;
 
 private:
-	virtual HRESULT	Bind_ShaderResources() override;
-	virtual HRESULT	Ready_Components(void* pArg) override;
-	virtual HRESULT Initialize_Prototype() override;
-	virtual HRESULT Initialize(void* pArg) override;
+    CSkill_Data();
+    ~CSkill_Data() = default;
 
 public:
-	//const SPELLINFO& Get_Info(_uint SpellID) const;
+    void Update(_float fTimeDelta);
+    void Change_Level();
+    _float Get_CoolTime(_int SpellID);
+
+public:
+    HRESULT Load_SpellInfo(const _char* pFilePath);
+
+    void NoCool(_bool bNoCool);
+
+public:
+    const SPELL_INFO& Get_Info(_uint SpellID) const;
+    _int Update_Spell(_int SpellID);
+    _float Get_Spell_Damage(_int SpellDamage);
+    void Update_Damage(_float Damage);
+    void Spell_UnLock(_int SpellID);
 
 private:
-	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
-	CGameObject* m_pSpell_Panel = { nullptr };
+    CInfoInstance* m_pInfoInstance = { nullptr };
 
-	SPELLINFO SpellInfo = {};
+    _int            m_iSpell_Count{};
+    SPELL_INFO      SpellInfo[34] = {};
+    _float          m_fSpell_CoolTime[34] = {};
+    _float          m_fSpell_Damage[34] = {};
+
+    _bool        m_bNoCool = { false };
+
+private:
+    HRESULT Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContex);
+
+
 public:
-	static CSkill_Data* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
-	virtual void Free() override;
-#ifdef _DEBUG
-	void Describe_Entity() override;
-#endif // _DEBUG
-
+    static CSkill_Data* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+    virtual void Free() override;
 };
 
 NS_END

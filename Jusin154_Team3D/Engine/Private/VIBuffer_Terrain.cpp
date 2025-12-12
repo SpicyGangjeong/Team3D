@@ -231,7 +231,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _char* pFilePath, _uint iS
 
 
 #pragma region READ_DATA
-	string strFilePath = "../Bin/Resources/Data/Map/" + string(pFilePath);
+	string strFilePath = "../Bin/Resources/Data/Map/Terrain/" + string(pFilePath);
 
 	ifstream in(strFilePath, ios::binary);
 
@@ -484,7 +484,7 @@ void CVIBuffer_Terrain::FitY(_fmatrix WorldMatrix, _float fY)
 
 HRESULT CVIBuffer_Terrain::Load_HeightMap(const _char* pFilePath)
 {
-	string strFilePath = "../Bin/Resources/Data/Map/" + string(pFilePath);
+	string strFilePath = "../Bin/Resources/Data/Map/Terrain/" + string(pFilePath);
 
 	ifstream in(strFilePath, ios::binary);
 
@@ -540,7 +540,7 @@ void CVIBuffer_Terrain::Set_CullingRadius(_float fRaduis)
 
 HRESULT CVIBuffer_Terrain::Save_HeightMap(const _char* pFilePath)
 {
-	string strFilePath = "../Bin/Resources/Data/Map/" + string(pFilePath);
+	string strFilePath = "../Bin/Resources/Data/Map/Terrain/" + string(pFilePath);
 
 	ofstream  out(strFilePath, ios::binary);
 

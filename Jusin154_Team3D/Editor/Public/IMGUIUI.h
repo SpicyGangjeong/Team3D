@@ -30,12 +30,13 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 
 private:
+	void CanvaswstringTostring(vector<wstring>& panelNames);
 	void PanelwstringTostring(vector<wstring>& panelNames);
 	void ElementwstringTostring(vector<wstring>& panelNames);
 
 private:
+	CGameObject*			m_pUI_Manager			= { nullptr };
 	CGameObject*			m_pGamePlay_Canvas		= { nullptr };
-	CGameObject*			m_pSpell_Canvas			= { nullptr };
 	CGameObject*			m_pCurrent_Canvas		= { nullptr };
 	CGameObject*			m_pPanelObject			= { nullptr };
 	CGameObject*			m_pElementObject		= { nullptr };
@@ -49,6 +50,7 @@ private:
 	_float2					m_UV{};
 
 	_int					m_iSpellType{};
+	_int					m_iSkillType{};
 
 	_vector					m_vLerpPosition{};
 	_float					m_fLerpX{};
@@ -85,11 +87,20 @@ private:
 	vector<string>			m_iPanelNamestring;
 	vector<const _char*>	m_iPanelName;
 
+	_int					m_iCanvasCount{};
+	vector<wstring>			m_iCanvasNamewstring;
+	vector<string>			m_iCanvasNamestring;
+	vector<const _char*>	m_iCanvaslName;
+
 	_bool					m_bCanvasVisible		= { false };
 	_bool					m_bPanelVisible			= { false };
 	_bool					m_bElementAllVisible	= { false };
 	_bool					m_bElementVisible		= { false };
 
+
+	_float2					m_fFontPos	{};
+	_float					m_fFontX	{};
+	_float					m_fFontY	{};
 public:
 	static CIMGUIUI* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

@@ -34,7 +34,7 @@ private:
 	CModel*				 m_pModelCom = { nullptr };
 
 	_float4x4			 m_pWandTipMatrix = {};
-
+	_float3				 m_Offset = {};
 #ifdef _DEBUG
 	unique_ptr<GeometricPrimitive> m_pGripShape = { nullptr };
 	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };

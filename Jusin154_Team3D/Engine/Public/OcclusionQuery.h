@@ -15,15 +15,18 @@ public:
 	void	Begin_Query();
 	_bool	isDraw();
 	void	End_Query();
+	void	Set_PreFrameDraw() { m_bCurFrameDraw = false; }
 
 private:
 	ID3D11Query*		m_pQuery[5] = {};
 
-	_bool				m_bPreFrameDraw = {};
-	_bool				m_bThisFrameDraw = {};
+	_bool				m_bPreFrameDraw = { true };
+	_bool				m_bCurFrameDraw = {};
+
 	_uint				m_iNumCullFrame = {};
 	_uint				m_iCountFrame = {};
 	_uint				m_iGetFrameIndex = {};
+	_uint				m_iCheckFrame = {};
 
 private:
 	virtual HRESULT Initialize_Prototype() override;

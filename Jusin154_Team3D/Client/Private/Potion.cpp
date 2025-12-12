@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Potion.h"
 #include "GameInstance.h"
+#include "InfoInstance.h"
 
 CPotion::CPotion(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
@@ -8,7 +9,8 @@ CPotion::CPotion(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CPotion::CPotion(const CPotion& rhs)
-	:CElementObject(rhs)
+	:CElementObject(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -42,7 +44,22 @@ HRESULT CPotion::Initialize(void* pArg)
 	m_fAlphaTime = 1.f;
 	m_vImageSlotPos = _float2(45.f, 45.f);
 	m_vImageSize = _float2(32.f, 32.f);
+	m_fFontX = 1163.f;
+	m_fFontY = 860.f;
+	m_iPotionIndex = 10;
+	m_iPerPotionIndex = -1;
+	m_iPotion_Level = 1;
 	return S_OK;
+}
+
+_float CPotion::Use_Potion()
+{
+	if (m_iPotionIndex == 0)
+		return -1.f;
+
+	m_iPotionIndex--;
+
+	return floor(m_pInfoInstance->Get_PlayerStatPtr()->Get_Stat().fMaxHp * (m_iPotion_Level * 0.25f));
 }
 
 void CPotion::Priority_Update(_float fTimeDelta)
@@ -86,11 +103,12 @@ void CPotion::Update(_float fTimeDelta)
 		}
 	}
 
-	if (m_pGameInstance->Key_Down(DIK_G))
+	if (m_iPerPotionIndex != m_iPotionIndex)
 	{
-		m_fTime = -1.f;
+		m_strPotion = to_wstring(m_iPotionIndex);
+		m_fFontOffSet = (m_pGameInstance->FontSizeX(TEXT("UI_size15"), m_strPotion.c_str()) - 13.f) * 0.5f;
+		m_iPerPotionIndex = m_iPotionIndex;
 	}
-
 
 	m_fTime += fTimeDelta * m_fTimeMult;
 
@@ -123,6 +141,7 @@ HRESULT CPotion::Render()
 	if (FAILED(m_pVIBufferCom->Render())) {
 		return E_FAIL;
 	}
+	m_pGameInstance->Render_Text(TEXT("UI_size15"), m_strPotion.c_str(), _float2((m_fFontX + m_fX) - m_fFontOffSet, m_fFontY + m_fY), XMVectorSet((208.f / 255.f) * m_fAlpha, (177.f / 255.f) * m_fAlpha, (52.f / 255.f) * m_fAlpha, m_fAlpha));
 
 	return S_OK;
 }

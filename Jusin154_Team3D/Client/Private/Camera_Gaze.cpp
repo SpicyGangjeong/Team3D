@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "Camera_Gaze.h"
+#include "InfoInstance.h"
 
 CCamera_Gaze::CCamera_Gaze(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCamera(pDevice, pContext)
@@ -7,7 +8,8 @@ CCamera_Gaze::CCamera_Gaze(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CCamera_Gaze::CCamera_Gaze(const CCamera_Gaze& rhs)
-	: CCamera(rhs)
+	: CCamera(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -18,14 +20,16 @@ void CCamera_Gaze::Priority_Update(_float fTimeDelta)
 	}
 	if (false == m_bIsCurrentTransition) {
 		if (m_bEnable_FollowLerp) {
-			_vector vNewPos = XMVectorSetW(XMVectorLerp(XMLoadFloat3(&m_vFollowPos_Src), XMLoadFloat3(&m_vFollowPos_Dest), m_vFollowLerpTime.x / m_vFollowLerpTime.y), 1.f);
+			_float fTimeDenom = max(m_vFollowLerpTime.y, FLT_EPSILON);
+			_vector vNewPos = XMVectorSetW(XMVectorLerp(XMLoadFloat3(&m_vFollowPos_Src), XMLoadFloat3(&m_vFollowPos_Dest), CMyTools::Saturate(m_vFollowLerpTime.x / fTimeDenom)), 1.f);
 			m_pTransformCom->Set_State(STATE::POSITION, vNewPos);
 		}
 		else {
 			m_pTransformCom->Set_State(STATE::POSITION, m_pFollowTarget->Get_Component<CTransform>()->Get_State(STATE::POSITION));
 		}
 		if (m_bEnable_LookLerp) {
-			_vector vNewLook = XMVectorSetW(XMVectorLerp(XMLoadFloat3(&m_vLookPos_Src), XMLoadFloat3(&m_vLookPos_Dest), m_vLookLerpTime.x / m_vLookLerpTime.y), 1.f);
+			_float fTimeDenom = max(m_vLookLerpTime.y, FLT_EPSILON);
+			_vector vNewLook = XMVectorSetW(XMVectorLerp(XMLoadFloat3(&m_vLookPos_Src), XMLoadFloat3(&m_vLookPos_Dest), CMyTools::Saturate(m_vLookLerpTime.x / fTimeDenom)), 1.f);
 			m_pTransformCom->LookAt(vNewLook);
 		}
 		else {
@@ -80,14 +84,18 @@ void CCamera_Gaze::Enable_FollowLerp()
 {
 	m_bEnable_FollowLerp = true;
 	m_vFollowLerpTime.x = 0.f;
-	XMStoreFloat3(&m_vFollowPos_Src, m_pFollowTarget->Get_WorldPostion());
+
+	XMStoreFloat3(&m_vFollowPos_Src, m_pTransformCom->Get_State(STATE::POSITION));
+	XMStoreFloat3(&m_vFollowPos_Dest, m_pFollowTarget->Get_WorldPostion());
 }
 
 void CCamera_Gaze::Enable_LookLerp()
 {
 	m_bEnable_LookLerp = true;
 	m_vLookLerpTime.x = 0.f;
-	XMStoreFloat3(&m_vLookPos_Src, m_pLookTarget->Get_WorldPostion());
+	_vector vLookTargetPos = m_pLookTarget->Get_WorldPostion();
+	XMStoreFloat3(&m_vLookPos_Src, vLookTargetPos);
+	XMStoreFloat3(&m_vLookPos_Dest, vLookTargetPos);
 }
 
 void CCamera_Gaze::Toggle_Priority()
@@ -125,6 +133,8 @@ HRESULT CCamera_Gaze::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg))) {
 		return E_FAIL;
 	}
+	m_pTransformCom->Set_State(STATE::POSITION, m_pFollowTarget->Get_WorldPostion());
+	m_pTransformCom->LookAt(m_pLookTarget->Get_WorldPostion());
 
 	return S_OK;
 }

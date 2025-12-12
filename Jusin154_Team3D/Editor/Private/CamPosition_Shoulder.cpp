@@ -98,7 +98,7 @@ void CCamPosition_Shoulder::Update(_float fTimeDelta)
 	if (m_pGameInstance->Key_Up(DIK_GRAVE)) {
 		m_bMovable = !m_bMovable;
 	}
-	if (m_pGameInstance->Mouse_Down(DIM_RBUTTON)) {
+	if (m_pGameInstance->Mouse_Down(DIM_MBUTTON)) {
 		m_pGameInstance->Toggle_MouseCenter();
 	}
 	if (m_pGameInstance->Key_Up(DIK_P)) {
@@ -170,8 +170,8 @@ HRESULT CCamPosition_Shoulder::Ready_SubParts()
 	CameraDesc.bEnableFollowLerp = true;
 	CameraDesc.bEnableLookLerp = true;
 	CameraDesc.vTransitionTime = { 0.f, 1.f };
-	CameraDesc.vFollowLerpTime = { 0.f, 0.16f };
-	CameraDesc.vLookLerpTime = { 0.f, 0.16f };
+	CameraDesc.vFollowLerpTime = { 0.f, TIMER_SHORT_LERP };
+	CameraDesc.vLookLerpTime = { 0.f, TIMER_SHORT_LERP };
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCamera_Gaze>(g_iStaticLevel, NEXT_LEVEL, LAYER_CAMERA, &CameraDesc, nullptr, &m_pBinded_Camera)))
 	{

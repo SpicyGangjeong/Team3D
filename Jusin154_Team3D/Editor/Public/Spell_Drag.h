@@ -29,6 +29,8 @@ private:
 private:
 	void Compute_UI(_uint SpellID);
 	virtual void Set_SpellType(_int SpellID) override;
+	_float2 Get_MousePos();
+	void Set_Current_Slot(_uint Index);
 
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
@@ -38,8 +40,16 @@ private:
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
+	_vector m_vStart_MousePos{};
+	_vector m_vMove_MousePos{};
 	_float4 m_vUV{};
 
+	_int	m_iCurrent_Slot_Index{};
+
+	_bool	m_bCurrent_Hover = { false };
+	_bool	m_bMove = { false };
+	_bool	m_bClick = { false };
+	_bool	m_bFalse = { false };
 public:
 	static CSpell_Drag* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

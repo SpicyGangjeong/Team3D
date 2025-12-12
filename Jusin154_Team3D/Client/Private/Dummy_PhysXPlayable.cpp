@@ -126,10 +126,10 @@ HRESULT CDummy_PhysXPlayable::Ready_Components(void* pArg)
 		Desc.iSubKind = pDesc->iSubKind;
 		Desc.pTransform = m_pTransformCom;
 		Desc.eBodyType = ACTOR::CAPSULE;
-		Desc.fContactOffset = 0.1f;
+		Desc.fContactOffset = 0.001f;
 		Desc.fMaterial = { 0.5f, 0.5f, 0.6f };
 		Desc.bAutoStepping = { false };
-		Desc.fStepOffset = { 0.05f };
+		Desc.fStepOffset = { 0.001f };
 		Desc.fRadius = 0.5f;
 		Desc.fHeight = 1.0f;
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Playable_HitReport::Create();

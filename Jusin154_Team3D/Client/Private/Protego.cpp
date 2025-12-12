@@ -45,19 +45,15 @@ HRESULT CProtego::Initialize(void* pArg)
 	m_wstrEffectName = L"Protego";
 
 
-	m_Events.emplace(1.3f, [&]() {
 
-		m_pSphere->Set_Dissolve(true);
-		m_pBottom->Set_Dissolve(true);
-		m_pCircle->Set_Dissolve(true);
-
-		});
 
 
 	m_fAmountSize = 0.1f;
 	m_fSpeed = 5.f;
 
 	m_fDuration = 2.5f;
+
+	m_isLoop = true;
 
 	return S_OK;
 }
@@ -106,18 +102,10 @@ void CProtego::Late_Update(_float fTimeDelta)
 
 }
 
-HRESULT CProtego::Pre_Setting(CGameObject* pObject)
+HRESULT CProtego::Pre_Setting(CGameObject* pObject, void* pArg)
 {
-	if (pObject == nullptr)
+	if (FAILED(__super::Pre_Setting(pObject)))
 		return E_FAIL;
-
-	m_pOwner = pObject;
-
-	Reset_EffectParts();
-
-	m_fAccTime = 0.f;
-	__super::m_fAccTime = 0.f;
-	m_fPreAccTime = 0.f;
 
 
 	m_pSphere->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
@@ -134,12 +122,6 @@ HRESULT CProtego::Pre_Setting(CGameObject* pObject)
 	m_pCircle->Get_Component<CTransform>()->Set_Scale(vSize);
 
 	m_fSizeAccTime = 0.f;
-
-	m_pSphere->Set_Dissolve(false);
-	m_pBottom->Set_Dissolve(false);
-	m_pCircle->Set_Dissolve(false);
-
-	m_bVisible = true;
 
 	return S_OK;
 }

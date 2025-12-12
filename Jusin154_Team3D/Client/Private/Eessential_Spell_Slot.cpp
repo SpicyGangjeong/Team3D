@@ -91,7 +91,7 @@ void CEessential_Spell_Slot::Update(_float fTimeDelta)
 		}
 	}
 
-	Hover(fTimeDelta);
+	Hover();
 
 	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
@@ -156,7 +156,7 @@ void CEessential_Spell_Slot::SizeUpdate(_float fSizeX, _float fSizeY)
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
 }
 
-void CEessential_Spell_Slot::Hover(_float fTimeDelta)
+void CEessential_Spell_Slot::Hover()
 {
 	POINT ptMouse{};
 	GetCursorPos(&ptMouse);
@@ -185,7 +185,7 @@ void CEessential_Spell_Slot::Hover(_float fTimeDelta)
 		Info.iHover_Index = m_iSpellType + ENUM_CLASS(SKILL_TYPE::JAP);
 		static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Hover"), &Info);
 
-	}	
+	}
 
 }
 

@@ -31,7 +31,7 @@ private:
 
 	_float			m_fCullingRadius = { 0.2f };
 
-	CQuadTree*		m_pChildren[CORNER_END] = { nullptr };
+	CQuadTree*		m_pChildren[CORNER_END] = { nullptr, nullptr, nullptr, nullptr };
 	CQuadTree*		m_pNeighbors[NEIGHBOR_END] = { nullptr, nullptr, nullptr, nullptr };
 
 private:

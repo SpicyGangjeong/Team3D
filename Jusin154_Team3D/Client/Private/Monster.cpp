@@ -57,6 +57,34 @@ void CMonster::Late_Update(_float fTimeDelta)
 	__super::Late_Update(fTimeDelta);
 }
 
+HRESULT CMonster::Render_DeadDisolve()
+{
+	if (FLT_EPSILON3 * 10 < m_fDeadRatio) {
+		_bool bDisolve = true;
+		_float fDisolveAmount = 0.1f;
+		_float fDisolveEdgeWidth = 0.1f;
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_fDisolveRatio", &m_fDeadRatio, sizeof(_float)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_fDisolveAmount", &fDisolveAmount, sizeof(_float)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_fDisolveEdgeWidth", &fDisolveEdgeWidth, sizeof(_float)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Bind_GlobalSRV(m_pShaderCom, TEXT("GLOBAL_DISOLVE_NOISE_05"), "g_DeadDisolveTexture"))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Bind_GlobalSRV(m_pShaderCom, TEXT("GLOBAL_DISOLVE_BURN_VERTICAL"), "g_DeadDisolveBurnTexture"))) {
+			return E_FAIL;
+		}
+	}
+	return S_OK;
+}
+
 HRESULT CMonster::Render_OutLine()
 {
 	m_bDrawOutLine = false;
@@ -64,25 +92,25 @@ HRESULT CMonster::Render_OutLine()
 		return E_FAIL;
 	}
 
-	GUI::SetNextItemWidth(80.f);
-	static _float3 vOutLineColor = _float3(1.f, 0.960784376f, 0.933333397f);
-	static _float fOutLineThickness = { 2.f }; // 카메라로부터 거리가 멀어지면 늘어나게끔 바꾸는걸 추천함
-	static _float fOutLineScale = { 1.f };
-	static _float fOutLinePower = { 1.f };
-	GUI::ColorPicker3("vOutLineColor", (_float*)&vOutLineColor);
-	GUI::SliderFloat("Thickness", &fOutLineThickness, 0.1f, 2.f, "%.1f");
-	GUI::SliderFloat("Scale", &fOutLineScale, 0.1f, 2.f, "%.1f");
-	GUI::SliderFloat("Power", &fOutLinePower, 0.1f, 2.f, "%.1f");
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vOutLineColor", &vOutLineColor, sizeof(_float3)))) {
+	Compute_Depth();
+	_float fRatio = (m_fCamDepth / *m_pGameInstance->Get_CurrentCameraFar());
+	m_fOutLineThickness = CMyTools::Lerp_f1D(2.f, 6.f, fRatio);
+	if (m_fOutLineThickness > 6.f) {
+		m_fOutLineThickness = 6.f;
+	}
+	else if (m_fOutLineThickness < 2.f) {
+		m_fOutLineThickness = 2.f;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vOutLineColor", &m_vOutLineColor, sizeof(_float3)))) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOutLineThickness", &(fOutLineThickness), sizeof(_float)))) {
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOutLineThickness", &m_fOutLineThickness, sizeof(_float)))) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOutLineScale", &(fOutLineScale), sizeof(_float)))) {
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOutLineScale", &m_fOutLineScale, sizeof(_float)))) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOutLinePower", &(fOutLinePower), sizeof(_float)))) {
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOutLinePower", &m_fOutLinePower, sizeof(_float)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float4)))) {
@@ -116,6 +144,26 @@ void CMonster::Set_DrawOutLine()
 	m_bDrawOutLine = true;
 }
 
+pair<_float, _float> CMonster::Get_Damage(_float fDamage)
+{
+	return  m_pStat->Get_Damage(fDamage);
+}
+
+_float2 CMonster::Get_Hp()
+{
+	return { m_pStat->Get_Stat().fCurrentHp, m_pStat->Get_Stat().fMaxHp };
+}
+
+CStat* CMonster::Get_Stat()
+{
+	return m_pStat;
+}
+
+const _float4x4* CMonster::Get_HeadMatrix()
+{
+	return m_pModelCom->Get_BoneMatrixPtr("Head");
+}
+
 HRESULT CMonster::Ready_Components(void*pArg)
 {
 	__super::Ready_Components(pArg);
@@ -146,6 +194,7 @@ void CMonster::Free()
 {
 	__super::Free();
 
+	SAFE_RELEASE(m_pStat);
 	SAFE_RELEASE(m_pTarget);
 	if (nullptr != m_pInfoInstance){
 		CInfoInstance* pInfo = m_pInfoInstance;  
@@ -157,6 +206,21 @@ void CMonster::Free()
 
 void CMonster::Describe_Entity()
 {
+	if (ImGui::TreeNode("ANIM STATE")) {
+
+		for (auto& pState : m_States)
+		{
+			if (ImGui::Button(to_string(pState.first).c_str()))
+			{
+				m_pFSM->Change_State(pState.first);
+			}
+
+		}
+
+		GUI::Text(to_string(m_pModelCom->Get_CurrentTrackProgressRatio()).c_str());
+
+		ImGui::TreePop();
+	}
 }
 
 #endif // _DEBUG

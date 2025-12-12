@@ -35,6 +35,8 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 
 private:
+	CInfoInstance* m_pInfoInstance = { nullptr };
+
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CTexture* m_pDiffuse_TextureCom1 = { nullptr };
 	CTexture* m_pDiffuse_TextureCom2 = { nullptr };
@@ -42,10 +44,13 @@ private:
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
+	_wstring m_pSpell_Info;
 
-
+	_float	m_fOriginPerviewSize{};
+	_float	m_fPreviewOffSet{};
 	_float4 m_vHeaderBack{};
 
+	_int	m_iPerSpellIndex{};
 public:
 	static CSpell_Preview* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

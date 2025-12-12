@@ -49,9 +49,6 @@
     <Filter Include="03.Management\00.GameObject_Manager">
       <UniqueIdentifier>{1cc7e2f7-559a-4b58-9e84-bbfafb84f81c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.Management\02.Asset_Manager">
-      <UniqueIdentifier>{685d2cc6-b29a-4018-b72f-d66a2807463d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Element\00.Level">
       <UniqueIdentifier>{beb918fe-e798-41b2-8076-6d0cbc525ada}</UniqueIdentifier>
     </Filter>
@@ -220,9 +217,6 @@
     <Filter Include="02.Element\02.Component\07.RigidBody\00.Static">
       <UniqueIdentifier>{fda41884-634b-4dd4-8bd2-f6f7ad68ab1f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Element\02.Component\09.Light">
-      <UniqueIdentifier>{7c82051e-19af-4284-8156-16f504db30b6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03.Management\03.Light_Manager">
       <UniqueIdentifier>{8727e975-e9e2-4b59-9a52-27ad3ad79f2f}</UniqueIdentifier>
     </Filter>
@@ -292,8 +286,26 @@
     <Filter Include="02.Element\02.Component\11.Query">
       <UniqueIdentifier>{432b36d5-fdf6-456a-bc71-8bf793a42314}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\07. Fog">
+    <Filter Include="01.Utility\07.Fog">
       <UniqueIdentifier>{d566d9e6-6183-48dc-a196-25fd47a10c48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Management\02.Resource_Manager">
+      <UniqueIdentifier>{685d2cc6-b29a-4018-b72f-d66a2807463d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\09.Light">
+      <UniqueIdentifier>{7c82051e-19af-4284-8156-16f504db30b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Management\04. Font_Manager">
+      <UniqueIdentifier>{bba1e91b-87a8-4a7b-8e4e-b42d2041d8eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\01.GameObject\01. Font">
+      <UniqueIdentifier>{7eab7292-025e-40d7-aa71-73e7a3c71ea7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\12.Stat">
+      <UniqueIdentifier>{ea9648d8-6a9a-41d2-8b8f-ea6937017372}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Element\02.Component\12.Stat\Event">
+      <UniqueIdentifier>{b31a93a4-8bba-4e94-8008-bbb9b458a55e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -556,7 +568,25 @@
       <Filter>02.Element\02.Component\02.VIBuffer\Box</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Fog.cpp">
-      <Filter>01.Utility\07. Fog</Filter>
+      <Filter>01.Utility\07.Fog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Renderer_Declare.cpp">
+      <Filter>01.Utility\01.Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Resource_Manager.cpp">
+      <Filter>03.Management\02.Resource_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Font_Manager.cpp">
+      <Filter>03.Management\04. Font_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Font.cpp">
+      <Filter>02.Element\01.GameObject\01. Font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Stat.cpp">
+      <Filter>02.Element\02.Component\12.Stat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\StatEvent.cpp">
+      <Filter>02.Element\02.Component\12.Stat\Event</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -998,9 +1028,6 @@
     <ClInclude Include="..\Public\PipeLine.h">
       <Filter>01.Utility\02.PipeLine</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Renderer.h">
-      <Filter>01.Utility\01.Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Shader.h">
       <Filter>02.Element\02.Component\01.Shader</Filter>
     </ClInclude>
@@ -1188,7 +1215,25 @@
       <Filter>02.Element\02.Component\02.VIBuffer\Box</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Fog.h">
-      <Filter>01.Utility\07. Fog</Filter>
+      <Filter>01.Utility\07.Fog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Renderer.h">
+      <Filter>01.Utility\01.Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Resource_Manager.h">
+      <Filter>03.Management\02.Resource_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Font_Manager.h">
+      <Filter>03.Management\04. Font_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Font.h">
+      <Filter>02.Element\01.GameObject\01. Font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Stat.h">
+      <Filter>02.Element\02.Component\12.Stat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\StatEvent.h">
+      <Filter>02.Element\02.Component\12.Stat\Event</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1239,40 +1284,43 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Particle_Compute.hlsl">
+      <Filter>99.Define\01.SHADER</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_WeightBlend.hlsl">
+      <Filter>99.Define\01.SHADER</Filter>
+    </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Cell.hlsl">
       <Filter>99.Define\01.SHADER</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Deferred.hlsl">
       <Filter>99.Define\01.SHADER</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Particle_Compute.hlsl">
-      <Filter>99.Define\01.SHADER</Filter>
-    </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_LastColor.hlsl">
       <Filter>99.Define\01.SHADER</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_WeightBlend.hlsl">
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Mesh_Compute.hlsl">
       <Filter>99.Define\01.SHADER</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Defines.hlsli">
-      <Filter>99.Define\01.SHADER\Inc</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Constants.hlsli">
       <Filter>99.Define\01.SHADER\Inc</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Structures.hlsli">
-      <Filter>99.Define\01.SHADER\Inc</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_States.hlsli">
-      <Filter>99.Define\01.SHADER\Inc</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Samplers.hlsli">
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Defines.hlsli">
       <Filter>99.Define\01.SHADER\Inc</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Functions.hlsli">
       <Filter>99.Define\01.SHADER\Inc</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Mesh_Compute.hlsl">
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Samplers.hlsli">
+      <Filter>99.Define\01.SHADER\Inc</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_States.hlsli">
+      <Filter>99.Define\01.SHADER\Inc</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Engine_Shader_Structures.hlsli">
+      <Filter>99.Define\01.SHADER\Inc</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Instance_Compute.hlsl">
       <Filter>99.Define\01.SHADER</Filter>
     </FxCompile>
   </ItemGroup>

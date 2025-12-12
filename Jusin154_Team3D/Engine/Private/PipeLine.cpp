@@ -1,8 +1,12 @@
 ﻿#include "pch.h"
 #include "PipeLine.h"
+#include "Shader.h"
+#include "GameInstance.h"
 
 CPipeLine::CPipeLine()
+	:m_pGameInstance(CGameInstance::GetInstance())
 {
+	SAFE_ADDREF(m_pGameInstance);
 }
 
 void CPipeLine::Set_Transform(D3DTS eState, _fmatrix TransformStateMatrix)
@@ -64,6 +68,29 @@ _bool CPipeLine::isIn_LocalFrustum(_fvector vLocalPos, _float fRadius)
 	return true;
 }
 
+HRESULT CPipeLine::Bind_GlobalSRV(CShader* pShader, const _tchar* wszKeyGlobalSRV, const _char* pConstantName)
+{
+	ID3D11ShaderResourceView* pSRV = Find_GlobalShader(wszKeyGlobalSRV);
+	if (FAILED(pShader->Bind_SRV(pConstantName, pSRV))) {
+		return E_FAIL;
+	}
+	return S_OK;
+}
+
+HRESULT CPipeLine::Load_GlobalSRV(const _tchar* wszKeyGlobalSRV, filesystem::path pathSRVFolder)
+{
+	ID3D11ShaderResourceView* pSRV = Find_GlobalShader(wszKeyGlobalSRV);
+	if (nullptr != pSRV) {
+		return E_FAIL;
+	}
+	pSRV = m_pGameInstance->Add_Resource(pathSRVFolder.string().c_str());
+	if (nullptr == pSRV) {
+		return E_FAIL;
+	}
+	m_mapGlobalSRV.emplace(wszKeyGlobalSRV, pSRV);
+	return S_OK;
+}
+
 void CPipeLine::Update()
 {
 	for (_uint i = ENUM_CLASS(D3DTS::VIEW_INV); i < ENUM_CLASS(D3DTS::END); ++i)
@@ -95,6 +122,11 @@ HRESULT CPipeLine::Initialize()
 	m_vOriginalPoints[6] = _float4(1.f,		-1.f,	1.f, 1.f); // RB
 	m_vOriginalPoints[7] = _float4(-1.f,	-1.f,	1.f, 1.f); // LB
 
+	for (_uint i = ENUM_CLASS(D3DTS::VIEW); i < ENUM_CLASS(D3DTS::END); ++i)
+	{
+		XMStoreFloat4x4(&m_TransformStateMatrices[i], XMMatrixIdentity());
+	}
+
 	return S_OK;
 }
 
@@ -106,6 +138,15 @@ void CPipeLine::Make_Planes(const _float4* pPoints, _float4* pPlanes)
 	XMStoreFloat4(&pPlanes[3], XMPlaneFromPoints(XMLoadFloat4(&pPoints[3]), XMLoadFloat4(&pPoints[2]), XMLoadFloat4(&pPoints[6])));
 	XMStoreFloat4(&pPlanes[4], XMPlaneFromPoints(XMLoadFloat4(&pPoints[5]), XMLoadFloat4(&pPoints[4]), XMLoadFloat4(&pPoints[7])));
 	XMStoreFloat4(&pPlanes[5], XMPlaneFromPoints(XMLoadFloat4(&pPoints[0]), XMLoadFloat4(&pPoints[1]), XMLoadFloat4(&pPoints[2])));
+}
+
+ID3D11ShaderResourceView* CPipeLine::Find_GlobalShader(const _tchar* wszKeyGlobalSRV)
+{
+	auto iter = m_mapGlobalSRV.find(wszKeyGlobalSRV);
+	if (iter == m_mapGlobalSRV.end()) {
+		return nullptr;
+	}
+	return (*iter).second;
 }
 
 CPipeLine* CPipeLine::Create()
@@ -123,4 +164,9 @@ CPipeLine* CPipeLine::Create()
 void CPipeLine::Free()
 {
 	__super::Free();
+	for (auto& pairSRV : m_mapGlobalSRV) {
+		SAFE_RELEASE(pairSRV.second);
+	}
+	m_mapGlobalSRV.clear();
+	SAFE_RELEASE(m_pGameInstance);
 }

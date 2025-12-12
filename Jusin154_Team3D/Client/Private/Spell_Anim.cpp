@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Spell_Anim.h"
 #include "GameInstance.h"
+#include "InfoInstance.h"
 
 CSpell_Anim::CSpell_Anim(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
@@ -8,7 +9,9 @@ CSpell_Anim::CSpell_Anim(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CSpell_Anim::CSpell_Anim(const CSpell_Anim& rhs)
-	:CElementObject(rhs)
+	:CElementObject(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
+
 {
 }
 
@@ -85,23 +88,30 @@ void CSpell_Anim::Update(_float fTimeDelta)
 		m_bAnim_Start = false;
 	}
 
-
-	if (m_bAnim_Start == true)
+	if (m_bFadeOut == false)
 	{
-		m_fTime += fTimeDelta * m_fTimeMult;
-	}
-	else
-	{
-		m_iCurrentFrame = 0;
-	}
-
-	if (m_fTime >= m_fFrameTime)
-	{
-		m_iCurrentFrame++;
-		m_fTime -= m_fFrameTime;
-
-		if (m_iCurrentFrame >= m_iTotalFrames)
+		if (m_bAnim_Start == true)
+		{
+			m_fTime += fTimeDelta * m_fTimeMult;
+		}
+		else
+		{
 			m_iCurrentFrame = 0;
+		}
+
+		if (m_fTime >= m_fFrameTime)
+		{
+			m_iCurrentFrame++;
+			m_fTime -= m_fFrameTime;
+
+			if (m_iCurrentFrame >= m_iTotalFrames)
+				m_iCurrentFrame = 0;
+		}
+	}
+
+	if (m_iPerSpell != -1)
+	{
+		m_fY = m_fOrigin_Position.y + m_pInfoInstance->Get_Spell_Info(m_iPerSpell).fVidio;
 	}
 
 	__super::Update(fTimeDelta);
@@ -160,8 +170,8 @@ void CSpell_Anim::Set_FadeIn()
 
 void CSpell_Anim::Change_Image(_int SpellID)
 {
-	_wstring pImageName = static_cast<CUIObject*>(m_pOwner)->Get_Info(SpellID).pImage_Name;
-	m_iTotalFrames = static_cast<CUIObject*>(m_pOwner)->Get_Info(SpellID).iAnimNum;
+	_wstring pImageName = m_pInfoInstance->Get_Spell_Info(SpellID).pImage_Name;
+	m_iTotalFrames = m_pInfoInstance->Get_Spell_Info(SpellID).iAnimNum;
 	if (m_pDiffuse_TextureCom)
 	{
 		Remove_Component<CTexture>();
@@ -179,6 +189,8 @@ void CSpell_Anim::Set_SkillType(_int eType)
 		m_iCurrentFrame = 0;
 		Change_Image(eType);
 	}
+	else if (eType == -1)
+		m_iPerSpell = eType;
 }
 
 HRESULT CSpell_Anim::Bind_ShaderResources()
@@ -224,7 +236,7 @@ HRESULT CSpell_Anim::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Arresto_Momentum"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Accio"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}

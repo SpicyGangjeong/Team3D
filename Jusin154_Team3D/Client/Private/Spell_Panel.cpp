@@ -14,8 +14,9 @@
 #include "Current_Slot_Number.h"
 #include "Spell_Header.h"
 #include "Spell_Header_Line.h"
-//#include "Spell_Data.h"
 #include "Spell_Anim.h"
+#include "Spell_Drag.h"
+#include "InfoInstance.h"
 
 CSpell_Panel::CSpell_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPanelObject(pDevice, pContext)
@@ -23,7 +24,8 @@ CSpell_Panel::CSpell_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CSpell_Panel::CSpell_Panel(const CSpell_Panel& rhs)
-	:CPanelObject(rhs)
+	:CPanelObject(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -58,7 +60,12 @@ HRESULT CSpell_Panel::Initialize(void* pArg)
 	m_iSpellType = -1;
 	m_iPendingSpell = -1;
 	m_fDelayTime = 1.f;
+	m_bActive = true;
 	Add_Function(TEXT("Hover"), [this](void* p) {this->Slot_Chack(p); });
+	Add_Function(TEXT("Click"), [this](void* p) {this->Click_Slot(*reinterpret_cast<_bool*>(p)); });
+	Add_Function(TEXT("Current_Slot_Click"), [this](void* p) {this->Current_Slot_Chack(*reinterpret_cast<_int*>(p)); });
+	Visible(true);
+	ElementAllVisible(true);
 	return S_OK;
 }
 
@@ -80,7 +87,7 @@ void CSpell_Panel::Update(_float fTimeDelta)
 
 	if (m_iSpellType != -1)
 	{
-		m_fHoverTimer += fTimeDelta; 
+		m_fHoverTimer += fTimeDelta;
 	}
 	else
 	{
@@ -88,9 +95,9 @@ void CSpell_Panel::Update(_float fTimeDelta)
 		Function_Callback(TEXT("FadeOut"));
 	}
 
-	if (m_fHoverTimer >= m_fDelayTime && m_iPendingSpell != m_iSpellType)
+	if (m_fHoverTimer >= m_fDelayTime)
 	{
-		m_iPendingSpell = m_iSpellType;
+
 		Function_Callback(TEXT("FadeIn"));
 	}
 
@@ -132,10 +139,11 @@ _vector CSpell_Panel::Get_WorldPostion()
 	return m_pTransformCom->Get_State(STATE::POSITION);
 }
 
-const CUIObject::SPELLINFO CSpell_Panel::Get_Info(_int Index)
+const Client::SPELL_INFO CSpell_Panel::Get_SpellInfo(_int SkillID)
 {
-	return m_Info[Index];
+	return m_pInfoInstance->Get_Spell_Info(SkillID);
 }
+
 
 void CSpell_Panel::Slot_Chack(void* pArg)
 {
@@ -156,6 +164,23 @@ void CSpell_Panel::Slot_Chack(void* pArg)
 
 	m_iSpellType = finalHover;
 	Function_Callback(TEXT("Slot_Hover"), &m_iSpellType);
+}
+
+void CSpell_Panel::Click_Slot(_bool bClick)
+{
+	if (bClick == true)
+	{
+		m_bHover = true;
+	}
+	else
+	{
+		m_bHover = false;
+	}
+}
+
+void CSpell_Panel::Current_Slot_Chack(_int Index)
+{
+	m_iCurrent_Slot_Index = Index;
 }
 
 HRESULT CSpell_Panel::Bind_ShaderResources()
@@ -298,6 +323,12 @@ HRESULT CSpell_Panel::Ready_Element(void* pArg)
 		return E_FAIL;
 	}
 	Add_Element(TEXT("Spell_Anim"), m_pSpell_Anim);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Drag>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Drag**>(&m_pSpell_Drag))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Spell_Drag"), m_pSpell_Drag);
 
 	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Data>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, m_Info, nullptr, reinterpret_cast<CSpell_Data**>(&m_pSpell_Data))))
 	//{

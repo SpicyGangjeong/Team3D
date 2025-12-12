@@ -17,6 +17,8 @@ float g_fAngle;
 float g_fFar;
 float g_fTime;
 
+float4 g_UV;
+
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -25,16 +27,19 @@ struct VS_IN
     float2 vSize : TEXCOORD1;
     float2 vPos : TEXCOORD2;
     float4 vUV : TEXCOORD3;
-    float4 vColor : TEXCOORD4;
+    float vBaseColor : TEXCOORD4;
     float bHover : TEXCOORD5;
+    float bSpell : TEXCOORD6;
 };
 
 struct VS_OUT
 {
     float4 vPosition : SV_POSITION;
     float2 vTexcoord : TEXCOORD0;
-    float4 vColor : TEXCOORD1;
-    float bHover : TEXCOORD2;
+    float2 vUV : TEXCOORD1;
+    float vBaseColor : TEXCOORD2;
+    float bHover : TEXCOORD3;
+    float bSpell : TEXCOORD4;
 };
 
 VS_OUT VS_MAIN(VS_IN In)
@@ -55,9 +60,11 @@ VS_OUT VS_MAIN(VS_IN In)
     float3 vFinalWorldPos = vLocalPos + vParentPos;
     
     Out.vPosition = mul(float4(vFinalWorldPos, 1.f), matVP);
-    Out.vTexcoord = UV.xy + In.vTexcoord * (UV.zw - UV.xy);
-    Out.vColor = In.vColor;
+    Out.vUV = UV.xy + In.vTexcoord * (UV.zw - UV.xy);
+    Out.vTexcoord = In.vTexcoord;
+    Out.vBaseColor = In.vBaseColor;
     Out.bHover = In.bHover;
+    Out.bSpell = In.bSpell;
     return Out;
 }
 
@@ -65,8 +72,10 @@ struct PS_IN
 {
     float4 vPosition : SV_POSITION;
     float2 vTexcoord : TEXCOORD0;
-    float4 vColor : TEXCOORD1;
-    float bHover : TEXCOORD2;
+    float2 vUV : TEXCOORD1;
+    float vBaseColor : TEXCOORD2;
+    float bHover : TEXCOORD3;
+    float bSpell : TEXCOORD4;
 };
 
 struct PS_OUT
@@ -102,6 +111,23 @@ PS_OUT PS_Alpha_Blend(PS_IN In)
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
    
     float4 color = g_Texture.Sample(ClampSampler, In.vTexcoord);
+    
+    if (color.a <= 0.4f)
+        discard;
+        
+    color.a *= Alpha;
+
+    Out.vColor = color;
+    
+    return Out;
+}
+
+PS_OUT PS_UVAlpha_Blend(PS_IN In)
+{
+    PS_OUT Out;
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+   
+    float4 color = g_Texture.Sample(ClampSampler, In.vUV);
     
     if (color.a <= 0.4f)
         discard;
@@ -191,7 +217,7 @@ PS_OUT PS_Eessential_Spell(PS_IN In)
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     
     float4 color = float4(1.f, 1.f, 1.f, 1.f);
-    float4 tex1 = g_Texture.Sample(ClampSampler, In.vTexcoord);
+    float4 tex1 = g_Texture.Sample(ClampSampler, In.vUV);
     
     color = tex1;
     
@@ -208,10 +234,35 @@ PS_OUT PS_Color_Image(PS_IN In)
     float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
     
     float4 color = float4(1.f, 1.f, 1.f, 1.f);
+    
+    float3 BGColor = float3(1.f, 1.f, 1.f);
+    switch (In.vBaseColor)
+    {
+        case 0:
+            BGColor = float3(220.f, 165.f, 70.f) / 255.f;
+            break;
+        case 1:
+            BGColor = float3(150.f, 120.f, 240.f) / 255.f;
+            break;
+        case 2:
+            BGColor = float3(190.f, 46., 34.f) / 255.f;
+            break;
+        case 3:
+            BGColor = float3(24.f, 190.f, 255.f) / 255.f;
+            break;
+        case 4:
+            BGColor = float3(200.f, 220.f, 150.f) / 255.f;
+            break;
+        case 5:
+            BGColor = float3(50.f, 150.f, 110.f) / 255.f;
+            break;
 
+    }
+    
     float4 tex1 = g_Texture.Sample(ClampSampler, In.vTexcoord);
+    
     color = tex1;
-    color *= In.vColor;
+    color.rgb *= BGColor;
     
     color.a *= Alpha;
 
@@ -247,10 +298,7 @@ PS_OUT PS_Spell_Hover(PS_IN In)
         color.rgb = HoverOff;
         color.a *= 0.5f;
     }
-    
-
-    color *= In.vColor;
-    
+        
     color.a *= Alpha;
 
     Out.vColor = color;
@@ -281,7 +329,7 @@ PS_OUT PS_Spell_Effect(PS_IN In)
     
     //float2 maskUV = In.vTexcoord;
 
-    //maskUV.x += g_fTime * float2(0.05, 0.02); // 속도 조절 가능
+    //maskUV.x += g_fTime * float2(0.05, 0.02); // ?띾룄 議곗젅 媛??
     
     //float2 center = float2(0.5, 0.0); 
     //float2 uv = In.vTexcoord - center;
@@ -297,9 +345,92 @@ PS_OUT PS_Spell_Effect(PS_IN In)
     color.a *= tex1;
     color.a *= mask;
     color.a *= Alpha;
-
-    color *= In.vColor;
     
+    Out.vColor = color;
+    
+    return Out;
+}
+
+PS_OUT PS_Spell_Slot(PS_IN In)
+{
+    PS_OUT Out;
+    
+    float2 center = float2(0.5f, 0.5f);
+    float2 uv = In.vTexcoord - center;
+    uv *= sqrt(2.0f);
+    float2 Rotation = In.vTexcoord;
+    Rotation.x = uv.x * cos(g_fAngle) - uv.y * sin(g_fAngle);
+    Rotation.y = uv.x * sin(g_fAngle) + uv.y * cos(g_fAngle);
+    Rotation += center;
+    
+    float4 Color = float4(1.f, 1.f, 1.f, 1.f);
+        
+    if (In.bSpell != 0)
+    {
+        float3 BGColor = float3(1.f, 1.f, 1.f);
+        switch (In.vBaseColor)
+        {
+            case 0:
+                BGColor = float3(255.f, 255.f, 0.f) / 255.f;
+                break;
+            case 1:
+                BGColor = float3(150.f, 120.f, 240.f) / 255.f;
+                break;
+            case 2:
+                BGColor = float3(190.f, 46., 34.f) / 255.f;
+                break;
+            case 3:
+                BGColor = float3(24.f, 190.f, 255.f) / 255.f;
+                break;
+            case 4:
+                BGColor = float3(200.f, 220.f, 150.f) / 255.f;
+                break;
+            case 5:
+                BGColor = float3(50.f, 150.f, 110.f) / 255.f;
+                break;
+
+        }
+        float4 tex1 = g_Texture.Sample(ClampSampler, Rotation);
+        tex1.rgb *= BGColor;
+        Color = tex1;
+
+        float4 tex2 = g_Texture1.Sample(DefaultSampler, In.vUV);
+        Color = lerp(Color, tex2, tex2.a);
+        
+        float4 tex3 = g_Texture2.Sample(ClampSampler, Rotation);
+        Color = lerp(Color, tex3, tex3.a);
+    }
+    
+    else
+    {
+        float4 tex3 = g_Texture2.Sample(ClampSampler, Rotation);
+        Color = tex3;
+    }
+    
+    Out.vColor = Color;
+    
+    return Out;
+}
+
+PS_OUT PS_Spell_Lock(PS_IN In)
+{
+    PS_OUT Out;
+
+    float Alpha = g_fAlpha * g_fOwnerAlpha * g_fCanvasAlpha;
+   
+    float4 color = g_Texture.Sample(ClampSampler, In.vTexcoord);
+    
+    if(In.bSpell == 0)
+    {
+        if (color.a <= 0.4f)
+            discard;
+    }
+        
+    else
+        discard;
+    
+    color.a *= Alpha;
+
     Out.vColor = color;
     
     return Out;
@@ -327,6 +458,17 @@ technique11 PosTexTechnique11
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Alpha_Blend();
+    }
+
+    pass UVAlphaBlend
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_UVAlpha_Blend();
     }
 
     pass Megic_Meter
@@ -404,5 +546,27 @@ technique11 PosTexTechnique11
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_Spell_Effect();
+    }
+
+    pass Spell_Slot
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Spell_Slot();
+    }
+
+    pass Spell_Lock
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_Spell_Lock();
     }
 }

@@ -4,6 +4,11 @@
 #include "GameInstance.h"
 
 #include "Level_Loading.h"
+#include "InfoInstance.h"
+
+#include "Loding_Panel.h"
+#include "Intro_Image.h"
+#include "Intro_BG.h"
 
 _float g_fTimeMult = 1.f;
 CMainApp::CMainApp()
@@ -58,7 +63,7 @@ void CMainApp::Update(_float fTimeDelta)
 
 HRESULT CMainApp::Render()
 {
-	_float4			vClearColor = _float4(0.f, 0.f, 1.f, 1.f);
+	_float4			vClearColor = _float4(0.f, 0.f, 0.f, 1.f);
 
 	m_pGameInstance->Render_Begin(&vClearColor);
 
@@ -78,6 +83,27 @@ void CMainApp::Compute_FrameCount()
 
 HRESULT CMainApp::Ready_Default_Setting()
 {
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("Font_size13"), TEXT("../Bin/Resources/Fonts/Font_size13.spritefont"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("Font_size14"), TEXT("../Bin/Resources/Fonts/Font_size14.spritefont"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("Font_size15"), TEXT("../Bin/Resources/Fonts/Font_size15.spritefont"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("Font_size20"), TEXT("../Bin/Resources/Fonts/Font_size20.spritefont"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("Font_size21"), TEXT("../Bin/Resources/Fonts/Font_size21.spritefont"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("Font_size30"), TEXT("../Bin/Resources/Fonts/Font_size30.spritefont"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("UI_size15"), TEXT("../Bin/Resources/Fonts/UI_size15.spritefont"))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -86,11 +112,67 @@ HRESULT CMainApp::Start_Level(LEVEL eLevelID)
 	if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::LOADING, eLevelID))))
 		return E_FAIL;
 
+	m_pInfoInstance = CInfoInstance::GetInstance();
+	if (nullptr == m_pInfoInstance) {
+		return E_FAIL;
+	}
+
+	SAFE_ADDREF(m_pInfoInstance);
+
+	if (FAILED(m_pInfoInstance->Initialize_Information(m_pDevice, m_pContext))) {
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 
 HRESULT CMainApp::Ready_Prototypes()
 {
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Logo"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Logo/UI_T_Hogwarts_Letter_Head.png"), 0)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("BG"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Logo/BG.png"), 0)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Dissolve"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Logo/Dissolve.png"), 0)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, FX_UIEDITOR,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_UIEditor.hlsl"),
+			VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Screen_BG"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/LoadingScreen/UI_T_Loding_Screen_BG.png"), 0)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("LoadingScreen"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("../Bin/Resources/Textures/LoadingScreen/UI_T_LoadingScreen_%d.png"), 2)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CIntro_Image>(g_iStaticLevel, CIntro_Image::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CIntro_BG>(g_iStaticLevel, CIntro_BG::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CLoding_Panel>(g_iStaticLevel, CLoding_Panel::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
+
 	return S_OK;
 }
 
@@ -157,7 +239,9 @@ void CMainApp::Free()
 	SAFE_RELEASE(m_pDevice);
 	SAFE_RELEASE(m_pContext);
 
+	m_pInfoInstance->Release_Information();
 	m_pGameInstance->Release_Engine();
 
+	SAFE_RELEASE(m_pInfoInstance);
 	SAFE_RELEASE(m_pGameInstance);
 }

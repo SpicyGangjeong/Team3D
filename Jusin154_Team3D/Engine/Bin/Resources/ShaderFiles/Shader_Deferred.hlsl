@@ -1,10 +1,10 @@
 #include "Engine_Shader_Defines.hlsli"
-
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 matrix g_invMatView, g_invmatProj;
 matrix g_LightViewMatrix, g_LightProjMatrix;
 matrix g_PreShadowLightViewMatrix, g_PreShadowLightProjMatrix;
 
+float4 g_SamplePos[64];
 float g_fFar;
 float g_fPreShadowFar;
 uint g_iMaxShadowWidth;
@@ -12,19 +12,28 @@ uint g_iMaxShadowHeight;
 float2 g_vResolution;
 
 uint g_iBloomEmbossingPass;
-float g_fThreshold;
+float g_fBloomThreshold;
 float g_fDepthThreshold;
 float g_fFocusDistance;
 float g_fFarBlurStart;
 float g_fFarBlurEnd;
 float g_fDOFBlurMultiplier;
+float g_fSSAO_BIAS;
 
-Texture2D g_Texture;
+Texture2D   g_Texture;
+Texture2D   g_SSAONoiseTexture;
+Texture2D   g_SSAOInputTexture;
+uint        g_iKernelSize;
+float       g_fSSAORadius;
+float2      g_vSSAOTextureSize;
 
 float g_fLightRange;
+float g_fLightIntensity;
 float g_fSpotInnerAngle;
 float g_fSpotOuterAngle;
 
+float g_fToneMappingExposure;
+uint g_iToneMappingType;
 bool  g_bUsePowerLightAttenuation;
 float g_fLightAttenuationPower;
 
@@ -40,7 +49,7 @@ Texture2D g_DiffuseTexture;
 Texture2D g_ShadeTexture;
 Texture2D g_DepthTexture;
 Texture2D g_SpecularTexture;
-Texture2D g_ShadowTexture;
+Texture2D g_ShadowNearTexture;
 Texture2D g_PreShadowTexture;
 Texture2D g_BlurTexture;
 Texture2D g_BlurXTexture;
@@ -60,12 +69,52 @@ float g_fFogDensity;
 float g_fFogPow;
 vector g_vFogColor;
 
+float g_fWeights_32[32] =
+{
+    0.000477, 0.000888, 0.001585, 0.002720, 0.004485, 0.007105, 0.010814, 0.015813,
+    0.022216, 0.029988, 0.038893, 0.048463, 0.058021, 0.066740, 0.073759, 0.078320,
+    0.079902, 0.078320, 0.073759, 0.066740, 0.058021, 0.048463, 0.038893, 0.029988,
+    0.022216, 0.015813, 0.010814, 0.007105, 0.004485, 0.002720, 0.001585, 0.000888
+};
+
+float g_fWeights_64[64] =
+{
+    0.0004, 0.0014, 0.0033, 0.0053, 0.0053, 0.0033, 0.0014, 0.0004,
+    0.0014, 0.0045, 0.0105, 0.0171, 0.0171, 0.0105, 0.0045, 0.0014,
+    0.0033, 0.0105, 0.0245, 0.0400, 0.0400, 0.0245, 0.0105, 0.0033,
+    0.0053, 0.0171, 0.0400, 0.0654, 0.0654, 0.0400, 0.0171, 0.0053,
+    0.0053, 0.0171, 0.0400, 0.0654, 0.0654, 0.0400, 0.0171, 0.0053,
+    0.0033, 0.0105, 0.0245, 0.0400, 0.0400, 0.0245, 0.0105, 0.0033,
+    0.0014, 0.0045, 0.0105, 0.0171, 0.0171, 0.0105, 0.0045, 0.0014,
+    0.0004, 0.0014, 0.0033, 0.0053, 0.0053, 0.0033, 0.0014, 0.0004
+};
+
+
+float g_fWeights_128[128] =
+{
+    0.000209902, 0.000241594, 0.000277451, 0.000317919, 0.000363477, 0.000414637, 0.000471944, 0.000535974,
+    0.000607333, 0.000686659, 0.000774615, 0.000871889, 0.00097919, 0.00109725, 0.00122679, 0.00136858,
+    0.00152334, 0.00169183, 0.00187477, 0.00207285, 0.00228675, 0.0025171, 0.00276448, 0.0030294,
+    0.00331231, 0.00361356, 0.00393342, 0.00427205, 0.00462949, 0.00500564, 0.0054003, 0.00581308,
+    0.00624346, 0.00669075, 0.00715411, 0.0076325, 0.00812472, 0.0086294, 0.009145, 0.0096698,
+    0.0102019, 0.0107393, 0.0112798, 0.0118211, 0.0123608, 0.0128962, 0.0134249, 0.0139441,
+    0.0144511, 0.0149431, 0.0154174, 0.0158713, 0.0163021, 0.0167073, 0.0170844, 0.0174311,
+    0.0177452, 0.0180246, 0.0182676, 0.0184726, 0.0186383, 0.0187635, 0.0188474, 0.0188895,
+
+    0.0188895, 0.0188474, 0.0187635, 0.0186383, 0.0184726, 0.0182676, 0.0180246, 0.0177452,
+    0.0174311, 0.0170844, 0.0167073, 0.0163021, 0.0158713, 0.0154174, 0.0149431, 0.0144511,
+    0.0139441, 0.0134249, 0.0128962, 0.0123608, 0.0118211, 0.0112798, 0.0107393, 0.0102019,
+    0.0096698, 0.009145, 0.0086294, 0.00812472, 0.0076325, 0.00715411, 0.00669076, 0.00624346,
+    0.00581308, 0.0054003, 0.00500564, 0.00462948, 0.00427205, 0.00393342, 0.00361356, 0.00331231,
+    0.0030294, 0.00276448, 0.0025171, 0.00228675, 0.00207285, 0.00187477, 0.00169183, 0.00152334,
+    0.00136858, 0.00122679, 0.00109725, 0.000979191, 0.000871889, 0.000774615, 0.000686658, 0.000607333,
+    0.000535973, 0.000471944, 0.000414637, 0.000363477, 0.000317919, 0.000277451, 0.000241594, 0.000209902
+};
 struct VS_IN
 {
     float3 vPosition : POSITION;
     float2 vTexcoord : TEXCOORD0;
 };
-
 struct VS_OUT
 {
     float4 vPosition : SV_POSITION;
@@ -96,43 +145,64 @@ VS_OUT VS_CAPTURE(VS_IN In)
 
     return Out;
 }
+VS_OUT VS_TONE_MAPPING(VS_IN In)
+{
+    VS_OUT Out;
+  
+    matrix matWV, matWVP;
+    
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+    
+    Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+    Out.vTexcoord = In.vTexcoord;
 
+    return Out;
+}
 struct PS_IN
 {
     float4 vPosition : SV_POSITION;
     float2 vTexcoord : TEXCOORD0;
 };
-
 struct PS_OUT_BACKBUFFER
 {
     float4 vBackBuffer  : SV_TARGET0;
     float4 vEnvironment : SV_Target1;
 };
-
-PS_OUT_BACKBUFFER PS_MAIN_DEBUG(PS_IN In)
-{
-    PS_OUT_BACKBUFFER Out;
-    
-    Out.vBackBuffer = g_Texture.Sample(DefaultSampler, In.vTexcoord);
-    Out.vEnvironment = float4(0.f, 0.f, 0.f, 0.f);
-    return Out;
-}
-
 struct PS_OUT_LIGHT
 {
     vector vShade : SV_TARGET0;
     vector vSpecular : SV_TARGET1;
 };
-
+struct PS_OUT_FLT4_SINGLE
+{
+    vector vSingleTarget : SV_TARGET0;
+};
+struct PS_OUT_BLUR_X
+{
+    float4 vBlurX : SV_TARGET0;
+    float4 vBlurWeight : SV_TARGET1;
+};
+struct PS_OUT_SSAO_AMBIENT_OCCLUSION
+{
+    float fOcclusion : SV_TARGET0;
+};
+struct PS_OUT_SSAO_BLUR
+{
+    float fBlur : SV_TARGET0;
+};
 PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 {
     PS_OUT_LIGHT Out;
+    Out.vShade = 0.f;
+    Out.vSpecular = 0.f;
     
     float2 uv = In.vTexcoord;
     
-    float3 vAlbedo = g_DiffuseTexture.Sample(DefaultSampler, uv).rgb;
-    float3 vNormal = normalize(g_NormalTexture.Sample(DefaultSampler, uv).xyz * 2.f - 1.f);
-    float4 vDepth = g_DepthTexture.Sample(DefaultSampler, uv);
+    float3 vAlbedo          = g_DiffuseTexture.Sample(DefaultSampler, uv).rgb;
+    float3 vNormal          = normalize(g_NormalTexture.Sample(DefaultSampler, uv).xyz * 2.f - 1.f);
+    float4 vDepth           = g_DepthTexture.Sample(DefaultSampler, uv);
+    float fAmbientOcclusion = g_SSAOInputTexture.Sample(DefaultSampler, uv).r;
     
     float fViewZ = vDepth.y * g_fFar;
     
@@ -158,7 +228,8 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     float3 vToLight = normalize(-g_vLightDir.xyz); // 픽셀에서 라이트로
     
     
-    if (true == AlmostEqual3(vDepth.b, AI_TEXTURE_TYPE_METALNESS)) // Metallic
+    
+    if (true == AlmostEqual3(vDepth.b * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_METALNESS)) // Metallic Roughness Occ
     {
         float3 vMRO = g_SurfaceTexture.Sample(DefaultSampler, uv).rgb;
         fMetallic = vMRO.r;
@@ -167,7 +238,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
         
         vF0 = lerp(float3(0.04f, 0.04f, 0.04f), vAlbedo, fMetallic);
     }
-    else if (true == AlmostEqual3(vDepth.b, AI_TEXTURE_TYPE_SPECULAR)) // Specular
+    else if (true == AlmostEqual3(vDepth.b * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_SPECULAR)) // Specular Roughness Occ
     {
         fMetallic = 0.f;
         
@@ -176,15 +247,24 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
         fRoughness = vSRO.g;
         fOcclusion = vSRO.b;
     }
+    else if (true == AlmostEqual3(vDepth.b * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_ANISOTROPY))
+    {
+        fMetallic = 0.f;
+        
+        float4 vSRXO = g_SurfaceTexture.Sample(DefaultSampler, uv);
+        vF0 = vSRXO.rrr;
+        fRoughness = vSRXO.g;
+        fOcclusion = vSRXO.a;
+    }
     else // basic Lighting(phong blinn) // if you were here, you miss some assets.
     {
-        Out.vShade = g_vLightDiffuse * saturate(max(dot(normalize(g_vLightDir.xyz) * -1.f, vNormal), 0.f) + (g_vLightAmbient * g_vMtrlAmbient));
+        Out.vShade = g_vLightDiffuse * saturate(max(dot(normalize(g_vLightDir.xyz) * -1.f, vNormal), 0.f) + (fAmbientOcclusion * g_vLightAmbient * g_vMtrlAmbient));
         Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(max(dot(vToView * -1.f, vToLight), 0.f), 50.f);
     
         return Out;
     }
+    float fTotalOcclusion = saturate(fOcclusion * fAmbientOcclusion);
     
-    //float fDiffuseAOStrength = lerp(0.3f, 3.f, fOcclusion);
     { // 수치조정 // 디렉셔널
         float fMinRoughness = 0.05f;
         fRoughness = max(fRoughness, fMinRoughness); // 러프니스 최소값 보장
@@ -193,22 +273,23 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     }
     
     
-    PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
-    PBR_Out.vShade *= fOcclusion;
+    PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, g_fLightIntensity, fAttenuation, vF0);
+    PBR_Out.vShade *= fTotalOcclusion;
     
-    float3 vAmbient = g_vLightAmbient.rgb * fOcclusion * fAttenuation;
+    float3 vAmbient = g_vLightAmbient.rgb * fTotalOcclusion * fAttenuation;
     float3 vFinalDiffuse = PBR_Out.vShade + vAmbient;
     float3 vFinalSpecular = PBR_Out.vSpecular * g_vLightSpecular.rgb;
-
+    
     Out.vShade = float4(vFinalDiffuse, 1.f);
     Out.vSpecular = float4(vFinalSpecular, 1.f);
     
     return Out;
 }
-
 PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 {
     PS_OUT_LIGHT Out;
+    Out.vShade = 0.f;
+    Out.vSpecular = 0.f;
     
     float2 uv = In.vTexcoord;
     
@@ -241,6 +322,7 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     float fLightDistance    = length(vFinalLightPosition - vWorldPosition.xyz);
     float3 vToView          = normalize(g_vCamPosition.xyz  - vWorldPosition.xyz); // 픽셀에서 카메라로
     float3 vToLight         = normalize(vFinalLightPosition - vWorldPosition.xyz); // 픽셀에서 라이트로
+    float fAmbientOcclusion = g_SSAOInputTexture.Sample(DefaultSampler, uv).r;
     
     if (g_bUsePowerLightAttenuation)
     {
@@ -259,7 +341,7 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
         return Out;
     }
     
-    if (true == AlmostEqual3(vDepth.b, AI_TEXTURE_TYPE_METALNESS)) // Metallic
+    if (true == AlmostEqual3(vDepth.b * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_METALNESS)) // Metallic
     {
         float3 vMRO = g_SurfaceTexture.Sample(DefaultSampler, uv).rgb;
         fMetallic = vMRO.r;
@@ -268,7 +350,7 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
         
         vF0 = lerp(float3(0.04f, 0.04f, 0.04f), vAlbedo, fMetallic);
     }
-    else if (true == AlmostEqual3(vDepth.b, AI_TEXTURE_TYPE_SPECULAR)) // Specular
+    else if (true == AlmostEqual3(vDepth.b * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_SPECULAR)) // Specular
     {
         fMetallic = 0.f;
         
@@ -277,15 +359,25 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
         fRoughness = vSRO.g;
         fOcclusion = vSRO.b;
     }
+    else if (true == AlmostEqual3(vDepth.b * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_ANISOTROPY))
+    {
+        fMetallic = 0.f;
+        
+        float4 vSRXO = g_SurfaceTexture.Sample(DefaultSampler, uv);
+        vF0 = vSRXO.rrr;
+        fRoughness = vSRXO.g;
+        fOcclusion = vSRXO.a;
+    }
     else // basic Lighting(phong blinn) // if you were here, you miss some assets.
     {
-        Out.vShade = fAttenuation * (g_vLightDiffuse * saturate(max(dot(vToLight * -1.f, vNormal), 0.f) + (g_vLightAmbient * g_vMtrlAmbient)));
+        Out.vShade = fAttenuation * (g_vLightDiffuse * saturate(max(dot(vToLight * -1.f, vNormal), 0.f) + (fAmbientOcclusion * g_vLightAmbient * g_vMtrlAmbient)));
         Out.vSpecular = fAttenuation * ((g_vLightSpecular * g_vMtrlSpecular) * pow(max(dot(vToView * -1.f, vToLight), 0.f), 50.f));
     
         return Out;
     }
     
-    //float fDiffuseAOStrength = lerp(0.3f, 3.f, fOcclusion);
+    float fTotalOcclusion = saturate(fOcclusion * fAmbientOcclusion);
+    
     { // 수치조정 // 점광원
         float fMinRoughness = 0.05f;
         fRoughness = max(fRoughness, fMinRoughness); // 러프니스 최소값 보장
@@ -293,11 +385,11 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
         vF0 = min(vF0, 0.9f); // 메탈릭 상한선
     }
     
-    PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
+    PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, g_fLightIntensity, fAttenuation, vF0);
     
-    PBR_Out.vShade *= fOcclusion;
+    PBR_Out.vShade *= fTotalOcclusion;
 
-    float3 vAmbient = g_vLightAmbient.rgb * fOcclusion * fAttenuation;
+    float3 vAmbient = g_vLightAmbient.rgb * fTotalOcclusion * fAttenuation;
     float3 vFinalDiffuse = PBR_Out.vShade + vAmbient;
     float3 vFinalSpecular = PBR_Out.vSpecular * g_vLightSpecular.rgb;
 
@@ -306,16 +398,18 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     
     return Out;
 }
-
 PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
 {
     PS_OUT_LIGHT Out;
+    Out.vShade = 0.f;
+    Out.vSpecular = 0.f;
     
     float2 uv = In.vTexcoord;
     
     float3 vAlbedo = g_DiffuseTexture.Sample(DefaultSampler, uv).rgb;
     float3 vNormal = normalize(g_NormalTexture.Sample(DefaultSampler, uv).xyz * 2.f - 1.f);
     float4 vDepth = g_DepthTexture.Sample(DefaultSampler, uv);
+    float fAmbientOcclusion = g_SSAOInputTexture.Sample(DefaultSampler, uv).r;
     
     float fViewZ = vDepth.y * g_fFar;
     
@@ -375,7 +469,7 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
     fSpotAttenenuation *= fSpotAttenenuation;
     fAttenuation *= fSpotAttenenuation;
     
-    if (true == AlmostEqual3(vDepth.b, AI_TEXTURE_TYPE_METALNESS)) // Metallic
+    if (true == AlmostEqual3(vDepth.b * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_METALNESS)) // Metallic
     {
         float3 vMRO = g_SurfaceTexture.Sample(DefaultSampler, uv).rgb;
         fMetallic = vMRO.r;
@@ -384,7 +478,7 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
         
         vF0 = lerp(float3(0.04f, 0.04f, 0.04f), vAlbedo, fMetallic);
     }
-    else if (true == AlmostEqual3(vDepth.b, AI_TEXTURE_TYPE_SPECULAR)) // Specular
+    else if (true == AlmostEqual3(vDepth.b * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_SPECULAR)) // Specular
     {
         fMetallic = 0.f;
         
@@ -393,13 +487,23 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
         fRoughness = vSRO.g;
         fOcclusion = vSRO.b;
     }
+    else if (true == AlmostEqual3(vDepth.b * AI_TEXTURE_TYPE_MAX, AI_TEXTURE_TYPE_ANISOTROPY))
+    {
+        fMetallic = 0.f;
+        
+        float4 vSRXO = g_SurfaceTexture.Sample(DefaultSampler, uv);
+        vF0 = vSRXO.rrr;
+        fRoughness = vSRXO.g;
+        fOcclusion = vSRXO.a;
+    }
     else // basic Lighting(phong blinn) // if you were here, you miss some assets.
     {
-        Out.vShade = fAttenuation * (g_vLightDiffuse * saturate(max(dot(vToLight * -1.f, vNormal), 0.f) + (g_vLightAmbient * g_vMtrlAmbient)));
+        Out.vShade = fAttenuation * (g_vLightDiffuse * saturate(max(dot(vToLight * -1.f, vNormal), 0.f) + (fAmbientOcclusion * g_vLightAmbient * g_vMtrlAmbient)));
         Out.vSpecular = fAttenuation * ((g_vLightSpecular * g_vMtrlSpecular) * pow(max(dot(vToView * -1.f, vToLight), 0.f), 50.f));
     
         return Out;
     }
+    float fTotalOcclusion = saturate(fOcclusion * fAmbientOcclusion);
     
     { // 수치조정 // 점광원
         float fMinRoughness = 0.05f;
@@ -408,48 +512,32 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
         vF0 = min(vF0, 0.9f); // 메탈릭 상한선
     }
     
-    PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, fAttenuation, vF0);
+    PBR_LIGHT_OUT PBR_Out = PBR_Lighting(vNormal, vToView, vToLight, vAlbedo, fMetallic, fRoughness, g_vLightDiffuse.rgb, g_fLightIntensity, fAttenuation, vF0);
     
-    PBR_Out.vShade *= fOcclusion;
+    PBR_Out.vShade *= fTotalOcclusion;
     
-    float3 vAmbient = g_vLightAmbient.rgb * fOcclusion * fAttenuation;
+    float3 vAmbient = g_vLightAmbient.rgb * fTotalOcclusion * fAttenuation;
     float3 vFinalDiffuse = PBR_Out.vShade + vAmbient;
     float3 vFinalSpecular = PBR_Out.vSpecular * g_vLightSpecular.rgb;
-
+    
     Out.vShade = float4(vFinalDiffuse, 1.f);
     Out.vSpecular = float4(vFinalSpecular, 1.f);
     
     return Out;
 }
-
-float g_fWeights_32[32] =
+PS_OUT_BACKBUFFER PS_MAIN_DEBUG(PS_IN In)
 {
-    0.000477, 0.000888, 0.001585, 0.002720, 0.004485, 0.007105, 0.010814, 0.015813,
-    0.022216, 0.029988, 0.038893, 0.048463, 0.058021, 0.066740, 0.073759, 0.078320,
-    0.079902, 0.078320, 0.073759, 0.066740, 0.058021, 0.048463, 0.038893, 0.029988,
-    0.022216, 0.015813, 0.010814, 0.007105, 0.004485, 0.002720, 0.001585, 0.000888
+    PS_OUT_BACKBUFFER Out;
+    
+    Out.vBackBuffer = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    Out.vEnvironment = float4(0.f, 0.f, 0.f, 0.f);
+    return Out;
+
 };
 
-float g_fWeights_128[128] =
-{
-    0.000209902, 0.000241594, 0.000277451, 0.000317919, 0.000363477, 0.000414637, 0.000471944, 0.000535974,
-    0.000607333, 0.000686659, 0.000774615, 0.000871889, 0.00097919, 0.00109725, 0.00122679, 0.00136858,
-    0.00152334, 0.00169183, 0.00187477, 0.00207285, 0.00228675, 0.0025171, 0.00276448, 0.0030294,
-    0.00331231, 0.00361356, 0.00393342, 0.00427205, 0.00462949, 0.00500564, 0.0054003, 0.00581308,
-    0.00624346, 0.00669075, 0.00715411, 0.0076325, 0.00812472, 0.0086294, 0.009145, 0.0096698,
-    0.0102019, 0.0107393, 0.0112798, 0.0118211, 0.0123608, 0.0128962, 0.0134249, 0.0139441,
-    0.0144511, 0.0149431, 0.0154174, 0.0158713, 0.0163021, 0.0167073, 0.0170844, 0.0174311,
-    0.0177452, 0.0180246, 0.0182676, 0.0184726, 0.0186383, 0.0187635, 0.0188474, 0.0188895,
 
-    0.0188895, 0.0188474, 0.0187635, 0.0186383, 0.0184726, 0.0182676, 0.0180246, 0.0177452,
-    0.0174311, 0.0170844, 0.0167073, 0.0163021, 0.0158713, 0.0154174, 0.0149431, 0.0144511,
-    0.0139441, 0.0134249, 0.0128962, 0.0123608, 0.0118211, 0.0112798, 0.0107393, 0.0102019,
-    0.0096698, 0.009145, 0.0086294, 0.00812472, 0.0076325, 0.00715411, 0.00669076, 0.00624346,
-    0.00581308, 0.0054003, 0.00500564, 0.00462948, 0.00427205, 0.00393342, 0.00361356, 0.00331231,
-    0.0030294, 0.00276448, 0.0025171, 0.00228675, 0.00207285, 0.00187477, 0.00169183, 0.00152334,
-    0.00136858, 0.00122679, 0.00109725, 0.000979191, 0.000871889, 0.000774615, 0.000686658, 0.000607333,
-    0.000535973, 0.000471944, 0.000414637, 0.000363477, 0.000317919, 0.000277451, 0.000241594, 0.000209902
-};
+
+
 
 
 PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
@@ -458,10 +546,7 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     
     vector vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     
-    if (0.f == vDiffuse.a)
-    {
-        discard;
-    }
+    if (0.f == vDiffuse.a) { discard; }
     
     vector vShade = g_ShadeTexture.Sample(DefaultSampler, In.vTexcoord);
     
@@ -503,10 +588,11 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     vPreShadowTexcoord.y = (vPreShadowPosition.y / vPreShadowPosition.w) * -0.5f + 0.5f;
     
     /* 광원의 NDC에서 샘플링 */
-    float fVisibility_Dynamic = ShadowVisibility_hwPCF(g_ShadowTexture, vPosition, float2(g_iMaxShadowWidth, g_iMaxShadowHeight), 0.0005f);
-    float fVisibility_Static = ShadowVisibility_hwPCF(g_PreShadowTexture, vPreShadowPosition, float2(g_iMaxShadowWidth, g_iMaxShadowHeight), 0.0005f);
+    float fVisibility_Dynamic_Near = ShadowVisibility_hwPCF(g_ShadowNearTexture, vPosition, float2(g_iMaxShadowWidth, g_iMaxShadowHeight), 0.005f);
+    float fVisibility_Static = ShadowVisibility_hwPCF(g_PreShadowTexture, vPreShadowPosition, float2(g_iMaxShadowWidth, g_iMaxShadowHeight), 0.005f);
     
-    Out.vBackBuffer.rgb *= lerp(0.5f, 1.f, min(fVisibility_Dynamic, fVisibility_Static));
+    Out.vBackBuffer.rgb *= lerp(0.25f, 1.f, lerp(fVisibility_Dynamic_Near, fVisibility_Static, vDepthDesc.y));
+    
     
     float4 vColor = 0.f;
     
@@ -515,7 +601,7 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
         vTexcoord.x = In.vTexcoord.x;
         vTexcoord.y = In.vTexcoord.y + (float) i / g_vResolution.y;
         
-        vColor += g_fWeights_128[i + 63] * g_BlurXTexture.Sample(ClampSampler, vTexcoord);
+        vColor += g_fWeights_128[i + 63] * g_BlurXTexture.Sample(BorderZeroSampler, vTexcoord);
     }
     
     Out.vBackBuffer += vColor;
@@ -523,29 +609,20 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     
     return Out;
 }
-
-
-struct PS_OUT_FLT4_SINGLE
-{
-    vector vSingleTarget : SV_TARGET0;
-};
-
-
 PS_OUT_FLT4_SINGLE PS_MAIN_REFIT(PS_IN In)
 {
     PS_OUT_FLT4_SINGLE Out;
 
-    Out.vSingleTarget = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
+    Out.vSingleTarget = g_DiffuseTexture.Sample(BorderZeroSampler, In.vTexcoord);
     
     return Out;
 }
-
 PS_OUT_FLT4_SINGLE PS_MAIN_EMBOSS(PS_IN In)
 {
     PS_OUT_FLT4_SINGLE Out;
 
-    vector vInput = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
-    //float fMask = g_BloomMaskTexture.Sample(PointSampler, In.vTexcoord).a;
+    vector vInput = g_DiffuseTexture.Sample(BorderZeroSampler, In.vTexcoord);
+    //float fMask = g_BloomMaskTexture.Sample(BorderZeroSampler, In.vTexcoord).a;
     float3 vColor = vInput.rgb;
     uint iMask = (uint) round(vInput.a * 255.f); // int a = 1  -> // vBloom.a = (enum / 255);
     
@@ -553,65 +630,56 @@ PS_OUT_FLT4_SINGLE PS_MAIN_EMBOSS(PS_IN In)
     {
         case 0:
             /* None */
-            vColor = float3(0.f, 0.f, 0.f);
+            vColor = (0.f, 0.f, 0.f);
             break;
         case 1:
             /* Basic_Apply */
             break;
         case 2:
             /* Multiply */
-            vColor *= 3;
+            vColor *= 3.f;
             break;
         case 3:
             break;
     }
     
-    float fIntensity = dot(vColor, float3(0.2126f, 0.7152f, 0.0722f)); // 대략적인 밝기 ( 인간적인 )
+    float fIntensity = dot(vColor, float3(0.2126f, 0.7152f, 0.0722f)); // 대략적인 밝기 
     
-    if (fIntensity <= 1e-4f)
+    if (fIntensity <= FLT_EPSILON5)
     {
         Out.vSingleTarget = 0;
         return Out;
     }
     
-    float fBloomIntensity = GetBloomCurve(fIntensity, g_fThreshold, g_iBloomEmbossingPass);
+    float fBloomIntensity = GetBloomCurve(fIntensity, g_fBloomThreshold, g_iBloomEmbossingPass);
     
     float3 bloomColor = (vColor * fBloomIntensity) / fIntensity;
     Out.vSingleTarget = float4(bloomColor, 1.f);
     
     return Out;
 }
-
-struct PS_OUT_BLUR_X
-{
-    float4 vBlurX : SV_TARGET0;
-    float4 vBlurWeight : SV_TARGET1;
-};
-
 PS_OUT_FLT4_SINGLE PS_MAIN_BLOOM_ACCUM(PS_IN In)
 {
     PS_OUT_FLT4_SINGLE Out;
     
     float3 vColorSrcA = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord).xyz;
-    float3 vColorSrcB = g_BlurTexture.Sample(PointSampler, In.vTexcoord).xyz;
+    float3 vColorSrcB = g_BlurTexture.Sample(BorderZeroSampler, In.vTexcoord).xyz;
     
     Out.vSingleTarget = float4(saturate(vColorSrcA + vColorSrcB), 1.f);
     
     return Out;
 }
-
 PS_OUT_FLT4_SINGLE PS_MAIN_BLOOM_FINISH(PS_IN In)
 {
     PS_OUT_FLT4_SINGLE Out;
     
     vector vColor = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
-    float3 vBloom = g_BlurTexture.Sample(PointSampler, In.vTexcoord).xyz;
+    float3 vBloom = g_BlurTexture.Sample(BorderZeroSampler, In.vTexcoord).xyz;
     Out.vSingleTarget = vColor;
     Out.vSingleTarget += float4(vBloom, 1.f);
     
     return Out;
 }
-
 PS_OUT_BLUR_X PS_MAIN_BLUR_X(PS_IN In)
 {
     PS_OUT_BLUR_X Out;
@@ -619,12 +687,12 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_X(PS_IN In)
     float2 vTexcoord;
     float4 vColor = 0.f;
     
-    for (int i = -63; i < 64; ++i)
+    for (int i = -15; i < 16; ++i)
     {
         vTexcoord.x = In.vTexcoord.x + (float) i / g_vResolution.x;
         vTexcoord.y = In.vTexcoord.y;
         
-        vColor += g_fWeights_128[i + 63] * g_BlurTexture.Sample(ClampSampler, vTexcoord);
+        vColor += g_fWeights_32[i + 15] * g_BlurTexture.Sample(ClampSampler, vTexcoord);
     }
     
     Out.vBlurX = vColor;
@@ -632,7 +700,6 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_X(PS_IN In)
     
     return Out;
 }
-
 PS_OUT_BLUR_X PS_MAIN_BLUR_X_ENV(PS_IN In)
 {
     PS_OUT_BLUR_X Out;
@@ -644,7 +711,7 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_X_ENV(PS_IN In)
     float fBlurAmount = 0.0f;
     
     float4 vCenter = g_DepthTexture.Sample(DefaultSampler, In.vTexcoord);
-    float4 vOriginal = g_BlurTexture.Sample(ClampSampler, In.vTexcoord);
+    float4 vOriginal = g_BlurTexture.Sample(BorderZeroSampler, In.vTexcoord);
     float fCenterViewZ = vCenter.y * g_fFar;
     
     float fTerrain = (1.f / 255.f);
@@ -688,7 +755,7 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_X_ENV(PS_IN In)
             continue;
         }
         
-        vColor += g_fWeights_32[i + 16] * g_BlurTexture.Sample(ClampSampler, vTexcoord);
+        vColor += g_fWeights_32[i + 16] * g_BlurTexture.Sample(BorderZeroSampler, vTexcoord);
         fAcc += g_fWeights_32[i + 16];
     }
     
@@ -708,7 +775,6 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_X_ENV(PS_IN In)
     
     return Out;
 }
-
 PS_OUT_BACKBUFFER PS_MAIN_POSTCOMBINED(PS_IN In)
 {
     PS_OUT_BACKBUFFER Out;
@@ -765,7 +831,7 @@ PS_OUT_BACKBUFFER PS_MAIN_POSTCOMBINED(PS_IN In)
             continue;
         }
         
-        vColor += g_fWeights_32[i + 16] * g_BlurTexture.Sample(ClampSampler, vTexcoord);
+        vColor += g_fWeights_32[i + 16] * g_BlurTexture.Sample(BorderZeroSampler, vTexcoord);
         fAcc += g_fWeights_32[i + 16];
     }
     if (fAcc <= FLT_EPSILON3)
@@ -793,12 +859,11 @@ PS_OUT_BACKBUFFER PS_MAIN_POSTCOMBINED(PS_IN In)
     float fBlendAmount = saturate(fBlurAmount * g_fDOFBlurMultiplier);
     float3 finalColor = lerp(vOriginal.rgb, vBlurMatched, fBlendAmount);
     
-    Out.vBackBuffer = float4(vColor.xyz, vOriginal.a);
+    Out.vBackBuffer = float4(finalColor.xyz, vOriginal.a);
     Out.vEnvironment = 0.f;
     
     return Out;
 }
-
 PS_OUT_BLUR_X PS_MAIN_BLUR_Y(PS_IN In)
 {
     PS_OUT_BLUR_X Out;
@@ -806,12 +871,12 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_Y(PS_IN In)
     float2 vTexcoord;
     float4 vColor = 0.f;
     
-    for (int i = -63; i < 64; ++i)
+    for (int i = -15; i < 16; ++i)
     {
         vTexcoord.x = In.vTexcoord.x;
         vTexcoord.y = In.vTexcoord.y + (float) i / g_vResolution.y;
         
-        vColor += g_fWeights_128[i + 63] * g_BlurTexture.Sample(ClampSampler, vTexcoord);
+        vColor += g_fWeights_32[i + 16] * g_BlurTexture.Sample(ClampSampler, vTexcoord);
     }
     
     Out.vBlurX = vColor;
@@ -819,7 +884,6 @@ PS_OUT_BLUR_X PS_MAIN_BLUR_Y(PS_IN In)
     
     return Out;
 }
-
 PS_OUT_FLT4_SINGLE PS_MAIN_FOG(PS_IN In)
 {
     PS_OUT_FLT4_SINGLE Out;
@@ -837,15 +901,121 @@ PS_OUT_FLT4_SINGLE PS_MAIN_FOG(PS_IN In)
     vFinalColor = lerp(g_vFogColor, vColor, max(fRatio, 0.2f));
     vFinalColor.a = 1.f;
     
-    if (1.f == vDepthDesc.y)
+    if (1.f == vDepthDesc.y) {
         vFinalColor = float4(g_vFogColor);
-        
+    }
     Out.vSingleTarget = vFinalColor;
     
     return Out;
 }
+PS_OUT_BACKBUFFER PS_TONE_MAPPING(PS_IN In)
+{
+    PS_OUT_BACKBUFFER Out;
+    vector vColor = g_OriginalTexture.Sample(DefaultSampler, In.vTexcoord);
+    vColor *= g_fToneMappingExposure; 
+    vColor = pow(vColor, 2.2f);
+    switch (g_iToneMappingType) {
+        case 0:
+            vColor = pow(vColor, 1.f/2.2f);
+            vColor /= g_fToneMappingExposure;
+            break;
+        case 1:
+            vColor = float4(ReinHard_ToneMapper(vColor.xyz), 1.f);
+            break;
+        case 2:
+            vColor = float4(Filmic_ToneMapper(vColor.xyz), 1.f);
+            break;
+        default:
+            break;
+    }
+    
+    Out.vBackBuffer = vColor;
+    Out.vEnvironment = float4(0.f, 0.f, 0.f, 1.f);
+    return Out;
+}
+PS_OUT_SSAO_AMBIENT_OCCLUSION PS_SSAO_AMBIENT_OCCLUSION(PS_IN In)
+{
+    PS_OUT_SSAO_AMBIENT_OCCLUSION Out;
+    float2 uv = In.vTexcoord;
+    
+    float4 vDepthDesc       = g_DepthTexture.Sample(PointSampler, uv);
+    float fCenterViewSpaceZ = vDepthDesc.y * g_fFar; // n ~ f
+    float fRatio = lerp(0.f, 1.f, (g_fFar - fCenterViewSpaceZ) / g_fFar);
+    if (fRatio <= 0.f)
+    {
+        Out.fOcclusion = 1.f;
+        return Out;
+    }
+    float4 vCenterViewPosition;
+    {
+        vCenterViewPosition.x = uv.x * 2.f - 1.f;
+        vCenterViewPosition.y = uv.y * -2.f + 1.f;
+        vCenterViewPosition.z = vDepthDesc.x;
+        vCenterViewPosition.w = 1.f;
+        vCenterViewPosition *= fCenterViewSpaceZ;
+        vCenterViewPosition = mul(vCenterViewPosition, g_invmatProj);
+        vCenterViewPosition /= vCenterViewPosition.w;
+    }
+    float3 vNormal = normalize(g_NormalTexture.Sample(PointSampler, uv).xyz * 2.f - 1.f);
+    float3 vCenterViewNormal = mul(vNormal, (float3x3)g_ViewMatrix);
+    
+    float2 vNoiseScale = g_vResolution / 4.f;
+    float3 vNoise = g_SSAONoiseTexture.Sample(SsaoDataSampler, uv * vNoiseScale).xyz;
+    
+    float3 vTangent = normalize(vNoise - vCenterViewNormal * dot(vNoise, vCenterViewNormal));
+    float3 vBiNormal = cross(vCenterViewNormal, vTangent);
+    float3x3 toViewTBNMatrix = float3x3(vTangent, vBiNormal, vCenterViewNormal);
+    
+    float fOcclusion = 0.f;
+    for (uint i = 0; i < g_iKernelSize; ++i)
+    {
+        float3 vViewSamplePosVec = mul(g_SamplePos[i].xyz, toViewTBNMatrix); // TANSPACE -> VIEW
+        float4 vViewSamplePos = vCenterViewPosition + float4(vViewSamplePosVec * g_fSSAORadius, 0.f);
+        float4 vNDCSampleOffset = mul(vViewSamplePos, g_ProjMatrix);
+               vNDCSampleOffset /= vNDCSampleOffset.w;
+        
+        float2 sampleUV;
+        sampleUV.x = vNDCSampleOffset.x * 0.5f + 0.5f;
+        sampleUV.y = vNDCSampleOffset.y * -0.5f + 0.5f;
 
+        if (sampleUV.x < 0 || sampleUV.x > 1
+         || sampleUV.y < 0 || sampleUV.y > 1) {
+            continue;
+        }
 
+        float fRecordedSampleViewPosDepth = g_DepthTexture.Sample(PointSampler, sampleUV).y * g_fFar;
+        float fIsOccluded = (fRecordedSampleViewPosDepth < vViewSamplePos.z - g_fSSAO_BIAS) ? 1.0f : 0.0f;
+
+        float fRangeCheck = smoothstep(0.f, 1.f, g_fSSAORadius / abs(vViewSamplePos.z - fRecordedSampleViewPosDepth));
+        fIsOccluded *= fRangeCheck;
+        fOcclusion += fIsOccluded;
+    }
+    fOcclusion = (1.f - (fOcclusion / g_iKernelSize) * fRatio);
+    Out.fOcclusion = fOcclusion ;
+    
+    return Out;
+}
+PS_OUT_SSAO_BLUR PS_SSAO_BLUR(PS_IN In)
+{
+    PS_OUT_SSAO_BLUR Out;
+
+    float2 vTexelSize = 1.0f / g_vResolution;
+
+    float fResult = 0.0f;
+    for (int x = -2; x < 2; ++x)
+    {
+        for (int y = -2; y < 2; ++y)
+        {
+            float2 vOffset = float2((float) x, (float) y) * vTexelSize;
+            fResult += g_SSAOInputTexture.Sample(DefaultSampler, In.vTexcoord + vOffset).r;
+        }
+    }
+
+    fResult /= 16.f; // 16개 샘플 평균
+
+    Out.fBlur = fResult;
+    return Out;
+}
 technique11 DefaultTechnique
 {
     pass DebugPass // 0
@@ -994,5 +1164,35 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_FOG();
+    }
+
+    pass Tone_Mapping_Pass // 15
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_CAPTURE();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_TONE_MAPPING();
+    }
+
+    pass SSAO_AmbientOcclusion // 16
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_CAPTURE();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_SSAO_AMBIENT_OCCLUSION();
+    }
+
+    pass SSAO_Blur_X // 17
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_CAPTURE();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_SSAO_BLUR();
     }
 }

@@ -103,8 +103,8 @@ HRESULT CPhysXEffectHitBox::Ready_Components(void* pArg)
 		Desc.iSubKind = pDesc->iSubKind;
 		Desc.pTransform = m_pTransformCom;
 		Desc.eBodyType = ACTOR::BOX;
-		Desc.fContactOffset = 0.1f;
-		Desc.fMaterial = { 0.5f, 0.5f, 0.6f };
+		Desc.fContactOffset = 0.3f;
+		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
 		Desc.bAutoStepping = { false };
 		Desc.fStepOffset = { 0.05f };
 		Desc.fRadius = 0.5f;
@@ -117,7 +117,7 @@ HRESULT CPhysXEffectHitBox::Ready_Components(void* pArg)
 			return E_FAIL;
 		}
 
-		m_pCharacter_Controller->SetGravity(pDesc->bGravity);
+		m_pCharacter_Controller->SetGravity(false);
 	}
 	m_pCharacter_Controller->Set_Position(m_pTransformCom->Get_State(STATE::POSITION));
 	/* Com_Shader */

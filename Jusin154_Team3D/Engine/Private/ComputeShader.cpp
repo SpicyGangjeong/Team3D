@@ -45,12 +45,7 @@ vector<D3D11_MAPPED_SUBRESOURCE> CComputeShader::Dispatch(_uint iSRVIndex, _uint
 
 	for (_uint i = 0; i < m_iNumInputBuffer; i++)
 	{
-		D3D11_MAPPED_SUBRESOURCE PreSubResource = {};
-
-		m_pContext->CopyResource(m_pInputStagingBuffer[i], ppBuffers[i]);
-
-		m_pContext->CopyResource(m_pInputBuffer[i], m_pInputStagingBuffer[i]);
-
+		m_pContext->CopyResource(m_pInputBuffer[i], ppBuffers[i]);
 	}
 
 
@@ -76,18 +71,7 @@ vector<D3D11_MAPPED_SUBRESOURCE> CComputeShader::Dispatch(_uint iSRVIndex, _uint
 
 	for (_uint i = 0; i < m_iNumOutputBuffer; i++)
 	{
-		m_pContext->CopyResource(m_pOutputStagingBuffer[i], m_pOutputBuffer[i]);
-
-		//스테이징 버퍼를 열어서 카피함
-		D3D11_MAPPED_SUBRESOURCE StagingSubResource = {};
-
-		if (SUCCEEDED(m_pContext->Map(m_pOutputStagingBuffer[i], 0, D3D11_MAP_READ, 0, &StagingSubResource)))
-		{
-			StagingSubResources.push_back(StagingSubResource);
-
-			m_pContext->Unmap(m_pOutputStagingBuffer[i], 0);
-		}
-
+		m_pContext->CopyResource(ppBuffers[i], m_pOutputBuffer[i]);
 	}
 
 	Reset();
@@ -116,36 +100,19 @@ void CComputeShader::Bind_OutPut_SRV(_uint iIndex, _uint iBufferIndex)
 
 }
 
+void CComputeShader::Bind_OutPut_SRV_VS(_uint iIndex, _uint iBufferIndex)
+{
+	m_pContext->VSSetShaderResources(iIndex, // 시작슬롯 번호
+		1,  // 버퍼 개수
+		&m_pOutputSRV[iBufferIndex]); // 버퍼 시작 주
+}
+
 ID3D11UnorderedAccessView* CComputeShader::GetOutputUAV(_uint iIndex) const
 {
 	return m_pOutputUAV[iIndex];
 }
 
-vector<D3D11_MAPPED_SUBRESOURCE> CComputeShader::ReadBackOutputs()
-{
-	std::vector<D3D11_MAPPED_SUBRESOURCE> StagingSubResources;
-	StagingSubResources.reserve(m_iNumOutputBuffer);
 
-	for (_uint i = 0; i < m_iNumOutputBuffer; ++i)
-	{
-		if (m_pOutputStagingBuffer[i] == nullptr || m_pOutputBuffer[i] == nullptr)
-			continue;
-
-		m_pContext->CopyResource(m_pOutputStagingBuffer[i], m_pOutputBuffer[i]);
-
-		D3D11_MAPPED_SUBRESOURCE mapped = {};
-		if (SUCCEEDED(m_pContext->Map(m_pOutputStagingBuffer[i], 0,
-			D3D11_MAP_READ, 0, &mapped)))
-		{
-			StagingSubResources.push_back(mapped);
-
-			m_pContext->Unmap(m_pOutputStagingBuffer[i], 0);
-		}
-	}
-
-	return StagingSubResources;
-	
-}
 
 void CComputeShader::Reset()
 {
@@ -191,22 +158,6 @@ HRESULT CComputeShader::CreateBuffer(_uint iNumElement, _uint iInputStructStride
 			return E_FAIL;
 
 		m_pInputBuffer.push_back(pInputBuffer);
-
-		//스테이징 버퍼 이름
-		D3D11_BUFFER_DESC StagingBufferDesc = {};
-		StagingBufferDesc.Usage = D3D11_USAGE_STAGING; // 스테이징 버퍼 
-		StagingBufferDesc.ByteWidth = iInputStructStride[i] * iNumElement;
-		StagingBufferDesc.StructureByteStride = iInputStructStride[i];
-		StagingBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
-
-		ID3D11Buffer* pStagingBuffer = nullptr;
-
-		if (FAILED(m_pDevice->CreateBuffer(&StagingBufferDesc, nullptr, &pStagingBuffer)))
-			return E_FAIL;
-
-		m_pInputStagingBuffer.push_back(pStagingBuffer);
-
-
 	}
 
 	for (_uint i = 0; i < m_iNumOutputBuffer; i++)
@@ -230,20 +181,6 @@ HRESULT CComputeShader::CreateBuffer(_uint iNumElement, _uint iInputStructStride
 			return E_FAIL;
 
 		m_pOutputBuffer.push_back(pOutputBuffer);
-
-		//아웃풋 스테이징 버퍼
-		D3D11_BUFFER_DESC OutPutStagingBufferDesc = {};
-		OutPutStagingBufferDesc.Usage = D3D11_USAGE_STAGING; // 스테이징 버퍼 
-		OutPutStagingBufferDesc.ByteWidth = iOuputStructStride[i] * iNumElement;
-		OutPutStagingBufferDesc.StructureByteStride = iOuputStructStride[i];
-		OutPutStagingBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
-
-		ID3D11Buffer* pOutputStagingBuffer = nullptr;
-
-		if (FAILED(m_pDevice->CreateBuffer(&OutPutStagingBufferDesc, nullptr, &pOutputStagingBuffer)))
-			return E_FAIL;
-
-		m_pOutputStagingBuffer.push_back(pOutputStagingBuffer);
 	}
 
 	return S_OK;
@@ -367,7 +304,6 @@ void CComputeShader::Free()
 	{
 		SAFE_RELEASE(m_pInputSRV[i]);
 		SAFE_RELEASE(m_pInputBuffer[i]);
-		SAFE_RELEASE(m_pInputStagingBuffer[i]);
 	}
 
 	for (_uint i = 0; i < m_iNumOutputBuffer; i++)
@@ -375,7 +311,6 @@ void CComputeShader::Free()
 		SAFE_RELEASE(m_pOutputUAV[i]);
 		SAFE_RELEASE(m_pOutputBuffer[i]);
 		SAFE_RELEASE(m_pOutputSRV[i]);
-		SAFE_RELEASE(m_pOutputStagingBuffer[i]);
 	}
 
 

@@ -22,7 +22,7 @@ public:
 private:
 	void Magic_Meter_Visible(_uint iIndex, _bool bVisible);
 	void Magic_Meter_UV();
-	void Matic_Meter_Move();
+	void Magic_Meter_Move();
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;

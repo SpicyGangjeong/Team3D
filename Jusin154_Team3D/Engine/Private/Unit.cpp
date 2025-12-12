@@ -118,8 +118,66 @@ HRESULT CUnit::Ready_Components(void *pArg)
 	if (FAILED(Add_Component<CFSM>(g_iStaticLevel, &m_pFSM))){
 		return E_FAIL;
 	}
-
+	 
 	return S_OK;
+}
+
+void CUnit::Play_Event()
+{
+	for (auto iter = m_PendingEvents.begin(); iter != m_PendingEvents.end(); )
+	{
+		_float ratio = m_pModelCom->Get_CurrentTrackProgressRatio();
+		_uint curAnim = m_pModelCom->Get_AnimIndex();
+
+		if (curAnim == iter->AnimIndex)
+		{
+			if (!iter->bExecuted && ratio >= iter->fRatio)
+			{
+				iter->Callback();
+				iter->bExecuted = true;
+
+				if (!iter->bKeep)
+				{
+					iter = m_PendingEvents.erase(iter);
+					continue;
+				}
+			}
+		}
+		else
+		{
+			iter->bExecuted = false;
+		}
+
+		++iter;
+	}
+}
+
+void CUnit::Add_Event(_uint AnimIndex, function<void()> Callback, _float fRatio,_bool bKeep)
+{
+	PendingEvent Desc;
+	Desc.AnimIndex = AnimIndex;
+	Desc.fRatio = fRatio;
+	Desc.Callback = Callback;
+	Desc.bKeep = bKeep;
+	m_PendingEvents.push_back(Desc);
+}
+
+void CUnit::Check_HitAngle(_vector ProjectileDir)
+{
+	_vector vProjectileDir = ProjectileDir;
+
+	_vector vLook = m_pTransformCom->Get_State(STATE::LOOK);
+
+	vLook = XMVector3Normalize(vLook);
+	vProjectileDir = XMVector3Normalize(vProjectileDir);
+
+	_float fDot = XMVectorGetX(XMVector3Dot(vLook, vProjectileDir));
+	fDot = clamp(fDot, -1.0f, 1.0f);
+
+	_float fAngleRad = acosf(fDot);
+	m_fHitDegree = XMConvertToDegrees(fAngleRad);
+	_vector vCross = XMVector3Cross(vLook, vProjectileDir);
+	m_fHitCross = XMVectorGetY(vCross);
 }
 
 void CUnit::Free()

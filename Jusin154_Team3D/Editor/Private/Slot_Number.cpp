@@ -112,7 +112,7 @@ HRESULT CSlot_Number::Render()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::ALPHABLEND))))
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIINTANCE::UVALPHABLEND))))
 	{
 		return E_FAIL;
 	}

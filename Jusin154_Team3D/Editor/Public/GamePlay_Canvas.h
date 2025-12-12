@@ -39,14 +39,13 @@ private:
 	CGameObject* m_pMinimap_Panel = { nullptr };
 	CGameObject* m_pLoading_Panel = { nullptr };
 	CGameObject* m_pAction_Panel = { nullptr };
+	CGameObject* m_pEnemy_Panel = { nullptr };
 
 public:
 	static CGamePlay_Canvas* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
-#ifdef _DEBUG
 	void Describe_Entity() override;
-#endif // _DEBUG
 };
 
 NS_END

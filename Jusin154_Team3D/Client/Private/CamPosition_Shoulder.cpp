@@ -30,30 +30,20 @@ HRESULT CCamPosition_Shoulder::Initialize(void* pArg)
 
 	CAMERA_SHOULDER_DESC* pDesc = static_cast<CAMERA_SHOULDER_DESC*>(pArg);
 	{
-		m_fMouseSensor = pDesc->fMouseSensor;
-		m_vShoulderPosRatio = pDesc->vInitialLook;
-		m_fShoulderDistance = pDesc->fShoulderDistance;
-		m_vAccDegreeXY = { 0.f, 0.f };
-		m_fCameraFocalLength = pDesc->fCameraFocalLength;
-		m_fBackFrontRatio = pDesc->fBackFrontRatio;
+		m_pLookTransform = m_pTarget_LookPart->Get_Component<CTransform>();
+		m_pFollowTransform = m_pTarget_FollowPart->Get_Component<CTransform>();
+		m_pParentPos = m_pParentTransformCom->Get_StatePtr(STATE::POSITION);
+		m_vDampingStartPosition = *m_pParentPos;
+		m_vDampingDestPosition = *m_pParentPos;
+		m_vDampingLerpTimer.x = m_vDampingLerpTimer.y;
+		m_vFocalRatio.x = m_vFocalRatio.y;
+		m_fFocalRatioTargetValue = m_vFocalRatio.y;
 
-		m_vShoulderOtherRatio = m_vShoulderPosRatio = m_vShoulderStartRatio = pDesc->vInitialLook;
-		m_vShoulderStartRatio.x *= -1.f;
-		m_pTransformCom->Set_State(STATE::POSITION, 
-			m_pParentTransformCom->Get_State(STATE::POSITION) 
-			+ XMVector3Normalize(XMLoadFloat3(&m_vShoulderPosRatio)) * m_fShoulderDistance);
-
-		_vector vShoulderPos = Get_WorldPostion();
-		_vector vCameraLook = XMVectorSet(0.f, 0.f, 1.f, 0.f);
-		_vector vRotCameraq = XMQuaternionRotationRollPitchYaw(XMConvertToRadians(m_vAccDegreeXY.x), XMConvertToRadians(m_vAccDegreeXY.y), 0.f);
-		vCameraLook = XMVector3Normalize(XMVector3Rotate(vCameraLook, vRotCameraq));
-
-		CTransform* pLookTransform = m_pTarget_LookPart->Get_Component<CTransform>();
-		CTransform* pFollowTransform = m_pTarget_FollowPart->Get_Component<CTransform>();
-
-		pLookTransform->Set_State(STATE::POSITION, vShoulderPos + vCameraLook * (m_fCameraFocalLength * m_fBackFrontRatio));
-		pFollowTransform->Set_State(STATE::POSITION, vShoulderPos - vCameraLook * (m_fCameraFocalLength * (1 - m_fBackFrontRatio)));
+		_vector vLookTargetPos = Calc_LookTargetPos();
+		m_pLookTransform->Set_State(STATE::POSITION, vLookTargetPos);
+		m_pFollowTransform->Set_State(STATE::POSITION, Calc_FollowTargetPos(vLookTargetPos) + XMVectorSet(0.f, 0.f, 1.f, 0.f));
 	}
+	m_bDampingParentPos = true;
 
 	return S_OK;
 }
@@ -63,55 +53,39 @@ void CCamPosition_Shoulder::Priority_Update(_float fTimeDelta)
 	if (FAILED(m_pGameInstance->IsBinded_Camera(CAMERA_SHOULDER))) {
 		return;
 	}
-
-	if (m_pGameInstance->Key_Up(DIK_PGDN))
 	{
-		m_bLerp = !m_bLerp;
+		if (false == m_bDampingParentPos) {
+			m_vDampingLerpTimer.x = 0.f;
+			m_vDampingStartPosition = *m_pParentPos;
+			m_vDampingDestPosition = *m_pParentPos;
+		}
+		else {
+			m_vDampingLerpTimer.x += fTimeDelta;
+			if (m_vDampingLerpTimer.x >= m_vDampingLerpTimer.y) {
+				XMStoreFloat4(&m_vDampingStartPosition, Calc_DampingParentPos());
+				m_vDampingLerpTimer.x = max(m_vDampingLerpTimer.x - m_vDampingLerpTimer.y, 0.f);
+				m_vDampingDestPosition = *m_pParentPos;
+			}
+		}
 	}
 	if (true == m_bMovable) {
-		m_vAccDegreeXY.y += m_pGameInstance->Get_MouseMove().x * m_fMouseSensor;
-		m_vAccDegreeXY.x += m_pGameInstance->Get_MouseMove().y * m_fMouseSensor;
-		CMyTools::AdjustAccumulateDegreePitchYawDegree(m_vAccDegreeXY);
+		m_vAccRotDegrees.y += m_pGameInstance->Get_MouseMove().x * m_fMouseSensor;
+		m_vAccRotDegrees.x += m_pGameInstance->Get_MouseMove().y * m_fMouseSensor;
+		CMyTools::AdjustAccumulateDegreePitchYawDegree(m_vAccRotDegrees);
 	}
-
-	if (m_bLerp)
 	{
-		m_vPosLerpTimer.x += fTimeDelta;
-		if (m_vPosLerpTimer.x > m_vPosLerpTimer.y) {
-			m_vPosLerpTimer.x = 0.f;
-			Start_LerpShoulderPos();
+		_vector vLookTargetPos = Calc_LookTargetPos();
+		m_pLookTransform->Set_State(STATE::POSITION, vLookTargetPos);
+		m_pFollowTransform->Set_State(STATE::POSITION, Calc_FollowTargetPos(vLookTargetPos));
+
+		_float focalRatioLerpAlpha = fTimeDelta * m_fFocalRatioLerpSpeed;
+		if (focalRatioLerpAlpha > 1.f)
+		{
+			focalRatioLerpAlpha = 1.f;
 		}
-		_vector vShoulderPos = XMVectorLerp(XMLoadFloat4(&m_StartPos), XMLoadFloat4(&m_DestPos), (m_vPosLerpTimer.x / m_vPosLerpTimer.y));
-		m_pTransformCom->Set_State(STATE::POSITION, vShoulderPos);
 
-		_vector vRotCameraq = XMQuaternionRotationRollPitchYaw(XMConvertToRadians(m_vAccDegreeXY.x), XMConvertToRadians(m_vAccDegreeXY.y), 0.f);
-		_vector vCameraLook = XMVector3Normalize(XMVector3Rotate(XMVectorSet(0.f, 0.f, 1.f, 0.f), vRotCameraq));
-
-		CTransform* pLookTransform = m_pTarget_LookPart->Get_Component<CTransform>();
-		CTransform* pFollowTransform = m_pTarget_FollowPart->Get_Component<CTransform>();
-
-		pLookTransform->Set_State(STATE::POSITION, vShoulderPos + vCameraLook * (m_fCameraFocalLength * m_fBackFrontRatio));
-		pFollowTransform->Set_State(STATE::POSITION, vShoulderPos - vCameraLook * (m_fCameraFocalLength * (1 - m_fBackFrontRatio)));
+		m_vFocalRatio.x = CMyTools::Lerp_f1D(m_vFocalRatio.x, m_fFocalRatioTargetValue, focalRatioLerpAlpha);
 	}
-	else
-	{
-		_vector vLook = XMVector3Normalize(XMLoadFloat3(&m_vShoulderPosRatio));
-		_vector vRotq = XMQuaternionRotationRollPitchYaw(0.f, XMConvertToRadians(m_vAccDegreeXY.y), 0.f);
-		vLook = XMVector3Normalize(XMVector3Rotate(vLook, vRotq));
-
-		m_pTransformCom->Set_State(STATE::POSITION, m_pParentTransformCom->Get_State(STATE::POSITION) + XMVector3Normalize(vLook) * m_fShoulderDistance);
-		_vector vShoulderPos = Get_WorldPostion();
-		_vector vCameraLook = XMVectorSet(0.f, 0.f, 1.f, 0.f);
-		_vector vRotCameraq = XMQuaternionRotationRollPitchYaw(XMConvertToRadians(m_vAccDegreeXY.x), XMConvertToRadians(m_vAccDegreeXY.y), 0.f);
-		vCameraLook = XMVector3Normalize(XMVector3Rotate(vCameraLook, vRotCameraq));
-
-		CTransform* pLookTransform = m_pTarget_LookPart->Get_Component<CTransform>();
-		CTransform* pFollowTransform = m_pTarget_FollowPart->Get_Component<CTransform>();
-
-		pLookTransform->Set_State(STATE::POSITION, vShoulderPos + vCameraLook * (m_fCameraFocalLength * m_fBackFrontRatio));
-		pFollowTransform->Set_State(STATE::POSITION, vShoulderPos - vCameraLook * (m_fCameraFocalLength * (1 - m_fBackFrontRatio)));
-	}
-	
 }
 
 void CCamPosition_Shoulder::Update(_float fTimeDelta)
@@ -126,18 +100,28 @@ void CCamPosition_Shoulder::Update(_float fTimeDelta)
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
-
+	if (m_pGameInstance->Key_Up(DIK_PGDN)) {
+		m_bDampingParentPos = !m_bDampingParentPos;
+	}
 	if (m_pGameInstance->Key_Up(DIK_GRAVE)) {
 		m_bMovable = !m_bMovable;
 	}
-	if (m_pGameInstance->Mouse_Down(DIM_RBUTTON)) {
+	if (m_pGameInstance->Mouse_Down(DIM_MBUTTON)) {
 		m_pGameInstance->Toggle_MouseCenter();
 	}
 	if (m_pGameInstance->Key_Up(DIK_P)) {
-		m_vShoulderOtherRatio = m_vShoulderPosRatio = m_vShoulderStartRatio;
-		m_vShoulderStartRatio.x *= -1.f;
-		m_bShoulderLerp = true;
+		m_bRightShoulderActive = !m_bRightShoulderActive;
+
+		m_vShoulderLerpDegree.x = m_fFollowTargetIncludedAngleDegree;
+		if (true == m_bRightShoulderActive) {
+			m_vShoulderLerpDegree.y = m_vShoulderLerpIncludedAngleDegree.y;
+		}
+		else {
+			m_vShoulderLerpDegree.y = m_vShoulderLerpIncludedAngleDegree.x;
+		}
+
 		m_vShoulderLerpTimer.x = 0.f;
+		m_bShoulderLerp = true;
 	}
 	if (m_pGameInstance->Mouse_Pressing(DIM_RBUTTON)) {
 		m_pBinded_Camera->ZoomIn(fTimeDelta);
@@ -154,15 +138,30 @@ void CCamPosition_Shoulder::Late_Update(_float fTimeDelta)
 	if (FAILED(m_pGameInstance->IsBinded_Camera(CAMERA_SHOULDER))) {
 		return;
 	}
-	if (true == m_bShoulderLerp) {
+	if (true == m_bShoulderLerp)
+	{
 		m_vShoulderLerpTimer.x += fTimeDelta;
-		XMStoreFloat3(&m_vShoulderPosRatio, XMVectorLerp(XMLoadFloat3(&m_vShoulderStartRatio), XMLoadFloat3(&m_vShoulderOtherRatio), m_vShoulderLerpTimer.x / m_vShoulderLerpTimer.y));
-		if (m_vShoulderLerpTimer.x > m_vShoulderLerpTimer.y) {
-			m_bShoulderLerp = false;
-			m_vShoulderLerpTimer.x = 0.f;
 
-			m_vShoulderPosRatio = m_vShoulderOtherRatio;
+		_float fLerpRatio = m_vShoulderLerpTimer.x/m_vShoulderLerpTimer.y;
+		if (fLerpRatio >= 1.f) {
+			fLerpRatio = 1.f;
+			m_bShoulderLerp = false;
 		}
+		if (false == m_bShoulderLerp) {
+			m_vShoulderLerpTimer.x = 0.f;
+			m_fFollowTargetIncludedAngleDegree = m_vShoulderLerpDegree.y;
+		} else {
+			m_fFollowTargetIncludedAngleDegree = CMyTools::Lerp_f1D(m_vShoulderLerpDegree.x, m_vShoulderLerpDegree.y, fLerpRatio);
+		}
+	}
+	if (true == m_bStartGame) {
+		m_vStartLerpTimer.x += fTimeDelta;
+		if (m_vStartLerpTimer.x >= m_vStartLerpTimer.y) {
+			m_vStartLerpTimer.x = 0.f;
+			m_bDampingParentPos = true;
+			m_bStartGame = false;
+		}
+		m_pGameInstance->Add_RenderGroup(RENDER::UI_OVERLAY, this);
 	}
 }
 
@@ -175,6 +174,136 @@ _vector CCamPosition_Shoulder::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
 }
+
+_vector CCamPosition_Shoulder::Calc_LookTargetPos()
+{
+	_vector vDestPos = Calc_DampingParentPos();
+
+	_vector vFoward = { 0.f, 0.f, 1.f, 0.f };
+	_vector vRotCameraq = XMQuaternionRotationRollPitchYaw(XMConvertToRadians(m_vAccRotDegrees.x + m_vAccRealDegrees.x), XMConvertToRadians(m_vAccRotDegrees.y + m_vAccRealDegrees.y), 0.f);
+	vFoward = XMVector3Normalize(XMVector3Rotate(vFoward, vRotCameraq));
+
+	_vector vHeadPos = vDestPos + XMVectorSet(0.f, m_fHeadHeight, 0.f, 0.f);
+	_vector vFowardPos = vHeadPos + vFoward * m_fCameraFowardDistance;
+
+	return XMVectorLerp(vHeadPos, vFowardPos, m_vFocalRatio.x);
+}
+_vector CCamPosition_Shoulder::Calc_FollowTargetPos(_vector vLookTargetWorldPos)
+{
+	_float fBestFollowTargetDistance = m_fCameraBarrelLength * (1.f - m_fDefaultCameraBackToFrontRatio);
+
+	_vector fRotQ = XMQuaternionRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-m_fFollowTargetIncludedAngleDegree));
+	_vector vDestPos = Calc_DampingParentPos();
+	_vector vHeadPos = vDestPos + XMVectorSet(0.f, m_fHeadHeight, 0.f, 0.f);
+	_vector vDir = vHeadPos - vLookTargetWorldPos;
+	_float fLengthSQ = XMVectorGetX(XMVector3LengthSq(vDir));
+
+	if (fLengthSQ < FLT_EPSILON)
+	{
+		vDir = XMVectorSet(0.f, 0.f, 1.f, 0.f);
+		vDir = XMVector3Rotate(vDir, fRotQ);
+	}
+	else
+	{
+		vDir = XMVector3Normalize(vDir);
+		vDir = XMVector3Rotate(vDir, fRotQ);
+	}
+
+	m_BufferHit = {};
+	_bool bHit = m_pGameInstance->SphereCast( 0.25f, vLookTargetWorldPos, vDir, fBestFollowTargetDistance,
+					PSX::PxHitFlag::eDEFAULT, PSX::PxQueryFlag::eSTATIC/*|PSX::PxQueryFlag::eDYNAMIC*/, m_BufferHit);
+
+	if (false == bHit) {
+		return vLookTargetWorldPos + vDir * fBestFollowTargetDistance;
+	}
+
+	vector<PSX::PxSweepHit> sweepHits;
+	_uint iTouchCount = m_BufferHit.getNbTouches();
+
+	if (true == m_BufferHit.hasBlock) {
+		sweepHits.reserve(iTouchCount + 1);
+		sweepHits.emplace_back(m_BufferHit.block);
+	}
+	else {
+		sweepHits.reserve(iTouchCount);
+	}
+
+	auto* touches = m_BufferHit.getTouches();
+	for (_uint index = 0; index < iTouchCount; ++index) {
+		sweepHits.emplace_back(touches[index]);
+	}
+	CMyTools::SortHitsByDistance(sweepHits);
+
+	// 벽면에서 팔로우 타겟을 살짝 띄우는 오프셋
+	_float fCameraSurfaceOffset = 0.05f;
+	_float fCameraMinDistance = 0.20f;
+	_float fDistance = { };
+	_float fFinalTargetDistance = fBestFollowTargetDistance;
+	for (auto& hit : sweepHits)
+	{
+		fDistance = hit.distance - fCameraSurfaceOffset;
+		if (fDistance < fFinalTargetDistance) {
+			if (fDistance < fCameraMinDistance) {
+				fDistance = fCameraMinDistance;
+			}
+			fFinalTargetDistance = fDistance;
+			break;
+		}
+	}
+
+	_float fSafeDistance = fBestFollowTargetDistance;
+	if (fSafeDistance < FLT_EPSILON3)
+	{
+		fSafeDistance = FLT_EPSILON3;
+	}
+
+	_float fBestFocalRatio = m_vFocalRatio.y * fFinalTargetDistance / fSafeDistance;
+
+	if (fBestFocalRatio < m_fFocalRatioMin) {
+		fBestFocalRatio = m_fFocalRatioMin;
+	} else if (fBestFocalRatio > m_vFocalRatio.y) {
+		fBestFocalRatio = m_vFocalRatio.y;
+	}
+
+	m_fFocalRatioTargetValue = fBestFocalRatio;
+
+	return vLookTargetWorldPos + vDir * fFinalTargetDistance;
+}
+_vector CCamPosition_Shoulder::Calc_DampingParentPos()
+{
+	_float duration = max(m_vDampingLerpTimer.y, FLT_EPSILON);
+	_float fTime = m_vDampingLerpTimer.x / duration;
+	fTime = CMyTools::Saturate(fTime); // 0~1
+
+	return XMVectorLerp(XMLoadFloat4(&m_vDampingStartPosition), XMLoadFloat4(&m_vDampingDestPosition), fTime);
+}
+void CCamPosition_Shoulder::Set_CameraShake(_float fXShock, _float fYShock)
+{
+	m_vAccRealDegrees.x = fXShock;
+	m_vAccRealDegrees.y = fYShock;
+}
+_vector CCamPosition_Shoulder::Get_ShoulderGlobalPos()
+{
+	// Right/Left 숄더를 로컬 X 부호로 결정
+	_float shoulderSideSign = (true == m_bRightShoulderActive) ? 1.f : -1.f;
+
+	_float3 shoulderLocalPosition = m_vShoulderLocalPos;
+	shoulderLocalPosition.x *= shoulderSideSign;
+
+	_vector shoulderLocalOffset = XMLoadFloat3(&shoulderLocalPosition);
+
+	// 카메라 회전(현재 마우스로 누적된 pitch/yaw)
+	_vector cameraRotationQuaternion = XMQuaternionRotationRollPitchYaw(
+		XMConvertToRadians(m_vAccRotDegrees.x + m_vAccRealDegrees.x),
+		XMConvertToRadians(m_vAccRotDegrees.y + m_vAccRealDegrees.y), 0.f
+	);
+
+	// 카메라 로컬 오프셋을 카메라 회전에 맞춰 월드로 회전
+	_vector shoulderWorldOffset = XMVector3Rotate(shoulderLocalOffset, cameraRotationQuaternion);
+
+	return shoulderWorldOffset;
+}
+
 
 HRESULT CCamPosition_Shoulder::Ready_Components(void* pArg)
 {
@@ -193,13 +322,15 @@ HRESULT CCamPosition_Shoulder::Ready_SubParts()
 		CCamPosition_Target::CAMERAPOSITION_TARGET_DESC Desc{};
 		Desc.pParentTransform = m_pTransformCom;
 		m_pTarget_LookPart = m_pGameInstance->Clone_Prototype< CCamPosition_Target>(g_iStaticLevel, &Desc);
+		m_pTarget_LookPart->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(-34.f, 5, -10.4f, 1.f));
 		m_pTarget_FollowPart = m_pGameInstance->Clone_Prototype< CCamPosition_Target>(g_iStaticLevel, &Desc);
+		m_pTarget_FollowPart->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(-34.f, 5, -11.4f, 1.f));
 	}
-
+	
 	CCamera_Gaze::CAMERA_GAZE_DESC CameraDesc{};
 	CameraDesc.fFovy = XMConvertToRadians(60.0f);
 	CameraDesc.fNear = 0.1f;
-	CameraDesc.fFar = 300.f;
+	CameraDesc.fFar = 500.f;
 	CameraDesc.fSpeedPerSec = 5.f;
 	CameraDesc.fRotationPerSec = XMConvertToRadians(90.f);
 	CameraDesc.pFollowTarget = m_pTarget_FollowPart;
@@ -210,28 +341,22 @@ HRESULT CCamPosition_Shoulder::Ready_SubParts()
 	CameraDesc.bEnableFollowLerp = false;
 	CameraDesc.bEnableLookLerp = false;
 	CameraDesc.vTransitionTime = { 0.f, 1.f };
-	CameraDesc.vFollowLerpTime = { 0.f, 0.16f };
-	CameraDesc.vLookLerpTime = { 0.f, 0.16f };
+	CameraDesc.vFollowLerpTime = { 0.f, TIMER_SHORT_LERP };
+	CameraDesc.vLookLerpTime = { 0.f, TIMER_SHORT_LERP };
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCamera_Gaze>(g_iStaticLevel, NEXT_LEVEL, LAYER_CAMERA, &CameraDesc, nullptr, &m_pBinded_Camera)))
 	{
 		return E_FAIL;
 	}
+	
 	m_pGameInstance->Add_Camera(g_iStaticLevel, m_pBinded_Camera, CAMERA_SHOULDER);
-
+	if (FAILED(m_pGameInstance->Bind_Camera(g_iStaticLevel, CAMERA_SHOULDER, true))) {
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
-void CCamPosition_Shoulder::Start_LerpShoulderPos()
-{
-	XMStoreFloat4(&m_StartPos, m_pTransformCom->Get_State(STATE::POSITION));
 
-	_vector vLook = XMVector3Normalize(XMLoadFloat3(&m_vShoulderPosRatio));
-	_vector vRotq = XMQuaternionRotationRollPitchYaw(0.f, XMConvertToRadians(m_vAccDegreeXY.y), 0.f);
-	vLook = XMVector3Normalize(XMVector3Rotate(vLook, vRotq));
-
-	XMStoreFloat4(&m_DestPos, m_pParentTransformCom->Get_State(STATE::POSITION) + XMVector3Normalize(vLook) * m_fShoulderDistance);
-}
 CCamPosition_Shoulder* CCamPosition_Shoulder::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CCamPosition_Shoulder* pInstance = new CCamPosition_Shoulder(pDevice, pContext);
@@ -271,10 +396,11 @@ void CCamPosition_Shoulder::Describe_Entity()
 	m_pTransformCom->Describe_Entity();
 
 	GUI::Text("fMouseSensor : %.1f", m_fMouseSensor);
-	GUI::SliderFloat("ShoulderDistance", &m_fShoulderDistance, 0.f, 10.f, "%.1f");
-	GUI::SliderFloat("BackFrontRatio", &m_fBackFrontRatio, 0.01f, 0.99f, "%.2f");
-	GUI::Text("Pitch Yaw : %f %f", m_vAccDegreeXY.x, m_vAccDegreeXY.y);
-	GUI::SliderFloat3("ShoulderPosRatio", (_float*)&m_vShoulderPosRatio, -2.f, 2.f, "%.1f");
+	GUI::SliderFloat("m_fFollowTargetIncludedAngleDegree", &m_fFollowTargetIncludedAngleDegree, -360.f, 360.f, "%.1f");
+	GUI::SliderFloat("m_fDefaultCameraBackToFrontRatio", &m_fDefaultCameraBackToFrontRatio, -1.f, 1.f);
+	GUI::SliderFloat("m_vFocalRatio", &m_vFocalRatio.x, 0.f, 1.f);
+	GUI::SliderFloat("m_fCameraFowardDistance", &m_fCameraFowardDistance, 0.f, 4.f);
+	//GUI::
 	GUI::End();
 }
 

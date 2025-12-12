@@ -64,10 +64,16 @@ void CCallBack_Playable_HitReport::onShapeHit(const PSX::PxControllerShapeHit& h
 			{
 			case PXOBJECT::END:
 				break;
-			default:
+			case PXOBJECT::BOX:
 			{
 				PSX::PxRigidDynamic* pDynamic = static_cast<PSX::PxRigidDynamic*>(pActor);
-				pDynamic->addForce(vDir * fLength * 100000.f, PSX::PxForceMode::eIMPULSE);
+				//pDynamic->setRigidBodyFlag(PSX::PxRigidBodyFlag::eKINEMATIC, false);
+				PSX::PxVec3 vCompressedDir = -vWorldNormal;
+				vCompressedDir.normalize();
+				pDynamic->addForce(vCompressedDir * fLength* 1000.f, PSX::PxForceMode::eFORCE);
+			} break;
+			default:
+			{
 			} break;
 			}
 		}	break;

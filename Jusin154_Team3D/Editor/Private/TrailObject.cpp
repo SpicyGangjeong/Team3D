@@ -93,7 +93,7 @@ void CTrailObject::Late_Update(_float fTimeDelta)
 		return;
 
 	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
-		m_pGameInstance->Add_RenderGroup(RENDER::EFFECT, this);
+		m_pGameInstance->Add_RenderGroup(m_TrailInfo.eRenderOrder, this);
 	}
 
 }
@@ -109,6 +109,9 @@ void CTrailObject::Set_Target(CTransform* pTargetTransform)
 
 void CTrailObject::Trail_Update(_fmatrix WorldMat, _float fTimeDelta)
 {
+	if (m_bVisible == false)
+		return;
+
 	m_pTrailCom->Trail_Update(fTimeDelta, WorldMat);
 }
 
@@ -365,7 +368,7 @@ HRESULT CTrailObject::Render()
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_POSTEX::TRAIL))))
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(m_TrailInfo.eShaderPass))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Bind_DepthStencil(m_pShaderCom, "g_DepthStencilTexture")))
@@ -484,19 +487,40 @@ void CTrailObject::Free()
 void CTrailObject::Describe_Entity()
 {
 
+	const char* pRenderNames[] = { "PRIORITY" , "SHADOW", "NONBLEND", "DECAL", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" ,"BLOOM" , "UI", "OCCLUSION"  , "PRESHADOW" , "UI_OVERLAY"};
+	const char* pEffectType[] = { "EFFECT" , "TRAIL" };
+	const char* pShaderPass[] = { "DEFAULT" , "SCISSOR" , "UI" , "UVMOVE" , "TRAIL" , "TRAIL_BLEND" , "TRAILWB_FOR_BLEND" , "TRAIL_BLUR",  "TRAIL_BLOOM" };
 	const char* pBloomType[] = { "NONE" , "BASIC" , "MUILTY" };
+
 	_int iCurrentBloomType = static_cast<_int>(m_TrailInfo.eBloomType);
+
+	_int iCurrentItem = static_cast<_int>(m_TrailInfo.eRenderOrder);
+	_int iCurrentPass = static_cast<_int>(m_TrailInfo.eShaderPass);
+
 
 	if (GUI::TreeNode("TRAIL"))
 	{
-		m_pTrailCom->Describe_Entity();
+		if (ImGui::Combo("Render Order", &iCurrentItem, pRenderNames, ENUM_CLASS(RENDER::END)))
+		{
+			m_TrailInfo.eRenderOrder = static_cast<RENDER>(iCurrentItem);
+		}
+		if (ImGui::Combo("Shader Pass", &iCurrentPass, pShaderPass, ENUM_CLASS(SHADER_PASS_POSTEX::END)))
+		{
+			m_TrailInfo.eShaderPass = static_cast<SHADER_PASS_POSTEX>(iCurrentPass);
+		}
 
+		m_pTrailCom->Describe_Entity();
 		m_pShaderCom->Describe_Entity();
 
-		if(GUI::InputInt("NumVertex", &m_TrailInfo.iNumVertex))
+		if (GUI::InputInt("NumVertex", &m_TrailInfo.iNumVertex))
 		{
-			m_pTrailCom->Reset_Trail();
+			
+		}
+
+		if(GUI::Button("Reset Trail"))
+		{
 			m_pTrailCom->ReStructVB(m_TrailInfo.iNumVertex);
+			m_pTrailCom->Reset_Trail();
 		}
 
 		GUI::Checkbox("Diffuse", &m_TrailInfo.isDiffuse);
@@ -573,12 +597,14 @@ void CTrailObject::Describe_Entity()
 				{
 					_string strName = m_pGameInstance->Asset_Description<CTexture>(ENUM_CLASS(LEVEL::EFFECT), "DIFFUSE_TEXTURE", (CComponent**)&m_pDiffuse_TextureCom, nullptr, this);
 					
+					if (strName != "") {
+						m_strTrailDiffuseName = strName;
+					}
+
 					GUI::TreePop();
 				}
 
-				if (strName != "") {
-					m_strTrailDiffuseName = strName;
-				}
+				
 
 				GUI::TreePop();
 			}

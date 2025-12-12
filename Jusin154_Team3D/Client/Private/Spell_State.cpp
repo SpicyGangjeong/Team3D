@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Spell_State.h"
 #include "GameInstance.h"
+#include "InfoInstance.h"
 
 CSpell_State::CSpell_State(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
@@ -8,7 +9,8 @@ CSpell_State::CSpell_State(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CSpell_State::CSpell_State(const CSpell_State& rhs)
-	:CElementObject(rhs)
+	:CElementObject(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -46,6 +48,9 @@ HRESULT CSpell_State::Initialize(void* pArg)
 	m_pVIBufferCom->Set_Cloned(true);
 	m_pVIBufferCom->Set_Pos(-185.f, 375.f, m_fOffSetX, m_fOffSetY, m_iCols);
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Slot_Hover"), [this](void* p) {this->Set_SkillType(*reinterpret_cast<_int*>(p)); });
+	m_pInfoInstance->Add_Event(TEXT("Spell_UnLock"), [this](void* p) {this->Spell_UnLock(*reinterpret_cast<_int*>(p)); });
+	Spell_Setting();
 	return S_OK;
 }
 
@@ -88,8 +93,13 @@ void CSpell_State::Update(_float fTimeDelta)
 			m_fAlpha = 0.f;
 		}
 	}
+
 	m_fTime += fTimeDelta * m_fTimeMult;
-	Hover();
+	if (m_bClick == false)
+	{
+		m_pVIBufferCom->Set_Hover_Index(m_iSpellType);
+	}
+
 	__super::Update(fTimeDelta);
 }
 
@@ -112,7 +122,7 @@ HRESULT CSpell_State::Render()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIINTANCE::ALPHABLEND))))
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIINTANCE::SPELL_LOCK))))
 	{
 		return E_FAIL;
 	}
@@ -152,21 +162,34 @@ void CSpell_State::SizeUpdate(_float fSizeX, _float fSizeY)
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
 }
 
-void CSpell_State::Hover()
+void CSpell_State::Click_Slot(_bool bClick)
 {
-	POINT ptMouse{};
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
-	_float2 fMouse;
-	fMouse.x = ptMouse.x - (g_iWinSizeX * 0.5f);
-	fMouse.y = -(ptMouse.y - (g_iWinSizeY * 0.5f));
+	if (bClick == true)
+	{
+		m_bClick = true;
+	}
+	else
+	{
+		m_bClick = false;
+	}
+}
 
-	// 엘리먼트의 월드 위치를 더해주면 엘리먼트 좌표계 기준이 됨
-	fMouse.x -= m_pOwner->Get_WorldPostion().m128_f32[0];
-	fMouse.y -= m_pOwner->Get_WorldPostion().m128_f32[1];
+void CSpell_State::Spell_Setting()
+{
+	for (_int i = 0; i < 26; ++i)
+	{
+		m_bLock[i] = m_pInfoInstance->Get_Spell_Info(i).bSpell_Lock;
+		if (m_bLock[i] == true)
+		{
+			m_pVIBufferCom->Set_Equip_Index(i);
+		}
+	}
+}
 
-	m_pVIBufferCom->Set_Mouse_Hover(fMouse);
-
+void CSpell_State::Spell_UnLock(_int iSpellIndex)
+{
+	m_pVIBufferCom->Set_Equip_Index(iSpellIndex);
+	m_bLock[iSpellIndex] = true;
 }
 
 HRESULT CSpell_State::Bind_ShaderResources()

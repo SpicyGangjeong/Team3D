@@ -21,8 +21,8 @@ HRESULT CLoadingWidget::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = 600.f;
-	Desc.fY = 0.f;
+	Desc.fX = 800.f;
+	Desc.fY = 400.f;
 	Desc.fSizeX = 200.f;
 	Desc.fSizeY = 200.f;
 
@@ -47,7 +47,7 @@ HRESULT CLoadingWidget::Initialize(void* pArg)
 	m_iImageFrameX = 6; // 이미지의 x 갯수
 	m_iImageFrameY = 6; // 이미지의 y 갯수
 
-	//m_bActive = true;
+	m_bActive = true;
 	return S_OK;
 }
 
@@ -189,7 +189,7 @@ HRESULT CLoadingWidget::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_LoadingWidget"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("LoadingWidget"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}

@@ -18,6 +18,8 @@
 #include "PhysX_Manager.h"
 #include "ThreadHolder.h"
 #include "Fog.h"
+#include "Resource_Manager.h"
+#include "Font_Manager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -49,8 +51,13 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 			}
 		}
 	}
+#ifdef 기무리
+	m_pThreadHolder = CThreadHolder::Create(12);
+#endif // 기무리
+#ifndef 기무리
+	m_pThreadHolder = CThreadHolder::Create(6);
+#endif // !기무리
 
-	m_pThreadHolder = CThreadHolder::Create( 6 );
 
 	if (nullptr == m_pThreadHolder) {
 		return E_FAIL;
@@ -108,30 +115,47 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 		return E_FAIL;
 	}
 
+	m_pResource_Manager = CResource_Manager::Create(*ppDevice, 1000);
+	if (nullptr == m_pResource_Manager) {
+		return E_FAIL;
+	}
+
+	m_pFont_Manager = CFont_Manager::Create(*ppDevice, *ppContext);
+	if (nullptr == m_pFont_Manager) {
+		return E_FAIL;
+	}
+
+
+	m_vViewPortSize = _float2((_float)EngineDesc.iWinSizeX, (_float)EngineDesc.iWinSizeY);
+
 	return S_OK;
 }
 
 void CGameInstance::Update_Engine(_float fTimeDelta)
 {
+	
+	_float fExcuteTimeDelta =  Update_SlowMotion(fTimeDelta);
+
 	m_pKey_Manager->Update();
 	m_pMouse_Manager->Update();
 	//m_pSound_Manager->Update();
 #ifdef _DEBUG
+	m_pResource_Manager->Describe_Entity();
 	m_pFog->Update_Fog();
 #endif // _DEBUG
 	m_pPicking->Update();
 
-	m_pObject_Manager->Priority_Update(fTimeDelta);
+	m_pObject_Manager->Priority_Update(fExcuteTimeDelta);
 
 	m_pPipeLine->Update();
 
-	m_pObject_Manager->Update(fTimeDelta);
+	m_pObject_Manager->Update(fExcuteTimeDelta);
 
-	m_pPhysX_Manager->Update(fTimeDelta);
+	m_pPhysX_Manager->Update(fExcuteTimeDelta);
 
-	m_pObject_Manager->Late_Update(fTimeDelta);
+	m_pObject_Manager->Late_Update(fExcuteTimeDelta);
 
-	m_pLevel_Manager->Update(fTimeDelta);
+	m_pLevel_Manager->Update(fExcuteTimeDelta);
 	m_pObject_Manager->Clear_DeadObj();
 
 	//m_pObstacle_Manager->Refresh_Region();
@@ -174,6 +198,23 @@ _int CGameInstance::Random_Int(_int iMin, _int iMax)
 	return iMin + (_int)(Random_Normal() * (iMax - iMin));
 }
 
+_int CGameInstance::Real_Random_Int(_int iMin, _int iMax)
+{
+	uniform_int_distribution<_int> rand(iMin, iMax);
+	return rand(m_Rng);
+}
+
+_float CGameInstance::Real_Random_Float (_float iMin, _float iMax)
+{
+	uniform_real_distribution<_float> rand(iMin, iMax);
+	return rand(m_Rng);
+}
+
+_float2 CGameInstance::Get_ViewPortSize()
+{
+	return m_vViewPortSize;
+}
+
 void CGameInstance::BillBoard(CTransform* pTransform)
 {
 	_matrix ScaleMatrix = {};
@@ -200,8 +241,39 @@ void CGameInstance::BillBoard(CTransform* pTransform)
 
 }
 
-#ifdef EDITOR_PROJECT
+void CGameInstance::SlowMotion(_float fSlowIntense, _float fTime)
+{
+	if (fTime <= 0 || fSlowIntense <= 0)
+		return;
 
+	m_isSlowMotion = true;
+	m_vSlowTime = _float2(0.f, fTime);
+	m_fSlowIntense = fSlowIntense;
+}
+
+_float CGameInstance::Update_SlowMotion(_float fTimeDelta)
+{
+	_float fExcuteTimeDelta = {};
+
+	if (m_isSlowMotion == false)
+		return fTimeDelta;
+
+	m_vSlowTime.x += fTimeDelta;
+
+	if (m_vSlowTime.x >= m_vSlowTime.y) // 시간을 넘겼다면
+	{
+		m_isSlowMotion = false;
+		m_vSlowTime.x = 0.f;
+	}
+	else
+	{
+		fExcuteTimeDelta = m_fSlowIntense * fTimeDelta;
+	}
+
+	return fExcuteTimeDelta;
+}
+
+#ifdef EDITOR_PROJECT
 
 void CGameInstance::Save_ModelFilePath(const _char* FilePath)
 {
@@ -282,6 +354,9 @@ void CGameInstance::Compute_FrameCount()
 	m_fTimer_LateUpdate = Get_TimeDelta(TEXT("Timer_LateUpdate"));
 	m_fTimer_DrawCall = Get_TimeDelta(TEXT("Timer_DrawCall"));
 	m_fTimer_Present = Get_TimeDelta(TEXT("Timer_Present"));
+	m_fTimer_Picking = Get_TimeDelta(TEXT("Timer_Picking"));
+	m_fTimer_PhysX = Get_TimeDelta(TEXT("Timer_PhysX"));
+	m_fTimer_Level = Get_TimeDelta(TEXT("Timer_Level"));
 	m_fTimer_FrameCount = Get_TimeDelta(TEXT("Timer_FrameCount"));
 #endif // _DEBUG
 }
@@ -293,39 +368,60 @@ void CGameInstance::Present_TimeCost() const
 		+ m_fTimer_Update
 		+ m_fTimer_LateUpdate
 		+ m_fTimer_DrawCall
-		+ m_fTimer_Present;
+		+ m_fTimer_Present
+		+ m_fTimer_Picking
+		+ m_fTimer_PhysX
+		+ m_fTimer_Level;
 
 	GUI::PushItemWidth(80);
 	GUI::Begin("Previous_Frame_Timer");
+	if (GUI::CollapsingHeader("Detail"))
 	{
-		GUI::ProgressBar(m_fTimer_PriorityUpdate / fTotal, ImVec2(200.f, 0.f));
-		GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-		GUI::Text("Priority_Update %d", int(m_fTimer_PriorityUpdate / fTotal * 100.f));
-	}
-	{
-		GUI::ProgressBar(m_fTimer_Update / fTotal, ImVec2(200.f, 0.f));
-		GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-		GUI::Text("Update %d", int(m_fTimer_Update / fTotal * 100.f));
-	}
-	{
-		GUI::ProgressBar(m_fTimer_LateUpdate / fTotal, ImVec2(200.f, 0.f));
-		GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-		GUI::Text("Late_Update %d", int(m_fTimer_LateUpdate / fTotal * 100.f));
-	}
-	{
-		GUI::ProgressBar(m_fTimer_DrawCall / fTotal, ImVec2(200.f, 0.f));
-		GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-		GUI::Text("DrawCall %d", int(m_fTimer_DrawCall / fTotal * 100.f));
-	}
-	{
-		GUI::ProgressBar(m_fTimer_Present / fTotal, ImVec2(200.f, 0.f));
-		GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-		GUI::Text("Present %d", int(m_fTimer_Present / fTotal * 100.f));
-	}
-	{
-		GUI::ProgressBar(fTotal / m_fTimer_FrameCount, ImVec2(200.f, 0.f));
-		GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-		GUI::Text("Timer_Occupancy %d", int(m_fTimer_Present / fTotal * 100.f));
+		{
+			GUI::ProgressBar(m_fTimer_PriorityUpdate / fTotal, ImVec2(200.f, 0.f));
+			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+			GUI::Text("Priority_Update %d", int(m_fTimer_PriorityUpdate / fTotal * 100.f));
+		}
+		{
+			GUI::ProgressBar(m_fTimer_Update / fTotal, ImVec2(200.f, 0.f));
+			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+			GUI::Text("Update %d", int(m_fTimer_Update / fTotal * 100.f));
+		}
+		{
+			GUI::ProgressBar(m_fTimer_LateUpdate / fTotal, ImVec2(200.f, 0.f));
+			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+			GUI::Text("Late_Update %d", int(m_fTimer_LateUpdate / fTotal * 100.f));
+		}
+		{
+			GUI::ProgressBar(m_fTimer_Picking / fTotal, ImVec2(200.f, 0.f));
+			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+			GUI::Text("Picking %d", int(m_fTimer_Picking / fTotal * 100.f));
+		}
+		{
+			GUI::ProgressBar(m_fTimer_PhysX / fTotal, ImVec2(200.f, 0.f));
+			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+			GUI::Text("PhysX %d", int(m_fTimer_PhysX / fTotal * 100.f));
+		}
+		{
+			GUI::ProgressBar(m_fTimer_Level / fTotal, ImVec2(200.f, 0.f));
+			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+			GUI::Text("Level %d", int(m_fTimer_Level / fTotal * 100.f));
+		}
+		{
+			GUI::ProgressBar(m_fTimer_DrawCall / fTotal, ImVec2(200.f, 0.f));
+			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+			GUI::Text("DrawCall %d", int(m_fTimer_DrawCall / fTotal * 100.f));
+		}
+		{
+			GUI::ProgressBar(m_fTimer_Present / fTotal, ImVec2(200.f, 0.f));
+			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+			GUI::Text("Present %d", int(m_fTimer_Present / fTotal * 100.f));
+		}
+		{
+			GUI::ProgressBar(fTotal / m_fTimer_FrameCount, ImVec2(200.f, 0.f));
+			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+			GUI::Text("Timer_Occupancy %d", int(m_fTimer_Present / fTotal * 100.f));
+		}
 	}
 	GUI::Text("GameInstance RefCNT : %d", m_iRefCnt.load());
 	static float values[60] = {};
@@ -434,6 +530,11 @@ HRESULT CGameInstance::Add_RenderGroup(RENDER eRenderGroup, CGameObject* pRender
 	return m_pRenderer->Add_RenderGroup(eRenderGroup, pRenderObject);
 }
 
+void CGameInstance::Render_PreShadow()
+{
+	return m_pRenderer->Render_PreShadow();
+}
+
 void CGameInstance::Set_Transform(D3DTS eState, _fmatrix TransformStateMatrix)
 {
 	m_pPipeLine->Set_Transform(eState, TransformStateMatrix);
@@ -474,9 +575,24 @@ _bool CGameInstance::isIn_LocalFrustum(_fvector vLocalPos, _float fRadius)
 	return m_pPipeLine->isIn_LocalFrustum(vLocalPos, fRadius);
 }
 
+HRESULT CGameInstance::Bind_GlobalSRV(CShader* pShader, const _tchar* wszKeyGlobalSRV, const _char* pConstantName)
+{
+	return m_pPipeLine->Bind_GlobalSRV(pShader, wszKeyGlobalSRV, pConstantName);
+}
+
+HRESULT CGameInstance::Load_GlobalSRV(const _tchar* wszKeyGlobalSRV, filesystem::path pathSRVFolder)
+{
+	return m_pPipeLine->Load_GlobalSRV(wszKeyGlobalSRV, pathSRVFolder);
+}
+
 void CGameInstance::Add_Light(_uint _iCurrentLevel, CLight* _pLight)
 {
 	m_pLight_Manager->Add_Light(_iCurrentLevel, _pLight);
+}
+
+void CGameInstance::Add_Light_Group(_uint _iCurrentLevel, CLight* _pLight)
+{
+	m_pLight_Manager->Add_Light_Group(_iCurrentLevel, _pLight);
 }
 
 void CGameInstance::Delete_Light(_uint _iCurrentLevel, CLight* _pLight)
@@ -569,6 +685,10 @@ HRESULT CGameInstance::Finish_RenderTarget(CVIBuffer_Rect* pVIBuffer, CShader* p
 {
 	return m_pRenderTarget_Manager->Finish_RenderTarget(pVIBuffer, pShader, wstrRenderTargetOriginal, wstrRenderTargetBloomed, ePass);
 }
+HRESULT CGameInstance::Bind_CS_RenderTarget(_uint iIndex, const _wstring& strTargetTag)
+{
+	return m_pRenderTarget_Manager->Bind_CS_RenderTarget(iIndex, strTargetTag);
+}
 #ifdef _DEBUG
 void CGameInstance::RenderTarget_Debuger()
 {
@@ -603,6 +723,10 @@ HRESULT CGameInstance::IsBinded_Camera(const _wstring& strCameraKey)
 _vector CGameInstance::Get_CameraLook()
 {
 	return m_pCamera_Manager->Get_CameraLook();
+}
+_float CGameInstance::Get_CameraFov()
+{
+	return m_pCamera_Manager->Get_CameraFov();
 }
 const _float* CGameInstance::Get_CurrentCameraFar()
 {
@@ -683,7 +807,7 @@ void CGameInstance::RegistHeight(const _tchar* pName, PSX::PxHeightFieldDesc& De
 PSX::PxRigidDynamic* CGameInstance::Add_DynamicActor(CRigidBody_Dynamic& RigidBody)
 {
 	return m_pPhysX_Manager->Add_DynamicActor(RigidBody);
-}
+	}
 PSX::PxRigidStatic* CGameInstance::Add_StaticActor(CRigidBody_Static& RigidBody)
 {
 	return m_pPhysX_Manager->Add_StaticActor(RigidBody);
@@ -696,9 +820,17 @@ _bool CGameInstance::SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir,
 {
 	return m_pPhysX_Manager->SphereCast(fRadius, vStartPos, vDir, fDistance, flagHitsData, flagQuery, hitBuffer);
 }
-_bool CGameInstance::SphereCast(_float fRadius, _fvector vStartPos, _fvector vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
+_bool CGameInstance::SphereCast(_float fRadius, _fvector vStartPos, _gvector vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
 {
 	return m_pPhysX_Manager->SphereCast(fRadius, vStartPos, vDir, fDistance, flagHitsData, flagQuery, hitBuffer);
+}
+_bool CGameInstance::RayCast(_float3 _vStartPos, _float3 _vDir, _float fDistance, PSX::PxRaycastHit* pRayHitArray, _uint iMaxHitCapacity, _uint& iOutHitCount)
+{
+	return m_pPhysX_Manager->RayCast(_vStartPos, _vDir, fDistance, pRayHitArray, iMaxHitCapacity, iOutHitCount);
+}
+_bool CGameInstance::RayCast(_fvector _vStartPos, _gvector _vDir, _float fDistance, PSX::PxRaycastHit* pRayHitArray, _uint iMaxHitCapacity, _uint& iOutHitCount)
+{
+	return m_pPhysX_Manager->RayCast(_vStartPos, _vDir, fDistance, pRayHitArray, iMaxHitCapacity, iOutHitCount);
 }
 PSX::PxController* CGameInstance::Add_CapsuleController(PSX::PxCapsuleControllerDesc& Desc)
 {
@@ -763,7 +895,14 @@ HRESULT CGameInstance::Bind_FogValue(class CShader* pShader)
 {
 	return m_pFog->Bind_FogValue(pShader);
 }
+ID3D11ShaderResourceView* CGameInstance::Add_Resource(const _char* pFilePath)
+{
+	return m_pResource_Manager->Add_Texture(pFilePath);
+}
+
 #pragma endregion // FOG
+
+#pragma region INPUT
 
 bool		CGameInstance::Key_Pressing(int _iKey)
 {
@@ -802,9 +941,9 @@ _bool CGameInstance::Mouse_Up(int _iKey)
 }
 _bool CGameInstance::Mouse_Down(int _iKey)
 {
-	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+	//if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
 		return m_pKey_Manager->Mouse_Down(_iKey);
-	}
+	//}
 	return false;
 }
 _bool CGameInstance::Mouse_StartMove()
@@ -868,12 +1007,44 @@ _bool	CGameInstance::Toggle_MouseCenter()
 	return m_pMouse_Manager->Toggle_MouseCenter();
 }
 
+#pragma endregion // INPUT
+
+#pragma region FONT_MANAGER
+
+HRESULT CGameInstance::Add_Font(const _wstring& strFontTag, const _tchar* pFontFilePath)
+{
+	return m_pFont_Manager->Add_Font(strFontTag, pFontFilePath);
+}
+
+HRESULT CGameInstance::Render_Text(const _wstring& strFontTag, const _tchar* pText, const _float2& vPosition, _fvector vColor, _float vScale)
+{
+	return m_pFont_Manager->Render(strFontTag, pText, vPosition, vColor, vScale);
+}
+
+HRESULT CGameInstance::Render_Rotation_Text(const _wstring& strFontTag, const _tchar* pText, const _float2& vPosition, _fvector vColor, _float Rotation, _float vScale)
+{
+	return m_pFont_Manager->Render_Rotate(strFontTag, pText, vPosition, vColor, Rotation, vScale);
+}
+
+HRESULT CGameInstance::Perspective_Render_Text(_matrix View, _matrix Proj, const _wstring& strFontTag, const _tchar* pText, const _fvector& vPosition, _fvector vColor, _float vScale)
+{
+	return m_pFont_Manager->Perspective_Render(View, Proj, strFontTag, pText, vPosition, vColor, vScale);
+}
+
+_float CGameInstance::FontSizeX(const _wstring& strFontTag, const _tchar* pText)
+{
+	return m_pFont_Manager->FontSizeX(strFontTag, pText);
+}
+
+#pragma endregion
+
 void CGameInstance::Release_Engine()
 {
 	SAFE_RELEASE(m_pThreadHolder);
 
 	DestroyInstance();
 
+	SAFE_RELEASE(m_pFont_Manager);
 	SAFE_RELEASE(m_pFog);
 	SAFE_RELEASE(m_pPicking);
 	SAFE_RELEASE(m_pCollider_Manager);
@@ -890,6 +1061,7 @@ void CGameInstance::Release_Engine()
 	SAFE_RELEASE(m_pLevel_Manager);
 	SAFE_RELEASE(m_pPrototype_Manager);
 	SAFE_RELEASE(m_pLight_Manager); // Light Manager�� m_pObject_Manager ���� ���� �ҷ����� 
+	SAFE_RELEASE(m_pResource_Manager);
 	SAFE_RELEASE(m_pGraphic_Device);
 }
 

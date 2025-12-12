@@ -90,7 +90,10 @@ void CSpell_Hover_Effect::Update(_float fTimeDelta)
 			m_fAlpha = 0.f;
 		}
 	}
-	m_pVIBufferCom->Set_Hover_Index(m_iSpellType);
+	if (m_bClick == false)
+	{
+		m_pVIBufferCom->Set_Hover_Index(m_iSpellType);
+	}
 	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
 }
@@ -152,6 +155,18 @@ void CSpell_Hover_Effect::SizeUpdate(_float fSizeX, _float fSizeY)
 	m_fSizeX = fSizeX;
 	m_fSizeY = fSizeY;
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
+}
+
+void CSpell_Hover_Effect::Click_Slot(_bool bClick)
+{
+	if (bClick == true)
+	{
+		m_bClick = true;
+	}
+	else
+	{
+		m_bClick = false;
+	}
 }
 
 HRESULT CSpell_Hover_Effect::Bind_ShaderResources()

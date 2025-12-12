@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Shadow.h"
 #include "Shader.h"
 
@@ -15,6 +15,13 @@ HRESULT CShadow::Ready_Shadow_Light(const SHADOW_LIGHT_DESC& Desc)
 
 	XMStoreFloat4x4(&m_TransformationMatrices[ENUM_CLASS(D3DTS::PROJ)],
 		XMMatrixOrthographicLH(m_Desc.fWidth, m_Desc.fHeight, m_Desc.fNear, m_Desc.fFar));
+
+	XMStoreFloat4x4(&m_TransformationMatrices[ENUM_CLASS(D3DTS::VIEW_INV)],
+		XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_TransformationMatrices[ENUM_CLASS(D3DTS::VIEW)])));
+
+	XMStoreFloat4x4(&m_TransformationMatrices[ENUM_CLASS(D3DTS::PROJ_INV)],
+		XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_TransformationMatrices[ENUM_CLASS(D3DTS::PROJ)])));
+
 	return S_OK;
 }
 

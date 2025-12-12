@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "MiniMap_TrimBorder.h"
 #include "GameInstance.h"
+#include "InfoInstance.h"
 
 CMiniMap_TrimBorder::CMiniMap_TrimBorder(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
@@ -8,7 +9,8 @@ CMiniMap_TrimBorder::CMiniMap_TrimBorder(ID3D11Device* pDevice, ID3D11DeviceCont
 }
 
 CMiniMap_TrimBorder::CMiniMap_TrimBorder(const CMiniMap_TrimBorder& rhs)
-	:CElementObject(rhs)
+	:CElementObject(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -40,8 +42,6 @@ HRESULT CMiniMap_TrimBorder::Initialize(void* pArg)
 	m_fTimeMult = 3.f;
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 3.f;
-
-	m_bActive = true;
 	return S_OK;
 }
 
@@ -84,7 +84,7 @@ void CMiniMap_TrimBorder::Update(_float fTimeDelta)
 			m_fAlpha = 0.f;
 		}
 	}
-
+	m_fAngle = -atan2(m_pInfoInstance->Get_CameraCoordinateSystem().first.x, m_pInfoInstance->Get_CameraCoordinateSystem().first.z);
 	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
 }
@@ -106,7 +106,7 @@ HRESULT CMiniMap_TrimBorder::Render()
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::ALPHABLEND)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::ROTATION)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
@@ -159,6 +159,10 @@ HRESULT CMiniMap_TrimBorder::Bind_ShaderResources()
 		return E_FAIL;
 	}
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fCanvasAlpha", &m_fCanvasAlpha, sizeof(_float))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fMapAngle", &m_fAngle, sizeof(_float))))
 	{
 		return E_FAIL;
 	}

@@ -10,6 +10,7 @@
 
 CDecendoSide::CDecendoSide(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEffect_Container{ pDevice, pContext }
+
 {
 }
 
@@ -45,7 +46,18 @@ HRESULT CDecendoSide::Initialize(void* pArg)
 	SAFE_ADDREF(m_pWandLight);
 	SAFE_ADDREF(m_pWandTrail);
 
-	m_fDuration = 1.f;
+	m_fDuration = 2.f;
+
+	m_Events.emplace(0.6f, [&]() {
+		CWand* pWand = static_cast<CWand*>(m_pOwner);
+
+		if (pWand == nullptr)
+			return;
+
+		m_isTrailEnd = true;
+
+		XMStoreFloat4x4(&m_TrailStopMat, pWand->Get_WorldMatrix());
+		});
 
 	return S_OK;
 }
@@ -73,7 +85,8 @@ void CDecendoSide::Update(_float fTimeDelta)
 
 	m_pWandLight->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
 
-	m_pWandTrail->Get_Component<CTrail>()->Trail_Update(fTimeDelta, pWand->Get_WorldMatrix());
+	_matrix TrailMat = m_isTrailEnd ? XMLoadFloat4x4(&m_TrailStopMat) : pWand->Get_WorldMatrix();
+	m_pWandTrail->Trail_Update(TrailMat, fTimeDelta);
 
 }
 
@@ -87,24 +100,18 @@ void CDecendoSide::Late_Update(_float fTimeDelta)
 
 }
 
-HRESULT CDecendoSide::Pre_Setting(CGameObject* pObject)
+HRESULT CDecendoSide::Pre_Setting(CGameObject* pObject, void* pArg)
 {
-	if (pObject == nullptr)
+	if (FAILED(__super::Pre_Setting(pObject, nullptr)))
 		return E_FAIL;
-
-	m_pOwner = pObject;
-
-	Reset_EffectParts();
-
-	m_fAccTime = 0.f;
-	__super::m_fAccTime = 0.f;
-	m_fPreAccTime = 0.f;
 
 
 	CWand* pWand = static_cast<CWand*>(m_pOwner);
 
 	if (pWand == nullptr)
 		return E_FAIL;
+
+	m_isTrailEnd = false;
 
 	m_pWandLight->Set_Visible(true);
 
@@ -115,9 +122,6 @@ HRESULT CDecendoSide::Pre_Setting(CGameObject* pObject)
 	/*_vector pPos = pPlayer->Get_WandPos().r[3];*/
 
 	m_pWandLight->Get_Component<CTransform>()->Set_State(STATE::POSITION, pWand->Get_WorldPostion());
-
-
-	m_bVisible = true;
 
 	return S_OK;
 }

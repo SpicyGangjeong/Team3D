@@ -25,12 +25,6 @@ public:
 	virtual HRESULT Render() override;
 	virtual _vector Get_WorldPostion() override;
 
-//public:
-//	virtual const SPELLINFO Get_Info(_int Index) override;
-//
-//public:
-//	virtual void Set_SkillType(_int eType);
-
 private:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT	Ready_Components(void* pArg) override;
@@ -43,8 +37,11 @@ private:
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
+	CInfoInstance* m_pInfoInstance = { nullptr };
+
 	_float	m_fStertTimer{};
 	_int	m_iPerIndex{};
+
 	_bool	m_bStart = { false };
 
 public:

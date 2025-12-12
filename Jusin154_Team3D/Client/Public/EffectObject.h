@@ -52,7 +52,6 @@ public:
 		_bool   isBlur = {};
 		_bool   isBillboard = {};
 
-
 		_float4 vEmissive = { 0.f ,0.f ,0.f ,0.f };
 		_float  fDiffuseAlpha = { 1.f };
 		_float  fBlurIntensity = {};
@@ -86,24 +85,52 @@ public:
 
 		SHADER_PASS_INSTANCE_MODEL eShaderPass = { SHADER_PASS_INSTANCE_MODEL::NON_NOMALMAP };
 
-		_bool   isBlurNoEmissive = {};
+		_bool       isBlurNoEmissive = {};
+		_bool	    isTexBlur = {};
+		_bool       isBlurDissolve = {};
+		_bool       isBlurReverseDissolve = {};
 
-		_bool	isTexBlur = {};
-		_bool   isBlurDissolve = {};
-		_bool   isBlurReverseDissolve = {};
+		_float      fBluringStrength = { 0.01f };
 
-		_float  fBluringStrength = { 0.01f };
+		_bool       isBloom = {};
+		_bool       isBloomDissolve = {};
+		_bool       isBloomReverseDissolve = {};
+		_float      fBloomStrength = {};
+		BLOOM_TYPE  eBloomType = {};
 
 
-		_bool   isBloom = {};
+		_float		fDissolveDelay = {};
+		_float		fReverseDissolveDelay = {};
+		_float2		vDissolveUVGainAmount = {};
+		_bool		isDissolveMove = {};
 
-		_bool   isBloomDissolve = {};
-		_bool   isBloomReverseDissolve = {};
+		_float3		vDissolveValue = {};
 
-		_float  fBloomStrength = {};
 
-		BLOOM_TYPE eBloomType = {};
+		_float2		vPadding0 = {};
 
+		_float      fLightDeley = {};
+		_float		fLightIntensity = {};
+		_float		isLightTime = { 0.f };
+		_bool		isLightDissolve = {};
+
+		_bool		isPadding0 = {};
+
+		_float4     vDissolveColor = {};
+		_float2     vDissolveColorCut = {};
+
+		_float		fEmissiveColorCut = {};
+
+		_float2     vPadding1 = {};
+		_float4     vNoiseColor = {};
+		_float4     vPadding3 = {};
+		_float4     vPadding4 = {};
+		_float4     vPadding5 = {};
+
+		_bool		isPadding1 = {};
+		_bool		isPadding2 = {};
+		_bool		isPadding3 = {};
+		_bool		isPadding4 = {};
 	}EFFECT_INFO;
 
 
@@ -122,10 +149,9 @@ public:
 public:
 	HRESULT Load(const _char* pFilePath, LEVEL eLevel);
 
-	void	Set_Dissolve(_bool isDissolve)
-	{
-		m_EffectInfo.isDissolve = isDissolve;
-	}	
+	void    Disable_Light();
+	void    Add_Light();
+	void    FollowParents(const _float4x4* pParentsMat, const _float4x4* pOffsetMat = nullptr);
 protected:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT Ready_Components(void* pArg) override;
@@ -145,6 +171,8 @@ protected:
 
 	CInstance_Model* m_pInstance_ModelCom = { nullptr };
 
+	const _float4x4* m_pParentMatrix = { nullptr };
+	_float4x4 m_FinalParentMatrix;
 
 protected:
 	EFFECT_INFO m_EffectInfo = {};

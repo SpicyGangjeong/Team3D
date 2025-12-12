@@ -92,19 +92,10 @@ void CRevelio::Late_Update(_float fTimeDelta)
 
 }
 
-HRESULT CRevelio::Pre_Setting(CGameObject* pObject)
+HRESULT CRevelio::Pre_Setting(CGameObject* pObject, void* pArg)
 {
-	if (pObject == nullptr)
+	if (FAILED(__super::Pre_Setting(pObject)))
 		return E_FAIL;
-
-	m_pOwner = pObject;
-
-
-	Reset_EffectParts();
-
-	m_fAccTime = 0.f;
-	__super::m_fAccTime = 0.f;
-	m_fPreAccTime = 0.f;
 
 
 	CPlayer* pPlayer = static_cast<CPlayer*>(m_pOwner);
@@ -128,7 +119,6 @@ HRESULT CRevelio::Pre_Setting(CGameObject* pObject)
 	Get_PartObject<CEffectParts>("Revelio_Ring")->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
 	Get_PartObject<CEffectParts>("Revelio_Ring")->Set_Visible(true);
 
-	m_bVisible = true;
 
 	return S_OK;
 }
