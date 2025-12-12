@@ -198,10 +198,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Box_Splesh.h" />
     <ClInclude Include="..\Public\StunEffect.h" />
     <ClInclude Include="..\Public\State_Broom_Dismount.h" />
-    <ClInclude Include="..\Public\State_Broom_Ride_Move.h" />
     <ClInclude Include="..\Public\State_Shield.h" />
-    <ClInclude Include="..\Public\StunEffect.h" />
-    <ClInclude Include="..\Public\State_Broom_Dismount.h" />
     <ClInclude Include="..\Public\State_Broom_Fly.h" />
     <ClInclude Include="..\Public\State_Broom_Hover.h" />
     <ClInclude Include="..\Public\State_Broom_Ride_Move.h" />
