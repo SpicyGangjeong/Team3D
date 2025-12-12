@@ -160,11 +160,11 @@ void CTroll::Late_Update(_float fTimeDelta)
 	if (true == m_pCharacter_Controller->IsActive()) {
 		m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
 	}
-	else {
+	else if (true == m_pRigidBody->IsActive()) {
 		m_pTransformCom->Set_WorldMatrix(m_pRigidBody->Get_Actor()->getGlobalPose());
 	}
 
-	if (m_bLookAt) {
+	if (true == m_bLookAt) {
 		m_pTransformCom->LookAt_Lerp(XMLoadFloat4(&m_vTargetPos), fTimeDelta, 3.f);
 	}
 
