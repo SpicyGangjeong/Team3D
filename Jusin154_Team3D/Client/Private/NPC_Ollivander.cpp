@@ -141,6 +141,7 @@ HRESULT CNPC_Ollivander::Initialize(void* pArg)
 		return E_FAIL;
 	}
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(40.f, 4.f, 68.9f, 1.f));
+	m_pModelCom->Set_AnimationIndex(m_pGameInstance->Random_Int(0, 19), false);
 	return S_OK;
 }
 
