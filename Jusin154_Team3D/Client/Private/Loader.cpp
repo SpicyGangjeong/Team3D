@@ -128,7 +128,7 @@
 #include "EffectPool.h"
 #include "Levioso.h"
 #include "Lumos.h"
-
+#include "Goblin_Teleport.h"
 
 
 #include "TrollSwing.h"
@@ -1641,6 +1641,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Teleport>(NEXT_LEVEL, CGoblin_Teleport::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	
 	if (FAILED(m_pGameInstance->Add_Prototype<CEffectPool>(g_iStaticLevel, CEffectPool::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}

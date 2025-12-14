@@ -326,6 +326,11 @@ void CGoblin_Mage::Behavior_BlinkEnter()
 
 			m_pCharacter_Controller->Set_Position(vFinalPos); }
 	, 0.99f);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			m_pEffectPool->Use_Skill(SKILL_TYPE::GOBILN_TELEPORT, this);
+		}, 0.1f);
 }
 
 HRESULT CGoblin_Mage::Behavior_BlinkExitCheck(_float fTimeDelta)
