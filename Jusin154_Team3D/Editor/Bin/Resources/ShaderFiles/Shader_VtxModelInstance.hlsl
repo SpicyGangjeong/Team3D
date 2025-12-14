@@ -72,17 +72,17 @@ float2 g_vDiffuseUVGainAmount;
 float2 g_vMaskingUVGainAmount;
 float2 g_vNoiseUVGainAmount;
 
-int    g_iMaskMoveLerpOption;
-int    g_iDiffuseMoveLerpOption;
-int    g_iNoiseMoveLerpOption;
+int g_iMaskMoveLerpOption;
+int g_iDiffuseMoveLerpOption;
+int g_iNoiseMoveLerpOption;
 
 //
 float2 g_vDistortionTime;
 float2 g_vMaskDistortionUVGainAmount;
 
 
-int    g_iMaskDistortionMoveLerpOption;
-int    g_iDiffuseDistortionMoveLerpOption;
+int g_iMaskDistortionMoveLerpOption;
+int g_iDiffuseDistortionMoveLerpOption;
 //
 
 float2 g_vUVCutting;
@@ -90,12 +90,12 @@ float2 g_vUVMaskCutting;
 
 float g_fDiffuseAlpha;
 
-int   g_iBlurWeight; // 블러 강도
+int g_iBlurWeight; // 블러 강도
 float g_fBlurIntensity; //블러 세기
 float g_fNoiseDistortionIntensity; // 디스토션 왜곡 세기
 
 float4 g_vEmissive;
-float  g_fEmissiveStrength;
+float g_fEmissiveStrength;
     
 float g_fSoftenExp;
 float g_fSoftStrength;
@@ -137,18 +137,18 @@ bool g_isBlurReverseDissolve;
 
 float g_fBluringStrength;
 
-bool    g_isBloomDissolve;
-bool    g_isBloomReverseDissolve;
+bool g_isBloomDissolve;
+bool g_isBloomReverseDissolve;
 
-float   g_fBloomStrength;
-int     g_iBloomType;
+float g_fBloomStrength;
+int g_iBloomType;
 
 float g_fFar;
 
-float   g_fDissolveDelay;
-float   g_fReverseDissolveDelay;
-float2  g_vDissolveUVGainAmount;
-bool    g_isDissolveMove;
+float g_fDissolveDelay;
+float g_fReverseDissolveDelay;
+float2 g_vDissolveUVGainAmount;
+bool g_isDissolveMove;
 
 float g_fDissolveMaskEdge;
 float g_fDissolveSoftMask;
@@ -263,7 +263,6 @@ struct PS_OUT
 {
     float4 vDiffuse : SV_TARGET0;
     float4 vRevealage : SV_TARGET1;
-    float4 vColorTarget : SV_TARGET2;
 };
 
 float4 DrawEffect(PS_IN In)
@@ -274,7 +273,7 @@ float4 DrawEffect(PS_IN In)
     vector vMtrlDissolve;
     vector vMtrlDistortion;
     
-    float  fAnimIndex = g_ParticleValue[In.iGPUIndex].vAniIndex.x;
+    float fAnimIndex = g_ParticleValue[In.iGPUIndex].vAniIndex.x;
     float2 vDiffuseTime = g_ParticleValue[In.iGPUIndex].vDiffuseUVMoveTime;
     float2 vMaskingTime = g_ParticleValue[In.iGPUIndex].vMaskingUVMoveTime;
     float2 vNoiseUVMoveTime = g_ParticleValue[In.iGPUIndex].vNoiseUVMoveTime;
@@ -456,7 +455,7 @@ float4 DrawEffect(PS_IN In)
     
     
     if (g_isDissolve == true)
-    {        
+    {
         float fTimeX = (In.vLifeTime.x - g_fDissolveDelay);
         float fTimeY = (In.vLifeTime.y - g_fDissolveDelay);
         float fTimeRatio = 0;
@@ -481,14 +480,14 @@ float4 DrawEffect(PS_IN In)
             {
                 vMtrlDiffuse.a *= In.vLifeTime.x / In.vLifeTime.y;
 
-            }    
+            }
            
         }
         
         float2 vDissolveUV = In.vTexcoord + SelectLerpUV(g_vDissolveUVGainAmount, (vDissolveUVMoveTime.x / vDissolveUVMoveTime.y), 0);
             
         if (g_isDissolveMove)
-            vMtrlDissolve = g_DissolveTexture.Sample(DefaultSampler, vDissolveUV );
+            vMtrlDissolve = g_DissolveTexture.Sample(DefaultSampler, vDissolveUV);
         else
             vMtrlDissolve = g_DissolveTexture.Sample(DefaultSampler, In.vTexcoord);
          
@@ -557,12 +556,12 @@ float4 DrawEffect(PS_IN In)
     return vMtrlDiffuse;
 }
 
-float4 EmissiveDraw(PS_IN In , float4 Diffuse)
+float4 EmissiveDraw(PS_IN In, float4 Diffuse)
 {
     float4 vEmissiveMtrl = vector(0.f, 0.f, 0.f, 0.f);
     float2 CenteredUV = In.vTexcoord - 0.5f;
-    float  fEmissive = 0.f;
-    float  fEmissiveStrength = g_fEmissiveStrength;
+    float fEmissive = 0.f;
+    float fEmissiveStrength = g_fEmissiveStrength;
     
     if (g_fEmissiveColorCut >= FLT_EPSILON5)
     {
@@ -655,13 +654,13 @@ PS_OUT PS_MAIN(PS_IN In)
     
     vMtrlDiffuse.rgb += EmissiveDraw(In, vMtrlDiffuse).rgb;
 
-    Out.vDiffuse = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vDiffuse = vMtrlDiffuse;
     
     return Out;
 }
 
 PS_OUT PS_NON_NORMALMAP(PS_IN In)
-{  
+{
     PS_OUT Out;
     
     vector vMtrlDiffuse;
@@ -679,12 +678,10 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     
     vMtrlDiffuse.rgb += EmissiveDraw(In, vMtrlDiffuse).rgb;
     
-    Out = float4(0.f, 0.f, 0.f, 0.f);
+    Out = BlendedWeight(vMtrlDiffuse, In.vProjPos.w);
     
     //// 색깔 추가할 처리 (이미시브)
-   
-    //Out.vDiffuse  // 이미시브 스트랭스
-    Out.vColorTarget = vector(0.f, 0.f, 0.f, 0.f);
+  
     
     return Out;
 }
@@ -753,7 +750,7 @@ PS_BLUR_OUT PS_BLUR_NOEMISSIVE(PS_IN In)
     
     vector vMtrlDiffuse;
     
-    vMtrlDiffuse= DrawEffect(In);
+    vMtrlDiffuse = DrawEffect(In);
     
     //// 색깔 추가할 처리 (이미시브)
     
@@ -768,7 +765,7 @@ PS_BLUR_OUT PS_BLUR_NOEMISSIVE(PS_IN In)
     //    }
     //}
    
-    Out.vDiffuse = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vDiffuse = vector(vMtrlDiffuse.rgb * g_fBlurIntensity, vMtrlDiffuse.a);
     Out.vBlurWeight = g_iBlurWeight / 128.f;
     
     return Out;
@@ -800,7 +797,7 @@ PS_BLUR_OUT PS_BLUR(PS_IN In)
     //    }
     //}
    
-    Out.vDiffuse = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vDiffuse = vector(vMtrlDiffuse.rgb * g_fBlurIntensity, vMtrlDiffuse.a);
     
     Out.vBlurWeight = g_iBlurWeight / 128.f;
     
@@ -824,7 +821,7 @@ PS_BLOOM_OUT PS_BLOOM(PS_IN In)
    
     vMtrlDiffuse.rgb += EmissiveDraw(In, vMtrlDiffuse).rgb;
     
-    float fBloomStrength = g_fBloomStrength; 
+    float fBloomStrength = g_fBloomStrength;
     
     if (g_isBloomDissolve == true)
     {
@@ -840,7 +837,7 @@ PS_BLOOM_OUT PS_BLOOM(PS_IN In)
     if (vMtrlDiffuse.a <= 0.1f)
         discard;
    
-    Out.vDiffuse = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vDiffuse = vector(vMtrlDiffuse.rgb * fBloomStrength, (float) g_iBloomType / 255.f);
     
     return Out;
 
@@ -856,7 +853,7 @@ PS_BLOOM_OUT PS_BLEND(PS_IN In)
     
     vMtrlDiffuse.rgb += EmissiveDraw(In, vMtrlDiffuse).rgb;
 
-    Out.vDiffuse = float4(0.f,0.f,0.f,0.f);
+    Out.vDiffuse = vMtrlDiffuse;
     
     return Out;
 }
@@ -871,7 +868,7 @@ PS_BLOOM_OUT PS_WEIGHTED_FOR_BLEND(PS_IN In)
     
     vMtrlDiffuse.rgb += EmissiveDraw(In, vMtrlDiffuse).rgb;
     
-    Out.vDiffuse = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vDiffuse = BlendedWeight(vMtrlDiffuse, In.vProjPos.w).vDiffuse;
     
     
     return Out;
