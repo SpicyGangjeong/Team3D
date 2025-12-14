@@ -463,9 +463,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 	}
 
 	m_pGameInstance->Add_Camera(g_iStaticLevel, pCamera, CAMERA_DEBUG);
-	if (FAILED(m_pGameInstance->Bind_Camera(g_iStaticLevel, CAMERA_DEBUG, true))) {
-		return E_FAIL;
-	}
 
 #endif // _DEBUG
 
