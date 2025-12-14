@@ -36,14 +36,10 @@ HRESULT CMapElement_Chest_Lid::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-
 	m_fOpenDuration = 0.1f;
-	m_fRotationAngle = 10.f;
-	m_vPosition = pDesc->vLid_Offset;
-	m_vRotation = _float3(0.f, 0.f, 0.f);
-	m_vScale = _float3(1.f, 1.f, 1.f);
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
-	
+	m_fRotationAngle = pDesc->fRotaitionAngle;
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pDesc->vLid_Offset), 1.f));
+
 	m_pParentWorldMatrix = m_pOwner->Get_Component<CTransform>()->Get_WorldMatrixPtr();
 	XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_XMWorldMatrix() * XMLoadFloat4x4(m_pParentWorldMatrix));
 
@@ -58,15 +54,15 @@ void CMapElement_Chest_Lid::Update(_float fTimeDelta)
 {
 	switch (m_eState)
 	{
-	case Editor::CMapElement_Chest_Lid::LID_STATE::IDLE:
+	case CMapElement_Chest_Lid::LID_STATE::IDLE:
 		break;
 
-	case Editor::CMapElement_Chest_Lid::LID_STATE::OPENING:
+	case CMapElement_Chest_Lid::LID_STATE::OPENING:
 		if (Opening(fTimeDelta))
 			m_eState = LID_STATE::OPENED;
 		break;
 
-	case Editor::CMapElement_Chest_Lid::LID_STATE::OPENED:
+	case CMapElement_Chest_Lid::LID_STATE::OPENED:
 		break;
 
 	default:
@@ -77,8 +73,6 @@ void CMapElement_Chest_Lid::Update(_float fTimeDelta)
 void CMapElement_Chest_Lid::Late_Update(_float fTimeDelta)
 {
 	/* 부모에서 Render 호출  */
-
-	
 }
 
 HRESULT CMapElement_Chest_Lid::Render(_uint iShaderPass)
@@ -93,7 +87,7 @@ HRESULT CMapElement_Chest_Lid::Render(_uint iShaderPass)
 		if (FAILED(m_pModelComs[0]->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
-		
+
 		if (FAILED(m_pShaderCom->Begin(iShaderPass))) {
 			return E_FAIL;
 		}
@@ -170,15 +164,6 @@ _bool CMapElement_Chest_Lid::Opening(_float fTimeDelta)
 	return false;
 }
 
-void CMapElement_Chest_Lid::Reset()
-{
-	m_fTimeAcc = 0.f;
-
-	m_pTransformCom->Rotation(0.f, 0.f, 0.f);
-
-	XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_XMWorldMatrix() * XMLoadFloat4x4(m_pParentWorldMatrix));
-}
-
 CMapElement_Chest_Lid* CMapElement_Chest_Lid::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CMapElement_Chest_Lid* pInstance = new CMapElement_Chest_Lid(pDevice, pContext);
@@ -215,91 +200,8 @@ void CMapElement_Chest_Lid::Free()
 		SAFE_RELEASE(pModel);
 }
 
+#ifdef _DEBUG
 void CMapElement_Chest_Lid::Describe_Entity()
 {
-	if (m_bDead)
-		return;
-	if (nullptr == m_pGameInstance)
-		return;
-
-	GUI::Begin("Lid");
-
-	GUI::Text(CMyTools::ToString(m_ModelPrototypeTags[m_iLodIndex]).c_str());
-	GUI::InputInt("Lod Level", (_int*)(&m_iLodIndex));
-	m_iLodIndex = max(0, m_iLodIndex);
-	m_iLodIndex = min(m_iMaxLodLevel, m_iLodIndex);
-
-	GUI::Text("----- Transfrom ----");
-	_float3 vMove = {};
-	GUI::InputFloat("Right", &vMove.x, 0.05f, 0.1f);
-	GUI::InputFloat("Up", &vMove.y, 0.05f, 0.1f);
-	GUI::InputFloat("Look", &vMove.z, 0.05f, 0.1f);
-
-	m_pTransformCom->Move_Right(vMove.x);
-	m_pTransformCom->Move_Up(vMove.y);
-	m_pTransformCom->Move_Look(vMove.z);
-
-	XMStoreFloat3(&m_vPosition, m_pTransformCom->Get_State(STATE::POSITION));
-
-	GUI::Text("----- Rotation ----");
-	GUI::InputFloat("X##Rotation", &m_vTargetRotation.x, 1.f, 15.f);
-	GUI::InputFloat("Y##Rotation", &m_vTargetRotation.y, 1.f, 15.f);
-	GUI::InputFloat("Z##Rotation", &m_vTargetRotation.z, 1.f, 15.f);
-
-	GUI::InputFloat("m_fRotationAngle", &m_fRotationAngle, 1.f, 5.f);
-	GUI::InputFloat("m_fOpenDuration", &m_fOpenDuration, 0.1f, 1.f);
-
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
-	XMStoreFloat4x4(&m_CombinedWorldMatrix, m_pTransformCom->Get_XMWorldMatrix() * XMLoadFloat4x4(m_pParentWorldMatrix));
-
-	if (GUI::Button("Open"))
-		m_eState = LID_STATE::OPENING;
-
-	if (GUI::Button("Reset"))
-		Reset();
-
-	GUI::End();
 }
-
-HRESULT CMapElement_Chest_Lid::Save_XML(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* root)
-{
-	tinyxml2::XMLElement* object = doc.NewElement("Lid");
-	object->SetAttribute("Lod_Level", m_iMaxLodLevel);
-	root->InsertEndChild(object);
-
-#pragma region PROTOTYPETAG
-	for (_uint i = 0; i < m_iMaxLodLevel + 1; ++i)
-	{
-		tinyxml2::XMLElement* prototype = doc.NewElement("PrototypeTag");
-		prototype->SetText(CMyTools::ToString(m_ModelPrototypeTags[i]).c_str());
-		object->InsertEndChild(prototype);
-	}
-#pragma endregion
-
-#pragma region TRANSFORM
-	_float3 vPosition = {};
-	XMStoreFloat3(&vPosition, m_pTransformCom->Get_State(STATE::POSITION));
-
-	_float3 vScale = m_pTransformCom->Get_Scale();
-
-	_float3 vRotation = {};
-	XMStoreFloat3(&vRotation, m_pTransformCom->Get_RollPitchYawVector());
-	vRotation.x = XMConvertToDegrees(vRotation.x);
-	vRotation.y = XMConvertToDegrees(vRotation.y);
-	vRotation.z = XMConvertToDegrees(vRotation.z);
-
-	tinyxml2::XMLElement* Position = doc.NewElement("Position");
-	Position->SetAttribute("x", vPosition.x);
-	Position->SetAttribute("y", vPosition.y);
-	Position->SetAttribute("z", vPosition.z);
-	object->InsertEndChild(Position);
-
-
-	tinyxml2::XMLElement* RotationAngle = doc.NewElement("RotationAngle");
-	RotationAngle->SetAttribute("RotationAngle", m_fRotationAngle);
-	object->InsertEndChild(RotationAngle);
-
-#pragma endregion
-
-	return S_OK;
-}
+#endif // _DEBUG

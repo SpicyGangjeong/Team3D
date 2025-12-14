@@ -210,7 +210,7 @@ void CTroll_Weapon::Free()
 
 void CTroll_Weapon::Describe_Entity()
 {
-	GUI::Begin("UNIT");
+	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	if (GUI::CollapsingHeader("Troll_Hammer")) {
 		_float4 vPos;
 		_float4 vHammerWorldPos;

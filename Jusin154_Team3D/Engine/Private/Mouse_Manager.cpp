@@ -204,7 +204,7 @@ void CMouse_Manager::Free()
 
 void CMouse_Manager::Describe_Entity()
 {
-	GUI::Begin("SYSTEM");
+	GUI::Begin("SYSTEM", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	GUI::PushItemWidth(80);
 	if (GUI::CollapsingHeader("Mouse_Manager")) {
 		GUI::Text("AccumulateMomentum %.2f, %.2f", m_vMove.x, m_vMove.y);

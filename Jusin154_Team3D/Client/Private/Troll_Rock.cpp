@@ -269,7 +269,7 @@ void CTroll_Rock::Free()
 
 void CTroll_Rock::Describe_Entity()
 {
-	GUI::Begin("UNIT");
+	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	GUI::PushItemWidth(80);
 	if (GUI::CollapsingHeader("TrollRock")) {
 		GUI::Checkbox("Visible", &m_bVisible);

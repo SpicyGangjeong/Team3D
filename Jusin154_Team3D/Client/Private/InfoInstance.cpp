@@ -127,6 +127,10 @@ HRESULT CInfoInstance::Load_DoorElemet(const _char* pFileName)
 {
 	return m_pMapInfo->Load_DoorElemet(pFileName);
 }
+HRESULT CInfoInstance::Load_ChestElemet(const _char* pFileName)
+{
+	return m_pMapInfo->Load_ChestElemet(pFileName);
+}
 #pragma endregion
 
 #pragma region SPELL_INFO

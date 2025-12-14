@@ -150,9 +150,9 @@ HRESULT CMainLight::Ready_Components()
 
 	m_pGameInstance->Add_Light(NEXT_LEVEL, m_pLightCom);
 
-	_float4 vColor = _float4(0.1f, 0.1f, 0.15f, 0.5f);
+	_float4 vColor = _float4(0.7f, 0.7f, 0.7f, 0.3f);
 	m_pGameInstance->Set_FogColor(vColor);
-
+	m_pGameInstance->Set_FogDensity(5.f);
 	return S_OK;
 }
 

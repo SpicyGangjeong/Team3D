@@ -39,7 +39,7 @@ void CLight_Main::Priority_Update(_float fTimeDelta)
 void CLight_Main::Update(_float fTimeDelta)
 {
 #ifdef _DEBUG
-	GUI::Begin("LIGHT");
+	GUI::Begin("LIGHT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	if (GUI::CollapsingHeader("Main_Light")) {
 		m_pLightCom->Describe_Entity();
 	}
@@ -79,9 +79,9 @@ HRESULT CLight_Main::Ready_Components()
 	}
 	m_pGameInstance->Add_Light(NEXT_LEVEL, m_pLightCom);
 
-
-	_float4 vColor = _float4(0.1f, 0.1f, 0.15f, 0.5f);
+	_float4 vColor = _float4(0.7f, 0.7f, 0.7f, 0.3f);
 	m_pGameInstance->Set_FogColor(vColor);
+	m_pGameInstance->Set_FogDensity(5.f);
 
 	return S_OK;
 }

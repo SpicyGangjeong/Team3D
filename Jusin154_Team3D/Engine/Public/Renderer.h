@@ -54,7 +54,7 @@ private:
 	_float	m_fExposure = { 0.7f };
 
 	// Bloom
-	_int	m_iBloomEmbossingPass = { 0 };
+	_int	m_iBloomEmbossingPass = { 1 };
 	_float	m_fBloomThreshold = { 1.26f };
 	
 	// DOF Environment
