@@ -940,9 +940,9 @@ PS_OUT_SSAO_AMBIENT_OCCLUSION PS_SSAO_AMBIENT_OCCLUSION(PS_IN In)
     
     float4 vDepthDesc       = g_DepthTexture.Sample(PointSampler, uv);
     float fCenterViewSpaceZ = vDepthDesc.y * g_fFar; // n ~ f
-    float fRatio = lerp(0.f, 1.f, (g_fFar - fCenterViewSpaceZ) / g_fFar);
-    if (fRatio <= 0.f)
-    {
+    float fRatio = saturate(smoothstep(0.f, 1.f, (g_fFar - fCenterViewSpaceZ) / g_fFar)); // 멀어지면 너무 반짝거려서 스무딩
+    
+    if (fRatio <= 0.f) {
         Out.fOcclusion = 1.f;
         return Out;
     }
@@ -1007,7 +1007,7 @@ PS_OUT_SSAO_BLUR PS_SSAO_BLUR(PS_IN In)
         for (int y = -2; y < 2; ++y)
         {
             float2 vOffset = float2((float) x, (float) y) * vTexelSize;
-            fResult += g_SSAOInputTexture.Sample(DefaultSampler, In.vTexcoord + vOffset).r;
+            fResult += g_SSAOInputTexture.Sample(BorderZeroSampler, In.vTexcoord + vOffset).r;
         }
     }
 

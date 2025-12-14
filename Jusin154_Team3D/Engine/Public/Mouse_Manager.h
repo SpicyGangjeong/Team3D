@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Base.h"
 
 NS_BEGIN(Engine)
@@ -55,6 +55,11 @@ private:
 public:
 	static CMouse_Manager* Create(HWND _g_hWnd, ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;
+#ifdef _DEBUG
+	virtual void Describe_Entity();
+
+#endif // _DEBUG
+
 };
 NS_END
 
