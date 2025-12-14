@@ -477,6 +477,7 @@ void CEditEffect::Describe_Entity()
 	GUI::Checkbox("Noise", &m_EffectInfo.isNoise);
 	GUI::Checkbox("Bloom", &m_EffectInfo.isBloom);
 	GUI::Checkbox("Blur", &m_EffectInfo.isBlur);
+	GUI::Checkbox("RimLight", &m_EffectInfo.isRimLight);
 
 	if (GUI::Checkbox("Billboard", &m_EffectInfo.isBillboard))
 	{
@@ -549,11 +550,11 @@ void CEditEffect::Describe_Entity()
 
 		ImGui::PushItemWidth(80);
 		GUI::DragFloat("EmissiveStrength", &m_EffectInfo.fEmissiveStrength, 0.005f, 0.f, 1.f);
-		GUI::DragFloat("Radius", &m_EffectInfo.fRadius, 0.005f);
-		GUI::DragFloat("CoreBoost", &m_EffectInfo.fCoreBoost, 0.005f);
-		GUI::DragFloat("SoftStrength", &m_EffectInfo.fSoftStrength, 0.005f);
-		GUI::DragFloat("SoftenExp", &m_EffectInfo.fSoftenExp, 0.005f);
-		GUI::DragFloat("EmissiveColorCut", &m_EffectInfo.fEmissiveColorCut, 0.005f);
+		GUI::DragFloat("Radius", &m_EffectInfo.fRadius, 0.005f , 0.f);
+		GUI::DragFloat("CoreBoost", &m_EffectInfo.fCoreBoost, 0.005f , 0.f);
+		GUI::DragFloat("SoftStrength", &m_EffectInfo.fSoftStrength, 0.005f , 0.f);
+		GUI::DragFloat("SoftenExp", &m_EffectInfo.fSoftenExp, 0.005f , 0.f);
+		GUI::DragFloat("EmissiveColorCut", &m_EffectInfo.fEmissiveColorCut, 0.005f , 0.f);
 
 		ImGui::PopItemWidth();
 
@@ -584,6 +585,19 @@ void CEditEffect::Describe_Entity()
 
 		GUI::TreePop();
 	}
+	
+	if (m_EffectInfo.isRimLight)
+	{
+		if (GUI::TreeNode("RIM LIGHT"))
+		{
+			GUI::ColorEdit4("Emissive", (_float*)&m_EffectInfo.vRimLightColor);
+			GUI::DragFloat("RimLightPower", &m_EffectInfo.fRimLightPower, 0.005f , 0.f);
+			GUI::DragFloat("RimLightStrength", &m_EffectInfo.fRimLightStrength, 0.005f, 0.f);
+
+			GUI::TreePop();
+		}
+	}
+	
 
 	if (GUI::TreeNode("LIGHT"))
 	{

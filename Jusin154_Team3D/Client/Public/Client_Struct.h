@@ -172,13 +172,16 @@ namespace Client
 
 		_float		fEmissiveColorCut = {};
 
-		_float2     vPadding1 = {};
+		_float      fRimLightPower = {};
+		_float      fRimLightStrength = {};
+
 		_float4     vNoiseColor = {};
-		_float4     vPadding3 = {};
+		_float4     vRimLightColor = {};
+
 		_float4     vPadding4 = {};
 		_float4     vPadding5 = {};
 
-		_bool		isPadding1 = {};
+		_bool		isRimLight = {};
 		_bool		isPadding2 = {};
 		_bool		isPadding3 = {};
 		_bool		isPadding4 = {};
