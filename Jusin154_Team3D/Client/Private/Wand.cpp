@@ -192,27 +192,31 @@ void CWand::Free()
 
 void CWand::Describe_Entity()
 {
-	_float4 vPos;
-	_float4 vTipWorldPos;
+	GUI::Begin("UNIT");
+	if (GUI::CollapsingHeader("WAND")) {
+		_float4 vPos;
+		_float4 vTipWorldPos;
 
-	_float4 vTipRight;
-	_float4 vTipUp;
-	_float4 vTipLook;
-	_float4 vTipPos;
-	XMStoreFloat4(&vPos, m_pTransformCom->Get_State(STATE::POSITION));
-	XMStoreFloat4(&vTipWorldPos, Get_WorldPostion());
+		_float4 vTipRight;
+		_float4 vTipUp;
+		_float4 vTipLook;
+		_float4 vTipPos;
+		XMStoreFloat4(&vPos, m_pTransformCom->Get_State(STATE::POSITION));
+		XMStoreFloat4(&vTipWorldPos, Get_WorldPostion());
 
-	XMStoreFloat4(&vTipRight, XMLoadFloat4((_float4*)&m_pWandTipMatrix.m[0][0]));
-	XMStoreFloat4(&vTipUp, XMLoadFloat4((_float4*)&m_pWandTipMatrix.m[1][0]));
-	XMStoreFloat4(&vTipLook, XMLoadFloat4((_float4*)&m_pWandTipMatrix.m[2][0]));
-	XMStoreFloat4(&vTipPos, XMLoadFloat4((_float4*)&m_pWandTipMatrix.m[3][0]));
+		XMStoreFloat4(&vTipRight, XMLoadFloat4((_float4*)&m_pWandTipMatrix.m[0][0]));
+		XMStoreFloat4(&vTipUp, XMLoadFloat4((_float4*)&m_pWandTipMatrix.m[1][0]));
+		XMStoreFloat4(&vTipLook, XMLoadFloat4((_float4*)&m_pWandTipMatrix.m[2][0]));
+		XMStoreFloat4(&vTipPos, XMLoadFloat4((_float4*)&m_pWandTipMatrix.m[3][0]));
 
-	GUI::Text("vPos, %.2f, %.2f, %.2f, %.2f", vPos.x, vPos.y, vPos.z, vPos.w);
-	GUI::Text("vTipWorldPos, %.2f, %.2f, %.2f, %.2f", vTipWorldPos.x, vTipWorldPos.y, vTipWorldPos.z, vTipWorldPos.w);
-	GUI::Text("vTipRight, %.2f, %.2f, %.2f, %.2f", vTipRight.x, vTipRight.y, vTipRight.z, vTipRight.w);
-	GUI::Text("vTipUp, %.2f, %.2f, %.2f, %.2f", vTipUp.x, vTipUp.y, vTipUp.z, vTipUp.w);
-	GUI::Text("vTipLook, %.2f, %.2f, %.2f, %.2f", vTipLook.x, vTipLook.y, vTipLook.z, vTipLook.w);
-	GUI::Text("vTipPos, %.2f, %.2f, %.2f, %.2f", vTipPos.x, vTipPos.y, vTipPos.z, vTipPos.w);
+		GUI::Text("vPos, %.2f, %.2f, %.2f, %.2f", vPos.x, vPos.y, vPos.z, vPos.w);
+		GUI::Text("vTipWorldPos, %.2f, %.2f, %.2f, %.2f", vTipWorldPos.x, vTipWorldPos.y, vTipWorldPos.z, vTipWorldPos.w);
+		GUI::Text("vTipRight, %.2f, %.2f, %.2f, %.2f", vTipRight.x, vTipRight.y, vTipRight.z, vTipRight.w);
+		GUI::Text("vTipUp, %.2f, %.2f, %.2f, %.2f", vTipUp.x, vTipUp.y, vTipUp.z, vTipUp.w);
+		GUI::Text("vTipLook, %.2f, %.2f, %.2f, %.2f", vTipLook.x, vTipLook.y, vTipLook.z, vTipLook.w);
+		GUI::Text("vTipPos, %.2f, %.2f, %.2f, %.2f", vTipPos.x, vTipPos.y, vTipPos.z, vTipPos.w);
+	}
+	GUI::End();
 }
 
 #endif // _DEBUG

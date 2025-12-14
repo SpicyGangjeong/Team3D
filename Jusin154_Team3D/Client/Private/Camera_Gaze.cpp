@@ -182,30 +182,32 @@ void CCamera_Gaze::Free()
 
 void CCamera_Gaze::Describe_Entity()
 {
-	GUI::Begin("Camera_Gaze_Describe");
-	m_pTransformCom->Describe_Entity();
-	GUI::Text("LOOK_SRC %.2f, %.2f, %.2f", m_vLookPos_Src.x, m_vLookPos_Src.y, m_vLookPos_Src.z);
-	GUI::Text("LOOK_DST %.2f, %.2f, %.2f", m_vLookPos_Dest.x, m_vLookPos_Dest.y, m_vLookPos_Dest.z);
-	GUI::Text("FOLLOW_SRC %.2f, %.2f, %.2f", m_vFollowPos_Src.x, m_vFollowPos_Src.y, m_vFollowPos_Src.z);
-	GUI::Text("FOLLOW_DST %.2f, %.2f, %.2f", m_vFollowPos_Dest.x, m_vFollowPos_Dest.y, m_vFollowPos_Dest.z);
-	GUI::Checkbox("TransitionLerp", &m_bEnable_TransitionLerp);
-	if (true == m_bEnable_TransitionLerp) {
-		GUI::SameLine(); GUI::Text("Translation : %.1f %.1f", m_vTransitionTime.x, m_vTransitionTime.y);
-		GUI::SliderFloat("TranslationTime", &m_vTransitionTime.y, 0.1f, 3.f, "%.1f");
-	}
+	GUI::Begin("CAMERA");
+	if (GUI::CollapsingHeader("Camera_Gaze_Describe")) {
+		m_pTransformCom->Describe_Entity();
+		GUI::Text("LOOK_SRC %.2f, %.2f, %.2f", m_vLookPos_Src.x, m_vLookPos_Src.y, m_vLookPos_Src.z);
+		GUI::Text("LOOK_DST %.2f, %.2f, %.2f", m_vLookPos_Dest.x, m_vLookPos_Dest.y, m_vLookPos_Dest.z);
+		GUI::Text("FOLLOW_SRC %.2f, %.2f, %.2f", m_vFollowPos_Src.x, m_vFollowPos_Src.y, m_vFollowPos_Src.z);
+		GUI::Text("FOLLOW_DST %.2f, %.2f, %.2f", m_vFollowPos_Dest.x, m_vFollowPos_Dest.y, m_vFollowPos_Dest.z);
+		GUI::Checkbox("TransitionLerp", &m_bEnable_TransitionLerp);
+		if (true == m_bEnable_TransitionLerp) {
+			GUI::SameLine(); GUI::Text("Translation : %.1f %.1f", m_vTransitionTime.x, m_vTransitionTime.y);
+			GUI::SliderFloat("TranslationTime", &m_vTransitionTime.y, 0.1f, 3.f, "%.1f");
+		}
 
-	GUI::Checkbox("LookLerp", &m_bEnable_LookLerp);
-	if (true == m_bEnable_LookLerp) {
-		GUI::SameLine(); GUI::Text("Translation : %.1f %.1f", m_vLookLerpTime.x, m_vLookLerpTime.y);
-		GUI::SliderFloat("LookTime", &m_vLookLerpTime.y, 0.1f, 3.f, "%.1f");
-	}
+		GUI::Checkbox("LookLerp", &m_bEnable_LookLerp);
+		if (true == m_bEnable_LookLerp) {
+			GUI::SameLine(); GUI::Text("Translation : %.1f %.1f", m_vLookLerpTime.x, m_vLookLerpTime.y);
+			GUI::SliderFloat("LookTime", &m_vLookLerpTime.y, 0.1f, 3.f, "%.1f");
+		}
 
-	GUI::Checkbox("FollowLerp", &m_bEnable_FollowLerp);
-	if (true == m_bEnable_FollowLerp) {
-		GUI::SameLine(); GUI::Text("Translation : %.1f %.1f", m_vFollowLerpTime.x, m_vFollowLerpTime.y);
-		GUI::SliderFloat("FollowTime", &m_vFollowLerpTime.y, 0.1f, 3.f, "%.1f");
-	}
+		GUI::Checkbox("FollowLerp", &m_bEnable_FollowLerp);
+		if (true == m_bEnable_FollowLerp) {
+			GUI::SameLine(); GUI::Text("Translation : %.1f %.1f", m_vFollowLerpTime.x, m_vFollowLerpTime.y);
+			GUI::SliderFloat("FollowTime", &m_vFollowLerpTime.y, 0.1f, 3.f, "%.1f");
+		}
 
+	}
 	GUI::End();
 }
 

@@ -37,16 +37,16 @@ void CRenderer::Render()
 	Render_UI_Overley();
 
 #ifdef _DEBUG
+	static _bool m_bToggleDebug = false;
+	GUI::Checkbox("DebugToggle", &m_bToggleDebug);
 	Describe_Entitiy();
 	m_pGameInstance->RenderTarget_Debuger();
-	static _bool m_bToggleDebug = false;
 
 	if (m_pGameInstance->Key_Pressing(DIK_F10)) {
 		Render_Debug();
 	}
 	else {
 		GUI::Begin("RenderTarget Debuger");
-		GUI::Checkbox("DebugToggle", &m_bToggleDebug);
 		if (m_bToggleDebug) {
 			Render_Debug();
 		}
