@@ -329,7 +329,7 @@ PS_OUT PS_Spell_Effect(PS_IN In)
     
     //float2 maskUV = In.vTexcoord;
 
-    //maskUV.x += g_fTime * float2(0.05, 0.02); // ?띾룄 議곗젅 媛??
+    //maskUV.x += g_fTime * float2(0.05, 0.02);
     
     //float2 center = float2(0.5, 0.0); 
     //float2 uv = In.vTexcoord - center;
@@ -371,7 +371,7 @@ PS_OUT PS_Spell_Slot(PS_IN In)
         switch (In.vBaseColor)
         {
             case 0:
-                BGColor = float3(255.f, 255.f, 0.f) / 255.f;
+                BGColor = float3(220.f, 165.f, 70.f) / 255.f;
                 break;
             case 1:
                 BGColor = float3(150.f, 120.f, 240.f) / 255.f;
@@ -388,7 +388,6 @@ PS_OUT PS_Spell_Slot(PS_IN In)
             case 5:
                 BGColor = float3(50.f, 150.f, 110.f) / 255.f;
                 break;
-
         }
         float4 tex1 = g_Texture.Sample(ClampSampler, Rotation);
         tex1.rgb *= BGColor;

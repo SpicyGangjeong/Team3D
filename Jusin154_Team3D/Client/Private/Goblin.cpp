@@ -481,7 +481,6 @@ void CGoblin::Free()
 	SAFE_RELEASE(m_pSmoke);
 	SAFE_RELEASE(m_pGoblin_Particle);
 	SAFE_RELEASE(m_pGoblin_Particle2);
-	SAFE_RELEASE(m_pDetection);
 	SAFE_RELEASE(m_pEffectPool);
 	Safe_Delete(m_pCallBack_Behavior);
 	Safe_Delete(m_pCallBack_HitReport);
