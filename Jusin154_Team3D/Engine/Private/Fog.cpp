@@ -45,7 +45,7 @@ HRESULT CFog::Bind_FogValue(CShader* pShader)
 #ifdef _DEBUG
 void CFog::Update_Fog()
 {
-    GUI::Begin("SYSTEM");
+    GUI::Begin("SYSTEM", 0, IMGUI_GLOBAL_BEGIN_FLAG);
     if (GUI::CollapsingHeader("FOG")) {
         GUI::Checkbox("Fog ON / OFF", &m_bVisible);
         GUI::InputFloat("g_fFogDensity", &m_fFogDensity, 0.001f);

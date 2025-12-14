@@ -1,8 +1,14 @@
 ﻿#pragma once
 
+
+
 #ifndef GUI
 #define	GUI	ImGui
 #endif // !GUI
+#ifndef IMGUI_GLOBAL_BEGIN_FLAG
+#define IMGUI_GLOBAL_BEGIN_FLAG  ImGuiWindowFlags_NoFocusOnAppearing|ImGuiWindowFlags_NoBringToFrontOnFocus|ImGuiWindowFlags_AlwaysAutoResize
+#endif // IMGUI_GLOBAL_BEGIN_FLAG
+
 
 #ifndef PSX
 #define PSX physx

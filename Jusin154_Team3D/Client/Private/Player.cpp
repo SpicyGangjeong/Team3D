@@ -339,7 +339,7 @@ void CPlayer::Render_CameraCoordinateSystem()
 	_float2 vLook = { XMVectorGetX(xmvLook), XMVectorGetZ(xmvLook) };
 
 
-	GUI::Begin("CAMERA");
+	GUI::Begin("CAMERA", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	GUI::PushItemWidth(80);
 	if (GUI::CollapsingHeader("Player_CAM_COOORD")) {
 
@@ -617,7 +617,7 @@ void CPlayer::Free()
 
 void CPlayer::Describe_Entity()
 {
-	GUI::Begin("UNIT");
+	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	GUI::PushItemWidth(80);
 	if (GUI::CollapsingHeader("PLAYER_DESC")) {
 		m_pCharacter_Controller->Describe_Entity();

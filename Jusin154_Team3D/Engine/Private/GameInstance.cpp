@@ -374,7 +374,7 @@ void CGameInstance::Present_TimeCost() const
 		+ m_fTimer_Level;
 
 	GUI::PushItemWidth(80);
-	GUI::Begin("Previous_Frame_Timer");
+	GUI::Begin("Previous_Frame_Timer", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	if (GUI::CollapsingHeader("Detail"))
 	{
 		{

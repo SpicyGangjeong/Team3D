@@ -39,7 +39,7 @@ void CLight_Main::Priority_Update(_float fTimeDelta)
 void CLight_Main::Update(_float fTimeDelta)
 {
 #ifdef _DEBUG
-	GUI::Begin("LIGHT");
+	GUI::Begin("LIGHT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	if (GUI::CollapsingHeader("Main_Light")) {
 		m_pLightCom->Describe_Entity();
 	}

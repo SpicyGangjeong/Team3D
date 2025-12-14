@@ -192,7 +192,7 @@ void CWand::Free()
 
 void CWand::Describe_Entity()
 {
-	GUI::Begin("UNIT");
+	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	if (GUI::CollapsingHeader("WAND")) {
 		_float4 vPos;
 		_float4 vTipWorldPos;

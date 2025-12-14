@@ -40,18 +40,18 @@ void CRenderer::Render()
 	static _bool m_bToggleDebug = false;
 	Describe_Entitiy();
 	m_pGameInstance->RenderTarget_Debuger();
+	GUI::Begin("RenderTarget Debuger", 0, IMGUI_GLOBAL_BEGIN_FLAG);
+	GUI::Checkbox("DebugToggle", &m_bToggleDebug);
 
 	if (m_pGameInstance->Key_Pressing(DIK_F10)) {
 		Render_Debug();
 	}
 	else {
-		GUI::Begin("RenderTarget Debuger");
-		GUI::Checkbox("DebugToggle", &m_bToggleDebug);
 		if (m_bToggleDebug) {
 			Render_Debug();
 		}
-		GUI::End();
 	}
+	GUI::End();
 	
 #endif
 }
@@ -674,6 +674,9 @@ void CRenderer::Render_Bloom()
 	// "Target_Bloom_2x2"
 	// "Target_Bloom_4x4"
 	// "Target_Bloom_8x8"
+	// "Target_Bloom_2x2_1"
+	// "Target_Bloom_4x4_1"
+	// "Target_Bloom_8x8_1"
 	// "Target_Bloom_8x8_X"
 	// "Target_Bloom_4x4_2"
 	// "Target_Bloom_2x2_2"
@@ -701,23 +704,27 @@ void CRenderer::Render_Bloom()
 	m_pShader->Bind_RawValue("g_iBloomEmbossingPass", &m_iBloomEmbossingPass, sizeof(_int));
 
 	m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_Input"), TEXT("Target_Bloom_2x2"), SHADER_PASS_DEFERRED::EMBOSSING); // 2
-	m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_2x2"), TEXT("Target_Bloom_4x4"), SHADER_PASS_DEFERRED::REFIT); // 3
-	m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_4x4"), TEXT("Target_Bloom_8x8"), SHADER_PASS_DEFERRED::REFIT); // 4
 
-	m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_8x8"), TEXT("Target_Bloom_8x8_X"), SHADER_PASS_DEFERRED::BLOOM_BLURX);
+	m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_2x2"), TEXT("Target_Bloom_4x4_1"), SHADER_PASS_DEFERRED::BLOOM_BLURX); // 3
+	m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_4x4_1"), TEXT("Target_Bloom_4x4"), SHADER_PASS_DEFERRED::BLOOM_BLURY); // 3
+
+	m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_4x4"), TEXT("Target_Bloom_8x8_1"), SHADER_PASS_DEFERRED::BLOOM_BLURX); // 4
+	m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_8x8_1"), TEXT("Target_Bloom_8x8"), SHADER_PASS_DEFERRED::BLOOM_BLURY); // 4
+
+	m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_8x8"), TEXT("Target_Bloom_8x8_X"), SHADER_PASS_DEFERRED::BLOOM_BLURX); // 5
 	m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_8x8_X"), TEXT("Target_Bloom_8x8"), SHADER_PASS_DEFERRED::BLOOM_BLURY); // 5
-	m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_8x8"), TEXT("Target_Bloom_4x4"), SHADER_PASS_DEFERRED::REFIT); // 6
+	m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_8x8"), TEXT("Target_Bloom_4x4"), SHADER_PASS_DEFERRED::UPSAMPLE); // 6
 
 	m_pGameInstance->Accumulate_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_4x4"), TEXT("Target_Bloom_8x8"), TEXT("Target_Bloom_4x4_2"), SHADER_PASS_DEFERRED::BLOOM_ACCUM);
 	m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_4x4_2"), TEXT("Target_Bloom_4x4"), SHADER_PASS_DEFERRED::BLOOM_BLURX);
 	m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_4x4"), TEXT("Target_Bloom_4x4_2"), SHADER_PASS_DEFERRED::BLOOM_BLURY); // 7
 
-	m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_4x4_2"), TEXT("Target_Bloom_2x2"), SHADER_PASS_DEFERRED::REFIT);
+	m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_4x4_2"), TEXT("Target_Bloom_2x2"), SHADER_PASS_DEFERRED::UPSAMPLE);
 	m_pGameInstance->Accumulate_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_2x2"), TEXT("Target_Bloom_4x4_2"), TEXT("Target_Bloom_2x2_2"), SHADER_PASS_DEFERRED::BLOOM_ACCUM);
 	m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_2x2_2"), TEXT("Target_Bloom_2x2"), SHADER_PASS_DEFERRED::BLOOM_BLURX);
 	m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_2x2"), TEXT("Target_Bloom_2x2_2"), SHADER_PASS_DEFERRED::BLOOM_BLURY); // 8
 
-	m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_2x2_2"), TEXT("Target_Bloom"), SHADER_PASS_DEFERRED::REFIT);
+	m_pGameInstance->Refit_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_2x2_2"), TEXT("Target_Bloom"), SHADER_PASS_DEFERRED::UPSAMPLE);
 	m_pGameInstance->Finish_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_Input"), TEXT("Target_Bloom"), SHADER_PASS_DEFERRED::BLOOM_FINISH); // 9
 	
 }

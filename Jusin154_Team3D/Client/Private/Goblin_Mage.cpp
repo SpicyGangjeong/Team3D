@@ -443,7 +443,7 @@ void CGoblin_Mage::Free()
 
 void CGoblin_Mage::Describe_Entity()
 {
-	GUI::Begin("UNIT");
+	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	GUI::PushItemWidth(80);
 	if (GUI::CollapsingHeader("Goblin_Mage")) {
 
