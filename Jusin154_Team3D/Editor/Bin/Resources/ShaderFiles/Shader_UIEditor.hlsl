@@ -1526,8 +1526,11 @@ VS_OUT3D VS_MAIN3D(VS_IN3D In)
 
     float3 vertexPos = worldCenter + dirRight + dirUp;
 
+    float2 TexCoord = In.vTexcoord;
+    TexCoord.y = 1.f - TexCoord.y;
+    
     Out.vPosition = mul(float4(vertexPos, 1.f), matViewProj);
-    Out.vTexcoord = 1.f - In.vTexcoord;
+    Out.vTexcoord = TexCoord;
     return Out;
 }
 

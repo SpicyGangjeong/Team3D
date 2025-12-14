@@ -19,6 +19,7 @@ HRESULT CSkill_Data::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pCon
 	Spell_UnLock(2);
 	Spell_UnLock(6);
 	Spell_UnLock(11);
+	Spell_UnLock(14);
 	return S_OK;
 }
 

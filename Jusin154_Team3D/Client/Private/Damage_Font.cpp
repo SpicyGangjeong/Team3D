@@ -104,7 +104,7 @@ void CDamage_Font::Add_Damage(void* pArg)
 	pInfo = *reinterpret_cast<DAMAGE_INFO*>(pArg);
 	DAMAGE_FONT_INFO Desc{};
 
-	Desc.vTarget_Pos =pInfo.vTarget_Pos , XMVectorSet(m_pGameInstance->Real_Random_Float(2,5), 1.f, m_pGameInstance->Real_Random_Float(2, 5), 0.f);
+	Desc.vTarget_Pos = pInfo.vTarget_Pos;
 	Desc.pDamage = to_wstring(static_cast<_int>(pInfo.fDamage));
 	if (pInfo.eType == DAMAGE_TYPE::NOMAL)
 	{
