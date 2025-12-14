@@ -76,6 +76,12 @@ float g_fWeights_32[32] =
     0.079902, 0.078320, 0.073759, 0.066740, 0.058021, 0.048463, 0.038893, 0.029988,
     0.022216, 0.015813, 0.010814, 0.007105, 0.004485, 0.002720, 0.001585, 0.000888
 };
+float g_fWeight_3x3_UPSAMPLE[3][3] =
+{
+    { 0.0625f, 0.125f, 0.0625f },
+    { 0.125f, 0.250f, 0.125f },
+    { 0.0625f, 0.125f, 0.0625f }
+};
 
 float g_fWeights_64[64] =
 {
@@ -617,9 +623,22 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
 PS_OUT_FLT4_SINGLE PS_MAIN_UPSAMPLE(PS_IN In)
 {
     PS_OUT_FLT4_SINGLE Out;
-
-    Out.vFirstTarget = g_DiffuseTexture.Sample(BorderZeroSampler, In.vTexcoord);
+    float3 vColor = float3(0.f, 0.f, 0.f);
+    float fWeight = 0.f;
+    float2 uv = In.vTexcoord;
+    float2 vTexcelSize = float2(1.f / g_vResolution.x, 1.f / g_vResolution.y);
     
+    for (int iRow = -1; iRow < 2; ++iRow) {
+        for (int iCol = -1; iCol < 2; ++iCol) {
+            uv = In.vTexcoord + vTexcelSize * float2(iRow, iCol);
+            if (true == IsValidUV(uv)) {
+                vColor  += g_fWeight_3x3_UPSAMPLE[1 + iRow][1 + iCol] * g_DiffuseTexture.SampleLevel(BorderZeroLinearSampler, uv, 0);
+                fWeight += g_fWeight_3x3_UPSAMPLE[1 + iRow][1 + iCol];
+            }
+        }
+    }
+    vColor /= fWeight;
+    Out.vFirstTarget = float4(vColor, 1.f);
     return Out;
 }
 PS_OUT_FLT4_SINGLE PS_MAIN_BLOOM_BLUR_X(PS_IN In)
@@ -688,26 +707,36 @@ PS_OUT_FLT4_SINGLE PS_MAIN_EMBOSS(PS_IN In)
     float3 vColor = (0.f, 0.f, 0.f);
     
     uint iMask = (uint) round(fMask * 255.f); // int a = 1  -> // vBloom.a = (enum / 255);
-    if (0 != iMask)
-    {
+    //if (0 != iMask) {
         // 주변 4개 셀(LT RT LB RB)및 중앙을 이중선형샘플링, 이후 자체적으로 이중선형샘플링
-        float3 vCenterColor = g_DiffuseTexture.SampleLevel(BorderZeroSampler, uv, 0);
-            uv = In.vTexcoord + vSrcTexelSize * float2(-1.0, -1.0);
-        float3 fLTColor = BilinearFetches(g_vResolution, g_DiffuseTexture, uv, BorderZeroLinearSampler);
-            uv = In.vTexcoord + vSrcTexelSize * float2(+1.0, -1.0);
-        float3 fRTColor = BilinearFetches(g_vResolution, g_DiffuseTexture, uv, BorderZeroLinearSampler);
-            uv = In.vTexcoord + vSrcTexelSize * float2(-1.0, +1.0);
-        float3 fLBColor = BilinearFetches(g_vResolution, g_DiffuseTexture, uv, BorderZeroLinearSampler);
-            uv = In.vTexcoord + vSrcTexelSize * float2(+1.0, +1.0);
-        float3 fRBColor = BilinearFetches(g_vResolution, g_DiffuseTexture, uv, BorderZeroLinearSampler);
+        
+    float3 vCenterColor = g_DiffuseTexture.SampleLevel(BorderZeroSampler, uv, 0);
+        uv = In.vTexcoord + vSrcTexelSize * float2(-1.0, -1.0);
+    float3 fLTColor = BilinearFetches(g_vResolution, g_DiffuseTexture, uv, BorderZeroLinearSampler);
+        uv = In.vTexcoord + vSrcTexelSize * float2(0.0, -1.0);
+    float3 fTColor = g_DiffuseTexture.SampleLevel(BorderZeroSampler, uv, 0);
+        uv = In.vTexcoord + vSrcTexelSize * float2(+1.0, -1.0);
+    float3 fRTColor = BilinearFetches(g_vResolution, g_DiffuseTexture, uv, BorderZeroLinearSampler);
+        uv = In.vTexcoord + vSrcTexelSize * float2(-1.0, 0.0);
+    float3 fLColor = g_DiffuseTexture.SampleLevel(BorderZeroSampler, uv, 0);
+        uv = In.vTexcoord + vSrcTexelSize * float2(1.0, 0.0);
+    float3 fRColor = g_DiffuseTexture.SampleLevel(BorderZeroSampler, uv, 0);
+        uv = In.vTexcoord + vSrcTexelSize * float2(-1.0, +1.0);
+    float3 fLBColor = BilinearFetches(g_vResolution, g_DiffuseTexture, uv, BorderZeroLinearSampler);
+        uv = In.vTexcoord + vSrcTexelSize * float2(0.0, 1.0);
+    float3 fBColor = g_DiffuseTexture.SampleLevel(BorderZeroSampler, uv, 0);
+        uv = In.vTexcoord + vSrcTexelSize * float2(+1.0, +1.0);
+    float3 fRBColor = BilinearFetches(g_vResolution, g_DiffuseTexture, uv, BorderZeroLinearSampler);
+    
+        
     
         // vSample /= fWeight 이중선형샘플러가 자체적으로 웨이츠 계싼해주기 때문에 안해도 상관없을듯
-        vColor = vCenterColor * 0.5f + (fLTColor + fRTColor + fLBColor + fRBColor) * 0.125f;
-        if (iMask == 2)
-        {
-            vColor *= 3.f;
-        }
-    }
+    vColor = vCenterColor * 0.25f + (fLTColor + fRTColor + fLBColor + fRBColor) * 0.0625f + (fTColor + fLColor + fRColor + fBColor) * 0.125f;
+        //if (iMask == 2)
+        //{
+        //    vColor *= 3.f;
+        //}
+    //}
     float fIntensity = dot(vColor, float3(0.2126f, 0.7152f, 0.0722f));
     fIntensity = max(FLT_EPSILON3, fIntensity);
 
