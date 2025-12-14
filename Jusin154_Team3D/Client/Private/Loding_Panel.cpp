@@ -44,16 +44,21 @@ HRESULT CLoding_Panel::Initialize(void* pArg)
 	Visible(true);
 	m_bActive = true;
 	//m_vImageposSi = _float4(0.f, 0.f, 1792.f, 1024.f);
-#ifdef _DEBUG
-	INHYUK = true;
-	human = 0;
-#endif // DEBUG
-
+	m_iToolTip_Count = 0;
+	ToolTipSetting();
 	return S_OK;
 }
 void CLoding_Panel::Set_Image(_int Index)
 {
 	m_iImageNum = Index;
+}
+void CLoding_Panel::ToolTipSetting()
+{
+	ToolTip[0] = TEXT("알고 계셨나요?\nF9를 눌러 브레이크포인트를 설정할 수 있습니다.");
+	ToolTip[1] = TEXT("알고 계셨나요?\nF12를 눌러 정의로 바로 이동할 수 있습니다!.");
+	ToolTip[2] = TEXT("알고 계셨나요?\n디버깅 중에도 핫 리로드로 코드를 수정할 수 있습니다.");
+	ToolTip[3] = TEXT("알고 계셨나요?\nCtrl + R, R로 변수 또는 함수 이름을 프로젝트 전체에서 일괄 변경할 수 있습니다.");
+	ToolTip[4] = TEXT("알고 계셨나요?\n디버깅 중 변수에 마우스를 올리면 현재 값을 확인할 수 있습니다.");
 }
 void CLoding_Panel::Priority_Update(_float fTimeDelta)
 {
@@ -63,54 +68,17 @@ void CLoding_Panel::Update(_float fTimeDelta)
 {
 	if (m_pGameInstance->Key_Down(DIK_M))
 	{
-		human++;
-		if (human > 4) // 4보다 크면 0으로
-			human = 0;
+		m_iToolTip_Count++;
+		if (m_iToolTip_Count > 4) // 4보다 크면 0으로
+			m_iToolTip_Count = 0;
 	}
 	if (m_pGameInstance->Key_Down(DIK_N))
 	{
-		human--;
-		if (human < 0) // 0보다 작으면 4로
-			human = 4;
+		m_iToolTip_Count--;
+		if (m_iToolTip_Count < 0) // 0보다 작으면 4로
+			m_iToolTip_Count = 4;
 	}
-	switch (human)
-	{
-	case 0:
-		INHYUK = true;
-		JINHO = false;
-		HYUNBIN = false;
-		NURI = false;
-		JINWOO = false;
-		break;
-	case 1:
-		INHYUK = false;
-		JINHO = true;
-		HYUNBIN = false;
-		NURI = false;
-		JINWOO = false;
-		break;
-	case 2:
-		INHYUK = false;
-		JINHO = false;
-		HYUNBIN = true;
-		NURI = false;
-		JINWOO = false;
-		break;
-	case 3:
-		INHYUK = false;
-		JINHO = false;
-		HYUNBIN = false;
-		NURI = true;
-		JINWOO = false;
-		break;
-	case 4:
-		INHYUK = false;
-		JINHO = false;
-		HYUNBIN = false;
-		NURI = false;
-		JINWOO = true;
-		break;
-	}
+
 	__super::Update(fTimeDelta);
 }
 
@@ -133,20 +101,10 @@ HRESULT CLoding_Panel::Render()
 	if (FAILED(m_pVIBufferCom->Render())) {
 		return E_FAIL;
 	}
-#ifdef _DEBUG
 	m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("<- N M ->."), _float2(100.f, 750.f));
 
-	if (INHYUK == true)
-		m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("알고 계셨나요?\nF9를 눌러 브레이크포인트를 설정할 수 있습니다."), _float2(100.f, 800.f));
-	if (JINHO == true)
-		m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("알고 계셨나요?\nF12를 눌러 정의로 바로 이동할 수 있습니다!."), _float2(100.f, 800.f));
-	if (HYUNBIN == true)
-		m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("알고 계셨나요?\n디버깅 중에도 핫 리로드로 코드를 수정할 수 있습니다."), _float2(100.f, 800.f));
-	if (NURI == true)
-		m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("알고 계셨나요?\nCtrl + R, R로 변수 또는 함수 이름을 프로젝트 전체에서 일괄 변경할 수 있습니다."), _float2(100.f, 800.f));
-	if (JINWOO == true)
-		m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("알고 계셨나요?\n디버깅 중 변수에 마우스를 올리면 현재 값을 확인할 수 있습니다."), _float2(100.f, 800.f));
-#endif // DEBUG
+	m_pGameInstance->Render_Text(TEXT("Font_size20"), ToolTip[m_iToolTip_Count].c_str(), _float2(100.f, 800.f));
+
 
 	return S_OK;
 }
