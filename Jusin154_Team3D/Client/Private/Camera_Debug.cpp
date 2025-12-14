@@ -25,7 +25,7 @@ void CCamera_Debug::Priority_Update(_float fTimeDelta)
 
 void CCamera_Debug::Update(_float fTimeDelta)
 {
-	if (false == m_bActive) {
+	if (FAILED(m_pGameInstance->IsBinded_Camera(CAMERA_DEBUG))) {
 		return;
 	}
 	Transition(fTimeDelta);
@@ -90,7 +90,7 @@ void CCamera_Debug::Update(_float fTimeDelta)
 
 void CCamera_Debug::Late_Update(_float fTimeDelta)
 {
-	if (false == m_bActive) {
+	if (FAILED(m_pGameInstance->IsBinded_Camera(CAMERA_DEBUG))) {
 		return;
 	}
 }

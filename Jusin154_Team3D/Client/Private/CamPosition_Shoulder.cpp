@@ -335,7 +335,7 @@ HRESULT CCamPosition_Shoulder::Ready_SubParts()
 	CameraDesc.fRotationPerSec = XMConvertToRadians(90.f);
 	CameraDesc.pFollowTarget = m_pTarget_FollowPart;
 	CameraDesc.pLookTarget = m_pTarget_LookPart;
-	CameraDesc.iPriority = 99;
+	CameraDesc.iPriority = 55;
 	CameraDesc.pCameraKey = CAMERA_SHOULDER;
 	CameraDesc.bEnableTransitionLerp = true;
 	CameraDesc.bEnableFollowLerp = false;

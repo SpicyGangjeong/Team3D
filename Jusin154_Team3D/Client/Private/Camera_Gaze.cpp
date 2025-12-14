@@ -100,11 +100,11 @@ void CCamera_Gaze::Enable_LookLerp()
 
 void CCamera_Gaze::Toggle_Priority()
 {
-	if (m_iPriority == 99) {
+	if (m_iPriority == 55) {
 		m_iPriority = 51;
 	}
 	else {
-		m_iPriority = 99;
+		m_iPriority = 55;
 		m_pGameInstance->Bind_Camera(g_iStaticLevel, CAMERA_SHOULDER, false);
 	}
 }
