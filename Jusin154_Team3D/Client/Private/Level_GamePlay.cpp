@@ -280,7 +280,9 @@ HRESULT CLevel_GamePlay::Ready_Background()
 		/* Doors */
 		CInfoInstance::GetInstance()->Load_DoorElemet("Element_Door_Info");
 		
-
+		/* Chests */
+		CInfoInstance::GetInstance()->Load_ChestElemet("Element_Chest_Info");
+		
 		if (FAILED(Ready_IntstanceProp()))
 			return E_FAIL;
 	}

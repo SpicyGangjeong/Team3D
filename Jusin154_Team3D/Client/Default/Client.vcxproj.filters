@@ -554,6 +554,12 @@
     <ClInclude Include="..\public\MapElement_Door.h">
       <Filter>02.GameObjects\Environment\03.MapElement\Door</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\MapElement_Chest.h">
+      <Filter>02.GameObjects\Environment\03.MapElement\Chest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapElement_Chest_Lid.h">
+      <Filter>02.GameObjects\Environment\03.MapElement\Chest\Chest_Lid</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Item_Potion.h">
       <Filter>02.GameObjects\Item\Potion</Filter>
     </ClInclude>
@@ -1176,6 +1182,12 @@
     <Filter Include="02.GameObjects\Environment\03.MapElement\Door">
       <UniqueIdentifier>{b09f9ada-6cf4-41a4-ad28-f00855509825}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Environment\03.MapElement\Chest">
+      <UniqueIdentifier>{160d0631-ff04-40ee-b27b-b2ea167b8da5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\03.MapElement\Chest\Chest_Lid">
+      <UniqueIdentifier>{70c01ca8-ae1b-43aa-b4f4-efa40994e3e9}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\Item\Potion">
       <UniqueIdentifier>{ace6c64f-901a-424e-99da-53f281413d77}</UniqueIdentifier>
     </Filter>
@@ -1679,6 +1691,12 @@
     </ClCompile>
     <ClCompile Include="..\private\MapElement_Door.cpp">
       <Filter>02.GameObjects\Environment\03.MapElement\Door</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapElement_Chest.cpp">
+      <Filter>02.GameObjects\Environment\03.MapElement\Chest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapElement_Chest_Lid.cpp">
+      <Filter>02.GameObjects\Environment\03.MapElement\Chest\Chest_Lid</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Item_Potion.cpp">
       <Filter>02.GameObjects\Item\Potion</Filter>

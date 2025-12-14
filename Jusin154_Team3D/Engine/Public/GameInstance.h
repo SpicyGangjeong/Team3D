@@ -319,7 +319,27 @@ private:
 	_float							m_fTimer_PhysX = { 0.f };
 	_float							m_fTimer_Level = { 0.f };
 	_float							m_fTimer_FrameCount = { 0.f };
-
+	
+	_float							m_fTimer_Render_Priority = { 0.f };
+	_float							m_fTimer_Render_Shadow = { 0.f };
+	_float							m_fTimer_Render_NonBlend = { 0.f };
+	_float							m_fTimer_Render_SSAO = { 0.f };
+	_float							m_fTimer_Render_SSAO_BLUR = { 0.f };
+	_float							m_fTimer_Render_LightAcc = { 0.f };
+	_float							m_fTimer_Render_Blur = { 0.f };
+	_float							m_fTimer_Render_Combined = { 0.f };
+	_float							m_fTimer_Render_Occlusion = { 0.f };
+	_float							m_fTimer_Render_EnvironmentPostProcess = { 0.f };
+	_float							m_fTimer_Render_Fog = { 0.f };
+	_float							m_fTimer_Render_Effect = { 0.f };
+	_float							m_fTimer_Render_NonLight = { 0.f };
+	_float							m_fTimer_Render_Blend = { 0.f };
+	_float							m_fTimer_Render_WeightBlend = { 0.f };
+	_float							m_fTimer_Render_Bloom = { 0.f };
+	_float							m_fTimer_Render_LastColor = { 0.f };
+	_float							m_fTimer_Render_Tone_Mapping = { 0.f };
+	_float							m_fTimer_Render_UI = { 0.f };
+	_float							m_fTimer_Render_UI_Overley = { 0.f };
 
 	vector<const _char*>			    m_FilePaths = {};
 	map<const _char*, CModel*>			m_ModelMap;

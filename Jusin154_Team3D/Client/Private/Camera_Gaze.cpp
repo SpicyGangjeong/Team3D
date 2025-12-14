@@ -182,7 +182,7 @@ void CCamera_Gaze::Free()
 
 void CCamera_Gaze::Describe_Entity()
 {
-	GUI::Begin("CAMERA");
+	GUI::Begin("CAMERA", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	if (GUI::CollapsingHeader("Camera_Gaze_Describe")) {
 		m_pTransformCom->Describe_Entity();
 		GUI::Text("LOOK_SRC %.2f, %.2f, %.2f", m_vLookPos_Src.x, m_vLookPos_Src.y, m_vLookPos_Src.z);

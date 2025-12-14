@@ -189,7 +189,7 @@ void CProtego::Free()
 
 void CProtego::Describe_Entity()
 {
-	GUI::Begin("PROTEGO");
+	GUI::Begin("PROTEGO", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 
 	GUI::DragFloat("fAmountSize", &m_fAmountSize);
 	GUI::DragFloat("fSpeed", &m_fSpeed);

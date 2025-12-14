@@ -204,7 +204,7 @@ void CBroom::Free()
 
 void CBroom::Describe_Entity()
 {
-	GUI::Begin("UNIT");
+	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	if (GUI::CollapsingHeader("Broom")) {
 		GUI::DragFloat("MaxSpeed", &m_fFlyMaxSpeed, 0.01f);
 		GUI::DragFloat("Speed", &m_fSpeed, 0.01f);

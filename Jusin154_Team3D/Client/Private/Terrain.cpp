@@ -237,7 +237,7 @@ void CTerrain::Free()
 #ifdef _DEBUG
 void CTerrain::Describe_Entity()
 {
-	GUI::Begin("Renderer");
+	GUI::Begin("Renderer", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	GUI::PushItemWidth(80);
 	if (GUI::CollapsingHeader("Terr"))
 	{

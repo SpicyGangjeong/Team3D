@@ -196,7 +196,7 @@ void CNPC_Ollivander::Free()
 
 void CNPC_Ollivander::Describe_Entity()
 {
-	GUI::Begin("UNIT");
+	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	if (GUI::CollapsingHeader("Ollivander")) {
 		m_pModelCom->Describe_Entity();
 		if (ImGui::TreeNode("ANIM STATE")) {

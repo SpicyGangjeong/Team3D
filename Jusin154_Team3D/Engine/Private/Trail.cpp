@@ -350,7 +350,7 @@ void CTrail::Free()
 
 void CTrail::Describe_Entity()
 {
-	GUI::Begin("EFFECT");
+	GUI::Begin("EFFECT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	if (GUI::CollapsingHeader("CTrail")) {
 		GUI::InputFloat3("Low", (_float*)&m_TrailDesc.vLow);
 		GUI::InputFloat3("High", (_float*)&m_TrailDesc.vHigh);

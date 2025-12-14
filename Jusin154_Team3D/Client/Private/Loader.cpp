@@ -166,6 +166,8 @@
 #include "MapElement_Door.h"
 #include "Land.h"
 #include "Unified.h"
+#include "MapElement_Chest.h"
+#include "MapElement_Chest_Lid.h"
 
 #pragma endregion
 
@@ -611,6 +613,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 				/* TeaShop Chair*/
 				jobMapModels.emplace_back(Deferred_FolderLoad(
 					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Meshes/Chairs",
+					".bin", false
+				));
+				/* Object Interactables (Chest)*/
+				jobMapModels.emplace_back(Deferred_FolderLoad(
+					"../Bin/Resources/Models/MapMesh/Game/Environment/Objects/Interactables",
 					".bin", false
 				));
 			}
@@ -1166,6 +1173,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 #pragma endregion
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Levioso_Noise"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Effect/Noises/VFX_T_NoiseCaustics02_Color_D.png"), 0)))) {
+		return E_FAIL;
+	}
 
 #pragma region EFFECT
 
@@ -1422,7 +1433,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 			return E_FAIL;
 		}
 
-		//Desc.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
+		Desc.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX_KIN"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
 			return E_FAIL;
 		}
@@ -2155,6 +2166,14 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_GameObject_MapElement_Door */
 	if (FAILED(m_pGameInstance->Add_Prototype<CMapElement_Door>(g_iStaticLevel, CMapElement_Door::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_MapElement_Chest */
+	if (FAILED(m_pGameInstance->Add_Prototype<CMapElement_Chest>(g_iStaticLevel, CMapElement_Chest::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_MapElement_Chest_Lid */
+	if (FAILED(m_pGameInstance->Add_Prototype<CMapElement_Chest_Lid>(g_iStaticLevel, CMapElement_Chest_Lid::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Unified */

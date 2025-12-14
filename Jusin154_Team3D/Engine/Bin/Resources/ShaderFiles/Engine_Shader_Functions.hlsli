@@ -390,4 +390,57 @@ float4 ApplyDissolve(Texture2D DisolveTexture, float fDisolveRatio, float fDisol
     return vMtrlDiffuse;
 }
 
+bool IsValidUV(float2 uv)
+{
+    if (uv.x < 0 || uv.x >= 1
+    || uv.y < 0 || uv.y >= 1)
+    {
+        return false;
+    }
+    return true;
+}
+
+float4 BilinearFetches(float2 vGlobalTexelSize, Texture2D SrcTexture2D, float2 vCenterTexCoord, sampler samplerLinear)
+{
+    float2 uv = vCenterTexCoord;
+    float2 vSrcTexelSize = float2(1.f/vGlobalTexelSize.x, 1.f/vGlobalTexelSize.y);
+    float fWeight = 0.f;
+    
+    float3 vCenterColor = float3(0.f, 0.f, 0.f);
+    float3 fLTColor = float3(0.f, 0.f, 0.f);
+    float3 fRTColor = float3(0.f, 0.f, 0.f);
+    float3 fLBColor = float3(0.f, 0.f, 0.f);
+    float3 fRBColor = float3(0.f, 0.f, 0.f);
+    {
+        if (true == IsValidUV(uv)) {
+            vCenterColor = SrcTexture2D.SampleLevel(samplerLinear, uv, 0).rgb;
+            fWeight += 0.5f;
+        }
+        uv = vCenterTexCoord + vSrcTexelSize * float2(-1.0, -1.0);
+        if (true == IsValidUV(uv)) {
+            fLTColor = SrcTexture2D.SampleLevel(samplerLinear, uv, 0).rgb;
+            fWeight += 0.125f;
+        }
+        uv = vCenterTexCoord + vSrcTexelSize * float2(+1.0, -1.0);
+        if (true == IsValidUV(uv)) {
+            fRTColor = SrcTexture2D.SampleLevel(samplerLinear, uv, 0).rgb;
+            fWeight += 0.125f;
+        }
+        uv = vCenterTexCoord + vSrcTexelSize * float2(-1.0, +1.0);
+        if (true == IsValidUV(uv)) {
+            fLBColor = SrcTexture2D.SampleLevel(samplerLinear, uv, 0).rgb;
+            fWeight += 0.125f;
+        }
+        uv = vCenterTexCoord + vSrcTexelSize * float2(+1.0, +1.0);
+        if (true == IsValidUV(uv)) {
+            fRBColor = SrcTexture2D.SampleLevel(samplerLinear, uv, 0).rgb;
+            fWeight += 0.125f;
+        }
+    }
+
+    float3 vFilteredColor = (vCenterColor * 0.5 + (fLTColor + fRTColor + fLBColor + fRBColor) * 0.125) / fWeight;
+
+    return float4(vFilteredColor, 1.0);
+}
+
 #endif // ENGINE_SHADER_FUNCTIONS_HLSLI
