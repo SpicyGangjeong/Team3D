@@ -683,35 +683,34 @@ PS_OUT_FLT4_SINGLE PS_MAIN_EMBOSS(PS_IN In)
 {
     PS_OUT_FLT4_SINGLE Out;
     float2 uv = In.vTexcoord;
-    float fMask = g_DiffuseTexture.Sample(BorderZeroSampler, In.vTexcoord).a;
+    float fMask = g_DiffuseTexture.SampleLevel(BorderZeroSampler, uv, 0).a;
     float2 vSrcTexelSize = float2(1.f / g_vResolution.x, 1.f / g_vResolution.y);
     float3 vColor = (0.f, 0.f, 0.f);
     
     uint iMask = (uint) round(fMask * 255.f); // int a = 1  -> // vBloom.a = (enum / 255);
-    if (true)
+    if (0 != iMask)
     {
         // 주변 4개 셀(LT RT LB RB)및 중앙을 이중선형샘플링, 이후 자체적으로 이중선형샘플링
-        float3 vCenterColor = g_DiffuseTexture.Sample(BorderZeroSampler, In.vTexcoord);
-        uv = In.vTexcoord + vSrcTexelSize * float2(-1.0, -1.0);
+        float3 vCenterColor = g_DiffuseTexture.SampleLevel(BorderZeroSampler, uv, 0);
+            uv = In.vTexcoord + vSrcTexelSize * float2(-1.0, -1.0);
         float3 fLTColor = BilinearFetches(g_vResolution, g_DiffuseTexture, uv, BorderZeroLinearSampler);
-        uv = In.vTexcoord + vSrcTexelSize * float2(+1.0, -1.0);
+            uv = In.vTexcoord + vSrcTexelSize * float2(+1.0, -1.0);
         float3 fRTColor = BilinearFetches(g_vResolution, g_DiffuseTexture, uv, BorderZeroLinearSampler);
-        uv = In.vTexcoord + vSrcTexelSize * float2(-1.0, +1.0);
+            uv = In.vTexcoord + vSrcTexelSize * float2(-1.0, +1.0);
         float3 fLBColor = BilinearFetches(g_vResolution, g_DiffuseTexture, uv, BorderZeroLinearSampler);
-        uv = In.vTexcoord + vSrcTexelSize * float2(+1.0, +1.0);
+            uv = In.vTexcoord + vSrcTexelSize * float2(+1.0, +1.0);
         float3 fRBColor = BilinearFetches(g_vResolution, g_DiffuseTexture, uv, BorderZeroLinearSampler);
     
         // vSample /= fWeight 이중선형샘플러가 자체적으로 웨이츠 계싼해주기 때문에 안해도 상관없을듯
         vColor = vCenterColor * 0.5f + (fLTColor + fRTColor + fLBColor + fRBColor) * 0.125f;
-        if (iMask == 2) {
+        if (iMask == 2)
+        {
             vColor *= 3.f;
         }
     }
-    float fIntensity = dot(vColor, float3(0.2126f, 0.7152f, 0.0722f)); // 대략적인 밝기 
-    if (fIntensity <= FLT_EPSILON5) {
-        Out.vFirstTarget = float4(0.f, 0.f, 0.f, 1.f);
-        return Out;
-    }
+    float fIntensity = dot(vColor, float3(0.2126f, 0.7152f, 0.0722f));
+    fIntensity = max(FLT_EPSILON3, fIntensity);
+
     
     float fBloomIntensity = GetBloomCurve(fIntensity, g_fBloomThreshold, g_iBloomEmbossingPass);
     float3 bloomColor = (vColor * fBloomIntensity) / fIntensity;

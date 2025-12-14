@@ -413,27 +413,27 @@ float4 BilinearFetches(float2 vGlobalTexelSize, Texture2D SrcTexture2D, float2 v
     float3 fRBColor = float3(0.f, 0.f, 0.f);
     {
         if (true == IsValidUV(uv)) {
-            vCenterColor = SrcTexture2D.Sample(samplerLinear, uv).rgb;
+            vCenterColor = SrcTexture2D.SampleLevel(samplerLinear, uv, 0).rgb;
             fWeight += 0.5f;
         }
         uv = vCenterTexCoord + vSrcTexelSize * float2(-1.0, -1.0);
         if (true == IsValidUV(uv)) {
-            fLTColor = SrcTexture2D.Sample(samplerLinear, uv).rgb;
+            fLTColor = SrcTexture2D.SampleLevel(samplerLinear, uv, 0).rgb;
             fWeight += 0.125f;
         }
         uv = vCenterTexCoord + vSrcTexelSize * float2(+1.0, -1.0);
         if (true == IsValidUV(uv)) {
-            fRTColor = SrcTexture2D.Sample(samplerLinear, uv).rgb;
+            fRTColor = SrcTexture2D.SampleLevel(samplerLinear, uv, 0).rgb;
             fWeight += 0.125f;
         }
         uv = vCenterTexCoord + vSrcTexelSize * float2(-1.0, +1.0);
         if (true == IsValidUV(uv)) {
-            fLBColor = SrcTexture2D.Sample(samplerLinear, uv).rgb;
+            fLBColor = SrcTexture2D.SampleLevel(samplerLinear, uv, 0).rgb;
             fWeight += 0.125f;
         }
         uv = vCenterTexCoord + vSrcTexelSize * float2(+1.0, +1.0);
         if (true == IsValidUV(uv)) {
-            fRBColor = SrcTexture2D.Sample(samplerLinear, uv).rgb;
+            fRBColor = SrcTexture2D.SampleLevel(samplerLinear, uv, 0).rgb;
             fWeight += 0.125f;
         }
     }
