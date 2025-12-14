@@ -560,6 +560,36 @@
     <ClInclude Include="..\Public\Goblin_Teleport.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Goblin_Teleport</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Quest_Border.h">
+      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Border</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Quest_Entry_Line.h">
+      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Entry_Line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Quest_Header.h">
+      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Quest_HeaderLine.h">
+      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_HeaderLine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Quest_Info.h">
+      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Info</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Quest_Info_Header.h">
+      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Info_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Quest_Info_Line.h">
+      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Info_Line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Quest_List.h">
+      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_List</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Quest_Canvas.h">
+      <Filter>02.GameObjects\UI\Quest_Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Quest_Panel.h">
+      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\State_Broom_TurboFly.h">
       <Filter>04.Mechanic\State\Broom_Player\State_Broom_TurboFly</Filter>
     </ClInclude>
@@ -1188,6 +1218,36 @@
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Goblin_Teleport">
       <UniqueIdentifier>{8f5dbf8c-be74-4512-a84f-586397744b24}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\UI\Quest_Canvas">
+      <UniqueIdentifier>{3bb81c23-be27-44c8-9fe8-3d9004391173}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel">
+      <UniqueIdentifier>{322edb99-c59d-4a92-8ab1-8ec57a9e18fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Border">
+      <UniqueIdentifier>{ba5406be-c0a0-41dd-879f-a324d71ea4b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Entry_Line">
+      <UniqueIdentifier>{c02a6573-5be6-4f17-b1b0-39698c0fff5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Header">
+      <UniqueIdentifier>{da2bbb64-73eb-427a-ae36-21c9ed5db304}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_HeaderLine">
+      <UniqueIdentifier>{73ceb062-c340-4365-9fb3-7bb21f9b9552}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Info">
+      <UniqueIdentifier>{bfeebdc4-6aa9-400f-a086-3d6a32a3d37e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Info_Header">
+      <UniqueIdentifier>{dba35303-1858-4f74-8c4c-4c084cfaad1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Info_Line">
+      <UniqueIdentifier>{7c8b3162-a6d5-441f-84ae-cfb4bf779dfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_List">
+      <UniqueIdentifier>{2d8d199b-8ba8-497a-afb3-edcc4c905ea5}</UniqueIdentifier>
+    </Filter>
     <Filter Include="04.Mechanic\State\Broom_Player\State_Broom_TurboFly">
       <UniqueIdentifier>{2326c134-a2bb-45f1-8452-2dd49bf42697}</UniqueIdentifier>
     </Filter>
@@ -1700,6 +1760,36 @@
     </ClCompile>
     <ClCompile Include="..\Private\Goblin_Teleport.cpp">
       <Filter>02.GameObjects\Effect\MonsterEffect\Goblin_Teleport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Quest_Border.cpp">
+      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Border</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Quest_Entry_Line.cpp">
+      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Entry_Line</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Quest_Header.cpp">
+      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Header</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Quest_HeaderLine.cpp">
+      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_HeaderLine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Quest_Info.cpp">
+      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Info</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Quest_Info_Header.cpp">
+      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Info_Header</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Quest_Info_Line.cpp">
+      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Info_Line</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Quest_List.cpp">
+      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_List</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Quest_Canvas.cpp">
+      <Filter>02.GameObjects\UI\Quest_Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Quest_Panel.cpp">
+      <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\State_Broom_TurboFly.cpp">
       <Filter>04.Mechanic\State\Broom_Player\State_Broom_TurboFly</Filter>

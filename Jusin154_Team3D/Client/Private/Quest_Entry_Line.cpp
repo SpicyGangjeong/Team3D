@@ -1,31 +1,30 @@
 ﻿#include "pch.h"
-#include "Quest_Info_Header.h"
+#include "Quest_Entry_Line.h"
 #include "GameInstance.h"
 
-CQuest_Info_Header::CQuest_Info_Header(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CQuest_Entry_Line::CQuest_Entry_Line(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
 {
 }
 
-CQuest_Info_Header::CQuest_Info_Header(const CQuest_Info_Header& rhs)
+CQuest_Entry_Line::CQuest_Entry_Line(const CQuest_Entry_Line& rhs)
 	:CElementObject(rhs)
 {
 }
 
-HRESULT CQuest_Info_Header::Initialize_Prototype()
+HRESULT CQuest_Entry_Line::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CQuest_Info_Header::Initialize(void* pArg)
+HRESULT CQuest_Entry_Line::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = 345.f;
-	Desc.fY = -350.f;
-	Desc.fSizeX = 128.f;
-	Desc.fSizeY = 32.f;
-
+	Desc.fX = 330.f;
+	Desc.fY = -230.f;
+	Desc.fSizeX = 256.f;
+	Desc.fSizeY = 64.f;
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
 	if (FAILED(__super::Initialize(&Desc)))
@@ -36,21 +35,20 @@ HRESULT CQuest_Info_Header::Initialize(void* pArg)
 	{
 		return E_FAIL;
 	}
+
 	m_fTimeMult = 3.f;
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 5.f;
-	m_vNine_Slice = _float4(0.f, 128.f, 0.f, 32.f);
-	m_fSortZ = 0.02f;
-	m_fFontX = 740.f;
+	m_vNine_Slice = _float4(0.f, 256.f, 0.f, 64.f);
+	m_fFontX = 928.f;
 	m_fFontY = 520.f;
-	m_iColor = 2;
-	SizeUpX(1105.f);
-	SizeUpY(60.f);
+	SizeUpX(800.f);
+	SizeUpY(15.f);
 	Visible(true);
 	return S_OK;
 }
 
-void CQuest_Info_Header::Priority_Update(_float fTimeDelta)
+void CQuest_Entry_Line::Priority_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -59,23 +57,22 @@ void CQuest_Info_Header::Priority_Update(_float fTimeDelta)
 	__super::Priority_Update(fTimeDelta);
 }
 
-
-void CQuest_Info_Header::Update(_float fTimeDelta)
+void CQuest_Entry_Line::Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
 		return;
 	}
-
 	if (m_bFadeIn == true)
 	{
 		if (m_fAlpha <= 1.f)
+		{
 			m_fAlpha += fTimeDelta * m_fAlphaTime;
+		}
 
 		if (m_fAlpha >= 1.f)
 		{
 			m_bFadeIn = false;
-			m_bHover = true;
 			m_fAlpha = 1.f;
 		}
 	}
@@ -83,10 +80,7 @@ void CQuest_Info_Header::Update(_float fTimeDelta)
 	if (m_bFadeOut == true)
 	{
 		if (m_fAlpha >= 0.f)
-		{
-			m_fAlpha -= fTimeDelta * m_fAlphaTime;
-			m_bHover = false;
-		}
+			m_fAlpha -= fTimeDelta * m_fAlphaTime;;
 
 		if (m_fAlpha <= 0.f)
 		{
@@ -94,12 +88,12 @@ void CQuest_Info_Header::Update(_float fTimeDelta)
 			m_fAlpha = 0.f;
 		}
 	}
-	m_fTime += fTimeDelta * m_fTimeMult;
 
+	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
 }
 
-void CQuest_Info_Header::Late_Update(_float fTimeDelta)
+void CQuest_Entry_Line::Late_Update(_float fTimeDelta)
 {
 	if (!__super::Chack_Visible())
 	{
@@ -111,7 +105,7 @@ void CQuest_Info_Header::Late_Update(_float fTimeDelta)
 	}
 }
 
-HRESULT CQuest_Info_Header::Render()
+HRESULT CQuest_Entry_Line::Render()
 {
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
@@ -126,17 +120,18 @@ HRESULT CQuest_Info_Header::Render()
 		return E_FAIL;
 	}
 
-	_float OffSet = m_pGameInstance->FontSizeX(TEXT("Font_size20"), TEXT("마을의 평화를 위해서 노력하기") - 22) * 0.5f;
-	m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("마을의 평화를 위해서 노력하기"), _float2((m_fFontX + m_fX) - OffSet, m_fFontY + m_fY), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
+	_float OffSet = m_pGameInstance->FontSizeX(TEXT("Font_size20"), TEXT("보 상") - 22) * 0.5f;
+	m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("조 건"), _float2((m_fFontX + m_fX) - OffSet, m_fFontY + m_fY), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
+
 	return S_OK;
 }
 
-_vector CQuest_Info_Header::Get_WorldPostion()
+_vector CQuest_Entry_Line::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
 }
 
-HRESULT CQuest_Info_Header::Bind_ShaderResources()
+HRESULT CQuest_Entry_Line::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 	{
@@ -146,6 +141,7 @@ HRESULT CQuest_Info_Header::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 	{
 		return E_FAIL;
@@ -193,13 +189,13 @@ HRESULT CQuest_Info_Header::Bind_ShaderResources()
 	return S_OK;
 }
 
-HRESULT CQuest_Info_Header::Ready_Components(void* pArg)
+HRESULT CQuest_Entry_Line::Ready_Components(void* pArg)
 {
 	if (FAILED(Add_Component<CVIBuffer_Rect>(g_iStaticLevel, &m_pVIBufferCom)))
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_LighthouseHeaderBack"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_Line"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -211,33 +207,33 @@ HRESULT CQuest_Info_Header::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-CQuest_Info_Header* CQuest_Info_Header::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CQuest_Entry_Line* CQuest_Entry_Line::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CQuest_Info_Header* pInstance = new CQuest_Info_Header(pDevice, pContext);
+	CQuest_Entry_Line* pInstance = new CQuest_Entry_Line(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CQuest_Info_Header");
+		MSG_BOX("Failed to Created : CQuest_Entry_Line");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CQuest_Info_Header::Clone(void* pArg, CGameObject* pOwner)
+CGameObject* CQuest_Entry_Line::Clone(void* pArg, CGameObject* pOwner)
 {
-	CQuest_Info_Header* pInstance = new CQuest_Info_Header(*this);
+	CQuest_Entry_Line* pInstance = new CQuest_Entry_Line(*this);
 	pInstance->m_pOwner = pOwner;
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CQuest_Info_Header");
+		MSG_BOX("Failed to Cloned : CSpell_Header");
 		SAFE_RELEASE(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CQuest_Info_Header::Free()
+void CQuest_Entry_Line::Free()
 {
 	__super::Free();
 
@@ -246,6 +242,8 @@ void CQuest_Info_Header::Free()
 	SAFE_RELEASE(m_pVIBufferCom);
 }
 
-void CQuest_Info_Header::Describe_Entity()
+#ifdef _DEBUG
+void CQuest_Entry_Line::Describe_Entity()
 {
 }
+#endif // _DEBUG
