@@ -4,16 +4,16 @@
 
 NS_BEGIN(Client)
 
-class CBroom_State_Hover final : public CState_Root
+class CState_Broom_TurboFly final : public CState_Root
 {
 public:
-    typedef struct tagHover : public CState_Root::STATE_ROOT_DESC {
+    typedef struct tagBroomTurboFly : public CState_Root::STATE_ROOT_DESC {
         function<void(_float fTimeDelta)> funcPriorityUpdate = { nullptr };
         function<void(_float fTimeDelta)> funcLateUpdate = { nullptr };
-    }STATE_HOVER_DESC;
+    }STATE_BROOM_TURBOFLY_DESC;
 private:
-    CBroom_State_Hover();
-    virtual ~CBroom_State_Hover() = default;
+    CState_Broom_TurboFly();
+    virtual ~CState_Broom_TurboFly() = default;
 
 public:
     virtual void Enter();
@@ -25,10 +25,10 @@ private:
     function<void(_float fTimeDelta)> m_funcLateUpdate = { nullptr };
 
 private:
-    HRESULT Initialize(STATE_HOVER_DESC* pDesc);
+    HRESULT Initialize(STATE_BROOM_TURBOFLY_DESC* pDesc);
 
 public:
-    static CBroom_State_Hover* Create(STATE_HOVER_DESC* pDesc);
+    static CState_Broom_TurboFly* Create(STATE_BROOM_TURBOFLY_DESC* pDesc);
     virtual void Free() override;
     virtual void Describe_Entity();
 };

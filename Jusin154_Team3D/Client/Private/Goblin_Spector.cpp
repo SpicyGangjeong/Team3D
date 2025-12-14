@@ -281,36 +281,6 @@ HRESULT CGoblin_Spector::Bind_ShaderResources()
 	return S_OK;
 }
 
-HRESULT CGoblin_Spector::Render_Disolve()
-{
-	if (FLT_EPSILON3 * 10 < m_fDisolveTime)
-	{
-		_bool bDisolve = true;
-		_float fDisolveAmount = 0.1f;
-		_float fDisolveEdgeWidth = 0.1f;
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool)))) {
-			return E_FAIL;
-		}
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_fDisolveRatio", &m_fDisolveTime, sizeof(_float)))) {
-			return E_FAIL;
-		}
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_fDisolveAmount", &fDisolveAmount, sizeof(_float)))) {
-			return E_FAIL;
-		}
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_fDisolveEdgeWidth", &fDisolveEdgeWidth, sizeof(_float)))) {
-			return E_FAIL;
-		}
-		if (FAILED(m_pGameInstance->Bind_GlobalSRV(m_pShaderCom, TEXT("GLOBAL_DISOLVE_NOISE_05"), "g_DeadDisolveTexture"))) {
-			return E_FAIL;
-		}
-		if (FAILED(m_pGameInstance->Bind_GlobalSRV(m_pShaderCom, TEXT("GLOBAL_DISOLVE_BURN_VERTICAL"), "g_DeadDisolveBurnTexture"))) {
-			return E_FAIL;
-		}
-	}
-	
-	return S_OK;
-}
-
 CGoblin_Spector* CGoblin_Spector::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CGoblin_Spector* pInstance = new CGoblin_Spector(pDevice, pContext);

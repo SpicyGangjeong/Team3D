@@ -132,7 +132,7 @@ HRESULT CMainLight::Ready_Components()
 	LightDesc.eType = LIGHT::DIRECTIONAL;
 	LightDesc.vDiffuse = _float4(0.3f, 0.3f, 0.1f, 0.f);
 	LightDesc.vAmbient = _float4(0.3f, 0.3f, 0.5f, 0.f);
-	LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 0.f);
+	LightDesc.vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.f);
 	LightDesc.pDirection = m_pTransformCom->Get_StatePtr(STATE::LOOK);
 	LightDesc.iLevel = NEXT_LEVEL;
 
