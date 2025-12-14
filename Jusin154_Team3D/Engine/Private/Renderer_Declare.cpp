@@ -418,9 +418,9 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_WB"), TEXT("Target_Color")))) {
-			return E_FAIL;
-		}
+		//if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_WB"), TEXT("Target_Color")))) {
+		//	return E_FAIL;
+		//}
 
 		/* MRT_Fog */
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Fog"), TEXT("Target_Fog")))) {
