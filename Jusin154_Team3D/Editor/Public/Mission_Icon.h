@@ -29,13 +29,13 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 
 public:
-	void QuestType(QUESTYPE eType);
+	void QuestType(QUESTTYPE eType);
 
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
-	QUESTYPE		m_eQuestType = QUESTYPE::END;
+	QUESTTYPE		m_eQuestType = QUESTTYPE::END;
 	_uint			m_iType{};
 
 public:

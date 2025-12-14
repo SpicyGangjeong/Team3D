@@ -36,7 +36,7 @@ private:
 public:
     void Set_Image(_int Index);
     void ToolTipSetting();
-
+    
 private:
     CTexture* m_pDiffuse_TextureCom = { nullptr };
     CTexture* m_pDiffuse_TextureCom1 = { nullptr };
@@ -52,6 +52,9 @@ private:
 
     _wstring ToolTip[5];
     _int m_iToolTip_Count{};
+
+	_wstring ToolTip[5];
+	_int m_iToolTip_Count{};
 
 #ifdef _DEBUG
     _bool INHYUK = { false };

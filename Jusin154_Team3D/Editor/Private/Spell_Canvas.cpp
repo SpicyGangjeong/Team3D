@@ -51,7 +51,6 @@ void CSpell_Canvas::Priority_Update(_float fTimeDelta)
 
 void CSpell_Canvas::Update(_float fTimeDelta)
 {
-
 	__super::Update(fTimeDelta);
 }
 

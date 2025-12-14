@@ -27,7 +27,7 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 
 public:
-	void QuestType(QUESTYPE eType);
+	void QuestType(QUESTTYPE eType);
 
 private:
 	void Compute_UV();
@@ -49,7 +49,7 @@ private:
 	_float4 m_vKey{};
 	_float4 m_vUV{};
 	_float4 m_vActive_Icon{};
-	QUESTYPE m_eType = QUESTYPE::END;
+	QUESTTYPE m_eType = QUESTTYPE::END;
 
 public:
 	static CMissionBanner_Key* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
