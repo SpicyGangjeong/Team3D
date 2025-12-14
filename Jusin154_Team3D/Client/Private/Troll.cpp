@@ -432,7 +432,7 @@ HRESULT CTroll::Ready_Components()
 		Desc.fContactOffset = 0.001f;
 		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
 		Desc.bAutoStepping = { false };
-		Desc.fStepOffset = { 0.015f };
+		Desc.fStepOffset = { 0.12f };
 		Desc.fRadius = 1.2f;
 		Desc.fHeight = 1.5f;
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Troll_HitReport::Create();
@@ -641,16 +641,20 @@ void CTroll::Free()
 
 void CTroll::Describe_Entity()
 {
-	__super::Describe_Entity();
+	GUI::Begin("UNIT");
+	if (GUI::CollapsingHeader("Troll")) {
+		__super::Describe_Entity();
 
-	_float4x4 socketMat = *m_pModelCom->Get_BoneMatrixPtr("HeadEnd");
+		_float4x4 socketMat = *m_pModelCom->Get_BoneMatrixPtr("HeadEnd");
 
-	_string strSocket = "Socket " + to_string(socketMat._41) + to_string(socketMat._42) + to_string(socketMat._43);
+		_string strSocket = "Socket " + to_string(socketMat._41) + to_string(socketMat._42) + to_string(socketMat._43);
 
-	GUI::Text(strSocket.c_str());
+		GUI::Text(strSocket.c_str());
 
 
-	m_pTransformCom->Describe_Entity();
+		m_pTransformCom->Describe_Entity();
+	}
+	GUI::End();
 }
 
 #endif // _DEBUG

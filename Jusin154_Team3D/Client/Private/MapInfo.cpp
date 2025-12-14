@@ -680,44 +680,45 @@ void CMapInfo::Free()
 
 void CMapInfo::Describe_Entity()
 {
-	CLayer* pLayer = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_BACKGROUND);
-	if (nullptr == pLayer) {
-		return;
-	}
-	static _bool s_bConverted = { false };
-	static _bool s_bReadyToCreate = { false };
+	GUI::Begin("CLIENT_SYSTEM");
+	if (GUI::CollapsingHeader("MapInfoDesc")) {
+		CLayer* pLayer = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_BACKGROUND);
+		if (nullptr == pLayer) {
+			return;
+		}
+		static _bool s_bConverted = { false };
+		static _bool s_bReadyToCreate = { false };
 
-	const list<CGameObject*>* pObjects = pLayer->Get_Objects();
+		const list<CGameObject*>* pObjects = pLayer->Get_Objects();
 
-	GUI::Begin("MapInfoDesc");
-	GUI::SetNextItemWidth(80.f);
-	GUI::BeginChild("CollisonPartObjects");
-	GUI::SetNextItemWidth(80.f);
-	if (false == s_bReadyToCreate) {
-		if (GUI::Button("Ready_StaticMeshesForPhyX_ALL")) {
-			s_bReadyToCreate = true;
-			list<CGameObject*>::const_iterator iter = pObjects->begin();
-			for (; iter != pObjects->end(); ++iter) {
-				CMapContainer* pContainer = dynamic_cast<CMapContainer*>(*iter);
-				if (nullptr != pContainer) {
-					pContainer->ReadyForPhysX();
+		GUI::SetNextItemWidth(80.f);
+		GUI::BeginChild("CollisonPartObjects");
+		if (false == s_bReadyToCreate) {
+			if (GUI::Button("Ready_StaticMeshesForPhyX_ALL")) {
+				s_bReadyToCreate = true;
+				list<CGameObject*>::const_iterator iter = pObjects->begin();
+				for (; iter != pObjects->end(); ++iter) {
+					CMapContainer* pContainer = dynamic_cast<CMapContainer*>(*iter);
+					if (nullptr != pContainer) {
+						pContainer->ReadyForPhysX();
+					}
 				}
 			}
 		}
-	}
-	else if (false == s_bConverted) {
-		if (GUI::Button("Convert_StaticMeshesForPhyX_ALL")) {
-			s_bConverted = true;
-			list<CGameObject*>::const_iterator iter = pObjects->begin();
-			for (; iter != pObjects->end(); ++iter) {
-				CMapContainer* pContainer = dynamic_cast<CMapContainer*>(*iter);
-				if (nullptr != pContainer) {
-					pContainer->ConvertToPhysX();
+		else if (false == s_bConverted) {
+			if (GUI::Button("Convert_StaticMeshesForPhyX_ALL")) {
+				s_bConverted = true;
+				list<CGameObject*>::const_iterator iter = pObjects->begin();
+				for (; iter != pObjects->end(); ++iter) {
+					CMapContainer* pContainer = dynamic_cast<CMapContainer*>(*iter);
+					if (nullptr != pContainer) {
+						pContainer->ConvertToPhysX();
+					}
 				}
 			}
 		}
+		GUI::EndChild();
 	}
-	GUI::EndChild();
 	GUI::End();
 }
 

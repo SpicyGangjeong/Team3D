@@ -37,9 +37,9 @@ void CRenderer::Render()
 	Render_UI_Overley();
 
 #ifdef _DEBUG
+	static _bool m_bToggleDebug = false;
 	Describe_Entitiy();
 	m_pGameInstance->RenderTarget_Debuger();
-	static _bool m_bToggleDebug = false;
 
 	if (m_pGameInstance->Key_Pressing(DIK_F10)) {
 		Render_Debug();

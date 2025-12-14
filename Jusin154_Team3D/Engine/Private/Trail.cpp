@@ -350,12 +350,12 @@ void CTrail::Free()
 
 void CTrail::Describe_Entity()
 {
-
-
-	GUI::InputFloat3("Low", (_float*)&m_TrailDesc.vLow);
-	GUI::InputFloat3("High", (_float*)&m_TrailDesc.vHigh);
-
-	
+	GUI::Begin("EFFECT");
+	if (GUI::CollapsingHeader("CTrail")) {
+		GUI::InputFloat3("Low", (_float*)&m_TrailDesc.vLow);
+		GUI::InputFloat3("High", (_float*)&m_TrailDesc.vHigh);
+	}
+	GUI::End();
 }
 
 #endif // _DEBUG

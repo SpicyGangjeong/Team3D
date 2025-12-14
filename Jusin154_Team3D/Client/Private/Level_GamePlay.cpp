@@ -453,7 +453,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 	Camera_Desc.pCameraKey = CAMERA_DEBUG;
 	Camera_Desc.fRotationPerSec = XMConvertToRadians(90.0f);
 	Camera_Desc.fMouseSensor = 0.1f;
-	Camera_Desc.iPriority = 70;
+	Camera_Desc.iPriority = 53;
 	Camera_Desc.pFollowTarget = { nullptr };
 	Camera_Desc.pLookTarget = { nullptr };
 
@@ -463,9 +463,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 	}
 
 	m_pGameInstance->Add_Camera(g_iStaticLevel, pCamera, CAMERA_DEBUG);
-	if (FAILED(m_pGameInstance->Bind_Camera(g_iStaticLevel, CAMERA_DEBUG, true))) {
-		return E_FAIL;
-	}
 
 #endif // _DEBUG
 
