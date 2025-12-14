@@ -11,6 +11,7 @@
 #include "MapElement_Interactable.h"
 #include "MapElement_Lake.h"
 #include "MapElement_Door.h"
+#include "MapElement_Chest.h"
 #include "Layer.h"
 
 CMapInfo::CMapInfo()
@@ -633,6 +634,97 @@ HRESULT CMapInfo::Load_DoorElemet(const _char* pFileName)
 		//LocalTranslation->QueryFloatAttribute("z", &Desc.vBoxLocalPosition.z);
 
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Door>(g_iStaticLevel, NEXT_LEVEL, LAYER_DOOR, &Desc)))
+			return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+HRESULT CMapInfo::Load_ChestElemet(const _char* pFileName)
+{
+	tinyxml2::XMLDocument xmlDoc;
+
+	string strPath = "../Bin/Resources/Data/Map/Hiden/" + string(pFileName) + ".xml";
+
+	if ((tinyxml2::XML_SUCCESS != xmlDoc.LoadFile(strPath.c_str())))
+		return E_FAIL;
+
+	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("Chests");
+
+	if (nullptr == root)
+	{
+		MSG_BOX("Failed to Find root");
+		return S_OK;
+	}
+
+	for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
+	{
+		CMapElement_Chest::ELEMENT_CHEST_DESC Desc = {};
+
+		/* Model Prototypes */
+		Object->QueryUnsignedAttribute("Lod_Level", &Desc.iMaxLodLevel);
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::BOX);
+		string strTag = {};
+		for (auto* PrototypeTag = Object->FirstChildElement("PrototypeTag"); PrototypeTag; PrototypeTag = PrototypeTag->NextSiblingElement("PrototypeTag"))
+		{
+			strTag = PrototypeTag->GetText();
+
+			Desc.ModelPrototypeTags.push_back(CMyTools::ToWstring(strTag));
+		}
+
+		/* Transform */
+		auto* Position = Object->FirstChildElement("Position");
+		Position->QueryFloatAttribute("x", &Desc.vPosition.x);
+		Position->QueryFloatAttribute("y", &Desc.vPosition.y);
+		Position->QueryFloatAttribute("z", &Desc.vPosition.z);
+
+		auto* Scale = Object->FirstChildElement("Scale");
+		Scale->QueryFloatAttribute("x", &Desc.vScale.x);
+		Scale->QueryFloatAttribute("y", &Desc.vScale.y);
+		Scale->QueryFloatAttribute("z", &Desc.vScale.z);
+
+		auto* Rotation = Object->FirstChildElement("Rotation");
+		Rotation->QueryFloatAttribute("x", &Desc.vRotation.x);
+		Rotation->QueryFloatAttribute("y", &Desc.vRotation.y);
+		Rotation->QueryFloatAttribute("z", &Desc.vRotation.z);
+
+		auto* HalfGeometryInfo = Object->FirstChildElement("HalfGeometryInfo");
+		HalfGeometryInfo->QueryFloatAttribute("x", &Desc.vBoxSize.x);
+		HalfGeometryInfo->QueryFloatAttribute("y", &Desc.vBoxSize.y);
+		HalfGeometryInfo->QueryFloatAttribute("z", &Desc.vBoxSize.z);
+
+		auto* LocalTranslation = Object->FirstChildElement("LocalTranslation");
+		LocalTranslation->QueryFloatAttribute("x", &Desc.vBoxLocalPosition.x);
+		LocalTranslation->QueryFloatAttribute("y", &Desc.vBoxLocalPosition.y);
+		LocalTranslation->QueryFloatAttribute("z", &Desc.vBoxLocalPosition.z);
+
+		auto* RimLight = Object->FirstChildElement("RimLight");
+		RimLight->QueryFloatAttribute("pow", &Desc.fRimLightPow);
+		RimLight->QueryFloatAttribute("strength", &Desc.fRimLightStrength);
+		RimLight->QueryFloatAttribute("colorR", &Desc.vRimLightColor.x);
+		RimLight->QueryFloatAttribute("colorG", &Desc.vRimLightColor.y);
+		RimLight->QueryFloatAttribute("colorB", &Desc.vRimLightColor.z);
+		RimLight->QueryFloatAttribute("colorA", &Desc.vRimLightColor.w);
+
+
+		auto* Lid = Object->FirstChildElement("Lid");
+		Lid->QueryUnsignedAttribute("Lod_Level", &Desc.iMaxLodLevel_Lid);
+		for (auto* PrototypeTag = Lid->FirstChildElement("PrototypeTag"); PrototypeTag; PrototypeTag = PrototypeTag->NextSiblingElement("PrototypeTag"))
+		{
+			strTag = PrototypeTag->GetText();
+
+			Desc.ModelPrototypeTags_Lid.push_back(CMyTools::ToWstring(strTag));
+		}
+
+		auto* LidPosition = Lid->FirstChildElement("Position");
+		LidPosition->QueryFloatAttribute("x", &Desc.vLid_Offset.x);
+		LidPosition->QueryFloatAttribute("y", &Desc.vLid_Offset.y);
+		LidPosition->QueryFloatAttribute("z", &Desc.vLid_Offset.z);
+
+		auto* RotationAngle = Lid->FirstChildElement("RotationAngle");
+		RotationAngle->QueryFloatAttribute("RotationAngle", &Desc.fRotaitionAngle);
+
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Chest>(g_iStaticLevel, NEXT_LEVEL, LAYER_HIDDEN, &Desc)))
 			return E_FAIL;
 	}
 
