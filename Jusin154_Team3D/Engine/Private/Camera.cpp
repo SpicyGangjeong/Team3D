@@ -160,7 +160,7 @@ HRESULT CCamera::Ready_Shadow()
     XMStoreFloat4(&ShadowDesc.vEye, XMLoadFloat4(&ShadowDesc.vAt) - matRotation.r[2] * (ShadowDesc.fFar * 0.25f));
 
 #ifdef _DEBUG
-    GUI::Begin("Renderer");
+    GUI::Begin("SYSTEM");
     if (GUI::CollapsingHeader("Near_Camera_ShadowDesc")) {
         //GUI::SliderFloat3("RPY", (_float*)&m_vRollPichYaw, -360.f, 360.f);
         GUI::DragFloat("Far", &ShadowDesc.fFar, 1.f, 20, 300.f);

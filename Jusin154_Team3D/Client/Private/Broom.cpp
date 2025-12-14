@@ -204,33 +204,35 @@ void CBroom::Free()
 
 void CBroom::Describe_Entity()
 {
+	GUI::Begin("UNIT");
+	if (GUI::CollapsingHeader("Broom")) {
+		GUI::DragFloat("MaxSpeed", &m_fFlyMaxSpeed, 0.01f);
+		GUI::DragFloat("Speed", &m_fSpeed, 0.01f);
+		GUI::DragFloat("Accle", &m_fAccel, 0.01f);
+		GUI::DragFloat("Decel", &m_fDecel, 0.01f);
 
-	GUI::DragFloat("MaxSpeed", &m_fFlyMaxSpeed, 0.01f);
-	GUI::DragFloat("Speed", &m_fSpeed, 0.01f);
-	GUI::DragFloat("Accle", &m_fAccel, 0.01f);
-	GUI::DragFloat("Decel", &m_fDecel, 0.01f);
+		string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
+		GUI::Text(AnimList.c_str());
+		GUI::Text("AnimIndex %d", m_pModelCom->Get_AnimIndex());
 
-	string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
-	GUI::Text(AnimList.c_str());
-	GUI::Text("AnimIndex %d", m_pModelCom->Get_AnimIndex());
+		GUI::Text("AnimTrack %.2f", m_pModelCom->Get_CurrentTrackPosition());
+		GUI::Text("AnimRatio %.2f", m_pModelCom->Get_CurrentTrackProgressRatio());
+		_float3 Pos;
+		XMStoreFloat3(&Pos, Get_WorldPostion());
 
-	GUI::Text("AnimTrack %.2f", m_pModelCom->Get_CurrentTrackPosition());
-	GUI::Text("AnimRatio %.2f", m_pModelCom->Get_CurrentTrackProgressRatio());
-	_float3 Pos;
-	XMStoreFloat3(&Pos, Get_WorldPostion());
-
-	float Pos3[3] = { Pos.x, Pos.y, Pos.z };
-	GUI::DragFloat3("Pos", Pos3);
+		float Pos3[3] = { Pos.x, Pos.y, Pos.z };
+		GUI::DragFloat3("Pos", Pos3);
 
 
-	_float RotR, RotU, RotL;
-	RotR = XMVectorGetX(m_pTransformCom->Get_State(STATE::RIGHT));
-	RotU = XMVectorGetY(m_pTransformCom->Get_State(STATE::UP));
-	RotL = XMVectorGetZ(m_pTransformCom->Get_State(STATE::LOOK));
+		_float RotR, RotU, RotL;
+		RotR = XMVectorGetX(m_pTransformCom->Get_State(STATE::RIGHT));
+		RotU = XMVectorGetY(m_pTransformCom->Get_State(STATE::UP));
+		RotL = XMVectorGetZ(m_pTransformCom->Get_State(STATE::LOOK));
 
-	float Rot3[3] = { RotR, RotU,RotL };
-	GUI::DragFloat3("Rot", Rot3);
-
+		float Rot3[3] = { RotR, RotU,RotL };
+		GUI::DragFloat3("Rot", Rot3);
+	}
+	GUI::End();
 }
 
 #endif // _DEBUG

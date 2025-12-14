@@ -210,27 +210,31 @@ void CTroll_Weapon::Free()
 
 void CTroll_Weapon::Describe_Entity()
 {
-	_float4 vPos;
-	_float4 vHammerWorldPos;
+	GUI::Begin("UNIT");
+	if (GUI::CollapsingHeader("Troll_Hammer")) {
+		_float4 vPos;
+		_float4 vHammerWorldPos;
 
-	_float4 vHammerRight;
-	_float4 vHammerUp;
-	_float4 vHammerLook;
-	_float4 vHammerPos;
-	XMStoreFloat4(&vPos, m_pTransformCom->Get_State(STATE::POSITION));
-	XMStoreFloat4(&vHammerWorldPos, Get_WorldPostion());
+		_float4 vHammerRight;
+		_float4 vHammerUp;
+		_float4 vHammerLook;
+		_float4 vHammerPos;
+		XMStoreFloat4(&vPos, m_pTransformCom->Get_State(STATE::POSITION));
+		XMStoreFloat4(&vHammerWorldPos, Get_WorldPostion());
 
-	XMStoreFloat4(&vHammerRight, XMLoadFloat4((_float4*)&m_HammerMatrix.m[0][0]));
-	XMStoreFloat4(&vHammerUp, XMLoadFloat4((_float4*)&m_HammerMatrix.m[1][0]));
-	XMStoreFloat4(&vHammerLook, XMLoadFloat4((_float4*)&m_HammerMatrix.m[2][0]));
-	XMStoreFloat4(&vHammerPos, XMLoadFloat4((_float4*)&m_HammerMatrix.m[3][0]));
+		XMStoreFloat4(&vHammerRight, XMLoadFloat4((_float4*)&m_HammerMatrix.m[0][0]));
+		XMStoreFloat4(&vHammerUp, XMLoadFloat4((_float4*)&m_HammerMatrix.m[1][0]));
+		XMStoreFloat4(&vHammerLook, XMLoadFloat4((_float4*)&m_HammerMatrix.m[2][0]));
+		XMStoreFloat4(&vHammerPos, XMLoadFloat4((_float4*)&m_HammerMatrix.m[3][0]));
 
-	GUI::Text("vPos, %.2f, %.2f, %.2f, %.2f", vPos.x, vPos.y, vPos.z, vPos.w);
-	GUI::Text("vHammerWorldPos, %.2f, %.2f, %.2f, %.2f", vHammerWorldPos.x, vHammerWorldPos.y, vHammerWorldPos.z, vHammerWorldPos.w);
-	GUI::Text("vHammerRight, %.2f, %.2f, %.2f, %.2f", vHammerRight.x, vHammerRight.y, vHammerRight.z, vHammerRight.w);
-	GUI::Text("vHammerUp, %.2f, %.2f, %.2f, %.2f", vHammerUp.x, vHammerUp.y, vHammerUp.z, vHammerUp.w);
-	GUI::Text("vHammerLook, %.2f, %.2f, %.2f, %.2f", vHammerLook.x, vHammerLook.y, vHammerLook.z, vHammerLook.w);
-	GUI::Text("vHammerPos, %.2f, %.2f, %.2f, %.2f", vHammerPos.x, vHammerPos.y, vHammerPos.z, vHammerPos.w);
+		GUI::Text("vPos, %.2f, %.2f, %.2f, %.2f", vPos.x, vPos.y, vPos.z, vPos.w);
+		GUI::Text("vHammerWorldPos, %.2f, %.2f, %.2f, %.2f", vHammerWorldPos.x, vHammerWorldPos.y, vHammerWorldPos.z, vHammerWorldPos.w);
+		GUI::Text("vHammerRight, %.2f, %.2f, %.2f, %.2f", vHammerRight.x, vHammerRight.y, vHammerRight.z, vHammerRight.w);
+		GUI::Text("vHammerUp, %.2f, %.2f, %.2f, %.2f", vHammerUp.x, vHammerUp.y, vHammerUp.z, vHammerUp.w);
+		GUI::Text("vHammerLook, %.2f, %.2f, %.2f, %.2f", vHammerLook.x, vHammerLook.y, vHammerLook.z, vHammerLook.w);
+		GUI::Text("vHammerPos, %.2f, %.2f, %.2f, %.2f", vHammerPos.x, vHammerPos.y, vHammerPos.z, vHammerPos.w);
+	}
+	GUI::End();
 }
 
 #endif // _DEBUG
