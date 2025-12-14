@@ -369,11 +369,20 @@ HRESULT CVIBuffer_Model_Instance::Create_ComputeShader()
 	sizeof(VTX_INSTANCE_MODEL),
 	};
 
-	m_pComputeShader = CComputeShader::Create(m_pDevice, m_pContext,
-		L"../Bin/Resources/ShaderFiles/Shader_Instance_Compute.hlsl", "CS_MAIN", m_iMaxNumInstance, 2, 1, CS_InputStrides, CS_OutputStrides);
+	CComputeShader::CS_INFO CS_Desc = {};
 
-	if (m_pComputeShader == nullptr)
+	CS_Desc.iNumElement = m_iMaxNumInstance;
+	CS_Desc.iNumInputBuffer = 2;
+	CS_Desc.iNumOutputBuffer = 1;
+
+	CS_Desc.iInputStructStride = CS_InputStrides;
+	CS_Desc.iOutputStructStride = CS_OutputStrides;
+
+	m_pComputeShader = (CComputeShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, CS_INSTANCE_MODEL, &CS_Desc, nullptr);
+
+	if (nullptr == m_pComputeShader) {
 		return E_FAIL;
+	}
 
 	return S_OK;
 }

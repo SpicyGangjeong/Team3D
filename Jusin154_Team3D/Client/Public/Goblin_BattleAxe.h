@@ -35,6 +35,15 @@ private:
 
 	_float4x4 m_vAxeMat= {};
 
+
+	PSX::PxSweepBufferN<12> m_SweepBufferAxe = {};
+	PSX::PxSweepBufferN<12> m_SweepBufferGrip = {};
+	const _float4* m_pAxePos = { nullptr };
+	const _float4* m_pAxeGripPos = { nullptr };
+	_float4 m_vStartAxePos = { };
+	_float4 m_vStartGripPos = { };
+	_bool m_bPlayerHit = {};
+
 #ifdef _DEBUG
 	unique_ptr<GeometricPrimitive> m_pGripShape = { nullptr };
 	unique_ptr<GeometricPrimitive> m_pSubShape = { nullptr };
@@ -44,6 +53,10 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
+
+	void CheckAxeHits(_uint& iHitCount, vector<PSX::PxSweepHit>& pxHits);
+
+	void SwingHit(_bool& bPlayerHit);
 
 public:
 	static CGoblin_BattleAxe* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

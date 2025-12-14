@@ -25,7 +25,9 @@ void CNPC_Ollivander::Priority_Update(_float fTimeDelta)
 void CNPC_Ollivander::Update(_float fTimeDelta)
 {
 	m_pFSM->Update_State(fTimeDelta);
-
+	if (m_pModelCom->IsFinishedAnim()) {
+		m_pModelCom->Set_AnimationIndex(m_pGameInstance->Random_Int(0, 19), false);
+	}
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 	__super::Update(fTimeDelta);
 #ifdef _DEBUG
@@ -39,6 +41,7 @@ void CNPC_Ollivander::Late_Update(_float fTimeDelta)
 	m_pTransformCom->Set_State(STATE::POSITION, m_pTransformCom->Get_EstimatedPositionByMomentum());
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW, this);
 
 	__super::Late_Update(fTimeDelta);
 }
@@ -137,7 +140,8 @@ HRESULT CNPC_Ollivander::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg))) {
 		return E_FAIL;
 	}
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-34.f, 5, -11.4f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(40.f, 4.f, 68.9f, 1.f));
+	m_pModelCom->Set_AnimationIndex(m_pGameInstance->Random_Int(0, 19), false);
 	return S_OK;
 }
 
@@ -192,21 +196,25 @@ void CNPC_Ollivander::Free()
 
 void CNPC_Ollivander::Describe_Entity()
 {
-	m_pModelCom->Describe_Entity();
-	if (ImGui::TreeNode("ANIM STATE")) {
+	GUI::Begin("UNIT");
+	if (GUI::CollapsingHeader("Ollivander")) {
+		m_pModelCom->Describe_Entity();
+		if (ImGui::TreeNode("ANIM STATE")) {
 
-		for (auto& pState : m_States)
-		{
-			if (ImGui::Button(to_string(pState.first).c_str()))
+			for (auto& pState : m_States)
 			{
-				m_pFSM->Change_State(pState.first);
+				if (ImGui::Button(to_string(pState.first).c_str()))
+				{
+					m_pFSM->Change_State(pState.first);
+				}
 			}
+
+			GUI::Text(to_string(m_pModelCom->Get_CurrentTrackProgressRatio()).c_str());
+
+			ImGui::TreePop();
 		}
-
-		GUI::Text(to_string(m_pModelCom->Get_CurrentTrackProgressRatio()).c_str());
-
-		ImGui::TreePop();
 	}
+	GUI::End();
 }
 
 #endif // _DEBUG

@@ -348,11 +348,12 @@ void CGoblin_Spector::Free()
 
 void CGoblin_Spector::Describe_Entity()
 {
-
-	GUI::Begin("GoblinSpector");
-	_float3 vScale = m_pTransformCom->Get_Scale();
-	GUI::DragFloat3("Scale", (_float*)&vScale);
-
+	GUI::Begin("UNIT");
+	GUI::PushItemWidth(80);
+	if (GUI::CollapsingHeader("GoblinSpector")) {
+		_float3 vScale = m_pTransformCom->Get_Scale();
+		GUI::DragFloat3("Scale", (_float*)&vScale);
+	}
 	GUI::End();
 }
 

@@ -22,6 +22,7 @@
 #include "Trail.h"
 #include "OcclusionQuery.h"
 #include "Font.h"
+#include "ComputeShader.h"
 
 NS_BEGIN(Engine)
 class CGameInstance;

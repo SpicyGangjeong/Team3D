@@ -238,7 +238,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Background = true;
 #endif // gimch
 #ifdef Bin
-	isReady_Background = false;
+	isReady_Background = true;
 #endif // 
 #ifdef 진우
 	isReady_Background = true;
@@ -263,11 +263,12 @@ HRESULT CLevel_GamePlay::Ready_Background()
 		CInfoInstance::GetInstance()->Load_MapObjects("Hogsmeade_MapContainer_Data");
 
 		/* 물 오브젝트 */
-		if (FAILED(CInfoInstance::GetInstance()->Load_WaterElemet("Element_Water_Info")))
+		if (FAILED(CInfoInstance::GetInstance()->Load_WaterElemet("Element_Water_Info"))){
 			return E_FAIL;
+		}
 
 		/* 조명 오브젝트 */
-		/*CInfoInstance::GetInstance()->Load_LightElements("LightElement"); */
+		CInfoInstance::GetInstance()->Load_LightElements("LightElement");
 
 		/* 상호작용 오브젝트 */
 		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_Barrel");
@@ -441,6 +442,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UI(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 {
+#ifdef _DEBUG
 	CCamera_Debug::CAMERA_DEBUG_DESC            Camera_Desc{};
 	Camera_Desc.fFovy = XMConvertToRadians(60.0f);
 	Camera_Desc.fNear = 0.1f;
@@ -451,7 +453,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 	Camera_Desc.pCameraKey = CAMERA_DEBUG;
 	Camera_Desc.fRotationPerSec = XMConvertToRadians(90.0f);
 	Camera_Desc.fMouseSensor = 0.1f;
-	Camera_Desc.iPriority = 70;
+	Camera_Desc.iPriority = 53;
 	Camera_Desc.pFollowTarget = { nullptr };
 	Camera_Desc.pLookTarget = { nullptr };
 
@@ -461,10 +463,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 	}
 
 	m_pGameInstance->Add_Camera(g_iStaticLevel, pCamera, CAMERA_DEBUG);
-	if (FAILED(m_pGameInstance->Bind_Camera(g_iStaticLevel, CAMERA_DEBUG, true))) {
+
+#endif // _DEBUG
+
+	if (FAILED(m_pGameInstance->Bind_Camera(g_iStaticLevel, CAMERA_SHOULDER, true))) {
 		return E_FAIL;
 	}
-
 
 	return S_OK;
 }

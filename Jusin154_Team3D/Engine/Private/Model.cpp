@@ -2015,7 +2015,6 @@ void CModel::Free()
 #ifdef _DEBUG
 void CModel::Describe_Entity()
 {
-	GUI::Begin("Model_Desc");
 	if (GUI::CollapsingHeader("ModelAnimations")) {
 		for (_uint i = 0; i < m_iNumAnimations; ++i) {
 			if (GUI::Button(m_Animations[i]->Get_Name().c_str())) {
@@ -2056,7 +2055,6 @@ void CModel::Describe_Entity()
 		CloseHandle(hFile);
 
 	}
-	GUI::End();
 }
 
 #endif // _DEBUG

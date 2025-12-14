@@ -2,14 +2,49 @@
 
 #include "Client_Define.h"
 #include "ContainerObject.h"
+#include "Trail.h"
 
 NS_BEGIN(Engine)
+class CInstance_Model;
+class CTrail;
 NS_END
 
 NS_BEGIN(Client)
 
 class CEffect_Container abstract : public CContainerObject
 {
+public:
+	typedef struct tagEffectSaveInfo
+	{
+		EFFECT_INFO EffectInfo = {};
+		LIGHT_DESC  LightInfo = {};
+
+		_wstring    wstrDiffuseName = {};
+		_wstring    wstrNoiseName = {};
+		_wstring    wstrMaskingName = {};
+		_wstring    wstrDissolveName = {};
+		_wstring    wstrEmissiveName = {};
+		_wstring    wstrDistortionName = {};
+		_wstring    wstrModelName = {};
+
+		_wstring    wstrEffectName = {};
+
+		CInstance_Model::INSTANCE_DESC InstanceModelInfo = {};
+	}EFFECT_SAVE_INFO;
+
+	typedef struct tagTrailSaveInfo
+	{
+		_wstring    wstrDiffuseName = {};
+		_wstring    wstrNoiseName = {};
+		_wstring    wstrMaskingName = {};
+		_wstring    wstrDistortionName = {};
+
+		_wstring    wstrTrailName = {};
+
+		CTrail::TRAIL_DESC TrailComponentDesc = {};
+		TRAIL_INFO		   TrailDesc = {};
+	}TRAIL_SAVE_INFO;
+
 protected:
 	CEffect_Container(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CEffect_Container(const CEffect_Container& rhs);
@@ -24,6 +59,9 @@ public:
 	HRESULT			Load_Directory(const _char* pPath);
 	virtual	HRESULT	Pre_Setting(CGameObject* pObject, void* pArg = nullptr);
 	HRESULT         Load_Package(const _char* pPath);
+	HRESULT         Load_Data(const _char* pPath);
+	HRESULT         Create_Effect();
+	HRESULT         Load_Trail_Data(const _char* pPath);
 	_uint			Get_SkillType() const { return m_iSkillType; }
 	void			Reset_Light();
 
@@ -60,6 +98,9 @@ protected:
 	_uint							m_iSkillType = ENUM_CLASS(SKILL_TYPE::END);
 	_bool							m_bHasDamage = { false };
 	LOCKON_INFO						m_Info = {};
+private:
+	vector<EFFECT_SAVE_INFO>        m_EffectsInfo = {};
+	vector<TRAIL_SAVE_INFO>			m_TrailsInfo = {};
 public:
 	virtual void Free() override;
 };

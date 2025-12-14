@@ -35,6 +35,7 @@ HRESULT CFog::Bind_FogValue(CShader* pShader)
     }
 #else
     pShader->Bind_RawValue("g_fFogDensity", &m_fFogDensity, sizeof(_float));
+    pShader->Bind_RawValue("g_fFogPow", &m_fFogPow, sizeof(_float));
     pShader->Bind_RawValue("g_vFogColor", &m_vFogColor, sizeof(_float4));
 #endif // _DEBUG
 
@@ -44,11 +45,13 @@ HRESULT CFog::Bind_FogValue(CShader* pShader)
 #ifdef _DEBUG
 void CFog::Update_Fog()
 {
-    GUI::Begin("Fog Edit");
-    GUI::Checkbox("Fog ON / OFF", &m_bVisible);
-    GUI::InputFloat("g_fFogDensity", &m_fFogDensity, 0.001f);
-    GUI::InputFloat("g_fFogPow", &m_fFogPow, 0.1f);
-    GUI::ColorEdit4("Fog Color", (_float*)(&m_vFogColor), ImGuiColorEditFlags_NoInputs);
+    GUI::Begin("SYSTEM");
+    if (GUI::CollapsingHeader("FOG")) {
+        GUI::Checkbox("Fog ON / OFF", &m_bVisible);
+        GUI::InputFloat("g_fFogDensity", &m_fFogDensity, 0.001f);
+        GUI::InputFloat("g_fFogPow", &m_fFogPow, 0.1f);
+        GUI::ColorEdit4("Fog Color", (_float*)(&m_vFogColor), ImGuiColorEditFlags_NoInputs);
+    }
     GUI::End();
 }
 #endif // _DEBUG

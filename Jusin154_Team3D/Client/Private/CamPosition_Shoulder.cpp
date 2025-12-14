@@ -41,8 +41,9 @@ HRESULT CCamPosition_Shoulder::Initialize(void* pArg)
 
 		_vector vLookTargetPos = Calc_LookTargetPos();
 		m_pLookTransform->Set_State(STATE::POSITION, vLookTargetPos);
-		m_pFollowTransform->Set_State(STATE::POSITION, Calc_FollowTargetPos(vLookTargetPos));
+		m_pFollowTransform->Set_State(STATE::POSITION, Calc_FollowTargetPos(vLookTargetPos) + XMVectorSet(0.f, 0.f, 1.f, 0.f));
 	}
+	m_bDampingParentPos = true;
 
 	return S_OK;
 }
@@ -153,6 +154,15 @@ void CCamPosition_Shoulder::Late_Update(_float fTimeDelta)
 			m_fFollowTargetIncludedAngleDegree = CMyTools::Lerp_f1D(m_vShoulderLerpDegree.x, m_vShoulderLerpDegree.y, fLerpRatio);
 		}
 	}
+	if (true == m_bStartGame) {
+		m_vStartLerpTimer.x += fTimeDelta;
+		if (m_vStartLerpTimer.x >= m_vStartLerpTimer.y) {
+			m_vStartLerpTimer.x = 0.f;
+			m_bDampingParentPos = true;
+			m_bStartGame = false;
+		}
+		m_pGameInstance->Add_RenderGroup(RENDER::UI_OVERLAY, this);
+	}
 }
 
 HRESULT CCamPosition_Shoulder::Render()
@@ -185,8 +195,19 @@ _vector CCamPosition_Shoulder::Calc_FollowTargetPos(_vector vLookTargetWorldPos)
 	_vector fRotQ = XMQuaternionRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(-m_fFollowTargetIncludedAngleDegree));
 	_vector vDestPos = Calc_DampingParentPos();
 	_vector vHeadPos = vDestPos + XMVectorSet(0.f, m_fHeadHeight, 0.f, 0.f);
-	_vector vDir = XMVector3Normalize(vHeadPos - vLookTargetWorldPos);
-	vDir = XMVector3Rotate(vDir, fRotQ);
+	_vector vDir = vHeadPos - vLookTargetWorldPos;
+	_float fLengthSQ = XMVectorGetX(XMVector3LengthSq(vDir));
+
+	if (fLengthSQ < FLT_EPSILON)
+	{
+		vDir = XMVectorSet(0.f, 0.f, 1.f, 0.f);
+		vDir = XMVector3Rotate(vDir, fRotQ);
+	}
+	else
+	{
+		vDir = XMVector3Normalize(vDir);
+		vDir = XMVector3Rotate(vDir, fRotQ);
+	}
 
 	m_BufferHit = {};
 	_bool bHit = m_pGameInstance->SphereCast( 0.25f, vLookTargetWorldPos, vDir, fBestFollowTargetDistance,
@@ -250,7 +271,11 @@ _vector CCamPosition_Shoulder::Calc_FollowTargetPos(_vector vLookTargetWorldPos)
 }
 _vector CCamPosition_Shoulder::Calc_DampingParentPos()
 {
-	return XMVectorLerp(XMLoadFloat4(&m_vDampingStartPosition), XMLoadFloat4(&m_vDampingDestPosition), m_vDampingLerpTimer.x / m_vDampingLerpTimer.y);
+	_float duration = max(m_vDampingLerpTimer.y, FLT_EPSILON);
+	_float fTime = m_vDampingLerpTimer.x / duration;
+	fTime = CMyTools::Saturate(fTime); // 0~1
+
+	return XMVectorLerp(XMLoadFloat4(&m_vDampingStartPosition), XMLoadFloat4(&m_vDampingDestPosition), fTime);
 }
 void CCamPosition_Shoulder::Set_CameraShake(_float fXShock, _float fYShock)
 {
@@ -297,9 +322,11 @@ HRESULT CCamPosition_Shoulder::Ready_SubParts()
 		CCamPosition_Target::CAMERAPOSITION_TARGET_DESC Desc{};
 		Desc.pParentTransform = m_pTransformCom;
 		m_pTarget_LookPart = m_pGameInstance->Clone_Prototype< CCamPosition_Target>(g_iStaticLevel, &Desc);
+		m_pTarget_LookPart->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(-34.f, 5, -10.4f, 1.f));
 		m_pTarget_FollowPart = m_pGameInstance->Clone_Prototype< CCamPosition_Target>(g_iStaticLevel, &Desc);
+		m_pTarget_FollowPart->Get_Component<CTransform>()->Set_State(STATE::POSITION, XMVectorSet(-34.f, 5, -11.4f, 1.f));
 	}
-
+	
 	CCamera_Gaze::CAMERA_GAZE_DESC CameraDesc{};
 	CameraDesc.fFovy = XMConvertToRadians(60.0f);
 	CameraDesc.fNear = 0.1f;
@@ -308,7 +335,7 @@ HRESULT CCamPosition_Shoulder::Ready_SubParts()
 	CameraDesc.fRotationPerSec = XMConvertToRadians(90.f);
 	CameraDesc.pFollowTarget = m_pTarget_FollowPart;
 	CameraDesc.pLookTarget = m_pTarget_LookPart;
-	CameraDesc.iPriority = 51;
+	CameraDesc.iPriority = 55;
 	CameraDesc.pCameraKey = CAMERA_SHOULDER;
 	CameraDesc.bEnableTransitionLerp = true;
 	CameraDesc.bEnableFollowLerp = false;
@@ -321,8 +348,11 @@ HRESULT CCamPosition_Shoulder::Ready_SubParts()
 	{
 		return E_FAIL;
 	}
+	
 	m_pGameInstance->Add_Camera(g_iStaticLevel, m_pBinded_Camera, CAMERA_SHOULDER);
-
+	if (FAILED(m_pGameInstance->Bind_Camera(g_iStaticLevel, CAMERA_SHOULDER, true))) {
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -362,15 +392,16 @@ void CCamPosition_Shoulder::Free()
 
 void CCamPosition_Shoulder::Describe_Entity()
 {
-	GUI::Begin("Cam_Shoulder");
-	m_pTransformCom->Describe_Entity();
+	GUI::Begin("CAMERA");
+	if (GUI::CollapsingHeader("Cam_Shoulder")) {
+		m_pTransformCom->Describe_Entity();
 
-	GUI::Text("fMouseSensor : %.1f", m_fMouseSensor);
-	GUI::SliderFloat("m_fFollowTargetIncludedAngleDegree", &m_fFollowTargetIncludedAngleDegree, -360.f, 360.f, "%.1f");
-	GUI::SliderFloat("m_fDefaultCameraBackToFrontRatio", &m_fDefaultCameraBackToFrontRatio, -1.f, 1.f);
-	GUI::SliderFloat("m_vFocalRatio", &m_vFocalRatio.x, 0.f, 1.f);
-	GUI::SliderFloat("m_fCameraFowardDistance", &m_fCameraFowardDistance, 0.f, 4.f);
-	//GUI::
+		GUI::Text("fMouseSensor : %.1f", m_fMouseSensor);
+		GUI::SliderFloat("m_fFollowTargetIncludedAngleDegree", &m_fFollowTargetIncludedAngleDegree, -360.f, 360.f, "%.1f");
+		GUI::SliderFloat("m_fDefaultCameraBackToFrontRatio", &m_fDefaultCameraBackToFrontRatio, -1.f, 1.f);
+		GUI::SliderFloat("m_vFocalRatio", &m_vFocalRatio.x, 0.f, 1.f);
+		GUI::SliderFloat("m_fCameraFowardDistance", &m_fCameraFowardDistance, 0.f, 4.f);
+	}
 	GUI::End();
 }
 

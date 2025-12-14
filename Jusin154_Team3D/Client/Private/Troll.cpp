@@ -123,7 +123,7 @@ void CTroll::Update(_float fTimeDelta)
 	for (_uint i = 0; i < ENUM_CLASS(TROLL_SKILL::END); i++)
 		m_fSkillCoolTime[i] = max(0.f, m_fSkillCoolTime[i] - fTimeDelta);
 
-	
+
 
 
 #pragma region TRAIL_UPDATE
@@ -182,7 +182,7 @@ void CTroll::Late_Update(_float fTimeDelta)
 	m_fCross = XMVectorGetY(XMVector3Cross(vLook, vDir));
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-//	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW, this);
+	//	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW, this);
 }
 
 HRESULT CTroll::Render()
@@ -337,29 +337,48 @@ void CTroll::OnCollision(CGameObject* pOther, void* pDesc)
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
 
-	_vector Head = (XMLoadFloat4x4(Get_HeadMatrix()) * m_pTransformCom->Get_XMWorldMatrix()).r[3];
-	m_DamageInfo.vTarget_Pos = XMVectorSet(Head.m128_f32[0], Head.m128_f32[1], Head.m128_f32[2], 1.f);
+	m_DamageInfo.vTarget_Pos = m_pCharacter_Controller->Get_HeadPosition();
 
-	_uint iSkillType = dynamic_cast<CEffect_Container*>(pOther)->Get_SkillType();
-	auto damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
-	switch (iSkillType)
+	CEffect_Container* pEffect_Container = dynamic_cast<CEffect_Container*>(pOther);
+
+	pair<_float, _float> damagePair = {};
+
+	if (pEffect_Container != nullptr)
 	{
-	case ENUM_CLASS(SKILL_TYPE::DESCENDO):
-		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
-		break;
-	case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
-		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
-		break;
-	case ENUM_CLASS(SKILL_TYPE::FLIPENDO):
-		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::FLIPENDO);
-		break;
-	case ENUM_CLASS(SKILL_TYPE::JAP):
-		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
-		break;
-	default:
-		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::END);
-		break;
+		_uint iSkillType = pEffect_Container->Get_SkillType();
+		damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
+
+		switch (iSkillType)
+		{
+		case ENUM_CLASS(SKILL_TYPE::DESCENDO):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::BOMBARDA):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::DESCENDO);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::FLIPENDO):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::FLIPENDO);
+			break;
+		case ENUM_CLASS(SKILL_TYPE::JAP):
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
+			break;
+		default:
+			m_eHitSpell = ENUM_CLASS(SKILL_TYPE::END);
+			break;
+		}
 	}
+	else
+	{
+		damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(ENUM_CLASS(SKILL_TYPE::ANCIENT_MAGIC_THROW)));
+	}
+
+	CMapElement_Interactable* pProps = dynamic_cast<CMapElement_Interactable*>(pOther);
+
+	if (pProps != nullptr)
+	{
+		m_eHitSpell = STATEANIM::KNOCKDOWN_FWD;
+	}
+
 	m_DamageInfo.fDamage = damagePair.first;
 	m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
 	if (0 == damagePair.second) {
@@ -367,6 +386,8 @@ void CTroll::OnCollision(CGameObject* pOther, void* pDesc)
 		return;
 	}
 	m_pFSM->Change_State(FSMSTATE::HIT);
+
+
 }
 
 void CTroll::OnHit(CGameObject* pOther, CGameObject* pCaller)
@@ -411,7 +432,7 @@ HRESULT CTroll::Ready_Components()
 		Desc.fContactOffset = 0.001f;
 		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
 		Desc.bAutoStepping = { false };
-		Desc.fStepOffset = { 0.001f };
+		Desc.fStepOffset = { 0.12f };
 		Desc.fRadius = 1.2f;
 		Desc.fHeight = 1.5f;
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Troll_HitReport::Create();
@@ -620,16 +641,20 @@ void CTroll::Free()
 
 void CTroll::Describe_Entity()
 {
-	__super::Describe_Entity();
+	GUI::Begin("UNIT");
+	if (GUI::CollapsingHeader("Troll")) {
+		__super::Describe_Entity();
 
-	_float4x4 socketMat = *m_pModelCom->Get_BoneMatrixPtr("HeadEnd");
+		_float4x4 socketMat = *m_pModelCom->Get_BoneMatrixPtr("HeadEnd");
 
-	_string strSocket = "Socket " + to_string(socketMat._41) + to_string(socketMat._42) + to_string(socketMat._43);
+		_string strSocket = "Socket " + to_string(socketMat._41) + to_string(socketMat._42) + to_string(socketMat._43);
 
-	GUI::Text(strSocket.c_str());
+		GUI::Text(strSocket.c_str());
 
 
-	m_pTransformCom->Describe_Entity();
+		m_pTransformCom->Describe_Entity();
+	}
+	GUI::End();
 }
 
 #endif // _DEBUG

@@ -336,6 +336,16 @@ HRESULT CInstance_Model::Save_InstanceModel(HANDLE hFile)
 
 #endif
 
+HRESULT CInstance_Model::Load_InstanceModel(INSTANCE_DESC InstanceDesc)
+{
+
+	m_InstanceDesc = InstanceDesc;
+
+	Change_NumInstance();
+
+	return S_OK;
+}
+
 HRESULT CInstance_Model::Load_InstanceModel(HANDLE hFile)
 {
 	DWORD dwByte = {};
@@ -488,11 +498,22 @@ HRESULT CInstance_Model::Create_CS()
 	sizeof(CS_PARTICLE_VALUE_DESC),
 	};
 
-	m_pComputeShader = CComputeShader::Create(m_pDevice, m_pContext,
-		L"../Bin/Resources/ShaderFiles/Shader_Particle_Compute.hlsl", "CS_MAIN", m_iNumInstance, 2, 2, CS_InputStrides, CS_OutputStrides);
+	//, 2, 2, CS_InputStrides, CS_OutputStrides
 
-	if (m_pComputeShader == nullptr)
+	CComputeShader::CS_INFO CS_Desc = {};
+
+	CS_Desc.iNumElement = m_iNumInstance;
+	CS_Desc.iNumInputBuffer = 2;
+	CS_Desc.iNumOutputBuffer = 2;
+
+	CS_Desc.iInputStructStride = CS_InputStrides;
+	CS_Desc.iOutputStructStride = CS_OutputStrides;
+
+	m_pComputeShader = (CComputeShader*)m_pGameInstance->Clone_Asset_Prototype(g_iStaticLevel, CS_EFFECT, &CS_Desc, nullptr);
+
+	if (nullptr == m_pComputeShader) {
 		return E_FAIL;
+	}
 
 	return S_OK;
 }

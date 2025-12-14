@@ -418,9 +418,9 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_WB"), TEXT("Target_Color")))) {
-			return E_FAIL;
-		}
+		//if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_WB"), TEXT("Target_Color")))) {
+		//	return E_FAIL;
+		//}
 
 		/* MRT_Fog */
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Fog"), TEXT("Target_Fog")))) {
@@ -508,57 +508,51 @@ void CRenderer::Free()
 #ifdef _DEBUG
 void CRenderer::Describe_Entitiy()
 {
-	GUI::Begin("Renderer");
-	GUI::PushItemWidth(80);
-	if (GUI::CollapsingHeader("PostProcessing_Bloom"))
-	{
-		GUI::BeginChild("PostProcessing_Bloom");
+	GUI::Begin("SYSTEM");
+	if (GUI::CollapsingHeader("RENDERER")) {
 		GUI::PushItemWidth(80);
-		GUI::DragFloat("m_fBloomThreshold", &m_fBloomThreshold, 0.01f, 0.02f, 100.f, "%.3f");
-		GUI::SliderInt("g_iEmbossingPass", &m_iBloomEmbossingPass, 0, 2, "%d");
-		GUI::PopItemWidth();
-		GUI::EndChild();
-	}
-	if (GUI::CollapsingHeader("Environment DOF"))
-	{
-		GUI::BeginChild("DOF_ENV", ImVec2(0, 0), true);
-		GUI::PushItemWidth(80.0f);
-
-		GUI::Text("Far DOF (Environment)");
-		GUI::Separator();
-
-		GUI::DragFloat("Depth Cut", &m_fDOF_ENV_CutThreshold, 0.001f, 0.0f, 20.0f, "%.4f");
-
-		GUI::DragFloat("Focus Dist", &m_fDOF_ENV_FocusDistance, 1.0f, 0.1f, 125.f, "%.1f");
-
-		GUI::DragFloat("Blur Start", &m_fDOF_ENV_StartDistance, 1.0f, 0.1f, 250.f, "%.1f");
-
-		GUI::DragFloat("Blur End", &m_fDOF_ENV_MaxEnd, 1.0f, 1.0f, 500.f, "%.1f");
-
-		GUI::DragFloat("Max Radius", &m_fDOF_ENV_AmountRadius, 0.1f, 0.0f, 10.0f, "%.2f");
-
-		if (m_fDOF_ENV_StartDistance < m_fDOF_ENV_FocusDistance) {
-			m_fDOF_ENV_StartDistance = m_fDOF_ENV_FocusDistance;
+		if (GUI::CollapsingHeader("PostProcessing_Bloom"))
+		{
+			GUI::BeginChild("PostProcessing_Bloom");
+			GUI::DragFloat("m_fBloomThreshold", &m_fBloomThreshold, 0.01f, 0.02f, 100.f, "%.3f");
+			GUI::SliderInt("g_iEmbossingPass", &m_iBloomEmbossingPass, 0, 2, "%d");
+			GUI::EndChild();
 		}
+		if (GUI::CollapsingHeader("Environment DOF"))
+		{
+			GUI::BeginChild("DOF_ENV", ImVec2(0, 0), true);
 
-		if (m_fDOF_ENV_MaxEnd < m_fDOF_ENV_StartDistance + 1.0f) {
-			m_fDOF_ENV_MaxEnd = m_fDOF_ENV_StartDistance + 1.0f;
+			GUI::Text("Far DOF (Environment)");
+			GUI::Separator();
+
+			GUI::DragFloat("Depth Cut", &m_fDOF_ENV_CutThreshold, 0.001f, 0.0f, 20.0f, "%.4f");
+			GUI::DragFloat("Focus Dist", &m_fDOF_ENV_FocusDistance, 1.0f, 0.1f, 125.f, "%.1f");
+			GUI::DragFloat("Blur Start", &m_fDOF_ENV_StartDistance, 1.0f, 0.1f, 250.f, "%.1f");
+			GUI::DragFloat("Blur End", &m_fDOF_ENV_MaxEnd, 1.0f, 1.0f, 500.f, "%.1f");
+			GUI::DragFloat("Max Radius", &m_fDOF_ENV_AmountRadius, 0.1f, 0.0f, 10.0f, "%.2f");
+
+#ifdef _DEBUG
+			if (m_fDOF_ENV_StartDistance < m_fDOF_ENV_FocusDistance) {
+				m_fDOF_ENV_StartDistance = m_fDOF_ENV_FocusDistance;
+			}
+			if (m_fDOF_ENV_MaxEnd < m_fDOF_ENV_StartDistance + 1.0f) {
+				m_fDOF_ENV_MaxEnd = m_fDOF_ENV_StartDistance + 1.0f;
+			}
+#endif // _DEBUG
+			GUI::EndChild();
 		}
-
-		GUI::PopItemWidth();
-		GUI::EndChild();
-	}
-	if (GUI::CollapsingHeader("ToneMapping")) {
-		GUI::BeginChild("TONE_MAP", ImVec2(0, 0), true);
-		GUI::SliderInt("m_iToneMappingType", &m_iToneMappingType, 0, 2, "%d");
-		GUI::SliderFloat("m_fExposure", &m_fExposure, 0.5f, 2.f, "%.3f");
-		GUI::EndChild();
-	}
-	if (GUI::CollapsingHeader("SSAO")) {
-		GUI::BeginChild("SSAO_Setting", ImVec2(0, 0), true);
-		GUI::DragFloat("fSSAORadius ", &m_fSSAO_Radius, 0.001f, -3.f, 3.f, "%.5f");
-		GUI::DragFloat("fSSAO_BIAS", &m_fSSAO_BIAS, 0.001f, -2.f, 2.f, "%.5f");
-		GUI::EndChild();
+		if (GUI::CollapsingHeader("SSAO")) {
+			GUI::BeginChild("SSAO_Setting", ImVec2(0, 0), true);
+			GUI::DragFloat("fSSAORadius ", &m_fSSAO_Radius, 0.001f, -3.f, 3.f, "%.5f");
+			GUI::DragFloat("fSSAO_BIAS", &m_fSSAO_BIAS, 0.001f, -2.f, 2.f, "%.5f");
+			GUI::EndChild();
+		}
+		if (GUI::CollapsingHeader("ToneMapping")) {
+			GUI::BeginChild("TONE_MAP", ImVec2(0, 0), true);
+			GUI::SliderInt("m_iToneMappingType", &m_iToneMappingType, 0, 2, "%d");
+			GUI::SliderFloat("m_fExposure", &m_fExposure, 0.5f, 2.f, "%.3f");
+			GUI::EndChild();
+		}
 	}
 	GUI::End();
 }

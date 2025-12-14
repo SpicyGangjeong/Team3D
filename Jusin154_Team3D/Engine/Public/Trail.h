@@ -25,6 +25,7 @@ public:
 #ifdef _DEBUG
 	HRESULT Save_Trail(HANDLE hFile);
 #endif
+	HRESULT Load_Trail(TRAIL_DESC TrailDesc);
 	HRESULT Load_Trail(HANDLE hFile);
 
 public:

@@ -18,6 +18,8 @@ CChair_Splesh::CChair_Splesh(const CChair_Splesh& rhs)
 
 HRESULT CChair_Splesh::Initialize_Prototype()
 {
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Chair")))
+		return E_FAIL;
 
 	return S_OK;
 
@@ -31,8 +33,7 @@ HRESULT CChair_Splesh::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Chair")))
+	if (FAILED(Create_Effect()))
 		return E_FAIL;
 
 

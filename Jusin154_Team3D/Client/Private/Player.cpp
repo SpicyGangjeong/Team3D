@@ -7,6 +7,7 @@
 #include "Camera_Gaze.h"
 #include "CamPosition_Arm.h"
 #include "Wand.h"
+#include "Item_Potion.h"
 #include "Character_Controller.h"
 #include "CallBack_Playable_Behavior.h"
 #include "CamPosition_Shoulder.h"
@@ -92,6 +93,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pInfoInstance->Set_Damage(m_pStat->Get_Stat().fDamage);
 
 	m_pCharacter_Controller->Set_Position(XMVectorSet(-34.f, 5, -11.4f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-34.f, 5, -11.4f, 1.f));
 
 #ifdef _DEBUG
 	m_BasicEffect = make_unique<BasicEffect>(m_pDevice);
@@ -147,6 +149,14 @@ __super::Update(fTimeDelta);
 		m_pInfoInstance->Mouse_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_UP));
 		m_bAim = false; 
 	}
+
+	if (m_pGameInstance->Key_Down(DIK_1)) {
+		if (m_pModelCom->Get_SecondAnimIndex() == m_Animation[STATEANIM::LUMOS].first)
+		{
+			m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R), m_Animation[STATEANIM::LUMOS_STOP].first, m_Animation[STATEANIM::LUMOS_STOP].second);
+		}
+	}
+
 }
 
 void CPlayer::UpdateGrapInteractive(_float fTimeDelta)
@@ -310,7 +320,6 @@ void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 void CPlayer::OnHit(CGameObject* pOther, CGameObject* pCaller)
 {
 }
-#ifdef _DEBUG
 
 void CPlayer::Start_CameraShake(_float fTime, _float fIntense)
 {
@@ -319,6 +328,7 @@ void CPlayer::Start_CameraShake(_float fTime, _float fIntense)
 	m_fCameraShakeIntense = fIntense;
 	m_bCameraShake = true;
 }
+#ifdef _DEBUG
 
 void CPlayer::Render_CameraCoordinateSystem()
 {
@@ -327,42 +337,47 @@ void CPlayer::Render_CameraCoordinateSystem()
 	const _float fArrowLength = 2.0f;
 	_vector xmvLook = XMVector4Normalize(XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
 	_float2 vLook = { XMVectorGetX(xmvLook), XMVectorGetZ(xmvLook) };
-	GUI::Begin("Player_CAM_COOORD");
-	GUI::Text("%d", m_LockOnInfo.pUnit);
 
-	GUI::Text("W : %.2f, %.2f, %.2f", m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z);
-	GUI::Text("A : %.2f, %.2f, %.2f", -m_vCameraRightDir.x, 0.f, -m_vCameraRightDir.z);
-	GUI::Text("S : %.2f, %.2f, %.2f", -m_vCameraLookDir.x, 0.f, -m_vCameraLookDir.z);
-	GUI::Text("D : %.2f, %.2f, %.2f", m_vCameraRightDir.x, 0.f, m_vCameraRightDir.z);
-	
-	_float  fButtonSize = 45.f;
-	GUI::Button("##0", { fButtonSize, fButtonSize }); GUI::SameLine();
-	GUI::Button(("W : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { m_vCameraLookDir.x , m_vCameraLookDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
-	GUI::Button("##2", { fButtonSize, fButtonSize });
-	GUI::Button(("A : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { -m_vCameraRightDir.x , -m_vCameraRightDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
-	GUI::Button("##4", { fButtonSize, fButtonSize }); GUI::SameLine();
-	GUI::Button(("D : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { m_vCameraRightDir.x , m_vCameraRightDir.z })))).c_str(), { fButtonSize, fButtonSize });
-	GUI::Button("##6", { fButtonSize, fButtonSize }); GUI::SameLine();
-	GUI::Button(("S : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { -m_vCameraLookDir.x , -m_vCameraLookDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
-	GUI::Button("##8", { fButtonSize, fButtonSize });
+
+	GUI::Begin("CAMERA");
+	GUI::PushItemWidth(80);
+	if (GUI::CollapsingHeader("Player_CAM_COOORD")) {
+
+		GUI::Text("%d", m_LockOnInfo.pUnit);
+
+		GUI::Text("W : %.2f, %.2f, %.2f", m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z);
+		GUI::Text("A : %.2f, %.2f, %.2f", -m_vCameraRightDir.x, 0.f, -m_vCameraRightDir.z);
+		GUI::Text("S : %.2f, %.2f, %.2f", -m_vCameraLookDir.x, 0.f, -m_vCameraLookDir.z);
+		GUI::Text("D : %.2f, %.2f, %.2f", m_vCameraRightDir.x, 0.f, m_vCameraRightDir.z);
+
+		_float  fButtonSize = 45.f;
+		GUI::Button("##0", { fButtonSize, fButtonSize }); GUI::SameLine();
+		GUI::Button(("W : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { m_vCameraLookDir.x , m_vCameraLookDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
+		GUI::Button("##2", { fButtonSize, fButtonSize });
+		GUI::Button(("A : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { -m_vCameraRightDir.x , -m_vCameraRightDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
+		GUI::Button("##4", { fButtonSize, fButtonSize }); GUI::SameLine();
+		GUI::Button(("D : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { m_vCameraRightDir.x , m_vCameraRightDir.z })))).c_str(), { fButtonSize, fButtonSize });
+		GUI::Button("##6", { fButtonSize, fButtonSize }); GUI::SameLine();
+		GUI::Button(("S : " + to_string(XMConvertToDegrees(CMyTools::Get_Direction2D(vLook, { -m_vCameraLookDir.x , -m_vCameraLookDir.z })))).c_str(), { fButtonSize, fButtonSize }); GUI::SameLine();
+		GUI::Button("##8", { fButtonSize, fButtonSize });
+		//W CMyTools::Get_Direction2D(vLook, { m_vCameraLookDir.x ,		m_vCameraLookDir.z })
+		//A CMyTools::Get_Direction2D(vLook, { -m_vCameraRightDir.x , -	m_vCameraRightDir.z })
+		//S CMyTools::Get_Direction2D(vLook, { m_vCameraRightDir.x ,	m_vCameraRightDir.z })
+		//D CMyTools::Get_Direction2D(vLook, { -m_vCameraLookDir.x , -	m_vCameraLookDir.z })
+	}
 	GUI::End();
-	//W CMyTools::Get_Direction2D(vLook, { m_vCameraLookDir.x ,		m_vCameraLookDir.z })
-	//A CMyTools::Get_Direction2D(vLook, { -m_vCameraRightDir.x , -	m_vCameraRightDir.z })
-	//S CMyTools::Get_Direction2D(vLook, { m_vCameraRightDir.x ,	m_vCameraRightDir.z })
-	//D CMyTools::Get_Direction2D(vLook, { -m_vCameraLookDir.x , -	m_vCameraLookDir.z })
 	m_Batch->DrawLine( // W
 		VertexPositionColor(fArrowLength * -XMLoadFloat3(&m_vCameraLookDir), DirectX::Colors::GhostWhite),
-		VertexPositionColor(fArrowLength * XMLoadFloat3(&m_vCameraLookDir), DirectX::Colors::Blue)
+		VertexPositionColor(fArrowLength* XMLoadFloat3(&m_vCameraLookDir), DirectX::Colors::Blue)
 	);
 	m_Batch->DrawLine( // D
 		VertexPositionColor(fArrowLength * -XMLoadFloat3(&m_vCameraRightDir), DirectX::Colors::GhostWhite),
-		VertexPositionColor(fArrowLength * XMLoadFloat3(&m_vCameraRightDir), DirectX::Colors::Red)
+		VertexPositionColor(fArrowLength* XMLoadFloat3(&m_vCameraRightDir), DirectX::Colors::Red)
 	);
 	m_Batch->DrawLine( // PlayerLook
 		VertexPositionColor(XMVectorZero(), DirectX::Colors::GhostWhite),
-		VertexPositionColor(fArrowLength * xmvLook, DirectX::Colors::HotPink)
+		VertexPositionColor(fArrowLength* xmvLook, DirectX::Colors::HotPink)
 	);
-
 	m_Batch->End();
 }
 #endif // _DEBUG
@@ -417,7 +432,7 @@ HRESULT CPlayer::Ready_Components()
 		Desc.fContactOffset = 0.001f;
 		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
 		Desc.bAutoStepping = { false };
-		Desc.fStepOffset = { 0.001f };
+		Desc.fStepOffset = { 0.02f };
 		Desc.fRadius = 0.5f;
 		Desc.fHeight = 0.6f;
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Playable_HitReport::Create();
@@ -453,6 +468,18 @@ HRESULT CPlayer::Ready_Parts()
 	{
 		return E_FAIL;
 	}
+
+	CItem_Potion::POTION_DESC PotionDesc{};
+
+	PotionDesc.pParentTransform = m_pTransformCom;
+	PotionDesc.pSocketMatrices = m_pModelCom->Get_BoneMatrixPtr("SKT_LeftHand");
+
+	if (FAILED(Add_PartObject<CItem_Potion>("Potion", g_iStaticLevel, nullptr, &PotionDesc)))
+	{
+		return E_FAIL;
+	}
+
+	Get_PartObject<CItem_Potion>()->Set_Visible(false);
 
 	{
 		CCamPosition_Shoulder::CAMERA_SHOULDER_DESC Desc;
@@ -590,85 +617,87 @@ void CPlayer::Free()
 
 void CPlayer::Describe_Entity()
 {
-	GUI::Begin("PLAYER_DESC");
-	m_pCharacter_Controller->Describe_Entity();
-	_float4 vMomentum = {};
-	XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());
-	GUI::Text("%.2f %.2f %.2f %.2f ", vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);
-	_char label[256];
-	for (auto& iter : m_KeyFrames)
-	{
-		sprintf_s(label, "%s   %.2f", iter.first.c_str(), iter.second);
+	GUI::Begin("UNIT");
+	GUI::PushItemWidth(80);
+	if (GUI::CollapsingHeader("PLAYER_DESC")) {
+		m_pCharacter_Controller->Describe_Entity();
+		_float4 vMomentum = {};
+		XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());
+		GUI::Text("%.2f %.2f %.2f %.2f ", vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);
+		_char label[256];
+		for (auto& iter : m_KeyFrames)
+		{
+			sprintf_s(label, "%s   %.2f", iter.first.c_str(), iter.second);
 
-		GUI::Text(label);
-	}
+			GUI::Text(label);
+		}
 
-	_float3 Pos;
-	XMStoreFloat3(&Pos, Get_WorldPostion());
+		_float3 Pos;
+		XMStoreFloat3(&Pos, Get_WorldPostion());
 
-	float Pos3[3] = { Pos.x, Pos.y, Pos.z };
-	GUI::DragFloat3("Pos", Pos3);
-
-
-	_float RotR, RotU, RotL;
-	RotR = XMVectorGetX(m_pTransformCom->Get_State(STATE::RIGHT));
-	RotU = XMVectorGetY(m_pTransformCom->Get_State(STATE::UP));
-	RotL = XMVectorGetZ(m_pTransformCom->Get_State(STATE::LOOK));
-
-	float Rot3[3] = { RotR, RotU,RotL };
-	GUI::DragFloat3("Rot", Rot3);
+		float Pos3[3] = { Pos.x, Pos.y, Pos.z };
+		GUI::DragFloat3("Pos", Pos3);
 
 
-	string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
-	GUI::Text(AnimList.c_str());
+		_float RotR, RotU, RotL;
+		RotR = XMVectorGetX(m_pTransformCom->Get_State(STATE::RIGHT));
+		RotU = XMVectorGetY(m_pTransformCom->Get_State(STATE::UP));
+		RotL = XMVectorGetZ(m_pTransformCom->Get_State(STATE::LOOK));
 
-	GUI::Text("AnimTrack %.2f", m_pModelCom->Get_CurrentTrackPosition());
-	GUI::Text("AnimRatio %.2f", m_pModelCom->Get_CurrentTrackProgressRatio());
-	GUI::Text("AnimSpeed %.2f", m_pModelCom->Get_AnimSpeed());
+		float Rot3[3] = { RotR, RotU,RotL };
+		GUI::DragFloat3("Rot", Rot3);
 
-	GUI::Checkbox("Render", &m_bVisible);
 
-	GUI::Text("%d", m_iStateMask);
-	GUI::Text("HP : %f, %f", m_pStat->Get_Stat().fCurrentHp, m_pStat->Get_Stat().fMaxHp);
-	GUI::SameLine(); if (GUI::Button("FULL")) { m_pStat->Set_Stat(ENUM_CLASS(STAT::CURRENTHP), m_pStat->Get_Stat().fMaxHp); }
+		string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
+		GUI::Text(AnimList.c_str());
+
+		GUI::Text("AnimTrack %.2f", m_pModelCom->Get_CurrentTrackPosition());
+		GUI::Text("AnimRatio %.2f", m_pModelCom->Get_CurrentTrackProgressRatio());
+		GUI::Text("AnimSpeed %.2f", m_pModelCom->Get_AnimSpeed());
+
+		GUI::Checkbox("Render", &m_bVisible);
+
+		GUI::Text("%d", m_iStateMask);
+		GUI::Text("HP : %f, %f", m_pStat->Get_Stat().fCurrentHp, m_pStat->Get_Stat().fMaxHp);
+		GUI::SameLine(); if (GUI::Button("FULL")) { m_pStat->Set_Stat(ENUM_CLASS(STAT::CURRENTHP), m_pStat->Get_Stat().fMaxHp); }
 #pragma region CAMERA_SHAKE
-	if (false == m_bCameraShake && GUI::Button("Shake")) {
-		m_bCameraShake = true;
-	}
-	if (GUI::SliderFloat("m_fCameraShakeTime", &m_fCameraShakeTime, 0.125f,  0.f, "%.3f")) {
-		m_vCameraShakeTimer.y = m_fCameraShakeTime;
-	}
-	GUI::SliderFloat("m_fCameraShakeIntense", &m_fCameraShakeIntense, 5.f, 20.f, "%.1f");
+		if (false == m_bCameraShake && GUI::Button("Shake")) {
+			m_bCameraShake = true;
+		}
+		if (GUI::SliderFloat("m_fCameraShakeTime", &m_fCameraShakeTime, 0.125f, 0.f, "%.3f")) {
+			m_vCameraShakeTimer.y = m_fCameraShakeTime;
+		}
+		GUI::SliderFloat("m_fCameraShakeIntense", &m_fCameraShakeIntense, 5.f, 20.f, "%.1f");
 #pragma endregion
 
-	_vector xmvInputDir = XMVectorZero();
+		_vector xmvInputDir = XMVectorZero();
 
-	_vector xmvCamLook = XMVector4Normalize(XMVectorSet(m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z, 0.f));
-	_vector xmvCamRight = XMVector4Normalize(XMVectorSet(m_vCameraRightDir.x, 0.f, m_vCameraRightDir.z, 0.f));
+		_vector xmvCamLook = XMVector4Normalize(XMVectorSet(m_vCameraLookDir.x, 0.f, m_vCameraLookDir.z, 0.f));
+		_vector xmvCamRight = XMVector4Normalize(XMVectorSet(m_vCameraRightDir.x, 0.f, m_vCameraRightDir.z, 0.f));
 
-	if (m_pGameInstance->Key_Pressing(DIK_W))
-		xmvInputDir += xmvCamLook;
-	if (m_pGameInstance->Key_Pressing(DIK_S))
-		xmvInputDir -= xmvCamLook;
-	if (m_pGameInstance->Key_Pressing(DIK_A))
-		xmvInputDir -= xmvCamRight;
-	if (m_pGameInstance->Key_Pressing(DIK_D))
-		xmvInputDir += xmvCamRight;
+		if (m_pGameInstance->Key_Pressing(DIK_W))
+			xmvInputDir += xmvCamLook;
+		if (m_pGameInstance->Key_Pressing(DIK_S))
+			xmvInputDir -= xmvCamLook;
+		if (m_pGameInstance->Key_Pressing(DIK_A))
+			xmvInputDir -= xmvCamRight;
+		if (m_pGameInstance->Key_Pressing(DIK_D))
+			xmvInputDir += xmvCamRight;
 
-	xmvInputDir = XMVector3Normalize(xmvInputDir);
+		xmvInputDir = XMVector3Normalize(xmvInputDir);
 
-	_float2 vInputDir = { XMVectorGetX(xmvInputDir),XMVectorGetZ(xmvInputDir) };
-	_vector xmvCurLook = XMVector4Normalize(
-		XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
-	_float2 vCurLook = { XMVectorGetX(xmvCurLook),XMVectorGetZ(xmvCurLook) };
+		_float2 vInputDir = { XMVectorGetX(xmvInputDir),XMVectorGetZ(xmvInputDir) };
+		_vector xmvCurLook = XMVector4Normalize(
+			XMVectorSetY(m_pTransformCom->Get_State(STATE::LOOK), 0.f));
+		_float2 vCurLook = { XMVectorGetX(xmvCurLook),XMVectorGetZ(xmvCurLook) };
 
-	_float vDir = CMyTools::Get_Direction2D(vCurLook, vInputDir);
-	_float degree = XMConvertToDegrees(vDir);
+		_float vDir = CMyTools::Get_Direction2D(vCurLook, vInputDir);
+		_float degree = XMConvertToDegrees(vDir);
 
-	GUI::Text("Angle %.2f", degree);
+		GUI::Text("Angle %.2f", degree);
 
-	m_pLightCom->Describe_Entity();
-
+		m_pLightCom->Describe_Entity();
+	}
 	GUI::End();
 }
 
