@@ -669,9 +669,12 @@ float4 RimLight(PS_IN In)
     
     if (g_isRimLight == true)
     {
-        vRimLight = 1.f - saturate(dot(float4(In.vNormal.rgb, 0.f), normalize(g_vCamPosition - In.vWorldPos)));
+        float4 vDir = normalize(g_vCamPosition - In.vWorldPos);
+        vDir.w = 0.f;
+        
+        vRimLight = saturate(dot(float4(In.vNormal.rgb, 0.f), vDir));
 
-        vRimLight = pow(vRimLight, g_fRimLightPower);
+        vRimLight = pow(1.f - vRimLight, g_fRimLightPower);
         vRimLight = vRimLight * g_vRimLightColor * g_fRimLightStrength; 
     }
     
@@ -908,7 +911,7 @@ technique11 DefaultTechnique
 
     pass NON_NOMALMAP
     {
-        SetRasterizerState(RS_Nocull);
+        SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_Blend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
@@ -928,7 +931,7 @@ technique11 DefaultTechnique
 
     pass WEIGHTBLEND
     {
-        SetRasterizerState(RS_Nocull);
+        SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_WB_Acc, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
@@ -959,7 +962,7 @@ technique11 DefaultTechnique
  
     pass BLEND
     {
-        SetRasterizerState(RS_Nocull);
+        SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Effect, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
@@ -969,7 +972,7 @@ technique11 DefaultTechnique
 
     pass BLEND_NOWORLD
     {
-        SetRasterizerState(RS_Nocull);
+        SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Effect, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_NOWORLD();
@@ -1020,7 +1023,7 @@ technique11 DefaultTechnique
 
     pass WEIGHTBLEND_FOR_BLEND
     {
-        SetRasterizerState(RS_Nocull);
+        SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Effect, 0);
         SetBlendState(BS_WB_Acc, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();

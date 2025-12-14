@@ -187,6 +187,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Intro_Image.h" />
     <ClInclude Include="..\Public\Item_Potion.h" />
     <ClInclude Include="..\public\Land.h" />
+    <ClInclude Include="..\Public\Accio.h" />
     <ClInclude Include="..\Public\Levioso.h" />
     <ClInclude Include="..\Public\Loding_Panel.h" />
     <ClInclude Include="..\Public\Logo.h" />
@@ -370,6 +371,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Intro_Image.cpp" />
     <ClCompile Include="..\Private\Item_Potion.cpp" />
     <ClCompile Include="..\private\Land.cpp" />
+    <ClCompile Include="..\Private\Accio.cpp" />
     <ClCompile Include="..\Private\Levioso.cpp" />
     <ClCompile Include="..\Private\Loding_Panel.cpp" />
     <ClCompile Include="..\Private\Logo.cpp" />

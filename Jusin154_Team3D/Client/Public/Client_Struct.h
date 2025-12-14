@@ -240,19 +240,23 @@ namespace Client
 		BLOOM_TYPE  eBloomType = {};
 		_float2     vBloomTime = {};
 
-		_int	    iNumVertex = {};
+		_int	    iNumVertex = { 256 };
 
 
 		RENDER		eRenderOrder = { RENDER::EFFECT };
 		SHADER_PASS_POSTEX eShaderPass = { SHADER_PASS_POSTEX::TRAIL };
 
-		_float3 vPadding0 = {};
+		_float      fDamping = { 0.5f };
+		_float      fRopeLength = { 0.1f };
+
+		_float  fPadding0 = {};
+
 		_float3 vPadding1 = {};
 		_float3 vPadding2 = {};
 
-		_float  fPadding0 = {};
 		_float  fPadding1 = {};
 		_float  fPadding2 = {};
+		_float  fPadding3 = {};
 
 		_bool   isPadding0 = {};
 		_bool   isPadding1 = {};

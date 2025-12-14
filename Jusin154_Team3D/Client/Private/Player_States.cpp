@@ -1169,6 +1169,11 @@ void CPlayer::Behavior_SpellEnter()
 				[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::LEVIOSO_SIDE, Get_PartObject<CWand>()); },
 				0.f);
 			break;
+		case ENUM_CLASS(SKILL_TYPE::ACCIO):
+			Add_Event(pairAnimInfo.first,
+				[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::ACCIO, this); },
+				fRatio);
+			break;
 		case ENUM_CLASS(SKILL_TYPE::DIFFINDO):
 			pairAnimInfo = m_Animation[STATEANIM::DIFFINDO];
 			break;

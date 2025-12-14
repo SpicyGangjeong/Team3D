@@ -128,6 +128,7 @@
 #include "EffectPool.h"
 #include "Levioso.h"
 #include "Lumos.h"
+#include "Accio.h"
 #include "Goblin_Teleport.h"
 
 
@@ -1579,6 +1580,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CLumos>(NEXT_LEVEL, CLumos::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CAccio>(NEXT_LEVEL, CAccio::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 

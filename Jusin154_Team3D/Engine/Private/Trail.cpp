@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Trail.h"
 
+
 CTrail::CTrail(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CVIBuffer(pDevice, pContext)
 {
@@ -10,6 +11,8 @@ CTrail::CTrail(const CTrail& rhs)
 	: CVIBuffer(rhs)
 {
 }
+
+
 
 HRESULT CTrail::Initialize_Prototype()
 {
@@ -36,6 +39,7 @@ HRESULT CTrail::Initialize(void* pArg)
 	m_ePrimitive = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
 	m_pVertices = new VTXPOSTEX[m_iNumVertices];
+	m_pOldPosition = new _float3[m_iNumVertices];
 
 	if (FAILED(Create_VB()))
 		return E_FAIL;
@@ -185,24 +189,6 @@ void CTrail::Trail_Update(_float fDeltaTime, _fmatrix WorldMatrix)
 
 	}
 
-	if (m_isFixedTrail == true)
-	{
-		//만약 고정된 트레일을 켰다면 가장 마지막 부분을 항상 내 위치로 고정함
-		//_vector vFixedLow = XMVector3TransformCoord(XMLoadFloat3(&m_TrailDesc.vLow), m_FixedMat);
-		//_vector vFixedHigh = XMVector3TransformCoord(XMLoadFloat3(&m_TrailDesc.vHigh), m_FixedMat);
-
-		//XMStoreFloat3(&m_pVertices[0].vPosition, vFixedLow);
-		//XMStoreFloat3(&m_pVertices[1].vPosition, vFixedHigh);
-
-	}
-#ifdef _DEBUG
-	Describe_Entity();
-#endif // _DEBUG
-
-
-	//XMStoreFloat3(&m_pVertices[0].vPosition, vLow);
-	//XMStoreFloat3(&m_pVertices[1].vPosition, vHigh);
-
 	for (_uint i = 0; i < m_iNumCount; i += 2)
 	{
 
@@ -233,6 +219,180 @@ void CTrail::Trail_Update(_float fDeltaTime, _fmatrix WorldMatrix)
 
 }
 
+void CTrail::Rope_Trail_Update(_fmatrix WorldMatrix, _float fTimeDelta, _float fDamping, _float fLength , _fmatrix EndWorldMatrix)
+{
+	if (m_isFix == false)
+	{
+		if (m_iNumCount > 2)
+			memmove(m_pVertices + 2, m_pVertices, sizeof(VTXPOSTEX) * (m_iNumCount - 2));
+
+		if (m_iNumCount >= m_iNumVertices)
+			m_iNumCount -= 2;
+	}
+	else
+	{
+		int a = 0;
+	}
+
+
+	if (m_iNumCount > 2)
+	{
+		m_pOldPosition[0] = m_pVertices[0].vPosition;
+		m_pOldPosition[1] = m_pVertices[1].vPosition;
+	}
+
+
+	_matrix WorldMat = {};
+
+	WorldMat.r[0] = XMVector3Normalize(WorldMatrix.r[0]);
+	WorldMat.r[1] = XMVector3Normalize(WorldMatrix.r[1]);
+	WorldMat.r[2] = XMVector3Normalize(WorldMatrix.r[2]);
+	WorldMat.r[3] = WorldMatrix.r[3];
+
+	_vector vLow = XMVector3TransformCoord(XMLoadFloat3(&m_TrailDesc.vLow), WorldMat);
+	_vector vHigh = XMVector3TransformCoord(XMLoadFloat3(&m_TrailDesc.vHigh), WorldMat);
+
+	/* 시작시 고정점 업데이트 */
+	XMStoreFloat3(&m_pVertices[0].vPosition, vLow);
+	XMStoreFloat3(&m_pVertices[1].vPosition, vHigh);
+
+	if (m_isFix == false)
+		m_iNumCount += 2;
+
+	_matrix EndWorldMat = {};
+
+	EndWorldMat.r[0] = XMVector3Normalize(EndWorldMatrix.r[0]);
+	EndWorldMat.r[1] = XMVector3Normalize(EndWorldMatrix.r[1]);
+	EndWorldMat.r[2] = XMVector3Normalize(EndWorldMatrix.r[2]);
+	EndWorldMat.r[3] = EndWorldMatrix.r[3];
+
+	_vector vEndLow = XMVector3TransformCoord(XMLoadFloat3(&m_TrailDesc.vLow), EndWorldMat);
+	_vector vEndHigh = XMVector3TransformCoord(XMLoadFloat3(&m_TrailDesc.vHigh), EndWorldMat);
+
+	XMStoreFloat3(&m_pVertices[m_iNumCount - 2].vPosition, vEndLow);
+	XMStoreFloat3(&m_pVertices[m_iNumCount - 1].vPosition, vEndHigh);
+
+	for (_uint i = 2; i < m_iNumCount; i++) /* 고정점은 연산에서 제외 0 , 1*/
+	{
+
+		_vector vCurrentPos = XMLoadFloat3(&m_pVertices[i].vPosition);
+		vCurrentPos = XMVectorSetW(vCurrentPos, 1.f);
+
+
+		_vector vOldPos = XMLoadFloat3(&m_pOldPosition[i]);
+		vOldPos = XMVectorSetW(vOldPos, 1.f);
+
+		_vector vVelocity = (vCurrentPos - vOldPos) * fDamping;
+
+		_vector vGravity = XMVectorSet(0.0f, m_fGravity, 0.0f, 0.0f);
+
+		// Verlet 공식: Next = Curr + Vel + Acc * dt * dt
+		_vector vNextPos = vCurrentPos + vVelocity + vGravity * (fTimeDelta * fTimeDelta);
+
+		// 과거 위치 갱신
+		XMStoreFloat3(&m_pOldPosition[i], XMLoadFloat3(&m_pVertices[i].vPosition));
+
+		// 현재 위치 갱신
+		XMStoreFloat3(&m_pVertices[i].vPosition, vNextPos);
+
+	}
+
+	for (int i = 0; i < 5; ++i) {
+		for (_uint k = 0; k < m_iNumCount - 2; k += 2) {
+
+			/* Low , High */
+			_vector vFirst[2] = { XMLoadFloat3(&m_pVertices[k].vPosition) , XMLoadFloat3(&m_pVertices[k + 1].vPosition) };
+			_vector vNext[2] = { XMLoadFloat3(&m_pVertices[k + 2].vPosition) , XMLoadFloat3(&m_pVertices[k + 3].vPosition) };
+
+
+			_vector vDeltaLow = vNext[0] - vFirst[0];
+			_vector vDeltaHigh = vNext[1] - vFirst[1];
+
+
+			_float fLowDist = XMVectorGetX(XMVector3Length(vDeltaLow));
+			_float fHighDist = XMVectorGetX(XMVector3Length(vDeltaHigh));
+
+			// 거리가 0이면 오류 방지
+			if (fLowDist < FLT_EPSILON5) continue;
+			if (fHighDist < FLT_EPSILON5) continue;
+
+			// 늘어나거나 줄어든 비율 계산 (Difference)
+			_float fLowDiff = (fLength - fLowDist) / fLowDist;
+			_float fHighDiff = (fLength - fHighDist) / fHighDist;
+
+			// 각 점을 절반씩 밀거나 당겨서 거리 맞춤
+			// 손잡이(Pinned)는 움직이지 않도록 질량 비율 조절 가능 (여기선 0.5씩)
+
+			_vector vLowOffset = vDeltaLow * (m_fMass * fLowDiff);
+			_vector vHighOffset = vDeltaHigh * (m_fMass * fHighDiff);
+
+			// k!=0 (즉, 움직이는 마디)일 때만 vFirst를 움직임
+			if (k != 0)
+			{
+				vFirst[0] -= vLowOffset;
+				vFirst[1] -= vHighOffset;
+			}
+
+			// vNext는 모든 경우에 움직임
+			vNext[0] += vLowOffset;
+			vNext[1] += vHighOffset;
+
+
+			// --- 2. 고정점 몫 몰아주기 (k=0 일 때만) ---
+
+			// k=0일 때 vFirst (손잡이)가 움직이지 않은 몫을 vNext (첫 마디)에게 전부 몰아줌
+			if (k == 0)
+			{
+				// vFirst가 움직여야 할 양(-Offset)만큼 vNext에 추가 보정 (+Offset)
+				vNext[0] += vLowOffset;
+				vNext[1] += vHighOffset;
+			}
+
+			// --- 3. 결과 저장 ---
+
+			// vFirst 저장 (k=0 일 때는 vFirst가 vLow/vHigh의 값을 가지지만, 
+			// 움직이지 않았으므로 저장해도 무방. 하지만 명확성을 위해 조건부 저장 가능)
+			if (k != 0)
+			{
+				XMStoreFloat3(&m_pVertices[k].vPosition, vFirst[0]);
+				XMStoreFloat3(&m_pVertices[k + 1].vPosition, vFirst[1]);
+			}
+
+			// vNext 저장
+			XMStoreFloat3(&m_pVertices[k + 2].vPosition, vNext[0]);
+			XMStoreFloat3(&m_pVertices[k + 3].vPosition, vNext[1]);
+		}
+	}
+
+	for (_uint i = 0; i < m_iNumCount; i += 2)
+	{
+
+		_float u = ((_float)i / (m_iNumCount - 2));
+
+		if (m_iNumCount - 2 <= 0)
+			u = 0;
+
+		m_pVertices[i].vTexcoord = _float2(u, 0); // Low
+
+		m_pVertices[i + 1].vTexcoord = _float2(u, 1); // High
+
+
+	}
+
+
+	D3D11_MAPPED_SUBRESOURCE		VBResource{};
+
+	if (SUCCEEDED(m_pContext->Map(m_pVB, 0, D3D11_MAP_WRITE_DISCARD, 0, &VBResource)))
+	{
+
+		memcpy(VBResource.pData, m_pVertices, sizeof(VTXPOSTEX) * m_iNumVertices);
+
+		VTXPOSTEX* pDebug = static_cast<VTXPOSTEX*>(VBResource.pData);
+
+		m_pContext->Unmap(m_pVB, 0);
+	}
+}
+
 void CTrail::Reset_Trail()
 {
 	ZeroMemory(m_pVertices, sizeof(VTXPOSTEX) * m_iNumVertices);
@@ -240,6 +400,7 @@ void CTrail::Reset_Trail()
 	ZeroMemory(&m_PreLow, sizeof(_vector) * 2);
 	m_iNumCount = 0;
 	m_fAccTime = 0.f;
+	m_isFix = false;
  }
 
 HRESULT CTrail::ReStructVB(_uint iNumVertices)
@@ -289,20 +450,6 @@ HRESULT CTrail::Load_Trail(HANDLE hFile)
 	return S_OK;
 }
 
-void CTrail::Fixed_Trail(_fmatrix WorldMatrix)
-{
-	_matrix WorldMat = {};
-
-	WorldMat.r[0] = XMVector3Normalize(WorldMatrix.r[0]);
-	WorldMat.r[1] = XMVector3Normalize(WorldMatrix.r[1]);
-	WorldMat.r[2] = XMVector3Normalize(WorldMatrix.r[2]);
-	WorldMat.r[3] = WorldMatrix.r[3];
-
-	m_isFixedTrail = true;
-	m_FixedMat = WorldMat;
-}
-
-
 
 HRESULT CTrail::Render()
 {
@@ -345,17 +492,24 @@ void CTrail::Free()
 	__super::Free();
 
 	Safe_Delete_Array(m_pVertices);
+	Safe_Delete_Array(m_pOldPosition);
 }
 #ifdef _DEBUG
 
 void CTrail::Describe_Entity()
 {
-	GUI::Begin("EFFECT");
-	if (GUI::CollapsingHeader("CTrail")) {
+	if (GUI::TreeNode("Trail Component")) {
 		GUI::InputFloat3("Low", (_float*)&m_TrailDesc.vLow);
 		GUI::InputFloat3("High", (_float*)&m_TrailDesc.vHigh);
+
+		GUI::DragFloat("Gravity", &m_fGravity);
+		GUI::DragFloat("Mass", &m_fMass);
+
+		GUI::Checkbox("Fix", &m_isFix);
+
+		GUI::TreePop();
 	}
-	GUI::End();
+
 }
 
 #endif // _DEBUG
