@@ -44,6 +44,73 @@ HRESULT CTimer_Manager::Add_Timer(const _wstring& strTimerTag)
 	return S_OK;
 }
 
+HRESULT CTimer_Manager::Initialize()
+{
+#ifdef _DEBUG
+	if (FAILED(Add_Timer(TEXT("Timer_Render_Priority")))) {
+		return E_FAIL;
+	}
+	if (FAILED(Add_Timer(TEXT("Timer_Render_Shadow")))) {
+		return E_FAIL;
+	}
+	if (FAILED(Add_Timer(TEXT("Timer_Render_NonBlend")))) {
+		return E_FAIL;
+	}
+	if (FAILED(Add_Timer(TEXT("Timer_Render_SSAO")))) {
+		return E_FAIL;
+	}
+	if (FAILED(Add_Timer(TEXT("Timer_Render_SSAO_BLUR")))) {
+		return E_FAIL;
+	}
+	if (FAILED(Add_Timer(TEXT("Timer_Render_LightAcc")))) {
+		return E_FAIL;
+	}
+	if (FAILED(Add_Timer(TEXT("Timer_Render_Blur")))) {
+		return E_FAIL;
+	}
+	if (FAILED(Add_Timer(TEXT("Timer_Render_Combined")))) {
+		return E_FAIL;
+	}
+	if (FAILED(Add_Timer(TEXT("Timer_Render_Occlusion")))) {
+		return E_FAIL;
+	}
+	if (FAILED(Add_Timer(TEXT("Timer_Render_EnvironmentPostProcess")))) {
+		return E_FAIL;
+	}
+	if (FAILED(Add_Timer(TEXT("Timer_Render_Fog")))) {
+		return E_FAIL;
+	}
+	if (FAILED(Add_Timer(TEXT("Timer_Render_Effect")))) {
+		return E_FAIL;
+	}
+	if (FAILED(Add_Timer(TEXT("Timer_Render_NonLight")))) {
+		return E_FAIL;
+	}
+	if (FAILED(Add_Timer(TEXT("Timer_Render_Blend")))) {
+		return E_FAIL;
+	}
+	if (FAILED(Add_Timer(TEXT("Timer_Render_WeightBlend")))) {
+		return E_FAIL;
+	}
+	if (FAILED(Add_Timer(TEXT("Timer_Render_Bloom")))) {
+		return E_FAIL;
+	}
+	if (FAILED(Add_Timer(TEXT("Timer_Render_LastColor")))) {
+		return E_FAIL;
+	}
+	if (FAILED(Add_Timer(TEXT("Timer_Render_Tone_Mapping")))) {
+		return E_FAIL;
+	}
+	if (FAILED(Add_Timer(TEXT("Timer_Render_UI")))) {
+		return E_FAIL;
+	}
+	if (FAILED(Add_Timer(TEXT("Timer_Render_UI_Overley")))) {
+		return E_FAIL;
+	}
+#endif // _DEBUG
+	return S_OK;
+}
+
 CTimer* CTimer_Manager::Find_Timer(const _wstring& strTimerTag)
 {
 	/*auto		iter = find_if(m_mapTimer.begin(), m_mapTimer.end(), CTag_Finder(pTimerTag));*/
@@ -57,7 +124,15 @@ CTimer* CTimer_Manager::Find_Timer(const _wstring& strTimerTag)
 
 CTimer_Manager* CTimer_Manager::Create()
 {
-	return new CTimer_Manager();
+	CTimer_Manager* pInstance = new CTimer_Manager();
+
+	if (FAILED(pInstance->Initialize()))
+	{
+		MSG_BOX("Failed to Created : CTimer_Manager");
+		SAFE_RELEASE(pInstance);
+	}
+
+	return pInstance;
 }
 
 void CTimer_Manager::Free()
