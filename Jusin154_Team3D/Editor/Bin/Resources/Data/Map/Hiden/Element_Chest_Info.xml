@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Chests>
+    <Object Type="2" ID="2" Lod_Level="3">
+        <PrototypeTag>Prototype_GameObject_SM_Chest_RewardContainer_C</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_Chest_RewardContainer_C_Lod1</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_Chest_RewardContainer_C_Lod2</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_Chest_RewardContainer_C_Lod3</PrototypeTag>
+        <Position x="76.562943" y="3.6033077" z="63.712246"/>
+        <Scale x="1" y="1" z="1"/>
+        <Rotation x="-0" y="-30" z="-0"/>
+        <HalfGeometryInfo x="0.30000001" y="0.25" z="0.27000001"/>
+        <LocalTranslation x="-0.0099999998" y="0.30000001" z="-0.25"/>
+        <RimLight pow="0.69999999" strength="3.7" colorR="0.70999998" colorG="0.38999999" colorB="0.02" colorA="1"/>
+        <Lid Lod_Level="2">
+            <PrototypeTag>Prototype_GameObject_SM_Chest_RewardContainer_C_Lid</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Chest_RewardContainer_C_Lid_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Chest_RewardContainer_C_Lid_Lod2</PrototypeTag>
+            <Position x="0" y="0.5" z="0"/>
+            <RotationAngle RotationAngle="10"/>
+        </Lid>
+    </Object>
+    <Object Type="2" ID="2" Lod_Level="3">
+        <PrototypeTag>Prototype_GameObject_SM_Chest_RewardContainer_C</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_Chest_RewardContainer_C_Lod1</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_Chest_RewardContainer_C_Lod2</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_Chest_RewardContainer_C_Lod3</PrototypeTag>
+        <Position x="129.29819" y="15.70473" z="144.45197"/>
+        <Scale x="0.99999988" y="1" z="0.99999988"/>
+        <Rotation x="0" y="74.999985" z="0"/>
+        <HalfGeometryInfo x="0.30000001" y="0.25" z="0.27000001"/>
+        <LocalTranslation x="-0.0099999998" y="0.30000001" z="-0.25"/>
+        <RimLight pow="0.69999999" strength="3.7" colorR="0.70999998" colorG="0.38999999" colorB="0.02" colorA="1"/>
+        <Lid Lod_Level="2">
+            <PrototypeTag>Prototype_GameObject_SM_Chest_RewardContainer_C_Lid</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Chest_RewardContainer_C_Lid_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Chest_RewardContainer_C_Lid_Lod2</PrototypeTag>
+            <Position x="0" y="0.5" z="0"/>
+            <RotationAngle RotationAngle="10"/>
+        </Lid>
+    </Object>
+    <Object Type="2" ID="2" Lod_Level="3">
+        <PrototypeTag>Prototype_GameObject_SM_Chest_RewardContainer_C</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_Chest_RewardContainer_C_Lod1</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_Chest_RewardContainer_C_Lod2</PrototypeTag>
+        <PrototypeTag>Prototype_GameObject_SM_Chest_RewardContainer_C_Lod3</PrototypeTag>
+        <Position x="75.051727" y="14.536825" z="130.8075"/>
+        <Scale x="0.99999988" y="1" z="0.99999988"/>
+        <Rotation x="0" y="74.999985" z="0"/>
+        <HalfGeometryInfo x="0.30000001" y="0.25" z="0.27000001"/>
+        <LocalTranslation x="-0.0099999998" y="0.30000001" z="-0.25"/>
+        <RimLight pow="0.69999999" strength="3.7" colorR="0.70999998" colorG="0.38999999" colorB="0.02" colorA="1"/>
+        <Lid Lod_Level="2">
+            <PrototypeTag>Prototype_GameObject_SM_Chest_RewardContainer_C_Lid</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Chest_RewardContainer_C_Lid_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_Chest_RewardContainer_C_Lid_Lod2</PrototypeTag>
+            <Position x="0" y="0.5" z="0"/>
+            <RotationAngle RotationAngle="10"/>
+        </Lid>
+    </Object>
+</Chests>

@@ -161,9 +161,8 @@ call Update_Resources.bat
   <ItemGroup>
     <ClInclude Include="..\Public\Action_Panel.h" />
     <ClInclude Include="..\Public\Barral_Splesh.h" />
+    <ClInclude Include="..\Public\BroomRacerAI.h" />
     <ClInclude Include="..\Public\Chair_Splesh.h" />
-    <ClInclude Include="..\Public\Broom_State_Fly.h" />
-    <ClInclude Include="..\Public\Broom_State_Hover.h" />
     <ClInclude Include="..\Public\Boss_HpBar.h" />
     <ClInclude Include="..\Public\CallBack_Troll_HitReport.h" />
     <ClInclude Include="..\Public\CameraLockOn.h" />
@@ -196,8 +195,12 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Mage_Nomal_Attack.h" />
     <ClInclude Include="..\Public\MageSide.h" />
     <ClInclude Include="..\Public\Mage_Down_Attack.h" />
+    <ClInclude Include="..\public\MapElement_Chest.h" />
+    <ClInclude Include="..\public\MapElement_Chest_Lid.h" />
     <ClInclude Include="..\Public\NPC_Ollivander.h" />
     <ClInclude Include="..\Public\Box_Splesh.h" />
+    <ClInclude Include="..\Public\RaceRing.h" />
+    <ClInclude Include="..\Public\State_Broom_TurboFly.h" />
     <ClInclude Include="..\Public\StunEffect.h" />
     <ClInclude Include="..\public\MapElement_Door.h" />
     <ClInclude Include="..\Public\State_Broom_Dismount.h" />
@@ -343,10 +346,9 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Action_Panel.cpp" />
     <ClCompile Include="..\Private\Boss_HpBar.cpp" />
     <ClCompile Include="..\Private\Barral_Splesh.cpp" />
+    <ClCompile Include="..\Private\BroomRacerAI.cpp" />
     <ClCompile Include="..\Private\Chair_Splesh.cpp" />
     <ClCompile Include="..\Private\Broom_States.cpp" />
-    <ClCompile Include="..\Private\Broom_State_Fly.cpp" />
-    <ClCompile Include="..\Private\Broom_State_Hover.cpp" />
     <ClCompile Include="..\Private\CallBack_Troll_HitReport.cpp" />
     <ClCompile Include="..\Private\CameraLockOn.cpp" />
     <ClCompile Include="..\Private\Current_Slot_Number.cpp" />
@@ -375,13 +377,17 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Logo.cpp" />
     <ClCompile Include="..\Private\Logo_Glow.cpp" />
     <ClCompile Include="..\Private\Logo_Text.cpp" />
+    <ClCompile Include="..\private\MapElement_Chest.cpp" />
+    <ClCompile Include="..\private\MapElement_Chest_Lid.cpp" />
     <ClCompile Include="..\Private\NPC_Ollivander.cpp" />
     <ClCompile Include="..\private\MapElement_Door.cpp" />
+    <ClCompile Include="..\Private\RaceRing.cpp" />
     <ClCompile Include="..\Private\State_Broom_Dismount.cpp" />
     <ClCompile Include="..\Private\State_Broom_Fly.cpp" />
     <ClCompile Include="..\Private\State_Broom_Hover.cpp" />
     <ClCompile Include="..\Private\State_Broom_Ride_Move.cpp" />
     <ClCompile Include="..\private\MiniMap_Camera.cpp" />
+    <ClCompile Include="..\Private\State_Broom_TurboFly.cpp" />
     <ClCompile Include="..\Private\State_Shield.cpp" />
     <ClCompile Include="..\Private\State_Sustain.cpp" />
     <ClCompile Include="..\Private\Goblin_Attack.cpp" />

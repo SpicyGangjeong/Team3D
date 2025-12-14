@@ -196,21 +196,25 @@ void CNPC_Ollivander::Free()
 
 void CNPC_Ollivander::Describe_Entity()
 {
-	m_pModelCom->Describe_Entity();
-	if (ImGui::TreeNode("ANIM STATE")) {
+	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
+	if (GUI::CollapsingHeader("Ollivander")) {
+		m_pModelCom->Describe_Entity();
+		if (ImGui::TreeNode("ANIM STATE")) {
 
-		for (auto& pState : m_States)
-		{
-			if (ImGui::Button(to_string(pState.first).c_str()))
+			for (auto& pState : m_States)
 			{
-				m_pFSM->Change_State(pState.first);
+				if (ImGui::Button(to_string(pState.first).c_str()))
+				{
+					m_pFSM->Change_State(pState.first);
+				}
 			}
+
+			GUI::Text(to_string(m_pModelCom->Get_CurrentTrackProgressRatio()).c_str());
+
+			ImGui::TreePop();
 		}
-
-		GUI::Text(to_string(m_pModelCom->Get_CurrentTrackProgressRatio()).c_str());
-
-		ImGui::TreePop();
 	}
+	GUI::End();
 }
 
 #endif // _DEBUG

@@ -515,12 +515,6 @@
     <ClInclude Include="..\Public\State_Broom_Dismount.h">
       <Filter>04.Mechanic\State\Broom_Player\State_Broom_Dismount</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Broom_State_Hover.h">
-      <Filter>04.Mechanic\State\Broom\Hover</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Broom_State_Fly.h">
-      <Filter>04.Mechanic\State\Broom\Fly</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Boss_HpBar.h">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Boss_HpBar</Filter>
     </ClInclude>
@@ -554,11 +548,26 @@
     <ClInclude Include="..\public\MapElement_Door.h">
       <Filter>02.GameObjects\Environment\03.MapElement\Door</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\MapElement_Chest.h">
+      <Filter>02.GameObjects\Environment\03.MapElement\Chest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapElement_Chest_Lid.h">
+      <Filter>02.GameObjects\Environment\03.MapElement\Chest\Chest_Lid</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\Item_Potion.h">
       <Filter>02.GameObjects\Item\Potion</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Goblin_Teleport.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Goblin_Teleport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Broom_TurboFly.h">
+      <Filter>04.Mechanic\State\Broom_Player\State_Broom_TurboFly</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BroomRacerAI.h">
+      <Filter>02.GameObjects\NPC\Ally\BroomRacerAI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\RaceRing.h">
+      <Filter>02.GameObjects\Item\RaceRing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1131,15 +1140,6 @@
     <Filter Include="04.Mechanic\State\Broom_Player\State_Broom_Dismount">
       <UniqueIdentifier>{51b299f6-ebb0-4f58-9620-5e1dc24a2e60}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Mechanic\State\Broom">
-      <UniqueIdentifier>{ca81f80e-701f-4988-ac3b-3ea2e6812a66}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Broom\Hover">
-      <UniqueIdentifier>{75764f4a-7eef-4daf-bd8c-d07aef1c59cf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Mechanic\State\Broom\Fly">
-      <UniqueIdentifier>{537c9208-b8e7-4e3b-a818-27335e3f0469}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Boss_HpBar">
       <UniqueIdentifier>{b49a3671-96d0-47b8-833f-28190d549b0f}</UniqueIdentifier>
     </Filter>
@@ -1176,11 +1176,26 @@
     <Filter Include="02.GameObjects\Environment\03.MapElement\Door">
       <UniqueIdentifier>{b09f9ada-6cf4-41a4-ad28-f00855509825}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Environment\03.MapElement\Chest">
+      <UniqueIdentifier>{160d0631-ff04-40ee-b27b-b2ea167b8da5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Environment\03.MapElement\Chest\Chest_Lid">
+      <UniqueIdentifier>{70c01ca8-ae1b-43aa-b4f4-efa40994e3e9}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\Item\Potion">
       <UniqueIdentifier>{ace6c64f-901a-424e-99da-53f281413d77}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Goblin_Teleport">
       <UniqueIdentifier>{8f5dbf8c-be74-4512-a84f-586397744b24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Mechanic\State\Broom_Player\State_Broom_TurboFly">
+      <UniqueIdentifier>{2326c134-a2bb-45f1-8452-2dd49bf42697}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\NPC\Ally\BroomRacerAI">
+      <UniqueIdentifier>{6ffe4bf3-60e2-4dd3-beef-cc7cf7b50328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Item\RaceRing">
+      <UniqueIdentifier>{f00654f0-c372-4289-ab1d-167941076573}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1641,12 +1656,6 @@
     <ClCompile Include="..\Private\State_Broom_Dismount.cpp">
       <Filter>04.Mechanic\State\Broom_Player\State_Broom_Dismount</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Broom_State_Hover.cpp">
-      <Filter>04.Mechanic\State\Broom\Hover</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Broom_State_Fly.cpp">
-      <Filter>04.Mechanic\State\Broom\Fly</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Boss_HpBar.cpp">
       <Filter>02.GameObjects\UI\GamePlay_Canvas\Enemy_Penel\Boss_HpBar</Filter>
     </ClCompile>
@@ -1680,11 +1689,26 @@
     <ClCompile Include="..\private\MapElement_Door.cpp">
       <Filter>02.GameObjects\Environment\03.MapElement\Door</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\MapElement_Chest.cpp">
+      <Filter>02.GameObjects\Environment\03.MapElement\Chest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapElement_Chest_Lid.cpp">
+      <Filter>02.GameObjects\Environment\03.MapElement\Chest\Chest_Lid</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\Item_Potion.cpp">
       <Filter>02.GameObjects\Item\Potion</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Goblin_Teleport.cpp">
       <Filter>02.GameObjects\Effect\MonsterEffect\Goblin_Teleport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Broom_TurboFly.cpp">
+      <Filter>04.Mechanic\State\Broom_Player\State_Broom_TurboFly</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BroomRacerAI.cpp">
+      <Filter>02.GameObjects\NPC\Ally\BroomRacerAI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RaceRing.cpp">
+      <Filter>02.GameObjects\Item\RaceRing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

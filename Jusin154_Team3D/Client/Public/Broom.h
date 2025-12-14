@@ -7,6 +7,17 @@ NS_BEGIN(Client)
 
 class CBroom final : public CUnit
 {
+public:
+	struct BroomInput
+	{
+		_float X;
+		_float Y;
+		_float Z;
+		_bool  bHoverToggle;
+		_bool  bTurbo;
+	};
+
+
 private:
 	CBroom(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CBroom(const CBroom& Prototype);
@@ -21,39 +32,53 @@ public:
 	virtual HRESULT Render() override;
 	void Set_Ride(_bool bRide) { m_bRide = bRide; }
 	_bool Get_Hover() { return m_bHoverToggle; }
+	_bool Get_Turbo() { return m_bTurbo; }
+
+	void Set_Input(BroomInput broomInput) { m_Input = broomInput; }
 
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
 
+	class CUnit* m_pParentUnit = {nullptr};
+
 	_bool m_bHoverToggle = { true };
-	_bool m_bWalkToggle = { false };
+	_bool m_bTurbo = { false };
 
 	_bool m_bRide = {false};
 
 	_float m_fSpeed = 0.f; 
 	_float m_fTurnSpeed = 0.f;
 	_float m_fTargetSpeed = 0.f;
-	_float m_fTurnMaxSpeed = 10.f;
+	_float m_fTurnMaxSpeed = 8.f;
 	_float m_fFlyTurnMaxSpeed = 9.f;
-	_float m_fFlyMaxSpeed = 15.f;    
+	_float m_fTurboTurnMaxSpeed = 12.f;
 	_float m_fHoverMaxSpeed = 5.f;
+	_float m_fFlyMaxSpeed = 15.f;    
+	_float m_fTurboMaxSpeed = 20.f;
 	_float m_fAccel = 1.f;             
 	_float m_fDecel = 1.f;
 	_float m_fTurnDecel = 0.3f;
-
-
-
 	_float m_fVerticalSpeed = 0.f;
+
+
+	_float m_fFlyAccel = 1.f;
+	_float m_fFlyDecel = 1.f;
+
+	_float m_fTurboAccel = 1.3f;
+	_float m_fTurboDecel = 0.6f;
 
 
 
 	_float3 m_vCameraLookDir = { 0.f, 0.f, 1.f, };
 	_float3 m_vCameraRightDir = { 1.f, 0.f, 0.f };
+
+	BroomInput m_Input;
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
 
 	void Update_CameraCoordinateSystem();
+	void PlayerInput();
 
 public:
 	static CBroom* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -68,9 +93,9 @@ public:
 	virtual void Add_FSM();
 	virtual void Set_Anim();
 
-	_float m_fAmount = { 1.f };
-	_float m_fInputTime = {};
-	_bool m_bRatio = { false };
+	_float		m_fAmount = { 1.f };
+	_float		m_fInputTime = {};
+	_bool		m_bRatio = { false };
 
 	HRESULT InputAction();
 	HRESULT InputMove();
@@ -93,6 +118,10 @@ public:
 	void	Behavior_Broom_FlyEnter();
 	HRESULT Behavior_Broom_FlyExitCheck(_float fTimeDelta);
 	void	Behavior_Broom_FlyExit();
+
+	void	Behavior_Broom_TurboFlyEnter();
+	HRESULT Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta);
+	void	Behavior_Broom_TurboFlyExit();
 #pragma endregion
 
 

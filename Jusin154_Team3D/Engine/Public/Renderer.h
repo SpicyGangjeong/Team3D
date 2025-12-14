@@ -50,20 +50,23 @@ private:
 	_float4x4					m_PreShadowMatrices[ENUM_CLASS(D3DTS::END)] = {};
 
 	/* TunningParam  */
-	_int	m_iToneMappingType = { 2 };
+	_int	m_iToneMappingType = { 0 };
 	_float	m_fExposure = { 0.7f };
 
-	_int	m_iBloomEmbossingPass = { 0 };
+	// Bloom
+	_int	m_iBloomEmbossingPass = { 1 };
 	_float	m_fBloomThreshold = { 1.26f };
-
+	
+	// DOF Environment
 	_float	m_fDOF_ENV_CutThreshold = { 0.1350f };
 	_float	m_fDOF_ENV_FocusDistance = { 31.1f };
 	_float	m_fDOF_ENV_StartDistance = { 53.1f };
 	_float	m_fDOF_ENV_MaxEnd = { 360.f };
 	_float	m_fDOF_ENV_AmountRadius = { 1.f };
 
-	_float	m_fSSAO_Radius = { 0.812f };
-	_float	m_fSSAO_BIAS = { 0.042f };
+	// SSAO
+	_float	m_fSSAO_Radius = { 1.6300f };
+	_float	m_fSSAO_BIAS = { 0.234f };
 
 	SSAO_GEOMETRY_HEMISPHERE m_tagSSAOGeometry = {};
 	SSAO_GEOMETRYDIRECTIONS_RANDOM_REAL m_tagSSAOGeometryDirections = {};

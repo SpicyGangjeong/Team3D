@@ -478,7 +478,7 @@ HRESULT CLevel_MapViewer::Ready_Layer_Chest(const _wstring& strLayerTag)
 
 	Chest_Desc.iMaxLodLevel_Lid = 2;
 	Chest_Desc.ModelPrototypeTags_Lid= ModelPrototypeTagsLid;
-	Chest_Desc.vLid_Offset = _float3(0.f, 0.3f, 0.f);
+	Chest_Desc.vLid_Offset = _float3(0.f, 0.5f, 0.f);
 	
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Chest>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, &Chest_Desc)))
 		return E_FAIL;

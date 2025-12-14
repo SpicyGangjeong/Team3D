@@ -51,7 +51,7 @@ void CCallBack_Troll_HitReport::onShapeHit(const PSX::PxControllerShapeHit& hit)
 				class CUnit* pOwner = (CUnit*)m_pController->Get_Owner();
 				_vector vLook = pOwner->Get_Component<CTransform>()->Get_State(STATE::LOOK);
 				_float fDot = XMVectorGetX(XMVector3Dot(XMLoadFloat3((_float3*)&vDir), vLook));
-				if (fDot > cosf(XM_PIDIV4)) {
+				if (fDot > cosf(XM_PIDIV4) && vWorldPos.y >= XMVectorGetY(pOwnerActorData->pCharacter->Get_Position()) - FLT_EPSILON3) {
 					CModel* pModel = pOwner->Get_Component<CModel>();
 					_uint iAnimIndex = pModel->Get_AnimIndex();
 					if (pOwner->Get_AnimInfo(STATEANIM::RUSH_LOOP).first == iAnimIndex) {

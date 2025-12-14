@@ -30,7 +30,9 @@ private:
 	HRESULT Ready_Layer_Camera();
 	HRESULT Ready_Layer_Sound();
 	HRESULT Ready_Layer_Player(const _wstring& strLayerTag);
+	HRESULT Ready_Layer_BroomRacerAI(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_Item(const _wstring& strLayerTag);
+	HRESULT Ready_Layer_RaceRing(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_SkyBox(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_Monster();
 	HRESULT Reday_Layer_EffectPool();
