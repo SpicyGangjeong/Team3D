@@ -31,6 +31,7 @@
 #include "Box_Splesh.h"
 #include "Chair_Splesh.h"
 #include "Barral_Splesh.h"
+#include "Goblin_Teleport.h"
 
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -409,7 +410,15 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 
 	))) return E_FAIL;
 
+	if (FAILED(Create_Effect(SKILL_TYPE::GOBILN_TELEPORT, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
+		CGoblin_Teleport* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CGoblin_Teleport>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+
+	))) return E_FAIL;
 
 	return S_OK;
 }
