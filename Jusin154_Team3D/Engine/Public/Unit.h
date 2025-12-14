@@ -33,6 +33,7 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	_wstring& Get_PrototypeTag() { return m_strModelPrototypeTag; }
+	_bool IsAI() { return m_bAI; }
 
 #ifdef _DEBUG
 	void Load_KeyFrame();
@@ -61,6 +62,8 @@ protected:
 	_float			m_fRimLightPower = { 3.2f };
 	_float			m_fRimLightStrength = { 3.04f };
 	_float3			m_vRimLightColor = { 69.f / 255.f, 5.f / 255.f, 10.f / 255.f };
+
+	_bool			m_bAI = {};
 
 	map<_string, _float> m_KeyFrames;
 

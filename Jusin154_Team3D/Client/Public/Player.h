@@ -122,6 +122,9 @@ private:
 	_float3			m_TargetScale = { 1.f, 1.f, 1.f };
 	_float			m_fScaleSmoothSpeed = 2.5f;
 	_bool			m_bLumos = {};
+	_bool			m_bShield = {false};
+	_float			m_fAnimTime = {};
+	_bool			m_bTurbo = {};
 
 	HRESULT InputAction();
 	HRESULT InputMove();
@@ -185,6 +188,10 @@ private:
 	void	Behavior_Broom_FlyEnter();
 	HRESULT Behavior_Broom_FlyExitCheck(_float fTimeDelta);
 	void	Behavior_Broom_FlyExit();
+
+	void	Behavior_Broom_TurboFlyEnter();
+	HRESULT Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta);
+	void	Behavior_Broom_TurboFlyExit();
 
 	void	Behavior_Broom_DismountEnter();
 	HRESULT Behavior_Broom_DismountExitCheck(_float fTimeDelta);

@@ -63,7 +63,6 @@ HRESULT CPlayer::Initialize(void* pArg)
 	Load_KeyFrame();
 #endif // _DEBUG
 
-	m_pBroom = m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_ITEM)->Get_Object<CBroom>();
 	m_pBroomModel = m_pBroom->Get_Component<CModel>();
 	m_pBroomTransform = m_pBroom->Get_Component<CTransform>();
 	SAFE_ADDREF(m_pBroom);
@@ -92,8 +91,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pInfoInstance->Regist_PlayerAlly(this);
 	m_pInfoInstance->Set_Damage(m_pStat->Get_Stat().fDamage);
 
-	m_pCharacter_Controller->Set_Position(XMVectorSet(-34.f, 5, -11.4f, 1.f));
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-34.f, 5, -11.4f, 1.f));
+	m_pCharacter_Controller->Set_Position(XMVectorSet(-82.f, -30.f, -56.f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-82.f, -30.f, -56.f, 1.f));
 
 #ifdef _DEBUG
 	m_BasicEffect = make_unique<BasicEffect>(m_pDevice);
@@ -107,6 +106,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	// UI 연동 추가
 	m_pInfoInstance->Add_Event(TEXT("UseSpell"), [this](void* p) {this->Get_Spell(*reinterpret_cast<_int*>(p)); });
 	m_pInfoInstance->Add_Event(TEXT("Canvas_Change"), [this](void* p) {this->Get_UIState(*reinterpret_cast<_int*>(p)); });
+
+	m_bAI = false;
 	return S_OK;
 }
 
@@ -126,8 +127,17 @@ void CPlayer::Update(_float fTimeDelta)
 	UpdateGrapInteractive(fTimeDelta);
 	
 	m_pFSM->Update_State(fTimeDelta);
+	float ratio = m_pModelCom->Get_CurrentTrackProgressRatio();
 
-	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
+	float ease = 1.f;
+	if (ratio < 0.4f)
+		ease = 1.15f;      
+	else if (ratio > 0.85f)
+		ease = 0.85f;      
+
+	m_pModelCom->Play_Animation(fTimeDelta * ease, m_pTransformCom);
+
+
 
 	Play_Event();
 	
@@ -149,14 +159,6 @@ __super::Update(fTimeDelta);
 		m_pInfoInstance->Mouse_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_UP));
 		m_bAim = false; 
 	}
-
-	if (m_pGameInstance->Key_Down(DIK_1)) {
-		if (m_pModelCom->Get_SecondAnimIndex() == m_Animation[STATEANIM::LUMOS].first)
-		{
-			m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R), m_Animation[STATEANIM::LUMOS_STOP].first, m_Animation[STATEANIM::LUMOS_STOP].second);
-		}
-	}
-
 }
 
 void CPlayer::UpdateGrapInteractive(_float fTimeDelta)
@@ -314,8 +316,13 @@ void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 	else {
 		m_fHitDegree = -1.f;
 	}
+	if (m_pFSM->IsEnable(FSMSTATE::SHIELD))
+	{
+		m_bShield = true;
+	}
 
-	m_pFSM->Change_State(FSMSTATE::HIT);
+	if(!m_pFSM->IsEnable(FSMSTATE::DODGE) && !m_bShield)
+		m_pFSM->Change_State(FSMSTATE::HIT);
 }
 void CPlayer::OnHit(CGameObject* pOther, CGameObject* pCaller)
 {
@@ -487,6 +494,10 @@ HRESULT CPlayer::Ready_Parts()
 		if (FAILED(Add_PartObject<CCamPosition_Shoulder>("Cam_Shoulder_Part", g_iStaticLevel, &m_pCamPosition_ShoulderPart, &Desc))) {
 			return E_FAIL;
 		}
+	}
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, LAYER_ITEM, nullptr, this,&m_pBroom))) {
+		return E_FAIL;
 	}
 
 	return S_OK;
