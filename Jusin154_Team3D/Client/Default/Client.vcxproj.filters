@@ -557,6 +557,9 @@
     <ClInclude Include="..\Public\Item_Potion.h">
       <Filter>02.GameObjects\Item\Potion</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Goblin_Teleport.h">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Goblin_Teleport</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1176,6 +1179,9 @@
     <Filter Include="02.GameObjects\Item\Potion">
       <UniqueIdentifier>{ace6c64f-901a-424e-99da-53f281413d77}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\MonsterEffect\Goblin_Teleport">
+      <UniqueIdentifier>{8f5dbf8c-be74-4512-a84f-586397744b24}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1676,6 +1682,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Item_Potion.cpp">
       <Filter>02.GameObjects\Item\Potion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Goblin_Teleport.cpp">
+      <Filter>02.GameObjects\Effect\MonsterEffect\Goblin_Teleport</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
