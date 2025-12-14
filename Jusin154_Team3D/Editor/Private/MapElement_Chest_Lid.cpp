@@ -37,8 +37,8 @@ HRESULT CMapElement_Chest_Lid::Initialize(void* pArg)
 		return E_FAIL;
 
 
-	m_fOpenDuration = 1.f;
-	m_fRotationAngle = 30.f;
+	m_fOpenDuration = 0.1f;
+	m_fRotationAngle = 10.f;
 	m_vPosition = pDesc->vLid_Offset;
 	m_vRotation = _float3(0.f, 0.f, 0.f);
 	m_vScale = _float3(1.f, 1.f, 1.f);
@@ -263,12 +263,12 @@ void CMapElement_Chest_Lid::Describe_Entity()
 
 HRESULT CMapElement_Chest_Lid::Save_XML(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* root)
 {
-	tinyxml2::XMLElement* object = doc.NewElement("Object");
+	tinyxml2::XMLElement* object = doc.NewElement("Lid");
 	object->SetAttribute("Lod_Level", m_iMaxLodLevel);
 	root->InsertEndChild(object);
 
 #pragma region PROTOTYPETAG
-	for (_uint i = 0; i < m_iLodIndex + 1; ++i)
+	for (_uint i = 0; i < m_iMaxLodLevel + 1; ++i)
 	{
 		tinyxml2::XMLElement* prototype = doc.NewElement("PrototypeTag");
 		prototype->SetText(CMyTools::ToString(m_ModelPrototypeTags[i]).c_str());
@@ -294,19 +294,10 @@ HRESULT CMapElement_Chest_Lid::Save_XML(tinyxml2::XMLDocument& doc, tinyxml2::XM
 	Position->SetAttribute("z", vPosition.z);
 	object->InsertEndChild(Position);
 
-	tinyxml2::XMLElement* Scale = doc.NewElement("Scale");
-	Scale->SetAttribute("x", vScale.x);
-	Scale->SetAttribute("y", vScale.y);
-	Scale->SetAttribute("z", vScale.z);
-	object->InsertEndChild(Scale);
 
-	tinyxml2::XMLElement* Rotation = doc.NewElement("Rotation");
-	Rotation->SetAttribute("x", vRotation.x);
-	Rotation->SetAttribute("y", vRotation.y);
-	Rotation->SetAttribute("z", vRotation.z);
-	object->InsertEndChild(Rotation);
-
-
+	tinyxml2::XMLElement* RotationAngle = doc.NewElement("RotationAngle");
+	RotationAngle->SetAttribute("RotationAngle", m_fRotationAngle);
+	object->InsertEndChild(RotationAngle);
 
 #pragma endregion
 

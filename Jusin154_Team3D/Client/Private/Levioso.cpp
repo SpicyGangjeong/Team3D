@@ -298,7 +298,7 @@ void CLevioso::Free()
 
 void CLevioso::Describe_Entity()
 {
-	GUI::Begin("LEVIOSO");
+	GUI::Begin("LEVIOSO", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 
 	GUI::DragFloat("TURN SPEED", &m_fTurnSpeed);
 	GUI::DragFloat("RANGE", &m_fRange);

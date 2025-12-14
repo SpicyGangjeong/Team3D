@@ -182,10 +182,6 @@ void CSpell_List::Hover()
 	fMouse.x = ptMouse.x - (g_iWinSizeX * 0.5f);
 	fMouse.y = -(ptMouse.y - (g_iWinSizeY * 0.5f));
 
-	// 엘리먼트의 월드 위치를 더해주면 엘리먼트 좌표계 기준이 됨
-	fMouse.x -= m_pOwner->Get_WorldPostion().m128_f32[0];
-	fMouse.y -= m_pOwner->Get_WorldPostion().m128_f32[1];
-
 	m_iSpellType = m_pVIBufferCom->Set_Mouse_Hover(fMouse);
 
 	CUIObject::HOVER_INFO Info;

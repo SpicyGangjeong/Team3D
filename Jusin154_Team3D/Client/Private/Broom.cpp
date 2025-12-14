@@ -3,6 +3,7 @@
 
 #include "GameInstance.h"
 #include "InfoInstance.h"
+#include "Unit.h"
 CBroom::CBroom(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUnit(pDevice, pContext)
 {
@@ -45,6 +46,9 @@ HRESULT CBroom::Initialize(void* pArg)
 
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 10.f, 0.f, 1.f));
 
+	m_pParentUnit = dynamic_cast<CUnit*>(m_pOwner);
+		
+
 	return S_OK;
 }
 
@@ -56,6 +60,9 @@ void CBroom::Priority_Update(_float fTimeDelta)
 void CBroom::Update(_float fTimeDelta)
 {
 	Update_CameraCoordinateSystem();
+
+	if(!m_pParentUnit->IsAI())
+		PlayerInput();
 
 	if (!m_bRide)
 	{
@@ -170,6 +177,23 @@ void CBroom::Update_CameraCoordinateSystem()
 }
 
 
+void CBroom::PlayerInput()
+{
+	m_Input = {};
+
+	m_Input.Z = m_pGameInstance->Key_Pressing(DIK_W) ? 1.f : 0.f;
+
+	m_Input.X = (m_pGameInstance->Key_Pressing(DIK_D) ? 1.f : 0.f)
+		- (m_pGameInstance->Key_Pressing(DIK_A) ? 1.f : 0.f);
+
+	m_Input.Y = (m_pGameInstance->Key_Pressing(DIK_SPACE) ? 1.f : 0.f)
+		- (m_pGameInstance->Key_Pressing(DIK_LCONTROL) ? 1.f : 0.f + m_pGameInstance->Key_Pressing(DIK_N) ? 1.f : 0.f);
+
+	m_Input.bHoverToggle = m_pGameInstance->Key_Down(DIK_LSHIFT);
+	m_Input.bTurbo = m_pGameInstance->Mouse_Pressing(DIM_LBUTTON);
+}
+
+
 CBroom* CBroom::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CBroom* pInstance = new CBroom(pDevice, pContext);
@@ -204,7 +228,7 @@ void CBroom::Free()
 
 void CBroom::Describe_Entity()
 {
-	GUI::Begin("UNIT");
+	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	if (GUI::CollapsingHeader("Broom")) {
 		GUI::DragFloat("MaxSpeed", &m_fFlyMaxSpeed, 0.01f);
 		GUI::DragFloat("Speed", &m_fSpeed, 0.01f);

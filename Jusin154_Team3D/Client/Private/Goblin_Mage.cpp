@@ -64,7 +64,9 @@ HRESULT CGoblin_Mage::Initialize(void* pArg)
 	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
 	SAFE_ADDREF(m_pEffectPool);
 
-	m_pCharacter_Controller->Set_Position(XMVectorSet(-50.f, 5.f, -10.f, 1.f));
+
+		m_pCharacter_Controller->Set_Position(XMVectorSet(-65.f, 5.f, -50.f, 1.f));
+
 
 
 	return S_OK;
@@ -443,7 +445,7 @@ void CGoblin_Mage::Free()
 
 void CGoblin_Mage::Describe_Entity()
 {
-	GUI::Begin("UNIT");
+	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	GUI::PushItemWidth(80);
 	if (GUI::CollapsingHeader("Goblin_Mage")) {
 

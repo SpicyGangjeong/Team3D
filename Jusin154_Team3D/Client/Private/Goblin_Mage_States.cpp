@@ -325,7 +325,7 @@ void CGoblin_Mage::Behavior_BlinkEnter()
 			vFinalPos = XMVectorSetY(vFinalPos, XMVectorGetY(vPos) + 1.f);
 
 			m_pCharacter_Controller->Set_Position(vFinalPos); }
-	, 0.99f);
+	, 0.95f);
 
 	Add_Event(pairAnimInfo.first,
 		[this]() {

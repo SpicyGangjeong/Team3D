@@ -498,7 +498,9 @@ void CTrail::Free()
 
 void CTrail::Describe_Entity()
 {
+
 	if (GUI::TreeNode("Trail Component")) {
+
 		GUI::InputFloat3("Low", (_float*)&m_TrailDesc.vLow);
 		GUI::InputFloat3("High", (_float*)&m_TrailDesc.vHigh);
 

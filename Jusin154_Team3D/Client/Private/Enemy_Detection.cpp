@@ -337,7 +337,6 @@ void CEnemy_Detection::Free()
 {
 	__super::Free();
 
-	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pDiffuse_TextureCom);
 	SAFE_RELEASE(m_pDiffuse_TextureCom1);
 	SAFE_RELEASE(m_pDiffuse_TextureCom2);
@@ -345,6 +344,7 @@ void CEnemy_Detection::Free()
 	SAFE_RELEASE(m_pDiffuse_TextureCom4);
 	SAFE_RELEASE(m_pDiffuse_TextureCom5);
 	SAFE_RELEASE(m_pVIBufferCom);
+	SAFE_RELEASE(m_pShaderCom);
 
 }
 

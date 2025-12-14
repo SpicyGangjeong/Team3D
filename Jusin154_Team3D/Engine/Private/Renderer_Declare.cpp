@@ -298,6 +298,18 @@ HRESULT CRenderer::Initialize()
 			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
 			return E_FAIL;
 		}
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Bloom_2x2_1"), (_uint)(Viewport.Width * 0.5f), (_uint)(Viewport.Height * 0.5f),
+			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Bloom_4x4_1"), (_uint)(Viewport.Width * 0.25f), (_uint)(Viewport.Height * 0.25f),
+			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Bloom_8x8_1"), (_uint)(Viewport.Width * 0.125f), (_uint)(Viewport.Height * 0.125f),
+			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
+			return E_FAIL;
+		}
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Bloom_8x8_X"), (_uint)(Viewport.Width * 0.125f), (_uint)(Viewport.Height * 0.125f),
 			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
 			return E_FAIL;
@@ -508,7 +520,7 @@ void CRenderer::Free()
 #ifdef _DEBUG
 void CRenderer::Describe_Entitiy()
 {
-	GUI::Begin("SYSTEM");
+	GUI::Begin("SYSTEM", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	if (GUI::CollapsingHeader("RENDERER")) {
 		GUI::PushItemWidth(80);
 		if (GUI::CollapsingHeader("PostProcessing_Bloom"))

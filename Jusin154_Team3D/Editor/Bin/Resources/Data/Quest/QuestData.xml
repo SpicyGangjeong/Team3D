@@ -1,0 +1,12 @@
+﻿<QuestInfo>
+	<QuestData>
+		<Quest QuestID="1" QuestType="Main" QuestName="트롤을 잡아라!" QuestInfo="마을에서 난리를 피우는 트롤을 제압하기">
+			<Objectives>
+				<Objective Type="1" TargetID="2" RequiredCount="1" CurrentCount="0"/>
+			</Objectives>
+			<Rewards>
+				<Reward Type="1" Value="BOMBARDA"/>
+			</Rewards>
+		</Quest>
+	</QuestData>
+</QuestInfo>

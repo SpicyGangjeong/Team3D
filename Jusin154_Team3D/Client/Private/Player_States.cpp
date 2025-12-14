@@ -31,6 +31,7 @@
 #include "State_Broom_Ride_Move.h"
 #include "State_Broom_Hover.h"
 #include "State_Broom_Fly.h"
+#include "State_Broom_TurboFly.h"
 #include "State_Broom_Dismount.h"
 #pragma endregion
 
@@ -185,8 +186,6 @@ void CPlayer::Behavior_IdleEnter() {
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 0.5f, true);
 }
 
-// S_OK -> 현 상태 유지
-// E_FAIL -> 현 상태 탈출
 HRESULT CPlayer::Behavior_IdleExitCheck(_float fTimeDelta)
 {
 	pair<_uint, _bool> pairAnimInfo;
@@ -259,7 +258,7 @@ HRESULT CPlayer::Behavior_IdleExitCheck(_float fTimeDelta)
 			xmvInputDir += xmvCamRight;
 
 		if (XMVector3Equal(xmvInputDir, XMVectorZero()))
-			return E_FAIL;
+			return S_OK;
 
 		xmvInputDir = XMVector3Normalize(xmvInputDir);
 
@@ -299,7 +298,7 @@ HRESULT CPlayer::Behavior_IdleExitCheck(_float fTimeDelta)
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, m_fAmount);
 		}
 
-		return E_FAIL;
+		return S_OK;
 	}
 
 	if (!SUCCEEDED(InputAim()))
@@ -329,25 +328,51 @@ void CPlayer::Behavior_MoveEnter()
 	_bool bBackward = m_pGameInstance->Key_Pressing(DIK_S);
 	m_pFSM->Enable_State(FSMSTATE::MOVE);
 	if (m_pFSM->IsEnable_Previous(FSMSTATE::IDLE | FSMSTATE::DODGE)) {
-		if (true == m_bSprintToggle) {
-			m_pFSM->Enable_State(FSMSTATE::SPRINT);
-			m_bWalkToggle = false;
-			pairAnimInfo = m_Animation[STATEANIM::SPRINT];
-			m_bRatio = false;
-		}
-		else if (true == m_bWalkToggle) {
-			m_pFSM->Enable_State(FSMSTATE::WALK);
-			m_bSprintToggle = false;
-			pairAnimInfo = m_Animation[STATEANIM::WALK_FWD];
-			m_bRatio = false;
-		}
-		else
+
+		if (m_pFSM->IsEnable_Previous(FSMSTATE::IDLE))
 		{
-			m_pFSM->Enable_State(FSMSTATE::JOG);
-			m_bSprintToggle = false;
-			m_bWalkToggle = false;
-			pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
-			m_bRatio = false;
+			if (true == m_bSprintToggle) {
+				m_pFSM->Enable_State(FSMSTATE::SPRINT);
+				m_bWalkToggle = false;
+				pairAnimInfo = m_Animation[STATEANIM::SPRINT];
+				m_bRatio = true;
+			}
+			else if (true == m_bWalkToggle) {
+				m_pFSM->Enable_State(FSMSTATE::WALK);
+				m_bSprintToggle = false;
+				pairAnimInfo = m_Animation[STATEANIM::WALK_FWD];
+				m_bRatio = true;
+			}
+			else
+			{
+				m_pFSM->Enable_State(FSMSTATE::JOG);
+				m_bSprintToggle = false;
+				m_bWalkToggle = false;
+				pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
+				m_bRatio = true;
+			}
+		}
+		else {
+			if (true == m_bSprintToggle) {
+				m_pFSM->Enable_State(FSMSTATE::SPRINT);
+				m_bWalkToggle = false;
+				pairAnimInfo = m_Animation[STATEANIM::SPRINT];
+				m_bRatio = false;
+			}
+			else if (true == m_bWalkToggle) {
+				m_pFSM->Enable_State(FSMSTATE::WALK);
+				m_bSprintToggle = false;
+				pairAnimInfo = m_Animation[STATEANIM::WALK_FWD];
+				m_bRatio = false;
+			}
+			else
+			{
+				m_pFSM->Enable_State(FSMSTATE::JOG);
+				m_bSprintToggle = false;
+				m_bWalkToggle = false;
+				pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
+				m_bRatio = false;
+			}
 		}
 	}
 	else { // While Moving
@@ -434,6 +459,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 				pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
 			}
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+			return S_OK;
 		}
 		else if (m_pGameInstance->Key_Down(DIK_C) && !m_pFSM->IsEnable(FSMSTATE::STOP)) {
 			m_bWalkToggle = !m_bWalkToggle;
@@ -452,8 +478,9 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 				pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
 			}
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+			return S_OK;
 		}
-		return S_OK;
+		return E_FAIL;
 	}
 
 	if (SUCCEEDED(InputMove())) {
@@ -473,7 +500,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 
 
 		if (XMVector3Equal(xmvInputDir, XMVectorZero()))
-			return E_FAIL;
+			return S_OK;
 
 		xmvInputDir = XMVector3Normalize(xmvInputDir);
 
@@ -685,12 +712,11 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 		{
 			m_pFSM->Disable_State(FSMSTATE::STOP);
 			m_pFSM->Change_State(FSMSTATE::IDLE);
+			return E_FAIL;
 		}
-
-		return S_OK;
 	}
 
-	return E_FAIL;
+	return S_OK;
 }
 
 void CPlayer::Behavior_MoveExit()
@@ -729,13 +755,14 @@ HRESULT CPlayer::Behavior_JumpExitCheck()
 	if (m_pGameInstance->Key_Down(DIK_B))
 	{
 		m_pFSM->Change_State(FSMSTATE::BROOM_RIDE);
+		return E_FAIL;
 	}
 
 	if (fRatio>=0.6f) {
 		m_pFSM->Change_State(FSMSTATE::LAND);
 		return E_FAIL;
 	}
-	return E_FAIL;
+	return S_OK;
 }
 
 void CPlayer::Behavior_JumpExit()
@@ -815,6 +842,7 @@ void CPlayer::Behavior_CombatEnter()
 	else if (m_pGameInstance->Key_Down(DIK_Q)) {
 
 		m_pFSM->Change_State(FSMSTATE::SHIELD);
+		return;
 	}
 	else if (m_pGameInstance->Mouse_Up(DIM_LBUTTON)) {
 		m_pFSM->Change_State(FSMSTATE::LIGHT_ATTACK);
@@ -871,6 +899,7 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 		else if (m_pGameInstance->Key_Down(DIK_Q))
 		{
 			m_pFSM->Change_State(FSMSTATE::SHIELD);
+			return E_FAIL;
 		}
 		else if (m_pGameInstance->Key_Down(DIK_V))
 		{
@@ -942,7 +971,7 @@ HRESULT CPlayer::Behavior_CombatExitCheck()
 		return E_FAIL;
 	}
 
-	return E_FAIL;
+	return S_OK;
 }
 
 void CPlayer::Behavior_CombatExit()
@@ -954,6 +983,7 @@ void CPlayer::Behavior_CombatExit()
 void CPlayer::Behavior_LightAttackEnter()
 {
 	pair<_uint, _bool> pairAnimInfo;
+	m_pModelCom->Set_BlendDuration(0.1f);
 	m_pFSM->Enable_State(FSMSTATE::LIGHT_ATTACK);
 	pairAnimInfo = m_Animation[STATEANIM::LIGHT_ATTACK];
 	if (m_LockOnInfo.pUnit)
@@ -1059,6 +1089,7 @@ HRESULT CPlayer::Behavior_LightAttackExitCheck(_float fTimeDelta)
 	}
 	else if (m_pGameInstance->Key_Down(DIK_Z)) {
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
+		return E_FAIL;
 	}
 
 	if (SUCCEEDED(InputMove()) && fRatio >= 0.3f) {
@@ -1079,18 +1110,21 @@ HRESULT CPlayer::Behavior_LightAttackExitCheck(_float fTimeDelta)
 		m_pFSM->Change_State(FSMSTATE::IDLE);
 	}
 
-	return E_FAIL;
+	return S_OK;
 
 }
 
 void CPlayer::Behavior_LightAttackExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::LIGHT_ATTACK);
+	m_pModelCom->Set_BlendDuration(0.3f);
 }
 
 void CPlayer::Behavior_SpellEnter()
 {
 	pair<_uint, _bool> pairAnimInfo;
+
+	m_pModelCom->Set_BlendDuration(0.1f);
 	m_pFSM->Enable_State(FSMSTATE::SPELL);
 	pairAnimInfo = m_Animation[STATEANIM::SPELL];
 	_float fRatio = 0.f;
@@ -1365,6 +1399,7 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 	}
 	else if (m_pGameInstance->Key_Down(DIK_Z)) {
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
+		return E_FAIL;
 	}
 
 	if (m_bSpellHit)
@@ -1406,15 +1441,18 @@ HRESULT CPlayer::Behavior_SpellExitCheck()
 		}
 		else {
 			m_pFSM->Change_State(FSMSTATE::IDLE);
+			return E_FAIL;
 		}
 	}
 
-	return E_FAIL;
+	return S_OK;
 }
 
 void CPlayer::Behavior_SpellExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::SPELL);
+
+	m_pModelCom->Set_BlendDuration(0.3f);
 }
 
 void CPlayer::Behavior_ShieldEnter()
@@ -1423,7 +1461,7 @@ void CPlayer::Behavior_ShieldEnter()
 
 	m_pFSM->Enable_State(FSMSTATE::SHIELD);
 	pairAnimInfo = m_Animation[STATEANIM::SKILL2];
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.f,true,0.5f);
 
 	Add_Event(pairAnimInfo.first,
 		[this]() {m_pEffectPool->Use_Skill(SKILL_TYPE::PROTEGO, this); },
@@ -1432,25 +1470,42 @@ void CPlayer::Behavior_ShieldEnter()
 
 HRESULT CPlayer::Behavior_ShieldExitCheck()
 {
+	pair<_uint, _bool> pairAnimInfo;
+	
 	if (m_pModelCom->IsFinishedAnim()) {
+		if (m_pGameInstance->Key_Pressing(DIK_Q))
+		{
+			if (m_bShield)
+			{
+				pairAnimInfo = m_Animation[STATEANIM::PARRY];
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+				m_bShield = false;
+				return S_OK;
+			}
+		}
+
 		if (SUCCEEDED(InputMove()))
 		{
 			m_pFSM->Change_State(FSMSTATE::MOVE);
+			return E_FAIL;
 		}
 		else {
 			m_pFSM->Change_State(FSMSTATE::IDLE);
+			return E_FAIL;
 		}
 	}
-	return E_FAIL;
+	return S_OK;
 }
 
 void CPlayer::Behavior_ShieldExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::SHIELD);
+	m_bShield = false;
 }
 
 void CPlayer::Behavior_HitEnter()
 {
+	m_pBroom->Set_Ride(false);
 	m_pFSM->Enable_State(FSMSTATE::HIT);
 	pair<_uint, _bool> pairAnimInfo;
 	_int RandIndex = m_pGameInstance->Real_Random_Int(0, 2);
@@ -1495,7 +1550,7 @@ HRESULT CPlayer::Behavior_HitExitCheck()
 		m_pFSM->Change_State(FSMSTATE::IDLE);
 		return E_FAIL;
 	}
-	return E_FAIL;
+	return S_OK;
 }
 
 void CPlayer::Behavior_HitExit()
@@ -1523,12 +1578,13 @@ HRESULT CPlayer::Behavior_Broom_RideExitCheck(_float fTimeDelta)
 			pairAnimInfo = m_Animation[STATEANIM::BROOM_MOUNT_END];
 			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, true);
 		}
-		return E_FAIL;
+		return S_OK;
 	}
 
 	if (m_pModelCom->IsFinishedAnim())
 	{
 		m_pFSM->Change_State(FSMSTATE::BROOM_RIDE_MOVE);
+		return E_FAIL;
 	}
 
 	if (m_pGameInstance->Key_Pressing(DIK_N))
@@ -1537,10 +1593,11 @@ HRESULT CPlayer::Behavior_Broom_RideExitCheck(_float fTimeDelta)
 		if (flags & PSX::PxControllerCollisionFlag::eCOLLISION_DOWN)
 		{
 			m_pFSM->Change_State(FSMSTATE::BROOM_DISMOUNT);
+			return E_FAIL;
 		}
 	}
 	
-	return E_FAIL;
+	return S_OK;
 }
 
 void CPlayer::Behavior_Broom_RideExit()
@@ -1558,12 +1615,18 @@ HRESULT CPlayer::Behavior_Broom_Ride_MoveExitCheck(_float fTimeDelta)
 	if (m_pBroom->Get_Hover())
 	{
 		m_pFSM->Change_State(FSMSTATE::HOVER);
+		return E_FAIL;
 	}
-	else {
+	else if(m_pBroom->Get_Turbo()) {
+		m_pFSM->Change_State(FSMSTATE::TURBOFLY);
+		return E_FAIL;
+	}
+	else{
 		m_pFSM->Change_State(FSMSTATE::FLY);
+		return E_FAIL;
 	}
 	
-	return E_FAIL;
+	return S_OK;
 }
 
 void CPlayer::Behavior_Broom_Ride_MoveExit()
@@ -1688,15 +1751,23 @@ HRESULT CPlayer::Behavior_Broom_HoverExitCheck(_float fTimeDelta)
 		if (flags & PSX::PxControllerCollisionFlag::eCOLLISION_DOWN)
 		{
 			m_pFSM->Change_State(FSMSTATE::BROOM_DISMOUNT);
+			return E_FAIL;
 		}
 	}
 
 	if (!m_pBroom->Get_Hover())
 	{
 		m_pFSM->Change_State(FSMSTATE::BROOM_RIDE_MOVE);
+		return E_FAIL;
 	}
 
-	return E_FAIL;
+	if (m_pBroom->Get_Turbo())
+	{
+		m_pFSM->Change_State(FSMSTATE::TURBOFLY);
+		return E_FAIL;
+	}
+
+	return S_OK;
 }
 
 void CPlayer::Behavior_Broom_HoverExit()
@@ -1819,20 +1890,150 @@ HRESULT CPlayer::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 		if (flags & PSX::PxControllerCollisionFlag::eCOLLISION_DOWN)
 		{
 			m_pFSM->Change_State(FSMSTATE::BROOM_DISMOUNT);
+			return E_FAIL;
 		}
 	}
 
 	if (m_pBroom->Get_Hover())
 	{
 		m_pFSM->Change_State(FSMSTATE::BROOM_RIDE_MOVE);
+		return E_FAIL;
 	}
 
-	return E_FAIL;
+	if (m_pBroom->Get_Turbo())
+	{
+		m_pFSM->Change_State(FSMSTATE::TURBOFLY);
+		return E_FAIL;
+	}
+
+	return S_OK;
 }
 
 void CPlayer::Behavior_Broom_FlyExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::FLY);
+}
+
+void CPlayer::Behavior_Broom_TurboFlyEnter()
+{
+	m_pFSM->Enable_State(FSMSTATE::TURBOFLY);
+}
+
+HRESULT CPlayer::Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta)
+{
+	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	pair<_uint, _bool> pairAnimInfo;
+
+	_bool bFwd = m_pGameInstance->Key_Pressing(DIK_W);
+	_bool bLft = m_pGameInstance->Key_Pressing(DIK_A);
+	_bool bRht = m_pGameInstance->Key_Pressing(DIK_D);
+	_bool bDown = m_pGameInstance->Key_Pressing(DIK_LCONTROL);
+	_bool bUp = m_pGameInstance->Key_Pressing(DIK_SPACE);
+
+	if (!m_pBroom->Get_Hover() && m_pBroom->Get_Turbo())
+	{
+		if (SUCCEEDED(InputBroom()) || SUCCEEDED(InputMove()))
+		{
+			_float3 vInput = { 0.f, 0.f, 0.f };
+
+			if (bFwd)  vInput.z += 1.f;
+			if (bLft)  vInput.x -= 1.f;
+			if (bRht)  vInput.x += 1.f;
+			if (bUp)   vInput.y += 1.f;
+			if (bDown) vInput.y -= 1.f;
+
+			_bool bHasInput = !(vInput.x == 0 && vInput.y == 0 && vInput.z == 0);
+			_vector vDir = XMVector3Normalize(XMLoadFloat3(&vInput));
+
+			if (bUp || bDown)
+			{
+				if (bUp)
+				{
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_TURBO_UP];
+				}
+				else
+				{
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_TURBO_DOWN];
+				}
+			}
+
+			_float ax = fabsf(vInput.x);
+			_float ay = fabsf(vInput.y);
+			_float az = fabsf(vInput.z);
+
+			if (ay > ax && ay > az)
+			{
+				if (vInput.y > 0)
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_TURBO_UP];
+				else
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_TURBO_DOWN];
+			}
+			else if (ax >= az)
+			{
+				if (ay >= ax)
+				{
+					if (vInput.y > 0)
+						pairAnimInfo = m_Animation[STATEANIM::BROOM_TURBO_UP];
+					else
+						pairAnimInfo = m_Animation[STATEANIM::BROOM_TURBO_DOWN];
+				}
+				else {
+					if (vInput.x < 0)
+						pairAnimInfo = m_Animation[STATEANIM::BROOM_TURBO_LEFT];
+					else if (vInput.x > 0)
+						pairAnimInfo = m_Animation[STATEANIM::BROOM_TURBO_RIGHT];
+					else {
+						pairAnimInfo = m_Animation[STATEANIM::BROOM_TURBO_FWD];
+					}
+				}
+			}
+			else
+			{
+				if (vInput.y > 0)
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_TURBO_UP];
+				else if (vInput.y < 0)
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_TURBO_DOWN];
+				else {
+					pairAnimInfo = m_Animation[STATEANIM::BROOM_TURBO_FWD];
+				}
+			}
+		}
+		else {
+			pairAnimInfo = Get_AnimInfo(STATEANIM::BROOM_TURBO_FWD);
+		}
+
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second,1.f,true);
+	}
+
+
+	if (m_pGameInstance->Key_Pressing(DIK_N))
+	{
+		auto flags = m_pCharacter_Controller->Get_CollisionFlags();
+		if (flags & PSX::PxControllerCollisionFlag::eCOLLISION_DOWN)
+		{
+			m_pFSM->Change_State(FSMSTATE::BROOM_DISMOUNT);
+			return E_FAIL;
+		}
+	}
+
+	if (m_pBroom->Get_Hover())
+	{
+		m_pFSM->Change_State(FSMSTATE::BROOM_RIDE_MOVE);
+		return E_FAIL;
+	}
+
+	if (!m_pBroom->Get_Turbo())
+	{
+		m_pFSM->Change_State(FSMSTATE::FLY);
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+void CPlayer::Behavior_Broom_TurboFlyExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::TURBOFLY);
 }
 
 void CPlayer::Behavior_Broom_DismountEnter()
@@ -1873,16 +2074,16 @@ HRESULT CPlayer::Behavior_Broom_DismountExitCheck(_float fTimeDelta)
 			if (SUCCEEDED(InputMove()))
 			{
 				m_pFSM->Change_State(FSMSTATE::MOVE);
+				return E_FAIL;
 			}
 			else {
 				m_pFSM->Change_State(FSMSTATE::IDLE);
+				return E_FAIL;
 			}
-
-			return E_FAIL;
 		}
 	}
 
-	return E_FAIL;
+	return S_OK;
 }
 
 void CPlayer::Behavior_Broom_DismountExit()
@@ -2265,6 +2466,20 @@ void CPlayer::Add_FSM()
 	}
 
 	{
+		CState_Broom_TurboFly::STATE_BROOM_TURBOFLY_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_Broom_TurboFlyEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_Broom_TurboFlyExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_Broom_TurboFlyExit(); };
+		Desc.funcPriorityUpdate = [this](_float fTimeDelta) {
+			_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+			Attach_Broom();
+			};
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::TURBOFLY, CState_Broom_TurboFly::Create(&Desc));
+	}
+
+	{
 		CState_Broom_Dismount::STATE_BROOM_DISMOUNT_DESC Desc{};
 		Desc.pOwner = this;
 		Desc.funcEnterEvent = [this]() { Behavior_Broom_DismountEnter(); };
@@ -2344,6 +2559,8 @@ void CPlayer::Set_Anim()
 
 	m_Animation[STATEANIM::SPELL_FAIL] = { 906,false };
 
+	m_Animation[STATEANIM::PARRY] = { 915,false };
+
 
 	m_Animation[STATEANIM::HIT_L] = { 1200,false };
 	m_Animation[STATEANIM::HIT_R] = { 1201,false };
@@ -2353,13 +2570,18 @@ void CPlayer::Set_Anim()
 	m_Animation[STATEANIM::FLINCH_RIGHT] = { 1063,false };
 	m_Animation[STATEANIM::KNOCKBACK] = { 1078,false };
 
-	m_Animation[STATEANIM::BROOM_IDLE] = { 710,true };
-	m_Animation[STATEANIM::BROOM_FWD] = { 711,true };
+	m_Animation[STATEANIM::BROOM_FWD] = { 710,true };
 	m_Animation[STATEANIM::BROOM_LEFT] = { 713,true };
 	m_Animation[STATEANIM::BROOM_RIGHT] = { 714,true };
 	m_Animation[STATEANIM::BROOM_DOWN] = { 712,true };
 	m_Animation[STATEANIM::BROOM_UP] = { 715,true };
 	m_Animation[STATEANIM::BROOM_REVELIO] = { 678,false };
+
+	m_Animation[STATEANIM::BROOM_TURBO_DOWN] = { 695,true };
+	m_Animation[STATEANIM::BROOM_TURBO_FWD] = { 711,true };
+	m_Animation[STATEANIM::BROOM_TURBO_LEFT] = { 713,true };
+	m_Animation[STATEANIM::BROOM_TURBO_RIGHT] = { 714,true };
+	m_Animation[STATEANIM::BROOM_TURBO_UP] = { 698,true };
 
 	m_Animation[STATEANIM::BROOM_MOUNT] = { 734,false };
 	m_Animation[STATEANIM::BROOM_MOUNT_END] = { 737,false };
@@ -2372,7 +2594,6 @@ void CPlayer::Set_Anim()
 	m_Animation[STATEANIM::BROOM_HOVER_LEFT] = { 701,true };
 	m_Animation[STATEANIM::BROOM_HOVER_RIGHT] = { 702,true };
 	m_Animation[STATEANIM::BROOM_HOVER_REVELIO] = { 721,false };
-
 
 	m_Animation[STATEANIM::JOG_AIM_STOP_L] = { 295,false };
 	m_Animation[STATEANIM::JOG_AIM_STOP_R] = { 456,false };
@@ -2401,6 +2622,11 @@ void CPlayer::Set_Anim()
 	// 849 90도 R
 	// 853 90도 R
 	// 854 90도 R
+
+	// 915 
+
+	// 716 아래 앞 왼 오 업
+	// 
 }
 
 

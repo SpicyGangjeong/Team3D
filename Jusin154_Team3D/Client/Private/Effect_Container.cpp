@@ -38,7 +38,6 @@ HRESULT CEffect_Container::Initialize(void* pArg)
 	if (FAILED(Ready_Child()))
 		return E_FAIL;
 
-
 	m_bVisible = false;
 
 	return S_OK;

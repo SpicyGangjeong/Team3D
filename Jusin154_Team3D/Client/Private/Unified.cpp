@@ -156,7 +156,7 @@ void CUnified::Free()
 #ifdef _DEBUG
 void CUnified::Describe_Entity()
 {
-	GUI::Begin("Unified");
+	GUI::Begin("Unified", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	GUI::Checkbox("Visible ON / OFF", &m_isVisible);
 
 	GUI::End();

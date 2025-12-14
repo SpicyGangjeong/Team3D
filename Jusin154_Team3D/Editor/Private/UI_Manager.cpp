@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "GamePlay_Canvas.h"
 #include "Spell_Canvas.h"
+#include "Quest_Canvas.h"
 #include "Mouse_Cursor.h"
 #include "CameraLockOn.h"
 #include "Loding_Canvas.h"
@@ -43,10 +44,16 @@ void CUI_Manager::Canvas_Change(Canvases eType)
 	case Canvases::GAMEPLAYER_CANVAS:
 		static_cast<CCanvasObject*>(m_pGamePlay_Canves)->Visible(true);
 		static_cast<CCanvasObject*>(m_pSpell_Canvas)->Visible(false);
+		static_cast<CCanvasObject*>(m_pQuest_Canves)->Visible(false);
 
 		break;
 	case Canvases::SPELL_CANVAS:
 		static_cast<CCanvasObject*>(m_pSpell_Canvas)->Visible(true);
+		static_cast<CCanvasObject*>(m_pGamePlay_Canves)->Visible(false);
+
+		break;
+	case Canvases::QUEST_CANVES:
+		static_cast<CCanvasObject*>(m_pQuest_Canves)->Visible(true);
 		static_cast<CCanvasObject*>(m_pGamePlay_Canves)->Visible(false);
 
 		break;
@@ -99,7 +106,15 @@ void CUI_Manager::Update(_float fTimeDelta)
 	{
 		if (m_eType == Canvases::GAMEPLAYER_CANVAS)
 			Canvas_Change(Canvases::SPELL_CANVAS);
-		else
+		else if(m_eType == Canvases::SPELL_CANVAS)
+			Canvas_Change(Canvases::GAMEPLAYER_CANVAS);
+	}
+
+	if (m_pGameInstance->Key_Down(DIK_TAB))
+	{
+		if (m_eType == Canvases::GAMEPLAYER_CANVAS)
+			Canvas_Change(Canvases::QUEST_CANVES);
+		else if (m_eType == Canvases::QUEST_CANVES)
 			Canvas_Change(Canvases::GAMEPLAYER_CANVAS);
 	}
 
@@ -145,15 +160,20 @@ HRESULT CUI_Manager::Ready_Components(void* pArg)
 	}
 	Add_Canvas(TEXT("Spell_Canvas"), m_pSpell_Canvas);
 
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CQuest_Canvas>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CQuest_Canvas**>(&m_pQuest_Canves)))) {
+		return E_FAIL;
+	}
+	Add_Canvas(TEXT("Quest_Canves"), m_pQuest_Canves);
+
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMouse_Cursor>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CMouse_Cursor**>(&m_pMouse_Cursor)))) {
 		return E_FAIL;
 	}
 	//Add_Canvas(TEXT("Mouse_Cursor"), m_pMouse_Cursor);
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCameraLockOn>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CCameraLockOn**>(&m_pCamera_LockOn)))) {
-		return E_FAIL;
-	}
-	//Add_Canvas(TEXT("Camera_LockOn"), m_pCamera_LockOn);
+	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCameraLockOn>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CCameraLockOn**>(&m_pCamera_LockOn)))) {
+	//	return E_FAIL;
+	//}
+	////Add_Canvas(TEXT("Camera_LockOn"), m_pCamera_LockOn);
 
 	return S_OK;
 }

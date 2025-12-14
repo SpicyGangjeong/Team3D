@@ -641,7 +641,7 @@ void CTroll::Free()
 
 void CTroll::Describe_Entity()
 {
-	GUI::Begin("UNIT");
+	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	if (GUI::CollapsingHeader("Troll")) {
 		__super::Describe_Entity();
 

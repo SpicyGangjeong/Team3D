@@ -64,7 +64,8 @@ HRESULT CGoblin::Initialize(void* pArg)
 	m_pCallBack_Behavior->Initialize(m_pCharacter_Controller, m_pRigidBody);
 	m_pCallBack_HitReport->Initialize(m_pCharacter_Controller, m_pRigidBody);
 
-	m_pCharacter_Controller->Set_Position(XMVectorSet(-60.f, 5.f, -40.f, 1.f));
+	m_pCharacter_Controller->Set_Position(XMVectorSet(-60.f, 5.f, -50.f, 1.f));
+
 
 	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
 	SAFE_ADDREF(m_pEffectPool);
@@ -118,6 +119,15 @@ void CGoblin::Update(_float fTimeDelta)
 
 	m_pDetection->Set_Active(m_bDetection);
 
+
+	if (m_bDisolve) {
+		m_fDisolveTime += fTimeDelta*0.8f;
+		if (m_fDisolveTime >= 1.f)
+		{
+			m_fDisolveTime = 0.f;
+			m_bDisolve = false;
+		}
+	}
 }
 
 void CGoblin::Late_Update(_float fTimeDelta)
@@ -154,6 +164,11 @@ HRESULT CGoblin::Render()
 	if (FAILED(Render_DeadDisolve())) {
 		return E_FAIL;
 	}
+
+	if (FAILED(Render_Disolve())) {
+		return E_FAIL;
+	}
+
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
 		if (FAILED(m_pModelCom->Bind_BoneMatrices(i, m_pShaderCom, "g_BoneMatrices"))) {
@@ -196,6 +211,14 @@ HRESULT CGoblin::Render()
 		if (FAILED(m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool)))) {
 			return E_FAIL;
 		}
+	}
+
+
+	{
+		_bool bDisolve = false;
+		_float zero = 0.f;
+		m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool));
+		m_pShaderCom->Bind_RawValue("g_fDisolveRatio", &zero, sizeof(_float));
 	}
 	return S_OK;
 }
@@ -485,7 +508,7 @@ void CGoblin::Free()
 
 void CGoblin::Describe_Entity()
 {
-	GUI::Begin("UNIT");
+	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	GUI::PushItemWidth(80);
 	if (GUI::CollapsingHeader("Goblin")) {
 		GUI::Checkbox("LookAt", &m_bLookAt);

@@ -127,6 +127,10 @@ HRESULT CInfoInstance::Load_DoorElemet(const _char* pFileName)
 {
 	return m_pMapInfo->Load_DoorElemet(pFileName);
 }
+HRESULT CInfoInstance::Load_ChestElemet(const _char* pFileName)
+{
+	return m_pMapInfo->Load_ChestElemet(pFileName);
+}
 #pragma endregion
 
 #pragma region SPELL_INFO
@@ -190,7 +194,16 @@ void CInfoInstance::Key_Input(_uint Input)
 		Event_CallBack(TEXT("Use_Potion"));
 		break;
 	case ENUM_CLASS(KEYINPUT::INPUT_TAB):
-
+		if (m_eUI_State == UI_STATE::GAMEPLAYER)
+		{
+			m_eUI_State = UI_STATE::QUEST_CANVES;
+			Event_CallBack(TEXT("Canvas_Change"), &m_eUI_State);
+		}
+		else if (m_eUI_State == UI_STATE::QUEST_CANVES)
+		{
+			m_eUI_State = UI_STATE::GAMEPLAYER;
+			Event_CallBack(TEXT("Canvas_Change"), &m_eUI_State);
+		}
 		break;
 
 	default:

@@ -21,6 +21,7 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render(_uint iShaderPass);
 
+	void Open() { m_eState = LID_STATE::OPENING; }
 private:
 	LID_STATE			m_eState = { LID_STATE::END };
 

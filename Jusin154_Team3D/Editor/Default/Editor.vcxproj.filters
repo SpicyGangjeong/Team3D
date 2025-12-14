@@ -564,7 +564,7 @@
     </Filter>
     <Filter Include="02.GameObjects\Layer_Effect\Effect\State_Effect">
       <UniqueIdentifier>{d276d751-77aa-423e-9499-c63875e36266}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_Detection">
       <UniqueIdentifier>{81c6b163-6c8b-47ac-a4b6-e86088ce709f}</UniqueIdentifier>
     </Filter>
@@ -576,6 +576,39 @@
     </Filter>
     <Filter Include="02.GameObjects\Env\03.MapElement\Chest\Lid">
       <UniqueIdentifier>{a1e789e1-dce1-4069-8c61-b9f9c89f795d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Quest_Data">
+      <UniqueIdentifier>{bafb5bee-4fbd-48f8-97a1-66142e96f920}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Quest_Canvas">
+      <UniqueIdentifier>{0cd16ac8-6b17-4110-8774-4b3dbd2fb8da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Quest_Canvas\Quest_Panel">
+      <UniqueIdentifier>{cf0e6cef-f688-481a-8e7e-478038907ca8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Quest_Canvas\Quest_Panel\Quest_Border">
+      <UniqueIdentifier>{0a514079-ba47-4973-8472-07a80f1390cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Quest_Canvas\Quest_Panel\Quest_Header">
+      <UniqueIdentifier>{104ae31b-3c6a-4acb-9886-abace9859c6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Quest_Canvas\Quest_Panel\Quest_HeaderLine">
+      <UniqueIdentifier>{2af37b38-5cbe-4701-8681-638dfe78a9ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Quest_Canvas\Quest_Panel\Quest_List">
+      <UniqueIdentifier>{0dfdc08d-b662-45f1-a1ea-1ca474010600}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Quest_Canvas\Quest_Panel\Quest_Info">
+      <UniqueIdentifier>{971fb38a-f92c-4eea-99d3-287704800ba5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Quest_Canvas\Quest_Panel\Quest_Info_Header">
+      <UniqueIdentifier>{2cf94833-8061-4a5f-9575-ebf2e491954a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Quest_Canvas\Quest_Panel\Quest_Info_Line">
+      <UniqueIdentifier>{a5e3c859-7e28-47b3-8b2e-3be3348bb7ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Quest_Canvas\Quest_Panel\Quest_Entry_Line">
+      <UniqueIdentifier>{2347d77a-ac72-4b3e-bf5f-434ca410e544}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1139,7 +1172,7 @@
     </ClInclude>
     <ClInclude Include="..\Public\StunEffect.h">
       <Filter>02.GameObjects\Layer_Effect\Effect\State_Effect</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\public\Enemy_Detection.h">
       <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_Detection</Filter>
     </ClInclude>
@@ -1151,6 +1184,39 @@
     </ClInclude>
     <ClInclude Include="..\public\MapElement_Chest_Lid.h">
       <Filter>02.GameObjects\Env\03.MapElement\Chest\Lid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Quest_Data.h">
+      <Filter>50.UI\Quest_Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Quest_Canvas.h">
+      <Filter>50.UI\Quest_Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Quest_Panel.h">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Quest_Border.h">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Border</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Quest_Header.h">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Quest_HeaderLine.h">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_HeaderLine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Quest_List.h">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_List</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Quest_Info.h">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Info</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Quest_Info_Header.h">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Info_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Quest_Info_Line.h">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Info_Line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Quest_Entry_Line.h">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Entry_Line</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1716,7 +1782,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\StunEffect.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect\State_Effect</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\Private\Enemy_Detection.cpp">
       <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_Detection</Filter>
     </ClCompile>
@@ -1728,6 +1794,39 @@
     </ClCompile>
     <ClCompile Include="..\private\MapElement_Chest_Lid.cpp">
       <Filter>02.GameObjects\Env\03.MapElement\Chest\Lid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Quest_Data.cpp">
+      <Filter>50.UI\Quest_Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Quest_Canvas.cpp">
+      <Filter>50.UI\Quest_Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Quest_Panel.cpp">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Quest_Border.cpp">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Border</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Quest_Header.cpp">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Header</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Quest_HeaderLine.cpp">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_HeaderLine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Quest_List.cpp">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_List</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Quest_Info.cpp">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Info</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Quest_Info_Header.cpp">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Info_Header</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Quest_Info_Line.cpp">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Info_Line</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Quest_Entry_Line.cpp">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Entry_Line</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

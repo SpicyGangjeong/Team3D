@@ -269,11 +269,15 @@ HRESULT CMapElement_Interactable::Render_OutLine()
 	}
 
 #ifdef _DEBUG
-	GUI::SetNextItemWidth(80.f);
-	GUI::ColorPicker3("vOutLineColor", (_float*)&m_vOutLineColor);
-	GUI::SliderFloat("Thickness", &m_fOutLineThickness, 0.1f, 2.f, "%.1f");
-	GUI::SliderFloat("Scale", &m_fOutLineScale, 0.1f, 2.f, "%.1f");
-	GUI::SliderFloat("Power", &m_fOutLinePower, 0.1f, 2.f, "%.1f");
+	GUI::Begin("Unit", 0, IMGUI_GLOBAL_BEGIN_FLAG);
+	if (GUI::CollapsingHeader("OutLine")) {
+		GUI::SetNextItemWidth(80.f);
+		GUI::ColorPicker3("vOutLineColor", (_float*)&m_vOutLineColor);
+		GUI::SliderFloat("Thickness", &m_fOutLineThickness, 0.1f, 2.f, "%.1f");
+		GUI::SliderFloat("Scale", &m_fOutLineScale, 0.1f, 2.f, "%.1f");
+		GUI::SliderFloat("Power", &m_fOutLinePower, 0.1f, 2.f, "%.1f");
+	}
+	GUI::End();
 #endif // _DEBUG
 
 	Compute_Depth();
