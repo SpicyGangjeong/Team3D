@@ -317,7 +317,7 @@ void CNomalJap::Free()
 
 void CNomalJap::Describe_Entity()
 {
-	GUI::Begin("Jap");
+	GUI::Begin("Jap", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 
 	GUI::InputFloat("Speed", &m_fLinearSpeed);
 

@@ -105,7 +105,6 @@ HRESULT CLoding_Panel::Render()
 	
 	m_pGameInstance->Render_Text(TEXT("Font_size20"), ToolTip[m_iToolTip_Count].c_str(), _float2(100.f, 800.f));
 
-
 	return S_OK;
 }
 

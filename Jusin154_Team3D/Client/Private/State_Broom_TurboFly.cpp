@@ -1,19 +1,19 @@
 ﻿#include "pch.h"
-#include "Broom_State_Hover.h"
+#include "State_Broom_TurboFly.h"
 #include "Unit.h"
 
 
-CBroom_State_Hover::CBroom_State_Hover()
+CState_Broom_TurboFly::CState_Broom_TurboFly()
     :CState_Root()
 {
 }
 
-void CBroom_State_Hover::Enter()
+void CState_Broom_TurboFly::Enter()
 {
     __super::Enter();
 }
 
-HRESULT CBroom_State_Hover::Update(_float fTimeDelta)
+HRESULT CState_Broom_TurboFly::Update(_float fTimeDelta)
 {
     if (nullptr != m_funcPriorityUpdate) {
         m_funcPriorityUpdate(fTimeDelta);
@@ -27,12 +27,12 @@ HRESULT CBroom_State_Hover::Update(_float fTimeDelta)
     return S_OK;
 }
 
-void CBroom_State_Hover::Exit()
+void CState_Broom_TurboFly::Exit()
 {
     __super::Exit();
 }
 
-HRESULT CBroom_State_Hover::Initialize(STATE_HOVER_DESC* pDesc)
+HRESULT CState_Broom_TurboFly::Initialize(STATE_BROOM_TURBOFLY_DESC* pDesc)
 {
     if (FAILED(__super::Initialize(pDesc))) {
         return E_FAIL;
@@ -45,20 +45,20 @@ HRESULT CBroom_State_Hover::Initialize(STATE_HOVER_DESC* pDesc)
     return S_OK;
 }
 
-CBroom_State_Hover* CBroom_State_Hover::Create(STATE_HOVER_DESC* pDesc)
+CState_Broom_TurboFly* CState_Broom_TurboFly::Create(STATE_BROOM_TURBOFLY_DESC* pDesc)
 {
-    CBroom_State_Hover* pInstance = new CBroom_State_Hover;
+    CState_Broom_TurboFly* pInstance = new CState_Broom_TurboFly;
     if (FAILED(pInstance->Initialize(pDesc))) {
         SAFE_RELEASE(pInstance);
     }
     return pInstance;
 }
 
-void CBroom_State_Hover::Free()
+void CState_Broom_TurboFly::Free()
 {
     __super::Free();
 }
 
-void CBroom_State_Hover::Describe_Entity()
+void CState_Broom_TurboFly::Describe_Entity()
 {
 }

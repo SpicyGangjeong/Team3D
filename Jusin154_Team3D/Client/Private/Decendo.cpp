@@ -313,7 +313,7 @@ void CDecendo::Free()
 #ifdef _DEBUG
 void CDecendo::Describe_Entity()
 {
-	GUI::Begin("DECENDO");
+	GUI::Begin("DECENDO", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 
 	GUI::InputFloat("Speed", &m_fLinearSpeed);
 

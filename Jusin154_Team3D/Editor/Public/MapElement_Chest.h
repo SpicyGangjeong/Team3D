@@ -42,6 +42,12 @@ private:
 
 	_uint							m_iShaderPass_Index = {};
 
+	_float							m_fTimeAcc = {};
+	_float							m_fRimLightPower = { 0.7f };
+	_float							m_fRimLightStrength = { 3.7f };
+	_float							m_fCurRimLightStrength = { 0.f };
+	_float4							m_vRimLightColor = {0.71f, 0.39f, 0.02f, 1.f};
+
 	class CMapElement_Chest_Lid*	m_pLid = { nullptr };
 	CRigidBody*						m_pRigidBody = { nullptr };
 	PSX::PxRigidDynamic*			m_pActor = { nullptr };

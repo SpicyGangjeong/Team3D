@@ -2204,11 +2204,10 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	vector<future<pair<_wstring, CModel*>*>> futures = {};
 
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_SM_Bottle_EmptyCapOff_Model"),
-		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM_LOCAL, "C:/MeshTable\\Game\\Cinematics\\Props\\SM_Bottle_EmptyCapOff.fbx", XMMatrixIdentity())))) {
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_SM_BRR_RaceRing_01_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM_LOCAL, "C:/MeshTable\\Game\\Environment\\BroomFlight\\Meshes\\SM_BRR_RaceRing_01.fbx", XMMatrixIdentity())))) {
 		return E_FAIL;
 	}
-
 
 #pragma region BODY
 

@@ -335,7 +335,7 @@ HRESULT CCamPosition_Shoulder::Ready_SubParts()
 	CameraDesc.fRotationPerSec = XMConvertToRadians(90.f);
 	CameraDesc.pFollowTarget = m_pTarget_FollowPart;
 	CameraDesc.pLookTarget = m_pTarget_LookPart;
-	CameraDesc.iPriority = 51;
+	CameraDesc.iPriority = 55;
 	CameraDesc.pCameraKey = CAMERA_SHOULDER;
 	CameraDesc.bEnableTransitionLerp = true;
 	CameraDesc.bEnableFollowLerp = false;
@@ -392,15 +392,16 @@ void CCamPosition_Shoulder::Free()
 
 void CCamPosition_Shoulder::Describe_Entity()
 {
-	GUI::Begin("Cam_Shoulder");
-	m_pTransformCom->Describe_Entity();
+	GUI::Begin("CAMERA", 0, IMGUI_GLOBAL_BEGIN_FLAG);
+	if (GUI::CollapsingHeader("Cam_Shoulder")) {
+		m_pTransformCom->Describe_Entity();
 
-	GUI::Text("fMouseSensor : %.1f", m_fMouseSensor);
-	GUI::SliderFloat("m_fFollowTargetIncludedAngleDegree", &m_fFollowTargetIncludedAngleDegree, -360.f, 360.f, "%.1f");
-	GUI::SliderFloat("m_fDefaultCameraBackToFrontRatio", &m_fDefaultCameraBackToFrontRatio, -1.f, 1.f);
-	GUI::SliderFloat("m_vFocalRatio", &m_vFocalRatio.x, 0.f, 1.f);
-	GUI::SliderFloat("m_fCameraFowardDistance", &m_fCameraFowardDistance, 0.f, 4.f);
-	//GUI::
+		GUI::Text("fMouseSensor : %.1f", m_fMouseSensor);
+		GUI::SliderFloat("m_fFollowTargetIncludedAngleDegree", &m_fFollowTargetIncludedAngleDegree, -360.f, 360.f, "%.1f");
+		GUI::SliderFloat("m_fDefaultCameraBackToFrontRatio", &m_fDefaultCameraBackToFrontRatio, -1.f, 1.f);
+		GUI::SliderFloat("m_vFocalRatio", &m_vFocalRatio.x, 0.f, 1.f);
+		GUI::SliderFloat("m_fCameraFowardDistance", &m_fCameraFowardDistance, 0.f, 4.f);
+	}
 	GUI::End();
 }
 

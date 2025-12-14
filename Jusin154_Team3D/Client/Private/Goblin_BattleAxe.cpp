@@ -216,7 +216,7 @@ void CGoblin_BattleAxe::CheckAxeHits(_uint& iHitCount, vector<PSX::PxSweepHit>& 
 
 		_bool bCollision = false;
 		m_SweepBufferAxe = {};
-		bCollision = m_pGameInstance->SphereCast(1.2f, vStartPos, vDir, fDistance, PSX::PxHitFlag::eDEFAULT, PSX::PxQueryFlag::eDYNAMIC, m_SweepBufferAxe);
+		bCollision = m_pGameInstance->SphereCast(1.f, vStartPos, vDir, fDistance, PSX::PxHitFlag::eDEFAULT, PSX::PxQueryFlag::eDYNAMIC, m_SweepBufferAxe);
 		if (true == bCollision) {
 			iHitCount += m_SweepBufferAxe.getNbTouches() + m_SweepBufferAxe.hasBlock;
 			auto touches = m_SweepBufferAxe.getTouches();
@@ -237,7 +237,7 @@ void CGoblin_BattleAxe::CheckAxeHits(_uint& iHitCount, vector<PSX::PxSweepHit>& 
 
 		_bool bCollision = false;
 		m_SweepBufferGrip = {};
-		bCollision = m_pGameInstance->SphereCast(1.2f, vStartPos, vDir, fDistance, PSX::PxHitFlag::eDEFAULT, PSX::PxQueryFlag::eDYNAMIC, m_SweepBufferGrip);
+		bCollision = m_pGameInstance->SphereCast(1.f, vStartPos, vDir, fDistance, PSX::PxHitFlag::eDEFAULT, PSX::PxQueryFlag::eDYNAMIC, m_SweepBufferGrip);
 		if (true == bCollision) {
 			iHitCount += m_SweepBufferGrip.getNbTouches() + m_SweepBufferGrip.hasBlock;
 			auto touches = m_SweepBufferGrip.getTouches();
