@@ -288,6 +288,14 @@ _vector CCharacter_Controller::Get_FootPosition()
 	return XMVectorSet((_float)pxLVecfootPos.x, (_float)pxLVecfootPos.y, (_float)pxLVecfootPos.z, 1.f );
 }
 
+_vector CCharacter_Controller::Get_HeadPosition()
+{
+	PSX::PxExtendedVec3  pxLVecfootPos = m_pController->getFootPosition();
+	PSX::PxExtendedVec3  pxVPos = m_pController->getPosition();
+	_float pxVecDiff = (_float)(pxVPos - pxLVecfootPos).y;
+	return XMVectorSet((_float)pxVPos.x, (_float)pxVPos.y + pxVecDiff, (_float)pxVPos.z, 1.f);
+}
+
 HRESULT CCharacter_Controller::Initialize_Prototype()
 {
 	return S_OK;

@@ -8,6 +8,7 @@
 #include "Camera_Gaze.h"
 #include "CamPosition_Arm.h"
 #include "Wand.h"
+#include "Item_Potion.h"
 #include "Character_Controller.h"
 #include "MapElement_Interactable.h"
 #include "CallBack_Playable_Behavior.h"
@@ -215,6 +216,7 @@ HRESULT CPlayer::Behavior_IdleExitCheck(_float fTimeDelta)
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
 		}
 		else if (m_pGameInstance->Key_Down(DIK_G)) {
+			Get_PartObject<CItem_Potion>()->Set_Visible(true);
 			m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_NECK_L), m_Animation[STATEANIM::POTION].first, m_Animation[STATEANIM::POTION].second);
 		}
 		else if (m_pGameInstance->Key_Down(DIK_B)) {
@@ -408,6 +410,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 			m_pFSM->Change_State(FSMSTATE::COMBAT);
 		}
 		else if (m_pGameInstance->Key_Down(DIK_G)) {
+			Get_PartObject<CItem_Potion>()->Set_Visible(true);
 			m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_NECK_L), m_Animation[STATEANIM::POTION].first, m_Animation[STATEANIM::POTION].second);
 		}
 
@@ -640,6 +643,7 @@ HRESULT CPlayer::Behavior_MoveExitCheck(_float fTimeDelta)
 		return S_OK;
 	}
 
+
 	if (m_pFSM->IsEnable(FSMSTATE::JOG | FSMSTATE::WALK | FSMSTATE::SPRINT) ||
 		!SUCCEEDED(InputMove())) {
 		if (!m_pFSM->IsEnable(FSMSTATE::STOP))
@@ -844,6 +848,12 @@ void CPlayer::Behavior_CombatEnter()
 		Add_Event(pairAnimInfo.first,
 			[this]() { Throwing_Interactive(); },
 			0.2f);
+
+		Add_Event(pairAnimInfo.first,
+			[this]() {
+				m_pGameInstance->SlowMotion(0.1f, 0.35f);
+			},
+			0.1f);
 	}
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
