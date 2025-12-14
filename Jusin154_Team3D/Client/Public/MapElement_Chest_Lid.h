@@ -1,14 +1,14 @@
 ﻿#pragma once
 
-#include "Editor_Define.h"
+#include "Client_Define.h"
 #include "MapElement.h"
 
-NS_BEGIN(Editor)
+NS_BEGIN(Client)
 
 class CMapElement_Chest_Lid final : public CMapElement
 {
 public:
-	enum class LID_STATE{IDLE, OPENING, OPENED, END};
+	enum class LID_STATE { IDLE, OPENING, OPENED, END };
 
 private:
 	CMapElement_Chest_Lid(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -22,6 +22,7 @@ public:
 	virtual HRESULT Render(_uint iShaderPass);
 
 	void Open() { m_eState = LID_STATE::OPENING; }
+
 private:
 	LID_STATE			m_eState = { LID_STATE::END };
 
@@ -35,11 +36,8 @@ private:
 
 	_float4x4			m_CombinedWorldMatrix = {};
 
-#ifdef _DEBUG
 	_bool				m_isOpen = {};
-	_float3				m_vDefaultPos = {};
 	const _float4x4*	m_pParentWorldMatrix = { nullptr };
-#endif // _DEBUG
 
 
 private:
@@ -50,17 +48,13 @@ private:
 
 	_bool Opening(_float fTimeDelta);
 
-#ifdef _DEBUG
-	void Reset();
-#endif // _DEBUG
-
-
 public:
 	static CMapElement_Chest_Lid* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
+#ifdef _DEBUG
 	void Describe_Entity() override;
-	virtual HRESULT Save_XML(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* root)override;
+#endif // _DEBUG
 };
 
 NS_END
