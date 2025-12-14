@@ -5,6 +5,7 @@
 #include "Terrain.h"
 #include "Layer.h"
 #include "MapElement_Chest_Lid.h"
+#include "Player.h"
 
 CMapElement_Chest::CMapElement_Chest(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMapElement{ pDevice, pContext }
@@ -75,12 +76,42 @@ void CMapElement_Chest::Priority_Update(_float fTimeDelta)
 
 void CMapElement_Chest::Update(_float fTimeDelta)
 {
+#ifdef _DEBUG
+	/*if(CHEST_STATE::OPENED != m_eCurState)
+	{
+		_vector vPlayerPos = m_pGameInstance->Get_Layer(g_iStaticLevel, LAYER_PLAYER)->Get_Object<CPlayer>()->Get_WorldPostion();
+
+		_float fDistance = XMVectorGetX(XMVector3Length(vPlayerPos - m_pTransformCom->Get_State(STATE::POSITION)));
+
+		if (CHEST_STATE::IDLE == m_eCurState && fDistance < 10.f)
+			m_eCurState = CHEST_STATE::FOUND;
+		else if (fDistance < 1.5f)
+			m_eCurState = CHEST_STATE::OPENED;
+	}*/
+#endif // _DEBUG
+
 	switch (m_eCurState)
 	{
 	case Editor::CMapElement_Chest::CHEST_STATE::IDLE:
 		break;
 
 	case Editor::CMapElement_Chest::CHEST_STATE::FOUND:
+		m_fTimeAcc += fTimeDelta * 0.03f;
+
+		if (0.f <= m_fTimeAcc && 0.06f > m_fTimeAcc)
+		{
+			m_fCurRimLightStrength = m_fRimLightStrength * m_fTimeAcc / 0.06f;
+		}
+		else if (0.3f <= m_fTimeAcc)
+		{
+			m_fTimeAcc = 0.f;
+			m_fCurRimLightStrength = 0.f;
+			m_eCurState = CHEST_STATE::IDLE;
+		}
+		else
+		{
+			m_fCurRimLightStrength = m_fRimLightStrength;
+		}
 		break;
 
 	case Editor::CMapElement_Chest::CHEST_STATE::OPENED:
@@ -105,7 +136,10 @@ void CMapElement_Chest::Late_Update(_float fTimeDelta)
 	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pModelComs[0]->Get_Radius())) {
 
 		if(CMapElement_Chest::CHEST_STATE::FOUND ==  m_eCurState)
+		{
 			m_pGameInstance->Add_RenderGroup(RENDER::NONLIGHT, this);
+			m_pGameInstance->Add_RenderGroup(RENDER::BLUR, this);
+		}
 		else
 			m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 
@@ -175,7 +209,6 @@ HRESULT CMapElement_Chest::Ready_Components(void* pArg)
 		reinterpret_cast<CComponent**>(&m_pNoiseTextureCom))))
 		return E_FAIL;
 
-
 	ELEMENT_CHEST_DESC* pPhysXDummyDesc = static_cast<ELEMENT_CHEST_DESC*>(pArg);
 
 	// RIGID_BODY
@@ -205,6 +238,23 @@ HRESULT CMapElement_Chest::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fTime", &m_fTimeAcc, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float4)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fRimPower", &m_fRimLightPower, sizeof(_float)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fRimStrength", &m_fCurRimLightStrength, sizeof(_float)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vRimColor", &m_vRimLightColor, sizeof(_float4)))) {
+		return E_FAIL;
+	}
+
 	if (FAILED(m_pShaderCom->Bind_SRV("g_NoiseTexture", m_pNoiseTextureCom->Get_SRV(0)))) {
 		return E_FAIL;
 	}
@@ -229,6 +279,8 @@ void CMapElement_Chest::Chage_State()
 		switch (m_eCurState)
 		{
 		case Editor::CMapElement_Chest::CHEST_STATE::IDLE:
+			m_fCurRimLightStrength = 0.f;
+			m_fTimeAcc = 0.f;
 			m_iShaderPass_Index = ENUM_CLASS(SHADER_PASS_MESH::DEFAULT);
 			break;
 
@@ -238,6 +290,7 @@ void CMapElement_Chest::Chage_State()
 
 		case Editor::CMapElement_Chest::CHEST_STATE::OPENED:
 			m_iShaderPass_Index = ENUM_CLASS(SHADER_PASS_MESH::DEFAULT);
+			m_pLid->Open();
 			break;
 
 		default:
@@ -299,7 +352,7 @@ void CMapElement_Chest::Describe_Entity()
 		return;
 
 	PSX::PxVec3 vDir = PSX::PxVec3(0.f, 1.f, 0.f);
-
+	GUI::Begin("Chest");
 	if (GUI::CollapsingHeader("Rigid Body"))
 	{
 		GUI::InputFloat("Power", &m_fPower);
@@ -334,10 +387,37 @@ void CMapElement_Chest::Describe_Entity()
 	}
 
 
+	if (GUI::Button("Save_ChestData"))
+	{
+		tinyxml2::XMLDocument doc;
+		string strPath = "../Bin/Resources/Data/Map/Hiden/Element_Chest_Info.xml";
+
+		tinyxml2::XMLError loadResult = doc.LoadFile(strPath.c_str());
+
+		tinyxml2::XMLElement* root = {};
+
+		if (loadResult == tinyxml2::XML_SUCCESS)
+		{
+			root = doc.FirstChildElement("Chests");
+
+			Save_XML(doc, root);
+
+			if (doc.SaveFile(strPath.c_str()) != tinyxml2::XML_SUCCESS) {
+				MSG_BOX("Failed to Save DoorInfo File");
+			}
+		}
+		else
+			MSG_BOX("Failed to Save Data");
+	}
+
 	GUI::Text(CMyTools::ToString(m_ModelPrototypeTags[m_iLodIndex]).c_str());
 	GUI::InputInt("Lod Level", (_int*)(&m_iLodIndex));
 	m_iLodIndex = max(0, m_iLodIndex);
 	m_iLodIndex = min(m_iMaxLodLevel, m_iLodIndex);
+
+	GUI::InputFloat("m_fRimLightPower", &m_fRimLightPower, 0.1f, 1.f);
+	GUI::InputFloat("m_fRimLightStrength", &m_fRimLightStrength, 0.1f, 1.f);
+	GUI::ColorEdit4("m_vRimLightColor", (_float*) & m_vRimLightColor);
 
 	GUI::Checkbox("Select Color ON / OFF", &m_bUseSelectColor);
 
@@ -395,6 +475,8 @@ void CMapElement_Chest::Describe_Entity()
 	if (GUI::Button("Delete"))
 		m_bDead = true;
 
+	GUI::End();
+
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
 	m_pTransformCom->Set_Scale(m_vScale);
 	m_pTransformCom->Rotation(XMConvertToRadians(m_vRotation.x), XMConvertToRadians(m_vRotation.y), XMConvertToRadians(m_vRotation.z));
@@ -405,11 +487,11 @@ HRESULT CMapElement_Chest::Save_XML(tinyxml2::XMLDocument& doc, tinyxml2::XMLEle
 	tinyxml2::XMLElement* object = doc.NewElement("Object");
 	object->SetAttribute("Type", ENUM_CLASS(MAPOBJECT_TYPE::ELEMENT_INTERACT));
 	object->SetAttribute("ID", ENUM_CLASS(m_eInteractableID));
-	object->SetAttribute("Lod_Level", m_iLodIndex);
+	object->SetAttribute("Lod_Level", m_iMaxLodLevel);
 	root->InsertEndChild(object);
 
 #pragma region PROTOTYPETAG
-	for (_uint i = 0; i < m_iLodIndex + 1; ++i)
+	for (_uint i = 0; i < m_iMaxLodLevel + 1; ++i)
 	{
 		tinyxml2::XMLElement* prototype = doc.NewElement("PrototypeTag");
 		prototype->SetText(CMyTools::ToString(m_ModelPrototypeTags[i]).c_str());
@@ -461,8 +543,18 @@ HRESULT CMapElement_Chest::Save_XML(tinyxml2::XMLDocument& doc, tinyxml2::XMLEle
 	LocalTranslation->SetAttribute("z", vLocalTranslation.z);
 	object->InsertEndChild(LocalTranslation);
 
+	tinyxml2::XMLElement* RimLight = doc.NewElement("RimLight");
+	RimLight->SetAttribute("pow", m_fRimLightPower);
+	RimLight->SetAttribute("strength", m_fRimLightStrength);
+	RimLight->SetAttribute("colorR", m_vRimLightColor.x);
+	RimLight->SetAttribute("colorG", m_vRimLightColor.y);
+	RimLight->SetAttribute("colorB", m_vRimLightColor.z);
+	RimLight->SetAttribute("colorA", m_vRimLightColor.w);
+	object->InsertEndChild(RimLight);
 
 #pragma endregion
+
+	m_pLid->Save_XML(doc, object);
 
 	return S_OK;
 }

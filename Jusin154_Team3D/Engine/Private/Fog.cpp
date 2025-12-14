@@ -3,7 +3,7 @@
 #include "Shader.h"
 
 CFog::CFog()
-    : m_bVisible{ true }
+    : m_bVisible{ true }, m_fFogPow{30.f}
 {
 }
 
@@ -30,7 +30,7 @@ HRESULT CFog::Bind_FogValue(CShader* pShader)
         _float fValue = 0.f;
         _float4 vColor = { 0.f, 0.f,0.f,0.f };
         pShader->Bind_RawValue("g_fFogDensity", &fValue, sizeof(_float));
-        pShader->Bind_RawValue("g_fFogDensity", &fValue, sizeof(_float));
+        pShader->Bind_RawValue("g_fFogPow", &fValue, sizeof(_float));
         pShader->Bind_RawValue("g_vFogColor", &vColor, sizeof(_float4));
     }
 #else

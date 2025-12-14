@@ -1,9 +1,9 @@
 ﻿#pragma once
 
-#include "Editor_Define.h"
+#include "Client_Define.h"
 #include "MapElement.h"
 
-NS_BEGIN(Editor)
+NS_BEGIN(Client)
 
 class CMapElement_Chest final : public CMapElement
 {
@@ -11,7 +11,7 @@ public:
 	enum class CHEST_STATE { IDLE, FOUND, OPENED, END };
 
 public:
-	typedef struct tagElement_Chest_Desc : MAPOBJECT_LOD_DESC
+	typedef struct tagElement_Chest_Desc : MAPELEMENT_DESC
 	{
 		_uint					iInteractableID = {};
 		_uint					iSubKind = {};
@@ -21,6 +21,11 @@ public:
 		_uint					iMaxLodLevel_Lid{};
 		vector<_wstring>		ModelPrototypeTags_Lid;
 		_float3					vLid_Offset = {};
+		_float					fRotaitionAngle = {};
+
+		_float					fRimLightPow;
+		_float					fRimLightStrength;
+		_float4					vRimLightColor;
 	}ELEMENT_CHEST_DESC;
 
 private:
@@ -34,7 +39,6 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
-
 private:
 	ELEMENT_INTERACTABLE_ID			m_eInteractableID = { ELEMENT_INTERACTABLE_ID::END };
 	CHEST_STATE						m_ePreState = {};
@@ -46,21 +50,13 @@ private:
 	_float							m_fRimLightPower = { 0.7f };
 	_float							m_fRimLightStrength = { 3.7f };
 	_float							m_fCurRimLightStrength = { 0.f };
-	_float4							m_vRimLightColor = {0.71f, 0.39f, 0.02f, 1.f};
+	_float4							m_vRimLightColor = { 0.71f, 0.39f, 0.02f, 1.f };
 
-	class CMapElement_Chest_Lid*	m_pLid = { nullptr };
+	CTexture*						m_pNoiseTextureCom = { nullptr };
 	CRigidBody*						m_pRigidBody = { nullptr };
 	PSX::PxRigidDynamic*			m_pActor = { nullptr };
 
-	CTexture*						m_pNoiseTextureCom = { nullptr };
-#ifdef _DEBUG
-	_bool		m_bUseSelectColor = { true };
-
-	_float		m_fPower = {};
-	_float		m_fMass = {};
-	_float3		m_vBoxSize = {};
-#endif // _DEBUG
-
+	class CMapElement_Chest_Lid*	m_pLid = { nullptr };
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
@@ -75,8 +71,9 @@ public:
 	static CMapElement_Chest* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
 	virtual void Free() override;
+#ifdef _DEBUG
 	void Describe_Entity() override;
-	virtual HRESULT Save_XML(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* root)override;
+#endif // _DEBUG
 };
 
 NS_END

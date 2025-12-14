@@ -895,13 +895,15 @@ PS_OUT_FLT4_SINGLE PS_MAIN_FOG(PS_IN In)
     float  fViewZ = vDepthDesc.y * g_fFar;
     
     float fRatio;
+  
+   
+    fRatio = pow(1.f - saturate(exp(-1.f * vDepthDesc.y * g_fFogDensity)), g_fFogPow);
     
-    fRatio = clamp(pow(exp(-(g_fFogDensity * fViewZ)), g_fFogPow), 0.f, 1.f);
-    
-    vFinalColor = lerp(g_vFogColor, vColor, max(fRatio, 0.2f));
+    vFinalColor = lerp(vColor, g_vFogColor, fRatio);
     vFinalColor.a = 1.f;
     
-    if (1.f == vDepthDesc.y) {
+    if (1.f == vDepthDesc.y)
+    {
         vFinalColor = float4(g_vFogColor);
     }
     Out.vSingleTarget = vFinalColor;
