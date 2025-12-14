@@ -100,6 +100,16 @@
 #include "Current_Slot_Number.h"
 #include "Spell_Drag.h"
 
+#include "Quest_Canvas.h"
+#include "Quest_Panel.h"
+#include "Quest_Border.h"
+#include "Quest_Header.h"
+#include "Quest_HeaderLine.h"
+#include "Quest_List.h"
+#include "Quest_Info.h"
+#include "Quest_Info_Header.h"
+#include "Quest_Info_Line.h"
+#include "Quest_Entry_Line.h"
 
 #pragma endregion
 
@@ -130,6 +140,7 @@
 #include "EffectPool.h"
 #include "Levioso.h"
 #include "Lumos.h"
+#include "Accio.h"
 #include "Goblin_Teleport.h"
 
 
@@ -850,6 +861,22 @@ HRESULT CLoader::Loading_For_GamePlay()
 		});
 
 	Asset_FileLoad("../Bin/Resources/Textures/Cursor", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
+		{
+
+			_string strFilePath = pFilePath;
+			_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
+
+
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
+				CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
+				return E_FAIL;
+			}
+
+			return S_OK;
+
+		});
+
+	Asset_FileLoad("../Bin/Resources/Textures/Quest", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
 		{
 
 			_string strFilePath = pFilePath;
@@ -1597,6 +1624,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype<CLumos>(NEXT_LEVEL, CLumos::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CAccio>(NEXT_LEVEL, CAccio::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CLeviosoSide>(NEXT_LEVEL, CLeviosoSide::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
@@ -1914,6 +1944,57 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 	/* For.Prototype_GameObject_Spell_Drag*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_Drag>(g_iStaticLevel, CSpell_Drag::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_Quest_Canvas*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Canvas>(g_iStaticLevel, CQuest_Canvas::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_Quest_Panel*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Panel>(g_iStaticLevel, CQuest_Panel::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_Quest_Border*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Border>(g_iStaticLevel, CQuest_Border::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_Quest_Header*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Header>(g_iStaticLevel, CQuest_Header::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_Quest_HeaderLine*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_HeaderLine>(g_iStaticLevel, CQuest_HeaderLine::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_Quest_List*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_List>(g_iStaticLevel, CQuest_List::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_Quest_Info*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Info>(g_iStaticLevel, CQuest_Info::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_Quest_Info_Header*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Info_Header>(g_iStaticLevel, CQuest_Info_Header::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_Quest_Info_Line*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Info_Line>(g_iStaticLevel, CQuest_Info_Line::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_Quest_Entry_Line*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Entry_Line>(g_iStaticLevel, CQuest_Entry_Line::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}

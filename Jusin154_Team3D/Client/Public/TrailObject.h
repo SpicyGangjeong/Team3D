@@ -28,6 +28,8 @@ public:
 
 public:
 	void    Trail_Update(_fmatrix WorldMat, _float fTimeDelta);
+	void    Rope_Trail_Update(_fmatrix WorldMat, _fmatrix EndWorldMat, _float fTimeDelta);
+
 	HRESULT Load_Trail(CEffect_Container::TRAIL_SAVE_INFO Trail_Save_Info, LEVEL eLevel);
 	HRESULT Load_Trail(const _char* pPath, LEVEL eLevel);
 
@@ -61,12 +63,12 @@ private:
 	_wstring		m_strTrailDiffuseName = {};
 	_wstring		m_strTrailNoiseName = {};
 	_wstring		m_strTrailMaskingName = {};
-	_wstring     m_strTrailDistortionName = {};
+	_wstring		m_strTrailDistortionName = {};
 
-	_string		m_strPath = {};
-	_string     m_strName = {};
+	_string			m_strPath = {};
+	_string			m_strName = {};
 
-	TRAIL_INFO  m_TrailInfo = {};
+	TRAIL_INFO		m_TrailInfo = {};
 };
 
 NS_END

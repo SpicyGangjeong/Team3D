@@ -52,7 +52,6 @@ public:
 
 private:
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
-	CGameObject* m_pSpell_Panel = { nullptr };
 
 	SPELLINFO SpellInfo = {};
 public:

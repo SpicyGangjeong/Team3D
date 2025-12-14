@@ -750,6 +750,14 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float4)))) {
+		return E_FAIL;
+	}
+
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))) {
 		return E_FAIL;
 	}
@@ -988,8 +996,22 @@ HRESULT CEffectObject::Bind_ShaderResources()
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fEmissiveColorCut", &m_EffectInfo.fEmissiveColorCut, sizeof(_float)))) {
 		return E_FAIL;
 	}
-	
-	
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isRimLight", &m_EffectInfo.isRimLight, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vRimLightColor", &m_EffectInfo.vRimLightColor, sizeof(_float4)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fRimLightPower", &m_EffectInfo.fRimLightPower, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fRimLightStrength", &m_EffectInfo.fRimLightStrength, sizeof(_float)))) {
+		return E_FAIL;
+	}
 
 
 	if (m_pDiffuse_TextureCom != nullptr)
@@ -1032,10 +1054,6 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		if (FAILED(m_pDistortion_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_DistortionTexture", 0))) {
 			return E_FAIL;
 		}
-	}
-
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
-		return E_FAIL;
 	}
 
 

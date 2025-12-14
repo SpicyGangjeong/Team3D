@@ -44,7 +44,7 @@ HRESULT CMission_Icon::Initialize(void* pArg)
 	m_fLerpX = m_fX;
 	m_fLerpY = 45;
 	m_fSortZ = 0.1f;
-	m_eQuestType = QUESTYPE::MAIN;
+	m_eQuestType = QUESTTYPE::MAIN;
 	//static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Mission_SizeUp"), [this](void* p) {
 	//																		if (p == nullptr)
 	//																			return;
@@ -58,7 +58,7 @@ HRESULT CMission_Icon::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CMission_Icon::QuestType(QUESTYPE eType)
+void CMission_Icon::QuestType(QUESTTYPE eType)
 {
 	m_eQuestType = eType;
 }
@@ -125,7 +125,7 @@ HRESULT CMission_Icon::Render()
 	if (FAILED(Bind_ShaderResources())) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::QUESTYPE)))) {
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIEDITOR::QUESTTYPE)))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pVIBufferCom->Bind_Resources())) {
