@@ -38,7 +38,6 @@ void CRenderer::Render()
 
 #ifdef _DEBUG
 	static _bool m_bToggleDebug = false;
-	GUI::Checkbox("DebugToggle", &m_bToggleDebug);
 	Describe_Entitiy();
 	m_pGameInstance->RenderTarget_Debuger();
 
@@ -47,6 +46,7 @@ void CRenderer::Render()
 	}
 	else {
 		GUI::Begin("RenderTarget Debuger");
+		GUI::Checkbox("DebugToggle", &m_bToggleDebug);
 		if (m_bToggleDebug) {
 			Render_Debug();
 		}
