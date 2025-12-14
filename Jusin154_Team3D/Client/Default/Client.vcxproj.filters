@@ -560,6 +560,9 @@
     <ClInclude Include="..\Public\Goblin_Teleport.h">
       <Filter>02.GameObjects\Effect\MonsterEffect\Goblin_Teleport</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Accio.h">
+      <Filter>02.GameObjects\Effect\Effects\Accio</Filter>
+	</ClInclude>
     <ClInclude Include="..\Public\Quest_Border.h">
       <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Border</Filter>
     </ClInclude>
@@ -1218,6 +1221,9 @@
     <Filter Include="02.GameObjects\Effect\MonsterEffect\Goblin_Teleport">
       <UniqueIdentifier>{8f5dbf8c-be74-4512-a84f-586397744b24}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\Effects\Accio">
+      <UniqueIdentifier>{170066b9-f360-4d15-be18-8a82f2cecf10}</UniqueIdentifier>
+	</Filter>
     <Filter Include="02.GameObjects\UI\Quest_Canvas">
       <UniqueIdentifier>{3bb81c23-be27-44c8-9fe8-3d9004391173}</UniqueIdentifier>
     </Filter>
@@ -1761,6 +1767,9 @@
     <ClCompile Include="..\Private\Goblin_Teleport.cpp">
       <Filter>02.GameObjects\Effect\MonsterEffect\Goblin_Teleport</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Accio.cpp">
+      <Filter>02.GameObjects\Effect\Effects\Accio</Filter>
+	</ClCompile>
     <ClCompile Include="..\Private\Quest_Border.cpp">
       <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Border</Filter>
     </ClCompile>

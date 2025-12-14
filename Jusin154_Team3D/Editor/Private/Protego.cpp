@@ -34,12 +34,9 @@ HRESULT CProtego::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_pSphere = Get_PartObject<CEditEffect>("ProtegoSphere");
-	m_pBottom = Get_PartObject<CEditEffect>("ProtegoBottom");
-	m_pCircle = Get_PartObject<CEditEffect>("ProtegoCircle");
 
 	SAFE_ADDREF(m_pSphere);
-	SAFE_ADDREF(m_pBottom);
-	SAFE_ADDREF(m_pCircle);
+
 
 	m_wstrEffectName = L"Protego";
 
@@ -64,8 +61,6 @@ void CProtego::Update(_float fTimeDelta)
 		return;
 
 	m_pSphere->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
-	m_pBottom->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
-	m_pCircle-> Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
 
 	__super::Update(fTimeDelta);
 
@@ -83,7 +78,6 @@ void CProtego::Update(_float fTimeDelta)
 	_float3 vSize = _float3(fSize, fSize, fSize);
 
 	m_pSphere->Get_Component<CTransform>()->Set_Scale(vSize);
-	m_pCircle->Get_Component<CTransform>()->Set_Scale(vSize);
 }
 
 void CProtego::Late_Update(_float fTimeDelta)
@@ -102,17 +96,13 @@ HRESULT CProtego::Pre_Setting(CGameObject* pObject, void* pArg)
 		return E_FAIL;
 
 	m_pSphere->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
-	m_pBottom->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
-	m_pCircle->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
 
 	m_pSphere->Set_Visible(true);
-	m_pCircle->Set_Visible(true);
-	m_pBottom->Set_Visible(true);
+
 
 
 	_float3 vSize = _float3(1.f, 1.f, 1.f);
 	m_pSphere->Get_Component<CTransform>()->Set_Scale(vSize);
-	m_pCircle->Get_Component<CTransform>()->Set_Scale(vSize);
 
 	m_fSizeAccTime = 0.f;
 
@@ -176,8 +166,6 @@ void CProtego::Free()
 	//		SAFE_RELEASE(m_pPhysHitBox);
 
 	SAFE_RELEASE(m_pSphere);
-	SAFE_RELEASE(m_pBottom);
-	SAFE_RELEASE(m_pCircle);
 
 }
 #ifdef _DEBUG
