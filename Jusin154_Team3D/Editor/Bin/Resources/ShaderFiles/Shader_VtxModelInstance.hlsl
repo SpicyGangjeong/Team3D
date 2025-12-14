@@ -655,7 +655,7 @@ PS_OUT PS_MAIN(PS_IN In)
     
     vMtrlDiffuse.rgb += EmissiveDraw(In, vMtrlDiffuse).rgb;
 
-    Out.vDiffuse = vMtrlDiffuse;
+    Out.vDiffuse = float4(0.f, 0.f, 0.f, 0.f);
     
     return Out;
 }
@@ -679,7 +679,7 @@ PS_OUT PS_NON_NORMALMAP(PS_IN In)
     
     vMtrlDiffuse.rgb += EmissiveDraw(In, vMtrlDiffuse).rgb;
     
-    Out = BlendedWeight(vMtrlDiffuse, In.vProjPos.w);
+    Out = float4(0.f, 0.f, 0.f, 0.f);
     
     //// 색깔 추가할 처리 (이미시브)
    
@@ -768,7 +768,7 @@ PS_BLUR_OUT PS_BLUR_NOEMISSIVE(PS_IN In)
     //    }
     //}
    
-    Out.vDiffuse = vector(vMtrlDiffuse.rgb * g_fBlurIntensity , vMtrlDiffuse.a); 
+    Out.vDiffuse = float4(0.f, 0.f, 0.f, 0.f);
     Out.vBlurWeight = g_iBlurWeight / 128.f;
     
     return Out;
@@ -800,7 +800,7 @@ PS_BLUR_OUT PS_BLUR(PS_IN In)
     //    }
     //}
    
-    Out.vDiffuse = vector(vMtrlDiffuse.rgb * g_fBlurIntensity, vMtrlDiffuse.a);
+    Out.vDiffuse = float4(0.f, 0.f, 0.f, 0.f);
     
     Out.vBlurWeight = g_iBlurWeight / 128.f;
     
@@ -840,7 +840,7 @@ PS_BLOOM_OUT PS_BLOOM(PS_IN In)
     if (vMtrlDiffuse.a <= 0.1f)
         discard;
    
-    Out.vDiffuse = vector(vMtrlDiffuse.rgb * fBloomStrength, (float) g_iBloomType / 255.f);
+    Out.vDiffuse = float4(0.f, 0.f, 0.f, 0.f);
     
     return Out;
 
@@ -856,7 +856,7 @@ PS_BLOOM_OUT PS_BLEND(PS_IN In)
     
     vMtrlDiffuse.rgb += EmissiveDraw(In, vMtrlDiffuse).rgb;
 
-    Out.vDiffuse = vMtrlDiffuse;
+    Out.vDiffuse = float4(0.f,0.f,0.f,0.f);
     
     return Out;
 }
@@ -871,7 +871,7 @@ PS_BLOOM_OUT PS_WEIGHTED_FOR_BLEND(PS_IN In)
     
     vMtrlDiffuse.rgb += EmissiveDraw(In, vMtrlDiffuse).rgb;
     
-    Out.vDiffuse = BlendedWeight(vMtrlDiffuse, In.vProjPos.w).vDiffuse;
+    Out.vDiffuse = float4(0.f, 0.f, 0.f, 0.f);
     
     
     return Out;
