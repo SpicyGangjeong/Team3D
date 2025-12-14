@@ -75,6 +75,8 @@
 #define FX_LASTCOLOR		TEXT("FX_LASTCOLOR")
 #define FX_WEIGHTBELND		TEXT("FX_WEIGHTBELND")
 
+#define CS_EFFECT			TEXT("CS_EFFECT")
+#define CS_INSTANCE_MODEL			TEXT("CS_INSTANCE_MODEL")
 
 #define			SAFE_ADDREF(pInstance)		Safe_AddRef(pInstance)
 #define			SAFE_RELEASE(pInstance)		Safe_Release(pInstance)

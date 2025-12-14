@@ -4,30 +4,63 @@
 #include "Instance_Model.h"
 
 CComputeShader::CComputeShader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: m_pDevice{ pDevice }
-	, m_pContext{ pContext }
-	, m_pGameInstance{ CGameInstance::GetInstance() }
+	: CComponent{ pDevice, pContext }
 {
-	SAFE_ADDREF(m_pDevice);
-	SAFE_ADDREF(m_pContext);
-	SAFE_ADDREF(m_pGameInstance);
 }
 
-HRESULT CComputeShader::Initialize(const _tchar* pShaderFilePath, const _char* pStartFunctionName, _uint iNumElement, _uint iNumInputBuffer, _uint iNumOutputBuffer, _uint iInputStructStride[], _uint iOutputStructStride[])
+CComputeShader::CComputeShader(const CComputeShader& rhs)
+	: CComponent(rhs),
+	m_pCSBlob(rhs.m_pCSBlob)
 {
-	m_iNumElement = iNumElement;
-	m_iNumInputBuffer = iNumInputBuffer;
-	m_iNumOutputBuffer = iNumOutputBuffer;
+	SAFE_ADDREF(m_pCSBlob);
+}
 
-	if (FAILED(CreateComputeShader(pShaderFilePath, pStartFunctionName)))
+HRESULT CComputeShader::Initialize(void* pArg)
+{
+
+	CS_INFO* CsDesc = static_cast<CS_INFO*>(pArg);
+
+	if (CsDesc == nullptr)
 		return E_FAIL;
 
-	if (FAILED(CreateBuffer(iNumElement, iInputStructStride, iOutputStructStride)))
+
+	m_iNumElement = CsDesc->iNumElement;
+	m_iNumInputBuffer = CsDesc->iNumInputBuffer;
+	m_iNumOutputBuffer = CsDesc->iNumOutputBuffer;
+
+
+	if (FAILED(CreateComputeShader()))
 		return E_FAIL;
 
-	if (FAILED(CreateResurceViews(iNumElement, iNumInputBuffer)))
+	if (FAILED(CreateBuffer(CsDesc->iInputStructStride, CsDesc->iOutputStructStride)))
 		return E_FAIL;
 
+	if (FAILED(CreateResurceViews()))
+		return E_FAIL;
+
+
+	return S_OK;
+}
+
+HRESULT CComputeShader::Initialize_Prototype(const _tchar* pShaderFilePath, const _char* pStartFunctionName)
+{
+	// Debug 모드와 release 모드의 플레그를 다르게 줘야함
+	UINT HLSLFlags = {};
+#ifdef _DEBUG
+	HLSLFlags |= D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+#else
+	HLSLFlags = D3DCOMPILE_OPTIMIZATION_LEVEL1;
+#endif // _DEBUG
+
+	HRESULT hr = D3DCompileFromFile(pShaderFilePath,
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE,
+		pStartFunctionName,
+		"cs_5_0",
+		HLSLFlags,
+		0,
+		&m_pCSBlob,
+		nullptr);
 
 
 	return S_OK;
@@ -136,7 +169,7 @@ void CComputeShader::Reset()
 	m_pContext->CSSetShader(nullptr, nullptr, 0);
 }
 
-HRESULT CComputeShader::CreateBuffer(_uint iNumElement, _uint iInputStructStride[], _uint iOuputStructStride[])
+HRESULT CComputeShader::CreateBuffer(_uint iInputStructStride[], _uint iOuputStructStride[])
 {
 	//인 아웃풋 버퍼
 
@@ -145,7 +178,7 @@ HRESULT CComputeShader::CreateBuffer(_uint iNumElement, _uint iInputStructStride
 	{
 		D3D11_BUFFER_DESC InputBufferdesc = {};
 
-		InputBufferdesc.ByteWidth = iInputStructStride[i] * iNumElement;
+		InputBufferdesc.ByteWidth = iInputStructStride[i] * m_iNumElement;
 		InputBufferdesc.StructureByteStride = iInputStructStride[i];
 		InputBufferdesc.Usage = D3D11_USAGE_DEFAULT;
 		InputBufferdesc.CPUAccessFlags = 0;
@@ -165,7 +198,7 @@ HRESULT CComputeShader::CreateBuffer(_uint iNumElement, _uint iInputStructStride
 		// 아웃풋 버퍼
 
 		D3D11_BUFFER_DESC Bufferdesc = {};
-		Bufferdesc.ByteWidth = iOuputStructStride[i] * iNumElement;
+		Bufferdesc.ByteWidth = iOuputStructStride[i] * m_iNumElement;
 		Bufferdesc.StructureByteStride = iOuputStructStride[i];
 		Bufferdesc.Usage = D3D11_USAGE_DEFAULT; // 인 아웃풋 버퍼는 디폴트로 설정해야함
 		Bufferdesc.CPUAccessFlags = 0; // 디폴트 버퍼는 CPU에서 Read Write가 불가능하며
@@ -186,10 +219,10 @@ HRESULT CComputeShader::CreateBuffer(_uint iNumElement, _uint iInputStructStride
 	return S_OK;
 }
 
-HRESULT CComputeShader::CreateResurceViews(_uint iNumElement, _uint iNumInputBuffer)
+HRESULT CComputeShader::CreateResurceViews()
 {
 	// SRV
-	for (_uint i = 0; i < iNumInputBuffer; i++) // 인풋 버퍼를 여러개 사용할 수 있도록 만든다
+	for (_uint i = 0; i < m_iNumInputBuffer; i++) // 인풋 버퍼를 여러개 사용할 수 있도록 만든다
 	{
 		ID3D11ShaderResourceView* pSrv = {};
 
@@ -197,7 +230,7 @@ HRESULT CComputeShader::CreateResurceViews(_uint iNumElement, _uint iNumInputBuf
 		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFEREX;
 		srvDesc.Format = DXGI_FORMAT_UNKNOWN;
 		srvDesc.Buffer.FirstElement = 0;
-		srvDesc.Buffer.NumElements = iNumElement;
+		srvDesc.Buffer.NumElements = m_iNumElement;
 
 		if (FAILED(m_pDevice->CreateShaderResourceView(m_pInputBuffer[i], &srvDesc, &pSrv)))
 			return E_FAIL;
@@ -215,7 +248,7 @@ HRESULT CComputeShader::CreateResurceViews(_uint iNumElement, _uint iNumInputBuf
 		uavDesc.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
 		uavDesc.Format = DXGI_FORMAT_UNKNOWN;
 		uavDesc.Buffer.FirstElement = 0;
-		uavDesc.Buffer.NumElements = iNumElement;
+		uavDesc.Buffer.NumElements = m_iNumElement;
 
 		ID3D11UnorderedAccessView* pOutputUAV = { nullptr };
 
@@ -230,7 +263,7 @@ HRESULT CComputeShader::CreateResurceViews(_uint iNumElement, _uint iNumInputBuf
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 		srvDesc.Format = DXGI_FORMAT_UNKNOWN; // StructuredBuffer는 UNKNOWN
 		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
-		srvDesc.Buffer.NumElements = iNumElement;
+		srvDesc.Buffer.NumElements = m_iNumElement;
 		srvDesc.Buffer.FirstElement = 0;
 
 
@@ -246,48 +279,26 @@ HRESULT CComputeShader::CreateResurceViews(_uint iNumElement, _uint iNumInputBuf
 	return S_OK;
 }
 
-HRESULT CComputeShader::CreateComputeShader(const _tchar* pShaderFilePath, const _char* pStartFunctionName)
+HRESULT CComputeShader::CreateComputeShader()
 {
-	ID3DBlob* pCSBlob = nullptr;
-
-	// Debug 모드와 release 모드의 플레그를 다르게 줘야함
-	UINT HLSLFlags = {};
-#ifdef _DEBUG
-	HLSLFlags |= D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
-#else
-	HLSLFlags = D3DCOMPILE_OPTIMIZATION_LEVEL1;
-#endif // _DEBUG
-
-	HRESULT hr = D3DCompileFromFile(pShaderFilePath,
-		nullptr,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE,
-		pStartFunctionName,
-		"cs_5_0",
-		HLSLFlags,
-		0,
-		&pCSBlob,
-		nullptr);
-
 
 	if (FAILED(m_pDevice->CreateComputeShader(
-		pCSBlob->GetBufferPointer(),         // 컴파일된 쉐이더 코드
-		pCSBlob->GetBufferSize(),            // 코드 길이
+		m_pCSBlob->GetBufferPointer(),         // 컴파일된 쉐이더 코드
+		m_pCSBlob->GetBufferSize(),            // 코드 길이
 		nullptr,                                // 클래스 인스턴스 (없음)
 		&m_pComputeShader // 컴퓨트 쉐이더 객체
 	)))
 		return E_FAIL;
 
-	SAFE_RELEASE(pCSBlob);
-
 	return S_OK;
 }
 
 
-CComputeShader* CComputeShader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pShaderFilePath, const _char* pStartFunctionName, _uint iNumElement, _uint iNumInputBuffer, _uint iNumOutputBuffer, _uint iInputStructStride[], _uint iOutputStructStride[])
+CComputeShader* CComputeShader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pShaderFilePath, const _char* pStartFunctionName)
 {
 	CComputeShader* pInstance = new CComputeShader(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize(pShaderFilePath, pStartFunctionName, iNumElement, iNumInputBuffer, iNumOutputBuffer, iInputStructStride, iOutputStructStride)))
+	if (FAILED(pInstance->Initialize_Prototype(pShaderFilePath, pStartFunctionName)))
 	{
 		MSG_BOX("Failed to Created : CComputeShader Prototype");
 		SAFE_RELEASE(pInstance);
@@ -318,4 +329,28 @@ void CComputeShader::Free()
 	SAFE_RELEASE(m_pDevice);
 	SAFE_RELEASE(m_pContext);
 	SAFE_RELEASE(m_pGameInstance);
+
+	SAFE_RELEASE(m_pCSBlob);
 }
+
+CComponent* CComputeShader::Clone(void* pArg, CGameObject* pOwner)
+{
+	CComputeShader* pInstance = new CComputeShader(*this);
+	pInstance->m_pOwner = pOwner;
+
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("Failed to Cloned : CComputeShader");
+		SAFE_RELEASE(pInstance);
+	}
+
+	return pInstance;
+}
+
+#ifdef _DEBUG
+
+void CComputeShader::Describe_Entity()
+{
+}
+
+#endif
