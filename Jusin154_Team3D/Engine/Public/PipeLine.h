@@ -35,7 +35,7 @@ public:
 	_bool IsIn_WorldFrustum(_fvector vWorldPos, _float fRadius);
 	_bool IsIn_LocalFrustum(_fvector vLocalPos, _float fRadius);
 
-	pair<_bool, _uint> IsIn_ShadowViewFrustum(_fvector vWorldCenter, _float fRadius);
+	pair<_bool, _ubyte> IsIn_ShadowViewFrustum(_fvector vWorldCenter, _float fRadius);
 
 	HRESULT Bind_CascadeSplitRatio(class CShader* pShader, const _char* pConstantName, _bool bNear);
 	HRESULT Bind_CascadeBias(class CShader* pShader, const _char* pConstantName);
@@ -44,7 +44,7 @@ public:
 	HRESULT Load_GlobalSRV(const _tchar* wszKeyGlobalSRV, filesystem::path pathSRVFolder);
 
 	HRESULT Ready_Shadow_Light(const _float4& vShadowDirRPYQuat);
-	HRESULT Bind_Shadow_Resource(class CShader* pShader, const _char* pConstantName, D3DTS eType, _uint iShadowBoxIndex) const;
+	HRESULT Bind_Shadow_Resource(class CShader* pShader, const _char* pConstantName, D3DTS eType, SHADOW eShadowType) const;
 	const _float4x4* Get_ShadowMatricesPtr(_uint iShadowBoxIndex);
 	_float Get_ShadowBoxFar(_uint iShadowBoxIndex);
 public:
@@ -56,9 +56,9 @@ private:
 	_float4x4	m_ShadowTransformStateMatrices[3][ENUM_CLASS(D3DTS::END)] = {};
 	_float4		m_vCamPosition = {};
 
-	_float		m_fShadowNearBoxRatio = { 0.17f };
+	_float		m_fShadowNearBoxRatio = { 0.07f };
 	_float		m_fShadowFarBoxRatio = { 0.60f };
-	_float4		m_vShadowBias = { 0.005f, 0.005f, 0.005f, 0.005f };
+	_float4		m_vShadowBias = { 0.0041f, 0.005f, 0.005f, 0.005f };
 
 	_float4		m_vOriginalRenderFrustumPoints[8] = {};
 	_float4		m_vOriginalShadowFrustumPoints[16] = {};// 3개로 나눈 절두체의 부분을 나타내는 16개의 점

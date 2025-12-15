@@ -59,12 +59,12 @@ HRESULT CBuildingContainer::Render()
     return S_OK;
 }
 
-HRESULT CBuildingContainer::Render_Shadow()
+HRESULT CBuildingContainer::Render_Shadow(SHADOW eType)
 {
     unordered_map<_string, CPartObject*>::iterator iter = m_PartObjects.begin();
     for (; iter != m_PartObjects.end(); ++iter) {
         CPartObject* pObject = (*iter).second;
-        if (FAILED(pObject->Render_Shadow())) {
+        if (FAILED(pObject->Render_Shadow(eType))) {
             return E_FAIL;
         }
     }

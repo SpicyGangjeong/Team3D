@@ -285,15 +285,15 @@ HRESULT CTroll::Render_OutLine()
 	return S_OK;
 }
 
-HRESULT CTroll::Render_Shadow()
+HRESULT CTroll::Render_Shadow(SHADOW eType)
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ViewMatrix", D3DTS::VIEW, ENUM_CLASS(m_eShadow)))) {
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ViewMatrix", D3DTS::VIEW, eType))) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ProjMatrix", D3DTS::PROJ, ENUM_CLASS(m_eShadow)))) {
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ProjMatrix", D3DTS::PROJ, eType))) {
 		return E_FAIL;
 	}
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();

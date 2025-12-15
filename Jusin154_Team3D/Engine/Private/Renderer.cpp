@@ -87,7 +87,7 @@ void CRenderer::Render_PreShadow()
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::PRESHADOW)])
 	{
 		if (nullptr != pRenderObject) {
-			if (FAILED(pRenderObject->Render_Shadow())) {
+			if (FAILED(pRenderObject->Render_Shadow(SHADOW::END))) {
 				assert(false);
 			}
 		}
@@ -189,7 +189,7 @@ void CRenderer::Render_Shadow()
 
 		for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::SHADOW_NEAR)]) {
 			if (nullptr != pRenderObject) {
-				if (FAILED(pRenderObject->Render_Shadow())) {
+				if (FAILED(pRenderObject->Render_Shadow(SHADOW::SHADOW_NEAR))) {
 					assert(false);
 				}
 			}
@@ -222,7 +222,7 @@ void CRenderer::Render_Shadow()
 
 		for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::SHADOW_MIDDLE)]) {
 			if (nullptr != pRenderObject) {
-				if (FAILED(pRenderObject->Render_Shadow())) {
+				if (FAILED(pRenderObject->Render_Shadow(SHADOW::SHADOW_MIDDLE))) {
 					assert(false);
 				}
 			}
@@ -255,7 +255,7 @@ void CRenderer::Render_Shadow()
 
 		for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::SHADOW_FAR)]) {
 			if (nullptr != pRenderObject) {
-				if (FAILED(pRenderObject->Render_Shadow())) {
+				if (FAILED(pRenderObject->Render_Shadow(SHADOW::SHADOW_FAR))) {
 					assert(false);
 				}
 			}
@@ -367,34 +367,22 @@ void CRenderer::Render_Combined()
 		if (FAILED(m_pShader->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 			return;
 		}
-		_float fShadowFar = m_pGameInstance->Get_ShadowBoxFar(0);
-		if (FAILED(m_pShader->Bind_RawValue("g_fShadowFar_NEAR", &fShadowFar, sizeof(_float)))) {
+		if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShader, "g_LightViewMatrix_NEAR", D3DTS::VIEW, SHADOW::SHADOW_NEAR))) {
 			return;
 		}
-		fShadowFar = m_pGameInstance->Get_ShadowBoxFar(1);
-		if (FAILED(m_pShader->Bind_RawValue("g_fShadowFar_MIDDDLE", &fShadowFar, sizeof(_float)))) {
+		if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShader, "g_LightProjMatrix_NEAR", D3DTS::PROJ, SHADOW::SHADOW_NEAR))) {
 			return;
 		}
-		fShadowFar = m_pGameInstance->Get_ShadowBoxFar(2);
-		if (FAILED(m_pShader->Bind_RawValue("g_fShadowFar_FAR", &fShadowFar, sizeof(_float)))) {
+		if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShader, "g_LightViewMatrix_MIDDLE", D3DTS::VIEW, SHADOW::SHADOW_MIDDLE))) {
 			return;
 		}
-		if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShader, "g_LightViewMatrix_NEAR", D3DTS::VIEW, 0))) {
+		if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShader, "g_LightProjMatrix_MIDDLE", D3DTS::PROJ, SHADOW::SHADOW_MIDDLE))) {
 			return;
 		}
-		if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShader, "g_LightProjMatrix_NEAR", D3DTS::PROJ, 0))) {
+		if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShader, "g_LightViewMatrix_FAR", D3DTS::VIEW, SHADOW::SHADOW_FAR))) {
 			return;
 		}
-		if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShader, "g_LightViewMatrix_MIDDLE", D3DTS::VIEW, 1))) {
-			return;
-		}
-		if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShader, "g_LightProjMatrix_MIDDLE", D3DTS::PROJ, 1))) {
-			return;
-		}
-		if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShader, "g_LightViewMatrix_FAR", D3DTS::VIEW, 2))) {
-			return;
-		}
-		if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShader, "g_LightProjMatrix_FAR", D3DTS::PROJ, 2))) {
+		if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShader, "g_LightProjMatrix_FAR", D3DTS::PROJ, SHADOW::SHADOW_FAR))) {
 			return;
 		}
 		if (FAILED(m_pShader->Bind_RawValue("g_fPreShadowFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {

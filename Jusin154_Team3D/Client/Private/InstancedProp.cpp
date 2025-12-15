@@ -49,22 +49,19 @@ HRESULT CInstancedProp::Render()
 	return S_OK;
 }
 
-HRESULT CInstancedProp::Render_Shadow()
+HRESULT CInstancedProp::Render_Shadow(SHADOW eType)
 {
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldMatrixPtr()))) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ViewMatrix", D3DTS::VIEW, ENUM_CLASS(m_eShadow)))) {
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ViewMatrix", D3DTS::VIEW, eType))) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ProjMatrix", D3DTS::PROJ, ENUM_CLASS(m_eShadow)))) {
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ProjMatrix", D3DTS::PROJ, eType))) {
 		return E_FAIL;
 	}
 	for (_uint i = 0; i < m_iNumMesh; i++)
 	{
-		if (FAILED(m_pVIBufferInstanceCom->Bind_Matrial(m_pShaderCom, i)))
-			return E_FAIL;
-
 		if (FAILED(m_pShaderCom->Begin(0)))
 			return E_FAIL;
 

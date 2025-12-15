@@ -68,15 +68,15 @@ _bool CPipeLine::IsIn_LocalFrustum(_fvector vLocalPos, _float fRadius)
 	return true;
 }
 
-pair<_bool, _uint> CPipeLine::IsIn_ShadowViewFrustum(_fvector vWorldCenter, _float fRadius)
+pair<_bool, _ubyte> CPipeLine::IsIn_ShadowViewFrustum(_fvector vWorldCenter, _float fRadius)
 {
-	pair<_bool, _uint> pairResult = { false, UINT_MAX };
+	pair<_bool, _ubyte> pairResult = { false, 0 };
 	// 월드 센터를 셰도우뷰 센터로 바꿈
 	_vector vShadowViewCenter = XMVectorSetW(XMVector3Rotate(vWorldCenter, XMLoadFloat4(&m_vShadowInvDirectionalRPYQuat)), 1.f);
 
 	_float fSafeRadius = fRadius; // 인스턴싱된 객체 고려해서 좀 더 넓게 탐색
 
-	for (_uint iCascadeIndex = 0; iCascadeIndex < 3; ++iCascadeIndex) {
+	for (_uint iCascadeIndex = 0; iCascadeIndex < ENUM_CLASS(SHADOW::END); ++iCascadeIndex) {
 		const _float4* pTargetPlanes = nullptr;
 		if (iCascadeIndex == 0) {
 			pTargetPlanes = m_vNearShadowViewBoxPlane;
@@ -92,7 +92,6 @@ pair<_bool, _uint> CPipeLine::IsIn_ShadowViewFrustum(_fvector vWorldCenter, _flo
 		}
 
 		_bool bIsInside = true;
-
 		for (_uint planeIndex = 0; planeIndex < 6; ++planeIndex) {
 			_vector vPlane = XMLoadFloat4(&pTargetPlanes[planeIndex]);
 			_float fDistance = XMVectorGetX(XMPlaneDotCoord(vPlane, vShadowViewCenter));
@@ -103,8 +102,7 @@ pair<_bool, _uint> CPipeLine::IsIn_ShadowViewFrustum(_fvector vWorldCenter, _flo
 		}
 		if (true == bIsInside) {
 			pairResult.first = true;
-			pairResult.second = iCascadeIndex;
-			break;
+			pairResult.second |= 1 << iCascadeIndex;
 		}
 	}
 	return pairResult;
@@ -161,9 +159,21 @@ HRESULT CPipeLine::Ready_Shadow_Light(const _float4& vShadowDirRPYQuat)
 	return S_OK;
 }
 
-HRESULT CPipeLine::Bind_Shadow_Resource(CShader* pShader, const _char* pConstantName, D3DTS eType, _uint iShadowBoxIndex) const
+HRESULT CPipeLine::Bind_Shadow_Resource(CShader* pShader, const _char* pConstantName, D3DTS eType, SHADOW eShadowType) const
 {
-	return pShader->Bind_Matrix(pConstantName, &m_ShadowTransformStateMatrices[iShadowBoxIndex][ENUM_CLASS(eType)]);
+	_uint iPass = UINT_MAX;
+	if (0 < ((_ubyte)eShadowType | (_ubyte)SHADOW::SHADOW_NEAR)) {
+		iPass = 0;
+	}
+	else if (0 < ((_ubyte)eShadowType | (_ubyte)SHADOW::SHADOW_MIDDLE)) {
+		iPass = 1;
+	}
+	else if (0 < ((_ubyte)eShadowType | (_ubyte)SHADOW::SHADOW_FAR)) {
+		iPass = 2;
+	}
+	assert(iPass != UINT_MAX);
+
+	return pShader->Bind_Matrix(pConstantName, &m_ShadowTransformStateMatrices[iPass][ENUM_CLASS(eType)]);
 }
 
 const _float4x4* CPipeLine::Get_ShadowMatricesPtr(_uint iShadowBoxIndex)

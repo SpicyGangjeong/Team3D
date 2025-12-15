@@ -724,7 +724,7 @@ _bool CGameInstance::IsIn_LocalFrustum(_fvector vLocalPos, _float fRadius)
 	return m_pPipeLine->IsIn_LocalFrustum(vLocalPos, fRadius);
 }
 
-pair<_bool, _uint> CGameInstance::IsIn_ShadowViewFrustum(_fvector vWorldCenter, _float fRadius)
+pair<_bool, _ubyte> CGameInstance::IsIn_ShadowViewFrustum(_fvector vWorldCenter, _float fRadius)
 {
 	return m_pPipeLine->IsIn_ShadowViewFrustum(vWorldCenter, fRadius);
 }
@@ -754,9 +754,9 @@ HRESULT CGameInstance::Ready_Shadow_Light(const _float4& vShadowDirRPYQuat)
 	return m_pPipeLine->Ready_Shadow_Light(vShadowDirRPYQuat);
 }
 
-HRESULT CGameInstance::Bind_Shadow_Resource(CShader* pShader, const _char* pConstantName, D3DTS eType, _uint iShadowBoxIndex) const
+HRESULT CGameInstance::Bind_Shadow_Resource(CShader* pShader, const _char* pConstantName, D3DTS eType, SHADOW eShadowType) const
 {
-	return m_pPipeLine->Bind_Shadow_Resource(pShader, pConstantName, eType, iShadowBoxIndex);
+	return m_pPipeLine->Bind_Shadow_Resource(pShader, pConstantName, eType, eShadowType);
 }
 
 const _float4x4* CGameInstance::Get_ShadowMatricesPtr(_uint iShadowBoxIndex)

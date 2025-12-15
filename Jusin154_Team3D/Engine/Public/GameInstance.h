@@ -139,14 +139,14 @@ public:
 	void Transform_Frustum_ToLocalSpace(_fmatrix WorldMatrixInverse);
 	_bool IsIn_WorldFrustum(_fvector vWorldPos, _float fRadius);
 	_bool IsIn_LocalFrustum(_fvector vLocalPos, _float fRadius);
-	pair<_bool, _uint> IsIn_ShadowViewFrustum(_fvector vWorldCenter, _float fRadius);
+	pair<_bool, _ubyte> IsIn_ShadowViewFrustum(_fvector vWorldCenter, _float fRadius);
 	HRESULT Bind_CascadeSplitRatio(class CShader* pShader, const _char* pConstantName, _bool bNear);
 	HRESULT Bind_CascadeBias(class CShader* pShader, const _char* pConstantName);
 	HRESULT Bind_GlobalSRV(class CShader* pShader, const _tchar* wszKeyGlobalSRV, const _char* pConstantName);
 	HRESULT Load_GlobalSRV(const _tchar* wszKeyGlobalSRV, filesystem::path pathSRVFolder);
 
 	HRESULT Ready_Shadow_Light(const _float4& vShadowDirRPYQuat);
-	HRESULT Bind_Shadow_Resource(class CShader* pShader, const _char* pConstantName, D3DTS eType, _uint iShadowBoxIndex) const;
+	HRESULT Bind_Shadow_Resource(class CShader* pShader, const _char* pConstantName, D3DTS eType, SHADOW eShadowType) const;
 	const _float4x4* Get_ShadowMatricesPtr(_uint iShadowBoxIndex);
 	_float  Get_ShadowBoxFar(_uint iShadowBoxIndex);
 #pragma endregion
