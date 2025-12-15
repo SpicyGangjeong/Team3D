@@ -679,9 +679,14 @@ HRESULT CGameInstance::Add_RenderGroup(RENDER eRenderGroup, CGameObject* pRender
 	return m_pRenderer->Add_RenderGroup(eRenderGroup, pRenderObject);
 }
 
-void CGameInstance::Render_PreShadow()
+void CGameInstance::Render_PreShadow(const _float4x4& ViewMatrix, const _float4x4& ProjMatrix)
 {
-	return m_pRenderer->Render_PreShadow();
+	return m_pRenderer->Render_PreShadow(ViewMatrix, ProjMatrix);
+}
+
+HRESULT CGameInstance::Bind_PreShadowMatrix(CShader* pShader, const _char* pConstants, D3DTS eType)
+{
+	return m_pRenderer->Bind_PreShadowMatrix(pShader, pConstants, eType);
 }
 
 void CGameInstance::Set_Transform(D3DTS eState, _fmatrix TransformStateMatrix)

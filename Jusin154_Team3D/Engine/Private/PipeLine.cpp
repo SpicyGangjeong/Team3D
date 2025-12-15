@@ -171,6 +171,9 @@ HRESULT CPipeLine::Bind_Shadow_Resource(CShader* pShader, const _char* pConstant
 	else if (0 < ((_ubyte)eShadowType & (_ubyte)SHADOW::SHADOW_FAR)) {
 		iPass = 2;
 	}
+	else if (0 < ((_ubyte)eShadowType & (_ubyte)SHADOW::SHADOW_PRE)) {
+		return m_pGameInstance->Bind_PreShadowMatrix(pShader, pConstantName, eType);
+	}
 	assert(iPass != UINT_MAX);
 
 	return pShader->Bind_Matrix(pConstantName, &m_ShadowTransformStateMatrices[iPass][ENUM_CLASS(eType)]);

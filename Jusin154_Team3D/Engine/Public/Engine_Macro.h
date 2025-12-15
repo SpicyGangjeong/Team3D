@@ -100,6 +100,9 @@
 #define			SSAO_SAMPLE_NUMBER			64
 #define			TIMER_SHORT_LERP			0.16f
 
+constexpr unsigned int g_iPreShadowWidth		= 16384;
+constexpr unsigned int g_iPreShadowHeight		= 9216;
+
 constexpr unsigned int g_iMaxShadowWidth		= 16384;
 constexpr unsigned int g_iMaxShadowHeight		= 9216;
 //constexpr unsigned int g_iMaxShadowWidth		= 4096;

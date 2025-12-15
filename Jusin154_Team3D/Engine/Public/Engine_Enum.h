@@ -15,7 +15,9 @@ enum class SHADOW : _ubyte {
 		SHADOW_NEAR		= 1 << 0
 	,	SHADOW_MIDDLE	= 1 << 1
 	,	SHADOW_FAR		= 1 << 2
-	,	END = 3
+	,	SHADOW_PRE		= 1 << 3
+////////////////
+	,	END = 3 // 케스케이드 셰도우 한정
 };
 
 

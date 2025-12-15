@@ -13,7 +13,8 @@ private:
 public:
 	void	Render();
 	HRESULT Add_RenderGroup(RENDER eRenderGroup, class CGameObject* pRenderObject);
-	void Render_PreShadow();
+	void Render_PreShadow(const _float4x4& ViewMatrix, const _float4x4& ProjMatrix);
+	HRESULT Bind_PreShadowMatrix(class CShader* pShader, const _char* pConstants, D3DTS eType);
 
 #ifdef _DEBUG
 private:
@@ -48,8 +49,8 @@ private:
 	ID3D11Texture2D*			m_pSSAO_NoiseTexture = { nullptr };
 	ID3D11Buffer*				m_pGlobalStaticCB = { nullptr };
 
-	_float						m_PreShadowFar = {};
-	_float4x4					m_PreShadowMatrices[ENUM_CLASS(D3DTS::END)] = {};
+	_float4x4					m_PreShadowView = {};
+	_float4x4					m_PreShadowProj = {};
 
 	/* TunningParam  */
 	_int	m_iToneMappingType = { 0 };

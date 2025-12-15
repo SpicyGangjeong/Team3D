@@ -56,17 +56,14 @@ void CRenderer::Render()
 #endif
 }
 
-void CRenderer::Render_PreShadow()
+void CRenderer::Render_PreShadow(const _float4x4& ViewMatrix, const _float4x4& ProjMatrix)
 {
 	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_PreShadow"), m_pPreShadowDSV))) {
 		return;
 	}
 
-	const _float4x4* pMatrices = m_pGameInstance->Get_ShadowMatricesPtr(0);
-	m_PreShadowFar = m_pGameInstance->Get_ShadowBoxFar(0);
-	for (int i = 0; i < ENUM_CLASS(D3DTS::END); ++i) {
-		m_PreShadowMatrices[i] = pMatrices[i];
-	}
+	m_PreShadowView = ViewMatrix;
+	m_PreShadowProj = ProjMatrix;
 
 	D3D11_VIEWPORT			ViewPortOldDesc;
 	D3D11_VIEWPORT			ViewPortDesc;
@@ -76,8 +73,8 @@ void CRenderer::Render_PreShadow()
 	{
 		ViewPortDesc.TopLeftX = 0;
 		ViewPortDesc.TopLeftY = 0;
-		ViewPortDesc.Width		= (_float)g_iMaxShadowWidth;
-		ViewPortDesc.Height		= (_float)g_iMaxShadowHeight;
+		ViewPortDesc.Width		= (_float)g_iPreShadowWidth;
+		ViewPortDesc.Height		= (_float)g_iPreShadowHeight;
 		ViewPortDesc.MinDepth = 0.f;
 		ViewPortDesc.MaxDepth = 1.f;
 	}
@@ -87,7 +84,7 @@ void CRenderer::Render_PreShadow()
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::PRESHADOW)])
 	{
 		if (nullptr != pRenderObject) {
-			if (FAILED(pRenderObject->Render_Shadow(SHADOW::END))) {
+			if (FAILED(pRenderObject->Render_Shadow(SHADOW::SHADOW_PRE))) {
 				assert(false);
 			}
 		}
@@ -101,6 +98,20 @@ void CRenderer::Render_PreShadow()
 	}
 
 	m_pContext->RSSetViewports(iNumViewOldPort, &ViewPortOldDesc);
+}
+
+HRESULT CRenderer::Bind_PreShadowMatrix(class CShader* pShader, const _char* pConstants, D3DTS eType)
+{
+	if (D3DTS::VIEW == eType) {
+		if (FAILED(pShader->Bind_Matrix(pConstants, &m_PreShadowView))) {
+			return E_FAIL;
+		}
+	} else if (D3DTS::PROJ == eType) {
+		if (FAILED(pShader->Bind_Matrix(pConstants, &m_PreShadowProj))) {
+			return E_FAIL;
+		}
+	}
+	return S_OK;
 }
 
 void CRenderer::Render_Occlusion()
@@ -385,13 +396,10 @@ void CRenderer::Render_Combined()
 		if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShader, "g_LightProjMatrix_FAR", D3DTS::PROJ, SHADOW::SHADOW_FAR))) {
 			return;
 		}
-		if (FAILED(m_pShader->Bind_RawValue("g_fPreShadowFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
+		if (FAILED(m_pShader->Bind_Matrix("g_PreShadowLightViewMatrix", &m_PreShadowView))) {
 			return;
 		}
-		if (FAILED(m_pShader->Bind_Matrix("g_PreShadowLightViewMatrix", &m_PreShadowMatrices[ENUM_CLASS(D3DTS::VIEW)]))) {
-			return;
-		}
-		if (FAILED(m_pShader->Bind_Matrix("g_PreShadowLightProjMatrix", &m_PreShadowMatrices[ENUM_CLASS(D3DTS::PROJ)]))) {
+		if (FAILED(m_pShader->Bind_Matrix("g_PreShadowLightProjMatrix", &m_PreShadowProj))) {
 			return;
 		}
 	}

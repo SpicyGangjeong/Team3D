@@ -11,7 +11,6 @@ float g_fFar;
 float g_fShadowFar_NEAR;
 float g_fShadowFar_MIDDDLE;
 float g_fShadowFar_FAR;
-float g_fPreShadowFar;
 float g_fCascadeSplitRatioNear;
 float g_fCascadeSplitRatioFar;
 uint g_iMaxShadowWidth;
@@ -628,12 +627,7 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     // Middle -> Far 경계 부드럽게
     fVisibilityDynamic = lerp(fVisibilityDynamic, fVisibility_Dynamic_Far, fCascadeBlend_MiddleToFar);
 
-    // PreShadow(Static)로 넘어가는 구간(원하는 대로 조절)
-    float fStaticShadowBlendStartRatio = 0.70f;
-    float fStaticShadowBlendEndRatio = 0.95f;
-
-    float fStaticShadowBlendWeight = smoothstep(fStaticShadowBlendStartRatio, fStaticShadowBlendEndRatio, fDepthRatio);
-    float fVisibilityCombined = lerp(fVisibilityDynamic, fVisibility_Static, fStaticShadowBlendWeight);
+    float fVisibilityCombined = min(fVisibility_Static, fVisibilityDynamic);
 
     // 최소 밝기
     float fMinShadowBrightness = 0.25f;

@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Light_Main.h"
 #include "GameInstance.h"
+#include "Layer.h"
 
 CLight_Main::CLight_Main(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -22,13 +23,9 @@ HRESULT CLight_Main::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg))){
 		return E_FAIL;
 	}
-
-
 	if (FAILED(Ready_Components())){
 		return E_FAIL;
 	}
-
-	m_pTransformCom->Set_State(STATE::LOOK, XMVectorSet(1.f, -1.f, 1.f, 0.f));
 
 	return S_OK;
 }
@@ -43,11 +40,7 @@ void CLight_Main::Priority_Update(_float fTimeDelta)
 void CLight_Main::Update(_float fTimeDelta)
 {
 #ifdef _DEBUG
-	GUI::Begin("LIGHT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
-	if (GUI::CollapsingHeader("Main_Light")) {
-		m_pLightCom->Describe_Entity();
-	}
-	GUI::End();
+	Describe_Entity();
 #endif // _DEBUG
 }
 
@@ -60,10 +53,51 @@ HRESULT CLight_Main::Render()
 	return S_OK;
 }
 
+HRESULT CLight_Main::Capture_PreShadow()
+{
+	_vector vRotq = m_pTransformCom->Get_QuarternionVector();
+	_uint iLevel = NEXT_LEVEL;
+	CLayer* pLayer = m_pGameInstance->Get_Layer(iLevel, LAYER_BACKGROUND);
+	assert(nullptr != pLayer);
+
+	const list<CGameObject*>* pObjects = pLayer->Get_Objects();
+	for (auto& pObject : *pObjects) {
+		if (FAILED(m_pGameInstance->Add_RenderGroup(RENDER::PRESHADOW, pObject))) {
+			assert(false);
+		}
+	}
+	vector<_float3> vNeededPos = {};
+	vNeededPos.reserve(12);
+	{ 
+		// 외곽이 더 많아지면 많아질수록 더 정밀한 경계가 가능
+		// 하지만 더 실제보다 멀리 외곽을 두르면 필요한 것보다 더 많이 찍게 됨
+		// 결국 딱 맞춰서 찍는게 제일 중요함
+		vNeededPos.emplace_back(_float3(-112, 155, 362));
+		vNeededPos.emplace_back(_float3(- 188, 10, 476));
+		vNeededPos.emplace_back(_float3(- 571, 19, 476));
+		vNeededPos.emplace_back(_float3(- 326, -64, 480));
+		vNeededPos.emplace_back(_float3(569, 77, 250));
+		vNeededPos.emplace_back(_float3(320, -236, 360));
+		vNeededPos.emplace_back(_float3(570, 277, -277));
+		vNeededPos.emplace_back(_float3(570, 176, -527));
+		vNeededPos.emplace_back(_float3(- 108, -64, -1146));
+		vNeededPos.emplace_back(_float3(- 824, 128, -533));
+		vNeededPos.emplace_back(_float3(- 826, 145, -150));
+		vNeededPos.emplace_back(_float3(- 256, -92, -414));
+	}
+	_matrix xmViewMatrix = m_pTransformCom->Get_WorldMatrixInv();
+	_float4x4 ViewMatrix = {}; XMStoreFloat4x4(&ViewMatrix, xmViewMatrix);
+	_float4x4 ProjMatrix = {}; XMStoreFloat4x4(&ProjMatrix, Get_OffCenterProjMatrix(xmViewMatrix, vNeededPos));
+
+	m_pGameInstance->Render_PreShadow(ViewMatrix, ProjMatrix);
+	return S_OK;
+}
+
 HRESULT CLight_Main::Ready_Components()
 {
 	__super::Ready_Components(nullptr);
 
+	m_pTransformCom->LookAt(XMVectorSet(1.f, -1.f, 1.f, 1.f));
 	LIGHT_DESC			LightDesc{};
 
 	LightDesc.eType = LIGHT::DIRECTIONAL;
@@ -94,6 +128,33 @@ HRESULT CLight_Main::Bind_ShaderResources()
 {
 	return S_OK;
 }
+
+_matrix CLight_Main::Get_OffCenterProjMatrix(_fmatrix ViewMatrix, vector<_float3>& WorldPositions)
+{
+	_float fMinX = FLT_MAX;
+	_float fMinY = FLT_MAX;
+	_float fMinZ = FLT_MAX;
+	_float fMaxX = -FLT_MAX;
+	_float fMaxY = -FLT_MAX;
+	_float fMaxZ = -FLT_MAX;
+
+	_uint iPosNum = (_uint)WorldPositions.size();
+	for (_uint iIndexPoint = 0; iIndexPoint < iPosNum; ++iIndexPoint)
+	{
+		_vector vLightViewPos = XMVector4Transform(XMVectorSetW(XMLoadFloat3(&WorldPositions[iIndexPoint]), 1.f), ViewMatrix);
+		
+		_float x = XMVectorGetX(vLightViewPos);
+		_float y = XMVectorGetY(vLightViewPos);
+		_float z = XMVectorGetZ(vLightViewPos);
+
+		fMinX = min(fMinX, x);  fMaxX = max(fMaxX, x);
+		fMinY = min(fMinY, y);  fMaxY = max(fMaxY, y);
+		fMinZ = min(fMinZ, z);  fMaxZ = max(fMaxZ, z);
+	}
+
+	return XMMatrixOrthographicOffCenterLH(fMinX, fMaxX, fMinY, fMaxY, fMinZ, fMaxZ);
+}
+
 
 CLight_Main* CLight_Main::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
@@ -131,6 +192,20 @@ void CLight_Main::Free()
 
 void CLight_Main::Describe_Entity()
 {
+	GUI::Begin("LIGHT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
+	if (GUI::CollapsingHeader("Main_Light")) {
+		if (GUI::Button("Capture_PreShadow") || m_pGameInstance->Key_Down(DIK_F12)) {
+			if (FAILED(Capture_PreShadow())) {
+				assert(false);
+			}
+		}
+		m_pLightCom->Describe_Entity();
+		if (GUI::Button("Sync_CamToLight")) {
+			m_pTransformCom->Set_WorldMatrix(m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW_INV));
+			m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+		}
+	}
+	GUI::End();
 }
 
 #endif // _DEBUG
