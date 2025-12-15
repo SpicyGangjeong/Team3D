@@ -62,7 +62,15 @@ HRESULT CRenderer::Ready_ShadowDepthStencilView(_uint iSizeX, _uint iSizeY)
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pDevice->CreateDepthStencilView(pShadowDepthStencilTexture, nullptr, &m_pShadowDSV))) {
+	if (FAILED(m_pDevice->CreateDepthStencilView(pShadowDepthStencilTexture, nullptr, &m_pShadowDSV_NEAR))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pDevice->CreateDepthStencilView(pShadowDepthStencilTexture, nullptr, &m_pShadowDSV_MIDDLE))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pDevice->CreateDepthStencilView(pShadowDepthStencilTexture, nullptr, &m_pShadowDSV_FAR))) {
 		return E_FAIL;
 	}
 	if (FAILED(m_pDevice->CreateDepthStencilView(pShadowDepthStencilTexture, nullptr, &m_pPreShadowDSV))) {
@@ -187,6 +195,16 @@ HRESULT CRenderer::Initialize()
 		}
 		/* Target_Shadow_Near */
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Shadow_Near"), (_uint)g_iMaxShadowWidth, (_uint)g_iMaxShadowHeight,
+			DXGI_FORMAT_R32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)))) {
+			return E_FAIL;
+		}
+		/* Target_Shadow_Middle */
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Shadow_Middle"), (_uint)g_iMaxShadowWidth, (_uint)g_iMaxShadowHeight,
+			DXGI_FORMAT_R32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)))) {
+			return E_FAIL;
+		}
+		/* Target_Shadow_Far */
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Shadow_Far"), (_uint)g_iMaxShadowWidth, (_uint)g_iMaxShadowHeight,
 			DXGI_FORMAT_R32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f)))) {
 			return E_FAIL;
 		}
@@ -371,9 +389,18 @@ HRESULT CRenderer::Initialize()
 		}
 
 		/* MRT_Shadow */
-		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Shadow"), TEXT("Target_Shadow_Near")))) {
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Shadow_Near"), TEXT("Target_Shadow_Near")))) {
 			return E_FAIL;
 		}
+		/* MRT_Shadow_Middle */
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Shadow_Middle"), TEXT("Target_Shadow_Middle")))) {
+			return E_FAIL;
+		}
+		/* MRT_Shadow_Far */
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Shadow_Far"), TEXT("Target_Shadow_Far")))) {
+			return E_FAIL;
+		}
+
 		/* MRT_PreShadow */
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_PreShadow"), TEXT("Target_PreShadow")))) {
 			return E_FAIL;
@@ -508,7 +535,9 @@ void CRenderer::Free()
 	SAFE_RELEASE(m_pSSAO_NoiseTexture);
 	SAFE_RELEASE(m_pSSAO_NoiseSRV);
 	SAFE_RELEASE(m_pPreShadowDSV);
-	SAFE_RELEASE(m_pShadowDSV);
+	SAFE_RELEASE(m_pShadowDSV_NEAR);
+	SAFE_RELEASE(m_pShadowDSV_MIDDLE);
+	SAFE_RELEASE(m_pShadowDSV_FAR);
 	SAFE_RELEASE(m_pShader);
 	SAFE_RELEASE(m_pLastColorShader);
 	SAFE_RELEASE(m_pWeightBlendShader);

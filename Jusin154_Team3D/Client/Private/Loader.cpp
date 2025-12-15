@@ -1501,9 +1501,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 			Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
 			Desc.fContactOffset = { 0.05f };
-			Desc.vhalfGeometryInfo = { 0.35f, 0.75f, 0.15f };
-			Desc.fDensity = 10.f;
-			PSX::PxTransform pxPivotTransform = PSX::PxTransform(PSX::PxVec3(0.f, 0.f, 0.f));
+			Desc.vhalfGeometryInfo = { 0.35f, 0.65f, 0.15f };
+			Desc.fDensity = 1.f;
+			PSX::PxTransform pxPivotTransform = PSX::PxTransform(PSX::PxVec3(0.f, 1.f, 0.f));
 			Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
 			Desc.vLocalTranslation = { 0.5f, 0.f, 0.f };
 
