@@ -2,6 +2,7 @@
 #include "Goblin_Spector.h"
 
 #include "GameInstance.h"
+#include "InfoInstance.h"
 #include "Goblin.h"
 #include "Effect_Container.h"
 #include "Goblin_BattleAxe.h"
@@ -37,6 +38,8 @@ HRESULT CGoblin_Spector::Initialize(void* pArg)
 
 	if (FAILED(Ready_Parts()))
 		return E_FAIL;
+
+	m_pInfoInstance->Deregist_ActiveMonster(this);
 
 	m_pGoblin = dynamic_cast<CGoblin*>(m_pOwner);
 	SAFE_ADDREF(m_pGoblin);
@@ -212,10 +215,6 @@ HRESULT CGoblin_Spector::Ready_Components()
 		return E_FAIL;
 	}
 
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_GOBLIN"), (CComponent**)&m_pStat))) {
-		return E_FAIL;
-	}
-
 	CPartObject::PARTOBJECT_DESC PartsDesc{};
 
 	PartsDesc.pParentTransform = m_pTransformCom;
@@ -281,36 +280,6 @@ HRESULT CGoblin_Spector::Bind_ShaderResources()
 	return S_OK;
 }
 
-HRESULT CGoblin_Spector::Render_Disolve()
-{
-	if (FLT_EPSILON3 * 10 < m_fDisolveTime)
-	{
-		_bool bDisolve = true;
-		_float fDisolveAmount = 0.1f;
-		_float fDisolveEdgeWidth = 0.1f;
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_bDisolve", &bDisolve, sizeof(_bool)))) {
-			return E_FAIL;
-		}
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_fDisolveRatio", &m_fDisolveTime, sizeof(_float)))) {
-			return E_FAIL;
-		}
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_fDisolveAmount", &fDisolveAmount, sizeof(_float)))) {
-			return E_FAIL;
-		}
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_fDisolveEdgeWidth", &fDisolveEdgeWidth, sizeof(_float)))) {
-			return E_FAIL;
-		}
-		if (FAILED(m_pGameInstance->Bind_GlobalSRV(m_pShaderCom, TEXT("GLOBAL_DISOLVE_NOISE_05"), "g_DeadDisolveTexture"))) {
-			return E_FAIL;
-		}
-		if (FAILED(m_pGameInstance->Bind_GlobalSRV(m_pShaderCom, TEXT("GLOBAL_DISOLVE_BURN_VERTICAL"), "g_DeadDisolveBurnTexture"))) {
-			return E_FAIL;
-		}
-	}
-	
-	return S_OK;
-}
-
 CGoblin_Spector* CGoblin_Spector::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CGoblin_Spector* pInstance = new CGoblin_Spector(pDevice, pContext);
@@ -348,11 +317,12 @@ void CGoblin_Spector::Free()
 
 void CGoblin_Spector::Describe_Entity()
 {
-
-	GUI::Begin("GoblinSpector");
-	_float3 vScale = m_pTransformCom->Get_Scale();
-	GUI::DragFloat3("Scale", (_float*)&vScale);
-
+	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
+	GUI::PushItemWidth(80);
+	if (GUI::CollapsingHeader("GoblinSpector")) {
+		_float3 vScale = m_pTransformCom->Get_Scale();
+		GUI::DragFloat3("Scale", (_float*)&vScale);
+	}
 	GUI::End();
 }
 

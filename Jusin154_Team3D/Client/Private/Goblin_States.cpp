@@ -346,40 +346,39 @@ void CGoblin::Behavior_BlinkEnter()
 
 	pairAnimInfo = m_Animation[STATEANIM::BLINK_START];
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
+	m_bDisolve = true;
 
-	Add_Event(pairAnimInfo.first,
+	/*Add_Event(pairAnimInfo.first,
 		[this]() {
-			m_bVisible = false;
-			m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::TP)] = m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::TP)];
-			_vector vPlayerPos = XMLoadFloat4(&m_vTargetPos);
-			_vector vPlayerLook = m_pTarget->Get_Component<CTransform>()->Get_State(STATE::LOOK);
-			vPlayerLook = XMVectorSetY(vPlayerLook, 1.f);
-			vPlayerLook = XMVector3Normalize(vPlayerLook);
-
-			_float randAngleDeg = m_pGameInstance->Real_Random_Float(-60.f, 60.f);
-			_float randAngleRad = XMConvertToRadians(randAngleDeg);
-
-			_matrix rot = XMMatrixRotationY(randAngleRad);
-			_vector offsetDir = XMVector3TransformNormal(vPlayerLook, rot);
-
-			_float randDist = m_pGameInstance->Real_Random_Float(5.f, 5.5f);
-
-			_vector vFinalPos = vPlayerPos + offsetDir * randDist;
-			vFinalPos = XMVectorSetY(vFinalPos, XMVectorGetY(vPlayerPos) + 1.f);
-
-			m_pCharacter_Controller->Set_Position(vFinalPos); }
-	, 0.99f);
+			m_pEffectPool->Use_Skill(SKILL_TYPE::GOBILN_TELEPORT, this);
+		}, 0.1f);*/
 }
 
 HRESULT CGoblin::Behavior_BlinkExitCheck(_float fTimeDelta)
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
-	m_fTpTime += fTimeDelta;
-	if (m_fTpTime >= 1.5f)
+	if (!m_bDisolve && iCurrAnimIndex != m_Animation[STATEANIM::BLINK].first)
 	{
-		m_bVisible = true;
-		m_fTpTime = 0.f;
+		m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::TP)] = m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::TP)];
+		_vector vPlayerPos = XMLoadFloat4(&m_vTargetPos);
+		_vector vPlayerLook = m_pTarget->Get_Component<CTransform>()->Get_State(STATE::LOOK);
+		vPlayerLook = XMVectorSetY(vPlayerLook, 0.f);
+		vPlayerLook = XMVector3Normalize(vPlayerLook);
+
+		_float randAngleDeg = m_pGameInstance->Real_Random_Float(-60.f, 60.f);
+		_float randAngleRad = XMConvertToRadians(randAngleDeg);
+
+		_matrix rot = XMMatrixRotationY(randAngleRad);
+		_vector offsetDir = XMVector3TransformNormal(vPlayerLook, rot);
+
+		_float randDist = m_pGameInstance->Real_Random_Float(5.f, 5.5f);
+
+		_vector vFinalPos = vPlayerPos + offsetDir * randDist;
+		vFinalPos = XMVectorSetY(vFinalPos, XMVectorGetY(vPlayerPos) + 0.5f);
+
+		m_pCharacter_Controller->Set_Position(vFinalPos);
+
 		pairAnimInfo = m_Animation[STATEANIM::BLINK];
 		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f, true);
 	}

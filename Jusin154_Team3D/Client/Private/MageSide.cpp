@@ -20,6 +20,9 @@ CMageSide::CMageSide(const CMageSide& rhs)
 HRESULT CMageSide::Initialize_Prototype()
 {
 
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/MonsterPackage/GoblinMage/MageSide")))
+		return E_FAIL;
+
 	return S_OK;
 
 }
@@ -32,8 +35,7 @@ HRESULT CMageSide::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/MonsterPackage/GoblinMage/MageSide")))
+	if (FAILED(Create_Effect()))
 		return E_FAIL;
 
 

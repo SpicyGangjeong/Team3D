@@ -31,6 +31,11 @@ private:
 	CRigidBody* m_pRigidBody = { nullptr };
 	PSX::PxRigidDynamic* m_pActor = { nullptr };
 
+	_float3		m_vRadianYAngle = {};
+	_float3		m_vKinematicTimer = { 0.f, 2.f, 2.3f };
+	PSX::PxQuat m_pxStartQuat = {};
+	_float4x4	m_InitialMatrix = {};
+
 #ifdef _DEBUG
 	_bool m_bUseSelectColor = { true };
 
@@ -45,6 +50,9 @@ private:
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual HRESULT Ready_Components(void* pArg) override;
 	virtual HRESULT Bind_ShaderResources() override;
+	void Lerp_Matrix(_float fTime);
+	void Lerp_NonMatrix(_float fTime);
+	_float ClampRadian(_float fNewRadian);
 
 public:
 	static CMapElement_Door* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

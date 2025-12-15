@@ -3,6 +3,7 @@
 
 #include "GameInstance.h"
 #include "Trail.h"
+#include "Effect_Container.h"
 
 
 CTrailObject::CTrailObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -96,6 +97,67 @@ void CTrailObject::Late_Update(_float fTimeDelta)
 
 }
 
+HRESULT CTrailObject::Load_Trail(CEffect_Container::TRAIL_SAVE_INFO Trail_Save_Info,  LEVEL eLevel)
+{
+	SAFE_RELEASE(m_pDiffuse_TextureCom);
+	SAFE_RELEASE(m_pMasking_TextureCom);
+	SAFE_RELEASE(m_pNoise_TextureCom);
+	SAFE_RELEASE(m_pDistortion_TextureCom);
+
+
+	if (Trail_Save_Info.wstrDiffuseName.length() != 0)
+	{
+
+		m_strTrailDiffuseName = Trail_Save_Info.wstrDiffuseName;
+
+		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), m_strTrailDiffuseName,
+			reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom))))
+			return E_FAIL;
+	}
+
+	if (Trail_Save_Info.wstrNoiseName.length() != 0)
+	{
+
+		m_strTrailNoiseName = Trail_Save_Info.wstrNoiseName;
+
+		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), m_strTrailNoiseName,
+			reinterpret_cast<CComponent**>(&m_pNoise_TextureCom))))
+			return E_FAIL;
+	}
+
+
+	if (Trail_Save_Info.wstrMaskingName.length() != 0)
+	{
+
+		m_strTrailMaskingName = Trail_Save_Info.wstrMaskingName;
+
+		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), m_strTrailMaskingName,
+			reinterpret_cast<CComponent**>(&m_pMasking_TextureCom))))
+			return E_FAIL;
+	}
+
+
+	if (Trail_Save_Info.wstrDistortionName.length() != 0)
+	{
+
+		m_strTrailDistortionName = Trail_Save_Info.wstrDistortionName;
+
+		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), m_strTrailDistortionName,
+			reinterpret_cast<CComponent**>(&m_pDistortion_TextureCom))))
+			return E_FAIL;
+
+
+	}
+
+	m_pTrailCom->Load_Trail(Trail_Save_Info.TrailComponentDesc);
+
+	m_TrailInfo = Trail_Save_Info.TrailDesc;
+
+	m_pTrailCom->ReStructVB(m_TrailInfo.iNumVertex);
+
+	return S_OK;
+}
+
 HRESULT CTrailObject::Load_Trail(const _char* pPath, LEVEL eLevel)
 {
 	SAFE_RELEASE(m_pDiffuse_TextureCom);
@@ -140,9 +202,9 @@ HRESULT CTrailObject::Load_Trail(const _char* pPath, LEVEL eLevel)
 			return E_FAIL;
 		}
 
-		m_strTrailDiffuseName = szName;
+		m_strTrailDiffuseName = CMyTools::ToWstring(szName);
 
-		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strTrailDiffuseName),
+		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), m_strTrailDiffuseName,
 			reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom))))
 			return E_FAIL;
 	}
@@ -159,9 +221,9 @@ HRESULT CTrailObject::Load_Trail(const _char* pPath, LEVEL eLevel)
 			return E_FAIL;
 		}
 
-		m_strTrailNoiseName = szName;
+		m_strTrailNoiseName = CMyTools::ToWstring(szName);
 
-		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strTrailNoiseName),
+		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), m_strTrailNoiseName,
 			reinterpret_cast<CComponent**>(&m_pNoise_TextureCom))))
 			return E_FAIL;
 
@@ -179,9 +241,9 @@ HRESULT CTrailObject::Load_Trail(const _char* pPath, LEVEL eLevel)
 			return E_FAIL;
 		}
 
-		m_strTrailMaskingName = szName;
+		m_strTrailMaskingName = CMyTools::ToWstring(szName);
 
-		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strTrailMaskingName),
+		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), m_strTrailMaskingName,
 			reinterpret_cast<CComponent**>(&m_pMasking_TextureCom))))
 			return E_FAIL;
 	}
@@ -199,9 +261,9 @@ HRESULT CTrailObject::Load_Trail(const _char* pPath, LEVEL eLevel)
 			return E_FAIL;
 		}
 
-		m_strTrailDistortionName = szName;
+		m_strTrailDistortionName = CMyTools::ToWstring(szName);
 
-		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strTrailDistortionName),
+		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), m_strTrailDistortionName ,
 			reinterpret_cast<CComponent**>(&m_pDistortion_TextureCom))))
 			return E_FAIL;
 
@@ -252,6 +314,14 @@ void CTrailObject::Trail_Update(_fmatrix WorldMat, _float fTimeDelta)
 		return;
 
 	m_pTrailCom->Trail_Update(fTimeDelta, WorldMat);
+}
+
+void CTrailObject::Rope_Trail_Update(_fmatrix WorldMat, _fmatrix EndWorldMat, _float fTimeDelta)
+ {
+	if (m_bVisible == false)
+		return;
+
+	m_pTrailCom->Rope_Trail_Update(WorldMat, fTimeDelta, m_TrailInfo.fDamping, m_TrailInfo.fRopeLength, m_TrailInfo.fMass, EndWorldMat);
 }
 
 
@@ -521,6 +591,13 @@ HRESULT CTrailObject::Bind_ShaderResources()
 #ifdef _DEBUG
 void CTrailObject::Describe_Entity()
 {
+	if (GUI::TreeNode("Rope Trail"))
+	{
 
+		GUI::DragFloat("Dampling", &m_TrailInfo.fDamping);
+		GUI::DragFloat("Rope Length", &m_TrailInfo.fRopeLength);
+
+		GUI::TreePop();
+	}
 }
 #endif

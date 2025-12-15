@@ -58,6 +58,7 @@ public:
 	void			Set_Position(_fvector vNewPos);	// 순간이동
 	_vector			Get_Position();
 	_vector			Get_FootPosition();				// ContactOffset이 고려된 발바닥 위치( 실제보다 바닥 위치가 더 아래에 위치한다는 뜻 )
+	_vector			Get_HeadPosition();
 
 	PSX::PxControllerCollisionFlags Get_CollisionFlags();
 	void			Resize_Volume(_float fHeight);	// 높이를 수정하고 바닥에 붙임

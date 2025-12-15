@@ -64,8 +64,8 @@ HRESULT CGoblin_Mage::Initialize(void* pArg)
 	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
 	SAFE_ADDREF(m_pEffectPool);
 
-	m_pCharacter_Controller->Set_Position(XMVectorSet(-50.f, 5.f, -10.f, 1.f));
-
+	m_pCharacter_Controller->Set_Position(XMVectorSet(-52.f, 0.f, -4.f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-52.f, 0.f, -4.f, 1.f));
 
 	return S_OK;
 }
@@ -84,10 +84,6 @@ void CGoblin_Mage::Update(_float fTimeDelta)
 	__super::Update(fTimeDelta);
 
 	Play_Event();
-#ifdef _DEBUG
-	GUI::Text("%d", m_pCharacter_Controller->IsActive());
-	GUI::Text("%f %f", m_vStunTimer.x, m_vStunTimer.y);
-#endif // _DEBUG
 
 	if (true == m_pCharacter_Controller->IsActive()) {
 		{ // 세트
@@ -152,7 +148,8 @@ void CGoblin_Mage::Late_Update(_float fTimeDelta)
 	m_pGoblin_Orb->Get_Component<CTransform>()->Set_WorldMatrix(World);
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW, this);
+
+	Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius()));
 }
 
 HRESULT CGoblin_Mage::Render()
@@ -218,18 +215,15 @@ HRESULT CGoblin_Mage::Render()
 	return S_OK;
 }
 
-HRESULT CGoblin_Mage::Render_Shadow()
+HRESULT CGoblin_Mage::Render_Shadow(SHADOW eType)
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ViewMatrix", D3DTS::VIEW))) {
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ViewMatrix", D3DTS::VIEW, eType))) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ProjMatrix", D3DTS::PROJ))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", &m_pGameInstance->Get_ShadowDesc()->fFar, sizeof(_float)))) {
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ProjMatrix", D3DTS::PROJ, eType))) {
 		return E_FAIL;
 	}
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
@@ -338,7 +332,7 @@ HRESULT CGoblin_Mage::Ready_Components()
 		Desc.fContactOffset = 0.001f;
 		Desc.fMaterial = { 1.2f, 1.0f, 0.0f };
 		Desc.bAutoStepping = { false };
-		Desc.fStepOffset = { 0.001f };
+		Desc.fStepOffset = { 0.02f };
 		Desc.fRadius = 0.6f;
 		Desc.fHeight = 0.7f;
 		Desc.pCallback_HitReport = m_pCallBack_HitReport = CCallBack_Monster_HitReport::Create();
@@ -447,40 +441,42 @@ void CGoblin_Mage::Free()
 
 void CGoblin_Mage::Describe_Entity()
 {
-	GUI::Begin("Goblin");
+	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
+	GUI::PushItemWidth(80);
+	if (GUI::CollapsingHeader("Goblin_Mage")) {
 
-	GUI::Checkbox("LookAt", &m_bLookAt);
+		GUI::Checkbox("LookAt", &m_bLookAt);
 
-	string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
-	GUI::Text(AnimList.c_str());
+		string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
+		GUI::Text(AnimList.c_str());
 
-	GUI::Text("AnimTrack %.2f", m_pModelCom->Get_CurrentTrackPosition());
-	GUI::Text("AnimRatio %.2f", m_pModelCom->Get_CurrentTrackProgressRatio());
+		GUI::Text("AnimTrack %.2f", m_pModelCom->Get_CurrentTrackPosition());
+		GUI::Text("AnimRatio %.2f", m_pModelCom->Get_CurrentTrackProgressRatio());
 
-	_float4 vMomentum = {};
-	XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());
-	GUI::Text("%.2f %.2f %.2f %.2f ", vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);
+		_float4 vMomentum = {};
+		XMStoreFloat4(&vMomentum, m_pTransformCom->Get_CurrentMomentum());
+		GUI::Text("%.2f %.2f %.2f %.2f ", vMomentum.x, vMomentum.y, vMomentum.z, vMomentum.w);
 
-	_float3 Pos;
-	XMStoreFloat3(&Pos, Get_WorldPostion());
+		_float3 Pos;
+		XMStoreFloat3(&Pos, Get_WorldPostion());
 
-	if (GUI::DragFloat3("Pos", (_float*)&Pos))
-	{
-		m_pCharacter_Controller->Set_Position(XMLoadFloat3(&Pos));
+		if (GUI::DragFloat3("Pos", (_float*)&Pos))
+		{
+			m_pCharacter_Controller->Set_Position(XMLoadFloat3(&Pos));
+		}
+
+		XMFLOAT3 f3;
+		XMStoreFloat3(&f3, m_vOriginPos);
+
+		GUI::Text("Origin: %.2f, %.2f, %.2f", f3.x, f3.y, f3.z);
+
+		m_fLength = XMVectorGetX(XMVector2Length(m_pTransformCom->Get_State(STATE::POSITION) - m_vOriginPos));
+
+		GUI::Text("Length %.2f", m_fLength);
+
+		GUI::TextColored(ImVec4(1.f, 0.f, 0.f, 1.f), "Distance %.2f", m_fTargetDistance);
+
 	}
-
-	XMFLOAT3 f3;
-	XMStoreFloat3(&f3, m_vOriginPos);
-
-	GUI::Text("Origin: %.2f, %.2f, %.2f", f3.x, f3.y, f3.z);
-
-	m_fLength = XMVectorGetX(XMVector2Length(m_pTransformCom->Get_State(STATE::POSITION) - m_vOriginPos));
-
-	GUI::Text("Length %.2f", m_fLength);
-
-	GUI::TextColored(ImVec4(1.f, 0.f, 0.f, 1.f), "Distance %.2f", m_fTargetDistance);
-
-
 	GUI::End();
 }
 

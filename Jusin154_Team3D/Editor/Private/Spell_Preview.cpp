@@ -156,7 +156,6 @@ void CSpell_Preview::SizeUpX(_float fSizeX)
 	m_fSizeX = fSizeX;
 	m_fX += fX;
 	m_fLerpX += fX;
-
 }
 
 void CSpell_Preview::SizeUpY(_float fSizeY)
@@ -164,9 +163,7 @@ void CSpell_Preview::SizeUpY(_float fSizeY)
 	_float prevY = m_fY;
 	m_fSizeY = fSizeY;
 	m_fY = m_fTopY + fSizeY * 0.5f;
-
 	_float deltaY = m_fY - prevY;
-
 }
 
 HRESULT CSpell_Preview::Bind_ShaderResources()

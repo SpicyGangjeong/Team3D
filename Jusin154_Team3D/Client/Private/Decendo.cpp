@@ -25,6 +25,9 @@ CDecendo::CDecendo(const CDecendo& rhs)
 HRESULT CDecendo::Initialize_Prototype()
 {
 
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Decendo")))
+		return E_FAIL;
+
 	return S_OK;
 
 }
@@ -37,7 +40,7 @@ HRESULT CDecendo::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Decendo")))
+	if (FAILED(Create_Effect()))
 		return E_FAIL;
 
 	m_iSkillType = ENUM_CLASS(SKILL_TYPE::DESCENDO);
@@ -310,7 +313,7 @@ void CDecendo::Free()
 #ifdef _DEBUG
 void CDecendo::Describe_Entity()
 {
-	GUI::Begin("DECENDO");
+	GUI::Begin("DECENDO", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 
 	GUI::InputFloat("Speed", &m_fLinearSpeed);
 

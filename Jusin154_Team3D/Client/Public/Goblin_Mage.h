@@ -4,6 +4,7 @@
 #include "Monster.h"
 #include "CallBack_Monster_Behavior.h"
 #include "CallBack_Monster_HitReport.h"
+#include "Enemy_Detection.h"
 
 NS_BEGIN(Client)
 
@@ -27,7 +28,7 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
-	virtual HRESULT Render_Shadow() override;
+	virtual HRESULT Render_Shadow(SHADOW eType) override;
 	virtual _vector Get_LockOnPos() override;
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
@@ -36,6 +37,7 @@ public:
 private:
 	CCallBack_Monster_Behavior* m_pCallBack_Behavior = { nullptr };
 	CCallBack_Monster_HitReport* m_pCallBack_HitReport = { nullptr };
+	CEnemy_Detection* m_pDetection = { nullptr };
 
 	CCharacter_Controller* m_pCharacter_Controller = { nullptr };
 	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
@@ -73,6 +75,8 @@ private:
 	virtual void Set_Anim();
 private:
 	class CEffectPool* m_pEffectPool = { nullptr };
+
+	_bool m_bDetection = { false };
 
 	_float m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = {};
 	_float m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = { 20.f,5.f,30.f,15.f };

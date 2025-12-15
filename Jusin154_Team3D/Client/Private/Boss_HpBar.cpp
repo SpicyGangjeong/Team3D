@@ -44,7 +44,7 @@ HRESULT CBoss_HpBar::Initialize(void* pArg)
 	m_fAlpha = 0.f;
 	m_fAlphaTime = 10.f;
 	m_vNine_Slice = _float4(60.f, 155.f, 5.f, 82.f);
-	m_fMaxHp = 200.f;
+	m_fMaxHp = 0.f;
 	m_fCurrentHp = m_fMaxHp;
 	m_fDamage = 0.f;
 	SizeUpX(750.f);

@@ -288,6 +288,14 @@ _vector CCharacter_Controller::Get_FootPosition()
 	return XMVectorSet((_float)pxLVecfootPos.x, (_float)pxLVecfootPos.y, (_float)pxLVecfootPos.z, 1.f );
 }
 
+_vector CCharacter_Controller::Get_HeadPosition()
+{
+	PSX::PxExtendedVec3  pxLVecfootPos = m_pController->getFootPosition();
+	PSX::PxExtendedVec3  pxVPos = m_pController->getPosition();
+	_float pxVecDiff = (_float)(pxVPos - pxLVecfootPos).y;
+	return XMVectorSet((_float)pxVPos.x, (_float)pxVPos.y + pxVecDiff, (_float)pxVPos.z, 1.f);
+}
+
 HRESULT CCharacter_Controller::Initialize_Prototype()
 {
 	return S_OK;
@@ -429,65 +437,66 @@ void CCharacter_Controller::Free()
 #ifdef _DEBUG
 void CCharacter_Controller::Describe_Entity()
 {
-	GUI::Begin("Character_Controller");
-	GUI::Text("Gravity : %d ", m_bGravity);
-	m_pTransform->Describe_Entity();
-	GUI::TextLinkOpenURL("More details here", "https://dev-treadmill.tistory.com/158");
-	_float fContact = m_pController->getContactOffset();
-	PSX::PxVec3 vUpDirection = m_pController->getUpDirection();
-	PSX::PxExtendedVec3 vCenterPosition = m_pController->getPosition();
-	PSX::PxExtendedVec3 vFootPosition = m_pController->getFootPosition();
-	_float3 vVolume = Get_Volume();
-	_float fStepOffset = m_pController->getStepOffset();
+	GUI::PushItemWidth(80);
+	if (GUI::CollapsingHeader("Character_Controller") ){
+		GUI::Text("Gravity : %d ", m_bGravity);
+		m_pTransform->Describe_Entity();
+		GUI::TextLinkOpenURL("More details here", "https://dev-treadmill.tistory.com/158");
+		_float fContact = m_pController->getContactOffset();
+		PSX::PxVec3 vUpDirection = m_pController->getUpDirection();
+		PSX::PxExtendedVec3 vCenterPosition = m_pController->getPosition();
+		PSX::PxExtendedVec3 vFootPosition = m_pController->getFootPosition();
+		_float3 vVolume = Get_Volume();
+		_float fStepOffset = m_pController->getStepOffset();
 
-	GUI::Text("eBodyType $d", (_uint)m_eBodyType); GUIHelpMarker("Body: only box and capsule available"); 
+		GUI::Text("eBodyType $d", (_uint)m_eBodyType); GUIHelpMarker("Body: only box and capsule available");
 
-	if (GUI::SliderFloat3("UpDirection", (_float*)&vUpDirection, -1.f, 1.f)) {
-		m_pController->setUpDirection(vUpDirection.getNormalized());
-	} GUIHelpMarker("Up vector in PhysX");
-	GUI::Text("vCenterPosition %lf, %lf, %lf", vCenterPosition.x, vCenterPosition.y, vCenterPosition.z); GUIHelpMarker("Exact center of the rigid body owned by the controller");
-	GUI::Text("vFootPosition %lf, %lf, %lf", vFootPosition.x, vFootPosition.y, vFootPosition.z); GUIHelpMarker("Foot position including step offset from the body center to the ground");
+		if (GUI::SliderFloat3("UpDirection", (_float*)&vUpDirection, -1.f, 1.f)) {
+			m_pController->setUpDirection(vUpDirection.getNormalized());
+		} GUIHelpMarker("Up vector in PhysX");
+		GUI::Text("vCenterPosition %lf, %lf, %lf", vCenterPosition.x, vCenterPosition.y, vCenterPosition.z); GUIHelpMarker("Exact center of the rigid body owned by the controller");
+		GUI::Text("vFootPosition %lf, %lf, %lf", vFootPosition.x, vFootPosition.y, vFootPosition.z); GUIHelpMarker("Foot position including step offset from the body center to the ground");
 
-	if (GUI::SliderFloat("ContactOffset", &fContact, 0.01f, 10.f, "%.2f")) {
-		m_pController->setContactOffset(fContact);
-	} GUIHelpMarker("Actual contact offset in PhysX; increasing it may make the controller appear to hover");
-	if (GUI::SliderFloat("StepOffset", &fStepOffset, 0.f, 3.f, "%.2f")) {
-		m_pController->setStepOffset(fStepOffset);
-	} GUIHelpMarker("In stepped regions, the tolerance height the controller can climb.\n Capsule behaves slightly differently.");
-	
-	if (ACTOR::CAPSULE == m_eBodyType) {
-		PSX::PxCapsuleController* pController = (PSX::PxCapsuleController*)m_pController;
+		if (GUI::SliderFloat("ContactOffset", &fContact, 0.01f, 10.f, "%.2f")) {
+			m_pController->setContactOffset(fContact);
+		} GUIHelpMarker("Actual contact offset in PhysX; increasing it may make the controller appear to hover");
+		if (GUI::SliderFloat("StepOffset", &fStepOffset, 0.f, 3.f, "%.2f")) {
+			m_pController->setStepOffset(fStepOffset);
+		} GUIHelpMarker("In stepped regions, the tolerance height the controller can climb.\n Capsule behaves slightly differently.");
 
-		if (0.f != fStepOffset) {
-			switch (pController->getClimbingMode())
-			{
-			case PSX::PxCapsuleClimbingMode::eEASY:
-				if (GUI::Button("ClimbingMode : eEasy")) {
-					pController->setClimbingMode(PSX::PxCapsuleClimbingMode::eCONSTRAINED);
+		if (ACTOR::CAPSULE == m_eBodyType) {
+			PSX::PxCapsuleController* pController = (PSX::PxCapsuleController*)m_pController;
+
+			if (0.f != fStepOffset) {
+				switch (pController->getClimbingMode())
+				{
+				case PSX::PxCapsuleClimbingMode::eEASY:
+					if (GUI::Button("ClimbingMode : eEasy")) {
+						pController->setClimbingMode(PSX::PxCapsuleClimbingMode::eCONSTRAINED);
+					}
+					break;
+				case PSX::PxCapsuleClimbingMode::eCONSTRAINED:
+					if (GUI::Button("ClimbingMode : eConstrained")) {
+						pController->setClimbingMode(PSX::PxCapsuleClimbingMode::eEASY);
+					}
+					break;
+				default:
+					break;
 				}
-				break;
-			case PSX::PxCapsuleClimbingMode::eCONSTRAINED:
-				if (GUI::Button("ClimbingMode : eConstrained")) {
-					pController->setClimbingMode(PSX::PxCapsuleClimbingMode::eEASY);
-				}
-				break;
-			default:
-				break;
+				GUIHelpMarker("A capsule is affected by its lower sphere and tends to generate an up vector on steps.\nIn eEASY, the up vector is combined with the step offset, allowing easier climbing; in eCONSTRAINED, the up vector is removed during step detection and only the step offset is used.");
 			}
-			GUIHelpMarker("A capsule is affected by its lower sphere and tends to generate an up vector on steps.\nIn eEASY, the up vector is combined with the step offset, allowing easier climbing; in eCONSTRAINED, the up vector is removed during step detection and only the step offset is used.");
 		}
-	}
-	GUI::Text("%.1f", m_fCurrentSlopeDegree);
-	GUI::Text("%.1f", m_fWalkableSlopeDegree); GUI::SameLine(); if (GUI::SliderFloat("m_fWalkableSlopeDegree", &m_fWalkableSlopeDegree, 0.0f, 90.f)) {
-		m_pController->setSlopeLimit(cosf(XMConvertToRadians(m_fWalkableSlopeDegree)));
-	}
-	GUI::DragFloat("m_vAccHeight.w", &m_vAccHeight.w, 0.01f, 0.f, 1.f);
-	GUI::SliderFloat("m_fGravity_Multiplier", &m_fGravity, 0.0f, 3.f);
-	if (GUI::SliderFloat3("Volume", (_float*)&vVolume, 0.1f, 10.f, "%.2f")) {
-		Modify_Volume(vVolume);
-	}GUIHelpMarker("Box uses vSize; Capsule uses x->fRadius, y->fHeight.\nThe capsule's fHeight is likely the distance from the lower sphere center to the upper sphere center.");
+		GUI::Text("%.1f", m_fCurrentSlopeDegree);
+		GUI::Text("%.1f", m_fWalkableSlopeDegree); GUI::SameLine(); if (GUI::SliderFloat("m_fWalkableSlopeDegree", &m_fWalkableSlopeDegree, 0.0f, 90.f)) {
+			m_pController->setSlopeLimit(cosf(XMConvertToRadians(m_fWalkableSlopeDegree)));
+		}
+		GUI::DragFloat("m_vAccHeight.w", &m_vAccHeight.w, 0.01f, 0.f, 1.f);
+		GUI::SliderFloat("m_fGravity_Multiplier", &m_fGravity, 0.0f, 3.f);
+		if (GUI::SliderFloat3("Volume", (_float*)&vVolume, 0.1f, 10.f, "%.2f")) {
+			Modify_Volume(vVolume);
+		}GUIHelpMarker("Box uses vSize; Capsule uses x->fRadius, y->fHeight.\nThe capsule's fHeight is likely the distance from the lower sphere center to the upper sphere center.");
 
-	GUI::End();
+	}
 }
 
 #endif // _DEBUG

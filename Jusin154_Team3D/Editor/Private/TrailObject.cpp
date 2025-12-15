@@ -92,9 +92,7 @@ void CTrailObject::Late_Update(_float fTimeDelta)
 	if (m_TrailInfo.isOnlyBlur == true)
 		return;
 
-	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
-		m_pGameInstance->Add_RenderGroup(m_TrailInfo.eRenderOrder, this);
-	}
+	m_pGameInstance->Add_RenderGroup(m_TrailInfo.eRenderOrder, this);
 
 }
 
@@ -114,6 +112,15 @@ void CTrailObject::Trail_Update(_fmatrix WorldMat, _float fTimeDelta)
 
 	m_pTrailCom->Trail_Update(fTimeDelta, WorldMat);
 }
+
+void CTrailObject::Rope_Trail_Update(_fmatrix WorldMat, _fmatrix EndWorldMat, _float fTimeDelta)
+{
+	if (m_bVisible == false)
+		return;
+
+	m_pTrailCom->Rope_Trail_Update(WorldMat, fTimeDelta, m_TrailInfo.fDamping, m_TrailInfo.fRopeLength, m_TrailInfo.fMass, EndWorldMat);
+}
+
 
 #ifdef _DEBUG
 
@@ -487,7 +494,7 @@ void CTrailObject::Free()
 void CTrailObject::Describe_Entity()
 {
 
-	const char* pRenderNames[] = { "PRIORITY" , "SHADOW", "NONBLEND", "DECAL", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" ,"BLOOM" , "UI", "OCCLUSION"  , "PRESHADOW" , "UI_OVERLAY"};
+	const char* pRenderNames[] = { "PRIORITY" , "SHADOW_NEAR", "NONBLEND", "DECAL", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" ,"BLOOM" , "UI", "OCCLUSION"  , "PRESHADOW" , "UI_OVERLAY"};
 	const char* pEffectType[] = { "EFFECT" , "TRAIL" };
 	const char* pShaderPass[] = { "DEFAULT" , "SCISSOR" , "UI" , "UVMOVE" , "TRAIL" , "TRAIL_BLEND" , "TRAILWB_FOR_BLEND" , "TRAIL_BLUR",  "TRAIL_BLOOM" };
 	const char* pBloomType[] = { "NONE" , "BASIC" , "MUILTY" };
@@ -529,7 +536,17 @@ void CTrailObject::Describe_Entity()
 		GUI::Checkbox("Distortion", &m_TrailInfo.isDistortion);
 		GUI::Checkbox("Bloom", &m_TrailInfo.isBloom);
 
+
 		GUI::ColorEdit4("MixColor", (_float*)&m_TrailInfo.vColor);
+
+		if (GUI::TreeNode("Rope Trail"))
+		{
+
+			GUI::DragFloat("Dampling", &m_TrailInfo.fDamping);
+			GUI::DragFloat("Rope Length", &m_TrailInfo.fRopeLength);
+			GUI::DragFloat("Mass", &m_TrailInfo.fMass);
+			GUI::TreePop();
+		}
 
 		if (GUI::TreeNode("TRAIL BLUR"))
 		{

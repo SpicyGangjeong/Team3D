@@ -54,12 +54,6 @@ typedef struct tagLightDesc
 	_uint				iLevel = {};
 }LIGHT_DESC;
 
-typedef struct tagShadowLight
-{
-	_float4		vEye{}, vAt{};
-	_float		fWidth{}, fHeight{}, fNear{}, fFar{};
-}SHADOW_LIGHT_DESC;
-
 struct SaveVertex
 {
 	_float3 Pos;

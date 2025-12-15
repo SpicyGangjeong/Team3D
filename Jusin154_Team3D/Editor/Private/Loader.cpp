@@ -41,6 +41,7 @@
 #include "Logo_Glow.h"
 
 #include "Spell_Data.h"
+#include "Quest_Data.h"
 #include "UI_Manager.h"
 
 #include "Mouse_Cursor.h"
@@ -98,6 +99,17 @@
 #include "Spell_Anim.h"
 #include "Current_Slot_Number.h"
 #include "Spell_Drag.h"
+
+#include "Quest_Canvas.h"
+#include "Quest_Panel.h"
+#include "Quest_Border.h"
+#include "Quest_Header.h"
+#include "Quest_HeaderLine.h"
+#include "Quest_List.h"
+#include "Quest_Info.h"
+#include "Quest_Info_Header.h"
+#include "Quest_Info_Line.h"
+#include "Quest_Entry_Line.h"
 
 #include "IMGUIUI.h"
 
@@ -458,7 +470,6 @@ HRESULT CLoader::Loading_For_UI()
 		return E_FAIL;
 	}
 
-
 	Asset_FileLoad("../Bin/Resources/Textures/MiniMap", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
 		{
 
@@ -586,6 +597,24 @@ HRESULT CLoader::Loading_For_UI()
 			return S_OK;
 
 		});
+
+	Asset_FileLoad("../Bin/Resources/Textures/Quest", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
+		{
+
+			_string strFilePath = pFilePath;
+			_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
+
+
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), wstrFileName,
+				CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
+				return E_FAIL;
+			}
+
+			return S_OK;
+
+		});
+
+
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::UI), TEXT("Item"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("../Bin/Resources/Textures/GadgetWheel/Item%d.png"), 8)))) {
@@ -899,6 +928,10 @@ HRESULT CLoader::Loading_For_UI()
 	{
 		return E_FAIL;
 	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Data>(g_iStaticLevel, CQuest_Data::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CUI_Manager>(g_iStaticLevel, CUI_Manager::Create(m_pDevice, m_pContext))))
 	{
@@ -1096,6 +1129,47 @@ HRESULT CLoader::Loading_For_UI()
 		return E_FAIL;
 	}
 	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_Drag>(g_iStaticLevel, CSpell_Drag::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Canvas>(g_iStaticLevel, CQuest_Canvas::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Panel>(g_iStaticLevel, CQuest_Panel::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Border>(g_iStaticLevel, CQuest_Border::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Header>(g_iStaticLevel, CQuest_Header::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_HeaderLine>(g_iStaticLevel, CQuest_HeaderLine::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_List>(g_iStaticLevel, CQuest_List::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Info>(g_iStaticLevel, CQuest_Info::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Info_Header>(g_iStaticLevel, CQuest_Info_Header::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Info_Line>(g_iStaticLevel, CQuest_Info_Line::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Entry_Line>(g_iStaticLevel, CQuest_Entry_Line::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
@@ -2129,6 +2203,11 @@ HRESULT CLoader::Loading_For_ObjectViewer()
 	}
 	vector<future<pair<_wstring, CModel*>*>> futures = {};
 
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Prototype_Component_SM_BRR_RaceRing_01_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM_LOCAL, "C:/MeshTable\\Game\\Environment\\BroomFlight\\Meshes\\SM_BRR_RaceRing_01.fbx", XMMatrixIdentity())))) {
+		return E_FAIL;
+	}
 
 #pragma region BODY
 

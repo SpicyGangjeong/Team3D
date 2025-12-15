@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "GamePlay_Canvas.h"
 #include "Spell_Canvas.h"
+#include "Quest_Canvas.h"
 #include "InfoInstance.h"
 #include "Mouse_Cursor.h"
 #include "CameraLockOn.h"
@@ -50,6 +51,7 @@ void CUI_Manager::Canvas_Change(UI_STATE eType)
 		m_pCamera_LockOn->Set_Visible(false);
 		static_cast<CCanvasObject*>(m_pGamePlay_Canves)->Visible(true);
 		static_cast<CCanvasObject*>(m_pSpell_Canvas)->Visible(false);
+		static_cast<CCanvasObject*>(m_pQuest_Canvas)->Visible(false);
 		break;
 
 	case UI_STATE::SPELL:
@@ -59,7 +61,11 @@ void CUI_Manager::Canvas_Change(UI_STATE eType)
 		static_cast<CCanvasObject*>(m_pGamePlay_Canves)->Visible(false);
 		break;
 
-	case UI_STATE::POTION:
+	case UI_STATE::QUEST_CANVES:
+		m_pMouse_Cursor->Set_Visible(true);
+		m_pCamera_LockOn->Set_Visible(false);
+		static_cast<CCanvasObject*>(m_pQuest_Canvas)->Visible(true);
+		static_cast<CCanvasObject*>(m_pGamePlay_Canves)->Visible(false);
 		break;
 
 	case UI_STATE::INVENTORY:
@@ -139,6 +145,11 @@ HRESULT CUI_Manager::Ready_Components(void* pArg)
 		return E_FAIL;
 	}
 	Add_Canvas(TEXT("Spell_Canvas"), m_pSpell_Canvas);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CQuest_Canvas>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CQuest_Canvas**>(&m_pQuest_Canvas)))) {
+		return E_FAIL;
+	}
+	Add_Canvas(TEXT("Quest_Canvas"), m_pQuest_Canvas);
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMouse_Cursor>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CMouse_Cursor**>(&m_pMouse_Cursor)))) {
 		return E_FAIL;

@@ -20,9 +20,10 @@ CNomalJapSide::CNomalJapSide(const CNomalJapSide& rhs)
 
 HRESULT CNomalJapSide::Initialize_Prototype()
 {
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/JapsideEffect")))
+		return E_FAIL;
 
 	return S_OK;
-
 }
 
 HRESULT CNomalJapSide::Initialize(void* pArg)
@@ -34,7 +35,7 @@ HRESULT CNomalJapSide::Initialize(void* pArg)
 		return E_FAIL;
 
 
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/JapsideEffect")))
+	if (FAILED(Create_Effect()))
 		return E_FAIL;
 
 	m_wstrEffectName = L"JapSideEffect";

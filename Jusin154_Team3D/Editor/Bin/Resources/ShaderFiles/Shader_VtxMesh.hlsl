@@ -92,6 +92,11 @@ float g_fRefractionPow;
 float4 g_vDiffuseColor;
 float4 g_vSurfaceColor;
 
+float   g_fRimPower;
+float   g_fRimStrength;
+float4  g_vRimColor;
+
+
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -121,7 +126,6 @@ struct VS_OUT_BLUR
 struct VS_OUT_SHADOW
 {
     float4 vPosition : SV_POSITION;
-    float fProjPos : TEXCOORD0;
 };
 
 
@@ -150,7 +154,6 @@ VS_OUT_SHADOW VS_MAIN_SHADOW(VS_IN In)
     matWVP = mul(matWV, g_ProjMatrix);
     
     Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
-    Out.fProjPos = Out.vPosition.z;
 
     return Out;
 }
@@ -392,7 +395,6 @@ PS_OUT PS_GLASS_CUBE(PS_IN In)
 struct PS_IN_SHADOW
 {
     float4 vPosition : SV_POSITION;
-    float fProjPos : TEXCOORD0;
 };
 
 struct PS_OUT_SHADOW
@@ -426,7 +428,7 @@ PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN_SHADOW In)
 {
     PS_OUT_SHADOW Out = (PS_OUT_SHADOW) 0;
     
-    Out.fShadowLightDepth = In.fProjPos;
+    Out.fShadowLightDepth = In.vPosition.z;
     
     return Out;
 }
@@ -726,7 +728,7 @@ PS_OUT PS_LEVIOSO(PS_IN In)
 
     float4 vMtrlDiffuse = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
     float4 vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
-    float4 vNoise = g_NoiseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord).r;
+    float fNoise = g_NoiseTexture.Sample(AnisoTropy_BLUR_Sampler, float2(In.vTexcoord.x + sin(g_fTime), In.vTexcoord.y)).r;
   
     if (g_iBinded_Texture[AI_TEXTURE_TYPE_TRANSMISSION] != 0)
     {
@@ -749,7 +751,13 @@ PS_OUT PS_LEVIOSO(PS_IN In)
     
     float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
     
-    Out.vAlbedo = vMtrlDiffuse * float4(1.f, 1.f, 0.3f, 1.f) * vNoise;
+    
+    float4 vRimLight = 1.f - saturate(dot(normalize(g_vCamPosition - In.vWorldPos), float4(In.vNormal, 0.f)));
+    
+    vRimLight = pow(vRimLight, g_fRimPower);
+    vRimLight = vRimLight * g_vRimColor * g_fRimStrength * fNoise;
+    
+    Out.vAlbedo = vMtrlDiffuse + vRimLight;
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
     float fSurfaceParam = g_fUsingSurfaceParams;
     if (true == AlmostEqual7(g_fUsingSurfaceParams, 0.f))

@@ -31,7 +31,8 @@
 #include "Box_Splesh.h"
 #include "Chair_Splesh.h"
 #include "Barral_Splesh.h"
-
+#include "Goblin_Teleport.h"
+#include "Accio.h"
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
 {
@@ -57,9 +58,8 @@ HRESULT CEffectPool::Initialize(void* pArg)
 	if (FAILED(Ready_Components())) {
 		return E_FAIL;
 	}
-
+	// 디버그 모드일 때
 #ifdef _DEBUG
-
 #ifdef gimch
 	m_isActiveEffectCreate = false;
 	m_isActiveMonsterEffectCreate = false;
@@ -80,8 +80,31 @@ HRESULT CEffectPool::Initialize(void* pArg)
 	m_isActiveEffectCreate = false;
 	m_isActiveMonsterEffectCreate = false;
 #endif // 
-
 #endif
+	//// 디버그 모드가 아닐 때, 릴리즈모드에
+#ifndef _DEBUG
+#ifdef gimch
+	m_isActiveEffectCreate = true;
+	m_isActiveMonsterEffectCreate = true;
+#endif // gimch
+#ifdef Bin
+	m_isActiveEffectCreate = true;
+	m_isActiveMonsterEffectCreate = true;
+#endif // 
+#ifdef 진우
+	m_isActiveEffectCreate = true;
+	m_isActiveMonsterEffectCreate = true;
+#endif // 
+#ifdef 기무리
+	m_isActiveEffectCreate = true;
+	m_isActiveMonsterEffectCreate = true;
+#endif // 
+#ifdef 인혁
+	m_isActiveEffectCreate = true;
+	m_isActiveMonsterEffectCreate = true;
+#endif // 
+#endif // !_DEBUG
+
 
 	if (m_isActiveEffectCreate)
 	{
@@ -115,6 +138,18 @@ void CEffectPool::Priority_Update(_float fTimeDelta)
 
 
 	}
+#ifdef  _DEBUG
+#if 진우
+
+
+	(*m_EffectList[ENUM_CLASS(SKILL_TYPE::ACCIO)].begin())->Describe_Entity();
+
+
+
+#endif
+#endif
+
+
 }
 
 void CEffectPool::Update(_float fTimeDelta)
@@ -240,6 +275,16 @@ HRESULT CEffectPool::Ready_Effect()
 		CLumos* pEffect = nullptr;
 
 		pEffect = m_pGameInstance->Clone_Prototype<CLumos>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+
+	if (FAILED(Create_Effect(SKILL_TYPE::ACCIO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CAccio* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CAccio>(iPrototypeLevel, nullptr);
 
 		return pEffect; }
 	))) return E_FAIL;
@@ -409,7 +454,15 @@ HRESULT CEffectPool::Ready_MonsterEffect()
 
 	))) return E_FAIL;
 
+	if (FAILED(Create_Effect(SKILL_TYPE::GOBILN_TELEPORT, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
 
+		CGoblin_Teleport* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CGoblin_Teleport>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+
+	))) return E_FAIL;
 
 	return S_OK;
 }

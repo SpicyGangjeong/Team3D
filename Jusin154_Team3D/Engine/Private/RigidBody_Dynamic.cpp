@@ -113,6 +113,10 @@ void CRigidBody_Dynamic::Move_LocalPos(_float4 vNewRotQ, _float3 vNewTranslation
 #endif // _DEBUG
 
 }
+_float CRigidBody_Dynamic::Get_Mass()
+{
+	return (_float)m_pRigidBody->getMass();
+}
 // _DEBUG
 void CRigidBody_Dynamic::Add_Force(_fvector vForce, PSX::PxForceMode::Enum eType)
 {
@@ -173,6 +177,27 @@ _float3 CRigidBody_Dynamic::Get_FootPosition()
 		break;
 	case Engine::ACTOR::SPHERE:
 		pxTransform.p.y -= m_vhalfGeometryInfo.x;
+		break;
+	default:
+		break;
+	}
+	_float3 vOut = { pxTransform.p.x , pxTransform.p.y , pxTransform.p.z };
+	return vOut;
+}
+
+_float3 CRigidBody_Dynamic::Get_HeadPosition()
+{
+	PSX::PxTransform pxTransform = m_pRigidBody->getGlobalPose();
+	switch (m_eActorType)
+	{
+	case Engine::ACTOR::BOX:
+		pxTransform.p.y += m_vhalfGeometryInfo.y;
+		break;
+	case Engine::ACTOR::CAPSULE:
+		pxTransform.p.y += m_vhalfGeometryInfo.y * 0.5f + m_vhalfGeometryInfo.x;
+		break;
+	case Engine::ACTOR::SPHERE:
+		pxTransform.p.y += m_vhalfGeometryInfo.x;
 		break;
 	default:
 		break;

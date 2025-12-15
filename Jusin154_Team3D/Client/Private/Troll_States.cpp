@@ -333,6 +333,7 @@ HRESULT CTroll::Behavior_RushExitCheck(_float fTimeDelta)
 void CTroll::Behavior_RushExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::RUSH);
+	m_fRushTime = 0.f;
 }
 
 void CTroll::Behavior_ThrowEnter()
@@ -528,12 +529,26 @@ HRESULT CTroll::Behavior_SlamExitCheck(_float fTimeDelta)
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
-	if (m_pModelCom->IsFinishedAnim())
+	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
+
+	if (m_fDegree >= 90.f)
 	{
+		m_bLookAt = true;
+		if (m_pModelCom->IsFinishedAnim())
+		{
+			m_bLookAt = true;
+			m_pFSM->Change_State(FSMSTATE::COMBAT);
+			return E_FAIL;
+		}
+
+		return S_OK;
+	}
+	else if (fRatio >= 0.4f) {
 		m_bLookAt = true;
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
 		return E_FAIL;
 	}
+
 	return S_OK;
 }
 
@@ -579,7 +594,7 @@ HRESULT CTroll::Behavior_BackHandSwingExitCheck(_float fTimeDelta)
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
 		return E_FAIL;
 	}
-	return E_FAIL;
+	return S_OK;
 }
 
 void CTroll::Behavior_BackHandSwingExit()
@@ -912,7 +927,7 @@ void CTroll::CheckHammerHits(_uint& iHitCount, vector<PSX::PxSweepHit>& pxHits)
 
 		_bool bCollision = false;
 		m_SweepBufferHammer = {};
-		bCollision = m_pGameInstance->SphereCast(1.2f, vStartPos, vDir, fDistance, PSX::PxHitFlag::eDEFAULT, PSX::PxQueryFlag::eDYNAMIC, m_SweepBufferHammer);
+		bCollision = m_pGameInstance->SphereCast(1.5f, vStartPos, vDir, fDistance, PSX::PxHitFlag::eDEFAULT, PSX::PxQueryFlag::eDYNAMIC, m_SweepBufferHammer);
 		if (true == bCollision) {
 			iHitCount += m_SweepBufferHammer.getNbTouches() + m_SweepBufferHammer.hasBlock;
 			auto touches = m_SweepBufferHammer.getTouches();
@@ -933,7 +948,7 @@ void CTroll::CheckHammerHits(_uint& iHitCount, vector<PSX::PxSweepHit>& pxHits)
 
 		_bool bCollision = false;
 		m_SweepBufferGrip = {};
-		bCollision = m_pGameInstance->SphereCast(1.2f, vStartPos, vDir, fDistance, PSX::PxHitFlag::eDEFAULT, PSX::PxQueryFlag::eDYNAMIC, m_SweepBufferGrip);
+		bCollision = m_pGameInstance->SphereCast(1.5f, vStartPos, vDir, fDistance, PSX::PxHitFlag::eDEFAULT, PSX::PxQueryFlag::eDYNAMIC, m_SweepBufferGrip);
 		if (true == bCollision) {
 			iHitCount += m_SweepBufferGrip.getNbTouches() + m_SweepBufferGrip.hasBlock;
 			auto touches = m_SweepBufferGrip.getTouches();

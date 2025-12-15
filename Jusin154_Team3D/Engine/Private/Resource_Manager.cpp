@@ -141,72 +141,75 @@ void CResource_Manager::Free()
 
 void CResource_Manager::Describe_Entity()
 {
-	static vector<pair<_wstring, _uint>> vecHit = {};
-	static vector<pair<_wstring, _uint>> vecMiss = {};
-	GUI::Begin("ResourceManager");
-	if (GUI::Button("Refresh")) {
-		vecHit.clear();
-		vecMiss.clear();
-		for (auto& element : m_mapCacheHit){
-			vecHit.emplace_back(element);
-		}
-		for (auto& element : m_mapCacheMiss){
-			vecMiss.emplace_back(element);
-		}
-		sort(vecHit.begin(), vecHit.end(),
-			[](const pair<_wstring, _uint>& leftPair,
-				const pair<_wstring, _uint>& rightPair)
-			{
-				return leftPair.second > rightPair.second;
-			});
+	GUI::Begin("SYSTEM", 0, IMGUI_GLOBAL_BEGIN_FLAG);
+	GUI::PushItemWidth(80);
+	if (GUI::CollapsingHeader("ResourceManager")) {
+		static vector<pair<_wstring, _uint>> vecHit = {};
+		static vector<pair<_wstring, _uint>> vecMiss = {};
+		if (GUI::Button("Refresh")) {
+			vecHit.clear();
+			vecMiss.clear();
+			for (auto& element : m_mapCacheHit) {
+				vecHit.emplace_back(element);
+			}
+			for (auto& element : m_mapCacheMiss) {
+				vecMiss.emplace_back(element);
+			}
+			sort(vecHit.begin(), vecHit.end(),
+				[](const pair<_wstring, _uint>& leftPair,
+					const pair<_wstring, _uint>& rightPair)
+				{
+					return leftPair.second > rightPair.second;
+				});
 
-		sort(vecMiss.begin(), vecMiss.end(),
-			[](const pair<_wstring, _uint>& leftPair,
-				const pair<_wstring, _uint>& rightPair)
-			{
-				return leftPair.second > rightPair.second;
-			});
-	}
-	if (GUI::CollapsingHeader("Statistics")) {
-		_uint iTotalHitCount = 0;
-		_uint iTotalMissCount = 0;
+			sort(vecMiss.begin(), vecMiss.end(),
+				[](const pair<_wstring, _uint>& leftPair,
+					const pair<_wstring, _uint>& rightPair)
+				{
+					return leftPair.second > rightPair.second;
+				});
+		}
+		if (GUI::CollapsingHeader("Statistics")) {
+			_uint iTotalHitCount = 0;
+			_uint iTotalMissCount = 0;
 
-		for (const auto& element : m_mapCacheHit) {
-			iTotalHitCount += element.second;
-		}
-		for (const auto& element : m_mapCacheMiss) {
-			iTotalMissCount += element.second;
-		}
-		_uint iTotalRequestCount = iTotalHitCount + iTotalMissCount;
+			for (const auto& element : m_mapCacheHit) {
+				iTotalHitCount += element.second;
+			}
+			for (const auto& element : m_mapCacheMiss) {
+				iTotalMissCount += element.second;
+			}
+			_uint iTotalRequestCount = iTotalHitCount + iTotalMissCount;
 
-		_float fHitRatePercent = 0.0f;
-		if (iTotalRequestCount > 0) {
-			fHitRatePercent = (_float)iTotalHitCount * 100.0f / (_float)iTotalRequestCount;
-		}
+			_float fHitRatePercent = 0.0f;
+			if (iTotalRequestCount > 0) {
+				fHitRatePercent = (_float)iTotalHitCount * 100.0f / (_float)iTotalRequestCount;
+			}
 
-		GUI::Text("Total Requests: %u", iTotalRequestCount);
-		GUI::Text("Hit: %u  Miss: %u  HitRate: %.2f%%", iTotalHitCount, iTotalMissCount, fHitRatePercent);
+			GUI::Text("Total Requests: %u", iTotalRequestCount);
+			GUI::Text("Hit: %u  Miss: %u  HitRate: %.2f%%", iTotalHitCount, iTotalMissCount, fHitRatePercent);
 
-	}
-	if (GUI::CollapsingHeader("CacheHit")) {
-		GUI::Text("%d", vecHit.size());
-		GUI::BeginChild("CacheHit", { 300, 300 });
-		GUI::GetScrollY();
-		for (auto& element : vecHit) {
-			GUI::Text("%d", element.second); GUI::SameLine();
-			GUI::Text(CMyTools::ToString(element.first).c_str());
 		}
-		GUI::EndChild();
-	}
-	if (GUI::CollapsingHeader("CacheMiss")) {
-		GUI::Text("%d", vecMiss.size());
-		GUI::BeginChild("CacheMiss", { 300, 300 });
-		GUI::GetScrollY();
-		for (auto& element : vecMiss) {
-			GUI::Text("%d", element.second); GUI::SameLine();
-			GUI::Text(CMyTools::ToString(element.first).c_str());
+		if (GUI::CollapsingHeader("CacheHit")) {
+			GUI::Text("%d", vecHit.size());
+			GUI::BeginChild("CacheHit", { 300, 300 });
+			GUI::GetScrollY();
+			for (auto& element : vecHit) {
+				GUI::Text("%d", element.second); GUI::SameLine();
+				GUI::Text(CMyTools::ToString(element.first).c_str());
+			}
+			GUI::EndChild();
 		}
-		GUI::EndChild();
+		if (GUI::CollapsingHeader("CacheMiss")) {
+			GUI::Text("%d", vecMiss.size());
+			GUI::BeginChild("CacheMiss", { 300, 300 });
+			GUI::GetScrollY();
+			for (auto& element : vecMiss) {
+				GUI::Text("%d", element.second); GUI::SameLine();
+				GUI::Text(CMyTools::ToString(element.first).c_str());
+			}
+			GUI::EndChild();
+		}
 	}
 	GUI::End();
 }

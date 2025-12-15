@@ -38,6 +38,7 @@ public:
 	void					Set_HalfGeometryInfo(_float3 vhalfGeometryInfo);
 	void					Move_LocalPos(_float4 vNewRotQ, _float3 vNewTranslation);
 	_float					Get_Density()			const { return m_fDensity; }
+	_float					Get_Mass();
 
 	virtual void			Add_Force(_fvector vForce, PSX::PxForceMode::Enum eType = PSX::PxForceMode::Enum::eFORCE); // 속도 + 방향
 	virtual void			Add_Torque(_fvector vDirection, PSX::PxForceMode::Enum eType = PSX::PxForceMode::Enum::eFORCE); // 방향 ( 회전축은 MassCenter )
@@ -50,6 +51,7 @@ public:
 
 	_vector					Get_Position();
 	_float3					Get_FootPosition();
+	_float3					Get_HeadPosition();
 	PSX::PxTransform		Get_FootPositionPxTransform();
 private:
 	PSX::PxRigidDynamic*	m_pRigidBody = { nullptr };		// 실제 시뮬레이션을 도는 본체

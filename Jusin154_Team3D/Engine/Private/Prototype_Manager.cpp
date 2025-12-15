@@ -98,6 +98,12 @@ HRESULT CPrototype_Manager::Ready_StaticComponents()
 	if (FAILED(Add_Prototype(g_iStaticLevel, CLight::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
+
+#pragma region Compute Shader
+
+
+
+#pragma endregion 
 	return S_OK;
 }
 
@@ -119,6 +125,24 @@ HRESULT CPrototype_Manager::Ready_EngineAssets()
 			VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)))) {
 		return E_FAIL;
 	}
+
+#pragma region COMPUTE_SHADER
+
+	if (FAILED(Add_Asset_Prototype(g_iStaticLevel, CS_EFFECT,
+		CComputeShader::Create(m_pDevice, m_pContext,
+			L"../Bin/Resources/ShaderFiles/Shader_Particle_Compute.hlsl", "CS_MAIN")))) {
+		return E_FAIL;
+
+	}
+
+	if (FAILED(Add_Asset_Prototype(g_iStaticLevel, CS_INSTANCE_MODEL,
+		CComputeShader::Create(m_pDevice, m_pContext,
+			L"../Bin/Resources/ShaderFiles/Shader_Instance_Compute.hlsl", "CS_MAIN")))) {
+		return E_FAIL;
+
+	}
+
+#pragma endregion
 
 	return S_OK;
 }

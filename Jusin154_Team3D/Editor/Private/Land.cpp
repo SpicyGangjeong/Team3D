@@ -25,7 +25,7 @@ void CLand::Update(_float fTimeDelta)
 
 void CLand::Late_Update(_float fTimeDelta)
 {
-	if(m_pGameInstance->isIn_WorldFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pModelCom->Get_Radius()))
+	if(m_pGameInstance->IsIn_WorldFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pModelCom->Get_Radius()))
 		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 	else
 	{

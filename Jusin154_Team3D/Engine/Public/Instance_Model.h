@@ -255,6 +255,7 @@ public:
 	//HRESULT			Bind_Value_Buffer(class CShader* pShader, const _char* pConstantName);
 	HRESULT         Bind_OutPut_SRV_VS(_uint Index, _uint iBufferIndex);
 	INSTANCE_DESC	Get_EffectValue() { return m_InstanceDesc; }
+	HRESULT			Load_InstanceModel(INSTANCE_DESC InstanceDesc);
 	HRESULT			Load_InstanceModel(HANDLE hFile);
 	HRESULT         Bind_CS_Output(_uint Index, _uint iBufferIndex);
 private:

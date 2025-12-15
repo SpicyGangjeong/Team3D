@@ -41,6 +41,8 @@ enum ESTATE : _u64Flag
     BROOM_DISMOUNT              = 1ULL << 34,
     HOVER                       = 1ULL << 35,
     FLY                         = 1ULL << 36,
+    TURBOFLY                    = 1ULL << 37,
+    PARRY                       = 1ULL << 38,
     END
 };
 NS_END

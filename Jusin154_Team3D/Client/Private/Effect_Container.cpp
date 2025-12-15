@@ -14,7 +14,9 @@ CEffect_Container::CEffect_Container(ID3D11Device* pDevice, ID3D11DeviceContext*
 }
 
 CEffect_Container::CEffect_Container(const CEffect_Container& rhs)
-	: CContainerObject(rhs)
+	: CContainerObject(rhs),
+	m_EffectsInfo(rhs.m_EffectsInfo),
+	m_TrailsInfo(rhs.m_TrailsInfo)
 {
 
 }
@@ -35,7 +37,6 @@ HRESULT CEffect_Container::Initialize(void* pArg)
 
 	if (FAILED(Ready_Child()))
 		return E_FAIL;
-
 
 	m_bVisible = false;
 
@@ -150,71 +151,376 @@ HRESULT CEffect_Container::Load_Package(const _char* pPath)
 
 		if (!strcmp(strExt.c_str(), "trail"))
 		{
-			CTrailObject* pTrail = nullptr;
+		
+			Load_Trail_Data(strEffectPath.c_str());
 
-			CPartObject::PARTOBJECT_DESC PartsDesc{};
+			m_TrailsInfo.back().wstrTrailName = CMyTools::ToWstring(strEffectName);
+			continue;
+		}
 
-			PartsDesc.pParentTransform = m_pTransformCom;
+		/////////////////////////////
+		
+		_string strFilePath = strEffectPath;
+		Load_Data(strFilePath.c_str());
+		
+		m_EffectsInfo.back().wstrEffectName = CMyTools::ToWstring(strEffectName);
+	}
 
-			if (FAILED(Add_PartObject<CTrailObject>(strEffectName, g_iStaticLevel, &pTrail, &PartsDesc))) {
-				assert(false);
+	CloseHandle(hFile);
+
+	return S_OK;
+}
+
+HRESULT CEffect_Container::Load_Data(const _char* pPath)
+{
+	_string strPerfectFilePath = pPath;
+
+	HANDLE hFile = CreateFileW(
+		CMyTools::ToWstring(strPerfectFilePath).c_str(),               // 파일 이름
+		GENERIC_READ,              // 읽기 모드
+		FILE_SHARE_READ,           // 다른 프로세스도 읽기 가능
+		NULL,
+		OPEN_EXISTING,             // 기존 파일 열기
+		FILE_ATTRIBUTE_NORMAL,
+		NULL
+	);
+
+
+	if (hFile == INVALID_HANDLE_VALUE) {
+		MessageBox(NULL, L"오브젝트 읽기 실패", L"System Message", MB_OK);
+		return E_FAIL;
+	}
+
+	// 나중에 패키징할때 패스를 저장할거임
+
+	EFFECT_SAVE_INFO EffectSaveInfo = {};
+
+	DWORD	dwByte(0);
+
+	if (!ReadFile(hFile, &EffectSaveInfo.EffectInfo, sizeof(EFFECT_INFO), &dwByte, nullptr)) {
+		CloseHandle(hFile);
+		return E_FAIL;
+	}
+
+	if (EffectSaveInfo.EffectInfo.isDiffuse)
+	{
+		size_t iComponentLength = {};
+
+		if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+			CloseHandle(hFile);
+			return E_FAIL;
+		}
+
+		if (iComponentLength != 0)
+		{
+			_char szName[MAX_PATH] = {};
+
+			if (!ReadFile(hFile, &szName, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+				CloseHandle(hFile);
+				return E_FAIL;
+			}
+
+			EffectSaveInfo.wstrDiffuseName = CMyTools::ToWstring(szName);
+		}
+
+
+	}
+
+	if (EffectSaveInfo.EffectInfo.isNoise)
+	{
+		size_t iComponentLength = {};
+
+
+		if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+			CloseHandle(hFile);
+			return E_FAIL;
+		}
+
+		if (iComponentLength != 0)
+		{
+			_char szName[MAX_PATH] = {};
+
+			if (!ReadFile(hFile, &szName, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+				CloseHandle(hFile);
+				return E_FAIL;
+			}
+
+			EffectSaveInfo.wstrNoiseName = CMyTools::ToWstring(szName);
+		}
+
+
+	}
+
+	if (EffectSaveInfo.EffectInfo.isMasking)
+	{
+		size_t iComponentLength = {};
+
+
+		if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+			return E_FAIL;
+		}
+
+		if (iComponentLength != 0)
+		{
+
+			_char szName[MAX_PATH] = {};
+
+			if (!ReadFile(hFile, &szName, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+				CloseHandle(hFile);
 				return E_FAIL;
 			}
 
 
-			/*이펙트 로드 로드*/
-			size_t iPos = {};
-
-			while ((iPos = strEffectPath.find(".trail")) != std::string::npos) {
-				strEffectPath.erase(iPos, 6);
-			};
-
-
-			if (FAILED(pTrail->Load_Trail(strEffectPath.c_str() , static_cast<LEVEL>(NEXT_LEVEL))))
-			{
-				Safe_Release(pTrail);
-				continue;
-			}
-
-			Safe_Release(pTrail);
-
-			continue;
+			EffectSaveInfo.wstrMaskingName = CMyTools::ToWstring(szName);
 		}
 
 
-		/////////////////////////////
+	}
 
-		CEffectParts* pEffectParts = nullptr;
+	if (EffectSaveInfo.EffectInfo.isDissolve)
+	{
+		size_t iComponentLength = {};
 
-		CPartObject::PARTOBJECT_DESC PartsDesc{};
-
-		PartsDesc.pParentTransform = m_pTransformCom;
-
-		/*이펙트 껍데기 생성*/
-
-		if (FAILED(Add_PartObject<CEffectParts>(strEffectName, g_iStaticLevel, &pEffectParts, &PartsDesc))) {
-			assert(false);
+		if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+			CloseHandle(hFile);
 			return E_FAIL;
 		}
 
-		/*이펙트 로드 로드*/
-		size_t iPosition = {};
-		_string strFilePath = strEffectPath;
-
-		while ((iPosition = strFilePath.find(".bin")) != std::string::npos) {
-			strFilePath.erase(iPosition, 4);
-		};
-
-
-		if (FAILED(pEffectParts->Load(strFilePath.c_str(), static_cast<LEVEL>(NEXT_LEVEL))))
+		if (iComponentLength != 0)
 		{
-			Safe_Release(pEffectParts);
-			continue;
+			_char szName[MAX_PATH] = {};
+
+			if (!ReadFile(hFile, &szName, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+				CloseHandle(hFile);
+				return E_FAIL;
+			}
+
+			EffectSaveInfo.wstrDissolveName = CMyTools::ToWstring(szName);
 		}
 
-		Safe_Release(pEffectParts);
 
 	}
+
+	if (EffectSaveInfo.EffectInfo.isEmissive)
+	{
+		size_t iComponentLength = {};
+
+		if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+			CloseHandle(hFile);
+			return E_FAIL;
+		}
+
+		if (iComponentLength != 0)
+		{
+			_char szName[MAX_PATH] = {};
+
+			if (!ReadFile(hFile, &szName, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+				CloseHandle(hFile);
+				return E_FAIL;
+			}
+
+			EffectSaveInfo.wstrEmissiveName = CMyTools::ToWstring(szName);
+		}
+
+
+	}
+
+	if (EffectSaveInfo.EffectInfo.isDistortion)
+	{
+		size_t iComponentLength = {};
+
+		if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+			CloseHandle(hFile);
+			return E_FAIL;
+		}
+
+		if (iComponentLength != 0)
+		{
+			_char szName[MAX_PATH] = {};
+
+			if (!ReadFile(hFile, &szName, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+				CloseHandle(hFile);
+				return E_FAIL;
+			}
+
+			EffectSaveInfo.wstrDistortionName = CMyTools::ToWstring(szName);
+		}
+
+
+	}
+
+	size_t iComponentLength = {};
+
+
+	if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+		CloseHandle(hFile);
+		return E_FAIL;
+	}
+
+	if (iComponentLength != 0)
+	{
+		_char szName[MAX_PATH] = {};
+
+		if (!ReadFile(hFile, &szName, sizeof(_char) * ((DWORD)(DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+			CloseHandle(hFile);
+			return E_FAIL;
+		}
+
+
+		EffectSaveInfo.wstrModelName = CMyTools::ToWstring(szName);
+	}
+
+	if (!ReadFile(hFile, &EffectSaveInfo.InstanceModelInfo, sizeof(CInstance_Model::INSTANCE_DESC), &dwByte, nullptr)) {
+		return E_FAIL;
+	}
+
+
+	CloseHandle(hFile);
+
+	m_EffectsInfo.push_back(EffectSaveInfo);
+
+	return S_OK;
+}
+
+HRESULT CEffect_Container::Create_Effect()
+{
+	CEffectParts* pEffectParts = nullptr;
+	CTrailObject* pTrail = nullptr;
+
+	CPartObject::PARTOBJECT_DESC PartsDesc{};
+
+	PartsDesc.pParentTransform = m_pTransformCom;
+
+	/*이펙트 껍데기 생성*/
+
+
+
+	for (auto& EffectInfo : m_EffectsInfo)
+	{
+
+		if (FAILED(Add_PartObject<CEffectParts>(CMyTools::ToString(EffectInfo.wstrEffectName), g_iStaticLevel, &pEffectParts, &PartsDesc))) {
+			return E_FAIL;
+		}
+
+		pEffectParts->Load(EffectInfo, static_cast<LEVEL>(NEXT_LEVEL));
+
+		Safe_Release(pEffectParts);
+	}
+
+	for (auto& TrailInfo : m_TrailsInfo)
+	{
+		if (FAILED(Add_PartObject<CTrailObject>(CMyTools::ToString(TrailInfo.wstrTrailName), g_iStaticLevel, &pTrail, &PartsDesc))) {
+			return E_FAIL;
+		}
+
+		pTrail->Load_Trail(TrailInfo, static_cast<LEVEL>(NEXT_LEVEL));
+
+		Safe_Release(pTrail);
+	}
+
+	
+	return S_OK;
+}
+
+HRESULT CEffect_Container::Load_Trail_Data(const _char* pPath)
+{
+	_string strPerfectFilePath = pPath;
+
+	DWORD	dwByte(0);
+
+	HANDLE hFile = CreateFileW(
+		CMyTools::ToWstring(strPerfectFilePath).c_str(),               // 파일 이름
+		GENERIC_READ,              // 읽기 모드
+		FILE_SHARE_READ,           // 다른 프로세스도 읽기 가능
+		NULL,
+		OPEN_EXISTING,             // 기존 파일 열기
+		FILE_ATTRIBUTE_NORMAL,
+		NULL
+	);
+
+	if (hFile == INVALID_HANDLE_VALUE) {
+		MessageBox(NULL, L"오브젝트 읽기 실패", L"System Message", MB_OK);
+		return E_FAIL;
+	}
+
+	TRAIL_SAVE_INFO Trail_Save_Info = {};
+
+
+	size_t iComponentLength = {};
+
+	if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+		return E_FAIL;
+	}
+
+	if (iComponentLength != 0)
+	{
+		_char szName[MAX_PATH] = {};
+
+		if (!ReadFile(hFile, &szName, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+			return E_FAIL;
+		}
+
+		Trail_Save_Info.wstrDiffuseName = CMyTools::ToWstring(szName);
+	}
+
+	if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+		return E_FAIL;
+	}
+
+	if (iComponentLength != 0)
+	{
+		_char szName[MAX_PATH] = {};
+
+		if (!ReadFile(hFile, &szName, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+			return E_FAIL;
+		}
+
+		Trail_Save_Info.wstrNoiseName = CMyTools::ToWstring(szName);
+
+	}
+
+	if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+		return E_FAIL;
+	}
+
+	if (iComponentLength != 0)
+	{
+		_char szName[MAX_PATH] = {};
+
+		if (!ReadFile(hFile, &szName, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+			return E_FAIL;
+		}
+
+		Trail_Save_Info.wstrMaskingName = CMyTools::ToWstring(szName);
+	}
+
+
+	if (!ReadFile(hFile, &iComponentLength, sizeof(size_t), &dwByte, nullptr)) {
+		return E_FAIL;
+	}
+
+	if (iComponentLength != 0)
+	{
+		_char szName[MAX_PATH] = {};
+
+		if (!ReadFile(hFile, &szName, sizeof(_char) * ((DWORD)iComponentLength + 1), &dwByte, nullptr)) {
+			return E_FAIL;
+		}
+
+		Trail_Save_Info.wstrDistortionName = CMyTools::ToWstring(szName);
+
+	}
+
+	if (!ReadFile(hFile, &Trail_Save_Info.TrailComponentDesc, sizeof(CTrail::TRAIL_DESC), &dwByte, nullptr)) {
+		return E_FAIL;
+	}
+
+	if (!ReadFile(hFile, &Trail_Save_Info.TrailDesc, sizeof(TRAIL_INFO), &dwByte, nullptr)) {
+		return E_FAIL;
+	}
+
+
+	m_TrailsInfo.push_back(Trail_Save_Info);
 
 	CloseHandle(hFile);
 
@@ -509,6 +815,11 @@ ON_COLLISION_INFO CEffect_Container::MonsterSweepTarget(_vector StartPos, _vecto
 					m_bHit = true;
 				}
 				break;
+				case PXOBJECT::SKILL_PROTEGO:
+				{
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					m_bHit = true;
+				}
 				}
 			}
 			}

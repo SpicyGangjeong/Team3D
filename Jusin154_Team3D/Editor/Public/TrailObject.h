@@ -74,13 +74,16 @@ public:
 		RENDER		eRenderOrder = { RENDER::EFFECT };
 		SHADER_PASS_POSTEX eShaderPass = { SHADER_PASS_POSTEX::TRAIL };
 
-		_float3 vPadding0 = {};
+		_float      fDamping = { 0.5f };
+		_float      fRopeLength = { 0.1f };
+		_float		fMass = { 0.5f };
+
 		_float3 vPadding1 = {};
 		_float3 vPadding2 = {};
 
-		_float  fPadding0 = {};
 		_float  fPadding1 = {};
 		_float  fPadding2 = {};
+		_float  fPadding3 = {};
 			    
 		_bool   isPadding0 = {};
 		_bool   isPadding1 = {};
@@ -100,7 +103,7 @@ public:
 public:
 	void	     Set_Target(class CTransform* pTargetTransform);
 	void         Trail_Update(_fmatrix WorldMat, _float fTimeDelta);
-
+	void         Rope_Trail_Update(_fmatrix WorldMat, _fmatrix EndWorldMat, _float fTimeDelta);
 public:
 #ifdef _DEBUG
 	HRESULT Save_Trail(const _char* pPath);

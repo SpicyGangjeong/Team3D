@@ -18,7 +18,10 @@
 #include "Troll_Rock.h"
 #include "Goblin_Dagger.h"
 #include "Wand.h"
+#include "Item_Potion.h"
+#include "RaceRing.h"
 #include "Goblin_BattleAxe.h"
+#include "BroomRaceManager.h"
 
 #pragma region ACTOR
 
@@ -28,6 +31,7 @@
 #include "Goblin_Spector.h"
 #include "Troll.h"
 #include "NPC_Ollivander.h"
+#include "BroomRacerAI.h"
 
 #pragma endregion
 
@@ -97,6 +101,16 @@
 #include "Current_Slot_Number.h"
 #include "Spell_Drag.h"
 
+#include "Quest_Canvas.h"
+#include "Quest_Panel.h"
+#include "Quest_Border.h"
+#include "Quest_Header.h"
+#include "Quest_HeaderLine.h"
+#include "Quest_List.h"
+#include "Quest_Info.h"
+#include "Quest_Info_Header.h"
+#include "Quest_Info_Line.h"
+#include "Quest_Entry_Line.h"
 
 #pragma endregion
 
@@ -127,7 +141,8 @@
 #include "EffectPool.h"
 #include "Levioso.h"
 #include "Lumos.h"
-
+#include "Accio.h"
+#include "Goblin_Teleport.h"
 
 
 #include "TrollSwing.h"
@@ -165,6 +180,8 @@
 #include "MapElement_Door.h"
 #include "Land.h"
 #include "Unified.h"
+#include "MapElement_Chest.h"
+#include "MapElement_Chest_Lid.h"
 
 #pragma endregion
 
@@ -312,7 +329,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_Background = true;
 #endif // gimch
 #ifdef Bin
-	isLoad_Background = true;
+	isLoad_Background = false;
 #endif // 
 #ifdef 진우
 	isLoad_Background = true;
@@ -612,6 +629,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 					"../Bin/Resources/Models/MapMesh/Game/Environment/Hogsmeade/Common/Meshes/Chairs",
 					".bin", false
 				));
+				/* Object Interactables (Chest)*/
+				jobMapModels.emplace_back(Deferred_FolderLoad(
+					"../Bin/Resources/Models/MapMesh/Game/Environment/Objects/Interactables",
+					".bin", false
+				));
 			}
 		}
 	}
@@ -855,6 +877,22 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 		});
 
+	Asset_FileLoad("../Bin/Resources/Textures/Quest", L"Prototype_Texture_", [&](_wstring wstrFileName, const _char* pFilePath)
+		{
+
+			_string strFilePath = pFilePath;
+			_wstring wstrFilePath = CMyTools::ToWstring(strFilePath);
+
+
+			if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, wstrFileName,
+				CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, wstrFilePath.c_str(), 0)))) {
+				return E_FAIL;
+			}
+
+			return S_OK;
+
+		});
+
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Item"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("../Bin/Resources/Textures/GadgetWheel/Item%d.png"), 8)))) {
 		return E_FAIL;
@@ -871,6 +909,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 		m_pGameInstance->Load_GlobalSRV(TEXT("GLOBAL_DISOLVE_BURN_VERTICAL"), "../Bin/Resources/Textures/Effect/Diffuse/drp_fire_Line_Vertical.png");
 	}
 #pragma endregion
+#if 진우
+#else
 #pragma region UI_ANI
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Altering_Spell"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Altering_Spell\\Altering_Spell%d.png"), 349))))
@@ -1071,6 +1111,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 #pragma endregion
+#endif
 
 #pragma region TERRAIN_TEXTURE
 	/* Terrain_Diffuse */
@@ -1165,6 +1206,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 #pragma endregion
 
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Levioso_Noise"),
+		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::SINGLE, TEXT("../Bin/Resources/Textures/Effect/Noises/VFX_T_NoiseCaustics02_Color_D.png"), 0)))) {
+		return E_FAIL;
+	}
 
 #pragma region EFFECT
 
@@ -1392,37 +1437,90 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 
-	CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
-	{
-		Desc.eType = ACTOR::BOX;
-		Desc.ePxRigidBodyFlags = { /*PSX::PxRigidBodyFlag::eKINEMATIC*/ };
-		Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
-		Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
-		Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
-		Desc.fContactOffset = { 0.05f };
-		Desc.vhalfGeometryInfo = { 0.5f, 0.5f, 0.5f };
-		Desc.fDensity = 1.f;
-		Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
-		Desc.eLockFlag = {};  
-		Desc.vAutoDamping = { 1.f, 1.f };
-		Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
-		Desc.vLocalTranslation = { 0.f, 0.f, 0.f };
-	}
+	{ // LIGHT PHYSX DYNAMIC
+		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
+		{
+			Desc.eType = ACTOR::BOX;
+			Desc.ePxRigidBodyFlags = { /*PSX::PxRigidBodyFlag::eKINEMATIC*/ };
+			Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+			Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
+			Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
+			Desc.fContactOffset = { 0.05f };
+			Desc.vhalfGeometryInfo = { 0.5f, 0.5f, 0.5f };
+			Desc.fDensity = 1.f;
+			Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
+			Desc.eLockFlag = {};
+			Desc.vAutoDamping = { 1.f, 1.f };
+			Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
+			Desc.vLocalTranslation = { 0.f, 0.f, 0.f };
+		}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_HEAVY_WALL"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
-		return E_FAIL;
-	}
+		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc1{};
+		{
+			Desc.eType = ACTOR::BOX;
+			Desc.ePxRigidBodyFlags = { /*PSX::PxRigidBodyFlag::eKINEMATIC*/ };
+			Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+			Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
+			Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
+			Desc.fContactOffset = { 0.05f };
+			Desc.vhalfGeometryInfo = { 1.f, 1.f, 1.f };
+			Desc.fDensity = 1.f;
+			Desc.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
+			Desc.eLockFlag = {};
+			Desc.vAutoDamping = { 1.f, 1.f };
+			Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
+			Desc.vLocalTranslation = { 0.f, 0.f, 0.f };
+		}
 
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), CCharacter_Controller::Create(m_pDevice, m_pContext)))) {
-		return E_FAIL;
-	}
 
-	//Desc.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
-	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX_KIN"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
-		return E_FAIL;
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_HEAVY_WALL"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_SHIELD"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc1)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), CCharacter_Controller::Create(m_pDevice, m_pContext)))) {
+			return E_FAIL;
+		}
+
+		Desc.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX_KIN"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
+			return E_FAIL;
+		}
+	} 
+	{ // DOOR PHYSX
+		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc{};
+		{
+			Desc.eType = ACTOR::BOX;
+			Desc.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
+			Desc.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE | PSX::PxShapeFlag::eSIMULATION_SHAPE };
+			Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
+			Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
+			Desc.fContactOffset = { 0.05f };
+			Desc.vhalfGeometryInfo = { 0.35f, 0.65f, 0.15f };
+			Desc.fDensity = 1.f;
+			PSX::PxTransform pxPivotTransform = PSX::PxTransform(PSX::PxVec3(0.f, 1.f, 0.f));
+			Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
+			Desc.vLocalTranslation = { 0.5f, 0.f, 0.f };
+
+			Desc.pxMassCenter = pxPivotTransform;
+			Desc.eLockFlag = {
+				PSX::PxRigidDynamicLockFlag::eLOCK_ANGULAR_X |
+				//PSX::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y |
+				PSX::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z |
+				PSX::PxRigidDynamicLockFlag::eLOCK_LINEAR_Y |
+				PSX::PxRigidDynamicLockFlag::eLOCK_LINEAR_X |
+				PSX::PxRigidDynamicLockFlag::eLOCK_LINEAR_Z
+			};
+			Desc.vAutoDamping = { 10.f, 10.f };
+		}
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_DOOR"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
+			return E_FAIL;
+		}
 	}
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Box"),
@@ -1469,6 +1567,14 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Wand_Model"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Models/Object/Wand/Wand.bin", XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationX(XMConvertToRadians(-90.f)) * XMMatrixIdentity()))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Potion_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Object/Potion/SM_Bottle_EmptyCapOff.bin", XMMatrixIdentity()))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_RaceRing_Model"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Models/Object/RaceRing/SM_BRR_RaceRing_01.bin", XMMatrixIdentity()))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Broom_Model"),
@@ -1543,6 +1649,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype<CLumos>(NEXT_LEVEL, CLumos::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
+	if (FAILED(m_pGameInstance->Add_Prototype<CAccio>(NEXT_LEVEL, CAccio::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CLeviosoSide>(NEXT_LEVEL, CLeviosoSide::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
@@ -1603,6 +1712,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Teleport>(NEXT_LEVEL, CGoblin_Teleport::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+	
 	if (FAILED(m_pGameInstance->Add_Prototype<CEffectPool>(g_iStaticLevel, CEffectPool::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
@@ -1856,6 +1969,57 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 	/* For.Prototype_GameObject_Spell_Drag*/
 	if (FAILED(m_pGameInstance->Add_Prototype<CSpell_Drag>(g_iStaticLevel, CSpell_Drag::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+
+	/* For.Prototype_GameObject_Quest_Canvas*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Canvas>(g_iStaticLevel, CQuest_Canvas::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_Quest_Panel*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Panel>(g_iStaticLevel, CQuest_Panel::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_Quest_Border*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Border>(g_iStaticLevel, CQuest_Border::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_Quest_Header*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Header>(g_iStaticLevel, CQuest_Header::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_Quest_HeaderLine*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_HeaderLine>(g_iStaticLevel, CQuest_HeaderLine::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_Quest_List*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_List>(g_iStaticLevel, CQuest_List::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_Quest_Info*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Info>(g_iStaticLevel, CQuest_Info::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_Quest_Info_Header*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Info_Header>(g_iStaticLevel, CQuest_Info_Header::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_Quest_Info_Line*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Info_Line>(g_iStaticLevel, CQuest_Info_Line::Create(m_pDevice, m_pContext))))
+	{
+		return E_FAIL;
+	}
+	/* For.Prototype_GameObject_Quest_Entry_Line*/
+	if (FAILED(m_pGameInstance->Add_Prototype<CQuest_Entry_Line>(g_iStaticLevel, CQuest_Entry_Line::Create(m_pDevice, m_pContext))))
 	{
 		return E_FAIL;
 	}
@@ -2115,6 +2279,14 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype<CMapElement_Door>(g_iStaticLevel, CMapElement_Door::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_MapElement_Chest */
+	if (FAILED(m_pGameInstance->Add_Prototype<CMapElement_Chest>(g_iStaticLevel, CMapElement_Chest::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_MapElement_Chest_Lid */
+	if (FAILED(m_pGameInstance->Add_Prototype<CMapElement_Chest_Lid>(g_iStaticLevel, CMapElement_Chest_Lid::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_Unified */
 	if (FAILED(m_pGameInstance->Add_Prototype<CMapElement_Lake>(g_iStaticLevel, CMapElement_Lake::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -2134,6 +2306,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_GameObject_Player */
 	if (FAILED(m_pGameInstance->Add_Prototype<CPlayer>(g_iStaticLevel, CPlayer::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_BroomRacerAI */
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroomRacerAI>(g_iStaticLevel, CBroomRacerAI::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Goblin */
@@ -2188,6 +2364,14 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype<CWand>(g_iStaticLevel, CWand::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_Potion */
+	if (FAILED(m_pGameInstance->Add_Prototype<CItem_Potion>(g_iStaticLevel, CItem_Potion::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_RaceRing */
+	if (FAILED(m_pGameInstance->Add_Prototype<CRaceRing>(g_iStaticLevel, CRaceRing::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_Troll_Weapon */
 	if (FAILED(m_pGameInstance->Add_Prototype<CTroll_Weapon>(g_iStaticLevel, CTroll_Weapon::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -2206,6 +2390,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_GameObject_Broom */
 	if (FAILED(m_pGameInstance->Add_Prototype<CBroom>(g_iStaticLevel, CBroom::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_BroomRaceManager */
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroomRaceManager>(g_iStaticLevel, CBroomRaceManager::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 
