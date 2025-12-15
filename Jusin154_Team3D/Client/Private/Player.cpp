@@ -63,7 +63,6 @@ HRESULT CPlayer::Initialize(void* pArg)
 	Load_KeyFrame();
 #endif // _DEBUG
 
-	m_pBroom = m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_ITEM)->Get_Object<CBroom>();
 	m_pBroomModel = m_pBroom->Get_Component<CModel>();
 	m_pBroomTransform = m_pBroom->Get_Component<CTransform>();
 	SAFE_ADDREF(m_pBroom);
@@ -92,8 +91,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pInfoInstance->Regist_PlayerAlly(this);
 	m_pInfoInstance->Set_Damage(m_pStat->Get_Stat().fDamage);
 
-	m_pCharacter_Controller->Set_Position(XMVectorSet(-34.f, 5, -11.4f, 1.f));
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-34.f, 5, -11.4f, 1.f));
+	m_pCharacter_Controller->Set_Position(XMVectorSet(-21.f, 0.f, -14.f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-21.f, 0.f, -14.f, 1.f));
+
 
 #ifdef _DEBUG
 	m_BasicEffect = make_unique<BasicEffect>(m_pDevice);
@@ -107,6 +107,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	// UI 연동 추가
 	m_pInfoInstance->Add_Event(TEXT("UseSpell"), [this](void* p) {this->Get_Spell(*reinterpret_cast<_int*>(p)); });
 	m_pInfoInstance->Add_Event(TEXT("Canvas_Change"), [this](void* p) {this->Get_UIState(*reinterpret_cast<_int*>(p)); });
+
+	m_bAI = false;
 	return S_OK;
 }
 
@@ -126,8 +128,17 @@ void CPlayer::Update(_float fTimeDelta)
 	UpdateGrapInteractive(fTimeDelta);
 	
 	m_pFSM->Update_State(fTimeDelta);
+	float ratio = m_pModelCom->Get_CurrentTrackProgressRatio();
 
-	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
+	float ease = 1.f;
+	if (ratio < 0.4f)
+		ease = 1.15f;      
+	else if (ratio > 0.85f)
+		ease = 0.85f;      
+
+	m_pModelCom->Play_Animation(fTimeDelta * ease, m_pTransformCom);
+
+
 
 	Play_Event();
 	
@@ -149,14 +160,6 @@ __super::Update(fTimeDelta);
 		m_pInfoInstance->Mouse_Input(ENUM_CLASS(KEYINPUT::DIM_RBUTTON_UP));
 		m_bAim = false; 
 	}
-
-	if (m_pGameInstance->Key_Down(DIK_1)) {
-		if (m_pModelCom->Get_SecondAnimIndex() == m_Animation[STATEANIM::LUMOS].first)
-		{
-			m_pModelCom->Set_Second_AnimationIndex(ENUM_CLASS(BLEND_BONE::SHOULDER_R), m_Animation[STATEANIM::LUMOS_STOP].first, m_Animation[STATEANIM::LUMOS_STOP].second);
-		}
-	}
-
 }
 
 void CPlayer::UpdateGrapInteractive(_float fTimeDelta)
@@ -195,7 +198,8 @@ void CPlayer::Late_Update(_float fTimeDelta)
 	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW, this);
+
+	Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius()));
 
 	__super::Late_Update(fTimeDelta);
 
@@ -268,21 +272,17 @@ HRESULT CPlayer::Render()
 
 	return S_OK;
 }
-HRESULT CPlayer::Render_Shadow()
+HRESULT CPlayer::Render_Shadow(SHADOW eType)
 {
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldMatrixPtr()))) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ViewMatrix", D3DTS::VIEW))) {
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ViewMatrix", D3DTS::VIEW, eType))) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ProjMatrix", D3DTS::PROJ))) {
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ProjMatrix", D3DTS::PROJ, eType))) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", &m_pGameInstance->Get_ShadowDesc()->fFar, sizeof(_float)))) {
-		return E_FAIL;
-	}
-
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
 	for (_uint i = 0; i < iNumMeshes; i++)
@@ -291,10 +291,7 @@ HRESULT CPlayer::Render_Shadow()
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
-			return E_FAIL;
-		}
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::SHADOW)))) {
 			return E_FAIL;
 		}
 
@@ -314,8 +311,13 @@ void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 	else {
 		m_fHitDegree = -1.f;
 	}
+	if (m_pFSM->IsEnable(FSMSTATE::SHIELD))
+	{
+		m_bShield = true;
+	}
 
-	m_pFSM->Change_State(FSMSTATE::HIT);
+	if(!m_pFSM->IsEnable(FSMSTATE::DODGE) && !m_bShield)
+		m_pFSM->Change_State(FSMSTATE::HIT);
 }
 void CPlayer::OnHit(CGameObject* pOther, CGameObject* pCaller)
 {
@@ -339,7 +341,7 @@ void CPlayer::Render_CameraCoordinateSystem()
 	_float2 vLook = { XMVectorGetX(xmvLook), XMVectorGetZ(xmvLook) };
 
 
-	GUI::Begin("CAMERA");
+	GUI::Begin("CAMERA", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	GUI::PushItemWidth(80);
 	if (GUI::CollapsingHeader("Player_CAM_COOORD")) {
 
@@ -489,6 +491,10 @@ HRESULT CPlayer::Ready_Parts()
 		}
 	}
 
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, LAYER_ITEM, nullptr, this,&m_pBroom))) {
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 
@@ -548,7 +554,7 @@ void CPlayer::Update_CameraCoordinateSystem(_float fTimeDelta)
 }
 
 _matrix CPlayer::Get_WandPos()
-{
+ {
 	CWand* pWand = Get_PartObject<CWand>();
 
 	if (pWand == nullptr)
@@ -617,7 +623,7 @@ void CPlayer::Free()
 
 void CPlayer::Describe_Entity()
 {
-	GUI::Begin("UNIT");
+	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	GUI::PushItemWidth(80);
 	if (GUI::CollapsingHeader("PLAYER_DESC")) {
 		m_pCharacter_Controller->Describe_Entity();

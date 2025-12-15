@@ -12,7 +12,7 @@ NS_BEGIN(Editor)
 class CUI_Manager final : public CUIObject
 {
 public:
-	enum class Canvases { GAMEPLAYER_CANVAS, SPELL_CANVAS };
+	enum class Canvases { GAMEPLAYER_CANVAS, SPELL_CANVAS, QUEST_CANVES };
 
 private:
 	CUI_Manager(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -52,6 +52,7 @@ private:
 	CGameObject* m_pGamePlay_Canves = { nullptr };
 	CGameObject* m_pSpell_Canvas = { nullptr };
 	CGameObject* m_pLoding_Canvas= { nullptr };
+	CGameObject* m_pQuest_Canves= { nullptr };
 	CGameObject* m_pMouse_Cursor = { nullptr };
 	CGameObject* m_pCamera_LockOn = { nullptr };
 	_bool			m_bCanvas_Change = { false };

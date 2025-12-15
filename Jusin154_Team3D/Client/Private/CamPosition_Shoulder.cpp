@@ -392,7 +392,7 @@ void CCamPosition_Shoulder::Free()
 
 void CCamPosition_Shoulder::Describe_Entity()
 {
-	GUI::Begin("CAMERA");
+	GUI::Begin("CAMERA", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	if (GUI::CollapsingHeader("Cam_Shoulder")) {
 		m_pTransformCom->Describe_Entity();
 

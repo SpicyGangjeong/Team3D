@@ -772,7 +772,7 @@ void CMapInfo::Free()
 
 void CMapInfo::Describe_Entity()
 {
-	GUI::Begin("CLIENT_SYSTEM");
+	GUI::Begin("CLIENT_SYSTEM", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	if (GUI::CollapsingHeader("MapInfoDesc")) {
 		CLayer* pLayer = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_BACKGROUND);
 		if (nullptr == pLayer) {

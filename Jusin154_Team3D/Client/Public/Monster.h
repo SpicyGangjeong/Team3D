@@ -38,13 +38,15 @@ protected:
 	_float			m_fOutLineThickness = { 5.f };
 	_float			m_fOutLineScale = { 1.f };
 	_float			m_fOutLinePower = { 1.f };
+	_float			m_fDisolveTime = { 0.f };
+	_bool			m_bDisolve = { false };
 
 protected:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	HRESULT Ready_Components(void* pArg);
 	void Set_Target(CUnit& pTarget, CTransform& pTransform);
-
+	virtual HRESULT Render_Disolve();
 public:
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr)PURE;
 	virtual void Free() override;

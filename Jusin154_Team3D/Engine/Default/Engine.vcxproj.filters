@@ -34,9 +34,6 @@
     <Filter Include="01.Utility\03.RenderTargets">
       <UniqueIdentifier>{d7596dbd-fa1c-414b-9f4e-f05a1a982434}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\05.Shadow">
-      <UniqueIdentifier>{6f4f880c-b0f2-4fab-ba8b-0939f6bc9321}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03.Management\10.Collider_Manager">
       <UniqueIdentifier>{ab763fcc-ac5b-4a2e-a99e-e96924a06c84}</UniqueIdentifier>
     </Filter>
@@ -383,9 +380,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Rect.cpp">
       <Filter>02.Element\02.Component\02.VIBuffer\Rect</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Shadow.cpp">
-      <Filter>01.Utility\05.Shadow</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\imgui_demo.cpp">
       <Filter>99.Define\99.THIRDPARTY\IMGUI</Filter>
@@ -1048,9 +1042,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_Rect.h">
       <Filter>02.Element\02.Component\02.VIBuffer\Rect</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Shadow.h">
-      <Filter>01.Utility\05.Shadow</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Key_Manager.h">
       <Filter>00.System\00.Device\Input\00.Key_Manager</Filter>

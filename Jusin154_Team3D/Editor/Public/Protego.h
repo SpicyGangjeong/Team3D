@@ -34,8 +34,6 @@ private:
 	_wstring	 m_wstrEffectName = {};
 
 	class CEditEffect* m_pSphere = { nullptr };
-	class CEditEffect* m_pBottom = { nullptr };
-	class CEditEffect* m_pCircle = { nullptr };
 
 	_float		 m_fSizeAccTime = {};
 	_float       m_fAmountSize = {};

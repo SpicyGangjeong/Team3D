@@ -28,7 +28,7 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
-	virtual HRESULT Render_Shadow() override;
+	virtual HRESULT Render_Shadow(SHADOW eType) override;
 	virtual _vector Get_LockOnPos() override;
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
@@ -81,12 +81,16 @@ private:
 	_float m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = {};
 	_float m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::END)] = { 20.f,5.f,30.f,15.f };
 
-	_bool m_bStep = { false };
-	_float m_fTpTime = {};
-	_float m_fAirTime = {};
+	_bool	m_bStep = { false };
+	_float	m_fTpTime = {};
+	_float	m_fAirTime = {};
 	_vector m_vOriginPos = {};
-	_float m_fLength = {};
-	_bool m_bShield = { false };
+	_float	m_fLength = {};
+	_bool	m_bShield = { false };
+	_bool	m_bPos = {};
+	_float	m_fAccel = { 3.f };
+	_float	m_fTargetSpeed = { 60.f };
+	_float	m_fSpeed = {};
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();

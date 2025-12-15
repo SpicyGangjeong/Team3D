@@ -19,12 +19,14 @@ HRESULT CLight_Main::Initialize_Prototype()
 
 HRESULT CLight_Main::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
+	if (FAILED(__super::Initialize(pArg))){
 		return E_FAIL;
+	}
 
 
-	if (FAILED(Ready_Components()))
+	if (FAILED(Ready_Components())){
 		return E_FAIL;
+	}
 
 	m_pTransformCom->Set_State(STATE::LOOK, XMVectorSet(1.f, -1.f, 1.f, 0.f));
 
@@ -33,13 +35,15 @@ HRESULT CLight_Main::Initialize(void* pArg)
 
 void CLight_Main::Priority_Update(_float fTimeDelta)
 {
-
+	_float4 vLook = {};
+	XMStoreFloat4(&vLook, m_pTransformCom->Get_State(STATE::LOOK));
+	m_pGameInstance->Ready_Shadow_Light(vLook);
 }
 
 void CLight_Main::Update(_float fTimeDelta)
 {
 #ifdef _DEBUG
-	GUI::Begin("LIGHT");
+	GUI::Begin("LIGHT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	if (GUI::CollapsingHeader("Main_Light")) {
 		m_pLightCom->Describe_Entity();
 	}
@@ -67,7 +71,7 @@ HRESULT CLight_Main::Ready_Components()
 	//LightDesc.vAmbient = _float4(0.6f, 0.6f, 0.6f, 0.f);
 	//LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 0.f);
 	LightDesc.vDiffuse = _float4(0.3f, 0.3f, 0.1f, 0.f);
-	LightDesc.vAmbient = _float4(0.3f, 0.3f, 0.5f, 0.f);
+	LightDesc.vAmbient = _float4(0.12f, 0.12f, 0.24f, 0.f);
 	LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 0.f);
 	LightDesc.pDirection = m_pTransformCom->Get_StatePtr(STATE::LOOK);
 	LightDesc.iLevel = NEXT_LEVEL;

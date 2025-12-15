@@ -8,7 +8,6 @@
 #include "PipeLine.h"
 #include "Light_Manager.h"
 #include "Renderer.h"
-#include "Shadow.h"
 #include "Camera_Manager.h"
 #include "RenderTarget_Manager.h"
 #include "Key_Manager.h"
@@ -92,10 +91,6 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 	}
 	m_pCamera_Manager = CCamera_Manager::Create(*ppDevice, *ppContext, EngineDesc.iNumLevels);
 	if (nullptr == m_pCamera_Manager) {
-		return E_FAIL;
-	}
-	m_pShadow = CShadow::Create();
-	if (nullptr == m_pShadow) {
 		return E_FAIL;
 	}
 	m_pPicking = CPicking::Create(*ppDevice, *ppContext, EngineDesc.hWnd, EngineDesc.iWinSizeX, EngineDesc.iWinSizeY);
@@ -358,11 +353,33 @@ void CGameInstance::Compute_FrameCount()
 	m_fTimer_PhysX = Get_TimeDelta(TEXT("Timer_PhysX"));
 	m_fTimer_Level = Get_TimeDelta(TEXT("Timer_Level"));
 	m_fTimer_FrameCount = Get_TimeDelta(TEXT("Timer_FrameCount"));
+
+	m_fTimer_Render_Priority = Get_TimeDelta(TEXT("Timer_Render_Priority"));
+	m_fTimer_Render_Shadow = Get_TimeDelta(TEXT("Timer_Render_Shadow"));
+	m_fTimer_Render_NonBlend = Get_TimeDelta(TEXT("Timer_Render_NonBlend"));
+	m_fTimer_Render_SSAO = Get_TimeDelta(TEXT("Timer_Render_SSAO"));
+	m_fTimer_Render_SSAO_BLUR = Get_TimeDelta(TEXT("Timer_Render_SSAO_BLUR"));
+	m_fTimer_Render_LightAcc = Get_TimeDelta(TEXT("Timer_Render_LightAcc"));
+	m_fTimer_Render_Blur = Get_TimeDelta(TEXT("Timer_Render_Blur"));
+	m_fTimer_Render_Combined = Get_TimeDelta(TEXT("Timer_Render_Combined"));
+	m_fTimer_Render_Occlusion = Get_TimeDelta(TEXT("Timer_Render_Occlusion"));
+	m_fTimer_Render_EnvironmentPostProcess = Get_TimeDelta(TEXT("Timer_Render_EnvironmentPostProcess"));
+	m_fTimer_Render_Fog = Get_TimeDelta(TEXT("Timer_Render_Fog"));
+	m_fTimer_Render_Effect = Get_TimeDelta(TEXT("Timer_Render_Effect"));
+	m_fTimer_Render_NonLight = Get_TimeDelta(TEXT("Timer_Render_NonLight"));
+	m_fTimer_Render_Blend = Get_TimeDelta(TEXT("Timer_Render_Blend"));
+	m_fTimer_Render_WeightBlend = Get_TimeDelta(TEXT("Timer_Render_WeightBlend"));
+	m_fTimer_Render_Bloom = Get_TimeDelta(TEXT("Timer_Render_Bloom"));
+	m_fTimer_Render_LastColor = Get_TimeDelta(TEXT("Timer_Render_LastColor"));
+	m_fTimer_Render_Tone_Mapping = Get_TimeDelta(TEXT("Timer_Render_Tone_Mapping"));
+	m_fTimer_Render_UI = Get_TimeDelta(TEXT("Timer_Render_UI"));
+	m_fTimer_Render_UI_Overley = Get_TimeDelta(TEXT("Timer_Render_UI_Overley"));
 #endif // _DEBUG
 }
 
 void CGameInstance::Present_TimeCost() const
 {
+#pragma region TimeCost
 #ifdef _DEBUG
 	_float fTotal = m_fTimer_PriorityUpdate
 		+ m_fTimer_Update
@@ -374,7 +391,8 @@ void CGameInstance::Present_TimeCost() const
 		+ m_fTimer_Level;
 
 	GUI::PushItemWidth(80);
-	GUI::Begin("Previous_Frame_Timer");
+	GUI::Begin("Previous_Frame_Timer", 0, IMGUI_GLOBAL_BEGIN_FLAG);
+
 	if (GUI::CollapsingHeader("Detail"))
 	{
 		{
@@ -407,8 +425,138 @@ void CGameInstance::Present_TimeCost() const
 			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
 			GUI::Text("Level %d", int(m_fTimer_Level / fTotal * 100.f));
 		}
+		if (GUI::IsPopupOpen("Renderer_Timer"))
+		{
+			if (GUI::BeginPopup("Renderer_Timer")) {
+				_float fRenderer_Total = m_fTimer_Render_Priority
+					+ m_fTimer_Render_Shadow
+					+ m_fTimer_Render_NonBlend
+					+ m_fTimer_Render_SSAO
+					+ m_fTimer_Render_SSAO_BLUR
+					+ m_fTimer_Render_LightAcc
+					+ m_fTimer_Render_Blur
+					+ m_fTimer_Render_Combined
+					+ m_fTimer_Render_Occlusion
+					+ m_fTimer_Render_EnvironmentPostProcess
+					+ m_fTimer_Render_Fog
+					+ m_fTimer_Render_Effect
+					+ m_fTimer_Render_NonLight
+					+ m_fTimer_Render_Blend
+					+ m_fTimer_Render_WeightBlend
+					+ m_fTimer_Render_Bloom
+					+ m_fTimer_Render_LastColor
+					+ m_fTimer_Render_Tone_Mapping
+					+ m_fTimer_Render_UI
+					+ m_fTimer_Render_UI_Overley;
+				{
+					GUI::ProgressBar(m_fTimer_Render_Priority / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_Priority %d", int(m_fTimer_Render_Priority / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_Shadow / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_Shadow %d", int(m_fTimer_Render_Shadow / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_NonBlend / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_NonBlend %d", int(m_fTimer_Render_NonBlend / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_SSAO / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_SSAO %d", int(m_fTimer_Render_SSAO / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_SSAO_BLUR / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_SSAO_BLUR %d", int(m_fTimer_Render_SSAO_BLUR / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_LightAcc / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_LightAcc %d", int(m_fTimer_Render_LightAcc / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_Blur / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_Blur %d", int(m_fTimer_Render_Blur / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_Combined / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_Combined %d", int(m_fTimer_Render_Combined / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_Occlusion / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_Occlusion %d", int(m_fTimer_Render_Occlusion / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_EnvironmentPostProcess / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_EnvironmentPostProcess %d", int(m_fTimer_Render_EnvironmentPostProcess / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_Fog / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_Fog %d", int(m_fTimer_Render_Fog / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_Effect / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_Effect %d", int(m_fTimer_Render_Effect / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_NonLight / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_NonLight %d", int(m_fTimer_Render_NonLight / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_Blend / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_Blend %d", int(m_fTimer_Render_Blend / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_WeightBlend / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_WeightBlend %d", int(m_fTimer_Render_WeightBlend / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_Bloom / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_Bloom %d", int(m_fTimer_Render_Bloom / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_LastColor / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_LastColor %d", int(m_fTimer_Render_LastColor / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_Tone_Mapping / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_Tone_Mapping %d", int(m_fTimer_Render_Tone_Mapping / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_UI / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_UI %d", int(m_fTimer_Render_UI / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_UI_Overley / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_UI_Overley %d", int(m_fTimer_Render_UI_Overley / fRenderer_Total * 100.f));
+				}
+				GUI::EndPopup();
+			}
+		}
 		{
 			GUI::ProgressBar(m_fTimer_DrawCall / fTotal, ImVec2(200.f, 0.f));
+			GUI::SameLine();
+			if (GUI::SmallButton("Renderer_Timer")) {
+				GUI::OpenPopup("Renderer_Timer");
+			}
 			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
 			GUI::Text("DrawCall %d", int(m_fTimer_DrawCall / fTotal * 100.f));
 		}
@@ -429,7 +577,7 @@ void CGameInstance::Present_TimeCost() const
 	static double refresh_time = 0.0;
 	if (refresh_time == 0.0)
 		refresh_time = GUI::GetTime();
-	while (refresh_time < GUI::GetTime()) // Create data at fixed 60 Hz rate for the demo
+	while (refresh_time < GUI::GetTime()) 
 	{
 		values[values_offset] = m_fTimer_FrameCount;
 		values_offset = (values_offset + 1) % IM_ARRAYSIZE(values);
@@ -475,6 +623,7 @@ void CGameInstance::Present_TimeCost() const
 	}
 	GUI::End();
 #endif // _DEBUG
+#pragma endregion
 }
 
 HRESULT CGameInstance::Change_Level(CLevel* pNewLevel)
@@ -565,14 +714,29 @@ void CGameInstance::Transform_Frustum_ToLocalSpace(_fmatrix WorldMatrixInverse)
 	m_pPipeLine->Transform_Frustum_ToLocalSpace(WorldMatrixInverse);
 }
 
-_bool CGameInstance::isIn_WorldFrustum(_fvector vWorldPos, _float fRadius)
+_bool CGameInstance::IsIn_WorldFrustum(_fvector vWorldPos, _float fRadius)
 {
-	return m_pPipeLine->isIn_WorldFrustum(vWorldPos, fRadius);
+	return m_pPipeLine->IsIn_WorldFrustum(vWorldPos, fRadius);
 }
 
-_bool CGameInstance::isIn_LocalFrustum(_fvector vLocalPos, _float fRadius)
+_bool CGameInstance::IsIn_LocalFrustum(_fvector vLocalPos, _float fRadius)
 {
-	return m_pPipeLine->isIn_LocalFrustum(vLocalPos, fRadius);
+	return m_pPipeLine->IsIn_LocalFrustum(vLocalPos, fRadius);
+}
+
+pair<_bool, _ubyte> CGameInstance::IsIn_ShadowViewFrustum(_fvector vWorldCenter, _float fRadius)
+{
+	return m_pPipeLine->IsIn_ShadowViewFrustum(vWorldCenter, fRadius);
+}
+
+HRESULT CGameInstance::Bind_CascadeSplitRatio(CShader* pShader, const _char* pConstantName, _bool bNear)
+{
+	return m_pPipeLine->Bind_CascadeSplitRatio(pShader, pConstantName, bNear);
+}
+
+HRESULT CGameInstance::Bind_CascadeBias(CShader* pShader, const _char* pConstantName)
+{
+	return m_pPipeLine->Bind_CascadeBias(pShader, pConstantName);
 }
 
 HRESULT CGameInstance::Bind_GlobalSRV(CShader* pShader, const _tchar* wszKeyGlobalSRV, const _char* pConstantName)
@@ -583,6 +747,26 @@ HRESULT CGameInstance::Bind_GlobalSRV(CShader* pShader, const _tchar* wszKeyGlob
 HRESULT CGameInstance::Load_GlobalSRV(const _tchar* wszKeyGlobalSRV, filesystem::path pathSRVFolder)
 {
 	return m_pPipeLine->Load_GlobalSRV(wszKeyGlobalSRV, pathSRVFolder);
+}
+
+HRESULT CGameInstance::Ready_Shadow_Light(const _float4& vShadowDirRPYQuat)
+{
+	return m_pPipeLine->Ready_Shadow_Light(vShadowDirRPYQuat);
+}
+
+HRESULT CGameInstance::Bind_Shadow_Resource(CShader* pShader, const _char* pConstantName, D3DTS eType, SHADOW eShadowType) const
+{
+	return m_pPipeLine->Bind_Shadow_Resource(pShader, pConstantName, eType, eShadowType);
+}
+
+const _float4x4* CGameInstance::Get_ShadowMatricesPtr(_uint iShadowBoxIndex)
+{
+	return m_pPipeLine->Get_ShadowMatricesPtr(iShadowBoxIndex);
+}
+
+_float  CGameInstance::Get_ShadowBoxFar(_uint iShadowBoxIndex)
+{
+	return m_pPipeLine->Get_ShadowBoxFar(iShadowBoxIndex);
 }
 
 void CGameInstance::Add_Light(_uint _iCurrentLevel, CLight* _pLight)
@@ -735,22 +919,6 @@ const _float* CGameInstance::Get_CurrentCameraFar()
 void CGameInstance::Force_CamPosition(_fvector vPos)
 {
 	return m_pCamera_Manager->Force_CamPosition(vPos);
-}
-HRESULT CGameInstance::Ready_Shadow_Light(const SHADOW_LIGHT_DESC& Desc)
-{
-	return m_pShadow->Ready_Shadow_Light(Desc);
-}
-HRESULT CGameInstance::Bind_Shadow_Resource(CShader* pShader, const _char* pConstantName, D3DTS eType) const
-{
-	return m_pShadow->Bind_Shadow_Resource(pShader, pConstantName, eType);
-}
-const _float4x4* CGameInstance::Get_ShadowMatricesPtr()
-{
-	return m_pShadow->Get_ShadowMatricesPtr();
-}
-const SHADOW_LIGHT_DESC* CGameInstance::Get_ShadowDesc()
-{
-	return m_pShadow->Get_ShadowDesc();
 }
 _bool CGameInstance::isPicking(_float3* pOut)
 {
@@ -1048,7 +1216,6 @@ void CGameInstance::Release_Engine()
 	SAFE_RELEASE(m_pFog);
 	SAFE_RELEASE(m_pPicking);
 	SAFE_RELEASE(m_pCollider_Manager);
-	SAFE_RELEASE(m_pShadow);
 	SAFE_RELEASE(m_pCamera_Manager);
 	SAFE_RELEASE(m_pRenderTarget_Manager);
 	SAFE_RELEASE(m_pPipeLine);

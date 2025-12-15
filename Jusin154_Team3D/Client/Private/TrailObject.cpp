@@ -316,6 +316,14 @@ void CTrailObject::Trail_Update(_fmatrix WorldMat, _float fTimeDelta)
 	m_pTrailCom->Trail_Update(fTimeDelta, WorldMat);
 }
 
+void CTrailObject::Rope_Trail_Update(_fmatrix WorldMat, _fmatrix EndWorldMat, _float fTimeDelta)
+ {
+	if (m_bVisible == false)
+		return;
+
+	m_pTrailCom->Rope_Trail_Update(WorldMat, fTimeDelta, m_TrailInfo.fDamping, m_TrailInfo.fRopeLength, m_TrailInfo.fMass, EndWorldMat);
+}
+
 
 HRESULT CTrailObject::Render()
 {
@@ -583,6 +591,13 @@ HRESULT CTrailObject::Bind_ShaderResources()
 #ifdef _DEBUG
 void CTrailObject::Describe_Entity()
 {
+	if (GUI::TreeNode("Rope Trail"))
+	{
 
+		GUI::DragFloat("Dampling", &m_TrailInfo.fDamping);
+		GUI::DragFloat("Rope Length", &m_TrailInfo.fRopeLength);
+
+		GUI::TreePop();
+	}
 }
 #endif

@@ -168,7 +168,7 @@ void CGameObject_Manager::Free()
 
 void CGameObject_Manager::Describe_Entity()
 {
-	GUI::Begin("SYSTEM");
+	GUI::Begin("SYSTEM", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	if (GUI::CollapsingHeader("Object_Manager")) {
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
 		GUI::Text("Levels : "); GUI::SameLine();

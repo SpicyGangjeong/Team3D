@@ -35,7 +35,7 @@ public:
 	_bool			Play_Animation(_float fTimeDelta, class CTransform* pTransform = nullptr); // 애니메이션에 델타타임을 넣어줌
 	_bool			Play_Anim(_float fTimeDelta, CTransform* pTransform);
 	_bool			Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform);
-	void			Set_AnimationIndex(_uint iIndex, _bool isLoop = true, _float fAmount = 1.f, _bool bRatio = false,_float fAnimSpeed = 1.f);
+	void			Set_AnimationIndex(_uint iIndex, _bool isLoop = true, _float fAmount = 1.f, _bool bRatio = false,_float fAnimSpeed = 1.f,_bool bRootBone = true);
 	void			Set_Second_AnimationIndex(_uint BoneIndex, _uint iIndex, _bool isLoop = false);
 	_bool			IsFinishedAnim() const { return m_bIsFinishedAnim; }
 	_bool			IsFinishedSecondAnim() const { return m_bIsSecondFinishedAnim; }
@@ -172,6 +172,7 @@ private:
 	_bool						m_bIsSecondFinishedAnim = { false };
 	_bool						m_bIsSecondLoop = { false };
 	_bool m_bRatio = { false };
+	_bool  m_bRootBone = {};
 
 private:
 #ifdef EDITOR_PROJECT

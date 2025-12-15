@@ -17,11 +17,12 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
-	virtual HRESULT Render_Shadow() override;
+	virtual HRESULT Render_Shadow(SHADOW eType) override;
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
 	_bool Get_Aim() { return m_bAim; }
 	void Set_SpellHit(_bool bHit) { m_bSpellHit = bHit; }
+	void Set_Shield(_bool bShield) { m_bShield = bShield; }
 	void Start_CameraShake(_float fTime, _float fIntense);
 #ifdef _DEBUG
 	void Render_CameraCoordinateSystem();
@@ -122,6 +123,9 @@ private:
 	_float3			m_TargetScale = { 1.f, 1.f, 1.f };
 	_float			m_fScaleSmoothSpeed = 2.5f;
 	_bool			m_bLumos = {};
+	_bool			m_bShield = {false};
+	_float			m_fAnimTime = {};
+	_bool			m_bTurbo = {};
 
 	HRESULT InputAction();
 	HRESULT InputMove();
@@ -185,6 +189,10 @@ private:
 	void	Behavior_Broom_FlyEnter();
 	HRESULT Behavior_Broom_FlyExitCheck(_float fTimeDelta);
 	void	Behavior_Broom_FlyExit();
+
+	void	Behavior_Broom_TurboFlyEnter();
+	HRESULT Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta);
+	void	Behavior_Broom_TurboFlyExit();
 
 	void	Behavior_Broom_DismountEnter();
 	HRESULT Behavior_Broom_DismountExitCheck(_float fTimeDelta);

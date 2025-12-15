@@ -40,21 +40,23 @@ private:
 	_float4x4					m_ViewMatrix = {};
 	_float4x4					m_ProjMatrix = {};
 
-	ID3D11DepthStencilView*		m_pShadowDSV = { nullptr };
+	ID3D11DepthStencilView*		m_pShadowDSV_NEAR = { nullptr };
+	ID3D11DepthStencilView*		m_pShadowDSV_MIDDLE = { nullptr };
+	ID3D11DepthStencilView*		m_pShadowDSV_FAR = { nullptr };
 	ID3D11DepthStencilView*		m_pPreShadowDSV = { nullptr };
 	ID3D11ShaderResourceView*	m_pSSAO_NoiseSRV = { nullptr };
 	ID3D11Texture2D*			m_pSSAO_NoiseTexture = { nullptr };
 	ID3D11Buffer*				m_pGlobalStaticCB = { nullptr };
 
-	SHADOW_LIGHT_DESC			m_PreShadowDesc = {};
+	_float						m_PreShadowFar = {};
 	_float4x4					m_PreShadowMatrices[ENUM_CLASS(D3DTS::END)] = {};
 
 	/* TunningParam  */
-	_int	m_iToneMappingType = { 2 };
+	_int	m_iToneMappingType = { 0 };
 	_float	m_fExposure = { 0.7f };
 
 	// Bloom
-	_int	m_iBloomEmbossingPass = { 0 };
+	_int	m_iBloomEmbossingPass = { 1 };
 	_float	m_fBloomThreshold = { 1.26f };
 	
 	// DOF Environment

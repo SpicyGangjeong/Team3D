@@ -78,7 +78,7 @@ void CMapElement_Light::Late_Update(_float fTimeDelta)
 	}
 #endif 
 
-	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pModelComs[0]->Get_Radius())) 
+	if (m_pGameInstance->IsIn_WorldFrustum(Get_WorldPostion(), m_pModelComs[0]->Get_Radius())) 
 	{
 		if (m_isLightOn)
 		{

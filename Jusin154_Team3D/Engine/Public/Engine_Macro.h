@@ -1,8 +1,14 @@
 ﻿#pragma once
 
+
+
 #ifndef GUI
 #define	GUI	ImGui
 #endif // !GUI
+#ifndef IMGUI_GLOBAL_BEGIN_FLAG
+#define IMGUI_GLOBAL_BEGIN_FLAG  ImGuiWindowFlags_NoFocusOnAppearing|ImGuiWindowFlags_NoBringToFrontOnFocus|ImGuiWindowFlags_AlwaysAutoResize
+#endif // IMGUI_GLOBAL_BEGIN_FLAG
+#define COMPUTE_TIMEDELTA(TIMER) m_pGameInstance->Compute_TimeDelta(TEXT(TIMER))
 
 #ifndef PSX
 #define PSX physx
@@ -96,6 +102,8 @@
 
 constexpr unsigned int g_iMaxShadowWidth		= 16384;
 constexpr unsigned int g_iMaxShadowHeight		= 9216;
+//constexpr unsigned int g_iMaxShadowWidth		= 4096;
+//constexpr unsigned int g_iMaxShadowHeight		= 2304;
 
 #ifndef AI_TEXTURE_TYPE_MAX
 #define AI_TEXTURE_TYPE_MAX 27

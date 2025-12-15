@@ -117,7 +117,7 @@ void CMapElement_Interactable::Late_Update(_float fTimeDelta)
 		}
 	}
 
-	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pModelComs[0]->Get_Radius())) {
+	if (m_pGameInstance->IsIn_WorldFrustum(Get_WorldPostion(), m_pModelComs[0]->Get_Radius())) {
 		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 	}
 }
@@ -269,11 +269,15 @@ HRESULT CMapElement_Interactable::Render_OutLine()
 	}
 
 #ifdef _DEBUG
-	GUI::SetNextItemWidth(80.f);
-	GUI::ColorPicker3("vOutLineColor", (_float*)&m_vOutLineColor);
-	GUI::SliderFloat("Thickness", &m_fOutLineThickness, 0.1f, 2.f, "%.1f");
-	GUI::SliderFloat("Scale", &m_fOutLineScale, 0.1f, 2.f, "%.1f");
-	GUI::SliderFloat("Power", &m_fOutLinePower, 0.1f, 2.f, "%.1f");
+	GUI::Begin("Unit", 0, IMGUI_GLOBAL_BEGIN_FLAG);
+	if (GUI::CollapsingHeader("OutLine")) {
+		GUI::SetNextItemWidth(80.f);
+		GUI::ColorPicker3("vOutLineColor", (_float*)&m_vOutLineColor);
+		GUI::SliderFloat("Thickness", &m_fOutLineThickness, 0.1f, 2.f, "%.1f");
+		GUI::SliderFloat("Scale", &m_fOutLineScale, 0.1f, 2.f, "%.1f");
+		GUI::SliderFloat("Power", &m_fOutLinePower, 0.1f, 2.f, "%.1f");
+	}
+	GUI::End();
 #endif // _DEBUG
 
 	Compute_Depth();

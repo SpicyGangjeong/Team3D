@@ -27,7 +27,7 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
-	virtual HRESULT Render_Shadow() override;
+	virtual HRESULT Render_Shadow(SHADOW eType) override;
 	virtual _vector Get_LockOnPos() override;
 	virtual void OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr)override;
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
@@ -47,6 +47,7 @@ private:
 	DAMAGE_INFO m_DamageInfo;
 
 	_bool m_bDetection = { false };
+
 
 	class CEffectParts* m_pSmoke = { nullptr };
 	class CEffectParts* m_pGoblin_Particle = { nullptr };
@@ -82,6 +83,10 @@ private:
 	_float	m_fLength = {};
 	_float	m_fMoveTime = {};
 	_bool	m_bFirstMove = {};
+	_bool	m_bPos = {};
+	_float	m_fAccel = { 3.f};
+	_float	m_fTargetSpeed = {60.f};
+	_float	m_fSpeed = {};
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();
