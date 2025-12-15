@@ -2616,7 +2616,7 @@ void CPlayer::Set_Anim()
 
 	m_Animation[STATEANIM::MAPHELP] = { 122,false };
 	m_Animation[STATEANIM::POTION] = { 115,false }; // 114 포션 // 909 루모스
-	m_Animation[STATEANIM::ACCIO] = { 417,false };
+	m_Animation[STATEANIM::ACCIO] = { 759,false };
 	m_Animation[STATEANIM::DESCENDO] = { 857,false };
 	m_Animation[STATEANIM::DEPULSO] = { 858,false };
 	m_Animation[STATEANIM::DIFFINDO] = { 862,false };
