@@ -815,6 +815,11 @@ ON_COLLISION_INFO CEffect_Container::MonsterSweepTarget(_vector StartPos, _vecto
 					m_bHit = true;
 				}
 				break;
+				case PXOBJECT::SKILL_PROTEGO:
+				{
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					m_bHit = true;
+				}
 				}
 			}
 			}

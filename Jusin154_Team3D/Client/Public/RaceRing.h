@@ -23,6 +23,9 @@ public:
 private:
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
+	class CBroomRaceManager* m_pBroomRaceManager = { nullptr };
+
+
 
 private:
 	HRESULT Ready_Components();

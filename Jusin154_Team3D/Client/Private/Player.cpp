@@ -91,8 +91,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pInfoInstance->Regist_PlayerAlly(this);
 	m_pInfoInstance->Set_Damage(m_pStat->Get_Stat().fDamage);
 
-	m_pCharacter_Controller->Set_Position(XMVectorSet(-82.f, -30.f, -56.f, 1.f));
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-82.f, -30.f, -56.f, 1.f));
+	m_pCharacter_Controller->Set_Position(XMVectorSet(-21.f, 0.f, -14.f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-21.f, 0.f, -14.f, 1.f));
+
 
 #ifdef _DEBUG
 	m_BasicEffect = make_unique<BasicEffect>(m_pDevice);
