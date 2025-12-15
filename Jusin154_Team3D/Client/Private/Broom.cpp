@@ -79,6 +79,10 @@ void CBroom::Update(_float fTimeDelta)
 
 	if(!m_pParentUnit->IsAI())
 		PlayerInput();
+	else {
+		m_bHoverToggle = m_Input.bHoverToggle;
+		m_bTurbo = m_Input.bTurbo;
+	}
 
 	if (!m_bRide)
 	{
@@ -266,8 +270,15 @@ void CBroom::PlayerInput()
 	m_Input.Y = (m_pGameInstance->Key_Pressing(DIK_SPACE) ? 1.f : 0.f)
 		- (m_pGameInstance->Key_Pressing(DIK_LCONTROL) ? 1.f : 0.f + m_pGameInstance->Key_Pressing(DIK_N) ? 1.f : 0.f);
 
-	m_Input.bHoverToggle = m_pGameInstance->Key_Down(DIK_LSHIFT);
+	if (m_pGameInstance->Key_Up(DIK_LSHIFT))
+	{
+		m_Input.bHoverToggle = !m_Input.bHoverToggle;
+		m_bHoverToggle = m_Input.bHoverToggle;
+	}
+
+
 	m_Input.bTurbo = m_pGameInstance->Mouse_Pressing(DIM_LBUTTON);
+	m_bTurbo = m_Input.bTurbo;
 }
 
 

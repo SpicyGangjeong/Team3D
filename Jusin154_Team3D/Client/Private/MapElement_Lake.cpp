@@ -78,7 +78,7 @@ void CMapElement_Lake::Update(_float fTimeDelta)
 
 void CMapElement_Lake::Late_Update(_float fTimeDelta)
 {
-	if(m_pGameInstance->isIn_WorldFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_fRadius))
+	if(m_pGameInstance->IsIn_WorldFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_fRadius))
 		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 }
 

@@ -21,6 +21,7 @@
 #include "Item_Potion.h"
 #include "RaceRing.h"
 #include "Goblin_BattleAxe.h"
+#include "BroomRaceManager.h"
 
 #pragma region ACTOR
 
@@ -329,7 +330,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	isLoad_Background = true;
 #endif // gimch
 #ifdef Bin
-	isLoad_Background = true;
+	isLoad_Background = false;
 #endif // 
 #ifdef 진우
 	isLoad_Background = true;
@@ -1455,11 +1456,32 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Desc.vLocalTranslation = { 0.f, 0.f, 0.f };
 		}
 
+		CRigidBody_Dynamic::RIGIDBODY_PROTOTYPE_DYNAMIC_DESC Desc1{};
+		{
+			Desc1.eType = ACTOR::BOX;
+			Desc1.ePxRigidBodyFlags = { PSX::PxRigidBodyFlag::eKINEMATIC };
+			Desc1.ePxShapeFlags = { PSX::PxShapeFlag::eVISUALIZATION | PSX::PxShapeFlag::eSCENE_QUERY_SHAPE };
+			Desc1.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
+			Desc1.vMatInfo = { 0.5f, 0.5f, 0.6f };
+			Desc1.fContactOffset = { 0.05f };
+			Desc1.vhalfGeometryInfo = { 1.f, 1.f, 1.f };
+			Desc1.fDensity = 1.f;
+			Desc1.pxMassCenter = PSX::PxTransform(PSX::PxIDENTITY());
+			Desc1.eLockFlag = {};
+			Desc1.vAutoDamping = { 1.f, 1.f };
+			Desc1.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
+			Desc1.vLocalTranslation = { 0.f, 0.f, 0.f };
+		}
+
+
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_HEAVY_WALL"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
 			return E_FAIL;
 		}
 
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc)))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_SHIELD"), CRigidBody_Dynamic::Create(m_pDevice, m_pContext, Desc1)))) {
 			return E_FAIL;
 		}
 		if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("PHYSX_CCT_CAPSULE"), CCharacter_Controller::Create(m_pDevice, m_pContext)))) {
@@ -1480,9 +1502,9 @@ HRESULT CLoader::Loading_For_GamePlay()
 			Desc.ePxMaterialTypes = { PXMATERIAL::DEFAULT };
 			Desc.vMatInfo = { 0.5f, 0.5f, 0.6f };
 			Desc.fContactOffset = { 0.05f };
-			Desc.vhalfGeometryInfo = { 0.35f, 0.75f, 0.15f };
-			Desc.fDensity = 10.f;
-			PSX::PxTransform pxPivotTransform = PSX::PxTransform(PSX::PxVec3(0.f, 0.f, 0.f));
+			Desc.vhalfGeometryInfo = { 0.35f, 0.65f, 0.15f };
+			Desc.fDensity = 1.f;
+			PSX::PxTransform pxPivotTransform = PSX::PxTransform(PSX::PxVec3(0.f, 1.f, 0.f));
 			Desc.vLocalRotQ = { 0.f, 0.f, 0.f, 1.f };
 			Desc.vLocalTranslation = { 0.5f, 0.f, 0.f };
 
@@ -2373,6 +2395,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_GameObject_Broom */
 	if (FAILED(m_pGameInstance->Add_Prototype<CBroom>(g_iStaticLevel, CBroom::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_BroomRaceManager */
+	if (FAILED(m_pGameInstance->Add_Prototype<CBroomRaceManager>(g_iStaticLevel, CBroomRaceManager::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 

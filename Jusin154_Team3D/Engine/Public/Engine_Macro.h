@@ -102,6 +102,8 @@
 
 constexpr unsigned int g_iMaxShadowWidth		= 16384;
 constexpr unsigned int g_iMaxShadowHeight		= 9216;
+//constexpr unsigned int g_iMaxShadowWidth		= 4096;
+//constexpr unsigned int g_iMaxShadowHeight		= 2304;
 
 #ifndef AI_TEXTURE_TYPE_MAX
 #define AI_TEXTURE_TYPE_MAX 27

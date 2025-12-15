@@ -18,6 +18,7 @@
 #include "Unified.h"
 #include "MapElement_Lake.h"
 #include "RaceRing.h"
+#include "BroomRaceManager.h"
 
 #pragma region ACTOR
 #include "Player.h"
@@ -62,6 +63,9 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	if (FAILED(Ready_Layer_Item(LAYER_ITEM))) {
 		return E_FAIL;
 	}
+	if (FAILED(Ready_Layer_Manager(TEXT("Layer_Manager")))) {
+		return E_FAIL;
+	}
 
 	if (FAILED(Ready_Layer_RaceRing(TEXT("Layer_RaceRing")))) {
 		return E_FAIL;
@@ -79,7 +83,7 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	if (FAILED(Ready_Layer_Monster())) {
 		return E_FAIL;
 	}
-
+	
 
 	return S_OK;
 }
@@ -247,7 +251,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Background = true;
 #endif // gimch
 #ifdef Bin
-	isReady_Background = true;
+	isReady_Background = false;
 #endif // 
 #ifdef 진우
 	isReady_Background = true;
@@ -264,7 +268,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	if(false == isReady_Background)
 	{
 		/* 테스트용 맵 */
-		CInfoInstance::GetInstance()->Load_MapObjects("ClientTest");
+		CInfoInstance::GetInstance()->Load_MapObjects("Map1215");
 	}
 	else
 	{
@@ -515,10 +519,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_BroomRacerAI(const _wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroomRacerAI>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
-		return E_FAIL;
+	for (_uint i = 0; i < 1; ++i) {
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroomRacerAI>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, m_pBroomRaceManager))) {
+			return E_FAIL;
+		}
 	}
-
 	return S_OK;
 }
 
@@ -530,7 +535,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Item(const _wstring& strLayerTag)
 HRESULT CLevel_GamePlay::Ready_Layer_RaceRing(const _wstring& strLayerTag)
 {
 	for (_uint i = 0; i < 50; ++i) {
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, m_pBroomRaceManager))) {
 			return E_FAIL;
 		}
 	}
@@ -573,6 +578,15 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 
 
 	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Manager(const _wstring& strLayerTag)
+{
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroomRaceManager>(g_iStaticLevel, NEXT_LEVEL, strLayerTag,nullptr,nullptr,&m_pBroomRaceManager))) {
 		return E_FAIL;
 	}
 

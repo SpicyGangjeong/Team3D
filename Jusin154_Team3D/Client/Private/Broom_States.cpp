@@ -191,7 +191,6 @@ HRESULT CBroom::Behavior_Broom_HoverExitCheck(_float fTimeDelta)
 	_bool bUp = m_Input.Y > 0.f;
 	_bool bDown = m_Input.Y < 0.f;
 	_bool bShift = m_Input.bHoverToggle;
-	m_bHoverToggle = m_Input.bHoverToggle;
 	_bool bTurbo = m_Input.bTurbo;
 
 	if (m_bHoverToggle)
@@ -234,7 +233,6 @@ HRESULT CBroom::Behavior_Broom_HoverExitCheck(_float fTimeDelta)
 
 			if (bFwd)
 			{
-				//Camera_InterpTurn(fTimeDelta*0.5f);
 				m_fTargetSpeed = m_fHoverMaxSpeed;
 				m_fSpeed += (m_fTargetSpeed - m_fSpeed) * fTimeDelta * m_fAccel;
 				m_pTransformCom->Go_LerpStraight(m_fSpeed, fTimeDelta);
@@ -244,7 +242,6 @@ HRESULT CBroom::Behavior_Broom_HoverExitCheck(_float fTimeDelta)
 			{
 				if (!bFwd)
 				{
-					//Camera_InterpTurn(fTimeDelta * 0.5f);
 					m_pTransformCom->Turn(-m_pTransformCom->Get_State(STATE::UP), fTimeDelta * 0.5f);
 					m_fTargetSpeed = m_fHoverMaxSpeed;
 					m_fSpeed += (m_fTargetSpeed - m_fSpeed) * fTimeDelta * m_fAccel;
@@ -259,7 +256,6 @@ HRESULT CBroom::Behavior_Broom_HoverExitCheck(_float fTimeDelta)
 			{
 				if (!bFwd)
 				{
-					//Camera_InterpTurn(fTimeDelta * 0.5f);
 					m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::UP), fTimeDelta * 0.5f);
 					m_fTargetSpeed = m_fHoverMaxSpeed;
 					m_fSpeed += (m_fTargetSpeed - m_fSpeed) * fTimeDelta * m_fAccel;
@@ -435,11 +431,9 @@ HRESULT CBroom::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 			{
 				if (vInput.z <= 0.f)
 				{
-					//Camera_InterpTurn(fTimeDelta * 0.4f);
 					m_pTransformCom->Turn(-m_pTransformCom->Get_State(STATE::UP), fTimeDelta * 0.4f);
 				}
 				else {
-					//Camera_InterpTurn(fTimeDelta * 0.2f);
 					m_pTransformCom->Turn(-m_pTransformCom->Get_State(STATE::UP), fTimeDelta * 0.2f);
 				}
 			}
@@ -447,11 +441,9 @@ HRESULT CBroom::Behavior_Broom_FlyExitCheck(_float fTimeDelta)
 			{
 				if (vInput.z <= 0.f)
 				{
-					//Camera_InterpTurn(fTimeDelta * 0.4f);
 					m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::UP), fTimeDelta * 0.4f);
 				}
 				else {
-					//Camera_InterpTurn(fTimeDelta * 0.2f);
 					m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::UP), fTimeDelta * 0.2f);
 				}
 			}
@@ -594,9 +586,9 @@ HRESULT CBroom::Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta)
 		m_bTurbo = false;
 	}
 
-	if (!m_bHoverToggle && m_bTurbo) {
-
-		if (SUCCEEDED(InputAction()) || SUCCEEDED(InputMove()))
+	if (!m_bHoverToggle)
+	{
+		if (SUCCEEDED(InputMove()))
 		{
 			if (bFwd) {
 				m_fTargetSpeed = m_fTurboMaxSpeed;
@@ -611,6 +603,10 @@ HRESULT CBroom::Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta)
 
 		m_fSpeed += (m_fTargetSpeed - m_fSpeed) * fTimeDelta * m_fTurboAccel;
 		m_pTransformCom->Go_LerpStraight(m_fSpeed, fTimeDelta);
+	}
+
+
+	if (!m_bHoverToggle && m_bTurbo) {
 
 		_float fTargetVertSpeed = 0.f;
 
@@ -632,7 +628,7 @@ HRESULT CBroom::Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta)
 				m_pTransformCom->Go_LerpDown(-m_fVerticalSpeed, fTimeDelta);
 		}
 
-		if (SUCCEEDED(InputAction()) || SUCCEEDED(InputMove()))
+		if (SUCCEEDED(InputMove()))
 		{
 			_float3 vInput = { 0.f, 0.f, 0.f };
 
@@ -656,7 +652,7 @@ HRESULT CBroom::Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta)
 					Camera_InterpTurn(fTimeDelta * 0.3f);
 				}
 				else {
-					Camera_InterpTurn(fTimeDelta * 0.1f);
+					Camera_InterpTurn(fTimeDelta * 0.15f);
 				}
 			}
 			else if (vInput.x > 0.f)
@@ -666,7 +662,7 @@ HRESULT CBroom::Behavior_Broom_TurboFlyExitCheck(_float fTimeDelta)
 					Camera_InterpTurn(fTimeDelta * 0.3f);
 				}
 				else {
-					Camera_InterpTurn(fTimeDelta * 0.1f);
+					Camera_InterpTurn(fTimeDelta * 0.15f);
 				}
 			}
 

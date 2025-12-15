@@ -34,7 +34,7 @@ void CBuildingContainer::Update(_float fTimeDelta)
 
 void CBuildingContainer::Late_Update(_float fTimeDelta)
 {
-    if (m_pGameInstance->isIn_WorldFrustum(XMVectorSetW(XMLoadFloat3(&m_vExtentWorldPosition), 1.f), m_fRadius)) {
+    if (m_pGameInstance->IsIn_WorldFrustum(XMVectorSetW(XMLoadFloat3(&m_vExtentWorldPosition), 1.f), m_fRadius)) {
         if (m_fCamDepth > 3000.f)
         {
             if (m_pOcclusionQueryCom->isDraw())
@@ -59,12 +59,12 @@ HRESULT CBuildingContainer::Render()
     return S_OK;
 }
 
-HRESULT CBuildingContainer::Render_Shadow()
+HRESULT CBuildingContainer::Render_Shadow(SHADOW eType)
 {
     unordered_map<_string, CPartObject*>::iterator iter = m_PartObjects.begin();
     for (; iter != m_PartObjects.end(); ++iter) {
         CPartObject* pObject = (*iter).second;
-        if (FAILED(pObject->Render_Shadow())) {
+        if (FAILED(pObject->Render_Shadow(eType))) {
             return E_FAIL;
         }
     }

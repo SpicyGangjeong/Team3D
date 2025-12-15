@@ -117,7 +117,7 @@ void CMapElement_Interactable::Late_Update(_float fTimeDelta)
 		}
 	}
 
-	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pModelComs[0]->Get_Radius())) {
+	if (m_pGameInstance->IsIn_WorldFrustum(Get_WorldPostion(), m_pModelComs[0]->Get_Radius())) {
 		m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 	}
 }
