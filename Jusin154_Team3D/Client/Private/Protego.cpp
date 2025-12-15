@@ -3,6 +3,7 @@
 
 #include "GameInstance.h"
 #include "EffectParts.h"
+#include "Player.h"
 
 
 CProtego::CProtego(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -18,9 +19,6 @@ CProtego::CProtego(const CProtego& rhs)
 HRESULT CProtego::Initialize_Prototype()
 {
 
-	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Protego")))
-		return E_FAIL;
-
 	return S_OK;
 
 }
@@ -33,29 +31,24 @@ HRESULT CProtego::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
+	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Protego")))
+		return E_FAIL;
+
 	if (FAILED(Create_Effect()))
 		return E_FAIL;
 
 	m_pSphere = Get_PartObject<CEffectParts>("ProtegoSphere");
-	m_pBottom = Get_PartObject<CEffectParts>("ProtegoBottom");
-	m_pCircle = Get_PartObject<CEffectParts>("ProtegoCircle");
 
 	SAFE_ADDREF(m_pSphere);
-	SAFE_ADDREF(m_pBottom);
-	SAFE_ADDREF(m_pCircle);
+
 
 	m_wstrEffectName = L"Protego";
-
-
-
 
 
 	m_fAmountSize = 0.1f;
 	m_fSpeed = 5.f;
 
-	m_fDuration = 2.5f;
-
-	m_isLoop = true;
+	m_fDuration = 3.f;
 
 	return S_OK;
 }
@@ -72,14 +65,10 @@ void CProtego::Update(_float fTimeDelta)
 		return;
 
 	m_pSphere->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
-	m_pBottom->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
-	m_pCircle->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
 
 	__super::Update(fTimeDelta);
 
 	Update_Event(fTimeDelta);
-
-
 
 	/* 시작 사이즈 러프 */
 	if (m_fSizeAccTime > XM_PIDIV2)
@@ -91,7 +80,6 @@ void CProtego::Update(_float fTimeDelta)
 	_float3 vSize = _float3(fSize, fSize, fSize);
 
 	m_pSphere->Get_Component<CTransform>()->Set_Scale(vSize);
-	m_pCircle->Get_Component<CTransform>()->Set_Scale(vSize);
 }
 
 void CProtego::Late_Update(_float fTimeDelta)
@@ -106,22 +94,17 @@ void CProtego::Late_Update(_float fTimeDelta)
 
 HRESULT CProtego::Pre_Setting(CGameObject* pObject, void* pArg)
 {
-	if (FAILED(__super::Pre_Setting(pObject)))
+	if (FAILED(__super::Pre_Setting(pObject, nullptr)))
 		return E_FAIL;
 
-
 	m_pSphere->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
-	m_pBottom->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
-	m_pCircle->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
 
 	m_pSphere->Set_Visible(true);
-	m_pCircle->Set_Visible(true);
-	m_pBottom->Set_Visible(true);
+
 
 
 	_float3 vSize = _float3(1.f, 1.f, 1.f);
 	m_pSphere->Get_Component<CTransform>()->Set_Scale(vSize);
-	m_pCircle->Get_Component<CTransform>()->Set_Scale(vSize);
 
 	m_fSizeAccTime = 0.f;
 
@@ -132,6 +115,16 @@ HRESULT CProtego::Ready_Components(void* pArg)
 {
 	if (FAILED(__super::Ready_Components(pArg))) {
 		return E_FAIL;
+	}
+
+
+	{ // DO
+		CRigidBody_Dynamic::RIGIDBODY_DYNAMIC_DESC Desc{};
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::SKILL_PROTEGO);
+		if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("PHYSX_DYNAMIC_BOX"), (CComponent**)&m_pRigidBody, &Desc))) {
+			return E_FAIL;
+		}
+		m_pGameInstance->Attach_Actor(*m_pRigidBody->Get_Actor());
 	}
 
 	return S_OK;
@@ -171,25 +164,29 @@ CGameObject* CProtego::Clone(void* pArg, CGameObject* pOwner)
 
 void CProtego::OnCollision(CGameObject* pOther, void* pDesc)
 {
-	//CTransform* pOtherTransform = p
+	if (!m_bVisible)
+		return;
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 
+	dynamic_cast<CPlayer*>(m_pOwner)->Set_Shield(true);
 }
 
 void CProtego::Free()
 {
 	__super::Free();
 
+	//if(m_pPhysHitBox != nullptr)
+	//	if (m_pPhysHitBox->Get_Depth() == false)
+	//		SAFE_RELEASE(m_pPhysHitBox);
+	SAFE_RELEASE(m_pRigidBody);
 	SAFE_RELEASE(m_pSphere);
-	SAFE_RELEASE(m_pBottom);
-	SAFE_RELEASE(m_pCircle);
 
 }
 #ifdef _DEBUG
 
 void CProtego::Describe_Entity()
 {
-	GUI::Begin("PROTEGO", 0, IMGUI_GLOBAL_BEGIN_FLAG);
+	GUI::Begin("PROTEGO");
 
 	GUI::DragFloat("fAmountSize", &m_fAmountSize);
 	GUI::DragFloat("fSpeed", &m_fSpeed);

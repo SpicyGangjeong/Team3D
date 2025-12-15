@@ -348,7 +348,7 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 	return m_bIsFinishedAnim;
 }
 
-void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fAmount, _bool bRatio, _float fAnimSpeed)
+void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fAmount, _bool bRatio, _float fAnimSpeed,_bool bRootBone)
 {
 	if (m_iCurrentAnimIndex == iIndex)
 		return;
@@ -370,7 +370,7 @@ void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fAmount, _boo
 
 		m_fBlendTime = 0.f;
 		m_fRatio = 0.f;
-
+		m_bRootBone = bRootBone;
 		m_iCurrentAnimIndex = iIndex;
 		m_bIsLoop = isLoop;
 		m_fAmount = fAmount;
@@ -447,7 +447,9 @@ void CModel::Update_RootBone(_float Amount)
 		vDeltaWorld *= Amount;
 
 		vDeltaWorld = XMVectorSetW(vDeltaWorld, 1.f);
-		m_pTransform->AccumulateMomentum(vDeltaWorld);
+
+		if(m_bRootBone)
+			m_pTransform->AccumulateMomentum(vDeltaWorld);
 
 		m_vPrevRootPos = vCurRootPos;
 

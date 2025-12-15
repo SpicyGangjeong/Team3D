@@ -36,7 +36,7 @@ private:
 public:
     void Set_Image(_int Index);
     void ToolTipSetting();
-
+    
 private:
     CTexture* m_pDiffuse_TextureCom = { nullptr };
     CTexture* m_pDiffuse_TextureCom1 = { nullptr };
@@ -52,15 +52,6 @@ private:
 
     _wstring ToolTip[5];
     _int m_iToolTip_Count{};
-
-#ifdef _DEBUG
-    _bool INHYUK = { false };
-    _bool JINHO = { false };
-    _bool HYUNBIN = { false };
-    _bool NURI = { false };
-    _bool JINWOO = { false };
-    _int human{};
-#endif
 
 public:
     static CLoding_Panel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

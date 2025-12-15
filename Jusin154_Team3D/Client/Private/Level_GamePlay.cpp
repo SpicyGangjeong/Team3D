@@ -17,6 +17,8 @@
 #include "Land.h"
 #include "Unified.h"
 #include "MapElement_Lake.h"
+#include "RaceRing.h"
+#include "BroomRaceManager.h"
 
 #pragma region ACTOR
 #include "Player.h"
@@ -25,6 +27,7 @@
 #include "Goblin_Mage.h"
 #include "Goblin_Spector.h"
 #include "NPC_Ollivander.h"
+#include "BroomRacerAI.h"
 #pragma endregion
 
 
@@ -60,6 +63,13 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	if (FAILED(Ready_Layer_Item(LAYER_ITEM))) {
 		return E_FAIL;
 	}
+	if (FAILED(Ready_Layer_Manager(TEXT("Layer_Manager")))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(Ready_Layer_RaceRing(TEXT("Layer_RaceRing")))) {
+		return E_FAIL;
+	}
 
 	if (FAILED(Ready_Layer_SkyBox(TEXT("Layer_SkyBox")))) {
 		return E_FAIL;
@@ -67,10 +77,13 @@ HRESULT CLevel_GamePlay::Initialize(void* pArg)
 	if (FAILED(Ready_Layer_Player(LAYER_PLAYER))) {
 		return E_FAIL;
 	}
+	if (FAILED(Ready_Layer_BroomRacerAI(TEXT("Layer_BroomRacerAI")))) {
+		return E_FAIL;
+	}
 	if (FAILED(Ready_Layer_Monster())) {
 		return E_FAIL;
 	}
-
+	
 
 	return S_OK;
 }
@@ -238,7 +251,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Background = true;
 #endif // gimch
 #ifdef Bin
-	isReady_Background = true;
+	isReady_Background = false;
 #endif // 
 #ifdef 진우
 	isReady_Background = true;
@@ -259,16 +272,22 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	}
 	else
 	{
+
+
+#if 진우
+
+#else
 		/* 전체 맵 */
 		CInfoInstance::GetInstance()->Load_MapObjects("Hogsmeade_MapContainer_Data");
 
 		/* 물 오브젝트 */
-		if (FAILED(CInfoInstance::GetInstance()->Load_WaterElemet("Element_Water_Info"))){
+		if (FAILED(CInfoInstance::GetInstance()->Load_WaterElemet("Element_Water_Info"))) {
 			return E_FAIL;
 		}
 
 		/* 조명 오브젝트 */
 		CInfoInstance::GetInstance()->Load_LightElements("LightElement");
+#endif
 
 		/* 상호작용 오브젝트 */
 		CInfoInstance::GetInstance()->Load_InteractableElements("E_INTER_Barrel");
@@ -498,13 +517,28 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring& strLayerTag)
 	return S_OK;
 }
 
+HRESULT CLevel_GamePlay::Ready_Layer_BroomRacerAI(const _wstring& strLayerTag)
+{
+	for (_uint i = 0; i < 1; ++i) {
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroomRacerAI>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, m_pBroomRaceManager))) {
+			return E_FAIL;
+		}
+	}
+	return S_OK;
+}
+
 HRESULT CLevel_GamePlay::Ready_Layer_Item(const _wstring& strLayerTag)
 {
+	return S_OK;
+}
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroom>(g_iStaticLevel, NEXT_LEVEL, LAYER_ITEM, nullptr, nullptr))) {
-		return E_FAIL;
+HRESULT CLevel_GamePlay::Ready_Layer_RaceRing(const _wstring& strLayerTag)
+{
+	for (_uint i = 0; i < 50; ++i) {
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CRaceRing>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, m_pBroomRaceManager))) {
+			return E_FAIL;
+		}
 	}
-
 	return S_OK;
 }
 
@@ -530,16 +564,29 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster()
 {
 	for (_uint i = 0; i < 1; ++i)
 	{
-		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER,&i))) {
 			return E_FAIL;
 		}
 	}
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Mage>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
+	for (_uint i = 0; i < 1; ++i)
+	{
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGoblin_Mage>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER, &i))) {
+			return E_FAIL;
+		}
+	}
+
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CTroll>(g_iStaticLevel, NEXT_LEVEL, LAYER_MONSTER))) {
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Manager(const _wstring& strLayerTag)
+{
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CBroomRaceManager>(g_iStaticLevel, NEXT_LEVEL, strLayerTag,nullptr,nullptr,&m_pBroomRaceManager))) {
 		return E_FAIL;
 	}
 

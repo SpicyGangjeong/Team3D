@@ -4,8 +4,6 @@
 #include "UIObject.h"
 #include "tinyxml2.h"
 
-;
-
 CSpell_Data::CSpell_Data(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CGameObject(pDevice, pContext)
 {
@@ -18,7 +16,6 @@ CSpell_Data::CSpell_Data(const CSpell_Data& rhs)
 
 HRESULT CSpell_Data::Initialize_Prototype()
 {
-
 	return S_OK;
 }
 
