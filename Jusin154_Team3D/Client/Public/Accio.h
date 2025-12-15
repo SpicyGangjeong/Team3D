@@ -49,9 +49,9 @@ private:
 	CCharacter_Controller* m_pEnemyCCT = { nullptr };
 
 	_float				m_fAccRotateTime = {};
-	_float				m_fTurnSpeed = {55.f };
+	_float				m_fTurnSpeed = {65.f };
 	_float				m_fRange = { 1.f };
-	_float              m_fAttenuation = { 35.f };
+	_float              m_fAttenuation = { 25.f };
 	_bool				m_isFix = { false };
 
 public:

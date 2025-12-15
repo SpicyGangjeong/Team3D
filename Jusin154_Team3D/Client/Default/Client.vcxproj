@@ -193,6 +193,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Logo_Glow.h" />
     <ClInclude Include="..\Public\Logo_Text.h" />
     <ClInclude Include="..\Public\Goblin_Attack.h" />
+    <ClInclude Include="..\Public\Screen_Wind.h" />
     <ClInclude Include="..\Public\Mage_Nomal_Attack.h" />
     <ClInclude Include="..\Public\MageSide.h" />
     <ClInclude Include="..\Public\Mage_Down_Attack.h" />
@@ -389,6 +390,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Logo.cpp" />
     <ClCompile Include="..\Private\Logo_Glow.cpp" />
     <ClCompile Include="..\Private\Logo_Text.cpp" />
+    <ClCompile Include="..\Private\Screen_Wind.cpp" />
     <ClCompile Include="..\private\MapElement_Chest.cpp" />
     <ClCompile Include="..\private\MapElement_Chest_Lid.cpp" />
     <ClCompile Include="..\Private\NPC_Ollivander.cpp" />

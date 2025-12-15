@@ -40,6 +40,8 @@ HRESULT CBroomRacerAI::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
+	m_bAI = true;
+
 	if (FAILED(Ready_Parts())) {
 		return E_FAIL;
 	}
@@ -79,7 +81,7 @@ HRESULT CBroomRacerAI::Initialize(void* pArg)
 	m_Batch = make_unique<PrimitiveBatch<VertexPositionColor>>(m_pContext);
 #endif // _DEBUG
 
-	m_bAI = true;
+
 
 	m_pBroom->Set_Ride(true);
 
