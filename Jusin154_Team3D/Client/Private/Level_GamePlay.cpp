@@ -268,7 +268,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	if(false == isReady_Background)
 	{
 		/* 테스트용 맵 */
-		CInfoInstance::GetInstance()->Load_MapObjects("ClientTest");
+		CInfoInstance::GetInstance()->Load_MapObjects("Map1215");
 	}
 	else
 	{

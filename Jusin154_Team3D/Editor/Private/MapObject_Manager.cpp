@@ -59,7 +59,7 @@ HRESULT CMapObject_Manager::Initialize(void* pArg)
 	m_iContainerObjectIndex = 99;
 	//m_pContainer = m_pGameInstance->Get_Layer(ENUM_CLASS(LEVEL::MAP), TEXT("Layer_Building"))->Get_Object<CBuildingContainer>();
 
-	if (FAILED(Load_MapData("Map1205")))
+	if (FAILED(Load_MapData("Hogsmeade_MapContainer_Data")))
 		return E_FAIL;
 
 	if (FAILED(Load_WaterObject("Element_Water_Info")))
