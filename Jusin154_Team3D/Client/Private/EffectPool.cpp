@@ -32,7 +32,7 @@
 #include "Chair_Splesh.h"
 #include "Barral_Splesh.h"
 #include "Goblin_Teleport.h"
-
+#include "Accio.h"
 CEffectPool::CEffectPool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
 {
@@ -263,6 +263,16 @@ HRESULT CEffectPool::Ready_Effect()
 		CLumos* pEffect = nullptr;
 
 		pEffect = m_pGameInstance->Clone_Prototype<CLumos>(iPrototypeLevel, nullptr);
+
+		return pEffect; }
+	))) return E_FAIL;
+
+
+	if (FAILED(Create_Effect(SKILL_TYPE::ACCIO, 5, NEXT_LEVEL, NEXT_LEVEL, [&](_uint iPrototypeLevel, _uint iCloneLevel) -> CEffect_Container* {
+
+		CAccio* pEffect = nullptr;
+
+		pEffect = m_pGameInstance->Clone_Prototype<CAccio>(iPrototypeLevel, nullptr);
 
 		return pEffect; }
 	))) return E_FAIL;
