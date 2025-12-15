@@ -12,6 +12,14 @@ NS_BEGIN(Editor)
 
 class CLand final : public CGameObject
 {
+public:
+	typedef struct tagLandDesc
+	{
+		_bool	bEdit;
+		_float3 vPosition;
+		_float3 vScale;
+		_wstring strModelComTag;
+	}LAND_DESC;
 private:
 	CLand(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CLand(const CLand& rhs);
@@ -28,15 +36,20 @@ public:
 
 private:
 	_bool				m_bSelected = { false };
+	_bool				m_bEdit = {false};
 	_uint				m_iMaxLodLevel = {};
 	_uint				m_iLodIndex = {};
 
+	_float				m_fUsingSurfaceParams = {};
+
 	CShader*			m_pShaderCom = { nullptr };
 	CModel*				m_pModelCom = { nullptr };
-	_float4				m_vPosition = {};
 
-	_float4x4    m_ProjMatrix = {};
-	_float4x4    m_ViewMatrix = {};
+	_float4				m_vPosition = {};
+	_float3				m_vScale = {};
+	_float3				m_vRotation = {};
+
+
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;

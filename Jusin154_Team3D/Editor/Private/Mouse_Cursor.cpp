@@ -37,6 +37,7 @@ HRESULT CMouse_Cursor::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
+	m_fTimeMult = 5.f;
 	// 메뉴가 실행이 되면 마우스가 나타나고 다른 UI위에 올라가면 살짝 작아진다.
 	return S_OK;
 }
@@ -52,14 +53,16 @@ void CMouse_Cursor::Priority_Update(_float fTimeDelta)
 
 void CMouse_Cursor::Update(_float fTimeDelta)
 {
-	m_fTime += fTimeDelta;
+	m_fTime += fTimeDelta * m_fTimeMult;
+
+
 	/*ShowCursor(false);*/
 }
 
 void CMouse_Cursor::Late_Update(_float fTimeDelta)
 {
 	if (m_bVisible) {
-		if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
+		if (m_pGameInstance->IsIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
 			m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
 		}
 	}
@@ -118,6 +121,7 @@ HRESULT CMouse_Cursor::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+
 	return S_OK;
 }
 
@@ -127,7 +131,7 @@ HRESULT CMouse_Cursor::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Cursor"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_CursorRings"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}

@@ -18,7 +18,9 @@ public:
 	vector<ID3D11ShaderResourceView*>* Get_Texture() { return &m_SRVs; }
 	ID3D11ShaderResourceView* Get_SRV(_uint iTextureIndex);
 	_uint Get_Size();
+#ifdef EDITOR_PROJECT
 	_bool Compare_GroupName(_wstring wstrGroupName);
+#endif // 
 
 #ifdef _DEBUG
 	void  HoverName();
@@ -30,10 +32,15 @@ private:
 	HRESULT Load_SRV(const _char* szPath, ID3D11ShaderResourceView** ppSRV);
 	HRESULT ParseTextureIncrementalToSRVs(_uint iNumTextures, const _tchar* pTextureFilePath);
 	HRESULT ParseTexturePathToSRVs(const _tchar* pTextureFolderPath);
+	HRESULT Load_CubeSRV(const _char* szPath, ID3D11ShaderResourceView** ppSRV);
 
 private:
-	vector<ID3D11ShaderResourceView*>				m_SRVs = { };
+	vector<ID3D11ShaderResourceView*>				m_SRVs = {};
 	_wstring										m_wstrPrototypeName = {};
+#ifdef EDITOR_PROJECT
+
+#endif // 
+
 public:
 	static CTexture* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TEXTURE_LOAD_TYPE eType, const _tchar* pTextureFilePath, _uint iNumTextures, _wstring wstrPrototypeName = L"");
 	virtual CComponent* Clone(void* pArg, class CGameObject* pOwner = nullptr) override;

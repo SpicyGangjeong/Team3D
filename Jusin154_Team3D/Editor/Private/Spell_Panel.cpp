@@ -11,6 +11,12 @@
 #include "Spell_Hover_Effect.h"
 #include "Spell_Preview.h"
 #include "Spell_Vidio_Border.h"
+#include "Current_Slot_Number.h"
+#include "Spell_Header.h"
+#include "Spell_Header_Line.h"
+#include "Spell_Data.h"
+#include "Spell_Anim.h"
+#include "Spell_Drag.h"
 
 CSpell_Panel::CSpell_Panel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPanelObject(pDevice, pContext)
@@ -49,8 +55,16 @@ HRESULT CSpell_Panel::Initialize(void* pArg)
 		return E_FAIL;
 	}
 	m_fCanvasAlpha = 1.f;
-	m_fSortZ = 0.04f;
-
+	m_fSortZ = 0.05f;
+	m_iSpellType = -1;
+	m_iPendingSpell = -1;
+	m_fDelayTime = 1.f;
+	m_bCurrentSlot_Hover = false;
+	Add_Function(TEXT("Hover"), [this](void* p) {this->Slot_Chack(p); });
+	Add_Function(TEXT("Click"), [this](void* p) {this->Click_Slot(*reinterpret_cast<_bool*>(p)); });
+	Add_Function(TEXT("Current_Slot_Click"), [this](void* p) {this->Current_Slot_Chack(*reinterpret_cast<_int*>(p)); });
+	Visible(true);
+	ElementAllVisible(true);
 	return S_OK;
 }
 
@@ -68,6 +82,22 @@ void CSpell_Panel::Update(_float fTimeDelta)
 	if (!__super::Chack_Visible())
 	{
 		return;
+	}
+
+	if (m_iSpellType != -1)
+	{
+		m_fHoverTimer += fTimeDelta; 
+	}
+	else
+	{
+		m_fHoverTimer = 0.f;
+		Function_Callback(TEXT("FadeOut"));
+	}
+
+	if (m_fHoverTimer >= m_fDelayTime)
+	{
+		
+		Function_Callback(TEXT("FadeIn"));
 	}
 
 	__super::Update(fTimeDelta);
@@ -106,6 +136,52 @@ HRESULT CSpell_Panel::Render()
 _vector CSpell_Panel::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
+}
+
+const CUIObject::SPELLINFO CSpell_Panel::Get_Info(_int Index)
+{
+	return m_Info[Index];
+}
+
+void CSpell_Panel::Slot_Chack(void* pArg)
+{
+	CUIObject::HOVER_INFO* Info = static_cast<CUIObject::HOVER_INFO*>(pArg);
+
+	_int iSlot = Info->iSlotID;
+	m_iHoverSlot[iSlot] = Info->iHover_Index;
+
+	int finalHover = -1;
+	for (int i = 0; i < 2; ++i)
+	{
+		if (m_iHoverSlot[i] != -1)
+		{
+			finalHover = m_iHoverSlot[i];
+			break;
+		}
+	}
+
+	m_iSpellType = finalHover;
+	if (m_bHover == false)
+	{
+		Function_Callback(TEXT("Slot_Hover"), &m_iSpellType);
+	}
+}
+
+void CSpell_Panel::Click_Slot(_bool bClick)
+{
+	if (bClick == true)
+	{
+		m_bHover = true;
+	}
+	else
+	{
+		m_bHover = false;
+	}
+}
+
+void CSpell_Panel::Current_Slot_Chack(_int Index)
+{
+	m_iCurrent_Slot_Index = Index;
 }
 
 HRESULT CSpell_Panel::Bind_ShaderResources()
@@ -225,6 +301,40 @@ HRESULT CSpell_Panel::Ready_Element(void* pArg)
 	}
 	Add_Element(TEXT("Spell_Vidio_Border"), m_pSpell_Vidio_Border);
 
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCurrent_Slot_Number>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CCurrent_Slot_Number**>(&m_pCurrent_Slot_Number))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Current_Slot_Number"), m_pCurrent_Slot_Number);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Header>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Header**>(&m_pSpell_Header))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Spell_Header"), m_pSpell_Header);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Header_Line>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Header_Line**>(&m_pSpell_Header_Line))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Spell_Header_Line"), m_pSpell_Header_Line);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Anim>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Anim**>(&m_pSpell_Anim))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Spell_Anim"), m_pSpell_Anim);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Drag>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Drag**>(&m_pCSpell_Drag))))
+	{
+		return E_FAIL;
+	}
+	Add_Element(TEXT("Spell_Drag"), m_pCSpell_Drag);
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Data>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, m_Info, nullptr, reinterpret_cast<CSpell_Data**>(&m_pSpell_Data))))
+	{
+		return E_FAIL;
+	}
 	return S_OK;
 }
 

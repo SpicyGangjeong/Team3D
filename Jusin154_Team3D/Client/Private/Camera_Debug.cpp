@@ -17,22 +17,28 @@ CCamera_Debug::CCamera_Debug(const CCamera_Debug& rhs)
 
 void CCamera_Debug::Priority_Update(_float fTimeDelta)
 {
+#ifdef _DEBUG
 	m_pGameInstance->Bind_Camera(g_iStaticLevel, CAMERA_DEBUG, false);
+#endif // _DEBUG
+
 }
 
 void CCamera_Debug::Update(_float fTimeDelta)
 {
-	if (false == m_bActive) {
+	if (FAILED(m_pGameInstance->IsBinded_Camera(CAMERA_DEBUG))) {
 		return;
 	}
 	Transition(fTimeDelta);
 	_float3 vCamPos = {};
 	XMStoreFloat3(&vCamPos, m_pTransformCom->Get_State(STATE::POSITION));
+#ifdef _DEBUG
 	GUI::Text("Cam Coord %.2f, %.2f, %.2f", vCamPos.x, vCamPos.y, vCamPos.z);
+#endif // _DEBUG
+
 	if (m_pGameInstance->Key_Up(DIK_GRAVE)) {
 		m_bMovable = !m_bMovable;
 	}
-	if (m_pGameInstance->Mouse_Down(DIM_RBUTTON)) {
+	if (m_pGameInstance->Mouse_Down(DIM_MBUTTON)) {
 		m_pGameInstance->Toggle_MouseCenter();
 	}
 	if (m_bMovable) {
@@ -60,7 +66,7 @@ void CCamera_Debug::Update(_float fTimeDelta)
 			Set_InitialPos();
 		}
 		if (m_pGameInstance->Key_Pressing(DIK_LCONTROL)) {
-			if (m_pGameInstance->Key_Up(DIK_SCROLL)) {
+			if (m_pGameInstance->Key_Up(DIK_MINUS)) {
 				CLayer* pLayer = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_PLAYER);
 				if (nullptr != pLayer) {
 					CPlayer* pPlayer = pLayer->Get_Object<CPlayer>();
@@ -84,7 +90,7 @@ void CCamera_Debug::Update(_float fTimeDelta)
 
 void CCamera_Debug::Late_Update(_float fTimeDelta)
 {
-	if (false == m_bActive) {
+	if (FAILED(m_pGameInstance->IsBinded_Camera(CAMERA_DEBUG))) {
 		return;
 	}
 }

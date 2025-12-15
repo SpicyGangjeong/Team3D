@@ -56,13 +56,8 @@ PSX::PxRigidDynamic* CPhysX_Manager::Add_DynamicActor(CRigidBody_Dynamic& RigidB
 	PSX::PxRigidBodyFlags pxRigidFlags = RigidBody.Get_RigidBodyFlags();
 	pActorDynamic->setRigidBodyFlags(pxRigidFlags);
 
-	if (pxRigidFlags.isSet(PSX::PxRigidBodyFlag::eKINEMATIC)) {
 
-	}
-	else {
-		PSX::PxRigidBodyExt::updateMassAndInertia(*pActorDynamic, (PSX::PxReal)RigidBody.Get_Density());
-	}
-
+	PSX::PxRigidBodyExt::updateMassAndInertia(*pActorDynamic, (PSX::PxReal)RigidBody.Get_Density());
 	m_pRestBodies.insert(pActorDynamic);
 	Attach_Actor(*pActorDynamic);
 
@@ -106,7 +101,11 @@ PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody_Static& RigidBody
 			// 유효성 체크
 			PX_ASSERT(pPxMeshGeometry->isValid());
 			pGeometry = pPxMeshGeometry;
-			m_TriangleMeshGeometry.emplace(RigidBody.Get_PxMeshKey(), pPxMeshGeometry);
+			_bool bEmplaceSuccess = m_TriangleMeshGeometry.emplace(RigidBody.Get_PxMeshKey(), pPxMeshGeometry).second;
+			if (false == bEmplaceSuccess) {
+				Safe_Delete(pPxMeshGeometry);
+				pGeometry = (*m_TriangleMeshGeometry.find(RigidBody.Get_PxMeshKey())).second;
+			}
 		}
 		break;
 	case ACTOR::HEIGHTFIELD:
@@ -118,7 +117,11 @@ PSX::PxRigidStatic* CPhysX_Manager::Add_StaticActor(CRigidBody_Static& RigidBody
 		// 유효성 체크
 		PX_ASSERT(pPxHeightGeometry->isValid());
 		pGeometry = pPxHeightGeometry;
-		m_HeightFieldGeometry.emplace(RigidBody.Get_PxMeshKey(), pPxHeightGeometry);
+		_bool bEmplaceSuccess = m_HeightFieldGeometry.emplace(RigidBody.Get_PxMeshKey(), pPxHeightGeometry).second;
+		if (false == bEmplaceSuccess) {
+			Safe_Delete(pPxHeightGeometry);
+			pGeometry = (*m_HeightFieldGeometry.find(RigidBody.Get_PxMeshKey())).second;
+		}
 	}
 	break;
 	default:
@@ -155,6 +158,17 @@ PSX::PxMaterial* CPhysX_Manager::Create_Material(const _float3* vMatInfo)
 
 _bool CPhysX_Manager::SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
 {
+	return SphereCast(fRadius, XMLoadFloat3(&vStartPos), XMLoadFloat3(&vDir), fDistance, flagHitsData, flagQuery, hitBuffer);
+}
+
+_bool CPhysX_Manager::SphereCast(_float fRadius, _fvector _vStartPos, _gvector _vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
+{
+	_float3 vDir = {};
+	_float3 vStartPos = {};
+
+	XMStoreFloat3(&vDir, _vDir);
+	XMStoreFloat3(&vStartPos, _vStartPos);
+
 	PSX::PxSphereGeometry sphereGeom(fRadius);
 
 	PSX::PxVec3 startPos(vStartPos.x, vStartPos.y, vStartPos.z);
@@ -163,12 +177,57 @@ _bool CPhysX_Manager::SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir
 	PSX::PxTransform startPose(startPos, startRot);
 
 	PSX::PxVec3 sweepDir(vDir.x, vDir.y, vDir.z);
+
 	sweepDir.normalize();
 
 	PSX::PxQueryFilterData filterData(flagQuery);
 
-	return m_pScene->sweep(sphereGeom, startPose, sweepDir, fDistance, hitBuffer, flagHitsData, filterData);
+	_bool bHit = m_pScene->sweep(sphereGeom, startPose, sweepDir, fDistance, hitBuffer, flagHitsData, filterData);
+
+	return bHit;
 }
+
+_bool CPhysX_Manager::RayCast(_float3 _vStartPos, _float3 _vDir, _float fDistance, PSX::PxRaycastHit* pRayHitArray, _uint iMaxHitCapacity, _uint& iOutHitCount)
+{
+	return RayCast(XMLoadFloat3(&_vStartPos), XMLoadFloat3(&_vDir), fDistance, pRayHitArray, iMaxHitCapacity, iOutHitCount);
+}
+
+bool CPhysX_Manager::RayCast(_fvector _vStartPos, _gvector _vDir, _float fDistance, PSX::PxRaycastHit* pRayHitArray, _uint iMaxHitCapacity, _uint& iOutHitCount )
+{
+	iOutHitCount = 0;
+
+	if (pRayHitArray == nullptr || iMaxHitCapacity == 0) {
+		return false;
+	}
+
+	_float3 vDir = {};
+	_float3 vStartPos = {};
+
+	XMStoreFloat3(&vDir, _vDir);
+	XMStoreFloat3(&vStartPos, _vStartPos);
+
+	PSX::PxVec3 startPos(vStartPos.x, vStartPos.y, vStartPos.z);
+	PSX::PxVec3 sweepDir(vDir.x, vDir.y, vDir.z);
+
+	sweepDir.normalize();
+
+	PSX::PxRaycastBuffer raycastBuffer(pRayHitArray, iMaxHitCapacity);
+
+	const PSX::PxHitFlags hitFlags = PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL;
+
+	PSX::PxQueryFilterData queryFilterData;
+	queryFilterData.flags = PSX::PxQueryFlag::eSTATIC | PSX::PxQueryFlag::eDYNAMIC;
+
+	const _bool bHit = m_pScene->raycast(startPos, sweepDir, fDistance, raycastBuffer, hitFlags, queryFilterData );
+
+	if (bHit == false) {
+		return false;
+	}
+
+	iOutHitCount = raycastBuffer.getNbAnyHits(); // block + touches 합
+	return bHit;
+}
+
 
 void CPhysX_Manager::RegistTriMesh(const _char* pName, PSX::PxTriangleMesh* pPxTriMesh) 
 {
@@ -185,8 +244,6 @@ void CPhysX_Manager::RegistHeight(const _tchar* pName, PSX::PxHeightFieldDesc& D
 	}
 
 }
-#ifdef EDITOR_PROJECT
-
 HRESULT CPhysX_Manager::ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix)
 {
 	for (size_t i = 0; i < Meshes.size(); ++i)
@@ -203,6 +260,8 @@ HRESULT CPhysX_Manager::ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<
 
 	return S_OK;
 }
+
+#ifdef EDITOR_PROJECT
 
 HRESULT CPhysX_Manager::SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes)
 {
@@ -325,6 +384,9 @@ void CPhysX_Manager::Update_Kinematic()
 
 void CPhysX_Manager::Update(_float fTimeDelta)
 {
+#ifdef _DEBUG
+	m_pGameInstance->Compute_TimeDelta(TEXT("Timer_PhysX"));
+#endif // _DEBUG
 	if (nullptr == m_pScene) {
 		return;
 	}
@@ -339,6 +401,9 @@ void CPhysX_Manager::Update(_float fTimeDelta)
 		 Update_Dynamic_ActiveActors();
 		//Update_Dynamic_AllActors();
 	}
+#ifdef _DEBUG
+	m_pGameInstance->Compute_TimeDelta(TEXT("Timer_PhysX"));
+#endif // _DEBUG
 }
 void CPhysX_Manager::Update_Dynamic_ActiveActors()
 {
@@ -439,7 +504,7 @@ PSX::PxController* CPhysX_Manager::Add_BoxController(PSX::PxBoxControllerDesc& D
 	PSX::PxController* pController = { nullptr };
 
 	pController = m_pCCTManager->createController(Desc);
-	
+
 	return pController;
 }
 
@@ -478,12 +543,10 @@ HRESULT CPhysX_Manager::Initialize()
 		return E_FAIL;
 	}
 #ifdef _DEBUG
-
 	if (FAILED(Connect_DebugServer())) {
 		//ASSERT_NURI(false);
 		//ASSERT_JINWOO(false);
 	}
-
 #endif // _DEBUG
 
 	{ // 씬 세팅
@@ -494,9 +557,8 @@ HRESULT CPhysX_Manager::Initialize()
 		m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, m_ToleranceScale, true, m_pPvd);
 #endif // _DEBUG
 #ifndef _DEBUG
-m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, m_ToleranceScale, true);
+		m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, m_ToleranceScale, true);
 #endif // _DEBUG
-
 
 		m_pCookingParam = new PSX::PxCookingParams(m_pPhysics->getTolerancesScale());
 		m_pCookingParam->meshPreprocessParams |= PSX::PxMeshPreprocessingFlag::eWELD_VERTICES;
@@ -562,7 +624,7 @@ m_pPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_pFoundation, m_ToleranceScal
 	m_pMaterials.push_back(m_pPhysics->createMaterial(0.5f, 0.5f, 0.6f));
 
 	PlaneData.eKind = PHYSX_KIND::BODY_STATIC;
-	PlaneData.iSubKind = UINT_MAX;
+	PlaneData.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
 	PlaneData.pOwner = nullptr;
 	PlaneData.pBody = nullptr;
 
@@ -613,7 +675,7 @@ void CPhysX_Manager::Free()
 	ClearScene();
 	
 	for (auto& pMeshes : m_TriangleMeshes) {
-		pMeshes.second->release();
+		pMeshes.second->release(); 
 	} m_TriangleMeshes.clear();
 
 	for (auto& pGeometry : m_TriangleMeshGeometry) {

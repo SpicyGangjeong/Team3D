@@ -168,37 +168,39 @@ void CGameObject_Manager::Free()
 
 void CGameObject_Manager::Describe_Entity()
 {
-	ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
-	GUI::Begin("Object_Manager");
-	GUI::Text("Levels : "); GUI::SameLine();
-	if (GUI::BeginTabBar("Levels")) {
-		for (_uint i = 0; i < m_iNumLevels; ++i) {
+	GUI::Begin("SYSTEM", 0, IMGUI_GLOBAL_BEGIN_FLAG);
+	if (GUI::CollapsingHeader("Object_Manager")) {
+		ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
+		GUI::Text("Levels : "); GUI::SameLine();
+		if (GUI::BeginTabBar("Levels")) {
+			for (_uint i = 0; i < m_iNumLevels; ++i) {
 
-			if (GUI::BeginTabItem(to_string(i).c_str(), nullptr)) { // Insert Here Level Names
-				GUI::BeginChild("Object_Lists");
-				if (GUI::BeginTabBar("Layers")) {
-					string strlayerName;
-					for (pair< const _wstring, CLayer*>& pairLayer : m_pLayers[i]) {
-						size_t pos = pairLayer.first.find(TEXT("Layer_"));
-						strlayerName = "NOT_STARTED_WITH_Layer_";
-						if (pos != wstring::npos) {
-							strlayerName = CMyTools::ToString(pairLayer.first.c_str() + pos + wcslen(TEXT("Layer_"))).c_str();
-						}
-						if (GUI::BeginTabItem(strlayerName.c_str(), nullptr)) {
-							if (GUI::BeginChild("Items", ImVec2(0, 0), 0, window_flags)) {
-								pairLayer.second->Describe_Entity();
-								GUI::EndChild();
+				if (GUI::BeginTabItem(to_string(i).c_str(), nullptr)) { // Insert Here Level Names
+					GUI::BeginChild("Object_Lists");
+					if (GUI::BeginTabBar("Layers")) {
+						string strlayerName;
+						for (pair< const _wstring, CLayer*>& pairLayer : m_pLayers[i]) {
+							size_t pos = pairLayer.first.find(TEXT("Layer_"));
+							strlayerName = "NOT_STARTED_WITH_Layer_";
+							if (pos != wstring::npos) {
+								strlayerName = CMyTools::ToString(pairLayer.first.c_str() + pos + wcslen(TEXT("Layer_"))).c_str();
 							}
-							GUI::EndTabItem();
+							if (GUI::BeginTabItem(strlayerName.c_str(), nullptr)) {
+								if (GUI::BeginChild("Items", ImVec2(0, 0), 0, window_flags)) {
+									pairLayer.second->Describe_Entity();
+									GUI::EndChild();
+								}
+								GUI::EndTabItem();
+							}
 						}
+						GUI::EndTabBar();
 					}
-					GUI::EndTabBar();
+					GUI::EndChild();
+					GUI::EndTabItem();
 				}
-				GUI::EndChild();
-				GUI::EndTabItem();
 			}
+			GUI::EndTabBar();
 		}
-		GUI::EndTabBar();
 	}
 	GUI::End();
 }

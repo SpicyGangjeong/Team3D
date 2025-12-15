@@ -36,11 +36,13 @@ private:
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
-	CGameObject* m_pSpell_Header = { nullptr };
-	CGameObject* m_pSpell_Header_Line = { nullptr };
+	_wstring m_pSpell_Info;
 
+	_float	m_fOriginPerviewSize{};
+	_float	m_fPreviewOffSet{};
 	_float4 m_vHeaderBack{};
 
+	_int	m_iPerSpellIndex{};
 public:
 	static CSpell_Preview* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

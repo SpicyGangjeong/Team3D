@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Base.h"
 
@@ -21,6 +21,7 @@ private:
 	map<const _wstring, class CTimer*>	m_Timers;
 
 private:
+	HRESULT Initialize();
 	class CTimer* Find_Timer(const _wstring& strTimerTag);
 
 public:

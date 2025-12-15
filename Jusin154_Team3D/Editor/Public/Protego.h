@@ -21,7 +21,7 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 
 public:
-	virtual	HRESULT	Pre_Setting(CGameObject* pObject) override;
+	virtual	HRESULT	Pre_Setting(CGameObject* pObject, void* pArg = nullptr) override;
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
@@ -34,8 +34,6 @@ private:
 	_wstring	 m_wstrEffectName = {};
 
 	class CEditEffect* m_pSphere = { nullptr };
-	class CEditEffect* m_pBottom = { nullptr };
-	class CEditEffect* m_pCircle = { nullptr };
 
 	_float		 m_fSizeAccTime = {};
 	_float       m_fAmountSize = {};

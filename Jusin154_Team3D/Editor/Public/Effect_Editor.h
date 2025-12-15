@@ -32,6 +32,7 @@ private:
 	virtual HRESULT Ready_Components(void* pArg) override;
 	HRESULT         Ready_Child();
 	HRESULT			Bind_ShaderResources() override;
+
 private:
 	HRESULT         Packaging(const _char* pDirectoryPath);
 	HRESULT			ReSaveFile(const _char* pDirectoryPath);
@@ -56,7 +57,7 @@ private:
 
 private:
 	class CEffectPool*									 m_pEffectPool = nullptr;
-
+	_bool											     m_isWandPos = {};
 public:
 	static CEffect_Editor* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

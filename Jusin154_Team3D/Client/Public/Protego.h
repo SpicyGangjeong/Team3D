@@ -3,9 +3,6 @@
 #include "Client_Define.h"
 #include "Effect_Container.h"
 
-NS_BEGIN(Engine)
-NS_END
-
 NS_BEGIN(Client)
 
 class CProtego final : public CEffect_Container
@@ -21,7 +18,7 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 
 public:
-	virtual	HRESULT	Pre_Setting(CGameObject* pObject) override;
+	virtual	HRESULT	Pre_Setting(CGameObject* pObject, void* pArg = nullptr) override;
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
@@ -31,15 +28,14 @@ private:
 	HRESULT			Bind_ShaderResources() override;
 	virtual void	OnCollision(CGameObject* pOther = nullptr, void* pDesc = nullptr) override;
 private:
-	_wstring						  m_wstrEffectName = {};
+	_wstring	 m_wstrEffectName = {};
 
 	class CEffectParts* m_pSphere = { nullptr };
-	class CEffectParts* m_pBottom = { nullptr };
-	class CEffectParts* m_pCircle = { nullptr };
-
+	CRigidBody_Dynamic* m_pRigidBody = { nullptr };
 	_float		 m_fSizeAccTime = {};
 	_float       m_fAmountSize = {};
 	_float       m_fSpeed = {};
+
 public:
 	static CProtego* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

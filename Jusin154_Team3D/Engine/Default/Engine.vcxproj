@@ -208,8 +208,12 @@ call Update_Lib.bat
     <ClCompile Include="..\Private\ContainerObject.cpp" />
     <ClCompile Include="..\Private\DebugDraw.cpp" />
     <ClCompile Include="..\private\Fog.cpp" />
+    <ClCompile Include="..\private\Font.cpp" />
+    <ClCompile Include="..\private\Font_Manager.cpp" />
     <ClCompile Include="..\private\QuadTree.cpp" />
     <ClCompile Include="..\private\OcclusionQuery.cpp" />
+    <ClCompile Include="..\Private\Renderer_Declare.cpp" />
+    <ClCompile Include="..\private\Resource_Manager.cpp" />
     <ClCompile Include="..\Private\RigidBody_Dynamic_Joint.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -296,9 +300,10 @@ call Update_Lib.bat
     <ClCompile Include="..\Private\RigidBody_Dynamic.cpp" />
     <ClCompile Include="..\Private\RigidBody_Static.cpp" />
     <ClCompile Include="..\Private\Shader.cpp" />
-    <ClCompile Include="..\Private\Shadow.cpp" />
     <ClCompile Include="..\Private\SoundSrc.cpp" />
+    <ClCompile Include="..\Private\Stat.cpp" />
     <ClCompile Include="..\Private\State.cpp" />
+    <ClCompile Include="..\Private\StatEvent.cpp" />
     <ClCompile Include="..\Private\Texture.cpp" />
     <ClCompile Include="..\Private\ThreadHolder.cpp" />
     <ClCompile Include="..\Private\Timer.cpp" />
@@ -424,9 +429,12 @@ call Update_Lib.bat
     <ClInclude Include="..\Public\Bounding_OBB.h" />
     <ClInclude Include="..\Public\Bounding_Sphere.h" />
     <ClInclude Include="..\public\Fog.h" />
+    <ClInclude Include="..\public\Font.h" />
+    <ClInclude Include="..\public\Font_Manager.h" />
     <ClInclude Include="..\public\FSM.h" />
     <ClInclude Include="..\public\QuadTree.h" />
     <ClInclude Include="..\public\OcclusionQuery.h" />
+    <ClInclude Include="..\public\Resource_Manager.h" />
     <ClInclude Include="..\Public\RigidBody_Dynamic_Joint.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -545,9 +553,10 @@ call Update_Lib.bat
     <ClInclude Include="..\Public\RigidBody_Dynamic.h" />
     <ClInclude Include="..\Public\RigidBody_Static.h" />
     <ClInclude Include="..\Public\Shader.h" />
-    <ClInclude Include="..\Public\Shadow.h" />
     <ClInclude Include="..\Public\SoundSrc.h" />
+    <ClInclude Include="..\Public\Stat.h" />
     <ClInclude Include="..\Public\State.h" />
+    <ClInclude Include="..\Public\StatEvent.h" />
     <ClInclude Include="..\Public\stb_image.h" />
     <ClInclude Include="..\Public\Texture.h" />
     <ClInclude Include="..\Public\ThreadHolder.h" />
@@ -630,6 +639,10 @@ call Update_Lib.bat
     <None Include="..\Public\fMod\fmod_errors.cs" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Instance_Compute.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_Mesh_Compute.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>

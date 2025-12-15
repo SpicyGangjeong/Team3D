@@ -26,7 +26,7 @@ public:
 	virtual HRESULT Render() override;
 public:
 	HRESULT Create_Effect(SKILL_TYPE eType, _uint iNumEffect, _uint iPrototypeLevel, _uint iCloneLevel , function<class CEffect_Container*(_uint , _uint)> AddPrototypeEvent);
-	HRESULT Use_Skill(SKILL_TYPE eType , CGameObject* pOwner);
+	HRESULT Use_Skill(SKILL_TYPE eType , CGameObject* pOwner, void* pArg = nullptr);
 private:
 	list<class CEffect_Container*> m_EffectList[ENUM_CLASS(SKILL_TYPE::END)] = {};
 	list<class CEffect_Container*> m_ActiveEffectList = {};
@@ -34,6 +34,10 @@ private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
 	HRESULT Ready_Effect();
+	HRESULT Ready_MonsterEffect();
+private:
+	_bool m_isActiveEffectCreate = { true };
+	_bool m_isActiveMonsterEffectCreate = { true };
 public:
 	static CEffectPool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner = nullptr) override;

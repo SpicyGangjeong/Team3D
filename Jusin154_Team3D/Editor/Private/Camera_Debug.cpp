@@ -29,9 +29,18 @@ void CCamera_Debug::Update(_float fTimeDelta)
 	if (m_pGameInstance->Key_Up(DIK_GRAVE)) {
 		m_bMovable = !m_bMovable;
 	}
+#ifdef 진우
+	if (m_pGameInstance->Mouse_Down(DIM_MBUTTON)) {
+		m_pGameInstance->Toggle_MouseCenter();
+	}
+#endif 
+#ifndef 진우
 	if (m_pGameInstance->Mouse_Down(DIM_RBUTTON)) {
 		m_pGameInstance->Toggle_MouseCenter();
 	}
+#endif // gimch
+
+	
 	if (m_bMovable) {
 #pragma region Position
 		_float fSpeed = 5.f;

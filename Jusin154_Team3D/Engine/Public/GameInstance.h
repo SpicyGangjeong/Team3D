@@ -22,7 +22,11 @@ public:
 	_float Random_Normal();
 	_float Random_Float(_float fMin, _float fMax);
 	_int   Random_Int(_int iMin, _int iMax);
+	_int   Real_Random_Int(_int iMin, _int iMax);
+	_float Real_Random_Float(_float fMin, _float fMax);
+	_float2 Get_ViewPortSize();
 	void BillBoard(CTransform* pTransform);
+	void SlowMotion(_float fSlowIntense, _float fTime);
 
 #pragma region GRAPHIC_DEVICE
 public:
@@ -97,6 +101,7 @@ public:
 
 #pragma region RENDERER
 	HRESULT Add_RenderGroup(RENDER eRenderGroup, class CGameObject* pRenderObject);
+	void Render_PreShadow();
 #pragma endregion
 
 #pragma region ASSET_MANAGER
@@ -132,12 +137,22 @@ public:
 	const _float4* Get_CamPosition();
 	const _vector Get_CamXMPosition();
 	void Transform_Frustum_ToLocalSpace(_fmatrix WorldMatrixInverse);
-	_bool isIn_WorldFrustum(_fvector vWorldPos, _float fRadius);
-	_bool isIn_LocalFrustum(_fvector vLocalPos, _float fRadius);
+	_bool IsIn_WorldFrustum(_fvector vWorldPos, _float fRadius);
+	_bool IsIn_LocalFrustum(_fvector vLocalPos, _float fRadius);
+	pair<_bool, _ubyte> IsIn_ShadowViewFrustum(_fvector vWorldCenter, _float fRadius);
+	HRESULT Bind_CascadeSplitRatio(class CShader* pShader, const _char* pConstantName, _bool bNear);
+	HRESULT Bind_CascadeBias(class CShader* pShader, const _char* pConstantName);
+	HRESULT Bind_GlobalSRV(class CShader* pShader, const _tchar* wszKeyGlobalSRV, const _char* pConstantName);
+	HRESULT Load_GlobalSRV(const _tchar* wszKeyGlobalSRV, filesystem::path pathSRVFolder);
 
+	HRESULT Ready_Shadow_Light(const _float4& vShadowDirRPYQuat);
+	HRESULT Bind_Shadow_Resource(class CShader* pShader, const _char* pConstantName, D3DTS eType, SHADOW eShadowType) const;
+	const _float4x4* Get_ShadowMatricesPtr(_uint iShadowBoxIndex);
+	_float  Get_ShadowBoxFar(_uint iShadowBoxIndex);
 #pragma endregion
 #pragma region LIGHT_MANAGER
 	void			  Add_Light(_uint _iCurrentLevel, class CLight* _pLight);
+	void			  Add_Light_Group(_uint _iCurrentLevel, class CLight* _pLight);
 	void			  Delete_Light(_uint _iCurrentLevel, class CLight* _pLight);
 	const LIGHT_DESC* Get_Light_Info(_uint _iCurrentLevel, _uint _iLightIndex);
 	HRESULT			  Render_Lights(_uint _iCurrentLevel, class CShader* pShader, class CVIBuffer* pVIBuffer);
@@ -163,6 +178,7 @@ public:
 	HRESULT Accumulate_RenderTarget(class CVIBuffer_Rect* pVIBuffer, class CShader* pShader, const _wstring& wstrRenderTarget_SrcA, const _wstring& wstrRenderTarget_SrcB, const _wstring& wstrRenderTarget_Target, SHADER_PASS_DEFERRED ePass);
 	HRESULT Refit_RenderTarget(class CVIBuffer_Rect* pVIBuffer, class CShader* pShader, const _wstring& wstrRenderTargetInput, const _wstring& wstrRenderTargetOutput, SHADER_PASS_DEFERRED ePass);
 	HRESULT Finish_RenderTarget(class CVIBuffer_Rect* pVIBuffer, class CShader* pShader, const _wstring& wstrRenderTargetOriginal, const _wstring& wstrRenderTargetBloomed, SHADER_PASS_DEFERRED ePass);
+	HRESULT Bind_CS_RenderTarget(_uint iIndex, const _wstring& strTargetTag);
 #ifdef _DEBUG
 	void    RenderTarget_Debuger();
 	HRESULT Render_RenderTarget_Debug(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
@@ -175,15 +191,9 @@ public:
 	HRESULT Bind_Camera(_uint iLevel, const _wstring& strCameraKey, _bool bIgnorePriority);
 	HRESULT IsBinded_Camera(const _wstring& strCameraKey);
 	_vector Get_CameraLook();
+	_float	Get_CameraFov();
 	const _float* Get_CurrentCameraFar();
 	void Force_CamPosition(_fvector vPos);
-#pragma endregion
-
-#pragma region SHADOW
-	HRESULT Ready_Shadow_Light(const SHADOW_LIGHT_DESC& Desc);
-	HRESULT Bind_Shadow_Resource(class CShader* pShader, const _char* pConstantName, D3DTS eType) const;
-	const _float4x4* Get_ShadowMatricesPtr();
-	const SHADOW_LIGHT_DESC* Get_ShadowDesc();
 #pragma endregion
 #pragma region SOUND_MANAGER
 #pragma endregion
@@ -200,6 +210,9 @@ public:
 	PSX::PxRevoluteJoint* Create_PxRevoluteJoint(PSX::PxRigidActor* pActorFrame, PSX::PxTransform& pxLocalWallFrame, PSX::PxRigidActor* pActorObject, PSX::PxTransform& pxLocalActorFrame);
 
 	_bool SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer);
+	_bool SphereCast(_float fRadius, _fvector vStartPos, _gvector vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer);
+	_bool RayCast(_float3 _vStartPos, _float3 _vDir, _float fDistance, PSX::PxRaycastHit* pRayHitArray, _uint iMaxHitCapacity, _uint& iOutHitCount);
+	_bool RayCast(_fvector _vStartPos, _gvector _vDir, _float fDistance, PSX::PxRaycastHit* pRayHitArray, _uint iMaxHitCapacity, _uint& iOutHitCount);
 
 	PSX::PxController*	Add_CapsuleController(PSX::PxCapsuleControllerDesc& Desc);
 	PSX::PxController*	Add_BoxController(PSX::PxBoxControllerDesc& Desc);
@@ -208,8 +221,8 @@ public:
 	void				Attach_Actor(PSX::PxActor& Actor);
 	void				Detach_Actor(PSX::PxActor& pActor);
 	void				Release_Actor(PSX::PxActor& Actor);
-#ifdef EDITOR_PROJECT
 	HRESULT ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix = XMMatrixIdentity());
+#ifdef EDITOR_PROJECT
 	HRESULT SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes);
 #endif // EDITOR_PROJECT
 	HRESULT LoadTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes); // 모델 불러왔던 경로에 그대로 있음
@@ -233,6 +246,20 @@ public:
 	HRESULT Bind_FogValue(class CShader* pShader);
 #pragma endregion
 
+#pragma region RESOURCE_MANGER
+	public:
+		ID3D11ShaderResourceView* Add_Resource(const _char* pFilePath);
+#pragma endregion
+
+#pragma region FONT_MANAGER
+	public:
+		HRESULT Add_Font(const _wstring& strFontTag, const _tchar* pFontFilePath);
+		HRESULT Render_Text(const _wstring& strFontTag, const _tchar* pText, const _float2& vPosition, _fvector vColor = XMVectorSet(1.f, 1.f, 1.f, 1.f), _float vScale = 1.f);
+		HRESULT Render_Rotation_Text(const _wstring& strFontTag, const _tchar* pText, const _float2& vPosition, _fvector vColor = XMVectorSet(1.f, 1.f, 1.f, 1.f), _float Rotation = 0.f, _float vScale = 1.f);
+		HRESULT Perspective_Render_Text(_matrix View, _matrix Proj, const _wstring& strFontTag, const _tchar* pText, const _fvector& vPosition, _fvector vColor = XMVectorSet(1.f, 1.f, 1.f, 1.f), _float vScale = 1.f);
+		_float FontSizeX(const _wstring& strFontTag, const _tchar* pText);
+#pragma endregion
+
 
 public:
 	void Add_ModelToMap(const _char* filePath, CModel* pModel);
@@ -250,6 +277,9 @@ public:
 #endif
 
 private:
+	_float Update_SlowMotion(_float fTimeDelta);
+
+private:
 	class CGraphic_Device*			m_pGraphic_Device = { nullptr };
 	class CTimer_Manager*			m_pTimer_Manager = { nullptr };
 	class CLevel_Manager*			m_pLevel_Manager = { nullptr };
@@ -258,7 +288,6 @@ private:
 	class CPipeLine*				m_pPipeLine = { nullptr };
 	class CRenderer*				m_pRenderer = { nullptr };
 	class CRenderTarget_Manager*	m_pRenderTarget_Manager = { nullptr };
-	class CShadow*					m_pShadow = { nullptr };
 	class CCamera_Manager*			m_pCamera_Manager = { nullptr };
 	class CLight_Manager*			m_pLight_Manager = { nullptr };
 	class CKey_Manager*				m_pKey_Manager = { nullptr };
@@ -268,8 +297,16 @@ private:
 	class CPicking*					m_pPicking = { nullptr };
 	class CThreadHolder*			m_pThreadHolder = { nullptr };
 	class CFog*						m_pFog = { nullptr };
-	
+	class CResource_Manager*		m_pResource_Manager = { nullptr };
+	class CFont_Manager*			m_pFont_Manager = { nullptr };
 
+	mt19937 m_Rng{ random_device{}() };
+	_float2							m_vViewPortSize = {};
+
+private:
+	_bool							m_isSlowMotion = {};
+	_float2							m_vSlowTime = {};
+	_float							m_fSlowIntense = {};
 #ifdef _DEBUG
 private:
 	_float							m_fTimer_PriorityUpdate = { 0.f };
@@ -277,9 +314,33 @@ private:
 	_float							m_fTimer_LateUpdate = { 0.f };
 	_float							m_fTimer_DrawCall = { 0.f };
 	_float							m_fTimer_Present = { 0.f };
+	_float							m_fTimer_Picking = { 0.f };
+	_float							m_fTimer_PhysX = { 0.f };
+	_float							m_fTimer_Level = { 0.f };
 	_float							m_fTimer_FrameCount = { 0.f };
+	
+	_float							m_fTimer_Render_Priority = { 0.f };
+	_float							m_fTimer_Render_Shadow = { 0.f };
+	_float							m_fTimer_Render_NonBlend = { 0.f };
+	_float							m_fTimer_Render_SSAO = { 0.f };
+	_float							m_fTimer_Render_SSAO_BLUR = { 0.f };
+	_float							m_fTimer_Render_LightAcc = { 0.f };
+	_float							m_fTimer_Render_Blur = { 0.f };
+	_float							m_fTimer_Render_Combined = { 0.f };
+	_float							m_fTimer_Render_Occlusion = { 0.f };
+	_float							m_fTimer_Render_EnvironmentPostProcess = { 0.f };
+	_float							m_fTimer_Render_Fog = { 0.f };
+	_float							m_fTimer_Render_Effect = { 0.f };
+	_float							m_fTimer_Render_NonLight = { 0.f };
+	_float							m_fTimer_Render_Blend = { 0.f };
+	_float							m_fTimer_Render_WeightBlend = { 0.f };
+	_float							m_fTimer_Render_Bloom = { 0.f };
+	_float							m_fTimer_Render_LastColor = { 0.f };
+	_float							m_fTimer_Render_Tone_Mapping = { 0.f };
+	_float							m_fTimer_Render_UI = { 0.f };
+	_float							m_fTimer_Render_UI_Overley = { 0.f };
 
-	vector<const _char*>			m_FilePaths = {};
+	vector<const _char*>			    m_FilePaths = {};
 	map<const _char*, CModel*>			m_ModelMap;
 
 #endif // _DEBUG

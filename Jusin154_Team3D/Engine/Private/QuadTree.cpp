@@ -24,8 +24,7 @@ void CQuadTree::Set_CullingRadius(_float fRadius)
 void CQuadTree::Culling(CGameInstance* pGameInstance, const _float3* pVertexPositions, _uint* pIndices, _uint* pNumIndices)
 {
 	/* 해당 노드에서 그릴건지 확인 */
-	if (nullptr == m_pChildren[CORNER_LT] ||
-		true == isDraw(pGameInstance, pVertexPositions))
+	if (nullptr == m_pChildren[CORNER_LT] || true == isDraw(pGameInstance, pVertexPositions))
 	{
 		_bool		isDraw[NEIGHBOR_END] = { true, true, true, true };
 
@@ -38,10 +37,10 @@ void CQuadTree::Culling(CGameInstance* pGameInstance, const _float3* pVertexPosi
 
 		/* 점들이 절두체 안에 있는지 확인 */
 		_bool		isIn[4] = {
-			pGameInstance->isIn_LocalFrustum(XMLoadFloat3(&pVertexPositions[m_iCorners[0]]), 0.f),
-			pGameInstance->isIn_LocalFrustum(XMLoadFloat3(&pVertexPositions[m_iCorners[1]]), 0.f),
-			pGameInstance->isIn_LocalFrustum(XMLoadFloat3(&pVertexPositions[m_iCorners[2]]), 0.f),
-			pGameInstance->isIn_LocalFrustum(XMLoadFloat3(&pVertexPositions[m_iCorners[3]]), 0.f),
+			pGameInstance->IsIn_LocalFrustum(XMLoadFloat3(&pVertexPositions[m_iCorners[0]]), 0.f),
+			pGameInstance->IsIn_LocalFrustum(XMLoadFloat3(&pVertexPositions[m_iCorners[1]]), 0.f),
+			pGameInstance->IsIn_LocalFrustum(XMLoadFloat3(&pVertexPositions[m_iCorners[2]]), 0.f),
+			pGameInstance->IsIn_LocalFrustum(XMLoadFloat3(&pVertexPositions[m_iCorners[3]]), 0.f),
 		};
 
 		/* 이웃하는 노드가 모두 그려진다면 */
@@ -172,7 +171,7 @@ void CQuadTree::Culling(CGameInstance* pGameInstance, const _float3* pVertexPosi
 	/* Range 는 사각형의 중심에서 꼭짓점까지의 거리 */
 	_float		fRange = XMVector3Length(XMLoadFloat3(&pVertexPositions[m_iCorners[CORNER_LT]]) - XMLoadFloat3(&pVertexPositions[m_iCenter])).m128_f32[0];
 
-	if (true == pGameInstance->isIn_LocalFrustum(XMLoadFloat3(&pVertexPositions[m_iCenter]), fRange ))
+	if (true == pGameInstance->IsIn_LocalFrustum(XMLoadFloat3(&pVertexPositions[m_iCenter]), fRange ))
 	{
 		for (size_t i = 0; i < CORNER_END; i++)
 		{

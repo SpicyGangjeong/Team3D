@@ -47,7 +47,7 @@ void CDummy_PhysXEffectHitBox::Late_Update(_float fTimeDelta)
 	if (true == m_pCharacter_Controller->IsActive()) {
 		m_pCharacter_Controller->Move(fTimeDelta);
 	}
-	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
+	if (m_pGameInstance->IsIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
 		m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
 	}
 }
@@ -83,6 +83,7 @@ HRESULT CDummy_PhysXEffectHitBox::Ready_Components(void* pArg)
 	if (FAILED(__super::Ready_Components(pArg))) {
 		return E_FAIL;
 	}
+
 	PHYSXDUMMY_DESC* pDesc = static_cast<PHYSXDUMMY_DESC*>(pArg);
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pDesc->vPos), 1.f));
 	m_pTransformCom->Rotation(pDesc->vRotRPY.x, pDesc->vRotRPY.y, pDesc->vRotRPY.z);

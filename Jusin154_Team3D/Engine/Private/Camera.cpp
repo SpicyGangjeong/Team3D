@@ -46,8 +46,6 @@ HRESULT CCamera::Initialize(void* pArg)
     m_bEnable_LookLerp = pDesc->bEnableLookLerp;
     m_vFollowLerpTime = pDesc->vFollowLerpTime;
 
-
-
     return S_OK;
 }
 
@@ -56,7 +54,6 @@ HRESULT CCamera::Bind_Matrices()
     if (true == m_bActive) {
         m_pGameInstance->Set_Transform(D3DTS::VIEW, XMMatrixInverse(nullptr, XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrixPtr())));
         m_pGameInstance->Set_Transform(D3DTS::PROJ, XMMatrixPerspectiveFovLH(m_fFovy, m_fAspect, m_fNear, m_fFar));
-        //Ready_Shadow();
     }
     return S_OK;
 }
@@ -145,29 +142,6 @@ const _float* CCamera::Get_CurrentFar()
     return &m_fFar;
 }
 
-HRESULT CCamera::Ready_Shadow()
-{
-    if (nullptr == m_pLookTarget) {
-        return S_OK;
-    }
-    ShadowDesc = *m_pGameInstance->Get_ShadowDesc();
-
-    ShadowDesc.fFar = 200.f;
-    ShadowDesc.fNear = 0.1f;
-    ShadowDesc.fWidth = 30.f;
-    ShadowDesc.fHeight = 30.f;
-
-    XMStoreFloat4(&ShadowDesc.vAt, m_pLookTarget->Get_WorldPostion());
-
-    _matrix matRotation = XMMatrixRotationRollPitchYaw(XMConvertToRadians(vRollPichYaw.x), XMConvertToRadians(vRollPichYaw.y), XMConvertToRadians(vRollPichYaw.z));
-    XMStoreFloat4(&ShadowDesc.vEye, XMLoadFloat4(&ShadowDesc.vAt) - matRotation.r[2] * (ShadowDesc.fFar * 0.25f));
-
-    if (FAILED(m_pGameInstance->Ready_Shadow_Light(ShadowDesc))) {
-        return E_FAIL;
-    }
-    return S_OK;
-}
-
 void CCamera::ZoomIn(_float fTimeDelta)
 {
     if (m_fFovy > XMConvertToRadians(40.f))
@@ -182,16 +156,28 @@ void CCamera::Set_Fov(_float fFovy, _float fTimeDelta,_bool& bZoomIn)
     if (fFovy > m_fFovy)
     {
         m_fFovy += (fTimeDelta * 0.6f);
+        if (fFovy < m_fFovy) {
+            m_fFovy = fFovy;
+        }
     }
     else if(fFovy < m_fFovy)
     {
         m_fFovy -= (fTimeDelta * 0.6f);
+        if (fFovy > m_fFovy) {
+            m_fFovy = fFovy;
+        }
     }
 
-    if (fFovy == m_fFovy)
+    if (fabsf(fFovy - m_fFovy) <= FLT_EPSILON3)
     {
+        m_fFovy = fFovy;
         bZoomIn = false;
     }
+}
+
+_float CCamera::Get_Fov()
+{
+    return m_fFovy;
 }
 
 void CCamera::Free()

@@ -25,7 +25,7 @@ void CBuildingContainer::Update(_float fTimeDelta)
 {
     __super::Update(fTimeDelta);
 
-    m_fCamDepth = XMVectorGetX(XMVector3LengthSq(XMLoadFloat4(m_pGameInstance->Get_CamPosition()) - XMLoadFloat3(&m_vExtentWorldPosition)));
+    m_fCamDepth = XMVectorGetX(XMVector3LengthSq(XMLoadFloat4(m_pGameInstance->Get_CamPosition()) - XMVectorSetW(XMLoadFloat3(&m_vExtentWorldPosition), 1.f)));
 
     for (auto& pCollisiton : m_ColiisonPartObjects){
         pCollisiton->Update(fTimeDelta);
@@ -34,19 +34,40 @@ void CBuildingContainer::Update(_float fTimeDelta)
 
 void CBuildingContainer::Late_Update(_float fTimeDelta)
 {
-    if (m_pOcclusionQueryCom->isDraw()){
-        __super::Late_Update(fTimeDelta);
-    }
+    if (m_pGameInstance->IsIn_WorldFrustum(XMVectorSetW(XMLoadFloat3(&m_vExtentWorldPosition), 1.f), m_fRadius)) {
+        if (m_fCamDepth > 3000.f)
+        {
+            if (m_pOcclusionQueryCom->isDraw())
+                __super::Late_Update(fTimeDelta);
+        }
+        else
+            __super::Late_Update(fTimeDelta);
 
-    for (auto& pCollisiton : m_ColiisonPartObjects){
-        pCollisiton->Late_Update(fTimeDelta);
-    }
+        m_pGameInstance->Add_RenderGroup(RENDER::OCCLUSION, this);
 
-    m_pGameInstance->Add_RenderGroup(RENDER::OCCLUSION, this);
+        for (auto& pCollisiton : m_ColiisonPartObjects) {
+            pCollisiton->Late_Update(fTimeDelta);
+        }
+    }
+    else
+        m_pOcclusionQueryCom->Set_PreFrameDraw();
+
 }
 
 HRESULT CBuildingContainer::Render()
 {
+    return S_OK;
+}
+
+HRESULT CBuildingContainer::Render_Shadow(SHADOW eType)
+{
+    unordered_map<_string, CPartObject*>::iterator iter = m_PartObjects.begin();
+    for (; iter != m_PartObjects.end(); ++iter) {
+        CPartObject* pObject = (*iter).second;
+        if (FAILED(pObject->Render_Shadow(eType))) {
+            return E_FAIL;
+        }
+    }
     return S_OK;
 }
 
@@ -142,6 +163,9 @@ HRESULT CBuildingContainer::Ready_Components(void* pArg)
     vRadius.y = (pDesc->vContainerMax.y - pDesc->vContainerMin.y) * 0.5f;
     vRadius.z = (pDesc->vContainerMax.z - pDesc->vContainerMin.z) * 0.5f;
 
+    m_fRadius = max(vRadius.x, vRadius.y);
+    m_fRadius = max(m_fRadius, vRadius.z);
+
     m_vExtentWorldPosition.x = pDesc->vContainerMin.x + vRadius.x;
     m_vExtentWorldPosition.y = pDesc->vContainerMin.y + vRadius.y;
     m_vExtentWorldPosition.z = pDesc->vContainerMin.z + vRadius.z;
@@ -211,3 +235,4 @@ void CBuildingContainer::Describe_Entity()
     
 }
 #endif
+////////////////////////////////

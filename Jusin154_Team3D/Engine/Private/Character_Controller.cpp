@@ -141,7 +141,7 @@ _float3 CCharacter_Controller::Get_Volume()
 }
 
 HRESULT CCharacter_Controller::ConvertToDO(CRigidBody_Dynamic& BodyOriginal)
-{	
+{
 	PSX::PxRigidDynamic* pDOActor = BodyOriginal.Get_Actor();
 	PSX::PxRigidDynamic* pCCTActor = m_pController->getActor();
 
@@ -150,7 +150,7 @@ HRESULT CCharacter_Controller::ConvertToDO(CRigidBody_Dynamic& BodyOriginal)
 
 	m_pGameInstance->Attach_Actor(*pDOActor); // DO 액터 활성화
 
-	PSX::PxTransform pxTransform = pCCTActor->getGlobalPose(); 
+	PSX::PxTransform pxTransform = pCCTActor->getGlobalPose();
 	pDOActor->setGlobalPose(pxTransform);
 
 	return S_OK;
@@ -177,75 +177,71 @@ void CCharacter_Controller::Rewind_Grounded()
 		m_iIsOnGround = 0;
 	}
 }
-
 _bool CCharacter_Controller::UpdateGroundByCast(_float fTimeDelta)
 {
-	_vector vFoot = Get_FootPosition();
-	_float3 fFoot;
-	XMStoreFloat3(&fFoot, vFoot);
-	fFoot.y += 0.0625f;
+	_vector vCharacterPos = Get_Position();
 
-	PSX::PxSweepBuffer pxBuffer = {};
+	PSX::PxSweepBuffer sweepHitBuffer = {};
+	_float3 vVolume = Get_Volume();
 
-	m_pController->getFootPosition();
-	_bool bHit = { false };
+	_float fVolumeRadius = vVolume.x;
+	_float fCastingDistance = vVolume.y * 2.f;
 
-	bHit = m_pGameInstance->SphereCast(0.0625f, fFoot, { 0.f, -1.f, 0.f }, 0.0625f, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eSTATIC, pxBuffer);
+	_vector vDownVector = { 0.f, -1.f, 0.f, 0.f };
+	_vector vUpVector = { 0.f, 1.f, 0.f, 0.f };
 
-	if (true == bHit) { // 쿼리해서 스태틱 중에 터레인 액터들이 맞으면 다시 갱신
-		const PSX::PxSweepHit& hit = pxBuffer.block;
-		
-		PSX::PxRigidActor* pActor = hit.actor;
-		PSX::PxShape* pShape = hit.shape;
+	_bool bHit =
+		m_pGameInstance->SphereCast( fVolumeRadius, vCharacterPos, vDownVector, fCastingDistance, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eSTATIC, sweepHitBuffer );
 
-		if (nullptr != pActor && nullptr != pActor->userData)
-		{
-			PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+	if (bHit == false) {
+		return false;
+	}
 
-			switch (pUserData->eKind)
-			{
-			case PHYSX_KIND::BODY_STATIC:
-			{
-				switch (PXOBJECT(pUserData->iSubKind))
-				{
-				case PXOBJECT::TERRAIN:
-				case PXOBJECT::FLOOR:
-				case PXOBJECT::ROAD:
-				{ // 임계값 이상이면 지면에 서서히 붙임
-					m_iIsOnGround = iCoyote_Counter;
+	_float fMaximumSlopeRadan = XMConvertToRadians(m_fWalkableSlopeDegree);
+	_float fMinCosSlope = cosf(fMaximumSlopeRadan);
 
+	_vector vFootPos = Get_FootPosition();
 
-					//_float fYHitPos = hit.position.y;
-					//_float fYFoot = (_float)m_pController->getFootPosition().y;
-					//_float fDiff = (fYHitPos - fYFoot);
-					//if (fDiff > m_vAccHeight.w) {
-					//	_vector vMomentum = m_pTransform->Get_CurrentMomentum();
-					//	_float fYCurrentMomentum = XMVectorGetY(vMomentum);
-					//	fYCurrentMomentum = fDiff * 0.3f;
-					//	m_pTransform->Set_CurrentMomentum(XMVectorSetY(vMomentum, fYCurrentMomentum));
-					//}
-					//else {
-					//	m_iIsOnGround = iCoyote_Counter;
-					//}
-				}
-					break;
-				default:
-					break;
-				}
-			} break;
-			case PHYSX_KIND::BODY_DYNAMIC:
-				break;
-			case PHYSX_KIND::CCTActor:
-			case PHYSX_KIND::OBSTACLEActor:
-				break;
-			default:
-				break;
-			}
+	auto& sweepHit = sweepHitBuffer.block;
+
+	PSX::PxRigidActor* hitActor = sweepHit.actor;
+
+	PhsXUserData* hitUserData = static_cast<PhsXUserData*>(hitActor->userData);
+
+	switch (PXOBJECT(hitUserData->iSubKind))
+	{
+	case PXOBJECT::TERRAIN:
+	case PXOBJECT::FLOOR:
+	case PXOBJECT::ROAD:
+	{
+		_vector vSurfaceNormal = XMVector3Normalize({ sweepHit.normal.x, sweepHit.normal.y, sweepHit.normal.z, 0.f });
+
+		_float fDotUp = XMVectorGetX(XMVector3Dot(vSurfaceNormal, vUpVector));
+
+		if (fDotUp < fMinCosSlope) {
+			break;
 		}
+
+		_vector vHitPos = { sweepHit.position.x, sweepHit.position.y, sweepHit.position.z, 0.f };
+		_vector vFootToHitPos = vFootPos - vHitPos;
+
+		_float fDistanceFromGround = XMVectorGetX(XMVector3Dot(vFootToHitPos, vSurfaceNormal));
+		_float fDotUpNormal = (fabsf(fDotUp) < FLT_EPSILON) ? FLT_EPSILON: fDotUp;
+		_float fCurrentMomentumY = (-fDistanceFromGround / fDotUpNormal) * 0.3f;
+		_vector vCurrentMomentum = m_pTransform->Get_CurrentMomentum();
+
+		m_pTransform->Set_CurrentMomentum( XMVectorSetY(vCurrentMomentum, fCurrentMomentumY) );
+		m_iIsOnGround = iCoyote_Counter;
+	}
+	break;
+	default:
+		break;
 	}
 
 	return bHit;
 }
+
+
 
 void CCharacter_Controller::Move(_float fTimeDelta)
 {
@@ -261,14 +257,13 @@ void CCharacter_Controller::Move(_float fTimeDelta)
 			UpdateGroundByCast(fTimeDelta); // 바닥에 플레이어 붙이게 함
 		}
 		else if (m_fCurrentSlopeDegree > m_fWalkableSlopeDegree) {        // 너무 가파른 경사: 중력
-			//m_pTransform->AccumulateMomentum(XMVectorSet(0.f, -GRAVITY * fTimeDelta, 0.f, 0.f));
+			m_pTransform->AccumulateMomentum(XMVectorSet(0.f, -GRAVITY * fTimeDelta, 0.f, 0.f));
 		}
 		else {
 			// 아니면 안함
 		}
 	}
 	XMStoreFloat3((_float3*)&pxVecMomentum, m_pTransform->Get_CurrentMomentum());
-	
 	m_eBeforeCollisionFlags = m_pController->move(pxVecMomentum, fMinimumDistant, fTimeDelta, pxFilter, pPxObstacles);
 }
 
@@ -291,6 +286,14 @@ _vector CCharacter_Controller::Get_FootPosition()
 {
 	PSX::PxExtendedVec3  pxLVecfootPos = m_pController->getFootPosition();
 	return XMVectorSet((_float)pxLVecfootPos.x, (_float)pxLVecfootPos.y, (_float)pxLVecfootPos.z, 1.f );
+}
+
+_vector CCharacter_Controller::Get_HeadPosition()
+{
+	PSX::PxExtendedVec3  pxLVecfootPos = m_pController->getFootPosition();
+	PSX::PxExtendedVec3  pxVPos = m_pController->getPosition();
+	_float pxVecDiff = (_float)(pxVPos - pxLVecfootPos).y;
+	return XMVectorSet((_float)pxVPos.x, (_float)pxVPos.y + pxVecDiff, (_float)pxVPos.z, 1.f);
 }
 
 HRESULT CCharacter_Controller::Initialize_Prototype()
@@ -355,6 +358,8 @@ HRESULT CCharacter_Controller::Initialize(void* pArg)
 		break;
 	}
 	
+	m_pController->setStepOffset(pDesc->fStepOffset);
+
 	if (nullptr == m_pController) {
 		assert(false);
 		return E_FAIL;
@@ -432,65 +437,66 @@ void CCharacter_Controller::Free()
 #ifdef _DEBUG
 void CCharacter_Controller::Describe_Entity()
 {
-	GUI::Begin("Character_Controller");
-	GUI::Text("Gravity : %d ", m_bGravity);
-	m_pTransform->Describe_Entity();
-	GUI::TextLinkOpenURL("More details here", "https://dev-treadmill.tistory.com/158");
-	_float fContact = m_pController->getContactOffset();
-	PSX::PxVec3 vUpDirection = m_pController->getUpDirection();
-	PSX::PxExtendedVec3 vCenterPosition = m_pController->getPosition();
-	PSX::PxExtendedVec3 vFootPosition = m_pController->getFootPosition();
-	_float3 vVolume = Get_Volume();
-	_float fStepOffset = m_pController->getStepOffset();
+	GUI::PushItemWidth(80);
+	if (GUI::CollapsingHeader("Character_Controller") ){
+		GUI::Text("Gravity : %d ", m_bGravity);
+		m_pTransform->Describe_Entity();
+		GUI::TextLinkOpenURL("More details here", "https://dev-treadmill.tistory.com/158");
+		_float fContact = m_pController->getContactOffset();
+		PSX::PxVec3 vUpDirection = m_pController->getUpDirection();
+		PSX::PxExtendedVec3 vCenterPosition = m_pController->getPosition();
+		PSX::PxExtendedVec3 vFootPosition = m_pController->getFootPosition();
+		_float3 vVolume = Get_Volume();
+		_float fStepOffset = m_pController->getStepOffset();
 
-	GUI::Text("eBodyType $d", (_uint)m_eBodyType); GUIHelpMarker("Body: only box and capsule available");
+		GUI::Text("eBodyType $d", (_uint)m_eBodyType); GUIHelpMarker("Body: only box and capsule available");
 
-	if (GUI::SliderFloat3("UpDirection", (_float*)&vUpDirection, -1.f, 1.f)) {
-		m_pController->setUpDirection(vUpDirection.getNormalized());
-	} GUIHelpMarker("Up vector in PhysX");
-	GUI::Text("vCenterPosition %lf, %lf, %lf", vCenterPosition.x, vCenterPosition.y, vCenterPosition.z); GUIHelpMarker("Exact center of the rigid body owned by the controller");
-	GUI::Text("vFootPosition %lf, %lf, %lf", vFootPosition.x, vFootPosition.y, vFootPosition.z); GUIHelpMarker("Foot position including step offset from the body center to the ground");
+		if (GUI::SliderFloat3("UpDirection", (_float*)&vUpDirection, -1.f, 1.f)) {
+			m_pController->setUpDirection(vUpDirection.getNormalized());
+		} GUIHelpMarker("Up vector in PhysX");
+		GUI::Text("vCenterPosition %lf, %lf, %lf", vCenterPosition.x, vCenterPosition.y, vCenterPosition.z); GUIHelpMarker("Exact center of the rigid body owned by the controller");
+		GUI::Text("vFootPosition %lf, %lf, %lf", vFootPosition.x, vFootPosition.y, vFootPosition.z); GUIHelpMarker("Foot position including step offset from the body center to the ground");
 
-	if (GUI::SliderFloat("ContactOffset", &fContact, 0.01f, 10.f, "%.2f")) {
-		m_pController->setContactOffset(fContact);
-	} GUIHelpMarker("Actual contact offset in PhysX; increasing it may make the controller appear to hover");
-	if (GUI::SliderFloat("StepOffset", &fStepOffset, 0.f, 3.f, "%.2f")) {
-		m_pController->setStepOffset(fStepOffset);
-	} GUIHelpMarker("In stepped regions, the tolerance height the controller can climb.\n Capsule behaves slightly differently.");
-	
-	if (ACTOR::CAPSULE == m_eBodyType) {
-		PSX::PxCapsuleController* pController = (PSX::PxCapsuleController*)m_pController;
+		if (GUI::SliderFloat("ContactOffset", &fContact, 0.01f, 10.f, "%.2f")) {
+			m_pController->setContactOffset(fContact);
+		} GUIHelpMarker("Actual contact offset in PhysX; increasing it may make the controller appear to hover");
+		if (GUI::SliderFloat("StepOffset", &fStepOffset, 0.f, 3.f, "%.2f")) {
+			m_pController->setStepOffset(fStepOffset);
+		} GUIHelpMarker("In stepped regions, the tolerance height the controller can climb.\n Capsule behaves slightly differently.");
 
-		if (0.f != fStepOffset) {
-			switch (pController->getClimbingMode())
-			{
-			case PSX::PxCapsuleClimbingMode::eEASY:
-				if (GUI::Button("ClimbingMode : eEasy")) {
-					pController->setClimbingMode(PSX::PxCapsuleClimbingMode::eCONSTRAINED);
+		if (ACTOR::CAPSULE == m_eBodyType) {
+			PSX::PxCapsuleController* pController = (PSX::PxCapsuleController*)m_pController;
+
+			if (0.f != fStepOffset) {
+				switch (pController->getClimbingMode())
+				{
+				case PSX::PxCapsuleClimbingMode::eEASY:
+					if (GUI::Button("ClimbingMode : eEasy")) {
+						pController->setClimbingMode(PSX::PxCapsuleClimbingMode::eCONSTRAINED);
+					}
+					break;
+				case PSX::PxCapsuleClimbingMode::eCONSTRAINED:
+					if (GUI::Button("ClimbingMode : eConstrained")) {
+						pController->setClimbingMode(PSX::PxCapsuleClimbingMode::eEASY);
+					}
+					break;
+				default:
+					break;
 				}
-				break;
-			case PSX::PxCapsuleClimbingMode::eCONSTRAINED:
-				if (GUI::Button("ClimbingMode : eConstrained")) {
-					pController->setClimbingMode(PSX::PxCapsuleClimbingMode::eEASY);
-				}
-				break;
-			default:
-				break;
+				GUIHelpMarker("A capsule is affected by its lower sphere and tends to generate an up vector on steps.\nIn eEASY, the up vector is combined with the step offset, allowing easier climbing; in eCONSTRAINED, the up vector is removed during step detection and only the step offset is used.");
 			}
-			GUIHelpMarker("A capsule is affected by its lower sphere and tends to generate an up vector on steps.\nIn eEASY, the up vector is combined with the step offset, allowing easier climbing; in eCONSTRAINED, the up vector is removed during step detection and only the step offset is used.");
 		}
-	}
-	GUI::Text("%.1f", m_fCurrentSlopeDegree);
-	GUI::Text("%.1f", m_fWalkableSlopeDegree); GUI::SameLine(); if (GUI::SliderFloat("m_fWalkableSlopeDegree", &m_fWalkableSlopeDegree, 0.0f, 90.f)) {
-		m_pController->setSlopeLimit(cosf(XMConvertToRadians(m_fWalkableSlopeDegree)));
-	}
-	GUI::DragFloat("m_vAccHeight.w", &m_vAccHeight.w, 0.01f, 0.f, 1.f);
-	GUI::SliderFloat("m_fGravity_Multiplier", &m_fGravity, 0.0f, 3.f);
-	if (GUI::SliderFloat3("Volume", (_float*)&vVolume, 0.1f, 10.f, "%.2f")) {
-		Modify_Volume(vVolume);
-	}GUIHelpMarker("Box uses vSize; Capsule uses x->fRadius, y->fHeight.\nThe capsule's fHeight is likely the distance from the lower sphere center to the upper sphere center.");
+		GUI::Text("%.1f", m_fCurrentSlopeDegree);
+		GUI::Text("%.1f", m_fWalkableSlopeDegree); GUI::SameLine(); if (GUI::SliderFloat("m_fWalkableSlopeDegree", &m_fWalkableSlopeDegree, 0.0f, 90.f)) {
+			m_pController->setSlopeLimit(cosf(XMConvertToRadians(m_fWalkableSlopeDegree)));
+		}
+		GUI::DragFloat("m_vAccHeight.w", &m_vAccHeight.w, 0.01f, 0.f, 1.f);
+		GUI::SliderFloat("m_fGravity_Multiplier", &m_fGravity, 0.0f, 3.f);
+		if (GUI::SliderFloat3("Volume", (_float*)&vVolume, 0.1f, 10.f, "%.2f")) {
+			Modify_Volume(vVolume);
+		}GUIHelpMarker("Box uses vSize; Capsule uses x->fRadius, y->fHeight.\nThe capsule's fHeight is likely the distance from the lower sphere center to the upper sphere center.");
 
-	GUI::End();
+	}
 }
 
 #endif // _DEBUG

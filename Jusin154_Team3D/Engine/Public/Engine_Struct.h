@@ -24,9 +24,9 @@ typedef struct tagModelDesc {
 
 typedef struct tagKeyFrame
 {
-	XMFLOAT3		vScale = {};
-	XMFLOAT4		vRotation = {};
-	XMFLOAT3		vTranslation = {};
+	_float3		vScale = {};
+	_float4		vRotation = {};
+	_float3		vTranslation = {};
 	_float			fTrackPosition = {};
 
 }KEYFRAME;
@@ -43,8 +43,8 @@ typedef struct tagLightDesc
 	_float4				vAmbient = {};
 	_float4				vSpecular = {};
 
-	const XMFLOAT4* pDirection = nullptr;
-	const XMFLOAT4* pPosition = nullptr;
+	const _float4* pDirection = nullptr;
+	const _float4* pPosition = nullptr;
 
 	_float4				vPosOffset = {};
 
@@ -54,26 +54,20 @@ typedef struct tagLightDesc
 	_uint				iLevel = {};
 }LIGHT_DESC;
 
-typedef struct tagShadowLight
-{
-	_float4		vEye{}, vAt{};
-	_float		fWidth{}, fHeight{}, fNear{}, fFar{};
-}SHADOW_LIGHT_DESC;
-
 struct SaveVertex
 {
-	XMFLOAT3 Pos;
-	XMFLOAT3 Normal;
-	XMFLOAT3 Tan;
-	XMFLOAT3 BiNoraml;
-	XMFLOAT2 UV;
+	_float3 Pos;
+	_float3 Normal;
+	_float3 Tan;
+	_float3 BiNoraml;
+	_float2 UV;
 
 	bool bHasNormal;
 	bool bHasTan;
 	bool bHasUV;
 
 	XMUINT4 BlendIndex;
-	XMFLOAT4 BlendWeight;
+	_float4 BlendWeight;
 };
 
 struct SaveBoneWeight
@@ -129,13 +123,13 @@ struct SaveMaterial
 struct SaveKeyFrameVec
 {
 	float Time;
-	XMFLOAT3 Value;
+	_float3 Value;
 };
 
 struct SaveKeyFrameRotation
 {
 	float Time;
-	XMFLOAT4 Value;
+	_float4 Value;
 };
 
 struct SaveChannel
@@ -201,8 +195,9 @@ typedef struct tagVertexInstance_UI
 	_float2 fSize = {};
 	_float2 fPos = {};
 	_float4 fUV = _float4(0.f, 0.f, 1.f, 1.f);
-	_float4 vColor = _float4(1.f, 1.f, 1.f, 1.f);
+	_float  vColor = 0;
 	_float  bHover = 0;
+	_float  bSpell = 0;
 }VTX_INSTANCE_UI;
 
 typedef struct tagVertexBlock
@@ -362,7 +357,7 @@ typedef struct tagVertexModelInstanceModelDesc
 
 typedef struct tagVertexInstance_UIDesc
 {
-	static constexpr unsigned int iNumElements = { 7 };
+	static constexpr unsigned int iNumElements = { 8 };
 	static constexpr D3D11_INPUT_ELEMENT_DESC		Elements[] = {
 	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
 	{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
@@ -370,8 +365,9 @@ typedef struct tagVertexInstance_UIDesc
 	{ "TEXCOORD", 1, DXGI_FORMAT_R32G32_FLOAT, 1, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 	{ "TEXCOORD", 2, DXGI_FORMAT_R32G32_FLOAT, 1, 8, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 	{ "TEXCOORD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-	{ "TEXCOORD", 4, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-	{ "TEXCOORD", 5, DXGI_FORMAT_R32_FLOAT, 1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1 }
+	{ "TEXCOORD", 4, DXGI_FORMAT_R32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+	{ "TEXCOORD", 5, DXGI_FORMAT_R32_FLOAT, 1, 36, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+	{ "TEXCOORD", 6, DXGI_FORMAT_R32_FLOAT, 1, 40, D3D11_INPUT_PER_INSTANCE_DATA, 1 }
 	};
 
 }VTX_POSTEX_INSTANCE_UI;
@@ -394,11 +390,11 @@ typedef struct tagPhsXUserData {
 
 typedef struct tagOnCollsionInfo
 {
-	_vector vWorldPos = {};		// 접촉지점
-	_vector vWorldNomal = {};	// 접촉노말
-	_vector vHitDir = {};		// 시도한 move 방향
+	_float4 vWorldPos = {};		// 접촉지점
+	_float4 vWorldNomal = {};	// 접촉노말
+	_float4 vHitDir = {};		// 시도한 move 방향
 	_float  fLength = {};		// 작용된 힘
-
+	class CGameObject* pObject = { nullptr }; // 시전자
 }ON_COLLISION_INFO;
 
 typedef struct tagKeyFrameDesc
@@ -438,5 +434,12 @@ typedef struct tagBoneDesc
 	_float4x4 Combined;
 }BONE_DESC;
 
+typedef struct tagSSAO_Geometry_Hemisphere {
+	_float3 SamplePos[SSAO_SAMPLE_NUMBER];
+}SSAO_GEOMETRY_HEMISPHERE;
+
+typedef struct tagSSAO_GeometryDirections_RANDOM_REAL {
+	_float4 vDir[16];
+}SSAO_GEOMETRYDIRECTIONS_RANDOM_REAL;
 
 NS_END

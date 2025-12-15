@@ -21,8 +21,12 @@ private:
 	HRESULT Ready_Layer_Camera(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_Background(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_Terrain(const _wstring& strLayerTag);
+	HRESULT Ready_Layer_Land(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_InstanceProp(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_BuildingContainer(const _wstring& strLayerTag);
+	HRESULT Ready_Layer_Unified(const _wstring& strLayerTag);
+	HRESULT Ready_Layer_Door(const _wstring& strLayerTag);
+	HRESULT Ready_Layer_Chest(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_MapObjectManager(const _wstring& strLayerTag);
 
 

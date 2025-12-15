@@ -3,6 +3,7 @@
 #include "Client_Define.h"
 #include "EffectObject.h"
 
+
 NS_BEGIN(Engine)
 class CModel;
 class CShader;
@@ -21,11 +22,15 @@ public:
 	virtual void Priority_Update(_float fTimeDelta) override;
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
+	virtual _vector Get_WorldPostion() override;
+
+
 
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual HRESULT Ready_Components(void* pArg) override;
+
 
 public:
 	static CEffectParts* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -93,12 +93,12 @@ void CUIObject::Priority_Update(_float fTimeDelta)
 
 void CUIObject::Update(_float fTimeDelta)
 {
-	m_vScale = _float3(m_fSizeX, m_fSizeY, 1.f);
-	m_pTransformCom->Set_Scale(m_vScale);
+	//m_vScale = _float3(m_fSizeX, m_fSizeY, 1.f);
+	//m_pTransformCom->Set_Scale(m_vScale);
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_fX - m_fWinSizeX * 0.5f, -m_fY + m_fWinSizeY * 0.5f, 0.f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(m_fX - m_fWinSizeX * 0.5f, -m_fY + m_fWinSizeY * 0.5f, m_fSortZ, 1.f));
 
-	m_fCurrent_Position = XMVectorSet(m_fX, m_fY, m_fSortZ, 1.f);
+	//m_fCurrent_Position = XMVectorSet(m_fX, m_fY, m_fSortZ, 1.f);
 
 }
 
@@ -207,14 +207,20 @@ _bool CUIObject::Chack_Visible()
 
 void CUIObject::Set_FadeIn()
 {
-	m_bFadeIn = true;
-	m_bFadeOut = false;
+	if (!m_bFadeIn && m_fAlpha < 1.f)
+	{
+		m_bFadeIn = true;
+		m_bFadeOut = false;
+	}
 }
 
 void CUIObject::Set_FadeOut()
 {
-	m_bFadeIn = false;
-	m_bFadeOut = true;
+	if (!m_bFadeOut && m_fAlpha > 0.f)
+	{
+		m_bFadeOut = true;
+		m_bFadeIn = false;
+	}
 }
 
 _bool CUIObject::Get_FadeIn()
@@ -285,6 +291,10 @@ void CUIObject::Set_V(_float V)
 _float2 CUIObject::Get_UV()
 {
 	return m_vUVScale;
+}
+
+void CUIObject::Add_Canvas(wstring Name, CGameObject* pCanvas)
+{
 }
 
 void CUIObject::Nine_Slice_Left(_float X)
@@ -449,6 +459,16 @@ _int CUIObject::Get_SkillType()
 	return m_iSpellType;
 }
 
+void CUIObject::Set_SpellType(_int eType)
+{
+	m_iSkillType = eType;
+}
+
+_int CUIObject::Get_SpellType()
+{
+	return m_iSkillType;
+}
+
 void CUIObject::Set_CoolTime(_float CoolTime)
 {
 	m_fCoolTime = CoolTime;
@@ -465,6 +485,36 @@ void CUIObject::Add_Function(wstring Name, function<void(void*)> Evnet)
 
 void CUIObject::Function_Callback(wstring Name, void* pArg)
 {
+}
+
+void CUIObject::Set_Hover(_bool Hover)
+{
+	m_bHover = Hover;
+}
+
+_bool CUIObject::Get_Hover()
+{
+	return m_bHover;
+}
+
+const CUIObject::SPELLINFO CUIObject::Get_Info(_int Index)
+{
+	return SPELLINFO();
+}
+
+void CUIObject::Set_FontX(_float fFontX)
+{
+	m_fFontX = fFontX;
+}
+
+void CUIObject::Set_FontY(_float fFontY)
+{
+	m_fFontY = fFontY;
+}
+
+_float2 CUIObject::Get_Font()
+{
+	return _float2(m_fFontX, m_fFontY);
 }
 
 void CUIObject::Free()

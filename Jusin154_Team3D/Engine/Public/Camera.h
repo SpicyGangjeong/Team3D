@@ -21,10 +21,10 @@ public:
 			_float2 vTransitionTime = { 0.f, 1.f };
 
 			_bool bEnableLookLerp = { false };
-			_float2 vLookLerpTime = { 0.f, 0.16f };
+			_float2 vLookLerpTime = { 0.f, TIMER_SHORT_LERP };
 
 			_bool bEnableFollowLerp = { false };
-			_float2 vFollowLerpTime = { 0.f, 0.16f };
+			_float2 vFollowLerpTime = { 0.f, TIMER_SHORT_LERP };
 	}CAMERA_DESC;
 
 protected:
@@ -43,9 +43,9 @@ public:
 	_bool IsActive() const { return m_bActive; }
 	_bool IsImportantThan(CCamera* pOther) const;
 	const _float* Get_CurrentFar();
-	HRESULT Ready_Shadow();
 	void ZoomIn(_float fTimeDelta);
 	void Set_Fov(_float fFovy,_float fTimeDelta, _bool& bZoomIn);
+	_float Get_Fov();
 
 protected:
 	_float			m_fFovy = {};
@@ -54,10 +54,10 @@ protected:
 	_float			m_fFar = {};
 
 	_float2			m_vTransitionTime	= { 0.f, 1.f };
-	_float2			m_vLookLerpTime		= { 0.f, 0.16f };
+	_float2			m_vLookLerpTime		= { 0.f, TIMER_SHORT_LERP };
 	_float3			m_vLookPos_Src = { 0.f, 0.f, 1.f };
 	_float3			m_vLookPos_Dest = { 0.f, 0.f, 1.f };
-	_float2			m_vFollowLerpTime	= { 0.f, 0.16f };
+	_float2			m_vFollowLerpTime	= { 0.f, TIMER_SHORT_LERP };
 	_float3			m_vFollowPos_Src = { 0.f, 0.f, 0.f };
 	_float3			m_vFollowPos_Dest = { 0.f, 0.f, 0.f };
 	_uint			m_iPriority = { UINT_MAX };
@@ -74,9 +74,6 @@ protected:
 	const _wchar*	m_pCameraKey = { nullptr };
 	CGameObject*	m_pFollowTarget = { nullptr };
 	CGameObject*	m_pLookTarget = { nullptr };
-
-	SHADOW_LIGHT_DESC		ShadowDesc{};
-	_float3 vRollPichYaw = { 45.f, 45.f, 0.f };
 
 protected:
 	virtual HRESULT Initialize_Prototype() override;

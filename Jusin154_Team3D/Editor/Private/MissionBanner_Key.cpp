@@ -43,11 +43,11 @@ HRESULT CMissionBanner_Key::Initialize(void* pArg)
 	m_fPI = AI_MATH_TWO_PI_F;
 	Compute_UV();
 	Compute_Alphabat('V');
-	m_eType = QUESTYPE::MAIN;
+	m_eType = QUESTTYPE::MAIN;
 	return S_OK;
 }
 
-void CMissionBanner_Key::QuestType(QUESTYPE eType)
+void CMissionBanner_Key::QuestType(QUESTTYPE eType)
 {
 	m_eType = eType;
 }

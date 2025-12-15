@@ -75,7 +75,7 @@ void CMapObject_Render::Update(_float fTimeDelta)
 
 void CMapObject_Render::Late_Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->isIn_WorldFrustum(XMLoadFloat4(&m_vExtentPosition), m_fRadius)) {
+	if (m_pGameInstance->IsIn_WorldFrustum(XMLoadFloat4(&m_vExtentPosition), m_fRadius)) {
 
 		m_fCamDepth = XMVectorGetX(XMVector3LengthSq(XMLoadFloat4(m_pGameInstance->Get_CamPosition()) - XMLoadFloat4(&m_vExtentPosition)));
 
@@ -88,10 +88,8 @@ void CMapObject_Render::Late_Update(_float fTimeDelta)
 		case MAPOBJECT_RENDER_TYPE::NORMAL:
 			m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 			break;
-
 		case MAPOBJECT_RENDER_TYPE::GLASS:
 			break;
-
 		case MAPOBJECT_RENDER_TYPE::DECAL:
 			m_pGameInstance->Add_RenderGroup(RENDER::DECAL, this);
 			break;
@@ -108,7 +106,7 @@ HRESULT CMapObject_Render::Render()
 		return E_FAIL;
 	}
 
-	for (_uint i = 0; i < m_iNumMeshe; i++)
+	for (_uint i = 0; i < m_iNumMeshe; ++i)
 	{
 		if (FAILED(m_pModelComs[0]->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
@@ -124,6 +122,83 @@ HRESULT CMapObject_Render::Render()
 	}
 
 	return S_OK;
+}
+
+HRESULT CMapObject_Render::Render_Shadow(SHADOW eType)
+{
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ViewMatrix", D3DTS::VIEW, eType))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ProjMatrix", D3DTS::PROJ, eType))) {
+		return E_FAIL;
+	}
+	_uint iMeshes = m_pModelComs[0]->Get_NumMeshes();
+
+	for (_uint i = 0; i < iMeshes; i++)
+	{
+		if (FAILED(m_pModelComs[0]->Bind_Material(i, m_pShaderCom))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_MESH::SHADOW)))) {
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pModelComs[0]->Render(i))) {
+			return E_FAIL;
+		}
+	}
+
+	return S_OK;
+}
+
+void CMapObject_Render::ReadyForPhysX()
+{
+	if (true == m_bConverted) {
+		return;
+	}
+	m_bConverted = true;
+
+	for (_uint iIndexLOD = 0; iIndexLOD < m_iMaxLodLevel + 1; ++iIndexLOD)
+	{
+		CModel* pModel = m_pModelComs[iIndexLOD];
+
+		if (FAILED(pModel->Ready_PhysXMeshes(XMLoadFloat4x4(&m_CombinedWorldMatrix)))) {
+			assert(false);
+		}
+	}
+}
+
+void CMapObject_Render::ConvertToPhysX()
+{
+	if (true == m_bReadyToCreatePhysX) {
+		return;
+	}
+	m_bReadyToCreatePhysX = true;
+
+	m_RigidBodies.resize(m_iMaxLodLevel + 1);
+	for (_uint iIndexLOD = 0; iIndexLOD < m_iMaxLodLevel + 1; ++iIndexLOD)
+	{
+		CModel* pModel = m_pModelComs[iIndexLOD];
+
+		_uint iNumMeshes = pModel->Get_NumMeshes();
+
+		for (_uint iIndex = 0; iIndex < iNumMeshes; ++iIndex)
+		{
+			_wstring wstrName = CMyTools::ToWstring(pModel->Get_MeshName(iIndex)) + to_wstring(iIndex);
+			CRigidBody_Static* pRigidBody = { nullptr };
+			CRigidBody_Static::RIGIDBODY_STATIC_DESC Desc = {};
+			Desc.iSubKind = ENUM_CLASS(PXOBJECT::TERRAIN);
+			Desc.pMeshName = wstrName.c_str();
+			if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, wstrName, (CComponent**)&pRigidBody, &Desc))) {
+				assert(false);
+			}
+			m_RigidBodies[iIndexLOD].push_back(pRigidBody);
+		}
+	}
 }
 
 _wstring CMapObject_Render::Get_PrototypeTag(_uint iLodIndex)
@@ -225,6 +300,12 @@ void CMapObject_Render::Free()
 	__super::Free();
 
 	SAFE_RELEASE(m_pShaderCom);
+
+	for (_uint i = 0; i < m_RigidBodies.size(); ++i) {
+		for (_uint j = 0; j < m_RigidBodies[i].size(); ++j) {
+			SAFE_RELEASE(m_RigidBodies[i][j]);
+		}
+	} m_RigidBodies.clear();
 
 	for (auto& pModel : m_pModelComs)
 		SAFE_RELEASE(pModel);

@@ -46,7 +46,11 @@ HRESULT CSpell_List::Initialize(void* pArg)
 	m_pVIBufferCom->Set_Cloned(true);
 	m_pVIBufferCom->Set_Pos(-185.f, 375.f, m_fOffSetX, m_fOffSetY, m_iCols);
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
+	m_fDelayTime = 0.5f;
+	m_iPerSpell_Slot = -1;
+	m_bClick = false;
 	Color();
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Click"), [this](void* p) {this->Click_Slot(*reinterpret_cast<_bool*>(p)); });
 	return S_OK;
 }
 
@@ -90,7 +94,11 @@ void CSpell_List::Update(_float fTimeDelta)
 		}
 	}
 	m_fTime += fTimeDelta * m_fTimeMult;
-	Hover();
+	if (m_bClick == false)
+	{
+		Hover();
+	}
+
 	__super::Update(fTimeDelta);
 }
 
@@ -156,13 +164,13 @@ void CSpell_List::SizeUpdate(_float fSizeX, _float fSizeY)
 
 void CSpell_List::Color()
 {
-	m_pVIBufferCom->Set_Index_Renge_Color(0, 3, _float4(255.f / 255.f, 255.f / 255.f, 0.f / 255.f, 1.f));
-	m_pVIBufferCom->Set_Index_Renge_Color(4, 7, _float4(150.f / 255.f, 120.f / 255.f, 240.f / 255.f, 1.f));
-	m_pVIBufferCom->Set_Index_Renge_Color(8, 12, _float4(190.f / 255.f, 46.f / 255.f, 34.f / 255.f, 1.f));
-	m_pVIBufferCom->Set_Index_Renge_Color(13, 16, _float4(24.f / 255.f, 190.f / 255.f, 255.f / 255.f, 1.f));
-	m_pVIBufferCom->Set_Index_Renge_Color(17, 19, _float4(200.f / 255.f, 220.f / 255.f, 150.f / 255.f, 1.f));
-	m_pVIBufferCom->Set_Index_Renge_Color(20, 22, _float4(50.f / 255.f, 150.f / 255.f, 110.f / 255.f, 1.f));
-	m_pVIBufferCom->Set_Index_Renge_Color(23, 25, _float4(24.f / 255.f, 190.f / 255.f, 255.f / 255.f, 1.f));
+	m_pVIBufferCom->Set_Index_Renge_Color(0, 3, 0.f);
+	m_pVIBufferCom->Set_Index_Renge_Color(4, 7, 1.f);
+	m_pVIBufferCom->Set_Index_Renge_Color(8, 12, 2.f);
+	m_pVIBufferCom->Set_Index_Renge_Color(13, 16, 3.f);
+	m_pVIBufferCom->Set_Index_Renge_Color(17, 19, 4.f);
+	m_pVIBufferCom->Set_Index_Renge_Color(20, 22, 5.f);
+	m_pVIBufferCom->Set_Index_Renge_Color(23, 25, 3.f);
 }
 
 void CSpell_List::Hover()
@@ -174,29 +182,34 @@ void CSpell_List::Hover()
 	fMouse.x = ptMouse.x - (g_iWinSizeX * 0.5f);
 	fMouse.y = -(ptMouse.y - (g_iWinSizeY * 0.5f));
 
-	// 엘리먼트의 월드 위치를 더해주면 엘리먼트 좌표계 기준이 됨
-	fMouse.x -= m_pOwner->Get_WorldPostion().m128_f32[0];
-	fMouse.y -= m_pOwner->Get_WorldPostion().m128_f32[1];
+	m_iSpellType = m_pVIBufferCom->Set_Mouse_Hover(fMouse);
 
-	m_bPrevHover = m_bHover;
-	m_bHover = (m_iSpellType = m_pVIBufferCom->Set_Mouse_Hover(fMouse));
-	if (m_iSpellType != -1)
+	CUIObject::HOVER_INFO Info;
+	Info.iSlotID = 0;
+	if (m_iSpellType == -1)
 	{
-		m_bHover = true;
-		if (m_bHover == true && m_bPrevHover == false)
-		{
-			static_cast<CUIObject*>(m_pOwner)->Set_SkillType(m_iSpellType);
-		}
+		Info.iHover_Index = -1;
+		static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Hover"), &Info);
+	}
+
+	else
+	{
+		Info.iHover_Index = m_iSpellType;
+		static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Hover"), &Info);
+	}
+
+}
+
+void CSpell_List::Click_Slot(_bool bClick)
+{
+	if (bClick == true)
+	{
+		m_bClick = true;
 	}
 	else
 	{
-		m_bHover = false;
-		if (m_bHover == false && m_bPrevHover == true)
-		{
-			static_cast<CUIObject*>(m_pOwner)->Set_SkillType(m_iSpellType);
-		}
+		m_bClick = false;
 	}
-
 }
 
 HRESULT CSpell_List::Bind_ShaderResources()

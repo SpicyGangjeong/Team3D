@@ -22,7 +22,12 @@ void CInstancedProp::Update(_float fTimeDelta)
 
 void CInstancedProp::Late_Update(_float fTimeDelta)
 {
+	if (m_isShake) {
+		m_pVIBufferInstanceCom->Shake(fTimeDelta);
+	}
+
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+
 }
 
 HRESULT CInstancedProp::Render()
@@ -35,6 +40,28 @@ HRESULT CInstancedProp::Render()
 		if (FAILED(m_pVIBufferInstanceCom->Bind_Matrial(m_pShaderCom, i)))
 			return E_FAIL;
 
+		if (FAILED(m_pShaderCom->Begin(0)))
+			return E_FAIL;
+
+		m_pVIBufferInstanceCom->Render(i);
+	}
+
+	return S_OK;
+}
+
+HRESULT CInstancedProp::Render_Shadow(SHADOW eType)
+{
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldMatrixPtr()))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ViewMatrix", D3DTS::VIEW, eType))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ProjMatrix", D3DTS::PROJ, eType))) {
+		return E_FAIL;
+	}
+	for (_uint i = 0; i < m_iNumMesh; i++)
+	{
 		if (FAILED(m_pShaderCom->Begin(0)))
 			return E_FAIL;
 
@@ -57,6 +84,7 @@ HRESULT CInstancedProp::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
+
 	m_iNumMesh = m_pVIBufferInstanceCom->Get_NumMesh();
 
 	return S_OK;
@@ -77,6 +105,10 @@ HRESULT CInstancedProp::Ready_Components(void* pArg)
 	/* Laod Instance Data */
 	if(FAILED(Load_InstancedProp(pDesc->strInstanceDataPath.c_str())))
 		return E_FAIL;
+
+	m_isShake = pDesc->isShake;
+	if (m_isShake)
+		m_pVIBufferInstanceCom->Set_Shake_Value(pDesc->vRadius, pDesc->vSpeed);
 
 	/* Com_Shader */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_INSTANCE_PROP_MODEL,
@@ -124,9 +156,8 @@ HRESULT CInstancedProp::Load_InstancedProp(const _char* pFilePath)
 	WorldMatrices.reserve(iNumWorldMatrix);
 
 	_float4x4 WorldMatrix = {};
-	FileIn.read(reinterpret_cast<char*>(&WorldMatrix), sizeof(_float4x4));
 
-	for (_uint i = 1; i < iNumWorldMatrix; ++i)
+	for (_uint i = 0; i < iNumWorldMatrix; ++i)
 	{
 		FileIn.read(reinterpret_cast<char*>(&WorldMatrix), sizeof(_float4x4));
 

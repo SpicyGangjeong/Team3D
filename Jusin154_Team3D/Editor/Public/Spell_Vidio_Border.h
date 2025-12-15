@@ -31,7 +31,11 @@ private:
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
-	CGameObject* m_pSpell_Anim = { nullptr };
+	_float	m_fStertTimer{};
+	_int	m_iPerIndex{};
+	_bool	m_bStart = { false };
+
+	_float	m_fPreviewOffSet{};
 
 public:
 	static CSpell_Vidio_Border* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

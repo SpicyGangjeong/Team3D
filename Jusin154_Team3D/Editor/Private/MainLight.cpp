@@ -61,6 +61,9 @@ HRESULT CMainLight::Initialize(void* pArg)
 void CMainLight::Priority_Update(_float fTimeDelta)
 {
 	m_pGameTime->Update_GameTime(fTimeDelta);
+	_float4 vLook = {};
+	XMStoreFloat4(&vLook, m_pTransformCom->Get_State(STATE::LOOK));
+	m_pGameInstance->Ready_Shadow_Light(vLook);
 }
 
 void CMainLight::Update(_float fTimeDelta)
@@ -109,6 +112,7 @@ void CMainLight::Update(_float fTimeDelta)
 
 	//m_pLightCom->Set_Color(m_vCurDiffuse, m_vAmbient, m_vSpecular);
 
+
 	Describe_Entity();
 }
 
@@ -132,9 +136,15 @@ HRESULT CMainLight::Ready_Components()
 	LightDesc.eType = LIGHT::DIRECTIONAL;
 	LightDesc.vDiffuse = _float4(0.3f, 0.3f, 0.1f, 0.f);
 	LightDesc.vAmbient = _float4(0.3f, 0.3f, 0.5f, 0.f);
-	LightDesc.vSpecular = _float4(0.f, 0.f, 0.f, 0.f);
+	LightDesc.vSpecular = _float4(0.05f, 0.05f, 0.05f, 0.f);
 	LightDesc.pDirection = m_pTransformCom->Get_StatePtr(STATE::LOOK);
 	LightDesc.iLevel = NEXT_LEVEL;
+
+#ifdef gimch
+	LightDesc.vDiffuse = _float4(0.8f, 0.8f, 0.8f, 0.f);
+	LightDesc.vAmbient = _float4(0.6f, 0.6f, 0.6f, 0.f);
+#endif // gimch
+
 
 	/* Com_Light*/
 	if (FAILED(Add_Component<CLight>(g_iStaticLevel, &m_pLightCom, &LightDesc)))
@@ -144,9 +154,9 @@ HRESULT CMainLight::Ready_Components()
 
 	m_pGameInstance->Add_Light(NEXT_LEVEL, m_pLightCom);
 
-	_float4 vColor = _float4(0.1f, 0.1f, 0.15f, 0.5f);
+	_float4 vColor = _float4(0.7f, 0.7f, 0.7f, 0.3f);
 	m_pGameInstance->Set_FogColor(vColor);
-
+	m_pGameInstance->Set_FogDensity(5.f);
 	return S_OK;
 }
 

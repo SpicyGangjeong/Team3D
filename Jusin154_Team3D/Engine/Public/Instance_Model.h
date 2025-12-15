@@ -55,8 +55,36 @@ public:
 		_float2     vSizeDrag = {};
 
 		_float2     vDelay = {};
-
 		_bool       isNoWorld = {};
+
+		_float2     vDissolveUVMoveTime = { 1.f , 1.f };
+
+		_float2		vDropAttenuation = { 1.f , 1.f };
+
+		_float		fPadding0 = {};
+		_float3		vPadding1 = {};
+
+		_float		fSizeLerpOption = {};
+		_float		fMoveLerpOption = {};
+
+		_bool		isDetphCompareStop = {};
+		_bool		isPadding0 = {};
+
+		_float3     vVelocityMin = {};
+		_float3     vVelocityMax = {};
+
+		_float2      vAcceleration = {};
+
+		_float4     vPadding4 = {};
+		_float4     vPadding5 = {};
+		_float4     vPadding6 = {};
+
+		_bool		isRandomAniIndex = {};
+		_bool		isMoveUp = {};
+		_bool		isMoveRight = {};
+		_bool		isExcludePos = {};
+		_bool		isStop_Move_For_Depth_Compare = {};
+
 	}INSTANCE_DESC;
 
 	typedef struct tagPreInstanceDesc
@@ -80,7 +108,7 @@ public:
 		_float2		vDiffuseUVMoveTime = { 1.f, 1.f };
 		_float2     vDistortionUVMoveTime = { 1.f , 1.f };
 		_float2		vNoiseUVMoveTime = { 1.f ,1.f };
-		_float2		vAniTime = { 1.f , 1.f };
+		_float2		vAniTime = { 0.01f , 0.01f };
 		_float2	    vAniIndex = {};
 
 		_bool		isMoveForward = {};
@@ -90,11 +118,11 @@ public:
 		_float3     vSinMinAmount = { 0.f , 0.f , 0.f };
 		_float3     vSinMaxAmount = { 0.f , 0.f , 0.f };
 
-		_bool		isTurn = {};
+		_bool		isTurn;
 		_float3     vDeltaAngleMin = {};
 		_float3     vDeltaAngleMax = {};
 
-		_bool       isAxisTurn = {};
+		_bool       isAxisTurn;
 		_float3     vDeltaAxisAngleMin = {};
 		_float3     vDeltaAxisAngleMax = {};
 
@@ -108,6 +136,20 @@ public:
 		_float2     vSizeDrag = {};
 
 		_float2     vDelay = {};
+		_bool       isNoWorld = {};
+
+		_float2     vDissolveUVMoveTime = { 1.f , 1.f };
+
+		_float2		vDropAttenuation = { 1.f , 1.f };
+
+		_float		fPadding0 = {};
+		_float3		vPadding1 = {};
+
+		_float		fSizeLerpOption = {};
+		_float		fMoveLerpOption = {};
+
+		_bool		isDetphCompareStop = {};
+		_bool		isRandomAniIndex = {};
 
 	}PRE_INSTANCE_DESC;
 
@@ -127,15 +169,26 @@ public:
 
 
 		_int	 isNoWorld = {};
-		_int     isPadding0 = {};
-		_int     isPadding1 = {};
+		_int     isDetphCompareStop = {};
+		_int     isRandomAniIndex = {};
+		_int	 isMoveRight = {};
+
+		_int     isMoveUp = {};
+		_int     isExcludePos = {};
+		_int     isStop_Move_For_Depth_Compare = {};
 		_int     isPadding2 = {};
 
 		_float   fTimeDelta = {};
-		_float	 fPadding2 = {};
-		_float   fPadding3 = {};
-		_float   fPadding4 = {};
+		_float	 fSizeLerpOption = {};
+		_float   fMoveLerpOption = {};
+		_float   fFar = {};
 
+		_float4x4  ViewMatrix = {};
+		_float4x4  ProjMatrix = {};
+
+		_float2 vScreenSize;
+		_float  fPadding0;
+		_float  fPadding1;
 
 	}CS_PARTICLE_DESC;
 
@@ -153,6 +206,7 @@ public:
 		_float2	 vDiffuseUVMoveTime = {};
 		_float2  vDistortionUVMoveTime = {};
 		_float2  vNoiseUVMoveTime = {};
+		_float2  vDissolveUVMoveTime = {};
 		_float2	 vAniTime = {};
 
 		_float2	 vAniIndex = {};
@@ -170,6 +224,14 @@ public:
 
 		_float2   vDelay = {};
 
+		_bool	  isCompareStop = {};
+		_float    fCollisionTime = {};
+		_float    fDropAttenuation = {};
+		_float3   vVelocity = {};
+		_float    fAcceleration = {};
+
+		_bool     isStop = {};
+
 	}CS_PARTICLE_VALUE_DESC;
 
 public:
@@ -185,14 +247,17 @@ public:
 #endif	
 
 	virtual HRESULT Initialize(void* pArg) override;
-	void			Drop(_float fTimeDelta);
+	void			Compute_CS(_float fTimeDelta);
 public:
 	HRESULT			Render(_uint iMeshIndx);
 	void			Instane_Buffer_ReStruct();
 	_uint			Get_NumMeshes() const { return m_iNumMeshes; }
-	HRESULT			Bind_CS_Output(_uint Index, _uint iBufferIndex);
+	//HRESULT			Bind_Value_Buffer(class CShader* pShader, const _char* pConstantName);
+	HRESULT         Bind_OutPut_SRV_VS(_uint Index, _uint iBufferIndex);
 	INSTANCE_DESC	Get_EffectValue() { return m_InstanceDesc; }
+	HRESULT			Load_InstanceModel(INSTANCE_DESC InstanceDesc);
 	HRESULT			Load_InstanceModel(HANDLE hFile);
+	HRESULT         Bind_CS_Output(_uint Index, _uint iBufferIndex);
 private:
 		bool LoadData(const _char* filename);
 
@@ -209,6 +274,7 @@ private:
 	HRESULT			Create_Instance_Buffer();
 	HRESULT         Create_SubResource_Buffer();
 	HRESULT			Create_CS();
+
 
 private:
 #ifdef EDITOR_PROJECT
@@ -239,6 +305,8 @@ private:
 	ID3D11Buffer*			m_pConstantBuffer = { nullptr }; // 컴퓨트 쉐이드 전용 상수버퍼
 	ID3D11Buffer*			m_pParticleValueBuffer = { nullptr }; // 컴퓨트 쉐이드 두번째 버퍼 (스피드, 로테이션)
 
+	ID3D11ShaderResourceView*	m_pVBInstance_Srv = { nullptr };
+	ID3D11ShaderResourceView*   m_pParticleValue_Srv = { nullptr };
 public:
 	//인스턴싱으로 바꾸기
 	static CInstance_Model* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex);

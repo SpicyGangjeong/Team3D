@@ -1,8 +1,8 @@
 ﻿#include "pch.h"
 #include "IMGUIUI.h"
 #include "UIObject.h"
-#include "GamePlay_Canvas.h"
-#include "Spell_Canvas.h"
+#include "UI_Manager.h"
+#include "CanvasObject.h"
 #include "PanelObject.h"
 #include "ElementObject.h"
 #include "Mouse_Cursor.h"
@@ -30,6 +30,38 @@ HRESULT CIMGUIUI::Initialize(void* pArg)
 	m_pCurrent_Canvas = m_pGamePlay_Canvas;
 
 	return S_OK;
+}
+
+void CIMGUIUI::CanvaswstringTostring(vector<wstring>& panelNames)
+{
+	m_iCanvasNamestring.clear();
+	m_iCanvaslName.clear();
+	m_iCanvasNamewstring.clear();
+
+	m_iCanvasNamewstring = panelNames;
+
+	for (auto& wname : panelNames)
+	{
+		// wstring -> UTF-8 string 변환
+		int size = WideCharToMultiByte(CP_UTF8, 0,
+			wname.c_str(), (int)wname.size(),
+			nullptr, 0, nullptr, nullptr);
+
+		std::string result(size, 0);
+
+		WideCharToMultiByte(CP_UTF8, 0,
+			wname.c_str(), (int)wname.size(),
+			&result[0], size, nullptr, nullptr);
+
+		// 변환된 string 저장
+		m_iCanvasNamestring.push_back(std::move(result));
+	}
+
+	// vector<const char*> 업데이트
+	for (auto& str : m_iCanvasNamestring)
+		m_iCanvaslName.push_back(str.c_str());
+
+	m_iCanvasCount = 999;
 }
 
 void CIMGUIUI::PanelwstringTostring(vector<std::wstring>& panelNames)
@@ -104,7 +136,6 @@ void CIMGUIUI::Update(_float fTimeDelta)
 {
 	static const char* SpellTypeNames[] = { "CONTROL","POWER", "DAMAGE","UTILITY", "TRANSFORM",  "CURSE",	"ESSENTIAL" };
 	int itemCount = sizeof(SpellTypeNames) / sizeof(const char*);
-	static const char* CanvasNames[] = { "GamePlay Canvas", "Spell Canvas" };
 	static int iCanvasIndex = 0;
 	if (m_pCurrent_Canvas != nullptr)
 	{
@@ -154,17 +185,21 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		m_fMoveSpeed = static_cast<CElementObject*>(m_pElementObject)->Get_Speed();
 		m_fAngle = static_cast<CElementObject*>(m_pElementObject)->Get_Angle();
 		m_iSpellType = static_cast<CElementObject*>(m_pElementObject)->Get_SkillType();
+		m_iSkillType = static_cast<CElementObject*>(m_pElementObject)->Get_SpellType();
 		m_fCoolTime = static_cast<CElementObject*>(m_pElementObject)->Get_CoolTime();
+		m_fFontPos = static_cast<CElementObject*>(m_pElementObject)->Get_Font();
 	}
-	GUI::Begin("Current_PanelObject_Info");
-	if (m_pCurrent_Canvas != nullptr)
+	GUI::Begin("Current_CanvasObject_Info");
+	if (m_pUI_Manager != nullptr)
 	{
-		if (GUI::Combo("Canvas", &iCanvasIndex, CanvasNames, 2))
+		auto CanvasName = static_cast<CUI_Manager*>(m_pUI_Manager)->Canvas_Name();
+		if (CanvasName != m_iCanvasNamewstring)
 		{
-			if (iCanvasIndex == 0)
-				m_pCurrent_Canvas = m_pGamePlay_Canvas;
-			else
-				m_pCurrent_Canvas = m_pSpell_Canvas;
+			CanvaswstringTostring(CanvasName);
+		}
+		if (GUI::Combo("Canvas", &m_iCanvasCount, m_iCanvaslName.data(), static_cast<_int>(m_iCanvaslName.size())))
+		{
+			m_pCurrent_Canvas = static_cast<CUI_Manager*>(m_pUI_Manager)->Get_Canvas(m_iCanvasNamewstring[m_iCanvasCount]);
 		}
 	}
 	if (m_pCurrent_Canvas != nullptr)
@@ -436,6 +471,7 @@ void CIMGUIUI::Update(_float fTimeDelta)
 			static_cast<CElementObject*>(m_pElementObject)->Set_Angle(m_fAngle);
 		}
 
+		GUI::Text("SpellType %d", m_iSkillType);
 		GUI::Text("SkillType %d", m_iSpellType);
 		if (GUI::Combo("SkillType", &m_iSpellType, SpellTypeNames, itemCount))
 		{
@@ -446,6 +482,17 @@ void CIMGUIUI::Update(_float fTimeDelta)
 		if (GUI::SliderFloat("CoolTime", &m_fCoolTime, 1.f, 90.f))
 		{
 			static_cast<CElementObject*>(m_pElementObject)->Set_CoolTime(m_fCoolTime);
+		}
+
+		GUI::Text("FontPosX %.1f", m_fFontPos.x);
+		GUI::Text("FontPosY %.1f", m_fFontPos.y);
+		if (GUI::SliderFloat("FontX", &m_fFontX, -1920.f, 1920.f))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->Set_FontX(m_fFontX);
+		}
+		if (GUI::SliderFloat("FontY", &m_fFontY, -1080.f, 1080.f))
+		{
+			static_cast<CElementObject*>(m_pElementObject)->Set_FontY(m_fFontY);
 		}
 	}
 	GUI::End();
@@ -467,15 +514,12 @@ HRESULT CIMGUIUI::Bind_ShaderResources()
 
 HRESULT CIMGUIUI::Ready_Components(void* pArg)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CGamePlay_Canvas>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CGamePlay_Canvas**>(&m_pGamePlay_Canvas))))
+
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CUI_Manager>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CUI_Manager**>(&m_pUI_Manager))))
 	{
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CSpell_Canvas>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI, nullptr, this, reinterpret_cast<CSpell_Canvas**>(&m_pSpell_Canvas))))
-	{
-		return E_FAIL;
-	}
 
 	return S_OK;
 }

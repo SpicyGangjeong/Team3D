@@ -1,20 +1,21 @@
 ﻿#include "pch.h"
 #include "Current_Spell_Slot.h"
 #include "GameInstance.h"
+#include "UI_Manager.h"
 
 CCurrent_Spell_Slot::CCurrent_Spell_Slot(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-    :CElementObject(pDevice, pContext)
+	:CElementObject(pDevice, pContext)
 {
 }
 
 CCurrent_Spell_Slot::CCurrent_Spell_Slot(const CCurrent_Spell_Slot& rhs)
-    :CElementObject(rhs)
+	:CElementObject(rhs)
 {
 }
 
 HRESULT CCurrent_Spell_Slot::Initialize_Prototype()
 {
-    return S_OK;
+	return S_OK;
 }
 
 HRESULT CCurrent_Spell_Slot::Initialize(void* pArg)
@@ -47,6 +48,11 @@ HRESULT CCurrent_Spell_Slot::Initialize(void* pArg)
 	m_pVIBufferCom->Set_Cloned(true);
 	m_pVIBufferCom->Set_Pos(-780.f, 340.f, m_fOffSetX, m_fOffSetY, m_iCols);
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
+	m_bChangeSlot = false;
+	m_iSpellType = -1;
+	m_iSkill_Index = -1;
+	Clear(-1);
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Slot_Hover"), [this](void* p) {this->Set_SkillType(*reinterpret_cast<_int*>(p)); });
 	return S_OK;
 }
 
@@ -90,6 +96,45 @@ void CCurrent_Spell_Slot::Update(_float fTimeDelta)
 		}
 	}
 	m_fTime += fTimeDelta * m_fTimeMult;
+
+	Hover();
+
+
+	if (m_bHover == true)
+	{
+		if (m_pGameInstance->Mouse_Down(DIM_LBUTTON) && m_bClick == false)
+		{
+			m_bClick = true;
+			m_iSkill_Index = Chack_Slot(m_iSlot_Index);
+			static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Current_Hover"), &m_iSkill_Index);
+		}
+	}
+
+	if (m_pGameInstance->Mouse_Up(DIM_LBUTTON))
+	{
+		if (m_bHover == true)
+		{
+			if (m_iSpellType != -1)
+			{
+				Get_Skill(m_iSpellType, m_iSlot_Index);
+			}
+
+			if (m_iSkill_Index != -1)
+			{
+				Get_Skill(m_iSkill_Index, m_iSlot_Index);
+				m_iSkill_Index = -1;
+			}
+			m_bHover = false;
+			m_bClick = false;
+			m_iSkill_Index = -1;
+		}
+		else
+		{
+			m_iSkill_Index = -1;
+			static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Current_Hover"), &m_iSkill_Index);
+		}
+	}
+
 	__super::Update(fTimeDelta);
 }
 
@@ -112,7 +157,7 @@ HRESULT CCurrent_Spell_Slot::Render()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIINTANCE::DEFAULT))))
+	if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_UIINTANCE::SPELL_SLOT))))
 	{
 		return E_FAIL;
 	}
@@ -152,6 +197,110 @@ void CCurrent_Spell_Slot::SizeUpdate(_float fSizeX, _float fSizeY)
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
 }
 
+void CCurrent_Spell_Slot::Hover()
+{
+	POINT ptMouse{};
+	GetCursorPos(&ptMouse);
+	ScreenToClient(g_hWnd, &ptMouse);
+	_float2 fMouse;
+	fMouse.x = ptMouse.x - (g_iWinSizeX * 0.5f);
+	fMouse.y = -(ptMouse.y - (g_iWinSizeY * 0.5f));
+
+	// 엘리먼트의 월드 위치를 더해주면 엘리먼트 좌표계 기준이 됨
+	fMouse.x -= m_pOwner->Get_WorldPostion().m128_f32[0];
+	fMouse.y -= m_pOwner->Get_WorldPostion().m128_f32[1];
+
+	m_iSlot_Index = m_pVIBufferCom->Set_Mouse_Hover(fMouse);
+	if (m_iSlot_Index != -1)
+	{
+		m_bHover = true;
+	}
+	else
+	{
+		m_bHover = false;
+		m_bClick = false;
+	}
+}
+
+void CCurrent_Spell_Slot::Click_Slot(_bool bClick)
+{
+	if (bClick == true)
+	{
+		m_bClick = true;
+	}
+	else
+	{
+		m_bClick = false;
+	}
+}
+
+void CCurrent_Spell_Slot::Get_Skill(_int SpellIndex, _int SlotIndex)
+{
+	if (SlotIndex == -1)
+		return;
+
+	if (SpellIndex == -1)
+		return;
+
+	_int iSlotx = 4;
+
+	_int x = SlotIndex % iSlotx;
+	_int y = SlotIndex / iSlotx;
+
+	m_iSpell[y][x] = SpellIndex;
+	m_pVIBufferCom->Set_Equip_Index(SlotIndex);
+	m_vUV.fUV = UV(SpellIndex);
+	m_pVIBufferCom->Set_Index_Color(SlotIndex, static_cast<_float>(static_cast<CUIObject*>(m_pOwner)->Get_Info(SpellIndex).iSpell_Type));
+	m_pVIBufferCom->Set_Index_ImageUV(SlotIndex, m_vUV);
+	//m_pManager->Event_Callback(TEXT("Skill_Change"));
+}
+
+_int CCurrent_Spell_Slot::Chack_Slot(_int Index) const
+{
+	_int iSlotx = 4;
+
+	_int x = Index % iSlotx;
+	_int y = Index / iSlotx;
+
+	return m_iSpell[y][x];
+}
+
+void CCurrent_Spell_Slot::Clear(_int iValue)
+{
+	for (_int i = 0; i < 4; ++i)
+	{
+		for (_int j = 0; j < 4; ++j)
+		{
+			m_iSpell[i][j] = iValue;
+		}
+	}
+}
+
+_float4 CCurrent_Spell_Slot::UV(_int SpellID)
+{
+	_float2 fImage_Size = { 1024.f, 1792.f };
+
+	_uint iCountX = 4;
+	_uint iCountY = 7;
+
+	_float iImageX = 256.f;
+	_float iImageY = 256.f;
+
+	_uint iframeX = SpellID % iCountX;
+	_uint iframeY = SpellID / iCountX;
+
+	_float2 UVStart;
+	UVStart.x = iframeX * iImageX / fImage_Size.x;
+	UVStart.y = iframeY * iImageY / fImage_Size.y;
+
+	_float2 UVEnd;
+	UVEnd.x = UVStart.x + (iImageX / fImage_Size.x);
+	UVEnd.y = UVStart.y + (iImageY / fImage_Size.y);
+
+	_float4 UV = _float4{ UVStart.x, UVStart.y, UVEnd.x, UVEnd.y };
+	return UV;
+}
+
 HRESULT CCurrent_Spell_Slot::Bind_ShaderResources()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
@@ -167,6 +316,14 @@ HRESULT CCurrent_Spell_Slot::Bind_ShaderResources()
 		return E_FAIL;
 	}
 	if (FAILED(m_pDiffuse_TextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pDiffuse_TextureCom1->Bind_ShaderResource(m_pShaderCom, "g_Texture1", 0)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pDiffuse_TextureCom2->Bind_ShaderResource(m_pShaderCom, "g_Texture2", 0)))
 	{
 		return E_FAIL;
 	}
@@ -200,7 +357,15 @@ HRESULT CCurrent_Spell_Slot::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_ActionItemGoldleaf_4K"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_SpellType_Generic"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_Atlas_Spell"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom1), nullptr)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Prototype_Texture_UI_T_ActionItemGoldleaf_4K"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom2), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -208,7 +373,6 @@ HRESULT CCurrent_Spell_Slot::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-
 	return S_OK;
 }
 
@@ -243,6 +407,8 @@ void CCurrent_Spell_Slot::Free()
 	__super::Free();
 
 	SAFE_RELEASE(m_pDiffuse_TextureCom);
+	SAFE_RELEASE(m_pDiffuse_TextureCom1);
+	SAFE_RELEASE(m_pDiffuse_TextureCom2);
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }

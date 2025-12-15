@@ -1,16 +1,27 @@
 ﻿#include "pch.h"
 #include "Troll.h"
 
+#include "InfoInstance.h"
 #include "GameInstance.h"
 #include "Player.h"
+#include "Troll_Rock.h"
+#include "Layer.h"
+#include "EffectPool.h"
+#include "TrailObject.h"
 
 #pragma region STATE
 #include "State_Idle.h"
-#include "State_Dodge.h"
-#include "State_Jump.h"
-#include "State_Land.h"
+#include "State_IdleBreak.h"
 #include "State_Move.h"
 #include "State_Combat.h"
+#include "Troll_State_Stun.h"
+#include "Troll_State_Rush.h"
+#include "Troll_State_BackHand_Swing.h"
+#include "State_Throw.h"
+#include "State_Swing.h"
+#include "State_Slam.h"
+#include "State_Hit.h"
+#include "State_Dead.h"
 #pragma endregion
 
 
@@ -24,7 +35,7 @@ void CTroll::Behavior_IdleEnter()
 
 HRESULT CTroll::Behavior_IdleExitCheck()
 {
-	if (m_fTargetDistance <= 15.f)
+	if (m_fTargetDistance <= 18.f && m_fTargetDistance != 0)
 		m_pFSM->Change_State(FSMSTATE::MOVE);
 
 	return E_FAIL;
@@ -35,21 +46,161 @@ void CTroll::Behavior_IdleExit()
 	m_pFSM->Disable_State(FSMSTATE::IDLE);
 }
 
-void CTroll::Behavior_MoveEnter()
+void CTroll::Behavior_IdleBreakEnter()
 {
-	pair<_uint, _bool> pairAnimInfo = {};
+	m_pFSM->Enable_State(FSMSTATE::IDLEBREAK);
+	pair<_uint, _bool> pairAnimInfo;
+	m_bLookAt = true;
+	_int RandIndex = m_pGameInstance->Real_Random_Int(0, 3);
+	switch (RandIndex)
+	{
+	case 0: //땅 두번구르기 왼발 오른발
+		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK1];
 
-	m_pFSM->Enable_State(FSMSTATE::MOVE);
-	m_pFSM->Enable_State(FSMSTATE::JOG);
+		Add_Event(pairAnimInfo.first, [this]() {
 
-	pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
+			_matrix HandMat = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("IK_LeftFoot")) * m_pTransformCom->Get_XMWorldMatrix();
 
+			_float4 vPosition = {};
+			XMStoreFloat4(&vPosition, HandMat.r[3]);
+
+			m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_NOMAL_SMOKE, this, &vPosition);
+			}, 0.3f);
+
+		Add_Event(pairAnimInfo.first, [this]() {
+
+			_matrix HandMat = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("IK_RightFoot")) * m_pTransformCom->Get_XMWorldMatrix();
+
+			_float4 vPosition = {};
+			XMStoreFloat4(&vPosition, HandMat.r[3]);
+
+			m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_NOMAL_SMOKE, this, &vPosition);
+			}, 0.7f);
+
+		break;
+	case 1:// 방망이
+		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK2];
+		break;
+	case 2: // 발구르기
+		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK3];
+
+		Add_Event(pairAnimInfo.first, [this]() {
+
+			_matrix HandMat = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("IK_RightFoot")) * m_pTransformCom->Get_XMWorldMatrix();
+
+			_float4 vPosition = {};
+			XMStoreFloat4(&vPosition, HandMat.r[3]);
+
+			m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_NOMAL_SMOKE, this, &vPosition);
+			}, 0.2f);
+
+		break;
+	case 3: //소리지르기
+		pairAnimInfo = m_Animation[STATEANIM::IDLE_BREAK4];
+		break;
+	}
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
 }
 
-HRESULT CTroll::Behavior_MoveExitCheck()
+HRESULT CTroll::Behavior_IdleBreakExitCheck()
 {
-	if (m_fTargetDistance <= 7.f &&m_fTargetDistance !=0.f)
+	if (m_pModelCom->IsFinishedAnim()){
+		m_pFSM->Change_State(FSMSTATE::MOVE);
+	}
+
+	return E_FAIL;
+}
+
+void CTroll::Behavior_IdleBreakExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::IDLEBREAK);
+}
+
+void CTroll::Behavior_MoveEnter()
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+	m_pFSM->Enable_State(FSMSTATE::MOVE);
+
+	m_pFSM->Enable_State(FSMSTATE::JOG);
+	pairAnimInfo = m_Animation[STATEANIM::JOG_START];
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
+}
+
+HRESULT CTroll::Behavior_MoveExitCheck(_float fTimeDelta)
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	_bool bTurnPlaying =
+		(iCurrAnimIndex == m_Animation[STATEANIM::JOG_LEFT_TURN].first) ||
+		(iCurrAnimIndex == m_Animation[STATEANIM::JOG_RIGHT_TURN].first);
+
+	if (iCurrAnimIndex == m_Animation[STATEANIM::JOG_START].first)
+	{
+		_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
+		if (fRatio >= 0.9f)
+		{
+			pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		}
+	}
+
+	if (m_fTargetDistance <= 18.f && m_fTargetDistance >= 14.f) {
+		m_pFSM->Change_State(FSMSTATE::COMBAT);
+		return E_FAIL;
+	}
+
+
+	if (bTurnPlaying)
+	{
+		m_bLookAt = false;
+
+		if (m_pModelCom->IsFinishedAnim())
+		{
+			m_bLookAt = true;
+			pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		}
+
+		return S_OK;
+	}
+
+	if (m_fDegree >= 90.f)
+	{
+		m_bLookAt = true;
+
+		if (m_fCross > 0)
+			pairAnimInfo = m_Animation[STATEANIM::JOG_LEFT_TURN];
+		else
+			pairAnimInfo = m_Animation[STATEANIM::JOG_RIGHT_TURN];
+
+		m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		return S_OK;
+	}
+
+	if (m_fTargetDistance > 8.f)
+	{
+		m_bLookAt = true;
+
+		if (iCurrAnimIndex == m_Animation[STATEANIM::JOG_START].first)
+		{
+			_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
+			if (fRatio >= 0.9f) {
+				pairAnimInfo = m_Animation[STATEANIM::JOG_FWD];
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+			}
+		}
+		else if (iCurrAnimIndex != m_Animation[STATEANIM::JOG_FWD].first)
+		{
+			pairAnimInfo = m_Animation[STATEANIM::JOG_START];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+		}
+
+		return S_OK;
+	}
+
+
+	if (m_fTargetDistance <= 6.f && m_fTargetDistance != 0.f)
 		m_pFSM->Change_State(FSMSTATE::COMBAT);
 
 	return E_FAIL;
@@ -63,28 +214,519 @@ void CTroll::Behavior_MoveExit()
 void CTroll::Behavior_CombatEnter()
 {
 	pair<_uint, _bool> pairAnimInfo = {};
-
 	m_pFSM->Enable_State(FSMSTATE::COMBAT);
 
-	m_pFSM->Enable_State(FSMSTATE::SKILL2);
-
-	pairAnimInfo = m_Animation[STATEANIM::SKILL2];
-
-	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+	m_bLookAt = true;
 }
 
-HRESULT CTroll::Behavior_CombatExitCheck()
+HRESULT CTroll::Behavior_CombatExitCheck(_float fTimeDelta)
 {
-	if (m_pModelCom->IsFinishedAnim())
+	m_bLookAt = true;
+
+	if (m_fTargetDistance > 30.f && m_fTargetDistance != 0.f)
 	{
 		m_pFSM->Change_State(FSMSTATE::IDLE);
+		return E_FAIL;
 	}
+	else if (m_fTargetDistance > 25.f && m_fTargetDistance != 0.f)
+	{
+		m_pFSM->Change_State(FSMSTATE::MOVE);
+		return E_FAIL;
+	}
+
+	if (m_fTargetDistance <= 6.f && (m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::SLAM)] <= 0.f))
+	{
+		m_pFSM->Change_State(FSMSTATE::SLAM);
+	}
+	else if (m_fTargetDistance <= 6.f && (m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::BACKHAND_SWING)] <= 0.f))
+	{
+		m_pFSM->Change_State(FSMSTATE::BACKHAND_SWING);
+	}
+	else if (m_fTargetDistance <= 6.f && (m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::SWING)] <= 0.f))
+	{
+		m_pFSM->Change_State(FSMSTATE::SWING);
+	}
+	else if (m_fTargetDistance <= 15.f && m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::THROWROCK)] <= 0.f)
+	{
+		m_pFSM->Change_State(FSMSTATE::THROW_ROCK);
+	}
+	else  if (m_fTargetDistance <= 18.f && m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::RUSH)] <= 0.f)
+	{
+		m_pFSM->Change_State(FSMSTATE::RUSH);
+	}
+	else
+	{
+		m_pFSM->Change_State(FSMSTATE::IDLEBREAK);
+	}
+
 	return E_FAIL;
 }
 
 void CTroll::Behavior_CombatExit()
 {
-	m_pFSM->Disable_State(FSMSTATE::COMBAT | FSMSTATE::SKILL | FSMSTATE::SKILL2);
+	m_pFSM->Disable_State(FSMSTATE::COMBAT);
+}
+
+void CTroll::Behavior_RushEnter()
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+	m_pFSM->Enable_State(FSMSTATE::RUSH);
+	pairAnimInfo = m_Animation[STATEANIM::RUSH_START];
+
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+}
+
+HRESULT CTroll::Behavior_RushExitCheck(_float fTimeDelta)
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	if (m_pFSM->IsEnable(FSMSTATE::RUSH))
+	{
+		if (iCurrAnimIndex == m_Animation[STATEANIM::RUSH_START].first)
+		{
+			if (m_pModelCom->IsFinishedAnim())
+			{
+				m_bLookAt = false;
+				pairAnimInfo = m_Animation[STATEANIM::RUSH_LOOP];
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+				m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::RUSH)] = m_fMaxSkillCoolTime[ENUM_CLASS(TROLL_SKILL::RUSH)];
+			}
+		}
+		else {
+			m_fRushTime += fTimeDelta;
+			if (m_fRushTime >= 1.5f)
+			{
+				m_fRushTime = 0.f;
+				m_pFSM->Disable_State(FSMSTATE::RUSH);
+				pairAnimInfo = m_Animation[STATEANIM::RUSH_END];
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+			}
+		}
+		return S_OK;
+	}
+	if (iCurrAnimIndex == m_Animation[STATEANIM::RUSH_END].first)
+	{
+		if (m_fDegree >= 90.f)
+		{
+			if (m_fCross > 0){
+				pairAnimInfo = m_Animation[STATEANIM::IDLE_COMBAT_TURN_BWD_L];
+			}
+			else{
+				pairAnimInfo = m_Animation[STATEANIM::IDLE_COMBAT_TURN_BWD_R];
+			}
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
+			Add_Event(pairAnimInfo.first,
+				[this]() {m_bLookAt = true; },
+				0.3f);
+		}
+	}
+
+	if (m_pModelCom->IsFinishedAnim())
+	{
+		m_bLookAt = true;
+		m_pFSM->Change_State(FSMSTATE::IDLEBREAK);
+	}
+	return E_FAIL;
+}
+
+void CTroll::Behavior_RushExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::RUSH);
+	m_fRushTime = 0.f;
+}
+
+void CTroll::Behavior_ThrowEnter()
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+	m_pFSM->Enable_State(FSMSTATE::THROW_ROCK);
+	pairAnimInfo = m_Animation[STATEANIM::THROW_ROCK_START];
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {Get_PartObject<CTroll_Rock>()->Set_Visible(true); },
+		0.95f);
+}
+
+HRESULT CTroll::Behavior_ThrowExitCheck(_float fTimeDelta)
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	if (m_pFSM->IsEnable(FSMSTATE::THROW_ROCK))
+	{
+		if (iCurrAnimIndex == m_Animation[STATEANIM::THROW_ROCK_START].first)
+		{
+			if (m_pModelCom->IsFinishedAnim())
+			{
+				m_pFSM->Disable_State(FSMSTATE::THROW_ROCK);
+				pairAnimInfo = m_Animation[STATEANIM::THROW_ROCK];
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+				m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::THROWROCK)] = m_fMaxSkillCoolTime[ENUM_CLASS(TROLL_SKILL::THROWROCK)];
+
+				Add_Event(pairAnimInfo.first,
+					[this]() {Get_PartObject<CTroll_Rock>()->Set_Attach(false); },
+					0.25f);
+
+				Add_Event(pairAnimInfo.first,
+					[this]() {Troll_Trail_Visible(false); },
+					0.6f);
+
+				Add_Event(pairAnimInfo.first, [this]() {
+
+
+					Troll_Trail_Visible(true);
+
+					_matrix HandMat = XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("SKT_LeftHand")) * m_pTransformCom->Get_XMWorldMatrix();
+
+					_float4 vPosition = {};
+					XMStoreFloat4(&vPosition, HandMat.r[3]);
+
+					m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_NOMAL_SMOKE, this, &vPosition);
+					}, 0.1f);
+			}
+		}
+		return S_OK;
+	}
+	if (m_pModelCom->IsFinishedAnim())
+	{
+		m_bLookAt = true;
+		m_pFSM->Change_State(FSMSTATE::COMBAT);
+	}
+	return E_FAIL;
+}
+
+void CTroll::Behavior_ThrowExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::THROW_ROCK);
+	Get_PartObject<CTroll_Rock>()->Set_Attach(true);
+	Get_PartObject<CTroll_Rock>()->Set_Visible(false);
+}
+
+void CTroll::Behavior_SwingEnter()
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+	m_pFSM->Enable_State(FSMSTATE::SWING);
+
+	pairAnimInfo = m_Animation[STATEANIM::SWING_FWD];
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
+	m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::SWING)] =
+		m_fMaxSkillCoolTime[ENUM_CLASS(TROLL_SKILL::SWING)];
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {m_bLookAt = false; },
+		0.2f);
+
+	Troll_Trail_Visible(true);
+	m_pWeaponTrail->Set_Visible(true);
+	m_pWeaponTrail->Get_Component<CTrail>()->Reset_Trail();
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			Troll_Trail_Visible(false);
+			m_pWeaponTrail->Set_Visible(false);
+		},
+		0.6f);
+}
+
+HRESULT CTroll::Behavior_SwingExitCheck(_float fTimeDelta)
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+
+	if (m_pModelCom->IsFinishedAnim())
+	{
+		m_bLookAt = true;
+		m_pFSM->Change_State(FSMSTATE::COMBAT);
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+void CTroll::Behavior_SwingExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::SWING);
+}
+
+void CTroll::SwingHit(_bool& bPlayerHit)
+{
+	vector<PSX::PxSweepHit> pxHits;
+	_uint iHitCount = 0;
+	_float Damage = 0.f;
+	CheckHammerHits(iHitCount, pxHits);
+	{
+		for (_uint i = 0; i < pxHits.size(); ++i) {
+			PSX::PxActor* pxHitActor = pxHits[i].actor;
+			if (nullptr != pxHitActor && nullptr != pxHitActor->userData) {
+				PhsXUserData* pUserData = (PhsXUserData*)pxHitActor->userData;
+				switch (PXOBJECT(pUserData->iSubKind))
+				{
+				case PXOBJECT::PLAYER:
+				{
+					if (true == bPlayerHit) {
+						continue;
+					}
+					CStat* pStat = pUserData->pCharacter->Get_Owner()->Get_Component<CStat>();
+					pStat->Get_Damage(20.f);
+					Damage = 7.f;
+					bPlayerHit = true;
+					pUserData->pOwner->OnCollision(this);
+				} break;
+				case PXOBJECT::ALLY_HITBOX:
+					break;
+				case PXOBJECT::ENVIRIONMENT:
+					break;
+				case PXOBJECT::TERRAIN:
+					break;
+				case PXOBJECT::BOX:
+					break;
+				case PXOBJECT::NPC:
+					break;
+				default:
+					break;
+				}
+			}
+		}
+	}
+}
+
+void CTroll::Behavior_SlamEnter()
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+	m_pFSM->Enable_State(FSMSTATE::SLAM);
+
+	pairAnimInfo = m_Animation[STATEANIM::SLAM];
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
+	m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::SLAM)] =
+		m_fMaxSkillCoolTime[ENUM_CLASS(TROLL_SKILL::SLAM)];
+
+
+	Troll_Trail_Visible(true);
+	m_pWeaponTrail->Set_Visible(true);
+	m_pWeaponTrail->Get_Component<CTrail>()->Reset_Trail();
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			Troll_Trail_Visible(false);
+			m_pWeaponTrail->Set_Visible(false);
+		},
+		0.7f);
+
+
+	Add_Event(m_Animation[STATEANIM::SLAM].first,
+		[this]() { m_bLookAt = false; },
+		0.2f);
+
+	Add_Event(m_Animation[STATEANIM::SLAM].first, [this]() {
+		m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_ATTACK, this);
+		}, 0.3f);
+
+}
+
+HRESULT CTroll::Behavior_SlamExitCheck(_float fTimeDelta)
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	_float fRatio = m_pModelCom->Get_CurrentTrackProgressRatio();
+
+	if (m_fDegree >= 90.f)
+	{
+		m_bLookAt = true;
+		if (m_pModelCom->IsFinishedAnim())
+		{
+			m_bLookAt = true;
+			m_pFSM->Change_State(FSMSTATE::COMBAT);
+			return E_FAIL;
+		}
+
+		return S_OK;
+	}
+	else if (fRatio >= 0.4f) {
+		m_bLookAt = true;
+		m_pFSM->Change_State(FSMSTATE::COMBAT);
+		return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+void CTroll::Behavior_SlamExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::SLAM);
+}
+
+void CTroll::Behavior_BackHandSwingEnter()
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+	m_pFSM->Enable_State(FSMSTATE::BACKHAND_SWING);
+
+	pairAnimInfo = m_Animation[STATEANIM::BACKHAND_SWING_JOG];
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
+	m_fSkillCoolTime[ENUM_CLASS(TROLL_SKILL::BACKHAND_SWING)] =
+		m_fMaxSkillCoolTime[ENUM_CLASS(TROLL_SKILL::BACKHAND_SWING)];
+
+	Add_Event(m_Animation[STATEANIM::BACKHAND_SWING_JOG].first,
+		[this]() { m_bLookAt = false; },
+		0.2f);
+
+	Troll_Trail_Visible(true);
+	m_pWeaponTrail->Set_Visible(true);
+	m_pWeaponTrail->Get_Component<CTrail>()->Reset_Trail();
+
+	Add_Event(pairAnimInfo.first,
+		[this]() {
+			Troll_Trail_Visible(false);
+			m_pWeaponTrail->Set_Visible(false);
+		},
+		0.9f);
+}
+
+HRESULT CTroll::Behavior_BackHandSwingExitCheck(_float fTimeDelta)
+{
+	pair<_uint, _bool> pairAnimInfo = {};
+	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	if (m_pModelCom->IsFinishedAnim())
+	{
+		m_bLookAt = true;
+		m_pFSM->Change_State(FSMSTATE::COMBAT);
+		return E_FAIL;
+	}
+	return S_OK;
+}
+
+void CTroll::Behavior_BackHandSwingExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::BACKHAND_SWING);
+}
+
+void CTroll::Behavior_StunEnter()
+{
+	m_pFSM->Enable_State(FSMSTATE::STUN);
+	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	pair<_uint, _bool> pairAnimInfo;
+
+	m_bLookAt = false;
+	if (iCurrAnimIndex == m_Animation[STATEANIM::RUSH_LOOP].first)
+	{
+		pairAnimInfo = m_Animation[STATEANIM::STUN];
+
+		_string strBoneName = "HeadEnd";
+
+		m_pEffectPool->Use_Skill(SKILL_TYPE::TROLL_RUSH_HIT, this);
+		m_pEffectPool->Use_Skill(SKILL_TYPE::STUN, this, &strBoneName);
+
+	}
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
+	Add_Event(pairAnimInfo.first,
+		[this]() { m_bLookAt = true;
+		},
+		0.6f);
+}
+
+HRESULT CTroll::Behavior_StunExitCheck(_float fTimeDelta)
+{
+	pair<_uint, _bool> pairAnimInfo;
+	if (true == m_pModelCom->IsFinishedAnim()) {
+		
+		m_pFSM->Change_State(FSMSTATE::IDLEBREAK);
+		return E_FAIL;
+	}
+	return S_OK;
+}
+
+void CTroll::Behavior_StunExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::STUN);
+}
+
+void CTroll::Behavior_HitEnter()
+{
+	m_pFSM->Enable_State(FSMSTATE::HIT);
+	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	pair<_uint, _bool> pairAnimInfo;
+
+	m_bLookAt = false;
+	if (iCurrAnimIndex == m_Animation[STATEANIM::SLAM].first)
+	{
+		pairAnimInfo = m_Animation[STATEANIM::HIT_FACE];
+	}
+	else {
+		_int RandIndex = m_pGameInstance->Real_Random_Int(0, 2);
+		switch (RandIndex)
+		{
+		case 0:
+			pairAnimInfo = m_Animation[STATEANIM::HIT_BWD];
+			break;
+		case 1:
+			pairAnimInfo = m_Animation[STATEANIM::HIT_BWD2];
+			break;
+		case 2:
+			pairAnimInfo = m_Animation[STATEANIM::HIT_BWD3];
+			break;
+		}
+	}
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+}
+
+HRESULT CTroll::Behavior_HitExitCheck()
+{
+	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	pair<_uint, _bool> pairAnimInfo;
+
+	if (iCurrAnimIndex == m_Animation[STATEANIM::HIT_FACE].first)
+	{
+		if (m_pModelCom->IsFinishedAnim()) {
+			pairAnimInfo = m_Animation[STATEANIM::HIT_FACE_END];
+			m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+			return S_OK;
+		}
+	}
+
+	if (m_pModelCom->IsFinishedAnim()) {
+		m_pFSM->Change_State(FSMSTATE::COMBAT);
+		m_bLookAt = true;
+		return E_FAIL;
+	}
+	return E_FAIL;
+}
+
+void CTroll::Behavior_HitExit()
+{
+	m_pFSM->Disable_State(FSMSTATE::HIT);
+}
+
+void CTroll::Behavior_DeadEnter()
+{
+	m_bLookAt = false;
+	m_pFSM->Enable_State(FSMSTATE::DEAD);
+	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	pair<_uint, _bool> pairAnimInfo;
+
+	pairAnimInfo = m_Animation[STATEANIM::KNOCKDOWN_BWD];
+	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
+
+	PSX::PxExtendedVec3 pxControlllerPos = m_pCharacter_Controller->Get_Controller()->getPosition();
+	PSX::PxTransform pxTransform((_float)pxControlllerPos.x, (_float)pxControlllerPos.y + 100.f, (_float)pxControlllerPos.z);
+	m_pCharacter_Controller->Set_Position(XMLoadFloat3((_float3*)&pxTransform.p));
+	m_pRigidBody->SetActive(false);
+	m_pCharacter_Controller->SetActive(false);
+}
+
+HRESULT CTroll::Behavior_DeadExitCheck(_float fTimeDelta)
+{
+	if (m_pModelCom->IsFinishedAnim()) {
+		m_bDead = true;
+	}
+	return S_OK;
+}
+
+void CTroll::Behavior_DeadExit()
+{
+	m_bDead = true;
 }
 
 
@@ -102,15 +744,22 @@ void CTroll::Add_FSM()
 		m_States.emplace(FSMSTATE::IDLE, CState_Idle::Create(&Desc));
 	}
 	{
+		CState_IdleBreak::STATE_IDLEBREAK_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_IdleBreakEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_IdleBreakExitCheck(); };
+		Desc.funcExitEvent = [this]() { Behavior_IdleBreakExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::IDLEBREAK, CState_IdleBreak::Create(&Desc));
+	}
+	{
 		CState_Move::STATE_MOVE_DESC Desc{};
 		Desc.pOwner = this;
 		Desc.funcEnterEvent = [this]() { Behavior_MoveEnter(); };
-		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_MoveExitCheck(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_MoveExitCheck(fTimedelta); };
 		Desc.funcExitEvent = [this]() { Behavior_MoveExit(); };
-		Desc.funcPriorityUpdate = [this](_float fTimeDelta) {
-			if (m_pGameInstance->Key_Pressing(DIK_A)) { m_pTransformCom->Turn(-m_pTransformCom->Get_State(STATE::UP), fTimeDelta); }
-			if (m_pGameInstance->Key_Pressing(DIK_D)) { m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::UP), fTimeDelta); };
-			};
+		Desc.funcPriorityUpdate = nullptr;
 		Desc.funcLateUpdate = nullptr;
 		m_States.emplace(FSMSTATE::MOVE, CState_Move::Create(&Desc));
 	}
@@ -120,71 +769,254 @@ void CTroll::Add_FSM()
 		CState_Combat::STATE_COMBAT_DESC Desc{};
 		Desc.pOwner = this;
 		Desc.funcEnterEvent = [this]() { Behavior_CombatEnter(); };
-		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_CombatExitCheck(); };
+		Desc.funcExitCheck = [this](_float fTimeDelta) { return Behavior_CombatExitCheck(fTimeDelta); };
 		Desc.funcExitEvent = [this]() { Behavior_CombatExit(); };
 		Desc.funcPriorityUpdate = nullptr;
 		Desc.funcLateUpdate = nullptr;
 		m_States.emplace(FSMSTATE::COMBAT, CState_Combat::Create(&Desc));
 	}
+
+	{
+		CTroll_State_Rush::TROLL_STATE_RUSH_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_RushEnter(); };
+		Desc.funcExitCheck = [this](_float fTimeDelta) { return Behavior_RushExitCheck(fTimeDelta); };
+		Desc.funcExitEvent = [this]() { Behavior_RushExit(); };
+		Desc.pCollisionPlayer = &m_bCollisionPlayer;
+		m_States.emplace(FSMSTATE::RUSH, CTroll_State_Rush::Create(&Desc));
+	}
+
+	{
+		CState_Throw::STATE_THROW_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_ThrowEnter(); };
+		Desc.funcExitCheck = [this](_float fTimeDelta) { return Behavior_ThrowExitCheck(fTimeDelta); };
+		Desc.funcExitEvent = [this]() { Behavior_ThrowExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::THROW_ROCK, CState_Throw::Create(&Desc));
+	}
+
+	{
+		CState_Swing::STATE_SWING_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_SwingEnter(); };
+		Desc.funcExitCheck = [this](_float fTimeDelta) { return Behavior_SwingExitCheck(fTimeDelta); };
+		Desc.funcExitEvent = [this]() { Behavior_SwingExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = [this](_float fTimeDelta, _bool& bHit) {  SwingHit(bHit); };
+		m_States.emplace(FSMSTATE::SWING, CState_Swing::Create(&Desc));
+	}
+
+	{
+		CState_Slam::STATE_SLAM_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_SlamEnter(); };
+		Desc.funcExitCheck = [this](_float fTimeDelta) { return Behavior_SlamExitCheck(fTimeDelta); };
+		Desc.funcExitEvent = [this]() { Behavior_SlamExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = [this](_float fTimeDelta, _bool& bHit) {  SlamHit(bHit); };
+		m_States.emplace(FSMSTATE::SLAM, CState_Slam::Create(&Desc));
+	}
+
+	{
+		CTroll_State_BackHand_Swing::TROLL_STATE_BACK_HAND_SWING_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_BackHandSwingEnter(); };
+		Desc.funcExitCheck = [this](_float fTimeDelta) { return Behavior_BackHandSwingExitCheck(fTimeDelta); };
+		Desc.funcExitEvent = [this]() { Behavior_BackHandSwingExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = [this](_float fTimeDelta, _bool& bHit) {  SwingHit(bHit); };
+		m_States.emplace(FSMSTATE::BACKHAND_SWING, CTroll_State_BackHand_Swing::Create(&Desc));
+	}
 #pragma endregion
 #pragma region Behavior_Combat_Focus
+	{
+		CTroll_State_Stun::TROLL_STATE_STUN Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_StunEnter(); };
+		Desc.funcExitCheck = [this](_float fTimeDelta) { return Behavior_StunExitCheck(fTimeDelta); };
+		Desc.funcExitEvent = [this]() { Behavior_StunExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::STUN, CTroll_State_Stun::Create(&Desc));
+	}
+#pragma endregion
+
+#pragma region Behavior_Hit
+	{
+		CState_Hit::STATE_HIT_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_HitEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_HitExitCheck(); };
+		Desc.funcExitEvent = [this]() { Behavior_HitExit(); };
+		Desc.funcPriorityUpdate = nullptr;
+		Desc.funcLateUpdate = nullptr;
+		m_States.emplace(FSMSTATE::HIT, CState_Hit::Create(&Desc));
+	}
+
+	{
+		CState_Dead::STATE_DEAD_DESC Desc{};
+		Desc.pOwner = this;
+		Desc.funcEnterEvent = [this]() { Behavior_DeadEnter(); };
+		Desc.funcExitCheck = [this](_float fTimedelta) { return Behavior_DeadExitCheck(fTimedelta); };
+		Desc.funcExitEvent = [this]() { Behavior_DeadExit(); };
+		Desc.funcLateUpdate = [this](_float fDeadRatio) {
+			m_fDeadRatio = fDeadRatio;
+			if (m_fDeadRatio > 1.f) {
+				m_bDead = true;
+			}
+			};
+		Desc.vDeadTimer.x = FLT_EPSILON5;
+		Desc.vDeadTimer.y = 2.f;
+		m_States.emplace(FSMSTATE::DEAD, CState_Dead::Create(&Desc));
+	}
 
 #pragma endregion
 
 }
 
+void CTroll::SlamHit(_bool& bPlayerHit)
+{
+	vector<PSX::PxSweepHit> pxHits;
+	_uint iHitCount = 0;
+	CheckHammerHits(iHitCount, pxHits);
+	{
+		for (_uint i = 0; i < pxHits.size(); ++i) {
+			PSX::PxActor* pxHitActor = pxHits[i].actor;
+			if (nullptr != pxHitActor && nullptr != pxHitActor->userData) {
+				PhsXUserData* pUserData = (PhsXUserData*)pxHitActor->userData;
+				switch (PXOBJECT(pUserData->iSubKind))
+				{
+				case PXOBJECT::PLAYER:
+				{
+					if (true == bPlayerHit) {
+						continue;
+					}
+					CStat* pStat = pUserData->pCharacter->Get_Owner()->Get_Component<CStat>();
+					pStat->Get_Damage(20.f);
+					bPlayerHit = true;
+					pUserData->pOwner->OnCollision(this);
+				} break;
+				case PXOBJECT::ALLY_HITBOX:
+					break;
+				case PXOBJECT::ENVIRIONMENT:
+					break;
+				case PXOBJECT::TERRAIN:
+					break;
+				case PXOBJECT::BOX:
+					break;
+				case PXOBJECT::NPC:
+					break;
+				default:
+					break;
+				}
+			}
+		}
+	}
+}
+
+void CTroll::CheckHammerHits(_uint& iHitCount, vector<PSX::PxSweepHit>& pxHits)
+{
+	{
+		_vector vStartPos = XMLoadFloat4(&m_vStartHammerPos);
+		_vector vEndPos = XMLoadFloat4(m_pHammerPos);
+		_vector vDir = vEndPos - vStartPos;
+		_float fDistance = XMVectorGetX(XMVector4Length(vDir));
+		vDir = XMVector4Normalize(vDir);
+
+		_bool bCollision = false;
+		m_SweepBufferHammer = {};
+		bCollision = m_pGameInstance->SphereCast(1.5f, vStartPos, vDir, fDistance, PSX::PxHitFlag::eDEFAULT, PSX::PxQueryFlag::eDYNAMIC, m_SweepBufferHammer);
+		if (true == bCollision) {
+			iHitCount += m_SweepBufferHammer.getNbTouches() + m_SweepBufferHammer.hasBlock;
+			auto touches = m_SweepBufferHammer.getTouches();
+			for (_uint i = 0; i < m_SweepBufferHammer.nbTouches; ++i) {
+				pxHits.push_back(m_SweepBufferHammer.touches[i]);
+			}
+			if (true == m_SweepBufferHammer.hasBlock) {
+				pxHits.push_back(m_SweepBufferHammer.block);
+			}
+		}
+	}
+	{
+		_vector vStartPos = XMLoadFloat4(&m_vStartGripPos);
+		_vector vEndPos = XMLoadFloat4(m_pHammerGripPos);
+		_vector vDir = vEndPos - vStartPos;
+		_float fDistance = XMVectorGetX(XMVector4Length(vDir));
+		vDir = XMVector4Normalize(vDir);
+
+		_bool bCollision = false;
+		m_SweepBufferGrip = {};
+		bCollision = m_pGameInstance->SphereCast(1.5f, vStartPos, vDir, fDistance, PSX::PxHitFlag::eDEFAULT, PSX::PxQueryFlag::eDYNAMIC, m_SweepBufferGrip);
+		if (true == bCollision) {
+			iHitCount += m_SweepBufferGrip.getNbTouches() + m_SweepBufferGrip.hasBlock;
+			auto touches = m_SweepBufferGrip.getTouches();
+			for (_uint i = 0; i < m_SweepBufferGrip.nbTouches; ++i) {
+				pxHits.push_back(m_SweepBufferGrip.touches[i]);
+			}
+			if (true == m_SweepBufferGrip.hasBlock) {
+				pxHits.push_back(m_SweepBufferGrip.block);
+			}
+		}
+	}
+}
+
 void CTroll::Set_Anim()
 {
 	m_Animation[STATEANIM::IDLE] = { 16,true };
+	m_Animation[STATEANIM::IDLE_COMBAT_TURN_BWD_R] = { 7,false };
+	m_Animation[STATEANIM::IDLE_COMBAT_TURN_BWD_L] = { 8,false };
+	m_Animation[STATEANIM::IDLE_COMBAT_TURN_90_L] = { 9,false };
+	m_Animation[STATEANIM::IDLE_COMBAT_TURN_90_R] = { 10,false };
+	m_Animation[STATEANIM::IDLE_BREAK1] = { 11,false }; // 땅2번구르기
+	m_Animation[STATEANIM::IDLE_BREAK2] = { 141,false }; // 방망이
+	m_Animation[STATEANIM::IDLE_BREAK3] = { 14,false }; // 땅구르기
+	m_Animation[STATEANIM::IDLE_BREAK4] = { 143,false }; // 소리지르기
 
 	m_Animation[STATEANIM::WALK_FWD] = { 22,true };
 
+	m_Animation[STATEANIM::JOG_START] = { 104,false };
+	m_Animation[STATEANIM::JOG_LEFT_TURN] = { 112,false };
+	m_Animation[STATEANIM::JOG_RIGHT_TURN] = { 108,false };
 	m_Animation[STATEANIM::JOG_FWD] = { 103,true };
 
 	m_Animation[STATEANIM::DODGE_LEFT] = { 125, false };
 	m_Animation[STATEANIM::DODGE_RIGHT] = { 126, false };
 	m_Animation[STATEANIM::SPRINT] = { 90, true };
 
-	m_Animation[STATEANIM::SKILL] = { 70,false }; 
-	m_Animation[STATEANIM::SKILL2] = { 66,false }; // 도끼 찍기
+	m_Animation[STATEANIM::SLAM] = { 66,false }; // 도끼 찍기
+	m_Animation[STATEANIM::SKILL2] = { 70,false };
 
-	m_Animation[STATEANIM::HIT_FWD] = { 353, false };
+	m_Animation[STATEANIM::THROW_ROCK_START] = { 77,false };
+	m_Animation[STATEANIM::THROW_ROCK] = { 74,false };
+
+	m_Animation[STATEANIM::RUSH_START] = { 55,false };
+	m_Animation[STATEANIM::RUSH_LOOP] = { 54,true };
+	m_Animation[STATEANIM::RUSH_END] = { 56,false };
+
+	m_Animation[STATEANIM::BACKHAND_SWING_JOG] = { 89,false };
+
+	m_Animation[STATEANIM::SWING_FWD] = { 91,false };
+
 	m_Animation[STATEANIM::HIT_BWD] = { 167, false }; // 
 	m_Animation[STATEANIM::HIT_BWD2] = { 168, false }; //
 	m_Animation[STATEANIM::HIT_BWD3] = { 169, false }; // 
-	m_Animation[STATEANIM::HIT_BWD4] = { 351, false };
-	m_Animation[STATEANIM::HIT_L] = { 354, false };
-	m_Animation[STATEANIM::HIT_R] = { 355, false };
+
+	m_Animation[STATEANIM::HIT_FWD] = { 170,false };
+
+	m_Animation[STATEANIM::HIT_FACE] = { 156, false }; // 
+	m_Animation[STATEANIM::HIT_FACE_END] = { 157, false }; // 
+
+	m_Animation[STATEANIM::STUN] = { 60, false }; // 
+
 
 	m_Animation[STATEANIM::KNOCKDOWN_BWD] = { 165, false }; // 
-	m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT] = { 375, false };
-	m_Animation[STATEANIM::KNOCKDOWN_BWD_SPLT_HOLD] = { 370, false };
-	m_Animation[STATEANIM::KNOCKDOWN_FWD] = { 371, false };
-	m_Animation[STATEANIM::KNOCKDOWN_FWD_SPLT] = { 372, false };
-	m_Animation[STATEANIM::KNOCKDOWN_FWD_SPLT_HOLD] = { 373, false };
 
-	m_Animation[STATEANIM::GETUP_BWD] = { 330, false };
-	m_Animation[STATEANIM::GETUP_FWD] = { 332, false };
-	m_Animation[STATEANIM::GETUP_L] = { 334, false };
-	m_Animation[STATEANIM::GETUP_L_FD] = { 336, false };
-	m_Animation[STATEANIM::GETUP_L_FU] = { 338, false };
-	m_Animation[STATEANIM::GETUP_R] = { 340, false };
-	m_Animation[STATEANIM::GETUP_R_FD] = { 342, false };
-	m_Animation[STATEANIM::GETUP_R_FU] = { 344, false };
-	m_Animation[STATEANIM::GETUP_SLOUCH] = { 346, false };
 
-	m_Animation[STATEANIM::KNOCKBACK] = { 377, true };
-	m_Animation[STATEANIM::KNOCKBACK2] = { 378, true };
-	m_Animation[STATEANIM::TUMBLE] = { 379, true };
-	m_Animation[STATEANIM::TUMBLE2] = { 380, true };
-	m_Animation[STATEANIM::PETRIFICUSED_START] = { 383, false };
+	//왼턴 108
+	//오른턴 112
+	// 106 우회전
+	// 110 좌회전
 
-	m_Animation[STATEANIM::DEAD_BWD] = { 317, false };
-	m_Animation[STATEANIM::DEAD_BWD2] = { 318, false };
-	m_Animation[STATEANIM::DEAD_FWD] = { 319, false };
-	m_Animation[STATEANIM::DEAD_FWD2] = { 320, false };
-	m_Animation[STATEANIM::DEAD_L] = { 321, false };
-	m_Animation[STATEANIM::DEAD_L2] = { 322, false };
-	m_Animation[STATEANIM::DEAD_R] = { 323, false };
-	m_Animation[STATEANIM::DEAD_R2] = { 324, false };
 }

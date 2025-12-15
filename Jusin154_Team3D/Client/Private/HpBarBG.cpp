@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "HpBarBG.h"
 #include "GameInstance.h"
+#include "InfoInstance.h"
 
 CHpBarBG::CHpBarBG(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
@@ -8,7 +9,8 @@ CHpBarBG::CHpBarBG(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CHpBarBG::CHpBarBG(const CHpBarBG& rhs)
-	:CElementObject(rhs)
+	:CElementObject(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -41,14 +43,14 @@ HRESULT CHpBarBG::Initialize(void* pArg)
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 1.f;
 	m_vNine_Slice = _float4(27.f, 125.f, m_fSizeY * 0.5f, m_fSizeY * 0.5f);
-	m_fMaxHp = 1000.f;
+	m_fMaxHp = 0.f;
 	m_fCurrentHp = m_fMaxHp;
 	m_fMoveSpeed = 5.f;
 	m_fHpBGSize = _float2(144.f, 24.f);
 	m_fHpBGPos = _float2(0.f, 13.f);
 	m_fHpBG = _float2(0, m_fSizeX);
 	SizeUpX(240.f);
-	m_bActive = true;
+	//m_pInfoInstance->Add_Event(TEXT("PlayerHit"), [this](void* p) {this->Set_Damage(*reinterpret_cast<_float*>(p)); });
 	return S_OK;
 }
 
@@ -92,11 +94,18 @@ void CHpBarBG::Update(_float fTimeDelta)
 		}
 	}
 
+	if (m_fMaxHp != m_pInfoInstance->Get_PlayerStatPtr()->Get_Stat().fMaxHp)
+	{
+		m_fMaxHp = m_pInfoInstance->Get_PlayerStatPtr()->Get_Stat().fMaxHp;
+		m_fCurrentHp = m_fMaxHp;
+	}
+
 	if (m_fCurrentHp < 0.f)
 		m_fCurrentHp = 0.f;
 	if (m_fDamage <= 0.f)
 		m_fDamage = 0.f;
-	m_fTargetHp = m_fMaxHp - m_fDamage;
+	m_fTargetHp = m_pInfoInstance->Get_PlayerStatPtr()->Get_Stat().fCurrentHp;
+	
 
 	if (m_fTargetHp > m_fCurrentHp)
 		Heal(fTimeDelta);
@@ -104,15 +113,6 @@ void CHpBarBG::Update(_float fTimeDelta)
 		Hit(fTimeDelta);
 	m_fHpBar = m_fCurrentHp / m_fMaxHp;
 
-	if (m_pGameInstance->Key_Down(DIK_3))
-	{
-		Lerp_PosX(100.f);
-	}
-
-	if (m_pGameInstance->Key_Down(DIK_4))
-	{
-		Lerp_PosX(-101.f);
-	}
 	if (m_fHpBar <= 0.3f)
 	{
 		m_fBlinkTime += fTimeDelta * m_fTimeMult;
@@ -126,6 +126,7 @@ void CHpBarBG::Update(_float fTimeDelta)
 		m_fBlinkTime = 0.f;
 		m_fTime = 0.f;
 	}
+
 	__super::Update(fTimeDelta);
 }
 
@@ -171,7 +172,7 @@ void CHpBarBG::Lerp_PosX(_float X)
 
 void CHpBarBG::Heal(_float fTimeDelta)
 {
-	m_fCurrentHp = CMyTools::Lerp_f1D(m_fTargetHp, m_fCurrentHp, fTimeDelta * m_fMoveSpeed);
+	m_fCurrentHp = CMyTools::Lerp_f1D(m_fCurrentHp, m_fTargetHp, fTimeDelta * m_fMoveSpeed);
 }
 
 void CHpBarBG::Hit(_float fTimeDelta)
@@ -183,6 +184,11 @@ void CHpBarBG::SizeUpX(_float fSizeX)
 {
 	m_fSizeX = fSizeX;
 	m_fX -= (fSizeX - m_vScale.x) * 0.5f;
+}
+
+void CHpBarBG::Set_Damage(_float fDamage)
+{
+	m_fDamage += fDamage;
 }
 
 HRESULT CHpBarBG::Bind_ShaderResources()

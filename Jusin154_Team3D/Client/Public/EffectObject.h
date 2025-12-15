@@ -2,6 +2,7 @@
 
 #include "Client_Define.h"
 #include "PartObject.h"
+#include "Effect_Container.h"
 
 NS_BEGIN(Engine)
 class CInstance_Model;
@@ -15,98 +16,6 @@ NS_BEGIN(Client)
 
 class CEffectObject abstract : public CPartObject
 {
-public:
-	typedef struct tagEffectInfo
-	{
-		_float4 vColor = { 0.f ,0.f ,0.f ,1.f };
-
-		_float2 vDiffuseUVGainAmount = {};
-		_float2 vMaskingUVGainAmount = {};
-		_float2 vNoiseUVGainAmount = {};
-
-		_float2 vDistortionTime = {};
-		_float2 vMaskDistortionUVGainAmount = {};
-
-		_float2 vUVCutting = { 1.f ,1.f };
-		_float2 vUVMaskCutting = { 1.f ,1.f };
-
-		_int    iMaskMoveLerpOption = { 0 };
-		_int    iDiffuseMoveLerpOption = { 0 };
-		_int    iNoiseMoveLerpOption = { 0 };
-
-		_int    iMaskDistortionMoveLerpOption = { 0 };
-		_int    iDiffuseDistortionMoveLerpOption = { 0 };
-
-		_int	iBlurWeight = { 0 };
-
-
-		_bool	isDiffuse = {};
-		_bool	isMasking = {};
-		_bool	isDissolve = {};
-		_bool	isNoise = {};
-		_bool   isEmissive = {};
-		_bool   isDistortion = {};
-		_bool	isDiffuseUVMove = {};
-		_bool   isNoiseUVMove = {};
-		_bool	isMaskUVMove = {};
-		_bool   isBlur = {};
-		_bool   isBillboard = {};
-
-
-		_float4 vEmissive = { 0.f ,0.f ,0.f ,0.f };
-		_float  fDiffuseAlpha = { 1.f };
-		_float  fBlurIntensity = {};
-		_float  fNoiseDistortionIntensity = {};
-		_float  fEmissiveStrength = { 0.f };
-
-		LIGHT_DESC	LightDesc = {};
-		RENDER		eRenderOrder = { RENDER::EFFECT };
-
-		_bool   isReverseDissolve = {};
-
-		EFFECT_TYPE eEffectType = { EFFECT_TYPE::EFFECT };
-
-		_bool   isEmissiveDissolve = { false };
-
-		_bool   isMaskClampSample = { false };
-		_bool   isNoiseColor = { false };
-		_bool   isNoiseAlpha = { false };
-		_bool	isNomalDissolve = {};
-
-		_float fSoftenExp = { 1.31429f };
-		_float fSoftStrength = {};
-		_float fCoreBoost = {};
-		_float fRadius = {};
-
-		_float fSoftMaskEdge = {};
-		_float fSoftMask = {};
-
-		_bool   isEmissiveDissolveReverse = { false };
-		_bool   isOnlyBlur = { false };
-
-		SHADER_PASS_INSTANCE_MODEL eShaderPass = { SHADER_PASS_INSTANCE_MODEL::NON_NOMALMAP };
-
-		_bool   isDiffuseBlur = {};
-		_bool	isMaskBlur = {};
-		_bool   isBlurDissolve = {};
-		_bool   isBlurReverseDissolve = {};
-
-		_float  fBluringStrength = { 0.01f };
-
-
-		_bool   isBloom = {};
-
-		_bool   isBloomDissolve = {};
-		_bool   isBloomReverseDissolve = {};
-
-		_float  fBloomStrength = {};
-
-		BLOOM_TYPE eBloomType = {};
-
-
-	}EFFECT_INFO;
-
-
 protected:
 	CEffectObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CEffectObject(const CEffectObject& rhs);
@@ -120,12 +29,11 @@ public:
 	virtual HRESULT Render_Blur() override;
 	virtual HRESULT Render_Bloom() override;
 public:
+	HRESULT Load(CEffect_Container::EFFECT_SAVE_INFO EffectSaveInfo, LEVEL eLevel);
 	HRESULT Load(const _char* pFilePath, LEVEL eLevel);
-
-	void	Set_Dissolve(_bool isDissolve)
-	{
-		m_EffectInfo.isDissolve = isDissolve;
-	}	
+	void    Disable_Light();
+	void    Add_Light();
+	void    FollowParents(const _float4x4* pParentsMat, const _float4x4* pOffsetMat = nullptr);
 protected:
 	virtual HRESULT	Bind_ShaderResources() override;
 	virtual HRESULT Ready_Components(void* pArg) override;
@@ -145,16 +53,18 @@ protected:
 
 	CInstance_Model* m_pInstance_ModelCom = { nullptr };
 
+	const _float4x4* m_pParentMatrix = { nullptr };
+	_float4x4 m_FinalParentMatrix;
 
 protected:
-	EFFECT_INFO m_EffectInfo = {};
-	_string		m_strDiffuseName = {};
-	_string		m_strNoiseName = {};
-	_string		m_strMaskingName = {};
-	_string		m_strDissolveName = {};
-	_string		m_strModelName = {};
-	_string     m_strEmissiveName = {};
-	_string     m_strDistortionName = {};
+	EFFECT_INFO  m_EffectInfo = {};
+	_wstring	 m_strDiffuseName = {};
+	_wstring	 m_strNoiseName = {};
+	_wstring	 m_strMaskingName = {};
+	_wstring	 m_strDissolveName = {};
+	_wstring	 m_strModelName = {};
+	_wstring     m_strEmissiveName = {};
+	_wstring     m_strDistortionName = {};
 
 public:
 	virtual void Free() override;

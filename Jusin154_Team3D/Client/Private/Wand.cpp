@@ -44,17 +44,6 @@ HRESULT CWand::Initialize(void* pArg)
 
 void CWand::Priority_Update(_float fTimeDelta)
 {
-	_matrix socketMatrix = {};
-
-	socketMatrix = XMLoadFloat4x4(m_pSocketMatrices);
-
-	for (int i = 0; i < 3; ++i) {
-		socketMatrix.r[i] = XMVector3Normalize(socketMatrix.r[i]);
-	}
-
-	m_pTransformCom->Set_WorldMatrix(socketMatrix * XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr()));
-	XMStoreFloat4x4(&m_pWandTipMatrix, XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("Effect")) * m_pTransformCom->Get_XMWorldMatrix());
-
 #ifdef _DEBUG
 	Describe_Entity();
 
@@ -69,7 +58,17 @@ void CWand::Update(_float fTimeDelta)
 
 void CWand::Late_Update(_float fTimeDelta)
 {
-	m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
+	_matrix socketMatrix = {};
+
+	socketMatrix = XMLoadFloat4x4(m_pSocketMatrices);
+
+	for (int i = 0; i < 3; ++i) {
+		socketMatrix.r[i] = XMVector3Normalize(socketMatrix.r[i]);
+	}
+
+	m_pTransformCom->Set_WorldMatrix(socketMatrix * XMLoadFloat4x4(m_pParentTransformCom->Get_WorldMatrixPtr()));
+	XMStoreFloat4x4(&m_pWandTipMatrix, XMLoadFloat4x4(m_pModelCom->Get_BoneMatrixPtr("Effect")) * m_pTransformCom->Get_XMWorldMatrix());
+	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 }
 
 HRESULT CWand::Render()
@@ -98,8 +97,8 @@ HRESULT CWand::Render()
 		}
 	}
 #ifdef _DEBUG
-	m_pGripShape->Draw(m_pTransformCom->Get_XMWorldMatrix(), m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW), m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ), DirectX::Colors::Green, nullptr, true);
-	m_pSubShape->Draw(XMLoadFloat4x4(&m_pWandTipMatrix), m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW), m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ), DirectX::Colors::Purple, nullptr, true);
+	//m_pGripShape->Draw(m_pTransformCom->Get_XMWorldMatrix(), m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW), m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ), DirectX::Colors::Green, nullptr, true);
+	//m_pSubShape->Draw(XMLoadFloat4x4(&m_pWandTipMatrix), m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW), m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ), DirectX::Colors::Purple, nullptr, true);
 #endif // _DEBUG
 	
 	return S_OK;
@@ -108,6 +107,11 @@ HRESULT CWand::Render()
 _vector CWand::Get_WorldPostion()
 {
 	return XMLoadFloat4((_float4*)&m_pWandTipMatrix.m[3][0]);
+}
+
+_matrix CWand::Get_WorldMatrix()
+{
+	return XMLoadFloat4x4(&m_pWandTipMatrix);
 }
 
 
@@ -188,27 +192,31 @@ void CWand::Free()
 
 void CWand::Describe_Entity()
 {
-	_float4 vPos;
-	_float4 vTipWorldPos;
+	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
+	if (GUI::CollapsingHeader("WAND")) {
+		_float4 vPos;
+		_float4 vTipWorldPos;
 
-	_float4 vTipRight;
-	_float4 vTipUp;
-	_float4 vTipLook;
-	_float4 vTipPos;
-	XMStoreFloat4(&vPos, m_pTransformCom->Get_State(STATE::POSITION));
-	XMStoreFloat4(&vTipWorldPos, Get_WorldPostion());
+		_float4 vTipRight;
+		_float4 vTipUp;
+		_float4 vTipLook;
+		_float4 vTipPos;
+		XMStoreFloat4(&vPos, m_pTransformCom->Get_State(STATE::POSITION));
+		XMStoreFloat4(&vTipWorldPos, Get_WorldPostion());
 
-	XMStoreFloat4(&vTipRight, XMLoadFloat4((_float4*)&m_pWandTipMatrix.m[0][0]));
-	XMStoreFloat4(&vTipUp, XMLoadFloat4((_float4*)&m_pWandTipMatrix.m[1][0]));
-	XMStoreFloat4(&vTipLook, XMLoadFloat4((_float4*)&m_pWandTipMatrix.m[2][0]));
-	XMStoreFloat4(&vTipPos, XMLoadFloat4((_float4*)&m_pWandTipMatrix.m[3][0]));
+		XMStoreFloat4(&vTipRight, XMLoadFloat4((_float4*)&m_pWandTipMatrix.m[0][0]));
+		XMStoreFloat4(&vTipUp, XMLoadFloat4((_float4*)&m_pWandTipMatrix.m[1][0]));
+		XMStoreFloat4(&vTipLook, XMLoadFloat4((_float4*)&m_pWandTipMatrix.m[2][0]));
+		XMStoreFloat4(&vTipPos, XMLoadFloat4((_float4*)&m_pWandTipMatrix.m[3][0]));
 
-	GUI::Text("vPos, %.2f, %.2f, %.2f, %.2f", vPos.x, vPos.y, vPos.z, vPos.w);
-	GUI::Text("vTipWorldPos, %.2f, %.2f, %.2f, %.2f", vTipWorldPos.x, vTipWorldPos.y, vTipWorldPos.z, vTipWorldPos.w);
-	GUI::Text("vTipRight, %.2f, %.2f, %.2f, %.2f", vTipRight.x, vTipRight.y, vTipRight.z, vTipRight.w);
-	GUI::Text("vTipUp, %.2f, %.2f, %.2f, %.2f", vTipUp.x, vTipUp.y, vTipUp.z, vTipUp.w);
-	GUI::Text("vTipLook, %.2f, %.2f, %.2f, %.2f", vTipLook.x, vTipLook.y, vTipLook.z, vTipLook.w);
-	GUI::Text("vTipPos, %.2f, %.2f, %.2f, %.2f", vTipPos.x, vTipPos.y, vTipPos.z, vTipPos.w);
+		GUI::Text("vPos, %.2f, %.2f, %.2f, %.2f", vPos.x, vPos.y, vPos.z, vPos.w);
+		GUI::Text("vTipWorldPos, %.2f, %.2f, %.2f, %.2f", vTipWorldPos.x, vTipWorldPos.y, vTipWorldPos.z, vTipWorldPos.w);
+		GUI::Text("vTipRight, %.2f, %.2f, %.2f, %.2f", vTipRight.x, vTipRight.y, vTipRight.z, vTipRight.w);
+		GUI::Text("vTipUp, %.2f, %.2f, %.2f, %.2f", vTipUp.x, vTipUp.y, vTipUp.z, vTipUp.w);
+		GUI::Text("vTipLook, %.2f, %.2f, %.2f, %.2f", vTipLook.x, vTipLook.y, vTipLook.z, vTipLook.w);
+		GUI::Text("vTipPos, %.2f, %.2f, %.2f, %.2f", vTipPos.x, vTipPos.y, vTipPos.z, vTipPos.w);
+	}
+	GUI::End();
 }
 
 #endif // _DEBUG

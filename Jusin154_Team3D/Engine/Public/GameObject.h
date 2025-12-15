@@ -20,7 +20,7 @@ public:
 	virtual void Late_Update(_float fTimeDelta);
 
 	virtual HRESULT Render();
-	virtual HRESULT Render_Shadow() { return S_OK; }
+	virtual HRESULT Render_Shadow(SHADOW eType) { return S_OK; }
 	virtual HRESULT Render_Blur() { return S_OK; }
 	virtual HRESULT Render_Bloom() { return S_OK; }
 	virtual HRESULT Render_OutLine() { return S_OK; }
@@ -107,7 +107,10 @@ protected:
 	_float	m_fCamDepth = { FLT_MAX };
 	_bool	m_bDead = { false };
 	_bool   m_bVisible = { true };
+	_bool   m_bCloned = { false };
+	_ubyte	m_iShadow = { 0 };
 protected:
+	void Set_Shadow(pair<_bool, _ubyte> shadowResult);
 	virtual HRESULT		Bind_ShaderResources()PURE;
 	virtual HRESULT		Ready_Components(void* pArg);
 public:

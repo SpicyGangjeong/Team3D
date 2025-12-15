@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "Camera_Gaze.h"
+#include "InfoInstance.h"
 
 CCamera_Gaze::CCamera_Gaze(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCamera(pDevice, pContext)
@@ -7,7 +8,8 @@ CCamera_Gaze::CCamera_Gaze(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CCamera_Gaze::CCamera_Gaze(const CCamera_Gaze& rhs)
-	: CCamera(rhs)
+	: CCamera(rhs),
+	m_pInfoInstance(CInfoInstance::GetInstance())
 {
 }
 
@@ -18,14 +20,16 @@ void CCamera_Gaze::Priority_Update(_float fTimeDelta)
 	}
 	if (false == m_bIsCurrentTransition) {
 		if (m_bEnable_FollowLerp) {
-			_vector vNewPos = XMVectorSetW(XMVectorLerp(XMLoadFloat3(&m_vFollowPos_Src), XMLoadFloat3(&m_vFollowPos_Dest), m_vFollowLerpTime.x / m_vFollowLerpTime.y), 1.f);
+			_float fTimeDenom = max(m_vFollowLerpTime.y, FLT_EPSILON);
+			_vector vNewPos = XMVectorSetW(XMVectorLerp(XMLoadFloat3(&m_vFollowPos_Src), XMLoadFloat3(&m_vFollowPos_Dest), CMyTools::Saturate(m_vFollowLerpTime.x / fTimeDenom)), 1.f);
 			m_pTransformCom->Set_State(STATE::POSITION, vNewPos);
 		}
 		else {
 			m_pTransformCom->Set_State(STATE::POSITION, m_pFollowTarget->Get_Component<CTransform>()->Get_State(STATE::POSITION));
 		}
 		if (m_bEnable_LookLerp) {
-			_vector vNewLook = XMVectorSetW(XMVectorLerp(XMLoadFloat3(&m_vLookPos_Src), XMLoadFloat3(&m_vLookPos_Dest), m_vLookLerpTime.x / m_vLookLerpTime.y), 1.f);
+			_float fTimeDenom = max(m_vLookLerpTime.y, FLT_EPSILON);
+			_vector vNewLook = XMVectorSetW(XMVectorLerp(XMLoadFloat3(&m_vLookPos_Src), XMLoadFloat3(&m_vLookPos_Dest), CMyTools::Saturate(m_vLookLerpTime.x / fTimeDenom)), 1.f);
 			m_pTransformCom->LookAt(vNewLook);
 		}
 		else {
@@ -41,7 +45,6 @@ void CCamera_Gaze::Priority_Update(_float fTimeDelta)
 
 void CCamera_Gaze::Update(_float fTimeDelta)
 {
-	GUI::Text("CAM_GAZE_PRIORITY : %d", m_iPriority);
 	if (false == m_bActive) {
 		return;
 	}
@@ -81,23 +84,27 @@ void CCamera_Gaze::Enable_FollowLerp()
 {
 	m_bEnable_FollowLerp = true;
 	m_vFollowLerpTime.x = 0.f;
-	XMStoreFloat3(&m_vFollowPos_Src, m_pFollowTarget->Get_WorldPostion());
+
+	XMStoreFloat3(&m_vFollowPos_Src, m_pTransformCom->Get_State(STATE::POSITION));
+	XMStoreFloat3(&m_vFollowPos_Dest, m_pFollowTarget->Get_WorldPostion());
 }
 
 void CCamera_Gaze::Enable_LookLerp()
 {
 	m_bEnable_LookLerp = true;
 	m_vLookLerpTime.x = 0.f;
-	XMStoreFloat3(&m_vLookPos_Src, m_pLookTarget->Get_WorldPostion());
+	_vector vLookTargetPos = m_pLookTarget->Get_WorldPostion();
+	XMStoreFloat3(&m_vLookPos_Src, vLookTargetPos);
+	XMStoreFloat3(&m_vLookPos_Dest, vLookTargetPos);
 }
 
 void CCamera_Gaze::Toggle_Priority()
 {
-	if (m_iPriority == 99) {
+	if (m_iPriority == 55) {
 		m_iPriority = 51;
 	}
 	else {
-		m_iPriority = 99;
+		m_iPriority = 55;
 		m_pGameInstance->Bind_Camera(g_iStaticLevel, CAMERA_SHOULDER, false);
 	}
 }
@@ -126,6 +133,8 @@ HRESULT CCamera_Gaze::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg))) {
 		return E_FAIL;
 	}
+	m_pTransformCom->Set_State(STATE::POSITION, m_pFollowTarget->Get_WorldPostion());
+	m_pTransformCom->LookAt(m_pLookTarget->Get_WorldPostion());
 
 	return S_OK;
 }
@@ -173,30 +182,32 @@ void CCamera_Gaze::Free()
 
 void CCamera_Gaze::Describe_Entity()
 {
-	GUI::Begin("Camera_Gaze_Describe");
-	m_pTransformCom->Describe_Entity();
-	GUI::Text("LOOK_SRC %.2f, %.2f, %.2f", m_vLookPos_Src.x, m_vLookPos_Src.y, m_vLookPos_Src.z);
-	GUI::Text("LOOK_DST %.2f, %.2f, %.2f", m_vLookPos_Dest.x, m_vLookPos_Dest.y, m_vLookPos_Dest.z);
-	GUI::Text("FOLLOW_SRC %.2f, %.2f, %.2f", m_vFollowPos_Src.x, m_vFollowPos_Src.y, m_vFollowPos_Src.z);
-	GUI::Text("FOLLOW_DST %.2f, %.2f, %.2f", m_vFollowPos_Dest.x, m_vFollowPos_Dest.y, m_vFollowPos_Dest.z);
-	GUI::Checkbox("TransitionLerp", &m_bEnable_TransitionLerp);
-	if (true == m_bEnable_TransitionLerp) {
-		GUI::SameLine(); GUI::Text("Translation : %.1f %.1f", m_vTransitionTime.x, m_vTransitionTime.y);
-		GUI::SliderFloat("TranslationTime", &m_vTransitionTime.y, 0.1f, 3.f, "%.1f");
-	}
+	GUI::Begin("CAMERA", 0, IMGUI_GLOBAL_BEGIN_FLAG);
+	if (GUI::CollapsingHeader("Camera_Gaze_Describe")) {
+		m_pTransformCom->Describe_Entity();
+		GUI::Text("LOOK_SRC %.2f, %.2f, %.2f", m_vLookPos_Src.x, m_vLookPos_Src.y, m_vLookPos_Src.z);
+		GUI::Text("LOOK_DST %.2f, %.2f, %.2f", m_vLookPos_Dest.x, m_vLookPos_Dest.y, m_vLookPos_Dest.z);
+		GUI::Text("FOLLOW_SRC %.2f, %.2f, %.2f", m_vFollowPos_Src.x, m_vFollowPos_Src.y, m_vFollowPos_Src.z);
+		GUI::Text("FOLLOW_DST %.2f, %.2f, %.2f", m_vFollowPos_Dest.x, m_vFollowPos_Dest.y, m_vFollowPos_Dest.z);
+		GUI::Checkbox("TransitionLerp", &m_bEnable_TransitionLerp);
+		if (true == m_bEnable_TransitionLerp) {
+			GUI::SameLine(); GUI::Text("Translation : %.1f %.1f", m_vTransitionTime.x, m_vTransitionTime.y);
+			GUI::SliderFloat("TranslationTime", &m_vTransitionTime.y, 0.1f, 3.f, "%.1f");
+		}
 
-	GUI::Checkbox("LookLerp", &m_bEnable_LookLerp);
-	if (true == m_bEnable_LookLerp) {
-		GUI::SameLine(); GUI::Text("Translation : %.1f %.1f", m_vLookLerpTime.x, m_vLookLerpTime.y);
-		GUI::SliderFloat("LookTime", &m_vLookLerpTime.y, 0.1f, 3.f, "%.1f");
-	}
+		GUI::Checkbox("LookLerp", &m_bEnable_LookLerp);
+		if (true == m_bEnable_LookLerp) {
+			GUI::SameLine(); GUI::Text("Translation : %.1f %.1f", m_vLookLerpTime.x, m_vLookLerpTime.y);
+			GUI::SliderFloat("LookTime", &m_vLookLerpTime.y, 0.1f, 3.f, "%.1f");
+		}
 
-	GUI::Checkbox("FollowLerp", &m_bEnable_FollowLerp);
-	if (true == m_bEnable_FollowLerp) {
-		GUI::SameLine(); GUI::Text("Translation : %.1f %.1f", m_vFollowLerpTime.x, m_vFollowLerpTime.y);
-		GUI::SliderFloat("FollowTime", &m_vFollowLerpTime.y, 0.1f, 3.f, "%.1f");
-	}
+		GUI::Checkbox("FollowLerp", &m_bEnable_FollowLerp);
+		if (true == m_bEnable_FollowLerp) {
+			GUI::SameLine(); GUI::Text("Translation : %.1f %.1f", m_vFollowLerpTime.x, m_vFollowLerpTime.y);
+			GUI::SliderFloat("FollowTime", &m_vFollowLerpTime.y, 0.1f, 3.f, "%.1f");
+		}
 
+	}
 	GUI::End();
 }
 

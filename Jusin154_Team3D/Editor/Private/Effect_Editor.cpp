@@ -6,7 +6,8 @@
 #include "TrailObject.h"
 #include "EffectPool.h"
 #include "Layer.h"
-
+#include "Player.h"
+#include "Wand.h"
 
 #include <sstream>
 
@@ -25,7 +26,7 @@ CEffect_Editor::CEffect_Editor(const CEffect_Editor& rhs)
 HRESULT CEffect_Editor::Initialize_Prototype()
 {
 
-	ReadMaterials("../Bin/Resources/VFX/Particles/Magic/Glacius");
+	ReadMaterials("../Bin/Resources/VFX/Particles/Magic/Levioso");
 
 
 	for (auto iter : m_MatFiles)
@@ -73,6 +74,26 @@ void CEffect_Editor::Update(_float fTimeDelta)
 	Describe_Entity();
 	__super::Update(fTimeDelta);
 
+	/* 트레일 업데이트 */
+
+	if (m_isWandPos == true)
+	{
+		if (m_pTrailObject != nullptr)
+		{
+			_matrix vWandPos = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_PLAYER)->Get_Object<CPlayer>()->Get_PartObject<CWand>()->Get_WorldMatrix();
+
+			m_pTrailObject->Rope_Trail_Update(vWandPos, m_pTransformCom->Get_XMWorldMatrix(), fTimeDelta);
+		}
+
+
+	}
+	else
+	{
+		if (m_pTrailObject != nullptr)
+			m_pTrailObject->Trail_Update(m_pTransformCom->Get_XMWorldMatrix(), fTimeDelta);
+	}
+
+
 	if (m_pGameInstance->Key_Pressing(DIK_UP))
 		m_pTransformCom->Go_Straight(fTimeDelta);
 	if (m_pGameInstance->Key_Pressing(DIK_DOWN))
@@ -87,11 +108,6 @@ void CEffect_Editor::Update(_float fTimeDelta)
 
 	/* 이펙트 컨테이너 업데이트 */
 	//Update_Event(fTimeDelta);
-
-	/* 트레일 업데이트 */
-	if (m_pTrailObject != nullptr)
-		m_pTrailObject->Trail_Update(m_pTransformCom->Get_XMWorldMatrix(), fTimeDelta);
-
 }
 
 void CEffect_Editor::Late_Update(_float fTimeDelta)
@@ -542,6 +558,7 @@ void CEffect_Editor::Describe_Entity()
 	if (m_pTrailObject != nullptr)
 	{
 		m_pTrailObject->Describe_Entity();
+		GUI::Checkbox("TRAIL WAND POS", &m_isWandPos);
 	}
 
 	ImGui::End();

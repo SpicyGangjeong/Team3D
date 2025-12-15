@@ -306,10 +306,41 @@ HRESULT CEffect_Container::Load_Package(const _char* pPath)
 	return S_OK;
 }
 
-HRESULT CEffect_Container::Pre_Setting(CGameObject* pObject)
+HRESULT CEffect_Container::Pre_Setting(CGameObject* pObject, void* pArg)
 {
+	if (pObject == nullptr)
+		return E_FAIL;
+
+	m_pOwner = pObject;
+
+
+	Reset_EditEffect();
+	Reset_Light();
+
+	m_fAccTime = 0.f;
+	m_fPreAccTime = 0.f;
+
+	m_bVisible = true;
+	m_isCollisionEnter = false;
+	m_bHit = false;
+
 	return S_OK;
 }
+
+void CEffect_Container::Reset_Light()
+{
+	for (auto& iter : m_PartObjects)
+	{
+		CLight* pLight = iter.second->Get_Component<CLight>();
+
+		if (pLight == nullptr)
+			continue;
+
+		pLight->Reset_IntensityRatio();
+	}
+
+}
+
 
 HRESULT CEffect_Container::Ready_Components(void* pArg)
 {
@@ -343,7 +374,7 @@ HRESULT CEffect_Container::Bind_ShaderResources()
 	return S_OK;
 }
 
-HRESULT CEffect_Container::Reset_EffectParts()
+HRESULT CEffect_Container::Reset_EditEffect()
 {
 	for (auto& iter : m_PartObjects)
 	{
@@ -385,17 +416,12 @@ void CEffect_Container::Update_Event(_float fTimeDelta)
 		else
 		{
 			m_bVisible = false;
-			
+
 			for (auto& pPart : m_PartObjects)
 			{
 				pPart.second->Set_Visible(false);
 			}
 
-			if (m_pPhysHitBox != nullptr && m_pPhysHitBox->isDead() == false )
-			{
-				m_pPhysHitBox->Set_Dead();
-				SAFE_RELEASE(m_pPhysHitBox);
-			}
 		}
 	}
 
@@ -408,5 +434,162 @@ void CEffect_Container::Update_Event(_float fTimeDelta)
 		}
 	}
 	
+
+}
+
+ON_COLLISION_INFO CEffect_Container::SweepTarget(_vector StartPos, _vector EndPos, _float fRadius, _bool isTerrainCollision)
+{
+	_vector vStartPos = StartPos;
+	_vector vEndPos = EndPos;
+	_vector vDir = { vEndPos - vStartPos };
+
+	_float fDistance = XMVectorGetX(XMVector3Length(vEndPos - vStartPos));
+
+	PSX::PxSweepBuffer pxBuffer = {};
+
+	_bool bHit = m_pGameInstance->SphereCast(fRadius, vStartPos, vDir, fDistance, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eDYNAMIC, pxBuffer);
+
+	const PSX::PxSweepHit& hit = pxBuffer.block;
+	PSX::PxRigidActor* pActor = hit.actor;
+	PSX::PxShape* pShape = hit.shape;
+	ON_COLLISION_INFO tagCollInfo = {};
+
+	tagCollInfo.vWorldPos.w = 1.f;
+
+	if (bHit) {
+
+		memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &hit.position, sizeof(hit.position));
+
+		memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &hit.normal, sizeof(hit.normal));
+		XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
+		tagCollInfo.fLength = fDistance;
+
+
+		if (nullptr != pActor && nullptr != pActor->userData)
+		{
+			PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+			tagCollInfo.pObject = pUserData->pOwner;
+
+			switch (pUserData->eKind)
+			{
+			case PHYSX_KIND::CCTActor:
+			{
+				switch (PXOBJECT(pUserData->iSubKind))
+				{
+				case PXOBJECT::MONSTER:
+					break;
+				case PXOBJECT::GOBLIN_WARRIOR:
+				{
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					m_bHit = true;
+				}
+				break;
+				case PXOBJECT::GOBLIN_MAGICIAN:
+				{
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					m_bHit = true;
+				}
+				break;
+				case PXOBJECT::TROLL:
+				{
+					pUserData->pOwner->OnCollision(this, &tagCollInfo);
+					m_bHit = true;
+				}
+				break;
+				}
+			}
+			}
+		}
+
+		if (isTerrainCollision == true && bHit == false)
+		{
+			memcpy_s(&tagCollInfo.vWorldPos, sizeof(tagCollInfo.vWorldPos), &hit.position, sizeof(hit.position));
+			memcpy_s(&tagCollInfo.vWorldNomal, sizeof(tagCollInfo.vWorldNomal), &hit.normal, sizeof(hit.normal));
+			XMStoreFloat4(&tagCollInfo.vHitDir, vDir);
+			tagCollInfo.fLength = fDistance;
+			tagCollInfo.pObject = m_pOwner->Get_Owner();
+
+			bHit = m_pGameInstance->SphereCast(fRadius, vStartPos, vDir, fDistance, PSX::PxHitFlag::ePOSITION | PSX::PxHitFlag::eNORMAL, PSX::PxQueryFlag::eSTATIC, pxBuffer);
+
+			PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+			tagCollInfo.pObject = pUserData->pOwner;
+
+			switch (pUserData->eKind)
+			{
+			case PHYSX_KIND::CCTActor:
+			{
+				switch (PXOBJECT(pUserData->iSubKind))
+				{
+				case PXOBJECT::TERRAIN:
+				{
+
+					bHit = true;
+					break;
+				}
+				}
+			}
+			}
+		}
+	}
+
+	return tagCollInfo;
+}
+
+
+_int CEffect_Container::CollisionCheck()
+{
+	_bool bIsCollide = { false };
+
+	// 건드린 친구들 순서대로 다 가져옴 ( 정렬은 안되어있음 )
+	for (PSX::PxU32 i = 0; i < m_Hitbuffer.nbTouches; ++i)
+	{
+		const PSX::PxSweepHit& Hit = m_Hitbuffer.touches[i];
+		/* 기타 로직 */
+
+		PSX::PxRigidActor* pActor = Hit.actor;
+		PSX::PxShape* pShape = Hit.shape;
+
+		if (nullptr != pActor && nullptr != pActor->userData) {
+
+			PhsXUserData* pUserData = static_cast<PhsXUserData*>(pActor->userData);
+
+			if (pUserData->iSubKind >= UINT_MAX - 1) {
+				continue;
+			}
+
+			switch (PXOBJECT(pUserData->eKind))
+			{
+			case PXOBJECT::PLAYER:
+				continue;
+			case PXOBJECT::MONSTER:
+			case PXOBJECT::GOBLIN_WARRIOR:
+			case PXOBJECT::TROLL:
+			case PXOBJECT::WALL:
+
+			{
+				return i;
+			}
+			break;
+			default:
+				break;
+			}
+
+			switch (pUserData->eKind)
+			{
+			case PHYSX_KIND::BODY_STATIC:
+			case PHYSX_KIND::BODY_DYNAMIC:
+			{
+				return i;
+			}
+			break;
+			case PHYSX_KIND::CCTActor:
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	return -1;
 
 }

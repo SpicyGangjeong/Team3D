@@ -30,9 +30,13 @@ float ShadowVisibility_hwPCF(Texture2D ShadowMap, float4 vLightClip, float2 vSha
         for (int u = -1; u <= 1; ++u)
         {
             float2 vOffset = float2(u, v) * vTexel;
-            float fDepth = ShadowMap.Sample(DefaultSampler, uv + vOffset).x;
+            float fDepth = ShadowMap.Sample(BorderOneSampler, uv + vOffset).x;
             fVisibility += (fDepthCenter - bias > fDepth) ? 0.f : 1.f;
         }
+    }
+    if (abs(fVisibility - 9.f) < FLT_EPSILON3)
+    {
+        fVisibility = 9.f;
     }
     return fVisibility / 9.f;
 }
@@ -147,20 +151,21 @@ float3 Fresnel_Schlick(float cosTheta, float3 F0)
 PBR_LIGHT_OUT PBR_Lighting(
     float3 vNormal, float3 vToView, float3 vToLight,
     float3 vAlbedo, float fMetallic, float fRoughness,
-    float3 vLightColor, float fAttenuation, float3 vFO
+    float3 vLightColor, float fLightIntensity, float fAttenuation, float3 vFO
 ) {
     PBR_LIGHT_OUT Out;
     Out.vShade = 0;
     Out.vSpecular = 0;
+    float3 vLighting = vLightColor * fLightIntensity;
     
     float3 vHalfVector = normalize(vToView + vToLight);
     float NdotL = saturate(dot(vNormal, vToLight));
     float NdotV = saturate(dot(vNormal, vToView));
     if (NdotL <= 0 || NdotV <= 0)
     {
-        return Out;
         Out.vShade = 0;
         Out.vSpecular = 0;
+        return Out;
     }
     
     float fAlpha = max(fRoughness * fRoughness, 0.04f);
@@ -177,10 +182,11 @@ PBR_LIGHT_OUT PBR_Lighting(
     float3 kS = F;
     float3 kD = (1.f - kS) * (1.f -fMetallic);
     
-    //Out.vShade = float(1.f, 1.f, 1. 1.f);
-    Out.vShade = (kD / PI) * (NdotL * fAttenuation) * vLightColor;
+    float3 vDiffuseBRDF = (kD * vAlbedo) / PI;
     
-    Out.vSpecular = specularBRDF * vLightColor * fAttenuation * NdotL;
+    Out.vShade = vDiffuseBRDF * vLighting * NdotL * fAttenuation;
+    
+    Out.vSpecular = specularBRDF * vLighting * NdotL * fAttenuation;
 
     return Out;
 }
@@ -283,7 +289,7 @@ float4x4 RotateAxis(float4 _vAxis , float fAngle)
         );
     }
     
-    float3 vAxis = normalize(_vAxis);
+    float3 vAxis = normalize(_vAxis).xyz;
     
     float fCos = cos(radians(fAngle));
     float fSin = sin(radians(fAngle));
@@ -320,13 +326,13 @@ float2 SelectLerpUV(float2 fAmount, float _fRatio, int iSelectOption)
             fRatio = fRatio * fRatio; // EaseInQuad 후반에 속도 증가
             break;
         case 2:
-            fRatio = 1 - (1 - fRatio * fRatio); // EaseOutQuad 초반에 속도 증가
+            fRatio = pow(1 - fRatio, 2); // EaseOutQuad 초반에 속도 증가
             break;
         case 3:
             fRatio = fRatio * fRatio * fRatio; // EaseInCubic  더 강하게 후반 속도 증가
             break;
         case 4:
-            fRatio = 1 - (1 - fRatio * fRatio * fRatio); // EaseOutCubic 더 강하게 초반 속도 증가
+            fRatio = pow(1 - fRatio, 3); // EaseOutCubic 더 강하게 초반 속도 증가
             break;
         case 5:
             fRatio = 0.5f * (1 - cos(PI * fRatio)); // EaseInOutSin 사인 곡선 
@@ -337,13 +343,104 @@ float2 SelectLerpUV(float2 fAmount, float _fRatio, int iSelectOption)
         case 7:
             fRatio = pow(2, 10 * (fRatio - 1)); // Expo 지수 함수
             break;
-        case 8:
-            fRatio = 1 - pow(1 - fRatio * fRatio, 0.5); // 원형 궤적     
-            break;
+
     }
     
     return fAmount * fRatio;
+}
 
+float3 ReinHard_ToneMapper(float3 vColor)
+{
+    float k = 1.f;
+    vColor = (vColor / (vColor + k));
+    return pow(vColor, 1.f / 2.2f);
+}
+
+float3 Filmic_ToneMapper(float3 vColor)
+{
+    const float fA = 2.51f;
+    const float fB = 0.03f;
+    const float fC = 2.43f;
+    const float fD = 0.59f;
+    const float fE = 0.14f;
+
+    vColor = saturate(
+        vColor * (fA * vColor + fB)
+        / (vColor * (fC * vColor + fD) + fE)
+    );
+    
+    return pow(vColor, 1.f / 2.2f);
+}
+
+
+float4 ApplyDissolve(Texture2D DisolveTexture, float fDisolveRatio, float fDisolveAmount, float fDisolveEdgeWidth, float4 vDisolveEdgeColor,  float4 vMtrlDiffuse, float2 vTexcoord)
+{
+    float4 vDisolve = DisolveTexture.Sample(DefaultSampler, vTexcoord);
+    float fDisolveValue = vDisolve.r;
+    
+    float fDisolveThreshold = saturate(fDisolveRatio + fDisolveAmount);
+
+    clip(fDisolveValue - fDisolveThreshold); // 진짜 잘려나감
+    
+    float edgeWidth = max(fDisolveEdgeWidth, FLT_EPSILON5); // 불타는 라인
+    float edgeFactor = smoothstep(fDisolveThreshold, fDisolveThreshold + edgeWidth, fDisolveValue);
+
+    vMtrlDiffuse.rgb = lerp(vDisolveEdgeColor.rgb, vMtrlDiffuse.rgb, edgeFactor);
+
+    return vMtrlDiffuse;
+}
+
+bool IsValidUV(float2 uv)
+{
+    if (uv.x < 0 || uv.x >= 1
+    || uv.y < 0 || uv.y >= 1)
+    {
+        return false;
+    }
+    return true;
+}
+
+float4 BilinearFetches(float2 vGlobalTexelSize, Texture2D SrcTexture2D, float2 vCenterTexCoord, sampler samplerLinear)
+{
+    float2 uv = vCenterTexCoord;
+    float2 vSrcTexelSize = float2(1.f/vGlobalTexelSize.x, 1.f/vGlobalTexelSize.y);
+    float fWeight = 0.f;
+    
+    float3 vCenterColor = float3(0.f, 0.f, 0.f);
+    float3 fLTColor = float3(0.f, 0.f, 0.f);
+    float3 fRTColor = float3(0.f, 0.f, 0.f);
+    float3 fLBColor = float3(0.f, 0.f, 0.f);
+    float3 fRBColor = float3(0.f, 0.f, 0.f);
+    {
+        if (true == IsValidUV(uv)) {
+            vCenterColor = SrcTexture2D.SampleLevel(samplerLinear, uv, 0).rgb;
+            fWeight += 0.5f;
+        }
+        uv = vCenterTexCoord + vSrcTexelSize * float2(-1.0, -1.0);
+        if (true == IsValidUV(uv)) {
+            fLTColor = SrcTexture2D.SampleLevel(samplerLinear, uv, 0).rgb;
+            fWeight += 0.125f;
+        }
+        uv = vCenterTexCoord + vSrcTexelSize * float2(+1.0, -1.0);
+        if (true == IsValidUV(uv)) {
+            fRTColor = SrcTexture2D.SampleLevel(samplerLinear, uv, 0).rgb;
+            fWeight += 0.125f;
+        }
+        uv = vCenterTexCoord + vSrcTexelSize * float2(-1.0, +1.0);
+        if (true == IsValidUV(uv)) {
+            fLBColor = SrcTexture2D.SampleLevel(samplerLinear, uv, 0).rgb;
+            fWeight += 0.125f;
+        }
+        uv = vCenterTexCoord + vSrcTexelSize * float2(+1.0, +1.0);
+        if (true == IsValidUV(uv)) {
+            fRBColor = SrcTexture2D.SampleLevel(samplerLinear, uv, 0).rgb;
+            fWeight += 0.125f;
+        }
+    }
+
+    float3 vFilteredColor = (vCenterColor * 0.5 + (fLTColor + fRTColor + fLBColor + fRBColor) * 0.125) / fWeight;
+
+    return float4(vFilteredColor, 1.0);
 }
 
 #endif // ENGINE_SHADER_FUNCTIONS_HLSLI

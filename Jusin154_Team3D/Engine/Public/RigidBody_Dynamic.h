@@ -29,21 +29,30 @@ private:
 
 public:
 #ifdef _DEBUG
+	_float3 Get_LocalTranslation() {return m_vLocalTranslation;	}
 	virtual HRESULT Render()override;
 #endif // _DEBUG
 
 	virtual PSX::PxRigidDynamic* Get_Actor()		override { return m_pRigidBody; };
 	_float3					Get_HalfGeometryInfo()	const { return m_vhalfGeometryInfo; }
+	void					Set_HalfGeometryInfo(_float3 vhalfGeometryInfo);
+	void					Move_LocalPos(_float4 vNewRotQ, _float3 vNewTranslation);
 	_float					Get_Density()			const { return m_fDensity; }
+	_float					Get_Mass();
 
 	virtual void			Add_Force(_fvector vForce, PSX::PxForceMode::Enum eType = PSX::PxForceMode::Enum::eFORCE); // 속도 + 방향
 	virtual void			Add_Torque(_fvector vDirection, PSX::PxForceMode::Enum eType = PSX::PxForceMode::Enum::eFORCE); // 방향 ( 회전축은 MassCenter )
 	void					Set_Kinematic(_bool bKinematic);
 
 	HRESULT					ConvertToCCT(class CCharacter_Controller& CCTOriginal);
+	void					Detach_Actor();
 	_bool					IsActive() const { return m_bActive; }
 	void					SetActive(_bool bCondition) { m_bActive = bCondition; }
 
+	_vector					Get_Position();
+	_float3					Get_FootPosition();
+	_float3					Get_HeadPosition();
+	PSX::PxTransform		Get_FootPositionPxTransform();
 private:
 	PSX::PxRigidDynamic*	m_pRigidBody = { nullptr };		// 실제 시뮬레이션을 도는 본체
 	PSX::PxRigidDynamicLockFlags m_eLockFlag = { };

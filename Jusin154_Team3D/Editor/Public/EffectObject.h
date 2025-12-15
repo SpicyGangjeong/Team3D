@@ -52,6 +52,126 @@ public:
 		_bool   isBlur = {};
 		_bool   isBillboard = {};
 	
+		_float4 vEmissive = { 0.f ,0.f ,0.f ,0.f };
+		_float  fDiffuseAlpha = { 1.f };
+		_float  fBlurIntensity = {};
+		_float  fNoiseDistortionIntensity = {};
+		_float  fEmissiveStrength = { 0.f };
+
+		LIGHT_DESC	LightDesc = {};
+		RENDER		eRenderOrder = { RENDER::EFFECT };
+
+		_bool   isReverseDissolve = {};
+
+		EFFECT_TYPE eEffectType = { EFFECT_TYPE::EFFECT };
+
+		_bool   isEmissiveDissolve = { false };
+
+		_bool   isMaskClampSample = { false };
+		_bool   isNoiseColor = { false };
+		_bool   isNoiseAlpha = { false };
+		_bool	isNomalDissolve = {};
+
+		_float fSoftenExp = { 1.31429f };
+		_float fSoftStrength = {};
+		_float fCoreBoost = {};
+		_float fRadius = {};
+
+		_float fSoftMaskEdge = {};
+		_float fSoftMask = {};
+
+		_bool   isEmissiveDissolveReverse = { false };
+		_bool   isOnlyBlur = { false };
+
+		SHADER_PASS_INSTANCE_MODEL eShaderPass = { SHADER_PASS_INSTANCE_MODEL::NON_NOMALMAP };
+
+		_bool       isBlurNoEmissive = {};
+		_bool	    isTexBlur = {};
+		_bool       isBlurDissolve = {};
+		_bool       isBlurReverseDissolve = {};
+
+		_float      fBluringStrength = {0.01f};
+
+		_bool       isBloom = {};
+		_bool       isBloomDissolve = {};
+		_bool       isBloomReverseDissolve = {};
+		_float      fBloomStrength = {};
+		BLOOM_TYPE  eBloomType = {};
+
+
+		_float		fDissolveDelay = {};
+		_float		fReverseDissolveDelay = {};
+		_float2		vDissolveUVGainAmount = {};
+		_bool		isDissolveMove = {};
+
+		_float3		vDissolveValue = {};
+
+
+		_float2		vPadding0 = {};
+
+		_float      fLightDeley = {};
+		_float		fLightIntensity = {};
+		_float		isLightTime = { 0.f };
+		_bool		isLightDissolve = {};
+
+		_bool		isPadding0 = {};
+
+		_float4     vDissolveColor = {};
+		_float2     vDissolveColorCut = {};
+
+		_float		fEmissiveColorCut = {};
+
+		_float      fRimLightPower = {};
+		_float      fRimLightStrength = {};
+
+		_float4     vNoiseColor = {};
+		_float4     vRimLightColor = {};
+
+		_float4     vPadding4 = {};
+		_float4     vPadding5 = {};
+
+		_bool		isRimLight = {};
+		_bool		isPadding2 = {};
+		_bool		isPadding3 = {};
+		_bool		isPadding4 = {};
+
+	}EFFECT_INFO;
+
+	typedef struct tagPreEffectInfo
+	{
+		_float4 vColor = { 0.f ,0.f ,0.f ,1.f };
+
+		_float2 vDiffuseUVGainAmount = {};
+		_float2 vMaskingUVGainAmount = {};
+		_float2 vNoiseUVGainAmount = {};
+
+		_float2 vDistortionTime = {};
+		_float2 vMaskDistortionUVGainAmount = {};
+
+		_float2 vUVCutting = { 1.f ,1.f };
+		_float2 vUVMaskCutting = { 1.f ,1.f };
+
+		_int    iMaskMoveLerpOption = { 0 };
+		_int    iDiffuseMoveLerpOption = { 0 };
+		_int    iNoiseMoveLerpOption = { 0 };
+
+		_int    iMaskDistortionMoveLerpOption = { 0 };
+		_int    iDiffuseDistortionMoveLerpOption = { 0 };
+
+		_int	iBlurWeight = { 0 };
+
+
+		_bool	isDiffuse = {};
+		_bool	isMasking = {};
+		_bool	isDissolve = {};
+		_bool	isNoise = {};
+		_bool   isEmissive = {};
+		_bool   isDistortion = {};
+		_bool	isDiffuseUVMove = {};
+		_bool   isNoiseUVMove = {};
+		_bool	isMaskUVMove = {};
+		_bool   isBlur = {};
+		_bool   isBillboard = {};
 
 		_float4 vEmissive = { 0.f ,0.f ,0.f ,0.f };
 		_float  fDiffuseAlpha = { 1.f };
@@ -86,109 +206,36 @@ public:
 
 		SHADER_PASS_INSTANCE_MODEL eShaderPass = { SHADER_PASS_INSTANCE_MODEL::NON_NOMALMAP };
 
-		_bool   isDiffuseBlur = {};
-		_bool	isMaskBlur = {};
-		_bool   isBlurDissolve = {};
-		_bool   isBlurReverseDissolve = {};
+		_bool       isBlurNoEmissive = {};
+		_bool	    isTexBlur = {};
+		_bool       isBlurDissolve = {};
+		_bool       isBlurReverseDissolve = {};
 
-		_float  fBluringStrength = {0.01f};
+		_float      fBluringStrength = { 0.01f };
 
-
-		_bool   isBloom = {};
-
-		_bool   isBloomDissolve = {};
-		_bool   isBloomReverseDissolve = {};
-
-		_float  fBloomStrength = {};
-		
-		BLOOM_TYPE eBloomType = {};
-
-		
-
-	}EFFECT_INFO;
-
-	typedef struct tagPreEffectInfo
-	{
-		_float4 vColor = { 0.f ,0.f ,0.f ,1.f };
-
-		_float2 vDiffuseUVGainAmount = {};
-		_float2 vMaskingUVGainAmount = {};
-		_float2 vNoiseUVGainAmount = {};
-
-		_float2 vDiffuseDistortionUVGainAmount = {};
-		_float2 vMaskDistortionUVGainAmount = {};
-
-		_float2 vUVCutting = { 1.f ,1.f };
-		_float2 vUVMaskCutting = { 1.f ,1.f };
-
-		_int    iMaskMoveLerpOption = { 0 };
-		_int    iDiffuseMoveLerpOption = { 0 };
-		_int    iNoiseMoveLerpOption = { 0 };
-
-		_int    iMaskDistortionMoveLerpOption = { 0 };
-		_int    iDiffuseDistortionMoveLerpOption = { 0 };
-
-		_int	iBlurWeight = { 0 };
+		_bool       isBloom = {};
+		_bool       isBloomDissolve = {};
+		_bool       isBloomReverseDissolve = {};
+		_float      fBloomStrength = {};
+		BLOOM_TYPE  eBloomType = {};
 
 
-		_bool	isDiffuse = {};
-		_bool	isMasking = {};
-		_bool	isDissolve = {};
-		_bool	isNoise = {};
-		_bool   isEmissive = {};
-		_bool   isDistortion = {};
-		_bool	isDiffuseUVMove = {};
-		_bool   isNoiseUVMove = {};
-		_bool	isMaskUVMove = {};
-		_bool   isBlur = {};
-		_bool   isBillboard = {};
+		_float		fDissolveDelay = {};
+		_float		fReverseDissolveDelay = {};
+		_float2		vDissolveUVGainAmount = {};
+		_bool		isDissolveMove = {};
 
-		_float4 vEmissive = { 0.f ,0.f ,0.f ,0.f };
-		_float  fDiffuseAlpha = { 1.f };
-		_float  fBlurIntensity = {};
-		_float  fNoiseDistortionIntensity = {};
-		_float  fEmissiveStrength = {};
-
-		LIGHT_DESC	LightDesc = {};
-		RENDER		eRenderOrder = { RENDER::EFFECT };
-		_bool   isReverseDissolve = {};
-		EFFECT_TYPE eEffectType = { EFFECT_TYPE::EFFECT };
-		_bool   isEmissiveDissolve = { false };
-		_bool   isMaskClampSample = { false };
-		_bool   isNoiseColor = { false };
-		_bool   isNoiseAlpha = { false };
-		_bool	isNomalDissolve = {};
-
-		_float fSoftenExp = { 1.31429f };
-		_float fSoftStrength = {};
-		_float fCoreBoost = {};
-		_float fRadius = {};
-
-		_float fSoftMaskEdge = {};
-		_float fSoftMask = {};
-
-		_bool   isEmissiveDissolveReverse = { false };
-		_bool   isOnlyBlur = { false };
-
-		SHADER_PASS_INSTANCE_MODEL eShaderPass = { SHADER_PASS_INSTANCE_MODEL::NON_NOMALMAP };
-
-		_bool   isDiffuseBlur = {};
-		_bool	isMaskBlur = {};
-		_bool   isBlurDissolve = {};
-		_bool   isBlurReverseDissolve = {};
-
-		_float  fBluringStrength = { 0.01f };
+		_float3		vDissolveValue = {};
 
 
-		_bool   isBloom = {};
+		_float2		vPadding1 = {};
 
-		_bool   isBloomDissolve = {};
-		_bool   isBloomReverseDissolve = {};
+		_float      fLightDeley = {};
+		_float		fLightIntensity = {};
+		_float		isLightTime = { 0.f };
+		_bool		isLightDissolve = {};
 
-		_float  fBloomStrength = {};
-
-		BLOOM_TYPE eBloomType = {};
-
+		_bool		isPadding1 = {};
 
 	}PRE_EFFECT_INFO;
 
@@ -207,10 +254,7 @@ public:
 public:
 	HRESULT Load(const _char* pFilePath, LEVEL eLevel);
 	HRESULT Load();
-	void	Set_Dissolve(_bool isDissolve)
-	{
-		m_EffectInfo.isDissolve = isDissolve;
-	}
+	void    FollowParants(const _float4x4* pParantsMat);
 public:
 #ifdef _DEBUG
 		HRESULT LoadPre(const _char* pFilePath, LEVEL eLevel);
@@ -236,7 +280,7 @@ protected:
 
 	CInstance_Model* m_pInstance_ModelCom = { nullptr };
 
-
+	const _float4x4* m_pPerentMatrix = { nullptr };
 protected:
 	EFFECT_INFO m_EffectInfo = {};
 	_string		m_strDiffuseName = {};

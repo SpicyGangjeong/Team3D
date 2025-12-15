@@ -327,8 +327,6 @@ void CLevel_ObjectViewer::Show_AnimList()
 					if (GUI::Button(pModel->Get_AnimList(i)))
 					{
 						pModel->Set_AnimationIndex(i);
-						pModel->Set_CurrentTrackPosition(0.f);
-						pModel->Play_Animation(0.f);
 					}
 				}
 			}
@@ -661,8 +659,6 @@ void CLevel_ObjectViewer::Find_Anim()
 			if (GUI::Button(pModel->Get_AnimList(m_iAnimIndex)))
 			{
 				pModel->Set_AnimationIndex(m_iAnimIndex);
-				pModel->Set_CurrentTrackPosition(0.f);
-				pModel->Play_Animation(0.f);
 			}
 		}
 
@@ -677,8 +673,6 @@ void CLevel_ObjectViewer::Find_Anim()
 				if (GUI::Button(pModel->Get_AnimList(i)))
 				{
 					pModel->Set_AnimationIndex(i);
-					pModel->Set_CurrentTrackPosition(0.f);
-					pModel->Play_Animation(0.f);
 				}
 			}
 		}
@@ -761,6 +755,7 @@ HRESULT CLevel_ObjectViewer::Ready_Layer_UI(const _wstring& strLayerTag)
 
 HRESULT CLevel_ObjectViewer::Ready_Layer_Dummy(const _wstring& strLayerTag)
 {
+
 	/*if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CPlayer>(g_iStaticLevel, NEXT_LEVEL, strLayerTag, nullptr, nullptr, &m_Test)))
 		return E_FAIL;*/
 

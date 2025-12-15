@@ -58,6 +58,7 @@ public:
 	void			Set_Position(_fvector vNewPos);	// 순간이동
 	_vector			Get_Position();
 	_vector			Get_FootPosition();				// ContactOffset이 고려된 발바닥 위치( 실제보다 바닥 위치가 더 아래에 위치한다는 뜻 )
+	_vector			Get_HeadPosition();
 
 	PSX::PxControllerCollisionFlags Get_CollisionFlags();
 	void			Resize_Volume(_float fHeight);	// 높이를 수정하고 바닥에 붙임
@@ -80,7 +81,7 @@ private:
 	CTransform*				m_pTransform = { nullptr };	
 	_bool					m_bAutoStepping = { false };
 	_float					m_fGravity = { 0.450f };
-	_float					m_fWalkableSlopeDegree = { 22.f }; // cosf각도, 오르막 경사각 제한. ( 추가설정 필요함 )
+	_float					m_fWalkableSlopeDegree = { 45.f }; // cosf각도, 오르막 경사각 제한. ( 추가설정 필요함 )
 	_float					m_fCurrentSlopeDegree = { 0.f };
 	_int					m_iIsOnGround = { 0 };
 	_float4					m_vAccHeight = { 0.f, 0.16f, 0.f, 0.01f };

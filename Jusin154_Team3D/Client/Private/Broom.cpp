@@ -3,6 +3,7 @@
 
 #include "GameInstance.h"
 #include "InfoInstance.h"
+#include "Unit.h"
 CBroom::CBroom(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUnit(pDevice, pContext)
 {
@@ -43,8 +44,10 @@ HRESULT CBroom::Initialize(void* pArg)
 		m_pFSM->Change_State(FSMSTATE::IDLE);
 	}
 
-
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 10.f, 0.f, 1.f));
+
+	m_pParentUnit = dynamic_cast<CUnit*>(m_pOwner);
+		
 
 	return S_OK;
 }
@@ -58,9 +61,25 @@ void CBroom::Update(_float fTimeDelta)
 {
 	Update_CameraCoordinateSystem();
 
+	if(!m_pParentUnit->IsAI())
+		PlayerInput();
+	else {
+		m_bHoverToggle = m_Input.bHoverToggle;
+		m_bTurbo = m_Input.bTurbo;
+	}
+
+	if (!m_bRide)
+	{
+		m_bHoverToggle = true;
+		m_fSpeed = 0.f;
+
+		m_pFSM->Change_State(FSMSTATE::IDLE);
+	}
+
 	m_pFSM->Update_State(fTimeDelta);
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
+
 
 #ifdef _DEBUG
 	Describe_Entity();
@@ -94,10 +113,9 @@ HRESULT CBroom::Render()
 		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
+		if (FAILED(m_pModelCom->Begin(i, m_pShaderCom))) {
 			return E_FAIL;
 		}
-
 
 		if (FAILED(m_pModelCom->Render(i))) {
 			return E_FAIL;
@@ -124,7 +142,7 @@ HRESULT CBroom::Ready_Components()
 	}
 
 	/* Com_Shader */
-	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_ANIMMESH,
+	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, FX_NPC_PBR_ANIM,
 		reinterpret_cast<CComponent**>(&m_pShaderCom)))) {
 		return E_FAIL;
 	}
@@ -162,6 +180,31 @@ void CBroom::Update_CameraCoordinateSystem()
 	m_pInfoInstance->Update_CameraCoordinateSystem(m_vCameraLookDir, m_vRimLightColor);
 }
 
+
+void CBroom::PlayerInput()
+{
+	m_Input = {};
+
+	m_Input.Z = m_pGameInstance->Key_Pressing(DIK_W) ? 1.f : 0.f;
+
+	m_Input.X = (m_pGameInstance->Key_Pressing(DIK_D) ? 1.f : 0.f)
+		- (m_pGameInstance->Key_Pressing(DIK_A) ? 1.f : 0.f);
+
+	m_Input.Y = (m_pGameInstance->Key_Pressing(DIK_SPACE) ? 1.f : 0.f)
+		- (m_pGameInstance->Key_Pressing(DIK_LCONTROL) ? 1.f : 0.f + m_pGameInstance->Key_Pressing(DIK_N) ? 1.f : 0.f);
+
+	if (m_pGameInstance->Key_Up(DIK_LSHIFT))
+	{
+		m_Input.bHoverToggle = !m_Input.bHoverToggle;
+		m_bHoverToggle = m_Input.bHoverToggle;
+	}
+
+
+	m_Input.bTurbo = m_pGameInstance->Mouse_Pressing(DIM_LBUTTON);
+	m_bTurbo = m_Input.bTurbo;
+}
+
+
 CBroom* CBroom::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CBroom* pInstance = new CBroom(pDevice, pContext);
@@ -196,15 +239,35 @@ void CBroom::Free()
 
 void CBroom::Describe_Entity()
 {
+	GUI::Begin("UNIT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
+	if (GUI::CollapsingHeader("Broom")) {
+		GUI::DragFloat("MaxSpeed", &m_fFlyMaxSpeed, 0.01f);
+		GUI::DragFloat("Speed", &m_fSpeed, 0.01f);
+		GUI::DragFloat("Accle", &m_fAccel, 0.01f);
+		GUI::DragFloat("Decel", &m_fDecel, 0.01f);
 
-	GUI::DragFloat("MaxSpeed", &m_fFlyMaxSpeed, 0.01f);
-	GUI::DragFloat("Speed", &m_fSpeed, 0.01f);
-	GUI::DragFloat("Accle", &m_fAccel, 0.01f);
-	GUI::DragFloat("Decel", &m_fDecel, 0.01f);
+		string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
+		GUI::Text(AnimList.c_str());
+		GUI::Text("AnimIndex %d", m_pModelCom->Get_AnimIndex());
 
-	string AnimList = m_pModelCom->Get_AnimList(m_pModelCom->Get_AnimIndex());
-	GUI::Text(AnimList.c_str());
+		GUI::Text("AnimTrack %.2f", m_pModelCom->Get_CurrentTrackPosition());
+		GUI::Text("AnimRatio %.2f", m_pModelCom->Get_CurrentTrackProgressRatio());
+		_float3 Pos;
+		XMStoreFloat3(&Pos, Get_WorldPostion());
 
+		float Pos3[3] = { Pos.x, Pos.y, Pos.z };
+		GUI::DragFloat3("Pos", Pos3);
+
+
+		_float RotR, RotU, RotL;
+		RotR = XMVectorGetX(m_pTransformCom->Get_State(STATE::RIGHT));
+		RotU = XMVectorGetY(m_pTransformCom->Get_State(STATE::UP));
+		RotL = XMVectorGetZ(m_pTransformCom->Get_State(STATE::LOOK));
+
+		float Rot3[3] = { RotR, RotU,RotL };
+		GUI::DragFloat3("Rot", Rot3);
+	}
+	GUI::End();
 }
 
 #endif // _DEBUG

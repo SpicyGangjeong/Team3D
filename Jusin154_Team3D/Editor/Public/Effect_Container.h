@@ -23,19 +23,27 @@ public:
 public:
 	HRESULT			Load_Directory(const _char* pPath);
 	HRESULT         Load_Package(const _char* pPath);
-	virtual	HRESULT	Pre_Setting(CGameObject* pObject);
+	virtual	HRESULT	Pre_Setting(CGameObject* pObject, void* pArg = nullptr);
+	void			Reset_Light();
+	_uint			Get_SkillType() const { return m_iSkillType; }
 protected:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual HRESULT Ready_Components(void* pArg) override;
 	HRESULT         Ready_Child();
 	HRESULT			Bind_ShaderResources() override;
-	HRESULT			Reset_EffectParts(); 
+	HRESULT			Reset_EditEffect(); 
 
 	void			Update_Event(_float fTimeDelta);
-
+	_int            CollisionCheck();
+	ON_COLLISION_INFO	SweepTarget(_vector StartPos, _vector EndPos, _float fRadius, _bool isTerrainCollision = false);
 protected:
-	class CDummy_PhysXEffectHitBox* m_pPhysHitBox = {};
+
+	_uint							m_iSkillType = ENUM_CLASS(SKILL_TYPE::END);
+	_float4							m_vStartPos = {};
+	_float4							m_vEndPos = {};
+	PSX::PxSweepBufferN<12>			m_Hitbuffer = {};
+	_bool							m_bHit = { false };
 protected:
 	_wstring						m_wstrEffectName = {};
 
@@ -46,9 +54,10 @@ protected:
 	_float							m_fDuration = {};
 	_float							m_fDelay = {};
 	_bool							m_isDelayed = { false };
+	_bool							m_isCollisionEnter = { false };
 
 	map<_float, function<void()>>	m_Events = {};
-
+	LOCKON_INFO						m_Info = {};
 public:
 	virtual void Free() override;
 };

@@ -14,6 +14,7 @@ HRESULT CLight_Manager::Initialize(_uint iNumLevels)
     m_iLevelNumber = iNumLevels;
 
     m_Lights = new list<class CLight*>[m_iLevelNumber];
+    m_FrameLights = new list<class CLight*>[m_iLevelNumber];
 
     return S_OK;
 }
@@ -29,6 +30,16 @@ void CLight_Manager::Add_Light(_uint _iCurrentLevel, CLight* _pLight)
 
 }
 
+void CLight_Manager::Add_Light_Group(_uint _iCurrentLevel, CLight* _pLight)
+{
+    if (nullptr == _pLight)
+        return;
+
+    m_FrameLights[_iCurrentLevel].push_back(_pLight);
+
+    SAFE_ADDREF(_pLight);
+}
+
 void CLight_Manager::Delete_Light(_uint _iCurrentLevel, CLight* _pLight)
 {
     for (auto iter = m_Lights[_iCurrentLevel].begin(); iter != m_Lights[_iCurrentLevel].end();)
@@ -38,7 +49,7 @@ void CLight_Manager::Delete_Light(_uint _iCurrentLevel, CLight* _pLight)
             SAFE_RELEASE(_pLight);
 
             iter = m_Lights[_iCurrentLevel].erase(iter);
-        
+            return;
         }
         else
         {
@@ -81,6 +92,17 @@ HRESULT CLight_Manager::Render_Lights(_uint iCurrentLevel, CShader* pShader, CVI
         pLight->Render(pShader, pVIBuffer);
     }
 
+    for (auto& pLight : m_FrameLights[iCurrentLevel])
+    {
+        pLight->Render(pShader, pVIBuffer);
+        
+        SAFE_RELEASE(pLight);
+
+    }
+
+    m_FrameLights[iCurrentLevel].clear();
+
+
     return S_OK;
 }
 
@@ -114,5 +136,17 @@ void CLight_Manager::Free()
 
     Safe_Delete_Array(m_Lights);
 
+    for (size_t i = 0; i < m_iLevelNumber; i++)
+    {
+        for (auto& Light : m_FrameLights[i])
+        {
+            SAFE_RELEASE(Light);
+        }
+
+        m_FrameLights[i].clear();
+
+    }
+
+    Safe_Delete_Array(m_FrameLights);
 
 }

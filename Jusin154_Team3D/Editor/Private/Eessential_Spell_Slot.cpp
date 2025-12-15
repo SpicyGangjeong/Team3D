@@ -46,6 +46,8 @@ HRESULT CEessential_Spell_Slot::Initialize(void* pArg)
 	m_pVIBufferCom->Set_Cloned(true);
 	m_pVIBufferCom->Set_Pos(-731.f, -300.f, m_fOffSetX, m_fOffSetY, m_iCols);
 	m_pVIBufferCom->Set_Size(m_fSizeX, m_fSizeY);
+	m_fDelayTime = 0.5f;
+	m_iPerSpell_Slot = -1;
 	return S_OK;
 }
 
@@ -167,25 +169,23 @@ void CEessential_Spell_Slot::Hover()
 	fMouse.x -= m_pOwner->Get_WorldPostion().m128_f32[0];
 	fMouse.y -= m_pOwner->Get_WorldPostion().m128_f32[1];
 
-	m_bPrevHover = m_bHover;
-	m_bHover = (m_iSpellType = m_pVIBufferCom->Set_Mouse_Hover(fMouse));
-	if (m_iSpellType != -1)
+
+	m_iSpellType = m_pVIBufferCom->Set_Mouse_Hover(fMouse);
+	CUIObject::HOVER_INFO Info;
+	Info.iSlotID = 1;
+	if (m_iSpellType == -1)
 	{
-		m_bHover = true;
-		if (m_bHover == true && m_bPrevHover == false)
-		{
-			m_iSpellType += ENUM_CLASS(SKILL_TYPE::JAP);
-			static_cast<CUIObject*>(m_pOwner)->Set_SkillType(m_iSpellType);
-		}
+		Info.iHover_Index = -1;
+		static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Hover"), &Info);
+
 	}
+
 	else
 	{
-		m_bHover = false;
-		if (m_bHover == false && m_bPrevHover == true)
-		{
-			static_cast<CUIObject*>(m_pOwner)->Set_SkillType(m_iSpellType);
-		}
-	}
+		Info.iHover_Index = m_iSpellType + ENUM_CLASS(SKILL_TYPE::JAP);
+		static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("Hover"), &Info);
+
+	}	
 
 }
 

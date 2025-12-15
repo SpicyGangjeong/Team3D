@@ -7,6 +7,8 @@ float g_fFar;
 float3 g_vContainerMin;
 float3 g_vContainerMax;
 
+
+
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -74,7 +76,7 @@ technique11 NorTechnique11
     pass BoundingDebugPass
     {
         SetRasterizerState(RS_Nocull);
-        SetDepthStencilState(DSS_None, 0);
+        SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;

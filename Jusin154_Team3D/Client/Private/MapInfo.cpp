@@ -8,6 +8,11 @@
 #include "MapObject_Render.h"
 #include "MapObject_Collision.h"
 #include "MapElement_Light.h"
+#include "MapElement_Interactable.h"
+#include "MapElement_Lake.h"
+#include "MapElement_Door.h"
+#include "MapElement_Chest.h"
+#include "Layer.h"
 
 CMapInfo::CMapInfo()
 {
@@ -15,6 +20,41 @@ CMapInfo::CMapInfo()
 
 void CMapInfo::Update(_float fTimeDelta)
 {
+#ifdef _DEBUG
+	Describe_Entity();
+#endif // _DEBUG
+
+	static _bool s_bConverted = { false };
+	static _bool s_bReadyToCreate = { false };
+
+	if (true != s_bConverted || true != s_bReadyToCreate) {
+		CLayer* pLayer = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_BACKGROUND);
+		if (nullptr == pLayer) {
+			return;
+		}
+		const list<CGameObject*>* pObjects = pLayer->Get_Objects();
+
+		if (false == s_bReadyToCreate) {
+				s_bReadyToCreate = true;
+				list<CGameObject*>::const_iterator iter = pObjects->begin();
+				for (; iter != pObjects->end(); ++iter) {
+					CMapContainer* pContainer = dynamic_cast<CMapContainer*>(*iter);
+					if (nullptr != pContainer) {
+						pContainer->ReadyForPhysX();
+					}
+			}
+		}
+		else if (false == s_bConverted) {
+				s_bConverted = true;
+				list<CGameObject*>::const_iterator iter = pObjects->begin();
+				for (; iter != pObjects->end(); ++iter) {
+					CMapContainer* pContainer = dynamic_cast<CMapContainer*>(*iter);
+					if (nullptr != pContainer) {
+						pContainer->ConvertToPhysX();
+					}
+				}
+		}
+	}
 }
 
 void CMapInfo::Change_Level()
@@ -43,8 +83,9 @@ HRESULT CMapInfo::Load_MapObjects(const _char* pFileName)
 	{
 		const _char* pName = {};
 		_uint iMapContainerType = {};
-		Container->QueryStringAttribute("Name", &pName);
 		Container->QueryUnsignedAttribute("MapContainerType", &iMapContainerType);
+
+		Container->FirstChildElement("MapContainerType")->QueryUnsignedAttribute("type", &iMapContainerType);
 
 		CMapContainer* pContainerObject = nullptr;
 
@@ -214,8 +255,9 @@ HRESULT CMapInfo::Load_MapRenderObjects(tinyxml2::XMLElement* Container, CMapCon
 		Rotation->QueryFloatAttribute("y", &Desc.vRotation.y);
 		Rotation->QueryFloatAttribute("z", &Desc.vRotation.z);
 
-		if (FAILED(pContainerObject->Add_Part<CMapObject_Render>(strKey, g_iStaticLevel, nullptr, &Desc)))
+		if (FAILED(pContainerObject->Add_Part<CMapObject_Render>(strKey, g_iStaticLevel, nullptr, &Desc))){
 			return E_FAIL;
+		}
 #pragma endregion
 	}
 
@@ -263,7 +305,6 @@ HRESULT CMapInfo::Load_MapCollisionObjects(tinyxml2::XMLElement* Container, CMap
 
 		pContainerObject->Add_Collision<CMapObject_Collision>(g_iStaticLevel, &Desc);
 #pragma endregion
-
 	}
 #pragma endregion
 
@@ -274,7 +315,7 @@ HRESULT CMapInfo::Load_LightElements(const _char* pFileName)
 {
 	tinyxml2::XMLDocument xmlDoc;
 
-	string strPath = "../Bin/Resources/Data/Map/" + string(pFileName) + ".xml";
+	string strPath = "../Bin/Resources/Data/Map/Light/" + string(pFileName) + ".xml";
 
 	if ((tinyxml2::XML_SUCCESS != xmlDoc.LoadFile(strPath.c_str())))
 		return E_FAIL;
@@ -351,11 +392,341 @@ HRESULT CMapInfo::Load_LightElements(const _char* pFileName)
 		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Light>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Light"), &Desc)))
 			return E_FAIL;
 	}
-
-	MSG_BOX("Successed to Load File");
-
+#ifndef 기무리
+	//MSG_BOX("Successed to Load File");
+#endif
 
 	return S_OK;
+}
+
+HRESULT CMapInfo::Load_InteractableElements(const _char* pFileName)
+{
+	tinyxml2::XMLDocument xmlDoc;
+
+	string strPath = "../Bin/Resources/Data/Map/Interactable/" + string(pFileName) + ".xml";
+
+	if ((tinyxml2::XML_SUCCESS != xmlDoc.LoadFile(strPath.c_str())))
+		return E_FAIL;
+
+	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("Element_Interactable");
+
+	if (nullptr == root)
+	{
+		MSG_BOX("Failed to Find root");
+		return S_OK;
+	}
+
+	for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
+	{
+		CMapElement_Interactable::ELEMENT_INTERACTABLE_DESC Desc = {};
+
+		/* Model Prototypes */
+		Object->QueryUnsignedAttribute("Lod_Level", &Desc.iMaxLodLevel);
+		Object->QueryUnsignedAttribute("Lod_Level", &Desc.iInteractableID);
+
+		string strTag = {};
+		for (auto* PrototypeTag = Object->FirstChildElement("PrototypeTag"); PrototypeTag; PrototypeTag = PrototypeTag->NextSiblingElement("PrototypeTag"))
+		{
+			strTag = PrototypeTag->GetText();
+
+			Desc.ModelPrototypeTags.push_back(CMyTools::ToWstring(strTag));
+		}
+
+		/* Transform */
+		auto* Position = Object->FirstChildElement("Position");
+		Position->QueryFloatAttribute("x", &Desc.vPosition.x);
+		Position->QueryFloatAttribute("y", &Desc.vPosition.y);
+		Position->QueryFloatAttribute("z", &Desc.vPosition.z);
+
+		auto* Scale = Object->FirstChildElement("Scale");
+		Scale->QueryFloatAttribute("x", &Desc.vScale.x);
+		Scale->QueryFloatAttribute("y", &Desc.vScale.y);
+		Scale->QueryFloatAttribute("z", &Desc.vScale.z);
+
+		auto* Rotation = Object->FirstChildElement("Rotation");
+		Rotation->QueryFloatAttribute("x", &Desc.vRotation.x);
+		Rotation->QueryFloatAttribute("y", &Desc.vRotation.y);
+		Rotation->QueryFloatAttribute("z", &Desc.vRotation.z);
+
+		auto* HalfGeometryInfo = Object->FirstChildElement("HalfGeometryInfo");
+		HalfGeometryInfo->QueryFloatAttribute("x", &Desc.vBoxSize.x);
+		HalfGeometryInfo->QueryFloatAttribute("y", &Desc.vBoxSize.y);
+		HalfGeometryInfo->QueryFloatAttribute("z", &Desc.vBoxSize.z);
+
+		auto* LocalTranslation = Object->FirstChildElement("LocalTranslation");
+		LocalTranslation->QueryFloatAttribute("x", &Desc.vBoxLocalPosition.x);
+		LocalTranslation->QueryFloatAttribute("y", &Desc.vBoxLocalPosition.y);
+		LocalTranslation->QueryFloatAttribute("z", &Desc.vBoxLocalPosition.z);
+
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Interactable>(g_iStaticLevel, NEXT_LEVEL, LAYER_INTERACTABLE, &Desc)))
+			return E_FAIL;
+	}
+	//MSG_BOX("Successed to Create Interactalbe Element");
+
+	return S_OK;
+}
+
+HRESULT CMapInfo::Load_WaterElemet(const _char* pFileName)
+{
+	tinyxml2::XMLDocument xmlDoc;
+
+	string strPath = "../Bin/Resources/Data/Map/Water/" + string(pFileName) + ".xml";
+
+	if ((tinyxml2::XML_SUCCESS != xmlDoc.LoadFile(strPath.c_str())))
+		return E_FAIL;
+
+	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("MapObjects_Water");
+
+	if (nullptr == root)
+	{
+		MSG_BOX("Failed to Find root");
+		return S_OK;
+	}
+
+	for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
+	{
+		CMapElement_Lake::MAPOBJECT_LAKE_DESC Desc = {};
+
+		/* Model Prototypes */
+		Object->QueryUnsignedAttribute("Lod_Level", &Desc.iMaxLodLevel);
+
+		string strTag = {};
+		for (auto* PrototypeTag = Object->FirstChildElement("PrototypeTag"); PrototypeTag; PrototypeTag = PrototypeTag->NextSiblingElement("PrototypeTag"))
+		{
+			strTag = PrototypeTag->GetText();
+
+			Desc.ModelPrototypeTags.push_back(CMyTools::ToWstring(strTag));
+		}
+		for (auto* PrototypeTag = Object->FirstChildElement("ShollowPrototypeTag"); PrototypeTag; PrototypeTag = PrototypeTag->NextSiblingElement("ShollowPrototypeTag"))
+		{
+			strTag = PrototypeTag->GetText();
+
+			Desc.ShallowModelPrototypeTags.push_back(CMyTools::ToWstring(strTag));
+		}
+
+		/* Transform */
+		auto* Position = Object->FirstChildElement("Position");
+		Position->QueryFloatAttribute("x", &Desc.vPosition.x);
+		Position->QueryFloatAttribute("y", &Desc.vPosition.y);
+		Position->QueryFloatAttribute("z", &Desc.vPosition.z);
+
+		auto* Scale = Object->FirstChildElement("Scale");
+		Scale->QueryFloatAttribute("x", &Desc.vScale.x);
+		Scale->QueryFloatAttribute("y", &Desc.vScale.y);
+		Scale->QueryFloatAttribute("z", &Desc.vScale.z);
+
+		auto* Rotation = Object->FirstChildElement("Rotation");
+		Rotation->QueryFloatAttribute("x", &Desc.vRotation.x);
+		Rotation->QueryFloatAttribute("y", &Desc.vRotation.y);
+		Rotation->QueryFloatAttribute("z", &Desc.vRotation.z);
+
+
+		auto* Radius = Object->FirstChildElement("Radius");
+		Radius->QueryFloatAttribute("value", &Desc.fRadius);
+
+		auto* TimeSpeed = Object->FirstChildElement("TimeSpeed");
+		TimeSpeed->QueryFloatAttribute("value", &Desc.fTimeSpeed);
+
+		auto* RefractionStrength = Object->FirstChildElement("RefractionStrength");
+		RefractionStrength->QueryFloatAttribute("value", &Desc.fRefractionStrength);
+
+		auto* RefractionPow = Object->FirstChildElement("RefractionPow");
+		RefractionPow->QueryFloatAttribute("value", &Desc.fRefractionPow);
+
+		auto* UVValue1 = Object->FirstChildElement("UVValue1");
+		UVValue1->QueryFloatAttribute("value", &Desc.fUVValue1);
+
+		auto* UVValue2 = Object->FirstChildElement("UVValue2");
+		UVValue2->QueryFloatAttribute("value", &Desc.fUVValue2);
+
+		auto* UVValue3 = Object->FirstChildElement("UVValue3");
+		UVValue3->QueryFloatAttribute("value", &Desc.fUVValue3);
+
+		// float2 값들
+		auto* UVSpeed = Object->FirstChildElement("UVSpeed");
+		UVSpeed->QueryFloatAttribute("x", &Desc.vUVSpeed.x);
+		UVSpeed->QueryFloatAttribute("y", &Desc.vUVSpeed.y);
+
+		auto* LargeUVSpeed = Object->FirstChildElement("LargeUVSpeed");
+		LargeUVSpeed->QueryFloatAttribute("x", &Desc.vLargeUVSpeed.x);
+		LargeUVSpeed->QueryFloatAttribute("y", &Desc.vLargeUVSpeed.y);
+
+		auto* SubUVSpeed3 = Object->FirstChildElement("SubUVSpeed3");
+		SubUVSpeed3->QueryFloatAttribute("x", &Desc.vSubUVSpeed3.x);
+		SubUVSpeed3->QueryFloatAttribute("y", &Desc.vSubUVSpeed3.y);
+
+		// float4 값들
+		auto* RefractionColor = Object->FirstChildElement("RefractionColor");
+		RefractionColor->QueryFloatAttribute("x", &Desc.vRefractionColor.x);
+		RefractionColor->QueryFloatAttribute("y", &Desc.vRefractionColor.y);
+		RefractionColor->QueryFloatAttribute("z", &Desc.vRefractionColor.z);
+		RefractionColor->QueryFloatAttribute("w", &Desc.vRefractionColor.w);
+
+		auto* SurfaceColor = Object->FirstChildElement("SurfaceColor");
+		SurfaceColor->QueryFloatAttribute("x", &Desc.vSurfaceColor.x);
+		SurfaceColor->QueryFloatAttribute("y", &Desc.vSurfaceColor.y);
+		SurfaceColor->QueryFloatAttribute("z", &Desc.vSurfaceColor.z);
+		SurfaceColor->QueryFloatAttribute("w", &Desc.vSurfaceColor.w);
+
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Lake>(g_iStaticLevel, NEXT_LEVEL, TEXT("Layer_Element_Lake"), &Desc)))
+			return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+HRESULT CMapInfo::Load_DoorElemet(const _char* pFileName)
+{
+	tinyxml2::XMLDocument xmlDoc;
+
+	string strPath = "../Bin/Resources/Data/Map/Door/" + string(pFileName) + ".xml";
+
+	if ((tinyxml2::XML_SUCCESS != xmlDoc.LoadFile(strPath.c_str())))
+		return E_FAIL;
+
+	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("Doors");
+
+	if (nullptr == root)
+	{
+		MSG_BOX("Failed to Find root");
+		return S_OK;
+	}
+
+	for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
+	{
+		CMapElement_Door::ELEMENT_DOOR_DESC Desc = {};
+
+		/* Model Prototypes */
+		Object->QueryUnsignedAttribute("Lod_Level", &Desc.iMaxLodLevel);
+
+		string strTag = {};
+		for (auto* PrototypeTag = Object->FirstChildElement("PrototypeTag"); PrototypeTag; PrototypeTag = PrototypeTag->NextSiblingElement("PrototypeTag"))
+		{
+			strTag = PrototypeTag->GetText();
+
+			Desc.ModelPrototypeTags.push_back(CMyTools::ToWstring(strTag));
+		}
+
+		/* Transform */
+		auto* Position = Object->FirstChildElement("Position");
+		Position->QueryFloatAttribute("x", &Desc.vPosition.x);
+		Position->QueryFloatAttribute("y", &Desc.vPosition.y);
+		Position->QueryFloatAttribute("z", &Desc.vPosition.z);
+
+		auto* Scale = Object->FirstChildElement("Scale");
+		Scale->QueryFloatAttribute("x", &Desc.vScale.x);
+		Scale->QueryFloatAttribute("y", &Desc.vScale.y);
+		Scale->QueryFloatAttribute("z", &Desc.vScale.z);
+
+		auto* Rotation = Object->FirstChildElement("Rotation");
+		Rotation->QueryFloatAttribute("x", &Desc.vRotation.x);
+		Rotation->QueryFloatAttribute("y", &Desc.vRotation.y);
+		Rotation->QueryFloatAttribute("z", &Desc.vRotation.z);
+
+		//auto* HalfGeometryInfo = Object->FirstChildElement("HalfGeometryInfo");
+		//HalfGeometryInfo->QueryFloatAttribute("x", &Desc.vBoxSize.x);
+		//HalfGeometryInfo->QueryFloatAttribute("y", &Desc.vBoxSize.y);
+		//HalfGeometryInfo->QueryFloatAttribute("z", &Desc.vBoxSize.z);
+
+		//auto* LocalTranslation = Object->FirstChildElement("LocalTranslation");
+		//LocalTranslation->QueryFloatAttribute("x", &Desc.vBoxLocalPosition.x);
+		//LocalTranslation->QueryFloatAttribute("y", &Desc.vBoxLocalPosition.y);
+		//LocalTranslation->QueryFloatAttribute("z", &Desc.vBoxLocalPosition.z);
+
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Door>(g_iStaticLevel, NEXT_LEVEL, LAYER_DOOR, &Desc)))
+			return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+HRESULT CMapInfo::Load_ChestElemet(const _char* pFileName)
+{
+	tinyxml2::XMLDocument xmlDoc;
+
+	string strPath = "../Bin/Resources/Data/Map/Hiden/" + string(pFileName) + ".xml";
+
+	if ((tinyxml2::XML_SUCCESS != xmlDoc.LoadFile(strPath.c_str())))
+		return E_FAIL;
+
+	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("Chests");
+
+	if (nullptr == root)
+	{
+		MSG_BOX("Failed to Find root");
+		return S_OK;
+	}
+
+	for (auto* Object = root->FirstChildElement("Object"); Object; Object = Object->NextSiblingElement("Object"))
+	{
+		CMapElement_Chest::ELEMENT_CHEST_DESC Desc = {};
+
+		/* Model Prototypes */
+		Object->QueryUnsignedAttribute("Lod_Level", &Desc.iMaxLodLevel);
+		Desc.iSubKind = ENUM_CLASS(PXOBJECT::BOX);
+		string strTag = {};
+		for (auto* PrototypeTag = Object->FirstChildElement("PrototypeTag"); PrototypeTag; PrototypeTag = PrototypeTag->NextSiblingElement("PrototypeTag"))
+		{
+			strTag = PrototypeTag->GetText();
+
+			Desc.ModelPrototypeTags.push_back(CMyTools::ToWstring(strTag));
+		}
+
+		/* Transform */
+		auto* Position = Object->FirstChildElement("Position");
+		Position->QueryFloatAttribute("x", &Desc.vPosition.x);
+		Position->QueryFloatAttribute("y", &Desc.vPosition.y);
+		Position->QueryFloatAttribute("z", &Desc.vPosition.z);
+
+		auto* Scale = Object->FirstChildElement("Scale");
+		Scale->QueryFloatAttribute("x", &Desc.vScale.x);
+		Scale->QueryFloatAttribute("y", &Desc.vScale.y);
+		Scale->QueryFloatAttribute("z", &Desc.vScale.z);
+
+		auto* Rotation = Object->FirstChildElement("Rotation");
+		Rotation->QueryFloatAttribute("x", &Desc.vRotation.x);
+		Rotation->QueryFloatAttribute("y", &Desc.vRotation.y);
+		Rotation->QueryFloatAttribute("z", &Desc.vRotation.z);
+
+		auto* HalfGeometryInfo = Object->FirstChildElement("HalfGeometryInfo");
+		HalfGeometryInfo->QueryFloatAttribute("x", &Desc.vBoxSize.x);
+		HalfGeometryInfo->QueryFloatAttribute("y", &Desc.vBoxSize.y);
+		HalfGeometryInfo->QueryFloatAttribute("z", &Desc.vBoxSize.z);
+
+		auto* LocalTranslation = Object->FirstChildElement("LocalTranslation");
+		LocalTranslation->QueryFloatAttribute("x", &Desc.vBoxLocalPosition.x);
+		LocalTranslation->QueryFloatAttribute("y", &Desc.vBoxLocalPosition.y);
+		LocalTranslation->QueryFloatAttribute("z", &Desc.vBoxLocalPosition.z);
+
+		auto* RimLight = Object->FirstChildElement("RimLight");
+		RimLight->QueryFloatAttribute("pow", &Desc.fRimLightPow);
+		RimLight->QueryFloatAttribute("strength", &Desc.fRimLightStrength);
+		RimLight->QueryFloatAttribute("colorR", &Desc.vRimLightColor.x);
+		RimLight->QueryFloatAttribute("colorG", &Desc.vRimLightColor.y);
+		RimLight->QueryFloatAttribute("colorB", &Desc.vRimLightColor.z);
+		RimLight->QueryFloatAttribute("colorA", &Desc.vRimLightColor.w);
+
+
+		auto* Lid = Object->FirstChildElement("Lid");
+		Lid->QueryUnsignedAttribute("Lod_Level", &Desc.iMaxLodLevel_Lid);
+		for (auto* PrototypeTag = Lid->FirstChildElement("PrototypeTag"); PrototypeTag; PrototypeTag = PrototypeTag->NextSiblingElement("PrototypeTag"))
+		{
+			strTag = PrototypeTag->GetText();
+
+			Desc.ModelPrototypeTags_Lid.push_back(CMyTools::ToWstring(strTag));
+		}
+
+		auto* LidPosition = Lid->FirstChildElement("Position");
+		LidPosition->QueryFloatAttribute("x", &Desc.vLid_Offset.x);
+		LidPosition->QueryFloatAttribute("y", &Desc.vLid_Offset.y);
+		LidPosition->QueryFloatAttribute("z", &Desc.vLid_Offset.z);
+
+		auto* RotationAngle = Lid->FirstChildElement("RotationAngle");
+		RotationAngle->QueryFloatAttribute("RotationAngle", &Desc.fRotaitionAngle);
+
+		if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMapElement_Chest>(g_iStaticLevel, NEXT_LEVEL, LAYER_HIDDEN, &Desc)))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -397,3 +768,50 @@ void CMapInfo::Free()
 	SAFE_RELEASE(m_pContext);
 
 }
+#ifdef _DEBUG
+
+void CMapInfo::Describe_Entity()
+{
+	GUI::Begin("CLIENT_SYSTEM", 0, IMGUI_GLOBAL_BEGIN_FLAG);
+	if (GUI::CollapsingHeader("MapInfoDesc")) {
+		CLayer* pLayer = m_pGameInstance->Get_Layer(CURRENT_LEVEL, LAYER_BACKGROUND);
+		if (nullptr == pLayer) {
+			return;
+		}
+		static _bool s_bConverted = { false };
+		static _bool s_bReadyToCreate = { false };
+
+		const list<CGameObject*>* pObjects = pLayer->Get_Objects();
+
+		GUI::SetNextItemWidth(80.f);
+		GUI::BeginChild("CollisonPartObjects");
+		if (false == s_bReadyToCreate) {
+			if (GUI::Button("Ready_StaticMeshesForPhyX_ALL")) {
+				s_bReadyToCreate = true;
+				list<CGameObject*>::const_iterator iter = pObjects->begin();
+				for (; iter != pObjects->end(); ++iter) {
+					CMapContainer* pContainer = dynamic_cast<CMapContainer*>(*iter);
+					if (nullptr != pContainer) {
+						pContainer->ReadyForPhysX();
+					}
+				}
+			}
+		}
+		else if (false == s_bConverted) {
+			if (GUI::Button("Convert_StaticMeshesForPhyX_ALL")) {
+				s_bConverted = true;
+				list<CGameObject*>::const_iterator iter = pObjects->begin();
+				for (; iter != pObjects->end(); ++iter) {
+					CMapContainer* pContainer = dynamic_cast<CMapContainer*>(*iter);
+					if (nullptr != pContainer) {
+						pContainer->ConvertToPhysX();
+					}
+				}
+			}
+		}
+		GUI::EndChild();
+	}
+	GUI::End();
+}
+
+#endif // _DEBUG

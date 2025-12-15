@@ -82,9 +82,6 @@
     <Filter Include="02.GameObjects\Layer_Effect\Effect\00.EffectObject">
       <UniqueIdentifier>{8a5ffca8-725a-42ee-a3eb-3c79df09dec9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\01.TestEffect">
-      <UniqueIdentifier>{32718f84-d863-48d2-8611-90c40f2ba1c5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Layer_Effect\Effect\02.EditEffect">
       <UniqueIdentifier>{ba468252-bba3-46e4-bf61-e726a59060ad}</UniqueIdentifier>
     </Filter>
@@ -256,9 +253,6 @@
     <Filter Include="02.GameObjects\Layer_Effect\Effect\04.Effect_Container">
       <UniqueIdentifier>{a193f87a-e222-4dd8-9766-cb32bb368ccb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\05.NomalJap">
-      <UniqueIdentifier>{8882358e-c8eb-4222-a87e-01d902533b8f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Broom">
       <UniqueIdentifier>{a9862861-6eaa-4e04-b7f6-217a32db7db4}</UniqueIdentifier>
     </Filter>
@@ -292,17 +286,11 @@
     <Filter Include="02.GameObjects\Wand">
       <UniqueIdentifier>{92110a48-81d0-4e98-be06-05dd078d0488}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\06.Bombard">
-      <UniqueIdentifier>{c81350c7-0edb-4e51-babf-09bf627414f1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\HpBarBG">
       <UniqueIdentifier>{7e8b7123-11fb-4946-99fe-3265932d0536}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\Env\05.AlphaMap">
       <UniqueIdentifier>{54eef1b7-a5ee-444f-9577-44ffc8c3d8bc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\07.Decendo">
-      <UniqueIdentifier>{a94e6a94-cc46-4c16-8518-5032bfdbd235}</UniqueIdentifier>
     </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Action_Panel\Spell_Slot_Preview">
       <UniqueIdentifier>{b4e1da25-c952-4ff4-92fd-7f1501d8c005}</UniqueIdentifier>
@@ -349,9 +337,6 @@
     <Filter Include="02.GameObjects\Layer_Effect\EffectPool">
       <UniqueIdentifier>{c0589f6e-ed9c-4e76-8df2-4f95ce3c7b9a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\08.Protego">
-      <UniqueIdentifier>{8bb21e5b-933f-4930-8d49-1093e0c3ea77}</UniqueIdentifier>
-    </Filter>
     <Filter Include="50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Border">
       <UniqueIdentifier>{a54567fa-e528-4c98-a605-289d7d300029}</UniqueIdentifier>
     </Filter>
@@ -363,12 +348,6 @@
     </Filter>
     <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Current_Spell_Slot">
       <UniqueIdentifier>{c7b1ffc6-548f-464c-8f19-8b6ff5913b06}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\09.Revelio">
-      <UniqueIdentifier>{03dca491-c8d3-4204-b450-b6089287aa3d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Layer_Effect\Effect\10.Levioso">
-      <UniqueIdentifier>{c87ea325-8242-4bc4-aec7-b102a5b1c847}</UniqueIdentifier>
     </Filter>
     <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_List">
       <UniqueIdentifier>{8d15e456-f0d7-45b6-b725-7f1a8c0f6b0f}</UniqueIdentifier>
@@ -436,11 +415,200 @@
     <Filter Include="02.GameObjects\Env\03.MapElement\Light">
       <UniqueIdentifier>{99652c97-4011-4d1f-84fb-7e6aa9f6ec1a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\02.EditEffect\01.TestEffect">
+      <UniqueIdentifier>{32718f84-d863-48d2-8611-90c40f2ba1c5}</UniqueIdentifier>
+    </Filter>
     <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_Anim">
       <UniqueIdentifier>{4aa98871-8d80-4757-b616-e96f4e840857}</UniqueIdentifier>
     </Filter>
     <Filter Include="50.UI\Spell_Data">
       <UniqueIdentifier>{3949bd3b-1686-43e3-822c-d3eabe41653e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Current_Slot_Number">
+      <UniqueIdentifier>{2f8a3c68-c3d3-43cc-9649-16e0cfd168fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_Drag">
+      <UniqueIdentifier>{dcc220a9-4649-4f95-9205-9eee9af128ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Spell_Canvas\Spell_Panel\Spell_Anim">
+      <UniqueIdentifier>{4aa98871-8d80-4757-b616-e96f4e840857}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.InfoInstance">
+      <UniqueIdentifier>{c30da651-49ea-4d68-b65b-c363eaf820f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.InfoInstance\00.PlayerInfo">
+      <UniqueIdentifier>{c66672a6-3ecb-4301-94a4-da003ef9a567}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.InfoInstance\01.MonsterInfo">
+      <UniqueIdentifier>{0e7cf683-2a5e-4aa9-882d-a0d97ba96a8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.InfoInstance\02.MapInfo">
+      <UniqueIdentifier>{6b288e75-d33a-4a9d-9cb0-139d3671ad13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\UI_Manager">
+      <UniqueIdentifier>{fe7d5909-159c-4130-ae5e-e08e648b193c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect">
+      <UniqueIdentifier>{44155272-ee23-4fbf-ae47-e89f62f34975}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic">
+      <UniqueIdentifier>{db7324ea-732a-4cac-948e-f99f0544027c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\05.NomalJap">
+      <UniqueIdentifier>{8882358e-c8eb-4222-a87e-01d902533b8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\05.NomalJap\NomalJapSide">
+      <UniqueIdentifier>{3fb9a340-293c-413e-ae32-e5986222f711}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\06.Bombard">
+      <UniqueIdentifier>{c81350c7-0edb-4e51-babf-09bf627414f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\06.Bombard\BombardSide">
+      <UniqueIdentifier>{51b32cc0-bf57-444f-9a21-0ff756a94291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\07.Decendo">
+      <UniqueIdentifier>{a94e6a94-cc46-4c16-8518-5032bfdbd235}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\07.Decendo\DecendoSide">
+      <UniqueIdentifier>{09f9fe15-1685-4aac-b3a1-ee98c3e76e3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\08.Protego">
+      <UniqueIdentifier>{8bb21e5b-933f-4930-8d49-1093e0c3ea77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\09.Revelio">
+      <UniqueIdentifier>{03dca491-c8d3-4204-b450-b6089287aa3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\10.Levioso">
+      <UniqueIdentifier>{c87ea325-8242-4bc4-aec7-b102a5b1c847}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Magic\10.Levioso\LeviosoSide">
+      <UniqueIdentifier>{c70a2ce4-8664-45e0-b594-4f416829dab8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Loding_Canvas">
+      <UniqueIdentifier>{ebad2fd8-622f-4c17-9ba3-b0c4bd366c05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Loding_Canvas\Loding_Panel">
+      <UniqueIdentifier>{944a2f28-34bc-4559-b179-85b920086b30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Logo">
+      <UniqueIdentifier>{abef48e8-ddeb-4498-9ad1-7ca552bd8aea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Intro">
+      <UniqueIdentifier>{809eacd9-d230-47c9-bfb1-da988a8b8835}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Intro\Intro_Image">
+      <UniqueIdentifier>{e18b00d7-5fe8-4309-8c47-94872d2c82e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Intro\Intro_BG">
+      <UniqueIdentifier>{c77981f0-39b1-485f-b13f-aca6cc7c40e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Logo\Logo_Text">
+      <UniqueIdentifier>{a4aecce8-41be-4c75-ab77-d91ce949770c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Logo\Logo_Glow">
+      <UniqueIdentifier>{d8a5038f-4f2c-4226-85ba-9202f11f822d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Enemy_Panel">
+      <UniqueIdentifier>{ea790bf9-9ca6-4c51-820b-ed2c70f86104}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_HpBar">
+      <UniqueIdentifier>{33ba73e0-b4a1-4ebf-9b99-8856c7e1078c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_Info">
+      <UniqueIdentifier>{e30ca8e3-8c89-4a08-b413-169ff1d5ff22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Env\07.Unified">
+      <UniqueIdentifier>{4b6ac1df-5642-42f1-a492-5c2ca2433559}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Env\03.MapElement\Lake">
+      <UniqueIdentifier>{df91c194-9910-489b-a9bb-724e1c1f4440}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\Troll">
+      <UniqueIdentifier>{2e89850b-eb23-46a7-9c3b-9c2965aa0b76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\Troll\Troll_State">
+      <UniqueIdentifier>{ed83440e-f038-4fe2-b005-4ba4093e8462}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\Troll\Rock">
+      <UniqueIdentifier>{d5debb7c-5bea-456a-8c70-f44b5fc9e51e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\Troll\Weapon">
+      <UniqueIdentifier>{5d93fa49-8e72-4182-a4ad-c4aef00000b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\Troll_Nomal_Smoke">
+      <UniqueIdentifier>{0df28480-a5ca-4895-b8f4-2bac1a7454ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\Troll_Rush_Hit">
+      <UniqueIdentifier>{7363a82f-1bdf-4107-b824-a5326a7d2075}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\Goblin_Protego">
+      <UniqueIdentifier>{4556b8c9-e689-435e-8775-48d0c45a942f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\Monster_Effect\TrollSwing">
+      <UniqueIdentifier>{3a12f2c2-0472-41b7-99ce-2c2f17f26e92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\Goblin\Item">
+      <UniqueIdentifier>{0fdb9c5b-7edd-4915-8fce-a8e78c9e1e9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\State">
+      <UniqueIdentifier>{0952e2b6-0430-42db-942f-75cb70310240}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Monster\Goblin\State">
+      <UniqueIdentifier>{f4f76745-6de8-4670-bd96-a4a4beb39415}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.InfoInstance\03.Skill_Info">
+      <UniqueIdentifier>{7ba1f85d-a9c4-4002-b425-43796bec6869}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Enemy_Panel\Boss_HpBar">
+      <UniqueIdentifier>{49575102-9b08-494e-bf3f-bdc98774913e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Layer_Effect\Effect\State_Effect">
+      <UniqueIdentifier>{d276d751-77aa-423e-9499-c63875e36266}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_Detection">
+      <UniqueIdentifier>{81c6b163-6c8b-47ac-a4b6-e86088ce709f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Env\03.MapElement\Door">
+      <UniqueIdentifier>{6cb94611-9a4c-4b22-897c-6a2ff662c59a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Env\03.MapElement\Chest">
+      <UniqueIdentifier>{18ff4d8b-a5fd-4c67-a864-5340e31391a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Env\03.MapElement\Chest\Lid">
+      <UniqueIdentifier>{a1e789e1-dce1-4069-8c61-b9f9c89f795d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Quest_Data">
+      <UniqueIdentifier>{bafb5bee-4fbd-48f8-97a1-66142e96f920}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Quest_Canvas">
+      <UniqueIdentifier>{0cd16ac8-6b17-4110-8774-4b3dbd2fb8da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Quest_Canvas\Quest_Panel">
+      <UniqueIdentifier>{cf0e6cef-f688-481a-8e7e-478038907ca8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Quest_Canvas\Quest_Panel\Quest_Border">
+      <UniqueIdentifier>{0a514079-ba47-4973-8472-07a80f1390cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Quest_Canvas\Quest_Panel\Quest_Header">
+      <UniqueIdentifier>{104ae31b-3c6a-4acb-9886-abace9859c6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Quest_Canvas\Quest_Panel\Quest_HeaderLine">
+      <UniqueIdentifier>{2af37b38-5cbe-4701-8681-638dfe78a9ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Quest_Canvas\Quest_Panel\Quest_List">
+      <UniqueIdentifier>{0dfdc08d-b662-45f1-a1ea-1ca474010600}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Quest_Canvas\Quest_Panel\Quest_Info">
+      <UniqueIdentifier>{971fb38a-f92c-4eea-99d3-287704800ba5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Quest_Canvas\Quest_Panel\Quest_Info_Header">
+      <UniqueIdentifier>{2cf94833-8061-4a5f-9575-ebf2e491954a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Quest_Canvas\Quest_Panel\Quest_Info_Line">
+      <UniqueIdentifier>{a5e3c859-7e28-47b3-8b2e-3be3348bb7ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Quest_Canvas\Quest_Panel\Quest_Entry_Line">
+      <UniqueIdentifier>{2347d77a-ac72-4b3e-bf5f-434ca410e544}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -520,7 +688,7 @@
       <Filter>02.GameObjects\Layer_Effect\Effect\00.EffectObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\TestEffect.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\01.TestEffect</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\02.EditEffect\01.TestEffect</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\EditEffect.h">
       <Filter>02.GameObjects\Layer_Effect\Effect\02.EditEffect</Filter>
@@ -709,7 +877,7 @@
       <Filter>02.GameObjects\Layer_Effect\Effect\04.Effect_Container</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\NomalJap.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\05.NomalJap</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\05.NomalJap</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Broom.h">
       <Filter>02.GameObjects\Broom</Filter>
@@ -742,7 +910,7 @@
       <Filter>02.GameObjects\Wand</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Bombard.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\06.Bombard</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\06.Bombard</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\State_Root.h">
       <Filter>80.State</Filter>
@@ -754,7 +922,7 @@
       <Filter>02.GameObjects\Env\05.AlphaMap</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Decendo.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\07.Decendo</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\07.Decendo</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Camera_Debug.h">
       <Filter>02.GameObjects\Camera\Debug</Filter>
@@ -799,7 +967,7 @@
       <Filter>02.GameObjects\Layer_Effect\EffectPool</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Protego.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\08.Protego</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\08.Protego</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\MissionBanner_Border.h">
       <Filter>50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Border</Filter>
@@ -814,10 +982,10 @@
       <Filter>50.UI\Spell_Canvas\Spell_Panel\Current_Spell_Slot</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Revelio.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\09.Revelio</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\09.Revelio</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Levioso.h">
-      <Filter>02.GameObjects\Layer_Effect\Effect\10.Levioso</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\10.Levioso</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Spell_List.h">
       <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_List</Filter>
@@ -863,6 +1031,192 @@
     </ClInclude>
     <ClInclude Include="..\public\Spell_Data.h">
       <Filter>50.UI\Spell_Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Current_Slot_Number.h">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Current_Slot_Number</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Spell_Drag.h">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Drag</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\NomalJapSide.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\05.NomalJap\NomalJapSide</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BombardSide.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\06.Bombard\BombardSide</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DecendoSide.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\07.Decendo\DecendoSide</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LeviosoSide.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\10.Levioso\LeviosoSide</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\InfoInstance.h">
+      <Filter>04.InfoInstance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerInfo.h">
+      <Filter>04.InfoInstance\00.PlayerInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MonsterInfo.h">
+      <Filter>04.InfoInstance\01.MonsterInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MapInfo.h">
+      <Filter>04.InfoInstance\02.MapInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\UI_Manager.h">
+      <Filter>50.UI\UI_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\CameraLockOn.h">
+      <Filter>50.UI\Mouse_Cursor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TrollSwing.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\TrollSwing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Loding_Canvas.h">
+      <Filter>50.UI\Loding_Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Loding_Panel.h">
+      <Filter>50.UI\Loding_Canvas\Loding_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Intro_Image.h">
+      <Filter>50.UI\Intro\Intro_Image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Logo.h">
+      <Filter>50.UI\Logo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Intro_BG.h">
+      <Filter>50.UI\Intro\Intro_BG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Logo_Text.h">
+      <Filter>50.UI\Logo\Logo_Text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Logo_Glow.h">
+      <Filter>50.UI\Logo\Logo_Glow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Unified.h">
+      <Filter>02.GameObjects\Env\07.Unified</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapElement_Lake.h">
+      <Filter>02.GameObjects\Env\03.MapElement\Lake</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll.h">
+      <Filter>02.GameObjects\Monster\Troll</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll_State_BackHand_Swing.h">
+      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll_State_Rush.h">
+      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll_Rock.h">
+      <Filter>02.GameObjects\Monster\Troll\Rock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll_Weapon.h">
+      <Filter>02.GameObjects\Monster\Troll\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_IdleBreak.h">
+      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Hit.h">
+      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Slam.h">
+      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Throw.h">
+      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Swing.h">
+      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll_Nomal_Smoke.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Troll_Nomal_Smoke</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Troll_Rush_Hit.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Troll_Rush_Hit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Goblin_Protego.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Goblin_Protego</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Enemy_Panel.h">
+      <Filter>50.UI\GamePlay_Canvas\Enemy_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Enemy_HpBar.h">
+      <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_HpBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Enemy_Info.h">
+      <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_Info</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Goblin_Dagger.h">
+      <Filter>02.GameObjects\Monster\Goblin\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Goblin_Spector.h">
+      <Filter>02.GameObjects\Monster\Goblin\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Blink.h">
+      <Filter>02.GameObjects\Monster\Goblin\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Dead.h">
+      <Filter>02.GameObjects\Monster\Goblin\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Shuffle.h">
+      <Filter>02.GameObjects\Monster\Goblin\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Goblin_BattleAxe.h">
+      <Filter>02.GameObjects\Monster\Goblin\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Skill_Data.h">
+      <Filter>04.InfoInstance\03.Skill_Info</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Boss_HpBer.h">
+      <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Boss_HpBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\StunEffect.h">
+      <Filter>02.GameObjects\Layer_Effect\Effect\State_Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Enemy_Detection.h">
+      <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_Detection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapElement_Door.h">
+      <Filter>02.GameObjects\Env\03.MapElement\Door</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapElement_Chest.h">
+      <Filter>02.GameObjects\Env\03.MapElement\Chest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\MapElement_Chest_Lid.h">
+      <Filter>02.GameObjects\Env\03.MapElement\Chest\Lid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Quest_Data.h">
+      <Filter>50.UI\Quest_Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Quest_Canvas.h">
+      <Filter>50.UI\Quest_Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Quest_Panel.h">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Quest_Border.h">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Border</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Quest_Header.h">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Quest_HeaderLine.h">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_HeaderLine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Quest_List.h">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_List</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Quest_Info.h">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Info</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Quest_Info_Header.h">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Info_Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Quest_Info_Line.h">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Info_Line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Quest_Entry_Line.h">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Entry_Line</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -923,7 +1277,7 @@
       <Filter>02.GameObjects\Layer_Effect\Effect\00.EffectObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\TestEffect.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\01.TestEffect</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\02.EditEffect\01.TestEffect</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\EditEffect.cpp">
       <Filter>02.GameObjects\Layer_Effect\Effect\02.EditEffect</Filter>
@@ -1124,7 +1478,7 @@
       <Filter>02.GameObjects\Layer_Effect\Effect\04.Effect_Container</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\NomalJap.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\05.NomalJap</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\05.NomalJap</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Broom.cpp">
       <Filter>02.GameObjects\Broom</Filter>
@@ -1163,13 +1517,13 @@
       <Filter>02.GameObjects\Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Bombard.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\06.Bombard</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\06.Bombard</Filter>
     </ClCompile>
     <ClCompile Include="..\private\AlphaMap.cpp">
       <Filter>02.GameObjects\Env\05.AlphaMap</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Decendo.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\07.Decendo</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\07.Decendo</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Spell_Slot_Preview.cpp">
       <Filter>50.UI\GamePlay_Canvas\Action_Panel\Spell_Slot_Preview</Filter>
@@ -1220,7 +1574,7 @@
       <Filter>02.GameObjects\Layer_Effect\EffectPool</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Protego.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\08.Protego</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\08.Protego</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\MissionBanner_Border.cpp">
       <Filter>50.UI\GamePlay_Canvas\Mission_Panel\MissionBanner_Border</Filter>
@@ -1235,10 +1589,10 @@
       <Filter>50.UI\Spell_Canvas\Spell_Panel\Current_Spell_Slot</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Revelio.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\09.Revelio</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\09.Revelio</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Levioso.cpp">
-      <Filter>02.GameObjects\Layer_Effect\Effect\10.Levioso</Filter>
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\10.Levioso</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Spell_List.cpp">
       <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_List</Filter>
@@ -1285,6 +1639,195 @@
     <ClCompile Include="..\private\Spell_Data.cpp">
       <Filter>50.UI\Spell_Data</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Current_Slot_Number.cpp">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Current_Slot_Number</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Spell_Drag.cpp">
+      <Filter>50.UI\Spell_Canvas\Spell_Panel\Spell_Drag</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\NomalJapSide.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\05.NomalJap\NomalJapSide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BombardSide.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\06.Bombard\BombardSide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\DecendoSide.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\07.Decendo\DecendoSide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LeviosoSide.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Magic\10.Levioso\LeviosoSide</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\InfoInstance.cpp">
+      <Filter>04.InfoInstance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerInfo.cpp">
+      <Filter>04.InfoInstance\00.PlayerInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MonsterInfo.cpp">
+      <Filter>04.InfoInstance\01.MonsterInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MapInfo.cpp">
+      <Filter>04.InfoInstance\02.MapInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\UI_Manager.cpp">
+      <Filter>50.UI\UI_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\CameraLockOn.cpp">
+      <Filter>50.UI\Mouse_Cursor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TrollSwing.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\TrollSwing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Loding_Canvas.cpp">
+      <Filter>50.UI\Loding_Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Loding_Panel.cpp">
+      <Filter>50.UI\Loding_Canvas\Loding_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Logo.cpp">
+      <Filter>50.UI\Logo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Intro_Image.cpp">
+      <Filter>50.UI\Intro\Intro_Image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Intro_BG.cpp">
+      <Filter>50.UI\Intro\Intro_BG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Logo_Text.cpp">
+      <Filter>50.UI\Logo\Logo_Text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Logo_Glow.cpp">
+      <Filter>50.UI\Logo\Logo_Glow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Enemy_Panel.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Enemy_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Enemy_HpBar.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_HpBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Enemy_Info.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_Info</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Unified.cpp">
+      <Filter>02.GameObjects\Env\07.Unified</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapElement_Lake.cpp">
+      <Filter>02.GameObjects\Env\03.MapElement\Lake</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll.cpp">
+      <Filter>02.GameObjects\Monster\Troll</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_State_BackHand_Swing.cpp">
+      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_State_Rush.cpp">
+      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_States.cpp">
+      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_Rock.cpp">
+      <Filter>02.GameObjects\Monster\Troll\Rock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_Weapon.cpp">
+      <Filter>02.GameObjects\Monster\Troll\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Hit.cpp">
+      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Throw.cpp">
+      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_IdleBreak.cpp">
+      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Slam.cpp">
+      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Swing.cpp">
+      <Filter>02.GameObjects\Monster\Troll\Troll_State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_Nomal_Smoke.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Troll_Nomal_Smoke</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Troll_Rush_Hit.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Troll_Rush_Hit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Goblin_Protego.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\Monster_Effect\Goblin_Protego</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Goblin_Dagger.cpp">
+      <Filter>02.GameObjects\Monster\Goblin\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Goblin_Spector.cpp">
+      <Filter>02.GameObjects\Monster\Goblin\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Blink.cpp">
+      <Filter>02.GameObjects\Monster\Goblin\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Dead.cpp">
+      <Filter>02.GameObjects\Monster\Goblin\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Shuffle.cpp">
+      <Filter>02.GameObjects\Monster\Goblin\State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Goblin_BattleAxe.cpp">
+      <Filter>02.GameObjects\Monster\Goblin\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Skill_Data.cpp">
+      <Filter>04.InfoInstance\03.Skill_Info</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Boss_HpBer.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Boss_HpBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\StunEffect.cpp">
+      <Filter>02.GameObjects\Layer_Effect\Effect\State_Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Enemy_Detection.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Enemy_Panel\Enemy_Detection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapElement_Door.cpp">
+      <Filter>02.GameObjects\Env\03.MapElement\Door</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapElement_Chest.cpp">
+      <Filter>02.GameObjects\Env\03.MapElement\Chest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\MapElement_Chest_Lid.cpp">
+      <Filter>02.GameObjects\Env\03.MapElement\Chest\Lid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Quest_Data.cpp">
+      <Filter>50.UI\Quest_Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Quest_Canvas.cpp">
+      <Filter>50.UI\Quest_Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Quest_Panel.cpp">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Quest_Border.cpp">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Border</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Quest_Header.cpp">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Header</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Quest_HeaderLine.cpp">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_HeaderLine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Quest_List.cpp">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_List</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Quest_Info.cpp">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Info</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Quest_Info_Header.cpp">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Info_Header</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Quest_Info_Line.cpp">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Info_Line</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Quest_Entry_Line.cpp">
+      <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Entry_Line</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Editor.rc">
@@ -1320,6 +1863,9 @@
       <Filter>99.Define\SHADER</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxPos.hlsl">
+      <Filter>99.Define\SHADER</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_NPC_PBR_Anim.hlsl">
       <Filter>99.Define\SHADER</Filter>
     </FxCompile>
   </ItemGroup>

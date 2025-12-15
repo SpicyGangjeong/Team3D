@@ -5,6 +5,9 @@
 #include "Level_Loading.h"
 #include "InfoInstance.h"
 
+#include "Logo.h"
+#include "Logo_Text.h"
+#include "Logo_Glow.h"
 
 CLevel_Logo::CLevel_Logo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -23,7 +26,11 @@ HRESULT CLevel_Logo::Initialize()
 
 void CLevel_Logo::Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->Key_Up(DIK_F1))
+//#ifdef 기무리
+//	m_pGameInstance->Set_LevelToChange();
+//#endif // 기무리
+
+	if (m_pGameInstance->Key_Down(DIK_F1))
 	{
 		m_pGameInstance->Set_LevelToChange();
 	}
@@ -39,12 +46,61 @@ void CLevel_Logo::Update(_float fTimeDelta)
 
 HRESULT CLevel_Logo::Render()
 {
-	SetWindowText(g_hWnd, TEXT("로고레벨입니다"));
+	_float fDeltaTimeSeconds = m_pGameInstance->Get_TimeDelta(TEXT("Timer_60"));
+
+	static _float fAccumulatedTimeSeconds = 0.0f;
+	static _uint  iFrameCountForFps = 0;
+	static _float fCurrentFps = 0.0f;
+	static _float fAverageFrameTimeMilliseconds = 0.0f;
+
+	fAccumulatedTimeSeconds += fDeltaTimeSeconds;
+	++iFrameCountForFps;
+
+	if (fAccumulatedTimeSeconds >= 1.0f)
+	{
+		if (fAccumulatedTimeSeconds > 0.0f)
+		{
+			fCurrentFps = static_cast<_float>(iFrameCountForFps) / fAccumulatedTimeSeconds;
+			if (fCurrentFps > 0.0f)
+			{
+				fAverageFrameTimeMilliseconds = 1000.0f / fCurrentFps;
+			}
+		}
+
+		fAccumulatedTimeSeconds = 0.0f;
+		iFrameCountForFps = 0;
+	}
+
+	_float fCurrentFrameTimeMilliseconds = fDeltaTimeSeconds * 1000.0f;
+
+	_tchar szWindowTitle[256] = {};
+
+	// 현재 프레임 시간 + 평균 FPS / 평균 프레임 타임(ms)
+	_stprintf_s(
+		szWindowTitle,
+		TEXT("로고 레벨입니다 | Frame: %.3f ms | Avg: %.3f ms | FPS: %.1f"),
+		fCurrentFrameTimeMilliseconds,
+		fAverageFrameTimeMilliseconds,
+		fCurrentFps
+	);
+
+	SetWindowText(g_hWnd, szWindowTitle);
+
 	return S_OK;
 }
 
 HRESULT CLevel_Logo::Ready_Layer_UI(const _wstring& strLayerTag)
 {
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLogo>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLogo_Text>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CLogo_Glow>(g_iStaticLevel, NEXT_LEVEL, strLayerTag))) {
+		return E_FAIL;
+	}
+
 	return S_OK;
 }
 

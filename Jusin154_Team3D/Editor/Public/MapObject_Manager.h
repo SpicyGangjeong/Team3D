@@ -64,6 +64,11 @@ private:
 
 	HRESULT		Save_LightObject(const _char* pFileName);
 	HRESULT     Load_LightObject(const _char* pFileName);
+
+	HRESULT		Save_InteractObject(const _char* pFileName);
+	HRESULT     Load_InteractObject(const _char* pFileName);
+
+	HRESULT		Load_WaterObject(const _char* pFileName);
 #pragma endregion
 
 	void		Update_PrototypeList();

@@ -8,7 +8,6 @@
 #include "PipeLine.h"
 #include "Light_Manager.h"
 #include "Renderer.h"
-#include "Shadow.h"
 #include "Camera_Manager.h"
 #include "RenderTarget_Manager.h"
 #include "Key_Manager.h"
@@ -18,6 +17,8 @@
 #include "PhysX_Manager.h"
 #include "ThreadHolder.h"
 #include "Fog.h"
+#include "Resource_Manager.h"
+#include "Font_Manager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -49,7 +50,14 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 			}
 		}
 	}
-	m_pThreadHolder = CThreadHolder::Create( 6 );
+#ifdef 기무리
+	m_pThreadHolder = CThreadHolder::Create(12);
+#endif // 기무리
+#ifndef 기무리
+	m_pThreadHolder = CThreadHolder::Create(6);
+#endif // !기무리
+
+
 	if (nullptr == m_pThreadHolder) {
 		return E_FAIL;
 	}
@@ -85,10 +93,6 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 	if (nullptr == m_pCamera_Manager) {
 		return E_FAIL;
 	}
-	m_pShadow = CShadow::Create();
-	if (nullptr == m_pShadow) {
-		return E_FAIL;
-	}
 	m_pPicking = CPicking::Create(*ppDevice, *ppContext, EngineDesc.hWnd, EngineDesc.iWinSizeX, EngineDesc.iWinSizeY);
 	if (nullptr == m_pPicking)
 		return E_FAIL;
@@ -106,30 +110,47 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 		return E_FAIL;
 	}
 
+	m_pResource_Manager = CResource_Manager::Create(*ppDevice, 1000);
+	if (nullptr == m_pResource_Manager) {
+		return E_FAIL;
+	}
+
+	m_pFont_Manager = CFont_Manager::Create(*ppDevice, *ppContext);
+	if (nullptr == m_pFont_Manager) {
+		return E_FAIL;
+	}
+
+
+	m_vViewPortSize = _float2((_float)EngineDesc.iWinSizeX, (_float)EngineDesc.iWinSizeY);
+
 	return S_OK;
 }
 
 void CGameInstance::Update_Engine(_float fTimeDelta)
 {
+	
+	_float fExcuteTimeDelta =  Update_SlowMotion(fTimeDelta);
+
 	m_pKey_Manager->Update();
 	m_pMouse_Manager->Update();
 	//m_pSound_Manager->Update();
 #ifdef _DEBUG
+	m_pResource_Manager->Describe_Entity();
 	m_pFog->Update_Fog();
 #endif // _DEBUG
 	m_pPicking->Update();
 
-	m_pObject_Manager->Priority_Update(fTimeDelta);
+	m_pObject_Manager->Priority_Update(fExcuteTimeDelta);
 
 	m_pPipeLine->Update();
 
-	m_pObject_Manager->Update(fTimeDelta);
+	m_pObject_Manager->Update(fExcuteTimeDelta);
 
-	m_pPhysX_Manager->Update(fTimeDelta);
+	m_pPhysX_Manager->Update(fExcuteTimeDelta);
 
-	m_pObject_Manager->Late_Update(fTimeDelta);
+	m_pObject_Manager->Late_Update(fExcuteTimeDelta);
 
-	m_pLevel_Manager->Update(fTimeDelta);
+	m_pLevel_Manager->Update(fExcuteTimeDelta);
 	m_pObject_Manager->Clear_DeadObj();
 
 	//m_pObstacle_Manager->Refresh_Region();
@@ -172,6 +193,23 @@ _int CGameInstance::Random_Int(_int iMin, _int iMax)
 	return iMin + (_int)(Random_Normal() * (iMax - iMin));
 }
 
+_int CGameInstance::Real_Random_Int(_int iMin, _int iMax)
+{
+	uniform_int_distribution<_int> rand(iMin, iMax);
+	return rand(m_Rng);
+}
+
+_float CGameInstance::Real_Random_Float (_float iMin, _float iMax)
+{
+	uniform_real_distribution<_float> rand(iMin, iMax);
+	return rand(m_Rng);
+}
+
+_float2 CGameInstance::Get_ViewPortSize()
+{
+	return m_vViewPortSize;
+}
+
 void CGameInstance::BillBoard(CTransform* pTransform)
 {
 	_matrix ScaleMatrix = {};
@@ -198,8 +236,39 @@ void CGameInstance::BillBoard(CTransform* pTransform)
 
 }
 
-#ifdef EDITOR_PROJECT
+void CGameInstance::SlowMotion(_float fSlowIntense, _float fTime)
+{
+	if (fTime <= 0 || fSlowIntense <= 0)
+		return;
 
+	m_isSlowMotion = true;
+	m_vSlowTime = _float2(0.f, fTime);
+	m_fSlowIntense = fSlowIntense;
+}
+
+_float CGameInstance::Update_SlowMotion(_float fTimeDelta)
+{
+	_float fExcuteTimeDelta = {};
+
+	if (m_isSlowMotion == false)
+		return fTimeDelta;
+
+	m_vSlowTime.x += fTimeDelta;
+
+	if (m_vSlowTime.x >= m_vSlowTime.y) // 시간을 넘겼다면
+	{
+		m_isSlowMotion = false;
+		m_vSlowTime.x = 0.f;
+	}
+	else
+	{
+		fExcuteTimeDelta = m_fSlowIntense * fTimeDelta;
+	}
+
+	return fExcuteTimeDelta;
+}
+
+#ifdef EDITOR_PROJECT
 
 void CGameInstance::Save_ModelFilePath(const _char* FilePath)
 {
@@ -280,50 +349,227 @@ void CGameInstance::Compute_FrameCount()
 	m_fTimer_LateUpdate = Get_TimeDelta(TEXT("Timer_LateUpdate"));
 	m_fTimer_DrawCall = Get_TimeDelta(TEXT("Timer_DrawCall"));
 	m_fTimer_Present = Get_TimeDelta(TEXT("Timer_Present"));
+	m_fTimer_Picking = Get_TimeDelta(TEXT("Timer_Picking"));
+	m_fTimer_PhysX = Get_TimeDelta(TEXT("Timer_PhysX"));
+	m_fTimer_Level = Get_TimeDelta(TEXT("Timer_Level"));
 	m_fTimer_FrameCount = Get_TimeDelta(TEXT("Timer_FrameCount"));
+
+	m_fTimer_Render_Priority = Get_TimeDelta(TEXT("Timer_Render_Priority"));
+	m_fTimer_Render_Shadow = Get_TimeDelta(TEXT("Timer_Render_Shadow"));
+	m_fTimer_Render_NonBlend = Get_TimeDelta(TEXT("Timer_Render_NonBlend"));
+	m_fTimer_Render_SSAO = Get_TimeDelta(TEXT("Timer_Render_SSAO"));
+	m_fTimer_Render_SSAO_BLUR = Get_TimeDelta(TEXT("Timer_Render_SSAO_BLUR"));
+	m_fTimer_Render_LightAcc = Get_TimeDelta(TEXT("Timer_Render_LightAcc"));
+	m_fTimer_Render_Blur = Get_TimeDelta(TEXT("Timer_Render_Blur"));
+	m_fTimer_Render_Combined = Get_TimeDelta(TEXT("Timer_Render_Combined"));
+	m_fTimer_Render_Occlusion = Get_TimeDelta(TEXT("Timer_Render_Occlusion"));
+	m_fTimer_Render_EnvironmentPostProcess = Get_TimeDelta(TEXT("Timer_Render_EnvironmentPostProcess"));
+	m_fTimer_Render_Fog = Get_TimeDelta(TEXT("Timer_Render_Fog"));
+	m_fTimer_Render_Effect = Get_TimeDelta(TEXT("Timer_Render_Effect"));
+	m_fTimer_Render_NonLight = Get_TimeDelta(TEXT("Timer_Render_NonLight"));
+	m_fTimer_Render_Blend = Get_TimeDelta(TEXT("Timer_Render_Blend"));
+	m_fTimer_Render_WeightBlend = Get_TimeDelta(TEXT("Timer_Render_WeightBlend"));
+	m_fTimer_Render_Bloom = Get_TimeDelta(TEXT("Timer_Render_Bloom"));
+	m_fTimer_Render_LastColor = Get_TimeDelta(TEXT("Timer_Render_LastColor"));
+	m_fTimer_Render_Tone_Mapping = Get_TimeDelta(TEXT("Timer_Render_Tone_Mapping"));
+	m_fTimer_Render_UI = Get_TimeDelta(TEXT("Timer_Render_UI"));
+	m_fTimer_Render_UI_Overley = Get_TimeDelta(TEXT("Timer_Render_UI_Overley"));
 #endif // _DEBUG
 }
 
 void CGameInstance::Present_TimeCost() const
 {
+#pragma region TimeCost
 #ifdef _DEBUG
 	_float fTotal = m_fTimer_PriorityUpdate
 		+ m_fTimer_Update
 		+ m_fTimer_LateUpdate
 		+ m_fTimer_DrawCall
-		+ m_fTimer_Present;
+		+ m_fTimer_Present
+		+ m_fTimer_Picking
+		+ m_fTimer_PhysX
+		+ m_fTimer_Level;
 
 	GUI::PushItemWidth(80);
-	GUI::Begin("Previous_Frame_Timer");
+	GUI::Begin("Previous_Frame_Timer", 0, IMGUI_GLOBAL_BEGIN_FLAG);
+
+	if (GUI::CollapsingHeader("Detail"))
 	{
-		GUI::ProgressBar(m_fTimer_PriorityUpdate / fTotal, ImVec2(200.f, 0.f));
-		GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-		GUI::Text("Priority_Update %d", int(m_fTimer_PriorityUpdate / fTotal * 100.f));
-	}
-	{
-		GUI::ProgressBar(m_fTimer_Update / fTotal, ImVec2(200.f, 0.f));
-		GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-		GUI::Text("Update %d", int(m_fTimer_Update / fTotal * 100.f));
-	}
-	{
-		GUI::ProgressBar(m_fTimer_LateUpdate / fTotal, ImVec2(200.f, 0.f));
-		GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-		GUI::Text("Late_Update %d", int(m_fTimer_LateUpdate / fTotal * 100.f));
-	}
-	{
-		GUI::ProgressBar(m_fTimer_DrawCall / fTotal, ImVec2(200.f, 0.f));
-		GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-		GUI::Text("DrawCall %d", int(m_fTimer_DrawCall / fTotal * 100.f));
-	}
-	{
-		GUI::ProgressBar(m_fTimer_Present / fTotal, ImVec2(200.f, 0.f));
-		GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-		GUI::Text("Present %d", int(m_fTimer_Present / fTotal * 100.f));
-	}
-	{
-		GUI::ProgressBar(fTotal / m_fTimer_FrameCount, ImVec2(200.f, 0.f));
-		GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
-		GUI::Text("Timer_Occupancy %d", int(m_fTimer_Present / fTotal * 100.f));
+		{
+			GUI::ProgressBar(m_fTimer_PriorityUpdate / fTotal, ImVec2(200.f, 0.f));
+			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+			GUI::Text("Priority_Update %d", int(m_fTimer_PriorityUpdate / fTotal * 100.f));
+		}
+		{
+			GUI::ProgressBar(m_fTimer_Update / fTotal, ImVec2(200.f, 0.f));
+			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+			GUI::Text("Update %d", int(m_fTimer_Update / fTotal * 100.f));
+		}
+		{
+			GUI::ProgressBar(m_fTimer_LateUpdate / fTotal, ImVec2(200.f, 0.f));
+			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+			GUI::Text("Late_Update %d", int(m_fTimer_LateUpdate / fTotal * 100.f));
+		}
+		{
+			GUI::ProgressBar(m_fTimer_Picking / fTotal, ImVec2(200.f, 0.f));
+			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+			GUI::Text("Picking %d", int(m_fTimer_Picking / fTotal * 100.f));
+		}
+		{
+			GUI::ProgressBar(m_fTimer_PhysX / fTotal, ImVec2(200.f, 0.f));
+			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+			GUI::Text("PhysX %d", int(m_fTimer_PhysX / fTotal * 100.f));
+		}
+		{
+			GUI::ProgressBar(m_fTimer_Level / fTotal, ImVec2(200.f, 0.f));
+			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+			GUI::Text("Level %d", int(m_fTimer_Level / fTotal * 100.f));
+		}
+		if (GUI::IsPopupOpen("Renderer_Timer"))
+		{
+			if (GUI::BeginPopup("Renderer_Timer")) {
+				_float fRenderer_Total = m_fTimer_Render_Priority
+					+ m_fTimer_Render_Shadow
+					+ m_fTimer_Render_NonBlend
+					+ m_fTimer_Render_SSAO
+					+ m_fTimer_Render_SSAO_BLUR
+					+ m_fTimer_Render_LightAcc
+					+ m_fTimer_Render_Blur
+					+ m_fTimer_Render_Combined
+					+ m_fTimer_Render_Occlusion
+					+ m_fTimer_Render_EnvironmentPostProcess
+					+ m_fTimer_Render_Fog
+					+ m_fTimer_Render_Effect
+					+ m_fTimer_Render_NonLight
+					+ m_fTimer_Render_Blend
+					+ m_fTimer_Render_WeightBlend
+					+ m_fTimer_Render_Bloom
+					+ m_fTimer_Render_LastColor
+					+ m_fTimer_Render_Tone_Mapping
+					+ m_fTimer_Render_UI
+					+ m_fTimer_Render_UI_Overley;
+				{
+					GUI::ProgressBar(m_fTimer_Render_Priority / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_Priority %d", int(m_fTimer_Render_Priority / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_Shadow / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_Shadow %d", int(m_fTimer_Render_Shadow / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_NonBlend / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_NonBlend %d", int(m_fTimer_Render_NonBlend / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_SSAO / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_SSAO %d", int(m_fTimer_Render_SSAO / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_SSAO_BLUR / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_SSAO_BLUR %d", int(m_fTimer_Render_SSAO_BLUR / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_LightAcc / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_LightAcc %d", int(m_fTimer_Render_LightAcc / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_Blur / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_Blur %d", int(m_fTimer_Render_Blur / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_Combined / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_Combined %d", int(m_fTimer_Render_Combined / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_Occlusion / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_Occlusion %d", int(m_fTimer_Render_Occlusion / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_EnvironmentPostProcess / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_EnvironmentPostProcess %d", int(m_fTimer_Render_EnvironmentPostProcess / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_Fog / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_Fog %d", int(m_fTimer_Render_Fog / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_Effect / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_Effect %d", int(m_fTimer_Render_Effect / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_NonLight / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_NonLight %d", int(m_fTimer_Render_NonLight / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_Blend / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_Blend %d", int(m_fTimer_Render_Blend / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_WeightBlend / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_WeightBlend %d", int(m_fTimer_Render_WeightBlend / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_Bloom / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_Bloom %d", int(m_fTimer_Render_Bloom / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_LastColor / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_LastColor %d", int(m_fTimer_Render_LastColor / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_Tone_Mapping / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_Tone_Mapping %d", int(m_fTimer_Render_Tone_Mapping / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_UI / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_UI %d", int(m_fTimer_Render_UI / fRenderer_Total * 100.f));
+				}
+				{
+					GUI::ProgressBar(m_fTimer_Render_UI_Overley / fRenderer_Total, ImVec2(200.f, 0.f));
+					GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+					GUI::Text("Render_UI_Overley %d", int(m_fTimer_Render_UI_Overley / fRenderer_Total * 100.f));
+				}
+				GUI::EndPopup();
+			}
+		}
+		{
+			GUI::ProgressBar(m_fTimer_DrawCall / fTotal, ImVec2(200.f, 0.f));
+			GUI::SameLine();
+			if (GUI::SmallButton("Renderer_Timer")) {
+				GUI::OpenPopup("Renderer_Timer");
+			}
+			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+			GUI::Text("DrawCall %d", int(m_fTimer_DrawCall / fTotal * 100.f));
+		}
+		{
+			GUI::ProgressBar(m_fTimer_Present / fTotal, ImVec2(200.f, 0.f));
+			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+			GUI::Text("Present %d", int(m_fTimer_Present / fTotal * 100.f));
+		}
+		{
+			GUI::ProgressBar(fTotal / m_fTimer_FrameCount, ImVec2(200.f, 0.f));
+			GUI::SameLine(0.f, GUI::GetStyle().ItemInnerSpacing.x);
+			GUI::Text("Timer_Occupancy %d", int(m_fTimer_Present / fTotal * 100.f));
+		}
 	}
 	GUI::Text("GameInstance RefCNT : %d", m_iRefCnt.load());
 	static float values[60] = {};
@@ -331,7 +577,7 @@ void CGameInstance::Present_TimeCost() const
 	static double refresh_time = 0.0;
 	if (refresh_time == 0.0)
 		refresh_time = GUI::GetTime();
-	while (refresh_time < GUI::GetTime()) // Create data at fixed 60 Hz rate for the demo
+	while (refresh_time < GUI::GetTime()) 
 	{
 		values[values_offset] = m_fTimer_FrameCount;
 		values_offset = (values_offset + 1) % IM_ARRAYSIZE(values);
@@ -377,6 +623,7 @@ void CGameInstance::Present_TimeCost() const
 	}
 	GUI::End();
 #endif // _DEBUG
+#pragma endregion
 }
 
 HRESULT CGameInstance::Change_Level(CLevel* pNewLevel)
@@ -432,6 +679,11 @@ HRESULT CGameInstance::Add_RenderGroup(RENDER eRenderGroup, CGameObject* pRender
 	return m_pRenderer->Add_RenderGroup(eRenderGroup, pRenderObject);
 }
 
+void CGameInstance::Render_PreShadow()
+{
+	return m_pRenderer->Render_PreShadow();
+}
+
 void CGameInstance::Set_Transform(D3DTS eState, _fmatrix TransformStateMatrix)
 {
 	m_pPipeLine->Set_Transform(eState, TransformStateMatrix);
@@ -462,19 +714,69 @@ void CGameInstance::Transform_Frustum_ToLocalSpace(_fmatrix WorldMatrixInverse)
 	m_pPipeLine->Transform_Frustum_ToLocalSpace(WorldMatrixInverse);
 }
 
-_bool CGameInstance::isIn_WorldFrustum(_fvector vWorldPos, _float fRadius)
+_bool CGameInstance::IsIn_WorldFrustum(_fvector vWorldPos, _float fRadius)
 {
-	return m_pPipeLine->isIn_WorldFrustum(vWorldPos, fRadius);
+	return m_pPipeLine->IsIn_WorldFrustum(vWorldPos, fRadius);
 }
 
-_bool CGameInstance::isIn_LocalFrustum(_fvector vLocalPos, _float fRadius)
+_bool CGameInstance::IsIn_LocalFrustum(_fvector vLocalPos, _float fRadius)
 {
-	return m_pPipeLine->isIn_LocalFrustum(vLocalPos, fRadius);
+	return m_pPipeLine->IsIn_LocalFrustum(vLocalPos, fRadius);
+}
+
+pair<_bool, _ubyte> CGameInstance::IsIn_ShadowViewFrustum(_fvector vWorldCenter, _float fRadius)
+{
+	return m_pPipeLine->IsIn_ShadowViewFrustum(vWorldCenter, fRadius);
+}
+
+HRESULT CGameInstance::Bind_CascadeSplitRatio(CShader* pShader, const _char* pConstantName, _bool bNear)
+{
+	return m_pPipeLine->Bind_CascadeSplitRatio(pShader, pConstantName, bNear);
+}
+
+HRESULT CGameInstance::Bind_CascadeBias(CShader* pShader, const _char* pConstantName)
+{
+	return m_pPipeLine->Bind_CascadeBias(pShader, pConstantName);
+}
+
+HRESULT CGameInstance::Bind_GlobalSRV(CShader* pShader, const _tchar* wszKeyGlobalSRV, const _char* pConstantName)
+{
+	return m_pPipeLine->Bind_GlobalSRV(pShader, wszKeyGlobalSRV, pConstantName);
+}
+
+HRESULT CGameInstance::Load_GlobalSRV(const _tchar* wszKeyGlobalSRV, filesystem::path pathSRVFolder)
+{
+	return m_pPipeLine->Load_GlobalSRV(wszKeyGlobalSRV, pathSRVFolder);
+}
+
+HRESULT CGameInstance::Ready_Shadow_Light(const _float4& vShadowDirRPYQuat)
+{
+	return m_pPipeLine->Ready_Shadow_Light(vShadowDirRPYQuat);
+}
+
+HRESULT CGameInstance::Bind_Shadow_Resource(CShader* pShader, const _char* pConstantName, D3DTS eType, SHADOW eShadowType) const
+{
+	return m_pPipeLine->Bind_Shadow_Resource(pShader, pConstantName, eType, eShadowType);
+}
+
+const _float4x4* CGameInstance::Get_ShadowMatricesPtr(_uint iShadowBoxIndex)
+{
+	return m_pPipeLine->Get_ShadowMatricesPtr(iShadowBoxIndex);
+}
+
+_float  CGameInstance::Get_ShadowBoxFar(_uint iShadowBoxIndex)
+{
+	return m_pPipeLine->Get_ShadowBoxFar(iShadowBoxIndex);
 }
 
 void CGameInstance::Add_Light(_uint _iCurrentLevel, CLight* _pLight)
 {
 	m_pLight_Manager->Add_Light(_iCurrentLevel, _pLight);
+}
+
+void CGameInstance::Add_Light_Group(_uint _iCurrentLevel, CLight* _pLight)
+{
+	m_pLight_Manager->Add_Light_Group(_iCurrentLevel, _pLight);
 }
 
 void CGameInstance::Delete_Light(_uint _iCurrentLevel, CLight* _pLight)
@@ -567,6 +869,10 @@ HRESULT CGameInstance::Finish_RenderTarget(CVIBuffer_Rect* pVIBuffer, CShader* p
 {
 	return m_pRenderTarget_Manager->Finish_RenderTarget(pVIBuffer, pShader, wstrRenderTargetOriginal, wstrRenderTargetBloomed, ePass);
 }
+HRESULT CGameInstance::Bind_CS_RenderTarget(_uint iIndex, const _wstring& strTargetTag)
+{
+	return m_pRenderTarget_Manager->Bind_CS_RenderTarget(iIndex, strTargetTag);
+}
 #ifdef _DEBUG
 void CGameInstance::RenderTarget_Debuger()
 {
@@ -602,6 +908,10 @@ _vector CGameInstance::Get_CameraLook()
 {
 	return m_pCamera_Manager->Get_CameraLook();
 }
+_float CGameInstance::Get_CameraFov()
+{
+	return m_pCamera_Manager->Get_CameraFov();
+}
 const _float* CGameInstance::Get_CurrentCameraFar()
 {
 	return m_pCamera_Manager->Get_CurrentCameraFar();
@@ -609,22 +919,6 @@ const _float* CGameInstance::Get_CurrentCameraFar()
 void CGameInstance::Force_CamPosition(_fvector vPos)
 {
 	return m_pCamera_Manager->Force_CamPosition(vPos);
-}
-HRESULT CGameInstance::Ready_Shadow_Light(const SHADOW_LIGHT_DESC& Desc)
-{
-	return m_pShadow->Ready_Shadow_Light(Desc);
-}
-HRESULT CGameInstance::Bind_Shadow_Resource(CShader* pShader, const _char* pConstantName, D3DTS eType) const
-{
-	return m_pShadow->Bind_Shadow_Resource(pShader, pConstantName, eType);
-}
-const _float4x4* CGameInstance::Get_ShadowMatricesPtr()
-{
-	return m_pShadow->Get_ShadowMatricesPtr();
-}
-const SHADOW_LIGHT_DESC* CGameInstance::Get_ShadowDesc()
-{
-	return m_pShadow->Get_ShadowDesc();
 }
 _bool CGameInstance::isPicking(_float3* pOut)
 {
@@ -681,7 +975,7 @@ void CGameInstance::RegistHeight(const _tchar* pName, PSX::PxHeightFieldDesc& De
 PSX::PxRigidDynamic* CGameInstance::Add_DynamicActor(CRigidBody_Dynamic& RigidBody)
 {
 	return m_pPhysX_Manager->Add_DynamicActor(RigidBody);
-}
+	}
 PSX::PxRigidStatic* CGameInstance::Add_StaticActor(CRigidBody_Static& RigidBody)
 {
 	return m_pPhysX_Manager->Add_StaticActor(RigidBody);
@@ -693,6 +987,18 @@ PSX::PxRevoluteJoint* CGameInstance::Create_PxRevoluteJoint(PSX::PxRigidActor* p
 _bool CGameInstance::SphereCast(_float fRadius, _float3 vStartPos, _float3 vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
 {
 	return m_pPhysX_Manager->SphereCast(fRadius, vStartPos, vDir, fDistance, flagHitsData, flagQuery, hitBuffer);
+}
+_bool CGameInstance::SphereCast(_float fRadius, _fvector vStartPos, _gvector vDir, _float fDistance, PSX::PxHitFlags flagHitsData, PSX::PxQueryFlags flagQuery, PSX::PxSweepBuffer& hitBuffer)
+{
+	return m_pPhysX_Manager->SphereCast(fRadius, vStartPos, vDir, fDistance, flagHitsData, flagQuery, hitBuffer);
+}
+_bool CGameInstance::RayCast(_float3 _vStartPos, _float3 _vDir, _float fDistance, PSX::PxRaycastHit* pRayHitArray, _uint iMaxHitCapacity, _uint& iOutHitCount)
+{
+	return m_pPhysX_Manager->RayCast(_vStartPos, _vDir, fDistance, pRayHitArray, iMaxHitCapacity, iOutHitCount);
+}
+_bool CGameInstance::RayCast(_fvector _vStartPos, _gvector _vDir, _float fDistance, PSX::PxRaycastHit* pRayHitArray, _uint iMaxHitCapacity, _uint& iOutHitCount)
+{
+	return m_pPhysX_Manager->RayCast(_vStartPos, _vDir, fDistance, pRayHitArray, iMaxHitCapacity, iOutHitCount);
 }
 PSX::PxController* CGameInstance::Add_CapsuleController(PSX::PxCapsuleControllerDesc& Desc)
 {
@@ -722,11 +1028,11 @@ void CGameInstance::Release_Actor(PSX::PxActor& Actor)
 {
 	m_pPhysX_Manager->Detach_Actor(Actor);
 }
-#ifdef EDITOR_PROJECT
 HRESULT CGameInstance::ConvertToTriMeshes(vector<class CMesh*>& Meshes, vector<class PSX::PxTriangleMesh*>& pxTriMeshes, _fmatrix WorldMatrix)
 {
 	return m_pPhysX_Manager->ConvertToTriMeshes(Meshes, pxTriMeshes, WorldMatrix);
 }
+#ifdef EDITOR_PROJECT
 HRESULT CGameInstance::SaveTriMeshes(const _char* pPath, vector<PSX::PxTriangleMesh*>& TriMeshes)
 {
 	return m_pPhysX_Manager->SaveTriMeshes(pPath, TriMeshes);
@@ -757,7 +1063,14 @@ HRESULT CGameInstance::Bind_FogValue(class CShader* pShader)
 {
 	return m_pFog->Bind_FogValue(pShader);
 }
+ID3D11ShaderResourceView* CGameInstance::Add_Resource(const _char* pFilePath)
+{
+	return m_pResource_Manager->Add_Texture(pFilePath);
+}
+
 #pragma endregion // FOG
+
+#pragma region INPUT
 
 bool		CGameInstance::Key_Pressing(int _iKey)
 {
@@ -796,9 +1109,9 @@ _bool CGameInstance::Mouse_Up(int _iKey)
 }
 _bool CGameInstance::Mouse_Down(int _iKey)
 {
-	if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
+	//if (false == (GUI::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))) {
 		return m_pKey_Manager->Mouse_Down(_iKey);
-	}
+	//}
 	return false;
 }
 _bool CGameInstance::Mouse_StartMove()
@@ -862,16 +1175,47 @@ _bool	CGameInstance::Toggle_MouseCenter()
 	return m_pMouse_Manager->Toggle_MouseCenter();
 }
 
+#pragma endregion // INPUT
+
+#pragma region FONT_MANAGER
+
+HRESULT CGameInstance::Add_Font(const _wstring& strFontTag, const _tchar* pFontFilePath)
+{
+	return m_pFont_Manager->Add_Font(strFontTag, pFontFilePath);
+}
+
+HRESULT CGameInstance::Render_Text(const _wstring& strFontTag, const _tchar* pText, const _float2& vPosition, _fvector vColor, _float vScale)
+{
+	return m_pFont_Manager->Render(strFontTag, pText, vPosition, vColor, vScale);
+}
+
+HRESULT CGameInstance::Render_Rotation_Text(const _wstring& strFontTag, const _tchar* pText, const _float2& vPosition, _fvector vColor, _float Rotation, _float vScale)
+{
+	return m_pFont_Manager->Render_Rotate(strFontTag, pText, vPosition, vColor, Rotation, vScale);
+}
+
+HRESULT CGameInstance::Perspective_Render_Text(_matrix View, _matrix Proj, const _wstring& strFontTag, const _tchar* pText, const _fvector& vPosition, _fvector vColor, _float vScale)
+{
+	return m_pFont_Manager->Perspective_Render(View, Proj, strFontTag, pText, vPosition, vColor, vScale);
+}
+
+_float CGameInstance::FontSizeX(const _wstring& strFontTag, const _tchar* pText)
+{
+	return m_pFont_Manager->FontSizeX(strFontTag, pText);
+}
+
+#pragma endregion
+
 void CGameInstance::Release_Engine()
 {
 	SAFE_RELEASE(m_pThreadHolder);
 
 	DestroyInstance();
 
+	SAFE_RELEASE(m_pFont_Manager);
 	SAFE_RELEASE(m_pFog);
 	SAFE_RELEASE(m_pPicking);
 	SAFE_RELEASE(m_pCollider_Manager);
-	SAFE_RELEASE(m_pShadow);
 	SAFE_RELEASE(m_pCamera_Manager);
 	SAFE_RELEASE(m_pRenderTarget_Manager);
 	SAFE_RELEASE(m_pPipeLine);
@@ -884,6 +1228,7 @@ void CGameInstance::Release_Engine()
 	SAFE_RELEASE(m_pLevel_Manager);
 	SAFE_RELEASE(m_pPrototype_Manager);
 	SAFE_RELEASE(m_pLight_Manager); // Light Manager�� m_pObject_Manager ���� ���� �ҷ����� 
+	SAFE_RELEASE(m_pResource_Manager);
 	SAFE_RELEASE(m_pGraphic_Device);
 }
 

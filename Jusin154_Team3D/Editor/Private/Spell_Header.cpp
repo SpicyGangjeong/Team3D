@@ -21,10 +21,10 @@ HRESULT CSpell_Header::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = 0.f;
-	Desc.fY = -20.f;
+	Desc.fX = 600.f;
+	Desc.fY = -385.f;
 	Desc.fSizeX = 512.f;
-	Desc.fSizeY = 64.f;
+	Desc.fSizeY = 80.f;
 
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
 
@@ -38,26 +38,42 @@ HRESULT CSpell_Header::Initialize(void* pArg)
 	}
 
 	m_fTimeMult = 3.f;
-	m_fAlpha = 1.f;
-	m_fAlphaTime = 3.f;
+	m_fAlpha = 0.f;
+	m_fAlphaTime = 5.f;
 	m_fMoveSpeed = 5.f;
 	m_fLerpX = m_fX;
 	m_fLerpY = 45;
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Slot_Hover"), [this](void* p) {this->Set_SkillType(*reinterpret_cast<_int*>(p)); });
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("FadeIn"), [this](void* p) {this->Set_FadeIn(); });
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("FadeOut"), [this](void* p) {this->Set_FadeOut(); });
+	m_fFontX = 920.f;
+	m_fFontY = 510.f;
+	m_fType = _float2(935.f, 550.f);
+	m_iPerSpellIndex = -1;
 	return S_OK;
 }
 
 void CSpell_Header::Priority_Update(_float fTimeDelta)
 {
+	if (!__super::Chack_Visible())
+	{
+		return;
+	}
 	__super::Priority_Update(fTimeDelta);
 }
 
 void CSpell_Header::Update(_float fTimeDelta)
 {
+	if (!__super::Chack_Visible())
+	{
+		return;
+	}
 	if (m_bFadeIn == true)
 	{
 		if (m_fAlpha <= 1.f)
 		{
 			m_fAlpha += fTimeDelta * m_fAlphaTime;
+			m_bHover = true;
 		}
 
 		if (m_fAlpha >= 1.f)
@@ -70,13 +86,24 @@ void CSpell_Header::Update(_float fTimeDelta)
 	if (m_bFadeOut == true)
 	{
 		if (m_fAlpha >= 0.f)
-			m_fAlpha -= fTimeDelta;
+		{
+			m_fAlpha -= fTimeDelta * m_fAlphaTime;
+		}
 
 		if (m_fAlpha <= 0.f)
 		{
 			m_bFadeOut = false;
 			m_fAlpha = 0.f;
+			m_bHover = false;
 		}
+	}
+
+	if (m_iSpellType != -1 && m_iPerSpellIndex != m_iSpellType)
+	{
+		m_iSkillType = static_cast<CUIObject*>(m_pOwner)->Get_Info(m_iSpellType).iSpell_Type;
+		m_pSpell_Name = static_cast<CUIObject*>(m_pOwner)->Get_Info(m_iSpellType).pSpell_Name;
+		m_fSpell_Type = static_cast<CUIObject*>(m_pOwner)->Get_Info(m_iSpellType).pType_Name;
+		m_iPerSpellIndex = m_iSpellType;
 	}
 
 	m_fTime += fTimeDelta * m_fTimeMult;
@@ -85,7 +112,12 @@ void CSpell_Header::Update(_float fTimeDelta)
 
 void CSpell_Header::Late_Update(_float fTimeDelta)
 {
+	if (!__super::Chack_Visible())
+	{
+		return;
+	}
 	if (m_bVisible) {
+		m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
 		__super::Late_Update(fTimeDelta);
 	}
 }
@@ -105,17 +137,17 @@ HRESULT CSpell_Header::Render()
 		return E_FAIL;
 	}
 
+
+	m_fFontOffSet = (m_pGameInstance->FontSizeX(TEXT("Font_size20"), m_pSpell_Name.c_str()) - 53.f) * 0.5f;
+	m_pGameInstance->Render_Text(TEXT("Font_size20"), m_pSpell_Name.c_str(), _float2((m_fFontX + m_fX) - m_fFontOffSet, m_fFontY + m_fY), XMVectorSet((215.f / 255.f) * m_fAlpha, (185.f / 255.f) * m_fAlpha, (95.f / 255.f) * m_fAlpha, m_fAlpha));
+	m_pGameInstance->Render_Text(TEXT("Font_size13"), m_fSpell_Type.c_str(), _float2(m_fType.x + m_fX, m_fType.y + m_fY), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
+
 	return S_OK;
 }
 
 _vector CSpell_Header::Get_WorldPostion()
 {
 	return m_pTransformCom->Get_State(STATE::POSITION);
-}
-
-void CSpell_Header::MoveY(_float fY)
-{
-	m_fY += fY;
 }
 
 HRESULT CSpell_Header::Bind_ShaderResources()
@@ -156,7 +188,7 @@ HRESULT CSpell_Header::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_iSpellType", &m_iSpellType, sizeof(_int))))
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_iSpellType", &m_iSkillType, sizeof(_int))))
 	{
 		return E_FAIL;
 	}

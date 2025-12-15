@@ -47,7 +47,7 @@ HRESULT CSpell_Overlay::Initialize(void* pArg)
 	m_vUVScale.x = 1.f;
 	m_vUVScale.y = 1.f;
 	m_fCoolTime = 5.f;
-	m_fSortZ = 1.f;
+	m_fSortZ = 0.01f;
 	m_iSpellType = ENUM_CLASS(SPELLTYPE::CONTROL);
 	Compute_UI(5);
 	return S_OK;
@@ -55,7 +55,7 @@ HRESULT CSpell_Overlay::Initialize(void* pArg)
 
 void CSpell_Overlay::Compute_UI(_uint SpellID)
 {
-	_float2 fImage_Size = { 1024.f, 1536.f };
+	_float2 fImage_Size = { 1024.f, 1792.f };
 
 	_uint iCountX = 4;
 	_uint iCountY = 6;

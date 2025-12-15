@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Level_UI.h"
 #include "GameInstance.h"
 #include "Level_Loading.h"
@@ -6,6 +6,7 @@
 #include "IMGUIUI.h"
 #include "GamePlay_Canvas.h"
 #include "Mouse_Cursor.h"
+#include "Spell_Data.h"
 
 CLevel_UI::CLevel_UI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eLevelID)
 	: CLevel{ pDevice, pContext, ENUM_CLASS(eLevelID) }
@@ -33,7 +34,7 @@ void CLevel_UI::Update(_float fTimeDelta)
 
 HRESULT CLevel_UI::Render()
 {
-	SetWindowText(g_hWnd, TEXT("UI·¹º§ÀÔ´Ï´Ù."));
+	SetWindowText(g_hWnd, TEXT("UIë ˆë²¨ìž…ë‹ˆë‹¤."));
 	GUI::ShowDemoWindow();
 	return S_OK;
 }
@@ -55,11 +56,6 @@ HRESULT CLevel_UI::Ready_Layer_UI(const _wstring& strLayerTag)
 
 HRESULT CLevel_UI::Ready_Layer_Cursor(const _wstring& strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CMouse_Cursor>(g_iStaticLevel, NEXT_LEVEL, LAYER_UI)))
-	{
-		return E_FAIL;
-	}
-
 	return S_OK;
 }
 

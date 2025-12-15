@@ -3,8 +3,9 @@
 
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
-bool g_bRimLight;
-bool g_bUseNormalMap;
+int g_bRimLight;
+int g_bUseNormalMap;
+int g_bDisolve;
 
 float g_fFar;
 float g_LifeRatio;
@@ -12,18 +13,51 @@ float g_fRimStrength;
 float g_fRimPower;
 float3 g_vRimColor;
 float4 g_TestColor;
-float3 g_vOutLineColor;
+float4 g_vOutLineColor;
 float g_fOutLineScale;
 float g_fOutLineThickness;
 float g_fOutLinePower;
-vector g_vCamPosition;
+float g_fDisolveRatio;
+float g_fDisolveAmount;
+float g_fDisolveEdgeWidth;
 
-Texture2D g_DiffuseTexture;
-Texture2D g_NormalTexture;
+float4 g_vDisolveEdgeColor;
+float4 g_vCamPosition;
+
 Texture2D g_DAOTexture;
 Texture2D g_THVTexture;
 Texture2D g_SurfaceParamsTexture;
+Texture2D g_DeadDisolveTexture;
+Texture2D g_DeadDisolveBurnTexture;
 
+Texture2D g_DiffuseTexture;
+Texture2D g_SpecularTexture;
+Texture2D g_AmbientTexture;
+Texture2D g_EmissiveTexture;
+Texture2D g_HeightTexture;
+Texture2D g_NormalTexture;
+Texture2D g_ShininessTexture;
+Texture2D g_OpacityTexture;
+Texture2D g_DisplacementTexture;
+Texture2D g_LightMapTexture;
+Texture2D g_ReflectionTexture;
+Texture2D g_BaseColorTexture;
+Texture2D g_NormalCameraTexture;
+Texture2D g_EmissionColorTexture;
+Texture2D g_MetalnessTexture;
+Texture2D g_Diffuse_RoughnessTexture;
+Texture2D g_AmbientOcclusionTexture;
+Texture2D g_UnknownTexture;
+Texture2D g_SheenTexture;
+Texture2D g_ClearcoadTexture;
+Texture2D g_TransmissionTexture;
+Texture2D g_Maya_BaseTexture;
+Texture2D g_Maya_SpecularTexture;
+Texture2D g_Maya_Specular_ColorTexture;
+Texture2D g_Maya_Specular_RoughnessTexture;
+Texture2D g_AnisotropyTexture;
+
+int g_iBinded_Texture[27];
 
 float3 g_RootColor;
 float3 g_TipColor;
@@ -82,13 +116,13 @@ VS_OUT VS_MAIN(VS_IN In)
     matWV = mul(g_WorldMatrix, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
     
-    Out.vPosition = mul(vPosition, matWVP);
-    Out.vNormal = normalize(mul(vNormal, g_WorldMatrix)).xyz;
-    Out.vBinormal = normalize(mul(vBinormal, g_WorldMatrix)).xyz;
-    Out.vTangent = normalize(mul(vTangent, g_WorldMatrix)).xyz;
-    Out.vTexcoord = In.vTexcoord;
-    Out.vWorldPos = mul(vPosition, g_WorldMatrix);
-    Out.vProjPos = Out.vPosition;
+    Out.vPosition   = mul(vPosition, matWVP);
+    Out.vNormal     = normalize(mul(vNormal, g_WorldMatrix)).xyz;
+    Out.vBinormal   = normalize(mul(vBinormal, g_WorldMatrix)).xyz;
+    Out.vTangent    = normalize(mul(vTangent, g_WorldMatrix)).xyz;
+    Out.vTexcoord   = In.vTexcoord;
+    Out.vWorldPos   = mul(vPosition, g_WorldMatrix);
+    Out.vProjPos    = Out.vPosition;
     return Out;
 }
 
@@ -197,7 +231,6 @@ VS_OUT_BLUR VS_MAIN_BLUR(VS_IN In)
 struct VS_OUT_SHADOW
 {
     float4 vPosition : SV_POSITION;
-    float4 vProjPos : TEXCOORD0;
 };
 
 VS_OUT_SHADOW VS_MAIN_SHADOW(VS_IN In)
@@ -220,7 +253,6 @@ VS_OUT_SHADOW VS_MAIN_SHADOW(VS_IN In)
     matWVP = mul(matWV, g_ProjMatrix);
     
     Out.vPosition = mul(vPosition, matWVP);
-    Out.vProjPos = Out.vPosition;
 
     return Out;
 }
@@ -249,12 +281,27 @@ PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out;
     
-    vector vMtrlDiffuse = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
-    vector vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
-    if (vMtrlDiffuse.a < 0.2f)
+    float4 vMtrlDiffuse = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    float4 vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    //if (vMtrlDiffuse.a < 0.3f){
+    //    discard;
+    //}
+    if (true == g_bDisolve)
     {
-        discard;
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vMtrlDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vMtrlDiffuse, In.vTexcoord);
     }
+    if (g_iBinded_Texture[21] != 0)
+    {
+        float4 vTransmission = g_TransmissionTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+        vMtrlDiffuse.a *= vTransmission.r;
+    }
+    if (g_iBinded_Texture[4] != 0)
+    {
+        float4 vEmissive = g_EmissiveTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+        vMtrlDiffuse += vEmissive;
+    }
+    if (vMtrlDiffuse.a < 0.2f) { discard; }
     
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, AnisoTropy_BLUR_Sampler, In.vTexcoord);
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
@@ -269,10 +316,15 @@ PS_OUT PS_MAIN(PS_IN In)
     
     Out.vAlbedo = vMtrlDiffuse;
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
+    float fSurfaceParam = g_fUsingSurfaceParams;
+    if (true == AlmostEqual7(g_fUsingSurfaceParams, 0.f))
+    {
+        fSurfaceParam = 0;
+    }
     Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
-    (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
-    g_fUsingSurfaceParams, // 서페이스 파라미터
-    1.f);
+        (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
+        fSurfaceParam, // 서페이스 파라미터
+        1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = vSurface;
     
@@ -282,19 +334,18 @@ PS_OUT PS_MAIN(PS_IN In)
 struct PS_IN_SHADOW
 {
     float4 vPosition : SV_POSITION;
-    float4 vProjPos : TEXCOORD0;
 };
 
 struct PS_OUT_SHADOW
 {
-    float4 vShadowLightDepth : SV_TARGET0;
+    float fShadowLightDepth : SV_TARGET0;
 };
 
 PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN_SHADOW In)
 {
     PS_OUT_SHADOW Out = (PS_OUT_SHADOW) 0;
     
-    Out.vShadowLightDepth.x = In.vProjPos.z;
+    Out.fShadowLightDepth = In.vPosition.z;
     
     return Out;
 }
@@ -335,7 +386,7 @@ PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
     (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
-    0, // 서페이스 파라미터
+    (float) AI_TEXTURE_TYPE_METALNESS / (float) AI_TEXTURE_TYPE_MAX, // 서페이스 파라미터
     1.f);
     
     return Out;
@@ -448,6 +499,54 @@ PS_OUT PS_EYELASH(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_SPECTOR_MAIN(PS_IN In)
+{
+    PS_OUT Out;
+    
+    float4 vMtrlDiffuse = g_EmissiveTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    float4 vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+        vMtrlDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vMtrlDiffuse, In.vTexcoord);
+    }
+    if (vMtrlDiffuse.a < 0.2f)
+    {
+        discard;
+    }
+    if (vMtrlDiffuse.r > 0.3f)
+    {
+        vMtrlDiffuse.rgb *= float3(2.f, 1.f, 1.f);
+    }
+    
+    float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
+    
+    float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
+    
+    if (true == g_bRimLight)
+    {
+        float fRimLight = GetRimLight(g_vCamPosition.xyz, In.vWorldPos.xyz, vNormal, g_fRimPower, g_fRimStrength);
+        vMtrlDiffuse.xyz = (vMtrlDiffuse.xyz * (1 - fRimLight)) + g_vRimColor * fRimLight;
+    }
+    
+    Out.vAlbedo = vMtrlDiffuse;
+    Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
+    float fSurfaceParam = g_fUsingSurfaceParams;
+    if (true == AlmostEqual7(g_fUsingSurfaceParams, 0.f))
+    {
+        fSurfaceParam = 0;
+    }
+    Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
+        (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
+        fSurfaceParam, // 서페이스 파라미터
+        1.f);
+    Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
+    Out.vSurface = vSurface;
+    
+    return Out;
+}
+
 
 technique11 DefaultTechnique
 {
@@ -528,5 +627,15 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN_OUTLINE();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_OUTLINE();
+    }
+
+    pass SpectorPass // 8
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_SPECTOR_MAIN();
     }
 }

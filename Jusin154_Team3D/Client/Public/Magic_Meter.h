@@ -27,7 +27,9 @@ public:
 
 public:
 	void Meter_Index(_uint Number);
-	//void Set_
+	_float Charge_Meter();
+	_float Get_Meter();
+	_float Use_Meter(_float Meter);
 
 private:
 	virtual HRESULT	Bind_ShaderResources() override;

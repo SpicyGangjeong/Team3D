@@ -1,8 +1,14 @@
 ﻿#pragma once
 
+
+
 #ifndef GUI
 #define	GUI	ImGui
 #endif // !GUI
+#ifndef IMGUI_GLOBAL_BEGIN_FLAG
+#define IMGUI_GLOBAL_BEGIN_FLAG  ImGuiWindowFlags_NoFocusOnAppearing|ImGuiWindowFlags_NoBringToFrontOnFocus|ImGuiWindowFlags_AlwaysAutoResize
+#endif // IMGUI_GLOBAL_BEGIN_FLAG
+#define COMPUTE_TIMEDELTA(TIMER) m_pGameInstance->Compute_TimeDelta(TEXT(TIMER))
 
 #ifndef PSX
 #define PSX physx
@@ -75,6 +81,8 @@
 #define FX_LASTCOLOR		TEXT("FX_LASTCOLOR")
 #define FX_WEIGHTBELND		TEXT("FX_WEIGHTBELND")
 
+#define CS_EFFECT			TEXT("CS_EFFECT")
+#define CS_INSTANCE_MODEL			TEXT("CS_INSTANCE_MODEL")
 
 #define			SAFE_ADDREF(pInstance)		Safe_AddRef(pInstance)
 #define			SAFE_RELEASE(pInstance)		Safe_Release(pInstance)
@@ -88,8 +96,14 @@
 // GRAVITY 음수 박으면 피직스 로드 실패함
 #define			GRAVITY						9.81f
 
-constexpr unsigned int g_iMaxShadowWidth = 16384;
-constexpr unsigned int g_iMaxShadowHeight = 9216;
+
+#define			SSAO_SAMPLE_NUMBER			64
+#define			TIMER_SHORT_LERP			0.16f
+
+constexpr unsigned int g_iMaxShadowWidth		= 16384;
+constexpr unsigned int g_iMaxShadowHeight		= 9216;
+//constexpr unsigned int g_iMaxShadowWidth		= 4096;
+//constexpr unsigned int g_iMaxShadowHeight		= 2304;
 
 #ifndef AI_TEXTURE_TYPE_MAX
 #define AI_TEXTURE_TYPE_MAX 27
@@ -141,8 +155,7 @@ constexpr unsigned int g_iMaxShadowHeight = 9216;
 			unsigned int iRefCnt = {};							\
 			if(nullptr != s_pInstance)	{						\
 				iRefCnt = s_pInstance->Release();				\
-				if(0 == iRefCnt)								\
-					s_pInstance = nullptr;						\
+				s_pInstance = nullptr;							\
 			}													\
 			return iRefCnt;										\
 		}

@@ -1,4 +1,5 @@
 ﻿#include "pch.h"
+#include "UI_Manager.h"
 #include "Spell_Canvas.h"
 #include "GameInstance.h"
 #include "Spell_Panel.h"
@@ -39,6 +40,7 @@ HRESULT CSpell_Canvas::Initialize(void* pArg)
 	{
 		return E_FAIL;
 	}
+	Visible(false);
 	return S_OK;
 }
 

@@ -199,6 +199,23 @@ HRESULT CRenderTarget_Manager::Paste_RenderTarget(const _wstring& strTargetTag, 
     return S_OK;
 }
 
+HRESULT CRenderTarget_Manager::Bind_CS_RenderTarget(_uint iIndex, const _wstring& strTargetTag)
+{
+    CRenderTarget* pRenderTarget = Find_RenderTarget(strTargetTag);
+
+    if (nullptr == pRenderTarget) {
+        return E_FAIL;
+    }
+
+    ID3D11ShaderResourceView* pSrc = pRenderTarget->Get_SRV();
+
+   m_pContext->CSSetShaderResources(iIndex, // 시작슬롯 번호
+        1,  // 버퍼 개수
+        &pSrc); // 버퍼 시작 주소
+
+   return S_OK;
+}
+
 HRESULT CRenderTarget_Manager::Accumulate_RenderTarget(CVIBuffer_Rect* pVIBuffer, CShader* pShader, 
     const _wstring& wstrRenderTarget_SrcA, const _wstring& wstrRenderTarget_SrcB, 
     const _wstring& wstrRenderTarget_Target, SHADER_PASS_DEFERRED ePass)
@@ -340,17 +357,17 @@ HRESULT CRenderTarget_Manager::Refit_RenderTarget(CVIBuffer_Rect* pVIBuffer, CSh
     const _char* pConstantName = { nullptr };
     switch (ePass)
     {
-    case Engine::SHADER_PASS_DEFERRED::BLOOM_BLURX:
-        pConstantName = "g_BlurTexture";
-        break;
-    case Engine::SHADER_PASS_DEFERRED::REFIT:
+    case Engine::SHADER_PASS_DEFERRED::UPSAMPLE:
         pConstantName = "g_DiffuseTexture";
         break;
     case Engine::SHADER_PASS_DEFERRED::EMBOSSING:
         pConstantName = "g_DiffuseTexture";
         break;
+    case Engine::SHADER_PASS_DEFERRED::BLOOM_BLURX:
+        pConstantName = "g_DiffuseTexture";
+        break;
     case Engine::SHADER_PASS_DEFERRED::BLOOM_BLURY:
-        pConstantName = "g_BlurTexture";
+        pConstantName = "g_BlurXTexture";
         break;
     default:
         hResult = E_FAIL;
@@ -497,7 +514,7 @@ HRESULT CRenderTarget_Manager::Render_RenderTarget_Debug(CShader* pShader, CVIBu
 
 void CRenderTarget_Manager::RenderTarget_Debuger()
 {
-    GUI::Begin("RenderTarget Debuger");
+    GUI::Begin("RenderTarget Debuger", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 
     GUI::Spacing();
 

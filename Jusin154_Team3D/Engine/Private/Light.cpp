@@ -123,6 +123,12 @@ HRESULT CLight::Render(CShader* pShader, CVIBuffer* pVIBuffer) const
 	if (FAILED(pShader->Bind_RawValue("g_vLightDiffuse", &m_LightDesc.vDiffuse, sizeof(_float4)))) {
 		return E_FAIL;
 	}
+
+	/* 라이트를 서서히 감쇄시키기 위한 감쇄값 */
+	
+
+
+
 	if (FAILED(pShader->Bind_RawValue("g_vLightAmbient", &m_LightDesc.vAmbient, sizeof(_float4)))) {
 		return E_FAIL;
 	}
@@ -130,6 +136,11 @@ HRESULT CLight::Render(CShader* pShader, CVIBuffer* pVIBuffer) const
 		return E_FAIL;
 	}
 
+	_float fLightIntensity = m_fIntensityRatio * m_fLightIntensity;
+
+	if (FAILED(pShader->Bind_RawValue("g_fLightIntensity", &fLightIntensity, sizeof(_float)))) {
+		return E_FAIL;
+	}
 	if (FAILED(pShader->Begin(iPassIndex))) {
 		return E_FAIL;
 	}
@@ -175,20 +186,22 @@ void CLight::Free()
 
 void CLight::Describe_Entity()
 {
-	if (ImGui::TreeNode("LIGHT_INFO"))
+	if (GUI::TreeNode("LIGHT_INFO"))
 	{
-		ImGui::Separator(); ImGui::Spacing();
+		GUI::Separator(); GUI::Spacing();
 
 		const char* pLightTypeNames[] = { "DIRECTIONAL", "POINT", "SPOT" };
 
 		int iCurrentItem = static_cast<int>(m_LightDesc.eType);
 
-		if (ImGui::Combo("LightType", &iCurrentItem, pLightTypeNames, ENUM_CLASS(LIGHT::END)))
+		if (GUI::Combo("LightType", &iCurrentItem, pLightTypeNames, ENUM_CLASS(LIGHT::END)))
 		{
 			m_LightDesc.eType = static_cast<LIGHT>(iCurrentItem);
 		}
 
-		GUI::DragFloat4("Diffuse", reinterpret_cast<float*>(&m_LightDesc.vDiffuse) , 0.01f , 0.f ,1.f);
+	 
+
+		GUI::ColorEdit4("Diffuse", (_float*)&m_LightDesc.vDiffuse);
 		GUI::DragFloat4("Ambient", reinterpret_cast<float*>(&m_LightDesc.vAmbient), 0.01f, 0.f, 1.f);
 		GUI::DragFloat4("Specular", reinterpret_cast<float*>(&m_LightDesc.vSpecular), 0.01f, 0.f, 1.f);
 		GUI::DragFloat("Range", &m_LightDesc.fRange, 1.f, 0.f);

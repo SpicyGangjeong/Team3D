@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "EffectObject.h"
 #include "GameInstance.h"
+#include "Effect_Container.h"
 
 CEffectObject::CEffectObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CPartObject(pDevice, pContext)
@@ -74,13 +75,30 @@ HRESULT CEffectObject::Render_Blur()
 
 	SHADER_PASS_INSTANCE_MODEL BlurPass = {};
 
+
 	if (m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::NON_WORLD || m_EffectInfo.eShaderPass == SHADER_PASS_INSTANCE_MODEL::BLEND_NOWORLD)
 	{
-		BlurPass = SHADER_PASS_INSTANCE_MODEL::NON_WORLD_BLUR;
+		if (m_EffectInfo.isBlurNoEmissive == false)
+		{
+			BlurPass = SHADER_PASS_INSTANCE_MODEL::NON_WORLD_BLUR;
+		}
+		else
+		{
+			BlurPass = SHADER_PASS_INSTANCE_MODEL::BLUR_NO_WORLD_NO_EMISSIVE;
+		}
 	}
 	else
 	{
-		BlurPass = SHADER_PASS_INSTANCE_MODEL::BLUR;
+		if (m_EffectInfo.isBlurNoEmissive == false)
+		{
+			BlurPass = SHADER_PASS_INSTANCE_MODEL::BLUR;
+		}
+		else
+		{
+			BlurPass = SHADER_PASS_INSTANCE_MODEL::BLUR_NO_EMMISVE;
+		}
+
+
 	}
 
 	for (_uint i = 0; i < m_pInstance_ModelCom->Get_NumMeshes(); i++)
@@ -107,6 +125,48 @@ HRESULT CEffectObject::Render_Blur()
 
 	return S_OK;
 }
+
+void CEffectObject::Disable_Light()
+{
+
+	if (m_pLightCom == nullptr)
+		return;
+
+	m_pGameInstance->Delete_Light(CURRENT_LEVEL, m_pLightCom);
+
+}
+
+void CEffectObject::Add_Light()
+{
+	if (m_pLightCom == nullptr)
+		return;
+
+	m_pGameInstance->Add_Light(CURRENT_LEVEL, m_pLightCom);
+}
+
+void CEffectObject::FollowParents(const _float4x4* pParentsMat,const _float4x4* pOffsetMat)
+{
+	if (pParentsMat == nullptr)
+		return;
+
+	if (pOffsetMat)
+	{
+		_matrix parent = XMLoadFloat4x4(pParentsMat);
+		_matrix offset = XMLoadFloat4x4(pOffsetMat);
+
+		_matrix final = offset * parent;
+
+		XMStoreFloat4x4(&m_FinalParentMatrix, final);
+
+		m_pParentMatrix = &m_FinalParentMatrix;
+	}
+	else {
+		m_pParentMatrix = pParentsMat;
+	}
+
+	m_bVisible = true;
+}
+
 
 HRESULT CEffectObject::Render_Bloom()
 {
@@ -161,6 +221,143 @@ HRESULT CEffectObject::Render_Bloom()
 
 
 
+HRESULT CEffectObject::Load(CEffect_Container::EFFECT_SAVE_INFO EffectSaveInfo, LEVEL eLevel)
+{
+	SAFE_RELEASE(m_pDiffuse_TextureCom);
+	SAFE_RELEASE(m_pNoise_TextureCom);
+	SAFE_RELEASE(m_pMasking_TextureCom);
+	SAFE_RELEASE(m_pDissolve_TextureCom);
+	SAFE_RELEASE(m_pEmissive_TextureCom);
+	SAFE_RELEASE(m_pInstance_ModelCom);
+
+	if (m_pLightCom != nullptr)
+		SAFE_RELEASE(m_pLightCom);
+
+	m_EffectInfo = EffectSaveInfo.EffectInfo;
+
+	m_EffectInfo.LightDesc.pPosition = m_pTransformCom->Get_StatePtr(STATE::POSITION);
+	m_EffectInfo.LightDesc.iLevel = ENUM_CLASS(eLevel);
+
+
+	if (m_EffectInfo.LightDesc.eType != LIGHT::DIRECTIONAL) // 0이 아닐때만 생성
+	{
+		if (FAILED(Add_Component<CLight>(g_iStaticLevel, &m_pLightCom, &m_EffectInfo.LightDesc)))
+		{
+			return E_FAIL;
+		}
+
+		m_pLightCom->Set_LightIntensity(m_EffectInfo.fLightIntensity);
+	}
+
+	if (m_EffectInfo.isDiffuse)
+	{
+	
+		m_strDiffuseName = EffectSaveInfo.wstrDiffuseName;
+
+		if (m_strDiffuseName.length() > 0)
+		{
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), m_strDiffuseName,
+				reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom))))
+			{
+				return E_FAIL;
+			}
+		}
+
+	}
+
+	if (m_EffectInfo.isNoise)
+	{
+		m_strNoiseName = EffectSaveInfo.wstrNoiseName;
+
+		if (m_strNoiseName.length() > 0)
+		{
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), m_strNoiseName,
+				reinterpret_cast<CComponent**>(&m_pNoise_TextureCom))))
+				return E_FAIL;
+		}
+
+	}
+
+
+	if (m_EffectInfo.isMasking)
+	{
+		m_strMaskingName = EffectSaveInfo.wstrMaskingName;
+
+		if (m_strMaskingName.length() > 0)
+		{
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), m_strMaskingName,
+				reinterpret_cast<CComponent**>(&m_pMasking_TextureCom))))
+			{
+				return E_FAIL;
+			}
+		}
+	
+	}
+
+	if (m_EffectInfo.isDissolve)
+	{
+		m_strDissolveName = EffectSaveInfo.wstrDissolveName;
+
+		if (m_strDissolveName.length() > 0)
+		{
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), m_strDissolveName,
+				reinterpret_cast<CComponent**>(&m_pDissolve_TextureCom))))
+			{
+				return E_FAIL;
+			}
+		}
+
+	
+	}
+
+	if (m_EffectInfo.isEmissive)
+	{
+	
+		m_strEmissiveName = EffectSaveInfo.wstrEmissiveName;
+
+		if (m_strEmissiveName.length() > 0)
+		{
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), m_strEmissiveName,
+				reinterpret_cast<CComponent**>(&m_pEmissive_TextureCom))))
+			{
+
+				return E_FAIL;
+			}
+		}
+	
+	}
+
+	if (m_EffectInfo.isDistortion)
+	{
+		
+		m_strDistortionName = EffectSaveInfo.wstrDistortionName;;
+
+		if (m_strDistortionName.length() > 0)
+		{
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), m_strDistortionName,
+				reinterpret_cast<CComponent**>(&m_pDistortion_TextureCom))))
+			{
+
+				return E_FAIL;
+			}
+		}
+	}
+
+	m_strModelName = EffectSaveInfo.wstrModelName;
+
+	if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), m_strModelName,
+		reinterpret_cast<CComponent**>(&m_pInstance_ModelCom))))
+	{
+		return E_FAIL;;
+	}
+
+
+	m_pInstance_ModelCom->Load_InstanceModel(EffectSaveInfo.InstanceModelInfo);
+
+	return S_OK;
+}
+
+
 HRESULT CEffectObject::Load(const _char* pFilePath, LEVEL eLevel)
 {
 	SAFE_RELEASE(m_pDiffuse_TextureCom);
@@ -171,9 +368,8 @@ HRESULT CEffectObject::Load(const _char* pFilePath, LEVEL eLevel)
 
 	SAFE_RELEASE(m_pInstance_ModelCom);
 
-	if (m_pLightCom != nullptr){
+	if (m_pLightCom != nullptr)
 		SAFE_RELEASE(m_pLightCom);
-	}
 
 	_string strPerfectFilePath = pFilePath;
 
@@ -208,6 +404,7 @@ HRESULT CEffectObject::Load(const _char* pFilePath, LEVEL eLevel)
 	m_EffectInfo.LightDesc.pPosition = m_pTransformCom->Get_StatePtr(STATE::POSITION);
 	m_EffectInfo.LightDesc.iLevel = ENUM_CLASS(eLevel);
 
+
 	if (m_EffectInfo.LightDesc.eType != LIGHT::DIRECTIONAL) // 0이 아닐때만 생성
 	{
 		if (FAILED(Add_Component<CLight>(g_iStaticLevel, &m_pLightCom, &m_EffectInfo.LightDesc)))
@@ -215,7 +412,11 @@ HRESULT CEffectObject::Load(const _char* pFilePath, LEVEL eLevel)
 			CloseHandle(hFile);
 			return E_FAIL;
 		}
+
+		m_pLightCom->Set_LightIntensity(m_EffectInfo.fLightIntensity);
 	}
+
+
 
 
 	if (m_EffectInfo.isDiffuse)
@@ -236,9 +437,9 @@ HRESULT CEffectObject::Load(const _char* pFilePath, LEVEL eLevel)
 				return E_FAIL;
 			}
 
-			m_strDiffuseName = szName;
+			m_strDiffuseName = CMyTools::ToWstring(szName);
 
-			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strDiffuseName),
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), m_strDiffuseName,
 				reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom))))
 			{
 				CloseHandle(hFile);
@@ -269,9 +470,9 @@ HRESULT CEffectObject::Load(const _char* pFilePath, LEVEL eLevel)
 				return E_FAIL;
 			}
 
-			m_strNoiseName = szName;
+			m_strNoiseName = CMyTools::ToWstring(szName);;
 
-			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strNoiseName),
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), m_strNoiseName,
 				reinterpret_cast<CComponent**>(&m_pNoise_TextureCom))))
 				return E_FAIL;
 		}
@@ -298,9 +499,9 @@ HRESULT CEffectObject::Load(const _char* pFilePath, LEVEL eLevel)
 				return E_FAIL;
 			}
 
-			m_strMaskingName = szName;
+			m_strMaskingName = CMyTools::ToWstring(szName);
 
-			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strMaskingName),
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), m_strMaskingName,
 				reinterpret_cast<CComponent**>(&m_pMasking_TextureCom))))
 			{
 				CloseHandle(hFile);
@@ -329,9 +530,9 @@ HRESULT CEffectObject::Load(const _char* pFilePath, LEVEL eLevel)
 				return E_FAIL;
 			}
 
-			m_strDissolveName = szName;
+			m_strDissolveName = CMyTools::ToWstring(szName);
 
-			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strDissolveName),
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel),m_strDissolveName,
 				reinterpret_cast<CComponent**>(&m_pDissolve_TextureCom))))
 			{
 				CloseHandle(hFile);
@@ -362,9 +563,9 @@ HRESULT CEffectObject::Load(const _char* pFilePath, LEVEL eLevel)
 				return E_FAIL;
 			}
 
-			m_strEmissiveName = szName;
+			m_strEmissiveName = CMyTools::ToWstring(szName);
 
-			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strEmissiveName),
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), m_strEmissiveName,
 				reinterpret_cast<CComponent**>(&m_pEmissive_TextureCom))))
 			{
 				CloseHandle(hFile);
@@ -393,9 +594,9 @@ HRESULT CEffectObject::Load(const _char* pFilePath, LEVEL eLevel)
 				return E_FAIL;
 			}
 
-			m_strDistortionName = szName;
+			m_strDistortionName = CMyTools::ToWstring(szName);
 
-			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strDistortionName),
+			if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), m_strDistortionName,
 				reinterpret_cast<CComponent**>(&m_pDistortion_TextureCom))))
 			{
 				CloseHandle(hFile);
@@ -423,9 +624,9 @@ HRESULT CEffectObject::Load(const _char* pFilePath, LEVEL eLevel)
 			return E_FAIL;
 		}
 
-		m_strModelName = szName;
+		m_strModelName = CMyTools::ToWstring(szName);
 
-		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), CMyTools::ToWstring(m_strModelName),
+		if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(eLevel), m_strModelName,
 			reinterpret_cast<CComponent**>(&m_pInstance_ModelCom))))
 		{
 			CloseHandle(hFile);
@@ -444,12 +645,36 @@ HRESULT CEffectObject::Load(const _char* pFilePath, LEVEL eLevel)
 	return S_OK;
 }
 
-
 HRESULT CEffectObject::Bind_ShaderResources()
 {
+	if (m_pParentMatrix != nullptr)
+	{
+
+		_matrix socketMatrix = XMLoadFloat4x4(m_pParentMatrix);
+
+		for (int i = 0; i < 3; ++i) {
+			socketMatrix.r[i] = XMVector3Normalize(socketMatrix.r[i]);
+		}
+		socketMatrix = socketMatrix * m_pParentTransformCom->Get_XMWorldMatrix();
+
+		m_pTransformCom->Set_State(STATE::POSITION, socketMatrix.r[3]);
+	}
+
 
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture"))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float4)))) {
+		return E_FAIL;
+	}
 
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW)))) {
 		return E_FAIL;
@@ -458,6 +683,13 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrixInv", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW_INV)))) {
+		return E_FAIL;
+	}
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrixInv", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ_INV)))) {
+		return E_FAIL;
+
+	}
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDiffuse", &m_EffectInfo.isDiffuse, sizeof(_bool)))) {
 		return E_FAIL;
@@ -524,11 +756,11 @@ HRESULT CEffectObject::Bind_ShaderResources()
 	}
 
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDiffuseBlur", &m_EffectInfo.isDiffuseBlur, sizeof(_bool)))) {
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isBlurNoEmissive", &m_EffectInfo.isBlurNoEmissive, sizeof(_bool)))) {
 		return E_FAIL;
 	}
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_isMaskBlur", &m_EffectInfo.isMaskBlur, sizeof(_bool)))) {
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isTexBlur", &m_EffectInfo.isTexBlur, sizeof(_bool)))) {
 		return E_FAIL;
 	}
 
@@ -638,6 +870,66 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDissolveDelay", &m_EffectInfo.fDissolveDelay, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fReverseDissolveDelay", &m_EffectInfo.fReverseDissolveDelay, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDissolveUVGainAmount", &m_EffectInfo.vDissolveUVGainAmount, sizeof(_float2)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDissolveMove", &m_EffectInfo.isDissolveMove, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDissolveMaskEdge", &m_EffectInfo.vDissolveValue.x, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDissolveSoftMask", &m_EffectInfo.vDissolveValue.y, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDissolveCutRatio", &m_EffectInfo.vDissolveValue.z, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDissolveColor", &m_EffectInfo.vDissolveColor, sizeof(_float4)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDissolveColorCut", &m_EffectInfo.vDissolveColorCut, sizeof(_float2)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vNoiseColor", &m_EffectInfo.vNoiseColor, sizeof(_float4)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fEmissiveColorCut", &m_EffectInfo.fEmissiveColorCut, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isRimLight", &m_EffectInfo.isRimLight, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vRimLightColor", &m_EffectInfo.vRimLightColor, sizeof(_float4)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fRimLightPower", &m_EffectInfo.fRimLightPower, sizeof(_float)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fRimLightStrength", &m_EffectInfo.fRimLightStrength, sizeof(_float)))) {
+		return E_FAIL;
+	}
 
 
 	if (m_pDiffuse_TextureCom != nullptr)
@@ -682,17 +974,11 @@ HRESULT CEffectObject::Bind_ShaderResources()
 		}
 	}
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
-		return E_FAIL;
-	}
-
 
 
 
 	return S_OK;
 
-
-	return S_OK;
 }
 
 HRESULT CEffectObject::Ready_Components(void* pArg)

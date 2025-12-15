@@ -3,18 +3,19 @@
 
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
-bool g_bUVTargetDiffuse;
-bool g_bAdditiveDisolve;
+int g_bUVTargetDiffuse;
+int g_bAdditiveDisolve;
+int g_bDisolve;
 
 float g_LifeRatio;
 float g_fFar;
 float g_fTime;
 float g_fDeltaU;
 float g_fDeltaV;
-float3 g_vOutLineColor;
+float4 g_vOutLineColor;
 float g_fOutLineScale;
-float g_fOutLinePower;
 float g_fOutLineThickness;
+float g_fOutLinePower;
 vector g_vCamPosition;
 uint g_iIndexU;
 uint g_iIndexV;
@@ -25,18 +26,76 @@ float g_fUsingSurfaceParams;
 float2 g_vClipBoxSize;
 float2 g_vClipBoxLTPos;
 
+float g_fDisolveAmount;
+float g_fDisolveEdgeWidth;
+
+Texture2D g_DAOTexture;
+Texture2D g_THVTexture;
+Texture2D g_SurfaceParamsTexture;
+Texture2D g_NoiseTexture;
+Texture2D g_CausticsTexture;
+
 Texture2D g_DiffuseTexture;
+Texture2D g_SpecularTexture;
+Texture2D g_AmbientTexture;
+Texture2D g_EmissiveTexture;
+Texture2D g_HeightTexture;
+Texture2D g_NormalTexture;
+Texture2D g_ShininessTexture;
+Texture2D g_OpacityTexture;
+Texture2D g_DisplacementTexture;
+Texture2D g_LightMapTexture;
+Texture2D g_ReflectionTexture;
+Texture2D g_BaseColorTexture;
+Texture2D g_NormalCameraTexture;
+Texture2D g_EmissionColorTexture;
+Texture2D g_MetalnessTexture;
+Texture2D g_Diffuse_RoughnessTexture;
+Texture2D g_AmbientOcclusionTexture;
+Texture2D g_UnknownTexture;
+Texture2D g_SheenTexture;
+Texture2D g_ClearcoadTexture;
+Texture2D g_TransmissionTexture;
+Texture2D g_Maya_BaseTexture;
+Texture2D g_Maya_SpecularTexture;
+Texture2D g_Maya_Specular_ColorTexture;
+Texture2D g_Maya_Specular_RoughnessTexture;
+Texture2D g_AnisotropyTexture;
+
+int g_iBinded_Texture[AI_TEXTURE_TYPE_MAX];
+
 Texture2D g_MaskingTexture;
 Texture2D g_ClippingTexture;
 Texture2D g_DisolveTexture;
-Texture2D g_NormalTexture;
 Texture2D g_GlowTexture;
-Texture2D g_SurfaceParamsTexture;
-Texture2D g_EmissiveTexture;
 Texture2D g_GlassTexture;
+
+TextureCube g_CubeTexture;
+Texture2D g_NormalLargeTexture;
+Texture2D g_NormalSubTexture;
+Texture2D g_DeadDisolveTexture;
+
+float g_fNormalValue1;
+float g_fNormalValue2;
+float g_fNormalValue3;
+
+float2 g_vUVSpeed1;
+float2 g_vUVSpeed2;
+float2 g_vUVSpeed3;
 
 float g_fBloomStrength;
 float g_fGlassRatio;
+float g_fSpecularIntensity;
+
+float g_fRefractionStrength;
+float g_fRefractionPow;
+float4 g_vDiffuseColor;
+float4 g_vSurfaceColor;
+
+float   g_fRimPower;
+float   g_fRimStrength;
+float4  g_vRimColor;
+
 
 struct VS_IN
 {
@@ -67,7 +126,6 @@ struct VS_OUT_BLUR
 struct VS_OUT_SHADOW
 {
     float4 vPosition : SV_POSITION;
-    float4 vProjPos : TEXCOORD0;
 };
 
 
@@ -96,7 +154,6 @@ VS_OUT_SHADOW VS_MAIN_SHADOW(VS_IN In)
     matWVP = mul(matWV, g_ProjMatrix);
     
     Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
-    Out.vProjPos = Out.vPosition;
 
     return Out;
 }
@@ -148,7 +205,7 @@ VS_OUT_OUTLINE VS_MAIN_OUTLINE(VS_IN In)
     VS_OUT_OUTLINE Out;
     
     vector vPosition = vector(In.vPosition, 1.f);
-    vector vNormal = vector(In.vNormal, 1.f);
+    vector vNormal = vector(In.vNormal, 0.f);
     vPosition.xyz += (vNormal.xyz * g_fOutLineThickness).xyz;
 
 
@@ -226,10 +283,28 @@ PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out;
 
-    vector vMtrlDiffuse = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
-    vector vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
-    if (vMtrlDiffuse.a < 0.2f) { discard; }
-    
+    float4 vMtrlDiffuse = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    float4 vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    //if (vMtrlDiffuse.a < 0.3f)
+    //{
+    //    discard;
+    //}
+    if (g_iBinded_Texture[AI_TEXTURE_TYPE_TRANSMISSION] != 0)
+    {
+        float4 vTransmission = g_TransmissionTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+        vMtrlDiffuse *= vTransmission;
+    }
+    if (g_iBinded_Texture[AI_TEXTURE_TYPE_EMISSIVE] != 0)
+    {
+        float4 vEmissive = g_EmissiveTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+        vMtrlDiffuse += vEmissive;
+    }
+    if (vMtrlDiffuse.a < 0.2f)
+    {
+        discard;
+    }
+
+
     float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, AnisoTropy_BLUR_Sampler, In.vTexcoord);
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
     
@@ -237,10 +312,15 @@ PS_OUT PS_MAIN(PS_IN In)
     
     Out.vAlbedo = vMtrlDiffuse;
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
+    float fSurfaceParam = g_fUsingSurfaceParams;
+    if (true == AlmostEqual7(g_fUsingSurfaceParams, 0.f))
+    {
+        fSurfaceParam = 0;
+    }
     Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
-    (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
-    g_fUsingSurfaceParams,  // 서페이스 파라미터
-    1.f);
+        (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
+        fSurfaceParam, // 서페이스 파라미터
+        1.f);
     Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
     Out.vSurface = vSurface;
     
@@ -285,15 +365,41 @@ PS_OUT PS_GLASS(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_GLASS_CUBE(PS_IN In)
+{
+    PS_OUT Out;
+
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    vector vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    float3 vNormalMap = DecodeNormalFromRG(g_NormalTexture, AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    
+    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
+    
+    float3 vNormal = normalize(mul(normalize(vNormalMap), WorldMatrix));
+    
+    float3 vReflaction = reflect(normalize(In.vWorldPos.xyz - g_vCamPosition.xyz), vNormal);
+    
+    float4 vReflactionDiffuse = g_CubeTexture.Sample(DefaultSampler, vReflaction);
+    
+    float fFresnelScala = 0.02f + (1.f - 0.02f) * pow(1.f - max(0.f, dot(normalize(g_vCamPosition.xyz - In.vWorldPos.xyz), vNormal)), 5.f);
+    
+    Out.vAlbedo = float4(vMtrlDiffuse.xyz, 1.f) * fFresnelScala + vReflactionDiffuse  * (1.f - fFresnelScala);
+    Out.vColor = float4(0.f, 0.f, 0.f, 0.f);
+    Out.vNormal = float4(In.vNormal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = float4(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / g_fFar, 15.f / 27.f, 1.f);
+    Out.vSurface = vSurface;
+    
+    return Out;
+}
+
 struct PS_IN_SHADOW
 {
     float4 vPosition : SV_POSITION;
-    float4 vProjPos : TEXCOORD0;
 };
 
 struct PS_OUT_SHADOW
 {
-    float4 vShadowLightDepth : SV_TARGET0;
+    float fShadowLightDepth : SV_TARGET0;
 };
 
 struct PS_IN_BLUR
@@ -322,7 +428,7 @@ PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN_SHADOW In)
 {
     PS_OUT_SHADOW Out = (PS_OUT_SHADOW) 0;
     
-    Out.vShadowLightDepth.x = In.vProjPos.z;
+    Out.fShadowLightDepth = In.vPosition.z;
     
     return Out;
 }
@@ -438,15 +544,13 @@ PS_OUT_OUTLINE PS_MAIN_OUTLINE(PS_IN_OUTLINE In)
 
     float fNdotV = saturate(dot(vNormal, vToView));
     float fRim = saturate((1.0f - fNdotV) * g_fOutLineScale);
-    
-    
     fRim = pow(fRim, g_fOutLinePower);
-
+    
     Out.vOutLine = float4(g_vOutLineColor.rgb, fRim);
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
     Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
     (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
-    0, // 서페이스 파라미터
+    AI_TEXTURE_TYPE_METALNESS, // 서페이스 파라미터
     1.f);
     
     return Out;
@@ -470,6 +574,207 @@ PS_OUT_CAPTUREDMODEL PS_CAPTUREDMODEL(PS_IN_CAPTUREDMODEL In)
     Out.vColor.a = saturate(1 - g_LifeRatio) * 0.5f;
     return Out;
 }
+
+PS_OUT PS_LAKE(PS_IN In)
+{
+    PS_OUT Out;
+
+    float2 vUV = float2(In.vTexcoord.x + cos(g_fTime * g_vUVSpeed1.x), In.vTexcoord.y + cos(g_fTime * g_vUVSpeed1.y)) * g_fNormalValue1;
+    float2 vUVLarge = float2(In.vTexcoord.x + cos(g_fTime * g_vUVSpeed2.x), In.vTexcoord.y + cos(g_fTime * g_vUVSpeed2.y)) * g_fNormalValue2;
+    float2 vUVSub = float2(In.vTexcoord.x + cos(g_fTime * g_vUVSpeed3.x), In.vTexcoord.y + cos(g_fTime * g_vUVSpeed3.y)) * g_fNormalValue3;
+    
+    float4 vMtrlDiffuse = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord * 30.f);
+    float3 vNoise = (g_NoiseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord + g_fTime * 0.1f).rgb - 0.5f) * 0.3f;
+    float4 vCaustics = g_CausticsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord * 30.f + vNoise.g);
+    
+    float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, AnisoTropy_BLUR_Sampler, vUV + vNoise.g);
+    float3 vNormalLarge = DecodeNormalFromRG(g_NormalLargeTexture, AnisoTropy_BLUR_Sampler, vUVLarge + vNoise.r);
+    float3 vNormalSub = DecodeNormalFromRG(g_NormalSubTexture, AnisoTropy_BLUR_Sampler, vUVSub + vNoise.b);
+    
+    vMtrlDiffuse = (vMtrlDiffuse + vCaustics * 0.3f) * g_vDiffuseColor;
+    
+    vector vSurface = g_vSurfaceColor;
+    
+    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
+    float3 vNormal = normalize(mul(float3(normalize(vNormalDecoded * 0.5f + vNormalLarge * 0.2f + vNormalSub * 0.3f).xy, 1.f), WorldMatrix));
+    
+    
+    float3 vViewDir = normalize(g_vCamPosition.xyz - In.vWorldPos.xyz);
+    
+    float3 vReflaction = reflect(-1.f * vViewDir, vNormal);
+    
+    float4 vCubeDiffuse = g_CubeTexture.Sample(AnisoTropy_BLUR_Sampler, vReflaction);
+    
+    float fFresnelScala = g_fRefractionStrength + (1.f - g_fRefractionStrength) * pow(1.f - saturate(dot(vViewDir, vNormal)), g_fRefractionPow);
+    fFresnelScala = saturate(fFresnelScala * 0.7f);
+
+    Out.vAlbedo = lerp(vMtrlDiffuse, vCubeDiffuse, fFresnelScala);
+    Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
+    (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
+    2.f / 27.f, // 서페이스 파라미터
+    1.f);
+    Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
+    Out.vSurface = vSurface;
+    
+    return Out;
+}
+
+PS_OUT PS_LAND(PS_IN In)
+{
+    PS_OUT Out;
+
+    float4 vMtrlDiffuse = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord * 10.f);
+    float4 vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord * 10.f);
+  
+    if (vMtrlDiffuse.a < 0.2f)
+    {
+        discard;
+    }
+
+
+    float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
+    
+    float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
+    
+    Out.vAlbedo = vMtrlDiffuse;
+    Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
+    float fSurfaceParam = g_fUsingSurfaceParams;
+    if (true == AlmostEqual7(g_fUsingSurfaceParams, 0.f))
+    {
+        fSurfaceParam = 0;
+    }
+    Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
+        (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
+        fSurfaceParam, // 서페이스 파라미터
+        1.f);
+    Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
+    Out.vSurface = vSurface;
+    
+    return Out;
+}
+
+PS_OUT PS_NONMRO(PS_IN In)
+{
+    PS_OUT Out;
+
+    float4 vMtrlDiffuse = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+  
+    if (vMtrlDiffuse.a < 0.2f)
+    {
+        discard;
+    }
+
+    float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
+    float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
+    
+    Out.vAlbedo = vMtrlDiffuse;
+    Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
+    Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
+        (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
+        g_fUsingSurfaceParams, // 서페이스 파라미터
+        1.f);
+    Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
+    Out.vSurface = g_vSurfaceColor;
+    
+    return Out;
+}
+
+PS_OUT PS_SPECTOR_WEAPON_MAIN(PS_IN In)
+{
+    PS_OUT Out;
+
+    float4 vMtrlDiffuse = g_EmissiveTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    float4 vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    
+    if (true == g_bDisolve)
+    {
+        float4 vBurnColor = g_DisolveTexture.Sample(DefaultSampler, In.vTexcoord);
+        vMtrlDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vMtrlDiffuse, In.vTexcoord);
+    }
+    
+    if (vMtrlDiffuse.a < 0.2f)
+    {
+        discard;
+    }
+
+
+    float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
+    
+    float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
+    
+    Out.vAlbedo = vMtrlDiffuse;
+    Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
+    float fSurfaceParam = g_fUsingSurfaceParams;
+    if (true == AlmostEqual7(g_fUsingSurfaceParams, 0.f))
+    {
+        fSurfaceParam = 0;
+    }
+    Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
+        (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
+        fSurfaceParam, // 서페이스 파라미터
+        1.f);
+    Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
+    Out.vSurface = vSurface;
+    
+    return Out;
+}
+PS_OUT PS_LEVIOSO(PS_IN In)
+{
+    PS_OUT Out;
+
+    float4 vMtrlDiffuse = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    float4 vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    float fNoise = g_NoiseTexture.Sample(AnisoTropy_BLUR_Sampler, float2(In.vTexcoord.x + sin(g_fTime), In.vTexcoord.y)).r;
+  
+    if (g_iBinded_Texture[AI_TEXTURE_TYPE_TRANSMISSION] != 0)
+    {
+        float4 vTransmission = g_TransmissionTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+        vMtrlDiffuse *= vTransmission;
+    }
+    if (g_iBinded_Texture[AI_TEXTURE_TYPE_EMISSIVE] != 0)
+    {
+        float4 vEmissive = g_EmissiveTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+        vMtrlDiffuse += vEmissive;
+    }
+    if (vMtrlDiffuse.a < 0.2f)
+    {
+        discard;
+    }
+
+
+    float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
+    
+    float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
+    
+    
+    float4 vRimLight = 1.f - saturate(dot(normalize(g_vCamPosition - In.vWorldPos), float4(In.vNormal, 0.f)));
+    
+    vRimLight = pow(vRimLight, g_fRimPower);
+    vRimLight = vRimLight * g_vRimColor * g_fRimStrength * fNoise;
+    
+    Out.vAlbedo = vMtrlDiffuse + vRimLight;
+    Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
+    float fSurfaceParam = g_fUsingSurfaceParams;
+    if (true == AlmostEqual7(g_fUsingSurfaceParams, 0.f))
+    {
+        fSurfaceParam = 0;
+    }
+    Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
+        (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
+        fSurfaceParam, // 서페이스 파라미터
+        1.f);
+    Out.vColor = float4(0.f, 0.f, 0.f, 1.f);
+    Out.vSurface = vSurface;
+    
+    return Out;
+}
+
+
 technique11 MeshTechnique11
 {
     pass MeshPass // 0
@@ -626,5 +931,65 @@ technique11 MeshTechnique11
         VertexShader = compile vs_5_0 VS_BLOOM();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_BLOOM();
+    }
+
+    pass WaterPass // 16
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_LAKE();
+    }
+
+    pass LandPass // 17
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_LAND();
+    }
+
+    pass NonMROPass // 18
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_NONMRO();
+    }
+
+    pass SpectorWeaponPass // 19
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_SPECTOR_WEAPON_MAIN();
+    }
+
+    pass GlassCubePass // 20
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_GLASS_CUBE();
+    }
+
+    pass LeviosoPass // 21
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_LEVIOSO();
     }
 }

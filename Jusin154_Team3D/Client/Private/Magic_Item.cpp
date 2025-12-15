@@ -47,7 +47,10 @@ HRESULT CMagic_Item::Initialize(void* pArg)
 	m_iArratCount = 2;
 	Compute_UV(0);
 	Compute_Image();
-	m_bActive = true;
+	m_fFontX = 1171.f;
+	m_fFontY = 870.f;
+	m_iPotionIndex = 0;
+	m_iPerPotionIndex = -1;
 	return S_OK;
 }
 
@@ -133,6 +136,14 @@ void CMagic_Item::Update(_float fTimeDelta)
 		}
 	}
 
+	if (m_iPerPotionIndex != m_iPotionIndex)
+	{
+		m_strPotion = to_wstring(m_iPotionIndex);
+		m_fFontOffSet = (m_pGameInstance->FontSizeX(TEXT("UI_size15"), m_strPotion.c_str()) - 13.f) * 0.5f;
+		m_iPerPotionIndex = m_iPotionIndex;
+	}
+
+
 	if (m_vUVScale.y <= 1)
 	{
 		m_vUVScale.y += fTimeDelta * (1.f / m_fCoolTime);
@@ -173,6 +184,7 @@ HRESULT CMagic_Item::Render()
 	{
 		return E_FAIL;
 	}
+	m_pGameInstance->Render_Text(TEXT("UI_size15"), m_strPotion.c_str(), _float2((m_fFontX + m_fX) - m_fFontOffSet, m_fFontY + m_fY), XMVectorSet((208.f / 255.f) * m_fAlpha, (177.f / 255.f) * m_fAlpha, (52.f / 255.f) * m_fAlpha, m_fAlpha));
 
 	return S_OK;
 }
@@ -217,6 +229,10 @@ HRESULT CMagic_Item::Bind_ShaderResources()
 		return E_FAIL;
 	}
 	if (FAILED(m_pDiffuse_TextureCom5->Bind_ShaderResource(m_pShaderCom, "g_Texture5", 0)))
+	{
+		return E_FAIL;
+	}
+	if (FAILED(m_pDiffuse_TextureCom6->Bind_ShaderResource(m_pShaderCom, "g_MaskingTexture", 0)))
 	{
 		return E_FAIL;
 	}
@@ -317,6 +333,10 @@ HRESULT CMagic_Item::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
+	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("Prototype_Texture_UI_T_tillingSmokes"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom6), nullptr)))
+	{
+		return E_FAIL;
+	}
 	if (FAILED(Add_Asset_Component(g_iStaticLevel, FX_UIEDITOR, (CComponent**)&m_pShaderCom, nullptr)))
 	{
 		return E_FAIL;
@@ -361,6 +381,7 @@ void CMagic_Item::Free()
 	SAFE_RELEASE(m_pDiffuse_TextureCom3);
 	SAFE_RELEASE(m_pDiffuse_TextureCom4);
 	SAFE_RELEASE(m_pDiffuse_TextureCom5);
+	SAFE_RELEASE(m_pDiffuse_TextureCom6);
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }

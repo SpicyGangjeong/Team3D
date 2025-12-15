@@ -7,6 +7,5 @@
 #include "Engine_Shader_States.hlsli"
 #include "Engine_Shader_Functions.hlsli"
 
-
 #endif // ENGINE_SHADER_DEFINES_HLSLI
 

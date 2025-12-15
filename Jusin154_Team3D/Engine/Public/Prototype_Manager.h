@@ -11,6 +11,8 @@
 #include "Cell.h"
 #include "Model.h"
 #include "Instance_Model.h"
+#include "Stat.h"
+#include "StatEvent.h"
 #include "Character_Controller.h"
 #include "Light.h"
 #include "FSM.h"
@@ -19,7 +21,8 @@
 #include "VIBuffer_Box.h"
 #include "Trail.h"
 #include "OcclusionQuery.h"
-
+#include "Font.h"
+#include "ComputeShader.h"
 
 NS_BEGIN(Engine)
 class CGameInstance;

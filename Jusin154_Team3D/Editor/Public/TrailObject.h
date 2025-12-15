@@ -58,17 +58,36 @@ public:
 		_int		iBlurWeight = {};
 
 		/* 블룸 */
-		_bool   isBloom = {};
+		_bool       isBloom = {};
 
-		_bool   isBloomDissolve = {};
-		_bool   isBloomReverseDissolve = {};
+		_bool       isBloomDissolve = {};
+		_bool       isBloomReverseDissolve = {};
 
 		_float		fBloomStrength = {};
 
-		BLOOM_TYPE eBloomType = {};
-		_float2    vBloomTime = {};
+		BLOOM_TYPE  eBloomType = {};
+		_float2     vBloomTime = {};
 
-		_int	   iNumVertex = {};
+		_int	    iNumVertex = { 256 };
+
+
+		RENDER		eRenderOrder = { RENDER::EFFECT };
+		SHADER_PASS_POSTEX eShaderPass = { SHADER_PASS_POSTEX::TRAIL };
+
+		_float      fDamping = { 0.5f };
+		_float      fRopeLength = { 0.1f };
+		_float		fMass = { 0.5f };
+
+		_float3 vPadding1 = {};
+		_float3 vPadding2 = {};
+
+		_float  fPadding1 = {};
+		_float  fPadding2 = {};
+		_float  fPadding3 = {};
+			    
+		_bool   isPadding0 = {};
+		_bool   isPadding1 = {};
+		_bool   isPadding2 = {};
 
 	}TRAIL_INFO;
 private:
@@ -84,7 +103,7 @@ public:
 public:
 	void	     Set_Target(class CTransform* pTargetTransform);
 	void         Trail_Update(_fmatrix WorldMat, _float fTimeDelta);
-
+	void         Rope_Trail_Update(_fmatrix WorldMat, _fmatrix EndWorldMat, _float fTimeDelta);
 public:
 #ifdef _DEBUG
 	HRESULT Save_Trail(const _char* pPath);
@@ -123,7 +142,9 @@ private:
 	_string     m_strName = {};
 
 	TRAIL_INFO  m_TrailInfo = {};
+	
 	_float4x4*  m_pParantsMatrix = {};
+
 
 };
 

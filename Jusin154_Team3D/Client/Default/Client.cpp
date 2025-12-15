@@ -83,6 +83,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Present")))) {
         return E_FAIL;
     }
+    if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Picking")))) {
+        return E_FAIL;
+    }
+    if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_PhysX")))) {
+        return E_FAIL;
+    }
+    if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_Level")))) {
+        return E_FAIL;
+    }
     if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_FrameCount")))) {
         return E_FAIL;
     }

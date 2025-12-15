@@ -135,6 +135,11 @@
     <FxCompile>
       <ShaderModel>5.0</ShaderModel>
     </FxCompile>
+    <PostBuildEvent>
+      <Command>cd /d "$(SolutionDir)"
+call Update_Shaders.bat
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -161,11 +166,53 @@
       <Command>
       </Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>cd /d "$(SolutionDir)"
+call Update_Shaders.bat
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Action_Panel.h" />
     <ClInclude Include="..\public\AlphaMap.h" />
     <ClInclude Include="..\Public\Body.h" />
+    <ClInclude Include="..\public\Boss_HpBer.h" />
+    <ClInclude Include="..\public\Enemy_Detection.h" />
+    <ClInclude Include="..\Public\Goblin_BattleAxe.h" />
+    <ClInclude Include="..\Public\Goblin_Dagger.h" />
+    <ClInclude Include="..\Public\Goblin_Protego.h" />
+    <ClInclude Include="..\Public\Goblin_Spector.h" />
+    <ClInclude Include="..\public\MapElement_Chest.h" />
+    <ClInclude Include="..\public\MapElement_Door.h" />
+    <ClInclude Include="..\public\MapElement_Chest_Lid.h" />
+    <ClInclude Include="..\Public\Quest_Border.h" />
+    <ClInclude Include="..\public\Quest_Canvas.h" />
+    <ClInclude Include="..\public\Quest_Data.h" />
+    <ClInclude Include="..\public\Quest_Entry_Line.h" />
+    <ClInclude Include="..\public\Quest_Header.h" />
+    <ClInclude Include="..\public\Quest_HeaderLine.h" />
+    <ClInclude Include="..\public\Quest_Info.h" />
+    <ClInclude Include="..\public\Quest_Info_Header.h" />
+    <ClInclude Include="..\public\Quest_Info_Line.h" />
+    <ClInclude Include="..\public\Quest_List.h" />
+    <ClInclude Include="..\public\Quest_Panel.h" />
+    <ClInclude Include="..\Public\Skill_Data.h" />
+    <ClInclude Include="..\Public\State_Blink.h" />
+    <ClInclude Include="..\Public\State_Dead.h" />
+    <ClInclude Include="..\Public\State_Hit.h" />
+    <ClInclude Include="..\Public\State_IdleBreak.h" />
+    <ClInclude Include="..\Public\State_Shuffle.h" />
+    <ClInclude Include="..\Public\State_Slam.h" />
+    <ClInclude Include="..\Public\State_Swing.h" />
+    <ClInclude Include="..\Public\State_Throw.h" />
+    <ClInclude Include="..\Public\StunEffect.h" />
+    <ClInclude Include="..\Public\Troll.h" />
+    <ClInclude Include="..\Public\Troll_Rush_Hit.h" />
+    <ClInclude Include="..\Public\Troll_Nomal_Smoke.h" />
+    <ClInclude Include="..\Public\TrollSwing.h" />
+    <ClInclude Include="..\Public\BombardSide.h" />
+    <ClInclude Include="..\public\CameraLockOn.h" />
+    <ClInclude Include="..\public\Current_Slot_Number.h" />
     <ClInclude Include="..\public\Current_Spell_Slot.h" />
     <ClInclude Include="..\Public\Decendo.h" />
     <ClInclude Include="..\Public\Broom.h" />
@@ -181,6 +228,7 @@
     <ClInclude Include="..\Public\CamPosition_Shoulder.h" />
     <ClInclude Include="..\Public\CamPosition_Socket.h" />
     <ClInclude Include="..\Public\CamPosition_Target.h" />
+    <ClInclude Include="..\Public\DecendoSide.h" />
     <ClInclude Include="..\Public\DummyObject.h" />
     <ClInclude Include="..\public\DummySkyBox.h" />
     <ClInclude Include="..\Public\Dummy_Globe.h" />
@@ -208,18 +256,33 @@
     <ClInclude Include="..\Public\Dummy_PhysXWall.h" />
     <ClInclude Include="..\Public\Dummy_Plane.h" />
     <ClInclude Include="..\Public\Dummy_PhysXPlayable.h" />
+    <ClInclude Include="..\public\Enemy_HpBar.h" />
+    <ClInclude Include="..\public\Enemy_Info.h" />
+    <ClInclude Include="..\public\Enemy_Panel.h" />
     <ClInclude Include="..\public\GameTime.h" />
     <ClInclude Include="..\public\Eessential_Spell.h" />
     <ClInclude Include="..\public\Eessential_Spell_Slot.h" />
     <ClInclude Include="..\public\HpBarBG.h" />
     <ClInclude Include="..\Public\Bombard.h" />
+    <ClInclude Include="..\Public\InfoInstance.h" />
     <ClInclude Include="..\public\InstancedProp.h" />
+    <ClInclude Include="..\public\Intro_BG.h" />
+    <ClInclude Include="..\public\Intro_Image.h" />
+    <ClInclude Include="..\Public\LeviosoSide.h" />
+    <ClInclude Include="..\public\Loding_Canvas.h" />
+    <ClInclude Include="..\public\Loding_Panel.h" />
+    <ClInclude Include="..\public\Logo.h" />
+    <ClInclude Include="..\public\Logo_Glow.h" />
+    <ClInclude Include="..\public\Logo_Text.h" />
     <ClInclude Include="..\public\Magic_Icon.h" />
     <ClInclude Include="..\public\Magic_Item.h" />
     <ClInclude Include="..\public\Magic_Meter.h" />
     <ClInclude Include="..\Public\EffectPool.h" />
+    <ClInclude Include="..\public\MapElement_Lake.h" />
     <ClInclude Include="..\public\MapElement_Light.h" />
+    <ClInclude Include="..\Public\MapInfo.h" />
     <ClInclude Include="..\Public\MissionBanner_Border.h" />
+    <ClInclude Include="..\Public\MonsterInfo.h" />
     <ClInclude Include="..\Public\NomalJap.h" />
     <ClInclude Include="..\Public\Effect_Container.h" />
     <ClInclude Include="..\public\GamePlay_Canvas.h" />
@@ -250,8 +313,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\Public\NomalJapSide.h" />
     <ClInclude Include="..\public\NoMountIcon.h" />
     <ClInclude Include="..\Public\Player.h" />
+    <ClInclude Include="..\Public\PlayerInfo.h" />
     <ClInclude Include="..\public\Potion.h" />
     <ClInclude Include="..\Public\Levioso.h" />
     <ClInclude Include="..\Public\Revelio.h" />
@@ -260,6 +325,7 @@
     <ClInclude Include="..\public\Spell_Anim.h" />
     <ClInclude Include="..\public\Spell_Canvas.h" />
     <ClInclude Include="..\public\Spell_Data.h" />
+    <ClInclude Include="..\public\Spell_Drag.h" />
     <ClInclude Include="..\public\Spell_Header.h" />
     <ClInclude Include="..\public\Spell_Header_Line.h" />
     <ClInclude Include="..\public\Spell_Hover.h" />
@@ -312,6 +378,12 @@
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\public\Mouse_Cursor.h" />
     <ClInclude Include="..\Public\RootModelPart.h" />
+    <ClInclude Include="..\Public\Troll_Rock.h" />
+    <ClInclude Include="..\Public\Troll_State_BackHand_Swing.h" />
+    <ClInclude Include="..\Public\Troll_State_Rush.h" />
+    <ClInclude Include="..\Public\Troll_Weapon.h" />
+    <ClInclude Include="..\public\UI_Manager.h" />
+    <ClInclude Include="..\public\Unified.h" />
     <ClInclude Include="..\Public\Wand.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="framework.h" />
@@ -322,6 +394,43 @@
     <ClCompile Include="..\Private\Action_Panel.cpp" />
     <ClCompile Include="..\private\AlphaMap.cpp" />
     <ClCompile Include="..\Private\Body.cpp" />
+    <ClCompile Include="..\private\Boss_HpBer.cpp" />
+    <ClCompile Include="..\Private\Enemy_Detection.cpp" />
+    <ClCompile Include="..\Private\Goblin_BattleAxe.cpp" />
+    <ClCompile Include="..\Private\Goblin_Dagger.cpp" />
+    <ClCompile Include="..\Private\Goblin_Protego.cpp" />
+    <ClCompile Include="..\Private\Goblin_Spector.cpp" />
+    <ClCompile Include="..\private\MapElement_Chest.cpp" />
+    <ClCompile Include="..\private\MapElement_Door.cpp" />
+    <ClCompile Include="..\private\MapElement_Chest_Lid.cpp" />
+    <ClCompile Include="..\Private\Quest_Border.cpp" />
+    <ClCompile Include="..\private\Quest_Canvas.cpp" />
+    <ClCompile Include="..\private\Quest_Data.cpp" />
+    <ClCompile Include="..\private\Quest_Entry_Line.cpp" />
+    <ClCompile Include="..\private\Quest_Header.cpp" />
+    <ClCompile Include="..\private\Quest_HeaderLine.cpp" />
+    <ClCompile Include="..\private\Quest_Info.cpp" />
+    <ClCompile Include="..\private\Quest_Info_Header.cpp" />
+    <ClCompile Include="..\private\Quest_Info_Line.cpp" />
+    <ClCompile Include="..\private\Quest_List.cpp" />
+    <ClCompile Include="..\private\Quest_Panel.cpp" />
+    <ClCompile Include="..\Private\Skill_Data.cpp" />
+    <ClCompile Include="..\Private\State_Blink.cpp" />
+    <ClCompile Include="..\Private\State_Dead.cpp" />
+    <ClCompile Include="..\Private\State_Hit.cpp" />
+    <ClCompile Include="..\Private\State_IdleBreak.cpp" />
+    <ClCompile Include="..\Private\State_Shuffle.cpp" />
+    <ClCompile Include="..\Private\State_Slam.cpp" />
+    <ClCompile Include="..\Private\State_Swing.cpp" />
+    <ClCompile Include="..\Private\State_Throw.cpp" />
+    <ClCompile Include="..\Private\StunEffect.cpp" />
+    <ClCompile Include="..\Private\Troll.cpp" />
+    <ClCompile Include="..\Private\Troll_Rush_Hit.cpp" />
+    <ClCompile Include="..\Private\Troll_Nomal_Smoke.cpp" />
+    <ClCompile Include="..\Private\TrollSwing.cpp" />
+    <ClCompile Include="..\Private\BombardSide.cpp" />
+    <ClCompile Include="..\private\CameraLockOn.cpp" />
+    <ClCompile Include="..\private\Current_Slot_Number.cpp" />
     <ClCompile Include="..\private\Current_Spell_Slot.cpp" />
     <ClCompile Include="..\Private\Decendo.cpp" />
     <ClCompile Include="..\Private\Broom.cpp" />
@@ -337,6 +446,7 @@
     <ClCompile Include="..\Private\CamPosition_Shoulder.cpp" />
     <ClCompile Include="..\Private\CamPosition_Socket.cpp" />
     <ClCompile Include="..\Private\CamPosition_Target.cpp" />
+    <ClCompile Include="..\Private\DecendoSide.cpp" />
     <ClCompile Include="..\Private\DummyObject.cpp" />
     <ClCompile Include="..\private\DummySkyBox.cpp" />
     <ClCompile Include="..\Private\Dummy_Globe.cpp" />
@@ -364,19 +474,34 @@
     <ClCompile Include="..\Private\Dummy_PhysXWall.cpp" />
     <ClCompile Include="..\Private\Dummy_Plane.cpp" />
     <ClCompile Include="..\Private\Dummy_PhysXPlayable.cpp" />
+    <ClCompile Include="..\private\Enemy_HpBar.cpp" />
+    <ClCompile Include="..\private\Enemy_Info.cpp" />
+    <ClCompile Include="..\private\Enemy_Panel.cpp" />
     <ClCompile Include="..\private\GameTime.cpp" />
     <ClCompile Include="..\private\Eessential_Spell.cpp" />
     <ClCompile Include="..\private\Eessential_Spell_Slot.cpp" />
     <ClCompile Include="..\Private\Goblin_States.cpp" />
     <ClCompile Include="..\private\HpBarBG.cpp" />
     <ClCompile Include="..\Private\Bombard.cpp" />
+    <ClCompile Include="..\Private\InfoInstance.cpp" />
     <ClCompile Include="..\private\InstancedProp.cpp" />
+    <ClCompile Include="..\private\Intro_BG.cpp" />
+    <ClCompile Include="..\private\Intro_Image.cpp" />
+    <ClCompile Include="..\Private\LeviosoSide.cpp" />
+    <ClCompile Include="..\private\Loding_Canvas.cpp" />
+    <ClCompile Include="..\private\Loding_Panel.cpp" />
+    <ClCompile Include="..\private\Logo.cpp" />
+    <ClCompile Include="..\private\Logo_Glow.cpp" />
+    <ClCompile Include="..\private\Logo_Text.cpp" />
     <ClCompile Include="..\private\Magic_Icon.cpp" />
     <ClCompile Include="..\private\Magic_Item.cpp" />
     <ClCompile Include="..\private\Magic_Meter.cpp" />
     <ClCompile Include="..\Private\EffectPool.cpp" />
+    <ClCompile Include="..\private\MapElement_Lake.cpp" />
     <ClCompile Include="..\private\MapElement_Light.cpp" />
+    <ClCompile Include="..\Private\MapInfo.cpp" />
     <ClCompile Include="..\Private\MissionBanner_Border.cpp" />
+    <ClCompile Include="..\Private\MonsterInfo.cpp" />
     <ClCompile Include="..\Private\NomalJap.cpp" />
     <ClCompile Include="..\Private\Effect_Container.cpp" />
     <ClCompile Include="..\private\GamePlay_Canvas.cpp" />
@@ -407,8 +532,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\Private\NomalJapSide.cpp" />
     <ClCompile Include="..\private\NoMountIcon.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
+    <ClCompile Include="..\Private\PlayerInfo.cpp" />
     <ClCompile Include="..\Private\Player_States.cpp" />
     <ClCompile Include="..\private\Potion.cpp" />
     <ClCompile Include="..\Private\Levioso.cpp" />
@@ -418,6 +545,7 @@
     <ClCompile Include="..\private\Spell_Anim.cpp" />
     <ClCompile Include="..\private\Spell_Canvas.cpp" />
     <ClCompile Include="..\private\Spell_Data.cpp" />
+    <ClCompile Include="..\private\Spell_Drag.cpp" />
     <ClCompile Include="..\Private\Spell_Header.cpp" />
     <ClCompile Include="..\private\Spell_Header_Line.cpp" />
     <ClCompile Include="..\private\Spell_Hover.cpp" />
@@ -471,6 +599,13 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\Private\RootModelPart.cpp" />
+    <ClCompile Include="..\Private\Troll_Rock.cpp" />
+    <ClCompile Include="..\Private\Troll_States.cpp" />
+    <ClCompile Include="..\Private\Troll_State_BackHand_Swing.cpp" />
+    <ClCompile Include="..\Private\Troll_State_Rush.cpp" />
+    <ClCompile Include="..\Private\Troll_Weapon.cpp" />
+    <ClCompile Include="..\private\UI_Manager.cpp" />
+    <ClCompile Include="..\private\Unified.cpp" />
     <ClCompile Include="..\Private\Wand.cpp" />
     <ClCompile Include="Editor.cpp" />
   </ItemGroup>
@@ -482,6 +617,10 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_NPC_PBR_Anim.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_UIEditor.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
@@ -510,7 +649,10 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxPos.hlsl" />
+    <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxPos.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="..\Bin\Resources\ShaderFiles\Shader_VtxNorTex.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>

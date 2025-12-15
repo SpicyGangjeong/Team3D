@@ -30,6 +30,7 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
+	virtual HRESULT Render_Shadow(SHADOW eType)override;
 	virtual HRESULT Render_BoundingBox() override;
 
 private:
@@ -37,6 +38,7 @@ private:
 	CVIBuffer_Box*			m_pVIBufferCom = { nullptr };
 	COcclusionQuery*		m_pOcclusionQueryCom = { nullptr };
 
+	_float					m_fRadius = {};
 	_float3					m_vExtentWorldPosition = {};
 
 private:

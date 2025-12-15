@@ -21,8 +21,8 @@ HRESULT CSpell_Anim::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = 0.f;
-	Desc.fY = 0.f;
+	Desc.fX = 590.f;
+	Desc.fY = -100.f;
 	Desc.fSizeX = 470.f;
 	Desc.fSizeY = 250.f;
 
@@ -38,23 +38,34 @@ HRESULT CSpell_Anim::Initialize(void* pArg)
 	}
 
 	m_fTimeMult = 3.f;
-	m_fAlpha = 1.f;
-	m_fAlphaTime = 3.f;
+	m_fAlpha = 0.f;
+	m_fAlphaTime = 9.f;
 	m_fSortZ = 0.01f;
-	m_iTotalFrames = 216;
+	m_iTotalFrames = 151;
 	m_fFrameTime = 0.1f;
 	m_iCurrentFrame = 0;
 	m_bAnim_Start = false;
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("Slot_Hover"), [this](void* p) {this->Set_SkillType(*reinterpret_cast<_int*>(p)); });
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("FadeIn"), [this](void* p) {this->Set_FadeIn(); });
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("FadeOut"), [this](void* p) {this->Set_FadeOut(); });
 	return S_OK;
 }
 
 void CSpell_Anim::Priority_Update(_float fTimeDelta)
 {
+	if (!__super::Chack_Visible())
+	{
+		return;
+	}
 	__super::Priority_Update(fTimeDelta);
 }
 
 void CSpell_Anim::Update(_float fTimeDelta)
 {
+	if (!__super::Chack_Visible())
+	{
+		return;
+	}
 	if (m_bFadeIn == true)
 	{
 		if (m_fAlpha <= 1.f)
@@ -69,26 +80,20 @@ void CSpell_Anim::Update(_float fTimeDelta)
 
 	if (m_bFadeOut == true)
 	{
-		if (m_fAlpha >= 0.f)
-			m_fAlpha -= fTimeDelta;
-
-		if (m_fAlpha <= 0.f)
-		{
-			m_bFadeOut = false;
-			m_fAlpha = 0.f;
-		}
+		m_bFadeOut = false;
+		m_fAlpha = 0.f;
+		m_bAnim_Start = false;
 	}
 
-	if (m_pGameInstance->Key_Down(DIK_9))
-	{
-		m_bAnim_Start = !m_bAnim_Start;
-	}
-	if (m_bAnim_Start)
+
+	if (m_bAnim_Start == true)
 	{
 		m_fTime += fTimeDelta * m_fTimeMult;
 	}
 	else
+	{
 		m_iCurrentFrame = 0;
+	}
 
 	if (m_fTime >= m_fFrameTime)
 	{
@@ -99,19 +104,30 @@ void CSpell_Anim::Update(_float fTimeDelta)
 			m_iCurrentFrame = 0;
 	}
 
+	if (m_iPerSpell != -1)
+	{
+		m_fY = m_fOrigin_Position.y + static_cast<CUIObject*>(m_pOwner)->Get_Info(m_iPerSpell).fVidio;
+	}
+
 	__super::Update(fTimeDelta);
 }
 
 void CSpell_Anim::Late_Update(_float fTimeDelta)
 {
+	if (!__super::Chack_Visible())
+	{
+		return;
+	}
 	if (m_bVisible) {
-		m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
+		if (m_pDiffuse_TextureCom != nullptr)
+			m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
 	}
 	__super::Late_Update(fTimeDelta);
 }
 
 HRESULT CSpell_Anim::Render()
 {
+
 	if (FAILED(Bind_ShaderResources()))
 	{
 		return E_FAIL;
@@ -137,12 +153,41 @@ _vector CSpell_Anim::Get_WorldPostion()
 	return m_pTransformCom->Get_State(STATE::POSITION);
 }
 
-void CSpell_Anim::Anim_Start(_uint iSpell_Id)
+void CSpell_Anim::Set_FadeIn()
 {
+	if (!m_bFadeIn && m_fAlpha < 1.f)
+	{
+		m_bFadeIn = true;
+		m_bFadeOut = false;
+	}
+	m_bAnim_Start = true;
 }
 
-void CSpell_Anim::Anim_End()
+HRESULT CSpell_Anim::Change_Image(_int SpellID)
 {
+	_wstring pImageName = static_cast<CUIObject*>(m_pOwner)->Get_Info(SpellID).pImage_Name;
+	m_iTotalFrames = static_cast<CUIObject*>(m_pOwner)->Get_Info(SpellID).iAnimNum;
+	if (m_pDiffuse_TextureCom)
+	{
+		Remove_Component<CTexture>();
+		SAFE_RELEASE(m_pDiffuse_TextureCom);
+	}
+	if (FAILED(__super::Add_Asset_Component(ENUM_CLASS(LEVEL::UI), pImageName, reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+void CSpell_Anim::Set_SkillType(_int eType)
+{
+	if (eType != -1 && eType != m_iPerSpell)
+	{
+		m_iPerSpell = eType;
+		m_iCurrentFrame = 0;
+		Change_Image(eType);
+	}
+	else if (eType == -1)
+		m_iPerSpell = eType;
 }
 
 HRESULT CSpell_Anim::Bind_ShaderResources()
@@ -188,7 +233,7 @@ HRESULT CSpell_Anim::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Crucio"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
+	if (FAILED(Add_Asset_Component(ENUM_CLASS(LEVEL::UI), TEXT("Accio"), reinterpret_cast<CComponent**>(&m_pDiffuse_TextureCom), nullptr)))
 	{
 		return E_FAIL;
 	}
@@ -196,7 +241,6 @@ HRESULT CSpell_Anim::Ready_Components(void* pArg)
 	{
 		return E_FAIL;
 	}
-
 	return S_OK;
 }
 

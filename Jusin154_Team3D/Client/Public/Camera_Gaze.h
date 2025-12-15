@@ -32,10 +32,15 @@ private:
 	virtual HRESULT Ready_Components(void* pArg) override;
 	HRESULT Bind_ShaderResources() override;
 
+private:
+	CInfoInstance* m_pInfoInstance = { nullptr };
+
+
 public:
 	static CCamera_Gaze* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, CGameObject* pOwner) override;
 	virtual void Free() override;
+
 
 #ifdef _DEBUG
 	void Describe_Entity() override;

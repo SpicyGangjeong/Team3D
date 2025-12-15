@@ -27,7 +27,7 @@ HRESULT CBroom::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	m_pModelCom->Set_AnimationIndex(5);
+	m_pModelCom->Set_AnimationIndex(11,true);
 
 	return S_OK;
 }
@@ -39,6 +39,8 @@ void CBroom::Priority_Update(_float fTimeDelta)
 void CBroom::Update(_float fTimeDelta)
 {
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
+
+	Describe_Entity();
 }
 
 void CBroom::Late_Update(_float fTimeDelta)
@@ -160,4 +162,5 @@ void CBroom::Free()
 
 void CBroom::Describe_Entity()
 {
+
 }

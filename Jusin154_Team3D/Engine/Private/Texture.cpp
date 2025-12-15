@@ -2,6 +2,8 @@
 #include "Texture.h"
 #include "Shader.h"
 
+#include "GameInstance.h"
+
 CTexture::CTexture(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
 {
@@ -38,11 +40,13 @@ _uint CTexture::Get_Size()
 {
 	return (_uint)m_SRVs.size();
 }
-
+#ifdef EDITOR_PROJECT
 _bool CTexture::Compare_GroupName(_wstring wstrGroupName)
 {
 	return m_wstrPrototypeName == wstrGroupName;
 }
+#endif // EDITOR_PROJECT
+
 
 #ifdef _DEBUG
 void CTexture::HoverName()
@@ -73,11 +77,18 @@ HRESULT CTexture::Initialize_Prototype(TEXTURE_LOAD_TYPE eType, const _tchar* pT
 			return E_FAIL;
 		}
 		break;
+	case Engine::TEXTURE_LOAD_TYPE::CUBE:
+		if (FAILED(ParseTexturePathToSRVs(pTextureFilePath))) {
+			return E_FAIL;
+		}
+		break;
 	default:
 		break;
 	}
-
+#ifdef EDITOR_PROJECT
 	m_wstrPrototypeName = wstrPrototypeName;
+#endif // EDITOR_PROJECT
+
 
 	return S_OK;
 }
@@ -89,39 +100,15 @@ HRESULT CTexture::Initialize(void* pArg)
 
 HRESULT CTexture::Load_SRV(const _char* szPath, ID3D11ShaderResourceView** ppSRV)
 {
-	*ppSRV = nullptr;
-	_char		szTextureFileName[MAX_PATH] = {};
-	_char		szTextureFilePath[MAX_PATH] = {};
-	_char		szDrive[MAX_PATH] = {};
-	_char		szDir[MAX_PATH] = {};
-	_char		szFileName[MAX_PATH] = {};
-	_char		szEXT[MAX_PATH] = {};
-	_splitpath_s(szPath, szDrive, MAX_PATH, szDir, MAX_PATH, szFileName, MAX_PATH, szEXT, MAX_PATH);
-	strcpy_s(szTextureFileName, szDrive);
-	strcat_s(szTextureFileName, szDir);
-	strcat_s(szTextureFileName, szFileName);
+	ID3D11ShaderResourceView* pSRV = m_pGameInstance->Add_Resource(szPath);
 
-	strcat_s(szTextureFilePath, szTextureFileName);
-	strcat_s(szTextureFilePath, ".dds");
-
-	HRESULT			hr = {};
-
-	hr = CreateDDSTextureFromFile(m_pDevice, CMyTools::ToWstring(szTextureFilePath).c_str(), nullptr, ppSRV, 1024); // 일단 dds로 시도하고
-	if (FAILED(hr)) {
-		memset(szTextureFilePath, 0, sizeof(_char) * MAX_PATH); // 실패하면 원래 확장자로 다시 시도
-		strcat_s(szTextureFilePath, szTextureFileName);
-		strcat_s(szTextureFilePath, szEXT);
-
-		if (false == strcmp(".tga", szEXT)) {
-			assert(false); // trying to Load TGA
-			hr = S_OK;
-		}
-		else {
-			hr = CreateWICTextureFromFile(m_pDevice, CMyTools::ToWstring(szTextureFilePath).c_str(), nullptr, ppSRV);
-		}
+	if (nullptr == pSRV){
+		return E_FAIL;
 	}
 
-	return hr;
+	*ppSRV = pSRV;
+
+	return S_OK;
 }
 
 HRESULT CTexture::ParseTextureIncrementalToSRVs(_uint iNumTextures, const _tchar* pTextureFilePath)
@@ -182,17 +169,18 @@ HRESULT CTexture::ParseTexturePathToSRVs(const _tchar* pTextureFolderPath)
 	HRESULT hr;
 	for (const auto& filePath : files)
 	{
-		hr = CreateDDSTextureFromFile(m_pDevice, filePath.c_str(), nullptr, &pSRV);
-		if (FAILED(hr)) {
-			hr = CreateWICTextureFromFile(m_pDevice, filePath.c_str(), nullptr, &pSRV);
-		}
+		hr = Load_SRV(CMyTools::ToString(filePath).c_str(), &pSRV);
 
 		if (FAILED(hr)) {
-			return hr;
+			return E_FAIL;
 		}
-
 		m_SRVs.push_back(pSRV);
 	}
+
+	return S_OK;
+}
+HRESULT CTexture::Load_CubeSRV(const _char* szPath, ID3D11ShaderResourceView** ppSRV)
+{
 
 	return S_OK;
 }

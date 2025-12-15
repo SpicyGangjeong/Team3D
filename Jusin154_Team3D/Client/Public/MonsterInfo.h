@@ -28,6 +28,7 @@ public:
 	CUnit* Get_LockOnUnit();
 	pair<CUnit*, CTransform*> Get_NearestPlayerAlly(_fvector vPos);
 
+	CMonster* Get_TargetMonster();
 private:
 	CGameInstance*			m_pGameInstance = { nullptr };
 	class CInfoInstance*	m_pInfoInstance = { nullptr };
@@ -42,6 +43,7 @@ private:
 	HRESULT Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContex);
 	HRESULT	Refresh_LockOnMonsters();
 	HRESULT	Refresh_PlayerAllies();
+	HRESULT Refresh_ActiveMonsters();
 
 
 public:

@@ -92,7 +92,28 @@ HRESULT CModel::Bind_Material(_uint iMeshIndex, CShader* pShader)
 	if (iMaterialIndex >= m_iNumMaterials) {
 		return E_FAIL;
 	}
-	return m_Materials[iMaterialIndex]->Bind_SRV(pShader);
+	return m_Materials[iMaterialIndex]->Bind_SRV(pShader, m_eType);
+}
+
+HRESULT CModel::Begin(_uint iMeshIndex, CShader* pShader, _bool OutLine)
+{
+	if (iMeshIndex >= m_iNumMeshes) {
+		return E_FAIL;
+	}
+
+	_uint		iMaterialIndex = m_Meshes[iMeshIndex]->Get_MaterialIndex();
+
+	if (iMaterialIndex >= m_iNumMaterials) {
+		return E_FAIL;
+	}
+	HRESULT hr = { E_FAIL };
+	if (false == OutLine) {
+		hr = pShader->Begin(m_Materials[iMaterialIndex]->Get_UsingPass());
+	}
+	else {
+		hr = pShader->Begin(m_Materials[iMaterialIndex]->Get_OutLinePass());
+	}
+	return hr;
 }
 
 HRESULT CModel::Bind_BoneMatrices(_uint iMeshIndex, CShader* pShader, const _char* pConstantName)
@@ -105,11 +126,13 @@ HRESULT CModel::Bind_BoneMatrices(_uint iMeshIndex, CShader* pShader, const _cha
 
 _bool CModel::Play_Animation(_float fTimeDelta, CTransform* pTransform)
 {
-	if (!m_bPlayAnim)
+	if (!m_bPlayAnim){
 		return false;
+	}
 
-	if (m_iCurrentAnimIndex < 0 || m_iCurrentAnimIndex >= (_int)m_iNumAnimations)
+	if (m_iCurrentAnimIndex < 0 || m_iCurrentAnimIndex >= (_int)m_iNumAnimations){
 		return false;
+	}
 
 	if (m_iCurrSecondAnimIndex >= 0) {
 		Play_Dual_Anim(fTimeDelta, pTransform);
@@ -123,13 +146,13 @@ _bool CModel::Play_Animation(_float fTimeDelta, CTransform* pTransform)
 
 _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 {
-	if (m_bLoopRestarted)
+	/*if (m_bLoopRestarted)
 	{
 		m_vPrevRootPos = { 0,0,0 };
 		m_bLoopRestarted = false;
-	}
+	}*/
 
-	ComputeAnimation(m_iCurrentAnimIndex);
+	//ComputeAnimation(m_iCurrentAnimIndex);
 
 	if (m_iPreAnimIndex >= 0 && m_iPreAnimIndex != m_iCurrentAnimIndex)
 	{
@@ -143,7 +166,6 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 		CAnimation* pPreAnim = m_Animations[m_iPreAnimIndex];
 
 		m_bIsFinishedAnim = pCurAnim->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, true, m_iBoneMask, m_vector);
-
 
 		pCurAnim->InterpAnim(pPreAnim, m_Bones, m_fRatio);
 
@@ -159,28 +181,32 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 
 		m_iPreAnimIndex = m_iCurrentAnimIndex;
 	}
+	
+	if (m_bIsFinishedAnim)
+	{
+		if (m_bIsLoop)
+		{
+			m_bLoopRestarted = true;
+			m_vPrevRootPos = { 0,0,0 };
+		}
+		else{
+			XMStoreFloat3(&m_vPrevRootPos, m_vector[2]);
+		}
+	}
 
 	if (m_bRatio) {
 		Update_RootBone(m_fAmount * m_fRatio);
 	}
 	else
 	{
-		Update_RootBone();
+		Update_RootBone(m_fAmount);
 	}
 
 	if (m_bIsFinishedAnim)
 	{
-		if (m_bIsLoop)
-		{
-			m_bLoopRestarted = true;
-		}
-		else
-			XMStoreFloat3(&m_vPrevRootPos, m_vector[2]);
-
 		m_vPrevRootRot = { 0.f,0.f,0.f,0.f };
 		m_bInitialRootRotSaved = false;
 	}
-
 
 	for (auto& pBone : m_Bones)
 	{
@@ -192,14 +218,14 @@ _bool CModel::Play_Anim(_float fTimeDelta, CTransform* pTransform)
 
 _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 {
-	if (m_bLoopRestarted)
+	/*if (m_bLoopRestarted)
 	{
 		m_vPrevRootPos = { 0,0,0 };
 		m_bLoopRestarted = false;
-	}
+	}*/
 
-	ComputeAnimation(m_iCurrentAnimIndex);
-	ComputeAnimation_Second(m_iCurrSecondAnimIndex);
+	//ComputeAnimation(m_iCurrentAnimIndex);
+	//ComputeAnimation_Second(m_iCurrSecondAnimIndex);
 
 	if (m_iPreAnimIndex >= 0 && m_iPreAnimIndex != m_iCurrentAnimIndex)
 	{
@@ -234,15 +260,20 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 			{
 				m_fSecondRatio = 1.f;
 			}
-			else
-				m_fSecondBlendTime = 0.f;
 		}
 	}
 	else
 	{
-		m_fSecondBlendTime += fTimeDelta;
-		m_fSecondRatio = (m_fSecondBlendTime / m_fSecondBlendDuration);
-		if (m_fSecondRatio > 1.f) m_fSecondRatio = 1.f;
+		if (!m_bSecondStopBlend && m_iCurrSecondAnimIndex != -1)
+		{
+			m_fSecondBlendTime += fTimeDelta;
+
+			if (m_fSecondBlendTime > m_fSecondBlendDuration)
+				m_fSecondBlendTime = m_fSecondBlendDuration;
+
+			m_fSecondRatio = m_fSecondBlendTime / m_fSecondBlendDuration;
+		}
+
 
 		m_bIsFinishedAnim = m_Animations[m_iCurrentAnimIndex]->Update_TransformationMatrices(m_Bones, m_pLocalPos, m_bIsLoop, fTimeDelta, true, m_iBoneMask, m_vector);
 
@@ -256,8 +287,18 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 			{
 				m_fSecondRatio = 1.f;
 			}
-			else
-				m_fSecondBlendTime = 0.f;
+		}
+	}
+
+	if (m_bIsFinishedAnim)
+	{
+		if (m_bIsLoop)
+		{
+			m_bLoopRestarted = true;
+			m_vPrevRootPos = { 0,0,0 };
+		}
+		else {
+			XMStoreFloat3(&m_vPrevRootPos, m_vector[2]);
 		}
 	}
 
@@ -266,26 +307,38 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 	}
 	else
 	{
-		Update_RootBone();
+		Update_RootBone(m_fAmount);
 	}
 
 	if (m_bIsFinishedAnim)
 	{
-		if (m_bIsLoop)
-		{
-			m_bLoopRestarted = true;
-		}
-		else
-			XMStoreFloat3(&m_vPrevRootPos, m_vector[2]);
-
 		m_vPrevRootRot = { 0.f,0.f,0.f,0.f };
 		m_bInitialRootRotSaved = false;
 	}
 
-	if (!m_bIsSecondLoop && m_bIsSecondFinishedAnim)
+	if (m_bIsSecondFinishedAnim && !m_bIsSecondLoop)
 	{
-		m_iCurrSecondAnimIndex = -1;
+		m_bSecondStopBlend = true;
 	}
+
+	if (m_bSecondStopBlend)
+	{
+		m_fSecondBlendTime -= fTimeDelta;
+
+		if (m_fSecondBlendTime < 0.f)
+			m_fSecondBlendTime = 0.f;
+
+		m_fSecondRatio = m_fSecondBlendTime / m_fSecondBlendDuration;
+
+		if (m_fSecondRatio <= 0.f)
+		{
+			m_fSecondRatio = 0.f;
+			m_bSecondStopBlend = false;
+			m_iCurrSecondAnimIndex = -1;
+		}
+	}
+
+
 
 	for (auto& pBone : m_Bones)
 	{
@@ -295,50 +348,75 @@ _bool CModel::Play_Dual_Anim(_float fTimeDelta, CTransform* pTransform)
 	return m_bIsFinishedAnim;
 }
 
-void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fAmount, _bool bRatio)
+void CModel::Set_AnimationIndex(_uint iIndex, _bool isLoop, _float fAmount, _bool bRatio, _float fAnimSpeed,_bool bRootBone)
 {
-	if (m_iCurrentAnimIndex == iIndex) {
+	if (m_iCurrentAnimIndex == iIndex)
 		return;
-	}
+
 	if (iIndex >= 0 && iIndex < m_iNumAnimations)
 	{
 		m_vPrevRootPos = { 0.f, 0.f, 0.f };
 		m_vPrevRootRot = { 0.f,0.f,0.f,0.f };
 		m_bInitialRootRotSaved = false;
 		m_bInitialRootPos = false;
+
 		if (m_iCurrentAnimIndex != -1)
 		{
+			m_iPreAnimIndex = m_iCurrentAnimIndex;
+
 			m_Animations[m_iCurrentAnimIndex]->Depart_Animation();
-			m_Animations[m_iCurrentAnimIndex]->ResetRootMotion();
+			m_Animations[m_iCurrentAnimIndex]->Set_AnimSpeed(1.f);
 		}
+
+		m_fBlendTime = 0.f;
+		m_fRatio = 0.f;
+		m_bRootBone = bRootBone;
 		m_iCurrentAnimIndex = iIndex;
 		m_bIsLoop = isLoop;
 		m_fAmount = fAmount;
 		m_bRatio = bRatio;
 
-
+		m_Animations[m_iCurrentAnimIndex]->Depart_Animation();
+		m_Animations[m_iCurrentAnimIndex]->Set_AnimSpeed(fAnimSpeed);
 	}
-	else {
+	else
+	{
 		m_iCurrentAnimIndex = -1;
 	}
 }
 
-void CModel::Set_Second_AnimationIndex(_uint iIndex, _uint BoneIndex, _bool isLoop)
+
+void CModel::Set_Second_AnimationIndex(_uint BoneIndex, _uint iIndex, _bool isLoop)
 {
-	if (m_iCurrSecondAnimIndex == iIndex) {
-		return;
-	}
 	if (iIndex >= 0 && iIndex < m_iNumAnimations)
 	{
+		if (m_iCurrSecondAnimIndex != -1)
+		{
+			m_Animations[m_iCurrSecondAnimIndex]->Depart_Animation();
+		}
+
 		m_iCurrSecondAnimIndex = iIndex;
 		m_bIsSecondLoop = isLoop;
 		m_iBoneMask = m_BoneMask[BoneIndex];
+
 		m_fSecondBlendTime = 0.f;
+		m_fSecondRatio = 0.f;
+		m_bIsSecondFinishedAnim = false;
+
+		m_Animations[m_iCurrSecondAnimIndex]->Depart_Animation();
 	}
-	else {
+	else
+	{
+		if (m_iCurrSecondAnimIndex != -1)
+			m_Animations[m_iCurrSecondAnimIndex]->Depart_Animation();
+
 		m_iCurrSecondAnimIndex = -1;
+		m_bIsSecondFinishedAnim = false;
+		m_fSecondBlendTime = 0.f;
+		m_fSecondRatio = 0.f;
 	}
 }
+
 
 void CModel::Update_RootBone(_float Amount)
 {
@@ -369,7 +447,9 @@ void CModel::Update_RootBone(_float Amount)
 		vDeltaWorld *= Amount;
 
 		vDeltaWorld = XMVectorSetW(vDeltaWorld, 1.f);
-		m_pTransform->AccumulateMomentum(vDeltaWorld);
+
+		if(m_bRootBone)
+			m_pTransform->AccumulateMomentum(vDeltaWorld);
 
 		m_vPrevRootPos = vCurRootPos;
 
@@ -422,7 +502,7 @@ void CModel::Update_RootBone(_float Amount)
 	{
 		_float4x4 Root = m_Bones[m_iRootBoneIndex]->Get_TransformationMatrix();
 		_matrix local = XMLoadFloat4x4(&Root);
-
+	
 		_matrix pre = XMLoadFloat4x4(&m_PreTransformMatrix);
 
 		_float4 curRotF4;
@@ -494,6 +574,35 @@ const _float4x4* CModel::Get_BoneMatrixPtr(const _char* pBoneName) const
 
 
 	return (*iter)->Get_CombinedTransformationMatrixPtr();
+
+}
+
+_matrix CModel::Get_BoneMatrix(const _char* pBoneName) const
+{
+	vector<CBone*>::const_iterator	iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone)->_bool
+		{
+			if (true == pBone->Compare_Name(pBoneName))
+				return true;
+
+			return false;
+		});
+
+
+	return 	(*iter)->Get_CombinedTransformationMatrix();
+}
+
+_matrix CModel::Get_BoneLocalMatrix(const _char* pBoneName) const
+{
+	vector<CBone*>::const_iterator    iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone)->_bool
+		{
+			if (true == pBone->Compare_Name(pBoneName))
+				return true;
+
+			return false;
+		});
+
+	_float4x4 LocalTransform = (*iter)->Get_TransformationMatrix();
+	return      XMLoadFloat4x4(&LocalTransform);
 }
 
 const _char* CModel::Get_MeshName(_uint iIndex)
@@ -579,6 +688,19 @@ HRESULT CModel::Render_Indexed(_uint iMeshIndex, _uint IndexCount, _uint StartIn
 
 	return S_OK;
 }
+HRESULT CModel::Ready_PhysXMeshes(_fmatrix& PreTransformMatrix)
+{
+	m_iNumPhysXMeshes = m_iNumMeshes;
+
+	m_TriMeshes.reserve(m_iNumMeshes);
+
+	m_pGameInstance->ConvertToTriMeshes(m_Meshes, m_TriMeshes, PreTransformMatrix);
+
+	for (_uint i = 0; i < m_iNumMeshes; ++i) {
+		m_pGameInstance->RegistTriMesh((m_Meshes[i]->Get_Name() + to_string(i)).c_str(), m_TriMeshes[i]);
+	}
+	return S_OK;
+}
 #ifdef EDITOR_PROJECT
 
 HRESULT CModel::Ready_Meshes(MODEL eType, const aiScene* pAIScene, _fmatrix& PreTransformMatrix)
@@ -601,25 +723,8 @@ HRESULT CModel::Ready_Meshes(MODEL eType, const aiScene* pAIScene, _fmatrix& Pre
 	return S_OK;
 }
 
-HRESULT CModel::Ready_PhysXMeshes()
-{
-	m_iNumPhysXMeshes = m_iNumMeshes;
-
-	m_TriMeshes.reserve(m_iNumMeshes);
-
-	m_pGameInstance->ConvertToTriMeshes(m_Meshes, m_TriMeshes);
-
-	return S_OK;
-}
-
 HRESULT CModel::Save_PhysXTriMeshes(const _char* pModelFilePath)
 {
-	if (FAILED(Ready_PhysXMeshes())) {
-		return E_FAIL;
-	}
-	for (_uint i = 0; i < m_iNumMeshes; ++i) {
-		m_pGameInstance->RegistTriMesh((m_Meshes[i]->Get_Name() + to_string(i)).c_str(), m_TriMeshes[i]);
-	}
 	return m_pGameInstance->SaveTriMeshes(pModelFilePath, m_TriMeshes);
 }
 
@@ -727,6 +832,90 @@ HRESULT CModel::Ready_Materials_FromFile(const aiScene* pAIScene, const _char* p
 		}
 	}
 
+	return S_OK;
+}
+
+HRESULT CModel::Ready_Materials_FromFile_Anim(const aiScene* pAIScene, const _char* pModelFilePath)
+{
+	m_iNumMaterials = pAIScene->mNumMaterials;
+	m_Materials.reserve(m_iNumMaterials);
+
+	_char szDrive[MAX_PATH] = {};
+	_char szDir[MAX_PATH] = {};
+	_char szFileName[MAX_PATH] = {};
+	_char szMeshFilePath[MAX_PATH] = {};
+	vector<_string> MaterialFilePathes;
+	string strFolderPath = pModelFilePath;
+
+	size_t iFolderPos = strFolderPath.find("MeshTable");
+
+	strFolderPath = strFolderPath.substr(0, iFolderPos) + "MeshTable/";
+
+	_splitpath_s(pModelFilePath, szDrive, MAX_PATH, szDir, MAX_PATH, szFileName, MAX_PATH, nullptr, 0);
+
+	strcpy_s(szMeshFilePath, szDrive);
+	strcat_s(szMeshFilePath, szDir);
+	strcat_s(szMeshFilePath, szFileName);
+	strcat_s(szMeshFilePath, ".props.txt");
+
+	ifstream file(szMeshFilePath);
+
+	if (!file.is_open())
+	{
+		return S_OK;
+	}
+
+	string strText = {};
+	_uint iNumParameter = {};
+
+	getline(file, strText);
+	getline(file, strText);
+
+	for (_uint i = 0; i < m_iNumMaterials; ++i)
+	{
+		getline(file, strText);
+
+		_int iBeginIndex = (_int)strText.find_first_of("/");
+		_int iEndIndex = (_int)strText.find('.');
+		if (-1 == iBeginIndex || -1 == iEndIndex) {
+
+			MSG_BOX("Fail Path _ NotExist");
+			return E_FAIL;
+		}
+		if ((_int)strText.size() < iEndIndex - iBeginIndex)
+		{
+			MSG_BOX("Fail Path");
+			return E_FAIL;
+		}
+
+		string	strPath = strFolderPath + strText.substr(iBeginIndex + 1, iEndIndex - iBeginIndex - 1);
+		MaterialFilePathes.push_back(strPath);
+	}
+
+	for (size_t i = 0; i < m_iNumMaterials; ++i) {
+		CMaterial* pMaterial = CMaterial::Create(m_pDevice, m_pContext, MaterialFilePathes[i].c_str(), strFolderPath.c_str());
+		if (nullptr == pMaterial) {
+			return E_FAIL;
+		}
+		m_Materials.push_back(pMaterial);
+	}
+	m_Materials.shrink_to_fit();
+
+	return S_OK;
+}
+
+HRESULT CModel::Ready_Materials_Independent(MODEL eType, const aiScene* pAIScene, const _char* pModelFilePath)
+{
+	m_iNumMaterials = pAIScene->mNumMaterials;
+	m_Materials.reserve(m_iNumMaterials);
+	for (size_t i = 0; i < m_iNumMaterials; ++i) {
+		CMaterial* pMaterial = CMaterial::Create(m_pDevice, m_pContext, eType, pModelFilePath, pAIScene->mMaterials[i]);
+		if (nullptr == pMaterial) {
+			return E_FAIL;
+		}
+		m_Materials.push_back(pMaterial);
+	}
+	m_Materials.shrink_to_fit();
 	return S_OK;
 }
 
@@ -1031,7 +1220,7 @@ _bool CModel::SaveAssimpModel(const _char* filename)
 		}
 	}
 
-	if (MODEL::ENVIROMENT == m_eType)
+	if (MODEL::ENVIRONMENT == m_eType)
 	{
 		fwrite(&m_fRadius, sizeof(_float), 1, fp);
 		fwrite(&m_vRadiusOffset, sizeof(_float3), 1, fp);
@@ -1077,14 +1266,15 @@ HRESULT CModel::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fma
 	_uint			iFlag = {};
 	iFlag = aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast;
 
-	if (MODEL::NONANIM == eType || MODEL::ENVIROMENT == eType) {
+	if (MODEL::NONANIM == eType || MODEL::PBR_NONANIM == eType || MODEL::ENVIRONMENT == eType || MODEL::NONANIM_LOCAL == eType) {
 		iFlag |= aiProcess_PreTransformVertices;
 	}
 	m_iRootBoneIndex = iRootBoneIndex;
 
 	m_pAIScene = m_Importer.ReadFile(pModelFilePath, iFlag);
-	if (nullptr == m_pAIScene)
+	if (nullptr == m_pAIScene){
 		return E_FAIL;
+	}
 
 
 #pragma region Bone
@@ -1098,14 +1288,23 @@ HRESULT CModel::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fma
 	}
 #pragma endregion
 #pragma region Material
-	if (MODEL::ENVIROMENT == eType)
+	if (MODEL::ENVIRONMENT == eType)
 	{
 		if (FAILED(Ready_Materials_FromFile(m_pAIScene, pModelFilePath))) {
 			return E_FAIL;
 		}
 	}
-	else
+	else if (MODEL::ANIM_LOCAL == eType || MODEL::NONANIM_LOCAL == eType)
 	{
+		if (FAILED(Ready_Materials_FromFile_Anim(m_pAIScene, pModelFilePath))) {
+			return E_FAIL;
+		}
+	}
+	else if (MODEL::PBR_NONANIM == eType || MODEL::PBR_ANIM == eType) {
+		if (FAILED(Ready_Materials_Independent(eType, m_pAIScene, pModelFilePath))) {
+			return E_FAIL;
+		}
+	} else {
 		if (FAILED(Ready_Materials(m_pAIScene, pModelFilePath))) {
 			return E_FAIL;
 		}
@@ -1126,28 +1325,7 @@ HRESULT CModel::Assimp_Model_Load(const _char* pModelFilePath, MODEL eType, _fma
 
 #endif // EDITOR_PROJECT
 
-HRESULT CModel::Create_CS()
-{
-	_uint CS1_InputStrides[] = {
-		sizeof(KEYFRAME_DESC),
-		sizeof(CHANNEL_DESC),
-	};
 
-	_uint CS1_OutputStrides[] = {
-		sizeof(LOCALPOS_DESC),
-		sizeof(LOCALPOS_DESC),
-	};
-
-
-	m_pComputeShader = CComputeShader::Create(m_pDevice, m_pContext, L"../Bin/Resources/ShaderFiles/Shader_Mesh_Compute.hlsl",
-		"CS_LocalSRT", (_uint)m_Bones.size(), 0, 2, nullptr, CS1_OutputStrides
-	);
-
-	if (!m_pComputeShader)
-		return E_FAIL;
-
-	return S_OK;
-}
 
 void CModel::Create_Temp()
 {
@@ -1176,85 +1354,7 @@ void CModel::Create_LocalPosVB()
 }
 
 
-void CModel::Create_Con()
-{
-	D3D11_BUFFER_DESC cbDesc = {};
-	cbDesc.Usage = D3D11_USAGE_DYNAMIC;
-	cbDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	cbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	cbDesc.ByteWidth = sizeof(ANIMSTATE_DESC);
 
-	if (FAILED(m_pDevice->CreateBuffer(&cbDesc, nullptr, &m_pConstantBuffer)))
-		return;
-}
-
-
-void CModel::UpdateAnimationCS(_uint AnimIndex)
-{
-	D3D11_MAPPED_SUBRESOURCE sub{};
-	if (SUCCEEDED(m_pContext->Map(m_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &sub)))
-	{
-		ANIMSTATE_DESC* pDesc = (ANIMSTATE_DESC*)sub.pData;
-
-		CAnimation* pAnim = m_Animations[AnimIndex];
-		pDesc->CurrentTime = pAnim->Get_CurrentTrackPosition();
-		pDesc->Duration = pAnim->Get_Duration();
-		pDesc->Speed = pAnim->Get_AnimSpeed();
-		pDesc->BoneCount = (_uint)m_Bones.size();
-		pDesc->PreTransformMatrix = m_PreTransformMatrix;
-		m_pContext->Unmap(m_pConstantBuffer, 0);
-	}
-}
-
-void CModel::ComputeAnimation(_uint AnimIndex)
-{
-	UpdateAnimationCS(AnimIndex);
-
-	_uint iGroupCountX = ((_uint)m_Bones.size() + 255) / 256;
-
-	CAnimation* pAnim = m_Animations[AnimIndex];
-	ID3D11ShaderResourceView* srvs[2] = {
-		pAnim->Get_KeyFrameSrv(),
-		pAnim->Get_ChannelSrv(),
-	};
-
-	m_pContext->CSSetShader(m_pComputeShader->Get_Compute(), nullptr, 0);
-	m_pContext->CSSetConstantBuffers(0, 1, &m_pConstantBuffer);
-	m_pContext->CSSetShaderResources(0, 2, srvs);
-
-	ID3D11UnorderedAccessView* uavs[1] = { m_pComputeShader->GetOutputUAV(0) };
-	m_pContext->CSSetUnorderedAccessViews(0, 1, uavs, nullptr);
-
-	m_pContext->Dispatch(iGroupCountX, 1, 1);
-
-	auto outSubs = m_pComputeShader->ReadBackOutputs();
-	m_pLocalPos[0] = static_cast<LOCALPOS_DESC*>(outSubs[0].pData);
-}
-
-void CModel::ComputeAnimation_Second(_uint AnimIndex)
-{
-	UpdateAnimationCS(AnimIndex);
-
-	_uint iGroupCountX = ((_uint)m_Bones.size() + 255) / 256;
-
-	CAnimation* pAnim = m_Animations[AnimIndex];
-	ID3D11ShaderResourceView* srvs[2] = {
-		pAnim->Get_KeyFrameSrv(),
-		pAnim->Get_ChannelSrv(),
-	};
-
-	m_pContext->CSSetShader(m_pComputeShader->Get_Compute(), nullptr, 0);
-	m_pContext->CSSetConstantBuffers(0, 1, &m_pConstantBuffer);
-	m_pContext->CSSetShaderResources(0, 2, srvs);
-
-	ID3D11UnorderedAccessView* uavs[1] = { m_pComputeShader->GetOutputUAV(1) };
-	m_pContext->CSSetUnorderedAccessViews(0, 1, uavs, nullptr);
-
-	m_pContext->Dispatch(iGroupCountX, 1, 1);
-
-	auto outSubs = m_pComputeShader->ReadBackOutputs();
-	m_pLocalPos[1] = static_cast<LOCALPOS_DESC*>(outSubs[1].pData);
-}
 
 void CModel::InItialize_BoneIndex()
 {
@@ -1387,15 +1487,13 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 	if (FAILED(Ready_Materials(pModelFilePath))) {
 		return E_FAIL;
 	}
-
+	if (MODEL::PBR_ANIM == m_eType || MODEL::PBR_NONANIM == m_eType) {
+		ParseMaterialXml(pModelFilePath);
+	}
 	if (FAILED(Ready_Animations(m_Bones))) {
 		return E_FAIL;
 	}
-//#ifdef 기무리
-//	if (MODEL::ENVIROMENT == eType) {
-//		Save_PhysXTriMeshes(pModelFilePath);
-//	}
-//#endif // _DEBUG
+
 	return S_OK;
 }
 
@@ -1425,6 +1523,9 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 
 	if (FAILED(Ready_Materials(pModelFilePath))) {
 		return E_FAIL;
+	}
+	if (MODEL::PBR_ANIM == m_eType || MODEL::PBR_NONANIM == m_eType) {
+		ParseMaterialXml(pModelFilePath);
 	}
 
 	if (FAILED(Ready_Animations(m_Bones))) {
@@ -1464,6 +1565,48 @@ void CModel::LoadAdditionalAnimations(const char* ModelFilePath)
 	}
 }
 
+void CModel::ParseMaterialXml(const _char* pFilePath)
+{
+	filesystem::path xmlFilePath = pFilePath;
+	xmlFilePath.replace_extension(".xml");
+
+	tinyxml2::XMLDocument xmlDoc;
+	if (xmlDoc.LoadFile(xmlFilePath.string().c_str()) != tinyxml2::XML_SUCCESS){
+		return;
+	}
+
+	tinyxml2::XMLElement* root = xmlDoc.FirstChildElement("Material");
+	if (root == nullptr){
+		return;
+	}
+
+	_int iVisitIndex = 0;
+	
+	for (tinyxml2::XMLElement* pElement = root->FirstChildElement();
+		pElement != nullptr;
+		pElement = pElement->NextSiblingElement(), ++iVisitIndex)
+	{
+		_int iOrderIndex = iVisitIndex;
+		{
+			const _char* szShaderIndex = pElement->Attribute("ShaderIndex");
+			_int iShaderIndex = -1;
+			if (szShaderIndex != nullptr) {
+				iShaderIndex = atoi(szShaderIndex);
+			}
+			m_Materials[iOrderIndex]->Set_UsingPass(iShaderIndex);
+		}
+
+		{
+			const _char* szShaderIndex = pElement->Attribute("OutLineWrite");
+			_int iShaderIndex = -1;
+			if (szShaderIndex != nullptr) {
+				iShaderIndex = atoi(szShaderIndex);
+			}
+			m_Materials[iOrderIndex]->Set_OutLinePass(iShaderIndex);
+		}
+
+	}
+}
 
 _bool CModel::LoadData(const _char* filename)
 {
@@ -1589,7 +1732,7 @@ _bool CModel::LoadData(const _char* filename)
 		NewModel.Materials.push_back(pMAt);
 	}
 
-	if (MODEL::ENVIROMENT == m_eType)
+	if (MODEL::ENVIRONMENT == m_eType)
 	{
 		fread(&m_fRadius, sizeof(_float), 1, fp);
 		fread(&m_vRadiusOffset, sizeof(_float3), 1, fp);
@@ -1714,13 +1857,13 @@ HRESULT CModel::Initialize(void* pArg)
 	SAFE_ADDREF(m_pTransform);
 
 
-	if (m_eType == MODEL::ANIM)
+	if (m_eType == MODEL::ANIM || m_eType == MODEL::PBR_ANIM || m_eType == MODEL::ANIM_LOCAL)
 	{
 		Initialize_RootBone();
 		InItialize_BoneIndex();
 		Initialize_BoneMasks();
 
-		Create_Temp();
+		/*Create_Temp();
 		m_Parent.resize(m_Bones.size());
 		for (size_t i = 0; i < (_uint)m_Bones.size(); i++)
 		{
@@ -1732,7 +1875,7 @@ HRESULT CModel::Initialize(void* pArg)
 
 		Create_Con();
 		Create_LocalPosVB();
-		Create_ParentVB();
+		Create_ParentVB();*/
 
 	}
 
@@ -1874,7 +2017,13 @@ void CModel::Free()
 #ifdef _DEBUG
 void CModel::Describe_Entity()
 {
-	GUI::Begin("Model_Desc");
+	if (GUI::CollapsingHeader("ModelAnimations")) {
+		for (_uint i = 0; i < m_iNumAnimations; ++i) {
+			if (GUI::Button(m_Animations[i]->Get_Name().c_str())) {
+				Set_AnimationIndex(i, false);
+			}
+		}
+	}
 	if (GUI::Button("SaveAnimIndexWithName")) {
 		_wstring wstrPath = TEXT("../Bin/AnimIndex.txt");
 		HANDLE	hFile = CreateFile(wstrPath.c_str(),
@@ -1908,7 +2057,6 @@ void CModel::Describe_Entity()
 		CloseHandle(hFile);
 
 	}
-	GUI::End();
 }
 
 #endif // _DEBUG

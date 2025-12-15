@@ -30,34 +30,21 @@ HRESULT CProtego::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-
 	if (FAILED(Load_Package("../Bin/Resources/Data/Effect/Package/Protego")))
 		return E_FAIL;
 
 	m_pSphere = Get_PartObject<CEditEffect>("ProtegoSphere");
-	m_pBottom = Get_PartObject<CEditEffect>("ProtegoBottom");
-	m_pCircle = Get_PartObject<CEditEffect>("ProtegoCircle");
 
 	SAFE_ADDREF(m_pSphere);
-	SAFE_ADDREF(m_pBottom);
-	SAFE_ADDREF(m_pCircle);
+
 
 	m_wstrEffectName = L"Protego";
-
-
-	m_Events.emplace(1.3f, [&]() {
-
-		m_pSphere->Set_Dissolve(true);
-		m_pBottom->Set_Dissolve(true);
-		m_pCircle->Set_Dissolve(true);
-
-		});
 
 
 	m_fAmountSize = 0.1f;
 	m_fSpeed = 5.f;
 
-	m_fDuration = 2.5f;
+	m_fDuration = 3.f;
 
 	return S_OK;
 }
@@ -74,8 +61,6 @@ void CProtego::Update(_float fTimeDelta)
 		return;
 
 	m_pSphere->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
-	m_pBottom->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
-	m_pCircle-> Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
 
 	__super::Update(fTimeDelta);
 
@@ -93,7 +78,6 @@ void CProtego::Update(_float fTimeDelta)
 	_float3 vSize = _float3(fSize, fSize, fSize);
 
 	m_pSphere->Get_Component<CTransform>()->Set_Scale(vSize);
-	m_pCircle->Get_Component<CTransform>()->Set_Scale(vSize);
 }
 
 void CProtego::Late_Update(_float fTimeDelta)
@@ -106,40 +90,21 @@ void CProtego::Late_Update(_float fTimeDelta)
 
 }
 
-HRESULT CProtego::Pre_Setting(CGameObject* pObject)
+HRESULT CProtego::Pre_Setting(CGameObject* pObject, void* pArg)
 {
-	if (pObject == nullptr)
+	if (FAILED(__super::Pre_Setting(pObject, nullptr)))
 		return E_FAIL;
 
-	m_pOwner = pObject;
-
-	Reset_EffectParts();
-
-	m_fAccTime = 0.f;
-	__super::m_fAccTime = 0.f;
-	m_fPreAccTime = 0.f;
-
-
 	m_pSphere->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
-	m_pBottom->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
-	m_pCircle->Get_Component<CTransform>()->Set_State(STATE::POSITION, m_pOwner->Get_WorldPostion());
 
 	m_pSphere->Set_Visible(true);
-	m_pCircle->Set_Visible(true);
-	m_pBottom->Set_Visible(true);
+
 
 
 	_float3 vSize = _float3(1.f, 1.f, 1.f);
 	m_pSphere->Get_Component<CTransform>()->Set_Scale(vSize);
-	m_pCircle->Get_Component<CTransform>()->Set_Scale(vSize);
 
 	m_fSizeAccTime = 0.f;
-
-	m_pSphere->Set_Dissolve(false);
-	m_pBottom->Set_Dissolve(false);
-	m_pCircle->Set_Dissolve(false);
-
-	m_bVisible = true;
 
 	return S_OK;
 }
@@ -201,8 +166,6 @@ void CProtego::Free()
 	//		SAFE_RELEASE(m_pPhysHitBox);
 
 	SAFE_RELEASE(m_pSphere);
-	SAFE_RELEASE(m_pBottom);
-	SAFE_RELEASE(m_pCircle);
 
 }
 #ifdef _DEBUG

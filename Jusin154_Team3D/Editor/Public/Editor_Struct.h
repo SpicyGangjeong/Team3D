@@ -1,9 +1,11 @@
 ﻿#pragma once
 NS_BEGIN(Engine)
-class CTransform;
 class CModel;
 class CRigidBody_Static;
+class CUnit;
+class CTransform;
 NS_END
+
 
 NS_BEGIN(Editor)
 
@@ -40,5 +42,29 @@ typedef struct tagFolderLoad {
 	vector<CRigidBody_Static*>			LoadedRigidBody;
 }FOLDER_LOAD;
 
+typedef struct tagSpellInfo
+{
+	_int			iSpell_ID{};
+	_wstring		pSpell_Name;
+	_wstring		pImage_Name;
+	_int			iSpell_Type{};
+	_wstring		pType_Name;
+	_int			iSkill_Type{};
+	_float			fSpell_Damage{};
+	_float			fSpell_CoolTime{};
+	_float			fDuration{};
+	_int			iAnimNum{};
+	_wstring		pSpellInfo;
+	_bool			bSpell_Lock = false;
+	_bool			bEquip_Spell = false;
+	_bool			bUse_Skill = false;
+	_float			fPreview{};
+	_float			fVidio{};
+}SPELL_INFO;
+
+typedef struct tagLockOnInfo {
+	CUnit* pUnit = { nullptr };
+	class CMapElement_Interactable* pInteractive = { nullptr };
+}LOCKON_INFO;
 
 NS_END
