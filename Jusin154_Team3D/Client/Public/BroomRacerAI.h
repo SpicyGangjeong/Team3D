@@ -27,10 +27,9 @@ private:
 	class CModel* m_pBroomModel = { nullptr };
 	class CTransform* m_pBroomTransform = { nullptr };
 	class CBroom* m_pBroom = { nullptr };
-	const list<CGameObject*>* m_pRaceRingList = { nullptr };
 	class CRaceRing* m_pRaceRing = { nullptr };
-	list<CGameObject*>::const_iterator m_itCurRing;
-	_int m_iIndex = {};
+	class CBroomRaceManager* m_pBroomRaceManager = { nullptr };
+	class CCamPosition_Shoulder* m_pCamPosition_ShoulderPart = { nullptr };
 private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -60,9 +59,7 @@ public:
 private:
 	virtual void Add_FSM();
 	virtual void Set_Anim();
-	void Check_RingPassed();
-	void OnRingPassed();
-	void Set_Input();
+	void Set_Input(_float fTimeDelta);
 
 	function<void()> m_InputAction = nullptr;
 	_int			m_eUIState = { };
@@ -78,7 +75,8 @@ private:
 	_float			m_fScaleSmoothSpeed = 2.5f;
 	_float			m_fAnimTime = {};
 	_bool			m_bTurbo = {};
-	_vector			m_vPrevPos = {};
+	_float			m_fSmoothX = {};
+	_float			m_fSmoothY = {};
 
 	void	Behavior_Broom_Ride_MoveEnter();
 	HRESULT Behavior_Broom_Ride_MoveExitCheck(_float fTimeDelta);

@@ -363,7 +363,7 @@ HRESULT CGoblin::Behavior_BlinkExitCheck(_float fTimeDelta)
 		m_fSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::TP)] = m_fMaxSkillCoolTime[ENUM_CLASS(GOBLIN_SKILL::TP)];
 		_vector vPlayerPos = XMLoadFloat4(&m_vTargetPos);
 		_vector vPlayerLook = m_pTarget->Get_Component<CTransform>()->Get_State(STATE::LOOK);
-		vPlayerLook = XMVectorSetY(vPlayerLook, 1.f);
+		vPlayerLook = XMVectorSetY(vPlayerLook, 0.f);
 		vPlayerLook = XMVector3Normalize(vPlayerLook);
 
 		_float randAngleDeg = m_pGameInstance->Real_Random_Float(-60.f, 60.f);

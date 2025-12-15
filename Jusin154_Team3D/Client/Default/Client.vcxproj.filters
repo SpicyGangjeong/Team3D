@@ -562,7 +562,7 @@
     </ClInclude>
     <ClInclude Include="..\Public\Accio.h">
       <Filter>02.GameObjects\Effect\Effects\Accio</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Public\Quest_Border.h">
       <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Border</Filter>
     </ClInclude>
@@ -602,6 +602,7 @@
     <ClInclude Include="..\Public\RaceRing.h">
       <Filter>02.GameObjects\Item\RaceRing</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\BroomRaceManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1223,7 +1224,7 @@
     </Filter>
     <Filter Include="02.GameObjects\Effect\Effects\Accio">
       <UniqueIdentifier>{170066b9-f360-4d15-be18-8a82f2cecf10}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="02.GameObjects\UI\Quest_Canvas">
       <UniqueIdentifier>{3bb81c23-be27-44c8-9fe8-3d9004391173}</UniqueIdentifier>
     </Filter>
@@ -1262,6 +1263,9 @@
     </Filter>
     <Filter Include="02.GameObjects\Item\RaceRing">
       <UniqueIdentifier>{f00654f0-c372-4289-ab1d-167941076573}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\BroomRaceManager">
+      <UniqueIdentifier>{9e8bccb6-c491-4f3a-bdb8-5f03f13ad84d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1769,7 +1773,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\Accio.cpp">
       <Filter>02.GameObjects\Effect\Effects\Accio</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\Private\Quest_Border.cpp">
       <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Panel\Quest_Border</Filter>
     </ClCompile>
@@ -1809,6 +1813,7 @@
     <ClCompile Include="..\Private\RaceRing.cpp">
       <Filter>02.GameObjects\Item\RaceRing</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\BroomRaceManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Goblin_States.cpp">

@@ -2,6 +2,7 @@
 #include "Goblin_Spector.h"
 
 #include "GameInstance.h"
+#include "InfoInstance.h"
 #include "Goblin.h"
 #include "Effect_Container.h"
 #include "Goblin_BattleAxe.h"
@@ -37,6 +38,8 @@ HRESULT CGoblin_Spector::Initialize(void* pArg)
 
 	if (FAILED(Ready_Parts()))
 		return E_FAIL;
+
+	m_pInfoInstance->Deregist_ActiveMonster(this);
 
 	m_pGoblin = dynamic_cast<CGoblin*>(m_pOwner);
 	SAFE_ADDREF(m_pGoblin);
@@ -209,10 +212,6 @@ HRESULT CGoblin_Spector::Ready_Components()
 	/* Com_Model */
 	if (FAILED(__super::Add_Asset_Component(g_iStaticLevel, m_strModelPrototypeTag,
 		reinterpret_cast<CComponent**>(&m_pModelCom)))) {
-		return E_FAIL;
-	}
-
-	if (FAILED(Add_Asset_Component(g_iStaticLevel, TEXT("STAT_GOBLIN"), (CComponent**)&m_pStat))) {
 		return E_FAIL;
 	}
 

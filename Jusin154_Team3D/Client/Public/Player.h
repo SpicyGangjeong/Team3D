@@ -22,6 +22,7 @@ public:
 	virtual void OnHit(CGameObject* pOther, CGameObject* pCaller = nullptr)override;
 	_bool Get_Aim() { return m_bAim; }
 	void Set_SpellHit(_bool bHit) { m_bSpellHit = bHit; }
+	void Set_Shield(_bool bShield) { m_bShield = bShield; }
 	void Start_CameraShake(_float fTime, _float fIntense);
 #ifdef _DEBUG
 	void Render_CameraCoordinateSystem();
