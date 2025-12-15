@@ -58,7 +58,7 @@ private:
 
 	_float		m_fShadowNearBoxRatio = { 0.07f };
 	_float		m_fShadowFarBoxRatio = { 0.60f };
-	_float4		m_vShadowBias = { 0.0041f, 0.005f, 0.005f, 0.005f };
+	_float4		m_vShadowBias = { 0.0018f, 0.0018f, 0.0018f, 0.0018f };
 
 	_float4		m_vOriginalRenderFrustumPoints[8] = {};
 	_float4		m_vOriginalShadowFrustumPoints[16] = {};// 3개로 나눈 절두체의 부분을 나타내는 16개의 점

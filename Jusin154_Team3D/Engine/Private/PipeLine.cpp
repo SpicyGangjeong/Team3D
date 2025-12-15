@@ -162,13 +162,13 @@ HRESULT CPipeLine::Ready_Shadow_Light(const _float4& vShadowDirRPYQuat)
 HRESULT CPipeLine::Bind_Shadow_Resource(CShader* pShader, const _char* pConstantName, D3DTS eType, SHADOW eShadowType) const
 {
 	_uint iPass = UINT_MAX;
-	if (0 < ((_ubyte)eShadowType | (_ubyte)SHADOW::SHADOW_NEAR)) {
+	if (0 < ((_ubyte)eShadowType & (_ubyte)SHADOW::SHADOW_NEAR)) {
 		iPass = 0;
 	}
-	else if (0 < ((_ubyte)eShadowType | (_ubyte)SHADOW::SHADOW_MIDDLE)) {
+	else if (0 < ((_ubyte)eShadowType & (_ubyte)SHADOW::SHADOW_MIDDLE)) {
 		iPass = 1;
 	}
-	else if (0 < ((_ubyte)eShadowType | (_ubyte)SHADOW::SHADOW_FAR)) {
+	else if (0 < ((_ubyte)eShadowType & (_ubyte)SHADOW::SHADOW_FAR)) {
 		iPass = 2;
 	}
 	assert(iPass != UINT_MAX);
