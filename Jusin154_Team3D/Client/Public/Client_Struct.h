@@ -249,7 +249,7 @@ namespace Client
 		_float      fDamping = { 0.5f };
 		_float      fRopeLength = { 0.1f };
 
-		_float  fPadding0 = {};
+		_float		fMass = { 0.5f };
 
 		_float3 vPadding1 = {};
 		_float3 vPadding2 = {};

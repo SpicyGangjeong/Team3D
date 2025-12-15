@@ -94,6 +94,9 @@ void CAccio::Update(_float fTimeDelta)
 
 	TrailPos.r[3] += XMLoadFloat3(&m_vCameraLook) * m_fLinearSpeed;
 
+
+
+
 	if (m_bHit == true && m_pEnemyCCT != nullptr)
 	{
 		/* 특정 대상과 충돌 했다면*/
@@ -102,7 +105,18 @@ void CAccio::Update(_float fTimeDelta)
 
 	XMStoreFloat4x4(&m_TrailWorld, TrailPos);
 
-	m_pRope_Trail->Rope_Trail_Update(pPlayer->Get_WandPos() , TrailPos, fTimeDelta);
+	if (m_bHit == false)
+	{
+		m_fAccRotateTime += fTimeDelta * m_fTurnSpeed;
+		_matrix rotMat = XMMatrixRotationAxis(XMLoadFloat3(&m_vCameraLook), m_fAccRotateTime);
+
+		_float fRange = m_fRange - m_fAccRotateTime / m_fAttenuation;
+		
+		if (fRange > 0)
+			TrailPos.r[3] += rotMat.r[1] * fRange;
+	}
+
+	m_pRope_Trail->Rope_Trail_Update(TrailPos, pPlayer->Get_WandPos(), fTimeDelta);
 
 }
 
@@ -123,6 +137,7 @@ void CAccio::Late_Update(_float fTimeDelta)
 
 		OnCollision(this , &CollisionInfo);
 	}
+
 
 	__super::Late_Update(fTimeDelta);
 }
@@ -181,6 +196,8 @@ HRESULT CAccio::Pre_Setting(CGameObject* pObject, void* pArg)
 		}
 
 	}
+
+	m_fAccRotateTime = 0.f;
 
 	return S_OK;
 }
@@ -252,8 +269,9 @@ void CAccio::OnCollision(CGameObject* pOther, void* pDesc)
 	pCircle->Set_Visible(false);
 	pWandLight->Set_Visible(false);
 	pSpread_Circle->Set_Visible(false);
-
-	m_pRope_Trail->Get_Component<CTrail>()->Rope_Fix(true);
+	
+	if(m_isFix)
+		m_pRope_Trail->Get_Component<CTrail>()->Rope_Fix(true);
 }
 
 void CAccio::Free()
@@ -268,7 +286,19 @@ void CAccio::Free()
 
 void CAccio::Describe_Entity()
 {
+	GUI::Begin("ACCIO");
 
+	GUI::DragFloat("TurnSpeed", &m_fTurnSpeed);
+	GUI::DragFloat("Speed", &m_fLinearSpeed);
+	GUI::DragFloat("Range", &m_fRange);
+	GUI::DragFloat("Attenuation", &m_fAttenuation);
+	
+	GUI::Checkbox("Collision Fix", &m_isFix);
+
+	m_pRope_Trail->Describe_Entity();
+	m_pRope_Trail->Get_Component<CTrail>()->Describe_Entity();
+
+	GUI::End();
 }
 
 #endif // _DEBUG
