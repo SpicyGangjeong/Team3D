@@ -37,16 +37,23 @@ private:
 private:
 	_wstring			 m_wstrEffectName = {};
 
-	class CTrailObject*  m_pRope_Trail   = { nullptr };
-	class CEffectParts*  m_pWandLight = { nullptr };
+	class CTrailObject* m_pRope_Trail = { nullptr };
+	class CEffectParts* m_pWandLight = { nullptr };
 
 	_float4				m_vStartPos = { 0.f, 0.f, 0.f, 1.f }; // 현재 발사 된 위치
-	_float4				m_vTargetPos = { 0.f, 0.f, 10.f, 1.f }; // 현재 타게팅 된 위치
-	_float				m_fLinearSpeed = 0.25f;
+	_float4				m_vTargetPos = { 0.f, 0.f, 0.f, 1.f }; // 현재 타게팅 된 위치
+	_float				m_fLinearSpeed = 1.5f;
 	_float3				m_vCameraLook = {};
 
-	_float4x4			m_TrailWorld = {};
-	 CCharacter_Controller*  m_pEnemyCCT = { nullptr };
+	_float4x4				 m_TrailWorld = {};
+	CCharacter_Controller* m_pEnemyCCT = { nullptr };
+
+	_float				m_fAccRotateTime = {};
+	_float				m_fTurnSpeed = {55.f };
+	_float				m_fRange = { 1.f };
+	_float              m_fAttenuation = { 35.f };
+	_bool				m_isFix = { false };
+
 public:
 	static CAccio* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

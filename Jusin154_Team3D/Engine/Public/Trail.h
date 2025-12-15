@@ -29,7 +29,7 @@ public:
 	HRESULT Load_Trail(HANDLE hFile);
 
 public:
-	void	Rope_Trail_Update(_fmatrix WorldMatrix, _float fTimeDelta  , _float fDamping, _float fLength, _fmatrix EndWorldMatrix);
+	void	Rope_Trail_Update(_fmatrix WorldMatrix, _float fTimeDelta  , _float fDamping, _float fLength, _float fMass, _fmatrix EndWorldMatrix);
 	void    Rope_Fix(_bool isFix) { m_isFix = isFix; }
 private:
 	virtual HRESULT Initialize_Prototype() override;
@@ -69,7 +69,7 @@ private:
 	/* 고정 트레일*/
 	_bool		m_isFix = {};
 	_float      m_fGravity = { 9.8f };
-	_float      m_fMass = { 0.5f };
+
 };
 
 NS_END

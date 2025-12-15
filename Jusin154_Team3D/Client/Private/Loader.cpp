@@ -908,6 +908,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 		m_pGameInstance->Load_GlobalSRV(TEXT("GLOBAL_DISOLVE_BURN_VERTICAL"), "../Bin/Resources/Textures/Effect/Diffuse/drp_fire_Line_Vertical.png");
 	}
 #pragma endregion
+#if 진우
+#else
 #pragma region UI_ANI
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Altering_Spell"),
 		CTexture::Create(m_pDevice, m_pContext, TEXTURE_LOAD_TYPE::INCREMENTAL, TEXT("C:\\MeshTable\\SpellAnim\\Altering_Spell\\Altering_Spell%d.png"), 349))))
@@ -1108,6 +1110,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 #pragma endregion
+#endif
 
 #pragma region TERRAIN_TEXTURE
 	/* Terrain_Diffuse */

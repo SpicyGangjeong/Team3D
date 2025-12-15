@@ -138,6 +138,18 @@ void CEffectPool::Priority_Update(_float fTimeDelta)
 
 
 	}
+#ifdef  _DEBUG
+#if 진우
+
+
+	(*m_EffectList[ENUM_CLASS(SKILL_TYPE::ACCIO)].begin())->Describe_Entity();
+
+
+
+#endif
+#endif
+
+
 }
 
 void CEffectPool::Update(_float fTimeDelta)
