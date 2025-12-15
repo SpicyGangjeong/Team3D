@@ -4,6 +4,9 @@
 #include "GameInstance.h"
 #include "InfoInstance.h"
 #include "Unit.h"
+#include "PartObject.h"
+#include "EffectParts.h"
+
 CBroom::CBroom(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUnit(pDevice, pContext)
 {
@@ -31,6 +34,9 @@ HRESULT CBroom::Initialize(void* pArg)
 		return E_FAIL;
 	}
 
+
+
+
 	Add_FSM();
 
 	Set_Anim();
@@ -47,18 +53,28 @@ HRESULT CBroom::Initialize(void* pArg)
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 10.f, 0.f, 1.f));
 
 	m_pParentUnit = dynamic_cast<CUnit*>(m_pOwner);
-		
+
+	if (m_pParentUnit->IsAI() == false)
+	{
+		if (FAILED(Ready_Child())) {
+			return E_FAIL;
+		}
+
+	}
+
 
 	return S_OK;
 }
 
 void CBroom::Priority_Update(_float fTimeDelta)
 {
-	
+	__super::Priority_Update(fTimeDelta);
 }
 
 void CBroom::Update(_float fTimeDelta)
 {
+	__super::Update(fTimeDelta);
+
 	Update_CameraCoordinateSystem();
 
 	if(!m_pParentUnit->IsAI())
@@ -73,6 +89,15 @@ void CBroom::Update(_float fTimeDelta)
 		m_bHoverToggle = true;
 		m_fSpeed = 0.f;
 
+		if(m_pWindEffect != nullptr)
+		{
+			if(m_pWindEffect->Get_Visible() == true) // 전 프레임에 트루였다면
+			{
+				m_pWindEffect->Set_Visible(false);
+				m_pWindEffect->Get_Effect_Info()->fSoftMask = 1.f;
+			}
+		}
+
 		m_pFSM->Change_State(FSMSTATE::IDLE);
 	}
 
@@ -80,16 +105,51 @@ void CBroom::Update(_float fTimeDelta)
 
 	m_pModelCom->Play_Animation(fTimeDelta, m_pTransformCom);
 
-
 #ifdef _DEBUG
 	Describe_Entity();
 #endif // _DEBUG
+
+	/* 윈드 이펙트 */
+
+	if (m_bRide == true && m_pWindEffect != nullptr)
+	{
+		if (m_fSpeed <= 5.f)
+		{
+			m_pWindEffect->Set_Visible(false);
+			return;
+		}
+
+		m_pWindEffect->Set_Visible(true);
+		m_pWindEffect->Get_Component<CInstance_Model>()->Set_TimeMult(0.5f + m_fSpeed / 20.f);
+		m_pWindEffect->Get_Effect_Info()->fSoftMask = 1.f + m_fSpeed / 10.f;
+
+	}
+
+
 
 }
 
 void CBroom::Late_Update(_float fTimeDelta)
 {
+	__super::Late_Update(fTimeDelta);
+
+	if (m_bRide == true && m_pWindEffect != nullptr)
+	{
+		CTransform* WindTransform = m_pWindEffect->Get_Component<CTransform>();
+
+		_matrix WorldMat = m_pTransformCom->Get_XMWorldMatrix() * XMMatrixRotationAxis(WindTransform->Get_State(STATE::UP) , XMConvertToRadians(180.f));
+		WindTransform->Set_WorldMatrix(WorldMat);
+		WindTransform->Set_State(STATE::POSITION, m_pGameInstance->Get_CamXMPosition());
+
+		GUI::Begin("Wind");
+
+		m_pWindEffect->Get_Component<CInstance_Model>()->Describe_Entity();
+
+		GUI::End();
+	}
+
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+
 }
 
 HRESULT CBroom::Render()
@@ -121,6 +181,23 @@ HRESULT CBroom::Render()
 			return E_FAIL;
 		}
 	}
+
+	return S_OK;
+}
+
+HRESULT CBroom::Ready_Child()
+{
+
+	CPartObject::PARTOBJECT_DESC PartsDesc{};
+
+	PartsDesc.pParentTransform = m_pTransformCom;
+
+	if (FAILED(Add_PartObject<CEffectParts>("Wind_Screen", g_iStaticLevel, &m_pWindEffect, &PartsDesc)))
+	{
+		return E_FAIL;
+	}
+
+	m_pWindEffect->Load("../Bin/Resources/Data/Effect/ScreenFX/Wind", static_cast<LEVEL>(NEXT_LEVEL));
 
 	return S_OK;
 }
@@ -234,6 +311,8 @@ CGameObject* CBroom::Clone(void* pArg, CGameObject* pOwner)
 void CBroom::Free()
 {
 	__super::Free();
+
+	SAFE_RELEASE(m_pWindEffect);
 }
 #ifdef _DEBUG
 

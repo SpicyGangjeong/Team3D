@@ -35,7 +35,7 @@ public:
 	_bool Get_Turbo() { return m_bTurbo; }
 
 	void Set_Input(BroomInput broomInput) { m_Input = broomInput; }
-
+	HRESULT         Ready_Child();
 private:
 	CInfoInstance* m_pInfoInstance = { nullptr };
 
@@ -72,7 +72,8 @@ private:
 	_float3 m_vCameraLookDir = { 0.f, 0.f, 1.f, };
 	_float3 m_vCameraRightDir = { 1.f, 0.f, 0.f };
 
-	BroomInput m_Input;
+	BroomInput			m_Input;
+	class CEffectParts* m_pWindEffect = { nullptr };
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();

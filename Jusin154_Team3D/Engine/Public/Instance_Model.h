@@ -258,8 +258,10 @@ public:
 	HRESULT			Load_InstanceModel(INSTANCE_DESC InstanceDesc);
 	HRESULT			Load_InstanceModel(HANDLE hFile);
 	HRESULT         Bind_CS_Output(_uint Index, _uint iBufferIndex);
+public:
+	void			Set_TimeMult(_float fTimeMult) { m_fTimeMult = fTimeMult; }
 private:
-		bool LoadData(const _char* filename);
+		bool		LoadData(const _char* filename);
 
 private:
 #ifdef EDITOR_PROJECT
@@ -307,8 +309,11 @@ private:
 
 	ID3D11ShaderResourceView*	m_pVBInstance_Srv = { nullptr };
 	ID3D11ShaderResourceView*   m_pParticleValue_Srv = { nullptr };
+
+private:
+	_float					m_fTimeMult = { 1.f };
+
 public:
-	//인스턴싱으로 바꾸기
 	static CInstance_Model* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, MODEL eType, _fmatrix& PreTransformMatrix, _uint iRootBoneIndex);
 
 	virtual CComponent* Clone(void* pArg, class CGameObject* pOwner = nullptr);

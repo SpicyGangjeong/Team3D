@@ -254,7 +254,7 @@ HRESULT CLevel_GamePlay::Ready_Background()
 	isReady_Background = false;
 #endif // 
 #ifdef 진우
-	isReady_Background = true;
+	isReady_Background = false;
 #endif // 
 #ifdef 기무리
 	isReady_Background = true;

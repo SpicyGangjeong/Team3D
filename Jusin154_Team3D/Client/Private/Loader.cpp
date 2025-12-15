@@ -161,6 +161,7 @@
 #include "Box_Splesh.h"
 #include "Chair_Splesh.h"
 #include "Barral_Splesh.h"
+#include "Screen_Wind.h"
 
 #pragma endregion
 
@@ -1713,6 +1714,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 
 	if (FAILED(m_pGameInstance->Add_Prototype<CGoblin_Teleport>(NEXT_LEVEL, CGoblin_Teleport::Create(m_pDevice, m_pContext)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pGameInstance->Add_Prototype<CScreen_Wind>(NEXT_LEVEL, CScreen_Wind::Create(m_pDevice, m_pContext)))) {
 		return E_FAIL;
 	}
 	

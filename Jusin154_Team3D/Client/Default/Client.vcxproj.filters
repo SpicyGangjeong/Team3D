@@ -602,7 +602,10 @@
     <ClInclude Include="..\Public\RaceRing.h">
       <Filter>02.GameObjects\Item\RaceRing</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\BroomRaceManager.h" />
+	  <ClInclude Include="..\Public\Screen_Wind.h">
+		  <Filter>02.GameObjects\Effect\ScreenFX</Filter>
+	  </ClInclude>
+	  <ClInclude Include="..\Public\BroomRaceManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1264,6 +1267,9 @@
     <Filter Include="02.GameObjects\Item\RaceRing">
       <UniqueIdentifier>{f00654f0-c372-4289-ab1d-167941076573}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\ScreenFX">
+      <UniqueIdentifier>{125737f1-56b3-4746-9be2-ea1bcb90c013}</UniqueIdentifier>
+	</Filter>
     <Filter Include="02.GameObjects\BroomRaceManager">
       <UniqueIdentifier>{9e8bccb6-c491-4f3a-bdb8-5f03f13ad84d}</UniqueIdentifier>
     </Filter>
@@ -1812,6 +1818,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\RaceRing.cpp">
       <Filter>02.GameObjects\Item\RaceRing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Screen_Wind.cpp">
+      <Filter>02.GameObjects\Effect\ScreenFX</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\BroomRaceManager.cpp" />
   </ItemGroup>

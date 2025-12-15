@@ -78,14 +78,16 @@ public:
 		_float      fRopeLength = { 0.1f };
 		_float		fMass = { 0.5f };
 
-		_float3 vPadding1 = {};
+		_float2 vDissolveTime = {};
+
+		_float  fPadding0 = {};
 		_float3 vPadding2 = {};
 
 		_float  fPadding1 = {};
 		_float  fPadding2 = {};
 		_float  fPadding3 = {};
 			    
-		_bool   isPadding0 = {};
+		_bool   isDissolve = {};
 		_bool   isPadding1 = {};
 		_bool   isPadding2 = {};
 

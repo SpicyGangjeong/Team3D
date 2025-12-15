@@ -39,7 +39,11 @@ private:
 	_int			m_iSelectTextureNum = {};
 	vector<_float>	m_ValueVector = {};
 	_float			m_fInputValue = {};
+	
 	_bool		    m_isWandPos = {};
+	_bool			m_isCamPos = {};
+
+	_float4			m_vCamOffset = {};
 public:
 	static CEditEffect* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;
