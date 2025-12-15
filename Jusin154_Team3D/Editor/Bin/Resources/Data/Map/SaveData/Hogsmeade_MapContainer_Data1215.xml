@@ -44,6 +44,12 @@
             <Scale x="1" y="1" z="1"/>
             <Rotation x="0" y="0" z="0"/>
         </PartObject>
+        <PartObject Lod_Level="0" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Ollivanders_Int_Decals</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
         <PartObject Lod_Level="2" Key_Index="0">
             <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Ollivanders_ext_Roof</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Ollivanders_ext_Roof_Lod1</PrototypeTag>
@@ -442,6 +448,14 @@
             <Scale x="1" y="1" z="1"/>
             <Rotation x="0" y="0" z="0"/>
         </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_TScrolls_ext_decals</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_TScrolls_ext_decals_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_TScrolls_ext_decals_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
         <PartObject Lod_Level="3" Key_Index="0">
             <PrototypeTag>Prototype_GameObject_SM_HM_TScrolls_Ext_Roof_Trim</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_TScrolls_Ext_Roof_Trim_Lod1</PrototypeTag>
@@ -814,6 +828,14 @@
             <Scale x="1" y="1" z="1"/>
             <Rotation x="0" y="0" z="0"/>
         </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_3Broom_ext_decals</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_3Broom_ext_decals_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_3Broom_ext_decals_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
         <PartObject Lod_Level="0" Key_Index="1">
             <PrototypeTag>Prototype_GameObject_SM_HM_3Broom_CrossBeam</PrototypeTag>
             <Position x="-5.3000016" y="0.70000005" z="1.3000001"/>
@@ -846,6 +868,13 @@
             <PrototypeTag>Prototype_GameObject_SM_HM_3Broom_ext_roof_copper_tops</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_3Broom_ext_roof_copper_tops_Lod1</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_3Broom_ext_roof_copper_tops_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_3Broom_ext_roof_decals</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_3Broom_ext_roof_decals_Lod1</PrototypeTag>
             <Position x="0" y="0" z="0"/>
             <Scale x="1" y="1" z="1"/>
             <Rotation x="0" y="0" z="0"/>
@@ -950,6 +979,13 @@
             <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Bridge</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Bridge_Lod1</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Bridge_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Bridge_Decals</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Gatehouse_Bridge_Decals_Lod1</PrototypeTag>
             <Position x="0" y="0" z="0"/>
             <Scale x="1" y="1" z="1"/>
             <Rotation x="0" y="0" z="0"/>
@@ -1147,6 +1183,12 @@
             <Scale x="1" y="1" z="1"/>
             <Rotation x="0" y="0" z="0"/>
         </PartObject>
+        <PartObject Lod_Level="0" Key_Index="1">
+            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Quid_ext_Roof_Decals</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
         <PartObject Lod_Level="3" Key_Index="0">
             <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Quid_ext_PatioCircle</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Quid_ext_PatioCircle_Lod1</PrototypeTag>
@@ -1190,6 +1232,21 @@
         <PartObject Lod_Level="1" Key_Index="0">
             <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Quid_ext_Window_Display</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Quid_ext_Window_Display_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="1">
+            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Quid_EXT_Walls_Decals</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Quid_EXT_Walls_Decals_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Quid_ext_WoodTrim</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Quid_ext_WoodTrim_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_BLDG_Quid_ext_WoodTrim_Lod2</PrototypeTag>
             <Position x="0" y="0" z="0"/>
             <Scale x="1" y="1" z="1"/>
             <Rotation x="0" y="0" z="0"/>
@@ -1344,6 +1401,14 @@
             <Position x="7.5751314" y="-0.11468146" z="13.250056"/>
             <Scale x="0.99999976" y="1" z="0.99999976"/>
             <Rotation x="0" y="89.999954" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_HogsHead_ext_Decals</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_HogsHead_ext_Decals_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_HogsHead_ext_Decals_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
         </PartObject>
         <PartObject Lod_Level="3" Key_Index="0">
             <PrototypeTag>Prototype_GameObject_SM_HM_HogsHead_ext_Gutters</PrototypeTag>
@@ -1713,9 +1778,24 @@
             <Scale x="1" y="1" z="1"/>
             <Rotation x="0" y="0" z="0"/>
         </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_HoneyDukes_Ext_Decals</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_HoneyDukes_Ext_Decals_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_HoneyDukes_Ext_Decals_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
         <PartObject Lod_Level="1" Key_Index="0">
             <PrototypeTag>Prototype_GameObject_SM_HM_Honeydukes_Glass_B</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_Honeydukes_Glass_B_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Honeydukes_Glass_Int_B</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Honeydukes_Glass_Int_B_Lod1</PrototypeTag>
             <Position x="0" y="0" z="0"/>
             <Scale x="1" y="1" z="1"/>
             <Rotation x="0" y="0" z="0"/>
@@ -2495,6 +2575,14 @@
             <Scale x="1" y="1" z="1"/>
             <Rotation x="0" y="0" z="0"/>
         </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_GEN_H_ext_decals</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_GEN_H_ext_decals_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_GEN_H_ext_decals_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
         <PartObject Lod_Level="2" Key_Index="1">
             <PrototypeTag>Prototype_GameObject_SM_HM_Gen_H_window_glass_a</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_Gen_H_window_glass_a_Lod1</PrototypeTag>
@@ -2593,6 +2681,13 @@
             <Scale x="1" y="1" z="1"/>
             <Rotation x="0" y="0" z="0"/>
         </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_GEN_J_ext_Wall_Decals</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_GEN_J_ext_Wall_Decals_Lod1</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
         <PartObject Lod_Level="3" Key_Index="0">
             <PrototypeTag>Prototype_GameObject_SM_HM_GEN_J_ext_Windows</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_GEN_J_ext_Windows_Lod1</PrototypeTag>
@@ -2647,6 +2742,14 @@
             <Scale x="1" y="1" z="1"/>
             <Rotation x="0" y="0" z="0"/>
         </PartObject>
+        <PartObject Lod_Level="2" Key_Index="1">
+            <PrototypeTag>Prototype_GameObject_SM_HM_TeaShop_Decals</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_TeaShop_Decals_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_TeaShop_Decals_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
         <PartObject Lod_Level="2" Key_Index="0">
             <PrototypeTag>Prototype_GameObject_SM_HM_TeaShop_Sign_Anchor</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_TeaShop_Sign_Anchor_Lod1</PrototypeTag>
@@ -2657,6 +2760,13 @@
         </PartObject>
         <PartObject Lod_Level="0" Key_Index="0">
             <PrototypeTag>Prototype_GameObject_SM_HM_TeaShop_Entrance_Sign</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_TeaShop_Glass_A_int</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_TeaShop_Glass_A_int_Lod1</PrototypeTag>
             <Position x="0" y="0" z="0"/>
             <Scale x="1" y="1" z="1"/>
             <Rotation x="0" y="0" z="0"/>
@@ -2777,6 +2887,14 @@
             <Rotation x="0" y="0" z="0"/>
         </PartObject>
         <PartObject Lod_Level="2" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Zonkos_ext_Walls_Decals</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Zonkos_ext_Walls_Decals_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Zonkos_ext_Walls_Decals_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0">
             <PrototypeTag>Prototype_GameObject_SM_HM_Zonkos_ext_Glass_A</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_Zonkos_ext_Glass_A_Lod1</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_Zonkos_ext_Glass_A_Lod2</PrototypeTag>
@@ -2798,6 +2916,13 @@
             <PrototypeTag>Prototype_GameObject_SM_HM_Zonkos_Ext_Entrance_B_Lod1</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_Zonkos_Ext_Entrance_B_Lod2</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_Zonkos_Ext_Entrance_B_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Zonkos_ext_Chimneys_Decals</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Zonkos_ext_Chimneys_Decals_Lod1</PrototypeTag>
             <Position x="0" y="0" z="0"/>
             <Scale x="1" y="1" z="1"/>
             <Rotation x="0" y="0" z="0"/>
@@ -2857,6 +2982,13 @@
             <PrototypeTag>Prototype_GameObject_SM_HM_Zonkos_ext_Roof</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_Zonkos_ext_Roof_Lod1</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_Zonkos_ext_Roof_Lod2</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_Zonkos_ext_Roof_Decals</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_Zonkos_ext_Roof_Decals_Lod1</PrototypeTag>
             <Position x="0" y="0" z="0"/>
             <Scale x="1" y="1" z="1"/>
             <Rotation x="0" y="0" z="0"/>
@@ -3046,6 +3178,13 @@
             <PrototypeTag>Prototype_GameObject_SM_HM_DB_GR_ext_windows_Lod1</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_DB_GR_ext_windows_Lod2</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_DB_GR_ext_windows_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="1" Key_Index="1">
+            <PrototypeTag>Prototype_GameObject_SM_HM_DB_GR_ext_Decals</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_DB_GR_ext_Decals_Lod1</PrototypeTag>
             <Position x="0" y="0" z="0"/>
             <Scale x="1" y="1" z="1"/>
             <Rotation x="0" y="0" z="0"/>
@@ -4571,6 +4710,14 @@
             <PrototypeTag>Prototype_GameObject_SM_HM_GEN_H_ext_Ivy_Lod1</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_GEN_H_ext_Ivy_Lod2</PrototypeTag>
             <PrototypeTag>Prototype_GameObject_SM_HM_GEN_H_ext_Ivy_Lod3</PrototypeTag>
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Rotation x="0" y="0" z="0"/>
+        </PartObject>
+        <PartObject Lod_Level="2" Key_Index="0">
+            <PrototypeTag>Prototype_GameObject_SM_HM_GEN_H_ext_decals</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_GEN_H_ext_decals_Lod1</PrototypeTag>
+            <PrototypeTag>Prototype_GameObject_SM_HM_GEN_H_ext_decals_Lod2</PrototypeTag>
             <Position x="0" y="0" z="0"/>
             <Scale x="1" y="1" z="1"/>
             <Rotation x="0" y="0" z="0"/>

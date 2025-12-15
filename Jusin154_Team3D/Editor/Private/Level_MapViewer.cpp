@@ -55,9 +55,9 @@ HRESULT CLevel_MapViewer::Initialize()
 		return E_FAIL;
 	}
 
-	if (FAILED(Ready_Layer_InstanceProp(TEXT("Layer_InstanceProp")))) {
-		return E_FAIL;
-	}
+	//if (FAILED(Ready_Layer_InstanceProp(TEXT("Layer_InstanceProp")))) {
+	//	return E_FAIL;
+	//}
 
 	//if (FAILED(Ready_Layer_BuildingContainer(TEXT("Layer_Building")))) {
 	//	return E_FAIL;
@@ -71,9 +71,9 @@ HRESULT CLevel_MapViewer::Initialize()
 	//	return E_FAIL;
 	//}
 
-	if (FAILED(Ready_Layer_Chest(TEXT("Layer_Chest")))) {
+	/*if (FAILED(Ready_Layer_Chest(TEXT("Layer_Chest")))) {
 		return E_FAIL;
-	}
+	}*/
 
 	if (FAILED(Ready_Layer_MapObjectManager(LAYER_MAPOBJECTMANAGER))) {
 		return E_FAIL;

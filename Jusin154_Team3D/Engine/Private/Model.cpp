@@ -1205,6 +1205,7 @@ _bool CModel::SaveAssimpModel(const _char* filename)
 		}
 	}
 
+	_uint iMaterial_Index = { 0 };
 	for (auto& mat : modelData.Materials)
 	{
 		for (_uint i = 0; i < AI_TEXTURE_TYPE_MAX; i++)
@@ -1217,6 +1218,14 @@ _bool CModel::SaveAssimpModel(const _char* filename)
 				fwrite(&len, sizeof(_uint), 1, fp);
 				fwrite(path.c_str(), sizeof(_char), len, fp);
 			}
+		}
+		if (MODEL::ENVIRONMENT == m_eType)
+		{
+			_float2 vSRV_Flag = m_Materials[iMaterial_Index]->Get_SRV_Flag();
+			_float3 vPBR_Flag = m_Materials[iMaterial_Index]->Get_PBR_Flag();
+			fwrite(&vSRV_Flag, sizeof(_float2), 1, fp);
+			fwrite(&vPBR_Flag, sizeof(_float3), 1, fp);
+			++iMaterial_Index;
 		}
 	}
 
@@ -1727,6 +1736,16 @@ _bool CModel::LoadData(const _char* filename)
 				fread(&temp[0], sizeof(_char), len, fp);
 				pMAt.Path[k][j] = temp;
 			}
+		}
+		if (MODEL::ENVIRONMENT == m_eType)
+		{
+			fread(&pMAt.vSRV_Flag, sizeof(_float2), 1, fp);
+			fread(&pMAt.vPBR_Flag, sizeof(_float3), 1, fp);
+		}
+		else
+		{
+			pMAt.vSRV_Flag = _float2(0.f, 0.f);
+			pMAt.vPBR_Flag = _float3(0.f, 0.f, 0.f);
 		}
 
 		NewModel.Materials.push_back(pMAt);

@@ -40,8 +40,8 @@ void CNPC_Ollivander::Late_Update(_float fTimeDelta)
 {
 	m_pTransformCom->Set_State(STATE::POSITION, m_pTransformCom->Get_EstimatedPositionByMomentum());
 
-	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_NEAR, this);
+	//m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
+	//m_pGameInstance->Add_RenderGroup(RENDER::SHADOW, this);
 
 	__super::Late_Update(fTimeDelta);
 }

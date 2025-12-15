@@ -30,20 +30,23 @@ Texture2D g_SurfaceParamsTexture;
 Texture2D g_DeadDisolveTexture;
 Texture2D g_DeadDisolveBurnTexture;
 
+float2 g_vSRVFlag;
+float3 g_vPBR_Flag;
+
 Texture2D g_DiffuseTexture;
 Texture2D g_SpecularTexture;
 Texture2D g_AmbientTexture;
 Texture2D g_EmissiveTexture;
-Texture2D g_HeightTexture;
+Texture2D g_MossDiffuseTexture;
 Texture2D g_NormalTexture;
-Texture2D g_ShininessTexture;
-Texture2D g_OpacityTexture;
-Texture2D g_DisplacementTexture;
-Texture2D g_LightMapTexture;
+Texture2D g_MossNormalTexture;
+Texture2D g_NormalBlendTexture;
+Texture2D g_SROBlendTexture;
+Texture2D g_MROBlendTexture;
 Texture2D g_ReflectionTexture;
-Texture2D g_BaseColorTexture;
-Texture2D g_NormalCameraTexture;
-Texture2D g_EmissionColorTexture;
+Texture2D g_DiffuseBlend;
+Texture2D g_MossSROTexture;
+Texture2D g_MossMROTexture;
 Texture2D g_MetalnessTexture;
 Texture2D g_Diffuse_RoughnessTexture;
 Texture2D g_AmbientOcclusionTexture;
@@ -283,14 +286,15 @@ PS_OUT PS_MAIN(PS_IN In)
     
     float4 vMtrlDiffuse = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
     float4 vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
+    
     //if (vMtrlDiffuse.a < 0.3f){
     //    discard;
     //}
-    if (true == g_bDisolve)
-    {
-        float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
-        vMtrlDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vMtrlDiffuse, In.vTexcoord);
-    }
+        if (true == g_bDisolve)
+        {
+            float4 vBurnColor = g_DeadDisolveBurnTexture.Sample(DefaultSampler, In.vTexcoord);
+            vMtrlDiffuse = ApplyDissolve(g_DeadDisolveTexture, g_fDisolveRatio, g_fDisolveAmount, g_fDisolveEdgeWidth, vBurnColor, vMtrlDiffuse, In.vTexcoord);
+        }
     if (g_iBinded_Texture[21] != 0)
     {
         float4 vTransmission = g_TransmissionTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
