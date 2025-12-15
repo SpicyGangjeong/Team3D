@@ -113,6 +113,10 @@ void CRigidBody_Dynamic::Move_LocalPos(_float4 vNewRotQ, _float3 vNewTranslation
 #endif // _DEBUG
 
 }
+_float CRigidBody_Dynamic::Get_Mass()
+{
+	return (_float)m_pRigidBody->getMass();
+}
 // _DEBUG
 void CRigidBody_Dynamic::Add_Force(_fvector vForce, PSX::PxForceMode::Enum eType)
 {

@@ -2237,7 +2237,8 @@ void CPlayer::Throwing_Interactive()
 		vDir = m_pTransformCom->Get_State(STATE::LOOK);
 	}
 	m_pGrapInteractive->Set_KinematicFlag(false);
-	pBody->Add_Force(vDir * vDistance, PSX::PxForceMode::eIMPULSE);
+	
+	pBody->Add_Force(pBody->Get_Mass() * vDir * (vDistance / 1.5f), PSX::PxForceMode::eIMPULSE);
 	SAFE_RELEASE(m_pGrapInteractive);
 }
 
