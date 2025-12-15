@@ -108,7 +108,9 @@ protected:
 	_bool	m_bDead = { false };
 	_bool   m_bVisible = { true };
 	_bool   m_bCloned = { false };
+	SHADOW	m_eShadow = { SHADOW::SHADOW_NEAR };
 protected:
+	void Set_Shadow(pair<_bool, _uint> shadowResult);
 	virtual HRESULT		Bind_ShaderResources()PURE;
 	virtual HRESULT		Ready_Components(void* pArg);
 public:

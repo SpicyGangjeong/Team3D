@@ -96,6 +96,30 @@ _float CGameObject::Get_Depth()
 	return m_fCamDepth;
 }
 
+void CGameObject::Set_Shadow(pair<_bool, _uint> shadowResult)
+{
+	if (true == shadowResult.first) {
+		m_eShadow = SHADOW(shadowResult.second);
+		switch (m_eShadow)
+		{
+		case SHADOW::SHADOW_NEAR:
+			m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_NEAR, this);
+			break;
+		case SHADOW::SHADOW_MIDDLE:
+			m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_MIDDLE, this);
+			break;
+		case SHADOW::SHADOW_FAR:
+			m_pGameInstance->Add_RenderGroup(RENDER::SHADOW_FAR, this);
+			break;
+		default:
+			break;
+		}
+	}
+	else {
+		m_eShadow = SHADOW::END;
+	}
+}
+
 HRESULT CGameObject::Ready_Components(void* pArg)
 {
 	if (FAILED(Add_Component<CTransform>(g_iStaticLevel, &m_pTransformCom, pArg))) {

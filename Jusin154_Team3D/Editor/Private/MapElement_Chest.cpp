@@ -133,7 +133,7 @@ void CMapElement_Chest::Late_Update(_float fTimeDelta)
 	m_pLid->Describe_Entity();
 #endif 
 
-	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pModelComs[0]->Get_Radius())) {
+	if (m_pGameInstance->IsIn_WorldFrustum(Get_WorldPostion(), m_pModelComs[0]->Get_Radius())) {
 
 		if(CMapElement_Chest::CHEST_STATE::FOUND ==  m_eCurState)
 		{

@@ -34,7 +34,7 @@ void CBuildingContainer::Update(_float fTimeDelta)
 
 void CBuildingContainer::Late_Update(_float fTimeDelta)
 {
-    if (m_pGameInstance->isIn_WorldFrustum(XMVectorSetW(XMLoadFloat3(&m_vExtentWorldPosition), 1.f), m_fRadius)) {
+    if (m_pGameInstance->IsIn_WorldFrustum(XMVectorSetW(XMLoadFloat3(&m_vExtentWorldPosition), 1.f), m_fRadius)) {
         if (m_fCamDepth > 3000.f)
         {
             if (m_pOcclusionQueryCom->isDraw())

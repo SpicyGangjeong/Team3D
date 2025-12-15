@@ -8,7 +8,6 @@
 #include "PipeLine.h"
 #include "Light_Manager.h"
 #include "Renderer.h"
-#include "Shadow.h"
 #include "Camera_Manager.h"
 #include "RenderTarget_Manager.h"
 #include "Key_Manager.h"
@@ -92,10 +91,6 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, ID3D11De
 	}
 	m_pCamera_Manager = CCamera_Manager::Create(*ppDevice, *ppContext, EngineDesc.iNumLevels);
 	if (nullptr == m_pCamera_Manager) {
-		return E_FAIL;
-	}
-	m_pShadow = CShadow::Create();
-	if (nullptr == m_pShadow) {
 		return E_FAIL;
 	}
 	m_pPicking = CPicking::Create(*ppDevice, *ppContext, EngineDesc.hWnd, EngineDesc.iWinSizeX, EngineDesc.iWinSizeY);
@@ -719,14 +714,24 @@ void CGameInstance::Transform_Frustum_ToLocalSpace(_fmatrix WorldMatrixInverse)
 	m_pPipeLine->Transform_Frustum_ToLocalSpace(WorldMatrixInverse);
 }
 
-_bool CGameInstance::isIn_WorldFrustum(_fvector vWorldPos, _float fRadius)
+_bool CGameInstance::IsIn_WorldFrustum(_fvector vWorldPos, _float fRadius)
 {
-	return m_pPipeLine->isIn_WorldFrustum(vWorldPos, fRadius);
+	return m_pPipeLine->IsIn_WorldFrustum(vWorldPos, fRadius);
 }
 
-_bool CGameInstance::isIn_LocalFrustum(_fvector vLocalPos, _float fRadius)
+_bool CGameInstance::IsIn_LocalFrustum(_fvector vLocalPos, _float fRadius)
 {
-	return m_pPipeLine->isIn_LocalFrustum(vLocalPos, fRadius);
+	return m_pPipeLine->IsIn_LocalFrustum(vLocalPos, fRadius);
+}
+
+pair<_bool, _uint> CGameInstance::IsIn_ShadowViewFrustum(_fvector vWorldCenter, _float fRadius)
+{
+	return m_pPipeLine->IsIn_ShadowViewFrustum(vWorldCenter, fRadius);
+}
+
+HRESULT CGameInstance::Bind_CascadeSplitRatio(CShader* pShader, const _char* pConstantName, _bool bNear)
+{
+	return m_pPipeLine->Bind_CascadeSplitRatio(pShader, pConstantName, bNear);
 }
 
 HRESULT CGameInstance::Bind_GlobalSRV(CShader* pShader, const _tchar* wszKeyGlobalSRV, const _char* pConstantName)
@@ -737,6 +742,26 @@ HRESULT CGameInstance::Bind_GlobalSRV(CShader* pShader, const _tchar* wszKeyGlob
 HRESULT CGameInstance::Load_GlobalSRV(const _tchar* wszKeyGlobalSRV, filesystem::path pathSRVFolder)
 {
 	return m_pPipeLine->Load_GlobalSRV(wszKeyGlobalSRV, pathSRVFolder);
+}
+
+HRESULT CGameInstance::Ready_Shadow_Light(const _float4& vShadowDirRPYQuat)
+{
+	return m_pPipeLine->Ready_Shadow_Light(vShadowDirRPYQuat);
+}
+
+HRESULT CGameInstance::Bind_Shadow_Resource(CShader* pShader, const _char* pConstantName, D3DTS eType, _uint iShadowBoxIndex) const
+{
+	return m_pPipeLine->Bind_Shadow_Resource(pShader, pConstantName, eType, iShadowBoxIndex);
+}
+
+const _float4x4* CGameInstance::Get_ShadowMatricesPtr(_uint iShadowBoxIndex)
+{
+	return m_pPipeLine->Get_ShadowMatricesPtr(iShadowBoxIndex);
+}
+
+_float  CGameInstance::Get_ShadowBoxFar(_uint iShadowBoxIndex)
+{
+	return m_pPipeLine->Get_ShadowBoxFar(iShadowBoxIndex);
 }
 
 void CGameInstance::Add_Light(_uint _iCurrentLevel, CLight* _pLight)
@@ -889,22 +914,6 @@ const _float* CGameInstance::Get_CurrentCameraFar()
 void CGameInstance::Force_CamPosition(_fvector vPos)
 {
 	return m_pCamera_Manager->Force_CamPosition(vPos);
-}
-HRESULT CGameInstance::Ready_Shadow_Light(const SHADOW_LIGHT_DESC& Desc)
-{
-	return m_pShadow->Ready_Shadow_Light(Desc);
-}
-HRESULT CGameInstance::Bind_Shadow_Resource(CShader* pShader, const _char* pConstantName, D3DTS eType) const
-{
-	return m_pShadow->Bind_Shadow_Resource(pShader, pConstantName, eType);
-}
-const _float4x4* CGameInstance::Get_ShadowMatricesPtr()
-{
-	return m_pShadow->Get_ShadowMatricesPtr();
-}
-const SHADOW_LIGHT_DESC* CGameInstance::Get_ShadowDesc()
-{
-	return m_pShadow->Get_ShadowDesc();
 }
 _bool CGameInstance::isPicking(_float3* pOut)
 {
@@ -1202,7 +1211,6 @@ void CGameInstance::Release_Engine()
 	SAFE_RELEASE(m_pFog);
 	SAFE_RELEASE(m_pPicking);
 	SAFE_RELEASE(m_pCollider_Manager);
-	SAFE_RELEASE(m_pShadow);
 	SAFE_RELEASE(m_pCamera_Manager);
 	SAFE_RELEASE(m_pRenderTarget_Manager);
 	SAFE_RELEASE(m_pPipeLine);

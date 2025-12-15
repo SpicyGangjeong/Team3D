@@ -62,8 +62,8 @@ void CRenderer::Render_PreShadow()
 		return;
 	}
 
-	const _float4x4* pMatrices = m_pGameInstance->Get_ShadowMatricesPtr();
-	m_PreShadowDesc = *m_pGameInstance->Get_ShadowDesc();
+	const _float4x4* pMatrices = m_pGameInstance->Get_ShadowMatricesPtr(0);
+	m_PreShadowFar = m_pGameInstance->Get_ShadowBoxFar(0);
 	for (int i = 0; i < ENUM_CLASS(D3DTS::END); ++i) {
 		m_PreShadowMatrices[i] = pMatrices[i];
 	}
@@ -154,45 +154,121 @@ void CRenderer::Render_Priority()
 void CRenderer::Render_Shadow()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_Shadow");
-	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Shadow"), m_pShadowDSV))) {
-		return;
-	}
-
 	D3D11_VIEWPORT			ViewPortOldDesc;
-	D3D11_VIEWPORT			ViewPortDesc;
 	_uint					iNumViewOldPort = { 1 };
 	ZeroMemory(&ViewPortOldDesc, sizeof(D3D11_VIEWPORT));
-	ZeroMemory(&ViewPortDesc, sizeof(D3D11_VIEWPORT));
-	{
-		ViewPortDesc.TopLeftX = 0;
-		ViewPortDesc.TopLeftY = 0;
-		ViewPortDesc.Width = (_float)(g_iMaxShadowWidth);
-		ViewPortDesc.Height = (_float)g_iMaxShadowHeight;
-		ViewPortDesc.MinDepth = 0.f;
-		ViewPortDesc.MaxDepth = 1.f;
-	}
 	m_pContext->RSGetViewports(&iNumViewOldPort, &ViewPortOldDesc);
-	m_pContext->RSSetViewports(1, &ViewPortDesc);
 
-	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::SHADOW)])
-	{
-		if (nullptr != pRenderObject) {
-			if (FAILED(pRenderObject->Render_Shadow())) {
-				assert(false);
-			}
+	if (FAILED(m_pGameInstance->Bind_CascadeSplitRatio(m_pShader, "g_fCascadeSplitRatioNear", true))) {
+		assert(false);
+	}
+	if (FAILED(m_pGameInstance->Bind_CascadeSplitRatio(m_pShader, "g_fCascadeSplitRatioFar", false))) {
+		assert(false);
+	}
+
+
+	{ // MRT_Shadow_Near
+		if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Shadow_Near"), m_pShadowDSV_NEAR))) {
+			return;
 		}
 
-		SAFE_RELEASE(pRenderObject);
+		D3D11_VIEWPORT			ViewPortDesc;
+		ZeroMemory(&ViewPortDesc, sizeof(D3D11_VIEWPORT));
+		{
+			ViewPortDesc.TopLeftX = 0;
+			ViewPortDesc.TopLeftY = 0;
+			ViewPortDesc.Width = (_float)(g_iMaxShadowWidth);
+			ViewPortDesc.Height = (_float)(g_iMaxShadowHeight);
+			ViewPortDesc.MinDepth = 0.f;
+			ViewPortDesc.MaxDepth = 1.f;
+		}
+		m_pContext->RSSetViewports(1, &ViewPortDesc);
+
+		for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::SHADOW_NEAR)]) {
+			if (nullptr != pRenderObject) {
+				if (FAILED(pRenderObject->Render_Shadow())) {
+					assert(false);
+				}
+			}
+
+			SAFE_RELEASE(pRenderObject);
+		}
+
+		m_RenderObjects[ENUM_CLASS(RENDER::SHADOW_NEAR)].clear();
+
+		if (FAILED(m_pGameInstance->End_MRT())) {
+			return;
+		}
 	}
+	{ // MRT_Shadow_Middle
+		if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Shadow_Middle"), m_pShadowDSV_MIDDLE))) {
+			return;
+		}
 
-	m_RenderObjects[ENUM_CLASS(RENDER::SHADOW)].clear();
+		D3D11_VIEWPORT			ViewPortDesc;
+		ZeroMemory(&ViewPortDesc, sizeof(D3D11_VIEWPORT));
+		{
+			ViewPortDesc.TopLeftX = 0;
+			ViewPortDesc.TopLeftY = 0;
+			ViewPortDesc.Width = (_float)(g_iMaxShadowWidth);
+			ViewPortDesc.Height = (_float)(g_iMaxShadowHeight);
+			ViewPortDesc.MinDepth = 0.f;
+			ViewPortDesc.MaxDepth = 1.f;
+		}
+		m_pContext->RSSetViewports(1, &ViewPortDesc);
 
-	if (FAILED(m_pGameInstance->End_MRT())) {
-		return;
+		for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::SHADOW_MIDDLE)]) {
+			if (nullptr != pRenderObject) {
+				if (FAILED(pRenderObject->Render_Shadow())) {
+					assert(false);
+				}
+			}
+
+			SAFE_RELEASE(pRenderObject);
+		}
+
+		m_RenderObjects[ENUM_CLASS(RENDER::SHADOW_MIDDLE)].clear();
+
+		if (FAILED(m_pGameInstance->End_MRT())) {
+			return;
+		}
 	}
+	{ // MRT_Shadow_Far
+		if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Shadow_Far"), m_pShadowDSV_FAR))) {
+			return;
+		}
 
+		D3D11_VIEWPORT			ViewPortDesc;
+		ZeroMemory(&ViewPortDesc, sizeof(D3D11_VIEWPORT));
+		{
+			ViewPortDesc.TopLeftX = 0;
+			ViewPortDesc.TopLeftY = 0;
+			ViewPortDesc.Width = (_float)(g_iMaxShadowWidth);
+			ViewPortDesc.Height = (_float)(g_iMaxShadowHeight);
+			ViewPortDesc.MinDepth = 0.f;
+			ViewPortDesc.MaxDepth = 1.f;
+		}
+		m_pContext->RSSetViewports(1, &ViewPortDesc);
 
+		for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::SHADOW_FAR)]) {
+			if (nullptr != pRenderObject) {
+				if (FAILED(pRenderObject->Render_Shadow())) {
+					assert(false);
+				}
+			}
+
+			SAFE_RELEASE(pRenderObject);
+		}
+
+		m_RenderObjects[ENUM_CLASS(RENDER::SHADOW_FAR)].clear();
+
+		if (FAILED(m_pGameInstance->End_MRT())) {
+			return;
+		}
+	}
 	m_pContext->RSSetViewports(iNumViewOldPort, &ViewPortOldDesc);
+
+
 	COMPUTE_TIMEDELTA("Timer_Render_Shadow");
 }
 
@@ -288,10 +364,34 @@ void CRenderer::Render_Combined()
 		if (FAILED(m_pShader->Bind_RawValue("g_fFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
 			return;
 		}
-		if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShader, "g_LightViewMatrix", D3DTS::VIEW))) {
+		_float fShadowFar = m_pGameInstance->Get_ShadowBoxFar(0);
+		if (FAILED(m_pShader->Bind_RawValue("g_fShadowFar_NEAR", &fShadowFar, sizeof(_float)))) {
 			return;
 		}
-		if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShader, "g_LightProjMatrix", D3DTS::PROJ))) {
+		fShadowFar = m_pGameInstance->Get_ShadowBoxFar(1);
+		if (FAILED(m_pShader->Bind_RawValue("g_fShadowFar_MIDDDLE", &fShadowFar, sizeof(_float)))) {
+			return;
+		}
+		fShadowFar = m_pGameInstance->Get_ShadowBoxFar(2);
+		if (FAILED(m_pShader->Bind_RawValue("g_fShadowFar_FAR", &fShadowFar, sizeof(_float)))) {
+			return;
+		}
+		if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShader, "g_LightViewMatrix_NEAR", D3DTS::VIEW, 0))) {
+			return;
+		}
+		if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShader, "g_LightProjMatrix_NEAR", D3DTS::PROJ, 0))) {
+			return;
+		}
+		if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShader, "g_LightViewMatrix_MIDDLE", D3DTS::VIEW, 1))) {
+			return;
+		}
+		if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShader, "g_LightProjMatrix_MIDDLE", D3DTS::PROJ, 1))) {
+			return;
+		}
+		if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShader, "g_LightViewMatrix_FAR", D3DTS::VIEW, 2))) {
+			return;
+		}
+		if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShader, "g_LightProjMatrix_FAR", D3DTS::PROJ, 2))) {
 			return;
 		}
 		if (FAILED(m_pShader->Bind_RawValue("g_fPreShadowFar", m_pGameInstance->Get_CurrentCameraFar(), sizeof(_float)))) {
@@ -321,6 +421,12 @@ void CRenderer::Render_Combined()
 			return;
 		}
 		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Shadow_Near"), m_pShader, "g_ShadowNearTexture"))) {
+			return;
+		}
+		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Shadow_Middle"), m_pShader, "g_ShadowMiddleTexture"))) {
+			return;
+		}
+		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Shadow_Far"), m_pShader, "g_ShadowFarTexture"))) {
 			return;
 		}
 		if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_PreShadow"), m_pShader, "g_PreShadowTexture"))) {
