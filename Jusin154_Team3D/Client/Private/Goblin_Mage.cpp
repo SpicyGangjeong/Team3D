@@ -67,6 +67,10 @@ HRESULT CGoblin_Mage::Initialize(void* pArg)
 	m_pCharacter_Controller->Set_Position(XMVectorSet(-52.f, 0.f, -4.f, 1.f));
 	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-52.f, 0.f, -4.f, 1.f));
 
+#if 진우
+	m_isDebugMode = true;
+#endif 
+
 	return S_OK;
 }
 
@@ -257,6 +261,7 @@ _vector CGoblin_Mage::Get_LockOnPos()
 
 void CGoblin_Mage::OnCollision(CGameObject* pOther, void* pDesc)
 {
+
 	if (true == m_bDead) {
 		return;
 	}
@@ -267,7 +272,6 @@ void CGoblin_Mage::OnCollision(CGameObject* pOther, void* pDesc)
 	Check_HitAngle(XMLoadFloat4(&CollisionDesc->vHitDir));
 
 	_uint iSkillType = dynamic_cast<CEffect_Container*>(pOther)->Get_SkillType();
-	auto damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
 
 	m_fHitRadius = CMyTools::Get_Direction2D(m_pTransformCom->Get_State(STATE::LOOK), XMLoadFloat4(&CollisionDesc->vHitDir));
 
@@ -292,6 +296,18 @@ void CGoblin_Mage::OnCollision(CGameObject* pOther, void* pDesc)
 		break;
 	}
 
+	if (!m_pFSM->IsEnable(FSMSTATE::BLINK)) {
+		m_pFSM->Change_State(FSMSTATE::HIT);
+	}
+
+#ifdef _DEBUG
+	if (m_isDebugMode == true)
+		return;
+#endif
+
+
+	auto damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
+
 	m_DamageInfo.fDamage = damagePair.first;
 	m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
 	if (0 == damagePair.second) {
@@ -299,9 +315,7 @@ void CGoblin_Mage::OnCollision(CGameObject* pOther, void* pDesc)
 		return;
 	}
 
-	if (!m_pFSM->IsEnable(FSMSTATE::BLINK)) {
-		m_pFSM->Change_State(FSMSTATE::HIT);
-	}
+
 
 }
 

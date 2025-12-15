@@ -92,6 +92,10 @@ private:
 	_float	m_fTargetSpeed = { 60.f };
 	_float	m_fSpeed = {};
 
+#ifdef _DEBUG
+	_bool   m_isDebugMode = {};
+#endif
+
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();
 	void	Behavior_IdleExit();

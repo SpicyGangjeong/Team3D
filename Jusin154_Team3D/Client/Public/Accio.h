@@ -49,10 +49,9 @@ private:
 	CCharacter_Controller* m_pEnemyCCT = { nullptr };
 
 	_float				m_fAccRotateTime = {};
-	_float				m_fTurnSpeed = {65.f };
-	_float				m_fRange = { 1.f };
-	_float              m_fAttenuation = { 25.f };
-	_bool				m_isFix = { false };
+	_float				m_fTurnSpeed = { 65.f };
+	_float				m_fRange = { 1.3f };
+	_float              m_fAttenuation = { 35.f };
 
 public:
 	static CAccio* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
