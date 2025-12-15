@@ -48,6 +48,7 @@ private:
 
 	_bool m_bDetection = { false };
 
+
 	class CEffectParts* m_pSmoke = { nullptr };
 	class CEffectParts* m_pGoblin_Particle = { nullptr };
 	class CEffectParts* m_pGoblin_Particle2 = { nullptr };
@@ -82,6 +83,10 @@ private:
 	_float	m_fLength = {};
 	_float	m_fMoveTime = {};
 	_bool	m_bFirstMove = {};
+	_bool	m_bPos = {};
+	_float	m_fAccel = { 3.f};
+	_float	m_fTargetSpeed = {60.f};
+	_float	m_fSpeed = {};
 
 	void	Behavior_IdleEnter();
 	HRESULT Behavior_IdleExitCheck();
