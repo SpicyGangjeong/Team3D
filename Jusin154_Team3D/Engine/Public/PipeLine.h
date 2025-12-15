@@ -57,7 +57,7 @@ private:
 	_float4		m_vCamPosition = {};
 
 	_float		m_fShadowNearBoxRatio = { 0.07f };
-	_float		m_fShadowFarBoxRatio = { 0.60f };
+	_float		m_fShadowFarBoxRatio = { 0.35f };
 	_float4		m_vShadowBias = { 0.0018f, 0.0018f, 0.0018f, 0.0018f };
 
 	_float4		m_vOriginalRenderFrustumPoints[8] = {};

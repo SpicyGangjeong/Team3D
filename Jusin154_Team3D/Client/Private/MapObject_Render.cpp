@@ -87,7 +87,7 @@ void CMapObject_Render::Late_Update(_float fTimeDelta)
 		{
 		case MAPOBJECT_RENDER_TYPE::NORMAL:
 			m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-			//Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(XMLoadFloat4((_float4*)&m_CombinedWorldMatrix.m[3][0]), m_fRadius));
+			Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(XMLoadFloat4((_float4*)&m_CombinedWorldMatrix.m[3][0]), m_fRadius));
 			break;
 		case MAPOBJECT_RENDER_TYPE::GLASS:
 			break;

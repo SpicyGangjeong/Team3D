@@ -627,7 +627,12 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     // Middle -> Far 경계 부드럽게
     fVisibilityDynamic = lerp(fVisibilityDynamic, fVisibility_Dynamic_Far, fCascadeBlend_MiddleToFar);
 
-    float fVisibilityCombined = min(fVisibility_Static, fVisibilityDynamic);
+    // PreShadow(Static)로 넘어가는 구간(원하는 대로 조절)
+    float fStaticShadowBlendStartRatio = 0.15f;
+    float fStaticShadowBlendEndRatio = 0.25f;
+
+    float fStaticShadowBlendWeight = smoothstep(fStaticShadowBlendStartRatio, fStaticShadowBlendEndRatio, fDepthRatio);
+    float fVisibilityCombined =  lerp(fVisibilityDynamic, fVisibility_Static, fStaticShadowBlendWeight);
 
     // 최소 밝기
     float fMinShadowBrightness = 0.25f;
