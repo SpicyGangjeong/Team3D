@@ -559,7 +559,7 @@ void CPlayer::Update_CameraCoordinateSystem(_float fTimeDelta)
 }
 
 _matrix CPlayer::Get_WandPos()
-{
+ {
 	CWand* pWand = Get_PartObject<CWand>();
 
 	if (pWand == nullptr)

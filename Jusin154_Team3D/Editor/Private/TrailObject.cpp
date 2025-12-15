@@ -118,7 +118,7 @@ void CTrailObject::Rope_Trail_Update(_fmatrix WorldMat, _fmatrix EndWorldMat, _f
 	if (m_bVisible == false)
 		return;
 
-	m_pTrailCom->Rope_Trail_Update(WorldMat, fTimeDelta, m_TrailInfo.fDamping, m_TrailInfo.fRopeLength, EndWorldMat);
+	m_pTrailCom->Rope_Trail_Update(WorldMat, fTimeDelta, m_TrailInfo.fDamping, m_TrailInfo.fRopeLength, m_TrailInfo.fMass, EndWorldMat);
 }
 
 
@@ -544,7 +544,7 @@ void CTrailObject::Describe_Entity()
 
 			GUI::DragFloat("Dampling", &m_TrailInfo.fDamping);
 			GUI::DragFloat("Rope Length", &m_TrailInfo.fRopeLength);
-
+			GUI::DragFloat("Mass", &m_TrailInfo.fMass);
 			GUI::TreePop();
 		}
 
