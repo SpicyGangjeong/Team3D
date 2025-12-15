@@ -38,6 +38,7 @@ public:
 	pair<_bool, _uint> IsIn_ShadowViewFrustum(_fvector vWorldCenter, _float fRadius);
 
 	HRESULT Bind_CascadeSplitRatio(class CShader* pShader, const _char* pConstantName, _bool bNear);
+	HRESULT Bind_CascadeBias(class CShader* pShader, const _char* pConstantName);
 
 	HRESULT Bind_GlobalSRV(class CShader* pShader, const _tchar* wszKeyGlobalSRV, const _char* pConstantName);
 	HRESULT Load_GlobalSRV(const _tchar* wszKeyGlobalSRV, filesystem::path pathSRVFolder);
@@ -55,8 +56,9 @@ private:
 	_float4x4	m_ShadowTransformStateMatrices[3][ENUM_CLASS(D3DTS::END)] = {};
 	_float4		m_vCamPosition = {};
 
-	_float m_fShadowNearBoxRatio = { 0.02f };
-	_float m_fShadowFarBoxRatio = { 0.12f };
+	_float		m_fShadowNearBoxRatio = { 0.17f };
+	_float		m_fShadowFarBoxRatio = { 0.60f };
+	_float4		m_vShadowBias = { 0.005f, 0.005f, 0.005f, 0.005f };
 
 	_float4		m_vOriginalRenderFrustumPoints[8] = {};
 	_float4		m_vOriginalShadowFrustumPoints[16] = {};// 3개로 나눈 절두체의 부분을 나타내는 16개의 점

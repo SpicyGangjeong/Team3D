@@ -125,6 +125,11 @@ HRESULT CPipeLine::Bind_CascadeSplitRatio(class CShader* pShader, const _char* p
 	return S_OK;
 }
 
+HRESULT CPipeLine::Bind_CascadeBias(CShader* pShader, const _char* pConstantName)
+{
+	return pShader->Bind_RawValue(pConstantName, &m_vShadowBias, sizeof(_float4));
+}
+
 HRESULT CPipeLine::Bind_GlobalSRV(CShader* pShader, const _tchar* wszKeyGlobalSRV, const _char* pConstantName)
 {
 	ID3D11ShaderResourceView* pSRV = Find_GlobalShaderResourceView(wszKeyGlobalSRV);
@@ -400,15 +405,22 @@ void CPipeLine::Describe_Entity()
 		_bool bModified = { false };
 		_float fNear = m_fShadowNearBoxRatio;
 		_float fFar = m_fShadowFarBoxRatio;
+		_float4 vShadowBias = m_vShadowBias;
 		if (GUI::DragFloat("m_fShadowNearBoxRatio", &fNear, 0.01f, 0.01f, 0.999f, "%.2f")) {
 			bModified = true;
 		}
 		if (GUI::DragFloat("m_fShadowFarBoxRatio", &fFar, 0.01f, 0.01f, 0.999f, "%.2f")) {
 			bModified = true;
 		}
+		GUI::PushItemWidth(150.f);
+		if (GUI::DragFloat4("ShadowBiasNMFS", (_float*)&vShadowBias, 0.0001f, 0.0001f, 1.f, "%.4f")) {
+			bModified = true;
+		}
+		GUI::PushItemWidth(80.f);
 		if (true == bModified) {
 			m_fShadowNearBoxRatio = fNear;
 			m_fShadowFarBoxRatio = fFar;
+			m_vShadowBias = vShadowBias;
 		}
 	}
 	GUI::End();

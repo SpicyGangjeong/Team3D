@@ -165,6 +165,9 @@ void CRenderer::Render_Shadow()
 	if (FAILED(m_pGameInstance->Bind_CascadeSplitRatio(m_pShader, "g_fCascadeSplitRatioFar", false))) {
 		assert(false);
 	}
+	if (FAILED(m_pGameInstance->Bind_CascadeBias(m_pShader, "g_vShadowBias"))) {
+		assert(false);
+	}
 
 
 	{ // MRT_Shadow_Near

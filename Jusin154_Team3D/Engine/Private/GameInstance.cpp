@@ -734,6 +734,11 @@ HRESULT CGameInstance::Bind_CascadeSplitRatio(CShader* pShader, const _char* pCo
 	return m_pPipeLine->Bind_CascadeSplitRatio(pShader, pConstantName, bNear);
 }
 
+HRESULT CGameInstance::Bind_CascadeBias(CShader* pShader, const _char* pConstantName)
+{
+	return m_pPipeLine->Bind_CascadeBias(pShader, pConstantName);
+}
+
 HRESULT CGameInstance::Bind_GlobalSRV(CShader* pShader, const _tchar* wszKeyGlobalSRV, const _char* pConstantName)
 {
 	return m_pPipeLine->Bind_GlobalSRV(pShader, wszKeyGlobalSRV, pConstantName);

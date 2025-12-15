@@ -141,6 +141,7 @@ public:
 	_bool IsIn_LocalFrustum(_fvector vLocalPos, _float fRadius);
 	pair<_bool, _uint> IsIn_ShadowViewFrustum(_fvector vWorldCenter, _float fRadius);
 	HRESULT Bind_CascadeSplitRatio(class CShader* pShader, const _char* pConstantName, _bool bNear);
+	HRESULT Bind_CascadeBias(class CShader* pShader, const _char* pConstantName);
 	HRESULT Bind_GlobalSRV(class CShader* pShader, const _tchar* wszKeyGlobalSRV, const _char* pConstantName);
 	HRESULT Load_GlobalSRV(const _tchar* wszKeyGlobalSRV, filesystem::path pathSRVFolder);
 
