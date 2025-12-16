@@ -149,7 +149,7 @@ HRESULT CMonsterInfo::Refresh_LockOnMonsters()
 			}
 			vMonsterPos = pMonster->Get_LockOnPos();
 			vToMonsterDir = vMonsterPos - vCameraPos;
-			if (150.f <= XMVectorGetX(XMVector4Length(vToMonsterDir))) {
+			if (40.f <= XMVectorGetX(XMVector4Length(vToMonsterDir))) {
 				continue;
 			}
 			_float fDotResult = CMyTools::DirectionCompare(vCameraLook, vToMonsterDir);

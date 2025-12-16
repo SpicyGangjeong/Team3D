@@ -184,6 +184,7 @@ call Update_Resources.bat
     <ClInclude Include="..\Public\Goblin_Spector.h" />
     <ClInclude Include="..\Public\HpBarBG.h" />
     <ClInclude Include="..\Public\InProgress_Panel.h" />
+    <ClInclude Include="..\public\Interaction_Key.h" />
     <ClInclude Include="..\Public\InteractiveInfo.h" />
     <ClInclude Include="..\Public\Intro_BG.h" />
     <ClInclude Include="..\Public\Intro_Image.h" />
@@ -388,6 +389,7 @@ call Update_Resources.bat
     <ClCompile Include="..\Private\Goblin_Spector.cpp" />
     <ClCompile Include="..\Private\HpBarBG.cpp" />
     <ClCompile Include="..\Private\InProgress_Panel.cpp" />
+    <ClCompile Include="..\private\Interaction_Key.cpp" />
     <ClCompile Include="..\Private\InteractiveInfo.cpp" />
     <ClCompile Include="..\Private\Intro_BG.cpp" />
     <ClCompile Include="..\Private\Intro_Image.cpp" />

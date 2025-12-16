@@ -267,6 +267,11 @@ QUESTINFO CInfoInstance::Get_Quest_Info(_int QuestID)
 	return m_pQuestInfo->Get_Quest(QuestID);
 }
 
+_int CInfoInstance::Get_Quest_Count()
+{
+	return m_pQuestInfo->Get_Count();
+}
+
 HRESULT CInfoInstance::Regist_ActiveInteractive(CMapElement_Interactable* pInteractive)
 {
 	if (nullptr == s_pInstance || nullptr == m_pInteractiveInfo) {
