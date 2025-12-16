@@ -74,8 +74,7 @@ private:
 
 	BroomInput			m_Input;
 	class CEffectParts* m_pWindEffect = { nullptr };
-	_float m_fCameraOffset = { -10.f };
-	_float m_fYOffset= { -5.f };
+	_float m_fCameraOffset = { 10.f };
 private:
 	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();

@@ -124,7 +124,7 @@ void CBroom::Update(_float fTimeDelta)
 
 		m_pWindEffect->Set_Visible(true);
 		m_pWindEffect->Get_Component<CInstance_Model>()->Set_TimeMult(0.5f + m_fSpeed / 20.f);
-		m_pWindEffect->Get_Effect_Info()->fSoftMask = 1.f + m_fSpeed / 10.f;
+		m_pWindEffect->Get_Effect_Info()->fBlurIntensity = m_fSpeed / 30.f;
 
 	}
 
@@ -144,7 +144,7 @@ void CBroom::Late_Update(_float fTimeDelta)
 		WindTransform->Set_WorldMatrix(WorldMat);
 
 		_vector vCameraLook = XMVector3Normalize(m_pGameInstance->Get_CameraLook());
-		WindTransform->Set_State(STATE::POSITION, m_pGameInstance->Get_CamXMPosition() + vCameraLook * m_fCameraOffset + XMVectorSet(0.f ,m_fYOffset , 0.f ,0.f));
+		WindTransform->Set_State(STATE::POSITION, m_pGameInstance->Get_CamXMPosition() + vCameraLook * m_fCameraOffset);
 
 #if _DEBUG
 #if 진우
@@ -153,7 +153,6 @@ void CBroom::Late_Update(_float fTimeDelta)
 		m_pWindEffect->Get_Component<CInstance_Model>()->Describe_Entity();
 		GUI::Checkbox("BillBoard", &m_pWindEffect->Get_Effect_Info()->isBillboard);
 		GUI::DragFloat("Offset", &m_fCameraOffset);
-		GUI::DragFloat("Offset Y", &m_fYOffset);
 		GUI::End();
 	}
 #endif
