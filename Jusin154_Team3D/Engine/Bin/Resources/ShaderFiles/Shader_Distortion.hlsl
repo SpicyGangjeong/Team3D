@@ -69,7 +69,7 @@ PS_OUT PS_MAIN(PS_IN In)
     float fDistortR2 = vMtrlDistortion.r * vMtrlDistortion.r;
     float fDistortR4 = fDistortR2 * fDistortR2;
     float fDistortIntensity = vMtrlDistortion.g;
-    ////float fDistortionFactor = 1.0f + (fDistortIntensity * (fDistortR2 + fDistortR2 * fDistortR4));
+    float fDistortionFactor = 1.0f + (fDistortIntensity * (fDistortR2 + fDistortR2 * fDistortR4));
     
     //float fDistortionFactor = 1 + vMtrlDistortion.g * vMtrlDistortion.r * vMtrlDistortion.r;
     //너무 낮은값 쓰면 찢어지는 효과 남. (같은 픽셀 계속 디스토션 돌려서)

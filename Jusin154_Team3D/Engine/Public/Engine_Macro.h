@@ -30,7 +30,8 @@
 #elif 진우
 #undef ASSERT_JINWOO
 #define ASSERT_JINWOO(expression) assert(expression)
-#define OPTIONAL_TRUE_KEYINPUTGUICHECK ||true
+//#undef OPTIONAL_TRUE_KEYINPUTGUICHECK
+//#define OPTIONAL_TRUE_KEYINPUTGUICHECK ||true
 #elif gimch
 #undef ASSERT_JINHO
 #define ASSERT_JINHO(expression) assert(expression)
