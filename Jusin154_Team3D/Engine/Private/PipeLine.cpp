@@ -74,21 +74,20 @@ pair<_bool, _ubyte> CPipeLine::IsIn_ShadowViewFrustum(_fvector vWorldCenter, _fl
 	// 월드 센터를 셰도우뷰 센터로 바꿈
 	_vector vShadowViewCenter = XMVectorSetW(XMVector3Rotate(vWorldCenter, XMLoadFloat4(&m_vShadowInvDirectionalRPYQuat)), 1.f);
 
-	_float fSafeRadius = fRadius; // 인스턴싱된 객체 고려해서 좀 더 넓게 탐색
+	_float fSafeRadius = (fRadius + m_fSafe_RadiusMargin) * m_fSafe_RadiusMultiplier; // 그림자임을 고려해서 객체 부피보다 좀 더 넓게 탐색
 
 	for (_uint iCascadeIndex = 0; iCascadeIndex < ENUM_CLASS(SHADOW::END); ++iCascadeIndex) {
 		const _float4* pTargetPlanes = nullptr;
+		if (iCascadeIndex == 2) {
+			continue;
+			// 게임 특성 상 Far가 너무 멀어서 프리베이크랑 차이가 안남
+			pTargetPlanes = m_vFarShadowViewBoxPlane;
+		}
 		if (iCascadeIndex == 0) {
 			pTargetPlanes = m_vNearShadowViewBoxPlane;
-			fSafeRadius = fRadius;
 		}
 		if (iCascadeIndex == 1) {
 			pTargetPlanes = m_vMiddleShadowViewBoxPlane;
-			fSafeRadius = fRadius;
-		}
-		if (iCascadeIndex == 2) {
-			pTargetPlanes = m_vFarShadowViewBoxPlane;
-			fSafeRadius = fRadius;
 		}
 
 		_bool bIsInside = true;
@@ -306,6 +305,11 @@ void CPipeLine::Make_LightBoxes()
 		if (iIndex == 1) targetPlanes = m_vMiddleShadowViewBoxPlane;
 		if (iIndex == 2) targetPlanes = m_vFarShadowViewBoxPlane;
 
+		if (fMinZ > fMaxZ)
+		{
+			swap(fMinZ, fMaxZ);
+		}
+
 		targetPlanes[0] = _float4(-1.f, 0.f, 0.f, fMinX); // Left
 		targetPlanes[1] = _float4(1.f, 0.f, 0.f, -fMaxX); // Right
 		targetPlanes[2] = _float4(0.f, -1.f, 0.f, fMinY); // Bottom
@@ -418,11 +422,19 @@ void CPipeLine::Describe_Entity()
 		_bool bModified = { false };
 		_float fNear = m_fShadowNearBoxRatio;
 		_float fFar = m_fShadowFarBoxRatio;
+		_float fSafe_RadiusMultiplier = m_fSafe_RadiusMultiplier;
+		_float fSafe_RadiusMargin = m_fSafe_RadiusMargin;
 		_float4 vShadowBias = m_vShadowBias;
 		if (GUI::DragFloat("m_fShadowNearBoxRatio", &fNear, 0.01f, 0.01f, 0.999f, "%.2f")) {
 			bModified = true;
 		}
 		if (GUI::DragFloat("m_fShadowFarBoxRatio", &fFar, 0.01f, 0.01f, 0.999f, "%.2f")) {
+			bModified = true;
+		}
+		if (GUI::DragFloat("m_fSafe_RadiusMultiplier", &fSafe_RadiusMultiplier, 0.01f, 1.f, 3.f, "%.2f")) {
+			bModified = true;
+		}
+		if (GUI::DragFloat("m_fSafe_RadiusMargin", &fSafe_RadiusMargin, 1.f, 10.f, 40.f, "%.2f")) {
 			bModified = true;
 		}
 		GUI::PushItemWidth(150.f);
@@ -434,6 +446,8 @@ void CPipeLine::Describe_Entity()
 			m_fShadowNearBoxRatio = fNear;
 			m_fShadowFarBoxRatio = fFar;
 			m_vShadowBias = vShadowBias;
+			m_fSafe_RadiusMultiplier = fSafe_RadiusMultiplier;
+			m_fSafe_RadiusMargin = fSafe_RadiusMargin;
 		}
 	}
 	GUI::End();

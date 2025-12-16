@@ -26,6 +26,7 @@ float g_fFarBlurStart;
 float g_fFarBlurEnd;
 float g_fDOFBlurMultiplier;
 float g_fSSAO_BIAS;
+float g_fSSAOStrength;
 
 Texture2D   g_Texture;
 Texture2D   g_SSAONoiseTexture;
@@ -219,10 +220,10 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     
     float2 uv = In.vTexcoord;
     
-    float3 vAlbedo          = g_DiffuseTexture.Sample(DefaultSampler, uv).rgb;
-    float3 vNormal          = normalize(g_NormalTexture.Sample(DefaultSampler, uv).xyz * 2.f - 1.f);
-    float4 vDepth           = g_DepthTexture.Sample(DefaultSampler, uv);
-    float fAmbientOcclusion = g_SSAOInputTexture.Sample(DefaultSampler, uv).r;
+    float3 vAlbedo                  = g_DiffuseTexture.Sample(DefaultSampler, uv).rgb;
+    float3 vNormal                  = normalize(g_NormalTexture.Sample(DefaultSampler, uv).xyz * 2.f - 1.f);
+    float4 vDepth                   = g_DepthTexture.Sample(DefaultSampler, uv);
+    float fSSAO_AmbientOcclusion    = g_SSAOInputTexture.Sample(DefaultSampler, uv).r;
     
     float fViewZ = vDepth.y * g_fFar;
     
@@ -278,12 +279,12 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
     }
     else // basic Lighting(phong blinn) // if you were here, you miss some assets.
     {
-        Out.vShade = g_vLightDiffuse * saturate(max(dot(normalize(g_vLightDir.xyz) * -1.f, vNormal), 0.f) + (fAmbientOcclusion * g_vLightAmbient * g_vMtrlAmbient));
+        Out.vShade = g_vLightDiffuse * saturate(max(dot(normalize(g_vLightDir.xyz) * -1.f, vNormal), 0.f) + (fSSAO_AmbientOcclusion * g_vLightAmbient * g_vMtrlAmbient));
         Out.vSpecular = (g_vLightSpecular * g_vMtrlSpecular) * pow(max(dot(vToView * -1.f, vToLight), 0.f), 50.f);
     
         return Out;
     }
-    float fTotalOcclusion = saturate(fOcclusion * fAmbientOcclusion);
+    float fTotalOcclusion = saturate(fOcclusion * fSSAO_AmbientOcclusion);
     
     { // 수치조정 // 디렉셔널
         float fMinRoughness = 0.05f;
@@ -342,7 +343,7 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     float fLightDistance    = length(vFinalLightPosition - vWorldPosition.xyz);
     float3 vToView          = normalize(g_vCamPosition.xyz  - vWorldPosition.xyz); // 픽셀에서 카메라로
     float3 vToLight         = normalize(vFinalLightPosition - vWorldPosition.xyz); // 픽셀에서 라이트로
-    float fAmbientOcclusion = g_SSAOInputTexture.Sample(DefaultSampler, uv).r;
+    float fSSAO_AmbientOcclusion = g_SSAOInputTexture.Sample(DefaultSampler, uv).r;
     
     if (g_bUsePowerLightAttenuation)
     {
@@ -390,13 +391,13 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     }
     else // basic Lighting(phong blinn) // if you were here, you miss some assets.
     {
-        Out.vShade = fAttenuation * (g_vLightDiffuse * saturate(max(dot(vToLight * -1.f, vNormal), 0.f) + (fAmbientOcclusion * g_vLightAmbient * g_vMtrlAmbient)));
+        Out.vShade = fAttenuation * (g_vLightDiffuse * saturate(max(dot(vToLight * -1.f, vNormal), 0.f) + (fSSAO_AmbientOcclusion * g_vLightAmbient * g_vMtrlAmbient)));
         Out.vSpecular = fAttenuation * ((g_vLightSpecular * g_vMtrlSpecular) * pow(max(dot(vToView * -1.f, vToLight), 0.f), 50.f));
     
         return Out;
     }
     
-    float fTotalOcclusion = saturate(fOcclusion * fAmbientOcclusion);
+    float fTotalOcclusion = saturate(fOcclusion * fSSAO_AmbientOcclusion);
     
     { // 수치조정 // 점광원
         float fMinRoughness = 0.05f;
@@ -429,7 +430,7 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
     float3 vAlbedo = g_DiffuseTexture.Sample(DefaultSampler, uv).rgb;
     float3 vNormal = normalize(g_NormalTexture.Sample(DefaultSampler, uv).xyz * 2.f - 1.f);
     float4 vDepth = g_DepthTexture.Sample(DefaultSampler, uv);
-    float fAmbientOcclusion = g_SSAOInputTexture.Sample(DefaultSampler, uv).r;
+    float fSSAO_AmbientOcclusion = g_SSAOInputTexture.Sample(DefaultSampler, uv).r;
     
     float fViewZ = vDepth.y * g_fFar;
     
@@ -518,12 +519,12 @@ PS_OUT_LIGHT PS_MAIN_SPOT(PS_IN In)
     }
     else // basic Lighting(phong blinn) // if you were here, you miss some assets.
     {
-        Out.vShade = fAttenuation * (g_vLightDiffuse * saturate(max(dot(vToLight * -1.f, vNormal), 0.f) + (fAmbientOcclusion * g_vLightAmbient * g_vMtrlAmbient)));
+        Out.vShade = fAttenuation * (g_vLightDiffuse * saturate(max(dot(vToLight * -1.f, vNormal), 0.f) + (fSSAO_AmbientOcclusion * g_vLightAmbient * g_vMtrlAmbient)));
         Out.vSpecular = fAttenuation * ((g_vLightSpecular * g_vMtrlSpecular) * pow(max(dot(vToView * -1.f, vToLight), 0.f), 50.f));
     
         return Out;
     }
-    float fTotalOcclusion = saturate(fOcclusion * fAmbientOcclusion);
+    float fTotalOcclusion = saturate(fOcclusion * fSSAO_AmbientOcclusion);
     
     { // 수치조정 // 점광원
         float fMinRoughness = 0.05f;
@@ -606,7 +607,7 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     /* 광원의 NDC에서 샘플링 */
     float fVisibility_Dynamic_Near = ShadowVisibility_hwPCF(g_ShadowNearTexture, vNearShadowPos, float2(g_iMaxShadowWidth, g_iMaxShadowHeight), g_vShadowBias.x);
     float fVisibility_Dynamic_Middle = ShadowVisibility_hwPCF(g_ShadowMiddleTexture, vMiddleShadowPos, float2(g_iMaxShadowWidth, g_iMaxShadowHeight), g_vShadowBias.y);
-    float fVisibility_Dynamic_Far = ShadowVisibility_hwPCF(g_ShadowFarTexture, vFarShadowPos, float2(g_iMaxShadowWidth, g_iMaxShadowHeight), g_vShadowBias.z);
+    //float fVisibility_Dynamic_Far = ShadowVisibility_hwPCF(g_ShadowFarTexture, vFarShadowPos, float2(g_iMaxShadowWidth, g_iMaxShadowHeight), g_vShadowBias.z);
     float fVisibility_Static = ShadowVisibility_hwPCF(g_PreShadowTexture, vPreShadowPosition, float2(g_iMaxShadowWidth, g_iMaxShadowHeight), g_vShadowBias.w);
     
 ////////////////////////////
@@ -619,17 +620,17 @@ PS_OUT_BACKBUFFER PS_MAIN_COMBINED(PS_IN In)
     // 경계 주변 부드럽게 할 비중
     float fCascadeBlend_NearToMiddle = smoothstep(g_fCascadeSplitRatioNear - fShadowCascadeBlendWidthRatio,
         g_fCascadeSplitRatioNear + fShadowCascadeBlendWidthRatio, fDepthRatio);
-    float fCascadeBlend_MiddleToFar = smoothstep(g_fCascadeSplitRatioFar - fShadowCascadeBlendWidthRatio,
-        g_fCascadeSplitRatioFar + fShadowCascadeBlendWidthRatio, fDepthRatio);
+    //float fCascadeBlend_MiddleToFar = smoothstep(g_fCascadeSplitRatioFar - fShadowCascadeBlendWidthRatio,
+    //    g_fCascadeSplitRatioFar + fShadowCascadeBlendWidthRatio, fDepthRatio);
 
     // Near -> Middle
     float fVisibilityDynamic = lerp(fVisibility_Dynamic_Near, fVisibility_Dynamic_Middle, fCascadeBlend_NearToMiddle);
     // Middle -> Far 경계 부드럽게
-    fVisibilityDynamic = lerp(fVisibilityDynamic, fVisibility_Dynamic_Far, fCascadeBlend_MiddleToFar);
+    //fVisibilityDynamic = lerp(fVisibilityDynamic, fVisibility_Dynamic_Far, fCascadeBlend_MiddleToFar);
 
-    // PreShadow(Static)로 넘어가는 구간(원하는 대로 조절)
-    float fStaticShadowBlendStartRatio = 0.15f;
-    float fStaticShadowBlendEndRatio = 0.25f;
+    // PreShadow로 넘어가는 구간
+    float fStaticShadowBlendStartRatio = g_fCascadeSplitRatioFar;
+    float fStaticShadowBlendEndRatio = 1.f;
 
     float fStaticShadowBlendWeight = smoothstep(fStaticShadowBlendStartRatio, fStaticShadowBlendEndRatio, fDepthRatio);
     float fVisibilityCombined =  lerp(fVisibilityDynamic, fVisibility_Static, fStaticShadowBlendWeight);
@@ -1126,7 +1127,7 @@ PS_OUT_SSAO_AMBIENT_OCCLUSION PS_SSAO_AMBIENT_OCCLUSION(PS_IN In)
         fIsOccluded *= fRangeCheck;
         fOcclusion += fIsOccluded;
     }
-    fOcclusion = (1.f - (fOcclusion / g_iKernelSize) * fRatio);
+    fOcclusion = saturate(1.f - (fOcclusion * g_fSSAOStrength / g_iKernelSize) * fRatio);
     Out.fOcclusion = fOcclusion ;
     
     return Out;

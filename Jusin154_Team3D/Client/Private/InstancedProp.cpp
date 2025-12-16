@@ -27,7 +27,11 @@ void CInstancedProp::Late_Update(_float fTimeDelta)
 	}
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-
+	//pair<_bool, _ubyte> pairShadowResult = m_pGameInstance->IsIn_ShadowViewFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius());
+	//if (0 == ((_ubyte)SHADOW::SHADOW_FAR & pairShadowResult.second)) {
+	//	pairShadowResult.first = true;
+	//	Set_Shadow(pairShadowResult);
+	//}
 }
 
 HRESULT CInstancedProp::Render()

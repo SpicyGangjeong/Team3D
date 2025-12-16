@@ -551,7 +551,6 @@ void CRenderer::Describe_Entitiy()
 {
 	GUI::Begin("SYSTEM", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	if (GUI::CollapsingHeader("RENDERER")) {
-		GUI::PushItemWidth(80);
 		if (GUI::CollapsingHeader("PostProcessing_Bloom"))
 		{
 			GUI::BeginChild("PostProcessing_Bloom");
@@ -586,6 +585,7 @@ void CRenderer::Describe_Entitiy()
 			GUI::BeginChild("SSAO_Setting", ImVec2(0, 0), true);
 			GUI::DragFloat("fSSAORadius ", &m_fSSAO_Radius, 0.001f, -3.f, 3.f, "%.5f");
 			GUI::DragFloat("fSSAO_BIAS", &m_fSSAO_BIAS, 0.001f, -2.f, 2.f, "%.5f");
+			GUI::DragFloat("fSSAOStrength", &m_fSSAOStrength, 0.01f, 1.f, 4.f, "%.5f");
 			GUI::EndChild();
 		}
 		if (GUI::CollapsingHeader("ToneMapping")) {
@@ -593,6 +593,8 @@ void CRenderer::Describe_Entitiy()
 			GUI::SliderInt("m_iToneMappingType", &m_iToneMappingType, 0, 2, "%d");
 			GUI::SliderFloat("m_fExposure", &m_fExposure, 0.5f, 2.f, "%.3f");
 			GUI::EndChild();
+		}
+		if (GUI::CollapsingHeader("End_Padding")) {
 		}
 	}
 	GUI::End();

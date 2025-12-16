@@ -713,6 +713,11 @@ void CRenderer::Render_SSAO()
 			assert(false);
 			return;
 		}
+
+		if (FAILED(m_pShader->Bind_RawValue("g_fSSAOStrength", &m_fSSAOStrength, sizeof(_float)))) {
+			assert(false);
+			return;
+		}
 	}
 	{
 		// Bind_Targets

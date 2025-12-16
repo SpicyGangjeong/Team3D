@@ -32,9 +32,9 @@ HRESULT CLight_Main::Initialize(void* pArg)
 
 void CLight_Main::Priority_Update(_float fTimeDelta)
 {
-	_float4 vLook = {};
-	XMStoreFloat4(&vLook, m_pTransformCom->Get_State(STATE::LOOK));
-	m_pGameInstance->Ready_Shadow_Light(vLook);
+	_float4 vRPYQuat = {};
+	XMStoreFloat4(&vRPYQuat, m_pTransformCom->Get_QuarternionVector());
+	m_pGameInstance->Ready_Shadow_Light(vRPYQuat);
 }
 
 void CLight_Main::Update(_float fTimeDelta)
@@ -55,9 +55,7 @@ HRESULT CLight_Main::Render()
 
 HRESULT CLight_Main::Capture_PreShadow()
 {
-	_vector vRotq = m_pTransformCom->Get_QuarternionVector();
-	_uint iLevel = NEXT_LEVEL;
-	CLayer* pLayer = m_pGameInstance->Get_Layer(iLevel, LAYER_BACKGROUND);
+	CLayer* pLayer = m_pGameInstance->Get_Layer(NEXT_LEVEL, LAYER_BACKGROUND);
 	assert(nullptr != pLayer);
 
 	const list<CGameObject*>* pObjects = pLayer->Get_Objects();
@@ -151,7 +149,14 @@ _matrix CLight_Main::Get_OffCenterProjMatrix(_fmatrix ViewMatrix, vector<_float3
 		fMinY = min(fMinY, y);  fMaxY = max(fMaxY, y);
 		fMinZ = min(fMinZ, z);  fMaxZ = max(fMaxZ, z);
 	}
+	if (fMinZ > fMaxZ)
+	{
+		swap(fMinZ, fMaxZ);
+	}
 
+	_float fShadowDepthMArgin = 10.f; // 캐릭터 이동 보정
+	fMinZ -= fShadowDepthMArgin;
+	fMaxZ += fShadowDepthMArgin;
 	return XMMatrixOrthographicOffCenterLH(fMinX, fMaxX, fMinY, fMaxY, fMinZ, fMaxZ);
 }
 
