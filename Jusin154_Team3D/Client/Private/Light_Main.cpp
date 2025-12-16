@@ -149,11 +149,6 @@ _matrix CLight_Main::Get_OffCenterProjMatrix(_fmatrix ViewMatrix, vector<_float3
 		fMinY = min(fMinY, y);  fMaxY = max(fMaxY, y);
 		fMinZ = min(fMinZ, z);  fMaxZ = max(fMaxZ, z);
 	}
-	if (fMinZ > fMaxZ)
-	{
-		swap(fMinZ, fMaxZ);
-	}
-
 	_float fShadowDepthMArgin = 10.f; // 캐릭터 이동 보정
 	fMinZ -= fShadowDepthMArgin;
 	fMaxZ += fShadowDepthMArgin;
@@ -199,7 +194,7 @@ void CLight_Main::Describe_Entity()
 {
 	GUI::Begin("LIGHT", 0, IMGUI_GLOBAL_BEGIN_FLAG);
 	if (GUI::CollapsingHeader("Main_Light")) {
-		if (GUI::Button("Capture_PreShadow") || m_pGameInstance->Key_Down(DIK_F12)) {
+		if (GUI::Button("Capture_PreShadow")) {
 			if (FAILED(Capture_PreShadow())) {
 				assert(false);
 			}

@@ -60,6 +60,9 @@ private:
 	_float		m_fShadowFarBoxRatio = { 0.15f };
 	_float		m_fSafe_RadiusMultiplier = { 2.3f };
 	_float		m_fSafe_RadiusMargin = { 10.f };
+	_float3		m_vShadowBoxMarginMin = { 0.f, 0.f, -25.f };
+	_float3		m_vShadowBoxMarginMax = { 0.f, 0.f, 25.f };
+
 	_float4		m_vShadowBias = { 0.0018f, 0.0018f, 0.0018f, 0.0018f };
 
 	_float4		m_vOriginalRenderFrustumPoints[8] = {};

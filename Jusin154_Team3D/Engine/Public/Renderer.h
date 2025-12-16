@@ -53,7 +53,7 @@ private:
 	_float4x4					m_PreShadowProj = {};
 
 	/* TunningParam  */
-	_int	m_iToneMappingType = { 0 };
+	_int	m_iToneMappingType = { 2 };
 	_float	m_fExposure = { 0.7f };
 
 	// Bloom

@@ -305,10 +305,12 @@ void CPipeLine::Make_LightBoxes()
 		if (iIndex == 1) targetPlanes = m_vMiddleShadowViewBoxPlane;
 		if (iIndex == 2) targetPlanes = m_vFarShadowViewBoxPlane;
 
-		if (fMinZ > fMaxZ)
-		{
-			swap(fMinZ, fMaxZ);
-		}
+		fMinX += m_vShadowBoxMarginMin.x;
+		fMaxX += m_vShadowBoxMarginMax.x;
+		fMinY += m_vShadowBoxMarginMin.y;
+		fMaxY += m_vShadowBoxMarginMax.y;
+		fMinZ += m_vShadowBoxMarginMin.z;
+		fMaxZ += m_vShadowBoxMarginMax.z;
 
 		targetPlanes[0] = _float4(-1.f, 0.f, 0.f, fMinX); // Left
 		targetPlanes[1] = _float4(1.f, 0.f, 0.f, -fMaxX); // Right
@@ -316,7 +318,6 @@ void CPipeLine::Make_LightBoxes()
 		targetPlanes[3] = _float4(0.f, 1.f, 0.f, -fMaxY); // Top
 		targetPlanes[4] = _float4(0.f, 0.f, -1.f, fMinZ); // Near
 		targetPlanes[5] = _float4(0.f, 0.f, 1.f, -fMaxZ); // Far
-
 
 		XMStoreFloat4x4(&m_ShadowTransformStateMatrices[iIndex][ENUM_CLASS(D3DTS::VIEW)], ViewMatrix);
 		XMStoreFloat4x4(&m_ShadowTransformStateMatrices[iIndex][ENUM_CLASS(D3DTS::VIEW_INV)], ViewInvMatrix);
@@ -425,6 +426,8 @@ void CPipeLine::Describe_Entity()
 		_float fSafe_RadiusMultiplier = m_fSafe_RadiusMultiplier;
 		_float fSafe_RadiusMargin = m_fSafe_RadiusMargin;
 		_float4 vShadowBias = m_vShadowBias;
+		_float3	vShadowBoxMarginMin = m_vShadowBoxMarginMin;
+		_float3	vShadowBoxMarginMax = m_vShadowBoxMarginMax;
 		if (GUI::DragFloat("m_fShadowNearBoxRatio", &fNear, 0.01f, 0.01f, 0.999f, "%.2f")) {
 			bModified = true;
 		}
@@ -441,6 +444,12 @@ void CPipeLine::Describe_Entity()
 		if (GUI::DragFloat4("ShadowBiasNMFS", (_float*)&vShadowBias, 0.0001f, 0.0001f, 1.f, "%.4f")) {
 			bModified = true;
 		}
+		if (GUI::SliderFloat3("fShadowBoxMarginMin", (_float*)&vShadowBoxMarginMin, -100.F, 100.f, "%.1f")) {
+			bModified = true;
+		}
+		if (GUI::SliderFloat3("fShadowBoxMarginMax", (_float*)&vShadowBoxMarginMax, -100.F, 100.f, "%.1f")) {
+			bModified = true;
+		}
 		GUI::PushItemWidth(80.f);
 		if (true == bModified) {
 			m_fShadowNearBoxRatio = fNear;
@@ -448,6 +457,8 @@ void CPipeLine::Describe_Entity()
 			m_vShadowBias = vShadowBias;
 			m_fSafe_RadiusMultiplier = fSafe_RadiusMultiplier;
 			m_fSafe_RadiusMargin = fSafe_RadiusMargin;
+			m_vShadowBoxMarginMin = vShadowBoxMarginMin;
+			m_vShadowBoxMarginMax = vShadowBoxMarginMax;
 		}
 	}
 	GUI::End();
