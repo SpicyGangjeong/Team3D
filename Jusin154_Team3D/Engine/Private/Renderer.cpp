@@ -26,6 +26,8 @@ void CRenderer::Render()
 	Render_Occlusion();
 	Render_EnvironmentPostProcess();
 	Render_Fog();
+	Render_Distortion();
+	Render_DistortionAcc();
 	Render_Effect();
 	Render_NonLight();
 	Render_Blend();
@@ -547,11 +549,10 @@ void CRenderer::Render_Fog()
 void CRenderer::Render_Effect()
 {
 	COMPUTE_TIMEDELTA("Timer_Render_Effect");
+
 	if (FAILED(m_pGameInstance->Begin_MRT_NO_DepthStencil(TEXT("MRT_WB")))) {
 		return;
 	}
-
-
 
 	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::EFFECT)])
 	{
@@ -867,6 +868,66 @@ void CRenderer::Render_Bloom()
 	m_pGameInstance->Finish_RenderTarget(m_pVIBuffer, m_pShader, TEXT("Target_Bloom_Input"), TEXT("Target_Bloom"), SHADER_PASS_DEFERRED::BLOOM_FINISH); // 9
 
 	COMPUTE_TIMEDELTA("Timer_Render_Bloom");
+}
+
+void CRenderer::Render_Distortion()
+{
+	COMPUTE_TIMEDELTA("Timer_Render_Distortion");
+
+	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Distortion")))) {
+		return;
+	}
+
+	for (auto& pRenderObject : m_RenderObjects[ENUM_CLASS(RENDER::DISTORTION)])
+	{
+		if (nullptr != pRenderObject)
+			pRenderObject->Render();
+
+		SAFE_RELEASE(pRenderObject);
+	}
+
+	m_RenderObjects[ENUM_CLASS(RENDER::DISTORTION)].clear();
+
+	if (FAILED(m_pGameInstance->End_MRT())) {
+		return;
+	}
+
+	COMPUTE_TIMEDELTA("Timer_Render_Distortion");
+}
+
+void CRenderer::Render_DistortionAcc()
+{
+	COMPUTE_TIMEDELTA("Timer_Render_DistortionAcc");
+	// Bind_Resorces
+
+	ID3D11Texture2D* pBackBufferTexture2D = { nullptr };
+
+	m_pGameInstance->Get_BackBufferPTR(&pBackBufferTexture2D);
+
+	if (FAILED(m_pGameInstance->Paste_RenderTarget(TEXT("Target_PreEffect"), pBackBufferTexture2D))) {
+		return;
+	}
+
+	m_pDistortionShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix);
+	m_pDistortionShader->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix);
+	m_pDistortionShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix);
+
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_Distortion"), m_pDistortionShader, "g_DistortionTexture"))) {
+		return;
+	}
+
+	if (FAILED(m_pGameInstance->Bind_RenderTarget(TEXT("Target_PreEffect"), m_pDistortionShader, "g_SceneTexture"))) {
+		return;
+	}
+
+	m_pDistortionShader->Begin(0);
+
+	m_pVIBuffer->Bind_Resources();
+	m_pVIBuffer->Render();
+
+	SAFE_RELEASE(pBackBufferTexture2D);
+
+	COMPUTE_TIMEDELTA("Timer_Render_DistortionAcc");
 }
 
 void CRenderer::Render_UI()

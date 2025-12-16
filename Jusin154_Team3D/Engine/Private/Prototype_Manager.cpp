@@ -126,6 +126,13 @@ HRESULT CPrototype_Manager::Ready_EngineAssets()
 		return E_FAIL;
 	}
 
+	if (FAILED(Add_Asset_Prototype(g_iStaticLevel, FX_DISTORTION,
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/ShaderFiles/Shader_Distortion.hlsl"),
+			VTXPOSTEX::Elements, VTXPOSTEX::iNumElements)))) {
+		return E_FAIL;
+	}
+	
+
 #pragma region COMPUTE_SHADER
 
 	if (FAILED(Add_Asset_Prototype(g_iStaticLevel, CS_EFFECT,

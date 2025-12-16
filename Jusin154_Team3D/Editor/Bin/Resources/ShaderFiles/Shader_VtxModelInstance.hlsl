@@ -177,6 +177,10 @@ float  g_fRimLightPower;
 float  g_fRimLightStrength;
 float4 g_vRimLightColor;
 
+/* 모델 디스토션 */
+
+float g_fModelDistortIntensity;
+
 
 
 struct VS_IN
@@ -933,6 +937,35 @@ PS_OUT PS_NO_DEPTH_COMPARE(PS_IN In)
     return Out;
 }
 
+PS_BLOOM_OUT PS_DISTORTION(PS_IN In)
+{
+    PS_BLOOM_OUT Out;
+    
+    vector vMtrlDiffuse;
+    
+
+    Out.vDiffuse = DrawEffect(In);
+    
+    if (Out.vDiffuse.a == 0.f)
+        discard;
+    
+    /* b,a 성분은 0으로 밀어준다. */
+    
+
+    
+    /* 거리 기반으로 디스토션 할 객체 중점으로부터의 거리 구해냄. */
+    /* 중점이라면 r은 1, 중점에서의 거리가 멀수록 1에서 r 성분의 크기가 줄어드는 형태. */
+    Out.vDiffuse.r = 1 - length(In.vTexcoord - float2(0.5f, 0.5f));
+    
+    /* 세기 */
+    Out.vDiffuse.g = g_fModelDistortIntensity * Out.vDiffuse.a;
+    
+    Out.vDiffuse.ba = 0.f;
+    
+    return Out;
+}
+
+
 technique11 DefaultTechnique
 {
 //0
@@ -1103,6 +1136,16 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_NO_DEPTH_COMPARE();
+    }
+//16
+    pass DISTORTION
+    {
+        SetRasterizerState(RS_Nocull);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_WB_Acc, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_DISTORTION();
     }
 }
 
