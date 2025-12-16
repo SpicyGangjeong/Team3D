@@ -47,7 +47,7 @@ void CTrailObject::Update(_float fTimeDelta)
 
 
 
-	/* 디졸브 타임*/
+	/* 디스토션 타임*/
 	if (m_TrailInfo.vDistortionTime.y != 0)
 	{
 		m_TrailInfo.vDistortionTime.x += fTimeDelta;
@@ -57,6 +57,22 @@ void CTrailObject::Update(_float fTimeDelta)
 			m_TrailInfo.vDistortionTime.x = 0.f;
 		}
 	}
+	
+	/* 디졸브 타임*/
+
+	if (m_TrailInfo.isDissolve == true)
+	{
+		if (m_TrailInfo.vDissolveTime.y != 0)
+		{
+			m_TrailInfo.vDissolveTime.x += fTimeDelta;
+
+			if (m_TrailInfo.vDissolveTime.x > m_TrailInfo.vDissolveTime.y)
+			{
+				m_TrailInfo.vDissolveTime.x = 0.f;
+			}
+		}
+	}
+
 
 	/* 블룸 타임*/
 
@@ -118,7 +134,7 @@ void CTrailObject::Rope_Trail_Update(_fmatrix WorldMat, _fmatrix EndWorldMat, _f
 	if (m_bVisible == false)
 		return;
 
-	m_pTrailCom->Rope_Trail_Update(WorldMat, fTimeDelta, m_TrailInfo.fDamping, m_TrailInfo.fRopeLength, EndWorldMat);
+	m_pTrailCom->Rope_Trail_Update(WorldMat, fTimeDelta, m_TrailInfo.fDamping, m_TrailInfo.fRopeLength, m_TrailInfo.fMass, EndWorldMat);
 }
 
 
@@ -494,7 +510,7 @@ void CTrailObject::Free()
 void CTrailObject::Describe_Entity()
 {
 
-	const char* pRenderNames[] = { "PRIORITY" , "SHADOW", "NONBLEND", "DECAL", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" ,"BLOOM" , "UI", "OCCLUSION"  , "PRESHADOW" , "UI_OVERLAY"};
+	const char* pRenderNames[] = { "PRIORITY" , "SHADOW_NEAR", "NONBLEND", "DECAL", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" ,"BLOOM" , "UI", "OCCLUSION"  , "PRESHADOW" , "UI_OVERLAY"};
 	const char* pEffectType[] = { "EFFECT" , "TRAIL" };
 	const char* pShaderPass[] = { "DEFAULT" , "SCISSOR" , "UI" , "UVMOVE" , "TRAIL" , "TRAIL_BLEND" , "TRAILWB_FOR_BLEND" , "TRAIL_BLUR",  "TRAIL_BLOOM" };
 	const char* pBloomType[] = { "NONE" , "BASIC" , "MUILTY" };
@@ -539,12 +555,18 @@ void CTrailObject::Describe_Entity()
 
 		GUI::ColorEdit4("MixColor", (_float*)&m_TrailInfo.vColor);
 
+		if (GUI::TreeNode("Dissolve"))
+		{
+			GUI::Checkbox("Dissolve", &m_TrailInfo.isDissolve);
+			GUI::DragFloat2("fBloomTime", (_float*)&m_TrailInfo.vDissolveTime, 0.001f, 0.f);
+			GUI::TreePop();
+		}
 		if (GUI::TreeNode("Rope Trail"))
 		{
 
 			GUI::DragFloat("Dampling", &m_TrailInfo.fDamping);
 			GUI::DragFloat("Rope Length", &m_TrailInfo.fRopeLength);
-
+			GUI::DragFloat("Mass", &m_TrailInfo.fMass);
 			GUI::TreePop();
 		}
 
@@ -797,6 +819,14 @@ HRESULT CTrailObject::Bind_ShaderResources()
 	}
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDistortionTime", &m_TrailInfo.vDistortionTime, sizeof(_float2)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDissolve", &m_TrailInfo.isDissolve, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDissolveTime", &m_TrailInfo.vDissolveTime, sizeof(_float2)))) {
 		return E_FAIL;
 	}
 

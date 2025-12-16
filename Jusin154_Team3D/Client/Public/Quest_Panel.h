@@ -53,6 +53,7 @@ public:
 #ifdef _DEBUG
 	void Describe_Entity() override;
 #endif // _DEBUG
+
 };
 
 NS_END

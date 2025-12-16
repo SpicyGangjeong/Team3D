@@ -418,6 +418,9 @@ void CGoblin_Mage::Behavior_HitEnter()
 	case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
 		pairAnimInfo = m_Animation[STATEANIM::HIT_LEVIOSO];
 		break;
+	case ENUM_CLASS(SKILL_TYPE::ACCIO):
+		pairAnimInfo = m_Animation[STATEANIM::INCARCEROUS];
+		break;
 	}
 
 	m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second);
@@ -427,6 +430,7 @@ HRESULT CGoblin_Mage::Behavior_HitExitCheck(_float fTimeDelta)
 {
 	pair<_uint, _bool> pairAnimInfo = {};
 	_uint iCurrAnimIndex = m_pModelCom->Get_AnimIndex();
+	CTransform* pTransform = m_pTarget->Get_Component<CTransform>();
 
 	if (iCurrAnimIndex == m_Animation[STATEANIM::KNOCKDOWN_FWD].first)
 	{
@@ -437,20 +441,63 @@ HRESULT CGoblin_Mage::Behavior_HitExitCheck(_float fTimeDelta)
 		}
 	}
 
-	if (iCurrAnimIndex == m_Animation[STATEANIM::HIT_LEVIOSO].first)
+	if (m_eHitSpell == ENUM_CLASS(SKILL_TYPE::LEVIOSO))
 	{
-		_vector vDir = m_pTransformCom->Get_State(STATE::UP);
-		vDir = XMVector4Normalize(vDir);
-		_vector vPos = m_pCharacter_Controller->Get_Position();
-		m_fAirTime += fTimeDelta;
-		_vector Force = vDir * fTimeDelta;
-		if (m_fAirTime < 1.3f) {
-			m_pCharacter_Controller->Set_Position(vPos + Force);
+		if (iCurrAnimIndex == m_Animation[STATEANIM::HIT_LEVIOSO].first)
+		{
+			_vector vDir = m_pTransformCom->Get_State(STATE::UP);
+			vDir = XMVector4Normalize(vDir);
+			_vector vPos = m_pCharacter_Controller->Get_Position();
+			m_fAirTime += fTimeDelta;
+			_vector Force = vDir * fTimeDelta;
+			if (m_fAirTime < 1.3f) {
+				m_pCharacter_Controller->Set_Position(vPos + Force);
+			}
+			else {
+				m_pCharacter_Controller->Set_Position(vPos);
+			}
+			m_pCharacter_Controller->SetGravity(false);
+
+			if (m_pModelCom->Get_CurrentTrackProgressRatio() >= 0.31f)
+			{
+				m_fAirTime = 0.f;
+				m_pCharacter_Controller->SetGravity(true);
+				pairAnimInfo = m_Animation[STATEANIM::LAND];
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f);
+			}
 		}
-		else {
-			m_pCharacter_Controller->Set_Position(vPos);
+	}
+	else
+	{
+		if (!m_bPos)
+		{
+			m_pCharacter_Controller->SetGravity(false);
+			_vector vPlayerPos = pTransform->Get_State(STATE::POSITION);
+			_vector vMonsterPos = m_pCharacter_Controller->Get_Position();
+
+			_vector vDir = XMVector3Normalize(vPlayerPos - vMonsterPos);
+			_float fLength = XMVectorGetX(XMVector3Length(vPlayerPos - vMonsterPos));
+
+
+			_vector vUp = m_pTransformCom->Get_State(STATE::UP);
+			vUp = XMVector4Normalize(vUp);
+			_vector vPos = m_pCharacter_Controller->Get_Position();
+			_vector Force = vUp * fTimeDelta * 15.f;
+
+			m_fSpeed += (m_fTargetSpeed - m_fSpeed) * fTimeDelta * m_fAccel;
+
+			if (fLength >= 3.5f)
+			{
+				m_pCharacter_Controller->Set_Position(
+					vMonsterPos + vDir * m_fSpeed * fTimeDelta + Force
+				);
+			}
+			else {
+				m_bPos = true;
+				pairAnimInfo = m_Animation[STATEANIM::HIT_LEVIOSO];
+				m_pModelCom->Set_AnimationIndex(pairAnimInfo.first, pairAnimInfo.second, 1.f);
+			}
 		}
-		m_pCharacter_Controller->SetGravity(false);
 
 		if (m_pModelCom->Get_CurrentTrackProgressRatio() >= 0.31f)
 		{
@@ -461,19 +508,20 @@ HRESULT CGoblin_Mage::Behavior_HitExitCheck(_float fTimeDelta)
 		}
 	}
 
-
 	if (m_pModelCom->IsFinishedAnim())
 	{
-		m_bLookAt = true;
 		m_pFSM->Change_State(FSMSTATE::IDLE);
 		return E_FAIL;
 	}
 	return E_FAIL;
 }
 
+
 void CGoblin_Mage::Behavior_HitExit()
 {
 	m_pFSM->Disable_State(FSMSTATE::HIT);
+	m_bPos = false;
+	m_bLookAt = true;
 }
 
 void CGoblin_Mage::Behavior_DeadEnter()
@@ -741,6 +789,7 @@ void CGoblin_Mage::Set_Anim()
 
 	m_Animation[STATEANIM::LAND] = { 376, false };
 	m_Animation[STATEANIM::HIT_LEVIOSO] = { 381, false };
+	m_Animation[STATEANIM::INCARCEROUS] = { 382,false };
 
 	m_Animation[STATEANIM::STUMBLE_BWD_L] = { 394, false };
 	m_Animation[STATEANIM::STUMBLE_BWD_R] = { 395, false };

@@ -194,6 +194,7 @@ HRESULT CMonster::Render_Disolve()
 {
 	if (FLT_EPSILON3 * 10 < m_fDisolveTime)
 	{
+		m_bDrawOutLine = false;
 		_bool bDisolve = true;
 		_float fDisolveAmount = 0.1f;
 		_float fDisolveEdgeWidth = 0.1f;

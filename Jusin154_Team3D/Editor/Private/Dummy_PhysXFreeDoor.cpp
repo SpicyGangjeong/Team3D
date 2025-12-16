@@ -102,7 +102,7 @@ void CDummy_PhysXFreeDoor::Update(_float fTimeDelta)
 
 void CDummy_PhysXFreeDoor::Late_Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->isIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
+	if (m_pGameInstance->IsIn_WorldFrustum(Get_WorldPostion(), m_pTransformCom->Get_Radius())) {
 		m_pGameInstance->Add_RenderGroup(RENDER::BLEND, this);
 	}
 }

@@ -64,10 +64,12 @@ HRESULT CGoblin_Mage::Initialize(void* pArg)
 	m_pEffectPool = m_pGameInstance->Get_Layer(NEXT_LEVEL, TEXT("Layer_EffectPool"))->Get_Object<CEffectPool>();
 	SAFE_ADDREF(m_pEffectPool);
 
+	m_pCharacter_Controller->Set_Position(XMVectorSet(-52.f, 0.f, -4.f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-52.f, 0.f, -4.f, 1.f));
 
-		m_pCharacter_Controller->Set_Position(XMVectorSet(-65.f, 5.f, -50.f, 1.f));
-
-
+#if 진우
+	m_isDebugMode = true;
+#endif 
 
 	return S_OK;
 }
@@ -150,7 +152,8 @@ void CGoblin_Mage::Late_Update(_float fTimeDelta)
 	m_pGoblin_Orb->Get_Component<CTransform>()->Set_WorldMatrix(World);
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW, this);
+
+	Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius()));
 }
 
 HRESULT CGoblin_Mage::Render()
@@ -216,18 +219,15 @@ HRESULT CGoblin_Mage::Render()
 	return S_OK;
 }
 
-HRESULT CGoblin_Mage::Render_Shadow()
+HRESULT CGoblin_Mage::Render_Shadow(SHADOW eType)
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix"))) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ViewMatrix", D3DTS::VIEW))) {
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ViewMatrix", D3DTS::VIEW, eType))) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ProjMatrix", D3DTS::PROJ))) {
-		return E_FAIL;
-	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", &m_pGameInstance->Get_ShadowDesc()->fFar, sizeof(_float)))) {
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ProjMatrix", D3DTS::PROJ, eType))) {
 		return E_FAIL;
 	}
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
@@ -261,6 +261,7 @@ _vector CGoblin_Mage::Get_LockOnPos()
 
 void CGoblin_Mage::OnCollision(CGameObject* pOther, void* pDesc)
 {
+
 	if (true == m_bDead) {
 		return;
 	}
@@ -271,7 +272,6 @@ void CGoblin_Mage::OnCollision(CGameObject* pOther, void* pDesc)
 	Check_HitAngle(XMLoadFloat4(&CollisionDesc->vHitDir));
 
 	_uint iSkillType = dynamic_cast<CEffect_Container*>(pOther)->Get_SkillType();
-	auto damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
 
 	m_fHitRadius = CMyTools::Get_Direction2D(m_pTransformCom->Get_State(STATE::LOOK), XMLoadFloat4(&CollisionDesc->vHitDir));
 
@@ -286,22 +286,36 @@ void CGoblin_Mage::OnCollision(CGameObject* pOther, void* pDesc)
 	case ENUM_CLASS(SKILL_TYPE::JAP):
 	{
 		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::JAP);
-		m_DamageInfo.fDamage = damagePair.first;
-		m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
-		if (0 == damagePair.second) {
-			m_pFSM->Change_State(FSMSTATE::DEAD);
-			return;
-		}
 	}
 	break;
 	case ENUM_CLASS(SKILL_TYPE::LEVIOSO):
 		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::LEVIOSO);
+		break;
+	case ENUM_CLASS(SKILL_TYPE::ACCIO):
+		m_eHitSpell = ENUM_CLASS(SKILL_TYPE::ACCIO);
 		break;
 	}
 
 	if (!m_pFSM->IsEnable(FSMSTATE::BLINK)) {
 		m_pFSM->Change_State(FSMSTATE::HIT);
 	}
+
+#ifdef _DEBUG
+	if (m_isDebugMode == true)
+		return;
+#endif
+
+
+	auto damagePair = Get_Damage(m_pInfoInstance->Get_Spell_Damage(iSkillType));
+
+	m_DamageInfo.fDamage = damagePair.first;
+	m_pInfoInstance->Event_CallBack(TEXT("Monster_Hit"), &m_DamageInfo);
+	if (0 == damagePair.second) {
+		m_pFSM->Change_State(FSMSTATE::DEAD);
+		return;
+	}
+
+
 
 }
 

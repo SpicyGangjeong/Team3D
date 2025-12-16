@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "RaceRing.h"
 
+#include "BroomRaceManager.h"
 #include "GameInstance.h"
 
 CRaceRing::CRaceRing(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -30,9 +31,16 @@ HRESULT CRaceRing::Initialize(void* pArg)
 	}
 
 	_float X = m_pGameInstance->Real_Random_Float(-200.f, 200.f);
-	_float Y = m_pGameInstance->Real_Random_Float(-200.f, 200.f);
+	_float Y = m_pGameInstance->Real_Random_Float(-5.f, 5.f);
 	_float Z = m_pGameInstance->Real_Random_Float(-200.f, 200.f);
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(X, Y,Z, 1.f));
+
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(X, Y, Z, 1.f));
+
+	m_pBroomRaceManager = static_cast<CBroomRaceManager*>(pArg);
+
+	m_pBroomRaceManager->Push_RaceRing(this);
+
+
 
 	return S_OK;
 }
@@ -86,6 +94,7 @@ HRESULT CRaceRing::Render()
 			return E_FAIL;
 		}
 	}
+
 
 	return S_OK;
 }

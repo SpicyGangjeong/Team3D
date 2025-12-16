@@ -58,6 +58,7 @@ private:
 private:
 	class CEffectPool*									 m_pEffectPool = nullptr;
 	_bool											     m_isWandPos = {};
+
 public:
 	static CEffect_Editor* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

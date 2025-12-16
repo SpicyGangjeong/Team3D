@@ -137,11 +137,18 @@ public:
 	const _float4* Get_CamPosition();
 	const _vector Get_CamXMPosition();
 	void Transform_Frustum_ToLocalSpace(_fmatrix WorldMatrixInverse);
-	_bool isIn_WorldFrustum(_fvector vWorldPos, _float fRadius);
-	_bool isIn_LocalFrustum(_fvector vLocalPos, _float fRadius);
+	_bool IsIn_WorldFrustum(_fvector vWorldPos, _float fRadius);
+	_bool IsIn_LocalFrustum(_fvector vLocalPos, _float fRadius);
+	pair<_bool, _ubyte> IsIn_ShadowViewFrustum(_fvector vWorldCenter, _float fRadius);
+	HRESULT Bind_CascadeSplitRatio(class CShader* pShader, const _char* pConstantName, _bool bNear);
+	HRESULT Bind_CascadeBias(class CShader* pShader, const _char* pConstantName);
 	HRESULT Bind_GlobalSRV(class CShader* pShader, const _tchar* wszKeyGlobalSRV, const _char* pConstantName);
 	HRESULT Load_GlobalSRV(const _tchar* wszKeyGlobalSRV, filesystem::path pathSRVFolder);
 
+	HRESULT Ready_Shadow_Light(const _float4& vShadowDirRPYQuat);
+	HRESULT Bind_Shadow_Resource(class CShader* pShader, const _char* pConstantName, D3DTS eType, SHADOW eShadowType) const;
+	const _float4x4* Get_ShadowMatricesPtr(_uint iShadowBoxIndex);
+	_float  Get_ShadowBoxFar(_uint iShadowBoxIndex);
 #pragma endregion
 #pragma region LIGHT_MANAGER
 	void			  Add_Light(_uint _iCurrentLevel, class CLight* _pLight);
@@ -187,13 +194,6 @@ public:
 	_float	Get_CameraFov();
 	const _float* Get_CurrentCameraFar();
 	void Force_CamPosition(_fvector vPos);
-#pragma endregion
-
-#pragma region SHADOW
-	HRESULT Ready_Shadow_Light(const SHADOW_LIGHT_DESC& Desc);
-	HRESULT Bind_Shadow_Resource(class CShader* pShader, const _char* pConstantName, D3DTS eType) const;
-	const _float4x4* Get_ShadowMatricesPtr();
-	const SHADOW_LIGHT_DESC* Get_ShadowDesc();
 #pragma endregion
 #pragma region SOUND_MANAGER
 #pragma endregion
@@ -288,7 +288,6 @@ private:
 	class CPipeLine*				m_pPipeLine = { nullptr };
 	class CRenderer*				m_pRenderer = { nullptr };
 	class CRenderTarget_Manager*	m_pRenderTarget_Manager = { nullptr };
-	class CShadow*					m_pShadow = { nullptr };
 	class CCamera_Manager*			m_pCamera_Manager = { nullptr };
 	class CLight_Manager*			m_pLight_Manager = { nullptr };
 	class CKey_Manager*				m_pKey_Manager = { nullptr };

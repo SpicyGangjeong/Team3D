@@ -61,6 +61,11 @@ HRESULT CPlayer::Initialize(void* pArg)
 	}
 #ifdef _DEBUG
 	Load_KeyFrame();
+
+#if 진우
+	m_isDebugMode = true; // 디버그 무적 모드
+#endif
+
 #endif // _DEBUG
 
 	m_pBroomModel = m_pBroom->Get_Component<CModel>();
@@ -91,8 +96,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pInfoInstance->Regist_PlayerAlly(this);
 	m_pInfoInstance->Set_Damage(m_pStat->Get_Stat().fDamage);
 
-	m_pCharacter_Controller->Set_Position(XMVectorSet(-82.f, -30.f, -56.f, 1.f));
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-82.f, -30.f, -56.f, 1.f));
+	m_pCharacter_Controller->Set_Position(XMVectorSet(-21.f, 0.f, -14.f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(-21.f, 0.f, -14.f, 1.f));
+
 
 #ifdef _DEBUG
 	m_BasicEffect = make_unique<BasicEffect>(m_pDevice);
@@ -197,7 +203,8 @@ void CPlayer::Late_Update(_float fTimeDelta)
 	m_pTransformCom->Set_State(STATE::POSITION, m_pCharacter_Controller->Get_FootPosition());
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
-	m_pGameInstance->Add_RenderGroup(RENDER::SHADOW, this);
+
+	Set_Shadow(m_pGameInstance->IsIn_ShadowViewFrustum(m_pTransformCom->Get_State(STATE::POSITION), m_pTransformCom->Get_Radius()));
 
 	__super::Late_Update(fTimeDelta);
 
@@ -270,21 +277,17 @@ HRESULT CPlayer::Render()
 
 	return S_OK;
 }
-HRESULT CPlayer::Render_Shadow()
+HRESULT CPlayer::Render_Shadow(SHADOW eType)
 {
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldMatrixPtr()))) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ViewMatrix", D3DTS::VIEW))) {
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ViewMatrix", D3DTS::VIEW, eType))) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ProjMatrix", D3DTS::PROJ))) {
+	if (FAILED(m_pGameInstance->Bind_Shadow_Resource(m_pShaderCom, "g_ProjMatrix", D3DTS::PROJ, eType))) {
 		return E_FAIL;
 	}
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_fFar", &m_pGameInstance->Get_ShadowDesc()->fFar, sizeof(_float)))) {
-		return E_FAIL;
-	}
-
 	_uint		iNumMeshes = m_pModelCom->Get_NumMeshes();
 
 	for (_uint i = 0; i < iNumMeshes; i++)
@@ -293,10 +296,7 @@ HRESULT CPlayer::Render_Shadow()
 			return E_FAIL;
 		}
 
-		if (FAILED(m_pModelCom->Bind_Material(i, m_pShaderCom))) {
-			return E_FAIL;
-		}
-		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::DEFAULT)))) {
+		if (FAILED(m_pShaderCom->Begin(ENUM_CLASS(SHADER_PASS_ANIM::SHADOW)))) {
 			return E_FAIL;
 		}
 
@@ -309,6 +309,11 @@ HRESULT CPlayer::Render_Shadow()
 }
 void CPlayer::OnCollision(CGameObject* pOther, void* pDesc)
 {
+#ifdef _DEBUG
+	if (m_isDebugMode == true)
+		return;
+#endif
+
 	ON_COLLISION_INFO* CollisionDesc = static_cast<ON_COLLISION_INFO*>(pDesc);
 	if (CollisionDesc) {
 		Check_HitAngle(XMLoadFloat4(&CollisionDesc->vHitDir));
@@ -559,7 +564,7 @@ void CPlayer::Update_CameraCoordinateSystem(_float fTimeDelta)
 }
 
 _matrix CPlayer::Get_WandPos()
-{
+ {
 	CWand* pWand = Get_PartObject<CWand>();
 
 	if (pWand == nullptr)

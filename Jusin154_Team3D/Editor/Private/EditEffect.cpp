@@ -86,6 +86,15 @@ void CEditEffect::Late_Update(_float fTimeDelta)
 		m_pTransformCom->Set_State(STATE::POSITION, vWandPos);
 	}
 
+	if (m_isCamPos == true)
+	{
+		_vector vCampos = XMLoadFloat4(m_pGameInstance->Get_CamPosition());
+		
+		vCampos += XMLoadFloat4(&m_vCamOffset);
+	
+		m_pTransformCom->Set_State(STATE::POSITION, vCampos);
+	}
+
 	if (m_EffectInfo.isBloom == true)
 	{
 		m_pGameInstance->Add_RenderGroup(RENDER::BLOOM, this);
@@ -421,9 +430,9 @@ void CEditEffect::Describe_Entity()
 	//여기서 모델, 텍스쳐, 선택할 수 있도록 함
 
 	const char* pLerp[] = { "Linear" , "EaseInQuad", "EaseOutQuad", "EaseInCubic" , "EaseOutCubic" , "EaseInOutSin" , "EaseInBack" , "Expo" , "Circle" };
-	const char* pRenderNames[] = { "PRIORITY" , "SHADOW", "NONBLEND", "DECAL", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" ,"BLOOM" , "UI", "OCCLUSION" , "PRESHADOW", "UI_OVERLAY"};
+	const char* pRenderNames[] = { "PRIORITY" , "SHADOW_NEAR", "NONBLEND", "DECAL", "BLUR" , "NONLIGHT" ,"EFFECT", "BLEND" ,"BLOOM" , "UI", "OCCLUSION" , "PRESHADOW", "UI_OVERLAY"};
 	const char* pEffectType[] = { "EFFECT" , "TRAIL" };
-	const char* pShaderPass[] = { "DEFAULT" , "NON_NOMALMAP" , "BLUR" , "WEIGHTBLEND" , "NON_WORLD" , "NON_WORLD_BLUR",  "BLEND", "BLEND_NOWORLD", "BLOOM" ,"BLOOM_NOWORLD" ,"BLUR_NO_EMMISVE", "BLUR_NO_WORLD_NO_EMISSIVE","WEIGHTBLEND_FOR_BLEND" , "DEPTH_STOP" };
+	const char* pShaderPass[] = { "DEFAULT" , "NON_NOMALMAP" , "BLUR" , "WEIGHTBLEND" , "NON_WORLD" , "NON_WORLD_BLUR",  "BLEND", "BLEND_NOWORLD", "BLOOM" ,"BLOOM_NOWORLD" ,"BLUR_NO_EMMISVE", "BLUR_NO_WORLD_NO_EMISSIVE","WEIGHTBLEND_FOR_BLEND" , "DEPTH_STOP" , "WB_CULLING", "SCREEN_FX"};
 	const char* pBloomType[] = { "NONE" , "BASIC" , "MUILTY"};
 
 	_int iCurrentItem = static_cast<_int>(m_EffectInfo.eRenderOrder);
@@ -466,7 +475,8 @@ void CEditEffect::Describe_Entity()
 
 	GUI::Checkbox("Visible", &m_bVisible);
 	GUI::Checkbox("WAND POS", &m_isWandPos);
-	
+	GUI::Checkbox("CAM POS", &m_isCamPos);
+	GUI::DragFloat4("CAM OFFSET", (_float*) & m_vCamOffset, 0.005f, 0.f);
 
 	m_pTransformCom->Describe_Entity();
 

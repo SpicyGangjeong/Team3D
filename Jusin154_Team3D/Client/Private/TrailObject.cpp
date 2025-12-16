@@ -45,9 +45,6 @@ void CTrailObject::Update(_float fTimeDelta)
 		return;
 
 
-
-
-
 	/* 디졸브 타임*/
 	if (m_TrailInfo.vDistortionTime.y != 0)
 	{
@@ -58,6 +55,22 @@ void CTrailObject::Update(_float fTimeDelta)
 			m_TrailInfo.vDistortionTime.x = 0.f;
 		}
 	}
+
+	if (m_TrailInfo.isDissolve == true)
+	{
+		if (m_TrailInfo.vDissolveTime.y != 0)
+		{
+			m_TrailInfo.vDissolveTime.x += fTimeDelta;
+
+			if (m_TrailInfo.vDissolveTime.x > m_TrailInfo.vDissolveTime.y)
+			{
+				m_bVisible = false;
+				m_TrailInfo.vDissolveTime.x = 0.f;
+				m_TrailInfo.isDissolve = false;
+			}
+		}
+	}
+
 
 	/* 블룸 타임*/
 
@@ -317,11 +330,11 @@ void CTrailObject::Trail_Update(_fmatrix WorldMat, _float fTimeDelta)
 }
 
 void CTrailObject::Rope_Trail_Update(_fmatrix WorldMat, _fmatrix EndWorldMat, _float fTimeDelta)
-{
+ {
 	if (m_bVisible == false)
 		return;
 
-	m_pTrailCom->Rope_Trail_Update(WorldMat, fTimeDelta, m_TrailInfo.fDamping, m_TrailInfo.fRopeLength , EndWorldMat);
+	m_pTrailCom->Rope_Trail_Update(WorldMat, fTimeDelta, m_TrailInfo.fDamping, m_TrailInfo.fRopeLength, m_TrailInfo.fMass, EndWorldMat);
 }
 
 
@@ -519,6 +532,14 @@ HRESULT CTrailObject::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_isDissolve", &m_TrailInfo.isDissolve, sizeof(_bool)))) {
+		return E_FAIL;
+	}
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDissolveTime", &m_TrailInfo.vDissolveTime, sizeof(_float2)))) {
+		return E_FAIL;
+	}
+
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vDiffuseDistortionUVGainAmount", &m_TrailInfo.vDiffuseDistortioUVAmount, sizeof(_float2)))) {
 		return E_FAIL;
 	}
@@ -591,6 +612,13 @@ HRESULT CTrailObject::Bind_ShaderResources()
 #ifdef _DEBUG
 void CTrailObject::Describe_Entity()
 {
+	if (GUI::TreeNode("Rope Trail"))
+	{
 
+		GUI::DragFloat("Dampling", &m_TrailInfo.fDamping);
+		GUI::DragFloat("Rope Length", &m_TrailInfo.fRopeLength);
+		GUI::DragFloat("Mass", &m_TrailInfo.fMass);
+		GUI::TreePop();
+	}
 }
 #endif

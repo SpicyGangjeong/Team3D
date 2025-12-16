@@ -54,12 +54,6 @@ typedef struct tagLightDesc
 	_uint				iLevel = {};
 }LIGHT_DESC;
 
-typedef struct tagShadowLight
-{
-	_float4		vEye{}, vAt{};
-	_float		fWidth{}, fHeight{}, fNear{}, fFar{};
-}SHADOW_LIGHT_DESC;
-
 struct SaveVertex
 {
 	_float3 Pos;
@@ -123,7 +117,8 @@ struct SaveMesh
 struct SaveMaterial
 {
 	vector<string> Path[AI_TEXTURE_TYPE_MAX];
-
+	_float2 vSRV_Flag;
+	_float3 vPBR_Flag;
 };
 
 struct SaveKeyFrameVec

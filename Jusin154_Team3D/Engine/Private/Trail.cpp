@@ -219,7 +219,7 @@ void CTrail::Trail_Update(_float fDeltaTime, _fmatrix WorldMatrix)
 
 }
 
-void CTrail::Rope_Trail_Update(_fmatrix WorldMatrix, _float fTimeDelta, _float fDamping, _float fLength , _fmatrix EndWorldMatrix)
+void CTrail::Rope_Trail_Update(_fmatrix WorldMatrix, _float fTimeDelta, _float fDamping, _float fLength , _float fMass , _fmatrix EndWorldMatrix)
 {
 	if (m_isFix == false)
 	{
@@ -229,22 +229,15 @@ void CTrail::Rope_Trail_Update(_fmatrix WorldMatrix, _float fTimeDelta, _float f
 		if (m_iNumCount >= m_iNumVertices)
 			m_iNumCount -= 2;
 	}
-	else
-	{
-		int a = 0;
-	}
 
 
-	if (m_iNumCount > 2)
-	{
-		m_pOldPosition[0] = m_pVertices[0].vPosition;
-		m_pOldPosition[1] = m_pVertices[1].vPosition;
-	}
+	m_pOldPosition[0] = m_pVertices[0].vPosition;
+	m_pOldPosition[1] = m_pVertices[1].vPosition;
 
 
 	_matrix WorldMat = {};
 
-	WorldMat.r[0] = XMVector3Normalize(WorldMatrix.r[0]);
+ 	WorldMat.r[0] = XMVector3Normalize(WorldMatrix.r[0]);
 	WorldMat.r[1] = XMVector3Normalize(WorldMatrix.r[1]);
 	WorldMat.r[2] = XMVector3Normalize(WorldMatrix.r[2]);
 	WorldMat.r[3] = WorldMatrix.r[3];
@@ -281,6 +274,9 @@ void CTrail::Rope_Trail_Update(_fmatrix WorldMatrix, _float fTimeDelta, _float f
 
 		_vector vOldPos = XMLoadFloat3(&m_pOldPosition[i]);
 		vOldPos = XMVectorSetW(vOldPos, 1.f);
+
+		if (XMVectorGetX(XMVector3Length(vOldPos)) <= 0)
+			continue;
 
 		_vector vVelocity = (vCurrentPos - vOldPos) * fDamping;
 
@@ -323,8 +319,8 @@ void CTrail::Rope_Trail_Update(_fmatrix WorldMatrix, _float fTimeDelta, _float f
 			// 각 점을 절반씩 밀거나 당겨서 거리 맞춤
 			// 손잡이(Pinned)는 움직이지 않도록 질량 비율 조절 가능 (여기선 0.5씩)
 
-			_vector vLowOffset = vDeltaLow * (m_fMass * fLowDiff);
-			_vector vHighOffset = vDeltaHigh * (m_fMass * fHighDiff);
+			_vector vLowOffset = vDeltaLow * (fMass * fLowDiff);
+			_vector vHighOffset = vDeltaHigh * (fMass * fHighDiff);
 
 			// k!=0 (즉, 움직이는 마디)일 때만 vFirst를 움직임
 			if (k != 0)
@@ -396,8 +392,10 @@ void CTrail::Rope_Trail_Update(_fmatrix WorldMatrix, _float fTimeDelta, _float f
 void CTrail::Reset_Trail()
 {
 	ZeroMemory(m_pVertices, sizeof(VTXPOSTEX) * m_iNumVertices);
+	ZeroMemory(m_pOldPosition, sizeof(_float3) * m_iNumVertices);
 	ZeroMemory(&m_PreHigh, sizeof(_vector) * 2);
 	ZeroMemory(&m_PreLow, sizeof(_vector) * 2);
+
 	m_iNumCount = 0;
 	m_fAccTime = 0.f;
 	m_isFix = false;
@@ -414,7 +412,9 @@ HRESULT CTrail::ReStructVB(_uint iNumVertices)
 		return E_FAIL;
 
 	Safe_Delete_Array(m_pVertices);
+	Safe_Delete_Array(m_pOldPosition);
 
+	m_pOldPosition = new _float3[m_iNumVertices];
 	m_pVertices = new VTXPOSTEX[m_iNumVertices]{};
 	
 	return S_OK;
@@ -505,7 +505,6 @@ void CTrail::Describe_Entity()
 		GUI::InputFloat3("High", (_float*)&m_TrailDesc.vHigh);
 
 		GUI::DragFloat("Gravity", &m_fGravity);
-		GUI::DragFloat("Mass", &m_fMass);
 
 		GUI::Checkbox("Fix", &m_isFix);
 

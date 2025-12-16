@@ -114,7 +114,7 @@ void CMapObject_LOD::Late_Update(_float fTimeDelta)
 	
 
 	_float fRaius = m_pModelComs[0]->Get_Radius();
-	if (m_pGameInstance->isIn_WorldFrustum(XMLoadFloat4(&m_vExtentPosition), fRaius)) {
+	if (m_pGameInstance->IsIn_WorldFrustum(XMLoadFloat4(&m_vExtentPosition), fRaius)) {
 		
 		_vector		vCamPosition = XMLoadFloat4(m_pGameInstance->Get_CamPosition());
 

@@ -61,6 +61,9 @@ HRESULT CMainLight::Initialize(void* pArg)
 void CMainLight::Priority_Update(_float fTimeDelta)
 {
 	m_pGameTime->Update_GameTime(fTimeDelta);
+	_float4 vLook = {};
+	XMStoreFloat4(&vLook, m_pTransformCom->Get_State(STATE::LOOK));
+	m_pGameInstance->Ready_Shadow_Light(vLook);
 }
 
 void CMainLight::Update(_float fTimeDelta)
@@ -108,6 +111,7 @@ void CMainLight::Update(_float fTimeDelta)
 		XMLoadFloat4(&m_Specular_Colors[ENUM_CLASS(m_eNextPhase)]), fRatio));
 
 	//m_pLightCom->Set_Color(m_vCurDiffuse, m_vAmbient, m_vSpecular);
+
 
 	Describe_Entity();
 }

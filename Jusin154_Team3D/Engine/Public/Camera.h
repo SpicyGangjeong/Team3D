@@ -43,7 +43,6 @@ public:
 	_bool IsActive() const { return m_bActive; }
 	_bool IsImportantThan(CCamera* pOther) const;
 	const _float* Get_CurrentFar();
-	HRESULT Ready_Shadow();
 	void ZoomIn(_float fTimeDelta);
 	void Set_Fov(_float fFovy,_float fTimeDelta, _bool& bZoomIn);
 	_float Get_Fov();
@@ -75,9 +74,6 @@ protected:
 	const _wchar*	m_pCameraKey = { nullptr };
 	CGameObject*	m_pFollowTarget = { nullptr };
 	CGameObject*	m_pLookTarget = { nullptr };
-
-	SHADOW_LIGHT_DESC		ShadowDesc{};
-	_float3 m_vRollPichYaw = { 35.2643897f, 45.f, 0.f };
 
 protected:
 	virtual HRESULT Initialize_Prototype() override;

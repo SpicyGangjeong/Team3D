@@ -42,6 +42,7 @@ enum ESTATE : _u64Flag
     HOVER                       = 1ULL << 35,
     FLY                         = 1ULL << 36,
     TURBOFLY                    = 1ULL << 37,
+    PARRY                       = 1ULL << 38,
     END
 };
 NS_END

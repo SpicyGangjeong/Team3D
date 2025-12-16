@@ -35,20 +35,23 @@ Texture2D g_SurfaceParamsTexture;
 Texture2D g_NoiseTexture;
 Texture2D g_CausticsTexture;
 
+float2 g_vSRVFlag;
+float3 g_vPBR_Flag;
+
 Texture2D g_DiffuseTexture;
 Texture2D g_SpecularTexture;
 Texture2D g_AmbientTexture;
 Texture2D g_EmissiveTexture;
-Texture2D g_HeightTexture;
+Texture2D g_MossDiffuseTexture;
 Texture2D g_NormalTexture;
-Texture2D g_ShininessTexture;
-Texture2D g_OpacityTexture;
-Texture2D g_DisplacementTexture;
-Texture2D g_LightMapTexture;
+Texture2D g_MossNormalTexture;
+Texture2D g_NormalBlendTexture;
+Texture2D g_SROBlendTexture;
+Texture2D g_MROBlendTexture;
 Texture2D g_ReflectionTexture;
-Texture2D g_BaseColorTexture;
-Texture2D g_NormalCameraTexture;
-Texture2D g_EmissionColorTexture;
+Texture2D g_DiffuseBlend;
+Texture2D g_MossSROTexture;
+Texture2D g_MossMROTexture;
 Texture2D g_MetalnessTexture;
 Texture2D g_Diffuse_RoughnessTexture;
 Texture2D g_AmbientOcclusionTexture;
@@ -126,7 +129,6 @@ struct VS_OUT_BLUR
 struct VS_OUT_SHADOW
 {
     float4 vPosition : SV_POSITION;
-    float fProjPos : TEXCOORD0;
 };
 
 
@@ -155,7 +157,6 @@ VS_OUT_SHADOW VS_MAIN_SHADOW(VS_IN In)
     matWVP = mul(matWV, g_ProjMatrix);
     
     Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
-    Out.fProjPos = Out.vPosition.z;
 
     return Out;
 }
@@ -285,12 +286,40 @@ PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out;
 
-    float4 vMtrlDiffuse = g_DiffuseTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
-    float4 vSurface = g_SurfaceParamsTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
-    //if (vMtrlDiffuse.a < 0.3f)
-    //{
-    //    discard;
-    //}
+    float4 vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    float4 vSurface = g_SurfaceParamsTexture.Sample(DefaultSampler, In.vTexcoord);
+    float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, DefaultSampler, In.vTexcoord);
+    
+    if (1 == g_vSRVFlag.x)
+    {
+        vMtrlDiffuse = BlendDiffuse(vMtrlDiffuse, g_DiffuseBlend, In.vTexcoord, 0.3f);
+      
+    }
+    if (2 == g_vSRVFlag.x)
+    {
+        vMtrlDiffuse = BlendDiffuse(vMtrlDiffuse, g_MossDiffuseTexture, In.vTexcoord, 0.3f);
+      
+    }
+    if (3 == g_vSRVFlag.x)
+    {
+        vMtrlDiffuse = float4(vMtrlDiffuse.xyz * 0.4f
+            + g_DiffuseBlend.Sample(DefaultSampler, In.vTexcoord).xyz * 0.4f
+            + g_MossDiffuseTexture.Sample(DefaultSampler, In.vTexcoord).xyz * 0.1f, 1.f);
+    }
+    
+    if (1 == g_vSRVFlag.y)
+    {
+        vNormalDecoded = normalize(vNormalDecoded + DecodeNormalFromRG(g_NormalBlendTexture, DefaultSampler, In.vTexcoord));
+    }
+    else if (2 == g_vSRVFlag.y)
+    {
+        vNormalDecoded = normalize(vNormalDecoded + DecodeNormalFromRG(g_MossNormalTexture, DefaultSampler, In.vTexcoord));
+    }
+    else if (3 == g_vSRVFlag.y)
+    {
+        vNormalDecoded = normalize(vNormalDecoded + DecodeNormalFromRG(g_NormalBlendTexture, DefaultSampler, In.vTexcoord) + DecodeNormalFromRG(g_MossNormalTexture, DefaultSampler, In.vTexcoord));
+    }
+    
     if (g_iBinded_Texture[AI_TEXTURE_TYPE_TRANSMISSION] != 0)
     {
         float4 vTransmission = g_TransmissionTexture.Sample(AnisoTropy_BLUR_Sampler, In.vTexcoord);
@@ -305,19 +334,18 @@ PS_OUT PS_MAIN(PS_IN In)
     {
         discard;
     }
-
-
-    float3 vNormalDecoded = DecodeNormalFromRG(g_NormalTexture, AnisoTropy_BLUR_Sampler, In.vTexcoord);
+   
     float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal * -1.f, In.vNormal);
     
     float3 vNormal = normalize(mul(vNormalDecoded, WorldMatrix));
     
+   
     Out.vAlbedo = vMtrlDiffuse;
     Out.vNormal = float4(vNormal * 0.5f + 0.5f, 0.f);
     float fSurfaceParam = g_fUsingSurfaceParams;
     if (true == AlmostEqual7(g_fUsingSurfaceParams, 0.f))
     {
-        fSurfaceParam = 0;
+        fSurfaceParam = 0.f;
     }
     Out.vDepth = float4((In.vProjPos.z / In.vProjPos.w), // NDC 깊이 ( 0~ 1)
         (In.vProjPos.w / g_fFar), // 뷰 스페이스 Z 
@@ -397,7 +425,6 @@ PS_OUT PS_GLASS_CUBE(PS_IN In)
 struct PS_IN_SHADOW
 {
     float4 vPosition : SV_POSITION;
-    float fProjPos : TEXCOORD0;
 };
 
 struct PS_OUT_SHADOW
@@ -431,7 +458,7 @@ PS_OUT_SHADOW PS_MAIN_SHADOW(PS_IN_SHADOW In)
 {
     PS_OUT_SHADOW Out = (PS_OUT_SHADOW) 0;
     
-    Out.fShadowLightDepth = In.fProjPos;
+    Out.fShadowLightDepth = In.vPosition.z;
     
     return Out;
 }

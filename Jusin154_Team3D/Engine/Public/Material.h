@@ -28,9 +28,14 @@ private:
 	_int		m_iUsingPass = { -1 };
 	_int		m_iOutLinePass = { -1 };
 
+	_float2		m_vSRV_Flag = {};
+	_float3		m_vPBR_Flag = {};
+
 #ifdef EDITOR_PROJECT
 public:
 	SaveMaterial Get_SaveMaterial() { return m_SaveMaterial; }
+	_float2 Get_SRV_Flag() { return m_vSRV_Flag; }
+	_float3 Get_PBR_Flag() { return m_vPBR_Flag; }
 
 	static CMaterial* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, const aiMaterial* pAIMaterial);
 	static CMaterial* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, const aiMaterial* pAIMaterial);
@@ -42,7 +47,10 @@ private:
 	HRESULT Initialize(const _char* pModelFilePath, MODEL eType, const aiMaterial* pAIMaterial);
 	HRESULT Initialize(const _char* pMaterialFilePath, const _char* pTextureFilePath);
 	HRESULT Read_MaterialFile(const _char* pMaterialFilePath, const _char* pTextureFolderPath);
-	HRESULT Add_Texture(const _char* pTextureFolderPath, string& FileType);
+	HRESULT Add_Texture(const _char* pTextureFolderPath, string& FileType, string& Use);
+	aiTextureType Switch_PBR(string Use);
+	aiTextureType Switch_PBR_B(string Use);
+	aiTextureType Switch_PBR_MOSS(string Use);
 #endif // EDITOR_PROJECT
 
 	// 바이너리

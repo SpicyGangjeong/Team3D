@@ -602,6 +602,10 @@
     <ClInclude Include="..\Public\RaceRing.h">
       <Filter>02.GameObjects\Item\RaceRing</Filter>
     </ClInclude>
+	  <ClInclude Include="..\Public\Screen_Wind.h">
+		  <Filter>02.GameObjects\Effect\ScreenFX</Filter>
+    </ClInclude>
+	  <ClInclude Include="..\Public\BroomRaceManager.h" />
     <ClInclude Include="..\Public\Quest_Status_Panel.h">
       <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Status_Panel</Filter>
     </ClInclude>
@@ -1278,6 +1282,12 @@
     <Filter Include="02.GameObjects\Item\RaceRing">
       <UniqueIdentifier>{f00654f0-c372-4289-ab1d-167941076573}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Effect\ScreenFX">
+      <UniqueIdentifier>{125737f1-56b3-4746-9be2-ea1bcb90c013}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\BroomRaceManager">
+      <UniqueIdentifier>{9e8bccb6-c491-4f3a-bdb8-5f03f13ad84d}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02.GameObjects\UI\Quest_Canvas\Quest_Status_Panel">
       <UniqueIdentifier>{9060b2e1-d8cb-4259-a17a-f8ee2407d37c}</UniqueIdentifier>
     </Filter>
@@ -1839,6 +1849,10 @@
     <ClCompile Include="..\Private\RaceRing.cpp">
       <Filter>02.GameObjects\Item\RaceRing</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Screen_Wind.cpp">
+      <Filter>02.GameObjects\Effect\ScreenFX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BroomRaceManager.cpp" />
     <ClCompile Include="..\Private\Quest_Status_Panel.cpp">
       <Filter>02.GameObjects\UI\Quest_Canvas\Quest_Status_Panel</Filter>
     </ClCompile>
