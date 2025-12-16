@@ -34,10 +34,20 @@ private:
 
 public:
 	void Clear_Penel();
+	void Update_Panel(_int Index);
 
 private:
+	CTexture* m_pDiffuse_TextureCom = { nullptr };
+	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
+
 	CGameObject* m_pQuest_Panel = { nullptr };
+	CGameObject* m_pInProgress_Panel = { nullptr };
+	CGameObject* m_pCompleted_Panel = { nullptr };
+	CGameObject* m_pQuest_Status_Panel = { nullptr };
+
+	_bool	m_bClick[3] = { false };
+	_int m_iIndex{};
 public:
 	static CQuest_Canvas* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg, class CGameObject* pOwner) override;

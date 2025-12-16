@@ -22,7 +22,7 @@ HRESULT CMagic_Item::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = -800.f;
-	Desc.fY = 70.f;
+	Desc.fY = -70.f;
 	Desc.fSizeX = 100.f;
 	Desc.fSizeY = 100.f;
 
@@ -184,7 +184,7 @@ HRESULT CMagic_Item::Render()
 	{
 		return E_FAIL;
 	}
-	m_pGameInstance->Render_Text(TEXT("UI_size15"), m_strPotion.c_str(), _float2((m_fFontX + m_fX) - m_fFontOffSet, m_fFontY + m_fY), XMVectorSet((208.f / 255.f) * m_fAlpha, (177.f / 255.f) * m_fAlpha, (52.f / 255.f) * m_fAlpha, m_fAlpha));
+	m_pGameInstance->Render_Text(TEXT("UI_size15"), m_strPotion.c_str(), _float2((m_fFontX + m_fX) - m_fFontOffSet, m_fFontY - m_fY), XMVectorSet((208.f / 255.f) * m_fAlpha, (177.f / 255.f) * m_fAlpha, (52.f / 255.f) * m_fAlpha, m_fAlpha));
 
 	return S_OK;
 }

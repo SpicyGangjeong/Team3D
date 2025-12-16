@@ -170,10 +170,10 @@ HRESULT CUI_Manager::Ready_Components(void* pArg)
 	}
 	//Add_Canvas(TEXT("Mouse_Cursor"), m_pMouse_Cursor);
 
-	//if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCameraLockOn>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CCameraLockOn**>(&m_pCamera_LockOn)))) {
-	//	return E_FAIL;
-	//}
-	////Add_Canvas(TEXT("Camera_LockOn"), m_pCamera_LockOn);
+	if (FAILED(m_pGameInstance->Add_GameObject_ToLayer<CCameraLockOn>(g_iStaticLevel, g_iStaticLevel, LAYER_UI, nullptr, this, reinterpret_cast<CCameraLockOn**>(&m_pCamera_LockOn)))) {
+		return E_FAIL;
+	}
+	//Add_Canvas(TEXT("Camera_LockOn"), m_pCamera_LockOn);
 
 	return S_OK;
 }

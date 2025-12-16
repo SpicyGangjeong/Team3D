@@ -25,13 +25,18 @@ private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
+public:
+	void Set_Quest_Data(class  CQuest_Data* Data);
+
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
 	CShader* m_pShaderCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
-	_int m_iColor = { false };
+	class CQuest_Data* m_pQuest_Data = { nullptr };
 
+	_int m_iColor = { false };
+	_int m_iCount = { false };
 
 public:
 	static CQuest_Border* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

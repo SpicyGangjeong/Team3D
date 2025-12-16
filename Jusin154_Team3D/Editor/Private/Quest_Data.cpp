@@ -43,8 +43,8 @@ HRESULT CQuest_Data::Initialize(void* pArg)
 
 		pQuest->QueryIntAttribute("QuestID", &quest.iQuestID);
 		pQuest->QueryIntAttribute("QuestType", &quest.iType);
-		quest.pQuestName = pQuest->Attribute("QuestName");
-		quest.pQuestInfo = pQuest->Attribute("QuestInfo");
+		quest.pQuestName = CMyTools::ToWstring(pQuest->Attribute("QuestName"));
+		quest.pQuestInfo = CMyTools::ToWstring(pQuest->Attribute("QuestInfo"));
 
 		tinyxml2::XMLElement* pObjectives = pQuest->FirstChildElement("Objectives");
 		if (pObjectives)
@@ -81,7 +81,7 @@ HRESULT CQuest_Data::Initialize(void* pArg)
 				pReward = pReward->NextSiblingElement("Reward");
 			}
 		}
-
+		m_iQuest_Count++;
 		QuestInfos.push_back(quest);
 
 		pQuest = pQuest->NextSiblingElement("Quest");
@@ -110,6 +110,16 @@ HRESULT CQuest_Data::Render()
 _vector CQuest_Data::Get_WorldPostion()
 {
 	return _vector();
+}
+
+CQuest_Data::QUESTINFO CQuest_Data::Get_Quest(_int QuestID)
+{
+	return QuestInfos[QuestID];
+}
+
+_int CQuest_Data::Get_Count()
+{
+	return m_iQuest_Count;
 }
 
 HRESULT CQuest_Data::Bind_ShaderResources()

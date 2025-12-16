@@ -29,7 +29,8 @@ public:
 	virtual class CGameObject* Get_Panel(const wstring& Name);
 	virtual _int Panels_Count();
 	virtual const vector<wstring> Panel_Name();
-
+	virtual void Add_Function(wstring Name, function<void(void*)> Evnet);
+	virtual void Function_Callback(wstring Name, void* pArg = nullptr);
 protected:
 	virtual void Add_Panel(wstring Name, class CGameObject* pPanel);
 
@@ -38,6 +39,9 @@ protected:
 	vector<wstring>						m_PanelNames;		// 패널들의 이름을 전해주기 위해서 
 	map<wstring ,class CGameObject*>	m_Panels_map;		// 캔버스에서 내가 원하는 패널을 찾기 위해서
 	_int								m_iPanel_Count{};	// 전체 패널의 갯수
+
+	multimap<wstring, function<void(void*)>>		m_PaneltFunction_map;
+
 
 private:
 	virtual class CGameObject* Find_Panel(const wstring& Name);

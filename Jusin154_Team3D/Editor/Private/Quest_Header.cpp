@@ -21,8 +21,8 @@ HRESULT CQuest_Header::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = -485.f;
-	Desc.fY = -352.f;
+	Desc.fX = -475.f;
+	Desc.fY = 352.f;
 	Desc.fSizeX = 128.f;
 	Desc.fSizeY = 32.f;
 
@@ -125,7 +125,7 @@ HRESULT CQuest_Header::Render()
 	}
 
 	_float OffSet = m_pGameInstance->FontSizeX(TEXT("Font_size20"), TEXT("마을의 평화를 위해서 노력하기") - 22) * 0.5f;
-	m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("마을의 평화를 위해서 노력하기"), _float2((m_fFontX + m_fX) - OffSet, m_fFontY + m_fY), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
+	m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("마을의 평화를 위해서 노력하기"), _float2((m_fFontX + m_fX) - OffSet, m_fFontY - m_fY), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
 	return S_OK;
 }
 

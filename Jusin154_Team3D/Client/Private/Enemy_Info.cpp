@@ -25,7 +25,7 @@ HRESULT CEnemy_Info::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = -180.f;
-	Desc.fY = 40.f;
+	Desc.fY = -40.f;
 	Desc.fSizeX = 50.f;
 	Desc.fSizeY = 50.f;
 
@@ -132,8 +132,8 @@ HRESULT CEnemy_Info::Render()
 
 
 
-		m_pGameInstance->Render_Text(TEXT("Font_size20"), m_pEnemy_Name.c_str(), _float2(m_fFontPos.x + m_fX - m_fFontOffSet, m_fFontPos.y + m_fY), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
-		m_pGameInstance->Render_Text(TEXT("UI_size15"), m_pLevel.c_str(), _float2(m_fFontX + m_fX - m_fFont2OffSet, m_fFontY + m_fY), XMVectorSet(0.f, (120.f / 255.f) * m_fAlpha, 0.f, m_fAlpha));
+		m_pGameInstance->Render_Text(TEXT("Font_size20"), m_pEnemy_Name.c_str(), _float2(m_fFontPos.x + m_fX - m_fFontOffSet, m_fFontPos.y - m_fY), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
+		m_pGameInstance->Render_Text(TEXT("UI_size15"), m_pLevel.c_str(), _float2(m_fFontX + m_fX - m_fFont2OffSet, m_fFontY - m_fY), XMVectorSet(0.f, (120.f / 255.f) * m_fAlpha, 0.f, m_fAlpha));
 	}
 
 	return S_OK;
@@ -218,13 +218,13 @@ void CEnemy_Info::Set_Font_Move(_bool Boss)
 	if (m_bBoss == true)
 	{
 		MoveX(-315.f);
-		MoveY(50.f);
+		MoveY(-50.f);
 		m_fFontPos = _float2(1250, 0.f);
 	}
 	else
 	{
 		MoveX(-180.f);
-		MoveY(40.f);
+		MoveY(-40.f);
 		m_fFontPos = _float2(1115.f, 0.f);
 	}
 }

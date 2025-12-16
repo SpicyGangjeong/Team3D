@@ -25,8 +25,8 @@ private:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 
-private:
-	void Hover();
+public:
+	void Set_Hover(_int Index);
 
 private:
 	CTexture* m_pDiffuse_TextureCom = { nullptr };
@@ -39,6 +39,7 @@ private:
 	_float	m_fOriginPerviewSize{};
 	_float	m_fPreviewOffSet{};
 	_float4 m_vHeaderBack{};
+	_int	m_iQuest_Index{};
 
 	_int	m_iPerQuestIndex{};
 public:
