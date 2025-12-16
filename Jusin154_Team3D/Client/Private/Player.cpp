@@ -532,6 +532,7 @@ void CPlayer::ReLockOnTarget()
 			m_LockOnInfo.pUnit = nullptr;
 		}
 	}
+
 	//m_pLockOnMonster->Get_State
 }
 

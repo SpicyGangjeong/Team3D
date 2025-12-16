@@ -69,6 +69,7 @@ public:
 #pragma region Spell_INFO
 #pragma endregion
 	QUESTINFO Get_Quest_Info(_int QuestID);
+	_int Get_Quest_Count();
 #pragma region Interactive_INFO
 	HRESULT Regist_ActiveInteractive(class CMapElement_Interactable* pInteractive);
 	HRESULT Deregist_ActiveInteractive(class CMapElement_Interactable* pInteractive);
