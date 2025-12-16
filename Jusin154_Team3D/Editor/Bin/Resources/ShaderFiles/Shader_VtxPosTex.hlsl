@@ -262,7 +262,7 @@ vector Draw_Trail(PS_IN In)
     
     if (g_isDissolve)
     {
-        vMtrlDiffuse.a *= g_vDissolveTime.x / g_vDissolveTime.y;  
+        vMtrlDiffuse.a *= saturate((0.96f - g_vDissolveTime.x / g_vDissolveTime.y)); 
     }
 
     return vMtrlDiffuse;
