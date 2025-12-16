@@ -22,7 +22,7 @@ HRESULT CQuest_Info::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 325.f;
-	Desc.fY = -250.f;
+	Desc.fY = 250.f;
 	Desc.fSizeX = 128.f;
 	Desc.fSizeY = 128.f;
 
@@ -48,7 +48,8 @@ HRESULT CQuest_Info::Initialize(void* pArg)
 	m_fFontX = 740.f;
 	m_fFontY = 500.f;
 	m_iPerQuestIndex = -1;
-	Visible(true);
+	Visible(false);
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("QuestListHover"), [this](void* p) {this->Set_Hover(*reinterpret_cast<_int*>(p)); });
 	return S_OK;
 }
 
@@ -96,11 +97,6 @@ void CQuest_Info::Update(_float fTimeDelta)
 		}
 	}
 	m_fTime += fTimeDelta * m_fTimeMult;
-	Hover();
-	m_pRect.left = long(m_fX - m_vScale.x * 0.5f);
-	m_pRect.top = long(m_fY - m_vScale.y * 0.5f);
-	m_pRect.right = long(m_fX + m_vScale.x * 0.5f);
-	m_pRect.bottom = long(m_fY + m_vScale.y * 0.5f);
 	__super::Update(fTimeDelta);
 }
 
@@ -111,7 +107,7 @@ void CQuest_Info::Late_Update(_float fTimeDelta)
 		return;
 	}
 	if (m_bVisible) {
-		m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
+			m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
 		__super::Late_Update(fTimeDelta);
 	}
 }
@@ -217,22 +213,18 @@ HRESULT CQuest_Info::Ready_Components(void* pArg)
 
 	return S_OK;
 }
-
-void CQuest_Info::Hover()
+	
+void CQuest_Info::Set_Hover(_int Index)
 {
-	POINT ptMouse{};
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
-	_float2 fMouse;
-	fMouse.x = ptMouse.x - g_iWinSizeX * 0.5f;
-	fMouse.y = -(ptMouse.y - g_iWinSizeY * 0.5f);
-
-	if (fMouse.x >= m_pRect.left && fMouse.x <= m_pRect.right &&
-		fMouse.y >= m_pRect.top && fMouse.y <= m_pRect.bottom)
+	m_iQuest_Index = Index;
+	if (m_iQuest_Index == -1)
 	{
-		_int a = 0;
+		Visible(false);
 	}
-
+	else
+	{
+		Visible(true);
+	}
 }
 
 CQuest_Info* CQuest_Info::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

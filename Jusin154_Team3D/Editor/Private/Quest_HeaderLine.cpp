@@ -21,8 +21,8 @@ HRESULT CQuest_HeaderLine::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = -485.f;
-	Desc.fY = -310.f;
+	Desc.fX = -475.f;
+	Desc.fY = 310.f;
 	Desc.fSizeX = 480.f;
 	Desc.fSizeY = 10.f;
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
@@ -39,7 +39,7 @@ HRESULT CQuest_HeaderLine::Initialize(void* pArg)
 	m_fTimeMult = 3.f;
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 5.f;
-	Visible(true);
+	Visible(false);
 	return S_OK;
 }
 

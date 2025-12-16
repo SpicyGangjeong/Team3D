@@ -21,8 +21,8 @@ HRESULT CQuest_Border::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = -485.f;
-	Desc.fY = -150.f;
+	Desc.fX = -475.f;
+	Desc.fY = 150.f;
 	Desc.fSizeX = 192.f;
 	Desc.fSizeY = 192.f;
 
@@ -41,8 +41,8 @@ HRESULT CQuest_Border::Initialize(void* pArg)
 	m_fAlphaTime = 5.f;
 	m_vNine_Slice = _float4(48.f, 148.f, 48.f, 148.f);
 	m_fSortZ = 0.02f;
-	m_fFontX = 740.f;
-	m_fFontY = 500.f;
+	m_fFontX = -31.5f;
+	m_fFontY = -50.f;
 	SizeUpX(500.f);
 	SizeUpY(500.f);
 	Visible(true);
@@ -124,7 +124,9 @@ HRESULT CQuest_Border::Render()
 		return E_FAIL;
 	}
 
-	//m_pGameInstance->Render_Text(TEXT("Font_size14"), m_pSpell_Info.c_str(), _float2(m_fFontX + m_fX, (m_fFontY + m_fY) - m_fPreviewOffSet * 0.5f), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
+	_float OffSet = (m_pGameInstance->FontSizeX(TEXT("Font_size20"), TEXT("전 체")) - 22) * 0.5f;
+	m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("전 체"), _float2((m_fFontX - m_fX) - OffSet, m_fFontY + m_fY));
+
 	return S_OK;
 }
 

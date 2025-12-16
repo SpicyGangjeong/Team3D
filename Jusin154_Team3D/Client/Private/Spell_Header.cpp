@@ -24,7 +24,7 @@ HRESULT CSpell_Header::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 600.f;
-	Desc.fY = -385.f;
+	Desc.fY = 385.f;
 	Desc.fSizeX = 512.f;
 	Desc.fSizeY = 80.f;
 
@@ -144,8 +144,8 @@ HRESULT CSpell_Header::Render()
 
 
 	m_fFontOffSet = (m_pGameInstance->FontSizeX(TEXT("Font_size20"), m_pSpell_Name.c_str()) - 53.f) * 0.5f;
-	m_pGameInstance->Render_Text(TEXT("Font_size20"), m_pSpell_Name.c_str(), _float2((m_fFontX + m_fX) - m_fFontOffSet, m_fFontY + m_fY), XMVectorSet((215.f / 255.f) * m_fAlpha, (185.f / 255.f) * m_fAlpha, (95.f / 255.f) * m_fAlpha, m_fAlpha));
-	m_pGameInstance->Render_Text(TEXT("Font_size13"), m_fSpell_Type.c_str(), _float2(m_fType.x + m_fX, m_fType.y + m_fY), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
+	m_pGameInstance->Render_Text(TEXT("Font_size20"), m_pSpell_Name.c_str(), _float2((m_fFontX + m_fX) - m_fFontOffSet, m_fFontY - m_fY), XMVectorSet((215.f / 255.f) * m_fAlpha, (185.f / 255.f) * m_fAlpha, (95.f / 255.f) * m_fAlpha, m_fAlpha));
+	m_pGameInstance->Render_Text(TEXT("Font_size13"), m_fSpell_Type.c_str(), _float2(m_fType.x + m_fX, m_fType.y - m_fY), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
 
 	return S_OK;
 }

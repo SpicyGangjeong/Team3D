@@ -22,7 +22,7 @@ HRESULT CQuest_Info_Header::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 345.f;
-	Desc.fY = -350.f;
+	Desc.fY = 350.f;
 	Desc.fSizeX = 128.f;
 	Desc.fSizeY = 32.f;
 
@@ -46,8 +46,22 @@ HRESULT CQuest_Info_Header::Initialize(void* pArg)
 	m_iColor = 2;
 	SizeUpX(1105.f);
 	SizeUpY(60.f);
-	Visible(true);
+	static_cast<CUIObject*>(m_pOwner)->Add_Function(TEXT("QuestListHover"), [this](void* p) {this->Set_Hover(*reinterpret_cast<_int*>(p)); });
+	Visible(false);
 	return S_OK;
+}
+
+void CQuest_Info_Header::Set_Hover(_int Index)
+{
+	m_iQuest_Index = Index;
+	if (m_iQuest_Index == -1)
+	{
+		Visible(false);
+	}
+	else
+	{
+		Visible(true);
+	}
 }
 
 void CQuest_Info_Header::Priority_Update(_float fTimeDelta)
@@ -106,7 +120,7 @@ void CQuest_Info_Header::Late_Update(_float fTimeDelta)
 		return;
 	}
 	if (m_bVisible) {
-		m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
+			m_pGameInstance->Add_RenderGroup(RENDER::UI, this);
 		__super::Late_Update(fTimeDelta);
 	}
 }
@@ -127,7 +141,7 @@ HRESULT CQuest_Info_Header::Render()
 	}
 
 	_float OffSet = m_pGameInstance->FontSizeX(TEXT("Font_size20"), TEXT("마을의 평화를 위해서 노력하기") - 22) * 0.5f;
-	m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("마을의 평화를 위해서 노력하기"), _float2((m_fFontX + m_fX) - OffSet, m_fFontY + m_fY), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
+	m_pGameInstance->Render_Text(TEXT("Font_size20"), TEXT("마을의 평화를 위해서 노력하기"), _float2((m_fFontX + m_fX) - OffSet, m_fFontY - m_fY), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
 	return S_OK;
 }
 

@@ -25,7 +25,7 @@ HRESULT CEnemy_HpBar::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 0.f;
-	Desc.fY = 40.f;
+	Desc.fY = -40.f;
 	Desc.fSizeX = 128.f;
 	Desc.fSizeY = 20.f;
 

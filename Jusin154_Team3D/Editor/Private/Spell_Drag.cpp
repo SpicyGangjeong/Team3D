@@ -109,7 +109,7 @@ void CSpell_Drag::Update(_float fTimeDelta)
 		ScreenToClient(g_hWnd, &m_pPt);
 		_float2 fMouse{};
 		fMouse.x = m_pPt.x - (g_iWinSizeX * 0.5f);
-		fMouse.y = m_pPt.y - (g_iWinSizeY * 0.5f);
+		fMouse.y = -m_pPt.y + (g_iWinSizeY * 0.5f);
 
 		m_vStart_MousePos = XMVectorSet(fMouse.x, fMouse.y, 0.f, 1.f);
 		m_bFalse = false;
@@ -124,7 +124,7 @@ void CSpell_Drag::Update(_float fTimeDelta)
 			ScreenToClient(g_hWnd, &pt);
 
 			float moveX = pt.x - (g_iWinSizeX * 0.5f);
-			float moveY = pt.y - (g_iWinSizeY * 0.5f);
+			float moveY = -pt.y + (g_iWinSizeY * 0.5f);
 
 			m_vMove_MousePos = XMVectorSet(moveX, moveY, 0.f, 1.f);
 
@@ -348,7 +348,7 @@ _float2 CSpell_Drag::Get_MousePos()
 	ScreenToClient(g_hWnd, &m_pPt);
 	_float2 fMouse{};
 	fMouse.x = m_pPt.x - (g_iWinSizeX * 0.5f);
-	fMouse.y = m_pPt.y - (g_iWinSizeY * 0.5f);
+	fMouse.y = -m_pPt.y + (g_iWinSizeY * 0.5f);
 
 	m_vMove_MousePos = XMVectorSet(fMouse.x, fMouse.y, 0.f, 1.f);
 	return fMouse;

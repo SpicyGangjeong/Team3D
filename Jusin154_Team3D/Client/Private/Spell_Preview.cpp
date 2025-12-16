@@ -3,7 +3,6 @@
 #include "GameInstance.h"
 #include "InfoInstance.h"
 
-
 CSpell_Preview::CSpell_Preview(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CElementObject(pDevice, pContext)
 {
@@ -25,7 +24,7 @@ HRESULT CSpell_Preview::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 400.f;
-	Desc.fY = -365.f;
+	Desc.fY = 500.f;
 	Desc.fSizeX = 128.f;
 	Desc.fSizeY = 128.f;
 
@@ -46,7 +45,7 @@ HRESULT CSpell_Preview::Initialize(void* pArg)
 	m_vNine_Slice = _float4(50.f, 75.f, 30.f, 96.f);
 	m_fTopY = m_fY - m_vScale.y * 0.5f;
 	m_fPreviewOffSet = 0.f;
-	m_fOriginPerviewSize = 280.f;
+	m_fOriginPerviewSize = 280;
 	SizeUpX(512.f);
 	SizeUpY(m_fOriginPerviewSize);
 	m_iSpellType = ENUM_CLASS(SPELLTYPE::CONTROL);
@@ -103,19 +102,16 @@ void CSpell_Preview::Update(_float fTimeDelta)
 			m_fAlpha = 0.f;
 		}
 	}
+	m_fTime += fTimeDelta * m_fTimeMult;
 
-	if (m_bFadeOut == false)
+	if (m_iSpellType != -1 && m_iPerSpellIndex != m_iSpellType)
 	{
-		if (m_iSpellType != -1)
-		{
-			m_pSpell_Info = m_pInfoInstance->Get_Spell_Info(m_iSpellType).pSpellInfo;
-			m_fPreviewOffSet = m_pInfoInstance->Get_Spell_Info(m_iSpellType).fPreview;
-			SizeUpY(m_fOriginPerviewSize + m_fPreviewOffSet);
-			m_iPerSpellIndex = m_iSpellType;
-		}
+		m_pSpell_Info = m_pInfoInstance->Get_Spell_Info(m_iSpellType).pSpellInfo;
+		m_fPreviewOffSet = m_pInfoInstance->Get_Spell_Info(m_iSpellType).fPreview;
+		SizeUpY(m_fOriginPerviewSize + m_fPreviewOffSet);
+		m_iPerSpellIndex = m_iSpellType;
 	}
 
-	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
 }
 
@@ -146,9 +142,7 @@ HRESULT CSpell_Preview::Render()
 		return E_FAIL;
 	}
 
-
-	m_pGameInstance->Render_Text(TEXT("Font_size14"), m_pSpell_Info.c_str(), _float2(m_fFontX + m_fX, (m_fFontY + m_fY) - m_fPreviewOffSet * 0.5f), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
-
+	m_pGameInstance->Render_Text(TEXT("Font_size14"), m_pSpell_Info.c_str(), _float2(m_fFontX + m_fX, (m_fFontY - m_fY) - m_fPreviewOffSet * 0.5f), XMVectorSet(1.f * m_fAlpha, 1.f * m_fAlpha, 1.f * m_fAlpha, m_fAlpha));
 	return S_OK;
 }
 
@@ -163,17 +157,14 @@ void CSpell_Preview::SizeUpX(_float fSizeX)
 	m_fSizeX = fSizeX;
 	m_fX += fX;
 	m_fLerpX += fX;
-
 }
 
 void CSpell_Preview::SizeUpY(_float fSizeY)
 {
 	_float prevY = m_fY;
 	m_fSizeY = fSizeY;
-	m_fY = m_fTopY + fSizeY * 0.5f;
-
+	m_fY = m_fTopY - fSizeY * 0.5f;
 	_float deltaY = m_fY - prevY;
-
 }
 
 HRESULT CSpell_Preview::Bind_ShaderResources()
@@ -308,6 +299,7 @@ void CSpell_Preview::Free()
 	SAFE_RELEASE(m_pShaderCom);
 	SAFE_RELEASE(m_pVIBufferCom);
 }
+
 
 #ifdef _DEBUG
 void CSpell_Preview::Describe_Entity()

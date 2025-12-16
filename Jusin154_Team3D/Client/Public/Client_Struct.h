@@ -66,6 +66,29 @@ namespace Client
 		DAMAGE_TYPE eType = DAMAGE_TYPE::NOMAL;
 	}DAMAGE_INFO;
 
+	typedef struct tagObjectiveInfo
+	{
+		_int iObjectType{};
+		_int iTargetID{};
+		_int iRequiredCount{};
+		_int iCurrentCount{};
+	}OBJECTIVEINFO;
+
+	typedef struct tagRewardsInfo
+	{
+		_int iRewardType{};
+		_int iRewardID{};
+	}REWARDSINFO;
+
+	typedef struct tagQuestInfo
+	{
+		_int					iQuestID{};
+		_int					iType{};
+		_wstring					pQuestName;
+		_wstring					pQuestInfo;
+		vector<OBJECTIVEINFO>	ObjectiveInfo;
+		vector<REWARDSINFO>		RewardsInfo;
+	}QUESTINFO;
 
 	typedef struct tagEffectInfo
 	{

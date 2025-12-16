@@ -610,6 +610,18 @@
     <Filter Include="50.UI\Quest_Canvas\Quest_Panel\Quest_Entry_Line">
       <UniqueIdentifier>{2347d77a-ac72-4b3e-bf5f-434ca410e544}</UniqueIdentifier>
     </Filter>
+    <Filter Include="50.UI\Quest_Canvas\Quest_Status_Panel">
+      <UniqueIdentifier>{a0cb1a30-7aab-4722-a0c3-fb75cc8986a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Quest_Canvas\InProgress_Panel">
+      <UniqueIdentifier>{c6fd65c0-d447-49b7-88f8-a7b12c21e6a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Quest_Canvas\Completed_Panel">
+      <UniqueIdentifier>{300bca91-ce47-43bb-8848-c1632a714bf3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="50.UI\Quest_Canvas\Quest_Status_Panel\Quest_Status">
+      <UniqueIdentifier>{18181fd1-eb00-4d29-a2aa-071428fe4ba6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -1217,6 +1229,18 @@
     </ClInclude>
     <ClInclude Include="..\public\Quest_Entry_Line.h">
       <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Entry_Line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Quest_Status_Panel.h">
+      <Filter>50.UI\Quest_Canvas\Quest_Status_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Completed_Panel.h">
+      <Filter>50.UI\Quest_Canvas\Completed_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\InProgress_Panel.h">
+      <Filter>50.UI\Quest_Canvas\InProgress_Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Quest_Status.h">
+      <Filter>50.UI\Quest_Canvas\Quest_Status_Panel\Quest_Status</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1827,6 +1851,18 @@
     </ClCompile>
     <ClCompile Include="..\private\Quest_Entry_Line.cpp">
       <Filter>50.UI\Quest_Canvas\Quest_Panel\Quest_Entry_Line</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Quest_Status_Panel.cpp">
+      <Filter>50.UI\Quest_Canvas\Quest_Status_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Completed_Panel.cpp">
+      <Filter>50.UI\Quest_Canvas\Completed_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\InProgress_Panel.cpp">
+      <Filter>50.UI\Quest_Canvas\InProgress_Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Quest_Status.cpp">
+      <Filter>50.UI\Quest_Canvas\Quest_Status_Panel\Quest_Status</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

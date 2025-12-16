@@ -22,7 +22,7 @@ HRESULT CMission_Icon::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = -70.f;
-	Desc.fY = -20.f;
+	Desc.fY = 20.f;
 	Desc.fSizeX = 60.f;
 	Desc.fSizeY = 60.f;
 

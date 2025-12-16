@@ -21,8 +21,8 @@ HRESULT CQuest_List::Initialize(void* pArg)
 {
 	CUIObject::UIOBJECT_DESC	Desc{};
 
-	Desc.fX = -485.f;
-	Desc.fY = 150.f;
+	Desc.fX = -475.f;
+	Desc.fY = -150.f;
 	Desc.fSizeX = 256.f;
 	Desc.fSizeY = 64.f;
 	m_pRect = { long(Desc.fX - Desc.fSizeX * 0.5f), long(Desc.fY - Desc.fSizeY * 0.5f), long(Desc.fX + Desc.fSizeX * 0.5f), long(Desc.fY + Desc.fSizeY * 0.5f) };
@@ -40,6 +40,8 @@ HRESULT CQuest_List::Initialize(void* pArg)
 	m_fAlpha = 1.f;
 	m_fAlphaTime = 5.f;
 	m_vNine_Slice = _float4(70.f, 186.f, 0.f, 64.f);
+	m_fFontX = 770.f;
+	m_fFontY = 520.f;
 	SizeUpX(495.f);
 	SizeUpY(80.f);
 	Visible(true);
@@ -87,6 +89,28 @@ void CQuest_List::Update(_float fTimeDelta)
 		}
 	}
 
+	Hover();
+	if (m_bHover == true)
+	{
+		m_fSizeX = 505.f;
+		m_fSizeY = 90.f;
+		m_fFontX = 765.f;
+		m_fFontY = 520.f;
+		m_pFontSize = TEXT("Font_size21");
+		m_pQuest_ID = 0;
+		static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("QuestListHover"), &m_pQuest_ID);
+	}
+	else
+	{
+		m_fSizeX = 495.f;
+		m_fSizeY = 80.f;
+		m_fFontX = 770.f;
+		m_fFontY = 520.f;
+		m_pFontSize = TEXT("Font_size20");
+		m_pQuest_ID = -1;
+		static_cast<CUIObject*>(m_pOwner)->Function_Callback(TEXT("QuestListHover"), &m_pQuest_ID);
+	}
+
 	m_fTime += fTimeDelta * m_fTimeMult;
 	__super::Update(fTimeDelta);
 }
@@ -117,6 +141,8 @@ HRESULT CQuest_List::Render()
 	if (FAILED(m_pVIBufferCom->Render())) {
 		return E_FAIL;
 	}
+
+	m_pGameInstance->Render_Text(m_pFontSize, m_pQuest_Name.c_str(), _float2(m_fFontX + m_fX, m_fFontY - m_fY));
 
 	return S_OK;
 }
@@ -199,6 +225,34 @@ HRESULT CQuest_List::Ready_Components(void* pArg)
 	}
 
 	return S_OK;
+}
+
+void CQuest_List::Hover()
+{
+	POINT ptMouse{};
+	GetCursorPos(&ptMouse);
+	ScreenToClient(g_hWnd, &ptMouse);
+	_float2 fMouse{};
+	fMouse.x = ptMouse.x - (g_iWinSizeX * 0.5f);
+	fMouse.y = -(ptMouse.y - (g_iWinSizeY * 0.5f));
+	POINT pt{}; 
+	pt.x = _long(fMouse.x); 
+	pt.y = _long(fMouse.y);
+
+	if (PtInRect(&m_pRect, pt))
+	{
+		m_bHover = true;
+	}
+	else
+	{
+		m_bHover = false;
+	}
+}
+
+void CQuest_List::Set_Name(_wstring Name, _int ID)
+{
+	m_pQuest_Name = Name;
+	m_pQuest_ID = ID;
 }
 
 CQuest_List* CQuest_List::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

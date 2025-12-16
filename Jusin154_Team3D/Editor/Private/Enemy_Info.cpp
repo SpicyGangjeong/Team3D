@@ -22,7 +22,7 @@ HRESULT CEnemy_Info::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = -180.f;
-	Desc.fY = 40.f;
+	Desc.fY = -40.f;
 	Desc.fSizeX = 50.f;
 	Desc.fSizeY = 50.f;
 

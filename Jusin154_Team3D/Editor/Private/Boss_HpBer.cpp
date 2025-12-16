@@ -22,7 +22,7 @@ HRESULT CBoss_HpBar::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 0.f;
-	Desc.fY = 40.f;
+	Desc.fY = -40.f;
 	Desc.fSizeX = 218.f;
 	Desc.fSizeY = 82.f;
 
