@@ -70,18 +70,18 @@ HRESULT CLight_Main::Capture_PreShadow()
 		// 외곽이 더 많아지면 많아질수록 더 정밀한 경계가 가능
 		// 하지만 더 실제보다 멀리 외곽을 두르면 필요한 것보다 더 많이 찍게 됨
 		// 결국 딱 맞춰서 찍는게 제일 중요함
-		vNeededPos.emplace_back(_float3(-112, 155, 362));
-		vNeededPos.emplace_back(_float3(- 188, 10, 476));
-		vNeededPos.emplace_back(_float3(- 571, 19, 476));
-		vNeededPos.emplace_back(_float3(- 326, -64, 480));
-		vNeededPos.emplace_back(_float3(569, 77, 250));
-		vNeededPos.emplace_back(_float3(320, -236, 360));
-		vNeededPos.emplace_back(_float3(570, 277, -277));
-		vNeededPos.emplace_back(_float3(570, 176, -527));
-		vNeededPos.emplace_back(_float3(- 108, -64, -1146));
-		vNeededPos.emplace_back(_float3(- 824, 128, -533));
-		vNeededPos.emplace_back(_float3(- 826, 145, -150));
-		vNeededPos.emplace_back(_float3(- 256, -92, -414));
+		vNeededPos.emplace_back(_float3(-112.f, 155.f, 362.f));
+		vNeededPos.emplace_back(_float3(- 188.f, 10.f, 476.f));
+		vNeededPos.emplace_back(_float3(- 571.f, 19.f, 476.f));
+		vNeededPos.emplace_back(_float3(- 326.f, -64.f, 480.f));
+		vNeededPos.emplace_back(_float3(569.f, 77.f, 250.f));
+		vNeededPos.emplace_back(_float3(320.f, -236.f, 360.f));
+		vNeededPos.emplace_back(_float3(570.f, 277.f, -277.f));
+		vNeededPos.emplace_back(_float3(570.f, 176.f, -527.f));
+		vNeededPos.emplace_back(_float3(- 108.f, -64.f, -1146.f));
+		vNeededPos.emplace_back(_float3(- 824.f, 128.f, -533.f));
+		vNeededPos.emplace_back(_float3(- 826.f, 145.f, -150.f));
+		vNeededPos.emplace_back(_float3(- 256.f, -92.f, -414.f));
 	}
 	_matrix xmViewMatrix = m_pTransformCom->Get_WorldMatrixInv();
 	_float4x4 ViewMatrix = {}; XMStoreFloat4x4(&ViewMatrix, xmViewMatrix);
@@ -95,7 +95,7 @@ HRESULT CLight_Main::Ready_Components()
 {
 	__super::Ready_Components(nullptr);
 
-	m_pTransformCom->LookAt(XMVectorSet(1.f, -1.f, 1.f, 1.f));
+	m_pTransformCom->LookAt(XMVectorSet(1.f, -4.f, 1.f, 1.f));
 	LIGHT_DESC			LightDesc{};
 
 	LightDesc.eType = LIGHT::DIRECTIONAL;

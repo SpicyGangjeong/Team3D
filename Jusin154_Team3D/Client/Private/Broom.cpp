@@ -155,9 +155,9 @@ void CBroom::Late_Update(_float fTimeDelta)
 		GUI::DragFloat("Offset", &m_fCameraOffset);
 		GUI::DragFloat("Offset Y", &m_fYOffset);
 		GUI::End();
+#endif
+#endif
 	}
-#endif
-#endif
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 

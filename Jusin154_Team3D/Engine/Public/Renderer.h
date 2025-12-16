@@ -63,8 +63,8 @@ private:
 	// DOF Environment
 	_float	m_fDOF_ENV_CutThreshold = { 0.1350f };
 	_float	m_fDOF_ENV_FocusDistance = { 31.1f };
-	_float	m_fDOF_ENV_StartDistance = { 53.1f };
-	_float	m_fDOF_ENV_MaxEnd = { 360.f };
+	_float	m_fDOF_ENV_StartDistance = { 130.f };
+	_float	m_fDOF_ENV_MaxEnd = { 350.f };
 	_float	m_fDOF_ENV_AmountRadius = { 1.f };
 
 	// SSAO

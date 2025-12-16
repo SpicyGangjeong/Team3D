@@ -1019,9 +1019,9 @@ PS_OUT_BACKBUFFER PS_MAIN_POSTCOMBINED(PS_IN In)
     float3 vBlurAdjusted = vColor * fLumenScale;
 
     float fBlendAmount = saturate(fBlurAmount * g_fDOFBlurMultiplier);
-    float3 vFinalColor = vBlurAdjusted;
+    float3 vFinalColor = lerp(vOriginal.rgb, vBlurAdjusted, fBlendAmount);
     
-    Out.vBackBuffer = float4(vFinalColor, fOriginalAlpha);
+    Out.vBackBuffer = float4(vColor, fOriginalAlpha);
     Out.vEnvironment = fAcc;
     
     return Out;
