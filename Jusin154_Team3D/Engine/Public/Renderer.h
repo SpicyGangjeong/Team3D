@@ -13,7 +13,8 @@ private:
 public:
 	void	Render();
 	HRESULT Add_RenderGroup(RENDER eRenderGroup, class CGameObject* pRenderObject);
-	void Render_PreShadow();
+	void Render_PreShadow(const _float4x4& ViewMatrix, const _float4x4& ProjMatrix);
+	HRESULT Bind_PreShadowMatrix(class CShader* pShader, const _char* pConstants, D3DTS eType);
 
 #ifdef _DEBUG
 private:
@@ -49,11 +50,11 @@ private:
 	ID3D11Texture2D*			m_pSSAO_NoiseTexture = { nullptr };
 	ID3D11Buffer*				m_pGlobalStaticCB = { nullptr };
 
-	_float						m_PreShadowFar = {};
-	_float4x4					m_PreShadowMatrices[ENUM_CLASS(D3DTS::END)] = {};
+	_float4x4					m_PreShadowView = {};
+	_float4x4					m_PreShadowProj = {};
 
 	/* TunningParam  */
-	_int	m_iToneMappingType = { 0 };
+	_int	m_iToneMappingType = { 2 };
 	_float	m_fExposure = { 0.7f };
 
 	// Bloom
@@ -63,13 +64,14 @@ private:
 	// DOF Environment
 	_float	m_fDOF_ENV_CutThreshold = { 0.1350f };
 	_float	m_fDOF_ENV_FocusDistance = { 31.1f };
-	_float	m_fDOF_ENV_StartDistance = { 53.1f };
-	_float	m_fDOF_ENV_MaxEnd = { 360.f };
+	_float	m_fDOF_ENV_StartDistance = { 130.f };
+	_float	m_fDOF_ENV_MaxEnd = { 350.f };
 	_float	m_fDOF_ENV_AmountRadius = { 1.f };
 
 	// SSAO
-	_float	m_fSSAO_Radius = { 1.6300f };
-	_float	m_fSSAO_BIAS = { 0.234f };
+	_float	m_fSSAO_Radius	= { 1.6300f };
+	_float	m_fSSAO_BIAS	= { 0.234f };
+	_float	m_fSSAOStrength = { 2.83f };
 
 	SSAO_GEOMETRY_HEMISPHERE m_tagSSAOGeometry = {};
 	SSAO_GEOMETRYDIRECTIONS_RANDOM_REAL m_tagSSAOGeometryDirections = {};

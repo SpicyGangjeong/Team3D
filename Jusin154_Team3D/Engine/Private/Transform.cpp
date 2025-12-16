@@ -488,12 +488,14 @@ void CTransform::Describe_Entity()
 		GUI::DragFloat4("Look", (_float*)(&m_WorldMatrix._31), 1.f, 0.f, 0.f, "%.3f");
 		GUI::DragFloat4("Pos", (_float*)(&m_WorldMatrix._41), 1.f, 0.f, 0.f, "%.3f");
 
-
+		
+		_vector vRotRPY = Get_RollPitchYawVector();
 		static _float3 s_vRotation = {};
-
-		if(GUI::InputFloat3("Rotation", (_float*)&s_vRotation))
+		XMStoreFloat3(&s_vRotation, vRotRPY);
+		_float3 vDegrees = { XMConvertToDegrees(s_vRotation.x),XMConvertToDegrees(s_vRotation.y),XMConvertToDegrees(s_vRotation.z) };
+		if(GUI::InputFloat3("Rotation", (_float*)&vDegrees))
 		{
-			Rotation(s_vRotation.x, s_vRotation.y, s_vRotation.z);
+			Rotation(XMConvertToRadians(vDegrees.x), XMConvertToRadians(vDegrees.y), XMConvertToRadians(vDegrees.z));
 		}
 
 		GUI::TreePop();

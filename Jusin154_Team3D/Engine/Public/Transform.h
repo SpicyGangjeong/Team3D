@@ -73,7 +73,7 @@ public:
 	void Rotation(_float3& vRadian);
 	void Rotation(_fvector vRPY);
 
-	// Up, Down 벡터를 바라보게 하면 터짐
+	// Up, Down 벡터를 바라보게 하면 터짐, w에 1 있어야함
 	void LookAt(_fvector vAt);
 	void LookAt_Lerp(_fvector vAt, _float fTimeDelta, _float fSpeed);
 	void LookAt_Horizontal(_fvector vAt);

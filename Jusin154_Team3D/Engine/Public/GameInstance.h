@@ -101,7 +101,8 @@ public:
 
 #pragma region RENDERER
 	HRESULT Add_RenderGroup(RENDER eRenderGroup, class CGameObject* pRenderObject);
-	void Render_PreShadow();
+	void Render_PreShadow(const _float4x4& ViewMatrix, const _float4x4& ProjMatrix);
+	HRESULT Bind_PreShadowMatrix(class CShader* pShader, const _char* pConstants, D3DTS eType);
 #pragma endregion
 
 #pragma region ASSET_MANAGER

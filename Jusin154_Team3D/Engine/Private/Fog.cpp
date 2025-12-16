@@ -24,6 +24,7 @@ HRESULT CFog::Bind_FogValue(CShader* pShader)
         pShader->Bind_RawValue("g_fFogDensity", &m_fFogDensity, sizeof(_float));
         pShader->Bind_RawValue("g_fFogPow", &m_fFogPow, sizeof(_float));
         pShader->Bind_RawValue("g_vFogColor", &m_vFogColor, sizeof(_float4));
+        pShader->Bind_RawValue("g_bFogVisible", &m_bVisible, sizeof(_bool));
     }
     else
     {
@@ -32,11 +33,13 @@ HRESULT CFog::Bind_FogValue(CShader* pShader)
         pShader->Bind_RawValue("g_fFogDensity", &fValue, sizeof(_float));
         pShader->Bind_RawValue("g_fFogPow", &fValue, sizeof(_float));
         pShader->Bind_RawValue("g_vFogColor", &vColor, sizeof(_float4));
+        pShader->Bind_RawValue("g_bFogVisible", &m_bVisible, sizeof(_bool));
     }
 #else
     pShader->Bind_RawValue("g_fFogDensity", &m_fFogDensity, sizeof(_float));
     pShader->Bind_RawValue("g_fFogPow", &m_fFogPow, sizeof(_float));
     pShader->Bind_RawValue("g_vFogColor", &m_vFogColor, sizeof(_float4));
+    pShader->Bind_RawValue("g_bFogVisible", &m_bVisible, sizeof(_bool));
 #endif // _DEBUG
 
     return S_OK;

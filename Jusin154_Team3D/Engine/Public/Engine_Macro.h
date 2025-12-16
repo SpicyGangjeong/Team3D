@@ -21,23 +21,30 @@
 #define ASSERT_JINHO(expression)
 #define ASSERT_HYUNBIN(expression)
 #define ASSERT_INHYUK(expression)
+#define OPTIONAL_TRUE_KEYINPUTGUICHECK
 
 #ifdef 기무리
 #undef ASSERT_NURI
 #define ASSERT_NURI(expression) assert(expression)
+//#define OPTIONAL_TRUE_KEYINPUTGUICHECK ||true
 #elif 진우
 #undef ASSERT_JINWOO
 #define ASSERT_JINWOO(expression) assert(expression)
+#define OPTIONAL_TRUE_KEYINPUTGUICHECK ||true
 #elif gimch
 #undef ASSERT_JINHO
 #define ASSERT_JINHO(expression) assert(expression)
+#define OPTIONAL_TRUE_KEYINPUTGUICHECK ||true
 #elif Bin
 #undef ASSERT_HYUNBIN
 #define ASSERT_HYUNBIN(expression) assert(expression)
+#define OPTIONAL_TRUE_KEYINPUTGUICHECK ||true
 #elif 인혁
 #undef ASSERT_INHYUK
 #define ASSERT_INHYUK(expression) assert(expression)
+#define OPTIONAL_TRUE_KEYINPUTGUICHECK ||true
 #endif
+
 
 #pragma endregion
 
@@ -100,6 +107,9 @@
 
 #define			SSAO_SAMPLE_NUMBER			64
 #define			TIMER_SHORT_LERP			0.16f
+
+constexpr unsigned int g_iPreShadowWidth		= 16384;
+constexpr unsigned int g_iPreShadowHeight		= 9216;
 
 constexpr unsigned int g_iMaxShadowWidth		= 16384;
 constexpr unsigned int g_iMaxShadowHeight		= 9216;

@@ -154,9 +154,9 @@ void CBroom::Late_Update(_float fTimeDelta)
 		GUI::Checkbox("BillBoard", &m_pWindEffect->Get_Effect_Info()->isBillboard);
 		GUI::DragFloat("Offset", &m_fCameraOffset);
 		GUI::End();
+#endif
+#endif
 	}
-#endif
-#endif
 
 	m_pGameInstance->Add_RenderGroup(RENDER::NONBLEND, this);
 

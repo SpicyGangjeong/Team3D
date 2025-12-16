@@ -118,16 +118,19 @@ void CInteraction_Key::ReLockOnTarget()
 			m_bActive = false;
 			m_LockOnInteractionObject.pInteractive = nullptr;
 		}
-		m_bActive = true;
-		m_fSize = _float3(40.f, 40.f, 1.f);
-		_vector Position = XMVectorSet(m_LockOnInteractionObject.pInteractive->Get_WorldPostion().m128_f32[0],
-			m_LockOnInteractionObject.pInteractive->Get_WorldPostion().m128_f32[1] + 0.5f,
-			m_LockOnInteractionObject.pInteractive->Get_WorldPostion().m128_f32[2],
-			m_LockOnInteractionObject.pInteractive->Get_WorldPostion().m128_f32[3]);
-		m_pTransformCom->Set_State(STATE::POSITION, Position);
+		else {
+			m_bActive = true;
+			m_fSize = _float3(40.f, 40.f, 1.f);
+			_vector Position = XMVectorSet(m_LockOnInteractionObject.pInteractive->Get_WorldPostion().m128_f32[0],
+				m_LockOnInteractionObject.pInteractive->Get_WorldPostion().m128_f32[1] + 0.5f,
+				m_LockOnInteractionObject.pInteractive->Get_WorldPostion().m128_f32[2],
+				m_LockOnInteractionObject.pInteractive->Get_WorldPostion().m128_f32[3]);
+			m_pTransformCom->Set_State(STATE::POSITION, Position);
+		}
 	}
-	else
+	else{
 		m_bActive = false;
+	}
 }
 
 HRESULT CInteraction_Key::Ready_Components()
@@ -231,7 +234,10 @@ void CInteraction_Key::Free()
 	SAFE_RELEASE(m_pShaderCom);
 
 }
+#ifdef _DEBUG
 
 void CInteraction_Key::Describe_Entity()
 {
 }
+
+#endif // _DEBUG
