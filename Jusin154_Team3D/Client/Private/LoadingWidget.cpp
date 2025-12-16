@@ -22,7 +22,7 @@ HRESULT CLoadingWidget::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 800.f;
-	Desc.fY = 400.f;
+	Desc.fY = -400.f;
 	Desc.fSizeX = 200.f;
 	Desc.fSizeY = 200.f;
 

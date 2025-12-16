@@ -1,4 +1,5 @@
-﻿#include "pch.h"
+﻿
+#include "pch.h"
 #include "Spell_Vidio_Border.h"
 #include "GameInstance.h"
 
@@ -22,7 +23,7 @@ HRESULT CSpell_Vidio_Border::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 590.f;
-	Desc.fY = -100.f;
+	Desc.fY = 100.f;
 	Desc.fSizeX = 520.f;
 	Desc.fSizeY = 275.f;
 
@@ -99,7 +100,7 @@ void CSpell_Vidio_Border::Update(_float fTimeDelta)
 
 	if (m_iSpellType != -1)
 	{
-		m_fY = m_fOrigin_Position.y + static_cast<CUIObject*>(m_pOwner)->Get_Info(m_iSpellType).fVidio;
+		m_fY = m_fOrigin_Position.y - static_cast<CUIObject*>(m_pOwner)->Get_Info(m_iSpellType).fVidio;
 	}
 
 	__super::Update(fTimeDelta);

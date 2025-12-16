@@ -22,7 +22,7 @@ HRESULT CLogo_Text::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 960.f;
-	Desc.fY = 480.f;
+	Desc.fY = -480.f;
 	Desc.fSizeX = 1536.f;
 	Desc.fSizeY = 768.f;
 

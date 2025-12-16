@@ -6,6 +6,7 @@
 #include "PlayerInfo.h"
 #include "InteractiveInfo.h"
 #include "Skill_Data.h"
+#include "Quest_Data.h"
 #include "Damage_Font.h"
 #include "Player.h"
 
@@ -261,6 +262,11 @@ void CInfoInstance::Event_CallBack(_wstring EventName, void* pArg)
 	}
 }
 
+QUESTINFO CInfoInstance::Get_Quest_Info(_int QuestID)
+{
+	return m_pQuestInfo->Get_Quest(QuestID);
+}
+
 HRESULT CInfoInstance::Regist_ActiveInteractive(CMapElement_Interactable* pInteractive)
 {
 	if (nullptr == s_pInstance || nullptr == m_pInteractiveInfo) {
@@ -316,6 +322,10 @@ HRESULT CInfoInstance::Initialize_Information(ID3D11Device* pDevice, ID3D11Devic
 	if (nullptr == m_pSkillInfo) {
 		return E_FAIL;
 	}
+	m_pQuestInfo = CQuest_Data::Create(pDevice, pContext);
+	if (nullptr == m_pQuestInfo) {
+		return E_FAIL;
+	}
 	m_pInteractiveInfo = CInteractiveInfo::Create(pDevice, pContext);
 	if (nullptr == m_pInteractiveInfo) {
 		return E_FAIL;
@@ -362,6 +372,7 @@ void CInfoInstance::Release_Information()
 	SAFE_RELEASE(m_pPlayerInfo);
 	SAFE_RELEASE(m_pMonsterInfo);
 	SAFE_RELEASE(m_pSkillInfo);
+	SAFE_RELEASE(m_pQuestInfo);
 	SAFE_RELEASE(m_pInteractiveInfo);
 	SAFE_RELEASE(m_pDevice);
 	SAFE_RELEASE(m_pContext);

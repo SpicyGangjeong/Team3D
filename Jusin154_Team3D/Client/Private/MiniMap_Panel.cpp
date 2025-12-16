@@ -24,7 +24,7 @@ HRESULT CMiniMap_Panel::Initialize(void* pArg)
 	CUIObject::UIOBJECT_DESC	Desc{};
 
 	Desc.fX = 170.f;
-	Desc.fY = 920.f;
+	Desc.fY = -920.f;
 	Desc.fSizeX = 280.f;
 	Desc.fSizeY = 280.f;
 
