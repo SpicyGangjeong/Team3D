@@ -89,6 +89,7 @@ private:
 	void Make_LightBoxes();
 	void Get_CascadePoints8(const _float4* shadowViewPoints16, _uint cascadeIndex, _float4* outPoints8); // 
 	void Update_ShadowDepthNdcZ();
+	void Adjust_ShadowTexcel(_float& fMinX, _float& fMinY, _float& fMaxX, _float& fMaxY, _uint iShadowWidth, _uint iShadowHeight);
 	ID3D11ShaderResourceView* Find_GlobalShaderResourceView(const _tchar* wszKeyGlobalSRV);
 
 public:

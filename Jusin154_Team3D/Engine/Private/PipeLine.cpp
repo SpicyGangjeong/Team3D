@@ -312,6 +312,8 @@ void CPipeLine::Make_LightBoxes()
 		fMinZ += m_vShadowBoxMarginMin.z;
 		fMaxZ += m_vShadowBoxMarginMax.z;
 
+		Adjust_ShadowTexcel(fMinX, fMinY, fMaxX, fMaxY, g_iMaxShadowWidth, g_iMaxShadowHeight);
+
 		targetPlanes[0] = _float4(-1.f, 0.f, 0.f, fMinX); // Left
 		targetPlanes[1] = _float4(1.f, 0.f, 0.f, -fMaxX); // Right
 		targetPlanes[2] = _float4(0.f, -1.f, 0.f, fMinY); // Bottom
@@ -382,6 +384,31 @@ void CPipeLine::Update_ShadowDepthNdcZ()
 		m_vOriginalShadowFrustumPoints[4 + iIndex].z = fNDCZ0;
 		m_vOriginalShadowFrustumPoints[8 + iIndex].z = fNDCZ1;
 	}
+}
+
+// Out으로 _float4를 새롭게 메모리로 받고 다시 밖에서 할당할 바에 레퍼런스로 쓰는게 더 나은듯
+// 카메라 미세 흔들림으로 인한 그림자 튐 보정
+void CPipeLine::Adjust_ShadowTexcel(_float& fMinX, _float& fMinY, _float& fMaxX, _float& fMaxY, _uint iShadowWidth, _uint iShadowHeight)
+{
+	_float fCascadeWidth = (fMaxX - fMinX);
+	_float fCascadeHeight = (fMaxY - fMinY);
+
+	_float fTexelSizeX = fCascadeWidth / (_float)(iShadowWidth);
+	_float fTexelSizeY = fCascadeHeight / (_float)(iShadowHeight);
+
+	// 박스 xy 중심
+	_float fCascadeCenterX = (fMinX + fMaxX) * 0.5f;
+	_float fCascadeCenterY = (fMinY + fMaxY) * 0.5f;
+	{
+		fCascadeCenterX = floorf(fCascadeCenterX / fTexelSizeX) * fTexelSizeX;
+		fCascadeCenterY = floorf(fCascadeCenterY / fTexelSizeY) * fTexelSizeY;
+	}
+	
+	// 박스 중심으로 min/max 보정
+	fMinX = fCascadeCenterX - fCascadeWidth * 0.5f;
+	fMaxX = fCascadeCenterX + fCascadeWidth * 0.5f;
+	fMinY = fCascadeCenterY - fCascadeHeight * 0.5f;
+	fMaxY = fCascadeCenterY + fCascadeHeight * 0.5f;
 }
 
 ID3D11ShaderResourceView* CPipeLine::Find_GlobalShaderResourceView(const _tchar* wszKeyGlobalSRV)

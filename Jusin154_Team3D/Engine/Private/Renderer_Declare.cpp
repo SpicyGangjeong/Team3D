@@ -234,15 +234,6 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 
-		/* Target_ENV_Blur */
-		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_ENV_Blur"), (_uint)Viewport.Width, (_uint)Viewport.Height,
-			DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 0.0f)))) {
-			return E_FAIL;
-		}
-		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_ENV_Blur_Weight"), (_uint)Viewport.Width, (_uint)Viewport.Height,
-			DXGI_FORMAT_R16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 1.0f)))) {
-			return E_FAIL;
-		}
 
 		/* Target_ENV_Blur_X */
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_ENV_Blur_X"), (_uint)Viewport.Width, (_uint)Viewport.Height,
@@ -250,6 +241,11 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_ENV_Blur_X_Weight"), (_uint)Viewport.Width, (_uint)Viewport.Height,
+			DXGI_FORMAT_R16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 1.0f)))) {
+			return E_FAIL;
+		}
+		/* Target_ENV_Blur_Weight */
+		if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_ENV_Blur_Weight"), (_uint)Viewport.Width, (_uint)Viewport.Height,
 			DXGI_FORMAT_R16_FLOAT, _float4(0.0f, 0.0f, 0.0f, 1.0f)))) {
 			return E_FAIL;
 		}
@@ -414,14 +410,6 @@ HRESULT CRenderer::Initialize()
 			return E_FAIL;
 		}
 
-		/* MRT_ENV_Blur */
-		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_ENV_Blur"), TEXT("Target_ENV_Blur")))) {
-			return E_FAIL;
-		}
-		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_ENV_Blur"), TEXT("Target_ENV_Blur_Weight")))) {
-			return E_FAIL;
-		}
-
 		/* MRT_Bloom */
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Bloom"), TEXT("Target_Bloom_Input")))) {
 			return E_FAIL;
@@ -463,6 +451,9 @@ HRESULT CRenderer::Initialize()
 
 		/* MRT_Fog */
 		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Fog"), TEXT("Target_Fog")))) {
+			return E_FAIL;
+		}
+		if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Fog"), TEXT("Target_ENV_Blur_Weight")))) {
 			return E_FAIL;
 		}
 

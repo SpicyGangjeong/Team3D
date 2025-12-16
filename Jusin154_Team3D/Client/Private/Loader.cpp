@@ -917,6 +917,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	}
 #pragma endregion
 #if 진우
+#elif 기무리
 #else
 #pragma region UI_ANI
 	if (FAILED(m_pGameInstance->Add_Asset_Prototype(g_iStaticLevel, TEXT("Altering_Spell"),
