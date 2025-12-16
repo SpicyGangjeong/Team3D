@@ -622,6 +622,9 @@
     <Filter Include="50.UI\Quest_Canvas\Quest_Status_Panel\Quest_Status">
       <UniqueIdentifier>{18181fd1-eb00-4d29-a2aa-071428fe4ba6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="50.UI\GamePlay_Canvas\Interaction_Panel">
+      <UniqueIdentifier>{daeac33b-8465-457b-ba3f-18738f7a0d32}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -1241,6 +1244,9 @@
     </ClInclude>
     <ClInclude Include="..\public\Quest_Status.h">
       <Filter>50.UI\Quest_Canvas\Quest_Status_Panel\Quest_Status</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Interaction_Panel.h">
+      <Filter>50.UI\GamePlay_Canvas\Interaction_Panel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1863,6 +1869,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Quest_Status.cpp">
       <Filter>50.UI\Quest_Canvas\Quest_Status_Panel\Quest_Status</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Interaction_Panel.cpp">
+      <Filter>50.UI\GamePlay_Canvas\Interaction_Panel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

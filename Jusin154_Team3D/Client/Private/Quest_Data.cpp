@@ -11,13 +11,13 @@ CQuest_Data::CQuest_Data()
 
 HRESULT CQuest_Data::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContex)
 {
-	
+	Load_QuestInfo("../Bin/Resources/Data/Quest/QuestData.xml");
 	return S_OK;
 }
 
 void CQuest_Data::Update(_float fTimeDelta)
 {
-	Load_QuestInfo("../Bin/Resources/Data/Quest/QuestData.xml");
+
 }
 
 HRESULT CQuest_Data::Load_QuestInfo(const _char* pFilePath)
